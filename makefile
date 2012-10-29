@@ -45,6 +45,7 @@ VPATH=src $(wildcard src/cpu/*)
 
 # compiler, linker and utilities
 AR = @ar
+NATIVECC = @gcc
 CC = @gcc
 LD = @gcc
 ASM = @nasm
@@ -60,32 +61,7 @@ else
 PREFIX =
 endif
 
-ifdef DEBUG
-NAME = $(PREFIX)$(TARGET)$(SUFFIX)d
-else
-ifdef ATHLON
-NAME = $(PREFIX)$(TARGET)$(SUFFIX)at
-ARCH = -march=athlon
-else
-ifdef K6
-NAME = $(PREFIX)$(TARGET)$(SUFFIX)k6
-ARCH = -march=k6
-else
-ifdef I686
-NAME = $(PREFIX)$(TARGET)$(SUFFIX)pp
-ARCH = -march=pentiumpro
-else
-ifdef P4
-NAME = $(PREFIX)$(TARGET)$(SUFFIX)p4
-ARCH = -march=pentium4
-else
-NAME = $(PREFIX)$(TARGET)$(SUFFIX)
-ARCH = -march=pentium
-endif
-endif
-endif
-endif
-endif
+NAME = mame
 
 # build the targets in different object dirs, since mess changes
 # some structures and thus they can't be linked against each other.
@@ -93,16 +69,16 @@ OBJ = obj/$(NAME)
 
 EMULATOR = $(NAME)$(EXE)
 
-DEFS = -DX86_ASM -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__
+DEFS = -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__
 
 CFLAGS = -std=gnu99 -Isrc -Isrc/includes -Isrc/$(MAMEOS) -I$(OBJ)/cpu/m68000 -Isrc/cpu/m68000
 
 ifdef SYMBOLS
-CFLAGS += -O0 -Werror -Wall -Wno-unused -g
+CFLAGS += -O0 -Wall -Wno-unused -g
 else
 CFLAGS += -DNDEBUG \
 	$(ARCH) -O3 -fomit-frame-pointer -fstrict-aliasing \
-	-Werror -Wall -Wno-sign-compare -Wunused \
+	-Wall -Wno-sign-compare -Wunused \
 	-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
 	-Wshadow -Wstrict-prototypes -Wundef \
 	-Wformat-security -Wwrite-strings \
@@ -194,7 +170,7 @@ chdman$(EXE): $(OBJ)/chdman.o $(OBJ)/chd.o $(OBJ)/md5.o $(OBJ)/sha1.o $(OBJ)/ver
 
 xml2info$(EXE): src/xml2info/xml2info.c
 	@echo Compiling $@...
-	$(CC) -O1 -o xml2info$(EXE) $<
+	$(NATIVECC) -O1 -o xml2info$(EXE) $<
 
 ifdef PERL
 $(OBJ)/cpuintrf.o: src/cpuintrf.c rules.mak
@@ -222,20 +198,20 @@ $(OBJ)/cpu/m68000/m68kcpu.o: $(OBJ)/cpu/m68000/m68kmake$(EXE)
 # generate C source files for the 68000 emulator
 $(OBJ)/cpu/m68000/m68kmake$(EXE): src/cpu/m68000/m68kmake.c
 	@echo M68K make $<...
-	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) -DDOS -o $(OBJ)/cpu/m68000/m68kmake$(EXE) $<
+	$(NATIVECC) $(CDEFS) $(CFLAGSPEDANTIC) -DDOS -o $(OBJ)/cpu/m68000/m68kmake$(EXE) $<
 	@echo Generating M68K source files...
 	$(OBJ)/cpu/m68000/m68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/m68k_in.c
 
 # generate asm source files for the 68000/68020 emulators
 $(OBJ)/cpu/m68000/68000.asm:  src/cpu/m68000/make68k.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $<
+	$(NATIVECC) $(CDEFS) $(CFLAGSPEDANTIC) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $<
 	@echo Generating $@...
 	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68000tab.asm 00
 
 $(OBJ)/cpu/m68000/68020.asm:  src/cpu/m68000/make68k.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $<
+	$(NATIVECC) $(CDEFS) $(CFLAGSPEDANTIC) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $<
 	@echo Generating $@...
 	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68020tab.asm 20
 
