@@ -28,7 +28,8 @@ else ifeq ($(platform), android)
    CC = arm-linux-androideabi-gcc
    AR = arm-linux-androideabi-ar
    LD = arm-linux-androideabi-gcc
-   CFLAGS += -fPIC
+   CFLAGS += -fPIC 
+   PLATCFLAGS += -march=armv7-a -Dstricmp=strcasecmp
    LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
 else
    CC = gcc

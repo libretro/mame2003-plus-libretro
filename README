@@ -2,9 +2,9 @@ Proof on concept
 Based on MAME 0.78
 
 Build with 'make MAMEOS=libretro'.
-Tested for osx and linux.
+Tested for OS X, linux and Android (arm-v7a).
 
-Will have error on 64-bit platforms.
+Will have errors on 64-bit platforms. Will have errors on platforms without unaligned memory access support.
 The output file will always be 'mame.exe' but it will be a proper library.
 You will get an error at the end of the build as it tries to run mame.exe, which isn't a program binary.
 When using concurrent building you may get an error that it can't create certain object files, just rerun make it it happens.

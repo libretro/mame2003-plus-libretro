@@ -156,7 +156,7 @@ CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 # primary target
 $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS)
 # always recompile the version string
-	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) -c src/version.c -o $(OBJ)/version.o
+	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) $(PLATCFLAGS) -c src/version.c -o $(OBJ)/version.o
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) -o $@ $(MAPFLAGS)
 
@@ -181,16 +181,16 @@ endif
 
 $(OBJ)/$(MAMEOS)/%.o: src/$(MAMEOS)/%.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: src/%.c
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) $(PLATCFLAGS) -c $< -o $@
 
 # compile generated C files for the 68000 emulator
 $(M68000_GENERATED_OBJS): $(OBJ)/cpu/m68000/m68kmake$(EXE)
 	@echo Compiling $(subst .o,.c,$@)...
-	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) -c $*.c -o $@
+	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) $(PLATCFLAGS) -c $*.c -o $@
 
 # additional rule, because m68kcpu.c includes the generated m68kops.h :-/
 $(OBJ)/cpu/m68000/m68kcpu.o: $(OBJ)/cpu/m68000/m68kmake$(EXE)
