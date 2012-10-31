@@ -13,7 +13,7 @@
 
 
 /* math trickery */
-#ifndef _WIN32
+#if !defined(_WIN32) || defined(__LIBRETRO__) // HACK: No controlfp 
 #define SETUP_FPU()
 #define RESTORE_FPU()
 #define TRUNC_TO_INT(f) (float) (floor(f))

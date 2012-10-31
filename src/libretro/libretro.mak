@@ -21,7 +21,7 @@ ifeq ($(platform), unix)
    CFLAGS += -fPIC
    LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
 else ifeq ($(platform), osx)
-   CC = clang
+   CC = gcc
    CFLAGS += -fPIC -m32 -Dstricmp=strcasecmp
    LDFLAGS += -fPIC -dynamiclib -m32
 else ifeq ($(platform), android)

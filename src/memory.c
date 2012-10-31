@@ -863,6 +863,13 @@ UINT8 alloc_new_subtable(const struct memport_data *memport, struct table_data *
 	if (tabledata->subtable_count + 1 == SUBTABLE_COUNT)
 		fatalerror("error: ran out of memory subtables\n");
 
+
+#ifdef __LIBRETRO__ // HACK: Don't use realloc
+    if(tabledata->subtable_alloc < SUBTABLE_COUNT)
+    {
+        tabledata->subtable_alloc = SUBTABLE_COUNT;
+    }
+#else
 	/* allocate more memory if we need to */
 	if (tabledata->subtable_count <= tabledata->subtable_alloc)
 	{
@@ -871,6 +878,7 @@ UINT8 alloc_new_subtable(const struct memport_data *memport, struct table_data *
 		if (!tabledata->table)
 			fatalerror("error: ran out of memory allocating memory subtable\n");
 	}
+#endif
 
 	/* initialize the table entries */
 	memset(&tabledata->table[(1 << l1bits) + (tabledata->subtable_count << l2bits)], previous_value, 1 << l2bits);
@@ -1129,8 +1137,14 @@ static int init_memport(int cpunum, struct memport_data *data, int abits, int db
 	data->mask = 0xffffffffUL >> (32 - abits);
 
 	/* allocate memory */
+#ifdef __LIBRETRO__ // HACK: Don't use realloc
+	data->read.table = malloc(1024*1024);
+	data->write.table = malloc(1024*1024);
+#else
 	data->read.table = malloc(1 << LEVEL1_BITS(data->ebits));
 	data->write.table = malloc(1 << LEVEL1_BITS(data->ebits));
+#endif
+
 	if (!data->read.table)
 		return fatalerror("cpu #%d couldn't allocate read table\n", cpunum);
 	if (!data->write.table)
