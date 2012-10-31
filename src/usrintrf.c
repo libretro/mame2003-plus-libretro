@@ -4039,6 +4039,14 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	if (setup_selected == 0 && input_ui_pressed(IPT_UI_CANCEL))
 		return 1;
 
+#ifdef __LIBRETRO__ // Leave if the frontend said too
+    extern int FRONTENDwantsExit;
+    if(FRONTENDwantsExit)
+    {
+        return 1;
+    }	
+#endif
+
 	if (setup_selected == 0 && input_ui_pressed(IPT_UI_CONFIGURE))
 	{
 		setup_selected = -1;

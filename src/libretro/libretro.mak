@@ -2,7 +2,7 @@
 # the first two targets generate the prefix.h header
 # note this requires that OSOBJS be the first target
 #
-OSOBJS = $(OBJ)/libretro/libretro.o $(OBJ)/libretro/osd.o $(OBJ)/libretro/keyboard.o
+OSOBJS = $(OBJ)/libretro/libretro.o $(OBJ)/libretro/osd.o $(OBJ)/libretro/keyboard.o $(OBJ)/libretro/joystick.o
 
 ifeq ($(platform),)
 platform = unix
@@ -22,8 +22,8 @@ ifeq ($(platform), unix)
    LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
 else ifeq ($(platform), osx)
    CC = gcc
-   CFLAGS += -fPIC -Dstricmp=strcasecmp
-   LDFLAGS += -fPIC -dynamiclib 
+   CFLAGS += -fPIC -Dstricmp=strcasecmp -m32
+   LDFLAGS += -fPIC -dynamiclib -m32
 else ifeq ($(platform), android)
    CC = arm-linux-androideabi-gcc
    AR = arm-linux-androideabi-ar

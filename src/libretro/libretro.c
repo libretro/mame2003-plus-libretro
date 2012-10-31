@@ -6,7 +6,7 @@
 #include "mame.h"
 #include "driver.h"
 
-#if 0
+#if 1
 # define LOG(msg) fprintf(stderr, "%s\n", msg)
 #else
 # define LOG(msg)
@@ -22,9 +22,11 @@ retro_environment_t environ_cb = NULL;
 
 //
 
-static bool FRONTENDwantsExit;
+int FRONTENDwantsExit;
+static bool hasExited;
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
+extern int retroJsState[16];
 extern struct osd_create_params videoConfig;
 
 cothread_t mainThread;
@@ -45,6 +47,8 @@ void retro_wrap_emulator()
     {
         environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, 0);
     }
+        
+    hasExited = 1;
         
     // We're done here
     co_switch(mainThread);
@@ -115,7 +119,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
         info->geometry.max_height = height;
         info->geometry.aspect_ratio = (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
         info->timing.fps = videoConfig.fps;
-        info->timing.sample_rate = 44100.0;
+        info->timing.sample_rate = 48000.0;
     }
     else
     {
@@ -146,6 +150,14 @@ void retro_deinit(void)
 {
     if(emuThread)
     {
+        if(!hasExited)
+        {
+            LOG("retro_deinit called before MAME has shutdown.");
+        }
+    
+        co_delete(emuThread);
+        emuThread = 0;
+    
         free(systemDir);
         systemDir = 0;
     }
@@ -173,17 +185,27 @@ void retro_run (void)
     {
         poll_cb();
         
+        // Keyboard
         const struct KeyboardInfo* thisInput = retroKeys;
         while(thisInput->name)
         {
             retroKeyState[thisInput->code] = input_cb(0, RETRO_DEVICE_KEYBOARD, 0, thisInput->code);
             thisInput ++;
         }
+
+        // Joystick
+        for(int i = 0; i != 16; i ++)
+        {
+            retroJsState[i] = input_cb(0, RETRO_DEVICE_JOYPAD, 0, i);
+        }
     
         co_switch(emuThread);
         
-        video_cb(videoBuffer, videoConfig.width, videoConfig.height, videoConfig.width * 2);
-        audio_batch_cb(XsoundBuffer, 735);
+        if(!hasExited)
+        {
+            video_cb(videoBuffer, videoConfig.width, videoConfig.height, videoConfig.width * 2);
+            audio_batch_cb(XsoundBuffer, 800);
+        }
     }
     else
     {
@@ -214,6 +236,8 @@ bool retro_load_game(const struct retro_game_info *game)
         }
     
         // Load emu
+            options.samplerate = 48000;
+
         co_switch(emuThread);
         
         // Setup Rotation
@@ -238,7 +262,7 @@ void retro_unload_game(void)
     if(emuThread)
     {
         FRONTENDwantsExit = true;
-        // TODO
+        co_switch(emuThread);
     }
     else
     {

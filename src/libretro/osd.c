@@ -152,20 +152,30 @@ const char *osd_get_fps_text(const struct performance_info *performance){return 
 
 ******************************************************************************/
 
-int osd_start_audio_stream(int stereo)
+static bool stereo;
+
+int osd_start_audio_stream(int aStereo)
 {
-    return 800; // ?
+    stereo = (aStereo != 0);
+    return 800;
 }
 
 int osd_update_audio_stream(INT16 *buffer)
 {
-    for(int i = 0; i != 735; i ++)
+    if(stereo)
     {
-        XsoundBuffer[i * 2 + 0] = buffer[i];
-        XsoundBuffer[i * 2 + 1] = buffer[i];
+        memcpy(XsoundBuffer, buffer, 800 * 4);
+    }
+    else
+    {
+        for(int i = 0; i != 800; i ++)
+        {
+            XsoundBuffer[i * 2 + 0] = buffer[i];
+            XsoundBuffer[i * 2 + 1] = buffer[i];
+        }    
     }
 
-    return 800; // ?
+    return 800;
 }
 
 void osd_stop_audio_stream(void)
@@ -184,34 +194,6 @@ int osd_get_mastervolume(void)
 void osd_sound_enable(int enable)
 {
 }
-
-
-
-
-/******************************************************************************
-
-	Joystick & Mouse/Trackball
-
-******************************************************************************/
-
-struct JoystickInfo jsItems[1] = {};
-
-const struct JoystickInfo *osd_get_joy_list(void)
-{
-    return jsItems;
-}
-
-int osd_is_joy_pressed(int joycode) {return 0;}
-int osd_is_joystick_axis_code(int joycode) {return 0;}
-int osd_joystick_needs_calibration(void){return 0;}
-void osd_joystick_start_calibration(void){}
-const char *osd_joystick_calibrate_next(void){return "";}
-void osd_joystick_calibrate(void){};
-void osd_joystick_end_calibration(void){};
-void osd_lightgun_read(int player, int *deltax, int *deltay){};
-void osd_trak_read(int player, int *deltax, int *deltay){};
-void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES]){}
-void osd_customize_inputport_defaults(struct ipd *defaults){}
 
 
 
