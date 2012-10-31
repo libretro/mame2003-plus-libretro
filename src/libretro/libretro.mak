@@ -22,8 +22,8 @@ ifeq ($(platform), unix)
    LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
 else ifeq ($(platform), osx)
    CC = gcc
-   CFLAGS += -fPIC -m32 -Dstricmp=strcasecmp
-   LDFLAGS += -fPIC -dynamiclib -m32
+   CFLAGS += -fPIC -Dstricmp=strcasecmp
+   LDFLAGS += -fPIC -dynamiclib 
 else ifeq ($(platform), android)
    CC = arm-linux-androideabi-gcc
    AR = arm-linux-androideabi-ar

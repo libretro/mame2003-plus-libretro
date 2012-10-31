@@ -1,0 +1,14 @@
+Proof on concept
+Based on MAME 0.78
+
+Build with 'make MAMEOS=libretro'.
+Tested for osx and linux.
+
+Might have errors on 64-bit. (Seems to work but there's a lot of casting pointers to 32-bits).
+The output file will always be 'mame.exe' but it will be a proper library.
+You will get an error at the end of the build as it tries to run mame.exe, which isn't a program binary.
+When using concurrent building you may get an error that it can't create certain object files, just rerun make it it happens.
+No libretro Joystick support (Keyboard only).
+No Sound support.
+
+To use you must have a system directory set with your games in the 'rom' folder. The driver name loaded is based on the name of the file you load.

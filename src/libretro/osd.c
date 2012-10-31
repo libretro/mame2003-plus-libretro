@@ -346,7 +346,7 @@ void CLIB_DECL osd_die(const char *text,...)
 
 void CLIB_DECL logerror(const char *text,...)
 {
-#if 1
+#if 0
     va_list args;
     va_start (args, text);
     vfprintf (stderr, text, args);
