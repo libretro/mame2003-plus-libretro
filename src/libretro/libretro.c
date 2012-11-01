@@ -67,7 +67,7 @@ int FRONTENDwantsExit;
 static bool hasExited;
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
-extern int retroJsState[16];
+extern int retroJsState[64];
 extern struct osd_create_params videoConfig;
 
 cothread_t mainThread;
@@ -233,9 +233,13 @@ void retro_run (void)
         }
 
         // Joystick
-        for(int i = 0; i != 16; i ++)
+        int* jsState = retroJsState;
+        for(int i = 0; i != 4; i ++)
         {
-            retroJsState[i] = input_cb(0, RETRO_DEVICE_JOYPAD, 0, i);
+            for(int j = 0; j != 16; j ++)
+            {
+                *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
+            }
         }
     
         co_switch(emuThread);

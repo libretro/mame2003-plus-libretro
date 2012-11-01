@@ -11,7 +11,7 @@
 ******************************************************************************/
 
 extern const struct JoystickInfo jsItems[];
-int retroJsState[16];
+int retroJsState[64];
 
 const struct JoystickInfo *osd_get_joy_list(void)
 {
@@ -26,31 +26,6 @@ int osd_is_joy_pressed(int joycode)
 int osd_is_joystick_axis_code(int joycode)
 {
     return 0;
-}
-
-int osd_joystick_needs_calibration(void)
-{
-    return 0;
-}
-
-void osd_joystick_start_calibration(void)
-{
-
-}
-
-const char *osd_joystick_calibrate_next(void)
-{
-    return 0;
-}
-
-void osd_joystick_calibrate(void)
-{
-
-}
-
-void osd_joystick_end_calibration(void)
-{
-
 }
 
 void osd_lightgun_read(int player, int *deltax, int *deltay)
@@ -73,30 +48,44 @@ void osd_customize_inputport_defaults(struct ipd *defaults)
 
 }
 
+// These calibration functions should never actually be used (as long as needs_calibration returns 0 anyway).
+int osd_joystick_needs_calibration(void) { return 0; }
+void osd_joystick_start_calibration(void){ }
+const char *osd_joystick_calibrate_next(void) { return 0; }
+void osd_joystick_calibrate(void) { }
+void osd_joystick_end_calibration(void) { }
+
+
 /******************************************************************************
 
 	Keymapping
 
 ******************************************************************************/
 
+#define EMIT_RETRO_PAD(INDEX) \
+    {"P" #INDEX " Left", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_LEFT, JOYCODE_##INDEX##_LEFT}, \
+    {"P" #INDEX " Right", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_RIGHT, JOYCODE_##INDEX##_RIGHT}, \
+    {"P" #INDEX " Up", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_UP, JOYCODE_##INDEX##_UP}, \
+    {"P" #INDEX " Down", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_DOWN, JOYCODE_##INDEX##_DOWN}, \
+    {"P" #INDEX " B", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_B, JOYCODE_##INDEX##_BUTTON1}, \
+    {"P" #INDEX " Y", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_Y, JOYCODE_##INDEX##_BUTTON2}, \
+    {"P" #INDEX " X", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_X, JOYCODE_##INDEX##_BUTTON3}, \
+    {"P" #INDEX " A", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_A, JOYCODE_##INDEX##_BUTTON4}, \
+    {"P" #INDEX " L", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_L, JOYCODE_##INDEX##_BUTTON5}, \
+    {"P" #INDEX " R", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_R, JOYCODE_##INDEX##_BUTTON6}, \
+    {"P" #INDEX " L2", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_L2, JOYCODE_##INDEX##_BUTTON7}, \
+    {"P" #INDEX " R2", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_R2, JOYCODE_##INDEX##_BUTTON8}, \
+    {"P" #INDEX " L3", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_L3, JOYCODE_##INDEX##_BUTTON9}, \
+    {"P" #INDEX " R3", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_R3, JOYCODE_##INDEX##_BUTTON10}, \
+    {"P" #INDEX " Start", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_START, JOYCODE_##INDEX##_START}, \
+    {"P" #INDEX " Select", ((INDEX - 1) * 16) + RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_##INDEX##_SELECT}
+
+
 const struct JoystickInfo jsItems[] =
 {
-    // Player 1
-    {"P1 Left", RETRO_DEVICE_ID_JOYPAD_LEFT, JOYCODE_1_LEFT},
-    {"P1 Right", RETRO_DEVICE_ID_JOYPAD_RIGHT, JOYCODE_1_RIGHT},
-    {"P1 Up", RETRO_DEVICE_ID_JOYPAD_UP, JOYCODE_1_UP},
-    {"P1 Down", RETRO_DEVICE_ID_JOYPAD_DOWN, JOYCODE_1_DOWN},
-    {"P1 B", RETRO_DEVICE_ID_JOYPAD_B, JOYCODE_1_BUTTON1},
-    {"P1 Y", RETRO_DEVICE_ID_JOYPAD_Y, JOYCODE_1_BUTTON2},
-    {"P1 X", RETRO_DEVICE_ID_JOYPAD_X, JOYCODE_1_BUTTON3},
-    {"P1 A", RETRO_DEVICE_ID_JOYPAD_A, JOYCODE_1_BUTTON4},
-    {"P1 L", RETRO_DEVICE_ID_JOYPAD_L, JOYCODE_1_BUTTON5},
-    {"P1 R", RETRO_DEVICE_ID_JOYPAD_R, JOYCODE_1_BUTTON6},
-    {"P1 L2", RETRO_DEVICE_ID_JOYPAD_L2, JOYCODE_1_BUTTON7},
-    {"P1 R2", RETRO_DEVICE_ID_JOYPAD_R2, JOYCODE_1_BUTTON8},
-    {"P1 L3", RETRO_DEVICE_ID_JOYPAD_L3, JOYCODE_1_BUTTON9},
-    {"P1 R3", RETRO_DEVICE_ID_JOYPAD_R3, JOYCODE_1_BUTTON10},
-    {"P1 Start", RETRO_DEVICE_ID_JOYPAD_START, JOYCODE_1_START},
-    {"P1 Select", RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_1_SELECT},
+    EMIT_RETRO_PAD(1),
+    EMIT_RETRO_PAD(2),
+    EMIT_RETRO_PAD(3),
+    EMIT_RETRO_PAD(4),
     {0, 0, 0}
 };
