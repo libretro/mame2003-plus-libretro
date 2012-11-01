@@ -6,6 +6,7 @@
 #include "common.h"
 #include "mame.h"
 #include "usrintrf.h"
+#include "driver.h"
 
 extern cothread_t mainThread;
 extern cothread_t emuThread;
@@ -13,6 +14,9 @@ extern uint16_t videoBuffer[1024*1024];
 struct osd_create_params videoConfig;
 
 // TODO: This seems to work so far, but could be better
+
+static unsigned totalColors;
+static uint32_t* convertedPalette;
 
 int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_components)
 {
@@ -47,7 +51,9 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
 
 void osd_close_display(void)
 {
-
+    free(convertedPalette);
+    convertedPalette = 0;
+    totalColors = 0;
 }
 
 int osd_skip_this_frame(void)
@@ -56,27 +62,23 @@ int osd_skip_this_frame(void)
 }
 
 // But mummy I wan't to use templates
-#define PALETTE_COPY(OTYPE, RLOSS, RMASK, RPOS, GLOSS, GMASK, GPOS, BLOSS, BMASK, BPOS) \
+#define PALETTE_COPY(OTYPE) \
 { \
     OTYPE* output = (OTYPE*)videoBuffer; \
     const uint32_t x = display->game_visible_area.min_x; \
     const uint32_t y = display->game_visible_area.min_y; \
     const uint32_t width = display->game_bitmap->width; \
     const uint32_t height = display->game_bitmap->height; \
-    const uint16_t* const input = display->game_bitmap->base; \
     const uint32_t pitch = display->game_bitmap->rowpixels; \
+    const uint16_t* const input = &((uint16_t*)display->game_bitmap->base)[y * pitch + x]; \
  \
     for(int i = 0; i != height; i ++) \
     { \
-        const uint16_t* inputLine = &input[(i + y) * pitch + x]; \
+        const uint16_t* inputLine = &input[i * pitch]; \
  \
         for(int j = 0; j != width; j ++) \
         { \
-            const uint32_t color = display->game_palette[*inputLine ++]; \
-            const uint32_t r = ((color >> (16 + RLOSS)) & RMASK) << RPOS; \
-            const uint32_t g = ((color >>  (8 + GLOSS)) & GMASK) << GPOS; \
-            const uint32_t b = ((color >>  (0 + BLOSS)) & BMASK) << BPOS; \
-            output[i * videoConfig.width + j] = r | g | b; \
+            output[i * videoConfig.width + j] = convertedPalette[*inputLine++]; \
         } \
     } \
 }
@@ -115,55 +117,97 @@ int osd_skip_this_frame(void)
 
 #define SIMPLE_DIRECT_COPY(OTYPE) DIRECT_COPY(OTYPE, OTYPE, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
+static uint32_t rgb32toNeeded(uint32_t aColor)
+{
+    extern unsigned retroColorMode;
+    
+    if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
+    {
+        return aColor;
+    }
+    else
+    {
+        const uint32_t r = (aColor >> 19) & 0x1F;
+        const uint32_t g = (aColor >> 11) & 0x1F;
+        const uint32_t b = (aColor >>  3) & 0x1F;
+        const int rgExtra = (RETRO_PIXEL_FORMAT_RGB565 == retroColorMode) ? 1 : 0;
+        
+        return (r << (10 + rgExtra)) | (g << (5 + rgExtra)) | b;
+    }
+}
+
 void osd_update_video_and_audio(struct mame_display *display)
 {
-    // Update UI area
-	if (display->changed_flags & GAME_VISIBLE_AREA_CHANGED)
-	{
-    	set_ui_visarea(display->game_visible_area.min_x, display->game_visible_area.min_y, display->game_visible_area.max_x, display->game_visible_area.max_y);
-    }
-
-    extern unsigned retroColorMode;
-
-    if(display->game_bitmap->depth == 16)
-    {
-        if(RETRO_PIXEL_FORMAT_0RGB1555 == retroColorMode)
+    if(display->changed_flags & 0xF)
+    {    
+        // Update UI area
+        if(display->changed_flags & GAME_VISIBLE_AREA_CHANGED)
         {
-            PALETTE_COPY(uint16_t, 3, 0x1F, 10, 3, 0x1F, 5, 3, 0x1F, 0);
+            set_ui_visarea(display->game_visible_area.min_x, display->game_visible_area.min_y, display->game_visible_area.max_x, display->game_visible_area.max_y);
         }
-        else if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
+        
+        // Update palette
+        if(display->changed_flags & GAME_PALETTE_CHANGED)
         {
-            PALETTE_COPY(uint32_t, 0, 0xFF, 16, 0, 0xFF, 8, 0, 0xFF, 0);        
+            if(display->game_palette_entries > totalColors)
+            {
+                totalColors = display->game_palette_entries;
+                free(convertedPalette);
+                convertedPalette = malloc(4 * display->game_palette_entries + (32 * 4));
+            }
+        
+            for(int i = 0; i < display->game_palette_entries; i += 32)
+            {
+                UINT32 dirtyField = display->game_palette_dirty[i / 32];
+                
+                for(int j = 0; dirtyField; j ++, dirtyField >>= 1)
+                {
+                    if(dirtyField & 1)
+                    {
+                        convertedPalette[i + j] = rgb32toNeeded(display->game_palette[i + j]);
+                    }
+                }
+            }
         }
-        else
+    
+        extern unsigned retroColorMode;
+    
+        if(display->game_bitmap->depth == 16)
         {
-            PALETTE_COPY(uint16_t, 3, 0x1F, 11, 2, 0x3F, 5, 3, 0x1F, 0);        
+            if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
+            {
+                PALETTE_COPY(uint32_t);
+            }
+            else
+            {
+                PALETTE_COPY(uint16_t);
+            }
         }
-    }
-    else if(display->game_bitmap->depth == 32)
-    {
-        if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
+        else if(display->game_bitmap->depth == 32)
         {
-            SIMPLE_DIRECT_COPY(uint32_t);
+            if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
+            {
+                SIMPLE_DIRECT_COPY(uint32_t);
+            }
+            else if(RETRO_PIXEL_FORMAT_0RGB1555 == retroColorMode)
+            {
+                DIRECT_COPY(uint16_t, uint32_t, 1, 19, 0x1F, 10, 11, 0x1F, 5, 3, 0x1F, 0);
+            }
+            else
+            {
+                DIRECT_COPY(uint16_t, uint32_t, 1, 19, 0x1F, 11, 10, 0x3F, 5, 3, 0x1F, 0);        
+            }
         }
-        else if(RETRO_PIXEL_FORMAT_0RGB1555 == retroColorMode)
+        else if(display->game_bitmap->depth == 15)
         {
-            DIRECT_COPY(uint16_t, uint32_t, 1, 19, 0x1F, 10, 11, 0x1F, 5, 3, 0x1F, 0);
-        }
-        else
-        {
-            DIRECT_COPY(uint16_t, uint32_t, 1, 19, 0x1F, 11, 10, 0x3F, 5, 3, 0x1F, 0);        
-        }
-    }
-    else if(display->game_bitmap->depth == 15)
-    {
-        if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
-        {
-            DIRECT_COPY(uint32_t, uint16_t, 1, 10, 0x1F, 19, 5, 0x1F, 11, 0, 0x1F, 3);
-        }
-        else 
-        {
-            SIMPLE_DIRECT_COPY(uint16_t);
+            if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
+            {
+                DIRECT_COPY(uint32_t, uint16_t, 1, 10, 0x1F, 19, 5, 0x1F, 11, 0, 0x1F, 3);
+            }
+            else 
+            {
+                SIMPLE_DIRECT_COPY(uint16_t);
+            }
         }
     }
     
