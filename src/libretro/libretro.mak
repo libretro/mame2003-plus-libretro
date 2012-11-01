@@ -1,7 +1,3 @@
-# only Windows specific output files and rules
-# the first two targets generate the prefix.h header
-# note this requires that OSOBJS be the first target
-#
 OSOBJS = $(OBJ)/libretro/libretro.o $(OBJ)/libretro/osd.o $(OBJ)/libretro/keyboard.o $(OBJ)/libretro/joystick.o
 
 ifeq ($(platform),)
@@ -18,22 +14,29 @@ endif
 endif
 
 ifeq ($(platform), unix)
+   EMULATOR = libretro.so
+
    CFLAGS += -fPIC
    LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
 else ifeq ($(platform), osx)
-   CC = gcc
+   EMULATOR = libretro.dylib
+
    CFLAGS += -fPIC -Dstricmp=strcasecmp -m32
    LDFLAGS += -fPIC -dynamiclib -m32
 else ifeq ($(platform), android)
-   CC = arm-linux-androideabi-gcc
-   AR = arm-linux-androideabi-ar
-   LD = arm-linux-androideabi-gcc
+   EMULATOR = libretro_mame.so
+
    CFLAGS += -fPIC 
    PLATCFLAGS += -march=armv7-a -Dstricmp=strcasecmp
    LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
+
+   CC = arm-linux-androideabi-gcc
+   AR = arm-linux-androideabi-ar
+   LD = arm-linux-androideabi-gcc
 else
-   CC = gcc
-   CFLAGS += -fPIC
+   EMULATOR = retro.dll
+   EXE = .exe
+   
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=libretro/link.T
 endif
 

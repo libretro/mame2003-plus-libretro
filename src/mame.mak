@@ -1099,9 +1099,3 @@ $(OBJ)/other.a: \
 
 COREOBJS += $(OBJ)/driver.o $(OBJ)/cheat.o
 
-# generated text files
-TEXTS += gamelist.txt
-
-gamelist.txt: $(EMULATOR)
-	@echo Generating $@...
-	@$(CURPATH)$(EMULATOR) -gamelist -noclones -sortname > docs/gamelist.txt

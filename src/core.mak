@@ -33,4 +33,3 @@ COREOBJS = $(OBJ)/version.o $(OBJ)/mame.o \
 	$(OBJ)/x86drc.o \
 	$(sort $(DBGOBJS))
 
-TOOLS = romcmp$(EXE) chdman$(EXE) xml2info$(EXE)

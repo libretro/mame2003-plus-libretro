@@ -14,9 +14,6 @@ endif
 # uncomment next line to include the symbols for symify
 # SYMBOLS = 1
 
-# uncomment next line to generate a link map for exception handling in windows
-# MAP = 1
-
 # uncomment next line to use Assembler 68000 engine
 # X86_ASM_68000 = 1
 
@@ -29,16 +26,7 @@ X86_MIPS3_DRC = 1
 # uncomment next line to use cygwin compiler
 # COMPILESYSTEM_CYGWIN	= 1
 
-
-# set this the operating system you're building for
-# MAMEOS = msdos
-# MAMEOS = windows
-ifeq ($(MAMEOS),)
-MAMEOS = windows
-endif
-
-# extension for executables
-EXE = .exe
+MAMEOS = libretro
 
 # CPU core include paths
 VPATH=src $(wildcard src/cpu/*)
@@ -52,7 +40,6 @@ ASM = @nasm
 ASMFLAGS = -f coff
 MD = -mkdir
 RM = @rm -f
-#PERL = @perl -w
 
 
 ifeq ($(MAMEOS),msdos)
@@ -61,14 +48,9 @@ else
 PREFIX =
 endif
 
-NAME = mame
-
 # build the targets in different object dirs, since mess changes
 # some structures and thus they can't be linked against each other.
-OBJ = obj/$(NAME)
-
-EMULATOR = $(NAME)$(EXE)
-
+OBJ = obj/mame
 DEFS = -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__
 
 CFLAGS = -std=gnu99 -Isrc -Isrc/includes -Isrc/$(MAMEOS) -I$(OBJ)/cpu/m68000 -Isrc/cpu/m68000
@@ -101,19 +83,6 @@ CFLAGSOSDEPEND = $(CFLAGS)
 # the windows osd code at least cannot be compiled with -pedantic
 CFLAGSPEDANTIC = $(CFLAGS) -pedantic
 
-ifdef SYMBOLS
-LDFLAGS =
-else
-#LDFLAGS = -s -Wl,--warn-common
-LDFLAGS = -s
-endif
-
-ifdef MAP
-MAPFLAGS = -Wl,-M >$(NAME).map
-else
-MAPFLAGS =
-endif
-
 # platform .mak files will want to add to this
 LIBS = -lz
 
@@ -128,13 +97,13 @@ ifeq ($(TARGET),mmsnd)
 OBJDIRS	+= $(OBJ)/mmsnd $(OBJ)/mmsnd/machine $(OBJ)/mmsnd/drivers $(OBJ)/mmsnd/sndhrdw
 endif
 
-all:	maketree $(EMULATOR) extra
+include src/$(MAMEOS)/$(MAMEOS).mak
+all:	maketree $(EMULATOR)
 
 # include the various .mak files
 include src/core.mak
 include src/$(TARGET).mak
 include src/rules.mak
-include src/$(MAMEOS)/$(MAMEOS).mak
 
 ifdef DEBUG
 DBGDEFS = -DMAME_DEBUG
@@ -148,8 +117,6 @@ CFLAGS	+= -mno-cygwin
 LDFLAGS	+= -mno-cygwin
 endif
 
-extra:	$(TOOLS) $(TEXTS)
-
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 
@@ -158,26 +125,7 @@ $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS)
 # always recompile the version string
 	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) $(PLATCFLAGS) -c src/version.c -o $(OBJ)/version.o
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) -o $@ $(MAPFLAGS)
-
-romcmp$(EXE): $(OBJ)/romcmp.o $(OBJ)/unzip.o
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ -lz -o $@
-
-chdman$(EXE): $(OBJ)/chdman.o $(OBJ)/chd.o $(OBJ)/md5.o $(OBJ)/sha1.o $(OBJ)/version.o
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ -lz -o $@
-
-xml2info$(EXE): src/xml2info/xml2info.c
-	@echo Compiling $@...
-	$(NATIVECC) -O1 -o xml2info$(EXE) $<
-
-ifdef PERL
-$(OBJ)/cpuintrf.o: src/cpuintrf.c rules.mak
-	$(PERL) src/makelist.pl
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) -c $< -o $@
-endif
+	$(LD) $(LDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) -o $@
 
 $(OBJ)/$(MAMEOS)/%.o: src/$(MAMEOS)/%.c
 	@echo Compiling $<...
@@ -248,10 +196,5 @@ clean68k:
 	$(RM) -r $(OBJ)/cpuintrf.o
 	$(RM) -r $(OBJ)/drivers/cps2.o
 	$(RM) -r $(OBJ)/cpu/m68000
-
-check: $(EMULATOR) xml2info$(EXE)
-	./$(EMULATOR) -listxml > $(NAME).xml
-	./xml2info < $(NAME).xml > $(NAME).lst
-	./xmllint --valid --noout $(NAME).xml
 
 
