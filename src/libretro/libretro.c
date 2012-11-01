@@ -21,6 +21,47 @@ static retro_audio_sample_batch_t audio_batch_cb = NULL;
 retro_environment_t environ_cb = NULL;
 
 //
+static int getDriverIndex(const char* aPath)
+{
+    char driverName[128];
+    const char* lastSlash = strrchr(aPath, '/');
+    const char* const lastSlashWindows = strrchr(aPath, '\\');
+    
+    if(!lastSlash && lastSlashWindows)
+    {
+        lastSlash = lastSlashWindows;
+    }
+    else if(lastSlash && lastSlashWindows && (lastSlashWindows > lastSlash))
+    {
+        lastSlash = lastSlashWindows;
+    }
+
+    memset(driverName, 0, sizeof(driverName));
+
+    if(NULL != lastSlash)
+    {
+        strncpy(driverName, lastSlash + 1, sizeof(driverName) - 1);
+        
+        char* const firstDot = strchr(driverName, '.');
+        if(firstDot)
+        {
+            *firstDot = 0;
+        }
+                
+        for(int i = 0; drivers[i]; i ++)
+        {
+            if(0 == strcmp(driverName, drivers[i]->name))
+            {
+                return i;
+            }
+        }
+    }
+    
+    return -1;
+}
+static int driverIndex; //< Index of mame game loaded
+
+//
 
 int FRONTENDwantsExit;
 static bool hasExited;
@@ -32,13 +73,11 @@ extern struct osd_create_params videoConfig;
 cothread_t mainThread;
 cothread_t emuThread;
 
-int driverIndex; //< Index of mame game loaded
-
 int16_t XsoundBuffer[2048];
 uint16_t videoBuffer[1024*1024];
 char* systemDir;
 
-void retro_wrap_emulator()
+void retro_wrap_emulator(void)
 {
     run_game(driverIndex);
     
@@ -219,36 +258,29 @@ bool retro_load_game(const struct retro_game_info *game)
     if(emuThread)
     {
         // Find game index
-        char* gameName = strdup(strrchr(game->path, '/') + 1);
-        *strrchr(gameName, '.') = 0;
-
-        for(driverIndex = 0;; driverIndex ++)
+        driverIndex = getDriverIndex(game->path);
+        
+        if(0 <= driverIndex)
         {
-            if(drivers[driverIndex] && (0 == strcmp(gameName, drivers[driverIndex]->name)))
-            {
-                break;
-            }
-        }
+            // Load emu
+            options.samplerate = 48000;
     
-        if(!drivers[driverIndex])
+            co_switch(emuThread);
+            
+            // Setup Rotation
+            const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
+            unsigned rotateMode = 0;
+            rotateMode = (ROT270 == orientation) ? 1 : rotateMode;
+            rotateMode = (ROT180 == orientation) ? 2 : rotateMode;
+            rotateMode = (ROT90 == orientation) ? 3 : rotateMode;
+            environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
+            
+            return true;
+        }
+        else
         {
             return false;
         }
-    
-        // Load emu
-            options.samplerate = 48000;
-
-        co_switch(emuThread);
-        
-        // Setup Rotation
-        const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
-        unsigned rotateMode = 0;
-        rotateMode = (ROT270 == orientation) ? 1 : rotateMode;
-        rotateMode = (ROT180 == orientation) ? 2 : rotateMode;
-        rotateMode = (ROT90 == orientation) ? 3 : rotateMode;
-        environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
-        
-        return true;
     }
     else
     {
