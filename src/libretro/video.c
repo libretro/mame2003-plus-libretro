@@ -11,6 +11,8 @@
 extern cothread_t mainThread;
 extern cothread_t emuThread;
 extern uint16_t videoBuffer[1024*1024];
+extern unsigned videoBufferWidth;
+extern unsigned videoBufferHeight;
 struct osd_create_params videoConfig;
 
 // TODO: This seems to work so far, but could be better
@@ -65,52 +67,41 @@ int osd_skip_this_frame(void)
 #define PALETTE_COPY(OTYPE) \
 { \
     OTYPE* output = (OTYPE*)videoBuffer; \
-    const uint32_t x = display->game_visible_area.min_x; \
-    const uint32_t y = display->game_visible_area.min_y; \
-    const uint32_t width = display->game_bitmap->width; \
-    const uint32_t height = display->game_bitmap->height; \
-    const uint32_t pitch = display->game_bitmap->rowpixels; \
-    const uint16_t* const input = &((uint16_t*)display->game_bitmap->base)[y * pitch + x]; \
+    const uint16_t* input = &((uint16_t*)display->game_bitmap->base)[y * pitch + x]; \
  \
     for(int i = 0; i != height; i ++) \
     { \
-        const uint16_t* inputLine = &input[i * pitch]; \
- \
         for(int j = 0; j != width; j ++) \
         { \
-            output[i * videoConfig.width + j] = convertedPalette[*inputLine++]; \
+            *output++ = convertedPalette[*input++]; \
         } \
+        input += pitch - width; \
     } \
 }
 
 #define DIRECT_COPY(OTYPE, ITYPE, ALLOWSIMPLE, RDOWN, RMASK, RUP, GDOWN, GMASK, GUP, BDOWN, BMASK, BUP) \
 { \
     OTYPE* output = (OTYPE*)videoBuffer; \
-    const uint32_t x = display->game_visible_area.min_x; \
-    const uint32_t y = display->game_visible_area.min_y; \
-    const uint32_t width = display->game_bitmap->width; \
-    const uint32_t height = display->game_bitmap->height; \
-    const ITYPE* const input = (const ITYPE*)display->game_bitmap->base; \
-    const uint32_t pitch = display->game_bitmap->rowpixels; \
+    const ITYPE* input = &((const ITYPE*)display->game_bitmap->base)[y * pitch + x]; \
  \
     for(int i = 0; i != height; i ++) \
     { \
-        const ITYPE* inputLine = &input[(i + y) * pitch + x]; \
- \
         if(ALLOWSIMPLE && sizeof(OTYPE) == sizeof(ITYPE)) \
         { \
-            memcpy(&output[i * videoConfig.width], inputLine, width * sizeof(OTYPE)); \
+            memcpy(&output[i * videoConfig.width], input, width * sizeof(OTYPE)); \
+            input += pitch; \
         } \
         else \
         { \
             for(int j = 0; j != width; j ++) \
             { \
-                const uint32_t color = *inputLine ++; \
+                const uint32_t color = *input ++; \
                 const uint32_t r = ((color >> (RDOWN)) & RMASK) << RUP; \
                 const uint32_t g = ((color >> (GDOWN)) & GMASK) << GUP; \
                 const uint32_t b = ((color >> (BDOWN)) & BMASK) << BUP; \
-                output[i * videoConfig.width + j] = r | g | b; \
+                *output++ = r | g | b; \
             } \
+            input += pitch - width; \
         } \
     } \
 }
@@ -171,7 +162,19 @@ void osd_update_video_and_audio(struct mame_display *display)
         }
     
         extern unsigned retroColorMode;
-    
+        
+        // Cache some values used in the below macros
+        const uint32_t x = display->game_visible_area.min_x;
+        const uint32_t y = display->game_visible_area.min_y;
+        const uint32_t width = videoConfig.width;
+        const uint32_t height = videoConfig.height;
+        const uint32_t pitch = display->game_bitmap->rowpixels;
+
+        // Copy image size
+        videoBufferWidth = width;
+        videoBufferHeight = height;
+
+        // Copy pixels
         if(display->game_bitmap->depth == 16)
         {
             if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)

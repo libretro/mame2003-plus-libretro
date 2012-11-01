@@ -84,6 +84,8 @@ cothread_t emuThread;
 unsigned retroColorMode;
 int16_t XsoundBuffer[2048];
 uint16_t videoBuffer[1024*1024];
+unsigned videoBufferWidth;
+unsigned videoBufferHeight;
 char* systemDir;
 
 // TODO: If run_game returns during load_game, tag it so load_game can return false.
@@ -238,9 +240,9 @@ void retro_run (void)
     
         co_switch(emuThread);
         
-        if(!hasExited)
+        if(!hasExited && videoBufferWidth && videoBufferHeight)
         {
-            video_cb(videoBuffer, videoConfig.width, videoConfig.height, videoConfig.width * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
+            video_cb(videoBuffer, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
             audio_batch_cb(XsoundBuffer, 800);
         }
     }
