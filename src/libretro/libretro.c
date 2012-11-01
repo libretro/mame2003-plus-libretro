@@ -73,6 +73,7 @@ extern struct osd_create_params videoConfig;
 cothread_t mainThread;
 cothread_t emuThread;
 
+unsigned retroColorMode;
 int16_t XsoundBuffer[2048];
 uint16_t videoBuffer[1024*1024];
 char* systemDir;
@@ -171,6 +172,17 @@ void retro_init (void)
 {
     if(!emuThread && !mainThread)
     {    
+        // Get color mode
+        retroColorMode = RETRO_PIXEL_FORMAT_XRGB8888;
+        if(!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
+        {
+            retroColorMode = RETRO_PIXEL_FORMAT_RGB565;
+            if(!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
+            {
+                retroColorMode = RETRO_PIXEL_FORMAT_0RGB1555;
+            }
+        }
+
         // Get System Directory: This likely won't work if not specified
         const char* retroSysDir = 0;
         const bool gotSysDir = environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &retroSysDir);
@@ -246,7 +258,7 @@ void retro_run (void)
         
         if(!hasExited)
         {
-            video_cb(videoBuffer, videoConfig.width, videoConfig.height, videoConfig.width * 2);
+            video_cb(videoBuffer, videoConfig.width, videoConfig.height, videoConfig.width * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
             audio_batch_cb(XsoundBuffer, 800);
         }
     }

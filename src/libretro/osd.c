@@ -7,8 +7,6 @@
 #include <sys/stat.h>
 #include <assert.h>
 
-#include "libco/libco.h"
-
 #include "libretro.h"
 #include "osdepend.h"
 
@@ -16,14 +14,10 @@
 #include "palette.h"
 #include "common.h"
 #include "mame.h"
-#include "usrintrf.h"
 
-extern cothread_t mainThread;
-extern cothread_t emuThread;
+
 extern int16_t XsoundBuffer[2048];
-extern uint16_t videoBuffer[1024*1024];
 extern char* systemDir;
-struct osd_create_params videoConfig;
 
 #if 0
 struct GameOptions
@@ -83,9 +77,6 @@ struct GameOptions
 
 int osd_init(void)
 {
-    // Set MAME options
-    options.samplerate = 48000;
-
     return 0;
 }
 
@@ -93,57 +84,6 @@ void osd_exit(void)
 {
 
 }
-
-int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_components)
-{
-    memcpy(&videoConfig, params, sizeof(videoConfig));
-    rgb_components[0] = 0x7c00;
-    rgb_components[1] = 0x03e0;
-    rgb_components[2] = 0x001f;
-
-    return 0;
-}
-
-void osd_close_display(void)
-{
-
-}
-
-int osd_skip_this_frame(void)
-{
-    return 0;
-}
-
-void osd_update_video_and_audio(struct mame_display *display)
-{
-    // Update UI area
-	if (display->changed_flags & GAME_VISIBLE_AREA_CHANGED)
-	{
-    	set_ui_visarea(display->game_visible_area.min_x, display->game_visible_area.min_y, display->game_visible_area.max_x, display->game_visible_area.max_y);
-    }
-
-    uint8_t* base = (uint8_t*)display->game_bitmap->base;
-    for(int i = 0; i != display->game_bitmap->height; i ++)
-    {
-        uint16_t* line = (uint16_t*)&base[(i + display->game_visible_area.min_y) * display->game_bitmap->rowbytes + display->game_visible_area.min_x * 2];
-    
-        for(int j = 0; j != display->game_bitmap->width; j ++)
-        {
-            const uint32_t color = display->game_palette[line[j]];
-            const uint32_t r = ((color >> 19) & 0x1F) << 10;
-            const uint32_t g = ((color >> 11) & 0x1F) << 5;
-            const uint32_t b = ((color >> 3) & 0x1F) << 0;
-        
-            videoBuffer[i * videoConfig.width + j] = r|g|b;
-        }
-    }
-    
-    co_switch(mainThread);
-}
-
-struct mame_bitmap *osd_override_snapshot(struct mame_bitmap *bitmap, struct rectangle *bounds){return NULL;}
-const char *osd_get_fps_text(const struct performance_info *performance){return "";}
-
 
 
 /******************************************************************************
