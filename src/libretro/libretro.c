@@ -78,6 +78,8 @@ int16_t XsoundBuffer[2048];
 uint16_t videoBuffer[1024*1024];
 char* systemDir;
 
+// TODO: If run_game returns during load_game, tag it so load_game can return false.
+
 void retro_wrap_emulator(void)
 {
     run_game(driverIndex);
@@ -277,19 +279,24 @@ bool retro_load_game(const struct retro_game_info *game)
         driverIndex = getDriverIndex(game->path);
         
         if(0 <= driverIndex)
-        {
-            // Load emu
-            options.samplerate = 48000;
-    
-            co_switch(emuThread);
-            
+        {            
             // Setup Rotation
             const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
             unsigned rotateMode = 0;
+            static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
+            
             rotateMode = (ROT270 == orientation) ? 1 : rotateMode;
             rotateMode = (ROT180 == orientation) ? 2 : rotateMode;
             rotateMode = (ROT90 == orientation) ? 3 : rotateMode;
+            
             environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
+
+            // Set all options before starting the game thread, after the first co_switch it's too late.
+            options.samplerate = 48000;            
+            options.ui_orientation = uiModes[rotateMode];
+
+            // Boot the emulator
+            co_switch(emuThread);
             
             return true;
         }
