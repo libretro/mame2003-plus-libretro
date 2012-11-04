@@ -234,12 +234,14 @@ void osd_fclose(osd_file *file)
 	Timing
 
 ******************************************************************************/
+// TODO: Determine if these are used anywhere other than performance monitoring, if not ditch them.
+//       Ditch performance monitoring anyway.
 cycles_t osd_cycles(void)
 {
     struct timeval t;
     gettimeofday(&t, 0);
     
-    return (t.tv_sec * 1000) + (t.tv_usec / 1000);
+    return (t.tv_sec * 1000000) + (t.tv_usec);
 }
 
 cycles_t osd_cycles_per_second(void)
@@ -272,6 +274,7 @@ void CLIB_DECL osd_die(const char *text,...)
     va_end (args);
 #endif
 
+    // TODO: Don't abort, switch back to main thread and exit cleanly: This is only used if a malloc fails in src/cpu/z80/z80.c so not too high a priority
     abort();
 }
 

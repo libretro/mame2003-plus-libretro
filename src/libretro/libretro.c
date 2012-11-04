@@ -6,7 +6,7 @@
 #include "mame.h"
 #include "driver.h"
 
-#if 1
+#ifdef DEBUG_LOG
 # define LOG(msg) fprintf(stderr, "%s\n", msg)
 #else
 # define LOG(msg)
