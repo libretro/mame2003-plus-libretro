@@ -11,6 +11,9 @@
 # define LOG(msg)
 #endif
 
+void mame_frame(void);
+void mame_done(void);
+
 //
 
 static retro_video_refresh_t video_cb = NULL;
@@ -94,7 +97,6 @@ static int driverIndex; //< Index of mame game loaded
 
 //
 
-int FRONTENDwantsExit;
 static bool hasExited;
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
@@ -107,31 +109,6 @@ uint16_t videoBuffer[1024*1024];
 unsigned videoBufferWidth;
 unsigned videoBufferHeight;
 char* systemDir;
-
-// TODO: If run_game returns during load_game, tag it so load_game can return false.
-
-/*void retro_wrap_emulator(void)
-{
-    run_game(driverIndex);
-    
-    // Exit comes from emulator, tell the frontend
-    if(!FRONTENDwantsExit)
-    {
-        environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, 0);
-    }
-        
-    hasExited = 1;
-        
-    // We're done here
-    co_switch(mainThread);
-        
-    // Dead emulator, but libco says not to return
-    while(true)
-    {
-        LOG("Running a dead emulator.");
-        co_switch(mainThread);
-    }
-}*/
 
 unsigned retro_api_version(void)
 {
@@ -180,21 +157,12 @@ void retro_init (void)
 
 void retro_deinit(void)
 {
-    if(!hasExited)
-    {
-        LOG("retro_deinit called before MAME has shutdown.");
-    }
-    
-    free(systemDir);
-    systemDir = 0;
 }
 
 void retro_reset (void)
 {
     machine_reset();
 }
-
-void mame_frame(void);
 
 void retro_run (void)
 {
@@ -258,9 +226,7 @@ bool retro_load_game(const struct retro_game_info *game)
         options.skip_gameinfo = 1;
 
         // Boot the emulator
-        run_game(driverIndex);
-        
-        return true;
+        return 0 == run_game(driverIndex);
     }
     else
     {
@@ -270,7 +236,10 @@ bool retro_load_game(const struct retro_game_info *game)
 
 void retro_unload_game(void)
 {
-    FRONTENDwantsExit = true;
+    mame_done();
+    
+    free(systemDir);
+    systemDir = 0;
 }
 
 
