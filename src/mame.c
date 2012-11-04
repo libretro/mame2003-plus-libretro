@@ -176,6 +176,7 @@ static struct artwork_callbacks mame_artwork_callbacks =
 };
 #endif
 
+static int game_loaded;
 
 
 
@@ -317,7 +318,10 @@ int run_game(int game)
 			if (run_machine())
 				bail_and_print("Unable to start machine emulation");
 			else
-				err = 0;
+			{
+			    game_loaded = 1;
+				return 0;
+			}
 
 			/* shutdown the local machine */
 			shutdown_machine();
@@ -332,7 +336,13 @@ int run_game(int game)
 	return err;
 }
 
-
+void run_game_done()
+{
+	shutdown_machine();
+	end_resource_tracking();
+	osd_exit();
+	end_resource_tracking();
+}
 
 /*-------------------------------------------------
 	init_machine - initialize the emulated machine
@@ -490,10 +500,7 @@ static int run_machine(void)
 
 				/* now do the core execution */
 				run_machine_core();
-				res = 0;
-
-				/* store the sound system */
-				sound_stop();
+				return 0;
 			}
 
 			/* shut down the driver's video and kill and artwork */
@@ -509,6 +516,18 @@ static int run_machine(void)
 	return res;
 }
 
+void run_machine_done(void)
+{				
+	sound_stop();
+
+    /* shut down the driver's video and kill and artwork */
+    if (Machine->drv->video_stop)
+        (*Machine->drv->video_stop)();
+
+    /* close down the tilemap and video systems */
+    tilemap_close();
+    vh_close();
+}
 
 
 /*-------------------------------------------------
@@ -553,30 +572,31 @@ void run_machine_core(void)
 
 				/* run the emulation! */
 				cpu_run();
-
-				/* save the NVRAM */
-				if (Machine->drv->nvram_handler)
-				{
-					mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 1);
-					if (nvram_file != NULL)
-					{
-						(*Machine->drv->nvram_handler)(nvram_file, 1);
-						mame_fclose(nvram_file);
-					}
-				}
-
-				/* stop the cheat engine */
-				if (options.cheat)
-					StopCheat();
-
-				/* save input ports settings */
-				save_input_port_settings();
 			}
 		}
 	}
 }
 
+void run_machine_core_done()
+{
+    /* save the NVRAM */
+    if (Machine->drv->nvram_handler)
+    {
+        mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 1);
+        if (nvram_file != NULL)
+        {
+            (*Machine->drv->nvram_handler)(nvram_file, 1);
+            mame_fclose(nvram_file);
+        }
+    }
 
+    /* stop the cheat engine */
+    if (options.cheat)
+        StopCheat();
+
+    /* save input ports settings */
+    save_input_port_settings();
+}
 
 /*-------------------------------------------------
 	shutdown_machine - tear down the emulated
@@ -2122,3 +2142,28 @@ static int validitychecks(void)
 
 
 
+void mame_frame(void)
+{
+    extern int gotFrame;
+    
+    while(!gotFrame)
+    {
+        cpu_frame();
+    }
+    
+    gotFrame = 0;
+}
+
+void cpu_run_done();
+void mame_done()
+{
+    if(game_loaded)
+    {
+        cpu_run_done();
+        run_machine_core_done();
+        run_machine_done();
+        run_game_done();
+    }
+    
+    game_loaded = 0;
+}

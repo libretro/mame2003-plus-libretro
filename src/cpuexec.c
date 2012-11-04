@@ -374,46 +374,29 @@ static void cpu_post_run(void)
  *
  *************************************/
 
+void cpu_frame(void)
+{
+    if (loadsave_schedule != LOADSAVE_NONE)
+        handle_loadsave();
+
+    cpu_timeslice();
+    
+    if(time_to_reset)
+    {
+        cpu_post_run();
+        cpu_pre_run();
+        time_to_reset = 0;
+    }
+}
+
+void cpu_run_done(void)
+{
+	cpu_post_run();
+}
+
 void cpu_run(void)
 {
-#ifdef MAME_DEBUG
-	/* initialize the debugger */
-	if (mame_debug)
-		mame_debug_init();
-#endif
-
-	/* loop over multiple resets, until the user quits */
-	time_to_quit = 0;
-	while (!time_to_quit)
-	{
-		/* prepare everything to run */
-		cpu_pre_run();
-
-		/* loop until the user quits or resets */
-		time_to_reset = 0;
-		while (!time_to_quit && !time_to_reset)
-		{
-			profiler_mark(PROFILER_EXTRA);
-
-			/* if we have a load/save scheduled, handle it */
-			if (loadsave_schedule != LOADSAVE_NONE)
-				handle_loadsave();
-			
-			/* execute CPUs */
-			cpu_timeslice();
-
-			profiler_mark(PROFILER_END);
-		}
-
-		/* finish up this iteration */
-		cpu_post_run();
-	}
-
-#ifdef MAME_DEBUG
-	/* shut down the debugger */
-	if (mame_debug)
-		mame_debug_exit();
-#endif
+    cpu_pre_run();
 }
 
 
