@@ -1,7 +1,6 @@
 #include <stdint.h>
 
 #include "libretro.h"
-#include "libco/libco.c" //
 
 #include "mame.h"
 #include "driver.h"
@@ -102,9 +101,6 @@ extern int retroKeyState[512];
 extern int retroJsState[64];
 extern struct osd_create_params videoConfig;
 
-cothread_t mainThread;
-cothread_t emuThread;
-
 unsigned retroColorMode;
 int16_t XsoundBuffer[2048];
 uint16_t videoBuffer[1024*1024];
@@ -114,7 +110,7 @@ char* systemDir;
 
 // TODO: If run_game returns during load_game, tag it so load_game can return false.
 
-void retro_wrap_emulator(void)
+/*void retro_wrap_emulator(void)
 {
     run_game(driverIndex);
     
@@ -135,7 +131,7 @@ void retro_wrap_emulator(void)
         LOG("Running a dead emulator.");
         co_switch(mainThread);
     }
-}
+}*/
 
 unsigned retro_api_version(void)
 {
@@ -153,182 +149,128 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-    if(emuThread)
-    {
-        const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
-        const bool rotated = ((ROT90 == orientation) || (ROT270 == orientation));
-        
-        const int width = rotated ? videoConfig.height : videoConfig.width;
-        const int height = rotated ? videoConfig.width : videoConfig.height;
+    const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
+    const bool rotated = ((ROT90 == orientation) || (ROT270 == orientation));
+    
+    const int width = rotated ? videoConfig.height : videoConfig.width;
+    const int height = rotated ? videoConfig.width : videoConfig.height;
 
-        info->geometry.base_width = width;
-        info->geometry.base_height = height;
-        info->geometry.max_width = width;
-        info->geometry.max_height = height;
-        info->geometry.aspect_ratio = (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-        info->timing.fps = videoConfig.fps;
-        info->timing.sample_rate = 48000.0;
-    }
-    else
-    {
-        LOG("retro_get_system_av_info called when there is no emulator thread.");
-    }
-
+    info->geometry.base_width = width;
+    info->geometry.base_height = height;
+    info->geometry.max_width = width;
+    info->geometry.max_height = height;
+    info->geometry.aspect_ratio = (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
+    info->timing.fps = videoConfig.fps;
+    info->timing.sample_rate = 48000.0;
 }
 
 void retro_init (void)
 {
-    if(!emuThread && !mainThread)
-    {    
-        // Get color mode
-        retroColorMode = RETRO_PIXEL_FORMAT_XRGB8888;
+    // Get color mode
+    retroColorMode = RETRO_PIXEL_FORMAT_XRGB8888;
+    if(!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
+    {
+        retroColorMode = RETRO_PIXEL_FORMAT_RGB565;
         if(!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
         {
-            retroColorMode = RETRO_PIXEL_FORMAT_RGB565;
-            if(!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
-            {
-                retroColorMode = RETRO_PIXEL_FORMAT_0RGB1555;
-            }
+            retroColorMode = RETRO_PIXEL_FORMAT_0RGB1555;
         }
-    
-        mainThread = co_active();
-        emuThread = co_create(65536*sizeof(void*), retro_wrap_emulator);
-    }
-    else
-    {
-        LOG("retro_init called more than once.");
     }
 }
 
 void retro_deinit(void)
 {
-    if(emuThread)
+    if(!hasExited)
     {
-        if(!hasExited)
-        {
-            LOG("retro_deinit called before MAME has shutdown.");
-        }
-    
-        co_delete(emuThread);
-        emuThread = 0;
-    
-        free(systemDir);
-        systemDir = 0;
+        LOG("retro_deinit called before MAME has shutdown.");
     }
-    else
-    {
-        LOG("retro_deinit called when there is no emulator thread.");
-    }
+    
+    free(systemDir);
+    systemDir = 0;
 }
 
 void retro_reset (void)
 {
-    if(emuThread)
-    {
-        machine_reset();
-    }
-    else
-    {
-        LOG("retro_reset called when there is no emulator thread.");
-    }
+    machine_reset();
 }
+
+void mame_frame(void);
 
 void retro_run (void)
 {
-    if(emuThread)
-    {
-        poll_cb();
-        
-        // Keyboard
-        const struct KeyboardInfo* thisInput = retroKeys;
-        while(thisInput->name)
-        {
-            retroKeyState[thisInput->code] = input_cb(0, RETRO_DEVICE_KEYBOARD, 0, thisInput->code);
-            thisInput ++;
-        }
-
-        // Joystick
-        int* jsState = retroJsState;
-        for(int i = 0; i != 4; i ++)
-        {
-            for(int j = 0; j != 16; j ++)
-            {
-                *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
-            }
-        }
+    poll_cb();
     
-        co_switch(emuThread);
-        
-        if(!hasExited && videoBufferWidth && videoBufferHeight)
+    // Keyboard
+    const struct KeyboardInfo* thisInput = retroKeys;
+    while(thisInput->name)
+    {
+        retroKeyState[thisInput->code] = input_cb(0, RETRO_DEVICE_KEYBOARD, 0, thisInput->code);
+        thisInput ++;
+    }
+
+    // Joystick
+    int* jsState = retroJsState;
+    for(int i = 0; i != 4; i ++)
+    {
+        for(int j = 0; j != 16; j ++)
         {
-            video_cb(videoBuffer, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
-            audio_batch_cb(XsoundBuffer, 800);
+            *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
         }
     }
-    else
+    
+    mame_frame();
+    
+    if(!hasExited && videoBufferWidth && videoBufferHeight)
     {
-        LOG("retro_run called when there is no emulator thread.");
-    }    
+        video_cb(videoBuffer, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
+        audio_batch_cb(XsoundBuffer, 800);
+    }
 }
 
 
 bool retro_load_game(const struct retro_game_info *game)
 {
-    if(emuThread)
+    // Find game index
+    driverIndex = getDriverIndex(game->path);
+    
+    if(0 <= driverIndex)
     {
-        // Find game index
-        driverIndex = getDriverIndex(game->path);
+        // Get MAME Directory
+        systemDir = normalizePath(strdup(game->path));
+        systemDir = peelPathItem(systemDir);
+        systemDir = peelPathItem(systemDir);       
+
+        // Setup Rotation
+        const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
+        unsigned rotateMode = 0;
+        static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
         
-        if(0 <= driverIndex)
-        {
-            // Get MAME Directory
-            systemDir = normalizePath(strdup(game->path));
-            systemDir = peelPathItem(systemDir);
-            systemDir = peelPathItem(systemDir);       
+        rotateMode = (ROT270 == orientation) ? 1 : rotateMode;
+        rotateMode = (ROT180 == orientation) ? 2 : rotateMode;
+        rotateMode = (ROT90 == orientation) ? 3 : rotateMode;
+        
+        environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
 
-            // Setup Rotation
-            const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
-            unsigned rotateMode = 0;
-            static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
-            
-            rotateMode = (ROT270 == orientation) ? 1 : rotateMode;
-            rotateMode = (ROT180 == orientation) ? 2 : rotateMode;
-            rotateMode = (ROT90 == orientation) ? 3 : rotateMode;
-            
-            environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
+        // Set all options before starting the game
+        options.samplerate = 48000;            
+        options.ui_orientation = uiModes[rotateMode];
+        options.skip_disclaimer = 1;
+        options.skip_gameinfo = 1;
 
-            // Set all options before starting the game thread, after the first co_switch it's too late.
-            options.samplerate = 48000;            
-            options.ui_orientation = uiModes[rotateMode];
-
-            // Boot the emulator
-            co_switch(emuThread);
-            
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        // Boot the emulator
+        run_game(driverIndex);
+        
+        return true;
     }
     else
     {
-        LOG("retro_load_game called when there is no emulator thread.");
         return false;
     }
 }
 
 void retro_unload_game(void)
 {
-    if(emuThread)
-    {
-        FRONTENDwantsExit = true;
-        co_switch(emuThread);
-    }
-    else
-    {
-        LOG("retro_unload_game called when there is no emulator thread.");
-    }
+    FRONTENDwantsExit = true;
 }
 
 

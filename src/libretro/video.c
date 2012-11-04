@@ -1,6 +1,5 @@
 #include "libretro.h"
 #include "osdepend.h"
-#include "libco/libco.h"
 #include "palette.h"
 #include "fileio.h"
 #include "common.h"
@@ -8,12 +7,11 @@
 #include "usrintrf.h"
 #include "driver.h"
 
-extern cothread_t mainThread;
-extern cothread_t emuThread;
 extern uint16_t videoBuffer[1024*1024];
 extern unsigned videoBufferWidth;
 extern unsigned videoBufferHeight;
 struct osd_create_params videoConfig;
+int gotFrame;
 
 // TODO: This seems to work so far, but could be better
 
@@ -214,7 +212,7 @@ void osd_update_video_and_audio(struct mame_display *display)
         }
     }
     
-    co_switch(mainThread);
+    gotFrame = 1;
 }
 
 struct mame_bitmap *osd_override_snapshot(struct mame_bitmap *bitmap, struct rectangle *bounds){return NULL;}

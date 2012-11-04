@@ -374,6 +374,16 @@ static void cpu_post_run(void)
  *
  *************************************/
 
+void cpu_frame(void)
+{
+    cpu_timeslice();
+}
+
+void cpu_run_done(void)
+{
+	cpu_post_run();
+}
+
 void cpu_run(void)
 {
 #ifdef MAME_DEBUG
@@ -393,16 +403,13 @@ void cpu_run(void)
 		time_to_reset = 0;
 		while (!time_to_quit && !time_to_reset)
 		{
-			profiler_mark(PROFILER_EXTRA);
-
 			/* if we have a load/save scheduled, handle it */
 			if (loadsave_schedule != LOADSAVE_NONE)
 				handle_loadsave();
+			return;
 			
 			/* execute CPUs */
 			cpu_timeslice();
-
-			profiler_mark(PROFILER_END);
 		}
 
 		/* finish up this iteration */
