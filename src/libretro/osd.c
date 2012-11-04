@@ -160,6 +160,11 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
     struct stat statbuf;
  
     snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
+
+#ifdef DEBUG_LOG
+    fprintf(stderr, "osd_get_path_info (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], filename);
+#endif
+
     if(0 == stat(buffer, &statbuf))
     {
         return (S_ISDIR(statbuf.st_mode)) ? PATH_IS_DIRECTORY : PATH_IS_FILE;
@@ -172,6 +177,10 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
 {
     char buffer[1024];
     snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
+
+#ifdef DEBUG_LOG
+    fprintf(stderr, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], filename);
+#endif
 
     osd_file* out = malloc(sizeof(osd_file));
     out->file = fopen(buffer, mode);
