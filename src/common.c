@@ -979,7 +979,7 @@ const struct RomModule *rom_next_chunk(const struct RomModule *romp)
 
 void CLIB_DECL debugload(const char *string, ...)
 {
-#ifdef LOG_LOAD
+#if defined(LOG_LOAD)
 	static int opened;
 	va_list arg;
 	FILE *f;
@@ -992,6 +992,11 @@ void CLIB_DECL debugload(const char *string, ...)
 		va_end(arg);
 		fclose(f);
 	}
+#elif defined(DEBUG_LOG)
+   va_list arg;
+   va_start(arg, string);
+   vfprintf(stderr, string, arg);
+   va_end(arg);
 #endif
 }
 

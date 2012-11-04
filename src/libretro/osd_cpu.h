@@ -88,4 +88,6 @@ typedef union {
 	UINT32 d;
 }	PAIR;
 
+//#define DEBUG_LOG 1
+
 #endif	/* defined OSD_CPU_H */
