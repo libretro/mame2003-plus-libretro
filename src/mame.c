@@ -336,7 +336,7 @@ int run_game(int game)
 	return err;
 }
 
-void run_game_done()
+void run_game_done(void)
 {
 	shutdown_machine();
 	end_resource_tracking();
@@ -577,7 +577,7 @@ void run_machine_core(void)
 	}
 }
 
-void run_machine_core_done()
+void run_machine_core_done(void)
 {
     /* save the NVRAM */
     if (Machine->drv->nvram_handler)
@@ -2140,22 +2140,8 @@ static int validitychecks(void)
 }
 #endif
 
-
-
-void mame_frame(void)
-{
-    extern int gotFrame;
-    
-    while(!gotFrame)
-    {
-        cpu_frame();
-    }
-    
-    gotFrame = 0;
-}
-
-void cpu_run_done();
-void mame_done()
+void cpu_run_done(void);
+void mame_done(void)
 {
     if(game_loaded)
     {

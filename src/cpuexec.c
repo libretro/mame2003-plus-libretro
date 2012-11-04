@@ -374,12 +374,19 @@ static void cpu_post_run(void)
  *
  *************************************/
 
-void cpu_frame(void)
+void mame_frame(void)
 {
     if (loadsave_schedule != LOADSAVE_NONE)
         handle_loadsave();
 
-    cpu_timeslice();
+    extern int gotFrame;
+    
+    while(!gotFrame)
+    {
+        cpu_timeslice();
+    }
+    
+    gotFrame = 0;
     
     if(time_to_reset)
     {

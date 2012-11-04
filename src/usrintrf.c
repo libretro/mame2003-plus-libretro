@@ -4029,14 +4029,17 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	if (input_ui_pressed(IPT_UI_LOAD_STATE))
 		do_loadsave(bitmap, LOADSAVE_LOAD);
 
+// HACK: Disable pause support
 #ifndef MESS
-	if (single_step || input_ui_pressed(IPT_UI_PAUSE)) /* pause the game */
+//	if (single_step || input_ui_pressed(IPT_UI_PAUSE)) /* pause the game */
+    if(0)
 	{
 #else
 	if (setup_selected)
 		mess_pause_for_ui = 1;
 
-	if (single_step || input_ui_pressed(IPT_UI_PAUSE) || mess_pause_for_ui) /* pause the game */
+//	if (single_step || input_ui_pressed(IPT_UI_PAUSE) || mess_pause_for_ui) /* pause the game */
+    if(0)
 	{
 #endif
 /*		osd_selected = 0;	   disable on screen display, since we are going   */
