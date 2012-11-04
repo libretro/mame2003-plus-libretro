@@ -374,25 +374,34 @@ static void cpu_post_run(void)
  *
  *************************************/
 
+void (*pause_action)(void);
+
 void mame_frame(void)
 {
-    if (loadsave_schedule != LOADSAVE_NONE)
-        handle_loadsave();
-
-    extern int gotFrame;
-    
-    while(!gotFrame)
+    if(!pause_action)
     {
-        cpu_timeslice();
+        if (loadsave_schedule != LOADSAVE_NONE)
+            handle_loadsave();
+    
+        extern int gotFrame;
+        
+        while(!gotFrame)
+        {
+            cpu_timeslice();
+        }
+        
+        gotFrame = 0;
+        
+        if(time_to_reset)
+        {
+            cpu_post_run();
+            cpu_pre_run();
+            time_to_reset = 0;
+        }
     }
-    
-    gotFrame = 0;
-    
-    if(time_to_reset)
+    else
     {
-        cpu_post_run();
-        cpu_pre_run();
-        time_to_reset = 0;
+        pause_action();
     }
 }
 

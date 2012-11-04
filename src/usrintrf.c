@@ -23,6 +23,13 @@
 #endif
 
 
+extern void (*pause_action)(void);
+static void pause_action_paused(void);
+static void pause_action_loadsave(void);
+static int pause_loadstate;
+static struct mame_bitmap *pause_bitmap;
+
+
 
 /***************************************************************************
 
@@ -85,7 +92,6 @@ int uirotcharwidth, uirotcharheight;
 static int setup_selected;
 static int osd_selected;
 static int jukebox_selected;
-static int single_step;
 
 UINT8 ui_dirty;
 
@@ -3874,55 +3880,11 @@ void CLIB_DECL usrintf_showmessage_secs(int seconds, const char *text,...)
 
 void do_loadsave(struct mame_bitmap *bitmap, int request_loadsave)
 {
-	int file = 0;
-
 	mame_pause(1);
-
-	do
-	{
-		InputCode code;
-
-		if (request_loadsave == LOADSAVE_SAVE)
-			displaymessage(bitmap, "Select position to save to");
-		else
-			displaymessage(bitmap, "Select position to load from");
-
-		update_video_and_audio();
-		reset_partial_updates();
-
-		if (input_ui_pressed(IPT_UI_CANCEL))
-			break;
-
-		code = code_read_async();
-		if (code != CODE_NONE)
-		{
-			if (code >= KEYCODE_A && code <= KEYCODE_Z)
-				file = 'a' + (code - KEYCODE_A);
-			else if (code >= KEYCODE_0 && code <= KEYCODE_9)
-				file = '0' + (code - KEYCODE_0);
-			else if (code >= KEYCODE_0_PAD && code <= KEYCODE_9_PAD)
-				file = '0' + (code - KEYCODE_0);
-		}
-	}
-	while (!file);
-
-	mame_pause(0);
-
-	if (file > 0)
-	{
-		if (request_loadsave == LOADSAVE_SAVE)
-			usrintf_showmessage("Save to position %c", file);
-		else
-			usrintf_showmessage("Load from position %c", file);
-		cpu_loadsave_schedule(request_loadsave, file);
-	}
-	else
-	{
-		if (request_loadsave == LOADSAVE_SAVE)
-			usrintf_showmessage("Save cancelled");
-		else
-			usrintf_showmessage("Load cancelled");
-	}
+	
+	pause_action = pause_action_loadsave;
+	pause_loadstate = request_loadsave;
+	pause_bitmap = bitmap;
 }
 
 int handle_user_interface(struct mame_bitmap *bitmap)
@@ -3972,170 +3934,40 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	if (osd_selected != 0) osd_selected = on_screen_display(bitmap, osd_selected);
 
 
-#if 0
-	if (keyboard_pressed_memory(KEYCODE_BACKSPACE))
-	{
-		if (jukebox_selected != -1)
-		{
-			jukebox_selected = -1;
-			cpu_halt(0,1);
-		}
-		else
-		{
-			jukebox_selected = 0;
-			cpu_halt(0,0);
-		}
-	}
-
-	if (jukebox_selected != -1)
-	{
-		char buf[40];
-		watchdog_reset_w(0,0);
-		if (keyboard_pressed_memory(KEYCODE_LCONTROL))
-		{
-#include "cpu/z80/z80.h"
-			soundlatch_w(0,jukebox_selected);
-			cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
-		}
-		if (input_ui_pressed_repeat(IPT_UI_RIGHT,8))
-		{
-			jukebox_selected = (jukebox_selected + 1) & 0xff;
-		}
-		if (input_ui_pressed_repeat(IPT_UI_LEFT,8))
-		{
-			jukebox_selected = (jukebox_selected - 1) & 0xff;
-		}
-		if (input_ui_pressed_repeat(IPT_UI_UP,8))
-		{
-			jukebox_selected = (jukebox_selected + 16) & 0xff;
-		}
-		if (input_ui_pressed_repeat(IPT_UI_DOWN,8))
-		{
-			jukebox_selected = (jukebox_selected - 16) & 0xff;
-		}
-		sprintf(buf,"sound cmd %02x",jukebox_selected);
-		displaymessage(buf);
-	}
-#endif
-
-
 	/* if the user pressed F3, reset the emulation */
 	if (input_ui_pressed(IPT_UI_RESET_MACHINE))
 		machine_reset();
 
 	if (input_ui_pressed(IPT_UI_SAVE_STATE))
+	{
 		do_loadsave(bitmap, LOADSAVE_SAVE);
+		return 0;
+	}
 
 	if (input_ui_pressed(IPT_UI_LOAD_STATE))
+	{
 		do_loadsave(bitmap, LOADSAVE_LOAD);
+		return 0;
+	}
 
-// HACK: Disable pause support
 #ifndef MESS
-//	if (single_step || input_ui_pressed(IPT_UI_PAUSE)) /* pause the game */
-    if(0)
+	if (input_ui_pressed(IPT_UI_PAUSE)) /* pause the game */
 	{
 #else
 	if (setup_selected)
 		mess_pause_for_ui = 1;
 
-//	if (single_step || input_ui_pressed(IPT_UI_PAUSE) || mess_pause_for_ui) /* pause the game */
-    if(0)
+	if (input_ui_pressed(IPT_UI_PAUSE) || mess_pause_for_ui) /* pause the game */
 	{
 #endif
 /*		osd_selected = 0;	   disable on screen display, since we are going   */
 							/* to change parameters affected by it */
 
-		if (single_step == 0)
-			mame_pause(1);
-
-		while (!input_ui_pressed(IPT_UI_PAUSE))
-		{
-#ifdef MAME_NET
-			osd_net_sync();
-#endif /* MAME_NET */
-			profiler_mark(PROFILER_VIDEO);
-			if (osd_skip_this_frame() == 0)
-			{
-				/* keep calling vh_screenrefresh() while paused so we can stuff */
-				/* debug code in there */
-				draw_screen();
-			}
-			profiler_mark(PROFILER_END);
-
-			if (input_ui_pressed(IPT_UI_SNAPSHOT))
-				save_screen_snapshot(bitmap);
-
-
-			if (input_ui_pressed(IPT_UI_SAVE_STATE))
-				do_loadsave(bitmap, LOADSAVE_SAVE);
-
-			if (input_ui_pressed(IPT_UI_LOAD_STATE))
-				do_loadsave(bitmap, LOADSAVE_LOAD);
-
-			/* if the user pressed F4, show the character set */
-			if (input_ui_pressed(IPT_UI_SHOW_GFX))
-				showcharset(bitmap);
-
-			if (setup_selected == 0 && input_ui_pressed(IPT_UI_CANCEL))
-				return 1;
-
-			if (setup_selected == 0 && input_ui_pressed(IPT_UI_CONFIGURE))
-			{
-				setup_selected = -1;
-				if (osd_selected != 0)
-				{
-					osd_selected = 0;	/* disable on screen display */
-					schedule_full_refresh();
-				}
-			}
-			if (setup_selected != 0) setup_selected = setup_menu(bitmap, setup_selected);
-
-#ifdef MAME_DEBUG
-			if (!mame_debug)
-#endif
-				if (osd_selected == 0 && input_ui_pressed(IPT_UI_ON_SCREEN_DISPLAY))
-				{
-					osd_selected = -1;
-					if (setup_selected != 0)
-					{
-						setup_selected = 0; /* disable setup menu */
-						schedule_full_refresh();
-					}
-				}
-			if (osd_selected != 0) osd_selected = on_screen_display(bitmap, osd_selected);
-
-			if (options.cheat) DisplayWatches(bitmap);
-
-			/* show popup message if any */
-			if (messagecounter > 0)
-			{
-				displaymessage(bitmap, messagetext);
-
-				if (--messagecounter == 0)
-					schedule_full_refresh();
-			}
-
-			update_video_and_audio();
-			reset_partial_updates();
-
-#ifdef MESS
-			if (!setup_selected && mess_pause_for_ui)
-			{
-				mess_pause_for_ui = 0;
-				break;
-			}
-#endif /* MESS */
-		}
-
-		if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
-			single_step = 1;
-		else
-		{
-			single_step = 0;
-			mame_pause(0);
-		}
-
-		schedule_full_refresh();
+		mame_pause(1);
+        pause_action = pause_action_paused;
+        pause_bitmap = bitmap;
+//		schedule_full_refresh();
+		return 0;
 	}
 
 #if defined(__sgi) && !defined(MESS)
@@ -4188,8 +4020,6 @@ void init_user_interface(void)
 	osd_selected = 0;
 
 	jukebox_selected = -1;
-
-	single_step = 0;
 }
 
 int onscrd_active(void)
@@ -4211,3 +4041,150 @@ int is_game_paused(void)
 }
 
 #endif
+
+void pause_action_paused(void)
+{
+#ifdef MAME_NET
+    osd_net_sync();
+#endif /* MAME_NET */
+    profiler_mark(PROFILER_VIDEO);
+    if (osd_skip_this_frame() == 0)
+    {
+        /* keep calling vh_screenrefresh() while paused so we can stuff */
+        /* debug code in there */
+        draw_screen();
+    }
+    profiler_mark(PROFILER_END);
+
+    if (input_ui_pressed(IPT_UI_SNAPSHOT))
+        save_screen_snapshot(pause_bitmap);
+
+
+    if (input_ui_pressed(IPT_UI_SAVE_STATE))
+    {
+        do_loadsave(pause_bitmap, LOADSAVE_SAVE);
+        return;
+    }
+
+    if (input_ui_pressed(IPT_UI_LOAD_STATE))
+    {
+        do_loadsave(pause_bitmap, LOADSAVE_LOAD);
+        return;
+    }
+
+    /* if the user pressed F4, show the character set */
+    if (input_ui_pressed(IPT_UI_SHOW_GFX))
+        showcharset(pause_bitmap);
+
+// TODO: ?
+//    if (setup_selected == 0 && input_ui_pressed(IPT_UI_CANCEL))
+//        return 1;
+
+    if (setup_selected == 0 && input_ui_pressed(IPT_UI_CONFIGURE))
+    {
+        setup_selected = -1;
+        if (osd_selected != 0)
+        {
+            osd_selected = 0;	/* disable on screen display */
+            schedule_full_refresh();
+        }
+    }
+    if (setup_selected != 0) setup_selected = setup_menu(pause_bitmap, setup_selected);
+
+#ifdef MAME_DEBUG
+    if (!mame_debug)
+#endif
+        if (osd_selected == 0 && input_ui_pressed(IPT_UI_ON_SCREEN_DISPLAY))
+        {
+            osd_selected = -1;
+            if (setup_selected != 0)
+            {
+                setup_selected = 0; /* disable setup menu */
+                schedule_full_refresh();
+            }
+        }
+    if (osd_selected != 0) osd_selected = on_screen_display(pause_bitmap, osd_selected);
+
+    if (options.cheat) DisplayWatches(pause_bitmap);
+
+    /* show popup message if any */
+    if (messagecounter > 0)
+    {
+        displaymessage(pause_bitmap, messagetext);
+
+        if (--messagecounter == 0)
+            schedule_full_refresh();
+    }
+
+    update_video_and_audio();
+    reset_partial_updates();
+
+#ifdef MESS
+    if (!setup_selected && mess_pause_for_ui)
+    {
+        mess_pause_for_ui = 0;
+        break;
+    }
+#endif /* MESS */
+
+	if(input_ui_pressed(IPT_UI_PAUSE))
+	{
+	    pause_action = 0;
+	    mame_pause(0);
+	}
+}
+
+void pause_action_loadsave(void)
+{
+    int file = 0;
+
+    InputCode code;
+
+    if (pause_loadstate == LOADSAVE_SAVE)
+        displaymessage(pause_bitmap, "Select position to save to");
+    else
+        displaymessage(pause_bitmap, "Select position to load from");
+
+    update_video_and_audio();
+    reset_partial_updates();
+
+    if (input_ui_pressed(IPT_UI_CANCEL))
+    {
+        mame_pause(0);
+        pause_action = 0;
+        return;
+    }
+
+    code = code_read_async();
+    if (code != CODE_NONE)
+    {
+        if (code >= KEYCODE_A && code <= KEYCODE_Z)
+            file = 'a' + (code - KEYCODE_A);
+        else if (code >= KEYCODE_0 && code <= KEYCODE_9)
+            file = '0' + (code - KEYCODE_0);
+        else if (code >= KEYCODE_0_PAD && code <= KEYCODE_9_PAD)
+            file = '0' + (code - KEYCODE_0);
+    }
+
+    if(file)
+    {
+	    mame_pause(0);
+	    pause_action = 0;
+
+        if (file > 0)
+        {
+            if (pause_loadstate == LOADSAVE_SAVE)
+                usrintf_showmessage("Save to position %c", file);
+            else
+                usrintf_showmessage("Load from position %c", file);
+            cpu_loadsave_schedule(pause_loadstate, file);
+        }
+        else
+        {
+            if (pause_loadstate == LOADSAVE_SAVE)
+                usrintf_showmessage("Save cancelled");
+            else
+                usrintf_showmessage("Load cancelled");
+        }
+    }
+}

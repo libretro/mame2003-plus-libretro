@@ -133,6 +133,7 @@ int osd_get_mastervolume(void)
 
 void osd_sound_enable(int enable)
 {
+    memset(XsoundBuffer, 0, sizeof(XsoundBuffer));
 }
 
 

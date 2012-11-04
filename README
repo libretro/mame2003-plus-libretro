@@ -7,7 +7,6 @@ TODO:
 
 * Better path management. For now all games must be placed in a folder named 'rom'. Other folders must be created manually in 'rom's parent directory. Their names can be found under the File I/O section of src/libretro/osd.c.
 * Make sure all of the mkdir commands in makefile complete before any compiling starts.
-* Fix the built in pause feature.
 * Lots more
 
 Notes:
