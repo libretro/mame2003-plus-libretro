@@ -18,6 +18,7 @@ ifeq ($(platform), unix)
    EMULATOR = libretro.so
 
    CFLAGS += -fPIC
+	PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
 else ifeq ($(platform), osx)
    EMULATOR = libretro.dylib
