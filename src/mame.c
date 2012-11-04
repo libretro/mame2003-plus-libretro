@@ -176,6 +176,7 @@ static struct artwork_callbacks mame_artwork_callbacks =
 };
 #endif
 
+static int game_loaded;
 
 
 
@@ -317,7 +318,10 @@ int run_game(int game)
 			if (run_machine())
 				bail_and_print("Unable to start machine emulation");
 			else
+			{
+			    game_loaded = 1;
 				return 0;
+			}
 
 			/* shutdown the local machine */
 			shutdown_machine();
@@ -2153,8 +2157,13 @@ void mame_frame(void)
 void cpu_run_done();
 void mame_done()
 {
-    cpu_run_done();
-    run_machine_core_done();
-    run_machine_done();
-    run_game_done();
+    if(game_loaded)
+    {
+        cpu_run_done();
+        run_machine_core_done();
+        run_machine_done();
+        run_game_done();
+    }
+    
+    game_loaded = 0;
 }

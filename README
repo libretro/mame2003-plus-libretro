@@ -5,7 +5,6 @@ Tested for OS X, linux, Wii, and Android (arm-v7a).
 
 TODO:
 
-* Don't crash if the game fails to load. (It would be best to remove dependence on libco altogether)
 * Better path management. For now all games must be placed in a folder named 'rom'. Other folders must be created manually in 'rom's parent directory. Their names can be found under the File I/O section of src/libretro/osd.c.
 * Make sure all of the mkdir commands in makefile complete before any compiling starts.
 * Lots more
