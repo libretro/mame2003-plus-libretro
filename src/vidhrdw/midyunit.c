@@ -664,10 +664,11 @@ WRITE16_HANDLER( midyunit_dma_w )
 	}
 
 	/* signal we're done */
-	if (FAST_DMA)
+#ifdef FAST_DMA
 		dma_callback(1);
-	else
+#else
 		timer_set(TIME_IN_NSEC(41 * dma_state.width * dma_state.height), 0, dma_callback);
+#endif
 
 	profiler_mark(PROFILER_END);
 }
