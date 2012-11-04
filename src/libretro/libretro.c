@@ -189,6 +189,7 @@ void retro_run (void)
     
     const void* gotFrame = (videoBufferWidth && videoBufferHeight) ? videoBuffer : 0;
     video_cb(gotFrame, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
+    audio_batch_cb(XsoundBuffer, 800);
 }
 
 
