@@ -218,4 +218,4 @@ void osd_update_video_and_audio(struct mame_display *display)
 }
 
 struct mame_bitmap *osd_override_snapshot(struct mame_bitmap *bitmap, struct rectangle *bounds){return NULL;}
-const char *osd_get_fps_text(const struct performance_info *performance){return "";}
+

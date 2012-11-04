@@ -1,3 +1,5 @@
+// __LIBRETRO__: Screw it, this code base isn't being modified elsewhere, just delete what isn't needed
+
 /*********************************************************************
 
 	usrintrf.c
@@ -84,11 +86,6 @@ static int setup_selected;
 static int osd_selected;
 static int jukebox_selected;
 static int single_step;
-
-static int showfps;
-static int showfpstemp;
-
-static int show_profiler;
 
 UINT8 ui_dirty;
 
@@ -3928,99 +3925,6 @@ void do_loadsave(struct mame_bitmap *bitmap, int request_loadsave)
 	}
 }
 
-
-void ui_show_fps_temp(double seconds)
-{
-	if (!showfps)
-		showfpstemp = (int)(seconds * Machine->drv->frames_per_second);
-}
-
-void ui_show_fps_set(int show)
-{
-	if (show)
-	{
-		showfps = 1;
-	}
-	else
-	{
-		showfps = 0;
-		showfpstemp = 0;
-		schedule_full_refresh();
-	}
-}
-
-int ui_show_fps_get(void)
-{
-	return showfps || showfpstemp;
-}
-
-void ui_show_profiler_set(int show)
-{
-	if (show)
-	{
-		show_profiler = 1;
-		profiler_start();
-	}
-	else
-	{
-		show_profiler = 0;
-		profiler_stop();
-		schedule_full_refresh();
-	}
-}
-
-int ui_show_profiler_get(void)
-{
-	return show_profiler;
-}
-
-void ui_display_fps(struct mame_bitmap *bitmap)
-{
-	const char *text, *end;
-	char textbuf[256];
-	int done = 0;
-	int y = 0;
-
-	/* if we're not currently displaying, skip it */
-	if (!showfps && !showfpstemp)
-		return;
-
-	/* get the current FPS text */
-	text = osd_get_fps_text(mame_get_performance_info());
-
-	/* loop over lines */
-	while (!done)
-	{
-		/* find the end of this line and copy it to the text buf */
-		end = strchr(text, '\n');
-		if (end)
-		{
-			memcpy(textbuf, text, end - text);
-			textbuf[end - text] = 0;
-			text = end + 1;
-		}
-		else
-		{
-			strcpy(textbuf, text);
-			done = 1;
-		}
-
-		/* render */
-		ui_text(bitmap, textbuf, uirotwidth - strlen(textbuf) * uirotcharwidth, y);
-		y += uirotcharheight;
-	}
-
-	/* update the temporary FPS display state */
-	if (showfpstemp)
-	{
-		showfpstemp--;
-		if (!showfps && showfpstemp == 0)
-			schedule_full_refresh();
-	}
-}
-
-
-
 int handle_user_interface(struct mame_bitmap *bitmap)
 {
 #ifdef MESS
@@ -4253,22 +4157,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	}
 
 
-	if (input_ui_pressed(IPT_UI_SHOW_PROFILER))
-	{
-		ui_show_profiler_set(!ui_show_profiler_get());
-	}
-
-	if (show_profiler) profiler_show(bitmap);
-
-
-	/* show FPS display? */
-	if (input_ui_pressed(IPT_UI_SHOW_FPS))
-	{
-		/* toggle fps */
-		ui_show_fps_set(!ui_show_fps_get());
-	}
-
-
 	/* if the user pressed F4, show the character set */
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
 	{
@@ -4284,9 +4172,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	{
 		drawgfx_toggle_crosshair();
 	}
-
-	/* add the FPS counter */
-	ui_display_fps(bitmap);
 
 	return 0;
 }

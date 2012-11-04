@@ -161,10 +161,6 @@ static UINT8 full_refresh_pending;
 static int last_partial_scanline;
 
 /* speed computation */
-static cycles_t last_fps_time;
-static int frames_since_last_fps;
-static int rendered_frames_since_last_fps;
-static int vfcount;
 static struct performance_info performance;
 
 /* misc other statics */
@@ -221,7 +217,6 @@ static void run_machine_core(void);
 static int validitychecks(void);
 #endif
 
-static void recompute_fps(int skipped_it);
 static int vh_open(void);
 static void vh_close(void);
 static int init_game_options(void);
@@ -762,13 +757,6 @@ static int vh_open(void)
 	/* force the first update to be full */
 	set_vh_global_attribute(NULL, 0);
 
-	/* reset performance data */
-	last_fps_time = osd_cycles();
-	rendered_frames_since_last_fps = frames_since_last_fps = 0;
-	performance.game_speed_percent = 100;
-	performance.frames_per_second = Machine->drv->frames_per_second;
-	performance.vector_updates_last_second = 0;
-
 	/* reset video statics and get out of here */
 	pdrawgfx_shadow_lowpri = 0;
 	leds_status = 0;
@@ -1247,58 +1235,9 @@ void update_video_and_audio(void)
 	/* render */
 	artwork_update_video_and_audio(&current_display);
 
-	/* update FPS */
-	recompute_fps(skipped_it);
-
 	/* reset dirty flags */
 	visible_area_changed = 0;
 	if (ui_dirty) ui_dirty--;
-}
-
-
-
-/*-------------------------------------------------
-	recompute_fps - recompute the frame rate
--------------------------------------------------*/
-
-static void recompute_fps(int skipped_it)
-{
-	/* increment the frame counters */
-	frames_since_last_fps++;
-	if (!skipped_it)
-		rendered_frames_since_last_fps++;
-
-	/* if we didn't skip this frame, we may be able to compute a new FPS */
-	if (!skipped_it && frames_since_last_fps >= FRAMES_PER_FPS_UPDATE)
-	{
-		cycles_t cps = osd_cycles_per_second();
-		cycles_t curr = osd_cycles();
-		double seconds_elapsed = (double)(curr - last_fps_time) * (1.0 / (double)cps);
-		double frames_per_sec = (double)frames_since_last_fps / seconds_elapsed;
-
-		/* compute the performance data */
-		performance.game_speed_percent = 100.0 * frames_per_sec / Machine->drv->frames_per_second;
-		performance.frames_per_second = (double)rendered_frames_since_last_fps / seconds_elapsed;
-
-		/* reset the info */
-		last_fps_time = curr;
-		frames_since_last_fps = 0;
-		rendered_frames_since_last_fps = 0;
-	}
-
-	/* for vector games, compute the vector update count once/second */
-	vfcount++;
-	if (vfcount >= (int)Machine->drv->frames_per_second)
-	{
-#ifndef MESS
-		/* from vidhrdw/avgdvg.c */
-		extern int vector_updates;
-
-		performance.vector_updates_last_second = vector_updates;
-		vector_updates = 0;
-#endif
-		vfcount -= (int)Machine->drv->frames_per_second;
-	}
 }
 
 

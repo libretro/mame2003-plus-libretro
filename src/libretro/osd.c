@@ -228,34 +228,6 @@ void osd_fclose(osd_file *file)
 }
 
 
-
-/******************************************************************************
-
-	Timing
-
-******************************************************************************/
-// TODO: Determine if these are used anywhere other than performance monitoring, if not ditch them.
-//       Ditch performance monitoring anyway.
-cycles_t osd_cycles(void)
-{
-    struct timeval t;
-    gettimeofday(&t, 0);
-    
-    return (t.tv_sec * 1000000) + (t.tv_usec);
-}
-
-cycles_t osd_cycles_per_second(void)
-{
-    return 1000000;
-}
-
-cycles_t osd_profiling_ticks(void)
-{
-    return osd_cycles();
-}
-
-
-
 /******************************************************************************
 
 	Miscellaneous
