@@ -82,7 +82,6 @@ typedef union {
 	struct { UINT8 l,h,h2,h3; } b;
 	struct { UINT16 l,h; } w;
 #else
-#error DONG
 	struct { UINT8 h3,h2,h,l; } b;
 	struct { UINT16 h,l; } w;
 #endif

@@ -35,6 +35,13 @@ else ifeq ($(platform), android)
    CC = arm-linux-androideabi-gcc
    AR = arm-linux-androideabi-ar
    LD = arm-linux-androideabi-gcc
+else ifeq ($(platform), wii)
+   EMULATOR = libretro_wii.a
+   BIGENDIAN = 1
+    
+   CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
+   AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
+   PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__   
 else
    EMULATOR = retro.dll
    EXE = .exe

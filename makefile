@@ -51,7 +51,7 @@ endif
 # build the targets in different object dirs, since mess changes
 # some structures and thus they can't be linked against each other.
 OBJ = obj/mame
-DEFS = -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__
+DEFS = -DINLINE="static __inline__" -Dasm=__asm__
 
 CFLAGS = -std=gnu99 -Isrc -Isrc/includes -Isrc/$(MAMEOS) -I$(OBJ)/cpu/m68000 -Isrc/cpu/m68000
 
@@ -100,6 +100,10 @@ endif
 include src/$(MAMEOS)/$(MAMEOS).mak
 all:	maketree $(EMULATOR)
 
+ifndef BIGENDIAN
+CFLAGS += -DLSB_FIRST
+endif
+
 # include the various .mak files
 include src/core.mak
 include src/$(TARGET).mak
@@ -122,10 +126,13 @@ CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 
 # primary target
 $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS)
-# always recompile the version string
-	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) $(PLATCFLAGS) -c src/version.c -o $(OBJ)/version.o
+ifeq ($(platform), wii)
+	@echo Archiving $@...
+	$(AR) rcs $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS)
+else
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) -o $@
+endif
 
 $(OBJ)/$(MAMEOS)/%.o: src/$(MAMEOS)/%.c
 	@echo Compiling $<...
