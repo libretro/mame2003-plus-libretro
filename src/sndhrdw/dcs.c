@@ -701,8 +701,9 @@ void dcs_data_w(int data)
 		}
 #endif
 
-	if (LOG_DCS_IO)
+#ifdef LOG_DCS_IO
 		logerror("%08X:dcs_data_w(%04X)\n", activecpu_get_pc(), data);
+#endif
 
 	cpu_boost_interleave(TIME_IN_USEC(0.5), TIME_IN_USEC(5));
 	cpu_set_irq_line(dcs_cpunum, ADSP2105_IRQ2, ASSERT_LINE);
@@ -727,8 +728,9 @@ static READ16_HANDLER( input_latch_r )
 {
 	if (dcs.auto_ack)
 		input_latch_ack_w(0,0,0);
-	if (LOG_DCS_IO)
+#ifdef LOG_DCS_IO
 		logerror("%08X:input_latch_r(%04X)\n", activecpu_get_pc(), dcs.input_data);
+#endif
 	return dcs.input_data;
 }
 
@@ -749,8 +751,9 @@ static void latch_delayed_w(int data)
 
 static WRITE16_HANDLER( output_latch_w )
 {
-	if (LOG_DCS_IO)
+#ifdef LOG_DCS_IO
 		logerror("%08X:output_latch_w(%04X) (empty=%d)\n", activecpu_get_pc(), data, IS_OUTPUT_EMPTY());
+#endif
 	timer_set(TIME_NOW, data, latch_delayed_w);
 }
 
@@ -775,8 +778,9 @@ int dcs_data_r(void)
 	if (dcs.auto_ack)
 		delayed_ack_w(0);
 
-	if (LOG_DCS_IO)
+#ifdef LOG_DCS_IO
 		logerror("%08X:dcs_data_r(%04X)\n", activecpu_get_pc(), dcs.output_data);
+#endif
 	return dcs.output_data;
 }
 
@@ -788,8 +792,9 @@ int dcs_data_r(void)
 
 static void output_control_delayed_w(int data)
 {
-	if (LOG_DCS_IO)
+#ifdef LOG_DCS_IO
 		logerror("output_control = %04X\n", data);
+#endif
 	dcs.output_control = data;
 	dcs.output_control_cycles = 0;
 }
@@ -797,8 +802,9 @@ static void output_control_delayed_w(int data)
 
 static WRITE16_HANDLER( output_control_w )
 {
-	if (LOG_DCS_IO)
+#ifdef LOG_DCS_IO
 		logerror("%04X:output_control = %04X\n", activecpu_get_pc(), data);
+#endif
 	timer_set(TIME_NOW, data, output_control_delayed_w);
 }
 
@@ -844,8 +850,10 @@ static void dcs_dac_update(int num, INT16 *buffer, int length)
 			*buffer++ = source[indx & DCS_BUFFER_MASK];
 		}
 
-		if (LOG_BUFFER_FILLING && i < length)
+#ifdef LOG_BUFFER_FILLING
+		if (i < length)
 			logerror("DCS ran out of input data\n");
+#endif
 
 		/* fill the rest with the last sample */
 		for ( ; i < length; i++)
@@ -858,8 +866,9 @@ static void dcs_dac_update(int num, INT16 *buffer, int length)
 			dcs.buffer_in -= DCS_BUFFER_SIZE;
 		}
 
-		if (LOG_BUFFER_FILLING)
-			logerror("DCS dac update: bytes in buffer = %d\n", dcs.buffer_in - (current >> 16));
+#ifdef LOG_BUFFER_FILLING
+      logerror("DCS dac update: bytes in buffer = %d\n", dcs.buffer_in - (current >> 16));
+#endif
 
 		/* update the final values */
 		dcs.sample_position = current;
@@ -895,8 +904,10 @@ static void dcs2_dac_update(int num, INT16 **buffer, int length)
 			*destr++ = sourcer[indx & DCS_BUFFER_MASK];
 		}
 
-		if (LOG_BUFFER_FILLING && i < length)
+#ifdef LOG_BUFFER_FILLING
+		if (i < length)
 			logerror("DCS ran out of input data\n");
+#endif
 
 		/* fill the rest with the last sample */
 		for ( ; i < length; i++)
@@ -912,8 +923,9 @@ static void dcs2_dac_update(int num, INT16 **buffer, int length)
 			dcs.buffer_in -= DCS_BUFFER_SIZE;
 		}
 
-		if (LOG_BUFFER_FILLING)
-			logerror("DCS dac update: bytes in buffer = %d\n", dcs.buffer_in - (current >> 16));
+#ifdef LOG_BUFFER_FILLING
+      logerror("DCS dac update: bytes in buffer = %d\n", dcs.buffer_in - (current >> 16));
+#endif
 
 		/* update the final values */
 		dcs.sample_position = current;
