@@ -97,7 +97,6 @@ static int driverIndex; //< Index of mame game loaded
 
 //
 
-static bool hasExited;
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
 extern int retroJsState[64];
@@ -188,11 +187,8 @@ void retro_run (void)
     
     mame_frame();
     
-    if(!hasExited && videoBufferWidth && videoBufferHeight)
-    {
-        video_cb(videoBuffer, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
-        audio_batch_cb(XsoundBuffer, 800);
-    }
+    const void* gotFrame = (videoBufferWidth && videoBufferHeight) ? videoBuffer : 0;
+    video_cb(gotFrame, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
 }
 
 
