@@ -29,44 +29,68 @@ void retro_set_environment(retro_environment_t cb) { environ_cb = cb; }
 
 
 //
+
+#ifndef PATH_SEPARATOR
+# if defined(WINDOWS_PATH_STYLE) || defined(_WIN32)
+#  define PATH_SEPARATOR '\\'
+# else
+#  define PATH_SEPARATOR '/'
+# endif
+#endif
+
+static char* normalizePath(char* aPath)
+{
+    static const char replaced = (PATH_SEPARATOR == '\\') ? '/' : '\\';
+
+    for(char* tok = strchr(aPath, replaced); tok; tok = strchr(aPath, replaced))
+    {
+        *tok = PATH_SEPARATOR;
+    }
+    
+    return aPath;
+}
+
 static int getDriverIndex(const char* aPath)
 {
     char driverName[128];
-    const char* lastSlash = strrchr(aPath, '/');
-    const char* const lastSlashWindows = strrchr(aPath, '\\');
-    
-    if(!lastSlash && lastSlashWindows)
-    {
-        lastSlash = lastSlashWindows;
-    }
-    else if(lastSlash && lastSlashWindows && (lastSlashWindows > lastSlash))
-    {
-        lastSlash = lastSlashWindows;
-    }
 
+    // Get all chars after the last slash
+    char* path = normalizePath(strdup(aPath ? aPath : "."));
+    char* last = strrchr(path, PATH_SEPARATOR);
     memset(driverName, 0, sizeof(driverName));
-
-    if(NULL != lastSlash)
+    strncpy(driverName, last ? last + 1 : path, sizeof(driverName) - 1);
+    free(path);
+    
+    // Remove extension    
+    char* const firstDot = strchr(driverName, '.');
+    if(firstDot)
     {
-        strncpy(driverName, lastSlash + 1, sizeof(driverName) - 1);
-        
-        char* const firstDot = strchr(driverName, '.');
-        if(firstDot)
+        *firstDot = 0;
+    }
+
+    // Search list
+    for(int i = 0; drivers[i]; i ++)
+    {
+        if(0 == strcmp(driverName, drivers[i]->name))
         {
-            *firstDot = 0;
-        }
-                
-        for(int i = 0; drivers[i]; i ++)
-        {
-            if(0 == strcmp(driverName, drivers[i]->name))
-            {
-                return i;
-            }
+            return i;
         }
     }
     
     return -1;
 }
+
+static char* peelPathItem(char* aPath)
+{
+    char* last = strrchr(aPath, PATH_SEPARATOR);
+    if(last)
+    {
+        *last = 0;
+    }
+    
+    return aPath;
+}
+
 static int driverIndex; //< Index of mame game loaded
 
 //
@@ -166,11 +190,6 @@ void retro_init (void)
                 retroColorMode = RETRO_PIXEL_FORMAT_0RGB1555;
             }
         }
-
-        // Get System Directory: This likely won't work if not specified
-        const char* retroSysDir = 0;
-        const bool gotSysDir = environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &retroSysDir);
-        systemDir = strdup(gotSysDir ? retroSysDir : ".");
     
         mainThread = co_active();
         emuThread = co_create(65536*sizeof(void*), retro_wrap_emulator);
@@ -261,7 +280,12 @@ bool retro_load_game(const struct retro_game_info *game)
         driverIndex = getDriverIndex(game->path);
         
         if(0 <= driverIndex)
-        {            
+        {
+            // Get MAME Directory
+            systemDir = normalizePath(strdup(game->path));
+            systemDir = peelPathItem(systemDir);
+            systemDir = peelPathItem(systemDir);       
+
             // Setup Rotation
             const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
             unsigned rotateMode = 0;
