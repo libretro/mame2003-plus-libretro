@@ -83,8 +83,17 @@ CFLAGSOSDEPEND = $(CFLAGS)
 # the windows osd code at least cannot be compiled with -pedantic
 CFLAGSPEDANTIC = $(CFLAGS) -pedantic
 
+dont_link_zlib =
+ifeq ($(platform), ps3)
+dont_link_zlib= yes
+endif
+
 # platform .mak files will want to add to this
+ifeq ($(dont_link_zlib),yes)
+CFLAGS += -Isrc/libretro/includes/zlib
+else
 LIBS = -lz
+endif
 
 OBJDIRS = obj $(OBJ) $(OBJ)/cpu $(OBJ)/sound $(OBJ)/$(MAMEOS) \
 	$(OBJ)/drivers $(OBJ)/machine $(OBJ)/vidhrdw $(OBJ)/sndhrdw
@@ -123,10 +132,17 @@ endif
 
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
+DO_ARCHIVE = 0
+ifeq ($(platform), wii)
+	DO_ARCHIVES = 1
+endif
+ifeq ($(platform), ps3)
+	DO_ARCHIVES = 1
+endif
 
 # primary target
 $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS)
-ifeq ($(platform), wii)
+ifeq ($(DO_ARCHIVES),1)
 	@echo Archiving $@...
 	$(AR) rcs $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS)
 else

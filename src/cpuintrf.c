@@ -10,7 +10,6 @@
 
 ***************************************************************************/
 
-#include <signal.h>
 #include "driver.h"
 #include "state.h"
 #include "mamedbg.h"

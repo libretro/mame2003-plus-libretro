@@ -735,7 +735,6 @@ static UINT8 SZHV_inc[256]; /* zero, sign, half carry and overflow flags INC r8 
 static UINT8 SZHV_dec[256]; /* zero, sign, half carry and overflow flags DEC r8 */
 
 #if BIG_FLAGS_ARRAY
-#include <signal.h>
 static UINT8 *SZHVC_add = 0;
 static UINT8 *SZHVC_sub = 0;
 #endif
@@ -1833,7 +1832,7 @@ void z180_reset(void *param)
 		if( !SZHVC_add || !SZHVC_sub )
 		{
 			LOG(("Z180: failed to allocate 2 * 128K flags arrays!!!\n"));
-			raise(SIGABRT);
+			//raise(SIGABRT);
 		}
 		padd = &SZHVC_add[	0*256];
 		padc = &SZHVC_add[256*256];

@@ -6,7 +6,6 @@
 
 ***************************************************************************/
 
-#include <signal.h>
 #include "driver.h"
 #include "timer.h"
 #include "state.h"

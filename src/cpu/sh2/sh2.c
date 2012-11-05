@@ -95,7 +95,6 @@
  *****************************************************************************/
 
 #include <stdio.h>
-#include <signal.h>
 #include "driver.h"
 #include "state.h"
 #include "mamedbg.h"
@@ -3092,7 +3091,7 @@ void sh2_init(void)
 	if (!sh2.m)
 	{
 		logerror("SH2 failed to malloc FREGS\n");
-		raise( SIGABRT );
+		//raise( SIGABRT );
 	}
 
 	state_save_register_UINT32("sh2", cpu, "PC",  &sh2.pc, 1);
