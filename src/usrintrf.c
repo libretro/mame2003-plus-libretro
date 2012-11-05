@@ -26,8 +26,13 @@
 extern void (*pause_action)(void);
 static void pause_action_paused(void);
 static void pause_action_loadsave(void);
+static void pause_action_showcopyright(void);
+static void pause_action_showgamewarnings(void);
+void pause_action_start_emulator(void);
 static int pause_loadstate;
 static struct mame_bitmap *pause_bitmap;
+static char pause_buffer[2048];
+static int pause_done;
 
 
 
@@ -2312,45 +2317,23 @@ static int mame_stats(struct mame_bitmap *bitmap,int selected)
 
 int showcopyright(struct mame_bitmap *bitmap)
 {
-	int done;
-	char buf[1000];
 	char buf2[256];
 
-	strcpy (buf, ui_getstring(UI_copyright1));
-	strcat (buf, "\n\n");
+	strcpy (pause_buffer, ui_getstring(UI_copyright1));
+	strcat (pause_buffer, "\n\n");
 	sprintf(buf2, ui_getstring(UI_copyright2), Machine->gamedrv->description);
-	strcat (buf, buf2);
-	strcat (buf, "\n\n");
-	strcat (buf, ui_getstring(UI_copyright3));
+	strcat (pause_buffer, buf2);
+	strcat (pause_buffer, "\n\n");
+	strcat (pause_buffer, ui_getstring(UI_copyright3));
 
 	setup_selected = -1;////
-	done = 0;
+	
+	// Prep pause action
+    pause_action = pause_action_showcopyright;
+    pause_bitmap = bitmap;
+    pause_done = 0;
 
-	do
-	{
-		erase_screen(bitmap);
-		ui_drawbox(bitmap,0,0,uirotwidth,uirotheight);
-		ui_displaymessagewindow(bitmap,buf);
-
-		update_video_and_audio();
-		if (input_ui_pressed(IPT_UI_CANCEL))
-		{
-			setup_selected = 0;////
-			return 1;
-		}
-		if (keyboard_pressed_memory(KEYCODE_O) ||
-				input_ui_pressed(IPT_UI_LEFT))
-			done = 1;
-		if (done == 1 && (keyboard_pressed_memory(KEYCODE_K) ||
-				input_ui_pressed(IPT_UI_RIGHT)))
-			done = 2;
-	} while (done < 2);
-
-	setup_selected = 0;////
-	erase_screen(bitmap);
-	update_video_and_audio();
-
-	return 0;
+    return 0;
 }
 
 static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
@@ -2519,62 +2502,66 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 
 int showgamewarnings(struct mame_bitmap *bitmap)
 {
+    pause_action = pause_action_start_emulator;
+
+    // Fill pause_buffer with text
 	int i;
-	char buf[2048];
 
 	if (Machine->gamedrv->flags &
 			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
 			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL))
 	{
-		int done;
-
-		strcpy(buf, ui_getstring (UI_knownproblems));
-		strcat(buf, "\n\n");
+        pause_action = pause_action_showgamewarnings;
+        pause_bitmap = bitmap;
+        pause_done = 0;
+		
+		strcpy(pause_buffer, ui_getstring (UI_knownproblems));
+		strcat(pause_buffer, "\n\n");
 
 #ifdef MESS
 		if (Machine->gamedrv->flags & GAME_COMPUTER)
 		{
-			strcpy(buf, ui_getstring (UI_comp1));
-			strcat(buf, "\n\n");
-			strcat(buf, ui_getstring (UI_comp2));
-			strcat(buf, "\n");
+			strcpy(pause_buffer, ui_getstring (UI_comp1));
+			strcat(pause_buffer, "\n\n");
+			strcat(pause_buffer, ui_getstring (UI_comp2));
+			strcat(pause_buffer, "\n");
 		}
 #endif
 
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
 		{
-			strcat(buf, ui_getstring (UI_imperfectcolors));
-			strcat(buf, "\n");
+			strcat(pause_buffer, ui_getstring (UI_imperfectcolors));
+			strcat(pause_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_WRONG_COLORS)
 		{
-			strcat(buf, ui_getstring (UI_wrongcolors));
-			strcat(buf, "\n");
+			strcat(pause_buffer, ui_getstring (UI_wrongcolors));
+			strcat(pause_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_GRAPHICS)
 		{
-			strcat(buf, ui_getstring (UI_imperfectgraphics));
-			strcat(buf, "\n");
+			strcat(pause_buffer, ui_getstring (UI_imperfectgraphics));
+			strcat(pause_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_SOUND)
 		{
-			strcat(buf, ui_getstring (UI_imperfectsound));
-			strcat(buf, "\n");
+			strcat(pause_buffer, ui_getstring (UI_imperfectsound));
+			strcat(pause_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_NO_SOUND)
 		{
-			strcat(buf, ui_getstring (UI_nosound));
-			strcat(buf, "\n");
+			strcat(pause_buffer, ui_getstring (UI_nosound));
+			strcat(pause_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_NO_COCKTAIL)
 		{
-			strcat(buf, ui_getstring (UI_nococktail));
-			strcat(buf, "\n");
+			strcat(pause_buffer, ui_getstring (UI_nococktail));
+			strcat(pause_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
@@ -2584,13 +2571,13 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 
 			if (Machine->gamedrv->flags & GAME_NOT_WORKING)
 			{
-				strcpy(buf, ui_getstring (UI_brokengame));
-				strcat(buf, "\n");
+				strcpy(pause_buffer, ui_getstring (UI_brokengame));
+				strcat(pause_buffer, "\n");
 			}
 			if (Machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
 			{
-				strcat(buf, ui_getstring (UI_brokenprotection));
-				strcat(buf, "\n");
+				strcat(pause_buffer, ui_getstring (UI_brokenprotection));
+				strcat(pause_buffer, "\n");
 			}
 
 			if (Machine->gamedrv->clone_of && !(Machine->gamedrv->clone_of->flags & NOT_A_DRIVER))
@@ -2607,39 +2594,21 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 					{
 						if (foundworking == 0)
 						{
-							strcat(buf,"\n\n");
-							strcat(buf, ui_getstring (UI_workingclones));
-							strcat(buf,"\n\n");
+							strcat(pause_buffer,"\n\n");
+							strcat(pause_buffer, ui_getstring (UI_workingclones));
+							strcat(pause_buffer,"\n\n");
 						}
 						foundworking = 1;
 
-						sprintf(&buf[strlen(buf)],"%s\n",drivers[i]->name);
+						sprintf(&pause_buffer[strlen(pause_buffer)],"%s\n",drivers[i]->name);
 					}
 				}
 				i++;
 			}
 		}
 
-		strcat(buf,"\n\n");
-		strcat(buf,ui_getstring (UI_typeok));
-
-		done = 0;
-		do
-		{
-			erase_screen(bitmap);
-			ui_drawbox(bitmap,0,0,uirotwidth,uirotheight);
-			ui_displaymessagewindow(bitmap,buf);
-
-			update_video_and_audio();
-			if (input_ui_pressed(IPT_UI_CANCEL))
-				return 1;
-			if (code_pressed_memory(KEYCODE_O) ||
-					input_ui_pressed(IPT_UI_LEFT))
-				done = 1;
-			if (done == 1 && (code_pressed_memory(KEYCODE_K) ||
-					input_ui_pressed(IPT_UI_RIGHT)))
-				done = 2;
-		} while (done < 2);
+		strcat(pause_buffer,"\n\n");
+		strcat(pause_buffer,ui_getstring (UI_typeok));
 	}
 
 	erase_screen(bitmap);
@@ -2649,6 +2618,7 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 }
 
 
+#if 0 // Will hang
 int showgameinfo(struct mame_bitmap *bitmap)
 {
 	/* clear the input memory */
@@ -2675,6 +2645,7 @@ int showgameinfo(struct mame_bitmap *bitmap)
 
 	return 0;
 }
+#endif
 
 /* Word-wraps the text in the specified buffer to fit in maxwidth characters per line.
    The contents of the buffer are modified.
@@ -4186,5 +4157,48 @@ void pause_action_loadsave(void)
             else
                 usrintf_showmessage("Load cancelled");
         }
+    }
+}
+
+static int show_game_message(void)
+{
+    erase_screen(pause_bitmap);
+    ui_drawbox(pause_bitmap,0,0,uirotwidth,uirotheight);
+    ui_displaymessagewindow(pause_bitmap,pause_buffer);
+
+    update_video_and_audio();
+    
+    if (input_ui_pressed(IPT_UI_CANCEL))
+    {
+        return 1;
+    }
+    
+    if (code_pressed_memory(KEYCODE_O) || input_ui_pressed(IPT_UI_LEFT))
+    {
+        pause_done = 1;
+    }
+    else if (pause_done == 1 && (code_pressed_memory(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
+    {
+        pause_done = 2;
+        return 1;
+    }
+    
+    return 0;
+}
+
+static void pause_action_showcopyright(void)
+{
+    if(show_game_message())
+    {
+        setup_selected = 0;
+        showgamewarnings(pause_bitmap);
+    }
+}
+
+static void pause_action_showgamewarnings(void)
+{
+    if(show_game_message())
+    {
+        pause_action = pause_action_start_emulator;    
     }
 }

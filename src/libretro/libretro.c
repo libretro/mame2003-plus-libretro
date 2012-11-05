@@ -219,8 +219,6 @@ bool retro_load_game(const struct retro_game_info *game)
         // Set all options before starting the game
         options.samplerate = 48000;            
         options.ui_orientation = uiModes[rotateMode];
-        options.skip_disclaimer = 1;
-        options.skip_gameinfo = 1;
 
         // Boot the emulator
         return 0 == run_game(driverIndex);

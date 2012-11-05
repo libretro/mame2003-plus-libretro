@@ -533,48 +533,53 @@ void run_machine_done(void)
 /*-------------------------------------------------
 	run_machine_core - core execution loop
 -------------------------------------------------*/
+void pause_action_start_emulator(void)
+{
+    init_user_interface();
+
+    /* enable artwork now */
+    artwork_enable(1);
+
+    /* disable cheat if no roms */
+    if (!gamedrv->rom)
+        options.cheat = 0;
+
+    /* start the cheat engine */
+    if (options.cheat)
+        InitCheat();
+
+    /* load the NVRAM now */
+    if (Machine->drv->nvram_handler)
+    {
+        mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
+        (*Machine->drv->nvram_handler)(nvram_file, 0);
+        if (nvram_file)
+            mame_fclose(nvram_file);
+    }
+
+    /* run the emulation! */
+    cpu_run();
+
+    // Unpause
+    extern void (*pause_action)(void);
+    pause_action = 0;
+}
 
 void run_machine_core(void)
 {
 	/* disable artwork for the start */
 	artwork_enable(0);
 
-	/* if we didn't find a settings file, show the disclaimer */
-	if (settingsloaded || options.skip_disclaimer || showcopyright(artwork_get_ui_bitmap()) == 0)
-	{
-		/* show info about incorrect behaviour (wrong colors etc.) */
-//		if (showgamewarnings(artwork_get_ui_bitmap()) == 0)
-		{
-			/* show info about the game */
-			if (options.skip_gameinfo || showgameinfo(artwork_get_ui_bitmap()) == 0)
-			{
-				init_user_interface();
+    if(settingsloaded || options.skip_disclaimer)
+    {
+        showgamewarnings(artwork_get_ui_bitmap());
+    }
+    else
+    {
+        showcopyright(artwork_get_ui_bitmap());
+    }
 
-				/* enable artwork now */
-				artwork_enable(1);
-
-				/* disable cheat if no roms */
-				if (!gamedrv->rom)
-					options.cheat = 0;
-
-				/* start the cheat engine */
-				if (options.cheat)
-					InitCheat();
-
-				/* load the NVRAM now */
-				if (Machine->drv->nvram_handler)
-				{
-					mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
-					(*Machine->drv->nvram_handler)(nvram_file, 0);
-					if (nvram_file)
-						mame_fclose(nvram_file);
-				}
-
-				/* run the emulation! */
-				cpu_run();
-			}
-		}
-	}
+    // GAME INFO
 }
 
 void run_machine_core_done(void)
