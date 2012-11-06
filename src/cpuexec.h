@@ -96,25 +96,6 @@ void machine_reset(void);
 
 /*************************************
  *
- *	Save/restore
- *
- *************************************/
-
-/* Load or save the game state */
-enum
-{
-	LOADSAVE_NONE,
-	LOADSAVE_SAVE,
-	LOADSAVE_LOAD
-};
-void cpu_loadsave_schedule(int type, char id);
-void cpu_loadsave_schedule_file(int type, const char *name);
-void cpu_loadsave_reset(void);
-
-
-
-/*************************************
- *
  *	Optional watchdog
  *
  *************************************/

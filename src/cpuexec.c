@@ -198,16 +198,6 @@ static double perfect_interleave;
 
 
 
-/*************************************
- *
- *	Save/load variables
- *
- *************************************/
-
-static int loadsave_schedule;
-static char *loadsave_schedule_name;
-
-
 
 /*************************************
  *
@@ -222,8 +212,6 @@ static void cpu_vblankcallback(int param);
 static void cpu_updatecallback(int param);
 static void end_interleave_boost(int param);
 static void compute_perfect_interleave(void);
-
-static void handle_loadsave(void);
 
 
 
@@ -379,10 +367,7 @@ void (*pause_action)(void);
 void mame_frame(void)
 {
     if(!pause_action)
-    {
-        if (loadsave_schedule != LOADSAVE_NONE)
-            handle_loadsave();
-    
+    {    
         extern int gotFrame;
         
         while(!gotFrame)
@@ -444,193 +429,6 @@ void cpu_exit(void)
 void machine_reset(void)
 {
 	time_to_reset = 1;
-}
-
-
-
-
-#if 0
-#pragma mark -
-#pragma mark SAVE/RESTORE
-#endif
-
-/*************************************
- *
- *	Handle saves at runtime
- *
- *************************************/
-
-static void handle_save(void)
-{
-	mame_file *file;
-	int cpunum;
-
-	/* open the file */
-	file = mame_fopen(Machine->gamedrv->name, loadsave_schedule_name, FILETYPE_STATE, 1);
-
-	if (file)
-	{
-		/* write the save state */
-		state_save_save_begin(file);
-
-		/* write tag 0 */
-		state_save_set_current_tag(0);
-		state_save_save_continue();
-
-		/* loop over CPUs */
-		for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
-		{
-			cpuintrf_push_context(cpunum);
-
-			/* make sure banking is set */
-			activecpu_reset_banking();
-
-			/* save the CPU data */
-			state_save_set_current_tag(cpunum + 1);
-			state_save_save_continue();
-
-			cpuintrf_pop_context();
-		}
-
-		/* finish and close */
-		state_save_save_finish();
-		mame_fclose(file);
-	}
-	else
-	{
-		usrintf_showmessage("Error: Failed to save state");
-	}
-
-	/* unschedule the save */
-	cpu_loadsave_reset();
-}
-
-
-
-/*************************************
- *
- *	Handle loads at runtime
- *
- *************************************/
-
-static void handle_load(void)
-{
-	mame_file *file;
-	int cpunum;
-
-	/* open the file */
-	file = mame_fopen(Machine->gamedrv->name, loadsave_schedule_name, FILETYPE_STATE, 0);
-
-	/* if successful, load it */
-	if (file)
-	{
-		/* start loading */
-		if (!state_save_load_begin(file))
-		{
-			/* read tag 0 */
-			state_save_set_current_tag(0);
-			state_save_load_continue();
-
-			/* loop over CPUs */
-			for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
-			{
-				cpuintrf_push_context(cpunum);
-
-				/* make sure banking is set */
-				activecpu_reset_banking();
-
-				/* load the CPU data */
-				state_save_set_current_tag(cpunum + 1);
-				state_save_load_continue();
-
-				cpuintrf_pop_context();
-			}
-
-			/* finish and close */
-			state_save_load_finish();
-		}
-		mame_fclose(file);
-	}
-	else
-	{
-		usrintf_showmessage("Error: Failed to load state");
-	}
-
-	/* unschedule the load */
-	cpu_loadsave_reset();
-}
-
-
-
-/*************************************
- *
- *	Handle saves & loads at runtime
- *
- *************************************/
-
-static void handle_loadsave(void)
-{
-	/* it's one or the other */
-	if (loadsave_schedule == LOADSAVE_SAVE)
-		handle_save();
-	else if (loadsave_schedule == LOADSAVE_LOAD)
-		handle_load();
-
-	/* reset the schedule */
-	cpu_loadsave_reset();
-}
-
-
-
-/*************************************
- *
- *	Schedules a save/load for later
- *
- *************************************/
-
-void cpu_loadsave_schedule_file(int type, const char *name)
-{
-	cpu_loadsave_reset();
-
-	loadsave_schedule_name = malloc(strlen(name) + 1);
-	if (loadsave_schedule_name)
-	{
-		strcpy(loadsave_schedule_name, name);
-		loadsave_schedule = type;
-	}
-}
-
-
-
-/*************************************
- *
- *	Schedules a save/load for later
- *
- *************************************/
-
-void cpu_loadsave_schedule(int type, char id)
-{
-	char name[256];
-	sprintf(name, "%s-%c", Machine->gamedrv->name, id);
-	cpu_loadsave_schedule_file(type, name);
-}
-
-
-
-/*************************************
- *
- *	Unschedules any saves or loads
- *
- *************************************/
-
-void cpu_loadsave_reset(void)
-{
-	loadsave_schedule = LOADSAVE_NONE;
-	if (loadsave_schedule_name)
-	{
-		free(loadsave_schedule_name);
-		loadsave_schedule_name = NULL;
-	}
 }
 
 

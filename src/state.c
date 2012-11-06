@@ -88,7 +88,6 @@ static ss_func *ss_postfunc_reg;
 static int ss_current_tag;
 
 static unsigned char *ss_dump_array;
-static mame_file *ss_dump_file;
 static unsigned int ss_dump_size;
 
 
@@ -181,7 +180,6 @@ void state_save_reset(void)
 
 	ss_current_tag = 0;
 	ss_dump_array = 0;
-	ss_dump_file = 0;
 	ss_dump_size = 0;
 }
 
@@ -381,13 +379,35 @@ static void ss_c8(unsigned char *data, unsigned size)
 	}
 }
 
-
-void state_save_save_begin(mame_file *file)
+// __LIBRETRO__: Serialize helper
+size_t state_get_dump_size(void)
 {
 	ss_module *m;
 	TRACE(logerror("Beginning save\n"));
 	ss_dump_size = 0x18;
-	ss_dump_file = file;
+	for(m = ss_registry; m; m=m->next) {
+		int i;
+		for(i=0; i<MAX_INSTANCES; i++) {
+			ss_entry *e;
+			for(e = m->instances[i]; e; e=e->next) {
+			    if(!e->data)
+			    {
+			        return 0;
+			    }
+				e->offset = ss_dump_size;
+				ss_dump_size += ss_size[e->type]*e->size;
+			}
+		}
+	}
+
+    return ss_dump_size;
+}
+
+void state_save_save_begin(void *array)
+{
+	ss_module *m;
+	TRACE(logerror("Beginning save\n"));
+	ss_dump_size = 0x18;
 	for(m = ss_registry; m; m=m->next) {
 		int i;
 		for(i=0; i<MAX_INSTANCES; i++) {
@@ -400,14 +420,14 @@ void state_save_save_begin(mame_file *file)
 	}
 
 	TRACE(logerror("   total size %u\n", ss_dump_size));
-	ss_dump_array = malloc(ss_dump_size);
+	ss_dump_array = array;
 	if (ss_dump_array == NULL)
 	{
 		logerror ("malloc failed in state_save_save_begin\n");
 	}
 }
 
-void state_save_save_continue(void)
+int state_save_save_continue(void)
 {
 	ss_module *m;
 	ss_func * f;
@@ -430,6 +450,11 @@ void state_save_save_continue(void)
 			ss_entry *e;
 			for(e = m->instances[i]; e; e=e->next)
 				if(e->tag == ss_current_tag) {
+				    if(!e->data) {
+				    	ss_dump_array = 0;
+                    	ss_dump_size = 0;
+                    	return 1;
+				    }
 					if(e->type == SS_INT) {
 						int v = *(int *)(e->data);
 						ss_dump_array[e->offset]   = v ;
@@ -444,6 +469,8 @@ void state_save_save_continue(void)
 				}
 		}
 	}
+	
+	return 0;
 }
 
 void state_save_save_finish(void)
@@ -472,14 +499,11 @@ void state_save_save_finish(void)
 	ss_dump_array[0x16] = signature >> 16;
 	ss_dump_array[0x17] = signature >> 24;
 
-	mame_fwrite(ss_dump_file, ss_dump_array, ss_dump_size);
-	free(ss_dump_array);
 	ss_dump_array = 0;
 	ss_dump_size = 0;
-	ss_dump_file = 0;
 }
 
-int state_save_load_begin(mame_file *file)
+int state_save_load_begin(void *array, size_t size)
 {
 	ss_module *m;
 	unsigned int offset = 0;
@@ -489,10 +513,8 @@ int state_save_load_begin(mame_file *file)
 
 	signature = ss_get_signature();
 
-	ss_dump_size = mame_fsize(file);
-	ss_dump_array = malloc(ss_dump_size);
-	ss_dump_file = file;
-	mame_fread(ss_dump_file, ss_dump_array, ss_dump_size);
+	ss_dump_size = size;
+	ss_dump_array = array;
 
 	if(memcmp(ss_dump_array, "MAMESAVE", 8)) {
 		usrintf_showmessage("Error: This is not a mame save file");
@@ -541,11 +563,10 @@ int state_save_load_begin(mame_file *file)
 	return 0;
 
  bad:
-	free(ss_dump_array);
 	return 1;
 }
 
-void state_save_load_continue(void)
+int state_save_load_continue(void)
 {
 	ss_module *m;
 	ss_func * f;
@@ -566,6 +587,12 @@ void state_save_load_continue(void)
 			ss_entry *e;
 			for(e = m->instances[i]; e; e=e->next)
 				if(e->tag == ss_current_tag) {
+					if(!e->data) {
+				    	ss_dump_array = 0;
+                    	ss_dump_size = 0;
+                    	return 1;
+				    }
+
 					if(e->type == SS_INT) {
 						int v;
 						v = ss_dump_array[e->offset]
@@ -593,15 +620,15 @@ void state_save_load_continue(void)
 		f = f->next;
 	}
 	TRACE(logerror("    %d functions called\n", count));
+	
+	return 0;
 }
 
 void state_save_load_finish(void)
 {
 	TRACE(logerror("Finishing load\n"));
-	free(ss_dump_array);
 	ss_dump_array = 0;
 	ss_dump_size = 0;
-	ss_dump_file = 0;
 }
 
 void state_save_dump_registry(void)

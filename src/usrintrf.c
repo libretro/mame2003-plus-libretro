@@ -15,7 +15,6 @@
 #include <stdarg.h>
 #include <math.h>
 #include "ui_text.h"
-#include "state.h"
 
 #ifdef MESS
   #include "mess.h"
@@ -25,11 +24,9 @@
 
 extern void (*pause_action)(void);
 static void pause_action_paused(void);
-static void pause_action_loadsave(void);
 static void pause_action_showcopyright(void);
 static void pause_action_showgamewarnings(void);
 void pause_action_start_emulator(void);
-static int pause_loadstate;
 static struct mame_bitmap *pause_bitmap;
 static char pause_buffer[2048];
 static int pause_done;
@@ -3849,15 +3846,6 @@ void CLIB_DECL usrintf_showmessage_secs(int seconds, const char *text,...)
 	messagecounter = seconds * Machine->drv->frames_per_second;
 }
 
-void do_loadsave(struct mame_bitmap *bitmap, int request_loadsave)
-{
-	mame_pause(1);
-	
-	pause_action = pause_action_loadsave;
-	pause_loadstate = request_loadsave;
-	pause_bitmap = bitmap;
-}
-
 int handle_user_interface(struct mame_bitmap *bitmap)
 {
 #ifdef MESS
@@ -3908,18 +3896,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	/* if the user pressed F3, reset the emulation */
 	if (input_ui_pressed(IPT_UI_RESET_MACHINE))
 		machine_reset();
-
-	if (input_ui_pressed(IPT_UI_SAVE_STATE))
-	{
-		do_loadsave(bitmap, LOADSAVE_SAVE);
-		return 0;
-	}
-
-	if (input_ui_pressed(IPT_UI_LOAD_STATE))
-	{
-		do_loadsave(bitmap, LOADSAVE_LOAD);
-		return 0;
-	}
 
 #ifndef MESS
 	if (input_ui_pressed(IPT_UI_PAUSE)) /* pause the game */
@@ -4031,18 +4007,6 @@ void pause_action_paused(void)
         save_screen_snapshot(pause_bitmap);
 
 
-    if (input_ui_pressed(IPT_UI_SAVE_STATE))
-    {
-        do_loadsave(pause_bitmap, LOADSAVE_SAVE);
-        return;
-    }
-
-    if (input_ui_pressed(IPT_UI_LOAD_STATE))
-    {
-        do_loadsave(pause_bitmap, LOADSAVE_LOAD);
-        return;
-    }
-
     /* if the user pressed F4, show the character set */
     if (input_ui_pressed(IPT_UI_SHOW_GFX))
         showcharset(pause_bitmap);
@@ -4103,61 +4067,6 @@ void pause_action_paused(void)
 	    pause_action = 0;
 	    mame_pause(0);
 	}
-}
-
-void pause_action_loadsave(void)
-{
-    int file = 0;
-
-    InputCode code;
-
-    if (pause_loadstate == LOADSAVE_SAVE)
-        displaymessage(pause_bitmap, "Select position to save to");
-    else
-        displaymessage(pause_bitmap, "Select position to load from");
-
-    update_video_and_audio();
-    reset_partial_updates();
-
-    if (input_ui_pressed(IPT_UI_CANCEL))
-    {
-        mame_pause(0);
-        pause_action = 0;
-        return;
-    }
-
-    code = code_read_async();
-    if (code != CODE_NONE)
-    {
-        if (code >= KEYCODE_A && code <= KEYCODE_Z)
-            file = 'a' + (code - KEYCODE_A);
-        else if (code >= KEYCODE_0 && code <= KEYCODE_9)
-            file = '0' + (code - KEYCODE_0);
-        else if (code >= KEYCODE_0_PAD && code <= KEYCODE_9_PAD)
-            file = '0' + (code - KEYCODE_0);
-    }
-
-    if(file)
-    {
-	    mame_pause(0);
-	    pause_action = 0;
-
-        if (file > 0)
-        {
-            if (pause_loadstate == LOADSAVE_SAVE)
-                usrintf_showmessage("Save to position %c", file);
-            else
-                usrintf_showmessage("Load from position %c", file);
-            cpu_loadsave_schedule(pause_loadstate, file);
-        }
-        else
-        {
-            if (pause_loadstate == LOADSAVE_SAVE)
-                usrintf_showmessage("Save cancelled");
-            else
-                usrintf_showmessage("Load cancelled");
-        }
-    }
 }
 
 static int show_game_message(void)

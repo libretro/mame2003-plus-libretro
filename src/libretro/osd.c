@@ -143,7 +143,7 @@ void osd_sound_enable(int enable)
 	File I/O
 
 ******************************************************************************/
-static const char* const paths[] = {"raw", "rom", "image", "image_diff", "sample", "artwork", "nvram", "hs", "hsdb", "config", "inputlog", "state", "memcard", "ss", "history", "cheat", "lang", "ctrlr", "ini"};
+static const char* const paths[] = {"raw", "rom", "image", "image_diff", "sample", "artwork", "nvram", "hs", "hsdb", "config", "inputlog", "memcard", "ss", "history", "cheat", "lang", "ctrlr", "ini"};
 
 struct _osd_file
 {

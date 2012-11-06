@@ -196,14 +196,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 		case FILETYPE_INPUTLOG:
 			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
 
-		/* save state files */
-		case FILETYPE_STATE:
-#ifndef MESS
-			return generic_fopen(filetype, NULL, filename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
-#else
-			return generic_fopen(filetype, NULL, filename, 0, FILEFLAG_ALLOW_ABSOLUTE | (openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD));
-#endif
-
 		/* memory card files */
 		case FILETYPE_MEMCARD:
 			return generic_fopen(filetype, NULL, filename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
@@ -825,10 +817,6 @@ static const char *get_extension_for_filetype(int filetype)
 
 		case FILETYPE_INPUTLOG:		/* input logs */
 			extension = "inp";
-			break;
-
-		case FILETYPE_STATE:		/* save state files */
-			extension = "sta";
 			break;
 
 		case FILETYPE_MEMCARD:		/* memory card files */

@@ -4,6 +4,7 @@
 
 #include "mame.h"
 #include "driver.h"
+#include "state.h"
 
 #ifdef DEBUG_LOG
 # define LOG(msg) fprintf(stderr, "%s\n", msg)
@@ -237,15 +238,101 @@ void retro_unload_game(void)
     systemDir = 0;
 }
 
+size_t retro_serialize_size(void)
+{
+    extern size_t state_get_dump_size(void);
+    
+    return state_get_dump_size();
+}
+
+bool retro_serialize(void *data, size_t size)
+{
+	if(retro_serialize_size() && data && size)
+	{
+		/* write the save state */
+		state_save_save_begin(data);
+
+		/* write tag 0 */
+		state_save_set_current_tag(0);
+		if(state_save_save_continue())
+		{
+		    return false;
+		}
+
+		/* loop over CPUs */
+		for(int cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+		{
+			cpuintrf_push_context(cpunum);
+
+			/* make sure banking is set */
+			activecpu_reset_banking();
+
+			/* save the CPU data */
+			state_save_set_current_tag(cpunum + 1);
+			if(state_save_save_continue())
+			{
+			    return false;
+			}
+
+			cpuintrf_pop_context();
+		}
+
+		/* finish and close */
+		state_save_save_finish();
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool retro_unserialize(const void * data, size_t size)
+{
+	/* if successful, load it */
+	if (retro_serialize_size() && data && size && !state_save_load_begin((void*)data, size))
+	{
+        /* read tag 0 */
+        state_save_set_current_tag(0);
+        if(state_save_load_continue())
+        {
+            return false;
+        }
+
+        /* loop over CPUs */
+        for(int cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+        {
+            cpuintrf_push_context(cpunum);
+
+            /* make sure banking is set */
+            activecpu_reset_banking();
+
+            /* load the CPU data */
+            state_save_set_current_tag(cpunum + 1);
+            if(state_save_load_continue())
+            {
+                return false;
+            }
+
+            cpuintrf_pop_context();
+        }
+
+        /* finish and close */
+        state_save_load_finish();
+
+        
+        return true;
+	}
+
+	return false;
+}
+
+
 
 // Stubs
 unsigned retro_get_region (void) {return RETRO_REGION_NTSC;}
 void *retro_get_memory_data(unsigned type) {return 0;}
 size_t retro_get_memory_size(unsigned type) {return 0;}
 bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info){return false;}
-size_t retro_serialize_size(void){return 0;}
-bool retro_serialize(void *data, size_t size){return false;}
-bool retro_unserialize(const void * data, size_t size){return false;}
 void retro_cheat_reset(void){}
 void retro_cheat_set(unsigned unused, bool unused1, const char* unused2){}
 void retro_set_controller_port_device(unsigned in_port, unsigned device){}

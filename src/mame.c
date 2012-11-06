@@ -293,12 +293,6 @@ int run_game(int game)
 	if (init_game_options())
 		return 1;
 
-	/* if we're coming in with a savegame request, process it now */
-	if (options.savegame)
-		cpu_loadsave_schedule(LOADSAVE_LOAD, options.savegame);
-	else
-		cpu_loadsave_reset();
-
 	/* here's the meat of it all */
 	bailing = 0;
 
