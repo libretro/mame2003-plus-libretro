@@ -138,7 +138,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
     info->geometry.max_width = width;
     info->geometry.max_height = height;
     info->geometry.aspect_ratio = (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-    info->timing.fps = videoConfig.fps;
+    info->timing.fps = Machine->drv->frames_per_second;
     info->timing.sample_rate = 48000.0;
 }
 
@@ -191,7 +191,7 @@ void retro_run (void)
     
     const void* gotFrame = (videoBufferWidth && videoBufferHeight) ? videoBuffer : 0;
     video_cb(gotFrame, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
-    audio_batch_cb(XsoundBuffer, 800);
+    audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
 }
 
 

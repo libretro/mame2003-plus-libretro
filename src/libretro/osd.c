@@ -14,6 +14,7 @@
 #include "palette.h"
 #include "common.h"
 #include "mame.h"
+#include "driver.h"
 
 
 extern int16_t XsoundBuffer[2048];
@@ -103,25 +104,26 @@ static bool stereo;
 int osd_start_audio_stream(int aStereo)
 {
     stereo = (aStereo != 0);
-    return 800;
+    return (Machine->sample_rate / Machine->drv->frames_per_second);
 }
 
 int osd_update_audio_stream(INT16 *buffer)
 {
+   int samplerate_buffer_size = (Machine->sample_rate / Machine->drv->frames_per_second);
     if(stereo)
     {
-        memcpy(XsoundBuffer, buffer, 800 * 4);
+        memcpy(XsoundBuffer, buffer, samplerate_buffer_size * 4);
     }
     else
     {
-        for(int i = 0; i != 800; i ++)
+        for(int i = 0; i < samplerate_buffer_size; i ++)
         {
             XsoundBuffer[i * 2 + 0] = buffer[i];
             XsoundBuffer[i * 2 + 1] = buffer[i];
         }    
     }
 
-    return 800;
+    return (Machine->sample_rate / Machine->drv->frames_per_second);
 }
 
 void osd_stop_audio_stream(void)
