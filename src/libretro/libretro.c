@@ -21,7 +21,7 @@ static retro_video_refresh_t video_cb = NULL;
 static retro_input_poll_t poll_cb = NULL;
 static retro_input_state_t input_cb = NULL;
 static retro_audio_sample_batch_t audio_batch_cb = NULL;
-static retro_environment_t environ_cb = NULL;
+retro_environment_t environ_cb = NULL;
 
 void retro_set_video_refresh(retro_video_refresh_t cb) { video_cb = cb; }
 void retro_set_audio_sample(retro_audio_sample_t cb) { }
@@ -147,16 +147,6 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 void retro_init (void)
 {
-    // Get color mode
-    retroColorMode = RETRO_PIXEL_FORMAT_XRGB8888;
-    if(!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
-    {
-        retroColorMode = RETRO_PIXEL_FORMAT_RGB565;
-        if(!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
-        {
-            retroColorMode = RETRO_PIXEL_FORMAT_0RGB1555;
-        }
-    }
 }
 
 void retro_deinit(void)
@@ -245,6 +235,7 @@ void retro_unload_game(void)
     mame_done();
     
     free(systemDir);
+    free(romDir);
     systemDir = 0;
 }
 
