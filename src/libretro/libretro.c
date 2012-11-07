@@ -109,6 +109,7 @@ uint16_t videoBuffer[1024*1024];
 unsigned videoBufferWidth;
 unsigned videoBufferHeight;
 char* systemDir;
+char* romDir;
 
 unsigned retro_api_version(void)
 {
@@ -205,6 +206,10 @@ bool retro_load_game(const struct retro_game_info *game)
         systemDir = normalizePath(strdup(game->path));
         systemDir = peelPathItem(systemDir);
         systemDir = peelPathItem(systemDir);       
+
+        // Get ROM directory
+        romDir    = normalizePath(strdup(game->path));
+        romDir    = peelPathItem(romDir);
 
         // Setup Rotation
         const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;

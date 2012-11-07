@@ -18,6 +18,12 @@
 
 extern int16_t XsoundBuffer[2048];
 extern char* systemDir;
+extern char* romDir;
+
+#if defined(__CELLOS_LV2__) && !defined(__PSL1GHT__)
+#include <unistd.h> //stat() is defined here
+#define S_ISDIR(x) (x & CELL_FS_S_IFDIR)
+#endif
 
 #if 0
 struct GameOptions
@@ -159,17 +165,24 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 {
     char buffer[1024];
     struct stat statbuf;
- 
-    snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
 
+    switch(pathtype)
+    {
+       case 1: /* ROM */
+          /* removes the stupid restriction where we need to have roms in a 'rom' folder */
+          snprintf(buffer, 1024, "%s/%s", romDir, filename);
+          break;
+       default:
+          snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
+    }
+ 
 #ifdef DEBUG_LOG
-    fprintf(stderr, "osd_get_path_info (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], filename);
+    fprintf(stderr, "osd_get_path_info (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
 #endif
 
+    /* Yoda conditionals are weird */
     if(0 == stat(buffer, &statbuf))
-    {
         return (S_ISDIR(statbuf.st_mode)) ? PATH_IS_DIRECTORY : PATH_IS_FILE;
-    }
     
     return PATH_NOT_FOUND;
 }
@@ -177,16 +190,25 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode)
 {
     char buffer[1024];
-    snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
+
+    switch(pathtype)
+    {
+       case 1: /* ROM */
+          /* removes the stupid restriction where we need to have roms in a 'rom' folder */
+          snprintf(buffer, 1024, "%s/%s", romDir, filename);
+          break;
+       default:
+          snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
+    }
 
 #ifdef DEBUG_LOG
-    fprintf(stderr, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], filename);
+    fprintf(stderr, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
 #endif
 
     osd_file* out = malloc(sizeof(osd_file));
     out->file = fopen(buffer, mode);
     
-    if(0 == out->file)
+    if(out->file == 0)
     {
         free(out);
         return 0;

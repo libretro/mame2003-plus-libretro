@@ -41,14 +41,15 @@ else ifeq ($(platform), wii)
     
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
-   PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__
+   PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
 else ifeq ($(platform), ps3)
    EMULATOR = libretro_ps3.a
    BIGENDIAN = 1
     
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
-   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__   
+   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+OSOBJS += utils/zlib/compress.o utils/zlib/deflate.o utils/zlib/trees.o
 else
    EMULATOR = retro.dll
    EXE = .exe
