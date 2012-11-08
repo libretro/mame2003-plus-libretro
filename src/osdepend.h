@@ -400,11 +400,18 @@ int osd_net_game_exit(void);
 #endif
 
 #ifdef __GNUC__
-void CLIB_DECL logerror(const char *text,...)
-      __attribute__ ((format (printf, 1, 2)));
-#else
-void CLIB_DECL logerror(const char *text,...);
+INLINE void CLIB_DECL logerror(const char *text,...) __attribute__ ((format (printf, 1, 2)));
 #endif
+
+INLINE void CLIB_DECL logerror(const char *text,...)
+{
+#ifdef DEBUG_LOG
+    va_list args;
+    va_start (args, text);
+    vfprintf (stderr, text, args);
+    va_end (args);
+#endif
+}
 
 #ifdef __cplusplus
 }

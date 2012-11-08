@@ -274,14 +274,3 @@ void CLIB_DECL osd_die(const char *text,...)
     // TODO: Don't abort, switch back to main thread and exit cleanly: This is only used if a malloc fails in src/cpu/z80/z80.c so not too high a priority
     abort();
 }
-
-void CLIB_DECL logerror(const char *text,...)
-{
-#ifdef DEBUG_LOG
-    va_list args;
-    va_start (args, text);
-    vfprintf (stderr, text, args);
-    va_end (args);
-#endif
-}
-
