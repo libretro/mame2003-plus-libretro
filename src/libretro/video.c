@@ -1,4 +1,5 @@
 #include "libretro.h"
+#include "performance.h"
 #include "osdepend.h"
 #include "palette.h"
 #include "fileio.h"
@@ -127,6 +128,9 @@ static uint32_t rgb32toNeeded(uint32_t aColor)
 
 void osd_update_video_and_audio(struct mame_display *display)
 {
+    RARCH_PERFORMANCE_INIT(update_video_and_audio);
+    RARCH_PERFORMANCE_START(update_video_and_audio);
+
     if(display->changed_flags & 0xF)
     {    
         // Update UI area
@@ -213,6 +217,8 @@ void osd_update_video_and_audio(struct mame_display *display)
     }
     
     gotFrame = 1;
+    
+    RARCH_PERFORMANCE_STOP(update_video_and_audio);
 }
 
 struct mame_bitmap *osd_override_snapshot(struct mame_bitmap *bitmap, struct rectangle *bounds){return NULL;}

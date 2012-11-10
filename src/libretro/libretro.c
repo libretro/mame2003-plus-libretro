@@ -1,6 +1,7 @@
 #include <stdint.h>
 
 #include "libretro.h"
+#include "performance.h"
 
 #include "mame.h"
 #include "driver.h"
@@ -161,6 +162,9 @@ void retro_init (void)
 
 void retro_deinit(void)
 {
+#ifdef PERF_TEST
+    rarch_perf_log();
+#endif
 }
 
 void retro_reset (void)
