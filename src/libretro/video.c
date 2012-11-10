@@ -23,7 +23,7 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
 {
     extern unsigned retroColorMode;
     static const UINT32 rValues[3] = {0x7C00, 0xFF0000, (0x1F << 11)};
-    static const UINT32 gValues[3] = {0x03E0, 0x00FF00, (0x3F << 6)};
+    static const UINT32 gValues[3] = {0x03E0, 0x00FF00, (0x3F << 5)};
     static const UINT32 bValues[3] = {0x001F, 0x0000FF, (0x1F)};
 
     if(retroColorMode >= 3)
