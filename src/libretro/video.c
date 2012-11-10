@@ -7,13 +7,6 @@
 #include "usrintrf.h"
 #include "driver.h"
 
-#ifdef DEBUG_LOG
-# define COLORLOG(...) fprintf(stderr, __VA_ARGS__)
-#else
-# define COLORLOG(...)
-#endif
-
-
 extern uint16_t videoBuffer[1024*1024];
 extern unsigned videoBufferWidth;
 extern unsigned videoBufferHeight;
@@ -27,52 +20,30 @@ static uint32_t* convertedPalette;
 
 int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_components)
 {
+    extern unsigned retroColorMode;
     static const UINT32 rValues[3] = {0x7C00, 0xFF0000, (0x1F << 11)};
     static const UINT32 gValues[3] = {0x03E0, 0x00FF00, (0x3F << 6)};
     static const UINT32 bValues[3] = {0x001F, 0x0000FF, (0x1F)};
+
+    if(retroColorMode >= 3)
+    {
+        retroColorMode %= 3; //< It's an error anyway
+    }
     
     memcpy(&videoConfig, params, sizeof(videoConfig));    
     
-    /* Setup Color Mode; Unless I missed something osd_create_display is only called once:
-       run_game()->run_machine()->vh_open()->artwork_create_display()->osd_create_display() */
-    extern retro_environment_t environ_cb;
-    extern unsigned retroColorMode;       
-       
-    static const unsigned bpp16modes[3] = {RETRO_PIXEL_FORMAT_RGB565, RETRO_PIXEL_FORMAT_0RGB1555, RETRO_PIXEL_FORMAT_XRGB8888};
-    static const unsigned bpp32modes[3] = {RETRO_PIXEL_FORMAT_XRGB8888, RETRO_PIXEL_FORMAT_RGB565, RETRO_PIXEL_FORMAT_0RGB1555};
-    const unsigned *const useModes = (Machine->color_depth == 32) ? bpp32modes : bpp16modes;
-
-    for(int i = 0; i != 3; i ++)
-    {
-        retroColorMode = useModes[i];
-        if(environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
-        {
-            COLORLOG("Colors: Using Mode %d\n", retroColorMode);
-            break;
-        }
-    }
-    
-    /* Tell MAME about color mapping */
     if(Machine->color_depth == 15)
     {
-        const unsigned fixedColorMode = (retroColorMode == RETRO_PIXEL_FORMAT_XRGB8888) ? RETRO_PIXEL_FORMAT_0RGB1555 : retroColorMode;
-        rgb_components[0] = rValues[fixedColorMode];
-        rgb_components[1] = gValues[fixedColorMode];
-        rgb_components[2] = bValues[fixedColorMode];
-        
-        COLORLOG("Colors: Machine want's direct 16 bits per pixel.\n");
+        const int val = (RETRO_PIXEL_FORMAT_RGB565 == retroColorMode) ? 2 : 0;
+        rgb_components[0] = rValues[val];
+        rgb_components[1] = gValues[val];
+        rgb_components[2] = bValues[val];
     }
     else if(Machine->color_depth == 32)
     {
         rgb_components[0] = rValues[1];
         rgb_components[1] = gValues[1];
         rgb_components[2] = bValues[1];
-        
-        COLORLOG("Colors: Machine want's direct 32 bits per pixel.\n");
-    }
-    else
-    {
-        COLORLOG("Colors: Machine uses palette.\n");
     }
 
     return 0;
