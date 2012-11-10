@@ -17,7 +17,7 @@ void mame_done(void);
 
 //
 
-retro_video_refresh_t video_cb = NULL;
+static retro_video_refresh_t video_cb = NULL;
 static retro_input_poll_t poll_cb = NULL;
 static retro_input_state_t input_cb = NULL;
 static retro_audio_sample_batch_t audio_batch_cb = NULL;
@@ -108,6 +108,9 @@ extern struct osd_create_params videoConfig;
 
 unsigned retroColorMode;
 int16_t XsoundBuffer[2048];
+uint16_t videoBuffer[1024*1024];
+unsigned videoBufferWidth;
+unsigned videoBufferHeight;
 char* systemDir;
 char* romDir;
 
@@ -181,6 +184,8 @@ void retro_run (void)
     
     mame_frame();
     
+    const void* gotFrame = (videoBufferWidth && videoBufferHeight) ? videoBuffer : 0;
+    video_cb(gotFrame, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
     audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
 }
 
