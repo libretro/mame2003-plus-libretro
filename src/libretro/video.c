@@ -8,6 +8,8 @@
 #include "usrintrf.h"
 #include "driver.h"
 
+extern retro_environment_t environ_cb;
+
 extern uint16_t videoBuffer[1024*1024];
 extern unsigned videoBufferWidth;
 extern unsigned videoBufferHeight;
@@ -26,19 +28,43 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
     static const UINT32 gValues[3] = {0x03E0, 0x00FF00, (0x3F << 5)};
     static const UINT32 bValues[3] = {0x001F, 0x0000FF, (0x1F)};
 
-    if(retroColorMode >= 3)
-    {
-        retroColorMode %= 3; //< It's an error anyway
-    }
-    
     memcpy(&videoConfig, params, sizeof(videoConfig));    
+
+    if(Machine->color_depth == 16)
+    {
+        retroColorMode = RETRO_PIXEL_FORMAT_RGB565;
+        if(!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
+        {
+           fprintf(stderr, "game bpp: [16], system bpp: [16], color format [RGB565] : NOT AVAILABLE, defaulting to color format [0RGB1555] (SLOW PATH).\n");
+           retroColorMode = RETRO_PIXEL_FORMAT_0RGB1555;
+        }
+        else
+        {
+           fprintf(stderr, "game bpp: [16], system bpp: [16], color format [RGB565] : SUPPORTED, enabling it.\n");
+        }
+    }
+    else
+    {
+       fprintf(stderr, "game bpp: [%d], defaulting to bpp: [32], color format [XRGB8888].\n", Machine->color_depth);
+       // Assume 32bit color by default
+       retroColorMode = RETRO_PIXEL_FORMAT_XRGB8888;
+       if(environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
+       {
+          fprintf(stderr, "game bpp: [%d], system bpp: [32], color format [XRGB8888] : SUPPORTED, enabling it.\n", Machine->color_depth);
+       }
+       else
+       {
+          fprintf(stderr, "game bpp: [%d], system bpp: [32], color format [XRGB8888] : NOT AVAILLE, defaulting to color format [0RGB1555] (SLOW PATH).\n", Machine->color_depth);
+           retroColorMode = RETRO_PIXEL_FORMAT_0RGB1555;
+       }
+    }
     
     if(Machine->color_depth == 15)
     {
-        const int val = (RETRO_PIXEL_FORMAT_RGB565 == retroColorMode) ? 2 : 0;
-        rgb_components[0] = rValues[val];
-        rgb_components[1] = gValues[val];
-        rgb_components[2] = bValues[val];
+       const int val = (RETRO_PIXEL_FORMAT_RGB565 == retroColorMode) ? 2 : 0;
+       rgb_components[0] = rValues[val];
+       rgb_components[1] = gValues[val];
+       rgb_components[2] = bValues[val];
     }
     else if(Machine->color_depth == 32)
     {
