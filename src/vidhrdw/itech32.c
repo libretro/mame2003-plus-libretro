@@ -506,7 +506,7 @@ static void draw_raw(UINT16 *base, UINT16 color)
 					for (x = 0; x < width && sx < scaled_clip_rect.min_x; x += xsrcstep, sx += xdststep) ;
 
 					/* compute the address */
-					dstbase = &base[compute_safe_address(sx >> 8, sy >> 8) - (sx >> 8)];
+					dstbase = &base[compute_safe_address(sx >> 8, sy >> 8) - ((sx >> 8) & vram_xmask)];
 
 					/* render middle pixels */
 					for ( ; x < width && sx < scaled_clip_rect.max_x; x += xsrcstep, sx += xdststep)
