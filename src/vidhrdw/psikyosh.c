@@ -311,55 +311,52 @@ static void psikyosh_drawbglayerscroll( int layer, struct mame_bitmap *bitmap, c
 /* 3 BG layers, with priority */
 static void psikyosh_drawbackground( struct mame_bitmap *bitmap, const struct rectangle *cliprect, UINT8 req_pri )
 {
-	int i, layer[3] = {0, 1, 2}, bg_pri[3];
-
-	/* Priority seems to be in range 0-7 */
-	for (i=0; i<=2; i++)
-	{
-		if ( BG_TYPE(i) == BG_NORMAL_ALT )
-			bg_pri[i]  = ((psikyosh_bgram[0x1ff0/4 + (i*0x04)/4] & 0xff000000) >> 24);
-		else if ( (BG_TYPE(i) == BG_NORMAL) )
-			bg_pri[i]  = ((psikyosh_bgram[0x17f0/4 + (i*0x04)/4] & 0xff000000) >> 24);
-		else // All the per-line types, take first row's value
-			bg_pri[i] = (psikyosh_bgram[(BG_TYPE(i)*0x800)/4 + 0x400/4 - 0x4000/4] & 0xff000000) >> 24;
-	}
+	int i;
 
 #if 0
 #ifdef MAME_DEBUG
 	usrintf_showmessage	("Pri %d=%02x-%s %d=%02x-%s %d=%02x-%s",
-		layer[0], BG_TYPE(layer[0]), BG_LAYER_ENABLE(layer[0])?"y":"n",
-		layer[1], BG_TYPE(layer[1]), BG_LAYER_ENABLE(layer[1])?"y":"n",
-		layer[2], BG_TYPE(layer[2]), BG_LAYER_ENABLE(layer[2])?"y":"n");
+		0, BG_TYPE(0), BG_LAYER_ENABLE(0)?"y":"n",
+ 		1, BG_TYPE(1), BG_LAYER_ENABLE(1)?"y":"n",
+		2, BG_TYPE(2), BG_LAYER_ENABLE(2)?"y":"n");
 #endif
 #endif
 
 	/* 1st-3rd layers */
-	for(i=0; i<=2; i++)
+	for(i=0; i<3; i++)
 	{
-		if(bg_pri[i] == req_pri)
-			if ( BG_LAYER_ENABLE(layer[i]) )
-			{
-				if( BG_TYPE(layer[i]) == BG_NORMAL ||
-					BG_TYPE(layer[i]) == BG_NORMAL_ALT )
-				{
-					psikyosh_drawbglayer(layer[i], bitmap, cliprect);
-				}
-				else if( BG_TYPE(layer[i]) == BG_SCROLL_0C ||  // Using normal for now
-					BG_TYPE(layer[i]) == BG_SCROLL_0D ) // Using normal for now
-				{
-					psikyosh_drawbglayertext(layer[i], bitmap, cliprect);
-				}
-				else if( BG_TYPE(layer[i]) >= BG_SCROLL_ZOOM && BG_TYPE(layer[i]) <= 0x1f)
-				{
-					psikyosh_drawbglayerscroll(layer[i], bitmap, cliprect);
-				}
-				else
-				{
-					usrintf_showmessage	("Unknown layer type %02x", BG_TYPE(layer[i]));
-					break;
-				}
-			}
+		if ( !BG_LAYER_ENABLE(i) )
+			continue;
+
+		switch(BG_TYPE(i))
+		{
+			case BG_NORMAL:
+				if(((psikyosh_bgram[0x17f0/4 + (i*0x04)/4] & 0xff000000) >> 24) == req_pri)
+					psikyosh_drawbglayer(i, bitmap, cliprect);
+				break;
+			case BG_NORMAL_ALT:
+				if(((psikyosh_bgram[0x1ff0/4 + (i*0x04)/4] & 0xff000000) >> 24) == req_pri)
+					psikyosh_drawbglayer(i, bitmap, cliprect);
+				break;
+			case BG_SCROLL_0C: /* Using normal for now */
+			case BG_SCROLL_0D: /* Using normal for now */
+				if(((psikyosh_bgram[(BG_TYPE(i)*0x800)/4 + 0x400/4 - 0x4000/4] & 0xff000000) >> 24) == req_pri)
+					psikyosh_drawbglayertext(i, bitmap, cliprect);
+				break;
+			case BG_SCROLL_ZOOM:
+			/* 0x10 - 0x1f */
+			case 0x10: case 0x11: case 0x12: case 0x13:
+			case 0x14: case 0x15: case 0x16: case 0x17:
+			case 0x18: case 0x19: case 0x1a: case 0x1b:
+			case 0x1c: case 0x1d: case 0x1e: case 0x1f:
+				if(((psikyosh_bgram[(BG_TYPE(i)*0x800)/4 + 0x400/4 - 0x4000/4] & 0xff000000) >> 24) == req_pri)
+					psikyosh_drawbglayerscroll(i, bitmap, cliprect);
+				break;
+			default:
+				usrintf_showmessage	("Unknown layer type %02x", BG_TYPE(i));
+		}
 	}
+   
 }
 
 /* --- SPRITES --- */
