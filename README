@@ -15,3 +15,7 @@ Notes:
 * Will have errors on platforms without unaligned memory access support.
 * When using concurrent building you may get an error that it can't create certain object files, just rerun make if it happens.
 * To run on Wii's memory constraints some drivers in src/driver.c must be removed.
+
+LINKS TO CONSULT:
+
+http://www.anthrofox.org/code/mame/index.html
