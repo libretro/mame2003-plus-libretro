@@ -50,6 +50,12 @@ else ifeq ($(platform), ps3)
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
 OSOBJS += utils/zlib/compress.o utils/zlib/deflate.o utils/zlib/trees.o
+else ifeq ($(platform), psp1)
+	EMULATOR = libretro_psp1.a
+
+	CC = psp-gcc$(EXE_EXT)
+	AR = psp-ar$(EXE_EXT)
+	PLATCFLAGS += -DPSP -Dstricmp=strcasecmp
 else
    EMULATOR = retro.dll
    EXE = .exe

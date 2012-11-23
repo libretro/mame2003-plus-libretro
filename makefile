@@ -95,6 +95,9 @@ dont_link_zlib =
 ifeq ($(platform), ps3)
 dont_link_zlib= yes
 endif
+ifeq ($(platform), psp1)
+dont_link_zlib= yes
+endif
 
 # platform .mak files will want to add to this
 ifeq ($(dont_link_zlib),yes)
@@ -145,6 +148,9 @@ ifeq ($(platform), wii)
 	DO_ARCHIVES = 1
 endif
 ifeq ($(platform), ps3)
+	DO_ARCHIVES = 1
+endif
+ifeq ($(platform), psp1)
 	DO_ARCHIVES = 1
 endif
 
