@@ -56,6 +56,7 @@ else ifeq ($(platform), psp1)
 	CC = psp-gcc$(EXE_EXT)
 	AR = psp-ar$(EXE_EXT)
 	PLATCFLAGS += -DPSP -Dstricmp=strcasecmp
+	CFLAGS += -G0
 else
    EMULATOR = retro.dll
    EXE = .exe
