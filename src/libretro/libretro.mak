@@ -15,18 +15,26 @@ endif
 endif
 
 ifeq ($(platform), unix)
-   EMULATOR = libretro.so
+   EMULATOR = mame078_libretro.so
 
    CFLAGS += -fPIC
-	PLATCFLAGS += -Dstricmp=strcasecmp
+   PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
 else ifeq ($(platform), osx)
-   EMULATOR = libretro.dylib
+   EMULATOR = mame078_libretro.dylib
 
    CFLAGS += -fPIC -Dstricmp=strcasecmp -m32
    LDFLAGS += -fPIC -dynamiclib -m32
+else ifeq ($(platform), ios)
+   EMULATOR = mame078_libretro.dylib
+
+   CFLAGS += -fPIC -Dstricmp=strcasecmp
+   LDFLAGS += -fPIC -dynamiclib
+
+   CC = clang -arch armv7 -isysroot $(IOSSDK)
+   LD = clang -arch armv7 -isysroot $(IOSSDK)
 else ifeq ($(platform), android)
-   EMULATOR = libretro_mame.so
+   EMULATOR = mame078_libretro.so
 
    CFLAGS += -fPIC 
    PLATCFLAGS += -march=armv7-a -Dstricmp=strcasecmp
@@ -36,14 +44,14 @@ else ifeq ($(platform), android)
    AR = arm-linux-androideabi-ar
    LD = arm-linux-androideabi-gcc
 else ifeq ($(platform), wii)
-   EMULATOR = libretro_wii.a
+   EMULATOR = mame078_libretro_wii.a
    BIGENDIAN = 1
     
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
 else ifeq ($(platform), ps3)
-   EMULATOR = libretro_ps3.a
+   EMULATOR = mame078_libretro_ps3.a
    BIGENDIAN = 1
     
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
@@ -58,7 +66,7 @@ else ifeq ($(platform), psp1)
 	PLATCFLAGS += -DPSP -Dstricmp=strcasecmp
 	CFLAGS += -G0
 else
-   EMULATOR = retro.dll
+   EMULATOR = mame078_retro.dll
    EXE = .exe
    
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=libretro/link.T
