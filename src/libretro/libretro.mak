@@ -43,6 +43,16 @@ else ifeq ($(platform), android)
    CC = arm-linux-androideabi-gcc
    AR = arm-linux-androideabi-ar
    LD = arm-linux-androideabi-gcc
+else ifeq ($(platform), qnx)
+   EMULATOR = mame078_libretro.so
+
+   CFLAGS += -fPIC 
+   PLATCFLAGS += -march=armv7-a -Dstricmp=strcasecmp
+   LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
+
+   CC = qcc -Vgcc_ntoarmv7le
+   AR = qcc -Vgcc_ntoarmv7le
+   LD = QCC -Vgcc_ntoarmv7le
 else ifeq ($(platform), wii)
    EMULATOR = mame078_libretro_wii.a
    BIGENDIAN = 1

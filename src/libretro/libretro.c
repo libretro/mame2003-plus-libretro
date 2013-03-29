@@ -16,8 +16,6 @@
 void mame_frame(void);
 void mame_done(void);
 
-//
-
 static retro_video_refresh_t video_cb = NULL;
 static retro_input_poll_t poll_cb = NULL;
 static retro_input_state_t input_cb = NULL;
@@ -31,9 +29,6 @@ void retro_set_input_poll(retro_input_poll_t cb) { poll_cb = cb; }
 void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 void retro_set_environment(retro_environment_t cb) { environ_cb = cb; }
 
-
-//
-
 #ifndef PATH_SEPARATOR
 # if defined(WINDOWS_PATH_STYLE) || defined(_WIN32)
 #  define PATH_SEPARATOR '\\'
@@ -44,41 +39,40 @@ void retro_set_environment(retro_environment_t cb) { environ_cb = cb; }
 
 static char* normalizePath(char* aPath)
 {
-    static const char replaced = (PATH_SEPARATOR == '\\') ? '/' : '\\';
+   char *tok;
+   static const char replaced = (PATH_SEPARATOR == '\\') ? '/' : '\\';
 
-    for(char* tok = strchr(aPath, replaced); tok; tok = strchr(aPath, replaced))
-    {
-        *tok = PATH_SEPARATOR;
-    }
-    
-    return aPath;
+   for (tok = strchr(aPath, replaced); tok; tok = strchr(aPath, replaced))
+      *tok = PATH_SEPARATOR;
+
+   return aPath;
 }
 
 static int getDriverIndex(const char* aPath)
 {
     char driverName[128];
+    char *path, *last;
+    char *firstDot;
+    int i;
 
     // Get all chars after the last slash
-    char* path = normalizePath(strdup(aPath ? aPath : "."));
-    char* last = strrchr(path, PATH_SEPARATOR);
+    path = normalizePath(strdup(aPath ? aPath : "."));
+    last = strrchr(path, PATH_SEPARATOR);
     memset(driverName, 0, sizeof(driverName));
     strncpy(driverName, last ? last + 1 : path, sizeof(driverName) - 1);
     free(path);
     
     // Remove extension    
-    char* const firstDot = strchr(driverName, '.');
+    firstDot = strchr(driverName, '.');
+
     if(firstDot)
-    {
-        *firstDot = 0;
-    }
+       *firstDot = 0;
 
     // Search list
-    for(int i = 0; drivers[i]; i ++)
+    for (i = 0; drivers[i]; i++)
     {
-        if(0 == strcmp(driverName, drivers[i]->name))
-        {
-            return i;
-        }
+       if(strcmp(driverName, drivers[i]->name) == 0)
+          return i;
     }
     
     return -1;
@@ -88,9 +82,7 @@ static char* peelPathItem(char* aPath)
 {
     char* last = strrchr(aPath, PATH_SEPARATOR);
     if(last)
-    {
-        *last = 0;
-    }
+       *last = 0;
     
     return aPath;
 }
@@ -164,33 +156,38 @@ void retro_reset (void)
 
 void retro_run (void)
 {
-    poll_cb();
-    
-    // Keyboard
+   int i, j;
+   int *jsState;
+#if USE_RETRO_KEYBOARD
+   const struct KeyboardInfo *thisInput;
+#endif
+   const void *gotFrame;
+
+   poll_cb();
+
+   // Keyboard
 #if USE_RETRO_KEYBOARD == 1
-    const struct KeyboardInfo* thisInput = retroKeys;
-    while(thisInput->name)
-    {
-        retroKeyState[thisInput->code] = input_cb(0, RETRO_DEVICE_KEYBOARD, 0, thisInput->code);
-        thisInput ++;
-    }
+   thisInput = retroKeys;
+   while(thisInput->name)
+   {
+      retroKeyState[thisInput->code] = input_cb(0, RETRO_DEVICE_KEYBOARD, 0, thisInput->code);
+      thisInput ++;
+   }
 #endif
 
-    // Joystick
-    int* jsState = retroJsState;
-    for(int i = 0; i != 4; i ++)
-    {
-        for(int j = 0; j != 16; j ++)
-        {
-            *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
-        }
-    }
-    
-    mame_frame();
-    
-    const void* gotFrame = (videoBufferWidth && videoBufferHeight) ? videoBuffer : 0;
-    video_cb(gotFrame, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
-    audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
+   // Joystick
+   jsState = retroJsState;
+   for (i = 0; i < 4; i ++)
+   {
+      for (j = 0; j < 16; j ++)
+         *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
+   }
+
+   mame_frame();
+
+   gotFrame = (videoBufferWidth && videoBufferHeight) ? videoBuffer : 0;
+   video_cb(gotFrame, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
+   audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
 }
 
 
@@ -199,7 +196,7 @@ bool retro_load_game(const struct retro_game_info *game)
     // Find game index
     driverIndex = getDriverIndex(game->path);
     
-    if(0 <= driverIndex)
+    if(driverIndex <= 0)
     {
         // Get MAME Directory
         systemDir = normalizePath(strdup(game->path));
@@ -252,6 +249,7 @@ size_t retro_serialize_size(void)
 
 bool retro_serialize(void *data, size_t size)
 {
+   int cpunum;
 	if(retro_serialize_size() && data && size)
 	{
 		/* write the save state */
@@ -265,7 +263,7 @@ bool retro_serialize(void *data, size_t size)
 		}
 
 		/* loop over CPUs */
-		for(int cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+		for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
 		{
 			cpuintrf_push_context(cpunum);
 
@@ -275,9 +273,7 @@ bool retro_serialize(void *data, size_t size)
 			/* save the CPU data */
 			state_save_set_current_tag(cpunum + 1);
 			if(state_save_save_continue())
-			{
 			    return false;
-			}
 
 			cpuintrf_pop_context();
 		}
@@ -293,18 +289,17 @@ bool retro_serialize(void *data, size_t size)
 
 bool retro_unserialize(const void * data, size_t size)
 {
+   int cpunum;
 	/* if successful, load it */
 	if (retro_serialize_size() && data && size && !state_save_load_begin((void*)data, size))
 	{
         /* read tag 0 */
         state_save_set_current_tag(0);
         if(state_save_load_continue())
-        {
             return false;
-        }
 
         /* loop over CPUs */
-        for(int cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
+        for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
         {
             cpuintrf_push_context(cpunum);
 
@@ -314,9 +309,7 @@ bool retro_unserialize(const void * data, size_t size)
             /* load the CPU data */
             state_save_set_current_tag(cpunum + 1);
             if(state_save_load_continue())
-            {
                 return false;
-            }
 
             cpuintrf_pop_context();
         }

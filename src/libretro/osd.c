@@ -16,7 +16,6 @@
 #include "mame.h"
 #include "driver.h"
 
-
 extern int16_t XsoundBuffer[2048];
 extern char* systemDir;
 extern char* romDir;
@@ -109,21 +108,22 @@ int osd_start_audio_stream(int aStereo)
 
 int osd_update_audio_stream(INT16 *buffer)
 {
-   int samplerate_buffer_size = (Machine->sample_rate / Machine->drv->frames_per_second);
-    if(stereo)
-    {
-        memcpy(XsoundBuffer, buffer, samplerate_buffer_size * 4);
-    }
-    else
-    {
-        for(int i = 0; i < samplerate_buffer_size; i ++)
-        {
-            XsoundBuffer[i * 2 + 0] = buffer[i];
-            XsoundBuffer[i * 2 + 1] = buffer[i];
-        }    
-    }
+   int i, samplerate_buffer_size;
 
-    return (Machine->sample_rate / Machine->drv->frames_per_second);
+   samplerate_buffer_size = (Machine->sample_rate / Machine->drv->frames_per_second);
+
+   if(stereo)
+      memcpy(XsoundBuffer, buffer, samplerate_buffer_size * 4);
+   else
+   {
+      for (i = 0; i < samplerate_buffer_size; i ++)
+      {
+         XsoundBuffer[i * 2 + 0] = buffer[i];
+         XsoundBuffer[i * 2 + 1] = buffer[i];
+      }    
+   }
+
+   return (Machine->sample_rate / Machine->drv->frames_per_second);
 }
 
 void osd_stop_audio_stream(void)
@@ -191,34 +191,32 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 
 osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode)
 {
-    char buffer[1024];
+   char buffer[1024];
 
-    switch(pathtype)
-    {
-       case 1: /* ROM */
-          /* removes the stupid restriction where we need to have roms in a 'rom' folder */
-          snprintf(buffer, 1024, "%s/%s", romDir, filename);
-          break;
-       default:
-          snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
-    }
+   switch(pathtype)
+   {
+      case 1: /* ROM */
+         /* removes the stupid restriction where we need to have roms in a 'rom' folder */
+         snprintf(buffer, 1024, "%s/%s", romDir, filename);
+         break;
+      default:
+         snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
+   }
 
 #ifdef DEBUG_LOG
-    fprintf(stderr, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
+   fprintf(stderr, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
 #endif
 
-    osd_file* out = malloc(sizeof(osd_file));
-    out->file = fopen(buffer, mode);
-    
-    if(out->file == 0)
-    {
-        free(out);
-        return 0;
-    }
-    else
-    {
-        return out;
-    }
+   osd_file* out = malloc(sizeof(osd_file));
+   out->file = fopen(buffer, mode);
+
+   if(out->file == 0)
+   {
+      free(out);
+      return 0;
+   }
+   else
+      return out;
 }
 
 int osd_fseek(osd_file *file, INT64 offset, int whence)
