@@ -72,7 +72,10 @@ static int getDriverIndex(const char* aPath)
     for (i = 0; drivers[i]; i++)
     {
        if(strcmp(driverName, drivers[i]->name) == 0)
+       {
+          fprintf(stderr, "Found game: %s [%s].\n", driverName, drivers[i]->name);
           return i;
+       }
     }
     
     return -1;
@@ -196,7 +199,7 @@ bool retro_load_game(const struct retro_game_info *game)
     // Find game index
     driverIndex = getDriverIndex(game->path);
     
-    if(driverIndex <= 0)
+    if(driverIndex)
     {
         // Get MAME Directory
         systemDir = normalizePath(strdup(game->path));
