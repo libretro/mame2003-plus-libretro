@@ -1523,9 +1523,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 				}
 			}
 		}
-
-		if (input_ui_pressed(IPT_UI_SNAPSHOT))
-			save_screen_snapshot(bitmap);
 	} while (!input_ui_pressed(IPT_UI_SHOW_GFX) &&
 			!input_ui_pressed(IPT_UI_CANCEL));
 
@@ -3852,10 +3849,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	extern int mess_pause_for_ui;
 #endif
 
-	/* if the user pressed F12, save the screen to a file */
-	if (input_ui_pressed(IPT_UI_SNAPSHOT))
-		save_screen_snapshot(bitmap);
-
 	/* This call is for the cheat, it must be called once a frame */
 	if (options.cheat) DoCheat(bitmap);
 
@@ -4002,10 +3995,6 @@ void pause_action_paused(void)
         draw_screen();
     }
     profiler_mark(PROFILER_END);
-
-    if (input_ui_pressed(IPT_UI_SNAPSHOT))
-        save_screen_snapshot(pause_bitmap);
-
 
     /* if the user pressed F4, show the character set */
     if (input_ui_pressed(IPT_UI_SHOW_GFX))
