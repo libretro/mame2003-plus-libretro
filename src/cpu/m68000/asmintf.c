@@ -9,8 +9,8 @@
 
 struct m68k_memory_interface a68k_memory_intf;
 
-// If we are only using assembler cores, we need to define these
-// otherwise they are declared by the C core.
+/* If we are only using assembler cores, we need to define these
+ * otherwise they are declared by the C core. */
 
 #ifdef A68K0
 #ifdef A68K2
@@ -139,7 +139,7 @@ static int IntelFlag[32] = {
 };
 
 
-// The assembler engine only keeps flags in intel format, so ...
+/* The assembler engine only keeps flags in intel format, so ... */
 
 static UINT32 zero = 0;
 static int stopped = 0;
@@ -224,14 +224,14 @@ static const struct m68k_memory_interface interface_a24_d16 =
 	cpu_writemem24bew_word,
 	writelong_a24_d16,
 	changepc_a24_d16,
-	cpu_readmem24bew,				// Encrypted Versions
+	cpu_readmem24bew,				/* Encrypted Versions */
 	cpu_readmem24bew_word,
 	readlong_a24_d16,
 	cpu_readmem24bew_word,
 	readlong_a24_d16
 };
 
-#endif // A68k0
+#endif /* A68k0 */
 
 /****************************************************************************
  * 24-bit address, 32-bit data memory interface
@@ -408,7 +408,7 @@ static const struct m68k_memory_interface interface_a32_d32 =
 	readlong_a32_d32
 };
 
-#endif // A68K2
+#endif /* A68K2 */
 
 /********************************************/
 /* Interface routines to link Mame -> 68KEM */
@@ -447,11 +447,11 @@ void m68000_reset(void *param)
 {
 	struct m68k_encryption_interface *interface = param;
 
-    // Default Memory Routines
+    /* Default Memory Routines */
 	if (a68k_memory_intf.read8 != cpu_readmem24bew)
 		a68k_memory_intf = interface_a24_d16;
 
-	// Import encryption routines if present
+	/* Import encryption routines if present */
 	if (param)
 	{
 		a68k_memory_intf.read8pc = interface->read8pc;
@@ -508,7 +508,9 @@ int m68000_execute(int cycles)
             }
             #endif
 
-//	        m68k_memory_intf = a68k_memory_intf;
+#if 0
+	        m68k_memory_intf = a68k_memory_intf;
+#endif
 			MAME_Debug();
             M68000_RUN();
 
@@ -687,7 +689,7 @@ void m68000_set_reset_callback(int (*callback)(void))
 const char *m68000_info(void *context, int regnum)
 {
 #ifdef MAME_DEBUG
-//extern int m68k_disassemble(char* str_buff, int pc, int cputype);
+extern int m68k_disassemble(char* str_buff, int pc, int cputype);
 #endif
 
     static char buffer[32][47+1];
@@ -827,7 +829,7 @@ unsigned m68010_dasm(char *buffer, unsigned pc)
 #endif
 
 
-#endif // A68K0
+#endif /* A68K0 */
 
 
 /****************************************************************************
@@ -912,7 +914,9 @@ int m68020_execute(int cycles)
             }
             #endif
 
-//	        m68k_memory_intf = a68k_memory_intf;
+#if 0
+	        m68k_memory_intf = a68k_memory_intf;
+#endif
 			MAME_Debug();
             M68020_RUN();
 
@@ -1087,7 +1091,7 @@ void m68020_set_reset_callback(int (*callback)(void))
 const char *m68020_info(void *context, int regnum)
 {
 #ifdef MAME_DEBUG
-//extern int m68k_disassemble(char* str_buff, int pc, int cputype);
+extern int m68k_disassemble(char* str_buff, int pc, int cputype);
 #endif
 
     static char buffer[32][47+1];
@@ -1224,4 +1228,4 @@ unsigned m68ec020_dasm(char *buffer, unsigned pc)
 
 #endif
 
-#endif // A68K2
+#endif /* A68K2 */

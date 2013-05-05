@@ -19,33 +19,33 @@ extern int m68k_ICount;
 
 struct m68k_memory_interface
 {
-	offs_t		opcode_xor;						// Address Calculation
-	data8_t		(*read8)(offs_t);				// Normal read 8 bit
-	data16_t	(*read16)(offs_t);				// Normal read 16 bit
-	data32_t	(*read32)(offs_t);				// Normal read 32 bit
-	void		(*write8)(offs_t, data8_t);		// Write 8 bit
-	void		(*write16)(offs_t, data16_t);	// Write 16 bit
-	void		(*write32)(offs_t, data32_t);	// Write 32 bit
-	void		(*changepc)(offs_t);			// Change PC routine
+	offs_t		opcode_xor;						/* Address Calculation */
+	data8_t		(*read8)(offs_t);				/* Normal read 8 bit */
+	data16_t	(*read16)(offs_t);				/* Normal read 16 bit */
+	data32_t	(*read32)(offs_t);				/* Normal read 32 bit */
+	void		(*write8)(offs_t, data8_t);		/* Write 8 bit */
+	void		(*write16)(offs_t, data16_t);	/* Write 16 bit */
+	void		(*write32)(offs_t, data32_t);	/* Write 32 bit */
+	void		(*changepc)(offs_t);			/* Change PC routine */
 
-    // For Encrypted Stuff
+    /* For Encrypted Stuff */
 
-	data8_t		(*read8pc)(offs_t);				// PC Relative read 8 bit
-	data16_t	(*read16pc)(offs_t);			// PC Relative read 16 bit
-	data32_t	(*read32pc)(offs_t);			// PC Relative read 32 bit
+	data8_t		(*read8pc)(offs_t);				/* PC Relative read 8 bit */
+	data16_t	(*read16pc)(offs_t);			/* PC Relative read 16 bit */
+	data32_t	(*read32pc)(offs_t);			/* PC Relative read 32 bit */
 
-	data16_t	(*read16d)(offs_t);				// Direct read 16 bit
-	data32_t	(*read32d)(offs_t);				// Direct read 32 bit
+	data16_t	(*read16d)(offs_t);				/* Direct read 16 bit */
+	data32_t	(*read32d)(offs_t);				/* Direct read 32 bit */
 };
 
 struct m68k_encryption_interface
 {
-	data8_t		(*read8pc)(offs_t);				// PC Relative read 8 bit
-	data16_t	(*read16pc)(offs_t);			// PC Relative read 16 bit
-	data32_t	(*read32pc)(offs_t);			// PC Relative read 32 bit
+	data8_t		(*read8pc)(offs_t);				/* PC Relative read 8 bit */
+	data16_t	(*read16pc)(offs_t);			/* PC Relative read 16 bit */
+	data32_t	(*read32pc)(offs_t);			/* PC Relative read 32 bit */
 
-	data16_t	(*read16d)(offs_t);				// Direct read 16 bit
-	data32_t	(*read32d)(offs_t);				// Direct read 32 bit
+	data16_t	(*read16d)(offs_t);				/* Direct read 16 bit */
+	data32_t	(*read32d)(offs_t);				/* Direct read 32 bit */
 };
 
 /* The MAME API for MC68000 */
@@ -163,7 +163,7 @@ const char *m68020_info(void *context, int regnum);
 extern unsigned m68020_dasm(char *buffer, unsigned pc);
 #endif
 
-// C Core header
+/* C Core header */
 #include "m68kmame.h"
 
 #endif /* M68000__HEADER */

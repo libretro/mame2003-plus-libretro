@@ -44,7 +44,7 @@ static const struct m68k_memory_interface interface_a24_d16 =
 	changepc_a24_d16
 };
 
-#endif // A68K0
+#endif /* A68K0 */
 
 /****************************************************************************
  * 24-bit address, 32-bit data memory interface
@@ -214,7 +214,7 @@ static const struct m68k_memory_interface interface_a32_d32 =
 /* global access */
 struct m68k_memory_interface m68k_memory_intf;
 
-#endif // A68K2
+#endif /* A68K2 */
 
 /****************************************************************************
  * 68000 section
@@ -714,7 +714,7 @@ unsigned m68010_dasm(char *buffer, unsigned pc)
 
 #endif /* HAS_M68010 */
 
-#endif // A68K0
+#endif /* A68K0 */
 
 /****************************************************************************
  * M680EC20 section
@@ -1243,4 +1243,4 @@ unsigned m68020_dasm(char *buffer, unsigned pc)
 }
 #endif /* HAS_M68020 */
 
-#endif // A68K2
+#endif /* A68K2 */

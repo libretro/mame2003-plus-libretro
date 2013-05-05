@@ -138,7 +138,7 @@ INLINE void m68kx_write_memory_32_pd(unsigned int address, unsigned int value)
 #define M68K_EMULATE_010            OPT_OFF
 #endif
 
-#endif	// A68K0
+#endif	/* A68K0 */
 
 #ifdef A68K2
 #define M68K_EMULATE_EC020          OPT_OFF
@@ -159,7 +159,7 @@ INLINE void m68kx_write_memory_32_pd(unsigned int address, unsigned int value)
 #define M68K_EMULATE_020            OPT_OFF
 #endif
 
-#endif // A68K2
+#endif /* A68K2 */
 
 /* ======================================================================== */
 /* ============================== END OF FILE ============================= */
