@@ -33,8 +33,10 @@
 #endif
 
 #ifdef _MSC_VER
-//#undef INLINE
-//#define INLINE static inline
+#if 0
+#undef INLINE
+#define INLINE static inline
+#endif
 #define strcasecmp stricmp
 #endif
 
@@ -88,6 +90,8 @@ typedef union {
 	UINT32 d;
 }	PAIR;
 
-//#define DEBUG_LOG 1
+#if 0
+#define DEBUG_LOG 1
+#endif
 
 #endif	/* defined OSD_CPU_H */
