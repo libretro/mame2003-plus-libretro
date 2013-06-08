@@ -127,7 +127,7 @@ void retro_get_system_info(struct retro_system_info *info)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
     const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
-    const bool rotated = ((ROT90 == orientation) || (ROT270 == orientation));
+    const bool rotated = ((orientation == ROT90) || (orientation == ROT270));
     
     const int width = rotated ? videoConfig.height : videoConfig.width;
     const int height = rotated ? videoConfig.width : videoConfig.height;
@@ -189,7 +189,7 @@ void retro_run (void)
    mame_frame();
 
    gotFrame = (videoBufferWidth && videoBufferHeight) ? videoBuffer : 0;
-   video_cb(gotFrame, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode) ? 4 : 2));
+   video_cb(gotFrame, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((retroColorMode == RETRO_PIXEL_FORMAT_XRGB8888) ? 4 : 2));
    audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
 }
 
@@ -215,9 +215,9 @@ bool retro_load_game(const struct retro_game_info *game)
         unsigned rotateMode = 0;
         static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
         
-        rotateMode = (ROT270 == orientation) ? 1 : rotateMode;
-        rotateMode = (ROT180 == orientation) ? 2 : rotateMode;
-        rotateMode = (ROT90 == orientation) ? 3 : rotateMode;
+        rotateMode = (orientation == ROT270) ? 1 : rotateMode;
+        rotateMode = (orientation == ROT180) ? 2 : rotateMode;
+        rotateMode = (orientation == ROT90) ? 3 : rotateMode;
         
         environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
 
@@ -227,7 +227,7 @@ bool retro_load_game(const struct retro_game_info *game)
         options.vector_intensity = 1.5f;
 
         // Boot the emulator
-        return 0 == run_game(driverIndex);
+        return run_game(driverIndex) == 0;
     }
     else
     {

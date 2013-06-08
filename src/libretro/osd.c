@@ -170,7 +170,8 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 
     switch(pathtype)
     {
-       case 1: /* ROM */
+       case FILETYPE_ROM: /* ROM */
+       case FILETYPE_IMAGE:
           /* removes the stupid restriction where we need to have roms in a 'rom' folder */
           snprintf(buffer, 1024, "%s/%s", romDir, filename);
           break;
@@ -182,8 +183,7 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
     fprintf(stderr, "osd_get_path_info (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
 #endif
 
-    /* Yoda conditionals are weird */
-    if(0 == stat(buffer, &statbuf))
+    if(stat(buffer, &statbuf) == 0)
         return (S_ISDIR(statbuf.st_mode)) ? PATH_IS_DIRECTORY : PATH_IS_FILE;
     
     return PATH_NOT_FOUND;
