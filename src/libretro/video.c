@@ -93,23 +93,15 @@ int osd_skip_this_frame(void)
    \
    for(i = 0; i < height; i ++) \
    { \
-      if(sizeof(OTYPE) == sizeof(ITYPE)) \
+      for(j = 0; j < width; j ++) \
       { \
-         memcpy(&output[i * videoConfig.width], input, width * sizeof(OTYPE)); \
-         input += pitch; \
+         const uint32_t color = *input ++; \
+         const uint32_t r = ((color >> (RDOWN)) & RMASK) << RUP; \
+         const uint32_t g = ((color >> (GDOWN)) & GMASK) << GUP; \
+         const uint32_t b = ((color >> (BDOWN)) & BMASK) << BUP; \
+         *output++ = r | g | b; \
       } \
-      else \
-      { \
-         for(j = 0; j < width; j ++) \
-         { \
-            const uint32_t color = *input ++; \
-            const uint32_t r = ((color >> (RDOWN)) & RMASK) << RUP; \
-            const uint32_t g = ((color >> (GDOWN)) & GMASK) << GUP; \
-            const uint32_t b = ((color >> (BDOWN)) & BMASK) << BUP; \
-            *output++ = r | g | b; \
-         } \
-         input += pitch - width; \
-      } \
+      input += pitch - width; \
    } \
 }
 
