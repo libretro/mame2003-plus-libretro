@@ -16,7 +16,7 @@
 void mame_frame(void);
 void mame_done(void);
 
-static retro_video_refresh_t video_cb = NULL;
+retro_video_refresh_t video_cb = NULL;
 static retro_input_poll_t poll_cb = NULL;
 static retro_input_state_t input_cb = NULL;
 static retro_audio_sample_batch_t audio_batch_cb = NULL;

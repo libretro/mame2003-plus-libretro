@@ -9,6 +9,7 @@
 #include "driver.h"
 
 extern retro_environment_t environ_cb;
+extern retro_video_refresh_t video_cb;
 
 extern uint16_t videoBuffer[1024*1024];
 extern unsigned videoBufferWidth;
@@ -107,7 +108,7 @@ void osd_update_video_and_audio(struct mame_display *display)
       }
 
       // Update palette
-      if(display->changed_flags & GAME_PALETTE_CHANGED)
+      if(retroColorMode != RETRO_PIXEL_FORMAT_XRGB8888 && display->changed_flags & GAME_PALETTE_CHANGED)
       {
          if(display->game_palette_entries > totalColors)
          {
@@ -138,44 +139,47 @@ void osd_update_video_and_audio(struct mame_display *display)
 
       extern unsigned retroColorMode;
 
-      // Cache some values used in the below macros
-      const uint32_t x = display->game_visible_area.min_x;
-      const uint32_t y = display->game_visible_area.min_y;
-      const uint32_t width = videoConfig.width;
-      const uint32_t height = videoConfig.height;
-      const uint32_t pitch = display->game_bitmap->rowpixels;
-
-      // Copy image size
-      videoBufferWidth = width;
-      videoBufferHeight = height;
-
-      // Copy pixels
-      if(display->game_bitmap->depth == 16)
+      if (video_cb)
       {
-         uint16_t* output = (uint16_t*)videoBuffer;
-         const uint16_t* input = &((uint16_t*)display->game_bitmap->base)[y * pitch + x];
+         // Cache some values used in the below macros
+         const uint32_t x = display->game_visible_area.min_x;
+         const uint32_t y = display->game_visible_area.min_y;
+         const uint32_t width = videoConfig.width;
+         const uint32_t height = videoConfig.height;
+         const uint32_t pitch = display->game_bitmap->rowpixels;
 
-         for(i = 0; i < height; i ++)
+         // Copy image size
+         videoBufferWidth = width;
+         videoBufferHeight = height;
+
+         // Copy pixels
+         if(display->game_bitmap->depth == 16)
          {
-            for (j = 0; j < width; j ++)
-               *output++ = convertedPalette[*input++];
-            input += pitch - width;
-         }
-      }
-      else if(display->game_bitmap->depth == 32)
-      {
-         uint32_t* output = (uint32_t*)videoBuffer;
-         const uint32_t* input = &((const uint32_t*)display->game_bitmap->base)[y * pitch + x];
+            uint16_t* output = (uint16_t*)videoBuffer;
+            const uint16_t* input = &((uint16_t*)display->game_bitmap->base)[y * pitch + x];
 
-         for(i = 0; i < height; i ++)
-         {
-            memcpy(&output[i * videoConfig.width], input, width * sizeof(uint32_t));
-            input += pitch;
+            for(i = 0; i < height; i ++)
+            {
+               for (j = 0; j < width; j ++)
+                  *output++ = convertedPalette[*input++];
+               input += pitch - width;
+            }
          }
-      }
-      else if(display->game_bitmap->depth == 15)
-      {
-         DIRECT_COPY(uint32_t, uint16_t, 1, 10, 0x1F, 19, 5, 0x1F, 11, 0, 0x1F, 3);
+         else if(display->game_bitmap->depth == 32)
+         {
+            uint32_t* output = (uint32_t*)videoBuffer;
+            const uint32_t* input = &((const uint32_t*)display->game_bitmap->base)[y * pitch + x];
+
+            for(i = 0; i < height; i ++)
+            {
+               memcpy(&output[i * width], input, width * sizeof(uint32_t));
+               input += pitch;
+            }
+         }
+         else if(display->game_bitmap->depth == 15)
+         {
+            DIRECT_COPY(uint32_t, uint16_t, 1, 10, 0x1F, 19, 5, 0x1F, 11, 0, 0x1F, 3);
+         }
       }
    }
 
