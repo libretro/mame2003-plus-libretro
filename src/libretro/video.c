@@ -86,20 +86,6 @@ int osd_skip_this_frame(void)
     return 0;
 }
 
-// But mummy I wan't to use templates
-#define PALETTE_COPY(OTYPE) \
-{ \
-   OTYPE* output = (OTYPE*)videoBuffer; \
-   const uint16_t* input = &((uint16_t*)display->game_bitmap->base)[y * pitch + x]; \
- \
-   for(i = 0; i < height; i ++) \
-   { \
-      for(j = 0; j < width; j ++) \
-      *output++ = convertedPalette[*input++]; \
-      input += pitch - width; \
-   } \
-}
-
 #define DIRECT_COPY(OTYPE, ITYPE, ALLOWSIMPLE, RDOWN, RMASK, RUP, GDOWN, GMASK, GUP, BDOWN, BMASK, BUP) \
 { \
    OTYPE* output = (OTYPE*)videoBuffer; \
@@ -107,7 +93,7 @@ int osd_skip_this_frame(void)
    \
    for(i = 0; i < height; i ++) \
    { \
-      if(ALLOWSIMPLE && sizeof(OTYPE) == sizeof(ITYPE)) \
+      if(sizeof(OTYPE) == sizeof(ITYPE)) \
       { \
          memcpy(&output[i * videoConfig.width], input, width * sizeof(OTYPE)); \
          input += pitch; \
@@ -126,8 +112,6 @@ int osd_skip_this_frame(void)
       } \
    } \
 }
-
-#define SIMPLE_DIRECT_COPY(OTYPE) DIRECT_COPY(OTYPE, OTYPE, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 static uint32_t rgb32toNeeded(uint32_t aColor)
 {
@@ -198,39 +182,43 @@ void osd_update_video_and_audio(struct mame_display *display)
       // Copy pixels
       if(display->game_bitmap->depth == 16)
       {
-         if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
+         uint16_t* output = (uint16_t*)videoBuffer;
+         const uint16_t* input = &((uint16_t*)display->game_bitmap->base)[y * pitch + x];
+
+         for(i = 0; i < height; i ++)
          {
-            PALETTE_COPY(uint32_t);
-         }
-         else
-         {
-            PALETTE_COPY(uint16_t);
+            for (j = 0; j < width; j ++)
+               *output++ = convertedPalette[*input++];
+            input += pitch - width;
          }
       }
       else if(display->game_bitmap->depth == 32)
       {
-         if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
+         uint32_t* output = (uint32_t*)videoBuffer;
+         const uint32_t* input = &((const uint32_t*)display->game_bitmap->base)[y * pitch + x];
+
+         for(i = 0; i < height; i ++)
          {
-            SIMPLE_DIRECT_COPY(uint32_t);
-         }
-         else if(RETRO_PIXEL_FORMAT_0RGB1555 == retroColorMode)
-         {
-            DIRECT_COPY(uint16_t, uint32_t, 1, 19, 0x1F, 10, 11, 0x1F, 5, 3, 0x1F, 0);
-         }
-         else
-         {
-            DIRECT_COPY(uint16_t, uint32_t, 1, 19, 0x1F, 11, 10, 0x3F, 5, 3, 0x1F, 0);        
+            memcpy(&output[i * videoConfig.width], input, width * sizeof(uint32_t));
+            input += pitch;
          }
       }
       else if(display->game_bitmap->depth == 15)
       {
-         if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
+         if(retroColorMode == RETRO_PIXEL_FORMAT_XRGB8888)
          {
             DIRECT_COPY(uint32_t, uint16_t, 1, 10, 0x1F, 19, 5, 0x1F, 11, 0, 0x1F, 3);
          }
          else 
          {
-            SIMPLE_DIRECT_COPY(uint16_t);
+            uint16_t* output = (uint16_t*)videoBuffer;
+            const uint16_t* input = &((const uint16_t*)display->game_bitmap->base)[y * pitch + x];
+
+            for(i = 0; i < height; i ++)
+            {
+               memcpy(&output[i * videoConfig.width], input, width * sizeof(uint16_t));
+               input += pitch;
+            }
          }
       }
    }
