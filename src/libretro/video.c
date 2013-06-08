@@ -33,28 +33,15 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
    if(Machine->color_depth == 16)
    {
       retroColorMode = RETRO_PIXEL_FORMAT_RGB565;
-      if(!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
-      {
-         fprintf(stderr, "game bpp: [16], system bpp: [16], color format [RGB565] : NOT AVAILABLE, defaulting to color format [0RGB1555] (SLOW PATH).\n");
-         retroColorMode = RETRO_PIXEL_FORMAT_0RGB1555;
-      }
-      else
-         fprintf(stderr, "game bpp: [16], system bpp: [16], color format [RGB565] : SUPPORTED, enabling it.\n");
+      environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode);
+      fprintf(stderr, "game bpp: [%d], system bpp: [16], color format [RGB565] : SUPPORTED, enabling it.\n", Machine->color_depth);
    }
    else
    {
-      fprintf(stderr, "game bpp: [%d], defaulting to bpp: [32], color format [XRGB8888].\n", Machine->color_depth);
       // Assume 32bit color by default
       retroColorMode = RETRO_PIXEL_FORMAT_XRGB8888;
-      if(environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode))
-      {
-         fprintf(stderr, "game bpp: [%d], system bpp: [32], color format [XRGB8888] : SUPPORTED, enabling it.\n", Machine->color_depth);
-      }
-      else
-      {
-         fprintf(stderr, "game bpp: [%d], system bpp: [32], color format [XRGB8888] : NOT AVAILLE, defaulting to color format [0RGB1555] (SLOW PATH).\n", Machine->color_depth);
-         retroColorMode = RETRO_PIXEL_FORMAT_0RGB1555;
-      }
+      environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode);
+      fprintf(stderr, "game bpp: [%d], system bpp: [32], color format [XRGB8888] : SUPPORTED, enabling it.\n", Machine->color_depth);
    }
 
    if(Machine->color_depth == 15)
@@ -188,21 +175,7 @@ void osd_update_video_and_audio(struct mame_display *display)
       }
       else if(display->game_bitmap->depth == 15)
       {
-         if(retroColorMode == RETRO_PIXEL_FORMAT_XRGB8888)
-         {
-            DIRECT_COPY(uint32_t, uint16_t, 1, 10, 0x1F, 19, 5, 0x1F, 11, 0, 0x1F, 3);
-         }
-         else 
-         {
-            uint16_t* output = (uint16_t*)videoBuffer;
-            const uint16_t* input = &((const uint16_t*)display->game_bitmap->base)[y * pitch + x];
-
-            for(i = 0; i < height; i ++)
-            {
-               memcpy(&output[i * videoConfig.width], input, width * sizeof(uint16_t));
-               input += pitch;
-            }
-         }
+         DIRECT_COPY(uint32_t, uint16_t, 1, 10, 0x1F, 19, 5, 0x1F, 11, 0, 0x1F, 3);
       }
    }
 
