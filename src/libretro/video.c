@@ -137,7 +137,7 @@ void osd_update_video_and_audio(struct mame_display *display)
 
       extern unsigned retroColorMode;
 
-      if (video_cb)
+      if (video_cb && display->changed_flags & GAME_BITMAP_CHANGED)
       {
          // Cache some values used in the below macros
          const uint32_t x = display->game_visible_area.min_x;
