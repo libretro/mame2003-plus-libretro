@@ -114,7 +114,7 @@ unsigned retro_api_version(void)
 
 void retro_get_system_info(struct retro_system_info *info)
 {
-   info->library_name = "MAME";
+   info->library_name = "MAME 2003";
    info->library_version = "0.78";
    info->valid_extensions = "zip";
    info->need_fullpath = true;   
