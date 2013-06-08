@@ -20,10 +20,10 @@ int gotFrame;
 
 static unsigned totalColors;
 static uint32_t* convertedPalette;
+extern unsigned retroColorMode;
 
 int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_components)
 {
-   extern unsigned retroColorMode;
    static const UINT32 rValues[3] = {0x7C00, 0xFF0000, (0x1F << 11)};
    static const UINT32 gValues[3] = {0x03E0, 0x00FF00, (0x3F << 5)};
    static const UINT32 bValues[3] = {0x001F, 0x0000FF, (0x1F)};
@@ -105,23 +105,6 @@ int osd_skip_this_frame(void)
    } \
 }
 
-static uint32_t rgb32toNeeded(uint32_t aColor)
-{
-    extern unsigned retroColorMode;
-    
-    if(RETRO_PIXEL_FORMAT_XRGB8888 == retroColorMode)
-        return aColor;
-    else
-    {
-        const uint32_t r = (aColor >> 19) & 0x1F;
-        const uint32_t g = (aColor >> 11) & 0x1F;
-        const uint32_t b = (aColor >>  3) & 0x1F;
-        const int rgExtra = (RETRO_PIXEL_FORMAT_RGB565 == retroColorMode) ? 1 : 0;
-        
-        return (r << (10 + rgExtra)) | (g << (5 + rgExtra)) | b;
-    }
-}
-
 void osd_update_video_and_audio(struct mame_display *display)
 {
    int i, j;
@@ -152,8 +135,16 @@ void osd_update_video_and_audio(struct mame_display *display)
 
             for(j = 0; dirtyField; j ++, dirtyField >>= 1)
             {
-               if(dirtyField & 1)
-                  convertedPalette[i + j] = rgb32toNeeded(display->game_palette[i + j]);
+               if (dirtyField & 1)
+               {
+                  uint32_t aColor = display->game_palette[i + j];
+                  const int rgExtra = (retroColorMode == RETRO_PIXEL_FORMAT_RGB565) ? 1 : 0;
+
+                  if(retroColorMode == RETRO_PIXEL_FORMAT_XRGB8888)
+                     convertedPalette[i + j] = aColor;
+                  else
+                     convertedPalette[i + j] = (((aColor >> 19) & 0x1F) << (10 + rgExtra)) | (((aColor >> 11) & 0x1F) << (5 + rgExtra)) | ((aColor >> 3) & 0x1F);
+               }
             }
          }
       }
