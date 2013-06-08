@@ -104,9 +104,6 @@ extern struct osd_create_params videoConfig;
 
 unsigned retroColorMode;
 int16_t XsoundBuffer[2048];
-uint16_t videoBuffer[1024*1024];
-unsigned videoBufferWidth;
-unsigned videoBufferHeight;
 char* systemDir;
 char* romDir;
 
@@ -164,7 +161,6 @@ void retro_run (void)
 #if USE_RETRO_KEYBOARD
    const struct KeyboardInfo *thisInput;
 #endif
-   const void *gotFrame;
 
    poll_cb();
 
@@ -188,8 +184,6 @@ void retro_run (void)
 
    mame_frame();
 
-   gotFrame = (videoBufferWidth && videoBufferHeight) ? videoBuffer : 0;
-   video_cb(gotFrame, videoBufferWidth, videoBufferHeight, videoBufferWidth * ((retroColorMode == RETRO_PIXEL_FORMAT_XRGB8888) ? 4 : 2));
    audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
 }
 

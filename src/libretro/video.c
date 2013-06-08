@@ -11,24 +11,18 @@
 extern retro_environment_t environ_cb;
 extern retro_video_refresh_t video_cb;
 
-extern uint16_t videoBuffer[1024*1024];
-extern unsigned videoBufferWidth;
-extern unsigned videoBufferHeight;
+uint16_t videoBuffer[1024*1024];
 struct osd_create_params videoConfig;
 int gotFrame;
 
 // TODO: This seems to work so far, but could be better
 
 static unsigned totalColors;
-static uint32_t* convertedPalette;
+uint32_t* convertedPalette;
 extern unsigned retroColorMode;
 
 int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_components)
 {
-   static const UINT32 rValues[3] = {0x7C00, 0xFF0000, (0x1F << 11)};
-   static const UINT32 gValues[3] = {0x03E0, 0x00FF00, (0x3F << 5)};
-   static const UINT32 bValues[3] = {0x001F, 0x0000FF, (0x1F)};
-
    memcpy(&videoConfig, params, sizeof(videoConfig));    
 
    if(Machine->color_depth == 16)
@@ -47,16 +41,22 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
 
    if(Machine->color_depth == 15)
    {
-      const int val = (RETRO_PIXEL_FORMAT_RGB565 == retroColorMode) ? 2 : 0;
-      rgb_components[0] = rValues[val];
-      rgb_components[1] = gValues[val];
-      rgb_components[2] = bValues[val];
+      /* 32bpp only */
+      rgb_components[0] = 0x7C00;
+      rgb_components[1] = 0x03E0;
+      rgb_components[2] = 0x001F;
+
+      /* 16bpp - just in case we ever do anything with this -
+       * r - (0x1F << 11) 
+       * g - (0x3F << 5)
+       * b - Ox1F
+       */
    }
    else if(Machine->color_depth == 32)
    {
-      rgb_components[0] = rValues[1];
-      rgb_components[1] = gValues[1];
-      rgb_components[2] = bValues[1];
+      rgb_components[0] = 0xFF0000;
+      rgb_components[1] = 0x00FF00;
+      rgb_components[2] = 0x0000FF;
    }
 
    return 0;
@@ -95,12 +95,13 @@ int osd_skip_this_frame(void)
 
 void osd_update_video_and_audio(struct mame_display *display)
 {
-   int i, j;
    RARCH_PERFORMANCE_INIT(update_video_and_audio);
    RARCH_PERFORMANCE_START(update_video_and_audio);
 
    if(display->changed_flags & 0xF)
-   {    
+   {
+      int i, j;
+
       // Update UI area
       if(display->changed_flags & GAME_VISIBLE_AREA_CHANGED)
       {
@@ -128,10 +129,7 @@ void osd_update_video_and_audio(struct mame_display *display)
                   uint32_t aColor = display->game_palette[i + j];
                   const int rgExtra = (retroColorMode == RETRO_PIXEL_FORMAT_RGB565) ? 1 : 0;
 
-                  if(retroColorMode == RETRO_PIXEL_FORMAT_XRGB8888)
-                     convertedPalette[i + j] = aColor;
-                  else
-                     convertedPalette[i + j] = (((aColor >> 19) & 0x1F) << (10 + rgExtra)) | (((aColor >> 11) & 0x1F) << (5 + rgExtra)) | ((aColor >> 3) & 0x1F);
+                  convertedPalette[i + j] = (((aColor >> 19) & 0x1F) << (10 + rgExtra)) | (((aColor >> 11) & 0x1F) << (5 + rgExtra)) | ((aColor >> 3) & 0x1F);
                }
             }
          }
@@ -148,10 +146,6 @@ void osd_update_video_and_audio(struct mame_display *display)
          const uint32_t height = videoConfig.height;
          const uint32_t pitch = display->game_bitmap->rowpixels;
 
-         // Copy image size
-         videoBufferWidth = width;
-         videoBufferHeight = height;
-
          // Copy pixels
          if(display->game_bitmap->depth == 16)
          {
@@ -164,21 +158,18 @@ void osd_update_video_and_audio(struct mame_display *display)
                   *output++ = convertedPalette[*input++];
                input += pitch - width;
             }
+
+            video_cb(videoBuffer, width, height, width * 2);
          }
          else if(display->game_bitmap->depth == 32)
          {
-            uint32_t* output = (uint32_t*)videoBuffer;
-            const uint32_t* input = &((const uint32_t*)display->game_bitmap->base)[y * pitch + x];
-
-            for(i = 0; i < height; i ++)
-            {
-               memcpy(&output[i * width], input, width * sizeof(uint32_t));
-               input += pitch;
-            }
+            const uint32_t* const input = &((const uint32_t*)display->game_bitmap->base)[y * pitch + x];
+            video_cb(input, width, height, pitch * 4);
          }
          else if(display->game_bitmap->depth == 15)
          {
             DIRECT_COPY(uint32_t, uint16_t, 1, 10, 0x1F, 19, 5, 0x1F, 11, 0, 0x1F, 3);
+            video_cb(videoBuffer, width, height, width * 4);
          }
       }
    }
