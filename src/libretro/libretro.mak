@@ -69,6 +69,13 @@ else ifeq ($(platform), ps3)
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+else ifeq ($(platform), sncps3)
+   EMULATOR = $(TARGET_NAME)_libretro_ps3.a
+   BIGENDIAN = 1
+    
+   CC = $(CELL_SDK)/host-win32/sn/bin/ps3ppusnc.exe
+   AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
+   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
 else ifeq ($(platform), psp1)
 	EMULATOR = libretro_psp1.a
 

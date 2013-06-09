@@ -62,27 +62,18 @@ CFLAGS += -DUSE_RETRO_KEYBOARD=${USE_RETRO_KEYBOARD}
 RETRO_PROFILE = 0
 CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
 
+ifneq ($(platform), sncps3)
+CFLAGS += -Wall -Wno-sign-compare -Wunused \
+	-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
+	-Wshadow -Wstrict-prototypes -Wundef \
+	-Wformat-security -Wwrite-strings \
+	-Wdisabled-optimization
+endif
 
 ifdef SYMBOLS
 CFLAGS += -O0 -Wall -Wno-unused -g
 else
-CFLAGS += -DNDEBUG \
-	$(ARCH) -O3 -fomit-frame-pointer -fstrict-aliasing \
-	-Wall -Wno-sign-compare -Wunused \
-	-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
-	-Wshadow -Wstrict-prototypes -Wundef \
-	-Wformat-security -Wwrite-strings \
-	-Wdisabled-optimization \
-#	-Wredundant-decls
-#	-Wfloat-equal
-#	-Wunreachable-code -Wpadded
-#	-W had to remove because of the "missing initializer" warning
-#	-Wlarger-than-262144  \
-#	-Wcast-qual \
-#	-Wwrite-strings \
-#	-Wconversion \
-#	-Wmissing-prototypes \
-#	-Wmissing-declarations
+CFLAGS += -DNDEBUG $(ARCH) -O3 -fomit-frame-pointer -fstrict-aliasing
 endif
 
 # extra options needed *only* for the osd files
