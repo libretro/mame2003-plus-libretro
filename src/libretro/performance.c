@@ -17,7 +17,7 @@
 #include "performance.h"
 
 #ifdef ANDROID
-#include "android/native/jni/cpufeatures.h"
+#include "android-perf/cpufeatures.h"
 #endif
 
 #ifdef PERF_TEST
