@@ -27,7 +27,16 @@ void retro_set_audio_sample(retro_audio_sample_t cb) { }
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
 void retro_set_input_poll(retro_input_poll_t cb) { poll_cb = cb; }
 void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
-void retro_set_environment(retro_environment_t cb) { environ_cb = cb; }
+void retro_set_environment(retro_environment_t cb)
+{
+   static const struct retro_variable vars[] = {
+      { "frameskip", "Frameskip; 0|1|2|3|4|5|6|7|8|9|10|11" },
+      { NULL, NULL },
+   };
+   environ_cb = cb;
+
+   cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
+}
 
 #ifndef PATH_SEPARATOR
 # if defined(WINDOWS_PATH_STYLE) || defined(_WIN32)
@@ -138,8 +147,22 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
     info->timing.sample_rate = 48000.0;
 }
 
+extern int frameskip;
+
+static void update_variables(void)
+{
+   struct retro_variable var;
+   
+   var.value = NULL;
+   var.key = "frameskip";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+      frameskip = atoi(var.value);
+}
+
 void retro_init (void)
 {
+	update_variables();
 }
 
 void retro_deinit(void)
@@ -161,8 +184,12 @@ void retro_run (void)
 #if USE_RETRO_KEYBOARD
    const struct KeyboardInfo *thisInput;
 #endif
+	bool updated = false;
 
    poll_cb();
+
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
+		update_variables();
 
    // Keyboard
 #if USE_RETRO_KEYBOARD == 1

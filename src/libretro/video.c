@@ -69,9 +69,31 @@ void osd_close_display(void)
     totalColors = 0;
 }
 
+static const int frameskip_table[12][12] = { { 0,0,0,0,0,0,0,0,0,0,0,0 },
+	                                                                    { 0,0,0,0,0,0,0,0,0,0,0,1 },
+	                                                                    { 0,0,0,0,0,1,0,0,0,0,0,1 },
+	                                                                    { 0,0,0,1,0,0,0,1,0,0,0,1 },
+	                                                                    { 0,0,1,0,0,1,0,0,1,0,0,1 },
+	                                                                    { 0,1,0,0,1,0,1,0,0,1,0,1 },
+	                                                                    { 0,1,0,1,0,1,0,1,0,1,0,1 },
+	                                                                    { 0,1,0,1,1,0,1,0,1,1,0,1 },
+	                                                                    { 0,1,1,0,1,1,0,1,1,0,1,1 },
+	                                                                    { 0,1,1,1,0,1,1,1,0,1,1,1 },
+	                                                                    { 0,1,1,1,1,1,0,1,1,1,1,1 },
+	                                                                    { 0,1,1,1,1,1,1,1,1,1,1,1 } };
+static unsigned frameskip_counter = 0;
+int frameskip = 0;
+
 int osd_skip_this_frame(void)
 {
-    return 0;
+   if (frameskip_counter >= 11)
+      frameskip_counter = 0;
+
+   int ret = frameskip_table[frameskip][frameskip_counter];
+
+   frameskip_counter++;
+
+   return ret;
 }
 
 #define DIRECT_COPY(OTYPE, ITYPE, ALLOWSIMPLE, RDOWN, RMASK, RUP, GDOWN, GMASK, GUP, BDOWN, BMASK, BUP) \
@@ -97,6 +119,9 @@ void osd_update_video_and_audio(struct mame_display *display)
 {
    RARCH_PERFORMANCE_INIT(update_video_and_audio);
    RARCH_PERFORMANCE_START(update_video_and_audio);
+
+   const uint32_t width = videoConfig.width;
+   const uint32_t height = videoConfig.height;
 
    if(display->changed_flags & 0xF)
    {
@@ -135,15 +160,11 @@ void osd_update_video_and_audio(struct mame_display *display)
          }
       }
 
-      extern unsigned retroColorMode;
-
-      if (video_cb && display->changed_flags & GAME_BITMAP_CHANGED)
+      if (video_cb && display->changed_flags & GAME_BITMAP_CHANGED && (osd_skip_this_frame() == 0))
       {
          // Cache some values used in the below macros
          const uint32_t x = display->game_visible_area.min_x;
          const uint32_t y = display->game_visible_area.min_y;
-         const uint32_t width = videoConfig.width;
-         const uint32_t height = videoConfig.height;
          const uint32_t pitch = display->game_bitmap->rowpixels;
 
          // Copy pixels
@@ -172,6 +193,8 @@ void osd_update_video_and_audio(struct mame_display *display)
             video_cb(videoBuffer, width, height, width * 4);
          }
       }
+      else
+         video_cb(NULL, width, height, width * 2);
    }
 
    gotFrame = 1;
