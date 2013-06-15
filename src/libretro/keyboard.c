@@ -4,8 +4,6 @@
 #include "osdepend.h"
 #include "input.h"
 
-#if USE_RETRO_KEYBOARD == 1
-
 /******************************************************************************
 
 	Keyboard
@@ -141,5 +139,3 @@ const struct KeyboardInfo retroKeys[] =
 
     {0, 0, 0}
 };
-
-#endif

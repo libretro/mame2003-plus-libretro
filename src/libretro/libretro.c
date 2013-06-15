@@ -103,10 +103,8 @@ static int driverIndex; //< Index of mame game loaded
 
 //
 
-#if USE_RETRO_KEYBOARD == 1
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
-#endif
 
 extern int retroJsState[64];
 extern struct osd_create_params videoConfig;
@@ -181,9 +179,7 @@ void retro_run (void)
 {
    int i, j;
    int *jsState;
-#if USE_RETRO_KEYBOARD
    const struct KeyboardInfo *thisInput;
-#endif
 	bool updated = false;
 
    poll_cb();
@@ -192,14 +188,12 @@ void retro_run (void)
 		update_variables();
 
    // Keyboard
-#if USE_RETRO_KEYBOARD == 1
    thisInput = retroKeys;
    while(thisInput->name)
    {
       retroKeyState[thisInput->code] = input_cb(0, RETRO_DEVICE_KEYBOARD, 0, thisInput->code);
       thisInput ++;
    }
-#endif
 
    // Joystick
    jsState = retroJsState;

@@ -55,10 +55,6 @@ DEFS = -DINLINE="static __inline__" -Dasm=__asm__
 
 CFLAGS = -Isrc -Isrc/includes -Isrc/$(MAMEOS) -I$(OBJ)/cpu/m68000 -Isrc/cpu/m68000
 
-# libretro keyboard
-USE_RETRO_KEYBOARD = 0
-CFLAGS += -DUSE_RETRO_KEYBOARD=${USE_RETRO_KEYBOARD}
-
 RETRO_PROFILE = 0
 CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
 

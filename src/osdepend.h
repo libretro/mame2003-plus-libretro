@@ -175,7 +175,6 @@ void osd_sound_enable(int enable);
 	Keyboard
 
 ******************************************************************************/
-#if (!defined(__LIBRETRO__)) || (USE_RETRO_KEYBOARD == 1)
 /*
   return a list of all available keys (see input.h)
 */
@@ -197,12 +196,6 @@ int osd_is_key_pressed(int keycode);
   having prior UI and game keys leak into the text entry.
 */
 int osd_readkey_unicode(int flush);
-#else
-static const struct KeyboardInfo retroKeys[] = {{0,0,0}};
-#define osd_get_key_list() retroKeys
-#define osd_is_key_pressed(x) 0
-#define osd_readkey_unicode(x) 0
-#endif
 
 
 /******************************************************************************
