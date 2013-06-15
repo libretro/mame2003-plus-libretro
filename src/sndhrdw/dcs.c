@@ -10,11 +10,11 @@
 
 #include <math.h>
 
-
 #define LOG_DCS_TRANSFERS			(0)
 #define LOG_DCS_IO					(0)
 #define LOG_BUFFER_FILLING			(0)
 
+static unsigned dcs_speedhack_enable = 0;
 
 /***************************************************************************
 	CONSTANTS
@@ -117,6 +117,11 @@ static INT8 dcs_cpunum;
 
 static struct dcs_state dcs;
 
+static data16_t *dcs_speedup1;
+static data16_t *dcs_speedup2;
+static data16_t *dcs_speedup3;
+static data16_t *dcs_speedup4;
+
 static data16_t *dcs_sram_bank0;
 static data16_t *dcs_sram_bank1;
 static data16_t *dcs_expanded_rom;
@@ -168,6 +173,11 @@ static void sound_tx_callback(int port, INT32 data);
 
 static READ16_HANDLER( dcs_polling_r );
 
+static WRITE16_HANDLER(dcs_speedup1_w);
+static WRITE16_HANDLER(dcs_speedup2_w);
+static WRITE16_HANDLER(dcs_speedup3_w);
+static WRITE16_HANDLER(dcs_speedup4_w);
+static void dcs_speedup_common(void);
 
 
 /***************************************************************************
@@ -402,6 +412,18 @@ void dcs_init(void)
 	/* reset RAM-based variables */
 	dcs_sram_bank0 = dcs_sram_bank1 = NULL;
 
+   dcs_speedhack_enable = 0;
+
+	/* install the speedup handler */
+   if (activate_dcs_speedhack)
+   {
+      dcs_speedhack_enable = 1;
+      dcs_speedup1 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x04f8, 0x04f8), dcs_speedup1_w);
+      dcs_speedup2 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x063d, 0x063d), dcs_speedup2_w);
+      dcs_speedup3 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x063a, 0x063a), dcs_speedup3_w);
+      dcs_speedup4 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x0641, 0x0641), dcs_speedup4_w);
+   }
+
 	/* create the timer */
 	dcs.reg_timer = timer_alloc(dcs_irq);
 	dcs.sport_timer = NULL;
@@ -524,6 +546,28 @@ static WRITE16_HANDLER( dcs_rombank_select_w )
 #if 0
 	set_led_status(2, data & 0x800);
 #endif
+
+   if (dcs_speedhack_enable)
+   {
+      /* they write 0x800 here just before entering the stall loop */
+      if (data == 0x800)
+      {
+         /* calculate the next buffer address */
+         int source = activecpu_get_reg(ADSP2100_I0 + dcs.ireg);
+         int ar = source + dcs.size / 2;
+
+         /* check for wrapping */
+         if (ar >= (dcs.ireg_base + dcs.size))
+            ar = dcs.ireg_base;
+
+         /* set it */
+         activecpu_set_reg(ADSP2100_AR, ar);
+
+         /* go around the buffer syncing code, we sync manually */
+         activecpu_set_reg(ADSP2100_PC, activecpu_get_pc() + 8);
+         cpu_spinuntil_int();
+      }
+   }
 }
 
 
@@ -1050,6 +1094,10 @@ static void dcs_irq(int state)
 
 	/* store it */
 	cpunum_set_reg(dcs_cpunum, ADSP2100_I0 + dcs.ireg, reg);
+   
+   if (dcs_speedhack_enable)
+	/* this is the same trigger as an interrupt */
+      cpu_triggerint(dcs_cpunum);
 }
 
 
@@ -1144,6 +1192,222 @@ static void sound_tx_callback(int port, INT32 data)
 	timer_adjust(dcs.reg_timer, TIME_NEVER, 0, 0);
 }
 
+/***************************************************************************
+	DCS SPEEDUPS
+****************************************************************************/
+
+static WRITE16_HANDLER( dcs_speedup1_w )
+{
+/*
+	MK3:     trigger = $04F8 = 2, PC = $00FD, SKIPTO = $0128
+	UMK3:    trigger = $04F8 = 2, PC = $00FD, SKIPTO = $0128
+	OPENICE: trigger = $04F8 = 2, PC = $00FD, SKIPTO = $0128
+	WWFMANIA:trigger = $04F8 = 2, PC = $00FD, SKIPTO = $0128
+	NBAHANGT:trigger = $04F8 = 2, PC = $00FD, SKIPTO = $0128
+	NBAMAXHT:trigger = $04F8 = 2, PC = $00FD, SKIPTO = $0128
+	RMPGWT:  trigger = $04F8 = 2, PC = $00FD, SKIPTO = $0128
+*/
+	COMBINE_DATA(&dcs_speedup1[offset]);
+	if (data == 2 && activecpu_get_pc() == 0xfd)
+		dcs_speedup_common();
+}
+
+
+static WRITE16_HANDLER( dcs_speedup2_w )
+{
+/*
+	MK2:     trigger = $063D = 2, PC = $00F6, SKIPTO = $0121
+	REVX:    trigger = $063D = 2, PC = $00F6, SKIPTO = $0121
+	KINST:   trigger = $063D = 2, PC = $00F6, SKIPTO = $0121
+*/
+	COMBINE_DATA(&dcs_speedup2[offset]);
+	if (data == 2 && activecpu_get_pc() == 0xf6)
+		dcs_speedup_common();
+}
+
+
+static WRITE16_HANDLER( dcs_speedup3_w )
+{
+/*
+	CRUSNUSA: trigger = $063A = 2, PC = $00E1, SKIPTO = $010C
+*/
+	COMBINE_DATA(&dcs_speedup3[offset]);
+	if (data == 2 && activecpu_get_pc() == 0xe1)
+		dcs_speedup_common();
+}
+
+
+static WRITE16_HANDLER( dcs_speedup4_w )
+{
+/*
+	CRUSNWLD: trigger = $0641 = 2, PC = $00DA, SKIPTO = $0105
+	OFFROADC: trigger = $0641 = 2, PC = $00DA, SKIPTO = $0105
+*/
+	COMBINE_DATA(&dcs_speedup4[offset]);
+	if (data == 2 && activecpu_get_pc() == 0xda)
+		dcs_speedup_common();
+}
+
+
+static void dcs_speedup_common(void)
+{
+/*
+	00F4: AR = $0002
+	00F5: DM($063D) = AR
+	00F6: SI = $0040
+	00F7: DM($063E) = SI
+	00F8: SR = LSHIFT SI BY -1 (LO)
+	00F9: DM($063F) = SR0
+	00FA: M0 = $3FFF
+	00FB: CNTR = $0006
+	00FC: DO $0120 UNTIL CE
+		00FD: I4 = $0780
+		00FE: I5 = $0700
+		00FF: I0 = $3800
+		0100: I1 = $3800
+		0101: AY0 = DM($063E)
+		0102: M2 = AY0
+		0103: MODIFY (I1,M2)
+		0104: I2 = I1
+		0105: AR = AY0 - 1
+		0106: M3 = AR
+		0107: CNTR = DM($063D)
+		0108: DO $0119 UNTIL CE
+			0109: CNTR = DM($063F)
+			010A: MY0 = DM(I4,M5)
+			010B: MY1 = DM(I5,M5)
+			010C: MX0 = DM(I1,M1)
+			010D: DO $0116 UNTIL CE
+				010E: MR = MX0 * MY0 (SS), MX1 = DM(I1,M1)
+				010F: MR = MR - MX1 * MY1 (RND), AY0 = DM(I0,M1)
+				0110: MR = MX1 * MY0 (SS), AX0 = MR1
+				0111: MR = MR + MX0 * MY1 (RND), AY1 = DM(I0,M0)
+				0112: AR = AY0 - AX0, MX0 = DM(I1,M1)
+				0113: AR = AX0 + AY0, DM(I0,M1) = AR
+				0114: AR = AY1 - MR1, DM(I2,M1) = AR
+				0115: AR = MR1 + AY1, DM(I0,M1) = AR
+				0116: DM(I2,M1) = AR
+			0117: MODIFY (I2,M2)
+			0118: MODIFY (I1,M3)
+			0119: MODIFY (I0,M2)
+		011A: SI = DM($063D)
+		011B: SR = LSHIFT SI BY 1 (LO)
+		011C: DM($063D) = SR0
+		011D: SI = DM($063F)
+		011E: DM($063E) = SI
+		011F: SR = LSHIFT SI BY -1 (LO)
+		0120: DM($063F) = SR0
+*/
+
+	INT16 *source = (INT16 *)memory_region(REGION_CPU1 + dcs_cpunum);
+	int mem63d = 2;
+	int mem63e = 0x40;
+	int mem63f = mem63e >> 1;
+	int i, j, k;
+
+	for (i = 0; i < 6; i++)
+	{
+		INT16 *i4 = &source[0x780];
+		INT16 *i5 = &source[0x700];
+		INT16 *i0 = &source[0x3800];
+		INT16 *i1 = &source[0x3800 + mem63e];
+		INT16 *i2 = i1;
+
+		for (j = 0; j < mem63d; j++)
+		{
+			INT32 mx0, mx1, my0, my1, ax0, ay0, ay1, mr1, temp;
+
+			my0 = *i4++;
+			my1 = *i5++;
+
+			for (k = 0; k < mem63f; k++)
+			{
+				mx0 = *i1++;
+				mx1 = *i1++;
+				ax0 = (mx0 * my0 - mx1 * my1) >> 15;
+				mr1 = (mx1 * my0 + mx0 * my1) >> 15;
+				ay0 = i0[0];
+				ay1 = i0[1];
+
+				temp = ay0 - ax0;
+				if (temp < -32768) temp = -32768;
+				else if (temp > 32767) temp = 32767;
+				*i0++ = temp;
+
+				temp = ax0 + ay0;
+				if (temp < -32768) temp = -32768;
+				else if (temp > 32767) temp = 32767;
+				*i2++ = temp;
+
+				temp = ay1 - mr1;
+				if (temp < -32768) temp = -32768;
+				else if (temp > 32767) temp = 32767;
+				*i0++ = temp;
+
+				temp = ay1 + mr1;
+				if (temp < -32768) temp = -32768;
+				else if (temp > 32767) temp = 32767;
+				*i2++ = temp;
+			}
+			i2 += mem63e;
+			i1 += mem63e;
+			i0 += mem63e;
+		}
+		mem63d <<= 1;
+		mem63e = mem63f;
+		mem63f >>= 1;
+	}
+	activecpu_set_reg(ADSP2100_PC, activecpu_get_pc() + 0x121 - 0xf6);
+}
+
+
+/* War Gods:
+2BA4: 0000      AR = $0002
+2BA5: 0000      DM($0A09) = AR
+2BA6: 0000      SI = $0040
+2BA7: 0000      DM($0A0B) = SI
+2BA8: 0000      SR = LSHIFT SI BY -1 (LO)
+2BA9: 0000      DM($0A0D) = SR0
+2BAA: 0000      M0 = $3FFF
+2BAB: 0000      CNTR = $0006
+2BAC: 0000      DO $2BD0 UNTIL CE
+2BAD: 0000          I4 = $1080
+2BAE: 0000          I5 = $1000
+2BAF: 0000          I0 = $2000
+2BB0: 0000          I1 = $2000
+2BB1: 0000          AY0 = DM($0A0B)
+2BB2: 0000          M2 = AY0
+2BB3: 0000          MODIFY (I1,M2)
+2BB4: 0000          I2 = I1
+2BB5: 0000          AR = AY0 - 1
+2BB6: 0000          M3 = AR
+2BB7: 0000          CNTR = DM($0A09)
+2BB8: 0000          DO $2BC9 UNTIL CE
+2BB9: 0000              CNTR = DM($0A0D)
+2BBA: 0000              MY0 = DM(I4,M5)
+2BBB: 0000              MY1 = DM(I5,M5)
+2BBC: 0000              MX0 = DM(I1,M1)
+2BBD: 0000              DO $2BC6 UNTIL CE
+2BBE: 0000                  MR = MX0 * MY0 (SS), MX1 = DM(I1,M1)
+2BBF: 0000                  MR = MR - MX1 * MY1 (RND), AY0 = DM(I0,M1)
+2BC0: 0000                  MR = MX1 * MY0 (SS), AX0 = MR1
+2BC1: 0000                  MR = MR + MX0 * MY1 (RND), AY1 = DM(I0,M0)
+2BC2: 0000                  AR = AY0 - AX0, MX0 = DM(I1,M1)
+2BC3: 0000                  AR = AX0 + AY0, DM(I0,M1) = AR
+2BC4: 0000                  AR = AY1 - MR1, DM(I2,M1) = AR
+2BC5: 0000                  AR = MR1 + AY1, DM(I0,M1) = AR
+2BC6: 0000                  DM(I2,M1) = AR
+2BC7: 0000              MODIFY (I2,M2)
+2BC8: 0000              MODIFY (I1,M3)
+2BC9: 0000              MODIFY (I0,M2)
+2BCA: 0000          SI = DM($0A09)
+2BCB: 0000          SR = LSHIFT SI BY 1 (LO)
+2BCC: 0000          DM($0A09) = SR0
+2BCD: 0000          SI = DM($0A0D)
+2BCE: 0000          DM($0A0B) = SI
+2BCF: 0000          SR = LSHIFT SI BY -1 (LO)
+2BD0: 0000          DM($0A0D) = SR0
+*/
 
 
 /***************************************************************************

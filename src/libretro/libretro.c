@@ -16,6 +16,8 @@
 void mame_frame(void);
 void mame_done(void);
 
+unsigned activate_dcs_speedhack = 0;
+
 retro_video_refresh_t video_cb = NULL;
 static retro_input_poll_t poll_cb = NULL;
 static retro_input_state_t input_cb = NULL;
@@ -31,6 +33,7 @@ void retro_set_environment(retro_environment_t cb)
 {
    static const struct retro_variable vars[] = {
       { "frameskip", "Frameskip; 0|1|2|3|4|5" },
+      { "dcs-speedhack", "MK2/MK3 DCS Speedhack; disabled|enabled" },
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -156,6 +159,19 @@ static void update_variables(void)
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
       frameskip = atoi(var.value);
+
+   var.value = NULL;
+   var.key = "dcs-speedhack";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+       if(strcmp(var.value, "enabled") == 0)
+          activate_dcs_speedhack = 1;
+       else if(strcmp(var.value, "enabled") == 0)
+          activate_dcs_speedhack = 0;
+   }
+   else
+      activate_dcs_speedhack = 0;
 }
 
 void retro_init (void)
