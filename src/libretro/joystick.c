@@ -53,7 +53,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
 
 int osd_is_joy_pressed(int joycode)
 {
-    return (joycode >= 0 && joycode < 16) ? retroJsState[joycode] : 0;
+    return (joycode >= 0) ? retroJsState[joycode] : 0;
 }
 
 int osd_is_joystick_axis_code(int joycode)
