@@ -203,9 +203,7 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
          snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
    }
 
-#ifdef DEBUG_LOG
    fprintf(stderr, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
-#endif
 
    osd_file* out = malloc(sizeof(osd_file));
    out->file = fopen(buffer, mode);
