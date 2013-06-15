@@ -30,7 +30,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 void retro_set_environment(retro_environment_t cb)
 {
    static const struct retro_variable vars[] = {
-      { "frameskip", "Frameskip; 0|1|2|3|4|5|6|7|8|9|10|11" },
+      { "frameskip", "Frameskip; 0|1|2|3|4|5" },
       { NULL, NULL },
    };
    environ_cb = cb;
