@@ -96,25 +96,6 @@ int osd_skip_this_frame(void)
    return ret;
 }
 
-#define DIRECT_COPY(OTYPE, ITYPE, ALLOWSIMPLE, RDOWN, RMASK, RUP, GDOWN, GMASK, GUP, BDOWN, BMASK, BUP) \
-{ \
-   OTYPE* output = (OTYPE*)videoBuffer; \
-   const ITYPE* input = &((const ITYPE*)display->game_bitmap->base)[y * pitch + x]; \
-   \
-   for(i = 0; i < height; i ++) \
-   { \
-      for(j = 0; j < width; j ++) \
-      { \
-         const uint32_t color = *input ++; \
-         const uint32_t r = ((color >> (RDOWN)) & RMASK) << RUP; \
-         const uint32_t g = ((color >> (GDOWN)) & GMASK) << GUP; \
-         const uint32_t b = ((color >> (BDOWN)) & BMASK) << BUP; \
-         *output++ = r | g | b; \
-      } \
-      input += pitch - width; \
-   } \
-}
-
 void osd_update_video_and_audio(struct mame_display *display)
 {
    RARCH_PERFORMANCE_INIT(update_video_and_audio);
@@ -189,7 +170,22 @@ void osd_update_video_and_audio(struct mame_display *display)
          }
          else if(display->game_bitmap->depth == 15)
          {
-            DIRECT_COPY(uint32_t, uint16_t, 1, 10, 0x1F, 19, 5, 0x1F, 11, 0, 0x1F, 3);
+            uint32_t* output = (uint32_t*)videoBuffer;
+            const uint16_t* input = &((const uint16_t*)display->game_bitmap->base)[y * pitch + x];
+
+            for(i = 0; i < height; i ++)
+            {
+               for(j = 0; j < width; j ++)
+               {
+                  const uint32_t color = *input ++;
+                  const uint32_t r = ((color >> 10) & 0x1f) << 19;
+                  const uint32_t g = ((color >> 5) & 0x1f) << 11;
+                  const uint32_t b = ((color) & 0x1f) << 3;
+                  *output++ = r | g | b;
+               }
+               input += pitch - width;
+            }
+
             video_cb(videoBuffer, width, height, width * 4);
          }
       }
