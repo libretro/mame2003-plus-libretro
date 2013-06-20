@@ -17,8 +17,6 @@ int gotFrame;
 
 // TODO: This seems to work so far, but could be better
 
-static unsigned totalColors;
-uint32_t* convertedPalette;
 extern unsigned retroColorMode;
 
 int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_components)
@@ -64,9 +62,6 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
 
 void osd_close_display(void)
 {
-    free(convertedPalette);
-    convertedPalette = 0;
-    totalColors = 0;
 }
 
 static const int frameskip_table[12][12] = { { 0,0,0,0,0,0,0,0,0,0,0,0 },
@@ -114,33 +109,6 @@ void osd_update_video_and_audio(struct mame_display *display)
          set_ui_visarea(display->game_visible_area.min_x, display->game_visible_area.min_y, display->game_visible_area.max_x, display->game_visible_area.max_y);
       }
 
-      // Update palette
-      if(retroColorMode != RETRO_PIXEL_FORMAT_XRGB8888 && display->changed_flags & GAME_PALETTE_CHANGED)
-      {
-         if(display->game_palette_entries > totalColors)
-         {
-            totalColors = display->game_palette_entries;
-            free(convertedPalette);
-            convertedPalette = malloc(4 * display->game_palette_entries + (32 * 4));
-         }
-
-         for(i = 0; i < display->game_palette_entries; i += 32)
-         {
-            UINT32 dirtyField = display->game_palette_dirty[i / 32];
-
-            for(j = 0; dirtyField; j ++, dirtyField >>= 1)
-            {
-               if (dirtyField & 1)
-               {
-                  uint32_t aColor = display->game_palette[i + j];
-                  const int rgExtra = (retroColorMode == RETRO_PIXEL_FORMAT_RGB565) ? 1 : 0;
-
-                  convertedPalette[i + j] = (((aColor >> 19) & 0x1F) << (10 + rgExtra)) | (((aColor >> 11) & 0x1F) << (5 + rgExtra)) | ((aColor >> 3) & 0x1F);
-               }
-            }
-         }
-      }
-
       if (video_cb && display->changed_flags & GAME_BITMAP_CHANGED && (osd_skip_this_frame() == 0))
       {
          // Cache some values used in the below macros
@@ -157,7 +125,11 @@ void osd_update_video_and_audio(struct mame_display *display)
             for(i = 0; i < height; i ++)
             {
                for (j = 0; j < width; j ++)
-                  *output++ = convertedPalette[*input++];
+               {
+                  uint32_t acolor = display->game_palette[*input++];
+                  *output++ = (((acolor >> 19) & 0x1f) << 11) | (((acolor >> 11) & 0x1f) << 6) |
+                     ((acolor >> 3) & 0x1f);
+               }
                input += pitch - width;
             }
 
