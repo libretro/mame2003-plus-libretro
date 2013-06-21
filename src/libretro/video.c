@@ -104,7 +104,7 @@ void osd_update_video_and_audio(struct mame_display *display)
       int i, j;
 
       // Update UI area
-      if(display->changed_flags & GAME_VISIBLE_AREA_CHANGED)
+      if (display->changed_flags & GAME_VISIBLE_AREA_CHANGED)
       {
          set_ui_visarea(display->game_visible_area.min_x, display->game_visible_area.min_y, display->game_visible_area.max_x, display->game_visible_area.max_y);
       }
@@ -126,9 +126,9 @@ void osd_update_video_and_audio(struct mame_display *display)
             {
                for (j = 0; j < width; j ++)
                {
-                  uint32_t acolor = display->game_palette[*input++];
-                  *output++ = (((acolor >> 19) & 0x1f) << 11) | (((acolor >> 11) & 0x1f) << 6) |
-                     ((acolor >> 3) & 0x1f);
+                  const uint32_t color = display->game_palette[*input++];
+                  *output++ = (((color >> 19) & 0x1f) << 11) | (((color >> 11) & 0x1f) << 6) |
+                     ((color >> 3) & 0x1f);
                }
                input += pitch - width;
             }
@@ -150,10 +150,8 @@ void osd_update_video_and_audio(struct mame_display *display)
                for(j = 0; j < width; j ++)
                {
                   const uint32_t color = *input ++;
-                  const uint32_t r = ((color >> 10) & 0x1f) << 19;
-                  const uint32_t g = ((color >> 5) & 0x1f) << 11;
-                  const uint32_t b = ((color) & 0x1f) << 3;
-                  *output++ = r | g | b;
+                  *output++ = (((color >> 10) & 0x1f) << 19) | (((color >> 5) & 0x1f) << 11) |
+                     (((color) & 0x1f) << 3);
                }
                input += pitch - width;
             }
