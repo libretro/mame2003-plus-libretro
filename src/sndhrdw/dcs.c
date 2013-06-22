@@ -653,7 +653,9 @@ void dcs_reset_w(int state)
 	/* going high halts the CPU */
 	if (state)
 	{
+#if 0
 		logerror("%08x: DCS reset = %d\n", activecpu_get_pc(), state);
+#endif
 
 		/* just run through the init code again */
 		dcs_reset();
@@ -1040,10 +1042,12 @@ static WRITE16_HANDLER( dcs_control_w )
 			break;
 
 		case S1_CONTROL_REG:
+#if 0
 			if (((data >> 4) & 3) == 2)
 				logerror("Oh no!, the data is compresed with u-law encoding\n");
 			if (((data >> 4) & 3) == 3)
 				logerror("Oh no!, the data is compresed with A-law encoding\n");
+#endif
 			break;
 	}
 }
@@ -1180,8 +1184,10 @@ static void sound_tx_callback(int port, INT32 data)
 
 			return;
 		}
+#if 0
 		else
 			logerror( "ADSP SPORT1: trying to transmit and autobuffer not enabled!\n" );
+#endif
 	}
 
 	/* if we get there, something went wrong. Disable playing */
@@ -1330,23 +1336,23 @@ static void dcs_speedup_common(void)
 				ay1 = i0[1];
 
 				temp = ay0 - ax0;
-				if (temp < -32768) temp = -32768;
-				else if (temp > 32767) temp = 32767;
+				//if (temp < -32768) temp = -32768;
+				//else if (temp > 32767) temp = 32767;
 				*i0++ = temp;
 
 				temp = ax0 + ay0;
-				if (temp < -32768) temp = -32768;
-				else if (temp > 32767) temp = 32767;
+				//if (temp < -32768) temp = -32768;
+				//else if (temp > 32767) temp = 32767;
 				*i2++ = temp;
 
 				temp = ay1 - mr1;
-				if (temp < -32768) temp = -32768;
-				else if (temp > 32767) temp = 32767;
+				//if (temp < -32768) temp = -32768;
+				//else if (temp > 32767) temp = 32767;
 				*i0++ = temp;
 
 				temp = ay1 + mr1;
-				if (temp < -32768) temp = -32768;
-				else if (temp > 32767) temp = 32767;
+				//if (temp < -32768) temp = -32768;
+				//else if (temp > 32767) temp = 32767;
 				*i2++ = temp;
 			}
 			i2 += mem63e;
