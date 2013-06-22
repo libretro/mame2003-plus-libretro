@@ -1105,6 +1105,7 @@ static int display_rom_load_results(struct rom_load_data *romdata)
 		/* if we're not getting out of here, wait for a keypress */
 		if (!options.gui_host && !bailing)
 		{
+#if 0
 			int k;
 
 			/* loop until we get one */
@@ -1114,6 +1115,7 @@ static int display_rom_load_results(struct rom_load_data *romdata)
 				k = code_read_async();
 			}
 			while (k == CODE_NONE || k == KEYCODE_LCONTROL);
+#endif
 
 			/* bail on a control + C */
 			if (keyboard_pressed(KEYCODE_LCONTROL) && keyboard_pressed(KEYCODE_C))
