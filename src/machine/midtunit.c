@@ -67,16 +67,20 @@ WRITE16_HANDLER( midtunit_cmos_enable_w )
 
 WRITE16_HANDLER( midtunit_cmos_w )
 {
+#if 0
 	if (1)/*cmos_write_enable)*/
 	{
+#endif
 		COMBINE_DATA(&((data16_t *)generic_nvram)[offset]);
 		cmos_write_enable = 0;
-	}
+	//}
+#if 0
 	else
 	{
 		logerror("%08X:Unexpected CMOS W @ %05X\n", activecpu_get_pc(), offset);
 		usrintf_showmessage("Bad CMOS write");
 	}
+#endif
 }
 
 
@@ -121,12 +125,12 @@ static UINT8 mk_prot_index;
 
 static READ16_HANDLER( mk_prot_r )
 {
-	logerror("%08X:Protection R @ %05X = %04X\n", activecpu_get_pc(), offset, mk_prot_values[mk_prot_index] << 9);
+	//logerror("%08X:Protection R @ %05X = %04X\n", activecpu_get_pc(), offset, mk_prot_values[mk_prot_index] << 9);
 
 	/* just in case */
 	if (mk_prot_index >= sizeof(mk_prot_values))
 	{
-		logerror("%08X:Unexpected protection R @ %05X\n", activecpu_get_pc(), offset);
+		//logerror("%08X:Unexpected protection R @ %05X\n", activecpu_get_pc(), offset);
 		mk_prot_index = 0;
 	}
 
@@ -151,11 +155,11 @@ static WRITE16_HANDLER( mk_prot_w )
 		/* just in case */
 		if (i == sizeof(mk_prot_values))
 		{
-			logerror("%08X:Unhandled protection W @ %05X = %04X\n", activecpu_get_pc(), offset, data);
+			//logerror("%08X:Unhandled protection W @ %05X = %04X\n", activecpu_get_pc(), offset, data);
 			mk_prot_index = 0;
 		}
 
-		logerror("%08X:Protection W @ %05X = %04X\n", activecpu_get_pc(), offset, data);
+		//logerror("%08X:Protection W @ %05X = %04X\n", activecpu_get_pc(), offset, data);
 	}
 }
 
@@ -324,7 +328,7 @@ static UINT8 jdredd_prot_max;
 
 static WRITE16_HANDLER( jdredd_prot_w )
 {
-	logerror("%08X:jdredd_prot_w(%04X,%04X)\n", activecpu_get_previouspc(), offset*16, data);
+	//logerror("%08X:jdredd_prot_w(%04X,%04X)\n", activecpu_get_previouspc(), offset*16, data);
 
 	switch (offset)
 	{
@@ -332,35 +336,35 @@ static WRITE16_HANDLER( jdredd_prot_w )
 			jdredd_prot_index = 0;
 			jdredd_prot_table = jdredd_prot_values_10740;
 			jdredd_prot_max = sizeof(jdredd_prot_values_10740);
-			logerror("-- reset prot table 10740\n");
+			//logerror("-- reset prot table 10740\n");
 			break;
 
 		case TOWORD(0x13240):
 			jdredd_prot_index = 0;
 			jdredd_prot_table = jdredd_prot_values_13240;
 			jdredd_prot_max = sizeof(jdredd_prot_values_13240);
-			logerror("-- reset prot table 13240\n");
+			//logerror("-- reset prot table 13240\n");
 			break;
 
 		case TOWORD(0x76540):
 			jdredd_prot_index = 0;
 			jdredd_prot_table = jdredd_prot_values_76540;
 			jdredd_prot_max = sizeof(jdredd_prot_values_76540);
-			logerror("-- reset prot table 76540\n");
+			//logerror("-- reset prot table 76540\n");
 			break;
 
 		case TOWORD(0x77760):
 			jdredd_prot_index = 0;
 			jdredd_prot_table = jdredd_prot_values_77760;
 			jdredd_prot_max = sizeof(jdredd_prot_values_77760);
-			logerror("-- reset prot table 77760\n");
+			//logerror("-- reset prot table 77760\n");
 			break;
 
 		case TOWORD(0x80020):
 			jdredd_prot_index = 0;
 			jdredd_prot_table = jdredd_prot_values_80020;
 			jdredd_prot_max = sizeof(jdredd_prot_values_80020);
-			logerror("-- reset prot table 80020\n");
+			//logerror("-- reset prot table 80020\n");
 			break;
 	}
 }
@@ -372,7 +376,7 @@ static READ16_HANDLER( jdredd_prot_r )
 	if (jdredd_prot_table && jdredd_prot_index < jdredd_prot_max)
 		result = jdredd_prot_table[jdredd_prot_index++] << 9;
 
-	logerror("%08X:jdredd_prot_r(%04X) = %04X\n", activecpu_get_previouspc(), offset*16, result);
+	//logerror("%08X:jdredd_prot_r(%04X) = %04X\n", activecpu_get_previouspc(), offset*16, result);
 	return result;
 }
 
@@ -659,7 +663,7 @@ READ16_HANDLER( midtunit_sound_state_r )
 
 READ16_HANDLER( midtunit_sound_r )
 {
-	logerror("%08X:Sound data read\n", activecpu_get_pc());
+	//logerror("%08X:Sound data read\n", activecpu_get_pc());
 
 	if (sound_type == SOUND_DCS && Machine->sample_rate)
 		return dcs_data_r() & 0xff;
@@ -672,7 +676,7 @@ WRITE16_HANDLER( midtunit_sound_w )
 	/* check for out-of-bounds accesses */
 	if (!offset)
 	{
-		logerror("%08X:Unexpected write to sound (lo) = %04X\n", activecpu_get_pc(), data);
+		//logerror("%08X:Unexpected write to sound (lo) = %04X\n", activecpu_get_pc(), data);
 		return;
 	}
 
@@ -690,7 +694,7 @@ WRITE16_HANDLER( midtunit_sound_w )
 				break;
 
 			case SOUND_DCS:
-				logerror("%08X:Sound write = %04X\n", activecpu_get_pc(), data);
+				//logerror("%08X:Sound write = %04X\n", activecpu_get_pc(), data);
 				dcs_reset_w(~data & 0x100);
 				dcs_data_w(data & 0xff);
 				/* the games seem to check for $82 loops, so this should be just barely enough */

@@ -488,7 +488,7 @@ void adsp2100_reset(void *param)
 			break;
 
 		default:
-			logerror( "ADSP2100 core: Unknown chip type!. Defaulting to ADSP2100.\n" );
+			//logerror( "ADSP2100 core: Unknown chip type!. Defaulting to ADSP2100.\n" );
 			adsp2100.pc = 4;
 			chip_type = CHIP_TYPE_ADSP2100;
 			break;

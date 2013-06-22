@@ -310,7 +310,11 @@ INLINE int CONDITION(int c)
 	register writing
 ===========================================================================*/
 
-static void wr_inval(INT32 val) { logerror( "ADSP %04x: Writing to an invalid register!", adsp2100.ppc ); }
+static void wr_inval(INT32 val)
+{
+   //logerror( "ADSP %04x: Writing to an invalid register!", adsp2100.ppc );
+}
+
 static void wr_ax0(INT32 val)   { adsp2100.core.ax0.s = val; }
 static void wr_ax1(INT32 val)   { adsp2100.core.ax1.s = val; }
 static void wr_mx0(INT32 val)   { adsp2100.core.mx0.s = val; }
@@ -407,7 +411,11 @@ static void (*wr_reg[4][16])(INT32) =
 	register reading
 ===========================================================================*/
 
-static INT32 rd_inval(void) { logerror( "ADSP %04x: Writing to an invalid register!", adsp2100.ppc ); return 0; }
+static INT32 rd_inval(void)
+{
+   //logerror( "ADSP %04x: Writing to an invalid register!", adsp2100.ppc );
+   return 0;
+}
 static INT32 rd_ax0(void)   { return adsp2100.core.ax0.s; }
 static INT32 rd_ax1(void)   { return adsp2100.core.ax1.s; }
 static INT32 rd_mx0(void)   { return adsp2100.core.mx0.s; }
