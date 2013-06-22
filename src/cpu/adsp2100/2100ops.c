@@ -2,6 +2,8 @@
 	ASTAT -- ALU/MAC status register
 ===========================================================================*/
 
+#define ADSP_TWEAK
+
 /* flag definitions */
 #define SSFLAG			0x80
 #define MVFLAG			0x40
@@ -1023,7 +1025,7 @@ void mac_op_mr(int op)
 			yop = MAC_GETYREG_SIGNED(yop);
 			temp = (xop * yop) << shift;
 			res = (INT64)temp;
-#if 0
+#ifdef ADSP_TWEAK
 			if ((res & 0xffff) == 0x8000) res &= ~((UINT64)0x10000);
 			else res += (res & 0x8000) << 1;
 #else
@@ -1039,7 +1041,7 @@ void mac_op_mr(int op)
 			yop = MAC_GETYREG_SIGNED(yop);
 			temp = (xop * yop) << shift;
 			res = adsp2100.core.mr.mr + (INT64)temp;
-#if 0
+#ifdef ADSP_TWEAK
 			if ((res & 0xffff) == 0x8000) res &= ~((UINT64)0x10000);
 			else res += (res & 0x8000) << 1;
 #else
@@ -1055,7 +1057,7 @@ void mac_op_mr(int op)
 			yop = MAC_GETYREG_SIGNED(yop);
 			temp = (xop * yop) << shift;
 			res = adsp2100.core.mr.mr - (INT64)temp;
-#if 0
+#ifdef ADSP_TWEAK
 			if ((res & 0xffff) == 0x8000) res &= ~((UINT64)0x10000);
 			else res += (res & 0x8000) << 1;
 #else
@@ -1187,7 +1189,7 @@ void mac_op_mf(int op)
 			yop = MAC_GETYREG_SIGNED(yop);
 			temp = (xop * yop) << shift;
 			res = (INT64)temp;
-#if 0
+#ifdef ADSP_TWEAK
 			if ((res & 0xffff) == 0x8000) res &= ~((UINT64)0x10000);
 			else res += (res & 0x8000) << 1;
 #else
@@ -1203,7 +1205,7 @@ void mac_op_mf(int op)
 			yop = MAC_GETYREG_SIGNED(yop);
 			temp = (xop * yop) << shift;
 			res = adsp2100.core.mr.mr + (INT64)temp;
-#if 0
+#ifdef ADSP_TWEAK
 			if ((res & 0xffff) == 0x8000) res &= ~((UINT64)0x10000);
 			else res += (res & 0x8000) << 1;
 #else
@@ -1219,7 +1221,7 @@ void mac_op_mf(int op)
 			yop = MAC_GETYREG_SIGNED(yop);
 			temp = (xop * yop) << shift;
 			res = adsp2100.core.mr.mr - (INT64)temp;
-#if 0
+#ifdef ADSP_TWEAK
 			if ((res & 0xffff) == 0x8000) res &= ~((UINT64)0x10000);
 			else res += (res & 0x8000) << 1;
 #else
