@@ -22,7 +22,7 @@
 ***********************************************************************************************/
 
 #define BACKEND_INTERPOLATE		1
-#define LOG_COMMANDS			0
+//#define LOG_COMMANDS			0
 #define RAINE_CHECK				0
 #define MAKE_WAVS				0
 
@@ -150,7 +150,7 @@ static INT16 *ulaw_lookup;
 static UINT16 *volume_lookup;
 static UINT32 accum_mask;
 
-static FILE *eslog;
+//static FILE *eslog;
 
 
 
@@ -247,7 +247,7 @@ static int compute_tables(void)
 		(sample1 * (INT32)(0x800 - (voice->accum & 0x7ff)) + 						\
 		 sample2 * (INT32)(voice->accum & 0x7ff)) >> 11;
 
-#if BACKEND_INTERPOLATE
+#ifdef BACKEND_INTERPOLATE
 #define backend_interpolate(sample1, sample2, position)								\
 		(sample1 * (INT32)(FRAC_ONE - position) + 									\
 		 sample2 * (INT32)position) >> FRAC_BITS;
@@ -761,7 +761,7 @@ static void generate_samples(struct ES5506Chip *chip, INT32 *left, INT32 *right,
 		/* generate from the appropriate source */
 		if (!base)
 		{
-			logerror("NULL region base %d\n",voice->control >> 14);
+			//logerror("NULL region base %d\n",voice->control >> 14);
 			generate_dummy(voice, base, left, right, samples);
 		}
 		else if (voice->control & 0x2000)
@@ -772,7 +772,7 @@ static void generate_samples(struct ES5506Chip *chip, INT32 *left, INT32 *right,
 		/* does this voice have it's IRQ bit raised? */
 		if (voice->control&CONTROL_IRQ) 
 		{
-logerror("IRQ raised on voice %d!!\n",v);
+//logerror("IRQ raised on voice %d!!\n",v);
 			/* only update voice vector if existing IRQ is acked by host */
 			if (chip->irqv&0x80)
 			{
@@ -910,9 +910,10 @@ int ES5506_sh_start(const struct MachineSound *msound)
 	int i, j;
 
 	/* debugging */
+#ifdef LOG_COMMANDS
 	if (LOG_COMMANDS && !eslog)
 		eslog = fopen("es.log", "w");
-
+#endif
 	/* compute the tables */
 	if (!compute_tables())
 		return 1;
@@ -997,11 +998,13 @@ void ES5506_sh_stop(void)
 	volume_lookup = NULL;
 
 	/* debugging */
+#ifdef LOG_COMMANDS
 	if (LOG_COMMANDS && eslog)
 	{
 		fclose(eslog);
 		eslog = NULL;
 	}
+#endif
 
 #if MAKE_WAVS
 {
@@ -1032,69 +1035,90 @@ INLINE void es5506_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 	{
 		case 0x00/8:	/* CR */
 			voice->control = data & 0xffff;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, control=%04x\n", chip->current_page & 0x1f, voice->control);
+#endif
 			break;
-
 		case 0x08/8:	/* FC */
 			voice->freqcount = data & 0x1ffff;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, freq count=%08x\n", chip->current_page & 0x1f, voice->freqcount);
+#endif
 			break;
 
 		case 0x10/8:	/* LVOL */
 			voice->lvol = data & 0xffff;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, left vol=%04x\n", chip->current_page & 0x1f, voice->lvol);
 			break;
+#endif
 
 		case 0x18/8:	/* LVRAMP */
 			voice->lvramp = (data & 0xff00) >> 8;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, left vol ramp=%04x\n", chip->current_page & 0x1f, voice->lvramp);
+#endif
 			break;
 
 		case 0x20/8:	/* RVOL */
 			voice->rvol = data & 0xffff;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, right vol=%04x\n", chip->current_page & 0x1f, voice->rvol);
+#endif
 			break;
 
 		case 0x28/8:	/* RVRAMP */
 			voice->rvramp = (data & 0xff00) >> 8;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, right vol ramp=%04x\n", chip->current_page & 0x1f, voice->rvramp);
+#endif
 			break;
 
 		case 0x30/8:	/* ECOUNT */
 			voice->ecount = data & 0x1ff;
 			voice->filtcount = 0;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, envelope count=%04x\n", chip->current_page & 0x1f, voice->ecount);
+#endif
 			break;
 
 		case 0x38/8:	/* K2 */
 			voice->k2 = data & 0xffff;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, K2=%04x\n", chip->current_page & 0x1f, voice->k2);
+#endif
 			break;
 
 		case 0x40/8:	/* K2RAMP */
 			voice->k2ramp = ((data & 0xff00) >> 8) | ((data & 0x0001) << 31);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, K2 ramp=%04x\n", chip->current_page & 0x1f, voice->k2ramp);
+#endif
 			break;
 
 		case 0x48/8:	/* K1 */
 			voice->k1 = data & 0xffff;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, K1=%04x\n", chip->current_page & 0x1f, voice->k1);
+#endif
 			break;
 
 		case 0x50/8:	/* K1RAMP */
 			voice->k1ramp = ((data & 0xff00) >> 8) | ((data & 0x0001) << 31);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, K1 ramp=%04x\n", chip->current_page & 0x1f, voice->k1ramp);
+#endif
 			break;
 
 		case 0x58/8:	/* ACTV */
@@ -1104,8 +1128,10 @@ INLINE void es5506_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 				chip->output_step = (int)(sample_rate * (double)(1 << FRAC_BITS) / (double)Machine->sample_rate);
 			chip->active_voices = data & 0x1f;
 
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "active voices=%d, sample_rate=%d, output_step=%08x\n", chip->active_voices, (int)sample_rate, chip->output_step);
+#endif
 			break;
 		}
 
@@ -1130,62 +1156,82 @@ INLINE void es5506_reg_write_high(struct ES5506Chip *chip, struct ES5506Voice *v
 	{
 		case 0x00/8:	/* CR */
 			voice->control = data & 0xffff;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, control=%04x\n", chip->current_page & 0x1f, voice->control);
+#endif
 			break;
 
 		case 0x08/8:	/* START */
 			voice->start = data & 0xfffff800;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, loop start=%08x\n", chip->current_page & 0x1f, voice->start);
+#endif
 			break;
 
 		case 0x10/8:	/* END */
 			voice->end = data & 0xffffff80;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, loop end=%08x\n", chip->current_page & 0x1f, voice->end);
+#endif
 			break;
 
 		case 0x18/8:	/* ACCUM */
 			voice->accum = data;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, accum=%08x\n", chip->current_page & 0x1f, voice->accum);
+#endif
 			break;
 
 		case 0x20/8:	/* O4(n-1) */
 			voice->o4n1 = (INT32)(data << 14) >> 14;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, O4(n-1)=%05x\n", chip->current_page & 0x1f, voice->o4n1 & 0x3ffff);
+#endif
 			break;
 
 		case 0x28/8:	/* O3(n-1) */
 			voice->o3n1 = (INT32)(data << 14) >> 14;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, O3(n-1)=%05x\n", chip->current_page & 0x1f, voice->o3n1 & 0x3ffff);
+#endif
 			break;
 
 		case 0x30/8:	/* O3(n-2) */
 			voice->o3n2 = (INT32)(data << 14) >> 14;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, O3(n-2)=%05x\n", chip->current_page & 0x1f, voice->o3n2 & 0x3ffff);
+#endif
 			break;
 
 		case 0x38/8:	/* O2(n-1) */
 			voice->o2n1 = (INT32)(data << 14) >> 14;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, O2(n-1)=%05x\n", chip->current_page & 0x1f, voice->o2n1 & 0x3ffff);
+#endif
 			break;
 
 		case 0x40/8:	/* O2(n-2) */
 			voice->o2n2 = (INT32)(data << 14) >> 14;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, O2(n-2)=%05x\n", chip->current_page & 0x1f, voice->o2n2 & 0x3ffff);
+#endif
 			break;
 
 		case 0x48/8:	/* O1(n-1) */
 			voice->o1n1 = (INT32)(data << 14) >> 14;
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "voice %d, O1(n-1)=%05x\n", chip->current_page & 0x1f, voice->o1n1 & 0x3ffff);
+#endif
 			break;
 
 		case 0x50/8:	/* W_ST */
@@ -1214,16 +1260,15 @@ INLINE void es5506_reg_write_test(struct ES5506Chip *chip, struct ES5506Voice *v
 {
 	switch (offset)
 	{
+#ifdef LOG_COMMANDS
 		case 0x00/8:	/* CHANNEL 0 LEFT */
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "Channel 0 left test write %08x\n", data);
 			break;
-
 		case 0x08/8:	/* CHANNEL 0 RIGHT */
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "Channel 0 right test write %08x\n", data);
 			break;
-
 		case 0x10/8:	/* CHANNEL 1 LEFT */
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "Channel 1 left test write %08x\n", data);
@@ -1278,7 +1323,7 @@ INLINE void es5506_reg_write_test(struct ES5506Chip *chip, struct ES5506Voice *v
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "Test write EMPTY %08x\n", data);
 			break;
-
+#endif
 		case 0x68/8:	/* PAR - read only */
 		case 0x70/8:	/* IRQV - read only */
 			break;
@@ -1506,8 +1551,10 @@ static data8_t es5506_reg_read(struct ES5506Chip *chip, offs_t offset)
 	if (shift != 0)
 		return chip->read_latch >> (24 - shift);
 
+#ifdef LOG_COMMANDS
 	if (LOG_COMMANDS && eslog)
 		fprintf(eslog, "read from %02x/%02x -> ", chip->current_page, offset / 4 * 8);
+#endif
 
 	/* force an update */
 	stream_update(chip->stream, 0);
@@ -1520,8 +1567,10 @@ static data8_t es5506_reg_read(struct ES5506Chip *chip, offs_t offset)
 	else
 		chip->read_latch = es5506_reg_read_test(chip, voice, offset / 4);
 
+#ifdef LOG_COMMANDS
 	if (LOG_COMMANDS && eslog)
 		fprintf(eslog, "%08x\n", chip->read_latch);
+#endif
 
 	/* return the high byte */
 	return chip->read_latch >> 24;
@@ -1659,9 +1708,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 				voice->control |= ((data >> 2) & CONTROL_LPMASK) |
 								  ((data << 2) & (CONTROL_CA0 | CONTROL_CA1));
 			}
-
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, control=%04x (raw=%04x & %04x)\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->control, data, mem_mask ^ 0xffff);
+#endif
 			break;
 
 		case 0x01:	/* FC */
@@ -1669,8 +1719,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 				voice->freqcount = (voice->freqcount & ~0x001fe) | ((data & 0x00ff) << 1);
 			if (ACCESSING_MSB)
 				voice->freqcount = (voice->freqcount & ~0x1fe00) | ((data & 0xff00) << 1);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, freq count=%08x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->freqcount);
+#endif
 			break;
 
 		case 0x02:	/* STRT (hi) */
@@ -1678,8 +1730,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 				voice->start = (voice->start & ~0x03fc0000) | ((data & 0x00ff) << 18);
 			if (ACCESSING_MSB)
 				voice->start = (voice->start & ~0x7c000000) | ((data & 0x1f00) << 18);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, loop start=%08x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->start);
+#endif
 			break;
 
 		case 0x03:	/* STRT (lo) */
@@ -1687,8 +1741,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 				voice->start = (voice->start & ~0x00000380) | ((data & 0x00e0) << 2);
 			if (ACCESSING_MSB)
 				voice->start = (voice->start & ~0x0003fc00) | ((data & 0xff00) << 2);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, loop start=%08x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->start);
+#endif
 			break;
 
 		case 0x04:	/* END (hi) */
@@ -1699,8 +1755,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 #if RAINE_CHECK
 			voice->control |= CONTROL_STOP0;
 #endif
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, loop end=%08x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->end);
+#endif
 			break;
 
 		case 0x05:	/* END (lo) */
@@ -1711,8 +1769,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 #if RAINE_CHECK
 			voice->control |= CONTROL_STOP0;
 #endif
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, loop end=%08x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->end);
+#endif
 			break;
 
 		case 0x06:	/* K2 */
@@ -1720,8 +1780,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 				voice->k2 = (voice->k2 & ~0x00f0) | (data & 0x00f0);
 			if (ACCESSING_MSB)
 				voice->k2 = (voice->k2 & ~0xff00) | (data & 0xff00);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, K2=%04x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->k2);
+#endif
 			break;
 
 		case 0x07:	/* K1 */
@@ -1729,22 +1791,28 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 				voice->k1 = (voice->k1 & ~0x00f0) | (data & 0x00f0);
 			if (ACCESSING_MSB)
 				voice->k1 = (voice->k1 & ~0xff00) | (data & 0xff00);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, K1=%04x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->k1);
+#endif
 			break;
 
 		case 0x08:	/* LVOL */
 			if (ACCESSING_MSB)
 				voice->lvol = (voice->lvol & ~0xff00) | (data & 0xff00);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, left vol=%04x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->lvol);
+#endif
 			break;
 
 		case 0x09:	/* RVOL */
 			if (ACCESSING_MSB)
 				voice->rvol = (voice->rvol & ~0xff00) | (data & 0xff00);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, right vol=%04x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->rvol);
+#endif
 			break;
 
 		case 0x0a:	/* ACC (hi) */
@@ -1752,8 +1820,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 				voice->accum = (voice->accum & ~0x03fc0000) | ((data & 0x00ff) << 18);
 			if (ACCESSING_MSB)
 				voice->accum = (voice->accum & ~0x7c000000) | ((data & 0x1f00) << 18);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, accum=%08x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->accum);
+#endif
 			break;
 
 		case 0x0b:	/* ACC (lo) */
@@ -1761,8 +1831,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 				voice->accum = (voice->accum & ~0x000003fc) | ((data & 0x00ff) << 2);
 			if (ACCESSING_MSB)
 				voice->accum = (voice->accum & ~0x0003fc00) | ((data & 0xff00) << 2);
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, accum=%08x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->accum);
+#endif
 			break;
 
 		case 0x0c:	/* unused */
@@ -1776,8 +1848,10 @@ INLINE void es5505_reg_write_low(struct ES5506Chip *chip, struct ES5506Voice *vo
 					chip->output_step = (int)(sample_rate * (double)(1 << FRAC_BITS) / (double)Machine->sample_rate);
 				chip->active_voices = data & 0x1f;
 
+#ifdef LOG_COMMANDS
 				if (LOG_COMMANDS && eslog)
 					fprintf(eslog, "active voices=%d, sample_rate=%d, output_step=%08x\n", chip->active_voices, (int)sample_rate, chip->output_step);
+#endif
 			}
 			break;
 
@@ -1809,8 +1883,10 @@ INLINE void es5505_reg_write_high(struct ES5506Chip *chip, struct ES5506Voice *v
 				voice->control |= ((data >> 2) & CONTROL_LPMASK) |
 								  ((data << 2) & (CONTROL_CA0 | CONTROL_CA1));
 			}
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, control=%04x (raw=%04x & %04x)\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->control, data, mem_mask ^ 0xffff);
+#endif
 			break;
 
 		case 0x01:	/* O4(n-1) */
@@ -1818,8 +1894,10 @@ INLINE void es5505_reg_write_high(struct ES5506Chip *chip, struct ES5506Voice *v
 				voice->o4n1 = (voice->o4n1 & ~0x00ff) | (data & 0x00ff);
 			if (ACCESSING_MSB)
 				voice->o4n1 = (INT16)((voice->o4n1 & ~0xff00) | (data & 0xff00));
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, O4(n-1)=%05x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->o4n1 & 0x3ffff);
+#endif
 			break;
 
 		case 0x02:	/* O3(n-1) */
@@ -1827,8 +1905,10 @@ INLINE void es5505_reg_write_high(struct ES5506Chip *chip, struct ES5506Voice *v
 				voice->o3n1 = (voice->o3n1 & ~0x00ff) | (data & 0x00ff);
 			if (ACCESSING_MSB)
 				voice->o3n1 = (INT16)((voice->o3n1 & ~0xff00) | (data & 0xff00));
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, O3(n-1)=%05x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->o3n1 & 0x3ffff);
+#endif
 			break;
 
 		case 0x03:	/* O3(n-2) */
@@ -1836,8 +1916,10 @@ INLINE void es5505_reg_write_high(struct ES5506Chip *chip, struct ES5506Voice *v
 				voice->o3n2 = (voice->o3n2 & ~0x00ff) | (data & 0x00ff);
 			if (ACCESSING_MSB)
 				voice->o3n2 = (INT16)((voice->o3n2 & ~0xff00) | (data & 0xff00));
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, O3(n-2)=%05x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->o3n2 & 0x3ffff);
+#endif
 			break;
 
 		case 0x04:	/* O2(n-1) */
@@ -1845,8 +1927,10 @@ INLINE void es5505_reg_write_high(struct ES5506Chip *chip, struct ES5506Voice *v
 				voice->o2n1 = (voice->o2n1 & ~0x00ff) | (data & 0x00ff);
 			if (ACCESSING_MSB)
 				voice->o2n1 = (INT16)((voice->o2n1 & ~0xff00) | (data & 0xff00));
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, O2(n-1)=%05x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->o2n1 & 0x3ffff);
+#endif
 			break;
 
 		case 0x05:	/* O2(n-2) */
@@ -1854,8 +1938,10 @@ INLINE void es5505_reg_write_high(struct ES5506Chip *chip, struct ES5506Voice *v
 				voice->o2n2 = (voice->o2n2 & ~0x00ff) | (data & 0x00ff);
 			if (ACCESSING_MSB)
 				voice->o2n2 = (INT16)((voice->o2n2 & ~0xff00) | (data & 0xff00));
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, O2(n-2)=%05x\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->o2n2 & 0x3ffff);
+#endif
 			break;
 
 		case 0x06:	/* O1(n-1) */
@@ -1863,8 +1949,10 @@ INLINE void es5505_reg_write_high(struct ES5506Chip *chip, struct ES5506Voice *v
 				voice->o1n1 = (voice->o1n1 & ~0x00ff) | (data & 0x00ff);
 			if (ACCESSING_MSB)
 				voice->o1n1 = (INT16)((voice->o1n1 & ~0xff00) | (data & 0xff00));
+#ifdef LOG_COMMANDS
 			if (LOG_COMMANDS && eslog)
 				fprintf(eslog, "%06x:voice %d, O1(n-1)=%05x (accum=%08x)\n", activecpu_get_previouspc(), chip->current_page & 0x1f, voice->o2n1 & 0x3ffff, voice->accum);
+#endif
 			break;
 
 		case 0x07:
@@ -1883,8 +1971,10 @@ INLINE void es5505_reg_write_high(struct ES5506Chip *chip, struct ES5506Voice *v
 					chip->output_step = (int)(sample_rate * (double)(1 << FRAC_BITS) / (double)Machine->sample_rate);
 				chip->active_voices = data & 0x1f;
 
+#ifdef LOG_COMMANDS
 				if (LOG_COMMANDS && eslog)
 					fprintf(eslog, "active voices=%d, sample_rate=%d, output_step=%08x\n", chip->active_voices, (int)sample_rate, chip->output_step);
+#endif
 			}
 			break;
 
@@ -1928,8 +2018,10 @@ INLINE void es5505_reg_write_test(struct ES5506Chip *chip, struct ES5506Voice *v
 					chip->output_step = (int)(sample_rate * (double)(1 << FRAC_BITS) / (double)Machine->sample_rate);
 				chip->active_voices = data & 0x1f;
 
+#ifdef LOG_COMMANDS
 				if (LOG_COMMANDS && eslog)
 					fprintf(eslog, "active voices=%d, sample_rate=%d, output_step=%08x\n", chip->active_voices, (int)sample_rate, chip->output_step);
+#endif
 			}
 			break;
 
@@ -2091,7 +2183,7 @@ INLINE UINT16 es5505_reg_read_high(struct ES5506Chip *chip, struct ES5506Voice *
 			/* accumulator */
 			if ((voice->control & CONTROL_STOPMASK) && chip->region_base[voice->control >> 14]) {
 				voice->o1n1 = chip->region_base[voice->control >> 14][voice->exbank + (voice->accum >> 11)];
-				logerror("%02x %08x ==> %08x\n",voice->o1n1,voice->control >> 14,voice->exbank + (voice->accum >> 11));
+				//logerror("%02x %08x ==> %08x\n",voice->o1n1,voice->control >> 14,voice->exbank + (voice->accum >> 11));
 			}
 				result = voice->o1n1;
 			break;
@@ -2159,8 +2251,10 @@ static data16_t es5505_reg_read(struct ES5506Chip *chip, offs_t offset)
 	struct ES5506Voice *voice = &chip->voice[chip->current_page & 0x1f];
 	data16_t result = 0;
 
+#ifdef LOG_COMMANDS
 	if (LOG_COMMANDS && eslog)
 		fprintf(eslog, "read from %02x/%02x -> ", chip->current_page, offset);
+#endif
 
 	/* force an update */
 	stream_update(chip->stream, 0);
@@ -2173,8 +2267,10 @@ static data16_t es5505_reg_read(struct ES5506Chip *chip, offs_t offset)
 	else
 		result = es5505_reg_read_test(chip, voice, offset);
 
+#ifdef LOG_COMMANDS
 	if (LOG_COMMANDS && eslog)
 		fprintf(eslog, "%04x (accum=%08x)\n", result, voice->accum);
+#endif
 
 	/* return the high byte */
 	return result;
