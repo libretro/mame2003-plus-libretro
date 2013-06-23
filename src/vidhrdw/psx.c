@@ -460,7 +460,14 @@ static int DebugTextureDisplay( struct mame_bitmap *bitmap )
 				}
 				p_n_interleave[ n_x ] = m_p_p_vram[ n_yi ][ n_xi ];
 			}
-			draw_scanline16( bitmap, 0, n_y, 1023, p_n_interleave, Machine->pens, -1 );
+
+         const uint16_t *src = &p_n_interleave;
+         int dy = bitmap->rowpixels;
+         UINT16 *dst = (UINT16 *)bitmap->base + y * dy;
+         int length = 1023;
+
+         while (length--)
+            *dst++ = *src++;
 		}
 	}
 	return m_b_debugtexture;
@@ -721,9 +728,15 @@ VIDEO_UPDATE( psx )
 		}
 
 		for( n_y = 0; n_y < m_n_screenheight; n_y++ )
-		{
-			draw_scanline16( bitmap, 0, n_y, m_n_screenwidth, m_p_p_vram[ n_y + m_n_displaystarty ] + n_x, Machine->pens, -1 );
-		}
+      {
+         const uint16_t *src = (m_p_p_vram[ n_y + m_n_displaystarty ] + n_x);
+         int dy = bitmap->rowpixels;
+         UINT16 *dst = (UINT16 *)bitmap->base + n_y * dy;
+         int length = m_n_screenwidth;
+
+         while (length--)
+            *dst++ = *src++;
+      }
 	}
 }
 
