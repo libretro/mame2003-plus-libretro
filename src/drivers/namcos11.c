@@ -698,8 +698,114 @@ static MACHINE_DRIVER_START( coh100 )
 	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( coh100_tekken )
+	/* basic machine hardware */
+	MDRV_CPU_ADD( PSXCPU, 33868800 / 2 ) /* 33MHz ?? */
+	MDRV_CPU_MEMORY( namcos11_readmem, namcos11_writemem )
+	MDRV_CPU_VBLANK_INT( namcos11_vblank, 1 )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+
+	MDRV_MACHINE_INIT( namcos11 )
+	MDRV_NVRAM_HANDLER( generic_0fill )
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER )
+#if defined( MAME_DEBUG )
+	MDRV_SCREEN_SIZE( 1024, 1024 )
+	MDRV_VISIBLE_AREA( 0, 1023, 0, 1023 )
+#else
+	MDRV_SCREEN_SIZE( 512, 240 )
+	MDRV_VISIBLE_AREA( 0, 511, 0, 239 )
+#endif
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type1_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( coh100_danceyes )
+	/* basic machine hardware */
+	MDRV_CPU_ADD( PSXCPU, 33868800 / 2 ) /* 33MHz ?? */
+	MDRV_CPU_MEMORY( namcos11_readmem, namcos11_writemem )
+	MDRV_CPU_VBLANK_INT( namcos11_vblank, 1 )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+
+	MDRV_MACHINE_INIT( namcos11 )
+	MDRV_NVRAM_HANDLER( generic_0fill )
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER )
+#if defined( MAME_DEBUG )
+	MDRV_SCREEN_SIZE( 1024, 1024 )
+	MDRV_VISIBLE_AREA( 0, 1023, 0, 1023 )
+#else
+	MDRV_SCREEN_SIZE( 640, 240 )
+	MDRV_VISIBLE_AREA( 0, 639, 0, 239 )
+#endif
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type1_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( coh100_primglex )
+	/* basic machine hardware */
+	MDRV_CPU_ADD( PSXCPU, 33868800 / 2 ) /* 33MHz ?? */
+	MDRV_CPU_MEMORY( namcos11_readmem, namcos11_writemem )
+	MDRV_CPU_VBLANK_INT( namcos11_vblank, 1 )
+
+	MDRV_FRAMES_PER_SECOND( 60 )
+	MDRV_VBLANK_DURATION( 0 )
+
+	MDRV_MACHINE_INIT( namcos11 )
+	MDRV_NVRAM_HANDLER( generic_0fill )
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER )
+#if defined( MAME_DEBUG )
+	MDRV_SCREEN_SIZE( 1024, 1024 )
+	MDRV_VISIBLE_AREA( 0, 1023, 0, 1023 )
+#else
+	MDRV_SCREEN_SIZE( 320, 240 )
+	MDRV_VISIBLE_AREA( 0, 319, 0, 239 )
+#endif
+	MDRV_PALETTE_LENGTH( 65536 )
+
+	MDRV_PALETTE_INIT( psx )
+	MDRV_VIDEO_START( psx_type1_1024x1024 )
+	MDRV_VIDEO_UPDATE( psx )
+	MDRV_VIDEO_STOP( psx )
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES( SOUND_SUPPORTS_STEREO )
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( coh110 )
 	MDRV_IMPORT_FROM( coh100 )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( coh110_danceyes )
+	MDRV_IMPORT_FROM( coh100_danceyes )
+	MDRV_VIDEO_START( psx_type2_1024x1024 )
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( coh110_primglex )
+	MDRV_IMPORT_FROM( coh100_primglex )
 	MDRV_VIDEO_START( psx_type2_1024x1024 )
 MACHINE_DRIVER_END
 
@@ -1347,18 +1453,18 @@ ROM_START( xevi3dg )
 	ROM_LOAD( "xv31wave.8k",  0x0000000, 0x400000, CRC(14f25ddd) SHA1(4981cf1017432ff85b768ec88c36f535df30b783) )
 ROM_END
 
-GAMEX( 1994, tekken,    0,        coh100, tekken,   namcos11, ROT0, "Namco", "Tekken (TE4/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1994, tekkena,   tekken,   coh100, tekken,   namcos11, ROT0, "Namco", "Tekken (TE2/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1994, tekkenb,   tekken,   coh100, tekken,   namcos11, ROT0, "Namco", "Tekken (TE1/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1995, tekken2,   0,        coh100, tekken,   namcos11, ROT0, "Namco", "Tekken 2 Ver.B (TES3/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1995, tekken2a,  tekken2,  coh100, tekken,   namcos11, ROT0, "Namco", "Tekken 2 Ver.B (TES2/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1995, tekken2b,  tekken2,  coh100, tekken,   namcos11, ROT0, "Namco", "Tekken 2 (TES2/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1996, souledge,  0,        coh110, souledge, namcos11, ROT0, "Namco", "Soul Edge Ver. II (SO4/VER.C)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAMEX( 1995, souledga,  souledge, coh110, souledge, namcos11, ROT0, "Namco", "Soul Edge (SO3/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1995, souledgb,  souledge, coh110, souledge, namcos11, ROT0, "Namco", "Soul Edge (SO1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1995, dunkmnia,  0,        coh110, namcos11, namcos11, ROT0, "Namco", "Dunk Mania (DM1/VER.C)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAMEX( 1995, xevi3dg,   0,        coh110, namcos11, namcos11, ROT0, "Namco", "Xevious 3D/G (XV31/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1996, primglex,  0,        coh110, tekken,   namcos11, ROT0, "Namco", "Prime Goal EX (PG1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1996, danceyes,  0,        coh110, namcos11, namcos11, ROT0, "Namco", "Dancing Eyes (DC1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1997, starswep,  0,        coh110, namcos11, namcos11, ROT0, "Axela/Namco", "Star Sweep (STP1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1998, myangel3,  0,        coh110, myangel3, namcos11, ROT0, "Namco", "Kosodate Quiz My Angel 3 (KQT1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1994, tekken,    0,        coh100_tekken, tekken,   namcos11, ROT0, "Namco", "Tekken (TE4/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1994, tekkena,   tekken,   coh100_tekken, tekken,   namcos11, ROT0, "Namco", "Tekken (TE2/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1994, tekkenb,   tekken,   coh100_tekken, tekken,   namcos11, ROT0, "Namco", "Tekken (TE1/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1995, tekken2,   0,        coh100_tekken, tekken,   namcos11, ROT0, "Namco", "Tekken 2 Ver.B (TES3/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1995, tekken2a,  tekken2,  coh100_tekken, tekken,   namcos11, ROT0, "Namco", "Tekken 2 Ver.B (TES2/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1995, tekken2b,  tekken2,  coh100_tekken, tekken,   namcos11, ROT0, "Namco", "Tekken 2 (TES2/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1996, souledge,  0,        coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge Ver. II (SO4/VER.C)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAMEX( 1995, souledga,  souledge, coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge (SO3/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1995, souledgb,  souledge, coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge (SO1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1995, dunkmnia,  0,        coh110_danceyes, namcos11, namcos11, ROT0, "Namco", "Dunk Mania (DM1/VER.C)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAMEX( 1995, xevi3dg,   0,        coh110_danceyes, namcos11, namcos11, ROT0, "Namco", "Xevious 3D/G (XV31/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1996, primglex,  0,        coh110_primglex, tekken,   namcos11, ROT0, "Namco", "Prime Goal EX (PG1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1996, danceyes,  0,        coh110_danceyes, namcos11, namcos11, ROT0, "Namco", "Dancing Eyes (DC1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1997, starswep,  0,        coh110_primglex, namcos11, namcos11, ROT0, "Axela/Namco", "Star Sweep (STP1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
+GAMEX( 1998, myangel3,  0,        coh110_primglex, myangel3, namcos11, ROT0, "Namco", "Kosodate Quiz My Angel 3 (KQT1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
