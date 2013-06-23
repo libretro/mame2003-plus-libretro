@@ -711,7 +711,14 @@ VIDEO_UPDATE( psx )
 	if( ( m_n_gpustatus & ( 1 << 0x17 ) ) != 0 )
 	{
 		/* todo: only draw to necessary area */
-		fillbitmap( bitmap, 0, cliprect );
+      int sy, ey, sx, ex, y;
+      sy = cliprect->min_y;
+      ey = cliprect->max_y;
+      sx = cliprect->min_x;
+      ex = cliprect->max_x;
+
+      for (y = sy;y <= ey;y++)
+         memset(((UINT16 *)bitmap->line[y]) + sx, 0, (ex-sx+1)*2);
 	}
 	else
 	{
