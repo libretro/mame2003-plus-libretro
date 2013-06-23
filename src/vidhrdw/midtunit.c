@@ -45,9 +45,6 @@ enum
 static data16_t	midtunit_control;
 static UINT8	midtunit_using_34020;
 
-/* palette-related variables */
-static pen_t *	pen_map;
-
 /* videoram-related variables */
 static UINT32 	gfxbank_offset[2];
 static UINT16 *	local_videoram;
@@ -99,19 +96,12 @@ static struct
 
 VIDEO_START( midtunit )
 {
-	int i;
-
 	/* allocate memory */
 	local_videoram = auto_malloc(0x100000);
-	pen_map = auto_malloc(65536 * sizeof(pen_map[0]));
 
 	/* handle failure */
-	if (!local_videoram || !pen_map)
+	if (!local_videoram)
 		return 1;
-
-	/* initialize pen map */
-	for (i = 0; i < 0x10000; i++)
-		pen_map[i] = i & 0x7fff;
 
 	/* reset all the globals */
 	gfxbank_offset[0] = 0x000000;
@@ -901,8 +891,14 @@ VIDEO_UPDATE( midtunit )
 
 	/* loop over rows */
 	for (v = cliprect->min_y; v <= cliprect->max_y; v++)
-	{
-		draw_scanline16(bitmap, xoffs, v, width, &local_videoram[offset], pen_map, -1);
-		offset = (offset + 512) & 0x3ffff;
-	}
+   {
+      const uint16_t *src = &local_videoram[offset];
+      UINT16 *dst = (UINT16 *)bitmap->base + v * bitmap->rowpixels + xoffs;
+      int length = width;
+
+      while (length--)
+         *dst++ = *src++ & 0x7fff;
+
+      offset = (offset + 512) & 0x3ffff;
+   }
 }
