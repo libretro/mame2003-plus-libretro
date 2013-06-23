@@ -897,7 +897,7 @@ VIDEO_UPDATE( midtunit )
       int length = width;
 
       while (length--)
-         *dst++ = *src++ & 0x7fff;
+         *dst++ = *src++;
 
       offset = (offset + 512) & 0x3ffff;
    }
