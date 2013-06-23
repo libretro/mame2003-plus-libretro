@@ -24,7 +24,7 @@
 
 #define STOP_ON_ERROR ( 0 )
 
-#define VERBOSE_LEVEL ( 1 )
+#define VERBOSE_LEVEL ( 0 )
 
 INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
@@ -843,14 +843,6 @@ f  e  d  c| b| a  9| 8  7| 6  5| 4| 3  2  1  0
 		n_abr = ( DRAWMODE & 0x60 ) >> 5; \
 		n_tp = ( DRAWMODE & 0x180 ) >> 7; \
 		n_ti = 0; \
-		if( ( DRAWMODE & ~0x9ff ) != 0 ) \
-		{ \
-			verboselog( 1, "not handled: draw mode %08x\n", DRAWMODE & ~0x9ff ); \
-		} \
-		if( n_tp == 3 ) \
-		{ \
-			verboselog( 1, "not handled: tp == 3\n" ); \
-		} \
 	} \
 	else \
 	{ \
@@ -864,18 +856,6 @@ f  e  d  c| b| a  9| 8  7| 6  5| 4| 3  2  1  0
 		n_abr = ( DRAWMODE & 0x180 ) >> 7; \
 		n_tp = ( DRAWMODE & 0x600 ) >> 9; \
 		n_ti = ( DRAWMODE & 0x2000 ) >> 13; \
-		if( ( DRAWMODE & ~0x27ef ) != 0 ) \
-		{ \
-			verboselog( 1, "not handled: draw mode %08x\n", DRAWMODE & ~0x27ef ); \
-		} \
-		if( n_tp == 3 ) \
-		{ \
-			verboselog( 1, "not handled: tp == 3\n" ); \
-		} \
-		else if( n_tp == 2 && n_ti != 0 ) \
-		{ \
-			verboselog( 1, "not handled: interleaved 15 bit texture\n" ); \
-		} \
 	} \
  \
 	switch( n_tp ) \
@@ -2798,10 +2778,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 		switch( m_packet.n_entry[ 0 ] >> 24 )
 		{
 		case 0x00:
-			verboselog( 1, "not handled: GPU Command 0x00: (%08x)\n", data );
-			break;
 		case 0x01:
-			verboselog( 1, "not handled: clear cache\n" );
 			break;
 		case 0x02:
 			if( m_n_gpu_buffer_offset < 2 )
@@ -2810,8 +2787,10 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
+#if 0
 				verboselog( 1, "%02x: frame buffer rectangle %u,%u %u,%u\n", m_packet.n_entry[ 0 ] >> 24,
 					m_packet.n_entry[ 1 ] & 0xffff, m_packet.n_entry[ 1 ] >> 16, m_packet.n_entry[ 2 ] & 0xffff, m_packet.n_entry[ 2 ] >> 16 );
+#endif
 				FrameBufferRectangleDraw();
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2826,7 +2805,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: monochrome 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: monochrome 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
 				FlatPolygon( 3 );
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2841,7 +2820,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: textured 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: textured 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
 				FlatTexturedPolygon( 3 );
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2856,7 +2835,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: monochrome 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: monochrome 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
 				FlatPolygon( 4 );
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2871,7 +2850,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: textured 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: textured 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
 				FlatTexturedPolygon( 4 );
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2886,7 +2865,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: gouraud 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: gouraud 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
 				GouraudPolygon( 3 );
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2901,7 +2880,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: gouraud textured 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: gouraud textured 3 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
 				GouraudTexturedPolygon( 3 );
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2916,7 +2895,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: gouraud 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: gouraud 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
 				GouraudPolygon( 4 );
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2931,7 +2910,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: gouraud textured 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: gouraud textured 4 point polygon\n", m_packet.n_entry[ 0 ] >> 24 );
 				GouraudTexturedPolygon( 4 );
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2944,7 +2923,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: monochrome line\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: monochrome line\n", m_packet.n_entry[ 0 ] >> 24 );
 				MonochromeLine();
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2957,7 +2936,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: monochrome polyline\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: monochrome polyline\n", m_packet.n_entry[ 0 ] >> 24 );
 				MonochromeLine();
 				if( ( m_packet.n_entry[ 3 ] & 0xf000f000 ) != 0x50005000 )
 				{
@@ -2979,7 +2958,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: gouraud line\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: gouraud line\n", m_packet.n_entry[ 0 ] >> 24 );
 				GouraudLine();
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -2993,7 +2972,7 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
-				verboselog( 1, "%02x: gouraud polyline\n", m_packet.n_entry[ 0 ] >> 24 );
+				//verboselog( 1, "%02x: gouraud polyline\n", m_packet.n_entry[ 0 ] >> 24 );
 				GouraudLine();
 				if( ( m_packet.n_entry[ 4 ] & 0xf000f000 ) != 0x50005000 )
 				{
@@ -3019,10 +2998,12 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
+#if 0
 				verboselog( 1, "%02x: rectangle %d,%d %d,%d\n",
 					m_packet.n_entry[ 0 ] >> 24,
 					(INT16)( m_packet.n_entry[ 1 ] & 0xffff ), (INT16)( m_packet.n_entry[ 1 ] >> 16 ),
 					(INT16)( m_packet.n_entry[ 2 ] & 0xffff ), (INT16)( m_packet.n_entry[ 2 ] >> 16 ) );
+#endif
 				FlatRectangle();
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -3037,11 +3018,13 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
+#if 0
 				verboselog( 1, "%02x: sprite %d,%d %u,%u %08x, %08x\n",
 					m_packet.n_entry[ 0 ] >> 24,
 					(INT16)( m_packet.n_entry[ 1 ] & 0xffff ), (INT16)( m_packet.n_entry[ 1 ] >> 16 ),
 					m_packet.n_entry[ 3 ] & 0xffff, m_packet.n_entry[ 3 ] >> 16,
 					m_packet.n_entry[ 0 ], m_packet.n_entry[ 2 ] );
+#endif
 				FlatTexturedRectangle();
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -3053,10 +3036,12 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
+#if 0
 				verboselog( 1, "%02x: dot %d,%d %08x\n",
 					m_packet.n_entry[ 0 ] >> 24,
 					(INT16)( m_packet.n_entry[ 1 ] & 0xffff ), (INT16)( m_packet.n_entry[ 1 ] >> 16 ),
 					m_packet.n_entry[ 0 ] & 0xffffff );
+#endif
 				Dot();
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -3069,8 +3054,10 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
+#if 0
 				verboselog( 1, "%02x: 8x8 sprite %08x %08x %08x\n", m_packet.n_entry[ 0 ] >> 24,
 					m_packet.n_entry[ 0 ], m_packet.n_entry[ 1 ], m_packet.n_entry[ 2 ] );
+#endif
 				Sprite8x8();
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -3083,8 +3070,10 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
+#if 0
 				verboselog( 1, "%02x: 16x16 sprite %08x %08x %08x\n", m_packet.n_entry[ 0 ] >> 24,
 					m_packet.n_entry[ 0 ], m_packet.n_entry[ 1 ], m_packet.n_entry[ 2 ] );
+#endif
 				Sprite16x16();
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -3096,7 +3085,9 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
+#if 0
 				verboselog( 1, "move image in frame buffer %08x %08x %08x %08x\n", m_packet.n_entry[ 0 ], m_packet.n_entry[ 1 ], m_packet.n_entry[ 2 ], m_packet.n_entry[ 3 ] );
+#endif
 				MoveImage();
 				m_n_gpu_buffer_offset = 0;
 			}
@@ -3111,10 +3102,12 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 				UINT32 n_pixel;
 				for( n_pixel = 0; n_pixel < 2; n_pixel++ )
 				{
+#if 0
 					verboselog( 2, "send image to framebuffer ( pixel %u,%u = %u )\n",
 						( m_n_vramx + m_packet.n_entry[ 1 ] ) & 1023,
 						( m_n_vramy + ( m_packet.n_entry[ 1 ] >> 16 ) ) & 1023,
 						data & 0xffff );
+#endif
 
 					*( m_p_p_vram[ ( m_n_vramy + ( m_packet.n_entry[ 1 ] >> 16 ) ) & 1023 ] + ( ( m_n_vramx + m_packet.n_entry[ 1 ] ) & 1023 ) ) = data & 0xffff;
 					m_n_vramx++;
@@ -3124,9 +3117,11 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 						m_n_vramy++;
 						if( m_n_vramy >= ( m_packet.n_entry[ 2 ] >> 16 ) )
 						{
+#if 0
 							verboselog( 1, "%02x: send image to framebuffer %u,%u %u,%u\n", m_packet.n_entry[ 0 ] >> 24,
 								m_packet.n_entry[ 1 ] & 0xffff, ( m_packet.n_entry[ 1 ] >> 16 ),
 								m_packet.n_entry[ 2 ] & 0xffff, ( m_packet.n_entry[ 2 ] >> 16 ) );
+#endif
 							m_n_gpu_buffer_offset = 0;
 							m_n_vramx = 0;
 							m_n_vramy = 0;
@@ -3144,13 +3139,17 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			}
 			else
 			{
+#if 0
 				verboselog( 1, "%02x: copy image from frame buffer\n", m_packet.n_entry[ 0 ] >> 24 );
+#endif
 				m_n_gpustatus |= ( 1L << 0x1b );
 			}
 			break;
 		case 0xe1:
+#if 0
 			verboselog( 1, "%02x: draw mode %06x\n", m_packet.n_entry[ 0 ] >> 24,
 				m_packet.n_entry[ 0 ] & 0xffffff );
+#endif
 			m_n_drawmode = m_packet.n_entry[ 0 ] & 0xffffff;
 			if( m_n_gputype == 2 )
 			{
@@ -3166,8 +3165,10 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			m_n_twx = ( ( ( m_packet.n_entry[ 0 ] >> 10 ) & 0x1f ) << 3 );
 			m_n_twh = 256 - ( ( ( m_packet.n_entry[ 0 ] >> 5 ) & 0x1f ) << 3 );
 			m_n_tww = 256 - ( ( m_packet.n_entry[ 0 ] & 0x1f ) << 3 );
+#if 0
 			verboselog( 1, "%02x: texture window %u,%u %u,%u\n", m_packet.n_entry[ 0 ] >> 24,
 				m_n_twx, m_n_twy, m_n_tww, m_n_twh );
+#endif
 			break;
 		case 0xe3:
 			m_n_drawarea_x1 = m_packet.n_entry[ 0 ] & 1023;
@@ -3179,8 +3180,10 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			{
 				m_n_drawarea_y1 = ( m_packet.n_entry[ 0 ] >> 12 ) & 1023;
 			}
+#if 0
 			verboselog( 1, "%02x: drawing area top left %d,%d\n", m_packet.n_entry[ 0 ] >> 24,
 				m_n_drawarea_x1, m_n_drawarea_y1 );
+#endif
 			break;
 		case 0xe4:
 			m_n_drawarea_x2 = m_packet.n_entry[ 0 ] & 1023;
@@ -3192,8 +3195,10 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			{
 				m_n_drawarea_y2 = ( m_packet.n_entry[ 0 ] >> 12 ) & 1023;
 			}
+#if 0
 			verboselog( 1, "%02x: drawing area bottom right %d,%d\n", m_packet.n_entry[ 0 ] >> 24,
 				m_n_drawarea_x2, m_n_drawarea_y2 );
+#endif
 			break;
 		case 0xe5:
 			m_n_drawoffset_x = SINT11( m_packet.n_entry[ 0 ] & 2047 );
@@ -3205,10 +3210,13 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			{
 				m_n_drawoffset_y = SINT11( ( m_packet.n_entry[ 0 ] >> 12 ) & 2047 );
 			}
+#if 0
 			verboselog( 1, "%02x: drawing offset %d,%d\n", m_packet.n_entry[ 0 ] >> 24,
 				m_n_drawoffset_x, m_n_drawoffset_y );
+#endif
 			break;
 		case 0xe6:
+#if 0
 			if( ( m_packet.n_entry[ 0 ] & 3 ) != 0 )
 			{
 				verboselog( 1, "not handled: mask setting %d\n", m_packet.n_entry[ 0 ] & 3 );
@@ -3217,12 +3225,15 @@ void psx_gpu_write( UINT32 *p_ram, INT32 n_size )
 			{
 				verboselog( 1, "mask setting %d\n", m_packet.n_entry[ 0 ] & 3 );
 			}
+#endif
 			break;
 		default:
 #if defined( MAME_DEBUG )
 			usrintf_showmessage_secs( 1, "unknown GPU packet %08x", m_packet.n_entry[ 0 ] );
 #endif
+#if 0
 			verboselog( 0, "unknown GPU packet %08x (%08x)\n", m_packet.n_entry[ 0 ], data );
+#endif
 #if ( STOP_ON_ERROR )
 			m_n_gpu_buffer_offset = 1;
 #endif
@@ -3291,20 +3302,20 @@ WRITE32_HANDLER( psx_gpu_w )
 			{
 				m_n_displaystarty = ( data >> 12 ) & 1023;
 			}
-			verboselog( 1, "start of display area %d %d\n", m_n_displaystartx, m_n_displaystarty );
+			//verboselog( 1, "start of display area %d %d\n", m_n_displaystartx, m_n_displaystarty );
 			break;
 		case 0x06:
 			m_n_horiz_disstart = data & 4095;
 			m_n_horiz_disend = ( data >> 12 ) & 4095;
-			verboselog( 1, "horizontal display range %d %d\n", m_n_horiz_disstart, m_n_horiz_disend );
+			//verboselog( 1, "horizontal display range %d %d\n", m_n_horiz_disstart, m_n_horiz_disend );
 			break;
 		case 0x07:
 			m_n_vert_disstart = data & 1023;
 			m_n_vert_disend = ( data >> 10 ) & 2047;
-			verboselog( 1, "vertical display range %d %d\n", m_n_vert_disstart, m_n_vert_disend );
+			//verboselog( 1, "vertical display range %d %d\n", m_n_vert_disstart, m_n_vert_disend );
 			break;
 		case 0x08:
-			verboselog( 1, "display mode %02x\n", data & 0xff );
+			//verboselog( 1, "display mode %02x\n", data & 0xff );
 			m_n_gpustatus &= ~( 127L << 0x10 );
 			m_n_gpustatus |= ( data & 0x3f ) << 0x11; /* width 0 + height + videmode + isrgb24 + isinter */
 			m_n_gpustatus |= ( ( data & 0x40 ) >> 0x06 ) << 0x10; /* width 1 */
@@ -3343,7 +3354,7 @@ WRITE32_HANDLER( psx_gpu_w )
 			}
 			break;
 		case 0x09:
-			verboselog( 1, "not handled: GPU Control 0x09: %08x\n", data );
+			//verboselog( 1, "not handled: GPU Control 0x09: %08x\n", data );
 			break;
 		case 0x10:
 			switch( data & 7 )
@@ -3418,7 +3429,7 @@ void psx_gpu_read( UINT32 *p_ram, INT32 n_size )
 			UINT32 n_pixel;
 			PAIR data;
 
-			verboselog( 2, "copy image from frame buffer ( %d, %d )\n", m_n_vramx, m_n_vramy );
+			//verboselog( 2, "copy image from frame buffer ( %d, %d )\n", m_n_vramx, m_n_vramy );
 			data.d = 0;
 			for( n_pixel = 0; n_pixel < 2; n_pixel++ )
 			{
@@ -3431,7 +3442,7 @@ void psx_gpu_read( UINT32 *p_ram, INT32 n_size )
 					m_n_vramy++;
 					if( m_n_vramy >= ( m_packet.n_entry[ 2 ] >> 16 ) )
 					{
-						verboselog( 1, "copy image from frame buffer end\n" );
+						//verboselog( 1, "copy image from frame buffer end\n" );
 						m_n_gpustatus &= ~( 1L << 0x1b );
 						m_n_gpu_buffer_offset = 0;
 						m_n_vramx = 0;
@@ -3449,7 +3460,7 @@ void psx_gpu_read( UINT32 *p_ram, INT32 n_size )
 		}
 		else
 		{
-			verboselog( 2, "read GPU info (%08x)\n", m_n_gpuinfo );
+			//verboselog( 2, "read GPU info (%08x)\n", m_n_gpuinfo );
 			*( p_ram ) = m_n_gpuinfo;
 		}
 		p_ram++;
@@ -3467,11 +3478,11 @@ READ32_HANDLER( psx_gpu_r )
 		psx_gpu_read( &data, 1 );
 		break;
 	case 0x01:
-		verboselog( 1, "read GPU status (%08x)\n", m_n_gpustatus );
+		//verboselog( 1, "read GPU status (%08x)\n", m_n_gpustatus );
 		data = m_n_gpustatus;
 		break;
 	default:
-		verboselog( 0, "gpu_r( %08x, %08x ) unknown register\n", offset, mem_mask );
+		//verboselog( 0, "gpu_r( %08x, %08x ) unknown register\n", offset, mem_mask );
 		data = 0;
 		break;
 	}
