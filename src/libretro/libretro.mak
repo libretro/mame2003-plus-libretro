@@ -102,6 +102,7 @@ else ifneq (,$(findstring hardfloat,$(platform)))
    CFLAGS += -mfloat-abi=hard
 endif
    CFLAGS += -DARM
+   platform = arm
 else
    EMULATOR = $(TARGET_NAME)_libretro.dll
    EXE = .exe
