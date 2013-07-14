@@ -85,24 +85,10 @@ else ifeq ($(platform), psp1)
 	CFLAGS += -G0
 else ifneq (,$(findstring armv,$(platform)))
    EMULATOR = $(TARGET_NAME)_libretro.so
+
+   CFLAGS += -fPIC
    PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
-ifneq (,$(findstring cortexa8,$(platform)))
-   CFLAGS += -marm -mcpu=cortex-a8
-else ifneq (,$(findstring cortexa9,$(platform)))
-   CFLAGS += -marm -mcpu=cortex-a9
-endif
-   CFLAGS += -marm
-ifneq (,$(findstring neon,$(platform)))
-   CFLAGS += -mfpu=neon
-endif
-ifneq (,$(findstring softfloat,$(platform)))
-   CFLAGS += -mfloat-abi=softfp
-else ifneq (,$(findstring hardfloat,$(platform)))
-   CFLAGS += -mfloat-abi=hard
-endif
-   CFLAGS += -DARM
-   platform = arm
 else
    EMULATOR = $(TARGET_NAME)_libretro.dll
    EXE = .exe
