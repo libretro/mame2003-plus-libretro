@@ -36,7 +36,6 @@ static int vercmp(char *str_a, char *str_b);
 
 /* private vars */
 static char netversion[] = "Rev7.3 ()"; /* RevX.Y X = Protocol version, Y = Tweak/Bug fix revision */
-static char *mameversion = build_version; /* from mame.h and version.c */
 static int is_active = 0;   /* Set to true if the net has been initialized */
 static int in_game = 0;     /* Set to true if we are in a game */
 static int is_client = 1;
@@ -162,7 +161,6 @@ int net_vers_check( int player )
 
 	/* setup app and network support version info */
 	memset( szVerSelf, 0, sizeof(szVerSelf) ); /* zero out array first */
-	strcpy( szVerSelf, build_version );
 	strcpy( (szVerSelf+25), netversion );
 
     dprintf(("net_vers_check()\n"))

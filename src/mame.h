@@ -18,7 +18,6 @@
 #include "drawgfx.h"
 #include "palette.h"
 
-extern char build_version[];
 extern int gbPriorityBitmapIsDirty;
 
 

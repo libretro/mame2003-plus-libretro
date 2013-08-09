@@ -1,6 +1,6 @@
 # the core object files (without target specific objects;
 # those are added in the target.mak files)
-COREOBJS = $(OBJ)/version.o $(OBJ)/mame.o \
+COREOBJS = $(OBJ)/mame.o \
 	$(OBJ)/drawgfx.o $(OBJ)/common.o $(OBJ)/usrintrf.o $(OBJ)/ui_text.o \
 	$(OBJ)/cpuintrf.o $(OBJ)/cpuexec.o $(OBJ)/cpuint.o $(OBJ)/mame-memory.o $(OBJ)/timer.o \
 	$(OBJ)/palette.o $(OBJ)/input.o $(OBJ)/inptport.o $(OBJ)/config.o $(OBJ)/unzip.o \

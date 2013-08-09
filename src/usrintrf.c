@@ -40,7 +40,6 @@ static int pause_done;
 ***************************************************************************/
 
 /* Variables for stat menu */
-extern char build_version[];
 extern unsigned int dispensed_tickets;
 extern unsigned int coins[COIN_COUNTERS];
 extern unsigned int coinlockedout[COIN_COUNTERS];
@@ -2453,7 +2452,6 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 		sprintf (buf2, "\n\t%s ", ui_getstring (UI_mame));	/* \t means that the line will be centered */
 		strcat(buf, buf2);
 
-		strcat(buf,build_version);
 		sprintf (buf2, "\n\t%s", ui_getstring (UI_anykey));
 		strcat(buf,buf2);
 		ui_drawbox(bitmap,0,0,uirotwidth,uirotheight);

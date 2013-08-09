@@ -1501,8 +1501,7 @@ static UINT64 chdman_length(struct chd_interface_file *file)
 
 int main(int argc, char **argv)
 {
-	extern char build_version[];
-	printf("chdman - MAME Compressed Hunks of Data (CHD) manager %s\n", build_version);
+	printf("chdman - MAME Compressed Hunks of Data (CHD) manager \n");
 
 	/* require at least 1 argument */
 	if (argc < 2)
