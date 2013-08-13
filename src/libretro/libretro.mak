@@ -93,7 +93,7 @@ else
    EMULATOR = $(TARGET_NAME)_libretro.dll
    EXE = .exe
    
-   LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=libretro/link.T
+   LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/libretro/link.T
 endif
 
 CFLAGS += -D__LIBRETRO__ -DPI=3.1415927
