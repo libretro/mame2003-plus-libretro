@@ -160,19 +160,19 @@ $(OBJ)/%.o: src/%.c
 	$(CC) $(CDEFS) $(CFLAGS) $(PLATCFLAGS) -c $< -o $@
 
 # compile generated C files for the 68000 emulator
-$(M68000_GENERATED_OBJS): $(OBJ)/cpu/m68000/m68kmake$(EXE)
-	@echo Compiling $(subst .o,.c,$@)...
-	$(CC) $(CDEFS) $(CFLAGSPEDANTIC) $(PLATCFLAGS) -c $*.c -o $@
+#$(M68000_GENERATED_OBJS): $(OBJ)/cpu/m68000/m68kmake$(EXE)
+	#@echo Compiling $(subst .o,.c,$@)...
+	#$(CC) $(CDEFS) $(CFLAGSPEDANTIC) $(PLATCFLAGS) -c $*.c -o $@
 
 # additional rule, because m68kcpu.c includes the generated m68kops.h :-/
-$(OBJ)/cpu/m68000/m68kcpu.o: $(OBJ)/cpu/m68000/m68kmake$(EXE)
+#$(OBJ)/cpu/m68000/m68kcpu.o: $(OBJ)/cpu/m68000/m68kmake$(EXE)
 
 # generate C source files for the 68000 emulator
-$(OBJ)/cpu/m68000/m68kmake$(EXE): src/cpu/m68000/m68kmake.c
-	@echo M68K make $<...
-	$(NATIVECC) $(CDEFS) $(CFLAGSPEDANTIC) -DDOS -o $(OBJ)/cpu/m68000/m68kmake$(EXE) $<
-	@echo Generating M68K source files...
-	$(OBJ)/cpu/m68000/m68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/m68k_in.c
+#$(OBJ)/cpu/m68000/m68kmake$(EXE): src/cpu/m68000/m68kmake.c
+	#@echo M68K make $<...
+	#$(NATIVECC) $(CDEFS) $(CFLAGSPEDANTIC) -DDOS -o $(OBJ)/cpu/m68000/m68kmake$(EXE) $<
+	#@echo Generating M68K source files...
+	#$(OBJ)/cpu/m68000/m68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/m68k_in.c
 
 # generate asm source files for the 68000/68020 emulators
 $(OBJ)/cpu/m68000/68000.asm:  src/cpu/m68000/make68k.c
