@@ -36,7 +36,7 @@ else ifeq ($(platform), ios)
    CC = clang -arch armv7 -isysroot $(IOSSDK)
    LD = clang -arch armv7 -isysroot $(IOSSDK)
 else ifeq ($(platform), android-armv7)
-   EMULATOR = libretro_$(TARGET_NAME).so
+   EMULATOR = $(TARGET_NAME)_libretro_android.so
 
    CFLAGS += -fPIC 
    PLATCFLAGS += -march=armv7-a -mfloat-abi=softfp -Dstricmp=strcasecmp
