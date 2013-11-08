@@ -1433,6 +1433,35 @@ static MACHINE_DRIVER_START( timekill )
 	MDRV_SOUND_ADD(ES5506, es5506_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( sftmrate )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD_TAG("main", M68000, CLOCK_12MHz)
+	MDRV_CPU_MEMORY(timekill_readmem,timekill_writemem)
+	MDRV_CPU_VBLANK_INT(generate_int1,1)
+
+	MDRV_CPU_ADD_TAG("sound", M6809, CLOCK_8MHz/4)
+	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
+
+	MDRV_FRAMES_PER_SECOND(55)
+	MDRV_VBLANK_DURATION((int)(((263. - 240.) / 263.) * 1000000. / 55.))
+
+	MDRV_MACHINE_INIT(itech32)
+	MDRV_NVRAM_HANDLER(itech32)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
+	MDRV_SCREEN_SIZE(384,256)
+	MDRV_VISIBLE_AREA(0, 383, 0, 239)
+	MDRV_PALETTE_LENGTH(8192)
+
+	MDRV_VIDEO_START(itech32)
+	MDRV_VIDEO_UPDATE(itech32)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(ES5506, es5506_interface)
+MACHINE_DRIVER_END
+
 
 static MACHINE_DRIVER_START( bloodstm )
 
@@ -1484,6 +1513,30 @@ static MACHINE_DRIVER_START( sftm )
 
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(bloodstm)
+
+	MDRV_CPU_REPLACE("main", M68EC020, CLOCK_25MHz)
+	MDRV_CPU_MEMORY(itech020_readmem,itech020_writemem)
+
+	MDRV_CPU_MODIFY("sound")
+	MDRV_CPU_MEMORY(sound_020_readmem,sound_020_writemem)
+	MDRV_CPU_VBLANK_INT(irq1_line_assert,4)
+
+	MDRV_NVRAM_HANDLER(itech020)
+
+	/* video hardware */
+	MDRV_VISIBLE_AREA(0, 383, 0, 254)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( sftmspec )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(sftmrate)
+
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(bloodstm_readmem,bloodstm_writemem)
+
+	/* video hardware */
+	MDRV_PALETTE_LENGTH(32768)
 
 	MDRV_CPU_REPLACE("main", M68EC020, CLOCK_25MHz)
 	MDRV_CPU_MEMORY(itech020_readmem,itech020_writemem)
@@ -2397,9 +2450,9 @@ GAME( 1995, wcbowl,   0,        sftm,     wcbowln,  wcbowln,  ROT0, "Incredible 
 GAME( 1995, wcbwl165, wcbowl,   sftm,     shufbowl, wcbowln,  ROT0, "Incredible Technologies", "World Class Bowling (v1.65)" ) /* PIC 16C54 labeled as ITBWL-3 */
 GAME( 1995, wcbwl161, wcbowl,   sftm,     shufbowl, wcbowln,  ROT0, "Incredible Technologies", "World Class Bowling (v1.61)" ) /* PIC 16C54 labeled as ITBWL-3 */
 GAME( 1995, wcbwl12,  wcbowl,   wcbowl,   wcbowl,   wcbowl,   ROT0, "Incredible Technologies", "World Class Bowling (v1.2)" ) /* PIC 16C54 labeled as ITBWL-1 */
-GAME( 1995, sftm,     0,        sftm,     sftm,     sftm,     ROT0, "Capcom/Incredible Technologies", "Street Fighter: The Movie (v1.12)" )	/* PIC 16C54 labeled as ITSF-1 */
-GAME( 1995, sftm111,  sftm,     sftm,     sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter: The Movie (v1.11)" )	/* PIC 16C54 labeled as ITSF-1 */
-GAME( 1995, sftm110,  sftm,     sftm,     sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter: The Movie (v1.10)" )	/* PIC 16C54 labeled as ITSF-1 */
-GAME( 1995, sftmj,    sftm,     sftm,     sftm,     sftm,     ROT0, "Capcom/Incredible Technologies", "Street Fighter: The Movie (v1.12N, Japan)" )	/* PIC 16C54 labeled as ITSF-1 */
+GAME( 1995, sftm,     0,        sftmspec,     sftm,     sftm,     ROT0, "Capcom/Incredible Technologies", "Street Fighter: The Movie (v1.12)" )	/* PIC 16C54 labeled as ITSF-1 */
+GAME( 1995, sftm111,  sftm,     sftmspec,     sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter: The Movie (v1.11)" )	/* PIC 16C54 labeled as ITSF-1 */
+GAME( 1995, sftm110,  sftm,     sftmspec,     sftm,     sftm110,  ROT0, "Capcom/Incredible Technologies", "Street Fighter: The Movie (v1.10)" )	/* PIC 16C54 labeled as ITSF-1 */
+GAME( 1995, sftmj,    sftm,     sftmspec,     sftm,     sftm,     ROT0, "Capcom/Incredible Technologies", "Street Fighter: The Movie (v1.12N, Japan)" )	/* PIC 16C54 labeled as ITSF-1 */
 GAME( 1997, shufshot, 0,        sftm,     shufshot, shufshot, ROT0, "Strata/Incredible Technologies", "Shuffleshot (v1.39)" ) /* PIC 16C54 labeled as ITSHF-1 */
 GAME( 1997, sshot137, shufshot, sftm,     shufbowl, shufshot, ROT0, "Strata/Incredible Technologies", "Shuffleshot (v1.37)" ) /* PIC 16C54 labeled as ITSHF-1 */
