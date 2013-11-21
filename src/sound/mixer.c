@@ -770,14 +770,9 @@ void mixer_sh_update(void)
 		{
 			/* fetch and clip the sample */
 			sample = left_accum[accum_pos];
-#if defined(MIXER_USE_CLIPPING) && defined(__LIBRETRO__)
+#if defined(MIXER_USE_CLIPPING)
          if ( (int16_t) sample != sample )
             sample = (sample >> 31) ^ 0x7FFF;
-#elif defined(MIXER_USE_CLIPPING)
-			if (sample < -32768)
-				sample = -32768;
-			else if (sample > 32767)
-				sample = 32767;
 #endif
 
 			/* store and zero out behind us */
@@ -797,14 +792,9 @@ void mixer_sh_update(void)
 		{
 			/* fetch and clip the left sample */
 			sample = left_accum[accum_pos];
-#if defined(MIXER_USE_CLIPPING) && defined(__LIBRETRO__)
+#if defined(MIXER_USE_CLIPPING)
          if ( (int16_t) sample != sample )
             sample = (sample >> 31) ^ 0x7FFF;
-#elif defined(MIXER_USE_CLIPPING)
-			if (sample < -32768)
-				sample = -32768;
-			else if (sample > 32767)
-				sample = 32767;
 #endif
 
 			/* store and zero out behind us */
@@ -813,14 +803,9 @@ void mixer_sh_update(void)
 
 			/* fetch and clip the right sample */
 			sample = right_accum[accum_pos];
-#if defined(MIXER_USE_CLIPPING) && defined(__LIBRETRO__)
+#if defined(MIXER_USE_CLIPPING)
          if ( (int16_t) sample != sample )
             sample = (sample >> 31) ^ 0x7FFF;
-#elif defined(MIXER_USE_CLIPPING)
-			if (sample < -32768)
-				sample = -32768;
-			else if (sample > 32767)
-				sample = 32767;
 #endif
 
 			/* store and zero out behind us */
