@@ -301,11 +301,13 @@ static void bsmt2000_update(int num, INT16 **buffer, int length)
 		{
 			/* left channel */
 			interp = backend_interpolate(lprev, lcurr, chip->output_pos);
-			*ldest++ = (interp < -32768) ? -32768 : (interp > 32767) ? 32767 : interp;
+         MAME_CLAMP_SAMPLE(interp);
+			*ldest++ = interp;
 
 			/* right channel */
 			interp = backend_interpolate(rprev, rcurr, chip->output_pos);
-			*rdest++ = (interp < -32768) ? -32768 : (interp > 32767) ? 32767 : interp;
+         MAME_CLAMP_SAMPLE(interp);
+			*rdest++ = interp;
 
 			/* advance */
 			chip->output_pos += chip->output_step;

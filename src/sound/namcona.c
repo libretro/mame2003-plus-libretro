@@ -153,22 +153,8 @@ RenderSamples( INT16 **buffer, INT16 *pSource, int length )
 	{
 		INT32 dataL = /* 100 * */ (*pSource++);
 		INT32 dataR = /* 100 * */ (*pSource++);
-		if( dataL > 0x7fff )
-		{
-			dataL =  0x7fff; /* clip */
-		}
-		else if( dataL < -0x8000 )
-		{
-			dataL = -0x8000; /* clip */
-		}
-		if( dataR > 0x7fff )
-		{
-			dataR =  0x7fff; /* clip */
-		}
-		else if( dataR < -0x8000 )
-		{
-			dataR = -0x8000; /* clip */
-		}
+      MAME_CLAMP_SAMPLE(dataL);
+      MAME_CLAMP_SAMPLE(dataR);
 		*pDest1++ = (INT16)dataL; /* stereo left */
 		*pDest2++ = (INT16)dataR; /* stereo right */
 	}

@@ -175,15 +175,9 @@
 #define TL_RES_LEN		(256) /* 8 bits addressing (real chip) */
 
 
-#if (FM_SAMPLE_BITS==16)
-	#define FINAL_SH	(0)
-	#define MAXOUT		(+32767)
-	#define MINOUT		(-32768)
-#else
-	#define FINAL_SH	(8)
-	#define MAXOUT		(+127)
-	#define MINOUT		(-128)
-#endif
+#define FINAL_SH	(0)
+#define MAXOUT		(+32767)
+#define MINOUT		(-32768)
 
 
 /*	TL_TAB_LEN is calculated as:
@@ -2091,7 +2085,7 @@ void YM2203UpdateOne(int num, INT16 *buffer, int length)
 
 			lt >>= FINAL_SH;
 
-			Limit( lt , MAXOUT, MINOUT );
+         MAME_CLAMP_SAMPLE(lt);
 
 			#ifdef SAVE_SAMPLE
 				SAVE_ALL_CHANNELS
@@ -3338,8 +3332,8 @@ void YM2608UpdateOne(int num, INT16 **buffer, int length)
 			lt >>= FINAL_SH;
 			rt >>= FINAL_SH;
 
-			Limit( lt, MAXOUT, MINOUT );
-			Limit( rt, MAXOUT, MINOUT );
+         MAME_CLAMP_SAMPLE(lt);
+         MAME_CLAMP_SAMPLE(rt);
 			/* buffering */
 			bufL[i] = lt;
 			bufR[i] = rt;
@@ -3905,8 +3899,8 @@ void YM2610UpdateOne(int num, INT16 **buffer, int length)
 			lt >>= FINAL_SH;
 			rt >>= FINAL_SH;
 
-			Limit( lt, MAXOUT, MINOUT );
-			Limit( rt, MAXOUT, MINOUT );
+         MAME_CLAMP_SAMPLE(lt);
+         MAME_CLAMP_SAMPLE(rt);
 
 			#ifdef SAVE_SAMPLE
 				SAVE_ALL_CHANNELS
@@ -4048,8 +4042,8 @@ void YM2610BUpdateOne(int num, INT16 **buffer, int length)
 			lt >>= FINAL_SH;
 			rt >>= FINAL_SH;
 
-			Limit( lt, MAXOUT, MINOUT );
-			Limit( rt, MAXOUT, MINOUT );
+         MAME_CLAMP_SAMPLE(lt);
+         MAME_CLAMP_SAMPLE(rt);
 
 			#ifdef SAVE_SAMPLE
 				SAVE_ALL_CHANNELS
@@ -4600,8 +4594,8 @@ void YM2612UpdateOne(int num, INT16 **buffer, int length)
 			lt >>= FINAL_SH;
 			rt >>= FINAL_SH;
 
-			Limit( lt, MAXOUT, MINOUT );
-			Limit( rt, MAXOUT, MINOUT );
+         MAME_CLAMP_SAMPLE(lt);
+         MAME_CLAMP_SAMPLE(rt);
 
 			#ifdef SAVE_SAMPLE
 				SAVE_ALL_CHANNELS

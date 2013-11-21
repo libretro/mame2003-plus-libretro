@@ -549,7 +549,8 @@ static void phoenix_sound_update(int param, INT16 *buffer, int length)
 	{
 		int sum = 0;
 		sum = (tone1(samplerate) + tone2(samplerate) + noise(samplerate)) / 4;
-		*buffer++ = sum < 32768 ? sum > -32768 ? sum : -32768 : 32767;
+      MAME_CLAMP_SAMPLE(sum);
+		*buffer++ = sum;
 	}
 }
 

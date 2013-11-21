@@ -649,7 +649,7 @@ INLINE void TG_group_advance(MSM5232 *chip, int groupidx)
 #ifdef SAVE_SEPARATE_CHANNELS
   #define SAVE_SINGLE_CHANNEL(j,val) \
   {	signed int pom= val; \
-	if (pom > 32767) pom = 32767; else if (pom < -32768) pom = -32768; \
+     MAME_CLAMP_SAMPLE(pom); \
 	fputc((unsigned short)pom&0xff,sample[j]); \
 	fputc(((unsigned short)pom>>8)&0xff,sample[j]);  }
 #else
@@ -700,10 +700,7 @@ void MSM5232_update_one(int which, INT16** buffer, int samples)
 
 		TG_group_advance(chip,0);	/* calculate tones group 1 */
 		out = (o2+o4+o8+o16);
-		if (out>32767)
-			out = 32767;
-		else if (out<-32768)
-			out = -32768;
+      MAME_CLAMP_SAMPLE(out);
 		buf1[i] = out;				/* should be 4 separate outputs */
 		SAVE_SINGLE_CHANNEL(0,o2)
 		SAVE_SINGLE_CHANNEL(1,o4)
@@ -712,10 +709,7 @@ void MSM5232_update_one(int which, INT16** buffer, int samples)
 
 		TG_group_advance(chip,1);	/* calculate tones group 2 */
 		out = (o2+o4+o8+o16);
-		if (out>32767)
-			out = 32767;
-		else if (out<-32768)
-			out = -32768;
+      MAME_CLAMP_SAMPLE(out);
 		buf2[i] = out;				/* should be 4 separate outputs */
 		SAVE_SINGLE_CHANNEL(4,o2)
 		SAVE_SINGLE_CHANNEL(5,o4)

@@ -592,18 +592,6 @@ static signed int chanout[18];			/* 18 channels */
 static UINT32	LFO_AM;
 static INT32	LFO_PM;
 
-
-
-INLINE int limit( int val, int max, int min ) {
-	if ( val > max )
-		val = max;
-	else if ( val < min )
-		val = min;
-
-	return val;
-}
-
-
 /* status set and IRQ handling */
 INLINE void OPL3_STATUS_SET(OPL3 *chip,int flag)
 {
@@ -2743,11 +2731,10 @@ void YMF262UpdateOne(int which, INT16 **buffers, int length)
 		c >>= FINAL_SH;
 		d >>= FINAL_SH;
 
-		/* limit check */
-		a = limit( a , MAXOUT, MINOUT );
-		b = limit( b , MAXOUT, MINOUT );
-		c = limit( c , MAXOUT, MINOUT );
-		d = limit( d , MAXOUT, MINOUT );
+      MAME_CLAMP_SAMPLE(a);
+      MAME_CLAMP_SAMPLE(b);
+      MAME_CLAMP_SAMPLE(c);
+      MAME_CLAMP_SAMPLE(d);
 
 		#ifdef SAVE_SAMPLE
 		if (which==0)

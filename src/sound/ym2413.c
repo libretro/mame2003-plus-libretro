@@ -40,15 +40,9 @@ to do:
 
 
 /* output final shift */
-#if (SAMPLE_BITS==16)
-	#define FINAL_SH	(0)
-	#define MAXOUT		(+32767)
-	#define MINOUT		(-32768)
-#else
-	#define FINAL_SH	(8)
-	#define MAXOUT		(+127)
-	#define MINOUT		(-128)
-#endif
+#define FINAL_SH	(0)
+#define MAXOUT		(+32767)
+#define MINOUT		(-32768)
 
 
 #define FREQ_SH			16  /* 16.16 fixed point (frequency calculations) */
@@ -615,17 +609,6 @@ static signed int outchan;
 
 static UINT32	LFO_AM;
 static INT32	LFO_PM;
-
-
-INLINE int limit( int val, int max, int min ) {
-	if ( val > max )
-		val = max;
-	else if ( val < min )
-		val = min;
-
-	return val;
-}
-
 
 /* advance LFO to next sample */
 INLINE void advance_lfo(YM2413 *chip)
@@ -2139,9 +2122,8 @@ void YM2413UpdateOne(int which, INT16 **buffers, int length)
 		mo >>= FINAL_SH;
 		ro >>= FINAL_SH;
 
-		/* limit check */
-		mo = limit( mo , MAXOUT, MINOUT );
-		ro = limit( ro , MAXOUT, MINOUT );
+      MAME_CLAMP_SAMPLE(mo);
+      MAME_CLAMP_SAMPLE(ro);
 
 		#ifdef SAVE_SAMPLE
 		if (which==0)

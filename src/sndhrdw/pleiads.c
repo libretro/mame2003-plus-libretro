@@ -399,7 +399,8 @@ static void pleiads_sound_update(int param, INT16 *buffer, int length)
 	while( length-- > 0 )
 	{
 		int sum = tone1(rate)/2 + tone23(rate)/2 + tone4(rate) + noise(rate);
-		*buffer++ = sum < 32768 ? sum > -32768 ? sum : -32768 : 32767;
+      MAME_CLAMP_SAMPLE(sum);
+		*buffer++ = sum;
 	}
 }
 

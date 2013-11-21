@@ -202,15 +202,9 @@ typedef struct
 #define TL_RES_LEN		(256) /* 8 bits addressing (real chip) */
 
 
-#if (SAMPLE_BITS==16)
-	#define FINAL_SH	(0)
-	#define MAXOUT		(+32767)
-	#define MINOUT		(-32768)
-#else
-	#define FINAL_SH	(8)
-	#define MAXOUT		(+127)
-	#define MINOUT		(-128)
-#endif
+#define FINAL_SH	(0)
+#define MAXOUT		(+32767)
+#define MINOUT		(-32768)
 
 
 /*	TL_TAB_LEN is calculated as:
@@ -2298,11 +2292,11 @@ INLINE signed int acc_calc(signed int value)
 	#ifdef SAVE_SEPARATE_CHANNELS
 	  #define SAVE_SINGLE_CHANNEL(j) \
 	  {	signed int pom = -(chanout[j] & PSG->pan[j*2]); \
-		if (pom > 32767) pom = 32767; else if (pom < -32768) pom = -32768; \
+        MAME_CLAMP_SAMPLE(pom); \
 		fputc((unsigned short)pom&0xff,sample[j]); \
 		fputc(((unsigned short)pom>>8)&0xff,sample[j]); \
 		pom = -(chanout[j] & PSG->pan[j*2+1]); \
-		if (pom > 32767) pom = 32767; else if (pom < -32768) pom = -32768; \
+        MAME_CLAMP_SAMPLE(pom); \
 		fputc((unsigned short)pom&0xff,sample[j]); \
 		fputc(((unsigned short)pom>>8)&0xff,sample[j]); \
 	  }
@@ -2426,10 +2420,8 @@ void YM2151UpdateOne(int num, INT16 **buffers, int length)
 
 		outl >>= FINAL_SH;
 		outr >>= FINAL_SH;
-		if (outl > MAXOUT) outl = MAXOUT;
-			else if (outl < MINOUT) outl = MINOUT;
-		if (outr > MAXOUT) outr = MAXOUT;
-			else if (outr < MINOUT) outr = MINOUT;
+      MAME_CLAMP_SAMPLE(outl);
+      MAME_CLAMP_SAMPLE(outr);
 		((SAMP*)bufL)[i] = (SAMP)outl;
 		((SAMP*)bufR)[i] = (SAMP)outr;
 

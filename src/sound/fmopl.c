@@ -81,18 +81,10 @@ Revision History:
 #define PI 3.14159265358979323846
 #endif
 
-
-
 /* output final shift */
-#if (OPL_SAMPLE_BITS==16)
-	#define FINAL_SH	(0)
-	#define MAXOUT		(+32767)
-	#define MINOUT		(-32768)
-#else
-	#define FINAL_SH	(8)
-	#define MAXOUT		(+127)
-	#define MINOUT		(-128)
-#endif
+#define FINAL_SH	(0)
+#define MAXOUT		(+32767)
+#define MINOUT		(-32768)
 
 
 #define FREQ_SH			16  /* 16.16 fixed point (frequency calculations) */
@@ -650,18 +642,6 @@ static INT32 output_deltat[4];		/* for Y8950 DELTA-T, chip is mono, that 4 here 
 
 static UINT32	LFO_AM;
 static INT32	LFO_PM;
-
-
-
-INLINE int limit( int val, int max, int min ) {
-	if ( val > max )
-		val = max;
-	else if ( val < min )
-		val = min;
-
-	return val;
-}
-
 
 /* status set and IRQ handling */
 INLINE void OPL_STATUS_SET(FM_OPL *OPL,int flag)
@@ -2149,8 +2129,7 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 
 		lt >>= FINAL_SH;
 
-		/* limit check */
-		lt = limit( lt , MAXOUT, MINOUT );
+      MAME_CLAMP_SAMPLE(lt);
 
 		#ifdef SAVE_SAMPLE
 		if (which==0)
@@ -2300,8 +2279,7 @@ void YM3526UpdateOne(int which, INT16 *buffer, int length)
 
 		lt >>= FINAL_SH;
 
-		/* limit check */
-		lt = limit( lt , MAXOUT, MINOUT );
+      MAME_CLAMP_SAMPLE(lt);
 
 		#ifdef SAVE_SAMPLE
 		if (which==0)
@@ -2481,8 +2459,7 @@ void Y8950UpdateOne(int which, INT16 *buffer, int length)
 
 		lt >>= FINAL_SH;
 
-		/* limit check */
-		lt = limit( lt , MAXOUT, MINOUT );
+      MAME_CLAMP_SAMPLE(lt);
 
 		#ifdef SAVE_SAMPLE
 		if (which==0)

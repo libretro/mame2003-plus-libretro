@@ -325,10 +325,7 @@ else
 						else
 							cur_val &= 15;
 						cur_val = cur_pval + dpcm[cur_val];
-						if(cur_val < -32768)
-							cur_val = -32768;
-						else if(cur_val > 32767)
-							cur_val = 32767;
+                  MAME_CLAMP_SAMPLE(cur_val);
 					}
 
 					UPDATE_CHANNELS;

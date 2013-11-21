@@ -19,9 +19,6 @@
 /* Define it to enable the check of the flag options.use_filter as condition for the filter use */
 #define MIXER_USE_OPTION_FILTER
 
-/* Undefine it to turn off clipping (helpful to find cases where we max out */
-#define MIXER_USE_CLIPPING
-
 /* Define it to enable the logerror output */
 /* #define MIXER_USE_LOGERROR */
 
@@ -770,10 +767,7 @@ void mixer_sh_update(void)
 		{
 			/* fetch and clip the sample */
 			sample = left_accum[accum_pos];
-#if defined(MIXER_USE_CLIPPING)
-         if ( (int16_t) sample != sample )
-            sample = (sample >> 31) ^ 0x7FFF;
-#endif
+         MAME_CLAMP_SAMPLE(sample);
 
 			/* store and zero out behind us */
 			*mix++ = sample;
@@ -792,10 +786,7 @@ void mixer_sh_update(void)
 		{
 			/* fetch and clip the left sample */
 			sample = left_accum[accum_pos];
-#if defined(MIXER_USE_CLIPPING)
-         if ( (int16_t) sample != sample )
-            sample = (sample >> 31) ^ 0x7FFF;
-#endif
+         MAME_CLAMP_SAMPLE(sample);
 
 			/* store and zero out behind us */
 			*mix++ = sample;
@@ -803,10 +794,7 @@ void mixer_sh_update(void)
 
 			/* fetch and clip the right sample */
 			sample = right_accum[accum_pos];
-#if defined(MIXER_USE_CLIPPING)
-         if ( (int16_t) sample != sample )
-            sample = (sample >> 31) ^ 0x7FFF;
-#endif
+         MAME_CLAMP_SAMPLE(sample);
 
 			/* store and zero out behind us */
 			*mix++ = sample;

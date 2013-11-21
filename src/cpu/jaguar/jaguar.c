@@ -1411,7 +1411,8 @@ void sat16s_rn(void)		/* DSP only */
 {
 	int dreg = jaguar.op & 31;
 	INT32 r2 = jaguar.r[dreg];
-	UINT32 res = (r2 < -32768) ? -32768 : (r2 > 32767) ? 32767 : r2;
+   MAME_CLAMP_SAMPLE(r2);
+   UINT32 res = r2;
 	jaguar.r[dreg] = res;
 	CLR_ZN; SET_ZN(res);
 }

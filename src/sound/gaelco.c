@@ -163,10 +163,8 @@ static void gaelco_sh_update(int param, INT16 **buffer, int length)
 
 #ifndef ALT_MIX
 		/* clip to max or min value */
-		if (output_l > 32767) output_l = 32767;
-		if (output_r > 32767) output_r = 32767;
-		if (output_l < -32768) output_l = -32768;
-		if (output_r < -32768) output_r = -32768;
+      MAME_CLAMP_SAMPLE(output_l);
+      MAME_CLAMP_SAMPLE(output_r);
 #else
 		/* ponderate channels */
 		output_l /= GAELCO_NUM_CHANNELS;

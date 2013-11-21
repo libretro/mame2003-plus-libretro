@@ -32,6 +32,16 @@
 #define VIDEO_EOF(name)			void video_eof_##name(void)
 #define VIDEO_UPDATE(name)		void video_update_##name(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 
+#define MIXER_USE_CLIPPING
+
+#if defined(MIXER_USE_CLIPPING)
+#define MAME_CLAMP_SAMPLE(a) \
+   if ((int16_t)a != a) \
+      a = (a >> 31) ^ 0x7FFF
+#else
+#define MAME_CLAMP_SAMPLE(a) ((void)0)
+#endif
+
 /* NULL versions */
 #define init_NULL				NULL
 #define machine_init_NULL 		NULL

@@ -293,10 +293,8 @@ static void mix_to_16(int length, INT16 *dest_left, INT16 *dest_right)
 		INT32 sample_left = *mixer_left++;
 		INT32 sample_right = *mixer_right++;
 
-		if (sample_left < -32768) { sample_left = -32768; clippers++; }
-		else if (sample_left > 32767) { sample_left = 32767; clippers++; }
-		if (sample_right < -32768) { sample_right = -32768; clippers++; }
-		else if (sample_right > 32767) { sample_right = 32767; clippers++; }
+      MAME_CLAMP_SAMPLE(sample_left);
+      MAME_CLAMP_SAMPLE(sample_right);
 
 		*dest_left++ = sample_left;
 		*dest_right++ = sample_right;
@@ -773,10 +771,7 @@ void fir_filter(INT32 *input, INT16 *output, int count)
 		result += (input[-27] + input[-28] + input[-29]) << 12;
 		result >>= 14;
 
-		if (result < -32768)
-			result = -32768;
-		else if (result > 32767)
-			result = 32767;
+      MAME_CLAMP_SAMPLE(result);
 
 		*output++ = result;
 		input++;
@@ -904,8 +899,7 @@ void decode_and_filter_cvsd(UINT8 *input, int bytes, int maskbits, int frequency
 		{
 			int sample = buffer[FIR_HISTORY_LENGTH + ind];
 			INT16 temp;
-			if (sample > 32767) sample = 32767;
-			else if (sample < -32768) sample = -32768;
+         MAME_CLAMP_SAMPLE(sample);
 			temp = intelShort(sample);
 			fwrite(&temp, 1, 2, wavfile);
 		}

@@ -201,10 +201,7 @@ static int generate_adpcm(struct YMZ280BVoice *voice, UINT8 *base, INT16 *buffer
 			signal += (step * diff_lookup[val & 15]) / 8;
 
 			/* clamp to the maximum */
-			if (signal > 32767)
-				signal = 32767;
-			else if (signal < -32768)
-				signal = -32768;
+         MAME_CLAMP_SAMPLE(signal);
 
 			/* adjust the step size and clamp */
 			step = (step * index_scale[val & 7]) >> 8;
@@ -235,10 +232,7 @@ static int generate_adpcm(struct YMZ280BVoice *voice, UINT8 *base, INT16 *buffer
 			signal += (step * diff_lookup[val & 15]) / 8;
 
 			/* clamp to the maximum */
-			if (signal > 32767)
-				signal = 32767;
-			else if (signal < -32768)
-				signal = -32768;
+         MAME_CLAMP_SAMPLE(signal);
 
 			/* adjust the step size and clamp */
 			step = (step * index_scale[val & 7]) >> 8;
@@ -544,10 +538,8 @@ static void ymz280b_update(int num, INT16 **buffer, int length)
 		int lsamp = lacc[v] / 256;
 		int rsamp = racc[v] / 256;
 
-		if (lsamp < -32768) lsamp = -32768;
-		else if (lsamp > 32767) lsamp = 32767;
-		if (rsamp < -32768) rsamp = -32768;
-		else if (rsamp > 32767) rsamp = 32767;
+      MAME_CLAMP_SAMPLE(lsamp);
+      MAME_CLAMP_SAMPLE(rsamp);
 
 		buffer[0][v] = lsamp;
 		buffer[1][v] = rsamp;

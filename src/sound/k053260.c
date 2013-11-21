@@ -81,15 +81,6 @@ static void K053260_reset( int chip ) {
 	}
 }
 
-INLINE int limit( int val, int max, int min ) {
-	if ( val > max )
-		val = max;
-	else if ( val < min )
-		val = min;
-
-	return val;
-}
-
 #define MAXOUT 0x7fff
 #define MINOUT -0x8000
 
@@ -174,8 +165,10 @@ void K053260_update( int param, INT16 **buffer, int length ) {
 				}
 			}
 
-			buffer[1][j] = limit( dataL, MAXOUT, MINOUT );
-			buffer[0][j] = limit( dataR, MAXOUT, MINOUT );
+         MAME_CLAMP_SAMPLE(dataL);
+         MAME_CLAMP_SAMPLE(dataR);
+			buffer[1][j] = dataL;
+			buffer[0][j] = dataR;
 		}
 
 	/* update the regs now */

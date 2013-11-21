@@ -23,8 +23,6 @@
 #include "driver.h"
 #include "cpuintrf.h"
 
-#define ICLIP16(x) (x<-32768)?-32768:((x>32767)?32767:x)
-
 static signed short *bufferl;
 static signed short *bufferr;
 
@@ -881,8 +879,10 @@ static void SCSP_DoMasterSamples(int chip, int nsamples)
 			CheckPendingIRQ();
 		}
 
-		*bufl=ICLIP16(smpl);
-		*bufr=ICLIP16(smpr);
+      MAME_CLAMP_SAMPLE(smpl);
+      MAME_CLAMP_SAMPLE(smpr);
+		*bufl= smpl;
+		*bufr= smpr;
 		*bufl1=0;
 		*bufr1=0;
 		++bufl;
