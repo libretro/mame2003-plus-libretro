@@ -25,8 +25,11 @@ ifeq ($(platform), unix)
 else ifeq ($(platform), osx)
    EMULATOR = $(TARGET_NAME)_libretro.dylib
 
-   CFLAGS += -fPIC -Dstricmp=strcasecmp -m32
-   LDFLAGS += -fPIC -dynamiclib -m32
+   CFLAGS += -fPIC -Dstricmp=strcasecmp
+   LDFLAGS += -fPIC -dynamiclib
+
+   CC = clang
+   LD = clang
 else ifeq ($(platform), ios)
    EMULATOR = $(TARGET_NAME)_libretro_ios.dylib
 
