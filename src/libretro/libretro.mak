@@ -33,11 +33,11 @@ else ifeq ($(platform), osx)
 else ifeq ($(platform), ios)
    EMULATOR = $(TARGET_NAME)_libretro_ios.dylib
 
-   CFLAGS += -fPIC -Dstricmp=strcasecmp
+   CFLAGS += -fPIC -Dstricmp=strcasecmp -miphoneos-version-min=5.0
    LDFLAGS += -fPIC -dynamiclib
 
-   CC = clang -arch armv7 -isysroot $(IOSSDK)
-   LD = clang -arch armv7 -isysroot $(IOSSDK)
+   CC = clang -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
+   LD = clang -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
 else ifeq ($(platform), android-armv7)
    EMULATOR = $(TARGET_NAME)_libretro_android.so
 
