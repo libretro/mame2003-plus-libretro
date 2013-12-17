@@ -1,5 +1,4 @@
 #include "libretro.h"
-#include "performance.h"
 #include "osdepend.h"
 #include "palette.h"
 #include "fileio.h"
@@ -98,8 +97,8 @@ int osd_skip_this_frame(void)
 
 void osd_update_video_and_audio(struct mame_display *display)
 {
-   RARCH_PERFORMANCE_INIT(update_video_and_audio);
-   RARCH_PERFORMANCE_START(update_video_and_audio);
+   RETRO_PERFORMANCE_INIT(update_video_and_audio);
+   RETRO_PERFORMANCE_START(update_video_and_audio);
 
    const uint32_t width = videoConfig.width;
    const uint32_t height = videoConfig.height;
@@ -170,7 +169,7 @@ void osd_update_video_and_audio(struct mame_display *display)
 
    gotFrame = 1;
 
-   RARCH_PERFORMANCE_STOP(update_video_and_audio);
+   RETRO_PERFORMANCE_STOP(update_video_and_audio);
 }
 
 struct mame_bitmap *osd_override_snapshot(struct mame_bitmap *bitmap, struct rectangle *bounds)

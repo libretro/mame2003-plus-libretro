@@ -1,5 +1,5 @@
 OSOBJS = $(OBJ)/libretro/libretro.o $(OBJ)/libretro/osd.o $(OBJ)/libretro/keyboard.o $(OBJ)/libretro/joystick.o \
-         $(OBJ)/libretro/video.o $(OBJ)/libretro/performance.o
+         $(OBJ)/libretro/video.o
 
 ifeq ($(platform),)
 platform = unix

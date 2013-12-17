@@ -1737,8 +1737,7 @@ $(MAME_DIR)/src/libretro/libretro.c \
 $(MAME_DIR)/src/libretro/osd.c \
 $(MAME_DIR)/src/libretro/keyboard.c \
 $(MAME_DIR)/src/libretro/joystick.c \
-$(MAME_DIR)/src/libretro/video.c \
-$(MAME_DIR)/src/libretro/performance.c
+$(MAME_DIR)/src/libretro/video.c
 
 LOCAL_SRC_FILES    = $(SOURCES)
 HAS_CPUS := -DHAS_Z80=1 \
