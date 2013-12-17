@@ -56,8 +56,8 @@ extern UINT8	CD_flag;				// 0x00 = CD-DA or <SEEK> or <SCAN> 0x80 = CD-ROM
 
 typedef struct filt_t {
 
-	UINT8		true;		// true connection
-	UINT8		false;		// false connection
+	UINT8		true_cond;		// true connection
+	UINT8		false_cond;		// false connection
 	UINT8		mode;		// filter mode
 	UINT32		fad;		// range start fad
 	UINT32		range;		// range length in fads

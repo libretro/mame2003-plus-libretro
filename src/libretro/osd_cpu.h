@@ -94,6 +94,8 @@ typedef union {
 #define DEBUG_LOG 1
 #endif
 
+#include "libretro.h"
+
 extern retro_get_cpu_features_t perf_get_cpu_features_cb;
 extern retro_perf_log_t perf_log_cb;
 extern retro_perf_get_counter_t perf_get_counter_cb;
