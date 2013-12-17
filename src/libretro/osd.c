@@ -19,6 +19,7 @@
 extern int16_t XsoundBuffer[2048];
 extern char* systemDir;
 extern char* romDir;
+extern retro_log_printf_t log_cb;
 
 #if defined(__CELLOS_LV2__) && !defined(__PSL1GHT__)
 #include <unistd.h> //stat() is defined here
@@ -203,7 +204,8 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
          snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
    }
 
-   fprintf(stderr, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
+   if (log_cb)
+      log_cb(RETRO_LOG_INFO, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
 
    osd_file* out = malloc(sizeof(osd_file));
    out->file = fopen(buffer, mode);
@@ -260,12 +262,8 @@ void osd_pause(int paused){}
 
 void CLIB_DECL osd_die(const char *text,...)
 {
-#ifdef DEBUG_LOG
-    va_list args;
-    va_start (args, text);
-    vfprintf (stderr, text, args);
-    va_end (args);
-#endif
+   if (log_cb)
+      log_cb(RETRO_LOG_INFO, text); 
 
     // TODO: Don't abort, switch back to main thread and exit cleanly: This is only used if a malloc fails in src/cpu/z80/z80.c so not too high a priority
     abort();

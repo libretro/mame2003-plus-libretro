@@ -7,17 +7,12 @@
 #include "driver.h"
 #include "state.h"
 
-#ifdef DEBUG_LOG
-# define LOG(msg) fprintf(stderr, "%s\n", msg)
-#else
-# define LOG(msg)
-#endif
-
 void mame_frame(void);
 void mame_done(void);
 
 unsigned activate_dcs_speedhack = 0;
 
+static retro_log_printf_t log_cb = NULL;
 retro_video_refresh_t video_cb = NULL;
 static retro_input_poll_t poll_cb = NULL;
 static retro_input_state_t input_cb = NULL;
@@ -85,7 +80,8 @@ static int getDriverIndex(const char* aPath)
     {
        if(strcmp(driverName, drivers[i]->name) == 0)
        {
-          fprintf(stderr, "Found game: %s [%s].\n", driverName, drivers[i]->name);
+          if (log_cb)
+             log_cb(RETRO_LOG_INFO, "Found game: %s [%s].\n", driverName, drivers[i]->name);
           return i;
        }
     }
@@ -176,6 +172,11 @@ static void update_variables(void)
 
 void retro_init (void)
 {
+   struct retro_log_callback log;
+   environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log);
+   if (log.log)
+      log_cb = log.log;
+
 	update_variables();
 }
 
