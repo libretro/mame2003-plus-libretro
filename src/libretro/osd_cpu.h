@@ -96,9 +96,6 @@ typedef union {
 
 #include "libretro.h"
 
-extern retro_get_cpu_features_t perf_get_cpu_features_cb;
-extern retro_perf_log_t perf_log_cb;
-extern retro_perf_get_counter_t perf_get_counter_cb;
-extern retro_perf_register_t perf_register_cb;
+extern struct retro_perf_callback perf_cb;
 
 #endif	/* defined OSD_CPU_H */

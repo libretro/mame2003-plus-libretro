@@ -11,10 +11,7 @@ void mame_done(void);
 
 unsigned activate_dcs_speedhack = 0;
 
-retro_perf_get_counter_t perf_get_counter_cb = NULL;
-retro_get_cpu_features_t perf_get_cpu_features_cb = NULL;
-retro_perf_log_t perf_log_cb = NULL;
-retro_perf_register_t perf_register_cb = NULL;
+struct retro_perf_callback perf_cb;
 
 static retro_log_printf_t log_cb = NULL;
 retro_video_refresh_t video_cb = NULL;
@@ -177,28 +174,22 @@ static void update_variables(void)
 void retro_init (void)
 {
    struct retro_log_callback log;
-   struct retro_perf_callback perf;
    environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log);
    if (log.log)
       log_cb = log.log;
 
-   environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf);
-   if (perf.perf_log)
-      perf_log_cb = perf.perf_log;
-   if (perf.get_cpu_features)
-      perf_get_cpu_features_cb = perf.get_cpu_features;
-   if (perf.get_perf_counter)
-      perf_get_counter_cb = perf.get_perf_counter;
-   if (perf.perf_register)
-      perf_register_cb = perf.perf_register;
+#ifdef LOG_PERFORMANCE
+   environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf_cb);
+#endif
 
 	update_variables();
 }
 
 void retro_deinit(void)
 {
-   if (perf_log_cb)
-      perf_log_cb();
+#ifdef LOG_PERFORMANCE
+   perf_cb.perf_log();
+#endif
 }
 
 void retro_reset (void)
