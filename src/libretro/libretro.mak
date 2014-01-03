@@ -18,23 +18,24 @@ TARGET_NAME := mame078
 
 ifeq ($(platform), unix)
    EMULATOR = $(TARGET_NAME)_libretro.so
+   fpic = -fPIC
 
-   CFLAGS += -fPIC
+   CFLAGS += $(fpic)
    PLATCFLAGS += -Dstricmp=strcasecmp
-   LDFLAGS += -fPIC -shared -Wl,--version-script=src/libretro/link.T
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=src/libretro/link.T
 else ifeq ($(platform), osx)
    EMULATOR = $(TARGET_NAME)_libretro.dylib
-
-   CFLAGS += -fPIC -Dstricmp=strcasecmp
-   LDFLAGS += -fPIC -dynamiclib
+   fpic = -fPIC -mmacosx-version-min=10.6
+   CFLAGS += $(fpic) -Dstricmp=strcasecmp
+   LDFLAGS += $(fpic) -dynamiclib
 
    CC = clang
    LD = clang
 else ifeq ($(platform), ios)
    EMULATOR = $(TARGET_NAME)_libretro_ios.dylib
-
-   CFLAGS += -fPIC -Dstricmp=strcasecmp -miphoneos-version-min=5.0
-   LDFLAGS += -fPIC -dynamiclib
+   fpic = -fPIC -miphoneos-version-min=5.0
+   CFLAGS += $(fpic) -Dstricmp=strcasecmp
+   LDFLAGS += $(fpic) -dynamiclib
 
    CC = clang -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
    LD = clang -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
