@@ -29,7 +29,13 @@ void retro_set_environment(retro_environment_t cb)
 {
    static const struct retro_variable vars[] = {
       { "frameskip", "Frameskip; 0|1|2|3|4|5" },
-      { "dcs-speedhack", "MK2/MK3 DCS Speedhack; disabled|enabled" },
+      { "dcs-speedhack",
+#if defined(__CELLOS_LV2__) || defined(GEKKO) || defined(_XBOX)
+         "MK2/MK3 DCS Speedhack; disabled|enabled"
+#else
+         "MK2/MK3 DCS Speedhack; enabled|disabled"
+#endif
+      },
       { NULL, NULL },
    };
    environ_cb = cb;
