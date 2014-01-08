@@ -9,7 +9,11 @@
 void mame_frame(void);
 void mame_done(void);
 
+#if defined(__CELLOS_LV2__) || defined(GEKKO) || defined(_XBOX)
+unsigned activate_dcs_speedhack = 1;
+#else
 unsigned activate_dcs_speedhack = 0;
+#endif
 
 struct retro_perf_callback perf_cb;
 
@@ -28,8 +32,8 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 void retro_set_environment(retro_environment_t cb)
 {
    static const struct retro_variable vars[] = {
-      { "frameskip", "Frameskip; 0|1|2|3|4|5" },
-      { "dcs-speedhack",
+      { "mame2003-frameskip", "Frameskip; 0|1|2|3|4|5" },
+      { "mame2003-dcs-speedhack",
 #if defined(__CELLOS_LV2__) || defined(GEKKO) || defined(_XBOX)
          "MK2/MK3 DCS Speedhack; disabled|enabled"
 #else
@@ -158,13 +162,13 @@ static void update_variables(void)
    struct retro_variable var;
    
    var.value = NULL;
-   var.key = "frameskip";
+   var.key = "mame2003-frameskip";
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
       frameskip = atoi(var.value);
 
    var.value = NULL;
-   var.key = "dcs-speedhack";
+   var.key = "mame2003-dcs-speedhack";
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
