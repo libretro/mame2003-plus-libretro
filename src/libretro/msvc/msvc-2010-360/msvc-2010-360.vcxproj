@@ -936,12 +936,12 @@
     <ClCompile Include="..\..\..\machine\midyunit.c" />
     <ClCompile Include="..\..\..\machine\missile.c" />
     <ClCompile Include="..\..\..\machine\mspacman.c" />
-    <ClCompile Include="..\..\..\machine\namcond1.c" />
-    <ClCompile Include="..\..\..\machine\namcos1.c" />
-    <ClCompile Include="..\..\..\machine\namcos2.c" />
+    <ClCompile Include="..\..\..\machine\namcond1_machine.c" />
+    <ClCompile Include="..\..\..\machine\namcos1_machine.c" />
+    <ClCompile Include="..\..\..\machine\namcos2_machine.c" />
     <ClCompile Include="..\..\..\machine\nb1413m3.c" />
     <ClCompile Include="..\..\..\machine\neocrypt.c" />
-    <ClCompile Include="..\..\..\machine\neogeo.c" />
+    <ClCompile Include="..\..\..\machine\neogeo_machine.c" />
     <ClCompile Include="..\..\..\machine\nitedrvr.c" />
     <ClCompile Include="..\..\..\machine\nycaptor.c" />
     <ClCompile Include="..\..\..\machine\pacplus.c" />
@@ -1019,7 +1019,7 @@
     <ClCompile Include="..\..\..\sndhrdw\carnival.c" />
     <ClCompile Include="..\..\..\sndhrdw\cchasm.c" />
     <ClCompile Include="..\..\..\sndhrdw\cclimber.c" />
-    <ClCompile Include="..\..\..\sndhrdw\cinemat.c" />
+    <ClCompile Include="..\..\..\sndhrdw\cinemat_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\cyberbal.c" />
     <ClCompile Include="..\..\..\sndhrdw\dcs.c" />
     <ClCompile Include="..\..\..\sndhrdw\depthch.c" />
@@ -1167,7 +1167,7 @@
     <ClCompile Include="..\..\..\vidhrdw\aeroboto.c" />
     <ClCompile Include="..\..\..\vidhrdw\aerofgt.c" />
     <ClCompile Include="..\..\..\vidhrdw\afega_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\airbustr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\airbustr_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\ajax_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\aliens.c" />
     <ClCompile Include="..\..\..\vidhrdw\alpha68k.c" />
@@ -1206,7 +1206,7 @@
     <ClCompile Include="..\..\..\vidhrdw\bagman.c" />
     <ClCompile Include="..\..\..\vidhrdw\balsente.c" />
     <ClCompile Include="..\..\..\vidhrdw\bankp.c" />
-    <ClCompile Include="..\..\..\vidhrdw\baraduke.c" />
+    <ClCompile Include="..\..\..\vidhrdw\baraduke_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\batman.c" />
     <ClCompile Include="..\..\..\vidhrdw\battlane.c" />
     <ClCompile Include="..\..\..\vidhrdw\battlera.c" />
@@ -1302,7 +1302,7 @@
     <ClCompile Include="..\..\..\vidhrdw\destroyr.c" />
     <ClCompile Include="..\..\..\vidhrdw\digdug_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\diverboy.c" />
-    <ClCompile Include="..\..\..\vidhrdw\djboy.c" />
+    <ClCompile Include="..\..\..\vidhrdw\djboy_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\djmain.c" />
     <ClCompile Include="..\..\..\vidhrdw\dkong_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\docastle_vidhrdw.c" />
@@ -1417,7 +1417,7 @@
     <ClCompile Include="..\..\..\vidhrdw\jcross.c" />
     <ClCompile Include="..\..\..\vidhrdw\jedi.c" />
     <ClCompile Include="..\..\..\vidhrdw\jrpacman.c" />
-    <ClCompile Include="..\..\..\vidhrdw\kaneko16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kaneko16_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\kangaroo.c" />
     <ClCompile Include="..\..\..\vidhrdw\karnov.c" />
     <ClCompile Include="..\..\..\vidhrdw\kchamp.c" />
@@ -1517,7 +1517,7 @@
     <ClCompile Include="..\..\..\vidhrdw\nbmj8991.c" />
     <ClCompile Include="..\..\..\vidhrdw\nbmj9195.c" />
     <ClCompile Include="..\..\..\vidhrdw\nemesis.c" />
-    <ClCompile Include="..\..\..\vidhrdw\neogeo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\neogeo_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\news.c" />
     <ClCompile Include="..\..\..\vidhrdw\ninjakd2.c" />
     <ClCompile Include="..\..\..\vidhrdw\ninjakid_vidhrdw.c" />
@@ -1681,7 +1681,7 @@
     <ClCompile Include="..\..\..\vidhrdw\superpac.c" />
     <ClCompile Include="..\..\..\vidhrdw\superqix.c" />
     <ClCompile Include="..\..\..\vidhrdw\suprloco.c" />
-    <ClCompile Include="..\..\..\vidhrdw\suprnova.c" />
+    <ClCompile Include="..\..\..\vidhrdw\suprnova_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\suprslam.c" />
     <ClCompile Include="..\..\..\vidhrdw\surpratk.c" />
     <ClCompile Include="..\..\..\vidhrdw\sys16spr.c" />
