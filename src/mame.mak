@@ -594,7 +594,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/overdriv.o $(OBJ)/drivers/overdriv.o \
 	$(OBJ)/vidhrdw/gradius3_vidhrdw.o $(OBJ)/drivers/gradius3.o \
 	$(OBJ)/vidhrdw/moo_vidhrdw.o $(OBJ)/drivers/moo.o \
-	$(OBJ)/vidhrdw/mystwarr.o $(OBJ)/drivers/mystwarr.o \
+	$(OBJ)/vidhrdw/mystwarr_vidhrdw.o $(OBJ)/drivers/mystwarr.o \
 	$(OBJ)/vidhrdw/rungun.o $(OBJ)/drivers/rungun.o \
 	$(OBJ)/vidhrdw/dbz2.o $(OBJ)/drivers/dbz2.o \
 	$(OBJ)/vidhrdw/bishi.o $(OBJ)/drivers/bishi.o \
@@ -675,7 +675,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/klax_vidhrdw.o $(OBJ)/drivers/klax.o \
 	$(OBJ)/vidhrdw/blstroid.o $(OBJ)/drivers/blstroid.o \
 	$(OBJ)/vidhrdw/xybots.o $(OBJ)/drivers/xybots.o \
-	$(OBJ)/vidhrdw/eprom.o $(OBJ)/drivers/eprom.o \
+	$(OBJ)/vidhrdw/eprom_vidhrdw.o $(OBJ)/drivers/eprom.o \
 	$(OBJ)/vidhrdw/skullxbo.o $(OBJ)/drivers/skullxbo.o \
 	$(OBJ)/vidhrdw/badlands.o $(OBJ)/drivers/badlands.o \
 	$(OBJ)/vidhrdw/cyberbal.o $(OBJ)/sndhrdw/cyberbal.o $(OBJ)/drivers/cyberbal.o \
