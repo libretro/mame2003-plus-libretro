@@ -237,23 +237,23 @@ COREOBJS += \
 	$(OBJ)/machine/toypop.o $(OBJ)/vidhrdw/toypop.o $(OBJ)/drivers/toypop.o \
 	$(OBJ)/machine/polepos.o $(OBJ)/vidhrdw/polepos.o $(OBJ)/sndhrdw/polepos.o $(OBJ)/drivers/polepos.o \
 	$(OBJ)/vidhrdw/pacland.o $(OBJ)/drivers/pacland.o \
-	$(OBJ)/vidhrdw/skykid.o $(OBJ)/drivers/skykid.o \
-	$(OBJ)/vidhrdw/baraduke.o $(OBJ)/drivers/baraduke.o \
-	$(OBJ)/vidhrdw/namcos86.o $(OBJ)/drivers/namcos86.o \
-	$(OBJ)/vidhrdw/tceptor.o $(OBJ)/drivers/tceptor.o \
-	$(OBJ)/machine/namcos1.o $(OBJ)/vidhrdw/namcos1.o $(OBJ)/drivers/namcos1.o \
-	$(OBJ)/machine/namcos2.o $(OBJ)/vidhrdw/namcos2.o $(OBJ)/drivers/namcos2.o \
+	$(OBJ)/vidhrdw/skykid_vidhrdw.o $(OBJ)/drivers/skykid.o \
+	$(OBJ)/vidhrdw/baraduke_vidhrdw.o $(OBJ)/drivers/baraduke.o \
+	$(OBJ)/vidhrdw/namcos86_vidhrdw.o $(OBJ)/drivers/namcos86.o \
+	$(OBJ)/vidhrdw/tceptor_vidhrdw.o $(OBJ)/drivers/tceptor.o \
+	$(OBJ)/machine/namcos1_machine.o $(OBJ)/vidhrdw/namcos1_vidhrdw.o $(OBJ)/drivers/namcos1.o \
+	$(OBJ)/machine/namcos2_machine.o $(OBJ)/vidhrdw/namcos2_vidhrdw.o $(OBJ)/drivers/namcos2.o \
 	$(OBJ)/drivers/namcoic.o \
-	$(OBJ)/vidhrdw/namcona1.o $(OBJ)/drivers/namcona1.o \
-	$(OBJ)/vidhrdw/namconb1.o $(OBJ)/drivers/namconb1.o \
-	$(OBJ)/machine/namcond1.o $(OBJ)/vidhrdw/ygv608.o $(OBJ)/drivers/namcond1.o \
-	$(OBJ)/vidhrdw/psx.o $(OBJ)/machine/psx.o \
+	$(OBJ)/vidhrdw/namcona1_vidhrdw.o $(OBJ)/drivers/namcona1.o \
+	$(OBJ)/vidhrdw/namconb1_vidhrdw.o $(OBJ)/drivers/namconb1.o \
+	$(OBJ)/machine/namcond1_machine.o $(OBJ)/vidhrdw/ygv608.o $(OBJ)/drivers/namcond1.o \
+	$(OBJ)/vidhrdw/psx_vidhrdw.o $(OBJ)/machine/psx.o \
 	$(OBJ)/drivers/namcos10.o \
 	$(OBJ)/drivers/namcos11.o \
 	$(OBJ)/drivers/namcos12.o \
 	$(OBJ)/vidhrdw/namcos3d.o \
-	$(OBJ)/vidhrdw/namcos21.o $(OBJ)/drivers/namcos21.o \
-	$(OBJ)/vidhrdw/namcos22.o $(OBJ)/drivers/namcos22.o \
+	$(OBJ)/vidhrdw/namcos21_vidhrdw.o $(OBJ)/drivers/namcos21.o \
+	$(OBJ)/vidhrdw/namcos22_vidhrdw.o $(OBJ)/drivers/namcos22.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/cosmic.o $(OBJ)/drivers/cosmic.o \
@@ -769,11 +769,11 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/quizdna.o $(OBJ)/drivers/quizdna.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/jack.o $(OBJ)/drivers/jack.o \
+	$(OBJ)/vidhrdw/jack_vidhrdw.o $(OBJ)/drivers/jack.o \
 	$(OBJ)/drivers/embargo.o \
 
 COREOBJS += \
-	$(OBJ)/sndhrdw/cinemat.o $(OBJ)/drivers/cinemat.o \
+	$(OBJ)/sndhrdw/cinemat_sndhrdw.o $(OBJ)/drivers/cinemat.o \
 	$(OBJ)/machine/cchasm.o $(OBJ)/vidhrdw/cchasm.o $(OBJ)/sndhrdw/cchasm.o $(OBJ)/drivers/cchasm.o \
 
 COREOBJS += \
