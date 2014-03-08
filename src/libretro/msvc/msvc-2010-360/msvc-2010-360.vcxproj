@@ -1689,7 +1689,7 @@
     <ClCompile Include="..\..\..\vidhrdw\system16.c" />
     <ClCompile Include="..\..\..\vidhrdw\system24.c" />
     <ClCompile Include="..\..\..\vidhrdw\system32.c" />
-    <ClCompile Include="..\..\..\vidhrdw\tagteam.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tagteam_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\tail2nos.c" />
     <ClCompile Include="..\..\..\vidhrdw\taitoair.c" />
     <ClCompile Include="..\..\..\vidhrdw\taitoic.c" />

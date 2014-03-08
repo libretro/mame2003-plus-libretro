@@ -719,7 +719,7 @@ COREOBJS += \
 
 COREOBJS += \
 	$(OBJ)/drivers/scregg.o \
-	$(OBJ)/vidhrdw/tagteam.o $(OBJ)/drivers/tagteam.o \
+	$(OBJ)/vidhrdw/tagteam_vidhrdw.o $(OBJ)/drivers/tagteam.o \
 	$(OBJ)/vidhrdw/ssozumo.o $(OBJ)/drivers/ssozumo.o \
 	$(OBJ)/vidhrdw/mystston.o $(OBJ)/drivers/mystston.o \
 	$(OBJ)/vidhrdw/dogfgt.o $(OBJ)/drivers/dogfgt.o \
