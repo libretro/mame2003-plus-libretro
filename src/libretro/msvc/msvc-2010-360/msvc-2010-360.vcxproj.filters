@@ -365,9 +365,6 @@
     <ClCompile Include="..\..\..\sound\ymf278b.c">
       <Filter>Source Files\sound</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\zodiack.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\4enraya.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
@@ -381,9 +378,6 @@
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\1943.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\8080bw.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\actfancr.c">
@@ -468,12 +462,6 @@
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\atarig42.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atarigt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atarigx2.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\atarimo.c">
@@ -968,12 +956,6 @@
     <ClCompile Include="..\..\..\vidhrdw\galpanic.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\galspnbl.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gameplan.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\gaplus.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
@@ -1088,9 +1070,6 @@
     <ClCompile Include="..\..\..\vidhrdw\hnayayoi.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\holeland.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\homedata.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
@@ -1131,9 +1110,6 @@
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\jackal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\jaguar.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\jailbrek.c">
@@ -1370,9 +1346,6 @@
     <ClCompile Include="..\..\..\vidhrdw\mosaic.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mouser.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\mpatrol.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
@@ -1562,9 +1535,6 @@
     <ClCompile Include="..\..\..\vidhrdw\playch10.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\playmark.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\plygonet.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
@@ -1617,12 +1587,6 @@
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\psychic5.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\punchout.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pushman.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\qix.c">
@@ -1869,9 +1833,6 @@
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\sshangha.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sslam.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\ssozumo.c">
@@ -2279,24 +2240,6 @@
     <ClCompile Include="..\..\..\vidhrdw\yunsung8.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\zac2650.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\zaccaria.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\zaxxon.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\zerozone.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\zaxxon.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\8080bw.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\asteroid.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
@@ -2391,9 +2334,6 @@
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\irem.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\jaguar.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\leland.c">
@@ -2940,9 +2880,6 @@
       <Filter>Source Files\drivers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\drivers\1943.c">
-      <Filter>Source Files\drivers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\drivers\8080bw.c">
       <Filter>Source Files\drivers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\drivers\aburner.c">
@@ -5434,6 +5371,69 @@
     </ClCompile>
     <ClCompile Include="..\..\..\cpu\z180\z180dasm.c">
       <Filter>Source Files\cpu\z180</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\8080bw_sndhrdw.c">
+      <Filter>Source Files\sndhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\drivers\8080bw_drivers.c">
+      <Filter>Source Files\drivers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\8080bw_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atarigt_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atarigx2_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\galspnbl_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gameplan_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\holeland_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\jaguar_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\jaguar_sndhrdw.c">
+      <Filter>Source Files\sndhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mouser_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\playmark_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\punchout_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pushman_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sslam_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\zac2650_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\zaccaria_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\zaxxon_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\zerozone_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\zodiack_vidhrdw.c">
+      <Filter>Source Files\vidhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\zaxxon_sndhrdw.c">
+      <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

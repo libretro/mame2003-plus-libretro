@@ -217,12 +217,12 @@ READ16_HANDLER( asic65_r )
 
 		case OP_SIN:	/* sin */
 			if (asic65_param_index >= 1)
-				result = (int)(16384. * sin(PI * (double)(INT16)asic65_param[0] / 32768.));
+				result = (int)(16384. * sin(M_PI * (double)(INT16)asic65_param[0] / 32768.));
 			break;
 
 		case OP_COS:	/* cos */
 			if (asic65_param_index >= 1)
-				result = (int)(16384. * cos(PI * (double)(INT16)asic65_param[0] / 32768.));
+				result = (int)(16384. * cos(M_PI * (double)(INT16)asic65_param[0] / 32768.));
 			break;
 
 		case OP_ATAN:	/* vector angle */
@@ -231,7 +231,7 @@ READ16_HANDLER( asic65_r )
 				INT32 xint = (INT32)((asic65_param[0] << 16) | asic65_param[1]);
 				INT32 yint = (INT32)((asic65_param[2] << 16) | asic65_param[3]);
 				double a = atan2((double)yint, (double)xint);
-				result = (INT16)(a * 32768. / PI);
+				result = (INT16)(a * 32768. / M_PI);
 			}
 			break;
 
