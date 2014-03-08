@@ -895,8 +895,8 @@
     <ClCompile Include="..\..\..\machine\decocass.c" />
     <ClCompile Include="..\..\..\machine\decocrpt.c" />
     <ClCompile Include="..\..\..\machine\decoprot.c" />
-    <ClCompile Include="..\..\..\machine\digdug.c" />
-    <ClCompile Include="..\..\..\machine\docastle.c" />
+    <ClCompile Include="..\..\..\machine\digdug_machine.c" />
+    <ClCompile Include="..\..\..\machine\docastle_machine.c" />
     <ClCompile Include="..\..\..\machine\dominos.c" />
     <ClCompile Include="..\..\..\machine\eeprom.c" />
     <ClCompile Include="..\..\..\machine\equites.c" />
@@ -1023,7 +1023,7 @@
     <ClCompile Include="..\..\..\sndhrdw\cyberbal.c" />
     <ClCompile Include="..\..\..\sndhrdw\dcs.c" />
     <ClCompile Include="..\..\..\sndhrdw\depthch.c" />
-    <ClCompile Include="..\..\..\sndhrdw\dkong.c" />
+    <ClCompile Include="..\..\..\sndhrdw\dkong_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\exidy.c" />
     <ClCompile Include="..\..\..\sndhrdw\exidy440.c" />
     <ClCompile Include="..\..\..\sndhrdw\flower.c" />
@@ -1042,7 +1042,7 @@
     <ClCompile Include="..\..\..\sndhrdw\leland.c" />
     <ClCompile Include="..\..\..\sndhrdw\llander.c" />
     <ClCompile Include="..\..\..\sndhrdw\m72.c" />
-    <ClCompile Include="..\..\..\sndhrdw\mario.c" />
+    <ClCompile Include="..\..\..\sndhrdw\mario_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\mcr.c" />
     <ClCompile Include="..\..\..\sndhrdw\meadows.c" />
     <ClCompile Include="..\..\..\sndhrdw\pbillian.c" />
@@ -1300,12 +1300,12 @@
     <ClCompile Include="..\..\..\vidhrdw\decocass.c" />
     <ClCompile Include="..\..\..\vidhrdw\deniam.c" />
     <ClCompile Include="..\..\..\vidhrdw\destroyr.c" />
-    <ClCompile Include="..\..\..\vidhrdw\digdug.c" />
+    <ClCompile Include="..\..\..\vidhrdw\digdug_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\diverboy.c" />
     <ClCompile Include="..\..\..\vidhrdw\djboy.c" />
     <ClCompile Include="..\..\..\vidhrdw\djmain.c" />
-    <ClCompile Include="..\..\..\vidhrdw\dkong.c" />
-    <ClCompile Include="..\..\..\vidhrdw\docastle.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dkong_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\docastle_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\dogfgt.c" />
     <ClCompile Include="..\..\..\vidhrdw\dooyong.c" />
     <ClCompile Include="..\..\..\vidhrdw\dorachan.c" />
@@ -1460,7 +1460,7 @@
     <ClCompile Include="..\..\..\vidhrdw\malzak.c" />
     <ClCompile Include="..\..\..\vidhrdw\mappy.c" />
     <ClCompile Include="..\..\..\vidhrdw\marineb.c" />
-    <ClCompile Include="..\..\..\vidhrdw\mario.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mario_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\markham.c" />
     <ClCompile Include="..\..\..\vidhrdw\marvins.c" />
     <ClCompile Include="..\..\..\vidhrdw\matmania.c" />
@@ -1563,7 +1563,7 @@
     <ClCompile Include="..\..\..\vidhrdw\polyplay.c" />
     <ClCompile Include="..\..\..\vidhrdw\poolshrk.c" />
     <ClCompile Include="..\..\..\vidhrdw\pooyan.c" />
-    <ClCompile Include="..\..\..\vidhrdw\popeye.c" />
+    <ClCompile Include="..\..\..\vidhrdw\popeye_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\popper.c" />
     <ClCompile Include="..\..\..\vidhrdw\portrait.c" />
     <ClCompile Include="..\..\..\vidhrdw\powerins.c" />
