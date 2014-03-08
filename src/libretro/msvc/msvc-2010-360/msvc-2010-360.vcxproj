@@ -1736,7 +1736,7 @@
     <ClCompile Include="..\..\..\vidhrdw\toypop_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\tp84.c" />
     <ClCompile Include="..\..\..\vidhrdw\trackfld.c" />
-    <ClCompile Include="..\..\..\vidhrdw\travrusa.c" />
+    <ClCompile Include="..\..\..\vidhrdw\travrusa_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\triplhnt.c" />
     <ClCompile Include="..\..\..\vidhrdw\troangel_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\truco.c" />
