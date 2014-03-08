@@ -1249,7 +1249,7 @@
     <ClCompile Include="..\..\..\vidhrdw\carjmbre.c" />
     <ClCompile Include="..\..\..\vidhrdw\carpolo.c" />
     <ClCompile Include="..\..\..\vidhrdw\cave_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\cbasebal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cbasebal_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\cbuster.c" />
     <ClCompile Include="..\..\..\vidhrdw\ccastles.c" />
     <ClCompile Include="..\..\..\vidhrdw\cchasm.c" />
