@@ -947,7 +947,7 @@
     <ClCompile Include="..\..\..\machine\pacplus.c" />
     <ClCompile Include="..\..\..\machine\pd4990a.c" />
     <ClCompile Include="..\..\..\machine\pgmcrypt.c" />
-    <ClCompile Include="..\..\..\machine\pgmprot.c" />
+    <ClCompile Include="..\..\..\machine\pgmprot_machine.c" />
     <ClCompile Include="..\..\..\machine\phozon.c" />
     <ClCompile Include="..\..\..\machine\pitnrun.c" />
     <ClCompile Include="..\..\..\machine\playch10.c" />
@@ -1166,7 +1166,7 @@
     <ClCompile Include="..\..\..\vidhrdw\actfancr.c" />
     <ClCompile Include="..\..\..\vidhrdw\aeroboto.c" />
     <ClCompile Include="..\..\..\vidhrdw\aerofgt.c" />
-    <ClCompile Include="..\..\..\vidhrdw\afega.c" />
+    <ClCompile Include="..\..\..\vidhrdw\afega_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\airbustr.c" />
     <ClCompile Include="..\..\..\vidhrdw\ajax_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\aliens.c" />
@@ -1181,7 +1181,7 @@
     <ClCompile Include="..\..\..\vidhrdw\argus.c" />
     <ClCompile Include="..\..\..\vidhrdw\arkanoid.c" />
     <ClCompile Include="..\..\..\vidhrdw\armedf.c" />
-    <ClCompile Include="..\..\..\vidhrdw\artmagic.c" />
+    <ClCompile Include="..\..\..\vidhrdw\artmagic_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\ashnojoe.c" />
     <ClCompile Include="..\..\..\vidhrdw\asterix.c" />
     <ClCompile Include="..\..\..\vidhrdw\astinvad.c" />
@@ -1227,7 +1227,7 @@
     <ClCompile Include="..\..\..\vidhrdw\blmbycar.c" />
     <ClCompile Include="..\..\..\vidhrdw\blockade.c" />
     <ClCompile Include="..\..\..\vidhrdw\blockhl.c" />
-    <ClCompile Include="..\..\..\vidhrdw\blockout.c" />
+    <ClCompile Include="..\..\..\vidhrdw\blockout_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\bloodbro.c" />
     <ClCompile Include="..\..\..\vidhrdw\blstroid.c" />
     <ClCompile Include="..\..\..\vidhrdw\blueprnt_vidhrdw.c" />
@@ -1289,8 +1289,8 @@
     <ClCompile Include="..\..\..\vidhrdw\dbz2.c" />
     <ClCompile Include="..\..\..\vidhrdw\dcon.c" />
     <ClCompile Include="..\..\..\vidhrdw\dday.c" />
-    <ClCompile Include="..\..\..\vidhrdw\ddragon.c" />
-    <ClCompile Include="..\..\..\vidhrdw\ddragon3.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ddragon_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ddragon3_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\ddrible.c" />
     <ClCompile Include="..\..\..\vidhrdw\deadang.c" />
     <ClCompile Include="..\..\..\vidhrdw\dec0.c" />
@@ -1405,7 +1405,7 @@
     <ClCompile Include="..\..\..\vidhrdw\hyprduel.c" />
     <ClCompile Include="..\..\..\vidhrdw\ikki.c" />
     <ClCompile Include="..\..\..\vidhrdw\inufuku.c" />
-    <ClCompile Include="..\..\..\vidhrdw\iqblock.c" />
+    <ClCompile Include="..\..\..\vidhrdw\iqblock_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\irobot.c" />
     <ClCompile Include="..\..\..\vidhrdw\ironhors.c" />
     <ClCompile Include="..\..\..\vidhrdw\itech32.c" />
@@ -1547,7 +1547,7 @@
     <ClCompile Include="..\..\..\vidhrdw\pbillian.c" />
     <ClCompile Include="..\..\..\vidhrdw\pcktgal.c" />
     <ClCompile Include="..\..\..\vidhrdw\pengo.c" />
-    <ClCompile Include="..\..\..\vidhrdw\pgm.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pgm_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\phoenix.c" />
     <ClCompile Include="..\..\..\vidhrdw\phozon.c" />
     <ClCompile Include="..\..\..\vidhrdw\pingpong.c" />
@@ -1616,7 +1616,7 @@
     <ClCompile Include="..\..\..\vidhrdw\seta.c" />
     <ClCompile Include="..\..\..\vidhrdw\seta2.c" />
     <ClCompile Include="..\..\..\vidhrdw\sf1.c" />
-    <ClCompile Include="..\..\..\vidhrdw\shadfrce.c" />
+    <ClCompile Include="..\..\..\vidhrdw\shadfrce_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\shangha3.c" />
     <ClCompile Include="..\..\..\vidhrdw\shangkid_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\shaolins.c" />
@@ -1755,7 +1755,7 @@
     <ClCompile Include="..\..\..\vidhrdw\usgames_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\vaportra.c" />
     <ClCompile Include="..\..\..\vidhrdw\vastar.c" />
-    <ClCompile Include="..\..\..\vidhrdw\vball.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vball_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\vector.c" />
     <ClCompile Include="..\..\..\vidhrdw\vendetta.c" />
     <ClCompile Include="..\..\..\vidhrdw\vicdual.c" />
@@ -1780,7 +1780,7 @@
     <ClCompile Include="..\..\..\vidhrdw\wolfpack.c" />
     <ClCompile Include="..\..\..\vidhrdw\wrally.c" />
     <ClCompile Include="..\..\..\vidhrdw\wwfsstar.c" />
-    <ClCompile Include="..\..\..\vidhrdw\wwfwfest.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wwfwfest_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\xain.c" />
     <ClCompile Include="..\..\..\vidhrdw\xevious.c" />
     <ClCompile Include="..\..\..\vidhrdw\xexex.c" />

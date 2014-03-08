@@ -728,15 +728,15 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/renegade.o $(OBJ)/drivers/renegade.o \
 	$(OBJ)/vidhrdw/xain.o $(OBJ)/drivers/xain.o \
 	$(OBJ)/vidhrdw/battlane.o $(OBJ)/drivers/battlane.o \
-	$(OBJ)/vidhrdw/ddragon.o $(OBJ)/drivers/ddragon.o \
+	$(OBJ)/vidhrdw/ddragon_vidhrdw.o $(OBJ)/drivers/ddragon.o \
 	$(OBJ)/drivers/chinagat.o \
 	$(OBJ)/vidhrdw/spdodgeb.o $(OBJ)/drivers/spdodgeb.o \
 	$(OBJ)/vidhrdw/wwfsstar.o $(OBJ)/drivers/wwfsstar.o \
-	$(OBJ)/vidhrdw/vball.o $(OBJ)/drivers/vball.o \
-	$(OBJ)/vidhrdw/blockout.o $(OBJ)/drivers/blockout.o \
-	$(OBJ)/vidhrdw/ddragon3.o $(OBJ)/drivers/ddragon3.o \
-	$(OBJ)/vidhrdw/wwfwfest.o $(OBJ)/drivers/wwfwfest.o \
-	$(OBJ)/vidhrdw/shadfrce.o $(OBJ)/drivers/shadfrce.o \
+	$(OBJ)/vidhrdw/vball_vidhrdw.o $(OBJ)/drivers/vball.o \
+	$(OBJ)/vidhrdw/blockout_vidhrdw.o $(OBJ)/drivers/blockout.o \
+	$(OBJ)/vidhrdw/ddragon3_vidhrdw.o $(OBJ)/drivers/ddragon3.o \
+	$(OBJ)/vidhrdw/wwfwfest_vidhrdw.o $(OBJ)/drivers/wwfwfest.o \
+	$(OBJ)/vidhrdw/shadfrce_vidhrdw.o $(OBJ)/drivers/shadfrce.o \
 
 COREOBJS += \
 	$(OBJ)/machine/berzerk.o $(OBJ)/vidhrdw/berzerk.o $(OBJ)/sndhrdw/berzerk.o $(OBJ)/drivers/berzerk.o \
@@ -957,7 +957,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/silkroad.o $(OBJ)/drivers/silkroad.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/afega.o $(OBJ)/drivers/afega.o \
+	$(OBJ)/vidhrdw/afega_vidhrdw.o $(OBJ)/drivers/afega.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/esd16_vidhrdw.o $(OBJ)/drivers/esd16.o \
@@ -976,11 +976,11 @@ COREOBJS += \
 	$(OBJ)/machine/spiders.o $(OBJ)/vidhrdw/spiders.o $(OBJ)/drivers/spiders.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/iqblock.o $(OBJ)/drivers/iqblock.o \
+	$(OBJ)/vidhrdw/iqblock_vidhrdw.o $(OBJ)/drivers/iqblock.o \
 	$(OBJ)/drivers/chindrag.o \
 	$(OBJ)/drivers/grtwall.o \
-	$(OBJ)/vidhrdw/pgm.o $(OBJ)/drivers/pgm.o \
-	$(OBJ)/machine/pgmprot.o $(OBJ)/machine/pgmcrypt.o \
+	$(OBJ)/vidhrdw/pgm_vidhrdw.o $(OBJ)/drivers/pgm.o \
+	$(OBJ)/machine/pgmprot_machine.o $(OBJ)/machine/pgmcrypt.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/hitme.o $(OBJ)/drivers/hitme.o \
@@ -1022,7 +1022,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/homedata.o $(OBJ)/drivers/homedata.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/artmagic.o $(OBJ)/drivers/artmagic.o \
+	$(OBJ)/vidhrdw/artmagic_vidhrdw.o $(OBJ)/drivers/artmagic.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/shangkid_vidhrdw.o $(OBJ)/drivers/shangkid.o \
