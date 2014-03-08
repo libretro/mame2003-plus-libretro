@@ -851,7 +851,7 @@ VIDEO_UPDATE( hanamai )
 VIDEO_UPDATE( hnoridur )
 {
 	int layers_ctrl = ~BITSWAP8(hanamai_priority, 7,6,5,4, 0,1,2,3);
-	int lay[4];
+	int lay[4], pri;
 
 	layers_ctrl &= debug_mask();
 
@@ -860,7 +860,7 @@ VIDEO_UPDATE( hnoridur )
 		Machine->pens[(dynax_blit_backpen & 0xff) + (dynax_blit_palbank & 0x0f) * 256],
 		cliprect);
 
-	int pri = hanamai_priority >> 4;
+	pri = hanamai_priority >> 4;
 
 	if (pri > 7)
 	{
