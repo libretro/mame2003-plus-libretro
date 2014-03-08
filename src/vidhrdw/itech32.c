@@ -1114,9 +1114,9 @@ VIDEO_UPDATE( itech32 )
 		/* handle multi-plane case */
 		if (itech32_planes > 1)
 		{
-			UINT16 *src2 = &videoplane[1][compute_safe_address(VIDEO_DISPLAY_XORIGIN2 + VIDEO_DISPLAY_XSCROLL2, VIDEO_DISPLAY_YORIGIN2 + VIDEO_DISPLAY_YSCROLL2 + y)];
-			UINT16 scanline[384];
-			int x;
+            int length, x, dy;
+            UINT16 *src, *src2, *dst, scanline[384];
+			src2 = &videoplane[1][compute_safe_address(VIDEO_DISPLAY_XORIGIN2 + VIDEO_DISPLAY_XSCROLL2, VIDEO_DISPLAY_YORIGIN2 + VIDEO_DISPLAY_YSCROLL2 + y)];
 
 			/* blend the pixels in the scanline; color xxFF is transparent */
 			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
@@ -1128,11 +1128,11 @@ VIDEO_UPDATE( itech32 )
 			}
 
 			/* draw from the buffer */
-         int length = cliprect->max_x - cliprect->min_x + 1;
+         length = cliprect->max_x - cliprect->min_x + 1;
          x = cliprect->min_x;
-         const uint16_t *src = &scanline[cliprect->min_x];
-         int dy = bitmap->rowpixels;
-         UINT16 *dst = (UINT16 *)bitmap->base + y * dy + x;
+         src = &scanline[cliprect->min_x];
+         dy = bitmap->rowpixels;
+         dst = (UINT16 *)bitmap->base + y * dy + x;
 
          while (length--)
             *dst++ = *src++;
@@ -1141,11 +1141,13 @@ VIDEO_UPDATE( itech32 )
 		/* otherwise, draw directly from VRAM */
 		else
       {
-         int length = cliprect->max_x - cliprect->min_x + 1;
-         const uint16_t *src = &src1[cliprect->min_x];
-         int dy = bitmap->rowpixels;
-         int x = cliprect->min_x;
-         UINT16 *dst = (UINT16 *)bitmap->base + y * dy + x;
+         int length, dy, x;
+         UINT16 *src, *dst;
+         length = cliprect->max_x - cliprect->min_x + 1;
+         src = &src1[cliprect->min_x];
+         dy = bitmap->rowpixels;
+         x = cliprect->min_x;
+         dst = (UINT16 *)bitmap->base + y * dy + x;
 
          while (length--)
             *dst++ = *src++;
