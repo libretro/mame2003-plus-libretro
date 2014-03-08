@@ -592,7 +592,7 @@
     <ClCompile Include="..\..\..\drivers\psychic5.c" />
     <ClCompile Include="..\..\..\drivers\punchout.c" />
     <ClCompile Include="..\..\..\drivers\pushman.c" />
-    <ClCompile Include="..\..\..\drivers\qix_vidhrdw.c" />
+    <ClCompile Include="..\..\..\drivers\qix.c" />
     <ClCompile Include="..\..\..\drivers\quantum.c" />
     <ClCompile Include="..\..\..\drivers\quizdna.c" />
     <ClCompile Include="..\..\..\drivers\quizpani.c" />
@@ -1425,7 +1425,7 @@
     <ClCompile Include="..\..\..\vidhrdw\kingobox.c" />
     <ClCompile Include="..\..\..\vidhrdw\kinst_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\klax_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\kncljoe.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kncljoe_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\konamigx_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\konamiic.c" />
     <ClCompile Include="..\..\..\vidhrdw\kopunch.c" />
@@ -1576,7 +1576,7 @@
     <ClCompile Include="..\..\..\vidhrdw\psychic5.c" />
     <ClCompile Include="..\..\..\vidhrdw\punchout_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\pushman_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\qix.c" />
+    <ClCompile Include="..\..\..\vidhrdw\qix_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\quizdna.c" />
     <ClCompile Include="..\..\..\vidhrdw\quizpani.c" />
     <ClCompile Include="..\..\..\vidhrdw\raiden_vidhrdw.c" />
