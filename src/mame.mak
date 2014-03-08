@@ -691,8 +691,8 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/beathead.o $(OBJ)/drivers/beathead.o \
 	$(OBJ)/vidhrdw/atarig42.o $(OBJ)/drivers/atarig42.o \
 	$(OBJ)/machine/asic65.o \
- 	$(OBJ)/vidhrdw/atarigx2.o $(OBJ)/drivers/atarigx2.o \
-	$(OBJ)/vidhrdw/atarigt.o $(OBJ)/drivers/atarigt.o \
+ 	$(OBJ)/vidhrdw/atarigx2_vidhrdw.o $(OBJ)/drivers/atarigx2.o \
+	$(OBJ)/vidhrdw/atarigt_vidhrdw.o $(OBJ)/drivers/atarigt.o \
 	$(OBJ)/vidhrdw/jaguar_vidhrdw.o $(OBJ)/sndhrdw/jaguar_sndhrdw.o $(OBJ)/drivers/cojag.o \
 	$(OBJ)/sndhrdw/cage.o \
 
@@ -745,14 +745,14 @@ COREOBJS += \
 
 COREOBJS += \
 	$(OBJ)/drivers/toratora.o \
-	$(OBJ)/vidhrdw/gameplan.o $(OBJ)/drivers/gameplan.o \
+	$(OBJ)/vidhrdw/gameplan_vidhrdw.o $(OBJ)/drivers/gameplan.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/zac2650_vidhrdw.o $(OBJ)/drivers/zac2650.o \
 	$(OBJ)/vidhrdw/zaccaria_vidhrdw.o $(OBJ)/drivers/zaccaria.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/mouser.o $(OBJ)/drivers/mouser.o \
+	$(OBJ)/vidhrdw/mouser_vidhrdw.o $(OBJ)/drivers/mouser.o \
 	$(OBJ)/vidhrdw/nova2001.o $(OBJ)/drivers/nova2001.o \
 	$(OBJ)/vidhrdw/ninjakid.o $(OBJ)/drivers/ninjakid.o \
 	$(OBJ)/vidhrdw/raiders5.o $(OBJ)/drivers/raiders5.o \

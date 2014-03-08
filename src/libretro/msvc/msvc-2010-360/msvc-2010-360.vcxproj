@@ -1191,8 +1191,8 @@
     <ClCompile Include="..\..\..\vidhrdw\atarifb.c" />
     <ClCompile Include="..\..\..\vidhrdw\atarig1.c" />
     <ClCompile Include="..\..\..\vidhrdw\atarig42.c" />
-    <ClCompile Include="..\..\..\vidhrdw\atarigt.c" />
-    <ClCompile Include="..\..\..\vidhrdw\atarigx2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarigt_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarigx2_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\atarimo.c" />
     <ClCompile Include="..\..\..\vidhrdw\atarirle.c" />
     <ClCompile Include="..\..\..\vidhrdw\atarisy1.c" />
@@ -1358,7 +1358,7 @@
     <ClCompile Include="..\..\..\vidhrdw\galpani2.c" />
     <ClCompile Include="..\..\..\vidhrdw\galpanic.c" />
     <ClCompile Include="..\..\..\vidhrdw\galspnbl_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\gameplan.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gameplan_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\gaplus.c" />
     <ClCompile Include="..\..\..\vidhrdw\gauntlet.c" />
     <ClCompile Include="..\..\..\vidhrdw\gberet.c" />
@@ -1491,7 +1491,7 @@
     <ClCompile Include="..\..\..\vidhrdw\momoko.c" />
     <ClCompile Include="..\..\..\vidhrdw\moo.c" />
     <ClCompile Include="..\..\..\vidhrdw\mosaic.c" />
-    <ClCompile Include="..\..\..\vidhrdw\mouser.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mouser_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\mpatrol.c" />
     <ClCompile Include="..\..\..\vidhrdw\mrdo.c" />
     <ClCompile Include="..\..\..\vidhrdw\mrflea.c" />
