@@ -227,7 +227,7 @@ COREOBJS += \
 	$(OBJ)/drivers/locomotn.o \
 	$(OBJ)/machine/bosco.o $(OBJ)/sndhrdw/bosco.o $(OBJ)/vidhrdw/bosco.o $(OBJ)/drivers/bosco.o \
 	$(OBJ)/machine/galaga.o $(OBJ)/vidhrdw/galaga.o $(OBJ)/drivers/galaga.o \
-	$(OBJ)/machine/digdug.o $(OBJ)/vidhrdw/digdug.o $(OBJ)/drivers/digdug.o \
+	$(OBJ)/machine/digdug_machine.o $(OBJ)/vidhrdw/digdug_vidhrdw.o $(OBJ)/drivers/digdug.o \
 	$(OBJ)/vidhrdw/xevious.o $(OBJ)/machine/xevious.o $(OBJ)/drivers/xevious.o \
 	$(OBJ)/machine/superpac.o $(OBJ)/vidhrdw/superpac.o $(OBJ)/drivers/superpac.o \
 	$(OBJ)/machine/phozon.o $(OBJ)/vidhrdw/phozon.o $(OBJ)/drivers/phozon.o \
@@ -261,13 +261,13 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/ladybug.o $(OBJ)/drivers/ladybug.o \
 	$(OBJ)/vidhrdw/cheekyms.o $(OBJ)/drivers/cheekyms.o \
 	$(OBJ)/vidhrdw/mrdo.o $(OBJ)/drivers/mrdo.o \
-	$(OBJ)/machine/docastle.o $(OBJ)/vidhrdw/docastle.o $(OBJ)/drivers/docastle.o \
+	$(OBJ)/machine/docastle_machine.o $(OBJ)/vidhrdw/docastle_vidhrdw.o $(OBJ)/drivers/docastle.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/dkong.o $(OBJ)/sndhrdw/dkong.o $(OBJ)/drivers/dkong.o \
+	$(OBJ)/vidhrdw/dkong_vidhrdw.o $(OBJ)/sndhrdw/dkong_sndhrdw.o $(OBJ)/drivers/dkong.o \
 	$(OBJ)/machine/strtheat.o \
-	$(OBJ)/vidhrdw/mario.o $(OBJ)/sndhrdw/mario.o $(OBJ)/drivers/mario.o \
-	$(OBJ)/vidhrdw/popeye.o $(OBJ)/drivers/popeye.o \
+	$(OBJ)/vidhrdw/mario_vidhrdw.o $(OBJ)/sndhrdw/mario_sndhrdw.o $(OBJ)/drivers/mario.o \
+	$(OBJ)/vidhrdw/popeye_vidhrdw.o $(OBJ)/drivers/popeye.o \
 	$(OBJ)/vidhrdw/punchout_vidhrdw.o $(OBJ)/drivers/punchout.o \
 	$(OBJ)/machine/rp5h01.o $(OBJ)/vidhrdw/ppu2c03b.o \
 	$(OBJ)/machine/playch10.o $(OBJ)/vidhrdw/playch10.o $(OBJ)/drivers/playch10.o \
