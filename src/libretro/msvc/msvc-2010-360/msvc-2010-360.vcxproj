@@ -1398,7 +1398,7 @@
     <ClCompile Include="..\..\..\vidhrdw\hitme_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\hnayayoi_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\holeland_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\homedata.c" />
+    <ClCompile Include="..\..\..\vidhrdw\homedata_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\homerun.c" />
     <ClCompile Include="..\..\..\vidhrdw\hyhoo.c" />
     <ClCompile Include="..\..\..\vidhrdw\hyperspt.c" />
