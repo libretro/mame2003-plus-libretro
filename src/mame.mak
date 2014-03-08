@@ -940,12 +940,12 @@ COREOBJS += \
 	$(OBJ)/drivers/looping.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/paradise.o $(OBJ)/drivers/paradise.o \
-	$(OBJ)/vidhrdw/yunsung8.o $(OBJ)/drivers/yunsung8.o \
-	$(OBJ)/vidhrdw/yunsun16.o $(OBJ)/drivers/yunsun16.o \
+	$(OBJ)/vidhrdw/paradise_vidhrdw.o $(OBJ)/drivers/paradise.o \
+	$(OBJ)/vidhrdw/yunsung8_vidhrdw.o $(OBJ)/drivers/yunsung8.o \
+	$(OBJ)/vidhrdw/yunsun16_vidhrdw.o $(OBJ)/drivers/yunsun16.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/blueprnt.o $(OBJ)/drivers/blueprnt.o \
+	$(OBJ)/vidhrdw/blueprnt_vidhrdw.o $(OBJ)/drivers/blueprnt.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/fuukifg2.o $(OBJ)/drivers/fuukifg2.o \
