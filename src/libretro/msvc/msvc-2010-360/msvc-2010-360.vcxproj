@@ -863,7 +863,7 @@
     <ClCompile Include="..\..\..\machine\8254pit.c" />
     <ClCompile Include="..\..\..\machine\8255ppi.c" />
     <ClCompile Include="..\..\..\machine\acitya.c" />
-    <ClCompile Include="..\..\..\machine\ajax.c" />
+    <ClCompile Include="..\..\..\machine\ajax_machine.c" />
     <ClCompile Include="..\..\..\machine\am53cf96.c" />
     <ClCompile Include="..\..\..\machine\arkanoid.c" />
     <ClCompile Include="..\..\..\machine\asic65.c" />
@@ -1168,7 +1168,7 @@
     <ClCompile Include="..\..\..\vidhrdw\aerofgt.c" />
     <ClCompile Include="..\..\..\vidhrdw\afega.c" />
     <ClCompile Include="..\..\..\vidhrdw\airbustr.c" />
-    <ClCompile Include="..\..\..\vidhrdw\ajax.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ajax_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\aliens.c" />
     <ClCompile Include="..\..\..\vidhrdw\alpha68k.c" />
     <ClCompile Include="..\..\..\vidhrdw\ambush.c" />
@@ -1717,7 +1717,7 @@
     <ClCompile Include="..\..\..\vidhrdw\thief.c" />
     <ClCompile Include="..\..\..\vidhrdw\thoop2.c" />
     <ClCompile Include="..\..\..\vidhrdw\thunderj.c" />
-    <ClCompile Include="..\..\..\vidhrdw\thunderx.c" />
+    <ClCompile Include="..\..\..\vidhrdw\thunderx_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\tia.c" />
     <ClCompile Include="..\..\..\vidhrdw\tickee.c" />
     <ClCompile Include="..\..\..\vidhrdw\tigeroad.c" />

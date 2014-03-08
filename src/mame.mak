@@ -566,8 +566,8 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/labyrunr.o $(OBJ)/drivers/labyrunr.o \
 	$(OBJ)/vidhrdw/battlnts.o $(OBJ)/drivers/battlnts.o \
 	$(OBJ)/vidhrdw/bladestl.o $(OBJ)/drivers/bladestl.o \
-	$(OBJ)/machine/ajax.o $(OBJ)/vidhrdw/ajax.o $(OBJ)/drivers/ajax.o \
-	$(OBJ)/vidhrdw/thunderx.o $(OBJ)/drivers/thunderx.o \
+	$(OBJ)/machine/ajax_machine.o $(OBJ)/vidhrdw/ajax_vidhrdw.o $(OBJ)/drivers/ajax.o \
+	$(OBJ)/vidhrdw/thunderx_vidhrdw.o $(OBJ)/drivers/thunderx.o \
 	$(OBJ)/vidhrdw/mainevt.o $(OBJ)/drivers/mainevt.o \
 	$(OBJ)/vidhrdw/88games.o $(OBJ)/drivers/88games.o \
 	$(OBJ)/vidhrdw/gbusters.o $(OBJ)/drivers/gbusters.o \
