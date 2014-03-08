@@ -277,7 +277,7 @@ COREOBJS += \
 
 COREOBJS += \
 	$(OBJ)/machine/8080bw.o \
-	$(OBJ)/vidhrdw/8080bw.o $(OBJ)/sndhrdw/8080bw.o $(OBJ)/drivers/8080bw.o \
+	$(OBJ)/vidhrdw/8080bw_vidhrdw.o $(OBJ)/sndhrdw/8080bw_sndhrdw.o $(OBJ)/drivers/8080bw_drivers.o \
 	$(OBJ)/vidhrdw/sspeedr.o $(OBJ)/drivers/sspeedr.o \
 	$(OBJ)/vidhrdw/m79amb.o $(OBJ)/drivers/m79amb.o $(OBJ)/drivers/rotaryf.o \
 
@@ -448,7 +448,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/sega.o $(OBJ)/sndhrdw/sega.o $(OBJ)/machine/sega.o $(OBJ)/drivers/sega.o \
 	$(OBJ)/vidhrdw/segar.o $(OBJ)/sndhrdw/segar.o $(OBJ)/machine/segar.o $(OBJ)/drivers/segar.o \
 	$(OBJ)/vidhrdw/tms9928a.o $(OBJ)/drivers/sg1000a.o \
-	$(OBJ)/vidhrdw/zaxxon.o $(OBJ)/sndhrdw/zaxxon.o $(OBJ)/drivers/zaxxon.o \
+	$(OBJ)/vidhrdw/zaxxon_vidhrdw.o $(OBJ)/sndhrdw/zaxxon_sndhrdw.o $(OBJ)/drivers/zaxxon.o \
 	$(OBJ)/machine/turbo.o $(OBJ)/vidhrdw/turbo.o $(OBJ)/drivers/turbo.o \
 	$(OBJ)/drivers/kopunch.o $(OBJ)/vidhrdw/kopunch.o \
 	$(OBJ)/vidhrdw/suprloco.o $(OBJ)/drivers/suprloco.o \
@@ -693,7 +693,7 @@ COREOBJS += \
 	$(OBJ)/machine/asic65.o \
  	$(OBJ)/vidhrdw/atarigx2.o $(OBJ)/drivers/atarigx2.o \
 	$(OBJ)/vidhrdw/atarigt.o $(OBJ)/drivers/atarigt.o \
-	$(OBJ)/vidhrdw/jaguar.o $(OBJ)/sndhrdw/jaguar.o $(OBJ)/drivers/cojag.o \
+	$(OBJ)/vidhrdw/jaguar_vidhrdw.o $(OBJ)/sndhrdw/jaguar_sndhrdw.o $(OBJ)/drivers/cojag.o \
 	$(OBJ)/sndhrdw/cage.o \
 
 COREOBJS += \
@@ -748,8 +748,8 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/gameplan.o $(OBJ)/drivers/gameplan.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/zac2650.o $(OBJ)/drivers/zac2650.o \
-	$(OBJ)/vidhrdw/zaccaria.o $(OBJ)/drivers/zaccaria.o \
+	$(OBJ)/vidhrdw/zac2650_vidhrdw.o $(OBJ)/drivers/zac2650.o \
+	$(OBJ)/vidhrdw/zaccaria_vidhrdw.o $(OBJ)/drivers/zaccaria.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/mouser.o $(OBJ)/drivers/mouser.o \
@@ -849,7 +849,7 @@ COREOBJS += \
 COREOBJS += \
 	$(OBJ)/vidhrdw/marineb.o $(OBJ)/drivers/marineb.o \
 	$(OBJ)/vidhrdw/funkybee.o $(OBJ)/drivers/funkybee.o \
-	$(OBJ)/vidhrdw/zodiack.o $(OBJ)/drivers/zodiack.o \
+	$(OBJ)/vidhrdw/zodiack_vidhrdw.o $(OBJ)/drivers/zodiack.o \
 	$(OBJ)/vidhrdw/espial.o $(OBJ)/drivers/espial.o \
 	$(OBJ)/vidhrdw/vastar.o $(OBJ)/drivers/vastar.o \
 
@@ -915,7 +915,7 @@ COREOBJS += \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/pushman.o $(OBJ)/drivers/pushman.o \
-	$(OBJ)/vidhrdw/zerozone.o $(OBJ)/drivers/zerozone.o \
+	$(OBJ)/vidhrdw/zerozone_vidhrdw.o $(OBJ)/drivers/zerozone.o \
 	$(OBJ)/vidhrdw/galspnbl.o $(OBJ)/drivers/galspnbl.o \
 
 COREOBJS += \

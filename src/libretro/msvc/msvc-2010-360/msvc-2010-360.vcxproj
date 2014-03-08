@@ -127,7 +127,7 @@
     <ClCompile Include="..\..\..\drivers\1943.c" />
     <ClCompile Include="..\..\..\drivers\40love.c" />
     <ClCompile Include="..\..\..\drivers\4enraya.c" />
-    <ClCompile Include="..\..\..\drivers\8080bw.c" />
+    <ClCompile Include="..\..\..\drivers\8080bw_drivers.c" />
     <ClCompile Include="..\..\..\drivers\88games.c" />
     <ClCompile Include="..\..\..\drivers\aburner.c" />
     <ClCompile Include="..\..\..\drivers\ace.c" />
@@ -1005,7 +1005,7 @@
     <ClCompile Include="..\..\..\png.c" />
     <ClCompile Include="..\..\..\profiler.c" />
     <ClCompile Include="..\..\..\sha1.c" />
-    <ClCompile Include="..\..\..\sndhrdw\8080bw.c" />
+    <ClCompile Include="..\..\..\sndhrdw\8080bw_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\asteroid.c" />
     <ClCompile Include="..\..\..\sndhrdw\astinvad.c" />
     <ClCompile Include="..\..\..\sndhrdw\astrocde.c" />
@@ -1038,7 +1038,7 @@
     <ClCompile Include="..\..\..\sndhrdw\harddriv.c" />
     <ClCompile Include="..\..\..\sndhrdw\invinco.c" />
     <ClCompile Include="..\..\..\sndhrdw\irem.c" />
-    <ClCompile Include="..\..\..\sndhrdw\jaguar.c" />
+    <ClCompile Include="..\..\..\sndhrdw\jaguar_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\leland.c" />
     <ClCompile Include="..\..\..\sndhrdw\llander.c" />
     <ClCompile Include="..\..\..\sndhrdw\m72.c" />
@@ -1072,7 +1072,7 @@
     <ClCompile Include="..\..\..\sndhrdw\warpwarp.c" />
     <ClCompile Include="..\..\..\sndhrdw\williams.c" />
     <ClCompile Include="..\..\..\sndhrdw\wiping.c" />
-    <ClCompile Include="..\..\..\sndhrdw\zaxxon.c" />
+    <ClCompile Include="..\..\..\sndhrdw\zaxxon_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndintrf.c" />
     <ClCompile Include="..\..\..\sound\2151intf.c" />
     <ClCompile Include="..\..\..\sound\2203intf.c" />
@@ -1161,7 +1161,7 @@
     <ClCompile Include="..\..\..\vidhrdw\1943.c" />
     <ClCompile Include="..\..\..\vidhrdw\40love.c" />
     <ClCompile Include="..\..\..\vidhrdw\4enraya.c" />
-    <ClCompile Include="..\..\..\vidhrdw\8080bw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\8080bw_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\88games.c" />
     <ClCompile Include="..\..\..\vidhrdw\actfancr.c" />
     <ClCompile Include="..\..\..\vidhrdw\aeroboto.c" />
@@ -1412,7 +1412,7 @@
     <ClCompile Include="..\..\..\vidhrdw\itech8.c" />
     <ClCompile Include="..\..\..\vidhrdw\jack.c" />
     <ClCompile Include="..\..\..\vidhrdw\jackal.c" />
-    <ClCompile Include="..\..\..\vidhrdw\jaguar.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jaguar_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\jailbrek.c" />
     <ClCompile Include="..\..\..\vidhrdw\jcross.c" />
     <ClCompile Include="..\..\..\vidhrdw\jedi.c" />
@@ -1794,11 +1794,11 @@
     <ClCompile Include="..\..\..\vidhrdw\yiear.c" />
     <ClCompile Include="..\..\..\vidhrdw\yunsun16.c" />
     <ClCompile Include="..\..\..\vidhrdw\yunsung8.c" />
-    <ClCompile Include="..\..\..\vidhrdw\zac2650.c" />
-    <ClCompile Include="..\..\..\vidhrdw\zaccaria.c" />
-    <ClCompile Include="..\..\..\vidhrdw\zaxxon.c" />
-    <ClCompile Include="..\..\..\vidhrdw\zerozone.c" />
-    <ClCompile Include="..\..\..\vidhrdw\zodiack.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zac2650_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zaccaria_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zaxxon_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zerozone_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zodiack_vidhrdw.c" />
     <ClCompile Include="..\..\..\window.c" />
     <ClCompile Include="..\..\..\x86drc.c" />
     <ClCompile Include="..\..\joystick.c">
