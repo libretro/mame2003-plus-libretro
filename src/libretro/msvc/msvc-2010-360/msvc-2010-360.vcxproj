@@ -985,7 +985,7 @@
     <ClCompile Include="..\..\..\machine\ticket.c" />
     <ClCompile Include="..\..\..\machine\tmp68301.c" />
     <ClCompile Include="..\..\..\machine\tnzs.c" />
-    <ClCompile Include="..\..\..\machine\toaplan1.c" />
+    <ClCompile Include="..\..\..\machine\toaplan1_machine.c" />
     <ClCompile Include="..\..\..\machine\toypop.c" />
     <ClCompile Include="..\..\..\machine\turbo.c" />
     <ClCompile Include="..\..\..\machine\twincobr.c" />
@@ -1727,9 +1727,9 @@
     <ClCompile Include="..\..\..\vidhrdw\tmnt_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\tms34061.c" />
     <ClCompile Include="..\..\..\vidhrdw\tms9928a.c" />
-    <ClCompile Include="..\..\..\vidhrdw\tnzs.c" />
-    <ClCompile Include="..\..\..\vidhrdw\toaplan1.c" />
-    <ClCompile Include="..\..\..\vidhrdw\toaplan2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tnzs_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\toaplan1_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\toaplan2_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\toki.c" />
     <ClCompile Include="..\..\..\vidhrdw\toobin.c" />
     <ClCompile Include="..\..\..\vidhrdw\topspeed.c" />

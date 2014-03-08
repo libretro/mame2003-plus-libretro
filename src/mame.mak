@@ -372,7 +372,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/slapshot.o $(OBJ)/drivers/slapshot.o \
 	$(OBJ)/vidhrdw/ninjaw.o $(OBJ)/drivers/ninjaw.o \
 	$(OBJ)/vidhrdw/warriorb.o $(OBJ)/drivers/warriorb.o \
-	$(OBJ)/machine/tnzs.o $(OBJ)/vidhrdw/tnzs.o $(OBJ)/drivers/tnzs.o \
+	$(OBJ)/machine/tnzs.o $(OBJ)/vidhrdw/tnzs_vidhrdw.o $(OBJ)/drivers/tnzs.o \
 	$(OBJ)/machine/buggychl.o $(OBJ)/vidhrdw/buggychl.o $(OBJ)/drivers/buggychl.o \
 	$(OBJ)/machine/lkage.o $(OBJ)/vidhrdw/lkage.o $(OBJ)/drivers/lkage.o \
 	$(OBJ)/vidhrdw/taitoic.o $(OBJ)/sndhrdw/taitosnd.o \
@@ -393,9 +393,9 @@ COREOBJS += \
 	$(OBJ)/machine/twincobr.o $(OBJ)/vidhrdw/twincobr.o \
 	$(OBJ)/drivers/twincobr.o $(OBJ)/drivers/wardner.o \
 	$(OBJ)/drivers/mjsister.o $(OBJ)/vidhrdw/mjsister.o \
-	$(OBJ)/machine/toaplan1.o $(OBJ)/vidhrdw/toaplan1.o $(OBJ)/drivers/toaplan1.o \
+	$(OBJ)/machine/toaplan1_machine.o $(OBJ)/vidhrdw/toaplan1_vidhrdw.o $(OBJ)/drivers/toaplan1.o \
 	$(OBJ)/vidhrdw/snowbros.o $(OBJ)/drivers/snowbros.o \
-	$(OBJ)/vidhrdw/toaplan2.o $(OBJ)/drivers/toaplan2.o \
+	$(OBJ)/vidhrdw/toaplan2_vidhrdw.o $(OBJ)/drivers/toaplan2.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/cave.o $(OBJ)/drivers/cave.o \
