@@ -589,18 +589,18 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/ultraman.o $(OBJ)/drivers/ultraman.o \
 	$(OBJ)/vidhrdw/hexion.o $(OBJ)/drivers/hexion.o \
 	$(OBJ)/vidhrdw/twin16.o $(OBJ)/drivers/twin16.o \
-	$(OBJ)/vidhrdw/tmnt.o $(OBJ)/drivers/tmnt.o \
-	$(OBJ)/vidhrdw/xmen.o $(OBJ)/drivers/xmen.o \
+	$(OBJ)/vidhrdw/tmnt_vidhrdw.o $(OBJ)/drivers/tmnt.o \
+	$(OBJ)/vidhrdw/xmen_vidhrdw.o $(OBJ)/drivers/xmen.o \
 	$(OBJ)/vidhrdw/overdriv.o $(OBJ)/drivers/overdriv.o \
-	$(OBJ)/vidhrdw/gradius3.o $(OBJ)/drivers/gradius3.o \
-	$(OBJ)/vidhrdw/moo.o $(OBJ)/drivers/moo.o \
+	$(OBJ)/vidhrdw/gradius3_vidhrdw.o $(OBJ)/drivers/gradius3.o \
+	$(OBJ)/vidhrdw/moo_vidhrdw.o $(OBJ)/drivers/moo.o \
 	$(OBJ)/vidhrdw/mystwarr.o $(OBJ)/drivers/mystwarr.o \
 	$(OBJ)/vidhrdw/rungun.o $(OBJ)/drivers/rungun.o \
 	$(OBJ)/vidhrdw/dbz2.o $(OBJ)/drivers/dbz2.o \
 	$(OBJ)/vidhrdw/bishi.o $(OBJ)/drivers/bishi.o \
-	$(OBJ)/machine/konamigx.o $(OBJ)/vidhrdw/konamigx.o $(OBJ)/drivers/konamigx.o \
+	$(OBJ)/machine/konamigx_machine.o $(OBJ)/vidhrdw/konamigx_vidhrdw.o $(OBJ)/drivers/konamigx.o \
 	$(OBJ)/vidhrdw/djmain.o $(OBJ)/drivers/djmain.o \
-	$(OBJ)/vidhrdw/plygonet.o $(OBJ)/drivers/plygonet.o \
+	$(OBJ)/vidhrdw/plygonet_vidhrdw.o $(OBJ)/drivers/plygonet.o \
 	$(OBJ)/drivers/mogura.o \
 	$(OBJ)/machine/am53cf96.o $(OBJ)/drivers/konamigq.o \
 
