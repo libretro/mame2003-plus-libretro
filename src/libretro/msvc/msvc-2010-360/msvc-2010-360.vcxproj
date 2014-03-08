@@ -455,7 +455,7 @@
     <ClCompile Include="..\..\..\drivers\macrossp.c" />
     <ClCompile Include="..\..\..\drivers\madmotor.c" />
     <ClCompile Include="..\..\..\drivers\magmax.c" />
-    <ClCompile Include="..\..\..\drivers\mainevt_vidhrdw.c" />
+    <ClCompile Include="..\..\..\drivers\mainevt.c" />
     <ClCompile Include="..\..\..\drivers\mainsnk.c" />
     <ClCompile Include="..\..\..\drivers\malzak.c" />
     <ClCompile Include="..\..\..\drivers\mappy.c" />
@@ -1455,7 +1455,7 @@
     <ClCompile Include="..\..\..\vidhrdw\macrossp.c" />
     <ClCompile Include="..\..\..\vidhrdw\madmotor.c" />
     <ClCompile Include="..\..\..\vidhrdw\magmax.c" />
-    <ClCompile Include="..\..\..\vidhrdw\mainevt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mainevt_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\mainsnk_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\malzak.c" />
     <ClCompile Include="..\..\..\vidhrdw\mappy.c" />
