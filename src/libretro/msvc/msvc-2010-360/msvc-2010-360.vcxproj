@@ -592,7 +592,7 @@
     <ClCompile Include="..\..\..\drivers\psychic5.c" />
     <ClCompile Include="..\..\..\drivers\punchout.c" />
     <ClCompile Include="..\..\..\drivers\pushman.c" />
-    <ClCompile Include="..\..\..\drivers\qix.c" />
+    <ClCompile Include="..\..\..\drivers\qix_vidhrdw.c" />
     <ClCompile Include="..\..\..\drivers\quantum.c" />
     <ClCompile Include="..\..\..\drivers\quizdna.c" />
     <ClCompile Include="..\..\..\drivers\quizpani.c" />
@@ -1286,7 +1286,7 @@
     <ClCompile Include="..\..\..\vidhrdw\darius_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\darkseal_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\dassault_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\dbz2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dbz2_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\dcon_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\dday_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\ddragon_vidhrdw.c" />
@@ -1500,7 +1500,7 @@
     <ClCompile Include="..\..\..\vidhrdw\msisaac.c" />
     <ClCompile Include="..\..\..\vidhrdw\mugsmash.c" />
     <ClCompile Include="..\..\..\vidhrdw\munchmo.c" />
-    <ClCompile Include="..\..\..\vidhrdw\mustache.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mustache_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\mystston.c" />
     <ClCompile Include="..\..\..\vidhrdw\mystwarr_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\namcona1_vidhrdw.c" />
@@ -1645,7 +1645,7 @@
     <ClCompile Include="..\..\..\vidhrdw\spbactn_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\spcforce.c" />
     <ClCompile Include="..\..\..\vidhrdw\spdodgeb.c" />
-    <ClCompile Include="..\..\..\vidhrdw\speedatk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\speedatk_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\speedbal_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\speedspn_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\spiders_vidhrdw.c" />
@@ -1668,7 +1668,7 @@
     <ClCompile Include="..\..\..\vidhrdw\starcrus_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\starfire.c" />
     <ClCompile Include="..\..\..\vidhrdw\starshp1.c" />
-    <ClCompile Include="..\..\..\vidhrdw\stfight.c" />
+    <ClCompile Include="..\..\..\vidhrdw\stfight_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\stlforce.c" />
     <ClCompile Include="..\..\..\vidhrdw\strnskil.c" />
     <ClCompile Include="..\..\..\vidhrdw\stvvdp1.c" />
