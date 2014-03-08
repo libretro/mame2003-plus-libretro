@@ -1372,7 +1372,7 @@
     <ClCompile Include="..\..\..\vidhrdw\glass.c" />
     <ClCompile Include="..\..\..\vidhrdw\gng_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\goal92_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\goindol.c" />
+    <ClCompile Include="..\..\..\vidhrdw\goindol_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\gomoku.c" />
     <ClCompile Include="..\..\..\vidhrdw\gotcha.c" />
     <ClCompile Include="..\..\..\vidhrdw\gottlieb.c" />
