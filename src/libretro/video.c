@@ -85,10 +85,11 @@ int frameskip = 0;
 
 int osd_skip_this_frame(void)
 {
+   int ret;
    if (frameskip_counter >= 11)
       frameskip_counter = 0;
 
-   int ret = frameskip_table[frameskip][frameskip_counter];
+   ret = frameskip_table[frameskip][frameskip_counter];
 
    frameskip_counter++;
 
@@ -97,11 +98,12 @@ int osd_skip_this_frame(void)
 
 void osd_update_video_and_audio(struct mame_display *display)
 {
+   uint32_t width, height;
    RETRO_PERFORMANCE_INIT(perf_cb, update_video_and_audio);
    RETRO_PERFORMANCE_START(perf_cb, update_video_and_audio);
 
-   const uint32_t width = videoConfig.width;
-   const uint32_t height = videoConfig.height;
+   width = videoConfig.width;
+   height = videoConfig.height;
 
    if(display->changed_flags & 0xF)
    {

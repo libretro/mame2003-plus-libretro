@@ -192,7 +192,7 @@ INLINE void setst_c_lae(UINT16 to, UINT16 val)
 #define wadd(addr,expr) { int lval = setst_add_laeco(readword(addr), (expr)); writeword((addr),lval); }
 #define wsub(addr,expr) { int lval = setst_sub_laeco(readword(addr), (expr)); writeword((addr),lval); }
 
-#if defined(__POWERPC__) && !defined(__GNUC__)
+#if defined(__POWERPC__) && !defined(__GNUC__) && !defined(_XBOX)
 
 // setst_add_32_laeco :
 // - computes a+b

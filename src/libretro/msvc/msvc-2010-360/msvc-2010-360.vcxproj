@@ -1,0 +1,2001 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="CodeAnalysis|Xbox 360">
+      <Configuration>CodeAnalysis</Configuration>
+      <Platform>Xbox 360</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Xbox 360">
+      <Configuration>Debug</Configuration>
+      <Platform>Xbox 360</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Profile|Xbox 360">
+      <Configuration>Profile</Configuration>
+      <Platform>Xbox 360</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Profile_FastCap|Xbox 360">
+      <Configuration>Profile_FastCap</Configuration>
+      <Platform>Xbox 360</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Xbox 360">
+      <Configuration>Release</Configuration>
+      <Platform>Xbox 360</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_LTCG|Xbox 360">
+      <Configuration>Release_LTCG</Configuration>
+      <Platform>Xbox 360</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\artwork.c" />
+    <ClCompile Include="..\..\..\audit.c" />
+    <ClCompile Include="..\..\..\blitgen.c" />
+    <ClCompile Include="..\..\..\chd.c" />
+    <ClCompile Include="..\..\..\cheat.c" />
+    <ClCompile Include="..\..\..\common.c" />
+    <ClCompile Include="..\..\..\config.c" />
+    <ClCompile Include="..\..\..\cpuexec.c" />
+    <ClCompile Include="..\..\..\cpuint.c" />
+    <ClCompile Include="..\..\..\cpuintrf.c" />
+    <ClCompile Include="..\..\..\cpu\adsp2100\adsp2100.c" />
+    <ClCompile Include="..\..\..\cpu\arm\arm.c" />
+    <ClCompile Include="..\..\..\cpu\asap\asap.c" />
+    <ClCompile Include="..\..\..\cpu\ccpu\ccpu.c" />
+    <ClCompile Include="..\..\..\cpu\dsp32\dsp32.c" />
+    <ClCompile Include="..\..\..\cpu\e132xs\e132xs.c" />
+    <ClCompile Include="..\..\..\cpu\g65816\g65816.c" />
+    <ClCompile Include="..\..\..\cpu\h6280\h6280.c" />
+    <ClCompile Include="..\..\..\cpu\hd6309\hd6309.c" />
+    <ClCompile Include="..\..\..\cpu\i8039\i8039.c" />
+    <ClCompile Include="..\..\..\cpu\i8085\i8085.c" />
+    <ClCompile Include="..\..\..\cpu\i86\i86.c" />
+    <ClCompile Include="..\..\..\cpu\i8x41\i8x41.c" />
+    <ClCompile Include="..\..\..\cpu\jaguar\jaguar.c" />
+    <ClCompile Include="..\..\..\cpu\konami\konami.c" />
+    <ClCompile Include="..\..\..\cpu\m6502\m6502.c" />
+    <ClCompile Include="..\..\..\cpu\m6800\m6800.c" />
+    <ClCompile Include="..\..\..\cpu\m6805\m6805.c" />
+    <ClCompile Include="..\..\..\cpu\m6809\m6809.c" />
+    <ClCompile Include="..\..\..\cpu\nec\nec.c" />
+    <ClCompile Include="..\..\..\cpu\pic16c5x\pic16c5x.c" />
+    <ClCompile Include="..\..\..\cpu\s2650\s2650.c" />
+    <ClCompile Include="..\..\..\cpu\sh2\sh2.c" />
+    <ClCompile Include="..\..\..\cpu\spc700\spc700.c" />
+    <ClCompile Include="..\..\..\cpu\t11\t11.c" />
+    <ClCompile Include="..\..\..\cpu\tms32010\tms32010.c" />
+    <ClCompile Include="..\..\..\cpu\tms32025\tms32025.c" />
+    <ClCompile Include="..\..\..\cpu\tms32031\tms32031.c" />
+    <ClCompile Include="..\..\..\cpu\tms34010\tms34010.c" />
+    <ClCompile Include="..\..\..\cpu\tms9900\tms9900.c" />
+    <ClCompile Include="..\..\..\cpu\upd7810\upd7810.c" />
+    <ClCompile Include="..\..\..\cpu\v60\v60.c" />
+    <ClCompile Include="..\..\..\cpu\z180\z180.c" />
+    <ClCompile Include="..\..\..\cpu\z8000\z8000.c" />
+    <ClCompile Include="..\..\..\cpu\z80\z80.c" />
+    <ClCompile Include="..\..\..\datafile.c" />
+    <ClCompile Include="..\..\..\drawgfx.c" />
+    <ClCompile Include="..\..\..\driver.c" />
+    <ClCompile Include="..\..\..\drivers\1942.c" />
+    <ClCompile Include="..\..\..\drivers\1943.c" />
+    <ClCompile Include="..\..\..\drivers\40love.c" />
+    <ClCompile Include="..\..\..\drivers\4enraya.c" />
+    <ClCompile Include="..\..\..\drivers\8080bw.c" />
+    <ClCompile Include="..\..\..\drivers\88games.c" />
+    <ClCompile Include="..\..\..\drivers\aburner.c" />
+    <ClCompile Include="..\..\..\drivers\ace.c" />
+    <ClCompile Include="..\..\..\drivers\actfancr.c" />
+    <ClCompile Include="..\..\..\drivers\aeroboto.c" />
+    <ClCompile Include="..\..\..\drivers\aerofgt.c" />
+    <ClCompile Include="..\..\..\drivers\afega.c" />
+    <ClCompile Include="..\..\..\drivers\airbustr.c" />
+    <ClCompile Include="..\..\..\drivers\ajax.c" />
+    <ClCompile Include="..\..\..\drivers\aliens.c" />
+    <ClCompile Include="..\..\..\drivers\alpha68k.c" />
+    <ClCompile Include="..\..\..\drivers\ambush.c" />
+    <ClCompile Include="..\..\..\drivers\amidar.c" />
+    <ClCompile Include="..\..\..\drivers\amspdwy.c" />
+    <ClCompile Include="..\..\..\drivers\angelkds.c" />
+    <ClCompile Include="..\..\..\drivers\appoooh.c" />
+    <ClCompile Include="..\..\..\drivers\aquarium.c" />
+    <ClCompile Include="..\..\..\drivers\arabian.c" />
+    <ClCompile Include="..\..\..\drivers\arcadecl.c" />
+    <ClCompile Include="..\..\..\drivers\argus.c" />
+    <ClCompile Include="..\..\..\drivers\arkanoid.c" />
+    <ClCompile Include="..\..\..\drivers\armedf.c" />
+    <ClCompile Include="..\..\..\drivers\artmagic.c" />
+    <ClCompile Include="..\..\..\drivers\ashnojoe.c" />
+    <ClCompile Include="..\..\..\drivers\asterix.c" />
+    <ClCompile Include="..\..\..\drivers\asteroid.c" />
+    <ClCompile Include="..\..\..\drivers\astinvad.c" />
+    <ClCompile Include="..\..\..\drivers\astrocde.c" />
+    <ClCompile Include="..\..\..\drivers\astrof.c" />
+    <ClCompile Include="..\..\..\drivers\asuka.c" />
+    <ClCompile Include="..\..\..\drivers\atarifb.c" />
+    <ClCompile Include="..\..\..\drivers\atarig1.c" />
+    <ClCompile Include="..\..\..\drivers\atarig42.c" />
+    <ClCompile Include="..\..\..\drivers\atarigt.c" />
+    <ClCompile Include="..\..\..\drivers\atarigx2.c" />
+    <ClCompile Include="..\..\..\drivers\atarisy1.c" />
+    <ClCompile Include="..\..\..\drivers\atarisy2.c" />
+    <ClCompile Include="..\..\..\drivers\ataxx.c" />
+    <ClCompile Include="..\..\..\drivers\atetris.c" />
+    <ClCompile Include="..\..\..\drivers\avalnche.c" />
+    <ClCompile Include="..\..\..\drivers\avengrgs.c" />
+    <ClCompile Include="..\..\..\drivers\aztarac.c" />
+    <ClCompile Include="..\..\..\drivers\badlands.c" />
+    <ClCompile Include="..\..\..\drivers\bagman.c" />
+    <ClCompile Include="..\..\..\drivers\balsente.c" />
+    <ClCompile Include="..\..\..\drivers\bankp.c" />
+    <ClCompile Include="..\..\..\drivers\baraduke.c" />
+    <ClCompile Include="..\..\..\drivers\batman.c" />
+    <ClCompile Include="..\..\..\drivers\battlane.c" />
+    <ClCompile Include="..\..\..\drivers\battlera.c" />
+    <ClCompile Include="..\..\..\drivers\battlex.c" />
+    <ClCompile Include="..\..\..\drivers\battlnts.c" />
+    <ClCompile Include="..\..\..\drivers\bbusters.c" />
+    <ClCompile Include="..\..\..\drivers\beaminv.c" />
+    <ClCompile Include="..\..\..\drivers\beathead.c" />
+    <ClCompile Include="..\..\..\drivers\beezer.c" />
+    <ClCompile Include="..\..\..\drivers\berzerk.c" />
+    <ClCompile Include="..\..\..\drivers\bigevglf.c" />
+    <ClCompile Include="..\..\..\drivers\bigstrkb.c" />
+    <ClCompile Include="..\..\..\drivers\bionicc.c" />
+    <ClCompile Include="..\..\..\drivers\bishi.c" />
+    <ClCompile Include="..\..\..\drivers\bking2.c" />
+    <ClCompile Include="..\..\..\drivers\bladestl.c" />
+    <ClCompile Include="..\..\..\drivers\blktiger.c" />
+    <ClCompile Include="..\..\..\drivers\blmbycar.c" />
+    <ClCompile Include="..\..\..\drivers\blockade.c" />
+    <ClCompile Include="..\..\..\drivers\blockhl.c" />
+    <ClCompile Include="..\..\..\drivers\blockout.c" />
+    <ClCompile Include="..\..\..\drivers\bloodbro.c" />
+    <ClCompile Include="..\..\..\drivers\blstroid.c" />
+    <ClCompile Include="..\..\..\drivers\blueprnt.c" />
+    <ClCompile Include="..\..\..\drivers\bogeyman.c" />
+    <ClCompile Include="..\..\..\drivers\bombjack.c" />
+    <ClCompile Include="..\..\..\drivers\bosco.c" />
+    <ClCompile Include="..\..\..\drivers\bottom9.c" />
+    <ClCompile Include="..\..\..\drivers\boxer.c" />
+    <ClCompile Include="..\..\..\drivers\brkthru.c" />
+    <ClCompile Include="..\..\..\drivers\bsktball.c" />
+    <ClCompile Include="..\..\..\drivers\btime.c" />
+    <ClCompile Include="..\..\..\drivers\btoads.c" />
+    <ClCompile Include="..\..\..\drivers\bublbobl.c" />
+    <ClCompile Include="..\..\..\drivers\buggychl.c" />
+    <ClCompile Include="..\..\..\drivers\bwidow.c" />
+    <ClCompile Include="..\..\..\drivers\bwing.c" />
+    <ClCompile Include="..\..\..\drivers\bzone.c" />
+    <ClCompile Include="..\..\..\drivers\cabal.c" />
+    <ClCompile Include="..\..\..\drivers\canyon.c" />
+    <ClCompile Include="..\..\..\drivers\capbowl.c" />
+    <ClCompile Include="..\..\..\drivers\carjmbre.c" />
+    <ClCompile Include="..\..\..\drivers\carpolo.c" />
+    <ClCompile Include="..\..\..\drivers\cave.c" />
+    <ClCompile Include="..\..\..\drivers\cbasebal.c" />
+    <ClCompile Include="..\..\..\drivers\cbuster.c" />
+    <ClCompile Include="..\..\..\drivers\ccastles.c" />
+    <ClCompile Include="..\..\..\drivers\cchasm.c" />
+    <ClCompile Include="..\..\..\drivers\cclimber.c" />
+    <ClCompile Include="..\..\..\drivers\centiped.c" />
+    <ClCompile Include="..\..\..\drivers\chaknpop.c" />
+    <ClCompile Include="..\..\..\drivers\champbas.c" />
+    <ClCompile Include="..\..\..\drivers\cheekyms.c" />
+    <ClCompile Include="..\..\..\drivers\chinagat.c" />
+    <ClCompile Include="..\..\..\drivers\chindrag.c" />
+    <ClCompile Include="..\..\..\drivers\chqflag.c" />
+    <ClCompile Include="..\..\..\drivers\cinemat.c" />
+    <ClCompile Include="..\..\..\drivers\circus.c" />
+    <ClCompile Include="..\..\..\drivers\circusc.c" />
+    <ClCompile Include="..\..\..\drivers\cischeat.c" />
+    <ClCompile Include="..\..\..\drivers\citycon.c" />
+    <ClCompile Include="..\..\..\drivers\clayshoo.c" />
+    <ClCompile Include="..\..\..\drivers\cloak.c" />
+    <ClCompile Include="..\..\..\drivers\cloud9.c" />
+    <ClCompile Include="..\..\..\drivers\clshroad.c" />
+    <ClCompile Include="..\..\..\drivers\cninja.c" />
+    <ClCompile Include="..\..\..\drivers\cojag.c" />
+    <ClCompile Include="..\..\..\drivers\combatsc.c" />
+    <ClCompile Include="..\..\..\drivers\commando.c" />
+    <ClCompile Include="..\..\..\drivers\compgolf.c" />
+    <ClCompile Include="..\..\..\drivers\contra.c" />
+    <ClCompile Include="..\..\..\drivers\coolpool.c" />
+    <ClCompile Include="..\..\..\drivers\cop01.c" />
+    <ClCompile Include="..\..\..\drivers\copsnrob.c" />
+    <ClCompile Include="..\..\..\drivers\cosmic.c" />
+    <ClCompile Include="..\..\..\drivers\cps1.c" />
+    <ClCompile Include="..\..\..\drivers\cps2.c" />
+    <ClCompile Include="..\..\..\drivers\crbaloon.c" />
+    <ClCompile Include="..\..\..\drivers\crgolf.c" />
+    <ClCompile Include="..\..\..\drivers\crimfght.c" />
+    <ClCompile Include="..\..\..\drivers\crospang.c" />
+    <ClCompile Include="..\..\..\drivers\crshrace.c" />
+    <ClCompile Include="..\..\..\drivers\cshooter.c" />
+    <ClCompile Include="..\..\..\drivers\cvs.c" />
+    <ClCompile Include="..\..\..\drivers\cyberbal.c" />
+    <ClCompile Include="..\..\..\drivers\darius.c" />
+    <ClCompile Include="..\..\..\drivers\darkseal.c" />
+    <ClCompile Include="..\..\..\drivers\dassault.c" />
+    <ClCompile Include="..\..\..\drivers\dbz2.c" />
+    <ClCompile Include="..\..\..\drivers\dcon.c" />
+    <ClCompile Include="..\..\..\drivers\dday.c" />
+    <ClCompile Include="..\..\..\drivers\ddenlovr.c" />
+    <ClCompile Include="..\..\..\drivers\ddragon.c" />
+    <ClCompile Include="..\..\..\drivers\ddragon3.c" />
+    <ClCompile Include="..\..\..\drivers\ddrible.c" />
+    <ClCompile Include="..\..\..\drivers\deadang.c" />
+    <ClCompile Include="..\..\..\drivers\dec0.c" />
+    <ClCompile Include="..\..\..\drivers\dec8.c" />
+    <ClCompile Include="..\..\..\drivers\deco32.c" />
+    <ClCompile Include="..\..\..\drivers\decocass.c" />
+    <ClCompile Include="..\..\..\drivers\deniam.c" />
+    <ClCompile Include="..\..\..\drivers\destroyr.c" />
+    <ClCompile Include="..\..\..\drivers\digdug.c" />
+    <ClCompile Include="..\..\..\drivers\diverboy.c" />
+    <ClCompile Include="..\..\..\drivers\djboy.c" />
+    <ClCompile Include="..\..\..\drivers\djmain.c" />
+    <ClCompile Include="..\..\..\drivers\dkong.c" />
+    <ClCompile Include="..\..\..\drivers\dlair.c" />
+    <ClCompile Include="..\..\..\drivers\docastle.c" />
+    <ClCompile Include="..\..\..\drivers\dogfgt.c" />
+    <ClCompile Include="..\..\..\drivers\dooyong.c" />
+    <ClCompile Include="..\..\..\drivers\dorachan.c" />
+    <ClCompile Include="..\..\..\drivers\dotrikun.c" />
+    <ClCompile Include="..\..\..\drivers\dragrace.c" />
+    <ClCompile Include="..\..\..\drivers\drgnmst.c" />
+    <ClCompile Include="..\..\..\drivers\dribling.c" />
+    <ClCompile Include="..\..\..\drivers\drmicro.c" />
+    <ClCompile Include="..\..\..\drivers\dynax.c" />
+    <ClCompile Include="..\..\..\drivers\dynduke.c" />
+    <ClCompile Include="..\..\..\drivers\embargo.c" />
+    <ClCompile Include="..\..\..\drivers\enigma2.c" />
+    <ClCompile Include="..\..\..\drivers\epos.c" />
+    <ClCompile Include="..\..\..\drivers\eprom.c" />
+    <ClCompile Include="..\..\..\drivers\equites.c" />
+    <ClCompile Include="..\..\..\drivers\esd16.c" />
+    <ClCompile Include="..\..\..\drivers\espial.c" />
+    <ClCompile Include="..\..\..\drivers\exctsccr.c" />
+    <ClCompile Include="..\..\..\drivers\exedexes.c" />
+    <ClCompile Include="..\..\..\drivers\exerion.c" />
+    <ClCompile Include="..\..\..\drivers\exidy.c" />
+    <ClCompile Include="..\..\..\drivers\exidy440.c" />
+    <ClCompile Include="..\..\..\drivers\exprraid.c" />
+    <ClCompile Include="..\..\..\drivers\exterm.c" />
+    <ClCompile Include="..\..\..\drivers\exzisus.c" />
+    <ClCompile Include="..\..\..\drivers\f1gp.c" />
+    <ClCompile Include="..\..\..\drivers\fantland.c" />
+    <ClCompile Include="..\..\..\drivers\fastfred.c" />
+    <ClCompile Include="..\..\..\drivers\fastlane.c" />
+    <ClCompile Include="..\..\..\drivers\fcombat.c" />
+    <ClCompile Include="..\..\..\drivers\finalizr.c" />
+    <ClCompile Include="..\..\..\drivers\findout.c" />
+    <ClCompile Include="..\..\..\drivers\firetrap.c" />
+    <ClCompile Include="..\..\..\drivers\firetrk.c" />
+    <ClCompile Include="..\..\..\drivers\fitfight.c" />
+    <ClCompile Include="..\..\..\drivers\flkatck.c" />
+    <ClCompile Include="..\..\..\drivers\flower.c" />
+    <ClCompile Include="..\..\..\drivers\flstory.c" />
+    <ClCompile Include="..\..\..\drivers\flyball.c" />
+    <ClCompile Include="..\..\..\drivers\foodf.c" />
+    <ClCompile Include="..\..\..\drivers\freekick.c" />
+    <ClCompile Include="..\..\..\drivers\frogger.c" />
+    <ClCompile Include="..\..\..\drivers\fromanc2.c" />
+    <ClCompile Include="..\..\..\drivers\fromance.c" />
+    <ClCompile Include="..\..\..\drivers\funkybee.c" />
+    <ClCompile Include="..\..\..\drivers\funkyjet.c" />
+    <ClCompile Include="..\..\..\drivers\funybubl.c" />
+    <ClCompile Include="..\..\..\drivers\fuukifg2.c" />
+    <ClCompile Include="..\..\..\drivers\fuukifg3.c" />
+    <ClCompile Include="..\..\..\drivers\gaelco.c" />
+    <ClCompile Include="..\..\..\drivers\gaelco2.c" />
+    <ClCompile Include="..\..\..\drivers\gaiden.c" />
+    <ClCompile Include="..\..\..\drivers\galaga.c" />
+    <ClCompile Include="..\..\..\drivers\galaxian.c" />
+    <ClCompile Include="..\..\..\drivers\galivan.c" />
+    <ClCompile Include="..\..\..\drivers\galpani2.c" />
+    <ClCompile Include="..\..\..\drivers\galpanic.c" />
+    <ClCompile Include="..\..\..\drivers\galspnbl.c" />
+    <ClCompile Include="..\..\..\drivers\gameplan.c" />
+    <ClCompile Include="..\..\..\drivers\gaplus.c" />
+    <ClCompile Include="..\..\..\drivers\gauntlet.c" />
+    <ClCompile Include="..\..\..\drivers\gberet.c" />
+    <ClCompile Include="..\..\..\drivers\gbusters.c" />
+    <ClCompile Include="..\..\..\drivers\gcpinbal.c" />
+    <ClCompile Include="..\..\..\drivers\geebee.c" />
+    <ClCompile Include="..\..\..\drivers\gijoe.c" />
+    <ClCompile Include="..\..\..\drivers\ginganin.c" />
+    <ClCompile Include="..\..\..\drivers\gladiatr.c" />
+    <ClCompile Include="..\..\..\drivers\glass.c" />
+    <ClCompile Include="..\..\..\drivers\gng.c" />
+    <ClCompile Include="..\..\..\drivers\goal92.c" />
+    <ClCompile Include="..\..\..\drivers\goindol.c" />
+    <ClCompile Include="..\..\..\drivers\gomoku.c" />
+    <ClCompile Include="..\..\..\drivers\gotcha.c" />
+    <ClCompile Include="..\..\..\drivers\gottlieb.c" />
+    <ClCompile Include="..\..\..\drivers\gotya.c" />
+    <ClCompile Include="..\..\..\drivers\gradius3.c" />
+    <ClCompile Include="..\..\..\drivers\grchamp.c" />
+    <ClCompile Include="..\..\..\drivers\gridlee.c" />
+    <ClCompile Include="..\..\..\drivers\grobda.c" />
+    <ClCompile Include="..\..\..\drivers\groundfx.c" />
+    <ClCompile Include="..\..\..\drivers\grtwall.c" />
+    <ClCompile Include="..\..\..\drivers\gstriker.c" />
+    <ClCompile Include="..\..\..\drivers\gsword.c" />
+    <ClCompile Include="..\..\..\drivers\gumbo.c" />
+    <ClCompile Include="..\..\..\drivers\gunbustr.c" />
+    <ClCompile Include="..\..\..\drivers\gundealr.c" />
+    <ClCompile Include="..\..\..\drivers\gunsmoke.c" />
+    <ClCompile Include="..\..\..\drivers\gyruss.c" />
+    <ClCompile Include="..\..\..\drivers\hal21.c" />
+    <ClCompile Include="..\..\..\drivers\halleys.c" />
+    <ClCompile Include="..\..\..\drivers\hanaawas.c" />
+    <ClCompile Include="..\..\..\drivers\hanaroku.c" />
+    <ClCompile Include="..\..\..\drivers\harddriv.c" />
+    <ClCompile Include="..\..\..\drivers\hcastle.c" />
+    <ClCompile Include="..\..\..\drivers\hexa.c" />
+    <ClCompile Include="..\..\..\drivers\hexion.c" />
+    <ClCompile Include="..\..\..\drivers\higemaru.c" />
+    <ClCompile Include="..\..\..\drivers\hitme.c" />
+    <ClCompile Include="..\..\..\drivers\hnayayoi.c" />
+    <ClCompile Include="..\..\..\drivers\holeland.c" />
+    <ClCompile Include="..\..\..\drivers\homedata.c" />
+    <ClCompile Include="..\..\..\drivers\homerun.c" />
+    <ClCompile Include="..\..\..\drivers\hyhoo.c" />
+    <ClCompile Include="..\..\..\drivers\hyperspt.c" />
+    <ClCompile Include="..\..\..\drivers\hyprduel.c" />
+    <ClCompile Include="..\..\..\drivers\ikki.c" />
+    <ClCompile Include="..\..\..\drivers\inufuku.c" />
+    <ClCompile Include="..\..\..\drivers\iqblock.c" />
+    <ClCompile Include="..\..\..\drivers\irobot.c" />
+    <ClCompile Include="..\..\..\drivers\ironhors.c" />
+    <ClCompile Include="..\..\..\drivers\itech32.c" />
+    <ClCompile Include="..\..\..\drivers\itech8.c" />
+    <ClCompile Include="..\..\..\drivers\jack.c" />
+    <ClCompile Include="..\..\..\drivers\jackal.c" />
+    <ClCompile Include="..\..\..\drivers\jailbrek.c" />
+    <ClCompile Include="..\..\..\drivers\jalmah.c" />
+    <ClCompile Include="..\..\..\drivers\jchan.c" />
+    <ClCompile Include="..\..\..\drivers\jcross.c" />
+    <ClCompile Include="..\..\..\drivers\jedi.c" />
+    <ClCompile Include="..\..\..\drivers\jrcrypt.c" />
+    <ClCompile Include="..\..\..\drivers\jrpacman.c" />
+    <ClCompile Include="..\..\..\drivers\junofrst.c" />
+    <ClCompile Include="..\..\..\drivers\kaneko16.c" />
+    <ClCompile Include="..\..\..\drivers\kangaroo.c" />
+    <ClCompile Include="..\..\..\drivers\karnov.c" />
+    <ClCompile Include="..\..\..\drivers\kchamp.c" />
+    <ClCompile Include="..\..\..\drivers\kickgoal.c" />
+    <ClCompile Include="..\..\..\drivers\kingobox.c" />
+    <ClCompile Include="..\..\..\drivers\kinst.c" />
+    <ClCompile Include="..\..\..\drivers\klax.c" />
+    <ClCompile Include="..\..\..\drivers\kncljoe.c" />
+    <ClCompile Include="..\..\..\drivers\konamigq.c" />
+    <ClCompile Include="..\..\..\drivers\konamigx.c" />
+    <ClCompile Include="..\..\..\drivers\kopunch.c" />
+    <ClCompile Include="..\..\..\drivers\kyugo.c" />
+    <ClCompile Include="..\..\..\drivers\labyrunr.c" />
+    <ClCompile Include="..\..\..\drivers\ladybug.c" />
+    <ClCompile Include="..\..\..\drivers\ladyfrog.c" />
+    <ClCompile Include="..\..\..\drivers\lasso.c" />
+    <ClCompile Include="..\..\..\drivers\lastduel.c" />
+    <ClCompile Include="..\..\..\drivers\lazercmd.c" />
+    <ClCompile Include="..\..\..\drivers\legionna.c" />
+    <ClCompile Include="..\..\..\drivers\leland.c" />
+    <ClCompile Include="..\..\..\drivers\lemmings.c" />
+    <ClCompile Include="..\..\..\drivers\leprechn.c" />
+    <ClCompile Include="..\..\..\drivers\lethalj.c" />
+    <ClCompile Include="..\..\..\drivers\liberate.c" />
+    <ClCompile Include="..\..\..\drivers\liberatr.c" />
+    <ClCompile Include="..\..\..\drivers\lkage.c" />
+    <ClCompile Include="..\..\..\drivers\locomotn.c" />
+    <ClCompile Include="..\..\..\drivers\looping.c" />
+    <ClCompile Include="..\..\..\drivers\lsasquad.c" />
+    <ClCompile Include="..\..\..\drivers\ltcasino.c" />
+    <ClCompile Include="..\..\..\drivers\lwings.c" />
+    <ClCompile Include="..\..\..\drivers\m107.c" />
+    <ClCompile Include="..\..\..\drivers\m62.c" />
+    <ClCompile Include="..\..\..\drivers\m72.c" />
+    <ClCompile Include="..\..\..\drivers\m79amb.c" />
+    <ClCompile Include="..\..\..\drivers\m90.c" />
+    <ClCompile Include="..\..\..\drivers\m92.c" />
+    <ClCompile Include="..\..\..\drivers\macrossp.c" />
+    <ClCompile Include="..\..\..\drivers\madmotor.c" />
+    <ClCompile Include="..\..\..\drivers\magmax.c" />
+    <ClCompile Include="..\..\..\drivers\mainevt.c" />
+    <ClCompile Include="..\..\..\drivers\mainsnk.c" />
+    <ClCompile Include="..\..\..\drivers\malzak.c" />
+    <ClCompile Include="..\..\..\drivers\mappy.c" />
+    <ClCompile Include="..\..\..\drivers\marineb.c" />
+    <ClCompile Include="..\..\..\drivers\marinedt.c" />
+    <ClCompile Include="..\..\..\drivers\mario.c" />
+    <ClCompile Include="..\..\..\drivers\markham.c" />
+    <ClCompile Include="..\..\..\drivers\marvins.c" />
+    <ClCompile Include="..\..\..\drivers\matmania.c" />
+    <ClCompile Include="..\..\..\drivers\mayumi.c" />
+    <ClCompile Include="..\..\..\drivers\mazerbla.c" />
+    <ClCompile Include="..\..\..\drivers\mcatadv.c" />
+    <ClCompile Include="..\..\..\drivers\mcr1.c" />
+    <ClCompile Include="..\..\..\drivers\mcr2.c" />
+    <ClCompile Include="..\..\..\drivers\mcr3.c" />
+    <ClCompile Include="..\..\..\drivers\mcr68.c" />
+    <ClCompile Include="..\..\..\drivers\meadows.c" />
+    <ClCompile Include="..\..\..\drivers\megasys1.c" />
+    <ClCompile Include="..\..\..\drivers\megazone.c" />
+    <ClCompile Include="..\..\..\drivers\mermaid.c" />
+    <ClCompile Include="..\..\..\drivers\metlclsh.c" />
+    <ClCompile Include="..\..\..\drivers\metro.c" />
+    <ClCompile Include="..\..\..\drivers\mexico86.c" />
+    <ClCompile Include="..\..\..\drivers\mhavoc.c" />
+    <ClCompile Include="..\..\..\drivers\midtunit.c" />
+    <ClCompile Include="..\..\..\drivers\midvunit.c" />
+    <ClCompile Include="..\..\..\drivers\midwunit.c" />
+    <ClCompile Include="..\..\..\drivers\midxunit.c" />
+    <ClCompile Include="..\..\..\drivers\midyunit.c" />
+    <ClCompile Include="..\..\..\drivers\mikie.c" />
+    <ClCompile Include="..\..\..\drivers\minivadr.c" />
+    <ClCompile Include="..\..\..\drivers\missb2.c" />
+    <ClCompile Include="..\..\..\drivers\missile.c" />
+    <ClCompile Include="..\..\..\drivers\mitchell.c" />
+    <ClCompile Include="..\..\..\drivers\mjkjidai.c" />
+    <ClCompile Include="..\..\..\drivers\mjsister.c" />
+    <ClCompile Include="..\..\..\drivers\mnight.c" />
+    <ClCompile Include="..\..\..\drivers\mogura.c" />
+    <ClCompile Include="..\..\..\drivers\mole.c" />
+    <ClCompile Include="..\..\..\drivers\momoko.c" />
+    <ClCompile Include="..\..\..\drivers\moo.c" />
+    <ClCompile Include="..\..\..\drivers\mosaic.c" />
+    <ClCompile Include="..\..\..\drivers\mouser.c" />
+    <ClCompile Include="..\..\..\drivers\mpatrol.c" />
+    <ClCompile Include="..\..\..\drivers\mrdo.c" />
+    <ClCompile Include="..\..\..\drivers\mrflea.c" />
+    <ClCompile Include="..\..\..\drivers\mrjong.c" />
+    <ClCompile Include="..\..\..\drivers\ms32.c" />
+    <ClCompile Include="..\..\..\drivers\msisaac.c" />
+    <ClCompile Include="..\..\..\drivers\mugsmash.c" />
+    <ClCompile Include="..\..\..\drivers\multi32.c" />
+    <ClCompile Include="..\..\..\drivers\munchmo.c" />
+    <ClCompile Include="..\..\..\drivers\mustache.c" />
+    <ClCompile Include="..\..\..\drivers\mystston.c" />
+    <ClCompile Include="..\..\..\drivers\mystwarr.c" />
+    <ClCompile Include="..\..\..\drivers\namcoic.c" />
+    <ClCompile Include="..\..\..\drivers\namcona1.c" />
+    <ClCompile Include="..\..\..\drivers\namconb1.c" />
+    <ClCompile Include="..\..\..\drivers\namcond1.c" />
+    <ClCompile Include="..\..\..\drivers\namcos1.c" />
+    <ClCompile Include="..\..\..\drivers\namcos10.c" />
+    <ClCompile Include="..\..\..\drivers\namcos11.c" />
+    <ClCompile Include="..\..\..\drivers\namcos12.c" />
+    <ClCompile Include="..\..\..\drivers\namcos2.c" />
+    <ClCompile Include="..\..\..\drivers\namcos21.c" />
+    <ClCompile Include="..\..\..\drivers\namcos22.c" />
+    <ClCompile Include="..\..\..\drivers\namcos86.c" />
+    <ClCompile Include="..\..\..\drivers\naughtyb.c" />
+    <ClCompile Include="..\..\..\drivers\nbmj8688.c" />
+    <ClCompile Include="..\..\..\drivers\nbmj8891.c" />
+    <ClCompile Include="..\..\..\drivers\nbmj8991.c" />
+    <ClCompile Include="..\..\..\drivers\nbmj9195.c" />
+    <ClCompile Include="..\..\..\drivers\nemesis.c" />
+    <ClCompile Include="..\..\..\drivers\neogeo.c" />
+    <ClCompile Include="..\..\..\drivers\news.c" />
+    <ClCompile Include="..\..\..\drivers\ninjakd2.c" />
+    <ClCompile Include="..\..\..\drivers\ninjakid.c" />
+    <ClCompile Include="..\..\..\drivers\ninjaw.c" />
+    <ClCompile Include="..\..\..\drivers\nitedrvr.c" />
+    <ClCompile Include="..\..\..\drivers\niyanpai.c" />
+    <ClCompile Include="..\..\..\drivers\nmk16.c" />
+    <ClCompile Include="..\..\..\drivers\nova2001.c" />
+    <ClCompile Include="..\..\..\drivers\nss.c" />
+    <ClCompile Include="..\..\..\drivers\nycaptor.c" />
+    <ClCompile Include="..\..\..\drivers\nyny.c" />
+    <ClCompile Include="..\..\..\drivers\offtwall.c" />
+    <ClCompile Include="..\..\..\drivers\ohmygod.c" />
+    <ClCompile Include="..\..\..\drivers\ojankohs.c" />
+    <ClCompile Include="..\..\..\drivers\olibochu.c" />
+    <ClCompile Include="..\..\..\drivers\omegaf.c" />
+    <ClCompile Include="..\..\..\drivers\omegrace.c" />
+    <ClCompile Include="..\..\..\drivers\oneshot.c" />
+    <ClCompile Include="..\..\..\drivers\opwolf.c" />
+    <ClCompile Include="..\..\..\drivers\orbit.c" />
+    <ClCompile Include="..\..\..\drivers\othldrby.c" />
+    <ClCompile Include="..\..\..\drivers\othunder.c" />
+    <ClCompile Include="..\..\..\drivers\outrun.c" />
+    <ClCompile Include="..\..\..\drivers\overdriv.c" />
+    <ClCompile Include="..\..\..\drivers\pacland.c" />
+    <ClCompile Include="..\..\..\drivers\pacman.c" />
+    <ClCompile Include="..\..\..\drivers\pandoras.c" />
+    <ClCompile Include="..\..\..\drivers\paradise.c" />
+    <ClCompile Include="..\..\..\drivers\parodius.c" />
+    <ClCompile Include="..\..\..\drivers\pass.c" />
+    <ClCompile Include="..\..\..\drivers\pastelgl.c" />
+    <ClCompile Include="..\..\..\drivers\pbaction.c" />
+    <ClCompile Include="..\..\..\drivers\pbillian.c" />
+    <ClCompile Include="..\..\..\drivers\pcktgal.c" />
+    <ClCompile Include="..\..\..\drivers\pengo.c" />
+    <ClCompile Include="..\..\..\drivers\pgm.c" />
+    <ClCompile Include="..\..\..\drivers\phoenix.c" />
+    <ClCompile Include="..\..\..\drivers\phozon.c" />
+    <ClCompile Include="..\..\..\drivers\pingpong.c" />
+    <ClCompile Include="..\..\..\drivers\pipedrm.c" />
+    <ClCompile Include="..\..\..\drivers\pirates.c" />
+    <ClCompile Include="..\..\..\drivers\pitnrun.c" />
+    <ClCompile Include="..\..\..\drivers\pkunwar.c" />
+    <ClCompile Include="..\..\..\drivers\playch10.c" />
+    <ClCompile Include="..\..\..\drivers\playmark.c" />
+    <ClCompile Include="..\..\..\drivers\plygonet.c" />
+    <ClCompile Include="..\..\..\drivers\polepos.c" />
+    <ClCompile Include="..\..\..\drivers\policetr.c" />
+    <ClCompile Include="..\..\..\drivers\polyplay.c" />
+    <ClCompile Include="..\..\..\drivers\poolshrk.c" />
+    <ClCompile Include="..\..\..\drivers\pooyan.c" />
+    <ClCompile Include="..\..\..\drivers\popeye.c" />
+    <ClCompile Include="..\..\..\drivers\popper.c" />
+    <ClCompile Include="..\..\..\drivers\portrait.c" />
+    <ClCompile Include="..\..\..\drivers\powerins.c" />
+    <ClCompile Include="..\..\..\drivers\prehisle.c" />
+    <ClCompile Include="..\..\..\drivers\psikyo.c" />
+    <ClCompile Include="..\..\..\drivers\psikyo4.c" />
+    <ClCompile Include="..\..\..\drivers\psikyosh.c" />
+    <ClCompile Include="..\..\..\drivers\psychic5.c" />
+    <ClCompile Include="..\..\..\drivers\punchout.c" />
+    <ClCompile Include="..\..\..\drivers\pushman.c" />
+    <ClCompile Include="..\..\..\drivers\qix.c" />
+    <ClCompile Include="..\..\..\drivers\quantum.c" />
+    <ClCompile Include="..\..\..\drivers\quizdna.c" />
+    <ClCompile Include="..\..\..\drivers\quizpani.c" />
+    <ClCompile Include="..\..\..\drivers\r2dtank.c" />
+    <ClCompile Include="..\..\..\drivers\rabbit.c" />
+    <ClCompile Include="..\..\..\drivers\raiden.c" />
+    <ClCompile Include="..\..\..\drivers\raiden2.c" />
+    <ClCompile Include="..\..\..\drivers\raiders5.c" />
+    <ClCompile Include="..\..\..\drivers\rainbow.c" />
+    <ClCompile Include="..\..\..\drivers\rallyx.c" />
+    <ClCompile Include="..\..\..\drivers\rampart.c" />
+    <ClCompile Include="..\..\..\drivers\rastan.c" />
+    <ClCompile Include="..\..\..\drivers\realbrk.c" />
+    <ClCompile Include="..\..\..\drivers\redalert.c" />
+    <ClCompile Include="..\..\..\drivers\redclash.c" />
+    <ClCompile Include="..\..\..\drivers\relief.c" />
+    <ClCompile Include="..\..\..\drivers\renegade.c" />
+    <ClCompile Include="..\..\..\drivers\retofinv.c" />
+    <ClCompile Include="..\..\..\drivers\rmhaihai.c" />
+    <ClCompile Include="..\..\..\drivers\rockola.c" />
+    <ClCompile Include="..\..\..\drivers\rockrage.c" />
+    <ClCompile Include="..\..\..\drivers\rocnrope.c" />
+    <ClCompile Include="..\..\..\drivers\rohga.c" />
+    <ClCompile Include="..\..\..\drivers\rollerg.c" />
+    <ClCompile Include="..\..\..\drivers\rollrace.c" />
+    <ClCompile Include="..\..\..\drivers\rotaryf.c" />
+    <ClCompile Include="..\..\..\drivers\route16.c" />
+    <ClCompile Include="..\..\..\drivers\royalmah.c" />
+    <ClCompile Include="..\..\..\drivers\rpunch.c" />
+    <ClCompile Include="..\..\..\drivers\runaway.c" />
+    <ClCompile Include="..\..\..\drivers\rungun.c" />
+    <ClCompile Include="..\..\..\drivers\safarir.c" />
+    <ClCompile Include="..\..\..\drivers\sauro.c" />
+    <ClCompile Include="..\..\..\drivers\sbasketb.c" />
+    <ClCompile Include="..\..\..\drivers\sbowling.c" />
+    <ClCompile Include="..\..\..\drivers\sbrkout.c" />
+    <ClCompile Include="..\..\..\drivers\sbugger.c" />
+    <ClCompile Include="..\..\..\drivers\scobra.c" />
+    <ClCompile Include="..\..\..\drivers\scramble.c" />
+    <ClCompile Include="..\..\..\drivers\scregg.c" />
+    <ClCompile Include="..\..\..\drivers\seattle.c" />
+    <ClCompile Include="..\..\..\drivers\sega.c" />
+    <ClCompile Include="..\..\..\drivers\segac2.c" />
+    <ClCompile Include="..\..\..\drivers\segar.c" />
+    <ClCompile Include="..\..\..\drivers\segasyse.c" />
+    <ClCompile Include="..\..\..\drivers\seicross.c" />
+    <ClCompile Include="..\..\..\drivers\sengokmj.c" />
+    <ClCompile Include="..\..\..\drivers\senjyo.c" />
+    <ClCompile Include="..\..\..\drivers\seta.c" />
+    <ClCompile Include="..\..\..\drivers\seta2.c" />
+    <ClCompile Include="..\..\..\drivers\sf1.c" />
+    <ClCompile Include="..\..\..\drivers\sg1000a.c" />
+    <ClCompile Include="..\..\..\drivers\sgladiat.c" />
+    <ClCompile Include="..\..\..\drivers\shadfrce.c" />
+    <ClCompile Include="..\..\..\drivers\shangha3.c" />
+    <ClCompile Include="..\..\..\drivers\shanghai.c" />
+    <ClCompile Include="..\..\..\drivers\shangkid.c" />
+    <ClCompile Include="..\..\..\drivers\shaolins.c" />
+    <ClCompile Include="..\..\..\drivers\sharrier.c" />
+    <ClCompile Include="..\..\..\drivers\shisen.c" />
+    <ClCompile Include="..\..\..\drivers\shootout.c" />
+    <ClCompile Include="..\..\..\drivers\shougi.c" />
+    <ClCompile Include="..\..\..\drivers\shuuz.c" />
+    <ClCompile Include="..\..\..\drivers\sidearms.c" />
+    <ClCompile Include="..\..\..\drivers\sidepckt.c" />
+    <ClCompile Include="..\..\..\drivers\silkroad.c" />
+    <ClCompile Include="..\..\..\drivers\simpsons.c" />
+    <ClCompile Include="..\..\..\drivers\skullxbo.c" />
+    <ClCompile Include="..\..\..\drivers\skyarmy.c" />
+    <ClCompile Include="..\..\..\drivers\skychut.c" />
+    <ClCompile Include="..\..\..\drivers\skydiver.c" />
+    <ClCompile Include="..\..\..\drivers\skyfox.c" />
+    <ClCompile Include="..\..\..\drivers\skykid.c" />
+    <ClCompile Include="..\..\..\drivers\skyraid.c" />
+    <ClCompile Include="..\..\..\drivers\slapfght.c" />
+    <ClCompile Include="..\..\..\drivers\slapshot.c" />
+    <ClCompile Include="..\..\..\drivers\snk.c" />
+    <ClCompile Include="..\..\..\drivers\snk68.c" />
+    <ClCompile Include="..\..\..\drivers\snowbros.c" />
+    <ClCompile Include="..\..\..\drivers\solomon.c" />
+    <ClCompile Include="..\..\..\drivers\sonson.c" />
+    <ClCompile Include="..\..\..\drivers\spacefb.c" />
+    <ClCompile Include="..\..\..\drivers\spbactn.c" />
+    <ClCompile Include="..\..\..\drivers\spcforce.c" />
+    <ClCompile Include="..\..\..\drivers\spdbuggy.c" />
+    <ClCompile Include="..\..\..\drivers\spdodgeb.c" />
+    <ClCompile Include="..\..\..\drivers\speedatk.c" />
+    <ClCompile Include="..\..\..\drivers\speedbal.c" />
+    <ClCompile Include="..\..\..\drivers\speedspn.c" />
+    <ClCompile Include="..\..\..\drivers\spiders.c" />
+    <ClCompile Include="..\..\..\drivers\splash.c" />
+    <ClCompile Include="..\..\..\drivers\sprcros2.c" />
+    <ClCompile Include="..\..\..\drivers\sprint2.c" />
+    <ClCompile Include="..\..\..\drivers\sprint4.c" />
+    <ClCompile Include="..\..\..\drivers\sprint8.c" />
+    <ClCompile Include="..\..\..\drivers\spy.c" />
+    <ClCompile Include="..\..\..\drivers\srmp2.c" />
+    <ClCompile Include="..\..\..\drivers\srumbler.c" />
+    <ClCompile Include="..\..\..\drivers\sshangha.c" />
+    <ClCompile Include="..\..\..\drivers\sslam.c" />
+    <ClCompile Include="..\..\..\drivers\ssozumo.c" />
+    <ClCompile Include="..\..\..\drivers\sspeedr.c" />
+    <ClCompile Include="..\..\..\drivers\ssrj.c" />
+    <ClCompile Include="..\..\..\drivers\ssv.c" />
+    <ClCompile Include="..\..\..\drivers\stactics.c" />
+    <ClCompile Include="..\..\..\drivers\stadhero.c" />
+    <ClCompile Include="..\..\..\drivers\starcrus.c" />
+    <ClCompile Include="..\..\..\drivers\starfire.c" />
+    <ClCompile Include="..\..\..\drivers\starshp1.c" />
+    <ClCompile Include="..\..\..\drivers\starwars.c" />
+    <ClCompile Include="..\..\..\drivers\statriv2.c" />
+    <ClCompile Include="..\..\..\drivers\stfight.c" />
+    <ClCompile Include="..\..\..\drivers\stlforce.c" />
+    <ClCompile Include="..\..\..\drivers\strnskil.c" />
+    <ClCompile Include="..\..\..\drivers\strvmstr.c" />
+    <ClCompile Include="..\..\..\drivers\stv.c" />
+    <ClCompile Include="..\..\..\drivers\stvhacks.c" />
+    <ClCompile Include="..\..\..\drivers\subs.c" />
+    <ClCompile Include="..\..\..\drivers\suna16.c" />
+    <ClCompile Include="..\..\..\drivers\suna8.c" />
+    <ClCompile Include="..\..\..\drivers\supbtime.c" />
+    <ClCompile Include="..\..\..\drivers\supdrapo.c" />
+    <ClCompile Include="..\..\..\drivers\superchs.c" />
+    <ClCompile Include="..\..\..\drivers\superpac.c" />
+    <ClCompile Include="..\..\..\drivers\superqix.c" />
+    <ClCompile Include="..\..\..\drivers\supertnk.c" />
+    <ClCompile Include="..\..\..\drivers\suprloco.c" />
+    <ClCompile Include="..\..\..\drivers\suprnova.c" />
+    <ClCompile Include="..\..\..\drivers\suprslam.c" />
+    <ClCompile Include="..\..\..\drivers\surpratk.c" />
+    <ClCompile Include="..\..\..\drivers\system1.c" />
+    <ClCompile Include="..\..\..\drivers\system16.c" />
+    <ClCompile Include="..\..\..\drivers\system18.c" />
+    <ClCompile Include="..\..\..\drivers\system24.c" />
+    <ClCompile Include="..\..\..\drivers\system32.c" />
+    <ClCompile Include="..\..\..\drivers\tagteam.c" />
+    <ClCompile Include="..\..\..\drivers\tail2nos.c" />
+    <ClCompile Include="..\..\..\drivers\taitoair.c" />
+    <ClCompile Include="..\..\..\drivers\taitosj.c" />
+    <ClCompile Include="..\..\..\drivers\taito_b.c" />
+    <ClCompile Include="..\..\..\drivers\taito_f2.c" />
+    <ClCompile Include="..\..\..\drivers\taito_f3.c" />
+    <ClCompile Include="..\..\..\drivers\taito_h.c" />
+    <ClCompile Include="..\..\..\drivers\taito_l.c" />
+    <ClCompile Include="..\..\..\drivers\taito_x.c" />
+    <ClCompile Include="..\..\..\drivers\taito_z.c" />
+    <ClCompile Include="..\..\..\drivers\tankbatt.c" />
+    <ClCompile Include="..\..\..\drivers\tankbust.c" />
+    <ClCompile Include="..\..\..\drivers\taotaido.c" />
+    <ClCompile Include="..\..\..\drivers\targeth.c" />
+    <ClCompile Include="..\..\..\drivers\taxidrvr.c" />
+    <ClCompile Include="..\..\..\drivers\tbowl.c" />
+    <ClCompile Include="..\..\..\drivers\tceptor.c" />
+    <ClCompile Include="..\..\..\drivers\tecmo.c" />
+    <ClCompile Include="..\..\..\drivers\tecmo16.c" />
+    <ClCompile Include="..\..\..\drivers\tecmosys.c" />
+    <ClCompile Include="..\..\..\drivers\tehkanwc.c" />
+    <ClCompile Include="..\..\..\drivers\tempest.c" />
+    <ClCompile Include="..\..\..\drivers\terracre.c" />
+    <ClCompile Include="..\..\..\drivers\tetrisp2.c" />
+    <ClCompile Include="..\..\..\drivers\thedeep.c" />
+    <ClCompile Include="..\..\..\drivers\thepit.c" />
+    <ClCompile Include="..\..\..\drivers\thief.c" />
+    <ClCompile Include="..\..\..\drivers\thoop2.c" />
+    <ClCompile Include="..\..\..\drivers\thunderj.c" />
+    <ClCompile Include="..\..\..\drivers\thunderx.c" />
+    <ClCompile Include="..\..\..\drivers\tickee.c" />
+    <ClCompile Include="..\..\..\drivers\tigeroad.c" />
+    <ClCompile Include="..\..\..\drivers\timelimt.c" />
+    <ClCompile Include="..\..\..\drivers\timeplt.c" />
+    <ClCompile Include="..\..\..\drivers\tmnt.c" />
+    <ClCompile Include="..\..\..\drivers\tnzs.c" />
+    <ClCompile Include="..\..\..\drivers\toaplan1.c" />
+    <ClCompile Include="..\..\..\drivers\toaplan2.c" />
+    <ClCompile Include="..\..\..\drivers\toki.c" />
+    <ClCompile Include="..\..\..\drivers\toobin.c" />
+    <ClCompile Include="..\..\..\drivers\topspeed.c" />
+    <ClCompile Include="..\..\..\drivers\toratora.c" />
+    <ClCompile Include="..\..\..\drivers\tourtabl.c" />
+    <ClCompile Include="..\..\..\drivers\toypop.c" />
+    <ClCompile Include="..\..\..\drivers\tp84.c" />
+    <ClCompile Include="..\..\..\drivers\trackfld.c" />
+    <ClCompile Include="..\..\..\drivers\travrusa.c" />
+    <ClCompile Include="..\..\..\drivers\triplhnt.c" />
+    <ClCompile Include="..\..\..\drivers\troangel.c" />
+    <ClCompile Include="..\..\..\drivers\truco.c" />
+    <ClCompile Include="..\..\..\drivers\tryout.c" />
+    <ClCompile Include="..\..\..\drivers\tsamurai.c" />
+    <ClCompile Include="..\..\..\drivers\ttmahjng.c" />
+    <ClCompile Include="..\..\..\drivers\tubep.c" />
+    <ClCompile Include="..\..\..\drivers\tugboat.c" />
+    <ClCompile Include="..\..\..\drivers\tumblep.c" />
+    <ClCompile Include="..\..\..\drivers\tunhunt.c" />
+    <ClCompile Include="..\..\..\drivers\turbo.c" />
+    <ClCompile Include="..\..\..\drivers\tutankhm.c" />
+    <ClCompile Include="..\..\..\drivers\twin16.c" />
+    <ClCompile Include="..\..\..\drivers\twincobr.c" />
+    <ClCompile Include="..\..\..\drivers\ultraman.c" />
+    <ClCompile Include="..\..\..\drivers\ultratnk.c" />
+    <ClCompile Include="..\..\..\drivers\undrfire.c" />
+    <ClCompile Include="..\..\..\drivers\unico.c" />
+    <ClCompile Include="..\..\..\drivers\usgames.c" />
+    <ClCompile Include="..\..\..\drivers\vamphalf.c" />
+    <ClCompile Include="..\..\..\drivers\vaportra.c" />
+    <ClCompile Include="..\..\..\drivers\vastar.c" />
+    <ClCompile Include="..\..\..\drivers\vball.c" />
+    <ClCompile Include="..\..\..\drivers\vendetta.c" />
+    <ClCompile Include="..\..\..\drivers\vicdual.c" />
+    <ClCompile Include="..\..\..\drivers\victory.c" />
+    <ClCompile Include="..\..\..\drivers\videopin.c" />
+    <ClCompile Include="..\..\..\drivers\vigilant.c" />
+    <ClCompile Include="..\..\..\drivers\vindictr.c" />
+    <ClCompile Include="..\..\..\drivers\volfied.c" />
+    <ClCompile Include="..\..\..\drivers\vsnes.c" />
+    <ClCompile Include="..\..\..\drivers\vulgus.c" />
+    <ClCompile Include="..\..\..\drivers\wallc.c" />
+    <ClCompile Include="..\..\..\drivers\wardner.c" />
+    <ClCompile Include="..\..\..\drivers\warpwarp.c" />
+    <ClCompile Include="..\..\..\drivers\warriorb.c" />
+    <ClCompile Include="..\..\..\drivers\wc90.c" />
+    <ClCompile Include="..\..\..\drivers\wc90b.c" />
+    <ClCompile Include="..\..\..\drivers\wecleman.c" />
+    <ClCompile Include="..\..\..\drivers\welltris.c" />
+    <ClCompile Include="..\..\..\drivers\wgp.c" />
+    <ClCompile Include="..\..\..\drivers\williams.c" />
+    <ClCompile Include="..\..\..\drivers\wilytowr.c" />
+    <ClCompile Include="..\..\..\drivers\wiping.c" />
+    <ClCompile Include="..\..\..\drivers\wiz.c" />
+    <ClCompile Include="..\..\..\drivers\wolfpack.c" />
+    <ClCompile Include="..\..\..\drivers\wrally.c" />
+    <ClCompile Include="..\..\..\drivers\wwfsstar.c" />
+    <ClCompile Include="..\..\..\drivers\wwfwfest.c" />
+    <ClCompile Include="..\..\..\drivers\xain.c" />
+    <ClCompile Include="..\..\..\drivers\xevious.c" />
+    <ClCompile Include="..\..\..\drivers\xexex.c" />
+    <ClCompile Include="..\..\..\drivers\xmen.c" />
+    <ClCompile Include="..\..\..\drivers\xorworld.c" />
+    <ClCompile Include="..\..\..\drivers\xxmissio.c" />
+    <ClCompile Include="..\..\..\drivers\xybots.c" />
+    <ClCompile Include="..\..\..\drivers\xyonix.c" />
+    <ClCompile Include="..\..\..\drivers\yamato.c" />
+    <ClCompile Include="..\..\..\drivers\yard.c" />
+    <ClCompile Include="..\..\..\drivers\yiear.c" />
+    <ClCompile Include="..\..\..\drivers\yumefuda.c" />
+    <ClCompile Include="..\..\..\drivers\yunsun16.c" />
+    <ClCompile Include="..\..\..\drivers\yunsung8.c" />
+    <ClCompile Include="..\..\..\drivers\zac2650.c" />
+    <ClCompile Include="..\..\..\drivers\zaccaria.c" />
+    <ClCompile Include="..\..\..\drivers\zaxxon.c" />
+    <ClCompile Include="..\..\..\drivers\zerozone.c" />
+    <ClCompile Include="..\..\..\drivers\zn.c" />
+    <ClCompile Include="..\..\..\drivers\zodiack.c" />
+    <ClCompile Include="..\..\..\fileio.c" />
+    <ClCompile Include="..\..\..\harddisk.c" />
+    <ClCompile Include="..\..\..\hash.c" />
+    <ClCompile Include="..\..\..\hiscore.c" />
+    <ClCompile Include="..\..\..\info.c" />
+    <ClCompile Include="..\..\..\inptport.c" />
+    <ClCompile Include="..\..\..\input.c" />
+    <ClCompile Include="..\..\..\machine\6522via.c" />
+    <ClCompile Include="..\..\..\machine\6532riot.c" />
+    <ClCompile Include="..\..\..\machine\6821pia.c" />
+    <ClCompile Include="..\..\..\machine\74123.c" />
+    <ClCompile Include="..\..\..\machine\74148.c" />
+    <ClCompile Include="..\..\..\machine\74153.c" />
+    <ClCompile Include="..\..\..\machine\7474.c" />
+    <ClCompile Include="..\..\..\machine\8080bw.c" />
+    <ClCompile Include="..\..\..\machine\8254pit.c" />
+    <ClCompile Include="..\..\..\machine\8255ppi.c" />
+    <ClCompile Include="..\..\..\machine\acitya.c" />
+    <ClCompile Include="..\..\..\machine\ajax.c" />
+    <ClCompile Include="..\..\..\machine\am53cf96.c" />
+    <ClCompile Include="..\..\..\machine\arkanoid.c" />
+    <ClCompile Include="..\..\..\machine\asic65.c" />
+    <ClCompile Include="..\..\..\machine\asteroid.c" />
+    <ClCompile Include="..\..\..\machine\astrocde.c" />
+    <ClCompile Include="..\..\..\machine\atarifb.c" />
+    <ClCompile Include="..\..\..\machine\atarigen.c" />
+    <ClCompile Include="..\..\..\machine\atari_vg.c" />
+    <ClCompile Include="..\..\..\machine\avalnche.c" />
+    <ClCompile Include="..\..\..\machine\bagman.c" />
+    <ClCompile Include="..\..\..\machine\balsente.c" />
+    <ClCompile Include="..\..\..\machine\beezer.c" />
+    <ClCompile Include="..\..\..\machine\berzerk.c" />
+    <ClCompile Include="..\..\..\machine\bigevglf.c" />
+    <ClCompile Include="..\..\..\machine\bonzeadv.c" />
+    <ClCompile Include="..\..\..\machine\bosco.c" />
+    <ClCompile Include="..\..\..\machine\bsktball.c" />
+    <ClCompile Include="..\..\..\machine\btime.c" />
+    <ClCompile Include="..\..\..\machine\bublbobl.c" />
+    <ClCompile Include="..\..\..\machine\buggychl.c" />
+    <ClCompile Include="..\..\..\machine\capbowl.c" />
+    <ClCompile Include="..\..\..\machine\carpolo.c" />
+    <ClCompile Include="..\..\..\machine\cchasm.c" />
+    <ClCompile Include="..\..\..\machine\cchip.c" />
+    <ClCompile Include="..\..\..\machine\chaknpop.c" />
+    <ClCompile Include="..\..\..\machine\clayshoo.c" />
+    <ClCompile Include="..\..\..\machine\copsnrob.c" />
+    <ClCompile Include="..\..\..\machine\dec0.c" />
+    <ClCompile Include="..\..\..\machine\decocass.c" />
+    <ClCompile Include="..\..\..\machine\decocrpt.c" />
+    <ClCompile Include="..\..\..\machine\decoprot.c" />
+    <ClCompile Include="..\..\..\machine\digdug.c" />
+    <ClCompile Include="..\..\..\machine\docastle.c" />
+    <ClCompile Include="..\..\..\machine\dominos.c" />
+    <ClCompile Include="..\..\..\machine\eeprom.c" />
+    <ClCompile Include="..\..\..\machine\equites.c" />
+    <ClCompile Include="..\..\..\machine\exctsccr.c" />
+    <ClCompile Include="..\..\..\machine\flstory.c" />
+    <ClCompile Include="..\..\..\machine\gaelco2.c" />
+    <ClCompile Include="..\..\..\machine\galaga.c" />
+    <ClCompile Include="..\..\..\machine\gaplus.c" />
+    <ClCompile Include="..\..\..\machine\geebee.c" />
+    <ClCompile Include="..\..\..\machine\grchamp.c" />
+    <ClCompile Include="..\..\..\machine\grobda.c" />
+    <ClCompile Include="..\..\..\machine\harddriv.c" />
+    <ClCompile Include="..\..\..\machine\idectrl.c" />
+    <ClCompile Include="..\..\..\machine\irem_cpu.c" />
+    <ClCompile Include="..\..\..\machine\irobot.c" />
+    <ClCompile Include="..\..\..\machine\jackal.c" />
+    <ClCompile Include="..\..\..\machine\jumpshot.c" />
+    <ClCompile Include="..\..\..\machine\kabuki.c" />
+    <ClCompile Include="..\..\..\machine\konami.c" />
+    <ClCompile Include="..\..\..\machine\konamigx.c" />
+    <ClCompile Include="..\..\..\machine\kyugo.c" />
+    <ClCompile Include="..\..\..\machine\leland.c" />
+    <ClCompile Include="..\..\..\machine\leprechn.c" />
+    <ClCompile Include="..\..\..\machine\lkage.c" />
+    <ClCompile Include="..\..\..\machine\lsasquad.c" />
+    <ClCompile Include="..\..\..\machine\m68kfmly.c" />
+    <ClCompile Include="..\..\..\machine\maniach.c" />
+    <ClCompile Include="..\..\..\machine\mappy.c" />
+    <ClCompile Include="..\..\..\machine\mathbox.c" />
+    <ClCompile Include="..\..\..\machine\mb87078.c" />
+    <ClCompile Include="..\..\..\machine\mcr.c" />
+    <ClCompile Include="..\..\..\machine\mexico86.c" />
+    <ClCompile Include="..\..\..\machine\mhavoc.c" />
+    <ClCompile Include="..\..\..\machine\midtunit.c" />
+    <ClCompile Include="..\..\..\machine\midwayic.c" />
+    <ClCompile Include="..\..\..\machine\midwunit.c" />
+    <ClCompile Include="..\..\..\machine\midyunit.c" />
+    <ClCompile Include="..\..\..\machine\missile.c" />
+    <ClCompile Include="..\..\..\machine\mspacman.c" />
+    <ClCompile Include="..\..\..\machine\namcond1.c" />
+    <ClCompile Include="..\..\..\machine\namcos1.c" />
+    <ClCompile Include="..\..\..\machine\namcos2.c" />
+    <ClCompile Include="..\..\..\machine\nb1413m3.c" />
+    <ClCompile Include="..\..\..\machine\neocrypt.c" />
+    <ClCompile Include="..\..\..\machine\neogeo.c" />
+    <ClCompile Include="..\..\..\machine\nitedrvr.c" />
+    <ClCompile Include="..\..\..\machine\nycaptor.c" />
+    <ClCompile Include="..\..\..\machine\pacplus.c" />
+    <ClCompile Include="..\..\..\machine\pd4990a.c" />
+    <ClCompile Include="..\..\..\machine\pgmcrypt.c" />
+    <ClCompile Include="..\..\..\machine\pgmprot.c" />
+    <ClCompile Include="..\..\..\machine\phozon.c" />
+    <ClCompile Include="..\..\..\machine\pitnrun.c" />
+    <ClCompile Include="..\..\..\machine\playch10.c" />
+    <ClCompile Include="..\..\..\machine\polepos.c" />
+    <ClCompile Include="..\..\..\machine\psx.c" />
+    <ClCompile Include="..\..\..\machine\qix.c" />
+    <ClCompile Include="..\..\..\machine\rainbow.c" />
+    <ClCompile Include="..\..\..\machine\random.c" />
+    <ClCompile Include="..\..\..\machine\retofinv.c" />
+    <ClCompile Include="..\..\..\machine\rp5h01.c" />
+    <ClCompile Include="..\..\..\machine\sbrkout.c" />
+    <ClCompile Include="..\..\..\machine\scramble.c" />
+    <ClCompile Include="..\..\..\machine\scudsp.c" />
+    <ClCompile Include="..\..\..\machine\sega.c" />
+    <ClCompile Include="..\..\..\machine\segacrpt.c" />
+    <ClCompile Include="..\..\..\machine\segar.c" />
+    <ClCompile Include="..\..\..\machine\simpsons.c" />
+    <ClCompile Include="..\..\..\machine\slapfght.c" />
+    <ClCompile Include="..\..\..\machine\slapstic.c" />
+    <ClCompile Include="..\..\..\machine\slikshot.c" />
+    <ClCompile Include="..\..\..\machine\snes.c" />
+    <ClCompile Include="..\..\..\machine\spiders.c" />
+    <ClCompile Include="..\..\..\machine\stactics.c" />
+    <ClCompile Include="..\..\..\machine\starwars.c" />
+    <ClCompile Include="..\..\..\machine\stfight.c" />
+    <ClCompile Include="..\..\..\machine\strtheat.c" />
+    <ClCompile Include="..\..\..\machine\stvcd.c" />
+    <ClCompile Include="..\..\..\machine\subs.c" />
+    <ClCompile Include="..\..\..\machine\superpac.c" />
+    <ClCompile Include="..\..\..\machine\system16.c" />
+    <ClCompile Include="..\..\..\machine\system24.c" />
+    <ClCompile Include="..\..\..\machine\tait8741.c" />
+    <ClCompile Include="..\..\..\machine\taitosj.c" />
+    <ClCompile Include="..\..\..\machine\theglobp.c" />
+    <ClCompile Include="..\..\..\machine\ticket.c" />
+    <ClCompile Include="..\..\..\machine\tmp68301.c" />
+    <ClCompile Include="..\..\..\machine\tnzs.c" />
+    <ClCompile Include="..\..\..\machine\toaplan1.c" />
+    <ClCompile Include="..\..\..\machine\toypop.c" />
+    <ClCompile Include="..\..\..\machine\turbo.c" />
+    <ClCompile Include="..\..\..\machine\twincobr.c" />
+    <ClCompile Include="..\..\..\machine\volfied.c" />
+    <ClCompile Include="..\..\..\machine\vsnes.c" />
+    <ClCompile Include="..\..\..\machine\williams.c" />
+    <ClCompile Include="..\..\..\machine\wrally.c" />
+    <ClCompile Include="..\..\..\machine\xevious.c" />
+    <ClCompile Include="..\..\..\machine\z80fmly.c" />
+    <ClCompile Include="..\..\..\mame-memory.c" />
+    <ClCompile Include="..\..\..\mame.c" />
+    <ClCompile Include="..\..\..\mamedbg.c" />
+    <ClCompile Include="..\..\..\md5.c" />
+    <ClCompile Include="..\..\..\memdbg.c" />
+    <ClCompile Include="..\..\..\network.c" />
+    <ClCompile Include="..\..\..\palette.c" />
+    <ClCompile Include="..\..\..\png.c" />
+    <ClCompile Include="..\..\..\profiler.c" />
+    <ClCompile Include="..\..\..\sha1.c" />
+    <ClCompile Include="..\..\..\sndhrdw\8080bw.c" />
+    <ClCompile Include="..\..\..\sndhrdw\asteroid.c" />
+    <ClCompile Include="..\..\..\sndhrdw\astinvad.c" />
+    <ClCompile Include="..\..\..\sndhrdw\astrocde.c" />
+    <ClCompile Include="..\..\..\sndhrdw\astrof.c" />
+    <ClCompile Include="..\..\..\sndhrdw\atarijsa.c" />
+    <ClCompile Include="..\..\..\sndhrdw\aztarac.c" />
+    <ClCompile Include="..\..\..\sndhrdw\berzerk.c" />
+    <ClCompile Include="..\..\..\sndhrdw\bosco.c" />
+    <ClCompile Include="..\..\..\sndhrdw\bzone.c" />
+    <ClCompile Include="..\..\..\sndhrdw\cage.c" />
+    <ClCompile Include="..\..\..\sndhrdw\carnival.c" />
+    <ClCompile Include="..\..\..\sndhrdw\cchasm.c" />
+    <ClCompile Include="..\..\..\sndhrdw\cclimber.c" />
+    <ClCompile Include="..\..\..\sndhrdw\cinemat.c" />
+    <ClCompile Include="..\..\..\sndhrdw\cyberbal.c" />
+    <ClCompile Include="..\..\..\sndhrdw\dcs.c" />
+    <ClCompile Include="..\..\..\sndhrdw\depthch.c" />
+    <ClCompile Include="..\..\..\sndhrdw\dkong.c" />
+    <ClCompile Include="..\..\..\sndhrdw\exidy.c" />
+    <ClCompile Include="..\..\..\sndhrdw\exidy440.c" />
+    <ClCompile Include="..\..\..\sndhrdw\flower.c" />
+    <ClCompile Include="..\..\..\sndhrdw\galaxian.c" />
+    <ClCompile Include="..\..\..\sndhrdw\geebee.c" />
+    <ClCompile Include="..\..\..\sndhrdw\gomoku.c" />
+    <ClCompile Include="..\..\..\sndhrdw\gorf.c" />
+    <ClCompile Include="..\..\..\sndhrdw\gottlieb.c" />
+    <ClCompile Include="..\..\..\sndhrdw\gotya.c" />
+    <ClCompile Include="..\..\..\sndhrdw\gridlee.c" />
+    <ClCompile Include="..\..\..\sndhrdw\gyruss.c" />
+    <ClCompile Include="..\..\..\sndhrdw\harddriv.c" />
+    <ClCompile Include="..\..\..\sndhrdw\invinco.c" />
+    <ClCompile Include="..\..\..\sndhrdw\irem.c" />
+    <ClCompile Include="..\..\..\sndhrdw\jaguar.c" />
+    <ClCompile Include="..\..\..\sndhrdw\leland.c" />
+    <ClCompile Include="..\..\..\sndhrdw\llander.c" />
+    <ClCompile Include="..\..\..\sndhrdw\m72.c" />
+    <ClCompile Include="..\..\..\sndhrdw\mario.c" />
+    <ClCompile Include="..\..\..\sndhrdw\mcr.c" />
+    <ClCompile Include="..\..\..\sndhrdw\meadows.c" />
+    <ClCompile Include="..\..\..\sndhrdw\pbillian.c" />
+    <ClCompile Include="..\..\..\sndhrdw\phoenix.c" />
+    <ClCompile Include="..\..\..\sndhrdw\pleiads.c" />
+    <ClCompile Include="..\..\..\sndhrdw\polepos.c" />
+    <ClCompile Include="..\..\..\sndhrdw\polyplay.c" />
+    <ClCompile Include="..\..\..\sndhrdw\pulsar.c" />
+    <ClCompile Include="..\..\..\sndhrdw\rastan.c" />
+    <ClCompile Include="..\..\..\sndhrdw\redalert.c" />
+    <ClCompile Include="..\..\..\sndhrdw\redbaron.c" />
+    <ClCompile Include="..\..\..\sndhrdw\rockola.c" />
+    <ClCompile Include="..\..\..\sndhrdw\scramble.c" />
+    <ClCompile Include="..\..\..\sndhrdw\sega.c" />
+    <ClCompile Include="..\..\..\sndhrdw\segar.c" />
+    <ClCompile Include="..\..\..\sndhrdw\segasnd.c" />
+    <ClCompile Include="..\..\..\sndhrdw\seibu.c" />
+    <ClCompile Include="..\..\..\sndhrdw\senjyo.c" />
+    <ClCompile Include="..\..\..\sndhrdw\snes.c" />
+    <ClCompile Include="..\..\..\sndhrdw\starwars.c" />
+    <ClCompile Include="..\..\..\sndhrdw\system16.c" />
+    <ClCompile Include="..\..\..\sndhrdw\taitosnd.c" />
+    <ClCompile Include="..\..\..\sndhrdw\taito_f3.c" />
+    <ClCompile Include="..\..\..\sndhrdw\targ.c" />
+    <ClCompile Include="..\..\..\sndhrdw\timeplt.c" />
+    <ClCompile Include="..\..\..\sndhrdw\trackfld.c" />
+    <ClCompile Include="..\..\..\sndhrdw\warpwarp.c" />
+    <ClCompile Include="..\..\..\sndhrdw\williams.c" />
+    <ClCompile Include="..\..\..\sndhrdw\wiping.c" />
+    <ClCompile Include="..\..\..\sndhrdw\zaxxon.c" />
+    <ClCompile Include="..\..\..\sndintrf.c" />
+    <ClCompile Include="..\..\..\sound\2151intf.c" />
+    <ClCompile Include="..\..\..\sound\2203intf.c" />
+    <ClCompile Include="..\..\..\sound\2413intf.c" />
+    <ClCompile Include="..\..\..\sound\2608intf.c" />
+    <ClCompile Include="..\..\..\sound\2610intf.c" />
+    <ClCompile Include="..\..\..\sound\2612intf.c" />
+    <ClCompile Include="..\..\..\sound\262intf.c" />
+    <ClCompile Include="..\..\..\sound\3812intf.c" />
+    <ClCompile Include="..\..\..\sound\5110intf.c" />
+    <ClCompile Include="..\..\..\sound\5220intf.c" />
+    <ClCompile Include="..\..\..\sound\adpcm.c" />
+    <ClCompile Include="..\..\..\sound\astrocde.c" />
+    <ClCompile Include="..\..\..\sound\ay8910.c" />
+    <ClCompile Include="..\..\..\sound\bsmt2000.c" />
+    <ClCompile Include="..\..\..\sound\c140.c" />
+    <ClCompile Include="..\..\..\sound\c6280.c" />
+    <ClCompile Include="..\..\..\sound\cem3394.c" />
+    <ClCompile Include="..\..\..\sound\dac.c" />
+    <ClCompile Include="..\..\..\sound\discrete.c" />
+    <ClCompile Include="..\..\..\sound\disc_dev.c" />
+    <ClCompile Include="..\..\..\sound\disc_flt.c" />
+    <ClCompile Include="..\..\..\sound\disc_inp.c" />
+    <ClCompile Include="..\..\..\sound\disc_mth.c" />
+    <ClCompile Include="..\..\..\sound\disc_out.c" />
+    <ClCompile Include="..\..\..\sound\disc_wav.c" />
+    <ClCompile Include="..\..\..\sound\es5506.c" />
+    <ClCompile Include="..\..\..\sound\filter.c" />
+    <ClCompile Include="..\..\..\sound\fm.c" />
+    <ClCompile Include="..\..\..\sound\fmopl.c" />
+    <ClCompile Include="..\..\..\sound\gaelco.c" />
+    <ClCompile Include="..\..\..\sound\hc55516.c" />
+    <ClCompile Include="..\..\..\sound\iremga20.c" />
+    <ClCompile Include="..\..\..\sound\k005289.c" />
+    <ClCompile Include="..\..\..\sound\k007232.c" />
+    <ClCompile Include="..\..\..\sound\k051649.c" />
+    <ClCompile Include="..\..\..\sound\k053260.c" />
+    <ClCompile Include="..\..\..\sound\k054539.c" />
+    <ClCompile Include="..\..\..\sound\mixer.c" />
+    <ClCompile Include="..\..\..\sound\msm5205.c" />
+    <ClCompile Include="..\..\..\sound\msm5232.c" />
+    <ClCompile Include="..\..\..\sound\multipcm.c" />
+    <ClCompile Include="..\..\..\sound\namco.c" />
+    <ClCompile Include="..\..\..\sound\namcona.c" />
+    <ClCompile Include="..\..\..\sound\nes_apu.c" />
+    <ClCompile Include="..\..\..\sound\pokey.c" />
+    <ClCompile Include="..\..\..\sound\psx.c" />
+    <ClCompile Include="..\..\..\sound\qsound.c" />
+    <ClCompile Include="..\..\..\sound\rf5c68.c" />
+    <ClCompile Include="..\..\..\sound\saa1099.c" />
+    <ClCompile Include="..\..\..\sound\samples.c" />
+    <ClCompile Include="..\..\..\sound\scsp.c" />
+    <ClCompile Include="..\..\..\sound\scsplfo.c" />
+    <ClCompile Include="..\..\..\sound\segapcm.c" />
+    <ClCompile Include="..\..\..\sound\sn76477.c" />
+    <ClCompile Include="..\..\..\sound\sn76496.c" />
+    <ClCompile Include="..\..\..\sound\sp0250.c" />
+    <ClCompile Include="..\..\..\sound\streams.c" />
+    <ClCompile Include="..\..\..\sound\tiaintf.c" />
+    <ClCompile Include="..\..\..\sound\tiasound.c" />
+    <ClCompile Include="..\..\..\sound\tms36xx.c" />
+    <ClCompile Include="..\..\..\sound\tms5110.c" />
+    <ClCompile Include="..\..\..\sound\tms5110r.c" />
+    <ClCompile Include="..\..\..\sound\tms5220.c" />
+    <ClCompile Include="..\..\..\sound\tms5220r.c" />
+    <ClCompile Include="..\..\..\sound\upd7759.c" />
+    <ClCompile Include="..\..\..\sound\vlm5030.c" />
+    <ClCompile Include="..\..\..\sound\votrax.c" />
+    <ClCompile Include="..\..\..\sound\wavwrite.c" />
+    <ClCompile Include="..\..\..\sound\x1_010.c" />
+    <ClCompile Include="..\..\..\sound\ym2151.c" />
+    <ClCompile Include="..\..\..\sound\ym2413.c" />
+    <ClCompile Include="..\..\..\sound\ymdeltat.c" />
+    <ClCompile Include="..\..\..\sound\ymf262.c" />
+    <ClCompile Include="..\..\..\sound\ymf271.c" />
+    <ClCompile Include="..\..\..\sound\ymf278b.c" />
+    <ClCompile Include="..\..\..\sound\ymz280b.c" />
+    <ClCompile Include="..\..\..\state.c" />
+    <ClCompile Include="..\..\..\tilemap.c" />
+    <ClCompile Include="..\..\..\timer.c" />
+    <ClCompile Include="..\..\..\ui_text.c" />
+    <ClCompile Include="..\..\..\unzip.c" />
+    <ClCompile Include="..\..\..\usrintrf.c" />
+    <ClCompile Include="..\..\..\vidhrdw\1942.c" />
+    <ClCompile Include="..\..\..\vidhrdw\1943.c" />
+    <ClCompile Include="..\..\..\vidhrdw\40love.c" />
+    <ClCompile Include="..\..\..\vidhrdw\4enraya.c" />
+    <ClCompile Include="..\..\..\vidhrdw\8080bw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\88games.c" />
+    <ClCompile Include="..\..\..\vidhrdw\actfancr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\aeroboto.c" />
+    <ClCompile Include="..\..\..\vidhrdw\aerofgt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\afega.c" />
+    <ClCompile Include="..\..\..\vidhrdw\airbustr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ajax.c" />
+    <ClCompile Include="..\..\..\vidhrdw\aliens.c" />
+    <ClCompile Include="..\..\..\vidhrdw\alpha68k.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ambush.c" />
+    <ClCompile Include="..\..\..\vidhrdw\amspdwy.c" />
+    <ClCompile Include="..\..\..\vidhrdw\angelkds.c" />
+    <ClCompile Include="..\..\..\vidhrdw\appoooh.c" />
+    <ClCompile Include="..\..\..\vidhrdw\aquarium.c" />
+    <ClCompile Include="..\..\..\vidhrdw\arabian.c" />
+    <ClCompile Include="..\..\..\vidhrdw\arcadecl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\argus.c" />
+    <ClCompile Include="..\..\..\vidhrdw\arkanoid.c" />
+    <ClCompile Include="..\..\..\vidhrdw\armedf.c" />
+    <ClCompile Include="..\..\..\vidhrdw\artmagic.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ashnojoe.c" />
+    <ClCompile Include="..\..\..\vidhrdw\asterix.c" />
+    <ClCompile Include="..\..\..\vidhrdw\astinvad.c" />
+    <ClCompile Include="..\..\..\vidhrdw\astrocde.c" />
+    <ClCompile Include="..\..\..\vidhrdw\astrof.c" />
+    <ClCompile Include="..\..\..\vidhrdw\asuka.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarifb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarig1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarig42.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarigt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarigx2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarimo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarirle.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarisy1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atarisy2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\atetris.c" />
+    <ClCompile Include="..\..\..\vidhrdw\avalnche.c" />
+    <ClCompile Include="..\..\..\vidhrdw\avengrgs.c" />
+    <ClCompile Include="..\..\..\vidhrdw\avgdvg.c" />
+    <ClCompile Include="..\..\..\vidhrdw\aztarac.c" />
+    <ClCompile Include="..\..\..\vidhrdw\badlands.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bagman.c" />
+    <ClCompile Include="..\..\..\vidhrdw\balsente.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bankp.c" />
+    <ClCompile Include="..\..\..\vidhrdw\baraduke.c" />
+    <ClCompile Include="..\..\..\vidhrdw\batman.c" />
+    <ClCompile Include="..\..\..\vidhrdw\battlane.c" />
+    <ClCompile Include="..\..\..\vidhrdw\battlera.c" />
+    <ClCompile Include="..\..\..\vidhrdw\battlex.c" />
+    <ClCompile Include="..\..\..\vidhrdw\battlnts.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bbusters.c" />
+    <ClCompile Include="..\..\..\vidhrdw\beaminv.c" />
+    <ClCompile Include="..\..\..\vidhrdw\beathead.c" />
+    <ClCompile Include="..\..\..\vidhrdw\beezer.c" />
+    <ClCompile Include="..\..\..\vidhrdw\berzerk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bigevglf.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bigstrkb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bionicc.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bishi.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bking2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bladestl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\blktiger.c" />
+    <ClCompile Include="..\..\..\vidhrdw\blmbycar.c" />
+    <ClCompile Include="..\..\..\vidhrdw\blockade.c" />
+    <ClCompile Include="..\..\..\vidhrdw\blockhl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\blockout.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bloodbro.c" />
+    <ClCompile Include="..\..\..\vidhrdw\blstroid.c" />
+    <ClCompile Include="..\..\..\vidhrdw\blueprnt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bogeyman.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bombjack.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bosco.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bottom9.c" />
+    <ClCompile Include="..\..\..\vidhrdw\boxer.c" />
+    <ClCompile Include="..\..\..\vidhrdw\brkthru.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bsktball.c" />
+    <ClCompile Include="..\..\..\vidhrdw\btime.c" />
+    <ClCompile Include="..\..\..\vidhrdw\btoads.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bublbobl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\buggychl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bwing.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cabal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\canyon.c" />
+    <ClCompile Include="..\..\..\vidhrdw\capbowl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\carjmbre.c" />
+    <ClCompile Include="..\..\..\vidhrdw\carpolo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cave.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cbasebal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cbuster.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ccastles.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cchasm.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cclimber.c" />
+    <ClCompile Include="..\..\..\vidhrdw\centiped.c" />
+    <ClCompile Include="..\..\..\vidhrdw\chaknpop.c" />
+    <ClCompile Include="..\..\..\vidhrdw\champbas.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cheekyms.c" />
+    <ClCompile Include="..\..\..\vidhrdw\chqflag.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cinemat.c" />
+    <ClCompile Include="..\..\..\vidhrdw\circus.c" />
+    <ClCompile Include="..\..\..\vidhrdw\circusc.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cischeat.c" />
+    <ClCompile Include="..\..\..\vidhrdw\citycon.c" />
+    <ClCompile Include="..\..\..\vidhrdw\clayshoo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cloak.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cloud9.c" />
+    <ClCompile Include="..\..\..\vidhrdw\clshroad.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cninja.c" />
+    <ClCompile Include="..\..\..\vidhrdw\combatsc.c" />
+    <ClCompile Include="..\..\..\vidhrdw\commando.c" />
+    <ClCompile Include="..\..\..\vidhrdw\contra.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cop01.c" />
+    <ClCompile Include="..\..\..\vidhrdw\copsnrob.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cosmic.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cps1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\crbaloon.c" />
+    <ClCompile Include="..\..\..\vidhrdw\crgolf.c" />
+    <ClCompile Include="..\..\..\vidhrdw\crimfght.c" />
+    <ClCompile Include="..\..\..\vidhrdw\crshrace.c" />
+    <ClCompile Include="..\..\..\vidhrdw\crtc6845.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cvs.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cyberbal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\darius.c" />
+    <ClCompile Include="..\..\..\vidhrdw\darkseal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dassault.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dbz2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dcon.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dday.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ddragon.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ddragon3.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ddrible.c" />
+    <ClCompile Include="..\..\..\vidhrdw\deadang.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dec0.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dec8.c" />
+    <ClCompile Include="..\..\..\vidhrdw\deco16ic.c" />
+    <ClCompile Include="..\..\..\vidhrdw\deco32.c" />
+    <ClCompile Include="..\..\..\vidhrdw\decocass.c" />
+    <ClCompile Include="..\..\..\vidhrdw\deniam.c" />
+    <ClCompile Include="..\..\..\vidhrdw\destroyr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\digdug.c" />
+    <ClCompile Include="..\..\..\vidhrdw\diverboy.c" />
+    <ClCompile Include="..\..\..\vidhrdw\djboy.c" />
+    <ClCompile Include="..\..\..\vidhrdw\djmain.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dkong.c" />
+    <ClCompile Include="..\..\..\vidhrdw\docastle.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dogfgt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dooyong.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dorachan.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dotrikun.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dragrace.c" />
+    <ClCompile Include="..\..\..\vidhrdw\drgnmst.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dribling.c" />
+    <ClCompile Include="..\..\..\vidhrdw\drmicro.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dynax.c" />
+    <ClCompile Include="..\..\..\vidhrdw\dynduke.c" />
+    <ClCompile Include="..\..\..\vidhrdw\epos.c" />
+    <ClCompile Include="..\..\..\vidhrdw\eprom.c" />
+    <ClCompile Include="..\..\..\vidhrdw\equites.c" />
+    <ClCompile Include="..\..\..\vidhrdw\esd16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\espial.c" />
+    <ClCompile Include="..\..\..\vidhrdw\exctsccr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\exedexes.c" />
+    <ClCompile Include="..\..\..\vidhrdw\exerion.c" />
+    <ClCompile Include="..\..\..\vidhrdw\exidy.c" />
+    <ClCompile Include="..\..\..\vidhrdw\exidy440.c" />
+    <ClCompile Include="..\..\..\vidhrdw\exprraid.c" />
+    <ClCompile Include="..\..\..\vidhrdw\exterm.c" />
+    <ClCompile Include="..\..\..\vidhrdw\exzisus.c" />
+    <ClCompile Include="..\..\..\vidhrdw\f1gp.c" />
+    <ClCompile Include="..\..\..\vidhrdw\fantland.c" />
+    <ClCompile Include="..\..\..\vidhrdw\fastfred.c" />
+    <ClCompile Include="..\..\..\vidhrdw\fastlane.c" />
+    <ClCompile Include="..\..\..\vidhrdw\finalizr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\firetrap.c" />
+    <ClCompile Include="..\..\..\vidhrdw\firetrk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\fitfight.c" />
+    <ClCompile Include="..\..\..\vidhrdw\flkatck.c" />
+    <ClCompile Include="..\..\..\vidhrdw\flower.c" />
+    <ClCompile Include="..\..\..\vidhrdw\flstory.c" />
+    <ClCompile Include="..\..\..\vidhrdw\flyball.c" />
+    <ClCompile Include="..\..\..\vidhrdw\foodf.c" />
+    <ClCompile Include="..\..\..\vidhrdw\freekick.c" />
+    <ClCompile Include="..\..\..\vidhrdw\fromanc2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\fromance.c" />
+    <ClCompile Include="..\..\..\vidhrdw\funkybee.c" />
+    <ClCompile Include="..\..\..\vidhrdw\funkyjet.c" />
+    <ClCompile Include="..\..\..\vidhrdw\fuukifg2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\fuukifg3.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gaelco.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gaelco2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gaiden.c" />
+    <ClCompile Include="..\..\..\vidhrdw\galaga.c" />
+    <ClCompile Include="..\..\..\vidhrdw\galaxian.c" />
+    <ClCompile Include="..\..\..\vidhrdw\galivan.c" />
+    <ClCompile Include="..\..\..\vidhrdw\galpani2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\galpanic.c" />
+    <ClCompile Include="..\..\..\vidhrdw\galspnbl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gameplan.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gaplus.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gauntlet.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gberet.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gbusters.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gcpinbal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\geebee.c" />
+    <ClCompile Include="..\..\..\vidhrdw\generic.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gijoe.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ginganin.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gladiatr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\glass.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gng.c" />
+    <ClCompile Include="..\..\..\vidhrdw\goal92.c" />
+    <ClCompile Include="..\..\..\vidhrdw\goindol.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gomoku.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gotcha.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gottlieb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gotya.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gradius3.c" />
+    <ClCompile Include="..\..\..\vidhrdw\grchamp.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gridlee.c" />
+    <ClCompile Include="..\..\..\vidhrdw\grobda.c" />
+    <ClCompile Include="..\..\..\vidhrdw\groundfx.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gstriker.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gsword.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gumbo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gunbustr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gundealr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gunsmoke.c" />
+    <ClCompile Include="..\..\..\vidhrdw\gyruss.c" />
+    <ClCompile Include="..\..\..\vidhrdw\hanaawas.c" />
+    <ClCompile Include="..\..\..\vidhrdw\harddriv.c" />
+    <ClCompile Include="..\..\..\vidhrdw\hcastle.c" />
+    <ClCompile Include="..\..\..\vidhrdw\hexa.c" />
+    <ClCompile Include="..\..\..\vidhrdw\hexion.c" />
+    <ClCompile Include="..\..\..\vidhrdw\higemaru.c" />
+    <ClCompile Include="..\..\..\vidhrdw\hitme.c" />
+    <ClCompile Include="..\..\..\vidhrdw\hnayayoi.c" />
+    <ClCompile Include="..\..\..\vidhrdw\holeland.c" />
+    <ClCompile Include="..\..\..\vidhrdw\homedata.c" />
+    <ClCompile Include="..\..\..\vidhrdw\homerun.c" />
+    <ClCompile Include="..\..\..\vidhrdw\hyhoo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\hyperspt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\hyprduel.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ikki.c" />
+    <ClCompile Include="..\..\..\vidhrdw\inufuku.c" />
+    <ClCompile Include="..\..\..\vidhrdw\iqblock.c" />
+    <ClCompile Include="..\..\..\vidhrdw\irobot.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ironhors.c" />
+    <ClCompile Include="..\..\..\vidhrdw\itech32.c" />
+    <ClCompile Include="..\..\..\vidhrdw\itech8.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jack.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jackal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jagblit.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jagobj.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jaguar.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jailbrek.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jcross.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jedi.c" />
+    <ClCompile Include="..\..\..\vidhrdw\jrpacman.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kaneko16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kangaroo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\karnov.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kchamp.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kickgoal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kingobox.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kinst.c" />
+    <ClCompile Include="..\..\..\vidhrdw\klax.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kncljoe.c" />
+    <ClCompile Include="..\..\..\vidhrdw\konamigx.c" />
+    <ClCompile Include="..\..\..\vidhrdw\konamiic.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kopunch.c" />
+    <ClCompile Include="..\..\..\vidhrdw\kyugo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\labyrunr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ladybug.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ladyfrog.c" />
+    <ClCompile Include="..\..\..\vidhrdw\lasso.c" />
+    <ClCompile Include="..\..\..\vidhrdw\lastduel.c" />
+    <ClCompile Include="..\..\..\vidhrdw\lazercmd.c" />
+    <ClCompile Include="..\..\..\vidhrdw\legionna.c" />
+    <ClCompile Include="..\..\..\vidhrdw\leland.c" />
+    <ClCompile Include="..\..\..\vidhrdw\lemmings.c" />
+    <ClCompile Include="..\..\..\vidhrdw\leprechn.c" />
+    <ClCompile Include="..\..\..\vidhrdw\lethalj.c" />
+    <ClCompile Include="..\..\..\vidhrdw\liberate.c" />
+    <ClCompile Include="..\..\..\vidhrdw\liberatr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\lkage.c" />
+    <ClCompile Include="..\..\..\vidhrdw\lsasquad.c" />
+    <ClCompile Include="..\..\..\vidhrdw\lwings.c" />
+    <ClCompile Include="..\..\..\vidhrdw\m107.c" />
+    <ClCompile Include="..\..\..\vidhrdw\m62.c" />
+    <ClCompile Include="..\..\..\vidhrdw\m72.c" />
+    <ClCompile Include="..\..\..\vidhrdw\m79amb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\m90.c" />
+    <ClCompile Include="..\..\..\vidhrdw\m92.c" />
+    <ClCompile Include="..\..\..\vidhrdw\macrossp.c" />
+    <ClCompile Include="..\..\..\vidhrdw\madmotor.c" />
+    <ClCompile Include="..\..\..\vidhrdw\magmax.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mainevt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mainsnk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\malzak.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mappy.c" />
+    <ClCompile Include="..\..\..\vidhrdw\marineb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mario.c" />
+    <ClCompile Include="..\..\..\vidhrdw\markham.c" />
+    <ClCompile Include="..\..\..\vidhrdw\marvins.c" />
+    <ClCompile Include="..\..\..\vidhrdw\matmania.c" />
+    <ClCompile Include="..\..\..\vidhrdw\matrix3d.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mayumi.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mcatadv.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mcr12.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mcr3.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mcr68.c" />
+    <ClCompile Include="..\..\..\vidhrdw\meadows.c" />
+    <ClCompile Include="..\..\..\vidhrdw\megasys1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\megazone.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mermaid.c" />
+    <ClCompile Include="..\..\..\vidhrdw\metlclsh.c" />
+    <ClCompile Include="..\..\..\vidhrdw\metro.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mexico86.c" />
+    <ClCompile Include="..\..\..\vidhrdw\midtunit.c" />
+    <ClCompile Include="..\..\..\vidhrdw\midvunit.c" />
+    <ClCompile Include="..\..\..\vidhrdw\midyunit.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mikie.c" />
+    <ClCompile Include="..\..\..\vidhrdw\minivadr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\missile.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mitchell.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mjkjidai.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mjsister.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mnight.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mole.c" />
+    <ClCompile Include="..\..\..\vidhrdw\momoko.c" />
+    <ClCompile Include="..\..\..\vidhrdw\moo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mosaic.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mouser.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mpatrol.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mrdo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mrflea.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mrjong.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ms32.c" />
+    <ClCompile Include="..\..\..\vidhrdw\msisaac.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mugsmash.c" />
+    <ClCompile Include="..\..\..\vidhrdw\munchmo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mustache.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mystston.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mystwarr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\namcona1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\namconb1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\namcos1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\namcos2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\namcos21.c" />
+    <ClCompile Include="..\..\..\vidhrdw\namcos22.c" />
+    <ClCompile Include="..\..\..\vidhrdw\namcos3d.c" />
+    <ClCompile Include="..\..\..\vidhrdw\namcos86.c" />
+    <ClCompile Include="..\..\..\vidhrdw\naughtyb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nbmj8688.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nbmj8891.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nbmj8991.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nbmj9195.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nemesis.c" />
+    <ClCompile Include="..\..\..\vidhrdw\neogeo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\news.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ninjakd2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ninjakid.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ninjaw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nitedrvr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\niyanpai.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nmk16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nova2001.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nycaptor.c" />
+    <ClCompile Include="..\..\..\vidhrdw\nyny.c" />
+    <ClCompile Include="..\..\..\vidhrdw\offtwall.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ohmygod.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ojankohs.c" />
+    <ClCompile Include="..\..\..\vidhrdw\omegaf.c" />
+    <ClCompile Include="..\..\..\vidhrdw\oneshot.c" />
+    <ClCompile Include="..\..\..\vidhrdw\orbit.c" />
+    <ClCompile Include="..\..\..\vidhrdw\othldrby.c" />
+    <ClCompile Include="..\..\..\vidhrdw\othunder.c" />
+    <ClCompile Include="..\..\..\vidhrdw\overdriv.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pacland.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pandoras.c" />
+    <ClCompile Include="..\..\..\vidhrdw\paradise.c" />
+    <ClCompile Include="..\..\..\vidhrdw\parodius.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pass.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pastelgl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pbaction.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pbillian.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pcktgal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pengo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pgm.c" />
+    <ClCompile Include="..\..\..\vidhrdw\phoenix.c" />
+    <ClCompile Include="..\..\..\vidhrdw\phozon.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pingpong.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pirates.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pitnrun.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pkunwar.c" />
+    <ClCompile Include="..\..\..\vidhrdw\playch10.c" />
+    <ClCompile Include="..\..\..\vidhrdw\playmark.c" />
+    <ClCompile Include="..\..\..\vidhrdw\plygonet.c" />
+    <ClCompile Include="..\..\..\vidhrdw\polepos.c" />
+    <ClCompile Include="..\..\..\vidhrdw\policetr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\poly.c" />
+    <ClCompile Include="..\..\..\vidhrdw\polyplay.c" />
+    <ClCompile Include="..\..\..\vidhrdw\poolshrk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pooyan.c" />
+    <ClCompile Include="..\..\..\vidhrdw\popeye.c" />
+    <ClCompile Include="..\..\..\vidhrdw\popper.c" />
+    <ClCompile Include="..\..\..\vidhrdw\portrait.c" />
+    <ClCompile Include="..\..\..\vidhrdw\powerins.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ppu2c03b.c" />
+    <ClCompile Include="..\..\..\vidhrdw\prehisle.c" />
+    <ClCompile Include="..\..\..\vidhrdw\psikyo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\psikyo4.c" />
+    <ClCompile Include="..\..\..\vidhrdw\psikyosh.c" />
+    <ClCompile Include="..\..\..\vidhrdw\psx.c" />
+    <ClCompile Include="..\..\..\vidhrdw\psychic5.c" />
+    <ClCompile Include="..\..\..\vidhrdw\punchout.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pushman.c" />
+    <ClCompile Include="..\..\..\vidhrdw\qix.c" />
+    <ClCompile Include="..\..\..\vidhrdw\quizdna.c" />
+    <ClCompile Include="..\..\..\vidhrdw\quizpani.c" />
+    <ClCompile Include="..\..\..\vidhrdw\raiden.c" />
+    <ClCompile Include="..\..\..\vidhrdw\raiders5.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rallyx.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rampart.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rastan.c" />
+    <ClCompile Include="..\..\..\vidhrdw\realbrk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\redalert.c" />
+    <ClCompile Include="..\..\..\vidhrdw\redclash.c" />
+    <ClCompile Include="..\..\..\vidhrdw\relief.c" />
+    <ClCompile Include="..\..\..\vidhrdw\renegade.c" />
+    <ClCompile Include="..\..\..\vidhrdw\retofinv.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rockola.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rockrage.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rocnrope.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rohga.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rollerg.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rollrace.c" />
+    <ClCompile Include="..\..\..\vidhrdw\route16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rpunch.c" />
+    <ClCompile Include="..\..\..\vidhrdw\runaway.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rungun.c" />
+    <ClCompile Include="..\..\..\vidhrdw\s2636.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sauro.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sbasketb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sbrkout.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sbugger.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sega.c" />
+    <ClCompile Include="..\..\..\vidhrdw\segac2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\segaic24.c" />
+    <ClCompile Include="..\..\..\vidhrdw\segar.c" />
+    <ClCompile Include="..\..\..\vidhrdw\segasyse.c" />
+    <ClCompile Include="..\..\..\vidhrdw\seicross.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sengokmj.c" />
+    <ClCompile Include="..\..\..\vidhrdw\senjyo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\seta.c" />
+    <ClCompile Include="..\..\..\vidhrdw\seta2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sf1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\shadfrce.c" />
+    <ClCompile Include="..\..\..\vidhrdw\shangha3.c" />
+    <ClCompile Include="..\..\..\vidhrdw\shangkid.c" />
+    <ClCompile Include="..\..\..\vidhrdw\shaolins.c" />
+    <ClCompile Include="..\..\..\vidhrdw\shisen.c" />
+    <ClCompile Include="..\..\..\vidhrdw\shootout.c" />
+    <ClCompile Include="..\..\..\vidhrdw\shuuz.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sidearms.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sidepckt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\silkroad.c" />
+    <ClCompile Include="..\..\..\vidhrdw\simpsons.c" />
+    <ClCompile Include="..\..\..\vidhrdw\skullxbo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\skychut.c" />
+    <ClCompile Include="..\..\..\vidhrdw\skydiver.c" />
+    <ClCompile Include="..\..\..\vidhrdw\skyfox.c" />
+    <ClCompile Include="..\..\..\vidhrdw\skykid.c" />
+    <ClCompile Include="..\..\..\vidhrdw\skyraid.c" />
+    <ClCompile Include="..\..\..\vidhrdw\slapfght.c" />
+    <ClCompile Include="..\..\..\vidhrdw\slapshot.c" />
+    <ClCompile Include="..\..\..\vidhrdw\snes.c" />
+    <ClCompile Include="..\..\..\vidhrdw\snk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\snk68.c" />
+    <ClCompile Include="..\..\..\vidhrdw\snowbros.c" />
+    <ClCompile Include="..\..\..\vidhrdw\solomon.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sonson.c" />
+    <ClCompile Include="..\..\..\vidhrdw\spacefb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\spbactn.c" />
+    <ClCompile Include="..\..\..\vidhrdw\spcforce.c" />
+    <ClCompile Include="..\..\..\vidhrdw\spdodgeb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\speedatk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\speedbal.c" />
+    <ClCompile Include="..\..\..\vidhrdw\speedspn.c" />
+    <ClCompile Include="..\..\..\vidhrdw\spiders.c" />
+    <ClCompile Include="..\..\..\vidhrdw\splash.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sprcros2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sprint2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sprint4.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sprint8.c" />
+    <ClCompile Include="..\..\..\vidhrdw\spy.c" />
+    <ClCompile Include="..\..\..\vidhrdw\srmp2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\srumbler.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sshangha.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sslam.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ssozumo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sspeedr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ssrj.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ssv.c" />
+    <ClCompile Include="..\..\..\vidhrdw\stactics.c" />
+    <ClCompile Include="..\..\..\vidhrdw\stadhero.c" />
+    <ClCompile Include="..\..\..\vidhrdw\starcrus.c" />
+    <ClCompile Include="..\..\..\vidhrdw\starfire.c" />
+    <ClCompile Include="..\..\..\vidhrdw\starshp1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\stfight.c" />
+    <ClCompile Include="..\..\..\vidhrdw\stlforce.c" />
+    <ClCompile Include="..\..\..\vidhrdw\strnskil.c" />
+    <ClCompile Include="..\..\..\vidhrdw\stvvdp1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\stvvdp2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\subs.c" />
+    <ClCompile Include="..\..\..\vidhrdw\suna16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\suna8.c" />
+    <ClCompile Include="..\..\..\vidhrdw\supbtime.c" />
+    <ClCompile Include="..\..\..\vidhrdw\superchs.c" />
+    <ClCompile Include="..\..\..\vidhrdw\superpac.c" />
+    <ClCompile Include="..\..\..\vidhrdw\superqix.c" />
+    <ClCompile Include="..\..\..\vidhrdw\suprloco.c" />
+    <ClCompile Include="..\..\..\vidhrdw\suprnova.c" />
+    <ClCompile Include="..\..\..\vidhrdw\suprslam.c" />
+    <ClCompile Include="..\..\..\vidhrdw\surpratk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sys16spr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\system1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\system16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\system24.c" />
+    <ClCompile Include="..\..\..\vidhrdw\system32.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tagteam.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tail2nos.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taitoair.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taitoic.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taitosj.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taito_b.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taito_f2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taito_f3.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taito_h.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taito_l.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taito_z.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tankbatt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tankbust.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taotaido.c" />
+    <ClCompile Include="..\..\..\vidhrdw\targeth.c" />
+    <ClCompile Include="..\..\..\vidhrdw\taxidrvr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tbowl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tceptor.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tecmo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tecmo16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tehkanwc.c" />
+    <ClCompile Include="..\..\..\vidhrdw\terracre.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tetrisp2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\thedeep.c" />
+    <ClCompile Include="..\..\..\vidhrdw\thepit.c" />
+    <ClCompile Include="..\..\..\vidhrdw\thief.c" />
+    <ClCompile Include="..\..\..\vidhrdw\thoop2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\thunderj.c" />
+    <ClCompile Include="..\..\..\vidhrdw\thunderx.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tia.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tickee.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tigeroad.c" />
+    <ClCompile Include="..\..\..\vidhrdw\timelimt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\timeplt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tlc34076.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tmnt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tms34061.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tms9928a.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tnzs.c" />
+    <ClCompile Include="..\..\..\vidhrdw\toaplan1.c" />
+    <ClCompile Include="..\..\..\vidhrdw\toaplan2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\toki.c" />
+    <ClCompile Include="..\..\..\vidhrdw\toobin.c" />
+    <ClCompile Include="..\..\..\vidhrdw\topspeed.c" />
+    <ClCompile Include="..\..\..\vidhrdw\toypop.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tp84.c" />
+    <ClCompile Include="..\..\..\vidhrdw\trackfld.c" />
+    <ClCompile Include="..\..\..\vidhrdw\travrusa.c" />
+    <ClCompile Include="..\..\..\vidhrdw\triplhnt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\troangel.c" />
+    <ClCompile Include="..\..\..\vidhrdw\truco.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tsamurai.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ttmahjng.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tubep.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tumblep.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tunhunt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\turbo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tutankhm.c" />
+    <ClCompile Include="..\..\..\vidhrdw\twin16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\twincobr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ultraman.c" />
+    <ClCompile Include="..\..\..\vidhrdw\undrfire.c" />
+    <ClCompile Include="..\..\..\vidhrdw\unico.c" />
+    <ClCompile Include="..\..\..\vidhrdw\usgames.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vaportra.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vastar.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vball.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vector.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vendetta.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vicdual.c" />
+    <ClCompile Include="..\..\..\vidhrdw\victory.c" />
+    <ClCompile Include="..\..\..\vidhrdw\videopin.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vigilant.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vindictr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\volfied.c" />
+    <ClCompile Include="..\..\..\vidhrdw\voodblit.c" />
+    <ClCompile Include="..\..\..\vidhrdw\voodoo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vsnes.c" />
+    <ClCompile Include="..\..\..\vidhrdw\vulgus.c" />
+    <ClCompile Include="..\..\..\vidhrdw\warpwarp.c" />
+    <ClCompile Include="..\..\..\vidhrdw\warriorb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wc90.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wc90b.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wecleman.c" />
+    <ClCompile Include="..\..\..\vidhrdw\welltris.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wgp.c" />
+    <ClCompile Include="..\..\..\vidhrdw\williams.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wiping.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wiz.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wolfpack.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wrally.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wwfsstar.c" />
+    <ClCompile Include="..\..\..\vidhrdw\wwfwfest.c" />
+    <ClCompile Include="..\..\..\vidhrdw\xain.c" />
+    <ClCompile Include="..\..\..\vidhrdw\xevious.c" />
+    <ClCompile Include="..\..\..\vidhrdw\xexex.c" />
+    <ClCompile Include="..\..\..\vidhrdw\xmen.c" />
+    <ClCompile Include="..\..\..\vidhrdw\xorworld.c" />
+    <ClCompile Include="..\..\..\vidhrdw\xxmissio.c" />
+    <ClCompile Include="..\..\..\vidhrdw\xybots.c" />
+    <ClCompile Include="..\..\..\vidhrdw\xyonix.c" />
+    <ClCompile Include="..\..\..\vidhrdw\yard.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ygv608.c" />
+    <ClCompile Include="..\..\..\vidhrdw\yiear.c" />
+    <ClCompile Include="..\..\..\vidhrdw\yunsun16.c" />
+    <ClCompile Include="..\..\..\vidhrdw\yunsung8.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zac2650.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zaccaria.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zaxxon.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zerozone.c" />
+    <ClCompile Include="..\..\..\vidhrdw\zodiack.c" />
+    <ClCompile Include="..\..\..\window.c" />
+    <ClCompile Include="..\..\..\x86drc.c" />
+    <ClCompile Include="..\..\joystick.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\keyboard.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\libretro.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\osd.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\video.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">CompileAsC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EA6D4439-262D-49A8-8F04-3483B4B3D607}</ProjectGuid>
+    <Keyword>Xbox360Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">
+    <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'">
+    <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'">
+    <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'">
+    <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">
+    <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">
+    <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <ExceptionHandling>false</ExceptionHandling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_DEBUG;_XBOX;_LIB;%(PreprocessorDefinitions);HAS_Z80;HAS_Z180;HAS_8080;HAS_8085A;HAS_M6502;HAS_M65C02;HAS_M6510;HAS_N2A03;HAS_DECO16;HAS_H6280;HAS_I86;HAS_I186;HAS_V20;HAS_V30;HAS_V33;HAS_V60;HAS_V70;HAS_I8035;HAS_I8039;HAS_I8048;HAS_N7751;HAS_I8X41;HAS_M6800;HAS_M6801;HAS_M6802;HAS_M6803;HAS_M6808;HAS_HD63701;HAS_NSC8105;HAS_M6805;HAS_M68705;HAS_HD63705;HAS_HD6309;HAS_M6809;HAS_KONAMI;HAS_M68000;HAS_M68010;HAS_M68EC020;HAS_M68020;HAS_T11;HAS_S2650;HAS_TMS34010;HAS_TMS34020;HAS_TMS9900;HAS_TMS9940;HAS_TMS9980;HAS_TMS9995;HAS_Z8000;HAS_TMS32010;HAS_TMS32025;HAS_TMS32031;HAS_CCPU;HAS_ADSP2100;HAS_ADSP2101;HAS_ADSP2104;HAS_ADSP2105;HAS_ADSP2115;HAS_PSXCPU;HAS_ASAP;HAS_UPD7810;HAS_UPD7807;HAS_ARM;HAS_JAGUAR;HAS_R3000;HAS_R4600;HAS_R5000;HAS_SH2;HAS_DSP32C;HAS_PIC16C55;HAS_PIC16C57;HAS_G65816;HAS_SPC700;HAS_E132XS;HAS_CUSTOM;HAS_SAMPLES;HAS_DAC;HAS_DISCRETE;HAS_AY816C58;HAS_AY8910;HAS_YM2203;HAS_YM2151_ALT;HAS_YM2608;HAS_YM2610;HAS_YM2610B;HAS_YM2612;HAS_YM3438;HAS_YM2413;HAS_YM3812;HAS_YM3526;HAS_YMZ280B;HAS_Y8950;HAS_SN76477;HAS_SN76496;HAS_POKEY;HAS_TIA;HAS_NES;HAS_ASTROCADE;HAS_NAMCO;HAS_NAMCONA;HAS_TMS36XX;HAS_TMS5110;HAS_TMS5220;HAS_VLM5030;HAS_ADPCM;HAS_OKIM6295;HAS_MSM5205;HAS_MSM5232;HAS_UPD7759;HAS_HC55516;HAS_K005289;HAS_K007232;HAS_K051649;HAS_K053260;HAS_K054539;HAS_SEGAPCM;HAS_RF5C68;HAS_CEM3394;HAS_C140;HAS_QSOUND;HAS_SAA1099;HAS_IREMGA20;HAS_ES5505;HAS_ES5506;HAS_BSMT2000;HAS_YMF262;HAS_YMF278B;HAS_GAELCO_CG1V;HAS_GAELCO_GAE1;HAS_X1_010;HAS_MULTIPCM;HAS_6280;HAS_SP0250;HAS_SCSP;HAS_PSXSPU;HAS_YMF271;NDEBUG;__LIBRETRO__;M_PI=3.1415927;MSB_FIRST;__ppc__;__POWERPC__;INLINE=static __inline</PreprocessorDefinitions>
+      <CallAttributedProfiling>Callcap</CallAttributedProfiling>
+      <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\;$(SolutionDir)\..\..\includes;$(SolutionDir)\..\..\cpu\m68000;$(SolutionDir)\..\..\libretro;$(SolutionDir)\..\..\libretro\includes\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <ExceptionHandling>false</ExceptionHandling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <PREfast>AnalyzeOnly</PREfast>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_DEBUG;_XBOX;_LIB;%(PreprocessorDefinitions);HAS_Z80;HAS_Z180;HAS_8080;HAS_8085A;HAS_M6502;HAS_M65C02;HAS_M6510;HAS_N2A03;HAS_DECO16;HAS_H6280;HAS_I86;HAS_I186;HAS_V20;HAS_V30;HAS_V33;HAS_V60;HAS_V70;HAS_I8035;HAS_I8039;HAS_I8048;HAS_N7751;HAS_I8X41;HAS_M6800;HAS_M6801;HAS_M6802;HAS_M6803;HAS_M6808;HAS_HD63701;HAS_NSC8105;HAS_M6805;HAS_M68705;HAS_HD63705;HAS_HD6309;HAS_M6809;HAS_KONAMI;HAS_M68000;HAS_M68010;HAS_M68EC020;HAS_M68020;HAS_T11;HAS_S2650;HAS_TMS34010;HAS_TMS34020;HAS_TMS9900;HAS_TMS9940;HAS_TMS9980;HAS_TMS9995;HAS_Z8000;HAS_TMS32010;HAS_TMS32025;HAS_TMS32031;HAS_CCPU;HAS_ADSP2100;HAS_ADSP2101;HAS_ADSP2104;HAS_ADSP2105;HAS_ADSP2115;HAS_PSXCPU;HAS_ASAP;HAS_UPD7810;HAS_UPD7807;HAS_ARM;HAS_JAGUAR;HAS_R3000;HAS_R4600;HAS_R5000;HAS_SH2;HAS_DSP32C;HAS_PIC16C55;HAS_PIC16C57;HAS_G65816;HAS_SPC700;HAS_E132XS;HAS_CUSTOM;HAS_SAMPLES;HAS_DAC;HAS_DISCRETE;HAS_AY816C58;HAS_AY8910;HAS_YM2203;HAS_YM2151_ALT;HAS_YM2608;HAS_YM2610;HAS_YM2610B;HAS_YM2612;HAS_YM3438;HAS_YM2413;HAS_YM3812;HAS_YM3526;HAS_YMZ280B;HAS_Y8950;HAS_SN76477;HAS_SN76496;HAS_POKEY;HAS_TIA;HAS_NES;HAS_ASTROCADE;HAS_NAMCO;HAS_NAMCONA;HAS_TMS36XX;HAS_TMS5110;HAS_TMS5220;HAS_VLM5030;HAS_ADPCM;HAS_OKIM6295;HAS_MSM5205;HAS_MSM5232;HAS_UPD7759;HAS_HC55516;HAS_K005289;HAS_K007232;HAS_K051649;HAS_K053260;HAS_K054539;HAS_SEGAPCM;HAS_RF5C68;HAS_CEM3394;HAS_C140;HAS_QSOUND;HAS_SAA1099;HAS_IREMGA20;HAS_ES5505;HAS_ES5506;HAS_BSMT2000;HAS_YMF262;HAS_YMF278B;HAS_GAELCO_CG1V;HAS_GAELCO_GAE1;HAS_X1_010;HAS_MULTIPCM;HAS_6280;HAS_SP0250;HAS_SCSP;HAS_PSXSPU;HAS_YMF271;NDEBUG;__LIBRETRO__;M_PI=3.1415927;MSB_FIRST;__ppc__;__POWERPC__;INLINE=static __inline</PreprocessorDefinitions>
+      <CallAttributedProfiling>Callcap</CallAttributedProfiling>
+      <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\;$(SolutionDir)\..\..\includes;$(SolutionDir)\..\..\cpu\m68000;$(SolutionDir)\..\..\libretro;$(SolutionDir)\..\..\libretro\includes\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ExceptionHandling>false</ExceptionHandling>
+      <StringPooling>true</StringPooling>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NDEBUG;_XBOX;PROFILE;_LIB;%(PreprocessorDefinitions);HAS_Z80;HAS_Z180;HAS_8080;HAS_8085A;HAS_M6502;HAS_M65C02;HAS_M6510;HAS_N2A03;HAS_DECO16;HAS_H6280;HAS_I86;HAS_I186;HAS_V20;HAS_V30;HAS_V33;HAS_V60;HAS_V70;HAS_I8035;HAS_I8039;HAS_I8048;HAS_N7751;HAS_I8X41;HAS_M6800;HAS_M6801;HAS_M6802;HAS_M6803;HAS_M6808;HAS_HD63701;HAS_NSC8105;HAS_M6805;HAS_M68705;HAS_HD63705;HAS_HD6309;HAS_M6809;HAS_KONAMI;HAS_M68000;HAS_M68010;HAS_M68EC020;HAS_M68020;HAS_T11;HAS_S2650;HAS_TMS34010;HAS_TMS34020;HAS_TMS9900;HAS_TMS9940;HAS_TMS9980;HAS_TMS9995;HAS_Z8000;HAS_TMS32010;HAS_TMS32025;HAS_TMS32031;HAS_CCPU;HAS_ADSP2100;HAS_ADSP2101;HAS_ADSP2104;HAS_ADSP2105;HAS_ADSP2115;HAS_PSXCPU;HAS_ASAP;HAS_UPD7810;HAS_UPD7807;HAS_ARM;HAS_JAGUAR;HAS_R3000;HAS_R4600;HAS_R5000;HAS_SH2;HAS_DSP32C;HAS_PIC16C55;HAS_PIC16C57;HAS_G65816;HAS_SPC700;HAS_E132XS;HAS_CUSTOM;HAS_SAMPLES;HAS_DAC;HAS_DISCRETE;HAS_AY816C58;HAS_AY8910;HAS_YM2203;HAS_YM2151_ALT;HAS_YM2608;HAS_YM2610;HAS_YM2610B;HAS_YM2612;HAS_YM3438;HAS_YM2413;HAS_YM3812;HAS_YM3526;HAS_YMZ280B;HAS_Y8950;HAS_SN76477;HAS_SN76496;HAS_POKEY;HAS_TIA;HAS_NES;HAS_ASTROCADE;HAS_NAMCO;HAS_NAMCONA;HAS_TMS36XX;HAS_TMS5110;HAS_TMS5220;HAS_VLM5030;HAS_ADPCM;HAS_OKIM6295;HAS_MSM5205;HAS_MSM5232;HAS_UPD7759;HAS_HC55516;HAS_K005289;HAS_K007232;HAS_K051649;HAS_K053260;HAS_K054539;HAS_SEGAPCM;HAS_RF5C68;HAS_CEM3394;HAS_C140;HAS_QSOUND;HAS_SAA1099;HAS_IREMGA20;HAS_ES5505;HAS_ES5506;HAS_BSMT2000;HAS_YMF262;HAS_YMF278B;HAS_GAELCO_CG1V;HAS_GAELCO_GAE1;HAS_X1_010;HAS_MULTIPCM;HAS_6280;HAS_SP0250;HAS_SCSP;HAS_PSXSPU;HAS_YMF271;NDEBUG;__LIBRETRO__;M_PI=3.1415927;MSB_FIRST;__ppc__;__POWERPC__;INLINE=static __inline</PreprocessorDefinitions>
+      <CallAttributedProfiling>Callcap</CallAttributedProfiling>
+      <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\;$(SolutionDir)\..\..\includes;$(SolutionDir)\..\..\cpu\m68000;$(SolutionDir)\..\..\libretro;$(SolutionDir)\..\..\libretro\includes\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <IgnoreSpecificDefaultLibraries>xapilib.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ExceptionHandling>false</ExceptionHandling>
+      <StringPooling>true</StringPooling>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallAttributedProfiling>Fastcap</CallAttributedProfiling>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NDEBUG;_XBOX;PROFILE;FASTCAP;_LIB;%(PreprocessorDefinitions);HAS_Z80;HAS_Z180;HAS_8080;HAS_8085A;HAS_M6502;HAS_M65C02;HAS_M6510;HAS_N2A03;HAS_DECO16;HAS_H6280;HAS_I86;HAS_I186;HAS_V20;HAS_V30;HAS_V33;HAS_V60;HAS_V70;HAS_I8035;HAS_I8039;HAS_I8048;HAS_N7751;HAS_I8X41;HAS_M6800;HAS_M6801;HAS_M6802;HAS_M6803;HAS_M6808;HAS_HD63701;HAS_NSC8105;HAS_M6805;HAS_M68705;HAS_HD63705;HAS_HD6309;HAS_M6809;HAS_KONAMI;HAS_M68000;HAS_M68010;HAS_M68EC020;HAS_M68020;HAS_T11;HAS_S2650;HAS_TMS34010;HAS_TMS34020;HAS_TMS9900;HAS_TMS9940;HAS_TMS9980;HAS_TMS9995;HAS_Z8000;HAS_TMS32010;HAS_TMS32025;HAS_TMS32031;HAS_CCPU;HAS_ADSP2100;HAS_ADSP2101;HAS_ADSP2104;HAS_ADSP2105;HAS_ADSP2115;HAS_PSXCPU;HAS_ASAP;HAS_UPD7810;HAS_UPD7807;HAS_ARM;HAS_JAGUAR;HAS_R3000;HAS_R4600;HAS_R5000;HAS_SH2;HAS_DSP32C;HAS_PIC16C55;HAS_PIC16C57;HAS_G65816;HAS_SPC700;HAS_E132XS;HAS_CUSTOM;HAS_SAMPLES;HAS_DAC;HAS_DISCRETE;HAS_AY816C58;HAS_AY8910;HAS_YM2203;HAS_YM2151_ALT;HAS_YM2608;HAS_YM2610;HAS_YM2610B;HAS_YM2612;HAS_YM3438;HAS_YM2413;HAS_YM3812;HAS_YM3526;HAS_YMZ280B;HAS_Y8950;HAS_SN76477;HAS_SN76496;HAS_POKEY;HAS_TIA;HAS_NES;HAS_ASTROCADE;HAS_NAMCO;HAS_NAMCONA;HAS_TMS36XX;HAS_TMS5110;HAS_TMS5220;HAS_VLM5030;HAS_ADPCM;HAS_OKIM6295;HAS_MSM5205;HAS_MSM5232;HAS_UPD7759;HAS_HC55516;HAS_K005289;HAS_K007232;HAS_K051649;HAS_K053260;HAS_K054539;HAS_SEGAPCM;HAS_RF5C68;HAS_CEM3394;HAS_C140;HAS_QSOUND;HAS_SAA1099;HAS_IREMGA20;HAS_ES5505;HAS_ES5506;HAS_BSMT2000;HAS_YMF262;HAS_YMF278B;HAS_GAELCO_CG1V;HAS_GAELCO_GAE1;HAS_X1_010;HAS_MULTIPCM;HAS_6280;HAS_SP0250;HAS_SCSP;HAS_PSXSPU;HAS_YMF271;NDEBUG;__LIBRETRO__;M_PI=3.1415927;MSB_FIRST;__ppc__;__POWERPC__;INLINE=static __inline</PreprocessorDefinitions>
+      <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\;$(SolutionDir)\..\..\includes;$(SolutionDir)\..\..\cpu\m68000;$(SolutionDir)\..\..\libretro;$(SolutionDir)\..\..\libretro\includes\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <StringPooling>true</StringPooling>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NDEBUG;_XBOX;_LIB;%(PreprocessorDefinitions);HAS_Z80;HAS_Z180;HAS_8080;HAS_8085A;HAS_M6502;HAS_M65C02;HAS_M6510;HAS_N2A03;HAS_DECO16;HAS_H6280;HAS_I86;HAS_I186;HAS_V20;HAS_V30;HAS_V33;HAS_V60;HAS_V70;HAS_I8035;HAS_I8039;HAS_I8048;HAS_N7751;HAS_I8X41;HAS_M6800;HAS_M6801;HAS_M6802;HAS_M6803;HAS_M6808;HAS_HD63701;HAS_NSC8105;HAS_M6805;HAS_M68705;HAS_HD63705;HAS_HD6309;HAS_M6809;HAS_KONAMI;HAS_M68000;HAS_M68010;HAS_M68EC020;HAS_M68020;HAS_T11;HAS_S2650;HAS_TMS34010;HAS_TMS34020;HAS_TMS9900;HAS_TMS9940;HAS_TMS9980;HAS_TMS9995;HAS_Z8000;HAS_TMS32010;HAS_TMS32025;HAS_TMS32031;HAS_CCPU;HAS_ADSP2100;HAS_ADSP2101;HAS_ADSP2104;HAS_ADSP2105;HAS_ADSP2115;HAS_PSXCPU;HAS_ASAP;HAS_UPD7810;HAS_UPD7807;HAS_ARM;HAS_JAGUAR;HAS_R3000;HAS_R4600;HAS_R5000;HAS_SH2;HAS_DSP32C;HAS_PIC16C55;HAS_PIC16C57;HAS_G65816;HAS_SPC700;HAS_E132XS;HAS_CUSTOM;HAS_SAMPLES;HAS_DAC;HAS_DISCRETE;HAS_AY816C58;HAS_AY8910;HAS_YM2203;HAS_YM2151_ALT;HAS_YM2608;HAS_YM2610;HAS_YM2610B;HAS_YM2612;HAS_YM3438;HAS_YM2413;HAS_YM3812;HAS_YM3526;HAS_YMZ280B;HAS_Y8950;HAS_SN76477;HAS_SN76496;HAS_POKEY;HAS_TIA;HAS_NES;HAS_ASTROCADE;HAS_NAMCO;HAS_NAMCONA;HAS_TMS36XX;HAS_TMS5110;HAS_TMS5220;HAS_VLM5030;HAS_ADPCM;HAS_OKIM6295;HAS_MSM5205;HAS_MSM5232;HAS_UPD7759;HAS_HC55516;HAS_K005289;HAS_K007232;HAS_K051649;HAS_K053260;HAS_K054539;HAS_SEGAPCM;HAS_RF5C68;HAS_CEM3394;HAS_C140;HAS_QSOUND;HAS_SAA1099;HAS_IREMGA20;HAS_ES5505;HAS_ES5506;HAS_BSMT2000;HAS_YMF262;HAS_YMF278B;HAS_GAELCO_CG1V;HAS_GAELCO_GAE1;HAS_X1_010;HAS_MULTIPCM;HAS_6280;HAS_SP0250;HAS_SCSP;HAS_PSXSPU;HAS_YMF271;NDEBUG;__LIBRETRO__;M_PI=3.1415927;MSB_FIRST;__ppc__;__POWERPC__;INLINE=static __inline</PreprocessorDefinitions>
+      <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\;$(SolutionDir)\..\..\includes;$(SolutionDir)\..\..\cpu\m68000;$(SolutionDir)\..\..\libretro;$(SolutionDir)\..\..\libretro\includes\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <StringPooling>true</StringPooling>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NDEBUG;_XBOX;LTCG;_LIB;%(PreprocessorDefinitions);HAS_Z80;HAS_Z180;HAS_8080;HAS_8085A;HAS_M6502;HAS_M65C02;HAS_M6510;HAS_N2A03;HAS_DECO16;HAS_H6280;HAS_I86;HAS_I186;HAS_V20;HAS_V30;HAS_V33;HAS_V60;HAS_V70;HAS_I8035;HAS_I8039;HAS_I8048;HAS_N7751;HAS_I8X41;HAS_M6800;HAS_M6801;HAS_M6802;HAS_M6803;HAS_M6808;HAS_HD63701;HAS_NSC8105;HAS_M6805;HAS_M68705;HAS_HD63705;HAS_HD6309;HAS_M6809;HAS_KONAMI;HAS_M68000;HAS_M68010;HAS_M68EC020;HAS_M68020;HAS_T11;HAS_S2650;HAS_TMS34010;HAS_TMS34020;HAS_TMS9900;HAS_TMS9940;HAS_TMS9980;HAS_TMS9995;HAS_Z8000;HAS_TMS32010;HAS_TMS32025;HAS_TMS32031;HAS_CCPU;HAS_ADSP2100;HAS_ADSP2101;HAS_ADSP2104;HAS_ADSP2105;HAS_ADSP2115;HAS_PSXCPU;HAS_ASAP;HAS_UPD7810;HAS_UPD7807;HAS_ARM;HAS_JAGUAR;HAS_R3000;HAS_R4600;HAS_R5000;HAS_SH2;HAS_DSP32C;HAS_PIC16C55;HAS_PIC16C57;HAS_G65816;HAS_SPC700;HAS_E132XS;HAS_CUSTOM;HAS_SAMPLES;HAS_DAC;HAS_DISCRETE;HAS_AY816C58;HAS_AY8910;HAS_YM2203;HAS_YM2151_ALT;HAS_YM2608;HAS_YM2610;HAS_YM2610B;HAS_YM2612;HAS_YM3438;HAS_YM2413;HAS_YM3812;HAS_YM3526;HAS_YMZ280B;HAS_Y8950;HAS_SN76477;HAS_SN76496;HAS_POKEY;HAS_TIA;HAS_NES;HAS_ASTROCADE;HAS_NAMCO;HAS_NAMCONA;HAS_TMS36XX;HAS_TMS5110;HAS_TMS5220;HAS_VLM5030;HAS_ADPCM;HAS_OKIM6295;HAS_MSM5205;HAS_MSM5232;HAS_UPD7759;HAS_HC55516;HAS_K005289;HAS_K007232;HAS_K051649;HAS_K053260;HAS_K054539;HAS_SEGAPCM;HAS_RF5C68;HAS_CEM3394;HAS_C140;HAS_QSOUND;HAS_SAA1099;HAS_IREMGA20;HAS_ES5505;HAS_ES5506;HAS_BSMT2000;HAS_YMF262;HAS_YMF278B;HAS_GAELCO_CG1V;HAS_GAELCO_GAE1;HAS_X1_010;HAS_MULTIPCM;HAS_6280;HAS_SP0250;HAS_SCSP;HAS_PSXSPU;HAS_YMF271;NDEBUG;__LIBRETRO__;M_PI=3.1415927;MSB_FIRST;__ppc__;__POWERPC__;INLINE=static __inline</PreprocessorDefinitions>
+      <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\;$(SolutionDir)\..\..\includes;$(SolutionDir)\..\..\cpu\m68000;$(SolutionDir)\..\..\libretro;$(SolutionDir)\..\..\libretro\includes\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

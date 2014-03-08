@@ -249,6 +249,10 @@ bool retro_load_game(const struct retro_game_info *game)
     
     if(driverIndex)
     {
+        int orientation;
+        unsigned rotateMode;
+        static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
+
         // Get MAME Directory
         systemDir = normalizePath(strdup(game->path));
         systemDir = peelPathItem(systemDir);
@@ -259,9 +263,8 @@ bool retro_load_game(const struct retro_game_info *game)
         romDir    = peelPathItem(romDir);
 
         // Setup Rotation
-        const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
-        unsigned rotateMode = 0;
-        static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
+        orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
+        rotateMode = 0;
         
         rotateMode = (orientation == ROT270) ? 1 : rotateMode;
         rotateMode = (orientation == ROT180) ? 2 : rotateMode;

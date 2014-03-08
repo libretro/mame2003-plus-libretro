@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#ifndef _WIN32
 #include <sys/time.h>
+#endif
 #include <sys/stat.h>
 #include <assert.h>
 
@@ -193,6 +195,7 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode)
 {
    char buffer[1024];
+   osd_file *out;
 
    switch(pathtype)
    {
@@ -207,7 +210,7 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
    if (log_cb)
       log_cb(RETRO_LOG_INFO, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
 
-   osd_file* out = malloc(sizeof(osd_file));
+   out = (osd_file*)malloc(sizeof(osd_file));
    out->file = fopen(buffer, mode);
 
    if(out->file == 0)
@@ -215,8 +218,7 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
       free(out);
       return 0;
    }
-   else
-      return out;
+   return out;
 }
 
 int osd_fseek(osd_file *file, INT64 offset, int whence)

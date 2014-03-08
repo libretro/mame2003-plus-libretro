@@ -527,6 +527,8 @@ void run_machine_done(void)
 /*-------------------------------------------------
 	run_machine_core - core execution loop
 -------------------------------------------------*/
+extern void (*pause_action)(void);
+
 void pause_action_start_emulator(void)
 {
     init_user_interface();
@@ -555,7 +557,6 @@ void pause_action_start_emulator(void)
     cpu_run();
 
     // Unpause
-    extern void (*pause_action)(void);
     pause_action = 0;
 }
 
