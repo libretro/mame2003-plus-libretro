@@ -1317,7 +1317,7 @@
     <ClCompile Include="..\..\..\vidhrdw\dynax.c" />
     <ClCompile Include="..\..\..\vidhrdw\dynduke.c" />
     <ClCompile Include="..\..\..\vidhrdw\epos.c" />
-    <ClCompile Include="..\..\..\vidhrdw\eprom.c" />
+    <ClCompile Include="..\..\..\vidhrdw\eprom_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\equites.c" />
     <ClCompile Include="..\..\..\vidhrdw\esd16_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\espial.c" />
@@ -1502,7 +1502,7 @@
     <ClCompile Include="..\..\..\vidhrdw\munchmo.c" />
     <ClCompile Include="..\..\..\vidhrdw\mustache.c" />
     <ClCompile Include="..\..\..\vidhrdw\mystston.c" />
-    <ClCompile Include="..\..\..\vidhrdw\mystwarr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mystwarr_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\namcona1_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\namconb1_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\namcos1_vidhrdw.c" />
