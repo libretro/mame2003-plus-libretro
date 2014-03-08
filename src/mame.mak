@@ -223,7 +223,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/warpwarp.o $(OBJ)/sndhrdw/warpwarp.o $(OBJ)/drivers/warpwarp.o \
 	$(OBJ)/vidhrdw/tankbatt.o $(OBJ)/drivers/tankbatt.o \
 	$(OBJ)/vidhrdw/galaxian.o $(OBJ)/sndhrdw/galaxian.o $(OBJ)/drivers/galaxian.o \
-	$(OBJ)/vidhrdw/rallyx.o $(OBJ)/drivers/rallyx.o \
+	$(OBJ)/vidhrdw/rallyx_vidhrdw.o $(OBJ)/drivers/rallyx.o \
 	$(OBJ)/drivers/locomotn.o \
 	$(OBJ)/machine/bosco.o $(OBJ)/sndhrdw/bosco.o $(OBJ)/vidhrdw/bosco.o $(OBJ)/drivers/bosco.o \
 	$(OBJ)/machine/galaga.o $(OBJ)/vidhrdw/galaga.o $(OBJ)/drivers/galaga.o \
@@ -236,7 +236,7 @@ COREOBJS += \
 	$(OBJ)/machine/gaplus.o $(OBJ)/vidhrdw/gaplus.o $(OBJ)/drivers/gaplus.o \
 	$(OBJ)/machine/toypop.o $(OBJ)/vidhrdw/toypop.o $(OBJ)/drivers/toypop.o \
 	$(OBJ)/machine/polepos.o $(OBJ)/vidhrdw/polepos.o $(OBJ)/sndhrdw/polepos.o $(OBJ)/drivers/polepos.o \
-	$(OBJ)/vidhrdw/pacland.o $(OBJ)/drivers/pacland.o \
+	$(OBJ)/vidhrdw/pacland_vidhrdw.o $(OBJ)/drivers/pacland.o \
 	$(OBJ)/vidhrdw/skykid_vidhrdw.o $(OBJ)/drivers/skykid.o \
 	$(OBJ)/vidhrdw/baraduke_vidhrdw.o $(OBJ)/drivers/baraduke.o \
 	$(OBJ)/vidhrdw/namcos86_vidhrdw.o $(OBJ)/drivers/namcos86.o \
@@ -257,7 +257,7 @@ COREOBJS += \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/cosmic.o $(OBJ)/drivers/cosmic.o \
-	$(OBJ)/vidhrdw/redclash.o $(OBJ)/drivers/redclash.o \
+	$(OBJ)/vidhrdw/redclash_vidhrdw.o $(OBJ)/drivers/redclash.o \
 	$(OBJ)/vidhrdw/ladybug.o $(OBJ)/drivers/ladybug.o \
 	$(OBJ)/vidhrdw/cheekyms.o $(OBJ)/drivers/cheekyms.o \
 	$(OBJ)/vidhrdw/mrdo.o $(OBJ)/drivers/mrdo.o \
@@ -394,11 +394,11 @@ COREOBJS += \
 	$(OBJ)/drivers/twincobr.o $(OBJ)/drivers/wardner.o \
 	$(OBJ)/drivers/mjsister.o $(OBJ)/vidhrdw/mjsister.o \
 	$(OBJ)/machine/toaplan1_machine.o $(OBJ)/vidhrdw/toaplan1_vidhrdw.o $(OBJ)/drivers/toaplan1.o \
-	$(OBJ)/vidhrdw/snowbros.o $(OBJ)/drivers/snowbros.o \
+	$(OBJ)/vidhrdw/snowbros_vidhrdw.o $(OBJ)/drivers/snowbros.o \
 	$(OBJ)/vidhrdw/toaplan2_vidhrdw.o $(OBJ)/drivers/toaplan2.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/cave.o $(OBJ)/drivers/cave.o \
+	$(OBJ)/vidhrdw/cave_vidhrdw.o $(OBJ)/drivers/cave.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/kyugo.o $(OBJ)/machine/kyugo.o $(OBJ)/drivers/kyugo.o \

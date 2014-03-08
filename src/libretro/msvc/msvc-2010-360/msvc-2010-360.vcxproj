@@ -1537,7 +1537,7 @@
     <ClCompile Include="..\..\..\vidhrdw\othldrby.c" />
     <ClCompile Include="..\..\..\vidhrdw\othunder.c" />
     <ClCompile Include="..\..\..\vidhrdw\overdriv.c" />
-    <ClCompile Include="..\..\..\vidhrdw\pacland.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pacland_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\pandoras.c" />
     <ClCompile Include="..\..\..\vidhrdw\paradise_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\parodius.c" />
@@ -1581,12 +1581,12 @@
     <ClCompile Include="..\..\..\vidhrdw\quizpani.c" />
     <ClCompile Include="..\..\..\vidhrdw\raiden.c" />
     <ClCompile Include="..\..\..\vidhrdw\raiders5_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\rallyx.c" />
+    <ClCompile Include="..\..\..\vidhrdw\rallyx_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\rampart.c" />
     <ClCompile Include="..\..\..\vidhrdw\rastan.c" />
     <ClCompile Include="..\..\..\vidhrdw\realbrk.c" />
     <ClCompile Include="..\..\..\vidhrdw\redalert.c" />
-    <ClCompile Include="..\..\..\vidhrdw\redclash.c" />
+    <ClCompile Include="..\..\..\vidhrdw\redclash_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\relief.c" />
     <ClCompile Include="..\..\..\vidhrdw\renegade.c" />
     <ClCompile Include="..\..\..\vidhrdw\retofinv.c" />
@@ -1638,7 +1638,7 @@
     <ClCompile Include="..\..\..\vidhrdw\snes.c" />
     <ClCompile Include="..\..\..\vidhrdw\snk_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\snk68_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\snowbros.c" />
+    <ClCompile Include="..\..\..\vidhrdw\snowbros_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\solomon.c" />
     <ClCompile Include="..\..\..\vidhrdw\sonson.c" />
     <ClCompile Include="..\..\..\vidhrdw\spacefb.c" />
@@ -1700,7 +1700,7 @@
     <ClCompile Include="..\..\..\vidhrdw\taito_h.c" />
     <ClCompile Include="..\..\..\vidhrdw\taito_l.c" />
     <ClCompile Include="..\..\..\vidhrdw\taito_z.c" />
-    <ClCompile Include="..\..\..\vidhrdw\tankbatt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\tankbatt_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\tankbust.c" />
     <ClCompile Include="..\..\..\vidhrdw\taotaido.c" />
     <ClCompile Include="..\..\..\vidhrdw\targeth.c" />
