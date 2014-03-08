@@ -1070,7 +1070,14 @@
     <ClCompile Include="..\..\..\sound\saa1099.c" />
     <ClCompile Include="..\..\..\sound\samples.c" />
     <ClCompile Include="..\..\..\sound\scsp.c" />
-    <ClCompile Include="..\..\..\sound\scsplfo.c" />
+    <ClCompile Include="..\..\..\sound\scsplfo.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='CodeAnalysis|Xbox 360'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Profile|Xbox 360'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Profile_FastCap|Xbox 360'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\sound\segapcm.c" />
     <ClCompile Include="..\..\..\sound\sn76477.c" />
     <ClCompile Include="..\..\..\sound\sn76496.c" />
