@@ -455,7 +455,7 @@
     <ClCompile Include="..\..\..\drivers\macrossp.c" />
     <ClCompile Include="..\..\..\drivers\madmotor.c" />
     <ClCompile Include="..\..\..\drivers\magmax.c" />
-    <ClCompile Include="..\..\..\drivers\mainevt.c" />
+    <ClCompile Include="..\..\..\drivers\mainevt_vidhrdw.c" />
     <ClCompile Include="..\..\..\drivers\mainsnk.c" />
     <ClCompile Include="..\..\..\drivers\malzak.c" />
     <ClCompile Include="..\..\..\drivers\mappy.c" />
@@ -1212,7 +1212,7 @@
     <ClCompile Include="..\..\..\vidhrdw\battlera.c" />
     <ClCompile Include="..\..\..\vidhrdw\battlex.c" />
     <ClCompile Include="..\..\..\vidhrdw\battlnts.c" />
-    <ClCompile Include="..\..\..\vidhrdw\bbusters.c" />
+    <ClCompile Include="..\..\..\vidhrdw\bbusters_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\beaminv.c" />
     <ClCompile Include="..\..\..\vidhrdw\beathead.c" />
     <ClCompile Include="..\..\..\vidhrdw\beezer.c" />
@@ -1456,7 +1456,7 @@
     <ClCompile Include="..\..\..\vidhrdw\madmotor.c" />
     <ClCompile Include="..\..\..\vidhrdw\magmax.c" />
     <ClCompile Include="..\..\..\vidhrdw\mainevt.c" />
-    <ClCompile Include="..\..\..\vidhrdw\mainsnk.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mainsnk_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\malzak.c" />
     <ClCompile Include="..\..\..\vidhrdw\mappy.c" />
     <ClCompile Include="..\..\..\vidhrdw\marineb.c" />
@@ -1568,7 +1568,7 @@
     <ClCompile Include="..\..\..\vidhrdw\portrait.c" />
     <ClCompile Include="..\..\..\vidhrdw\powerins.c" />
     <ClCompile Include="..\..\..\vidhrdw\ppu2c03b.c" />
-    <ClCompile Include="..\..\..\vidhrdw\prehisle.c" />
+    <ClCompile Include="..\..\..\vidhrdw\prehisle_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\psikyo_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\psikyo4_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\psikyosh_vidhrdw.c" />
@@ -1636,8 +1636,8 @@
     <ClCompile Include="..\..\..\vidhrdw\slapfght.c" />
     <ClCompile Include="..\..\..\vidhrdw\slapshot.c" />
     <ClCompile Include="..\..\..\vidhrdw\snes.c" />
-    <ClCompile Include="..\..\..\vidhrdw\snk.c" />
-    <ClCompile Include="..\..\..\vidhrdw\snk68.c" />
+    <ClCompile Include="..\..\..\vidhrdw\snk_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\snk68_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\snowbros.c" />
     <ClCompile Include="..\..\..\vidhrdw\solomon.c" />
     <ClCompile Include="..\..\..\vidhrdw\sonson.c" />

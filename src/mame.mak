@@ -568,7 +568,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/bladestl.o $(OBJ)/drivers/bladestl.o \
 	$(OBJ)/machine/ajax_machine.o $(OBJ)/vidhrdw/ajax_vidhrdw.o $(OBJ)/drivers/ajax.o \
 	$(OBJ)/vidhrdw/thunderx_vidhrdw.o $(OBJ)/drivers/thunderx.o \
-	$(OBJ)/vidhrdw/mainevt.o $(OBJ)/drivers/mainevt.o \
+	$(OBJ)/vidhrdw/mainevt_vidhrdw.o $(OBJ)/drivers/mainevt.o \
 	$(OBJ)/vidhrdw/88games.o $(OBJ)/drivers/88games.o \
 	$(OBJ)/vidhrdw/gbusters.o $(OBJ)/drivers/gbusters.o \
 	$(OBJ)/vidhrdw/crimfght.o $(OBJ)/drivers/crimfght.o \
@@ -702,13 +702,13 @@ COREOBJS += \
 	$(OBJ)/drivers/munchmo.o $(OBJ)/vidhrdw/munchmo.o \
 	$(OBJ)/vidhrdw/marvins.o $(OBJ)/drivers/marvins.o \
 	$(OBJ)/vidhrdw/jcross.o $(OBJ)/drivers/jcross.o \
-	$(OBJ)/vidhrdw/mainsnk.o $(OBJ)/drivers/mainsnk.o \
+	$(OBJ)/vidhrdw/mainsnk_vidhrdw.o $(OBJ)/drivers/mainsnk.o \
 	$(OBJ)/drivers/hal21.o \
-	$(OBJ)/vidhrdw/snk.o $(OBJ)/drivers/snk.o \
+	$(OBJ)/vidhrdw/snk_vidhrdw.o $(OBJ)/drivers/snk.o \
 	$(OBJ)/drivers/sgladiat.o \
-	$(OBJ)/vidhrdw/snk68.o $(OBJ)/drivers/snk68.o \
-	$(OBJ)/vidhrdw/prehisle.o $(OBJ)/drivers/prehisle.o \
-	$(OBJ)/vidhrdw/bbusters.o $(OBJ)/drivers/bbusters.o \
+	$(OBJ)/vidhrdw/snk68_vidhrdw.o $(OBJ)/drivers/snk68.o \
+	$(OBJ)/vidhrdw/prehisle_vidhrdw.o $(OBJ)/drivers/prehisle.o \
+	$(OBJ)/vidhrdw/bbusters_vidhrdw.o $(OBJ)/drivers/bbusters.o \
 
 COREOBJS += \
 	$(OBJ)/drivers/shougi.o \
