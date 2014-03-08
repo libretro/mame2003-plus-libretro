@@ -747,7 +747,7 @@
     <ClCompile Include="..\..\..\drivers\tbowl.c" />
     <ClCompile Include="..\..\..\drivers\tceptor.c" />
     <ClCompile Include="..\..\..\drivers\tecmo.c" />
-    <ClCompile Include="..\..\..\drivers\tecmo16_vidhrdw.c" />
+    <ClCompile Include="..\..\..\drivers\tecmo16.c" />
     <ClCompile Include="..\..\..\drivers\tecmosys.c" />
     <ClCompile Include="..\..\..\drivers\tehkanwc.c" />
     <ClCompile Include="..\..\..\drivers\tempest.c" />
