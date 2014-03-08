@@ -366,7 +366,7 @@ int dss_squarewave2_step(struct node_description *node)
 	double newphase;
 
 	/* Establish trigger phase from time periods */
-	context->trigger=(node->input[2] / (node->input[2] + node->input[3])) * (2.0 * PI);
+	context->trigger=(node->input[2] / (node->input[2] + node->input[3])) * (2.0 * M_PI);
 
 	/* Work out the phase step based on phase/freq & sample rate */
 	/* The enable input only curtails output, phase rotation     */
@@ -403,9 +403,9 @@ int dss_squarewave2_reset(struct node_description *node)
 	double start;
 
 	/* Establish starting phase, convert from degrees to radians */
-	start = (node->input[5] / (node->input[2] + node->input[3])) * (2.0 * PI);
+	start = (node->input[5] / (node->input[2] + node->input[3])) * (2.0 * M_PI);
 	/* Make sure its always mod 2Pi */
-	context->phase = fmod(start, 2.0 * PI);
+	context->phase = fmod(start, 2.0 * M_PI);
 
 	/* Step the output */
 	dss_squarewave2_step(node);
@@ -454,8 +454,8 @@ int dss_trianglewave_step(struct node_description *node)
 
 	if(node->input[0])
 	{
-		node->output=context->phase < PI ? (node->input[2] * (context->phase / (PI/2.0) - 1.0))/2.0 :
-									(node->input[2] * (3.0 - context->phase / (PI/2.0)))/2.0 ;
+		node->output=context->phase < M_PI ? (node->input[2] * (context->phase / (M_PI/2.0) - 1.0))/2.0 :
+									(node->input[2] * (3.0 - context->phase / (M_PI/2.0)))/2.0 ;
 
 		/* Add DC Bias component */
 		node->output=node->output+node->input[3];
@@ -473,7 +473,7 @@ int dss_trianglewave_step(struct node_description *node)
 	/*                    boils out to                           */
 	/*     phase step = (2Pi*output freq)/sample freq)           */
 	/* Also keep the new phasor in the 2Pi range.                */
-	context->phase=fmod((context->phase+((2.0*PI*node->input[1])/Machine->sample_rate)),2.0*PI);
+	context->phase=fmod((context->phase+((2.0*M_PI*node->input[1])/Machine->sample_rate)),2.0*M_PI);
 
 	return 0;
 }
@@ -485,9 +485,9 @@ int dss_trianglewave_reset(struct node_description *node)
 
 	context=(struct dss_trianglewave_context*)node->context;
 	/* Establish starting phase, convert from degrees to radians */
-	start=(node->input[4]/360.0)*(2.0*PI);
+	start=(node->input[4]/360.0)*(2.0*M_PI);
 	/* Make sure its always mod 2Pi */
-	context->phase=fmod(start,2.0*PI);
+	context->phase=fmod(start,2.0*M_PI);
 
 	/* Step to set the output */
 	dss_trianglewave_step(node);
@@ -534,7 +534,7 @@ int dss_sawtoothwave_step(struct node_description *node)
 
 	if(node->input[0])
 	{
-		node->output=(context->type==0)?context->phase*(node->input[2]/(2.0*PI)):node->input[2]-(context->phase*(node->input[2]/(2.0*PI)));
+		node->output=(context->type==0)?context->phase*(node->input[2]/(2.0*M_PI)):node->input[2]-(context->phase*(node->input[2]/(2.0*M_PI)));
 		node->output-=node->input[2]/2.0;
 		/* Add DC Bias component */
 		node->output=node->output+node->input[3];
@@ -552,7 +552,7 @@ int dss_sawtoothwave_step(struct node_description *node)
 	/*                    boils out to                           */
 	/*     phase step = (2Pi*output freq)/sample freq)           */
 	/* Also keep the new phasor in the 2Pi range.                */
-	context->phase=fmod((context->phase+((2.0*PI*node->input[1])/Machine->sample_rate)),2.0*PI);
+	context->phase=fmod((context->phase+((2.0*M_PI*node->input[1])/Machine->sample_rate)),2.0*M_PI);
 
 	return 0;
 }
@@ -564,9 +564,9 @@ int dss_sawtoothwave_reset(struct node_description *node)
 
 	context=(struct dss_sawtoothwave_context*)node->context;
 	/* Establish starting phase, convert from degrees to radians */
-	start=(node->input[5]/360.0)*(2.0*PI);
+	start=(node->input[5]/360.0)*(2.0*M_PI);
 	/* Make sure its always mod 2Pi */
-	context->phase=fmod(start,2.0*PI);
+	context->phase=fmod(start,2.0*M_PI);
 
 	/* Invert gradient depending on sawtooth type /|/|/|/|/| or |\|\|\|\|\ */
 	context->type=(node->input[4])?1:0;
@@ -619,7 +619,7 @@ int dss_noise_step(struct node_description *node)
 	if(node->input[0])
 	{
 		/* Only sample noise on rollover to next cycle */
-		if(context->phase>(2.0*PI))
+		if(context->phase>(2.0*M_PI))
 		{
 			int newval=rand() & 0x7fff;
 			node->output=node->input[2]*(1-(newval/16384.0));

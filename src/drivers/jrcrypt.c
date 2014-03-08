@@ -26,7 +26,9 @@ static int interrupt_enable;
 typedef unsigned short word;
 typedef unsigned char byte;
 
+#ifndef _WIN32
 #define PreDecryptedRoms
+#endif
 
 #ifndef PreDecryptedRoms
 static int s0,s1,s2,s3; /* 1 bit registers inside decoder PAL */

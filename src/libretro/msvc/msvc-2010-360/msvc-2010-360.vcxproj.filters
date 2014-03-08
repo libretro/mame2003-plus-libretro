@@ -96,9 +96,6 @@
     <Filter Include="Source Files\cpu\s2650">
       <UniqueIdentifier>{c7a25826-f222-469f-acce-16882a12dec3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\cpu\sh2">
-      <UniqueIdentifier>{47278b4d-24fe-4ec7-9a1b-62606d0f7703}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\cpu\spc700">
       <UniqueIdentifier>{76e46215-c2cd-4130-9cb9-aba86748a6cf}</UniqueIdentifier>
     </Filter>
@@ -134,6 +131,12 @@
     </Filter>
     <Filter Include="Source Files\cpu\z8000">
       <UniqueIdentifier>{a64ef156-82f2-4ca4-b8f7-2e55733f395c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cpu\mips">
+      <UniqueIdentifier>{12877620-bf9d-48d2-90b2-f9a3928db9ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cpu\sh2">
+      <UniqueIdentifier>{47278b4d-24fe-4ec7-9a1b-62606d0f7703}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -207,24 +210,6 @@
       <Filter>Source Files\sound</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sound\dac.c">
-      <Filter>Source Files\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sound\disc_dev.c">
-      <Filter>Source Files\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sound\disc_flt.c">
-      <Filter>Source Files\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sound\disc_inp.c">
-      <Filter>Source Files\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sound\disc_mth.c">
-      <Filter>Source Files\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sound\disc_out.c">
-      <Filter>Source Files\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sound\disc_wav.c">
       <Filter>Source Files\sound</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sound\discrete.c">
@@ -1146,12 +1131,6 @@
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\jackal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\jagblit.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\jagobj.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\jaguar.c">
@@ -2208,9 +2187,6 @@
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\volfied.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\voodblit.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\voodoo.c">
@@ -5314,6 +5290,150 @@
     </ClCompile>
     <ClCompile Include="..\..\..\window.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\konami\knmidasm.c">
+      <Filter>Source Files\cpu\konami</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\mips\r3kdasm.c">
+      <Filter>Source Files\cpu\mips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\mips\r3000.c">
+      <Filter>Source Files\cpu\mips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\mips\mips3.c">
+      <Filter>Source Files\cpu\mips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\mips\mips3dsm.c">
+      <Filter>Source Files\cpu\mips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\mips\mipsdasm.c">
+      <Filter>Source Files\cpu\mips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\nec\necdasm.c">
+      <Filter>Source Files\cpu\nec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m6809\6809dasm.c">
+      <Filter>Source Files\cpu\m6809</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m6805\6805dasm.c">
+      <Filter>Source Files\cpu\m6805</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m6800\6800dasm.c">
+      <Filter>Source Files\cpu\m6800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m6502\6502dasm.c">
+      <Filter>Source Files\cpu\m6502</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m6502\m6509.c">
+      <Filter>Source Files\cpu\m6502</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m6502\m4510.c">
+      <Filter>Source Files\cpu\m6502</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\jaguar\jagdasm.c">
+      <Filter>Source Files\cpu\jaguar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\i8x41\8x41dasm.c">
+      <Filter>Source Files\cpu\i8x41</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\i86\i86dasm.c">
+      <Filter>Source Files\cpu\i86</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\i8085\8085dasm.c">
+      <Filter>Source Files\cpu\i8085</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\i8039\8039dasm.c">
+      <Filter>Source Files\cpu\i8039</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\hd6309\6309dasm.c">
+      <Filter>Source Files\cpu\hd6309</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\h6280\6280dasm.c">
+      <Filter>Source Files\cpu\h6280</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\g65816\g65816o4.c">
+      <Filter>Source Files\cpu\g65816</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\g65816\g65816ds.c">
+      <Filter>Source Files\cpu\g65816</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\g65816\g65816o0.c">
+      <Filter>Source Files\cpu\g65816</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\g65816\g65816o1.c">
+      <Filter>Source Files\cpu\g65816</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\g65816\g65816o2.c">
+      <Filter>Source Files\cpu\g65816</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\g65816\g65816o3.c">
+      <Filter>Source Files\cpu\g65816</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\e132xs\32xsdasm.c">
+      <Filter>Source Files\cpu\e132xs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\dsp32\dsp32dis.c">
+      <Filter>Source Files\cpu\dsp32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\ccpu\ccpudasm.c">
+      <Filter>Source Files\cpu\ccpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\asap\asapdasm.c">
+      <Filter>Source Files\cpu\asap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\arm\armdasm.c">
+      <Filter>Source Files\cpu\arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\adsp2100\2100dasm.c">
+      <Filter>Source Files\cpu\adsp2100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\s2650\2650dasm.c">
+      <Filter>Source Files\cpu\s2650</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\sh2\sh2dasm.c">
+      <Filter>Source Files\cpu\sh2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\spc700\spc700ds.c">
+      <Filter>Source Files\cpu\spc700</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\t11\t11dasm.c">
+      <Filter>Source Files\cpu\t11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\tms32010\32010dsm.c">
+      <Filter>Source Files\cpu\tms32010</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\tms32031\dis32031.c">
+      <Filter>Source Files\cpu\tms32031</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\tms34010\34010fld.c">
+      <Filter>Source Files\cpu\tms34010</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\tms34010\34010dsm.c">
+      <Filter>Source Files\cpu\tms34010</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\tms9900\tms9995.c">
+      <Filter>Source Files\cpu\tms9900</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\tms9900\9900dasm.c">
+      <Filter>Source Files\cpu\tms9900</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\tms9900\tms9980a.c">
+      <Filter>Source Files\cpu\tms9900</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\upd7810\7810dasm.c">
+      <Filter>Source Files\cpu\upd7810</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\v60\v60d.c">
+      <Filter>Source Files\cpu\v60</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\z80\z80dasm.c">
+      <Filter>Source Files\cpu\z80</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\z8000\8000dasm.c">
+      <Filter>Source Files\cpu\z8000</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\z180\z180dasm.c">
+      <Filter>Source Files\cpu\z180</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
