@@ -1357,7 +1357,7 @@
     <ClCompile Include="..\..\..\vidhrdw\galivan.c" />
     <ClCompile Include="..\..\..\vidhrdw\galpani2.c" />
     <ClCompile Include="..\..\..\vidhrdw\galpanic.c" />
-    <ClCompile Include="..\..\..\vidhrdw\galspnbl.c" />
+    <ClCompile Include="..\..\..\vidhrdw\galspnbl_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\gameplan.c" />
     <ClCompile Include="..\..\..\vidhrdw\gaplus.c" />
     <ClCompile Include="..\..\..\vidhrdw\gauntlet.c" />
@@ -1397,7 +1397,7 @@
     <ClCompile Include="..\..\..\vidhrdw\higemaru.c" />
     <ClCompile Include="..\..\..\vidhrdw\hitme.c" />
     <ClCompile Include="..\..\..\vidhrdw\hnayayoi.c" />
-    <ClCompile Include="..\..\..\vidhrdw\holeland.c" />
+    <ClCompile Include="..\..\..\vidhrdw\holeland_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\homedata.c" />
     <ClCompile Include="..\..\..\vidhrdw\homerun.c" />
     <ClCompile Include="..\..\..\vidhrdw\hyhoo.c" />
@@ -1555,7 +1555,7 @@
     <ClCompile Include="..\..\..\vidhrdw\pitnrun.c" />
     <ClCompile Include="..\..\..\vidhrdw\pkunwar.c" />
     <ClCompile Include="..\..\..\vidhrdw\playch10.c" />
-    <ClCompile Include="..\..\..\vidhrdw\playmark.c" />
+    <ClCompile Include="..\..\..\vidhrdw\playmark_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\plygonet.c" />
     <ClCompile Include="..\..\..\vidhrdw\polepos.c" />
     <ClCompile Include="..\..\..\vidhrdw\policetr.c" />
@@ -1574,8 +1574,8 @@
     <ClCompile Include="..\..\..\vidhrdw\psikyosh.c" />
     <ClCompile Include="..\..\..\vidhrdw\psx.c" />
     <ClCompile Include="..\..\..\vidhrdw\psychic5.c" />
-    <ClCompile Include="..\..\..\vidhrdw\punchout.c" />
-    <ClCompile Include="..\..\..\vidhrdw\pushman.c" />
+    <ClCompile Include="..\..\..\vidhrdw\punchout_vidhrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\pushman_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\qix.c" />
     <ClCompile Include="..\..\..\vidhrdw\quizdna.c" />
     <ClCompile Include="..\..\..\vidhrdw\quizpani.c" />
@@ -1658,7 +1658,7 @@
     <ClCompile Include="..\..\..\vidhrdw\srmp2.c" />
     <ClCompile Include="..\..\..\vidhrdw\srumbler.c" />
     <ClCompile Include="..\..\..\vidhrdw\sshangha.c" />
-    <ClCompile Include="..\..\..\vidhrdw\sslam.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sslam_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\ssozumo.c" />
     <ClCompile Include="..\..\..\vidhrdw\sspeedr.c" />
     <ClCompile Include="..\..\..\vidhrdw\ssrj.c" />
