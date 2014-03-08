@@ -991,7 +991,7 @@
     <ClCompile Include="..\..\..\machine\twincobr.c" />
     <ClCompile Include="..\..\..\machine\volfied.c" />
     <ClCompile Include="..\..\..\machine\vsnes_machine.c" />
-    <ClCompile Include="..\..\..\machine\williams.c" />
+    <ClCompile Include="..\..\..\machine\williams_machine.c" />
     <ClCompile Include="..\..\..\machine\wrally.c" />
     <ClCompile Include="..\..\..\machine\xevious.c" />
     <ClCompile Include="..\..\..\machine\z80fmly.c" />
