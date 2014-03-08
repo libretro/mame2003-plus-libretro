@@ -221,7 +221,7 @@ COREOBJS += \
 COREOBJS += \
 	$(OBJ)/machine/geebee.o $(OBJ)/vidhrdw/geebee.o $(OBJ)/sndhrdw/geebee.o $(OBJ)/drivers/geebee.o \
 	$(OBJ)/vidhrdw/warpwarp.o $(OBJ)/sndhrdw/warpwarp.o $(OBJ)/drivers/warpwarp.o \
-	$(OBJ)/vidhrdw/tankbatt.o $(OBJ)/drivers/tankbatt.o \
+	$(OBJ)/vidhrdw/tankbatt_vidhrdw.o $(OBJ)/drivers/tankbatt.o \
 	$(OBJ)/vidhrdw/galaxian.o $(OBJ)/sndhrdw/galaxian.o $(OBJ)/drivers/galaxian.o \
 	$(OBJ)/vidhrdw/rallyx_vidhrdw.o $(OBJ)/drivers/rallyx.o \
 	$(OBJ)/drivers/locomotn.o \

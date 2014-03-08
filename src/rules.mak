@@ -1,4 +1,59 @@
 # List of CPU core (and, for a debug build, disassembler) object files
+#
+CPU=$(strip $(findstring ADSP2100@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(OBJ)/cpu/adsp2100
+CPUDEFS += -DHAS_ADSP2100=1
+CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
+DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
+$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
+else
+CPUDEFS += -DHAS_ADSP2100=0
+endif
+
+CPU=$(strip $(findstring ADSP2101@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(OBJ)/cpu/adsp2100
+CPUDEFS += -DHAS_ADSP2101=1
+CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
+DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
+$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
+else
+CPUDEFS += -DHAS_ADSP2101=0
+endif
+
+CPU=$(strip $(findstring ADSP2104@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(OBJ)/cpu/adsp2100
+CPUDEFS += -DHAS_ADSP2104=1
+CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
+DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
+$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
+else
+CPUDEFS += -DHAS_ADSP2104=0
+endif
+
+CPU=$(strip $(findstring ADSP2105@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(OBJ)/cpu/adsp2100
+CPUDEFS += -DHAS_ADSP2105=1
+CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
+DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
+$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
+else
+CPUDEFS += -DHAS_ADSP2105=0
+endif
+
+CPU=$(strip $(findstring ADSP2115@,$(CPUS)))
+ifneq ($(CPU),)
+OBJDIRS += $(OBJ)/cpu/adsp2100
+CPUDEFS += -DHAS_ADSP2115=1
+CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
+DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
+$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
+else
+CPUDEFS += -DHAS_ADSP2115=0
+endif
 
 CPU=$(strip $(findstring Z80@,$(CPUS)))
 ifneq ($(CPU),)
@@ -770,60 +825,6 @@ else
 CPUDEFS += -DHAS_CCPU=0
 endif
 
-CPU=$(strip $(findstring ADSP2100@,$(CPUS)))
-ifneq ($(CPU),)
-OBJDIRS += $(OBJ)/cpu/adsp2100
-CPUDEFS += -DHAS_ADSP2100=1
-CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
-DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
-$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
-else
-CPUDEFS += -DHAS_ADSP2100=0
-endif
-
-CPU=$(strip $(findstring ADSP2101@,$(CPUS)))
-ifneq ($(CPU),)
-OBJDIRS += $(OBJ)/cpu/adsp2100
-CPUDEFS += -DHAS_ADSP2101=1
-CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
-DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
-$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
-else
-CPUDEFS += -DHAS_ADSP2101=0
-endif
-
-CPU=$(strip $(findstring ADSP2104@,$(CPUS)))
-ifneq ($(CPU),)
-OBJDIRS += $(OBJ)/cpu/adsp2100
-CPUDEFS += -DHAS_ADSP2104=1
-CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
-DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
-$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
-else
-CPUDEFS += -DHAS_ADSP2104=0
-endif
-
-CPU=$(strip $(findstring ADSP2105@,$(CPUS)))
-ifneq ($(CPU),)
-OBJDIRS += $(OBJ)/cpu/adsp2100
-CPUDEFS += -DHAS_ADSP2105=1
-CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
-DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
-$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
-else
-CPUDEFS += -DHAS_ADSP2105=0
-endif
-
-CPU=$(strip $(findstring ADSP2115@,$(CPUS)))
-ifneq ($(CPU),)
-OBJDIRS += $(OBJ)/cpu/adsp2100
-CPUDEFS += -DHAS_ADSP2115=1
-CPUOBJS += $(OBJ)/cpu/adsp2100/adsp2100.o
-DBGOBJS += $(OBJ)/cpu/adsp2100/2100dasm.o
-$(OBJ)/cpu/adsp2100/adsp2100.o: adsp2100.c adsp2100.h 2100ops.c
-else
-CPUDEFS += -DHAS_ADSP2115=0
-endif
 
 CPU=$(strip $(findstring PSXCPU@,$(CPUS)))
 ifneq ($(CPU),)
