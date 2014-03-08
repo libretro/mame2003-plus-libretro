@@ -1257,7 +1257,7 @@
     <ClCompile Include="..\..\..\vidhrdw\centiped.c" />
     <ClCompile Include="..\..\..\vidhrdw\chaknpop.c" />
     <ClCompile Include="..\..\..\vidhrdw\champbas.c" />
-    <ClCompile Include="..\..\..\vidhrdw\cheekyms.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cheekyms_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\chqflag.c" />
     <ClCompile Include="..\..\..\vidhrdw\cinemat.c" />
     <ClCompile Include="..\..\..\vidhrdw\circus.c" />
@@ -1431,7 +1431,7 @@
     <ClCompile Include="..\..\..\vidhrdw\kopunch.c" />
     <ClCompile Include="..\..\..\vidhrdw\kyugo.c" />
     <ClCompile Include="..\..\..\vidhrdw\labyrunr.c" />
-    <ClCompile Include="..\..\..\vidhrdw\ladybug.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ladybug_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\ladyfrog.c" />
     <ClCompile Include="..\..\..\vidhrdw\lasso.c" />
     <ClCompile Include="..\..\..\vidhrdw\lastduel.c" />
@@ -1493,7 +1493,7 @@
     <ClCompile Include="..\..\..\vidhrdw\mosaic.c" />
     <ClCompile Include="..\..\..\vidhrdw\mouser_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\mpatrol.c" />
-    <ClCompile Include="..\..\..\vidhrdw\mrdo.c" />
+    <ClCompile Include="..\..\..\vidhrdw\mrdo_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\mrflea.c" />
     <ClCompile Include="..\..\..\vidhrdw\mrjong.c" />
     <ClCompile Include="..\..\..\vidhrdw\ms32.c" />

@@ -258,9 +258,9 @@ COREOBJS += \
 COREOBJS += \
 	$(OBJ)/vidhrdw/cosmic.o $(OBJ)/drivers/cosmic.o \
 	$(OBJ)/vidhrdw/redclash_vidhrdw.o $(OBJ)/drivers/redclash.o \
-	$(OBJ)/vidhrdw/ladybug.o $(OBJ)/drivers/ladybug.o \
-	$(OBJ)/vidhrdw/cheekyms.o $(OBJ)/drivers/cheekyms.o \
-	$(OBJ)/vidhrdw/mrdo.o $(OBJ)/drivers/mrdo.o \
+	$(OBJ)/vidhrdw/ladybug_vidhrdw.o $(OBJ)/drivers/ladybug.o \
+	$(OBJ)/vidhrdw/cheekyms_vidhrdw.o $(OBJ)/drivers/cheekyms.o \
+	$(OBJ)/vidhrdw/mrdo_vidhrdw.o $(OBJ)/drivers/mrdo.o \
 	$(OBJ)/machine/docastle_machine.o $(OBJ)/vidhrdw/docastle_vidhrdw.o $(OBJ)/drivers/docastle.o \
 
 COREOBJS += \
