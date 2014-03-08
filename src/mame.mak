@@ -863,17 +863,17 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/glass.o $(OBJ)/drivers/glass.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/airbustr.o $(OBJ)/drivers/airbustr.o \
-	$(OBJ)/vidhrdw/djboy.o $(OBJ)/drivers/djboy.o \
-	$(OBJ)/vidhrdw/galpanic.o $(OBJ)/drivers/galpanic.o \
-	$(OBJ)/vidhrdw/galpani2.o $(OBJ)/drivers/galpani2.o \
+	$(OBJ)/vidhrdw/airbustr_vidhrdw.o $(OBJ)/drivers/airbustr.o \
+	$(OBJ)/vidhrdw/djboy_vidhrdw.o $(OBJ)/drivers/djboy.o \
+	$(OBJ)/vidhrdw/galpanic_vidhrdw.o $(OBJ)/drivers/galpanic.o \
+	$(OBJ)/vidhrdw/galpani2_vidhrdw.o $(OBJ)/drivers/galpani2.o \
 	$(OBJ)/drivers/jchan.o \
-	$(OBJ)/vidhrdw/kaneko16.o $(OBJ)/drivers/kaneko16.o \
-	$(OBJ)/vidhrdw/suprnova.o $(OBJ)/drivers/suprnova.o \
+	$(OBJ)/vidhrdw/kaneko16_vidhrdw.o $(OBJ)/drivers/kaneko16.o \
+	$(OBJ)/vidhrdw/suprnova_vidhrdw.o $(OBJ)/drivers/suprnova.o \
 
 COREOBJS += \
-	$(OBJ)/machine/neogeo.o $(OBJ)/machine/pd4990a.o $(OBJ)/machine/neocrypt.o \
-	$(OBJ)/vidhrdw/neogeo.o $(OBJ)/drivers/neogeo.o \
+	$(OBJ)/machine/pd4990a.o $(OBJ)/machine/neocrypt.o \
+	$(OBJ)/machine/neogeo_machine.o $(OBJ)/vidhrdw/neogeo_vidhrdw.o $(OBJ)/drivers/neogeo.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/hanaawas.o $(OBJ)/drivers/hanaawas.o \
