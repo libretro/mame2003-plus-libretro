@@ -753,9 +753,9 @@ COREOBJS += \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/mouser_vidhrdw.o $(OBJ)/drivers/mouser.o \
-	$(OBJ)/vidhrdw/nova2001.o $(OBJ)/drivers/nova2001.o \
-	$(OBJ)/vidhrdw/ninjakid.o $(OBJ)/drivers/ninjakid.o \
-	$(OBJ)/vidhrdw/raiders5.o $(OBJ)/drivers/raiders5.o \
+	$(OBJ)/vidhrdw/nova2001_vidhrdw.o $(OBJ)/drivers/nova2001.o \
+	$(OBJ)/vidhrdw/ninjakid_vidhrdw.o $(OBJ)/drivers/ninjakid.o \
+	$(OBJ)/vidhrdw/raiders5_vidhrdw.o $(OBJ)/drivers/raiders5.o \
 	$(OBJ)/vidhrdw/pkunwar.o $(OBJ)/drivers/pkunwar.o \
 	$(OBJ)/vidhrdw/xxmissio.o $(OBJ)/drivers/xxmissio.o \
 	$(OBJ)/vidhrdw/ninjakd2.o $(OBJ)/drivers/ninjakd2.o \
@@ -763,7 +763,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/omegaf.o $(OBJ)/drivers/omegaf.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/nmk16.o $(OBJ)/drivers/nmk16.o \
+	$(OBJ)/vidhrdw/nmk16_vidhrdw.o $(OBJ)/drivers/nmk16.o \
 	$(OBJ)/drivers/jalmah.o \
 	$(OBJ)/drivers/quizpani.o $(OBJ)/vidhrdw/quizpani.o \
 	$(OBJ)/vidhrdw/macrossp.o $(OBJ)/drivers/macrossp.o \
@@ -838,9 +838,9 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/inufuku.o $(OBJ)/drivers/inufuku.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/psikyo.o $(OBJ)/drivers/psikyo.o \
-	$(OBJ)/vidhrdw/psikyosh.o $(OBJ)/drivers/psikyosh.o \
-	$(OBJ)/vidhrdw/psikyo4.o $(OBJ)/drivers/psikyo4.o \
+	$(OBJ)/vidhrdw/psikyo_vidhrdw.o $(OBJ)/drivers/psikyo.o \
+	$(OBJ)/vidhrdw/psikyosh_vidhrdw.o $(OBJ)/drivers/psikyosh.o \
+	$(OBJ)/vidhrdw/psikyo4_vidhrdw.o $(OBJ)/drivers/psikyo4.o \
 
 COREOBJS += \
 	$(OBJ)/machine/8254pit.o $(OBJ)/drivers/leland.o $(OBJ)/vidhrdw/leland.o $(OBJ)/machine/leland.o $(OBJ)/sndhrdw/leland.o \
@@ -960,7 +960,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/afega.o $(OBJ)/drivers/afega.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/esd16.o $(OBJ)/drivers/esd16.o \
+	$(OBJ)/vidhrdw/esd16_vidhrdw.o $(OBJ)/drivers/esd16.o \
 
 COREOBJS += \
 	$(OBJ)/drivers/royalmah.o \
@@ -996,7 +996,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/kickgoal.o $(OBJ)/drivers/kickgoal.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/usgames.o $(OBJ)/drivers/usgames.o \
+	$(OBJ)/vidhrdw/usgames_vidhrdw.o $(OBJ)/drivers/usgames.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/mermaid.o $(OBJ)/drivers/mermaid.o \
@@ -1025,7 +1025,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/artmagic.o $(OBJ)/drivers/artmagic.o \
 
 COREOBJS += \
-	$(OBJ)/vidhrdw/shangkid.o $(OBJ)/drivers/shangkid.o \
+	$(OBJ)/vidhrdw/shangkid_vidhrdw.o $(OBJ)/drivers/shangkid.o \
 
 COREOBJS += \
 	$(OBJ)/vidhrdw/astinvad.o $(OBJ)/sndhrdw/astinvad.o $(OBJ)/drivers/astinvad.o \
