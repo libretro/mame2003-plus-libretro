@@ -271,9 +271,9 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/punchout_vidhrdw.o $(OBJ)/drivers/punchout.o \
 	$(OBJ)/machine/rp5h01.o $(OBJ)/vidhrdw/ppu2c03b.o \
 	$(OBJ)/machine/playch10.o $(OBJ)/vidhrdw/playch10.o $(OBJ)/drivers/playch10.o \
-	$(OBJ)/machine/vsnes.o $(OBJ)/vidhrdw/vsnes.o $(OBJ)/drivers/vsnes.o \
-	$(OBJ)/machine/snes.o $(OBJ)/vidhrdw/snes.o \
-	$(OBJ)/sndhrdw/snes.o $(OBJ)/drivers/nss.o \
+	$(OBJ)/machine/vsnes_machine.o $(OBJ)/vidhrdw/vsnes_vidhrdw.o $(OBJ)/drivers/vsnes.o \
+	$(OBJ)/machine/snes_machine.o $(OBJ)/vidhrdw/snes.o \
+	$(OBJ)/sndhrdw/snes_sndhrdw.o $(OBJ)/drivers/nss.o \
 
 COREOBJS += \
 	$(OBJ)/machine/8080bw.o \
@@ -622,15 +622,14 @@ COREOBJS += \
 	$(OBJ)/sndhrdw/bzone.o	$(OBJ)/drivers/bzone.o \
 	$(OBJ)/sndhrdw/redbaron.o \
 	$(OBJ)/drivers/tempest.o \
-	$(OBJ)/machine/starwars.o \
-	$(OBJ)/drivers/starwars.o $(OBJ)/sndhrdw/starwars.o \
-	$(OBJ)/machine/mhavoc.o $(OBJ)/drivers/mhavoc.o \
+	$(OBJ)/machine/starwars_machine.o $(OBJ)/drivers/starwars.o $(OBJ)/sndhrdw/starwars_sndhrdw.o \
+	$(OBJ)/machine/mhavoc_machine.o $(OBJ)/drivers/mhavoc.o \
 	$(OBJ)/drivers/quantum.o \
 	$(OBJ)/vidhrdw/copsnrob.o $(OBJ)/machine/copsnrob.o $(OBJ)/drivers/copsnrob.o \
-	$(OBJ)/vidhrdw/flyball.o $(OBJ)/drivers/flyball.o \
-	$(OBJ)/vidhrdw/sprint2.o $(OBJ)/drivers/sprint2.o \
-	$(OBJ)/vidhrdw/sprint4.o $(OBJ)/drivers/sprint4.o \
-	$(OBJ)/vidhrdw/sprint8.o $(OBJ)/drivers/sprint8.o \
+	$(OBJ)/vidhrdw/flyball_vidhrdw.o $(OBJ)/drivers/flyball.o \
+	$(OBJ)/vidhrdw/sprint2_vidhrdw.o $(OBJ)/drivers/sprint2.o \
+	$(OBJ)/vidhrdw/sprint4_vidhrdw.o $(OBJ)/drivers/sprint4.o \
+	$(OBJ)/vidhrdw/sprint8_vidhrdw.o $(OBJ)/drivers/sprint8.o \
 	$(OBJ)/vidhrdw/nitedrvr.o $(OBJ)/machine/nitedrvr.o $(OBJ)/drivers/nitedrvr.o \
 	$(OBJ)/machine/dominos.o \
 	$(OBJ)/vidhrdw/triplhnt.o $(OBJ)/drivers/triplhnt.o \
@@ -673,7 +672,7 @@ COREOBJS += \
 	$(OBJ)/vidhrdw/atetris.o $(OBJ)/drivers/atetris.o \
 	$(OBJ)/vidhrdw/toobin.o $(OBJ)/drivers/toobin.o \
 	$(OBJ)/vidhrdw/vindictr.o $(OBJ)/drivers/vindictr.o \
-	$(OBJ)/vidhrdw/klax.o $(OBJ)/drivers/klax.o \
+	$(OBJ)/vidhrdw/klax_vidhrdw.o $(OBJ)/drivers/klax.o \
 	$(OBJ)/vidhrdw/blstroid.o $(OBJ)/drivers/blstroid.o \
 	$(OBJ)/vidhrdw/xybots.o $(OBJ)/drivers/xybots.o \
 	$(OBJ)/vidhrdw/eprom.o $(OBJ)/drivers/eprom.o \
