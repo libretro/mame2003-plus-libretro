@@ -901,7 +901,7 @@
     <ClCompile Include="..\..\..\machine\eeprom.c" />
     <ClCompile Include="..\..\..\machine\equites_machine.c" />
     <ClCompile Include="..\..\..\machine\exctsccr_machine.c" />
-    <ClCompile Include="..\..\..\machine\flstory.c" />
+    <ClCompile Include="..\..\..\machine\flstory_machine.c" />
     <ClCompile Include="..\..\..\machine\gaelco2_machine.c" />
     <ClCompile Include="..\..\..\machine\galaga_machine.c" />
     <ClCompile Include="..\..\..\machine\gaplus_machine.c" />
@@ -915,7 +915,7 @@
     <ClCompile Include="..\..\..\machine\jackal_machine.c" />
     <ClCompile Include="..\..\..\machine\jumpshot.c" />
     <ClCompile Include="..\..\..\machine\kabuki.c" />
-    <ClCompile Include="..\..\..\machine\konami.c" />
+    <ClCompile Include="..\..\..\machine\konami_machine.c" />
     <ClCompile Include="..\..\..\machine\konamigx_machine.c" />
     <ClCompile Include="..\..\..\machine\kyugo_machine.c" />
     <ClCompile Include="..\..\..\machine\leland_machine.c" />
@@ -928,7 +928,7 @@
     <ClCompile Include="..\..\..\machine\mathbox.c" />
     <ClCompile Include="..\..\..\machine\mb87078.c" />
     <ClCompile Include="..\..\..\machine\mcr.c" />
-    <ClCompile Include="..\..\..\machine\mexico86.c" />
+    <ClCompile Include="..\..\..\machine\mexico86_machine.c" />
     <ClCompile Include="..\..\..\machine\mhavoc_machine.c" />
     <ClCompile Include="..\..\..\machine\midtunit_machine.c" />
     <ClCompile Include="..\..\..\machine\midwayic.c" />
@@ -970,7 +970,7 @@
     <ClCompile Include="..\..\..\machine\slikshot.c" />
     <ClCompile Include="..\..\..\machine\snes_machine.c" />
     <ClCompile Include="..\..\..\machine\spiders_machine.c" />
-    <ClCompile Include="..\..\..\machine\stactics.c" />
+    <ClCompile Include="..\..\..\machine\stactics_machine.c" />
     <ClCompile Include="..\..\..\machine\starwars_machine.c" />
     <ClCompile Include="..\..\..\machine\stfight_machine.c" />
     <ClCompile Include="..\..\..\machine\strtheat.c" />
@@ -1063,9 +1063,9 @@
     <ClCompile Include="..\..\..\sndhrdw\senjyo_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\snes_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\starwars_sndhrdw.c" />
-    <ClCompile Include="..\..\..\sndhrdw\system16.c" />
+    <ClCompile Include="..\..\..\sndhrdw\system16_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\taitosnd.c" />
-    <ClCompile Include="..\..\..\sndhrdw\taito_f3.c" />
+    <ClCompile Include="..\..\..\sndhrdw\taito_f3_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\targ.c" />
     <ClCompile Include="..\..\..\sndhrdw\timeplt_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\trackfld_sndhrdw.c" />
@@ -1163,9 +1163,9 @@
     <ClCompile Include="..\..\..\vidhrdw\4enraya_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\8080bw_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\88games_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\actfancr.c" />
+    <ClCompile Include="..\..\..\vidhrdw\actfancr_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\aeroboto_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\aerofgt.c" />
+    <ClCompile Include="..\..\..\vidhrdw\aerofgt_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\afega_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\airbustr_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\ajax_vidhrdw.c" />
@@ -1339,7 +1339,7 @@
     <ClCompile Include="..\..\..\vidhrdw\fitfight_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\flkatck_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\flower_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\flstory.c" />
+    <ClCompile Include="..\..\..\vidhrdw\flstory_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\flyball_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\foodf_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\freekick_vidhrdw.c" />
