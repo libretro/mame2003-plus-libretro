@@ -1085,7 +1085,7 @@
     <ClCompile Include="..\..\..\sound\5110intf.c" />
     <ClCompile Include="..\..\..\sound\5220intf.c" />
     <ClCompile Include="..\..\..\sound\adpcm.c" />
-    <ClCompile Include="..\..\..\sound\astrocde.c" />
+    <ClCompile Include="..\..\..\sound\astrocde_snd.c" />
     <ClCompile Include="..\..\..\sound\ay8910.c" />
     <ClCompile Include="..\..\..\sound\bsmt2000.c" />
     <ClCompile Include="..\..\..\sound\c140.c" />
@@ -1097,7 +1097,7 @@
     <ClCompile Include="..\..\..\sound\filter.c" />
     <ClCompile Include="..\..\..\sound\fm.c" />
     <ClCompile Include="..\..\..\sound\fmopl.c" />
-    <ClCompile Include="..\..\..\sound\gaelco.c" />
+    <ClCompile Include="..\..\..\sound\gaelco_snd.c" />
     <ClCompile Include="..\..\..\sound\hc55516.c" />
     <ClCompile Include="..\..\..\sound\iremga20.c" />
     <ClCompile Include="..\..\..\sound\k005289.c" />
@@ -1259,7 +1259,7 @@
     <ClCompile Include="..\..\..\vidhrdw\champbas_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\cheekyms_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\chqflag_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\cinemat.c" />
+    <ClCompile Include="..\..\..\vidhrdw\cinemat_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\circus_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\circusc_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\cischeat_vidhrdw.c" />

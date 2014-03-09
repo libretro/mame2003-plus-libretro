@@ -818,7 +818,7 @@ CPU=$(strip $(findstring CCPU@,$(CPUS)))
 ifneq ($(CPU),)
 OBJDIRS += $(OBJ)/cpu/ccpu
 CPUDEFS += -DHAS_CCPU=1
-CPUOBJS += $(OBJ)/cpu/ccpu/ccpu.o $(OBJ)/vidhrdw/cinemat.o
+CPUOBJS += $(OBJ)/cpu/ccpu/ccpu.o $(OBJ)/vidhrdw/cinemat_vidhrdw.o
 DBGOBJS += $(OBJ)/cpu/ccpu/ccpudasm.o
 $(OBJ)/cpu/ccpu/ccpu.o: ccpu.c ccpu.h ccputabl.c
 else
@@ -1250,7 +1250,7 @@ endif
 SOUND=$(strip $(findstring ASTROCADE@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_ASTROCADE=1
-SOUNDOBJS += $(OBJ)/sound/astrocde.o
+SOUNDOBJS += $(OBJ)/sound/astrocde_snd.o
 else
 SOUNDDEFS += -DHAS_ASTROCADE=0
 endif
@@ -1490,7 +1490,7 @@ endif
 SOUND=$(strip $(findstring GAELCO_CG1V@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_GAELCO_CG1V=1
-SOUNDOBJS += $(OBJ)/sound/gaelco.o
+SOUNDOBJS += $(OBJ)/sound/gaelco_snd.o
 else
 SOUNDDEFS += -DHAS_GAELCO_CG1V=0
 endif
@@ -1498,7 +1498,7 @@ endif
 SOUND=$(strip $(findstring GAELCO_GAE1@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_GAELCO_GAE1=1
-SOUNDOBJS += $(OBJ)/sound/gaelco.o
+SOUNDOBJS += $(OBJ)/sound/gaelco_snd.o
 else
 SOUNDDEFS += -DHAS_GAELCO_GAE1=0
 endif
