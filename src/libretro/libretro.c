@@ -379,7 +379,6 @@ bool retro_unserialize(const void * data, size_t size)
 }
 
 
-
 // Stubs
 unsigned retro_get_region (void) {return RETRO_REGION_NTSC;}
 void *retro_get_memory_data(unsigned type) {return 0;}
