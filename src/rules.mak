@@ -830,9 +830,9 @@ CPU=$(strip $(findstring PSXCPU@,$(CPUS)))
 ifneq ($(CPU),)
 OBJDIRS += $(OBJ)/cpu/mips
 CPUDEFS += -DHAS_PSXCPU=1
-CPUOBJS += $(OBJ)/cpu/mips/psx.o
+CPUOBJS += $(OBJ)/cpu/mips/psx_cpu.o
 DBGOBJS += $(OBJ)/cpu/mips/mipsdasm.o
-$(OBJ)/cpu/mips/psx.o: psx.c psx.h
+$(OBJ)/cpu/mips/psx.o: psx_cpu.c psx.h
 else
 CPUDEFS += -DHAS_PSXCPU=0
 endif

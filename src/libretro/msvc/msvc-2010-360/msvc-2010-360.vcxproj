@@ -90,7 +90,7 @@
     <ClCompile Include="..\..\..\cpu\mips\mips3.c" />
     <ClCompile Include="..\..\..\cpu\mips\mips3dsm.c" />
     <ClCompile Include="..\..\..\cpu\mips\mipsdasm.c" />
-    <ClCompile Include="..\..\..\cpu\mips\psx.c" />
+    <ClCompile Include="..\..\..\cpu\mips\psx_cpu.c" />
     <ClCompile Include="..\..\..\cpu\mips\r3000.c" />
     <ClCompile Include="..\..\..\cpu\mips\r3kdasm.c" />
     <ClCompile Include="..\..\..\cpu\nec\nec.c" />
