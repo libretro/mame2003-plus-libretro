@@ -193,6 +193,9 @@ void retro_init (void)
    environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf_cb);
 #endif
 
+   unsigned colormode = RETRO_PIXEL_FORMAT_RGB565;
+   environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &colormode);
+
 	update_variables();
 }
 
