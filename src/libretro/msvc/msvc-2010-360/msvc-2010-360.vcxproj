@@ -1530,7 +1530,7 @@
     <ClCompile Include="..\..\..\vidhrdw\nyny_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\offtwall_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\ohmygod_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\ojankohs.c" />
+    <ClCompile Include="..\..\..\vidhrdw\ojankohs_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\omegaf_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\oneshot_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\orbit_vidhrdw.c" />

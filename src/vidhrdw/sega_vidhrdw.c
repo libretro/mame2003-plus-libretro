@@ -143,7 +143,7 @@ VIDEO_START( sega )
 	/* generate the sine/cosine lookup tables */
 	for (i = 0; i < 0x400; i++)
 	{
-		double angle = ((2. * PI) / (double)0x400) * (double)i;
+		double angle = ((2. * M_PI) / (double)0x400) * (double)i;
 		double temp;
 
 		temp = sin (angle);
