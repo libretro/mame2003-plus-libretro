@@ -440,7 +440,7 @@
     <ClCompile Include="..\..\..\drivers\lethalj.c" />
     <ClCompile Include="..\..\..\drivers\liberate.c" />
     <ClCompile Include="..\..\..\drivers\liberatr.c" />
-    <ClCompile Include="..\..\..\drivers\lkage_machine.c" />
+    <ClCompile Include="..\..\..\drivers\lkage.c" />
     <ClCompile Include="..\..\..\drivers\locomotn.c" />
     <ClCompile Include="..\..\..\drivers\looping.c" />
     <ClCompile Include="..\..\..\drivers\lsasquad.c" />
@@ -920,7 +920,7 @@
     <ClCompile Include="..\..\..\machine\kyugo_machine.c" />
     <ClCompile Include="..\..\..\machine\leland.c" />
     <ClCompile Include="..\..\..\machine\leprechn.c" />
-    <ClCompile Include="..\..\..\machine\lkage.c" />
+    <ClCompile Include="..\..\..\machine\lkage_machine.c" />
     <ClCompile Include="..\..\..\machine\lsasquad.c" />
     <ClCompile Include="..\..\..\machine\m68kfmly.c" />
     <ClCompile Include="..\..\..\machine\maniach.c" />
