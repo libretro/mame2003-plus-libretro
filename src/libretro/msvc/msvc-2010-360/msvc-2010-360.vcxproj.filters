@@ -191,9 +191,6 @@
     <ClCompile Include="..\..\..\sound\adpcm.c">
       <Filter>Source Files\sound</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sound\astrocde.c">
-      <Filter>Source Files\sound</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\sound\ay8910.c">
       <Filter>Source Files\sound</Filter>
     </ClCompile>
@@ -225,9 +222,6 @@
       <Filter>Source Files\sound</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sound\fmopl.c">
-      <Filter>Source Files\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sound\gaelco.c">
       <Filter>Source Files\sound</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sound\hc55516.c">
@@ -365,1924 +359,58 @@
     <ClCompile Include="..\..\..\sound\ymf278b.c">
       <Filter>Source Files\sound</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\4enraya.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\40love.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\88games.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\1942.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\1943.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\actfancr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\aeroboto.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\aerofgt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\afega.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\airbustr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ajax.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\aliens.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\alpha68k.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ambush.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\amspdwy.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\angelkds.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\appoooh.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\aquarium.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\arabian.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\arcadecl.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\argus.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\arkanoid.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\armedf.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\artmagic.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ashnojoe.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\asterix.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\astinvad.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\astrocde.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\astrof.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\asuka.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atarifb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atarig1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atarig42.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atarimo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atarirle.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atarisy1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atarisy2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\atetris.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\avalnche.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\avengrgs.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\avgdvg.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\aztarac.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\badlands.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bagman.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\balsente.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bankp.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\baraduke.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\batman.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\battlane.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\battlera.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\battlex.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\battlnts.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bbusters.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\beaminv.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\beathead.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\beezer.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\berzerk.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bigevglf.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bigstrkb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bionicc.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bishi.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bking2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bladestl.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\blktiger.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\blmbycar.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\blockade.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\blockhl.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\blockout.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bloodbro.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\blstroid.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\blueprnt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bogeyman.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bombjack.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bosco.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bottom9.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\boxer.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\brkthru.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bsktball.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\btime.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\btoads.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bublbobl.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\buggychl.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\bwing.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cabal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\canyon.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\capbowl.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\carjmbre.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\carpolo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cave.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cbasebal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cbuster.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ccastles.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cchasm.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cclimber.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\centiped.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\chaknpop.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\champbas.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cheekyms.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\chqflag.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cinemat.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\circus.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\circusc.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cischeat.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\citycon.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\clayshoo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cloak.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cloud9.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\clshroad.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cninja.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\combatsc.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\commando.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\contra.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cop01.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\copsnrob.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cosmic.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cps1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\crbaloon.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\crgolf.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\crimfght.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\crshrace.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\crtc6845.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cvs.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\cyberbal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\darius.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\darkseal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dassault.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dbz2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dcon.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dday.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ddragon3.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ddragon.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ddrible.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\deadang.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dec0.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dec8.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\deco16ic.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\deco32.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\decocass.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\deniam.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\destroyr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\digdug.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\diverboy.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\djboy.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\djmain.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dkong.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\docastle.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dogfgt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dooyong.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dorachan.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dotrikun.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dragrace.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\drgnmst.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dribling.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\drmicro.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dynax.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\dynduke.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\epos.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\eprom.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\equites.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\esd16.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\espial.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\exctsccr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\exedexes.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\exerion.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\exidy440.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\exidy.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\exprraid.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\exterm.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\exzisus.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\f1gp.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\fantland.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\fastfred.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\fastlane.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\finalizr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\firetrap.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\firetrk.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\fitfight.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\flkatck.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\flower.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\flstory.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\flyball.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\foodf.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\freekick.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\fromanc2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\fromance.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\funkybee.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\funkyjet.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\fuukifg2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\fuukifg3.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gaelco2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gaelco.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gaiden.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\galaga.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\galaxian.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\galivan.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\galpani2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\galpanic.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gaplus.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gauntlet.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gberet.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gbusters.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gcpinbal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\geebee.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\generic.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gijoe.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ginganin.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gladiatr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\glass.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gng.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\goal92.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\goindol.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gomoku.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gotcha.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gottlieb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gotya.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gradius3.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\grchamp.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gridlee.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\grobda.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\groundfx.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gstriker.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gsword.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gumbo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gunbustr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gundealr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gunsmoke.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\gyruss.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\hanaawas.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\harddriv.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\hcastle.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\hexa.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\hexion.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\higemaru.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\hitme.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\hnayayoi.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\homedata.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\homerun.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\hyhoo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\hyperspt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\hyprduel.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ikki.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\inufuku.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\iqblock.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\irobot.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ironhors.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\itech8.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\itech32.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\jack.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\jackal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\jailbrek.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\jcross.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\jedi.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\jrpacman.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\kaneko16.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\kangaroo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\karnov.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\kchamp.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\kickgoal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\kingobox.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\kinst.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\klax.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\kncljoe.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\konamigx.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\konamiic.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\kopunch.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\kyugo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\labyrunr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ladybug.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ladyfrog.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\lasso.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\lastduel.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\lazercmd.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\legionna.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\leland.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\lemmings.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\leprechn.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\lethalj.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\liberate.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\liberatr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\lkage.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\lsasquad.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\lwings.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\m62.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\m72.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\m79amb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\m90.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\m92.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\m107.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\macrossp.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\madmotor.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\magmax.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mainevt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mainsnk.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\malzak.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mappy.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\marineb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mario.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\markham.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\marvins.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\matmania.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\matrix3d.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mayumi.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mcatadv.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mcr3.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mcr12.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mcr68.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\meadows.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\megasys1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\megazone.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mermaid.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\metlclsh.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\metro.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mexico86.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\midtunit.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\midvunit.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\midyunit.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mikie.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\minivadr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\missile.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mitchell.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mjkjidai.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mjsister.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mnight.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mole.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\momoko.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\moo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mosaic.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mpatrol.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mrdo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mrflea.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mrjong.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ms32.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\msisaac.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mugsmash.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\munchmo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mustache.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mystston.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\mystwarr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\namcona1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\namconb1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\namcos1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\namcos2.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\namcos3d.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\namcos21.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\namcos22.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\namcos86.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\naughtyb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nbmj8688.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nbmj8891.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nbmj8991.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nbmj9195.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nemesis.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\neogeo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\news.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ninjakd2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ninjakid.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ninjaw.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nitedrvr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\niyanpai.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nmk16.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nova2001.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nycaptor.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\nyny.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\offtwall.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ohmygod.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ojankohs.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\omegaf.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\oneshot.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\orbit.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\othldrby.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\othunder.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\overdriv.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pacland.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pandoras.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\paradise.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\parodius.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pass.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pastelgl.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pbaction.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pbillian.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pcktgal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pengo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pgm.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\phoenix.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\phozon.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pingpong.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pirates.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pitnrun.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pkunwar.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\playch10.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\plygonet.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\polepos.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\policetr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\poly.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\polyplay.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\poolshrk.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\pooyan.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\popeye.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\popper.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\portrait.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\powerins.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\ppu2c03b.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\prehisle.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\psikyo4.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\psikyo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\psikyosh.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\psx.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\psychic5.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\qix.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\quizdna.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\quizpani.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\raiden.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\raiders5.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rallyx.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rampart.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rastan.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\realbrk.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\redalert.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\redclash.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\relief.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\renegade.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\retofinv.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rockola.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rockrage.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rocnrope.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rohga.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rollerg.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rollrace.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\route16.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rpunch.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\runaway.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\rungun.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\s2636.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sauro.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sbasketb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sbrkout.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sbugger.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sega.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\segac2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\segaic24.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\segar.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\segasyse.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\seicross.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sengokmj.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\senjyo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\seta2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\seta.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sf1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\shadfrce.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\shangha3.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\shangkid.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\shaolins.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\shisen.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\shootout.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\shuuz.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sidearms.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sidepckt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\silkroad.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\simpsons.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\skullxbo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\skychut.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\skydiver.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\skyfox.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\skykid.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\skyraid.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\slapfght.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\slapshot.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\snes.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\snk68.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\snk.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\snowbros.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\solomon.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sonson.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\spacefb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\spbactn.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\spcforce.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\spdodgeb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\speedatk.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\speedbal.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\speedspn.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\spiders.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\splash.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sprcros2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sprint2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sprint4.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sprint8.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\spy.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\srmp2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\srumbler.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sshangha.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ssozumo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\sspeedr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ssrj.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ssv.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\stactics.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\stadhero.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\starcrus.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\starfire.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\starshp1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\stfight.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\stlforce.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\strnskil.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\stvvdp1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\stvvdp2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\subs.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\suna8.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\suna16.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\supbtime.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\superchs.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\superpac.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\superqix.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\suprloco.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\suprnova.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\suprslam.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\surpratk.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\sys16spr.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\system1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\system16.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\system24.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\system32.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tagteam.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tail2nos.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taito_b.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taito_f2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taito_f3.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taito_h.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taito_l.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taito_z.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taitoair.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\taitoic.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taitosj.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tankbatt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tankbust.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taotaido.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\targeth.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\taxidrvr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tbowl.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tceptor.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tecmo16.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tecmo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tehkanwc.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\terracre.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tetrisp2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\thedeep.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\thepit.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\thief.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\thoop2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\thunderj.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\thunderx.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\tia.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tickee.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tigeroad.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\timelimt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\timeplt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\tlc34076.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tmnt.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\tms9928a.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tms34061.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tnzs.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\toaplan1.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\toaplan2.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\toki.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\toobin.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\topspeed.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\toypop.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tp84.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\trackfld.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\travrusa.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\triplhnt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\troangel.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\truco.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tsamurai.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ttmahjng.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tubep.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tumblep.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tunhunt.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\turbo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\tutankhm.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\twin16.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\twincobr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\ultraman.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\undrfire.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\unico.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\usgames.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\vaportra.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\vastar.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\vball.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\vector.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\vendetta.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\vicdual.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\victory.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\videopin.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\vigilant.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\vindictr.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\volfied.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\voodoo.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\vsnes.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\vulgus.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\warpwarp.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\warriorb.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wc90.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wc90b.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wecleman.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\welltris.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wgp.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\williams.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wiping.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wiz.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wolfpack.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wrally.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wwfsstar.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\wwfwfest.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\xain.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\xevious.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\xexex.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\xmen.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\xorworld.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\xxmissio.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\xybots.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\xyonix.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\yard.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\vidhrdw\ygv608.c">
       <Filter>Source Files\vidhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\yiear.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\yunsun16.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\vidhrdw\yunsung8.c">
-      <Filter>Source Files\vidhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\asteroid.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\astinvad.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\astrocde.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\astrof.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\atarijsa.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\aztarac.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\berzerk.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\bosco.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\bzone.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\cage.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\carnival.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\cchasm.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\cclimber.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\cinemat.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\cyberbal.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\dcs.c">
@@ -2291,43 +419,7 @@
     <ClCompile Include="..\..\..\sndhrdw\depthch.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\dkong.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\exidy440.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\exidy.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\flower.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\galaxian.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\geebee.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\gomoku.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\gorf.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\gottlieb.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\gotya.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\gridlee.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\gyruss.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\harddriv.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\invinco.c">
@@ -2336,61 +428,16 @@
     <ClCompile Include="..\..\..\sndhrdw\irem.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\leland.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\llander.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\m72.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\mario.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\mcr.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\meadows.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\pbillian.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\phoenix.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\pleiads.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\polepos.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\polyplay.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\pulsar.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\rastan.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\redalert.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\redbaron.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\rockola.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\scramble.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\sega.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\segar.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\segasnd.c">
@@ -2399,40 +446,10 @@
     <ClCompile Include="..\..\..\sndhrdw\seibu.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\senjyo.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\snes.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\starwars.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\system16.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\taito_f3.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\taitosnd.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\targ.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\timeplt.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\trackfld.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\warpwarp.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\williams.c">
-      <Filter>Source Files\sndhrdw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\sndhrdw\wiping.c">
       <Filter>Source Files\sndhrdw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\z80fmly.c">
@@ -2471,94 +488,22 @@
     <ClCompile Include="..\..\..\machine\acitya.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\ajax.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\am53cf96.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\arkanoid.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\asic65.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\asteroid.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\astrocde.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\atari_vg.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\atarifb.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\atarigen.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\avalnche.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\bagman.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\balsente.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\beezer.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\berzerk.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\bigevglf.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\bonzeadv.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\bosco.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\bsktball.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\btime.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\bublbobl.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\buggychl.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\capbowl.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\carpolo.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\cchasm.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\cchip.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\chaknpop.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\clayshoo.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\copsnrob.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\dec0.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\decocass.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\decocrpt.c">
@@ -2567,46 +512,10 @@
     <ClCompile Include="..\..\..\machine\decoprot.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\digdug.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\docastle.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\dominos.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\eeprom.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\equites.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\exctsccr.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\flstory.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\gaelco2.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\galaga.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\gaplus.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\geebee.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\grchamp.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\grobda.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\harddriv.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\idectrl.c">
@@ -2615,46 +524,16 @@
     <ClCompile Include="..\..\..\machine\irem_cpu.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\irobot.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\jackal.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\jumpshot.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\kabuki.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\konami.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\konamigx.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\kyugo.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\leland.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\leprechn.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\lkage.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\lsasquad.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\m68kfmly.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\maniach.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\mappy.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\mathbox.c">
@@ -2666,52 +545,16 @@
     <ClCompile Include="..\..\..\machine\mcr.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\mexico86.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\mhavoc.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\midtunit.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\midwayic.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\midwunit.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\midyunit.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\missile.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\mspacman.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\namcond1.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\namcos1.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\namcos2.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\nb1413m3.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\neocrypt.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\neogeo.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\nitedrvr.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\nycaptor.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\pacplus.c">
@@ -2723,61 +566,16 @@
     <ClCompile Include="..\..\..\machine\pgmcrypt.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\pgmprot.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\phozon.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\pitnrun.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\playch10.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\polepos.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\psx.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\qix.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\rainbow.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\random.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\retofinv.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\rp5h01.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\sbrkout.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\scramble.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\scudsp.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\sega.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\segacrpt.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\segar.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\simpsons.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\slapfght.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\slapstic.c">
@@ -2786,43 +584,13 @@
     <ClCompile Include="..\..\..\machine\slikshot.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\snes.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\spiders.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\stactics.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\starwars.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\stfight.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\strtheat.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\stvcd.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\machine\subs.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\superpac.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\system16.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\system24.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\machine\tait8741.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\taitosj.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\theglobp.c">
@@ -2832,36 +600,6 @@
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\machine\tmp68301.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\tnzs.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\toaplan1.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\toypop.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\turbo.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\twincobr.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\volfied.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\vsnes.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\williams.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\wrally.c">
-      <Filter>Source Files\machine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\machine\xevious.c">
       <Filter>Source Files\machine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\drivers\zodiack.c">
@@ -5081,9 +2819,6 @@
     <ClCompile Include="..\..\..\cpu\t11\t11.c">
       <Filter>Source Files\cpu\t11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\cpu\tms9900\tms9900.c">
-      <Filter>Source Files\cpu\tms9900</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\cpu\tms32010\tms32010.c">
       <Filter>Source Files\cpu\tms32010</Filter>
     </ClCompile>
@@ -5118,9 +2853,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\audit.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\blitgen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\chd.c">
@@ -5172,9 +2904,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\input.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\mame.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\mamedbg.c">
@@ -5434,6 +3163,2295 @@
     </ClCompile>
     <ClCompile Include="..\..\..\sndhrdw\zaxxon_sndhrdw.c">
       <Filter>Source Files\sndhrdw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\ajax_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\arkanoid_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\asteroid_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\astrocde_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\atarifb_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\avalnche_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\bagman_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\balsente_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\beezer_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\berzerk_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\bigevglf_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\bosco_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\bsktball_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\btime_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\bublbobl_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\buggychl_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\capbowl_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\carpolo_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\cchasm_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\chaknpop_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\clayshoo_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\copsnrob_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\dec0_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\decocass_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\digdug_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\docastle_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\equites_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\exctsccr_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\flstory_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\gaelco2_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\galaga_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\gaplus_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\geebee_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\grchamp_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\grobda_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\harddriv_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\irobot_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\jackal_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\konami_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\konamigx_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\kyugo_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\leland_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\leprechn_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\lkage_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\lsasquad_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\mappy_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\mexico86_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\mhavoc_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\midtunit_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\midwunit_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\midyunit_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\missile_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\namcond1_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\namcos1_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\namcos2_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\neogeo_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\nitedrvr_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\nycaptor_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\pgmprot_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\phozon_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\pitnrun_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\playch10_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\polepos_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\psx_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\qix_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\rainbow_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\retofinv_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\sbrkout_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\scramble_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\sega_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\segar_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\simpsons_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\slapfght_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\snes_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\spiders_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\stactics_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\starwars_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\stfight_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\subs_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\superpac_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\system16_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\system24_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\taitosj_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\tnzs_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\toaplan1_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\toypop_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\turbo_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\twincobr_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\volfied_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\vsnes_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\williams_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\wrally_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\machine\xevious_machine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\asteroid_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\astinvad_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\astrocde_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\astrof_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\aztarac_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\berzerk_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\bosco_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\bzone_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\cage_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\cchasm_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\cclimber_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\cinemat_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\cyberbal_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\dkong_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\exidy_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\exidy440_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\flower_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\galaxian_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\geebee_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\gomoku_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\gottlieb_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\gotya_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\gridlee_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\gyruss_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\harddriv_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\leland_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\m72_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\mario_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\mcr_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\meadows_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\pbillian_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\phoenix_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\polepos_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\polyplay_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\rastan_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\redalert_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\rockola_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\scramble_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\sega_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\segar_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\senjyo_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\snes_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\starwars_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\system16_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\taito_f3_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\timeplt_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\trackfld_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\warpwarp_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\williams_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sndhrdw\wiping_sndhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sound\astrocde_snd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\sound\gaelco_snd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\1942_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\1943_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\40love_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\4enraya_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\88games_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\actfancr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\aeroboto_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\aerofgt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\afega_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\airbustr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ajax_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\aliens_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\alpha68k_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ambush_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\amspdwy_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\angelkds_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\appoooh_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\aquarium_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\arabian_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\arcadecl_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\argus_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\arkanoid_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\armedf_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\artmagic_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ashnojoe_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\asterix_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\astinvad_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\astrocde_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\astrof_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\asuka_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atarifb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atarig1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atarig42_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atarimo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atarirle_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atarisy1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atarisy2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\atetris_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\avalnche_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\avengrgs_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\avgdvg_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\aztarac_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\badlands_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bagman_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\balsente_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bankp_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\baraduke_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\batman_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\battlane_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\battlera_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\battlex_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\battlnts_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bbusters_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\beaminv_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\beathead_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\beezer_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\berzerk_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bigevglf_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bigstrkb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bionicc_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bishi_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bking2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bladestl_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\blktiger_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\blmbycar_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\blockade_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\blockhl_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\blockout_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bloodbro_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\blstroid_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\blueprnt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bogeyman_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bombjack_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bosco_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bottom9_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\boxer_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\brkthru_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bsktball_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\btime_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\btoads_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bublbobl_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\buggychl_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\bwing_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cabal_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\canyon_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\capbowl_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\carjmbre_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\carpolo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cave_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cbasebal_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cbuster_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ccastles_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cchasm_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cclimber_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\centiped_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\chaknpop_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\champbas_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cheekyms_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\chqflag_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cinemat_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\circus_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\circusc_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cischeat_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\citycon_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\clayshoo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cloak_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cloud9_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\clshroad_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cninja_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\combatsc_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\commando_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\contra_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cop01_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\copsnrob_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cosmic_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cps1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\crbaloon_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\crgolf_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\crimfght_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\crshrace_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cvs_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\cyberbal_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\darius_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\darkseal_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dassault_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dbz2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dcon_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dday_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ddragon_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ddragon3_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ddrible_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\deadang_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dec0_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dec8_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\deco32_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\decocass_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\deniam_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\destroyr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\digdug_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\diverboy_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\djboy_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\djmain_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dkong_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\docastle_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dogfgt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dooyong_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dorachan_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dotrikun_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dragrace_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\drgnmst_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dribling_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\drmicro_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dynax_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\dynduke_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\epos_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\eprom_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\equites_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\esd16_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\espial_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\exctsccr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\exedexes_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\exerion_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\exidy_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\exidy440_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\exprraid_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\exterm_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\exzisus_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\f1gp_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\fantland_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\fastfred_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\fastlane_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\finalizr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\firetrap_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\firetrk_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\fitfight_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\flkatck_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\flower_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\flstory_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\flyball_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\foodf_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\freekick_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\fromanc2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\fromance_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\funkybee_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\funkyjet_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\fuukifg2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\fuukifg3_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gaelco_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gaelco2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gaiden_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\galaga_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\galaxian_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\galivan_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\galpani2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\galpanic_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gaplus_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gauntlet_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gberet_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gbusters_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gcpinbal_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\geebee_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gijoe_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ginganin_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gladiatr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\glass_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gng_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\goal92_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\goindol_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gomoku_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gotcha_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gottlieb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gotya_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gradius3_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\grchamp_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gridlee_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\grobda_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\groundfx_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gstriker_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gsword_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gumbo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gunbustr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gundealr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gunsmoke_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\gyruss_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\hanaawas_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\harddriv_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\hcastle_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\hexa_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\hexion_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\higemaru_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\hitme_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\hnayayoi_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\homedata_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\homerun_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\hyhoo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\hyperspt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\hyprduel_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ikki_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\inufuku_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\iqblock_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\irobot_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ironhors_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\itech32_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\itech8_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\jack_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\jackal_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\jailbrek_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\jcross_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\jedi_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\jrpacman_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\kaneko16_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\kangaroo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\karnov_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\kchamp_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\kickgoal_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\kingobox_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\kinst_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\klax_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\kncljoe_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\konamigx_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\kopunch_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\kyugo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\labyrunr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ladybug_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ladyfrog_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\lasso_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\lastduel_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\lazercmd_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\legionna_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\leland_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\lemmings_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\leprechn_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\lethalj_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\liberate_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\liberatr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\lkage_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\lsasquad_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\lwings_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\m107_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\m62_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\m72_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\m79amb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\m90_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\m92_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\macrossp_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\madmotor_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\magmax_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mainevt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mainsnk_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\malzak_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mappy_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\marineb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mario_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\markham_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\marvins_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\matmania_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mayumi_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mcatadv_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mcr12_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mcr3_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mcr68_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\meadows_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\megasys1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\megazone_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mermaid_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\metlclsh_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\metro_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mexico86_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\midtunit_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\midvunit_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\midyunit_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mikie_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\minivadr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\missile_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mitchell_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mjkjidai_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mjsister_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mnight_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mole_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\momoko_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\moo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mosaic_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mpatrol_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mrdo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mrflea_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mrjong_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ms32_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\msisaac_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mugsmash_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\munchmo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mustache_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mystston_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\mystwarr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\namcona1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\namconb1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\namcos1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\namcos2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\namcos21_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\namcos22_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\namcos86_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\naughtyb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nbmj8688_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nbmj8891_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nbmj8991_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nbmj9195_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nemesis_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\neogeo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\news_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ninjakd2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ninjakid_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ninjaw_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nitedrvr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\niyanpai_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nmk16_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nova2001_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nycaptor_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\nyny_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\offtwall_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ohmygod_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ojankohs_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\omegaf_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\oneshot_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\orbit_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\othldrby_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\othunder_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\overdriv_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pacland_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pandoras_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\paradise_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\parodius_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pass_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pastelgl_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pbaction_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pbillian_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pcktgal_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pengo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pgm_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\phoenix_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\phozon_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pingpong_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pirates_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pitnrun_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pkunwar_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\playch10_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\plygonet_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\polepos_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\policetr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\polyplay_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\poolshrk_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\pooyan_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\popeye_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\popper_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\portrait_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\powerins_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\prehisle_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\psikyo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\psikyo4_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\psikyosh_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\psx_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\psychic5_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\qix_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\quizdna_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\quizpani_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\raiden_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\raiders5_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rallyx_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rampart_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rastan_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\realbrk_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\redalert_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\redclash_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\relief_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\renegade_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\retofinv_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rockola_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rockrage_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rocnrope_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rohga_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rollerg_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rollrace_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\route16_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rpunch_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\runaway_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\rungun_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\s2636_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sauro_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sbasketb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sbrkout_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sbugger_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sega_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\segac2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\segar_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\segasyse_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\seicross_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sengokmj_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\senjyo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\seta_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\seta2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sf1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\shadfrce_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\shangha3_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\shangkid_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\shaolins_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\shisen_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\shootout_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\shuuz_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sidearms_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sidepckt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\silkroad_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\simpsons_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\skullxbo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\skychut_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\skydiver_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\skyfox_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\skykid_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\skyraid_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\slapfght_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\slapshot_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\snes_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\snk_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\snk68_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\snowbros_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\solomon_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sonson_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\spacefb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\spbactn_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\spcforce_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\spdodgeb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\speedatk_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\speedbal_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\speedspn_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\spiders_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\splash_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sprcros2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sprint2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sprint4_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sprint8_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\spy_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\srmp2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\srumbler_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sshangha_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ssozumo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\sspeedr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ssrj_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ssv_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\stactics_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\stadhero_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\starcrus_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\starfire_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\starshp1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\stfight_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\stlforce_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\strnskil_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\stvvdp1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\stvvdp2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\subs_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\suna16_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\suna8_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\supbtime_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\superchs_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\superpac_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\superqix_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\suprloco_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\suprnova_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\suprslam_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\surpratk_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\system1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\system16_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\system24_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\system32_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tagteam_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tail2nos_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taitoair_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taitosj_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taito_b_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taito_f2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taito_f3_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taito_h_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taito_l_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taito_z_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tankbatt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tankbust_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taotaido_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\targeth_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\taxidrvr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tbowl_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tceptor_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tecmo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tecmo16_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tehkanwc_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\terracre_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tetrisp2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\thedeep_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\thepit_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\thief_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\thoop2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\thunderj_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\thunderx_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tickee_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tigeroad_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\timelimt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\timeplt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tmnt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tms34061_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tnzs_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\toaplan1_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\toaplan2_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\toki_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\toobin_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\topspeed_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\toypop_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tp84_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\trackfld_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\travrusa_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\triplhnt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\troangel_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\truco_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tsamurai_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ttmahjng_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tubep_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tumblep_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tunhunt_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\turbo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\tutankhm_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\twin16_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\twincobr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\ultraman_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\undrfire_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\unico_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\usgames_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\vaportra_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\vastar_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\vball_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\vendetta_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\vicdual_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\victory_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\videopin_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\vigilant_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\vindictr_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\volfied_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\voodoo_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\vsnes_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\vulgus_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\warpwarp_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\warriorb_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wc90_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wc90b_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wecleman_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\welltris_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wgp_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\williams_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wiping_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wiz_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wolfpack_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wrally_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wwfsstar_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\wwfwfest_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\xain_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\xevious_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\xexex_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\xmen_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\xorworld_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\xxmissio_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\xybots_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\xyonix_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\yard_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\yiear_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\yunsun16_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\vidhrdw\yunsung8_vidhrdw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dirent_win32.c">
+      <Filter>Source Files\libretro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\mame.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m68000\m68kmame.c">
+      <Filter>Source Files\cpu\m6800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m68000\m68kcpu.c">
+      <Filter>Source Files\cpu\m6800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m68000\m68kopac.c">
+      <Filter>Source Files\cpu\m6800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m68000\m68kopdm.c">
+      <Filter>Source Files\cpu\m6800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m68000\m68kopnz.c">
+      <Filter>Source Files\cpu\m6800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\m68000\m68kops.c">
+      <Filter>Source Files\cpu\m6800</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpu\mips\psx.c">
+      <Filter>Source Files\cpu\mips</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
