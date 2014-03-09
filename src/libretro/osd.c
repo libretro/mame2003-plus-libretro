@@ -170,16 +170,21 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 {
     char buffer[1024];
     struct stat statbuf;
+#if defined(_WIN32)
+   char slash = '\\';
+#else
+   char slash = '/';
+#endif
 
     switch(pathtype)
     {
        case FILETYPE_ROM: /* ROM */
        case FILETYPE_IMAGE:
           /* removes the stupid restriction where we need to have roms in a 'rom' folder */
-          snprintf(buffer, 1024, "%s/%s", romDir, filename);
+          snprintf(buffer, 1024, "%s%c%s", romDir, slash, filename);
           break;
        default:
-          snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
+          snprintf(buffer, 1024, "%s%c%s%c%s", systemDir, slash, paths[pathtype], slash, filename);
     }
  
 #ifdef DEBUG_LOG
@@ -196,15 +201,20 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
 {
    char buffer[1024];
    osd_file *out;
+#if defined(_WIN32)
+   char slash = '\\';
+#else
+   char slash = '/';
+#endif
 
    switch(pathtype)
    {
       case 1: /* ROM */
          /* removes the stupid restriction where we need to have roms in a 'rom' folder */
-         snprintf(buffer, 1024, "%s/%s", romDir, filename);
+         snprintf(buffer, 1024, "%s%c%s", romDir, slash, filename);
          break;
       default:
-         snprintf(buffer, 1024, "%s/%s/%s", systemDir, paths[pathtype], filename);
+         snprintf(buffer, 1024, "%s%c%s%c%s", systemDir, slash, paths[pathtype], slash, filename);
    }
 
    if (log_cb)
