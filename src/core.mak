@@ -19,7 +19,7 @@ COREOBJS = $(OBJ)/mame.o \
 	$(OBJ)/machine/74123.o $(OBJ)/machine/74153.o \
 	$(OBJ)/machine/74148.o \
 	$(OBJ)/vidhrdw/generic.o $(OBJ)/vidhrdw/vector.o \
-	$(OBJ)/vidhrdw/avgdvg.o $(OBJ)/machine/mathbox.o \
+	$(OBJ)/vidhrdw/avgdvg_vidhrdw.o $(OBJ)/machine/mathbox.o \
 	$(OBJ)/vidhrdw/poly.o $(OBJ)/vidhrdw/matrix3d.o \
 	$(OBJ)/vidhrdw/tlc34076.o \
 	$(OBJ)/machine/ticket.o $(OBJ)/machine/eeprom.o \
