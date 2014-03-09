@@ -440,7 +440,7 @@
     <ClCompile Include="..\..\..\drivers\lethalj.c" />
     <ClCompile Include="..\..\..\drivers\liberate.c" />
     <ClCompile Include="..\..\..\drivers\liberatr.c" />
-    <ClCompile Include="..\..\..\drivers\lkage.c" />
+    <ClCompile Include="..\..\..\drivers\lkage_machine.c" />
     <ClCompile Include="..\..\..\drivers\locomotn.c" />
     <ClCompile Include="..\..\..\drivers\looping.c" />
     <ClCompile Include="..\..\..\drivers\lsasquad.c" />
@@ -956,7 +956,7 @@
     <ClCompile Include="..\..\..\machine\qix_machine.c" />
     <ClCompile Include="..\..\..\machine\rainbow.c" />
     <ClCompile Include="..\..\..\machine\random.c" />
-    <ClCompile Include="..\..\..\machine\retofinv.c" />
+    <ClCompile Include="..\..\..\machine\retofinv_machine.c" />
     <ClCompile Include="..\..\..\machine\rp5h01.c" />
     <ClCompile Include="..\..\..\machine\sbrkout.c" />
     <ClCompile Include="..\..\..\machine\scramble.c" />
@@ -1018,7 +1018,7 @@
     <ClCompile Include="..\..\..\sndhrdw\cage.c" />
     <ClCompile Include="..\..\..\sndhrdw\carnival.c" />
     <ClCompile Include="..\..\..\sndhrdw\cchasm.c" />
-    <ClCompile Include="..\..\..\sndhrdw\cclimber.c" />
+    <ClCompile Include="..\..\..\sndhrdw\cclimber_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\cinemat_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\cyberbal.c" />
     <ClCompile Include="..\..\..\sndhrdw\dcs.c" />
@@ -1028,7 +1028,7 @@
     <ClCompile Include="..\..\..\sndhrdw\exidy440.c" />
     <ClCompile Include="..\..\..\sndhrdw\flower_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\galaxian_sndhrdw.c" />
-    <ClCompile Include="..\..\..\sndhrdw\geebee.c" />
+    <ClCompile Include="..\..\..\sndhrdw\geebee_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\gomoku_sndhrdw.c" />
     <ClCompile Include="..\..\..\sndhrdw\gorf.c" />
     <ClCompile Include="..\..\..\sndhrdw\gottlieb.c" />
@@ -1172,7 +1172,7 @@
     <ClCompile Include="..\..\..\vidhrdw\aliens_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\alpha68k_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\ambush_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\amspdwy.c" />
+    <ClCompile Include="..\..\..\vidhrdw\amspdwy_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\angelkds.c" />
     <ClCompile Include="..\..\..\vidhrdw\appoooh_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\aquarium.c" />
@@ -1454,7 +1454,7 @@
     <ClCompile Include="..\..\..\vidhrdw\m92_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\macrossp.c" />
     <ClCompile Include="..\..\..\vidhrdw\madmotor.c" />
-    <ClCompile Include="..\..\..\vidhrdw\magmax_vidhwrdw.c" />
+    <ClCompile Include="..\..\..\vidhrdw\magmax_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\mainevt_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\mainsnk_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\malzak_vidhrdw.c" />
@@ -1650,7 +1650,7 @@
     <ClCompile Include="..\..\..\vidhrdw\speedspn_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\spiders_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\splash.c" />
-    <ClCompile Include="..\..\..\vidhrdw\sprcros2.c" />
+    <ClCompile Include="..\..\..\vidhrdw\sprcros2_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\sprint2_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\sprint4_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\sprint8_vidhrdw.c" />
@@ -1768,7 +1768,7 @@
     <ClCompile Include="..\..\..\vidhrdw\vsnes_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\vulgus_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\warpwarp_vidhrdw.c" />
-    <ClCompile Include="..\..\..\vidhrdw\warriorb.c" />
+    <ClCompile Include="..\..\..\vidhrdw\warriorb_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\wc90_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\wc90b_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\wecleman.c" />
