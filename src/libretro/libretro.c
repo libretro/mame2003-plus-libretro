@@ -183,6 +183,7 @@ static void update_variables(void)
 
 void retro_init (void)
 {
+   unsigned colormode;
    struct retro_log_callback log;
    if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log))
       log_cb = log.log;
@@ -193,7 +194,7 @@ void retro_init (void)
    environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf_cb);
 #endif
 
-   unsigned colormode = RETRO_PIXEL_FORMAT_RGB565;
+   colormode = RETRO_PIXEL_FORMAT_RGB565;
    environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &colormode);
 
 	update_variables();
