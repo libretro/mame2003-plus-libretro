@@ -2951,9 +2951,6 @@
     <ClCompile Include="..\..\..\ui_text.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\unzip.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\usrintrf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
