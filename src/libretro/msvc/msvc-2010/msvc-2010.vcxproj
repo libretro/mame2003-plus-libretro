@@ -982,6 +982,7 @@
     <ClCompile Include="..\..\..\mame-memory.c" />
     <ClCompile Include="..\..\..\mame.c" />
     <ClCompile Include="..\..\..\mamedbg.c" />
+    <ClCompile Include="..\..\..\mame_unzip.c" />
     <ClCompile Include="..\..\..\md5.c" />
     <ClCompile Include="..\..\..\memdbg.c" />
     <ClCompile Include="..\..\..\network.c" />
