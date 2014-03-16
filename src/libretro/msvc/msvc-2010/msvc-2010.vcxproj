@@ -1796,7 +1796,7 @@
     <ClCompile Include="..\..\..\zlib\ioapi.c" />
     <ClCompile Include="..\..\..\zlib\trees.c" />
     <ClCompile Include="..\..\..\zlib\uncompr.c" />
-    <ClCompile Include="..\..\..\zlib\mame_unzip.c" />
+    <ClCompile Include="..\..\..\zlib\unzip.c" />
     <ClCompile Include="..\..\..\zlib\zutil.c" />
     <ClCompile Include="..\..\dirent_win32.c" />
     <ClCompile Include="..\..\joystick.c">
