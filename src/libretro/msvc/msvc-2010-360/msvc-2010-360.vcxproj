@@ -1160,7 +1160,7 @@
     <ClCompile Include="..\..\..\tilemap.c" />
     <ClCompile Include="..\..\..\timer.c" />
     <ClCompile Include="..\..\..\ui_text.c" />
-    <ClCompile Include="..\..\..\unzip.c" />
+    <ClCompile Include="..\..\..\mame_unzip.c" />
     <ClCompile Include="..\..\..\usrintrf.c" />
     <ClCompile Include="..\..\..\vidhrdw\1942_vidhrdw.c" />
     <ClCompile Include="..\..\..\vidhrdw\1943_vidhrdw.c" />
