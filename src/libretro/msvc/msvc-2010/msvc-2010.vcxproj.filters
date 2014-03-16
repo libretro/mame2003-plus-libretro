@@ -3065,9 +3065,6 @@
     <ClCompile Include="..\..\..\cpu\t11\t11dasm.c">
       <Filter>Source Files\cpu\t11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\cpu\tms32010\32010dsm.c">
-      <Filter>Source Files\cpu\tms32010</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\cpu\tms32031\dis32031.c">
       <Filter>Source Files\cpu\tms32031</Filter>
     </ClCompile>

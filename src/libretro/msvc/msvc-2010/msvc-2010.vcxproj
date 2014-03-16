@@ -88,7 +88,6 @@
     <ClCompile Include="..\..\..\cpu\spc700\spc700ds.c" />
     <ClCompile Include="..\..\..\cpu\t11\t11.c" />
     <ClCompile Include="..\..\..\cpu\t11\t11dasm.c" />
-    <ClCompile Include="..\..\..\cpu\tms32010\32010dsm.c" />
     <ClCompile Include="..\..\..\cpu\tms32010\tms32010.c" />
     <ClCompile Include="..\..\..\cpu\tms32025\tms32025.c" />
     <ClCompile Include="..\..\..\cpu\tms32031\dis32031.c" />
