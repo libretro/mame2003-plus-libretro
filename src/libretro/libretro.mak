@@ -9,6 +9,10 @@ else ifneq ($(findstring MINGW,$(shell uname -a)),)
    platform = win
 else ifneq ($(findstring Darwin,$(shell uname -a)),)
    platform = osx
+	arch = intel
+ifeq ($(shell uname -p),powerpc)
+	arch = ppc
+endif
 else ifneq ($(findstring win,$(shell uname -a)),)
    platform = win
 endif
@@ -25,12 +29,15 @@ ifeq ($(platform), unix)
    LDFLAGS += $(fpic) -shared -Wl,--version-script=src/libretro/link.T
 else ifeq ($(platform), osx)
    EMULATOR = $(TARGET_NAME)_libretro.dylib
-   fpic = -fPIC -mmacosx-version-min=10.6
+   fpic = -fPIC
+ifeq ($(arch),ppc)
+   BIGENDIAN = 1
+   PLATCFLAGS += -D__ppc__ -D__POWERPC__
+else
+   fpic += -mmacosx-version-min=10.6
+endif
    CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
-
-   CC = clang
-   LD = clang
 else ifeq ($(platform), ios)
    EMULATOR = $(TARGET_NAME)_libretro_ios.dylib
    fpic = -fPIC -miphoneos-version-min=5.0
