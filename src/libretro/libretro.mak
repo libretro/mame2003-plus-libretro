@@ -33,19 +33,27 @@ else ifeq ($(platform), osx)
 ifeq ($(arch),ppc)
    BIGENDIAN = 1
    PLATCFLAGS += -D__ppc__ -D__POWERPC__
-else
-   fpic += -mmacosx-version-min=10.6
 endif
    CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
+OSXVER = `sw_vers -productVersion | cut -c 4`
+ifneq ($(OSXVER),9)
+   fpic += -mmacosx-version-min=10.5
+endif
 else ifeq ($(platform), ios)
    EMULATOR = $(TARGET_NAME)_libretro_ios.dylib
-   fpic = -fPIC -miphoneos-version-min=5.0
+   fpic = -fPIC
    CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
 
-   CC = clang -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
-   LD = clang -arch armv7 -isysroot $(IOSSDK) -miphoneos-version-min=5.0
+   CC = clang -arch armv7 -isysroot $(IOSSDK)
+   LD = clang -arch armv7 -isysroot $(IOSSDK)
+OSXVER = `sw_vers -productVersion | cut -c 4`
+ifneq ($(OSXVER),9)
+   fpic += -miphoneos-version-min=5.0
+   CC += -miphoneos-version-min=5.0
+   LD += -miphoneos-version-min=5.0
+endif
 else ifeq ($(platform), android-armv7)
    EMULATOR = $(TARGET_NAME)_libretro_android.so
 
