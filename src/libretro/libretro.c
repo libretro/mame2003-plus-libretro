@@ -181,6 +181,14 @@ static void update_variables(void)
       activate_dcs_speedhack = 0;
 }
 
+static void check_system_specs(void)
+{
+   // TODO - set variably
+   // Midway DCS - Mortal Kombat/NBA Jam etc. require level 9
+   unsigned level = 10;
+   environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
+}
+
 void retro_init (void)
 {
    struct retro_log_callback log;
@@ -194,6 +202,7 @@ void retro_init (void)
 #endif
 
 	update_variables();
+   check_system_specs();
 }
 
 void retro_deinit(void)
