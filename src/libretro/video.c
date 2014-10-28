@@ -1,4 +1,5 @@
 #include "libretro.h"
+#include "libretro_perf.h"
 #include "osdepend.h"
 #include "palette.h"
 #include "fileio.h"
