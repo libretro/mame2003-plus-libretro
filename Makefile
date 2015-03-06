@@ -86,11 +86,28 @@ ifeq ($(platform), psp1)
 dont_link_zlib= yes
 endif
 
+ZLIBOBJS :=
+
 # platform .mak files will want to add to this
 ifeq ($(dont_link_zlib),yes)
 CFLAGS += -Isrc/libretro/includes/zlib
 else
-LIBS = -lz
+ZLIBOBJS := deps/zlib/adler32.c \
+	deps/zlib/compress.c \
+	deps/zlib/crc32.c \
+	deps/zlib/deflate.c \
+	deps/zlib/gzclose.c \
+	deps/zlib/gzlib.c \
+	deps/zlib/gzread.c \
+	deps/zlib/gzwrite.c \
+	deps/zlib/inffast.c \
+	deps/zlib/inflate.c \
+	deps/zlib/inftrees.c \
+	deps/zlib/trees.c \
+	deps/zlib/uncompr.c \
+	deps/zlib/zutil.c \
+	deps/zlib/ioapi.c \
+	deps/zlib/unzip.c
 endif
 
 OBJDIRS = obj $(OBJ) $(OBJ)/cpu $(OBJ)/sound $(OBJ)/$(MAMEOS) \
@@ -142,13 +159,13 @@ ifeq ($(platform), psp1)
 endif
 
 # primary target
-$(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS)
+$(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(ZLIBOBJS) $(DRVLIBS)
 ifeq ($(DO_ARCHIVES),1)
 	@echo Archiving $@...
-	$(AR) rcs $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(DRVLIBS)
+	$(AR) rcs $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(ZLIBOBJS) $(DRVLIBS)
 else
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(LIBS) $(DRVLIBS) -o $@
+	$(LD) $(LDFLAGS) $(OBJS) $(COREOBJS) $(OSOBJS) $(ZLIBOBJS) $(LIBS) $(DRVLIBS) -o $@
 endif
 
 $(OBJ)/$(MAMEOS)/%.o: src/$(MAMEOS)/%.c

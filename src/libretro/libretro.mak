@@ -20,12 +20,22 @@ endif
 
 TARGET_NAME := mame078
 
+LIBM := -lm
+
 ifeq ($(platform), unix)
    EMULATOR = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
 
    CFLAGS += $(fpic)
    PLATCFLAGS += -Dstricmp=strcasecmp
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=src/libretro/link.T
+else ifeq ($(platform), linux-portable)
+   EMULATOR = $(TARGET_NAME)_libretro.so
+   fpic = -fPIC -nostdlib
+
+   CFLAGS += $(fpic)
+   PLATCFLAGS += -Dstricmp=strcasecmp
+	LIBM :=
    LDFLAGS += $(fpic) -shared -Wl,--version-script=src/libretro/link.T
 else ifeq ($(platform), osx)
    EMULATOR = $(TARGET_NAME)_libretro.dylib
@@ -116,4 +126,4 @@ else
 endif
 
 CFLAGS += -D__LIBRETRO__ -DPI=3.1415927
-LDFLAGS += -lm
+LDFLAGS += $(LIBM)

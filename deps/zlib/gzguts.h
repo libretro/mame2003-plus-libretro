@@ -32,6 +32,8 @@
 
 #ifdef _WIN32
 #  include <stddef.h>
+#else
+#  include <unistd.h>
 #endif
 
 #if defined(__TURBOC__) || defined(_MSC_VER) || defined(_WIN32)
@@ -164,7 +166,7 @@
 #define MODE_COPY 1      /* copy input directly */
 #define MODE_GZIP 2      /* decompress a gzip stream */
 
-#if defined(__APPLE__) || defined(PSP)
+#if defined(__APPLE__) || defined(__QNX__) && !defined(HAVE_BB10)
 struct gzFile_s
 {
     unsigned have;
