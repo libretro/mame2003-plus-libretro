@@ -9,13 +9,25 @@ else ifneq ($(findstring MINGW,$(shell uname -a)),)
    platform = win
 else ifneq ($(findstring Darwin,$(shell uname -a)),)
    platform = osx
-	arch = intel
+else ifneq ($(findstring win,$(shell uname -a)),)
+	platform = win
+endif
+endif
+
+# system platform
+system_platform = unix
+ifeq ($(shell uname -a),)
+	EXE_EXT = .exe
+	system_platform = win
+else ifneq ($(findstring Darwin,$(shell uname -a)),)
+	system_platform = osx
 ifeq ($(shell uname -p),powerpc)
 	arch = ppc
+else
+	arch = intel
 endif
-else ifneq ($(findstring win,$(shell uname -a)),)
-   platform = win
-endif
+else ifneq ($(findstring MINGW,$(shell uname -a)),)
+	system_platform = win
 endif
 
 TARGET_NAME := mame078
