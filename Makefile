@@ -124,10 +124,6 @@ endif
 include src/$(MAMEOS)/$(MAMEOS).mak
 all:	maketree $(EMULATOR)
 
-ifndef BIGENDIAN
-CFLAGS += -DLSB_FIRST
-endif
-
 # include the various .mak files
 include src/core.mak
 include src/$(TARGET).mak

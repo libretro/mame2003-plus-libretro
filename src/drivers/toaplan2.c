@@ -3664,18 +3664,7 @@ static struct GfxLayout raizing_textlayout =
 	8*32
 };
 
-#ifdef LSB_FIRST
-static struct GfxLayout truxton2_tx_tilelayout =
-{
-	8,8,	/* 8x8 characters */
-	1024,	/* 1024 characters */
-	4,		/* 4 bits per pixel */
-	{ 0, 1, 2, 3 },
-	{ 0, 4, 16, 20, 32, 36, 48, 52 },
-	{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64 },
-	8*64
-};
-#else
+#ifdef MSB_FIRST
 static struct GfxLayout truxton2_tx_tilelayout =
 {
 	8,8,	/* 8x8 characters */
@@ -3686,20 +3675,7 @@ static struct GfxLayout truxton2_tx_tilelayout =
 	{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64 },
 	8*64
 };
-#endif
 
-#ifdef LSB_FIRST
-static struct GfxLayout batrider_tx_tilelayout =
-{
-	8,8,	/* 8x8 characters */
-	1024,	/* 1024 characters */
-	4,		/* 4 bits per pixel */
-	{ 0, 1, 2, 3 },
-	{ 0, 4, 8, 12, 16, 20, 24, 28 },
-	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
-	8*32
-};
-#else
 static struct GfxLayout batrider_tx_tilelayout =
 {
 	8,8,	/* 8x8 characters */
@@ -3707,6 +3683,28 @@ static struct GfxLayout batrider_tx_tilelayout =
 	4,		/* 4 bits per pixel */
 	{ 0, 1, 2, 3 },
 	{ 8, 12, 0, 4, 24, 28, 16, 20 },
+	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
+	8*32
+};
+#else
+static struct GfxLayout truxton2_tx_tilelayout =
+{
+	8,8,	/* 8x8 characters */
+	1024,	/* 1024 characters */
+	4,		/* 4 bits per pixel */
+	{ 0, 1, 2, 3 },
+	{ 0, 4, 16, 20, 32, 36, 48, 52 },
+	{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64 },
+	8*64
+};
+
+static struct GfxLayout batrider_tx_tilelayout =
+{
+	8,8,	/* 8x8 characters */
+	1024,	/* 1024 characters */
+	4,		/* 4 bits per pixel */
+	{ 0, 1, 2, 3 },
+	{ 0, 4, 8, 12, 16, 20, 24, 28 },
 	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
 	8*32
 };

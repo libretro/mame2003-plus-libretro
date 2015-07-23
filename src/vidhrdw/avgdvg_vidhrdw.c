@@ -976,7 +976,7 @@ int avgdvg_init(int vector_type)
 		flipword = 1;
 
 	/* Quantum may be reverse-endian depending on the platform */
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	else if (vector_engine==USE_AVG_QUANTUM)
 		flipword = 1;
 #endif

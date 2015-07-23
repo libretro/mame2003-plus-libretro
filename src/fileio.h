@@ -59,16 +59,17 @@ UINT32 mame_fread(mame_file *file, void *buffer, UINT32 length);
 UINT32 mame_fwrite(mame_file *file, const void *buffer, UINT32 length);
 UINT32 mame_fread_swap(mame_file *file, void *buffer, UINT32 length);
 UINT32 mame_fwrite_swap(mame_file *file, const void *buffer, UINT32 length);
-#ifdef LSB_FIRST
-#define mame_fread_msbfirst mame_fread_swap
-#define mame_fwrite_msbfirst mame_fwrite_swap
-#define mame_fread_lsbfirst mame_fread
-#define mame_fwrite_lsbfirst mame_fwrite
-#else
+#ifdef MSB_FIRST
 #define mame_fread_msbfirst mame_fread
 #define mame_fwrite_msbfirst mame_fwrite
 #define mame_fread_lsbfirst mame_fread_swap
 #define mame_fwrite_lsbfirst mame_fwrite_swap
+#else
+
+#define mame_fread_msbfirst mame_fread_swap
+#define mame_fwrite_msbfirst mame_fwrite_swap
+#define mame_fread_lsbfirst mame_fread
+#define mame_fwrite_lsbfirst mame_fwrite
 #endif
 int mame_fseek(mame_file *file, INT64 offset, int whence);
 void mame_fclose(mame_file *file);

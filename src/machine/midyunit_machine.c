@@ -268,12 +268,12 @@ static WRITE16_HANDLER( term2la1_hack_w )
  *
  *************************************/
 
-#ifdef LSB_FIRST
-	#define ADDR_XOR_LE(a)  (a)
-	#define BIG_DWORD_LE(x) (x)
-#else
+#ifdef MSB_FIRST
 	#define ADDR_XOR_LE(a)  ((UINT8*)((UINT32)(a) ^ 1))
 	#define BIG_DWORD_LE(x) (((UINT32)(x) >> 16) + ((x) << 16))
+#else
+	#define ADDR_XOR_LE(a)  (a)
+	#define BIG_DWORD_LE(x) (x)
 #endif
 
 
@@ -281,12 +281,12 @@ static WRITE16_HANDLER( term2la1_hack_w )
 	#define READ_U16(a)    (*(INT16 *)a)
 	#define WRITE_U16(a,x) (*(INT16 *)a = (x))
 #else
-	#ifdef LSB_FIRST  /* unaligned read and write macros, cpg */
-		#define READ_U16(a)    ((INT16)(*(UINT8 *)a | (*((UINT8 *)a+1) << 8)))
-		#define WRITE_U16(a,x) do { *(UINT8 *)a = x; *((UINT8 *)a+1) = (x>>8); } while (0)
-	#else
+	#ifdef MSB_FIRST  
 		#define READ_U16(a)    ((INT16)((*(UINT8 *)a << 8) | *((UINT8 *)a+1)))
 		#define WRITE_U16(a,x) do { *(UINT8 *)a = (x>>8); *((UINT8 *)a+1) = x; } while (0)
+	#else /* unaligned read and write macros, cpg */
+		#define READ_U16(a)    ((INT16)(*(UINT8 *)a | (*((UINT8 *)a+1) << 8)))
+		#define WRITE_U16(a,x) do { *(UINT8 *)a = x; *((UINT8 *)a+1) = (x>>8); } while (0)
 	#endif
 #endif
 
@@ -294,16 +294,16 @@ static WRITE16_HANDLER( term2la1_hack_w )
 	#define READ_U32(a)    (*(INT32 *)a)
 	#define WRITE_U32(a,x) (*(INT32 *)a = (x))
 #else
-	#ifdef LSB_FIRST  /* unaligned read and write macros, cpg */
-		#define READ_U32(a) ((INT32)(*(UINT8 *)a | (*((UINT8 *)a+1) << 8) \
-							| (*((UINT8 *)a+2) << 16) | (*((UINT8 *)a+3) << 24)))
-		#define WRITE_U32(a,x) do { *(UINT8 *)a = x; *((UINT8 *)a+1) = (x>>8); \
-							*((UINT8 *)a+2) = (x>>16); *((UINT8 *)a+3) = (x>>24); } while (0)
-	#else
+	#ifdef MSB_FIRST
 		#define READ_U32(a) ((INT32)((*(UINT8 *)a << 24) | (*((UINT8 *)a+1) << 16) \
 							| (*((UINT8 *)a+2) << 8) | *((UINT8 *)a+3)))
 		#define WRITE_U32(a,x) do { *(UINT8 *)a = (x>>24); *((UINT8 *)a+1) = (x>>16); \
 							*((UINT8 *)a+2) = (x>>8); *((UINT8 *)a+3) = x; } while (0)
+	#else  /* unaligned read and write macros, cpg */
+		#define READ_U32(a) ((INT32)(*(UINT8 *)a | (*((UINT8 *)a+1) << 8) \
+							| (*((UINT8 *)a+2) << 16) | (*((UINT8 *)a+3) << 24)))
+		#define WRITE_U32(a,x) do { *(UINT8 *)a = x; *((UINT8 *)a+1) = (x>>8); \
+							*((UINT8 *)a+2) = (x>>16); *((UINT8 *)a+3) = (x>>24); } while (0)
 	#endif
 #endif
 

@@ -89,12 +89,12 @@ typedef uint64_t					UINT64;
  * which expects 'int' really.
  ******************************************************************************/
 typedef union {
-#ifdef LSB_FIRST
-	struct { UINT8 l,h,h2,h3; } b;
-	struct { UINT16 l,h; } w;
-#else
+#ifdef MSB_FIRST
 	struct { UINT8 h3,h2,h,l; } b;
 	struct { UINT16 h,l; } w;
+#else
+	struct { UINT8 l,h,h2,h3; } b;
+	struct { UINT16 l,h; } w;
 #endif
 	UINT32 d;
 }	PAIR;

@@ -19,10 +19,10 @@
 
 #define DISPLAY_SPEEDUPS			0
 
-#ifdef LSB_FIRST
-#define MASK(n)			(0x000000ffUL << ((n) * 8))
-#else
+#ifdef MSB_FIRST
 #define MASK(n)			(0xff000000UL >> (((n) ^ 1) * 8))
+#else
+#define MASK(n)			(0x000000ffUL << ((n) * 8))
 #endif
 
 

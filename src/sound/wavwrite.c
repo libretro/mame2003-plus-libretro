@@ -9,12 +9,12 @@ struct wav_data
 	UINT32 data_offs;
 };
 
-#ifdef LSB_FIRST
-#define intel_long(x) (x)
-#define intel_short(x) (x)
-#else
+#ifdef MSB_FIRST
 #define intel_long(x) (((x << 24) | (((unsigned long) x) >> 24) | (( x & 0x0000ff00) << 8) | (( x & 0x00ff0000) >> 8)))
 #define intel_short(x) (((x) << 8) | ((x) >> 8))
+#else
+#define intel_long(x) (x)
+#define intel_short(x) (x)
 #endif
 
 void *wav_open(const char *filename, int sample_rate, int channels)

@@ -577,18 +577,19 @@ static DRIVER_INIT( twocrude )
 
 	/* Main cpu decrypt */
 	for (i=0x00000; i<0x80000; i+=2) {
-#ifdef LSB_FIRST
-		RAM[i+1]=(RAM[i+1] & 0xcf) | ((RAM[i+1] & 0x10) << 1) | ((RAM[i+1] & 0x20) >> 1);
-		RAM[i+1]=(RAM[i+1] & 0x5f) | ((RAM[i+1] & 0x20) << 2) | ((RAM[i+1] & 0x80) >> 2);
-
-		RAM[i]=(RAM[i] & 0xbd) | ((RAM[i] & 0x2) << 5) | ((RAM[i] & 0x40) >> 5);
-		RAM[i]=(RAM[i] & 0xf5) | ((RAM[i] & 0x2) << 2) | ((RAM[i] & 0x8) >> 2);
-#else
+#ifdef MSB_FIRST
 		RAM[i]=(RAM[i] & 0xcf) | ((RAM[i] & 0x10) << 1) | ((RAM[i] & 0x20) >> 1);
 		RAM[i]=(RAM[i] & 0x5f) | ((RAM[i] & 0x20) << 2) | ((RAM[i] & 0x80) >> 2);
 
 		RAM[i+1]=(RAM[i+1] & 0xbd) | ((RAM[i+1] & 0x2) << 5) | ((RAM[i+1] & 0x40) >> 5);
 		RAM[i+1]=(RAM[i+1] & 0xf5) | ((RAM[i+1] & 0x2) << 2) | ((RAM[i+1] & 0x8) >> 2);
+#else
+
+		RAM[i+1]=(RAM[i+1] & 0xcf) | ((RAM[i+1] & 0x10) << 1) | ((RAM[i+1] & 0x20) >> 1);
+		RAM[i+1]=(RAM[i+1] & 0x5f) | ((RAM[i+1] & 0x20) << 2) | ((RAM[i+1] & 0x80) >> 2);
+
+		RAM[i]=(RAM[i] & 0xbd) | ((RAM[i] & 0x2) << 5) | ((RAM[i] & 0x40) >> 5);
+		RAM[i]=(RAM[i] & 0xf5) | ((RAM[i] & 0x2) << 2) | ((RAM[i] & 0x8) >> 2);
 #endif
 	}
 

@@ -3,16 +3,16 @@
 #include "driver.h"
 
 
-#ifdef LSB_FIRST
+#ifdef MSB_FIRST
+#define SHIFT0 24
+#define SHIFT1 16
+#define SHIFT2 8
+#define SHIFT3 0
+#else
 #define SHIFT0 0
 #define SHIFT1 8
 #define SHIFT2 16
 #define SHIFT3 24
-#else
-#define SHIFT3 0
-#define SHIFT2 8
-#define SHIFT1 16
-#define SHIFT0 24
 #endif
 
 

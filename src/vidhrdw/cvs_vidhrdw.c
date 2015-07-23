@@ -12,20 +12,20 @@
 #define MAX_STARS        250
 #define STARS_COLOR_BASE 16
 
-#ifdef LSB_FIRST
-#define BL0 0
-#define BL1 1
-#define BL2 2
-#define BL3 3
-#define WL0 0
-#define WL1 1
-#else
+#ifdef MSB_FIRST
 #define BL0 3
 #define BL1 2
 #define BL2 1
 #define BL3 0
 #define WL0 1
 #define WL1 0
+#else
+#define BL0 0
+#define BL1 1
+#define BL2 2
+#define BL3 3
+#define WL0 0
+#define WL1 1
 #endif
 
 struct star

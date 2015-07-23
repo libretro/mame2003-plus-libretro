@@ -68,10 +68,10 @@ struct sh6840_timer_channel
 	UINT32	clocks;
 	union
 	{
-#ifdef LSB_FIRST
-		struct { UINT8 l, h; } b;
-#else
+#ifdef MSB_FIRST
 		struct { UINT8 h, l; } b;
+#else
+		struct { UINT8 l, h; } b;
 #endif
 		UINT16 w;
 	} counter;

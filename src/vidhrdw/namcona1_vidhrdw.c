@@ -23,7 +23,7 @@ static int palette_is_dirty;
 static void tilemap_get_info(
 	int tile_index,const data16_t *tilemap_videoram,int tilemap_color )
 {
-#ifdef LSB_FIRST
+#ifndef MSB_FIRST
 	data16_t *source;
 #endif
 	static UINT8 mask_data[8];
@@ -38,7 +38,7 @@ static void tilemap_get_info(
 	else
 	{
 		SET_TILE_INFO( 0,tile,tilemap_color,0 );
-#ifdef LSB_FIRST
+#ifndef MSB_FIRST
 		source = shaperam+4*tile;
 		mask_data[0] = source[0]>>8;
 		mask_data[1] = source[0]&0xff;
@@ -123,10 +123,10 @@ static struct GfxLayout shape_layout =
 	1,
 	{ 0 },
 	{ 0,1,2,3,4,5,6,7 },
-#ifdef LSB_FIRST
-	{ 8*1,8*0,8*3,8*2,8*5,8*4,8*7,8*6 },
-#else
+#ifdef MSB_FIRST
 	{ 8*0,8*1,8*2,8*3,8*4,8*5,8*6,8*7 },
+#else
+	{ 8*1,8*0,8*3,8*2,8*5,8*4,8*7,8*6 },
 #endif
 	8*8
 }; /* shape_layout */
@@ -137,10 +137,10 @@ static struct GfxLayout cg_layout =
 	0x1000,
 	8, /* 8BPP */
 	{ 0,1,2,3,4,5,6,7 },
-#ifdef LSB_FIRST
-	{ 8*1,8*0,8*3,8*2,8*5,8*4,8*7,8*6 },
-#else
+#ifdef MSB_FIRST
 	{ 8*0,8*1,8*2,8*3,8*4,8*5,8*6,8*7 },
+#else
+	{ 8*1,8*0,8*3,8*2,8*5,8*4,8*7,8*6 },
 #endif
 	{ 64*0,64*1,64*2,64*3,64*4,64*5,64*6,64*7 },
 	64*8

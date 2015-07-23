@@ -4162,14 +4162,14 @@ static void decode_tdragonb(void)
 	rom = memory_region(REGION_CPU1);
 	for (A = 0;A < memory_region_length(REGION_CPU1);A += 2)
 	{
-#ifdef LSB_FIRST
-		unsigned short tmp = decode_word( rom[A+1]*256 + rom[A], decode_data_tdragonb[0]);
-		rom[A+1] = tmp >> 8;
-		rom[A] = tmp & 0xff;
-#else
+#ifdef MSB_FIRST
 		unsigned short tmp = decode_word( rom[A]*256 + rom[A+1], decode_data_tdragonb[0]);
 		rom[A] = tmp >> 8;
 		rom[A+1] = tmp & 0xff;
+#else
+		unsigned short tmp = decode_word( rom[A+1]*256 + rom[A], decode_data_tdragonb[0]);
+		rom[A+1] = tmp >> 8;
+		rom[A] = tmp & 0xff;
 #endif
 	}
 

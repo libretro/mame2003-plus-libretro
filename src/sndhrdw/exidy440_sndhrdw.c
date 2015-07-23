@@ -129,12 +129,12 @@ static void fir_filter(INT32 *input, INT16 *output, int count);
 /* debugging */
 #if MAKE_WAVES
 
-#ifdef LSB_FIRST
-#define intelShort(x) (x)
-#define intelLong(x) (x)
-#else
+#ifdef MSB_FIRST
 #define intelShort(x) (((x) << 8) | ((x) >> 8))
 #define intelLong(x) ((((x) << 24) | (((unsigned long) (x)) >> 24) | (( (x) & 0x0000ff00) << 8) | (( (x) & 0x00ff0000) >> 8)))
+#else
+#define intelShort(x) (x)
+#define intelLong(x) (x)
 #endif
 
 static FILE *wavfile;

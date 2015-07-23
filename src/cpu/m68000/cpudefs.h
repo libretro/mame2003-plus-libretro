@@ -31,13 +31,13 @@ typedef unsigned int	CPTR;
 /****************************************************************************/
 typedef union
 {
- #ifdef LSB_FIRST
-   struct { UBYTE l,h,h2,h3; } B;
-   struct { UWORD l,h; } W;
-   ULONG D;
- #else
+ #ifdef MSB_FIRST
    struct { UBYTE h3,h2,h,l; } B;
    struct { UWORD h,l; } W;
+   ULONG D;
+ #else
+   struct { UBYTE l,h,h2,h3; } B;
+   struct { UWORD l,h; } W;
    ULONG D;
  #endif
 } pair68000;

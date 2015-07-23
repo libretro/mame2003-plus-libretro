@@ -795,7 +795,7 @@ static struct GfxLayout RoadTileLayout =
 	ROAD_TILE_COUNT_MAX,
 	2,
 	{
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 		0,8
 #else
 		8,0

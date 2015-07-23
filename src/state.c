@@ -484,7 +484,7 @@ void state_save_save_finish(void)
 	if(!Machine->sample_rate)
 		flags |= SS_NO_SOUND;
 
-#ifndef LSB_FIRST
+#ifdef MSB_FIRST
 	flags |= SS_MSB_FIRST;
 #endif
 
@@ -573,10 +573,10 @@ int state_save_load_continue(void)
 	int count = 0;
 	int need_convert;
 
-#ifdef LSB_FIRST
-	need_convert = (ss_dump_array[9] & SS_MSB_FIRST) != 0;
-#else
+#ifdef MSB_FIRST
 	need_convert = (ss_dump_array[9] & SS_MSB_FIRST) == 0;
+#else
+	need_convert = (ss_dump_array[9] & SS_MSB_FIRST) != 0;
 #endif
 
 	TRACE(logerror("Loading tag %d\n", ss_current_tag));

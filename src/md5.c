@@ -24,17 +24,16 @@
 
 #include "md5.h"
 
-#ifndef LSB_FIRST
-void
-byteSwap(UWORD32 *buf, unsigned words)
+#ifdef MSB_FIRST
+void byteSwap(UWORD32 *buf, unsigned words)
 {
-	md5byte *p = (md5byte *)buf;
+   md5byte *p = (md5byte *)buf;
 
-	do {
-		*buf++ = (UWORD32)((unsigned)p[3] << 8 | p[2]) << 16 |
-			((unsigned)p[1] << 8 | p[0]);
-		p += 4;
-	} while (--words);
+   do {
+      *buf++ = (UWORD32)((unsigned)p[3] << 8 | p[2]) << 16 |
+         ((unsigned)p[1] << 8 | p[0]);
+      p += 4;
+   } while (--words);
 }
 #else
 #define byteSwap(buf,words)

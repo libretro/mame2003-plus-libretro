@@ -1379,10 +1379,10 @@ MEMORY_END
 
 /* Z80 Sound Hardware - based on MESS code, to be improved, it can do some strange things */
 
-#ifdef LSB_FIRST
-	#define BYTE_XOR(a) ((a) ^ 1)
-#else
+#ifdef MSB_FIRST
 	#define BYTE_XOR(a) (a)
+#else
+	#define BYTE_XOR(a) ((a) ^ 1)
 #endif
 
 

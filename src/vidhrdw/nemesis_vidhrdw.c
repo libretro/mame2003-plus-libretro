@@ -258,7 +258,7 @@ static void nemesis_lsbify_gfx(void)
 /* claim a palette dirty array */
 VIDEO_START( nemesis )
 {
-#ifdef LSB_FIRST
+#ifndef MSB_FIRST
 	nemesis_lsbify_gfx();
 #endif
 

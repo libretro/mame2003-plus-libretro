@@ -106,7 +106,7 @@ namcos3d_Init( int width, int height, void *pTilemapROM, void *pTextureROM )
 					pSource++;
 				}
 				mpTextureTileMap16 = pTilemapROM;
-				#ifndef LSB_FIRST
+				#ifdef MSB_FIRST
 				/* if not little endian, swap each word */
 				{
 					unsigned i;

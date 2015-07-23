@@ -108,10 +108,10 @@ void showdisclaimer(void)   /* MAURY_BEGIN: dichiarazione */
 
 ***************************************************************************/
 
-#ifdef LSB_FIRST
-#define intelLong(x) (x)
-#else
+#ifdef MSB_FIRST
 #define intelLong(x) (((x << 24) | (((unsigned long) x) >> 24) | (( x & 0x0000ff00) << 8) | (( x & 0x00ff0000) >> 8)))
+#else
+#define intelLong(x) (x)
 #endif
 
 /*-------------------------------------------------
@@ -1169,10 +1169,10 @@ static void region_post_process(struct rom_load_data *romdata, const struct RomM
 	}
 
 	/* swap the endianness if we need to */
-#ifdef LSB_FIRST
-	if (datawidth > 1 && !littleendian)
-#else
+#ifdef MSB_FIRST
 	if (datawidth > 1 && littleendian)
+#else
+	if (datawidth > 1 && !littleendian)
 #endif
 	{
 		debugload("+ Byte swapping region\n");

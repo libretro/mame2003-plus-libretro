@@ -366,7 +366,7 @@ typedef void (*dma_draw_func)(void);
 
 
 /*** fast pixel extractors ***/
-#if !defined(ALIGN_SHORTS) && defined(LSB_FIRST)
+#if !defined(ALIGN_SHORTS) && !defined(MSB_FIRST)
 #define EXTRACTGEN(m)	((*(UINT16 *)&base[o >> 3] >> (o & 7)) & (m))
 #elif defined(powerc)
 #define EXTRACTGEN(m)	((__lhbrx(base, o >> 3) >> (o & 7)) & (m))

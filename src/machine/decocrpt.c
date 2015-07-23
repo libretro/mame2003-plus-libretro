@@ -605,7 +605,7 @@ static void deco_decrypt(int mem_region,const UINT8 *xor_table,const UINT16 *add
 	data16_t *buffer = malloc(len*2);
 	int i;
 
-#ifdef LSB_FIRST
+#ifndef MSB_FIRST
 	/* we work on 16-bit words but data is loaded as 8-bit, so swap bytes on LSB machines */
 	for (i = 0;i < len;i++)
 	{
@@ -644,12 +644,10 @@ static void deco_decrypt(int mem_region,const UINT8 *xor_table,const UINT16 *add
 		free(buffer);
 	}
 
-#ifdef LSB_FIRST
+#ifndef MSB_FIRST
 	/* we work on 16-bit words but data is loaded as 8-bit, so swap bytes on LSB machines */
 	for (i = 0;i < len;i++)
-	{
 		rom[i] = (rom[i] >> 8) | (rom[i] << 8);
-	}
 #endif
 }
 

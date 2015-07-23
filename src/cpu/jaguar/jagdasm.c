@@ -18,10 +18,10 @@
 **	MEMORY ACCESSORS
 **#################################################################################################*/
 
-#ifdef LSB_FIRST
-#define ROPCODE(pc)		(*(UINT16 *)&OP_ROM[(UINT32)(pc) ^ 2])
-#else
+#ifdef MSB_FIRST
 #define ROPCODE(pc)		(*(UINT16 *)&OP_ROM[(UINT32)(pc)])
+#else
+#define ROPCODE(pc)		(*(UINT16 *)&OP_ROM[(UINT32)(pc) ^ 2])
 #endif
 
 

@@ -137,5 +137,9 @@ else
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/libretro/link.T
 endif
 
+ifeq ($(BIGENDIAN), 1)
+	PLATCFLAGS += -DMSB_FIRST
+endif
+
 CFLAGS += -D__LIBRETRO__ -DPI=3.1415927
 LDFLAGS += $(LIBM)

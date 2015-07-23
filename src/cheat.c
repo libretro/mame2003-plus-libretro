@@ -405,10 +405,6 @@ is selected
 
 #define CHEAT_FILENAME_MAX_LEN					255
 
-#ifndef LSB_FIRST
-#define LSB_FIRST 0
-#endif
-
 #define kRegionListLength						(REGION_MAX - REGION_INVALID)
 
 /**** Enums ******************************************************************/

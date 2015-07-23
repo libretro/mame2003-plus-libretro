@@ -74,12 +74,12 @@ static UINT8 tms34010_win_layout[] =
 /* TMS34010 State */
 typedef struct
 {
-#ifdef LSB_FIRST
-	INT16 x;
+#ifdef MSB_FIRST
 	INT16 y;
+	INT16 x;
 #else
-	INT16 y;
 	INT16 x;
+	INT16 y;
 #endif
 } XY;
 

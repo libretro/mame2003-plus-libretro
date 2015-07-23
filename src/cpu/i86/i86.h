@@ -19,10 +19,10 @@ typedef enum { AX, CX, DX, BX, SP, BP, SI, DI } WREGS;
 #define TRUE 1
 #endif
 
-#ifdef LSB_FIRST
-typedef enum { AL,AH,CL,CH,DL,DH,BL,BH,SPL,SPH,BPL,BPH,SIL,SIH,DIL,DIH } BREGS;
-#else
+#ifdef MSB_FIRST
 typedef enum { AH,AL,CH,CL,DH,DL,BH,BL,SPH,SPL,BPH,BPL,SIH,SIL,DIH,DIL } BREGS;
+#else
+typedef enum { AL,AH,CL,CH,DL,DH,BL,BH,SPL,SPH,BPL,BPH,SIL,SIH,DIL,DIH } BREGS;
 #endif
 
 /* parameter x = result, y = source 1, z = source 2 */

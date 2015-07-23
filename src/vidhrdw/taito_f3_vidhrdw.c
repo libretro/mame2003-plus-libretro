@@ -1027,14 +1027,14 @@ INLINE void f3_alpha_set_level(void)
 
 /*============================================================================*/
 
-#ifdef LSB_FIRST
-#define COLOR1 0
-#define COLOR2 1
-#define COLOR3 2
-#else
+#ifdef MSB_FIRST
 #define COLOR1 3
 #define COLOR2 2
 #define COLOR3 1
+#else
+#define COLOR1 0
+#define COLOR2 1
+#define COLOR3 2
 #endif
 
 INLINE void f3_alpha_blend32_s( const UINT8 *alphas, UINT32 s )
