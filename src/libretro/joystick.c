@@ -78,9 +78,9 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
 
 void osd_customize_inputport_defaults(struct ipd *defaults)
 {
+#if 0
    unsigned int i = 0;
 
-#if 0
    for( ; defaults[i].type != IPT_END; ++i)
    {
       struct ipd *entry = &defaults[i];
