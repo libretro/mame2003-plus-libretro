@@ -59,9 +59,7 @@ endif
    CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
 OSXVER = `sw_vers -productVersion | cut -c 4`
-ifneq ($(OSXVER),9)
-   fpic += -mmacosx-version-min=10.5
-endif
+	fpic += -mmacosx-version-min=10.1
 else ifeq ($(platform), ios)
    EMULATOR = $(TARGET_NAME)_libretro_ios.dylib
    fpic = -fPIC
