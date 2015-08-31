@@ -85,6 +85,9 @@ endif
 ifeq ($(platform), psp1)
 dont_link_zlib= yes
 endif
+ifeq ($(platform), vita)
+dont_link_zlib= yes
+endif
 
 ZLIBOBJS :=
 
@@ -151,6 +154,9 @@ ifeq ($(platform), ps3)
 	DO_ARCHIVES = 1
 endif
 ifeq ($(platform), psp1)
+	DO_ARCHIVES = 1
+endif
+ifeq ($(platform), vita)
 	DO_ARCHIVES = 1
 endif
 

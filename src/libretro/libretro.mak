@@ -122,6 +122,13 @@ else ifeq ($(platform), psp1)
 	AR = psp-ar$(EXE_EXT)
 	PLATCFLAGS += -DPSP -Dstricmp=strcasecmp
 	CFLAGS += -G0
+
+else ifeq ($(platform), vita)
+	EMULATOR = libretro_vita.a
+
+	CC = arm-vita-eabi-gcc$(EXE_EXT)
+	AR = arm-vita-eabi-ar$(EXE_EXT)
+	PLATCFLAGS += -DVITA -Dstricmp=strcasecmp
 else ifneq (,$(findstring armv,$(platform)))
    EMULATOR = $(TARGET_NAME)_libretro.so
 
