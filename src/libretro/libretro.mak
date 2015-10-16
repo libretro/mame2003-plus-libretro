@@ -60,16 +60,22 @@ endif
    LDFLAGS += $(fpic) -dynamiclib
 OSXVER = `sw_vers -productVersion | cut -c 4`
 	fpic += -mmacosx-version-min=10.1
-else ifeq ($(platform), ios)
+
+# iOS
+else ifneq (,$(findstring ios,$(platform)))
+
    EMULATOR = $(TARGET_NAME)_libretro_ios.dylib
    fpic = -fPIC
    CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
 
-   CC = clang -arch armv7 -isysroot $(IOSSDK)
-   LD = clang -arch armv7 -isysroot $(IOSSDK)
-OSXVER = `sw_vers -productVersion | cut -c 4`
-ifneq ($(OSXVER),9)
+   CC = cc -arch armv7 -isysroot $(IOSSDK)
+   LD = cc -arch armv7 -isysroot $(IOSSDK)
+ifeq ($(platform),ios9)
+   fpic += -miphoneos-version-min=8.0
+   CC += -miphoneos-version-min=8.0
+   LD += -miphoneos-version-min=8.0
+else
    fpic += -miphoneos-version-min=5.0
    CC += -miphoneos-version-min=5.0
    LD += -miphoneos-version-min=5.0
