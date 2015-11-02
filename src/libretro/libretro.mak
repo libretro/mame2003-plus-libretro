@@ -80,6 +80,19 @@ else
    CC += -miphoneos-version-min=5.0
    LD += -miphoneos-version-min=5.0
 endif
+else ifeq ($(platform), ctr)
+   EMULATOR = $(TARGET_NAME)_libretro_ctr.a
+   CC = $(DEVKITARM)/bin/arm-none-eabi-gcc$(EXE_EXT)
+   CXX = $(DEVKITARM)/bin/arm-none-eabi-g++$(EXE_EXT)
+   AR = $(DEVKITARM)/bin/arm-none-eabi-ar$(EXE_EXT)
+   PLATCFLAGS += -DARM11 -D_3DS
+   PLATCFLAGS += -march=armv6k -mtune=mpcore -mfloat-abi=hard -mfpu=vfp
+   PLATCFLAGS += -Wall -mword-relocations
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+   ENDIANNESS_DEFINES:=-DLSB_FIRST
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
+   CPU_ARCH := arm
+   STATIC_LINKING = 1
 else ifeq ($(platform), android-armv7)
    EMULATOR = $(TARGET_NAME)_libretro_android.so
 

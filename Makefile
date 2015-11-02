@@ -88,6 +88,9 @@ endif
 ifeq ($(platform), vita)
 dont_link_zlib= yes
 endif
+ifeq ($(platform), ctr)
+dont_link_zlib= yes
+endif
 
 ZLIBOBJS :=
 
@@ -159,7 +162,9 @@ endif
 ifeq ($(platform), vita)
 	DO_ARCHIVES = 1
 endif
-
+ifeq ($(platform), ctr)
+	DO_ARCHIVES = 1
+endif
 # primary target
 $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(ZLIBOBJS) $(DRVLIBS)
 ifeq ($(DO_ARCHIVES),1)
