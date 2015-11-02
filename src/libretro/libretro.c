@@ -6,6 +6,14 @@
 #include "driver.h"
 #include "state.h"
 
+// Wrapper to build MAME on 3DS. It doesn't have stricmp.
+#ifdef _3DS
+int stricmp(const char *string1, const char *string2)
+{
+    return strcasecmp(string1, string2);
+}
+#endif
+
 void mame_frame(void);
 void mame_done(void);
 
