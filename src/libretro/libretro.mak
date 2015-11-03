@@ -41,6 +41,7 @@ ifeq ($(platform), unix)
    CFLAGS += $(fpic)
    PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -shared -Wl,--version-script=src/libretro/link.T
+
 else ifeq ($(platform), linux-portable)
    EMULATOR = $(TARGET_NAME)_libretro.so
    fpic = -fPIC -nostdlib
@@ -49,6 +50,7 @@ else ifeq ($(platform), linux-portable)
    PLATCFLAGS += -Dstricmp=strcasecmp
 	LIBM :=
    LDFLAGS += $(fpic) -shared -Wl,--version-script=src/libretro/link.T
+
 else ifeq ($(platform), osx)
    EMULATOR = $(TARGET_NAME)_libretro.dylib
    fpic = -fPIC
@@ -80,6 +82,7 @@ else
    CC += -miphoneos-version-min=5.0
    LD += -miphoneos-version-min=5.0
 endif
+
 else ifeq ($(platform), ctr)
    EMULATOR = $(TARGET_NAME)_libretro_ctr.a
    CC = $(DEVKITARM)/bin/arm-none-eabi-gcc$(EXE_EXT)
@@ -120,6 +123,7 @@ else ifeq ($(platform), wii)
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   STATIC_LINKING = 1
 else ifeq ($(platform), ps3)
    EMULATOR = $(TARGET_NAME)_libretro_ps3.a
    BIGENDIAN = 1
@@ -127,6 +131,7 @@ else ifeq ($(platform), ps3)
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   STATIC_LINKING = 1
 else ifeq ($(platform), sncps3)
    EMULATOR = $(TARGET_NAME)_libretro_ps3.a
    BIGENDIAN = 1
@@ -134,6 +139,7 @@ else ifeq ($(platform), sncps3)
    CC = $(CELL_SDK)/host-win32/sn/bin/ps3ppusnc.exe
    AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   STATIC_LINKING = 1
 else ifeq ($(platform), psp1)
 	EMULATOR = libretro_psp1.a
 
@@ -141,6 +147,7 @@ else ifeq ($(platform), psp1)
 	AR = psp-ar$(EXE_EXT)
 	PLATCFLAGS += -DPSP -Dstricmp=strcasecmp
 	CFLAGS += -G0
+   STATIC_LINKING = 1
 
 else ifeq ($(platform), vita)
 	EMULATOR = libretro_vita.a
@@ -148,6 +155,7 @@ else ifeq ($(platform), vita)
 	CC = arm-vita-eabi-gcc$(EXE_EXT)
 	AR = arm-vita-eabi-ar$(EXE_EXT)
 	PLATCFLAGS += -DVITA -Dstricmp=strcasecmp
+   STATIC_LINKING = 1
 else ifneq (,$(findstring armv,$(platform)))
    EMULATOR = $(TARGET_NAME)_libretro.so
 

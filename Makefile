@@ -78,43 +78,7 @@ CFLAGSOSDEPEND = $(CFLAGS)
 # the windows osd code at least cannot be compiled with -pedantic
 CFLAGSPEDANTIC = $(CFLAGS) -pedantic
 
-dont_link_zlib =
-ifeq ($(platform), ps3)
-dont_link_zlib= yes
-endif
-ifeq ($(platform), psp1)
-dont_link_zlib= yes
-endif
-ifeq ($(platform), vita)
-dont_link_zlib= yes
-endif
-ifeq ($(platform), ctr)
-dont_link_zlib= yes
-endif
-
 ZLIBOBJS :=
-
-# platform .mak files will want to add to this
-ifeq ($(dont_link_zlib),yes)
-CFLAGS += -Isrc/libretro/includes/zlib
-else
-ZLIBOBJS := deps/zlib/adler32.c \
-	deps/zlib/compress.c \
-	deps/zlib/crc32.c \
-	deps/zlib/deflate.c \
-	deps/zlib/gzclose.c \
-	deps/zlib/gzlib.c \
-	deps/zlib/gzread.c \
-	deps/zlib/gzwrite.c \
-	deps/zlib/inffast.c \
-	deps/zlib/inflate.c \
-	deps/zlib/inftrees.c \
-	deps/zlib/trees.c \
-	deps/zlib/uncompr.c \
-	deps/zlib/zutil.c \
-	deps/zlib/ioapi.c \
-	deps/zlib/unzip.c
-endif
 
 OBJDIRS = obj $(OBJ) $(OBJ)/cpu $(OBJ)/sound $(OBJ)/$(MAMEOS) \
 	$(OBJ)/drivers $(OBJ)/machine $(OBJ)/vidhrdw $(OBJ)/sndhrdw
@@ -147,27 +111,34 @@ CFLAGS	+= -mno-cygwin
 LDFLAGS	+= -mno-cygwin
 endif
 
+# platform .mak files will want to add to this
+ifeq ($(STATIC_LINKING),1)
+CFLAGS += -Isrc/libretro/includes/zlib
+else
+ZLIBOBJS := deps/zlib/adler32.c \
+	deps/zlib/compress.c \
+	deps/zlib/crc32.c \
+	deps/zlib/deflate.c \
+	deps/zlib/gzclose.c \
+	deps/zlib/gzlib.c \
+	deps/zlib/gzread.c \
+	deps/zlib/gzwrite.c \
+	deps/zlib/inffast.c \
+	deps/zlib/inflate.c \
+	deps/zlib/inftrees.c \
+	deps/zlib/trees.c \
+	deps/zlib/uncompr.c \
+	deps/zlib/zutil.c \
+	deps/zlib/ioapi.c \
+	deps/zlib/unzip.c
+endif
+
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
-DO_ARCHIVE = 0
-ifeq ($(platform), wii)
-	DO_ARCHIVES = 1
-endif
-ifeq ($(platform), ps3)
-	DO_ARCHIVES = 1
-endif
-ifeq ($(platform), psp1)
-	DO_ARCHIVES = 1
-endif
-ifeq ($(platform), vita)
-	DO_ARCHIVES = 1
-endif
-ifeq ($(platform), ctr)
-	DO_ARCHIVES = 1
-endif
+
 # primary target
 $(EMULATOR): $(OBJS) $(COREOBJS) $(OSOBJS) $(ZLIBOBJS) $(DRVLIBS)
-ifeq ($(DO_ARCHIVES),1)
+ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
 	$(AR) rcs $@ $(OBJS) $(COREOBJS) $(OSOBJS) $(ZLIBOBJS) $(DRVLIBS)
 else
@@ -176,40 +147,10 @@ else
 endif
 
 $(OBJ)/$(MAMEOS)/%.o: src/$(MAMEOS)/%.c
-	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: src/%.c
-	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) $(PLATCFLAGS) -c $< -o $@
-
-# compile generated C files for the 68000 emulator
-#$(M68000_GENERATED_OBJS): $(OBJ)/cpu/m68000/m68kmake$(EXE)
-	#@echo Compiling $(subst .o,.c,$@)...
-	#$(CC) $(CDEFS) $(CFLAGSPEDANTIC) $(PLATCFLAGS) -c $*.c -o $@
-
-# additional rule, because m68kcpu.c includes the generated m68kops.h :-/
-#$(OBJ)/cpu/m68000/m68kcpu.o: $(OBJ)/cpu/m68000/m68kmake$(EXE)
-
-# generate C source files for the 68000 emulator
-#$(OBJ)/cpu/m68000/m68kmake$(EXE): src/cpu/m68000/m68kmake.c
-	#@echo M68K make $<...
-	#$(NATIVECC) $(CDEFS) $(CFLAGSPEDANTIC) -DDOS -o $(OBJ)/cpu/m68000/m68kmake$(EXE) $<
-	#@echo Generating M68K source files...
-	#$(OBJ)/cpu/m68000/m68kmake$(EXE) $(OBJ)/cpu/m68000 src/cpu/m68000/m68k_in.c
-
-# generate asm source files for the 68000/68020 emulators
-$(OBJ)/cpu/m68000/68000.asm:  src/cpu/m68000/make68k.c
-	@echo Compiling $<...
-	$(NATIVECC) $(CDEFS) $(CFLAGSPEDANTIC) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $<
-	@echo Generating $@...
-	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68000tab.asm 00
-
-$(OBJ)/cpu/m68000/68020.asm:  src/cpu/m68000/make68k.c
-	@echo Compiling $<...
-	$(NATIVECC) $(CDEFS) $(CFLAGSPEDANTIC) -O0 -DDOS -o $(OBJ)/cpu/m68000/make68k$(EXE) $<
-	@echo Generating $@...
-	@$(OBJ)/cpu/m68000/make68k$(EXE) $@ $(OBJ)/cpu/m68000/68020tab.asm 20
 
 # generated asm files for the 68000 emulator
 $(OBJ)/cpu/m68000/68000.o:  $(OBJ)/cpu/m68000/68000.asm
