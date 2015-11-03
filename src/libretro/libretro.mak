@@ -30,7 +30,7 @@ else ifneq ($(findstring MINGW,$(shell uname -a)),)
 	system_platform = win
 endif
 
-TARGET_NAME := mame078
+TARGET_NAME := mame2003
 
 LIBM := -lm
 
