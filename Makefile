@@ -23,9 +23,6 @@ endif
 # uncomment next line to use DRC MIPS3 engine
 # X86_MIPS3_DRC = 1
 
-# uncomment next line to use cygwin compiler
-# COMPILESYSTEM_CYGWIN	= 1
-
 MAMEOS = libretro
 
 # CPU core include paths
@@ -87,10 +84,6 @@ OBJDIRS += $(OBJ)/mess $(OBJ)/mess/systems $(OBJ)/mess/machine \
 	$(OBJ)/mess/vidhrdw $(OBJ)/mess/sndhrdw $(OBJ)/mess/tools
 endif
 
-ifeq ($(TARGET),mmsnd)
-OBJDIRS	+= $(OBJ)/mmsnd $(OBJ)/mmsnd/machine $(OBJ)/mmsnd/drivers $(OBJ)/mmsnd/sndhrdw
-endif
-
 include src/$(MAMEOS)/$(MAMEOS).mak
 all:	maketree $(EMULATOR)
 
@@ -104,11 +97,6 @@ DBGDEFS = -DMAME_DEBUG
 else
 DBGDEFS =
 DBGOBJS =
-endif
-
-ifdef COMPILESYSTEM_CYGWIN
-CFLAGS	+= -mno-cygwin
-LDFLAGS	+= -mno-cygwin
 endif
 
 # platform .mak files will want to add to this
