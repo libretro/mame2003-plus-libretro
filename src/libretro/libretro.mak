@@ -71,6 +71,10 @@ else ifneq (,$(findstring ios,$(platform)))
    CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
 
+ifeq ($(IOSSDK),)
+   IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
+endif
+
    CC = cc -arch armv7 -isysroot $(IOSSDK)
    LD = cc -arch armv7 -isysroot $(IOSSDK)
 ifeq ($(platform),ios9)
