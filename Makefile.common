@@ -1,0 +1,3 @@
+include src/core.mak
+include src/mame.mak
+include src/rules.mak

@@ -88,9 +88,7 @@ include src/$(MAMEOS)/$(MAMEOS).mak
 all:	maketree $(EMULATOR)
 
 # include the various .mak files
-include src/core.mak
-include src/$(TARGET).mak
-include src/rules.mak
+include Makefile.common
 
 ifdef DEBUG
 DBGDEFS = -DMAME_DEBUG
