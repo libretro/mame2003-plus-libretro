@@ -1798,7 +1798,6 @@
     <ClCompile Include="..\..\..\zlib\uncompr.c" />
     <ClCompile Include="..\..\..\zlib\unzip.c" />
     <ClCompile Include="..\..\..\zlib\zutil.c" />
-    <ClCompile Include="..\..\dirent_win32.c" />
     <ClCompile Include="..\..\joystick.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>

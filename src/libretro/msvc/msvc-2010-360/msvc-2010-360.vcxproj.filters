@@ -5426,9 +5426,6 @@
     <ClCompile Include="..\..\..\vidhrdw\yunsung8_vidhrdw.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dirent_win32.c">
-      <Filter>Source Files\libretro</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\mame.c">
       <Filter>Source Files</Filter>
     </ClCompile>
