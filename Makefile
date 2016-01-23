@@ -234,8 +234,6 @@ CFLAGSOSDEPEND = $(CFLAGS)
 # the windows osd code at least cannot be compiled with -pedantic
 CFLAGSPEDANTIC = $(CFLAGS) -pedantic
 
-SOURCES_C :=
-
 # include the various .mak files
 include Makefile.common
 

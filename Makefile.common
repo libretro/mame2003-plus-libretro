@@ -4,7 +4,7 @@ INCFLAGS := -I$(CORE_DIR) \
 				-I$(CORE_DIR)/cpu/m68000 \
 				-I$(CORE_DIR)/cpu/m68000
 
-SOURCES_C += $(CORE_DIR)/libretro/libretro.c \
+SOURCES_C := $(CORE_DIR)/libretro/libretro.c \
 				 $(CORE_DIR)/libretro/osd.c \
 				 $(CORE_DIR)/libretro/keyboard.c \
 				 $(CORE_DIR)/libretro/joystick.c \
@@ -2574,20 +2574,20 @@ endif
 ifeq ($(STATIC_LINKING),1)
 INCFLAGS += -I$(CORE_DIR)/libretro/includes/zlib
 else
-SOURCES_C += deps/zlib/adler32.c \
-				 deps/zlib/compress.c \
-				 deps/zlib/crc32.c \
-				 deps/zlib/deflate.c \
-				 deps/zlib/gzclose.c \
-				 deps/zlib/gzlib.c \
-				 deps/zlib/gzread.c \
-				 deps/zlib/gzwrite.c \
-				 deps/zlib/inffast.c \
-				 deps/zlib/inflate.c \
-				 deps/zlib/inftrees.c \
-				 deps/zlib/trees.c \
-				 deps/zlib/uncompr.c \
-				 deps/zlib/zutil.c \
-				 deps/zlib/ioapi.c \
-				 deps/zlib/unzip.c
+SOURCES_C += $(CORE_DIR)/../deps/zlib/adler32.c \
+				 $(CORE_DIR)/../deps/zlib/compress.c \
+				 $(CORE_DIR)/../deps/zlib/crc32.c \
+				 $(CORE_DIR)/../deps/zlib/deflate.c \
+				 $(CORE_DIR)/../deps/zlib/gzclose.c \
+				 $(CORE_DIR)/../deps/zlib/gzlib.c \
+				 $(CORE_DIR)/../deps/zlib/gzread.c \
+				 $(CORE_DIR)/../deps/zlib/gzwrite.c \
+				 $(CORE_DIR)/../deps/zlib/inffast.c \
+				 $(CORE_DIR)/../deps/zlib/inflate.c \
+				 $(CORE_DIR)/../deps/zlib/inftrees.c \
+				 $(CORE_DIR)/../deps/zlib/trees.c \
+				 $(CORE_DIR)/../deps/zlib/uncompr.c \
+				 $(CORE_DIR)/../deps/zlib/zutil.c \
+				 $(CORE_DIR)/../deps/zlib/ioapi.c \
+				 $(CORE_DIR)/../deps/zlib/unzip.c
 endif
