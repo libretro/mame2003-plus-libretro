@@ -1,3 +1,10 @@
+# compiler, linker and utilities
+AR = @ar
+CC = @gcc
+LD = @gcc
+MD = -mkdir
+RM = @rm -f
+
 CORE_DIR := src
 TARGET_NAME := mame2003
 
@@ -195,15 +202,6 @@ LDFLAGS += $(LIBM)
 # uncomment next line to use DRC MIPS3 engine
 # X86_MIPS3_DRC = 1
 
-# compiler, linker and utilities
-AR = @ar
-NATIVECC = @gcc
-CC = @gcc
-LD = @gcc
-ASM = @nasm
-ASMFLAGS = -f coff
-MD = -mkdir
-RM = @rm -f
 
 
 # build the targets in different object dirs, since mess changes
