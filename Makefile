@@ -2,7 +2,6 @@
 AR = @ar
 CC = @gcc
 LD = @gcc
-MD = -mkdir
 RM = @rm -f
 
 CORE_DIR := src
