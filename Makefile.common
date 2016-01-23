@@ -1,3 +1,9 @@
+INCFLAGS := -I$(CORE_DIR) \
+				-I$(CORE_DIR)/includes \
+				-I$(CORE_DIR)/libretro \
+				-I$(CORE_DIR)/cpu/m68000 \
+				-I$(CORE_DIR)/cpu/m68000
+
 SOURCES_C += $(CORE_DIR)/libretro/libretro.c \
 				 $(CORE_DIR)/libretro/osd.c \
 				 $(CORE_DIR)/libretro/keyboard.c \
@@ -2563,4 +2569,25 @@ SOUNDDEFS += -DHAS_YMF271=1
 SOURCES_C += $(CORE_DIR)/sound/ymf271.c
 else
 SOUNDDEFS += -DHAS_YMF271=0
+endif
+
+ifeq ($(STATIC_LINKING),1)
+INCFLAGS += -I$(CORE_DIR)/libretro/includes/zlib
+else
+SOURCES_C += deps/zlib/adler32.c \
+				 deps/zlib/compress.c \
+				 deps/zlib/crc32.c \
+				 deps/zlib/deflate.c \
+				 deps/zlib/gzclose.c \
+				 deps/zlib/gzlib.c \
+				 deps/zlib/gzread.c \
+				 deps/zlib/gzwrite.c \
+				 deps/zlib/inffast.c \
+				 deps/zlib/inflate.c \
+				 deps/zlib/inftrees.c \
+				 deps/zlib/trees.c \
+				 deps/zlib/uncompr.c \
+				 deps/zlib/zutil.c \
+				 deps/zlib/ioapi.c \
+				 deps/zlib/unzip.c
 endif

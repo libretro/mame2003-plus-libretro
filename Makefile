@@ -210,7 +210,6 @@ RM = @rm -f
 # some structures and thus they can't be linked against each other.
 DEFS = -DINLINE="static __inline__" -Dasm=__asm__
 
-CFLAGS = -I$(CORE_DIR) -I$(CORE_DIR)/includes -I$(CORE_DIR)/libretro -I$(CORE_DIR)/cpu/m68000 -I$(CORE_DIR)/cpu/m68000
 
 RETRO_PROFILE = 0
 CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
@@ -240,35 +239,14 @@ SOURCES_C :=
 # include the various .mak files
 include Makefile.common
 
-all:	$(TARGET)
-# platform .mak files will want to add to this
-ifeq ($(STATIC_LINKING),1)
-CFLAGS += -I$(CORE_DIR)/libretro/includes/zlib
-else
-SOURCES_C += deps/zlib/adler32.c \
-				 deps/zlib/compress.c \
-				 deps/zlib/crc32.c \
-				 deps/zlib/deflate.c \
-				 deps/zlib/gzclose.c \
-				 deps/zlib/gzlib.c \
-				 deps/zlib/gzread.c \
-				 deps/zlib/gzwrite.c \
-				 deps/zlib/inffast.c \
-				 deps/zlib/inflate.c \
-				 deps/zlib/inftrees.c \
-				 deps/zlib/trees.c \
-				 deps/zlib/uncompr.c \
-				 deps/zlib/zutil.c \
-				 deps/zlib/ioapi.c \
-				 deps/zlib/unzip.c
-endif
+CFLAGS += $(INCFLAGS)
 
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 
 OBJECTS := $(SOURCES_C:.c=.o)
 
-# primary target
+all:	$(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
