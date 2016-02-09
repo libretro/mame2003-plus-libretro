@@ -29,7 +29,7 @@ static const char *mame_default_text[] =
 	/* copyright stuff */
 	"Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.",
 	"IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.",
-	"Otherwise, type OK to continue",
+	"Otherwise, type OK on Keyboard, or Left, Right on Joystick to continue",
 
 	/* misc stuff */
 	"Return to Main Menu",
