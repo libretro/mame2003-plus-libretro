@@ -2603,8 +2603,9 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 		strcat(pause_buffer,ui_getstring (UI_typeok));
 	}
 
-	erase_screen(bitmap);
-	update_video_and_audio();
+	/* not needed */
+	//erase_screen(bitmap);
+	//update_video_and_audio();
 
 	return 0;
 }

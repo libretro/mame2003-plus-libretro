@@ -48,6 +48,7 @@ void retro_set_environment(retro_environment_t cb)
          "MK2/MK3 DCS Speedhack; enabled|disabled"
 #endif
       },
+      { "mame2003-skip_disclaimer", "Skip Disclaimer; disabled|enabled" },
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -164,6 +165,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 }
 
 extern int frameskip;
+unsigned skip_disclaimer = 0;
 
 static void update_variables(void)
 {
@@ -182,11 +184,24 @@ static void update_variables(void)
    {
        if(strcmp(var.value, "enabled") == 0)
           activate_dcs_speedhack = 1;
-       else if(strcmp(var.value, "enabled") == 0)
+       else
           activate_dcs_speedhack = 0;
    }
    else
       activate_dcs_speedhack = 0;
+    
+   var.value = NULL;
+   var.key = "mame2003-skip_disclaimer";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+       if(strcmp(var.value, "enabled") == 0)
+          skip_disclaimer = 1;
+       else
+          skip_disclaimer = 0;
+   }
+   else
+      skip_disclaimer = 0;
 }
 
 static void check_system_specs(void)
@@ -293,6 +308,7 @@ bool retro_load_game(const struct retro_game_info *game)
         options.samplerate = 48000;            
         options.ui_orientation = uiModes[rotateMode];
         options.vector_intensity = 1.5f;
+        options.skip_disclaimer = skip_disclaimer;
 
         // Boot the emulator
         return run_game(driverIndex) == 0;
