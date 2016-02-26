@@ -221,6 +221,15 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
       log_cb(RETRO_LOG_INFO, "osd_fopen (buffer = [%s]), (systemDir: [%s]), (path type dir: [%s]), (path: [%d]), (filename: [%s]) \n", buffer, systemDir, paths[pathtype], pathtype, filename);
 
    out = (osd_file*)malloc(sizeof(osd_file));
+    
+   if (osd_get_path_info(pathtype, pathindex, filename) == PATH_NOT_FOUND)
+   {
+       /* if path not found, create */
+       char newPath[1024];
+       snprintf(newPath, sizeof(newPath), "%s%c%s", systemDir, slash, paths[pathtype]);
+       mkdir(newPath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+   }
+    
    out->file = fopen(buffer, mode);
 
    if(out->file == 0)
