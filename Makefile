@@ -114,7 +114,7 @@ else ifeq ($(platform), rpi2)
    PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimizations
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
    ENDIANNESS_DEFINES:=-DLSB_FIRST
-   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
 else ifeq ($(platform), android-armv7)
    TARGET = $(TARGET_NAME)_libretro_android.so
