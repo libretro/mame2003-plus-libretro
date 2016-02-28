@@ -223,8 +223,8 @@ void retro_init (void)
 #ifdef LOG_PERFORMANCE
    environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf_cb);
 #endif
-
-	update_variables();
+    
+   update_variables();
    check_system_specs();
 }
 
