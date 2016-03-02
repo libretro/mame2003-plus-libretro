@@ -105,6 +105,17 @@ else ifeq ($(platform), ctr)
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
    CPU_ARCH := arm
    STATIC_LINKING = 1
+else ifeq ($(platform), rpi2)
+   TARGET = $(TARGET_NAME)_libretro.so
+   fpic = -fPIC
+   CFLAGS += $(fpic)
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+   PLATCFLAGS += -Dstricmp=strcasecmp
+   PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimizations
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+   ENDIANNESS_DEFINES:=-DLSB_FIRST
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+   CPU_ARCH := arm
 else ifeq ($(platform), android-armv7)
    TARGET = $(TARGET_NAME)_libretro_android.so
 
