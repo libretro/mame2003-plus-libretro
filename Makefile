@@ -182,6 +182,23 @@ else ifneq (,$(findstring armv,$(platform)))
    CFLAGS += -fPIC
    PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
+
+# GCW0
+else ifeq ($(platform), gcw0)
+	TARGET := $(TARGET_NAME)_libretro.so
+	CC = /opt/gcw0-toolchain/usr/bin/mipsel-linux-gcc-4.9.1
+	CXX = /opt/gcw0-toolchain/usr/bin/mipsel-linux-g++
+	AR = /opt/gcw0-toolchain/usr/bin/mipsel-linux-ar
+	LDFLAGS += -shared -Wl,--version-script=link.T -Wl,-no-undefined
+	PLATCFLAGS += -Dstricmp=strcasecmp
+	#LDFLAGS += $(PTHREAD_FLAGS) -lrt
+	LIBS := -lc -lgcc
+	fpic := -fPIC -nostdlib
+	LIBM :=
+	#CFLAGS += $(PTHREAD_FLAGS) -DHAVE_MKDIR
+	CFLAGS += -DFAMEC_NO_GOTOS
+	CFLAGS += -lm -march=mips32 -mtune=mips32r2 -mhard-float
+
 else
    EXE = .exe
    
