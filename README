@@ -1,13 +1,19 @@
-Proof on concept
+Proof of concept
 Based on MAME 0.78
 
 Tested for OS X, linux, Wii, and Android (arm-v7a).
 
+Generates directories as it requires:
+* User-generated content: Saves (NVRAM, MEMCARD), Hi-Scores, and Controller Config files
+  are in sub-directories within /Retroarch Savefile Dir/mame2003/.
+* Everything else (Cheats, Mame INI, etc) in sub-directories within
+  /Retroarch System Dir/mame2003/.
+
 TODO:
 
-* Better path management. For now all games must be placed in a folder named 'rom'. Other folders must be created manually in 'rom's parent directory. Their names can be found under the File I/O section of src/libretro/osd.c.
 * Make sure all of the mkdir commands in makefile complete before any compiling starts.
-* Lots more
+* Input Descriptors (for use in Core Input Remapping).
+* Lots more.
 
 Notes:
 

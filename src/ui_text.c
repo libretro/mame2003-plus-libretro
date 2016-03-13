@@ -92,7 +92,7 @@ static const char *mame_default_text[] =
 #endif
 	"The game has protection which isn't fully emulated.",
 	"There are working clones of this game. They are:",
-	"Type OK to continue",
+    "Type OK on Keyboard, or Left, Right on Joystick to continue",
 
 	/* main menu */
 	"Input (general)",
