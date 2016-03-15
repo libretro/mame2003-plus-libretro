@@ -284,14 +284,13 @@ bool retro_load_game(const struct retro_game_info *game)
     if(driverIndex)
     {
         fallbackDir = strdup(game->path);
-        //const char *fallbackDir = game->path;
         int orientation;
         unsigned rotateMode;
         static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
         
         /* Get system directory from frontend */
         environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&systemDir);
-        if (systemDir == NULL || systemDir[0] == 0)
+        if (systemDir == NULL || systemDir[0] == '\0')
         {
             /* if non set, use old method */
             systemDir = normalizePath(fallbackDir);
@@ -300,7 +299,7 @@ bool retro_load_game(const struct retro_game_info *game)
         
         /* Get save directory from frontend */
         environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&saveDir);
-        if (saveDir == NULL || saveDir[0] == 0)
+        if (saveDir == NULL || saveDir[0] == '\0')
         {
             /* if non set, use old method */
             saveDir = normalizePath(fallbackDir);
