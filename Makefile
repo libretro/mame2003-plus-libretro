@@ -116,6 +116,17 @@ else ifeq ($(platform), rpi2)
    ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
+else ifeq ($(platform), rpi3)
+   TARGET = $(TARGET_NAME)_libretro.so
+   fpic = -fPIC
+   CFLAGS += $(fpic)
+   LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
+   PLATCFLAGS += -Dstricmp=strcasecmp
+   PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimizations
+   PLATCFLAGS += -fomit-frame-pointer -ffast-math
+   ENDIANNESS_DEFINES:=-DLSB_FIRST
+   CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+   CPU_ARCH := arm
 else ifeq ($(platform), android-armv7)
    TARGET = $(TARGET_NAME)_libretro_android.so
 
@@ -209,6 +220,12 @@ ifeq ($(BIGENDIAN), 1)
 	PLATCFLAGS += -DMSB_FIRST
 endif
 
+# use -fsigned-char on ARM to solve potential problems with code written/tested on x86
+# eg on mame2003 audio on rtype leo is wrong without it.
+ifeq ($(ARM), 1)
+   PLATCFLAGS += -fsigned-char
+endif
+
 PLATCFLAGS += $(fpic)
 
 CFLAGS += -D__LIBRETRO__ -DPI=3.1415927
@@ -248,9 +265,14 @@ CFLAGS += -Wall -Wno-sign-compare -Wunused \
 endif
 
 ifdef SYMBOLS
-CFLAGS += -O0 -Wall -Wno-unused -g
+   CFLAGS += -O0 -Wall -Wno-unused -g
+
+# O3 optimisation causes issues on ARM
+else ifeq ($(ARM), 1)
+   CFLAGS += -DNDEBUG $(ARCH) -O2 -fomit-frame-pointer -fstrict-aliasing
+
 else
-CFLAGS += -DNDEBUG $(ARCH) -O3 -fomit-frame-pointer -fstrict-aliasing
+   CFLAGS += -DNDEBUG $(ARCH) -O3 -fomit-frame-pointer -fstrict-aliasing
 endif
 
 # extra options needed *only* for the osd files
