@@ -116,17 +116,19 @@ else ifeq ($(platform), rpi2)
    ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
+   ARM = 1
 else ifeq ($(platform), rpi3)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
    CFLAGS += $(fpic)
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
    PLATCFLAGS += -Dstricmp=strcasecmp
-   PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimizations
+   PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard -funsafe-math-optimizations
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
    ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
+   ARM = 1
 else ifeq ($(platform), android-armv7)
    TARGET = $(TARGET_NAME)_libretro_android.so
 
