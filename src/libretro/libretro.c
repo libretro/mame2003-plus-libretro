@@ -49,6 +49,7 @@ void retro_set_environment(retro_environment_t cb)
 #endif
       },
       { "mame2003-skip_disclaimer", "Skip Disclaimer; disabled|enabled" },
+      { "mame2003-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -149,6 +150,8 @@ void retro_get_system_info(struct retro_system_info *info)
    info->block_extract = true;
 }
 
+int sample_rate;
+
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
     const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
@@ -163,7 +166,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
     info->geometry.max_height = height;
     info->geometry.aspect_ratio = 0;
     info->timing.fps = Machine->drv->frames_per_second;
-    info->timing.sample_rate = 48000.0;
+    info->timing.sample_rate = sample_rate;
 }
 
 extern int frameskip;
@@ -184,10 +187,10 @@ static void update_variables(void)
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
-       if(strcmp(var.value, "enabled") == 0)
-          activate_dcs_speedhack = 1;
-       else
-          activate_dcs_speedhack = 0;
+      if(strcmp(var.value, "enabled") == 0)
+         activate_dcs_speedhack = 1;
+      else
+         activate_dcs_speedhack = 0;
    }
    else
       activate_dcs_speedhack = 0;
@@ -197,13 +200,23 @@ static void update_variables(void)
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
-       if(strcmp(var.value, "enabled") == 0)
-          skip_disclaimer = 1;
-       else
-          skip_disclaimer = 0;
+      if(strcmp(var.value, "enabled") == 0)
+         skip_disclaimer = 1;
+      else
+         skip_disclaimer = 0;
    }
    else
       skip_disclaimer = 0;
+    
+   var.value = NULL;
+   var.key = "mame2003-sample_rate";
+    
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      sample_rate = atoi(var.value);
+   }
+   else
+      sample_rate = 48000;
 }
 
 static void check_system_specs(void)
@@ -321,7 +334,7 @@ bool retro_load_game(const struct retro_game_info *game)
         environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
 
         // Set all options before starting the game
-        options.samplerate = 48000;            
+        options.samplerate = sample_rate;
         options.ui_orientation = uiModes[rotateMode];
         options.vector_intensity = 1.5f;
         options.skip_disclaimer = skip_disclaimer;
