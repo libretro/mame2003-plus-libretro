@@ -1,0 +1,46 @@
+# mame2003-libretro
+MAME as it was in 2003, and using the libretro API. Accepts romset **MAME 0.78**. Any file-not-found issues will be because your romset is wrong, or incomplete (e.g. you're trying to run a clone .zip, without the parent .zip present).
+
+Suitable for lower-end devices that would struggle to run current versions of MAME (later versions of MAME are increasingly accurate, thus can perform worse).
+
+Tested for OS X, linux (including Raspberry Pi 2, 3), Wii, and Android (arm-v7a).
+
+### Directories
+Generates directories as it requires:
+* User-generated content are in sub-directories within `/libretro savefile dir/mame2003/` e.g.:
+````
+/libretro savefile dir/mame2003/diff/
+/libretro savefile dir/mame2003/nvram/
+/libretro savefile dir/mame2003/hi/
+/libretro savefile dir/mame2003/cfg/
+/libretro savefile dir/mame2003/inp/
+/libretro savefile dir/mame2003/memcard/
+/libretro savefile dir/mame2003/snap/
+````
+* .dat files should be placed within `/libretro system dir/mame2003/` e.g.:
+```
+/libretro system dir/mame2003/hiscore.dat
+/libretro system dir/mame2003/cheat.dat
+/libretro system dir/mame2003/history.dat
+````
+* Static data should be placed in subdirectories within `/libretro system dir/mame2003/` e.g.:
+````
+/libretro system dir/mame2003/samples/
+````
+
+### To-do:
+* Make sure all of the mkdir commands in makefile complete before any compiling starts.
+* Input Descriptors (for use in Core Input Remapping).
+* Expose all MAME options as Core Options (including various vector game-specific options)
+* Lots more.
+
+### Notes:
+* Will have errors on 64-bit platforms.
+* Will have errors on platforms without unaligned memory access support.
+* When using concurrent building you may get an error that it can't create certain object files, just rerun make if it happens.
+* To run on Wii's memory constraints some drivers in src/driver.c must be removed.
+
+### Links to consult:
+http://www.anthrofox.org/code/mame/index.html
+https://code.oregonstate.edu/svn/dsp_bd/uclinux-dist/trunk/user/games/xmame/xmame-0.106/src/unix/contrib/patches/word-align-patch
+http://www.filewatcher.com/b/ftp/ftp.zenez.com/pub/mame/xmame.0.0.html

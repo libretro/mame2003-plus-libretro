@@ -48,8 +48,10 @@ void retro_set_environment(retro_environment_t cb)
          "MK2/MK3 DCS Speedhack; enabled|disabled"
 #endif
       },
-      { "mame2003-skip_disclaimer", "Skip Disclaimer; disabled|enabled" },
+      { "mame2003-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
+      { "mame2003-samples", "Samples; enabled|disabled" },
       { "mame2003-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
+      { "mame2003-cheats", "Cheats; disabled|enabled" },
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -171,6 +173,8 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 extern int frameskip;
 unsigned skip_disclaimer = 0;
+unsigned samples = 0;
+unsigned cheats = 0;
 
 static void update_variables(void)
 {
@@ -184,7 +188,7 @@ static void update_variables(void)
 
    var.value = NULL;
    var.key = "mame2003-dcs-speedhack";
-
+   
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -194,10 +198,10 @@ static void update_variables(void)
    }
    else
       activate_dcs_speedhack = 0;
-    
+   
    var.value = NULL;
    var.key = "mame2003-skip_disclaimer";
-
+   
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -207,16 +211,39 @@ static void update_variables(void)
    }
    else
       skip_disclaimer = 0;
-    
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         samples = 1;
+      else
+         samples = 0;
+   }
+   else
+      cheats = 0;
+   
    var.value = NULL;
    var.key = "mame2003-sample_rate";
-    
+   
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       sample_rate = atoi(var.value);
    }
    else
       sample_rate = 48000;
+   
+   var.value = NULL;
+   var.key = "mame2003-cheats";
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         cheats = 1;
+      else
+         cheats = 0;
+   }
+   else
+      cheats = 0;
 }
 
 static void check_system_specs(void)
@@ -338,7 +365,8 @@ bool retro_load_game(const struct retro_game_info *game)
         options.ui_orientation = uiModes[rotateMode];
         options.vector_intensity = 1.5f;
         options.skip_disclaimer = skip_disclaimer;
-        options.use_samples = 1;
+        options.use_samples = samples;
+        options.cheat = cheats;
 
         // Boot the emulator
         return run_game(driverIndex) == 0;
@@ -406,7 +434,7 @@ bool retro_serialize(void *data, size_t size)
 
 bool retro_unserialize(const void * data, size_t size)
 {
-   int cpunum;
+    int cpunum;
 	/* if successful, load it */
 	if (retro_serialize_size() && data && size && !state_save_load_begin((void*)data, size))
 	{
