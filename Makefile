@@ -297,7 +297,7 @@ all:	$(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
-	$(AR) rcs $@ $(OBJECTS)
+	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),&& $(AR) q $@ $(OBJECTS))
 else
 	@echo Linking $@...
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
