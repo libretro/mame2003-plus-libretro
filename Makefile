@@ -111,7 +111,7 @@ else ifeq ($(platform), rpi2)
    CFLAGS += $(fpic)
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
    PLATCFLAGS += -Dstricmp=strcasecmp
-   PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimizations
+   PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
    ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
@@ -123,7 +123,7 @@ else ifeq ($(platform), rpi3)
    CFLAGS += $(fpic)
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
    PLATCFLAGS += -Dstricmp=strcasecmp
-   PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard -funsafe-math-optimizations
+   PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
    ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
