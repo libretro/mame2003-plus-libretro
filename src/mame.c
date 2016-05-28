@@ -567,7 +567,14 @@ void run_machine_core(void)
 
     if(settingsloaded || options.skip_disclaimer)
     {
-        showgamewarnings(artwork_get_ui_bitmap());
+        if (options.skip_warnings)
+        {
+            pause_action = pause_action_start_emulator;
+        }
+        else
+        {
+            showgamewarnings(artwork_get_ui_bitmap());
+        }
     }
     else
     {
