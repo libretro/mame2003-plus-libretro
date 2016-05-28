@@ -49,6 +49,7 @@ void retro_set_environment(retro_environment_t cb)
 #endif
       },
       { "mame2003-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
+      { "mame2003-skip_warnings", "Skip Warnings; disabled|enabled" },
       { "mame2003-samples", "Samples; enabled|disabled" },
       { "mame2003-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
       { "mame2003-cheats", "Cheats; disabled|enabled" },
@@ -173,6 +174,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
 extern int frameskip;
 unsigned skip_disclaimer = 0;
+unsigned skip_warnings = 0;
 unsigned samples = 0;
 unsigned cheats = 0;
 
@@ -211,6 +213,19 @@ static void update_variables(void)
    }
    else
       skip_disclaimer = 0;
+
+   var.value = NULL;
+   var.key = "mame2003-skip_warnings";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         skip_warnings = 1;
+      else
+         skip_warnings = 0;
+   }
+   else
+      skip_warnings = 0;
    
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
@@ -365,6 +380,7 @@ bool retro_load_game(const struct retro_game_info *game)
         options.ui_orientation = uiModes[rotateMode];
         options.vector_intensity = 1.5f;
         options.skip_disclaimer = skip_disclaimer;
+        options.skip_warnings = skip_warnings;
         options.use_samples = samples;
         options.cheat = cheats;
 
