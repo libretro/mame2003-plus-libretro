@@ -173,6 +173,14 @@ else ifeq ($(platform), sncps3)
    AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
    STATIC_LINKING = 1
+else ifeq ($(platform), psl1ght)
+   TARGET = $(TARGET_NAME)_libretro_psl1ght.a
+   BIGENDIAN = 1
+    
+   CC = $(PS3DEV)/ppu/bin/ppu-gcc$
+   AR = $(PS3DEV)/ppu/bin/ppu-ar$
+   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   STATIC_LINKING = 1
 else ifeq ($(platform), psp1)
 	TARGET = $(TARGET_NAME)_libretro_psp1.a
 
