@@ -128,8 +128,9 @@ static int driverIndex; //< Index of mame game loaded
 
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
-
-extern int retroJsState[64];
+extern int retroJsState[72];
+extern int16_t mouse_x;
+extern int16_t mouse_y;
 extern struct osd_create_params videoConfig;
 
 unsigned retroColorMode;
@@ -305,12 +306,12 @@ void retro_run (void)
    int i, j;
    int *jsState;
    const struct KeyboardInfo *thisInput;
-	bool updated = false;
+   bool updated = false;
 
    poll_cb();
 
-	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
-		update_variables();
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
+      update_variables();
 
    // Keyboard
    thisInput = retroKeys;
@@ -326,8 +327,24 @@ void retro_run (void)
    {
       for (j = 0; j < 16; j ++)
          *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
-   }
 
+      /* Mouse
+       * Currently libretro only supports 1 mouse, so port is hard-coded.
+       * MAME seems to support 4 mice/trackballs, so could be changed
+       * in the future. */
+      if (i == 0)
+      {
+         *jsState++ = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
+         *jsState++ = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
+         mouse_x[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+         mouse_y[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+      }
+   }
+    
+   // Mouse
+   mouse_x = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+   mouse_y = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+    
    mame_frame();
 
    audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
