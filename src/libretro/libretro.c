@@ -226,7 +226,10 @@ static void update_variables(void)
    }
    else
       skip_warnings = 0;
-   
+
+   var.value = NULL;
+   var.key = "mame2003-samples";
+
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -235,7 +238,7 @@ static void update_variables(void)
          samples = 0;
    }
    else
-      cheats = 0;
+      samples = 0;
    
    var.value = NULL;
    var.key = "mame2003-sample_rate";
