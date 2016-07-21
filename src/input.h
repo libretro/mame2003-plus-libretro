@@ -194,4 +194,9 @@ int input_ui_pressed_repeat(int code, int speed);
 int is_joystick_axis_code(unsigned code);
 int return_os_joycode(InputCode code);
 
+#define LIBRETRO_ANALOG_MIN -32768
+#define LIBRETRO_ANALOG_MAX 32767
+#define ANALOG_MIN -128
+#define ANALOG_MAX 128
+
 #endif

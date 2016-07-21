@@ -129,8 +129,10 @@ static int driverIndex; //< Index of mame game loaded
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
 extern int retroJsState[72];
-extern int16_t mouse_x;
-extern int16_t mouse_y;
+
+extern int16_t mouse_x[4];
+extern int16_t mouse_y[4];
+extern int16_t analogjoy[4][4];
 extern struct osd_create_params videoConfig;
 
 unsigned retroColorMode;
@@ -313,7 +315,7 @@ void retro_run (void)
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       update_variables();
 
-   // Keyboard
+   /* Keyboard */
    thisInput = retroKeys;
    while(thisInput->name)
    {
@@ -321,12 +323,14 @@ void retro_run (void)
       thisInput ++;
    }
 
-   // Joystick
    jsState = retroJsState;
    for (i = 0; i < 4; i ++)
    {
-      for (j = 0; j < 16; j ++)
-         *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
+      /* Joystick */
+       for (j = 0; j < 16; j ++) {
+          *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
+       }
+       
 
       /* Mouse
        * Currently libretro only supports 1 mouse, so port is hard-coded.
@@ -339,12 +343,19 @@ void retro_run (void)
          mouse_x[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
          mouse_y[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
       }
+      else
+      {
+         *jsState++ = 0;
+         *jsState++ = 0;
+      }
+
+      /* Analog joystick */
+      analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X);
+      analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y);
+      //analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
+      //analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
    }
-    
-   // Mouse
-   mouse_x = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-   mouse_y = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
-    
+
    mame_frame();
 
    audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
