@@ -220,10 +220,12 @@ else ifeq ($(platform), gcw0)
 	CFLAGS += -DFAMEC_NO_GOTOS
 	CFLAGS += -lm -march=mips32 -mtune=mips32r2 -mhard-float
 
+# Windows
 else
-   EXE = .exe
-   
+   TARGET := $(TARGET_NAME)_libretro.dll
+   CC = gcc
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
+   CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -Wno-missing-field-initializers
 endif
 
 ifeq ($(BIGENDIAN), 1)
@@ -308,7 +310,10 @@ ifeq ($(STATIC_LINKING),1)
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),&& $(AR) q $@ $(OBJECTS))
 else
 	@echo Linking $@...
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
+	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
+	$(file >$@.in,$(OBJECTS))
+	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) -o $@ @$@.in $(LIBS)
+	@rm $@.in
 endif
 
 %.o: %.c
@@ -320,4 +325,7 @@ $(OBJ)/%.a:
 	$(AR) cr $@ $^
 
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
+	$(file >$@.in,$(OBJECTS))
+	rm -f @$@.in $(TARGET)
+	@rm $@.in
