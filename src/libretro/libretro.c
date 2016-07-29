@@ -128,8 +128,11 @@ static int driverIndex; //< Index of mame game loaded
 
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
+extern int retroJsState[72];
 
-extern int retroJsState[64];
+extern int16_t mouse_x[4];
+extern int16_t mouse_y[4];
+extern int16_t analogjoy[4][4];
 extern struct osd_create_params videoConfig;
 
 unsigned retroColorMode;
@@ -226,7 +229,10 @@ static void update_variables(void)
    }
    else
       skip_warnings = 0;
-   
+
+   var.value = NULL;
+   var.key = "mame2003-samples";
+
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -235,7 +241,7 @@ static void update_variables(void)
          samples = 0;
    }
    else
-      cheats = 0;
+      samples = 0;
    
    var.value = NULL;
    var.key = "mame2003-sample_rate";
@@ -302,14 +308,14 @@ void retro_run (void)
    int i, j;
    int *jsState;
    const struct KeyboardInfo *thisInput;
-	bool updated = false;
+   bool updated = false;
 
    poll_cb();
 
-	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
-		update_variables();
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
+      update_variables();
 
-   // Keyboard
+   /* Keyboard */
    thisInput = retroKeys;
    while(thisInput->name)
    {
@@ -317,12 +323,37 @@ void retro_run (void)
       thisInput ++;
    }
 
-   // Joystick
    jsState = retroJsState;
    for (i = 0; i < 4; i ++)
    {
-      for (j = 0; j < 16; j ++)
-         *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
+      /* Joystick */
+       for (j = 0; j < 16; j ++) {
+          *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
+       }
+       
+
+      /* Mouse
+       * Currently libretro only supports 1 mouse, so port is hard-coded.
+       * MAME seems to support 4 mice/trackballs, so could be changed
+       * in the future. */
+      if (i == 0)
+      {
+         *jsState++ = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
+         *jsState++ = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
+         mouse_x[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+         mouse_y[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+      }
+      else
+      {
+         *jsState++ = 0;
+         *jsState++ = 0;
+      }
+
+      /* Analog joystick */
+      analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X);
+      analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y);
+      //analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
+      //analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
    }
 
    mame_frame();
