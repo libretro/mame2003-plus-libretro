@@ -16,7 +16,7 @@ else ifneq ($(findstring MINGW,$(shell uname -a)),)
 else ifneq ($(findstring Darwin,$(shell uname -a)),)
    platform = osx
 else ifneq ($(findstring win,$(shell uname -a)),)
-	platform = win
+   platform = win
 endif
 endif
 
@@ -310,10 +310,14 @@ ifeq ($(STATIC_LINKING),1)
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),&& $(AR) q $@ $(OBJECTS))
 else
 	@echo Linking $@...
+ifeq ($(platform),win)	
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) -o $@ @$@.in $(LIBS)
 	@rm $@.in
+else
+	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
+endif
 endif
 
 %.o: %.c
@@ -325,7 +329,11 @@ $(OBJ)/%.a:
 	$(AR) cr $@ $^
 
 clean:
+ifeq ($(platform),win)	
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	rm -f @$@.in $(TARGET)
 	@rm $@.in
+else
+	rm -f $(OBJECTS) $(TARGET)
+endif
