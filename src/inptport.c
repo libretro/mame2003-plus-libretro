@@ -46,6 +46,7 @@ extern unsigned int coinlockedout[COIN_COUNTERS];
 static unsigned short input_port_value[MAX_INPUT_PORTS];
 static unsigned short input_vblank[MAX_INPUT_PORTS];
 
+extern unsigned int dial_share_xy;
 
 
 /***************************************************************************
@@ -2073,6 +2074,13 @@ void update_analog_port(int port)
 	delta = 0;
 
 	player = IP_GET_PLAYER(in);
+    
+    /* if second player on a dial, and dial sharing turned on, use Y axis from player 1 */
+    if (dial_share_xy && type == IPT_DIAL && player == 1)
+    {
+        axis = Y_AXIS;
+        player = 0;
+    }
 
 	delta = mouse_delta_axis[player][axis];
 

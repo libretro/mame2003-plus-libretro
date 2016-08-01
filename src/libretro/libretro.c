@@ -53,6 +53,7 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-samples", "Samples; enabled|disabled" },
       { "mame2003-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
       { "mame2003-cheats", "Cheats; disabled|enabled" },
+      { "mame2003-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -180,6 +181,7 @@ unsigned skip_disclaimer = 0;
 unsigned skip_warnings = 0;
 unsigned samples = 0;
 unsigned cheats = 0;
+unsigned dial_share_xy = 0;
 
 static void update_variables(void)
 {
@@ -265,6 +267,19 @@ static void update_variables(void)
    }
    else
       cheats = 0;
+
+    var.value = NULL;
+    var.key = "mame2003-dialsharexy";
+    
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+    {
+        if(strcmp(var.value, "enabled") == 0)
+            dial_share_xy = 1;
+        else
+            dial_share_xy = 0;
+    }
+    else
+        dial_share_xy = 0;
 }
 
 static void check_system_specs(void)
