@@ -93,7 +93,7 @@ else
 endif
 
 else ifeq ($(platform), ctr)
-   TARGET = $(TARGET_NAME)_libretro_ctr.a
+   TARGET = $(TARGET_NAME)_libretro_$(platform).a
    CC = $(DEVKITARM)/bin/arm-none-eabi-gcc$(EXE_EXT)
    CXX = $(DEVKITARM)/bin/arm-none-eabi-g++$(EXE_EXT)
    AR = $(DEVKITARM)/bin/arm-none-eabi-ar$(EXE_EXT)
@@ -140,7 +140,7 @@ else ifeq ($(platform), android-armv7)
    AR = arm-linux-androideabi-ar
    LD = arm-linux-androideabi-gcc
 else ifeq ($(platform), qnx)
-   TARGET = $(TARGET_NAME)_libretro_qnx.so
+   TARGET = $(TARGET_NAME)_libretro_$(platform).so
 
    CFLAGS += -fPIC 
    PLATCFLAGS += -march=armv7-a -Dstricmp=strcasecmp
@@ -150,7 +150,7 @@ else ifeq ($(platform), qnx)
    AR = qcc -Vgcc_ntoarmv7le
    LD = QCC -Vgcc_ntoarmv7le
 else ifeq ($(platform), wii)
-   TARGET = $(TARGET_NAME)_libretro_wii.a
+   TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
     
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
@@ -158,7 +158,7 @@ else ifeq ($(platform), wii)
    PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
    STATIC_LINKING = 1
 else ifeq ($(platform), ps3)
-   TARGET = $(TARGET_NAME)_libretro_ps3.a
+   TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
     
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
@@ -174,7 +174,7 @@ else ifeq ($(platform), sncps3)
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
    STATIC_LINKING = 1
 else ifeq ($(platform), psl1ght)
-   TARGET = $(TARGET_NAME)_libretro_psl1ght.a
+   TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
     
    CC = $(PS3DEV)/ppu/bin/ppu-gcc$
@@ -182,7 +182,7 @@ else ifeq ($(platform), psl1ght)
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
    STATIC_LINKING = 1
 else ifeq ($(platform), psp1)
-	TARGET = $(TARGET_NAME)_libretro_psp1.a
+	TARGET = $(TARGET_NAME)_libretro_$(platform).a
 
 	CC = psp-gcc$(EXE_EXT)
 	AR = psp-ar$(EXE_EXT)
@@ -191,7 +191,7 @@ else ifeq ($(platform), psp1)
    STATIC_LINKING = 1
 
 else ifeq ($(platform), vita)
-	TARGET = $(TARGET_NAME)_libretro_vita.a
+	TARGET = $(TARGET_NAME)_libretro_$(platform).a
 
 	CC = arm-vita-eabi-gcc$(EXE_EXT)
 	AR = arm-vita-eabi-ar$(EXE_EXT)
