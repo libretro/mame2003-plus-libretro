@@ -281,10 +281,10 @@ ifdef SYMBOLS
 
 # O3 optimisation causes issues on ARM
 else ifeq ($(ARM), 1)
-   CFLAGS += -DNDEBUG $(ARCH) -O2 -fomit-frame-pointer -fstrict-aliasing
+   CFLAGS += -DNDEBUG $(arch) -O2 -fomit-frame-pointer -fstrict-aliasing
 
 else
-   CFLAGS += -DNDEBUG $(ARCH) -O3 -fomit-frame-pointer -fstrict-aliasing
+   CFLAGS += -DNDEBUG $(arch) -O3 -fomit-frame-pointer -fstrict-aliasing
 endif
 
 # extra options needed *only* for the osd files
