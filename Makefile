@@ -101,7 +101,6 @@ else ifeq ($(platform), ctr)
    PLATCFLAGS += -march=armv6k -mtune=mpcore -mfloat-abi=hard -mfpu=vfp
    PLATCFLAGS += -Wall -mword-relocations
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
-   ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
    CPU_ARCH := arm
    STATIC_LINKING = 1
@@ -113,7 +112,6 @@ else ifeq ($(platform), rpi2)
    PLATCFLAGS += -Dstricmp=strcasecmp
    PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
-   ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
    ARM = 1
@@ -125,7 +123,6 @@ else ifeq ($(platform), rpi3)
    PLATCFLAGS += -Dstricmp=strcasecmp
    PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
-   ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
    ARM = 1
