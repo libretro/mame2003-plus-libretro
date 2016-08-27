@@ -193,7 +193,16 @@ else ifeq ($(platform), vita)
 	CC = arm-vita-eabi-gcc$(EXE_EXT)
 	AR = arm-vita-eabi-ar$(EXE_EXT)
 	PLATCFLAGS += -DVITA -Dstricmp=strcasecmp
-   STATIC_LINKING = 1
+	CFLAGS += -mthumb -mfloat-abi=hard -fsingle-precision-constant
+	CFLAGS += -Wall -mword-relocations
+	CFLAGS += -fomit-frame-pointer -ffast-math
+	CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+	HAVE_RZLIB := 1
+	DISABLE_ERROR_LOGGING := 1
+	ARM = 1
+	STATIC_LINKING := 1
+	SYMBOLS:=1
+	
 else ifneq (,$(findstring armv,$(platform)))
    TARGET = $(TARGET_NAME)_libretro.so
 

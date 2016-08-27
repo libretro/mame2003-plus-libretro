@@ -342,7 +342,7 @@ int png_read_file(mame_file *fp, struct png_info *p)
 
 	return 1;
 }
-
+#if !defined(VITA)
 int png_read_info(mame_file *fp, struct png_info *p)
 {
 	UINT32 chunk_length, chunk_type=0, chunk_crc, crc;
@@ -451,7 +451,7 @@ int png_read_info(mame_file *fp, struct png_info *p)
 	}
 	return res;
 }
-
+#endif
 /*	Expands a p->image from p->bit_depth to 8 bit */
 int png_expand_buffer_8bit (struct png_info *p)
 {
