@@ -3,12 +3,15 @@ MAME as it was in 2003, and using the libretro API. Accepts romset **MAME 0.78**
 
 Suitable for lower-end devices that would struggle to run current versions of MAME (later versions of MAME are increasingly accurate, thus can perform worse).
 
+Has support for a single mouse (or touch device) in games that support trackpads, etc (via the "Mouse Device" core option)
+Supports one or two spinners/dials (via the "Share 2 player dial controls across one X/Y device" core option)
+
 Tested for OS X, linux (including Raspberry Pi 2, 3), Wii, and Android (arm-v7a).
 
 ### Directories
 Generates directories as it requires:
 * User-generated content are in sub-directories within `/libretro savefile dir/mame2003/` e.g.:
-````
+```
 /libretro savefile dir/mame2003/diff/
 /libretro savefile dir/mame2003/nvram/
 /libretro savefile dir/mame2003/hi/
@@ -16,22 +19,47 @@ Generates directories as it requires:
 /libretro savefile dir/mame2003/inp/
 /libretro savefile dir/mame2003/memcard/
 /libretro savefile dir/mame2003/snap/
-````
+```
 * .dat files should be placed within `/libretro system dir/mame2003/` e.g.:
 ```
 /libretro system dir/mame2003/hiscore.dat
 /libretro system dir/mame2003/cheat.dat
 /libretro system dir/mame2003/history.dat
-````
+```
 * Static data should be placed in subdirectories within `/libretro system dir/mame2003/` e.g.:
-````
+```
 /libretro system dir/mame2003/samples/
-````
+```
+* .chd images should be placed in subdirectories within the `/libretro content dir/` ROM directory e.g.:
+```
+/libretro content dir/blitz/blitz.chd
+```
+
+### Core options
+* **Frameskip** (0-5)
+* **DCS Speedhack** (enabled/disabled)
+  Speedhack for the Midway sound hardware used in Mortal Kombat 2, 3 and others. Improves performance in these games.
+* **Skip Disclaimer** (enabled/disabled)
+  Skips the 'nag-screen'.
+* **Skip Warnings** (disabled/enabled)
+  Skips the warning screen shown before games with incomplete emulation.
+* **Samples** (enabled/disabled)
+  Requires valid sample zips.
+* **Sample Rate (KHz)** (11025-48000)
+  Lowering may improve performance on weaker devices
+* **Cheats** (disabled/enabled)
+  Requires a valid cheat.dat file.
+* **Share 2 player dial controls across one X/Y device** (disabled/enabled)
+  Some dial/spinner hardware are actually one device with one axis for each player. This supports that setup, by breaking down the normal mouse x/y into two seperate inputs.
+* **Mouse Device** (mouse/pointer/disabled)
+  Switch between mouse (e.g. hardware mouse, trackball, etc), pointer (touchpad, touchscreen, lightgun, etc), or disabled.
 
 ### To-do:
 * Make sure all of the mkdir commands in makefile complete before any compiling starts.
 * Input Descriptors (for use in Core Input Remapping).
 * Expose all MAME options as Core Options (including various vector game-specific options)
+* Artwork support.
+* High-resolution in vector games (currently limited to 640x480).
 * Lots more.
 
 ### Notes:
@@ -44,3 +72,4 @@ Generates directories as it requires:
 http://www.anthrofox.org/code/mame/index.html
 https://code.oregonstate.edu/svn/dsp_bd/uclinux-dist/trunk/user/games/xmame/xmame-0.106/src/unix/contrib/patches/word-align-patch
 http://www.filewatcher.com/b/ftp/ftp.zenez.com/pub/mame/xmame.0.0.html
+https://github.com/RetroPie/RetroPie-Setup/wiki/lr-mame2003
