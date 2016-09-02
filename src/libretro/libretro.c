@@ -54,6 +54,11 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
       { "mame2003-cheats", "Cheats; disabled|enabled" },
       { "mame2003-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
+#if defined(__IOS__)
+      { "mame2003-mouse_device", "Mouse Device; pointer|mouse|disabled" },
+#else
+      { "mame2003-mouse_device", "Mouse Device; mouse|pointer|disabled" },
+#endif
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -133,7 +138,10 @@ extern int retroJsState[72];
 
 extern int16_t mouse_x[4];
 extern int16_t mouse_y[4];
+int16_t prev_pointer_x;
+int16_t prev_pointer_y;
 extern int16_t analogjoy[4][4];
+
 extern struct osd_create_params videoConfig;
 
 unsigned retroColorMode;
@@ -182,6 +190,7 @@ unsigned skip_warnings = 0;
 unsigned samples = 0;
 unsigned cheats = 0;
 unsigned dial_share_xy = 0;
+unsigned mouse_device = 0;
 
 static void update_variables(void)
 {
@@ -280,6 +289,21 @@ static void update_variables(void)
     }
     else
         dial_share_xy = 0;
+   
+   var.value = NULL;
+   var.key = "mame2003-mouse_device";
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "pointer") == 0)
+         mouse_device = RETRO_DEVICE_POINTER;
+      else if(strcmp(var.value, "mouse") == 0)
+         mouse_device = RETRO_DEVICE_MOUSE;
+      else
+         mouse_device = 0;
+   }
+   else
+      mouse_device = 0;
 }
 
 static void check_system_specs(void)
@@ -318,10 +342,31 @@ void retro_reset (void)
     machine_reset();
 }
 
+/* get pointer axis vector from coord */
+int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
+{
+   int16_t delta = 0;
+   if (*prev_coord == 0 || coord == 0)
+   {
+      *prev_coord = coord;
+   }
+   else
+   {
+      if (coord != *prev_coord)
+      {
+         delta = coord - *prev_coord;
+         *prev_coord = coord;
+      }
+   }
+   
+   return delta;
+}
+
 void retro_run (void)
 {
    int i, j;
    int *jsState;
+   bool pointer_pressed;
    const struct KeyboardInfo *thisInput;
    bool updated = false;
 
@@ -342,21 +387,31 @@ void retro_run (void)
    for (i = 0; i < 4; i ++)
    {
       /* Joystick */
-       for (j = 0; j < 16; j ++) {
-          *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
-       }
-       
-
+      for (j = 0; j < 16; j ++) {
+         *jsState++ = input_cb(i, RETRO_DEVICE_JOYPAD, 0, j);
+      }
+      
       /* Mouse
        * Currently libretro only supports 1 mouse, so port is hard-coded.
        * MAME seems to support 4 mice/trackballs, so could be changed
        * in the future. */
-      if (i == 0)
+      if (i == 0 && mouse_device)
       {
-         *jsState++ = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
-         *jsState++ = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
-         mouse_x[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-         mouse_y[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+         if (mouse_device == RETRO_DEVICE_MOUSE)
+         {
+            *jsState++ = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
+            *jsState++ = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
+            mouse_x[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
+            mouse_y[i] = input_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
+         }
+         else // RETRO_DEVICE_POINTER
+         {
+            pointer_pressed = input_cb(0, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
+            *jsState++ = pointer_pressed;
+            *jsState++ = 0; // padding
+            mouse_x[i] = pointer_pressed ? get_pointer_delta(input_cb(0, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
+            mouse_y[i] = pointer_pressed ? get_pointer_delta(input_cb(0, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
+         }
       }
       else
       {
