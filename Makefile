@@ -102,7 +102,6 @@ else ifeq ($(platform), ctr)
    PLATCFLAGS += -march=armv6k -mtune=mpcore -mfloat-abi=hard -mfpu=vfp
    PLATCFLAGS += -Wall -mword-relocations
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
-   ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
    CPU_ARCH := arm
    STATIC_LINKING = 1
@@ -114,7 +113,6 @@ else ifeq ($(platform), rpi2)
    PLATCFLAGS += -Dstricmp=strcasecmp
    PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
-   ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
    ARM = 1
@@ -126,7 +124,6 @@ else ifeq ($(platform), rpi3)
    PLATCFLAGS += -Dstricmp=strcasecmp
    PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
-   ENDIANNESS_DEFINES:=-DLSB_FIRST
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
    CPU_ARCH := arm
    ARM = 1
@@ -197,7 +194,16 @@ else ifeq ($(platform), vita)
 	CC = arm-vita-eabi-gcc$(EXE_EXT)
 	AR = arm-vita-eabi-ar$(EXE_EXT)
 	PLATCFLAGS += -DVITA -Dstricmp=strcasecmp
-   STATIC_LINKING = 1
+	CFLAGS += -mthumb -mfloat-abi=hard -fsingle-precision-constant
+	CFLAGS += -Wall -mword-relocations
+	CFLAGS += -fomit-frame-pointer -ffast-math
+	CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
+	HAVE_RZLIB := 1
+	DISABLE_ERROR_LOGGING := 1
+	ARM = 1
+	STATIC_LINKING := 1
+	SYMBOLS:=1
+	
 else ifneq (,$(findstring armv,$(platform)))
    TARGET = $(TARGET_NAME)_libretro.so
 

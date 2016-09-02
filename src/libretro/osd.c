@@ -106,6 +106,8 @@ int osd_create_directory(const char *dir)
 			/* don't care if already exists) */
 #if defined(_WIN32)
 			int mkdirok = _mkdir(dir);
+#elif defined(VITA) || defined(PSP)
+			int mkdirok = sceIoMkdir(dir, 0777);
 #else 
 			int mkdirok = mkdir(dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
