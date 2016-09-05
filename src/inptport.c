@@ -190,7 +190,7 @@ const char ipdn_defaultstrings[][MAX_DEFSTR_LEN] =
 
 struct ipd inputport_defaults[] =
 {
-	{ IPT_UI_CONFIGURE,         "Config Menu",			SEQ_DEF_3(KEYCODE_TAB, CODE_OR, JOYCODE_1_BUTTON8) },
+	{ IPT_UI_CONFIGURE,         "Config Menu",			SEQ_DEF_1(KEYCODE_TAB) },
 	{ IPT_UI_ON_SCREEN_DISPLAY, "On Screen Display",	SEQ_DEF_1(KEYCODE_TILDE) },
 	{ IPT_UI_PAUSE,             "Pause",				SEQ_DEF_1(KEYCODE_P) },
 	{ IPT_UI_RESET_MACHINE,     "Reset Game",			SEQ_DEF_1(KEYCODE_F3) },
@@ -209,8 +209,8 @@ struct ipd inputport_defaults[] =
 	{ IPT_UI_DOWN,              "UI Down",				SEQ_DEF_3(KEYCODE_DOWN, CODE_OR, JOYCODE_1_DOWN) },
 	{ IPT_UI_LEFT,              "UI Left",				SEQ_DEF_3(KEYCODE_LEFT, CODE_OR, JOYCODE_1_LEFT) },
 	{ IPT_UI_RIGHT,             "UI Right",				SEQ_DEF_3(KEYCODE_RIGHT, CODE_OR, JOYCODE_1_RIGHT) },
-	{ IPT_UI_SELECT,            "UI Select",			SEQ_DEF_3(KEYCODE_ENTER, CODE_OR, JOYCODE_1_BUTTON1) },
-	{ IPT_UI_CANCEL,            "UI Cancel",			SEQ_DEF_1(KEYCODE_ESC) },
+	{ IPT_UI_SELECT,            "UI Select",			SEQ_DEF_3(KEYCODE_ENTER, CODE_OR, JOYCODE_1_BUTTON4) },
+	{ IPT_UI_CANCEL,            "UI Cancel",			SEQ_DEF_3(KEYCODE_ESC, CODE_OR, JOYCODE_1_BUTTON1) },
 	{ IPT_UI_PAN_UP,            "Pan Up",				SEQ_DEF_3(KEYCODE_PGUP, CODE_NOT, KEYCODE_LSHIFT) },
 	{ IPT_UI_PAN_DOWN,          "Pan Down",				SEQ_DEF_3(KEYCODE_PGDN, CODE_NOT, KEYCODE_LSHIFT) },
 	{ IPT_UI_PAN_LEFT,          "Pan Left",				SEQ_DEF_2(KEYCODE_PGUP, KEYCODE_LSHIFT) },
