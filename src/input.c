@@ -744,8 +744,12 @@ int seq_read_async(InputSeq* seq, int first)
 {
 	InputCode newkey;
 
-	if (input_ui_pressed(IPT_UI_CANCEL))
-		return 1;
+    /* Ignore UI_CANCEL when rebinding as you may want to rebind
+       the key/button that UI_CANCEL is bound to, especially in RETROPAD-only
+       environments.
+     */
+	//if (input_ui_pressed(IPT_UI_CANCEL))
+	//	return 1;
 
 	if (record_count == SEQ_MAX
 		|| (record_count > 0 && clock() > record_last + RECORD_TIME))	{
