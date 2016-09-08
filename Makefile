@@ -1,9 +1,3 @@
-# compiler, linker and utilities
-AR = @ar
-CC = @gcc
-LD = @gcc
-RM = @rm -f
-
 CORE_DIR := src
 TARGET_NAME := mame2003
 
@@ -199,7 +193,6 @@ else ifeq ($(platform), vita)
 	CFLAGS += -fomit-frame-pointer -ffast-math
 	CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
 	HAVE_RZLIB := 1
-	DISABLE_ERROR_LOGGING := 1
 	ARM = 1
 	STATIC_LINKING := 1
 	SYMBOLS:=1
@@ -222,8 +215,13 @@ else ifeq ($(platform), gcw0)
 	LIBS := -lc -lgcc
 	fpic := -fPIC -nostdlib
 	LIBM :=
-	CFLAGS += -DFAMEC_NO_GOTOS
 	CFLAGS += -lm -march=mips32 -mtune=mips32r2 -mhard-float
+
+else ifeq ($(platform), emscripten)
+	TARGET := $(TARGET_NAME)_libretro_$(platform).bc
+	HAVE_RZLIB := 1
+	STATIC_LINKING := 1
+   PLATCFLAGS += -Dstricmp=strcasecmp
 
 # Windows
 else
