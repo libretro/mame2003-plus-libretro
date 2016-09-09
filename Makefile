@@ -313,14 +313,10 @@ ifeq ($(STATIC_LINKING),1)
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),&& $(AR) q $@ $(OBJECTS))
 else
 	@echo Linking $@...
-ifeq ($(platform),win)	
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) -o $@ @$@.in $(LIBS)
 	@rm $@.in
-else
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
-endif
 endif
 
 %.o: %.c
