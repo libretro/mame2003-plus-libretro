@@ -191,12 +191,15 @@ else ifeq ($(platform), vita)
 	CFLAGS += -mthumb -mfloat-abi=hard -fsingle-precision-constant
 	CFLAGS += -Wall -mword-relocations
 	CFLAGS += -fomit-frame-pointer -ffast-math
+	CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables 
+	CFLAGS +=  -fno-optimize-sibling-calls
+	CFLAGS += -ftree-vectorize -funroll-loops -fno-short-enums
 	CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
 	HAVE_RZLIB := 1
 	ARM = 1
 	STATIC_LINKING := 1
-	SYMBOLS:=1
-	
+	SYMBOLS = 0
+		
 else ifneq (,$(findstring armv,$(platform)))
    TARGET = $(TARGET_NAME)_libretro.so
 
