@@ -141,6 +141,7 @@ else ifeq ($(platform), qnx)
    CC = qcc -Vgcc_ntoarmv7le
    AR = qcc -Vgcc_ntoarmv7le
    LD = QCC -Vgcc_ntoarmv7le
+
 else ifeq ($(platform), wii)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
@@ -149,6 +150,16 @@ else ifeq ($(platform), wii)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
    STATIC_LINKING = 1
+
+else ifeq ($(platform), wiiu)
+   TARGET = $(TARGET_NAME)_libretro_$(platform).a
+   BIGENDIAN = 1
+    
+   CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
+   AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
+   PLATCFLAGS += -DGEKKO -DWIIU -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   STATIC_LINKING = 1
+
 else ifeq ($(platform), ps3)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
