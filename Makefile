@@ -297,6 +297,9 @@ ifdef SYMBOLS
    CFLAGS += -O0 -Wall -Wno-unused -g
 
 # O3 optimisation causes issues on ARM
+else ifeq ($(platform), vita)
+   CFLAGS += -DNDEBUG -O3 -fomit-frame-pointer -fstrict-aliasing
+
 else ifeq ($(ARM), 1)
    CFLAGS += -DNDEBUG -O2 -fomit-frame-pointer -fstrict-aliasing
 
