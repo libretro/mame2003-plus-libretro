@@ -60,6 +60,7 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-mouse_device", "Mouse Device; mouse|pointer|disabled" },
 #endif
       { "mame2003-rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
+      { "mame2003-tate_mode", "TATE Mode; disabled|enabled" },
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -168,23 +169,6 @@ void retro_get_system_info(struct retro_system_info *info)
 
 int sample_rate;
 
-void retro_get_system_av_info(struct retro_system_av_info *info)
-{
-    const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
-    const bool rotated = ((orientation == ROT90) || (orientation == ROT270));
-    
-    const int width = rotated ? videoConfig.height : videoConfig.width;
-    const int height = rotated ? videoConfig.width : videoConfig.height;
-
-    info->geometry.base_width = width;
-    info->geometry.base_height = height;
-    info->geometry.max_width = width;
-    info->geometry.max_height = height;
-    info->geometry.aspect_ratio = rotated ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-    info->timing.fps = Machine->drv->frames_per_second;
-    info->timing.sample_rate = sample_rate;
-}
-
 extern int frameskip;
 unsigned skip_disclaimer = 0;
 unsigned skip_warnings = 0;
@@ -193,6 +177,7 @@ unsigned cheats = 0;
 unsigned dial_share_xy = 0;
 unsigned mouse_device = 0;
 unsigned rstick_to_btns = 0;
+unsigned tate_mode = 0;
 
 static void update_variables(void)
 {
@@ -319,6 +304,36 @@ static void update_variables(void)
    }
    else
       rstick_to_btns = 0;
+   
+   var.value = NULL;
+   var.key = "mame2003-tate_mode";
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         tate_mode = 1;
+      else
+         tate_mode = 0;
+   }
+   else
+      tate_mode = 0;
+}
+
+void retro_get_system_av_info(struct retro_system_av_info *info)
+{
+   const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
+   const bool rotated = ((orientation == ROT90) || (orientation == ROT270));
+   
+   const int width = rotated ? videoConfig.height : videoConfig.width;
+   const int height = rotated ? videoConfig.width : videoConfig.height;
+   
+   info->geometry.base_width = width;
+   info->geometry.base_height = height;
+   info->geometry.max_width = width;
+   info->geometry.max_height = height;
+   info->geometry.aspect_ratio = (rotated && !tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
+   info->timing.fps = Machine->drv->frames_per_second;
+   info->timing.sample_rate = sample_rate;
 }
 
 static void check_system_specs(void)

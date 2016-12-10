@@ -53,6 +53,8 @@ Generates directories as it requires:
   Some dial/spinner hardware are actually one device with one axis for each player. This supports that setup, by breaking down the normal mouse x/y into two seperate inputs.
 * **Mouse Device** (mouse/pointer/disabled)
   Switch between mouse (e.g. hardware mouse, trackball, etc), pointer (touchpad, touchscreen, lightgun, etc), or disabled.
+* **TATE Mode** (disabled/enabled)
+  Enable if rotating display for vertically oriented games (Pac-Man, Galaga, etc). Requires `video_allow_rotate = "false"` cfg setting in RetroArch.
 
 ### To-do:
 * Make sure all of the mkdir commands in makefile complete before any compiling starts.
