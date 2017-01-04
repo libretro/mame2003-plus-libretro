@@ -1047,14 +1047,14 @@ endif
 
 ifeq ($(HAS_Z80),1)
 SOURCES_C += $(CORE_DIR)/cpu/z80/z80.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/z80/z80dasm.c
 endif
 endif
 
 ifeq ($(HAS_ADSP2100),1)
 SOURCES_C += $(CORE_DIR)/cpu/adsp2100/adsp2100.c 
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/adsp2100/2100dasm.c
 endif
 endif
@@ -1063,7 +1063,7 @@ CPU=$(strip $(findstring Z180@,$(CPUS)))
 ifneq ($(CPU),)
 CPUDEFS += -DHAS_Z180=1
 SOURCES_C += $(CORE_DIR)/cpu/z180/z180.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/z180/z180dasm.c
 endif
 else
@@ -1088,7 +1088,7 @@ endif
 
 ifeq ($(HAS_8085),1)
 SOURCES_C += $(CORE_DIR)/cpu/i8085/i8085.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/i8085/8085dasm.c
 endif
 endif
@@ -1196,7 +1196,7 @@ endif
 
 ifeq ($(HAS_M6502_COMMON),1)
 SOURCES_C += $(CORE_DIR)/cpu/m6502/m6502.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/m6502/6502dasm.c
 endif
 endif
@@ -1206,7 +1206,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/h6280
 CPUDEFS += -DHAS_H6280=1
 SOURCES_C += $(CORE_DIR)/cpu/h6280/h6280.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/h6280/6280dasm.c
 endif
 else
@@ -1261,7 +1261,7 @@ endif
 
 ifeq ($(HAS_I86),1)
 SOURCES_C += $(CORE_DIR)/cpu/i86/i86.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/i86/i86dasm.c
 endif
 endif
@@ -1295,7 +1295,7 @@ endif
 
 ifeq ($(HAS_V30),1)
 SOURCES_C += $(CORE_DIR)/cpu/nec/nec.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/nec/necdasm.c
 endif
 endif
@@ -1360,7 +1360,7 @@ endif
 
 ifeq ($(HAS_I8039),1)
 SOURCES_C += $(CORE_DIR)/cpu/i8039/i8039.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/i8039/8039dasm.c
 endif
 endif
@@ -1370,7 +1370,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/i8x41
 CPUDEFS += -DHAS_I8X41=1
 SOURCES_C += $(CORE_DIR)/cpu/i8x41/i8x41.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/i8x41/8x41dasm.c
 endif
 else
@@ -1443,7 +1443,7 @@ endif
 
 ifeq ($(HAS_M6800COMMON),1)
 SOURCES_C += $(CORE_DIR)/cpu/m6800/m6800.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/m6800/6800dasm.c
 endif
 endif
@@ -1477,7 +1477,7 @@ endif
 
 ifeq ($(HAS_M6805),1)
 SOURCES_C += $(CORE_DIR)/cpu/m6805/m6805.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/m6805/6805dasm.c
 endif
 endif
@@ -1487,7 +1487,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/hd6309
 CPUDEFS += -DHAS_HD6309=1
 SOURCES_C += $(CORE_DIR)/cpu/hd6309/hd6309.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/hd6309/6309dasm.c
 endif
 else
@@ -1499,7 +1499,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/m6809
 CPUDEFS += -DHAS_M6809=1
 SOURCES_C += $(CORE_DIR)/cpu/m6809/m6809.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/m6809/6809dasm.c
 endif
 else
@@ -1511,7 +1511,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/konami
 CPUDEFS += -DHAS_KONAMI=1
 SOURCES_C += $(CORE_DIR)/cpu/konami/konami.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/konami/knmidasm.c
 endif
 else
@@ -1584,7 +1584,7 @@ ifeq ($(HAS_M68KCOMMON),1)
 SOURCES_C += $(CORE_DIR)/cpu/m68000/m68kops.c $(CORE_DIR)/cpu/m68000/m68kopac.c \
 				 $(CORE_DIR)/cpu/m68000/m68kopdm.c $(CORE_DIR)/cpu/m68000/m68kopnz.c \
 				 $(CORE_DIR)/cpu/m68000/m68kcpu.c $(CORE_DIR)/cpu/m68000/m68kmame.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/m68000/m68kdasm.c
 endif
 endif
@@ -1594,7 +1594,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/t11
 CPUDEFS += -DHAS_T11=1
 SOURCES_C += $(CORE_DIR)/cpu/t11/t11.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/t11/t11dasm.c
 endif
 else
@@ -1606,7 +1606,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/s2650
 CPUDEFS += -DHAS_S2650=1
 SOURCES_C += $(CORE_DIR)/cpu/s2650/s2650.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/s2650/2650dasm.c
 endif
 else
@@ -1633,7 +1633,7 @@ endif
 
 ifeq ($(HAS_TMS),1)
 SOURCES_C += $(CORE_DIR)/cpu/tms34010/tms34010.c $(CORE_DIR)/cpu/tms34010/34010fld.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/tms34010/34010dsm.c
 endif
 endif
@@ -1729,7 +1729,7 @@ endif
 
 ifeq ($(HAS_TMS9900),1)
 SOURCES_C += $(CORE_DIR)/cpu/tms9900/tms9900.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/tms9900/9900dasm.c
 endif
 endif
@@ -1739,7 +1739,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/z8000
 CPUDEFS += -DHAS_Z8000=1
 SOURCES_C += $(CORE_DIR)/cpu/z8000/z8000.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/z8000/8000dasm.c
 endif
 else
@@ -1751,7 +1751,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/tms32010
 CPUDEFS += -DHAS_TMS32010=1
 SOURCES_C += $(CORE_DIR)/cpu/tms32010/tms32010.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/tms32010/32010dsm.c
 endif
 else
@@ -1763,7 +1763,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/tms32025
 CPUDEFS += -DHAS_TMS32025=1
 SOURCES_C += $(CORE_DIR)/cpu/tms32025/tms32025.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/tms32025/32025dsm.c
 endif
 else
@@ -1775,7 +1775,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/tms32031
 CPUDEFS += -DHAS_TMS32031=1
 SOURCES_C += $(CORE_DIR)/cpu/tms32031/tms32031.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/tms32031/dis32031.c
 endif
 else
@@ -1787,7 +1787,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/ccpu
 CPUDEFS += -DHAS_CCPU=1
 SOURCES_C += $(CORE_DIR)/cpu/ccpu/ccpu.c $(CORE_DIR)/vidhrdw/cinemat_vidhrdw.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/ccpu/ccpudasm.c
 endif
 else
@@ -1800,7 +1800,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/mips
 CPUDEFS += -DHAS_PSXCPU=1
 SOURCES_C += $(CORE_DIR)/cpu/mips/psx_cpu.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/mips/mipsdasm.c
 endif
 else
@@ -1812,7 +1812,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/asap
 CPUDEFS += -DHAS_ASAP=1
 SOURCES_C += $(CORE_DIR)/cpu/asap/asap.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/asap/asapdasm.c
 endif
 else
@@ -1839,7 +1839,7 @@ endif
 
 ifeq ($(HAS_UPD7810),1)
 SOURCES_C += $(CORE_DIR)/cpu/upd7810/upd7810.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/upd7810/7810dasm.c
 endif
 endif
@@ -1849,7 +1849,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/arm
 CPUDEFS += -DHAS_ARM=1
 SOURCES_C += $(CORE_DIR)/cpu/arm/arm.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/arm/armdasm.c
 endif
 else
@@ -1861,7 +1861,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/jaguar
 CPUDEFS += -DHAS_JAGUAR=1
 SOURCES_C += $(CORE_DIR)/cpu/jaguar/jaguar.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/jaguar/jagdasm.c
 endif
 else
@@ -1873,7 +1873,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/r3000
 CPUDEFS += -DHAS_R3000=1
 SOURCES_C += $(CORE_DIR)/cpu/mips/r3000.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/mips/r3kdasm.c
 endif
 else
@@ -1903,7 +1903,7 @@ SOURCES_C += $(CORE_DIR)/cpu/mips/mips3drc.c
 else
 SOURCES_C += $(CORE_DIR)/cpu/mips/mips3.c
 endif
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/mips/mips3dsm.c
 endif
 endif
@@ -1913,7 +1913,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/sh2
 CPUDEFS += -DHAS_SH2=1
 SOURCES_C += $(CORE_DIR)/cpu/sh2/sh2.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/sh2/sh2dasm.c
 endif
 else
@@ -1925,7 +1925,7 @@ ifneq ($(CPU),)
 OBJDIRS += $(CORE_DIR)/cpu/dsp32
 CPUDEFS += -DHAS_DSP32C=1
 SOURCES_C += $(CORE_DIR)/cpu/dsp32/dsp32.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/dsp32/dsp32dis.c
 endif
 else
@@ -1979,7 +1979,7 @@ endif
 
 ifeq ($(HAS_PIC16C58),1)
 SOURCES_C += $(CORE_DIR)/cpu/pic16c5x/pic16c5x.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/pic16c5x/16c5xdsm.c
 endif
 endif
@@ -2014,7 +2014,7 @@ CPU=$(strip $(findstring E132XS@,$(CPUS)))
 ifneq ($(CPU),)
 CPUDEFS += -DHAS_E132XS=1
 SOURCES_C += $(CORE_DIR)/cpu/e132xs/e132xs.c
-ifeq ($(DEBUG),1)
+ifeq ($(DEBUGGER),1)
 SOURCES_C += $(CORE_DIR)/cpu/e132xs/32xsdasm.c
 endif
 else
