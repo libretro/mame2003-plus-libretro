@@ -1,3 +1,5 @@
+DEBUG=0
+DEBUGGER=0
 CORE_DIR := src
 TARGET_NAME := mame2003
 
@@ -209,7 +211,7 @@ else ifeq ($(platform), vita)
 	HAVE_RZLIB := 1
 	ARM = 1
 	STATIC_LINKING := 1
-	SYMBOLS = 0
+	DEBUG = 0
 		
 else ifneq (,$(findstring armv,$(platform)))
    TARGET = $(TARGET_NAME)_libretro.so
@@ -260,12 +262,6 @@ PLATCFLAGS += $(fpic)
 CFLAGS += -D__LIBRETRO__ -DPI=3.1415927
 LDFLAGS += $(LIBM)
 
-# uncomment next line to include the debugger
-# DEBUG = 1
-
-# uncomment next line to include the symbols for symify
-# SYMBOLS = 1
-
 # uncomment next line to use Assembler 68000 engine
 # X86_ASM_68000 = 1
 
@@ -293,7 +289,7 @@ CFLAGS += -Wall -Wno-sign-compare -Wunused \
 	-Wdisabled-optimization
 endif
 
-ifdef SYMBOLS
+ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -Wall -Wno-unused -g
 
 # O3 optimisation causes issues on ARM
