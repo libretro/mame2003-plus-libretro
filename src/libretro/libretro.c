@@ -497,6 +497,9 @@ void retro_run (void)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
+   if (!game)
+      return false;
+
     // Find game index
     driverIndex = getDriverIndex(game->path);
     
