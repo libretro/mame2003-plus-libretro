@@ -3,6 +3,11 @@ DEBUGGER=0
 CORE_DIR := src
 TARGET_NAME := mame2003
 
+GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
+ifneq ($(GIT_VERSION)," unknown")
+	CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
+endif
+
 ifeq ($(platform),)
 platform = unix
 ifeq ($(shell uname -a),)
