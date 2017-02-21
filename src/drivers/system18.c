@@ -661,7 +661,7 @@ static MACHINE_DRIVER_START( system18 )
 	MDRV_CPU_MEMORY(sound_readmem_18,sound_writemem_18)
 	MDRV_CPU_PORTS(sound_readport_18,sound_writeport_18)
 
-	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_FRAMES_PER_SECOND(57.23)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	/* video hardware */
