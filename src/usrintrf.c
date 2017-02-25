@@ -3853,9 +3853,11 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 
 	/* if the user pressed ESC, stop the emulation */
 	/* but don't quit if the setup menu is on screen */
+#ifndef __LIBRETRO__ // libretro handles quits, so ignore.
 	if (setup_selected == 0 && input_ui_pressed(IPT_UI_CANCEL))
 		return 1;
-
+#endif
+    
 	if (setup_selected == 0 && input_ui_pressed(IPT_UI_CONFIGURE))
 	{
 		setup_selected = -1;
