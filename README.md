@@ -56,22 +56,25 @@ Generates directories as it requires:
 * **TATE Mode** (disabled/enabled)
   Enable if rotating display for vertically oriented games (Pac-Man, Galaga, etc). Requires `video_allow_rotate = "false"` cfg setting in RetroArch.
 
-### To-do:
+## Additional configuration information:
+ * RetroPie publishes [a detailed MAME 2003 configuration wiki](https://github.com/RetroPie/RetroPie-Setup/wiki/lr-mame2003) which can be adapted for use in other environments.
+ 
+ 
+## Development todo:
 * Make sure all of the mkdir commands in makefile complete before any compiling starts.
 * Input Descriptors (for use in Core Input Remapping).
 * Expose all MAME options as Core Options (including various vector game-specific options)
 * Artwork support.
 * High-resolution in vector games (currently limited to 640x480).
-* Lots more.
+* Lots more - contributions are welcome!
 
 ### Notes:
-* Will have errors on 64-bit platforms.
+* Will have errors on 64-bit platforms. See [Debugging xmame Segfaults on X86-64](http://www.anthrofox.org/code/mame/64bitclean/index.html) at anthrofox.org
 * Will have errors on platforms without unaligned memory access support.
 * When using concurrent building you may get an error that it can't create certain object files, just rerun make if it happens.
 * To run on Wii's memory constraints some drivers in src/driver.c must be removed.
 
-### Links to consult:
-http://www.anthrofox.org/code/mame/index.html
-https://code.oregonstate.edu/svn/dsp_bd/uclinux-dist/trunk/user/games/xmame/xmame-0.106/src/unix/contrib/patches/word-align-patch
-http://www.filewatcher.com/b/ftp/ftp.zenez.com/pub/mame/xmame.0.0.html
-https://github.com/RetroPie/RetroPie-Setup/wiki/lr-mame2003
+### Development reference links:
+ * [MAME: Benchmarks, Useful Code, Bug Fixes, Known Issues](http://www.anthrofox.org/code/mame/index.html) at anthrofox.org
+ * [diff file which records efforts taken to address the unaligned memory issue](https://code.oregonstate.edu/svn/dsp_bd/uclinux-dist/trunk/user/games/xmame/xmame-0.106/src/unix/contrib/patches/word-align-patch)
+ * [Directory of xmame diffs](http://web.archive.org/web/20090718202532/http://www.filewatcher.com/b/ftp/ftp.zenez.com/pub/mame/xmame.0.0.html) - Offline as of March 2017
