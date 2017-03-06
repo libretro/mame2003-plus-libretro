@@ -50,7 +50,7 @@ Generates directories as it requires:
 * **Cheats** (disabled/enabled)
   Requires a valid cheat.dat file.
 * **Share 2 player dial controls across one X/Y device** (disabled/enabled)
-  Some dial/spinner hardware are actually one device with one axis for each player. This supports that setup, by breaking down the normal mouse x/y into two seperate inputs.90
+  Some dial/spinner hardware are actually one device with one axis for each player. This supports that setup, by breaking down the normal mouse x/y into two seperate inputs.
 * **Mouse Device** (mouse/pointer/disabled)
   Switch between mouse (e.g. hardware mouse, trackball, etc), pointer (touchpad, touchscreen, lightgun, etc), or disabled.
 * **TATE Mode** (disabled/enabled)
