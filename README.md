@@ -20,7 +20,7 @@ MAME 2003 also supports one or two spinners/dials via the "Share 2 player dial c
 ```
 /libretro system dir/mame2003/samples/
 ```
-* High score, cheat, and history metadata files should be moved from github's `https://github.com/libretro/mame2003-libretro/tree/master/metadata` and placed within `/libretro system dir/mame2003/` e.g.:
+* High score, cheat, and history metadata files should be moved from github's [`/libretro/mame2003-libretro/tree/master/metadata`](https://github.com/libretro/mame2003-libretro/tree/master/metadata) and placed within `/libretro system dir/mame2003/` e.g.:
 ```
 /libretro system dir/mame2003/hiscore.dat
 /libretro system dir/mame2003/cheat.dat
