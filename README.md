@@ -1,16 +1,32 @@
 # mame2003-libretro
-MAME as it was in 2003, and using the libretro API. Accepts romset **MAME 0.78**. Any file-not-found issues will be because your romset is wrong, or incomplete (e.g. you're trying to run a clone .zip, without the parent .zip present).
+MAME as it was in 2003, using the libretro API. Suitable for lower-end devices that would struggle to run current versions of MAME (later versions of MAME are increasingly accurate, thus can perform worse).
 
-Suitable for lower-end devices that would struggle to run current versions of MAME (later versions of MAME are increasingly accurate, thus can perform worse).
+## ROMset compatibility with MAME 2003
+**The MAME 2003 core accepts MAME 0.78 ROMsets.** Each version of an arcade emulator must be used with ROMs that have the same exact version number. For example, MAME 0.37b5 ROMsets are required by the MAME 2000 emulator, but MAME 0.37b5 sets will not work correctly with the MAME 2003 or MAME 2010 emulator cores. Those cores require MAME 0.78 and MAME 0.139 ROM sets, respectively.
 
-Has support for a single mouse (or touch device) in games that support trackpads, etc (via the "Mouse Device" core option)
-Supports one or two spinners/dials (via the "Share 2 player dial controls across one X/Y device" core option)
+File-not-found errors are the result of a ROMset that is wrong or incomplete, including if you're trying to run a "Split" clone .zip without the parent .zip present. Non-Merged MAME0.78 ROMsets do not require parent .zips to be present.
 
-Tested for OS X, linux (including Raspberry Pi 2, 3), Wii, and Android (arm-v7a).
+## Multiple lightgun, steering wheel, and "spinner/dial" devices
+MAME 2003 has support for multiple mice or touch devices in games that support trackballs, etc.
 
-### Directories
-Generates directories as it requires:
-* User-generated content are in sub-directories within `/libretro savefile dir/mame2003/` e.g.:
+MAME 2003 also supports one or two spinners/dials via the "Share 2 player dial controls across one X/Y device" core option.
+
+## Directories
+* Some MAME games require data from an internal hard drive, CD-ROM, laserdisk, or other media in order to be emulated -- those forms of media are packaged as CHD files. CHD files should be copied to subfolders within the folder where the MAME ROM zips have been installed. e.g.:
+```
+/libretro content dir/blitz/blitz.chd
+```
+* Some games require an additional zip file with recorded sounds or music in order for audio to work correctly. Audio 'sample' files should be placed in subdirectories within `/libretro system dir/mame2003/` e.g.:
+```
+/libretro system dir/mame2003/samples/
+```
+* High score, cheat, and history metadata files should be moved from github's [`/libretro/mame2003-libretro/tree/master/metadata`](https://github.com/libretro/mame2003-libretro/tree/master/metadata) and placed within `/libretro system dir/mame2003/` e.g.:
+```
+/libretro system dir/mame2003/hiscore.dat
+/libretro system dir/mame2003/cheat.dat
+/libretro system dir/mame2003/history.dat
+```
+* User-generated content is placed in sub-directories within `/libretro savefile dir/mame2003/` e.g.:
 ```
 /libretro savefile dir/mame2003/diff/
 /libretro savefile dir/mame2003/nvram/
@@ -19,20 +35,6 @@ Generates directories as it requires:
 /libretro savefile dir/mame2003/inp/
 /libretro savefile dir/mame2003/memcard/
 /libretro savefile dir/mame2003/snap/
-```
-* .dat files should be placed within `/libretro system dir/mame2003/` e.g.:
-```
-/libretro system dir/mame2003/hiscore.dat
-/libretro system dir/mame2003/cheat.dat
-/libretro system dir/mame2003/history.dat
-```
-* Static data should be placed in subdirectories within `/libretro system dir/mame2003/` e.g.:
-```
-/libretro system dir/mame2003/samples/
-```
-* .chd images should be placed in subdirectories within the `/libretro content dir/` ROM directory e.g.:
-```
-/libretro content dir/blitz/blitz.chd
 ```
 
 ### Core options
