@@ -1,8 +1,9 @@
 INCFLAGS := -I$(CORE_DIR) \
 				-I$(CORE_DIR)/includes \
 				-I$(CORE_DIR)/libretro \
+				-I$(CORE_DIR)/libretro/includes/zlib
 				-I$(CORE_DIR)/cpu/m68000 \
-				-I$(CORE_DIR)/cpu/m68000
+				-I$(CORE_DIR)/cpu/m68000 \
 
 ifneq (,$(findstring msvc,$(platform)))
 COREDEFINES := -DINLINE="static _inline"
@@ -2579,7 +2580,6 @@ SOUNDDEFS += -DHAS_YMF271=0
 endif
 
 ifeq ($(STATIC_LINKING),1)
-INCFLAGS += -I$(CORE_DIR)/libretro/includes/zlib
 else
 SOURCES_C += $(CORE_DIR)/../deps/zlib/adler32.c \
 				 $(CORE_DIR)/../deps/zlib/compress.c \
