@@ -38,7 +38,7 @@ else ifneq ($(findstring MINGW,$(shell uname -a)),)
 endif
 
 
-LIBM := -lm
+LIBS := -lm
 
 ifeq ($(platform), unix)
    TARGET = $(TARGET_NAME)_libretro.so
@@ -54,7 +54,7 @@ else ifeq ($(platform), linux-portable)
 
    CFLAGS += $(fpic)
    PLATCFLAGS += -Dstricmp=strcasecmp
-	LIBM :=
+	LIBS =
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 
 else ifeq ($(platform), osx)
@@ -237,7 +237,7 @@ else ifeq ($(platform), gcw0)
 	PLATCFLAGS += -Dstricmp=strcasecmp
 	LIBS := -lc -lgcc
 	fpic := -fPIC -nostdlib
-	LIBM :=
+	LIBS =
 	CFLAGS += -lm -march=mips32 -mtune=mips32r2 -mhard-float
 
 else ifeq ($(platform), emscripten)
@@ -269,6 +269,7 @@ export LIB := $(LIB);$(WindowsSdkDir)
 TARGET := $(TARGET_NAME)_libretro.dll
 PSS_STYLE :=2
 LDFLAGS += -DLL
+LIBS =
 # Windows MSVC 2010 x86
 else ifeq ($(platform), windows_msvc2010_x86)
 	CC  = cl.exe
@@ -292,8 +293,7 @@ export LIB := $(LIB);$(WindowsSdkDir)
 TARGET := $(TARGET_NAME)_libretro.dll
 PSS_STYLE :=2
 LDFLAGS += -DLL
-
-
+LIBS =
 # Windows
 else
    TARGET := $(TARGET_NAME)_libretro.dll
@@ -313,8 +313,6 @@ ifeq ($(ARM), 1)
 endif
 
 PLATCFLAGS += $(fpic)
-
-LDFLAGS += $(LIBM)
 
 # uncomment next line to use Assembler 68000 engine
 # X86_ASM_68000 = 1
