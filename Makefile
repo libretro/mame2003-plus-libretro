@@ -341,7 +341,11 @@ endif
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -Wall -Wno-unused -g
 else
-   CFLAGS += -DNDEBUG -O2 -fomit-frame-pointer -fstrict-aliasing
+   CFLAGS += -O2 -DNDEBUG
+endif
+
+ifneq (,$(findstring msvc,$(platform)))
+   CFLAGS += -fomit-frame-pointer -fstrict-aliasing
 endif
 
 # extra options needed *only* for the osd files
