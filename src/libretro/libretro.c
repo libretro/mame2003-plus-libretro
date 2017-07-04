@@ -417,13 +417,13 @@ void retro_run (void)
    
    for (i = 0; i < 4; i ++)
    {
+      unsigned int offset = (i * 18);
+
       /* Analog joystick */
       analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X);
       analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y);
       analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
       analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
-      
-      unsigned int offset = (i * 18);
       
       /* Joystick */
       if (rstick_to_btns)
@@ -501,10 +501,11 @@ bool retro_load_game(const struct retro_game_info *game)
     
     if(driverIndex)
     {
-        fallbackDir = strdup(game->path);
         int orientation;
         unsigned rotateMode;
         static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
+
+        fallbackDir = strdup(game->path);
         
         /* Get system directory from frontend */
         environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&systemDir);
