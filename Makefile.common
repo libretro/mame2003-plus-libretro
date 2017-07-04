@@ -1,9 +1,8 @@
 INCFLAGS := -I$(CORE_DIR) \
 				-I$(CORE_DIR)/includes \
 				-I$(CORE_DIR)/libretro \
-				-I$(CORE_DIR)/libretro/includes/zlib
-				-I$(CORE_DIR)/cpu/m68000 \
-				-I$(CORE_DIR)/cpu/m68000 \
+				-I$(CORE_DIR)/libretro/includes/zlib \
+				-I$(CORE_DIR)/cpu/m68000
 
 ifneq (,$(findstring msvc,$(platform)))
 COREDEFINES := -DINLINE="static _inline"
