@@ -391,6 +391,11 @@ ifeq ($(platform),win)
 	$(file >$@.in,$(OBJECTS))
 	$(LD) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
 	@rm $@.in
+else ifeq (,$(findstring msvc,$(platform)))
+	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
+	$(file >$@.in,$(OBJECTS))
+	$(LD) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
+	@rm $@.in
 else
 	$(LD) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) $(LINKOUT)$@ $(OBJECTS) $(LIBS)
 endif
