@@ -344,7 +344,7 @@ else
    CFLAGS += -O2 -DNDEBUG
 endif
 
-ifneq (,$(findstring msvc,$(platform)))
+ifeq (,$(findstring msvc,$(platform)))
    CFLAGS += -fomit-frame-pointer -fstrict-aliasing
 endif
 
