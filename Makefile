@@ -329,11 +329,13 @@ RETRO_PROFILE = 0
 CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
 
 ifneq ($(platform), sncps3)
+ifneq (,$(findstring msvc,$(platform)))
 CFLAGS += -Wall -Wno-sign-compare -Wunused \
 	-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
 	-Wshadow -Wstrict-prototypes \
 	-Wformat-security -Wwrite-strings \
 	-Wdisabled-optimization
+endif
 endif
 
 ifeq ($(DEBUG), 1)
