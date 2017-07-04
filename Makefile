@@ -246,6 +246,54 @@ else ifeq ($(platform), emscripten)
 	STATIC_LINKING := 1
    PLATCFLAGS += -Dstricmp=strcasecmp
 
+# Windows MSVC 2010 x64
+else ifeq ($(platform), windows_msvc2010_x64)
+	CC  = cl.exe
+	CXX = cl.exe
+
+PATH := $(shell IFS=$$'\n'; cygpath "$(VS100COMNTOOLS)../../VC/bin/amd64"):$(PATH)
+PATH := $(PATH):$(shell IFS=$$'\n'; cygpath "$(VS100COMNTOOLS)../IDE")
+LIB := $(shell IFS=$$'\n'; cygpath "$(VS100COMNTOOLS)../../VC/lib/amd64")
+INCLUDE := $(shell IFS=$$'\n'; cygpath "$(VS100COMNTOOLS)../../VC/include")
+
+WindowsSdkDir := $(shell reg query "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A" -v "InstallationFolder" | grep -o '[A-Z]:\\.*')lib/x64
+WindowsSdkDir ?= $(shell reg query "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1A" -v "InstallationFolder" | grep -o '[A-Z]:\\.*')lib/x64
+
+WindowsSdkDirInc := $(shell reg query "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A" -v "InstallationFolder" | grep -o '[A-Z]:\\.*')Include
+WindowsSdkDirInc ?= $(shell reg query "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1A" -v "InstallationFolder" | grep -o '[A-Z]:\\.*')Include
+
+
+INCFLAGS_PLATFORM = -I"$(WindowsSdkDirInc)"
+export INCLUDE := $(INCLUDE)
+export LIB := $(LIB);$(WindowsSdkDir)
+TARGET := $(TARGET_NAME)_libretro.dll
+PSS_STYLE :=2
+LDFLAGS += -DLL
+# Windows MSVC 2010 x86
+else ifeq ($(platform), windows_msvc2010_x86)
+	CC  = cl.exe
+	CXX = cl.exe
+
+PATH := $(shell IFS=$$'\n'; cygpath "$(VS100COMNTOOLS)../../VC/bin"):$(PATH)
+PATH := $(PATH):$(shell IFS=$$'\n'; cygpath "$(VS100COMNTOOLS)../IDE")
+LIB := $(shell IFS=$$'\n'; cygpath -w "$(VS100COMNTOOLS)../../VC/lib")
+INCLUDE := $(shell IFS=$$'\n'; cygpath "$(VS100COMNTOOLS)../../VC/include")
+
+WindowsSdkDir := $(shell reg query "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A" -v "InstallationFolder" | grep -o '[A-Z]:\\.*')lib
+WindowsSdkDir ?= $(shell reg query "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1A" -v "InstallationFolder" | grep -o '[A-Z]:\\.*')lib
+
+WindowsSdkDirInc := $(shell reg query "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A" -v "InstallationFolder" | grep -o '[A-Z]:\\.*')Include
+WindowsSdkDirInc ?= $(shell reg query "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1A" -v "InstallationFolder" | grep -o '[A-Z]:\\.*')Include
+
+
+INCFLAGS_PLATFORM = -I"$(WindowsSdkDirInc)"
+export INCLUDE := $(INCLUDE)
+export LIB := $(LIB);$(WindowsSdkDir)
+TARGET := $(TARGET_NAME)_libretro.dll
+PSS_STYLE :=2
+LDFLAGS += -DLL
+
+
 # Windows
 else
    TARGET := $(TARGET_NAME)_libretro.dll
@@ -266,7 +314,6 @@ endif
 
 PLATCFLAGS += $(fpic)
 
-CFLAGS += -D__LIBRETRO__ -DPI=3.1415927
 LDFLAGS += $(LIBM)
 
 # uncomment next line to use Assembler 68000 engine
@@ -277,13 +324,6 @@ LDFLAGS += $(LIBM)
 
 # uncomment next line to use DRC MIPS3 engine
 # X86_MIPS3_DRC = 1
-
-
-
-# build the targets in different object dirs, since mess changes
-# some structures and thus they can't be linked against each other.
-DEFS = -DINLINE="static __inline__" -Dasm=__asm__
-
 
 RETRO_PROFILE = 0
 CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
@@ -298,16 +338,8 @@ endif
 
 ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -Wall -Wno-unused -g
-
-# O3 optimisation causes issues on ARM
-else ifeq ($(platform), vita)
-   CFLAGS += -DNDEBUG -O3 -fomit-frame-pointer -fstrict-aliasing
-
-else ifeq ($(ARM), 1)
-   CFLAGS += -DNDEBUG -O2 -fomit-frame-pointer -fstrict-aliasing
-
 else
-   CFLAGS += -DNDEBUG -O3 -fomit-frame-pointer -fstrict-aliasing
+   CFLAGS += -DNDEBUG -O2 -fomit-frame-pointer -fstrict-aliasing
 endif
 
 # extra options needed *only* for the osd files
@@ -319,12 +351,27 @@ CFLAGSPEDANTIC = $(CFLAGS) -pedantic
 # include the various .mak files
 include Makefile.common
 
-CFLAGS += $(INCFLAGS)
+# build the targets in different object dirs, since mess changes
+# some structures and thus they can't be linked against each other.
+DEFS = $(COREDEFINES) -Dasm=__asm__
+
+CFLAGS += $(INCFLAGS) $(INCFLAGS_PLATFORM)
 
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 
 OBJECTS := $(SOURCES_C:.c=.o)
+
+OBJOUT   = -o
+LINKOUT  = -o 
+
+ifneq (,$(findstring msvc,$(platform)))
+	OBJOUT = -Fo
+	LINKOUT = -out:
+	LD = link.exe
+else
+	LD = $(CC)
+endif
 
 all:	$(TARGET)
 $(TARGET): $(OBJECTS)
@@ -336,15 +383,15 @@ else
 ifeq ($(platform),win)	
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) -o $@ @$@.in $(LIBS)
+	$(LD) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
 	@rm $@.in
 else
-	$(CC) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
+	$(LD) $(CDEFS) $(CFLAGSOSDEPEND) $(PLATCFLAGS) $(LDFLAGS) $(LINKOUT)$@ $(OBJECTS) $(LIBS)
 endif
 endif
 
 %.o: %.c
-	$(CC) $(CDEFS) $(CFLAGS) $(PLATCFLAGS) -c -o $@ $<
+	$(CC) $(CDEFS) $(CFLAGS) $(PLATCFLAGS) -c $(OBJOUT)$@ $<
 
 $(OBJ)/%.a:
 	@echo Archiving $@...

@@ -4,6 +4,13 @@ INCFLAGS := -I$(CORE_DIR) \
 				-I$(CORE_DIR)/cpu/m68000 \
 				-I$(CORE_DIR)/cpu/m68000
 
+ifneq (,$(findstring msvc,$(platform)))
+COREDEFINES := -DINLINE="static _inline"
+else
+COREDEFINES := -DINLINE="static __inline__"
+endif
+COREDEFINES += -D__LIBRETRO__ -DPI=3.1415927
+
 SOURCES_C := $(CORE_DIR)/libretro/libretro.c \
 				 $(CORE_DIR)/libretro/osd.c \
 				 $(CORE_DIR)/libretro/keyboard.c \
