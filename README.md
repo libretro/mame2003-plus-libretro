@@ -63,7 +63,6 @@ MAME 2003 also supports one or two spinners/dials via the "Share 2 player dial c
  
  
 ## Development todo:
-* Make sure all of the mkdir commands in makefile complete before any compiling starts.
 * Input Descriptors (for use in Core Input Remapping).
 * Expose all MAME options as Core Options (including various vector game-specific options)
 * Artwork support.
