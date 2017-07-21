@@ -21,22 +21,26 @@ else ifneq ($(findstring win,$(shell uname -a)),)
 endif
 endif
 
-# system platform
-system_platform = unix
-ifeq ($(shell uname -a),)
-	EXE_EXT = .exe
-	system_platform = win
-else ifneq ($(findstring Darwin,$(shell uname -a)),)
-	system_platform = osx
-ifeq ($(shell uname -p),powerpc)
-	arch = ppc
-else
-	arch = intel
-endif
-else ifneq ($(findstring MINGW,$(shell uname -a)),)
-	system_platform = win
+
+X86_ASM_68000 = # don't use x86 Assembler 68000 engine by default; set to 1 to enable
+X86_ASM_68020 = # don't use x86 Assembler 68020 engine by default; set to 1 to enable
+X86_MIPS3_DRC = # don't use x86 DRC MIPS3 engine by default;       set to 1 to enable
+
+ifeq ($(ARCH),)
+	# no architecture value passed make; try to determine host platform
+	UNAME_P = $(shell uname -p)
+	ifneq ($(findstring powerpc,$(UNAME_P)),)
+		ARCH = ppc
+	else ifneq ($(findstring x86_64,$(UNAME_P)),)
+		# catch "x86_64" first, but no commands for x86_x64 only at this point
+	else ifneq ($(findstring 86,$(UNAME_P)),)
+		ARCH = x86 # if "86" is found now it must be i386 or i686
+	endif
 endif
 
+ifeq ($(ARCH), x86)
+	X86_MIPS3_DRC = 1
+endif
 
 LIBS := -lm
 
@@ -60,7 +64,7 @@ else ifeq ($(platform), linux-portable)
 else ifeq ($(platform), osx)
    TARGET = $(TARGET_NAME)_libretro.dylib
    fpic = -fPIC
-ifeq ($(arch),ppc)
+ifeq ($(ARCH),ppc)
    BIGENDIAN = 1
    PLATCFLAGS += -D__ppc__ -D__POWERPC__
 endif
@@ -313,15 +317,6 @@ ifeq ($(ARM), 1)
 endif
 
 PLATCFLAGS += $(fpic)
-
-# uncomment next line to use Assembler 68000 engine
-# X86_ASM_68000 = 1
-
-# uncomment next line to use Assembler 68020 engine
-# X86_ASM_68020 = 1
-
-# uncomment next line to use DRC MIPS3 engine
-# X86_MIPS3_DRC = 1
 
 RETRO_PROFILE = 0
 CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
