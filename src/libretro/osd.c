@@ -151,10 +151,12 @@ Sound
 ******************************************************************************/
 
 static bool stereo;
+static float delta_samples;
 
 int osd_start_audio_stream(int aStereo)
 {
 	stereo = (aStereo != 0);
+	delta_samples = 0.0f;
 	return (Machine->sample_rate / Machine->drv->frames_per_second);
 }
 
@@ -174,7 +176,16 @@ int osd_update_audio_stream(INT16 *buffer)
 		}
 	}
 
-	return (Machine->sample_rate / Machine->drv->frames_per_second);
+	// Take care of fractional part
+	delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samplerate_buffer_size;
+	if (delta_samples >= 1.0f)
+	{
+		int integer_delta = (int)delta_samples;
+		samplerate_buffer_size += integer_delta;
+		delta_samples -= integer_delta;
+	}
+
+	return samplerate_buffer_size;
 }
 
 void osd_stop_audio_stream(void)
