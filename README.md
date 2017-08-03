@@ -59,7 +59,8 @@ MAME 2003 also supports one or two spinners/dials via the "Share 2 player dial c
   Enable if rotating display for vertically oriented games (Pac-Man, Galaga, etc). Requires `video_allow_rotate = "false"` cfg setting in RetroArch.
 
 ## Additional configuration information:
- * RetroPie publishes [a detailed MAME 2003 configuration wiki](https://github.com/RetroPie/RetroPie-Setup/wiki/lr-mame2003) which can be adapted for use in other environments.
+ * Official RetroArch documentation for the mame2003-libretro core are published at [buildbot.libretro.com/docs](https://buildbot.libretro.com/docs/). They can be [edited and improved by users via github.com](https://github.com/libretro/docs/blob/master/docs/library/mame2003.md).
+ * The RetroArch documentation owes much to RetroPie's [detailed MAME 2003 configuration wiki](https://github.com/RetroPie/RetroPie-Setup/wiki/lr-mame2003) which can be adapted for use in other environments.
  
  
 ## Development todo:
