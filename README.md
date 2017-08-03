@@ -64,13 +64,6 @@ MAME 2003 also supports one or two spinners/dials via the "Share 2 player dial c
 ## Additional configuration information:
  * RetroPie publishes [a detailed MAME 2003 configuration wiki](https://github.com/RetroPie/RetroPie-Setup/wiki/lr-mame2003) which can be adapted for use in other environments.
  
- ## Development todo:
-* Expose all MAME options as Core Options (including various vector game-specific options)
-
-### Notes:
-* Will have errors on platforms without unaligned memory access support.
-* When using concurrent building you may get an error that it can't create certain object files, just rerun make if it happens.
-
 ### Development reference links:
  * [MAME: Benchmarks, Useful Code, Bug Fixes, Known Issues](http://www.anthrofox.org/code/mame/index.html) at anthrofox.org
  * [diff file which records efforts taken to address the unaligned memory issue](https://code.oregonstate.edu/svn/dsp_bd/uclinux-dist/trunk/user/games/xmame/xmame-0.106/src/unix/contrib/patches/word-align-patch)
