@@ -11,6 +11,9 @@ MAME 2003 has support for multiple mice or touch devices in games that support t
 
 MAME 2003 also supports one or two spinners/dials via the "Share 2 player dial controls across one X/Y device" core option.
 
+## Compiling for the Wii
+* To run on Wii's memory constraints some drivers in src/driver.c must be removed.
+
 ## Directories
 * Some MAME games require data from an internal hard drive, CD-ROM, laserdisk, or other media in order to be emulated -- those forms of media are packaged as CHD files. CHD files should be copied to subfolders within the folder where the MAME ROM zips have been installed. e.g.:
 ```
@@ -62,20 +65,6 @@ MAME 2003 also supports one or two spinners/dials via the "Share 2 player dial c
  * Official RetroArch documentation for the mame2003-libretro core are published at [buildbot.libretro.com/docs](https://buildbot.libretro.com/docs/). They can be [edited and improved by users via github.com](https://github.com/libretro/docs/blob/master/docs/library/mame2003.md).
  * The RetroArch documentation owes much to RetroPie's [detailed MAME 2003 configuration wiki](https://github.com/RetroPie/RetroPie-Setup/wiki/lr-mame2003) which can be adapted for use in other environments.
  
- 
-## Development todo:
-* Input Descriptors (for use in Core Input Remapping).
-* Expose all MAME options as Core Options (including various vector game-specific options)
-* Artwork support.
-* High-resolution in vector games (currently limited to 640x480).
-* Lots more - contributions are welcome!
-
-### Notes:
-* Will have errors on 64-bit platforms. See [Debugging xmame Segfaults on X86-64](http://www.anthrofox.org/code/mame/64bitclean/index.html) at anthrofox.org
-* Will have errors on platforms without unaligned memory access support.
-* When using concurrent building you may get an error that it can't create certain object files, just rerun make if it happens.
-* To run on Wii's memory constraints some drivers in src/driver.c must be removed.
-
 ### Development reference links:
  * [MAME: Benchmarks, Useful Code, Bug Fixes, Known Issues](http://www.anthrofox.org/code/mame/index.html) at anthrofox.org
  * [diff file which records efforts taken to address the unaligned memory issue](https://code.oregonstate.edu/svn/dsp_bd/uclinux-dist/trunk/user/games/xmame/xmame-0.106/src/unix/contrib/patches/word-align-patch)
