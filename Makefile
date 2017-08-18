@@ -402,15 +402,14 @@ all:	$(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
+ifneq ($(findstring win,$(shell uname -a)),)
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
 else
+	$(AR) rcs $@ $(OBJECTS)
+endif
+else
 	@echo Linking $@...
-ifeq ($(platform),win)	
-	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
-	$(file >$@.in,$(OBJECTS))
-	$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
-	@rm $@.in
-else ifneq (,$(findstring msvc,$(platform)))
+ifneq ($(findstring win,$(shell uname -a)),)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
@@ -429,7 +428,7 @@ $(OBJ)/%.a:
 	$(AR) cr $@ $^
 
 clean:
-ifeq ($(platform),win)	
+ifneq ($(findstring win,$(shell uname -a)),)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	rm -f @$@.in $(TARGET)
@@ -437,4 +436,5 @@ ifeq ($(platform),win)
 else
 	find . -name "*.o" -type f -delete
 	rm -f *.a
+	rm -f $(OBJECTS) $(TARGET)
 endif
