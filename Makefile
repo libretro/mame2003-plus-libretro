@@ -393,11 +393,16 @@ else
 	LD = $(CC)
 endif
 
+define NEWLINE
+
+
+endef
+
 all:	$(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
-	$(AR) rcs $@ $(OBJECTS)
+	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
 else
 	@echo Linking $@...
 ifeq ($(platform),win)	
@@ -430,5 +435,6 @@ ifeq ($(platform),win)
 	rm -f @$@.in $(TARGET)
 	@rm $@.in
 else
-	rm -f $(OBJECTS) $(TARGET)
+	find . -name "*.o" -type f -delete
+	rm -f *.a
 endif
