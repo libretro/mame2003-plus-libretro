@@ -402,7 +402,7 @@ all:	$(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
-ifeq ($(platform), win)
+ifeq ($(platform), ps3)
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
 else
 	$(AR) rcs $@ $(OBJECTS)
@@ -433,8 +433,9 @@ ifeq ($(platform), win)
 	$(file >$@.in,$(OBJECTS))
 	rm -f @$@.in $(TARGET)
 	@rm $@.in
-else
+else ifeq ($(platform), ps3)
 	find . -name "*.o" -type f -delete
 	rm -f *.a
+else
 	rm -f $(OBJECTS) $(TARGET)
 endif
