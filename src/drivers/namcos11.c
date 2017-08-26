@@ -1462,7 +1462,7 @@ GAMEX( 1995, tekken2b,  tekken2,  coh100_tekken, tekken,   namcos11, ROT0, "Namc
 GAMEX( 1996, souledge,  0,        coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge Ver. II (SO4/VER.C)", GAME_NOT_WORKING | GAME_NO_SOUND )
 GAMEX( 1995, souledga,  souledge, coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge (SO3/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1995, souledgb,  souledge, coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge (SO1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1995, dunkmnia,  0,        coh110_danceyes, namcos11, namcos11, ROT0, "Namco", "Dunk Mania (DM1/VER.C)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAMEX( 1995, dunkmnia,  0,        coh110_danceyes, namcos11, namcos11, ROT0, "Namco", "Dunk Mania (DM1/VER.C)", GAME_NO_SOUND )
 GAMEX( 1995, xevi3dg,   0,        coh110_danceyes, namcos11, namcos11, ROT0, "Namco", "Xevious 3D/G (XV31/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1996, primglex,  0,        coh110_primglex, tekken,   namcos11, ROT0, "Namco", "Prime Goal EX (PG1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1996, danceyes,  0,        coh110_danceyes, namcos11, namcos11, ROT0, "Namco", "Dancing Eyes (DC1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
