@@ -402,7 +402,7 @@ all:	$(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
-ifeq ($(platform), ps3)
+ifeq ($(platform),$(filter $(platform),win ps3))
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
 else
 	$(AR) rcs $@ $(OBJECTS)
