@@ -885,7 +885,7 @@ static DRIVER_INIT( bubl2000 )
 
 ***************************************************************************/
 
-GAMEX( 1998, stagger1, 0,        stagger1, stagger1, 0,        ROT270, "Afega", "Stagger I (Japan)",                GAME_NOT_WORKING )
-GAMEX( 1997, redhawk,  stagger1, redhawk,  stagger1, redhawk,  ROT270, "Afega", "Red Hawk (US)", GAME_NOT_WORKING )
-GAMEX( 1998, grdnstrm, 0,        grdnstrm, grdnstrm, grdnstrm, ROT270, "Afega", "Sen Jin - Guardian Storm (Korea)", GAME_NOT_WORKING )
+GAME ( 1998, stagger1, 0,        stagger1, stagger1, 0,        ROT270, "Afega", "Stagger I (Japan)" )
+GAME ( 1997, redhawk,  stagger1, redhawk,  stagger1, redhawk,  ROT270, "Afega", "Red Hawk (US)" )
+GAME ( 1998, grdnstrm, 0,        grdnstrm, grdnstrm, grdnstrm, ROT270, "Afega", "Sen Jin - Guardian Storm (Korea)" )
 GAMEX( 1998, bubl2000, 0,        bubl2000, bubl2000, bubl2000, ROT0,   "Tuning", "Bubble 2000", GAME_IMPERFECT_GRAPHICS )

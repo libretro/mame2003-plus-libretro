@@ -70,6 +70,7 @@ enum
 	UI_nococktail,
 	UI_brokengame,
 	UI_brokenprotection,
+	UI_mustbeinitialized,
 	UI_workingclones,
 	UI_typeok,
 
@@ -195,4 +196,3 @@ int uistring_init (mame_file *language_file);
 const char * ui_getstring (int string_num);
 
 #endif /* UI_TEXT_H */
-
