@@ -3061,7 +3061,7 @@ GAME( 1987, timesol1, timesold, alpha68k_II,   timesold, timesol1, ROT90, "[Alph
 GAME( 1987, btlfield, timesold, alpha68k_II,   btlfield, btlfield, ROT90, "[Alpha Denshi Co.] (SNK license)", "Battle Field (Japan)" )
 GAME( 1988, skysoldr, 0,        alpha68k_II,   skysoldr, skysoldr, ROT90, "[Alpha Denshi Co.] (SNK of America/Romstar license)", "Sky Soldiers (US)" )
 GAME( 1988, goldmedl, 0,        alpha68k_II_gm,goldmedl, goldmedl, ROT0,  "SNK",                "Gold Medalist" )
-GAMEX(1988, goldmedb, goldmedl, alpha68k_II_gm,goldmedl, goldmedb, ROT0,  "bootleg",            "Gold Medalist (bootleg)", GAME_NOT_WORKING )
+GAME( 1988, goldmedb, goldmedl, alpha68k_II_gm,goldmedl, goldmedb, ROT0,  "bootleg",            "Gold Medalist (bootleg)" )
 GAME( 1989, skyadvnt, 0,        alpha68k_V,    skyadvnt, skyadvnt, ROT90, "Alpha Denshi Co.",   "Sky Adventure (World)" )
 GAME( 1989, skyadvnu, skyadvnt, alpha68k_V,    skyadvnu, skyadvnu, ROT90, "Alpha Denshi Co. (SNK of America license)", "Sky Adventure (US)" )
 GAME( 1989, skyadvnj, skyadvnt, alpha68k_V,    skyadvnt, skyadvnt, ROT90, "Alpha Denshi Co.",   "Sky Adventure (Japan)" )
@@ -3073,4 +3073,3 @@ GAME( 1989, sbasebal, 0,        alpha68k_V_sb, sbasebal, sbasebal, ROT0,  "Alpha
 GAME( 1989, sbasebal, 0,        alpha68k_V_sb, sbasebal, sbasebal, ROT0,  "Alpha Denshi Co. (SNK of America license)", "Super Champion Baseball (US)" )
 #endif
 GAMEX(1989, tnexspce, 0,        tnexspce,      tnexspce, tnexspce, ROT90, "SNK",                "The Next Space", GAME_NO_COCKTAIL )
-
