@@ -2557,6 +2557,6 @@ GAME( 1985, spdball,  0,        williams, spdball,  spdball,  ROT0,   "Williams"
 GAME( 1983, mysticm,  0,        williams2,mysticm,  mysticm,  ROT0,   "Williams", "Mystic Marathon" )
 GAME( 1984, tshoot,   0,        williams2,tshoot,   tshoot,   ROT0,   "Williams", "Turkey Shoot" )
 GAMEX(1984, inferno,  0,        williams2,inferno,  inferno,  ROT0,   "Williams", "Inferno", GAME_IMPERFECT_SOUND )
-GAME( 1986, joust2,   0,        joust2,   joust2,   joust2,   ROT270, "Williams", "Joust 2 - Survival of the Fittest (set 1)" )
+GAMEX( 1986, joust2,   0,        joust2,   joust2,   joust2,   ROT270, "Williams", "Joust 2 - Survival of the Fittest (set 1)", GAME_MUST_INITIALIZE )
 
 GAME( 1987, lottofun, 0,        williams, lottofun, lottofun, ROT0,   "H.A.R. Management", "Lotto Fun" )
