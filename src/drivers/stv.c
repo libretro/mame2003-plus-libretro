@@ -4578,7 +4578,7 @@ GAMEBX( 1996, prikura,   stvbios, stvbios, stv, stv,  prikura,   ROT0, "Atlus", 
 GAMEBX( 1995, shanhigw,  stvbios, stvbios, stv, stv,  stv,       ROT0, "Sunsoft / Activision", "Shanghai - The Great Wall / Shanghai Triple Threat", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 GAMEBX( 1996, groovef,   stvbios, stvbios, stv, stv,  stv,       ROT0, "Atlus",      "Power Instinct 3 - Groove On Fight", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 GAMEBX( 1999, danchih,   stvbios, stvbios, stv, stvmp,stv,       ROT0, "Altron (Tecmo license)", "Danchi de Hanafuda", GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEBX( 1998, grdforce,  stvbios, stvbios, stv, stv,  stv,       ROT0, "Success",    "Guardian Force", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAMEBX( 1998, grdforce,  stvbios, stvbios, stv, stv,  stv,       ROT0, "Success",    "Guardian Force", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAMEBX( 1998, elandore,  stvbios, stvbios, stv, stv,  stv,       ROT0, "Sai-Mate",   "Fighting Dragon Legend Elan Doree", GAME_NO_SOUND | GAME_NOT_WORKING )
 GAMEBX( 1998, myfairld,  stvbios, stvbios, stv, stvmp,stv,       ROT0, "Micronet",   "Virtual Mahjong 2 - My Fair Lady", GAME_NO_SOUND | GAME_NOT_WORKING )
 GAMEBX( 1998, rsgun,     stvbios, stvbios, stv, stv,  stv,       ROT0, "Treasure",   "Radiant Silvergun", GAME_NO_SOUND | GAME_NOT_WORKING )
