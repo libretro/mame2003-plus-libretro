@@ -20,16 +20,13 @@ struct lang_struct lang;
 /* All entries in this table must match the enum ordering in "ui_text.h" */
 static const char *mame_default_text[] =
 {
-#ifndef MESS
 	"MAME",
-#else
 	"MESS",
-#endif
 
 	/* copyright stuff */
 	"Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.",
 	"IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.",
-	"Otherwise, type OK on Keyboard, or Left, Right on Joystick to continue",
+	"To continue, type OK on Keyboard *OR* Left then Right on Joystick",
 
 	/* misc stuff */
 	"Return to Main Menu",
@@ -59,11 +56,7 @@ static const char *mame_default_text[] =
 	"Vector Intensity",
 	"Overclock",
 	"ALL CPUS",
-#ifndef MESS
 	"History not available",
-#else
-	"System Info not available",
-#endif
 
 	/* special characters */
 	"\x11",
@@ -74,23 +67,16 @@ static const char *mame_default_text[] =
 	"\x1b",
 
 	/* known problems */
-#ifndef MESS
 	"There are known problems with this game:",
-#else
-	"There are known problems with this system",
-#endif
 	"The colors aren't 100% accurate.",
 	"The colors are completely wrong.",
 	"The video emulation isn't 100% accurate.",
 	"The sound emulation isn't 100% accurate.",
 	"The game lacks sound.",
 	"Screen flipping in cocktail mode is not supported.",
-#ifndef MESS
 	"THIS GAME DOESN'T WORK PROPERLY",
-#else
-	"THIS SYSTEM DOESN'T WORK PROPERLY",
-#endif
 	"The game has protection which isn't fully emulated.",
+	"This game must be intialized in order to be playable.",
 	"There are working clones of this game. They are:",
     "Type OK on Keyboard, or Left, Right on Joystick to continue",
 
@@ -100,21 +86,11 @@ static const char *mame_default_text[] =
 	"Analog Controls",
 	"Calibrate Joysticks",
 	"Bookkeeping Info",
-
-#ifndef MESS
 	"Input (this game)",
 	"Game Information",
 	"Game History",
 	"Reset Game",
 	"Return to Game",
-#else
-	"Input (this machine)",
-	"Machine Information",
-	"Machine Usage & History",
-	"Reset Machine",
-	"Return to Machine",
-#endif /* MESS */
-
 	"Cheat",
 	"Memory Card",
 
