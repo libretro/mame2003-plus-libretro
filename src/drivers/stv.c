@@ -4570,7 +4570,7 @@ GAMEBX( 1997, winterht,  stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega",
 
 /* Almost */
 GAMEBX( 1995, fhboxers,  stvbios, stvbios, stv, stv,  fhboxers,  ROT0,   "Sega", 	 "Funky Head Boxers", GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEB ( 1998, othellos,  stvbios, stvbios, stv, stv,  stv,       ROT0,   "Success",  "Othello Shiyouyo", GAME_NO_SOUND )
+GAMEBX( 1998, othellos,  stvbios, stvbios, stv, stv,  stv,       ROT0,   "Success",  "Othello Shiyouyo", GAME_NO_SOUND )
 GAMEBX( 1995, kiwames,   stvbios, stvbios, stv, stvmp,ic13,      ROT0,   "Athena",   "Pro Mahjong Kiwame S", GAME_NO_SOUND | GAME_NOT_WORKING )
 
 /* Doing Something.. but not enough yet */
