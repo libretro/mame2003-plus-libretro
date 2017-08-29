@@ -321,4 +321,4 @@ ROM_START( rougien )
 ROM_END
 
 GAMEX( 1982, mermaid, 0, mermaid, mermaid, 0, ROT0, "[Sanritsu] Rock-ola", "Mermaid", GAME_NOT_WORKING )
-GAMEX( 1982, rougien, 0, mermaid, mermaid, 0, ROT0, "Sanritsu", "Rougien", GAME_NOT_WORKING )
+GAME ( 1982, rougien, 0, mermaid, mermaid, 0, ROT0, "Sanritsu", "Rougien" )

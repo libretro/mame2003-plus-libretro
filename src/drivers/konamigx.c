@@ -3438,7 +3438,7 @@ GAMEX(1994, konamigx, 0, konamigx, konamigx, konamigx, ROT0, "Konami", "System G
 /* needs the 53936 to be playable */
 GAMEX( 1994, racinfrc, konamigx, racinfrc, racinfrc, konamigx, ROT0, "Konami", "Racin' Force (ver UAB)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
 GAMEX( 1994, opengolf, konamigx, opengolf,  racinfrc, konamigx, ROT0, "Konami", "Konami's Open Golf Championship (ver EAD)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
-GAMEX( 1994, ggreats2, opengolf, opengolf,  racinfrc, konamigx, ROT0, "Konami", "Golfing Greats 2 (ver JAC)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAMEX( 1994, ggreats2, opengolf, opengolf,  racinfrc, konamigx, ROT0, "Konami", "Golfing Greats 2 (ver JAC)", GAME_IMPERFECT_GRAPHICS )
 
 
 /* Type 2: totally stock, sometimes with funny protection chips on the ROM board */
