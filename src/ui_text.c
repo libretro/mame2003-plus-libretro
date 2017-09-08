@@ -21,7 +21,6 @@ struct lang_struct lang;
 static const char *mame_default_text[] =
 {
 	"MAME",
-	"MESS",
 
 	/* copyright stuff */
 	"Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.",
