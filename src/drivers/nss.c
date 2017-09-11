@@ -406,9 +406,9 @@ ROM_END
 GAMEX( 199?, nss,       0,		  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: BIOS", NOT_A_DRIVER )
 GAMEX( 1992, nss_actr,  nss,	  snes,	     snes,    snes,		ROT0, "Enix",						"Nintendo Super System: Act Raiser", GAME_NO_SOUND | GAME_NOT_WORKING ) // time broken
 GAMEX( 1992, nss_adam,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: The Addams Family", GAME_NO_SOUND | GAME_NOT_WORKING ) // crashes mame
-GAMEX( 1992, nss_aten,  nss,	  snes,	     snes,    snes,		ROT0, "Absolute Entertainment Inc.","Nintendo Super System: David Crane's Amazing Tennis", GAME_NO_SOUND | GAME_NOT_WORKING ) // gfx problems with net
-GAMEX( 1992, nss_con3,  nss,	  snes,	     snes,    snes,		ROT0, "Konami",						"Nintendo Super System: Contra 3: The Alien Wars", GAME_NO_SOUND | GAME_NOT_WORKING )
-GAMEX( 1992, nss_lwep,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: Lethal Weapon", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAMEX( 1992, nss_aten,  nss,	  snes,	     snes,    snes,		ROT0, "Absolute Entertainment Inc.","Nintendo Super System: David Crane's Amazing Tennis", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS ) // gfx problems with net
+GAMEX( 1992, nss_con3,  nss,	  snes,	     snes,    snes,		ROT0, "Konami",						"Nintendo Super System: Contra 3: The Alien Wars", GAME_NO_SOUND )
+GAMEX( 1992, nss_lwep,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: Lethal Weapon", GAME_NO_SOUND )
 GAMEX( 1992, nss_ncaa,  nss,	  snes,	     snes,    snes,		ROT0, "Sculptured Software Inc.",	"Nintendo Super System: NCAA Basketball", GAME_NO_SOUND | GAME_NOT_WORKING ) // severe gfx problems, no inputs
 GAMEX( 1992, nss_rob3,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: Robocop 3", GAME_NO_SOUND | GAME_NOT_WORKING ) // invisible enemy? gameplay prob?
 GAMEX( 1992, nss_skin,  nss,	  snes,	     snes,    snes,		ROT0, "Irem",						"Nintendo Super System: Skins Game", GAME_NO_SOUND | GAME_NOT_WORKING ) // uses some gfx modes not implemented
