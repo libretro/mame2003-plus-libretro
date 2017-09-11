@@ -4433,7 +4433,7 @@ GAMEX( 1996, pclubjv5, pclubj,   segac2, pclub,    pclub,    ROT0, "Atlus",     
 
 /* nn */ /* nn is part of the instruction rom name, should there be a game for each number? */
 /* -- */ GAMEX( 1989, megatech, 0,        megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Bios", NOT_A_DRIVER )
-/* 01 */ GAMEX( 1989, mt_beast, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Altered Beast", GAME_NOT_WORKING )
+/* 01 */ GAMEX( 1989, mt_beast, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Altered Beast", GAME_IMPERFECT_GRAPHICS )
 /* 02 */ GAMEX( 1989, mt_shar2, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Space Harrier 2.", GAME_NOT_WORKING )
 /* 03 */ GAMEX( 1989, mt_stbld, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Super Thunder Blade", GAME_NOT_WORKING )
 /* 04 */ GAMEX( 1989, mt_ggolf, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Great Golf", GAME_NOT_WORKING ) /* sms! also bad */
@@ -4452,25 +4452,25 @@ GAMEX( 1996, pclubjv5, pclubj,   segac2, pclub,    pclub,    ROT0, "Atlus",     
 /* 17 */ // unknown
 /* 18 */ // unknown
 /* 19 */ // unknown
-/* 20 */ GAMEX( 1989, mt_lastb, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Last Battle.", GAME_NOT_WORKING )
-/* 21 */ GAMEX( 1989, mt_wcsoc, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: World Cup Soccer", GAME_NOT_WORKING )
+/* 20 */ GAME ( 1989, mt_lastb, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Last Battle." )
+/* 21 */ GAME ( 1989, mt_wcsoc, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: World Cup Soccer" )
 /* 22 */ GAMEX( 1989, mt_tetri, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Tetris", GAME_NOT_WORKING ) /* bad dump */
 /* 23 */ GAMEX( 1989, mt_gng,   megatech, megatech, megatech, segac2, ROT0, "Capcom / Sega",         "MegaTech: Ghouls and Ghosts", GAME_NOT_WORKING ) /* bad dump */
 /* 24 */ // unknown
 /* 25 */ GAMEX( 1989, mt_gaxe,  megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Golden Axe", GAME_NOT_WORKING )
 /* 26 */ // unknown
-/* 27 */ GAMEX( 1989, mt_mystd, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Mystic Defender", GAME_NOT_WORKING )
-/* 28 */ GAMEX( 1989, mt_revsh, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: The Revenge Of Shinobi", GAME_NOT_WORKING )
+/* 27 */ GAME ( 1989, mt_mystd, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Mystic Defender" )
+/* 28 */ GAME ( 1989, mt_revsh, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: The Revenge Of Shinobi" )
 /* 29 */ GAMEX( 1989, mt_parlg, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Parlour Games", GAME_NOT_WORKING ) /* sms! */
 /* 30 */ // unknown
-/* 31 */ GAMEX( 1989, mt_tgolf, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Arnold Palmer Tournament Golf", GAME_NOT_WORKING )
+/* 31 */ GAME ( 1989, mt_tgolf, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Arnold Palmer Tournament Golf" )
 /* 32 */ // unknown
 /* 33 */ // unknown
 /* 34 */ // unknown
-/* 35 */ GAMEX( 1989, mt_tlbba, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Tommy Lasorda Baseball", GAME_NOT_WORKING )
+/* 35 */ GAME ( 1989, mt_tlbba, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Tommy Lasorda Baseball" )
 /* 36 */ // unknown
 /* 37 */ // unknown
-/* 38 */ GAMEX( 1989, mt_eswat, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: E-Swat", GAME_NOT_WORKING )
+/* 38 */ GAME ( 1989, mt_eswat, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: E-Swat" )
 /* 39 */ GAMEX( 1990, mt_smgp,  megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Super Monaco Grand Prix", GAME_NOT_WORKING )
 /* 40 */ GAMEX( 1989, mt_mwalk, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Moonwalker", GAME_NOT_WORKING )
 /* 41 */ // unknown
@@ -4484,15 +4484,15 @@ GAMEX( 1996, pclubjv5, pclubj,   segac2, pclub,    pclub,    ROT0, "Atlus",     
 /* 49 */ GAMEX( 1989, mt_bbros, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Bonanza Bros.", GAME_NOT_WORKING )
 /* 50 */ // unknown
 /* 51 */ // unknown
-/* 52 */ GAMEX( 1989, mt_sonic, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Sonic the Hedgehog", GAME_NOT_WORKING )
-/* 53 */ GAMEX( 1989, mt_fshrk, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Fire Shark", GAME_NOT_WORKING )
+/* 52 */ GAME ( 1989, mt_sonic, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Sonic the Hedgehog" )
+/* 53 */ GAME ( 1989, mt_fshrk, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Fire Shark" )
 /* 54 */ // unknown
 /* 55 */ // unknown
 /* 56 */ // unknown
 /* 57 */ GAMEX( 1989, mt_gaxe2, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Golden Axe 2", GAME_NOT_WORKING )
 /* 58 */ // unknown
 /* 59 */ // unknown
-/* 60 */ GAMEX( 1989, mt_kcham, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Kid Chameleon", GAME_NOT_WORKING )
+/* 60 */ GAME ( 1989, mt_kcham, megatech, megatech, megatech, segac2, ROT0, "Sega",                  "MegaTech: Kid Chameleon" )
 /* more? */
 
 /* Mega Play - needs kludge to boot, 68k side of things not working yet, communication not complete. */
