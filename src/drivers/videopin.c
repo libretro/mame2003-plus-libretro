@@ -406,4 +406,4 @@ ROM_END
  *
  *************************************/
 
-GAMEX( 1979, videopin, 0, videopin, videopin, 0, ROT270, "Atari", "Video Pinball", GAME_NO_SOUND )
+GAMEX( 1979, videopin, 0, videopin, videopin, 0, ROT270, "Atari", "Video Pinball", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
