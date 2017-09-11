@@ -1459,7 +1459,7 @@ GAMEX( 1994, tekkenb,   tekken,   coh100_tekken, tekken,   namcos11, ROT0, "Namc
 GAMEX( 1995, tekken2,   0,        coh100_tekken, tekken,   namcos11, ROT0, "Namco", "Tekken 2 Ver.B (TES3/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1995, tekken2a,  tekken2,  coh100_tekken, tekken,   namcos11, ROT0, "Namco", "Tekken 2 Ver.B (TES2/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1995, tekken2b,  tekken2,  coh100_tekken, tekken,   namcos11, ROT0, "Namco", "Tekken 2 (TES2/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
-GAMEX( 1996, souledge,  0,        coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge Ver. II (SO4/VER.C)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAMEX( 1996, souledge,  0,        coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge Ver. II (SO4/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1995, souledga,  souledge, coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge (SO3/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1995, souledgb,  souledge, coh110_danceyes, souledge, namcos11, ROT0, "Namco", "Soul Edge (SO1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 GAMEX( 1995, dunkmnia,  0,        coh110_danceyes, namcos11, namcos11, ROT0, "Namco", "Dunk Mania (DM1/VER.C)", GAME_NO_SOUND )

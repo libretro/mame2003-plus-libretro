@@ -320,5 +320,5 @@ ROM_START( rougien )
 	ROM_LOAD( "rou-42.bin",  0x2000,  0x1000, CRC(5ce13444) SHA1(e6da83190b26b094159a3a97deffd31d0d20a061) )
 ROM_END
 
-GAMEX( 1982, mermaid, 0, mermaid, mermaid, 0, ROT0, "[Sanritsu] Rock-ola", "Mermaid", GAME_NOT_WORKING )
+GAME ( 1982, mermaid, 0, mermaid, mermaid, 0, ROT0, "[Sanritsu] Rock-ola", "Mermaid" )
 GAME ( 1982, rougien, 0, mermaid, mermaid, 0, ROT0, "Sanritsu", "Rougien" )
