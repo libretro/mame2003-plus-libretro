@@ -250,6 +250,36 @@ else ifeq ($(platform), emscripten)
 	STATIC_LINKING := 1
    PLATCFLAGS += -Dstricmp=strcasecmp
 
+# Windows MSVC 2003 Xbox 1
+else ifeq ($(platform), xbox1_msvc2003)
+TARGET := $(TARGET_NAME)_libretro_xdk1.lib
+MSVCBINDIRPREFIX = $(XDK)/xbox/bin/vc71
+CC  = "$(MSVCBINDIRPREFIX)/CL.exe"
+CXX  = "$(MSVCBINDIRPREFIX)/CL.exe"
+LD   = "$(MSVCBINDIRPREFIX)/lib.exe"
+
+export INCLUDE := $(XDK)/xbox/include
+export LIB := $(XDK)/xbox/lib
+PSS_STYLE :=2
+CFLAGS   += -D_XBOX -D_XBOX1
+CXXFLAGS += -D_XBOX -D_XBOX1
+STATIC_LINKING=1
+# Windows MSVC 2010 Xbox 360
+else ifeq ($(platform), xbox360_msvc2010)
+TARGET := $(TARGET_NAME)_libretro_xdk360.lib
+MSVCBINDIRPREFIX = $(XEDK)/bin/win32
+CC  = "$(MSVCBINDIRPREFIX)/cl.exe"
+CXX  = "$(MSVCBINDIRPREFIX)/cl.exe"
+LD   = "$(MSVCBINDIRPREFIX)/lib.exe"
+
+export INCLUDE := $(XEDK)/include/xbox
+export LIB := $(XEDK)/lib/xbox
+PSS_STYLE :=2
+CFLAGS   += -D_XBOX -D_XBOX360
+CXXFLAGS += -D_XBOX -D_XBOX360
+STATIC_LINKING=1
+BIGENDIAN = 1
+
 # Windows MSVC 2010 x64
 else ifeq ($(platform), windows_msvc2010_x64)
 	CC  = cl.exe
@@ -388,7 +418,12 @@ LINKOUT  = -o
 ifneq (,$(findstring msvc,$(platform)))
 	OBJOUT = -Fo
 	LINKOUT = -out:
+ifeq ($(STATIC_LINKING),1)
+	LD ?= lib.exe
+	STATIC_LINKING=0
+else
 	LD = link.exe
+endif
 else
 	LD = $(CC)
 endif
