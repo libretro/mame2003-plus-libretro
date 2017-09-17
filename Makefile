@@ -9,14 +9,19 @@ ifneq ($(GIT_VERSION)," unknown")
 endif
 
 ifeq ($(platform),)
+system_platform = unix
 platform = unix
 ifeq ($(shell uname -a),)
+   system_platform = win
    platform = win
 else ifneq ($(findstring MINGW,$(shell uname -a)),)
+   system_platform = win
    platform = win
 else ifneq ($(findstring Darwin,$(shell uname -a)),)
+   system_platform = osx
    platform = osx
 else ifneq ($(findstring win,$(shell uname -a)),)
+   system_platform = win
    platform = win
 endif
 endif
@@ -42,7 +47,11 @@ ifeq ($(ARCH), x86)
 	X86_MIPS3_DRC = 1
 endif
 
-LIBS := -lm
+LIBS :=
+
+ifeq (,$(findstring msvc,$(platform)))
+LIBS += -lm
+endif
 
 ifeq ($(platform), unix)
    TARGET = $(TARGET_NAME)_libretro.so
@@ -260,6 +269,7 @@ LD   = "$(MSVCBINDIRPREFIX)/lib.exe"
 
 export INCLUDE := $(XDK)/xbox/include
 export LIB := $(XDK)/xbox/lib
+system_platform = win
 PSS_STYLE :=2
 CFLAGS   += -D_XBOX -D_XBOX1
 CXXFLAGS += -D_XBOX -D_XBOX1
@@ -275,6 +285,7 @@ LD   = "$(MSVCBINDIRPREFIX)/lib.exe"
 export INCLUDE := $(XEDK)/include/xbox
 export LIB := $(XEDK)/lib/xbox
 PSS_STYLE :=2
+system_platform = win
 CFLAGS   += -D_XBOX -D_XBOX360
 CXXFLAGS += -D_XBOX -D_XBOX360
 STATIC_LINKING=1
@@ -437,14 +448,15 @@ all:	$(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
-ifeq ($(platform),$(filter $(platform),win ps3))
+ifeq ($(system_platform), win)
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
 else
 	$(AR) rcs $@ $(OBJECTS)
 endif
 else
 	@echo Linking $@...
-ifeq ($(platform), win)
+	@echo platform $(system_platform)
+ifeq ($(system_platform), win)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
@@ -463,14 +475,12 @@ $(OBJ)/%.a:
 	$(AR) cr $@ $^
 
 clean:
-ifeq ($(platform), win)
+ifeq ($(system_platform), win)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	rm -f @$@.in $(TARGET)
 	@rm $@.in
-else ifeq ($(platform), ps3)
-	find . -name "*.o" -type f -delete
-	rm -f *.a
+	rm -f $(OBJECTS) $(TARGET)
 else
 	rm -f $(OBJECTS) $(TARGET)
 endif
