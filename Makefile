@@ -53,6 +53,10 @@ ifeq (,$(findstring msvc,$(platform)))
 LIBS += -lm
 endif
 
+ifneq (,$(findstring msvc,$(platform)))
+system_platform = win
+endif
+
 ifeq ($(platform), unix)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
@@ -269,7 +273,6 @@ LD   = "$(MSVCBINDIRPREFIX)/lib.exe"
 
 export INCLUDE := $(XDK)/xbox/include
 export LIB := $(XDK)/xbox/lib
-system_platform = win
 PSS_STYLE :=2
 CFLAGS   += -D_XBOX -D_XBOX1
 CXXFLAGS += -D_XBOX -D_XBOX1
@@ -285,7 +288,6 @@ LD   = "$(MSVCBINDIRPREFIX)/lib.exe"
 export INCLUDE := $(XEDK)/include/xbox
 export LIB := $(XEDK)/lib/xbox
 PSS_STYLE :=2
-system_platform = win
 CFLAGS   += -D_XBOX -D_XBOX360
 CXXFLAGS += -D_XBOX -D_XBOX360
 STATIC_LINKING=1
