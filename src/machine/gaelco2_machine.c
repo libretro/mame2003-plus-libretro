@@ -221,25 +221,88 @@ WRITE16_HANDLER( gaelco2_eeprom_data_w )
 ***************************************************************************/
 
 data16_t *snowboar_protection;
+data32_t  snowboard_latch;
 
-/*
-	The game writes 2 values and then reads from a memory address.
-	If the read value is wrong, the game can crash in some places.
-	If we always return 0, the game doesn't crash but you can't see
-	the full intro (because it expects 0xffff somewhere).
 
-	The protection handles sound, controls, gameplay and some sprites
-*/
-
-READ16_HANDLER( snowboar_protection_r )
+static UINT32 rol(UINT32 x, unsigned int c)
 {
-	logerror("%06x: protection read from %04x\n", activecpu_get_pc(), offset*2);
-	return 0x0000;
+	return (x << c) | (x >> (32 - c));
 }
 
-WRITE16_HANDLER( snowboar_protection_w )
+static UINT16 get_lo(UINT32 x)
+{
+	return ((x & 0x00000010) <<  1) |
+			((x & 0x00000800) <<  3) |
+			((x & 0x40000000) >> 27) |
+			((x & 0x00000005) <<  6) |
+			((x & 0x00000008) <<  8) |
+			rol(x & 0x00800040, 9)   |
+			((x & 0x04000000) >> 16) |
+			((x & 0x00008000) >> 14) |
+			((x & 0x00002000) >> 11) |
+			((x & 0x00020000) >> 10) |
+			((x & 0x00100000) >>  8) |
+			((x & 0x00044000) >>  5) |
+			((x & 0x00000020) >>  1);
+}
+
+static UINT16 get_hi(UINT32 x)
+{
+	return ((x & 0x00001400) >>  0) |
+			((x & 0x10000000) >> 26) |
+			((x & 0x02000000) >> 24) |
+			((x & 0x08000000) >> 21) |
+			((x & 0x00000002) << 12) |
+			((x & 0x01000000) >> 19) |
+			((x & 0x20000000) >> 18) |
+			((x & 0x80000000) >> 16) |
+			((x & 0x00200000) >> 13) |
+			((x & 0x00010000) >> 12) |
+     		((x & 0x00080000) >> 10) |
+			((x & 0x00000200) >>  9) |
+			((x & 0x00400000) >>  8) |
+			((x & 0x00000080) >>  4) |
+			((x & 0x00000100) >>  1);
+}
+
+static UINT16 get_out(UINT16 x)
+{
+	return ((x & 0xc840) <<  0) |
+			((x & 0x0080) <<  2) |
+			((x & 0x0004) <<  3) |
+			((x & 0x0008) <<  5) |
+			((x & 0x0010) <<  8) |
+			((x & 0x0002) <<  9) |
+			((x & 0x0001) << 13) |
+			((x & 0x0200) >>  9) |
+			((x & 0x1400) >>  8) |
+			((x & 0x0100) >>  7) |
+			((x & 0x2000) >>  6) |
+     		((x & 0x0020) >>  2);
+}
+ 
+UINT16 mangle(UINT32 x)
+{
+	UINT16 a = get_lo(x);
+	UINT16 b = get_hi(x);
+	return get_out(((a ^ 0x0010) - (b ^ 0x0024)) ^ 0x5496);
+}
+ 
+
+READ16_HANDLER(snowboar_protection_r)
+{
+	UINT16 ret  = mangle(snowboard_latch);
+	ret = ((ret & 0xff00) >> 8) | ((ret & 0x00ff) << 8);
+	return ret;
+ 
+}
+ 
+ WRITE16_HANDLER(snowboar_protection_w)
 {
 	COMBINE_DATA(&snowboar_protection[offset]);
+
+	snowboard_latch = (snowboard_latch << 16) | data;
+
 	logerror("%06x: protection write %04x to %04x\n", activecpu_get_pc(), data, offset*2);
 
 }
