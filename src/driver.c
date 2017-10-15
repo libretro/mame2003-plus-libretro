@@ -2586,9 +2586,9 @@ V-V                           TP-027
 	/* Sega System 1 / System 2 games */
 	DRIVER( starjack )	/* 834-5191 (c) 1983 (S1) */
 	DRIVER( starjacs )	/* (c) 1983 Stern (S1) */
-	DRIVER( regulus )	/* 834-5328 (c) 1983 (S1) */
-	DRIVER( reguluso )	/* 834-5328 (c) 1983 (S1) */
-	DRIVER( regulusu )	/* 834-5328 (c) 1983 (S1) */
+	DRIVER( regulus )	/* 834-5328Â (c) 1983 (S1) */
+	DRIVER( reguluso )	/* 834-5328Â (c) 1983 (S1) */
+	DRIVER( regulusu )	/* 834-5328Â (c) 1983 (S1) */
 	DRIVER( upndown )	/* (c) 1983 (S1) */
 	DRIVER( upndownu )	/* (c) 1983 (S1) */
 	DRIVER( mrviking )	/* 834-5383 (c) 1984 (S1) */
@@ -5215,6 +5215,7 @@ Other Sun games
 	DRIVER( freekckb )	/* (c) 1987 Nihon System (+ optional Sega) */
 	DRIVER( countrun )
 	DRIVER( countrnb )
+	DRIVER( countrb2 )
 
 	/* Alba games */
 	DRIVER( rmhaihai )	/* (c) 1985 Alba */
