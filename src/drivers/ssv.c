@@ -2492,6 +2492,84 @@ INPUT_PORTS_START( vasara )
 	PORT_BIT(  0x00f0, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 INPUT_PORTS_END
 
+/***************************************************************************
+		                       Vasara 2
+***************************************************************************/
+
+INPUT_PORTS_START( vasara2 )
+	PORT_START	// IN0 - $210002
+	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Free_Play )  )
+	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_SERVICE( 0x0004, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0008, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0030, 0x0030, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(      0x0010, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x0030, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(      0x0020, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x00c0, 0x00c0, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(      0x0040, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x00c0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(      0x0080, DEF_STR( 1C_2C ) )
+
+	PORT_START	// IN1
+	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(      0x0002, "Easy" )
+	PORT_DIPSETTING(      0x0003, "Normal" )
+	PORT_DIPSETTING(      0x0001, "Hard" )
+	PORT_DIPSETTING(      0x0000, "Hardest" )
+	PORT_DIPNAME( 0x000c, 0x000c, DEF_STR( Lives ) )
+	PORT_DIPSETTING(      0x0000, "1" )
+	PORT_DIPSETTING(      0x0004, "2" )
+	PORT_DIPSETTING(      0x000c, "3" )
+	PORT_DIPSETTING(      0x0008, "5" )
+	PORT_DIPNAME( 0x0010, 0x0010, "Game Voice" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0010, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0020, 0x0020, "Vasara Stock" )
+	PORT_DIPSETTING(      0x0020, "2" )
+	PORT_DIPSETTING(      0x0000, "3" )
+	PORT_DIPNAME( 0x0040, 0x0040, "English Subtitles" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0040, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Unused ) )
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+
+	PORT_START	// IN2 - $210008
+	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )
+	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
+	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
+	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
+	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
+
+	PORT_START	// IN3 - $21000a
+	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )
+	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
+	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
+	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
+	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
+
+	PORT_START	// IN4 - $21000c
+	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 10 )
+	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 10 )
+	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_TILT     )
+	PORT_BIT(  0x00f0, IP_ACTIVE_LOW, IPT_UNKNOWN  )
+INPUT_PORTS_END
 
 
 /***************************************************************************
@@ -4023,6 +4101,47 @@ ROM_START( vasara )
 	ROM_LOAD16_BYTE( "s1.u37", 0x000000, 0x200000, CRC(5f303698) SHA1(bd6495f912aa9d761d245ef0a1566d9d7bdbb2ad) )
 ROM_END
 
+ROM_START( vasara2 )
+	ROM_REGION16_LE( 0x400000, REGION_USER1, 0 )		/* V60 Code */
+	ROM_LOAD16_WORD( "data.u34",  0x000000, 0x200000, CRC(493d0103) SHA1(fda68fb089328cabb3bbd52f8703b445a9509bf1) )
+	ROM_LOAD16_BYTE( "prg-l.u30", 0x200000, 0x080000, CRC(40e6f5f6) SHA1(05fee4535ffe8403e86ba92a58e5f2d040489c8e) )
+	ROM_RELOAD(                   0x300000, 0x080000             )
+	ROM_LOAD16_BYTE( "prg-h.u31", 0x200001, 0x080000, CRC(c958e146) SHA1(568878526cef76ac0ce4feeaa46e7039291e5f77) )
+	ROM_RELOAD(                   0x300001, 0x080000             )
+
+	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_DISPOSE ) /* Sprites */
+	ROM_LOAD( "a0.u1", 0x0000000, 0x800000, CRC(a6306c75) SHA1(bad715e53426a295d3571c025e0539d5f81ce5ab) )
+	ROM_LOAD( "b0.u2", 0x0800000, 0x800000, CRC(227cbd9f) SHA1(a02787943b659508ce1589cdc7a372cc02826a10) )
+	ROM_LOAD( "c0.u3", 0x1000000, 0x800000, CRC(54ede017) SHA1(4a7ff7ff8ec5843837016f35a588983b5ace06ff) )
+	ROM_LOAD( "d0.u4", 0x1800000, 0x800000, CRC(4be8479d) SHA1(cbb5943dfae86f4d571459263199a63399dedc20) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND1, ROMREGION_ERASE | ROMREGION_SOUNDONLY )	/* Samples */
+	ROM_LOAD16_BYTE( "s0.u36", 0x000000, 0x200000, CRC(2b381b33) SHA1(b9dd13651e4b8d0b9e3bc4c592022f31ea634d19) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND2, ROMREGION_ERASE | ROMREGION_SOUNDONLY )	/* Samples */
+	ROM_LOAD16_BYTE( "s1.u37", 0x000000, 0x200000, CRC(11cd7098) SHA1(f75288b5c89df039dfb41d66bd275cda8605e75a) )
+ROM_END
+
+ROM_START( vasara2a )
+	ROM_REGION16_LE( 0x400000, REGION_USER1, 0 )		/* V60 Code */
+	ROM_LOAD16_WORD( "data.u34",     0x000000, 0x200000, CRC(493d0103) SHA1(fda68fb089328cabb3bbd52f8703b445a9509bf1) )
+	ROM_LOAD16_BYTE( "basara-l.u30", 0x200000, 0x080000, CRC(fd88b068) SHA1(a86e3ffc870e6f6f7f18273428b24d938d6b9c3d) )
+	ROM_RELOAD(                      0x300000, 0x080000             )
+	ROM_LOAD16_BYTE( "basara-h.u31", 0x200001, 0x080000, CRC(91d641e6) SHA1(4987d1771a90c9f1ce45c2dd2de5b2922d5d19c5) )
+	ROM_RELOAD(                      0x300001, 0x080000             )
+
+	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_DISPOSE ) /* Sprites */
+	ROM_LOAD( "a0.u1", 0x0000000, 0x800000, CRC(a6306c75) SHA1(bad715e53426a295d3571c025e0539d5f81ce5ab) )
+	ROM_LOAD( "b0.u2", 0x0800000, 0x800000, CRC(227cbd9f) SHA1(a02787943b659508ce1589cdc7a372cc02826a10) )
+	ROM_LOAD( "c0.u3", 0x1000000, 0x800000, CRC(54ede017) SHA1(4a7ff7ff8ec5843837016f35a588983b5ace06ff) )
+	ROM_LOAD( "d0.u4", 0x1800000, 0x800000, CRC(4be8479d) SHA1(cbb5943dfae86f4d571459263199a63399dedc20) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND1, ROMREGION_ERASE | ROMREGION_SOUNDONLY )	/* Samples */
+	ROM_LOAD16_BYTE( "s0.u36", 0x000000, 0x200000, CRC(2b381b33) SHA1(b9dd13651e4b8d0b9e3bc4c592022f31ea634d19) )
+
+	ROM_REGION16_BE( 0x400000, REGION_SOUND2, ROMREGION_ERASE | ROMREGION_SOUNDONLY )	/* Samples */
+	ROM_LOAD16_BYTE( "s1.u37", 0x000000, 0x200000, CRC(11cd7098) SHA1(f75288b5c89df039dfb41d66bd275cda8605e75a) )
+ROM_END
 
 /***************************************************************************
 
@@ -4049,8 +4168,11 @@ GAMEX( 1997,  srmp7,    0,        srmp7,    srmp7,    srmp7,    ROT0,   "Seta", 
 GAMEX( 1998,  ryorioh,  0,        ryorioh,  ryorioh,  ryorioh,  ROT0,   "Visco",              "Gourmet Battle Quiz Ryohrioh CooKing (Japan)",     GAME_NO_COCKTAIL )
 GAMEX( 1998,  sxyreact, 0,        sxyreact, sxyreact, sxyreact, ROT0,   "Sammy",              "Pachinko Sexy Reaction (Japan)",                   GAME_NO_COCKTAIL )
 GAMEX( 1999,  cairblad, 0,        sxyreact, cairblad, sxyreact, ROT270, "Sammy",              "Change Air Blade (Japan)",                         GAME_NO_COCKTAIL )
-GAMEX( 2000,  vasara,   0,        ryorioh,  vasara,   vasara,   ROT270, "Visco",              "Vasara",                                 GAME_NO_COCKTAIL )
+GAMEX( 2000,  vasara,   0,        ryorioh,  vasara,   vasara,   ROT270, "Visco",              "Vasara",                                           GAME_NO_COCKTAIL )
+GAMEX( 2001,  vasara2,  0,        ryorioh,  vasara2,  vasara,   ROT270, "Visco",              "Vasara 2 (set 1)",                                 GAME_NO_COCKTAIL )
+GAMEX( 2001,  vasara2a, vasara2,  ryorioh,  vasara2,  vasara,   ROT270, "Visco",              "Vasara 2 (set 2)",                                 GAME_NO_COCKTAIL )
 
+	
 // Games not working properly:
 
 GAMEX( 1997,  mslider,  0,        mslider,  mslider,  mslider,  ROT0,   "Visco / Datt Japan", "Monster Slider (Japan)",                           GAME_NO_COCKTAIL ) // game logic?
