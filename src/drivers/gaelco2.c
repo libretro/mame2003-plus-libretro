@@ -24,6 +24,7 @@
 extern data16_t *gaelco_sndregs;
 extern data16_t *gaelco2_vregs;
 extern data16_t *snowboar_protection;
+extern data32_t  snowboard_latch;
 
 /* comment this line to display 2 monitors for the dual monitor games */
 //#define ONE_MONITOR
@@ -1337,7 +1338,7 @@ GAME( 1994, aligatun, aligator, alighunt, alighunt, alighunt, ROT0, "Gaelco", "A
 GAMEX(1995, touchgo,  0,        touchgo,  touchgo,  touchgo,  ROT0, "Gaelco", "Touch & Go", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAMEX(1995, wrally2,  0,        wrally2,  wrally2,  0,        ROT0, "Gaelco", "World Rally 2: Twin Racing", GAME_UNEMULATED_PROTECTION )
 GAME( 1996, maniacsq, 0,        maniacsq, maniacsq, 0,        ROT0, "Gaelco", "Maniac Square (unprotected)" )
-GAMEX(1996, snowboar, 0,        snowboar, snowboar, snowboar, ROT0, "Gaelco", "Snow Board Championship (set 1)", GAME_UNEMULATED_PROTECTION )
-GAMEX(1996, snowbalt, snowboar, snowboar, snowboar, 0,        ROT0, "Gaelco", "Snow Board Championship (set 2)", GAME_UNEMULATED_PROTECTION )
+GAME( 1996, snowboar, 0,        snowboar, snowboar, snowboar, ROT0, "Gaelco", "Snow Board Championship (set 1)" )
+GAME( 1996, snowbalt, snowboar, snowboar, snowboar, 0,        ROT0, "Gaelco", "Snow Board Championship (set 2)" )
 GAME( 1998, bang,     0,        bang,     bang,     bang,     ROT0, "Gaelco", "Bang!" )
 GAME( 1998, bangj,    bang,     bang,     bang,     bang,     ROT0, "Gaelco", "Gun Gabacho (Japan)" )
