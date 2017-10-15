@@ -2282,6 +2282,7 @@ V-V                           TP-027
 	DRIVER( sfz3j )		/* 27/07/1998 (c) 1998 (Japan) */
 	DRIVER( sfz3jr1 )	/* 29/06/1998 (c) 1998 (Japan) */
 	DRIVER( sfz3a )		/* 01/07/1998 (c) 1998 (Asia) */
+	DRIVER( hsf2a )         /* 02/02/2004 (c) 2004 (Asia) */
 	DRIVER( gigawing )	/* 22/02/1999 (c) 1999 Takumi (US) */
 	DRIVER( gwingj )	/* 23/02/1999 (c) 1999 Takumi (Japan) */
 						/* 27/05/1999 Jyangokushi: Haoh no Saihai (Japan) */
@@ -4893,7 +4894,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mslider )	/* (c) 1997 Visco / Datt Japan */
 	DRIVER( ryorioh )	/* (c) 1998 Visco */
 	DRIVER( vasara )	/* (c) 2000 Visco */
-
+        DRIVER( vasara2 )	/* (c) 2001 Visco */
+        DRIVER( vasara2a )	/* (c) 2001 Visco */
 	DRIVER( ultrax )	/* (c) 1995 Banpresto */
 	DRIVER( jsk )		/* (c) 1997 Visco */
 
