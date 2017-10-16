@@ -8,6 +8,26 @@ Toffy / Super Toffy added by David Haywood
 Thanks to Bryan McPhail for spotting the Toffy program rom encryption
 Toffy / Super Toffy sound hooked up by R. Belmont.
 
+BM, 8/1/2006:
+
+Double Dragon has a crash which sometimes occurs at the very end of the game
+(right before the final animation sequence).  It occurs because of a jump look up
+table:
+
+    BAD3: LDY   #$BADD
+    BAD7: JSR   [A,Y]
+
+At the point of the crash A is 0x3e which causes a jump to 0x3401 (background tile ram) 
+which obviously doesn't contain proper code and causes a crash.  The jump table has 
+32 entries, and only the last contains an invalid jump vector.  A is set to 0x3e as a 
+result of code at 0x625f - it reads from the shared spriteram (0x2049 in main cpu memory space), 
+copies the value to 0x523 (main ram) where it is later fetched and shifted to make 0x3e.
+
+So..  it's not clear where the error is - the 0x1f value is actually written to
+shared RAM by the main CPU - perhaps the MCU should modify it before the main CPU
+reads it back?  Perhaps 0x1f should never be written at all?  If you want to trace
+this further please submit a proper fix!  In the meantime I have patched the error
+by making sure the invalid jump is never taken - this fixes the crash (see ddragon_spriteram_r).
 
 Modifications by Bryan McPhail, June-November 2003:
 
@@ -279,6 +299,10 @@ static READ_HANDLER( port4_r )
 
 static READ_HANDLER( ddragon_spriteram_r )
 {
+        /* Double Dragon crash fix - see notes above */
+	if (offset == 0x49 && activecpu_get_pc() == 0x6261 && ddragon_spriteram[offset]== 0x1f)
+	    return 0x1;
+	
 	return ddragon_spriteram[offset];
 }
 
