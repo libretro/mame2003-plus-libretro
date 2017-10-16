@@ -5567,6 +5567,9 @@ Other Sun games
 	/* 0258 SNK vs. Capcom? (prototype) */
 	DRIVER( bangbead )	/* 0259 (c) 2000 Visco */
 	DRIVER( nitd )		/* 0260 (c) 2000 Eleven / Gavaking */
+	DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
+        DRIVER( zupapa )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
+        DRIVER( ghostlop )	/* 0228 GhostLop (prototype) 1996? Data East */
 
 
 #endif	/* DRIVER_RECURSIVE */
