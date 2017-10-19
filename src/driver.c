@@ -5572,7 +5572,12 @@ Other Sun games
 	DRIVER( ironclad )      /* 0220 Choutetsu Brikin'ger - iron clad (prototype) 1996 Saurus */
         DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
         DRIVER( zupapa )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
-
+	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith */
+	DRIVER( kof2002 )	/* 0265 (c) 2002 Eolith */
+	DRIVER( mslug4 )	/* 0263 (c) 2001 Mega Enterprises */
+	DRIVER( rotd )		/* 0264 (c) 2002 Evoga Entertainment */
+	DRIVER( matrim )	/* 0266 (c) 2002 Atlus / Noise Factory */
+	DRIVER( crswd2bl )      /* 0054 Crossed Swords 2  (CD only? not confirmed, MVS might exist) */
 
 #endif	/* DRIVER_RECURSIVE */
 
