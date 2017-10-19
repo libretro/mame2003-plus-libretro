@@ -6,14 +6,11 @@
 
 ****************************************************************************
 
-	Since there has been confusion in the past over the order of
-	initialization and other such things, here it is, all spelled out
-	as of May, 2002:
-
-	main()
-		- does platform-specific init
-		- calls run_game()
-
+        libretro manages:
+	        - platform-specific init
+		- calls run_game() from the function retro_load_game()
+        
+	mame.c manages:
 		run_game()
 			- constructs the machine driver
 			- calls init_game_options()
