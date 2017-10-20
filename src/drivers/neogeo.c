@@ -7067,7 +7067,7 @@ static void kof2002_vx_decrypt( void )
 
 	int rom_size = memory_region_length( REGION_SOUND1 );
 	UINT8 *rom = memory_region( REGION_SOUND1 );
-	UINT8 *buf = osd_malloc( rom_size );
+	UINT8 *buf = (UINT8 *)malloc( rom_size );
 	int i;
 
 	memcpy( buf, rom, rom_size );
@@ -7088,7 +7088,7 @@ static void kof2002_vx_decrypt( void )
 DRIVER_INIT( kof2002 )
 {
 	UINT8 *src = memory_region(REGION_CPU1)+0x100000;
-	UINT8 *dst = osd_malloc(0x400000);
+	UINT8 *dst = malloc(0x400000);
 	int i;
 	unsigned int sec[]={0x100000,0x280000,0x300000,0x180000,0x000000,0x380000,0x200000,0x080000};
 
@@ -7113,7 +7113,7 @@ DRIVER_INIT( kof2002 )
 DRIVER_INIT( kof2k2nd )
 {
 	UINT8 *src = memory_region(REGION_CPU1)+0x100000;
-	UINT8 *dst = osd_malloc(0x400000);
+	UINT8 *dst = malloc(0x400000);
 	int i;
 	unsigned int sec[]={0x100000,0x280000,0x300000,0x180000,0x000000,0x380000,0x200000,0x080000};
 
@@ -7144,7 +7144,7 @@ static void matrim_vx_decrypt( void )
 
 	int rom_size = memory_region_length( REGION_SOUND1 );
 	UINT8 *rom = memory_region( REGION_SOUND1 );
-	UINT8 *buf = osd_malloc( rom_size );
+	UINT8 *buf = (UINT8 *)malloc( rom_size );
 	int i;
 
 	memcpy( buf, rom, rom_size );
@@ -7165,7 +7165,7 @@ static void matrim_vx_decrypt( void )
 DRIVER_INIT( matrim )
 {
 	UINT8 *src = memory_region(REGION_CPU1)+0x100000;
-	UINT8 *dst = osd_malloc(0x400000);
+	UINT8 *dst = malloc(0x400000);
 	int i;
 	unsigned int sec[]={0x100000,0x280000,0x300000,0x180000,0x000000,0x380000,0x200000,0x080000};
 
@@ -7476,7 +7476,7 @@ static void svcchaos_vx_decrypt( void )
 
 	int rom_size = memory_region_length( REGION_SOUND1 );
 	UINT8 *rom = memory_region( REGION_SOUND1 );
-	UINT8 *buf = osd_malloc( rom_size );
+	UINT8 *buf = (UINT8 *)malloc( rom_size );
 	int i;
 
 	memcpy( buf, rom, rom_size );
@@ -7595,7 +7595,7 @@ static void mslug5_vx_decrypt( void )
 
 	int rom_size = memory_region_length( REGION_SOUND1 );
 	UINT8 *rom = memory_region( REGION_SOUND1 );
-	UINT8 *buf = osd_malloc( rom_size );
+	UINT8 *buf = (UINT8 *)malloc( rom_size );
 	int i;
 
 	memcpy( buf, rom, rom_size );
@@ -7649,7 +7649,7 @@ static void samsho5_vx_decrypt( void )
 
 	int rom_size = memory_region_length( REGION_SOUND1 );
 	UINT8 *rom = memory_region( REGION_SOUND1 );
-	UINT8 *buf = osd_malloc( rom_size );
+	UINT8 *buf = (UINT8 *)malloc( rom_size );
 	int i;
 
 	memcpy( buf, rom, rom_size );
@@ -7671,7 +7671,7 @@ DRIVER_INIT( samsho5 )
 {	
 	/* Descrambling P ROMs by X-or */
 	UINT8 *src = memory_region(REGION_CPU1);
-	UINT8 *dst = osd_malloc(0x800000);
+	UINT8 *dst = malloc(0x800000);
 	int i;
 	unsigned int sec[]={0x000000, 0x080000, 0x700000, 0x680000, 0x500000, 0x180000, 0x200000, 0x480000, 0x300000, 0x780000, 0x600000, 0x280000, 0x100000, 0x580000, 0x400000, 0x380000};
 	if (dst)
@@ -7700,7 +7700,7 @@ static void samsh5sp_vx_decrypt( void )
 
 	int rom_size = memory_region_length( REGION_SOUND1 );
 	UINT8 *rom = memory_region( REGION_SOUND1 );
-	UINT8 *buf = osd_malloc( rom_size );
+	UINT8 *buf = (UINT8 *)malloc( rom_size );
 	int i;
 
 	memcpy( buf, rom, rom_size );
@@ -7722,7 +7722,7 @@ DRIVER_INIT( samsh5nd )
 {
 	/* Descrambling P ROMs by X-or */
 	UINT8 *src = memory_region(REGION_CPU1);
-	UINT8 *dst = osd_malloc(0x800000);
+	UINT8 *dst = malloc(0x800000);
 	int i;
 	unsigned int sec[]={0x000000, 0x080000, 0x700000, 0x680000, 0x500000, 0x180000, 0x200000, 0x480000, 0x300000, 0x780000, 0x600000, 0x280000, 0x100000, 0x580000, 0x400000, 0x380000};
 	if (dst)
@@ -7743,7 +7743,7 @@ DRIVER_INIT( samsh5sp )
 {
 	/* Descrambling Px by Vorador from speksnk Coneverted to Mame code by James */
 	UINT8 *src = memory_region(REGION_CPU1);
-	UINT8 *dst = osd_malloc(0x800000);
+	UINT8 *dst = malloc(0x800000);
 	int i;
 	unsigned int sec[]={0x0,0x1,0xA,0x9,0xC,0xB,0xE,0x5,0x2,0xD,0x8,0xF,0x4,0x7,0x6,0x3};
 	if (dst)
