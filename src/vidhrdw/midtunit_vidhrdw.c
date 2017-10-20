@@ -645,9 +645,13 @@ static void dma_callback(int is_in_34010_context)
 
 READ16_HANDLER( midtunit_dma_r )
 {
+	/* rmpgwt sometimes reads register 0, expecting it to return the */
+	/* current DMA status; thus we map register 0 to register 1 */
+	/* openice does it as well */
+	if (offset == 0)
+		offset = 1;
 	return dma_register[offset];
 }
-
 
 
 /*************************************
