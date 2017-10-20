@@ -72,7 +72,7 @@ static const char *mame_default_text[] =
 	"The video emulation isn't 100% accurate.",
 	"The sound emulation isn't 100% accurate.",
 	"The game lacks sound.",
-	"Screen flipping in cocktail mode is not supported.",
+	"Screen flipping cocktail video is not supported by MAME 2003 for this title. If your frontend implements the libretro Shader API, an appropriate mirrored cocktail video shader may be available.",
 	"THIS GAME DOESN'T WORK PROPERLY",
 	"The game has protection which isn't fully emulated.",
 	"This game must be intialized in order to be playable.",
