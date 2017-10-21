@@ -5085,6 +5085,7 @@ Other Sun games
 
 	/* Fuuki FG-3 games */
 	DRIVER( asurabld )	/* (c) 1998 (Japan) */
+	DRIVER( asurabus )	/* (c) 2000 (Japan) */
 
 	/* Unico games */
 	DRIVER( drgnmst )	/* (c) 1994 */
