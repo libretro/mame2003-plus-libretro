@@ -7088,7 +7088,7 @@ static void kof2002_vx_decrypt( void )
 DRIVER_INIT( kof2002 )
 {
 	UINT8 *src = memory_region(REGION_CPU1)+0x100000;
-	UINT8 *dst = malloc(0x400000);
+	UINT8 *dst = (UINT8 *)malloc(0x400000);
 	int i;
 	unsigned int sec[]={0x100000,0x280000,0x300000,0x180000,0x000000,0x380000,0x200000,0x080000};
 
@@ -7165,7 +7165,7 @@ static void matrim_vx_decrypt( void )
 DRIVER_INIT( matrim )
 {
 	UINT8 *src = memory_region(REGION_CPU1)+0x100000;
-	UINT8 *dst = malloc(0x400000);
+	UINT8 *dst = (UINT8 *)malloc(0x400000);
 	int i;
 	unsigned int sec[]={0x100000,0x280000,0x300000,0x180000,0x000000,0x380000,0x200000,0x080000};
 
