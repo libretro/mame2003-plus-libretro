@@ -3,11 +3,11 @@
 						  -= Fuuki 32 Bit Games (FG-3) =-
 
 				driver by Paul Priest and David Haywood
-				based on fuuki16 by Luca Elia
+				based on fuukifg2 by Luca Elia
 
 Hardware is similar to FG-2 used for :
 "Go Go! Mile Smile", "Susume! Mile Smile (Japan)" & "Gyakuten!! Puzzle Bancho (Japan)"
-See fuuki16.c
+See fuukifg2.c
 
 Main  CPU	:	M68020
 
@@ -20,8 +20,6 @@ Year + Game
 
 --
 Notes so far:
-
-- Z80 isn't hooked up properly, unknown sound chips. Need hw specs (Being worked on, OPL4)
 
 - Dips, need DIP sheet.
 
@@ -93,11 +91,13 @@ FG-3J ROM-J 507KA0301P04       Rev:1.3
 #include "vidhrdw/generic.h"
 
 static int fuuki32_raster_enable = 1; /* Enabled by default */
+static data8_t fuuki32_shared_ram[16];
 
 // Described in src/vidhrdw/fuuki32.c
 extern data32_t *fuuki32_vram_0, *fuuki32_vram_1;
 extern data32_t *fuuki32_vram_2, *fuuki32_vram_3;
 extern data32_t *fuuki32_vregs, *fuuki32_priority, *fuuki32_tilebank;
+
 
 /* Functions defined in vidhrdw: */
 
@@ -183,20 +183,30 @@ FUUKI32_INPUT( 1 ) /* $810000.l Player Inputs */
 FUUKI32_INPUT( 2 ) /* $880000.l Dipswitches + Service */
 FUUKI32_INPUT( 3 ) /* $890000.l More Dipswitches */
 
-/* Fake sound return */
-static READ32_HANDLER( shared )
+/* Sound comms */
+static READ32_HANDLER( snd_020_r )
 {
-	if(offset==0)
-		return (0x00cd0000) | (fuuki32_vregs[offset] & 0xff00ffff); // Comms with sound
-
-	else return fuuki32_vregs[offset];
+	return fuuki32_shared_ram[offset*2]<<16 | fuuki32_shared_ram[(offset*2)+1];
 }
 
-// Lines with empty comment are for debug only
+static WRITE32_HANDLER( snd_020_w )
+{
+	if (!(mem_mask & 0x00ff0000))
+	{
+		fuuki32_shared_ram[offset*2] = data>>16;
+	}
+
+	if (!(mem_mask & 0x000000ff))
+	{
+		fuuki32_shared_ram[(offset*2)+1] = data & 0xff;
+	}
+}
+
 
 static MEMORY_READ32_START( fuuki32_readmem )
 	{ 0x000000, 0x1fffff, MRA32_ROM },
 	{ 0x400000, 0x40ffff, MRA32_RAM }, // Work RAM
+	{ 0x410000, 0x41ffff, MRA32_RAM }, // Work RAM (used by asurabus)
 	{ 0x500000, 0x501fff, MRA32_RAM }, // Tilemap 1
 	{ 0x502000, 0x503fff, MRA32_RAM }, // Tilemap 2
 	{ 0x504000, 0x505fff, MRA32_RAM }, // Tilemap bg
@@ -216,7 +226,7 @@ static MEMORY_READ32_START( fuuki32_readmem )
 /**/{ 0x8d0000, 0x8d0003, MRA32_RAM }, // Flipscreen Related
 /**/{ 0x8e0000, 0x8e0003, MRA32_RAM }, // Controls layer order
 
-	{ 0x903fe0, 0x903fff, shared }, // Shared with Z80, faked for now
+	{ 0x903fe0, 0x903fff, snd_020_r }, // Shared with Z80
 //	{ 0x903fe0, 0x903fe3, fuuki32_sound_command_r }, // Shared with Z80
 //	{ 0x903fe4, 0x903fff, MRA32_RAM }, // ??
 MEMORY_END
@@ -224,6 +234,7 @@ MEMORY_END
 static MEMORY_WRITE32_START( fuuki32_writemem )
 	{ 0x000000, 0x1fffff, MWA32_ROM },
 	{ 0x400000, 0x40ffff, MWA32_RAM }, // Work RAM
+	{ 0x410000, 0x41ffff, MWA32_RAM }, // Work RAM
 	{ 0x500000, 0x501fff, fuuki32_vram_0_w, &fuuki32_vram_0 }, // Tilemap 1
 	{ 0x502000, 0x503fff, fuuki32_vram_1_w, &fuuki32_vram_1 }, // Tilemap 2
 	{ 0x504000, 0x505fff, fuuki32_vram_2_w, &fuuki32_vram_2 }, // Tilemap bg
@@ -241,21 +252,16 @@ static MEMORY_WRITE32_START( fuuki32_writemem )
 	{ 0x8d0000, 0x8d0003, MWA32_RAM }, // Flipscreen Related
 	{ 0x8e0000, 0x8e0003, MWA32_RAM, &fuuki32_priority }, // Controls layer order
 
-	{ 0x903fe0, 0x903fff, MWA32_RAM }, // Shared with Z80
+	{ 0x903fe0, 0x903fff, snd_020_w }, // z80 comms
 //	{ 0x903fe0, 0x903fe3, fuuki32_sound_command_w }, // Shared with Z80
 //	{ 0x903fe4, 0x903fff, MWA32_RAM }, // Shared with Z80
 
 	{ 0xa00000, 0xa00003, MWA32_RAM, &fuuki32_tilebank },
 MEMORY_END
 
-
 /***************************************************************************
 
-
 							Memory Maps - Sound CPU
-
-TODO: Everything
-What sound chip?
 
 ***************************************************************************/
 
@@ -263,36 +269,46 @@ static WRITE_HANDLER ( fuuki32_sound_bw_w )
 {
 	data8_t *rom = memory_region(REGION_CPU2);
 
-	cpu_setbank(1,rom + data * 0x4000);
+	cpu_setbank(1, rom + 0x10000 + (data * 0x8000));
+}
+
+static READ_HANDLER( snd_z80_r )
+{
+	return fuuki32_shared_ram[offset];
+}
+
+static WRITE_HANDLER( snd_z80_w )
+{
+	fuuki32_shared_ram[offset] = data;
 }
 
 static MEMORY_READ_START( fuuki32_sound_readmem )
-	{ 0x0000, 0x3fff, MRA_ROM		},	// ROM
+	{ 0x0000, 0x5fff, MRA_ROM		},	// ROM
 	{ 0x6000, 0x6fff, MRA_RAM		},	// RAM
-	{ 0x7ff0, 0x7ff0, soundlatch_r  },
-	{ 0x8000, 0xbfff, MRA_BANK1		},	// ROM
+	{ 0x7ff0, 0x7fff, snd_z80_r  },
+	{ 0x8000, 0xffff, MRA_BANK1		},	// ROM
 MEMORY_END
 
 static MEMORY_WRITE_START( fuuki32_sound_writemem )
-	{ 0x0000, 0x3fff, MWA_ROM		},	// ROM
+	{ 0x0000, 0x5fff, MWA_ROM		},	// ROM
 	{ 0x6000, 0x6fff, MWA_RAM		},	// RAM
-	{ 0x7ff0, 0x7ff0, soundlatch2_w  },
-	{ 0x8000, 0xbfff, MWA_ROM		},	// ROM
+	{ 0x7ff0, 0x7fff, snd_z80_w  },
+	{ 0x8000, 0xffff, MWA_ROM		},	// ROM
 MEMORY_END
 
 static PORT_READ_START( fuuki32_sound_readport )
-	{ 0x40, 0x40, MRA_NOP }, // Status?
+	{ 0x40, 0x40, YMF262_status_0_r },
 PORT_END
 
 static PORT_WRITE_START( fuuki32_sound_writeport )
 	{ 0x00, 0x00, fuuki32_sound_bw_w },
 	{ 0x30, 0x30, MWA_NOP },
-	{ 0x40, 0x40, MWA_NOP },
-	{ 0x41, 0x41, MWA_NOP },
-	{ 0x42, 0x42, MWA_NOP },
-	{ 0x43, 0x43, MWA_NOP },
-	{ 0x44, 0x44, MWA_NOP },
-	{ 0x45, 0x45, MWA_NOP },
+	{ 0x40, 0x40, YMF262_register_A_0_w },
+	{ 0x41, 0x41, YMF262_data_A_0_w },
+	{ 0x42, 0x42, YMF262_register_B_0_w },
+	{ 0x43, 0x43, YMF262_data_B_0_w },
+	{ 0x44, 0x44, YMF278B_control_port_0_C_w },
+	{ 0x45, 0x45, YMF278B_data_port_0_C_w },
 PORT_END
 
 
@@ -491,6 +507,29 @@ static INTERRUPT_GEN( fuuki32_interrupt )
 	}
 }
 
+static void irqhandler(int irq)
+{
+	cpu_set_irq_line(1, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+}
+
+static struct YMF278B_interface ymf278b_interface =
+{
+	1,
+	{ YMF278B_STD_CLOCK },
+	{ REGION_SOUND1 },
+	{ YM3012_VOL(50, MIXER_PAN_LEFT, 50, MIXER_PAN_RIGHT) },
+	{ 0 }
+};
+
+static struct YMF262interface ymf262_interface =
+{
+	1,					/* 1 chip */
+	14318180,			/* X1 ? */
+	{ YAC512_VOL(50,MIXER_PAN_LEFT,50,MIXER_PAN_RIGHT) },	/* channels A and B */
+	{ YAC512_VOL(50,MIXER_PAN_LEFT,50,MIXER_PAN_RIGHT) },	/* channels C and D */
+	{ irqhandler },		/* irq */
+};
+
 static MACHINE_DRIVER_START( fuuki32 )
 
 	/* basic machine hardware */
@@ -517,35 +556,18 @@ static MACHINE_DRIVER_START( fuuki32 )
 	MDRV_VIDEO_EOF(fuuki32)
 
 	/* sound hardware */
-//	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-//	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-//	MDRV_SOUND_ADD(OKIM6295, m6295_interface)
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(YMF262, ymf262_interface)
+	MDRV_SOUND_ADD(YMF278B, ymf278b_interface)
 MACHINE_DRIVER_END
 
 /***************************************************************************
-
-
-								ROMs Loading
-
-
+                                ROMs Loading
 ***************************************************************************/
 
 /***************************************************************************
-
-								Asura Blade
-Fuuki, 1999
-
-This dump is taken from a ROM board with number FG-3J ROM-J
-There's nothing on the board except some 4M EPROMs and several
-surface mounted MASK ROMs.
-
-The connectors on the board and the size of the board is similar
-to Jaleco Megasys32, however it's not compatible with it due to the
-connector spacing being different. The physical size of the board
-is too large to fit an SSV board.
-So, I have no idea what the main hardware is, the game probably
-runs on a custom Fuuki system board named 'FG-3'?
-
+                 Asura Blade - Sword of Dynasty (Japan)
+Fuuki, 1999   Consists of a FG-3J MAIN-J mainboard &  FG-3J ROM-J combo
 ***************************************************************************/
 
 ROM_START( asurabld )
@@ -555,8 +577,9 @@ ROM_START( asurabld )
 	ROM_LOAD32_BYTE( "pgm1.u3", 0x000002, 0x80000, CRC(35104452) SHA1(03cfd81429f8a945d5419c9750925bfa997d0607) )
 	ROM_LOAD32_BYTE( "pgm0.u4", 0x000003, 0x80000, CRC(68615497) SHA1(de93751f151f195a863dc6fe83b6e7ed8f99430a) )
 
-	ROM_REGION( 0x080000, REGION_CPU2, 0 ) /* Z80 */
+	ROM_REGION( 0x090000, REGION_CPU2, 0 ) /* Z80 */
 	ROM_LOAD( "srom.u7", 0x00000, 0x80000, CRC(bb1deb89) SHA1(b1c70abddc0b9a88beb69a592376ff69a7e091eb) )
+	ROM_RELOAD(          0x10000, 0x80000) /* for banks */
 
 	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_DISPOSE )
 	/* 0x0000000 - 0x03fffff empty */ /* spXX.uYY - XX is the bank number! */
@@ -578,9 +601,52 @@ ROM_START( asurabld )
 	ROM_REGION( 0x200000, REGION_GFX4, ROMREGION_DISPOSE ) // background tiles
 	ROM_LOAD( "map.u5", 0x00000, 0x200000, CRC(e681155e) SHA1(458845b9c86df72685d92d0d4052aacc2fa7d1bd) )
 
-	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) // doesn't seem to be oki
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) // OPL4 samples
 	ROM_LOAD( "pcm.u6", 0x00000, 0x400000, CRC(ac72225a) SHA1(8d16399ed34ac5bd69dbf43b2de2b0db9ac1c610) )
 ROM_END
+
+
+/***************************************************************************
+                 Asura Buster - Eternal Warriors (Japan)
+Fuuki, 2000   Consists of a FG-3J MAIN-J mainboard &  FG-3J ROM-J combo
+***************************************************************************/
+
+ROM_START( asurabus )
+	ROM_REGION( 0x200000, REGION_CPU1, 0 ) /* M68020 */
+	ROM_LOAD32_BYTE( "pgm3.u1", 0x000000, 0x80000, CRC(2c6b5271) SHA1(188371f1f003823ac719e962e048719d76696b2f) )
+	ROM_LOAD32_BYTE( "pgm2.u2", 0x000001, 0x80000, CRC(8f8694ec) SHA1(3334df4aecc5ab2f8914ef6748c027a99b39ce26) )
+	ROM_LOAD32_BYTE( "pgm1.u3", 0x000002, 0x80000, CRC(0a040f0f) SHA1(d5e86d33efcbbde7ee62cfc8dfe867f250a33415) )
+	ROM_LOAD32_BYTE( "pgm0.u4", 0x000003, 0x80000, CRC(9b71e9d8) SHA1(9b705b5b6fff549f5679890422b481b5cf1d7bd7) )
+
+	ROM_REGION( 0x090000, REGION_CPU2, 0 ) /* Z80 */
+	ROM_LOAD( "srom.u7", 0x00000, 0x80000, CRC(368da389) SHA1(1423b709da40bf3033c9032c4bd07658f1a969de) )
+	ROM_RELOAD(          0x10000, 0x80000) /* for banks */
+
+	ROM_REGION( 0x2000000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "sp01.u13", 0x0000000, 0x400000, CRC(5edea463) SHA1(22a780912f060bae0c9a403a7bfd4d27f25b76e3) )
+	ROM_LOAD( "sp23.u14", 0x0400000, 0x400000, CRC(91b1b0de) SHA1(341367966559ef2027415b673eb0db704680c81f) )
+	ROM_LOAD( "sp45.u15", 0x0800000, 0x400000, CRC(96c69aac) SHA1(cf053523026651427f884b9dd7c095af362dd24e) )
+	ROM_LOAD( "sp67.u16", 0x0c00000, 0x400000, CRC(7c3d83bf) SHA1(7188dd923c6c7eb6aee3323e7ab54aa240c35ea3) )
+	ROM_LOAD( "sp89.u17", 0x1000000, 0x400000, CRC(cb1e14f8) SHA1(941cea1887d7ceb52222adcf1d6913969e6163aa) )
+	ROM_LOAD( "spab.u18", 0x1400000, 0x400000, CRC(e5a4608d) SHA1(b8e39f53e0b7ad1e16ae9c3726597776b404be1c) )
+	ROM_LOAD( "spcd.u19", 0x1800000, 0x400000, CRC(99bfbe32) SHA1(926a8afc4a175874f22f53300e76f59331d3b9ba) )
+	ROM_LOAD( "spef.u20", 0x1c00000, 0x400000, CRC(c9c799cc) SHA1(01373316700d8688deeea2e9e8f831d5f86c7f17) )
+
+	ROM_REGION( 0x0800000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD( "bg1012.u22", 0x0000000, 0x400000, CRC(e3fb9af0) SHA1(11900cc2873337692f66fb4f1eb9c574e5a967de) )
+	ROM_LOAD( "bg1113.u23", 0x0400000, 0x400000, CRC(5f8657e6) SHA1(7c2854dc5d2d4efe55bda01e329da051350e0031) )
+
+	ROM_REGION( 0x0800000, REGION_GFX3, ROMREGION_DISPOSE )
+	ROM_LOAD( "bg2022.u25", 0x0000000, 0x400000, CRC(f46eda52) SHA1(46530016b32a164bd76c4f53e7b53b2beb28db06) )
+	ROM_LOAD( "bg2123.u24", 0x0400000, 0x400000, CRC(c4ebb86b) SHA1(a7093e6e02b64566d277cbbd5fa90cd430e7c8a0) )
+
+	ROM_REGION( 0x200000, REGION_GFX4, ROMREGION_DISPOSE ) // background tiles
+	ROM_LOAD( "map.u5", 0x00000, 0x200000, CRC(bd179dc5) SHA1(ce3fcac573b14fd5365eb5dcec3257e439d2c129) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) // OPL4 samples
+	ROM_LOAD( "opm.u6", 0x00000, 0x400000, CRC(31b05be4) SHA1(d0f4f387f84a74591224b0f42b7f5c538a3dc498) )
+ROM_END
+
 
 
 /***************************************************************************
@@ -591,4 +657,5 @@ ROM_END
 
 ***************************************************************************/
 
-GAMEX( 1998, asurabld,	0, fuuki32, asurabld, 0, ROT0, "Fuuki", "Asura Blade - Sword of Dynasty (Japan)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, asurabld,	0, fuuki32, asurabld, 0, ROT0, "Fuuki", "Asura Blade - Sword of Dynasty", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 2000, asurabus,	0, fuuki32, asurabld, 0, ROT0, "Fuuki", "Asura Buster - Eternal Warriors", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
