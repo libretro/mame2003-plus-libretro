@@ -269,8 +269,8 @@ static void ymf278b_pcm_update(int num, INT16 **outputs, int length)
 						break;
 				}
 
-				*mixp++ += (sample * volume[slot->TL+pan_left [slot->pan]+(slot->env_vol>>23)])>>16;
-				*mixp++ += (sample * volume[slot->TL+pan_right[slot->pan]+(slot->env_vol>>23)])>>16;
+				*mixp++ += (sample * volume[slot->TL+pan_left [slot->pan]+(slot->env_vol>>23)])>>17;
+				*mixp++ += (sample * volume[slot->TL+pan_right[slot->pan]+(slot->env_vol>>23)])>>17;
 
 				// update frequency
 				slot->stepptr += slot->step;
