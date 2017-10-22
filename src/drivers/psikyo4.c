@@ -68,7 +68,7 @@ Or use these cheats:
 #include "cpu/sh2/sh2.h"
 #include "machine/eeprom.h"
 
-#define DUAL_SCREEN 1 /* Display both screens simultaneously if 1, change in vidhrdw too */
+#define DUAL_SCREEN 0 /* Display both screens simultaneously if 1, change in vidhrdw too */
 #define ROMTEST 0 /* Does necessary stuff to perform rom test, uses RAM as it doesn't dispose of GFX after decoding */
 
 data32_t *psikyo4_vidregs, *ps4_ram, *ps4_io_select;
