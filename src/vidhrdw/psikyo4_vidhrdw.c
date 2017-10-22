@@ -29,7 +29,7 @@ HgKairak: 86010000 1f201918 a0000000 Large Screen
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-#define DUAL_SCREEN 1 /* Display both screens simultaneously if 1, change in driver too */
+#define DUAL_SCREEN 0 /* Display both screens simultaneously if 1, change in driver too */
 
 static UINT32 screen; /* for PS4 games when DUAL_SCREEN=0 */
 
