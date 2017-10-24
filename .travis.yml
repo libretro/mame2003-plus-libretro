@@ -31,4 +31,4 @@ script:
   - cd ~/
   - git clone --depth=50 https://github.com/libretro/libretro-super
   - cd libretro-super/travis
-  - ./build.sh
+  - ./build-long.sh
