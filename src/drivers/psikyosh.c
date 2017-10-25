@@ -134,6 +134,7 @@ static data8_t factory_eeprom[16]  = { 0x00,0x02,0x00,0x01,0x00,0x00,0x00,0x00,0
 static data8_t daraku_eeprom[16]   = { 0x03,0x02,0x00,0x48,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 static data8_t s1945iii_eeprom[16] = { 0x00,0x00,0x00,0x00,0x00,0x01,0x11,0x70,0x25,0x25,0x25,0x00,0x01,0x00,0x11,0xe0 };
 static data8_t dragnblz_eeprom[16] = { 0x00,0x01,0x11,0x70,0x25,0x25,0x25,0x00,0x01,0x00,0x11,0xe0,0x00,0x00,0x00,0x00 };
+static data8_t gnbarich_eeprom[16] = { 0x00,0x0f,0x42,0x40,0x08,0x0a,0x00,0x00,0x01,0x06,0x42,0x59,0x00,0x00,0x00,0x00 };
 
 int use_factory_eeprom;
 
@@ -219,6 +220,11 @@ static NVRAM_HANDLER(93C56)
 
  				if (use_factory_eeprom==EEPROM_DRAGNBLZ) /* Dragnblz too */
  					memcpy(eeprom_data+0xf0, dragnblz_eeprom, 0x10);
+				
+									
+			        if (use_factory_eeprom==EEPROM_GNBARICH) /* Might as well do Gnbarich as well, otherwise the highscore is incorrect */
+ 					memcpy(eeprom_data+0xf0, gnbarich_eeprom, 0x10);
+
 
 				EEPROM_set_data(eeprom_data,0x100);
 			}
@@ -604,6 +610,19 @@ INPUT_PORTS_START( dragnblz ) /* Security requires bit high */
 	PORT_DIPSETTING(    0x01, "International Ver B." )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( gnbarich ) /* Same as S1945iii except only one button */
+	PORT_PLAYER( IPF_PLAYER1, IPT_START1, 3 )
+	PORT_PLAYER( IPF_PLAYER2, IPT_START2, 3 )
+	UNUSED_PORT /* IN2 unused? */
+	PORT_COIN( 0 ) /* If HIGH then you can perform rom test, but EEPROM resets? */
+
+	PORT_START /* IN4 jumper pads on the PCB */
+	PORT_DIPNAME( 0x03, 0x01, "Region" )
+	PORT_DIPSETTING(    0x00, "Japan" )
+	PORT_DIPSETTING(    0x02, "International Ver A." )
+	PORT_DIPSETTING(    0x01, "International Ver B." )
+INPUT_PORTS_END
+
 #if ROMTEST
 #define ROMTEST_GFX 0
 #else
@@ -776,6 +795,25 @@ ROM_START( dragnblz )
 	ROM_LOAD( "snd0.u52", 0x000000, 0x200000, CRC(7fd1b225) SHA1(6aa61021ada51393bbb34fd1aea00b8feccc8197) )
 ROM_END
 
+ROM_START( gnbarich )
+	ROM_REGION( 0x100000, REGION_CPU1, 0)
+	ROM_LOAD32_WORD_SWAP( "2-prog_l.u21",   0x000000, 0x080000, CRC(c136cd9c) SHA1(ab66c4f5196a66a97dbb5832336a203421cf40fa) )
+	ROM_LOAD32_WORD_SWAP( "1-prog_h.u22",   0x000002, 0x080000, CRC(6588fc96) SHA1(3db29fcf17e8b2aee465319b557bd3e45bc966b2) )
+
+	ROM_REGION( 0x2c00000, REGION_GFX1, ROMTEST_GFX )	/* Sprites */
+	ROM_LOAD32_WORD( "6l.u1",  0x1800000, 0x200000, CRC(0432e1a8) SHA1(632cb6534a19a92aa16d1dc8bb98c0c1fa17e428) )
+	ROM_LOAD32_WORD( "6h.u2",  0x1800002, 0x200000, CRC(f90fa3ea) SHA1(773861c6c559f2df88e395669f27c43bd4dd6eb6) )
+	ROM_LOAD32_WORD( "7l.u19", 0x1c00000, 0x200000, CRC(36bf9a58) SHA1(b546425f17f4b0b1112f0a22f9f5c695f5d97fe9) )
+	ROM_LOAD32_WORD( "7h.u20", 0x1c00002, 0x200000, CRC(4b3eafd8) SHA1(8d0a4516bab2a188a66291e805c3c265774a6b72) )
+	ROM_LOAD32_WORD( "8l.u28", 0x2000000, 0x200000, CRC(026754da) SHA1(66072e7584dcfea614a1e37592bda65733c9ce11) )
+	ROM_LOAD32_WORD( "8h.u29", 0x2000002, 0x200000, CRC(8cd7aaa0) SHA1(83469c5407cba134ec1d22330623d8be8e0eabec) )
+	ROM_LOAD32_WORD( "9l.u41", 0x2400000, 0x200000, CRC(02c066fe) SHA1(ecd5f36d9e55a341aff956bab4e7b0ae9e6cc15f) )
+	ROM_LOAD32_WORD( "9h.u42", 0x2400002, 0x200000, CRC(5433385a) SHA1(138d62409cfb9e1a4eb3ca378ab8f6df45d478c0) )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* Samples */
+	ROM_LOAD( "snd0.u52", 0x000000, 0x200000, CRC(7b10436b) SHA1(c731fcce024e286a677ca10a91761c1ee06094a5) )
+ROM_END
+
 
 /* are these right? should i fake the counter return?
    'speedups / idle skipping isn't needed for 'hotgmck, hgkairak'
@@ -892,6 +930,22 @@ static READ32_HANDLER( dragnblz_speedup_r )
 	return psh_ram[0x006000C/4];
 }
 
+static READ32_HANDLER( gnbarich_speedup_r )
+{
+	if (activecpu_get_pc()==0x0602CAE8) cpu_spinuntil_int(); // startup texts
+	if (activecpu_get_pc()==0x0602CD88) cpu_spinuntil_int(); // attract intro
+	if (activecpu_get_pc()==0x0602D2F0) cpu_spinuntil_int(); // attract game
+	if (activecpu_get_pc()==0x0602D042) cpu_spinuntil_int(); // game
+
+	return psh_ram[0x006000C/4];
+}
+
+static DRIVER_INIT( gnbarich )
+{
+	install_mem_read32_handler(0, 0x606000c, 0x606000f, gnbarich_speedup_r );
+	use_factory_eeprom = EEPROM_GNBARICH;
+}
+
 static DRIVER_INIT( soldivid )
 {
 	install_mem_read32_handler(0, 0x600000c, 0x600000f, soldivid_speedup_r );
@@ -954,3 +1008,4 @@ GAMEX( 1999, s1945iii, 0,        psikyo5,   s1945iii, s1945iii, ROT270, "Psikyo"
 
 /* ps5v2 */
 GAMEX( 2000, dragnblz, 0,        psikyo5,   dragnblz, dragnblz, ROT270, "Psikyo", "Dragon Blaze", GAME_IMPERFECT_GRAPHICS )
+GAME(  2001, gnbarich, 0,        psikyo5,   gnbarich, gnbarich, ROT270, "Psikyo", "Gunbarich" )
