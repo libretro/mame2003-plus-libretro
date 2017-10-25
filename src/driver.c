@@ -2831,6 +2831,7 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( spidey )	/* (c) 1991 */
 	DRIVER( spideyj )	/* (c) 1991 (Japan) */
 	DRIVER( arabfgt )	/* (c) 1991 */
+	DRIVER( arescue )	/* (c) 1992 */
 	DRIVER( f1lap )
 	DRIVER( dbzvrvs )
 	DRIVER( darkedge )
@@ -4698,6 +4699,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( loderndf )	/* (c) 2000 */
 	DRIVER( loderdfa )	/* (c) 2000 */
 	DRIVER( hotdebut )	/* (c) 2000 */
+	DRIVER( gnbarich )	/* (c) 2001 */
 
 	/* Orca games */
 	DRIVER( marineb )	/* (c) 1982 Orca */
