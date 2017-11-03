@@ -242,6 +242,27 @@ READ16_HANDLER( konamigt_input_word_r )
 	return ret;
 }
 
+/* Copied from WEC Le Mans 24 driver, explicity needed for Hyper Crash */
+static UINT16 hcrash_selected_ip;
+
+static WRITE16_HANDLER( selected_ip_w )
+{
+	if (ACCESSING_LSB) hcrash_selected_ip = data & 0xff;	// latch the value
+}
+
+static READ16_HANDLER( selected_ip_r )
+{
+	switch (hcrash_selected_ip & 0xf)
+	{												// From WEC Le Mans Schems:
+		case 0xc:  return input_port_8_r(offset);	// Accel - Schems: Accelevr
+		case 0:    return input_port_8_r(offset);
+		case 0xd:  return input_port_9_r(offset);	// Wheel - Schems: Handlevr
+		case 1:    return input_port_9_r(offset);
+
+		default: return ~0;
+	}
+}
+
 WRITE16_HANDLER( nemesis_soundlatch_word_w )
 {
 	if(ACCESSING_LSB) {
@@ -580,6 +601,59 @@ static MEMORY_WRITE16_START( salamand_writemem )
 	{ 0x0A0000, 0x0A0001, nemesis_irq_enable_word_w },          /* irq enable */
 	{ 0x0C0000, 0x0C0001, salamand_soundlatch_word_w },
 	{ 0x0C0004, 0x0C0005, MWA16_NOP },        /* Watchdog at $c0005 */
+	{ 0x100000, 0x100fff, nemesis_videoram1b_word_w, &nemesis_videoram1b },	/* VRAM 1 */
+	{ 0x101000, 0x101fff, nemesis_videoram1f_word_w, &nemesis_videoram1f },	/* VRAM 1 */
+	{ 0x102000, 0x102fff, nemesis_videoram2b_word_w, &nemesis_videoram2b },	/* VRAM 2 */
+	{ 0x103000, 0x103fff, nemesis_videoram2f_word_w, &nemesis_videoram2f },	/* VRAM 2 */
+	{ 0x120000, 0x12ffff, nemesis_characterram_word_w, &nemesis_characterram, &nemesis_characterram_size },
+	{ 0x180000, 0x180fff, MWA16_RAM, &spriteram16, &spriteram_size },		/* more sprite ram ??? */
+	{ 0x190000, 0x1903ff, gx400_xscroll1_word_w, &nemesis_xscroll1 },
+	{ 0x190400, 0x1907ff, gx400_xscroll2_word_w, &nemesis_xscroll2 },
+	{ 0x190800, 0x190eff, MWA16_RAM },			/* not used */
+	{ 0x190f00, 0x190f7f, gx400_yscroll1_word_w, &nemesis_yscroll1 },
+	{ 0x190f80, 0x190fff, gx400_yscroll2_word_w, &nemesis_yscroll2 },
+	{ 0x191000, 0x191fff, MWA16_RAM },			/* not used */
+MEMORY_END
+
+static MEMORY_READ16_START( hcrash_readmem )
+	{ 0x000000, 0x00ffff, MRA16_ROM },  /* ROM BIOS */
+	{ 0x040000, 0x05ffff, MRA16_ROM },
+	{ 0x080000, 0x083fff, MRA16_RAM },
+	{ 0x090000, 0x091fff, MRA16_RAM },
+	{ 0x0c0002, 0x0c0003, input_port_4_word_r },
+	{ 0x0c0004, 0x0c0005, input_port_5_word_r },
+	{ 0x0c0006, 0x0c0007, input_port_3_word_r },
+	{ 0x0c000a, 0x0c000b, input_port_0_word_r },
+	{ 0x0c2000, 0x0c2001, konamigt_input_word_r },	/* Konami GT control */
+	{ 0x0c4000, 0x0c4001, input_port_1_word_r },
+	{ 0x0c4002, 0x0c4003, selected_ip_r },	/* WEC Le Mans 24 control */
+	{ 0x100000, 0x100fff, nemesis_videoram1b_word_r },
+	{ 0x101000, 0x101fff, nemesis_videoram1f_word_r },
+	{ 0x102000, 0x102fff, nemesis_videoram2b_word_r },
+	{ 0x103000, 0x103fff, nemesis_videoram2f_word_r },
+	{ 0x120000, 0x12ffff, nemesis_characterram_word_r },
+	{ 0x180000, 0x180fff, MRA16_RAM },
+	{ 0x190000, 0x1903ff, gx400_xscroll1_word_r },
+	{ 0x190400, 0x1907ff, gx400_xscroll2_word_r },
+	{ 0x190800, 0x190eff, MRA16_RAM },
+	{ 0x190f00, 0x190f7f, gx400_yscroll1_word_r },
+	{ 0x190f80, 0x190fff, gx400_yscroll2_word_r },
+	{ 0x191000, 0x191fff, MRA16_RAM },
+MEMORY_END
+
+static MEMORY_WRITE16_START( hcrash_writemem )
+	{ 0x000000, 0x00ffff, MWA16_ROM },
+	{ 0x040000, 0x05ffff, MWA16_ROM },
+	{ 0x080000, 0x083fff, MWA16_RAM, &ram },
+	{ 0x090000, 0x091fff, salamander_palette_word_w, &paletteram16 },
+	{ 0x0A0000, 0x0A0001, nemesis_irq_enable_word_w },          /* irq enable */
+	{ 0x0C0000, 0x0C0001, salamand_soundlatch_word_w },
+	{ 0x0C0008, 0x0C0009, MWA16_NOP },        /* Watchdog at $c0005 */
+	{ 0x0c2800, 0x0c2801, MWA16_NOP },
+	{ 0x0c2802, 0x0c2803, gx400_irq2_enable_word_w }, // or at 0x0c2804 ?
+	{ 0x0c2804, 0x0c2805, MWA16_NOP },
+	{ 0x0c4000, 0x0c4001, selected_ip_w },
+	{ 0x0c4002, 0x0c4003, MWA16_NOP }, /* latches the value read previously */
 	{ 0x100000, 0x100fff, nemesis_videoram1b_word_w, &nemesis_videoram1b },	/* VRAM 1 */
 	{ 0x101000, 0x101fff, nemesis_videoram1f_word_w, &nemesis_videoram1f },	/* VRAM 1 */
 	{ 0x102000, 0x102fff, nemesis_videoram2b_word_w, &nemesis_videoram2b },	/* VRAM 2 */
@@ -1800,6 +1874,98 @@ INPUT_PORTS_START( nyanpani )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( hcrash )
+	PORT_START /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START	/* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BITX(0x08, IP_ACTIVE_HIGH, IPT_BUTTON2, "Brake", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON3 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL )	// must be 0 otherwise game freezes when using WEC Le Mans 24 cabinet
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START	/* IN2 */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START	/* TEST */
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, "Quantity of Initials" )
+	PORT_DIPSETTING(    0x00, "3" )
+	PORT_DIPSETTING(    0x02, "7" )
+	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x08, 0x08, "Speed Unit" )
+	PORT_DIPSETTING(    0x08, "km/h" )
+	PORT_DIPSETTING(    0x00, "M.P.H." )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START /* DSW0 */
+	GX400_COINAGE_DIP
+
+	PORT_START /* DSW1 */
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x03, "Konami GT without brake" )
+	PORT_DIPSETTING(    0x02, "WEC Le Mans 24 Upright" )
+	PORT_DIPSETTING(    0x01, "Konami GT with brake" )
+	// 0x00 WEC Le Mans 24 Upright again
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x60, "Easy" )
+	PORT_DIPSETTING(    0x40, "Normal" )
+	PORT_DIPSETTING(    0x20, "Difficult" )
+	PORT_DIPSETTING(    0x00, "Very Difficult" )
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	/* Konami GT specific control */
+	PORT_START	/* IN6 */
+	PORT_ANALOG( 0xff, 0x40, IPT_DIAL, 25, 10, 0x00, 0x7f )
+
+	PORT_START	/* IN7 */
+	PORT_BITX( 0x20,IP_ACTIVE_HIGH, IPT_BUTTON2, "Brake", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+//	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON4 )
+    
+	/* WEC Le Mans 24 specific control */
+	PORT_START	/* IN8 - Accelerator */
+	PORT_ANALOG( 0xff, 0, IPT_PEDAL, 30, 10, 0, 0x80 )
+
+	PORT_START	/* IN9 - Steering Wheel */
+	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER, 30, 5, 0, 0xff )
+INPUT_PORTS_END
+
 /******************************************************************************/
 
 static struct GfxLayout charlayout =
@@ -2285,6 +2451,39 @@ static MACHINE_DRIVER_START( rf2_gx400 )
 	MDRV_SOUND_ADD(VLM5030, gx400_vlm5030_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( hcrash )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000,18432000/3)         /* 6.144MHz */
+	MDRV_CPU_MEMORY(hcrash_readmem,hcrash_writemem)
+	MDRV_CPU_VBLANK_INT(konamigt_interrupt,2)
+
+	MDRV_CPU_ADD(Z80,14318180/4)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)        /* 3.579545 MHz */
+	MDRV_CPU_MEMORY(sal_sound_readmem,sal_sound_writemem)
+
+	MDRV_FRAMES_PER_SECOND((18432000.0/4)/(288*264))		/* 60.606060 Hz */
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(nemesis)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048)
+
+	MDRV_VIDEO_START(nemesis)
+	MDRV_VIDEO_UPDATE(salamand)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(K007232, k007232_interface)
+	MDRV_SOUND_ADD(YM2151, ym2151_interface)
+    MDRV_SOUND_ADD(VLM5030, vlm5030_interface)
+MACHINE_DRIVER_END
+
 /***************************************************************************
 
   Game driver(s)
@@ -2556,6 +2755,41 @@ ROM_START( nyanpani )
 	ROM_LOAD(      "712b01.1k",   0x00000, 0x80000, CRC(f65b5d95) SHA1(12701be68629844720cd16af857ce38ef06af61c) )
 ROM_END
 
+ROM_START( hcrash )
+	ROM_REGION( 0x140000, REGION_CPU1, 0 )    /* 64k for code */
+	ROM_LOAD16_BYTE( "790-d03.t9",   0x00000, 0x08000, CRC(10177dce) SHA1(e46f75e3206eff5299e08e5258e67b68efc4c20c) )
+	ROM_LOAD16_BYTE( "790-d06.t7",   0x00001, 0x08000, CRC(fca5ab3e) SHA1(2ad335cf25a86fe38c190e2e0fe101ea161eb81d) )
+	ROM_LOAD16_BYTE( "790-c02.s9",   0x40000, 0x10000, CRC(8ae6318f) SHA1(b3205df1103a69eef34c5207e567a27a5fee5660) )
+	ROM_LOAD16_BYTE( "790-c05.s7",   0x40001, 0x10000, CRC(c214f77b) SHA1(c5754c3da2a3820d8d06f8ff171be6c2aea92ecc) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )    /* 64k for sound */
+	ROM_LOAD( "790-c09.n2",   0x00000, 0x8000, CRC(a68a8cce) SHA1(a54966b9cbbe37b2be6a2276ee09c81452d9c0ca) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 )  /* VLM5030 data data */
+	ROM_LOAD( "790-c08.j4",   0x04000, 0x04000, CRC(cfb844bc) SHA1(43b7adb6093e707212204118087ef4f79b0dbc1f) )
+	ROM_CONTINUE(             0x00000, 0x04000 ) /* Board is wired for 27C128, top half of EPROM is blank */
+
+	ROM_REGION( 0x80000, REGION_SOUND2, 0 )  /* 007232 data */
+	ROM_LOAD( "790-c01.m10",  0x00000, 0x20000, CRC(07976bc3) SHA1(9341ac6084fbbe17c4e7bbefade9a3f1dec3f132) )
+ROM_END
+
+ROM_START( hcrashc )
+	ROM_REGION( 0x140000, REGION_CPU1, 0 )    /* 64k for code */
+	ROM_LOAD16_BYTE( "790-c03.t9",   0x00000, 0x08000, CRC(d98ec625) SHA1(ddec88b0babd1c538fe5055adec73b537d637d3e) )
+	ROM_LOAD16_BYTE( "790-c06.t7",   0x00001, 0x08000, CRC(1d641a86) SHA1(d20ae01565d04db62d5687546c19d87c8e26248c) )
+	ROM_LOAD16_BYTE( "790-c02.s9",   0x40000, 0x10000, CRC(8ae6318f) SHA1(b3205df1103a69eef34c5207e567a27a5fee5660) )
+	ROM_LOAD16_BYTE( "790-c05.s7",   0x40001, 0x10000, CRC(c214f77b) SHA1(c5754c3da2a3820d8d06f8ff171be6c2aea92ecc) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )    /* 64k for sound */
+	ROM_LOAD( "790-c09.n2",   0x00000, 0x8000, CRC(a68a8cce) SHA1(a54966b9cbbe37b2be6a2276ee09c81452d9c0ca) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 )  /* VLM5030 data data */
+	ROM_LOAD( "790-c08.j4",   0x04000, 0x04000, CRC(cfb844bc) SHA1(43b7adb6093e707212204118087ef4f79b0dbc1f) )
+	ROM_CONTINUE(             0x00000, 0x04000 ) /* Board is wired for 27C128, top half of EPROM is blank */
+
+	ROM_REGION( 0x80000, REGION_SOUND2, 0 )  /* 007232 data */
+	ROM_LOAD( "790-c01.m10",  0x00000, 0x20000, CRC(07976bc3) SHA1(9341ac6084fbbe17c4e7bbefade9a3f1dec3f132) )
+ROM_END
 
 
 GAME( 1985, nemesis,  0,        nemesis,       nemesis,  0, ROT0,   "Konami", "Nemesis" )
@@ -2574,3 +2808,5 @@ GAMEX(1987, citybomb, 0,        citybomb,      citybomb, 0, ROT270, "Konami", "C
 GAMEX(1987, citybmrj, citybomb, citybomb,      citybomb, 0, ROT270, "Konami", "City Bomber (Japan)", GAME_NO_COCKTAIL )
 GAMEX(1988, kittenk,  0,        nyanpani,      nyanpani, 0, ROT0,   "Konami", "Kitten Kaboodle", GAME_NO_COCKTAIL )
 GAMEX(1988, nyanpani, kittenk,  nyanpani,      nyanpani, 0, ROT0,   "Konami", "Nyan Nyan Panic (Japan)", GAME_NO_COCKTAIL )
+GAMEX(1987, hcrash,   0,        hcrash,        hcrash,   0, ROT0,   "Konami", "Hyper Crash (version D)", GAME_NO_COCKTAIL )
+GAMEX(1987, hcrashc,  hcrash,   hcrash,        hcrash,   0, ROT0,   "Konami", "Hyper Crash (version C)", GAME_NO_COCKTAIL )
