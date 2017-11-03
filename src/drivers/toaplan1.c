@@ -58,7 +58,6 @@ Notes:
 To Do:
 	Add support for HD647180 (Z180) sound CPUs (once their internal
 	ROMS are dumped). These are:
-		Fire Shark/Same! Same! Same!
 		Vimana
 
 ***************************************************************************/
@@ -68,7 +67,14 @@ To Do:
 #include "cpu/tms32010/tms32010.h"
 #include "toaplan1.h"
 
+// Fire Shark / Same Same Same! sound
+data8_t to_mcu;
+data8_t cmdavailable;
 
+WRITE16_HANDLER(samesame_mcu_w);
+READ_HANDLER(samesame_soundlatch_r);
+WRITE_HANDLER(samesame_sound_done_w);
+READ_HANDLER(samesame_cmdavailable_r);
 
 /* 68000 memory maps */
 static MEMORY_READ16_START( rallybik_readmem )
@@ -284,7 +290,7 @@ static MEMORY_WRITE16_START( samesame_writemem )
 	{ 0x104000, 0x1047ff, toaplan1_colorram1_w, &toaplan1_colorram1, &toaplan1_colorram1_size },
 	{ 0x106000, 0x1067ff, toaplan1_colorram2_w, &toaplan1_colorram2, &toaplan1_colorram2_size },
 	{ 0x14000c, 0x14000d, samesame_coin_w },	/* Coin counter/lockout */
-//	{ 0x14000e, 0x14000f, samesame_mcu_w },		/* Commands sent to HD647180 */
+	{ 0x14000e, 0x14000f, samesame_mcu_w },		/* Commands sent to HD647180 */
 	{ 0x180000, 0x180001, toaplan1_bcu_flipscreen_w },
 	{ 0x180002, 0x180003, toaplan1_tileram_offs_w },
 	{ 0x180004, 0x180007, toaplan1_tileram16_w },
@@ -497,6 +503,52 @@ static PORT_WRITE16_START( DSP_writeport )
 	{ TMS32010_PORT_RANGE(0, 3), demonwld_dsp_w },
 PORT_END
 
+WRITE16_HANDLER(samesame_mcu_w)
+{
+    to_mcu = data;
+	cmdavailable = 1;
+};
+
+READ_HANDLER(samesame_soundlatch_r)
+{
+	return to_mcu;
+};
+
+WRITE_HANDLER(samesame_sound_done_w)
+{
+	to_mcu = data;
+	cmdavailable = 0;
+}
+
+READ_HANDLER(samesame_cmdavailable_r)
+{
+	if (cmdavailable) return 0xff;
+	else return 0x00;
+};
+
+ 
+static MEMORY_READ_START( samesame_hd647180_readmem )
+	{ 0x00000, 0x03fff, MRA_ROM },
+	{ 0x0fe00, 0x0ffff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_WRITE_START( samesame_hd647180_writemem )
+	{ 0x00000, 0x03fff, MWA_ROM },
+	{ 0x0fe00, 0x0ffff, MWA_RAM },
+MEMORY_END
+ 
+static PORT_READ_START( samesame_hd647180_readport )
+        { 0x63, 0x63, samesame_cmdavailable_r },
+	{ 0xa0, 0xa0, samesame_soundlatch_r },
+	{ 0x80, 0x80, YM3812_status_port_0_r },
+	{ 0x81, 0x81, YM3812_status_port_0_r },
+PORT_END
+
+static PORT_WRITE_START( samesame_hd647180_writeport )
+	{ 0xb0, 0xb0, samesame_sound_done_w },	/* Coin counter/lockout */
+	{ 0x80, 0x80, YM3812_control_port_0_w },
+	{ 0x81, 0x81, YM3812_write_port_0_w },
+PORT_END
 
 
 /*****************************************************************************
@@ -1748,9 +1800,14 @@ static MACHINE_DRIVER_START( samesame )
 	MDRV_CPU_ADD(M68000, 10000000)
 	MDRV_CPU_MEMORY(samesame_readmem,samesame_writemem)
 	MDRV_CPU_VBLANK_INT(toaplan1_interrupt,1)
+	
+	MDRV_CPU_ADD(Z180, 28000000/8)    /* HD647180XOFS6 CPU */
+	MDRV_CPU_MEMORY(samesame_hd647180_readmem,samesame_hd647180_writemem)
+	MDRV_CPU_PORTS(samesame_hd647180_readport,samesame_hd647180_writeport)
 
 	MDRV_FRAMES_PER_SECOND( (28000000.0 / 4) / (450 * 270) )
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_INIT(toaplan1)
 
@@ -2036,8 +2093,7 @@ ROM_START( samesame )
 	ROM_LOAD16_BYTE( "o17_12.bin",  0x040001, 0x20000, CRC(ef698811) SHA1(4c729704eba0bf469599c79009327e4fa5dc540b) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Sound HD647180 code */
-	/* sound CPU is a HD647180 (Z180) with internal ROM - not yet supported */
-	ROM_LOAD( "hd647180.017",  0x00000, 0x08000, NO_DUMP )
+        ROM_LOAD( "hd647180.017", 0x00000, 0x08000, CRC(43523032) SHA1(1b94003a00e7bf6bdf1b1b946f42ff5d04629949) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "o17_05.bin",  0x00000, 0x20000, CRC(565315f8) SHA1(6b1c5ef52359483228b329c89c2e1174e3fbf017) )
@@ -2064,8 +2120,7 @@ ROM_START( samesam2 )
 	ROM_LOAD16_BYTE( "o17_12x.bin", 0x040001, 0x20000, CRC(6adb6eb5) SHA1(9b6e63aa50d271c2bb0b4cf822fc6f3684f10230) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Sound HD647180 code */
-	/* sound CPU is a HD647180 (Z180) with internal ROM - not yet supported */
-	ROM_LOAD( "hd647180.017",  0x00000, 0x08000, NO_DUMP )
+        ROM_LOAD( "hd647180.017", 0x00000, 0x08000, CRC(43523032) SHA1(1b94003a00e7bf6bdf1b1b946f42ff5d04629949) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "o17_05.bin",  0x00000, 0x20000, CRC(565315f8) SHA1(6b1c5ef52359483228b329c89c2e1174e3fbf017) )
@@ -2092,8 +2147,7 @@ ROM_START( fireshrk )
 	ROM_LOAD16_BYTE( "o17_12x.bin", 0x040001, 0x20000, CRC(6adb6eb5) SHA1(9b6e63aa50d271c2bb0b4cf822fc6f3684f10230) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Sound HD647180 code */
-	/* sound CPU is a HD647180 (Z180) with internal ROM - not yet supported */
-	ROM_LOAD( "hd647180.017",  0x00000, 0x08000, NO_DUMP )
+        ROM_LOAD( "hd647180.017", 0x00000, 0x08000, CRC(43523032) SHA1(1b94003a00e7bf6bdf1b1b946f42ff5d04629949) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "o17_05.bin",  0x00000, 0x20000, CRC(565315f8) SHA1(6b1c5ef52359483228b329c89c2e1174e3fbf017) )
@@ -2257,9 +2311,9 @@ GAME ( 1989, hellfir1, hellfire, hellfire, hellfir1, 0, ROT0,   "Toaplan (Taito 
 GAME ( 1989, zerowing, 0,        zerowing, zerowing, 0, ROT0,   "Toaplan", "Zero Wing" )
 GAME ( 1990, demonwld, 0,        demonwld, demonwld, 0, ROT0,   "Toaplan", "Demon's World / Horror Story" )
 GAME ( 1989, demonwl1, demonwld, demonwld, demonwl1, 0, ROT0,   "Toaplan (Taito license)", "Demon's World / Horror Story (Taito license)" )
-GAMEX( 1990, fireshrk, 0,        samesame, fireshrk, 0, ROT270, "Toaplan", "Fire Shark", GAME_NO_SOUND )
-GAMEX( 1989, samesame, fireshrk, samesame, samesame, 0, ROT270, "Toaplan", "Same! Same! Same!", GAME_NO_SOUND )
-GAMEX( 1989, samesam2, fireshrk, samesame, samesam2, 0, ROT270, "Toaplan", "Same! Same! Same! (2P Ver.)", GAME_NO_SOUND )
+GAME(  1990, fireshrk, 0,        samesame, fireshrk, 0, ROT270, "Toaplan", "Fire Shark" )
+GAME(  1989, samesame, fireshrk, samesame, samesame, 0, ROT270, "Toaplan", "Same! Same! Same!" )
+GAME(  1989, samesam2, fireshrk, samesame, samesam2, 0, ROT270, "Toaplan", "Same! Same! Same! (2P Ver.)" )
 GAME ( 1990, outzone,  0,        outzone,  outzone,  0, ROT270, "Toaplan", "Out Zone (set 1)" )
 GAME ( 1990, outzonea, outzone,  outzone,  outzone,  0, ROT270, "Toaplan", "Out Zone (set 2)" )
 GAMEX( 1991, vimana,   0,        vimana,   vimana,   0, ROT270, "Toaplan", "Vimana", GAME_NO_SOUND )
