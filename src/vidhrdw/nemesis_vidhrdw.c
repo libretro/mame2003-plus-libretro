@@ -311,7 +311,7 @@ VIDEO_START( nemesis )
 	sprite816_dirty = auto_malloc(1024);
 	if (!sprite816_dirty)
 		return 1;
-	memset(sprite816_dirty,1,32);
+	memset(sprite816_dirty,1,1024);
 
 	sprite6464_dirty = auto_malloc(32);
 	if (!sprite6464_dirty)
@@ -441,7 +441,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 
 				if( zoom )
 				{
-					zoom = ((1<<16)*0x80/zoom) + 0x0200;
+					zoom = ((1<<16)*0x80/zoom) + 0x02ab;
 					if (flipscreen)
 					{
 						sx = 256 - ((zoom * w) >> 16) - sx;
