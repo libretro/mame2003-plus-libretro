@@ -342,6 +342,7 @@ static MEMORY_READ16_START( vimana_readmem )
 	{ 0x400000, 0x400001, input_port_0_word_r },
 	{ 0x404000, 0x4047ff, toaplan1_colorram1_r },
 	{ 0x406000, 0x4067ff, toaplan1_colorram2_r },
+	{ 0x440000, 0x4407ff, toaplan1_shared_r },/* inputs, coins and sound handled by 647180 MCU via this space */
 	{ 0x480000, 0x487fff, MRA16_RAM },
 	{ 0x4c0002, 0x4c0003, toaplan1_tileram_offs_r },
 	{ 0x4c0004, 0x4c0007, toaplan1_tileram16_r },
@@ -360,6 +361,7 @@ static MEMORY_WRITE16_START( vimana_writemem )
 	{ 0x400008, 0x40000f, toaplan1_bcu_control_w },
 	{ 0x404000, 0x4047ff, toaplan1_colorram1_w, &toaplan1_colorram1, &toaplan1_colorram1_size },
 	{ 0x406000, 0x4067ff, toaplan1_colorram2_w, &toaplan1_colorram2, &toaplan1_colorram2_size },
+	{ 0x440000, 0x4407ff, toaplan1_shared_w },/* inputs, coins and sound handled by 647180 MCU via this space */
 	{ 0x480000, 0x487fff, MWA16_RAM },
 	{ 0x4c0000, 0x4c0001, toaplan1_bcu_flipscreen_w },
 	{ 0x4c0002, 0x4c0003, toaplan1_tileram_offs_w },
