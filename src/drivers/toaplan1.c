@@ -54,12 +54,6 @@ Notes:
 	Demonwld (Toaplan copyright) is a newer version, and has a different game
 	level sequence compared to the Taito licensed version.
 
-
-To Do:
-	Add support for HD647180 (Z180) sound CPUs (once their internal
-	ROMS are dumped). These are:
-		Vimana
-
 ***************************************************************************/
 
 #include "driver.h"
@@ -75,6 +69,8 @@ WRITE16_HANDLER(samesame_mcu_w);
 READ_HANDLER(samesame_soundlatch_r);
 WRITE_HANDLER(samesame_sound_done_w);
 READ_HANDLER(samesame_cmdavailable_r);
+READ_HANDLER(vimana_dswb_invert_r);
+READ_HANDLER(vimana_tjump_invert_r);
 
 /* 68000 memory maps */
 static MEMORY_READ16_START( rallybik_readmem )
@@ -346,13 +342,6 @@ static MEMORY_READ16_START( vimana_readmem )
 	{ 0x400000, 0x400001, input_port_0_word_r },
 	{ 0x404000, 0x4047ff, toaplan1_colorram1_r },
 	{ 0x406000, 0x4067ff, toaplan1_colorram2_r },
-	{ 0x440000, 0x440005, vimana_mcu_r },
-	{ 0x440006, 0x440007, input_port_3_word_r },
-	{ 0x440008, 0x440009, vimana_input_port_5_word_r },
-	{ 0x44000a, 0x44000b, input_port_1_word_r },
-	{ 0x44000c, 0x44000d, input_port_2_word_r },
-	{ 0x44000e, 0x44000f, input_port_4_word_r },
-	{ 0x440010, 0x440011, input_port_6_word_r },
 	{ 0x480000, 0x487fff, MRA16_RAM },
 	{ 0x4c0002, 0x4c0003, toaplan1_tileram_offs_r },
 	{ 0x4c0004, 0x4c0007, toaplan1_tileram16_r },
@@ -371,7 +360,6 @@ static MEMORY_WRITE16_START( vimana_writemem )
 	{ 0x400008, 0x40000f, toaplan1_bcu_control_w },
 	{ 0x404000, 0x4047ff, toaplan1_colorram1_w, &toaplan1_colorram1, &toaplan1_colorram1_size },
 	{ 0x406000, 0x4067ff, toaplan1_colorram2_w, &toaplan1_colorram2, &toaplan1_colorram2_size },
-	{ 0x440000, 0x440005, vimana_mcu_w },
 	{ 0x480000, 0x487fff, MWA16_RAM },
 	{ 0x4c0000, 0x4c0001, toaplan1_bcu_flipscreen_w },
 	{ 0x4c0002, 0x4c0003, toaplan1_tileram_offs_w },
@@ -550,6 +538,52 @@ static PORT_WRITE_START( samesame_hd647180_writeport )
 	{ 0x81, 0x81, YM3812_write_port_0_w },
 PORT_END
 
+READ_HANDLER(vimana_dswb_invert_r)
+{
+    return input_port_4_r(0)^0xFF;
+}
+ 
+READ_HANDLER(vimana_tjump_invert_r)
+{
+	return (input_port_6_r(0)^0xFF)|0xC0; // high 2 bits of port G always read as 1
+} 
+ 
+static MEMORY_READ_START( vimana_hd647180_readmem )
+	{ 0x00000, 0x03fff, MRA_ROM },
+	{ 0x08000, 0x087ff, MRA_RAM }, /* 2048 bytes of shared ram w/maincpu */
+	{ 0x0fe00, 0x0ffff, MRA_RAM },
+MEMORY_END
+
+static MEMORY_WRITE_START( vimana_hd647180_writemem )
+	{ 0x00000, 0x03fff, MWA_ROM },
+	{ 0x08000, 0x087ff, MWA_RAM, &toaplan1_sharedram }, /* 2048 bytes of shared ram w/maincpu */
+	{ 0x0fe00, 0x0ffff, MWA_RAM },
+MEMORY_END
+ 
+static PORT_READ_START( vimana_hd647180_readport )
+        { 0x60, 0x60, vimana_dswb_invert_r },
+	{ 0x66, 0x66, vimana_tjump_invert_r },
+	{ 0x80, 0x80, input_port_1_r },
+	{ 0x81, 0x81, input_port_2_r },
+	{ 0x82, 0x82, input_port_3_r },
+	{ 0x83, 0x83, input_port_5_r },
+	{ 0x87, 0x87, YM3812_status_port_0_r },
+	{ 0x8f, 0x8f, YM3812_status_port_0_r },
+PORT_END
+
+static PORT_WRITE_START( vimana_hd647180_writeport )
+        { 0x32, 0x32, MWA_NOP }, // DMA WAIT/Control register
+	{ 0x33, 0x33, MWA_NOP }, // IL (int vector low) register
+	{ 0x36, 0x36, MWA_NOP }, // refresh control register for RFSH pin
+	{ 0x71, 0x71, MWA_NOP }, // ddr for port B
+	{ 0x72, 0x72, MWA_NOP }, // ddr for port C
+	{ 0x73, 0x73, MWA_NOP }, // ddr for port D
+	{ 0x74, 0x74, MWA_NOP }, // ddr for port E
+	{ 0x75, 0x75, MWA_NOP }, // ddr for port F
+	{ 0x84, 0x84, toaplan1_coin_w },  // Coin counter/lockout // needs verify
+	{ 0x87, 0x87, YM3812_control_port_0_w },
+	{ 0x8f, 0x8f, YM3812_write_port_0_w },
+PORT_END
 
 /*****************************************************************************
 	Input Port definitions
@@ -1434,24 +1468,24 @@ INPUT_PORTS_START( vimana )
 
 	TOAPLAN1_SYSTEM_INPUTS
 
-	PORT_START		/* Territory Jumper Block */
-	PORT_DIPNAME( 0x0f, 0x02, "Territory" )
+	PORT_START
+        PORT_DIPNAME( 0x0f, 0x02, "Region" )
 	PORT_DIPSETTING(    0x02, "Europe" )
-	PORT_DIPSETTING(    0x01, "US" )
-	PORT_DIPSETTING(    0x00, "Japan" )
-	PORT_DIPSETTING(    0x03, "Hong Kong" )
-	PORT_DIPSETTING(    0x04, "Korea" )
+	PORT_DIPSETTING(    0x01, "USA" )
+	PORT_DIPSETTING(    0x07, "USA (Romstar license)" )
+    //  PORT_DIPSETTING(    0x00, "Japan (distributed by Tecmo)" )
+    //  PORT_DIPSETTING(    0x0f, "Japan (distributed by Tecmo)" )
+	PORT_DIPSETTING(    0x04, "Korea")
+	PORT_DIPSETTING(    0x03, "Hong_Kong" )
+	PORT_DIPSETTING(    0x08, "Hong Kong (Honest Trading license)" )
 	PORT_DIPSETTING(    0x05, "Taiwan" )
-//	PORT_DIPSETTING(    0x06, "Taiwan" )
-//	PORT_DIPSETTING(    0x07, "US" )
-//	PORT_DIPSETTING(    0x08, "Hong Kong" )
-//	PORT_DIPSETTING(    0x09, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0a, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0b, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0c, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0d, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0e, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0f, "Japan" )
+	PORT_DIPSETTING(    0x06, "Taiwan (Spacy license)" )
+    //  PORT_DIPSETTING(    0x09, "???" )
+    //  PORT_DIPSETTING(    0x0a, "???" )
+    //  PORT_DIPSETTING(    0x0b, "???" )
+    //  PORT_DIPSETTING(    0x0c, "???" )
+    //  PORT_DIPSETTING(    0x0d, "???" )
+    //  PORT_DIPSETTING(    0x0e, "???" )
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -1523,24 +1557,24 @@ INPUT_PORTS_START( vimanan )
 
 	TOAPLAN1_SYSTEM_INPUTS
 
-	PORT_START		/* Territory Jumper Block */
-	PORT_DIPNAME( 0x0f, 0x02, "Territory" )
+	PORT_START
+        PORT_DIPNAME( 0x0f, 0x02, "Region" )
 	PORT_DIPSETTING(    0x02, "Europe" )
-	PORT_DIPSETTING(    0x01, "US" )
-	PORT_DIPSETTING(    0x00, "Japan" )
-	PORT_DIPSETTING(    0x03, "Hong Kong" )
-	PORT_DIPSETTING(    0x04, "Korea" )
+	PORT_DIPSETTING(    0x01, "USA" )
+	PORT_DIPSETTING(    0x07, "USA (Romstar license)" )
+    //  PORT_DIPSETTING(    0x00, "Japan (distributed by Tecmo)" )
+    //  PORT_DIPSETTING(    0x0f, "Japan (distributed by Tecmo)" )
+	PORT_DIPSETTING(    0x04, "Korea")
+	PORT_DIPSETTING(    0x03, "Hong_Kong" )
+	PORT_DIPSETTING(    0x08, "Hong Kong (Honest Trading license)" )
 	PORT_DIPSETTING(    0x05, "Taiwan" )
-//	PORT_DIPSETTING(    0x06, "Taiwan" )
-//	PORT_DIPSETTING(    0x07, "US" )
-//	PORT_DIPSETTING(    0x08, "Hong Kong" )
-//	PORT_DIPSETTING(    0x09, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0a, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0b, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0c, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0d, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0e, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x0f, "Japan" )
+	PORT_DIPSETTING(    0x06, "Taiwan (Spacy license)" )
+    //  PORT_DIPSETTING(    0x09, "???" )
+    //  PORT_DIPSETTING(    0x0a, "???" )
+    //  PORT_DIPSETTING(    0x0b, "???" )
+    //  PORT_DIPSETTING(    0x0c, "???" )
+    //  PORT_DIPSETTING(    0x0d, "???" )
+    //  PORT_DIPSETTING(    0x0e, "???" )
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -1866,9 +1900,14 @@ static MACHINE_DRIVER_START( vimana )
 	MDRV_CPU_ADD(M68000, 10000000)
 	MDRV_CPU_MEMORY(vimana_readmem,vimana_writemem)
 	MDRV_CPU_VBLANK_INT(toaplan1_interrupt,1)
+	
+	MDRV_CPU_ADD(Z180, 28000000/8)    /* HD647180XOFS6 CPU */
+	MDRV_CPU_MEMORY(vimana_hd647180_readmem,vimana_hd647180_writemem)
+	MDRV_CPU_PORTS(vimana_hd647180_readport,vimana_hd647180_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(10)
 
 	MDRV_MACHINE_INIT(vimana)
 
@@ -2236,8 +2275,8 @@ ROM_START( vimana )			/* From board serial number 1547.04 (July '94) */
 	ROM_LOAD16_BYTE( "tp019-8a.bin",  0x000001, 0x20000, CRC(03ba27e8) SHA1(edb5fe741d2a6a7fe5cde9a82317ea1e9447cf73) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Sound HD647180 code */
-	/* sound CPU is a HD647180 (Z180) with internal ROM - not yet supported */
-	ROM_LOAD( "hd647180.019",  0x00000, 0x08000, NO_DUMP )
+	/* sound CPU is a HD647180 (Z180) with internal ROM */
+	ROM_LOAD( "hd647180.019", 0x00000, 0x08000, CRC(41a97ebe) SHA1(9b377086e4d9b8de6e3c8c7d2dd099b80ab88934) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "vim6.bin",  0x00000, 0x20000, CRC(2886878d) SHA1(f44933d87bbcd3bd58f46e0f0f89b05c409b713b) )
@@ -2260,8 +2299,8 @@ ROM_START( vimana1 )
 	ROM_LOAD16_BYTE( "vim08.bin",  0x000001, 0x20000, CRC(e45b7def) SHA1(6b92a91d64581954da8ecdbeb5fed79bcc9c5217) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Sound HD647180 code */
-	/* sound CPU is a HD647180 (Z180) with internal ROM - not yet supported */
-	ROM_LOAD( "hd647180.019",  0x00000, 0x08000, NO_DUMP )
+	/* sound CPU is a HD647180 (Z180) with internal ROM */
+	ROM_LOAD( "hd647180.019", 0x00000, 0x08000, CRC(41a97ebe) SHA1(9b377086e4d9b8de6e3c8c7d2dd099b80ab88934) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "vim6.bin",  0x00000, 0x20000, CRC(2886878d) SHA1(f44933d87bbcd3bd58f46e0f0f89b05c409b713b) )
@@ -2284,8 +2323,8 @@ ROM_START( vimanan )
 	ROM_LOAD16_BYTE( "tp019-08.rom",  0x000001, 0x20000, CRC(6cd2dc3c) SHA1(029d974eb938c5e2fbe7575f0dda342b4b12b731) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Sound HD647180 code */
-	/* sound CPU is a HD647180 (Z180) with internal ROM - not yet supported */
-	ROM_LOAD( "hd647180.019",  0x00000, 0x08000, NO_DUMP )
+	/* sound CPU is a HD647180 (Z180) with internal ROM */
+	ROM_LOAD( "hd647180.019", 0x00000, 0x08000, CRC(41a97ebe) SHA1(9b377086e4d9b8de6e3c8c7d2dd099b80ab88934) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "vim6.bin",  0x00000, 0x20000, CRC(2886878d) SHA1(f44933d87bbcd3bd58f46e0f0f89b05c409b713b) )
@@ -2311,11 +2350,11 @@ GAME ( 1989, hellfir1, hellfire, hellfire, hellfir1, 0, ROT0,   "Toaplan (Taito 
 GAME ( 1989, zerowing, 0,        zerowing, zerowing, 0, ROT0,   "Toaplan", "Zero Wing" )
 GAME ( 1990, demonwld, 0,        demonwld, demonwld, 0, ROT0,   "Toaplan", "Demon's World / Horror Story" )
 GAME ( 1989, demonwl1, demonwld, demonwld, demonwl1, 0, ROT0,   "Toaplan (Taito license)", "Demon's World / Horror Story (Taito license)" )
-GAME(  1990, fireshrk, 0,        samesame, fireshrk, 0, ROT270, "Toaplan", "Fire Shark" )
-GAME(  1989, samesame, fireshrk, samesame, samesame, 0, ROT270, "Toaplan", "Same! Same! Same!" )
-GAME(  1989, samesam2, fireshrk, samesame, samesam2, 0, ROT270, "Toaplan", "Same! Same! Same! (2P Ver.)" )
+GAME ( 1990, fireshrk, 0,        samesame, fireshrk, 0, ROT270, "Toaplan", "Fire Shark" )
+GAME ( 1989, samesame, fireshrk, samesame, samesame, 0, ROT270, "Toaplan", "Same! Same! Same!" )
+GAME ( 1989, samesam2, fireshrk, samesame, samesam2, 0, ROT270, "Toaplan", "Same! Same! Same! (2P Ver.)" )
 GAME ( 1990, outzone,  0,        outzone,  outzone,  0, ROT270, "Toaplan", "Out Zone (set 1)" )
 GAME ( 1990, outzonea, outzone,  outzone,  outzone,  0, ROT270, "Toaplan", "Out Zone (set 2)" )
-GAMEX( 1991, vimana,   0,        vimana,   vimana,   0, ROT270, "Toaplan", "Vimana", GAME_NO_SOUND )
-GAMEX( 1991, vimana1,  vimana,   vimana,   vimana,   0, ROT270, "Toaplan", "Vimana (old set)", GAME_NO_SOUND )
-GAMEX( 1991, vimanan,  vimana,   vimana,   vimanan,  0, ROT270, "Toaplan (Nova Apparate GMBH & Co license)", "Vimana (Nova Apparate GMBH & Co)", GAME_NO_SOUND )
+GAME ( 1991, vimana,   0,        vimana,   vimana,   0, ROT270, "Toaplan", "Vimana" )
+GAME ( 1991, vimana1,  vimana,   vimana,   vimana,   0, ROT270, "Toaplan", "Vimana (old set)" )
+GAME ( 1991, vimanan,  vimana,   vimana,   vimanan,  0, ROT270, "Toaplan (Nova Apparate GMBH & Co license)", "Vimana (Nova Apparate GMBH & Co)" )
