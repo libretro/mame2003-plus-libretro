@@ -3493,6 +3493,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( citybmrj )	/* GX787 (c) 1987 (Japan) */
 	DRIVER( kittenk )	/* GX712 (c) 1988 */
 	DRIVER( nyanpani )	/* GX712 (c) 1988 (Japan) */
+	DRIVER( hcrash )        /* GX790 (c) 1987 */
+	DRIVER( hcrashc )       /* GX790 (c) 1987 */
 
 	/* GX400 BIOS based games */
 	DRIVER( rf2 )		/* GX561 (c) 1985 */
