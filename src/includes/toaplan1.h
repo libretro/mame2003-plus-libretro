@@ -15,9 +15,6 @@ WRITE16_HANDLER( demonwld_dsp_w );
 WRITE16_HANDLER( demonwld_dsp_ctrl_w );
 READ16_HANDLER ( demonwld_BIO_r );
 READ16_HANDLER ( samesame_port_6_word_r );
-READ16_HANDLER ( vimana_mcu_r );
-WRITE16_HANDLER( vimana_mcu_w );
-READ16_HANDLER ( vimana_input_port_5_word_r );
 
 WRITE_HANDLER( rallybik_coin_w );
 WRITE_HANDLER( toaplan1_coin_w );
