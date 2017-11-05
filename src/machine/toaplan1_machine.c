@@ -7,6 +7,7 @@
 #include "state.h"
 #include "cpu/m68000/m68000.h"
 #include "cpu/tms32010/tms32010.h"
+#include "toaplan1.h"
 
 #define CLEAR 0
 #define ASSERT 1
@@ -15,11 +16,11 @@
 static int toaplan1_coin_count; /* coin count increments on startup ? , so dont count it */
 static int toaplan1_intenable;
 static int demonwld_dsp_BIO;
+static int vimana_credits;
+static int vimana_latch;
 
 static int dsp_execute;							/* Demon world */
 static unsigned int dsp_addr_w, main_ram_seg;	/* Demon world */
-static int credits;		/* Vimana */
-static int latch;		/* Vimana */
 
 int toaplan1_unk_reset_port;
 
@@ -148,50 +149,6 @@ READ16_HANDLER( samesame_port_6_word_r )
 	return (0x80 | input_port_6_word_r(0,0)) & 0xff;
 }
 
-READ16_HANDLER( vimana_input_port_5_word_r )
-{
-	int data, p;
-
-	p = input_port_5_word_r(0,0);
-
-	latch ^= p;
-	data = (latch & p );
-
-	/* simulate the mcu keeping track of credits */
-	/* latch so it doesn't add more than one */
-	/* credit per keypress */
-
-	if (data & 0x18)
-	{
-		credits++ ;
-	}
-
-	latch = p;
-
-	return p & 0xffff;
-}
-
-READ16_HANDLER( vimana_mcu_r )
-{
-	int data = 0 ;
-	switch (offset)
-	{
-		case 0:  data = 0xff; break;
-		case 1:  data = 0; break;
-		case 2:  data = credits; break;
-	}
-	return data & 0xff;
-}
-WRITE16_HANDLER( vimana_mcu_w )
-{
-	switch (offset)
-	{
-		case 0:  break;
-		case 1:  break;
-		case 2:  if (ACCESSING_LSB) credits = data & 0xff; break;
-	}
-}
-
 READ16_HANDLER( toaplan1_shared_r )
 {
 	return toaplan1_sharedram[offset] & 0xff;
@@ -248,10 +205,6 @@ MACHINE_INIT( demonwld )
 
 MACHINE_INIT( vimana )
 {
-	credits = 0;
-	latch = 0;
-	state_save_register_INT32("vimana", 0, "Credits count", &credits, 1);
-	state_save_register_INT32("vimana", 0, "MCU_latch", &latch, 1);
 	machine_init_toaplan1();
 }
 
