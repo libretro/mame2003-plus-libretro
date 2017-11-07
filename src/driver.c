@@ -5609,7 +5609,6 @@ Other Sun games
         DRIVER( baryon )    /* (c) 1997 SemiCom / Tirano */
         DRIVER( cutefght )  /* (c) 1998 SemiCom */
 	DRIVER( dreamwld )  /* (c) 2000 SemiCom */
-        DRIVER( rolcrush )  /* (c) 1999 Trust / SemiCom */
         DRIVER( gaialast )  /* (c) 1999 SemiCom / XESS */
 	DRIVER( rolcrush )  /* (c) 1999 Trust / SemiCom */
 
