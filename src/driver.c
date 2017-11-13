@@ -4576,6 +4576,10 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tetrisp2 )	/* (c) 1997 Jaleco */
 	DRIVER( teplus2j )	/* (c) 1997 Jaleco */
 	DRIVER( rockn )		/* (c) 1999 Jaleco */
+	DRIVER( rockna )        /* (c) 1999 Jaleco */
+	DRIVER( rockn2 )        /* (c) 1999 Jaleco */
+	DRIVER( rockn3 )        /* (c) 1999 Jaleco */
+	DRIVER( rockn4 )        /* (c) 2000 Jaleco */
 
 	/* Jaleco Mega System 1 games */
 	DRIVER( lomakai )	/* (c) 1988 (World) */
