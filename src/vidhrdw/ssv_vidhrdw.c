@@ -581,11 +581,11 @@ static void ssv_draw_row(struct mame_bitmap *bitmap, int sx, int sy, int scroll)
 
 /* Draw the "background layer" using multiple tilemap sprites */
 
-static void ssv_draw_layer(struct mame_bitmap *bitmap)
+static void ssv_draw_layer(struct mame_bitmap *bitmap,int  nr)
 {
 	int sy;
 	for ( sy = 0; sy <= Machine->visible_area.max_y; sy += 0x40 )
-		ssv_draw_row(bitmap, 0, sy, 0);
+		ssv_draw_row(bitmap, 0, sy, nr);
 }
 
 /* Draw sprites in the sprites list */
@@ -669,7 +669,8 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 				// Kludge for srmp4
 				if (ssv_scroll[0x7a/2] == 0x4940)	sy+=0x60;
 
-				ssv_draw_row(bitmap, sx, sy, scroll);
+				if (ssv_special !=3) // dynagears draws rows over sprites?! (but needs rows for hi-score table..)
+					ssv_draw_row(bitmap, sx, sy, scroll);
 			}
 /* 	"normal" sprite
 	hot spots:
@@ -782,6 +783,16 @@ VIDEO_UPDATE( ssv )
 
 	if (!enable_video)	return;
 
-	ssv_draw_layer(bitmap);		// "background layer"
-	ssv_draw_sprites(bitmap);	// sprites list
+	if (ssv_special !=3)
+	{
+		ssv_draw_layer(bitmap,0);		// "background layer"
+		ssv_draw_sprites(bitmap);	// sprites list
+	} // dynagears is weird, whats really going on?
+	else
+	{
+		ssv_draw_layer(bitmap,0);
+		ssv_draw_layer(bitmap,1);
+		ssv_draw_sprites(bitmap);
+		ssv_draw_layer(bitmap,3);
+	}
 }
