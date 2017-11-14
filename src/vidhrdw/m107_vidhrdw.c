@@ -207,8 +207,7 @@ WRITE_HANDLER( m107_control_w )
 			break;
 
 		case 0x1e:
-		case 0x1f:
-			m107_raster_irq_position=((m107_control[0x1f]<<8) | m107_control[0x1e])-128;
+			m107_raster_irq_position=(m107_control[0x1e])-128; //gamezfan 
 			break;
 	}
 }
@@ -370,7 +369,7 @@ static void m107_update_scroll_positions(void)
 	*/
 
 	if (pf1_rowscroll) {
-		tilemap_set_scroll_rows(pf1_layer,512);
+		tilemap_set_scroll_rows(pf1_layer,1024);
 		for (i=0; i<1024; i+=2)
 			tilemap_set_scrollx( pf1_layer,i/2, (m107_vram_data[0xe800+i]+(m107_vram_data[0xe801+i]<<8)));
 	} else {
