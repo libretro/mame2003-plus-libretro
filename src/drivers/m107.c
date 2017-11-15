@@ -64,7 +64,6 @@ static WRITE_HANDLER( m107_coincounter_w )
 }
 
 
-
 enum { VECTOR_INIT, YM2151_ASSERT, YM2151_CLEAR, V30_ASSERT, V30_CLEAR };
 
 static void setvector_callback(int param)
@@ -105,7 +104,7 @@ static int sound_status;
 
 static READ_HANDLER( m92_sound_status_r )
 {
-	return 0xff;
+	return sound_status;
 }
 
 static READ_HANDLER( m92_soundlatch_r )
@@ -129,12 +128,18 @@ static WRITE_HANDLER( m92_sound_irq_ack_w )
 
 static WRITE_HANDLER( m92_sound_status_w )
 {
-	if (offset == 0)
-	{
-//		usrintf_showmessage("sound answer %02x",data);
-		sound_status = data;
-	}
+   if (offset == 0)
+   {
+   sound_status = data;
+   cpu_set_irq_line_and_vector(0,0,HOLD_LINE,m107_IRQ_3);
+   }
 }
+
+static WRITE_HANDLER( m107_sound_reset_w )
+{
+   cpu_set_reset_line(1, (data) ? CLEAR_LINE : ASSERT_LINE);
+}
+
 
 /*****************************************************************************/
 
@@ -178,6 +183,7 @@ static PORT_WRITE_START( writeport )
 	{ 0x80, 0x9f, m107_control_w },
 	{ 0xa0, 0xaf, MWA_NOP }, /* Written with 0's in interrupt */
 	{ 0xb0, 0xb1, m107_spritebuffer_w },
+	{ 0xc0, 0xc1, m107_sound_reset_w },
 PORT_END
 
 /******************************************************************************/
@@ -490,10 +496,10 @@ static INTERRUPT_GEN( m107_raster_interrupt )
 	}
 
 	/* Kludge to get Fire Barrel running */
-	else if (line==118)
-	{
-		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, m107_IRQ_3);
-	}
+//	else if (line==118)
+//	{
+//		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, m107_IRQ_3);
+//	}
 
 	/* Redraw screen, then set vblank and trigger the VBL interrupt */
 	else if (line==248) {
@@ -724,6 +730,6 @@ static DRIVER_INIT( wpksoc )
 
 /***************************************************************************/
 
-GAMEX(1993, firebarr, 0, firebarr, firebarr, firebarr, ROT270, "Irem", "Fire Barrel (Japan)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAMEX(1993, firebarr, 0, firebarr, firebarr, firebarr, ROT270, "Irem", "Fire Barrel (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, dsoccr94, 0, dsoccr94, dsoccr94, dsoccr94, ROT0,   "Irem (Data East Corporation license)", "Dream Soccer '94" )
 GAMEX(1995, wpksoc,   0, firebarr, wpksoc,	 wpksoc,   ROT0,   "Jaleco", "World PK Soccer", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS )
