@@ -22,7 +22,6 @@ extern int (*sys16_spritesystem)(
 
 extern int sys16_sprite_shinobi( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
 extern int sys16_sprite_passshot( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
-extern int sys16_sprite_aurail( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
 extern int sys16_sprite_fantzone( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
 extern int sys16_sprite_quartet2( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
 extern int sys16_sprite_hangon( struct sys16_sprite_attributes *sprite, const UINT16 *source, int bJustGetColor );
@@ -62,14 +61,14 @@ extern void sys16_patch_z80code( int offset, int data );
 
 extern void sys16_interleave_sprite_data( int bank_size );
 
-#define SYS16_MWA16_PALETTERAM	sys16_paletteram_w, &paletteram16
+#define SYS16_MWA16_PALETTERAM	sys16_paletteram_w
 #define SYS16_MRA16_PALETTERAM	paletteram16_word_r
 
 #define SYS16_MRA16_WORKINGRAM	MRA16_RAM
-#define SYS16_MWA16_WORKINGRAM	MWA16_RAM,&sys16_workingram
+#define SYS16_MWA16_WORKINGRAM	MWA16_RAM
 
 #define SYS16_MRA16_WORKINGRAM2	MRA16_RAM
-#define SYS16_MWA16_WORKINGRAM2	MWA16_RAM,&sys16_workingram2
+#define SYS16_MWA16_WORKINGRAM2	MWA16_RAM
 
 extern READ16_HANDLER( SYS16_MRA16_WORKINGRAM2_SHARE );
 extern WRITE16_HANDLER( SYS16_MWA16_WORKINGRAM2_SHARE );
@@ -78,28 +77,28 @@ extern void (*sys16_custom_irq)(void);
 extern MACHINE_INIT( sys16_onetime );
 
 #define SYS16_MRA16_SPRITERAM		MRA16_RAM
-#define SYS16_MWA16_SPRITERAM		MWA16_RAM,&sys16_spriteram
+#define SYS16_MWA16_SPRITERAM		MWA16_RAM
 
 #define SYS16_MRA16_TILERAM		sys16_tileram_r
-#define SYS16_MWA16_TILERAM		sys16_tileram_w,&sys16_tileram
+#define SYS16_MWA16_TILERAM		sys16_tileram_w
 
 #define SYS16_MRA16_TEXTRAM		sys16_textram_r
-#define SYS16_MWA16_TEXTRAM		sys16_textram_w,&sys16_textram
+#define SYS16_MWA16_TEXTRAM		sys16_textram_w
 
 #define SYS16_MRA16_EXTRAM		MRA16_RAM
-#define SYS16_MWA16_EXTRAM		MWA16_RAM,&sys16_extraram
+#define SYS16_MWA16_EXTRAM		MWA16_RAM
 
 #define SYS16_MRA16_EXTRAM2		MRA16_RAM
-#define SYS16_MWA16_EXTRAM2		MWA16_RAM,&sys16_extraram2
+#define SYS16_MWA16_EXTRAM2		MWA16_RAM
 
 #define SYS16_MRA16_EXTRAM3		MRA16_RAM
-#define SYS16_MWA16_EXTRAM3		MWA16_RAM,&sys16_extraram3
+#define SYS16_MWA16_EXTRAM3		MWA16_RAM
 
 #define SYS16_MRA16_EXTRAM4		MRA16_RAM
-#define SYS16_MWA16_EXTRAM4		MWA16_RAM,&sys16_extraram4
+#define SYS16_MWA16_EXTRAM4		MWA16_RAM
 
 #define SYS16_MRA16_ROADRAM		MRA16_RAM
-#define SYS16_MWA16_ROADRAM		MWA16_RAM,&sys16_roadram
+#define SYS16_MWA16_ROADRAM		MWA16_RAM
 
 extern READ16_HANDLER( SYS16_MRA16_ROADRAM_SHARE );
 extern WRITE16_HANDLER( SYS16_MWA16_ROADRAM_SHARE );
@@ -254,13 +253,11 @@ extern int sys16_textlayer_lo_min;
 extern int sys16_textlayer_lo_max;
 extern int sys16_textlayer_hi_min;
 extern int sys16_textlayer_hi_max;
-extern int sys16_dactype;
 extern int sys16_bg1_trans;
 extern int sys16_bg_priority_mode;
 extern int sys16_fg_priority_mode;
 extern int sys16_bg_priority_value;
 extern int sys16_fg_priority_value;
-extern int sys16_spritelist_end;
 extern int sys16_tilebank_switch;
 extern int sys16_rowscroll_scroll;
 extern int sys16_quartet_title_kludge;
@@ -314,6 +311,7 @@ extern struct YM2151interface sys16_ym2151_interface;
 extern struct YM2203interface sys16_ym2203_interface;
 extern struct YM2203interface sys16_3xym2203_interface;
 
+extern struct DACinterface datsu_dac_interface;
 extern struct DACinterface sys16_7751_dac_interface;
 
 extern struct UPD7759_interface sys16_upd7759_interface;
@@ -323,3 +321,6 @@ extern struct YM2413interface sys16_ym2413_interface;
 
 extern struct RF5C68interface sys18_rf5c68_interface;
 extern struct YM2612interface sys18_ym3438_interface;
+
+extern int sys18_sound_info[4*2];
+
