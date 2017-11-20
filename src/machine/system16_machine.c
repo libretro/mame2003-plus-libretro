@@ -2218,8 +2218,7 @@ struct YM2413interface sys16_ym2413_interface= {
 };
 
 struct RF5C68interface sys18_rf5c68_interface = {
-  //3580000 * 2,
-  3579545*2,
+  8000000,
   100
 };
 
@@ -2231,3 +2230,5 @@ struct YM2612interface sys18_ym3438_interface =
 			YM3012_VOL(40,MIXER_PAN_CENTER,40,MIXER_PAN_CENTER) },	/* Volume */
 	{ 0 },	{ 0 },	{ 0 },	{ 0 }
 };
+
+int sys18_sound_info[4*2];
