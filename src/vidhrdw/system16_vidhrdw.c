@@ -10,7 +10,6 @@ Known issues:
 - many registers are suspiciously plucked from working RAM
 - several games have nvram according to the self test, but we aren't yet saving it
 - many games suffer from sys16_refreshenable register not being mapped
-- hangon road isn't displayed(!) emulation bug?
 - road-rendering routines need to be cleaned up or at least better described
 - logical sprite height computation isn't quite right - garbage pixels are drawn
 - screen orientation support for sprite drawing
@@ -92,6 +91,7 @@ type1		type0			function
 ***************************************************************************/
 #include "driver.h"
 #include "system16.h"
+#include "vidhrdw/res_net.h"
 
 /*
 static void debug_draw( struct mame_bitmap *bitmap, int x, int y, unsigned int data ){
@@ -149,14 +149,12 @@ int sys16_textlayer_lo_min;
 int sys16_textlayer_lo_max;
 int sys16_textlayer_hi_min;
 int sys16_textlayer_hi_max;
-int sys16_dactype;
 int sys16_bg1_trans; // alien syn + sys18
 int sys16_bg_priority_mode;
 int sys16_fg_priority_mode;
 int sys16_bg_priority_value;
 int sys16_fg_priority_value;
 int sys16_18_mode;
-int sys16_spritelist_end;
 int sys16_tilebank_switch;
 int sys16_rowscroll_scroll;
 int sys16_quartet_title_kludge;
@@ -245,6 +243,7 @@ static void draw_sprite( //*
 	unsigned pen, data;
 
 	priority = 1<<priority;
+	if (!strcmp(Machine->gamedrv->name,"sonicbom")) flipy^=0x80; // temp hack until we fix drawing
 
 	if( flipy ){
 		dy = -1;
@@ -438,6 +437,10 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 				if (sprite.zoomy) logical_height = logical_height*(0x400 + sprite.zoomy)/0x400 - 1;
 				if (sprite.zoomx) screen_width = screen_width*(0x800 - sprite.zoomx)/0x800 + 2;
 
+// fix, 5-bit zoom field
+//				if (sprite.zoomy) logical_height = logical_height*(0x20 + sprite.zoomy)/0x20 - 1;
+//				if (sprite.zoomx) screen_width = screen_width*(0x40 - sprite.zoomx)/0x40 + 2;
+
 				if (flipx && flipy) { mod_h = -logical_height-1; mod_x = 2; }
 				else if     (flipx) { mod_h = 0;                 mod_x = 2; }
 				else if     (flipy) { mod_h = -logical_height;   mod_x = 0; }
@@ -482,57 +485,82 @@ UINT32 sys16_text_map( UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows 
 
 /***************************************************************************/
 
-WRITE16_HANDLER( sys16_paletteram_w ){
+/*
+	Color generation details
+	
+	Each color is made up of 5 bits, connected through one or more resistors like so:
+	
+	Bit 0 = 1 x 3.9K ohm
+	Bit 1 = 1 x 2.0K ohm
+	Bit 2 = 1 x 1.0K ohm
+	Bit 3 = 2 x 1.0K ohm
+	Bit 4 = 4 x 1.0K ohm
+	
+	Another data bit is connected by a tristate buffer to the color output through a 470 ohm resistor.
+	The buffer allows the resistor to have no effect (tristate), halve brightness (pull-down) or double brightness (pull-up).
+	The data bit source is a PPI pin in some of the earlier hardware (Hang-On, Pre-System 16) or bit 15 of each
+	color RAM entry (Space Harrier, System 16B and most later boards).
+*/
+
+const int resistances_normal[6] = {3900, 2000, 1000, 1000/2, 1000/4, 0};
+const int resistances_sh[6] = {3900, 2000, 1000, 1000/2, 1000/4, 470};
+static double weights[2][3][6];
+
+WRITE16_HANDLER( sys16_paletteram_w )
+{
 	data16_t oldword = paletteram16[offset];
 	data16_t newword;
 	COMBINE_DATA( &paletteram16[offset] );
 	newword = paletteram16[offset];
-	if( oldword!=newword ){ /* we can do this, because we initialize palette RAM to all black in vh_start */
+	
+	if( oldword!=newword )
+	{ 
+		/* we can do this, because we initialize palette RAM to all black in vh_start */
 		/*	   byte 0    byte 1 */
-		/*	GBGR BBBB GGGG RRRR */
-		/*	5444 3210 3210 3210 */
-		UINT8 r = (newword & 0x00f)<<1;
-		UINT8 g = (newword & 0x0f0)>>2;
-		UINT8 b = (newword & 0xf00)>>7;
-		if( sys16_dactype == 0 ){ /* we should really use two distinct paletteram_w handlers */
-			/* dac_type == 0 (from GCS file) */
-			if (newword&0x1000) r|=1;
-			if (newword&0x2000) g|=2;
-			if (newword&0x8000) g|=1;
-			if (newword&0x4000) b|=1;
-		}
-		else if( sys16_dactype == 1 ){
-			/* dac_type == 1 (from GCS file) Shinobi Only*/
-			if (newword&0x1000) r|=1;
-			if (newword&0x4000) g|=2;
-			if (newword&0x8000) g|=1;
-			if (newword&0x2000) b|=1;
-		}
+		/*	sBGR BBBB GGGG RRRR */
+		/*	x000 4321 4321 4321 */
+		
+		int r, g, b, rs, gs, bs, rh, gh, bh;
+		int r0 = (newword >> 12) & 1;
+		int r1 = (newword >>  0) & 1;
+		int r2 = (newword >>  1) & 1;
+		int r3 = (newword >>  2) & 1;
+		int r4 = (newword >>  3) & 1;
+		int g0 = (newword >> 13) & 1;
+		int g1 = (newword >>  4) & 1;
+		int g2 = (newword >>  5) & 1;
+		int g3 = (newword >>  6) & 1;
+		int g4 = (newword >>  7) & 1;
+		int b0 = (newword >> 14) & 1;
+		int b1 = (newword >>  8) & 1;
+		int b2 = (newword >>  9) & 1;
+		int b3 = (newword >> 10) & 1;
+		int b4 = (newword >> 11) & 1;
 
-#ifndef TRANSPARENT_SHADOWS
-		palette_set_color( offset,
-				(r << 3) | (r >> 2), /* 5 bits red */
-				(g << 2) | (g >> 4), /* 6 bits green */
-				(b << 3) | (b >> 2) /* 5 bits blue */
-			);
-#else
-		{   extern struct GameDriver driver_aburner, driver_aburner2; //JUN
-			r=(r << 3) | (r >> 2); /* 5 bits red */
-			g=(g << 2) | (g >> 4); /* 6 bits green */
-			b=(b << 3) | (b >> 2); /* 5 bits blue */
+		/* Normal colors */
+		r = combine_6_weights(weights[0][0], r0, r1, r2, r3, r4, 0);
+		g = combine_6_weights(weights[0][1], g0, g1, g2, g3, g4, 0);
+		b = combine_6_weights(weights[0][2], b0, b1, b2, b3, b4, 0);
+		
+		/* Shadow colors */
+		rs = combine_6_weights(weights[1][0], r0, r1, r2, r3, r4, 0);
+		gs = combine_6_weights(weights[1][1], g0, g1, g2, g3, g4, 0);
+		bs = combine_6_weights(weights[1][2], b0, b1, b2, b3, b4, 0);
 
-			palette_set_color( offset,r,g,b);
-			if (Machine->gamedrv != &driver_aburner && Machine->gamedrv != &driver_aburner2) { //JUN
-			/* shadow color */
-			r= r * 160 / 256;
-			g= g * 160 / 256;
-			b= b * 160 / 256;
-
-			palette_set_color( offset+Machine->drv->total_colors/2,r,g,b); }
-		}
-#endif
+		/* Highlight colors */
+		rh = combine_6_weights(weights[1][0], r0, r1, r2, r3, r4, 1);
+		gh = combine_6_weights(weights[1][1], g0, g1, g2, g3, g4, 1);
+		bh = combine_6_weights(weights[1][2], b0, b1, b2, b3, b4, 1);	
+	
+		palette_set_color( offset, r, g, b );
+		
+#ifdef TRANSPARENT_SHADOWS
+		palette_set_color( offset+Machine->drv->total_colors/2,rs,gs,bs); 
+#endif		
+		
 	}
 }
+
 
 static void update_page( void ){
 	int all_dirty = 0;
@@ -817,6 +845,20 @@ VIDEO_START( system16 ){
 	};
 	sys16_obj_bank = bank_default;
 
+	/* Normal colors */
+	compute_resistor_weights(0, 255, -1.0,  
+		6, resistances_normal, weights[0][0], 0, 0,
+		6, resistances_normal, weights[0][1], 0, 0,
+		6, resistances_normal, weights[0][2], 0, 0
+		);	
+
+	/* Shadow/Highlight colors */
+	compute_resistor_weights(0, 255, -1.0,  
+		6, resistances_sh, weights[1][0], 0, 0,
+		6, resistances_sh, weights[1][1], 0, 0,
+		6, resistances_sh, weights[1][2], 0, 0
+		);	
+
 	if( !sys16_bg1_trans )
 		background = tilemap_create(
 			get_bg_tile_info,
@@ -847,6 +889,9 @@ VIDEO_START( system16 ){
 		40,28 );
 
 	num_sprites = 128*2; /* only 128 for most games; aburner uses 256 */
+	
+	if(!strcmp(Machine->gamedrv->name, "hangon"))
+		num_sprites = 128;
 
 	if( background && foreground && text_layer ){
 		/* initialize all entries to black - needed for Golden Axe*/
@@ -876,10 +921,8 @@ VIDEO_START( system16 ){
 		sys16_sprxoffset = -0xb8;
 		sys16_textmode = 0;
 		sys16_bgxoffset = 0;
-		sys16_dactype = 0;
 		sys16_bg_priority_mode=0;
 		sys16_fg_priority_mode=0;
-		sys16_spritelist_end=0xffff;
 		sys16_tilebank_switch=0x1000;
 
 		// Defaults for sys16 games
