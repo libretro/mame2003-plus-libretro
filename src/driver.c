@@ -1792,6 +1792,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( whoopee )	/* TP-025 */
 	DRIVER( pipibibi )	/* (c) 1991 Ryouta Kikaku (bootleg?) */
 	DRIVER( fixeight )	/* TP-026 (c) 1992 + Taito license */
+	DRIVER( fixeighb )	/* TP-026 */
 	DRIVER( vfive )		/* TP-027 (c) 1993 Toaplan (Japan) */
 	DRIVER( grindstm )	/* TP-027 (c) 1993 Toaplan + Unite Trading license (Korea) */
 	DRIVER( grindsta )	/* TP-027 (c) 1993 Toaplan + Unite Trading license (Korea) */
