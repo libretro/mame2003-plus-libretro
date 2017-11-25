@@ -23,6 +23,7 @@ Supported games:
 	whoopee		TP-025		Toaplan		Whoopee
 	pipibibi	bootleg?	Toaplan		Pipi & Bibis
 	fixeight	TP-026		Toaplan		FixEight
+	fixeight	bootleg		Toaplan		FixEight (bootleg)
 	grindstm	TP-027		Toaplan		Grind Stormer  (1992)
 	grindsta	TP-027		Toaplan		Grind Stormer  (1992) (older)
 	vfive		TP-027		Toaplan		V-V  (V-Five)  (1993 - Japan only)
@@ -376,6 +377,12 @@ static DRIVER_INIT( fixeight )
 	install_mem_write16_handler(0, 0x28f002, 0x28fbff, MWA16_RAM );
 
 	toaplan2_sub_cpu = CPU_2_Zx80;
+}
+
+static DRIVER_INIT( fixeighb )
+{
+	data16_t *bgdata = (data16_t *)memory_region(REGION_CPU1);
+	cpu_setbank(1, &bgdata[0x40000]); /* $80000 - $fffff */
 }
 
 static DRIVER_INIT( pipibibi )
@@ -885,6 +892,19 @@ static WRITE16_HANDLER( oki_bankswitch_w )
 	if (ACCESSING_LSB)
 	{
 		OKIM6295_set_bank_base(0, (data & 1) * 0x40000);
+	}
+}
+
+static WRITE16_HANDLER( fixeighb_oki_bankswitch_w )
+{
+	if (ACCESSING_LSB)
+	{
+		data &= 7;
+		if (data <= 4)
+		{
+			data8_t *fixeighb_oki = memory_region(REGION_SOUND1);
+			memcpy(&fixeighb_oki[0x30000], &fixeighb_oki[(data * 0x10000) + 0x40000], 0x10000);
+		}
 	}
 }
 
@@ -1525,6 +1545,41 @@ static MEMORY_WRITE16_START( fixeight_writemem )
 	{ 0x502000, 0x5021ff, toaplan2_txvideoram16_offs_w, &toaplan2_txvideoram16_offs, &toaplan2_tx_offs_vram_size },
 	{ 0x503000, 0x5031ff, toaplan2_txscrollram16_w, &toaplan2_txscrollram16, &toaplan2_tx_scroll_vram_size },
 	{ 0x600000, 0x60ffff, toaplan2_tx_gfxram16_w, &toaplan2_tx_gfxram16 },
+MEMORY_END
+
+static MEMORY_READ16_START( fixeighb_readmem )
+	{ 0x000000, 0x0fffff, MRA16_ROM },
+	{ 0x100000, 0x10ffff, MRA16_RAM },
+	{ 0x200000, 0x200001, input_port_1_word_r },	/* Player 1 controls */
+	{ 0x200004, 0x200005, input_port_2_word_r },	/* Player 2 controls */
+	{ 0x200008, 0x200009, input_port_3_word_r },	/* Player 3 controls */
+	{ 0x20000c, 0x20000d, input_port_6_word_r },
+	{ 0x200010, 0x200011, input_port_4_word_r },	/* Coin/System inputs */
+	{ 0x200018, 0x200019, OKIM6295_status_0_lsb_r },/* ?? */
+	{ 0x20001c, 0x20001d, input_port_5_word_r },
+	{ 0x300004, 0x300007, toaplan2_0_videoram16_r },/* Tile/Sprite VideoRAM */
+	{ 0x30000c, 0x30000d, toaplan2_inputport_0_word_r },
+	{ 0x400000, 0x400fff, paletteram16_word_r },
+	{ 0x500000, 0x501fff, toaplan2_txvideoram16_r },
+	{ 0x502000, 0x5021ff, toaplan2_txvideoram16_offs_r },
+	{ 0x503000, 0x5031ff, toaplan2_txscrollram16_r },
+	{ 0x700000, 0x700001, video_count_r },
+	{ 0x800000, 0x87ffff, MRA16_BANK1 },
+MEMORY_END
+
+static MEMORY_WRITE16_START( fixeighb_writemem )
+	{ 0x000000, 0x0fffff, MWA16_ROM },
+	{ 0x100000, 0x10ffff, MWA16_RAM },
+	{ 0x200014, 0x200015, fixeighb_oki_bankswitch_w }, /* Sound banking. Code at $4084c, $5070 */
+	{ 0x200018, 0x200019, OKIM6295_data_0_lsb_w }, /* ?? */
+	{ 0x300000, 0x300001, toaplan2_0_voffs_w },	/* VideoRAM selector/offset */
+	{ 0x300004, 0x300007, toaplan2_0_videoram16_w },/* Tile/Sprite VideoRAM */
+	{ 0x300008, 0x300009, toaplan2_0_scroll_reg_select_w },
+	{ 0x30000c, 0x30000d, toaplan2_0_scroll_reg_data_w },
+	{ 0x400000, 0x400fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
+	{ 0x500000, 0x501fff, toaplan2_txvideoram16_w, &toaplan2_txvideoram16, &toaplan2_tx_vram_size },
+	{ 0x502000, 0x5021ff, toaplan2_txvideoram16_offs_w, &toaplan2_txvideoram16_offs, &toaplan2_tx_offs_vram_size },
+	{ 0x503000, 0x5031ff, toaplan2_txscrollram16_w, &toaplan2_txscrollram16, &toaplan2_tx_scroll_vram_size },
 MEMORY_END
 
 static MEMORY_READ16_START( vfive_readmem )
@@ -2673,6 +2728,61 @@ INPUT_PORTS_START( fixeight )
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( fixeighb )
+
+PORT_START		/* (0) VBlank */
+	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_VBLANK )
+	PORT_BIT( 0xfffe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	TOAPLAN2_PLAYER_INPUT( IPF_PLAYER1, IPT_UNKNOWN, IPT_UNKNOWN )
+
+	TOAPLAN2_PLAYER_INPUT( IPF_PLAYER2, IPT_UNKNOWN, IPT_UNKNOWN )
+
+	SNOWBRO2_PLAYER_INPUT( IPF_PLAYER3, IPT_START3, IPT_UNKNOWN )
+
+	PORT_START		/* service input is a push-button marked 'Test SW' */
+	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_COIN3 )
+	PORT_BIT( 0x0002, IP_ACTIVE_HIGH, IPT_TILT )
+	PORT_BITX(0x0004, IP_ACTIVE_HIGH, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_START2 )
+	PORT_BIT( 0xff80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_DIPNAME( 0x0001,	0x0000, "Maximum Players" )
+	PORT_DIPSETTING(		0x0000, "2" )
+	PORT_DIPSETTING(		0x0001, "3" )
+	PORT_DIPNAME( 0x0002,	0x0000, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(		0x0002, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0004,	0x0004, "Shooting style" )
+	PORT_DIPSETTING(		0x0004, "Semi-auto" )
+	PORT_DIPSETTING(		0x0000, "Fully-auto" )
+	PORT_DIPNAME( 0x0008,	0x0000, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
+	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
+//	EUROPEAN_COINAGE_16
+	NONEUROPEAN_COINAGE_16
+	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START
+	DIFFICULTY_16
+	PORT_DIPNAME( 0x000c,	0x0000, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(		0x0004, "300k and every 300k" )
+	PORT_DIPSETTING(		0x0008, "300k only" )
+	PORT_DIPSETTING(		0x0000, "500k and every 500k" )
+//	PORT_DIPSETTING(		0x000c, DEF_STR( None ) )
+	LIVES_16
+	PORT_DIPNAME( 0x0040,   0x0000, "Invulnerability" )
+	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(		0x0040, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0080,	0x0000, "Allow Continue" )
+	PORT_DIPSETTING(		0x0080, DEF_STR( No ) )
+	PORT_DIPSETTING(		0x0000, DEF_STR( Yes ) )
+INPUT_PORTS_END
+
 INPUT_PORTS_START( grindstm )
 	PORT_START		/* (0) VBlank */
 	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_VBLANK )
@@ -3664,6 +3774,17 @@ static struct GfxLayout raizing_textlayout =
 	8*32
 };
 
+static struct GfxLayout fixeighblayout =
+{
+   8,8,
+   RGN_FRAC(1,1),
+   4,
+   { 0,1,2,3 },
+   { 0*4, 1*4, 2*4, 3*4, 4*4, 5*4, 6*4, 7*4},
+   { 0*4*8, 1*4*8, 2*4*8, 3*4*8, 4*4*8, 5*4*8, 6*4*8, 7*4*8},
+   8*8*4
+};
+
 #ifdef MSB_FIRST
 static struct GfxLayout truxton2_tx_tilelayout =
 {
@@ -3753,6 +3874,13 @@ static struct GfxDecodeInfo batrider_gfxdecodeinfo[] =
 	{ -1 } /* end of array */
 };
 
+static struct GfxDecodeInfo fixeighb_gfxdecodeinfo[] =
+{
+	{ REGION_GFX1, 0, &tilelayout     , 0, 128 },
+	{ REGION_GFX1, 0, &spritelayout   , 0,  64 },
+	{ REGION_GFX2, 0, &fixeighblayout , 0, 128 },
+	{ -1 } /* end of array */
+};
 
 static void irqhandler(int linestate)
 {
@@ -3816,6 +3944,13 @@ static struct OKIM6295interface batrider_okim6295_interface =
 	{ 25, 25 }
 };
 
+static struct OKIM6295interface fixeighb_okim6295_interface =
+{
+	1,						/* 1 chip */
+	{ 14000000/16/165 },	/* 5303.03Hz , 875KHz to 6295 (using A mode) */
+	{ REGION_SOUND1 },		/* memory region */
+	{ 100 }
+};
 static struct YMZ280Binterface ymz280b_interface =
 {
 	1,
@@ -4129,6 +4264,32 @@ static MACHINE_DRIVER_START( fixeight )
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( fixeighb )
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 10000000)			/* 10MHz Oscillator */
+    MDRV_CPU_MEMORY(fixeighb_readmem,fixeighb_writemem)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq2,262)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(toaplan2)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
+	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_VISIBLE_AREA(0, 319, 0, 239)
+	MDRV_GFXDECODE(fixeighb_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048)
+
+	MDRV_VIDEO_START(truxton2_0)
+	MDRV_VIDEO_EOF(toaplan2_0)
+	MDRV_VIDEO_UPDATE(truxton2_0)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(OKIM6295, fixeighb_okim6295_interface)
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( vfive )
 
@@ -4571,6 +4732,26 @@ ROM_START( fixeight )
 	ROM_LOAD( "93c45.u21", 0x00, 0x80, CRC(40d75df0) )
 ROM_END
 
+ROM_START( fixeighb )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )			/* Main 68K code */
+	ROM_LOAD16_BYTE( "3.bin", 0x000000, 0x80000, CRC(cc77d4b4) SHA1(4d3376cbae13d90c6314d8bb9236c2183fc6253c) )
+	ROM_LOAD16_BYTE( "2.bin", 0x000001, 0x80000, CRC(ed715488) SHA1(37be9bc8ff6b54a1f660d89469c6c2da6301e9cd) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "tp-026-3", 0x000000, 0x200000, CRC(e5578d98) SHA1(280d2b716d955e767d311fc9596823852435b6d7) )
+	ROM_LOAD( "tp-026-4", 0x200000, 0x200000, CRC(b760cb53) SHA1(bc9c5e49e45cdda0f774be0038aa4deb21d4d285) )
+
+	ROM_REGION( 0x08000, REGION_GFX2, ROMREGION_DISPOSE)
+	ROM_LOAD( "4.bin", 0x00000, 0x08000, CRC(a6aca465) SHA1(2b331faeee1832e0adc5218254a99d66331862c6) )
+
+	ROM_REGION( 0x90000, REGION_SOUND1, 0 )			/* ADPCM Samples */
+	ROM_LOAD( "1.bin", 0x00000, 0x30000, CRC(888f19ac) SHA1(d2f4f8b7be7a0fdb95baa0af8930e50e2f875c05) )
+	ROM_CONTINUE(      0x40000, 0x50000 )
+
+	ROM_REGION( 0x8000, REGION_USER1, 0 )			/* ??? Some sort of table  - same as in pipibibi*/
+	ROM_LOAD( "5.bin", 0x0000, 0x8000, CRC(456dd16e) SHA1(84779ee64d3ea33ba1ba4dee39b504a81c6811a1) )
+ROM_END
+
 ROM_START( grindstm )
 	ROM_REGION( 0x080000, REGION_CPU1, 0 )			/* Main 68K code */
 	ROM_LOAD16_WORD_SWAP( "01.bin", 0x000000, 0x080000, CRC(4923f790) SHA1(1c2d66b432d190d0fb6ac7ca0ec0687aea3ccbf4) )
@@ -4960,6 +5141,7 @@ GAME ( 1991, pipibibs, 0,        pipibibs, pipibibs, T2_Z80,   ROT0,   "Toaplan"
 GAME ( 1991, whoopee,  pipibibs, whoopee,  whoopee,  T2_Z80,   ROT0,   "Toaplan", "Whoopee!! / Pipi & Bibis" )
 GAME ( 1991, pipibibi, pipibibs, pipibibi, pipibibi, pipibibi, ROT0,   "[Toaplan] Ryouta Kikaku", "Pipi & Bibis / Whoopee!! (bootleg ?)" )
 GAMEX( 1992, fixeight, 0,        fixeight, fixeight, fixeight, ROT270, "Toaplan", "FixEight", GAME_NOT_WORKING )
+GAME ( 1992, fixeighb, fixeight, fixeighb, fixeighb, fixeighb, ROT270, "Toaplan", "FixEight (Bootleg)" )
 GAMEX( 1992, grindstm, vfive,    vfive,    grindstm, T2_Zx80,  ROT270, "Toaplan", "Grind Stormer", GAME_NO_SOUND )
 GAMEX( 1992, grindsta, vfive,    vfive,    grindstm, T2_Zx80,  ROT270, "Toaplan", "Grind Stormer (older set)", GAME_NO_SOUND )
 GAMEX( 1993, vfive,    0,        vfive,    vfive,    T2_Zx80,  ROT270, "Toaplan", "V-Five (Japan)", GAME_NO_SOUND )
