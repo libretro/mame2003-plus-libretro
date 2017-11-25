@@ -2769,7 +2769,6 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( shdancbl )	/* (c) 1989 (but bootleg) */
 	DRIVER( shdancer )	/* (c) 1989 */
 	DRIVER( shdancrj )	/* (c) 1989 */
-	DRIVER( shdancrb )	/* (c) 1989 */
 	DRIVER( shinobi )	/* (c) 1987 */
 	DRIVER( shinobl )	/* (c) 1987 (but bootleg) */
 	DRIVER( sonicbom )	/* (c) 1987 */
