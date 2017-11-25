@@ -7,225 +7,11 @@
 **	Space Harrier
 */
 
-/*
-03/11/04  Charles MacDonald
-Various Hang-On fixes:
-- Fixed sprite RAM size.
-- Fixed tile RAM size.
-- Fixed 2nd 68000 work RAM size, passes RAM test.
-- Fixed visibility of 2nd 68000 ROM to 1st 68000, passes ROM test.
-- Fixed access to road RAM and shared RAM by both CPUs.
-- Cleaned up input management, now entering test mode does not crash
-  MAME, there are no specific control hacks for the name entry screen,
-  and the ROM patches are no longer needed.
-  
-To do:
-- Missing color bars in CRT tests
-- Proper Enduro Racer and Space Harrier inputs
-*/
-
 #include "driver.h"
 #include "vidhrdw/generic.h"
 #include "cpu/z80/z80.h"
 #include "cpu/i8039/i8039.h"
 #include "system16.h"
-
-/*
-	Hang-On I/O hardware
-*/
-
-static int latched_analog_input;	/* Selected input to read with ADC */
-static int ppi_reg[2][4];			/* PPI registers */
-
-static WRITE16_HANDLER( hangon_io_w )
-{
-	if( ACCESSING_LSB )
-	{                        
-		switch( offset & 0x003020/2 )
-		{
-			case 0x0000: /* PPI @ 4B */
-				switch( offset & 0x07)
-				{
-					case 0x00: /* Port A : Z80 sound command */
-						ppi_reg[0][0] = data;
-						soundlatch_w(0, data & 0xff);
-						cpu_set_nmi_line(1, PULSE_LINE);
-						return;
-
-					case 0x01: /* Port B : Miscellaneous outputs */
-						ppi_reg[0][1] = data;
-
-						/* D7 : FLIPC (1= flip screen, 0= normal orientation) */
-						/* D6 : SHADE0 (1= highlight, 0= shadow) */
-						/* D4 : /KILL (1= screen on, 0= screen off) */
-						sys16_refreshenable = data & 0x10;
-
-						/* D3 : LAMP2 */
-						set_led_status(1, data & 0x08);
-						
-						/* D2 : LAMP1 */
-						set_led_status(0, data & 0x04);
-						
-						/* D1 : COIN2 */
-						coin_counter_w(1, data & 0x02);
-						
-						/* D0 : COIN1 */
-						coin_counter_w(0, data & 0x01);						
-						return;
-
-					case 0x02: /* Port C : Tilemap origin and audio mute */
-						ppi_reg[0][2] = data;
-
-						/* D2 : SCONT1 - Tilemap origin bit 1 */
-						/* D1 : SCONT0 - Tilemap origin bit 0 */
-						/* D0 : MUTE (1= audio on, 0= audio off) */					
-						
-  						/* Not used */
-						return;
-
-					case 0x03: /* PPI control register */
-						ppi_reg[0][3] = data;
-						return;
-				}
-				break;
-
-		case 0x3000/2: /* PPI @ 4C */
-			switch( offset & 0x07)
-			{
-				case 0x00: /* Port A : S.CPU control and ADC channel select */
-					ppi_reg[1][0] = data;
-				
-#if 0 // Not sure this is correct
-
-					/* To S.RES of second CPU */
-					if(data & 0x20)
-					cpu_set_reset_line(2, CLEAR_LINE);
-					else
-					cpu_set_reset_line(2, ASSERT_LINE);
-					
-					/* To S.INT of second CPU */
-					if(data & 0x10)
-					cpu_set_irq_line(2, 1, HOLD_LINE);
-					else
-					cpu_set_irq_line(2, 1, CLEAR_LINE);
-#endif
-					return;
-				
-				case 0x01: /* Port B : High-current outputs */
-					ppi_reg[1][1] = data;		
-					/* Not used */
-					return;
-				
-				case 0x02: /* Port C : LED driver control (?) */
-					ppi_reg[1][2] = data;				
-					/* Not used */
-					return;
-					
-				case 0x03: /* PPI control register */
-					ppi_reg[1][3] = data;
-					return;
-			}
-		break;
-
-		case 0x3020/2: /* ADC0804 */
-			switch(ppi_reg[1][0] & 0x0C)
-			{
-				case 0x00: /* "ANGLE" */
-					latched_analog_input = readinputport(0);
-					return;
-				
-				case 0x04: /* "ACCEL" */
-					latched_analog_input = readinputport(1);
-					return;
-			
-				case 0x08: /* "BRAKE" */
-					latched_analog_input = readinputport(5);
-					return;
-				
-				case 0x0C: /* Not used */
-					latched_analog_input = 0;
-					return;
-			}
-			break;
-		}
-	}
-}
-
-static READ16_HANDLER( hangon_io_r )
-{
-	switch( offset & 0x003020/2 )
-	{
-		case 0x0000: /* PPI @ 4B */
-			switch( offset & 0x07)
-			{
-				case 0x00: /* Port A : Z80 sound command */
-				/*
-				Bidirectional port, but Z80 only ever reads data written
-				by the main 68000.
-				*/
-				return 0xFF;
-			
-				case 0x01: /* Port B */
-					return ppi_reg[0][1];
-				
-				case 0x02: /* Port C */
-					return ppi_reg[0][2];
-				
-				case 0x03: /* PPI control register */
-					return ppi_reg[0][3];
-			}
-			break;
-			
-			case 0x1000/2: /* Input ports and DIP switches */
-				switch( offset & 0x0F )
-				{
-					case 0x00: /* Input port #0 */
-						return readinputport(2);
-			
-					case 0x01: /* Input port #1 */	
-						/* Not used */
-						return 0xFF;
-			
-					case 0x04: /* DIP switch A */
-						return readinputport(3);
-			
-					case 0x06: /* DIP switch B */
-						return readinputport(4);
-				}
-				break;
-			
-			case 0x3000/2: /* PPI @ 4C */
-				switch( offset & 0x07)
-				{
-					case 0x00: /* Port A */
-						return ppi_reg[1][0];
-					
-					case 0x01: /* Port B */
-						return ppi_reg[1][1];
-					
-					case 0x02: /* Port C : ADC status */
-						/*
-						D7 = 0 (left open)
-						D6 = /INTR of ADC0804
-						D5 = 0 (left open)
-						D4 = 0 (left open)
-						
-						We leave /INTR low to indicate converted data is
-						always ready to be read.
-						*/
-						return (ppi_reg[1][2] & 0x0F);
-					
-					case 0x03: /* PPI control register */
-						return ppi_reg[1][3];
-				}
-				break;
-				
-			case 0x3020/2: /* ADC0804 data output */
-				return latched_analog_input;
-	}	
-	
-	return -1;
-}
 
 /***************************************************************************/
 
@@ -383,29 +169,20 @@ static WRITE16_HANDLER( sys16_coinctrl_w )
 }
 #endif
 
-/*
-	Hang-On shared road RAM and 68000 #2 work RAM
-*/
 
-data16_t *hangon_roadram;
-data16_t *hangon_sharedram;
+static READ16_HANDLER( ho_io_x_r ){ return input_port_0_r( offset ); }
+static READ16_HANDLER( ho_io_y_r ){ return (input_port_1_r( offset ) << 8) + input_port_5_r( offset ); }
 
-static READ16_HANDLER( hangon_sharedram_r ) {
-	return hangon_sharedram[offset];
+static READ16_HANDLER( ho_io_highscoreentry_r ){
+	int mode= sys16_extraram4[0x3000/2];
+	if( mode&4 ){	// brake
+		if(ho_io_y_r(0,0) & 0x00ff) return 0xffff;
+	}
+	else if( mode&8 ){ // button
+		if(ho_io_y_r(0,0) & 0xff00) return 0xffff;
+	}
+	return 0;
 }
-
-static WRITE16_HANDLER( hangon_sharedram_w ) {
-	COMBINE_DATA( hangon_sharedram + offset );
-}
-
-static READ16_HANDLER( hangon_roadram_r ) {
-	return hangon_roadram[offset];
-}
-
-static WRITE16_HANDLER( hangon_roadram_w ) {
-	COMBINE_DATA( hangon_roadram + offset );
-}
-
 
 static READ16_HANDLER( hangon1_skip_r ){
 	if (activecpu_get_pc()==0x17e6) {cpu_spinuntil_int(); return 0xffff;}
@@ -413,52 +190,60 @@ static READ16_HANDLER( hangon1_skip_r ){
 }
 
 static MEMORY_READ16_START( hangon_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x20c400, 0x20c401, hangon1_skip_r },
 	{ 0x20c000, 0x20ffff, SYS16_MRA16_EXTRAM },
-	{ 0x400000, 0x403fff, SYS16_MRA16_TILERAM },
+	{ 0x400000, 0x40ffff, SYS16_MRA16_TILERAM },
 	{ 0x410000, 0x410fff, SYS16_MRA16_TEXTRAM },
-	{ 0x600000, 0x6007ff, SYS16_MRA16_SPRITERAM },
+	{ 0x600000, 0x600fff, SYS16_MRA16_SPRITERAM },
 	{ 0xa00000, 0xa00fff, SYS16_MRA16_PALETTERAM },
-	{ 0xc00000, 0xc0ffff, SYS16_CPU3ROM16_r },
-	{ 0xc68000, 0xc68fff, hangon_roadram_r },
-	{ 0xc7c000, 0xc7ffff, hangon_sharedram_r },
-	{ 0xe00000, 0xffffff, hangon_io_r },
+	{ 0xc68000, 0xc68fff, SYS16_MRA16_EXTRAM2 },
+	{ 0xc7e000, 0xc7ffff, SYS16_MRA16_EXTRAM3 },
+	{ 0xe00002, 0xe00003, sys16_coinctrl_r },
+	{ 0xe01000, 0xe01001, input_port_2_word_r }, // service
+	{ 0xe0100c, 0xe0100d, input_port_4_word_r }, // dip2
+	{ 0xe0100a, 0xe0100b, input_port_3_word_r }, // dip1
+	{ 0xe03020, 0xe03021, ho_io_highscoreentry_r },
+	{ 0xe03028, 0xe03029, ho_io_x_r },
+	{ 0xe0302a, 0xe0302b, ho_io_y_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( hangon_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0x20c000, 0x20ffff, SYS16_MWA16_EXTRAM, &sys16_extraram },
-	{ 0x400000, 0x403fff, SYS16_MWA16_TILERAM, &sys16_tileram },
-	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
-	{ 0x600000, 0x6007ff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
-	{ 0xa00000, 0xa00fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
-	{ 0xc00000, 0xc3ffff, MWA16_NOP },
-	{ 0xc68000, 0xc68fff, hangon_roadram_w, &hangon_roadram },
-	{ 0xc7c000, 0xc7ffff, hangon_sharedram_w, &hangon_sharedram },
-	{ 0xe00000, 0xffffff, hangon_io_w },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x20c000, 0x20ffff, SYS16_MWA16_EXTRAM },
+	{ 0x400000, 0x40ffff, SYS16_MWA16_TILERAM },
+	{ 0x410000, 0x410fff, SYS16_MWA16_TEXTRAM },
+	{ 0x600000, 0x600fff, SYS16_MWA16_SPRITERAM },
+	{ 0xa00000, 0xa00fff, SYS16_MWA16_PALETTERAM },
+	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2 },
+	{ 0xc7e000, 0xc7ffff, SYS16_MWA16_EXTRAM3 },
+	{ 0xe00000, 0xe00001, sound_command_nmi_w },
+	{ 0xe00002, 0xe00003, sys16_3d_coinctrl_w },
+	{ 0xe00004, 0xe00005, MWA16_NOP }, /* ? */
+	{ 0xe02000, 0xe02001, MWA16_NOP }, /* ? */
+	{ 0xe03000, 0xe03001, MWA16_NOP }, /* ? */
 MEMORY_END
 
 static READ16_HANDLER( hangon2_skip_r ){
 	if (activecpu_get_pc()==0xf66) {cpu_spinuntil_int(); return 0xffff;}
-	return hangon_sharedram[0x01000/2];
+	return sys16_extraram3[0x01000/2];
 }
 
 static MEMORY_READ16_START( hangon_readmem2 )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0xc7f000, 0xc7f001, hangon2_skip_r },
-	{ 0xc68000, 0xc68fff, hangon_roadram_r },
-	{ 0xc7c000, 0xc7ffff, hangon_sharedram_r },
+	{ 0xc68000, 0xc68fff, SYS16_MRA16_EXTRAM2 },
+	{ 0xc7e000, 0xc7ffff, SYS16_MRA16_EXTRAM3 },
 MEMORY_END
 
 static MEMORY_WRITE16_START( hangon_writemem2 )
-    { 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0xc68000, 0xc68fff, hangon_roadram_w },
-	{ 0xc7c000, 0xc7ffff, hangon_sharedram_w },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2 },
+	{ 0xc7e000, 0xc7ffff, SYS16_MWA16_EXTRAM3 },
 MEMORY_END
 
 static MEMORY_READ_START( hangon_sound_readmem )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xc000, 0xc7ff, MRA_RAM },
 	{ 0xd000, 0xd000, YM2203_status_port_0_r },
 	{ 0xe000, 0xe7ff, SegaPCM_r },
@@ -466,7 +251,7 @@ static MEMORY_READ_START( hangon_sound_readmem )
 MEMORY_END
 
 static MEMORY_WRITE_START( hangon_sound_writemem )
-    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0xc000, 0xc7ff, MWA_RAM },
 	{ 0xd000, 0xd000, YM2203_control_port_0_w },
 	{ 0xd001, 0xd001, YM2203_write_port_0_w },
@@ -475,7 +260,7 @@ static MEMORY_WRITE_START( hangon_sound_writemem )
 MEMORY_END
 
 static PORT_READ_START( hangon_sound_readport )
-    { 0x40, 0x40, soundlatch_r },
+	{ 0x40, 0x40, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( hangon_sound_writeport )
@@ -484,11 +269,11 @@ PORT_END
 /***************************************************************************/
 
 static void hangon_update_proc( void ){
-	set_page( sys16_bg_page, sys16_textram[0x74e] & 0x3333 );
-	set_page( sys16_fg_page, sys16_textram[0x74f] & 0x3333 );
+	set_page( sys16_bg_page, sys16_textram[0x74e] );
+	set_page( sys16_fg_page, sys16_textram[0x74f] );
 	sys16_fg_scrollx = sys16_textram[0x7fc] & 0x01ff;
 	sys16_bg_scrollx = sys16_textram[0x7fd] & 0x01ff;
-	sys16_fg_scrolly = sys16_textram[0x792] & 0x01ff;
+	sys16_fg_scrolly = sys16_textram[0x792] & 0x00ff;
 	sys16_bg_scrolly = sys16_textram[0x793] & 0x01ff;
 }
 
@@ -502,20 +287,13 @@ static MACHINE_INIT( hangon ){
 	sys16_textlayer_hi_min=0;
 	sys16_textlayer_hi_max=0xff;
 
-/*  
-	The following patches modified the input code to read the first three
-	analog inputs from unique addresses rather than the single address
-	the ADC is mapped to, so the input selection behavior didn't have to be
-	emulated. Not needed anymore, but left in for reference.
-	
-	sys16_patch_code( 0x83bd, 0x29); // $E03021 -> $E03029
-	sys16_patch_code( 0x8495, 0x2a); // $E03021 -> $E0302A
-	sys16_patch_code( 0x84f9, 0x2b); // $E03021 -> $E0302B
-*/
+	sys16_patch_code( 0x83bd, 0x29);
+	sys16_patch_code( 0x8495, 0x2a);
+	sys16_patch_code( 0x84f9, 0x2b);
 
 	sys16_update_proc = hangon_update_proc;
 
-	sys16_gr_ver = &hangon_roadram[0x0];
+	sys16_gr_ver = &sys16_extraram2[0x0];
 	sys16_gr_hor = sys16_gr_ver+0x200/2;
 	sys16_gr_pal = sys16_gr_ver+0x400/2;
 	sys16_gr_flip= sys16_gr_ver+0x600/2;
@@ -593,9 +371,8 @@ static WRITE16_HANDLER( shared_ram_w ){
 
 static READ16_HANDLER( sh_motor_status_r ) { return 0x0; }
 
-
 static MEMORY_READ16_START( harrier_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x040000, 0x043fff, SYS16_MRA16_EXTRAM },
 	{ 0x100000, 0x107fff, SYS16_MRA16_TILERAM },
 	{ 0x108000, 0x108fff, SYS16_MRA16_TEXTRAM },
@@ -611,39 +388,39 @@ static MEMORY_READ16_START( harrier_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( harrier_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0x040000, 0x043fff, SYS16_MWA16_EXTRAM, &sys16_extraram },
-	{ 0x100000, 0x107fff, SYS16_MWA16_TILERAM, &sys16_tileram },
-	{ 0x108000, 0x108fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
-	{ 0x110000, 0x110fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x040000, 0x043fff, SYS16_MWA16_EXTRAM },
+	{ 0x100000, 0x107fff, SYS16_MWA16_TILERAM },
+	{ 0x108000, 0x108fff, SYS16_MWA16_TEXTRAM },
+	{ 0x110000, 0x110fff, SYS16_MWA16_PALETTERAM },
 	{ 0x124000, 0x127fff, shared_ram_w, &shared_ram },
-	{ 0x130000, 0x130fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x130000, 0x130fff, SYS16_MWA16_SPRITERAM },
 	{ 0x140000, 0x140001, sound_command_nmi_w },
 	{ 0x140002, 0x140003, sys16_3d_coinctrl_w },
-	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
+	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2 },
 MEMORY_END
 
 static MEMORY_READ16_START( harrier_readmem2 )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0xc68000, 0xc68fff, SYS16_MRA16_EXTRAM2 },
 	{ 0xc7c000, 0xc7ffff, shared_ram_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( harrier_writemem2 )
-    { 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2 },
 	{ 0xc7c000, 0xc7ffff, shared_ram_w, &shared_ram },
 MEMORY_END
 
 static MEMORY_READ_START( harrier_sound_readmem )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xd000, 0xd000, YM2203_status_port_0_r },
 	{ 0xe000, 0xe0ff, SegaPCM_r },
 	{ 0x8000, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( harrier_sound_writemem )
-    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0xd000, 0xd000, YM2203_control_port_0_w },
 	{ 0xd001, 0xd001, YM2203_write_port_0_w },
 	{ 0xe000, 0xe0ff, SegaPCM_w },
@@ -651,8 +428,9 @@ static MEMORY_WRITE_START( harrier_sound_writemem )
 MEMORY_END
 
 static PORT_READ_START( harrier_sound_readport )
-    { 0x40, 0x40, soundlatch_r },
+	{ 0x40, 0x40, soundlatch_r },
 PORT_END
+
 
 static PORT_WRITE_START( harrier_sound_writeport )
 PORT_END
@@ -815,7 +593,7 @@ static READ16_HANDLER( er_reset2_r )
 }
 
 static MEMORY_READ16_START( enduror_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x040000, 0x043fff, SYS16_MRA16_EXTRAM },
 	{ 0x100000, 0x107fff, SYS16_MRA16_TILERAM },
 	{ 0x108000, 0x108fff, SYS16_MRA16_TEXTRAM },
@@ -831,13 +609,13 @@ static MEMORY_READ16_START( enduror_readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( enduror_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0x040000, 0x043fff, SYS16_MWA16_EXTRAM, &sys16_extraram },
-	{ 0x100000, 0x107fff, SYS16_MWA16_TILERAM, &sys16_tileram },
-	{ 0x108000, 0x108fff, SYS16_MWA16_TEXTRAM, &sys16_textram },
-	{ 0x110000, 0x110fff, SYS16_MWA16_PALETTERAM, &paletteram16 },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0x040000, 0x043fff, SYS16_MWA16_EXTRAM },
+	{ 0x100000, 0x107fff, SYS16_MWA16_TILERAM },
+	{ 0x108000, 0x108fff, SYS16_MWA16_TEXTRAM },
+	{ 0x110000, 0x110fff, SYS16_MWA16_PALETTERAM },
 	{ 0x124000, 0x127fff, shared_ram_w, &shared_ram },
-	{ 0x130000, 0x130fff, SYS16_MWA16_SPRITERAM, &sys16_spriteram },
+	{ 0x130000, 0x130fff, SYS16_MWA16_SPRITERAM },
 	{ 0x140000, 0x140001, sound_command_nmi_w },
 	{ 0x140002, 0x140003, sys16_3d_coinctrl_w },
 	{ 0x140030, 0x140031, er_io_analog_w },
@@ -849,65 +627,63 @@ static READ16_HANDLER( enduro_p2_skip_r ){
 }
 
 static MEMORY_READ16_START( enduror_readmem2 )
-    { 0x000000, 0x03ffff, MRA16_ROM },
+	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0xc68000, 0xc68fff, SYS16_MRA16_EXTRAM2 },
 	{ 0xc7e000, 0xc7e001, enduro_p2_skip_r },
 	{ 0xc7c000, 0xc7ffff, shared_ram_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( enduror_writemem2 )
-    { 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2, &sys16_extraram2 },
+	{ 0x000000, 0x03ffff, MWA16_ROM },
+	{ 0xc68000, 0xc68fff, SYS16_MWA16_EXTRAM2 },
 	{ 0xc7c000, 0xc7ffff, shared_ram_w, &shared_ram },
 MEMORY_END
 
 static MEMORY_READ_START( enduror_sound_readmem )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xc000, 0xc7ff, MRA_RAM },
 	{ 0xd000, 0xd000, YM2203_status_port_0_r },
 	{ 0xe000, 0xe7ff, SegaPCM_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( enduror_sound_writemem )
-    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0xc000, 0xc7ff, MWA_RAM },
 	{ 0xd000, 0xd000, YM2203_control_port_0_w },
 	{ 0xd001, 0xd001, YM2203_write_port_0_w },
 	{ 0xe000, 0xe7ff, SegaPCM_w },
 MEMORY_END
 
-
 static PORT_READ_START( enduror_sound_readport )
-    { 0x40, 0x40, soundlatch_r },
+	{ 0x40, 0x40, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( enduror_sound_writeport )
 PORT_END
 
-
 static MEMORY_READ_START( enduror_b2_sound_readmem )
-    { 0x0000, 0x7fff, MRA_ROM },
+	{ 0x0000, 0x7fff, MRA_ROM },
 //	{ 0xc000, 0xc7ff, MRA_RAM },
 	{ 0xf000, 0xf7ff, SegaPCM_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( enduror_b2_sound_writemem )
-    { 0x0000, 0x7fff, MWA_ROM },
+	{ 0x0000, 0x7fff, MWA_ROM },
 //	{ 0xc000, 0xc7ff, MWA_RAM },
 	{ 0xf000, 0xf7ff, SegaPCM_w },
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
 static PORT_READ_START( enduror_b2_sound_readport )
-    { 0x00, 0x00, YM2203_status_port_0_r },
+	{ 0x00, 0x00, YM2203_status_port_0_r },
 	{ 0x80, 0x80, YM2203_status_port_1_r },
 	{ 0xc0, 0xc0, YM2203_status_port_2_r },
 	{ 0x40, 0x40, soundlatch_r },
 PORT_END
 
 static PORT_WRITE_START( enduror_b2_sound_writeport )
-    { 0x00, 0x00, YM2203_control_port_0_w },
+	{ 0x00, 0x00, YM2203_control_port_0_w },
 	{ 0x01, 0x01, YM2203_write_port_0_w },
 	{ 0x80, 0x80, YM2203_control_port_1_w },
 	{ 0x81, 0x81, YM2203_write_port_1_w },
