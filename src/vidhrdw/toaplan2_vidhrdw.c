@@ -223,6 +223,21 @@ static UINT8 bg_tile_priority[2][16];
 static struct tilemap *top_tilemap[2], *fg_tilemap[2], *bg_tilemap[2];
 static struct tilemap *tx_tilemap;	/* Tilemap for extra-text-layer */
 
+static int xoffset[4];
+static int yoffset[4];
+
+void defaultOffsets(void)
+{
+		xoffset[0]=0;
+		xoffset[1]=0;
+		xoffset[2]=0;
+		xoffset[3]=0;
+
+		yoffset[0]=0;
+		yoffset[1]=0;
+		yoffset[2]=0;
+		yoffset[3]=0;
+}
 
 /***************************************************************************
 
@@ -511,6 +526,7 @@ static int toaplan2_vh_start(int controller)
 
 VIDEO_START( toaplan2_0 )
 {
+	defaultOffsets();
 	return toaplan2_vh_start(0);
 }
 
@@ -519,6 +535,7 @@ VIDEO_START( toaplan2_1 )
 	int error_level = 0;
 	error_level |= toaplan2_vh_start(0);
 	error_level |= toaplan2_vh_start(1);
+	defaultOffsets();
 	return error_level;
 }
 
@@ -532,7 +549,24 @@ VIDEO_START( truxton2_0 )
 	{
 		return 1;
 	}
-	tilemap_set_scrolldx(tx_tilemap, 0x1d4 +1, 0x2a);
+	if(!strcmp(Machine->gamedrv->name,"fixeighb"))
+	{
+		xoffset[0]=-26;
+		xoffset[1]=-22;
+		xoffset[2]=-18;
+		xoffset[3]=8;
+
+		yoffset[0]=-15;
+		yoffset[1]=-15;
+		yoffset[2]=-15;
+		yoffset[3]=8;
+		tilemap_set_scrolldx(tx_tilemap, 0, 0);
+	}
+	else
+	{
+		defaultOffsets();
+		tilemap_set_scrolldx(tx_tilemap, 0x1d4 +1, 0x2a);
+	}
 	return 0;
 }
 
@@ -547,6 +581,7 @@ VIDEO_START( battleg_0 )
 		return 1;
 	}
 	tilemap_set_scrolldx(tx_tilemap, 0x1d4, 0x2a);
+	defaultOffsets();
 	return 0;
 }
 
@@ -564,6 +599,7 @@ VIDEO_START( batrider_0 )
 		return 1;
 
 	tilemap_set_scrolldx(tx_tilemap, 0x1d4, 0x2a);
+	defaultOffsets();
 	return 0;
 }
 
@@ -885,37 +921,37 @@ void toaplan2_scroll_reg_data_w(offs_t offset, data16_t data, UINT32 mem_mask, i
 					COMBINE_DATA(&bg_scrollx[controller]);
 					bg_flip[controller] &= (~TILEMAP_FLIPX);
 					tilemap_set_flip(bg_tilemap[controller],bg_flip[controller]);
-					tilemap_set_scrollx(bg_tilemap[controller],0,bg_scrollx[controller]);
+					tilemap_set_scrollx(bg_tilemap[controller],0,bg_scrollx[controller]+xoffset[0]);
 					break;
 		case 0x01:	data -= 0x1ef;			/* 1EFh */
 					COMBINE_DATA(&bg_scrolly[controller]);
 					bg_flip[controller] &= (~TILEMAP_FLIPY);
 					tilemap_set_flip(bg_tilemap[controller],bg_flip[controller]);
-					tilemap_set_scrolly(bg_tilemap[controller],0,bg_scrolly[controller]);
+					tilemap_set_scrolly(bg_tilemap[controller],0,bg_scrolly[controller]+yoffset[0]);
 					break;
 		case 0x02:	data -= 0x1d8;			/* 1D0h */
 					COMBINE_DATA(&fg_scrollx[controller]);
 					fg_flip[controller] &= (~TILEMAP_FLIPX);
 					tilemap_set_flip(fg_tilemap[controller],fg_flip[controller]);
-					tilemap_set_scrollx(fg_tilemap[controller],0,fg_scrollx[controller]);
+					tilemap_set_scrollx(fg_tilemap[controller],0,fg_scrollx[controller]+xoffset[1]);
 					break;
 		case 0x03:  data -= 0x1ef;			/* 1EFh */
 					COMBINE_DATA(&fg_scrolly[controller]);
 					fg_flip[controller] &= (~TILEMAP_FLIPY);
 					tilemap_set_flip(fg_tilemap[controller],fg_flip[controller]);
-					tilemap_set_scrolly(fg_tilemap[controller],0,fg_scrolly[controller]);
+					tilemap_set_scrolly(fg_tilemap[controller],0,fg_scrolly[controller]+yoffset[1]);
 					break;
 		case 0x04:	data -= 0x1da;			/* 1DAh */
 					COMBINE_DATA(&top_scrollx[controller]);
 					top_flip[controller] &= (~TILEMAP_FLIPX);
 					tilemap_set_flip(top_tilemap[controller],top_flip[controller]);
-					tilemap_set_scrollx(top_tilemap[controller],0,top_scrollx[controller]);
+					tilemap_set_scrollx(top_tilemap[controller],0,top_scrollx[controller]+xoffset[2]);
 					break;
 		case 0x05:	data -= 0x1ef;			/* 1EFh */
 					COMBINE_DATA(&top_scrolly[controller]);
 					top_flip[controller] &= (~TILEMAP_FLIPY);
 					tilemap_set_flip(top_tilemap[controller],top_flip[controller]);
-					tilemap_set_scrolly(top_tilemap[controller],0,top_scrolly[controller]);
+					tilemap_set_scrolly(top_tilemap[controller],0,top_scrolly[controller]+yoffset[2]);
 					break;
 		case 0x06:  data -= 0x1cc;			/* 1D4h */
 					COMBINE_DATA(&sprite_scrollx[controller]);
@@ -934,37 +970,37 @@ void toaplan2_scroll_reg_data_w(offs_t offset, data16_t data, UINT32 mem_mask, i
 					COMBINE_DATA(&bg_scrollx[controller]);
 					bg_flip[controller] |= TILEMAP_FLIPX;
 					tilemap_set_flip(bg_tilemap[controller],bg_flip[controller]);
-					tilemap_set_scrollx(bg_tilemap[controller],0,bg_scrollx[controller]);
+					tilemap_set_scrollx(bg_tilemap[controller],0,bg_scrollx[controller]+xoffset[0]);
 					break;
 		case 0x81:	data -= 0x210;			/* 100h */
 					COMBINE_DATA(&bg_scrolly[controller]);
 					bg_flip[controller] |= TILEMAP_FLIPY;
 					tilemap_set_flip(bg_tilemap[controller],bg_flip[controller]);
-					tilemap_set_scrolly(bg_tilemap[controller],0,bg_scrolly[controller]);
+					tilemap_set_scrolly(bg_tilemap[controller],0,bg_scrolly[controller]+yoffset[0]);
 					break;
 		case 0x82:	data -= 0x227;			/* 15Fh */
 					COMBINE_DATA(&fg_scrollx[controller]);
 					fg_flip[controller] |= TILEMAP_FLIPX;
 					tilemap_set_flip(fg_tilemap[controller],fg_flip[controller]);
-					tilemap_set_scrollx(fg_tilemap[controller],0,fg_scrollx[controller]);
+					tilemap_set_scrollx(fg_tilemap[controller],0,fg_scrollx[controller]+xoffset[1]);
 					break;
 		case 0x83:	data -= 0x210;			/* 100h */
 					COMBINE_DATA(&fg_scrolly[controller]);
 					fg_flip[controller] |= TILEMAP_FLIPY;
 					tilemap_set_flip(fg_tilemap[controller],fg_flip[controller]);
-					tilemap_set_scrolly(fg_tilemap[controller],0,fg_scrolly[controller]);
+					tilemap_set_scrolly(fg_tilemap[controller],0,fg_scrolly[controller]+yoffset[1]);
 					break;
 		case 0x84:	data -= 0x225;			/* 165h */
 					COMBINE_DATA(&top_scrollx[controller]);
 					top_flip[controller] |= TILEMAP_FLIPX;
 					tilemap_set_flip(top_tilemap[controller],top_flip[controller]);
-					tilemap_set_scrollx(top_tilemap[controller],0,top_scrollx[controller]);
+					tilemap_set_scrollx(top_tilemap[controller],0,top_scrollx[controller]+xoffset[2]);
 					break;
 		case 0x85:	data -= 0x210;			/* 100h */
 					COMBINE_DATA(&top_scrolly[controller]);
 					top_flip[controller] |= TILEMAP_FLIPY;
 					tilemap_set_flip(top_tilemap[controller],top_flip[controller]);
-					tilemap_set_scrolly(top_tilemap[controller],0,top_scrolly[controller]);
+					tilemap_set_scrolly(top_tilemap[controller],0,top_scrolly[controller]+yoffset[2]);
 					break;
 		case 0x86:	data -= 0x17b;			/* 17Bh */
 					COMBINE_DATA(&sprite_scrollx[controller]);
@@ -1328,8 +1364,8 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 			sprite_sizey = ((source[offs + 3] & 0x0f) + 1) * 8;
 
 			/***** find position to display sprite *****/
-			sx_base = ((source[offs + 2] >> 7) - sprite_scrollx[controller]) & 0x1ff;
-			sy_base = ((source[offs + 3] >> 7) - sprite_scrolly[controller]) & 0x1ff;
+			sx_base = ((source[offs + 2] >> 7) - (sprite_scrollx[controller]+xoffset[3])) & 0x1ff;
+			sy_base = ((source[offs + 3] >> 7) - (sprite_scrolly[controller]+yoffset[3])) & 0x1ff;
 
 			flipx = attrib & TOAPLAN2_SPRITE_FLIPX;
 			flipy = attrib & TOAPLAN2_SPRITE_FLIPY;
