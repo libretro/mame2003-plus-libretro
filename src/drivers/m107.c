@@ -191,6 +191,7 @@ PORT_END
 static MEMORY_READ_START( sound_readmem )
 	{ 0x00000, 0x1ffff, MRA_ROM },
 	{ 0xa0000, 0xa3fff, MRA_RAM },
+    { 0xa8000, 0xa803f, IremGA20_r },
 	{ 0xa8042, 0xa8043, YM2151_status_port_0_r },
 	{ 0xa8044, 0xa8045, m92_soundlatch_r },
 	{ 0xffff0, 0xfffff, MRA_ROM },
@@ -683,7 +684,7 @@ static DRIVER_INIT( firebarr )
 	RAM = memory_region(REGION_CPU2);
 	memcpy(RAM+0xffff0,RAM+0x1fff0,0x10); /* Sound cpu Start vector */
 
-	irem_cpu_decrypt(1,rtypeleo_decryption_table);
+	irem_cpu_decrypt(1,firebarr_decryption_table);
 
 	m107_irq_vectorbase=0x20;
 	m107_spritesystem = 1;
