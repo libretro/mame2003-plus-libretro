@@ -1420,9 +1420,11 @@ static struct DACinterface dkong_dac_interface =
 static const char *dkong_sample_names[] =
 {
 	"*dkong",
-	"effect00.wav",
-	"effect01.wav",
-	"effect02.wav",
+	"run01.wav",
+	"run02.wav",
+	"run03.wav",
+	"jump.wav",
+	"dkstomp.wav",
 	0	/* end of array */
 };
 
@@ -1432,11 +1434,15 @@ static const char *dkongjr_sample_names[] =
 	"jump.wav",
 	"land.wav",
 	"roar.wav",
-	"climb.wav",   /* HC */
-	"death.wav",  /* HC */
-	"drop.wav",  /* HC */
-	"walk.wav", /* HC */
-	"snapjaw.wav",  /* HC */
+	"climb0.wav",
+	"climb1.wav",
+	"climb2.wav",
+	"death.wav",
+	"drop.wav",
+	"walk0.wav",
+	"walk1.wav",
+	"walk2.wav",
+	"snapjaw.wav",
 	0	/* end of array */
 };
 
