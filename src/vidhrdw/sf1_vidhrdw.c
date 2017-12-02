@@ -8,6 +8,8 @@ static int sf1_active = 0;
 
 static struct tilemap *bg_tilemap, *fg_tilemap, *tx_tilemap;
 
+static data16_t bgscroll, fgscroll;
+static int bgprev = 0, fgprev = 0;
 
 /***************************************************************************
 
@@ -17,7 +19,7 @@ static struct tilemap *bg_tilemap, *fg_tilemap, *tx_tilemap;
 
 static void get_bg_tile_info(int tile_index)
 {
-	unsigned char *base = memory_region(REGION_GFX5) + 2*tile_index;
+	unsigned char *base = memory_region(REGION_GFX5) + ((bgscroll >> 4) << 5) + 2*tile_index;
 	int attr = base[0x10000];
 	int color = base[0];
 	int code = (base[0x10000+1]<<8) | base[1];
@@ -30,7 +32,7 @@ static void get_bg_tile_info(int tile_index)
 
 static void get_fg_tile_info(int tile_index)
 {
-	unsigned char *base = memory_region(REGION_GFX5) + 0x20000 + 2*tile_index;
+	unsigned char *base = memory_region(REGION_GFX5) + ((fgscroll >> 4) << 5) + 0x20000 + 2*tile_index;
 	int attr = base[0x10000];
 	int color = base[0];
 	int code = (base[0x10000+1]<<8) | base[1];
@@ -61,8 +63,8 @@ static void get_tx_tile_info(int tile_index)
 
 VIDEO_START( sf1 )
 {
-	bg_tilemap = tilemap_create(get_bg_tile_info,tilemap_scan_cols,TILEMAP_OPAQUE,     16,16,2048,16);
-	fg_tilemap = tilemap_create(get_fg_tile_info,tilemap_scan_cols,TILEMAP_TRANSPARENT,16,16,2048,16);
+	bg_tilemap = tilemap_create(get_bg_tile_info,tilemap_scan_cols,TILEMAP_OPAQUE,     16,16,(512/16)+1,16);
+	fg_tilemap = tilemap_create(get_fg_tile_info,tilemap_scan_cols,TILEMAP_TRANSPARENT,16,16,(512/16)+1,16);
 	tx_tilemap = tilemap_create(get_tx_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 8, 8,  64,32);
 
 	if (!bg_tilemap || !fg_tilemap || !tx_tilemap)
@@ -92,16 +94,20 @@ WRITE16_HANDLER( sf1_videoram_w )
 
 WRITE16_HANDLER( sf1_bg_scroll_w )
 {
-	static data16_t scroll;
-	COMBINE_DATA(&scroll);
-	tilemap_set_scrollx(bg_tilemap,0,scroll);
+	COMBINE_DATA(&bgscroll);
+	tilemap_set_scrollx(bg_tilemap,0,bgscroll & 0x0f);
+
+	if ((bgscroll >> 4) != bgprev) tilemap_mark_all_tiles_dirty( bg_tilemap );
+	bgprev = bgscroll >> 4;
 }
 
 WRITE16_HANDLER( sf1_fg_scroll_w )
 {
-	static data16_t scroll;
-	COMBINE_DATA(&scroll);
-	tilemap_set_scrollx(fg_tilemap,0,scroll);
+	COMBINE_DATA(&fgscroll);
+	tilemap_set_scrollx(fg_tilemap,0,fgscroll & 0x0f);
+
+	if ((fgscroll >> 4) != fgprev) tilemap_mark_all_tiles_dirty( fg_tilemap );
+	fgprev = fgscroll >> 4;
 }
 
 WRITE16_HANDLER( sf1_gfxctrl_w )
