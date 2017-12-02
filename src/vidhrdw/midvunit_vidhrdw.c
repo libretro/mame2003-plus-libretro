@@ -14,6 +14,7 @@
 
 #define WATCH_RENDER		(0)
 #define KEEP_STATISTICS		(0)
+#define LOG_DMA				(0)
 
 
 #if KEEP_STATISTICS
@@ -1023,7 +1024,7 @@ static void process_dma_queue(void)
 
 WRITE32_HANDLER( midvunit_dma_queue_w )
 {
-if (keyboard_pressed(KEYCODE_L))
+if (LOG_DMA && keyboard_pressed(KEYCODE_L))
 	logerror("%06X:queue(%X) = %08X\n", activecpu_get_pc(), dma_data_index, data);
 	if (dma_data_index < 16)
 		dma_data[dma_data_index++] = data;
@@ -1041,7 +1042,7 @@ READ32_HANDLER( midvunit_dma_trigger_r )
 {
 	if (offset)
 	{
-if (keyboard_pressed(KEYCODE_L))
+if (LOG_DMA && keyboard_pressed(KEYCODE_L))
 	logerror("%06X:trigger\n", activecpu_get_pc());
 		process_dma_queue();
 		dma_data_index = 0;
@@ -1062,7 +1063,7 @@ WRITE32_HANDLER( midvunit_page_control_w )
 	/* watch for the display page to change */
 	if ((page_control ^ data) & 1)
 	{
-if (keyboard_pressed(KEYCODE_L))
+if (LOG_DMA && keyboard_pressed(KEYCODE_L))
 	logerror("##########################################################\n");
 #if KEEP_STATISTICS
 		usrintf_showmessage("Polys:%d  Render:%d%%  FPS:%d",
