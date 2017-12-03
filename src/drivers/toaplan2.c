@@ -23,7 +23,7 @@ Supported games:
 	whoopee		TP-025		Toaplan		Whoopee
 	pipibibi	bootleg?	Toaplan		Pipi & Bibis
 	fixeight	TP-026		Toaplan		FixEight
-	fixeight	bootleg		Toaplan		FixEight (bootleg)
+	fixeighb	bootleg		Toaplan		FixEight (bootleg)
 	grindstm	TP-027		Toaplan		Grind Stormer  (1992)
 	grindsta	TP-027		Toaplan		Grind Stormer  (1992) (older)
 	vfive		TP-027		Toaplan		V-V  (V-Five)  (1993 - Japan only)
@@ -188,6 +188,7 @@ Pipi & Bibis                   Working.
 Whoopee                        Working. Missing sound MCU dump. Using bootleg sound CPU dump for now
 Pipi & Bibis (Ryouta Kikaku)   Working.
 FixEight                       Not working properly. Missing background GFX (controlled by MCU). MCU type unknown - its a Z?80 of some sort.
+FixEight bootleg               Working. One unknown ROM (same as pipibibi one). Region hardcoded to Korea (@ $4d8)
 Grind Stormer                  Working, but no sound. MCU type unknown - its a Z?80 of some sort.
 VFive                          Working, but no sound. MCU type unknown - its a Z?80 of some sort.
 Batsugun                       Working, but no sound and wrong GFX priorities. MCU type unknown - its a Z?80 of some sort.
@@ -213,8 +214,17 @@ To Do / Unknowns:
 		(pirate ?) version of Pipi and Bibis (Ryouta Kikaku copyright).
 		It really has a HD647180 CPU, and its internal ROM needs to be dumped.
 	- Fix top character text layer (implement the line position table).
+	- Priority problem on 2nd player side of selection screen in FixEight (both original and bootleg)
+	- Fixeight bootleg text in sound check mode does not display properly
+		with the CPU set to 10MHz (ok at 16MHz). Possible error in video_count_r routine.
 
-
+	- Need to sort out the video status register. Currently should be enabled
+		by defining T2_VIDEO_CONTROL but sprite lag needs to be re-synched.
+		VIDEO_UPDATE should probably be AFTER Vblank.
+		Where did the magical '262' IRQ/Sec for the 68K come from? Probably
+		should be 256. CPU interleave on BBAKRAID is 262 aswell - why?
+	- Batrider IRQ4 beig activated at EOF is rubish. It's sound related -
+		maybe acknowledgement from the Z80 when its NMI has completed (port 46)
 
 *****************************************************************************/
 
@@ -259,7 +269,6 @@ int toaplan2_sub_cpu = 0;
 static int mcu_data = 0;
 static int video_status;
 static int prev_scanline;
-//static int prev_beampos;
 static INT8 old_p1_paddle_h;			/* For Ghox */
 static INT8 old_p1_paddle_v;
 static INT8 old_p2_paddle_h;
@@ -493,34 +502,46 @@ static DRIVER_INIT( bbakrada )
   Toaplan games
 ***************************************************************************/
 
+#define T2_VIDEO_CONTROL 0		/* Need to adjust the sprite lag.. */
+
 READ16_HANDLER( toaplan2_inputport_0_word_r )
 {
-//	int retval = (current_scanline>255) ? 1 : 0;
+#if T2_VIDEO_CONTROL
+	return cpu_getvblank();
+#else
 	int retval = vblank_irq;
 	return retval;
+#endif
 }
 
 static void toaplan2_irq(int irq_line)
 {
+#if T2_VIDEO_CONTROL
+	int vpos = cpu_getscanline();
+	if (vpos == 240) cpu_set_irq_line(0, irq_line, HOLD_LINE);
+	vblank_irq = 0; //Remove
+//	logerror("IRQ: scanline=%04x iloop=%04x beampos=%04x\n",vpos,cpu_getiloops(),cpu_gethorzbeampos());
+#else
 	if (cpu_getiloops() == 0) current_scanline = 255;
 
-	if(current_scanline == 245)
+	if (current_scanline == 245)
 	{
 		cpu_set_irq_line(0, irq_line, HOLD_LINE);
 		vblank_irq = 1;
 	}
 
 	current_scanline++;
-	if(current_scanline > 261)
+	if (current_scanline > 261)
 	{
 		current_scanline = 0;
 		vblank_irq = 0;
 	}
+#endif
 }
 
-static INTERRUPT_GEN( toaplan2_vblank_irq2 ) {toaplan2_irq(2);}
-static INTERRUPT_GEN( toaplan2_vblank_irq3 ) {toaplan2_irq(3);}
-static INTERRUPT_GEN( toaplan2_vblank_irq4 ) {toaplan2_irq(4);}
+static INTERRUPT_GEN( toaplan2_vblank_irq2 ) { toaplan2_irq(2); }
+static INTERRUPT_GEN( toaplan2_vblank_irq3 ) { toaplan2_irq(3); }
+static INTERRUPT_GEN( toaplan2_vblank_irq4 ) { toaplan2_irq(4); }
 
 static READ16_HANDLER( video_count_r )
 {
@@ -530,26 +551,47 @@ static READ16_HANDLER( video_count_r )
 	/* +---------+---------+--------+---------------------------+ */
 	/*************** Control Signals are active low ***************/
 
-//	static int current_beampos = 0;
+#if T2_VIDEO_CONTROL
+	int hpos = cpu_gethorzbeampos();
+	int vpos = cpu_getscanline();
+	video_status = 0xff00;						/* Set signals inactive */
 
-//	logerror("Was VC=%04x  Vbl=%02x  VS=%04x  HS=%04x - ",video_status,vblank_irq,prev_scanline,prev_beampos );
+	if ((hpos > 325) && (hpos < 380))
+		video_status &= ~0x8000;
+	if ((vpos >= 242) && (vpos <= 245))
+		video_status &= ~0x4000;
+	if (cpu_getvblank())
+		video_status &= ~0x0100;
+	if (vpos < 256)
+		video_status |= (vpos & 0xff);
+	else
+		video_status |= 0xff;
+
+	current_scanline = prev_scanline = vpos; //Remove
+	logerror("VC: scanline=%04x iloop=%04x beampos=%04x VBL=%04x\n",vpos,cpu_getiloops(),hpos,cpu_getvblank());
+#else
+//	logerror("Was VS=%04x  Vbl=%02x  VS=%04x - ",video_status,vblank_irq,prev_scanline );
 
 	video_status = 0xff00;						/* Set signals inactive */
-	video_status |= (current_scanline & 0xff);	/* Scanline */
-
+	if ((current_scanline & 0x100) == 0) {
+		video_status |= (current_scanline & 0xff);	/* Scanline */
+	}
+	else {
+		video_status |= 0xff;
+	}
 	if (vblank_irq) {
 		video_status &= ~0x0100;
 	}
 	if (prev_scanline != current_scanline) {
-		video_status &= ~0x8000;				/* Activate V-Sync Clk */
+		video_status &= ~0x8000;				/* Activate H-Sync Clk */
 	}
-//	if (current_beampos) {
-//		video_status &= ~0x4000;
-//	}
-//	current_beampos = ~current_beampos;
+	if ((current_scanline >= 247) && (current_scanline <= 250)) {
+		video_status &= ~0x4000;				/* Activate V-Sync Clk */
+	}
 	prev_scanline = current_scanline;
 
 //	logerror("Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),cpu_gethorzbeampos() );
+#endif
 
 	return video_status;
 }
@@ -1380,6 +1422,39 @@ static MEMORY_WRITE16_START( kbash_writemem )
 	{ 0x200000, 0x200003, kbash_sub_cpu_w },		/* sound number to play */
 //	{ 0x200002, 0x200003, kbash_sub_cpu_w2 },		/* ??? */
 	{ 0x20801c, 0x20801d, toaplan2_coin_word_w },
+	{ 0x300000, 0x300001, toaplan2_0_voffs_w },
+	{ 0x300004, 0x300007, toaplan2_0_videoram16_w },
+	{ 0x300008, 0x300009, toaplan2_0_scroll_reg_select_w },
+	{ 0x30000c, 0x30000d, toaplan2_0_scroll_reg_data_w },
+	{ 0x400000, 0x400fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
+MEMORY_END
+
+static MEMORY_READ16_START( kbash2_readmem )
+    { 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x100000, 0x10401f, MRA16_RAM },
+	{ 0x200000, 0x200001, MRA16_NOP },
+	{ 0x200004, 0x200005, input_port_4_word_r },	/* Dip Switch A */
+	{ 0x200008, 0x200009, input_port_5_word_r },	/* Dip Switch B */
+	{ 0x20000c, 0x20000d, input_port_6_word_r },	/* Territory Jumper block */
+	{ 0x200010, 0x200011, input_port_1_word_r },	/* Player 1 controls */
+	{ 0x200014, 0x200015, input_port_2_word_r },	/* Player 2 controls */
+	{ 0x200018, 0x200019, input_port_3_word_r },	/* Coin/System inputs */
+	{ 0x200020, 0x200021, OKIM6295_status_1_lsb_r },
+	{ 0x200024, 0x200025, OKIM6295_status_0_lsb_r },
+	{ 0x20002c, 0x20002d, video_count_r },
+	{ 0x300004, 0x300007, toaplan2_0_videoram16_r },/* tile layers */
+	{ 0x30000c, 0x30000d, toaplan2_inputport_0_word_r },	/* VBlank */
+	{ 0x400000, 0x400fff, paletteram16_word_r },
+	{ 0x700000, 0x700001, video_count_r },			/* test bit 8 */
+MEMORY_END
+
+static MEMORY_WRITE16_START( kbash2_writemem )
+    { 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x100000, 0x10401f, MWA16_RAM },
+	{ 0x200000, 0x200003, MWA16_NOP },		/* sound number to play */
+	{ 0x200020, 0x200021, OKIM6295_data_1_lsb_w },
+	{ 0x200024, 0x200025, OKIM6295_data_0_lsb_w },
+	{ 0x200028, 0x200029, oki_bankswitch_w },
 	{ 0x300000, 0x300001, toaplan2_0_voffs_w },
 	{ 0x300004, 0x300007, toaplan2_0_videoram16_w },
 	{ 0x300008, 0x300009, toaplan2_0_scroll_reg_select_w },
@@ -2439,6 +2514,65 @@ INPUT_PORTS_START( kbash )
 	PORT_DIPSETTING(		0x0001, "USA, Europe (Atari License)" )
 	PORT_BIT( 0xfff0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
+
+INPUT_PORTS_START( kbash2 )
+	PORT_START		/* (0) VBlank */
+	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_VBLANK )
+	PORT_BIT( 0xfffe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	TOAPLAN2_PLAYER_INPUT( IPF_PLAYER1, IPT_BUTTON3, IPT_UNKNOWN )
+
+	TOAPLAN2_PLAYER_INPUT( IPF_PLAYER2, IPT_BUTTON3, IPT_UNKNOWN )
+
+	TOAPLAN2_SYSTEM_INPUTS
+
+	PORT_START		/* (4) DSWA */
+	PORT_DIPNAME( 0x0001,	0x0000, "Continue Mode" )
+	PORT_DIPSETTING(		0x0000, "Normal" )
+	PORT_DIPSETTING(		0x0001, "Discount" )
+	PORT_DIPNAME( 0x0002,	0x0000, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(		0x0002, DEF_STR( On ) )
+	PORT_SERVICE( 0x0004,	IP_ACTIVE_HIGH )		/* Service Mode */
+	PORT_DIPNAME( 0x0008,	0x0000, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
+	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
+	EUROPEAN_COINAGE_16
+//	NONEUROPEAN_COINAGE_16
+	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START		/* (5) DSWB */
+	DIFFICULTY_16
+	PORT_DIPNAME( 0x000c,	0x0000, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(		0x0000, "100k and every 400k" )
+	PORT_DIPSETTING(		0x0004, "100k only" )
+	PORT_DIPSETTING(		0x0008, "200k only" )
+	PORT_DIPSETTING(		0x000c, "None" )
+	/* Lives are different in this game */
+	PORT_DIPNAME( 0x0030,	0x0000, DEF_STR( Lives ) )
+	PORT_DIPSETTING(		0x0030, "1" )
+	PORT_DIPSETTING(		0x0000, "2" )
+	PORT_DIPSETTING(		0x0020, "3" )
+	PORT_DIPSETTING(		0x0010, "4" )
+	PORT_DIPNAME( 0x0040, 0x0000, "Invulnerability" )
+	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(		0x0040, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0080,	0x0000, "Allow Continue" )
+	PORT_DIPSETTING(		0x0080, DEF_STR( No ) )
+	PORT_DIPSETTING(		0x0000, DEF_STR( Yes ) )
+	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START		/* (6) Territory Jumper block */
+	PORT_DIPNAME( 0x000f,	0x0006, "Territory" )
+	PORT_DIPSETTING(		0x0000, "Japan (Taito Corp license)" )
+	PORT_DIPSETTING(		0x000e, "South East Asia" )	/*Service Mode lists European Coinage */
+	PORT_DIPSETTING(		0x0006, "South East Asia (Charterfield license)" )	/*Service Mode lists European Coinage */
+	PORT_DIPSETTING(		0x000b, "Korea" )
+	PORT_DIPSETTING(		0x0003, "Korea (Unite license)" )
+	PORT_DIPSETTING(		0x0004, "Hong Kong" )
+	PORT_DIPSETTING(		0x0005, "Taiwan" )
+	PORT_BIT( 0xfff0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	INPUT_PORTS_END
 
 INPUT_PORTS_START( truxton2 )
 	PORT_START		/* (0) VBlank */
@@ -3951,6 +4085,15 @@ static struct OKIM6295interface fixeighb_okim6295_interface =
 	{ REGION_SOUND1 },		/* memory region */
 	{ 100 }
 };
+
+static struct OKIM6295interface kbash2_okim6295_interface =
+{
+	2,										/* 2 chips */
+	{ 16000000/16/132, 16000000/16/165 },	/* frequency (Hz). 3.2MHz to two 6295 (using B mode / A mode) */
+	{ REGION_SOUND1, REGION_SOUND2 },		/* memory region */
+	{ 100, 100 }
+};
+
 static struct YMZ280Binterface ymz280b_interface =
 {
 	1,
@@ -4100,6 +4243,32 @@ static MACHINE_DRIVER_START( kbash )
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( kbash2 )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 16000000)			/* 16MHz Oscillator */
+	MDRV_CPU_MEMORY(kbash2_readmem,kbash2_writemem)
+	MDRV_CPU_VBLANK_INT(toaplan2_vblank_irq4,262)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(toaplan2)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
+	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_VISIBLE_AREA(0, 319, 0, 239)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(2048)
+
+	MDRV_VIDEO_START(toaplan2_0)
+	MDRV_VIDEO_EOF(toaplan2_0)
+	MDRV_VIDEO_UPDATE(toaplan2_0)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(OKIM6295, kbash2_okim6295_interface)
+MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( truxton2 )
 
@@ -4650,6 +4819,24 @@ ROM_START( kbash )
 	ROM_LOAD( "kbash07.bin", 0x00000, 0x40000, CRC(3732318f) SHA1(f0768459f5ad2dee53d408a0a5ae3a314864e667) )
 ROM_END
 
+ROM_START( kbash2 )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 )			/* Main 68K code */
+	ROM_LOAD16_WORD_SWAP( "mecat-m", 0x000000, 0x80000, CRC(bd2263c6) SHA1(eb794c0fc9c1fb4337114d48149283d42d22e4b3) )
+
+	ROM_REGION( 0x800000, REGION_GFX1, 0 )
+	ROM_LOAD( "mecat-34", 0x000000, 0x400000, CRC(6be7b37e) SHA1(13160ad0712fee932bb98cc226e651895b19228a) )
+	ROM_LOAD( "mecat-12", 0x400000, 0x400000, CRC(49e46b1f) SHA1(d12b12696a8473eb34f3cd247ab060289a6c0e9c) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 )			/* ADPCM Music */
+	ROM_LOAD( "mecat-s", 0x00000, 0x80000, CRC(3eb7adf4) SHA1(b0e6e99726b854858bd0e69eb77f12b9664b35e6) )
+
+	ROM_REGION( 0x40000, REGION_SOUND2, 0 )			/* ADPCM Samples */
+	ROM_LOAD( "eprom",   0x00000, 0x40000, CRC(31115cb9) SHA1(c79ea01bd865e2fc3aaab3ff05483c8fd27e5c98) )
+
+	ROM_REGION( 0x10000, REGION_USER1, 0 )			/* ??? Some sort of table  - same as in pipibibi*/
+	ROM_LOAD( "050917-10", 0x0000, 0x10000, CRC(6b213183) SHA1(599c59d155d11edb151bfaed1d24ef964462a447) )
+ROM_END
+
 ROM_START( truxton2 )
 	ROM_REGION( 0x080000, REGION_CPU1, 0 )			/* Main 68K code */
 	ROM_LOAD16_WORD( "tp024_1.bin", 0x000000, 0x080000, CRC(f5cfe6ee) SHA1(30979888a4cd6500244117748f28386a7e20a169) )
@@ -5136,6 +5323,7 @@ GAMEX( 1991, tekipaki, 0,        tekipaki, tekipaki, T2_Z180,  ROT0,   "Toaplan"
 GAMEX( 1991, ghox,     0,        ghox,     ghox,     T2_Z180,  ROT270, "Toaplan", "Ghox", GAME_NO_SOUND )
 GAMEX( 1992, dogyuun,  0,        dogyuun,  dogyuun,  T2_Zx80,  ROT270, "Toaplan", "Dogyuun", GAME_NO_SOUND )
 GAMEX( 1993, kbash,    0,        kbash,    kbash,    T2_Zx80,  ROT0,   "Toaplan", "Knuckle Bash", GAME_NO_SOUND )
+GAME(  1999, kbash2,   0,        kbash2,   kbash2,   T2_noZ80, ROT0,   "Toaplan", "Knuckle Bash 2" )
 GAME ( 1992, truxton2, 0,        truxton2, truxton2, T2_noZ80, ROT270, "Toaplan", "Truxton II / Tatsujin II / Tatsujin Oh (Japan)" )
 GAME ( 1991, pipibibs, 0,        pipibibs, pipibibs, T2_Z80,   ROT0,   "Toaplan", "Pipi & Bibis / Whoopee!!" )
 GAME ( 1991, whoopee,  pipibibs, whoopee,  whoopee,  T2_Z80,   ROT0,   "Toaplan", "Whoopee!! / Pipi & Bibis" )
