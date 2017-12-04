@@ -34,9 +34,8 @@
 	COMPILER SWITCHES
 ****************************************************************************/
 
-/* Replaced by variables so they can be enabled/disabled via core options */
-//  #define DISABLE_FIRQ_SPEEDUP		0
-//  #define DISABLE_LOOP_CATCHERS		0
+#define DISABLE_FIRQ_SPEEDUP		0
+#define DISABLE_LOOP_CATCHERS		0
 
 
 /***************************************************************************
@@ -139,8 +138,6 @@ static struct dac_state dac;
 static int dac_stream;
 static int cvsd_stream;
 
-static unsigned disable_firq_speedup;
-static unsigned disable_loop_catchers;
 
 /***************************************************************************
 	PROTOTYPES
@@ -713,16 +710,6 @@ void williams_narc_init(int cpunum)
 
 static void init_audio_state(int first_time)
 {
-        /* enable speedhacks */
-        disable_firq_speedup = 1;
-        disable_loop_catchers = 1;
-        
-        if(activate_williams_speedhack)
-        {
-            disable_firq_speedup = 0;
-            disable_loop_catchers = 0;
-        }
-    
 	/* reset the YM2151 state */
 	ym2151.timer_base = 1.0 / (3579580.0 / 64.0);
 	ym2151.timer_period[0] = ym2151.timer_period[1] = ym2151.timer_period[2] = 1.0;
@@ -1095,11 +1082,11 @@ static WRITE_HANDLER( williams_ym2151_w )
 	}
 	else
 	{
-		if (!disable_firq_speedup)
+		if (!DISABLE_FIRQ_SPEEDUP)
 			ym2151.current_register = data;
 
 		/* only pass through register writes for non-timer registers */
-		if (disable_firq_speedup || ym2151.current_register < 0x10 || ym2151.current_register > 0x14)
+		if (DISABLE_FIRQ_SPEEDUP || ym2151.current_register < 0x10 || ym2151.current_register > 0x14)
 			YM2151_register_port_0_w(offset, data);
 	}
 }
@@ -1154,7 +1141,7 @@ static void update_counter(void)
 	double time_since_update, timer_period = ym2151.timer_period[ym2151.active_timer];
 	int firqs_since_update, complete_ticks, downcounter;
 
-	if (disable_firq_speedup || ym2151.active_timer == 2 || counter.invalid)
+	if (DISABLE_FIRQ_SPEEDUP || ym2151.active_timer == 2 || counter.invalid)
 		return;
 
 	/* compute the time since we last updated; if it's less than one period, do nothing */
@@ -1221,7 +1208,7 @@ static READ_HANDLER( counter_value_r )
 	counter.last_read_pc = pc;
 
 	/* on the second LSB read in the hotspot, check to see if we will be looping */
-	if (offset == 1 && pc == counter.hotspot_start + 6 && !disable_loop_catchers)
+	if (offset == 1 && pc == counter.hotspot_start + 6 && !DISABLE_LOOP_CATCHERS)
 	{
 		UINT16 new_counter = counter.value[0] * 256 + counter.value[1];
 

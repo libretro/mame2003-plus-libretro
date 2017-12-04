@@ -560,6 +560,5 @@ extern const struct GameDriver *drivers[];
 extern const struct GameDriver *test_drivers[];
 
 extern unsigned activate_dcs_speedhack;
-extern unsigned activate_williams_speedhack;
 
 #endif

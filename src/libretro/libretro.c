@@ -23,8 +23,6 @@ unsigned activate_dcs_speedhack = 1;
 unsigned activate_dcs_speedhack = 0;
 #endif
 
-unsigned activate_williams_speedhack = 0;
-
 struct retro_perf_callback perf_cb;
 
 retro_log_printf_t log_cb = NULL;
@@ -50,7 +48,6 @@ void retro_set_environment(retro_environment_t cb)
          "MK2/MK3 DCS Speedhack; enabled|disabled"
 #endif
       },
-      { "mame2003-williams-speedhack", "Williams Speedhack; enabled|disabled" },
       { "mame2003-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
       { "mame2003-skip_warnings", "Skip Warnings; disabled|enabled" },
       { "mame2003-samples", "Samples; enabled|disabled" },
@@ -208,19 +205,6 @@ static void update_variables(void)
    else
       activate_dcs_speedhack = 0;
    
-   var.value = NULL;
-   var.key = "mame2003-williams-speedhack";
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         activate_williams_speedhack = 1;
-      else
-         activate_williams_speedhack = 0;
-   }
-   else
-      activate_williams_speedhack = 0;
-
    var.value = NULL;
    var.key = "mame2003-skip_disclaimer";
    
