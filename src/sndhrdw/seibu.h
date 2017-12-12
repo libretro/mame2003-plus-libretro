@@ -119,7 +119,7 @@ static struct YM2151interface ym2151_interface =					\
 {																	\
 	1,																\
 	freq1,															\
-	{ 50 },															\
+	{ YM3012_VOL(50,MIXER_PAN_LEFT,50,MIXER_PAN_RIGHT) },	        \
 	{ seibu_ym2151_irqhandler },									\
 };																	\
 																	\
