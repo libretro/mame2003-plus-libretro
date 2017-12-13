@@ -247,7 +247,8 @@ static void update_irq_lines(int param)
 
 WRITE_HANDLER( seibu_irq_clear_w )
 {
-	update_irq_lines(VECTOR_INIT);
+	/* Denjin Makai and SD Gundam doesn't like this, it's tied to the rst18 ack ONLY so it could be related to it. */
+//	update_irq_lines(VECTOR_INIT);
 }
 
 WRITE_HANDLER( seibu_rst10_ack_w )
@@ -282,6 +283,12 @@ MACHINE_INIT( seibu_sound_1 )
 {
 	sound_cpu=1;
 	update_irq_lines(VECTOR_INIT);
+
+	/* Denjin Makai definitely needs this at start-up, it never writes to the bankswitch */
+	{
+	if(strcmp(Machine->gamedrv->name, "denjinmk") == 0)
+    seibu_bank_w(1,0);
+	}
 }
 
 /* Use this if the sound cpu is cpu 2 */
