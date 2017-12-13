@@ -5621,6 +5621,9 @@ Other Sun games
 	DRIVER( dreamwld )  /* (c) 2000 SemiCom */
         DRIVER( gaialast )  /* (c) 1999 SemiCom / XESS */
 	DRIVER( rolcrush )  /* (c) 1999 Trust / SemiCom */
+		
+	/* Seibu Hardware */
+	DRIVER( denjinmk )  /* (c) 1994 Banpresto */
 
 
 #endif	/* DRIVER_RECURSIVE */
