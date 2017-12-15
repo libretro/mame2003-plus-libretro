@@ -5607,6 +5607,7 @@ Other Sun games
 	DRIVER( mslug5nd )	/* 0268 (c) 2003 SNK Playmore */
 	DRIVER( svcchaos )	/* 0269 (c) 2003 SNK Playmore */
 	DRIVER( svcnd )		/* 0269 (c) 2003 SNK Playmore */
+	DRIVER( svcboot )	/* 0269 (c) 2003 Bootleg */
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5nd )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5sp )	/* 0270 (c) 2003 Yuki Enterprises */
