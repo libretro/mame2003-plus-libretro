@@ -4605,6 +4605,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( rodlandj )	/* (c) 1990 (Japan) */
 	DRIVER( rodlndjb )	/* bootleg */
 	DRIVER( avspirit )	/* (c) 1991 */
+	DRIVER( inyourfa )  /* (c) 1991 (US, prototype) */
 	DRIVER( phantasm )	/* (c) 1991 (Japan) */
 	DRIVER( edf )		/* (c) 1991 */
 	DRIVER( 64street )	/* (c) 1991 */
