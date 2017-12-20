@@ -4605,6 +4605,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( rodlandj )	/* (c) 1990 (Japan) */
 	DRIVER( rodlndjb )	/* bootleg */
 	DRIVER( avspirit )	/* (c) 1991 */
+	DRIVER( inyourfa )  /* (c) 1991 (US, prototype) */
 	DRIVER( phantasm )	/* (c) 1991 (Japan) */
 	DRIVER( edf )		/* (c) 1991 */
 	DRIVER( 64street )	/* (c) 1991 */
@@ -5607,6 +5608,7 @@ Other Sun games
 	DRIVER( mslug5nd )	/* 0268 (c) 2003 SNK Playmore */
 	DRIVER( svcchaos )	/* 0269 (c) 2003 SNK Playmore */
 	DRIVER( svcnd )		/* 0269 (c) 2003 SNK Playmore */
+	DRIVER( svcboot )	/* 0269 (c) 2003 Bootleg */
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5nd )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5sp )	/* 0270 (c) 2003 Yuki Enterprises */
@@ -5621,6 +5623,9 @@ Other Sun games
 	DRIVER( dreamwld )  /* (c) 2000 SemiCom */
         DRIVER( gaialast )  /* (c) 1999 SemiCom / XESS */
 	DRIVER( rolcrush )  /* (c) 1999 Trust / SemiCom */
+		
+	/* Seibu Hardware */
+	DRIVER( denjinmk )  /* (c) 1994 Banpresto */
 
 
 #endif	/* DRIVER_RECURSIVE */

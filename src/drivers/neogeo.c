@@ -6379,6 +6379,45 @@ ROM_START( svcnd ) /* Pcb Dump, Decrypted C */
 	ROM_LOAD16_BYTE( "svcn_c8.rom", 0x3000001, 0x800000, CRC(de99e613) ) /* Plane 2,3 */
 ROM_END
 
+ROM_START( svcboot )
+	ROM_REGION( 0x800000, REGION_CPU1, 0 )
+	ROM_LOAD16_WORD_SWAP( "svc-p1.bin", 0x000000, 0x800000, CRC(0348f162) SHA1(c313351d68effd92aeb80ed320e4f8c26a3bb53e) )
+
+	ROM_REGION( 0x20000, REGION_GFX1, 0 )
+	ROM_LOAD( "svc-s1.bin", 0x10000, 0x10000, CRC(70b44df1) SHA1(52ae3f264d7b33e94e770e6b2d0cf35a64e7dda4) )
+	ROM_CONTINUE(			0x00000, 0x10000 )
+	ROM_REGION( 0x20000, REGION_GFX2, 0 )
+	ROM_LOAD( "sfix.sfx",  0x000000, 0x20000, CRC(354029fc) SHA1(4ae4bf23b4c2acff875775d4cbff5583893ce2a1) )
+
+	ROM_REGION16_BE( 0x20000, REGION_USER1, 0 )
+	NEOGEO_BIOS
+	ROM_REGION( 0x50000, REGION_CPU2, 0 )
+	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )
+	ROM_LOAD( "svc-m1.bin", 0x20000, 0x10000, CRC(804328c3) SHA1(f931636c563b0789d4812033a77b47bf663db43f) )
+	ROM_CONTINUE(           0x00000, 0x10000 )
+	ROM_COPY( REGION_CPU2,  0x00000, 0x10000, 0x10000 )
+	ROM_REGION( 0x10000, REGION_GFX4, 0 )
+	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+	ROM_LOAD16_WORD_SWAP( "svc-v2.bin", 0x000000, 0x400000, CRC(b5097287) SHA1(3ba3a9b5624879616382ed40337a3d9c50a0f314) )
+	ROM_LOAD16_WORD_SWAP( "svc-v1.bin", 0x400000, 0x400000, CRC(bd3a391f) SHA1(972bf09b75e99a683ee965bec93b0da8f15d72d9) )
+	ROM_LOAD16_WORD_SWAP( "svc-v4.bin", 0x800000, 0x400000, CRC(33fc0b37) SHA1(d61017d829f44c7df8795ba10c55c727d9972662) )
+	ROM_LOAD16_WORD_SWAP( "svc-v3.bin", 0xc00000, 0x400000, CRC(aa9849a0) SHA1(9539b3356a070a066a89f27c287f316e7367ce2a) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "svc-c1.bin", 0x0000000, 0x800000, CRC(a7826b89) SHA1(3bbe348ce54b80b56ef032ea532a18ef3cafeb11) )
+	ROM_LOAD16_BYTE( "svc-c2.bin", 0x0000001, 0x800000, CRC(ed3c2089) SHA1(b5d17692f15f5a678c273589fab2e3918711135e) )
+	ROM_LOAD16_BYTE( "svc-c3.bin", 0x1000000, 0x800000, CRC(71ed8063) SHA1(ea1df9e2e382a8560a06d447421844cc588f43dd) )
+	ROM_LOAD16_BYTE( "svc-c4.bin", 0x1000001, 0x800000, CRC(250bde2d) SHA1(8c72dcfceef6d022ab4b73ab37cf3ac0c3940c17) )
+	ROM_LOAD16_BYTE( "svc-c5.bin", 0x2000000, 0x800000, CRC(9817c082) SHA1(1bea9c7220c2b1524896c86841d6d8fd55f5d366) )
+	ROM_LOAD16_BYTE( "svc-c6.bin", 0x2000001, 0x800000, CRC(2bc0307f) SHA1(8090fa82c46eb503832359093c8cc3cee3141c90) )
+	ROM_LOAD16_BYTE( "svc-c7.bin", 0x3000000, 0x800000, CRC(4358d7b9) SHA1(9270b58c2abc072a046bedda72f1395df26d0714) )
+	ROM_LOAD16_BYTE( "svc-c8.bin", 0x3000001, 0x800000, CRC(366deee5) SHA1(d477ad7a5987fd6c7ef2c1680fbb7c884654590e) )
+ROM_END
+
 ROM_START( mslug5 ) /* original encrypted */
 	ROM_REGION( 0x800000, REGION_CPU1, 0 )
 	ROM_LOAD32_WORD_SWAP( "268-p1.bin", 0x000000, 0x400000, CRC(d0466792) )
@@ -7487,6 +7526,91 @@ DRIVER_INIT( svcnd )
 	install_mem_write16_handler(0, 0x2ffff0, 0x2ffff3, mv0_bankswitch_w );
 }
 
+/***************************************************************************
+ svcboot
+***************************************************************************/
+static void svcboot_px_decrypt( void )
+{
+	const unsigned char sec[] = {
+		0x06, 0x07, 0x01, 0x02, 0x03, 0x04, 0x05, 0x00
+	};
+
+	int i;
+	int ofst;
+
+	int rom_size = memory_region_length( REGION_CPU1 );
+	UINT8 *rom = memory_region( REGION_CPU1 );
+	UINT8 *buf = malloc( rom_size );
+
+	for( i = 0; i < rom_size / 0x100000; i++ ){
+		memcpy( &buf[ i * 0x100000 ], &rom[ sec[ i ] * 0x100000 ], 0x100000 );
+	}
+
+	for( i = 0; i < rom_size / 2; i++ ){
+		ofst = BITSWAP8( (i & 0x0000ff), 7, 6, 1, 0, 3, 2, 5, 4 );
+		ofst += (i & 0xffff00);
+
+		memcpy( &rom[ i * 2 ], &buf[ ofst * 2 ], 0x02 );
+	}
+
+	free( buf );
+}
+
+static void svcboot_cx_decrypt( void )
+{
+	const unsigned char idx_tbl[ 0x10 ] = {
+		0, 1, 0, 1, 2, 3, 2, 3, 3, 4, 3, 4, 4, 5, 4, 5,
+	};
+
+	const unsigned char bitswap4_tbl[ 6 ][ 4 ] = {
+		{ 3, 0, 1, 2 },
+		{ 2, 3, 0, 1 },
+		{ 1, 2, 3, 0 },
+		{ 0, 1, 2, 3 },
+		{ 3, 2, 1, 0 },
+		{ 3, 0, 2, 1 },
+	};
+
+	int i;
+	int ofst;
+
+	int rom_size = memory_region_length( REGION_GFX3 );
+	UINT8 *rom = memory_region( REGION_GFX3 );
+	UINT8 *buf = malloc( rom_size );
+
+	memcpy( buf, rom, rom_size );
+
+	for( i = 0; i < rom_size / 0x80; i++ ){
+		int idx = idx_tbl[ (i & 0xf00) >> 8 ];
+
+		int bit0 = bitswap4_tbl[ idx ][ 0 ];
+		int bit1 = bitswap4_tbl[ idx ][ 1 ];
+		int bit2 = bitswap4_tbl[ idx ][ 2 ];
+		int bit3 = bitswap4_tbl[ idx ][ 3 ];
+
+		ofst = BITSWAP8( (i & 0x0000ff), 7, 6, 5, 4, bit3, bit2, bit1, bit0 );
+		ofst += (i & 0xfffff00);
+
+		memcpy( &rom[ i * 0x80 ], &buf[ ofst * 0x80 ], 0x80 );
+	}
+
+	free( buf );
+}
+
+DRIVER_INIT( svcboot )
+{
+	svcboot_px_decrypt();
+	svcboot_cx_decrypt();
+
+	init_neogeo();
+
+	install_mem_read16_handler( 0, 0x2fe000, 0x2fffef, MRA16_RAM );
+	install_mem_write16_handler( 0, 0x2fe000, 0x2fffef, MWA16_RAM );
+
+	install_mem_read16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_r );
+	install_mem_write16_handler( 0, 0x2ffff0, 0x2fffff, mv0_bankswitch_w );
+}
+
 static UINT16 mv0_bankswitch_offset[ 2 ];
 static int mv0_bankswitch_flg;
 
@@ -7978,6 +8102,7 @@ GAMEB( 1996, ironclad, neogeo,   neogeo, neogeo, neogeo,  neogeo,   ROT0, "Sauru
 GAMEB( 2003, kof2003d, neogeo,   neogeo, neogeo, neogeo,  kof2003d, ROT0, "NeoGeo", "The King of Fighters 2003 (Decrypted C)" )
 GAMEB( 2003, svcchaos, neogeo,   neogeo, neogeo, neogeo,  svcchaos, ROT0, "Snk Playmore", "Snk Vs Capcom : Svc Chaos" )
 GAMEB( 2003, svcnd,    svcchaos, neogeo, neogeo, neogeo,  svcnd,    ROT0, "Snk Playmore", "Snk Vs Capcom : Svc Chaos (Decrypted C)" )
+GAMEB( 2003, svcboot,  neogeo,   neogeo, neogeo, neogeo,  svcboot,  ROT0, "Snk Playmore", "Snk Vs Capcom : Svc Chaos (Bootleg)" )
 GAMEB( 2003, mslug5,   neogeo,   neogeo, neogeo, neogeo,  mslug5,   ROT0, "Snk Playmore", "Metal Slug 5" )
 GAMEB( 2003, mslug5nd, mslug5,   neogeo, neogeo, neogeo,  mslug5nd, ROT0, "Snk Playmore", "Metal Slug 5 (Decrypted C)" )
 
