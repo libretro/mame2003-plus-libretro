@@ -1,5 +1,6 @@
 DEBUG=0
 DEBUGGER=0
+SPLIT_UP_LINK=0
 CORE_DIR := src
 TARGET_NAME := mame2003
 
@@ -24,6 +25,15 @@ else ifneq ($(findstring win,$(shell uname -a)),)
    system_platform = win
    platform = win
 endif
+endif
+
+#Windows and wsl need to have their linking split up due to cmd length limits
+ifneq ($(findstring Microsoft,$(shell uname -a)),)
+   SPLIT_UP_LINK=1
+endif
+
+ifeq ($(system_platform), win)
+   SPLIT_UP_LINK=1
 endif
 
 
@@ -450,7 +460,7 @@ all:	$(TARGET)
 $(TARGET): $(OBJECTS)
 ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
-ifeq ($(system_platform), win)
+ifeq ($(SPLIT_UP_LINK), 1)
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
 else
 	$(AR) rcs $@ $(OBJECTS)
@@ -458,7 +468,7 @@ endif
 else
 	@echo Linking $@...
 	@echo platform $(system_platform)
-ifeq ($(system_platform), win)
+ifeq ($(SPLIT_UP_LINK), 1)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
@@ -477,7 +487,7 @@ $(OBJ)/%.a:
 	$(AR) cr $@ $^
 
 clean:
-ifeq ($(system_platform), win)
+ifeq ($(SPLIT_UP_LINK), 1)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	rm -f @$@.in $(TARGET)
