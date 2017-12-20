@@ -1,5 +1,6 @@
 DEBUG=0
 DEBUGGER=0
+WSL=0
 CORE_DIR := src
 TARGET_NAME := mame2003
 
@@ -24,6 +25,10 @@ else ifneq ($(findstring win,$(shell uname -a)),)
    system_platform = win
    platform = win
 endif
+endif
+
+ifneq ($(findstring Microsoft,$(shell uname -a)),)
+   WSL=1
 endif
 
 
@@ -453,12 +458,21 @@ ifeq ($(STATIC_LINKING),1)
 ifeq ($(system_platform), win)
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
 else
+ifeq ($(WSL), 1)
+	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
+else
 	$(AR) rcs $@ $(OBJECTS)
 endif
 else
 	@echo Linking $@...
 	@echo platform $(system_platform)
 ifeq ($(system_platform), win)
+	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
+	$(file >$@.in,$(OBJECTS))
+	$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
+	@rm $@.in
+else
+ifeq ($(WSL), 1)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	$(LD) $(LDFLAGS) $(LINKOUT)$@ @$@.in $(LIBS)
@@ -478,6 +492,13 @@ $(OBJ)/%.a:
 
 clean:
 ifeq ($(system_platform), win)
+	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
+	$(file >$@.in,$(OBJECTS))
+	rm -f @$@.in $(TARGET)
+	@rm $@.in
+	rm -f $(OBJECTS) $(TARGET)
+else
+ifeq ($(WSL), 1)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	rm -f @$@.in $(TARGET)
