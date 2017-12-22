@@ -16,8 +16,15 @@ data16_t *gaelco_spriteram;
 
 int sprite_count[5];
 int *sprite_table[5];
-static struct tilemap *pant[2];
+static struct tilemap *gaelco_tilemap[2];
 
+#define pant	gaelco_tilemap
+
+// lazy
+void gaelco_mark_offset_dirty(unsigned int offset)
+{
+	tilemap_mark_tile_dirty(pant[offset >> 11],((offset << 1) & 0x0fff) >> 2);
+}
 
 /***************************************************************************
 
