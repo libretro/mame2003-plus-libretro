@@ -4754,7 +4754,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( bigkarnk )	/* (c) 1991 - Ref 901112-1 */
 	/* Master Boy 2 */	/* (c) 1991 - Ref ??? */
 	DRIVER( splash )	/* (c) 1992 - Ref 922804 */
-	/*  Thunder Hoop */	/* (c) 1992 - Ref 922804/1 */
+	DRIVER( thoop )	        /* (c) 1992 - Ref 922804/1 */
 	/* Squash */		/* (c) 1992 - Ref 922804/2 */
 	DRIVER( wrally )	/* (c) 1993 - Ref 930705 */
 	DRIVER( wrallya )	/* (c) 1993 - Ref 930705 */
