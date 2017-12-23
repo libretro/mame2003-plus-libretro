@@ -14,9 +14,149 @@
 extern data16_t *gaelco_vregs;
 extern data16_t *gaelco_videoram;
 extern data16_t *gaelco_spriteram;
+data16_t *gaelco_screen;
 
 /* from vidhrdw/gaelco.c */
 WRITE16_HANDLER( gaelco_vram_w );
+extern void gaelco_mark_offset_dirty(unsigned int offset);
+
+static int decrypt(int const param1, int const param2, int const enc_prev_word, int const dec_prev_word, int const enc_word)
+{
+	int const swap = (BIT(dec_prev_word, 8) << 1) | BIT(dec_prev_word, 7);
+	int const type = (BIT(dec_prev_word,12) << 1) | BIT(dec_prev_word, 2);
+	int res=0;
+	int k=0;
+
+	switch (swap)
+	{
+		case 0:	res = BITSWAP16(enc_word,  1, 2, 0,14,12,15, 4, 8,13, 7, 3, 6,11, 5,10, 9); break;
+		case 1:	res = BITSWAP16(enc_word, 14,10, 4,15, 1, 6,12,11, 8, 0, 9,13, 7, 3, 5, 2); break;
+		case 2:	res = BITSWAP16(enc_word,  2,13,15, 1,12, 8,14, 4, 6, 0, 9, 5,10, 7, 3,11); break;
+		case 3:	res = BITSWAP16(enc_word,  3, 8, 1,13,14, 4,15, 0,10, 2, 7,12, 6,11, 9, 5); break;
+	}
+
+	res ^= param2;
+
+	switch (type)
+	{
+		case 0:
+			k =	(0 << 0) |
+				(1 << 1) |
+				(0 << 2) |
+				(1 << 3) |
+				(1 << 4) |
+				(1 << 5);
+			break;
+
+		case 1:
+			k =	(BIT(dec_prev_word, 0) << 0) |
+				(BIT(dec_prev_word, 1) << 1) |
+				(BIT(dec_prev_word, 1) << 2) |
+				(BIT(enc_prev_word, 3) << 3) |
+				(BIT(enc_prev_word, 8) << 4) |
+				(BIT(enc_prev_word,15) << 5);
+			break;
+
+		case 2:
+			k =	(BIT(enc_prev_word, 5) << 0) |
+				(BIT(dec_prev_word, 5) << 1) |
+				(BIT(enc_prev_word, 7) << 2) |
+				(BIT(enc_prev_word, 3) << 3) |
+				(BIT(enc_prev_word,13) << 4) |
+				(BIT(enc_prev_word,14) << 5);
+			break;
+
+		case 3:
+			k =	(BIT(enc_prev_word, 0) << 0) |
+				(BIT(enc_prev_word, 9) << 1) |
+				(BIT(enc_prev_word, 6) << 2) |
+				(BIT(dec_prev_word, 4) << 3) |
+				(BIT(enc_prev_word, 2) << 4) |
+				(BIT(dec_prev_word,11) << 5);
+			break;
+	}
+
+	k ^= param1;
+
+	res = (res & 0xffc0) | ((res + k) & 0x003f);
+
+	res ^= param1;
+
+	switch (type)
+	{
+		case 0:
+			k =	(BIT(enc_word, 9) << 0) |
+				(BIT(res,2)       << 1) |
+				(BIT(enc_word, 5) << 2) |
+				(BIT(res,5)       << 3) |
+				(BIT(res,4)       << 4);
+			break;
+
+		case 1:
+			k =	(BIT(dec_prev_word, 2) << 0) |	// always 1
+				(BIT(enc_prev_word, 4) << 1) |
+				(BIT(dec_prev_word,14) << 2) |
+				(BIT(res, 1)           << 3) |
+				(BIT(dec_prev_word,12) << 4);	// always 0
+			break;
+
+		case 2:
+			k =	(BIT(enc_prev_word, 6) << 0) |
+				(BIT(dec_prev_word, 6) << 1) |
+				(BIT(dec_prev_word,15) << 2) |
+				(BIT(res,0)            << 3) |
+				(BIT(dec_prev_word, 7) << 4);
+			break;
+
+		case 3:
+			k =	(BIT(dec_prev_word, 2) << 0) |	// always 1
+				(BIT(dec_prev_word, 9) << 1) |
+				(BIT(enc_prev_word, 5) << 2) |
+				(BIT(dec_prev_word, 1) << 3) |
+				(BIT(enc_prev_word,10) << 4);
+
+			break;
+	}
+
+	k ^= param1;
+
+	res =	(res & 0x003f) |
+			((res + (k <<  6)) & 0x07c0) |
+			((res + (k << 11)) & 0xf800);
+
+	res ^= (param1 << 6) | (param1 << 11);
+
+	return BITSWAP16(res, 2,6,0,11,14,12,7,10,5,4,8,3,9,1,13,15);
+}
+
+UINT16 gaelco_decrypt(int offset, int data, int param1, int param2)
+{
+	static int lastpc, lastoffset, lastencword, lastdecword;
+
+	int thispc = activecpu_get_pc();
+
+	/* check if 2nd half of 32 bit */
+	if(lastpc == thispc && offset == lastoffset + 1)
+	{
+		lastpc = 0;
+		data = decrypt(param1, param2, lastencword, lastdecword, data);
+	}
+	else
+	{
+		/* code as 1st word */
+
+		lastpc = thispc;
+		lastoffset = offset;
+		lastencword = data;
+
+		/* high word returned */
+		data = decrypt(param1, param2, 0, 0, data);
+
+		lastdecword = data;
+	}
+
+	return data;
+}
 
 
 #define TILELAYOUT8(NUM) static struct GfxLayout tilelayout8_##NUM =	\
@@ -292,6 +432,7 @@ VIDEO_UPDATE( maniacsq );
 static MEMORY_READ16_START( maniacsq_readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },			/* ROM */
 	{ 0x100000, 0x101fff, MRA16_RAM },			/* Video RAM */
+	{ 0x102000, 0x103fff, MRA16_RAM },			/* Screen RAM */
 	{ 0x200000, 0x2007ff, MRA16_RAM },			/* Palette */
 	{ 0x440000, 0x440fff, MRA16_RAM },			/* Sprite RAM */
 	{ 0x700000, 0x700001, input_port_0_word_r },/* DIPSW #2 */
@@ -314,6 +455,7 @@ static WRITE16_HANDLER( OKIM6295_bankswitch_w )
 static MEMORY_WRITE16_START( maniacsq_writemem )
 	{ 0x000000, 0x0fffff, MWA16_ROM },								/* ROM */
 	{ 0x100000, 0x101fff, gaelco_vram_w, &gaelco_videoram },		/* Video RAM */
+	{ 0x102000, 0x103fff, MWA16_RAM },						        /* Screen RAM */
 	{ 0x108000, 0x108007, MWA16_RAM, &gaelco_vregs },				/* Video Registers */
 //	{ 0x10800c, 0x10800d, watchdog_reset_w },						/* INT 6 ACK/Watchdog timer */
 	{ 0x200000, 0x2007ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },/* Palette */
@@ -471,6 +613,146 @@ INPUT_PORTS_START( biomtoy )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 INPUT_PORTS_END
 
+/*============================================================================
+					THUNDER HOOP
+============================================================================*/
+
+static MEMORY_READ16_START( thoop_readmem )
+        { 0x000000, 0x0fffff, MRA16_ROM },			/* ROM */
+	{ 0x100000, 0x101fff, MRA16_RAM },			/* Video RAM */
+	{ 0x102000, 0x103fff, MRA16_RAM },			/* Screen RAM */
+	{ 0x200000, 0x2007ff, MRA16_RAM },			/* Palette */
+	{ 0x440000, 0x440fff, MRA16_RAM },		/* Sprite RAM */
+	{ 0x700000, 0x700001, input_port_0_word_r },/* DIPSW #2 */
+	{ 0x700002, 0x700003, input_port_1_word_r },/* DIPSW #1 */
+	{ 0x700004, 0x700005, input_port_2_word_r },/* INPUT #1 */
+	{ 0x700006, 0x700007, input_port_3_word_r },/* INPUT #2 */
+	{ 0x70000e, 0x70000f, OKIM6295_status_0_lsb_r },/* OKI6295 status register */
+	{ 0xff0000, 0xffffff, MRA16_RAM },		/* Work RAM */
+MEMORY_END
+
+static WRITE16_HANDLER( thoop_vram_encrypted_w )
+{
+	data = gaelco_decrypt(offset, data, 0x0e, 0x4228);
+	COMBINE_DATA(&gaelco_videoram[offset]);
+
+	gaelco_mark_offset_dirty(offset);
+}
+
+static WRITE16_HANDLER(thoop_encrypted_w)
+{
+	data = gaelco_decrypt(offset, data, 0x0e, 0x4228);
+	COMBINE_DATA(&gaelco_screen[offset]);
+}
+
+static MEMORY_WRITE16_START( thoop_writemem )
+        { 0x000000, 0x0fffff, MWA16_ROM },							/* ROM */
+	{ 0x100000, 0x101fff, thoop_vram_encrypted_w, &gaelco_videoram },	/* Video RAM */
+	{ 0x102000, 0x103fff, thoop_encrypted_w, &gaelco_screen },								/* Screen RAM */
+	{ 0x108000, 0x108007, MWA16_RAM, &gaelco_vregs },		/* Video Registers */
+//	{ 0x10800c, 0x10800d, watchdog_reset_w },					/* INT 6 ACK/Watchdog timer */
+	{ 0x200000, 0x2007ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },/* Palette */
+	{ 0x440000, 0x440fff, MWA16_RAM, &gaelco_spriteram },		/* Sprite RAM */
+	{ 0x70000c, 0x70000d, OKIM6295_bankswitch_w },					/* OKI6295 bankswitch */
+        { 0x70000e, 0x70000f, OKIM6295_data_0_lsb_w },					/* OKI6295 data register */
+	{ 0xff0000, 0xffffff, MWA16_RAM },							/* Work RAM */
+MEMORY_END
+
+INPUT_PORTS_START( thoop )
+	PORT_START	/* DSW2 8bit */
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x03, "Easy" )
+	PORT_DIPSETTING(    0x02, "Normal" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x04, 0x04, "Player Controls" )
+	PORT_DIPSETTING(    0x04, "2 Joysticks" )
+	PORT_DIPSETTING(    0x00, "1 Joystick" )
+	PORT_DIPNAME( 0x18, 0x08, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "4" )
+	PORT_DIPSETTING(    0x08, "3" )
+	PORT_DIPSETTING(    0x10, "2" )
+	PORT_DIPSETTING(    0x18, "1" )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
+	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
+
+	PORT_START	/* DSW1 8bit */
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 3C_4C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_6C ) )
+	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 6C_1C ) )
+	PORT_DIPSETTING(    0x18, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x28, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) )
+	PORT_DIPNAME( 0x40, 0x40, "2 Credits to Start, 1 to Continue" )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Free_Play ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START	/* 1P INPUTS & COINSW */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
+
+	PORT_START	/* 2P INPUTS & STARTSW */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START	/* 8bit */
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
 
 static struct OKIM6295interface maniacsq_okim6295_interface =
 {
@@ -504,6 +786,30 @@ static MACHINE_DRIVER_START( maniacsq )
 	MDRV_SOUND_ADD(OKIM6295, maniacsq_okim6295_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( thoop )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 12000000)	/* MC68000P12, 12 MHz */
+	MDRV_CPU_MEMORY(thoop_readmem,thoop_writemem)
+	MDRV_CPU_VBLANK_INT(irq6_line_hold,1)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(10)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_VISIBLE_AREA(0, 320-1, 16, 256-1)
+	MDRV_GFXDECODE(gfxdecodeinfo_0x100000)
+	MDRV_PALETTE_LENGTH(1024)
+
+	MDRV_VIDEO_START(maniacsq)
+	MDRV_VIDEO_UPDATE(maniacsq)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(OKIM6295, bigkarnk_okim6295_interface)
+MACHINE_DRIVER_END
 
 ROM_START( maniacsp )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )	/* 68000 code */
@@ -563,8 +869,37 @@ ROM_START( biomtoy )
 	ROM_LOAD( "c3",	0x0c0000, 0x080000, CRC(914e4bbc) SHA1(ca82b7481621a119f05992ed093b963da70d748a) )
 ROM_END
 
+/* encrypted video ram */
+ROM_START( thoop )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )	/* 68000 code */
+	ROM_LOAD16_BYTE( "th18dea1.040", 0x000000, 0x80000, CRC(59bad625) SHA1(28e058b2290bc5f7130b801014d026432f9e7fd5) ) 
+	ROM_LOAD16_BYTE( "th161eb4.020", 0x000001, 0x40000, CRC(6add61ed) SHA1(0e789d9a0ac19b6143044fbc04ab2227735b2a8f) ) 
+
+	ROM_REGION( 0x400000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "c09", 0x300000, 0x040000, CRC(06f0edbf) SHA1(3cf2e5c29cd00b43d49a106084076f2ac0dbad98) )
+	ROM_CONTINUE(    0x380000, 0x040000 )
+	ROM_CONTINUE(    0x340000, 0x040000 )
+	ROM_CONTINUE(    0x3c0000, 0x040000 )
+	ROM_LOAD( "c10", 0x200000, 0x040000, CRC(2d227085) SHA1(b224efd59ec83bb786fa92a23ef2d27ed36cab6c) )
+	ROM_CONTINUE(    0x280000, 0x040000 )
+	ROM_CONTINUE(    0x240000, 0x040000 )
+	ROM_CONTINUE(    0x2c0000, 0x040000 )
+	ROM_LOAD( "c11", 0x100000, 0x040000, CRC(7403ef7e) SHA1(52a737816e25a07ada070ed3a5f40bbbd22ac8e0) )
+	ROM_CONTINUE(    0x180000, 0x040000 )
+	ROM_CONTINUE(    0x140000, 0x040000 )
+	ROM_CONTINUE(    0x1c0000, 0x040000 )
+	ROM_LOAD( "c12", 0x000000, 0x040000, CRC(29a5ca36) SHA1(fdcfdefb3b02bfe34781fdd0295640caabe2a5fb) )
+	ROM_CONTINUE(    0x080000, 0x040000 )
+	ROM_CONTINUE(    0x040000, 0x040000 )
+	ROM_CONTINUE(    0x0c0000, 0x040000 )
+	
+	ROM_REGION( 0x140000, REGION_SOUND1, 0 )	/* ADPCM samples - sound chip is OKIM6295 */
+	ROM_LOAD( "sound", 0x000000, 0x100000, CRC(99f80961) SHA1(de3a514a8f46dffd5f762e52aac1f4c3b08e2e18) )
+	ROM_RELOAD(		   0x040000, 0x100000 )
+ROM_END
 
 
 GAME( 1991, bigkarnk, 0,        bigkarnk, bigkarnk, 0, ROT0, "Gaelco", "Big Karnak" )
 GAME( 1995, biomtoy,  0,        maniacsq, biomtoy,  0, ROT0, "Gaelco", "Biomechanical Toy (unprotected)" )
 GAME( 1996, maniacsp, maniacsq, maniacsq, maniacsq, 0, ROT0, "Gaelco", "Maniac Square (prototype)" )
+GAME( 1992, thoop,    0,	thoop,    thoop,    0, ROT0, "Gaelco", "Thunder Hoop" )
