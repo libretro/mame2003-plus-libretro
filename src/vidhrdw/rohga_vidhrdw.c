@@ -412,7 +412,7 @@ sprite 2:
 						colour,
 						fx,fy,
 						sx + x_mult * (w-x),sy + y_mult * (h-y),
-						&Machine->visible_area,trans,0,tilemap_pri,sprite_pri);
+						&Machine->visible_area,trans,0,tilemap_pri,sprite_pri,0);
 			}
 		}
 
