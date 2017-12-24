@@ -598,7 +598,7 @@ static const UINT8 deco74_swap_table[0x800] =
 	4,7,2,2,1,3,4,4,1,7,0,2,5,4,7,3,7,6,1,5,6,0,7,4,1,1,5,2,2,6,7,2,
 };
 
-static void deco_decrypt(int mem_region,const UINT8 *xor_table,const UINT16 *address_table,const UINT8 *swap_table)
+static void deco_decrypt(int mem_region,const UINT8 *xor_table,const UINT16 *address_table,const UINT8 *swap_table,int remap_only)
 {
 	data16_t *rom = (data16_t *)memory_region(mem_region);
 	int len = memory_region_length(mem_region)/2;
@@ -622,7 +622,10 @@ static void deco_decrypt(int mem_region,const UINT8 *xor_table,const UINT16 *add
 			int addr = (i & ~0x7ff) | address_table[i & 0x7ff];
 			int pat = swap_table[i & 0x7ff];
 
-			rom[i] = BITSWAP16(buffer[addr] ^ xor_masks[xor_table[addr & 0x7ff]],
+			if (remap_only)
+				rom[i] = buffer[addr];
+			else
+				rom[i] = BITSWAP16(buffer[addr] ^ xor_masks[xor_table[addr & 0x7ff]],
 							swap_patterns[pat][0],
 							swap_patterns[pat][1],
 							swap_patterns[pat][2],
@@ -647,16 +650,163 @@ static void deco_decrypt(int mem_region,const UINT8 *xor_table,const UINT16 *add
 #ifndef MSB_FIRST
 	/* we work on 16-bit words but data is loaded as 8-bit, so swap bytes on LSB machines */
 	for (i = 0;i < len;i++)
+	{
 		rom[i] = (rom[i] >> 8) | (rom[i] << 8);
+	}
 #endif
+}
+
+static void decrypt(UINT32 *src, UINT32 *dst, int length)
+{
+	int a;
+
+	for (a = 0; a < length/4; a++)
+	{
+		int addr, dword;
+
+		addr = (a & 0xff0000) | 0x92c6;
+
+		if (a & 0x0001) addr ^= 0xce4a;
+		if (a & 0x0002) addr ^= 0x4db2;
+		if (a & 0x0004) addr ^= 0xef60;
+		if (a & 0x0008) addr ^= 0x5737;
+		if (a & 0x0010) addr ^= 0x13dc;
+		if (a & 0x0020) addr ^= 0x4bd9;
+		if (a & 0x0040) addr ^= 0xa209;
+		if (a & 0x0080) addr ^= 0xd996;
+		if (a & 0x0100) addr ^= 0xa700;
+		if (a & 0x0200) addr ^= 0xeca0;
+		if (a & 0x0400) addr ^= 0x7529;
+		if (a & 0x0800) addr ^= 0x3100;
+		if (a & 0x1000) addr ^= 0x33b4;
+		if (a & 0x2000) addr ^= 0x6161;
+		if (a & 0x4000) addr ^= 0x1eef;
+		if (a & 0x8000) addr ^= 0xf5a5;
+
+		dword = src[addr];
+
+		// note that each of the following lines affects exactly two bits
+
+		if (a & 0x00004) dword ^= 0x04400000;
+		if (a & 0x00008) dword ^= 0x40000004;
+		if (a & 0x00010) dword ^= 0x00048000;
+		if (a & 0x00020) dword ^= 0x00000280;
+		if (a & 0x00040) dword ^= 0x00200040;
+		if (a & 0x00080) dword ^= 0x09000000;
+		if (a & 0x00100) dword ^= 0x00001100;
+		if (a & 0x00200) dword ^= 0x20002000;
+		if (a & 0x00400) dword ^= 0x00000022;
+		if (a & 0x00800) dword ^= 0x000a0000;
+		if (a & 0x01000) dword ^= 0x10004000;
+		if (a & 0x02000) dword ^= 0x00010400;
+		if (a & 0x04000) dword ^= 0x80000010;
+		if (a & 0x08000) dword ^= 0x00000009;
+		if (a & 0x10000) dword ^= 0x02100000;
+		if (a & 0x20000) dword ^= 0x00800800;
+
+		switch (a & 3)
+		{
+			case 0:
+				dword = BITSWAP32( dword ^ 0xec63197a,
+					 1,	 4,	 7,	28,	22,	18,	20,	 9,
+					16,	10,	30,	 2,	31,	24,	19,	29,
+					 6,	21,	23,	11,	12,	13,	 5,	 0,
+					 8,	26,	27,	15,	14,	17,	25,	 3 );
+				break;
+
+			case 1:
+				dword = BITSWAP32( dword ^ 0x58a5a55f,
+					14,	23,	28,	29,	 6,	24,	10,	 1,
+					 5,	16,	 7,	 2,	30,	 8,	18,	 3,
+					31,	22,	25,	20,	17,	 0,	19,	27,
+					 9,	12,	21,	15,	26,	13,	 4,	11 );
+				break;
+
+			case 2:
+				dword = BITSWAP32( dword ^ 0xe3a65f16,
+					19,	30,	21,	 4,	 2,	18,	15,	 1,
+					12,	25,	 8,	 0,	24,	20,	17,	23,
+					22,	26,	28,	16,	 9,	27,	 6,	11,
+					31,	10,	 3,	13,	14,	 7,	29,	 5 );
+				break;
+
+			case 3:
+				dword = BITSWAP32( dword ^ 0x28d93783,
+					30,	 6,	15,	 0,	31,	18,	26,	22,
+					14,	23,	19,	17,	10,	 8,	11,	20,
+					 1,	28,	 2,	 4,	 9,	24,	25,	27,
+					 7,	21,	13,	29,	 5,	 3,	16,	12 );
+				break;
+		}
+
+		dst[a] = dword;
+	}
+}
+
+
+
+static UINT16 decrypt2(UINT16 data, int address, int select_xor)
+{
+	static const UINT16 xors[16] =
+	{
+		0xb52c,0x2458,0x139a,0xc998,0xce8e,0x5144,0x0429,0xaad4,0xa331,0x3645,0x69a3,0xac64,0x1a53,0x5083,0x4dea,0xd237
+	};
+	static const UINT8 bitswaps[16][16] =
+	{
+		{ 12,8,13,11,14,10,15,9, 3,2,1,0,4,5,6,7 }, { 10,11,14,12,15,13,8,9, 6,7,5,3,0,4,2,1 },
+		{ 14,13,15,9,8,12,11,10, 7,4,1,5,6,0,3,2 }, { 15,14,8,9,10,11,13,12, 1,2,7,3,4,6,0,5 },
+		{ 10,9,13,14,15,8,12,11, 5,2,1,0,3,4,7,6 }, { 8,9,15,14,10,11,13,12, 0,6,5,4,1,2,3,7 },
+		{ 14,8,15,9,10,11,13,12, 4,5,3,0,2,7,6,1 }, { 13,11,12,10,15,9,14,8, 6,0,7,5,1,4,3,2 },
+		{ 12,11,13,10,9,8,14,15, 0,2,4,6,7,5,3,1 }, { 15,13,9,8,10,11,12,14, 2,1,0,7,6,5,4,3 },
+		{ 13,8,9,10,11,12,15,14, 6,0,1,2,3,7,4,5 }, { 12,11,10,8,9,13,14,15, 6,5,4,0,7,1,2,3 },
+		{ 12,15,8,13,9,11,14,10, 6,5,4,3,2,1,0,7 }, { 11,12,13,14,15,8,9,10, 4,5,7,1,6,3,2,0 },
+		{ 13,8,12,14,11,15,10,9, 7,6,5,4,3,2,1,0 }, { 15,14,13,12,11,10,9,8, 0,6,7,4,3,2,1,5 }
+	};
+	int j, xorval;
+	const UINT8 *bs;
+
+	// calculate bitswap to use
+	j = ((address ^ select_xor) & 0xf0) >> 4;
+	if (address & 0x20000) j ^= 4;
+	bs = bitswaps[j];
+
+	// calculate xor to use
+	j = (address ^ select_xor) & 0x0f;
+	if (address & 0x40000) j ^= 2;	// boogwing
+	xorval = xors[j];
+
+	// decrypt
+	return xorval ^ BITSWAP16(data,
+				bs[0],bs[1],bs[2],bs[3],bs[4],bs[5],bs[6],bs[7],
+				bs[8],bs[9],bs[10],bs[11],bs[12],bs[13],bs[14],bs[15]);
+}
+
+
+void deco156_decrypt(void)
+{
+	UINT32 *rom = (UINT32 *)memory_region(REGION_CPU1);
+	int length = memory_region_length(REGION_CPU1);
+	UINT32 *buf = (UINT32*)malloc(length);
+
+		memcpy(buf, rom, length);
+		decrypt(buf, rom, length);
+		free(buf);
 }
 
 void deco56_decrypt(int region)
 {
-	deco_decrypt(region,deco56_xor_table,deco56_address_table,deco56_swap_table);
+	deco_decrypt(region,deco56_xor_table,deco56_address_table,deco56_swap_table,0);
 }
 
 void deco74_decrypt(int region)
 {
-	deco_decrypt(region,deco74_xor_table,deco74_address_table,deco74_swap_table);
+	deco_decrypt(region,deco74_xor_table,deco74_address_table,deco74_swap_table,0);
 }
+
+void deco56_remap_gfx(int region)
+{
+	// Apply address remap, but not XOR/shift
+	deco_decrypt(region,deco56_xor_table,deco56_address_table,deco56_swap_table, 1);
+}
+
+
