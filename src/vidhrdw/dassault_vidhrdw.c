@@ -134,7 +134,7 @@ static void dassault_drawsprites(struct mame_bitmap *bitmap, int pf_priority)
 						colour,
 						fx,fy,
 						x,y + mult * multi,
-						&Machine->visible_area,trans,0,pmask,1<<bank);
+						&Machine->visible_area,trans,0,pmask,1<<bank,0);
 
 				multi--;
 			}
