@@ -782,6 +782,50 @@ static UINT16 decrypt2(UINT16 data, int address, int select_xor)
 }
 
 
+void deco102_decrypt_cpu(int address_xor, int data_select_xor, int opcode_select_xor)
+{
+	int i;
+	UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
+	int size = memory_region_length(REGION_CPU1);
+	UINT16 *opcodes = auto_malloc(size);
+	UINT16 *buf = (UINT16 *)malloc(size);
+
+		memcpy(buf, rom, size);
+	    memory_set_opcode_base(0,opcodes);
+	    memory_set_encrypted_opcode_range(0,0,memory_region_length(REGION_CPU1));
+
+		for (i = 0; i < size / 2; i++)
+		{
+			int src;
+
+			// calculate address of encrypted word in ROM
+			src = i & 0xf0000;
+			if (i & 0x0001) src ^= 0xbe0b;
+			if (i & 0x0002) src ^= 0x5699;
+			if (i & 0x0004) src ^= 0x1322;
+			if (i & 0x0008) src ^= 0x0004;
+			if (i & 0x0010) src ^= 0x08a0;
+			if (i & 0x0020) src ^= 0x0089;
+			if (i & 0x0040) src ^= 0x0408;
+			if (i & 0x0080) src ^= 0x1212;
+			if (i & 0x0100) src ^= 0x08e0;
+			if (i & 0x0200) src ^= 0x5499;
+			if (i & 0x0400) src ^= 0x9a8b;
+			if (i & 0x0800) src ^= 0x1222;
+			if (i & 0x1000) src ^= 0x1200;
+			if (i & 0x2000) src ^= 0x0008;
+			if (i & 0x4000) src ^= 0x1210;
+			if (i & 0x8000) src ^= 0x00e0;
+			src ^= address_xor;
+
+			rom[i]     = decrypt2(buf[src], i, data_select_xor);
+			opcodes[i] = decrypt2(buf[src], i, opcode_select_xor);
+		}
+
+		free(buf);
+}
+
+
 void deco156_decrypt(void)
 {
 	UINT32 *rom = (UINT32 *)memory_region(REGION_CPU1);
