@@ -3277,7 +3277,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* MBQ ?? */
 	DRIVER( tattass )	/* prototype (c) 1994 Data East Pinball (US) */
 	DRIVER( tattassa )	/* prototype (c) 1994 Data East Pinball (Asia) */
-	/* Charlie Ninja       MBR (c) Mitchell */
+        DRIVER( charlien )	/* MBR (c) 1995 Mitchell */
 	/* MBS ?? */
 	/* MBT ?? */
 	/* MBU ?? */
@@ -3288,7 +3288,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Backfire            MBZ (c) 1995 */
 	/* MCA ?? */
 	/* Ganbare! Gonta!! 2/Lady Killer Part 2 - Party Time  MCB (c) 1995 Mitchell */
-	/* Chain Reaction      MCC (c) 1994 */
+	DRIVER( chainrec )	/* MCC (c) 1994 Data East Corporation */
 	/* MCD ?? */
 	/* Dunk Dream 95/Hoops MCE (c) 1995 */
 	/* MCF ?? */
@@ -3296,6 +3296,12 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( sotsugyo )	/* (c) 1995 Mitchell (Atlus license) */
 	DRIVER( sshangha )	/* (c) 1992 Hot-B */
 	DRIVER( sshanghb )	/* bootleg */
+		
+	/* Other Data East games not yet identified */
+	DRIVER( candance )	/* (c) 1996 Mitchell */
+	DRIVER( magdrop )	/* (c) 1995 Data East Corporation */
+	DRIVER( magdropp )	/* (c) 1995 Data East Corporation */
+	DRIVER( osman )		/* (c) 1996 Mitchell */
 
 	/* Tehkan / Tecmo games (Tehkan became Tecmo in 1986) */
 	DRIVER( senjyo )	/* (c) 1983 Tehkan */
