@@ -3245,12 +3245,18 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( nitrobal )	/* MAV (c) 1992 Data East Corporation (US) */
 	/* MAW ?? */
 	/* MAX ?? */
-	/* Diet GoGo           MAY (c) 1993 */
+	DRIVER( dietgo )	/* MAY (c) 1992 Data East Corporation (Euro) */
+	DRIVER( dietgoe )	/* MAY (c) 1992 Data East Corporation (Euro) */
+        DRIVER( dietgou )	/* MAY (c) 1992 Data East Corporation (US) */
+	DRIVER( dietgoj )	/* MAY (c) 1992 Data East Corporation (Japan) */
 	/* Pocket Gal DX       MAZ (c) 1993 */
 	/* MBA ?? */
 	/* MBB ?? */
 	/* MBC ?? */
-	/* Boogie Wings/The Great Ragtime Show MBD (c) 1993 */
+	DRIVER( boogwing )	/* MBD (c) 1993 Data East Corporation (Euro) */
+	DRIVER( boogwinga )	/* MBD (c) 1993 Data East Corporation (Asia) */
+	DRIVER( ragtime )	/* MBD (c) 1993 Data East Corporation (Japan)*/
+	DRIVER( ragtimea )	/* MBD (c) 1993 Data East Corporation (Japan)*/
 	/* Double Wings        MBE (c) 1993 Mitchell */
 	DRIVER( fghthist )	/* MBF (c) 1993 Data East Corporation (US) */
 	DRIVER( fghthstw )	/* MBF (c) 1993 Data East Corporation (World) */
