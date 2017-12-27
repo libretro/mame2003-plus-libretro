@@ -6912,7 +6912,7 @@ DRIVER_INIT( pnyaa )
 static void kof98P1decode(void)
 {
 	UINT8 *src = memory_region(REGION_CPU1);
-	UINT8 *dst = malloc(0x200000);
+	UINT8 *dst = (UINT8 *)malloc(0x200000);
 	int i, j, k;
 	unsigned int sec[]={0x000000,0x100000,0x000004,0x100004,0x10000a,0x00000a,0x10000e,0x00000e};
 	unsigned int pos[]={0x000,0x004,0x00a,0x00e};
@@ -7113,7 +7113,7 @@ DRIVER_INIT( kof2002 )
 DRIVER_INIT( kof2k2nd )
 {
 	UINT8 *src = memory_region(REGION_CPU1)+0x100000;
-	UINT8 *dst = malloc(0x400000);
+	UINT8 *dst = (UINT8 *)malloc(0x400000);
 	int i;
 	unsigned int sec[]={0x100000,0x280000,0x300000,0x180000,0x000000,0x380000,0x200000,0x080000};
 
@@ -7282,7 +7282,7 @@ static void kof2003_px_decrypt( void )
 		*rom16 = BITSWAP16( *rom16, 15, 14, 13, 12, 4, 5, 6, 7, 8, 9, 10, 11, 3, 2, 1, 0 );
 	}
 
-	buf = malloc( 0x800000 );
+	buf = (UINT8 *)malloc( 0x800000 );
 	memcpy( buf, rom, 0x800000 );
 
 	for( i = 0; i < 0x0100000 / 0x10000; i++ ){
@@ -7300,7 +7300,7 @@ static void kof2003_px_decrypt( void )
 
 	free( buf );
 
-	buf = malloc(0x900000);
+	buf = (UINT8 *)malloc(0x900000);
 	memcpy( buf, rom, 0x900000 );
 
 	memcpy( &rom[0x100000], &buf[0x800000], 0x100000 );
@@ -7392,7 +7392,7 @@ static void svcchaos_px_decrypt( void )
 		*rom16 = BITSWAP16( *rom16, 15, 14, 13, 12, 10, 11, 8, 9, 6, 7, 4, 5, 3, 2, 1, 0 );
 	}
 
-	buf = malloc( 0x800000 );
+	buf = (UINT8 *)malloc( 0x800000 );
 	memcpy( buf, rom, 0x800000 );
 
 	for( i = 0; i < 0x0100000 / 0x10000; i++ ){
@@ -7410,7 +7410,7 @@ static void svcchaos_px_decrypt( void )
 
 	free( buf );
 
-	buf = malloc( 0x800000 );
+	buf = (UINT8 *)malloc( 0x800000 );
 	memcpy( buf, rom, 0x800000 );
 	memcpy( &rom[ 0x100000 ], &buf[ 0x700000 ], 0x100000 );
 	memcpy( &rom[ 0x200000 ], &buf[ 0x100000 ], 0x600000 );
@@ -7428,7 +7428,7 @@ static void svcchaos_gfx_decrypt( void )
 
 	int rom_size = memory_region_length( REGION_GFX3 );
 	UINT8 *rom = memory_region( REGION_GFX3 );
-	UINT8 *buf = malloc( rom_size );
+	UINT8 *buf = (UINT8 *)malloc( rom_size );
 
 	for( i = 0; i < rom_size; i++ ){
 		rom[ i ] ^= xor[ (i % 4) ];
@@ -7540,7 +7540,7 @@ static void svcboot_px_decrypt( void )
 
 	int rom_size = memory_region_length( REGION_CPU1 );
 	UINT8 *rom = memory_region( REGION_CPU1 );
-	UINT8 *buf = malloc( rom_size );
+	UINT8 *buf = (UINT8 *)malloc( rom_size );
 
 	for( i = 0; i < rom_size / 0x100000; i++ ){
 		memcpy( &buf[ i * 0x100000 ], &rom[ sec[ i ] * 0x100000 ], 0x100000 );
@@ -7576,7 +7576,7 @@ static void svcboot_cx_decrypt( void )
 
 	int rom_size = memory_region_length( REGION_GFX3 );
 	UINT8 *rom = memory_region( REGION_GFX3 );
-	UINT8 *buf = malloc( rom_size );
+	UINT8 *buf = (UINT8 *)malloc( rom_size );
 
 	memcpy( buf, rom, rom_size );
 
@@ -7645,7 +7645,7 @@ static void mslug5_px_decrypt( void )
 		*rom16 = BITSWAP16( *rom16, 15, 14, 13, 12, 10, 11, 8, 9, 6, 7, 4, 5, 3, 2, 1, 0 );
 	}
 
-	buf = malloc( 0x800000 );
+	buf = (UINT8 *)malloc( 0x800000 );
 	memcpy( buf, rom, 0x800000 );
 
 	for( i = 0; i < 0x0100000 / 0x10000; i++ ){
@@ -7663,7 +7663,7 @@ static void mslug5_px_decrypt( void )
 
 	free( buf );
 
-	buf = malloc( 0x800000 );
+	buf = (UINT8 *)malloc( 0x800000 );
 	memcpy( buf, rom, 0x800000 );
 	memcpy( &rom[ 0x100000 ], &buf[ 0x700000 ], 0x100000 );
 	memcpy( &rom[ 0x200000 ], &buf[ 0x100000 ], 0x600000 );
@@ -7756,7 +7756,7 @@ DRIVER_INIT( samsho5 )
 {	
 	/* Descrambling P ROMs by X-or */
 	UINT8 *src = memory_region(REGION_CPU1);
-	UINT8 *dst = malloc(0x800000);
+	UINT8 *dst = (UINT8 *)malloc(0x800000);
 	int i;
 	unsigned int sec[]={0x000000, 0x080000, 0x700000, 0x680000, 0x500000, 0x180000, 0x200000, 0x480000, 0x300000, 0x780000, 0x600000, 0x280000, 0x100000, 0x580000, 0x400000, 0x380000};
 	if (dst)
@@ -7807,7 +7807,7 @@ DRIVER_INIT( samsh5nd )
 {
 	/* Descrambling P ROMs by X-or */
 	UINT8 *src = memory_region(REGION_CPU1);
-	UINT8 *dst = malloc(0x800000);
+	UINT8 *dst = (UINT8 *)malloc(0x800000);
 	int i;
 	unsigned int sec[]={0x000000, 0x080000, 0x700000, 0x680000, 0x500000, 0x180000, 0x200000, 0x480000, 0x300000, 0x780000, 0x600000, 0x280000, 0x100000, 0x580000, 0x400000, 0x380000};
 	if (dst)
@@ -7828,7 +7828,7 @@ DRIVER_INIT( samsh5sp )
 {
 	/* Descrambling Px by Vorador from speksnk Coneverted to Mame code by James */
 	UINT8 *src = memory_region(REGION_CPU1);
-	UINT8 *dst = malloc(0x800000);
+	UINT8 *dst = (UINT8 *)malloc(0x800000);
 	int i;
 	unsigned int sec[]={0x0,0x1,0xA,0x9,0xC,0xB,0xE,0x5,0x2,0xD,0x8,0xF,0x4,0x7,0x6,0x3};
 	if (dst)
