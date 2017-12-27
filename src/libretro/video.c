@@ -11,6 +11,10 @@
 extern retro_log_printf_t log_cb;
 extern retro_environment_t environ_cb;
 extern retro_video_refresh_t video_cb;
+extern retro_set_led_state_t led_state_cb;
+static unsigned long prev_led_state = 0;
+
+#define MAX_LED 16
 
 uint16_t videoBuffer[1024*1024];
 struct osd_create_params videoConfig;
@@ -170,6 +174,27 @@ void osd_update_video_and_audio(struct mame_display *display)
          video_cb(NULL, width, height, width * 2);
    }
 
+   if (display->changed_flags & LED_STATE_CHANGED)
+   {
+       if(led_state_cb != NULL)
+       {
+           // Set each changed LED
+           unsigned long o = prev_led_state;
+           unsigned long n = display->led_state;
+           int led;
+           for(led=0;led<MAX_LED;led++)
+           {
+               if((o & 0x01) != (n & 0x01))
+               {
+                 led_state_cb(led,n&0x01);
+               }
+               o >>= 1;
+               n >>= 1;
+           }
+           prev_led_state = display->led_state;
+       }
+   }
+   
    gotFrame = 1;
 
    RETRO_PERFORMANCE_STOP(perf_cb, update_video_and_audio);

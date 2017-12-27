@@ -32,6 +32,9 @@ static retro_input_state_t input_cb = NULL;
 static retro_audio_sample_batch_t audio_batch_cb = NULL;
 retro_environment_t environ_cb = NULL;
 
+unsigned long lastled = 0;
+retro_set_led_state_t led_state_cb = NULL;
+
 void retro_set_video_refresh(retro_video_refresh_t cb) { video_cb = cb; }
 void retro_set_audio_sample(retro_audio_sample_t cb) { }
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
@@ -320,6 +323,15 @@ static void update_variables(void)
    }
    else
       tate_mode = 0;
+
+
+   {
+       struct retro_led_interface ledintf;
+       ledintf.set_led_state = NULL;
+       
+       environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
+       led_state_cb = ledintf.set_led_state;
+   }
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -488,6 +500,7 @@ void retro_run (void)
    mame_frame();
 
    audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
+
 }
 
 
