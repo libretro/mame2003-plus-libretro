@@ -978,7 +978,7 @@ struct retro_hw_render_context_negotiation_interface
                                             * so it will be used after SET_HW_RENDER, but before the context_reset callback.
                                             */
 
-#define RETRO_ENVIRONMENT_GET_LED_INTERFACE (45 | RETRO_ENVIRONMENT_EXPERIMENTAL)
+#define RETRO_ENVIRONMENT_GET_LED_INTERFACE (46 | RETRO_ENVIRONMENT_EXPERIMENTAL)
                                            /* struct retro_led_interface * --
                                             * Gets an interface which is used by a libretro core to set 
                                             * state of LEDs.
