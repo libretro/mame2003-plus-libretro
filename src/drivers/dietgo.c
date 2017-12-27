@@ -17,10 +17,9 @@ PAL16R6A 11H
 #include "cpu/m68000/m68000.h"
 #include "cpu/h6280/h6280.h"
 #include "decocrpt.h"
+#include "decoprot.h"
 #include "deco16ic.h"
 
-READ16_HANDLER( dietgo_104_prot_r );
-WRITE16_HANDLER( dietgo_104_prot_w );
 
 static int flip_screen;
 static data16_t *spriteram16;
@@ -140,30 +139,6 @@ static READ16_HANDLER( dietgo_298 )
 	return ret;
 }
 
-READ16_HANDLER( dietgo_104_prot_r )
-{
-	switch (offset * 2)
-	{
-	case 0x298: return readinputport(0);
-	case 0x342: return readinputport(1);
-	case 0x506: return readinputport(2);
-	}
-
-	//logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", cpu_get_pc(space->cpu), offset<<1);
-
-	return 0;
-}
-
-WRITE16_HANDLER( dietgo_104_prot_w )
-{
-	if (offset == (0x380 / 2))
-	{
-		soundlatch_w(0,data&0xff);
-		cpu_set_irq_line(1,0,HOLD_LINE);
-		return;
-	}
-//	logerror("Protection PC %06x: warning - write unmapped memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);
-}
 
 static MEMORY_READ16_START( dietgo_readmem )
     { 0x000000, 0x07ffff, MRA16_ROM },
