@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "libretro.h"
+#include <libretro.h>
 
 #include "mame.h"
 #include "driver.h"
@@ -187,8 +187,9 @@ unsigned tate_mode = 0;
 
 static void update_variables(void)
 {
+   struct retro_led_interface ledintf;
    struct retro_variable var;
-   
+
    var.value = NULL;
    var.key = "mame2003-frameskip";
 
@@ -197,7 +198,7 @@ static void update_variables(void)
 
    var.value = NULL;
    var.key = "mame2003-dcs-speedhack";
-   
+
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -207,10 +208,10 @@ static void update_variables(void)
    }
    else
       activate_dcs_speedhack = 0;
-   
+
    var.value = NULL;
    var.key = "mame2003-skip_disclaimer";
-   
+
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -246,20 +247,20 @@ static void update_variables(void)
    }
    else
       samples = 0;
-   
+
    var.value = NULL;
    var.key = "mame2003-sample_rate";
-   
+
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       sample_rate = atoi(var.value);
    }
    else
       sample_rate = 48000;
-   
+
    var.value = NULL;
    var.key = "mame2003-cheats";
-   
+
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -270,22 +271,22 @@ static void update_variables(void)
    else
       cheats = 0;
 
-    var.value = NULL;
-    var.key = "mame2003-dialsharexy";
-    
-    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-    {
-        if(strcmp(var.value, "enabled") == 0)
-            dial_share_xy = 1;
-        else
-            dial_share_xy = 0;
-    }
-    else
-        dial_share_xy = 0;
-   
+   var.value = NULL;
+   var.key = "mame2003-dialsharexy";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         dial_share_xy = 1;
+      else
+         dial_share_xy = 0;
+   }
+   else
+      dial_share_xy = 0;
+
    var.value = NULL;
    var.key = "mame2003-mouse_device";
-   
+
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "pointer") == 0)
@@ -300,7 +301,7 @@ static void update_variables(void)
 
    var.value = NULL;
    var.key = "mame2003-rstick_to_btns";
-   
+
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -310,10 +311,10 @@ static void update_variables(void)
    }
    else
       rstick_to_btns = 0;
-   
+
    var.value = NULL;
    var.key = "mame2003-tate_mode";
-   
+
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -325,13 +326,10 @@ static void update_variables(void)
       tate_mode = 0;
 
 
-   {
-       struct retro_led_interface ledintf;
-       ledintf.set_led_state = NULL;
-       
-       environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
-       led_state_cb = ledintf.set_led_state;
-   }
+   ledintf.set_led_state = NULL;
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf))
+      led_state_cb = ledintf.set_led_state;
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
