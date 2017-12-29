@@ -1266,6 +1266,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( skingam2 )	/* (c) 1992 Irem America (US) */
 	DRIVER( hook )		/* (c) 1992 Irem (World) */
 	DRIVER( hooku )		/* (c) 1992 Irem America (US) */
+	DRIVER( hookj )		/* (c) 1992 Irem (Japan) */
 	DRIVER( rtypeleo )	/* (c) 1992 Irem (World) */
 	DRIVER( rtypelej )	/* (c) 1992 Irem (Japan) */
 	DRIVER( inthunt )	/* (c) 1993 Irem (World) */
