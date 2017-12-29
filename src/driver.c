@@ -4817,16 +4817,19 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mgcrystj )	/* (c) 1991 Kaneko + distributed by Atlus (Japan) */
 	DRIVER( blazeon )	/* (c) 1992 Atlus */
 	DRIVER( sandscrp )	/* (c) 1992 Face */
-	DRIVER( bakubrkr )
-	DRIVER( shogwarr )
-	DRIVER( fjbuster )
-	DRIVER( brapboys )
-	DRIVER( bloodwar )
-	DRIVER( bonkadv )
+	DRIVER( bakubrkr )      /* (c) 1992 Kaneko */
+	DRIVER( shogwarr )      /* (c) 1992 Kaneko */	
+	DRIVER( fjbuster )      /* (c) 1992 Kaneko (Japan) */
+	DRIVER( brapboys )      /* (c) 1992 Kaneko (World) */
+	DRIVER( brapboysj )     /* (c) 1992 Kaneko (Japan) */
+	DRIVER( bloodwar )      /* (c) 1994 Kaneko */
+	DRIVER( bonkadv )       /* (c) 1994 Kaneko */
 	DRIVER( gtmr )		/* (c) 1994 Kaneko */
 	DRIVER( gtmre )		/* (c) 1994 Kaneko */
 	DRIVER( gtmrusa )	/* (c) 1994 Kaneko (US) */
 	DRIVER( gtmr2 )		/* (c) 1995 Kaneko */
+	DRIVER( wingforc )      /* (c) 1993 Atlus */
+	DRIVER( packbang )      /* (c) 1994 Kaneko */
 
 	/* Kaneko "Super Nova System" games */
 	DRIVER( galpani4 )	/* (c) 1996 Kaneko (Japan) */
