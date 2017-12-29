@@ -17,6 +17,7 @@
 	The Irem Skins Game (USA Set 2)	M92-F	(c) 1992 Irem America Corp
 	Hook (World)							(c) 1992 Irem Corp
 	Hook (USA)								(c) 1992 Irem America Corp
+	Hook (Japan)							(c) 1992 Irem Corp
 	R-Type Leo (World)						(c) 1992 Irem Corp
 	R-Type Leo (Japan)						(c) 1992 Irem Corp
 	In The Hunt	(World)				M92-E	(c) 1993 Irem Corp
@@ -1630,6 +1631,33 @@ ROM_START( hooku )
 	ROM_LOAD( "hook-da.rom" ,0x000000, 0x080000, CRC(88cd0212) SHA1(789532f5544b5d024d8af60eb8a5c133ae0d19d4) )
 ROM_END
 
+ROM_START( hookj )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "h-h0-g.3h", 0x000001, 0x040000, CRC(5964c886) SHA1(fe15f328d0e62b6be09c8ae9892f5b669585fcdb) )
+	ROM_LOAD16_BYTE( "h-l0-g.5h", 0x000000, 0x040000, CRC(7f7433f2) SHA1(e85c170332ed7195e713fd5a2a20c97d56a7297b) )
+	ROM_LOAD16_BYTE( "h-h1.rom",  0x080001, 0x020000, CRC(264ba1f0) SHA1(49ecf9b3e5375629607fb747abe264406065580b) )
+	ROM_LOAD16_BYTE( "h-l1.rom",  0x080000, 0x020000, CRC(f9913731) SHA1(be7871d6843e76f66fae6b501c5ee83ccc366463) )
+
+	ROM_REGION( 0x100000 * 2, REGION_CPU2, 0 )	/* 1MB for the audio CPU - encrypted V30 = NANAO custom D80001 (?) */
+	ROM_LOAD16_BYTE( "h-sh0-a.3l", 0x000001, 0x010000, CRC(bd3d1f61) SHA1(0c884a0b5519f9c0823128872baf7b0c4078e5c4) )
+	ROM_LOAD16_BYTE( "h-sl0-a.3n", 0x000000, 0x010000, CRC(76371def) SHA1(b7a86fd4eecdd8a538c32e08cd920c27bd50924b) )
+
+	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )/* Tiles */
+	ROM_LOAD( "hook-c0.rom", 0x000000, 0x040000, CRC(dec63dcf) SHA1(e9869110f832d782c460b123928b042c65fdf8bd) )
+	ROM_LOAD( "hook-c1.rom", 0x040000, 0x040000, CRC(e4eb0b92) SHA1(159da3ec973490a153c69c96c1373cf4e0290736) )
+	ROM_LOAD( "hook-c2.rom", 0x080000, 0x040000, CRC(a52b320b) SHA1(1522562239bb3b93ef552c47445daa4ee021495c) )
+	ROM_LOAD( "hook-c3.rom", 0x0c0000, 0x040000, CRC(7ef67731) SHA1(af0b0ee6e1c06af04c609af7e077d4a7d76d8817) )
+
+	ROM_REGION( 0x400000, REGION_GFX2, ROMREGION_DISPOSE )/* Sprites */
+	ROM_LOAD( "hook-000.rom", 0x000000, 0x100000, CRC(ccceac30) SHA1(16e2b4393840344debe869034135feead7450184) )
+	ROM_LOAD( "hook-010.rom", 0x100000, 0x100000, CRC(8ac8da67) SHA1(a9b962cb0bc0d8bc3bda8a0ed1ce06641d666b41) )
+	ROM_LOAD( "hook-020.rom", 0x200000, 0x100000, CRC(8847af9a) SHA1(f82cdbd640fac373136219422172ca9fbf5d1830) )
+	ROM_LOAD( "hook-030.rom", 0x300000, 0x100000, CRC(239e877e) SHA1(445e1096619c4e3a2d5b50a645fd45bd7c501590) )
+
+	ROM_REGION( 0x80000, REGION_SOUND1, ROMREGION_SOUNDONLY )
+	ROM_LOAD( "hook-da.rom", 0x000000, 0x080000, CRC(88cd0212) SHA1(789532f5544b5d024d8af60eb8a5c133ae0d19d4) )
+ROM_END
+
 ROM_START( rtypeleo )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
 	ROM_LOAD16_BYTE( "rtl-h0-c",     0x000001, 0x040000, CRC(5fef7fa1) SHA1(7d18d4ea979d887d6da42c79734b8c695f3df02b) )
@@ -2423,6 +2451,7 @@ GAMEX(1992, skingame, majtitl2, raster,    majtitl2, majtitl2, ROT0,   "Irem Ame
 GAMEX(1992, skingam2, majtitl2, raster,    majtitl2, majtitl2, ROT0,   "Irem America", "The Irem Skins Game (US set 2)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, hook,     0,        nonraster, hook,     hook,     ROT0,   "Irem",         "Hook (World)" )
 GAME( 1992, hooku,    hook,     nonraster, hook,     hook,     ROT0,   "Irem America", "Hook (US)" )
+GAME( 1992, hookj,    hook,     nonraster, hook,     hook,     ROT0,   "Irem", 	"Hook (Japan)" )
 GAME( 1992, rtypeleo, 0,        raster,    rtypeleo, rtypeleo, ROT0,   "Irem",         "R-Type Leo (World rev. C)" )
 GAME( 1992, rtypelej, rtypeleo, raster,    rtypeleo, rtypelej, ROT0,   "Irem",         "R-Type Leo (Japan rev. D)" )
 GAME( 1993, inthunt,  0,        raster,    inthunt,  inthunt,  ROT0,   "Irem",         "In The Hunt (World)" )
