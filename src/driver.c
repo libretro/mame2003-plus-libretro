@@ -3250,7 +3250,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( dietgoe )	/* MAY (c) 1992 Data East Corporation (Euro) */
         DRIVER( dietgou )	/* MAY (c) 1992 Data East Corporation (US) */
 	DRIVER( dietgoj )	/* MAY (c) 1992 Data East Corporation (Japan) */
-	/* Pocket Gal DX       MAZ (c) 1993 */
+	DRIVER( pktgaldx )      /* MAZ (c) 1992 Data East Corporation (Euro) */
+	DRIVER( pktgaldj )      /* MAZ (c) 1993 Nihon System */
 	/* MBA ?? */
 	/* MBB ?? */
 	/* MBC ?? */
