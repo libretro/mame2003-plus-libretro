@@ -135,7 +135,9 @@ CPU 3
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-
+static int ddr1, ddr2, ddr3, ddr4;
+static int port1_in, port2_in, port3_in, port4_in;
+static int port1_out, port2_out, port3_out, port4_out;
 
 /* vidhrdw/bublbobl.c */
 extern unsigned char *bublbobl_objectram;
@@ -165,6 +167,117 @@ WRITE_HANDLER( bublbobl_sh_nmi_disable_w );
 WRITE_HANDLER( bublbobl_sh_nmi_enable_w );
 
 
+READ_HANDLER( bublbobl_mcu_ddr1_r )
+{
+	return ddr1;
+}
+
+WRITE_HANDLER( bublbobl_mcu_ddr1_w )
+{
+	ddr1 = data;
+}
+
+READ_HANDLER( bublbobl_mcu_ddr2_r )
+{
+	return ddr2;
+}
+
+WRITE_HANDLER( bublbobl_mcu_ddr2_w )
+{
+	ddr2 = data;
+}
+
+READ_HANDLER( bublbobl_mcu_ddr3_r )
+{
+	return ddr3;
+}
+
+WRITE_HANDLER( bublbobl_mcu_ddr3_w )
+{
+	ddr3 = data;
+}
+
+READ_HANDLER( bublbobl_mcu_ddr4_r )
+{
+	return ddr4;
+}
+
+WRITE_HANDLER( bublbobl_mcu_ddr4_w )
+{
+	ddr4 = data;
+}
+
+READ_HANDLER( bublbobl_mcu_port1_r )
+{
+	port1_in = readinputport(0);
+	return (port1_out & ddr1) | (port1_in & ~ddr1);
+}
+
+WRITE_HANDLER( bublbobl_mcu_port1_w )
+{
+	coin_lockout_w( 0, (~data & 0x10) );
+	coin_lockout_w( 1, (~data & 0x10) );
+
+	if ((port1_out & 0x40) && (~data & 0x40))
+	{
+		cpu_irq_line_vector_w(0, 0, bublbobl_sharedram2[0]);
+		cpu_set_irq_line(0, 0, HOLD_LINE);
+	}
+
+	// bit 7: select read or write shared RAM
+
+	port1_out = data;
+}
+
+READ_HANDLER( bublbobl_mcu_port2_r )
+{
+	return (port2_out & ddr2) | (port2_in & ~ddr2);
+}
+
+WRITE_HANDLER( bublbobl_mcu_port2_w )
+{
+	if ((~port2_out & 0x10) && (data & 0x10))
+	{
+		int address = port4_out | ((data & 0x0f) << 8);
+
+		if (port1_out & 0x80)
+		{
+			// read
+			if ((address & 0x0800) == 0x0000)
+				port3_in = readinputport((address & 3) + 1);
+			else if ((address & 0x0c00) == 0x0c00)
+				port3_in = bublbobl_sharedram2[address & 0x03ff];
+		}
+		else
+		{
+			if ((address & 0x0c00) == 0x0c00)
+				bublbobl_sharedram2[address & 0x03ff] = port3_out;
+		}
+	}
+
+	port2_out = data;
+}
+
+READ_HANDLER( bublbobl_mcu_port3_r )
+{
+	return (port3_out & ddr3) | (port3_in & ~ddr3);
+}
+
+WRITE_HANDLER( bublbobl_mcu_port3_w )
+{
+	port3_out = data;
+}
+
+READ_HANDLER( bublbobl_mcu_port4_r )
+{
+	return (port4_out & ddr4) | (port4_in & ~ddr4);
+}
+
+WRITE_HANDLER( bublbobl_mcu_port4_w )
+{
+	port4_out = data;
+}
+
 
 static MEMORY_READ_START( bublbobl_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
@@ -189,21 +302,30 @@ static MEMORY_WRITE_START( bublbobl_writemem )
 	{ 0xfc00, 0xffff, bublbobl_sharedram2_w, &bublbobl_sharedram2 },
 MEMORY_END
 
-static MEMORY_READ_START( m68705_readmem )
-	{ 0x0000, 0x0000, bublbobl_68705_portA_r },
-	{ 0x0001, 0x0001, bublbobl_68705_portB_r },
-	{ 0x0002, 0x0002, input_port_0_r },	/* COIN */
-	{ 0x0010, 0x007f, MRA_RAM },
-	{ 0x0080, 0x07ff, MRA_ROM },
+static MEMORY_READ_START( m6801_readmem )
+    { 0x0000, 0x0000, bublbobl_mcu_ddr1_r },
+	{ 0x0001, 0x0001, bublbobl_mcu_ddr2_r },
+	{ 0x0002, 0x0002, bublbobl_mcu_port1_r },
+	{ 0x0003, 0x0003, bublbobl_mcu_port2_r },
+	{ 0x0004, 0x0004, bublbobl_mcu_ddr3_r },
+	{ 0x0005, 0x0005, bublbobl_mcu_ddr4_r },
+	{ 0x0006, 0x0006, bublbobl_mcu_port3_r },
+	{ 0x0007, 0x0007, bublbobl_mcu_port4_r },
+	{ 0x0040, 0x00ff, MRA_RAM },
+	{ 0xf000, 0xffff, MRA_ROM },
 MEMORY_END
 
-static MEMORY_WRITE_START( m68705_writemem )
-	{ 0x0000, 0x0000, bublbobl_68705_portA_w },
-	{ 0x0001, 0x0001, bublbobl_68705_portB_w },
-	{ 0x0004, 0x0004, bublbobl_68705_ddrA_w },
-	{ 0x0005, 0x0005, bublbobl_68705_ddrB_w },
-	{ 0x0010, 0x007f, MWA_RAM },
-	{ 0x0080, 0x07ff, MWA_ROM },
+static MEMORY_WRITE_START( m6801_writemem )
+    { 0x0000, 0x0000, bublbobl_mcu_ddr1_w },
+	{ 0x0001, 0x0001, bublbobl_mcu_ddr2_w },
+	{ 0x0002, 0x0002, bublbobl_mcu_port1_w },
+	{ 0x0003, 0x0003, bublbobl_mcu_port2_w },
+	{ 0x0004, 0x0004, bublbobl_mcu_ddr3_w },
+	{ 0x0005, 0x0005, bublbobl_mcu_ddr4_w },
+	{ 0x0006, 0x0006, bublbobl_mcu_port3_w },
+	{ 0x0007, 0x0007, bublbobl_mcu_port4_w },
+	{ 0x0040, 0x00ff, MWA_RAM },
+	{ 0xf000, 0xffff, MWA_ROM },
 MEMORY_END
 
 
@@ -335,9 +457,12 @@ INPUT_PORTS_START( bublbobl )
 	PORT_START      /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SPECIAL )	// output: coin lockout
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL )	// output: select 1-way or 2-way coin counter
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL )	// output: trigger IRQ on main CPU (jumper switchable to vblank)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL )	// output: select read or write shared RAM
 
 	PORT_START      /* DSW0 */
 	PORT_DIPNAME( 0x01, 0x00, "Language" )
@@ -678,7 +803,6 @@ static struct YM2203interface tokio_ym2203_interface =
 };
 
 
-
 static MACHINE_DRIVER_START( bublbobl )
 
 	/* basic machine hardware */
@@ -694,14 +818,13 @@ static MACHINE_DRIVER_START( bublbobl )
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 								/* IRQs are triggered by the YM2203 */
 
-	MDRV_CPU_ADD(M68705,4000000/2)	/* xtal is 4MHz, I think it's divided by 2 internally */
-	MDRV_CPU_MEMORY(m68705_readmem,m68705_writemem)
-	MDRV_CPU_VBLANK_INT(bublbobl_m68705_interrupt,2)	/* ??? should come from the same */
-					/* clock which latches the INT pin on the second Z80 */
+	MDRV_CPU_ADD(M6801,4000000/2)	/* xtal is 4MHz, I think it's divided by 2 internally */
+	MDRV_CPU_MEMORY(m6801_readmem,m6801_writemem)
+	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-	MDRV_INTERLEAVE(100)	/* 100 CPU slices per frame - an high value to ensure proper */
+	MDRV_INTERLEAVE(1000)	/* 100 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
 
 	/* video hardware */
@@ -796,9 +919,9 @@ MACHINE_DRIVER_END
 
 ROM_START( bublbobl )
 	ROM_REGION( 0x30000, REGION_CPU1, 0 )
-	ROM_LOAD( "a78-06.51",    0x00000, 0x08000, CRC(32c8305b) SHA1(6bf69b3edfbefd33cd670a762b4bf0b39629a220) )
-    /* ROMs banked at 8000-bfff */
-	ROM_LOAD( "a78-05.52",    0x10000, 0x10000, CRC(53f4bc6e) SHA1(15a2e6d83438d4136b154b3d90dd2cf9f1ce572c) )
+	ROM_LOAD( "a78-06-1.51",    0x00000, 0x08000, CRC(567934b6) SHA1(b0c4d49fd551f465d148c25c3e80b278835e2f0d) )
+	/* ROMs banked at 8000-bfff */
+	ROM_LOAD( "a78-05-1.52",    0x10000, 0x10000, CRC(9f8ee242) SHA1(924150d4e7e087a9b2b0a294c2d0e9903a266c6c) )
 	/* 20000-2ffff empty */
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for the second CPU */
@@ -807,8 +930,8 @@ ROM_START( bublbobl )
 	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* 64k for the third CPU */
 	ROM_LOAD( "a78-07.46",    0x0000, 0x08000, CRC(4f9a26e8) SHA1(3105b34b88a7134493c2b3f584729f8b0407a011) )
 
-	ROM_REGION( 0x0800, REGION_CPU4, 0 )	/* 2k for the microcontroller */
-	ROM_LOAD( "68705.bin",    0x0000, 0x0800, CRC(78caa635) SHA1(a756e45b25b007843ba4f2204cad6081cf7260e9) )	/* from a pirate board */
+	ROM_REGION( 0x10000, REGION_CPU4, 0 )	/* 64k for the MCU */
+	ROM_LOAD( "a78-01.17",    0xf000, 0x1000, CRC(b1bfb53d) SHA1(31b8f31acd3aa394acd80db362774749842e1285) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )
 	ROM_LOAD( "a78-09.12",    0x00000, 0x8000, CRC(20358c22) SHA1(2297af6c53d5807bf90a8e081075b8c72a994fc5) )    /* 1st plane */
@@ -843,8 +966,8 @@ ROM_START( bublbobr )
 	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* 64k for the third CPU */
 	ROM_LOAD( "a78-07.46",    0x0000, 0x08000, CRC(4f9a26e8) SHA1(3105b34b88a7134493c2b3f584729f8b0407a011) )
 
-	ROM_REGION( 0x0800, REGION_CPU4, 0 )	/* 2k for the microcontroller */
-	ROM_LOAD( "68705.bin",    0x0000, 0x0800, CRC(78caa635) SHA1(a756e45b25b007843ba4f2204cad6081cf7260e9) )	/* from a pirate board */
+	ROM_REGION( 0x10000, REGION_CPU4, 0 )	/* 64k for the MCU */
+	ROM_LOAD( "a78-01.17",    0xf000, 0x1000, CRC(b1bfb53d) SHA1(31b8f31acd3aa394acd80db362774749842e1285) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )
 	ROM_LOAD( "a78-09.12",    0x00000, 0x8000, CRC(20358c22) SHA1(2297af6c53d5807bf90a8e081075b8c72a994fc5) )    /* 1st plane */
@@ -879,8 +1002,8 @@ ROM_START( bubbobr1 )
 	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* 64k for the third CPU */
 	ROM_LOAD( "a78-07.46",    0x0000, 0x08000, CRC(4f9a26e8) SHA1(3105b34b88a7134493c2b3f584729f8b0407a011) )
 
-	ROM_REGION( 0x0800, REGION_CPU4, 0 )	/* 2k for the microcontroller */
-	ROM_LOAD( "68705.bin",    0x0000, 0x0800, CRC(78caa635) SHA1(a756e45b25b007843ba4f2204cad6081cf7260e9) )	/* from a pirate board */
+	ROM_REGION( 0x10000, REGION_CPU4, 0 )	/* 64k for the MCU */
+	ROM_LOAD( "a78-01.17",    0xf000, 0x1000, CRC(b1bfb53d) SHA1(31b8f31acd3aa394acd80db362774749842e1285) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )
 	ROM_LOAD( "a78-09.12",    0x00000, 0x8000, CRC(20358c22) SHA1(2297af6c53d5807bf90a8e081075b8c72a994fc5) )    /* 1st plane */
@@ -1048,16 +1171,17 @@ ROM_START( tokiob )
 ROM_END
 
 
-
 static DRIVER_INIT( bublbobl )
 {
+	extern int bublbobl_video_enable;
 	unsigned char *ROM = memory_region(REGION_CPU1);
 
 	/* in Bubble Bobble, bank 0 has code falling from 7fff to 8000, */
 	/* so I have to copy it there because bank switching wouldn't catch it */
 	memcpy(ROM+0x08000,ROM+0x10000,0x4000);
-}
 
+	bublbobl_video_enable = 1;
+}
 
 static DRIVER_INIT( boblbobl )
 {
