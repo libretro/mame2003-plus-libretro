@@ -46,8 +46,12 @@ WRITE_HANDLER( bublbobl_bankswitch_w )
 	/* bit 3 n.c. */
 
 	/* bit 4 resets second Z80 */
+	cpu_set_reset_line(1, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 
 	/* bit 5 resets mcu */
+	if (memory_region_length(REGION_CPU3) == 0x10000) { // do we have an mcu?
+		cpu_set_reset_line(3, (data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
+	}
 
 	/* bit 6 enables display */
 	bublbobl_video_enable = data & 0x40;
