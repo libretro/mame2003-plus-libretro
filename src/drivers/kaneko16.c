@@ -3697,30 +3697,27 @@ WRITE16_HANDLER( shogwarr_oki_bank_w )
 
 
 static MEMORY_READ16_START( shogwarr_readmem )
-    { 0x000000, 0x03ffff, MRA16_ROM			      },	// ROM
-	{ 0x100000, 0x10ffff, MRA16_RAM			      },	// Work RAM
-	{ 0x200000, 0x20ffff, MRA16_RAM               },	// Shared With MCU
-	{ 0x380000, 0x380fff, MRA16_RAM               },	// Palette
-	{ 0x400000, 0x400001, OKIM6295_status_0_lsb_r },    // Sound
-	{ 0x480000, 0x480001, OKIM6295_status_1_lsb_r },    //
-	{ 0x580000, 0x581fff, MRA16_RAM				  },    
-	{ 0x600000, 0x600fff, MRA16_RAM               },    // Layers 0
-	{ 0x601000, 0x601fff, MRA16_RAM               },    //
-	{ 0x602000, 0x602fff, MRA16_RAM               },    // Sprites
-	{ 0x603000, 0x603fff, MRA16_RAM               },
-	{ 0x800000, 0x80000f, MRA16_RAM               },	// Layers 0 Regs
-	{ 0x900000, 0x90001f, MRA16_RAM               },	// Sprites Regs
-	{ 0xa00000, 0xa0007f, bloodwar_calc_r         },    // Protection
-	{ 0xa80000, 0xa80001, watchdog_reset16_r      },	// Watchdog
-	{ 0xb80000, 0xb80001, input_port_0_word_r	  },	// Inputs
-	{ 0xb80002, 0xb80003, input_port_1_word_r	  },
-	{ 0xb80004, 0xb80005, input_port_2_word_r	  },
-	{ 0xb80006, 0xb80007, input_port_3_word_r	  },
-	{ 0xd00000, 0xd00001, MRA16_NOP				  },	// ? (bit 0)
+        { 0x000000, 0x03ffff, MRA16_ROM	 }, // ROM
+	{ 0x100000, 0x10ffff, MRA16_RAM	 },	// Work RAM
+	{ 0x200000, 0x20ffff, MRA16_RAM  }, // Shared With MCU
+	{ 0x380000, 0x380fff, MRA16_RAM  },	// Palette
+	{ 0x400000, 0x400001, OKIM6295_status_0_lsb_r }, // Sound
+	{ 0x480000, 0x480001, OKIM6295_status_1_lsb_r },
+	{ 0x580000, 0x581fff, MRA16_RAM },	// Sprites
+	{ 0x600000, 0x603fff, MRA16_RAM },	// Layers 0
+	{ 0x800000, 0x80000f, MRA16_RAM },	// Layers 0 Regs
+	{ 0x900000, 0x90001f, MRA16_RAM },	// Sprites Regs
+	{ 0xa00000, 0xa0007f, bloodwar_calc_r },
+	{ 0xa80000, 0xa80001, watchdog_reset16_r },	// Watchdog
+	{ 0xb80000, 0xb80001, input_port_0_word_r },	// Inputs
+	{ 0xb80002, 0xb80003, input_port_1_word_r },
+	{ 0xb80004, 0xb80005, input_port_2_word_r },
+	{ 0xb80006, 0xb80007, input_port_3_word_r },
+	{ 0xd00000, 0xd00001, MRA16_NOP			  },	// ? (bit 0)
 MEMORY_END
 
 static MEMORY_WRITE16_START( shogwarr_writemem )
-    { 0x000000, 0x03ffff, MWA16_ROM	            },              // ROM
+        { 0x000000, 0x03ffff, MWA16_ROM	            },              // ROM
 	{ 0x100000, 0x10ffff, MWA16_RAM, &kaneko16_mainram       },	// Work RAM
 	{ 0x200000, 0x20ffff, calc3_mcu_ram_w, &kaneko16_mcu_ram },	// Shared With MCU
 	{ 0x280000, 0x280001, calc3_mcu_com0_w      },
