@@ -32,6 +32,10 @@ ifneq ($(findstring Microsoft,$(shell uname -a)),)
    SPLIT_UP_LINK=1
 endif
 
+ifneq ($(findstring MINGW,$(shell uname -a)),)
+   SPLIT_UP_LINK=1
+endif
+
 ifeq ($(system_platform), win)
    SPLIT_UP_LINK=1
 endif
