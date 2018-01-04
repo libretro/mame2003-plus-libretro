@@ -2697,11 +2697,10 @@ static MACHINE_INIT( mgcrystl )
 static MACHINE_INIT( sandscrp )
 {
 	machine_init_kaneko16();
-	kaneko16_sprite_type  = 0;
 
 	kaneko16_sprite_xoffs = 0;
 	kaneko16_sprite_yoffs = 0;
-	kaneko16_sprite_type = 3;	// "different" sprites layout
+	kaneko16_sprite_type = 3;	// Should be using Kaneko Pandora draw
 	
 	kaneko16_priority.sprite[0] = 0xfffc;	// above tile[0],   below the others
 	kaneko16_priority.sprite[1] = 0xfff0;	// above tile[0-1], below the others
