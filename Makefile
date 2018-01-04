@@ -200,6 +200,14 @@ else ifeq ($(platform), wiiu)
    PLATCFLAGS += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
    STATIC_LINKING = 1
 
+# Nintendo Switch (libtransistor)
+else ifeq ($(platform), switch)
+	EXT=a
+        TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
+	PLATCFLAGS += -Dstricmp=strcasecmp
+        include $(LIBTRANSISTOR_HOME)/libtransistor.mk
+        STATIC_LINKING=1
+
 else ifeq ($(platform), ps3)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
