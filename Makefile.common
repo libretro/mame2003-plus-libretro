@@ -766,7 +766,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/vidhrdw/ninjakd2_vidhrdw.c $(CORE_DIR)/drivers/ninjakd2.c \
 				 $(CORE_DIR)/vidhrdw/mnight_vidhrdw.c $(CORE_DIR)/drivers/mnight.c \
 				 $(CORE_DIR)/vidhrdw/omegaf_vidhrdw.c $(CORE_DIR)/drivers/omegaf.c \
-				 $(CORE_DIR)/vidhrdw/nmk16_vidhrdw.c $(CORE_DIR)/drivers/nmk16.c \
+				 $(CORE_DIR)/vidhrdw/nmk16_vidhrdw.c $(CORE_DIR)/machine/nmk004.c $(CORE_DIR)/drivers/nmk16.c \
 				 $(CORE_DIR)/drivers/jalmah.c \
 				 $(CORE_DIR)/drivers/quizpani.c $(CORE_DIR)/vidhrdw/quizpani_vidhrdw.c \
 				 $(CORE_DIR)/vidhrdw/macrossp_vidhrdw.c $(CORE_DIR)/drivers/macrossp.c \
