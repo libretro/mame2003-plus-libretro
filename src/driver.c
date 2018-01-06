@@ -4316,7 +4316,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( omegafs )	/* UPL-89016 (c) 1989 */
 
 	/* UPL/NMK/Banpresto games */
-	DRIVER( urashima )	/* UPL-89052 */
 	DRIVER( tharrier )	/* UPL-89053 (c) 1989 UPL + American Sammy license */
 	DRIVER( tharierj )	/* UPL-89053 (c) 1989 UPL (Japan) */
 	DRIVER( mustang )	/* UPL-90058 (c) 1990 UPL */
@@ -4336,13 +4335,17 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tdragon )	/* (c) 1991 NMK / Tecmo */
 	DRIVER( tdragonb )	/* bootleg */
 	DRIVER( hachamf )	/* (c) 1991 NMK */
+	DRIVER( hachamfb )	/* bootleg */
 	DRIVER( macross )	/* (c) 1992 Banpresto */
 	DRIVER( gunnail )	/* (c) 1993 NMK / Tecmo */
 	DRIVER( macross2 )	/* (c) 1993 Banpresto */
 	DRIVER( sabotenb )	/* (c) 1992 NMK / Tecmo */
+	DRIVER( sabotnba )	/* (c) 1992 NMK / Tecmo */
 	DRIVER( nouryoku )	/* (c) 1995 Tecmo */
 	DRIVER( manybloc )	/* (c) 1991 Bee-Oh */
 	DRIVER( ssmissin )	/* (c) 1992 Comad */
+	DRIVER( airattck )	/* (c) 1996 Comad */
+	DRIVER( airattcka )	/* (c) 1996 Comad */
 	DRIVER( raphero )	/* (c) 1994 Media Trading Corp */
 
 	/* Jaleco Mahjong Games, Similar Hardware to the NMK ones above? */
