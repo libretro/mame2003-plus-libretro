@@ -1,3 +1,143 @@
+Updated 2018
+
+New games now supported in no particular order
+
+Hyper Street Fighter II
+Puzz Loop 2
+Title Fight
+Air Rescue
+Baryon
+Cute Fighters
+Dream World
+Gaia : The Last Choice Of Earth
+Rolling Crush
+FixEight (bootleg)
+DJ Boy
+Hyper Crash
+Gunbarich
+Power Instinct Legends
+Counter Run
+Dyna Gears
+Vasara 2
+Sonic Boom
+Bang Bang Busters
+Ghost Loop
+Choutetsu Brikin'ger - iron clad
+Sengoku 3
+Zupapa
+King Of Fighters 2001
+King Of Fighters 2002
+King Of Fighters 2003
+Metal Slug 4
+Metal Slug 5
+Rage Of The Dragons
+Power Instinct Matrimelee
+Pochi & Nyaa
+Snk Vs Capcom : Svc Chaos
+Samurai Shodown V
+Samurai Shodown V Special
+Zintrick
+Crossed Swords 2
+The Last Hope
+Cabal (Joystick with 3 buttons version)
+Knuckle Bash 2
+Denjin Makai 
+Asura Blade 
+Asura Buster
+In Your Face
+Snk Vs Capcom : Svc Chaos (Bootleg)
+Bonk's Adventure
+Thunder Hoop
+Explosive Breaker
+Pack'n Bang Bang
+Wing Force
+Night Slashers
+Joe & Mac Returns
+Osman
+Charlie Ninja
+Boogie Wings
+Diet Go Go
+Chain Reaction
+Pocket Gal Deluxe
+Hacha Mecha Figher (Unprotected)
+Air Attack
+
+
+
+Games fixed and or now working
+
+1000 Miglia : Great 1000 Miles Rally
+Avenging Spirit
+Bakuretsu Breaker
+Blood Warrior
+Driftout 94
+Fire Barrel
+Funky Jet
+Hacha Mecha Figher
+Monster Slider
+Narc (Via Williams Speedups)
+Rogha Armor Force
+Snowboard Championship
+Street Fighter (With Added Speedups)
+Task Force Harrier
+Thunder Dragon
+Twin Eagle 2
+
+
+Games now with sound or improved sound
+
+Cosmic Alien
+Fire Shark
+Vimana
+Donkey Kong
+Donkey Kong JR
+Sasuke Vs Commander
+Fantasy
+Nibbler
+Pioneer Balloon
+Rohga Armor Force
+Vanguard
+SD Gundam Psycho Salamander no Kyoui
+US AAF Mustang
+Bio-ship Paladin
+Vandyke
+Black Heart
+Acrobat Mission
+Koutetsu Yousai Strahl
+Hacha Mecha Fighter
+Super Spacefortress Macross
+GunNail
+Thunder Dragon
+
+
+Improvements
+
+More Midway speedups added should give a nice boost to all the games
+Added Williams sound core with the speedhacks improves performance in the Midway T-Unit and Y-Unit games
+Added sound support to Fire Shark and Vimana
+Added sound support for Cosmic Alien
+Added BritneysPAIRS improved sample support to Donkey Kong and Donkey kong JR
+New and improved sample support for Sasuke, Fantasy, Pioneer Balloon and Vanguard
+Added sound support for SD Gundam Psycho Salamander no Kyoui
+Enabled single screen hack for Lode Runner The Dig Fight
+Fixed end of game crash in Double Dragon
+Fixed random crashes in Rampage World Tour
+Added protection simulation for Snowboard Championship
+Added dsp handling for Driftout 94 and Twin Eagle 2 both games now playable
+Fixed incorrect game logic in Monster Slider game now playable
+Small graphical improvements for Biomechanical Toy and Maniac Square
+Backported iq_132's Kaneko16 driver B.Rap Boys and Shogun Warriors wont work though
+Updated the Deco Protection Rohga Armor Force now playable
+Fixed possible crash in Funky Jet by updating Deco Protection
+Fixed sound and music in Rohga Armor Force
+Fixed 1000 Miglia : Great 1000 Miles Rally gtmr.zip
+Added M6801 MCU dump to Bubble Bobble game now 100% Emulated
+Updated the NMK16 driver for many sound and graphical improvements
+Fixed a reset problem after level 3 in Night Slashers
+
+
+gamezfan with code additions via iq_132 and BritneysPAIRS.
+
 0.78
 ----
 
