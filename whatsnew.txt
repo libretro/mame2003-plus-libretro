@@ -134,6 +134,8 @@ Fixed 1000 Miglia : Great 1000 Miles Rally gtmr.zip
 Added M6801 MCU dump to Bubble Bobble game now 100% Emulated
 Updated the NMK16 driver for many sound and graphical improvements
 Fixed a reset problem after level 3 in Night Slashers
+Enabled breakable backgrounds in 64th street code via BritneysPAIRS
+improved sprite drawing for Gun Force 2
 
 
 gamezfan with code additions via iq_132 and BritneysPAIRS.
