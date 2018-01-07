@@ -5611,35 +5611,23 @@ Other Sun games
 	DRIVER( ghostlop )	/* 0228 GhostLop (prototype) 1996? Data East */
 	DRIVER( ironclad )      /* 0220 Choutetsu Brikin'ger - iron clad (prototype) 1996 Saurus */
         DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
-	DRIVER( sngoku3n )	/* 0261 (c) 2001 Noise Factory */
         DRIVER( zupapa )	/* 0070 (c) SNK */
-	DRIVER( zupapan )	/* 0070 (c) SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith */
-	DRIVER( kof2k1nd )	/* 0262 (c) 2001 Eolith */
-	DRIVER( kf2k1pls )      /* 0262 (c) 2001 Eolith */
 	DRIVER( kof2002 )	/* 0265 (c) 2002 Eolith */
-	DRIVER( kof2k2nd )	/* 0265 (c) 2002 Eolith */
-	DRIVER( kf2k2pa )       /* 0265 (c) 2002 Eolith */
 	DRIVER( mslug4 )	/* 0263 (c) 2001 Mega Enterprises */
-	DRIVER( mslug4nd )	/* 0263 (c) 2001 Mega Enterprises */
 	DRIVER( rotd )		/* 0264 (c) 2002 Evoga Entertainment */
-	DRIVER( rotdnd )	/* 0264 (c) 2002 Evoga Entertainment */
 	DRIVER( matrim )	/* 0266 (c) 2002 Atlus / Noise Factory */
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
-	DRIVER( pnyaan )	/* 0267 (c) 2003 Aiky / Taito */
 	DRIVER( mslug5 )	/* 0268 (c) 2003 SNK Playmore */
-	DRIVER( mslug5nd )	/* 0268 (c) 2003 SNK Playmore */
 	DRIVER( svcchaos )	/* 0269 (c) 2003 SNK Playmore */
-	DRIVER( svcnd )		/* 0269 (c) 2003 SNK Playmore */
 	DRIVER( svcboot )	/* 0269 (c) 2003 Bootleg */
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Yuki Enterprises */
-	DRIVER( samsh5nd )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5sp )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( kof2003d)	/* 0271 (c) 2003 SNK Playmore */
 	DRIVER( crswd2bl )      /* 0054 Crossed Swords 2  (CD only? not confirmed, MVS might exist) */
 	DRIVER( zintrckb )	/* 0211 hack - this is not a genuine MVS proto, its a bootleg made from the CD version */
 	DRIVER( lasthope )      /* (c) 2005 NG:DEV.TEAM */
-		
+
 	/* SemiCom 68020 based hardware */
         DRIVER( baryon )    /* (c) 1997 SemiCom / Tirano */
         DRIVER( cutefght )  /* (c) 1998 SemiCom */
