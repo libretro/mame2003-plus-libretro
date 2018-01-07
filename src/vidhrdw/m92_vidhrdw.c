@@ -552,7 +552,7 @@ static void m92_drawsprites(struct mame_bitmap *bitmap, const struct rectangle *
 		y_multi=1 << y_multi; /* 1, 2, 4 or 8 */
 		x_multi=1 << x_multi; /* 1, 2, 4 or 8 */
 
-		if (fx && x_multi>1) x+=16;
+		if (fx) x+=16 * (x_multi - 1);
 		for (j=0; j<x_multi; j++)
 		{
 			s_ptr=8 * j;
