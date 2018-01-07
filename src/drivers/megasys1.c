@@ -333,29 +333,32 @@ MEMORY_END
 #define interrupt_C		interrupt_B
 
 static MEMORY_READ16_START( readmem_C )
-	MEMORY_ADDRESS_BITS(21)
-	{ 0x000000, 0x07ffff, MRA16_ROM },
-	{ 0x0c0000, 0x0cffff, megasys1_vregs_C_r },
-	{ 0x0d2000, 0x0d3fff, MRA16_RAM },
-	{ 0x0e0000, 0x0e3fff, MRA16_RAM },
-	{ 0x0e8000, 0x0ebfff, MRA16_RAM },
-	{ 0x0f0000, 0x0f3fff, MRA16_RAM },
-	{ 0x0f8000, 0x0f87ff, paletteram16_word_r },
-	{ 0x0d8000, 0x0d8001, ip_select_r },
-	{ 0x1f0000, 0x1fffff, MRA16_RAM },
+    MEMORY_ADDRESS_BITS(21)
+    { 0x000000, 0x07ffff, MRA16_ROM },
+    { 0x0c0000, 0x0cffff, megasys1_vregs_C_r },
+    { 0x0d2000, 0x0d3fff, MRA16_RAM },
+    { 0x0e0000, 0x0e3fff, MRA16_RAM },
+    { 0x0e8000, 0x0ebfff, MRA16_RAM },
+    { 0x0f0000, 0x0f3fff, MRA16_RAM },
+    { 0x0f8000, 0x0f87ff, paletteram16_word_r },
+    { 0x0d8000, 0x0d8001, ip_select_r },
+    { 0x1f0000, 0x1fffff, MRA16_RAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem_C )
-	MEMORY_ADDRESS_BITS(21)
- 	{ 0x000000, 0x07ffff, MWA16_ROM },
-	{ 0x0c0000, 0x0cffff, megasys1_vregs_C_w, &megasys1_vregs },
-	{ 0x0d2000, 0x0d3fff, MWA16_RAM, &megasys1_objectram },
-	{ 0x0e0000, 0x0e3fff, megasys1_scrollram_0_w, &megasys1_scrollram_0 },
-	{ 0x0e8000, 0x0ebfff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
-	{ 0x0f0000, 0x0f3fff, megasys1_scrollram_2_w, &megasys1_scrollram_2 },
-	{ 0x0f8000, 0x0f87ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
-	{ 0x0d8000, 0x0d8001, ip_select_w },
-	{ 0x1f0000, 0x1fffff, MWA16_RAM, &megasys1_ram },
+    MEMORY_ADDRESS_BITS(21)
+    { 0x000000, 0x07ffff, MWA16_ROM },
+    { 0x0c0000, 0x0cffff, megasys1_vregs_C_w, &megasys1_vregs },
+    { 0x0d2000, 0x0d3fff, MWA16_RAM, &megasys1_objectram },
+    { 0x0e0000, 0x0e3fff, megasys1_scrollram_0_w, &megasys1_scrollram_0 },
+    { 0x0e8000, 0x0ebfff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
+    { 0x0f0000, 0x0f3fff, megasys1_scrollram_2_w, &megasys1_scrollram_2 },
+    { 0x0e4000, 0x0e7fff, megasys1_scrollram_0_w, &megasys1_scrollram_0 },
+    { 0x0ec000, 0x0effff, megasys1_scrollram_1_w, &megasys1_scrollram_1 },
+    { 0x0f4000, 0x0f7fff, megasys1_scrollram_2_w, &megasys1_scrollram_2 },
+    { 0x0f8000, 0x0f87ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
+    { 0x0d8000, 0x0d8001, ip_select_w },
+    { 0x1f0000, 0x1fffff, MWA16_RAM, &megasys1_ram },
 MEMORY_END
 
 
