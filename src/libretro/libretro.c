@@ -54,7 +54,7 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
       { "mame2003-skip_warnings", "Skip Warnings; disabled|enabled" },
       { "mame2003-samples", "Samples; enabled|disabled" },
-      { "mame2003-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
+      { "mame2003-sample_rate", "Sample Rate (Hz); 48000|8000|11025|22050|44100" },
       { "mame2003-cheats", "Cheats; disabled|enabled" },
       { "mame2003-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
 #if defined(__IOS__)
