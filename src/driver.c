@@ -2646,6 +2646,7 @@ V-V                           TP-027
 	DRIVER( wbml )		/* bootleg (S2) */
 	DRIVER( wbmljo )	/* (c) 1987 Sega/Westone (S2) */
 	DRIVER( wbmljb )	/* (c) 1987 Sega/Westone (S2) */
+        DRIVER( wbmlvc )        /* (c) 2009 Sega/Westone Virtual Console English Version */
 	DRIVER( wbmlb )		/* bootleg? (S2) */
 	DRIVER( dakkochn )	/* 836-6483? (S2) */
 	DRIVER( ufosensi )	/* 834-6659 (S2) */
