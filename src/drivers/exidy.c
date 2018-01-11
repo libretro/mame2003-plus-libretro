@@ -11,6 +11,7 @@
 		* Pepper 2
 		* Hard Hat
 		* Fax
+		* Teeter Torture
 
 	Known bugs:
 		* none at this time
@@ -130,6 +131,35 @@
 #include "exidy.h"
 
 
+static UINT8 last_dial;
+
+
+/*************************************
+ *
+ *  Special Teeter Torture input
+ *
+ *************************************/
+
+static READ_HANDLER( teetert_input_r )
+{
+	UINT8 result = readinputport(1) & ~0x44;
+	UINT8 dial = readinputport(4);
+
+	if (dial != last_dial)
+	{
+		result |= 0x40;
+		if (((dial - last_dial) & 0xff) < 0x80)
+		{
+			result |= 0x04;
+			last_dial++;
+		}
+		else
+			last_dial--;
+	}
+
+	return result;
+}
+
 /*************************************
  *
  *	Bankswitcher
@@ -162,7 +192,7 @@ static MEMORY_READ_START( main_readmem )
 	{ 0x5100, 0x5100, input_port_0_r },		/* DSW */
 	{ 0x5101, 0x5101, input_port_1_r },		/* IN0 */
 	{ 0x5103, 0x5103, exidy_interrupt_r },	/* IN1 */
-	{ 0x5105, 0x5105, input_port_4_r },		/* IN3 - Targ, Spectar only */
+	{ 0x5105, 0x5105, input_port_4_r },		/* IN3 - Targ, Teeter Torture, Spectar only */
 	{ 0x5200, 0x520F, pia_0_r },
 	{ 0x5213, 0x5213, input_port_3_r },		/* IN2 */
 	{ 0x6000, 0x6fff, MRA_RAM },			/* Pepper II only */
@@ -809,6 +839,66 @@ INPUT_PORTS_START( phantoma )
 INPUT_PORTS_END
 
 
+INPUT_PORTS_START( teetert )
+	PORT_START /* DSW */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x06, "20000" )
+	PORT_DIPSETTING(    0x04, "30000" )
+	PORT_DIPSETTING(    0x02, "40000" )
+	PORT_DIPSETTING(    0x00, "50000" )
+	PORT_DIPNAME( 0x98, 0x98, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x90, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x00, "Pence: A 2C/1C B 1C/3C" )
+	PORT_DIPSETTING(    0x98, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x10, "Pence: A 1C/1C B 1C/4C" )
+	PORT_DIPSETTING(    0x18, "Pence: A 1C/1C B 1C/5C" )
+	PORT_DIPSETTING(    0x88, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x08, "1C/3C, 2C/7C" )
+	PORT_DIPSETTING(    0x80, DEF_STR( 1C_4C ) )
+	PORT_DIPNAME( 0x60, 0x40, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "5" )
+	PORT_DIPSETTING(    0x20, "4" )
+	PORT_DIPSETTING(    0x40, "3" )
+	PORT_DIPSETTING(    0x60, "2" )
+
+	PORT_START /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL )	/* direction */
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL )	/* movement */
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 )
+
+	PORT_START /* IN1 */
+/*
+    The schematics claim these exist, but there's nothing in
+    the ROMs to support that claim (as far as I can see):
+
+    PORT_DIPNAME( 0x03, 0x00, "Language" )
+    PORT_DIPSETTING(    0x00, "English" )
+    PORT_DIPSETTING(    0x01, "French" )
+    PORT_DIPSETTING(    0x02, "German" )
+    PORT_DIPSETTING(    0x03, "Spanish" )
+    PORT_DIPNAME( 0x08, 0x00, DEF_STR( Cabinet ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
+    PORT_DIPSETTING(    0x08, DEF_STR( Cocktail ) )
+*/
+	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_VBLANK )
+
+	PORT_START /* IN2 */
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START /* IN3 */
+	PORT_ANALOG( 0xff, 0x00, IPT_DIAL | IPF_REVERSE, 5, 30, 0, 255)
+INPUT_PORTS_END
+
+
 /*************************************
  *
  *	Graphics definitions
@@ -1028,7 +1118,13 @@ static MACHINE_DRIVER_START( phantoma )
 	MDRV_GFXDECODE(gfxdecodeinfo_2bpp)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( teetert )
 
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(venture)
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_VBLANK_INT(teetert_vblank_interrupt,10)
+MACHINE_DRIVER_END
 /*************************************
  *
  *	ROM definitions
@@ -1375,6 +1471,28 @@ ROM_START( fax )
 	ROM_CONTINUE(             0x0000, 0x0800 )       /* overwrite with the real one - should be a 2716? */
 ROM_END
 
+ROM_START( teetert )
+	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /* 64k for code */
+	ROM_LOAD( "13a-cpu",      0x8000, 0x1000, CRC(f4e4d991) SHA1(6683c1552b56b20f2296e461aff697af73563792) )
+	ROM_LOAD( "12a-cpu",      0x9000, 0x1000, CRC(c6d8cb04) SHA1(3b9ae8fdc35117c73c91daed66e93e5344bdcd7e) )
+	ROM_LOAD( "11a-cpu",      0xa000, 0x1000, CRC(bac9b259) SHA1(0265cbd683fadf42f8a6b71958cbe782a732c257) )
+	ROM_LOAD( "10a-cpu",      0xb000, 0x1000, CRC(3ae7e445) SHA1(e511ce4c553ac58e87b6ee623f8c42d7653de972) )
+	ROM_LOAD( "9a-cpu",       0xc000, 0x1000, CRC(0cba424d) SHA1(54377163a8b8082639baf56b960eb26268462d46) )
+	ROM_LOAD( "8a-cpu",       0xd000, 0x1000, CRC(68de66e7) SHA1(70a0cc950f16f2c408fae717e6fdb75eb0fd8039) )
+	ROM_LOAD( "7a-cpu",       0xe000, 0x1000, CRC(84491333) SHA1(db9f8e4c49057a4574a3784d71e627da7f7a4b44) )
+	ROM_LOAD( "6a-cpu",       0xf000, 0x1000, CRC(3600d465) SHA1(84d633e042f73bfd6bf4a4d0ffee1cd2027c65d2) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for audio */
+	ROM_LOAD( "3a-ac",        0x5800, 0x0800, CRC(83b8836f) SHA1(ec0e2de62caea61ceff56e924449213997bff8cd) )
+	ROM_LOAD( "4a-ac",        0x6000, 0x0800, CRC(5154c39e) SHA1(e6f011630eb1aa4116a0e5824ad6b65c1be2455f) )
+	ROM_LOAD( "5a-ac",        0x6800, 0x0800, CRC(1e1e3916) SHA1(867e586583e07cd01e0e852f6ea52a040995725d) )
+	ROM_LOAD( "6a-ac",        0x7000, 0x0800, CRC(80f3357a) SHA1(f1ee638251e8676a526e6367c11866b1d52f5910) )
+	ROM_LOAD( "7a-ac",        0x7800, 0x0800, CRC(466addc7) SHA1(0230b5365d6aeee3ca47666a9eadee4141de125b) )
+	ROM_RELOAD(               0xf800, 0x0800 )
+
+	ROM_REGION( 0x0800, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "11d-cpu",      0x0000, 0x0800, CRC(0fe70b00) SHA1(6068be263d7a8e6b71af6f4dceec40bb8d246376) )
+ROM_END
 
 
 /*************************************
@@ -1482,6 +1600,16 @@ DRIVER_INIT( phantoma )
 	install_mem_write_handler(0, 0x5200, 0x5201, targ_sh_w);
 }
 
+DRIVER_INIT( teetert )
+{
+	exidy_palette 			= NULL;
+	exidy_colortable 		= exidy_1bpp_colortable;
+	exidy_collision_mask 	= 0x0c;
+	exidy_collision_invert	= 0x0c;
+	
+	/* special input handler for the dial */
+	install_mem_read_handler(0, 0x5101, 0x5101, teetert_input_r);
+}
 /*************************************
  *
  *	Game drivers
@@ -1504,3 +1632,4 @@ GAME( 1981, venture4, venture, venture, venture,  venture,  ROT0, "Exidy", "Vent
 GAME( 1982, pepper2,  0,       pepper2, pepper2,  pepper2,  ROT0, "Exidy", "Pepper II" )
 GAME( 1982, hardhat,  0,       pepper2, pepper2,  pepper2,  ROT0, "Exidy", "Hard Hat" )
 GAME( 1983, fax,      0,       fax,     fax,      fax,      ROT0, "Exidy", "Fax" )
+GAME( 1982, teetert,  0,       teetert, teetert,  teetert,  ROT0, "Exidy", "Teeter Torture (prototype)" )
