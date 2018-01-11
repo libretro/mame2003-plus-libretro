@@ -200,6 +200,7 @@ INTERRUPT_GEN( exidy_vblank_interrupt )
 INTERRUPT_GEN( teetert_vblank_interrupt )
 {
 	/* standard stuff */
+	if (cpu_getiloops() == 0)
 	exidy_vblank_interrupt();
 	
 	/* plus a pulse on the NMI line */
