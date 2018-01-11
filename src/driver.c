@@ -3688,7 +3688,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( fireone )	/* (c) 1979 Exidy */
 	DRIVER( victory )	/* (c) 1982 */
 	DRIVER( victorba )	/* (c) 1982 */
-
+	DRIVER( teetert )	/* (c) 1982 Exidy */
+		
 	/* Exidy 440 games */
 	DRIVER( crossbow )	/* (c) 1983 */
 	DRIVER( cheyenne )	/* (c) 1984 */
