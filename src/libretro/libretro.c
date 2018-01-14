@@ -62,6 +62,7 @@ void retro_set_environment(retro_environment_t cb)
 #else
       { "mame2003-mouse_device", "Mouse Device; mouse|pointer|disabled" },
 #endif
+      { "mame2003-crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
       { "mame2003-rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
       { "mame2003-tate_mode", "TATE Mode; disabled|enabled" },
       { NULL, NULL },
@@ -184,6 +185,7 @@ unsigned dial_share_xy = 0;
 unsigned mouse_device = 0;
 unsigned rstick_to_btns = 0;
 unsigned tate_mode = 0;
+extern int crosshair_enable;
 
 static void update_variables(void)
 {
@@ -297,6 +299,19 @@ static void update_variables(void)
    }
    else
       mouse_device = 0;
+
+   var.value = NULL;
+   var.key = "mame2003-crosshair_enabled";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         crosshair_enable = 1;
+      else
+         crosshair_enable = 0;
+   }
+   else
+      crosshair_enable = 0;
 
    var.value = NULL;
    var.key = "mame2003-rstick_to_btns";
