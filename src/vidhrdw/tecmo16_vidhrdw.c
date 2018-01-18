@@ -1,10 +1,7 @@
 /******************************************************************************
-
   Ganbare Ginkun  (Japan)  (c)1995 TECMO
   Final StarForce (US)     (c)1992 TECMO
-
   Based on sprite drivers from vidhrdw/wc90.c by Ernesto Corvi (ernesto@imagina.com)
-
 ******************************************************************************/
 
 #include "vidhrdw/generic.h"
@@ -17,6 +14,7 @@ data16_t *tecmo16_colorram2;
 data16_t *tecmo16_charram;
 
 static struct tilemap *fg_tilemap,*bg_tilemap,*tx_tilemap;
+static int flipscreen,game_is_riot;
 
 /******************************************************************************/
 
@@ -70,7 +68,8 @@ VIDEO_START( fstarfrc )
 	tilemap_set_transparent_pen(tx_tilemap,0);
 
 	tilemap_set_scrolly(tx_tilemap,0,-16);
-
+	flipscreen = 0;
+	game_is_riot = 0;
 	return 0;
 }
 
@@ -86,9 +85,33 @@ VIDEO_START( ginkun )
 	tilemap_set_transparent_pen(fg_tilemap,0);
 	tilemap_set_transparent_pen(bg_tilemap,0);
 	tilemap_set_transparent_pen(tx_tilemap,0);
+	flipscreen = 0;
+	game_is_riot = 0;
 
 	return 0;
 }
+
+VIDEO_START( riot )
+{
+	fg_tilemap = tilemap_create(fg_get_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,16,16,64,32);
+	bg_tilemap = tilemap_create(bg_get_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,16,16,64,32);
+	tx_tilemap = tilemap_create(tx_get_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT, 8, 8,64,32);
+
+	if (!fg_tilemap || !bg_tilemap || !tx_tilemap)
+		return 1;
+
+	tilemap_set_transparent_pen(fg_tilemap,0);
+	tilemap_set_transparent_pen(bg_tilemap,0);
+	tilemap_set_transparent_pen(tx_tilemap,0);
+
+	tilemap_set_scrolldy(tx_tilemap,-16,-16);
+
+	flipscreen = 0;
+	game_is_riot = 1;
+
+	return 0;
+}
+
 
 /******************************************************************************/
 
@@ -131,6 +154,12 @@ WRITE16_HANDLER( tecmo16_charram_w )
 	COMBINE_DATA(&tecmo16_charram[offset]);
 	if (oldword != tecmo16_charram[offset])
 		tilemap_mark_tile_dirty(tx_tilemap,offset);
+}
+
+WRITE16_HANDLER( tecmo16_flipscreen_w )
+{
+	flipscreen = data & 0x01;
+	flip_screen_set(flipscreen);
 }
 
 /******************************************************************************/
@@ -205,6 +234,13 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 			color = (spriteram16[offs+2] & 0xf0) >> 4;
 			sizex = 1 << ((spriteram16[offs+2] & 0x03) >> 0);
 			sizey = 1 << ((spriteram16[offs+2] & 0x0c) >> 2);
+
+			if(game_is_riot)
+				sizey = sizex;
+			else
+				sizey = 1 << ((spriteram16[offs+2] & 0x0c) >> 2);
+
+
 			if (sizex >= 2) code &= ~0x01;
 			if (sizey >= 2) code &= ~0x02;
 			if (sizex >= 4) code &= ~0x04;
@@ -229,12 +265,26 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 				case 0x3: priority_mask = 0xf0|0xcc|0xaa; break; /* obscured by bg and fg */
 			}
 
+			if (flipscreen)
+			{
+				flipx = !flipx;
+				flipy = !flipy;
+			}
+
 			for (y = 0;y < sizey;y++)
 			{
 				for (x = 0;x < sizex;x++)
 				{
-					int sx = xpos + 8*(flipx?(sizex-1-x):x);
-					int sy = ypos + 8*(flipy?(sizey-1-y):y);
+					int sx,sy;
+
+					if (!flipscreen)
+					{
+						sx = xpos + 8*(flipx?(sizex-1-x):x);
+						sy = ypos + 8*(flipy?(sizey-1-y):y);
+					} else {
+						sx = 256 - (xpos + 8*(!flipx?(sizex-1-x):x) + 8);
+						sy = 256 - (ypos + 8*(!flipy?(sizey-1-y):y) + 8);
+					}
 					pdrawgfx(bitmap,Machine->gfx[2],
 							code + layout[y][x],
 							color,
