@@ -1,34 +1,24 @@
 /***************************************************************************
-
 TODO:
 - Radarscope does a check on bit 6 of 7d00 which prevent it from working.
   It's a sound status flag, maybe signaling whan a tune is finished.
   For now, we comment it out.
-
 - radarscp_grid_color_w() is wrong, it probably isn't supposed to change
   the grid color. There are reports of the grid being constantly blue in
   the real game, the flyer confirms this.
-
-
 Donkey Kong and Donkey Kong Jr. memory map (preliminary) (DKong 3 follows)
-
 0000-3fff ROM (Donkey Kong Jr.and Donkey Kong 3: 0000-5fff)
 6000-6fff RAM
 6900-6a7f sprites
 7000-73ff ?
 7400-77ff Video RAM
 8000-9fff ROM (DK3 only)
-
-
-
 memory mapped ports:
-
 read:
 7c00      IN0
 7c80      IN1
 7d00      IN2 (DK3: DSW2)
 7d80      DSW1
-
 *
  * IN0 (bits NOT inverted)
  * bit 7 : ?
@@ -73,7 +63,6 @@ read:
  * bit 1 : \ 00 = 3 lives  01 = 4 lives
  * bit 0 : / 10 = 5 lives  11 = 6 lives
  *
-
 write:
 7800-7803 ?
 7808      ?
@@ -109,31 +98,21 @@ write:
 7d84      interrupt enable
 7d85      0/1 toggle
 7d86-7d87 palette bank selector (only bit 0 is significant: 7d86 = bit 0 7d87 = bit 1)
-
-
 8035 Memory Map:
-
 0000-07ff ROM
 0800-0fff Compressed sound sample (Gorilla roar in DKong)
-
 Read ports:
 0x20   Read current tune
 P2.5   Active low when jumping
 T0     Select sound for jump (Normal or Barrell?)
 T1     Active low when gorilla is falling
-
 Write ports:
 P1     Digital out
 P2.7   External decay
 P2.6   Select second ROM reading (MOVX instruction will access area 800-fff)
 P2.2-0 Select the bank of 256 bytes for second ROM
-
-
-
 Donkey Kong 3 memory map (preliminary):
-
 RAM and read ports same as above;
-
 write:
 7d00      ?
 7d80      ?
@@ -145,20 +124,14 @@ write:
 7e84      interrupt enable
 7e85      ?
 7e86-7e87 palette bank selector (only bit 0 is significant: 7e86 = bit 0 7e87 = bit 1)
-
-
 I/O ports
-
 write:
 00        ?
-
 Changes:
 	Apr 7 98 Howie Cohen
 	* Added samples for the climb, jump, land and walking sounds
-
 	Jul 27 99 Chad Hendrickson
 	* Added cocktail mode flipscreen
-
 ***************************************************************************/
 
 #include "driver.h"
@@ -166,6 +139,80 @@ Changes:
 #include "cpu/i8039/i8039.h"
 #include "cpu/s2650/s2650.h"
 #include "cpu/m6502/m6502.h"
+#include "machine/eeprom.h"
+
+/*************************************
+ *
+ *  Braze Tech Addon boards
+ *
+ *************************************/
+
+static int banks = 0;
+
+static struct EEPROM_interface braze_eeprom_intf =
+{
+	7,				/* address bits */
+	8,				/* data bits */
+	"*110",			/* read command */
+	"*101",			/* write command */
+	0,				/* erase command */
+	"*10000xxxxx",	/* lock command */
+	"*10011xxxxx",	/* unlock command */
+};
+
+NVRAM_HANDLER( braze )
+{
+	if (read_or_write)
+		EEPROM_save(file);
+	else
+	{
+		EEPROM_init(&braze_eeprom_intf);
+
+		if (file) EEPROM_load(file);
+	}
+}
+
+static READ_HANDLER( braze_eeprom_r )
+{
+	return EEPROM_read_bit();
+}
+
+static WRITE_HANDLER( braze_a15_w )
+{
+
+	if (banks != (data & 1)) {
+		banks = data & 1;
+		memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x06000); // ?
+		memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x08000); // ?
+	}
+}
+
+static WRITE_HANDLER( braze_eeprom_w )
+{
+	EEPROM_write_bit(data & 0x01);
+	EEPROM_set_cs_line(data & 0x04 ? CLEAR_LINE : ASSERT_LINE);
+	EEPROM_set_clock_line(data & 0x02 ? ASSERT_LINE : CLEAR_LINE);
+}
+
+static void braze_decrypt_rom(UINT8 *dest)
+{
+	UINT8 oldbyte,newbyte;
+	UINT8 *ROM;
+	UINT32 mem;
+	UINT32 newmem;
+
+	ROM = memory_region(REGION_USER1);
+
+	for (mem=0;mem<0x10000;mem++)
+	{
+		oldbyte = ROM[mem];
+
+		newmem = ((BITSWAP8((mem >> 8),7,2,3,1,0,6,4,5))<<8) | (mem & 0xff);
+		newbyte = BITSWAP8(oldbyte, 1,4,5,7,6,0,3,2);
+
+		dest[newmem] = newbyte;
+	}
+}
 
 static int page = 0,mcustatus;
 static int p[8] = { 255,255,255,255,255,255,255,255 };
@@ -287,6 +334,19 @@ static MEMORY_READ_START( readmem )
 	{ 0xd000, 0xdfff, MRA_ROM },	/* DK3 bootleg only */
 MEMORY_END
 
+static MEMORY_READ_START( dkong2_readmem )
+	{ 0x0000, 0x5fff, MRA_ROM },	/* DK: 0000-3fff */
+	{ 0x6000, 0x6fff, MRA_RAM },	/* including sprites RAM */
+	{ 0x7400, 0x77ff, MRA_RAM },	/* video RAM */
+	{ 0x7c00, 0x7c00, input_port_0_r },	/* IN0 */
+	{ 0x7c80, 0x7c80, input_port_1_r },	/* IN1 */
+	{ 0x7d00, 0x7d00, dkong_in2_r },	/* IN2/DSW2 */
+	{ 0x7d80, 0x7d80, input_port_3_r },	/* DSW1 */
+	{ 0xc800, 0xc800, braze_eeprom_r },
+	{ 0x8000, 0x9fff, MRA_ROM },	/* DK3 and bootleg DKjr only */
+	{ 0xb000, 0xbfff, MRA_ROM },	/* Pest Place only */
+MEMORY_END
+
 static MEMORY_READ_START( dkong3_readmem )
 	{ 0x0000, 0x5fff, MRA_ROM },	/* DK: 0000-3fff */
 	{ 0x6000, 0x6fff, MRA_RAM },	/* including sprites RAM */
@@ -344,6 +404,32 @@ static MEMORY_WRITE_START( dkong_writemem )
 	{ 0x7d84, 0x7d84, interrupt_enable_w },
 	{ 0x7d85, 0x7d85, MWA_RAM },
 	{ 0x7d86, 0x7d87, dkong_palettebank_w },
+MEMORY_END
+
+static MEMORY_WRITE_START( dkong2_writemem )
+	{ 0x0000, 0x5fff, MWA_ROM },
+	{ 0x6000, 0x68ff, MWA_RAM },
+	{ 0x6900, 0x6a7f, MWA_RAM, &spriteram, &spriteram_size },
+	{ 0x6a80, 0x6fff, MWA_RAM },
+	{ 0x7000, 0x73ff, MWA_RAM },    /* ???? */
+	{ 0x7400, 0x77ff, dkong_videoram_w, &videoram },
+	{ 0x7800, 0x7803, MWA_RAM },	/* ???? */
+	{ 0x7808, 0x7808, MWA_RAM },	/* ???? */
+	{ 0x7c00, 0x7c00, dkong_sh_tuneselect_w },
+//	{ 0x7c80, 0x7c80,  },
+	{ 0x7d00, 0x7d02, dkong_sh1_w },	/* walk/jump/boom sample trigger */
+	{ 0x7d03, 0x7d03, dkong_sh_sound3_w },
+	{ 0x7d04, 0x7d04, dkong_sh_sound4_w },
+	{ 0x7d05, 0x7d05, dkong_sh_sound5_w },
+	{ 0x7d80, 0x7d80, dkong_sh_w },
+	{ 0x7d81, 0x7d81, MWA_RAM },	/* ???? */
+	{ 0x7d82, 0x7d82, dkong_flipscreen_w },
+	{ 0x7d83, 0x7d83, MWA_RAM },
+	{ 0x7d84, 0x7d84, interrupt_enable_w },
+	{ 0x7d85, 0x7d85, MWA_RAM },
+	{ 0x7d86, 0x7d87, dkong_palettebank_w },
+	{ 0xe000, 0xe000, braze_a15_w },
+	{ 0xc800, 0xc800, braze_eeprom_w },
 MEMORY_END
 
 static MEMORY_READ_START( hunchbkd_readmem )
@@ -731,6 +817,64 @@ INPUT_PORTS_START( dkong )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( dkong2 )
+	PORT_START      /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_4WAY )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_4WAY )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_4WAY )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START      /* IN1 */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_COCKTAIL )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START      /* IN2 */
+	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+//	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Service_Mode ) )
+//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+//	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_START2 )
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* status from sound cpu */
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN1 )
+
+	PORT_START      /* DSW0 */
+	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x00, "3" )
+	PORT_DIPSETTING(    0x01, "4" )
+	PORT_DIPSETTING(    0x02, "5" )
+	PORT_DIPSETTING(    0x03, "6" )
+	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x00, "7000" )
+	PORT_DIPSETTING(    0x04, "10000" )
+	PORT_DIPSETTING(    0x08, "15000" )
+	PORT_DIPSETTING(    0x0c, "20000" )
+	PORT_DIPNAME( 0x70, 0x00, DEF_STR( Coinage ) )
+	PORT_DIPSETTING(    0x70, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x50, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x60, DEF_STR( 1C_4C ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Cabinet ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Upright ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
+INPUT_PORTS_END
 
 INPUT_PORTS_START( dkong3 )
 	PORT_START      /* IN0 */
@@ -1524,6 +1668,40 @@ static MACHINE_DRIVER_START( dkong )
 	MDRV_SOUND_ADD(SAMPLES, dkong_samples_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( braze )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 3072000)	/* 3.072 MHz (?) */
+	MDRV_CPU_MEMORY(dkong2_readmem,dkong2_writemem)
+	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)
+
+	MDRV_CPU_ADD(I8035,6000000/15)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* 6MHz crystal */
+	MDRV_CPU_MEMORY(readmem_sound,writemem_sound)
+	MDRV_CPU_PORTS(readport_sound,writeport_sound)
+
+	MDRV_NVRAM_HANDLER(braze)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(256)
+	MDRV_COLORTABLE_LENGTH(64*4)
+
+	MDRV_PALETTE_INIT(dkong)
+	MDRV_VIDEO_START(dkong)
+	MDRV_VIDEO_UPDATE(dkong)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(DAC, dkong_dac_interface)
+	MDRV_SOUND_ADD(SAMPLES, dkong_samples_interface)
+MACHINE_DRIVER_END
+
 static INTERRUPT_GEN( hunchbkd_interrupt )
 {
 	cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0x03);
@@ -1749,9 +1927,7 @@ MACHINE_DRIVER_END
 
 
 /***************************************************************************
-
   Game driver(s)
-
 ***************************************************************************/
 
 ROM_START( radarscp )
@@ -1960,6 +2136,38 @@ I use more appropreate filenames for color PROMs.
 	ROM_LOAD( "dkong.2j",     0x0100, 0x0100, CRC(2ab01dc8) )
 	ROM_LOAD( "dkong.5f",     0x0200, 0x0100, CRC(44988665) )
 *********************************************************/
+ROM_END
+
+ROM_START( dkongx )
+	ROM_REGION( 0x20000, REGION_CPU1, 0 )
+	ROM_LOAD( "c_5et_g.bin",  0x10000, 0x1000, CRC(ba70b88b) SHA1(d76ebecfea1af098d843ee7e578e480cd658ac1a) )
+	ROM_LOAD( "c_5ct_g.bin",  0x11000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )
+	ROM_LOAD( "c_5bt_g.bin",  0x12000, 0x1000, CRC(1c97d324) SHA1(c7966261f3a1d3296927e0b6ee1c58039fc53c1f) )
+	ROM_LOAD( "c_5at_g.bin",  0x13000, 0x1000, CRC(b9005ac0) SHA1(3fe3599f6fa7c496f782053ddf7bacb453d197c4) )
+	/* space for diagnostic ROM */
+
+	ROM_REGION( 0x20000, REGION_USER1, 0 )
+	ROM_LOAD( "d2k12.bin",  0x0000, 0x10000,  CRC(6e95ca0d) SHA1(c058add0f146d577e3df0ba60828fe1734e78d01) ) /* Version 1.2 */
+
+	ROM_REGION( 0x1800, REGION_CPU2, 0 )	/* sound */
+	ROM_LOAD( "s_3i_b.bin",   0x0000, 0x0800, CRC(45a4ed06) SHA1(144d24464c1f9f01894eb12f846952290e6e32ef) )
+	ROM_RELOAD(               0x0800, 0x0800 )
+	ROM_LOAD( "s_3j_b.bin",   0x1000, 0x0800, CRC(4743fe92) SHA1(6c82b57637c0212a580591397e6a5a1718f19fd2) )
+
+	ROM_REGION( 0x1000, REGION_GFX1, 0 )
+	ROM_LOAD( "v_5h_b.bin",   0x0000, 0x0800, CRC(12c8c95d) SHA1(a57ff5a231c45252a63b354137c920a1379b70a3) )
+	ROM_LOAD( "v_3pt.bin",    0x0800, 0x0800, CRC(15e9c5e9) SHA1(976eb1e18c74018193a35aa86cff482ebfc5cc4e) )
+
+	ROM_REGION( 0x2000, REGION_GFX2, 0 )
+	ROM_LOAD( "l_4m_b.bin",   0x0000, 0x0800, CRC(59f8054d) SHA1(793dba9bf5a5fe76328acdfb90815c243d2a65f1) )
+	ROM_LOAD( "l_4n_b.bin",   0x0800, 0x0800, CRC(672e4714) SHA1(92e5d379f4838ac1fa44d448ce7d142dae42102f) )
+	ROM_LOAD( "l_4r_b.bin",   0x1000, 0x0800, CRC(feaa59ee) SHA1(ecf95db5a20098804fc8bd59232c66e2e0ed3db4) )
+	ROM_LOAD( "l_4s_b.bin",   0x1800, 0x0800, CRC(20f2ef7e) SHA1(3bc482a38bf579033f50082748ee95205b0f673d) )
+
+	ROM_REGION( 0x0300, REGION_PROMS, 0 )
+	ROM_LOAD( "c-2k.bpr",     0x0000, 0x0100, CRC(e273ede5) SHA1(b50ec9e1837c00c20fb2a4369ec7dd0358321127) ) /* palette low 4 bits (inverted) */
+	ROM_LOAD( "c-2j.bpr",     0x0100, 0x0100, CRC(d6412358) SHA1(f9c872da2fe8e800574ae3bf483fb3ccacc92eb3) ) /* palette high 4 bits (inverted) */
+	ROM_LOAD( "v-5e.bpr",     0x0200, 0x0100, CRC(b869b8f5) SHA1(c2bdccbf2654b64ea55cd589fd21323a9178a660) ) /* character color codes on a per-column basis */
 ROM_END
 
 ROM_START( dkongjr )
@@ -2617,6 +2825,20 @@ static DRIVER_INIT( radarscp )
 	RAM[0x1e9d] = 0xbd;
 }
 
+static DRIVER_INIT( dkong2 )
+{
+	braze_decrypt_rom(memory_region(REGION_USER1) + 0x10000);
+
+	memset (memory_region(REGION_CPU1), 0, 0x10000);
+
+	banks = 0;
+	memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000, 0x06000); 
+	memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000, 0x08000); // ?
+
+	install_mem_write_handler(0, 0xe000, 0xe000,  braze_a15_w);
+	install_mem_write_handler(0, 0xc800, 0xc800,  braze_eeprom_w);
+	install_mem_read_handler(0,  0xc800, 0xc800,  braze_eeprom_r);
+}
 
 
 GAMEX(1980, radarscp, 0,        radarscp, dkong,    radarscp, ROT90, "Nintendo", "Radar Scope", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
@@ -2626,6 +2848,8 @@ GAME( 1981, dkongo,   dkong,    dkong,    dkong,    0,        ROT90, "Nintendo",
 GAME( 1981, dkongjp,  dkong,    dkong,    dkong,    0,        ROT90, "Nintendo", "Donkey Kong (Japan set 1)" )
 GAME( 1981, dkongjo,  dkong,    dkong,    dkong,    0,        ROT90, "Nintendo", "Donkey Kong (Japan set 2)" )
 GAME( 1981, dkongjo1, dkong,    dkong,    dkong,    0,        ROT90, "Nintendo", "Donkey Kong (Japan set 3) (bad dump?)" )
+
+GAME( 2008, dkongx,   dkong,    braze,    dkong2,   dkong2,   ROT90, "bootleg",  "Donkey Kong II: Jumpman Returns (Hack)" )
 
 GAME( 1982, dkongjr,  0,        dkongjr,  dkong,    0,        ROT90, "Nintendo of America", "Donkey Kong Junior (US)" )
 GAME( 1982, dkongjrj, dkongjr,  dkongjr,  dkong,    0,        ROT90, "Nintendo", "Donkey Kong Jr. (Japan)" )
