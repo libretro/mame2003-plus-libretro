@@ -1,19 +1,14 @@
 /******************************************************************************
-
   Ganbare Ginkun  (Japan)  (c)1995 TECMO
   Final StarForce (US)     (c)1992 TECMO
-
-  driver by Eisuke Watanabe (MHF03337@nifty.ne.jp)
-
-  special thanks to Nekomata, NTD & code-name'Siberia'
-
+  Riot            (Japan)  (c)1992 NMK
+--
+driver by Eisuke Watanabe, Nicola Salmoria
+special thanks to Nekomata, NTD & code-name'Siberia'
 TODO:
 - wrong background in fstarfrc title
-- flip screen is unsupported
-
 To enter into service mode in Final Star Force press and hold start
 buttons 1 and 2 during P.O.S.T.
-
 ******************************************************************************/
 
 #include "driver.h"
@@ -33,6 +28,7 @@ WRITE16_HANDLER( tecmo16_colorram_w );
 WRITE16_HANDLER( tecmo16_videoram2_w );
 WRITE16_HANDLER( tecmo16_colorram2_w );
 WRITE16_HANDLER( tecmo16_charram_w );
+WRITE16_HANDLER( tecmo16_flipscreen_w );
 
 WRITE16_HANDLER( tecmo16_scroll_x_w );
 WRITE16_HANDLER( tecmo16_scroll_y_w );
@@ -43,6 +39,7 @@ WRITE16_HANDLER( tecmo16_scroll_char_y_w );
 
 VIDEO_START( fstarfrc );
 VIDEO_START( ginkun );
+VIDEO_START( riot );
 VIDEO_UPDATE( tecmo16 );
 
 /******************************************************************************/
@@ -85,6 +82,7 @@ static MEMORY_WRITE16_START( fstarfrc_writemem )
 	{ 0x122000, 0x127fff, MWA16_RAM },	/* work area */
 	{ 0x130000, 0x130fff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x140000, 0x1407ff, paletteram16_xxxxBBBBGGGGRRRR_word_w, &paletteram16 },
+	{ 0x150000, 0x150001, tecmo16_flipscreen_w },
 	{ 0x150010, 0x150011, tecmo16_sound_command_w },
 	{ 0x150030, 0x150031, MWA16_NOP },	/* ??? */
 	{ 0x160000, 0x160001, tecmo16_scroll_char_x_w },
@@ -102,11 +100,13 @@ static MEMORY_READ16_START( ginkun_readmem )
 	{ 0x121000, 0x121fff, MRA16_RAM },
 	{ 0x122000, 0x122fff, MRA16_RAM },
 	{ 0x123000, 0x123fff, MRA16_RAM },
+	{ 0x124000, 0x124fff, MRA16_RAM },	/* extra RAM for Riot */
 	{ 0x130000, 0x130fff, MRA16_RAM },
 	{ 0x140000, 0x1407ff, MRA16_RAM },
 	{ 0x150030, 0x150031, input_port_1_word_r },
 	{ 0x150040, 0x150041, input_port_0_word_r },
 	{ 0x150050, 0x150051, input_port_2_word_r },
+	{ 0x150020, 0x150021, input_port_3_word_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( ginkun_writemem )
@@ -117,9 +117,12 @@ static MEMORY_WRITE16_START( ginkun_writemem )
 	{ 0x121000, 0x121fff, tecmo16_colorram_w, &tecmo16_colorram },
 	{ 0x122000, 0x122fff, tecmo16_videoram2_w, &tecmo16_videoram2 },
 	{ 0x123000, 0x123fff, tecmo16_colorram2_w, &tecmo16_colorram2 },
+	{ 0x124000, 0x124fff, MWA16_RAM },	/* extra RAM for Riot */
 	{ 0x130000, 0x130fff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x140000, 0x1407ff, paletteram16_xxxxBBBBGGGGRRRR_word_w, &paletteram16 },
+	{ 0x150000, 0x150001, tecmo16_flipscreen_w },
 	{ 0x150010, 0x150011, tecmo16_sound_command_w },
+	{ 0x150030, 0x150031, MWA16_NOP },	/* ??? */
 	{ 0x160000, 0x160001, tecmo16_scroll_char_x_w },
 	{ 0x160006, 0x160007, tecmo16_scroll_char_y_w },
 	{ 0x16000c, 0x16000d, tecmo16_scroll_x_w },
@@ -284,6 +287,83 @@ INPUT_PORTS_START( ginkun )
 	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_COIN2 )
 INPUT_PORTS_END
 
+INPUT_PORTS_START( riot )
+	PORT_START
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) ) 
+	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_4C ) )
+	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_B ) ) 
+	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x18, DEF_STR( 1C_4C ) )
+	PORT_DIPNAME( 0x40, 0x40, "Starting Coins" ) 
+	PORT_DIPSETTING(    0x40, "1" )
+	PORT_DIPSETTING(    0x00, "2" )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) ) 
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START
+	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) ) 
+	PORT_DIPSETTING(    0x03, "1" )
+	PORT_DIPSETTING(    0x02, "2" )
+	PORT_DIPSETTING(    0x01, "3" )
+	PORT_DIPSETTING(    0x00, "4" )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) ) 
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) ) 
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) ) 
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Demo_Sounds ) ) 
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )  
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )  
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW,  IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW,  IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW,  IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW,  IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW,  IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW,  IPT_BUTTON3 | IPF_PLAYER1 )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW,  IPT_START1 )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW,  IPT_START2 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW,  IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW,  IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW,  IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW,  IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW,  IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW,  IPT_BUTTON3 | IPF_PLAYER2 )
+	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_COIN1 )
+	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_COIN2 )
+
+	PORT_START
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0xffdd, IP_ACTIVE_LOW,  IPT_UNKNOWN )
+INPUT_PORTS_END
+
+
 /******************************************************************************/
 
 static struct GfxLayout charlayout =
@@ -417,6 +497,13 @@ static MACHINE_DRIVER_START( ginkun )
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( riot )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(ginkun)
+	MDRV_VIDEO_START(riot)
+MACHINE_DRIVER_END
+
+
 /******************************************************************************/
 
 ROM_START( fstarfrc )
@@ -465,7 +552,32 @@ ROM_START( ginkun )
 	ROM_LOAD( "ginkun08.i18",           0x00000, 0x20000, CRC(8b7583c7) SHA1(be7ce721504afb45e16eda146f12031d818fc94c) )
 ROM_END
 
+ROM_START( riot )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "1.ic1", 0x00000, 0x40000, CRC(9ef4232e) SHA1(b9dd3e0dc5785311ff2433b5eb94e327b51ef144) )
+	ROM_LOAD16_BYTE( "2.ic2", 0x00001, 0x40000, CRC(f2c6fbbf) SHA1(114cc9ede8b6b4e94dad59f82f0232e9b7fa5025) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )
+	ROM_LOAD( "7.ic17", 0x00000, 0x10000, CRC(0a95b8f3) SHA1(cc6bdeeeb184eb4f3867eb9c961b0b82743fac9f) )
+
+	ROM_REGION( 0x20000, REGION_GFX1, 0 )
+	ROM_LOAD( "3.ic3", 0x00000, 0x20000, CRC(f60f5c96) SHA1(56ea21f22d3cf47071bfb3555b331a676463b63e) )
+
+	ROM_REGION( 0x100000, REGION_GFX2, 0 )
+	ROM_LOAD16_BYTE( "5.ic9", 0x00000, 0x80000, CRC(056fce78) SHA1(25234fa0282fdbefefb06e6aa5a467f9d08ed534) )
+	ROM_LOAD16_BYTE( "4.ic5", 0x00001, 0x80000, CRC(0894e7b4) SHA1(37a04476770942f292d836997c649a343f71e317) )
+
+	ROM_REGION( 0x100000, REGION_GFX3, 0 )
+	ROM_LOAD16_BYTE( "9.ic22", 0x00000, 0x80000, CRC(0ead54f3) SHA1(4848eb158d9e2279332225e0b25f1c96a8a5a0c4) )
+	ROM_LOAD16_BYTE( "6.ic16", 0x00001, 0x80000, CRC(96ef61da) SHA1(c306e4d1eee19af0229a47c2f115f98c74f33d33) )
+
+	ROM_REGION( 0x40000, REGION_SOUND1, 0 )
+	ROM_LOAD( "8.ic18", 0x00000, 0x20000, CRC(4b70e266) SHA1(4ed23de9223cc7359fbaff9dd500ef6daee00fb0) )
+ROM_END
+
+
 /******************************************************************************/
 
-GAMEX( 1992, fstarfrc, 0, fstarfrc, fstarfrc, 0, ROT90, "Tecmo", "Final Star Force (US)", GAME_NO_COCKTAIL )
-GAMEX( 1995, ginkun,   0, ginkun,   ginkun,   0, ROT0,  "Tecmo", "Ganbare Ginkun", GAME_NO_COCKTAIL )
+GAME(1992, fstarfrc, 0, fstarfrc, fstarfrc, 0, ROT90, "Tecmo", "Final Star Force (US)" )
+GAME(1992, riot,     0, riot,     riot,     0, ROT0,  "NMK",   "Riot" )
+GAME(1995, ginkun,   0, ginkun,   ginkun,   0, ROT0,  "Tecmo", "Ganbare Ginkun" )
