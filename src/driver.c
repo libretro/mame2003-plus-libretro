@@ -2298,7 +2298,10 @@ V-V                           TP-027
 	DRIVER( 1944 )		/* 20/06/2000 (c) 2000 Eighting/Raizing (US) */
 	DRIVER( 1944j )		/* 20/06/2000 (c) 2000 Eighting/Raizing (Japan) */
 	DRIVER( mpangj )	/* 11/10/2000 (c) 2000 Mitchell */
+	DRIVER( progear )	/* 17/01/2001 (c) 2001 Cave (US) */
+	DRIVER( progearj )	/* 17/01/2001 (c) 2001 Cave (Japan) */
 	DRIVER( pzloop2j )	/* 05/02/2001 (c) 2001 Mitchell */
+		
 
 
 	/* Capcom CPS3 games */
