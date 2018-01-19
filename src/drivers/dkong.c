@@ -2865,7 +2865,7 @@ GAME( 1984, herbiedk, huncholy, herbiedk, herbiedk, 0,        ROT90, "CVS", "Her
 
 GAMEX(1983, hunchbkd, hunchbak, hunchbkd, hunchbkd, 0,        ROT90, "Century Electronics", "Hunchback (DK conversion)", GAME_WRONG_COLORS )
 
-GAME( 1984, sbdk,	  superbik,	hunchbkd, sbdk,		0,        ROT90, "Century Electronics", "Super Bike (DK conversion)" )
+GAME( 1984, sbdk,     superbik,	hunchbkd, sbdk,	    0,        ROT90, "Century Electronics", "Super Bike (DK conversion)" )
 
 GAME( 1984, herodk,   hero,     hunchbkd, herodk,   herodk,   ROT90, "Seatongrove Ltd (Crown license)", "Hero in the Castle of Doom (DK conversion)" )
 GAME( 1984, herodku,  hero,     hunchbkd, herodk,   0,        ROT90, "Seatongrove Ltd (Crown license)", "Hero in the Castle of Doom (DK conversion not encrypted)" )
@@ -2873,12 +2873,12 @@ GAME( 1984, herodku,  hero,     hunchbkd, herodk,   0,        ROT90, "Seatongrov
 GAME( 1984, 8ballact, 0,    	eightact, 8ballact, 0,        ROT90, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DK conversion)" )
 GAME( 1984, 8ballat2, 8ballact,	eightact, 8ballact, 0,        ROT90, "Seatongrove Ltd (Magic Eletronics USA licence)", "Eight Ball Action (DKJr conversion)" )
 
-GAMEX(1984, shootgal, 0,		shootgal, hunchbkd, 0,		  ROT180, "Seatongrove Ltd (Zaccaria licence)", "Shooting Gallery", GAME_NOT_WORKING )
+GAMEX(1984, shootgal, 0,	shootgal, hunchbkd, 0,		  ROT180, "Seatongrove Ltd (Zaccaria licence)", "Shooting Gallery", GAME_NOT_WORKING )
 
 GAMEX(1983, pestplce, mario,	pestplce, pestplce, 0,        ROT180, "bootleg", "Pest Place", GAME_WRONG_COLORS | GAME_IMPERFECT_SOUND )
 
-GAMEX(1985, spclforc, 0,		spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces", GAME_NO_SOUND )
-GAMEX(1985, spcfrcii, 0,		spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces II", GAME_NO_SOUND )
+GAMEX(1985, spclforc, 0,	spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces", GAME_NO_SOUND )
+GAMEX(1985, spcfrcii, 0,	spclforc, spclforc, 0,        ROT90, "Senko Industries (Magic Eletronics Inc. licence)", "Special Forces II", GAME_NO_SOUND )
 
 GAMEX(198?, drakton,  0,        dkong,    dkong,    0,        ROT90, "Epos Corporation", "Drakton", GAME_NOT_WORKING )
 GAMEX(1985, strtheat, 0,        strtheat, strtheat, 0,        ROT90, "Epos Corporation", "Street Heat - Cardinal Amusements", GAME_NO_SOUND)
