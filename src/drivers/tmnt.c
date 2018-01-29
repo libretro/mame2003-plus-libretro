@@ -41,8 +41,7 @@ Updates:
   correctly. TMNT2 stays dimmed most of the time.(fixed)
 - sprite lag, quite evident in lgtnfght and mia but also in the others.
   Also see the left corner of the wall in punkshot DownTown level(should be better)
-- ssriders: Billy no longer goes berserk at stage 4's boss. Players
-  don't jitter as much walking on slanted surfaces.
+- ssriders: Billy no longer goes berserk at stage 4's boss.
 
 * uncertain bugs:
 - Detana!! Twin Bee's remaining sprite lag does not appear to be
@@ -436,9 +435,9 @@ static READ16_HANDLER( ssriders_protection_r )
 			/* collision table */
 			data = -cpu_readmem24bew_word(0x105818);
 			data = ((data / 8 - 4) & 0x1f) * 0x40;
-			data += ((cpu_readmem24bew_word(0x105cb0) +
-						256*K052109_r(0x1a01) + K052109_r(0x1a00) - 6) / 8 + 12) & 0x3f; //*
-			return data;
+			// 0x1040c8 is the x scroll buffer, avoids stutter on slopes + scrolling (and it's actually more logical as HW pov)
+			data += ((cpu_readmem24bew_word(0x105cb0) + cpu_readmem24bew_word(0x1040c8) - 6) / 8 + 12) & 0x3f;
+ 			return data;
 
 		default:
 			usrintf_showmessage("%06x: unknown protection read",activecpu_get_pc());
