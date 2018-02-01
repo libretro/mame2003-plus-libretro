@@ -1,8 +1,12 @@
 # mame2003-plus-libretro
-MAME as it was in 2003, using the libretro API. Suitable for lower-end devices that would struggle to run current versions of MAME (later versions of MAME are increasingly accurate, thus can perform worse).
+MAME as it was in 2003 with some new game support plus many fixes and improvements for 2018, using the libretro API. Suitable for lower-end devices that would struggle to run current versions of MAME (later versions of MAME are increasingly accurate, thus can perform worse).
 
 ## ROMset compatibility with MAME 2003-plus
-**The MAME 2003-plus core accepts MAME 0.78 ROMsets.** Each version of an arcade emulator must be used with ROMs that have the same exact version number. For example, MAME 0.37b5 ROMsets are required by the MAME 2000 emulator, but MAME 0.37b5 sets will not work correctly with the MAME 2003-plus or MAME 2010 emulator cores. Those cores require MAME 0.78 and MAME 0.139 ROM sets, respectively.
+**The MAME 2003-plus core accepts MAME 0.78 ROMsets for 99.9% of games however most of the new playable games
+plus some others that now have sound will require a Rom from later MAME builds a datfile is being created which
+will help users of this core to obtain the correct versions.** 
+
+Each version of an arcade emulator must be used with ROMs that have the same exact version number. For example, MAME 0.37b5 ROMsets are required by the MAME 2000 emulator, but MAME 0.37b5 sets will not work correctly with the MAME 2003-plus or MAME 2010 emulator cores. Those cores require MAME 0.78 and MAME 0.139 ROM sets, respectively.
 
 File-not-found errors are the result of a ROMset that is wrong or incomplete, including if you're trying to run a "Split" clone .zip without the parent .zip present. Non-Merged MAME0.78 ROMsets do not require parent .zips to be present.
 
@@ -61,9 +65,6 @@ MAME 2003-plus also supports one or two spinners/dials via the "Share 2 player d
 * **TATE Mode** (disabled/enabled)
   Enable if rotating display for vertically oriented games (Pac-Man, Galaga, etc). Requires `video_allow_rotate = "false"` cfg setting in RetroArch.
 
-## Additional configuration information:
- * Official RetroArch documentation for the mame2003-plus-libretro core are published at [buildbot.libretro.com/docs](https://buildbot.libretro.com/docs/). They can be [edited and improved by users via github.com](https://github.com/libretro/docs/blob/master/docs/library/mame2003-plus.md).
- * The RetroArch documentation owes much to RetroPie's [detailed MAME 2003-plus configuration wiki](https://github.com/RetroPie/RetroPie-Setup/wiki/lr-mame2003-plus) which can be adapted for use in other environments.
  
 ### Development reference links:
  * [MAME: Benchmarks, Useful Code, Bug Fixes, Known Issues](http://www.anthrofox.org/code/mame/index.html) at anthrofox.org
