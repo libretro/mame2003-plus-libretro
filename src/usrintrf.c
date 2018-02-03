@@ -23,7 +23,6 @@
 
 
 extern void (*pause_action)(void);
-static void pause_action_paused(void);
 static void pause_action_showcopyright(void);
 static void pause_action_showgamewarnings(void);
 void pause_action_start_emulator(void);
@@ -3886,26 +3885,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	if (input_ui_pressed(IPT_UI_RESET_MACHINE))
 		machine_reset();
 
-#ifndef MESS
-	if (input_ui_pressed(IPT_UI_PAUSE)) /* pause the game */
-	{
-#else
-	if (setup_selected)
-		mess_pause_for_ui = 1;
-
-	if (input_ui_pressed(IPT_UI_PAUSE) || mess_pause_for_ui) /* pause the game */
-	{
-#endif
-/*		osd_selected = 0;	   disable on screen display, since we are going   */
-							/* to change parameters affected by it */
-
-		mame_pause(1);
-        pause_action = pause_action_paused;
-        pause_bitmap = bitmap;
-//		schedule_full_refresh();
-		return 0;
-	}
-
 #if defined(__sgi) && !defined(MESS)
 	game_paused = 0;
 #endif
@@ -3928,12 +3907,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 		showcharset(bitmap);
 
 		osd_sound_enable(1);
-	}
-
-	/* if the user pressed F1 and this is a lightgun game, toggle the crosshair */
-	if (input_ui_pressed(IPT_UI_TOGGLE_CROSSHAIR))
-	{
-		drawgfx_toggle_crosshair();
 	}
 
 	return 0;
@@ -3977,82 +3950,6 @@ int is_game_paused(void)
 }
 
 #endif
-
-void pause_action_paused(void)
-{
-#ifdef MAME_NET
-    osd_net_sync();
-#endif /* MAME_NET */
-    profiler_mark(PROFILER_VIDEO);
-    if (osd_skip_this_frame() == 0)
-    {
-        /* keep calling vh_screenrefresh() while paused so we can stuff */
-        /* debug code in there */
-        draw_screen();
-    }
-    profiler_mark(PROFILER_END);
-
-    /* if the user pressed F4, show the character set */
-    if (input_ui_pressed(IPT_UI_SHOW_GFX))
-        showcharset(pause_bitmap);
-
-// TODO: ?
-//    if (setup_selected == 0 && input_ui_pressed(IPT_UI_CANCEL))
-//        return 1;
-
-    if (setup_selected == 0 && input_ui_pressed(IPT_UI_CONFIGURE))
-    {
-        setup_selected = -1;
-        if (osd_selected != 0)
-        {
-            osd_selected = 0;	/* disable on screen display */
-            schedule_full_refresh();
-        }
-    }
-    if (setup_selected != 0) setup_selected = setup_menu(pause_bitmap, setup_selected);
-
-#ifdef MAME_DEBUG
-    if (!mame_debug)
-#endif
-        if (osd_selected == 0 && input_ui_pressed(IPT_UI_ON_SCREEN_DISPLAY))
-        {
-            osd_selected = -1;
-            if (setup_selected != 0)
-            {
-                setup_selected = 0; /* disable setup menu */
-                schedule_full_refresh();
-            }
-        }
-    if (osd_selected != 0) osd_selected = on_screen_display(pause_bitmap, osd_selected);
-
-    if (options.cheat) DisplayWatches(pause_bitmap);
-
-    /* show popup message if any */
-    if (messagecounter > 0)
-    {
-        displaymessage(pause_bitmap, messagetext);
-
-        if (--messagecounter == 0)
-            schedule_full_refresh();
-    }
-
-    update_video_and_audio();
-    reset_partial_updates();
-
-#ifdef MESS
-    if (!setup_selected && mess_pause_for_ui)
-    {
-        mess_pause_for_ui = 0;
-        break;
-    }
-#endif /* MESS */
-
-	if(input_ui_pressed(IPT_UI_PAUSE))
-	{
-	    pause_action = 0;
-	    mame_pause(0);
-	}
-}
 
 static int show_game_message(void)
 {
