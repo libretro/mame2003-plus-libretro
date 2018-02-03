@@ -2856,29 +2856,6 @@ static int displayhistory (struct mame_bitmap *bitmap, int selected)
 			ui_displaymessagewindow(bitmap,msg);
 		}
 
-		if ((scroll > 0) && input_ui_pressed_repeat(IPT_UI_UP,4))
-		{
-			if (scroll == 2) scroll = 0;	/* 1 would be the same as 0, but with arrow on top */
-			else scroll--;
-		}
-
-		if (input_ui_pressed_repeat(IPT_UI_DOWN,4))
-		{
-			if (scroll == 0) scroll = 2;	/* 1 would be the same as 0, but with arrow on top */
-			else scroll++;
-		}
-
-		if (input_ui_pressed_repeat(IPT_UI_PAN_UP, 4))
-		{
-			scroll -= maxrows - 2;
-			if (scroll < 0) scroll = 0;
-		}
-
-		if (input_ui_pressed_repeat(IPT_UI_PAN_DOWN, 4))
-		{
-			scroll += maxrows - 2;
-		}
-
 		if (input_ui_pressed(IPT_UI_SELECT))
 			sel = -1;
 
