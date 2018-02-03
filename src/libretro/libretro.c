@@ -6,16 +6,48 @@
 #include "driver.h"
 #include "state.h"
 
-// Wrapper to build MAME on 3DS. It doesn't have stricmp.
-#ifdef _3DS
-int stricmp(const char *string1, const char *string2)
-{
-    return strcasecmp(string1, string2);
-}
-#endif
+static int driverIndex; // Index of mame game loaded
+extern struct osd_create_params videoConfig;
 
-void mame_frame(void);
-void mame_done(void);
+extern const struct KeyboardInfo retroKeys[];
+extern int retroKeyState[512];
+extern int retroJsState[72];
+extern int16_t mouse_x[4];
+extern int16_t mouse_y[4];
+int16_t prev_pointer_x;
+int16_t prev_pointer_y;
+extern int16_t analogjoy[4][4];
+
+struct retro_perf_callback perf_cb;
+unsigned retroColorMode;
+
+retro_environment_t environ_cb = NULL;
+retro_log_printf_t log_cb = NULL;
+retro_video_refresh_t video_cb = NULL;
+static retro_input_poll_t poll_cb = NULL;
+static retro_input_state_t input_cb = NULL;
+static retro_audio_sample_batch_t audio_batch_cb = NULL;
+unsigned long lastled = 0;
+retro_set_led_state_t led_state_cb = NULL;
+
+char *fallbackDir;
+char *systemDir;
+char *romDir;
+char *saveDir;
+
+int16_t XsoundBuffer[2048];
+
+int sample_rate;
+extern int frameskip;
+unsigned skip_disclaimer = 0;
+unsigned skip_warnings = 0;
+unsigned samples = 0;
+unsigned cheats = 0;
+unsigned dial_share_xy = 0;
+unsigned mouse_device = 0;
+unsigned rstick_to_btns = 0;
+unsigned tate_mode = 0;
+extern int crosshair_enable;
 
 #if defined(__CELLOS_LV2__) || defined(GEKKO) || defined(_XBOX)
 unsigned activate_dcs_speedhack = 1;
@@ -23,23 +55,29 @@ unsigned activate_dcs_speedhack = 1;
 unsigned activate_dcs_speedhack = 0;
 #endif
 
-struct retro_perf_callback perf_cb;
+#ifdef _3DS
+int stricmp(const char *string1, const char *string2)
+{
+    return strcasecmp(string1, string2); // Wrapper to build MAME on 3DS. It doesn't have stricmp.
+}
+#endif
 
-retro_log_printf_t log_cb = NULL;
-retro_video_refresh_t video_cb = NULL;
-static retro_input_poll_t poll_cb = NULL;
-static retro_input_state_t input_cb = NULL;
-static retro_audio_sample_batch_t audio_batch_cb = NULL;
-retro_environment_t environ_cb = NULL;
+void mame_frame(void);
+void mame_done(void);
 
-unsigned long lastled = 0;
-retro_set_led_state_t led_state_cb = NULL;
-
+unsigned retro_get_region (void) {return RETRO_REGION_NTSC;}
+void *retro_get_memory_data(unsigned type) {return 0;}
+size_t retro_get_memory_size(unsigned type) {return 0;}
+bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info){return false;}
+void retro_cheat_reset(void){}
+void retro_cheat_set(unsigned unused, bool unused1, const char* unused2){}
+void retro_set_controller_port_device(unsigned in_port, unsigned device){}
 void retro_set_video_refresh(retro_video_refresh_t cb) { video_cb = cb; }
 void retro_set_audio_sample(retro_audio_sample_t cb) { }
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
 void retro_set_input_poll(retro_input_poll_t cb) { poll_cb = cb; }
 void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
+
 void retro_set_environment(retro_environment_t cb)
 {
    static const struct retro_variable vars[] = {
@@ -134,29 +172,6 @@ static char* peelPathItem(char* aPath)
     return aPath;
 }
 
-static int driverIndex; //< Index of mame game loaded
-
-//
-
-extern const struct KeyboardInfo retroKeys[];
-extern int retroKeyState[512];
-extern int retroJsState[72];
-
-extern int16_t mouse_x[4];
-extern int16_t mouse_y[4];
-int16_t prev_pointer_x;
-int16_t prev_pointer_y;
-extern int16_t analogjoy[4][4];
-
-extern struct osd_create_params videoConfig;
-
-unsigned retroColorMode;
-int16_t XsoundBuffer[2048];
-char *fallbackDir;
-char *systemDir;
-char *romDir;
-char *saveDir;
-
 unsigned retro_api_version(void)
 {
    return RETRO_API_VERSION;
@@ -173,19 +188,6 @@ void retro_get_system_info(struct retro_system_info *info)
    info->need_fullpath = true;   
    info->block_extract = true;
 }
-
-int sample_rate;
-
-extern int frameskip;
-unsigned skip_disclaimer = 0;
-unsigned skip_warnings = 0;
-unsigned samples = 0;
-unsigned cheats = 0;
-unsigned dial_share_xy = 0;
-unsigned mouse_device = 0;
-unsigned rstick_to_btns = 0;
-unsigned tate_mode = 0;
-extern int crosshair_enable;
 
 static void update_variables(void)
 {
@@ -703,13 +705,3 @@ bool retro_unserialize(const void * data, size_t size)
 
 	return false;
 }
-
-
-// Stubs
-unsigned retro_get_region (void) {return RETRO_REGION_NTSC;}
-void *retro_get_memory_data(unsigned type) {return 0;}
-size_t retro_get_memory_size(unsigned type) {return 0;}
-bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info){return false;}
-void retro_cheat_reset(void){}
-void retro_cheat_set(unsigned unused, bool unused1, const char* unused2){}
-void retro_set_controller_port_device(unsigned in_port, unsigned device){}
