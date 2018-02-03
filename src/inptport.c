@@ -175,7 +175,6 @@ const char ipdn_defaultstrings[][MAX_DEFSTR_LEN] =
 	"Game Time",
 	"Continue Price",
 	"Controller",
-	"Light Gun",
 	"Joystick",
 	"Trackball",
 	"Continues",
