@@ -2534,26 +2534,6 @@ static int EnableDisableCheatMenu(struct mame_bitmap * bitmap, int selection, in
 		}
 	}
 
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kVerticalKeyRepeatRate))
-	{
-		sel -= fullMenuPageHeight;
-
-		if(sel < 0)
-		{
-			sel = 0;
-		}
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kVerticalKeyRepeatRate))
-	{
-		sel += fullMenuPageHeight;
-
-		if(sel >= total)
-		{
-			sel = total - 1;
-		}
-	}
-
 	if(	(sel >= 0) &&
 		(sel < cheatListLength))
 		entry = &cheatList[sel];
@@ -4307,26 +4287,6 @@ static int EditCheatMenu(struct mame_bitmap * bitmap, CheatEntry * entry, int se
 		editActive = 0;
 	}
 
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kVerticalKeyRepeatRate))
-	{
-		sel -= fullMenuPageHeight;
-
-		if(sel < 0)
-			sel = 0;
-
-		editActive = 0;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kVerticalKeyRepeatRate))
-	{
-		sel += fullMenuPageHeight;
-
-		if(sel >= total)
-			sel = total - 1;
-
-		editActive = 0;
-	}
-
 	if(input_ui_pressed(IPT_UI_SELECT))
 	{
 		if(editActive)
@@ -4699,22 +4659,6 @@ static int DoSearchMenuClassic(struct mame_bitmap * bitmap, int selection, int s
 		sel--;
 
 		if(sel < 0)
-			sel = total - 1;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kVerticalKeyRepeatRate))
-	{
-		sel -= fullMenuPageHeight;
-
-		if(sel < 0)
-			sel = 0;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kVerticalKeyRepeatRate))
-	{
-		sel += fullMenuPageHeight;
-
-		if(sel >= total)
 			sel = total - 1;
 	}
 
@@ -5093,22 +5037,6 @@ static int DoSearchMenu(struct mame_bitmap * bitmap, int selection, int startNew
 			sel = total - 1;
 	}
 
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kVerticalKeyRepeatRate))
-	{
-		sel -= fullMenuPageHeight;
-
-		if(sel < 0)
-			sel = 0;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kVerticalKeyRepeatRate))
-	{
-		sel += fullMenuPageHeight;
-
-		if(sel >= total)
-			sel = total - 1;
-	}
-
 	if(UIPressedRepeatThrottle(IPT_UI_LEFT, kHorizontalFastKeyRepeatRate))
 	{
 		switch(sel)
@@ -5384,22 +5312,6 @@ static int AddEditCheatMenu(struct mame_bitmap * bitmap, int selection)
 			sel = total - 1;
 	}
 
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kVerticalKeyRepeatRate))
-	{
-		sel -= fullMenuPageHeight;
-
-		if(sel < 0)
-			sel = 0;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kVerticalKeyRepeatRate))
-	{
-		sel += fullMenuPageHeight;
-
-		if(sel >= total)
-			sel = total - 1;
-	}
-
 	if(sel < (total - 1))
 		entry = &cheatList[sel];
 	else
@@ -5665,16 +5577,6 @@ static int ViewSearchResults(struct mame_bitmap * bitmap, int selection, int fir
 		}
 	}
 
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kHorizontalFastKeyRepeatRate))
-	{
-		goToPrevPage = 1;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kHorizontalFastKeyRepeatRate))
-	{
-		goToNextPage = 1;
-	}
-
 	if(goToNextPage)
 	{
 		search->currentResultsPage++;
@@ -5880,22 +5782,6 @@ static int ChooseWatch(struct mame_bitmap * bitmap, int selection)
 		sel--;
 
 		if(sel < 0)
-			sel = total - 1;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kVerticalKeyRepeatRate))
-	{
-		sel -= fullMenuPageHeight;
-
-		if(sel < 0)
-			sel = 0;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kVerticalKeyRepeatRate))
-	{
-		sel += fullMenuPageHeight;
-
-		if(sel >= total)
 			sel = total - 1;
 	}
 
@@ -6371,26 +6257,6 @@ static int EditWatch(struct mame_bitmap * bitmap, WatchInfo * entry, int selecti
 		editActive = 0;
 	}
 
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kVerticalKeyRepeatRate))
-	{
-		sel -= fullMenuPageHeight;
-
-		if(sel < 0)
-			sel = 0;
-
-		editActive = 0;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kVerticalKeyRepeatRate))
-	{
-		sel += fullMenuPageHeight;
-
-		if(sel >= total)
-			sel = total - 1;
-
-		editActive = 0;
-	}
-
 	if(input_ui_pressed(IPT_UI_SELECT))
 	{
 		if(editActive)
@@ -6586,22 +6452,6 @@ static int SelectSearchRegions(struct mame_bitmap * bitmap, int selection, Searc
 			sel = total - 1;
 	}
 
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kVerticalKeyRepeatRate))
-	{
-		sel -= fullMenuPageHeight;
-
-		if(sel < 0)
-			sel = 0;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kVerticalKeyRepeatRate))
-	{
-		sel += fullMenuPageHeight;
-
-		if(sel >= total)
-			sel = total - 1;
-	}
-
 	if(UIPressedRepeatThrottle(IPT_UI_LEFT, kHorizontalSlowKeyRepeatRate))
 	{
 		if(sel < search->regionListLength)
@@ -6749,22 +6599,6 @@ static int SelectSearch(struct mame_bitmap * bitmap, int selection)
 		sel--;
 
 		if(sel < 0)
-			sel = total - 1;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_UP, kVerticalKeyRepeatRate))
-	{
-		sel -= fullMenuPageHeight;
-
-		if(sel < 0)
-			sel = 0;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_DOWN, kVerticalKeyRepeatRate))
-	{
-		sel += fullMenuPageHeight;
-
-		if(sel >= total)
 			sel = total - 1;
 	}
 
@@ -10415,4 +10249,3 @@ static void BuildCPUInfoList(void)
 		}
 	}
 }
-
