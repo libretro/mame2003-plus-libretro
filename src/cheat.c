@@ -5637,22 +5637,6 @@ static int ViewSearchResults(struct mame_bitmap * bitmap, int selection, int fir
 		}
 	}
 
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_LEFT, kVerticalKeyRepeatRate))
-	{
-		search->currentRegionIdx--;
-
-		if(search->currentRegionIdx < 0)
-			search->currentRegionIdx = search->regionListLength - 1;
-	}
-
-	if(UIPressedRepeatThrottle(IPT_UI_PAN_RIGHT, kVerticalKeyRepeatRate))
-	{
-		search->currentRegionIdx++;
-
-		if(search->currentRegionIdx >= search->regionListLength)
-			search->currentRegionIdx = 0;
-	}
-
 	if(selectedAddressGood)
 	{
 		if(input_ui_pressed(IPT_UI_SAVE_CHEAT))
