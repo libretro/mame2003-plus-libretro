@@ -143,8 +143,8 @@ struct ipd inputport_defaults[] =
 {
 	{ IPT_UI_CONFIGURE,         "Config Menu",			SEQ_DEF_3(KEYCODE_TAB, CODE_OR, JOYCODE_1_BUTTON8) },
 	{ IPT_UI_ON_SCREEN_DISPLAY, "On Screen Display",	SEQ_DEF_1(KEYCODE_TILDE) },
-	{ IPT_UI_RESET_MACHINE,     "Reset Game",			},
-	{ IPT_UI_SHOW_GFX,          "Show Gfx",				},
+	{ IPT_UI_RESET_MACHINE,     "Reset Game",			CODE_NONE },
+	{ IPT_UI_SHOW_GFX,          "Show Gfx",				CODE_NONE },
 #ifdef MESS
 	{ IPT_UI_TOGGLE_UI,         "UI Toggle",			SEQ_DEF_1(KEYCODE_SCRLOCK) },
 #endif
