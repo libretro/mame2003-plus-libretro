@@ -143,17 +143,11 @@ struct ipd inputport_defaults[] =
 {
 	{ IPT_UI_CONFIGURE,         "Config Menu",			SEQ_DEF_3(KEYCODE_TAB, CODE_OR, JOYCODE_1_BUTTON8) },
 	{ IPT_UI_ON_SCREEN_DISPLAY, "On Screen Display",	SEQ_DEF_1(KEYCODE_TILDE) },
-	{ IPT_UI_RESET_MACHINE,     "Reset Game",			SEQ_DEF_1(KEYCODE_F3) },
-	{ IPT_UI_SHOW_GFX,          "Show Gfx",				SEQ_DEF_1(KEYCODE_F4) },
-	{ IPT_UI_FRAMESKIP_DEC,     "Frameskip Dec",		SEQ_DEF_1(KEYCODE_F8) },
-	{ IPT_UI_FRAMESKIP_INC,     "Frameskip Inc",		SEQ_DEF_1(KEYCODE_F9) },
-	{ IPT_UI_THROTTLE,          "Throttle",				SEQ_DEF_1(KEYCODE_F10) },
-	{ IPT_UI_SHOW_FPS,          "Show FPS",				SEQ_DEF_5(KEYCODE_F11, CODE_NOT, KEYCODE_LCONTROL, CODE_NOT, KEYCODE_LSHIFT) },
-	{ IPT_UI_SHOW_PROFILER,     "Show Profiler",		SEQ_DEF_2(KEYCODE_F11, KEYCODE_LSHIFT) },
+	{ IPT_UI_RESET_MACHINE,     "Reset Game",			},
+	{ IPT_UI_SHOW_GFX,          "Show Gfx",				},
 #ifdef MESS
 	{ IPT_UI_TOGGLE_UI,         "UI Toggle",			SEQ_DEF_1(KEYCODE_SCRLOCK) },
 #endif
-	{ IPT_UI_SNAPSHOT,          "Save Snapshot",		SEQ_DEF_1(KEYCODE_F12) },
 	{ IPT_UI_TOGGLE_CHEAT,      "Toggle Cheat",			SEQ_DEF_1(KEYCODE_F6) },
 	{ IPT_UI_UP,                "UI Up",				SEQ_DEF_3(KEYCODE_UP, CODE_OR, JOYCODE_1_UP) },
 	{ IPT_UI_DOWN,              "UI Down",				SEQ_DEF_3(KEYCODE_DOWN, CODE_OR, JOYCODE_1_DOWN) },
@@ -165,7 +159,6 @@ struct ipd inputport_defaults[] =
 	{ IPT_UI_PAN_DOWN,          "Pan Down",				SEQ_DEF_3(KEYCODE_PGDN, CODE_NOT, KEYCODE_LSHIFT) },
 	{ IPT_UI_PAN_LEFT,          "Pan Left",				SEQ_DEF_2(KEYCODE_PGUP, KEYCODE_LSHIFT) },
 	{ IPT_UI_PAN_RIGHT,         "Pan Right",			SEQ_DEF_2(KEYCODE_PGDN, KEYCODE_LSHIFT) },
-	{ IPT_UI_TOGGLE_DEBUG,      "Toggle Debugger",		SEQ_DEF_1(KEYCODE_F5) },
 	{ IPT_UI_ADD_CHEAT,			"Add Cheat",			SEQ_DEF_1(KEYCODE_A) },
 	{ IPT_UI_DELETE_CHEAT,		"Delete Cheat",			SEQ_DEF_1(KEYCODE_D) },
 	{ IPT_UI_SAVE_CHEAT,		"Save Cheat",			SEQ_DEF_1(KEYCODE_S) },
