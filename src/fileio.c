@@ -5,7 +5,6 @@
 ***************************************************************************/
 
 #include <zlib.h>
-#include <stdio.h>
 
 #include <assert.h>
 #include "driver.h"
@@ -610,7 +609,6 @@ char *mame_fgets(char *s, int n, mame_file *file)
 		*cur++ = 0;
 	return s;
 }
-
 
 /***************************************************************************
 	mame_feof
