@@ -4,6 +4,7 @@ INCFLAGS := -I$(CORE_DIR) \
 				-I$(CORE_DIR)/includes \
 				-I$(CORE_DIR)/libretro \
 				-I$(CORE_DIR)/libretro/includes/zlib \
+				-I$(CORE_DIR)/blobs \
 				-I$(CORE_DIR)/cpu/m68000
 
 ifneq (,$(findstring msvc2003,$(platform)))

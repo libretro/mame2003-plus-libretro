@@ -61,6 +61,19 @@ ifeq ($(ARCH), x86)
 	X86_MIPS3_DRC = 1
 endif
 
+#COMPILE_BIN2C = 1
+COMPILE_BIN2C = 0
+
+ifeq ($(COMPILE_BIN2C),1)
+# compile bin2c
+	DUMMY_RESULT:=$(shell mkdir -p ./metadata/compiled)
+	DUMMY_RESULT:=$(shell gcc -o bin2c deps/bin2c/bin2c.c)
+# compile hiscore.dat into a c header file for the freshest possible version  
+	DUMMY_RESULT:=$(shell ./bin2c ./metadata/hiscore.dat ./metadata/compiled/hiscore_dat.h hiscoredat)
+endif
+# (otherwise we fall back to a precompiled hiscore_dat.h from the github repo)
+
+
 LIBS :=
 
 ifeq (,$(findstring msvc,$(platform)))
@@ -216,6 +229,7 @@ else ifeq ($(platform), ps3)
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
    STATIC_LINKING = 1
+   SPLIT_UP_LINK=1   
 else ifeq ($(platform), sncps3)
    TARGET = $(TARGET_NAME)_libretro_ps3.a
    BIGENDIAN = 1
@@ -497,7 +511,7 @@ $(OBJ)/%.a:
 	@echo Archiving $@...
 	$(RM) $@
 	$(AR) cr $@ $^
-
+    
 clean:
 ifeq ($(SPLIT_UP_LINK), 1)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
