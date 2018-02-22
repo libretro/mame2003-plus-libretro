@@ -10,8 +10,6 @@
 #define FILEIO_H
 
 #include <stdarg.h>
-#include <stdio.h>
-
 #include "osdepend.h"
 #include "hash.h"
 
