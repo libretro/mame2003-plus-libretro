@@ -63,7 +63,8 @@ endif
 
 #COMPILE_BIN2C = 1
 COMPILE_BIN2C = 0
-
+# eventually it would be good to compile hiscore.dat into hiscore_dat.h
+# as part of the automated build process, but that's not in place yet
 ifeq ($(COMPILE_BIN2C),1)
 # compile bin2c
 	DUMMY_RESULT:=$(shell mkdir -p ./metadata/compiled)
