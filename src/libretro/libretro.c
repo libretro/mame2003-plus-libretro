@@ -43,6 +43,7 @@ unsigned skip_disclaimer = 0;
 unsigned skip_warnings = 0;
 unsigned samples = 0;
 unsigned cheats = 0;
+unsigned use_external_hiscore = 0;
 unsigned dial_share_xy = 0;
 unsigned mouse_device = 0;
 unsigned rstick_to_btns = 0;
@@ -94,6 +95,7 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-samples", "Samples; enabled|disabled" },
       { "mame2003-sample_rate", "Sample Rate (Hz); 48000|8000|11025|22050|44100" },
       { "mame2003-cheats", "Cheats; disabled|enabled" },
+      { "mame2003-external_hiscore", "Use external hiscore.dat; disabled|enabled" },      
       { "mame2003-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
 #if defined(__IOS__)
       { "mame2003-mouse_device", "Mouse Device; pointer|mouse|disabled" },
@@ -273,6 +275,19 @@ static void update_variables(void)
    }
    else
       cheats = 0;
+  
+   var.value = NULL;
+   var.key = "mame2003-external_hiscore";
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         use_external_hiscore = 1;
+      else
+         use_external_hiscore = 0;
+   }
+   else
+      use_external_hiscore = 0;  
 
     var.value = NULL;
     var.key = "mame2003-dialsharexy";
@@ -560,6 +575,8 @@ bool retro_load_game(const struct retro_game_info *game)
             { 0, 0, 0, 0, NULL }
             };
 
+        environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+            
         fallbackDir = strdup(game->path);
         
         /* Get system directory from frontend */
@@ -601,9 +618,7 @@ bool retro_load_game(const struct retro_game_info *game)
         options.skip_disclaimer = skip_disclaimer;
         options.skip_warnings = skip_warnings;
         options.use_samples = samples;
-        options.cheat = cheats;
-
-        environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+        options.cheat = cheats;     
 
         // Boot the emulator
         return run_game(driverIndex) == 0;

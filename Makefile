@@ -3,6 +3,7 @@ DEBUGGER=0
 SPLIT_UP_LINK=0
 CORE_DIR := src
 TARGET_NAME := mame2003
+BUILD_BIN2C ?= 1
 
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
@@ -10,20 +11,20 @@ ifneq ($(GIT_VERSION)," unknown")
 endif
 
 ifeq ($(platform),)
-system_platform = unix
-platform = unix
+	system_platform = unix
+	platform = unix   
 ifeq ($(shell uname -a),)
-   system_platform = win
-   platform = win
+	system_platform = win
+	platform = win
 else ifneq ($(findstring MINGW,$(shell uname -a)),)
-   system_platform = win
-   platform = win
+	system_platform = win
+	platform = win
 else ifneq ($(findstring Darwin,$(shell uname -a)),)
-   system_platform = osx
-   platform = osx
+	system_platform = osx
+	platform = osx
 else ifneq ($(findstring win,$(shell uname -a)),)
-   system_platform = win
-   platform = win
+	system_platform = win
+	platform = win
 endif
 endif
 
@@ -61,20 +62,6 @@ ifeq ($(ARCH), x86)
 	X86_MIPS3_DRC = 1
 endif
 
-#COMPILE_BIN2C = 1
-COMPILE_BIN2C = 0
-# eventually it would be good to compile hiscore.dat into hiscore_dat.h
-# as part of the automated build process, but that's not in place yet
-ifeq ($(COMPILE_BIN2C),1)
-# compile bin2c
-	DUMMY_RESULT:=$(shell mkdir -p ./metadata/compiled)
-	DUMMY_RESULT:=$(shell gcc -o bin2c deps/bin2c/bin2c.c)
-# compile hiscore.dat into a c header file for the freshest possible version  
-	DUMMY_RESULT:=$(shell ./bin2c ./metadata/hiscore.dat ./metadata/compiled/hiscore_dat.h hiscoredat)
-endif
-# (otherwise we fall back to a precompiled hiscore_dat.h from the github repo)
-
-
 LIBS :=
 
 ifeq (,$(findstring msvc,$(platform)))
@@ -92,7 +79,6 @@ ifeq ($(platform), unix)
    CFLAGS += $(fpic)
    PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
-
 else ifeq ($(platform), linux-portable)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC -nostdlib
@@ -101,7 +87,6 @@ else ifeq ($(platform), linux-portable)
    PLATCFLAGS += -Dstricmp=strcasecmp
 	LIBS =
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
-
 else ifeq ($(platform), osx)
    TARGET = $(TARGET_NAME)_libretro.dylib
    fpic = -fPIC
@@ -122,7 +107,6 @@ else ifneq (,$(findstring ios,$(platform)))
    CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
    PLATCFLAGS += -D__IOS__
-
 ifeq ($(IOSSDK),)
    IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
 endif
@@ -478,6 +462,17 @@ else
 	LD = $(CC)
 endif
 
+ifeq ($(BUILD_BIN2C),1)
+# compile bin2c
+$(info creating bin2c working folder and compiling bin2c executable tool...)
+	DUMMY_RESULT:=$(shell mkdir -p ./precompile)
+	DUMMY_RESULT:=$(shell gcc -o ./precompile/bin2c deps/bin2c/bin2c.c)
+# compile hiscore.dat into a fresh header file for embedding
+	DUMMY_RESULT:=$(shell ./precompile/bin2c ./metadata/hiscore.dat ./precompile/hiscore_dat.h hiscoredat)
+else
+$(info echo BUILD_BIN2C == 0 - fall back to a precompiled hiscore_dat.h from the github repo)
+endif
+
 define NEWLINE
 
 
@@ -514,12 +509,14 @@ $(OBJ)/%.a:
 	$(AR) cr $@ $^
     
 clean:
+ifeq ($(BUILD_BIN2C), 1)
+	@echo Deleting bin2c working folder...
+	rm -fr precompile
+endif    
 ifeq ($(SPLIT_UP_LINK), 1)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
 	rm -f @$@.in $(TARGET)
 	@rm $@.in
-	rm -f $(OBJECTS) $(TARGET)
-else
-	rm -f $(OBJECTS) $(TARGET)
 endif
+	rm -f $(OBJECTS) $(TARGET)

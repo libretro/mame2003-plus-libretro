@@ -18,8 +18,10 @@
 #include "drawgfx.h"
 #include "palette.h"
 
-extern int gbPriorityBitmapIsDirty;
 
+extern int gbPriorityBitmapIsDirty;
+extern retro_log_printf_t log_cb;
+extern retro_environment_t environ_cb;
 
 
 /***************************************************************************
@@ -27,6 +29,8 @@ extern int gbPriorityBitmapIsDirty;
 	Parameters
 
 ***************************************************************************/
+
+#define FRAMES_PER_FPS_UPDATE		12
 
 #define MAX_GFX_ELEMENTS 32
 #define MAX_MEMORY_REGIONS 32
