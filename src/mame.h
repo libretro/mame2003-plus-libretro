@@ -22,6 +22,7 @@
 extern int gbPriorityBitmapIsDirty;
 extern retro_log_printf_t log_cb;
 extern retro_environment_t environ_cb;
+extern unsigned vector_resolution_multiplier;
 
 
 /***************************************************************************

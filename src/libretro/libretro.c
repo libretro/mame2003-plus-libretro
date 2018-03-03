@@ -41,14 +41,13 @@ int sample_rate;
 extern int frameskip;
 unsigned skip_disclaimer = 0;
 unsigned skip_warnings = 0;
-unsigned samples = 0;
-unsigned cheats = 0;
 unsigned use_external_hiscore = 0;
 unsigned dial_share_xy = 0;
 unsigned mouse_device = 0;
 unsigned rstick_to_btns = 0;
 unsigned tate_mode = 0;
 unsigned skip_rom_verify = 0;
+unsigned vector_resolution_multiplier = 1;
 extern int crosshair_enable;
 
 #if defined(__CELLOS_LV2__) || defined(GEKKO) || defined(_XBOX)
@@ -91,11 +90,8 @@ void retro_set_environment(retro_environment_t cb)
          "MK2/MK3 DCS Speedhack; enabled|disabled"
 #endif
       },
-      { "mame2003-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
       { "mame2003-skip_warnings", "Skip Warnings; disabled|enabled" },
-      { "mame2003-samples", "Samples; enabled|disabled" },
       { "mame2003-sample_rate", "Sample Rate (Hz); 48000|8000|11025|22050|44100" },
-      { "mame2003-cheats", "Cheats; disabled|enabled" },
       { "mame2003-external_hiscore", "Use external hiscore.dat; disabled|enabled" },      
       { "mame2003-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
 #if defined(__IOS__)
@@ -106,6 +102,8 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
       { "mame2003-rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
       { "mame2003-tate_mode", "TATE Mode; disabled|enabled" },
+      { "mame2003-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification; disabled|enabled" }, 
+      { "mame2003-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier; 1|2|3|4|5|6" },      
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -216,19 +214,6 @@ static void update_variables(void)
       activate_dcs_speedhack = 0;
    
    var.value = NULL;
-   var.key = "mame2003-skip_disclaimer";
-   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         skip_disclaimer = 1;
-      else
-         skip_disclaimer = 0;
-   }
-   else
-      skip_disclaimer = 0;
-
-   var.value = NULL;
    var.key = "mame2003-skip_warnings";
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
@@ -241,18 +226,6 @@ static void update_variables(void)
    else
       skip_warnings = 0;
 
-   var.value = NULL;
-   var.key = "mame2003-samples";
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         samples = 1;
-      else
-         samples = 0;
-   }
-   else
-      samples = 0;
    
    var.value = NULL;
    var.key = "mame2003-sample_rate";
@@ -264,18 +237,6 @@ static void update_variables(void)
    else
       sample_rate = 48000;
    
-   var.value = NULL;
-   var.key = "mame2003-cheats";
-   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         cheats = 1;
-      else
-         cheats = 0;
-   }
-   else
-      cheats = 0;
   
    var.value = NULL;
    var.key = "mame2003-external_hiscore";
@@ -370,6 +331,12 @@ static void update_variables(void)
    else
       skip_rom_verify = 0;  
 
+   var.value = NULL;
+   var.key = "mame2003-vector-resolution-multiplier";
+   
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+      vector_resolution_multiplier = atoi(var.value);  
+  
    {
        struct retro_led_interface ledintf;
        ledintf.set_led_state = NULL;
@@ -628,10 +595,11 @@ bool retro_load_game(const struct retro_game_info *game)
         options.samplerate = sample_rate;
         options.ui_orientation = uiModes[rotateMode];
         options.vector_intensity = 1.5f;
-        options.skip_disclaimer = skip_disclaimer;
+        //options.antialias = 1; // why does this crash mame2003?
+        options.skip_disclaimer = 1;
         options.skip_warnings = skip_warnings;
-        options.use_samples = samples;
-        options.cheat = cheats;     
+        options.use_samples = 1;
+        options.cheat = 1;
 
         // Boot the emulator
         return run_game(driverIndex) == 0;
