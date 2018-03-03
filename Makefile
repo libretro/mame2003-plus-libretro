@@ -462,8 +462,6 @@ else
 	LD = $(CC)
 endif
 
-DUMMY_RESULT:=$(shell echo testing 123)
-
 ifeq ($(BUILD_BIN2C),1)
 # compile bin2c
 $(info creating bin2c working folder and compiling bin2c executable tool...)
