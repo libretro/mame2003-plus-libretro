@@ -26,7 +26,7 @@ MAME 2003 also supports one or two spinners/dials via the "Share 2 player dial c
 /libretro system dir/mame2003/history.dat
 ```
 
-* hiscore metadata is built into mame2003 and enabled by default. Upon changing mame2003's core setting place an external `hiscore.dat` at this location: `/libretro system dir/mame2003/hiscore.dat`
+* hiscore metadata is built into mame2003 and enabled by default, however external highscore data can also be used. Enabled the external hiscore metadata feature in the mame2003 core settings and place `hiscore.dat` at this location: `/libretro system dir/mame2003/hiscore.dat`
 
 * User-generated content is placed in sub-directories within `/libretro savefile dir/mame2003/` e.g.:
 ```
