@@ -105,7 +105,7 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-tate_mode", "TATE Mode; disabled|enabled" },
       { "mame2003-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification; disabled|enabled" }, 
       { "mame2003-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier; 1|2|3|4|5|6" },      
-      { "mame2003-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },      
+//      { "mame2003-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },      
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -339,6 +339,7 @@ static void update_variables(void)
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
       vector_resolution_multiplier = atoi(var.value);  
 
+/* 
    var.value = NULL;
    var.key = "mame2003-vector-antialias";
    
@@ -351,7 +352,9 @@ static void update_variables(void)
    }
    else
       vector_antialias = 0;  
-  
+*/  
+    vector_antialias = 0;
+    
    {
        struct retro_led_interface ledintf;
        ledintf.set_led_state = NULL;
