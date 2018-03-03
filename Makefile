@@ -511,7 +511,7 @@ $(OBJ)/%.a:
 	$(AR) cr $@ $^
     
 clean:
-ifeq ($(COMPILE_BIN2C), 1)
+ifeq ($(BUILD_BIN2C), 1)
 	@echo Deleting bin2c working folder...
 	rm -fr precompile
 endif    
