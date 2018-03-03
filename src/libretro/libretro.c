@@ -48,6 +48,7 @@ unsigned dial_share_xy = 0;
 unsigned mouse_device = 0;
 unsigned rstick_to_btns = 0;
 unsigned tate_mode = 0;
+unsigned skip_rom_verify = 0;
 extern int crosshair_enable;
 
 #if defined(__CELLOS_LV2__) || defined(GEKKO) || defined(_XBOX)
@@ -356,6 +357,18 @@ static void update_variables(void)
    else
       tate_mode = 0;
 
+   var.value = NULL;
+   var.key = "mame2003-skip-rom-verify";
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "enabled") == 1)
+         skip_rom_verify = 1;
+      else
+         skip_rom_verify = 0;
+   }
+   else
+      skip_rom_verify = 0;  
 
    {
        struct retro_led_interface ledintf;
