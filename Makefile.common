@@ -6,6 +6,12 @@ INCFLAGS := -I$(CORE_DIR) \
 				-I$(CORE_DIR)/libretro/includes/zlib \
 				-I$(CORE_DIR)/cpu/m68000
 
+ifeq ($(COMPILE_BIN2C), 1)
+INCFLAGS += -Iprecompile
+else
+INCFLAGS += -Imetadata/compiled
+endif
+
 ifneq (,$(findstring msvc2003,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
 endif
