@@ -344,7 +344,7 @@ static void update_variables(void)
    
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
-      if(strcmp(var.value, "enabled") == 1)
+      if(strcmp(var.value, "enabled") == 0)
          vector_antialias = 1;
       else
          vector_antialias = 0;
