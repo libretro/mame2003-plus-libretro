@@ -610,7 +610,12 @@ bool retro_load_game(const struct retro_game_info *game)
         options.samplerate = sample_rate;
         options.ui_orientation = uiModes[rotateMode];
         options.vector_intensity = 1.5f;
-        options.antialias = (vector_antialias ? 1 : 0);
+        
+        if(vector_antialias)
+            options.antialias = 1;
+        else
+            options.antialias = 0;
+        
         options.skip_disclaimer = 1;
         options.skip_warnings = skip_warnings;
         options.use_samples = 1;
