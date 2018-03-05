@@ -105,7 +105,7 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-tate_mode", "TATE Mode; disabled|enabled" },
       { "mame2003-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification; disabled|enabled" }, 
       { "mame2003-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier; 1|2|3|4|5|6" },      
-      { "mame2003-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled" },*/
+      { "mame2003-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled" },
       { NULL, NULL },
    };
    environ_cb = cb;
