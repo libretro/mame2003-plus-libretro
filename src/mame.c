@@ -693,8 +693,10 @@ static int vh_open(void)
 
 	/* if we're a vector game, override the screen width and height */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
-		scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
-
+    {
+		//scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);       
+       // Hack to avoid segfault: leave vector resolution to its default the first time scale_vectorgames is caused        
+    }
 	/* compute the visible area for raster games */
 	if (!(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR))
 	{
@@ -727,8 +729,13 @@ static int vh_open(void)
 
 	/* the create display process may update the vector width/height, so recompute */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
-		scale_vectorgames(options.vector_width, options.vector_height, &bmwidth, &bmheight);
-
+    {
+        //scale_vectorgames((vector_resolution_multiplier * Machine->drv->screen_width), (vector_resolution_multiplier * Machine->drv->screen_height), &bmwidth, &bmheight);
+        bmwidth = Machine->drv->screen_width * vector_resolution_multiplier;
+        bmheight = Machine->drv->screen_height * vector_resolution_multiplier;
+    }
+    
+    
 	/* now allocate the screen bitmap */
 	Machine->scrbitmap = auto_bitmap_alloc_depth(bmwidth, bmheight, Machine->color_depth);
 	if (!Machine->scrbitmap)
@@ -1010,8 +1017,7 @@ static void scale_vectorgames(int gfx_width, int gfx_height, int *width, int *he
 	*height = (int)((double)*height * scale);
 
 	/* round to the nearest 4 pixel value */
-	*width &= ~3;
-	*height &= ~3;
+
 }
 
 

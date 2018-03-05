@@ -469,8 +469,9 @@ $(info creating bin2c working folder and compiling bin2c executable tool...)
 	DUMMY_RESULT:=$(shell gcc -o ./precompile/bin2c deps/bin2c/bin2c.c)
 # compile hiscore.dat into a fresh header file for embedding
 	DUMMY_RESULT:=$(shell ./precompile/bin2c ./metadata/hiscore.dat ./precompile/hiscore_dat.h hiscoredat)
+    DUMMY_RESULT:=$(shell rm ./precompile/bin2c*)
 else
-$(info echo BUILD_BIN2C == 0 - fall back to a precompiled hiscore_dat.h from the github repo)
+$(info echo BUILD_BIN2C==0 - use the precompiled hiscore_dat.h from the github repo)
 endif
 
 define NEWLINE
@@ -508,11 +509,7 @@ $(OBJ)/%.a:
 	$(RM) $@
 	$(AR) cr $@ $^
     
-clean:
-ifeq ($(BUILD_BIN2C), 1)
-	@echo Deleting bin2c working folder...
-	rm -fr precompile
-endif    
+clean: 
 ifeq ($(SPLIT_UP_LINK), 1)
 	# Use a temporary file to hold the list of objects, as it can exceed windows shell command limits
 	$(file >$@.in,$(OBJECTS))
