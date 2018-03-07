@@ -12,7 +12,7 @@ endif
 
 ifeq ($(platform),)
 	system_platform = unix
-	platform = unix   
+	platform = unix
 ifeq ($(shell uname -a),)
 	system_platform = win
 	platform = win
