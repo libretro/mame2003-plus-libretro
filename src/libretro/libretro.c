@@ -49,6 +49,11 @@ unsigned tate_mode = 0;
 unsigned skip_rom_verify = 0;
 unsigned vector_resolution_multiplier = 1;
 unsigned vector_antialias = 0;
+unsigned vector_translucency = 1;
+unsigned vector_beam_width = 1;
+float vector_flicker = 20.0f;      /* float: vector beam flicker effect control */
+float vector_intensity = 1.5f;     /* float: vector beam intensity */
+
 extern int crosshair_enable;
 
 #if defined(__CELLOS_LV2__) || defined(GEKKO) || defined(_XBOX)
@@ -106,6 +111,10 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification; disabled|enabled" }, 
       { "mame2003-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier; 1|2|3|4|5|6" },      
       { "mame2003-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled" },
+      { "mame2003-vector-translucency", "Vector translucency; enabled|disabled" },
+      { "mame2003-vector-beam-width", "Vector beam width; 1|2|3|4|5" },
+      { "mame2003-vector-flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
+      { "mame2003-vector-intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -350,10 +359,41 @@ static void update_variables(void)
       else
          vector_antialias = 0;
    }
-   else
-      vector_antialias = 0;  
   
-    vector_antialias = 0;
+   var.value = NULL;
+   var.key = "mame2003-vector-translucency";
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         vector_translucency = 1;
+      else 
+         vector_translucency = 0;          
+   }
+  
+   var.value = NULL;
+   var.key = "mame2003-vector-beam-width";
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      vector_beam_width = atoi(var.value);
+   }    
+ 
+   var.value = NULL;
+   var.key = "mame2003-vector-flicker";
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      vector_flicker = atof(var.value);
+   }   
+
+   var.value = NULL;
+   var.key = "mame2003-vector-intensity";
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   {
+      vector_intensity = atof(var.value);
+   }   
     
    {
        struct retro_led_interface ledintf;
@@ -612,12 +652,12 @@ bool retro_load_game(const struct retro_game_info *game)
         // Set all options before starting the game
         options.samplerate = sample_rate;
         options.ui_orientation = uiModes[rotateMode];
-        options.vector_intensity = 1.5f;
         
-        if(vector_antialias)
-            options.antialias = 1;
-        else
-            options.antialias = 0;
+        options.antialias = vector_antialias;        /* integer: 1 to enable antialiasing on vectors */
+        options.translucency = vector_translucency;  /* integer: 1 to enable translucency on vectors */
+        options.beam = vector_beam_width;            /* integer: vector beam width */
+        options.vector_flicker = vector_flicker ;    /* float: vector beam flicker effect control */
+        options.vector_intensity = vector_intensity; /* float: vector beam intensity */
         
         options.skip_disclaimer = 1;
         options.skip_warnings = skip_warnings;
