@@ -1992,6 +1992,7 @@ V-V                           TP-027
 	DRIVER( topsecrt )	/*  3/1987 (c) 1987 (Japan) */
 	DRIVER( 1943 )		/*  6/1987 (c) 1987 (US) */
 	DRIVER( 1943j )		/*  6/1987 (c) 1987 (Japan) */
+	DRIVER( 1943mii )       /*  6/1987 (c) 1987 (US) */
 	DRIVER( blktiger )	/*  8/1987 (c) 1987 (US) */
 	DRIVER( bktigerb )	/* bootleg */
 	DRIVER( blkdrgon )	/*  8/1987 (c) 1987 (Japan) */
