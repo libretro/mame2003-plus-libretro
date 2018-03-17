@@ -68,6 +68,9 @@ Riot
 Progear
 1943 - The Battle Of Midway Mark II
 Double Wings
+Oriental Legend Special
+Puzzle Star
+The Killing Blade
 
 
 
@@ -89,6 +92,7 @@ Street Fighter (With Added Speedups)
 Task Force Harrier
 Thunder Dragon
 Twin Eagle 2
+Photo Y2k
 
 
 Games now with sound or improved sound
@@ -115,6 +119,7 @@ Hacha Mecha Fighter
 Super Spacefortress Macross
 GunNail
 Thunder Dragon
+All PGM (Poly Game Master)
 
 
 Improvements
@@ -143,6 +148,8 @@ Updated the NMK16 driver for many sound and graphical improvements
 Fixed a reset problem after level 3 in Night Slashers
 Enabled breakable backgrounds in 64th street code via BritneysPAIRS
 improved sprite drawing for Gun Force 2
+Added the ICS2115 soundcore for the PGM games
+Updated the PGM driver to MAME105 more games are now playable
 
 
 gamezfan with code additions via iq_132 and BritneysPAIRS.
