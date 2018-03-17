@@ -189,7 +189,7 @@ static void pgm_drawsprites(int priority)
 		int palt = (pgm_sprite_source[2] & 0x1f00) >> 8;
 		int flip = (pgm_sprite_source[2] & 0x6000) >> 13;
 		int boff = ((pgm_sprite_source[2] & 0x007f) << 16) | (pgm_sprite_source[3] & 0xffff);
-		int wide = (pgm_sprite_source[4] & 0xfe00) >> 9;
+		int wide = (pgm_sprite_source[4] & 0x7e00) >> 9;// Killing Blade
 		int high = pgm_sprite_source[4] & 0x01ff;
 		int pri = (pgm_sprite_source[2] & 0x0080) >>  7;
 
