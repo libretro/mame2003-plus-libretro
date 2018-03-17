@@ -5211,8 +5211,10 @@ Other Sun games
 	DRIVER( orlegend )	/* (c) 1997 */
 	DRIVER( orlegnde )	/* (c) 1997 */
 	DRIVER( orlegndc )	/* (c) 1997 */
+	DRIVER( olds )          /* (c) 1998 */
 	DRIVER( olds103t )      /* (c) 1998 */
 	DRIVER( dragwld2 )	/* (c) 1997 */
+	DRIVER( killbld )	/* (c) 1998 */
 	DRIVER( kov )		/* (c) 1999 */
 	DRIVER( kovplus )	/* (c) 1999 */
 	DRIVER( kov115 )	/* (c) 1999 */
