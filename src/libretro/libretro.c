@@ -208,13 +208,13 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-frameskip";
 
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
       frameskip = atoi(var.value);
 
    var.value = NULL;
    var.key = "mame2003-dcs-speedhack";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
          activate_dcs_speedhack = 1;
@@ -227,7 +227,7 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-skip_warnings";
 
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
          skip_warnings = 1;
@@ -236,23 +236,19 @@ static void update_variables(void)
    }
    else
       skip_warnings = 0;
-
    
    var.value = NULL;
    var.key = "mame2003-sample_rate";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-   {
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
       sample_rate = atoi(var.value);
-   }
    else
       sample_rate = 48000;
    
-  
    var.value = NULL;
    var.key = "mame2003-external_hiscore";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
          use_external_hiscore = 1;
@@ -265,7 +261,7 @@ static void update_variables(void)
     var.value = NULL;
     var.key = "mame2003-dialsharexy";
     
-    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
     {
         if(strcmp(var.value, "enabled") == 0)
             dial_share_xy = 1;
@@ -278,7 +274,7 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-mouse_device";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "pointer") == 0)
          mouse_device = RETRO_DEVICE_POINTER;
@@ -293,7 +289,7 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-crosshair_enabled";
 
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
          crosshair_enable = 1;
@@ -306,7 +302,7 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-rstick_to_btns";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
          rstick_to_btns = 1;
@@ -319,7 +315,7 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-tate_mode";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
          tate_mode = 1;
@@ -332,7 +328,7 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-skip-rom-verify";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 1)
          skip_rom_verify = 1;
@@ -345,14 +341,13 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-vector-resolution-multiplier";
    
-    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-      vector_resolution_multiplier = atoi(var.value);  
-
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+      vector_resolution_multiplier = atoi(var.value);
  
    var.value = NULL;
    var.key = "mame2003-vector-antialias";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
          vector_antialias = 1;
@@ -363,7 +358,7 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-vector-translucency";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
          vector_translucency = 1;
@@ -374,15 +369,13 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-vector-beam-width";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-   {
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
       vector_beam_width = atoi(var.value);
-   }    
  
    var.value = NULL;
    var.key = "mame2003-vector-flicker";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       vector_flicker = atof(var.value);
    }   
@@ -390,10 +383,8 @@ static void update_variables(void)
    var.value = NULL;
    var.key = "mame2003-vector-intensity";
    
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-   {
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
       vector_intensity = atof(var.value);
-   }   
     
    {
        struct retro_led_interface ledintf;
