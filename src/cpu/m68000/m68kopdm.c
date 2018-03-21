@@ -23,9 +23,11 @@ void m68k_op_dbf_16(void)
 		REG_PC -= 2;
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		m68ki_branch_16(offset);
+		USE_CYCLES(CYC_DBCC_F_NOEXP);
 		return;
 	}
 	REG_PC += 2;
+	USE_CYCLES(CYC_DBCC_F_EXP);
 }
 
 
@@ -4137,9 +4139,9 @@ void m68k_op_eori_32_al(void)
 }
 
 
-void m68k_op_eori_16_toc(void)
+void m68k_op_eori_8_toc(void)
 {
-	m68ki_set_ccr(m68ki_get_ccr() ^ OPER_I_16());
+	m68ki_set_ccr(m68ki_get_ccr() ^ OPER_I_8());
 }
 
 
