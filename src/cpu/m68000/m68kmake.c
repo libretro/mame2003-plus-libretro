@@ -3,26 +3,30 @@
 /* ======================================================================== */
 /*
  *                                  MUSASHI
- *                                Version 3.3
+ *                                Version 3.4
  *
  * A portable Motorola M680x0 processor emulation engine.
  * Copyright 1998-2001 Karl Stenerud.  All rights reserved.
  *
- * This code may be freely used for non-commercial purposes as long as this
- * copyright notice remains unaltered in the source code and any binary files
- * containing this code in compiled form.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * All other lisencing terms must be negotiated with the author
- * (Karl Stenerud).
- *
- * The latest version of this code can be obtained at:
- * http://kstenerud.cjb.net
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
-/*
- * Modified For OpenVMS By:  Robert Alan Byer
- *                           byer@mail.ourservers.net
- */
 
 
 /* ======================================================================== */
@@ -52,7 +56,7 @@
  */
 
 
-const char* g_version = "3.3";
+char* g_version = "3.3";
 
 /* ======================================================================== */
 /* =============================== INCLUDES =============================== */
@@ -188,8 +192,8 @@ typedef struct
 /* All modifications necessary for a specific EA mode of an instruction */
 typedef struct
 {
-	const char* fname_add;
-	const char* ea_add;
+	char* fname_add;
+	char* ea_add;
 	unsigned int mask_add;
 	unsigned int match_add;
 } ea_info_struct;
@@ -212,8 +216,8 @@ typedef struct
 
 
 /* Function Prototypes */
-void error_exit(const char* fmt, ...);
-void perror_exit(const char* fmt, ...);
+void error_exit(char* fmt, ...);
+void perror_exit(char* fmt, ...);
 int check_strsncpy(char* dst, char* src, int maxlength);
 int check_atoi(char* str, int *result);
 int skip_spaces(char* str);
@@ -224,7 +228,7 @@ int get_oper_cycles(opcode_struct* op, int ea_mode, int cpu_type);
 opcode_struct* find_opcode(char* name, int size, char* spec_proc, char* spec_ea);
 opcode_struct* find_illegal_opcode(void);
 int extract_opcode_info(char* src, char* name, int* size, char* spec_proc, char* spec_ea);
-void add_replace_string(replace_struct* replace, const char* search_str, const char* replace_str);
+void add_replace_string(replace_struct* replace, char* search_str, char* replace_str);
 void write_body(FILE* filep, body_struct* body, replace_struct* replace);
 void get_base_name(char* base_name, opcode_struct* op);
 void write_prototype(FILE* filep, char* base_name);
@@ -286,7 +290,7 @@ ea_info_struct g_ea_info_table[13] =
 };
 
 
-const char* g_cc_table[16][2] =
+char* g_cc_table[16][2] =
 {
 	{ "t",  "T"}, /* 0000 */
 	{ "f",  "F"}, /* 0001 */
@@ -343,7 +347,7 @@ int g_jmp_cycle_table[13] =
 	 0, /* EA_MODE_PD   */
 	 0, /* EA_MODE_PD7  */
 	 6, /* EA_MODE_DI   */
-	 8, /* EA_MODE_IX   */
+	 10, /* EA_MODE_IX   */
 	 6, /* EA_MODE_AW   */
 	 8, /* EA_MODE_AL   */
 	 6, /* EA_MODE_PCDI */
@@ -391,7 +395,7 @@ int g_lea_cycle_table[13] =
 int g_pea_cycle_table[13] =
 {
 	 0, /* EA_MODE_NONE */
-	 4, /* EA_MODE_AI   */
+	 6, /* EA_MODE_AI   */
 	 0, /* EA_MODE_PI   */
 	 0, /* EA_MODE_PI7  */
 	 0, /* EA_MODE_PD   */
@@ -448,7 +452,7 @@ int g_clr_cycle_table[13][3] =
 /* ======================================================================== */
 
 /* Print an error message and exit with status error */
-void error_exit(const char* fmt, ...)
+void error_exit(char* fmt, ...)
 {
 	va_list args;
 	fprintf(stderr, "In %s, near or on line %d:\n\t", g_input_filename, g_line_number);
@@ -468,7 +472,7 @@ void error_exit(const char* fmt, ...)
 }
 
 /* Print an error message, call perror(), and exit with status error */
-void perror_exit(const char* fmt, ...)
+void perror_exit(char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -705,7 +709,7 @@ int extract_opcode_info(char* src, char* name, int* size, char* spec_proc, char*
 
 
 /* Add a search/replace pair to a replace structure */
-void add_replace_string(replace_struct* replace, const char* search_str, const char* replace_str)
+void add_replace_string(replace_struct* replace, char* search_str, char* replace_str)
 {
 	if(replace->length >= MAX_REPLACE_LENGTH)
 		error_exit("overflow in replace structure");
@@ -1246,44 +1250,11 @@ int main(int argc, char **argv)
 
 		for(ptr = strchr(output_path, '\\'); ptr; ptr = strchr(ptr, '\\'))
 			*ptr = '/';
-
-#if !(defined(__DECC) && defined(VMS))
         if(output_path[strlen(output_path)-1] != '/')
 			strcat(output_path, "/");
-#endif
-
 		if(argc > 2)
 			strcpy(g_input_filename, argv[2]);
 	}
-
-
-#if defined(__DECC) && defined(VMS)
-
-	/* Open the files we need */
-	sprintf(filename, "%s%s", output_path, FILENAME_PROTOTYPE);
-	if((g_prototype_file = fopen(filename, "w")) == NULL)
-		perror_exit("Unable to create prototype file (%s)\n", filename);
-
-	sprintf(filename, "%s%s", output_path, FILENAME_TABLE);
-	if((g_table_file = fopen(filename, "w")) == NULL)
-		perror_exit("Unable to create table file (%s)\n", filename);
-
-	sprintf(filename, "%s%s", output_path, FILENAME_OPS_AC);
-	if((g_ops_ac_file = fopen(filename, "w")) == NULL)
-		perror_exit("Unable to create ops ac file (%s)\n", filename);
-
-	sprintf(filename, "%s%s", output_path, FILENAME_OPS_DM);
-	if((g_ops_dm_file = fopen(filename, "w")) == NULL)
-		perror_exit("Unable to create ops dm file (%s)\n", filename);
-
-	sprintf(filename, "%s%s", output_path, FILENAME_OPS_NZ);
-	if((g_ops_nz_file = fopen(filename, "w")) == NULL)
-		perror_exit("Unable to create ops nz file (%s)\n", filename);
-
-	if((g_input_file=fopen(g_input_filename, "r")) == NULL)
-		perror_exit("can't open %s for input", g_input_filename);
-
-#else
 
 
 	/* Open the files we need */
@@ -1310,7 +1281,6 @@ int main(int argc, char **argv)
 	if((g_input_file=fopen(g_input_filename, "rt")) == NULL)
 		perror_exit("can't open %s for input", g_input_filename);
 
-#endif
 
 	/* Get to the first section of the input file */
 	section_id[0] = 0;
