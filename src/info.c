@@ -816,6 +816,8 @@ static void print_game_driver(int OUTPUT_XML, FILE* out, const struct GameDriver
 	fprintf(out, SELECT(L1P "driver" L2B, "\t\t<driver"));
 	if (game->flags & GAME_NOT_WORKING)
 		fprintf(out, SELECT(L2P "status preliminary" L2N, " status=\"preliminary\""));
+	else if (game->flags & GAME_UNEMULATED_PROTECTION)
+		fprintf(out, SELECT(L2P "protection" L2N, " status=\"protection\""));
 	else
 		fprintf(out, SELECT(L2P "status good" L2N, " status=\"good\""));
 
