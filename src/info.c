@@ -5,6 +5,7 @@
 #include "info.h"
 #include "hash.h"
 #include "datafile.h"
+#include "fileio.h"
 
 /* Format */
 #define SELECT(a,b) (OUTPUT_XML ? (b) : (a))

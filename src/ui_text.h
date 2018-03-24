@@ -84,6 +84,7 @@ enum
 	UI_gameinfo,
 	UI_history,
 	UI_resetgame,
+    UI_generate_xml_dat,
 	UI_returntogame,
 	UI_cheat,
 	UI_memorycard,

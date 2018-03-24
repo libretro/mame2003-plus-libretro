@@ -15,6 +15,8 @@
 #include <stdarg.h>
 #include <math.h>
 #include "ui_text.h"
+#include "fileio.h"
+#include "libretro.h"
 
 #ifdef MESS
   #include "mess.h"
@@ -3047,11 +3049,11 @@ int memcard_menu(struct mame_bitmap *bitmap, int selection)
 #ifndef MESS
 enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_ANALOG,UI_CALIBRATE,
 		UI_STATS,UI_GAMEINFO, UI_HISTORY,
-		UI_CHEAT,UI_RESET,UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT };
+		UI_CHEAT,UI_RESET,UI_GENERATE_XML_DAT, UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT };
 #else
 enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_ANALOG,UI_CALIBRATE,
 		UI_GAMEINFO, UI_IMAGEINFO,UI_FILEMANAGER,UI_TAPECONTROL,
-		UI_HISTORY,UI_CHEAT,UI_RESET,UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT,
+		UI_HISTORY,UI_CHEAT,UI_RESET,UI_GENERATE_XML_DAT,UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT,
 		UI_CONFIGURATION };
 #endif
 
@@ -3173,6 +3175,7 @@ static void setup_menu_init(void)
 #endif
 
 	menu_item[menu_total] = ui_getstring (UI_resetgame); menu_action[menu_total++] = UI_RESET;
+    menu_item[menu_total] = ui_getstring (UI_generate_xml_dat); menu_action[menu_total++] = UI_GENERATE_XML_DAT;
 	menu_item[menu_total] = ui_getstring (UI_returntogame); menu_action[menu_total++] = UI_EXIT;
 	menu_item[menu_total] = 0; /* terminate array */
 }
@@ -3307,6 +3310,10 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 			case UI_RESET:
 				machine_reset();
 				break;
+            
+            case UI_GENERATE_XML_DAT:
+                generate_xml_dat();
+                break;
 
 			case UI_EXIT:
 				menu_lastselected = 0;
@@ -3330,6 +3337,26 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 	return sel + 1;
 }
 
+struct _osd_file
+{
+	FILE* file;
+};
+
+void generate_xml_dat()
+{
+ 	int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   
+    osd_file *xml_dat_osd = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w");
+    FILE *xml_dat = xml_dat_osd->file;
+   
+    if (xml_dat == NULL)
+        log_cb(RETRO_LOG_ERROR, "Unable to open mame2003.xml for writing.\n");
+	else 
+	{
+	 	log_cb(RETRO_LOG_INFO, "Generating mame2003.xml\n");
+		print_mame_xml(xml_dat, drivers);   
+		osd_fclose(xml_dat_osd);
+	}        
+}
 
 
 /*********************************************************************
