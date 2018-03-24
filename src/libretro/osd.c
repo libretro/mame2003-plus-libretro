@@ -213,7 +213,7 @@ void osd_sound_enable(int enable)
 File I/O
 
 ******************************************************************************/
-static const char* const paths[] = { "raw", "rom", "image", "diff", "samples", "artwork", "nvram", "hi", "hsdb", "cfg", "inp", "memcard", "snap", "history", "cheat", "lang", "ctrlr", "ini" };
+static const char* const paths[] = { "raw", "rom", "image", "diff", "samples", "artwork", "nvram", "hi", "hsdb", "cfg", "inp", "memcard", "snap", "history", "cheat", "lang", "ctrlr" };
 
 struct _osd_file
 {
@@ -244,22 +244,12 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
       case FILETYPE_INPUTLOG:
       case FILETYPE_MEMCARD:
       case FILETYPE_SCREENSHOT:
-         /* user generated content goes in libretro save directory subfolders */
+         /* user generated content goes in mam2003 save directory subfolders */
          snprintf(currDir, 1024, "%s%c%s%c%s", saveDir, slash, parentDir, slash, paths[pathtype]);
          break;
-      case FILETYPE_XML_DAT:
-         /* user generated XML gamelist goes directly in libretro save directory */
-         snprintf(currDir, 1024, "%s%c%s", saveDir, slash, parentDir);
-         break;
-      case FILETYPE_HIGHSCORE_DB:
-      case FILETYPE_HISTORY:
-      case FILETYPE_CHEAT:
-         /* .dat files go directly in the libretro system directory */
-         snprintf(currDir, 1024, "%s%c%s", systemDir, slash, parentDir);
-         break;
       default:
-         /* additonal core content goes in libretro system directory */
-         snprintf(currDir, 1024, "%s%c%s%c%s", systemDir, slash, parentDir, slash, paths[pathtype]);
+         /* .dat files and additional core content goes in mame2003 system directory */
+         snprintf(currDir, 1024, "%s%c%s", systemDir, slash, parentDir);
    }
 
    snprintf(buffer, 1024, "%s%c%s", currDir, slash, filename);
@@ -282,30 +272,23 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
 
    switch (pathtype)
    {
-      case 1:  /* ROM */
-      case 2:  /* IMAGE */
-         /* removes the stupid restriction where we need to have roms in a 'rom' folder */
+      case FILETYPE_ROM:
+      case FILETYPE_IMAGE:
          strcpy(currDir, romDir);
          break;
-      case 3:  /* IMAGE DIFF */
-      case 6:  /* NVRAM */
-      case 7:  /* HIGHSCORE */
-      case 9:  /* CONFIG */
-      case 10: /* INPUT LOG */
-      case 11: /* MEMORY CARD */
-      case 12: /* SCREENSHOT */
-         /* user generated content goes in Retroarch save directory */
+      case FILETYPE_IMAGE_DIFF:
+      case FILETYPE_NVRAM:
+      case FILETYPE_HIGHSCORE:
+      case FILETYPE_CONFIG:
+      case FILETYPE_INPUTLOG:
+      case FILETYPE_MEMCARD:
+      case FILETYPE_SCREENSHOT:
+         /* user generated content goes in mam2003 save directory subfolders */
          snprintf(currDir, 1024, "%s%c%s%c%s", saveDir, slash, parentDir, slash, paths[pathtype]);
          break;
-      case 8:  /* HIGHSCORE DB */
-      case 13: /* HISTORY */
-      case 14: /* CHEAT */
-         /* .dat files go directly in the Retroarch system directory */
-         snprintf(currDir, 1024, "%s%c%s", systemDir, slash, parentDir);
-         break;
       default:
-         /* additonal core content goes in Retroarch system directory */
-         snprintf(currDir, 1024, "%s%c%s%c%s", systemDir, slash, parentDir, slash, paths[pathtype]);
+         /* .dat files and additional core content goes in mame2003 system directory */
+         snprintf(currDir, 1024, "%s%c%s", systemDir, slash, parentDir);
    }
 
    snprintf(buffer, 1024, "%s%c%s", currDir, slash, filename);
