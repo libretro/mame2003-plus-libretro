@@ -6717,7 +6717,7 @@ ROM_END
 /* pre-System16 */
 /*          rom       parent    machine   inp       init */
 /* Alien Syndrome */
-GAME( 1985, mjleague, 0,        mjleague, mjleague, mjleague, ROT270, "Sega",    "Major League" )
+GAMEX(1985, mjleague, 0,        mjleague, mjleague, mjleague, ROT270, "Sega",    "Major League", GAME_NOT_WORKING )
 GAME( 1986, bodyslam, 0,        bodyslam, bodyslam, bodyslam, ROT0,   "Sega",    "Body Slam" )
 GAME( 1986, dumpmtmt, bodyslam, bodyslam, bodyslam, bodyslam, ROT0,   "Sega",    "Dump Matsumoto (Japan)" )
 GAME( 1986, quartet,  0,        quartet,  quartet,  quartet,  ROT0,   "Sega",    "Quartet" )

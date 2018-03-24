@@ -4564,7 +4564,6 @@ GAMEBX( 1998, cottonbm,  stvbios, stvbios, stv, stv,  cottonbm,  ROT0,   "Succes
 GAMEBX( 1996, vfkids,    stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Virtua Fighter Kids", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAMEBX( 1995, ejihon,    stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Ejihon Tantei Jimusyo", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAMEBX( 1996, colmns97,  stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Columns 97", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAMEBX( 1996, diehard,   stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Die Hard Arcade (US)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS  )
 GAMEBX( 1996, dnmtdeka,  diehard, stvbios, stv, stv,  dnmtdeka,  ROT0,   "Sega", 	 "Dynamite Deka (Japan)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS  )
 GAMEBX( 1997, winterht,  stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Winter Heat", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS  )
 
@@ -4578,6 +4577,7 @@ GAMEBX( 1996, prikura,   stvbios, stvbios, stv, stv,  prikura,   ROT0, "Atlus", 
 GAMEBX( 1995, shanhigw,  stvbios, stvbios, stv, stv,  stv,       ROT0, "Sunsoft / Activision", "Shanghai - The Great Wall / Shanghai Triple Threat", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAMEBX( 1996, groovef,   stvbios, stvbios, stv, stv,  stv,       ROT0, "Atlus",      "Power Instinct 3 - Groove On Fight", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 GAMEBX( 1999, danchih,   stvbios, stvbios, stv, stvmp,stv,       ROT0, "Altron (Tecmo license)", "Danchi de Hanafuda", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAMEBX( 1996, diehard,   stvbios, stvbios, stv, stv,  ic13,      ROT0,   "Sega", 	 "Die Hard Arcade (US)", GAME_NOT_WORKING )
 GAMEBX( 1998, grdforce,  stvbios, stvbios, stv, stv,  stv,       ROT0, "Success",    "Guardian Force", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAMEBX( 1998, elandore,  stvbios, stvbios, stv, stv,  stv,       ROT0, "Sai-Mate",   "Fighting Dragon Legend Elan Doree", GAME_NO_SOUND | GAME_NOT_WORKING )
 GAMEBX( 1998, myfairld,  stvbios, stvbios, stv, stvmp,stv,       ROT0, "Micronet",   "Virtual Mahjong 2 - My Fair Lady", GAME_NO_SOUND | GAME_NOT_WORKING )
