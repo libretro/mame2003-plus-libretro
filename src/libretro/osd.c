@@ -177,9 +177,8 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 
    switch (pathtype)
    {
-      case FILETYPE_ROM: /* ROM */
+      case FILETYPE_ROM:
       case FILETYPE_IMAGE:
-         /* removes the stupid restriction where we need to have roms in a 'rom' folder */
          strcpy(currDir, romDir);
          break;
       case FILETYPE_IMAGE_DIFF:
@@ -189,17 +188,21 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
       case FILETYPE_INPUTLOG:
       case FILETYPE_MEMCARD:
       case FILETYPE_SCREENSHOT:
-         /* user generated content goes in Retroarch save directory */
+         /* user generated content goes in libretro save directory subfolders */
          snprintf(currDir, 1024, "%s%c%s%c%s", saveDir, slash, parentDir, slash, paths[pathtype]);
+         break;
+      case FILETYPE_XML_DAT:
+         /* user generated XML gamelist goes directly in libretro save directory */
+         snprintf(currDir, 1024, "%s%c%s", saveDir, slash, parentDir);
          break;
       case FILETYPE_HIGHSCORE_DB:
       case FILETYPE_HISTORY:
       case FILETYPE_CHEAT:
-         /* .dat files go directly in the Retroarch system directory */
+         /* .dat files go directly in the libretro system directory */
          snprintf(currDir, 1024, "%s%c%s", systemDir, slash, parentDir);
          break;
       default:
-         /* additonal core content goes in Retroarch system directory */
+         /* additonal core content goes in libretro system directory */
          snprintf(currDir, 1024, "%s%c%s%c%s", systemDir, slash, parentDir, slash, paths[pathtype]);
    }
 
