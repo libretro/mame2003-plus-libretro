@@ -51,6 +51,7 @@ int ui_show_fps_get(void);
 
 void ui_show_profiler_set(int show);
 int ui_show_profiler_get(void);
+void generate_xml_dat(void);
 
 int onscrd_active(void);
 int setup_active(void);

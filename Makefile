@@ -204,7 +204,7 @@ else ifeq ($(platform), wiiu)
 else ifeq ($(platform), switch)
 	EXT=a
         TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
-	PLATCFLAGS += -Dstricmp=strcasecmp
+	PLATCFLAGS += -Dstricmp=strcasecmp -D__SWITCH__
         include $(LIBTRANSISTOR_HOME)/libtransistor.mk
         STATIC_LINKING=1
 
@@ -273,7 +273,7 @@ else ifeq ($(platform), gcw0)
 	CXX = /opt/gcw0-toolchain/usr/bin/mipsel-linux-g++
 	AR = /opt/gcw0-toolchain/usr/bin/mipsel-linux-ar
 	LDFLAGS += -shared -Wl,--version-script=link.T -Wl,-no-undefined
-	PLATCFLAGS += -Dstricmp=strcasecmp
+	PLATCFLAGS += -Dstricmp=strcasecmp -D__GCW0__
 	LIBS := -lc -lgcc
 	fpic := -fPIC -nostdlib
 	LIBS =
@@ -283,7 +283,7 @@ else ifeq ($(platform), emscripten)
 	TARGET := $(TARGET_NAME)_libretro_$(platform).bc
 	HAVE_RZLIB := 1
 	STATIC_LINKING := 1
-   PLATCFLAGS += -Dstricmp=strcasecmp
+   PLATCFLAGS += -Dstricmp=strcasecmp -D__EMSCRIPTEN__
 
 # Windows MSVC 2003 Xbox 1
 else ifeq ($(platform), xbox1_msvc2003)

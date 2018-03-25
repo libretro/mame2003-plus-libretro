@@ -341,6 +341,7 @@ void run_game_done(void)
 
 static int init_machine(void)
 {
+
 	/* load the localization file */
 	if (uistring_init(options.language_file) != 0)
 	{
