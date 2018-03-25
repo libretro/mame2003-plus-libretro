@@ -3349,14 +3349,14 @@ void generate_xml_dat()
     osd_file *xml_dat_osd = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w");
     FILE *xml_dat = xml_dat_osd->file;
    
-    if (xml_dat == NULL)
-        logerror("Unable to open mame2003.xml for writing.\n");
-	else 
-	{
-	 	logerror("Generating mame2003.xml\n");
-		print_mame_xml(xml_dat, drivers);   
-		osd_fclose(xml_dat_osd);
-	}        
+    if (xml_dat =! NULL)
+    {
+	/*printf("Generating mame2003.xml\n");*/
+        print_mame_xml(xml_dat, drivers);   
+        osd_fclose(xml_dat_osd);
+    } else {
+        /*printf("Unable to open mame2003.xml for writing.\n");*/
+    }        
 }
 
 
