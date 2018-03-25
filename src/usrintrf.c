@@ -32,7 +32,7 @@ static struct mame_bitmap *pause_bitmap;
 static char pause_buffer[2048];
 static int pause_done;
 
-
+extern retro_log_printf_t log_cb; 
 
 /***************************************************************************
 
@@ -3323,18 +3323,20 @@ struct _osd_file
 
 void generate_xml_dat()
 {
- 	int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   
-    osd_file *xml_dat_osd = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w");
-    FILE *xml_dat = xml_dat_osd->file;
-   
-    if (xml_dat == NULL)
-        log_cb(RETRO_LOG_ERROR, "Unable to open mame2003.xml for writing.\n");
-	else 
-	{
-	 	log_cb(RETRO_LOG_INFO, "Generating mame2003.xml\n");
-		print_mame_xml(xml_dat, drivers);   
-		osd_fclose(xml_dat_osd);
-	}        
+    osd_file *xml_dat_osd;
+    
+    int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   
+    xml_dat_osd = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w+b");
+    
+    FILE *xml_dat = xml_dat_osd->file;  
+    if (xml_dat != NULL)
+    {
+        log_cb(RETRO_LOG_INFO, "Generating mame2003.xml\n");
+        print_mame_xml(xml_dat, drivers);   
+        osd_fclose(xml_dat_osd);
+    } else {
+        log_cb(RETRO_LOG_WARN, "Unable to open mame2003.xml for writing.\n");
+    }        
 }
 
 
