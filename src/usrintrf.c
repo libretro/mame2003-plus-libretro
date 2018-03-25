@@ -1,5 +1,3 @@
-// __LIBRETRO__: Screw it, this code base isn't being modified elsewhere, just delete what isn't needed
-
 /*********************************************************************
 
 	usrintrf.c
@@ -3347,15 +3345,15 @@ struct _osd_file
 
 void generate_xml_dat()
 {
- 	int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   
+    int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   
     osd_file *xml_dat_osd = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w");
     FILE *xml_dat = xml_dat_osd->file;
    
     if (xml_dat == NULL)
-        log_cb(RETRO_LOG_ERROR, "Unable to open mame2003.xml for writing.\n");
+        logerror("Unable to open mame2003.xml for writing.\n");
 	else 
 	{
-	 	log_cb(RETRO_LOG_INFO, "Generating mame2003.xml\n");
+	 	logerror("Generating mame2003.xml\n");
 		print_mame_xml(xml_dat, drivers);   
 		osd_fclose(xml_dat_osd);
 	}        
@@ -3875,14 +3873,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 
 	/* This call is for the cheat, it must be called once a frame */
 	if (options.cheat) DoCheat(bitmap);
-
-	/* if the user pressed ESC, stop the emulation */
-	/* but don't quit if the setup menu is on screen */
-#ifndef __LIBRETRO__ // libretro handles quits, so ignore.
-	if (setup_selected == 0 && input_ui_pressed(IPT_UI_CANCEL))
-		return 1;
-#endif
-    
+   
 	if (setup_selected == 0 && input_ui_pressed(IPT_UI_CONFIGURE))
 	{
 		setup_selected = -1;
