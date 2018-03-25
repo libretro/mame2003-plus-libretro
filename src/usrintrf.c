@@ -31,7 +31,7 @@ static struct mame_bitmap *pause_bitmap;
 static char pause_buffer[2048];
 static int pause_done;
 
-
+extern retro_log_printf_t log_cb; 
 
 /***************************************************************************
 
@@ -778,7 +778,8 @@ void ui_drawbox(struct mame_bitmap *bitmap, int leftx, int topy, int width, int 
 static void drawbar(struct mame_bitmap *bitmap, int leftx, int topy, int width, int height, int percentage, int default_percentage)
 {
 	struct rectangle bounds, tbounds;
-	UINT32 black, white;
+/*	UINT32 black;*/
+    UINT32 white;
 
 	/* make a rect and orient/clip it */
 	bounds.min_x = uirotbounds.min_x + leftx;
@@ -788,7 +789,7 @@ static void drawbar(struct mame_bitmap *bitmap, int leftx, int topy, int width, 
 	sect_rect(&bounds, &uirotbounds);
 
 	/* pick colors from the colortable */
-	black = uirotfont->colortable[0];
+/*	black = uirotfont->colortable[0];*/
 	white = uirotfont->colortable[1];
 
 	/* draw the top default percentage marker */
@@ -1126,7 +1127,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 	char buf[80];
 	int mode,bank,color,firstdrawn;
 	int palpage;
-	int changed;
+/*	int changed = 1;*/
 	int total_colors = 0;
 	pen_t *colortable = NULL;
 	int cpx=0,cpy,skip_chars=0,skip_tmap=0;
@@ -1138,8 +1139,6 @@ static void showcharset(struct mame_bitmap *bitmap)
 	color = 0;
 	firstdrawn = 0;
 	palpage = 0;
-
-	changed = 1;
 
 	do
 	{
@@ -1220,7 +1219,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 						ui_text(bitmap,"N/A",3*uirotcharwidth,2*uirotcharheight);
 
 					ui_text(bitmap,buf,0,0);
-					changed = 0;
+					/*changed = 0;*/
 				}
 
 				break;
@@ -1270,7 +1269,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 
 					sprintf(buf,"GFXSET %d COLOR %2X CODE %X-%X",bank,color,firstdrawn,lastdrawn);
 					ui_text(bitmap,buf,0,0);
-					changed = 0;
+					/*changed = 0;*/
 				}
 
 				break;
@@ -1293,7 +1292,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 					tilemap_nb_draw (bitmap, bank, tilemap_xpos, tilemap_ypos);
 					sprintf(buf, "TILEMAP %d (%dx%d)  X:%d  Y:%d", bank, tilemap_width, tilemap_height, tilemap_xpos, tilemap_ypos);
 					ui_text(bitmap,buf,0,0);
-					changed = 0;
+					/*changed = 0;*/
 					skip_tmap = 0;
 				}
 				break;
@@ -1351,8 +1350,8 @@ static void showcharset(struct mame_bitmap *bitmap)
 			{
 				bank = next_bank;
 				mode = next_mode;
-//				firstdrawn = 0;
-				changed = 1;
+				/*firstdrawn = 0;*/
+				/*changed = 1;*/
 			}
 		}
 
@@ -1387,8 +1386,8 @@ static void showcharset(struct mame_bitmap *bitmap)
 			{
 				bank = next_bank;
 				mode = next_mode;
-//				firstdrawn = 0;
-				changed = 1;
+				/*firstdrawn = 0;*/
+				/*changed = 1;*/
 			}
 		}
 
@@ -1401,7 +1400,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 					if (256 * (palpage + 1) < total_colors)
 					{
 						palpage++;
-						changed = 1;
+						/*changed = 1;*/
 					}
 					break;
 				}
@@ -1410,7 +1409,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 					if (firstdrawn + skip_chars < Machine->gfx[bank]->total_elements)
 					{
 						firstdrawn += skip_chars;
-						changed = 1;
+						/*changed = 1;*/
 					}
 					break;
 				}
@@ -1420,7 +1419,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 						tilemap_ypos -= skip_tmap;
 					else
 						tilemap_ypos -= bitmap->height/4;
-					changed = 1;
+					/*changed = 1;*/
 					break;
 				}
 			}
@@ -1435,7 +1434,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 					if (palpage > 0)
 					{
 						palpage--;
-						changed = 1;
+						/*changed = 1;*/
 					}
 					break;
 				}
@@ -1443,7 +1442,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 				{
 					firstdrawn -= skip_chars;
 					if (firstdrawn < 0) firstdrawn = 0;
-					changed = 1;
+					/*changed = 1;*/
 					break;
 				}
 				case 2:
@@ -1452,7 +1451,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 						tilemap_ypos += skip_tmap;
 					else
 						tilemap_ypos += bitmap->height/4;
-					changed = 1;
+					/*changed = 1;*/
 					break;
 				}
 			}
@@ -1468,7 +1467,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 						tilemap_xpos -= skip_tmap;
 					else
 						tilemap_xpos -= bitmap->width/4;
-					changed = 1;
+					/*changed = 1;*/
 					break;
 				}
 			}
@@ -1484,7 +1483,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 						tilemap_xpos += skip_tmap;
 					else
 						tilemap_xpos += bitmap->width/4;
-					changed = 1;
+					/*changed = 1;*/
 					break;
 				}
 			}
@@ -1499,7 +1498,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 					if (color < Machine->gfx[bank]->total_colors - 1)
 					{
 						color++;
-						changed = 1;
+						/*changed = 1;*/
 					}
 					break;
 				}
@@ -1517,7 +1516,7 @@ static void showcharset(struct mame_bitmap *bitmap)
 					if (color > 0)
 					{
 						color--;
-						changed = 1;
+						/*changed = 1;*/
 					}
 				}
 			}
@@ -3345,17 +3344,19 @@ struct _osd_file
 
 void generate_xml_dat()
 {
+    osd_file *xml_dat_osd;
+    
     int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   
-    osd_file *xml_dat_osd = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w");
-    FILE *xml_dat = xml_dat_osd->file;
-   
-    if (xml_dat =! NULL)
+    xml_dat_osd = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w+b");
+    
+    FILE *xml_dat = xml_dat_osd->file;  
+    if (xml_dat != NULL)
     {
-	/*printf("Generating mame2003.xml\n");*/
+	    log_cb(RETRO_LOG_INFO, "Generating mame2003.xml\n");
         print_mame_xml(xml_dat, drivers);   
         osd_fclose(xml_dat_osd);
     } else {
-        /*printf("Unable to open mame2003.xml for writing.\n");*/
+        log_cb(RETRO_LOG_WARN, "Unable to open mame2003.xml for writing.\n");
     }        
 }
 

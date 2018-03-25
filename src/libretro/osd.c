@@ -293,9 +293,6 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
 
    snprintf(buffer, 1024, "%s%c%s", currDir, slash, filename);
 
-   if (log_cb)
-      log_cb(RETRO_LOG_INFO, "osd_fopen (buffer = [%s]), (directory: [%s]), (path type dir: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, paths[pathtype], pathtype, filename);
-
    osd_create_directory(currDir);
 
    out = (osd_file*)malloc(sizeof(osd_file));
