@@ -430,6 +430,8 @@ static void print_game_rom(int OUTPUT_XML, FILE* out, const struct GameDriver* g
 			for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
 				length += ROM_GETLENGTH(chunk);
 
+			if (!hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP)) {
+
 			if (!ROM_NOGOODDUMP(rom) && game->clone_of)
 			{
 				fprom=NULL;
@@ -565,6 +567,7 @@ static void print_game_rom(int OUTPUT_XML, FILE* out, const struct GameDriver* g
 			fprintf(out, SELECT(L2E L1N, "/>\n"));
 		}
 	}
+   }
 }
 
 static void print_game_sampleof(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
@@ -994,6 +997,7 @@ static void print_mame_data(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	PRINT_RESOURCE(OUTPUT_XML, cpzn2);
 	PRINT_RESOURCE(OUTPUT_XML, tps);
 	PRINT_RESOURCE(OUTPUT_XML, taitofx1);
+        PRINT_RESOURCE(OUTPUT_XML, acpsx);
 #endif
 }
 
