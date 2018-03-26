@@ -997,6 +997,7 @@ static void print_mame_data(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	PRINT_RESOURCE(OUTPUT_XML, cpzn2);
 	PRINT_RESOURCE(OUTPUT_XML, tps);
 	PRINT_RESOURCE(OUTPUT_XML, taitofx1);
+        PRINT_RESOURCE(OUTPUT_XML, acpsx);
 #endif
 }
 
