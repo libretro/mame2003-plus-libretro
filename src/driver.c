@@ -5632,11 +5632,10 @@ Other Sun games
 	DRIVER( matrim )	/* 0266 (c) 2002 Atlus / Noise Factory */
 	DRIVER( pnyaa )		/* 0267 (c) 2003 Aiky / Taito */
 	DRIVER( mslug5 )	/* 0268 (c) 2003 SNK Playmore */
-	DRIVER( svcchaos )	/* 0269 (c) 2003 SNK Playmore */
+	DRIVER( svc )	        /* 0269 (c) 2003 SNK Playmore */
 	DRIVER( svcboot )	/* 0269 (c) 2003 Bootleg */
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5sp )	/* 0270 (c) 2003 Yuki Enterprises */
-	DRIVER( kof2003d)	/* 0271 (c) 2003 SNK Playmore */
 	DRIVER( crswd2bl )      /* 0054 Crossed Swords 2  (CD only? not confirmed, MVS might exist) */
 	DRIVER( zintrckb )	/* 0211 hack - this is not a genuine MVS proto, its a bootleg made from the CD version */
 	DRIVER( lasthope )      /* (c) 2005 NG:DEV.TEAM */

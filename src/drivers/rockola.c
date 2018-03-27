@@ -1381,5 +1381,5 @@ GAME(  1981, vangrdce, vanguard, vanguard, vanguard, 0, ROT90, "SNK (Centuri lic
 GAME(  1981, fantasy,  0,        fantasy,  fantasy,  0, ROT90, "[SNK] (Rock-ola license)", "Fantasy (US)" )
 GAME(  1981, fantasyj, fantasy,  fantasy,  fantasy,  0, ROT90, "SNK", "Fantasy (Japan)" )
 GAME(  1982, pballoon, 0,        pballoon, pballoon, 0, ROT90, "SNK", "Pioneer Balloon" )
-GAME(  1982, nibbler,  0,        fantasy,  nibbler,  0, ROT90, "Rock-ola", "Nibbler (set 1)" )
-GAME(  1982, nibblera, nibbler,  fantasy,  nibbler,  0, ROT90, "Rock-ola", "Nibbler (set 2)" )
+GAME(  1982, nibbler,  0,        nibbler,  nibbler,  0, ROT90, "Rock-ola", "Nibbler (set 1)" )
+GAME(  1982, nibblera, nibbler,  nibbler,  nibbler,  0, ROT90, "Rock-ola", "Nibbler (set 2)" )
