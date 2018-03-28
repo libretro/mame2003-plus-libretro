@@ -45,6 +45,8 @@ void set_ui_visarea (int xmin, int ymin, int xmax, int ymax);
 void init_user_interface(void);
 int handle_user_interface(struct mame_bitmap *bitmap);
 
+void generate_xml_dat(void);
+
 int onscrd_active(void);
 int setup_active(void);
 

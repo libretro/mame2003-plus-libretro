@@ -106,9 +106,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 		case FILETYPE_ARTWORK:
 		case FILETYPE_HISTORY:
 		case FILETYPE_LANGUAGE:
-#ifndef MESS
-		case FILETYPE_INI:
-#endif
 			if (openforwrite)
 			{
 				logerror("mame_fopen: type %02x write not supported\n", filetype);
@@ -219,14 +216,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 		/* ctrlr files */
 		case FILETYPE_CTRLR:
 			return generic_fopen(filetype, gamename, filename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
-
-		/* game specific ini files */
-		case FILETYPE_INI:
-#ifndef MESS
-			return generic_fopen(filetype, NULL, gamename, 0, FILEFLAG_OPENREAD);
-#else
-			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
-#endif
 
 #ifdef MESS
 		/* CRC files */
@@ -824,7 +813,6 @@ static const char *get_extension_for_filetype(int filetype)
 			break;
 
 		case FILETYPE_CTRLR:		/* config files */
-		case FILETYPE_INI:			/* game specific ini files */
 			extension = "ini";
 			break;
 
