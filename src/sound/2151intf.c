@@ -67,12 +67,12 @@ void YM2151UpdateRequest(int chip)
 static int my_YM2151_sh_start(const struct MachineSound *msound,int mode)
 {
 	int i,j;
-	int rate = Machine->sample_rate;
+	int rate;// = Machine->sample_rate;
 	char buf[YM2151_NUMBUF][40];
 	const char *name[YM2151_NUMBUF];
 	int mixed_vol,vol[YM2151_NUMBUF];
 
-	if( rate == 0 ) rate = 1000;	/* kludge to prevent nasty crashes */
+	//if( rate == 0 ) rate = 1000;	/* kludge to prevent nasty crashes */
 
 	intf = msound->sound_interface;
 
