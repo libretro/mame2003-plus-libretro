@@ -2,9 +2,9 @@
 #define __INFO_H
 
 /* Print the MAME database in INFO format */
-void print_mame_info(FILE* out, const struct GameDriver* games[]);
+void print_mame_info(FILE* out);
 
 /* Print the MAME database in XML format */
-void print_mame_xml(const struct GameDriver* games[]);
+void print_mame_xml();
 
 #endif
