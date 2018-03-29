@@ -11,8 +11,8 @@
 #include "vidhrdw/vector.h"
 #include "datafile.h"
 #include <stdarg.h>
-#include <math.h>
 #include <stdio.h>
+#include <math.h>
 #include "ui_text.h"
 #include "fileio.h"
 #include "libretro.h"
@@ -3313,7 +3313,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 				break;
             
             case UI_GENERATE_XML_DAT:
-                print_mame_xml(drivers);
+                print_mame_xml();
                 break;
 
 			case UI_EXIT:
