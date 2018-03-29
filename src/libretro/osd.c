@@ -307,6 +307,11 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
    return out;
 }
 
+FILE *osd_fopen_file(int pathtype, int pathindex, const char *filename, const char *mode)
+{
+   return (osd_fopen(pathtype, pathindex, filename, mode))->file;    
+}
+
 int osd_fseek(osd_file *file, INT64 offset, int whence)
 {
 	return fseek(file->file, offset, whence);
