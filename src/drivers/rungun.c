@@ -86,7 +86,7 @@ static NVRAM_HANDLER( rungun )
 		}
 		else
         {
-            usrintf_showmessage_secs(150, "This romset requires a properly initialized nvram file in order to complete its self test.\n\nEither place an appropriate rungun.nv in your nvram path or generate an nvram file with the proper initialization by pressing the MAME service key during the self-test and then resetting the core.\n\nThis message will not display again.");
+            usrintf_showmessage_secs(150, "This romset requires a properly initialized nvram file in order to complete its self test.\n\nEither place an appropriate rungun.nv in your nvram path or generate an nvram file with the proper initialization by pressing the MAME service key during the self test and then resetting the core.\n\nThis message will not display again.");
 			init_eeprom_count = 10;
         }
 	}
