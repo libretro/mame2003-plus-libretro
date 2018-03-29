@@ -1,6 +1,7 @@
 #ifndef OSDEPEND_H
 #define OSDEPEND_H
 
+#include <stdio.h>
 #include "osd_cpu.h"
 #include "inptport.h"
 
