@@ -1,6 +1,7 @@
 #ifndef OSDEPEND_H
 #define OSDEPEND_H
 
+#include <stdio.h>
 #include "osd_cpu.h"
 #include "inptport.h"
 
@@ -296,6 +297,8 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename);
 
 /* Attempt to open a file with the given name and mode using the specified path type */
 osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode);
+
+FILE *osd_fopen_file(int pathtype, int pathindex, const char *filename, const char *mode);
 
 /* Seek within a file */
 int osd_fseek(osd_file *file, INT64 offset, int whence);

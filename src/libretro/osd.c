@@ -24,7 +24,7 @@ extern int16_t XsoundBuffer[2048];
 extern char* systemDir;
 extern char* saveDir;
 extern char* romDir;
-const char* parentDir = "mame2003"; /* groups mame dirs together to avoid conflicts in shared dirs */
+const char* parentDir = "mame2003-plus"; /* groups mame dirs together to avoid conflicts in shared dirs */
 #if defined(_WIN32)
 char slash = '\\';
 #else
@@ -36,6 +36,62 @@ extern retro_log_printf_t log_cb;
 #if defined(__CELLOS_LV2__) && !defined(__PSL1GHT__)
 #include <unistd.h> //stat() is defined here
 #define S_ISDIR(x) (x & CELL_FS_S_IFDIR)
+#endif
+
+#if 0
+struct GameOptions
+{
+	mame_file *	record;			/* handle to file to record input to */
+	mame_file *	playback;		/* handle to file to playback input from */
+	mame_file *	language_file;	/* handle to file for localization */
+
+	int		mame_debug;		/* 1 to enable debugging */
+	int		cheat;			/* 1 to enable cheating */
+	int 	gui_host;		/* 1 to tweak some UI-related things for better GUI integration */
+	int 	skip_disclaimer;	/* 1 to skip the disclaimer screen at startup */
+	int 	skip_gameinfo;		/* 1 to skip the game info screen at startup */
+
+	int		samplerate;		/* sound sample playback rate, in Hz */
+	int		use_samples;	/* 1 to enable external .wav samples */
+	int		use_filter;		/* 1 to enable FIR filter on final mixer output */
+
+	float	brightness;		/* brightness of the display */
+	float	pause_bright;		/* additional brightness when in pause */
+	float	gamma;			/* gamma correction of the display */
+	int		color_depth;	/* 15, 16, or 32, any other value means auto */
+	int		vector_width;	/* requested width for vector games; 0 means default (640) */
+	int		vector_height;	/* requested height for vector games; 0 means default (480) */
+	int		ui_orientation;	/* orientation of the UI relative to the video */
+
+	int		beam;			/* vector beam width */
+	float	vector_flicker;	/* vector beam flicker effect control */
+	float	vector_intensity;/* vector beam intensity */
+	int		translucency;	/* 1 to enable translucency on vectors */
+	int 	antialias;		/* 1 to enable antialiasing on vectors */
+
+	int		use_artwork;	/* bitfield indicating which artwork pieces to use */
+	int		artwork_res;	/* 1 for 1x game scaling, 2 for 2x */
+	int		artwork_crop;	/* 1 to crop artwork to the game screen */
+
+	char	savegame;		/* character representing a savegame to load */
+	int     crc_only;       /* specify if only CRC should be used as checksum */
+	char *	bios;			/* specify system bios (if used), 0 is default */
+
+	int		debug_width;	/* requested width of debugger bitmap */
+	int		debug_height;	/* requested height of debugger bitmap */
+	int		debug_depth;	/* requested depth of debugger bitmap */
+
+#ifdef MESS
+	UINT32 ram;
+	struct ImageFile image_files[MAX_IMAGES];
+	int		image_count;
+	int(*mess_printf_output)(const char *fmt, va_list arg);
+	int disable_normal_ui;
+
+	int		min_width;		/* minimum width for the display */
+	int		min_height;		/* minimum height for the display */
+#endif
+};
 #endif
 
 int osd_create_directory(const char *dir)
@@ -237,8 +293,6 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
 
    snprintf(buffer, 1024, "%s%c%s", currDir, slash, filename);
 
-   //log_cb(RETRO_LOG_INFO, "osd_fopen (buffer = [%s]), (directory: [%s]), (path type dir: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, paths[pathtype], pathtype, filename);
-
    osd_create_directory(currDir);
 
    out = (osd_file*)malloc(sizeof(osd_file));
@@ -251,6 +305,11 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
       return 0;
    }
    return out;
+}
+
+FILE *osd_fopen_file(int pathtype, int pathindex, const char *filename, const char *mode)
+{
+   return (osd_fopen(pathtype, pathindex, filename, mode))->file;    
 }
 
 int osd_fseek(osd_file *file, INT64 offset, int whence)
