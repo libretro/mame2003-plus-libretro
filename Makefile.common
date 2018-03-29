@@ -790,7 +790,9 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/vidhrdw/raiden_vidhrdw.c $(CORE_DIR)/drivers/raiden.c $(CORE_DIR)/drivers/raiden2.c \
 				 $(CORE_DIR)/vidhrdw/dcon_vidhrdw.c $(CORE_DIR)/drivers/dcon.c \
 				 $(CORE_DIR)/vidhrdw/sengokmj_vidhrdw.c $(CORE_DIR)/drivers/sengokmj.c \
+				 $(CORE_DIR)/sndhrdw/t5182.c \
 				 $(CORE_DIR)/vidhrdw/mustache_vidhrdw.c $(CORE_DIR)/drivers/mustache.c \
+				 $(CORE_DIR)/vidhrdw/darkmist.c $(CORE_DIR)/drivers/darkmist.c \
 				 $(CORE_DIR)/vidhrdw/cabal_vidhrdw.c $(CORE_DIR)/drivers/cabal.c \
 				 $(CORE_DIR)/vidhrdw/toki_vidhrdw.c $(CORE_DIR)/drivers/toki.c \
 				 $(CORE_DIR)/vidhrdw/bloodbro_vidhrdw.c $(CORE_DIR)/drivers/bloodbro.c \
