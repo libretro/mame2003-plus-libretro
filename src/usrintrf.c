@@ -12,6 +12,7 @@
 #include "datafile.h"
 #include <stdarg.h>
 #include <math.h>
+#include <stdio.h>
 #include "ui_text.h"
 #include "fileio.h"
 #include "libretro.h"
