@@ -5,6 +5,6 @@
 void print_mame_info(FILE* out);
 
 /* Print the MAME database in XML format */
-void print_mame_xml();
+void print_mame_xml(void);
 
 #endif
