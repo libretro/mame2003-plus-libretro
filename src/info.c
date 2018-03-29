@@ -6,6 +6,7 @@
 #include "hash.h"
 #include "datafile.h"
 #include "fileio.h"
+#include "libretro.h"
 
 /* Format */
 #define SELECT(a,b) (OUTPUT_XML ? (b) : (a))
@@ -64,6 +65,9 @@
 #define L2N "\n"
 #define L2E INDENT ")"
 */
+
+extern retro_log_printf_t log_cb; 
+
 
 /* Print a free format string */
 static void print_free_string(int OUTPUT_XML, FILE* out, const char* s)
@@ -430,6 +434,7 @@ static void print_game_rom(int OUTPUT_XML, FILE* out, const struct GameDriver* g
 			for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
 				length += ROM_GETLENGTH(chunk);
 
+
 			if (!ROM_NOGOODDUMP(rom) && game->clone_of)
 			{
 				fprom=NULL;
@@ -565,6 +570,7 @@ static void print_game_rom(int OUTPUT_XML, FILE* out, const struct GameDriver* g
 			fprintf(out, SELECT(L2E L1N, "/>\n"));
 		}
 	}
+   
 }
 
 static void print_game_sampleof(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
@@ -994,13 +1000,25 @@ static void print_mame_data(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	PRINT_RESOURCE(OUTPUT_XML, cpzn2);
 	PRINT_RESOURCE(OUTPUT_XML, tps);
 	PRINT_RESOURCE(OUTPUT_XML, taitofx1);
+        PRINT_RESOURCE(OUTPUT_XML, acpsx);
 #endif
 }
 
 /* Print the MAME database in XML format */
-void print_mame_xml(FILE* out, const struct GameDriver* games[])
+void print_mame_xml(void)
 {
-	fprintf(out,
+       	
+    int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   	
+    FILE *xml_dat = osd_fopen_file(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w+b");	
+    	
+    if (xml_dat != NULL)	
+    {	
+	    log_cb(RETRO_LOG_INFO, "Generating mame2003.xml\n");	
+    } else {	
+        log_cb(RETRO_LOG_WARN, "Unable to open mame2003.xml for writing.\n");
+         return;
+    }    
+	fprintf(xml_dat,
 		"<?xml version=\"1.0\"?>\n"
 		"<!DOCTYPE " XML_ROOT " [\n"
 		"<!ELEMENT " XML_ROOT " (" XML_TOP "+)>\n"
@@ -1085,13 +1103,14 @@ void print_mame_xml(FILE* out, const struct GameDriver* games[])
 		"<" XML_ROOT ">\n"
 	);
 
-	print_mame_data(1, out, games);
+	print_mame_data(1, xml_dat, drivers);
 
-	fprintf(out, "</" XML_ROOT ">\n");
+	fprintf(xml_dat, "</" XML_ROOT ">\n");
+    fclose(xml_dat);
 }
 
 /* Print the MAME database in INFO format */
-void print_mame_info(FILE* out, const struct GameDriver* games[])
+void print_mame_info(FILE* out)
 {
-	print_mame_data(0, out, games);
+	print_mame_data(0, out, drivers);
 }
