@@ -1,25 +1,31 @@
 /* ======================================================================== */
 /* ========================= LICENSING & COPYRIGHT ======================== */
 /* ======================================================================== */
+/*
+ *                                  MUSASHI
+ *                                Version 3.4
+ *
+ * A portable Motorola M680x0 processor emulation engine.
+ * Copyright 1998-2001 Karl Stenerud.  All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
 
-#if 0
-static const char* copyright_notice =
-"MUSASHI\n"
-"Version 3.3 (2001-01-29)\n"
-"A portable Motorola M680x0 processor emulation engine.\n"
-"Copyright 1998-2001 Karl Stenerud.  All rights reserved.\n"
-"\n"
-"This code may be freely used for non-commercial purpooses as long as this\n"
-"copyright notice remains unaltered in the source code and any binary files\n"
-"containing this code in compiled form.\n"
-"\n"
-"All other lisencing terms must be negotiated with the author\n"
-"(Karl Stenerud).\n"
-"\n"
-"The latest version of this code can be obtained at:\n"
-"http://kstenerud.cjb.net\n"
-;
-#endif
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 
 /* ======================================================================== */
@@ -45,7 +51,7 @@ uint m68ki_tracing = 0;
 uint m68ki_address_space;
 
 #ifdef M68K_LOG_ENABLE
-const char* m68ki_cpu_names[9] =
+char* m68ki_cpu_names[9] =
 {
 	"Invalid CPU",
 	"M68000",
@@ -123,8 +129,8 @@ uint8 m68ki_exception_cycle_table[3][256] =
 		 34, /*  7: TRAPV                                              */
 		 34, /*  8: Privilege Violation                                */
 		 34, /*  9: Trace                                              */
-		  4, /* 10: 1010                                               */
-		  4, /* 11: 1111                                               */
+		 34, /* 10: 1010                                               */
+		 34, /* 11: 1111                                               */
 		  4, /* 12: RESERVED                                           */
 		  4, /* 13: Coprocessor Protocol Violation        (unemulated) */
 		  4, /* 14: Format Error                                       */
@@ -572,7 +578,7 @@ void m68k_set_cpu_type(unsigned int cpu_type)
 			CYC_BCC_NOTAKE_W = 2;
 			CYC_DBCC_F_NOEXP = -2;
 			CYC_DBCC_F_EXP   = 2;
-			CYC_SCC_R_FALSE  = 2;
+			CYC_SCC_R_TRUE   = 2;
 			CYC_MOVEM_W      = 2;
 			CYC_MOVEM_L      = 3;
 			CYC_SHIFT        = 1;
@@ -588,7 +594,7 @@ void m68k_set_cpu_type(unsigned int cpu_type)
 			CYC_BCC_NOTAKE_W = 0;
 			CYC_DBCC_F_NOEXP = 0;
 			CYC_DBCC_F_EXP   = 6;
-			CYC_SCC_R_FALSE  = 0;
+			CYC_SCC_R_TRUE   = 0;
 			CYC_MOVEM_W      = 2;
 			CYC_MOVEM_L      = 3;
 			CYC_SHIFT        = 1;
@@ -604,7 +610,7 @@ void m68k_set_cpu_type(unsigned int cpu_type)
 			CYC_BCC_NOTAKE_W = 0;
 			CYC_DBCC_F_NOEXP = 0;
 			CYC_DBCC_F_EXP   = 4;
-			CYC_SCC_R_FALSE  = 0;
+			CYC_SCC_R_TRUE   = 0;
 			CYC_MOVEM_W      = 2;
 			CYC_MOVEM_L      = 2;
 			CYC_SHIFT        = 0;
@@ -620,7 +626,7 @@ void m68k_set_cpu_type(unsigned int cpu_type)
 			CYC_BCC_NOTAKE_W = 0;
 			CYC_DBCC_F_NOEXP = 0;
 			CYC_DBCC_F_EXP   = 4;
-			CYC_SCC_R_FALSE  = 0;
+			CYC_SCC_R_TRUE   = 0;
 			CYC_MOVEM_W      = 2;
 			CYC_MOVEM_L      = 2;
 			CYC_SHIFT        = 0;
@@ -759,6 +765,7 @@ void m68k_pulse_reset(void)
 	SET_CYCLES(0);
 
 	CPU_RUN_MODE = RUN_MODE_BERR_AERR_RESET;
+	CPU_INSTR_MODE = INSTRUCTION_YES;
 
 	/* Turn off tracing */
 	FLAG_T1 = FLAG_T0 = 0;
