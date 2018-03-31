@@ -71,6 +71,7 @@ Double Wings
 Oriental Legend Special
 Puzzle Star
 The Killing Blade
+Glass (Censored, Unprotected)
 
 
 
@@ -93,6 +94,7 @@ Task Force Harrier
 Thunder Dragon
 Twin Eagle 2
 Photo Y2k
+Run And Gun (NVRAM) Markwkidd
 
 
 Games now with sound or improved sound
@@ -120,6 +122,7 @@ Super Spacefortress Macross
 GunNail
 Thunder Dragon
 All PGM (Poly Game Master)
+Mustache Boy
 
 
 Improvements
@@ -150,6 +153,8 @@ Enabled breakable backgrounds in 64th street code via BritneysPAIRS
 improved sprite drawing for Gun Force 2
 Added the ICS2115 soundcore for the PGM games
 Updated the PGM driver to MAME105 more games are now playable
+Hooked Up Toshiba T5182 sound in Mustache Boy
+Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 
 
 gamezfan with code additions via iq_132 and BritneysPAIRS.
