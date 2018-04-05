@@ -492,6 +492,10 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 }
 #endif
 
+
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+
 static void namcos1_draw_screen(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
 	int i, j, scrollx, scrolly, priority;
@@ -565,6 +569,7 @@ static void namcos1_draw_screen(struct mame_bitmap *bitmap, const struct rectang
 		draw_sprites(bitmap, cliprect, sp_updatebuffer);
 #endif
 }
+#pragma GCC pop_options
 
 
 VIDEO_START( namcos1 )
