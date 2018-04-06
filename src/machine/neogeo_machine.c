@@ -528,12 +528,49 @@ static READ16_HANDLER( prot_9a37_r )
 	return 0x9a37;
 }
 
+static READ16_HANDLER( mslug5_prot_r )
+{
+        logerror("PC %06x: access protected\n",activecpu_get_pc());
+        return 0xa0;
+}
+
+static WRITE16_HANDLER ( mslug5p_bankswitch_w )
+{
+        /* thanks to fataku for the info */
+        unsigned char *RAM = memory_region(REGION_CPU1);
+        int bankaddress;
+        logerror("offset: %06x PC %06x: set banking %04x\n",offset,activecpu_get_pc(),data);
+        if ((offset == 0)&&(data == 0xa0))
+        {
+                bankaddress=0xa0;
+                cpu_setbank(4,&RAM[bankaddress]);
+                //neogeo_set_cpu1_second_bank(bankaddress);
+                logerror("offset: %06x PC %06x: set banking %04x\n\n",offset,activecpu_get_pc(),bankaddress);
+        }
+        else if(offset == 2)
+        {  data=data>>4;
+           //data=data&7;
+           bankaddress=data*0x100000;
+           cpu_setbank(4,&RAM[bankaddress]);
+           //neogeo_set_cpu1_second_bank(bankaddress);
+           logerror("offset: %06x PC %06x: set banking %04x\n\n",offset,activecpu_get_pc(),bankaddress);
+        }
+}
 
 static void neogeo_custom_memory(void)
 {
 	/* Individual games can go here... */
 
 	/* kludges */
+
+	if (!strcmp(Machine->gamedrv->name,"ms5plus") )
+    {
+        /* special ROM banking handler */
+       install_mem_write16_handler( 0, 0x2ffff0, 0x2fffff, mslug5p_bankswitch_w );
+
+        /* additional protection */
+       install_mem_read16_handler( 0, 0x2ffff0, 0x2fffff, mslug5_prot_r );       
+    }	
 
 	if (!Machine->sample_rate &&
 			!strcmp(Machine->gamedrv->name,"popbounc"))
@@ -589,6 +626,8 @@ static void neogeo_custom_memory(void)
 	/* we write protect a SRAM location so it cannot be set to 1 */
 	sram_protection_hack = ~0;
 	if (	!strcmp(Machine->gamedrv->name,"fatfury3") ||
+			!strcmp(Machine->gamedrv->name,"samsho5") ||
+			!strcmp(Machine->gamedrv->name,"samsh5sp") ||
 			!strcmp(Machine->gamedrv->name,"samsho3") ||
 			!strcmp(Machine->gamedrv->name,"samsho4") ||
 			!strcmp(Machine->gamedrv->name,"aof3") ||
