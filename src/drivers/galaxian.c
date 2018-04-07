@@ -4371,7 +4371,7 @@ ROM_START( omega )
 	ROM_LOAD( "omega1k.bin",  0x0800, 0x0800, CRC(36de42c6) SHA1(6fd93d439e3b8eab62049f925d9e8f8deeda2ae3) )
 
 	ROM_REGION( 0x0020, REGION_PROMS, 0 )
-	ROM_LOAD( "6331-1j.86",   0x0000, 0x0020, NO_DUMP )	/* missing */
+	ROM_LOAD( "a6331-1j.86",   0x0000, 0x0020, BAD_DUMP CRC(24652bc4) SHA1(d89575f3749c75dc963317fe451ffeffd9856e4d) ) /* use the theend eprom default behavior*/ 
 ROM_END
 
 ROM_START( scramblb )
