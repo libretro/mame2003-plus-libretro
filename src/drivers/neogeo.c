@@ -6063,12 +6063,14 @@ ROM_START( mslug5 ) /* Encrypted Set */
 	/* Encrypted, we load it here for reference and replace with decrypted ROM */
 	ROM_LOAD( "268-m1.bin", 0x00000, 0x80000, CRC(4a5a6e0e) SHA1(df0f660f2465e1db7be5adfcaf5e88ad61a74a42) )
 	/* Decrypted */
-	NEO_BIOS_SOUND_64K( "268-m1_decrypted.bin",  CRC(3c0655a7) SHA1(ae839d4c2b87a7aa3dd8e5caddc43eb75ee9b732) )
+	NEO_BIOS_SOUND_256K( "268-m1_decrypted.bin",  CRC(3c0655a7) SHA1(ae839d4c2b87a7aa3dd8e5caddc43eb75ee9b732) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
 	/* Encrypted */
 	ROM_LOAD( "268-v1c.bin", 0x000000, 0x800000, CRC(ae31d60c) SHA1(c42285cf4e52fea74247860813e826df5aa7600a) )
 	ROM_LOAD( "268-v2c.bin", 0x800000, 0x800000, CRC(c40613ed) SHA1(af889570304e2867d7dfea1e94e388c06249fb67) )
+
+	NO_DELTAT_REGION
 
 	ROM_REGION( 0x4000000, REGION_GFX3, 0 )
 	/* Encrypted */
