@@ -260,7 +260,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	if ((samples = auto_malloc(sizeof(struct GameSamples) + (i-1)*sizeof(struct GameSample))) == 0)
 		return 0;
 
-    log_cb(RETRO_LOG_INFO, "Searching for %i individual audio sample files in %s.zip", samples->total, basename);
+    log_cb(RETRO_LOG_INFO, "Searching for %i individual audio sample files in %s.zip\n", samples->total, basename);
 
 	samples->total = i;
 	for (i = 0;i < samples->total;i++)
@@ -278,11 +278,11 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
                 {
 					f = mame_fopen(samplenames[0]+1,samplenames[i+skipfirst],FILETYPE_SAMPLE,0);
                     if (f != 0)
-                        log_cb(RETRO_LOG_INFO, "Loaded %s.wav from %s.zip", samplenames[i+skipfirst], samplenames[0]+1);
+                        log_cb(RETRO_LOG_INFO, "Loaded %s.wav from %s.zip\n", samplenames[i+skipfirst], samplenames[0]+1);
 
                 } 
             } else
-                log_cb(RETRO_LOG_INFO, "Loaded %s.wav from %s.zip", samplenames[i+skipfirst], basename);
+                log_cb(RETRO_LOG_INFO, "Loaded %s.wav from %s.zip\n", samplenames[i+skipfirst], basename);
 
             if (f != 0)
 			{
