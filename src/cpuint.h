@@ -12,6 +12,8 @@
 #include "osd_cpu.h"
 #include "memory.h"
 #include "timer.h"
+#include "hiscore.h"
+
 
 #ifdef __cplusplus
 extern "C" {

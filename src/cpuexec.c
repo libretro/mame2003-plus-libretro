@@ -11,7 +11,7 @@
 #include "timer.h"
 #include "state.h"
 #include "mamedbg.h"
-#include "hiscore.h"
+#include "cpuexec.h"
 
 #if (HAS_M68000 || HAS_M68010 || HAS_M68020 || HAS_M68EC020)
 #include "cpu/m68000/m68000.h"

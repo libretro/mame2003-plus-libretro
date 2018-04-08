@@ -3520,12 +3520,7 @@ INLINE void plotclip(struct mame_bitmap *bitmap,int x,int y,int pen,const struct
 		plot_pixel(bitmap,x,y,pen);
 }
 
-static int crosshair_enable=1;
-
-void drawgfx_toggle_crosshair(void)
-{
-	crosshair_enable^=1;
-}
+int crosshair_enable = 1;
 
 void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip)
 {
