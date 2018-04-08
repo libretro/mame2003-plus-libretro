@@ -45,12 +45,6 @@ void set_ui_visarea (int xmin, int ymin, int xmax, int ymax);
 void init_user_interface(void);
 int handle_user_interface(struct mame_bitmap *bitmap);
 
-void ui_show_fps_temp(double seconds);
-void ui_show_fps_set(int show);
-int ui_show_fps_get(void);
-
-void ui_show_profiler_set(int show);
-int ui_show_profiler_get(void);
 void generate_xml_dat(void);
 
 int onscrd_active(void);
@@ -59,10 +53,6 @@ int setup_active(void);
 #if defined(__sgi) && ! defined(MESS)
 int is_game_paused(void);
 #endif
-
-void switch_ui_orientation(struct mame_bitmap *bitmap);
-void switch_debugger_orientation(struct mame_bitmap *bitmap);
-void switch_true_orientation(struct mame_bitmap *bitmap);
 
 #ifdef __GNUC__
 void CLIB_DECL usrintf_showmessage(const char *text,...)

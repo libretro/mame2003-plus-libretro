@@ -3,6 +3,7 @@ DEBUGGER=0
 SPLIT_UP_LINK=0
 CORE_DIR := src
 TARGET_NAME := mame2003-plus
+BUILD_BIN2C ?= 0
 
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
@@ -10,20 +11,20 @@ ifneq ($(GIT_VERSION)," unknown")
 endif
 
 ifeq ($(platform),)
-system_platform = unix
-platform = unix
+	system_platform = unix
+	platform = unix
 ifeq ($(shell uname -a),)
-   system_platform = win
-   platform = win
+	system_platform = win
+	platform = win
 else ifneq ($(findstring MINGW,$(shell uname -a)),)
-   system_platform = win
-   platform = win
+	system_platform = win
+	platform = win
 else ifneq ($(findstring Darwin,$(shell uname -a)),)
-   system_platform = osx
-   platform = osx
+	system_platform = osx
+	platform = osx
 else ifneq ($(findstring win,$(shell uname -a)),)
-   system_platform = win
-   platform = win
+	system_platform = win
+	platform = win
 endif
 endif
 
@@ -78,7 +79,6 @@ ifeq ($(platform), unix)
    CFLAGS += $(fpic)
    PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
-
 else ifeq ($(platform), linux-portable)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC -nostdlib
@@ -87,7 +87,6 @@ else ifeq ($(platform), linux-portable)
    PLATCFLAGS += -Dstricmp=strcasecmp
 	LIBS =
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
-
 else ifeq ($(platform), osx)
    TARGET = $(TARGET_NAME)_libretro.dylib
    fpic = -fPIC
@@ -108,7 +107,6 @@ else ifneq (,$(findstring ios,$(platform)))
    CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
    PLATCFLAGS += -D__IOS__
-
 ifeq ($(IOSSDK),)
    IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
 endif
@@ -216,6 +214,7 @@ else ifeq ($(platform), ps3)
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
    STATIC_LINKING = 1
+   SPLIT_UP_LINK=1   
 else ifeq ($(platform), sncps3)
    TARGET = $(TARGET_NAME)_libretro_ps3.a
    BIGENDIAN = 1
@@ -463,6 +462,18 @@ else
 	LD = $(CC)
 endif
 
+ifeq ($(BUILD_BIN2C),1)
+# compile bin2c
+$(info creating bin2c working folder and compiling bin2c executable tool...)
+	DUMMY_RESULT:=$(shell mkdir -p ./precompile)
+	DUMMY_RESULT:=$(shell gcc -o ./precompile/bin2c deps/bin2c/bin2c.c)
+# compile hiscore.dat into a fresh header file for embedding
+	DUMMY_RESULT:=$(shell ./precompile/bin2c ./metadata/hiscore.dat ./precompile/hiscore_dat.h hiscoredat)
+    DUMMY_RESULT:=$(shell rm ./precompile/bin2c*)
+else
+$(info echo BUILD_BIN2C==0 - use the precompiled hiscore_dat.h from the github repo)
+endif
+
 define NEWLINE
 
 
@@ -504,7 +515,5 @@ ifeq ($(SPLIT_UP_LINK), 1)
 	$(file >$@.in,$(OBJECTS))
 	rm -f @$@.in $(TARGET)
 	@rm $@.in
-	rm -f $(OBJECTS) $(TARGET)
-else
-	rm -f $(OBJECTS) $(TARGET)
 endif
+	rm -f $(OBJECTS) $(TARGET)
