@@ -13,6 +13,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 
+#include "libretro.h"
 
 //#define LOG_LOAD
 
@@ -24,12 +25,8 @@
 
 ***************************************************************************/
 
-// VERY IMPORTANT: osd_alloc_bitmap must allocate also a "safety area" 16 pixels wide all
-// around the bitmap. This is required because, for performance reasons, some graphic
-// routines don't clip at boundaries of the bitmap.
-#define BITMAP_SAFETY			16
-
-#define MAX_MALLOCS				4096
+#define BITMAP_SAFETY 16 /* osd_alloc_bitmap allocates a "safety area" 16 pixels around the bitmap. For performance reasons some graphic routines don't clip at boundaries of the bitmap.*/
+#define MAX_MALLOCS   4096
 
 
 
@@ -77,6 +74,8 @@ static struct chd_file *disk_handle[4];
 
 /* system BIOS */
 static int system_bios;
+
+extern retro_log_printf_t log_cb;
 
 
 /***************************************************************************
@@ -261,20 +260,31 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	if ((samples = auto_malloc(sizeof(struct GameSamples) + (i-1)*sizeof(struct GameSample))) == 0)
 		return 0;
 
+    log_cb(RETRO_LOG_INFO, "Searching for %i individual audio sample files in %s.zip", samples->total, basename);
+
 	samples->total = i;
 	for (i = 0;i < samples->total;i++)
 		samples->sample[i] = 0;
 
 	for (i = 0;i < samples->total;i++)
 	{
-		mame_file *f;
+        mame_file *f;
 
-		if (samplenames[i+skipfirst][0])
+        if (samplenames[i+skipfirst][0])
 		{
-			if ((f = mame_fopen(basename,samplenames[i+skipfirst],FILETYPE_SAMPLE,0)) == 0)
+            if ((f = mame_fopen(basename,samplenames[i+skipfirst],FILETYPE_SAMPLE,0)) == 0)
+            {
 				if (skipfirst)
+                {
 					f = mame_fopen(samplenames[0]+1,samplenames[i+skipfirst],FILETYPE_SAMPLE,0);
-			if (f != 0)
+                    if (f != 0)
+                        log_cb(RETRO_LOG_INFO, "Loaded %s.wav from %s.zip", samplenames[i+skipfirst], samplenames[0]+1);
+
+                } 
+            } else
+                log_cb(RETRO_LOG_INFO, "Loaded %s.wav from %s.zip", samplenames[i+skipfirst], basename);
+
+            if (f != 0)
 			{
 				samples->sample[i] = read_wav_sample(f);
 				mame_fclose(f);
