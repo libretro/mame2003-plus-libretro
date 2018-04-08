@@ -26,7 +26,74 @@
 #include "sndhrdw/dcs.h"
 #include "midtunit.h"
 
+const char *const mk_sample_names_tunit[] =
+{
+	"*mk",
+	"title-01",
+	"title-02",
+	"c-select-01",
+	"c-select-02",
+	"battle-menu-01",
+	"battle-menu-02",
+	"continue-01",
+	"continue-02",
+	"fatality-01",
+	"fatality-02",
+	"courtyard-01",
+	"courtyard-02",
+	"courtyard-end-01",
+	"courtyard-end-02",
+	"courtyard-finish-him-01",
+	"courtyard-finish-him-02",
+	"test-your-might-01",
+	"test-your-might-02",
+	"test-your-might-end-01",
+	"test-your-might-end-02",
+	"gameover-01",
+	"gameover-02",
+	"warriors-shrine-01",
+	"warriors-shrine-02",
+	"warriors-shrine-end-01",
+	"warriors-shrine-end-02",
+	"warriors-shrine-finish-him-01",
+	"warriors-shrine-finish-him-02",
+	"pit-01",
+	"pit-02",
+	"pit-end-01",
+	"pit-end-02",
+	"pit-finish-him-01",
+	"pit-finish-him-02",
+	"throne-room-01",
+	"throne-room-02",
+	"throne-room-end-01",
+	"throne-room-end-02",
+	"throne-room-finish-him-01",
+	"throne-room-finish-him-02",
+	"goros-lair-01",
+	"goros-lair-02",
+	"goros-lair-end-01",
+	"goros-lair-end-02",
+	"goros-lair-finish-him-01",
+	"goros-lair-finish-him-02",
+	"endurance-switch-01",
+	"endurance-switch-02",
+	"victory-01",
+	"victory-02",
+	"palace-gates-01",
+	"palace-gates-02",
+	"palace-gates-end-01",
+	"palace-gates-end-02",
+	"palace-gates-finish-him-01",
+	"palace-gates-finish-him-02",
+	0
+};
 
+static struct Samplesinterface mk_samples_tunit =
+{
+	2,	// 2 channels
+	100, // volume
+	mk_sample_names_tunit
+};
 
 /*************************************
  *
@@ -644,6 +711,18 @@ static MACHINE_DRIVER_START( tunit_adpcm )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(tunit_core)
 	MDRV_IMPORT_FROM(williams_adpcm_sound)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( mk )
+	mk_playing_mortal_kombat_t = true; // --> Let the sound hardware know we are playing Mortal Kombat.
+	
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(tunit_core)
+	MDRV_IMPORT_FROM(williams_adpcm_sound)
+
+	// Lets add our Mortal Kombat music sample packs.
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(SAMPLES, mk_samples_tunit)	
 MACHINE_DRIVER_END
 
 
@@ -1321,8 +1400,8 @@ ROM_END
  *
  *************************************/
 
-GAME( 1992, mk,       0,       tunit_adpcm, mk,      mk,       ROT0, "Midway",   "Mortal Kombat (rev 5.0 T-Unit 03/19/93)" )
-GAME( 1992, mkr4,     mk,      tunit_adpcm, mk,      mkr4,     ROT0, "Midway",   "Mortal Kombat (rev 4.0 T-Unit 02/11/93)" )
+GAME( 1992, mk,       0,       mk, mk,      mk,       ROT0, "Midway",   "Mortal Kombat (rev 5.0 T-Unit 03/19/93)" )
+GAME( 1992, mkr4,     mk,      mk, mk,      mkr4,     ROT0, "Midway",   "Mortal Kombat (rev 4.0 T-Unit 02/11/93)" )
 
 GAME( 1993, mk2,      0,       tunit_dcs,   mk2,     mk2,      ROT0, "Midway",   "Mortal Kombat II (rev L3.1)" )
 GAME( 1993, mk2r32,   mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "Midway",   "Mortal Kombat II (rev L3.2 (European))" )

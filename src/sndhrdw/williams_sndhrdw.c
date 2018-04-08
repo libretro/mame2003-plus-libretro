@@ -595,10 +595,759 @@ static READ_HANDLER( adpcm_command_r )
 	return soundlatch_r(0);
 }
 
-
 void williams_adpcm_data_w(int data)
 {
-	soundlatch_w(0, data & 0xff);
+	if(mk_playing_mortal_kombat == true || mk_playing_mortal_kombat_t == true) {
+		int a = 0;
+		bool mk_do_nothing = false;
+		bool sa_play_sample = false;
+		bool sa_play_original = false;
+		bool mk_stop_samples = false;
+		
+		int sa_left = 0;
+		int sa_right = 1;
+		bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.
+
+		// If we are playing the T-Unit version of Mortal Kombat.
+		if(mk_playing_mortal_kombat_t == true) {
+			switch (data) {
+				// Intro title screen diddy
+				case 0x13:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 0; // Left channel.
+					sa_right = 1; // Right channel/
+					break;
+
+				// Second player joining diddy
+				case 0x18:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 0;
+					sa_right = 1;
+					break;				
+
+				// Character selection screen.
+				case 0x1:
+					sa_play_sample = true;
+					sa_left = 2;
+					sa_right = 3;			
+					break;
+
+				// Scrolling character map
+				case 0x12:
+					sa_play_sample = true;
+					
+					sa_left = 4;
+					sa_right = 5;
+					break;
+
+				// Scrolling character map end
+				case 0x1E:
+					mk_do_nothing = true;
+					break;
+
+				// Continue music
+				case 0x6:
+					sa_play_sample = true;
+					
+					sa_left = 6;
+					sa_right = 7;
+					break;
+
+				// Game over music
+				case 0x2:
+					sa_play_sample = true;
+					
+					sa_left = 20;
+					sa_right = 21;
+					break;
+
+				// Test your might music.
+				case 0x19:
+					sa_play_sample = true;
+					
+					sa_left = 16;
+					sa_right = 17;
+					break;
+
+				// Test your end (fail).
+				case 0x1A:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 18;
+					sa_right = 19;
+					break;
+
+				// Fatality music
+				case 0xEE:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 8;
+					sa_right = 9;
+					break;
+
+				// Fatality music echo loop
+				case 0xDE:
+					mk_do_nothing = true;
+					break;
+							
+				// Courtyard music
+				case 0x3:
+					sa_play_sample = true;
+					
+					sa_left = 10;
+					sa_right = 11;
+					break;
+
+				// Courtyard end music
+				case 0x5:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 12;
+					sa_right = 13;
+					break;
+
+				// Courtyard finish him music
+				case 0x4:
+					sa_play_sample = true;
+					
+					sa_left = 14;
+					sa_right = 15;
+					break;
+
+				// Warrior Shrine music
+				case 0xA:
+					sa_play_sample = true;
+					
+					sa_left = 22;
+					sa_right = 23;
+					break;
+
+				// Warrior Shrine end music
+				case 0xC:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 24;
+					sa_right = 25;
+					break;
+
+				// Warrior Shrine finish him music
+				case 0xB:
+					sa_play_sample = true;
+					
+					sa_left = 26;
+					sa_right = 27;
+					break;
+
+				// The Pit music
+				case 0xD:
+					sa_play_sample = true;
+					
+					sa_left = 28;
+					sa_right = 29;
+					break;
+
+				// The Pit end music
+				case 0xF:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 30;
+					sa_right = 31;
+					break;
+
+				// The Pit finish him music
+				case 0xE:
+					sa_play_sample = true;
+					
+					sa_left = 32;
+					sa_right = 33;
+					break;
+
+				// Throne Room music
+				case 0x1B:
+					sa_play_sample = true;
+					
+					sa_left = 34;
+					sa_right = 35;
+					break;
+
+				// Throne Room end music
+				case 0x1D:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 36;
+					sa_right = 37;
+					break;
+
+				// Throne Room finish him music
+				case 0x1C:
+					sa_play_sample = true;
+					
+					sa_left = 38;
+					sa_right = 39;
+					break;
+
+				// Goro's Lair music
+				case 0x14:
+					sa_play_sample = true;
+					
+					sa_left = 40;
+					sa_right = 41;
+					break;
+
+				// Goro's Lair end music
+				case 0x17:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 42;
+					sa_right = 43;
+					break;
+
+				// Goro's Lair finish him music
+				case 0x16:
+					sa_play_sample = true;
+					
+					sa_left = 44;
+					sa_right = 45;
+					break;
+
+				// Endurance switch characters chime
+				case 0x10:
+					sa_play_sample = true;
+					
+					sa_left = 46;
+					sa_right = 47;
+					break;
+
+				// Victory music
+				case 0x1F:
+					sa_play_sample = true;
+					
+					sa_left = 48;
+					sa_right = 49;
+					break;
+
+				// Palace gates music
+				case 0x7:
+					sa_play_sample = true;
+					
+					sa_left = 50;
+					sa_right = 51;
+					break;
+
+				// Palace Gates end music
+				case 0x9:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 52;
+					sa_right = 53;
+					break;
+
+				// Palace Gates finish him music
+				case 0x8:
+					sa_play_sample = true;
+					sa_left = 54;
+					sa_right = 55;
+					break;								
+																
+				default:
+					soundlatch_w(0, data & 0xff);
+
+					// Time to stop the Mortal Kombat music samples.
+					if(data == 0x0) {
+						a = 0;
+						
+						// Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.
+						for(a = 0; a <= 55; a++) {
+							sample_stop(a);
+						}
+					}
+					
+					break;
+			}
+		}
+		else {
+			switch (data) {
+				// Intro title screen diddy
+				case 0xFD13:
+					// --> Do nothing.
+					mk_do_nothing = true;
+					break;
+
+				// Intro title screen diddy
+				case 0xFF13:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 0; // Left channel.
+					sa_right = 1; // Right channel/
+					break;
+
+				// Second player joining diddy
+				case 0xFD18:
+					// --> Do nothing.
+					mk_do_nothing = true;
+					break;
+
+				// Second player joining diddy
+				case 0xFF18:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 0;
+					sa_right = 1;
+					break;				
+
+				// Character selection screen.
+				case 0xFD01:
+					mk_do_nothing = true; // --> Do nothing.
+					break;
+					
+				// Character selection screen.
+				case 0xFF01:
+					sa_play_sample = true;
+					sa_left = 2;
+					sa_right = 3;			
+					break;
+
+				// Scrolling character map
+				case 0xFD12:
+					mk_do_nothing = true;	
+					break;
+
+				// Scrolling character map
+				case 0xFF12:
+					sa_play_sample = true;
+					
+					sa_left = 4;
+					sa_right = 5;
+					break;
+
+				// Scrolling character map end
+				case 0xFD1E:
+					mk_do_nothing = true;
+					break;
+
+				// Scrolling character map end
+				case 0xFF1E:
+					mk_do_nothing = true;
+					break;
+
+				// Continue music
+				case 0xFD06:
+					mk_do_nothing = true;	
+					break;
+
+				// Continue music
+				case 0xFF06:
+					sa_play_sample = true;
+					
+					sa_left = 6;
+					sa_right = 7;
+					break;
+
+				// Game over music
+				case 0xFD02:
+					mk_do_nothing = true;	
+					break;
+
+				// Game over music
+				case 0xFF02:
+					sa_play_sample = true;
+					
+					sa_left = 20;
+					sa_right = 21;
+					break;
+					
+				// Test your might music.
+				case 0xFD19:
+					mk_do_nothing = true;
+					break;
+
+				// Test your might music.
+				case 0xFF19:
+					sa_play_sample = true;
+					
+					sa_left = 16;
+					sa_right = 17;
+					break;
+
+				// Test your end (fail).
+				case 0xFD1A:
+					mk_do_nothing = true;
+					break;
+
+				// Test your end (fail).
+				case 0xFF1A:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 18;
+					sa_right = 19;
+					break;
+				
+				// Fatality music
+				case 0xFDEE:
+					mk_do_nothing = true;	
+					break;
+
+				// Fatality music
+				case 0xFFEE:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 8;
+					sa_right = 9;
+					break;
+
+				// Fatality music echo loop
+				case 0xFDDE:
+					mk_do_nothing = true;
+					break;
+
+				// Fatality music echo loop
+				case 0xFFDE:
+					mk_do_nothing = true;
+					break;
+									
+				// Courtyard music
+				case 0xFD03:
+					mk_do_nothing = true;	
+					break;
+
+				// Courtyard music
+				case 0xFF03:
+					sa_play_sample = true;
+					
+					sa_left = 10;
+					sa_right = 11;
+					break;
+
+				// Courtyard end music
+				case 0xFD05:
+					mk_do_nothing = true;
+					break;
+
+				// Courtyard end music
+				case 0xFF05:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 12;
+					sa_right = 13;
+					break;
+
+				// Courtyard finish him music
+				case 0xFD04:
+					mk_do_nothing = true;	
+					break;
+
+				// Courtyard finish him music
+				case 0xFF04:
+					sa_play_sample = true;
+					
+					sa_left = 14;
+					sa_right = 15;
+					break;
+
+				// Warrior Shrine music
+				case 0xFD0A:
+					mk_do_nothing = true;	
+					break;
+
+				// Warrior Shrine music
+				case 0xFF0A:
+					sa_play_sample = true;
+					
+					sa_left = 22;
+					sa_right = 23;
+					break;
+
+				// Warrior Shrine end music
+				case 0xFD0C:
+					mk_do_nothing = true;
+					break;
+
+				// Warrior Shrine end music
+				case 0xFF0C:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 24;
+					sa_right = 25;
+					break;
+
+				// Warrior Shrine finish him music
+				case 0xFD0B:
+					mk_do_nothing = true;	
+					break;
+
+				// Warrior Shrine finish him music
+				case 0xFF0B:
+					sa_play_sample = true;
+					
+					sa_left = 26;
+					sa_right = 27;
+					break;
+
+				// The Pit music
+				case 0xFD0D:
+					mk_do_nothing = true;	
+					break;
+
+				// The Pit music
+				case 0xFF0D:
+					sa_play_sample = true;
+					
+					sa_left = 28;
+					sa_right = 29;
+					break;
+
+				// The Pit end music
+				case 0xFD0F:
+					mk_do_nothing = true;
+					break;
+
+				// The Pit end music
+				case 0xFF0F:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 30;
+					sa_right = 31;
+					break;
+
+				// The Pit finish him music
+				case 0xFD0E:
+					mk_do_nothing = true;	
+					break;
+
+				// The Pit finish him music
+				case 0xFF0E:
+					sa_play_sample = true;
+					
+					sa_left = 32;
+					sa_right = 33;
+					break;
+
+				// Throne Room music
+				case 0xFD1B:
+					mk_do_nothing = true;	
+					break;
+
+				// Throne Room music
+				case 0xFF1B:
+					sa_play_sample = true;
+					
+					sa_left = 34;
+					sa_right = 35;
+					break;
+
+				// Throne Room end music
+				case 0xFD1D:
+					mk_do_nothing = true;
+					break;
+
+				// Throne Room end music
+				case 0xFF1D:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 36;
+					sa_right = 37;
+					break;
+
+				// Throne Room finish him music
+				case 0xFD1C:
+					mk_do_nothing = true;	
+					break;
+
+				// Throne Room finish him music
+				case 0xFF1C:
+					sa_play_sample = true;
+					
+					sa_left = 38;
+					sa_right = 39;
+					break;
+
+				// Goro's Lair music
+				case 0xFD14:
+					mk_do_nothing = true;	
+					break;
+
+				// Goro's Lair music
+				case 0xFF14:
+					sa_play_sample = true;
+					
+					sa_left = 40;
+					sa_right = 41;
+					break;
+
+				// Goro's Lair end music
+				case 0xFD17:
+					mk_do_nothing = true;
+					break;
+
+				// Goro's Lair end music
+				case 0xFF17:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 42;
+					sa_right = 43;
+					break;
+
+				// Goro's Lair finish him music
+				case 0xFD16:
+					mk_do_nothing = true;	
+					break;
+
+				// Goro's Lair finish him music
+				case 0xFF16:
+					sa_play_sample = true;
+					
+					sa_left = 44;
+					sa_right = 45;
+					break;
+		
+				// Endurance switch characters chime
+				case 0xFD10:
+					mk_do_nothing = true;	
+					break;
+
+				// Endurance switch characters chime
+				case 0xFF10:
+					sa_play_sample = true;
+					
+					sa_left = 46;
+					sa_right = 47;
+					break;
+					
+				// Victory music
+				case 0xFD1F:
+					mk_do_nothing = true;	
+					break;
+
+				// Victory music
+				case 0xFF1F:
+					sa_play_sample = true;
+					
+					sa_left = 48;
+					sa_right = 49;
+					break;
+
+				// Palace gates music
+				case 0xFD07:
+					mk_do_nothing = true;	
+					break;
+
+				// Palace gates music
+				case 0xFF07:
+					sa_play_sample = true;
+					
+					sa_left = 50;
+					sa_right = 51;
+					break;
+
+				// Palace Gates end music
+				case 0xFD09:
+					mk_do_nothing = true;
+					break;
+
+				// Palace Gates end music
+				case 0xFF09:
+					sa_play_sample = true;
+					sa_loop = 0;
+					
+					sa_left = 52;
+					sa_right = 53;
+					break;
+
+				// Palace Gates finish him music
+				case 0xFD08:
+					mk_do_nothing = true;	
+					break;
+
+				// Palace Gates finish him music
+				case 0xFF08:
+					sa_play_sample = true;
+					sa_left = 54;
+					sa_right = 55;
+					break;								
+																
+				default:
+					soundlatch_w(0, data & 0xff);
+
+					// Time to stop the Mortal Kombat music samples.
+					if(data == 0xFD00 || data == 0xFF00) {
+						a = 0;
+
+						// Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.
+						for(a = 0; a <= 55; a++) {
+							sample_stop(a);
+						}
+					}
+					
+					break;
+			}
+		}
+
+		if(sa_play_sample == true) {
+			a = 0;
+
+			// Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.
+			for(a = 0; a <= 55; a++) {
+				sample_stop(a);
+			}
+
+			sample_start(0, sa_left, sa_loop);
+			sample_start(1, sa_right, sa_loop);
+			
+			// Determine how we should mix these samples together.
+			if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+				sample_set_stereo_volume(1, 100, 100);
+			}
+			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+				sample_set_stereo_volume(0, 100, 100);
+			}
+			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+				sample_set_stereo_volume(0, 100, 0);
+				sample_set_stereo_volume(1, 0, 100);
+			}
+			else if(sample_playing(0) == 0 && sample_playing(1) == 0 && mk_do_nothing == false) { // No sample playing, revert to the default sound.
+				sa_play_original = false;
+				soundlatch_w(0, data & 0xff);
+			}
+
+			if(sa_play_original == true)
+				soundlatch_w(0, data & 0xff);
+		}
+		else if(mk_stop_samples == true) {
+			a = 0;
+
+			// Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.
+			for(a = 0; a <= 55; a++) {
+				sample_stop(a);
+			}
+
+			// Now play the default sound.
+			soundlatch_w(0, data & 0xff);
+		}
+	}
+	else
+		soundlatch_w(0, data & 0xff);
+		
 	if (!(data & 0x200))
 	{
 		cpu_set_irq_line(sound_cpunum, M6809_IRQ_LINE, ASSERT_LINE);
