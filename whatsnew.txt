@@ -2,7 +2,7 @@ Updated 2018
 
 New games now supported in no particular order
 
-Hyper Street Fighter II
+Hyper Street Fighter II (Asia)
 Puzz Loop 2
 Title Fight
 Air Rescue
@@ -25,15 +25,13 @@ Ghost Loop
 Choutetsu Brikin'ger - iron clad
 Sengoku 3
 Zupapa
-King Of Fighters 2001
-King Of Fighters 2002
-King Of Fighters 2003
+The King Of Fighters 2001
+The King Of Fighters 2002
 Metal Slug 4
-Metal Slug 5
 Rage Of The Dragons
 Power Instinct Matrimelee
 Pochi & Nyaa
-Snk Vs Capcom : Svc Chaos
+Snk Vs Capcom : Svc Chaos (bootleg)
 Samurai Shodown V
 Samurai Shodown V Special
 Zintrick
@@ -45,13 +43,12 @@ Denjin Makai
 Asura Blade 
 Asura Buster
 In Your Face
-Snk Vs Capcom : Svc Chaos (Bootleg)
 Bonk's Adventure
 Thunder Hoop
 Pack'n Bang Bang
 Wing Force
 Night Slashers
-Joe & Mac Returns
+Joe & Mac Return
 Osman
 Charlie Ninja
 Boogie Wings
@@ -71,6 +68,8 @@ Oriental Legend Special
 Puzzle Star
 The Killing Blade
 Glass (Censored, Unprotected)
+Crystal Castles (Joystick Version)
+Hook (Japan Version) [SumavisionQ5]
 
 
 
@@ -85,7 +84,6 @@ Fire Barrel
 Funky Jet
 Hacha Mecha Figher
 Monster Slider
-Narc (Via Williams Speedups)
 Rogha Armor Force
 Snowboard Championship
 Street Fighter (With Added Speedups)
@@ -126,8 +124,6 @@ Mustache Boy
 
 Improvements
 
-More Midway speedups added should give a nice boost to all the games
-Added Williams sound core with the speedhacks improves performance in the Midway T-Unit and Y-Unit games
 Added sound support to Fire Shark and Vimana
 Added sound support for Cosmic Alien
 Added BritneysPAIRS improved sample support to Donkey Kong and Donkey kong JR
@@ -147,12 +143,13 @@ Fixed sound and music in Rohga Armor Force
 Fixed 1000 Miglia : Great 1000 Miles Rally gtmr.zip
 Added M6801 MCU dump to Bubble Bobble game now 100% Emulated
 Updated the NMK16 driver for many sound and graphical improvements
-Fixed a reset problem after level 3 in Night Slashers
+Fixed a reset problem after level 3 in Night Slashers (ARM CPU)
 Enabled breakable backgrounds in 64th street code via BritneysPAIRS
 improved sprite drawing for Gun Force 2
 Added the ICS2115 soundcore for the PGM games
 Updated the PGM driver to MAME105 more games are now playable
 Hooked Up Toshiba T5182 sound in Mustache Boy
+Tweaked Tecmo Bowl so it will boot using only a single screen
 Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 
 
