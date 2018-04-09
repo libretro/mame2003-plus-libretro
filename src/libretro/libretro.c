@@ -56,11 +56,7 @@ float vector_intensity = 1.5f;     /* float: vector beam intensity */
 
 extern int crosshair_enable;
 
-#if defined(__CELLOS_LV2__) || defined(GEKKO) || defined(_XBOX)
 unsigned activate_dcs_speedhack = 1;
-#else
-unsigned activate_dcs_speedhack = 0;
-#endif
 
 #ifdef _3DS
 int stricmp(const char *string1, const char *string2)
@@ -89,13 +85,7 @@ void retro_set_environment(retro_environment_t cb)
 {
    static const struct retro_variable vars[] = {
       { "mame2003-plus-frameskip", "Frameskip; 0|1|2|3|4|5" },
-      { "mame2003-plus-dcs-speedhack",
-#if defined(__CELLOS_LV2__) || defined(GEKKO) || defined(_XBOX)
-         "MK2/MK3 DCS Speedhack; disabled|enabled"
-#else
-         "MK2/MK3 DCS Speedhack; enabled|disabled"
-#endif
-      },
+      { "mame2003-plus-dcs-speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
       { "mame2003-plus-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
       { "mame2003-plus-skip_warnings", "Skip Warnings; disabled|enabled" },
       { "mame2003-plus-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
