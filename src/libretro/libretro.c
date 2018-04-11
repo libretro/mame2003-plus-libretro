@@ -419,7 +419,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->geometry.max_width = width;
    info->geometry.max_height = height;
    info->geometry.aspect_ratio = (rotated && !tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-   info->timing.fps = 60.0; // sets the core timing does any game go above 60fps?
+   info->timing.fps = Machine->drv->frames_per_second + 4; 
    info->timing.sample_rate = sample_rate;  // please not if you want bally games to work properly set the sample rate to 22050 you cant go below 48 frames with the default that is set you will need to restart retroarch
 }
 
