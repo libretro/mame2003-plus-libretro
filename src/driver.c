@@ -1577,6 +1577,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( sciu )		/* C09 (c) 1989 Taito America Corporation (US) */
 	DRIVER( bshark )	/* C34 (c) 1989 Taito America Corporation (US) */
 	DRIVER( bsharkj )	/* C34 (c) 1989 Taito Corporation (Japan) */
+        DRIVER( bsharkjjs )	/* C34 (c) 1989 Taito Corporation (Japan) */
 	DRIVER( aquajack )	/* B77 (c) 1990 Taito Corporation Japan (World) */
 	DRIVER( aquajckj )	/* B77 (c) 1990 Taito Corporation (Japan) */
 	DRIVER( spacegun )	/* C57 (c) 1990 Taito Corporation Japan (World) */
@@ -4147,6 +4148,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( ikarijpb )	/* bootleg */
 	DRIVER( victroad )	/*            (c) 1986 */
 	DRIVER( dogosoke )	/*            (c) 1986 */
+	DRIVER( dogosokj )      /* bootleg */
 	DRIVER( gwar )		/* A7003 'GV' (c) 1987 */
 	DRIVER( gwarj )		/* A7003 'GV' (c) 1987 (Japan) */
 	DRIVER( gwara )		/* A7003 'GV' (c) 1987 */
@@ -4166,6 +4168,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tdfeverj )	/* A6006 'TD' (c) 1987 */
 	DRIVER( tdfever2 )	/* A6006 'TD'?(c) 1988 */
 	DRIVER( ikari3 )	/* A7007 'IK3'(c) 1989 */
+	DRIVER( ikari3nr )	/* A7007 'IK3'(c) 1989 */
 	DRIVER( pow )		/* A7008 'DG' (c) 1988 */
 	DRIVER( powj )		/* A7008 'DG' (c) 1988 */
 	DRIVER( searchar )	/* A8007 'BH' (c) 1989 */
@@ -4878,6 +4881,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tndrcadj )	/* UA-0 (c) 1987 Taito */
 	DRIVER( twineagl )	/* UA-2 (c) 1988 + Taito license */
 	DRIVER( downtown )	/* UD-2 (c) 1989 + Romstar or Taito license (DSW) */
+	DRIVER( downtowj )	/* UD-2 (c) 1989 + Romstar or Taito license (DSW) */
 	DRIVER( usclssic )	/* UE   (c) 1989 + Romstar or Taito license (DSW) */
 	DRIVER( calibr50 )	/* UH   (c) 1989 + Romstar or Taito license (DSW) */
 	DRIVER( arbalest )	/* UK   (c) 1989 + Jordan, Romstar or Taito license (DSW) */
