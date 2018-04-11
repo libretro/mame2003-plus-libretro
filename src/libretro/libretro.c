@@ -9,6 +9,11 @@
 static int driverIndex; // Index of mame game loaded
 extern struct osd_create_params videoConfig;
 
+extern int samples_per_frame;
+extern short *samples_buffer;
+extern short *conversion_buffer;
+extern int usestereo;
+
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
 extern int retroJsState[72];
@@ -476,7 +481,7 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 void retro_run (void)
 {
-   int i;
+   int i,j;
    bool pointer_pressed;
    const struct KeyboardInfo *thisInput;
    bool updated = false;
@@ -565,8 +570,21 @@ void retro_run (void)
    }
 
    mame_frame();
-
-   audio_batch_cb(XsoundBuffer, Machine->sample_rate / Machine->drv->frames_per_second);
+   if (samples_per_frame)
+   {
+      if (usestereo)
+         audio_batch_cb(samples_buffer, samples_per_frame);
+      else
+      {
+         for (i = 0, j = 0; i < samples_per_frame; i++)
+         {
+            conversion_buffer[j++] = samples_buffer[i];
+            conversion_buffer[j++] = samples_buffer[i];
+         }
+         audio_batch_cb(conversion_buffer, samples_per_frame);
+      }
+   }
+   
 
 }
 
