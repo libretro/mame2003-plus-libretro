@@ -8,7 +8,8 @@
 	Street Smart (US version 2) 		A7008	SNK 1989
 	Street Smart (World version 1) 		A8007	SNK 1989
 	Street Smart (Japan version 1)		A8007	SNK 1989
-	Ikari III - The Rescue (US) 		A7007	SNK 1989
+	Ikari III - The Rescue (US, Rotary Joystick) 		A7007	SNK 1989
+	Ikari III - The Rescue (World, 8-Way Joystick) 		A7007	SNK 1989
 
 	For some strange reason version 2 of Street Smart runs on Pow hardware!
 
@@ -1196,6 +1197,48 @@ ROM_START( ikari3 )
 	ROM_LOAD16_BYTE( "ik3-4.bin",  0x000001, 0x10000, CRC(a43af6b5) SHA1(1ad3acadbadd21642932028ecd7c282f7fd02856) )
 ROM_END
 
+ROM_START( ikari3nr ) /* 8-Way Joystick */
+	ROM_REGION( 0x40000, REGION_CPU1, 0 )
+	ROM_LOAD16_BYTE( "ik3-2-ver1.c10", 0x000000, 0x20000, CRC(1bae8023) SHA1(42d590a545cbabc596f2e0d9a3d56b1bc270ec9a) )
+	ROM_LOAD16_BYTE( "ik3-3-ver1.c9",  0x000001, 0x20000, CRC(10e38b66) SHA1(28cc82d868f59cd6dde1c4e4c890627012e5e978) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Sound CPU */
+	ROM_LOAD( "ik3-5.bin",  0x000000, 0x10000, CRC(ce6706fc) SHA1(95505b90a9524abf0c8c1ec6b2c40d8f25cb1d92) )
+
+	ROM_REGION( 0x010000, REGION_GFX1, ROMREGION_DISPOSE )	/* characters */
+	ROM_LOAD( "ik3-7.bin",  0x000000, 0x08000, CRC(0b4804df) SHA1(66d16d245bfc404366164823faaea0bfec83e487) )
+	ROM_LOAD( "ik3-8.bin",  0x008000, 0x08000, CRC(10ab4e50) SHA1(dee8416eb720848cf6471e568dadc1cfc6c2e67f) )
+
+	ROM_REGION( 0x280000, REGION_GFX2, ROMREGION_DISPOSE )	/* sprites */
+	ROM_LOAD( "ik3-13.bin", 0x000000, 0x20000, CRC(9a56bd32) SHA1(9301b48f970b71a909fb44514b2e93c3f1516b38) )
+	ROM_LOAD( "ik3-12.bin", 0x020000, 0x20000, CRC(0ce6a10a) SHA1(13a231aa0002b2c5a0d9404ba05a879e212d638e) )
+	ROM_LOAD( "ik3-11.bin", 0x040000, 0x20000, CRC(e4e2be43) SHA1(959d2799708ddae909b017c0696694c46a52697e) )
+	ROM_LOAD( "ik3-10.bin", 0x060000, 0x20000, CRC(ac222372) SHA1(8a17e37699d691b962a6d0256a18550cc73ddfef) )
+	ROM_LOAD( "ik3-9.bin",  0x080000, 0x20000, CRC(c33971c2) SHA1(91f3eb301803f5a7027da1ff7dd2a28bc97e5125) )
+	ROM_LOAD( "ik3-14.bin", 0x0a0000, 0x20000, CRC(453bea77) SHA1(f8f8d0c048fcf32ad99e1de622d9ab635bb86eae) )
+	ROM_LOAD( "ik3-15.bin", 0x0c0000, 0x20000, CRC(781a81fc) SHA1(e08a6cf9c632d1002176afe618605bc06168e8aa) )
+	ROM_LOAD( "ik3-16.bin", 0x0e0000, 0x20000, CRC(80ba400b) SHA1(2cc3e53c45f239516a60c461ad9cfa5955164262) )
+	ROM_LOAD( "ik3-17.bin", 0x100000, 0x20000, CRC(0cc3ce4a) SHA1(7b34435d0bbb089055a183b821ab255170db6bec) )
+	ROM_LOAD( "ik3-18.bin", 0x120000, 0x20000, CRC(ba106245) SHA1(ac609ec3046c21fe6058f91dd4528c5c6448dc15) )
+	ROM_LOAD( "ik3-23.bin", 0x140000, 0x20000, CRC(d0fd5c77) SHA1(c171c64ad252f0ba5b0bbdf37808102fca37b488) )
+	ROM_LOAD( "ik3-22.bin", 0x160000, 0x20000, CRC(4878d883) SHA1(8cdb541bad00e707fb65399d637b7cc9288ada77) )
+	ROM_LOAD( "ik3-21.bin", 0x180000, 0x20000, CRC(50d0fbf0) SHA1(9ff5fbea8d35d0f9a38ddd7eb093edcd91d9f874) )
+	ROM_LOAD( "ik3-20.bin", 0x1a0000, 0x20000, CRC(9a851efc) SHA1(bc7be338ee4da7fbfe6fe44a9c7889817416bc44) )
+	ROM_LOAD( "ik3-19.bin", 0x1c0000, 0x20000, CRC(4ebdba89) SHA1(f3ecfef4c9d2aba58dc3e6aa3cf5813d68686909) )
+	ROM_LOAD( "ik3-24.bin", 0x1e0000, 0x20000, CRC(e9b26d68) SHA1(067d582d33157ed4b7980bd87f2f260ab74c347b) )
+	ROM_LOAD( "ik3-25.bin", 0x200000, 0x20000, CRC(073b03f1) SHA1(b8053139799fa06c7324cee928154c89d4425ab1) )
+	ROM_LOAD( "ik3-26.bin", 0x220000, 0x20000, CRC(9c613561) SHA1(fc7c9a642b18faa94e6a2ba53f35a4d756a25da3) )
+	ROM_LOAD( "ik3-27.bin", 0x240000, 0x20000, CRC(16dd227e) SHA1(db3b1718dea65bc9a1a736aa62aa2be389313baf) )
+	ROM_LOAD( "ik3-28.bin", 0x260000, 0x20000, CRC(711715ae) SHA1(90978c86884ca3d23c138d95b654e2fb3afc6f9a) )
+
+	ROM_REGION( 0x20000, REGION_SOUND1, 0 )	/* UPD7759 samples */
+	ROM_LOAD( "ik3-6.bin",  0x000000, 0x20000, CRC(59d256a4) SHA1(1e7b33329f761c695bc9a817bbc0c5e13386d073) )
+
+	ROM_REGION16_BE( 0x40000, REGION_USER1, 0 ) /* Extra code bank */
+	ROM_LOAD16_BYTE( "ik3-1.c8",   0x000000, 0x10000, CRC(47e4d256) SHA1(7c6921cf2f1b8c3dae867eb1fc14e3da218cc1e0) )
+	ROM_LOAD16_BYTE( "ik3-4.c12",  0x000001, 0x10000, CRC(a43af6b5) SHA1(1ad3acadbadd21642932028ecd7c282f7fd02856) )
+ROM_END
+
 /******************************************************************************/
 
 static DRIVER_INIT( searchar )
@@ -1205,13 +1248,14 @@ static DRIVER_INIT( searchar )
 
 /******************************************************************************/
 
-GAME( 1988, pow,	  0,		pow,	  pow,		0,		  ROT0,  "SNK", "P.O.W. - Prisoners of War (US)" )
-GAME( 1988, powj,	  pow,		pow,	  powj, 	0,		  ROT0,  "SNK", "Datsugoku - Prisoners of War (Japan)" )
-GAME( 1989, searchar, 0,		searchar, searchar, searchar, ROT90, "SNK", "SAR - Search And Rescue (World)" )
-GAME( 1989, sercharu, searchar, searchar, searchar, searchar, ROT90, "SNK", "SAR - Search And Rescue (US)" )
-GAME( 1989, streetsm, 0,		streetsm, streetsm, 0,		  ROT0,  "SNK", "Street Smart (US version 2)" )
+GAME( 1988, pow,      0,	pow,	  pow,	    0,		  ROT0,  "SNK", "P.O.W. - Prisoners of War (US)" )
+GAME( 1988, powj,     pow,	pow,	  powj,     0,		  ROT0,  "SNK", "Datsugoku - Prisoners of War (Japan)" )
+GAME( 1989, searchar, 0,	searchar, searchar, searchar,     ROT90, "SNK", "SAR - Search And Rescue (World)" )
+GAME( 1989, sercharu, searchar, searchar, searchar, searchar,     ROT90, "SNK", "SAR - Search And Rescue (US)" )
+GAME( 1989, streetsm, 0,	streetsm, streetsm, 0,		  ROT0,  "SNK", "Street Smart (US version 2)" )
 GAME( 1989, streets1, streetsm, searchar, streetsm, 0,		  ROT0,  "SNK", "Street Smart (US version 1)" )
 GAME( 1989, streetsw, streetsm, searchar, streetsj, 0,		  ROT0,  "SNK", "Street Smart (World version 1)" )
 GAME( 1989, streetsj, streetsm, searchar, streetsj, 0,		  ROT0,  "SNK", "Street Smart (Japan version 1)" )
-GAME( 1989, ikari3,   0,		ikari3,   ikari3,	searchar, ROT0,  "SNK", "Ikari III - The Rescue" )
+GAME( 1989, ikari3,   0,	ikari3,   ikari3,   searchar,     ROT0,  "SNK", "Ikari III - The Rescue (US, Rotary Joystick)" )
+GAME( 1989, ikari3nr, ikari3,   ikari3,   ikari3,   searchar,     ROT0,  "SNK", "Ikari III - The Rescue (World, 8-Way Joystick)" )
 
