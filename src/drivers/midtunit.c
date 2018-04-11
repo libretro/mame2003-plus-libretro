@@ -95,6 +95,33 @@ static struct Samplesinterface mk_samples_tunit =
 	mk_sample_names_tunit
 };
 
+const char *const nba_jam_sample_names_tunit[] =
+{
+	"*nba_jam",
+	"main-theme-01",
+	"main-theme-02",
+	"team-select-01",
+	"team-select-02",
+	"ingame-01", // First & third quarter
+	"ingame-02",
+	"ingame-03", // Second & fourth quarter
+	"ingame-04",
+	"intermission-01",
+	"intermission-02",
+	"halftime-01",
+	"halftime-02",
+	"theme-end-01",
+	"theme-end-02",
+	0
+};
+
+static struct Samplesinterface nba_jam_samples_tunit =
+{
+	2,	// 2 channels
+	100, // volume
+	nba_jam_sample_names_tunit
+};
+
 /*************************************
  *
  *	Memory maps
@@ -723,6 +750,27 @@ static MACHINE_DRIVER_START( mk )
 	// Lets add our Mortal Kombat music sample packs.
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(SAMPLES, mk_samples_tunit)	
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( nbajam )
+	nba_jam_playing = true; // --> Let the sound hardware know we are playing NBA Jam.
+	nba_jam_title_screen = false;
+	nba_jam_select_screen = false;
+	nba_jam_intermission = false;
+	nba_jam_in_game = false;
+	nba_jam_boot_up	= true;
+	nba_jam_playing_title_music = false;
+	
+	m_nba_last_offset = 0;
+	m_nba_start_counter = 0;
+	
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(tunit_core)
+	MDRV_IMPORT_FROM(williams_adpcm_sound)
+
+	// Lets add our NBA Jam music sample packs.
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(SAMPLES, nba_jam_samples_tunit)
 MACHINE_DRIVER_END
 
 
@@ -1413,8 +1461,8 @@ GAME( 1993, mk2chal,  mk2,     tunit_dcs,   mk2,     mk2,      ROT0, "hack",    
 
 GAME( 1993, jdreddp,  0,       tunit_adpcm, jdreddp, jdreddp,  ROT0, "Midway",   "Judge Dredd (rev LA1, prototype)" )
 
-GAME( 1993, nbajam,   0,       tunit_adpcm, nbajam,  nbajam,   ROT0, "Midway",   "NBA Jam (rev 3.01 04/07/93)" )
-GAME( 1993, nbajamr2, nbajam,  tunit_adpcm, nbajam,  nbajam20, ROT0, "Midway",   "NBA Jam (rev 2.00 02/10/93)" )
+GAME( 1993, nbajam,   0,       nbajam, nbajam,  nbajam,   ROT0, "Midway",   "NBA Jam (rev 3.01 04/07/93)" )
+GAME( 1993, nbajamr2, nbajam,  nbajam, nbajam,  nbajam20, ROT0, "Midway",   "NBA Jam (rev 2.00 02/10/93)" )
 GAME( 1994, nbajamte, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway",   "NBA Jam TE (rev 4.0 03/23/94)" )
 GAME( 1994, nbajamt1, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway",   "NBA Jam TE (rev 1.0 01/17/94)" )
 GAME( 1994, nbajamt2, nbajam,  tunit_adpcm, nbajamte,  nbajamte, ROT0, "Midway",   "NBA Jam TE (rev 2.0 01/28/94)" )

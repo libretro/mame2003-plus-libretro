@@ -597,7 +597,305 @@ static READ_HANDLER( adpcm_command_r )
 
 void williams_adpcm_data_w(int data)
 {
-	if(mk_playing_mortal_kombat == true || mk_playing_mortal_kombat_t == true) {
+	if(nba_jam_playing == true) {
+		int a = 0;
+		bool nba_jam_do_nothing = false;
+		bool sa_play_sample = false;
+		bool sa_play_original = false;
+		bool nba_jam_stop_samples = false;
+		bool nba_jam_play_default = false;
+		
+		int sa_left = 0;
+		int sa_right = 1;
+		bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.		
+
+		switch (data) {
+			case 0x8C:
+				nba_jam_do_nothing = true;
+				break;
+							
+			case 0x0:
+				m_nba_start_counter++;
+
+				// Need to reset the intermission offset for game over.
+				if(m_nba_last_offset == 0x23 || m_nba_last_offset == 0x29)
+					nba_jam_intermission = false;
+					
+				if(nba_jam_boot_up == false) {
+					if(m_nba_start_counter > 10)
+						m_nba_start_counter = 4;
+
+					if(m_nba_start_counter > 1 && nba_jam_in_game == false)
+						nba_jam_title_screen = true;
+						
+					if(nba_jam_title_screen == true && nba_jam_playing_title_music == false && nba_jam_in_game == false && nba_jam_intermission == false) {
+						sa_play_sample = true;
+						nba_jam_select_screen = false;
+						nba_jam_intermission = false;
+						nba_jam_playing_title_music = true;
+						
+						sa_left = 0; // Left channel.
+						sa_right = 1; // Right channel.
+					}
+					else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
+						nba_jam_do_nothing = true;
+					else
+						nba_jam_stop_samples = true;
+				}
+				else {
+					if(m_nba_start_counter == 2) {
+						nba_jam_boot_up = false;
+						m_nba_start_counter = 0;
+					}
+				}
+				break;
+			
+			// Rev 2 calls this on title screen start. Rev 3 does not. Rev 3 does a extra 0 byte call, while Rev 2 does the FF byte instead.
+			case 0xFF:
+				nba_jam_intermission = false;
+			
+				if(m_nba_last_offset == 0) {
+					m_nba_start_counter++;
+					
+					if(m_nba_start_counter > 10)
+						m_nba_start_counter = 4;
+
+					if(m_nba_start_counter > 1 && nba_jam_in_game == false && nba_jam_intermission == false)
+						nba_jam_title_screen = true;
+						
+					if(nba_jam_title_screen == true && nba_jam_playing_title_music == false && nba_jam_in_game == false && nba_jam_intermission == false) {
+						sa_play_sample = true;
+						nba_jam_select_screen = false;
+						nba_jam_intermission = false;
+						nba_jam_playing_title_music = true;
+						
+						sa_left = 0; // Left channel.
+						sa_right = 1; // Right channel.
+					}
+					else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
+						nba_jam_do_nothing = true;
+					else
+						nba_jam_stop_samples = true;
+				}
+				break;
+			
+			// Doesn't seem to do anything? Appears after title screen demo game. Showing high scores. Replay the NBA Jam title music?
+			case 0x7E:
+				nba_jam_intermission = false;
+				if(nba_jam_title_screen == true && nba_jam_playing_title_music == false && nba_jam_in_game == false) {
+					sa_play_sample = true;
+				
+					sa_left = 0;
+					sa_right = 1;
+				}
+				break;				
+							
+			// Team select.
+			case 0x1:
+				sa_play_sample = true;
+				nba_jam_title_screen = false;
+				nba_jam_select_screen = true;
+				nba_jam_intermission = false;
+				nba_jam_in_game = true;
+				nba_jam_playing_title_music = false;
+				
+				sa_left = 2;
+				sa_right = 3;
+				break;
+
+			// 1st quarter.
+			case 0x2:
+				sa_play_sample = true;
+				nba_jam_select_screen = false;
+				nba_jam_title_screen = false;
+				nba_jam_intermission = false;
+				nba_jam_playing_title_music = false;
+				
+				sa_left = 4;
+				sa_right = 5;
+				break;
+
+			// 2nd quarter.
+			case 0x6:
+				sa_play_sample = true;
+				nba_jam_select_screen = false;
+				nba_jam_title_screen = false;
+				nba_jam_intermission = false;
+				nba_jam_playing_title_music = false;
+				
+				sa_left = 6;
+				sa_right = 7;
+				break;				
+
+			// Half time report.
+			case 0x4:
+				sa_play_sample = true;
+				nba_jam_select_screen = false;
+				nba_jam_title_screen = false;
+				nba_jam_intermission = true;
+				nba_jam_in_game = false;
+				nba_jam_playing_title_music = false;
+				
+				sa_left = 10;
+				sa_right = 11;
+				break;
+
+			// 3rd quarter.
+			case 0x7:
+				sa_play_sample = true;
+				nba_jam_select_screen = false;
+				nba_jam_title_screen = false;
+				nba_jam_intermission = false;
+				nba_jam_playing_title_music = false;
+				
+				sa_left = 4;
+				sa_right = 5;
+				break;
+
+			// 4th quarter.
+			case 0x8:
+				sa_play_sample = true;
+				nba_jam_select_screen = false;
+				nba_jam_title_screen = false;
+				nba_jam_intermission = false;
+				nba_jam_playing_title_music = false;
+				
+				sa_left = 6;
+				sa_right = 7;
+				break;
+
+			// Game over and back to title screen. This plays the team select music. We will do nothing and reflag the title screen music to start playback soon after.
+			case 0x9:						
+				nba_jam_select_screen = false;
+				nba_jam_title_screen = false;
+				nba_jam_intermission = false;
+				nba_jam_in_game = false;
+				nba_jam_playing_title_music = false;
+				nba_jam_do_nothing = true;
+				break;
+			
+			// Game stats after playing a full game.
+			case 0x3:
+				sa_play_sample = true;
+				nba_jam_select_screen = false;
+				nba_jam_title_screen = false;
+				nba_jam_intermission = false;
+				nba_jam_in_game = false;
+				nba_jam_playing_title_music = false;
+				
+				sa_left = 12;
+				sa_right = 13;
+				break;
+			
+			// Intermission.
+			case 0xA:
+				sa_play_sample = true;
+				nba_jam_select_screen = false;
+				nba_jam_title_screen = false;
+				nba_jam_intermission = true;
+				nba_jam_in_game = false;
+				nba_jam_playing_title_music = false;
+				
+				sa_left = 8;
+				sa_right = 9;
+				break;
+
+			// Overtime.
+			case 0xB:
+				sa_play_sample = true;
+				nba_jam_select_screen = false;
+				nba_jam_title_screen = false;
+				nba_jam_intermission = false;
+				nba_jam_playing_title_music = false;
+				
+				sa_left = 6;
+				sa_right = 7;
+				break;
+			
+			// NBA Jam halftime report.
+			case 0x71:
+					nba_jam_do_nothing = true;
+				break;
+
+			// Altitude with a attitude.
+			case 0xCC:
+					nba_jam_do_nothing = true;
+				break;
+							
+			// Welcome to NBA Jam.
+			case 0xCB:
+				if(nba_jam_select_screen == true)
+					nba_jam_do_nothing = true;
+				else
+					nba_jam_play_default = true;
+				break;
+			
+			default:
+				soundlatch_w(0, data & 0xff);
+
+				// Time to stop the NBA Jam music samples.
+				if(data == 0x0 && nba_jam_title_screen == false) {
+					a = 0;
+					
+					// Lets stop the NBA Jam sample music as we are starting up a new sample to play.
+					for(a = 0; a <= 13; a++) {
+						sample_stop(a);
+					}
+				}
+				
+				break;
+		}
+
+		if(sa_play_sample == true) {
+			a = 0;
+
+			// Lets stop the NBA Jam sample music as we are starting up a new sample to play.
+			for(a = 0; a <= 13; a++) {
+				sample_stop(a);
+			}
+
+			sample_start(0, sa_left, sa_loop);
+			sample_start(1, sa_right, sa_loop);
+			
+			// Determine how we should mix these samples together.
+			if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+				sample_set_stereo_volume(1, 100, 100);
+			}
+			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+				sample_set_stereo_volume(0, 100, 100);
+			}
+			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+				sample_set_stereo_volume(0, 100, 0);
+				sample_set_stereo_volume(1, 0, 100);
+			}
+			else if(sample_playing(0) == 0 && sample_playing(1) == 0 && nba_jam_do_nothing == false) { // No sample playing, revert to the default sound.
+				sa_play_original = false;
+				soundlatch_w(0, data & 0xff);
+			}
+
+			if(sa_play_original == true)
+				soundlatch_w(0, data & 0xff);
+		}
+		else if(nba_jam_do_nothing == true) {
+			// --> Do nothing.
+		}
+		else if(nba_jam_stop_samples == true) {
+			a = 0;
+
+			// Lets stop the NBA Jam sample music as we are starting up a new sample to play.
+			for(a = 0; a <= 13; a++) {
+				sample_stop(a);
+			}
+
+			// Now play the default sound.
+			soundlatch_w(0, data & 0xff);
+		}
+		else if(nba_jam_play_default == true)
+			soundlatch_w(0, data & 0xff);
+
+		m_nba_last_offset = data;
+	}
+	else if(mk_playing_mortal_kombat == true || mk_playing_mortal_kombat_t == true) {
 		int a = 0;
 		bool mk_do_nothing = false;
 		bool sa_play_sample = false;
