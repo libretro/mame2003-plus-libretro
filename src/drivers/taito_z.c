@@ -1489,6 +1489,29 @@ static MEMORY_WRITE16_START( bshark_cpub_writemem )
 	{ 0x800000, 0x801fff, TC0150ROD_word_w },	/* "root ram" */
 MEMORY_END
 
+static MEMORY_READ16_START( bsharkjjs_readmem )
+	{ 0x000000, 0x07ffff, MRA16_ROM },
+	{ 0x100000, 0x10ffff, MRA16_RAM },	/* main CPUA ram */
+	{ 0x110000, 0x113fff, sharedram_r },
+	{ 0x400000, 0x40000f, TC0220IOC_halfword_r },
+	{ 0xa00000, 0xa01fff, paletteram16_word_r },	/* palette */
+	{ 0xc00000, 0xc00fff, MRA16_RAM },	/* spriteram */
+	{ 0xd00000, 0xd0ffff, TC0100SCN_word_0_r },	/* tilemaps */
+	{ 0xd20000, 0xd2000f, TC0100SCN_ctrl_word_0_r },
+MEMORY_END
+
+static MEMORY_WRITE16_START( bsharkjjs_writemem )
+	{ 0x000000, 0x07ffff, MWA16_ROM },
+	{ 0x100000, 0x10ffff, MWA16_RAM },
+	{ 0x110000, 0x113fff, sharedram_w, &taitoz_sharedram, &taitoz_sharedram_size },
+	{ 0x400000, 0x40000f, TC0220IOC_halfword_w },
+	{ 0x600000, 0x600001, cpua_noz80_ctrl_w },
+	{ 0xa00000, 0xa01fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
+	{ 0xc00000, 0xc00fff, MWA16_RAM, &spriteram16, &spriteram_size },
+	{ 0xd00000, 0xd0ffff, TC0100SCN_word_0_w },	/* tilemaps */
+	{ 0xd20000, 0xd2000f, TC0100SCN_ctrl_word_0_w },
+MEMORY_END
+
 
 static MEMORY_READ16_START( sci_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
@@ -2344,6 +2367,64 @@ INPUT_PORTS_START( bsharkj )
 
 	PORT_START	/* "Y adjust" */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( bsharkjjs )
+	PORT_START /* DSW A */
+	PORT_DIPNAME( 0x01, 0x01, "Mirror screen" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	TAITO_Z_COINAGE_JAPAN_8
+
+	
+	PORT_START /* DSW B */
+	TAITO_Z_DIFFICULTY_8
+	PORT_DIPNAME( 0x0c, 0x04, "Speed of Sight" )
+	PORT_DIPSETTING(    0x0c, "Slow" )
+	PORT_DIPSETTING(    0x08, "Medium" )
+	PORT_DIPSETTING(    0x04, "Fast" )
+	PORT_DIPSETTING(    0x00, "Fastest" )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START      /* IN0 */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_TILT )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START      /* IN1, unused */
+
+	PORT_START     /* IN2, */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	/* "Fire" */
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	/* Same as Fire, */
 INPUT_PORTS_END
 
 INPUT_PORTS_START( sci )	// dsws may be slightly wrong
@@ -3214,6 +3295,36 @@ static MACHINE_DRIVER_START( bshark )
 	MDRV_SOUND_ADD(YM2610, ym2610_interfaceb)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( bsharkjjs )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 12000000)	/* 12 MHz ??? */
+	MDRV_CPU_MEMORY(bsharkjjs_readmem,bsharkjjs_writemem)
+	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
+
+	MDRV_CPU_ADD(M68000, 12000000)	/* 12 MHz ??? */
+	MDRV_CPU_MEMORY(bshark_cpub_readmem,bshark_cpub_writemem)
+	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(100)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(40*8, 32*8)
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 2*8, 32*8-1)
+	MDRV_GFXDECODE(taitoz_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(4096)
+
+	MDRV_VIDEO_START(taitoz)
+	MDRV_VIDEO_UPDATE(bshark)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(YM2610, ym2610_interfaceb)
+MACHINE_DRIVER_END
+
 
 static MACHINE_DRIVER_START( sci )
 
@@ -3718,6 +3829,48 @@ ROM_START( bsharkj )
 	ROM_LOAD( "c34_22.8",  0x00000, 0x00400, CRC(643e8bfc) SHA1(a6e6086fb8fbd102e01ec72fe60a4232f5909565) )
 ROM_END
 
+ROM_START( bsharkjjs )
+	ROM_REGION( 0x80000, REGION_CPU1, 0 )	/* 512K for 68000 code (CPU A) */
+	ROM_LOAD16_BYTE( "c34_79.98", 0x00000, 0x20000, CRC(bc3f2e93) SHA1(a03778fb8c8fb91956005cab0f2050262bc8f306) )
+	ROM_LOAD16_BYTE( "c34_77.75", 0x00001, 0x20000, CRC(917916d0) SHA1(86db550737a20fd5aa2862f7a6be0d47da5fc74e) )
+	ROM_LOAD16_BYTE( "c34_78.97", 0x40000, 0x20000, CRC(f2fcc880) SHA1(6d8530056bd2e0e54061d95048b3b5e0b1eb76ef) )
+	ROM_LOAD16_BYTE( "c34_76.74", 0x40001, 0x20000, CRC(de97fac0) SHA1(53baf70bbf0102ff965921330e2d7a918318acff) )
+
+	ROM_REGION( 0x80000, REGION_CPU2, 0 )	/* 512K for 68000 code (CPU B) */
+	ROM_LOAD16_BYTE( "c34_82.128", 0x00000, 0x20000, CRC(6869fa99) SHA1(16221f25c865a81ca4f6a987b6de02a3ccf3208c) )
+	ROM_LOAD16_BYTE( "c34_80.112", 0x00001, 0x20000, CRC(e1783eb4) SHA1(02aaaf117f258625052734064692d2c1679b80b6) )
+	ROM_LOAD16_BYTE( "c34_83.129", 0x40000, 0x20000, CRC(eec0b364) SHA1(17010b19570ee65020ae09e5734b48a763a12e3f) )
+	ROM_LOAD16_BYTE( "c34_81.113", 0x40001, 0x20000, CRC(23ce6bcf) SHA1(b084209f809793d8f0f11ddabee217ba1abd6038) )
+
+	ROM_REGION( 0x80000, REGION_GFX1, 0 )
+	ROM_LOAD( "c34_05.3", 0x00000, 0x80000, CRC(596b83da) SHA1(826cf1e48a017a0cbfcc4a4f507dfb285594178b) )	/* SCR 8x8 */
+
+	ROM_REGION( 0x200000, REGION_GFX2, 0 )
+	ROM_LOAD32_BYTE( "c34_04.17", 0x000000, 0x080000, CRC(2446b0da) SHA1(bce5c73533e2bb7dfa7f18fad510f818cf1a542a) )	/* OBJ 16x8 */
+	ROM_LOAD32_BYTE( "c34_03.16", 0x000001, 0x080000, CRC(a18eab78) SHA1(155f0efbfe73e18355804477d4b8954bb47bf1ef) )
+	ROM_LOAD32_BYTE( "c34_02.15", 0x000002, 0x080000, CRC(8488ba10) SHA1(60f8f0dc9d4bc6bc452527250221c9915e9dfe6e) )
+	ROM_LOAD32_BYTE( "c34_01.14", 0x000003, 0x080000, CRC(3ebe8c63) SHA1(fa7403bf895c041cb64234209c944683ae372e57) )
+
+	ROM_REGION( 0x80000, REGION_GFX3, 0 )	/* don't dispose */
+	ROM_LOAD( "c34_07.42", 0x00000, 0x80000, CRC(edb07808) SHA1(f32b4b93e9125536376d96fbca76c2b2f5f78656) )	/* ROD, road lines */
+
+	ROM_REGION16_LE( 0x80000, REGION_USER1, 0 )
+	ROM_LOAD16_WORD( "c34_06.12", 0x00000, 0x80000, CRC(d200b6eb) SHA1(6bfe3a7dde8d4e983521877d2bb176f5d126b763) )	/* STY spritemap */
+
+	ROM_REGION( 0x80000, REGION_SOUND1, 0 )	/* ADPCM samples */
+	ROM_LOAD( "c34_08.127", 0x00000, 0x80000, CRC(89a30450) SHA1(96b96ca5a3e20cdceb9ac5ddf377fb21a9a529fb) )
+
+	ROM_REGION( 0x80000, REGION_SOUND2, 0 )	/* Delta-T samples */
+	ROM_LOAD( "c34_09.126", 0x00000, 0x80000, CRC(39d12b50) SHA1(5c5d1369597604376943e4825f6c09cc28d66047) )
+
+	ROM_REGION( 0x10000, REGION_USER2, 0 )	/* unused ROMs */
+	ROM_LOAD( "c34_18.22", 0x00000, 0x10000, CRC(7245a6f6) SHA1(5bdde4e3bcde8c59dc84478c3cc079d7ef8ee9c5) )
+	ROM_LOAD( "c34_19.72", 0x00000, 0x00100, CRC(2ee9c404) SHA1(3a2ddaaaf7abe9f47f7e062b002fd3a61c80f60b) )	// road/sprite priority and palette select
+	ROM_LOAD( "c34_20.89", 0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )	// road A/B internal priority
+	ROM_LOAD( "c34_21.7",  0x00000, 0x00400, CRC(10728853) SHA1(45d7cc8e06fbe01295cc2194bca9586f0ef8b12b) )
+	ROM_LOAD( "c34_22.8",  0x00000, 0x00400, CRC(643e8bfc) SHA1(a6e6086fb8fbd102e01ec72fe60a4232f5909565) )
+ROM_END
+
 ROM_START( sci )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 )	/* 512K for 68000 code (CPU A) */
 	ROM_LOAD16_BYTE( "c09-37.rom", 0x00000, 0x20000, CRC(0fecea17) SHA1(0ad4454eee6646b0f978b1ba83206d64c1f6d081) )
@@ -4152,6 +4305,7 @@ GAMEX( 1988, chasehqj, chasehq,  chasehq,  chasehqj, taitoz,   ROT0,            
 GAMEX( 1988, enforce,  0,        enforce,  enforce,  taitoz,   ROT0,               "Taito Corporation", "Enforce (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1989, bshark,   0,        bshark,   bshark,   bshark,   ORIENTATION_FLIP_X, "Taito America Corporation", "Battle Shark (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1989, bsharkj,  bshark,   bshark,   bsharkj,  bshark,   ORIENTATION_FLIP_X, "Taito Corporation", "Battle Shark (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1989, bsharkjjs,bshark,   bsharkjjs,bsharkjjs,bshark,   ORIENTATION_FLIP_X, "Taito Corporation", "Battle Shark (Japan, Joystick)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1989, sci,      0,        sci,      sci,      taitoz,   ROT0,               "Taito Corporation Japan", "Special Criminal Investigation (World set 1)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1989, scia,     sci,      sci,      sci,      taitoz,   ROT0,               "Taito Corporation Japan", "Special Criminal Investigation (World set 2)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1989, sciu,     sci,      sci,      sciu,     taitoz,   ROT0,               "Taito America Corporation", "Special Criminal Investigation (US)", GAME_IMPERFECT_GRAPHICS )
