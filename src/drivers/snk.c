@@ -297,7 +297,7 @@ static int snk_rot8( int which ){
 	return (value&0xf) | dial_8[joypos16>>1];
 }
 
-// Ken
+// BritneysPAIRS
 static int snk_rot8_ikarijpb( int which ){
 	const int dial_8[8]   = { 0xf0,0x30,0x10,0x50,0x40,0xc0,0x80,0xa0 };
 	int value = readinputport(which+1);
