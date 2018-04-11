@@ -226,6 +226,9 @@ Credits (in alphabetical order)
 int snk_gamegroup = 0;
 int snk_sound_busy_bit = 0;
 int snk_irq_delay = 1500;
+int direction = 0;
+int directionb = 0;
+int directionset = 0;
 
 // see IRQ notes in drivers\marvins.c
 static void irq_trigger_callback(int cpu) { cpu_set_irq_line(cpu, 0, HOLD_LINE); }
@@ -260,6 +263,8 @@ typedef enum {
 	SNK_INP5,SNK_INP6,SNK_INP7,SNK_INP8,
 	SNK_INP9,SNK_INP10,SNK_INP11,
 	SNK_ROT8_PLAYER1, SNK_ROT8_PLAYER2,
+	SNK_ROT8_IKARIJPB_PLAYER1, SNK_ROT8_IKARIJPB_PLAYER2,
+	SNK_ROTX_PLAYER1, SNK_ROTX_PLAYER2,
 	SNK_ROT12_PLAYER1, SNK_ROT12_PLAYER2
 } SNK_INPUT_PORT_TYPE;
 
@@ -291,6 +296,76 @@ static int snk_rot8( int which ){
 	int joypos16 = value>>4;
 	return (value&0xf) | dial_8[joypos16>>1];
 }
+
+// Ken
+static int snk_rot8_ikarijpb( int which ){
+	const int dial_8[8]   = { 0xf0,0x30,0x10,0x50,0x40,0xc0,0x80,0xa0 };
+	int value = readinputport(which+1);
+	int joypos16 = value>>4;
+	if (which == 0)
+{
+	if ((value&0xf) == 14)
+		direction = 0;
+	if ((value&0xf) == 6)
+		direction = 1;
+	if ((value&0xf) == 7)
+		direction = 2;
+	if ((value&0xf) == 5)
+		direction = 3;
+	if ((value&0xf) == 13)
+		direction = 4;
+	if ((value&0xf) == 9)
+		direction = 5;
+	if ((value&0xf) == 11)
+		direction = 6;
+	if ((value&0xf) == 10)
+		direction = 7;
+	  directionset = direction;
+}
+	if (which == 1)
+{
+	if ((value&0xf) == 14)
+		directionb = 0;
+	if ((value&0xf) == 6)
+		directionb = 1;
+	if ((value&0xf) == 7)
+		directionb = 2;
+	if ((value&0xf) == 5)
+		directionb = 3;
+	if ((value&0xf) == 13)
+		directionb = 4;
+	if ((value&0xf) == 9)
+		directionb = 5;
+	if ((value&0xf) == 11)
+		directionb = 6;
+	if ((value&0xf) == 10)
+		directionb = 7;
+  directionset = directionb;
+}
+
+	return (value&0xf) | dial_8[directionset];
+
+}
+
+
+static int snk_rotx( int which ){
+	const int dial_12[13] = {
+	0xb0,0xa0,0x90,0x80,0x70,0x60,
+	0xf0,
+	/* 0xf0 isn't a valid direction, but avoids the "joystick error"
+	protection
+	** in Guerilla War which happens when direction changes directly from
+	** 0x50<->0x60 8 times.
+	*/
+	0x50,0x40,0x30,0x20,0x10,0x00
+	};
+	int value = readinputport(which+1);
+	int joypos16 = value>>4;
+
+	return (value&0xf) | 0xf0;
+
+}
+
 
 static int snk_rot12( int which ){
 /*
@@ -338,6 +413,12 @@ static int snk_input_port_r( int which ){
 
 		case SNK_ROT8_PLAYER1: return snk_rot8( 0 );
 		case SNK_ROT8_PLAYER2: return snk_rot8( 1 );
+		
+		case SNK_ROT8_IKARIJPB_PLAYER1: return snk_rot8_ikarijpb( 0 );
+		case SNK_ROT8_IKARIJPB_PLAYER2: return snk_rot8_ikarijpb( 1 );
+
+		case SNK_ROTX_PLAYER1: return snk_rotx( 0 );
+		case SNK_ROTX_PLAYER2: return snk_rotx( 1 );
 
 		case SNK_ROT12_PLAYER1: return snk_rot12( 0 );
 		case SNK_ROT12_PLAYER2: return snk_rot12( 1 );
@@ -1733,6 +1814,48 @@ ROM_START( dogosoke ) /* Victory Road Japan */
 	ROM_LOAD( "up03_g5.rom", 0x10000, 0x10000, CRC(aae30cd6) SHA1(9d0d2c0f947387a0924bf0ed73de9305c1625054) )
 ROM_END
 
+ROM_START( dogosokj ) /* Victory Road Japan (Joystick version) */
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* CPU A code */
+	ROM_LOAD( "01",  0x00000, 0x10000, CRC(53b0ad90) SHA1(7581365d6c82b35189852d96437b0f19abe2cf74) )
+
+	ROM_REGION(  0x10000 , REGION_CPU2, 0 )	/* CPU B code */
+	ROM_LOAD( "p2",  0x00000, 0x10000, CRC(907fac83) SHA1(691d95f95ef7a308c7f5e7defb20971b54423745) )
+
+	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* sound code */
+	ROM_LOAD( "up03_k7.rom",  0x00000, 0x10000, CRC(173fa571) SHA1(fb9c783e5377fa86f70afee6804c8ee9061b27fd) )
+
+	ROM_REGION( 0x0c00, REGION_PROMS, 0 )
+	ROM_LOAD( "mb7122e.1k", 0x000, 0x400, CRC(491ab831) SHA1(2801d68d8a7fddaca5c48f09d421fc48ff53d244) )
+	ROM_LOAD( "mb7122e.2l", 0x400, 0x400, CRC(8feca424) SHA1(c3d666f4b4b914199b24ded02f9a1b643bf90d26) )
+	ROM_LOAD( "mb7122e.1l", 0x800, 0x400, CRC(220076ca) SHA1(a353c770c0ffb1105fb93c97977597ad2fda8ac8) )
+
+	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE ) /* characters */
+	ROM_LOAD( "up02_b3.rom",  0x0000, 0x4000,  CRC(51a4ec83) SHA1(8cb743c68a51b71ef3d78127b2cf6ab0877b13f6) )
+
+	ROM_REGION( 0x20000, REGION_GFX2, ROMREGION_DISPOSE ) /* tiles */
+	ROM_LOAD( "p17",  0x00000, 0x8000, CRC(19d4518c) SHA1(133ac6e3d75af6cfc9aa9d1d467f16696c7f3794) )
+	ROM_LOAD( "p18",  0x08000, 0x8000, CRC(d818be43) SHA1(274827b13e8572f68302b7e0b5964d3e32544303) )
+	ROM_LOAD( "p19",  0x10000, 0x8000, CRC(d64e0f89) SHA1(41204d5b0bc9d2f2599c3e881f10b73bddae3c5c) )
+	ROM_LOAD( "p20",  0x18000, 0x8000, CRC(edba0f31) SHA1(b3fc886d3cf7a34b470dd72cc0268a193f9a64d7) )
+
+	ROM_REGION( 0x18000, REGION_GFX3, ROMREGION_DISPOSE ) /* 16x16 sprites */
+	ROM_LOAD( "up02_d3.rom",  0x00000, 0x8000, CRC(d43044f8) SHA1(4d5bc3730ea1bb1978ae246745416b71979cb100) )
+	ROM_LOAD( "up02_e3.rom",  0x08000, 0x8000, CRC(365ed2d8) SHA1(e0f600c936483e3d0d03709ae709321d072145bd) )
+	ROM_LOAD( "up02_g3.rom",  0x10000, 0x8000, CRC(92579bf3) SHA1(eb2084bf5c62cbbf08dc25997702f8e8eb3dcc5d) )
+
+	ROM_REGION( 0x40000, REGION_GFX4, ROMREGION_DISPOSE ) /* 32x32 sprites */
+	ROM_LOAD( "p11", 0x00000, 0x8000, CRC(668b25a4) SHA1(235423e3b442271581dde0195fdff2a37596a9bc) )
+	ROM_LOAD( "p14", 0x08000, 0x8000, CRC(a7031d4a) SHA1(9ea184990372909de7d8fe0891bb3e0441b13f90) )
+	ROM_LOAD( "p12", 0x10000, 0x8000, CRC(f44e95fa) SHA1(6633bd1e9e947cae5ba696f6fd393bf0cd7969b0) )
+	ROM_LOAD( "p15", 0x18000, 0x8000, CRC(120d2450) SHA1(8699db76f598e7719fa5f9a3dcc07d24c53e5da4) )
+	ROM_LOAD( "p13", 0x20000, 0x8000, CRC(980ca3d8) SHA1(bda6f19edf43c61c0c8d2235bb60def76c801b87) )
+	ROM_LOAD( "p16", 0x28000, 0x8000, CRC(9f820e8a) SHA1(2be0128d6861241f6a9c5a7032368dbc6d57b44e) )
+
+	ROM_REGION( 0x20000, REGION_SOUND1, 0 )
+	ROM_LOAD( "up03_f5.rom", 0x00000, 0x10000, CRC(5b43fe9f) SHA1(28f803f633b83b17f9b10516d38c862f90d55ff3) )
+	ROM_LOAD( "up03_g5.rom", 0x10000, 0x10000, CRC(aae30cd6) SHA1(9d0d2c0f947387a0924bf0ed73de9305c1625054) )
+ROM_END
+
 /***********************************************************************/
 
 ROM_START( gwar )
@@ -2774,6 +2897,63 @@ INPUT_PORTS_START( victroad )
 INPUT_PORTS_END
 
 
+INPUT_PORTS_START( dogosokj )
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN ) 	/* sound related ??? */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	SNK_JOY1_NODIAL_PORT
+
+	SNK_JOY2_NODIAL_PORT
+
+	SNK_BUTTON_PORT
+
+	PORT_START /* DSW 1 */
+	PORT_BITX( 0x01,    0x01, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Kill friend & walk everywhere" ,0 ,0 )
+	PORT_DIPSETTING(    0x01, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x02, 0x02, "P1 & P2 Fire Buttons" )
+	PORT_DIPSETTING(    0x02, "Separate" )
+	PORT_DIPSETTING(    0x00, "Common" )
+	PORT_DIPNAME( 0x04, 0x04, "Bonus Occurrence" )
+	PORT_DIPSETTING(    0x04, "1st & every 2nd" )
+	PORT_DIPSETTING(    0x00, "1st & 2nd only" )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x08, "3" )
+	PORT_DIPSETTING(    0x00, "5" )
+	SNK_COINAGE
+
+	PORT_START /* DSW 2 */
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x03, "Easy" )
+	PORT_DIPSETTING(    0x02, "Normal" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x0c, 0x08, "Game Mode" )
+	PORT_DIPSETTING(    0x0c, "Demo Sounds Off" )
+	PORT_DIPSETTING(    0x08, "Demo Sounds On" )
+	PORT_DIPSETTING(    0x00, "Freeze" )
+	PORT_BITX( 0,       0x04, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite Lives", IP_KEY_NONE, IP_JOY_NONE )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x30, "50k 100k" )
+	PORT_DIPSETTING(    0x20, "60k 120k" )
+	PORT_DIPSETTING(    0x10, "100k 200k" )
+	PORT_DIPSETTING(    0x00, "None" )
+	PORT_DIPNAME( 0x40 ,0x00, "Allow Continue" )
+	PORT_DIPSETTING(    0x40, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
+INPUT_PORTS_END
+
+
 INPUT_PORTS_START( gwar )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN ) 	/* sound related ??? */
@@ -2788,6 +2968,63 @@ INPUT_PORTS_START( gwar )
 	SNK_JOY1_PORT
 
 	SNK_JOY2_PORT
+
+	SNK_BUTTON_PORT
+
+	PORT_START /* DSW 1 */
+	PORT_DIPNAME( 0x01, 0x01, "Allow Continue" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, "Bonus Occurrence" )
+	PORT_DIPSETTING(    0x04, "1st & 2nd only" )
+	PORT_DIPSETTING(    0x00, "1st & every 2nd" )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )
+	PORT_DIPSETTING(    0x08, "3" )
+	PORT_DIPSETTING(    0x00, "5" )
+	SNK_COINAGE
+
+	PORT_START /* DSW 2 */
+	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x03, "Easy" )
+	PORT_DIPSETTING(    0x02, "Normal" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, "Freeze" )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Bonus_Life ) )
+	PORT_DIPSETTING(    0x30, "30k 60k" )
+	PORT_DIPSETTING(    0x20, "40k 80k" )
+	PORT_DIPSETTING(    0x10, "50k 100k" )
+	PORT_DIPSETTING(    0x00, "None" )
+	PORT_DIPNAME( 0x40 ,0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( gwarb )
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN ) 	/* sound related ??? */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* causes reset */
+	PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
+
+	SNK_JOY1_NODIAL_PORT
+
+	SNK_JOY2_NODIAL_PORT
 
 	SNK_BUTTON_PORT
 
@@ -3751,8 +3988,19 @@ const SNK_INPUT_PORT_TYPE ikari_io[SNK_MAX_INPUT_PORTS] = {
 
 const SNK_INPUT_PORT_TYPE ikarijpb_io[SNK_MAX_INPUT_PORTS] = {
 	/* c000 */ SNK_INP0,
-	/* c100 */ SNK_ROT8_PLAYER1,	SNK_UNUSED,
-	/* c200 */ SNK_ROT8_PLAYER2,	SNK_UNUSED,
+	/* c100 */ SNK_ROT8_IKARIJPB_PLAYER1,	SNK_UNUSED,
+	/* c200 */ SNK_ROT8_IKARIJPB_PLAYER2,	SNK_UNUSED,
+	/* c300 */ SNK_INP3,		SNK_UNUSED,
+	/* c400 */ SNK_UNUSED,		SNK_UNUSED,
+	/* c500 */ SNK_INP4,		SNK_UNUSED,
+	/* c600 */ SNK_INP5,
+	/* c080 */ SNK_UNUSED
+};
+
+const SNK_INPUT_PORT_TYPE gwarb_io[SNK_MAX_INPUT_PORTS] = {
+	/* c000 */ SNK_INP0,
+	/* c100 */ SNK_ROTX_PLAYER1,	SNK_UNUSED,
+	/* c200 */ SNK_ROTX_PLAYER2,	SNK_UNUSED,
 	/* c300 */ SNK_INP3,		SNK_UNUSED,
 	/* c400 */ SNK_UNUSED,		SNK_UNUSED,
 	/* c500 */ SNK_INP4,		SNK_UNUSED,
@@ -3878,6 +4126,14 @@ static DRIVER_INIT( gwar ){
 	snk_gamegroup = 2;
 }
 
+static DRIVER_INIT( gwarb ){
+	snk_sound_busy_bit = 0x01;
+	snk_io = gwarb_io;
+	hard_flags = 0;
+	snk_bg_tilemap_baseaddr = 0xd800;
+	snk_gamegroup = 2;
+}
+
 static DRIVER_INIT( gwara ){
 	snk_sound_busy_bit = 0x01;
 	snk_io = ikari_io;
@@ -3992,13 +4248,14 @@ GAMEX( 1988, fitegol2, fitegolf, athena,   fitegolf, fitegolf, ROT0,   "SNK", "F
 GAMEX( 1988, countryc, fitegolf, athena,   countryc, fitegolf, ROT0,   "SNK", "Country Club", GAME_NO_COCKTAIL )
 GAMEX( 1986, ikari,    0,        ikari,    ikari,    ikari,    ROT270, "SNK", "Ikari Warriors (US)", GAME_NO_COCKTAIL )
 GAMEX( 1986, ikarijp,  ikari,    ikari,    ikarijp,  ikarijp,  ROT270, "SNK", "Ikari (Japan)", GAME_NO_COCKTAIL )
-GAMEX( 1986, ikarijpb, ikari,    ikari,    ikarijp,  ikarijpb, ROT270, "bootleg", "Ikari (Japan bootleg)", GAME_NO_COCKTAIL )
+GAMEX( 1986, ikarijpb, ikari,    ikari,    ikarijp,  ikarijpb, ROT270, "bootleg", "Ikari (joystick hack bootleg)", GAME_NO_COCKTAIL )
 GAMEX( 1986, victroad, 0,        victroad, victroad, victroad, ROT270, "SNK", "Victory Road", GAME_NO_COCKTAIL )
 GAMEX( 1986, dogosoke, victroad, victroad, victroad, dogosoke, ROT270, "SNK", "Dogou Souken", GAME_NO_COCKTAIL )
+GAMEX( 1986, dogosokj, victroad, victroad, dogosokj, dogosoke, ROT270, "bootleg", "Dogou Souken (joystick hack bootleg)", GAME_NO_COCKTAIL )
 GAMEX( 1987, gwar,     0,        gwar,     gwar,     gwar,     ROT270, "SNK", "Guerrilla War (US)", GAME_NO_COCKTAIL )
 GAMEX( 1987, gwarj,    gwar,     gwar,     gwar,     gwar,     ROT270, "SNK", "Guevara (Japan)", GAME_NO_COCKTAIL )
 GAMEX( 1987, gwara,    gwar,     gwar,     gwar,     gwara,    ROT270, "SNK", "Guerrilla War (Version 1)", GAME_NO_COCKTAIL )
-GAMEX( 1987, gwarb,    gwar,     gwar,     gwar,     gwar,     ROT270, "bootleg", "Guerrilla War (bootleg)", GAME_NO_COCKTAIL )
+GAMEX( 1987, gwarb,    gwar,     gwar,     gwarb,    gwarb,    ROT270, "bootleg", "Guerrilla War (joystick hack bootleg)", GAME_NO_COCKTAIL )
 GAMEX( 1987, bermudat, 0,        bermudat, bermudat, bermudat, ROT270, "SNK", "Bermuda Triangle (Japan)", GAME_NO_COCKTAIL )
 GAMEX( 1987, bermudao, bermudat, bermudat, bermudat, bermudat, ROT270, "SNK", "Bermuda Triangle (Japan old version)", GAME_NO_COCKTAIL )
 GAMEX( 1987, bermudaa, bermudat, bermudat, bermudaa, worldwar, ROT270, "SNK", "Bermuda Triangle (US older version)", GAME_NO_COCKTAIL )
