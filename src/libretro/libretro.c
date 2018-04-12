@@ -6,6 +6,9 @@
 #include "driver.h"
 #include "state.h"
 
+
+extern int framerate_test;
+
 static int driverIndex; // Index of mame game loaded
 extern struct osd_create_params videoConfig;
 
@@ -419,7 +422,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->geometry.max_width = width;
    info->geometry.max_height = height;
    info->geometry.aspect_ratio = (rotated && !tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-   info->timing.fps = Machine->drv->frames_per_second; 
+   info->timing.fps = Machine->drv->frames_per_second; // sets the core timing does any game go above 60fps?
    info->timing.sample_rate = sample_rate;  // please not if you want bally games to work properly set the sample rate to 22050 you cant go below 48 frames with the default that is set you will need to restart retroarch
 }
 
@@ -568,6 +571,17 @@ void retro_run (void)
          retroJsState[17 + offset] = 0;
       }
    }
+
+	if (framerate_test == 1)
+	{
+		struct retro_system_av_info info;
+		retro_get_system_av_info(&info);
+		printf("timing %d\n", (int) info.timing.sample_rate);
+		info.timing.sample_rate=22050;
+		
+		environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info);
+		framerate_test = 0;
+	}
 
    mame_frame();
    if (samples_per_frame)

@@ -131,8 +131,7 @@
 	Global variables
 
 ***************************************************************************/
-
-/* handy globals for other parts of the system */
+int framerate_test =0;/* handy globals for other parts of the system */
 void *record;	/* for -record */
 void *playback; /* for -playback */
 int mame_debug; /* !0 when -debug option is specified */
@@ -908,8 +907,16 @@ static int init_game_options(void)
 	if (options.vector_height == 0) options.vector_height = 480;
 
 	/* initialize the samplerate */
+	if ( (  Machine->drv->frames_per_second < 47 ) && (options.samplerate >= 30000) )
+	{
+		printf("sample rate too high\n");
+		framerate_test =1;
+		options.samplerate=22050;
+		framerate_test =1;
+	}
+	
 	Machine->sample_rate = options.samplerate;
-
+	
 	/* get orientation right */
 	Machine->orientation = ROT0;
 	Machine->ui_orientation = options.ui_orientation;
