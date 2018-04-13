@@ -5653,6 +5653,9 @@ Other Sun games
 		
 	/* Seibu Hardware */
 	DRIVER( denjinmk )  /* (c) 1994 Banpresto */
+		
+	/* Mighty Warriors  */
+	DRIVER( mwarr )     /* (c) 1993 Elettronica Video-Games S.R.L */
 
 
 #endif	/* DRIVER_RECURSIVE */
