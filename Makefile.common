@@ -1013,6 +1013,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/drivers/dietgo.c \
 				 $(CORE_DIR)/drivers/pktgaldx.c \
 				 $(CORE_DIR)/drivers/dblewing.c \
+				 $(CORE_DIR)/drivers/mwarr.c \
 				 $(CORE_DIR)/driver.c $(CORE_DIR)/cheat.c
 
 
