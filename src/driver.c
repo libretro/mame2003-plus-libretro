@@ -3187,6 +3187,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( midres )	/* (c) 1989 Data East Corporation (World) */
 	DRIVER( midresu )	/* (c) 1989 Data East USA (US) */
 	DRIVER( midresj )	/* (c) 1989 Data East Corporation (Japan) */
+	DRIVER( midresbj )	/* bootleg */
 	DRIVER( bouldash )	/* (c) 1990 Data East Corporation (World) */
 	DRIVER( bouldshj )	/* (c) 1990 Data East Corporation (Japan) */
 /* end of similar hardware */
