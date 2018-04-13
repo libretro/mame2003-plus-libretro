@@ -38,10 +38,7 @@ enum
 	FILETYPE_CHEAT,
 	FILETYPE_LANGUAGE,
 	FILETYPE_CTRLR,
-#ifdef MESS
-	FILETYPE_CRC,
-#endif
-    FILETYPE_XML_DAT,
+        FILETYPE_XML_DAT,
 	FILETYPE_end /* dummy last entry */
 };
 
