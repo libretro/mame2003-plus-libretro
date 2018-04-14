@@ -640,7 +640,7 @@ bool retro_load_game(const struct retro_game_info *game)
         if (options.libretro_save_path == NULL || options.libretro_save_path[0] == '\0')
         {
             /* error if not set */
-            log_cb(RETRO_LOG_ERROR, "[MAME 2003] libretro system path not set!\n");
+            log_cb(RETRO_LOG_ERROR, "[MAME 2003] libretro save path not set!\n");
             options.libretro_save_path = options.libretro_content_path;
         }
 
