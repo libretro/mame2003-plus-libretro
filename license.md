@@ -72,66 +72,36 @@ First of all, thanks to Allard van der Bas (avdbas@wi.leidenuniv.nl) for startin
 
 Without the Repository, I would never have even tried to write an emulator. Unfortunately, the original Repository is now closed, but its spirit lives on in MAME.
 
-Z80 emulator Copyright (c) 1998 Juergen Buchmueller, all rights reserved.
-
-M6502 emulator Copyright (c) 1998 Juergen Buchmueller, all rights reserved.
-
-Hu6280 Copyright (c) 1999 Bryan McPhail, mish@tendril.force9.net
-
-I86 emulator by David Hedley, modified by Fabrice Frances (frances@ensica.fr)
-
-M6809 emulator by John Butler, based on L.C. Benschop's 6809 Simulator V09.
-
-M6808 based on L.C. Benschop's 6809 Simulator V09.
-
-M68000 emulator Copyright 1999 Karl Stenerud.  All rights reserved.
-
-80x86 M68000 emulator Copyright 1998, Mike Coates, Darren Olafson.
-
-8039 emulator by Mirko Buffoni, based on 8048 emulator by Dan Boris.
-
-T-11 emulator Copyright (C) Aaron Giles 1998
-
-TMS34010 emulator by Alex Pasadyn and Zsolt Vasvari.
-
-TMS9900 emulator by Andy Jones, based on original code by Ton Brouwer.
-
-Cinematronics CPU emulator by Jeff Mitchell, Zonn Moore, Neil Bradley.
-
-Atari AVG/DVG emulation based on VECSIM by Hedley Rainnie, Eric Smith and Al Kossow.
-
-TMS5220 emulator by Frank Palazzolo.
-
-AY-3-8910 emulation based on various code snippets by Ville Hallik, Michael Cuddy, Tatsuyuki Satoh, Fabrice Frances, Nicola Salmoria.
-
-YM-2203, YM-2151, YM3812 emulation by Tatsuyuki Satoh.
-
-POKEY emulator by Ron Fries.
-
-Many thanks to Eric Smith, Hedley Rainnie and Sean Trowbridge for information on the Pokey random number generator.
-
-NES sound hardware info by Matthew Conte.
-
-YM2610 emulation by Hiromitsu Shioya.
-
-Background art by Peter Hirschberg (PeterH@cronuscom.com).
-
-Allegro library by Shawn Hargreaves, 1994/97
-
-SEAL Synthetic Audio Library API Interface Copyright (C) 1995, 1996 Carlos Hasan. All Rights Reserved.
-
-Video modes created using Tweak 1.6b by Robert Schmidt, who also wrote TwkUser.c.
-
-"inflate" code for zip file support by Mark Adler.
-
-DOS executable compressed with UPX by Markus F.X.J. Oberhumer & Laszlo Molnar, http://upx.sourceforge.net/
-
-Big thanks to Gary Walton (garyw@excels-w.demon.co.uk) for too many things to mention.
-
-Thanks to Brian Deuel, Neil Bradley, and the Retrocade dev team for allowing us to use Retrocade's game history database.
-
-Thanks to Richard Bush for info on several games.
-
-Thanks to Dave (www.finalburn.com) for info on After Burner.
+* Z80 emulator Copyright (c) 1998 Juergen Buchmueller, all rights reserved.
+* M6502 emulator Copyright (c) 1998 Juergen Buchmueller, all rights reserved.
+* Hu6280 Copyright (c) 1999 Bryan McPhail, mish@tendril.force9.net
+* I86 emulator by David Hedley, modified by Fabrice Frances (frances@ensica.fr)
+* M6809 emulator by John Butler, based on L.C. Benschop's 6809 Simulator V09.
+* M6808 based on L.C. Benschop's 6809 Simulator V09.
+* M68000 emulator Copyright 1999 Karl Stenerud.  All rights reserved.
+* 80x86 M68000 emulator Copyright 1998, Mike Coates, Darren Olafson.
+* 8039 emulator by Mirko Buffoni, based on 8048 emulator by Dan Boris.
+* T-11 emulator Copyright (C) Aaron Giles 1998
+* TMS34010 emulator by Alex Pasadyn and Zsolt Vasvari.
+* TMS9900 emulator by Andy Jones, based on original code by Ton Brouwer.
+* Cinematronics CPU emulator by Jeff Mitchell, Zonn Moore, Neil Bradley.
+* Atari AVG/DVG emulation based on VECSIM by Hedley Rainnie, Eric Smith and Al Kossow.
+* TMS5220 emulator by Frank Palazzolo.
+* AY-3-8910 emulation based on various code snippets by Ville Hallik, Michael Cuddy, Tatsuyuki Satoh, Fabrice Frances, Nicola Salmoria.
+* YM-2203, YM-2151, YM3812 emulation by Tatsuyuki Satoh.
+* POKEY emulator by Ron Fries.
+* Many thanks to Eric Smith, Hedley Rainnie and Sean Trowbridge for information on the Pokey random number generator.
+* NES sound hardware info by Matthew Conte.
+* YM2610 emulation by Hiromitsu Shioya.
+* Background art by Peter Hirschberg (PeterH@cronuscom.com).
+* Allegro library by Shawn Hargreaves, 1994/97
+* SEAL Synthetic Audio Library API Interface Copyright (C) 1995, 1996 Carlos Hasan. All Rights Reserved.
+* Video modes created using Tweak 1.6b by Robert Schmidt, who also wrote TwkUser.c.
+* "inflate" code for zip file support by Mark Adler.
+* DOS executable compressed with UPX by Markus F.X.J. Oberhumer & Laszlo Molnar, http://upx.sourceforge.net/
+* Big thanks to Gary Walton (garyw@excels-w.demon.co.uk) for too many things to mention.
+* Thanks to Brian Deuel, Neil Bradley, and the Retrocade dev team for allowing us to use Retrocade's game history database.
+* Thanks to Richard Bush for info on several games.
+* Thanks to Dave (www.finalburn.com) for info on After Burner.
 
 and thanks to everyone else I forgot.
