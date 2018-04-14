@@ -22,7 +22,6 @@
 extern int gbPriorityBitmapIsDirty;
 extern retro_log_printf_t log_cb;
 extern retro_environment_t environ_cb;
-extern unsigned vector_resolution_multiplier;
 
 /***************************************************************************
 
@@ -35,10 +34,7 @@ extern unsigned vector_resolution_multiplier;
 #define MAX_GFX_ELEMENTS 32
 #define MAX_MEMORY_REGIONS 32
 
-#define APPNAME					"MAME"
-#define APPLONGNAME				"M.A.M.E."
-#define GAMENOUN				"game"
-#define GAMESNOUN				"games"
+#define APPNAME					"mame2003-plus"
 
 
 /***************************************************************************
@@ -168,44 +164,60 @@ struct RunningMachine
 /* or on the commandline. */
 struct GameOptions
 {
-	mame_file *	record;			/* handle to file to record input to */
-	mame_file *	playback;		/* handle to file to playback input from */
-	mame_file *	language_file;	/* handle to file for localization */
+	mame_file *	record;			    /* handle to file to record input to */
+	mame_file *	playback;		    /* handle to file to playback input from */
+	mame_file *	language_file;	    /* handle to file for localization */
 
-	int		mame_debug;		             /* 1 to enable debugging */
-	int		cheat;			             /* 1 to enable cheating */
-	int 	skip_disclaimer;	         /* 1 to skip the disclaimer screen at startup */
-	int 	skip_gameinfo;		         /* 1 to skip the game info screen at startup */
-    int     skip_warnings;               /* 1 to skip the game warning screen at startup */
+    char *  libretro_content_path;
+    char *  libretro_system_path;
+    char *  libretro_save_path;
+    
+	int		 mame_debug;		    /* 1 to enable debugging */
+	int		 cheat;			        /* 1 to enable cheating */
+	int 	 skip_disclaimer;	    /* 1 to skip the disclaimer screen at startup */
+	int 	 skip_gameinfo;		    /* 1 to skip the game info screen at startup */
+    int      skip_warnings;         /* 1 to skip the game warning screen at startup */
+    
+    unsigned dial_share_xy;
+    unsigned mouse_device;
+    unsigned rstick_to_btns;
+    unsigned tate_mode;
 
-	int		samplerate;		             /* sound sample playback rate, in Hz */
-	int		use_samples;	             /* 1 to enable external .wav samples */
+    int      crosshair_enable;
+    unsigned activate_dcs_speedhack;
 
-	float	brightness;		             /* brightness of the display */
-	float	pause_bright;		         /* additional brightness when in pause */
-	float	gamma;			/* gamma correction of the display */
-	int		color_depth;	/* 15, 16, or 32, any other value means auto */
-	int		vector_width;	/* requested width for vector games; 0 means default (640) */
-	int		vector_height;	/* requested height for vector games; 0 means default (480) */
-	int		ui_orientation;	/* orientation of the UI relative to the video */
+	int		 samplerate;		    /* sound sample playback rate, in KHz */
+	int		 use_samples;	        /* 1 to enable external .wav samples */
+    unsigned use_external_hiscore;  /* 1 to load hiscore.dat from the libretro system folder structure rather than the compiled core */
 
-	int		beam;			/* vector beam width */
-	float	vector_flicker;	/* vector beam flicker effect control */
-	float	vector_intensity;/* vector beam intensity */
-	int		translucency;	/* 1 to enable translucency on vectors */
-	int 	antialias;		/* 1 to enable antialiasing on vectors */
+	float	 brightness;		    /* brightness of the display */
+	float	 pause_bright;		    /* additional brightness when in pause */
+	float	 gamma;			        /* gamma correction of the display */
+    int      frameskip;
+	int		 color_depth;	        /* valid: 15, 16, or 32. any other value means auto */
+	int		 ui_orientation;	    /* orientation of the UI relative to the video */
+        
+	int		 vector_width;	        /* requested width for vector games; 0 means default (640) */
+	int		 vector_height;	        /* requested height for vector games; 0 means default (480) */
+	int		 beam;			        /* vector beam width */
+	float	 vector_flicker;	    /* vector beam flicker effect control */
+	float	 vector_intensity;      /* vector beam intensity */
+	int		 translucency;	        /* 1 to enable translucency on vectors */
+	int 	 antialias;		        /* 1 to enable antialiasing on vectors */
+    unsigned vector_resolution_multiplier;
+    
+	int		 use_artwork;	        /* bitfield indicating which artwork pieces to use */
+	int		 artwork_res;	        /* 1 for 1x game scaling, 2 for 2x */
+	int		 artwork_crop;	        /* 1 to crop artwork to the game screen */
 
-	int		use_artwork;	/* bitfield indicating which artwork pieces to use */
-	int		artwork_res;	/* 1 for 1x game scaling, 2 for 2x */
-	int		artwork_crop;	/* 1 to crop artwork to the game screen */
+	char	 savegame;		        /* character representing a savegame to load */
+	int      crc_only;              /* specify if only CRC should be used as checksum */
+    unsigned skip_rom_verify;       
+	char *	 bios;			        /* specify system bios (if used), 0 is default */
 
-	char	savegame;		/* character representing a savegame to load */
-	int     crc_only;       /* specify if only CRC should be used as checksum */
-	char *	bios;			/* specify system bios (if used), 0 is default */
-
-	int		debug_width;	/* requested width of debugger bitmap */
-	int		debug_height;	/* requested height of debugger bitmap */
-	int		debug_depth;	/* requested depth of debugger bitmap */
+	int		 debug_width;	        /* requested width of debugger bitmap */
+	int		 debug_height;	        /* requested height of debugger bitmap */
+	int		 debug_depth;	        /* requested depth of debugger bitmap */
 
 };
 

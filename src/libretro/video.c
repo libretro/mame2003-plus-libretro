@@ -86,7 +86,6 @@ static const int frameskip_table[12][12] = { { 0,0,0,0,0,0,0,0,0,0,0,0 },
 	                                                                    { 0,1,1,1,1,1,0,1,1,1,1,1 },
 	                                                                    { 0,1,1,1,1,1,1,1,1,1,1,1 } };
 static unsigned frameskip_counter = 0;
-int frameskip = 0;
 
 int osd_skip_this_frame(void)
 {
@@ -94,7 +93,7 @@ int osd_skip_this_frame(void)
    if (frameskip_counter >= 11)
       frameskip_counter = 0;
 
-   ret = frameskip_table[frameskip][frameskip_counter];
+   ret = frameskip_table[options.frameskip][frameskip_counter];
 
    frameskip_counter++;
 

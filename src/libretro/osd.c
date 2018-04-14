@@ -26,10 +26,6 @@ short *conversion_buffer;
 int usestereo = 1;
 extern int16_t XsoundBuffer[2048];
 
-extern char* systemDir;
-extern char* saveDir;
-extern char* romDir;
-const char* parentDir = "mame2003-plus"; /* groups mame dirs together to avoid conflicts in shared dirs */
 #if defined(_WIN32)
 char slash = '\\';
 #else
@@ -79,9 +75,9 @@ int osd_init(void)
 {
 	/* ensure parent dir for various mame dirs is created */
 	char buffer[1024];
-	snprintf(buffer, 1024, "%s%c%s", saveDir, slash, parentDir);
+	snprintf(buffer, 1024, "%s%c%s", options.libretro_save_path, slash, APPNAME);
 	osd_create_directory(buffer);
-	snprintf(buffer, 1024, "%s%c%s", systemDir, slash, parentDir);
+	snprintf(buffer, 1024, "%s%c%s", options.libretro_system_path, slash, APPNAME);
 	osd_create_directory(buffer);
 
 	return 0;
@@ -183,7 +179,7 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
    {
       case FILETYPE_ROM:
       case FILETYPE_IMAGE:
-         strcpy(currDir, romDir);
+         strcpy(currDir, options.libretro_content_path);
          break;
       case FILETYPE_IMAGE_DIFF:
       case FILETYPE_NVRAM:
@@ -193,11 +189,11 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
       case FILETYPE_MEMCARD:
       case FILETYPE_SCREENSHOT:
          /* user generated content goes in mam2003 save directory subfolders */
-         snprintf(currDir, 1024, "%s%c%s%c%s", saveDir, slash, parentDir, slash, paths[pathtype]);
+         snprintf(currDir, 1024, "%s%c%s%c%s", options.libretro_save_path, slash, APPNAME, slash, paths[pathtype]);
          break;
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
-         snprintf(currDir, 1024, "%s%c%s", systemDir, slash, parentDir);
+         snprintf(currDir, 1024, "%s%c%s", options.libretro_system_path, slash, APPNAME);
    }
 
    snprintf(buffer, 1024, "%s%c%s", currDir, slash, filename);
@@ -222,7 +218,7 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
    {
       case FILETYPE_ROM:
       case FILETYPE_IMAGE:
-         strcpy(currDir, romDir);
+         strcpy(currDir, options.libretro_content_path);
          break;
       case FILETYPE_IMAGE_DIFF:
       case FILETYPE_NVRAM:
@@ -232,11 +228,11 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
       case FILETYPE_MEMCARD:
       case FILETYPE_SCREENSHOT:
          /* user generated content goes in mam2003 save directory subfolders */
-         snprintf(currDir, 1024, "%s%c%s%c%s", saveDir, slash, parentDir, slash, paths[pathtype]);
+         snprintf(currDir, 1024, "%s%c%s%c%s", options.libretro_save_path, slash, APPNAME, slash, paths[pathtype]);
          break;
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
-         snprintf(currDir, 1024, "%s%c%s", systemDir, slash, parentDir);
+         snprintf(currDir, 1024, "%s%c%s", options.libretro_system_path, slash, APPNAME);
    }
 
    snprintf(buffer, 1024, "%s%c%s", currDir, slash, filename);
