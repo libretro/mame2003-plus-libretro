@@ -2261,6 +2261,11 @@ endif
 SOUND=$(strip $(findstring NES@,$(SOUNDS)))
 ifneq ($(SOUND),)
 SOUNDDEFS += -DHAS_NES=1
+ifndef MESS
+SOURCES_C += $(CORE_DIR)/sound/nes_apu.c
+else
+SOURCES_C += $(CORE_DIR)/mess/sound/nes_apu2.c $(CORE_DIR)/mess/sound/nesintf.c
+endif
 else
 SOUNDDEFS += -DHAS_NES=0
 endif
