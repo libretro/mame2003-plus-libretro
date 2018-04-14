@@ -85,7 +85,7 @@ void retro_set_environment(retro_environment_t cb)
       { "mame2003-plus-tate_mode", "TATE Mode; disabled|enabled" },
       { "mame2003-plus-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification; disabled|enabled" }, 
       { "mame2003-plus-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier; 1|2|3|4|5|6" },      
-      { "mame2003-plus-vector-antialias", "EXPERIMENTAL: Vector antialias; enabled|disabled" },
+      { "mame2003-plus-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled" },
       { "mame2003-plus-vector-translucency", "Vector translucency; enabled|disabled" },
       { "mame2003-plus-vector-beam-width", "Vector beam width; 1|2|3|4|5" },
       { "mame2003-plus-vector-flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
