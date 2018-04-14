@@ -239,7 +239,7 @@ void hs_open (const char *name)
                 if (matching_game_name (buffer, name))
                 {
                    mode = FIND_DATA;
-                   log_cb(RETRO_LOG_INFO, "[MAME 2003] %s hiscore memory map found in external hiscore.dat.\n", name);
+                   log_cb(RETRO_LOG_INFO, "[MAME 2003] %s hiscore memory map found in external hiscore.dat!\n", name);
                 }
              }
              else if (is_mem_range (buffer))
