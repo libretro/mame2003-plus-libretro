@@ -35,18 +35,10 @@ extern unsigned vector_resolution_multiplier;
 #define MAX_GFX_ELEMENTS 32
 #define MAX_MEMORY_REGIONS 32
 
-#ifndef MESS
 #define APPNAME					"MAME"
 #define APPLONGNAME				"M.A.M.E."
 #define GAMENOUN				"game"
 #define GAMESNOUN				"games"
-#else
-#define APPNAME					"MESS"
-#define APPLONGNAME				"M.E.S.S."
-#define GAMENOUN				"system"
-#define GAMESNOUN				"systems"
-#endif
-
 
 
 /***************************************************************************
@@ -172,19 +164,6 @@ struct RunningMachine
 #define ARTWORK_USE_BEZELS		0x04
 
 
-#ifdef MESS
-#define MAX_IMAGES	32
-/*
- * This is a filename and it's associated peripheral type
- * The types are defined in mess.h (IO_...)
- */
-struct ImageFile
-{
-	const char *name;
-	int type;
-};
-#endif
-
 /* The host platform should fill these fields with the preferences specified in the GUI */
 /* or on the commandline. */
 struct GameOptions
@@ -193,19 +172,17 @@ struct GameOptions
 	mame_file *	playback;		/* handle to file to playback input from */
 	mame_file *	language_file;	/* handle to file for localization */
 
-	int		mame_debug;		/* 1 to enable debugging */
-	int		cheat;			/* 1 to enable cheating */
-	int 	gui_host;		/* 1 to tweak some UI-related things for better GUI integration */
-	int 	skip_disclaimer;	/* 1 to skip the disclaimer screen at startup */
-	int 	skip_gameinfo;		/* 1 to skip the game info screen at startup */
-        int     skip_warnings;          /* 1 to skip the game warning screen at startup */
+	int		mame_debug;		             /* 1 to enable debugging */
+	int		cheat;			             /* 1 to enable cheating */
+	int 	skip_disclaimer;	         /* 1 to skip the disclaimer screen at startup */
+	int 	skip_gameinfo;		         /* 1 to skip the game info screen at startup */
+    int     skip_warnings;               /* 1 to skip the game warning screen at startup */
 
-	int		samplerate;		/* sound sample playback rate, in Hz */
-	int		use_samples;	/* 1 to enable external .wav samples */
-	int		use_filter;		/* 1 to enable FIR filter on final mixer output */
+	int		samplerate;		             /* sound sample playback rate, in Hz */
+	int		use_samples;	             /* 1 to enable external .wav samples */
 
-	float	brightness;		/* brightness of the display */
-	float	pause_bright;		/* additional brightness when in pause */
+	float	brightness;		             /* brightness of the display */
+	float	pause_bright;		         /* additional brightness when in pause */
 	float	gamma;			/* gamma correction of the display */
 	int		color_depth;	/* 15, 16, or 32, any other value means auto */
 	int		vector_width;	/* requested width for vector games; 0 means default (640) */
@@ -230,16 +207,6 @@ struct GameOptions
 	int		debug_height;	/* requested height of debugger bitmap */
 	int		debug_depth;	/* requested depth of debugger bitmap */
 
-	#ifdef MESS
-	UINT32 ram;
-	struct ImageFile image_files[MAX_IMAGES];
-	int		image_count;
-	int		(*mess_printf_output)(const char *fmt, va_list arg);
-	int disable_normal_ui;
-
-	int		min_width;		/* minimum width for the display */
-	int		min_height;		/* minimum height for the display */
-	#endif
 };
 
 
@@ -374,9 +341,5 @@ const struct performance_info *mame_get_performance_info(void);
 
 /* return the index of the given CPU, or -1 if not found */
 int mame_find_cpu_index(const char *tag);
-
-#ifdef MESS
-#include "mess.h"
-#endif /* MESS */
 
 #endif

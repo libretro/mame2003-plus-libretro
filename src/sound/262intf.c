@@ -49,8 +49,7 @@ int YMF262_sh_start(const struct MachineSound *msound)
 	intf_262 = msound->sound_interface;
 	if( intf_262->num > MAX_262 ) return 1;
 
-	if (options.use_filter)
-		rate = intf_262->baseclock/288;
+	rate = intf_262->baseclock/288;
 
 	/* Timer state clear */
 	memset(Timer_262,0,sizeof(Timer_262));

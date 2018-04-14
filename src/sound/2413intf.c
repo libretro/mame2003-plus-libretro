@@ -42,8 +42,7 @@ int YM2413_sh_start (const struct MachineSound *msound)
 	intf = msound->sound_interface;
 	if( intf->num > MAX_2413 ) return 1;
 
-	if (options.use_filter)
-		rate = intf->baseclock/72;
+	rate = intf->baseclock/72;
 
 
 	/* emulator create */
