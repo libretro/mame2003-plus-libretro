@@ -692,9 +692,9 @@ static int vh_open(void)
 	/* the create display process may update the vector width/height, so recompute */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
     {
-        //scale_vectorgames((vector_resolution_multiplier * Machine->drv->screen_width), (vector_resolution_multiplier * Machine->drv->screen_height), &bmwidth, &bmheight);
-        bmwidth = Machine->drv->screen_width * vector_resolution_multiplier;
-        bmheight = Machine->drv->screen_height * vector_resolution_multiplier;
+        //scale_vectorgames((options.vector_resolution_multiplier * Machine->drv->screen_width), (options.vector_resolution_multiplier * Machine->drv->screen_height), &bmwidth, &bmheight);
+        bmwidth = Machine->drv->screen_width * options.vector_resolution_multiplier;
+        bmheight = Machine->drv->screen_height * options.vector_resolution_multiplier;
     }
     
     

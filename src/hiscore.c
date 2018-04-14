@@ -223,7 +223,7 @@ void hs_open (const char *name)
     enum { FIND_NAME, FIND_DATA, FETCH_DATA } mode;
     mode = FIND_NAME;
     
-    if(use_external_hiscore)
+    if(options.use_external_hiscore)
     {
        mame_file *f = NULL;
 
