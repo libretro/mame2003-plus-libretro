@@ -1,48 +1,61 @@
 
 # MAME 2003-Plus License
+#### MAME  -  Multiple Arcade Machine Emulator
 
-MAME 2003-Plus is licensed under the classic MAME Non-Commercial license, specifically the license of MAME 0.78 unless specifically stated otherwise.
+Copyright (C) 1997-2003 by Nicola Salmoria and The MAME Team, Copyright (C)2003-2018 by the Libretro MAME 2003 Team and Copyright (C)2017-2018 by the Libretro MAME 2003-Plus Team. Backports from other versions of MAME are as noted in individual source files.
 
-## MAME 0.78 Usage and Distribution License License
-M.A.M.E.  -  Multiple Arcade Machine Emulator
-Copyright (C) 1997-2003 by Nicola Salmoria and The MAME Team
+Many people have helped with this project--directly, or by releasing the source code for the drivers they have written. We are not trying to take credit that isn't ours. See the **Acknowledgments** section for a list of contributors. Please note, however, that the list is incomplete. Also see the comments in the source code to see the people who contributed to specific drivers. That list, too, may be incomplete. We apologize for any omission.
 
-Many people have helped with this project--directly, or by releasing the source code for the drivers they have written. We are not trying to take credit that isn't ours. See the Acknowledgments section for a list of contributors. Please note, however, that the list is largely incomplete. Also see the comments in the source code to see the people who contributed to specific drivers. That list, too, may be incomplete. We apologize for any omission.
+MAME 2003-Plus is licensed under the classic MAME Non-Commercial license and specifically the license of MAME 0.78 unless specifically stated otherwise by individual source files.
 
 All trademarks cited in this document are property of their respective owners.
 
+## MAME 0.78 Usage and Distribution License
+
 ### I. Purpose
-----------
+
 MAME is strictly a non-profit project. Its main purpose is to be a reference to the inner workings of the emulated arcade machines. This is done for educational purposes and to prevent many historical games from sinking into oblivion once the hardware they run on stops working. Of course to preserve the games, you must also be able to actually play them; you can consider that a nice side effect.
    
 It is not our intention to infringe on any copyrights or patents on the original games. All of MAME's source code is either our own or freely available. To operate, the emulator requires images of the original ROMs from the arcade machines, which must be provided by the user. No portions of the original ROM codes are included in the executable.
 
+-------------------------
+
 ### II. Cost
---------
+
 MAME is free. Its source code is free. Selling either is not allowed.
 
+-------------------------
+
 ### III. ROM Images
----------------
+
 ROM images are copyrighted material. Most of them cannot be distributed freely. Distribution of MAME on the same physical medium as illegal copies of ROM images is strictly forbidden.
    
 You are not allowed to distribute MAME in any form if you sell, advertise, or publicize CD-ROMs or other media containing illegal copies of ROM images. This restriction applies even if you don't make money, directly or indirectly, from those activities. You are allowed to make ROMs and MAME available for download on the same website, but only if you warn users about the ROMs's copyright status, and make it clear that users must not download ROMs unless they are legally entitled to do so.
 
+-------------------------
+
 ### IV. Source Code Distribution
-----------------------------
+
 If you distribute the binary (compiled) version of MAME, you should also distribute the source code. If you can't do that, you must provide a link to a site where the source can be obtained.
 
-### V. Distribution Integrity
 -------------------------
+
+### V. Distribution Integrity
+
 This chapter applies to the official MAME distribution. See below for limitations on the distribution of derivative works. MAME must be distributed only in the original archives. You are not allowed to distribute a modified version, nor to remove and/or add files to the archive.
 
+-------------------------
+
 ### VI. Reuse of Source Code
---------------------------
+
 This chapter might not apply to specific portions of MAME (e.g. CPU emulators) which bear different copyright notices. The source code cannot be used in a commercial product without the written authorization of the authors. Use in non-commercial products is allowed, and indeed encouraged.  If you use portions of the MAME source code in your program, however, you must make the full source code freely available as well.
 
 Usage of the _information_ contained in the source code is free for any use. However, given the amount of time and energy it took to collect this information, if you find new information we would appreciate if you made it freely available as well.
 
+-------------------------
+
 ### VII. Derivative Works
----------------------
+
 Derivative works are allowed, provided their source code is freely available. However, these works are discouraged. MAME is a continuously-evolving project. It is in your best interests to submit your contributions to the MAME development team, so they may be integrated into the main distribution.
 
 There are some specific modifications to the source code which go against the spirit of the project. They are NOT considered a derivative work, and distribution of executables containing them is strictly forbidden. Such modifications include, but are not limited to:
@@ -52,10 +65,9 @@ There are some specific modifications to the source code which go against the sp
    
 If you make a derivative work, you are not allowed to call it MAME. You must use a different name to make clear that it is a MAME derivative, not an official distribution from the MAME team. Simply calling it MAME followed or preceded by a punctuation mark (e.g. MAME+) is not sufficient. The name must be clearly distinct (e.g. REMAME). The version number must also match the number of the official MAME version from which you derived your version.
 
+-------------------------
 
 ## Acknowledgments
----------------
-
 First of all, thanks to Allard van der Bas (avdbas@wi.leidenuniv.nl) for starting the Arcade Emulation Programming Repository at http://valhalla.ph.tn.tudelft.nl/emul8
 
 Without the Repository, I would never have even tried to write an emulator. Unfortunately, the original Repository is now closed, but its spirit lives on in MAME.
