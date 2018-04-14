@@ -14,7 +14,6 @@
 #define LOG_DCS_IO					(0)
 #define LOG_BUFFER_FILLING			(0)
 
-static unsigned dcs_speedhack_enable = 0;
 
 /***************************************************************************
 	CONSTANTS
@@ -412,12 +411,10 @@ void dcs_init(void)
 	/* reset RAM-based variables */
 	dcs_sram_bank0 = dcs_sram_bank1 = NULL;
 
-   dcs_speedhack_enable = 0;
 
 	/* install the speedup handler */
-   if (activate_dcs_speedhack)
+   if (options.activate_dcs_speedhack)
    {
-      dcs_speedhack_enable = 1;
       dcs_speedup1 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x04f8, 0x04f8), dcs_speedup1_w);
       dcs_speedup2 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x063d, 0x063d), dcs_speedup2_w);
       dcs_speedup3 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x063a, 0x063a), dcs_speedup3_w);
@@ -547,7 +544,7 @@ static WRITE16_HANDLER( dcs_rombank_select_w )
 	set_led_status(2, data & 0x800);
 #endif
 
-   if (dcs_speedhack_enable)
+   if (options.activate_dcs_speedhack)
    {
       /* they write 0x800 here just before entering the stall loop */
       if (data == 0x800)
@@ -1099,7 +1096,7 @@ static void dcs_irq(int state)
 	/* store it */
 	cpunum_set_reg(dcs_cpunum, ADSP2100_I0 + dcs.ireg, reg);
    
-   if (dcs_speedhack_enable)
+   if (options.activate_dcs_speedhack)
 	/* this is the same trigger as an interrupt */
       cpu_triggerint(dcs_cpunum);
 }
