@@ -3295,7 +3295,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* MBW ?? */
 	/* MBX ?? */
 	/* MBY ?? */
-	/* Backfire            MBZ (c) 1995 */
+	DRIVER( backfire )      /* MBZ (c) 1995 Data East Corporation */
 	/* MCA ?? */
 	/* Ganbare! Gonta!! 2/Lady Killer Part 2 - Party Time  MCB (c) 1995 Mitchell */
 	DRIVER( chainrec )	/* MCC (c) 1994 Data East Corporation */
