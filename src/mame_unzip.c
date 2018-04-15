@@ -457,7 +457,7 @@ int seekcompresszip(ZIP* zip, struct zipent* ent) {
 
    990525 rewritten for use with zlib MLR
 */
-static int inflate_file(osd_file* in_file, unsigned in_size, unsigned char* out_data, unsigned out_size)
+static int inflate_file(FILE* in_file, unsigned in_size, unsigned char* out_data, unsigned out_size)
 {
     int err;
 	unsigned char* in_buffer;

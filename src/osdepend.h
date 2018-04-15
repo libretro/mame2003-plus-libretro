@@ -277,8 +277,6 @@ typedef struct
 } INP_HEADER;
 
 
-typedef struct _osd_file osd_file;
-
 
 /* These values are returned by osd_get_path_info */
 enum
@@ -296,27 +294,25 @@ int osd_get_path_count(int pathtype);
 int osd_get_path_info(int pathtype, int pathindex, const char *filename);
 
 /* Attempt to open a file with the given name and mode using the specified path type */
-osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode);
-
-FILE *osd_fopen_file(int pathtype, int pathindex, const char *filename, const char *mode);
+FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode);
 
 /* Seek within a file */
-int osd_fseek(osd_file *file, INT64 offset, int whence);
+int osd_fseek(FILE* file, INT64 offset, int whence);
 
 /* Return current file position */
-UINT64 osd_ftell(osd_file *file);
+UINT64 osd_ftell(FILE* file);
 
 /* Return 1 if we're at the end of file */
-int osd_feof(osd_file *file);
+int osd_feof(FILE* file);
 
 /* Read bytes from a file */
-UINT32 osd_fread(osd_file *file, void *buffer, UINT32 length);
+UINT32 osd_fread(FILE* file, void *buffer, UINT32 length);
 
 /* Write bytes to a file */
-UINT32 osd_fwrite(osd_file *file, const void *buffer, UINT32 length);
+UINT32 osd_fwrite(FILE* file, const void *buffer, UINT32 length);
 
 /* Close an open file */
-void osd_fclose(osd_file *file);
+void osd_fclose(FILE* file);
 
 
 
@@ -364,35 +360,6 @@ void CLIB_DECL osd_die(const char *text,...)
       __attribute__ ((format (printf, 1, 2)));
 #else
 void CLIB_DECL osd_die(const char *text,...);
-#endif
-
-
-
-#if defined MAME_NET || defined XMAME_NET
-/* network */
-int osd_net_init(void);
-#ifdef XMAME_NET
-int osd_net_active(void);
-#endif
-int osd_net_send(int player, unsigned char buf[], int *size);
-int osd_net_recv(int player, unsigned char buf[], int *size);
-#ifdef MAME_NET
-int osd_net_sync(void);
-#elif defined XMAME_NET
-void osd_net_sync(unsigned short input_port_values[MAX_INPUT_PORTS],
-		unsigned short input_port_defaults[MAX_INPUT_PORTS]);
-#endif
-int osd_net_input_sync(void);
-int osd_net_exit(void);
-int osd_net_add_player(void);
-int osd_net_remove_player(int player);
-int osd_net_game_init(void);
-int osd_net_game_exit(void);
-#endif /* MAME_NET */
-
-#ifdef MESS
-/* this is here to follow the current mame file hierarchy style */
-#include "osd_mess.h"
 #endif
 
 #ifdef __GNUC__

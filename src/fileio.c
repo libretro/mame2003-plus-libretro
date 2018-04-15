@@ -56,7 +56,7 @@ struct _mame_file
 #ifdef DEBUG_COOKIE
 	UINT32 debug_cookie;
 #endif
-	osd_file *file;
+	FILE *file;
 	UINT8 *data;
 	UINT64 offset;
 	UINT64 length;
@@ -971,7 +971,7 @@ static int checksum_file(int pathtype, int pathindex, const char *file, UINT8 **
 {
 	UINT64 length;
 	UINT8 *data;
-	osd_file *f;
+	FILE *f;
 	unsigned int functions;
 
 	/* open the file */

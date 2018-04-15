@@ -7,6 +7,7 @@
 #include "datafile.h"
 #include "fileio.h"
 #include "libretro.h"
+#include "osdepend.h"
 
 /* Format */
 #define SELECT(a,b) (OUTPUT_XML ? (b) : (a))
@@ -1009,7 +1010,7 @@ void print_mame_xml(void)
 {
        	
     int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   	
-    FILE *xml_dat = osd_fopen_file(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w+b");	
+    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w+b");	
     	
     if (xml_dat != NULL)	
     {	

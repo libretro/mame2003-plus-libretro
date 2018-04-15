@@ -19,6 +19,11 @@
 #include "mame.h"
 #include "driver.h"
 
+#if defined(__CELLOS_LV2__) && !defined(__PSL1GHT__)
+#include <unistd.h> //stat() is defined here
+#define S_ISDIR(x) (x & CELL_FS_S_IFDIR)
+#endif
+
 static float delta_samples;
 int samples_per_frame = 0;
 short *samples_buffer;
@@ -34,10 +39,6 @@ char slash = '/';
 
 extern retro_log_printf_t log_cb;
 
-#if defined(__CELLOS_LV2__) && !defined(__PSL1GHT__)
-#include <unistd.h> //stat() is defined here
-#define S_ISDIR(x) (x & CELL_FS_S_IFDIR)
-#endif
 
 int osd_create_directory(const char *dir)
 {
@@ -95,7 +96,6 @@ Sound
 
 ******************************************************************************/
 
-static bool stereo;
 static float delta_samples;
 
 int osd_start_audio_stream(int stereo)
@@ -159,11 +159,6 @@ File I/O
 ******************************************************************************/
 static const char* const paths[] = { "raw", "rom", "image", "diff", "samples", "artwork", "nvram", "hi", "hsdb", "cfg", "inp", "memcard", "snap", "history", "cheat", "lang", "ctrlr" };
 
-struct _osd_file
-{
-	FILE* file;
-};
-
 int osd_get_path_count(int pathtype)
 {
 	return 1;
@@ -208,11 +203,11 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
    return PATH_NOT_FOUND;
 }
 
-osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode)
+FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode)
 {
    char buffer[1024];
    char currDir[1024];
-   osd_file *out;
+   FILE* out;
 
    switch (pathtype)
    {
@@ -239,52 +234,43 @@ osd_file *osd_fopen(int pathtype, int pathindex, const char *filename, const cha
 
    osd_create_directory(currDir);
 
-   out = (osd_file*)malloc(sizeof(osd_file));
+   out = fopen(buffer, mode);
 
-   out->file = fopen(buffer, mode);
-
-   if (out->file == 0)
+   if (out == 0)
    {
-      free(out);
       return 0;
    }
    return out;
 }
 
-FILE *osd_fopen_file(int pathtype, int pathindex, const char *filename, const char *mode)
+int osd_fseek(FILE* file, INT64 offset, int whence)
 {
-   return (osd_fopen(pathtype, pathindex, filename, mode))->file;    
+	return fseek(file, offset, whence);
 }
 
-int osd_fseek(osd_file *file, INT64 offset, int whence)
+UINT64 osd_ftell(FILE* file)
 {
-	return fseek(file->file, offset, whence);
+	return ftell(file);
 }
 
-UINT64 osd_ftell(osd_file *file)
+int osd_feof(FILE* file)
 {
-	return ftell(file->file);
+	return feof(file);
 }
 
-int osd_feof(osd_file *file)
+UINT32 osd_fread(FILE* file, void *buffer, UINT32 length)
 {
-	return feof(file->file);
+	return fread(buffer, 1, length, file);
 }
 
-UINT32 osd_fread(osd_file *file, void *buffer, UINT32 length)
+UINT32 osd_fwrite(FILE* file, const void *buffer, UINT32 length)
 {
-	return fread(buffer, 1, length, file->file);
+	return fwrite(buffer, 1, length, file);
 }
 
-UINT32 osd_fwrite(osd_file *file, const void *buffer, UINT32 length)
+void osd_fclose(FILE* file)
 {
-	return fwrite(buffer, 1, length, file->file);
-}
-
-void osd_fclose(osd_file *file)
-{
-	fclose(file->file);
-	free(file);
+	fclose(file);
 }
 
 
