@@ -7,6 +7,7 @@
 #include "datafile.h"
 #include "fileio.h"
 #include "libretro.h"
+#include "osdepend.h"
 
 /* Format */
 #define SELECT(a,b) (OUTPUT_XML ? (b) : (a))
@@ -984,7 +985,7 @@ static void print_mame_data(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 		print_game_info(OUTPUT_XML, out, games[j]);
 
 	/* print the resources (only if linked) */
-#if !defined(MESS) && !defined(TINY_COMPILE) && !defined(MMSND)
+#if !defined(TINY_COMPILE) && !defined(MMSND)
 	PRINT_RESOURCE(OUTPUT_XML, neogeo);
 	PRINT_RESOURCE(OUTPUT_XML, cvs);
 	PRINT_RESOURCE(OUTPUT_XML, decocass);
@@ -1000,7 +1001,7 @@ static void print_mame_data(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	PRINT_RESOURCE(OUTPUT_XML, cpzn2);
 	PRINT_RESOURCE(OUTPUT_XML, tps);
 	PRINT_RESOURCE(OUTPUT_XML, taitofx1);
-        PRINT_RESOURCE(OUTPUT_XML, acpsx);
+	PRINT_RESOURCE(OUTPUT_XML, acpsx);
 #endif
 }
 
@@ -1009,7 +1010,7 @@ void print_mame_xml(void)
 {
        	
     int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   	
-    FILE *xml_dat = osd_fopen_file(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w+b");	
+    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w+b");	
     	
     if (xml_dat != NULL)	
     {	
