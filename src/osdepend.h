@@ -20,10 +20,6 @@ extern "C" {
 #define FPTR unsigned int
 #endif
 
-
-int osd_init(void);
-
-
 /******************************************************************************
 
 	Display

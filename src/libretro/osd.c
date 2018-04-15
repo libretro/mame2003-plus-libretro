@@ -70,18 +70,6 @@ int osd_create_directory(const char *dir)
 	return 1;
 }
 
-int osd_init(void)
-{
-	/* ensure parent dir for various mame dirs is created */
-	char buffer[1024];
-	snprintf(buffer, 1024, "%s%c%s", options.libretro_save_path, slash, APPNAME);
-	osd_create_directory(buffer);
-	snprintf(buffer, 1024, "%s%c%s", options.libretro_system_path, slash, APPNAME);
-	osd_create_directory(buffer);
-
-	return 0;
-}
-
 
 /******************************************************************************
 
