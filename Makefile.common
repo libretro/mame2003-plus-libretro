@@ -1014,7 +1014,9 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/drivers/crospang.c \
 				 $(CORE_DIR)/drivers/funybubl.c \
 				 $(CORE_DIR)/drivers/dreamwld.c \
-				 $(CORE_DIR)/machine/seicop.c $(CORE_DIR)/vidhrdw/denjinmk.c $(CORE_DIR)/drivers/denjinmk.c \
+				 $(CORE_DIR)/machine/seicop.c \
+				 $(CORE_DIR)/vidhrdw/denjinmk.c \
+				 $(CORE_DIR)/drivers/driver_denjinmk.c \
 				 $(CORE_DIR)/drivers/simpl156.c \
 				 $(CORE_DIR)/drivers/boogwing.c \
 				 $(CORE_DIR)/drivers/dietgo.c \
