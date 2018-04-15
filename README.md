@@ -41,7 +41,6 @@ MAME 2003-plus also supports one or two spinners/dials via the "Share 2 player d
 /libretro savefile dir/mame2003-plus/cfg/
 /libretro savefile dir/mame2003-plus/inp/
 /libretro savefile dir/mame2003-plus/memcard/
-/libretro savefile dir/mame2003-plus/snap/
 ```
 
 ### Core options
@@ -52,12 +51,7 @@ MAME 2003-plus also supports one or two spinners/dials via the "Share 2 player d
   Skips the 'nag-screen'.
 * **Skip Warnings** (disabled/enabled)
   Skips the warning screen shown before games with incomplete emulation.
-* **Samples** (enabled/disabled)
-  Requires valid sample zips.
 * **Sample Rate (KHz)** (11025-48000)
-  Lowering may improve performance on weaker devices
-* **Cheats** (disabled/enabled)
-  Requires a valid cheat.dat file.
 * **Share 2 player dial controls across one X/Y device** (disabled/enabled)
   Some dial/spinner hardware are actually one device with one axis for each player. This supports that setup, by breaking down the normal mouse x/y into two seperate inputs.
 * **Mouse Device** (mouse/pointer/disabled)
