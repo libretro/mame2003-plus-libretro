@@ -63,7 +63,7 @@
 #include "osd_cpu.h"
 #include "memory.h"
 #include "mamedbg.h"
-#include "osdepend.h"
+#include "mame2003.h"
 #include "mame.h"
 #include "common.h"
 #include "drawgfx.h"

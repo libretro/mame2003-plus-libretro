@@ -103,9 +103,9 @@
 
 ***************************************************************************/
 
-#include "driver.h"
 #include <ctype.h>
 #include <stdarg.h>
+#include <file_path.h>
 #include "ui_text.h"
 #include "mamedbg.h"
 #include "artwork.h"
@@ -114,8 +114,8 @@
 #include "vidhrdw/vector.h"
 #include "palette.h"
 #include "harddisk.h"
-#include "osdepend.h"
-
+#include "driver.h"
+#include "mame.h"
 
 /***************************************************************************
 
@@ -290,10 +290,10 @@ int run_game(int game)
 	/* let the OSD layer start up first */
 	/* ensure parent dir for various mame dirs is created */
 	char buffer[1024];
-	snprintf(buffer, 1024, "%s%c%s", options.libretro_save_path, slash, APPNAME);
-	osd_create_directory(buffer);
-	snprintf(buffer, 1024, "%s%c%s", options.libretro_system_path, slash, APPNAME);
-	osd_create_directory(buffer);
+	snprintf(buffer, 1024, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
+	path_mkdir(buffer);
+	snprintf(buffer, 1024, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
+	path_mkdir(buffer);
     
     begin_resource_tracking();
 

@@ -1,6 +1,14 @@
-#include <stdint.h>
+/*********************************************************************
 
+	mame2003.c
+    
+    a port of mame 0.78 to the libretro API
+    
+*********************************************************************/    
+
+#include <stdint.h>
 #include <libretro.h>
+#include <file_path.h>
 
 #include "mame.h"
 #include "driver.h"
@@ -9,13 +17,14 @@
 
 extern int framerate_test;
 
-static int driverIndex; // Index of mame game loaded
+static int driverIndex; /* Index of mame game loaded */
 extern struct osd_create_params videoConfig;
 
-extern int samples_per_frame;
-extern short *samples_buffer;
-extern short *conversion_buffer;
-extern int usestereo;
+static float delta_samples;
+int samples_per_frame = 0;
+short *samples_buffer;
+short *conversion_buffer;
+int usestereo = 1;
 
 extern const struct KeyboardInfo retroKeys[];
 extern int retroKeyState[512];
@@ -42,12 +51,163 @@ retro_set_led_state_t led_state_cb = NULL;
 int16_t XsoundBuffer[2048];
 
 
-#ifdef _3DS
+#ifdef _3DS /* TODO: convert this strcasecmp wrapper to libretro-common/compat functions */
 int stricmp(const char *string1, const char *string2)
 {
-    return strcasecmp(string1, string2); // Wrapper to build MAME on 3DS. It doesn't have stricmp.
+    return strcasecmp(string1, string2); /* Wrapper to build MAME on 3DS. It doesn't have stricmp. */
 }
 #endif
+
+/******************************************************************************
+
+Sound
+
+******************************************************************************/
+
+int osd_start_audio_stream(int stereo)
+{
+	delta_samples = 0.0f;
+	usestereo = stereo ? 1 : 0;
+
+	/* determine the number of samples per frame */
+	samples_per_frame = Machine->sample_rate / Machine->drv->frames_per_second;
+
+	if (Machine->sample_rate == 0) return 0;
+
+	samples_buffer = (short *) calloc(samples_per_frame, 2 + usestereo * 2);
+	if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame, 4);
+	
+	return samples_per_frame;
+
+
+}
+
+int osd_update_audio_stream(INT16 *buffer)
+{
+	memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+   	delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samples_per_frame;
+	if (delta_samples >= 1.0f)
+	{
+		int integer_delta = (int)delta_samples;
+		samples_per_frame += integer_delta;
+		delta_samples -= integer_delta;
+	}
+
+	return samples_per_frame;
+}
+
+
+
+void osd_stop_audio_stream(void)
+{
+}
+
+
+/******************************************************************************
+
+File I/O
+
+******************************************************************************/
+static const char* const paths[] = { "raw", "rom", "image", "diff", "samples", "artwork", "nvram", "hi", "hsdb", "cfg", "inp", "memcard", "history", "cheat", "lang", "ctrlr" };
+
+int osd_get_path_count(int pathtype)
+{
+	return 1;
+}
+
+int osd_get_path_info(int pathtype, int pathindex, const char *filename)
+{
+   char buffer[1024];
+   char currDir[1024];
+
+   switch (pathtype)
+   {
+      case FILETYPE_ROM:
+      case FILETYPE_IMAGE:
+         strcpy(currDir, options.libretro_content_path);
+         break;
+      case FILETYPE_IMAGE_DIFF:
+      case FILETYPE_NVRAM:
+      case FILETYPE_HIGHSCORE:
+      case FILETYPE_CONFIG:
+      case FILETYPE_INPUTLOG:
+      case FILETYPE_MEMCARD:
+      case FILETYPE_SAMPLE:
+         /* user generated content goes in mam2003 save directory subfolders */
+         snprintf(currDir, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), paths[pathtype]);
+         break;
+      default:
+         /* .dat files and additional core content goes in mame2003 system directory */
+         snprintf(currDir, 1024, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
+   }
+
+   snprintf(buffer, 1024, "%s%s%s", currDir, path_default_slash(), filename);
+
+#ifdef DEBUG_LOG
+   fprintf(stderr, "osd_get_path_info (buffer = [%s]), (directory: [%s]), (path type dir: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, paths[pathtype], pathtype, filename);
+#endif
+
+   if (path_is_directory(buffer))
+      return PATH_IS_DIRECTORY;
+   else if (path_file_exists(buffer))
+      return PATH_IS_FILE;
+   else   
+      return PATH_NOT_FOUND;
+}
+
+FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode)
+{
+   char buffer[1024];
+   char currDir[1024];
+   FILE* out;
+
+   switch (pathtype)
+   {
+      case FILETYPE_ROM:
+      case FILETYPE_IMAGE:
+         strcpy(currDir, options.libretro_content_path);
+         break;
+      case FILETYPE_IMAGE_DIFF:
+      case FILETYPE_NVRAM:
+      case FILETYPE_HIGHSCORE:
+      case FILETYPE_CONFIG:
+      case FILETYPE_INPUTLOG:
+      case FILETYPE_MEMCARD:
+      case FILETYPE_SAMPLE:
+         /* user generated content goes in mam2003 save directory subfolders */
+         snprintf(currDir, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), paths[pathtype]);
+         break;
+      default:
+         /* .dat files and additional core content goes in mame2003 system directory */
+         snprintf(currDir, 1024, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
+   }
+
+   snprintf(buffer, 1024, "%s%s%s", currDir, path_default_slash(), filename);
+
+   path_mkdir(currDir);
+
+   out = fopen(buffer, mode);
+
+   return out;
+}
+
+
+/******************************************************************************
+
+Miscellaneous
+
+******************************************************************************/
+
+void CLIB_DECL osd_die(const char *text, ...)
+{
+   if (log_cb)
+      log_cb(RETRO_LOG_INFO, text);
+
+   /* TODO: Don't abort, switch back to main thread and exit cleanly: 
+    * This is only used if a malloc fails in src/cpu/z80/z80.c so not too high a priority */
+   abort();
+}
+
 
 void mame_frame(void);
 void mame_done(void);
@@ -123,20 +283,20 @@ static int getDriverIndex(const char* aPath)
     char *firstDot;
     int i;
 
-    // Get all chars after the last slash
+    /* Get all chars after the last slash */
     path = normalizePath(strdup(aPath ? aPath : "."));
     last = strrchr(path, PATH_SEPARATOR);
     memset(driverName, 0, sizeof(driverName));
     strncpy(driverName, last ? last + 1 : path, sizeof(driverName) - 1);
     free(path);
     
-    // Remove extension    
+    /* Remove extension */
     firstDot = strchr(driverName, '.');
 
     if(firstDot)
        *firstDot = 0;
 
-    // Search list
+    /* Search list */
     for (i = 0; drivers[i]; i++)
     {
        if(strcmp(driverName, drivers[i]->name) == 0)
@@ -402,14 +562,14 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->geometry.max_width = width;
    info->geometry.max_height = height;
    info->geometry.aspect_ratio = (rotated && !options.tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-   info->timing.fps = Machine->drv->frames_per_second; // sets the core timing does any game go above 60fps?
-   info->timing.sample_rate = options.samplerate;  // please not if you want bally games to work properly set the sample rate to 22050 you cant go below 48 frames with the default that is set you will need to restart retroarch
+   info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
+   info->timing.sample_rate = options.samplerate;  /* please note if you want bally games to work properly set the sample rate to 22050 you cant go below 48 frames with the default that is set you will need to restart the core */
 }
 
 static void check_system_specs(void)
 {
-   // TODO - set variably
-   // Midway DCS - Mortal Kombat/NBA Jam etc. require level 9
+   /* TODO - set variably */
+   /* Midway DCS - Mortal Kombat/NBA Jam etc. require level 9 */
    unsigned level = 10;
    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
@@ -536,11 +696,11 @@ void retro_run (void)
             mouse_x[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
             mouse_y[i] = input_cb(i, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
          }
-         else // RETRO_DEVICE_POINTER
+         else /* RETRO_DEVICE_POINTER */
          {
             pointer_pressed = input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_PRESSED);
             retroJsState[16 + offset] = pointer_pressed;
-            retroJsState[17 + offset] = 0; // padding
+            retroJsState[17 + offset] = 0; /* padding */
             mouse_x[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_X), &prev_pointer_x) : 0;
             mouse_y[i] = pointer_pressed ? get_pointer_delta(input_cb(i, RETRO_DEVICE_POINTER, 0, RETRO_DEVICE_ID_POINTER_Y), &prev_pointer_y) : 0;
          }
@@ -588,7 +748,7 @@ bool retro_load_game(const struct retro_game_info *game)
    if (!game)
       return false;
 
-    // Find game index
+    /* Find game index */
     driverIndex = getDriverIndex(game->path);
     
     if(driverIndex)
@@ -644,7 +804,7 @@ bool retro_load_game(const struct retro_game_info *game)
             options.libretro_save_path = options.libretro_content_path;
         }
 
-        // Setup Rotation
+        /* Setup Rotation */
         orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
         rotateMode = 0;
         
@@ -654,13 +814,13 @@ bool retro_load_game(const struct retro_game_info *game)
         
         environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
 
-        // Set all options before starting the game
+        /* Set all remaining options before starting the game */
         options.ui_orientation = uiModes[rotateMode];
         
         options.use_samples = 1;
         options.cheat = 1;
 
-        // Boot the emulator
+        /* Boot the emulator */
         return run_game(driverIndex) == 0;
     }
     else

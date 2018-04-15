@@ -26,7 +26,7 @@ System 24      68000x2  315-5292   315-5293  315-5294  315-5242        ym2151 da
 #include "state.h"
 #include "generic.h"
 #include "drawgfx.h"
-#include "osdepend.h"
+#include "mame2003.h"
 #include "segaic24.h"
 
 #include <math.h>
@@ -47,7 +47,7 @@ static void set_color(int color, unsigned char r, unsigned char g, unsigned char
 	palette_set_color (color+Machine->drv->total_colors/2, r, g, b);
 }
 
-// 315-5242
+/* 315-5242 */
 WRITE16_HANDLER (system24temp_sys16_paletteram1_w)
 {
 	int r, g, b;
@@ -72,7 +72,7 @@ WRITE16_HANDLER (system24temp_sys16_paletteram1_w)
 	set_color (offset, r, g, b, data & 0x8000);
 }
 
-// - System 24
+/* System 24 */
 
 enum {SYS24_TILES = 0x4000};
 
@@ -270,10 +270,10 @@ static void sys24_tile_draw_rect(struct mame_bitmap *bm, struct mame_bitmap *tm,
 				m = ~m;
 
 			if(!cur_x && llx>=128) {
-				// Fast paths for the 128-pixels without side clipping case
+				/* Fast paths for the 128-pixels without side clipping case */
 
 				if(!m) {
-					// 1- 128 pixels from this layer
+					/* 1- 128 pixels from this layer */
 					int x;
 					for(x=0; x<128; x++) {
 						if(*srct++ == tpri) {
@@ -286,14 +286,14 @@ static void sys24_tile_draw_rect(struct mame_bitmap *bm, struct mame_bitmap *tm,
 					}
 
 				} else if(m == 0xffff) {
-					// 2- 128 pixels from the other layer
+					/* 2- 128 pixels from the other layer */
 					src += 128;
 					srct += 128;
 					dst += 128;
 					pr += 128;
 
 				} else {
-					// 3- 128 pixels from both layers
+					/* 3- 128 pixels from both layers */
 					int x;
 					for(x=0; x<128; x+=8) {
 						if(!(m & 0x8000)) {
@@ -312,11 +312,11 @@ static void sys24_tile_draw_rect(struct mame_bitmap *bm, struct mame_bitmap *tm,
 					}
 				}
 			} else {
-				// Clipped path
+				/* Clipped path */
 				int llx1 = llx >= 128 ? 128 : llx;
 
 				if(!m) {
-					// 1- 128 pixels from this layer
+					/* 1- 128 pixels from this layer */
 					int x;
 					for(x = cur_x; x<llx1; x++) {
 						if(*srct++ == tpri) {
@@ -329,14 +329,14 @@ static void sys24_tile_draw_rect(struct mame_bitmap *bm, struct mame_bitmap *tm,
 					}
 
 				} else if(m == 0xffff) {
-					// 2- 128 pixels from the other layer
+					/* 2- 128 pixels from the other layer */
 					src += 128 - cur_x;
 					srct += 128 - cur_x;
 					dst += 128 - cur_x;
 					pr += 128 - cur_x;
 
 				} else {
-					// 3- 128 pixels from both layers
+					/* 3- 128 pixels from both layers */
 					int x;
 					for(x=cur_x; x<llx1; x++) {
 						if(*srct++ == tpri && !(m & (0x8000 >> (x >> 3)))) {
@@ -362,9 +362,11 @@ static void sys24_tile_draw_rect(struct mame_bitmap *bm, struct mame_bitmap *tm,
 }
 
 
-// The rgb version is used by model 1 & 2 which do not need to care
-// about sprite priority hence the lack of support for the
-// priority_bitmap
+/*
+   The rgb version is used by model 1 & 2 which do not need to care
+   about sprite priority hence the lack of support for the
+   priority_bitmap
+*/
 
 static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap *tm, struct mame_bitmap *dm, const UINT16 *mask,
 									 UINT16 tpri, UINT8 lpri, int win, int sx, int sy, int xx1, int yy1, int xx2, int yy2)
@@ -402,10 +404,10 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 				m = ~m;
 
 			if(!cur_x && llx>=128) {
-				// Fast paths for the 128-pixels without side clipping case
+				/* Fast paths for the 128-pixels without side clipping case */
 
 				if(!m) {
-					// 1- 128 pixels from this layer
+					/* 1- 128 pixels from this layer */
 					int x;
 					for(x=0; x<128; x++) {
 						if(*srct++ == tpri)
@@ -415,13 +417,13 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 					}
 
 				} else if(m == 0xffff) {
-					// 2- 128 pixels from the other layer
+					/* 2- 128 pixels from the other layer */
 					src += 128;
 					srct += 128;
 					dst += 128;
 
 				} else {
-					// 3- 128 pixels from both layers
+					/* 3- 128 pixels from both layers */
 					int x;
 					for(x=0; x<128; x+=8) {
 						if(!(m & 0x8000)) {
@@ -437,11 +439,11 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 					}
 				}
 			} else {
-				// Clipped path
+				/* Clipped path */
 				int llx1 = llx >= 128 ? 128 : llx;
 
 				if(!m) {
-					// 1- 128 pixels from this layer
+					/* 1- 128 pixels from this layer */
 					int x;
 					for(x = cur_x; x<llx1; x++) {
 						if(*srct++ == tpri)
@@ -451,13 +453,13 @@ static void sys24_tile_draw_rect_rgb(struct mame_bitmap *bm, struct mame_bitmap 
 					}
 
 				} else if(m == 0xffff) {
-					// 2- 128 pixels from the other layer
+					/* 2- 128 pixels from the other layer */
 					src += 128 - cur_x;
 					srct += 128 - cur_x;
 					dst += 128 - cur_x;
 
 				} else {
-					// 3- 128 pixels from both layers
+					/* 3- 128 pixels from both layers */
 					int x;
 					for(x=cur_x; x<llx1; x++) {
 						if(*srct++ == tpri && !(m & (0x8000 >> (x >> 3))))
@@ -489,12 +491,12 @@ void sys24_tile_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 	lpri = 1 << lpri;
 	layer >>= 1;
 
-	// Layer disable
+	/* Layer disable */
 	if(vscr & 0x8000)
 		return;
 
 	if(ctrl & 0x6000) {
-		// Special window/scroll modes
+		/* Special window/scroll modes */
 		if(layer & 1)
 			return;
 
@@ -502,10 +504,7 @@ void sys24_tile_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 		tilemap_set_scrolly(sys24_tile_layer[layer|1], 0, +(vscr & 0x1ff));
 
 		if(hscr & 0x8000) {
-			//#ifdef MAME_DEBUG
 			usrintf_showmessage("Linescroll with special mode %04x", ctrl);
-			//			return;
-			//#endif
 		} else {
 			tilemap_set_scrollx(sys24_tile_layer[layer],   0, -(hscr & 0x1ff));
 			tilemap_set_scrollx(sys24_tile_layer[layer|1], 0, -(hscr & 0x1ff));
@@ -545,9 +544,7 @@ void sys24_tile_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 			break;
 		}
 		case 3:
-			//#ifdef MAME_DEBUG
 			usrintf_showmessage("Mode 3, please scream");
-			//#endif
 			break;
 		};
 
@@ -571,13 +568,13 @@ void sys24_tile_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 			vscr &= 0x1ff;
 
 			for(y=0; y<384; y++) {
-				// Whether it's tilemap-relative or screen-relative is unknown
+				/* Whether it's tilemap-relative or screen-relative is unknown */
 				hscr = (-hscrtb[vscr]) & 0x1ff;
 				if(hscr + 496 <= 512) {
-					// Horizontal split unnecessary
+					/* Horizontal split unnecessary */
 					draw(bm, tm, bitmap, mask, tpri, lpri, win, hscr, vscr,        0,        y,      496,      y+1);
 				} else {
-					// Horizontal split necessary
+					/* Horizontal split necessary */
 					draw(bm, tm, bitmap, mask, tpri, lpri, win, hscr, vscr,        0,        y, 512-hscr,      y+1);
 					draw(bm, tm, bitmap, mask, tpri, lpri, win,    0, vscr, 512-hscr,        y,      496,      y+1);
 				}
@@ -588,24 +585,24 @@ void sys24_tile_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 			vscr = (+vscr) & 0x1ff;
 
 			if(hscr + 496 <= 512) {
-				// Horizontal split unnecessary
+				/* Horizontal split unnecessary */
 				if(vscr + 384 <= 512) {
-					// Vertical split unnecessary
+					/* Vertical split unnecessary */
 					draw(bm, tm, bitmap, mask, tpri, lpri, win, hscr, vscr,        0,        0,      496,      384);
 				} else {
-					// Vertical split necessary
+					/* Vertical split necessary */
 					draw(bm, tm, bitmap, mask, tpri, lpri, win, hscr, vscr,        0,        0,      496, 512-vscr);
 					draw(bm, tm, bitmap, mask, tpri, lpri, win, hscr,    0,        0, 512-vscr,      496,      384);
 
 				}
 			} else {
-				// Horizontal split necessary
+				/* Horizontal split necessary */
 				if(vscr + 384 <= 512) {
-					// Vertical split unnecessary
+					/* Vertical split unnecessary */
 					draw(bm, tm, bitmap, mask, tpri, lpri, win, hscr, vscr,        0,        0, 512-hscr,      384);
 					draw(bm, tm, bitmap, mask, tpri, lpri, win,    0, vscr, 512-hscr,        0,      496,      384);
 				} else {
-					// Vertical split necessary
+					/* Vertical split necessary */
 					draw(bm, tm, bitmap, mask, tpri, lpri, win, hscr, vscr,        0,        0, 512-hscr, 512-vscr);
 					draw(bm, tm, bitmap, mask, tpri, lpri, win,    0, vscr, 512-hscr,        0,      496, 512-vscr);
 					draw(bm, tm, bitmap, mask, tpri, lpri, win, hscr,    0,        0, 512-vscr, 512-hscr,      384);
@@ -644,7 +641,7 @@ WRITE16_HANDLER(sys24_char_w)
 	}
 }
 
-// - System 24
+/* System 24 */
 
 static UINT16 *sys24_sprite_ram;
 
@@ -655,7 +652,7 @@ int sys24_sprite_vh_start(void)
 		return 1;
 
 	state_save_register_UINT16("system24 sprite", 0, "ram", sys24_sprite_ram, 0x20000);
-	//	kc = 0;
+	/*	kc = 0; */
 	return 0;
 }
 
@@ -731,7 +728,7 @@ void sys24_sprite_draw(struct mame_bitmap *bitmap, const struct rectangle *clipr
 		int flipx, flipy;
 		int zoomx, zoomy;
 		UINT8 pm[16];
-		//		int dump;
+		/*		int dump; */
 		int xmod, ymod;
 		int min_x, min_y, max_x, max_y;
 
@@ -880,8 +877,10 @@ READ16_HANDLER(sys24_sprite_r)
 	return sys24_sprite_ram[offset];
 }
 
-// Programmable mixers
-//   System 24
+/*
+   Programmable mixers
+   System 24
+*/
 
 static UINT16 sys24_mixer_reg[0x10];
 

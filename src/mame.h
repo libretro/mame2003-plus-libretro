@@ -14,7 +14,7 @@
 #include <stdlib.h>
 
 #include "fileio.h"
-#include "osdepend.h"
+#include "mame2003.h"
 #include "drawgfx.h"
 #include "palette.h"
 

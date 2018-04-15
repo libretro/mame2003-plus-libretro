@@ -1,7 +1,7 @@
 /* Copyright  (C) 2010-2017 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
- * The following license statement only applies to this file (boolean.h).
+ * The following license statement only applies to this file (compat_strl.c).
  * ---------------------------------------------------------------------------------------
  *
  * Permission is hereby granted, free of charge,
@@ -20,20 +20,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __LIBRETRO_SDK_BOOLEAN_H
-#define __LIBRETRO_SDK_BOOLEAN_H
+#include <ctype.h>
 
-#ifndef __cplusplus
+#include <compat/strl.h>
+#include <compat/posix_string.h>
 
-#if defined(_MSC_VER) && !defined(SN_TARGET_PS3)
-/* Hack applied for MSVC when compiling in C89 mode as it isn't C99 compliant. */
-#define bool unsigned char
-#define true 1
-#define false 0
-#else
-#include <stdbool.h>
-#endif
+/* Implementation of strlcpy()/strlcat() based on OpenBSD. */
 
-#endif
+#ifndef __MACH__
 
+size_t strlcpy(char *dest, const char *source, size_t size)
+{
+   size_t src_size = 0;
+   size_t        n = size;
+
+   if (n)
+      while (--n && (*dest++ = *source++)) src_size++;
+
+   if (!n)
+   {
+      if (size) *dest = '\0';
+      while (*source++) src_size++;
+   }
+
+   return src_size;
+}
+
+size_t strlcat(char *dest, const char *source, size_t size)
+{
+   size_t len = strlen(dest);
+
+   dest += len;
+
+   if (len > size)
+      size = 0;
+   else
+      size -= len;
+
+   return len + strlcpy(dest, source, size);
+}
 #endif

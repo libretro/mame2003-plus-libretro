@@ -11,7 +11,6 @@
 #ifdef MAME_NET
 
 #include "network.h"
-#include "osdepend.h"
 #include "mame.h"
 #include "common.h"   /* Machine struct       */
 #include "driver.h"   /* GameDriver struct    */
