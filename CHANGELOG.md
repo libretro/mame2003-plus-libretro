@@ -117,6 +117,7 @@
 * Hacha Mecha Fighter
 * Koutetsu Yousai Strahl
 * Knights Of Valour / Sangoku Senki
+* Knights of Valour Plus / Sangoku Senki Plus
 * Mustache Boy
 * Oriental Legend / Xi Yo Gi Shi Re Zuang
 * Sasuke Vs Commander
