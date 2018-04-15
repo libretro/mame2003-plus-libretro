@@ -4591,6 +4591,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( exerion )	/* (c) 1983 Jaleco */
 	DRIVER( exeriont )	/* (c) 1983 Jaleco + Taito America license */
 	DRIVER( exerionb )	/* bootleg */
+	DRIVER( pturn )		/* (c) 1984 Jaleco */
 	DRIVER( fcombat )	/* (c) 1985 Jaleco */
 	DRIVER( formatz )	/* (c) 1984 Jaleco */
 	DRIVER( aeroboto )	/* (c) 1984 Williams */
