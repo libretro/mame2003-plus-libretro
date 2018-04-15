@@ -26,8 +26,7 @@ SOURCES_C := $(CORE_DIR)/libretro/mame2003.c \
 				 $(CORE_DIR)/libretro/joystick.c \
 				 $(CORE_DIR)/libretro/video.c
 
-SOURCES_C += 
-				 $(LIBRETRO_COMM_DIR)/compat/compat_strcasestr.c \
+SOURCES_C += $(LIBRETRO_COMM_DIR)/compat/compat_strcasestr.c \
 				 $(LIBRETRO_COMM_DIR)/compat/compat_strl.c
                  
 SOURCES_C += $(CORE_DIR)/mame.c \
