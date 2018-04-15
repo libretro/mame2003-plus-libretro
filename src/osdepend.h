@@ -279,12 +279,6 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename);
 /* Attempt to open a file with the given name and mode using the specified path type */
 FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode);
 
-/* Read bytes from a file */
-UINT32 osd_fread(FILE* file, void *buffer, UINT32 length);
-
-/* Write bytes to a file */
-UINT32 osd_fwrite(FILE* file, const void *buffer, UINT32 length);
-
 int osd_create_directory(const char *dir);
 
 
