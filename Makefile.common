@@ -22,13 +22,13 @@ endif
 COREDEFINES += -D__LIBRETRO__ -DPI=3.1415927 -DM_PI=3.1415927
 
 SOURCES_C := $(CORE_DIR)/libretro/mame2003.c \
-				 $(CORE_DIR)/libretro/keyboard.c \
-				 $(CORE_DIR)/libretro/joystick.c \
-				 $(CORE_DIR)/libretro/video.c
+	$(CORE_DIR)/libretro/keyboard.c \
+	$(CORE_DIR)/libretro/joystick.c \
+	$(CORE_DIR)/libretro/video.c
 
-SOURCES_C += 
-				 $(LIBRETRO_COMM_DIR)/compat/compat_strcasestr.c \
-				 $(LIBRETRO_COMM_DIR)/compat/compat_strl.c
+SOURCES_C +=  \
+	      $(LIBRETRO_COMM_DIR)/compat/compat_strcasestr.c \
+	      $(LIBRETRO_COMM_DIR)/compat/compat_strl.c
                  
 SOURCES_C += $(CORE_DIR)/mame.c \
 				 $(CORE_DIR)/drawgfx.c \
