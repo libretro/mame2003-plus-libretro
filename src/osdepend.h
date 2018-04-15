@@ -286,7 +286,6 @@ enum
 	PATH_IS_DIRECTORY
 };
 
-
 /* Return the number of paths for a given type */
 int osd_get_path_count(int pathtype);
 
@@ -296,23 +295,12 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename);
 /* Attempt to open a file with the given name and mode using the specified path type */
 FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode);
 
-/* Seek within a file */
-int osd_fseek(FILE* file, INT64 offset, int whence);
-
-/* Return current file position */
-UINT64 osd_ftell(FILE* file);
-
-/* Return 1 if we're at the end of file */
-int osd_feof(FILE* file);
-
 /* Read bytes from a file */
 UINT32 osd_fread(FILE* file, void *buffer, UINT32 length);
 
 /* Write bytes to a file */
 UINT32 osd_fwrite(FILE* file, const void *buffer, UINT32 length);
 
-/* Close an open file */
-void osd_fclose(FILE* file);
 
 
 

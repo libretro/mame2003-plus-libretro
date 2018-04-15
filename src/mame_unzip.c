@@ -83,7 +83,7 @@ static int ecd_read(ZIP* zip) {
 		if (buf_length > zip->length)
 			buf_length = zip->length;
 
-		if (osd_fseek(zip->fp, zip->length - buf_length, SEEK_SET) != 0) {
+		if (fseek(zip->fp, zip->length - buf_length, SEEK_SET) != 0) {
 			return -1;
 		}
 
@@ -195,24 +195,24 @@ ZIP* openzip(int pathtype, int pathindex, const char* zipfile) {
 	}
 
 	/* go to end */
-	if (osd_fseek(zip->fp, 0L, SEEK_END) != 0) {
+	if (fseek(zip->fp, 0L, SEEK_END) != 0) {
 		errormsg ("Seeking to end", ERROR_FILESYSTEM, zipfile);
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		free(zip);
 		return 0;
 	}
 
 	/* get length */
-	zip->length = osd_ftell(zip->fp);
+	zip->length = ftell(zip->fp);
 	if (zip->length < 0) {
 		errormsg ("Get file size", ERROR_FILESYSTEM, zipfile);
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		free(zip);
 		return 0;
 	}
 	if (zip->length == 0) {
 		errormsg ("Empty file", ERROR_CORRUPT, zipfile);
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		free(zip);
 		return 0;
 	}
@@ -220,7 +220,7 @@ ZIP* openzip(int pathtype, int pathindex, const char* zipfile) {
 	/* read ecd data */
 	if (ecd_read(zip)!=0) {
 		errormsg ("Reading ECD (end of central directory)", ERROR_CORRUPT, zipfile);
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		free(zip);
 		return 0;
 	}
@@ -242,15 +242,15 @@ ZIP* openzip(int pathtype, int pathindex, const char* zipfile) {
 		(zip->total_entries_cent_dir < 1)) {
 		errormsg("Cannot span disks", ERROR_UNSUPPORTED, zipfile);
 		free(zip->ecd);
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		free(zip);
 		return 0;
 	}
 
-	if (osd_fseek(zip->fp, zip->offset_to_start_of_cent_dir, SEEK_SET)!=0) {
+	if (fseek(zip->fp, zip->offset_to_start_of_cent_dir, SEEK_SET)!=0) {
 		errormsg ("Seeking to central directory", ERROR_CORRUPT, zipfile);
 		free(zip->ecd);
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		free(zip);
 		return 0;
 	}
@@ -259,7 +259,7 @@ ZIP* openzip(int pathtype, int pathindex, const char* zipfile) {
 	zip->cd = (char*)malloc( zip->size_of_cent_dir );
 	if (!zip->cd) {
 		free(zip->ecd);
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		free(zip);
 		return 0;
 	}
@@ -268,7 +268,7 @@ ZIP* openzip(int pathtype, int pathindex, const char* zipfile) {
 		errormsg ("Reading central directory", ERROR_CORRUPT, zipfile);
 		free(zip->cd);
 		free(zip->ecd);
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		free(zip);
 		return 0;
 	}
@@ -284,7 +284,7 @@ ZIP* openzip(int pathtype, int pathindex, const char* zipfile) {
 	if (!zip->zip) {
 		free(zip->cd);
 		free(zip->ecd);
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		free(zip);
 		return 0;
 	}
@@ -357,7 +357,7 @@ void closezip(ZIP* zip) {
 	free(zip->ecd);
 	/* only if not suspended */
 	if (zip->fp)
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 	free(zip->zip);
 	free(zip);
 }
@@ -371,7 +371,7 @@ void closezip(ZIP* zip) {
 */
 void suspendzip(ZIP* zip) {
 	if (zip->fp) {
-		osd_fclose(zip->fp);
+		fclose(zip->fp);
 		zip->fp = 0;
 	}
 }
@@ -418,7 +418,7 @@ int seekcompresszip(ZIP* zip, struct zipent* ent) {
 			return -1;
 	}
 
-	if (osd_fseek(zip->fp, ent->offset_lcl_hdr_frm_frst_disk, SEEK_SET)!=0) {
+	if (fseek(zip->fp, ent->offset_lcl_hdr_frm_frst_disk, SEEK_SET)!=0) {
 		errormsg ("Seeking to header", ERROR_CORRUPT, zip->zip);
 		return -1;
 	}
@@ -432,10 +432,10 @@ int seekcompresszip(ZIP* zip, struct zipent* ent) {
 		UINT16 filename_length = read_word (buf+ZIPFNLN);
 		UINT16 extra_field_length = read_word (buf+ZIPXTRALN);
 
-		/* calculate offset to data and osd_fseek() there */
+		/* calculate offset to data and fseek() there */
 		offset = ent->offset_lcl_hdr_frm_frst_disk + ZIPNAME + filename_length + extra_field_length;
 
-		if (osd_fseek(zip->fp, offset, SEEK_SET) != 0) {
+		if (fseek(zip->fp, offset, SEEK_SET) != 0) {
 			errormsg ("Seeking to compressed data", ERROR_CORRUPT, zip->zip);
 			return -1;
 		}

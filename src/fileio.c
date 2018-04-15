@@ -100,14 +100,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 			}
 			break;
 
-		/* write-only cases */
-		case FILETYPE_SCREENSHOT:
-			if (!openforwrite)
-			{
-				logerror("mame_fopen: type %02x read not supported\n", filetype);
-				return NULL;
-			}
-			break;
 	}
 
 	/* now open the file appropriately */
@@ -158,10 +150,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 		/* memory card files */
 		case FILETYPE_MEMCARD:
 			return generic_fopen(filetype, NULL, filename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
-
-		/* screenshot files */
-		case FILETYPE_SCREENSHOT:
-			return generic_fopen(filetype, NULL, filename, 0, FILEFLAG_OPENWRITE);
 
 		/* history files */
 		case FILETYPE_HISTORY:
@@ -215,7 +203,7 @@ void mame_fclose(mame_file *file)
 	switch (file->type)
 	{
 		case PLAIN_FILE:
-			osd_fclose(file->file);
+			fclose(file->file);
 			break;
 
 		case ZIPPED_FILE:
@@ -349,7 +337,7 @@ int mame_fseek(mame_file *file, INT64 offset, int whence)
 	switch (file->type)
 	{
 		case PLAIN_FILE:
-			return osd_fseek(file->file, offset, whence);
+			return fseek(file->file, offset, whence);
 
 		case ZIPPED_FILE:
 		case RAM_FILE:
@@ -411,10 +399,10 @@ UINT64 mame_fsize(mame_file *file)
 		case PLAIN_FILE:
 		{
 			int size, offs;
-			offs = osd_ftell(file->file);
-			osd_fseek(file->file, 0, SEEK_END);
-			size = osd_ftell(file->file);
-			osd_fseek(file->file, offs, SEEK_SET);
+			offs = ftell(file->file);
+			fseek(file->file, 0, SEEK_END);
+			size = ftell(file->file);
+			fseek(file->file, offs, SEEK_SET);
 			return size;
 		}
 
@@ -478,14 +466,14 @@ int mame_ungetc(int c, mame_file *file)
 	switch (file->type)
 	{
 		case PLAIN_FILE:
-			if (osd_feof(file->file))
+			if (feof(file->file))
 			{
-				if (osd_fseek(file->file, 0, SEEK_CUR))
+				if (fseek(file->file, 0, SEEK_CUR))
 					return c;
 			}
 			else
 			{
-				if (osd_fseek(file->file, -1, SEEK_CUR))
+				if (fseek(file->file, -1, SEEK_CUR))
 					return c;
 			}
 			return EOF;
@@ -567,7 +555,7 @@ int mame_feof(mame_file *file)
 	switch (file->type)
 	{
 		case PLAIN_FILE:
-			return osd_feof(file->file);
+			return feof(file->file);
 
 		case RAM_FILE:
 		case ZIPPED_FILE:
@@ -589,7 +577,7 @@ UINT64 mame_ftell(mame_file *file)
 	switch (file->type)
 	{
 		case PLAIN_FILE:
-			return osd_ftell(file->file);
+			return ftell(file->file);
 
 		case RAM_FILE:
 		case ZIPPED_FILE:
@@ -730,7 +718,6 @@ static const char *get_extension_for_filetype(int filetype)
 			break;
 
 		case FILETYPE_ARTWORK:		/* artwork files */
-		case FILETYPE_SCREENSHOT:	/* screenshot files */
 			extension = "png";
 			break;
 
@@ -980,16 +967,16 @@ static int checksum_file(int pathtype, int pathindex, const char *file, UINT8 **
 		return -1;
 
 	/* determine length of file */
-	if (osd_fseek(f, 0L, SEEK_END) != 0)
+	if (fseek(f, 0L, SEEK_END) != 0)
 	{
-		osd_fclose(f);
+		fclose(f);
 		return -1;
 	}
 
-	length = osd_ftell(f);
+	length = ftell(f);
 	if (length == -1L)
 	{
-		osd_fclose(f);
+		fclose(f);
 		return -1;
 	}
 
@@ -997,22 +984,22 @@ static int checksum_file(int pathtype, int pathindex, const char *file, UINT8 **
 	data = malloc(length);
 	if (!data)
 	{
-		osd_fclose(f);
+		fclose(f);
 		return -1;
 	}
 
 	/* read entire file into memory */
-	if (osd_fseek(f, 0L, SEEK_SET) != 0)
+	if (fseek(f, 0L, SEEK_SET) != 0)
 	{
 		free(data);
-		osd_fclose(f);
+		fclose(f);
 		return -1;
 	}
 
 	if (osd_fread(f, data, length) != length)
 	{
 		free(data);
-		osd_fclose(f);
+		fclose(f);
 		return -1;
 	}
 
@@ -1034,7 +1021,7 @@ static int checksum_file(int pathtype, int pathindex, const char *file, UINT8 **
 		free(data);
 
 	/* close the file */
-	osd_fclose(f);
+	fclose(f);
 	return 0;
 }
 
