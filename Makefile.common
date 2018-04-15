@@ -21,9 +21,6 @@ SOURCES_C := $(CORE_DIR)/libretro/mame2003.c \
 	$(CORE_DIR)/libretro/joystick.c \
 	$(CORE_DIR)/libretro/video.c
 
-SOURCES_C +=  \
-	      $(LIBRETRO_COMM_DIR)/compat/compat_strcasestr.c \
-	      $(LIBRETRO_COMM_DIR)/compat/compat_strl.c
                  
 SOURCES_C += $(CORE_DIR)/mame.c \
 				 $(CORE_DIR)/drawgfx.c \
@@ -2627,5 +2624,10 @@ SOURCES_C += $(CORE_DIR)/../deps/zlib/adler32.c \
 				 $(CORE_DIR)/../deps/zlib/ioapi.c \
 				 $(CORE_DIR)/../deps/zlib/unzip.c
 
-SOURCES_C += $(LIBRETRO_COMM_DIR)/file/file_path.c
+SOURCES_C +=  \
+	      $(LIBRETRO_COMM_DIR)/compat/compat_strcasestr.c \
+	      $(LIBRETRO_COMM_DIR)/compat/compat_strl.c \
+			$(LIBRETRO_COMM_DIR)/encodings/encoding_utf8.c \
+			$(LIBRETRO_COMM_DIR)/string/stdstring.c \
+			$(LIBRETRO_COMM_DIR)/file/file_path.c
 endif
