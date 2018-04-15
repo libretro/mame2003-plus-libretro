@@ -1,7 +1,709 @@
+# MAME 2003-Plus CHANGELOG
+
+* Lead developer: gamezfan and arcadez with code additions via iq_132 and BritneysPAIRS.
+* Repository maintainers: arcadez, grant2258, and markwkidd.
+
+## New games
+
+* 1943 - The Battle Of Midway Mark II
+* Air Attack
+* Air Rescue
+* Asura Blade 
+* Asura Buster
+* Backfire!
+* Bang Bang Busters
+* Baryon
+* Battle Shark (Japan, Joystick)
+* Bonk's Adventure
+* Boogie Wings
+* Cabal (Joystick with 3 buttons version)
+* Chain Reaction
+* Charlie Ninja
+* Choutetsu Brikin'ger - iron clad
+* Counter Run
+* Crossed Swords 2
+* Crystal Castles (Joystick Version)
+* Cute Fighters
+* Denjin Makai 
+* Diet Go Go
+* DJ Boy
+* Dogou Souken (joystick hack bootleg)
+* Donkey Kong II Jumpman Returns
+* Double Wings
+* DownTown (joystick hack)
+* Dream World
+* Dyna Gears
+* FixEight (bootleg)
+* Gaia: The Last Choice Of Earth
+* Ghost Loop
+* Glass (Censored, Unprotected)
+* Guerrilla War (joystick hack bootleg)
+* Gunbarich
+* Hacha Mecha Figher (Unprotected)
+* Hook (Japan Version) [SumavisionQ5]
+* Hyper Crash
+* Hyper Street Fighter II (Asia)
+* Ikari (joystick hack bootleg)
+* Ikari III - The Rescue (World, 8-Way Joystick)
+* In Your Face
+* Joe & Mac Return
+* Knuckle Bash 2
+* Metal Slug 4
+* Midnight Resistance (joystick hack bootleg)
+* Mighty Warriors
+* Night Slashers
+* Oriental Legend Special
+* Osman
+* Pack'n Bang Bang
+* Pochi & Nyaa
+* Pocket Gal Deluxe
+* Power Instinct Legends
+* Power Instinct Matrimelee
+* Progear
+* Puzz Loop 2
+* Puzzle Star
+* Rage Of The Dragons
+* Riot
+* Rolling Crush
+* Samurai Shodown V
+* Samurai Shodown V Special
+* Sengoku 3
+* Snk Vs Capcom : Svc Chaos (bootleg)
+* Sonic Boom
+* Teeter Torture
+* The Killing Blade
+* The King Of Fighters 2001
+* The King Of Fighters 2002
+* The Last Hope
+* Thunder Hoop
+* Title Fight
+* Vasara 2
+* Wing Force
+* Wonderboy In Monsterland (English Virtual Console Version)
+* Zintrick
+* Zupapa
+
+
+## Games fixed and now working
+
+* 1000 Miglia : Great 1000 Miles Rally
+* Avenging Spirit
+* Bakuretsu Breaker
+* Blood Warrior
+* Driftout 94
+* Fire Barrel
+* Funky Jet
+* Hacha Mecha Figher
+* Monster Slider
+* Photo Y2k
+* Rogha Armor Force
+* Run And Gun (NVRAM) markwkidd
+* Snowboard Championship
+* Street Fighter (With Added Speedups)
+* Task Force Harrier
+* Thunder Dragon
+* Twin Eagle 2
+
+
+## Games now with sound or improved sound
+
+* Acrobat Mission
+* All PGM (Poly Game Master)
+* Bio-ship Paladin
+* Black Heart
+* Cosmic Alien
+* Donkey Kong
+* Donkey Kong JR
+* Fantasy
+* Fire Shark
+* GunNail
+* Hacha Mecha Fighter
+* Koutetsu Yousai Strahl
+* Mustache Boy
+* Nibbler
+* Pioneer Balloon
+* Rohga Armor Force
+* Sasuke Vs Commander
+* SD Gundam Psycho Salamander no Kyoui
+* Super Spacefortress Macross
+* Thunder Dragon
+* US AAF Mustang
+* Vandyke
+* Vanguard
+* Vimana
+
+
+## Changes
+
+* Added sound support to Fire Shark and Vimana
+* Added sound support for Cosmic Alien
+* Added BritneysPAIRS improved sample support to Donkey Kong and Donkey kong JR
+* New and improved sample support for Sasuke, Fantasy, Pioneer Balloon and Vanguard
+* Added sound support for SD Gundam Psycho Salamander no Kyoui
+* Enabled single screen hack for Lode Runner The Dig Fight
+* Fixed end of game crash in Double Dragon
+* Fixed random crashes in Rampage World Tour
+* Added protection simulation for Snowboard Championship
+* Added dsp handling for Driftout 94 and Twin Eagle 2 both games now playable
+* Fixed incorrect game logic in Monster Slider game now playable
+* Small graphical improvements for Biomechanical Toy and Maniac Square
+* Backported iq_132's Kaneko16 driver B.Rap Boys and Shogun Warriors wont work though
+* Updated the Deco Protection Rohga Armor Force now playable
+* Fixed possible crash in Funky Jet by updating Deco Protection
+* Fixed sound and music in Rohga Armor Force
+* Fixed 1000 Miglia : Great 1000 Miles Rally gtmr.zip
+* Added M6801 MCU dump to Bubble Bobble game now 100% Emulated
+* Updated the NMK16 driver for many sound and graphical improvements
+* Fixed a reset problem after level 3 in Night Slashers (ARM CPU)
+* Enabled breakable backgrounds in 64th street code via BritneysPAIRS
+* improved sprite drawing for Gun Force 2
+* Added the ICS2115 soundcore for the PGM games
+* Updated the PGM driver to MAME105 more games are now playable
+* Hooked Up Toshiba T5182 sound in Mustache Boy
+* Tweaked Tecmo Bowl so it will boot using only a single screen
+* Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
+
+
+------------------------------------
+
+# 0.78
+
+
+## General Source Changes
+
+
+Various System 24 Improvements, Fixing Priorities, Clipping issues etc.  [Olivier Galibert]
+	src/drivers/system24.c
+	src/vidhrdw/system24.c
+	src/vidhrdw/segaic24.c
+	src/vidhrdw/segaic24.h
+
+Improved Lightgun Code / Reload Handling [Bryan McPhail]
+	'-lightgun' now enables the lightgun only - no button remapping is performed.
+	'-reload' (formally '-offscreen_reload') is now needed for 2nd button presses
+           to map to offscreen shots.
+	'-dual' (formally '-dual_lightgun') adds support for the Actlabs Dual Lightgun
+           setup, it may be used with and without '-reload' and it requires '-lightgun'. 
+           This mode attempts to automatically remap the player 1 & 2 buttons to suit the
+           lightgun setup.  If it doesn't work you probably need to delete the .cfg file
+           for that game.
+	
+	src/input.h
+	src/windows/input.c
+	src/windows/input.h
+	src/windows/window.c
+
+Removed '(hack?) from descriptions of newly added raizing games, stickers on the boards
+seem to indicate they are genuine Korean release versions.
+
+Improved ms32 sound a bit [Tomasz Slanina]
+	src/drivers/ms32.c
+
+Removed 8.3 ROM Filename Limitation [Olivier Galibert]
+	src/mame.c
+
+Removed neomame / cpmame
+
+Various Seattle + Related Updates [Aaron Giles]
+	MIPS3 core:
+	* fixed handling of condition codes so they are stored in CCR31 now
+	* fixed handling of CCR31 so that rounding modes are set correctly (in the
+	DRC only)
+
+	Seattle:
+	* added support for Biofreaks
+	* fixed remaining issues in California Speed
+	* verified California Speed HDD dump (works in self test, not in boot ROM
+	test)
+	* fixed timer change that broke Blitz 2000
+	* added proper PIC IDs for Wayne Gretzky and Mace
+
+	IDE controller:
+	* fixed final sector handling for Gauntlet: Dark Legacy
+
+	Midway IC:
+	* added sound auto acknowledgement option
+	* added new PIC mapping for Gauntlet: Dark Legacy
+	* fixed initial sound IRQ state
+
+	DCS:
+	* fixed reporting of input full/output empty states
+
+	Voodoo:
+	* added initial Voodoo 2 support
+	* removed hack to toss what I thought were bogus triangles
+	* improved W buffer handling
+	* improved accuracy of depth buffer handling
+
+PSX core Improvements [smf]
+	* Fixed MVMVA disassembly
+	* SWC bit in SR is ignored
+	* Fixed MVMVA with LM bit set
+	* Added SQR & CC opcodes
+	* Added preliminary looped DMA detection
+	* Improved root counter emulation
+	* Improved SIO emulation
+	* Preliminary SPU emulation
+	* Preliminary screen flipping / blanking support
+	* Added GPU packet 41, 52 & 77
+	* Supports uploading 1024 pixel wide textures
+	* Resetting GPU sets default texture window
+	src\cpu\mips\mipsdasm.c
+	src\cpu\mips\psx.c
+	src\machine\psx.c
+	src\includes\psx.h
+	src\sound\psx.c
+	src\sound\psx.h
+	src\vidhrdw\psx.c
+
+GP-13 board layout [Brian A. Troha]
+	src\drivers\namcos11.c
+
+NCR 53CF96-2 SCSI controller emulation [R.Belmont]
+	src\machine\am53cf96.c
+	src\machine\am53cf96.h
+
+Added ADPCM and fixed jerky music in Pass [Tomasz Slanina]
+	src/drivers/pass.c
+
+Fixed the colors in Hana Oriduru [Luca Elia]
+
+ROM patch to fix sound cpu communication in Gundam Psycho Salamander [Tomasz Slanina]
+	still need a real fix ..
+	src/drivers/dcon.c
+
+Improvements to Speed Attack Colours [Pierpaolo Prazzoli]
+
+Misc Fixes / Tilemap conversions [Curt Coder]
+	(prehisle, psychic5, tunhunt + more)
+
+More MS32 Sound Improvements [Tomasz Slanina]
+
+-------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
+
+Bonanza Bros [Olivier Galibert]
+Quiz Rouka Ni Tattenasai [Olivier Galibert, David Haywood]
+Dynamic Country Club [Olivier Galibert]
+	src/drivers/system24.c
+
+Biofreaks (Prototype) [Aaron Giles]
+California Speed [Aaron Giles]
+	src/drivers/seattle.c
+
+Crypt Killer [R.Belmont, smf]
+	src/drivers/konamigq.c
+
+Tekken 3 [smf]
+Ehrgeiz
+Fighting Layer
+Mr Driller
+Aquarush
+	src/drivers/namcos12.c
+
+Super Tank [Norbert Kehrer]
+	src/drivers/supertnk.c
+
+Ashita no Joe [David Haywood, Pierpaolo Prazzoli]
+	sound problems
+	src/drivers/ashnojoe.c
+	src/vidhrdw/ashnojoe.c
+
+Mahjong Campus Hunting [Luca Elia]
+7jigen no Youseitachi [Luca Elia]
+Mahjong Yarunara [Luca Elia]
+Mahjong Angels [Luca Elia]
+Quiz TV Gassyuukoku [Luca Elia]
+	src/drivers/dynax.c
+	src/vidhrdw/dynax.c
+	src/includes/dynax.h
+
+Borderline (bootleg) [David Haywood]
+	no sound
+	src/drivers/vicdual.c
+
+Cross Pang [Pierpaolo Prazzoli]
+	no sound, some sprite glitches, will try to clean up for u1
+	src/drivers/crospang.c
+
+Funny Bubble [David Haywood]
+	sound banking problem, some sprite glitches, will try to clean up for u1
+	src/drivers/funybubl.c
+
+New Clones supported or promoted from GAME_NOT_WORKING status:
+--------------------------------------------------------------
+
+Lode Runner III - The Golden Labyrinth [Pierpaolo Prazzoli]
+Fighting Hawk (World) [Fabrice Arzeno]
+Chinese Hero (older) [Stefan Jokisch]
+Delta Race (omega Race bootleg) 
+Vs. Atari R.B.I. Baseball (set 2) [Pierpaolo Prazzoli]
+Premier Soccer (EAB) [Taucher]
+Pairs V1.2 [Taucher]
+
+
+----------------------------------------
+## New Non-Working games / clones supported
+
+Scramble Spirits [Olivier Galibert]
+Super Masters Golf [Olivier Galibert]
+Quiz Syukudai wo Wasuremashita [Olivier Galibert]
+Gain Ground [Olivier Galibert]
+Crackdown [Olivier Galibert]
+	src/drivers/system24.c
+	all encrypted
+
+Mr Driller 2 [smf]
+	src/drivers/namcos10.c
+
+Star Gladiator [smf]
+Battle Arena Toshinden 2 (USA)
+Strider 2 (USA)
+Strider 2 (ASIA)
+Gallop Racer 2 (USA)
+Brave Blade
+Beastorizer
+Primal Rage 2
+NBA Jam Extreme
+Judge Dredd (Rev C)
+Judge Dredd (Rev B)
+	src/drivers/zn.c
+
+Ace Driver [Guru]
+	src/drivers/namcos22.c
+
+Champion Baseball Japan set 2 [Stefan Jokisch]
+
+Target Balls [David Haywood]
+	not looked at it much yet, seems to be paradise.c
+
+# 0.77u3
+------
+
+## General Source Changes
+
+
+Added SHA1 Information to remaining drivers
+
+Seattle (and related) Improvements [Aaron Giles]
+	* added ADSP2104 variant to the ADSP2100 core
+	* fixed ROM loading code in the ADSP2100 core
+	* fixed several minor bugs that affected Biofreaks and California Speed
+	* included several DIP switch fixes from Brian Troha
+	* fixed input ports for California Speed and SF Rush
+	* increased default visible area to handle Biofreaks
+	* added speedups to Blitz and Blitz 2000
+	* made sure the IDE controller waits a minimum amount of time before
+	generating an interrupt
+	* the IDE controller features buffer is now filled in completely
+	* fixed code that reads the bus master status register from a word offset
+	* tweaked the Midway PIC handling so that Biofreaks can read its serial
+	number
+	* changed the mechanism for DCS to report buffer full/empty states
+	* added IOASIC support for buffer full/buffer empty interrupts from DCS
+	* added preliminary DCS support for ADSP-2104-based sound
+	* added code to clip the Voodoo vertexes to 1/16th of a pixel increments
+	* fixed writes to the palette RAM on the Voodoo
+	* fixed small errors in the Voodoo rendering when bilinear filtering
+	* fixed handling of local alpha blending on the Voodoo
+
+STV Improvements [Angelo Salese. Mariusz Wojcieszek]
+
+Attempted to improve quizpani sound banking [Pierpaolo Prazzoli]
+
+Snes emulation improvements from MESS (used for NSS) [Nathan Woods]
+	src/drivers/nss.c
+	src/includes/snes.h
+	src/machine/snes.c
+	src/sndhrdw/snes.c
+	src/vidhrdw/snes.c
+	    - Misc changes and improvements from the SNES driver in MESS
+
+Fixed Uncio sound frequency with values taken from real pcb [El Condor]
+
+YMF271 sound core plus very preliminary hook up in ms32.c (only Desert War makes
+any sound at all and it doesn't really seem to be anytihng like correct, this is
+probably due to a combination of z80 communication and banking issues) [R.Belmont]
+
+Made sure each bitmap is aligned on a 16-bit boundary [Brad Oliver]
+	src/common.c
+
+Updated Vball driver to use graphics extracted from origianl PCB [Jarek Burczynski]
+
+Fixed viofight to only have one OKI [Jarek Burczynski]
+	- fixed adpcm sound in viofight: now there's is only one OKI M6295 chip
+	- corrected Z80 clock in viofight
+	- corrected viofight rom names
+	- added some info about PALs: viofight, nastar
+
+
+Misc Fixes for MESS [Nathan Woods]
+	src/common.c:
+	src/common.h:
+	- Added auto_strdup(), just an auto_malloc'd version of strdup()
+
+	src/ui_text.c:
+	src/ui_text.h:
+	src/mame.c:
+	- Cleanups in UI string support, primarily to more easily
+	support MESS specific strings without modifying MAME files.  Also
+	removed uistring_shutdown(), which is made unnecessary by auto_strdup()
+
+	src/osdepend.h
+	src/cpu/z80/z80.c
+	src/windows/config.c
+	- Adds osd_die() function; a friendlier way to die in some
+	unexpected fatal way than exit(-1) or [shudder] raise(SIGABRT)
+
+	src/harddisk.h
+	src/chd.h
+	- Adds #ifndef <headername>_H protection
+
+	src/windows/config.c
+	- Adds minor code within #ifdef MESS
+
+
+TMS9900 inline asm update [Brad Oliver]
+	The syntax for the inline ppc assembly in the tms9900 core has changed 
+	slightly
+
+Hooked up Backgrounds in Miss Bubble 2 [Angelo Salese]
+
+SCSP updates [Elsemi, R.Belmont]
+
+Path for Solaris [Lawrence Gold]
+	Attached is a patch for Solaris that replaces uses of sqrtf and floorf,
+	which aren't available on that platform, with their double-precision
+	counterparts.  Please let me know if this is a problem, in which case I
+	can add some special-case #defines for Solaris
+
+Changed Liberator to use Proms, proper PROMS are not dumped however [Stefan Jokisch]
+
+Improved Namco Sound core {BUT]
+
+-------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
+
+Gals Hustler [Pierpaolo Prazzoli, David Haywood]
+	src/drivers/galpanic.c
+
+Hot Rod [GreyRogue, Olivier Galibert]
+	** you must init the default settings or it won't work properly **
+
+Monkey Mole Panic [Luca Elia]
+
+
+New Clones supported or promoted from GAME_NOT_WORKING status:
+--------------------------------------------------------------
+
+Street Fighter the Movie (1.11) [Brian Troha]
+
+Sorcer Striker (hack?) [Brian Troha]
+Kingdom Grand Prix (hack?) [Brian Troha]
+	difficult to verify if these are genuine
+
+Power Instinct (USA alt bootleg) [Pierpaolo Prazzoli]
+	sound not yet working
+
+Roller Aces (set 2) [Pierpaolo Prazzoli]
+
+
+
+----------------------------------------
+## New Non-Working games / clones supported
+
+Malzak [Barry Rodewald]
+	collisions don't work
+	src/drivers/malzak.c
+	src/vidhrdw/malzak.c
+
+Ashita no Joe [David Haywood]
+	incomplete set
+
+# 0.77u2
+------
+
+make sure you do a CLEAN build or this won't work
+
+## General Source Changes
+
+
+CHDman updates, with added checks to make sure source chd's aren't corrupt
+when doing updates etc. [Aaron Giles]
+	src/chdman.c
+
+Fixed Grand Striker 2 dipswitches [Pierpaolo Prazzoli]
+	src/drivers/metro.c
+
+Found the way the OTIR/INIR instructions affect the PF flag and removed
+the look-up tables [Ramsoft, Sean Young]
+	src/cpu/z80/z80.c
+
+Fixed a few v60 floating point opcodes [Olivier Galibert]
+
+Merged taito_x.c and seta.c video hardware, this is correct but due to some
+differences in the drivers a few glitches have been introduced in twinhawk
+that will need investigating [David Haywood]
+
+Mess Related Updates [Nathan Woods]
+	src/windows/fileio.c:
+	- Merged in some #ifdef MESS'd code
+
+Improved bg gfxdecode in missb2, but the backgrounds still haven't been
+hooked up yet [David Haywood]
+	src/drivers/missb2.c
+
+Improved / Fixed Ym2610 save states [Leon van Rooij]
+	src/sound/fm.c
+
+SCSP fixes (improves music in some games a little) [ElSemi / R.Belmont]
+	src/sound/scsp.c
+
+Improved Mysterious Stone driver based on schematics [Curt Coder]
+	src/drivers/mystston.c
+	src/vidhrdw/mystston.c
+
+Improved Raiden drum volume Balance [R.Belmont]
+	src/drivers/raiden.c
+	src/sndhrdw/seibu.h
+
+-------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
+
+Gundam Ex Revue [Pierpaolo Prazzoli, David Haywood]
+	src/drivers/seta2.c
+	src/vidhrdw/seta2.c
+
+Runaway (prototype) [Stefan Jokisch]
+	src/drivers/centiped.c
+	src/vidhrdw/runaway.c
+	src/drivers/runaway.c
+	src/vidhrdw/runaway.c
+
+NFL Blitz [Aaron Giles]
+NFL Blitz 2000 [Aaron Giles]
+	src/drivers/seattle.c
+
+Kyuukyoku no Striker / Last Striker [Luca Elia]
+	src/drivers/taito_x.c
+
+MegaTech : Tournament Golf [David Haywood]
+	src/drivers/segac2.c
+
+Nettoh Quiz Champion [Luca Elia]
+	src/drivers/ddenlovr.c
+
+New Clones supported or promoted from GAME_NOT_WORKING status:
+--------------------------------------------------------------
+
+Capitol (clone of pleiads) [Pierpaolo Prazzoli]
+	src/drivers/phoenix.c
+
+Thunder ceptor [BUT]
+	src/drivers/tceptor.c
+	src/vidhrdw/tceptor.c
+
+
+----------------------------------------
+## New Non-Working games / clones supported
+
+Rabbit
+Tokimeki Mahjong Paradise - Dear My Love
+	these look tricky, blitter based gfx / sound chip, maybe i'll come back
+	to them at a later date
+	src/drivers/rabbit.c
+
+BioFreaks [Aaron Giles]
+	missing hd image
+	src/drivers/seattle.c
+
+Jackie Chan [David Haywood]
+	protection? gfx decode not worked out either, does nothing, may look at
+	it again one day but probably not, no work has been done on it for about
+	a year.
+	src/drivers/jchan.c
+
+
+# 0.77u1 (private)
+
+note, credit for the Z80 DAA emulation improvement in the previous release should
+have been given to 'Ramsoft' ( http://www.ramsoft.bbk.org/ )
+
+## General Source Changes
+
+
+New CHD format and management tools [Aaron Giles]
+	hdcomp is now chdman
+	old chd files are _not_ compatible, they will need to be updated
+	using chdman -update oldchd.chd newchd.chd
+	CHD now stands for 'Compressed Hunks of Data' not 'Compressed
+	Hard Drive' as the format is more flexible.
+
+Misc Changes [Nathan Woods]
+	src/drivers/sengokmj.c:
+	src/drivers/stv.c:
+	- Minor cleanups (specifically changed some variables to static)
+
+	src/machine/6522via.c:
+	src/vidhrdw/tms9928a.c:
+	- Fixes and updates from MESS
+
+Updated a couple of drivers with new Hard Drive SHA1s [Roman Scherzer]
+	src/drivers/cojag.c
+	src/drivers/djmain.c
+	src/drivers/seattle.c
+
+Fixed sound in tpgolf [Leon van Rooij]
+	src/drivers/neogeo.c
+
+Various other changes (dip fixes, tilemap conversions etc.) [various people]
+
+
+-------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
+
+Angel Kiss [David Haywood]
+	no sound
+	src/drivers/ms32.c
+
+Grand Striker 2 [David Haywood]
+	priority glitch inbetween round
+	src/drivers/metro.c
+	src/vidhrdw/metro.c
+
+Hatch Catch [David Haywood]
+	src/drivers/tumblep.c
+	src/vidhrdw/tumblep.c
+
+Cookie & Bibi 2 [David Haywood]
+	src/drivers/snowbros.c
+	src/vidhrdw/snowbros.c
+
+Quiz Panicuru Fantasy [Pierpaolo Prazzoli]
+	incorrect sample banking
+	src/drivers/quizpani.c
+	src/vidhrdw/quizpani.c
+
+Video Pinball [Stefan Jokisch]
+	driver was rewritten, it works now
+	src/drivers/videopin.c
+	src/vidhrdw/videopin.c
+
+
+----------------------------------------
+## New Non-Working games / clones supported
+
+BC Story (SemiCom)
+	protection (missing 0x200 bytes of program code)
+	
 0.77
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Fix to allow a driver to have MSM6295s and plain ADPCM voices coexist
 (required for gcpinbal).  [R.Belmont]
@@ -132,8 +834,9 @@ Various Atari Improvements
 Improved Z80 DAA emulation allowing removal of look-up table [Sean Young / Stefano]
 
 
-New Games supported or promoted from GAME_NOT_WORKING status:
 -------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
 
 Seattle Hardware [Aaron Giles]
 	Mace - The Dark Age
@@ -166,8 +869,9 @@ The Simpsons (2 player, alt) [R.Belmont]
 
 Martial Champion [EAA] [R.Belmont]
 
-New Non-Working games / clones supported
+
 ----------------------------------------
+## New Non-Working games / clones supported
 
 Namco System 12 [smf]
 	(sets include tekken3, soulclbr, ehrgeiz, mdhorse, fgtlayer,
@@ -189,10 +893,10 @@ Sports Fishing 2 (stv) [ANY]
 	src/drivers/stv.c
 	src/machine/stvcd.c
 
-0.76u2
+# 0.76u2
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Rewrote rf5c68 sound core [Olivier Galibert]
 	src/sound/rf5c68.c
@@ -296,7 +1000,7 @@ Asterock Dipswitches [Pierpaolo Prazzoli]
 	src/drivers/asteroid.c
 
 Fixed Aspect Ratio calculationbug on some rotated games
-	(galspnbl for example) [Sébastien Volpe]
+	(galspnbl for example) [Sï¿½bastien Volpe]
 	src/common.c
 	src/windows/wind3d.c
 	src/windows/winddraw.c
@@ -313,7 +1017,7 @@ improved existing graphics a bit
 	src/drivers/tceptor.c
 	src/vidhrdw/tceptor.c
 
-Fixed Dragon Unit Dipswitches [Iñigo Luja]
+Fixed Dragon Unit Dipswitches [Iï¿½igo Luja]
 	src/drivers/seta.c
 
 Some twin16.c / tmnt.c cleanups, fg layer converted to tilemaps [Curt Coder]
@@ -326,8 +1030,9 @@ Some input fixes [HowardC]
 Fixed Xain'd Sleena hang? [David Haywood]
 	src/drivers/xain.c
 
-New Games supported or promoted from GAME_NOT_WORKING status:
 -------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
 
 Several ST-V games are probably now playable, however be warned many are very very
 slow, this is not a bug, sound is still poor or non-existant in most titles, these
@@ -352,18 +1057,19 @@ Sega Dual Space Attack / Head On Dual board [Stefan Jokisch]
 	src/drivers/vicdual.c
 
 
-New Non-Working games / clones supported
+
 ----------------------------------------
+## New Non-Working games / clones supported
 	
 Quiz Panicuru Fantasy [David Haywood]
 	haven't found any time for this in the last 6 months so included it anyway
 	so it doesn't get lost, if anybody wants to finish it they're welcome
 	src/drivers/quizpani.c
 
-0.76u1
+# 0.76u1
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Ported ElSemi's SCSP Core, this gives preliminary sound in the ST-V games, however at
 the moment most of them play static, Shienryu is mostly correct [R.Belmont]
@@ -447,8 +1153,9 @@ Merged Zaxxon and Congo drivesr [CUrt Coder]
 
 Reversed harddisk.c back to 0.73 status
 
-New Games supported or promoted from GAME_NOT_WORKING status:
 -------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
 
 Baku Baku Animal [David Haywood]
 	still a few gfx glitches and no sound
@@ -517,14 +1224,14 @@ Sky Raiders (bootleg of uniwars) [Pierpaolo Prazzoli]
 	src/drivers/galaxian.c
 
 
-0.76
+# 0.76
 
 It appears no new timer system related bugs were found with 0.75u1 so *hopefully* this
 release will be better than the last, 0.75 ended up not being not too great due to the
 problems with the YM2151 sound etc.
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Various ST-V and SH-2 improvements, shienryu is improved as are many other games but
 no more are really playable yet (although I have changed Shienryu to IMPERFECT_GFX
@@ -543,8 +1250,9 @@ Fixed invalid dipswitch in Big Event Golf
 Readded a bit of code that was removed from blockage driver when it was converted to
 use tilemap (blasto needed it)
 
-New Games supported or promoted from GAME_NOT_WORKING status:
 -------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
 
 VS. Super Xevious [Pierpaolo Prazzoli]
 VS. Freedom Force [Pierpaolo Prazzoli]
@@ -570,7 +1278,7 @@ Q*Bert (early test) [Peter Rittwage]
 Mad Planets (UK Taitel license) [Tom McClintock]
 	src/drivers/gottlieb.c
 
-0.75u1
+# 0.75u1
 
 Please TEST this release, I had hoped 0.75 would be the end of the timer related bugs
 for good but it wasn't so if this tests out as ok then I'll probably release 0.76
@@ -578,8 +1286,8 @@ within a fairly short period of time, if sound has vanished on any games, or any
 that booted in .75 no longer boots let us know, the sooner the better.
 
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Attempted to fix remaining timer system related bugs [Aaron Giles]
 	src/timer.c
@@ -598,25 +1306,27 @@ Dips in dbz and lethalj drivers [El Condor]
 Fixed Speedup for r3000 version of Area 51 / Max. Force Duo [Aaron Giles]
 	src/drivers/cojag.c
 
-New Games supported or promoted from GAME_NOT_WORKING status:
 -------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
 
 Gorkans [Tomasz Slanina]
 	correct gfx roms are now loaded
 	src/drivers/pacman.c
 
 
-New Non-Working games / clones supported
+
 ----------------------------------------
+## New Non-Working games / clones supported
 
 TryOut [Pierpaolo Prazzoli]
 	src/drivers/tryout.c
 
 
-0.75
+# 0.75
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 TESTDRIVERS still enabled (see note for 0.74u2)
 
@@ -734,8 +1444,9 @@ Some namcos22 Improvements [Phil Stroffolino]
 
 
 
-New Games supported or promoted from GAME_NOT_WORKING status:
 -------------------------------------------------------------
+## New Games supported or promoted from GAME_NOT_WORKING status:
+
 
 Lady Frog [Tomasz Slanina]
 	old 'ladyfrog' set (not working) renamed to 'roldfrog' (Return Of Lady Frog)
@@ -774,8 +1485,9 @@ Sub Hunter (clone of depthch) [Stefan Jokisch]
 Route X (bootleg)
 	src/drivers/route16.c
 
-New Non-Working games / clones supported
+
 ----------------------------------------
+## New Non-Working games / clones supported
 
 Task Force Harrier (Japan)
 	src/drivers/nmk16.c
@@ -796,10 +1508,10 @@ Marine Date [insideoutboy]
 	src/drivers/marinedt.c
 
 
-0.74u2
+# 0.74u2
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 The TESTDRIVER system has been removed, all drivers are now enabled working or not,
 this decision was made by several members of the development team.  The drivers
@@ -827,7 +1539,7 @@ Fixed recently introduced tp84 video bug [David Haywood]
 
 Fixed Config Saving Bug [BUT]
 
-Various Dipswitch Fixes [Iñigo Luja]
+Various Dipswitch Fixes [Iï¿½igo Luja]
 
 
 New games supported:
@@ -856,8 +1568,7 @@ Galaxian / Space Invaders Test Roms [Mike O'Malley]
 	worth supporting?
 
 
-New Clones supported:
----------------------
+### New Clones supported:
 
 Phantomas (clone of spectar) [Pierpaolo Prazzoli]
 Donkey Kong 3 (bootleg on DKJr hw) [Pierpaolo Prazzoli]
@@ -877,10 +1588,10 @@ New Non-Working games supported
 Dealer [Pierpaolo Prazzoli]
 	bad rom or bad decryption
 
-0.74u1
+# 0.74u1
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Mame now recognises off-screen shots with the Act-Labs gun in a way which works
 better with certain drivers (Area 51 etc,) [Bryan McPhail)
@@ -939,8 +1650,7 @@ Big Bucks [Pierpaolo Prazzoli]
 Embargo [Stefan Jokisch, MASH]
 	src/drivers/embargo.c
 
-New Clones supported:
----------------------
+### New Clones supported:
 
 8 Ball ACtion (Pacman Kit) [Pierpaolo Prazzoli, David Widel] - bad colours
 	no sound
@@ -952,8 +1662,7 @@ PuzzLoop (USA) [Brian Troha]
 	src/drivers/suprnova.c
 
 
-New TESTDRIVERS:
-----------------
+### New TESTDRIVERS:
 
 Competition Golf [Angelo Salese]
 	incomplete video emulation
@@ -963,12 +1672,12 @@ Competition Golf [Angelo Salese]
 	preliminary, doesn't boot yet
 	src/drivers/yumefuda.c
 
-0.74
+# 0.74
 
 Basically a cleaned up version of .73 now my machine is working again.
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Misc source changes mainly to Improve compatibility with MESS [Nathan Woods]
 	src/driver.h:
@@ -1067,8 +1776,7 @@ Super-X [David Haywood]
 A Few new Megatech sets (mostly SMS based, not yet working)
 	src/drivers/segac2.c
 
-New Clones supported:
----------------------
+### New Clones supported:
 
 Natsuiro Mahjong (Mahjong Summer Story) (Japan) (clone of mjnatsu) [Takahiro Nogi]
 	src/drivers/fromance.c
@@ -1085,12 +1793,12 @@ Explorer (bootleg of Scramble) [Pierpaolo Prazzoli]
 	todo : check these 3 bootlegs are worth supporting, if not remove them
 
 
-0.73
+# 0.73
 
 Sorry, this list of changes isn't complete due to hardware problems I'm having.
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Many Improvements to the ST-V emulation, resulting in Hanagumi Columns being
 playable and other games on the driver starting to show some
@@ -1159,10 +1867,10 @@ Video Pool (Moon Cresta hardware) (bootleg of Video Hustler) [Mike Coates]
 	dipswitches incomplete
 	src/drivers/galaxian.c
 
-0.72u2
+# 0.72u2
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Improved Megaplay a bit, the bios screens now show however the games still don't
 work [Barry Rodewald]
@@ -1285,10 +1993,10 @@ Speed Attack [Angelo Salese, Pierpaolo Prazzoli]
 Some New MegaTech Sets (mostly not working yet)
 	src/drivers/segac2.c
 
-0.72u1
+# 0.72u1
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Changed Fuuki 16-bit driver to use Partial Updates for Raster Effects and enabled
 them [David Haywood, Paul Priest]
@@ -1436,10 +2144,10 @@ New Clones supported:
 	src/drivers/dkong.c
 
 
-0.72u2
+# 0.72u2
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Improved Megaplay a bit, the bios screens now show however the games still don't
 work [Barry Rodewald]
@@ -1562,10 +2270,10 @@ Speed Attack [Angelo Salese, Pierpaolo Prazzoli]
 Some New MegaTech Sets (mostly not working yet)
 	src/drivers/segac2.c
 
-0.72u1
+# 0.72u1
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Changed Fuuki 16-bit driver to use Partial Updates for Raster Effects and enabled
 them [David Haywood, Paul Priest]
@@ -1712,7 +2420,7 @@ New Clones supported:
 8 Ball Action (DkJr Kit) [Pierpaolo Prazzoli]
 	src/drivers/dkong.c
 
-0.72
+# 0.72
 
 FAQ about new drivers added since 0.71
 --------------------------------------
@@ -1733,8 +2441,8 @@ updates, sorry.
 The games using the sp0250 sound for speech still need samples for the sound
 effects, however samples for the speech are no longer needed with this update.
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Work Around for Genix Protection + tilemap scroll making it playable [Paul Priest]
 	src/drivers/pirates.c
@@ -1743,7 +2451,7 @@ Work Around for Genix Protection + tilemap scroll making it playable [Paul Pries
 Various Conversions to Tilemaps [Curt Coder]
 	some were left out as they need checking, or devs didn't like them
 
-Various Dipswitch Fixes [Iñigo Luja]
+Various Dipswitch Fixes [Iï¿½igo Luja]
 
 Cleanups to Darius Video [Acho A. Tang]
 	src/vidhrdw/warriorb.c
@@ -1768,11 +2476,11 @@ Zero Point (alt) [Brian Troha]
 	src/drivers/unico.c
 
 
-0.71u3p
+# 0.71u3p
 
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Cleaned up tmnt.c cuebrick addition, added SSriders bootleg (not working) [R.Belmont]
 	src/drivers/tmnt.c
@@ -1986,8 +2694,8 @@ Various CPS2 clones [Razoola]
 	
 0.71u2
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Some progress on MegaTech emulation [David Haywood]
 	menu is now displayed, but carts not recognised, display currently controllled
@@ -2058,7 +2766,7 @@ Stopped Nova2001 from resetting when a coin is inserted [Tomasz Slanina]
 	just the way it was, the code for this part was changed in the clone
 	src/drivers/nova2001.c
 
-Some Dipswitch Fixes [Iñigo Luja]
+Some Dipswitch Fixes [Iï¿½igo Luja]
 	src/drivers/rohga.c
 	src/drivers/deadang.c
 
@@ -2180,10 +2888,10 @@ Super Draw Poker [Pierpaolo Prazzoli]
 	src/drivers/supdrapo.c
 	
 
-0.71u1
+# 0.71u1
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Cleaned Up and Fixed filenames in Namco System 11 driver [smf]
 	src/drivers/namcos11.c
@@ -2264,12 +2972,12 @@ Landmaker (World prototype) [Bryan Mcphail]
 	src/drivers/taito_f3.c
 
 
-0.71
+# 0.71
 
 Everything from 0.70u1 - u5 (see details below) as well as
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Fixed MultiPCM banking for Stadium Cross [R.Belmont]
 	src/drivers/multi32.c
@@ -2337,16 +3045,16 @@ Rougien [..]
 	video hardware emulation needs finishing
 	src/drivers/mermaid.c
 
-0.70u5
+# 0.70u5
 
 Please, if you submit dipswitch changes to me make sure they've been tested with a DEBUG compile, fixing
 'fixed' dipswitches is time consuming, there are extra warnings when you attempt to run Mame in a DEBUG
 compile.
 
-General Source Changes
-----------------------
+## General Source Changes
 
-Some Dipswitch Fixes [Iñigo Luja]
+
+Some Dipswitch Fixes [Iï¿½igo Luja]
 	src/drivers/gameplan.c
 	src/drivers/cps1.c (kodj064gra)
 	src/drivers/ms32.c
@@ -2463,10 +3171,10 @@ New clones supported
 Some namco ones that were forgotten last time
 
 
-0.70u4
+# 0.70u4
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Tilemap viewer now displays a more logical ordering for "tilemap#1", "tilemap#2", etc. [Phil Stroffolino]
 Broadened support for palette_offset, and made it work in tilemap viewer [Phil Stroffolino]
@@ -2542,10 +3250,10 @@ R2D Tank [Pierpaolo Prazzoli]
 
 
 
-0.70u3
+# 0.70u3
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Allowed Region to be selected via Dipswitch on Banpresto games in cave.c [David Haywood]
 	src/drivers/cave.c
@@ -2585,10 +3293,10 @@ Dock Man (parent of portman) [TheGuru]
 	src/drivers/thepit.c
 
 
-0.70u2
+# 0.70u2
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Fixed a few minor problems in the Wolf Pack Driver [Stefan Jokisch]
 	src/drivers/wolfpack.c
@@ -2631,7 +3339,7 @@ Some Dipswitch / Input Fixes [El Condor]
 	src/drivers/astrocde.c
 	src/drivers/8080bw.c
 	
-Some Dipswitch Fixes [Iñigo Luja]
+Some Dipswitch Fixes [Iï¿½igo Luja]
 	src/drivers/toaplan2.c
 	src/drivers/taito_b.c
 	src/drivers/deniam.c
@@ -2653,7 +3361,7 @@ Fixed i86 DAA opcodes + more [Nathan Woods]
 	src/cpu/nec/nec.h
 	- i86 DAA fixes
 
-Corrected Green Beret Rom Names [Gérald]
+Corrected Green Beret Rom Names [Gï¿½rald]
 	src/drivers/gberet.c
 
 Preliminary MCU simulation for Paddle 2 [Angelo Salese]
@@ -2671,10 +3379,10 @@ Enigma 2 [Pierpaolo Prazzoli, Tomasz Slanina]
 	src/drivers/enigma2.c
 
 
-0.70u1
+# 0.70u1
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Fixed Night Striker dips [Brian A. Troha]
 	src/drivers\taito_z.c
@@ -2742,15 +3450,15 @@ Grand Tour [Tomasz Slanina]
 	src/drivers/iqblock.c
 
 
-0.70
+# 0.70
 
 This contains all the updates listed which were part of the source only diffs listed below
 (0.69a, 0.69b, 0.69u3) plus a few extra bits and pieces.  A couple of drivers still appear to
 be broken with the new timer system (deadang, artmagic for example) but hopefully most of the
 problems were ironed out.
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Konami GX Sound Improvements [R.Belmont]
 
@@ -2785,7 +3493,7 @@ DJ Boy [Phil Stroffolino]
 	src\drivers\djboy.c
 	src\vidhrdw\djboy.c
 
-0.69u3 (0.69 Update 3)
+# 0.69u3 (0.69 Update 3)
 
 source diff, changed numbering system to ux instead of a,b,c because people were getting
 confused and thinking mame069b.zip (mame 0.69 _b_inary) was the updated version when it
@@ -2797,8 +3505,8 @@ as testing that goes this isn't an essential upgrade.
 if you use this code in your own build of Mame please make sure you use the correct
 version number to reflect the inclusion of this updated code.
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Direct 3D update to change the way cleanstretch is handled [Leon van Rooij]
 	-cleanstretch works like this:
@@ -2859,14 +3567,14 @@ Sparkman [Luca Elia]
 
 
 
-0.69b (0.69 Update 2)
+# 0.69b (0.69 Update 2)
 
 Another source diff update, this fixes some of the problems Mametesters discovered
 with the new timer code, please test this well too, if anything else is broken which
 worked in .69 let us know, it could be important.
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Fixed Dipswitches and Inputs in Atlantic City Action / Broadwalk Casion [Peter Storey]
 	src\drivers\pacman.c
@@ -2942,7 +3650,7 @@ Final Fight (Japan Set 2) [Razoola]
 	src\drivers\cps1.c
 	src\vidhrdw\cps1.c
 
-0.69a (0.69 Update 1)
+# 0.69a (0.69 Update 1)
 
 This version is provided as a source diff only, more releases like this may follow
 depending on how this one goes down, the intention is to allow people to have the
@@ -2953,8 +3661,8 @@ doesn't change anything as normal release plans are concerned, please don't hass
 whoever maintains your favourite port of Mame to add the updates here, not everybody
 is going to have time to make new binaries on a regular basis.
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Fixed eeprom in Head Panic [Paul Priest]
 	src\drivers\esd16.c
@@ -3091,7 +3799,7 @@ Stadium Cross [David Haywood]
 	src\drivers\multi32.c
 
 
-0.69
+# 0.69
 
 Mainly a bugfix release for problems discovered with new features in 0.68,
 it also further clears the backlog.  Put together by David Haywood, 
@@ -3117,8 +3825,8 @@ result = IDirect3D7_CreateDevice(d3d7, &IID_IDirect3DHALDevice, back_surface, &d
 however we don't know how to fix this nor why it happens, could the real problem
 be elsewhere?
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 Fixed a problem with missing 'returns' in the PIC CPU core [Bryan McPhail]
 	src\cpu\pic16c5x\pic16c5x.c
@@ -3549,13 +4257,13 @@ Mustache Boy [Tomasz Slanina]
 	src\vidhrdw\mustache.c
 	src\sndhrdw\seibu.c
 
-0.68
+# 0.68
 
 Note, this Release was put together by David Haywood, some of it is
 untested but most of it seems to work.
 
-General Source Changes
-----------------------
+## General Source Changes
+
 
 SHA1 hash support, including various new command line options [Farfetch'd]
 	src\too many to list ;-)
@@ -3903,7 +4611,7 @@ Main Event (SNK) [David Haywood]
 	src\drivers\mainsnk.c
 
 
-0.67
+# 0.67
 
 
 MAME Testers bugs fixed (there are probably more)
@@ -3981,7 +4689,7 @@ Complex X [Brian Crowe]
 
 ==========================================================================
 
-0.66
+# 0.66
 
 Codename "FR-34"
 
@@ -4090,8 +4798,7 @@ Mad Shark [Luca Elia]
 Ultra Toukon Densetsu [Luca Elia]
 
 
-New clones supported:
----------------------
+### New Clones supported:
 
 Gratia (set 1)
 Mysterious Stones (set 1)
@@ -4100,7 +4807,7 @@ Cosmic Cop (= Gallop)
 
 ==========================================================================
 
-0.65
+# 0.65
 
 
 MAME Testers bugs fixed (there are probably more)
@@ -4182,7 +4889,7 @@ Ribbit! [Aaron Giles]
 
 ==========================================================================
 
-0.64
+# 0.64
 
 
 MAME Testers bugs fixed (there are probably more)
@@ -4235,8 +4942,7 @@ Enforce
 Shot Rider [Tomasz Slanina]
 
 
-New clones supported:
----------------------
+### New Clones supported:
 
 Shadow Warriors (set 2)
 Carrier Air Wing (US)
@@ -4247,7 +4953,7 @@ Mahjong Nanpa Story (Ura)
 ==========================================================================
 
 
-0.63
+# 0.63
 
 An interim release with many things submitted in the past two months not
 included yet.
@@ -4403,8 +5109,7 @@ Liberation [Bryan McPhail]
 P-47 Aces
 
 
-New clones supported:
----------------------
+### New Clones supported:
 
 Nostradamus (Korea)
 Cruis'n World (rev L2.0)
@@ -4419,7 +5124,7 @@ Hokuha Syourin Hiryu no Ken (=Shanghai Kid)
 ==========================================================================
 
 
-0.62
+# 0.62
 
 LICENSE CHANGE WARNING:
 We are considering changing distribution license, switching to GPL for the
@@ -4586,8 +5291,7 @@ Sky Skipper
 Gomoku Narabe Renju [Takahiro Nogi]
 
 
-New clones supported:
----------------------
+### New Clones supported:
 
 Sanrin San Chan (= Spatter)
 New Rally X (vertical bootleg)
@@ -4612,7 +5316,7 @@ Strikers 1945 (Japan, unprotected)
 ==========================================================================
 
 
-0.61
+# 0.61
 
 
 These drivers have improved GRAPHICS:
@@ -4786,8 +5490,7 @@ Knights of Valour / Sango [ElSemi]
 Battle Bakraider [Quench]
 
 
-New clones supported:
----------------------
+### New Clones supported:
 
 ESP Ra.De (International Ver 1998 4/22)
 ESP Ra. De. (Japan Ver 1998 4/21)
@@ -4814,7 +5517,7 @@ Bagman (bootleg on Galaxian hardware)
 ==========================================================================
 
 
-0.60
+# 0.60
 
 
 These drivers have improved GRAPHICS:
@@ -4918,8 +5621,7 @@ Tank Busters [Jarek Burczynski]
 Hyper Duel [E. Watanabe]
 
 
-New clones supported:
----------------------
+### New Clones supported:
 
 Pengo (bootleg)
 Bone Crusher (= Knuckle Joe)
@@ -4946,7 +5648,7 @@ Dragon Punch (= Sports Match)
 ==========================================================================
 
 
-0.59
+# 0.59
 
 
 Other drivers changes:
@@ -5016,8 +5718,7 @@ Paddle Mania [Acho A. Tang]
 Scorpion [Stephane Humbert]
 
 
-New clones supported:
----------------------
+### New Clones supported:
 
 Dynasty Wars (World)
 Captain America (Japan)
@@ -5034,7 +5735,7 @@ Beraboh Man (Japan version B)
 ==========================================================================
 
 
-0.58
+# 0.58
 
 
 Other drivers changes:
@@ -5166,8 +5867,7 @@ Flyball [Stefan Jokisch]
 Grand Cross [David Graves]
 
 
-New clones supported:
----------------------
+### New Clones supported:
 
 Mayday (set 3)
 Alpha One (prototype of Major Havoc)
