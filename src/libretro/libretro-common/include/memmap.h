@@ -1,7 +1,7 @@
 /* Copyright  (C) 2010-2017 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
- * The following license statement only applies to this file (strcasestr.h).
+ * The following license statement only applies to this file (memmap.h).
  * ---------------------------------------------------------------------------------------
  *
  * Permission is hereby granted, free of charge,
@@ -20,30 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __LIBRETRO_SDK_COMPAT_STRCASESTR_H
-#define __LIBRETRO_SDK_COMPAT_STRCASESTR_H
+#ifndef _LIBRETRO_MEMMAP_H
+#define _LIBRETRO_MEMMAP_H
 
-#include <string.h>
+#include <stdio.h>
+#include <stdint.h>
 
-#if defined(RARCH_INTERNAL) && defined(HAVE_CONFIG_H)
-#include "../../../config.h"
+#if defined(__CELLOS_LV2__) || defined(PSP) || defined(GEKKO) || defined(VITA) || defined(_XBOX) || defined(_3DS) || defined(WIIU) || defined(SWITCH)
+/* No mman available */
+#elif defined(_WIN32) && !defined(_XBOX)
+#include <windows.h>
+#include <errno.h>
+#include <io.h>
+#else
+#define HAVE_MMAN
+#include <sys/mman.h>
 #endif
 
-#ifndef HAVE_STRCASESTR
+#if !defined(HAVE_MMAN) || defined(_WIN32)
+void* mmap(void *addr, size_t len, int mmap_prot, int mmap_flags, int fildes, size_t off);
 
-#include <retro_common_api.h>
+int munmap(void *addr, size_t len);
 
-RETRO_BEGIN_DECLS
-
-/* Avoid possible naming collisions during link
- * since we prefer to use the actual name. */
-#define strcasestr(haystack, needle) strcasestr_retro__(haystack, needle)
-
-char *strcasestr(const char *haystack, const char *needle);
-
-RETRO_END_DECLS
-
+int mprotect(void *addr, size_t len, int prot);
 #endif
 
-#endif
+int memsync(void *start, void *end);
 
+int memprotect(void *addr, size_t len);
+
+#endif

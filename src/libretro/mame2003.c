@@ -149,10 +149,10 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 
    if (path_is_directory(buffer))
       return PATH_IS_DIRECTORY;
-   else if (path_file_exists(buffer))
+   else if (filestream_exists(buffer))
       return PATH_IS_FILE;
-   else   
-      return PATH_NOT_FOUND;
+
+   return PATH_NOT_FOUND;
 }
 
 FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode)
