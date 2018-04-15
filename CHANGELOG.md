@@ -1,6 +1,6 @@
 # MAME 2003-Plus CHANGELOG
 
-* Lead developer: gamezfan and arcadez with code additions via iq_132 and BritneysPAIRS.
+* Lead developer: arcadez with code additions via iq_132 and BritneysPAIRS.
 * Repository maintainers: arcadez, grant2258, and markwkidd.
 
 ## New games
@@ -55,6 +55,7 @@
 * Oriental Legend Special
 * Osman
 * Pack'n Bang Bang
+* Parallel Turn
 * Pochi & Nyaa
 * Pocket Gal Deluxe
 * Power Instinct Legends
@@ -105,32 +106,39 @@
 * Twin Eagle 2
 
 
-## Games now with sound or improved sound
+## Games now with sound
 
 * Acrobat Mission
-* All PGM (Poly Game Master)
 * Bio-ship Paladin
 * Black Heart
 * Cosmic Alien
-* Donkey Kong
-* Donkey Kong JR
-* Fantasy
 * Fire Shark
 * GunNail
 * Hacha Mecha Fighter
 * Koutetsu Yousai Strahl
+* Knights Of Valour / Sangoku Senki
 * Mustache Boy
-* Nibbler
-* Pioneer Balloon
-* Rohga Armor Force
+* Oriental Legend / Xi Yo Gi Shi Re Zuang
 * Sasuke Vs Commander
+* Same Same Same
 * SD Gundam Psycho Salamander no Kyoui
 * Super Spacefortress Macross
 * Thunder Dragon
 * US AAF Mustang
 * Vandyke
-* Vanguard
 * Vimana
+* Zhong Guo Long II
+
+
+## Games now with improved sound
+
+* Donkey Kong
+* Donkey Kong JR
+* Fantasy
+* Pioneer Balloon
+* Nibbler
+* Rohga Armor Force
+* Vanguard
 
 
 ## Changes
