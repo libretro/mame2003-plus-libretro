@@ -720,13 +720,12 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 				if (ssv_special == 2) sy = 232 - sy; // vasara, wheres the register for this?
 
 				sx	=	ssv_sprites_offsx + sx;
-if (ssv_scroll[0x74/2] & 0x8000)	// srmp7, twineag2, ultrax
-				sy	=	ssv_sprites_offsy + sy;	// ?
-else
-				sy	=	ssv_sprites_offsy - sy - (ynum-1) * 8;
+				if (ssv_scroll[0x74/2] & 0x8000)	// srmp7, twineag2, ultrax
+					sy	=	ssv_sprites_offsy + sy;	// ?
+				else
+					sy	=	ssv_sprites_offsy - sy - (ynum-1) * 8;
 
 				/* Draw the tiles */
-
 				transparency = shadow ? TRANSPARENCY_ALPHA : TRANSPARENCY_PEN;
 
 				for (x = xstart; x != xend; x += xinc)
