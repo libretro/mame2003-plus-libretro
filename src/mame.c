@@ -114,6 +114,7 @@
 #include "vidhrdw/vector.h"
 #include "palette.h"
 #include "harddisk.h"
+#include "osdepend.h"
 
 
 /***************************************************************************
@@ -138,6 +139,8 @@ void *record;	/* for -record */
 void *playback; /* for -playback */
 int mame_debug; /* !0 when -debug option is specified */
 int bailing;	/* set to 1 if the startup is aborted to prevent multiple error messages */
+
+extern int16_t XsoundBuffer[2048];
 
 /* the active machine */
 static struct RunningMachine active_machine;
@@ -285,44 +288,42 @@ int run_game(int game)
 	bailing = 0;
 
 	/* let the OSD layer start up first */
-	if (osd_init())
-		bail_and_print("Unable to initialize system");
-	else
-	{
-		begin_resource_tracking();
+	/* ensure parent dir for various mame dirs is created */
+	char buffer[1024];
+	snprintf(buffer, 1024, "%s%c%s", options.libretro_save_path, slash, APPNAME);
+	osd_create_directory(buffer);
+	snprintf(buffer, 1024, "%s%c%s", options.libretro_system_path, slash, APPNAME);
+	osd_create_directory(buffer);
+    
+    begin_resource_tracking();
 
-		/* then finish setting up our local machine */
-		if (init_machine())
-			bail_and_print("Unable to initialize machine emulation");
-		else
-		{
-			/* then run it */
-			if (run_machine())
-				bail_and_print("Unable to start machine emulation");
-			else
-			{
-			    game_loaded = 1;
-				return 0;
-			}
+    /* then finish setting up our local machine */
+    if (init_machine())
+        bail_and_print("Unable to initialize machine emulation");
+    else
+    {
+        /* then run it */
+        if (run_machine())
+            bail_and_print("Unable to start machine emulation");
+        else
+        {
+            game_loaded = 1;
+            return 0;
+        }
 
-			/* shutdown the local machine */
-			shutdown_machine();
-		}
+        /* shutdown the local machine */
+        shutdown_machine();
+    }
 
-		/* stop tracking resources and exit the OSD layer */
-		end_resource_tracking();
-		osd_exit();
-	}
-
-	end_resource_tracking();
+    /* stop tracking resources and exit the OSD layer */
+    end_resource_tracking();
+    
 	return err;
 }
 
 void run_game_done(void)
 {
 	shutdown_machine();
-	end_resource_tracking();
-	osd_exit();
 	end_resource_tracking();
 }
 
@@ -615,8 +616,7 @@ static void shutdown_machine(void)
 
 void mame_pause(int pause)
 {
-	osd_pause(pause);
-	osd_sound_enable(!pause);
+	memset(XsoundBuffer, 0, sizeof(XsoundBuffer));
 	palette_set_global_brightness_adjust(pause ? options.pause_bright : 1.00);
 	schedule_full_refresh();
 }

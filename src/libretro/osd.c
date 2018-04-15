@@ -29,16 +29,14 @@ int samples_per_frame = 0;
 short *samples_buffer;
 short *conversion_buffer;
 int usestereo = 1;
-extern int16_t XsoundBuffer[2048];
 
 #if defined(_WIN32)
-char slash = '\\';
+const char slash = '\\';
 #else
-char slash = '/';
+const char slash = '/';
 #endif
 
 extern retro_log_printf_t log_cb;
-
 
 int osd_create_directory(const char *dir)
 {
@@ -82,11 +80,6 @@ int osd_init(void)
 	osd_create_directory(buffer);
 
 	return 0;
-}
-
-void osd_exit(void)
-{
-
 }
 
 
@@ -135,21 +128,6 @@ int osd_update_audio_stream(INT16 *buffer)
 void osd_stop_audio_stream(void)
 {
 }
-
-void osd_set_mastervolume(int attenuation)
-{
-}
-
-int osd_get_mastervolume(void)
-{
-	return 0;
-}
-
-void osd_sound_enable(int enable)
-{
-	memset(XsoundBuffer, 0, sizeof(XsoundBuffer));
-}
-
 
 
 /******************************************************************************
@@ -259,9 +237,6 @@ UINT32 osd_fwrite(FILE* file, const void *buffer, UINT32 length)
 Miscellaneous
 
 ******************************************************************************/
-
-int osd_display_loading_rom_message(const char *name, struct rom_load_data *romdata) { return 0; }
-void osd_pause(int paused) {}
 
 void CLIB_DECL osd_die(const char *text, ...)
 {

@@ -1089,9 +1089,6 @@ static int display_rom_load_results(struct rom_load_data *romdata)
 {
 	int region;
 
-	/* final status display */
-	osd_display_loading_rom_message(NULL, romdata);
-
 	/* only display if we have warnings or errors */
 	if (romdata->warnings || romdata->errors)
 	{
@@ -1185,10 +1182,6 @@ static int open_rom_file(struct rom_load_data *romdata, const struct RomModule *
 	const struct GameDriver *drv;
 
 	++romdata->romsloaded;
-
-	/* update status display */
-	if (osd_display_loading_rom_message(ROM_GETNAME(romp), romdata))
-       return 0;
 
 	/* Attempt reading up the chain through the parents. It automatically also
 	   attempts any kind of load by checksum supported by the archives. */

@@ -22,7 +22,6 @@ extern "C" {
 
 
 int osd_init(void);
-void osd_exit(void);
 
 
 /******************************************************************************
@@ -157,19 +156,6 @@ int osd_start_audio_stream(int stereo);
 int osd_update_audio_stream(INT16 *buffer);
 void osd_stop_audio_stream(void);
 
-/*
-  control master volume. attenuation is the attenuation in dB (a negative
-  number). To convert from dB to a linear volume scale do the following:
-	volume = MAX_VOLUME;
-	while (attenuation++ < 0)
-		volume /= 1.122018454;		//	= (10 ^ (1/20)) = 1dB
-*/
-void osd_set_mastervolume(int attenuation);
-int osd_get_mastervolume(void);
-
-void osd_sound_enable(int enable);
-
-
 
 /******************************************************************************
 
@@ -268,6 +254,8 @@ void osd_customize_inputport_defaults(struct ipd *defaults);
 
 ******************************************************************************/
 
+extern const char slash;
+
 /* inp header */
 typedef struct
 {
@@ -301,7 +289,7 @@ UINT32 osd_fread(FILE* file, void *buffer, UINT32 length);
 /* Write bytes to a file */
 UINT32 osd_fwrite(FILE* file, const void *buffer, UINT32 length);
 
-
+int osd_create_directory(const char *dir);
 
 
 /******************************************************************************
@@ -330,17 +318,6 @@ cycles_t osd_profiling_ticks(void);
 	Miscellaneous
 
 ******************************************************************************/
-
-/* called while loading ROMs. It is called a last time with name == 0 to signal */
-/* that the ROM loading process is finished. */
-/* return non-zero to abort loading */
-int osd_display_loading_rom_message(const char *name,struct rom_load_data *romdata);
-
-/* called when the game is paused/unpaused, so the OS dependent code can do special */
-/* things like changing the title bar or darkening the display. */
-/* Note that the OS dependent code must NOT stop processing input, since the user */
-/* interface is still active while the game is paused. */
-void osd_pause(int paused);
 
 /* aborts the program in some unexpected fatal way */
 #ifdef __GNUC__
