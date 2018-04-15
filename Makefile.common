@@ -14,11 +14,6 @@ ifneq (,$(findstring msvc2003,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
 endif
 
-ifneq (,$(findstring msvc,$(platform)))
-COREDEFINES := -DINLINE="static _inline"
-else
-COREDEFINES := -DINLINE="static __inline__"
-endif
 COREDEFINES += -D__LIBRETRO__ -DPI=3.1415927 -DM_PI=3.1415927
 
 SOURCES_C := $(CORE_DIR)/libretro/mame2003.c \

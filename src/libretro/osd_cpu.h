@@ -26,7 +26,8 @@
 #define OSD_CPU_H
 
 #include <stdint.h>
-#include "libretro.h"
+#include <libretro.h>
+#include <retro_inline.h>
 
 
 #if 0
@@ -34,15 +35,10 @@
 #endif
 
 #ifdef __MWERKS__
-#define INLINE static inline
 #define __extension__
 #endif
 
 #ifdef _MSC_VER
-#if 0
-#undef INLINE
-#define INLINE static inline
-#endif
 #define strcasecmp stricmp
 #define snprintf _snprintf
 
