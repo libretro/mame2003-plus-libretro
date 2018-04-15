@@ -262,6 +262,7 @@ INLINE void bail_and_print(const char *message)
 
 int run_game(int game)
 {
+    char buffer[1024];
 	int err = 1;
 
 	begin_resource_tracking();
@@ -289,7 +290,6 @@ int run_game(int game)
 
 	/* let the OSD layer start up first */
 	/* ensure parent dir for various mame dirs is created */
-	char buffer[1024];
 	snprintf(buffer, 1024, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
 	path_mkdir(buffer);
 	snprintf(buffer, 1024, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
