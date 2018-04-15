@@ -284,7 +284,7 @@ UINT32 mame_fread(mame_file *file, void *buffer, UINT32 length)
 	switch (file->type)
 	{
 		case PLAIN_FILE:
-			return osd_fread(file->file, buffer, length);
+			return fread(buffer, 1, length, file->file);
 
 		case ZIPPED_FILE:
 		case RAM_FILE:
@@ -317,7 +317,7 @@ UINT32 mame_fwrite(mame_file *file, const void *buffer, UINT32 length)
 	switch (file->type)
 	{
 		case PLAIN_FILE:
-			return osd_fwrite(file->file, buffer, length);
+			return fwrite(buffer, 1, length, file->file);
 	}
 
 	return 0;
@@ -439,7 +439,7 @@ int mame_fgetc(mame_file *file)
 	switch (file->type)
 	{
 		case PLAIN_FILE:
-			if (osd_fread(file->file, &buffer, 1) == 1)
+			if (fread(&buffer, 1, 1, file->file) == 1)
 				return buffer;
 			return EOF;
 
@@ -996,7 +996,7 @@ static int checksum_file(int pathtype, int pathindex, const char *file, UINT8 **
 		return -1;
 	}
 
-	if (osd_fread(f, data, length) != length)
+	if (fread(data, 1, length, f) != length)
 	{
 		free(data);
 		fclose(f);

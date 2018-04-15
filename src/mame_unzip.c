@@ -93,7 +93,7 @@ static int ecd_read(ZIP* zip) {
 			return -1;
 		}
 
-		if (osd_fread( zip->fp, buf, buf_length ) != buf_length) {
+		if (fread( buf, 1, buf_length, zip->fp ) != buf_length) {
 			free(buf);
 			return -1;
 		}
@@ -264,7 +264,7 @@ ZIP* openzip(int pathtype, int pathindex, const char* zipfile) {
 		return 0;
 	}
 
-	if (osd_fread(zip->fp, zip->cd, zip->size_of_cent_dir)!=zip->size_of_cent_dir) {
+	if (fread(zip->cd, 1, zip->size_of_cent_dir, zip->fp)!=zip->size_of_cent_dir) {
 		errormsg ("Reading central directory", ERROR_CORRUPT, zipfile);
 		free(zip->cd);
 		free(zip->ecd);
@@ -423,7 +423,7 @@ int seekcompresszip(ZIP* zip, struct zipent* ent) {
 		return -1;
 	}
 
-	if (osd_fread(zip->fp, buf, ZIPNAME)!=ZIPNAME) {
+	if (fread(buf, 1, ZIPNAME, zip->fp)!=ZIPNAME) {
 		errormsg ("Reading header", ERROR_CORRUPT, zip->zip);
 		return -1;
 	}
@@ -497,7 +497,7 @@ static int inflate_file(FILE* in_file, unsigned in_size, unsigned char* out_data
 			return -1;
 		}
 		d_stream.next_in  = in_buffer;
-		d_stream.avail_in = osd_fread (in_file, in_buffer, MIN(in_size, INFLATE_INPUT_BUFFER_MAX));
+		d_stream.avail_in = fread (in_buffer, 1, MIN(in_size, INFLATE_INPUT_BUFFER_MAX), in_file);
 		in_size -= d_stream.avail_in;
 		if (in_size == 0)
 			d_stream.avail_in++; /* add dummy byte at end of compressed data */
@@ -544,7 +544,7 @@ int readcompresszip(ZIP* zip, struct zipent* ent, char* data) {
 	if (err!=0)
 		return err;
 
-	if (osd_fread(zip->fp, data, ent->compressed_size)!=ent->compressed_size) {
+	if (fread(data, 1, ent->compressed_size, zip->fp)!=ent->compressed_size) {
 		errormsg ("Reading compressed data", ERROR_CORRUPT, zip->zip);
 		return -1;
 	}

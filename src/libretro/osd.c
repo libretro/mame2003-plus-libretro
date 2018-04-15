@@ -202,21 +202,7 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
 
    out = fopen(buffer, mode);
 
-   if (out == 0)
-   {
-      return 0;
-   }
    return out;
-}
-
-UINT32 osd_fread(FILE* file, void *buffer, UINT32 length)
-{
-	return fread(buffer, 1, length, file);
-}
-
-UINT32 osd_fwrite(FILE* file, const void *buffer, UINT32 length)
-{
-	return fwrite(buffer, 1, length, file);
 }
 
 
