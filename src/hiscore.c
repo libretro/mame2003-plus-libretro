@@ -217,128 +217,129 @@ static void hs_save (void)
 /* call hs_open once after loading a game */
 void hs_open (const char *name)
 {   
-	state.mem_range = NULL;
+   char buffer[MAX_CONFIG_LINE_SIZE];
+   enum { FIND_NAME, FIND_DATA, FETCH_DATA } mode;
 
-    char buffer[MAX_CONFIG_LINE_SIZE];
-    enum { FIND_NAME, FIND_DATA, FETCH_DATA } mode;
-    mode = FIND_NAME;
-    
-    if(options.use_external_hiscore)
-    {
-       mame_file *f = NULL;
+   state.mem_range = NULL;
 
-       log_cb(RETRO_LOG_INFO, "[MAME 2003] Searching for %s hiscore memory map in external .dat.\n", name);
-       f = mame_fopen (NULL, db_filename, FILETYPE_HIGHSCORE_DB, 0);
+   mode = FIND_NAME;
 
-       if(f)
-       {
-          while (mame_fgets (buffer, MAX_CONFIG_LINE_SIZE, f))
-          {
-             if (mode==FIND_NAME)
-             {
-                if (matching_game_name (buffer, name))
-                {
-                   mode = FIND_DATA;
-                   log_cb(RETRO_LOG_INFO, "[MAME 2003] %s hiscore memory map found in external hiscore.dat!\n", name);
-                }
-             }
-             else if (is_mem_range (buffer))
-             {
-                const char            *pBuf = buffer;
-                struct mem_range *mem_range = (struct mem_range*)
-                   malloc(sizeof(struct mem_range));
+   if(options.use_external_hiscore)
+   {
+      mame_file *f = NULL;
 
-                if (mem_range)
-                {
-                   mem_range->cpu = hexstr2num (&pBuf);
-                   mem_range->addr = hexstr2num (&pBuf);
-                   mem_range->num_bytes = hexstr2num (&pBuf);
-                   mem_range->start_value = hexstr2num (&pBuf);
-                   mem_range->end_value = hexstr2num (&pBuf);
+      log_cb(RETRO_LOG_INFO, "[MAME 2003] Searching for %s hiscore memory map in external .dat.\n", name);
+      f = mame_fopen (NULL, db_filename, FILETYPE_HIGHSCORE_DB, 0);
 
-                   mem_range->next = NULL;
-                   {
-                      struct mem_range *last = state.mem_range;
-                      while (last && last->next) last = last->next;
-                      if (last == NULL)
-                         state.mem_range = mem_range;
-                      else
-                         last->next = mem_range;
-                   }
-
-                   mode = FETCH_DATA;
-                }
-                else
-                {
-                   hs_free();
-                   break;
-                }
-             }
-             else
-             {
-                /* line is a game name */
-                if (mode == FETCH_DATA)
-                   break;
-             }
-          }
-          mame_fclose (f);
-       }
-    }
-    else 
-    {    
-        int hiscoredat_index = 0;
-        log_cb(RETRO_LOG_INFO, "[MAME 2003] Searching for %s hiscore memory map in internal .dat.\n", name);
-
-        while(parse_hiscoredat(buffer, MAX_CONFIG_LINE_SIZE, &hiscoredat_index))
-        {
+      if(f)
+      {
+         while (mame_fgets (buffer, MAX_CONFIG_LINE_SIZE, f))
+         {
             if (mode==FIND_NAME)
             {
-                if (matching_game_name (buffer, name))
-                {
-                    mode = FIND_DATA;
-                    log_cb(RETRO_LOG_INFO, "[MAME 2003] %s hiscore memory map found in internal hiscore.dat!\n", name);
-                }
+               if (matching_game_name (buffer, name))
+               {
+                  mode = FIND_DATA;
+                  log_cb(RETRO_LOG_INFO, "[MAME 2003] %s hiscore memory map found in external hiscore.dat!\n", name);
+               }
             }
             else if (is_mem_range (buffer))
             {
-                const char *pBuf = buffer;
-                struct mem_range *mem_range = (struct mem_range*)
-                   malloc(sizeof(struct mem_range));
-                if (mem_range)
-                {
-                    mem_range->cpu = hexstr2num (&pBuf);
-                    mem_range->addr = hexstr2num (&pBuf);
-                    mem_range->num_bytes = hexstr2num (&pBuf);
-                    mem_range->start_value = hexstr2num (&pBuf);
-                    mem_range->end_value = hexstr2num (&pBuf);
+               const char            *pBuf = buffer;
+               struct mem_range *mem_range = (struct mem_range*)
+                  malloc(sizeof(struct mem_range));
 
-                    mem_range->next = NULL;
-                    {
-                        struct mem_range *last = state.mem_range;
-                        while (last && last->next)
-                           last = last->next;
-                        if (last == NULL)
-                            state.mem_range = mem_range;
-                        else
-                            last->next = mem_range;
-                    }
+               if (mem_range)
+               {
+                  mem_range->cpu = hexstr2num (&pBuf);
+                  mem_range->addr = hexstr2num (&pBuf);
+                  mem_range->num_bytes = hexstr2num (&pBuf);
+                  mem_range->start_value = hexstr2num (&pBuf);
+                  mem_range->end_value = hexstr2num (&pBuf);
 
-                    mode = FETCH_DATA;
-                }
-                else
-                {
-                    hs_free();
-                    break;
-                }
+                  mem_range->next = NULL;
+                  {
+                     struct mem_range *last = state.mem_range;
+                     while (last && last->next) last = last->next;
+                     if (last == NULL)
+                        state.mem_range = mem_range;
+                     else
+                        last->next = mem_range;
+                  }
+
+                  mode = FETCH_DATA;
+               }
+               else
+               {
+                  hs_free();
+                  break;
+               }
             }
             else
             {
-                /* line is a game name */
-                if (mode == FETCH_DATA)
-                   break;
+               /* line is a game name */
+               if (mode == FETCH_DATA)
+                  break;
             }
-        }   
-    }
+         }
+         mame_fclose (f);
+      }
+   }
+   else 
+   {    
+      int hiscoredat_index = 0;
+      log_cb(RETRO_LOG_INFO, "[MAME 2003] Searching for %s hiscore memory map in internal .dat.\n", name);
+
+      while(parse_hiscoredat(buffer, MAX_CONFIG_LINE_SIZE, &hiscoredat_index))
+      {
+         if (mode==FIND_NAME)
+         {
+            if (matching_game_name (buffer, name))
+            {
+               mode = FIND_DATA;
+               log_cb(RETRO_LOG_INFO, "[MAME 2003] %s hiscore memory map found in internal hiscore.dat!\n", name);
+            }
+         }
+         else if (is_mem_range (buffer))
+         {
+            const char *pBuf = buffer;
+            struct mem_range *mem_range = (struct mem_range*)
+               malloc(sizeof(struct mem_range));
+            if (mem_range)
+            {
+               mem_range->cpu = hexstr2num (&pBuf);
+               mem_range->addr = hexstr2num (&pBuf);
+               mem_range->num_bytes = hexstr2num (&pBuf);
+               mem_range->start_value = hexstr2num (&pBuf);
+               mem_range->end_value = hexstr2num (&pBuf);
+
+               mem_range->next = NULL;
+               {
+                  struct mem_range *last = state.mem_range;
+                  while (last && last->next)
+                     last = last->next;
+                  if (last == NULL)
+                     state.mem_range = mem_range;
+                  else
+                     last->next = mem_range;
+               }
+
+               mode = FETCH_DATA;
+            }
+            else
+            {
+               hs_free();
+               break;
+            }
+         }
+         else
+         {
+            /* line is a game name */
+            if (mode == FETCH_DATA)
+               break;
+         }
+      }   
+   }
 }
 
 char *parse_hiscoredat(char *s, int n, int *const index)
@@ -348,10 +349,11 @@ char *parse_hiscoredat(char *s, int n, int *const index)
 	/* loop while we have characters */
 	while (n > 0)
    {
+      int c;
       if (*index == hiscoredat_length)
          break;
 
-      int c = hiscoredat[(*index)++];
+      c = hiscoredat[(*index)++];
 
       /* if there's a CR, look for an LF afterwards */
       if (c == 0x0d)
