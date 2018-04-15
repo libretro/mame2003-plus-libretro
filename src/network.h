@@ -8,7 +8,7 @@
 #ifndef __NETWORK_H__
 #define __NETWORK_H__
 
-#include "osdepend.h"
+#include "mame2003.h"
 
 #define NET_ERROR         (-1)
 

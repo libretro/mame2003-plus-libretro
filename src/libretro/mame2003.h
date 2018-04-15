@@ -1,5 +1,5 @@
-#ifndef OSDEPEND_H
-#define OSDEPEND_H
+#ifndef MAME2003_H
+#define MAME2003_H
 
 #include <stdio.h>
 #include "osd_cpu.h"
@@ -250,8 +250,6 @@ void osd_customize_inputport_defaults(struct ipd *defaults);
 
 ******************************************************************************/
 
-extern const char slash;
-
 /* inp header */
 typedef struct
 {
@@ -335,4 +333,4 @@ INLINE void CLIB_DECL logerror(const char *text,...)
 }
 #endif
 
-#endif
+#endif /* MAME2003_H */

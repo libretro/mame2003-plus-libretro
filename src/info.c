@@ -7,7 +7,7 @@
 #include "datafile.h"
 #include "fileio.h"
 #include "libretro.h"
-#include "osdepend.h"
+#include "mame2003.h"
 
 /* Format */
 #define SELECT(a,b) (OUTPUT_XML ? (b) : (a))

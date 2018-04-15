@@ -2,9 +2,13 @@ LIBRETRO_COMM_DIR := $(CORE_DIR)/libretro/libretro-common
 
 INCFLAGS := -I$(CORE_DIR) \
 				-I$(CORE_DIR)/includes \
-				-I$(CORE_DIR)/libretro \
-				-I$(CORE_DIR)/libretro/includes/zlib \
 				-I$(CORE_DIR)/cpu/m68000
+
+INCFLAGS += -I$(CORE_DIR)/libretro \
+				-I$(CORE_DIR)/libretro/includes/zlib \
+				-I$(LIBRETRO_COMM_DIR)/include \
+				-I$(LIBRETRO_COMM_DIR)/include/file \
+				-I$(LIBRETRO_COMM_DIR)/include/compat
 
 ifneq (,$(findstring msvc2003,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
@@ -17,12 +21,15 @@ COREDEFINES := -DINLINE="static __inline__"
 endif
 COREDEFINES += -D__LIBRETRO__ -DPI=3.1415927 -DM_PI=3.1415927
 
-SOURCES_C := $(CORE_DIR)/libretro/libretro.c \
-				 $(CORE_DIR)/libretro/osd.c \
+SOURCES_C := $(CORE_DIR)/libretro/mame2003.c \
 				 $(CORE_DIR)/libretro/keyboard.c \
 				 $(CORE_DIR)/libretro/joystick.c \
 				 $(CORE_DIR)/libretro/video.c
 
+SOURCES_C += $(LIBRETRO_COMM_DIR)/file/file_path.c \
+				 $(LIBRETRO_COMM_DIR)/compat/compat_strcasestr.c \
+				 $(LIBRETRO_COMM_DIR)/compat/compat_strl.c
+                 
 SOURCES_C += $(CORE_DIR)/mame.c \
 				 $(CORE_DIR)/drawgfx.c \
 				 $(CORE_DIR)/common.c \

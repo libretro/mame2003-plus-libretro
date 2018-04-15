@@ -1,6 +1,6 @@
 #include "libretro.h"
 #include "libretro_perf.h"
-#include "osdepend.h"
+#include "mame2003.h"
 #include "palette.h"
 #include "fileio.h"
 #include "common.h"

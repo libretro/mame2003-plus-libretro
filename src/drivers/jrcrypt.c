@@ -19,7 +19,7 @@
 #include <ctype.h>
 #include "mame.h"
 #include "driver.h"
-#include "osdepend.h"
+#include "mame2003.h"
 
 static int interrupt_enable;
 

@@ -1,7 +1,7 @@
 
 #include "cpuintrf.h"
 #include "osd_cpu.h"
-#include "osdepend.h"
+#include "mame2003.h"
 #include "mamedbg.h"
 
 #include <stdio.h>

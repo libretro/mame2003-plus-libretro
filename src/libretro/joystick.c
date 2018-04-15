@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "libretro.h"
-#include "osdepend.h"
+#include "mame2003.h"
 #include "input.h"
 
 /******************************************************************************

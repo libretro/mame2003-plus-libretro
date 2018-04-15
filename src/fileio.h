@@ -10,7 +10,7 @@
 #define FILEIO_H
 
 #include <stdarg.h>
-#include "osdepend.h"
+#include "mame2003.h"
 #include "hash.h"
 
 #ifdef __cplusplus

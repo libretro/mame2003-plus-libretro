@@ -1,7 +1,7 @@
 /* Copyright  (C) 2010-2017 The RetroArch team
  *
  * ---------------------------------------------------------------------------------------
- * The following license statement only applies to this file (boolean.h).
+ * The following license statement only applies to this file (compat_strcasestr.c).
  * ---------------------------------------------------------------------------------------
  *
  * Permission is hereby granted, free of charge,
@@ -20,20 +20,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __LIBRETRO_SDK_BOOLEAN_H
-#define __LIBRETRO_SDK_BOOLEAN_H
+#include <ctype.h>
 
-#ifndef __cplusplus
+#include <compat/strcasestr.h>
 
-#if defined(_MSC_VER) && !defined(SN_TARGET_PS3)
-/* Hack applied for MSVC when compiling in C89 mode as it isn't C99 compliant. */
-#define bool unsigned char
-#define true 1
-#define false 0
-#else
-#include <stdbool.h>
-#endif
+/* Pretty much strncasecmp. */
+static int casencmp(const char *a, const char *b, size_t n)
+{
+   size_t i;
 
-#endif
+   for (i = 0; i < n; i++)
+   {
+      int a_lower = tolower(a[i]);
+      int b_lower = tolower(b[i]);
+      if (a_lower != b_lower)
+         return a_lower - b_lower;
+   }
 
-#endif
+   return 0;
+}
+
+char *strcasestr_retro__(const char *haystack, const char *needle)
+{
+   size_t i, search_off;
+   size_t hay_len    = strlen(haystack);
+   size_t needle_len = strlen(needle);
+
+   if (needle_len > hay_len)
+      return NULL;
+
+   search_off = hay_len - needle_len;
+   for (i = 0; i <= search_off; i++)
+      if (!casencmp(haystack + i, needle, needle_len))
+         return (char*)haystack + i;
+
+   return NULL;
+}
