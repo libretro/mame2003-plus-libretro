@@ -564,7 +564,7 @@ static const char *voodoo_reg_name[] =
  *
  *************************************/
 
-INLINE void dither_to_matrix(UINT32 color, UINT16 *matrix)
+static INLINE void dither_to_matrix(UINT32 color, UINT16 *matrix)
 {
 	UINT32 rawr = (((color >> 16) & 0xff) * 0xf8*2) / 0xff;
 	UINT32 rawg = (((color >> 8) & 0xff) * 0xfc*2) / 0xff;
@@ -590,7 +590,7 @@ INLINE void dither_to_matrix(UINT32 color, UINT16 *matrix)
  *
  *************************************/
 
-INLINE UINT16 float_to_depth(float val)
+static INLINE UINT16 float_to_depth(float val)
 {
 	INT32 ival, ex;
 	

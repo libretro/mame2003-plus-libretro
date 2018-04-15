@@ -227,7 +227,7 @@ void GTELOG(const char *a,...)
 	logerror( "%08x: GTE: %08x %s\n", mipscpu.pc, INS_COFUN( mipscpu.op ), s_text );
 }
 #else
-INLINE void GTELOG(const char *a, ...) {}
+static INLINE void GTELOG(const char *a, ...) {}
 #endif
 
 static UINT32 getcp2dr( int n_reg );
@@ -246,7 +246,7 @@ void mips_stop( void )
 #endif
 }
 
-INLINE void mips_set_cp0r( int reg, UINT32 value )
+static INLINE void mips_set_cp0r( int reg, UINT32 value )
 {
 	mipscpu.cp0r[ reg ] = value;
 	if( reg == CP0_SR || reg == CP0_CAUSE )
@@ -263,7 +263,7 @@ INLINE void mips_set_cp0r( int reg, UINT32 value )
 	}
 }
 
-INLINE void mips_commit_delayed_load( void )
+static INLINE void mips_commit_delayed_load( void )
 {
 	if( mipscpu.delayr != 0 )
 	{
@@ -273,7 +273,7 @@ INLINE void mips_commit_delayed_load( void )
 	}
 }
 
-INLINE void mips_delayed_branch( UINT32 n_adr )
+static INLINE void mips_delayed_branch( UINT32 n_adr )
 {
 	if( ( n_adr & ( ( ( mipscpu.cp0r[ CP0_SR ] & SR_KUC ) << 30 ) | 3 ) ) != 0 )
 	{
@@ -289,7 +289,7 @@ INLINE void mips_delayed_branch( UINT32 n_adr )
 	}
 }
 
-INLINE void mips_set_pc( unsigned val )
+static INLINE void mips_set_pc( unsigned val )
 {
 	mipscpu.pc = val;
 	change_pc32ledw( val );
@@ -297,7 +297,7 @@ INLINE void mips_set_pc( unsigned val )
 	mipscpu.delayv = 0;
 }
 
-INLINE void mips_advance_pc( void )
+static INLINE void mips_advance_pc( void )
 {
 	if( mipscpu.delayr == REGPC )
 	{
@@ -310,7 +310,7 @@ INLINE void mips_advance_pc( void )
 	}
 }
 
-INLINE void mips_load( UINT32 n_r, UINT32 n_v )
+static INLINE void mips_load( UINT32 n_r, UINT32 n_v )
 {
 	mips_advance_pc();
 	if( n_r != 0 )
@@ -319,7 +319,7 @@ INLINE void mips_load( UINT32 n_r, UINT32 n_v )
 	}
 }
 
-INLINE void mips_delayed_load( UINT32 n_r, UINT32 n_v )
+static INLINE void mips_delayed_load( UINT32 n_r, UINT32 n_v )
 {
 	if( mipscpu.delayr == REGPC )
 	{
@@ -2323,7 +2323,7 @@ static void setcp2cr( int n_reg, UINT32 n_value )
 	mipscpu.cp2cr[ n_reg ].d = n_value;
 }
 
-INLINE INT32 LIM( INT32 n_value, INT32 n_max, INT32 n_min, UINT32 n_flag )
+static INLINE INT32 LIM( INT32 n_value, INT32 n_max, INT32 n_min, UINT32 n_flag )
 {
 	if( n_value > n_max )
 	{
@@ -2338,7 +2338,7 @@ INLINE INT32 LIM( INT32 n_value, INT32 n_max, INT32 n_min, UINT32 n_flag )
 	return n_value;
 }
 
-INLINE INT64 BOUNDS( INT64 n_value, INT64 n_max, int n_maxflag, INT64 n_min, int n_minflag )
+static INLINE INT64 BOUNDS( INT64 n_value, INT64 n_max, int n_maxflag, INT64 n_min, int n_minflag )
 {
 	if( n_value > n_max )
 	{
@@ -2362,7 +2362,7 @@ INLINE INT64 BOUNDS( INT64 n_value, INT64 n_max, int n_maxflag, INT64 n_min, int
 #define Lm_C3( a ) LIM( ( a ), 0x00ff, 0x0000, ( 1 << 19 ) )
 #define Lm_D( a ) LIM( ( a ), 0xffff, 0x0000, ( 1 << 31 ) | ( 1 << 18 ) )
 
-INLINE UINT32 Lm_E( UINT32 n_z )
+static INLINE UINT32 Lm_E( UINT32 n_z )
 {
 	if( n_z <= H / 2 )
 	{

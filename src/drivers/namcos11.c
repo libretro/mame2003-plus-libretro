@@ -148,7 +148,7 @@ GP-13  COH-110  S-XMB 1-660-276-11
 
 #define VERBOSE_LEVEL ( 0 )
 
-INLINE void verboselog( int n_level, const char *s_fmt, ... )
+static INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
 	if( VERBOSE_LEVEL >= n_level )
 	{
@@ -447,7 +447,7 @@ static INTERRUPT_GEN( namcos11_vblank )
 static UINT32 m_n_bankoffset;
 static UINT32 m_p_n_bankoffset[ 8 ];
 
-INLINE void bankswitch_update( int n_bank )
+static INLINE void bankswitch_update( int n_bank )
 {
 	verboselog( 1, "bankswitch_update( %d ) = %08x\n", n_bank, m_p_n_bankoffset[ n_bank ] );
 	cpu_setbank( 7 + n_bank, memory_region( REGION_USER3 ) + m_p_n_bankoffset[ n_bank ] );
@@ -463,7 +463,7 @@ static void bankswitch_update_all( void )
 	}
 }
 
-INLINE void bankswitch_rom8( int n_bank, int n_data )
+static INLINE void bankswitch_rom8( int n_bank, int n_data )
 {
 	m_p_n_bankoffset[ n_bank ] = ( ( ( n_data & 0xc0 ) >> 4 ) + ( n_data & 0x03 ) ) * 1024 * 1024;
 	bankswitch_update( n_bank );
@@ -497,7 +497,7 @@ static WRITE32_HANDLER( bankswitch_rom64_upper_w )
 	}
 }
 
-INLINE void bankswitch_rom64( int n_bank, int n_data )
+static INLINE void bankswitch_rom64( int n_bank, int n_data )
 {
 	/* todo: verify behaviour */
 	m_p_n_bankoffset[ n_bank ] = ( ( ( ( n_data & 0xc0 ) >> 3 ) + ( n_data & 0x07 ) ) ^ m_n_bankoffset ) * 1024 * 1024;

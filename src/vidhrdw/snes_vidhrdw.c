@@ -164,7 +164,7 @@ VIDEO_UPDATE( snes )
  * Routine for additive/subtractive blending
  * between the main and sub screens.
  *****************************************/
-INLINE void snes_draw_blend( UINT16 offset, UINT16 *colour, UINT8 mode, UINT8 clip )
+static INLINE void snes_draw_blend( UINT16 offset, UINT16 *colour, UINT8 mode, UINT8 clip )
 {
 #ifdef SNES_DBG_VIDHRDW
 	if( !debug_options.transparency_disabled )
@@ -247,7 +247,7 @@ INLINE void snes_draw_blend( UINT16 offset, UINT16 *colour, UINT8 mode, UINT8 cl
  *
  * Draw tiles with 2 bit planes(4 colors)
  *****************************************/
-INLINE void snes_draw_tile_2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal )
+static INLINE void snes_draw_tile_2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal )
 {
 	UINT8 mask, plane[2];
 	UINT16 c;
@@ -302,7 +302,7 @@ INLINE void snes_draw_tile_2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 
  *
  * Draw 2 tiles with 2 bit planes(4 colors)
  *****************************************/
-INLINE void snes_draw_tile_2x2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal )
+static INLINE void snes_draw_tile_2x2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal )
 {
 	if( flip )
 	{
@@ -321,7 +321,7 @@ INLINE void snes_draw_tile_2x2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT1
  *
  * Draw tiles with 4 bit planes(16 colors)
  *****************************************/
-INLINE void snes_draw_tile_4( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal )
+static INLINE void snes_draw_tile_4( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal )
 {
 	UINT8 mask, plane[4];
 	UINT16 c;
@@ -380,7 +380,7 @@ INLINE void snes_draw_tile_4( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 
  *
  * Draw 2 tiles with 4 bit planes(16 colors)
  *****************************************/
-INLINE void snes_draw_tile_4x2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal )
+static INLINE void snes_draw_tile_4x2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal )
 {
 	if( flip )
 	{
@@ -399,7 +399,7 @@ INLINE void snes_draw_tile_4x2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT1
  *
  * Draw tiles with 8 bit planes(256 colors)
  *****************************************/
-INLINE void snes_draw_tile_8( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip )
+static INLINE void snes_draw_tile_8( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip )
 {
 	UINT8 mask, plane[8];
 	UINT16 c;
@@ -466,7 +466,7 @@ INLINE void snes_draw_tile_8( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 
  *
  * Draw 2 tiles with 8 bit planes(256 colors)
  *****************************************/
-INLINE void snes_draw_tile_8x2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip )
+static INLINE void snes_draw_tile_8x2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip )
 {
 	if( flip )
 	{
@@ -487,7 +487,7 @@ INLINE void snes_draw_tile_8x2( UINT8 screen, UINT8 layer, UINT16 tileaddr, INT1
  * The same as snes_draw_tile_4() except
  * that it takes a blend parameter.
  *****************************************/
-INLINE void snes_draw_tile_object( UINT8 screen, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal, UINT8 blend )
+static INLINE void snes_draw_tile_object( UINT8 screen, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal, UINT8 blend )
 {
 	UINT8 mask, plane[4];
 	UINT16 c;
@@ -550,7 +550,7 @@ INLINE void snes_draw_tile_object( UINT8 screen, UINT16 tileaddr, INT16 x, UINT8
  * that it takes a blend parameter.
  * Wide version.
  *****************************************/
-INLINE void snes_draw_tile_object_w( UINT8 screen, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal, UINT8 blend )
+static INLINE void snes_draw_tile_object_w( UINT8 screen, UINT16 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT16 pal, UINT8 blend )
 {
 	UINT8 mask, plane[4];
 	UINT16 c;

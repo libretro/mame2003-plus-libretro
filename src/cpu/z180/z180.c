@@ -743,7 +743,7 @@ static UINT8 *SZHVC_sub = 0;
  * Burn an odd amount of cycles, that is instructions taking something
  * different from 4 T-states per opcode (and R increment)
  ****************************************************************************/
-INLINE void BURNODD(int cycles, int opcodes, int cyclesum)
+static INLINE void BURNODD(int cycles, int opcodes, int cyclesum)
 {
 	if( cycles > 0 )
 	{

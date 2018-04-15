@@ -259,7 +259,7 @@ static const memory_handlers le_cache =
 **	EXECEPTION HANDLING
 **#################################################################################################*/
 
-INLINE void generate_exception(int exception)
+static INLINE void generate_exception(int exception)
 {
 	/* set the exception PC */
 	r3000.cpr[0][COP0_EPC] = r3000.pc;
@@ -295,7 +295,7 @@ INLINE void generate_exception(int exception)
 }
 
 
-INLINE void invalid_instruction(UINT32 op)
+static INLINE void invalid_instruction(UINT32 op)
 {
 	generate_exception(EXCEPTION_INVALIDOP);
 }
@@ -453,12 +453,12 @@ void r3000_exit(void)
 **	COP0 (SYSTEM) EXECUTION HANDLING
 **#################################################################################################*/
 
-INLINE UINT32 get_cop0_reg(int idx)
+static INLINE UINT32 get_cop0_reg(int idx)
 {
 	return r3000.cpr[0][idx];
 }
 
-INLINE void set_cop0_reg(int idx, UINT32 val)
+static INLINE void set_cop0_reg(int idx, UINT32 val)
 {
 	if (idx == COP0_Cause)
 	{
@@ -498,17 +498,17 @@ INLINE void set_cop0_reg(int idx, UINT32 val)
 		r3000.cpr[0][idx] = val;
 }
 
-INLINE UINT32 get_cop0_creg(int idx)
+static INLINE UINT32 get_cop0_creg(int idx)
 {
 	return r3000.ccr[0][idx];
 }
 
-INLINE void set_cop0_creg(int idx, UINT32 val)
+static INLINE void set_cop0_creg(int idx, UINT32 val)
 {
 	r3000.ccr[0][idx] = val;
 }
 
-INLINE void handle_cop0(UINT32 op)
+static INLINE void handle_cop0(UINT32 op)
 {
 	if (!(SR & SR_COP0) && (SR & SR_KUc))
 		generate_exception(EXCEPTION_BADCOP);
@@ -566,27 +566,27 @@ INLINE void handle_cop0(UINT32 op)
 **	COP1 (FPU) EXECUTION HANDLING
 **#################################################################################################*/
 
-INLINE UINT32 get_cop1_reg(int idx)
+static INLINE UINT32 get_cop1_reg(int idx)
 {
 	return r3000.cpr[1][idx];
 }
 
-INLINE void set_cop1_reg(int idx, UINT32 val)
+static INLINE void set_cop1_reg(int idx, UINT32 val)
 {
 	r3000.cpr[1][idx] = val;
 }
 
-INLINE UINT32 get_cop1_creg(int idx)
+static INLINE UINT32 get_cop1_creg(int idx)
 {
 	return r3000.ccr[1][idx];
 }
 
-INLINE void set_cop1_creg(int idx, UINT32 val)
+static INLINE void set_cop1_creg(int idx, UINT32 val)
 {
 	r3000.ccr[1][idx] = val;
 }
 
-INLINE void handle_cop1(UINT32 op)
+static INLINE void handle_cop1(UINT32 op)
 {
 	if (!(SR & SR_COP1))
 		generate_exception(EXCEPTION_BADCOP);
@@ -635,27 +635,27 @@ INLINE void handle_cop1(UINT32 op)
 **	COP2 (CUSTOM) EXECUTION HANDLING
 **#################################################################################################*/
 
-INLINE UINT32 get_cop2_reg(int idx)
+static INLINE UINT32 get_cop2_reg(int idx)
 {
 	return r3000.cpr[2][idx];
 }
 
-INLINE void set_cop2_reg(int idx, UINT32 val)
+static INLINE void set_cop2_reg(int idx, UINT32 val)
 {
 	r3000.cpr[2][idx] = val;
 }
 
-INLINE UINT32 get_cop2_creg(int idx)
+static INLINE UINT32 get_cop2_creg(int idx)
 {
 	return r3000.ccr[2][idx];
 }
 
-INLINE void set_cop2_creg(int idx, UINT32 val)
+static INLINE void set_cop2_creg(int idx, UINT32 val)
 {
 	r3000.ccr[2][idx] = val;
 }
 
-INLINE void handle_cop2(UINT32 op)
+static INLINE void handle_cop2(UINT32 op)
 {
 	if (!(SR & SR_COP2))
 		generate_exception(EXCEPTION_BADCOP);
@@ -702,27 +702,27 @@ INLINE void handle_cop2(UINT32 op)
 **	COP3 (CUSTOM) EXECUTION HANDLING
 **#################################################################################################*/
 
-INLINE UINT32 get_cop3_reg(int idx)
+static INLINE UINT32 get_cop3_reg(int idx)
 {
 	return r3000.cpr[3][idx];
 }
 
-INLINE void set_cop3_reg(int idx, UINT32 val)
+static INLINE void set_cop3_reg(int idx, UINT32 val)
 {
 	r3000.cpr[3][idx] = val;
 }
 
-INLINE UINT32 get_cop3_creg(int idx)
+static INLINE UINT32 get_cop3_creg(int idx)
 {
 	return r3000.ccr[3][idx];
 }
 
-INLINE void set_cop3_creg(int idx, UINT32 val)
+static INLINE void set_cop3_creg(int idx, UINT32 val)
 {
 	r3000.ccr[3][idx] = val;
 }
 
-INLINE void handle_cop3(UINT32 op)
+static INLINE void handle_cop3(UINT32 op)
 {
 	if (!(SR & SR_COP3))
 		generate_exception(EXCEPTION_BADCOP);

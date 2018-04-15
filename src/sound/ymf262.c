@@ -593,7 +593,7 @@ static UINT32	LFO_AM;
 static INT32	LFO_PM;
 
 /* status set and IRQ handling */
-INLINE void OPL3_STATUS_SET(OPL3 *chip,int flag)
+static INLINE void OPL3_STATUS_SET(OPL3 *chip,int flag)
 {
 	/* set status flag masking out disabled IRQs */
 	chip->status |= (flag & chip->statusmask);
@@ -609,7 +609,7 @@ INLINE void OPL3_STATUS_SET(OPL3 *chip,int flag)
 }
 
 /* status reset and IRQ handling */
-INLINE void OPL3_STATUS_RESET(OPL3 *chip,int flag)
+static INLINE void OPL3_STATUS_RESET(OPL3 *chip,int flag)
 {
 	/* reset status flag */
 	chip->status &= ~flag;
@@ -625,7 +625,7 @@ INLINE void OPL3_STATUS_RESET(OPL3 *chip,int flag)
 }
 
 /* IRQ mask set */
-INLINE void OPL3_STATUSMASK_SET(OPL3 *chip,int flag)
+static INLINE void OPL3_STATUSMASK_SET(OPL3 *chip,int flag)
 {
 	chip->statusmask = flag;
 	/* IRQ handling check */
@@ -635,7 +635,7 @@ INLINE void OPL3_STATUSMASK_SET(OPL3 *chip,int flag)
 
 
 /* advance LFO to next sample */
-INLINE void advance_lfo(OPL3 *chip)
+static INLINE void advance_lfo(OPL3 *chip)
 {
 	UINT8 tmp;
 
@@ -656,7 +656,7 @@ INLINE void advance_lfo(OPL3 *chip)
 }
 
 /* advance to next sample */
-INLINE void advance(OPL3 *chip)
+static INLINE void advance(OPL3 *chip)
 {
 	OPL3_CH *CH;
 	OPL3_SLOT *op;
@@ -828,7 +828,7 @@ INLINE void advance(OPL3 *chip)
 }
 
 
-INLINE signed int op_calc(UINT32 phase, unsigned int env, signed int pm, unsigned int wave_tab)
+static INLINE signed int op_calc(UINT32 phase, unsigned int env, signed int pm, unsigned int wave_tab)
 {
 	UINT32 p;
 
@@ -839,7 +839,7 @@ INLINE signed int op_calc(UINT32 phase, unsigned int env, signed int pm, unsigne
 	return tl_tab[p];
 }
 
-INLINE signed int op_calc1(UINT32 phase, unsigned int env, signed int pm, unsigned int wave_tab)
+static INLINE signed int op_calc1(UINT32 phase, unsigned int env, signed int pm, unsigned int wave_tab)
 {
 	UINT32 p;
 
@@ -855,7 +855,7 @@ INLINE signed int op_calc1(UINT32 phase, unsigned int env, signed int pm, unsign
 
 /* calculate output of a standard 2 operator channel
  (or 1st part of a 4-op channel) */
-INLINE void chan_calc( OPL3_CH *CH )
+static INLINE void chan_calc( OPL3_CH *CH )
 {
 	OPL3_SLOT *SLOT;
 	unsigned int env;
@@ -890,7 +890,7 @@ INLINE void chan_calc( OPL3_CH *CH )
 }
 
 /* calculate output of a 2nd part of 4-op channel */
-INLINE void chan_calc_ext( OPL3_CH *CH )
+static INLINE void chan_calc_ext( OPL3_CH *CH )
 {
 	OPL3_SLOT *SLOT;
 	unsigned int env;
@@ -948,7 +948,7 @@ number   number    BLK/FNUM2 FNUM    Drum  Hat   Drum  Tom  Cymbal
 
 /* calculate rhythm */
 
-INLINE void chan_calc_rhythm( OPL3_CH *CH, unsigned int noise )
+static INLINE void chan_calc_rhythm( OPL3_CH *CH, unsigned int noise )
 {
 	OPL3_SLOT *SLOT;
 	signed int out;
@@ -1347,7 +1347,7 @@ static void OPL3_initalize(OPL3 *chip)
 
 }
 
-INLINE void FM_KEYON(OPL3_SLOT *SLOT, UINT32 key_set)
+static INLINE void FM_KEYON(OPL3_SLOT *SLOT, UINT32 key_set)
 {
 	if( !SLOT->key )
 	{
@@ -1359,7 +1359,7 @@ INLINE void FM_KEYON(OPL3_SLOT *SLOT, UINT32 key_set)
 	SLOT->key |= key_set;
 }
 
-INLINE void FM_KEYOFF(OPL3_SLOT *SLOT, UINT32 key_clr)
+static INLINE void FM_KEYOFF(OPL3_SLOT *SLOT, UINT32 key_clr)
 {
 	if( SLOT->key )
 	{
@@ -1375,7 +1375,7 @@ INLINE void FM_KEYOFF(OPL3_SLOT *SLOT, UINT32 key_clr)
 }
 
 /* update phase increment counter of operator (also update the EG rates if necessary) */
-INLINE void CALC_FCSLOT(OPL3_CH *CH,OPL3_SLOT *SLOT)
+static INLINE void CALC_FCSLOT(OPL3_CH *CH,OPL3_SLOT *SLOT)
 {
 	int ksr;
 
@@ -1410,7 +1410,7 @@ INLINE void CALC_FCSLOT(OPL3_CH *CH,OPL3_SLOT *SLOT)
 }
 
 /* set multi,am,vib,EG-TYP,KSR,mul */
-INLINE void set_mul(OPL3 *chip,int slot,int v)
+static INLINE void set_mul(OPL3 *chip,int slot,int v)
 {
 	OPL3_CH   *CH   = &chip->P_CH[slot/2];
 	OPL3_SLOT *SLOT = &CH->SLOT[slot&1];
@@ -1476,7 +1476,7 @@ INLINE void set_mul(OPL3 *chip,int slot,int v)
 }
 
 /* set ksl & tl */
-INLINE void set_ksl_tl(OPL3 *chip,int slot,int v)
+static INLINE void set_ksl_tl(OPL3 *chip,int slot,int v)
 {
 	OPL3_CH   *CH   = &chip->P_CH[slot/2];
 	OPL3_SLOT *SLOT = &CH->SLOT[slot&1];
@@ -1542,7 +1542,7 @@ INLINE void set_ksl_tl(OPL3 *chip,int slot,int v)
 }
 
 /* set attack rate & decay rate  */
-INLINE void set_ar_dr(OPL3 *chip,int slot,int v)
+static INLINE void set_ar_dr(OPL3 *chip,int slot,int v)
 {
 	OPL3_CH   *CH   = &chip->P_CH[slot/2];
 	OPL3_SLOT *SLOT = &CH->SLOT[slot&1];
@@ -1569,7 +1569,7 @@ INLINE void set_ar_dr(OPL3 *chip,int slot,int v)
 }
 
 /* set sustain level & release rate */
-INLINE void set_sl_rr(OPL3 *chip,int slot,int v)
+static INLINE void set_sl_rr(OPL3 *chip,int slot,int v)
 {
 	OPL3_CH   *CH   = &chip->P_CH[slot/2];
 	OPL3_SLOT *SLOT = &CH->SLOT[slot&1];

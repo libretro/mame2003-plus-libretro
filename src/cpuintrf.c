@@ -746,7 +746,7 @@ static unsigned (*cpu_dasm_override)(int cpunum, char *buffer, unsigned pc);
  *
  *************************************/
 
-INLINE void set_cpu_context(int cpunum)
+static INLINE void set_cpu_context(int cpunum)
 {
 	int newfamily = cpu[cpunum].family;
 	int oldcontext = cpu_active_context[newfamily];

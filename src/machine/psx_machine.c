@@ -12,7 +12,7 @@
 
 #define VERBOSE_LEVEL ( 1 )
 
-INLINE void verboselog( int n_level, const char *s_fmt, ... )
+static INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
 	if( VERBOSE_LEVEL >= n_level )
 	{
@@ -28,12 +28,12 @@ INLINE void verboselog( int n_level, const char *s_fmt, ... )
 static UINT8 *m_p_n_ram;
 static size_t m_n_ramsize;
 
-INLINE UINT8 psxreadbyte( UINT32 n_address )
+static INLINE UINT8 psxreadbyte( UINT32 n_address )
 {
 	return m_p_n_ram[ BYTE_XOR_LE( n_address ) ];
 }
 
-INLINE UINT16 psxreadword( UINT32 n_address )
+static INLINE UINT16 psxreadword( UINT32 n_address )
 {
 	return *( (UINT16 *)&m_p_n_ram[ WORD_XOR_LE( n_address ) ] );
 }
@@ -708,12 +708,12 @@ static void mdec_idct( INT32 *p_n_src, INT32 *p_n_dst )
 	}
 }
 
-INLINE UINT16 mdec_unpack_run( UINT16 n_packed )
+static INLINE UINT16 mdec_unpack_run( UINT16 n_packed )
 {
 	return n_packed >> 10;
 }
 
-INLINE INT32 mdec_unpack_val( UINT16 n_packed )
+static INLINE INT32 mdec_unpack_val( UINT16 n_packed )
 {
 	return ( ( (INT32)n_packed ) << 22 ) >> 22;
 }
@@ -769,42 +769,42 @@ static UINT32 mdec_unpack( UINT32 n_address )
 	return n_address;
 }
 
-INLINE INT32 mdec_cr_to_r( INT32 n_cr )
+static INLINE INT32 mdec_cr_to_r( INT32 n_cr )
 {
 	return ( 1435 * n_cr ) >> 10;
 }
 
-INLINE INT32 mdec_cr_to_g( INT32 n_cr )
+static INLINE INT32 mdec_cr_to_g( INT32 n_cr )
 {
 	return ( -731 * n_cr ) >> 10;
 }
 
-INLINE INT32 mdec_cb_to_g( INT32 n_cb )
+static INLINE INT32 mdec_cb_to_g( INT32 n_cb )
 {
 	return ( -351 * n_cb ) >> 10;
 }
 
-INLINE INT32 mdec_cb_to_b( INT32 n_cb )
+static INLINE INT32 mdec_cb_to_b( INT32 n_cb )
 {
 	return ( 1814 * n_cb ) >> 10;
 }
 
-INLINE UINT16 mdec_clamp_r15( INT32 n_r )
+static INLINE UINT16 mdec_clamp_r15( INT32 n_r )
 {
 	return m_p_n_mdec_r15[ n_r + 128 + 256 ];
 }
 
-INLINE UINT16 mdec_clamp_g15( INT32 n_g )
+static INLINE UINT16 mdec_clamp_g15( INT32 n_g )
 {
 	return m_p_n_mdec_g15[ n_g + 128 + 256 ];
 }
 
-INLINE UINT16 mdec_clamp_b15( INT32 n_b )
+static INLINE UINT16 mdec_clamp_b15( INT32 n_b )
 {
 	return m_p_n_mdec_b15[ n_b + 128 + 256 ];
 }
 
-INLINE UINT32 mdec_makergb15( INT32 n_r, INT32 n_g, INT32 n_b, INT32 *p_n_y )
+static INLINE UINT32 mdec_makergb15( INT32 n_r, INT32 n_g, INT32 n_b, INT32 *p_n_y )
 {
 	return mdec_clamp_r15( p_n_y[ BYTE_XOR_LE( 0 ) ] + n_r ) | mdec_clamp_g15( p_n_y[ BYTE_XOR_LE( 0 ) ] + n_g ) | mdec_clamp_b15( p_n_y[ BYTE_XOR_LE( 0 ) ] + n_b ) |
 		( mdec_clamp_r15( p_n_y[ BYTE_XOR_LE( 1 ) ] + n_r ) | mdec_clamp_g15( p_n_y[ BYTE_XOR_LE( 1 ) ] + n_g ) | mdec_clamp_b15( p_n_y[ BYTE_XOR_LE( 1 ) ] + n_b ) ) << 16;

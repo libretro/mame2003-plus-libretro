@@ -29,7 +29,7 @@ static UINT8 is_raw[TRANSPARENCY_MODES];
 
 #ifdef ALIGN_INTS /* GSL 980108 read/write nonaligned dword routine for ARM processor etc */
 
-INLINE UINT32 read_dword(void *address)
+static INLINE UINT32 read_dword(void *address)
 {
 	if ((long)address & 3)
 	{
@@ -43,7 +43,7 @@ INLINE UINT32 read_dword(void *address)
 }
 
 
-INLINE void write_dword(void *address, UINT32 data)
+static INLINE void write_dword(void *address, UINT32 data)
 {
   	if ((long)address & 3)
 	{
@@ -63,7 +63,7 @@ INLINE void write_dword(void *address, UINT32 data)
 
 
 
-INLINE int readbit(const UINT8 *src,int bitnum)
+static INLINE int readbit(const UINT8 *src,int bitnum)
 {
 	return src[bitnum / 8] & (0x80 >> (bitnum % 8));
 }
@@ -284,7 +284,7 @@ void freegfx(struct GfxElement *gfx)
 
 
 
-INLINE void blockmove_NtoN_transpen_noremap8(
+static INLINE void blockmove_NtoN_transpen_noremap8(
 		const UINT8 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT8 *dstdata,int dstmodulo,
 		int transpen)
@@ -350,7 +350,7 @@ INLINE void blockmove_NtoN_transpen_noremap8(
 	}
 }
 
-INLINE void blockmove_NtoN_transpen_noremap_flipx8(
+static INLINE void blockmove_NtoN_transpen_noremap_flipx8(
 		const UINT8 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT8 *dstdata,int dstmodulo,
 		int transpen)
@@ -413,7 +413,7 @@ INLINE void blockmove_NtoN_transpen_noremap_flipx8(
 }
 
 
-INLINE void blockmove_NtoN_transpen_noremap16(
+static INLINE void blockmove_NtoN_transpen_noremap16(
 		const UINT16 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT16 *dstdata,int dstmodulo,
 		int transpen)
@@ -441,7 +441,7 @@ INLINE void blockmove_NtoN_transpen_noremap16(
 	}
 }
 
-INLINE void blockmove_NtoN_transpen_noremap_flipx16(
+static INLINE void blockmove_NtoN_transpen_noremap_flipx16(
 		const UINT16 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT16 *dstdata,int dstmodulo,
 		int transpen)
@@ -470,7 +470,7 @@ INLINE void blockmove_NtoN_transpen_noremap_flipx16(
 	}
 }
 
-INLINE void blockmove_NtoN_transpen_noremap32(
+static INLINE void blockmove_NtoN_transpen_noremap32(
 		const UINT32 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT32 *dstdata,int dstmodulo,
 		int transpen)
@@ -498,7 +498,7 @@ INLINE void blockmove_NtoN_transpen_noremap32(
 	}
 }
 
-INLINE void blockmove_NtoN_transpen_noremap_flipx32(
+static INLINE void blockmove_NtoN_transpen_noremap_flipx32(
 		const UINT32 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 		UINT32 *dstdata,int dstmodulo,
 		int transpen)
@@ -721,7 +721,7 @@ int pdrawgfx_shadow_lowpri = 0;
 
 /* 32-bit version */
 //* AAT032503: added limited 32-bit shadow and highlight support
-INLINE UINT32 SHADOW32(UINT32 c) {
+static INLINE UINT32 SHADOW32(UINT32 c) {
 	c = (c>>9&0x7c00) | (c>>6&0x03e0) | (c>>3&0x001f);
 	return(((UINT32*)palette_shadow_table)[c]); }
 
@@ -841,7 +841,7 @@ INLINE UINT32 SHADOW32(UINT32 c) {
 
 ***************************************************************************/
 
-INLINE void common_drawgfx(struct mame_bitmap *dest,const struct GfxElement *gfx,
+static INLINE void common_drawgfx(struct mame_bitmap *dest,const struct GfxElement *gfx,
 		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
 		const struct rectangle *clip,int transparency,int transparent_color,
 		struct mame_bitmap *pri_buffer,UINT32 pri_mask)
@@ -1344,7 +1344,7 @@ void fillbitmap(struct mame_bitmap *dest,pen_t pen,const struct rectangle *clip)
 
 
 
-INLINE void common_drawgfxzoom( struct mame_bitmap *dest_bmp,const struct GfxElement *gfx,
+static INLINE void common_drawgfxzoom( struct mame_bitmap *dest_bmp,const struct GfxElement *gfx,
 		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
 		const struct rectangle *clip,int transparency,int transparent_color,
 		int scalex, int scaley,struct mame_bitmap *pri_buffer,UINT32 pri_mask)
@@ -3514,7 +3514,7 @@ void set_pixel_functions(struct mame_bitmap *bitmap)
 }
 
 
-INLINE void plotclip(struct mame_bitmap *bitmap,int x,int y,int pen,const struct rectangle *clip)
+static INLINE void plotclip(struct mame_bitmap *bitmap,int x,int y,int pen,const struct rectangle *clip)
 {
 	if (x >= clip->min_x && x <= clip->max_x && y >= clip->min_y && y <= clip->max_y)
 		plot_pixel(bitmap,x,y,pen);

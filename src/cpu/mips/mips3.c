@@ -300,7 +300,7 @@ static const memory_handlers le_memory =
 **	EXECEPTION HANDLING
 **#################################################################################################*/
 
-INLINE void generate_exception(int exception, int backup)
+static INLINE void generate_exception(int exception, int backup)
 {
 /*
 	useful for catching exceptions:
@@ -362,7 +362,7 @@ INLINE void generate_exception(int exception, int backup)
 }
 
 
-INLINE void invalid_instruction(UINT32 op)
+static INLINE void invalid_instruction(UINT32 op)
 {
 	generate_exception(EXCEPTION_INVALIDOP, 1);
 }
@@ -571,7 +571,7 @@ static UINT32 update_cycle_counting(void)
 	return count;
 }
 
-INLINE UINT64 get_cop0_reg(int idx)
+static INLINE UINT64 get_cop0_reg(int idx)
 {
 	if (idx == COP0_Count)
 	{
@@ -589,7 +589,7 @@ INLINE UINT64 get_cop0_reg(int idx)
 	return mips3.cpr[0][idx];
 }
 
-INLINE void set_cop0_reg(int idx, UINT64 val)
+static INLINE void set_cop0_reg(int idx, UINT64 val)
 {
 	switch (idx)
 	{
@@ -630,17 +630,17 @@ INLINE void set_cop0_reg(int idx, UINT64 val)
 	}
 }
 
-INLINE UINT64 get_cop0_creg(int idx)
+static INLINE UINT64 get_cop0_creg(int idx)
 {
 	return mips3.ccr[0][idx];
 }
 
-INLINE void set_cop0_creg(int idx, UINT64 val)
+static INLINE void set_cop0_creg(int idx, UINT64 val)
 {
 	mips3.ccr[0][idx] = val;
 }
 
-INLINE void logonetlbentry(int which)
+static INLINE void logonetlbentry(int which)
 {
 	UINT64 hi = mips3.cpr[0][COP0_EntryHi];
 	UINT64 lo = mips3.cpr[0][COP0_EntryLo0 + which];
@@ -664,7 +664,7 @@ static void logtlbentry(void)
 	logonetlbentry(1);
 }
 
-INLINE void handle_cop0(UINT32 op)
+static INLINE void handle_cop0(UINT32 op)
 {
 	if ((SR & SR_KSU_MASK) != SR_KSU_KERNEL && !(SR & SR_COP0))
 		generate_exception(EXCEPTION_BADCOP, 1);
@@ -724,27 +724,27 @@ INLINE void handle_cop0(UINT32 op)
 **	COP1 (FPU) EXECUTION HANDLING
 **#################################################################################################*/
 
-INLINE UINT64 get_cop1_reg(int idx)
+static INLINE UINT64 get_cop1_reg(int idx)
 {
 	return mips3.cpr[1][idx];
 }
 
-INLINE void set_cop1_reg(int idx, UINT64 val)
+static INLINE void set_cop1_reg(int idx, UINT64 val)
 {
 	mips3.cpr[1][idx] = val;
 }
 
-INLINE UINT64 get_cop1_creg(int idx)
+static INLINE UINT64 get_cop1_creg(int idx)
 {
 	return mips3.ccr[1][idx];
 }
 
-INLINE void set_cop1_creg(int idx, UINT64 val)
+static INLINE void set_cop1_creg(int idx, UINT64 val)
 {
 	mips3.ccr[1][idx] = val;
 }
 
-INLINE void handle_cop1(UINT32 op)
+static INLINE void handle_cop1(UINT32 op)
 {
 	double dtemp;
 
@@ -1105,7 +1105,7 @@ INLINE void handle_cop1(UINT32 op)
 **	COP1X (FPU EXTRA) EXECUTION HANDLING
 **#################################################################################################*/
 
-INLINE void handle_cop1x(UINT32 op)
+static INLINE void handle_cop1x(UINT32 op)
 {
 	if (!(SR & SR_COP1))
 		generate_exception(EXCEPTION_BADCOP, 1);
@@ -1183,27 +1183,27 @@ INLINE void handle_cop1x(UINT32 op)
 **	COP2 (CUSTOM) EXECUTION HANDLING
 **#################################################################################################*/
 
-INLINE UINT64 get_cop2_reg(int idx)
+static INLINE UINT64 get_cop2_reg(int idx)
 {
 	return mips3.cpr[2][idx];
 }
 
-INLINE void set_cop2_reg(int idx, UINT64 val)
+static INLINE void set_cop2_reg(int idx, UINT64 val)
 {
 	mips3.cpr[2][idx] = val;
 }
 
-INLINE UINT64 get_cop2_creg(int idx)
+static INLINE UINT64 get_cop2_creg(int idx)
 {
 	return mips3.ccr[2][idx];
 }
 
-INLINE void set_cop2_creg(int idx, UINT64 val)
+static INLINE void set_cop2_creg(int idx, UINT64 val)
 {
 	mips3.ccr[2][idx] = val;
 }
 
-INLINE void handle_cop2(UINT32 op)
+static INLINE void handle_cop2(UINT32 op)
 {
 	if (!(SR & SR_COP2))
 		generate_exception(EXCEPTION_BADCOP, 1);

@@ -29,7 +29,7 @@
 
 #define ASSERT(expr)	assert(expr)
 
-INLINE void *MyMalloc( UINT32 size, const char *function )
+static INLINE void *MyMalloc( UINT32 size, const char *function )
 {
 	void *p = malloc( size );
     ASSERT( p );
@@ -37,14 +37,14 @@ INLINE void *MyMalloc( UINT32 size, const char *function )
 	return p;
 }
 
-INLINE void *MyReAlloc( void *p, UINT32 size, const char *function )
+static INLINE void *MyReAlloc( void *p, UINT32 size, const char *function )
 {
 	p = realloc( p, size );
     ASSERT( p );
 	return p;
 }
 
-INLINE void MyFree( void **p, const char *function )
+static INLINE void MyFree( void **p, const char *function )
 {
 	if( *p )
 	{
@@ -82,7 +82,7 @@ static UINT8 *p_attr = NULL;
  *
  ************************************************************************/
 
-INLINE void win_out(UINT8 bChar, UINT8 bAttr, UINT32 x, UINT32 y, UINT32 idx)
+static INLINE void win_out(UINT8 bChar, UINT8 bAttr, UINT32 x, UINT32 y, UINT32 idx)
 {
 	UINT32 offs = (y * screen_w) + x;
 

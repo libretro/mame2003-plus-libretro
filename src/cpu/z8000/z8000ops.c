@@ -29,7 +29,7 @@
  check new fcw for switch to system mode
  and swap stack pointer if needed
  ******************************************/
-INLINE void CHANGE_FCW(UINT16 fcw)
+static INLINE void CHANGE_FCW(UINT16 fcw)
 {
 	if (fcw & F_S_N) {			/* system mode now? */
 		if (!(FCW & F_S_N)) {	/* and not before? */
@@ -51,26 +51,26 @@ INLINE void CHANGE_FCW(UINT16 fcw)
     FCW = fcw;  /* set new FCW */
 }
 
-INLINE void PUSHW(UINT8 dst, UINT16 value)
+static INLINE void PUSHW(UINT8 dst, UINT16 value)
 {
     RW(dst) -= 2;
 	WRMEM_W( RW(dst), value );
 }
 
-INLINE UINT16 POPW(UINT8 src)
+static INLINE UINT16 POPW(UINT8 src)
 {
 	UINT16 result = RDMEM_W( RW(src) );
     RW(src) += 2;
 	return result;
 }
 
-INLINE void PUSHL(UINT8 dst, UINT32 value)
+static INLINE void PUSHL(UINT8 dst, UINT32 value)
 {
 	RW(dst) -= 4;
 	WRMEM_L( RW(dst), value );
 }
 
-INLINE UINT32 POPL(UINT8 src)
+static INLINE UINT32 POPL(UINT8 src)
 {
 	UINT32 result = RDMEM_L( RW(src) );
     RW(src) += 4;
@@ -114,7 +114,7 @@ INLINE UINT32 POPL(UINT8 src)
  add byte
  flags:  CZSVDH
  ******************************************/
-INLINE UINT8 ADDB(UINT8 dest, UINT8 value)
+static INLINE UINT8 ADDB(UINT8 dest, UINT8 value)
 {
 	UINT8 result = dest + value;
     CLR_CZSVH;      /* first clear C, Z, S, P/V and H flags    */
@@ -130,7 +130,7 @@ INLINE UINT8 ADDB(UINT8 dest, UINT8 value)
  add word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 ADDW(UINT16 dest, UINT16 value)
+static INLINE UINT16 ADDW(UINT16 dest, UINT16 value)
 {
 	UINT16 result = dest + value;
     CLR_CZSV;       /* first clear C, Z, S, P/V flags          */
@@ -144,7 +144,7 @@ INLINE UINT16 ADDW(UINT16 dest, UINT16 value)
  add long
  flags:  CZSV--
  ******************************************/
-INLINE UINT32 ADDL(UINT32 dest, UINT32 value)
+static INLINE UINT32 ADDL(UINT32 dest, UINT32 value)
 {
 	UINT32 result = dest + value;
     CLR_CZSV;       /* first clear C, Z, S, P/V flags          */
@@ -158,7 +158,7 @@ INLINE UINT32 ADDL(UINT32 dest, UINT32 value)
  add with carry byte
  flags:  CZSVDH
  ******************************************/
-INLINE UINT8 ADCB(UINT8 dest, UINT8 value)
+static INLINE UINT8 ADCB(UINT8 dest, UINT8 value)
 {
 	UINT8 result = dest + value + GET_C;
     CLR_CZSVH;      /* first clear C, Z, S, P/V and H flags    */
@@ -174,7 +174,7 @@ INLINE UINT8 ADCB(UINT8 dest, UINT8 value)
  add with carry word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 ADCW(UINT16 dest, UINT16 value)
+static INLINE UINT16 ADCW(UINT16 dest, UINT16 value)
 {
 	UINT16 result = dest + value + GET_C;
     CLR_CZSV;       /* first clear C, Z, S, P/V flags          */
@@ -188,7 +188,7 @@ INLINE UINT16 ADCW(UINT16 dest, UINT16 value)
  subtract byte
  flags:  CZSVDH
  ******************************************/
-INLINE UINT8 SUBB(UINT8 dest, UINT8 value)
+static INLINE UINT8 SUBB(UINT8 dest, UINT8 value)
 {
 	UINT8 result = dest - value;
     CLR_CZSVH;      /* first clear C, Z, S, P/V and H flags    */
@@ -204,7 +204,7 @@ INLINE UINT8 SUBB(UINT8 dest, UINT8 value)
  subtract word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 SUBW(UINT16 dest, UINT16 value)
+static INLINE UINT16 SUBW(UINT16 dest, UINT16 value)
 {
 	UINT16 result = dest - value;
     CLR_CZSV;       /* first clear C, Z, S, P/V flags          */
@@ -218,7 +218,7 @@ INLINE UINT16 SUBW(UINT16 dest, UINT16 value)
  subtract long
  flags:  CZSV--
  ******************************************/
-INLINE UINT32 SUBL(UINT32 dest, UINT32 value)
+static INLINE UINT32 SUBL(UINT32 dest, UINT32 value)
 {
 	UINT32 result = dest - value;
     CLR_CZSV;       /* first clear C, Z, S, P/V flags          */
@@ -232,7 +232,7 @@ INLINE UINT32 SUBL(UINT32 dest, UINT32 value)
  subtract with carry byte
  flags:  CZSVDH
  ******************************************/
-INLINE UINT8 SBCB(UINT8 dest, UINT8 value)
+static INLINE UINT8 SBCB(UINT8 dest, UINT8 value)
 {
 	UINT8 result = dest - value - GET_C;
     CLR_CZSVH;      /* first clear C, Z, S, P/V and H flags    */
@@ -248,7 +248,7 @@ INLINE UINT8 SBCB(UINT8 dest, UINT8 value)
  subtract with carry word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 SBCW(UINT16 dest, UINT16 value)
+static INLINE UINT16 SBCW(UINT16 dest, UINT16 value)
 {
 	UINT16 result = dest - value - GET_C;
     CLR_CZSV;       /* first clear C, Z, S, P/V flags          */
@@ -262,7 +262,7 @@ INLINE UINT16 SBCW(UINT16 dest, UINT16 value)
  logical or byte
  flags:  -ZSP--
  ******************************************/
-INLINE UINT8 ORB(UINT8 dest, UINT8 value)
+static INLINE UINT8 ORB(UINT8 dest, UINT8 value)
 {
 	UINT8 result = dest | value;
 	CLR_ZSP;		/* first clear Z, S, P/V flags			   */
@@ -274,7 +274,7 @@ INLINE UINT8 ORB(UINT8 dest, UINT8 value)
  logical or word
  flags:  -ZS---
  ******************************************/
-INLINE UINT16 ORW(UINT16 dest, UINT16 value)
+static INLINE UINT16 ORW(UINT16 dest, UINT16 value)
 {
 	UINT16 result = dest | value;
 	CLR_ZS; 		/* first clear Z, and S flags			   */
@@ -286,7 +286,7 @@ INLINE UINT16 ORW(UINT16 dest, UINT16 value)
  logical and byte
  flags:  -ZSP--
  ******************************************/
-INLINE UINT8 ANDB(UINT8 dest, UINT8 value)
+static INLINE UINT8 ANDB(UINT8 dest, UINT8 value)
 {
 	UINT8 result = dest & value;
     CLR_ZSP;        /* first clear Z,S and P/V flags           */
@@ -298,7 +298,7 @@ INLINE UINT8 ANDB(UINT8 dest, UINT8 value)
  logical and word
  flags:  -ZS---
  ******************************************/
-INLINE UINT16 ANDW(UINT16 dest, UINT16 value)
+static INLINE UINT16 ANDW(UINT16 dest, UINT16 value)
 {
 	UINT16 result = dest & value;
     CLR_ZS;         /* first clear Z and S flags               */
@@ -310,7 +310,7 @@ INLINE UINT16 ANDW(UINT16 dest, UINT16 value)
  logical exclusive or byte
  flags:  -ZSP--
  ******************************************/
-INLINE UINT8 XORB(UINT8 dest, UINT8 value)
+static INLINE UINT8 XORB(UINT8 dest, UINT8 value)
 {
 	UINT8 result = dest ^ value;
     CLR_ZSP;        /* first clear Z, S and P/V flags          */
@@ -322,7 +322,7 @@ INLINE UINT8 XORB(UINT8 dest, UINT8 value)
  logical exclusive or word
  flags:  -ZS---
  ******************************************/
-INLINE UINT16 XORW(UINT16 dest, UINT16 value)
+static INLINE UINT16 XORW(UINT16 dest, UINT16 value)
 {
 	UINT16 result = dest ^ value;
     CLR_ZS;         /* first clear Z and S flags               */
@@ -335,7 +335,7 @@ INLINE UINT16 XORW(UINT16 dest, UINT16 value)
  compare byte
  flags:  CZSV--
  ******************************************/
-INLINE void CPB(UINT8 dest, UINT8 value)
+static INLINE void CPB(UINT8 dest, UINT8 value)
 {
 	UINT8 result = dest - value;
     CLR_CZSV;       /* first clear C, Z, S and P/V flags       */
@@ -348,7 +348,7 @@ INLINE void CPB(UINT8 dest, UINT8 value)
  compare word
  flags:  CZSV--
  ******************************************/
-INLINE void CPW(UINT16 dest, UINT16 value)
+static INLINE void CPW(UINT16 dest, UINT16 value)
 {
 	UINT16 result = dest - value;
 	CLR_CZSV;
@@ -361,7 +361,7 @@ INLINE void CPW(UINT16 dest, UINT16 value)
  compare long
  flags:  CZSV--
  ******************************************/
-INLINE void CPL(UINT32 dest, UINT32 value)
+static INLINE void CPL(UINT32 dest, UINT32 value)
 {
 	UINT32 result = dest - value;
 	CLR_CZSV;
@@ -374,7 +374,7 @@ INLINE void CPL(UINT32 dest, UINT32 value)
  complement byte
  flags: -ZSP--
  ******************************************/
-INLINE UINT8 COMB(UINT8 dest)
+static INLINE UINT8 COMB(UINT8 dest)
 {
 	UINT8 result = ~dest;
 	CLR_ZSP;
@@ -386,7 +386,7 @@ INLINE UINT8 COMB(UINT8 dest)
  complement word
  flags: -ZS---
  ******************************************/
-INLINE UINT16 COMW(UINT16 dest)
+static INLINE UINT16 COMW(UINT16 dest)
 {
 	UINT16 result = ~dest;
 	CLR_ZS;
@@ -398,7 +398,7 @@ INLINE UINT16 COMW(UINT16 dest)
  negate byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 NEGB(UINT8 dest)
+static INLINE UINT8 NEGB(UINT8 dest)
 {
 	UINT8 result = (UINT8) -dest;
 	CLR_CZSV;
@@ -412,7 +412,7 @@ INLINE UINT8 NEGB(UINT8 dest)
  negate word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 NEGW(UINT16 dest)
+static INLINE UINT16 NEGW(UINT16 dest)
 {
 	UINT16 result = (UINT16) -dest;
 	CLR_CZSV;
@@ -426,7 +426,7 @@ INLINE UINT16 NEGW(UINT16 dest)
  test byte
  flags:  -ZSP--
  ******************************************/
-INLINE void TESTB(UINT8 result)
+static INLINE void TESTB(UINT8 result)
 {
 	CLR_ZSP;
 	CHK_XXXB_ZSP;	/* set Z and S flags for result byte	   */
@@ -436,7 +436,7 @@ INLINE void TESTB(UINT8 result)
  test word
  flags:  -ZS---
  ******************************************/
-INLINE void TESTW(UINT16 dest)
+static INLINE void TESTW(UINT16 dest)
 {
 	CLR_ZS;
     if (!dest) SET_Z; else if (dest & S16) SET_S;
@@ -446,7 +446,7 @@ INLINE void TESTW(UINT16 dest)
  test long
  flags:  -ZS---
  ******************************************/
-INLINE void TESTL(UINT32 dest)
+static INLINE void TESTL(UINT32 dest)
 {
 	CLR_ZS;
 	if (!dest) SET_Z; else if (dest & S32) SET_S;
@@ -456,7 +456,7 @@ INLINE void TESTL(UINT32 dest)
  increment byte
  flags: -ZSV--
  ******************************************/
-INLINE UINT8 INCB(UINT8 dest, UINT8 value)
+static INLINE UINT8 INCB(UINT8 dest, UINT8 value)
 {
     UINT8 result = dest + value;
 	CLR_ZSV;
@@ -469,7 +469,7 @@ INLINE UINT8 INCB(UINT8 dest, UINT8 value)
  increment word
  flags: -ZSV--
  ******************************************/
-INLINE UINT16 INCW(UINT16 dest, UINT16 value)
+static INLINE UINT16 INCW(UINT16 dest, UINT16 value)
 {
     UINT16 result = dest + value;
 	CLR_ZSV;
@@ -482,7 +482,7 @@ INLINE UINT16 INCW(UINT16 dest, UINT16 value)
  decrement byte
  flags: -ZSV--
  ******************************************/
-INLINE UINT8 DECB(UINT8 dest, UINT8 value)
+static INLINE UINT8 DECB(UINT8 dest, UINT8 value)
 {
     UINT8 result = dest - value;
 	CLR_ZSV;
@@ -495,7 +495,7 @@ INLINE UINT8 DECB(UINT8 dest, UINT8 value)
  decrement word
  flags: -ZSV--
  ******************************************/
-INLINE UINT16 DECW(UINT16 dest, UINT16 value)
+static INLINE UINT16 DECW(UINT16 dest, UINT16 value)
 {
     UINT16 result = dest - value;
 	CLR_ZSV;
@@ -508,7 +508,7 @@ INLINE UINT16 DECW(UINT16 dest, UINT16 value)
  multiply words
  flags:  CZSV--
  ******************************************/
-INLINE UINT32 MULTW(UINT16 dest, UINT16 value)
+static INLINE UINT32 MULTW(UINT16 dest, UINT16 value)
 {
 	UINT32 result = (INT32)(INT16)dest * (INT16)value;
 	CLR_CZSV;
@@ -526,7 +526,7 @@ INLINE UINT32 MULTW(UINT16 dest, UINT16 value)
  multiply longs
  flags:  CZSV--
  ******************************************/
-INLINE UINT64 MULTL(UINT32 dest, UINT32 value)
+static INLINE UINT64 MULTL(UINT32 dest, UINT32 value)
 {
 	UINT64 result = (INT64)(INT32)dest * (INT32)value;
     if( !value )
@@ -550,7 +550,7 @@ INLINE UINT64 MULTL(UINT32 dest, UINT32 value)
  divide long by word
  flags: CZSV--
  ******************************************/
-INLINE UINT32 DIVW(UINT32 dest, UINT16 value)
+static INLINE UINT32 DIVW(UINT32 dest, UINT16 value)
 {
 	UINT32 result = dest;
 	UINT16 remainder = 0;
@@ -594,7 +594,7 @@ INLINE UINT32 DIVW(UINT32 dest, UINT16 value)
  divide quad word by long
  flags: CZSV--
  ******************************************/
-INLINE UINT64 DIVL(UINT64 dest, UINT32 value)
+static INLINE UINT64 DIVL(UINT64 dest, UINT32 value)
 {
 	UINT64 result = dest;
 	UINT32 remainder = 0;
@@ -638,7 +638,7 @@ INLINE UINT64 DIVL(UINT64 dest, UINT32 value)
  rotate left byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 RLB(UINT8 dest, UINT8 twice)
+static INLINE UINT8 RLB(UINT8 dest, UINT8 twice)
 {
 	UINT8 result = (dest << 1) | (dest >> 7);
 	CLR_CZSV;
@@ -653,7 +653,7 @@ INLINE UINT8 RLB(UINT8 dest, UINT8 twice)
  rotate left word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 RLW(UINT16 dest, UINT8 twice)
+static INLINE UINT16 RLW(UINT16 dest, UINT8 twice)
 {
 	UINT16 result = (dest << 1) | (dest >> 15);
 	CLR_CZSV;
@@ -668,7 +668,7 @@ INLINE UINT16 RLW(UINT16 dest, UINT8 twice)
  rotate left through carry byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 RLCB(UINT8 dest, UINT8 twice)
+static INLINE UINT8 RLCB(UINT8 dest, UINT8 twice)
 {
     UINT8 c = dest & S08;
 	UINT8 result = (dest << 1) | GET_C;
@@ -688,7 +688,7 @@ INLINE UINT8 RLCB(UINT8 dest, UINT8 twice)
  rotate left through carry word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 RLCW(UINT16 dest, UINT8 twice)
+static INLINE UINT16 RLCW(UINT16 dest, UINT8 twice)
 {
     UINT16 c = dest & S16;
 	UINT16 result = (dest << 1) | GET_C;
@@ -708,7 +708,7 @@ INLINE UINT16 RLCW(UINT16 dest, UINT8 twice)
  rotate right byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 RRB(UINT8 dest, UINT8 twice)
+static INLINE UINT8 RRB(UINT8 dest, UINT8 twice)
 {
 	UINT8 result = (dest >> 1) | (dest << 7);
 	CLR_CZSV;
@@ -722,7 +722,7 @@ INLINE UINT8 RRB(UINT8 dest, UINT8 twice)
  rotate right word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 RRW(UINT16 dest, UINT8 twice)
+static INLINE UINT16 RRW(UINT16 dest, UINT8 twice)
 {
 	UINT16 result = (dest >> 1) | (dest << 15);
 	CLR_CZSV;
@@ -736,7 +736,7 @@ INLINE UINT16 RRW(UINT16 dest, UINT8 twice)
  rotate right through carry byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 RRCB(UINT8 dest, UINT8 twice)
+static INLINE UINT8 RRCB(UINT8 dest, UINT8 twice)
 {
 	UINT8 c = dest & 1;
 	UINT8 result = (dest >> 1) | (GET_C << 7);
@@ -756,7 +756,7 @@ INLINE UINT8 RRCB(UINT8 dest, UINT8 twice)
  rotate right through carry word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 RRCW(UINT16 dest, UINT8 twice)
+static INLINE UINT16 RRCW(UINT16 dest, UINT8 twice)
 {
 	UINT16 c = dest & 1;
 	UINT16 result = (dest >> 1) | (GET_C << 15);
@@ -776,7 +776,7 @@ INLINE UINT16 RRCW(UINT16 dest, UINT8 twice)
  shift dynamic arithmetic byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 SDAB(UINT8 dest, INT8 count)
+static INLINE UINT8 SDAB(UINT8 dest, INT8 count)
 {
 	INT8 result = (INT8) dest;
 	UINT8 c = 0;
@@ -801,7 +801,7 @@ INLINE UINT8 SDAB(UINT8 dest, INT8 count)
  shift dynamic arithmetic word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 SDAW(UINT16 dest, INT8 count)
+static INLINE UINT16 SDAW(UINT16 dest, INT8 count)
 {
 	INT16 result = (INT16) dest;
 	UINT16 c = 0;
@@ -826,7 +826,7 @@ INLINE UINT16 SDAW(UINT16 dest, INT8 count)
  shift dynamic arithmetic long
  flags:  CZSV--
  ******************************************/
-INLINE UINT32 SDAL(UINT32 dest, INT8 count)
+static INLINE UINT32 SDAL(UINT32 dest, INT8 count)
 {
 	INT32 result = (INT32) dest;
 	UINT32 c = 0;
@@ -851,7 +851,7 @@ INLINE UINT32 SDAL(UINT32 dest, INT8 count)
  shift dynamic logic byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 SDLB(UINT8 dest, INT8 count)
+static INLINE UINT8 SDLB(UINT8 dest, INT8 count)
 {
 	UINT8 result = dest;
 	UINT8 c = 0;
@@ -876,7 +876,7 @@ INLINE UINT8 SDLB(UINT8 dest, INT8 count)
  shift dynamic logic word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 SDLW(UINT16 dest, INT8 count)
+static INLINE UINT16 SDLW(UINT16 dest, INT8 count)
 {
 	UINT16 result = dest;
 	UINT16 c = 0;
@@ -901,7 +901,7 @@ INLINE UINT16 SDLW(UINT16 dest, INT8 count)
  shift dynamic logic long
  flags:  CZSV--
  ******************************************/
-INLINE UINT32 SDLL(UINT32 dest, INT8 count)
+static INLINE UINT32 SDLL(UINT32 dest, INT8 count)
 {
 	UINT32 result = dest;
 	UINT32 c = 0;
@@ -926,7 +926,7 @@ INLINE UINT32 SDLL(UINT32 dest, INT8 count)
  shift left arithmetic byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 SLAB(UINT8 dest, UINT8 count)
+static INLINE UINT8 SLAB(UINT8 dest, UINT8 count)
 {
     UINT8 c = (count) ? (dest << (count - 1)) & S08 : 0;
 	UINT8 result = (UINT8)((INT8)dest << count);
@@ -941,7 +941,7 @@ INLINE UINT8 SLAB(UINT8 dest, UINT8 count)
  shift left arithmetic word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 SLAW(UINT16 dest, UINT8 count)
+static INLINE UINT16 SLAW(UINT16 dest, UINT8 count)
 {
     UINT16 c = (count) ? (dest << (count - 1)) & S16 : 0;
 	UINT16 result = (UINT16)((INT16)dest << count);
@@ -956,7 +956,7 @@ INLINE UINT16 SLAW(UINT16 dest, UINT8 count)
  shift left arithmetic long
  flags:  CZSV--
  ******************************************/
-INLINE UINT32 SLAL(UINT32 dest, UINT8 count)
+static INLINE UINT32 SLAL(UINT32 dest, UINT8 count)
 {
     UINT32 c = (count) ? (dest << (count - 1)) & S32 : 0;
 	UINT32 result = (UINT32)((INT32)dest << count);
@@ -971,7 +971,7 @@ INLINE UINT32 SLAL(UINT32 dest, UINT8 count)
  shift left logic byte
  flags:  CZS---
  ******************************************/
-INLINE UINT8 SLLB(UINT8 dest, UINT8 count)
+static INLINE UINT8 SLLB(UINT8 dest, UINT8 count)
 {
     UINT8 c = (count) ? (dest << (count - 1)) & S08 : 0;
 	UINT8 result = dest << count;
@@ -985,7 +985,7 @@ INLINE UINT8 SLLB(UINT8 dest, UINT8 count)
  shift left logic word
  flags:  CZS---
  ******************************************/
-INLINE UINT16 SLLW(UINT16 dest, UINT8 count)
+static INLINE UINT16 SLLW(UINT16 dest, UINT8 count)
 {
     UINT16 c = (count) ? (dest << (count - 1)) & S16 : 0;
 	UINT16 result = dest << count;
@@ -999,7 +999,7 @@ INLINE UINT16 SLLW(UINT16 dest, UINT8 count)
  shift left logic long
  flags:  CZS---
  ******************************************/
-INLINE UINT32 SLLL(UINT32 dest, UINT8 count)
+static INLINE UINT32 SLLL(UINT32 dest, UINT8 count)
 {
     UINT32 c = (count) ? (dest << (count - 1)) & S32 : 0;
 	UINT32 result = dest << count;
@@ -1013,7 +1013,7 @@ INLINE UINT32 SLLL(UINT32 dest, UINT8 count)
  shift right arithmetic byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 SRAB(UINT8 dest, UINT8 count)
+static INLINE UINT8 SRAB(UINT8 dest, UINT8 count)
 {
 	UINT8 c = (count) ? ((INT8)dest >> (count - 1)) & 1 : 0;
 	UINT8 result = (UINT8)((INT8)dest >> count);
@@ -1027,7 +1027,7 @@ INLINE UINT8 SRAB(UINT8 dest, UINT8 count)
  shift right arithmetic word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 SRAW(UINT16 dest, UINT8 count)
+static INLINE UINT16 SRAW(UINT16 dest, UINT8 count)
 {
 	UINT8 c = (count) ? ((INT16)dest >> (count - 1)) & 1 : 0;
 	UINT16 result = (UINT16)((INT16)dest >> count);
@@ -1041,7 +1041,7 @@ INLINE UINT16 SRAW(UINT16 dest, UINT8 count)
  shift right arithmetic long
  flags:  CZSV--
  ******************************************/
-INLINE UINT32 SRAL(UINT32 dest, UINT8 count)
+static INLINE UINT32 SRAL(UINT32 dest, UINT8 count)
 {
 	UINT8 c = (count) ? ((INT32)dest >> (count - 1)) & 1 : 0;
 	UINT32 result = (UINT32)((INT32)dest >> count);
@@ -1055,7 +1055,7 @@ INLINE UINT32 SRAL(UINT32 dest, UINT8 count)
  shift right logic byte
  flags:  CZSV--
  ******************************************/
-INLINE UINT8 SRLB(UINT8 dest, UINT8 count)
+static INLINE UINT8 SRLB(UINT8 dest, UINT8 count)
 {
 	UINT8 c = (count) ? (dest >> (count - 1)) & 1 : 0;
 	UINT8 result = dest >> count;
@@ -1069,7 +1069,7 @@ INLINE UINT8 SRLB(UINT8 dest, UINT8 count)
  shift right logic word
  flags:  CZSV--
  ******************************************/
-INLINE UINT16 SRLW(UINT16 dest, UINT8 count)
+static INLINE UINT16 SRLW(UINT16 dest, UINT8 count)
 {
 	UINT8 c = (count) ? (dest >> (count - 1)) & 1 : 0;
 	UINT16 result = dest >> count;
@@ -1083,7 +1083,7 @@ INLINE UINT16 SRLW(UINT16 dest, UINT8 count)
  shift right logic long
  flags:  CZSV--
  ******************************************/
-INLINE UINT32 SRLL(UINT32 dest, UINT8 count)
+static INLINE UINT32 SRLL(UINT32 dest, UINT8 count)
 {
 	UINT8 c = (count) ? (dest >> (count - 1)) & 1 : 0;
 	UINT32 result = dest >> count;

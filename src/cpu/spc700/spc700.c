@@ -92,7 +92,7 @@ spctodo says sleep and standby modes cannot be used.
 #define MAKE_INT_8(A) (int8)((A)&0xff)
 #else
 #define int8   int
-INLINE int MAKE_INT_8(int A) {return (A & 0x80) ? A | ~0xff : A & 0xff;}
+static INLINE int MAKE_INT_8(int A) {return (A & 0x80) ? A | ~0xff : A & 0xff;}
 #endif /* UCHAR_MAX == 0xff */
 
 #define MAKE_UINT_8(A) ((A)&0xff)
@@ -353,38 +353,38 @@ unsigned char daa_table[1024] =
 
 #define BREAKOUT break
 
-INLINE uint read_8_normal(uint address)
+static INLINE uint read_8_normal(uint address)
 {
 	address = MAKE_UINT_16(address);
 	return spc700_read_8(address);
 }
 
-INLINE uint read_8_immediate(uint address)
+static INLINE uint read_8_immediate(uint address)
 {
 	address = MAKE_UINT_16(address);
 	return spc700_read_8_immediate(address);
 }
 
-INLINE uint read_8_instruction(uint address)
+static INLINE uint read_8_instruction(uint address)
 {
 	address = MAKE_UINT_16(address);
 	return spc700_read_8_instruction(address);
 }
 
-INLINE uint read_8_direct(uint address)
+static INLINE uint read_8_direct(uint address)
 {
 	address = MAKE_UINT_8(address) | FLAG_P;
 	return spc700_read_8_direct(address);
 }
 
-INLINE void write_8_normal(uint address, uint value)
+static INLINE void write_8_normal(uint address, uint value)
 {
 	address = MAKE_UINT_16(address);
 	value = MAKE_UINT_8(value);
 	spc700_write_8(address, value);
 }
 
-INLINE void write_8_direct(uint address, uint value)
+static INLINE void write_8_direct(uint address, uint value)
 {
 	address = MAKE_UINT_8(address) | FLAG_P;
 	value = MAKE_UINT_8(value);
@@ -392,22 +392,22 @@ INLINE void write_8_direct(uint address, uint value)
 }
 
 
-INLINE uint read_16_normal(uint address)
+static INLINE uint read_16_normal(uint address)
 {
 	return read_8_normal(address) | (read_8_normal(address+1)<<8);
 }
 
-INLINE uint read_16_immediate(uint address)
+static INLINE uint read_16_immediate(uint address)
 {
 	return read_8_immediate(address) | (read_8_immediate(address+1)<<8);
 }
 
-INLINE uint read_16_direct(uint address)
+static INLINE uint read_16_direct(uint address)
 {
 	return read_8_direct(address) | (read_8_direct(address+1)<<8);
 }
 
-INLINE void write_16_direct(uint address, uint value)
+static INLINE void write_16_direct(uint address, uint value)
 {
 	write_8_direct(address, value);
 	write_8_direct(address+1, value>>8);
@@ -510,32 +510,32 @@ INLINE void write_16_direct(uint address, uint value)
 #define OPER_16_YI()	read_16_YI(EA_YI())
 
 /* Effective Address Caluclations */
-INLINE uint EA_IMM(void)   {return REG_PC++;}
-INLINE uint EA_IMM16(void) {REG_PC += 2; return REG_PC-2;}
-INLINE uint EA_ABS(void)   {return OPER_16_IMM();}
-INLINE uint EA_ABX(void)   {return EA_ABS() + REG_X;}
-INLINE uint EA_ABY(void)   {return EA_ABS() + REG_Y;}
-INLINE uint EA_AXI(void)   {return OPER_16_ABX();}
-INLINE uint EA_DP(void)   {return OPER_8_IMM();}
-INLINE uint EA_DPX(void)   {return (EA_DP() + REG_X)&0xff;}
-INLINE uint EA_DPY(void)   {return (EA_DP() + REG_Y)&0xff;}
-INLINE uint EA_DPI(void)   {return OPER_16_DP();}
-INLINE uint EA_DXI(void)   {return OPER_16_DPX();}
-INLINE uint EA_DIY(void)   {uint addr = OPER_16_DP(); if((addr&0xff00) != ((addr+REG_Y)&0xff00)) CLK(1); return addr + REG_Y;}
-INLINE uint EA_XI(void)    {return REG_X;}
-INLINE uint EA_XII(void)   {uint val = REG_X;REG_X = MAKE_UINT_8(REG_X+1);return val;}
-INLINE uint EA_YI(void)    {return REG_Y;}
+static INLINE uint EA_IMM(void)   {return REG_PC++;}
+static INLINE uint EA_IMM16(void) {REG_PC += 2; return REG_PC-2;}
+static INLINE uint EA_ABS(void)   {return OPER_16_IMM();}
+static INLINE uint EA_ABX(void)   {return EA_ABS() + REG_X;}
+static INLINE uint EA_ABY(void)   {return EA_ABS() + REG_Y;}
+static INLINE uint EA_AXI(void)   {return OPER_16_ABX();}
+static INLINE uint EA_DP(void)   {return OPER_8_IMM();}
+static INLINE uint EA_DPX(void)   {return (EA_DP() + REG_X)&0xff;}
+static INLINE uint EA_DPY(void)   {return (EA_DP() + REG_Y)&0xff;}
+static INLINE uint EA_DPI(void)   {return OPER_16_DP();}
+static INLINE uint EA_DXI(void)   {return OPER_16_DPX();}
+static INLINE uint EA_DIY(void)   {uint addr = OPER_16_DP(); if((addr&0xff00) != ((addr+REG_Y)&0xff00)) CLK(1); return addr + REG_Y;}
+static INLINE uint EA_XI(void)    {return REG_X;}
+static INLINE uint EA_XII(void)   {uint val = REG_X;REG_X = MAKE_UINT_8(REG_X+1);return val;}
+static INLINE uint EA_YI(void)    {return REG_Y;}
 
 
 
 /* Change the Program Counter */
-INLINE void JUMP(uint address)
+static INLINE void JUMP(uint address)
 {
 	REG_PC = address;
 	spc700_jumping(REG_PC);
 }
 
-INLINE void BRANCH(uint offset)
+static INLINE void BRANCH(uint offset)
 {
 	REG_PC = MAKE_UINT_16(REG_PC + MAKE_INT_8(offset));
 	spc700_branching(REG_PC);
@@ -544,7 +544,7 @@ INLINE void BRANCH(uint offset)
 
 #define GET_REG_YA() (REG_A | (REG_Y<<8))
 
-INLINE void SET_REG_YA(uint value)
+static INLINE void SET_REG_YA(uint value)
 {
 	REG_A = MAKE_UINT_8(value);
 	REG_Y = MAKE_UINT_8(value>>8);
@@ -582,10 +582,10 @@ INLINE void SET_REG_YA(uint value)
 	((!FLAG_NZ) << 1)		|	\
 	CFLAG_AS_1())
 
-INLINE void SET_FLAG_I(uint value);
+static INLINE void SET_FLAG_I(uint value);
 
 /* Set the Process Status Register */
-INLINE void SET_REG_P(uint value)
+static INLINE void SET_REG_P(uint value)
 {
 	FLAG_NZ = (value & 0x80) | !(value & 2);
 	FLAG_V = value<<1;
@@ -597,31 +597,31 @@ INLINE void SET_REG_P(uint value)
 }
 
 /* Push/Pull data to/from the stack */
-INLINE void PUSH_8(uint value)
+static INLINE void PUSH_8(uint value)
 {
 	write_8_STK(REG_S+STACK_PAGE, value);
 	REG_S = MAKE_UINT_8(REG_S - 1);
 }
 
-INLINE uint PULL_8(void)
+static INLINE uint PULL_8(void)
 {
 	REG_S = MAKE_UINT_8(REG_S + 1);
 	return read_8_STK(REG_S+STACK_PAGE);
 }
 
-INLINE void PUSH_16(uint value)
+static INLINE void PUSH_16(uint value)
 {
 	PUSH_8(value>>8);
 	PUSH_8(value);
 }
 
-INLINE uint PULL_16(void)
+static INLINE uint PULL_16(void)
 {
 	uint value = PULL_8();
 	return value | (PULL_8()<<8);
 }
 
-INLINE void SERVICE_IRQ(void)
+static INLINE void SERVICE_IRQ(void)
 {
 	CLK(7);
 	PUSH_16(REG_PC);
@@ -633,7 +633,7 @@ INLINE void SERVICE_IRQ(void)
 }
 
 #if !SPC700_OPTIMIZE_SNES
-INLINE void CHECK_IRQ(void)
+static INLINE void CHECK_IRQ(void)
 {
 	if(FLAG_I & LINE_IRQ)
 		SERVICE_IRQ();
@@ -642,7 +642,7 @@ INLINE void CHECK_IRQ(void)
 #define CHECK_IRQ()
 #endif /* SPC700_OPTIMIZE_SNES */
 
-INLINE void SET_FLAG_I(uint value)
+static INLINE void SET_FLAG_I(uint value)
 {
 	FLAG_I = value & IFLAG_SET;
 	CHECK_IRQ();

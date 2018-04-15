@@ -451,7 +451,7 @@ PROTOTYPES(Z80xycb,xycb);
 /* Burn an odd amount of cycles, that is instructions taking something		*/
 /* different from 4 T-states per opcode (and R increment)					*/
 /****************************************************************************/
-INLINE void BURNODD(int cycles, int opcodes, int cyclesum)
+static INLINE void BURNODD(int cycles, int opcodes, int cyclesum)
 {
 	if( cycles > 0 )
 	{
@@ -597,7 +597,7 @@ INLINE void BURNODD(int cycles, int opcodes, int cyclesum)
 /***************************************************************
  * Read a word from given memory location
  ***************************************************************/
-INLINE void RM16( UINT32 addr, PAIR *r )
+static INLINE void RM16( UINT32 addr, PAIR *r )
 {
 	r->b.l = RM(addr);
 	r->b.h = RM((addr+1)&0xffff);
@@ -611,7 +611,7 @@ INLINE void RM16( UINT32 addr, PAIR *r )
 /***************************************************************
  * Write a word to given memory location
  ***************************************************************/
-INLINE void WM16( UINT32 addr, PAIR *r )
+static INLINE void WM16( UINT32 addr, PAIR *r )
 {
 	WM(addr,r->b.l);
 	WM((addr+1)&0xffff,r->b.h);
@@ -622,7 +622,7 @@ INLINE void WM16( UINT32 addr, PAIR *r )
  * reading opcodes. In case of system with memory mapped I/O,
  * this function can be used to greatly speed up emulation
  ***************************************************************/
-INLINE UINT8 ROP(void)
+static INLINE UINT8 ROP(void)
 {
 	unsigned pc = _PCD;
 	_PC++;
@@ -635,14 +635,14 @@ INLINE UINT8 ROP(void)
  * support systems that use different encoding mechanisms for
  * opcodes and opcode arguments
  ***************************************************************/
-INLINE UINT8 ARG(void)
+static INLINE UINT8 ARG(void)
 {
 	unsigned pc = _PCD;
 	_PC++;
 	return cpu_readop_arg(pc);
 }
 
-INLINE UINT32 ARG16(void)
+static INLINE UINT32 ARG16(void)
 {
 	unsigned pc = _PCD;
 	_PC += 2;
@@ -894,7 +894,7 @@ INLINE UINT32 ARG16(void)
 /***************************************************************
  * INC	r8
  ***************************************************************/
-INLINE UINT8 INC(UINT8 value)
+static INLINE UINT8 INC(UINT8 value)
 {
 	UINT8 res = value + 1;
 	_F = (_F & CF) | SZHV_inc[res];
@@ -904,7 +904,7 @@ INLINE UINT8 INC(UINT8 value)
 /***************************************************************
  * DEC	r8
  ***************************************************************/
-INLINE UINT8 DEC(UINT8 value)
+static INLINE UINT8 DEC(UINT8 value)
 {
 	UINT8 res = value - 1;
 	_F = (_F & CF) | SZHV_dec[res];
@@ -1562,7 +1562,7 @@ asm (															\
 /***************************************************************
  * RLC	r8
  ***************************************************************/
-INLINE UINT8 RLC(UINT8 value)
+static INLINE UINT8 RLC(UINT8 value)
 {
 	unsigned res = value;
 	unsigned c = (res & 0x80) ? CF : 0;
@@ -1574,7 +1574,7 @@ INLINE UINT8 RLC(UINT8 value)
 /***************************************************************
  * RRC	r8
  ***************************************************************/
-INLINE UINT8 RRC(UINT8 value)
+static INLINE UINT8 RRC(UINT8 value)
 {
 	unsigned res = value;
 	unsigned c = (res & 0x01) ? CF : 0;
@@ -1586,7 +1586,7 @@ INLINE UINT8 RRC(UINT8 value)
 /***************************************************************
  * RL	r8
  ***************************************************************/
-INLINE UINT8 RL(UINT8 value)
+static INLINE UINT8 RL(UINT8 value)
 {
 	unsigned res = value;
 	unsigned c = (res & 0x80) ? CF : 0;
@@ -1598,7 +1598,7 @@ INLINE UINT8 RL(UINT8 value)
 /***************************************************************
  * RR	r8
  ***************************************************************/
-INLINE UINT8 RR(UINT8 value)
+static INLINE UINT8 RR(UINT8 value)
 {
 	unsigned res = value;
 	unsigned c = (res & 0x01) ? CF : 0;
@@ -1610,7 +1610,7 @@ INLINE UINT8 RR(UINT8 value)
 /***************************************************************
  * SLA	r8
  ***************************************************************/
-INLINE UINT8 SLA(UINT8 value)
+static INLINE UINT8 SLA(UINT8 value)
 {
 	unsigned res = value;
 	unsigned c = (res & 0x80) ? CF : 0;
@@ -1622,7 +1622,7 @@ INLINE UINT8 SLA(UINT8 value)
 /***************************************************************
  * SRA	r8
  ***************************************************************/
-INLINE UINT8 SRA(UINT8 value)
+static INLINE UINT8 SRA(UINT8 value)
 {
 	unsigned res = value;
 	unsigned c = (res & 0x01) ? CF : 0;
@@ -1634,7 +1634,7 @@ INLINE UINT8 SRA(UINT8 value)
 /***************************************************************
  * SLL	r8
  ***************************************************************/
-INLINE UINT8 SLL(UINT8 value)
+static INLINE UINT8 SLL(UINT8 value)
 {
 	unsigned res = value;
 	unsigned c = (res & 0x80) ? CF : 0;
@@ -1646,7 +1646,7 @@ INLINE UINT8 SLL(UINT8 value)
 /***************************************************************
  * SRL	r8
  ***************************************************************/
-INLINE UINT8 SRL(UINT8 value)
+static INLINE UINT8 SRL(UINT8 value)
 {
 	unsigned res = value;
 	unsigned c = (res & 0x01) ? CF : 0;
@@ -1675,7 +1675,7 @@ INLINE UINT8 SRL(UINT8 value)
 /***************************************************************
  * RES	bit,r8
  ***************************************************************/
-INLINE UINT8 RES(UINT8 bit, UINT8 value)
+static INLINE UINT8 RES(UINT8 bit, UINT8 value)
 {
 	return value & ~(1<<bit);
 }
@@ -1683,7 +1683,7 @@ INLINE UINT8 RES(UINT8 bit, UINT8 value)
 /***************************************************************
  * SET	bit,r8
  ***************************************************************/
-INLINE UINT8 SET(UINT8 bit, UINT8 value)
+static INLINE UINT8 SET(UINT8 bit, UINT8 value)
 {
 	return value | (1<<bit);
 }

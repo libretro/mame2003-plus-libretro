@@ -548,7 +548,7 @@ if (((spriteram16[i + 4]!=0xf800) && (spriteram16[i + 4]!=0xfff6))
 		dstp = (UINT8 *)((UINT8 *)bitmapp->line[0] + dy * ty / sizeof(type)) + tx;	\
 	}
 
-INLINE void bryan2_drawscanline(
+static INLINE void bryan2_drawscanline(
 		struct mame_bitmap *bitmap,int x,int y,int length,
 		const UINT16 *src,int transparent,UINT32 orient,int pri)
 {

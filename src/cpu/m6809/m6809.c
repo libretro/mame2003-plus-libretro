@@ -105,7 +105,7 @@ static UINT8 m6809_win_layout[] = {
 	 0,23,80, 1,	/* command line window (bottom rows) */
 };
 
-INLINE void fetch_effective_address( void );
+static INLINE void fetch_effective_address( void );
 
 /* 6809 Registers */
 typedef struct
@@ -405,13 +405,13 @@ static UINT8 cycles1[] =
 };
 #endif
 
-INLINE UINT32 RM16( UINT32 Addr )
+static INLINE UINT32 RM16( UINT32 Addr )
 {
 	UINT32 result = RM(Addr) << 8;
 	return result | RM((Addr+1)&0xffff);
 }
 
-INLINE void WM16( UINT32 Addr, PAIR *p )
+static INLINE void WM16( UINT32 Addr, PAIR *p )
 {
 	WM( Addr, p->b.h );
 	WM( (Addr+1)&0xffff, p->b.l );
@@ -967,7 +967,7 @@ int m6809_execute(int cycles)	/* NS 970908 */
     return cycles - m6809_ICount;   /* NS 970908 */
 }
 
-INLINE void fetch_effective_address( void )
+static INLINE void fetch_effective_address( void )
 {
 	UINT8 postbyte = ROP_ARG(PCD);
 	PC++;

@@ -131,7 +131,7 @@ static UINT8 hd6309_win_layout[] = {
 	 0,23,80, 1,	/* command line window (bottom rows) */
 };
 
-INLINE void fetch_effective_address( void );
+static INLINE void fetch_effective_address( void );
 
 /* 6309 Registers */
 typedef struct
@@ -357,15 +357,15 @@ static UINT8 *index_cycle;
 	}									\
 }
 
-INLINE UINT32 RM16( UINT32 mAddr );
-INLINE UINT32 RM16( UINT32 mAddr )
+static INLINE UINT32 RM16( UINT32 mAddr );
+static INLINE UINT32 RM16( UINT32 mAddr )
 {
 	UINT32 result = RM(mAddr) << 8;
 	return result | RM((mAddr+1)&0xffff);
 }
 
-INLINE UINT32 RM32( UINT32 mAddr );
-INLINE UINT32 RM32( UINT32 mAddr )
+static INLINE UINT32 RM32( UINT32 mAddr );
+static INLINE UINT32 RM32( UINT32 mAddr )
 {
 	UINT32 result = RM(mAddr) << 24;
 	result += RM(mAddr+1) << 16;
@@ -374,15 +374,15 @@ INLINE UINT32 RM32( UINT32 mAddr )
 	return result;
 }
 
-INLINE void WM16( UINT32 mAddr, PAIR *p );
-INLINE void WM16( UINT32 mAddr, PAIR *p )
+static INLINE void WM16( UINT32 mAddr, PAIR *p );
+static INLINE void WM16( UINT32 mAddr, PAIR *p )
 {
 	WM( mAddr, p->b.h );
 	WM( (mAddr+1)&0xffff, p->b.l );
 }
 
-INLINE void WM32( UINT32 mAddr, PAIR *p );
-INLINE void WM32( UINT32 mAddr, PAIR *p )
+static INLINE void WM32( UINT32 mAddr, PAIR *p );
+static INLINE void WM32( UINT32 mAddr, PAIR *p )
 {
 	WM( mAddr, p->b.h3 );
 	WM( (mAddr+1)&0xffff, p->b.h2 );
@@ -1071,7 +1071,7 @@ int hd6309_execute(int cycles)	/* NS 970908 */
 	return cycles - hd6309_ICount;	 /* NS 970908 */
 }
 
-INLINE void fetch_effective_address( void )
+static INLINE void fetch_effective_address( void )
 {
 	UINT8 postbyte = ROP_ARG(PCD);
 	PC++;
