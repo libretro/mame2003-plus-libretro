@@ -2,6 +2,7 @@
 #define MAME2003_H
 
 #include <stdio.h>
+#include <libretro.h>
 #include "osd_cpu.h"
 #include "inptport.h"
 
@@ -259,27 +260,6 @@ typedef struct
 } INP_HEADER;
 
 
-
-/* These values are returned by osd_get_path_info */
-enum
-{
-	PATH_NOT_FOUND,
-	PATH_IS_FILE,
-	PATH_IS_DIRECTORY
-};
-
-/* Return the number of paths for a given type */
-int osd_get_path_count(int pathtype);
-
-/* Get information on the existence of a file */
-int osd_get_path_info(int pathtype, int pathindex, const char *filename);
-
-/* Attempt to open a file with the given name and mode using the specified path type */
-FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode);
-
-int osd_create_directory(const char *dir);
-
-
 /******************************************************************************
 
 	Timing
@@ -306,14 +286,6 @@ cycles_t osd_profiling_ticks(void);
 	Miscellaneous
 
 ******************************************************************************/
-
-/* aborts the program in some unexpected fatal way */
-#ifdef __GNUC__
-void CLIB_DECL osd_die(const char *text,...)
-      __attribute__ ((format (printf, 1, 2)));
-#else
-void CLIB_DECL osd_die(const char *text,...);
-#endif
 
 #ifdef __GNUC__
 static INLINE void CLIB_DECL logerror(const char *text,...) __attribute__ ((format (printf, 1, 2)));
