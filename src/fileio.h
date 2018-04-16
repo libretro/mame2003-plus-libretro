@@ -41,12 +41,31 @@ enum
 	FILETYPE_end /* dummy last entry */
 };
 
+/* These values are returned by osd_get_path_info */
+enum
+{
+	PATH_NOT_FOUND,
+	PATH_IS_FILE,
+	PATH_IS_DIRECTORY
+};
 
 /* gamename holds the driver name, filename is only used for ROMs and    */
 /* samples. If 'write' is not 0, the file is opened for write. Otherwise */
 /* it is opened for read. */
 
 typedef struct _mame_file mame_file;
+
+
+/* Return the number of paths for a given type */
+int osd_get_path_count(int pathtype);
+
+/* Get information on the existence of a file */
+int osd_get_path_info(int pathtype, int pathindex, const char *filename);
+
+/* Attempt to open a file with the given name and mode using the specified path type */
+FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode);
+
+int osd_create_directory(const char *dir);
 
 int mame_faccess(const char *filename, int filetype);
 mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, int openforwrite);

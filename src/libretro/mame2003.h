@@ -2,6 +2,7 @@
 #define MAME2003_H
 
 #include <stdio.h>
+#include <libretro.h>
 #include "osd_cpu.h"
 #include "inptport.h"
 
@@ -257,27 +258,6 @@ typedef struct
 	char version[3];   /* byte[0] = 0, byte[1] = version byte[2] = beta_version */
 	char reserved[20]; /* for future use, possible store game options? */
 } INP_HEADER;
-
-
-
-/* These values are returned by osd_get_path_info */
-enum
-{
-	PATH_NOT_FOUND,
-	PATH_IS_FILE,
-	PATH_IS_DIRECTORY
-};
-
-/* Return the number of paths for a given type */
-int osd_get_path_count(int pathtype);
-
-/* Get information on the existence of a file */
-int osd_get_path_info(int pathtype, int pathindex, const char *filename);
-
-/* Attempt to open a file with the given name and mode using the specified path type */
-FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode);
-
-int osd_create_directory(const char *dir);
 
 
 /******************************************************************************

@@ -83,6 +83,7 @@
 #include "state.h"
 #include "mamedbg.h"
 #include "z80.h"
+#include "mame2003.h"
 
 #define VERBOSE 0
 
@@ -206,6 +207,8 @@ typedef struct {
 #define _IFF1	Z80.IFF1
 #define _IFF2	Z80.IFF2
 #define _HALT	Z80.HALT
+
+extern retro_log_printf_t log_cb; 
 
 int z80_ICount;
 static Z80_Regs Z80;
@@ -3995,6 +3998,7 @@ void z80_init(void)
 {
 	int cpu = cpu_getactivecpu();
 	int i, p;
+   	struct retro_log_callback log;    
 #if BIG_FLAGS_ARRAY
 	if( !SZHVC_add || !SZHVC_sub )
 	{
@@ -4005,7 +4009,19 @@ void z80_init(void)
 		SZHVC_sub = (UINT8 *)malloc(2*256*256);
 		if( !SZHVC_add || !SZHVC_sub )
 		{
-			osd_die("Z80: failed to allocate 2 * 128K flags arrays!!!\n");
+			if (!log_cb)
+            {
+   				if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log))
+      				log_cb = log.log;
+   				else
+      				log_cb = NULL;
+            }
+			if(log_cb)            
+				log_cb(RETRO_LOG_WARN, "Z80: failed to allocate 2 * 128K flags arrays!!!\n");
+
+   			/* TODO: Don't abort, switch back to main thread and exit cleanly: 
+    		* This is only used if a malloc fails in src/cpu/z80/z80.c so not too high a priority */
+   			abort();       
 		}
 		padd = &SZHVC_add[	0*256];
 		padc = &SZHVC_add[256*256];
