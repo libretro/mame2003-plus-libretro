@@ -128,7 +128,7 @@ static READ32_HANDLER( special_port3_r )
 
 
 #if (HACK_TMEK_CONTROLS)
-INLINE void compute_fake_pots(int *pots)
+static INLINE void compute_fake_pots(int *pots)
 {
 	int fake = readinputport(4);
 

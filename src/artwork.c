@@ -458,7 +458,7 @@ static void add_range_to_hint(UINT32 *hintbase, int scanline, int startx, int en
 	union_rect - compute the union of two rects
 -------------------------------------------------*/
 
-INLINE void union_rect(struct rectangle *dst, const struct rectangle *src)
+static INLINE void union_rect(struct rectangle *dst, const struct rectangle *src)
 {
 	if (dst->max_x == 0)
 		*dst = *src;
@@ -478,7 +478,7 @@ INLINE void union_rect(struct rectangle *dst, const struct rectangle *src)
 	brightness for an RGB pixel
 -------------------------------------------------*/
 
-INLINE UINT8 compute_brightness(rgb_t rgb)
+static INLINE UINT8 compute_brightness(rgb_t rgb)
 {
 	return (RGB_RED(rgb) * 222 + RGB_GREEN(rgb) * 707 + RGB_BLUE(rgb) * 71) / 1000;
 }
@@ -490,7 +490,7 @@ INLINE UINT8 compute_brightness(rgb_t rgb)
 	pixel
 -------------------------------------------------*/
 
-INLINE UINT32 compute_pre_pixel(UINT8 a, UINT8 r, UINT8 g, UINT8 b)
+static INLINE UINT32 compute_pre_pixel(UINT8 a, UINT8 r, UINT8 g, UINT8 b)
 {
 	/* premultiply the RGB components with the pixel's alpha */
 	r = (r * a) / 0xff;
@@ -508,7 +508,7 @@ INLINE UINT32 compute_pre_pixel(UINT8 a, UINT8 r, UINT8 g, UINT8 b)
 	compute_yrgb_pixel - compute a YRGB pixel
 -------------------------------------------------*/
 
-INLINE UINT32 compute_yrgb_pixel(UINT8 a, UINT8 r, UINT8 g, UINT8 b)
+static INLINE UINT32 compute_yrgb_pixel(UINT8 a, UINT8 r, UINT8 g, UINT8 b)
 {
 	/* compute the premultiplied brightness */
 	int bright = (r * 222 + g * 707 + b * 71) / 1000;
@@ -525,7 +525,7 @@ INLINE UINT32 compute_yrgb_pixel(UINT8 a, UINT8 r, UINT8 g, UINT8 b)
 	each component to the max
 -------------------------------------------------*/
 
-INLINE UINT32 add_and_clamp(UINT32 game, UINT32 underpix)
+static INLINE UINT32 add_and_clamp(UINT32 game, UINT32 underpix)
 {
 	UINT32 temp1 = game + underpix;
 	UINT32 temp2 = game ^ underpix ^ temp1;
@@ -563,7 +563,7 @@ INLINE UINT32 add_and_clamp(UINT32 game, UINT32 underpix)
 	blend_over - blend two pixels with overlay
 -------------------------------------------------*/
 
-INLINE UINT32 blend_over(UINT32 game, UINT32 pre, UINT32 yrgb)
+static INLINE UINT32 blend_over(UINT32 game, UINT32 pre, UINT32 yrgb)
 {
 	/* case 1: no game pixels; just return the premultiplied pixel */
 	if ((game & nonalpha_mask) == 0)

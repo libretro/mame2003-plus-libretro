@@ -107,7 +107,7 @@ PALETTE_INIT( namcos86 )
 
 ***************************************************************************/
 
-INLINE void get_tile_info(int tile_index,int layer,data8_t *vram)
+static INLINE void get_tile_info(int tile_index,int layer,data8_t *vram)
 {
 	unsigned char attr = vram[2*tile_index + 1];
 	int tile_offs;

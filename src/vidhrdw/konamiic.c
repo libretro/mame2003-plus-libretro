@@ -1465,7 +1465,7 @@ static UINT32 K007342_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows
 	return (col & 0x1f) + ((row & 0x1f) << 5) + ((col & 0x20) << 5);
 }
 
-INLINE void K007342_get_tile_info(int tile_index,int layer,data8_t *cram,data8_t *vram)
+static INLINE void K007342_get_tile_info(int tile_index,int layer,data8_t *cram,data8_t *vram)
 {
 	int color, code;
 
@@ -1906,7 +1906,7 @@ struct tilemap *K052109_tilemap[3];
   color RAM    ------xx  depends on external connections (usually banking, flip)
 */
 
-INLINE void K052109_get_tile_info(int tile_index,int layer,data8_t *cram,data8_t *vram1,data8_t *vram2)
+static INLINE void K052109_get_tile_info(int tile_index,int layer,data8_t *cram,data8_t *vram1,data8_t *vram2)
 {
 	int flipy = 0;
 	int code = vram1[tile_index] + 256 * vram2[tile_index];
@@ -3006,7 +3006,7 @@ void K053245_clear_buffer(void)
 	for (e=K053245_ramsize/2, i=0; i<e; i+=8) K053245_buffer[i] = 0;
 }
 
-INLINE void K053245_update_buffer( void )
+static INLINE void K053245_update_buffer( void )
 {
 	memcpy(K053245_buffer, K053245_ram, K053245_ramsize);
 }
@@ -4274,7 +4274,7 @@ static struct tilemap *K051316_tilemap[MAX_K051316];
 
 ***************************************************************************/
 
-INLINE void K051316_get_tile_info(int tile_index,int chip)
+static INLINE void K051316_get_tile_info(int tile_index,int chip)
 {
 	int code = K051316_ram[chip][tile_index];
 	int color = K051316_ram[chip][tile_index + 0x400];
@@ -5040,7 +5040,7 @@ static int K054157_tilemapl[8], K054157_offsetl[8];
 
 static void (*K054157_callback)(int, int *, int *);
 
-INLINE void K054157_get_tile_info(int tile_index,int layer)
+static INLINE void K054157_get_tile_info(int tile_index,int layer)
 {
 	data16_t *addr;
 	int attr, code;
@@ -5671,12 +5671,12 @@ if (stricmp(Machine->gamedrv->source_file+12, "djmain.c") || K056832_LayerAssoci
 
 static void (*K056832_callback)(int, int *, int *);
 
-INLINE UINT32 K056832_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
+static INLINE UINT32 K056832_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
 {
 	return (row<<6) + col;
 }
 
-INLINE void K056832_get_tile_info( int tile_index, int pageIndex )
+static INLINE void K056832_get_tile_info( int tile_index, int pageIndex )
 {
 	static struct K056832_SHIFTMASKS
 	{
@@ -7887,7 +7887,7 @@ void K053250_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprect, 
 #else
 
 // utility function to render a clipped scanline vertically or horizontally
-INLINE void K053250_pdraw_scanline32(struct mame_bitmap *bitmap, pen_t *palette, UINT8 *source,
+static INLINE void K053250_pdraw_scanline32(struct mame_bitmap *bitmap, pen_t *palette, UINT8 *source,
 		const struct rectangle *cliprect, int linepos, int scroll, int zoom,
 		UINT32 clipmask, UINT32 wrapmask, UINT32 orientation, int priority)
 {

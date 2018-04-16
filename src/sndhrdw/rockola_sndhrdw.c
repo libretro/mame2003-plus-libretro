@@ -110,7 +110,7 @@ const char *fantasy_sample_names[] =
 };
 
 
-INLINE void validate_tone_channel(int channel)
+static INLINE void validate_tone_channel(int channel)
 {
 	if (!tone_channels[channel].mute)
 	{

@@ -382,7 +382,7 @@ RAM[0x256c+size] = 0x00;	// HALT -> NOP
 								Hard Head 2
 ***************************************************************************/
 
-INLINE data8_t hardhea2_decrypt(data8_t x, int encry, int mask)
+static INLINE data8_t hardhea2_decrypt(data8_t x, int encry, int mask)
 {
 		switch( encry )
 		{
@@ -577,7 +577,7 @@ rom13:	0?, 1y, 2n, 3n		?,?,?,? (palettes)
 ***************************************************************************/
 
 /* SAME AS HARDHEA2 */
-INLINE data8_t starfigh_decrypt(data8_t x, int encry, int mask)
+static INLINE data8_t starfigh_decrypt(data8_t x, int encry, int mask)
 {
 		switch( encry )
 		{

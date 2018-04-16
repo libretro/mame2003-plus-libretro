@@ -370,7 +370,7 @@ void cem3394_sh_stop(void)
 }
 
 
-INLINE double compute_db(double voltage)
+static INLINE double compute_db(double voltage)
 {
 	/* assumes 0.0 == full off, 4.0 == full on, with linear taper, as described in the datasheet */
 
@@ -396,7 +396,7 @@ INLINE double compute_db(double voltage)
 }
 
 
-INLINE UINT32 compute_db_volume(double voltage)
+static INLINE UINT32 compute_db_volume(double voltage)
 {
 	double temp;
 

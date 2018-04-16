@@ -239,7 +239,7 @@ static void blitter_x1800x01_xxxxxx_xxxxxx(UINT32 command, UINT32 a1flags, UINT3
  *
  *************************************/
 
-INLINE void get_crosshair_xy(int player, int *x, int *y)
+static INLINE void get_crosshair_xy(int player, int *x, int *y)
 {
 	*x = ((readinputport(3 + player * 2) & 0xff) * Machine->drv->screen_width) >> 8;
 	*y = ((readinputport(4 + player * 2) & 0xff) * Machine->drv->screen_height) >> 8;

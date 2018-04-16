@@ -87,7 +87,7 @@ static UINT8 is_drivedge;
  *
  *************************************/
 
-INLINE int determine_irq_state(int vint, int xint, int qint)
+static INLINE int determine_irq_state(int vint, int xint, int qint)
 {
 	int level = 0;
 
@@ -397,7 +397,7 @@ static WRITE_HANDLER( sound_output_w )
  *
  *************************************/
 
-INLINE void update_via_int(void)
+static INLINE void update_via_int(void)
 {
 	/* if interrupts are enabled and one is pending, set the line */
 	if ((via6522[14] & 0x80) && (via6522_int_state & via6522[14]))

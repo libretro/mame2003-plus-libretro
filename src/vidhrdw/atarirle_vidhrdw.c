@@ -154,7 +154,7 @@ static void draw_rle_zoom_hflip(struct mame_bitmap *bitmap, const struct atarirl
 
 
 /*##########################################################################
-	INLINE FUNCTIONS
+static INLINE FUNCTIONS
 ##########################################################################*/
 
 /*---------------------------------------------------------------
@@ -163,7 +163,7 @@ static void draw_rle_zoom_hflip(struct mame_bitmap *bitmap, const struct atarirl
 	two.
 ---------------------------------------------------------------*/
 
-INLINE int compute_log(int value)
+static INLINE int compute_log(int value)
 {
 	int log = 0;
 
@@ -183,7 +183,7 @@ INLINE int compute_log(int value)
 	next greatest power (e.g., 4 returns 8).
 ---------------------------------------------------------------*/
 
-INLINE int round_to_powerof2(int value)
+static INLINE int round_to_powerof2(int value)
 {
 	int log = 0;
 
@@ -201,7 +201,7 @@ INLINE int round_to_powerof2(int value)
 	value into the result, packing the bits along the way.
 ---------------------------------------------------------------*/
 
-INLINE int collapse_bits(int value, int mask)
+static INLINE int collapse_bits(int value, int mask)
 {
 	int testmask, ormask;
 	int result = 0;
@@ -222,7 +222,7 @@ INLINE int collapse_bits(int value, int mask)
 	shift, and adjusted mask. Returns 0 if invalid.
 ---------------------------------------------------------------*/
 
-INLINE int convert_mask(const struct atarirle_entry *input, struct atarirle_mask *result)
+static INLINE int convert_mask(const struct atarirle_entry *input, struct atarirle_mask *result)
 {
 	int i, temp;
 

@@ -500,7 +500,7 @@ static void zwackery_493_callback(int param)
  *
  *************************************/
 
-INLINE void update_interrupts(void)
+static INLINE void update_interrupts(void)
 {
 	m6840_status &= ~0x80;
 

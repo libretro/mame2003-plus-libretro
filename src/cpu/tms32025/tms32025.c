@@ -273,17 +273,17 @@ typedef void (*opcode_fn) (void);
 
 
 
-INLINE void CLR0(UINT16 flag) { R.STR0 &= ~flag; R.STR0 |= 0x0400; }
-INLINE void SET0(UINT16 flag) { R.STR0 |=  flag; R.STR0 |= 0x0400; }
-INLINE void CLR1(UINT16 flag) { R.STR1 &= ~flag; R.STR1 |= 0x0180; }
-INLINE void SET1(UINT16 flag) { R.STR1 |=  flag; R.STR1 |= 0x0180; }
-INLINE void MODIFY_DP (int data) { R.STR0 &= ~DP_REG;  R.STR0 |= (data & DP_REG); R.STR0 |= 0x0400; }
-INLINE void MODIFY_PM (int data) { R.STR1 &= ~PM_REG;  R.STR1 |= (data & PM_REG); R.STR1 |= 0x0180; }
-INLINE void MODIFY_ARP(int data) { R.STR1 &= ~ARB_REG; R.STR1 |= (R.STR0 & ARP_REG); R.STR1 |= 0x0180; \
+static INLINE void CLR0(UINT16 flag) { R.STR0 &= ~flag; R.STR0 |= 0x0400; }
+static INLINE void SET0(UINT16 flag) { R.STR0 |=  flag; R.STR0 |= 0x0400; }
+static INLINE void CLR1(UINT16 flag) { R.STR1 &= ~flag; R.STR1 |= 0x0180; }
+static INLINE void SET1(UINT16 flag) { R.STR1 |=  flag; R.STR1 |= 0x0180; }
+static INLINE void MODIFY_DP (int data) { R.STR0 &= ~DP_REG;  R.STR0 |= (data & DP_REG); R.STR0 |= 0x0400; }
+static INLINE void MODIFY_PM (int data) { R.STR1 &= ~PM_REG;  R.STR1 |= (data & PM_REG); R.STR1 |= 0x0180; }
+static INLINE void MODIFY_ARP(int data) { R.STR1 &= ~ARB_REG; R.STR1 |= (R.STR0 & ARP_REG); R.STR1 |= 0x0180; \
 								   R.STR0 &= ~ARP_REG; R.STR0 |= ((data << 13) & ARP_REG); R.STR0 |= 0x0400; }
-INLINE void MODIFY_ARB(int data) { R.STR1 &= ~ARB_REG; R.STR1 |= ((data << 13) & ARB_REG); R.STR1 |= 0x0180; }
+static INLINE void MODIFY_ARB(int data) { R.STR1 &= ~ARB_REG; R.STR1 |= ((data << 13) & ARB_REG); R.STR1 |= 0x0180; }
 
-INLINE void MODIFY_AR_ARP(void)
+static INLINE void MODIFY_AR_ARP(void)
 {
 	switch (R.opcode.b.l & 0x70)		/* Cases ordered by predicted useage */
 	{
@@ -304,7 +304,7 @@ INLINE void MODIFY_AR_ARP(void)
 	}
 }
 
-INLINE void CALCULATE_ADD_CARRY(void)
+static INLINE void CALCULATE_ADD_CARRY(void)
 {
 	if ( ((INT32)(oldacc.d) < 0) && ((INT32)(R.ACC.d) >= 0) ) {
 		SET1(C_FLAG);
@@ -314,7 +314,7 @@ INLINE void CALCULATE_ADD_CARRY(void)
 	}
 }
 
-INLINE void CALCULATE_SUB_CARRY(void)
+static INLINE void CALCULATE_SUB_CARRY(void)
 {
 	if ( ((INT32)(oldacc.d) >= 0) && ((INT32)(R.ACC.d) < 0) ) {
 		CLR1(C_FLAG);
@@ -324,7 +324,7 @@ INLINE void CALCULATE_SUB_CARRY(void)
 	}
 }
 
-INLINE void CALCULATE_ADD_OVERFLOW(INT32 addval)
+static INLINE void CALCULATE_ADD_OVERFLOW(INT32 addval)
 {
 	if ((INT32)(~(oldacc.d ^ addval) & (oldacc.d ^ R.ACC.d)) < 0) {
 		SET0(OV_FLAG);
@@ -332,7 +332,7 @@ INLINE void CALCULATE_ADD_OVERFLOW(INT32 addval)
 			R.ACC.d = ((INT32)oldacc.d < 0) ? 0x80000000 : 0x7fffffff;
 	}
 }
-INLINE void CALCULATE_SUB_OVERFLOW(INT32 subval)
+static INLINE void CALCULATE_SUB_OVERFLOW(INT32 subval)
 {
 	if ((INT32)((oldacc.d ^ subval) & (oldacc.d ^ R.ACC.d)) < 0) {
 		SET0(OV_FLAG);
@@ -341,7 +341,7 @@ INLINE void CALCULATE_SUB_OVERFLOW(INT32 subval)
 	}
 }
 
-INLINE UINT16 POP_STACK(void)
+static INLINE UINT16 POP_STACK(void)
 {
 	UINT16 data = R.STACK[7];
 	R.STACK[7] = R.STACK[6];
@@ -353,7 +353,7 @@ INLINE UINT16 POP_STACK(void)
 	R.STACK[1] = R.STACK[0];
 	return data;
 }
-INLINE void PUSH_STACK(UINT16 data)
+static INLINE void PUSH_STACK(UINT16 data)
 {
 	R.STACK[0] = R.STACK[1];
 	R.STACK[1] = R.STACK[2];
@@ -365,7 +365,7 @@ INLINE void PUSH_STACK(UINT16 data)
 	R.STACK[7] = data;
 }
 
-INLINE void SHIFT_Preg_TO_ALU(void)
+static INLINE void SHIFT_Preg_TO_ALU(void)
 {
 	switch(PM)		/* PM (in STR1) is the shift mode for Preg */
 	{
@@ -380,7 +380,7 @@ INLINE void SHIFT_Preg_TO_ALU(void)
 
 
 
-INLINE void GETDATA(int shift,int signext)
+static INLINE void GETDATA(int shift,int signext)
 {
 	if (R.opcode.b.l & 0x80) memaccess = IND;
 	else memaccess = DMA;
@@ -394,7 +394,7 @@ INLINE void GETDATA(int shift,int signext)
 
 	if (R.opcode.b.l & 0x80) MODIFY_AR_ARP();
 }
-INLINE void PUTDATA(UINT16 data)
+static INLINE void PUTDATA(UINT16 data)
 {
 	if (R.opcode.b.l & 0x80) {
 		if (memaccess >= 0x800) R.external_mem_access = 1;	/* Pause if hold pin is active */
@@ -410,7 +410,7 @@ INLINE void PUTDATA(UINT16 data)
 		M_WRTRAM(DMA,data);
 	}
 }
-INLINE void PUTDATA_SST(UINT16 data)
+static INLINE void PUTDATA_SST(UINT16 data)
 {
 	if (R.opcode.b.l & 0x80) memaccess = IND;
 	else memaccess = DMApg0;
@@ -1787,7 +1787,7 @@ static int process_IRQs(void)
 	return R.tms32025_irq_cycles;
 }
 
-INLINE void process_timer(int counts)
+static INLINE void process_timer(int counts)
 {
 	if (counts > TIM) {				/* Overflow timer counts ? */
 		if (counts > PRD) {

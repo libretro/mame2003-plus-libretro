@@ -475,13 +475,13 @@ static const UINT8 cycles_nsc8105[] =
 	/*F*/  4, 4, 4, 0, 4, 4, 4, 5, 4, 4, 4, 4, 4, 5, 0, 6
 };
 
-INLINE UINT32 RM16( UINT32 Addr )
+static INLINE UINT32 RM16( UINT32 Addr )
 {
 	UINT32 result = RM(Addr) << 8;
 	return result | RM((Addr+1)&0xffff);
 }
 
-INLINE void WM16( UINT32 Addr, PAIR *p )
+static INLINE void WM16( UINT32 Addr, PAIR *p )
 {
 	WM( Addr, p->b.h );
 	WM( (Addr+1)&0xffff, p->b.l );

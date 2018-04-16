@@ -118,7 +118,7 @@ PALETTE_INIT( navalone )
 }
 
 
-INLINE void geebee_plot(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int x, int y)
+static INLINE void geebee_plot(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int x, int y)
 {
 	if (x >= cliprect->min_x && x <= cliprect->max_x && y >= cliprect->min_y && y <= cliprect->max_y)
 		plot_pixel(bitmap,x,y,Machine->pens[1]);

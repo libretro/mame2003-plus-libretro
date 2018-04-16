@@ -55,19 +55,19 @@
 
 #define ADDRESS_65816(A) ((A)&0x00ffffff)
 
-INLINE uint g65816i_read_8_normal(uint address)
+static INLINE uint g65816i_read_8_normal(uint address)
 {
 	address = ADDRESS_65816(address);
 	return g65816_read_8(address);
 }
 
-INLINE uint g65816i_read_8_immediate(uint address)
+static INLINE uint g65816i_read_8_immediate(uint address)
 {
 	address = ADDRESS_65816(address);
 	return g65816_read_8_immediate(address);
 }
 
-INLINE uint g65816i_read_8_direct(uint address)
+static INLINE uint g65816i_read_8_direct(uint address)
 {
 #if FLAG_SET_E
 	/* force address into zero page */
@@ -78,13 +78,13 @@ INLINE uint g65816i_read_8_direct(uint address)
 	return g65816_read_8(address);
 }
 
-INLINE void g65816i_write_8_normal(uint address, uint value)
+static INLINE void g65816i_write_8_normal(uint address, uint value)
 {
 	address = ADDRESS_65816(address);
 	g65816_write_8(address, MAKE_UINT_8(value));
 }
 
-INLINE void g65816i_write_8_direct(uint address, uint value)
+static INLINE void g65816i_write_8_direct(uint address, uint value)
 {
 #if FLAG_SET_E
 	/* force address into zero page */
@@ -95,51 +95,51 @@ INLINE void g65816i_write_8_direct(uint address, uint value)
 	g65816_write_8(address, MAKE_UINT_8(value));
 }
 
-INLINE uint g65816i_read_16_normal(uint address)
+static INLINE uint g65816i_read_16_normal(uint address)
 {
 	return	 g65816i_read_8_normal(address) |
 			(g65816i_read_8_normal(address+1)<<8);
 }
 
-INLINE uint g65816i_read_16_immediate(uint address)
+static INLINE uint g65816i_read_16_immediate(uint address)
 {
 	return	 g65816i_read_8_immediate(address) |
 			(g65816i_read_8_immediate(address+1)<<8);
 }
 
-INLINE uint g65816i_read_16_direct(uint address)
+static INLINE uint g65816i_read_16_direct(uint address)
 {
 	return   g65816i_read_8_direct(address) |
 			(g65816i_read_8_direct(address+1)<<8);
 }
 
-INLINE void g65816i_write_16_normal(uint address, uint value)
+static INLINE void g65816i_write_16_normal(uint address, uint value)
 {
 	g65816i_write_8_normal(address, value&0xff);
 	g65816i_write_8_normal(address+1, value>>8);
 }
 
-INLINE void g65816i_write_16_direct(uint address, uint value)
+static INLINE void g65816i_write_16_direct(uint address, uint value)
 {
 	g65816i_write_8_direct(address, value&0xff);
 	g65816i_write_8_direct(address+1, value>>8);
 }
 
-INLINE uint g65816i_read_24_normal(uint address)
+static INLINE uint g65816i_read_24_normal(uint address)
 {
 	return	 g65816i_read_8_normal(address)       |
 			(g65816i_read_8_normal(address+1)<<8) |
 			(g65816i_read_8_normal(address+2)<<16);
 }
 
-INLINE uint g65816i_read_24_immediate(uint address)
+static INLINE uint g65816i_read_24_immediate(uint address)
 {
 	return	 g65816i_read_8_immediate(address)       |
 			(g65816i_read_8_immediate(address+1)<<8) |
 			(g65816i_read_8_immediate(address+2)<<16);
 }
 
-INLINE uint g65816i_read_24_direct(uint address)
+static INLINE uint g65816i_read_24_direct(uint address)
 {
 	return	 g65816i_read_8_direct(address)         |
 			(g65816i_read_8_direct(address+1)<<8) |
@@ -152,7 +152,7 @@ INLINE uint g65816i_read_24_direct(uint address)
 /* ================================= STACK ================================ */
 /* ======================================================================== */
 
-INLINE void g65816i_push_8(uint value)
+static INLINE void g65816i_push_8(uint value)
 {
 	g65816i_write_8_normal(REGISTER_S, value);
 #if FLAG_SET_E
@@ -162,7 +162,7 @@ INLINE void g65816i_push_8(uint value)
 #endif
 }
 
-INLINE uint g65816i_pull_8(void)
+static INLINE uint g65816i_pull_8(void)
 {
 #if FLAG_SET_E
 	REGISTER_S = MAKE_UINT_8(REGISTER_S+1) | 0x100;
@@ -172,26 +172,26 @@ INLINE uint g65816i_pull_8(void)
 	return g65816i_read_8_normal(REGISTER_S);
 }
 
-INLINE void g65816i_push_16(uint value)
+static INLINE void g65816i_push_16(uint value)
 {
 	g65816i_push_8(value>>8);
 	g65816i_push_8(value&0xff);
 }
 
-INLINE uint g65816i_pull_16(void)
+static INLINE uint g65816i_pull_16(void)
 {
 	uint res = g65816i_pull_8();
 	return res | (g65816i_pull_8() << 8);
 }
 
-INLINE void g65816i_push_24(uint value)
+static INLINE void g65816i_push_24(uint value)
 {
 	g65816i_push_8(value>>16);
 	g65816i_push_8((value>>8)&0xff);
 	g65816i_push_8(value&0xff);
 }
 
-INLINE uint g65816i_pull_24(void)
+static INLINE uint g65816i_pull_24(void)
 {
 	uint res = g65816i_pull_8();
 	res |= g65816i_pull_8() << 8;
@@ -203,20 +203,20 @@ INLINE uint g65816i_pull_24(void)
 /* ============================ PROGRAM COUNTER =========================== */
 /* ======================================================================== */
 
-INLINE void g65816i_jump_16(uint address)
+static INLINE void g65816i_jump_16(uint address)
 {
 	REGISTER_PC = MAKE_UINT_16(address);
 	g65816i_jumping(REGISTER_PC);
 }
 
-INLINE void g65816i_jump_24(uint address)
+static INLINE void g65816i_jump_24(uint address)
 {
 	REGISTER_PB = address&0xff0000;
 	REGISTER_PC = MAKE_UINT_16(address);
 	g65816i_jumping(REGISTER_PC);
 }
 
-INLINE void g65816i_branch_8(uint offset)
+static INLINE void g65816i_branch_8(uint offset)
 {
 #if FLAG_SET_E
 	uint old_pc = REGISTER_PC;
@@ -229,7 +229,7 @@ INLINE void g65816i_branch_8(uint offset)
 	g65816i_branching(REGISTER_PC);
 }
 
-INLINE void g65816i_branch_16(uint offset)
+static INLINE void g65816i_branch_16(uint offset)
 {
 	REGISTER_PC = MAKE_UINT_16(REGISTER_PC + offset);
 	g65816i_branching(REGISTER_PC);
@@ -241,7 +241,7 @@ INLINE void g65816i_branch_16(uint offset)
 /* ======================================================================== */
 
 #if !FLAG_SET_E
-INLINE void g65816i_set_flag_mx(uint value)
+static INLINE void g65816i_set_flag_mx(uint value)
 {
 #if FLAG_SET_M
 	if(!(value & FLAGPOS_M))
@@ -275,7 +275,7 @@ INLINE void g65816i_set_flag_mx(uint value)
 }
 #endif
 
-INLINE void g65816i_set_flag_e(uint value)
+static INLINE void g65816i_set_flag_e(uint value)
 {
 #if FLAG_SET_E
 	if(!value)
@@ -305,7 +305,7 @@ INLINE void g65816i_set_flag_e(uint value)
 
 //INLINE void g65816i_check_maskable_interrupt(void);
 
-INLINE void g65816i_set_flag_i(uint value)
+static INLINE void g65816i_set_flag_i(uint value)
 {
 	value &= FLAGPOS_I;
 	if(!FLAG_I || value)
@@ -321,7 +321,7 @@ INLINE void g65816i_set_flag_i(uint value)
 
 
 /* Get the Processor Status Register */
-INLINE uint g65816i_get_reg_p(void)
+static INLINE uint g65816i_get_reg_p(void)
 {
 	return	(FLAG_N&0x80)		|
 			((FLAG_V>>1)&0x40)	|
@@ -333,7 +333,7 @@ INLINE uint g65816i_get_reg_p(void)
 			((FLAG_C>>8)&1);
 }
 
-INLINE void g65816i_set_reg_p(uint value)
+static INLINE void g65816i_set_reg_p(uint value)
 {
 #if FLAG_SET_E
 	FLAG_N = value;
@@ -358,7 +358,7 @@ INLINE void g65816i_set_reg_p(uint value)
 /* =============================== INTERRUPTS ============================= */
 /* ======================================================================== */
 
-INLINE void g65816i_interrupt_hardware(uint vector)
+static INLINE void g65816i_interrupt_hardware(uint vector)
 {
 #if FLAG_SET_E
 	CLK(7);
@@ -382,7 +382,7 @@ INLINE void g65816i_interrupt_hardware(uint vector)
 #endif
 }
 
-INLINE void g65816i_interrupt_software(uint vector)
+static INLINE void g65816i_interrupt_software(uint vector)
 {
 #if FLAG_SET_E
 	CLK(7);
@@ -404,7 +404,7 @@ INLINE void g65816i_interrupt_software(uint vector)
 #endif
 }
 
-INLINE void g65816i_interrupt_nmi(void)
+static INLINE void g65816i_interrupt_nmi(void)
 {
 #if FLAG_SET_E
 	CLK(7);
@@ -425,7 +425,7 @@ INLINE void g65816i_interrupt_nmi(void)
 }
 
 
-INLINE void g65816i_check_maskable_interrupt(void)
+static INLINE void g65816i_check_maskable_interrupt(void)
 {
 	if(!(CPU_STOPPED & STOP_LEVEL_STOP) && LINE_IRQ && !FLAG_I)
 	{
@@ -604,27 +604,27 @@ INLINE void g65816i_check_maskable_interrupt(void)
 #define OPER_24_S()			read_24_S(EA_S())
 #define OPER_24_SIY()		read_24_SIY(EA_SIY())
 
-INLINE uint EA_IMM8(void)  {REGISTER_PC += 1; return REGISTER_PB | MAKE_UINT_16(REGISTER_PC-1);}
-INLINE uint EA_IMM16(void) {REGISTER_PC += 2; return REGISTER_PB | MAKE_UINT_16(REGISTER_PC-2);}
-INLINE uint EA_IMM24(void) {REGISTER_PC += 3; return REGISTER_PB | MAKE_UINT_16(REGISTER_PC-3);}
-INLINE uint EA_D(void)     {if(MAKE_UINT_8(REGISTER_D)) CLK(1); return MAKE_UINT_16(REGISTER_D + OPER_8_IMM());}
-INLINE uint EA_A(void)     {return REGISTER_DB | OPER_16_IMM();}
-INLINE uint EA_AL(void)    {return OPER_24_IMM();}
-INLINE uint EA_DX(void)    {return MAKE_UINT_16(REGISTER_D + OPER_8_IMM() + REGISTER_X);}
-INLINE uint EA_DY(void)    {return MAKE_UINT_16(REGISTER_D + OPER_8_IMM() + REGISTER_Y);}
-INLINE uint EA_AX(void)    {uint tmp = EA_A(); if((tmp^(tmp+REGISTER_X))&0xff00) CLK(1); return tmp + REGISTER_X;}
-INLINE uint EA_ALX(void)   {return EA_AL() + REGISTER_X;}
-INLINE uint EA_AY(void)    {uint tmp = EA_A(); if((tmp^(tmp+REGISTER_X))&0xff00) CLK(1); return tmp + REGISTER_Y;}
-INLINE uint EA_DI(void)    {return REGISTER_DB | OPER_16_D();}
-INLINE uint EA_DLI(void)   {return OPER_24_D();}
-INLINE uint EA_AI(void)    {return read_16_A(OPER_16_IMM());}
-INLINE uint EA_ALI(void)   {return OPER_24_A();}
-INLINE uint EA_DXI(void)   {return REGISTER_DB | OPER_16_DX();}
-INLINE uint EA_DIY(void)   {uint tmp = REGISTER_DB | OPER_16_D(); if((tmp^(tmp+REGISTER_X))&0xff00) CLK(1); return tmp + REGISTER_Y;}
-INLINE uint EA_DLIY(void)  {return OPER_24_D() + REGISTER_Y;}
-INLINE uint EA_AXI(void)   {return read_16_AXI(MAKE_UINT_16(OPER_16_IMM() + REGISTER_X));}
-INLINE uint EA_S(void)     {return MAKE_UINT_16(REGISTER_S + OPER_8_IMM());}
-INLINE uint EA_SIY(void)   {return EA_S() + REGISTER_DB + REGISTER_Y;}
+static INLINE uint EA_IMM8(void)  {REGISTER_PC += 1; return REGISTER_PB | MAKE_UINT_16(REGISTER_PC-1);}
+static INLINE uint EA_IMM16(void) {REGISTER_PC += 2; return REGISTER_PB | MAKE_UINT_16(REGISTER_PC-2);}
+static INLINE uint EA_IMM24(void) {REGISTER_PC += 3; return REGISTER_PB | MAKE_UINT_16(REGISTER_PC-3);}
+static INLINE uint EA_D(void)     {if(MAKE_UINT_8(REGISTER_D)) CLK(1); return MAKE_UINT_16(REGISTER_D + OPER_8_IMM());}
+static INLINE uint EA_A(void)     {return REGISTER_DB | OPER_16_IMM();}
+static INLINE uint EA_AL(void)    {return OPER_24_IMM();}
+static INLINE uint EA_DX(void)    {return MAKE_UINT_16(REGISTER_D + OPER_8_IMM() + REGISTER_X);}
+static INLINE uint EA_DY(void)    {return MAKE_UINT_16(REGISTER_D + OPER_8_IMM() + REGISTER_Y);}
+static INLINE uint EA_AX(void)    {uint tmp = EA_A(); if((tmp^(tmp+REGISTER_X))&0xff00) CLK(1); return tmp + REGISTER_X;}
+static INLINE uint EA_ALX(void)   {return EA_AL() + REGISTER_X;}
+static INLINE uint EA_AY(void)    {uint tmp = EA_A(); if((tmp^(tmp+REGISTER_X))&0xff00) CLK(1); return tmp + REGISTER_Y;}
+static INLINE uint EA_DI(void)    {return REGISTER_DB | OPER_16_D();}
+static INLINE uint EA_DLI(void)   {return OPER_24_D();}
+static INLINE uint EA_AI(void)    {return read_16_A(OPER_16_IMM());}
+static INLINE uint EA_ALI(void)   {return OPER_24_A();}
+static INLINE uint EA_DXI(void)   {return REGISTER_DB | OPER_16_DX();}
+static INLINE uint EA_DIY(void)   {uint tmp = REGISTER_DB | OPER_16_D(); if((tmp^(tmp+REGISTER_X))&0xff00) CLK(1); return tmp + REGISTER_Y;}
+static INLINE uint EA_DLIY(void)  {return OPER_24_D() + REGISTER_Y;}
+static INLINE uint EA_AXI(void)   {return read_16_AXI(MAKE_UINT_16(OPER_16_IMM() + REGISTER_X));}
+static INLINE uint EA_S(void)     {return MAKE_UINT_16(REGISTER_S + OPER_8_IMM());}
+static INLINE uint EA_SIY(void)   {return EA_S() + REGISTER_DB + REGISTER_Y;}
 
 
 

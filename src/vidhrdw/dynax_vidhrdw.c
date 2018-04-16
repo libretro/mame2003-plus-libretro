@@ -248,7 +248,7 @@ WRITE_HANDLER( dynax_flipscreen_w )
 
 
 /* Plot a pixel (in the pixmaps specified by dynax_blit_dest) */
-INLINE void sprtmtch_plot_pixel(int x, int y, int pen, int flags)
+static INLINE void sprtmtch_plot_pixel(int x, int y, int pen, int flags)
 {
 	x &= 0xff;	// confirmed by some mjdialq2 gfx and especially by mjfriday, which
 				// uses the front layer to mask out the right side of the screen as

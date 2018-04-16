@@ -95,7 +95,7 @@ WRITE16_HANDLER( toypop_merged_background_w )
 		toypop_bg_image[2*offset+1] = (data & 0xf) | ((data & 0xf0) << 4);
 }
 
-INLINE void toypop_draw_sprite(struct mame_bitmap *dest,unsigned int code,unsigned int color,
+static INLINE void toypop_draw_sprite(struct mame_bitmap *dest,unsigned int code,unsigned int color,
 	int flipx,int flipy,int sx,int sy)
 {
 	drawgfx(dest,Machine->gfx[1],code,color,flipx,flipy,sx,sy,&Machine->visible_area,TRANSPARENCY_COLOR,0xff);

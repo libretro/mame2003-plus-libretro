@@ -19,7 +19,7 @@ UINT32 gotcha_tilemap_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows
 	return (col & 0x1f) | (row << 5) | ((col & 0x20) << 5);
 }
 
-INLINE void get_tile_info(int tile_index,data16_t *vram,int color_offs)
+static INLINE void get_tile_info(int tile_index,data16_t *vram,int color_offs)
 {
 	data16_t data = vram[tile_index];
 	int code = (data & 0x3ff) | (gfxbank[(data & 0x0c00) >> 10] << 10);

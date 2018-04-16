@@ -197,7 +197,7 @@ WRITE_HANDLER( kangaroo_blitter_w )
 
 
 
-INLINE void kangaroo_plot_pixel(struct mame_bitmap *bitmap, int x, int y, int col, int color_base, int flip)
+static INLINE void kangaroo_plot_pixel(struct mame_bitmap *bitmap, int x, int y, int col, int color_base, int flip)
 {
 	if (flip)
 	{
@@ -208,7 +208,7 @@ INLINE void kangaroo_plot_pixel(struct mame_bitmap *bitmap, int x, int y, int co
 	plot_pixel(bitmap, x, y, Machine->pens[((col & 0x08) ? 0 : color_base) + (col & 0x07)]);
 }
 
-INLINE void kangaroo_redraw_4pixels(int x, int y)
+static INLINE void kangaroo_redraw_4pixels(int x, int y)
 {
 	int offs, flipA, flipB;
 

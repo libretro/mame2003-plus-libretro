@@ -237,7 +237,7 @@ static dsp32_regs dsp32;
 
 #else
 
-INLINE data16_t RWORD(offs_t addr)
+static INLINE data16_t RWORD(offs_t addr)
 {
 	data16_t data;
 	if (addr & 1) fprintf(stderr, "Unaligned word read @ %06X, PC=%06X\n", addr, dsp32.PC);
@@ -245,7 +245,7 @@ INLINE data16_t RWORD(offs_t addr)
 	return data;
 }
 
-INLINE data32_t RLONG(offs_t addr)
+static INLINE data32_t RLONG(offs_t addr)
 {
 	data32_t data;
 	if (addr & 3) fprintf(stderr, "Unaligned long read @ %06X, PC=%06X\n", addr, dsp32.PC);
@@ -253,13 +253,13 @@ INLINE data32_t RLONG(offs_t addr)
 	return data;
 }
 
-INLINE void WWORD(offs_t addr, data16_t data)
+static INLINE void WWORD(offs_t addr, data16_t data)
 {
 	if (addr & 1) fprintf(stderr, "Unaligned word write @ %06X, PC=%06X\n", addr, dsp32.PC);
 	cpu_writemem24ledw_word((addr), data);
 }
 
-INLINE void WLONG(offs_t addr, data32_t data)
+static INLINE void WLONG(offs_t addr, data32_t data)
 {
 	if (addr & 3) fprintf(stderr, "Unaligned long write @ %06X, PC=%06X\n", addr, dsp32.PC);
 	cpu_writemem24ledw_dword((addr), data);
@@ -273,12 +273,12 @@ INLINE void WLONG(offs_t addr, data32_t data)
 **	EXECEPTION HANDLING
 **#################################################################################################*/
 
-INLINE void generate_exception(int exception)
+static INLINE void generate_exception(int exception)
 {
 }
 
 
-INLINE void invalid_instruction(UINT32 op)
+static INLINE void invalid_instruction(UINT32 op)
 {
 }
 
@@ -764,7 +764,7 @@ unsigned dsp32c_dasm(char *buffer, unsigned pc)
 **#################################################################################################*/
 
 /* context finder */
-INLINE dsp32_regs *FINDCONTEXT(int cpu)
+static INLINE dsp32_regs *FINDCONTEXT(int cpu)
 {
 	dsp32_regs *context = cpunum_get_context_ptr(cpu);
 	if (!context)
@@ -806,7 +806,7 @@ static UINT32 regmap[4][16] =
 **	PARALLEL INTERFACE WRITES
 **#################################################################################################*/
 
-INLINE void dma_increment(void)
+static INLINE void dma_increment(void)
 {
 	if (dsp32.pcr & PCR_AUTO)
 	{
@@ -818,7 +818,7 @@ INLINE void dma_increment(void)
 }
 
 
-INLINE void dma_load(void)
+static INLINE void dma_load(void)
 {
 	/* only process if DMA is enabled */
 	if (dsp32.pcr & PCR_DMA)
@@ -843,7 +843,7 @@ INLINE void dma_load(void)
 }
 
 
-INLINE void dma_store(void)
+static INLINE void dma_store(void)
 {
 	/* only process if DMA is enabled */
 	if (dsp32.pcr & PCR_DMA)

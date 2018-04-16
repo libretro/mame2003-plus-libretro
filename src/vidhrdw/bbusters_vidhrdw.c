@@ -117,7 +117,7 @@ VIDEO_START( mechatt )
 		else if (dy&0x40) code+=32;				\
 		else if (dx&0x40) code+=16
 
-INLINE const data8_t *get_source_ptr(unsigned int sprite, int dx, int dy, int bank, int block)
+static INLINE const data8_t *get_source_ptr(unsigned int sprite, int dx, int dy, int bank, int block)
 {
 	const struct GfxElement *gfx=Machine->gfx[bank];
 	int source_base,code=0;

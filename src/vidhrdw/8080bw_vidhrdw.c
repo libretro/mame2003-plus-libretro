@@ -328,7 +328,7 @@ static void plot_pixel_8080(int x, int y, int col)
 	plot_pixel(tmpbitmap,x,y,Machine->pens[col]);
 }
 
-INLINE void plot_byte(int x, int y, int data, int fore_color, int back_color)
+static INLINE void plot_byte(int x, int y, int data, int fore_color, int back_color)
 {
 	int i;
 

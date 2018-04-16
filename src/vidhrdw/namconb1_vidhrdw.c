@@ -17,7 +17,7 @@ static struct tilemap *background[6];
 /* nth_word32 is a general-purpose utility function, which allows us to
  * read from 32-bit aligned memory as if it were an array of 16 bit words.
  */
-INLINE data16_t nth_word32( const data32_t *source, int which )
+static INLINE data16_t nth_word32( const data32_t *source, int which )
 {
 	source += which/2;
 	if( which&1 )
@@ -33,7 +33,7 @@ INLINE data16_t nth_word32( const data32_t *source, int which )
 /* nth_byte32 is a general-purpose utility function, which allows us to
  * read from 32-bit aligned memory as if it were an array of bytes.
  */
-INLINE data8_t
+static INLINE data8_t
 nth_byte32( const data32_t *pSource, int which )
 {
 		data32_t data = pSource[which/4];
@@ -46,7 +46,7 @@ nth_byte32( const data32_t *pSource, int which )
 		}
 } /* nth_byte32 */
 
-INLINE void tilemapNB1_get_info(int tile_index,int tilemap_color,const data32_t *tilemap_videoram)
+static INLINE void tilemapNB1_get_info(int tile_index,int tilemap_color,const data32_t *tilemap_videoram)
 {
 	data16_t tile = nth_word32( tilemap_videoram, tile_index );
 	SET_TILE_INFO(
@@ -295,7 +295,7 @@ VIDEO_START( namconb1 )
 
 /****************************************************************************************************/
 
-INLINE void
+static INLINE void
 tilemapNB2_get_info(int tile_index,int which,const data32_t *tilemap_videoram)
 {
 	data16_t tile = nth_word32( tilemap_videoram, tile_index );

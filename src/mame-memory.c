@@ -2597,7 +2597,7 @@ int port_address_bits_of_cpu(int cputype)
 	basic static handlers
 -------------------------------------------------*/
 
-INLINE offs_t effective_offset(offs_t offset)
+static INLINE offs_t effective_offset(offs_t offset)
 {
 	int shift = activecpu_address_shift();
 	if (shift < 0)

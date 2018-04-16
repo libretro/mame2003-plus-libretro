@@ -133,7 +133,7 @@ static UINT8 *empty_tiles;
 
 
 /* 8x8x4 tiles only */
-INLINE void get_tile_info(int tile_index,int layer,data16_t *vram)
+static INLINE void get_tile_info(int tile_index,int layer,data16_t *vram)
 {
 	data16_t code;
 	int      table_index;
@@ -171,7 +171,7 @@ INLINE void get_tile_info(int tile_index,int layer,data16_t *vram)
 
 /* 8x8x4 or 8x8x8 tiles. It's the tile's color that decides: if its low 4
    bits are high ($f,$1f,$2f etc) the tile is 8bpp, otherwise it's 4bpp */
-INLINE void get_tile_info_8bit(int tile_index,int layer,data16_t *vram)
+static INLINE void get_tile_info_8bit(int tile_index,int layer,data16_t *vram)
 {
 	data16_t code;
 	int      table_index;
@@ -214,7 +214,7 @@ INLINE void get_tile_info_8bit(int tile_index,int layer,data16_t *vram)
 
 /* 16x16x4 or 16x16x8 tiles. It's the tile's color that decides: if its low 4
    bits are high ($f,$1f,$2f etc) the tile is 8bpp, otherwise it's 4bpp */
-INLINE void get_tile_info_16x16_8bit(int tile_index,int layer,data16_t *vram)
+static INLINE void get_tile_info_16x16_8bit(int tile_index,int layer,data16_t *vram)
 {
 	data16_t code;
 	int      table_index;
@@ -256,7 +256,7 @@ INLINE void get_tile_info_16x16_8bit(int tile_index,int layer,data16_t *vram)
 }
 
 
-INLINE void hyprduel_vram_w(offs_t offset,data16_t data,data16_t mem_mask,int layer,data16_t *vram)
+static INLINE void hyprduel_vram_w(offs_t offset,data16_t data,data16_t mem_mask,int layer,data16_t *vram)
 {
 	data16_t olddata = vram[offset];
 	data16_t newdata = COMBINE_DATA(&vram[offset]);

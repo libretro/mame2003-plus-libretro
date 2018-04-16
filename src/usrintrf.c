@@ -258,7 +258,7 @@ static const struct GfxLayout uifontlayout =
 	ui_markdirty - mark a raw rectangle dirty
 -------------------------------------------------*/
 
-INLINE void ui_markdirty(const struct rectangle *rect)
+static INLINE void ui_markdirty(const struct rectangle *rect)
 {
 	artwork_mark_ui_dirty(rect->min_x, rect->min_y, rect->max_x, rect->max_y);
 	ui_dirty = 5;

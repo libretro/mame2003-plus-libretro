@@ -31,7 +31,7 @@ static UINT8 blank_palette;
  *
  *************************************/
 
-INLINE void get_crosshair_xy(int player, int *x, int *y)
+static INLINE void get_crosshair_xy(int player, int *x, int *y)
 {
 	*x = ((readinputport(2 + player * 2) & 0xff) * Machine->drv->screen_width) / 255;
 	*y = ((readinputport(3 + player * 2) & 0xff) * Machine->drv->screen_height) / 255;

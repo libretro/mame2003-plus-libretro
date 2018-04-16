@@ -171,7 +171,7 @@ CPUS+=E132XS@
 
 #define VERBOSE_LEVEL ( 0 )
 
-INLINE void verboselog( int n_level, const char *s_fmt, ... )
+static INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
 	if( VERBOSE_LEVEL >= n_level )
 	{

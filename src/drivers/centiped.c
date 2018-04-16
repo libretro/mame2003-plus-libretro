@@ -345,7 +345,7 @@ static WRITE_HANDLER( irq_ack_w )
  * to prevent the counter from wrapping around between reads.
  */
 
-INLINE int read_trackball(int idx, int switch_port)
+static INLINE int read_trackball(int idx, int switch_port)
 {
 	int newpos;
 

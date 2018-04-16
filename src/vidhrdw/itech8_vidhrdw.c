@@ -150,14 +150,14 @@ WRITE_HANDLER( itech8_palette_w )
  *
  *************************************/
 
-INLINE void draw_byte(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	tms_state.vram[addr] = val & mask;
 	tms_state.latchram[addr] = latch;
 }
 
 
-INLINE void draw_byte_trans4(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte_trans4(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	if (!val)
 		return;
@@ -183,7 +183,7 @@ INLINE void draw_byte_trans4(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 }
 
 
-INLINE void draw_byte_trans8(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte_trans8(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	if (val) draw_byte(addr, val, mask, latch);
 }
@@ -196,7 +196,7 @@ INLINE void draw_byte_trans8(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
  *
  *************************************/
 
-INLINE void draw_byte_shift(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte_shift(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	tms_state.vram[addr] = (tms_state.vram[addr] & 0xf0) | ((val & mask) >> 4);
 	tms_state.latchram[addr] = (tms_state.latchram[addr] & 0xf0) | (latch >> 4);
@@ -205,7 +205,7 @@ INLINE void draw_byte_shift(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 }
 
 
-INLINE void draw_byte_shift_trans4(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte_shift_trans4(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	if (!val)
 		return;
@@ -223,7 +223,7 @@ INLINE void draw_byte_shift_trans4(offs_t addr, UINT8 val, UINT8 mask, UINT8 lat
 }
 
 
-INLINE void draw_byte_shift_trans8(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte_shift_trans8(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	if (val) draw_byte_shift(addr, val, mask, latch);
 }
@@ -236,28 +236,28 @@ INLINE void draw_byte_shift_trans8(offs_t addr, UINT8 val, UINT8 mask, UINT8 lat
  *
  *************************************/
 
-INLINE void draw_byte_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	val = (val >> 4) | (val << 4);
 	draw_byte(addr, val, mask, latch);
 }
 
 
-INLINE void draw_byte_trans4_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte_trans4_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	val = (val >> 4) | (val << 4);
 	draw_byte_trans4(addr, val, mask, latch);
 }
 
 
-INLINE void draw_byte_shift_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte_shift_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	val = (val >> 4) | (val << 4);
 	draw_byte_shift(addr, val, mask, latch);
 }
 
 
-INLINE void draw_byte_shift_trans4_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
+static INLINE void draw_byte_shift_trans4_xflip(offs_t addr, UINT8 val, UINT8 mask, UINT8 latch)
 {
 	val = (val >> 4) | (val << 4);
 	draw_byte_shift_trans4(addr, val, mask, latch);

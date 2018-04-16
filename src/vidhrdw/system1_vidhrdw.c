@@ -156,12 +156,12 @@ void system1_define_background_memory(int mode)
 }
 
 
-INLINE int get_sprite_bottom_y(int spr_number)
+static INLINE int get_sprite_bottom_y(int spr_number)
 {
 	return  spriteram[0x10 * spr_number + SPR_Y_BOTTOM];
 }
 
-INLINE void draw_pixel(struct mame_bitmap *bitmap,
+static INLINE void draw_pixel(struct mame_bitmap *bitmap,
 				  	   int x,int y,int x_flipped,int y_flipped,
 				  	   int spr_number,int color)
 {

@@ -80,7 +80,7 @@ int jagobj_init(void)
  *
  *************************************/
 
-INLINE void bitmap_4_draw(INT32 firstpix, INT32 iwidth, data32_t *src, INT32 xpos, UINT8 flags, INT32 dxpos)
+static INLINE void bitmap_4_draw(INT32 firstpix, INT32 iwidth, data32_t *src, INT32 xpos, UINT8 flags, INT32 dxpos)
 {
 	if (firstpix & 7)
 	{
@@ -246,7 +246,7 @@ static void (*bitmap4[8])(INT32, INT32, data32_t *, INT32) =
  *
  *************************************/
 
-INLINE void bitmap_8_draw(INT32 firstpix, INT32 iwidth, data32_t *src, INT32 xpos, UINT8 flags, INT32 dxpos)
+static INLINE void bitmap_8_draw(INT32 firstpix, INT32 iwidth, data32_t *src, INT32 xpos, UINT8 flags, INT32 dxpos)
 {
 	if (firstpix & 3)
 	{
@@ -376,7 +376,7 @@ static void (*bitmap8[8])(INT32, INT32, data32_t *, INT32) =
  *
  *************************************/
 
-INLINE void bitmap_16_draw(INT32 firstpix, INT32 iwidth, data32_t *src, INT32 xpos, UINT8 flags, INT32 dxpos)
+static INLINE void bitmap_16_draw(INT32 firstpix, INT32 iwidth, data32_t *src, INT32 xpos, UINT8 flags, INT32 dxpos)
 {
 	if (firstpix & 1)
 	{
@@ -477,7 +477,7 @@ static void (*bitmap16[8])(INT32, INT32, data32_t *, INT32) =
 
 
 
-INLINE UINT8 lookup_pixel(const data32_t *src, int i, int pitch, int depth)
+static INLINE UINT8 lookup_pixel(const data32_t *src, int i, int pitch, int depth)
 {
 	int ppl			= 32 / depth;
 	data32_t data	= src[((i & ppl) / ppl) + ((i / (ppl*2)) * 2 * pitch)];

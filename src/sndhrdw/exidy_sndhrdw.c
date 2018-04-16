@@ -150,7 +150,7 @@ static struct pia6821_interface victory_pia_0_intf =
  *
  *************************************/
 
-INLINE void update_irq_state(void)
+static INLINE void update_irq_state(void)
 {
 	cpu_set_irq_line(1, M6502_IRQ_LINE, (pia_irq_state | riot_irq_state) ? ASSERT_LINE : CLEAR_LINE);
 }
@@ -170,7 +170,7 @@ static void exidy_irq(int state)
  *
  *************************************/
 
-INLINE void sh6840_apply_clock(struct sh6840_timer_channel *t, int clocks)
+static INLINE void sh6840_apply_clock(struct sh6840_timer_channel *t, int clocks)
 {
 	/* dual 8-bit case */
 	if (t->cr & 0x04)
@@ -225,7 +225,7 @@ INLINE void sh6840_apply_clock(struct sh6840_timer_channel *t, int clocks)
  *
  *************************************/
 
-INLINE int sh6840_update_noise(int clocks)
+static INLINE int sh6840_update_noise(int clocks)
 {
 	UINT8 history = sh6840_noise_history;
 	int noise_clocks = 0;

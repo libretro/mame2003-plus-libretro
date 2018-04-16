@@ -184,18 +184,18 @@ static unsigned int bit_clr[8] = { 0xfe, 0xfd, 0xfb, 0xf7, 0xef, 0xdf, 0xbf, 0x7
 static unsigned int bit_set[8] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 
 
-INLINE void CLR(UINT16 flag) { R.STATUS &= ~flag; }
-INLINE void SET(UINT16 flag) { R.STATUS |=  flag; }
+static INLINE void CLR(UINT16 flag) { R.STATUS &= ~flag; }
+static INLINE void SET(UINT16 flag) { R.STATUS |=  flag; }
 
 
 
-INLINE void CALCULATE_Z_FLAG(void)
+static INLINE void CALCULATE_Z_FLAG(void)
 {
 	if (R.ALU == 0) SET(Z_FLAG);
 	else CLR(Z_FLAG);
 }
 
-INLINE void CALCULATE_ADD_CARRY(void)
+static INLINE void CALCULATE_ADD_CARRY(void)
 {
 	if ((UINT8)(old_data) > (UINT8)(R.ALU)) {
 		SET(C_FLAG);
@@ -205,7 +205,7 @@ INLINE void CALCULATE_ADD_CARRY(void)
 	}
 }
 
-INLINE void CALCULATE_ADD_DIGITCARRY(void)
+static INLINE void CALCULATE_ADD_DIGITCARRY(void)
 {
 	if (((UINT8)(old_data) & 0x0f) > ((UINT8)(R.ALU) & 0x0f)) {
 		SET(DC_FLAG);
@@ -215,7 +215,7 @@ INLINE void CALCULATE_ADD_DIGITCARRY(void)
 	}
 }
 
-INLINE void CALCULATE_SUB_CARRY(void)
+static INLINE void CALCULATE_SUB_CARRY(void)
 {
 	if ((UINT8)(old_data) < (UINT8)(R.ALU)) {
 		CLR(C_FLAG);
@@ -225,7 +225,7 @@ INLINE void CALCULATE_SUB_CARRY(void)
 	}
 }
 
-INLINE void CALCULATE_SUB_DIGITCARRY(void)
+static INLINE void CALCULATE_SUB_DIGITCARRY(void)
 {
 	if (((UINT8)(old_data) & 0x0f) < ((UINT8)(R.ALU) & 0x0f)) {
 		CLR(DC_FLAG);
@@ -237,20 +237,20 @@ INLINE void CALCULATE_SUB_DIGITCARRY(void)
 
 
 
-INLINE UINT16 POP_STACK(void)
+static INLINE UINT16 POP_STACK(void)
 {
 	UINT16 data = R.STACK[1];
 	R.STACK[1] = R.STACK[0];
 	return (data & ADDR_MASK);
 }
-INLINE void PUSH_STACK(UINT16 data)
+static INLINE void PUSH_STACK(UINT16 data)
 {
 	R.STACK[0] = R.STACK[1];
 	R.STACK[1] = (data & ADDR_MASK);
 }
 
 
-INLINE UINT8 GET_REGFILE(offs_t addr)	/* Read from internal memory */
+static INLINE UINT8 GET_REGFILE(offs_t addr)	/* Read from internal memory */
 {
 	UINT8 data;
 
@@ -292,7 +292,7 @@ INLINE UINT8 GET_REGFILE(offs_t addr)	/* Read from internal memory */
 	return data;
 }
 
-INLINE void STORE_REGFILE(offs_t addr, UINT8 data)	/* Write to internal memory */
+static INLINE void STORE_REGFILE(offs_t addr, UINT8 data)	/* Write to internal memory */
 {
 	if ((picmodel == 0x16C57) || (picmodel == 0x16C58))
 	{
@@ -329,7 +329,7 @@ INLINE void STORE_REGFILE(offs_t addr, UINT8 data)	/* Write to internal memory *
 }
 
 
-INLINE void STORE_RESULT(offs_t addr, UINT8 data)
+static INLINE void STORE_RESULT(offs_t addr, UINT8 data)
 {
 	if (R.opcode.b.l & 0x20)
 	{

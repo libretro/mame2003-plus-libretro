@@ -188,13 +188,13 @@ static m4510_Regs m4510;
  * include the opcode macros, functions and tables
  ***************************************************************/
 
-INLINE int m4510_cpu_readop(void)
+static INLINE int m4510_cpu_readop(void)
 {
 	register UINT16 t=m4510.pc.w.l++;
 	return cpu_readop(M4510_MEM(t));
 }
 
-INLINE int m4510_cpu_readop_arg(void)
+static INLINE int m4510_cpu_readop_arg(void)
 {
 	register UINT16 t=m4510.pc.w.l++;
 	return cpu_readop_arg(M4510_MEM(t));
@@ -329,7 +329,7 @@ void m4510_set_reg (int regnum, unsigned val)
 	}
 }
 
-INLINE void m4510_take_irq(void)
+static INLINE void m4510_take_irq(void)
 {
 	if( !(P & F_I) )
 	{

@@ -156,7 +156,7 @@ static int mo_render_object(struct atarimo_data *mo, const struct atarimo_entry 
 
 
 /*##########################################################################
-	INLINE FUNCTIONS
+static INLINE FUNCTIONS
 ##########################################################################*/
 
 /*---------------------------------------------------------------
@@ -165,7 +165,7 @@ static int mo_render_object(struct atarimo_data *mo, const struct atarimo_entry 
 	two.
 ---------------------------------------------------------------*/
 
-INLINE int compute_log(int value)
+static INLINE int compute_log(int value)
 {
 	int log = 0;
 
@@ -185,7 +185,7 @@ INLINE int compute_log(int value)
 	next greatest power (e.g., 4 returns 8).
 ---------------------------------------------------------------*/
 
-INLINE int round_to_powerof2(int value)
+static INLINE int round_to_powerof2(int value)
 {
 	int log = 0;
 
@@ -202,7 +202,7 @@ INLINE int round_to_powerof2(int value)
 	shift, and adjusted mask. Returns 0 if invalid.
 ---------------------------------------------------------------*/
 
-INLINE int convert_mask(const struct atarimo_entry *input, struct atarimo_mask *result)
+static INLINE int convert_mask(const struct atarimo_entry *input, struct atarimo_mask *result)
 {
 	int i, temp;
 
@@ -242,7 +242,7 @@ INLINE int convert_mask(const struct atarimo_entry *input, struct atarimo_mask *
 	gives us full control over colors.
 ---------------------------------------------------------------*/
 
-INLINE void init_gfxelement(struct atarimo_data *mo, int idx)
+static INLINE void init_gfxelement(struct atarimo_data *mo, int idx)
 {
 	mo->gfxelement[idx] = *Machine->gfx[idx];
 	mo->gfxgranularity[idx] = mo->gfxelement[idx].color_granularity;
@@ -493,7 +493,7 @@ static void update_active_list(struct atarimo_data *mo, int link)
 	X and Y position.
 ---------------------------------------------------------------*/
 
-INLINE UINT8 *get_dirty_base(struct atarimo_data *mo, int x, int y)
+static INLINE UINT8 *get_dirty_base(struct atarimo_data *mo, int x, int y)
 {
 	UINT8 *result = mo->dirtygrid;
 	result += ((y >> mo->tileyshift) + 1) * mo->dirtywidth;

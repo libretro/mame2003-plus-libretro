@@ -70,7 +70,7 @@ INTERRUPT_GEN( m72_interrupt )
 
 ***************************************************************************/
 
-INLINE void m72_get_tile_info(int tile_index,unsigned char *vram,int gfxnum)
+static INLINE void m72_get_tile_info(int tile_index,unsigned char *vram,int gfxnum)
 {
 	int code,attr,color,pri;
 
@@ -92,7 +92,7 @@ INLINE void m72_get_tile_info(int tile_index,unsigned char *vram,int gfxnum)
 			TILE_FLIPYX((attr & 0xc0) >> 6) | TILE_SPLIT(pri))
 }
 
-INLINE void rtype2_get_tile_info(int tile_index,unsigned char *vram,int gfxnum)
+static INLINE void rtype2_get_tile_info(int tile_index,unsigned char *vram,int gfxnum)
 {
 	int code,attr,color,pri;
 
@@ -327,7 +327,7 @@ READ_HANDLER( m72_palette2_r )
 	return paletteram_2[offset] | 0xe0;	/* only D0-D4 are connected */
 }
 
-INLINE void changecolor(int color,int r,int g,int b)
+static INLINE void changecolor(int color,int r,int g,int b)
 {
 	r = (r << 3) | (r >> 2);
 	g = (g << 3) | (g >> 2);

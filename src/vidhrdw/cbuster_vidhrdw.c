@@ -25,7 +25,7 @@ static UINT32 back_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
 	return (col & 0x1f) + ((row & 0x1f) << 5) + ((col & 0x20) << 5);
 }
 
-INLINE void get_back_tile_info(int tile_index,int gfx_bank,data16_t *gfx_base)
+static INLINE void get_back_tile_info(int tile_index,int gfx_bank,data16_t *gfx_base)
 {
 	int tile,color;
 

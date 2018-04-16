@@ -419,7 +419,7 @@ PALETTE_INIT( pteacher )
 
 ***************************************************************************/
 
-INLINE void mrokumei_info0( int tile_index, int page, int gfxbank )
+static INLINE void mrokumei_info0( int tile_index, int page, int gfxbank )
 {
 	int addr  = tile_index * 2 + 0x2000 * page;
 	int attr  = videoram[addr];
@@ -428,7 +428,7 @@ INLINE void mrokumei_info0( int tile_index, int page, int gfxbank )
 
 	SET_TILE_INFO( 0, code, color, homedata_flipscreen );
 }
-INLINE void mrokumei_info1( int tile_index, int page, int gfxbank )
+static INLINE void mrokumei_info1( int tile_index, int page, int gfxbank )
 {
 	int addr  = tile_index * 2 + 0x1000 + 0x2000 * page;
 	int attr  = videoram[addr];
@@ -444,7 +444,7 @@ static void mrokumei_get_info0_1(int tile_index) { mrokumei_info1( tile_index, 0
 static void mrokumei_get_info1_1(int tile_index) { mrokumei_info1( tile_index, 1, (blitter_bank & 0x38) >> 3 ); }
 
 
-INLINE void reikaids_info( int tile_index, int page, int layer, int gfxbank )
+static INLINE void reikaids_info( int tile_index, int page, int layer, int gfxbank )
 {
 	int addr  = tile_index * 4 + layer + 0x2000 * page;
 	int attr  = videoram[addr];
@@ -475,7 +475,7 @@ static void reikaids_get_info0_3(int tile_index) { reikaids_info( tile_index, 0,
 static void reikaids_get_info1_3(int tile_index) { reikaids_info( tile_index, 1, 3,  (reikaids_gfx_bank[0]&0x7)); }
 
 
-INLINE void pteacher_info( int tile_index, int page, int layer, int gfxbank )
+static INLINE void pteacher_info( int tile_index, int page, int layer, int gfxbank )
 {
 	int addr  = tile_index * 2 + 0x1000 * layer + 0x2000 * page;
 	int attr  = videoram[addr];
@@ -491,7 +491,7 @@ static void pteacher_get_info0_1(int tile_index) { pteacher_info( tile_index, 0,
 static void pteacher_get_info1_1(int tile_index) { pteacher_info( tile_index, 1, 1, pteacher_gfx_bank >> 4 ); }
 
 
-INLINE void lemnangl_info( int tile_index, int page, int layer, int gfxset, int gfxbank )
+static INLINE void lemnangl_info( int tile_index, int page, int layer, int gfxset, int gfxbank )
 {
 	int addr  = tile_index * 2 + 0x1000 * layer + 0x2000 * page;
 	int attr  = videoram[addr];

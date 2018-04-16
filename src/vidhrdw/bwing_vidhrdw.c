@@ -170,24 +170,24 @@ WRITE_HANDLER( bwing_paletteram_w )
 	tile_info.pal_data = &GFX->colortable[(COLOR) << 3]; \
 	tile_info.pen_usage = GFX->pen_usage[(CODE)]; }
 
-INLINE void get_fgtileinfo(int i)
+static INLINE void get_fgtileinfo(int i)
 {
 	unsigned code = fgdata[i];
 	BW_SET_TILE_INFO(fgfx, code & (BW_NTILES-1), code >> 7)
 }
 
-INLINE void get_bgtileinfo(int i)
+static INLINE void get_bgtileinfo(int i)
 {
 	unsigned code = bgdata[i];
 	BW_SET_TILE_INFO(bgfx, code & (BW_NTILES-1), code >> 7)
 }
 
-INLINE void get_charinfo(int i)
+static INLINE void get_charinfo(int i)
 {
 	SET_TILE_INFO(0, videoram[i], 0, 0)
 }
 
-INLINE UINT32 bwing_scan_cols(UINT32 col, UINT32 row, UINT32 nc, UINT32 nr)
+static INLINE UINT32 bwing_scan_cols(UINT32 col, UINT32 row, UINT32 nc, UINT32 nr)
 {
 	return((col<<6) + row);
 }

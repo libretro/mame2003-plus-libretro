@@ -282,13 +282,13 @@ static void (*conditiontable[16])(void) =
 #define UPDATEPC()		change_pc32ledw(asap.pc)
 
 
-INLINE data8_t READBYTE(offs_t address)
+static INLINE data8_t READBYTE(offs_t address)
 {
 	/* no alignment issues with bytes */
 	return cpu_readmem32ledw(address);
 }
 
-INLINE data16_t READWORD(offs_t address)
+static INLINE data16_t READWORD(offs_t address)
 {
 	/* aligned reads are easy */
 	if (!(address & 1))
@@ -298,7 +298,7 @@ INLINE data16_t READWORD(offs_t address)
 	return cpu_readmem32ledw_dword(address & ~3) >> (address & 3);
 }
 
-INLINE data32_t READLONG(offs_t address)
+static INLINE data32_t READLONG(offs_t address)
 {
 	/* aligned reads are easy */
 	if (!(address & 3))
@@ -308,13 +308,13 @@ INLINE data32_t READLONG(offs_t address)
 	return cpu_readmem32ledw_dword(address & ~3) >> (address & 3);
 }
 
-INLINE void WRITEBYTE(offs_t address, data8_t data)
+static INLINE void WRITEBYTE(offs_t address, data8_t data)
 {
 	/* no alignment issues with bytes */
 	cpu_writemem32ledw(address, data);
 }
 
-INLINE void WRITEWORD(offs_t address, data16_t data)
+static INLINE void WRITEWORD(offs_t address, data16_t data)
 {
 	/* aligned writes are easy */
 	if (!(address & 1))
@@ -333,7 +333,7 @@ INLINE void WRITEWORD(offs_t address, data16_t data)
 		cpu_writemem32ledw(address + 1, data);
 }
 
-INLINE void WRITELONG(offs_t address, data32_t data)
+static INLINE void WRITELONG(offs_t address, data32_t data)
 {
 	/* aligned writes are easy */
 	if (!(address & 3))
@@ -364,7 +364,7 @@ INLINE void WRITELONG(offs_t address, data32_t data)
 **	EXCEPTION HANDLING
 **#################################################################################################*/
 
-INLINE void generate_exception(int exception)
+static INLINE void generate_exception(int exception)
 {
 	asap.pflag = asap.iflag;
 	asap.iflag = 0;
@@ -385,7 +385,7 @@ INLINE void generate_exception(int exception)
 **	IRQ HANDLING
 **#################################################################################################*/
 
-INLINE void check_irqs(void)
+static INLINE void check_irqs(void)
 {
 	if (asap.irq_state && asap.iflag)
 	{
@@ -523,7 +523,7 @@ void asap_exit(void)
 **	CORE EXECUTION LOOP
 **#################################################################################################*/
 
-INLINE void fetch_instruction(void)
+static INLINE void fetch_instruction(void)
 {
 	/* debugging */
 	asap.ppc = asap.pc;
@@ -534,7 +534,7 @@ INLINE void fetch_instruction(void)
 	asap.pc += 4;
 }
 
-INLINE void execute_instruction(void)
+static INLINE void execute_instruction(void)
 {
 	/* parse the instruction */
 	(*opcode[asap.op.d >> 21])();

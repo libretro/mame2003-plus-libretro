@@ -87,7 +87,7 @@ to do:
 //#define SAVE_SAMPLE
 
 #ifdef SAVE_SAMPLE
-INLINE signed int acc_calc(signed int value)
+static INLINE signed int acc_calc(signed int value)
 {
 	if (value>=0)
 	{
@@ -611,7 +611,7 @@ static UINT32	LFO_AM;
 static INT32	LFO_PM;
 
 /* advance LFO to next sample */
-INLINE void advance_lfo(YM2413 *chip)
+static INLINE void advance_lfo(YM2413 *chip)
 {
 	/* LFO */
 	chip->lfo_am_cnt += chip->lfo_am_inc;
@@ -625,7 +625,7 @@ INLINE void advance_lfo(YM2413 *chip)
 }
 
 /* advance to next sample */
-INLINE void advance(YM2413 *chip)
+static INLINE void advance(YM2413 *chip)
 {
 	OPLL_CH *CH;
 	OPLL_SLOT *op;
@@ -862,7 +862,7 @@ INLINE void advance(YM2413 *chip)
 }
 
 
-INLINE signed int op_calc(UINT32 phase, unsigned int env, signed int pm, unsigned int wave_tab)
+static INLINE signed int op_calc(UINT32 phase, unsigned int env, signed int pm, unsigned int wave_tab)
 {
 	UINT32 p;
 
@@ -873,7 +873,7 @@ INLINE signed int op_calc(UINT32 phase, unsigned int env, signed int pm, unsigne
 	return tl_tab[p];
 }
 
-INLINE signed int op_calc1(UINT32 phase, unsigned int env, signed int pm, unsigned int wave_tab)
+static INLINE signed int op_calc1(UINT32 phase, unsigned int env, signed int pm, unsigned int wave_tab)
 {
 	UINT32 p;
 	INT32  i;
@@ -895,7 +895,7 @@ INLINE signed int op_calc1(UINT32 phase, unsigned int env, signed int pm, unsign
 #define volume_calc(OP) ((OP)->TLL + ((UINT32)(OP)->volume) + (LFO_AM & (OP)->AMmask))
 
 /* calculate output */
-INLINE void chan_calc( OPLL_CH *CH )
+static INLINE void chan_calc( OPLL_CH *CH )
 {
 	OPLL_SLOT *SLOT;
 	unsigned int env;
@@ -972,7 +972,7 @@ number   number    BLK/FNUM2 FNUM    Drum  Hat   Drum  Tom  Cymbal
 
 /* calculate rhythm */
 
-INLINE void rhythm_calc( OPLL_CH *CH, unsigned int noise )
+static INLINE void rhythm_calc( OPLL_CH *CH, unsigned int noise )
 {
 	OPLL_SLOT *SLOT;
 	signed int out;
@@ -1300,7 +1300,7 @@ static void OPLL_initalize(YM2413 *chip)
 
 }
 
-INLINE void KEY_ON(OPLL_SLOT *SLOT, UINT32 key_set)
+static INLINE void KEY_ON(OPLL_SLOT *SLOT, UINT32 key_set)
 {
 	if( !SLOT->key )
 	{
@@ -1311,7 +1311,7 @@ INLINE void KEY_ON(OPLL_SLOT *SLOT, UINT32 key_set)
 	SLOT->key |= key_set;
 }
 
-INLINE void KEY_OFF(OPLL_SLOT *SLOT, UINT32 key_clr)
+static INLINE void KEY_OFF(OPLL_SLOT *SLOT, UINT32 key_clr)
 {
 	if( SLOT->key )
 	{
@@ -1327,7 +1327,7 @@ INLINE void KEY_OFF(OPLL_SLOT *SLOT, UINT32 key_clr)
 }
 
 /* update phase increment counter of operator (also update the EG rates if necessary) */
-INLINE void CALC_FCSLOT(OPLL_CH *CH,OPLL_SLOT *SLOT)
+static INLINE void CALC_FCSLOT(OPLL_CH *CH,OPLL_SLOT *SLOT)
 {
 	int ksr;
 	UINT32 SLOT_rs;
@@ -1373,7 +1373,7 @@ INLINE void CALC_FCSLOT(OPLL_CH *CH,OPLL_SLOT *SLOT)
 }
 
 /* set multi,am,vib,EG-TYP,KSR,mul */
-INLINE void set_mul(YM2413 *chip,int slot,int v)
+static INLINE void set_mul(YM2413 *chip,int slot,int v)
 {
 	OPLL_CH   *CH   = &chip->P_CH[slot/2];
 	OPLL_SLOT *SLOT = &CH->SLOT[slot&1];
@@ -1387,7 +1387,7 @@ INLINE void set_mul(YM2413 *chip,int slot,int v)
 }
 
 /* set ksl, tl */
-INLINE void set_ksl_tl(YM2413 *chip,int chan,int v)
+static INLINE void set_ksl_tl(YM2413 *chip,int chan,int v)
 {
 	int ksl;
 	OPLL_CH   *CH   = &chip->P_CH[chan];
@@ -1402,7 +1402,7 @@ INLINE void set_ksl_tl(YM2413 *chip,int chan,int v)
 }
 
 /* set ksl , waveforms, feedback */
-INLINE void set_ksl_wave_fb(YM2413 *chip,int chan,int v)
+static INLINE void set_ksl_wave_fb(YM2413 *chip,int chan,int v)
 {
 	int ksl;
 	OPLL_CH   *CH   = &chip->P_CH[chan];
@@ -1422,7 +1422,7 @@ INLINE void set_ksl_wave_fb(YM2413 *chip,int chan,int v)
 }
 
 /* set attack rate & decay rate  */
-INLINE void set_ar_dr(YM2413 *chip,int slot,int v)
+static INLINE void set_ar_dr(YM2413 *chip,int slot,int v)
 {
 	OPLL_CH   *CH   = &chip->P_CH[slot/2];
 	OPLL_SLOT *SLOT = &CH->SLOT[slot&1];
@@ -1446,7 +1446,7 @@ INLINE void set_ar_dr(YM2413 *chip,int slot,int v)
 }
 
 /* set sustain level & release rate */
-INLINE void set_sl_rr(YM2413 *chip,int slot,int v)
+static INLINE void set_sl_rr(YM2413 *chip,int slot,int v)
 {
 	OPLL_CH   *CH   = &chip->P_CH[slot/2];
 	OPLL_SLOT *SLOT = &CH->SLOT[slot&1];

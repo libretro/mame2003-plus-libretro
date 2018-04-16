@@ -61,7 +61,7 @@ static data8_t sndtor3k[ 16 ];
 static data8_t sector_buffer[512];
 static UINT8 *m_p_n_ram;
 
-INLINE void psxwritebyte( UINT32 n_address, UINT8 n_data )
+static INLINE void psxwritebyte( UINT32 n_address, UINT8 n_data )
 {
 	m_p_n_ram[ BYTE_XOR_LE( n_address ) ] = n_data;
 }

@@ -35,7 +35,7 @@ PALETTE_INIT( berzerk )
 }
 
 
-INLINE void copy_byte(UINT8 x, UINT8 y, data8_t data, data8_t col)
+static INLINE void copy_byte(UINT8 x, UINT8 y, data8_t data, data8_t col)
 {
 	pen_t fore, back;
 

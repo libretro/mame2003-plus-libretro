@@ -637,7 +637,7 @@ logerror("adc_select %d\n", offset & 7);
  *
  *************************************/
 
-INLINE void counter_start(int which)
+static INLINE void counter_start(int which)
 {
 	/* don't start a timer for channel 0; it is clocked manually */
 	if (which != 0)
@@ -652,7 +652,7 @@ INLINE void counter_start(int which)
 }
 
 
-INLINE void counter_stop(int which)
+static INLINE void counter_stop(int which)
 {
 	/* only stop the timer if it exists */
 	if (counter[which].timer_active)
@@ -661,7 +661,7 @@ INLINE void counter_stop(int which)
 }
 
 
-INLINE void counter_update_count(int which)
+static INLINE void counter_update_count(int which)
 {
 	/* only update if the timer is running */
 	if (counter[which].timer_active)

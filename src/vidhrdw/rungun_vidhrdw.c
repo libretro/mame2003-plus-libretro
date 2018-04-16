@@ -21,7 +21,7 @@ extern data16_t *rng_936_videoram;
 
 /* TTL text plane stuff */
 
-INLINE void ttl_get_tile_info(int tile_index)
+static INLINE void ttl_get_tile_info(int tile_index)
 {
 	data32_t *lvram = (data32_t *)ttl_vram;
 	int attr, code;
@@ -34,7 +34,7 @@ INLINE void ttl_get_tile_info(int tile_index)
 	SET_TILE_INFO(ttl_gfx_index, code, attr, 0);
 }
 
-INLINE UINT32 ttl_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
+static INLINE UINT32 ttl_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
 {
 	/* logical (col,row) -> memory offset */
 	return((row<<6) + col);
@@ -63,7 +63,7 @@ WRITE16_HANDLER(rng_936_videoram_w)
 	tilemap_mark_tile_dirty(rng_936_tilemap, offset/2);
 }
 
-INLINE void get_rng_936_tile_info(int tile_index)
+static INLINE void get_rng_936_tile_info(int tile_index)
 {
 	int tileno, colour, flipx;
 

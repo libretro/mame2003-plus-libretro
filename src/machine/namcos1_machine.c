@@ -564,7 +564,7 @@ static uint32 reloadMT(void)
 	return(s1 ^ (s1 >> 18));
 }
 
-INLINE uint32 randomMT(void)
+static INLINE uint32 randomMT(void)
 {
 	uint32 y;
 

@@ -437,7 +437,7 @@ static READ_HANDLER( sound_data_r )
  *
  *************************************/
 
-INLINE void update_via_int(void)
+static INLINE void update_via_int(void)
 {
 	/* if interrupts are enabled and one is pending, set the line */
 	if ((via6522[14] & 0x80) && (via6522_int_state & via6522[14]))

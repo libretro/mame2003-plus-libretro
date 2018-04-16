@@ -336,7 +336,7 @@ static void bsmt2000_update(int num, INT16 **buffer, int length)
 
 ***********************************************************************************************/
 
-INLINE void init_voice(struct BSMT2000Voice *voice)
+static INLINE void init_voice(struct BSMT2000Voice *voice)
 {
 	memset(&voice->reg, 0, sizeof(voice->reg));
 	voice->position = 0;
@@ -346,7 +346,7 @@ INLINE void init_voice(struct BSMT2000Voice *voice)
 }
 
 
-INLINE void init_all_voices(struct BSMT2000Chip *chip)
+static INLINE void init_all_voices(struct BSMT2000Chip *chip)
  {
  	int i;
  

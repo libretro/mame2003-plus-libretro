@@ -245,7 +245,7 @@ void K053936GP_set_cliprect(int chip, int minx, int maxx, int miny, int maxy)
 	edx += eax;          \
 	dst_ptr[ecx] = edx; }
 
-INLINE void K053936GP_copyroz32clip( struct mame_bitmap *dst_bitmap, struct mame_bitmap *src_bitmap,
+static INLINE void K053936GP_copyroz32clip( struct mame_bitmap *dst_bitmap, struct mame_bitmap *src_bitmap,
 		const struct rectangle *dst_cliprect, const struct rectangle *src_cliprect,
 		UINT32 _startx,UINT32 _starty,int _incxx,int _incxy,int _incyx,int _incyy,
 		int tilebpp, int blend, int clip )
@@ -497,7 +497,7 @@ void K053936GP_1_zoom_draw(struct mame_bitmap *bitmap, const struct rectangle *c
 	pri     : 0 = topmost, 255 = backmost (pixel priority)
 */
 
-INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct GfxElement *gfx, const struct rectangle *cliprect,
+static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct GfxElement *gfx, const struct rectangle *cliprect,
 		unsigned int code, unsigned int color, int flipx, int flipy, int sx, int sy,
 		int scalex, int scaley, int alpha, int drawmode, int zcode, int pri)
 {
@@ -992,7 +992,7 @@ static void konamigx_precache_registers(void)
 	osmixon  = K055555_read_register(K55_OSBLEND_ON);
 }
 
-INLINE int K053247GX_combine_c18(int attrib) // (see p.46)
+static INLINE int K053247GX_combine_c18(int attrib) // (see p.46)
 {
 	int c18;
 
@@ -1004,7 +1004,7 @@ INLINE int K053247GX_combine_c18(int attrib) // (see p.46)
 	return(c18);
 }
 
-INLINE int K055555GX_decode_objcolor(int c18) // (see p.59 7.2.2)
+static INLINE int K055555GX_decode_objcolor(int c18) // (see p.59 7.2.2)
 {
 	int ocb, opon;
 
@@ -1016,7 +1016,7 @@ INLINE int K055555GX_decode_objcolor(int c18) // (see p.59 7.2.2)
 	return((ocb | c18) >> K053247_coregshift);
 }
 
-INLINE int K055555GX_decode_inpri(int c18) // (see p.59 7.2.2)
+static INLINE int K055555GX_decode_inpri(int c18) // (see p.59 7.2.2)
 {
 	int op = opri;
 

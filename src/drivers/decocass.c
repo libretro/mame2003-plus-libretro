@@ -63,7 +63,7 @@
  *
  ***************************************************************************/
 
-INLINE int swap_bits_5_6(int data)
+static INLINE int swap_bits_5_6(int data)
 {
 	return (data & 0x9f) | ((data & 0x20) << 1) | ((data & 0x40) >> 1);
 }

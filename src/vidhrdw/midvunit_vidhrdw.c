@@ -75,7 +75,7 @@ VIDEO_START( midvunit )
  *
  *************************************/
 
-INLINE int quad_is_straight(void)
+static INLINE int quad_is_straight(void)
 {
 	INT32 x1, x2, y1, y2, t;
 

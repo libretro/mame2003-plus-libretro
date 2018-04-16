@@ -542,7 +542,7 @@ static void tattass_drawsprites(struct mame_bitmap *bitmap, const data32_t *spri
 	}
 }
 
-INLINE void dragngun_drawgfxzoom( struct mame_bitmap *dest_bmp,const struct GfxElement *gfx,
+static INLINE void dragngun_drawgfxzoom( struct mame_bitmap *dest_bmp,const struct GfxElement *gfx,
 		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
 		const struct rectangle *clip,int transparency,int transparent_color,
 		int scalex, int scaley,struct mame_bitmap *pri_buffer,UINT32 pri_mask, int sprite_screen_width, int  sprite_screen_height )

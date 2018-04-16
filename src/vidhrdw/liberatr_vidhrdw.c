@@ -75,7 +75,7 @@ static UINT8 *liberatr_videoram;
 static Liberator_Planet *liberatr_planet_segs[2];
 
 
-INLINE void bitmap_common_w(UINT8 x, UINT8 y, int data)
+static INLINE void bitmap_common_w(UINT8 x, UINT8 y, int data)
 {
 	int pen;
 

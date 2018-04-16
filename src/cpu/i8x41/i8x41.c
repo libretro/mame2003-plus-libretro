@@ -184,7 +184,7 @@ static UINT8 i8x41_win_layout[] = {
  *	Shortcuts
  ************************************************************************/
 
-INLINE void PUSH_PC_TO_STACK(void)
+static INLINE void PUSH_PC_TO_STACK(void)
 {
 	WM( M_STACK + (PSW&SP) * 2 + 0, PC & 0xff);
 	WM( M_STACK + (PSW&SP) * 2 + 1, ((PC >> 8) & 0x0f) | (PSW & 0xf0) );
@@ -199,7 +199,7 @@ INLINE void PUSH_PC_TO_STACK(void)
 /***********************************
  *	illegal opcodes
  ***********************************/
-INLINE void illegal(void)
+static INLINE void illegal(void)
 {
 	logerror("i8x41 #%d: illegal opcode at 0x%03x: %02x\n", cpu_getactivecpu(), PC, ROP(PC));
 }
@@ -207,7 +207,7 @@ INLINE void illegal(void)
 /***********************************
  *	0110 1rrr *  ADD	 A,Rr
  ***********************************/
-INLINE void add_r(int r)
+static INLINE void add_r(int r)
 {
 	UINT8 res = A + R(r);
 	if( res < A ) PSW |= FC;
@@ -219,7 +219,7 @@ INLINE void add_r(int r)
  *	0110 000r
  *	ADD 	A,@Rr
  ***********************************/
-INLINE void add_rm(int r)
+static INLINE void add_rm(int r)
 {
 	UINT8 res = A + RM( M_IRAM + (R(r) & I8X42_intRAM_MASK) );
 	if( res < A ) PSW |= FC;
@@ -231,7 +231,7 @@ INLINE void add_rm(int r)
  *	0000 0011 7654 3210
  *	ADD 	A,#n
  ***********************************/
-INLINE void add_i(void)
+static INLINE void add_i(void)
 {
 	UINT8 res = A + ROP_ARG(PC);
 	PC++;
@@ -244,7 +244,7 @@ INLINE void add_i(void)
  *	0111 1rrr
  *	ADDC	A,Rr
  ***********************************/
-INLINE void addc_r(int r)
+static INLINE void addc_r(int r)
 {
 	UINT8 res = A + R(r) + (PSW >> 7);
 	if( res <= A ) PSW |= FC;
@@ -256,7 +256,7 @@ INLINE void addc_r(int r)
  *	0111 000r
  *	ADDC	A,@Rr
  ***********************************/
-INLINE void addc_rm(int r)
+static INLINE void addc_rm(int r)
 {
 	UINT8 res = A + RM( M_IRAM + (R(r) & I8X42_intRAM_MASK) ) + (PSW >> 7);
 	if( res <= A ) PSW |= FC;
@@ -268,7 +268,7 @@ INLINE void addc_rm(int r)
  *	0001 0011 7654 3210
  *	ADDC	A,#n
  ***********************************/
-INLINE void addc_i(void)
+static INLINE void addc_i(void)
 {
 	UINT8 res = A + ROP_ARG(PC);
 	PC++;
@@ -281,7 +281,7 @@ INLINE void addc_i(void)
  *	0101 1rrr
  *	ANL 	A,Rr
  ***********************************/
-INLINE void anl_r(int r)
+static INLINE void anl_r(int r)
 {
 	A = A & R(r);
 }
@@ -290,7 +290,7 @@ INLINE void anl_r(int r)
  *	0101 000r
  *	ANL 	A,@Rr
  ***********************************/
-INLINE void anl_rm(int r)
+static INLINE void anl_rm(int r)
 {
 	A = A & RM( M_IRAM + (R(r) & I8X42_intRAM_MASK) );
 }
@@ -299,7 +299,7 @@ INLINE void anl_rm(int r)
  *	0101 0011 7654 3210
  *	ANL 	A,#n
  ***********************************/
-INLINE void anl_i(void)
+static INLINE void anl_i(void)
 {
 	A = A & ROP_ARG(PC);
 	PC++;
@@ -309,7 +309,7 @@ INLINE void anl_i(void)
  *	1001 10pp 7654 3210
  *	ANL 	Pp,#n
  ***********************************/
-INLINE void anl_p_i(int p)
+static INLINE void anl_p_i(int p)
 {
 	UINT8 val = ROP_ARG(PC);
 	PC++;
@@ -328,7 +328,7 @@ INLINE void anl_p_i(int p)
  *	1001 11pp 7654 3210
  *	ANLD	Pp,A
  ***********************************/
-INLINE void anld_p_a(int p)
+static INLINE void anld_p_a(int p)
 {
 	/* added proper expanded port setup */
 	WP(2, (P2 & 0xf0) | 0x0c | p); /* AND mode */
@@ -341,7 +341,7 @@ INLINE void anld_p_a(int p)
  *	aaa1 0100 7654 3210
  *	CALL	addr
  ***********************************/
-INLINE void call_i(int page)
+static INLINE void call_i(int page)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC++;
@@ -353,7 +353,7 @@ INLINE void call_i(int page)
  *	0010 0111
  *	CLR 	A
  ***********************************/
-INLINE void clr_a(void)
+static INLINE void clr_a(void)
 {
 	A = 0;
 }
@@ -362,7 +362,7 @@ INLINE void clr_a(void)
  *	1001 0111
  *	CLR 	C
  ***********************************/
-INLINE void clr_c(void)
+static INLINE void clr_c(void)
 {
 	PSW &= ~FC;
 }
@@ -371,7 +371,7 @@ INLINE void clr_c(void)
  *	1000 0101
  *	CLR 	F0
  ***********************************/
-INLINE void clr_f0(void)
+static INLINE void clr_f0(void)
 {
 	PSW &= ~Ff0;
 	STATE &= ~F0;
@@ -381,7 +381,7 @@ INLINE void clr_f0(void)
  *	1010 0101
  *	CLR 	F1
  ***********************************/
-INLINE void clr_f1(void)
+static INLINE void clr_f1(void)
 {
 	STATE &= ~F1;
 }
@@ -390,7 +390,7 @@ INLINE void clr_f1(void)
  *	0011 0111
  *	CPL 	A
  ***********************************/
-INLINE void cpl_a(void)
+static INLINE void cpl_a(void)
 {
 	A = ~A;
 }
@@ -399,7 +399,7 @@ INLINE void cpl_a(void)
  *	1010 0111
  *	CPL 	C
  ***********************************/
-INLINE void cpl_c(void)
+static INLINE void cpl_c(void)
 {
 	PSW ^= FC;
 }
@@ -408,7 +408,7 @@ INLINE void cpl_c(void)
  *	1001 0101
  *	CPL 	F0
  ***********************************/
-INLINE void cpl_f0(void)
+static INLINE void cpl_f0(void)
 {
 	PSW ^= Ff0;
 	STATE ^= F0;
@@ -418,7 +418,7 @@ INLINE void cpl_f0(void)
  *	1011 0101
  *	CPL 	F1
  ***********************************/
-INLINE void cpl_f1(void)
+static INLINE void cpl_f1(void)
 {
 	STATE ^= F1;
 }
@@ -427,7 +427,7 @@ INLINE void cpl_f1(void)
  *	0101 0111
  *	DA		A
  ***********************************/
-INLINE void da_a(void)
+static INLINE void da_a(void)
 {
 	UINT8 res = A + ((PSW & FA) || ((A & 0x0f) > 0x09)) ? 0x06 : 0x00;
 	if( (PSW & FC) || ((res & 0xf0) > 0x90) )
@@ -443,7 +443,7 @@ INLINE void da_a(void)
  *	0000 0111
  *	DEC 	A
  ***********************************/
-INLINE void dec_a(void)
+static INLINE void dec_a(void)
 {
 	A -= 1;
 }
@@ -452,7 +452,7 @@ INLINE void dec_a(void)
  *	1100 1rrr
  *	DEC 	Rr
  ***********************************/
-INLINE void dec_r(int r)
+static INLINE void dec_r(int r)
 {
 	R(r) -= 1;
 }
@@ -461,7 +461,7 @@ INLINE void dec_r(int r)
  *	0001 0101
  *	DIS 	I
  ***********************************/
-INLINE void dis_i(void)
+static INLINE void dis_i(void)
 {
 	ENABLE &= ~IBFI;	/* disable input buffer full interrupt */
 }
@@ -470,7 +470,7 @@ INLINE void dis_i(void)
  *	0011 0101
  *	DIS 	TCNTI
  ***********************************/
-INLINE void dis_tcnti(void)
+static INLINE void dis_tcnti(void)
 {
 	ENABLE &= ~TCNTI;	/* disable timer/counter interrupt */
 }
@@ -479,7 +479,7 @@ INLINE void dis_tcnti(void)
  *	0111 1rrr 7654 3210
  *	DJNZ	Rr,addr
  ***********************************/
-INLINE void djnz_r_i(int r)
+static INLINE void djnz_r_i(int r)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC++;
@@ -492,7 +492,7 @@ INLINE void djnz_r_i(int r)
  *	1110 0101
  *	EN		DMA
  ***********************************/
-INLINE void en_dma(void)
+static INLINE void en_dma(void)
 {
 	ENABLE |= DMA;		/* enable DMA handshake lines */
 	P2_HS &= 0xbf;
@@ -503,7 +503,7 @@ INLINE void en_dma(void)
  *	1111 0101
  *	EN		FLAGS
  ***********************************/
-INLINE void en_flags(void)
+static INLINE void en_flags(void)
 {
 	if( 0 == (ENABLE & FLAGS) )
 	{
@@ -522,7 +522,7 @@ INLINE void en_flags(void)
  *	0000 0101
  *	EN		I
  ***********************************/
-INLINE void en_i(void)
+static INLINE void en_i(void)
 {
 	if( 0 == (ENABLE & IBFI) )
 	{
@@ -536,7 +536,7 @@ INLINE void en_i(void)
  *	0010 0101
  *	EN		TCNTI
  ***********************************/
-INLINE void en_tcnti(void)
+static INLINE void en_tcnti(void)
 {
 	ENABLE |= TCNTI;	/* enable timer/counter interrupt */
 }
@@ -545,7 +545,7 @@ INLINE void en_tcnti(void)
  *	0010 0010
  *	IN		A,DBB
  ***********************************/
-INLINE void in_a_dbb(void)
+static INLINE void in_a_dbb(void)
 {
 	if( i8x41.irq_callback )
 		(*i8x41.irq_callback)(I8X41_INT_IBF);
@@ -565,7 +565,7 @@ INLINE void in_a_dbb(void)
  *	0000 10pp
  *	IN		A,Pp
  ***********************************/
-INLINE void in_a_p(int p)
+static INLINE void in_a_p(int p)
 {
 	/* changed to latched port scheme */
 	switch( p )
@@ -582,7 +582,7 @@ INLINE void in_a_p(int p)
  *	0001 0111
  *	INC 	A
  ***********************************/
-INLINE void inc_a(void)
+static INLINE void inc_a(void)
 {
 	A += 1;
 }
@@ -591,7 +591,7 @@ INLINE void inc_a(void)
  *	0001 1rrr
  *	INC 	Rr
  ***********************************/
-INLINE void inc_r(int r)
+static INLINE void inc_r(int r)
 {
 	R(r) += 1;
 }
@@ -600,7 +600,7 @@ INLINE void inc_r(int r)
  *	0001 000r
  *	INC  @	Rr
  ***********************************/
-INLINE void inc_rm(int r)
+static INLINE void inc_rm(int r)
 {
 	UINT16 addr = M_IRAM + (R(r) & I8X42_intRAM_MASK);
 	WM( addr, RM(addr) + 1 );
@@ -610,7 +610,7 @@ INLINE void inc_rm(int r)
  *	bbb1 0010
  *	JBb 	addr
  ***********************************/
-INLINE void jbb_i(int bit)
+static INLINE void jbb_i(int bit)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -622,7 +622,7 @@ INLINE void jbb_i(int bit)
  *	1111 0110
  *	JC		addr
  ***********************************/
-INLINE void jc_i(void)
+static INLINE void jc_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -634,7 +634,7 @@ INLINE void jc_i(void)
  *	1011 0110
  *	JF0 	addr
  ***********************************/
-INLINE void jf0_i(void)
+static INLINE void jf0_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -646,7 +646,7 @@ INLINE void jf0_i(void)
  *	0111 0110
  *	JF1 	addr
  ***********************************/
-INLINE void jf1_i(void)
+static INLINE void jf1_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -658,7 +658,7 @@ INLINE void jf1_i(void)
  *	aaa0 0100
  *	JMP 	addr
  ***********************************/
-INLINE void jmp_i(int page)
+static INLINE void jmp_i(int page)
 {
 	/* err.. do we have 10 or 11 PC bits?
 	 * CALL is said to use 0aa1 (4 pages)
@@ -672,7 +672,7 @@ INLINE void jmp_i(int page)
  *	1011 0011
  *	JMP  @	A
  ***********************************/
-INLINE void jmpp_a(void)
+static INLINE void jmpp_a(void)
 {
 	UINT16 adr = (PC & 0x700) | A;
 	PC = (PC & 0x700) | RM(adr);
@@ -682,7 +682,7 @@ INLINE void jmpp_a(void)
  *	1110 0110
  *	JNC 	addr
  ***********************************/
-INLINE void jnc_i(void)
+static INLINE void jnc_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -694,7 +694,7 @@ INLINE void jnc_i(void)
  *	1101 0110
  *	JNIBF	addr
  ***********************************/
-INLINE void jnibf_i(void)
+static INLINE void jnibf_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -706,7 +706,7 @@ INLINE void jnibf_i(void)
  *	0010 0110
  *	JNT0	addr
  ***********************************/
-INLINE void jnt0_i(void)
+static INLINE void jnt0_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -718,7 +718,7 @@ INLINE void jnt0_i(void)
  *	0100 0110
  *	JNT1	addr
  ***********************************/
-INLINE void jnt1_i(void)
+static INLINE void jnt1_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -736,7 +736,7 @@ INLINE void jnt1_i(void)
  *	1001 0110
  *	JNZ 	addr
  ***********************************/
-INLINE void jnz_i(void)
+static INLINE void jnz_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -748,7 +748,7 @@ INLINE void jnz_i(void)
  *	1000 0110
  *	JOBF	addr
  ***********************************/
-INLINE void jobf_i(void)
+static INLINE void jobf_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -760,7 +760,7 @@ INLINE void jobf_i(void)
  *	0001 0110
  *	JTF 	addr
  ***********************************/
-INLINE void jtf_i(void)
+static INLINE void jtf_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -773,7 +773,7 @@ INLINE void jtf_i(void)
  *	0011 0110
  *	JT0 	addr
  ***********************************/
-INLINE void jt0_i(void)
+static INLINE void jt0_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -785,7 +785,7 @@ INLINE void jt0_i(void)
  *	0101 0110
  *	JT1 	addr
  ***********************************/
-INLINE void jt1_i(void)
+static INLINE void jt1_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -803,7 +803,7 @@ INLINE void jt1_i(void)
  *	1100 0110
  *	JZ		addr
  ***********************************/
-INLINE void jz_i(void)
+static INLINE void jz_i(void)
 {
 	UINT8 adr = ROP_ARG(PC);
 	PC += 1;
@@ -815,7 +815,7 @@ INLINE void jz_i(void)
  *	0010 0011
  *	MOV 	A,#n
  ***********************************/
-INLINE void mov_a_i(void)
+static INLINE void mov_a_i(void)
 {
 	A = ROP(PC);
 	PC += 1;
@@ -825,7 +825,7 @@ INLINE void mov_a_i(void)
  *	1100 0111
  *	MOV 	A,PSW
  ***********************************/
-INLINE void mov_a_psw(void)
+static INLINE void mov_a_psw(void)
 {
 	A = PSW;
 }
@@ -834,7 +834,7 @@ INLINE void mov_a_psw(void)
  *	1111 1rrr
  *	MOV 	A,Rr
  ***********************************/
-INLINE void mov_a_r(int r)
+static INLINE void mov_a_r(int r)
 {
 	A = R(r);
 }
@@ -843,7 +843,7 @@ INLINE void mov_a_r(int r)
  *	1111 000r
  *	MOV 	A,Rr
  ***********************************/
-INLINE void mov_a_rm(int r)
+static INLINE void mov_a_rm(int r)
 {
 	A = RM( M_IRAM + (R(r) & I8X42_intRAM_MASK) );
 }
@@ -852,7 +852,7 @@ INLINE void mov_a_rm(int r)
  *	0100 0010
  *	MOV 	A,T
  ***********************************/
-INLINE void mov_a_t(void)
+static INLINE void mov_a_t(void)
 {
 	A = TIMER;
 }
@@ -861,7 +861,7 @@ INLINE void mov_a_t(void)
  *	1101 0111
  *	MOV 	PSW,A
  ***********************************/
-INLINE void mov_psw_a(void)
+static INLINE void mov_psw_a(void)
 {
 	PSW = A;
 }
@@ -870,7 +870,7 @@ INLINE void mov_psw_a(void)
  *	1010 1rrr
  *	MOV 	Rr,A
  ***********************************/
-INLINE void mov_r_a(int r)
+static INLINE void mov_r_a(int r)
 {
 	R(r) = A;
 }
@@ -879,7 +879,7 @@ INLINE void mov_r_a(int r)
  *	1011 1rrr
  *	MOV 	Rr,#n
  ***********************************/
-INLINE void mov_r_i(int r)
+static INLINE void mov_r_i(int r)
 {
 	UINT8 val = ROP_ARG(PC);
 	PC += 1;
@@ -890,7 +890,7 @@ INLINE void mov_r_i(int r)
  *	1010 000r
  *	MOV 	@Rr,A
  ***********************************/
-INLINE void mov_rm_a(int r)
+static INLINE void mov_rm_a(int r)
 {
 	WM( M_IRAM + (R(r) & I8X42_intRAM_MASK), A );
 }
@@ -899,7 +899,7 @@ INLINE void mov_rm_a(int r)
  *	1011 000r
  *	MOV 	@Rr,#n
  ***********************************/
-INLINE void mov_rm_i(int r)
+static INLINE void mov_rm_i(int r)
 {
 	UINT8 val = ROP_ARG(PC);
 	PC += 1;
@@ -910,7 +910,7 @@ INLINE void mov_rm_i(int r)
  *	1001 0000
  *	MOV 	STS,A
  ***********************************/
-INLINE void mov_sts_a(void)
+static INLINE void mov_sts_a(void)
 {
 	STATE = (STATE & 0x0f) | (A & 0xf0);
 }
@@ -919,7 +919,7 @@ INLINE void mov_sts_a(void)
  *	0110 0010
  *	MOV 	T,A
  ***********************************/
-INLINE void mov_t_a(void)
+static INLINE void mov_t_a(void)
 {
 	TIMER = A;
 }
@@ -928,7 +928,7 @@ INLINE void mov_t_a(void)
  *	0000 11pp
  *	MOVD	A,Pp
  ***********************************/
-INLINE void movd_a_p(int p)
+static INLINE void movd_a_p(int p)
 {
 	/* added proper expanded port setup */
 	WP(2, (P2 & 0xf0) | 0x00 | p);	/* READ mode */
@@ -941,7 +941,7 @@ INLINE void movd_a_p(int p)
  *	0011 11pp
  *	MOVD	Pp,A
  ***********************************/
-INLINE void movd_p_a(int p)
+static INLINE void movd_p_a(int p)
 {
 	/* added proper expanded port setup */
 	WP(2, (P2 & 0xf0) | 0x04 | p);	/* WRITE mode */
@@ -954,7 +954,7 @@ INLINE void movd_p_a(int p)
  *	1010 0011
  *	MOVP	A,@A
  ***********************************/
-INLINE void movp_a_am(void)
+static INLINE void movp_a_am(void)
 {
 	UINT16 addr = (PC & 0x700) | A;
 	A = RM(addr);
@@ -964,7 +964,7 @@ INLINE void movp_a_am(void)
  *	1110 0011
  *	MOVP3	A,@A
  ***********************************/
-INLINE void movp3_a_am(void)
+static INLINE void movp3_a_am(void)
 {
 	UINT16 addr = 0x300 | A;
 	A = RM(addr);
@@ -974,7 +974,7 @@ INLINE void movp3_a_am(void)
  *	0000 0000
  *	NOP
  ***********************************/
-INLINE void nop(void)
+static INLINE void nop(void)
 {
 }
 
@@ -982,7 +982,7 @@ INLINE void nop(void)
  *	0100 1rrr
  *	ORL 	A,Rr
  ***********************************/
-INLINE void orl_r(int r)
+static INLINE void orl_r(int r)
 {
 	A = A | R(r);
 }
@@ -991,7 +991,7 @@ INLINE void orl_r(int r)
  *	0100 000r
  *	ORL 	A,@Rr
  ***********************************/
-INLINE void orl_rm(int r)
+static INLINE void orl_rm(int r)
 {
 	A = A | RM( M_IRAM + (R(r) & I8X42_intRAM_MASK) );
 }
@@ -1000,7 +1000,7 @@ INLINE void orl_rm(int r)
  *	0100 0011 7654 3210
  *	ORL 	A,#n
  ***********************************/
-INLINE void orl_i(void)
+static INLINE void orl_i(void)
 {
 	UINT8 val = ROP_ARG(PC);
 	PC++;
@@ -1011,7 +1011,7 @@ INLINE void orl_i(void)
  *	1000 10pp 7654 3210
  *	ORL 	Pp,#n
  ***********************************/
-INLINE void orl_p_i(int p)
+static INLINE void orl_p_i(int p)
 {
 	UINT8 val = ROP_ARG(PC);
 	PC++;
@@ -1030,7 +1030,7 @@ INLINE void orl_p_i(int p)
  *	1000 11pp 7654 3210
  *	ORLD	Pp,A
  ***********************************/
-INLINE void orld_p_a(int p)
+static INLINE void orld_p_a(int p)
 {
 	/* added proper expanded port setup */
 	WP(2, (P2 & 0xf0) | 0x08 | p);	/* OR mode */
@@ -1043,7 +1043,7 @@ INLINE void orld_p_a(int p)
  *	0000 0010
  *	OUT 	DBB,A
  ***********************************/
-INLINE void out_dbb_a(void)
+static INLINE void out_dbb_a(void)
 {
 	DBBO = A;			/* DBB output buffer */
 	STATE |= OBF;		/* assert the output buffer full flag */
@@ -1060,7 +1060,7 @@ INLINE void out_dbb_a(void)
  *	0011 10pp
  *	OUT 	Pp,A
  ***********************************/
-INLINE void out_p_a(int p)
+static INLINE void out_p_a(int p)
 {
 	/* changed to latched port scheme */
 	switch (p)
@@ -1077,7 +1077,7 @@ INLINE void out_p_a(int p)
  *	1000 0011
  *	RET
  ***********************************/
-INLINE void ret(void)
+static INLINE void ret(void)
 {
 	UINT8 msb;
 	PSW = (PSW & ~SP) | ((PSW - 1) & SP);
@@ -1090,7 +1090,7 @@ INLINE void ret(void)
  *	1001 0011
  *	RETR
  ***********************************/
-INLINE void retr(void)
+static INLINE void retr(void)
 {
 	UINT8 msb;
 	PSW = (PSW & ~SP) | ((PSW - 1) & SP);
@@ -1106,7 +1106,7 @@ INLINE void retr(void)
  *	1110 0111
  *	RL		A
  ***********************************/
-INLINE void rl_a(void)
+static INLINE void rl_a(void)
 {
 	A = (A << 1) | (A >> 7);
 }
@@ -1115,7 +1115,7 @@ INLINE void rl_a(void)
  *	1111 0111
  *	RLC 	A
  ***********************************/
-INLINE void rlc_a(void)
+static INLINE void rlc_a(void)
 {
 	UINT8 c = PSW >> 7;
 	PSW = (PSW & ~FC) | (A >> 7);
@@ -1126,7 +1126,7 @@ INLINE void rlc_a(void)
  *	0111 0111
  *	RR		A
  ***********************************/
-INLINE void rr_a(void)
+static INLINE void rr_a(void)
 {
 	A = (A >> 1) | (A << 7);
 }
@@ -1135,7 +1135,7 @@ INLINE void rr_a(void)
  *	0110 0111
  *	RRC 	A
  ***********************************/
-INLINE void rrc_a(void)
+static INLINE void rrc_a(void)
 {
 	UINT8 c = PSW & 0x80;
 	PSW = (PSW & ~FC) | (A << 7);
@@ -1146,7 +1146,7 @@ INLINE void rrc_a(void)
  *	1100 0101
  *	SEL 	RB0
  ***********************************/
-INLINE void sel_rb0(void)
+static INLINE void sel_rb0(void)
 {
 	PSW &= ~BS;
 }
@@ -1155,7 +1155,7 @@ INLINE void sel_rb0(void)
  *	1101 0101
  *	SEL 	RB1
  ***********************************/
-INLINE void sel_rb1(void)
+static INLINE void sel_rb1(void)
 {
 	PSW |= BS;
 }
@@ -1164,7 +1164,7 @@ INLINE void sel_rb1(void)
  *	0110 0101
  *	STOP	TCNT
  ***********************************/
-INLINE void stop_tcnt(void)
+static INLINE void stop_tcnt(void)
 {
 	ENABLE &= ~(T|CNT);
 }
@@ -1173,7 +1173,7 @@ INLINE void stop_tcnt(void)
  *	0100 0101
  *	STRT	CNT
  ***********************************/
-INLINE void strt_cnt(void)
+static INLINE void strt_cnt(void)
 {
 	ENABLE |= CNT;
 	ENABLE &= ~T;
@@ -1183,7 +1183,7 @@ INLINE void strt_cnt(void)
  *	0101 0101
  *	STRT	T
  ***********************************/
-INLINE void strt_t(void)
+static INLINE void strt_t(void)
 {
 	ENABLE |= T;
 	ENABLE &= ~CNT;
@@ -1193,7 +1193,7 @@ INLINE void strt_t(void)
  *	0100 0111
  *	SWAP	A
  ***********************************/
-INLINE void swap_a(void)
+static INLINE void swap_a(void)
 {
 	A = (A << 4) | (A >> 4);
 }
@@ -1202,7 +1202,7 @@ INLINE void swap_a(void)
  *	0010 1rrr
  *	XCH 	A,Rr
  ***********************************/
-INLINE void xch_a_r(int r)
+static INLINE void xch_a_r(int r)
 {
 	UINT8 tmp = R(r);
 	R(r) = A;
@@ -1213,7 +1213,7 @@ INLINE void xch_a_r(int r)
  *	0010 000r
  *	XCH 	A,@Rr
  ***********************************/
-INLINE void xch_a_rm(int r)
+static INLINE void xch_a_rm(int r)
 {
 	UINT16 addr = M_IRAM + (R(r) & I8X42_intRAM_MASK);
 	UINT8 tmp = RM(addr);
@@ -1225,7 +1225,7 @@ INLINE void xch_a_rm(int r)
  *	0011 000r
  *	XCHD	A,@Rr
  ***********************************/
-INLINE void xchd_a_rm(int r)
+static INLINE void xchd_a_rm(int r)
 {
 	UINT16 addr = M_IRAM + (R(r) & I8X42_intRAM_MASK);
 	UINT8 tmp = RM(addr);
@@ -1237,7 +1237,7 @@ INLINE void xchd_a_rm(int r)
  *	1101 1rrr
  *	XRL 	A,Rr
  ***********************************/
-INLINE void xrl_r(int r)
+static INLINE void xrl_r(int r)
 {
 	A = A ^ R(r);
 }
@@ -1246,7 +1246,7 @@ INLINE void xrl_r(int r)
  *	1101 000r
  *	XRL 	A,@Rr
  ***********************************/
-INLINE void xrl_rm(int r)
+static INLINE void xrl_rm(int r)
 {
 	A = A ^ RM( M_IRAM + (R(r) & I8X42_intRAM_MASK) );
 }
@@ -1255,7 +1255,7 @@ INLINE void xrl_rm(int r)
  *	1101 0011 7654 3210
  *	XRL 	A,#n
  ***********************************/
-INLINE void xrl_i(void)
+static INLINE void xrl_i(void)
 {
 	UINT8 val = ROP_ARG(PC);
 	PC++;

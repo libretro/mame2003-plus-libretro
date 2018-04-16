@@ -219,7 +219,7 @@ void m65ce02_set_reg (int regnum, unsigned val)
 	}
 }
 
-INLINE void m65ce02_take_irq(void)
+static INLINE void m65ce02_take_irq(void)
 {
 	if( !(P & F_I) )
 	{

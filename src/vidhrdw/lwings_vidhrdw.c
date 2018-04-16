@@ -183,7 +183,7 @@ WRITE_HANDLER( trojan_bg2_image_w )
 
 ***************************************************************************/
 
-INLINE int is_sprite_on(int offs)
+static INLINE int is_sprite_on(int offs)
 {
 	int sx,sy;
 

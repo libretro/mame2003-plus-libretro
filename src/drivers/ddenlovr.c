@@ -169,7 +169,7 @@ static void do_plot(int x,int y,int pen)
 }
 
 
-INLINE int fetch_bit(UINT8 *src_data,int src_len,int *bit_addr)
+static INLINE int fetch_bit(UINT8 *src_data,int src_len,int *bit_addr)
 {
 	int baddr = (*bit_addr)++;
 
@@ -184,7 +184,7 @@ INLINE int fetch_bit(UINT8 *src_data,int src_len,int *bit_addr)
 	return (src_data[baddr / 8] >> (7 - (baddr & 7))) & 1;
 }
 
-INLINE int fetch_word(UINT8 *src_data,int src_len,int *bit_addr,int word_len)
+static INLINE int fetch_word(UINT8 *src_data,int src_len,int *bit_addr,int word_len)
 {
 	int res = 0;
 

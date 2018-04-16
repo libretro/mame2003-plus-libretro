@@ -354,7 +354,7 @@ WRITE_HANDLER( taitosj_collision_reg_clear_w )
 	taitosj_collision_reg[3] = 0;
 }
 
-INLINE int get_sprite_xy(UINT8 num, UINT8* sx, UINT8* sy)
+static INLINE int get_sprite_xy(UINT8 num, UINT8* sx, UINT8* sy)
 {
 	int offs = num * 4;
 

@@ -75,7 +75,7 @@ static const char *condition[32] =
 **	CODE CODE
 **#################################################################################################*/
 
-INLINE char *signed_16bit(INT16 val)
+static INLINE char *signed_16bit(INT16 val)
 {
 	static char temp[10];
 	if (val < 0)

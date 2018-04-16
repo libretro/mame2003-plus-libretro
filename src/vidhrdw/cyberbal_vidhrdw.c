@@ -266,7 +266,7 @@ void cyberbal_set_screen(int which)
  *
  *************************************/
 
-INLINE void set_palette_entry(int entry, UINT16 value)
+static INLINE void set_palette_entry(int entry, UINT16 value)
 {
 	int r, g, b;
 

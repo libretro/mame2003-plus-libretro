@@ -826,7 +826,7 @@ static READ32_HANDLER( sound020_r )
 	return(rv);
 }
 
-INLINE void write_snd_020(int reg, int val)
+static INLINE void write_snd_020(int reg, int val)
 {
 	sndto000[reg] = val;
 

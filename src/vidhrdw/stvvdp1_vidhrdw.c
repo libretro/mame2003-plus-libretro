@@ -208,7 +208,7 @@ why they would want to */
 
 extern data32_t* stv_vdp2_cram;
 
-INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
+static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 {
 	int pix,mode,transmask;
 	data8_t* gfxdata = memory_region(REGION_GFX2);

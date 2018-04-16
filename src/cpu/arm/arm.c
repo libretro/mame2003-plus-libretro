@@ -240,19 +240,19 @@ static data32_t decodeShift( data32_t insn, data32_t *pCarry);
 
 /***************************************************************************/
 
-INLINE void cpu_write32( int addr, data32_t data )
+static INLINE void cpu_write32( int addr, data32_t data )
 {
 	/* Unaligned writes are treated as normal writes */
 	cpu_writemem26ledw_dword(addr&ADDRESS_MASK,data);
 	if (ARM_DEBUG_CORE && addr&3) logerror("%08x: Unaligned write %08x\n",R15,addr);
 }
 
-INLINE void cpu_write8( int addr, data8_t data )
+static INLINE void cpu_write8( int addr, data8_t data )
 {
 	cpu_writemem26ledw(addr,data);
 }
 
-INLINE data32_t cpu_read32( int addr )
+static INLINE data32_t cpu_read32( int addr )
 {
 	data32_t result = cpu_readmem26ledw_dword(addr&ADDRESS_MASK);
 
@@ -272,17 +272,17 @@ INLINE data32_t cpu_read32( int addr )
 	return result;
 }
 
-INLINE data8_t cpu_read8( int addr )
+static INLINE data8_t cpu_read8( int addr )
 {
 	return cpu_readmem26ledw(addr);
 }
 
-INLINE data32_t GetRegister( int rIndex )
+static INLINE data32_t GetRegister( int rIndex )
 {
 	return arm.sArmRegister[sRegisterTable[MODE][rIndex]];
 }
 
-INLINE void SetRegister( int rIndex, data32_t value )
+static INLINE void SetRegister( int rIndex, data32_t value )
 {
 	arm.sArmRegister[sRegisterTable[MODE][rIndex]] = value;
 }

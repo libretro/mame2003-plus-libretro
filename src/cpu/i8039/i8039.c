@@ -153,12 +153,12 @@ typedef struct {
 #define R7	intRAM[regPTR+7]
 
 
-INLINE void CLR (UINT8 flag) { R.PSW &= ~flag; }
-INLINE void SET (UINT8 flag) { R.PSW |= flag;  }
+static INLINE void CLR (UINT8 flag) { R.PSW &= ~flag; }
+static INLINE void SET (UINT8 flag) { R.PSW |= flag;  }
 
 
 /* Get next opcode argument and increment program counter */
-INLINE unsigned M_RDMEM_OPCODE (void)
+static INLINE unsigned M_RDMEM_OPCODE (void)
 {
 	unsigned retval;
 	retval=M_RDOP_ARG(R.PC.w.l);
@@ -166,7 +166,7 @@ INLINE unsigned M_RDMEM_OPCODE (void)
 	return retval;
 }
 
-INLINE void push(UINT8 d)
+static INLINE void push(UINT8 d)
 {
 	intRAM[8+R.SP++] = d;
 	R.SP  = R.SP & 0x0f;
@@ -174,7 +174,7 @@ INLINE void push(UINT8 d)
 	R.PSW = R.PSW | (R.SP >> 1);
 }
 
-INLINE UINT8 pull(void) {
+static INLINE UINT8 pull(void) {
 	R.SP  = (R.SP + 15) & 0x0f;		/*  if (--R.SP < 0) R.SP = 15;  */
 	R.PSW = R.PSW & 0xf8;
 	R.PSW = R.PSW | (R.SP >> 1);
@@ -182,7 +182,7 @@ INLINE UINT8 pull(void) {
 	return intRAM[8+R.SP];
 }
 
-INLINE void daa_a(void)
+static INLINE void daa_a(void)
 {
 	if ((R.A & 0x0f) > 0x09 || (R.PSW & A_FLAG))
 		R.A += 0x06;
@@ -193,7 +193,7 @@ INLINE void daa_a(void)
 	} else CLR(C_FLAG);
 }
 
-INLINE void M_ADD(UINT8 dat)
+static INLINE void M_ADD(UINT8 dat)
 {
 	UINT16 temp;
 
@@ -204,7 +204,7 @@ INLINE void M_ADD(UINT8 dat)
 	R.A  = temp & 0xff;
 }
 
-INLINE void M_ADDC(UINT8 dat)
+static INLINE void M_ADDC(UINT8 dat)
 {
 	UINT16 temp;
 
@@ -216,7 +216,7 @@ INLINE void M_ADDC(UINT8 dat)
 	R.A  = temp & 0xff;
 }
 
-INLINE void M_CALL(UINT16 addr)
+static INLINE void M_CALL(UINT16 addr)
 {
 	push(R.PC.b.l);
 	push((R.PC.b.h & 0x0f) | (R.PSW & 0xf0));
@@ -227,7 +227,7 @@ INLINE void M_CALL(UINT16 addr)
 
 }
 
-INLINE void M_XCHD(UINT8 addr)
+static INLINE void M_XCHD(UINT8 addr)
 {
 	UINT8 dat = R.A & 0x0f;
 	R.A &= 0xf0;
@@ -237,12 +237,12 @@ INLINE void M_XCHD(UINT8 addr)
 }
 
 
-INLINE void M_ILLEGAL(void)
+static INLINE void M_ILLEGAL(void)
 {
 	logerror("I8039:  PC = %04x,  Illegal opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
 }
 
-INLINE void M_UNDEFINED(void)
+static INLINE void M_UNDEFINED(void)
 {
 	logerror("I8039:  PC = %04x,  Unimplemented opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
 }

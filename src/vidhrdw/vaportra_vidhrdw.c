@@ -28,7 +28,7 @@ static UINT32 vaportra_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_row
 	return (col & 0x1f) + ((row & 0x1f) << 5) + ((col & 0x20) << 5) + ((row & 0x20) << 6);
 }
 
-INLINE void get_bg_tile_info(int tile_index,int gfx_bank,data16_t *gfx_base)
+static INLINE void get_bg_tile_info(int tile_index,int gfx_bank,data16_t *gfx_base)
 {
 	int data = gfx_base[tile_index];
 
@@ -39,9 +39,9 @@ INLINE void get_bg_tile_info(int tile_index,int gfx_bank,data16_t *gfx_base)
 			0)
 }
 
-INLINE void get_bg2_tile_info(int tile_index) { get_bg_tile_info(tile_index,1,vaportra_pf2_data); }
-INLINE void get_bg3_tile_info(int tile_index) { get_bg_tile_info(tile_index,2,vaportra_pf3_data); }
-INLINE void get_bg4_tile_info(int tile_index) { get_bg_tile_info(tile_index,3,vaportra_pf4_data); }
+static INLINE void get_bg2_tile_info(int tile_index) { get_bg_tile_info(tile_index,1,vaportra_pf2_data); }
+static INLINE void get_bg3_tile_info(int tile_index) { get_bg_tile_info(tile_index,2,vaportra_pf3_data); }
+static INLINE void get_bg4_tile_info(int tile_index) { get_bg_tile_info(tile_index,3,vaportra_pf4_data); }
 
 
 /* 8x8 top layer */

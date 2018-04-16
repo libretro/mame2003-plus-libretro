@@ -116,7 +116,7 @@ static rgb_t sparkle_callback(void);
  *
  *************************************/
 
-INLINE int twos_comp_val(int num, int bits)
+static INLINE int twos_comp_val(int num, int bits)
 {
 	return (INT32)(num << (32 - bits)) >> (32 - bits);
 }
@@ -129,7 +129,7 @@ INLINE int twos_comp_val(int num, int bits)
  *
  *************************************/
 
-INLINE UINT16 vector_word(UINT16 offset)
+static INLINE UINT16 vector_word(UINT16 offset)
 {
 	UINT8 *base;
 
@@ -154,7 +154,7 @@ INLINE UINT16 vector_word(UINT16 offset)
  *
  *************************************/
 
-INLINE int vector_timer(int deltax, int deltay)
+static INLINE int vector_timer(int deltax, int deltay)
 {
 	deltax = abs(deltax);
 	deltay = abs(deltay);
@@ -165,7 +165,7 @@ INLINE int vector_timer(int deltax, int deltay)
 }
 
 
-INLINE int dvg_vector_timer(int scale)
+static INLINE int dvg_vector_timer(int scale)
 {
 	return scale;
 }
@@ -178,7 +178,7 @@ INLINE int dvg_vector_timer(int scale)
  *
  *************************************/
 
-INLINE int effective_z(int z, int statz)
+static INLINE int effective_z(int z, int statz)
 {
 	/* Star Wars blends Z and an 8-bit STATZ */
 	/* STATZ of 128 should give highest intensity */

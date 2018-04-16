@@ -263,7 +263,7 @@ static void (*dsp_op_table[64])(void) =
 **	INLINES
 **#################################################################################################*/
 
-INLINE void update_register_banks(void)
+static INLINE void update_register_banks(void)
 {
 	UINT32 temp;
 	int i, bank;
@@ -494,7 +494,7 @@ void jaguardsp_init(void)
 	jaguar_state_register("jaguardsp");
 }
 
-INLINE void common_reset(struct jaguar_config *config)
+static INLINE void common_reset(struct jaguar_config *config)
 {
 	init_tables();
 
@@ -521,7 +521,7 @@ void jaguardsp_reset(void *param)
 	jaguar.isdsp = 1;
 }
 
-INLINE void common_exit(void)
+static INLINE void common_exit(void)
 {
 	if (mirror_table)
 		free(mirror_table);
@@ -646,7 +646,7 @@ int jaguardsp_execute(int cycles)
 **	REGISTER SNOOP
 **#################################################################################################*/
 
-INLINE unsigned common_get_reg(int regnum)
+static INLINE unsigned common_get_reg(int regnum)
 {
 	switch (regnum)
 	{
@@ -717,7 +717,7 @@ unsigned jaguardsp_get_reg(int regnum)
 **	REGISTER MODIFY
 **#################################################################################################*/
 
-INLINE void common_set_reg(int regnum, unsigned val)
+static INLINE void common_set_reg(int regnum, unsigned val)
 {
 	switch (regnum)
 	{

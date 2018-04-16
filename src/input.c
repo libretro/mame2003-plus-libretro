@@ -70,7 +70,7 @@ int code_init(void)
 }
 
 /* Find the osd record of an oscode */
-INLINE const struct KeyboardInfo* internal_oscode_find_keyboard(unsigned oscode)
+static INLINE const struct KeyboardInfo* internal_oscode_find_keyboard(unsigned oscode)
 {
 	const struct KeyboardInfo *keyinfo;
 	keyinfo = osd_get_key_list();
@@ -83,7 +83,7 @@ INLINE const struct KeyboardInfo* internal_oscode_find_keyboard(unsigned oscode)
 	return 0;
 }
 
-INLINE const struct JoystickInfo* internal_oscode_find_joystick(unsigned oscode)
+static INLINE const struct JoystickInfo* internal_oscode_find_joystick(unsigned oscode)
 {
 	const struct JoystickInfo *joyinfo;
 	joyinfo = osd_get_joy_list();
@@ -145,7 +145,7 @@ static int internal_oscode_add(unsigned oscode, unsigned type)
 }
 
 /* Find the osd record of a standard code */
-INLINE const struct KeyboardInfo* internal_code_find_keyboard(InputCode code)
+static INLINE const struct KeyboardInfo* internal_code_find_keyboard(InputCode code)
 {
 	const struct KeyboardInfo *keyinfo;
 	keyinfo = osd_get_key_list();
@@ -171,7 +171,7 @@ INLINE const struct KeyboardInfo* internal_code_find_keyboard(InputCode code)
 	return 0;
 }
 
-INLINE const struct JoystickInfo* internal_code_find_joystick(InputCode code)
+static INLINE const struct JoystickInfo* internal_code_find_joystick(InputCode code)
 {
 	const struct JoystickInfo *joyinfo;
 	joyinfo = osd_get_joy_list();

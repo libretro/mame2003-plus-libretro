@@ -397,7 +397,7 @@ WRITE16_HANDLER( hdgsp_vram_2bpp_w )
  *
  *************************************/
 
-INLINE void gsp_palette_change(int offset)
+static INLINE void gsp_palette_change(int offset)
 {
 	int red = (hdgsp_paletteram_lo[offset] >> 8) & 0xff;
 	int green = hdgsp_paletteram_lo[offset] & 0xff;

@@ -43,7 +43,7 @@ void fromanc2_set_dispvram_w(int vram)
 
 ******************************************************************************/
 
-INLINE void fromanc2_get_tile_info(int tile_index, int vram, int layer)
+static INLINE void fromanc2_get_tile_info(int tile_index, int vram, int layer)
 {
 	int tile, color;
 
@@ -63,7 +63,7 @@ static void fromanc2_get_v1_l2_tile_info(int tile_index) { fromanc2_get_tile_inf
 static void fromanc2_get_v1_l3_tile_info(int tile_index) { fromanc2_get_tile_info(tile_index, 1, 3); }
 
 
-INLINE void fromancr_get_tile_info(int tile_index, int vram, int layer)
+static INLINE void fromancr_get_tile_info(int tile_index, int vram, int layer)
 {
 	int tile, color;
 
@@ -240,7 +240,7 @@ WRITE16_HANDLER( fromanc4_paletteram_1_w )
 }
 
 
-INLINE void fromanc2_dispvram_w(offs_t offset, data16_t data, data16_t mem_mask, int vram, int layer)
+static INLINE void fromanc2_dispvram_w(offs_t offset, data16_t data, data16_t mem_mask, int vram, int layer)
 {
 	layer += (offset < 0x1000) ? 0 : 1;
 
@@ -326,7 +326,7 @@ WRITE16_HANDLER( fromanc2_gfxbank_1_w )
 }
 
 
-INLINE void fromancr_vram_w(offs_t offset, data16_t data, data16_t mem_mask, int layer)
+static INLINE void fromancr_vram_w(offs_t offset, data16_t data, data16_t mem_mask, int layer)
 {
 	int vram = (offset < 0x1000) ? 0 : 1;
 
@@ -375,7 +375,7 @@ void fromancr_gfxbank_w(int data)
 }
 
 
-INLINE void fromanc4_vram_w(offs_t offset, data16_t data, data16_t mem_mask, int layer)
+static INLINE void fromanc4_vram_w(offs_t offset, data16_t data, data16_t mem_mask, int layer)
 {
 	int vram = (offset < 0x4000) ? 0 : 1;
 

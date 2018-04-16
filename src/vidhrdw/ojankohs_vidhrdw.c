@@ -189,7 +189,7 @@ WRITE_HANDLER( ojankohs_flipscreen_w )
 	}
 }
 
-INLINE void ojankohs_get_tile_info(int tile_index)
+static INLINE void ojankohs_get_tile_info(int tile_index)
 {
 	int tile, color;
 
@@ -204,7 +204,7 @@ INLINE void ojankohs_get_tile_info(int tile_index)
 	SET_TILE_INFO(0, tile, color, 0)
 }
 
-INLINE void ojankoy_get_tile_info(int tile_index)
+static INLINE void ojankoy_get_tile_info(int tile_index)
 {
 	int tile, color, flipx, flipy;
 

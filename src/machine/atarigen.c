@@ -432,7 +432,7 @@ void decompress_eeprom_byte(const data16_t *data)
 	SLAPSTIC HANDLING
 ##########################################################################*/
 
-INLINE void update_bank(int bank)
+static INLINE void update_bank(int bank)
 {
 	/* if the bank has changed, copy the memory; Pit Fighter needs this */
 	if (bank != atarigen_slapstic_bank)

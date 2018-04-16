@@ -1009,7 +1009,7 @@ static void vdp_dma_fill(int data)
 /*** Useful Little Functions **************************************************/
 
 /* Note: We Expect plane = 0 for Scroll A, plane = 2 for Scroll B */
-INLINE int vdp_gethscroll(int plane, int line)
+static INLINE int vdp_gethscroll(int plane, int line)
 {
 	line &= vdp_hscrollmask;
 	return 0x400 - (VDP_VRAM_WORD(vdp_hscrollbase + (4 * line) + plane) & 0x3ff);
@@ -1313,7 +1313,7 @@ static void drawline_tiles(UINT32 *tiles, UINT16 *bmap, int pri, int offset, int
 ******************************************************************************/
 
 /* draw a non-horizontally-flipped section of a sprite */
-INLINE void draw8pixs(UINT16 *bmap, int patno, int priority, int colbase, int patline)
+static INLINE void draw8pixs(UINT16 *bmap, int patno, int priority, int colbase, int patline)
 {
 	UINT32 tile = *(UINT32 *)&VDP_VRAM_BYTE(patno * 32 + 4 * patline);
 	int col;
@@ -1391,7 +1391,7 @@ INLINE void draw8pixs(UINT16 *bmap, int patno, int priority, int colbase, int pa
 
 
 /* draw a horizontally-flipped section of a sprite */
-INLINE void draw8pixs_hflip(UINT16 *bmap, int patno, int priority, int colbase, int patline)
+static INLINE void draw8pixs_hflip(UINT16 *bmap, int patno, int priority, int colbase, int patline)
 {
 	UINT32 tile = *(UINT32 *)&VDP_VRAM_BYTE(patno * 32 + 4 * patline);
 	int col;

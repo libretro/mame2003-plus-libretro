@@ -1033,7 +1033,7 @@ static s_command commands[] = {
 { 0,	},
 };
 
-INLINE unsigned order( unsigned offset, unsigned size )
+static INLINE unsigned order( unsigned offset, unsigned size )
 {
 	switch( size )
 	{
@@ -1059,7 +1059,7 @@ INLINE unsigned order( unsigned offset, unsigned size )
 }
 
 /* adjust an offset by shifting it left activecpu_address_shift() times */
-INLINE unsigned lshift( unsigned offset )
+static INLINE unsigned lshift( unsigned offset )
 {
 	int shift = ASHIFT;
 	if (shift > 0)
@@ -1070,7 +1070,7 @@ INLINE unsigned lshift( unsigned offset )
 }
 
 /* adjust an offset by shifting it right activecpu_address_shift() times */
-INLINE unsigned rshift( unsigned offset )
+static INLINE unsigned rshift( unsigned offset )
 {
 	int shift = ASHIFT;
 	if (shift > 0)
@@ -1088,7 +1088,7 @@ INLINE unsigned rshift( unsigned offset )
  * and trailing space. The pointer to int size (if given) contains the
  * number of digits found.
  **************************************************************************/
-INLINE unsigned dtou( char **parg, int *size)
+static INLINE unsigned dtou( char **parg, int *size)
 {
 	unsigned val = 0, digit;
 
@@ -1111,7 +1111,7 @@ INLINE unsigned dtou( char **parg, int *size)
  * and trailing space. The pointer to int size (if given) contains the
  * number of digits found.
  **************************************************************************/
-INLINE unsigned xtou( char **parg, int *size)
+static INLINE unsigned xtou( char **parg, int *size)
 {
 	unsigned val = 0, digit;
 
@@ -1252,7 +1252,7 @@ const char *set_ea_info( int what, unsigned value, int size, int access )
  * lower
  * Convert string into all lower case.
  **************************************************************************/
-INLINE char *lower( const char *src)
+static INLINE char *lower( const char *src)
 {
 	static char buffer[127+1];
 	char *dst = buffer;
@@ -1266,7 +1266,7 @@ INLINE char *lower( const char *src)
  * upper
  * Convert string into all upper case.
  **************************************************************************/
-INLINE char *upper( const char *src)
+static INLINE char *upper( const char *src)
 {
 	static char buffer[127+1];
 	char *dst = buffer;
@@ -1280,7 +1280,7 @@ INLINE char *upper( const char *src)
  * kilobyte
  * Format a byte count or size to a kilo or mega bytes string
  **************************************************************************/
-INLINE char *kilobyte( unsigned bytes )
+static INLINE char *kilobyte( unsigned bytes )
 {
 	static char buffer[2][31+1];
 	static int which = 0;
@@ -1300,7 +1300,7 @@ INLINE char *kilobyte( unsigned bytes )
  * my_stricmp
  * Compare strings case insensitive
  **************************************************************************/
-INLINE int my_stricmp( const char *dst, const char *src)
+static INLINE int my_stricmp( const char *dst, const char *src)
 {
 	while( *src && *dst )
 	{
@@ -2131,7 +2131,7 @@ static int DECL_SPEC win_msgbox( UINT8 color, const char *title, const char *fmt
  * dbg_set_rect
  * set a rectangle from x,y,w and h
  **************************************************************************/
-INLINE void dbg_set_rect( struct rectangle *r, int x, int y, int w, int h )
+static INLINE void dbg_set_rect( struct rectangle *r, int x, int y, int w, int h )
 {
 	r->min_x = x;
 	r->max_x = x + w - 1;

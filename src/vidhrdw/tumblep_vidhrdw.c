@@ -262,7 +262,7 @@ static UINT32 tumblep_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows
 	return (col & 0x1f) + ((row & 0x1f) << 5) + ((col & 0x20) << 5);
 }
 
-INLINE void get_bg_tile_info(int tile_index,int gfx_bank,data16_t *gfx_base)
+static INLINE void get_bg_tile_info(int tile_index,int gfx_bank,data16_t *gfx_base)
 {
 	int data = gfx_base[tile_index];
 
@@ -287,7 +287,7 @@ static void get_fg_tile_info(int tile_index)
 			0)
 }
 
-INLINE void get_fncywld_bg_tile_info(int tile_index,int gfx_bank,data16_t *gfx_base)
+static INLINE void get_fncywld_bg_tile_info(int tile_index,int gfx_bank,data16_t *gfx_base)
 {
 	int data = gfx_base[tile_index*2];
 	int attr = gfx_base[tile_index*2+1];

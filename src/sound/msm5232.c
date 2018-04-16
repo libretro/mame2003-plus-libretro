@@ -462,7 +462,7 @@ static void msm5232_write(int which, int ofst, int data)
 #define VMAX	32768
 
 
-INLINE void EG_voices_advance(MSM5232 *chip)
+static INLINE void EG_voices_advance(MSM5232 *chip)
 {
 	VOICE *voi = &chip->voi[0];
 	int samplerate = chip->rate;
@@ -564,7 +564,7 @@ INLINE void EG_voices_advance(MSM5232 *chip)
 
 static int o2,o4,o8,o16;
 
-INLINE void TG_group_advance(MSM5232 *chip, int groupidx)
+static INLINE void TG_group_advance(MSM5232 *chip, int groupidx)
 {
 	VOICE *voi = &chip->voi[groupidx*4];
 	int i;

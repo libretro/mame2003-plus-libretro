@@ -1560,7 +1560,7 @@ L_Skip:
    } /* not totally clipped */
 }
 
-INLINE tilemap_draw_func pick_draw_func( struct mame_bitmap *dest )
+static INLINE tilemap_draw_func pick_draw_func( struct mame_bitmap *dest )
 {
 	switch (dest ? dest->depth : Machine->scrbitmap->depth)
 	{

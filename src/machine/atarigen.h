@@ -191,7 +191,7 @@ void atarivc_update(const data16_t *data);
 WRITE16_HANDLER( atarivc_w );
 READ16_HANDLER( atarivc_r );
 
-INLINE void atarivc_update_pf_xscrolls(void)
+static INLINE void atarivc_update_pf_xscrolls(void)
 {
 	atarivc_state.pf0_xscroll = atarivc_state.pf0_xscroll_raw + ((atarivc_state.pf1_xscroll_raw) & 7);
 	atarivc_state.pf1_xscroll = atarivc_state.pf1_xscroll_raw + 4;

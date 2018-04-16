@@ -136,7 +136,7 @@ static void unimplemented(void)
 }
 
 
-INLINE void execute_one(void)
+static INLINE void execute_one(void)
 {
 	PROCESS_DEFERRED_MEMORY();
 	CALL_MAME_DEBUG;
@@ -191,7 +191,7 @@ static void cau_write_pi_special(UINT8 i, UINT32 val)
 }
 
 
-INLINE UINT8 cau_read_pi_1byte(int pi)
+static INLINE UINT8 cau_read_pi_1byte(int pi)
 {
 	int p = (pi >> 5) & 0x1f;
 	int i = (pi >> 0) & 0x1f;
@@ -206,7 +206,7 @@ INLINE UINT8 cau_read_pi_1byte(int pi)
 }
 
 
-INLINE UINT16 cau_read_pi_2byte(int pi)
+static INLINE UINT16 cau_read_pi_2byte(int pi)
 {
 	int p = (pi >> 5) & 0x1f;
 	int i = (pi >> 0) & 0x1f;
@@ -224,7 +224,7 @@ INLINE UINT16 cau_read_pi_2byte(int pi)
 }
 
 
-INLINE UINT32 cau_read_pi_4byte(int pi)
+static INLINE UINT32 cau_read_pi_4byte(int pi)
 {
 	int p = (pi >> 5) & 0x1f;
 	int i = (pi >> 0) & 0x1f;
@@ -242,7 +242,7 @@ INLINE UINT32 cau_read_pi_4byte(int pi)
 }
 
 
-INLINE void cau_write_pi_1byte(int pi, UINT8 val)
+static INLINE void cau_write_pi_1byte(int pi, UINT8 val)
 {
 	int p = (pi >> 5) & 0x1f;
 	int i = (pi >> 0) & 0x1f;
@@ -256,7 +256,7 @@ INLINE void cau_write_pi_1byte(int pi, UINT8 val)
 }
 
 
-INLINE void cau_write_pi_2byte(int pi, UINT16 val)
+static INLINE void cau_write_pi_2byte(int pi, UINT16 val)
 {
 	int p = (pi >> 5) & 0x1f;
 	int i = (pi >> 0) & 0x1f;
@@ -273,7 +273,7 @@ INLINE void cau_write_pi_2byte(int pi, UINT16 val)
 }
 
 
-INLINE void cau_write_pi_4byte(int pi, UINT32 val)
+static INLINE void cau_write_pi_4byte(int pi, UINT32 val)
 {
 	int p = (pi >> 5) & 0x1f;
 	int i = (pi >> 0) & 0x1f;
@@ -300,7 +300,7 @@ INLINE void cau_write_pi_4byte(int pi, UINT32 val)
 #pragma mark DAU HELPERS
 #endif
 
-INLINE double dau_get_amult(int aidx)
+static INLINE double dau_get_amult(int aidx)
 {
 	int bufidx = (dsp32.abuf_index - 1) & 3;
 	double val = dsp32.a[aidx];
@@ -314,7 +314,7 @@ INLINE double dau_get_amult(int aidx)
 }
 
 
-INLINE double dau_get_anzflags(void)
+static INLINE double dau_get_anzflags(void)
 {
 	int bufidx = (dsp32.abuf_index - 1) & 3;
 	double nzflags = dsp32.NZflags;
@@ -327,7 +327,7 @@ INLINE double dau_get_anzflags(void)
 }
 
 
-INLINE UINT8 dau_get_avuflags(void)
+static INLINE UINT8 dau_get_avuflags(void)
 {
 #if (!IGNORE_DAU_UV_FLAGS)
 	int bufidx = (dsp32.abuf_index - 1) & 3;
@@ -344,7 +344,7 @@ INLINE UINT8 dau_get_avuflags(void)
 }
 
 
-INLINE void remember_last_dau(int aidx)
+static INLINE void remember_last_dau(int aidx)
 {
 #if (EMULATE_MULTIPLIER_LATENCY || EMULATE_AFLAGS_LATENCY)
 	int bufidx = dsp32.abuf_index++ & 3;
@@ -359,14 +359,14 @@ INLINE void remember_last_dau(int aidx)
 }
 
 
-INLINE void dau_set_val_noflags(int aidx, double res)
+static INLINE void dau_set_val_noflags(int aidx, double res)
 {
 	remember_last_dau(aidx);
 	dsp32.a[aidx] = res;
 }
 
 
-INLINE void dau_set_val_flags(int aidx, double res)
+static INLINE void dau_set_val_flags(int aidx, double res)
 {
 	remember_last_dau(aidx);
 #if (!IGNORE_DAU_UV_FLAGS)
@@ -393,7 +393,7 @@ INLINE void dau_set_val_flags(int aidx, double res)
 }
 
 
-INLINE double dsp_to_double(UINT32 val)
+static INLINE double dsp_to_double(UINT32 val)
 {
 	int_double id;
 
@@ -416,7 +416,7 @@ INLINE double dsp_to_double(UINT32 val)
 }
 
 
-INLINE UINT32 double_to_dsp(double val)
+static INLINE UINT32 double_to_dsp(double val)
 {
 	int mantissa, exponent;
 	int_double id;
@@ -459,7 +459,7 @@ static void dau_write_pi_special(int i, double val)
 
 static int lastp;
 
-INLINE double dau_read_pi_double_1st(int pi, int multiplier)
+static INLINE double dau_read_pi_double_1st(int pi, int multiplier)
 {
 	int p = (pi >> 3) & 15;
 	int i = (pi >> 0) & 7;
@@ -481,7 +481,7 @@ INLINE double dau_read_pi_double_1st(int pi, int multiplier)
 }
 
 
-INLINE double dau_read_pi_double_2nd(int pi, int multiplier, double xval)
+static INLINE double dau_read_pi_double_2nd(int pi, int multiplier, double xval)
 {
 	int p = (pi >> 3) & 15;
 	int i = (pi >> 0) & 7;
@@ -505,7 +505,7 @@ INLINE double dau_read_pi_double_2nd(int pi, int multiplier, double xval)
 }
 
 
-INLINE UINT32 dau_read_pi_4bytes(int pi)
+static INLINE UINT32 dau_read_pi_4bytes(int pi)
 {
 	int p = (pi >> 3) & 15;
 	int i = (pi >> 0) & 7;
@@ -527,7 +527,7 @@ INLINE UINT32 dau_read_pi_4bytes(int pi)
 }
 
 
-INLINE UINT16 dau_read_pi_2bytes(int pi)
+static INLINE UINT16 dau_read_pi_2bytes(int pi)
 {
 	int p = (pi >> 3) & 15;
 	int i = (pi >> 0) & 7;
@@ -549,7 +549,7 @@ INLINE UINT16 dau_read_pi_2bytes(int pi)
 }
 
 
-INLINE void dau_write_pi_double(int pi, double val)
+static INLINE void dau_write_pi_double(int pi, double val)
 {
 	int p = (pi >> 3) & 15;
 	int i = (pi >> 0) & 7;
@@ -570,7 +570,7 @@ INLINE void dau_write_pi_double(int pi, double val)
 }
 
 
-INLINE void dau_write_pi_4bytes(int pi, UINT32 val)
+static INLINE void dau_write_pi_4bytes(int pi, UINT32 val)
 {
 	int p = (pi >> 3) & 15;
 	int i = (pi >> 0) & 7;
@@ -592,7 +592,7 @@ INLINE void dau_write_pi_4bytes(int pi, UINT32 val)
 }
 
 
-INLINE void dau_write_pi_2bytes(int pi, UINT16 val)
+static INLINE void dau_write_pi_2bytes(int pi, UINT16 val)
 {
 	int p = (pi >> 3) & 15;
 	int i = (pi >> 0) & 7;

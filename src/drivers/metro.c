@@ -722,12 +722,12 @@ void metro_blit_done(int param)
 	update_irq_state();
 }
 
-INLINE int blt_read(const data8_t *ROM, const int offs)
+static INLINE int blt_read(const data8_t *ROM, const int offs)
 {
 	return ROM[offs] ^ 0xff;
 }
 
-INLINE void blt_write(const int tmap, const offs_t offs, const data16_t data, const data16_t mask)
+static INLINE void blt_write(const int tmap, const offs_t offs, const data16_t data, const data16_t mask)
 {
 	switch( tmap )
 	{

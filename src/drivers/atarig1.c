@@ -138,7 +138,7 @@ static READ16_HANDLER( a2d_data_r )
  *
  *************************************/
 
-INLINE void update_bank(int bank)
+static INLINE void update_bank(int bank)
 {
 	/* if the bank has changed, copy the memory; Pit Fighter needs this */
 	if (bank != bslapstic_bank)

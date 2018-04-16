@@ -112,7 +112,7 @@ PALETTE_INIT( tceptor )
 
 /*******************************************************************/
 
-INLINE int get_tile_addr(int tile_index)
+static INLINE int get_tile_addr(int tile_index)
 {
 	int x = tile_index / 28;
 	int y = tile_index % 28;

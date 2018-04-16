@@ -484,12 +484,12 @@ static MACHINE_INIT( cps )
 }
 
 
-INLINE int cps1_port(int offset)
+static INLINE int cps1_port(int offset)
 {
 	return cps1_output[offset/2];
 }
 
-INLINE data16_t *cps1_base(int offset,int boundary)
+static INLINE data16_t *cps1_base(int offset,int boundary)
 {
 	int base=cps1_port(offset)*256;
 	/*
@@ -668,7 +668,7 @@ static int cps2_last_sprite_offset;     /* Offset of the last sprite */
 #define CPS2_OBJ_XOFFS	0x08	/* X offset (usually 0x0040) */
 #define CPS2_OBJ_YOFFS	0x0a	/* Y offset (always 0x0010) */
 
-INLINE int cps2_port(int offset)
+static INLINE int cps2_port(int offset)
 {
     return cps2_output[offset/2];
 }

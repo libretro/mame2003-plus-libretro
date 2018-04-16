@@ -13,7 +13,7 @@ static struct tilemap *tilemap[2];
 
 ***************************************************************************/
 
-INLINE void get_tile_info(int tile_index,data8_t *ram)
+static INLINE void get_tile_info(int tile_index,data8_t *ram)
 {
 	tile_index *= 4;
 	SET_TILE_INFO(

@@ -199,25 +199,25 @@ static void check_irqs(void);
 **	MEMORY ACCESSORS
 **#################################################################################################*/
 
-INLINE UINT32 RWORD_DATA(UINT32 addr)
+static INLINE UINT32 RWORD_DATA(UINT32 addr)
 {
 	addr <<= 1;
 	return ADSP2100_RDMEM_WORD(ADSP2100_DATA_OFFSET + addr);
 }
 
-INLINE void WWORD_DATA(UINT32 addr, UINT32 data)
+static INLINE void WWORD_DATA(UINT32 addr, UINT32 data)
 {
 	addr <<= 1;
 	ADSP2100_WRMEM_WORD(ADSP2100_DATA_OFFSET + addr, data);
 }
 
-INLINE UINT32 RWORD_PGM(UINT32 addr)
+static INLINE UINT32 RWORD_PGM(UINT32 addr)
 {
 	addr <<= 2;
 	return *(UINT32 *)&OP_ROM[ADSP2100_PGM_OFFSET + addr];
 }
 
-INLINE void WWORD_PGM(UINT32 addr, UINT32 data)
+static INLINE void WWORD_PGM(UINT32 addr, UINT32 data)
 {
 	addr <<= 2;
 	ADSP2100_WRPGM(&OP_ROM[ADSP2100_PGM_OFFSET + addr], data);
@@ -230,7 +230,7 @@ INLINE void WWORD_PGM(UINT32 addr, UINT32 data)
 **	OTHER INLINES
 **#################################################################################################*/
 
-INLINE void set_core_2100(void)
+static INLINE void set_core_2100(void)
 {
 	chip_type = CHIP_TYPE_ADSP2100;
 	mstat_mask = 0x0f;
@@ -238,7 +238,7 @@ INLINE void set_core_2100(void)
 }
 
 #if (HAS_ADSP2101)
-INLINE void set_core_2101(void)
+static INLINE void set_core_2101(void)
 {
 	chip_type = CHIP_TYPE_ADSP2101;
 	mstat_mask = 0x7f;
@@ -247,7 +247,7 @@ INLINE void set_core_2101(void)
 #endif
 
 #if (HAS_ADSP2104)
-INLINE void set_core_2104(void)
+static INLINE void set_core_2104(void)
 {
 	chip_type = CHIP_TYPE_ADSP2104;
 	mstat_mask = 0x7f;
@@ -256,7 +256,7 @@ INLINE void set_core_2104(void)
 #endif
 
 #if (HAS_ADSP2105)
-INLINE void set_core_2105(void)
+static INLINE void set_core_2105(void)
 {
 	chip_type = CHIP_TYPE_ADSP2105;
 	mstat_mask = 0x7f;
@@ -265,7 +265,7 @@ INLINE void set_core_2105(void)
 #endif
 
 #if (HAS_ADSP2115)
-INLINE void set_core_2115(void)
+static INLINE void set_core_2115(void)
 {
 	chip_type = CHIP_TYPE_ADSP2115;
 	mstat_mask = 0x7f;
@@ -286,7 +286,7 @@ INLINE void set_core_2115(void)
 **	IRQ HANDLING
 **#################################################################################################*/
 
-INLINE int adsp2100_generate_irq(int which)
+static INLINE int adsp2100_generate_irq(int which)
 {
 	/* skip if masked */
 	if (!(adsp2100.imask & (1 << which)))
@@ -311,7 +311,7 @@ INLINE int adsp2100_generate_irq(int which)
 }
 
 
-INLINE int adsp2101_generate_irq(int which, int indx)
+static INLINE int adsp2101_generate_irq(int which, int indx)
 {
 	/* skip if masked */
 	if (!(adsp2100.imask & (0x20 >> indx)))

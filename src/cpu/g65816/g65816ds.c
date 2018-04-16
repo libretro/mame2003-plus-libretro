@@ -144,26 +144,26 @@ static opcode_struct g_opcodes[256] =
 	{JSR, I, AXI }, {SBC, M, AX  }, {INC, M, AX  }, {SBC, M, ALX }
 };
 
-INLINE unsigned int read_8(unsigned int address)
+static INLINE unsigned int read_8(unsigned int address)
 {
 	address = ADDRESS_65816(address);
 	return g65816_read_8_disassembler(address);
 }
 
-INLINE unsigned int read_16(unsigned int address)
+static INLINE unsigned int read_16(unsigned int address)
 {
 	unsigned int val = read_8(address);
 	return val | (read_8(address+1)<<8);
 }
 
-INLINE unsigned int read_24(unsigned int address)
+static INLINE unsigned int read_24(unsigned int address)
 {
 	unsigned int val = read_8(address);
 	val |= (read_8(address+1)<<8);
 	return val | (read_8(address+2)<<16);
 }
 
-INLINE char* int_8_str(unsigned int val)
+static INLINE char* int_8_str(unsigned int val)
 {
    static char str[20];
 
@@ -177,7 +177,7 @@ INLINE char* int_8_str(unsigned int val)
    return str;
 }
 
-INLINE char* int_16_str(unsigned int val)
+static INLINE char* int_16_str(unsigned int val)
 {
    static char str[20];
 

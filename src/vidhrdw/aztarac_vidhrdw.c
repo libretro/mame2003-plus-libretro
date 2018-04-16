@@ -15,7 +15,7 @@ data16_t *aztarac_vectorram;
 
 static int xcenter, ycenter;
 
-INLINE void read_vectorram (int addr, int *x, int *y, int *c)
+static INLINE void read_vectorram (int addr, int *x, int *y, int *c)
 {
     *c = aztarac_vectorram[addr] & 0xffff;
     *x = aztarac_vectorram[addr + 0x800] & 0x03ff;

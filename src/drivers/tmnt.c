@@ -1024,7 +1024,7 @@ static data16_t *tmnt2_1c0800,*sunset_104000;
 static data16_t *tmnt2_rom;
 
 #if 1 //*
-INLINE UINT32 tmnt2_get_word(UINT32 addr)
+static INLINE UINT32 tmnt2_get_word(UINT32 addr)
 {
 	if (addr <= 0x07ffff/2) return(tmnt2_rom[addr]); else
 	if (addr >= 0x104000/2 && addr <= 0x107fff/2) return(sunset_104000[addr-0x104000/2]); else

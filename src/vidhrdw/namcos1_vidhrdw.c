@@ -304,7 +304,7 @@ WRITE_HANDLER( namcos1_videocontrol_w )
 }
 
 /* tilemap callback */
-INLINE void background_get_info(int tile_index,int info_color,data8_t *info_vram)
+static INLINE void background_get_info(int tile_index,int info_color,data8_t *info_vram)
 {
 	int code;
 
@@ -314,7 +314,7 @@ INLINE void background_get_info(int tile_index,int info_color,data8_t *info_vram
 	tile_info.mask_data = &mpMaskData[code<<3];
 }
 
-INLINE void foreground_get_info(int tile_index,int info_color,data8_t *info_vram)
+static INLINE void foreground_get_info(int tile_index,int info_color,data8_t *info_vram)
 {
 	int code;
 

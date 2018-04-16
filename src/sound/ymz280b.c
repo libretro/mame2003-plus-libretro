@@ -91,7 +91,7 @@ static int diff_lookup[16];
 
 
 
-INLINE void update_irq_state(struct YMZ280BChip *chip)
+static INLINE void update_irq_state(struct YMZ280BChip *chip)
 {
 	int irq_bits = chip->status_register & chip->irq_mask;
 
@@ -117,7 +117,7 @@ else logerror("ymz280 irq_callback = 0");
 }
 
 
-INLINE void update_step(struct YMZ280BChip *chip, struct YMZ280BVoice *voice)
+static INLINE void update_step(struct YMZ280BChip *chip, struct YMZ280BVoice *voice)
 {
 	double frequency;
 
@@ -137,7 +137,7 @@ INLINE void update_step(struct YMZ280BChip *chip, struct YMZ280BVoice *voice)
 }
 
 
-INLINE void update_volumes(struct YMZ280BVoice *voice)
+static INLINE void update_volumes(struct YMZ280BVoice *voice)
 {
 	if (voice->pan == 8)
 	{

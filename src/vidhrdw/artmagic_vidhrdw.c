@@ -36,7 +36,7 @@ static double blitter_busy_until;
  *
  *************************************/
 
-INLINE UINT16 *address_to_vram(offs_t *address)
+static INLINE UINT16 *address_to_vram(offs_t *address)
 {
 	offs_t original = *address;
 	*address = TOWORD(original & 0x001fffff);

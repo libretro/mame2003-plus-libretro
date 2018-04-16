@@ -104,7 +104,7 @@ int	t11_ICount;
  *
  *************************************/
 
-INLINE int ROPCODE(void)
+static INLINE int ROPCODE(void)
 {
 	int pc = PCD;
 	PC += 2;
@@ -112,25 +112,25 @@ INLINE int ROPCODE(void)
 }
 
 
-INLINE int RBYTE(int addr)
+static INLINE int RBYTE(int addr)
 {
 	return T11_RDMEM(addr);
 }
 
 
-INLINE void WBYTE(int addr, int data)
+static INLINE void WBYTE(int addr, int data)
 {
 	T11_WRMEM(addr, data);
 }
 
 
-INLINE int RWORD(int addr)
+static INLINE int RWORD(int addr)
 {
 	return T11_RDMEM_WORD(addr & 0xfffe);
 }
 
 
-INLINE void WWORD(int addr, int data)
+static INLINE void WWORD(int addr, int data)
 {
 	T11_WRMEM_WORD(addr & 0xfffe, data);
 }
@@ -143,14 +143,14 @@ INLINE void WWORD(int addr, int data)
  *
  *************************************/
 
-INLINE void PUSH(int val)
+static INLINE void PUSH(int val)
 {
 	SP -= 2;
 	WWORD(SPD, val);
 }
 
 
-INLINE int POP(void)
+static INLINE int POP(void)
 {
 	int result = RWORD(SPD);
 	SP += 2;

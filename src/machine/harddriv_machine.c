@@ -617,7 +617,7 @@ WRITE16_HANDLER( hd68k_zram_w )
 */
 
 
-INLINE double duart_clock_period(void)
+static INLINE double duart_clock_period(void)
 {
 	int mode = (duart_write_data[0x04] >> 4) & 7;
 	if (mode != 3)
@@ -784,7 +784,7 @@ static void stmsp_sync_update(int param)
 }
 
 
-INLINE void stmsp_sync_w(int which, offs_t offset, data16_t data, data16_t mem_mask)
+static INLINE void stmsp_sync_w(int which, offs_t offset, data16_t data, data16_t mem_mask)
 {
 	data16_t newdata = stmsp_sync[which][offset];
 	COMBINE_DATA(&newdata);

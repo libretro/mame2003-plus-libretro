@@ -655,7 +655,7 @@ UINT32 mame_fwrite_swap(mame_file *file, const void *buffer, UINT32 length)
 	compose_path
 ***************************************************************************/
 
-INLINE void compose_path(char *output, const char *gamename, const char *filename, const char *extension)
+static INLINE void compose_path(char *output, const char *gamename, const char *filename, const char *extension)
 {
 	char *filename_base = output;
 	*output = 0;

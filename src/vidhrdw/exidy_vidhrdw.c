@@ -179,7 +179,7 @@ VIDEO_START( exidy )
  *
  *************************************/
 
-INLINE void latch_condition(int collision)
+static INLINE void latch_condition(int collision)
 {
 	collision ^= exidy_collision_invert;
 	int_condition = (input_port_2_r(0) & ~0x1c) | (collision & exidy_collision_mask);
@@ -343,12 +343,12 @@ static void collision_irq_callback(int param)
 
 ***************************************************************************/
 
-INLINE int sprite_1_enabled(void)
+static INLINE int sprite_1_enabled(void)
 {
 	return (!(*exidy_sprite_enable & 0x80) || (*exidy_sprite_enable & 0x10));
 }
 
-INLINE int sprite_2_enabled(void)
+static INLINE int sprite_2_enabled(void)
 {
 	return (!(*exidy_sprite_enable & 0x40));
 }

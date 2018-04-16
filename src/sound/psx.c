@@ -14,7 +14,7 @@
 
 #define VERBOSE_LEVEL ( 0 )
 
-INLINE void verboselog( int n_level, const char *s_fmt, ... )
+static INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
 	if( VERBOSE_LEVEL >= n_level )
 	{
@@ -63,12 +63,12 @@ static data32_t *m_p_n_spuram;
 #define SPU_REG( a ) ( ( a - 0xc00 ) / 4 )
 #define SPU_CHANNEL_REG( a ) ( a / 4 )
 
-INLINE data32_t psxreadlong( data32_t n_address )
+static INLINE data32_t psxreadlong( data32_t n_address )
 {
 	return *( (data32_t *)&m_p_n_ram[ n_address ] );
 }
 
-INLINE void psxwritelong( data32_t n_address, data32_t n_data )
+static INLINE void psxwritelong( data32_t n_address, data32_t n_data )
 {
 	*( (data32_t *)&m_p_n_ram[ n_address ] ) = n_data;
 }

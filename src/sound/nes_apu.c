@@ -87,7 +87,7 @@ static char apu_queuenotfull(unsigned int chip)
 }
 
 /* ADD AN ENTRY TO THE QUEUE */
-INLINE void apu_enqueue(unsigned int chip,unsigned char reg,unsigned char val)
+static INLINE void apu_enqueue(unsigned int chip,unsigned char reg,unsigned char val)
 {
   queue_t *entry;
 
@@ -106,7 +106,7 @@ INLINE void apu_enqueue(unsigned int chip,unsigned char reg,unsigned char val)
 }
 
 /* EXTRACT AN ENTRY FROM THE QUEUE */
-INLINE queue_t * apu_dequeue(int chip)
+static INLINE queue_t * apu_dequeue(int chip)
 {
   queue_t *p=&cur->queue[(cur->tail)];
 
@@ -375,7 +375,7 @@ static int8 apu_noise(noise_t *chan)
 }
 
 /* RESET DPCM PARAMETERS */
-INLINE void apu_dpcmreset(dpcm_t *chan)
+static INLINE void apu_dpcmreset(dpcm_t *chan)
 {
    chan->address = 0xC000 + (uint16) (chan->regs[2] << 6);
    chan->length = (uint16) (chan->regs[3] << 4) + 1;
@@ -446,7 +446,7 @@ static int8 apu_dpcm(dpcm_t *chan)
 }
 
 /* WRITE REGISTER VALUE */
-INLINE void apu_regwrite(int chip,int address, uint8 value)
+static INLINE void apu_regwrite(int chip,int address, uint8 value)
 {
    int chan = (address & 4) ? 1 : 0;
 
@@ -641,7 +641,7 @@ logerror("invalid apu write: $%02X at $%04X\n", value, address);
 }
 
 /* UPDATE SOUND BUFFER USING CURRENT DATA */
-INLINE void apu_update(int chip)
+static INLINE void apu_update(int chip)
 {
    static INT16 *buffer16 = NULL;
    int accum;
@@ -694,13 +694,13 @@ INLINE void apu_update(int chip)
 }
 
 /* READ VALUES FROM REGISTERS */
-INLINE uint8 apu_read(int chip,int address)
+static INLINE uint8 apu_read(int chip,int address)
 {
   return APU[chip].regs[address];
 }
 
 /* WRITE VALUE TO TEMP REGISTRY AND QUEUE EVENT */
-INLINE void apu_write(int chip,int address, uint8 value)
+static INLINE void apu_write(int chip,int address, uint8 value)
 {
    APU[chip].regs[address]=value;
 #ifdef USE_QUEUE

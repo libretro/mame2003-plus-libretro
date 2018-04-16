@@ -153,7 +153,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 }
 
 
-INLINE void changecolor_RRRRGGGGBBBBxxxx(int color,int indx)
+static INLINE void changecolor_RRRRGGGGBBBBxxxx(int color,int indx)
 {
 	int r,g,b;
 	int data = paletteram[2*indx | 1] | (paletteram[2*indx] << 8);

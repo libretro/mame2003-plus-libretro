@@ -229,7 +229,7 @@ PALETTE_INIT( pwrinst2 )
 
 ***************************************************************************/
 
-INLINE void get_tile_info(int GFX, data16_t *VRAM, int TDIM, int tile_index)
+static INLINE void get_tile_info(int GFX, data16_t *VRAM, int TDIM, int tile_index)
 {
 	UINT32 code, color, pri, tile;
 
@@ -316,7 +316,7 @@ void sailormn_get_tile_info_2(int tile_index)
 }
 
 
-INLINE void vram_w(data16_t *VRAM, struct tilemap *TILEMAP, UNUSEDARG offs_t offset, UNUSEDARG data16_t data, UNUSEDARG data16_t mem_mask)
+static INLINE void vram_w(data16_t *VRAM, struct tilemap *TILEMAP, UNUSEDARG offs_t offset, UNUSEDARG data16_t data, UNUSEDARG data16_t mem_mask)
 {
 	if ((VRAM[offset] & ~mem_mask)==(data & ~mem_mask)) return;
 	COMBINE_DATA(&VRAM[offset]);
@@ -338,7 +338,7 @@ INLINE void vram_w(data16_t *VRAM, struct tilemap *TILEMAP, UNUSEDARG offs_t off
 	and 408000-407fff both go to the 8x8 tilemap ram. Use this function
 	in this cases. Note that the get_tile_info function looks in the
 	4000-7fff range for tiles, so we have to write the data there. */
-INLINE void vram_8x8_w(data16_t *VRAM, struct tilemap *TILEMAP,UNUSEDARG offs_t offset, UNUSEDARG data16_t data, UNUSEDARG data16_t mem_mask)
+static INLINE void vram_8x8_w(data16_t *VRAM, struct tilemap *TILEMAP,UNUSEDARG offs_t offset, UNUSEDARG data16_t data, UNUSEDARG data16_t mem_mask)
 {
 	offset %= 0x4000/2;
 	if ((VRAM[offset] & ~mem_mask)==(data & ~mem_mask)) return;
@@ -1285,7 +1285,7 @@ static void sprite_draw_donpachi_zbuf( int priority )
 
 ***************************************************************************/
 
-INLINE void cave_tilemap_draw(
+static INLINE void cave_tilemap_draw(
 	struct mame_bitmap *bitmap, const struct rectangle *cliprect,
 	struct tilemap *TILEMAP, data16_t *VRAM, data16_t *VCTRL,
 	UINT32 flags, UINT32 priority, UINT32 priority2 )

@@ -583,7 +583,7 @@ Newer version of the I/O chip ?
 		dstp = (UINT8 *)((UINT8 *)bitmapp->line[0] + dy * ty / sizeof(type)) + tx;	\
 	}
 
-INLINE void taitoic_drawscanline(
+static INLINE void taitoic_drawscanline(
 		struct mame_bitmap *bitmap,int x,int y,
 		const UINT16 *src,int transparent,UINT32 orient,int pri, const struct rectangle *cliprect)
 {
@@ -927,7 +927,7 @@ static struct tilemap *PC080SN_tilemap[PC080SN_MAX_CHIPS][2];
 static int PC080SN_bg_gfx[PC080SN_MAX_CHIPS];
 static int PC080SN_yinvert,PC080SN_dblwidth;
 
-INLINE void common_get_PC080SN_bg_tile_info(data16_t *ram,int gfxnum,int tile_index)
+static INLINE void common_get_PC080SN_bg_tile_info(data16_t *ram,int gfxnum,int tile_index)
 {
 	UINT16 code,attr;
 
@@ -949,7 +949,7 @@ INLINE void common_get_PC080SN_bg_tile_info(data16_t *ram,int gfxnum,int tile_in
 			TILE_FLIPYX((attr & 0xc000) >> 14))
 }
 
-INLINE void common_get_PC080SN_fg_tile_info(data16_t *ram,int gfxnum,int tile_index)
+static INLINE void common_get_PC080SN_fg_tile_info(data16_t *ram,int gfxnum,int tile_index)
 {
 	UINT16 code,attr;
 
@@ -2348,7 +2348,7 @@ static int TC0100SCN_gfxbank,TC0100SCN_chip_colbank[3],TC0100SCN_colbank[3];
 static int TC0100SCN_dblwidth[TC0100SCN_MAX_CHIPS];
 
 
-INLINE void common_get_bg0_tile_info(data16_t *ram,int gfxnum,int tile_index,int colbank,int dblwidth)
+static INLINE void common_get_bg0_tile_info(data16_t *ram,int gfxnum,int tile_index,int colbank,int dblwidth)
 {
 	int code,attr;
 
@@ -2370,7 +2370,7 @@ INLINE void common_get_bg0_tile_info(data16_t *ram,int gfxnum,int tile_index,int
 			TILE_FLIPYX((attr & 0xc000) >> 14))
 }
 
-INLINE void common_get_bg1_tile_info(data16_t *ram,int gfxnum,int tile_index,int colbank,int dblwidth)
+static INLINE void common_get_bg1_tile_info(data16_t *ram,int gfxnum,int tile_index,int colbank,int dblwidth)
 {
 	int code,attr;
 
@@ -2392,7 +2392,7 @@ INLINE void common_get_bg1_tile_info(data16_t *ram,int gfxnum,int tile_index,int
 			TILE_FLIPYX((attr & 0xc000) >> 14))
 }
 
-INLINE void common_get_tx_tile_info(data16_t *ram,int gfxnum,int tile_index,int colbank,int dblwidth)
+static INLINE void common_get_tx_tile_info(data16_t *ram,int gfxnum,int tile_index,int colbank,int dblwidth)
 {
 	int attr = ram[tile_index];
 
@@ -3345,7 +3345,7 @@ static int TC0480SCP_text_xoffs,TC0480SCP_text_yoffs;
 static int TC0480SCP_flip_xoffs,TC0480SCP_flip_yoffs;
 
 
-INLINE void common_get_tc0480bg_tile_info(data16_t *ram,int gfxnum,int tile_index)
+static INLINE void common_get_tc0480bg_tile_info(data16_t *ram,int gfxnum,int tile_index)
 {
 	int code = ram[2*tile_index + 1] & 0x7fff;
 	int attr = ram[2*tile_index];
@@ -3356,7 +3356,7 @@ INLINE void common_get_tc0480bg_tile_info(data16_t *ram,int gfxnum,int tile_inde
 			TILE_FLIPYX((attr & 0xc000) >> 14))
 }
 
-INLINE void common_get_tc0480tx_tile_info(data16_t *ram,int gfxnum,int tile_index)
+static INLINE void common_get_tc0480tx_tile_info(data16_t *ram,int gfxnum,int tile_index)
 {
 	int attr = ram[tile_index];
 	SET_TILE_INFO(

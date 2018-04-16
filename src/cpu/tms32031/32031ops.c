@@ -109,7 +109,7 @@ static void unimplemented(void)
 }
 
 
-INLINE void execute_one(void)
+static INLINE void execute_one(void)
 {
 	CALL_MAME_DEBUG;
 	OP = ROPCODE(tms32031.pc);
@@ -269,7 +269,7 @@ void double_to_dsp_with_flags(double val, union genreg *result)
 #endif
 
 #if !USE_FP
-INLINE int count_leading_zeros(UINT32 val)
+static INLINE int count_leading_zeros(UINT32 val)
 {
 	int count;
 	for (count = 0; (INT32)val >= 0; count++) val <<= 1;
@@ -277,7 +277,7 @@ INLINE int count_leading_zeros(UINT32 val)
 }
 
 
-INLINE int count_leading_ones(UINT32 val)
+static INLINE int count_leading_ones(UINT32 val)
 {
 	int count;
 	for (count = 0; (INT32)val < 0; count++) val <<= 1;
@@ -5244,7 +5244,7 @@ static void ldizuf_imm(void)
 #pragma mark BRANCH OPS
 #endif
 
-INLINE void execute_delayed(UINT32 newpc)
+static INLINE void execute_delayed(UINT32 newpc)
 {
 	tms32031.delayed = 1;
 

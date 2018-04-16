@@ -111,7 +111,7 @@ currently zooming isn't supported etc.
 #if NEW_DRAWSPRITE
 
 //* AT050703 new drawsprite (unproven, general testing required)
-INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
+static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
 #define FP     20
 #define FPONE  (1<<FP)
@@ -693,7 +693,7 @@ drawing functions
 */
 
 //* AT050703: minor clean-up's
-INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const struct rectangle *cliprect ) {
+static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const struct rectangle *cliprect ) {
 	/* get attributes */
 	int mixerinput, sprite_palette_mask, sprite_priority_levels, sys32sprite_priority_lookup;
 

@@ -544,7 +544,7 @@ static void update_cycle_counting(void)
 	logtlbentry
 ------------------------------------------------------------------*/
 
-INLINE void logonetlbentry(int which)
+static INLINE void logonetlbentry(int which)
 {
 	UINT64 hi = mips3.cpr[0][COP0_EntryHi];
 	UINT64 lo = mips3.cpr[0][COP0_EntryLo0 + which];

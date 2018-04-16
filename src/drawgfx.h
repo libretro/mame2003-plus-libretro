@@ -184,14 +184,14 @@ void extract_scanline16(struct mame_bitmap *bitmap,int x,int y,int length,UINT16
 /* Alpha blending functions */
 extern int alpha_active;
 void alpha_init(void);
-INLINE void alpha_set_level(int level) {
+static INLINE void alpha_set_level(int level) {
 	if(level == 0)
 		level = -1;
 	alpha_cache.alphas = alpha_cache.alpha[level+1];
 	alpha_cache.alphad = alpha_cache.alpha[255-level];
 }
 
-INLINE UINT32 alpha_blend16( UINT32 d, UINT32 s )
+static INLINE UINT32 alpha_blend16( UINT32 d, UINT32 s )
 {
 	const UINT8 *alphas = alpha_cache.alphas;
 	const UINT8 *alphad = alpha_cache.alphad;
@@ -200,7 +200,7 @@ INLINE UINT32 alpha_blend16( UINT32 d, UINT32 s )
 }
 
 
-INLINE UINT32 alpha_blend32( UINT32 d, UINT32 s )
+static INLINE UINT32 alpha_blend32( UINT32 d, UINT32 s )
 {
 	const UINT8 *alphas = alpha_cache.alphas;
 	const UINT8 *alphad = alpha_cache.alphad;
@@ -208,7 +208,7 @@ INLINE UINT32 alpha_blend32( UINT32 d, UINT32 s )
 		+ (alphad[d & 0xff] | (alphad[(d>>8) & 0xff] << 8) | (alphad[(d>>16) & 0xff] << 16));
 }
 
-INLINE UINT32 alpha_blend_r16( UINT32 d, UINT32 s, UINT8 level )
+static INLINE UINT32 alpha_blend_r16( UINT32 d, UINT32 s, UINT8 level )
 {
 	const UINT8 *alphas = alpha_cache.alpha[level];
 	const UINT8 *alphad = alpha_cache.alpha[255 - level];
@@ -217,7 +217,7 @@ INLINE UINT32 alpha_blend_r16( UINT32 d, UINT32 s, UINT8 level )
 }
 
 
-INLINE UINT32 alpha_blend_r32( UINT32 d, UINT32 s, UINT8 level )
+static INLINE UINT32 alpha_blend_r32( UINT32 d, UINT32 s, UINT8 level )
 {
 	const UINT8 *alphas = alpha_cache.alpha[level];
 	const UINT8 *alphad = alpha_cache.alpha[255 - level];
@@ -273,7 +273,7 @@ void mdrawgfxzoom( struct mame_bitmap *dest_bmp,const struct GfxElement *gfx,
 void drawgfx_toggle_crosshair(void);
 void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip);
 
-INLINE void sect_rect(struct rectangle *dst, const struct rectangle *src)
+static INLINE void sect_rect(struct rectangle *dst, const struct rectangle *src)
 {
 	if (src->min_x > dst->min_x) dst->min_x = src->min_x;
 	if (src->max_x < dst->max_x) dst->max_x = src->max_x;

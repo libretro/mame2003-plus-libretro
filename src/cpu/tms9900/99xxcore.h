@@ -223,7 +223,7 @@ Tons of thanks to the guy who posted these, whoever he is...
 #endif
 
 
-INLINE void execute(UINT16 opcode);
+static INLINE void execute(UINT16 opcode);
 
 static void external_instruction_notify(int ext_op_ID);
 static UINT16 fetch(void);
@@ -3279,7 +3279,7 @@ static void h4000b(UINT16 opcode)
 }
 
 
-INLINE void execute(UINT16 opcode)
+static INLINE void execute(UINT16 opcode)
 {
 #if (TMS99XX_MODEL <= TMS9985_ID)
 

@@ -70,25 +70,25 @@ extern struct m68k_memory_interface m68k_memory_intf;
 #define m68k_write_memory_32_pd(address, value) m68kx_write_memory_32_pd(address, value)
 
 
-INLINE unsigned int m68k_read_immediate_16(unsigned int address);
-INLINE unsigned int m68k_read_immediate_32(unsigned int address);
-INLINE unsigned int m68k_read_pcrelative_8(unsigned int address);
-INLINE unsigned int m68k_read_pcrelative_16(unsigned int address);
-INLINE unsigned int m68k_read_pcrelative_32(unsigned int address);
-INLINE void m68k_write_memory_32_pd(unsigned int address, unsigned int value);
+static INLINE unsigned int m68k_read_immediate_16(unsigned int address);
+static INLINE unsigned int m68k_read_immediate_32(unsigned int address);
+static INLINE unsigned int m68k_read_pcrelative_8(unsigned int address);
+static INLINE unsigned int m68k_read_pcrelative_16(unsigned int address);
+static INLINE unsigned int m68k_read_pcrelative_32(unsigned int address);
+static INLINE void m68k_write_memory_32_pd(unsigned int address, unsigned int value);
 
 
-INLINE unsigned int m68kx_read_immediate_16(unsigned int address)
+static INLINE unsigned int m68kx_read_immediate_16(unsigned int address)
 {
 	return cpu_readop16((address) ^ m68k_memory_intf.opcode_xor);
 }
 
-INLINE unsigned int m68kx_read_immediate_32(unsigned int address)
+static INLINE unsigned int m68kx_read_immediate_32(unsigned int address)
 {
 	return ((m68k_read_immediate_16(address) << 16) | m68k_read_immediate_16((address)+2));
 }
 
-INLINE unsigned int m68kx_read_pcrelative_8(unsigned int address)
+static INLINE unsigned int m68kx_read_pcrelative_8(unsigned int address)
 {
 	if (address >= encrypted_opcode_start[cpu_getactivecpu()] &&
 			address < encrypted_opcode_end[cpu_getactivecpu()])
@@ -97,7 +97,7 @@ INLINE unsigned int m68kx_read_pcrelative_8(unsigned int address)
 		return m68k_read_memory_8(address);
 }
 
-INLINE unsigned int m68kx_read_pcrelative_16(unsigned int address)
+static INLINE unsigned int m68kx_read_pcrelative_16(unsigned int address)
 {
 	if (address >= encrypted_opcode_start[cpu_getactivecpu()] &&
 			address < encrypted_opcode_end[cpu_getactivecpu()])
@@ -106,7 +106,7 @@ INLINE unsigned int m68kx_read_pcrelative_16(unsigned int address)
 		return m68k_read_memory_16(address);
 }
 
-INLINE unsigned int m68kx_read_pcrelative_32(unsigned int address)
+static INLINE unsigned int m68kx_read_pcrelative_32(unsigned int address)
 {
 	if (address >= encrypted_opcode_start[cpu_getactivecpu()] &&
 			address < encrypted_opcode_end[cpu_getactivecpu()])
@@ -121,7 +121,7 @@ INLINE unsigned int m68kx_read_pcrelative_32(unsigned int address)
  * A real 68k first writes the high word to [address+2], and then writes the
  * low word to [address].
  */
-INLINE void m68kx_write_memory_32_pd(unsigned int address, unsigned int value)
+static INLINE void m68kx_write_memory_32_pd(unsigned int address, unsigned int value)
 {
 	(*m68k_memory_intf.write16)(address+2, value>>16);
 	(*m68k_memory_intf.write16)(address, value&0xffff);

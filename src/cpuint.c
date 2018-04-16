@@ -198,7 +198,7 @@ void cpu_set_irq_callback(int cpunum, int (*callback)(int))
  *
  *************************************/
 
-INLINE int cpu_irq_callback(int cpunum, int irqline)
+static INLINE int cpu_irq_callback(int cpunum, int irqline)
 {
 	int vector = irq_line_vector[cpunum][irqline];
 
@@ -377,7 +377,7 @@ INTERRUPT_GEN( nmi_line_assert )
  *
  *************************************/
 
-INLINE void irqn_line_hold(int irqline)
+static INLINE void irqn_line_hold(int irqline)
 {
 	int cpunum = cpu_getactivecpu();
 	if (interrupt_enable[cpunum])
@@ -387,7 +387,7 @@ INLINE void irqn_line_hold(int irqline)
 	}
 }
 
-INLINE void irqn_line_pulse(int irqline)
+static INLINE void irqn_line_pulse(int irqline)
 {
 	int cpunum = cpu_getactivecpu();
 	if (interrupt_enable[cpunum])
@@ -397,7 +397,7 @@ INLINE void irqn_line_pulse(int irqline)
 	}
 }
 
-INLINE void irqn_line_assert(int irqline)
+static INLINE void irqn_line_assert(int irqline)
 {
 	int cpunum = cpu_getactivecpu();
 	if (interrupt_enable[cpunum])

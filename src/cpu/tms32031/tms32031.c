@@ -261,12 +261,12 @@ static void double_to_dsp(double val, union genreg *result)
 **	EXECEPTION HANDLING
 **#################################################################################################*/
 
-INLINE void generate_exception(int exception)
+static INLINE void generate_exception(int exception)
 {
 }
 
 
-INLINE void invalid_instruction(UINT32 op)
+static INLINE void invalid_instruction(UINT32 op)
 {
 }
 

@@ -41,7 +41,7 @@ static struct tilemap* tilemap2; /* for collision detection */
 
 
 
-INLINE int arrow_code(int c)
+static INLINE int arrow_code(int c)
 {
 	if (GAME_IS_FIRETRUCK)
 	{

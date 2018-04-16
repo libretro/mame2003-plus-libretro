@@ -21,7 +21,7 @@ static struct tilemap *tilemap[3];
 
 ***************************************************************************/
 
-INLINE void get_tile_info(int tile_index,int plane)
+static INLINE void get_tile_info(int tile_index,int plane)
 {
 	data16_t attr;
 

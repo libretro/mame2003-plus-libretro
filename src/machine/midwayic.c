@@ -225,7 +225,7 @@ void midway_serial_pic_w(UINT8 data)
  *
  *************************************/
 
-INLINE UINT8 make_bcd(UINT8 data)
+static INLINE UINT8 make_bcd(UINT8 data)
 {
 	return ((data / 10) << 4) | (data % 10);
 }

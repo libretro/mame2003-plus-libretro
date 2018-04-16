@@ -105,7 +105,7 @@ static void get_fg_tile_info(int tile_index)
 			0)
 }
 
-INLINE void get_bg_tile_info(int tile_index, unsigned char *bgvideoram, int gfx_region)
+static INLINE void get_bg_tile_info(int tile_index, unsigned char *bgvideoram, int gfx_region)
 {
 	int code, color;
 

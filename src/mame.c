@@ -238,7 +238,7 @@ static int init_buffered_spriteram(void);
 	printed
 -------------------------------------------------*/
 
-INLINE void bail_and_print(const char *message)
+static INLINE void bail_and_print(const char *message)
 {
 	if (!bailing)
 	{
@@ -1581,7 +1581,7 @@ UINT64 mame_chd_length(struct chd_interface_file *file)
 
 #ifdef MAME_DEBUG
 
-INLINE int my_stricmp(const char *dst, const char *src)
+static INLINE int my_stricmp(const char *dst, const char *src)
 {
 	while (*src && *dst)
 	{

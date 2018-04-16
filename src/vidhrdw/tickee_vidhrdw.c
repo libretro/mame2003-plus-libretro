@@ -23,7 +23,7 @@ static void *setup_gun_timer;
  *
  *************************************/
 
-INLINE void get_crosshair_xy(int player, int *x, int *y)
+static INLINE void get_crosshair_xy(int player, int *x, int *y)
 {
 	*x = ((readinputport(4 + player * 2) & 0xff) * Machine->drv->screen_width) >> 8;
 	*y = ((readinputport(5 + player * 2) & 0xff) * Machine->drv->screen_height) >> 8;

@@ -200,7 +200,7 @@ static void ide_controller_write(struct ide_state *ide, offs_t offset, int size,
  *
  *************************************/
 
-INLINE void signal_interrupt(struct ide_state *ide)
+static INLINE void signal_interrupt(struct ide_state *ide)
 {
 	LOG(("IDE interrupt assert\n"));
 
@@ -212,7 +212,7 @@ INLINE void signal_interrupt(struct ide_state *ide)
 }
 
 
-INLINE void clear_interrupt(struct ide_state *ide)
+static INLINE void clear_interrupt(struct ide_state *ide)
 {
 	LOG(("IDE interrupt clear\n"));
 
@@ -247,7 +247,7 @@ static void delayed_interrupt_buffer_ready(int which)
 }
 
 
-INLINE void signal_delayed_interrupt(struct ide_state *ide, double time, int buffer_ready)
+static INLINE void signal_delayed_interrupt(struct ide_state *ide, double time, int buffer_ready)
 {
 	/* clear buffer ready and set the busy flag */
 	ide->status &= ~IDE_STATUS_BUFFER_READY;
@@ -417,7 +417,7 @@ static void reset_callback(int param)
  *
  *************************************/
 
-INLINE int convert_to_offset_and_size32(offs_t *offset, data32_t mem_mask)
+static INLINE int convert_to_offset_and_size32(offs_t *offset, data32_t mem_mask)
 {
 	int size = 4;
 
@@ -446,7 +446,7 @@ INLINE int convert_to_offset_and_size32(offs_t *offset, data32_t mem_mask)
 	return size;
 }
 
-INLINE int convert_to_offset_and_size16(offs_t *offset, data32_t mem_mask)
+static INLINE int convert_to_offset_and_size16(offs_t *offset, data32_t mem_mask)
 {
 	int size = 2;
 
@@ -468,7 +468,7 @@ INLINE int convert_to_offset_and_size16(offs_t *offset, data32_t mem_mask)
  *
  *************************************/
 
-INLINE UINT32 lba_address(struct ide_state *ide)
+static INLINE UINT32 lba_address(struct ide_state *ide)
 {
 	/* LBA direct? */
 	if (ide->cur_head_reg & 0x40)
@@ -487,7 +487,7 @@ INLINE UINT32 lba_address(struct ide_state *ide)
  *
  *************************************/
 
-INLINE void next_sector(struct ide_state *ide)
+static INLINE void next_sector(struct ide_state *ide)
 {
 	/* LBA direct? */
 	if (ide->cur_head_reg & 0x40)

@@ -131,7 +131,7 @@ int tms34061_start(struct tms34061_interface *interface)
  *
  *************************************/
 
-INLINE void update_interrupts(void)
+static INLINE void update_interrupts(void)
 {
 	/* if we have a callback, process it */
 	if (tms34061.intf.interrupt)
@@ -277,7 +277,7 @@ static READ_HANDLER( register_r )
  *
  *************************************/
 
-INLINE void adjust_xyaddress(int offset)
+static INLINE void adjust_xyaddress(int offset)
 {
 	/* note that carries are allowed if the Y coordinate isn't being modified */
 	switch (offset & 0x1e)

@@ -328,7 +328,7 @@ Offset + 0x4:
 
 ***************************************************************************/
 
-INLINE void twineagl_tile_info( int tile_index, data16_t *vram )
+static INLINE void twineagl_tile_info( int tile_index, data16_t *vram )
 {
 	data16_t code =	vram[ tile_index ];
 	data16_t attr =	vram[ tile_index + 0x800 ];
@@ -341,7 +341,7 @@ static void twineagl_get_tile_info_0( int tile_index ) { twineagl_tile_info( til
 static void twineagl_get_tile_info_1( int tile_index ) { twineagl_tile_info( tile_index, seta_vram_0 + 0x1000 ); }
 
 
-INLINE void get_tile_info( int tile_index, int layer, data16_t *vram )
+static INLINE void get_tile_info( int tile_index, int layer, data16_t *vram )
 {
 	data16_t code =	vram[ tile_index ];
 	data16_t attr =	vram[ tile_index + 0x800 ];

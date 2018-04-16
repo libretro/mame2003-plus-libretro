@@ -437,7 +437,7 @@ INTERRUPT_GEN( cvs_interrupt )
 	cpu_set_irq_line(0,0,PULSE_LINE);
 }
 
-INLINE void plot_star(struct mame_bitmap *bitmap, int x, int y)
+static INLINE void plot_star(struct mame_bitmap *bitmap, int x, int y)
 {
 	if (flip_screen_x)
 	{

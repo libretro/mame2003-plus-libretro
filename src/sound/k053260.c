@@ -248,7 +248,7 @@ void K053260_sh_stop( void ) {
 	}
 }
 
-INLINE void check_bounds( int chip, int channel ) {
+static INLINE void check_bounds( int chip, int channel ) {
 	struct K053260_chip_def *ic = &K053260_chip[chip];
 
 	int channel_start = ( ic->channels[channel].bank << 16 ) + ic->channels[channel].start;

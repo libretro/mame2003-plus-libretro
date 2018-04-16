@@ -135,7 +135,7 @@ VIDEO_UPDATE( missb2 )
 	}
 }
 
-INLINE void bg_changecolor_RRRRGGGGBBBBxxxx(pen_t color,int data)
+static INLINE void bg_changecolor_RRRRGGGGBBBBxxxx(pen_t color,int data)
 {
 	int r,g,b;
 

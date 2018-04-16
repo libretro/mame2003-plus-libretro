@@ -43,7 +43,7 @@ WRITE16_HANDLER( namcos2_gfx_ctrl_w )
 
 /**************************************************************************/
 
-INLINE void get_tile_info(int tile_index,data16_t *vram)
+static INLINE void get_tile_info(int tile_index,data16_t *vram)
 {
 	int tile;
 	tile = vram[tile_index];

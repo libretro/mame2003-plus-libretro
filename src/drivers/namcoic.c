@@ -30,7 +30,7 @@ READ32_HANDLER( namco_spritepos32_r )
 	return (mSpritePos[offset]<<16)|mSpritePos[offset+1];
 }
 
-INLINE data8_t
+static INLINE data8_t
 nth_byte16( const data16_t *pSource, int which )
 {
 	data16_t data = pSource[which/2];
@@ -47,7 +47,7 @@ nth_byte16( const data16_t *pSource, int which )
 /* nth_word32 is a general-purpose utility function, which allows us to
  * read from 32-bit aligned memory as if it were an array of 16 bit words.
  */
-INLINE data16_t
+static INLINE data16_t
 nth_word32( const data32_t *pSource, int which )
 {
 	data32_t data = pSource[which/2];
@@ -64,7 +64,7 @@ nth_word32( const data32_t *pSource, int which )
 /* nth_byte32 is a general-purpose utility function, which allows us to
  * read from 32-bit aligned memory as if it were an array of bytes.
  */
-INLINE data8_t
+static INLINE data8_t
 nth_byte32( const data32_t *pSource, int which )
 {
 		data32_t data = pSource[which/4];

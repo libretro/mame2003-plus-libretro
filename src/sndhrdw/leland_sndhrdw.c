@@ -1544,7 +1544,7 @@ static WRITE_HANDLER( i186_internal_port_w )
  *
  *************************************/
 
-INLINE void counter_update_count(int which)
+static INLINE void counter_update_count(int which)
 {
 	/* only update if the timer is running */
 	if (counter[which].timer)
