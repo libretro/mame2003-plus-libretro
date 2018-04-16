@@ -173,7 +173,15 @@ static void setirq_callback(int param)
 		cpu_set_irq_line(cpunum, 0, ASSERT_LINE);
 }
 
+READ_HANDLER(t5182shared_r)
+{
+	return t5182_sharedram[offset];
+}
 
+WRITE_HANDLER(t5182shared_w)
+{
+	t5182_sharedram[offset] = data;
+}
 
 WRITE_HANDLER( t5182_sound_irq_w )
 {
