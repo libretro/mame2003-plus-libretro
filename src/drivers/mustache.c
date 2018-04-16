@@ -23,16 +23,6 @@ VIDEO_UPDATE( mustache );
 PALETTE_INIT( mustache );
 
 
-static READ_HANDLER(t5182shared_r)
-{
-	return t5182_sharedram[offset];
-}
-
-static WRITE_HANDLER(t5182shared_w)
-{
-	t5182_sharedram[offset] = data;
-}
-
 static int read_coins=0;
 
 
@@ -251,7 +241,6 @@ ROM_START( mustache )
 	ROM_LOAD( "mustache.b6",0x0300, 0x1000, CRC(5f83fa35) SHA1(cb13e63577762d818e5dcbb52b8a53f66e284e8f) ) /* 63S281N near SEI0070BU */
 ROM_END
 
-
 static DRIVER_INIT( mustache )
 {
 	int i;
@@ -303,4 +292,4 @@ static DRIVER_INIT( mustache )
 }
 
 
-GAME( 1987,  mustache,  0,  mustache,  mustache,  mustache,  ROT90,  "[Seibu Kaihatsu] (March license)", "Mustache Boy" )
+GAME( 1987, mustache, 0, mustache, mustache, mustache, ROT90, "[Seibu Kaihatsu] (March license)", "Mustache Boy" )
