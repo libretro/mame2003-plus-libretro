@@ -7,6 +7,9 @@
 #include <zlib.h>
 
 #include <assert.h>
+
+#include <streams/file_stream.h>
+
 #include "driver.h"
 #include "unzip.h"
 #include "fileio.h"
