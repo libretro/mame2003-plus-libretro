@@ -8,8 +8,7 @@
 
 static data8_t djboy_videoreg, djboy_scrollx, djboy_scrolly, flipscreen;
 static struct tilemap *background;
-int scroll;
-scroll = 0;
+int scroll = 0;
 
 void djboy_set_videoreg( data8_t data )
 {
