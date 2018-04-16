@@ -382,7 +382,7 @@ static void SCSP_Init(int n, struct SCSPinterface *intf)
 	for (i = 0; i < n; i++)
 	{
 		SCSP = &SCSPs[i];
-		memset(SCSP,0,sizeof(SCSP));
+		memset(SCSP,0,sizeof(*SCSP));
 
 		if (!i)
 		{
@@ -750,8 +750,8 @@ SCSPNAME(_8bit,lfo,alfo,loop)\
 		else\
 		{\
 			signed short *p=(signed short *) (slot->base+((slot->cur_addr>>(SHIFT-1))&(~1)));\
-			signed int fpart;\
-			fpart=slot->cur_addr&((1<<SHIFT)-1);\
+			/*signed int fpart;*/\
+			/*fpart=slot->cur_addr&((1<<SHIFT)-1);*/\
 			sample=p[0];\
 		}\
 		slot->cur_addr+=step;\
@@ -895,7 +895,7 @@ static void SCSP_DoMasterSamples(int chip, int nsamples)
 
 static void dma_scsp()
 {
-	static UINT16 tmp_dma[2], *scsp_regs;
+	static UINT16 tmp_dma[3], *scsp_regs;
 
 	scsp_regs = (UINT16 *)SCSP->udata.datab;
 
