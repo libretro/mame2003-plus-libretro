@@ -171,7 +171,7 @@
 * Hooked Up Toshiba T5182 sound in Mustache Boy
 * Tweaked Tecmo Bowl so it will boot using only a single screen
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
-* Turned off debugging code in the hotspots, giving a huge speed improvement to the V-unit games.
+* Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
 
 
 ------------------------------------
