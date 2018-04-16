@@ -10,12 +10,7 @@
 #ifndef _I8039_H
 #define _I8039_H
 
-#ifndef INLINE
-#define INLINE static inline
-#endif
-
 #include "osd_cpu.h"
-
 
 /**************************************************************************
 	Internal Clock divisor

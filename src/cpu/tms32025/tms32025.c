@@ -121,6 +121,9 @@ Table 3-2.  TMS32025/26 Memory Blocks
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include <retro_inline.h>
+
 #include "driver.h"
 #include "cpuintrf.h"
 #include "mamedbg.h"
@@ -129,11 +132,6 @@ Table 3-2.  TMS32025/26 Memory Blocks
 
 
 #define CLK 4	/* 1 cycle equals 4 clock ticks */		/* PE/DI */
-
-
-#ifndef INLINE
-#define INLINE static inline
-#endif
 
 
 #define M_RDROM(A)		TMS32025_ROM_RDMEM(A)

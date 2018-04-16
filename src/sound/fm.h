@@ -5,6 +5,8 @@
 #ifndef _H_FM_FM_
 #define _H_FM_FM_
 
+#include <retro_inline.h>
+
 /* --- select emulation chips --- */
 #define BUILD_YM2203  (HAS_YM2203)		/* build YM2203(OPN)   emulator */
 #define BUILD_YM2608  (HAS_YM2608)		/* build YM2608(OPNA)  emulator */
@@ -88,14 +90,6 @@ typedef signed short	INT16;   /* signed 16bit   */
 typedef signed int		INT32;   /* signed 32bit   */
 #endif
 #endif
-
-#ifndef INLINE
-#define INLINE static __inline__
-#endif
-
-
-
-
 
 #if (FM_SAMPLE_BITS==16)
 typedef INT16 FMSAMPLE;

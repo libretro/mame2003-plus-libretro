@@ -1,13 +1,11 @@
 #ifndef SPC700__HEADER
 #define SPC700__HEADER
 
+#include <retro_inline.h>
+
 /* ======================================================================== */
 /* ============================= Configuration ============================ */
 /* ======================================================================== */
-
-#ifndef INLINE
-#define INLINE static
-#endif
 
 /* Turn on optimizations for SNES since it doesn't hook up the interrupt lines */
 #define SPC700_OPTIMIZE_SNES 1

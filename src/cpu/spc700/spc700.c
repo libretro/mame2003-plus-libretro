@@ -65,6 +65,7 @@ spctodo says sleep and standby modes cannot be used.
 
 #include <limits.h>
 #include <stdio.h>
+#include <retro_inline.h>
 #include "spc700.h"
 
 
@@ -73,9 +74,6 @@ spctodo says sleep and standby modes cannot be used.
 /* ======================================================================== */
 
 /* Fallback on static if we don't have inline */
-#ifndef INLINE
-#define INLINE static
-#endif
 
 /* This should be set to the default size of your processor (min 16 bit) */
 #undef uint

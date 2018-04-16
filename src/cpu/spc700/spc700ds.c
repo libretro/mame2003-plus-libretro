@@ -19,10 +19,8 @@ author (Karl Stenerud) at karl@higashiyama-unet.ocn.ne.jp.
 #include "spc700ds.h"
 #include <stdio.h>
 
+#include <retro_inline.h>
 
-#ifndef INLINE
-#define INLINE static
-#endif
 
 
 typedef struct

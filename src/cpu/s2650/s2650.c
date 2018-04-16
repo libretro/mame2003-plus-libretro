@@ -8,11 +8,15 @@
 
 #include <stdio.h>
 #include <string.h>
+
+#include <retro_inline.h>
+
 #include "driver.h"
 #include "state.h"
 #include "mamedbg.h"
 #include "s2650.h"
 #include "s2650cpu.h"
+
 
 /* define this to have some interrupt information logged */
 #define VERBOSE 0

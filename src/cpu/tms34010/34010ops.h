@@ -13,10 +13,6 @@
 #include "osd_cpu.h"
 #include "memory.h"
 
-#ifndef INLINE
-#define INLINE static inline
-#endif
-
 /* Size of the memory buffer allocated for the shiftr register */
 #define SHIFTREG_SIZE			(8 * 512 * sizeof(UINT16))
 

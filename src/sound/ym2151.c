@@ -9,6 +9,8 @@
 #include <string.h>
 #include <math.h>
 
+#include <retro_inline.h>
+
 #include "driver.h"
 #include "state.h"
 #include "ym2151.h"
@@ -19,7 +21,6 @@
 
 /*#define FM_EMU*/
 #ifdef FM_EMU
-	#define INLINE static __inline__
 	#ifdef USE_MAME_TIMERS
 		#undef USE_MAME_TIMERS
 	#endif

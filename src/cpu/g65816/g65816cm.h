@@ -8,20 +8,16 @@
 /* ======================================================================== */
 /* ================================ INCLUDES ============================== */
 /* ======================================================================== */
-
-#include <limits.h>
-#include "g65816.h"
 #include <stdio.h>
+#include <limits.h>
 
+#include <retro_inline.h>
+
+#include "g65816.h"
 
 /* ======================================================================== */
 /* ================================ GENERAL =============================== */
 /* ======================================================================== */
-
-/* Fallback on static if we don't have inline */
-#ifndef INLINE
-#define INLINE static
-#endif
 
 /* This should be set to the default size of your processor (min 16 bit) */
 #undef uint

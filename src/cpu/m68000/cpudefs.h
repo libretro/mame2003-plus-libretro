@@ -6,12 +6,10 @@
 #define __m68000defs__
 
 #include <stdlib.h>
+
+#include <retro_inline.h>
+
 #include "memory.h"
-
-#ifndef INLINE
-#define INLINE static inline
-#endif
-
 
 #ifdef __MWERKS__
 #pragma require_prototypes off

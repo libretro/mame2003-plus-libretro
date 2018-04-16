@@ -56,6 +56,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include <retro_inline.h>
+
 #include "driver.h"
 #include "cpuintrf.h"
 #include "mamedbg.h"
@@ -64,11 +67,6 @@
 
 
 #define CLK 1	/* 1 cycle equals 4 Q-clock ticks */
-
-
-#ifndef INLINE
-#define INLINE static inline
-#endif
 
 
 #define M_RDRAM(A)		PIC16C5x_RAM_RDMEM(A)

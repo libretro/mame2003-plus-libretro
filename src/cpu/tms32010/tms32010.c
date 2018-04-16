@@ -50,6 +50,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include <retro_inline.h>
+
 #include "driver.h"
 #include "cpuintrf.h"
 #include "mamedbg.h"
@@ -58,11 +61,6 @@
 
 
 #define CLK 4	/* 1 cycle equals 4 clock ticks */
-
-
-#ifndef INLINE
-#define INLINE static inline
-#endif
 
 
 #define M_RDROM(A)		TMS32010_ROM_RDMEM(A)

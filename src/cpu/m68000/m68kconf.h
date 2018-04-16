@@ -32,6 +32,8 @@
 #ifndef M68KCONF__HEADER
 #define M68KCONF__HEADER
 
+#include <retro_inline.h>
+
 
 /* Configuration switches.
  * Use OPT_SPECIFY_HANDLER for configuration options that allow callbacks.
@@ -167,15 +169,6 @@
 */
 #define M68K_USE_64_BIT  OPT_OFF
 
-
-/* Set to your compiler's static inline keyword to enable it, or
- * set it to blank to disable it.
- * If you define INLINE in the makefile, it will override this value.
- * NOTE: not enabling inline functions will SEVERELY slow down emulation.
- */
-#ifndef INLINE
-#define INLINE static __inline__
-#endif /* INLINE */
 
 #endif /* M68K_COMPILE_FOR_MAME */
 
