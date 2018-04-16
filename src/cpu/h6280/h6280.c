@@ -66,6 +66,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <retro_inline.h>
+
 extern FILE * errorlog;
 
 static UINT8 reg_layout[] = {

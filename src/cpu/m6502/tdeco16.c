@@ -6,7 +6,7 @@
 #define DECO16_VERBOSE 0
 
 #undef	OP
-#define OP(nn) INLINE void deco16_##nn(void)
+#define OP(nn) static INLINE void deco16_##nn(void)
 
 #define DECO16_BRK												\
 	logerror("%04x: BRK\n",activecpu_get_pc());					\

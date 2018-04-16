@@ -24,7 +24,7 @@
  *****************************************************************************/
 
 #undef	OP
-#define OP(nn) INLINE void m6509_##nn(void)
+#define OP(nn) static INLINE void m6509_##nn(void)
 
 OP(00) {		  m6509_ICount -= 7;		 BRK;		  } /* 7 BRK */
 OP(20) {		  m6509_ICount -= 6;		 JSR;		  } /* 6 JSR */

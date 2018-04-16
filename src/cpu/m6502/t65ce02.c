@@ -21,9 +21,9 @@
 
 #undef	OP
 #ifdef M4510
-#define OP(nn) INLINE void m4510_##nn(void)
+#define OP(nn) static INLINE void m4510_##nn(void)
 #else
-#define OP(nn) INLINE void m65ce02_##nn(void)
+#define OP(nn) static INLINE void m65ce02_##nn(void)
 #endif
 
 /*****************************************************************************
