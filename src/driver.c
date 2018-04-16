@@ -5657,6 +5657,9 @@ Other Sun games
 		
 	/* Mighty Warriors  */
 	DRIVER( mwarr )     /* (c) 1993 Elettronica Video-Games S.R.L */
+		
+	/* The Lost Castle In Darkmist */
+	DRIVER ( darkmist ) /* (c) 1986 Seibu Kaihatsu (Taito license) */
 
 
 #endif	/* DRIVER_RECURSIVE */
