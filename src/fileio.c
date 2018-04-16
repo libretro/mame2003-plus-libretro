@@ -9,6 +9,7 @@
 #include <assert.h>
 #include "driver.h"
 #include "unzip.h"
+#include "fileio.h"
 
 
 /***************************************************************************
