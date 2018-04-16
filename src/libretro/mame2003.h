@@ -287,14 +287,6 @@ cycles_t osd_profiling_ticks(void);
 
 ******************************************************************************/
 
-/* aborts the program in some unexpected fatal way */
-#ifdef __GNUC__
-void CLIB_DECL osd_die(const char *text,...)
-      __attribute__ ((format (printf, 1, 2)));
-#else
-void CLIB_DECL osd_die(const char *text,...);
-#endif
-
 #ifdef __GNUC__
 static INLINE void CLIB_DECL logerror(const char *text,...) __attribute__ ((format (printf, 1, 2)));
 #endif
