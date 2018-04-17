@@ -291,20 +291,6 @@ OSD_4
 #include "driver.h"
 #include "config.h"
 
-#ifdef MESS
-#include "inputx.h"
-#endif
-
-/* MAMEnet support */
-#if defined MAME_NET || defined XMAME_NET
-#include "network.h"
-
-static unsigned short input_port_defaults[MAX_INPUT_PORTS];
-static int default_player;
-static int analog_player_port[MAX_INPUT_PORTS];
-#endif /* MAME_NET */
-
-
 
 /***************************************************************************
 
