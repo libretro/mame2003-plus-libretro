@@ -223,7 +223,9 @@ void osd_get_path(int pathtype, char* path)
       case FILETYPE_CTRLR:
          snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "ctrlr");
          break;
- 
+      case FILETYPE_XML_DAT:
+         snprintf(path, 1024, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
+         break;
       /* pre-generated content goes in mam2003 system directory subfolders */
       case FILETYPE_ARTWORK:
          snprintf(path, 1024, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "artwork");
