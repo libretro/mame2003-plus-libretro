@@ -15,7 +15,7 @@
 #include "state.h"
 
 
-extern int framerate_test;
+
 
 static int driverIndex; /* Index of mame game loaded */
 extern struct osd_create_params videoConfig;
@@ -66,6 +66,9 @@ Sound
 
 int osd_start_audio_stream(int stereo)
 {
+
+	 Machine->sample_rate = Machine->drv->frames_per_second * 1000;
+
 	delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
 
@@ -82,17 +85,43 @@ int osd_start_audio_stream(int stereo)
 
 }
 
+
 int osd_update_audio_stream(INT16 *buffer)
 {
-	memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
-   	delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samples_per_frame;
-	if (delta_samples >= 1.0f)
-	{
-		int integer_delta = (int)delta_samples;
-		samples_per_frame += integer_delta;
-		delta_samples -= integer_delta;
-	}
+	int i,j;
 
+
+
+	if ( Machine->sample_rate !=0 && buffer )
+	{
+
+   		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+
+		if (usestereo)
+			audio_batch_cb(samples_buffer, samples_per_frame);
+
+		else
+		{
+
+			for (i = 0, j = 0; i < samples_per_frame; i++)
+        		{
+				conversion_buffer[j++] = samples_buffer[i];
+				conversion_buffer[j++] = samples_buffer[i];
+		        }
+
+         		audio_batch_cb(conversion_buffer,samples_per_frame);
+		}	
+
+   		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samples_per_frame;
+
+		if (delta_samples >= 1.0f)
+		{
+			int integer_delta = (int)delta_samples;
+			samples_per_frame += integer_delta;
+			delta_samples -= integer_delta;
+		}
+
+	}
 	return samples_per_frame;
 }
 
@@ -489,8 +518,11 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->geometry.max_width = width;
    info->geometry.max_height = height;
    info->geometry.aspect_ratio = (rotated && !options.tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-   info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
-   info->timing.sample_rate = options.samplerate;  /* please note if you want bally games to work properly set the sample rate to 22050 you cant go below 48 frames with the default that is set you will need to restart the core */
+   if ( Machine->drv->frames_per_second < 60.0 ) info->timing.fps = 60.0; 
+
+   else 
+   info->timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps
+   info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
 }
 
 static void check_system_specs(void)
@@ -639,32 +671,7 @@ void retro_run (void)
       }
    }
 
-	if (framerate_test == 1)
-	{
-		struct retro_system_av_info info;
-		retro_get_system_av_info(&info);
-		printf("timing %d\n", (int) info.timing.sample_rate);
-		info.timing.sample_rate=22050;
-		
-		environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info);
-		framerate_test = 0;
-	}
-
    mame_frame();
-   if (samples_per_frame)
-   {
-      if (usestereo)
-         audio_batch_cb(samples_buffer, samples_per_frame);
-      else
-      {
-         for (i = 0, j = 0; i < samples_per_frame; i++)
-         {
-            conversion_buffer[j++] = samples_buffer[i];
-            conversion_buffer[j++] = samples_buffer[i];
-         }
-         audio_batch_cb(conversion_buffer, samples_per_frame);
-      }
-   }
    
 
 }
