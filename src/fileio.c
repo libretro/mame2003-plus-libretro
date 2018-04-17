@@ -192,16 +192,13 @@ int osd_get_path_count(int pathtype)
 	return 1;
 }
 
-int osd_get_path_info(int pathtype, int pathindex, const char *filename)
+void osd_get_path(int pathtype, char* path)
 {
-   char buffer[1024];
-   char currDir[1024];
-
    switch (pathtype)
    {
       case FILETYPE_ROM:
       case FILETYPE_IMAGE:
-         strcpy(currDir, options.libretro_content_path);
+         strcpy(path, options.libretro_content_path);
          break;
       case FILETYPE_IMAGE_DIFF:
       case FILETYPE_NVRAM:
@@ -211,13 +208,20 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
       case FILETYPE_MEMCARD:
       case FILETYPE_SAMPLE:
          /* user generated content goes in mam2003 save directory subfolders */
-         snprintf(currDir, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), paths[pathtype]);
+         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), paths[pathtype]);
          break;
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
-         snprintf(currDir, 1024, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
-   }
+         snprintf(path, 1024, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
+   }    
+}
 
+int osd_get_path_info(int pathtype, int pathindex, const char *filename)
+{
+   char buffer[1024];
+   char currDir[1024];
+
+   osd_get_path(pathtype, currDir);
    snprintf(buffer, 1024, "%s%s%s", currDir, path_default_slash(), filename);
 
 #ifdef DEBUG_LOG
@@ -238,27 +242,7 @@ FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *m
    char currDir[1024];
    FILE* out;
 
-   switch (pathtype)
-   {
-      case FILETYPE_ROM:
-      case FILETYPE_IMAGE:
-         strcpy(currDir, options.libretro_content_path);
-         break;
-      case FILETYPE_IMAGE_DIFF:
-      case FILETYPE_NVRAM:
-      case FILETYPE_HIGHSCORE:
-      case FILETYPE_CONFIG:
-      case FILETYPE_INPUTLOG:
-      case FILETYPE_MEMCARD:
-      case FILETYPE_SAMPLE:
-         /* user generated content goes in mam2003 save directory subfolders */
-         snprintf(currDir, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), paths[pathtype]);
-         break;
-      default:
-         /* .dat files and additional core content goes in mame2003 system directory */
-         snprintf(currDir, 1024, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
-   }
-
+   osd_get_path(pathtype, currDir);
    snprintf(buffer, 1024, "%s%s%s", currDir, path_default_slash(), filename);
 
    path_mkdir(currDir);
