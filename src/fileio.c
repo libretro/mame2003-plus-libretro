@@ -185,7 +185,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 File I/O
 
 ******************************************************************************/
-static const char* const paths[] = { "raw", "rom", "image", "diff", "samples", "artwork", "nvram", "hi", "hsdb", "cfg", "inp", "memcard", "history", "cheat", "lang", "ctrlr" };
 
 int osd_get_path_count(int pathtype)
 {
@@ -200,15 +199,37 @@ void osd_get_path(int pathtype, char* path)
       case FILETYPE_IMAGE:
          strcpy(path, options.libretro_content_path);
          break;
+         
+      /* user-initiated content goes in mam2003 save directory subfolders */
+        
       case FILETYPE_IMAGE_DIFF:
+         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "diff");
+         break;     
       case FILETYPE_NVRAM:
+         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "nvram");
+         break;
       case FILETYPE_HIGHSCORE:
+          snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "hi");
+         break;
       case FILETYPE_CONFIG:
+         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "cfg");
+         break;
       case FILETYPE_INPUTLOG:
+         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "inp");
+         break;
       case FILETYPE_MEMCARD:
+         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "memcard");
+         break;
+      case FILETYPE_CTRLR:
+         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "ctrlr");
+         break;
+ 
+      /* pre-generated content goes in mam2003 system directory subfolders */
+      case FILETYPE_ARTWORK:
+         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "artwork");
+         break;
       case FILETYPE_SAMPLE:
-         /* user generated content goes in mam2003 save directory subfolders */
-         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), paths[pathtype]);
+         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "samples");
          break;
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
