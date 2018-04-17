@@ -104,7 +104,6 @@
 * Photo Y2k
 * Rogha Armor Force
 * Run And Gun (NVRAM) markwkidd
-* Sand Scorpian
 * Snowboard Championship
 * Street Fighter (With Added Speedups)
 * Task Force Harrier
@@ -178,7 +177,6 @@
 * Tweaked Tecmo Bowl so it will boot using only a single screen
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 * Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
-* Fixed missing graphical layers in Sand Scorpian game now playable
 
 
 ------------------------------------
