@@ -242,14 +242,18 @@ static void update_variables(void)
    struct retro_variable var;
 
    var.value = NULL;
+   
    var.key = APPNAME"-frameskip";
-
+   options.frameskip = 0; /* default if none set by frontend */
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
       options.frameskip = atoi(var.value);
+   }
 
    var.value = NULL;
-   var.key = APPNAME"-dcs-speedhack";
    
+   var.key = APPNAME"-dcs-speedhack";
+   options.activate_dcs_speedhack = 1;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -257,12 +261,11 @@ static void update_variables(void)
       else
          options.activate_dcs_speedhack = 0;
    }
-   else
-      options.activate_dcs_speedhack = 0;
 
    var.value = NULL;
+   
    var.key = APPNAME"-skip_disclaimer";
-
+   options.skip_disclaimer = 0;   
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -270,12 +273,11 @@ static void update_variables(void)
       else
          options.skip_disclaimer = 0;
    }
-   else
-      options.skip_disclaimer = 0;
 
    var.value = NULL;
-   var.key = APPNAME"-skip_warnings";
 
+   var.key = APPNAME"-skip_warnings";
+   options.skip_warnings = 0;   
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -283,20 +285,21 @@ static void update_variables(void)
       else
          options.skip_warnings = 0;
    }
-   else
-      options.skip_warnings = 0;
    
    var.value = NULL;
+   
    var.key = APPNAME"-sample_rate";
+   options.samplerate = 48000;
    
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
       options.samplerate = atoi(var.value);
-   else
-      options.samplerate = 48000;
+   }
 
    var.value = NULL;
-   var.key = APPNAME"-external_hiscore";
    
+   var.key = APPNAME"-external_hiscore";
+   options.use_external_hiscore = 0;  
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -304,13 +307,12 @@ static void update_variables(void)
       else
          options.use_external_hiscore = 0;
    }
-   else
-      options.use_external_hiscore = 0;  
 
 
    var.value = NULL;
    
    var.key = APPNAME"-dialsharexy";
+   options.dial_share_xy = 0;   
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -318,12 +320,11 @@ static void update_variables(void)
       else
          options.dial_share_xy = 0;
    }
-   else
-      options.dial_share_xy = 0;
 
    var.value = NULL;
    
    var.key = APPNAME"-mouse_device";
+   options.mouse_device = 0;   
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
    {
       if(strcmp(var.value, "pointer") == 0)
@@ -333,12 +334,11 @@ static void update_variables(void)
       else
          options.mouse_device = 0;
    }
-   else
-      options.mouse_device = 0;
 
    var.value = NULL;
    
    var.key = APPNAME"-crosshair_enabled";
+   options.crosshair_enable = 0;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -346,12 +346,11 @@ static void update_variables(void)
       else
          options.crosshair_enable = 0;
    }
-   else
-      options.crosshair_enable = 0;
 
    var.value = NULL;
    
    var.key = APPNAME"-rstick_to_btns";  
+   options.rstick_to_btns = 0;   
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -359,12 +358,11 @@ static void update_variables(void)
       else
          options.rstick_to_btns = 0;
    }
-   else
-      options.rstick_to_btns = 0;
 
    var.value = NULL;
    
    var.key = APPNAME"-tate_mode";
+   options.tate_mode = 0;   
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -372,12 +370,11 @@ static void update_variables(void)
       else
          options.tate_mode = 0;
    }
-   else
-      options.tate_mode = 0;
 
    var.value = NULL;
    
-   var.key = APPNAME"-skip-rom-verify"; 
+   var.key = APPNAME"-skip-rom-verify";
+   options.skip_rom_verify = 0;     
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 1)
@@ -385,22 +382,24 @@ static void update_variables(void)
       else
          options.skip_rom_verify = 0;
    }
-   else
-      options.skip_rom_verify = 0;  
 
    var.value = NULL;
    
-   var.key = APPNAME"-vector-resolution-multiplier";
+    var.key = APPNAME"-vector-resolution-multiplier";
+    options.vector_resolution_multiplier = 1;
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    {
       options.vector_resolution_multiplier = atoi(var.value);
+    }
  
    var.value = NULL;
    
    var.key = APPNAME"-vector-antialias";
+   options.antialias = 0;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
-         options.antialias = 1; /* integer: 1 to enable antialiasing on vectors */
+         options.antialias = 1; /* integer: 1 to enable antialiasing on vectors - does not work as of 2018/04/17*/
       else
          options.antialias = 0;
    }
@@ -408,6 +407,7 @@ static void update_variables(void)
    var.value = NULL;
    
    var.key = APPNAME"-vector-translucency";
+   options.translucency = 1;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       if(strcmp(var.value, "enabled") == 0)
@@ -419,6 +419,7 @@ static void update_variables(void)
    var.value = NULL;
    
    var.key = APPNAME"-vector-beam-width";
+   options.beam = 1;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       options.beam = atoi(var.value); /* integer: vector beam width */
@@ -427,6 +428,7 @@ static void update_variables(void)
    var.value = NULL;
    
    var.key = APPNAME"-vector-flicker"; 
+   options.vector_flicker = 20;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       options.vector_flicker = atof(var.value); /* float: vector beam flicker effect control */
@@ -435,6 +437,7 @@ static void update_variables(void)
    var.value = NULL;
 
    var.key = APPNAME"-vector-intensity";   
+   options.vector_intensity = 1.5f;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
       options.vector_intensity = atof(var.value); /* float: vector beam intensity */
