@@ -693,13 +693,6 @@ bool retro_load_game(const struct retro_game_info *game)
     { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
     { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
 
-    if (!game)
-      return false;
-
-    /* Find game index */
-    driverIndex = getDriverIndex(game->path);
-    
-
     struct retro_input_descriptor desc[] = {
         describe_buttons(0)
         describe_buttons(1)
@@ -707,6 +700,12 @@ bool retro_load_game(const struct retro_game_info *game)
         describe_buttons(3)
         { 0, 0, 0, 0, NULL }
         };
+
+    if (!game)
+      return false;
+
+    /* Find game index */
+    driverIndex = getDriverIndex(game->path);
 
     environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
     
