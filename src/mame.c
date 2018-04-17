@@ -287,17 +287,10 @@ int run_game(int game)
 
 	/* here's the meat of it all */
 	bailing = 0;
-
-	/* let the OSD layer start up first */
-	/* ensure parent dir for various mame dirs is created */
-	snprintf(buffer, 1024, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
-	path_mkdir(buffer);
-	snprintf(buffer, 1024, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
-	path_mkdir(buffer);
-    
+  
     begin_resource_tracking();
 
-    /* then finish setting up our local machine */
+    /* finish setting up our local machine */
     if (init_machine())
         bail_and_print("Unable to initialize machine emulation");
     else
