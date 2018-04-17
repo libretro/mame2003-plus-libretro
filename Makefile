@@ -426,12 +426,6 @@ ifeq (,$(findstring msvc,$(platform)))
    CFLAGS += -fomit-frame-pointer -fstrict-aliasing
 endif
 
-# extra options needed *only* for the osd files
-CFLAGSOSDEPEND = $(CFLAGS)
-
-# the windows osd code at least cannot be compiled with -pedantic
-CFLAGSPEDANTIC = $(CFLAGS) -pedantic
-
 # include the various .mak files
 include Makefile.common
 
