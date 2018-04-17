@@ -10,6 +10,8 @@
 * Air Rescue
 * Asura Blade 
 * Asura Buster
+* B-Rap Boys
+* B-Rap Boys Special
 * Backfire!
 * Bang Bang Busters
 * Baryon
@@ -34,6 +36,7 @@
 * Dream World
 * Dyna Gears
 * FixEight (bootleg)
+* Fujiyama Buster
 * Gaia: The Last Choice Of Earth
 * Ghost Loop
 * Glass (Censored, Unprotected)
@@ -69,6 +72,7 @@
 * Samurai Shodown V
 * Samurai Shodown V Special
 * Sengoku 3
+* Shogun Warriors
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
 * Teeter Torture
@@ -76,6 +80,7 @@
 * The King Of Fighters 2001
 * The King Of Fighters 2002
 * The Last Hope
+* The Lost Castle In Darkmist
 * Thunder Hoop
 * Title Fight
 * Vasara 2
@@ -99,6 +104,7 @@
 * Photo Y2k
 * Rogha Armor Force
 * Run And Gun (NVRAM) markwkidd
+* Sand Scorpian
 * Snowboard Championship
 * Street Fighter (With Added Speedups)
 * Task Force Harrier
@@ -172,6 +178,7 @@
 * Tweaked Tecmo Bowl so it will boot using only a single screen
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 * Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
+* Fixed missing graphical layers in Sand Scorpian game now playable
 
 
 ------------------------------------
