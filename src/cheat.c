@@ -208,13 +208,9 @@ Cheat Format:
 
 :[ drivername ]:[ type ]:[ address ]:[ data ]:[ extended data ]:[ name ]:[ description ]
 
-(for MESS)
-
-:[ drivername ]:[ CRC ]:[ type ]:[ address ]:[ data ]:[ extended data ]:[ name ]:[ description ]
 
 drivername		string	maximum	8 chars
 type			hex		32 bits
-CRC				hex		32 bits
 address			hex		32 bits
 data			hex		32 bits
 extended data	hex		32 bits
@@ -381,9 +377,6 @@ is selected
 #include "machine/eeprom.h"
 #include <ctype.h>
 
-#ifdef MESS
-#include "cheatms.h"
-#endif
 
 
 #define OSD_READKEY_KLUDGE	1
@@ -1692,9 +1685,6 @@ void InitCheat(void)
 	searchList =			NULL;
 	searchListLength =		0;
 
-#ifdef MESS
-	InitMessCheats();
-#endif
 
 	currentSearchIdx =		0;
 	foundCheatDatabase =	0;
@@ -1759,10 +1749,6 @@ void StopCheat(void)
 
 	free(menuItemInfo);
 	menuItemInfo = NULL;
-
-#ifdef MESS
-	StopMessCheats();
-#endif
 
 	cheatListLength =		0;
 	watchListLength =		0;
@@ -7732,10 +7718,6 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 				(!region->writeHandler->base))
 				return 1;
 
-#ifndef MESS
-#ifndef TINY_COMPILE
-#ifndef CPSMAME
-
 			{
 				extern struct GameDriver	driver_neogeo;
 
@@ -7747,9 +7729,6 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 					return 1;
 			}
 
-#endif
-#endif
-#endif
 
 #if HAS_TMS34010
 
@@ -8272,13 +8251,8 @@ static void LoadCheatFile(char * fileName)
 	foundCheatDatabase = 1;
 
 	// make the format strings
-#ifdef MESS
-	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
-	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%x:%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
-#else
 	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
 	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
-#endif
 
 	while(mame_fgets(buf, 2048, theFile))
 	{
@@ -8288,9 +8262,6 @@ static void LoadCheatFile(char * fileName)
 		int			extendData;
 		char		name[256];
 		char		description[256];
-#ifdef MESS
-		int			crc;
-#endif
 
 		int			argumentsMatched;
 
@@ -8303,49 +8274,25 @@ static void LoadCheatFile(char * fileName)
 		name[0] = 0;
 		description[0] = 0;
 
-#ifdef MESS
-		argumentsMatched = sscanf(buf, formatString, &crc, &type, &address, &data, &extendData, name, description);
-#else
 		argumentsMatched = sscanf(buf, formatString, &type, &address, &data, &extendData, name, description);
-#endif
 
-#ifdef MESS
-		if(argumentsMatched < 5)
-#else
 		if(argumentsMatched < 4)
-#endif
 		{
 			int	oldCPU;
 			int	oldCode;
 
-#ifdef MESS
-			argumentsMatched = sscanf(buf, oldFormatString, &crc, &oldCPU, &address, &data, &oldCode, name, description);
-			if(argumentsMatched < 5)
-#else
 			argumentsMatched = sscanf(buf, oldFormatString, &oldCPU, &address, &data, &oldCode, name, description);
 			if(argumentsMatched < 4)
-#endif
 			{
 				continue;
 			}
 			else
 			{
-#ifdef MESS
-				if(!MatchesCRCTable(crc))
-					continue;
-#endif
-
 				// convert the old code to the new format
 				type = ConvertOldCode(oldCode, oldCPU, &data, &extendData);
 			}
 		}
-		else
-		{
-#ifdef MESS
-			if(!MatchesCRCTable(crc))
-				continue;
-#endif
-		}
+
 
 		//logerror("cheat: processing %s\n", buf);
 
@@ -8557,11 +8504,7 @@ static void SaveCheat(CheatEntry * entry)
 			break;
 		}
 
-#ifdef MESS
-		bufTraverse += sprintf(bufTraverse, ":%s:%.8X:%.8X:%.*X:%.8X:%.8X", Machine->gamedrv->name, thisGameCRC, type, addressLength, action->address, action->originalDataField, action->extendData);
-#else
 		bufTraverse += sprintf(bufTraverse, ":%s:%.8X:%.*X:%.8X:%.8X", Machine->gamedrv->name, type, addressLength, action->address, action->originalDataField, action->extendData);
-#endif
 
 		if(name)
 		{

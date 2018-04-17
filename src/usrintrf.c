@@ -17,11 +17,6 @@
 #include "info.h"
 #include "libretro.h"
 
-#ifdef MESS
-  #include "mess.h"
-#include "mesintrf.h"
-#endif
-
 
 extern void (*pause_action)(void);
 static void pause_action_showcopyright(void);
@@ -45,10 +40,6 @@ extern unsigned int coins[COIN_COUNTERS];
 extern unsigned int coinlockedout[COIN_COUNTERS];
 
 /* MARTINEZ.F 990207 Memory Card */
-#ifndef MESS
-#ifndef TINY_COMPILE
-#ifndef CPSMAME
-#ifndef MMSND
 int 		memcard_menu(struct mame_bitmap *bitmap, int);
 extern int	mcd_action;
 extern int	mcd_number;
@@ -56,14 +47,6 @@ extern int	memcard_status;
 extern int	memcard_number;
 extern int	memcard_manager;
 extern struct GameDriver driver_neogeo;
-#endif
-#endif
-#endif
-#endif
-
-#if defined(__sgi) && !defined(MESS)
-static int game_paused = 0; /* not zero if the game is paused */
-#endif
 
 extern int neogeo_memcard_load(int);
 extern void neogeo_memcard_save(void);
@@ -493,11 +476,6 @@ struct GfxElement *builduifont(void)
 void ui_drawchar(struct mame_bitmap *dest, int ch, int color, int sx, int sy)
 {
 	struct rectangle bounds;
-
-#ifdef MESS
-	extern int skip_this_frame;
-	skip_this_frame = 0;
-#endif /* MESS */
 
 	/* construct a rectangle in rotated coordinates, then transform it */
 	bounds.min_x = sx + uirotbounds.min_x;
@@ -1704,17 +1682,6 @@ static int setdipswitches(struct mame_bitmap *bitmap, int selected)
 	return switchmenu(bitmap, selected, IPT_DIPSWITCH_NAME, IPT_DIPSWITCH_SETTING);
 }
 
-
-
-#ifdef MESS
-static int setconfiguration(struct mame_bitmap *bitmap, int selected)
-{
-	return switchmenu(bitmap, selected, IPT_CONFIG_NAME, IPT_CONFIG_SETTING);
-}
-#endif /* MESS */
-
-
-
 /* This flag is used for record OR sequence of key/joy */
 /* when is !=0 the first sequence is record, otherwise the first free */
 /* it's used byt setdefkeysettings, setdefjoysettings, setkeysettings, setjoysettings */
@@ -2233,7 +2200,6 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	return sel + 1;
 }
 
-#ifndef MESS
 static int mame_stats(struct mame_bitmap *bitmap,int selected)
 {
 	char temp[10];
@@ -2305,7 +2271,7 @@ static int mame_stats(struct mame_bitmap *bitmap,int selected)
 
 	return sel + 1;
 }
-#endif
+
 
 int showcopyright(struct mame_bitmap *bitmap)
 {
@@ -2616,13 +2582,6 @@ int showgameinfo(struct mame_bitmap *bitmap)
 		update_video_and_audio();
 	}
 
-	#ifdef MESS
-	while (displayimageinfo(bitmap,0) == 1)
-	{
-		update_video_and_audio();
-	}
-	#endif
-
 	erase_screen(bitmap);
 	/* make sure that the screen is really cleared, in case autoframeskip kicked in */
 	update_video_and_audio();
@@ -2882,11 +2841,6 @@ static int displayhistory (struct mame_bitmap *bitmap, int selected)
 
 }
 
-
-#ifndef MESS
-#ifndef TINY_COMPILE
-#ifndef CPSMAME
-#ifndef MMSND
 int memcard_menu(struct mame_bitmap *bitmap, int selection)
 {
 	int sel;
@@ -2901,9 +2855,6 @@ int memcard_menu(struct mame_bitmap *bitmap, int selection)
 	menuitem[menutotal++] = buf;
 	menuitem[menutotal++] = ui_getstring (UI_ejectcard);
 	menuitem[menutotal++] = ui_getstring (UI_createcard);
-#ifdef MESS
-	menuitem[menutotal++] = ui_getstring (UI_resetcard);
-#endif
 	menuitem[menutotal++] = ui_getstring (UI_returntomain);
 	menuitem[menutotal] = 0;
 
@@ -2981,20 +2932,9 @@ int memcard_menu(struct mame_bitmap *bitmap, int selection)
 				else
 					mcd_action = 5;
 				break;
-#ifdef MESS
-			case 3:
-				memcard_manager=1;
-				sel=-2;
-				machine_reset();
-				break;
-			case 4:
-				sel=-1;
-				break;
-#else
 			case 3:
 				sel=-1;
 				break;
-#endif
 
 
 			}
@@ -3014,27 +2954,12 @@ int memcard_menu(struct mame_bitmap *bitmap, int selection)
 
 	return sel + 1;
 }
-#endif
-#endif
-#endif
-#endif
 
 
-#ifndef MESS
 enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_ANALOG,UI_CALIBRATE,
 		UI_STATS,UI_GAMEINFO, UI_HISTORY,
 		UI_CHEAT,UI_RESET,UI_GENERATE_XML_DAT, UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT };
-#else
-enum { UI_SWITCH = 0,UI_DEFCODE,UI_CODE,UI_ANALOG,UI_CALIBRATE,
-		UI_GAMEINFO, UI_IMAGEINFO,UI_FILEMANAGER,UI_TAPECONTROL,
-		UI_HISTORY,UI_CHEAT,UI_RESET,UI_GENERATE_XML_DAT,UI_MEMCARD,UI_RAPIDFIRE,UI_EXIT,
-		UI_CONFIGURATION };
-#endif
 
-
-#ifdef XMAME
-extern int setrapidfire(struct mame_bitmap *bitmap, int selected);
-#endif
 
 
 #define MAX_SETUPMENU_ITEMS 20
@@ -3049,9 +2974,6 @@ static void setup_menu_init(void)
 
 	menu_item[menu_total] = ui_getstring (UI_inputgeneral); menu_action[menu_total++] = UI_DEFCODE;
 	menu_item[menu_total] = ui_getstring (UI_inputspecific); menu_action[menu_total++] = UI_CODE;
-#ifdef MESS
-	menu_item[menu_total] = ui_getstring (UI_configuration); menu_action[menu_total++] = UI_CONFIGURATION;
-#endif /* MESS */
 
 	/* Determine if there are any dip switches */
 	{
@@ -3115,38 +3037,21 @@ static void setup_menu_init(void)
 		menu_item[menu_total] = ui_getstring (UI_calibrate); menu_action[menu_total++] = UI_CALIBRATE;
 	}
 
-#ifndef MESS
 	menu_item[menu_total] = ui_getstring (UI_bookkeeping); menu_action[menu_total++] = UI_STATS;
 	menu_item[menu_total] = ui_getstring (UI_gameinfo); menu_action[menu_total++] = UI_GAMEINFO;
 	menu_item[menu_total] = ui_getstring (UI_history); menu_action[menu_total++] = UI_HISTORY;
-#else
-	menu_item[menu_total] = ui_getstring (UI_imageinfo); menu_action[menu_total++] = UI_IMAGEINFO;
-	menu_item[menu_total] = ui_getstring (UI_filemanager); menu_action[menu_total++] = UI_FILEMANAGER;
-#if HAS_WAVE
-	menu_item[menu_total] = ui_getstring (UI_tapecontrol); menu_action[menu_total++] = UI_TAPECONTROL;
-#endif
-	menu_item[menu_total] = ui_getstring (UI_history); menu_action[menu_total++] = UI_HISTORY;
-#endif
 
 	if (options.cheat)
 	{
 		menu_item[menu_total] = ui_getstring (UI_cheat); menu_action[menu_total++] = UI_CHEAT;
 	}
 
-#ifndef MESS
-#ifndef TINY_COMPILE
-#ifndef CPSMAME
-#ifndef MMSND
 	if (Machine->gamedrv->clone_of == &driver_neogeo ||
 			(Machine->gamedrv->clone_of &&
 				Machine->gamedrv->clone_of->clone_of == &driver_neogeo))
 	{
 		menu_item[menu_total] = ui_getstring (UI_memorycard); menu_action[menu_total++] = UI_MEMCARD;
 	}
-#endif
-#endif
-#endif
-#endif
 
 	menu_item[menu_total] = ui_getstring (UI_resetgame); menu_action[menu_total++] = UI_RESET;
 #if !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
@@ -3192,47 +3097,22 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 			case UI_CALIBRATE:
 				res = calibratejoysticks(bitmap, sel >> SEL_BITS);
 				break;
-#ifndef MESS
 			case UI_STATS:
 				res = mame_stats(bitmap, sel >> SEL_BITS);
 				break;
 			case UI_GAMEINFO:
 				res = displaygameinfo(bitmap, sel >> SEL_BITS);
 				break;
-#endif
-#ifdef MESS
-			case UI_IMAGEINFO:
-				res = displayimageinfo(bitmap, sel >> SEL_BITS);
-				break;
-			case UI_FILEMANAGER:
-				res = filemanager(bitmap, sel >> SEL_BITS);
-				break;
-#if HAS_WAVE
-			case UI_TAPECONTROL:
-				res = tapecontrol(bitmap, sel >> SEL_BITS);
-				break;
-#endif /* HAS_WAVE */
-			case UI_CONFIGURATION:
-				res = setconfiguration(bitmap, sel >> SEL_BITS);
-				break;
-#endif /* MESS */
 			case UI_HISTORY:
 				res = displayhistory(bitmap, sel >> SEL_BITS);
 				break;
 			case UI_CHEAT:
 				res = cheat_menu(bitmap, sel >> SEL_BITS);
 				break;
-#ifndef MESS
-#ifndef TINY_COMPILE
-#ifndef CPSMAME
-#ifndef MMSND
 			case UI_MEMCARD:
 				res = memcard_menu(bitmap, sel >> SEL_BITS);
 				break;
-#endif
-#endif
-#endif
-#endif
+
 		}
 
 		if (res == -1)
@@ -3267,16 +3147,8 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 			case UI_CODE:
 			case UI_ANALOG:
 			case UI_CALIBRATE:
-			#ifndef MESS
 			case UI_STATS:
 			case UI_GAMEINFO:
-			#else
-			case UI_GAMEINFO:
-			case UI_IMAGEINFO:
-			case UI_FILEMANAGER:
-			case UI_TAPECONTROL:
-			case UI_CONFIGURATION:
-#endif /* !MESS */
 			case UI_HISTORY:
 			case UI_CHEAT:
 			case UI_MEMCARD:
@@ -3727,9 +3599,6 @@ void CLIB_DECL usrintf_showmessage_secs(int seconds, const char *text,...)
 
 int handle_user_interface(struct mame_bitmap *bitmap)
 {
-#ifdef MESS
-	extern int mess_pause_for_ui;
-#endif
 
 	/* This call is for the cheat, it must be called once a frame */
 	if (options.cheat) DoCheat(bitmap);
@@ -3766,10 +3635,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	/* if the user pressed F3, reset the emulation */
 	if (input_ui_pressed(IPT_UI_RESET_MACHINE))
 		machine_reset();
-
-#if defined(__sgi) && !defined(MESS)
-	game_paused = 0;
-#endif
 
 	/* show popup message if any */
 	if (messagecounter > 0)
@@ -3818,16 +3683,6 @@ int setup_active(void)
 {
 	return setup_selected;
 }
-
-#if defined(__sgi) && !defined(MESS)
-
-/* Return if the game is paused or not */
-int is_game_paused(void)
-{
-	return game_paused;
-}
-
-#endif
 
 static int show_game_message(void)
 {

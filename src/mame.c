@@ -519,7 +519,7 @@ void pause_action_start_emulator(void)
     /* run the emulation! */
     cpu_run();
 
-    // Unpause
+    /* Unpause */
     pause_action = 0;
 }
 
@@ -544,7 +544,6 @@ void run_machine_core(void)
         showcopyright(artwork_get_ui_bitmap());
     }
 
-    // GAME INFO
 }
 
 void run_machine_core_done(void)
@@ -685,7 +684,7 @@ static int vh_open(void)
 	/* the create display process may update the vector width/height, so recompute */
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
     {
-        //scale_vectorgames((options.vector_resolution_multiplier * Machine->drv->screen_width), (options.vector_resolution_multiplier * Machine->drv->screen_height), &bmwidth, &bmheight);
+        /*scale_vectorgames((options.vector_resolution_multiplier * Machine->drv->screen_width), (options.vector_resolution_multiplier * Machine->drv->screen_height), &bmwidth, &bmheight);*/
         bmwidth = Machine->drv->screen_width * options.vector_resolution_multiplier;
         bmheight = Machine->drv->screen_height * options.vector_resolution_multiplier;
     }
@@ -697,7 +696,7 @@ static int vh_open(void)
 		goto cant_create_scrbitmap;
 
 	/* set the default visible area */
-	set_visible_area(0,1,0,1);	// make sure everything is recalculated on multiple runs
+	set_visible_area(0,1,0,1);	/* make sure everything is recalculated on multiple runs */
 	set_visible_area(
 			Machine->drv->default_visible_area.min_x,
 			Machine->drv->default_visible_area.max_x,
@@ -1631,7 +1630,7 @@ static int validitychecks(void)
 		}
 
 #if 0
-//		if (drivers[i]->drv->color_table_len == drivers[i]->drv->total_colors &&
+/*		if (drivers[i]->drv->color_table_len == drivers[i]->drv->total_colors && */
 		if (drivers[i]->drv->color_table_len && drivers[i]->drv->total_colors &&
 				drivers[i]->drv->vh_init_palette == 0)
 		{

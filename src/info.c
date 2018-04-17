@@ -925,14 +925,10 @@ static void print_game_info(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	print_game_input(OUTPUT_XML, out, game);
 	print_game_switch(OUTPUT_XML, out, game);
 	print_game_driver(OUTPUT_XML, out, game);
-#ifdef MESS
-	print_game_device(OUTPUT_XML, out, game);
-#endif
 
 	fprintf(out, SELECT(L1E, "\t</" XML_TOP ">\n"));
 }
 
-#if !defined(MESS) && !defined(TINY_COMPILE) && !defined(CPSMAME) && !defined(MMSND)
 /* Print the resource info */
 static void print_resource_info(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
 {
@@ -974,7 +970,6 @@ static void print_resource_info(int OUTPUT_XML, FILE* out, const struct GameDriv
 		print_resource_info(format, out, &driver_##s); \
 	}
 
-#endif
 
 static void print_mame_data(int OUTPUT_XML, FILE* out, const struct GameDriver* games[])
 {
@@ -985,7 +980,6 @@ static void print_mame_data(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 		print_game_info(OUTPUT_XML, out, games[j]);
 
 	/* print the resources (only if linked) */
-#if !defined(TINY_COMPILE) && !defined(MMSND)
 	PRINT_RESOURCE(OUTPUT_XML, neogeo);
 	PRINT_RESOURCE(OUTPUT_XML, cvs);
 	PRINT_RESOURCE(OUTPUT_XML, decocass);
@@ -1002,7 +996,6 @@ static void print_mame_data(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	PRINT_RESOURCE(OUTPUT_XML, tps);
 	PRINT_RESOURCE(OUTPUT_XML, taitofx1);
 	PRINT_RESOURCE(OUTPUT_XML, acpsx);
-#endif
 }
 
 /* Print the MAME database in XML format */

@@ -79,18 +79,6 @@
 #include "tilemap.h"
 #include "profiler.h"
 
-#ifdef MESS
-#include "messdrv.h"
-#endif
-
-#ifdef MAME_NET
-#include "network.h"
-#endif /* MAME_NET */
-
-#ifdef MMSND
-#include "mmsnd/mmsnd.h"
-#endif
-
 
 /***************************************************************************
 
