@@ -206,35 +206,6 @@ void ppi8255_w(int which, int offset, int data)
 	}
 }
 
-#ifdef MESS
-data8_t ppi8255_peek( int which, offs_t offset )
-{
-	ppi8255 *chip;
-
-
-	/* Some bounds checking */
-	if (which > num)
-	{
-		logerror("Attempting to access an unmapped 8255 chip.  PC: %04X\n", activecpu_get_pc());
-		return 0xff;
-	}
-
-	chip = &chips[which];
-
-
-	if (offset > 2)
-	{
-		logerror("Attempting to access an invalid 8255 port.  PC: %04X\n", activecpu_get_pc());
-		return 0xff;
-	}
-
-
-	chip = &chips[which];
-
-	return chip->latch[offset];
-}
-#endif
-
 
 void ppi8255_set_portAread(int which, mem_read_handler portAread)
 {

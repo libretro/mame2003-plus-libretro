@@ -2997,18 +2997,6 @@ static void setup_menu_init(void)
 		}
 	}
 
-#ifdef XMAME
-	{
-		extern int rapidfire_enable;
-
-		if (rapidfire_enable != 0)
-		{
-			menu_item[menu_total] = "Rapid Fire";
-			menu_action[menu_total++] = UI_RAPIDFIRE;
-		}
-	}
-#endif
-
 	/* Determine if there are any analog controls */
 	{
 		struct InputPort *in;
@@ -3077,11 +3065,6 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 	{
 		switch (menu_action[sel & SEL_MASK])
 		{
-#ifdef XMAME
-			case UI_RAPIDFIRE:
-				res = setrapidfire(bitmap, sel >> SEL_BITS);
-				break;
-#endif
 			case UI_SWITCH:
 				res = setdipswitches(bitmap, sel >> SEL_BITS);
 				break;
@@ -3139,9 +3122,6 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 	{
 		switch (menu_action[sel])
 		{
-#ifdef XMAME
-			case UI_RAPIDFIRE:
-#endif
 			case UI_SWITCH:
 			case UI_DEFCODE:
 			case UI_CODE:
@@ -3611,9 +3591,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 			osd_selected = 0;	/* disable on screen display */
 			schedule_full_refresh();
 		}
-#ifdef XMAME
-		update_video_and_audio(); /* for rapid-fire support */
-#endif
 	}
 	if (setup_selected != 0) setup_selected = setup_menu(bitmap, setup_selected);
 

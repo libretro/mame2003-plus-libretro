@@ -411,18 +411,6 @@ int c6280_num(const struct MachineSound *msound) { return ((struct C6280_interfa
 int TIA_clock(const struct MachineSound *msound) { return ((struct TIAinterface*)msound->sound_interface)->baseclock; }
 #endif
 
-#ifdef MESS
-#if (HAS_BEEP)
-int beep_num(const struct MachineSound *msound) { return ((struct beep_interface*)msound->sound_interface)->num; }
-#endif
-#if (HAS_SPEAKER)
-int speaker_num(const struct MachineSound *msound) { return ((struct Speaker_interface*)msound->sound_interface)->num; }
-#endif
-#if (HAS_WAVE)
-int wave_num(const struct MachineSound *msound) { return ((struct Wave_interface*)msound->sound_interface)->num; }
-#endif
-#endif
-
 struct snd_interface sndintf[] =
 {
     {
@@ -1179,49 +1167,7 @@ struct snd_interface sndintf[] =
 	},
 #endif
 
-
-#ifdef MESS
-#if (HAS_BEEP)
-	{
-		SOUND_BEEP,
-		"Beep",
-		beep_num,
-		0,
-		beep_sh_start,
-		beep_sh_stop,
-		beep_sh_update,
-		0
-	},
-#endif
-#if (HAS_SPEAKER)
-	{
-		SOUND_SPEAKER,
-		"Speaker",
-		speaker_num,
-		0,
-		speaker_sh_start,
-		speaker_sh_stop,
-		speaker_sh_update,
-		0
-	},
-#endif
-#if (HAS_WAVE)
-	{
-		SOUND_WAVE,
-		"Cassette",
-		wave_num,
-		0,
-		wave_sh_start,
-		0,
-		0,
-		0
-	},
-#endif
-#endif
-
 };
-
-
 
 
 int sound_start(void)

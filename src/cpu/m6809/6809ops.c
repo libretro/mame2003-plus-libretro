@@ -158,9 +158,6 @@ static INLINE void jmp_di( void )
 static INLINE void clr_di( void )
 {
 	DIRECT;
-#ifdef MESS
-	RM(EAD);
-#endif
 	WM(EAD,0);
 	CLR_NZVC;
 	SEZ;
@@ -1183,9 +1180,6 @@ static INLINE void jmp_ix( void )
 static INLINE void clr_ix( void )
 {
 	fetch_effective_address();
-#ifdef MESS
-	RM(EAD);
-#endif
 	WM(EAD,0);
 	CLR_NZVC; SEZ;
 }
@@ -1304,9 +1298,6 @@ static INLINE void jmp_ex( void )
 static INLINE void clr_ex( void )
 {
 	EXTENDED;
-#ifdef MESS
-	RM(EAD);
-#endif
 	WM(EAD,0);
 	CLR_NZVC; SEZ;
 }
