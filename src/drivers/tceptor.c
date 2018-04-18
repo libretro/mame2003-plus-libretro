@@ -14,12 +14,6 @@
 #include "cpu/m68000/m68000.h"
 #include "namcoic.h"
 
-#ifdef TINY_COMPILE
-// to avoid link error
-int namcos2_gametype;
-#endif
-
-
 extern PALETTE_INIT( tceptor );
 extern VIDEO_START( tceptor );
 extern VIDEO_UPDATE( tceptor );
