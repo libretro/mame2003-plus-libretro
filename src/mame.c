@@ -1256,32 +1256,6 @@ int updatescreen(void)
 
 
 
-/***************************************************************************
-
-	Miscellaneous bits & pieces
-
-***************************************************************************/
-
-/*-------------------------------------------------
-	mame_highscore_enabled - return 1 if high
-	scores are enabled
--------------------------------------------------*/
-
-int mame_highscore_enabled(void)
-{
-	/* disable high score when record/playback is on */
-	if (record != 0 || playback != 0)
-		return 0;
-
-	/* disable high score when cheats are used */
-	if (he_did_cheat != 0)
-		return 0;
-
-	return 1;
-}
-
-
-
 /*-------------------------------------------------
 	set_led_status - set the state of a given LED
 -------------------------------------------------*/

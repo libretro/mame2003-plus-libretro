@@ -337,9 +337,6 @@ int updatescreen(void);
 
 /* ----- miscellaneous bits & pieces ----- */
 
-/* mame_fopen() must use this to know if high score files can be used */
-int mame_highscore_enabled(void);
-
 /* set the state of a given LED */
 void set_led_status(int num, int on);
 
