@@ -96,6 +96,7 @@
 * Avenging Spirit
 * Bakuretsu Breaker
 * Blood Warrior
+* Die Hard Arcade (requires a fast system, video and sound issues remain)
 * Driftout 94
 * Fire Barrel
 * Funky Jet
@@ -177,6 +178,7 @@
 * Tweaked Tecmo Bowl so it will boot using only a single screen
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 * Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
+* Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.106. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color issue affecting backdrop.
 
 
 ------------------------------------
