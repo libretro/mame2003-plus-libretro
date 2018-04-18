@@ -62,11 +62,7 @@ struct MachineSound
 #include "sound/pokey.h"
 #endif
 #if (HAS_NES)
- #ifndef MESS
 #include "sound/nes_apu.h"
- #else
-#include "sound/nesintf.h"
- #endif
 #endif
 #if (HAS_ASTROCADE)
 #include "sound/astrocde.h"
@@ -182,19 +178,6 @@ struct MachineSound
 #if (HAS_ICS2115)
 #include "sound/ics2115.h"
 #endif
-
-#ifdef MESS
-#if (HAS_BEEP)
-#include "sound/beep.h"
-#endif
-#if (HAS_SPEAKER)
-#include "sound/speaker.h"
-#endif
-#if (HAS_WAVE)
-#include "sound/wave.h"
-#endif
-#endif
-
 
 #define SOUND_YM2151_ALT SOUND_YM2151
 
@@ -392,17 +375,6 @@ enum
 	SOUND_ICS2115,
 #endif
 
-#ifdef MESS
-#if (HAS_BEEP)
-	SOUND_BEEP,
-#endif
-#if (HAS_SPEAKER)
-	SOUND_SPEAKER,
-#endif
-#if (HAS_WAVE)
-	SOUND_WAVE,
-#endif
-#endif
 	SOUND_COUNT
 };
 

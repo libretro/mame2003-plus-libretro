@@ -175,10 +175,6 @@ enum
 	UI_last_mame_entry
 };
 
-#ifdef MESS
-#include "mui_text.h"
-#endif
-
 struct lang_struct
 {
 	int version;

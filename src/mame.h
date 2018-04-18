@@ -309,11 +309,6 @@ int run_game(int game);
 struct InternalMachineDriver;
 void expand_machine_driver(void (*constructor)(struct InternalMachineDriver *), struct InternalMachineDriver *output);
 
-/* pause the system */
-void mame_pause(int pause);
-
-
-
 /* ----- screen rendering and management ----- */
 
 /* set the current visible area of the screen bitmap */

@@ -36,23 +36,6 @@ struct GameDriver driver_0 =
 
 #endif
 
-#ifdef TINY_COMPILE
-
-extern struct GameDriver TINY_NAME;
-
-const struct GameDriver *drivers[] =
-{
-	TINY_POINTER,
-	0	/* end of array */
-};
-
-const struct GameDriver *test_drivers[] =
-{
-	0	/* end of array */
-};
-
-#else
-
 #ifndef DRIVER_RECURSIVE
 
 #define DRIVER_RECURSIVE
@@ -73,7 +56,7 @@ const struct GameDriver *drivers[] =
 	0	/* end of array */
 };
 
-/* step 2: define the test_drivers[] array */
+/* step 3: define the test_drivers[] array */
 #undef DRIVER
 #undef TESTDRIVER
 #define DRIVER(NAME)
@@ -5663,5 +5646,3 @@ Other Sun games
 
 
 #endif	/* DRIVER_RECURSIVE */
-
-#endif	/* TINY_COMPILE */

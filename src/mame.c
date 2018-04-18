@@ -600,21 +600,6 @@ static void shutdown_machine(void)
 	state_save_reset();
 }
 
-
-
-/*-------------------------------------------------
-	mame_pause - pause or resume the system
--------------------------------------------------*/
-
-void mame_pause(int pause)
-{
-	memset(XsoundBuffer, 0, sizeof(XsoundBuffer));
-	palette_set_global_brightness_adjust(pause ? options.pause_bright : 1.00);
-	schedule_full_refresh();
-}
-
-
-
 /*-------------------------------------------------
 	expand_machine_driver - construct a machine
 	driver from the macroized state
@@ -1287,16 +1272,6 @@ int mame_highscore_enabled(void)
 	/* disable high score when cheats are used */
 	if (he_did_cheat != 0)
 		return 0;
-
-	/* disable high score when playing network game */
-	/* (this forces all networked machines to start from the same state!) */
-#ifdef MAME_NET
-	if (net_active())
-		return 0;
-#elif defined XMAME_NET
-	if (osd_net_active())
-		return 0;
-#endif
 
 	return 1;
 }

@@ -10,10 +10,6 @@
 #include "driver.h"
 #include "ui_text.h"
 
-#ifdef MESS
-extern const char *mess_default_text[];
-#endif /* MESS */
-
 
 struct lang_struct lang;
 
@@ -185,9 +181,6 @@ static const char *mame_default_text[] =
 static const char **default_text[] =
 {
 	mame_default_text,
-#ifdef MESS
-	mess_default_text,
-#endif /* MESS */
 	NULL
 };
 

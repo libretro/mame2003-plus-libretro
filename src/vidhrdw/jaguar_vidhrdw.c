@@ -225,13 +225,6 @@ static void blitter_01800009_000028_000028(UINT32 command, UINT32 a1flags, UINT3
 static void blitter_01800001_000018_000018(UINT32 command, UINT32 a1flags, UINT32 a2flags);
 static void blitter_01c00001_000018_000018(UINT32 command, UINT32 a1flags, UINT32 a2flags);
 
-#ifdef MESS
-static void blitter_00010000_xxxxxx_xxxxxx(UINT32 command, UINT32 a1flags, UINT32 a2flags);
-static void blitter_01800001_xxxxxx_xxxxxx(UINT32 command, UINT32 a1flags, UINT32 a2flags);
-static void blitter_x1800x01_xxxxxx_xxxxxx(UINT32 command, UINT32 a1flags, UINT32 a2flags);
-#endif
-
-
 
 /*************************************
  *
@@ -534,26 +527,6 @@ void blitter_run(void)
 			return;
 		}
 	}
-
-#ifdef MESS
-	if (command == 0x00010000)
-	{
-		blitter_00010000_xxxxxx_xxxxxx(blitter_regs[B_CMD], blitter_regs[A1_FLAGS], blitter_regs[A2_FLAGS]);
-		return;
-	}
-
-	if (command == 0x01800001)
-	{
-		blitter_01800001_xxxxxx_xxxxxx(blitter_regs[B_CMD], blitter_regs[A1_FLAGS], blitter_regs[A2_FLAGS]);
-		return;
-	}
-
-	if ((command & 0x0ffff0ff) == 0x01800001)
-	{
-		blitter_x1800x01_xxxxxx_xxxxxx(blitter_regs[B_CMD], blitter_regs[A1_FLAGS], blitter_regs[A2_FLAGS]);
-		return;
-	}
-#endif
 
 
 #if LOG_BLITTER_STATS
@@ -877,36 +850,3 @@ VIDEO_UPDATE( cojag )
 #undef COMMAND
 #undef FUNCNAME
 
-#ifdef MESS
-
-#define FUNCNAME	blitter_00010000_xxxxxx_xxxxxx
-#define COMMAND		0x00010000
-#define A1FIXED		a1flags
-#define A2FIXED		a2flags
-#include "jagblit.c"
-#undef A2FIXED
-#undef A1FIXED
-#undef COMMAND
-#undef FUNCNAME
-
-#define FUNCNAME	blitter_01800001_xxxxxx_xxxxxx
-#define COMMAND		0x01800001
-#define A1FIXED		a1flags
-#define A2FIXED		a2flags
-#include "jagblit.c"
-#undef A2FIXED
-#undef A1FIXED
-#undef COMMAND
-#undef FUNCNAME
-
-#define FUNCNAME	blitter_x1800x01_xxxxxx_xxxxxx
-#define COMMAND		((command & 0xf0000f00) | 0x01800001)
-#define A1FIXED		a1flags
-#define A2FIXED		a2flags
-#include "jagblit.c"
-#undef A2FIXED
-#undef A1FIXED
-#undef COMMAND
-#undef FUNCNAME
-
-#endif /* MESS */

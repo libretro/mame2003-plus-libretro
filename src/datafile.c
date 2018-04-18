@@ -8,6 +8,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+
 #include "osd_cpu.h"
 #include "driver.h"
 #include "datafile.h"
@@ -15,14 +16,6 @@
 /****************************************************************************
  *      token parsing constants
  ****************************************************************************/
-#ifndef TRUE
-#define TRUE 1
-#endif
-
-#ifndef FALSE
-#define FALSE 0
-#endif
-
 #define CR      0x0d    /* '\n' and '\r' meanings are swapped in some */
 #define LF      0x0a    /*     compilers (e.g., Mac compilers) */
 
@@ -330,21 +323,18 @@ static void ParseClose(void)
  ****************************************************************************/
 static UINT8 ParseOpen(const char *pszFilename)
 {
-        /* Open file up in binary mode */
+   /* Open file up in binary mode */
+   fp = mame_fopen (NULL, pszFilename, FILETYPE_HISTORY, 0);
 
-        fp = mame_fopen (NULL, pszFilename, FILETYPE_HISTORY, 0);
+   /* If this is NULL, return FALSE. We can't open it */
 
-        /* If this is NULL, return FALSE. We can't open it */
+   if (!fp)
+      return 0;
 
-        if (NULL == fp)
-        {
-                return(FALSE);
-        }
+   /* Otherwise, prepare! */
 
-        /* Otherwise, prepare! */
-
-        dwFilePos = 0;
-        return(TRUE);
+   dwFilePos = 0;
+   return 1;
 }
 
 
@@ -353,13 +343,11 @@ static UINT8 ParseOpen(const char *pszFilename)
  ****************************************************************************/
 static UINT8 ParseSeek(long offset, int whence)
 {
-        int result = mame_fseek(fp, offset, whence);
+   int result = mame_fseek(fp, offset, whence);
 
-        if (0 == result)
-        {
-                dwFilePos = mame_ftell(fp);
-        }
-        return (UINT8)result;
+   if (0 == result)
+      dwFilePos = mame_ftell(fp);
+   return (UINT8)result;
 }
 
 

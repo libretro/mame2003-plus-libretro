@@ -438,12 +438,7 @@ struct ipd inputport_defaults[] =
 	{ IPT_SERVICE2, "Service 2",     SEQ_DEF_1(KEYCODE_0) },
 	{ IPT_SERVICE3, "Service 3",     SEQ_DEF_1(KEYCODE_MINUS) },
 	{ IPT_SERVICE4, "Service 4",     SEQ_DEF_1(KEYCODE_EQUALS) },
-#ifndef MESS
 	{ IPT_TILT,   "Tilt",            SEQ_DEF_1(KEYCODE_T) },
-#else
-	{ IPT_TILT,   "Tilt",            SEQ_DEF_0 },
-#endif
-
 	{ IPT_JOYSTICK_UP         | IPF_PLAYER1, "P1 Up",          SEQ_DEF_3(KEYCODE_UP, CODE_OR, JOYCODE_1_UP)    },
 	{ IPT_JOYSTICK_DOWN       | IPF_PLAYER1, "P1 Down",        SEQ_DEF_3(KEYCODE_DOWN, CODE_OR, JOYCODE_1_DOWN)  },
 	{ IPT_JOYSTICK_LEFT       | IPF_PLAYER1, "P1 Left",        SEQ_DEF_3(KEYCODE_LEFT, CODE_OR, JOYCODE_1_LEFT)  },
@@ -849,59 +844,6 @@ struct ipd inputport_defaults[] =
 	{ IPT_LIGHTGUN_Y | IPF_PLAYER8, "Lightgun Y 8", SEQ_DEF_1(JOYCODE_8_UP) },
 	{ (IPT_LIGHTGUN_Y | IPF_PLAYER8)+IPT_EXTENSION,                "Lightgun Y 8", SEQ_DEF_1(JOYCODE_8_DOWN) },
 
-#ifdef MESS
-	{ IPT_MOUSE_X | IPF_PLAYER1, "MOUSE X",   SEQ_DEF_3(KEYCODE_LEFT, CODE_OR, JOYCODE_1_LEFT) },
-	{ (IPT_MOUSE_X | IPF_PLAYER1)+IPT_EXTENSION,                "MOUSE X",   SEQ_DEF_3(KEYCODE_RIGHT, CODE_OR, JOYCODE_1_RIGHT) },
-	{ IPT_MOUSE_X | IPF_PLAYER2, "MOUSE X 2", SEQ_DEF_3(KEYCODE_D, CODE_OR, JOYCODE_2_LEFT) },
-	{ (IPT_MOUSE_X | IPF_PLAYER2)+IPT_EXTENSION,                "MOUSE X 2", SEQ_DEF_3(KEYCODE_G, CODE_OR, JOYCODE_2_RIGHT) },
-	{ IPT_MOUSE_X | IPF_PLAYER3, "MOUSE X 3", SEQ_DEF_3(KEYCODE_J, CODE_OR, JOYCODE_3_LEFT) },
-	{ (IPT_MOUSE_X | IPF_PLAYER3)+IPT_EXTENSION,                "MOUSE X 3", SEQ_DEF_3(KEYCODE_L, CODE_OR, JOYCODE_3_RIGHT) },
-	{ IPT_MOUSE_X | IPF_PLAYER4, "MOUSE X 4", SEQ_DEF_1(JOYCODE_4_LEFT) },
-	{ (IPT_MOUSE_X | IPF_PLAYER4)+IPT_EXTENSION,                "MOUSE X 4", SEQ_DEF_1(JOYCODE_4_RIGHT) },
-	{ IPT_MOUSE_X | IPF_PLAYER5, "MOUSE X 5", SEQ_DEF_0 },
-	{ (IPT_MOUSE_X | IPF_PLAYER5)+IPT_EXTENSION,                "MOUSE X 5", SEQ_DEF_0 },
-	{ IPT_MOUSE_X | IPF_PLAYER6, "MOUSE X 6", SEQ_DEF_0 },
-	{ (IPT_MOUSE_X | IPF_PLAYER6)+IPT_EXTENSION,                "MOUSE X 6", SEQ_DEF_0 },
-	{ IPT_MOUSE_X | IPF_PLAYER7, "MOUSE X 7", SEQ_DEF_0 },
-	{ (IPT_MOUSE_X | IPF_PLAYER7)+IPT_EXTENSION,                "MOUSE X 7", SEQ_DEF_0 },
-	{ IPT_MOUSE_X | IPF_PLAYER8, "MOUSE X 8", SEQ_DEF_0 },
-	{ (IPT_MOUSE_X | IPF_PLAYER8)+IPT_EXTENSION,                "MOUSE X 8", SEQ_DEF_0 },
-
-	{ IPT_MOUSE_Y | IPF_PLAYER1, "MOUSE Y",   SEQ_DEF_3(KEYCODE_UP, CODE_OR, JOYCODE_1_UP) },
-	{ (IPT_MOUSE_Y | IPF_PLAYER1)+IPT_EXTENSION,                "MOUSE Y",   SEQ_DEF_3(KEYCODE_DOWN, CODE_OR, JOYCODE_1_DOWN) },
-	{ IPT_MOUSE_Y | IPF_PLAYER2, "MOUSE Y 2", SEQ_DEF_3(KEYCODE_R, CODE_OR, JOYCODE_2_UP) },
-	{ (IPT_MOUSE_Y | IPF_PLAYER2)+IPT_EXTENSION,                "MOUSE Y 2", SEQ_DEF_3(KEYCODE_F, CODE_OR, JOYCODE_2_DOWN) },
-	{ IPT_MOUSE_Y | IPF_PLAYER3, "MOUSE Y 3", SEQ_DEF_3(KEYCODE_I, CODE_OR, JOYCODE_3_UP) },
-	{ (IPT_MOUSE_Y | IPF_PLAYER3)+IPT_EXTENSION,                "MOUSE Y 3", SEQ_DEF_3(KEYCODE_K, CODE_OR, JOYCODE_3_DOWN) },
-	{ IPT_MOUSE_Y | IPF_PLAYER4, "MOUSE Y 4", SEQ_DEF_1(JOYCODE_4_UP) },
-	{ (IPT_MOUSE_Y | IPF_PLAYER4)+IPT_EXTENSION,                "MOUSE Y 4", SEQ_DEF_1(JOYCODE_4_DOWN) },
-	{ IPT_MOUSE_Y | IPF_PLAYER5, "MOUSE Y 5", SEQ_DEF_0 },
-	{ (IPT_MOUSE_Y | IPF_PLAYER5)+IPT_EXTENSION,                "MOUSE Y 5", SEQ_DEF_0 },
-	{ IPT_MOUSE_Y | IPF_PLAYER6, "MOUSE Y 6", SEQ_DEF_0 },
-	{ (IPT_MOUSE_Y | IPF_PLAYER6)+IPT_EXTENSION,                "MOUSE Y 6", SEQ_DEF_0 },
-	{ IPT_MOUSE_Y | IPF_PLAYER7, "MOUSE Y 7", SEQ_DEF_0 },
-	{ (IPT_MOUSE_Y | IPF_PLAYER7)+IPT_EXTENSION,                "MOUSE Y 7", SEQ_DEF_0 },
-	{ IPT_MOUSE_Y | IPF_PLAYER8, "MOUSE Y 8", SEQ_DEF_0 },
-	{ (IPT_MOUSE_Y | IPF_PLAYER8)+IPT_EXTENSION,                "MOUSE Y 8", SEQ_DEF_0 },
-
-	{ IPT_START | IPF_PLAYER1, "P1 Start",        SEQ_DEF_3(KEYCODE_1, CODE_OR, JOYCODE_1_START) },
-	{ IPT_START | IPF_PLAYER2, "P2 Start",        SEQ_DEF_3(KEYCODE_2, CODE_OR, JOYCODE_2_START) },
-	{ IPT_START | IPF_PLAYER3, "P3 Start",        SEQ_DEF_3(KEYCODE_3, CODE_OR, JOYCODE_3_START) },
-	{ IPT_START | IPF_PLAYER4, "P4 Start",        SEQ_DEF_3(KEYCODE_4, CODE_OR, JOYCODE_4_START) },
-	{ IPT_START | IPF_PLAYER5, "P5 Start",        SEQ_DEF_0 },
-	{ IPT_START | IPF_PLAYER6, "P6 Start",        SEQ_DEF_0 },
-	{ IPT_START | IPF_PLAYER7, "P7 Start",        SEQ_DEF_0 },
-	{ IPT_START | IPF_PLAYER8, "P8 Start",        SEQ_DEF_0 },
-	{ IPT_SELECT | IPF_PLAYER1, "P1 Select",      SEQ_DEF_3(KEYCODE_5, CODE_OR, JOYCODE_1_SELECT) },
-	{ IPT_SELECT | IPF_PLAYER2, "P2 Select",      SEQ_DEF_3(KEYCODE_6, CODE_OR, JOYCODE_2_SELECT) },
-	{ IPT_SELECT | IPF_PLAYER3, "P3 Select",      SEQ_DEF_3(KEYCODE_7, CODE_OR, JOYCODE_3_SELECT) },
-	{ IPT_SELECT | IPF_PLAYER4, "P4 Select",      SEQ_DEF_3(KEYCODE_8, CODE_OR, JOYCODE_4_SELECT) },
-	{ IPT_SELECT | IPF_PLAYER5, "P5 Select",      SEQ_DEF_0 },
-	{ IPT_SELECT | IPF_PLAYER6, "P6 Select",      SEQ_DEF_0 },
-	{ IPT_SELECT | IPF_PLAYER7, "P7 Select",      SEQ_DEF_0 },
-	{ IPT_SELECT | IPF_PLAYER8, "P8 Select",      SEQ_DEF_0 },
-#endif
-
 	{ IPT_UNKNOWN,             "UNKNOWN",         SEQ_DEF_0 },
 	{ IPT_OSD_RESERVED,        "",                SEQ_DEF_0 },
 	{ IPT_OSD_RESERVED,        "",                SEQ_DEF_0 },
@@ -1167,9 +1109,6 @@ struct ik input_keywords[] =
 
 	{ "UI_CONFIGURE", 			IKT_IPT,	 	IPT_UI_CONFIGURE },
 	{ "UI_RESET_MACHINE",		IKT_IPT,		IPT_UI_RESET_MACHINE },
-#ifdef MESS
-	{ "UI_TOGGLE_UI",			IKT_IPT,		IPT_UI_TOGGLE_UI },
-#endif
 	{ "UI_TOGGLE_CHEAT",		IKT_IPT,		IPT_UI_TOGGLE_CHEAT },
 	{ "UI_UP",					IKT_IPT,		IPT_UI_UP },
 	{ "UI_DOWN",				IKT_IPT,		IPT_UI_DOWN },
@@ -1608,60 +1547,6 @@ struct ik input_keywords[] =
 	{ "P7_AD_STICK_Z_EXT",		IKT_IPT_EXT,	IPF_PLAYER7 | IPT_AD_STICK_Z },
 	{ "P8_AD_STICK_Z",			IKT_IPT,		IPF_PLAYER8 | IPT_AD_STICK_Z },
 	{ "P8_AD_STICK_Z_EXT",		IKT_IPT_EXT,	IPF_PLAYER8 | IPT_AD_STICK_Z },
-
-#ifdef MESS
-	{ "P1_MOUSE_X",				IKT_IPT,		IPF_PLAYER1 | IPT_MOUSE_X },
-	{ "P1_MOUSE_X_EXT",			IKT_IPT_EXT,	IPF_PLAYER1 | IPT_MOUSE_X },
-	{ "P2_MOUSE_X",				IKT_IPT,		IPF_PLAYER2 | IPT_MOUSE_X },
-	{ "P2_MOUSE_X_EXT",			IKT_IPT_EXT,	IPF_PLAYER2 | IPT_MOUSE_X },
-	{ "P3_MOUSE_X",				IKT_IPT,		IPF_PLAYER3 | IPT_MOUSE_X },
-	{ "P3_MOUSE_X_EXT",			IKT_IPT_EXT,	IPF_PLAYER3 | IPT_MOUSE_X },
-	{ "P4_MOUSE_X",				IKT_IPT,		IPF_PLAYER4 | IPT_MOUSE_X },
-	{ "P4_MOUSE_X_EXT",			IKT_IPT_EXT,	IPF_PLAYER4 | IPT_MOUSE_X },
-	{ "P5_MOUSE_X",				IKT_IPT,		IPF_PLAYER5 | IPT_MOUSE_X },
-	{ "P5_MOUSE_X_EXT",			IKT_IPT_EXT,	IPF_PLAYER5 | IPT_MOUSE_X },
-	{ "P6_MOUSE_X",				IKT_IPT,		IPF_PLAYER6 | IPT_MOUSE_X },
-	{ "P6_MOUSE_X_EXT",			IKT_IPT_EXT,	IPF_PLAYER6 | IPT_MOUSE_X },
-	{ "P7_MOUSE_X",				IKT_IPT,		IPF_PLAYER7 | IPT_MOUSE_X },
-	{ "P7_MOUSE_X_EXT",			IKT_IPT_EXT,	IPF_PLAYER7 | IPT_MOUSE_X },
-	{ "P8_MOUSE_X",				IKT_IPT,		IPF_PLAYER8 | IPT_MOUSE_X },
-	{ "P8_MOUSE_X_EXT",			IKT_IPT_EXT,	IPF_PLAYER8 | IPT_MOUSE_X },
-
-	{ "P1_MOUSE_Y",				IKT_IPT,		IPF_PLAYER1 | IPT_MOUSE_Y },
-	{ "P1_MOUSE_Y_EXT",			IKT_IPT_EXT,	IPF_PLAYER1 | IPT_MOUSE_Y },
-	{ "P2_MOUSE_Y",				IKT_IPT,		IPF_PLAYER2 | IPT_MOUSE_Y },
-	{ "P2_MOUSE_Y_EXT",			IKT_IPT_EXT,	IPF_PLAYER2 | IPT_MOUSE_Y },
-	{ "P3_MOUSE_Y",				IKT_IPT,		IPF_PLAYER3 | IPT_MOUSE_Y },
-	{ "P3_MOUSE_Y_EXT",			IKT_IPT_EXT,	IPF_PLAYER3 | IPT_MOUSE_Y },
-	{ "P4_MOUSE_Y",				IKT_IPT,		IPF_PLAYER4 | IPT_MOUSE_Y },
-	{ "P4_MOUSE_Y_EXT",			IKT_IPT_EXT,	IPF_PLAYER4 | IPT_MOUSE_Y },
-	{ "P5_MOUSE_Y",				IKT_IPT,		IPF_PLAYER5 | IPT_MOUSE_Y },
-	{ "P5_MOUSE_Y_EXT",			IKT_IPT_EXT,	IPF_PLAYER5 | IPT_MOUSE_Y },
-	{ "P6_MOUSE_Y",				IKT_IPT,		IPF_PLAYER6 | IPT_MOUSE_Y },
-	{ "P6_MOUSE_Y_EXT",			IKT_IPT_EXT,	IPF_PLAYER6 | IPT_MOUSE_Y },
-	{ "P7_MOUSE_Y",				IKT_IPT,		IPF_PLAYER7 | IPT_MOUSE_Y },
-	{ "P7_MOUSE_Y_EXT",			IKT_IPT_EXT,	IPF_PLAYER7 | IPT_MOUSE_Y },
-	{ "P8_MOUSE_Y",				IKT_IPT,		IPF_PLAYER8 | IPT_MOUSE_Y },
-	{ "P8_MOUSE_Y_EXT",			IKT_IPT_EXT,	IPF_PLAYER8 | IPT_MOUSE_Y },
-
-	{ "P1_START",				IKT_IPT,		IPF_PLAYER1 | IPT_START },
-	{ "P2_START",				IKT_IPT,		IPF_PLAYER2 | IPT_START },
-	{ "P3_START",				IKT_IPT,		IPF_PLAYER3 | IPT_START },
-	{ "P4_START",				IKT_IPT,		IPF_PLAYER4 | IPT_START },
-	{ "P5_START",				IKT_IPT,		IPF_PLAYER5 | IPT_START },
-	{ "P6_START",				IKT_IPT,		IPF_PLAYER6 | IPT_START },
-	{ "P7_START",				IKT_IPT,		IPF_PLAYER7 | IPT_START },
-	{ "P8_START",				IKT_IPT,		IPF_PLAYER8 | IPT_START },
-	{ "P1_SELECT",				IKT_IPT,		IPF_PLAYER1 | IPT_SELECT },
-	{ "P2_SELECT",				IKT_IPT,		IPF_PLAYER2 | IPT_SELECT },
-	{ "P3_SELECT",				IKT_IPT,		IPF_PLAYER3 | IPT_SELECT },
-	{ "P4_SELECT",				IKT_IPT,		IPF_PLAYER4 | IPT_SELECT },
-	{ "P5_SELECT",				IKT_IPT,		IPF_PLAYER5 | IPT_SELECT },
-	{ "P6_SELECT",				IKT_IPT,		IPF_PLAYER6 | IPT_SELECT },
-	{ "P7_SELECT",				IKT_IPT,		IPF_PLAYER7 | IPT_SELECT },
-	{ "P8_SELECT",				IKT_IPT,		IPF_PLAYER8 | IPT_SELECT },
-#endif /* MESS */
-
 	{ "OSD_1",					IKT_IPT,		IPT_OSD_1 },
 	{ "OSD_2",					IKT_IPT,		IPT_OSD_2 },
 	{ "OSD_3",					IKT_IPT,		IPT_OSD_3 },
@@ -1788,11 +1673,6 @@ int load_input_port_settings(void)
 	config_file *cfg;
 	int err;
 	struct mixer_config mixercfg;
-#ifdef MAME_NET
-    struct InputPort *in;
-    int port, player;
-#endif /* MAME_NET */
-
 
 	load_default_keys();
 
@@ -1823,126 +1703,6 @@ getout:
 		for (i = 0; i < MAX_INPUT_PORTS; i++)
 			input_analog_init[i] = 1;
 	}
-#ifdef MAME_NET
-	/* Find out what port is used by what player and swap regular inputs */
-	in = Machine->input_ports;
-
-//	if (in->type == IPT_END) return; 	/* nothing to do */
-
-	/* make sure the InputPort definition is correct */
-//	if (in->type != IPT_PORT)
-//	{
-//		logerror("Error in InputPort definition: expecting PORT_START\n");
-//		return;
-//	}
-//	else in++;
-	in++;
-
-	/* scan all the input ports */
-	port = 0;
-	while (in->type != IPT_END && port < MAX_INPUT_PORTS)
-	{
-		/* now check the input bits. */
-		while (in->type != IPT_END && in->type != IPT_PORT)
-		{
-			if ((in->type & ~IPF_MASK) != IPT_DIPSWITCH_SETTING &&	/* skip dipswitch definitions */
-#ifdef MESS
-				(in->type & ~IPF_MASK) != IPT_CONFIG_SETTING &&		/* skip config definitions */
-#endif
-				(in->type & ~IPF_MASK) != IPT_EXTENSION &&			/* skip analog extension fields */
-				(in->type & IPF_UNUSED) == 0 &&						/* skip unused bits */
-				!(!options.cheat && (in->type & IPF_CHEAT)) &&				/* skip cheats if cheats disabled */
-				(in->type & ~IPF_MASK) != IPT_VBLANK &&				/* skip vblank stuff */
-				((in->type & ~IPF_MASK) >= IPT_COIN1 &&				/* skip if coin input and it's locked out */
-				(in->type & ~IPF_MASK) <= IPT_COIN4 &&
-                 coinlockedout[(in->type & ~IPF_MASK) - IPT_COIN1]))
-			{
-				player = IP_GET_PLAYER(in);
-
-				if (((in->type & ~IPF_MASK) > IPT_ANALOG_START)
-					&& ((in->type & ~IPF_MASK) < IPT_ANALOG_END))
-				{
-					analog_player_port[port] = player;
-				}
-				if (((in->type & ~IPF_MASK) == IPT_BUTTON1) ||
-					((in->type & ~IPF_MASK) == IPT_BUTTON2) ||
-					((in->type & ~IPF_MASK) == IPT_BUTTON3) ||
-					((in->type & ~IPF_MASK) == IPT_BUTTON4) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICK_UP) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICK_DOWN) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICK_LEFT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICK_RIGHT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKRIGHT_UP) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKRIGHT_DOWN) ||
- 					((in->type & ~IPF_MASK) == IPT_JOYSTICKRIGHT_LEFT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKRIGHT_RIGHT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKLEFT_UP) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKLEFT_DOWN) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKLEFT_LEFT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKLEFT_RIGHT) ||
-					((in->type & ~IPF_MASK) == IPT_PADDLE) ||
-					((in->type & ~IPF_MASK) == IPT_DIAL) ||
-					((in->type & ~IPF_MASK) == IPT_TRACKBALL_X) ||
-					((in->type & ~IPF_MASK) == IPT_TRACKBALL_Y) ||
-					((in->type & ~IPF_MASK) == IPT_LIGHTGUN_X) ||
-					((in->type & ~IPF_MASK) == IPT_LIGHTGUN_Y) ||
-					((in->type & ~IPF_MASK) == IPT_AD_STICK_X) ||
-					((in->type & ~IPF_MASK) == IPT_AD_STICK_Y) ||
-					((in->type & ~IPF_MASK) == IPT_AD_STICK_Z))
-				{
-					switch (default_player)
-					{
-						case 0:
-							/* do nothing */
-							break;
-						case 1:
-							if (player == 0)
-							{
-								in->type &= ~IPF_PLAYER1;
-								in->type |= IPF_PLAYER2;
-							}
-							else if (player == 1)
-							{
-								in->type &= ~IPF_PLAYER2;
-								in->type |= IPF_PLAYER1;
-							}
-							break;
-						case 2:
-							if (player == 0)
-							{
-								in->type &= ~IPF_PLAYER1;
-								in->type |= IPF_PLAYER3;
-							}
-							else if (player == 2)
-							{
-								in->type &= ~IPF_PLAYER3;
-								in->type |= IPF_PLAYER1;
-							}
-							break;
-						case 3:
-							if (player == 0)
-							{
-								in->type &= ~IPF_PLAYER1;
-								in->type |= IPF_PLAYER4;
-							}
-							else if (player == 3)
-							{
-								in->type &= ~IPF_PLAYER4;
-								in->type |= IPF_PLAYER1;
-							}
-							break;
-					}
-				}
-			}
-			in++;
-		}
-		port++;
-		if (in->type == IPT_PORT) in++;
-	}
-
-	/* TODO: at this point the games should initialize peers to same as server */
-
-#endif /* MAME_NET */
 
 	init_analog_seq();
 
@@ -1960,127 +1720,6 @@ void save_input_port_settings(void)
 {
 	config_file *cfg;
 	struct mixer_config mixercfg;
-#ifdef MAME_NET
-	struct InputPort *in;
-	int port, player;
-
-	/* Swap input port definitions back to defaults */
-	in = Machine->input_ports;
-
-	if (in->type == IPT_END) return; 	/* nothing to do */
-
-	/* make sure the InputPort definition is correct */
-	if (in->type != IPT_PORT)
-	{
-		logerror("Error in InputPort definition: expecting PORT_START\n");
-		return;
-	}
-	else in++;
-
-	/* scan all the input ports */
-	port = 0;
-	while (in->type != IPT_END && port < MAX_INPUT_PORTS)
-	{
-		/* now check the input bits. */
-		while (in->type != IPT_END && in->type != IPT_PORT)
-		{
-			if ((in->type & ~IPF_MASK) != IPT_DIPSWITCH_SETTING &&	/* skip dipswitch definitions */
-#ifdef MESS
-				(in->type & ~IPF_MASK) != IPT_CONFIG_SETTING &&		/* skip config definitions */
-#endif
-				(in->type & ~IPF_MASK) != IPT_EXTENSION &&			/* skip analog extension fields */
-				(in->type & IPF_UNUSED) == 0 &&						/* skip unused bits */
-				!(!options.cheat && (in->type & IPF_CHEAT)) &&				/* skip cheats if cheats disabled */
-				(in->type & ~IPF_MASK) != IPT_VBLANK &&				/* skip vblank stuff */
-				((in->type & ~IPF_MASK) >= IPT_COIN1 &&				/* skip if coin input and it's locked out */
-				(in->type & ~IPF_MASK) <= IPT_COIN4 &&
-                 coinlockedout[(in->type & ~IPF_MASK) - IPT_COIN1]))
-			{
-				player = IP_GET_PLAYER(in);
-
-				if (((in->type & ~IPF_MASK) == IPT_BUTTON1) ||
-					((in->type & ~IPF_MASK) == IPT_BUTTON2) ||
-					((in->type & ~IPF_MASK) == IPT_BUTTON3) ||
-					((in->type & ~IPF_MASK) == IPT_BUTTON4) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICK_UP) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICK_DOWN) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICK_LEFT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICK_RIGHT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKRIGHT_UP) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKRIGHT_DOWN) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKRIGHT_LEFT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKRIGHT_RIGHT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKLEFT_UP) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKLEFT_DOWN) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKLEFT_LEFT) ||
-					((in->type & ~IPF_MASK) == IPT_JOYSTICKLEFT_RIGHT) ||
-					((in->type & ~IPF_MASK) == IPT_PADDLE) ||
-					((in->type & ~IPF_MASK) == IPT_DIAL) ||
-					((in->type & ~IPF_MASK) == IPT_TRACKBALL_X) ||
-					((in->type & ~IPF_MASK) == IPT_TRACKBALL_Y) ||
-					((in->type & ~IPF_MASK) == IPT_LIGHTGUN_X) ||
-					((in->type & ~IPF_MASK) == IPT_LIGHTGUN_Y) ||
-					((in->type & ~IPF_MASK) == IPT_AD_STICK_X) ||
-					((in->type & ~IPF_MASK) == IPT_AD_STICK_Y) ||
-					((in->type & ~IPF_MASK) == IPT_AD_STICK_Z))
-				{
-					switch (default_player)
-					{
-						case 0:
-							/* do nothing */
-							analog_player_port[port] = player;
-							break;
-						case 1:
-							if (player == 0)
-							{
-								in->type &= ~IPF_PLAYER1;
-								in->type |= IPF_PLAYER2;
-								analog_player_port[port] = 1;
-							}
-							else if (player == 1)
-							{
-								in->type &= ~IPF_PLAYER2;
-								in->type |= IPF_PLAYER1;
-								analog_player_port[port] = 0;
-							}
-							break;
-						case 2:
-							if (player == 0)
-							{
-								in->type &= ~IPF_PLAYER1;
-								in->type |= IPF_PLAYER3;
-								analog_player_port[port] = 2;
-							}
-							else if (player == 2)
-							{
-								in->type &= ~IPF_PLAYER3;
-								in->type |= IPF_PLAYER1;
-								analog_player_port[port] = 0;
-							}
-							break;
-						case 3:
-							if (player == 0)
-							{
-								in->type &= ~IPF_PLAYER1;
-								in->type |= IPF_PLAYER4;
-								analog_player_port[port] = 3;
-							}
-							else if (player == 3)
-							{
-								in->type &= ~IPF_PLAYER4;
-								in->type |= IPF_PLAYER1;
-								analog_player_port[port] = 0;
-							}
-							break;
-					}
-				}
-			}
-			in++;
-		}
-		port++;
-		if (in->type == IPT_PORT) in++;
-	}
-#endif /* MAME_NET */
 
 	save_default_keys();
 
@@ -2449,11 +2088,7 @@ profiler_mark(PROFILER_INPUT);
 		readword(playback,&input_port_value[port]);
 	if (record)
 		writeword(record,input_port_value[port]);
-#ifdef MAME_NET
-	if ( net_active() && (default_player != NET_SPECTATOR) )
-		net_analog_sync((unsigned char *) input_port_value, port, analog_player_port, default_player);
-#endif /* MAME_NET */
-profiler_mark(PROFILER_END);
+	profiler_mark(PROFILER_END);
 }
 
 #define MAX_JOYSTICKS 3
@@ -2579,11 +2214,6 @@ void update_input_ports(void)
 	static int waspressed[MAX_INPUT_BITS];
 	static int pbwaspressed[MAX_INPUT_BITS];
 
-#ifdef MAME_NET
-	int player;
-#endif /* MAME_NET */
-
-
 profiler_mark(PROFILER_INPUT);
 
 	/* clear all the values before proceeding */
@@ -2625,20 +2255,10 @@ profiler_mark(PROFILER_INPUT);
 		while (in->type != IPT_END && in->type != IPT_PORT)
 		{
 			if ((in->type & ~IPF_MASK) != IPT_DIPSWITCH_SETTING &&	/* skip dipswitch definitions */
-#ifdef MESS
-				(in->type & ~IPF_MASK) != IPT_CONFIG_SETTING &&		/* skip config definitions */
-#endif /* MESS */
 				(in->type & ~IPF_MASK) != IPT_EXTENSION)			/* skip analog extension fields */
 			{
 				input_port_value[port] =
 						(input_port_value[port] & ~in->mask) | (in->default_value & in->mask);
-#ifdef MAME_NET
-				if ( net_active() )
-					input_port_defaults[port] = input_port_value[port];
-#elif defined XMAME_NET
-				if ( osd_net_active() )
-					input_port_defaults[port] = input_port_value[port];
-#endif /* MAME_NET */
 			}
 
 			in++;
@@ -2649,13 +2269,7 @@ profiler_mark(PROFILER_INPUT);
 			 in->type != IPT_END && in->type != IPT_PORT;
 			 in++, ib++)
 		{
-#ifdef MAME_NET
-			player = IP_GET_PLAYER(in);
-#endif /* MAME_NET */
 			if ((in->type & ~IPF_MASK) != IPT_DIPSWITCH_SETTING &&	/* skip dipswitch definitions */
-#ifdef MESS
-				(in->type & ~IPF_MASK) != IPT_CONFIG_SETTING &&		/* skip config definitions */
-#endif
 					(in->type & ~IPF_MASK) != IPT_EXTENSION)		/* skip analog extension fields */
 			{
 				if ((in->type & ~IPF_MASK) == IPT_VBLANK)
@@ -2685,11 +2299,6 @@ if (Machine->drv->vblank_duration == 0)
 					seq = input_port_seq(in);
 					if (seq_pressed(seq))
 					{
-#ifdef MESS
-						if (((in->type & ~IPF_MASK) == IPT_KEYBOARD) && osd_keyboard_disabled())
-							continue;
-#endif
-
 						/* skip if coin input and it's locked out */
 						if ((in->type & ~IPF_MASK) >= IPT_COIN1 &&
 							(in->type & ~IPF_MASK) <= IPT_COIN4 &&
@@ -2729,13 +2338,9 @@ if (IP_GET_IMPULSE(in) == 0)
 						else if ((in->type & ~IPF_MASK) >= IPT_JOYSTICK_UP &&
 								(in->type & ~IPF_MASK) <= IPT_JOYSTICKLEFT_RIGHT)
 						{
-#ifndef MAME_NET
 							int joynum,joydir,mask,player;
 
 							player = IP_GET_PLAYER(in);
-#else
-							int joynum,joydir,mask;
-#endif /* !MAME_NET */
 							joynum = player * MAX_JOYSTICKS +
 									((in->type & ~IPF_MASK) - IPT_JOYSTICK_UP) / 4;
 
@@ -2817,10 +2422,6 @@ if (IP_GET_IMPULSE(in) == 0)
 		}
 	}
 
-#ifdef MESS
-	inputx_update(input_port_value);
-#endif
-
 	if (record)
 	{
 		int i;
@@ -2828,15 +2429,8 @@ if (IP_GET_IMPULSE(in) == 0)
 		for (i = 0; i < MAX_INPUT_PORTS; i ++)
 			writeword(record,input_port_value[i]);
 	}
-#ifdef MAME_NET
-	if ( net_active() && (default_player != NET_SPECTATOR) )
-		net_input_sync((unsigned char *) input_port_value, (unsigned char *) input_port_defaults, MAX_INPUT_PORTS);
-#elif defined XMAME_NET
-	if ( osd_net_active() )
-		osd_net_sync(input_port_value, input_port_defaults);
-#endif /* MAME_NET */
 
-profiler_mark(PROFILER_END);
+	profiler_mark(PROFILER_END);
 }
 
 
@@ -2968,15 +2562,6 @@ READ16_HANDLER( input_port_27_word_r ) { return readinputport(27); }
 READ16_HANDLER( input_port_28_word_r ) { return readinputport(28); }
 READ16_HANDLER( input_port_29_word_r ) { return readinputport(29); }
 
-#ifdef MAME_NET
-void set_default_player_controls(int player)
-{
-	if (player == NET_SPECTATOR)
-		default_player = NET_SPECTATOR;
-	else
-		default_player = player - 1;
-}
-#endif /* MAME_NET */
 
 /***************************************************************************/
 /* InputPort conversion */
@@ -3030,10 +2615,6 @@ struct InputPort* input_port_allocate(const struct InputPortTiny *src)
 			case IPT_PORT :
 			case IPT_DIPSWITCH_NAME :
 			case IPT_DIPSWITCH_SETTING :
-#ifdef MESS
-			case IPT_CONFIG_NAME :
-			case IPT_CONFIG_SETTING :
-#endif
 				seq_default = CODE_NONE;
 			break;
 			default:
