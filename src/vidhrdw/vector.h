@@ -41,8 +41,6 @@ typedef UINT32 vector_pixel_t;
 
 extern vector_pixel_t *vector_dirty_list;
 
-extern int translucency;  /* translucent vectors  */
-
 extern unsigned char *vectorram;
 extern size_t vectorram_size;
 
@@ -71,10 +69,6 @@ void vector_draw_to (int x2, int y2, rgb_t col, int intensity, int dirty, rgb_t 
 void vector_add_point (int x, int y, rgb_t color, int intensity);
 void vector_add_point_callback (int x, int y, rgb_t (*color_callback)(void), int intensity);
 void vector_add_clip (int minx, int miny, int maxx, int maxy);
-void vector_set_intensity(float _intensity);
-float vector_get_intensity(void);
-void vector_set_flicker(float _flicker);
-float vector_get_flicker(void);
 void vector_set_gamma(float _gamma);
 float vector_get_gamma(void);
 

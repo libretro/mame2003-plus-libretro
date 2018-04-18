@@ -91,7 +91,7 @@ void sega_generate_vector_list (void)
 				color = VECTOR_COLOR222((attrib >> 1) & 0x3f);
 				if ((attrib & 1) && color)
 				{
-					if (translucency)
+					if (options.translucency)
 						intensity = 0xa0; /* leave room for translucency */
 					else
 						intensity = 0xff;
