@@ -6,9 +6,9 @@
 
 ****************************************************************************
 
-        libretro manages:
-	        - platform-specific init
-		- calls run_game() from the function retro_load_game()
+    libretro manages:
+        - platform-specific init
+        - calls run_game() from the function retro_load_game()
         
 	mame.c manages:
 		run_game()
@@ -20,7 +20,6 @@
 				- computes orientation from the options
 
 			- initializes the savegame system
-			- calls osd_init() to do platform-specific initialization
 			- calls init_machine()
 
 			init_machine()
@@ -262,7 +261,6 @@ static INLINE void bail_and_print(const char *message)
 
 int run_game(int game)
 {
-    char buffer[1024];
 	int err = 1;
 
 	begin_resource_tracking();
@@ -851,6 +849,12 @@ static int init_game_options(void)
 	Machine->orientation = ROT0;
 	Machine->ui_orientation = options.ui_orientation;
 
+    /* catch any custom options needed on a per-game basis. this approach feels like a hack. */
+    if(stricmp(Machine->gamedrv->name, "diehard") == 0) {
+        options.bios = strdup("us");
+    }
+    
+    
 	return 0;
 }
 
