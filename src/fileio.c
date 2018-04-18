@@ -135,8 +135,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 
 		/* high score files */
 		case FILETYPE_HIGHSCORE:
-			if (!mame_highscore_enabled())
-				return NULL;
 			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
 
 		/* highscore database */
@@ -145,10 +143,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 
 		/* config files */
 		case FILETYPE_CONFIG:
-			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
-
-		/* input logs */
-		case FILETYPE_INPUTLOG:
 			return generic_fopen(filetype, NULL, gamename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
 
 		/* memory card files */
@@ -213,9 +207,6 @@ void osd_get_path(int pathtype, char* path)
          break;
       case FILETYPE_CONFIG:
          snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "cfg");
-         break;
-      case FILETYPE_INPUTLOG:
-         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "inp");
          break;
       case FILETYPE_MEMCARD:
          snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "memcard");
@@ -836,10 +827,6 @@ static const char *get_extension_for_filetype(int filetype)
 
 		case FILETYPE_CONFIG:		/* config files */
 			extension = "cfg";
-			break;
-
-		case FILETYPE_INPUTLOG:		/* input logs */
-			extension = "inp";
 			break;
 
 		case FILETYPE_MEMCARD:		/* memory card files */
