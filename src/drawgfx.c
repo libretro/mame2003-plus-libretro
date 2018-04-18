@@ -121,15 +121,11 @@ static void calc_penusage(struct GfxElement *gfx,int num)
 void decodechar(struct GfxElement *gfx,int num,const UINT8 *src,const struct GfxLayout *gl)
 {
 	int plane,x,y;
-	UINT8 *dp;
 	int baseoffs;
-	const UINT32 *xoffset,*yoffset;
+	const UINT32 *xoffset = gl->xoffset;
+	const UINT32 *yoffset = gl->yoffset;
+	UINT8 *dp = gfx->gfxdata + num * gfx->char_modulo;
 
-
-	xoffset = gl->xoffset;
-	yoffset = gl->yoffset;
-
-	dp = gfx->gfxdata + num * gfx->char_modulo;
 	memset(dp,0,gfx->char_modulo);
 
 	baseoffs = num * gl->charincrement;

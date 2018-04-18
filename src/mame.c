@@ -600,21 +600,6 @@ static void shutdown_machine(void)
 	state_save_reset();
 }
 
-
-
-/*-------------------------------------------------
-	mame_pause - pause or resume the system
--------------------------------------------------*/
-
-void mame_pause(int pause)
-{
-	memset(XsoundBuffer, 0, sizeof(XsoundBuffer));
-	palette_set_global_brightness_adjust(pause ? options.pause_bright : 1.00);
-	schedule_full_refresh();
-}
-
-
-
 /*-------------------------------------------------
 	expand_machine_driver - construct a machine
 	driver from the macroized state
