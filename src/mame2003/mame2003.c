@@ -473,7 +473,7 @@ static void update_variables(void)
     
     options.use_samples = 1;
     options.cheat = 1;
-
+    /*options.use_artwork = ARTWORK_USE_BACKDROPS;*/
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
