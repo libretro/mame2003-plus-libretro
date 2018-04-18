@@ -712,8 +712,15 @@ bool retro_load_game(const struct retro_game_info *game)
     driverIndex = getDriverIndex(game->path);
 
     environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-    
-    options.libretro_content_path = peelPathItem(normalizePath(strdup(game->path)));
+
+    if(find_last_slash(game->path) == NULL) /* no slashes in the path -- in current folder */
+    {
+        snprintf(options.libretro_content_path, 1024 * sizeof(char), ".");
+    }
+    else
+    {
+        options.libretro_content_path = peelPathItem(normalizePath(strdup(game->path)));        
+    }
     
     /* fallback paths in case these are not provided by the frontend for some reason */
     if(options.libretro_save_path == NULL)
