@@ -845,15 +845,7 @@ static int init_game_options(void)
 	if (options.vector_width == 0) options.vector_width = 640;
 	if (options.vector_height == 0) options.vector_height = 480;
 
-	/* initialize the samplerate */
-        if ( (  Machine->drv->frames_per_second < 47 ) && (options.samplerate >= 30000) )	
-        {	
-                printf("sample rate too high\n");	
-                framerate_test =1;	
-                options.samplerate=22050;	
-                framerate_test =1;	
-        }        
-	Machine->sample_rate = options.samplerate;
+
 
 	/* get orientation right */
 	Machine->orientation = ROT0;
