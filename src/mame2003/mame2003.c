@@ -478,24 +478,20 @@ static void update_variables(void)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-	int orientation;
-	unsigned rotateMode; 
-    rotateMode = (orientation == ROT270) ? 1 : rotateMode;
-    rotateMode = (orientation == ROT180) ? 2 : rotateMode;
-    rotateMode = (orientation == ROT90) ? 3 : rotateMode;
-
-   const int width = rotateMode ? videoConfig.height : videoConfig.width;
-   const int height = rotateMode ? videoConfig.width : videoConfig.height;
+   const int orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
+   const bool rotated = ((orientation == ROT90) || (orientation == ROT270));
+   
+   const int width = rotated ? videoConfig.height : videoConfig.width;
+   const int height = rotated ? videoConfig.width : videoConfig.height;
    
    info->geometry.base_width = width;
    info->geometry.base_height = height;
    info->geometry.max_width = width;
    info->geometry.max_height = height;
-   info->geometry.aspect_ratio = (rotateMode && !options.tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
+   info->geometry.aspect_ratio = (rotated && !options.tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
    info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
    info->timing.sample_rate = options.samplerate;  /* please note if you want bally games to work properly set the sample rate to 22050 you cant go below 48 frames with the default that is set you will need to restart the core */
 }
-
 
 static void check_system_specs(void)
 {
