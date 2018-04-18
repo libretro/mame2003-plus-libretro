@@ -9,57 +9,8 @@
 #include "libretro.h"
 #include "mame2003.h"
 
-/* Format */
-#define SELECT(a,b) (OUTPUT_XML ? (b) : (a))
-
 #define XML_ROOT "mame"
 #define XML_TOP "game"
-
-/* Indentation */
-#define INDENT "\t"
-
-/* Output format configuration
-	L1 first level
-	L2 second level
-	B begin a list of items
-	E end a list of items
-	P begin an item
-	N end an item
-*/
-
-/* Output unformatted */
-/*
-#define L1B "("
-#define L1P " "
-#define L1N ""
-#define L1E ")"
-#define L2B "("
-#define L2P " "
-#define L2N ""
-#define L2E ")"
-*/
-
-/* Output on one level */
-#define L1B " (\n"
-#define L1P INDENT
-#define L1N "\n"
-#define L1E ")\n\n"
-#define L2B " ("
-#define L2P " "
-#define L2N ""
-#define L2E " )"
-
-/* Output on two levels */
-/*
-#define L1B " (\n"
-#define L1P INDENT
-#define L1N "\n"
-#define L1E ")\n\n"
-#define L2B " (\n"
-#define L2P INDENT INDENT
-#define L2N "\n"
-#define L2E INDENT ")"
-*/
 
 extern retro_log_printf_t log_cb; 
 
@@ -168,41 +119,32 @@ static void print_game_switch(int OUTPUT_XML, FILE* out, const struct GameDriver
 		{
 			int def = input->default_value;
 
-			fprintf(out, SELECT(L1P "dipswitch" L2B, "\t\t<dipswitch"));
+			fprintf(out, "\t\t<dipswitch");
 
-			fprintf(out, SELECT(L2P "name ", " name=\""));
+			fprintf(out, " name=\"");
 			print_free_string(OUTPUT_XML, out, input->name);
-			fprintf(out, "%s", SELECT(L2N, "\""));
+			fprintf(out, "%s", "\"");
 			++input;
 
-			fprintf(out, "%s", SELECT("", ">\n"));
+			fprintf(out, "%s", ">\n");
 
 			while ((input->type & ~IPF_MASK)==IPT_DIPSWITCH_SETTING)
 			{
-				fprintf(out, SELECT(L2P "entry ", "\t\t\t<dipvalue"));
-				fprintf(out, "%s", SELECT("", " name=\""));
+				fprintf(out, "\t\t\t<dipvalue");
+				fprintf(out, "%s", " name=\"");
 				print_free_string(OUTPUT_XML, out, input->name);
-				fprintf(out, "%s", SELECT(L2N, "\""));
+				fprintf(out, "%s", "\\");
 				if (def == input->default_value)
 				{
-					if (OUTPUT_XML)
-					{
-						fprintf(out, " default=\"yes\"");
-					}
-					else
-					{
-						fprintf(out, L2P "default ");
-						print_free_string(OUTPUT_XML, out, input->name);
-						fprintf(out, "%s", L2N);
-					}
+					fprintf(out, " default=\"yes\"");
 				}
 
-				fprintf(out, "%s", SELECT("", "/>\n"));
+				fprintf(out, "%s", "/>\n");
 
 				++input;
 			}
 
-			fprintf(out, SELECT(L2E L1N, "\t\t</dipswitch>\n"));
+			fprintf(out, "\t\t</dipswitch>\n");
 		}
 		else
 			++input;
@@ -362,19 +304,19 @@ static void print_game_input(int OUTPUT_XML, FILE* out, const struct GameDriver*
 		++input;
 	}
 
-	fprintf(out, SELECT(L1P "input" L2B, "\t\t<input"));
-	fprintf(out, SELECT(L2P "players %d" L2N, " players=\"%d\""), nplayer );
+	fprintf(out, "\t\t<input");
+	fprintf(out, " players=\"%d\"", nplayer );
 	if (control)
-		fprintf(out, SELECT(L2P "control %s" L2N, " control=\"%s\""), control );
+		fprintf(out, " control=\"%s\"", control );
 	if (nbutton)
-		fprintf(out, SELECT(L2P "buttons %d" L2N, " buttons=\"%d\""), nbutton );
+		fprintf(out, " buttons=\"%d\"", nbutton );
 	if (ncoin)
-		fprintf(out, SELECT(L2P "coins %d" L2N, " coins=\"%d\""), ncoin );
+		fprintf(out, " coins=\"%d\"", ncoin );
 	if (service)
-		fprintf(out, SELECT(L2P "service %s" L2N, " service=\"%s\""), service );
+		fprintf(out, " service=\"%s\"", service );
 	if (tilt)
-		fprintf(out, SELECT(L2P "tilt %s" L2N, " tilt=\"%s\""), tilt );
-	fprintf(out, SELECT(L2E L1N, "/>\n"));
+		fprintf(out, " tilt=\"%s\"", tilt );
+	fprintf(out, "/>\n");
 }
 
 static void print_game_bios(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
@@ -389,16 +331,16 @@ static void print_game_bios(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	/* Match against bios short names */
 	while(!BIOSENTRY_ISEND(thisbios))
 	{
-		fprintf(out, SELECT(L1P "biosset" L2B, "\t\t<biosset"));
+		fprintf(out, "\t\t<biosset");
 
 		if (thisbios->_name)
-			fprintf(out, SELECT(L2P "name %s" L2N, " name=\"%s\""), thisbios->_name);
+			fprintf(out, " name=\"%s\"", thisbios->_name);
 		if (thisbios->_description)
-			fprintf(out, SELECT(L2P "description \"%s\"" L2N, " description=\"%s\""), thisbios->_description);
+			fprintf(out, " description=\"%s\"", thisbios->_description);
 		if (thisbios->value == 0)
-			fprintf(out, SELECT(L2P "default yes" L2N, " default=\"yes\""));
+			fprintf(out, " default=\"yes\"");
 
-		fprintf(out, SELECT(L2E L1N, "/>\n"));
+		fprintf(out, "/>\n");
 
 		thisbios++;
 	}
@@ -463,18 +405,18 @@ static void print_game_rom(int OUTPUT_XML, FILE* out, const struct GameDriver* g
 
 
 			if (!is_disk)
-				fprintf(out, SELECT(L1P "rom" L2B, "\t\t<rom"));
+				fprintf(out, "\t\t<rom");
 			else
-				fprintf(out, SELECT(L1P "disk" L2B, "\t\t<disk"));
+				fprintf(out, "\t\t<disk");
 
 			if (*name)
-				fprintf(out, SELECT(L2P "name %s" L2N, " name=\"%s\""), name);
+				fprintf(out, " name=\"%s\"", name);
 			if (!is_disk && in_parent)
-				fprintf(out, SELECT(L2P "merge %s" L2N, " merge=\"%s\""), ROM_GETNAME(fprom));
+				fprintf(out, " merge=\"%s\"", ROM_GETNAME(fprom));
 			if (!is_disk && found_bios)
-				fprintf(out, SELECT(L2P "bios %s" L2N, " bios=\"%s\""), bios_name);
+				fprintf(out, " bios=\"%s\"", bios_name);
 			if (!is_disk)
-				fprintf(out, SELECT(L2P "size %d" L2N, " size=\"%d\""), length);
+				fprintf(out, " size=\"%d\"", length);
 
 			/* dump checksum information only if there is a known dump */
 			if (!hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
@@ -487,82 +429,69 @@ static void print_game_rom(int OUTPUT_XML, FILE* out, const struct GameDriver* g
 
 					if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), func, checksum))
 					{
-						fprintf(out, SELECT(L2P "%s %s" L2N, " %s=\"%s\""), func_name, checksum);
+						fprintf(out, " %s=\"%s\"", func_name, checksum);
 					}
 				}
 			}
 
 			switch (ROMREGION_GETTYPE(region))
 			{
-				case REGION_CPU1: fprintf(out, SELECT(L2P "region cpu1" L2N, " region=\"cpu1\"")); break;
-				case REGION_CPU2: fprintf(out, SELECT(L2P "region cpu2" L2N, " region=\"cpu2\"")); break;
-				case REGION_CPU3: fprintf(out, SELECT(L2P "region cpu3" L2N, " region=\"cpu3\"")); break;
-				case REGION_CPU4: fprintf(out, SELECT(L2P "region cpu4" L2N, " region=\"cpu4\"")); break;
-				case REGION_CPU5: fprintf(out, SELECT(L2P "region cpu5" L2N, " region=\"cpu5\"")); break;
-				case REGION_CPU6: fprintf(out, SELECT(L2P "region cpu6" L2N, " region=\"cpu6\"")); break;
-				case REGION_CPU7: fprintf(out, SELECT(L2P "region cpu7" L2N, " region=\"cpu7\"")); break;
-				case REGION_CPU8: fprintf(out, SELECT(L2P "region cpu8" L2N, " region=\"cpu8\"")); break;
-				case REGION_GFX1: fprintf(out, SELECT(L2P "region gfx1" L2N, " region=\"gfx1\"")); break;
-				case REGION_GFX2: fprintf(out, SELECT(L2P "region gfx2" L2N, " region=\"gfx2\"")); break;
-				case REGION_GFX3: fprintf(out, SELECT(L2P "region gfx3" L2N, " region=\"gfx3\"")); break;
-				case REGION_GFX4: fprintf(out, SELECT(L2P "region gfx4" L2N, " region=\"gfx4\"")); break;
-				case REGION_GFX5: fprintf(out, SELECT(L2P "region gfx5" L2N, " region=\"gfx5\"")); break;
-				case REGION_GFX6: fprintf(out, SELECT(L2P "region gfx6" L2N, " region=\"gfx6\"")); break;
-				case REGION_GFX7: fprintf(out, SELECT(L2P "region gfx7" L2N, " region=\"gfx7\"")); break;
-				case REGION_GFX8: fprintf(out, SELECT(L2P "region gfx8" L2N, " region=\"gfx8\"")); break;
-				case REGION_PROMS: fprintf(out, SELECT(L2P "region proms" L2N, " region=\"proms\"")); break;
-				case REGION_SOUND1: fprintf(out, SELECT(L2P "region sound1" L2N, " region=\"sound1\"")); break;
-				case REGION_SOUND2: fprintf(out, SELECT(L2P "region sound2" L2N, " region=\"sound2\"")); break;
-				case REGION_SOUND3: fprintf(out, SELECT(L2P "region sound3" L2N, " region=\"sound3\"")); break;
-				case REGION_SOUND4: fprintf(out, SELECT(L2P "region sound4" L2N, " region=\"sound4\"")); break;
-				case REGION_SOUND5: fprintf(out, SELECT(L2P "region sound5" L2N, " region=\"sound5\"")); break;
-				case REGION_SOUND6: fprintf(out, SELECT(L2P "region sound6" L2N, " region=\"sound6\"")); break;
-				case REGION_SOUND7: fprintf(out, SELECT(L2P "region sound7" L2N, " region=\"sound7\"")); break;
-				case REGION_SOUND8: fprintf(out, SELECT(L2P "region sound8" L2N, " region=\"sound8\"")); break;
-				case REGION_USER1: fprintf(out, SELECT(L2P "region user1" L2N, " region=\"user1\"")); break;
-				case REGION_USER2: fprintf(out, SELECT(L2P "region user2" L2N, " region=\"user2\"")); break;
-				case REGION_USER3: fprintf(out, SELECT(L2P "region user3" L2N, " region=\"user3\"")); break;
-				case REGION_USER4: fprintf(out, SELECT(L2P "region user4" L2N, " region=\"user4\"")); break;
-				case REGION_USER5: fprintf(out, SELECT(L2P "region user5" L2N, " region=\"user5\"")); break;
-				case REGION_USER6: fprintf(out, SELECT(L2P "region user6" L2N, " region=\"user6\"")); break;
-				case REGION_USER7: fprintf(out, SELECT(L2P "region user7" L2N, " region=\"user7\"")); break;
-				case REGION_USER8: fprintf(out, SELECT(L2P "region user8" L2N, " region=\"user8\"")); break;
-				case REGION_DISKS: fprintf(out, SELECT(L2P "region disks" L2N, " region=\"disks\"")); break;
-				default: fprintf(out, SELECT(L2P "region 0x%x" L2N, " region=\"0x%x\""), ROMREGION_GETTYPE(region));
+				case REGION_CPU1:   fprintf(out, " region=\"cpu1\""); break;
+				case REGION_CPU2:   fprintf(out, " region=\"cpu2\""); break;
+				case REGION_CPU3:   fprintf(out, " region=\"cpu3\""); break;
+				case REGION_CPU4:   fprintf(out, " region=\"cpu4\""); break;
+				case REGION_CPU5:   fprintf(out, " region=\"cpu5\""); break;
+				case REGION_CPU6:   fprintf(out, " region=\"cpu6\""); break;
+				case REGION_CPU7:   fprintf(out, " region=\"cpu7\""); break;
+				case REGION_CPU8:   fprintf(out, " region=\"cpu8\""); break;
+				case REGION_GFX1:   fprintf(out, " region=\"gfx1\""); break;
+				case REGION_GFX2:   fprintf(out, " region=\"gfx2\""); break;
+				case REGION_GFX3:   fprintf(out, " region=\"gfx3\""); break;
+				case REGION_GFX4:   fprintf(out, " region=\"gfx4\""); break;
+				case REGION_GFX5:   fprintf(out, " region=\"gfx5\""); break;
+				case REGION_GFX6:   fprintf(out, " region=\"gfx6\""); break;
+				case REGION_GFX7:   fprintf(out, " region=\"gfx7\""); break;
+				case REGION_GFX8:   fprintf(out, " region=\"gfx8\""); break;
+				case REGION_PROMS:  fprintf(out, " region=\"proms\""); break;
+				case REGION_SOUND1: fprintf(out, " region=\"sound1\""); break;
+				case REGION_SOUND2: fprintf(out, " region=\"sound2\""); break;
+				case REGION_SOUND3: fprintf(out, " region=\"sound3\""); break;
+				case REGION_SOUND4: fprintf(out, " region=\"sound4\""); break;
+				case REGION_SOUND5: fprintf(out, " region=\"sound5\""); break;
+				case REGION_SOUND6: fprintf(out, " region=\"sound6\""); break;
+				case REGION_SOUND7: fprintf(out, " region=\"sound7\""); break;
+				case REGION_SOUND8: fprintf(out, " region=\"sound8\""); break;
+				case REGION_USER1:  fprintf(out, " region=\"user1\""); break;
+				case REGION_USER2:  fprintf(out, " region=\"user2\""); break;
+				case REGION_USER3:  fprintf(out, " region=\"user3\""); break;
+				case REGION_USER4:  fprintf(out, " region=\"user4\""); break;
+				case REGION_USER5:  fprintf(out, " region=\"user5\""); break;
+				case REGION_USER6:  fprintf(out, " region=\"user6\""); break;
+				case REGION_USER7:  fprintf(out, " region=\"user7\""); break;
+				case REGION_USER8:  fprintf(out, " region=\"user8\""); break;
+				case REGION_DISKS:  fprintf(out, " region=\"disks\""); break;
+				default:            fprintf(out, " region=\"0x%x\"", ROMREGION_GETTYPE(region));
 		}
 
 		if (!is_disk)
 		{
-			if (OUTPUT_XML)
-			{
-				if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
-					fprintf(out, " status=\"nodump\"");
-				if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP))
-					fprintf(out, " status=\"baddump\"");
-				if (ROMREGION_GETFLAGS(region) & ROMREGION_DISPOSE)
-					fprintf(out, " dispose=\"yes\"");
-				if (ROMREGION_GETFLAGS(region) & ROMREGION_SOUNDONLY)
-					fprintf(out, " soundonly=\"yes\"");
-			}
-			else
-			{
-				if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
-					fprintf(out, L2P "flags nodump" L2N);
-				if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP))
-					fprintf(out, L2P "flags baddump" L2N);
-				if (ROMREGION_GETFLAGS(region) & ROMREGION_DISPOSE)
-					fprintf(out, L2P "flags dispose" L2N);
-				if (ROMREGION_GETFLAGS(region) & ROMREGION_SOUNDONLY)
-					fprintf(out, L2P "flags soundonly" L2N);
-			}
 
-			fprintf(out, SELECT(L2P "offs %x", " offset=\"%x\""), offset);
-			fprintf(out, SELECT(L2E L1N, "/>\n"));
+            if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
+                fprintf(out, " status=\"nodump\"");
+            if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP))
+                fprintf(out, " status=\"baddump\"");
+            if (ROMREGION_GETFLAGS(region) & ROMREGION_DISPOSE)
+                fprintf(out, " dispose=\"yes\"");
+            if (ROMREGION_GETFLAGS(region) & ROMREGION_SOUNDONLY)
+                fprintf(out, " soundonly=\"yes\"");
+
+			fprintf(out, " offset=\"%x\"", offset);
+			fprintf(out, "/>\n");
 		}
 		else
 		{
-			fprintf(out, SELECT(L2P "index %x", " index=\"%x\""), DISK_GETINDEX(rom));
-			fprintf(out, SELECT(L2E L1N, "/>\n"));
+			fprintf(out, " index=\"%x\"", DISK_GETINDEX(rom));
+			fprintf(out, "/>\n");
 		}
 	}
    
@@ -587,7 +516,7 @@ static void print_game_sampleof(int OUTPUT_XML, FILE* out, const struct GameDriv
 			{
 				/* output sampleof only if different from game name */
 				if (strcmp(samplenames[k] + 1, game->name)!=0)
-					fprintf(out, SELECT(L1P "sampleof %s" L1N, " sampleof=\"%s\""), samplenames[k] + 1);
+					fprintf(out, " sampleof=\"%s\"", samplenames[k] + 1);
 				++k;
 			}
 		}
@@ -622,7 +551,7 @@ static void print_game_sample(int OUTPUT_XML, FILE* out, const struct GameDriver
 					while (l<k && strcmp(samplenames[k],samplenames[l])!=0)
 						++l;
 					if (l==k)
-						fprintf(out, SELECT(L1P "sample %s" L1N, "\t\t<sample name=\"%s\"/>\n"), samplenames[k]);
+						fprintf(out, "\t\t<sample name=\"%s\"/>\n", samplenames[k]);
 				}
 				++k;
 			}
@@ -646,18 +575,18 @@ static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver*
 	{
 		if (cpu[j].cpu_type!=0)
 		{
-			fprintf(out, SELECT(L1P "chip" L2B, "\t\t<chip"));
+			fprintf(out, "\t\t<chip");
 			if (cpu[j].cpu_flags & CPU_AUDIO_CPU)
-				fprintf(out, SELECT(L2P "type cpu flags audio" L2N, " type=\"cpu\" soundonly=\"yes\""));
+				fprintf(out, " type=\"cpu\" soundonly=\"yes\"");
 			else
-				fprintf(out, SELECT(L2P "type cpu" L2N, " type=\"cpu\""));
+				fprintf(out, " type=\"cpu\"");
 
-			fprintf(out, SELECT(L2P "name ", " name=\""));
+			fprintf(out, " name=\"");
 			print_statement_string(OUTPUT_XML, out, cputype_name(cpu[j].cpu_type));
-			fprintf(out, "%s", SELECT(L2N, "\""));
+			fprintf(out, "%s", "\"");
 
-			fprintf(out, SELECT(L2P "clock %d" L2N, " clock=\"%d\""), cpu[j].cpu_clock);
-			fprintf(out, SELECT(L2E L1N, "/>\n"));
+			fprintf(out, " clock=\"%d\"", cpu[j].cpu_clock);
+			fprintf(out, "/>\n");
 		}
 	}
 
@@ -672,14 +601,14 @@ static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver*
 
 			for(l=0;l<num;++l)
 			{
-				fprintf(out, SELECT(L1P "chip" L2B, "\t\t<chip"));
-				fprintf(out, SELECT(L2P "type audio" L2N, " type=\"audio\""));
-				fprintf(out, SELECT(L2P "name ", " name=\""));
+				fprintf(out, "\t\t<chip");
+				fprintf(out, " type=\"audio\"");
+				fprintf(out, " name=\"");
 				print_statement_string(OUTPUT_XML, out, sound_name(&sound[j]));
-				fprintf(out, "%s", SELECT(L2N, "\""));
+				fprintf(out, "%s", "\"");
 				if (sound_clock(&sound[j]))
-					fprintf(out, SELECT(L2P "clock %d" L2N, " clock=\"%d\""), sound_clock(&sound[j]));
-				fprintf(out, SELECT(L2E L1N, "/>\n"));
+					fprintf(out, " clock=\"%d\"", sound_clock(&sound[j]));
+				fprintf(out, "/>\n");
 			}
 		}
 	}
@@ -698,15 +627,15 @@ static void print_game_video(int OUTPUT_XML, FILE* out, const struct GameDriver*
 
 	expand_machine_driver(game->drv, &driver);
 
-	fprintf(out, SELECT(L1P "video" L2B, "\t\t<video"));
+	fprintf(out, "\t\t<video");
 	if (driver.video_attributes & VIDEO_TYPE_VECTOR)
 	{
-		fprintf(out, SELECT(L2P "screen vector" L2N, " screen=\"vector\""));
+		fprintf(out, " screen=\"vector\"");
 		showxy = 0;
 	}
 	else
 	{
-		fprintf(out, SELECT(L2P "screen raster" L2N, " screen=\"raster\""));
+		fprintf(out, " screen=\"raster\"");
 		showxy = 1;
 	}
 
@@ -735,18 +664,18 @@ static void print_game_video(int OUTPUT_XML, FILE* out, const struct GameDriver*
 		orientation = 0;
 	}
 
-	fprintf(out, SELECT(L2P "orientation %s" L2N, " orientation=\"%s\""), orientation ? "vertical" : "horizontal" );
+	fprintf(out, " orientation=\"%s\"", orientation ? "vertical" : "horizontal" );
 	if (showxy)
 	{
-		fprintf(out, SELECT(L2P "x %d" L2N, " width=\"%d\""), dx);
-		fprintf(out, SELECT(L2P "y %d" L2N, " height=\"%d\""), dy);
+		fprintf(out, " width=\"%d\"", dx);
+		fprintf(out, " height=\"%d\"", dy);
 	}
 
-	fprintf(out, SELECT(L2P "aspectx %d" L2N, " aspectx=\"%d\""), ax);
-	fprintf(out, SELECT(L2P "aspecty %d" L2N, " aspecty=\"%d\""), ay);
+	fprintf(out, " aspectx=\"%d\"", ax);
+	fprintf(out, " aspecty=\"%d\"", ay);
 
-	fprintf(out, SELECT(L2P "freq %f" L2N, " refresh=\"%f\""), driver.frames_per_second);
-	fprintf(out, SELECT(L2E L1N, "/>\n"));
+	fprintf(out, " refresh=\"%f\"", driver.frames_per_second);
+	fprintf(out, "/>\n");
 }
 
 static void print_game_sound(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
@@ -778,20 +707,20 @@ static void print_game_sound(int OUTPUT_XML, FILE* out, const struct GameDriver*
 		++i;
 	}
 
-	fprintf(out, SELECT(L1P "sound" L2B, "\t\t<sound"));
+	fprintf(out, "\t\t<sound");
 
 	/* sound channel */
 	if (has_sound)
 	{
 		if (driver.sound_attributes & SOUND_SUPPORTS_STEREO)
-			fprintf(out, SELECT(L2P "channels 2" L2N, " channels=\"2\""));
+			fprintf(out, " channels=\"2\"");
 		else
-			fprintf(out, SELECT(L2P "channels 1" L2N, " channels=\"1\""));
+			fprintf(out, " channels=\"1\"");
 	}
 	else
-		fprintf(out, SELECT(L2P "channels 0" L2N, " channels=\"0\""));
+		fprintf(out, " channels=\"0\"");
 
-	fprintf(out, SELECT(L2E L1N, "/>\n"));
+	fprintf(out, "/>\n");
 }
 
 #define HISTORY_BUFFER_MAX 16384
@@ -802,9 +731,9 @@ static void print_game_history(int OUTPUT_XML, FILE* out, const struct GameDrive
 
 	if (load_driver_history(game,buffer,HISTORY_BUFFER_MAX)==0)
 	{
-		fprintf(out, SELECT(L1P "history ", "\t\t<history>"));
+		fprintf(out, "\t\t<history>");
 		print_free_string(OUTPUT_XML, out, buffer);
-		fprintf(out, SELECT(L1N, "</history>\n"));
+		fprintf(out, "</history>\n");
 	}
 }
 
@@ -814,31 +743,31 @@ static void print_game_driver(int OUTPUT_XML, FILE* out, const struct GameDriver
 
 	expand_machine_driver(game->drv, &driver);
 
-	fprintf(out, SELECT(L1P "driver" L2B, "\t\t<driver"));
+	fprintf(out, "\t\t<driver");
 	if (game->flags & GAME_NOT_WORKING)
-		fprintf(out, SELECT(L2P "status preliminary" L2N, " status=\"preliminary\""));
+		fprintf(out, " status=\"preliminary\"");
 	else if (game->flags & GAME_UNEMULATED_PROTECTION)
-		fprintf(out, SELECT(L2P "protection" L2N, " status=\"protection\""));
+		fprintf(out, " status=\"protection\"");
 	else
-		fprintf(out, SELECT(L2P "status good" L2N, " status=\"good\""));
+		fprintf(out, " status=\"good\"");
 
 	if (game->flags & GAME_WRONG_COLORS)
-		fprintf(out, SELECT(L2P "color preliminary" L2N, " color=\"preliminary\""));
+		fprintf(out, " color=\"preliminary\"");
 	else if (game->flags & GAME_IMPERFECT_COLORS)
-		fprintf(out, SELECT(L2P "color imperfect" L2N, " color=\"imperfect\""));
+		fprintf(out, " color=\"imperfect\"");
 	else
-		fprintf(out, SELECT(L2P "color good" L2N, " color=\"good\""));
+		fprintf(out, " color=\"good\"");
 
 	if (game->flags & GAME_NO_SOUND)
-		fprintf(out, SELECT(L2P "sound preliminary" L2N, " sound=\"preliminary\""));
+		fprintf(out, " sound=\"preliminary\"");
 	else if (game->flags & GAME_IMPERFECT_SOUND)
-		fprintf(out, SELECT(L2P "sound imperfect" L2N, " sound=\"imperfect\""));
+		fprintf(out, " sound=\"imperfect\"");
 	else
-		fprintf(out, SELECT(L2P "sound good" L2N, " sound=\"good\""));
+		fprintf(out, " sound=\"good\"");
 
-	fprintf(out, SELECT(L2P "palettesize %d" L2N, " palettesize=\"%d\""), driver.total_colors);
+	fprintf(out, " palettesize=\"%d\"", driver.total_colors);
 
-	fprintf(out, SELECT(L2E L1N, "/>\n"));
+	fprintf(out, "/>\n");
 }
 
 /* Print the MAME info record for a game */
@@ -846,36 +775,36 @@ static void print_game_info(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 {
 	extern struct GameDriver driver_0;
 
-	fprintf(out, SELECT(XML_TOP L1B, "\t<" XML_TOP));
+	fprintf(out, "\t<" XML_TOP);
 
-	fprintf(out, SELECT(L1P "name %s" L1N, " name=\"%s\""), game->name );
+	fprintf(out, " name=\"%s\"", game->name );
 
 	if (game->clone_of && !(game->clone_of->flags & NOT_A_DRIVER))
-		fprintf(out, SELECT(L1P "cloneof %s" L1N, " cloneof=\"%s\""), game->clone_of->name);
+		fprintf(out, " cloneof=\"%s\"", game->clone_of->name);
 
 	if (game->clone_of && game->clone_of != &driver_0)
-		fprintf(out, SELECT(L1P "romof %s" L1N, " romof=\"%s\""), game->clone_of->name);
+		fprintf(out, " romof=\"%s\"", game->clone_of->name);
 
 	print_game_sampleof(OUTPUT_XML, out, game);
 
-	fprintf(out, "%s", SELECT("", ">\n"));
+	fprintf(out, "%s", ">\n");
 
 	if (game->description)
 	{
-		fprintf(out, SELECT(L1P "description ", "\t\t<description>"));
+		fprintf(out, "\t\t<description>");
 		print_free_string(OUTPUT_XML, out, game->description);
-		fprintf(out, SELECT(L1N, "</description>\n"));
+		fprintf(out, "</description>\n");
 	}
 
 	/* print the year only if is a number */
 	if (game->year && strspn(game->year,"0123456789")==strlen(game->year))
-		fprintf(out, SELECT(L1P "year %s" L1N, "\t\t<year>%s</year>\n"), game->year );
+		fprintf(out, "\t\t<year>%s</year>\n", game->year );
 
 	if (game->manufacturer)
 	{
-		fprintf(out, SELECT(L1P "manufacturer ", "\t\t<manufacturer>"));
+		fprintf(out, "\t\t<manufacturer>");
 		print_free_string(OUTPUT_XML, out, game->manufacturer);
-		fprintf(out, SELECT(L1N, "</manufacturer>\n"));
+		fprintf(out, "</manufacturer>\n");
 	}
 
 	print_game_history(OUTPUT_XML, out, game);
@@ -889,41 +818,41 @@ static void print_game_info(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	print_game_switch(OUTPUT_XML, out, game);
 	print_game_driver(OUTPUT_XML, out, game);
 
-	fprintf(out, SELECT(L1E, "\t</" XML_TOP ">\n"));
+	fprintf(out, "\t</" XML_TOP ">\n");
 }
 
 /* Print the resource info */
 static void print_resource_info(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
 {
-	fprintf(out, SELECT("resource" L1B, "\t<" XML_TOP " runnable=\"no\"") );
+	fprintf(out, "\t<" XML_TOP " runnable=\"no\"");
 
-	fprintf(out, SELECT(L1P "name %s" L1N, " name=\"%s\""), game->name );
+	fprintf(out, " name=\"%s\"", game->name);
 
-	fprintf(out, "%s", SELECT("", ">\n"));
+	fprintf(out, "%s", ">\n");
 
 	if (game->description)
 	{
-		fprintf(out, SELECT(L1P "description ", "\t\t<description>"));
+		fprintf(out, "\t\t<description>");
 		print_free_string(OUTPUT_XML, out, game->description);
-		fprintf(out, SELECT(L1N, "</description>\n"));
+		fprintf(out, "</description>\n");
 	}
 
 	/* print the year only if it's a number */
 	if (game->year && strspn(game->year,"0123456789")==strlen(game->year))
-		fprintf(out, SELECT(L1P "year %s" L1N, "\t\t<year>%s</year>\n"), game->year );
+		fprintf(out, "\t\t<year>%s</year>\n", game->year );
 
 	if (game->manufacturer)
 	{
-		fprintf(out, SELECT(L1P "manufacturer ", "\t\t<manufacturer>"));
+		fprintf(out, "\t\t<manufacturer>");
 		print_free_string(OUTPUT_XML, out, game->manufacturer);
-		fprintf(out, SELECT(L1N, "</manufacturer>\n"));
+		fprintf(out, "</manufacturer>\n");
 	}
 
 	print_game_bios(OUTPUT_XML, out, game);
 	print_game_rom(OUTPUT_XML, out, game);
 	print_game_sample(OUTPUT_XML, out, game);
 
-	fprintf(out, SELECT(L1E, "\t</" XML_TOP ">\n"));
+	fprintf(out, "\t</" XML_TOP ">\n");
 }
 
 /* Import the driver object and print it as a resource */
