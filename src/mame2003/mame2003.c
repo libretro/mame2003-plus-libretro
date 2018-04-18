@@ -711,7 +711,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
     if(find_last_slash(game->path) == NULL) /* no slashes in the path -- in current folder */
     {
-        options.libretro_content_path = ".";
+        snprintf(options.libretro_content_path, 1024 * sizeof(char), ".");
     }
     else
     {
