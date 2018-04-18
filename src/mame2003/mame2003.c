@@ -175,7 +175,7 @@ void retro_set_environment(retro_environment_t cb)
       { APPNAME"-tate_mode", "TATE Mode; disabled|enabled" },
       { APPNAME"-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" }, 
       { APPNAME"-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },      
-      { APPNAME"-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled" },
+      { APPNAME"-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },
       { APPNAME"-vector-translucency", "Vector translucency; enabled|disabled" },
       { APPNAME"-vector-beam-width", "EXPERIMENTAL: Vector beam width; 1|2|3|4|5" },
       { APPNAME"-vector-flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },

@@ -18,95 +18,25 @@ extern retro_log_printf_t log_cb;
 /* Print a free format string */
 static void print_free_string(int OUTPUT_XML, FILE* out, const char* s)
 {
-	if (!OUTPUT_XML)
-	{
-		fprintf(out, "\"");
-		if (s)
-		{
-			while (*s)
-			{
-				switch (*s)
-				{
-					case '\a' : fprintf(out, "\\a"); break;
-					case '\b' : fprintf(out, "\\b"); break;
-					case '\f' : fprintf(out, "\\f"); break;
-					case '\n' : fprintf(out, "\\n"); break;
-					case '\r' : fprintf(out, "\\r"); break;
-					case '\t' : fprintf(out, "\\t"); break;
-					case '\v' : fprintf(out, "\\v"); break;
-					case '\\' : fprintf(out, "\\\\"); break;
-					case '\"' : fprintf(out, "\\\""); break;
-					default:
-						if (*s>=' ' && *s<='~')
-							fprintf(out, "%c", *s);
-						else
-							fprintf(out, "\\x%02x", (unsigned)(unsigned char)*s);
-				}
-				++s;
-			}
-		}
-		fprintf(out, "\"");
-	}
-	else
-	{
-		if (s)
-		{
-			while (*s)
-			{
-				switch (*s)
-				{
-					case '\"' : fprintf(out, "&quot;"); break;
-					case '&'  : fprintf(out, "&amp;"); break;
-					case '<'  : fprintf(out, "&lt;"); break;
-					case '>'  : fprintf(out, "&gt;"); break;
-					default:
-						if (*s>=' ' && *s<='~')
-							fprintf(out, "%c", *s);
-						else
-							fprintf(out, "&#%d;", (unsigned)(unsigned char)*s);
-				}
-				++s;
-			}
-		}
-	}
-}
-
-/* Print a statement string */
-static void print_statement_string(int OUTPUT_XML, FILE* out, const char* s)
-{
-	if (OUTPUT_XML)
-	{
-		print_free_string(OUTPUT_XML, out, s);
-		return;
-	}
-	if (s)
-	{
-		while (*s)
-		{
-			if (isspace(*s))
-			{
-				fprintf(out, "_");
-			}
-			else
-			{
-				switch (*s)
-				{
-					case '(' :
-					case ')' :
-					case '"' :
-						fprintf(out, "_");
-						break;
-					default:
-						fprintf(out, "%c", *s);
-				}
-			}
-			++s;
-		}
-	}
-	else
-	{
-		fprintf(out, "null");
-	}
+    if (s)
+    {
+        while (*s)
+        {
+            switch (*s)
+            {
+                case '\"' : fprintf(out, "&quot;"); break;
+                case '&'  : fprintf(out, "&amp;"); break;
+                case '<'  : fprintf(out, "&lt;"); break;
+                case '>'  : fprintf(out, "&gt;"); break;
+                default:
+                    if (*s>=' ' && *s<='~')
+                        fprintf(out, "%c", *s);
+                    else
+                        fprintf(out, "&#%d;", (unsigned)(unsigned char)*s);
+            }
+            ++s;
+        }
+    }
 }
 
 static void print_game_switch(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
@@ -133,7 +63,7 @@ static void print_game_switch(int OUTPUT_XML, FILE* out, const struct GameDriver
 				fprintf(out, "\t\t\t<dipvalue");
 				fprintf(out, "%s", " name=\"");
 				print_free_string(OUTPUT_XML, out, input->name);
-				fprintf(out, "%s", "\\");
+				fprintf(out, "%s", "\"");
 				if (def == input->default_value)
 				{
 					fprintf(out, " default=\"yes\"");
@@ -582,7 +512,7 @@ static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver*
 				fprintf(out, " type=\"cpu\"");
 
 			fprintf(out, " name=\"");
-			print_statement_string(OUTPUT_XML, out, cputype_name(cpu[j].cpu_type));
+			print_free_string(OUTPUT_XML, out, cputype_name(cpu[j].cpu_type));
 			fprintf(out, "%s", "\"");
 
 			fprintf(out, " clock=\"%d\"", cpu[j].cpu_clock);
@@ -604,7 +534,7 @@ static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver*
 				fprintf(out, "\t\t<chip");
 				fprintf(out, " type=\"audio\"");
 				fprintf(out, " name=\"");
-				print_statement_string(OUTPUT_XML, out, sound_name(&sound[j]));
+				print_free_string(OUTPUT_XML, out, sound_name(&sound[j]));
 				fprintf(out, "%s", "\"");
 				if (sound_clock(&sound[j]))
 					fprintf(out, " clock=\"%d\"", sound_clock(&sound[j]));
