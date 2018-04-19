@@ -25,6 +25,68 @@ void punisher_decode(void);
 void slammast_decode(void);
 
 
+const char *const ffight_sample_names[] =
+{
+	"*ffight",
+	"track02-01",
+	"track02-02",
+	"track03-01",
+	"track03-02",
+	"track04-01",
+	"track04-02",
+	"track05-01",
+	"track05-02",
+	"track06-01",
+	"track06-02",
+	"track07-01",
+	"track07-02",
+	"track08-01",
+	"track08-02",
+	"track09-01",
+	"track09-02",
+	"track10-01",
+	"track10-02",
+	"track11-01",
+	"track11-02",
+	"track12-01",
+	"track12-02",
+	"track13-01",
+	"track13-02",
+	"track14-01",
+	"track14-02",
+	"track15-01",
+	"track15-02",
+	"track16-01",
+	"track16-02",
+	"track17-01",
+	"track17-02",
+	"track18-01",
+	"track18-02",
+	"track19-01",
+	"track19-02",
+	"track20-01",
+	"track20-02",
+	"track21-01",
+	"track21-02",
+	"track22-01",
+	"track22-02",
+	"track23-01",
+	"track23-02",
+	"track24-01",
+	"track24-02",
+	"track25-01",
+	"track25-02",
+	"track26-01",
+	"track26-02",
+	0
+};
+
+static struct Samplesinterface ff_samples =
+{
+	2,	// 2 channels
+	100, // volume
+	ffight_sample_names
+};
 
 static READ16_HANDLER( cps1_input_r )
 {
@@ -95,8 +157,201 @@ static READ_HANDLER( cps1_snd_fade_timer_r )
 
 static WRITE16_HANDLER( cps1_sound_command_w )
 {
-	if (ACCESSING_LSB)
-		soundlatch_w(0,data & 0xff);
+	// Debug.
+	/*
+	if (data != 0xff) {
+		printf("%X\n", data);
+	}
+	*/
+	
+	// We are playing Final Fight. Let's use the samples.
+	if(ff_playing_final_fight == true) {
+		switch (data) {
+			// stage 1 upper level music
+			case 0x40:
+				// Play the left channel.
+				sample_start(0, 0, 1);
+
+				// Play the right channel.
+				sample_start(1, 1, 1);
+
+				break;
+			// stage #1: basement
+			case 0x41:
+				sample_start(0, 2, 1);
+				sample_start(1, 3, 1);
+
+				break;
+			// stage #2: subway intro
+			case 0x42:
+				// play the normal version of the song unless playAlternateSong is true
+				if (ff_play_alternate_song == false) {
+					sample_start(0, 4, 1);
+					sample_start(1, 5, 1);
+				}
+				else {
+					sample_start(0, 40, 1);
+					sample_start(1, 41, 1);
+				}
+				
+				break;
+			// stage #2 exiting subway/alley
+			case 0x43:
+				sample_start(0, 6, 1);
+				sample_start(1, 7, 1);
+
+				break;
+			// double andore cage fight music
+			case 0x44:
+				sample_start(0, 8, 1);
+				sample_start(1, 9, 1);
+
+				break;
+			// bay area sea side theme
+			case 0x45:
+				sample_start(0, 10, 1);
+				sample_start(1, 11, 1);
+
+				// we'll provision the alternate songs if they're not already
+				if (ff_provision_alt_song == false) {
+					ff_provision_alt_song = true;
+				}
+				
+				break;
+			// bathroom music for bay area
+			case 0x46:
+				sample_start(0, 12, 1);
+				sample_start(1, 13, 1);
+
+				break;
+			// bay area post-bathroom ending/boss / final boss room entrance
+			case 0x47:
+				// play the normal version of the song unless playAlternateSong is true
+				if (ff_provision_alt_song == false) {
+					sample_start(0, 14, 1);
+					sample_start(1, 15, 1);
+				}
+				else {
+					sample_start(0, 36, 1);
+					sample_start(1, 37, 1);
+				}
+				
+				break;
+			// bonus stage music
+			case 0x4c:
+				sample_start(0, 20, 1);
+				sample_start(1, 21, 1);
+
+				break;
+			// industrial music theme
+			case 0x48:
+				sample_start(0, 16, 1);
+				sample_start(1, 17, 1);
+
+				break;
+			// industrial zone elevator ride music
+			case 0x49:
+				sample_start(0, 18, 1);
+				sample_start(1, 19, 1);
+
+				break;
+			// game start ditty
+			case 0x50:
+				sample_start(0, 22, 0);
+				sample_start(1, 23, 0);
+
+				// when the game starts, we'll reset all the alternate songs
+				ff_provision_alt_song = false;
+				ff_play_alternate_song = false;
+				
+				break;
+			// post explosion ditty
+			case 0x51:
+				sample_start(0, 24, 0);
+				sample_start(1, 25, 0);
+
+				break;
+			// opening cinematic song
+			case 0x52:
+				sample_start(0, 46, 0);
+				sample_start(1, 47, 0);
+		
+				break;
+			// continue/dynamite song
+			case 0x53:
+				sample_start(0, 32, 1);
+				sample_start(1, 33, 1);
+				
+				break;
+			// homosexual cheesy ending music
+			case 0x54:
+				sample_start(0, 48, 1);
+				sample_start(1, 49, 1);
+			
+				break;
+			// player select song
+			case 0x55:
+				sample_start(0, 30, 0);
+				sample_start(1, 31, 0);
+				
+				break;
+			// stage end/victory song
+			case 0x57:
+				sample_start(0, 28, 0);
+				sample_start(1, 29, 0);
+				
+				// when we beat a stage after the alternate songs are provisioned, we know that we should be playing the alternate songs
+				if (ff_provision_alt_song == true) {
+					ff_play_alternate_song = true;
+				}
+				
+				break;
+			// final stage clear ditty
+			case 0x58:
+				sample_start(0, 26, 0);
+				sample_start(1, 27, 0);
+								
+				ff_provision_alt_song = false;
+				ff_play_alternate_song = false;
+				
+				break;
+			default:
+				if(ACCESSING_LSB)
+					soundlatch_w(0,data & 0xff);
+
+				// Lets stop the Final Fight sample music.
+				if(data == 0xf0 || data == 0xf2 || data == 0xf7) {
+					int a = 0;
+					
+					for(a = 0; a <= 50; a++) {
+						sample_stop(a);
+					}
+				}
+
+				break;
+		}
+
+		// Determine how we should mix these samples together.
+		if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+			sample_set_stereo_volume(1, 100, 100);
+		}
+		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+			sample_set_stereo_volume(0, 100, 100);
+		}
+		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+			sample_set_stereo_volume(0, 100, 0);
+			sample_set_stereo_volume(1, 0, 100);
+		}
+		else if(sample_playing(0) == 0 && sample_playing(1) == 0) { // No sample playing, revert to the default sound.
+			if(ACCESSING_LSB) {
+				soundlatch_w(0,data & 0xff);
+			}
+		}
+	}
+	else {
+		if(ACCESSING_LSB)
+			soundlatch_w(0,data & 0xff);
+	}
 }
 
 static WRITE16_HANDLER( cps1_coinctrl_w )
@@ -595,7 +850,7 @@ INPUT_PORTS_START( ghouls )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// "Demo Sounds" in manual; doesn´t work
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// "Demo Sounds" in manual; doesn?t work
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, "Allow Continue" )
@@ -677,7 +932,7 @@ INPUT_PORTS_START( ghoulsu )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// "Demo Sounds" in manual; doesn´t work
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// "Demo Sounds" in manual; doesn?t work
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, "Allow Continue" )
@@ -758,7 +1013,7 @@ INPUT_PORTS_START( daimakai )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// "Demo Sounds" in manual; doesn´t work
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// "Demo Sounds" in manual; doesn?t work
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, "Allow Continue" )
@@ -2082,12 +2337,12 @@ INPUT_PORTS_START( 3wonders )
 	PORT_DIPSETTING(    0x00, "Hardest" )
 
 	PORT_START      /* DSWC */
-	PORT_DIPNAME( 0x03, 0x01, "Lives (Don´t Pull)" )
+	PORT_DIPNAME( 0x03, 0x01, "Lives (Don?t Pull)" )
 	PORT_DIPSETTING(    0x03, "1" )
 	PORT_DIPSETTING(    0x02, "2" )
 	PORT_DIPSETTING(    0x01, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
-	PORT_DIPNAME( 0x0c, 0x08, "Difficulty (Don´t Pull)" )
+	PORT_DIPNAME( 0x0c, 0x08, "Difficulty (Don?t Pull)" )
 	PORT_DIPSETTING(    0x0c, "Easy" )
 	PORT_DIPSETTING(    0x08, "Normal" )
 	PORT_DIPSETTING(    0x04, "Hard" )
@@ -3707,6 +3962,19 @@ static MACHINE_DRIVER_START( cps1 )
 	/* sound hardware */
 	MDRV_SOUND_ADD_TAG("2151", YM2151, ym2151_interface)
 	MDRV_SOUND_ADD_TAG("okim", OKIM6295, okim6295_interface_7576)
+MACHINE_DRIVER_END
+
+// For Final Fight.
+static MACHINE_DRIVER_START( ffight_hack )
+	ff_playing_final_fight = true;
+	
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(cps1)
+
+	// Lets add our Final Fight music sample packs.
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(SAMPLES, ff_samples)
+	//MDRV_SOUND_ADD(SAMPLES, ff_samplesR)
 MACHINE_DRIVER_END
 
 
@@ -7429,10 +7697,19 @@ GAME( 1989, willowj,  willow,   cps1,     willow,   cps1,     ROT0,   "Capcom", 
 GAME( 1989, willowje, willow,   cps1,     willow,   cps1,     ROT0,   "Capcom", "Willow (Japan, English)" )						// (c) Capcom U.S.A. but Japan "warning"
 GAME( 1989, unsquad,  0,        cps1,     unsquad,  cps1,     ROT0,   "Capcom", "U.N. Squadron (US)" )
 GAME( 1989, area88,   unsquad,  cps1,     unsquad,  cps1,     ROT0,   "Capcom", "Area 88 (Japan)" )
+
+GAME( 1989, ffight,   0,        ffight_hack,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (World)" )
+GAME( 1989, ffightu,  ffight,   ffight_hack,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (US 900112)" )
+GAME( 1989, ffightj,  ffight,   ffight_hack,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 1)" )
+GAME( 1989, ffightj1, ffight,   ffight_hack,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 2)" )
+
+/*
 GAME( 1989, ffight,   0,        cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (World)" )
 GAME( 1989, ffightu,  ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (US 900112)" )
 GAME( 1989, ffightj,  ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 1)" )
 GAME( 1989, ffightj1, ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", "Final Fight (Japan set 2)" )
+*/
+
 GAME( 1990, 1941,     0,        cps1,     1941,     cps1,     ROT270, "Capcom", "1941 - Counter Attack (World)" )
 GAME( 1990, 1941j,    1941,     cps1,     1941,     cps1,     ROT270, "Capcom", "1941 - Counter Attack (Japan)" )
 GAME( 1990, mercs,    0,        cps1,     mercs,    cps1,     ROT270, "Capcom", "Mercs (World 900302)" )						// "ETC"

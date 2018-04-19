@@ -71,20 +71,6 @@ void sample_set_stereo_volume(int channel,int volume_left, int volume_right)
 	mixer_set_stereo_volume(channel + firstchannel,volume_left * 100 / 255, volume_right * 100 / 255);
 }
 
-// Set sample volume by speaker.
-void sample_set_stereo_volume(int channel,int volume_left, int volume_right)
-{
-	if (Machine->sample_rate == 0) return;
-	if (Machine->samples == 0) return;
-	if (channel >= numchannels)
-	{
-		logerror("error: sample_adjust() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
-		return;
-	}
-
-	mixer_set_stereo_volume(channel + firstchannel,volume_left * 100 / 255, volume_right * 100 / 255);
-}
-
 void sample_set_volume(int channel,int volume)
 {
 	if (Machine->sample_rate == 0) return;
