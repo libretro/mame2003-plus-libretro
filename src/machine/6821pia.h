@@ -25,12 +25,6 @@
 #define PIA_STANDARD_ORDERING		0
 #define PIA_ALTERNATE_ORDERING		1
 
-#ifdef MESS
-#define PIA_8BIT                    0
-#define PIA_AUTOSENSE				8
-#endif
-
-
 struct pia6821_interface
 {
 	mem_read_handler in_a_func;

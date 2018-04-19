@@ -197,13 +197,13 @@ struct GameOptions
 	int		 color_depth;	        /* valid: 15, 16, or 32. any other value means auto */
 	int		 ui_orientation;	    /* orientation of the UI relative to the video */
         
-	int		 vector_width;	        /* requested width for vector games; 0 means default (640) */
-	int		 vector_height;	        /* requested height for vector games; 0 means default (480) */
-	int		 beam;			        /* vector beam width */
-	float	 vector_flicker;	    /* vector beam flicker effect control */
-	float	 vector_intensity;      /* vector beam intensity */
-	int		 translucency;	        /* 1 to enable translucency on vectors */
-	int 	 antialias;		        /* 1 to enable antialiasing on vectors */
+	int		 vector_width;	               /* requested width for vector games; 0 means default (640) */
+	int		 vector_height;	               /* requested height for vector games; 0 means default (480) */
+	int		 beam;			               /* vector beam width */
+	int	     vector_flicker;	            /* vector beam flicker effect control */
+	float	 vector_intensity_correction;   
+	int		 translucency;	                /* 1 to enable translucency on vectors */
+	int 	 antialias;		                /* 1 to enable antialiasing on vectors */
     unsigned vector_resolution_multiplier;
     
 	int		 use_artwork;	        /* bitfield indicating which artwork pieces to use */
@@ -309,11 +309,6 @@ int run_game(int game);
 struct InternalMachineDriver;
 void expand_machine_driver(void (*constructor)(struct InternalMachineDriver *), struct InternalMachineDriver *output);
 
-/* pause the system */
-void mame_pause(int pause);
-
-
-
 /* ----- screen rendering and management ----- */
 
 /* set the current visible area of the screen bitmap */
@@ -341,9 +336,6 @@ int updatescreen(void);
 
 
 /* ----- miscellaneous bits & pieces ----- */
-
-/* mame_fopen() must use this to know if high score files can be used */
-int mame_highscore_enabled(void);
 
 /* set the state of a given LED */
 void set_led_status(int num, int on);

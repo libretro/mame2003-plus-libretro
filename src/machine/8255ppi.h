@@ -30,11 +30,6 @@ void ppi8255_set_portAwrite( int which, mem_write_handler portAwrite);
 void ppi8255_set_portBwrite( int which, mem_write_handler portBwrite);
 void ppi8255_set_portCwrite( int which, mem_write_handler portCwrite);
 
-#ifdef MESS
-/* Peek at the ports */
-data8_t ppi8255_peek( int which, offs_t offset );
-#endif
-
 /* Helpers */
 READ_HANDLER( ppi8255_0_r );
 READ_HANDLER( ppi8255_1_r );

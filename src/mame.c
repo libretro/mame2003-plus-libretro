@@ -6,9 +6,9 @@
 
 ****************************************************************************
 
-        libretro manages:
-	        - platform-specific init
-		- calls run_game() from the function retro_load_game()
+    libretro manages:
+        - platform-specific init
+        - calls run_game() from the function retro_load_game()
         
 	mame.c manages:
 		run_game()
@@ -20,7 +20,6 @@
 				- computes orientation from the options
 
 			- initializes the savegame system
-			- calls osd_init() to do platform-specific initialization
 			- calls init_machine()
 
 			init_machine()
@@ -262,7 +261,6 @@ static INLINE void bail_and_print(const char *message)
 
 int run_game(int game)
 {
-    char buffer[1024];
 	int err = 1;
 
 	begin_resource_tracking();
@@ -600,21 +598,6 @@ static void shutdown_machine(void)
 	state_save_reset();
 }
 
-
-
-/*-------------------------------------------------
-	mame_pause - pause or resume the system
--------------------------------------------------*/
-
-void mame_pause(int pause)
-{
-	memset(XsoundBuffer, 0, sizeof(XsoundBuffer));
-	palette_set_global_brightness_adjust(pause ? options.pause_bright : 1.00);
-	schedule_full_refresh();
-}
-
-
-
 /*-------------------------------------------------
 	expand_machine_driver - construct a machine
 	driver from the macroized state
@@ -860,20 +843,18 @@ static int init_game_options(void)
 	if (options.vector_width == 0) options.vector_width = 640;
 	if (options.vector_height == 0) options.vector_height = 480;
 
-	/* initialize the samplerate */
-        if ( (  Machine->drv->frames_per_second < 47 ) && (options.samplerate >= 30000) )	
-        {	
-                printf("sample rate too high\n");	
-                framerate_test =1;	
-                options.samplerate=22050;	
-                framerate_test =1;	
-        }        
-	Machine->sample_rate = options.samplerate;
+
 
 	/* get orientation right */
 	Machine->orientation = ROT0;
 	Machine->ui_orientation = options.ui_orientation;
 
+    /* catch any custom options needed on a per-game basis. this approach feels like a hack. */
+    if(stricmp(Machine->gamedrv->name, "diehard") == 0) {
+        options.bios = strdup("us");
+    }
+    
+    
 	return 0;
 }
 
@@ -1271,42 +1252,6 @@ int updatescreen(void)
 	}
 
 	return 0;
-}
-
-
-
-/***************************************************************************
-
-	Miscellaneous bits & pieces
-
-***************************************************************************/
-
-/*-------------------------------------------------
-	mame_highscore_enabled - return 1 if high
-	scores are enabled
--------------------------------------------------*/
-
-int mame_highscore_enabled(void)
-{
-	/* disable high score when record/playback is on */
-	if (record != 0 || playback != 0)
-		return 0;
-
-	/* disable high score when cheats are used */
-	if (he_did_cheat != 0)
-		return 0;
-
-	/* disable high score when playing network game */
-	/* (this forces all networked machines to start from the same state!) */
-#ifdef MAME_NET
-	if (net_active())
-		return 0;
-#elif defined XMAME_NET
-	if (osd_net_active())
-		return 0;
-#endif
-
-	return 1;
 }
 
 

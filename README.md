@@ -2,13 +2,14 @@
 MAME as it was in 2003 with some new game support plus many fixes and improvements for 2018, using the libretro API. Suitable for lower-end devices that would struggle to run current versions of MAME (later versions of MAME are increasingly accurate, thus can perform worse).
 
 ## ROMset compatibility with MAME 2003-plus
-**The MAME 2003-plus core accepts MAME 0.78 ROMsets for 99.9% of games however most of the new playable games
-plus some others that now have sound will require a Rom from later MAME builds a datfile is being created which
-will help users of this core to obtain the correct versions.** 
-
 Each version of an arcade emulator must be used with ROMs that have the same exact version number. For example, MAME 0.37b5 ROMsets are required by the MAME 2000 emulator, but MAME 0.37b5 sets will not work correctly with the MAME 2003-plus or MAME 2010 emulator cores. Those cores require MAME 0.78 and MAME 0.139 ROM sets, respectively.
 
-File-not-found errors are the result of a ROMset that is wrong or incomplete, including if you're trying to run a "Split" clone .zip without the parent .zip present. Non-Merged MAME0.78 ROMsets do not require parent .zips to be present.
+**The MAME 2003-plus core accepts MAME 0.78 ROMsets for 99.9% of games, most of the new playable games require a Rom from later MAME builds. An XML datfile compatible with ClrMamePro is included in this repository's `metadata` folder, or you can use the `Generate XML DAT` command from within mame2003's "Tab Menu" to create an XML DAT file within your `/libretro save/mame2003-plus` folder.**
+
+## Use 'Full Non-Merged' ROM Collections
+Full Non-Merged ROM set zips include all the files needed to run that game, including any ROMs from 'parent' ROM sets and BIOS sets. Using Full Non-merged ROM sets means that every .zip in this collection is complete and can be used stand-alone.
+
+To configure ClrMamePro to validate or rebuild a Full Non-Merged collection, disable "Separate BIOS Sets" from the "Advanced" menu in both ClrMamePro's Rebuild and Scanner menus.
 
 ## Multiple lightgun, steering wheel, and "spinner/dial" devices
 MAME 2003-plus has support for multiple mice or touch devices in games that support trackballs, etc.
@@ -29,7 +30,7 @@ MAME 2003-plus also supports one or two spinners/dials via the "Share 2 player d
 ```
 * High score, cheat, and history metadata files should be moved from github's [`/libretro/mame2003-plus-libretro/tree/master/metadata`](https://github.com/libretro/mame2003-plus-libretro/tree/master/metadata) and placed within `/libretro system dir/mame2003-plus/` e.g.:
 ```
-/libretro system dir/mame2003-plus/hiscore.dat
+/libretro system dir/mame2003-plus/hiscore.dat (optional)
 /libretro system dir/mame2003-plus/cheat.dat
 /libretro system dir/mame2003-plus/history.dat
 ```
@@ -39,7 +40,6 @@ MAME 2003-plus also supports one or two spinners/dials via the "Share 2 player d
 /libretro savefile dir/mame2003-plus/nvram/
 /libretro savefile dir/mame2003-plus/hi/
 /libretro savefile dir/mame2003-plus/cfg/
-/libretro savefile dir/mame2003-plus/inp/
 /libretro savefile dir/mame2003-plus/memcard/
 ```
 

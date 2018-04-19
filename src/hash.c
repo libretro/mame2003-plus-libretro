@@ -138,14 +138,6 @@
 
 #define ASSERT(x)
 
-#ifndef TRUE
-#define TRUE    1
-#endif
-
-#ifndef FALSE
-#define FALSE   0
-#endif
-
 typedef struct 
 {
 	const char* name;           // human-readable name
@@ -594,21 +586,21 @@ int hash_verify_string(const char *hash)
 	int len, i;
 
 	if (!hash)
-		return FALSE;
+		return 0;
 
 	while(*hash)
 	{
 		if (*hash == '$')
 		{
 			if (memcmp(hash, NO_DUMP, 4) && memcmp(hash, BAD_DUMP, 4))
-				return FALSE;
+				return 0;
 			hash += 4;
 		}
 		else
 		{
 			/* first make sure that the next char is a colon */
 			if (hash[1] != ':')
-				return FALSE;
+				return 0;
 
 			/* search for a hash function for this code */
 			for (i = 0; i < sizeof(hash_descs) / sizeof(hash_descs[0]); i++)
@@ -617,7 +609,7 @@ int hash_verify_string(const char *hash)
 					break;
 			}
 			if (i >= sizeof(hash_descs) / sizeof(hash_descs[0]))
-				return FALSE;
+				return 0;
 
 			/* we have a proper code */
 			len = hash_descs[i].size * 2;
@@ -626,15 +618,16 @@ int hash_verify_string(const char *hash)
 			for (i = 0; (hash[i] != '#') && (i < len); i++)
 			{
 				if (!isxdigit(hash[i]))
-					return FALSE;
+					return 0;
 			}
 			if (hash[i] != '#')
-				return FALSE;
+				return 0;
 
 			hash += i+1;
 		}
 	}
-	return TRUE;
+
+	return 1;
 }
 
 

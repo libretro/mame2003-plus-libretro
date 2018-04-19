@@ -33,10 +33,6 @@ struct InputPort
 	UINT32 type;			/* see defines below */
 	const char *name;		/* name to display */
 	InputSeq seq;                  	/* input sequence affecting the input bits */
-#ifdef MESS
-	UINT32 arg;				/* extra argument needed in some cases */
-	UINT16 min, max;		/* for analog controls */
-#endif
 };
 
 
@@ -69,12 +65,7 @@ enum { IPT_END=1,IPT_PORT,
 	IPT_SERVICE1, IPT_SERVICE2, IPT_SERVICE3, IPT_SERVICE4,	/* service coin */
 	IPT_SERVICE, IPT_TILT,
 	IPT_DIPSWITCH_NAME, IPT_DIPSWITCH_SETTING,
-#ifdef MESS
-	IPT_KEYBOARD, IPT_UCHAR,
-	IPT_CONFIG_NAME, IPT_CONFIG_SETTING,
-	IPT_MOUSE_X, IPT_MOUSE_Y,
-	IPT_START, IPT_SELECT,
-#endif
+
 /* Many games poll an input bit to check for vertical blanks instead of using */
 /* interrupts. This special value allows you to handle that. If you set one of the */
 /* input bits to this, the bit will be inverted while a vertical blank is happening. */
@@ -329,10 +320,6 @@ InputSeq* input_port_seq(const struct InputPort *in);
 
 struct InputPort* input_port_allocate(const struct InputPortTiny *src);
 void input_port_free(struct InputPort* dst);
-
-#ifdef MAME_NET
-void set_default_player_controls(int player);
-#endif /* MAME_NET */
 
 void init_analog_seq(void);
 

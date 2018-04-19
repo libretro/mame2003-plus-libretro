@@ -15,7 +15,7 @@
 #include "state.h"
 
 
-extern int framerate_test;
+
 
 static int driverIndex; /* Index of mame game loaded */
 extern struct osd_create_params videoConfig;
@@ -66,6 +66,9 @@ Sound
 
 int osd_start_audio_stream(int stereo)
 {
+
+	 Machine->sample_rate = Machine->drv->frames_per_second * 1000;
+
 	delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
 
@@ -82,17 +85,43 @@ int osd_start_audio_stream(int stereo)
 
 }
 
+
 int osd_update_audio_stream(INT16 *buffer)
 {
-	memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
-   	delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samples_per_frame;
-	if (delta_samples >= 1.0f)
-	{
-		int integer_delta = (int)delta_samples;
-		samples_per_frame += integer_delta;
-		delta_samples -= integer_delta;
-	}
+	int i,j;
 
+
+
+	if ( Machine->sample_rate !=0 && buffer )
+	{
+
+   		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+
+		if (usestereo)
+			audio_batch_cb(samples_buffer, samples_per_frame);
+
+		else
+		{
+
+			for (i = 0, j = 0; i < samples_per_frame; i++)
+        		{
+				conversion_buffer[j++] = samples_buffer[i];
+				conversion_buffer[j++] = samples_buffer[i];
+		        }
+
+         		audio_batch_cb(conversion_buffer,samples_per_frame);
+		}	
+
+   		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samples_per_frame;
+
+		if (delta_samples >= 1.0f)
+		{
+			int integer_delta = (int)delta_samples;
+			samples_per_frame += integer_delta;
+			delta_samples -= integer_delta;
+		}
+
+	}
 	return samples_per_frame;
 }
 
@@ -133,6 +162,7 @@ void retro_set_environment(retro_environment_t cb)
       { APPNAME"-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
       { APPNAME"-skip_warnings", "Skip Warnings; disabled|enabled" },
       { APPNAME"-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
+      { APPNAME"-enable-backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
       { APPNAME"-external_hiscore", "Use external hiscore.dat; disabled|enabled" },      
       { APPNAME"-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
 #if defined(__IOS__)
@@ -143,11 +173,11 @@ void retro_set_environment(retro_environment_t cb)
       { APPNAME"-crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
       { APPNAME"-rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
       { APPNAME"-tate_mode", "TATE Mode; disabled|enabled" },
-      { APPNAME"-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification; disabled|enabled" }, 
-      { APPNAME"-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier; 1|2|3|4|5|6" },      
-      { APPNAME"-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled" },
+      { APPNAME"-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" }, 
+      { APPNAME"-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },      
+      { APPNAME"-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },
       { APPNAME"-vector-translucency", "Vector translucency; enabled|disabled" },
-      { APPNAME"-vector-beam-width", "Vector beam width; 1|2|3|4|5" },
+      { APPNAME"-vector-beam-width", "EXPERIMENTAL: Vector beam width; 1|2|3|4|5" },
       { APPNAME"-vector-flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
       { APPNAME"-vector-intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
       { NULL, NULL },
@@ -295,6 +325,18 @@ static void update_variables(void)
    {
       options.samplerate = atoi(var.value);
    }
+   
+   var.value = NULL;
+   
+   var.key = APPNAME"-enable-backdrop";
+   options.use_artwork = ARTWORK_USE_NONE;
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         options.use_artwork = ARTWORK_USE_BACKDROPS;
+      else
+         options.use_artwork = ARTWORK_USE_NONE;
+   }
 
    var.value = NULL;
    
@@ -431,16 +473,16 @@ static void update_variables(void)
    options.vector_flicker = 20;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
-      options.vector_flicker = atof(var.value); /* float: vector beam flicker effect control */
+      options.vector_flicker = (int)(2.55 * atof(var.value)); /* why 2.55? must be an old mame family recipe */
    }   
 
    var.value = NULL;
 
    var.key = APPNAME"-vector-intensity";   
-   options.vector_intensity = 1.5f;
+   options.vector_intensity_correction = 1.5f;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    {
-      options.vector_intensity = atof(var.value); /* float: vector beam intensity */
+      options.vector_intensity_correction = atof(var.value); /* float: vector beam intensity */
    }
     
    {
@@ -473,7 +515,7 @@ static void update_variables(void)
     
     options.use_samples = 1;
     options.cheat = 1;
-
+    /*options.use_artwork = ARTWORK_USE_BACKDROPS;*/
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -489,8 +531,11 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->geometry.max_width = width;
    info->geometry.max_height = height;
    info->geometry.aspect_ratio = (rotated && !options.tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-   info->timing.fps = Machine->drv->frames_per_second; /* sets the core timing does any game go above 60fps? */
-   info->timing.sample_rate = options.samplerate;  /* please note if you want bally games to work properly set the sample rate to 22050 you cant go below 48 frames with the default that is set you will need to restart the core */
+   if ( Machine->drv->frames_per_second < 60.0 ) info->timing.fps = 60.0; 
+
+   else 
+   info->timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps
+   info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
 }
 
 static void check_system_specs(void)
@@ -639,32 +684,7 @@ void retro_run (void)
       }
    }
 
-	if (framerate_test == 1)
-	{
-		struct retro_system_av_info info;
-		retro_get_system_av_info(&info);
-		printf("timing %d\n", (int) info.timing.sample_rate);
-		info.timing.sample_rate=22050;
-		
-		environ_cb(RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO, &info);
-		framerate_test = 0;
-	}
-
    mame_frame();
-   if (samples_per_frame)
-   {
-      if (usestereo)
-         audio_batch_cb(samples_buffer, samples_per_frame);
-      else
-      {
-         for (i = 0, j = 0; i < samples_per_frame; i++)
-         {
-            conversion_buffer[j++] = samples_buffer[i];
-            conversion_buffer[j++] = samples_buffer[i];
-         }
-         audio_batch_cb(conversion_buffer, samples_per_frame);
-      }
-   }
    
 
 }
@@ -708,8 +728,15 @@ bool retro_load_game(const struct retro_game_info *game)
     driverIndex = getDriverIndex(game->path);
 
     environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-    
-    options.libretro_content_path = peelPathItem(normalizePath(strdup(game->path)));
+
+    if(find_last_slash(game->path) == NULL) /* no slashes in the path -- in current folder */
+    {
+        snprintf(options.libretro_content_path, 1024 * sizeof(char), ".");
+    }
+    else
+    {
+        options.libretro_content_path = peelPathItem(normalizePath(strdup(game->path)));        
+    }
     
     /* fallback paths in case these are not provided by the frontend for some reason */
     if(options.libretro_save_path == NULL)

@@ -184,7 +184,7 @@ static INLINE int effective_z(int z, int statz)
 	/* STATZ of 128 should give highest intensity */
 	if (vector_engine == USE_AVG_SWARS)
 	{
-		z = (z * statz) / (translucency ? 12 : 8);
+		z = (z * statz) / (options.translucency ? 12 : 8);
 		if (z > 0xff)
 			z = 0xff;
 	}
@@ -203,7 +203,7 @@ static INLINE int effective_z(int z, int statz)
 		else if (z == 2)
 			z = statz;
 
-		z *= (translucency) ? BRIGHTNESS : 16;
+		z *= (options.translucency) ? BRIGHTNESS : 16;
 	}
 
 	return z;

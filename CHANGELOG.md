@@ -10,6 +10,8 @@
 * Air Rescue
 * Asura Blade 
 * Asura Buster
+* B-Rap Boys
+* B-Rap Boys Special
 * Backfire!
 * Bang Bang Busters
 * Baryon
@@ -34,6 +36,7 @@
 * Dream World
 * Dyna Gears
 * FixEight (bootleg)
+* Fujiyama Buster
 * Gaia: The Last Choice Of Earth
 * Ghost Loop
 * Glass (Censored, Unprotected)
@@ -69,6 +72,7 @@
 * Samurai Shodown V
 * Samurai Shodown V Special
 * Sengoku 3
+* Shogun Warriors
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
 * Teeter Torture
@@ -76,6 +80,7 @@
 * The King Of Fighters 2001
 * The King Of Fighters 2002
 * The Last Hope
+* The Lost Castle In Darkmist
 * Thunder Hoop
 * Title Fight
 * Vasara 2
@@ -88,22 +93,51 @@
 ## Games fixed and now working
 
 * 1000 Miglia : Great 1000 Miles Rally
+* Arch Rivals
 * Avenging Spirit
 * Bakuretsu Breaker
+* Blasted
 * Blood Warrior
+* Crater Raider
+* Demolition Derby
+* Die Hard Arcade (requires a fast system, video and sound issues remain)
+* Discs Of Tron
+* Domino Man
+* Journey
+* Kick
+* Kozmik Kroozer
 * Driftout 94
 * Fire Barrel
 * Funky Jet
 * Hacha Mecha Figher
+* Max RPM
 * Monster Slider
 * Photo Y2k
+* Pigskin 621AD
+* Power Drive
+* Rampage
 * Rogha Armor Force
 * Run And Gun (NVRAM) markwkidd
+* Sarge
+* Satan's Hollow
 * Snowboard Championship
+* Solar Fox
+* Spy Hunter
+* Spy Hunter 2
+* Star Guards
 * Street Fighter (With Added Speedups)
+* Tapper
 * Task Force Harrier
+* Timber
 * Thunder Dragon
+* Tri-Sports
+* Tron
+* Turbo Tag
 * Twin Eagle 2
+* Two Tigers
+* Xenophobe
+* Wacko
+* Zwackery
 
 
 ## Games now with sound
@@ -172,6 +206,8 @@
 * Tweaked Tecmo Bowl so it will boot using only a single screen
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 * Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
+* Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
+* Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.106. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color issue affecting backdrop.
 
 
 ------------------------------------
