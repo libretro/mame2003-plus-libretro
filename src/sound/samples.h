@@ -14,6 +14,7 @@ struct Samplesinterface
 /* mixer_play_sample() */
 void sample_start(int channel,int samplenum,int loop);
 void sample_set_freq(int channel,int freq);
+void sample_set_stereo_volume(int channel,int volume_left, int volume_right);
 void sample_set_volume(int channel,int volume);
 void sample_stop(int channel);
 int sample_playing(int channel);
