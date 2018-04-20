@@ -320,7 +320,7 @@ static void update_variables(void)
    {
       if(strcmp(var.value, "default") == 0)
          options.bios = NULL;
-      else {
+      else
          options.bios = strdup(var.value);
    }
    
