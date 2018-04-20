@@ -3759,9 +3759,9 @@ ROM_END
 
 SYSTEM_BIOS_START( stvbios )
 	SYSTEM_BIOS_ADD( 0, "japan",       "Japan (bios epr19730)" )
-	SYSTEM_BIOS_ADD( 1, "japana",      "Japan (bios mp17951a)" )
+	SYSTEM_BIOS_ADD( 1, "japan-a",      "Japan (bios mp17951a)" )
 	SYSTEM_BIOS_ADD( 2, "us",          "USA (bios mp17952a)" )
-	SYSTEM_BIOS_ADD( 3, "japanb",      "Japan (bios 20091)" )
+	SYSTEM_BIOS_ADD( 3, "japan-b",      "Japan (bios 20091)" )
 	SYSTEM_BIOS_ADD( 4, "taiwan",      "Taiwan (bios mp17953a)" )
 	SYSTEM_BIOS_ADD( 5, "europe",      "Europe (bios mp17954a)" )
 //	SYSTEM_BIOS_ADD( 7, "saturn",      "Saturn bios :)" )

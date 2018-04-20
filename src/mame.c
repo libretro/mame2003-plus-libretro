@@ -844,18 +844,15 @@ static int init_game_options(void)
 	if (options.vector_height == 0) options.vector_height = 480;
 
 
-
 	/* get orientation right */
 	Machine->orientation = ROT0;
 	Machine->ui_orientation = options.ui_orientation;
 
-    /* catch any custom options needed on a per-game basis. this approach feels like a hack. */
+    /* catch any custom bios options needed on a per-game basis. this is a hack. */
     if(stricmp(Machine->gamedrv->name, "diehard") == 0) {
         options.bios = strdup("us");
     }
-    if(stricmp(Machine->gamedrv->name,"neobombe") == 0) {
-        options.bios = strdup("us");
-    }
+    printf("the curent bios option: %s\n", options.bios);
 
 	return 0;
 }

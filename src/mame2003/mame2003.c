@@ -154,32 +154,35 @@ void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_c
 void retro_set_input_poll(retro_input_poll_t cb) { poll_cb = cb; }
 void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
+
+
 void retro_set_environment(retro_environment_t cb)
 {
    static const struct retro_variable vars[] = {
       { APPNAME"-frameskip", "Frameskip; 0|1|2|3|4|5" },
-      { APPNAME"-dcs-speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
-      { APPNAME"-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
-      { APPNAME"-skip_warnings", "Skip Warnings; disabled|enabled" },
-      { APPNAME"-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
       { APPNAME"-enable-backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
-      { APPNAME"-external_hiscore", "Use external hiscore.dat; disabled|enabled" },      
-      { APPNAME"-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
 #if defined(__IOS__)
       { APPNAME"-mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else
       { APPNAME"-mouse_device", "Mouse Device; mouse|pointer|disabled" },
 #endif
+      { APPNAME"-bios-region", "Specify alternate BIOS region; default|asia|japan|japan-a|japan-b|europe|europe-a|taiwan|us|us-a" },
       { APPNAME"-crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
+      { APPNAME"-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
       { APPNAME"-rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
       { APPNAME"-tate_mode", "TATE Mode; disabled|enabled" },
-      { APPNAME"-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" }, 
       { APPNAME"-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },      
       { APPNAME"-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },
       { APPNAME"-vector-translucency", "Vector translucency; enabled|disabled" },
       { APPNAME"-vector-beam-width", "EXPERIMENTAL: Vector beam width; 1|2|3|4|5" },
       { APPNAME"-vector-flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
       { APPNAME"-vector-intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
+      { APPNAME"-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" }, 
+      { APPNAME"-external_hiscore", "Use external hiscore.dat; disabled|enabled" },            
+      { APPNAME"-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },      
+      { APPNAME"-dcs-speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
+      { APPNAME"-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
+      { APPNAME"-skip_warnings", "Skip Warnings; disabled|enabled" },
       { NULL, NULL },
    };
    environ_cb = cb;
@@ -187,21 +190,13 @@ void retro_set_environment(retro_environment_t cb)
    cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
 }
 
-#ifndef PATH_SEPARATOR
-# if defined(WINDOWS_PATH_STYLE) || defined(_WIN32)
-#  define PATH_SEPARATOR '\\'
-# else
-#  define PATH_SEPARATOR '/'
-# endif
-#endif
-
 static char* normalizePath(char* aPath)
 {
    char *tok;
-   static const char replaced = (PATH_SEPARATOR == '\\') ? '/' : '\\';
+   static const char replaced = (path_default_slash_c() == '\\') ? '/' : '\\';
 
    for (tok = strchr(aPath, replaced); tok; tok = strchr(aPath, replaced))
-      *tok = PATH_SEPARATOR;
+      *tok = path_default_slash_c();
 
    return aPath;
 }
@@ -215,7 +210,7 @@ static int getDriverIndex(const char* aPath)
 
     /* Get all chars after the last slash */
     path = normalizePath(strdup(aPath ? aPath : "."));
-    last = strrchr(path, PATH_SEPARATOR);
+    last = strrchr(path, path_default_slash_c());
     memset(driverName, 0, sizeof(driverName));
     strncpy(driverName, last ? last + 1 : path, sizeof(driverName) - 1);
     free(path);
@@ -242,7 +237,7 @@ static int getDriverIndex(const char* aPath)
 
 static char* peelPathItem(char* aPath)
 {
-    char* last = strrchr(aPath, PATH_SEPARATOR);
+    char* last = strrchr(aPath, path_default_slash_c());
     if(last)
        *last = 0;
     
@@ -279,53 +274,7 @@ static void update_variables(void)
    {
       options.frameskip = atoi(var.value);
    }
-
-   var.value = NULL;
-   
-   var.key = APPNAME"-dcs-speedhack";
-   options.activate_dcs_speedhack = 1;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.activate_dcs_speedhack = 1;
-      else
-         options.activate_dcs_speedhack = 0;
-   }
-
-   var.value = NULL;
-   
-   var.key = APPNAME"-skip_disclaimer";
-   options.skip_disclaimer = 0;   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.skip_disclaimer = 1;
-      else
-         options.skip_disclaimer = 0;
-   }
-
-   var.value = NULL;
-
-   var.key = APPNAME"-skip_warnings";
-   options.skip_warnings = 0;   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.skip_warnings = 1;
-      else
-         options.skip_warnings = 0;
-   }
-   
-   var.value = NULL;
-   
-   var.key = APPNAME"-sample_rate";
-   options.samplerate = 48000;
-   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      options.samplerate = atoi(var.value);
-   }
-   
+  
    var.value = NULL;
    
    var.key = APPNAME"-enable-backdrop";
@@ -336,31 +285,6 @@ static void update_variables(void)
          options.use_artwork = ARTWORK_USE_BACKDROPS;
       else
          options.use_artwork = ARTWORK_USE_NONE;
-   }
-
-   var.value = NULL;
-   
-   var.key = APPNAME"-external_hiscore";
-   options.use_external_hiscore = 0;  
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.use_external_hiscore = 1;
-      else
-         options.use_external_hiscore = 0;
-   }
-
-
-   var.value = NULL;
-   
-   var.key = APPNAME"-dialsharexy";
-   options.dial_share_xy = 0;   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.dial_share_xy = 1;
-      else
-         options.dial_share_xy = 0;
    }
 
    var.value = NULL;
@@ -388,7 +312,30 @@ static void update_variables(void)
       else
          options.crosshair_enable = 0;
    }
-
+   var.value = NULL;
+   
+   var.key = APPNAME"-bios-region";
+   options.bios = NULL;
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      if(strcmp(var.value, "default") == 0)
+         options.bios = NULL;
+      else {
+         options.bios = strdup(var.value);
+      printf("setting bios region to: %s", options.bios); }
+   }
+   
+   var.value = NULL;
+   
+   var.key = APPNAME"-dialsharexy";
+   options.dial_share_xy = 0;   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         options.dial_share_xy = 1;
+      else
+         options.dial_share_xy = 0;
+   }
    var.value = NULL;
    
    var.key = APPNAME"-rstick_to_btns";  
@@ -411,18 +358,6 @@ static void update_variables(void)
          options.tate_mode = 1;
       else
          options.tate_mode = 0;
-   }
-
-   var.value = NULL;
-   
-   var.key = APPNAME"-skip-rom-verify";
-   options.skip_rom_verify = 0;     
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 1)
-         options.skip_rom_verify = 1;
-      else
-         options.skip_rom_verify = 0;
    }
 
    var.value = NULL;
@@ -484,7 +419,78 @@ static void update_variables(void)
    {
       options.vector_intensity_correction = atof(var.value); /* float: vector beam intensity */
    }
-    
+
+   var.value = NULL;
+   
+   var.key = APPNAME"-skip-rom-verify";
+   options.skip_rom_verify = 0;     
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      if(strcmp(var.value, "enabled") == 1)
+         options.skip_rom_verify = 1;
+      else
+         options.skip_rom_verify = 0;
+   }
+
+   var.value = NULL;
+   
+   var.key = APPNAME"-skip_disclaimer";
+   options.skip_disclaimer = 0;   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         options.skip_disclaimer = 1;
+      else
+         options.skip_disclaimer = 0;
+   }
+
+   var.value = NULL;
+
+   var.key = APPNAME"-skip_warnings";
+   options.skip_warnings = 0;   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         options.skip_warnings = 1;
+      else
+         options.skip_warnings = 0;
+   }
+
+   var.value = NULL;
+   
+   var.key = APPNAME"-external_hiscore";
+   options.use_external_hiscore = 0;  
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         options.use_external_hiscore = 1;
+      else
+         options.use_external_hiscore = 0;
+   }
+
+   
+   var.value = NULL;
+   
+   var.key = APPNAME"-sample_rate";
+   options.samplerate = 48000;
+   
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      options.samplerate = atoi(var.value);
+   }
+
+   var.value = NULL;
+   
+   var.key = APPNAME"-dcs-speedhack";
+   options.activate_dcs_speedhack = 1;
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      if(strcmp(var.value, "enabled") == 0)
+         options.activate_dcs_speedhack = 1;
+      else
+         options.activate_dcs_speedhack = 0;
+   }
+   
    {
        struct retro_led_interface ledintf;
        ledintf.set_led_state = NULL;
@@ -512,7 +518,7 @@ static void update_variables(void)
         log_cb(RETRO_LOG_ERROR, "[MAME 2003] libretro save path not set!\n");
         options.libretro_save_path = options.libretro_content_path;
     }
-    
+
     options.use_samples = 1;
     options.cheat = 1;
     /*options.use_artwork = ARTWORK_USE_BACKDROPS;*/
