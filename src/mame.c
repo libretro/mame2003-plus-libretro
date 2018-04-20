@@ -852,7 +852,6 @@ static int init_game_options(void)
     if(stricmp(Machine->gamedrv->name, "diehard") == 0) {
         options.bios = strdup("us");
     }
-    printf("the curent bios option: %s\n", options.bios);
 
 	return 0;
 }
