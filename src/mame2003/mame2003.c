@@ -320,7 +320,7 @@ static void update_variables(void)
    {
       if(strcmp(var.value, "default") == 0)
          options.bios = NULL;
-      else {
+      else
          options.bios = strdup(var.value);
    }
    
@@ -490,13 +490,10 @@ static void update_variables(void)
          options.activate_dcs_speedhack = 0;
    }
    
-   {
-       struct retro_led_interface ledintf;
-       ledintf.set_led_state = NULL;
+   ledintf.set_led_state = NULL;
        
-       environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
-       led_state_cb = ledintf.set_led_state;
-   }
+   environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
+   led_state_cb = ledintf.set_led_state;
 
     /* Get system directory from frontend */
     options.libretro_system_path = NULL;
@@ -520,7 +517,6 @@ static void update_variables(void)
 
     options.use_samples = 1;
     options.cheat = 1;
-    /*options.use_artwork = ARTWORK_USE_BACKDROPS;*/
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
