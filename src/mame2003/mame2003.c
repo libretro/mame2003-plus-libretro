@@ -322,7 +322,6 @@ static void update_variables(void)
          options.bios = NULL;
       else {
          options.bios = strdup(var.value);
-      printf("setting bios region to: %s", options.bios); }
    }
    
    var.value = NULL;
