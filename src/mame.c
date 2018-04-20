@@ -853,8 +853,10 @@ static int init_game_options(void)
     if(stricmp(Machine->gamedrv->name, "diehard") == 0) {
         options.bios = strdup("us");
     }
-    
-    
+    if(stricmp(Machine->gamedrv->name,"neobombe") == 0) {
+        options.bios = strdup("us");
+    }
+
 	return 0;
 }
 
