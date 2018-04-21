@@ -425,24 +425,6 @@ static void update_variables(void)
    environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
    led_state_cb = ledintf.set_led_state;
 
-    /* Get system directory from frontend */
-    options.libretro_system_path = NULL;
-    environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&options.libretro_system_path);
-    if (options.libretro_system_path == NULL || options.libretro_system_path[0] == '\0')
-    {
-        log_cb(RETRO_LOG_INFO, "[MAME 2003] libretro system path not set by frontend, using content path\n");
-        options.libretro_system_path = options.libretro_content_path;
-    }
-    
-    /* Get save directory from frontend */
-    options.libretro_save_path = NULL;
-    environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&options.libretro_save_path);
-    if (options.libretro_save_path == NULL || options.libretro_save_path[0] == '\0')
-    {
-        log_cb(RETRO_LOG_INFO, "[MAME 2003] libretro save path not set by frontent, using content path\n");
-        options.libretro_save_path = options.libretro_content_path;
-    }
-
     options.use_samples = 1;
     options.cheat = 1;
 }
@@ -679,6 +661,24 @@ bool retro_load_game(const struct retro_game_info *game)
     options.libretro_content_path = strdup(game->path);        
     path_basedir(options.libretro_content_path);
 
+    /* Get system directory from frontend */
+    options.libretro_system_path = NULL;
+    environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&options.libretro_system_path);
+    if (options.libretro_system_path == NULL || options.libretro_system_path[0] == '\0')
+    {
+        log_cb(RETRO_LOG_INFO, "[MAME 2003] libretro system path not set by frontend, using content path\n");
+        options.libretro_system_path = options.libretro_content_path;
+    }
+    
+    /* Get save directory from frontend */
+    options.libretro_save_path = NULL;
+    environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&options.libretro_save_path);
+    if (options.libretro_save_path == NULL || options.libretro_save_path[0] == '\0')
+    {
+        log_cb(RETRO_LOG_INFO, "[MAME 2003] libretro save path not set by frontent, using content path\n");
+        options.libretro_save_path = options.libretro_content_path;
+    }
+    
     /* Setup Rotation */
     rotateMode = 0;        
     orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
