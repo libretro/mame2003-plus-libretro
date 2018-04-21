@@ -588,51 +588,101 @@ int mame_ungetc(int c, mame_file *file)
 	mame_fgets
 ***************************************************************************/
 
-char *mame_fgets(char *s, int n, mame_file *file)
+char *mame_fgets(char *buffer, int length, mame_file *file)
 {
-	char *cur = s;
+	char *needle = buffer;
 
 	/* loop while we have characters */
-	while (n > 0)
+	while (length > 0)
 	{
-		int c = mame_fgetc(file);
-		if (c == EOF)
+		int character = mame_fgetc(file);
+		if (character == EOF)
 			break;
 
-		/* if there's a CR, look for an LF afterwards */
-		if (c == 0x0d)
+		/* if it's CR, look for an LF afterwards */
+		if (character == 0x0d)
 		{
-			int c2 = mame_fgetc(file);
-			if (c2 != 0x0a)
-				mame_ungetc(c2, file);
-			*cur++ = 0x0d;
-			n--;
+			int next_char = mame_fgetc(file);
+			if (next_char != 0x0a)
+				mame_ungetc(next_char, file);
+			*needle++ = 0x0d;
+			length--;
 			break;
 		}
 
-		/* if there's an LF, reinterp as a CR for consistency */
-		else if (c == 0x0a)
+		/* if it's LF, reinterp as a CR for consistency */
+		else if (character == 0x0a)
 		{
-			*cur++ = 0x0d;
-			n--;
+			*needle++ = 0x0d;
+			length--;
 			break;
 		}
 
 		/* otherwise, pop the character in and continue */
-		*cur++ = c;
-		n--;
+		*needle++ = character;
+		length--;
 	}
 
 	/* if we put nothing in, return NULL */
-	if (cur == s)
+	if (needle == buffer)
 		return NULL;
 
 	/* otherwise, terminate */
-	if (n > 0)
-		*cur++ = 0;
-	return s;
+	if (length > 0)
+		*needle++ = 0;
+	return buffer;
 }
 
+/***************************************************************************
+	bin2c_fgets
+***************************************************************************/
+
+char *bin2c_fgets(const char bin2c_array[], const int bin2c_length, char *buffer, int length, int *const index)
+{
+	char *needle = buffer;
+
+	/* loop while we have characters */
+	while (length > 0)
+   {
+      int character;
+      if (*index == bin2c_length) /* end of bin2c file array */
+         break;
+
+      character = bin2c_array[(*index)++];
+
+      /* if it's CR, look for an LF afterwards */
+      if (character == 0x0d)
+      {
+         int next_char = bin2c_array[(*index)++];
+         if (next_char != 0x0a)
+            (*index)--;
+         *needle++ = 0x0d;
+         length--;
+         break; /* end here regardless of remaining length */
+      }
+
+      /* if it's LF, reinterp as a CR for consistency */
+      else if (character == 0x0a)
+      {
+         *needle++ = 0x0d;
+         length--;
+         break;
+      }
+
+      /* otherwise, pop the character in and continue */
+      *needle++ = character;
+      length--;
+   }
+
+	/* if we put nothing in, return NULL */
+	if (needle == buffer)
+		return NULL;
+
+	/* otherwise, terminate */
+	if (length > 0)
+		*needle++ = 0;
+	return buffer;
+}
 
 
 /***************************************************************************

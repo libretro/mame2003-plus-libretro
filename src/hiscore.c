@@ -285,12 +285,12 @@ void hs_open (const char *name)
          mame_fclose (f);
       }
    }
-   else 
+   else /* use internal bin2c hiscore database */
    {    
       int hiscoredat_index = 0;
       log_cb(RETRO_LOG_INFO, "[MAME 2003] Searching for %s hiscore memory map in internal .dat.\n", name);
 
-      while(parse_hiscoredat(buffer, MAX_CONFIG_LINE_SIZE, &hiscoredat_index))
+      while(bin2c_fgets(hiscoredat, hiscoredat_length, buffer, MAX_CONFIG_LINE_SIZE, &hiscoredat_index))
       {
          if (mode==FIND_NAME)
          {
@@ -342,52 +342,6 @@ void hs_open (const char *name)
    }
 }
 
-char *parse_hiscoredat(char *s, int n, int *const index)
-{
-	char *cur = s;
-
-	/* loop while we have characters */
-	while (n > 0)
-   {
-      int c;
-      if (*index == hiscoredat_length)
-         break;
-
-      c = hiscoredat[(*index)++];
-
-      /* if there's a CR, look for an LF afterwards */
-      if (c == 0x0d)
-      {
-         int c2 = hiscoredat[(*index)++];
-         if (c2 != 0x0a)
-            (*index)--;
-         *cur++ = 0x0d;
-         n--;
-         break;
-      }
-
-      /* if there's an LF, reinterp as a CR for consistency */
-      else if (c == 0x0a)
-      {
-         *cur++ = 0x0d;
-         n--;
-         break;
-      }
-
-      /* otherwise, pop the character in and continue */
-      *cur++ = c;
-      n--;
-   }
-
-	/* if we put nothing in, return NULL */
-	if (cur == s)
-		return NULL;
-
-	/* otherwise, terminate */
-	if (n > 0)
-		*cur++ = 0;
-	return s;
-}
 
 /* call hs_init when emulation starts, and when the game is reset */
 void hs_init (void)

@@ -216,20 +216,20 @@ static INTERRUPT_GEN(rng_interrupt)
 }
 
 static MEMORY_READ16_START( rngreadmem )
-	{ 0x000000, 0x2fffff, MRA16_ROM },		// main program + data
-	{ 0x300000, 0x3007ff, MRA16_RAM },		// palette RAM
-	{ 0x380000, 0x39ffff, MRA16_RAM },		// work RAM
-	{ 0x400000, 0x43ffff, MRA16_NOP },		// K053936_0_rom_r }, // '936 ROM readback window
+	{ 0x000000, 0x2fffff, MRA16_ROM },		/* main program + data */
+	{ 0x300000, 0x3007ff, MRA16_RAM },		/* palette RAM */
+	{ 0x380000, 0x39ffff, MRA16_RAM },		/* work RAM */
+	{ 0x400000, 0x43ffff, MRA16_NOP },		/* K053936_0_rom_r }, */ /* '936 ROM readback window */
 	{ 0x480000, 0x48001f, rng_sysregs_r },
-	{ 0x4c0000, 0x4c001f, K053252_word_r },	// CCU (for scanline and vblank polling)
+	{ 0x4c0000, 0x4c001f, K053252_word_r },	/* CCU (for scanline and vblank polling) */
 	{ 0x580014, 0x580015, sound_status_msb_r },
-	{ 0x580000, 0x58001f, MRA16_RAM },		// sound regs read fall-through
-	{ 0x5c0000, 0x5c000d, K053246_word_r },	// 246A ROM readback window
-	{ 0x600000, 0x600fff, K053247_word_r },	// OBJ RAM
-	{ 0x601000, 0x601fff, MRA16_RAM },		// communication? second monitor buffer?
-	{ 0x6c0000, 0x6cffff, MRA16_RAM },		// PSAC2 render RAM
-	{ 0x700000, 0x7007ff, MRA16_RAM },		// PSAC2 line effect
-	{ 0x740000, 0x741fff, ttl_ram_r },		// text plane RAM
+	{ 0x580000, 0x58001f, MRA16_RAM },		/* sound regs read fall-through */
+	{ 0x5c0000, 0x5c000d, K053246_word_r },	/* 246A ROM readback window */
+	{ 0x600000, 0x600fff, K053247_word_r },	/* OBJ RAM */
+	{ 0x601000, 0x601fff, MRA16_RAM },		/* communication? second monitor buffer? */
+	{ 0x6c0000, 0x6cffff, MRA16_RAM },		/* PSAC2 render RAM */
+	{ 0x700000, 0x7007ff, MRA16_RAM },		/* PSAC2 line effect */
+	{ 0x740000, 0x741fff, ttl_ram_r },		/* text plane RAM */
 #if RNG_DEBUG
 	{ 0x5c0010, 0x5c001f, K053247_reg_word_r },
 	{ 0x640000, 0x640007, K053246_reg_word_r },
@@ -239,22 +239,22 @@ MEMORY_END
 static MEMORY_WRITE16_START( rngwritemem )
 	{ 0x000000, 0x2fffff, MWA16_ROM },
 	{ 0x300000, 0x3007ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
-	{ 0x380000, 0x39ffff, MWA16_RAM },		// work RAM
+	{ 0x380000, 0x39ffff, MWA16_RAM },		/* work RAM */
 	{ 0x480000, 0x48001f, rng_sysregs_w, &rng_sysreg },
-	{ 0x4c0000, 0x4c001f, K053252_word_w },	// CCU
+	{ 0x4c0000, 0x4c001f, K053252_word_w },	/* CCU */
 	{ 0x540000, 0x540001, sound_irq_w },
 	{ 0x58000c, 0x58000d, sound_cmd1_w },
 	{ 0x58000e, 0x58000f, sound_cmd2_w },
-	{ 0x580000, 0x58001f, MWA16_RAM },		// sound regs write fall-through
+	{ 0x580000, 0x58001f, MWA16_RAM },		/* sound regs write fall-through */
 	{ 0x5c0010, 0x5c001f, K053247_reg_word_w },
-	{ 0x600000, 0x600fff, K053247_word_w },	// OBJ RAM
-	{ 0x601000, 0x601fff, MWA16_RAM },		// communication? second monitor buffer?
-	{ 0x640000, 0x640007, K053246_word_w },	// '246A registers
-	{ 0x680000, 0x68001f, MWA16_RAM, &K053936_0_ctrl },				// '936 registers
-	{ 0x6c0000, 0x6cffff, rng_936_videoram_w, &rng_936_videoram },	// PSAC2 ('936) RAM (34v + 35v)
-	{ 0x700000, 0x7007ff, MWA16_RAM, &K053936_0_linectrl },			// "Line RAM"
-	{ 0x740000, 0x741fff, ttl_ram_w },		// text plane RAM
-	{ 0x7c0000, 0x7c0001, MWA16_NOP },		// watchdog
+	{ 0x600000, 0x600fff, K053247_word_w },	/* OBJ RAM */
+	{ 0x601000, 0x601fff, MWA16_RAM },		/* communication? second monitor buffer? */
+	{ 0x640000, 0x640007, K053246_word_w },	/* '246A registers */
+	{ 0x680000, 0x68001f, MWA16_RAM, &K053936_0_ctrl },				/* '936 registers */
+	{ 0x6c0000, 0x6cffff, rng_936_videoram_w, &rng_936_videoram },	/* PSAC2 ('936) RAM (34v + 35v) */
+	{ 0x700000, 0x7007ff, MWA16_RAM, &K053936_0_linectrl },			/* "Line RAM" */
+	{ 0x740000, 0x741fff, ttl_ram_w },		/* text plane RAM */
+	{ 0x7c0000, 0x7c0001, MWA16_NOP },		/* watchdog */
 MEMORY_END
 
 /**********************************************************************************/
@@ -344,12 +344,12 @@ static MACHINE_DRIVER_START( rng )
 	MDRV_CPU_MEMORY(rngreadmem,rngwritemem)
 	MDRV_CPU_VBLANK_INT(rng_interrupt,1)
 
-	MDRV_CPU_ADD_TAG("sound", Z80, 10000000) // 8Mhz (10Mhz is much safer in self-test due to heavy sync)
+	MDRV_CPU_ADD_TAG("sound", Z80, 10000000) /* 8Mhz (10Mhz is much safer in self-test due to heavy sync) */
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_PERIODIC_INT(audio_interrupt, 480)
 
-	MDRV_INTERLEAVE(100) // higher if sound stutters
+	MDRV_INTERLEAVE(100) /* higher if sound stutters */
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
@@ -473,10 +473,10 @@ ROM_START( rungunu )
 
 	/* sprites */
 	ROM_REGION( 0x800000, REGION_GFX2, 0)
-	ROM_LOAD64_WORD( "247-a11", 0x000000, 0x200000, CRC(c3f60854) SHA1(cbee7178ab9e5aa6a5aeed0511e370e29001fb01) )	// 5y
-	ROM_LOAD64_WORD( "247-a08", 0x000002, 0x200000, CRC(3e315eef) SHA1(898bc4d5ad244e5f91cbc87820b5d0be99ef6662) )	// 2u
-	ROM_LOAD64_WORD( "247-a09", 0x000004, 0x200000, CRC(5ca7bc06) SHA1(83c793c68227399f93bd1ed167dc9ed2aaac4167) )	// 2y
-	ROM_LOAD64_WORD( "247-a10", 0x000006, 0x200000, CRC(a5ccd243) SHA1(860b88ade1a69f8b6c5b8206424814b386343571) )	// 5u
+	ROM_LOAD64_WORD( "247-a11", 0x000000, 0x200000, CRC(c3f60854) SHA1(cbee7178ab9e5aa6a5aeed0511e370e29001fb01) )	/* 5y */
+	ROM_LOAD64_WORD( "247-a08", 0x000002, 0x200000, CRC(3e315eef) SHA1(898bc4d5ad244e5f91cbc87820b5d0be99ef6662) )	/* 2u */
+	ROM_LOAD64_WORD( "247-a09", 0x000004, 0x200000, CRC(5ca7bc06) SHA1(83c793c68227399f93bd1ed167dc9ed2aaac4167) )	/* 2y */
+	ROM_LOAD64_WORD( "247-a10", 0x000006, 0x200000, CRC(a5ccd243) SHA1(860b88ade1a69f8b6c5b8206424814b386343571) )	/* 5u */
 
 	/* TTL text plane ("fix layer") */
 	ROM_REGION( 0x20000, REGION_GFX3, 0)
@@ -502,9 +502,9 @@ ROM_START( rungun )
 
 	/* sound program */
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )
-	// bad dump (higher banks and the second half of lower banks filled with 0xff)
+	/* bad dump (higher banks and the second half of lower banks filled with 0xff) */
 	ROM_LOAD("247-a05", 0x000000, 0x20000, BAD_DUMP CRC(412fa1e0) SHA1(3fcf203cfcfb7ec9539d8613a8bf95747c76cc4f) )
-	// borrowed from rungunu
+	/* borrowed from rungunu */
 	ROM_LOAD("247a05",  0x000000, 0x20000, CRC(64e85430) SHA1(542919c3be257c8f118fc21d3835d7b6426a22ed) )
 	ROM_RELOAD(         0x010000, 0x20000 )
 
@@ -514,10 +514,10 @@ ROM_START( rungun )
 
 	/* sprites */
 	ROM_REGION( 0x800000, REGION_GFX2, 0)
-	ROM_LOAD64_WORD( "247-a11", 0x000000, 0x200000, CRC(c3f60854) SHA1(cbee7178ab9e5aa6a5aeed0511e370e29001fb01) )	// 5y
-	ROM_LOAD64_WORD( "247-a08", 0x000002, 0x200000, CRC(3e315eef) SHA1(898bc4d5ad244e5f91cbc87820b5d0be99ef6662) )	// 2u
-	ROM_LOAD64_WORD( "247-a09", 0x000004, 0x200000, CRC(5ca7bc06) SHA1(83c793c68227399f93bd1ed167dc9ed2aaac4167) )	// 2y
-	ROM_LOAD64_WORD( "247-a10", 0x000006, 0x200000, CRC(a5ccd243) SHA1(860b88ade1a69f8b6c5b8206424814b386343571) )	// 5u
+	ROM_LOAD64_WORD( "247-a11", 0x000000, 0x200000, CRC(c3f60854) SHA1(cbee7178ab9e5aa6a5aeed0511e370e29001fb01) )	/* 5y */
+	ROM_LOAD64_WORD( "247-a08", 0x000002, 0x200000, CRC(3e315eef) SHA1(898bc4d5ad244e5f91cbc87820b5d0be99ef6662) )	/* 2u */
+	ROM_LOAD64_WORD( "247-a09", 0x000004, 0x200000, CRC(5ca7bc06) SHA1(83c793c68227399f93bd1ed167dc9ed2aaac4167) )	/* 2y */
+	ROM_LOAD64_WORD( "247-a10", 0x000006, 0x200000, CRC(a5ccd243) SHA1(860b88ade1a69f8b6c5b8206424814b386343571) )	/* 5u */
 
 	/* TTL text plane ("fix layer") */
 	ROM_REGION( 0x20000, REGION_GFX3, 0)
@@ -543,9 +543,9 @@ ROM_START( slmdunkj )
 
 	/* sound program */
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )
-	// bad dump (higher banks and the second half of lower banks filled with 0xff)
+	/* bad dump (higher banks and the second half of lower banks filled with 0xff) */
 	ROM_LOAD("247-a05", 0x000000, 0x20000, BAD_DUMP CRC(412fa1e0) SHA1(3fcf203cfcfb7ec9539d8613a8bf95747c76cc4f) )
-	// borrowed from rungunu
+	/* borrowed from rungunu */
 	ROM_LOAD("247a05",  0x000000, 0x20000, CRC(64e85430) SHA1(542919c3be257c8f118fc21d3835d7b6426a22ed) )
 	ROM_RELOAD(         0x010000, 0x20000 )
 
@@ -555,10 +555,10 @@ ROM_START( slmdunkj )
 
 	/* sprites */
 	ROM_REGION( 0x800000, REGION_GFX2, 0)
-	ROM_LOAD64_WORD( "247-a11", 0x000000, 0x200000, CRC(c3f60854) SHA1(cbee7178ab9e5aa6a5aeed0511e370e29001fb01) )	// 5y
-	ROM_LOAD64_WORD( "247-a08", 0x000002, 0x200000, CRC(3e315eef) SHA1(898bc4d5ad244e5f91cbc87820b5d0be99ef6662) )	// 2u
-	ROM_LOAD64_WORD( "247-a09", 0x000004, 0x200000, CRC(5ca7bc06) SHA1(83c793c68227399f93bd1ed167dc9ed2aaac4167) )	// 2y
-	ROM_LOAD64_WORD( "247-a10", 0x000006, 0x200000, CRC(a5ccd243) SHA1(860b88ade1a69f8b6c5b8206424814b386343571) )	// 5u
+	ROM_LOAD64_WORD( "247-a11", 0x000000, 0x200000, CRC(c3f60854) SHA1(cbee7178ab9e5aa6a5aeed0511e370e29001fb01) )	/* 5y */
+	ROM_LOAD64_WORD( "247-a08", 0x000002, 0x200000, CRC(3e315eef) SHA1(898bc4d5ad244e5f91cbc87820b5d0be99ef6662) )	/* 2u */
+	ROM_LOAD64_WORD( "247-a09", 0x000004, 0x200000, CRC(5ca7bc06) SHA1(83c793c68227399f93bd1ed167dc9ed2aaac4167) )	/* 2y */
+	ROM_LOAD64_WORD( "247-a10", 0x000006, 0x200000, CRC(a5ccd243) SHA1(860b88ade1a69f8b6c5b8206424814b386343571) )	/* 5u */
 
 	/* TTL text plane ("fix layer") */
 	ROM_REGION( 0x20000, REGION_GFX3, 0)
