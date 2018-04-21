@@ -5102,6 +5102,7 @@ Other Sun games
 	DRIVER( looping )	/* (c) 1982 Venture Line + licensed from Video Games */
 	DRIVER( loopinga )	/* (c) 1982 Venture Line + licensed from Video Games */
 	DRIVER( skybump )	/* (c) 1982 Venture Line */
+	DRIVER( suprridr )	/* (c) 1983 Venture Line + Taito license */
 
 	/* Yun Sung games */
 	DRIVER( paradise )	/* (c) >1994 Yun Sung */
