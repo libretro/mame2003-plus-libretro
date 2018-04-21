@@ -20,6 +20,7 @@
 * Boogie Wings
 * Cabal (Joystick with 3 buttons version)
 * Chain Reaction
+* Cannon Dancer
 * Charlie Ninja
 * Choutetsu Brikin'ger - iron clad
 * Counter Run
@@ -51,6 +52,8 @@
 * In Your Face
 * Joe & Mac Return
 * Knuckle Bash 2
+* Magical Drop
+* Magical Drop Plus 1
 * Metal Slug 4
 * Midnight Resistance (joystick hack bootleg)
 * Mighty Warriors
@@ -64,6 +67,7 @@
 * Power Instinct Legends
 * Power Instinct Matrimelee
 * Progear
+* Progear No Arashi
 * Puzz Loop 2
 * Puzzle Star
 * Rage Of The Dragons
@@ -76,6 +80,7 @@
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
 * Teeter Torture
+* The Great Ragtime Show
 * The Killing Blade
 * The King Of Fighters 2001
 * The King Of Fighters 2002
@@ -112,6 +117,7 @@
 * Hacha Mecha Figher
 * Max RPM
 * Monster Slider
+* Phantasm
 * Photo Y2k
 * Pigskin 621AD
 * Power Drive
