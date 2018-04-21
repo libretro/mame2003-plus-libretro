@@ -81,7 +81,6 @@ ifeq ($(platform), unix)
 ifeq ($(BUILD_C89),1)
    CFLAGS += -std=c89
 endif
-   PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 else ifeq ($(platform), linux-portable)
    TARGET = $(TARGET_NAME)_libretro.so
@@ -91,7 +90,6 @@ else ifeq ($(platform), linux-portable)
 ifeq ($(BUILD_C89),1)
    CFLAGS += -std=c89
 endif
-   PLATCFLAGS += -Dstricmp=strcasecmp
 	LIBS =
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 else ifeq ($(platform), osx)
@@ -101,7 +99,6 @@ ifeq ($(ARCH),ppc)
    BIGENDIAN = 1
    PLATCFLAGS += -D__ppc__ -D__POWERPC__
 endif
-   CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
 OSXVER = `sw_vers -productVersion | cut -c 4`
 	fpic += -mmacosx-version-min=10.1
@@ -111,7 +108,6 @@ else ifneq (,$(findstring ios,$(platform)))
 
    TARGET = $(TARGET_NAME)_libretro_ios.dylib
    fpic = -fPIC
-   CFLAGS += $(fpic) -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -dynamiclib
    PLATCFLAGS += -D__IOS__
 ifeq ($(IOSSDK),)
@@ -147,7 +143,6 @@ else ifeq ($(platform), rpi2)
    fpic = -fPIC
    CFLAGS += $(fpic)
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
-   PLATCFLAGS += -Dstricmp=strcasecmp
    PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
@@ -158,7 +153,6 @@ else ifeq ($(platform), rpi3)
    fpic = -fPIC
    CFLAGS += $(fpic)
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
-   PLATCFLAGS += -Dstricmp=strcasecmp
    PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
    CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions
@@ -168,7 +162,7 @@ else ifeq ($(platform), android-armv7)
    TARGET = $(TARGET_NAME)_libretro_android.so
 
    CFLAGS += -fPIC 
-   PLATCFLAGS += -march=armv7-a -mfloat-abi=softfp -Dstricmp=strcasecmp
+   PLATCFLAGS += -march=armv7-a -mfloat-abi=softfp
    LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
 
    CC = arm-linux-androideabi-gcc
@@ -178,7 +172,7 @@ else ifeq ($(platform), qnx)
    TARGET = $(TARGET_NAME)_libretro_$(platform).so
 
    CFLAGS += -fPIC 
-   PLATCFLAGS += -march=armv7-a -Dstricmp=strcasecmp
+   PLATCFLAGS += -march=armv7-a
    LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
 
    CC = qcc -Vgcc_ntoarmv7le
@@ -191,7 +185,7 @@ else ifeq ($(platform), wii)
     
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
-   PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__
    PLATCFLAGS += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
    STATIC_LINKING = 1
 
@@ -201,7 +195,7 @@ else ifeq ($(platform), wiiu)
     
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
-   PLATCFLAGS += -DGEKKO -DWIIU -mwup -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   PLATCFLAGS += -DGEKKO -DWIIU -mwup -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__
    PLATCFLAGS += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int
    STATIC_LINKING = 1
 
@@ -209,7 +203,7 @@ else ifeq ($(platform), wiiu)
 else ifeq ($(platform), switch)
 	EXT=a
         TARGET := $(TARGET_NAME)_libretro_$(platform).$(EXT)
-	PLATCFLAGS += -Dstricmp=strcasecmp -D__SWITCH__
+	PLATCFLAGS += -D__SWITCH__
         include $(LIBTRANSISTOR_HOME)/libtransistor.mk
         STATIC_LINKING=1
 
@@ -219,7 +213,7 @@ else ifeq ($(platform), ps3)
     
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
-   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
    STATIC_LINKING = 1
    SPLIT_UP_LINK=1   
 else ifeq ($(platform), sncps3)
@@ -228,7 +222,7 @@ else ifeq ($(platform), sncps3)
     
    CC = $(CELL_SDK)/host-win32/sn/bin/ps3ppusnc.exe
    AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
-   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
    STATIC_LINKING = 1
 else ifeq ($(platform), psl1ght)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
@@ -236,14 +230,14 @@ else ifeq ($(platform), psl1ght)
     
    CC = $(PS3DEV)/ppu/bin/ppu-gcc$
    AR = $(PS3DEV)/ppu/bin/ppu-ar$
-   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__ -Dstricmp=strcasecmp
+   PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
    STATIC_LINKING = 1
 else ifeq ($(platform), psp1)
 	TARGET = $(TARGET_NAME)_libretro_$(platform).a
 
 	CC = psp-gcc$(EXE_EXT)
 	AR = psp-ar$(EXE_EXT)
-	PLATCFLAGS += -DPSP -Dstricmp=strcasecmp
+	PLATCFLAGS += -DPSP
 	CFLAGS += -G0
    STATIC_LINKING = 1
 
@@ -252,7 +246,7 @@ else ifeq ($(platform), vita)
 
 	CC = arm-vita-eabi-gcc$(EXE_EXT)
 	AR = arm-vita-eabi-ar$(EXE_EXT)
-	PLATCFLAGS += -DVITA -Dstricmp=strcasecmp
+	PLATCFLAGS += -DVITA
 	CFLAGS += -mthumb -mfloat-abi=hard -fsingle-precision-constant
 	CFLAGS += -Wall -mword-relocations
 	CFLAGS += -fomit-frame-pointer -ffast-math
@@ -269,7 +263,6 @@ else ifneq (,$(findstring armv,$(platform)))
    TARGET = $(TARGET_NAME)_libretro.so
 
    CFLAGS += -fPIC
-   PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
 
 # GCW0
@@ -279,7 +272,7 @@ else ifeq ($(platform), gcw0)
 	CXX = /opt/gcw0-toolchain/usr/bin/mipsel-linux-g++
 	AR = /opt/gcw0-toolchain/usr/bin/mipsel-linux-ar
 	LDFLAGS += -shared -Wl,--version-script=link.T -Wl,-no-undefined
-	PLATCFLAGS += -Dstricmp=strcasecmp -D__GCW0__
+	PLATCFLAGS += -D__GCW0__
 	LIBS := -lc -lgcc
 	fpic := -fPIC -nostdlib
 	LIBS =
@@ -289,7 +282,7 @@ else ifeq ($(platform), emscripten)
 	TARGET := $(TARGET_NAME)_libretro_$(platform).bc
 	HAVE_RZLIB := 1
 	STATIC_LINKING := 1
-   PLATCFLAGS += -Dstricmp=strcasecmp -D__EMSCRIPTEN__
+   PLATCFLAGS += -D__EMSCRIPTEN__
 
 # Windows MSVC 2003 Xbox 1
 else ifeq ($(platform), xbox1_msvc2003)

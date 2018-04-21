@@ -39,7 +39,6 @@
 #endif
 
 #ifdef _MSC_VER
-#define strcasecmp stricmp
 #define snprintf _snprintf
 
 #ifndef S_ISDIR
