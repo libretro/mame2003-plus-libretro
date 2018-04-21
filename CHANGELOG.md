@@ -79,6 +79,7 @@
 * Shogun Warriors
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
+* Super Rider
 * Teeter Torture
 * The Great Ragtime Show
 * The Killing Blade
