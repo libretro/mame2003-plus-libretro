@@ -66,9 +66,7 @@ Sound
 
 int osd_start_audio_stream(int stereo)
 {
-
 	 Machine->sample_rate = Machine->drv->frames_per_second * 1000;
-
 	delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
 
@@ -81,8 +79,6 @@ int osd_start_audio_stream(int stereo)
 	if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame, 4);
 	
 	return samples_per_frame;
-
-
 }
 
 
@@ -90,47 +86,35 @@ int osd_update_audio_stream(INT16 *buffer)
 {
 	int i,j;
 
-
-
 	if ( Machine->sample_rate !=0 && buffer )
 	{
-
    		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
-
 		if (usestereo)
 			audio_batch_cb(samples_buffer, samples_per_frame);
-
 		else
 		{
-
 			for (i = 0, j = 0; i < samples_per_frame; i++)
         		{
 				conversion_buffer[j++] = samples_buffer[i];
 				conversion_buffer[j++] = samples_buffer[i];
 		        }
-
          		audio_batch_cb(conversion_buffer,samples_per_frame);
 		}	
-
    		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samples_per_frame;
-
 		if (delta_samples >= 1.0f)
 		{
 			int integer_delta = (int)delta_samples;
 			samples_per_frame += integer_delta;
 			delta_samples -= integer_delta;
 		}
-
 	}
 	return samples_per_frame;
 }
 
 
-
 void osd_stop_audio_stream(void)
 {
 }
-
 
 /******************************************************************************
 
@@ -446,8 +430,7 @@ static void update_variables(void)
     environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&options.libretro_system_path);
     if (options.libretro_system_path == NULL || options.libretro_system_path[0] == '\0')
     {
-        /* error if not set */
-        log_cb(RETRO_LOG_ERROR, "[MAME 2003] libretro system path not set!\n");
+        log_cb(RETRO_LOG_INFO, "[MAME 2003] libretro system path not set by frontend, using content path\n");
         options.libretro_system_path = options.libretro_content_path;
     }
     
@@ -456,8 +439,7 @@ static void update_variables(void)
     environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&options.libretro_save_path);
     if (options.libretro_save_path == NULL || options.libretro_save_path[0] == '\0')
     {
-        /* error if not set */
-        log_cb(RETRO_LOG_ERROR, "[MAME 2003] libretro save path not set!\n");
+        log_cb(RETRO_LOG_INFO, "[MAME 2003] libretro save path not set by frontent, using content path\n");
         options.libretro_save_path = options.libretro_content_path;
     }
 
@@ -694,16 +676,8 @@ bool retro_load_game(const struct retro_game_info *game)
 
     log_cb(RETRO_LOG_INFO, "Found game: %s [%s].\n", driverName, drivers[driverIndex]->name);
 
-
     options.libretro_content_path = strdup(game->path);        
     path_basedir(options.libretro_content_path);
-
-    /* fallback paths in case these are not provided by the frontend for some reason */
-    /* is this necessary? */
-    if(options.libretro_save_path == NULL)
-        options.libretro_save_path = options.libretro_content_path;
-    if(options.libretro_system_path == NULL)
-        options.libretro_system_path = options.libretro_content_path;
 
     /* Setup Rotation */
     rotateMode = 0;        
