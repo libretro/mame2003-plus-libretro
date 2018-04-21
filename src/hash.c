@@ -130,7 +130,7 @@
 #include <stdlib.h>
 #include <zlib.h>
 #include "hash.h"
-#include "md5.h"
+#include <utils/md5.h>
 #include "sha1.h"
 #include "osd_cpu.h"
 #include "mame.h"
@@ -676,19 +676,19 @@ static void h_sha1_end(UINT8* bin_chksum)
 }
 
 
-static struct MD5Context md5_ctx;
+static MD5_CTX md5;
 
 static void h_md5_begin(void)
 {
-	MD5Init(&md5_ctx);		
+	MD5_Init(&md5);		
 }
 
 static void h_md5_buffer(const void* mem, unsigned long len)
 {
-	MD5Update(&md5_ctx, (md5byte*)mem, len);
+	MD5_Update(&md5, (md5byte*)mem, len);
 }
 
 static void h_md5_end(UINT8* bin_chksum)
 {
-	MD5Final(bin_chksum, &md5_ctx);
+	MD5_Final(bin_chksum, &md5);
 }

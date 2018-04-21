@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <libretro.h>
-#include <file_path.h>
+#include <file/file_path.h>
 #include "osd_cpu.h"
 #include "inptport.h"
 

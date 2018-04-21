@@ -246,8 +246,8 @@ logerror("EEPROM unlock\n");
 
 static void EEPROM_reset(void)
 {
-if (serial_count)
-	logerror("EEPROM reset, buffer = %s\n",serial_buffer);
+	if (serial_count)
+		logerror("EEPROM reset, buffer = %s\n",serial_buffer);
 
 	serial_count = 0;
 	sending = 0;
@@ -335,6 +335,12 @@ logerror("EEPROM read %04x from address %02x\n",eeprom_data_bits,eeprom_read_add
 void EEPROM_load(mame_file *f)
 {
 	mame_fread(f,eeprom_data,(1 << intf->address_bits) * intf->data_bits / 8);
+}
+
+void EEPROM_load_bin2c(const char *bin2c_array, const int array_length)
+{
+	for(int i = 0; i < ((1 << intf->address_bits) * intf->data_bits / 8) && i < array_length; i++)
+		eeprom_data[i] = (UINT8)bin2c_array[i];
 }
 
 void EEPROM_save(mame_file *f)

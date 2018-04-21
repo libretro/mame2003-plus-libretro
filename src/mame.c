@@ -104,7 +104,7 @@
 
 #include <ctype.h>
 #include <stdarg.h>
-#include <file_path.h>
+#include <file/file_path.h>
 #include "ui_text.h"
 #include "mamedbg.h"
 #include "artwork.h"

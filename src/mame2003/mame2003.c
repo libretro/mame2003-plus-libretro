@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 #include <libretro.h>
-#include <file_path.h>
+#include <file/file_path.h>
 
 #include "mame.h"
 #include "driver.h"

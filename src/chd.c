@@ -5,7 +5,7 @@
 ***************************************************************************/
 
 #include "chd.h"
-#include "md5.h"
+#include <utils/md5.h>
 #include "sha1.h"
 #include "zlib.h"
 #include <time.h>
@@ -1032,7 +1032,7 @@ int chd_compress(struct chd_file *chd, const char *rawfile, UINT32 offset, void 
 {
 	struct chd_interface_file *sourcefile = NULL;
 	UINT64 sourceoffset = 0;
-	struct MD5Context md5;
+	MD5_CTX md5;
 	struct sha1_ctx sha;
 	clock_t lastupdate;
 	int err, hunknum;
@@ -1062,7 +1062,7 @@ int chd_compress(struct chd_file *chd, const char *rawfile, UINT32 offset, void 
 		init_crcmap(chd->parent, 1);
 
 	/* init the MD5/SHA1 computations */
-	MD5Init(&md5);
+	MD5_Init(&md5);
 	sha1_init(&sha);
 
 	/* loop over source hunks until we run out */
@@ -1098,7 +1098,7 @@ int chd_compress(struct chd_file *chd, const char *rawfile, UINT32 offset, void 
 		}
 		if (bytestochecksum)
 		{
-			MD5Update(&md5, chd->cache, bytestochecksum);
+			MD5_Update(&md5, chd->cache, bytestochecksum);
 			sha1_update(&sha, bytestochecksum, chd->cache);
 		}
 
@@ -1117,7 +1117,7 @@ int chd_compress(struct chd_file *chd, const char *rawfile, UINT32 offset, void 
 	}
 
 	/* compute the final MD5/SHA1 values */
-	MD5Final(chd->header.md5, &md5);
+	MD5_Final(chd->header.md5, &md5);
 	sha1_final(&sha);
 	sha1_digest(&sha, SHA1_DIGEST_SIZE, chd->header.sha1);
 
@@ -1155,7 +1155,7 @@ cleanup:
 
 int chd_verify(struct chd_file *chd, void (*progress)(const char *, ...), UINT8 actualmd5[CHD_MD5_BYTES], UINT8 actualsha1[CHD_SHA1_BYTES])
 {
-	struct MD5Context md5;
+	MD5_CTX md5;
 	struct sha1_ctx sha;
 	UINT64 sourceoffset = 0;
 	int err, hunknum = 0;
@@ -1174,7 +1174,7 @@ int chd_verify(struct chd_file *chd, void (*progress)(const char *, ...), UINT8 
 		SET_ERROR_AND_CLEANUP(CHDERR_CANT_VERIFY);
 
 	/* init the MD5/SHA1 computations */
-	MD5Init(&md5);
+	MD5_Init(&md5);
 	sha1_init(&sha);
 
 	/* loop over source hunks until we run out */
@@ -1208,7 +1208,7 @@ int chd_verify(struct chd_file *chd, void (*progress)(const char *, ...), UINT8 
 		}
 		if (bytestochecksum)
 		{
-			MD5Update(&md5, chd->cache, bytestochecksum);
+			MD5_Update(&md5, chd->cache, bytestochecksum);
 			sha1_update(&sha, bytestochecksum, chd->cache);
 		}
 		
@@ -1217,7 +1217,7 @@ int chd_verify(struct chd_file *chd, void (*progress)(const char *, ...), UINT8 
 	}
 
 	/* compute the final MD5 */
-	MD5Final(actualmd5, &md5);
+	MD5_Final(actualmd5, &md5);
 	sha1_final(&sha);
 	sha1_digest(&sha, SHA1_DIGEST_SIZE, actualsha1);
 
