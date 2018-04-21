@@ -21,6 +21,7 @@ extern "C" {
 #define HASH_MD5    (1 << 2)
 
 #define HASH_NUM_FUNCTIONS  3
+#define md5byte unsigned char
 
 /* Standard size of a hash data buffer, all the manipulated buffers
  * must respect this size

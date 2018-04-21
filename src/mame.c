@@ -104,7 +104,7 @@
 
 #include <ctype.h>
 #include <stdarg.h>
-#include <file_path.h>
+#include <file/file_path.h>
 #include "ui_text.h"
 #include "mamedbg.h"
 #include "artwork.h"
@@ -859,7 +859,7 @@ static int init_game_options(void)
 	Machine->sample_rate = options.samplerate;
 
     /* catch any custom bios options needed on a per-game basis. this is a hack. */
-    if(stricmp(Machine->gamedrv->name, "diehard") == 0) {
+    if(strcasecmp(Machine->gamedrv->name, "diehard") == 0) {
         options.bios = strdup("us");
     }
 
@@ -1526,19 +1526,6 @@ UINT64 mame_chd_length(struct chd_interface_file *file)
 
 #ifdef MAME_DEBUG
 
-static INLINE int my_stricmp(const char *dst, const char *src)
-{
-	while (*src && *dst)
-	{
-		if (tolower(*src) != tolower(*dst))
-			return *dst - *src;
-		src++;
-		dst++;
-	}
-	return *dst - *src;
-}
-
-
 static int validitychecks(void)
 {
 	int i,j,cpu;
@@ -1985,7 +1972,7 @@ static int validitychecks(void)
 					for (j = 0;j < STR_TOTAL;j++)
 					{
 						if (inp->name == ipdn_defaultstrings[j]) break;
-						else if (!my_stricmp(inp->name,ipdn_defaultstrings[j]))
+						else if (!strcasecmp(inp->name,ipdn_defaultstrings[j]))
 						{
 							printf("%s: %s must use DEF_STR( %s )\n",drivers[i]->source_file,drivers[i]->name,inp->name);
 							error = 1;
@@ -2004,7 +1991,7 @@ static int validitychecks(void)
 						error = 1;
 					}
 
-					if (!my_stricmp(inp->name,"table"))
+					if (!strcasecmp(inp->name,"table"))
 					{
 						printf("%s: %s must use DEF_STR( Cocktail ), not %s\n",drivers[i]->source_file,drivers[i]->name,inp->name);
 						error = 1;

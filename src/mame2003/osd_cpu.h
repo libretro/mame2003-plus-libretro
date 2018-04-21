@@ -28,7 +28,7 @@
 #include <stdint.h>
 #include <libretro.h>
 #include <retro_inline.h>
-
+#include <formats/libchdr/coretypes.h>
 
 #if 0
 #define DEBUG_LOG 1
@@ -39,7 +39,6 @@
 #endif
 
 #ifdef _MSC_VER
-#define strcasecmp stricmp
 #define snprintf _snprintf
 
 #ifndef S_ISDIR
@@ -53,14 +52,16 @@
 
 extern struct retro_perf_callback perf_cb;
 
-typedef uint8_t						UINT8;
-typedef int8_t 						INT8;
-typedef uint16_t					UINT16;
-typedef int16_t						INT16;
-typedef uint32_t					UINT32;
-typedef int32_t						INT32;
-typedef int64_t						INT64;
-typedef uint64_t					UINT64;
+/* typedefs are the same as coretypes.h, although those typedefs are overridden by ifndef */
+typedef uint64_t UINT64;
+typedef uint32_t UINT32;
+typedef uint16_t UINT16;
+typedef uint8_t UINT8;
+
+typedef int64_t INT64;
+typedef int32_t INT32;
+typedef int16_t INT16;
+typedef int8_t INT8;
 
 /* Combine two 32-bit integers into a 64-bit integer */
 #define COMBINE_64_32_32(A,B)     ((((UINT64)(A))<<32) | (UINT32)(B))
