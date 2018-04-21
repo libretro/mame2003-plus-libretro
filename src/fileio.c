@@ -197,50 +197,48 @@ void osd_get_path(int pathtype, char* path)
       /* user-initiated content goes in mam2003 save directory subfolders */
         
       case FILETYPE_IMAGE_DIFF:
-         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "diff");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "diff");
          break;     
       case FILETYPE_NVRAM:
-         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "nvram");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "nvram");
          break;
       case FILETYPE_HIGHSCORE:
-          snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "hi");
+          snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "hi");
          break;
       case FILETYPE_CONFIG:
-         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "cfg");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "cfg");
          break;
       case FILETYPE_MEMCARD:
-         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "memcard");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "memcard");
          break;
       case FILETYPE_CTRLR:
-         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "ctrlr");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "ctrlr");
          break;
       case FILETYPE_XML_DAT:
-         snprintf(path, 1024, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME);
          break;
       /* pre-generated content goes in mam2003 system directory subfolders */
       case FILETYPE_ARTWORK:
-         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "artwork");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "artwork");
          break;
       case FILETYPE_SAMPLE:
-         snprintf(path, 1024, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "samples");
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "samples");
          break;
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
-         snprintf(path, 1024, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
+         snprintf(path, PATH_MAX_LENGTH, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
    }    
 }
 
 int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 {
-   char buffer[1024];
-   char currDir[1024];
+   char buffer[PATH_MAX_LENGTH];
+   char currDir[PATH_MAX_LENGTH];
 
    osd_get_path(pathtype, currDir);
-   snprintf(buffer, 1024, "%s%s%s", currDir, path_default_slash(), filename);
+   snprintf(buffer, PATH_MAX_LENGTH, "%s%s%s", currDir, path_default_slash(), filename);
 
-#ifdef DEBUG_LOG
-   fprintf(stderr, "osd_get_path_info (buffer = [%s]), (directory: [%s]), (path type dir: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, paths[pathtype], pathtype, filename);
-#endif
+   /*log_cb(RETRO_LOG_INFO, "osd_get_path_info (buffer = [%s]), (directory: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, pathtype, filename);*/
 
    if (path_is_directory(buffer))
       return PATH_IS_DIRECTORY;
@@ -252,12 +250,12 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
 
 FILE* osd_fopen(int pathtype, int pathindex, const char *filename, const char *mode)
 {
-   char buffer[1024];
-   char currDir[1024];
+   char buffer[PATH_MAX_LENGTH];
+   char currDir[PATH_MAX_LENGTH];
    FILE* out;
 
    osd_get_path(pathtype, currDir);
-   snprintf(buffer, 1024, "%s%s%s", currDir, path_default_slash(), filename);
+   snprintf(buffer, PATH_MAX_LENGTH, "%s%s%s", currDir, path_default_slash(), filename);
 
    path_mkdir(currDir);
 
@@ -339,7 +337,7 @@ int mame_faccess(const char *filename, int filetype)
 	/* loop over all paths */
 	for (pathindex = 0; pathindex < pathcount; pathindex++)
 	{
-		char name[256];
+		char name[PATH_MAX_LENGTH];
 
 		/* first check the raw filename, in case we're looking for a directory */
 		sprintf(name, "%s", filename);
@@ -882,7 +880,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 	/* loop over paths */
 	for (pathindex = pathstart; pathindex != pathstop; pathindex += pathinc)
 	{
-		char name[1024];
+		char name[PATH_MAX_LENGTH];
 
 		/* ----------------- STEP 1: OPEN THE FILE RAW -------------------- */
 
@@ -1114,18 +1112,6 @@ static int checksum_file(int pathtype, int pathindex, const char *file, UINT8 **
 }
 
 
-
-/***************************************************************************
-	mame_fputs
-***************************************************************************/
-
-int mame_fputs(mame_file *f, const char *s)
-{
-	return mame_fwrite(f, s, strlen(s));
-}
-
-
-
 /***************************************************************************
 	mame_vfprintf
 ***************************************************************************/
@@ -1134,7 +1120,7 @@ int mame_vfprintf(mame_file *f, const char *fmt, va_list va)
 {
 	char buf[512];
 	vsnprintf(buf, sizeof(buf), fmt, va);
-	return mame_fputs(f, buf);
+	return mame_fwrite(f, buf, strlen(buf));
 }
 
 

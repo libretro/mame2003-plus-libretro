@@ -190,60 +190,6 @@ void retro_set_environment(retro_environment_t cb)
    cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
 }
 
-static char* normalizePath(char* aPath)
-{
-   char *tok;
-   static const char replaced = (path_default_slash_c() == '\\') ? '/' : '\\';
-
-   for (tok = strchr(aPath, replaced); tok; tok = strchr(aPath, replaced))
-      *tok = path_default_slash_c();
-
-   return aPath;
-}
-
-static int getDriverIndex(const char* aPath)
-{
-    char driverName[128];
-    char *path, *last;
-    char *firstDot;
-    int i;
-
-    /* Get all chars after the last slash */
-    path = normalizePath(strdup(aPath ? aPath : "."));
-    last = strrchr(path, path_default_slash_c());
-    memset(driverName, 0, sizeof(driverName));
-    strncpy(driverName, last ? last + 1 : path, sizeof(driverName) - 1);
-    free(path);
-    
-    /* Remove extension */
-    firstDot = strchr(driverName, '.');
-
-    if(firstDot)
-       *firstDot = 0;
-
-    /* Search list */
-    for (i = 0; drivers[i]; i++)
-    {
-       if(strcmp(driverName, drivers[i]->name) == 0)
-       {
-          if (log_cb)
-             log_cb(RETRO_LOG_INFO, "Found game: %s [%s].\n", driverName, drivers[i]->name);
-          return i;
-       }
-    }
-    
-    return -1;
-}
-
-static char* peelPathItem(char* aPath)
-{
-    char* last = strrchr(aPath, path_default_slash_c());
-    if(last)
-       *last = 0;
-    
-    return aPath;
-}
-
 unsigned retro_api_version(void)
 {
    return RETRO_API_VERSION;
@@ -597,7 +543,7 @@ int16_t get_pointer_delta(int16_t coord, int16_t *prev_coord)
 
 void retro_run (void)
 {
-   int i,j;
+   int i;
    bool pointer_pressed;
    const struct KeyboardInfo *thisInput;
    bool updated = false;
@@ -722,24 +668,38 @@ bool retro_load_game(const struct retro_game_info *game)
         { 0, 0, 0, 0, NULL }
         };
 
+    char driverName[PATH_MAX_LENGTH];
+    char *path, *last;
+
     if (!game)
       return false;
 
-    /* Find game index */
-    driverIndex = getDriverIndex(game->path);
-
     environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 
-    if(find_last_slash(game->path) == NULL) /* no slashes in the path -- in current folder */
-    {
-        snprintf(options.libretro_content_path, 1024 * sizeof(char), ".");
-    }
-    else
-    {
-        options.libretro_content_path = peelPathItem(normalizePath(strdup(game->path)));        
-    }
+    /* Find game index */
     
+    /* Get all chars after the last slash */
+    path = strdup(game->path ? game->path : ".");
+    last = find_last_slash(path);
+    memset(driverName, 0, PATH_MAX_LENGTH);
+    strncpy(driverName, last ? last + 1 : path, PATH_MAX_LENGTH - 1);
+    free(path);
+    
+    path_remove_extension(driverName);
+
+    /* Search list */
+    for (driverIndex = 0; drivers[driverIndex]; driverIndex++) /* could go out of bounds here? */
+       if(strcmp(driverName, drivers[driverIndex]->name) == 0)
+          break;
+
+    log_cb(RETRO_LOG_INFO, "Found game: %s [%s].\n", driverName, drivers[driverIndex]->name);
+
+
+    options.libretro_content_path = strdup(game->path);        
+    path_basedir(options.libretro_content_path);
+
     /* fallback paths in case these are not provided by the frontend for some reason */
+    /* is this necessary? */
     if(options.libretro_save_path == NULL)
         options.libretro_save_path = options.libretro_content_path;
     if(options.libretro_system_path == NULL)

@@ -3,8 +3,20 @@
 
 #include <stdio.h>
 #include <libretro.h>
+#include <file_path.h>
 #include "osd_cpu.h"
 #include "inptport.h"
+
+/* we can't include <retro_miscellaneous.h> to bring in PATH_MAX_LENGTH due to namespace conflicts */
+#ifndef PATH_MAX_LENGTH
+#if defined(__CELLOS_LV2__)
+#define PATH_MAX_LENGTH CELL_FS_MAX_FS_PATH_LENGTH
+#elif defined(_XBOX1) || defined(_3DS) || defined(PSP) || defined(GEKKO)|| defined(WIIU)
+#define PATH_MAX_LENGTH 512
+#else
+#define PATH_MAX_LENGTH 4096
+#endif
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +32,16 @@ extern "C" {
 #else
 #define FPTR unsigned int
 #endif
+
+/******************************************************************************
+
+	Shared libretro log interface
+    set in mame2003.c 
+
+******************************************************************************/
+
+extern retro_log_printf_t log_cb;
+
 
 /******************************************************************************
 

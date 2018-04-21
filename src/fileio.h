@@ -10,7 +10,6 @@
 #define FILEIO_H
 
 #include <stdarg.h>
-#include <file_path.h>
 #include "mame2003.h"
 #include "hash.h"
 
