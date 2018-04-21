@@ -1296,20 +1296,6 @@ static INLINE char *kilobyte( unsigned bytes )
 	return dst;
 }
 
-/**************************************************************************
- * my_stricmp
- * Compare strings case insensitive
- **************************************************************************/
-static INLINE int my_stricmp( const char *dst, const char *src)
-{
-	while( *src && *dst )
-	{
-		if( tolower(*src) != tolower(*dst) ) return *dst - *src;
-		src++;
-		dst++;
-	}
-	return *dst - *src;
-}
 
 /**************************************************************************
  * get_boolean
@@ -4630,7 +4616,7 @@ static void cmd_trace_to_file( void )
 
 	filename = get_file_name( &cmd, &length );
 
-	if( !my_stricmp( filename, "OFF" ) )
+	if( !strcasecmp( filename, "OFF" ) )
 	{
 		trace_done();
 	}

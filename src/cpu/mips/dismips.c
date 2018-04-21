@@ -157,11 +157,11 @@ int main( int argc, char *argv[] )
 				{
 					usage();
 				}
-				if( stricmp( argv[ i ], "bin" ) == 0 )
+				if( strcasecmp( argv[ i ], "bin" ) == 0 )
 				{
 					format = FORMAT_BIN;
 				}
-				else if( stricmp( argv[ i ], "psx" ) == 0 )
+				else if( strcasecmp( argv[ i ], "psx" ) == 0 )
 				{
 					format = FORMAT_PSX;
 				}

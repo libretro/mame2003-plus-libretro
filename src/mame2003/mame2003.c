@@ -51,13 +51,6 @@ retro_set_led_state_t led_state_cb = NULL;
 int16_t XsoundBuffer[2048];
 
 
-#ifdef _3DS /* TODO: convert this strcasecmp wrapper to libretro-common/compat functions */
-int stricmp(const char *string1, const char *string2)
-{
-    return strcasecmp(string1, string2); /* Wrapper to build MAME on 3DS. It doesn't have stricmp. */
-}
-#endif
-
 /******************************************************************************
 
 Sound
