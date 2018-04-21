@@ -2,7 +2,6 @@
 #define HISCORE_H
 
 void hs_open( const char *name );
-char *parse_hiscoredat(char *s, int n, int *const index);
 void hs_init( void );
 void hs_update( void );
 void hs_close( void );

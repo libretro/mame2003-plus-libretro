@@ -7,7 +7,7 @@
 #include "osd_cpu.h"
 #include "inptport.h"
 
-/* we can't include <retro_miscellaneous.h> to bring in PATH_MAX_LENGTH due to namespace conflicts */
+/* we can't #include <retro_miscellaneous.h> to bring in PATH_MAX_LENGTH due to namespace conflicts */
 #ifndef PATH_MAX_LENGTH
 #if defined(__CELLOS_LV2__)
 #define PATH_MAX_LENGTH CELL_FS_MAX_FS_PATH_LENGTH
