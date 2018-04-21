@@ -337,12 +337,6 @@ void EEPROM_load(mame_file *f)
 	mame_fread(f,eeprom_data,(1 << intf->address_bits) * intf->data_bits / 8);
 }
 
-void EEPROM_load_bin2c(const char *bin2c_array, const int array_length)
-{
-	for(int i = 0; i < ((1 << intf->address_bits) * intf->data_bits / 8) && i < array_length; i++)
-		eeprom_data[i] = (UINT8)bin2c_array[i];
-}
-
 void EEPROM_save(mame_file *f)
 {
 	mame_fwrite(f,eeprom_data,(1 << intf->address_bits) * intf->data_bits / 8);

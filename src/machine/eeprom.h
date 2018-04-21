@@ -24,7 +24,6 @@ void EEPROM_set_cs_line(int state);
 void EEPROM_set_clock_line(int state);
 
 void EEPROM_load(mame_file *file);
-void EEPROM_load_bin2c(const char *bin2c_array, const int array_length);
 void EEPROM_save(mame_file *file);
 
 void EEPROM_set_data(UINT8 *data, int length);

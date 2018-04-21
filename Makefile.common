@@ -44,7 +44,6 @@ SOURCES_C += \
 	$(CORE_DIR)/mame.c \
 	$(CORE_DIR)/mamedbg.c \
 	$(CORE_DIR)/mame_unzip.c \
-	$(LIBRETRO_COMM_DIR)/utils/md5.c \
 	$(CORE_DIR)/palette.c \
 	$(CORE_DIR)/png.c \
 	$(CORE_DIR)/profiler.c \
@@ -2619,6 +2618,7 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/file/file_path.c \
 	$(LIBRETRO_COMM_DIR)/streams/file_stream.c \
 	$(LIBRETRO_COMM_DIR)/string/stdstring.c \
+	$(LIBRETRO_COMM_DIR)/utils/md5.c \
 	$(LIBRETRO_COMM_DIR)/vfs/vfs_implementation.c \
 	$(LIBRETRO_COMM_DIR)/zlib/adler32.c \
 	$(LIBRETRO_COMM_DIR)/zlib/compress.c \

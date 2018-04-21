@@ -1,114 +1,186 @@
 /*
- * This is bin2c program, which allows you to convert binary file to
- * C language array, for use as embedded resource, for instance you can
- * embed graphics or audio file directly into your program.
- * This is public domain software, use it on your own risk.
- * Contact Serge Fukanchik at fuxx@mail.ru  if you have any questions.
+ * Converts binary data into a C source file.  The C source file
+ * defines a string with the file name of the source of data, and an
+ * unsigned character array containing the binary data.
  *
- * Some modifications were made by Gwilym Kuiper (kuiper.gwilym@gmail.com)
- * I have decided not to change the licence.
+ * For example, if the source file is dl.lua, the generated file
+ * contains:
+ *
+ * static const char dl_lua_source[] = "dl.lua";
+ *
+ * static const unsigned char dl_lua_bytes[] = {
+ * ...
+ * };
+ *
+ * A useful GNUMakefile rule follows.
+ *
+ * %.h:    %.lua
+ *         luac -o $*.luo $*.lua
+ *         bin2c -o $@ -n $*.lua $*.luo
+ *         rm $*.luo
+ *
+ * John D. Ramsdell
+ * Copyright (C) 2006 The MITRE Corporation
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
-#include <assert.h>
+#include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
 
-#ifdef USE_BZ2
-#include <bzlib.h>
+#define COLUMNS 18
+
+#ifdef PACKAGE_NAME
+static const char package[] = PACKAGE_NAME;
+#else
+static const char *package = NULL;
 #endif
+
+#ifdef VERSION
+static const char version[] = VERSION;
+#else
+static const char version[] = "version unknown";
+#endif
+
+static void
+print_version(const char *program)
+{
+  if (package != NULL)
+    program = package;
+  fprintf(stderr, "%s %s\n", program, version);
+}
+
+static void
+usage(const char *prog)
+{
+  fprintf(stderr,
+	  "Usage: %s [options] file\n"
+	  "Options:\n"
+	  "  -n name -- generated C identifier source (default is file)\n"
+	  "  -o file -- output to file (default is standard output)\n"
+	  "  -v      -- print version information\n"
+	  "  -h      -- print this message\n",
+	  prog);
+}
+
+static void
+emit_name(const char *name)
+{
+  int ch = *name;
+  if (!ch) {
+    putchar('_');
+    return;
+  }
+  if (isalpha(ch))		/* Print underscore */
+    putchar(ch);		/* when first char is */
+  else				/* is not a letter. */
+    putchar('_');
+  for (;;) {
+    ch = *++name;
+    if (!ch)
+      return;
+    if (isalnum(ch))		/* Print underscore when */
+      putchar(ch);		/* part of identifier is */
+    else			/* not a letter or a digit. */
+      putchar('_');
+  }
+}
+
+static int
+emit(const char *name)
+{
+  int col = COLUMNS;
+
+  printf("static const char ");
+  emit_name(name);
+  printf("_source[] = \"%s\";\n\n", name);
+  printf("static const unsigned char ");
+  emit_name(name);
+  printf("_bytes[] = {");
+  for (;;) {
+    int ch = getchar();
+    if (ch == EOF) {
+      printf("\n};\n");
+      return 0;
+    }
+    if (col >= COLUMNS) {
+      printf("\n  ");
+      col = 0;
+    }
+    printf("%3d,", ch);
+    col++;
+  }
+}
 
 int
 main(int argc, char *argv[])
 {
-    char *buf;
-    char *ident;
-    unsigned int i, file_size, need_comma;
+  extern char *optarg;
+  extern int optind;
 
-    FILE *f_input, *f_output;
+  char *input = NULL;
+  char *output = NULL;
+  char *name = NULL;
 
-#ifdef USE_BZ2
-    char *bz2_buf;
-    unsigned int uncompressed_size, bz2_size;
-#endif
-
-    if (argc < 4) {
-        fprintf(stderr, "Usage: %s binary_file output_file array_name\n",
-                argv[0]);
-        return -1;
+  for (;;) {
+    int c = getopt(argc, argv, "n:o:vh");
+    if (c == -1)
+      break;
+    switch (c) {
+    case 'n':
+      name = optarg;
+      break;
+    case 'o':
+      output = optarg;
+      break;
+    case 'v':
+      print_version(argv[0]);
+      return 0;
+    case 'h':
+      usage(argv[0]);
+      return 0;
+    default:
+      usage(argv[0]);
+      return 1;
     }
+  }
 
-    f_input = fopen(argv[1], "rb");
-    if (f_input == NULL) {
-        fprintf(stderr, "%s: can't open %s for reading\n", argv[0], argv[1]);
-        return -1;
-    }
+  if (argc != optind + 1) {
+    fprintf(stderr, "Bad arg count\n");
+    usage(argv[0]);
+    return 1;
+  }
 
-    // Get the file length
-    fseek(f_input, 0, SEEK_END);
-    file_size = ftell(f_input);
-    fseek(f_input, 0, SEEK_SET);
+  input = argv[optind];
+  if (!freopen(input, "rb", stdin)) {
+    perror(input);
+    return 1;
+  }
 
-    buf = (char *) malloc(file_size);
-    assert(buf);
+  if (output && !freopen(output, "w", stdout)) {
+    perror(output);
+    return 1;
+  }
 
-    fread(buf, file_size, 1, f_input);
-    fclose(f_input);
-
-#ifdef USE_BZ2
-    // allocate for bz2.
-    bz2_size =
-      (file_size + file_size / 100 + 1) + 600; // as per the documentation
-
-    bz2_buf = (char *) malloc(bz2_size);
-    assert(bz2_buf);
-
-    // compress the data
-    int status =
-      BZ2_bzBuffToBuffCompress(bz2_buf, &bz2_size, buf, file_size, 9, 1, 0);
-
-    if (status != BZ_OK) {
-        fprintf(stderr, "Failed to compress data: error %i\n", status);
-        return -1;
-    }
-
-    // and be very lazy
-    free(buf);
-    uncompressed_size = file_size;
-    file_size = bz2_size;
-    buf = bz2_buf;
-#endif
-
-    f_output = fopen(argv[2], "w");
-    if (f_output == NULL) {
-        fprintf(stderr, "%s: can't open %s for writing\n", argv[0], argv[1]);
-        return -1;
-    }
-
-    ident = argv[3];
-
-    need_comma = 0;
-
-    fprintf(f_output, "const char %s[%i] = {", ident, file_size);
-    for (i = 0; i < file_size; ++i) {
-        if (need_comma)
-            fprintf(f_output, ", ");
-        else
-            need_comma = 1;
-        if ((i % 11) == 0)
-            fprintf(f_output, "\n\t");
-        fprintf(f_output, "0x%.2x", buf[i] & 0xff);
-    }
-    fprintf(f_output, "\n};\n\n");
-
-    fprintf(f_output, "const int %s_length = %i;\n", ident, file_size);
-
-#ifdef USE_BZ2
-    fprintf(f_output, "const int %s_length_uncompressed = %i;\n", ident,
-            uncompressed_size);
-#endif
-
-    fclose(f_output);
-
-    return 0;
+  return emit(name ? name : input);
 }

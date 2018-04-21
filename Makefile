@@ -80,6 +80,9 @@ ifeq ($(platform), unix)
    CFLAGS += $(fpic)
 ifeq ($(BUILD_C89),1)
    CFLAGS += -std=c89
+   $(info BUILD_C89==1 -- compiling with -std=c89)
+else
+   $(info BUILD_C89==0 -- not compiling with -std=c89)   
 endif
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 else ifeq ($(platform), linux-portable)
@@ -89,6 +92,9 @@ else ifeq ($(platform), linux-portable)
    CFLAGS += $(fpic)
 ifeq ($(BUILD_C89),1)
    CFLAGS += -std=c89
+   $(info BUILD_C89==1 -- compiling with -std=c89)
+else
+   $(info BUILD_C89==0 -- not compiling with -std=c89)   
 endif
 	LIBS =
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
@@ -391,6 +397,9 @@ else
    CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -Wno-missing-field-initializers
 ifeq ($(BUILD_C89),1)
    CFLAGS += -std=c89
+   $(info BUILD_C89==1 -- compiling with -std=c89)
+else
+   $(info BUILD_C89==0 -- not compiling with -std=c89)   
 endif
 endif
 
@@ -469,11 +478,6 @@ $(info creating bin2c working folder and compiling bin2c executable tool...)
     DUMMY_RESULT:=$(shell rm ./precompile/bin2c*)
 else
 $(info BUILD_BIN2C==0 - use the precompiled hiscore_dat.h from the github repo)
-endif
-ifeq ($(BUILD_C89),1)
-$(info BUILD_C89==1 -- compiling with -std=c89)
-else
-$(info BUILD_C89==0 -- not compiling with -std=c89)
 endif
 
 define NEWLINE

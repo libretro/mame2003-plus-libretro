@@ -19,9 +19,6 @@
 	DEBUGGING
 ***************************************************************************/
 
-/* Verbose outputs to error.log ? */
-#define VERBOSE 					0
-
 /* enable lots of logging */
 #if VERBOSE
 #define LOG(x)	logerror x
@@ -637,7 +634,7 @@ char *mame_fgets(char *buffer, int length, mame_file *file)
 	bin2c_fgets
 ***************************************************************************/
 
-char *bin2c_fgets(const char bin2c_array[], const int bin2c_length, char *buffer, int length, int *const index)
+char *bin2c_fgets(const char bin2c_array[], char *buffer, int length, int *const index)
 {
 	char *needle = buffer;
 
@@ -645,7 +642,7 @@ char *bin2c_fgets(const char bin2c_array[], const int bin2c_length, char *buffer
 	while (length > 0)
    {
       int character;
-      if (*index == bin2c_length) /* end of bin2c file array */
+      if (*index == sizeof(bin2c_array)) /* end of bin2c file array */
          break;
 
       character = bin2c_array[(*index)++];

@@ -93,7 +93,7 @@ const char *mame_fhash(mame_file *file);
 int mame_fgetc(mame_file *file);
 int mame_ungetc(int c, mame_file *file);
 char *mame_fgets(char *s, int n, mame_file *file);
-char *bin2c_fgets(const char bin2c_array[], const int bin2c_length, char *buffer, int length, int *const index);
+char *bin2c_fgets(const char bin2c_array[], char *buffer, int length, int *const index);
 int mame_feof(mame_file *file);
 UINT64 mame_ftell(mame_file *file);
 
