@@ -4,6 +4,7 @@ SPLIT_UP_LINK=0
 CORE_DIR := src
 TARGET_NAME := mame2003-plus
 BUILD_BIN2C ?= 0
+BUILD_C89 ?= 0
 
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
@@ -77,6 +78,9 @@ ifeq ($(platform), unix)
    fpic = -fPIC
 
    CFLAGS += $(fpic)
+ifeq ($(BUILD_C89),1)
+   CFLAGS += -std=c89
+endif
    PLATCFLAGS += -Dstricmp=strcasecmp
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 else ifeq ($(platform), linux-portable)
@@ -84,6 +88,9 @@ else ifeq ($(platform), linux-portable)
    fpic = -fPIC -nostdlib
 
    CFLAGS += $(fpic)
+ifeq ($(BUILD_C89),1)
+   CFLAGS += -std=c89
+endif
    PLATCFLAGS += -Dstricmp=strcasecmp
 	LIBS =
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
@@ -389,6 +396,9 @@ else
    CC = gcc
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
    CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -Wno-missing-field-initializers
+ifeq ($(BUILD_C89),1)
+   CFLAGS += -std=c89
+endif
 endif
 
 ifeq ($(BIGENDIAN), 1)
@@ -465,7 +475,12 @@ $(info creating bin2c working folder and compiling bin2c executable tool...)
 	DUMMY_RESULT:=$(shell ./precompile/bin2c ./metadata/hiscore.dat ./precompile/hiscore_dat.h hiscoredat)
     DUMMY_RESULT:=$(shell rm ./precompile/bin2c*)
 else
-$(info echo BUILD_BIN2C==0 - use the precompiled hiscore_dat.h from the github repo)
+$(info BUILD_BIN2C==0 - use the precompiled hiscore_dat.h from the github repo)
+endif
+ifeq ($(BUILD_C89),1)
+$(info BUILD_C89==1 -- compiling with -std=c89)
+else
+$(info BUILD_C89==0 -- not compiling with -std=c89)
 endif
 
 define NEWLINE
