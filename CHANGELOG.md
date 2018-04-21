@@ -19,8 +19,8 @@
 * Bonk's Adventure
 * Boogie Wings
 * Cabal (Joystick with 3 buttons version)
-* Chain Reaction
 * Cannon Dancer
+* Chain Reaction
 * Charlie Ninja
 * Choutetsu Brikin'ger - iron clad
 * Counter Run
