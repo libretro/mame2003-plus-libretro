@@ -848,6 +848,16 @@ static int init_game_options(void)
 	Machine->orientation = ROT0;
 	Machine->ui_orientation = options.ui_orientation;
 
+	/* initialize the samplerate */
+        if ( (  Machine->drv->frames_per_second < 47 ) && (options.samplerate >= 30000) )	
+        {	
+                printf("sample rate too high\n");	
+                framerate_test =1;	
+                options.samplerate=22050;	
+                framerate_test =1;	
+        }        
+	Machine->sample_rate = options.samplerate;
+
     /* catch any custom bios options needed on a per-game basis. this is a hack. */
     if(stricmp(Machine->gamedrv->name, "diehard") == 0) {
         options.bios = strdup("us");
