@@ -160,6 +160,61 @@ static void update_variables(void)
          options.crosshair_enable = 0;
    }
    var.value = NULL;
+
+   /* TODO: Add brightness core option. Below is the boundary code from the old MAME osd to help */
+   /*
+
+	    double brightness;
+        increment = 0.05;
+		if (brightness < 0.1) brightness = 0.1;
+		if (brightness > 1.0) brightness = 1.0;
+		palette_set_global_brightness(brightness);
+
+	sprintf(buf,"%s %3d%%", "brightness", (int)(brightness * 100));
+    */
+
+   /* TODO: Add gamma core option. Below is the increment & boundary code from the old MAME osd to help */
+   /*
+
+        double gamma_correction;
+        increment = 0.05;
+		if (gamma_correction < 0.5) gamma_correction = 0.5;
+		if (gamma_correction > 2.0) gamma_correction = 2.0;
+
+        sprintf(buf,"%s %1.2f", "gamma", gamma_correction);
+    */
+
+    /* TODO: Add overclock option. Below is the code from the old MAME osd to help process the core option.*/
+    /*
+
+	double overclock;
+	int cpu, doallcpus = 0, oc;
+
+	if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
+		doallcpus = 1;
+	if (!code_pressed(KEYCODE_LCONTROL) && !code_pressed(KEYCODE_RCONTROL))
+		increment *= 5;
+	if( increment )
+	{
+		overclock = timer_get_overclock(arg);
+		overclock += 0.01 * increment;
+		if (overclock < 0.01) overclock = 0.01;
+		if (overclock > 2.0) overclock = 2.0;
+		if( doallcpus )
+			for( cpu = 0; cpu < cpu_gettotalcpu(); cpu++ )
+				timer_set_overclock(cpu, overclock);
+		else
+			timer_set_overclock(arg, overclock);
+	}
+
+	oc = 100 * timer_get_overclock(arg) + 0.5;
+
+	if( doallcpus )
+		sprintf(buf,"%s %s %3d%%", ui_getstring (UI_allcpus), ui_getstring (UI_overclock), oc);
+	else
+		sprintf(buf,"%s %s%d %3d%%", ui_getstring (UI_overclock), ui_getstring (UI_cpu), arg, oc);
+	displayosd(bitmap,buf,oc/2,100/2);
+*/
    
    var.key = APPNAME"-bios-region";
    options.bios = NULL;
