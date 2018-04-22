@@ -33,6 +33,6 @@ MACHINE_INIT( namcond1 );
 
 /* VIDHRDW */
 
-// to be removed
+/* to be removed*/
 extern READ16_HANDLER( debug_trigger );
 

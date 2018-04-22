@@ -15,7 +15,7 @@ extern data16_t *seta_vram_0, *seta_vctrl_0;
 extern data16_t *seta_vram_2, *seta_vctrl_2;
 extern data16_t *seta_vregs;
 
-extern data16_t *seta_workram; // Needed for zombraid Crosshair hack
+extern data16_t *seta_workram; /* Needed for zombraid Crosshair hack*/
 
 extern int seta_tiles_offset;
 

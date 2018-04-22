@@ -39,7 +39,7 @@ extern void tnk3_draw_status( struct mame_bitmap *bitmap, int bank, unsigned cha
 
 extern int snk_bg_tilemap_baseaddr;
 
-// note: compare tdfever which does blinking in software with tdfeverj which does it in hardware
+/* note: compare tdfever which does blinking in software with tdfeverj which does it in hardware*/
 extern int snk_blink_parity;
 
 

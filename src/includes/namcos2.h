@@ -6,7 +6,7 @@
 
 ***************************************************************************/
 
-// #define NAMCOS2_DEBUG_MODE
+/* #define NAMCOS2_DEBUG_MODE*/
 
 
 /* CPU reference numbers */
