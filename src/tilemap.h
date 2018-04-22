@@ -146,7 +146,7 @@ void tilemap_draw_roz(struct mame_bitmap *dest,const struct rectangle *cliprect,
 
 struct mame_bitmap *tilemap_get_pixmap( struct tilemap * tilemap );
 struct mame_bitmap *tilemap_get_transparency_bitmap( struct tilemap * tilemap );
-UINT8 *tilemap_get_transparency_data( struct tilemap * tilemap );  //*
+UINT8 *tilemap_get_transparency_data( struct tilemap * tilemap );  /***/
 
 /*********************************************************************/
 

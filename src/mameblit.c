@@ -15,12 +15,12 @@ static int theColor;
 
 #define SHADOW16(data) palette_shadow_table[data]
 
-//* AAT 032503: added limited 32-bit shadow and highlight support
+/** AAT 032503: added limited 32-bit shadow and highlight support*/
 static INLINE int SHADOW32(int c)
 {
 	#define RGB8TO5(x) (((x)>>3&0x001f)|((x)>>6&0x03e0)|((x)>>9&0x7c00))
 	#define RGB5TO8(x) (((x)<<3&0x00f8)|((x)<<6&0xf800)|((x)<<9&0xf80000))
-	// DEPENDENCY CHAIN!!!
+	/* DEPENDENCY CHAIN!!!*/
 	c = RGB8TO5(c);
 	c = palette_shadow_table[c];
 	c = RGB5TO8(c);

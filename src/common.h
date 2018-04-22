@@ -358,7 +358,7 @@ enum
 #define NO_DUMP                                      "$ND$"
 #define BAD_DUMP                                     "$BD$"
 
-// @@@ FF: Remove this when we use the final SHA1Merger
+/* @@@ FF: Remove this when we use the final SHA1Merger */
 #define NOT_DUMPED NO_DUMP
 #define BADROM BAD_DUMP
 

@@ -20,7 +20,7 @@ uint16_t videoBuffer[1024*1024];
 struct osd_create_params videoConfig;
 int gotFrame;
 
-// TODO: This seems to work so far, but could be better
+/* TODO: This seems to work so far, but could be better*/
 
 extern unsigned retroColorMode;
 
@@ -38,7 +38,7 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
    }
    else
    {
-      // Assume 32bit color by default
+      /* Assume 32bit color by default*/
       retroColorMode = RETRO_PIXEL_FORMAT_XRGB8888;
       environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode);
 
@@ -113,7 +113,7 @@ void osd_update_video_and_audio(struct mame_display *display)
    {
       int i, j;
 
-      // Update UI area
+      /* Update UI area*/
       if (display->changed_flags & GAME_VISIBLE_AREA_CHANGED)
       {
          set_ui_visarea(display->game_visible_area.min_x, display->game_visible_area.min_y, display->game_visible_area.max_x, display->game_visible_area.max_y);
@@ -121,12 +121,12 @@ void osd_update_video_and_audio(struct mame_display *display)
 
       if (video_cb && display->changed_flags & GAME_BITMAP_CHANGED && (osd_skip_this_frame() == 0))
       {
-         // Cache some values used in the below macros
+         /* Cache some values used in the below macros*/
          const uint32_t x = display->game_visible_area.min_x;
          const uint32_t y = display->game_visible_area.min_y;
          const uint32_t pitch = display->game_bitmap->rowpixels;
 
-         // Copy pixels
+         /* Copy pixels*/
          if(display->game_bitmap->depth == 16)
          {
             uint16_t* output = (uint16_t*)videoBuffer;
@@ -177,7 +177,7 @@ void osd_update_video_and_audio(struct mame_display *display)
    {
        if(led_state_cb != NULL)
        {
-           // Set each changed LED
+           /* Set each changed LED*/
            unsigned long o = prev_led_state;
            unsigned long n = display->led_state;
            int led;

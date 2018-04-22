@@ -815,8 +815,8 @@ UINT32 win_open(UINT32 idx, struct sWindow *psWin)
 	if( psWin->flags & BORDER_BOTTOM )
 		++yadd;
 
-//	ASSERT((psWin->x + psWin->w + xadd) <= screen_w);
-//	ASSERT((psWin->y + psWin->h + yadd) <= screen_h);
+/*	ASSERT((psWin->x + psWin->w + xadd) <= screen_w);*/
+/*	ASSERT((psWin->y + psWin->h + yadd) <= screen_h);*/
 
 	psWin->text = MyMalloc( screen_w * (yadd + psWin->h), "win_open()" );
 	psWin->attr = MyMalloc( screen_w * (yadd + psWin->h), "win_open()" );

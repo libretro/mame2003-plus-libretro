@@ -23,8 +23,8 @@
 #include <stdarg.h>
 
 
-//#define MEM_DUMP
-//#define CHECK_MASKS
+/*#define MEM_DUMP*/
+/*#define CHECK_MASKS*/
 
 
 
@@ -864,7 +864,7 @@ UINT8 alloc_new_subtable(const struct memport_data *memport, struct table_data *
 		fatalerror("error: ran out of memory subtables\n");
 
 
-#ifdef __LIBRETRO__ // HACK: Don't use realloc
+#ifdef __LIBRETRO__ /* HACK: Don't use realloc*/
     if(tabledata->subtable_alloc < SUBTABLE_COUNT)
     {
         tabledata->subtable_alloc = SUBTABLE_COUNT;
@@ -1137,7 +1137,7 @@ static int init_memport(int cpunum, struct memport_data *data, int abits, int db
 	data->mask = 0xffffffffUL >> (32 - abits);
 
 	/* allocate memory */
-#ifdef __LIBRETRO__ // HACK: Don't use realloc
+#ifdef __LIBRETRO__ /* HACK: Don't use realloc*/
 	data->read.table = malloc(1024*1024);
 	data->write.table = malloc(1024*1024);
 #else
@@ -1664,7 +1664,7 @@ void register_banks(void)
 		const struct Memory_ReadAddress *mra, *mra_start = Machine->drv->cpu[cpunum].memory_read;
 		const struct Memory_WriteAddress *mwa, *mwa_start = Machine->drv->cpu[cpunum].memory_write;
 		int bits = cpudata[cpunum].mem.abits;
-//		int width = cpunum_databus_width(cpunum);
+/*		int width = cpunum_databus_width(cpunum);*/
 
 		if (!IS_SPARSE(bits))
 		{

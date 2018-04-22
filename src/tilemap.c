@@ -1900,7 +1900,7 @@ struct mame_bitmap *tilemap_get_transparency_bitmap( struct tilemap * tilemap )
 	return tilemap->transparency_bitmap;
 }
 
-UINT8 *tilemap_get_transparency_data( struct tilemap * tilemap ) //*
+UINT8 *tilemap_get_transparency_data( struct tilemap * tilemap ) /***/
 {
 	return tilemap->transparency_data;
 }
@@ -2119,7 +2119,7 @@ profiler_mark(PROFILER_TILEMAP_DRAW);
 				}
 				else
 				{
-					//* AAT APR2003: added 32-bit no-priority counterpart
+					/** AAT APR2003: added 32-bit no-priority counterpart*/
 					if( flags&TILEMAP_ALPHA )
 					{
 						blit.draw_masked = (blitmask_t)npbt32;
@@ -2521,7 +2521,7 @@ void tilemap_nb_draw( struct mame_bitmap *dest, UINT32 number, UINT32 scrollx, U
 
 /***********************************************************************************/
 
-#endif // !DECLARE && !TRANSP
+#endif /* !DECLARE && !TRANSP*/
 
 #ifdef TRANSP
 /*************************************************************************************************/
@@ -3067,5 +3067,5 @@ static UINT8 TRANSP(HandleTransparencyNone)(struct tilemap *tilemap, UINT32 x0, 
 #undef TRANSP
 #undef PAL_INIT
 #undef PAL_GET
-#endif // TRANSP
+#endif /* TRANSP*/
 

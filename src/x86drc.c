@@ -282,18 +282,18 @@ void drc_append_verify_code(struct drccore *drc, void *code, UINT8 length)
 {
 	if (length >= 4)
 	{
-		_cmp_m32abs_imm(code, *(UINT32 *)code);						// cmp	[pc],opcode
-		_jcc(COND_NE, drc->recompile);								// jne	recompile
+		_cmp_m32abs_imm(code, *(UINT32 *)code);						/* cmp	[pc],opcode*/
+		_jcc(COND_NE, drc->recompile);								/* jne	recompile*/
 	}
 	else if (length >= 2)
 	{
-		_cmp_m16abs_imm(code, *(UINT16 *)code);						// cmp	[pc],opcode
-		_jcc(COND_NE, drc->recompile);								// jne	recompile
+		_cmp_m16abs_imm(code, *(UINT16 *)code);						/* cmp	[pc],opcode*/
+		_jcc(COND_NE, drc->recompile);								/* jne	recompile*/
 	}
 	else
 	{
-		_cmp_m8abs_imm(code, *(UINT8 *)code);						// cmp	[pc],opcode
-		_jcc(COND_NE, drc->recompile);								// jne	recompile
+		_cmp_m8abs_imm(code, *(UINT8 *)code);						/* cmp	[pc],opcode*/
+		_jcc(COND_NE, drc->recompile);								/* jne	recompile*/
 	}
 }
 
@@ -306,9 +306,9 @@ void drc_append_call_debugger(struct drccore *drc)
 {
 #ifdef MAME_DEBUG
 	struct linkdata link;
-	_cmp_m32abs_imm(&mame_debug, 0);								// cmp	[mame_debug],0
-	_jcc_short_link(COND_E, &link);									// je	skip
-	drc_append_save_call_restore(drc, (void *)MAME_Debug, 0);		// save volatiles
+	_cmp_m32abs_imm(&mame_debug, 0);								/* cmp	[mame_debug],0*/
+	_jcc_short_link(COND_E, &link);									/* je	skip*/
+	drc_append_save_call_restore(drc, (void *)MAME_Debug, 0);		/* save volatiles*/
 	_resolve_link(&link);
 #endif
 }
@@ -350,11 +350,11 @@ void drc_append_restore_volatiles(struct drccore *drc)
 
 void drc_append_save_call_restore(struct drccore *drc, void *target, UINT32 stackadj)
 {
-	drc_append_save_volatiles(drc);									// save volatiles
-	_call(target);													// call	target
-	drc_append_restore_volatiles(drc);								// restore volatiles
+	drc_append_save_volatiles(drc);									/* save volatiles*/
+	_call(target);													/* call	target*/
+	drc_append_restore_volatiles(drc);								/* restore volatiles*/
 	if (stackadj)
-		_add_r32_imm(REG_ESP, stackadj);							// adjust stack
+		_add_r32_imm(REG_ESP, stackadj);							/* adjust stack*/
 }
 
 
@@ -365,11 +365,11 @@ void drc_append_save_call_restore(struct drccore *drc, void *target, UINT32 stac
 void drc_append_standard_epilogue(struct drccore *drc, INT32 cycles, INT32 pcdelta, int allow_exit)
 {
 	if (cycles != 0)
-		_sub_r32_imm(REG_EBP, cycles);								// sub	ebp,cycles
+		_sub_r32_imm(REG_EBP, cycles);								/* sub	ebp,cycles*/
 	if (pcdelta != 0)
-		_lea_r32_m32bd(REG_EDI, REG_EDI, pcdelta);					// lea	edi,[edi+pcdelta]
+		_lea_r32_m32bd(REG_EDI, REG_EDI, pcdelta);					/* lea	edi,[edi+pcdelta]*/
 	if (allow_exit && cycles != 0)
-		_jcc(COND_S, drc->out_of_cycles);							// js	out_of_cycles
+		_jcc(COND_S, drc->out_of_cycles);							/* js	out_of_cycles*/
 }
 
 
@@ -380,15 +380,15 @@ void drc_append_standard_epilogue(struct drccore *drc, INT32 cycles, INT32 pcdel
 void drc_append_dispatcher(struct drccore *drc)
 {
 #if LOG_DISPATCHES
-	_push_imm(drc);													// push	drc
-	drc_append_save_call_restore(drc, (void *)log_dispatch, 4);		// call	log_dispatch
+	_push_imm(drc);													/* push	drc*/
+	drc_append_save_call_restore(drc, (void *)log_dispatch, 4);		/* call	log_dispatch*/
 #endif
-	_mov_r32_r32(REG_EAX, REG_EDI);									// mov	eax,edi
-	_shr_r32_imm(REG_EAX, drc->l1shift);							// shr	eax,l1shift
-	_mov_r32_r32(REG_EDX, REG_EDI);									// mov	edx,edi
-	_mov_r32_m32isd(REG_EAX, REG_EAX, 4, drc->lookup_l1);			// mov	eax,[eax*4 + l1lookup]
-	_and_r32_imm(REG_EDX, drc->l2mask);								// and	edx,l2mask
-	_jmp_m32bisd(REG_EAX, REG_EDX, drc->l2scale, 0);				// jmp	[eax+edx*l2scale]
+	_mov_r32_r32(REG_EAX, REG_EDI);									/* mov	eax,edi*/
+	_shr_r32_imm(REG_EAX, drc->l1shift);							/* shr	eax,l1shift*/
+	_mov_r32_r32(REG_EDX, REG_EDI);									/* mov	edx,edi*/
+	_mov_r32_m32isd(REG_EAX, REG_EAX, 4, drc->lookup_l1);			/* mov	eax,[eax*4 + l1lookup]*/
+	_and_r32_imm(REG_EDX, drc->l2mask);								/* and	edx,l2mask*/
+	_jmp_m32bisd(REG_EAX, REG_EDX, drc->l2scale, 0);				/* jmp	[eax+edx*l2scale]*/
 }
 
 
@@ -401,11 +401,11 @@ void drc_append_fixed_dispatcher(struct drccore *drc, UINT32 newpc)
 	void **base = drc->lookup_l1[newpc >> drc->l1shift];
 	if (base == drc->lookup_l2_recompile)
 	{
-		_mov_r32_m32abs(REG_EAX, &drc->lookup_l1[newpc >> drc->l1shift]);// mov	eax,[(newpc >> l1shift)*4 + l1lookup]
-		_jmp_m32bd(REG_EAX, (newpc & drc->l2mask) * drc->l2scale);		// jmp	[eax+(newpc & l2mask)*l2scale]
+		_mov_r32_m32abs(REG_EAX, &drc->lookup_l1[newpc >> drc->l1shift]);/* mov	eax,[(newpc >> l1shift)*4 + l1lookup]*/
+		_jmp_m32bd(REG_EAX, (newpc & drc->l2mask) * drc->l2scale);		/* jmp	[eax+(newpc & l2mask)*l2scale]*/
 	}
 	else
-		_jmp_m32abs((UINT8 *)base + (newpc & drc->l2mask) * drc->l2scale);	// jmp	[eax+(newpc & l2mask)*l2scale]
+		_jmp_m32abs((UINT8 *)base + (newpc & drc->l2mask) * drc->l2scale);	/* jmp	[eax+(newpc & l2mask)*l2scale]*/
 }
 
 
@@ -433,8 +433,8 @@ void drc_append_tentative_fixed_dispatcher(struct drccore *drc, UINT32 newpc)
 
 void drc_append_set_fp_rounding(struct drccore *drc, UINT8 regindex)
 {
-	_fldcw_m16isd(regindex, 2, &fp_control[0]);						// fldcw [fp_control + reg*2]
-	_fnstcw_m16abs(&drc->fpcw_curr);								// fnstcw [fpcw_curr]
+	_fldcw_m16isd(regindex, 2, &fp_control[0]);						/* fldcw [fp_control + reg*2]*/
+	_fnstcw_m16abs(&drc->fpcw_curr);								/* fnstcw [fpcw_curr]*/
 }
 
 
@@ -445,7 +445,7 @@ void drc_append_set_fp_rounding(struct drccore *drc, UINT8 regindex)
 
 void drc_append_set_temp_fp_rounding(struct drccore *drc, UINT8 rounding)
 {
-	_fldcw_m16abs(&fp_control[rounding]);							// fldcw [fp_control]
+	_fldcw_m16abs(&fp_control[rounding]);							/* fldcw [fp_control]*/
 }
 
 
@@ -456,7 +456,7 @@ void drc_append_set_temp_fp_rounding(struct drccore *drc, UINT8 rounding)
 
 void drc_append_restore_fp_rounding(struct drccore *drc)
 {
-	_fldcw_m16abs(&drc->fpcw_curr);									// fldcw [fpcw_curr]
+	_fldcw_m16abs(&drc->fpcw_curr);									/* fldcw [fpcw_curr]*/
 }
 
 
@@ -531,16 +531,16 @@ void drc_dasm(FILE *f, unsigned pc, void *begin, void *end)
 
 static void append_entry_point(struct drccore *drc)
 {
-	_pushad();														// pushad
+	_pushad();														/* pushad*/
 	if (drc->uses_fp)
 	{
-		_fnstcw_m16abs(&drc->fpcw_save);							// fstcw [fpcw_save]
-		_fldcw_m16abs(&drc->fpcw_curr);								// fldcw [fpcw_curr]
+		_fnstcw_m16abs(&drc->fpcw_save);							/* fstcw [fpcw_save]*/
+		_fldcw_m16abs(&drc->fpcw_curr);								/* fldcw [fpcw_curr]*/
 	}
-	drc_append_restore_volatiles(drc);								// load volatiles
+	drc_append_restore_volatiles(drc);								/* load volatiles*/
 	if (drc->cb_entrygen)
-		(*drc->cb_entrygen)(drc);									// additional entry point duties
-	drc_append_dispatcher(drc);										// dispatch
+		(*drc->cb_entrygen)(drc);									/* additional entry point duties*/
+	drc_append_dispatcher(drc);										/* dispatch*/
 }
 
 
@@ -562,9 +562,9 @@ static void recompile_code(struct drccore *drc)
 
 static void append_recompile(struct drccore *drc)
 {
-	_push_imm(drc);													// push	drc
-	drc_append_save_call_restore(drc, (void *)recompile_code, 4);	// call	recompile_code
-	drc_append_dispatcher(drc);										// dispatch
+	_push_imm(drc);													/* push	drc*/
+	drc_append_save_call_restore(drc, (void *)recompile_code, 4);	/* call	recompile_code*/
+	drc_append_dispatcher(drc);										/* dispatch*/
 }
 
 
@@ -574,14 +574,14 @@ static void append_recompile(struct drccore *drc)
 
 static void append_out_of_cycles(struct drccore *drc)
 {
-	drc_append_save_volatiles(drc);									// save volatiles
+	drc_append_save_volatiles(drc);									/* save volatiles*/
 	if (drc->uses_fp)
 	{
-		_fnclex();													// fnclex
-		_fldcw_m16abs(&drc->fpcw_save);								// fldcw [fpcw_save]
+		_fnclex();													/* fnclex*/
+		_fldcw_m16abs(&drc->fpcw_save);								/* fldcw [fpcw_save]*/
 	}
-	_popad();														// popad
-	_ret();															// ret
+	_popad();														/* popad*/
+	_ret();															/* ret*/
 }
 
 

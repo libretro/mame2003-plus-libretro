@@ -26,7 +26,7 @@ int osd_is_key_pressed(int keycode)
 
 int osd_readkey_unicode(int flush)
 {
-    // TODO
+    /* TODO*/
     return 0;
 }
 
@@ -36,13 +36,13 @@ int osd_readkey_unicode(int flush)
 
 ******************************************************************************/
 
-// Unassigned keycodes
-//	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN, KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE,
+/* Unassigned keycodes*/
+/*	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN, KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE,*/
 
-// The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG)
-// EMIT1(TAG): The tag value is the same between libretro and MAME
-// EMIT2(RTAG, MTAG): The tag value is different between the two
-// EXITX(TAG): MAME has no equivalent key.
+/* The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG)*/
+/* EMIT1(TAG): The tag value is the same between libretro and MAME*/
+/* EMIT2(RTAG, MTAG): The tag value is different between the two*/
+/* EXITX(TAG): MAME has no equivalent key.*/
 
 #define EMIT2(RETRO, KEY) {(char*)#RETRO, RETROK_##RETRO, KEYCODE_##KEY}
 #define EMIT1(KEY) {(char*)#KEY, RETROK_##KEY, KEYCODE_##KEY}

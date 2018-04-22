@@ -280,7 +280,7 @@ static void print_game_rom(int OUTPUT_XML, FILE* out, const struct GameDriver* g
 {
 	const struct RomModule *region, *rom, *chunk;
 	const struct RomModule *pregion, *prom, *fprom=NULL;
-//	extern struct GameDriver driver_0;
+/*	extern struct GameDriver driver_0;*/
 
 	if (!game->rom)
 		return;

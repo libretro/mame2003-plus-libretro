@@ -819,7 +819,7 @@ int cpuintrf_init_cpu(int cpunum, int cputype)
 	if (size == 0)
 	{
 		/* that can't really be true */
-		//logerror("CPU #%d claims to need no context buffer!\n", cpunum);
+		/*logerror("CPU #%d claims to need no context buffer!\n", cpunum);*/
 		return 1;
 	}
 
@@ -828,7 +828,7 @@ int cpuintrf_init_cpu(int cpunum, int cputype)
 	if (cpu[cpunum].context == NULL)
 	{
 		/* that's really bad :( */
-		//logerror("CPU #%d failed to allocate context buffer (%d bytes)!\n", cpunum, size);
+		/*logerror("CPU #%d failed to allocate context buffer (%d bytes)!\n", cpunum, size);*/
 		return 1;
 	}
 
@@ -916,7 +916,7 @@ void activecpu_set_irq_line(int irqline, int state)
 	VERIFY_ACTIVECPU_VOID(activecpu_set_irq_line);
 	if (state != INTERNAL_CLEAR_LINE && state != INTERNAL_ASSERT_LINE)
 	{
-		//logerror("activecpu_set_irq_line called when cpu_set_irq_line should have been used!\n");
+		/*logerror("activecpu_set_irq_line called when cpu_set_irq_line should have been used!\n");*/
 		return;
 	}
 	(*cpu[activecpu].intf.set_irq_line)(irqline, state - INTERNAL_CLEAR_LINE);
@@ -1459,7 +1459,7 @@ void cpu_set_m68k_reset(int cpunum, void (*resetfn)(void))
 #endif
 		)
 	{
-		//logerror("Trying to set m68k reset vector on non-68k cpu\n");
+		/*logerror("Trying to set m68k reset vector on non-68k cpu\n");*/
 		exit(1);
 	}
 

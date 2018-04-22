@@ -202,12 +202,12 @@ static INLINE int cpu_irq_callback(int cpunum, int irqline)
 {
 	int vector = irq_line_vector[cpunum][irqline];
 
-	//LOG(("cpu_%d_irq_callback(%d) $%04x\n", cpunum, irqline, vector));
+	/*LOG(("cpu_%d_irq_callback(%d) $%04x\n", cpunum, irqline, vector));*/
 
 	/* if the IRQ state is HOLD_LINE, clear it */
 	if (irq_line_state[cpunum][irqline] == HOLD_LINE)
 	{
-		//LOG(("->set_irq_line(%d,%d,%d)\n", cpunum, irqline, CLEAR_LINE));
+		/*LOG(("->set_irq_line(%d,%d,%d)\n", cpunum, irqline, CLEAR_LINE));*/
 		activecpu_set_irq_line(irqline, INTERNAL_CLEAR_LINE);
 		irq_line_state[cpunum][irqline] = CLEAR_LINE;
 	}
@@ -242,11 +242,11 @@ void cpu_irq_line_vector_w(int cpunum, int irqline, int vector)
 {
 	if (cpunum < cpu_gettotalcpu() && irqline >= 0 && irqline < MAX_IRQ_LINES)
 	{
-		//LOG(("cpu_irq_line_vector_w(%d,%d,$%04x)\n",cpunum,irqline,vector));
+		/*LOG(("cpu_irq_line_vector_w(%d,%d,$%04x)\n",cpunum,irqline,vector));*/
 		interrupt_vector[cpunum][irqline] = vector;
 		return;
 	}
-	//LOG(("cpu_irq_line_vector_w CPU#%d irqline %d > max irq lines\n", cpunum, irqline));
+	/*LOG(("cpu_irq_line_vector_w CPU#%d irqline %d > max irq lines\n", cpunum, irqline));*/
 }
 
 
@@ -272,7 +272,7 @@ static void cpu_empty_event_queue(int cpunum)
 		int irqline = (irq_event >> 8) & 0xff;
 		int vector = irq_event >> 16;
 
-		//LOG(("cpu_empty_event_queue %d,%d,%d\n",cpunum,irqline,state));
+		/*LOG(("cpu_empty_event_queue %d,%d,%d\n",cpunum,irqline,state));*/
 
 	/* set the IRQ line state and vector */
 	if (irqline >= 0 && irqline < MAX_IRQ_LINES)
@@ -324,7 +324,7 @@ void cpu_set_irq_line_and_vector(int cpunum, int irqline, int state, int vector)
 	INT32 irq_event = (state & 0xff) | ((irqline & 0xff) << 8) | (vector << 16);
 	int event_index = irq_event_index[cpunum]++;
 
-	//LOG(("cpu_set_irq_line(%d,%d,%d,%02x)\n", cpunum, irqline, state, vector));
+	/*LOG(("cpu_set_irq_line(%d,%d,%d,%02x)\n", cpunum, irqline, state, vector));*/
 
 	/* enqueue the event */
 	if (event_index < MAX_IRQ_EVENTS)
@@ -480,7 +480,7 @@ void cpu_interrupt_enable(int cpunum,int enabled)
 {
 	interrupt_enable[cpunum] = enabled;
 
-//LOG(("CPU#%d interrupt_enable=%d\n", cpunum, enabled));
+/*LOG(("CPU#%d interrupt_enable=%d\n", cpunum, enabled));*/
 
 	/* make sure there are no queued interrupts */
 	if (enabled == 0)
@@ -507,7 +507,7 @@ WRITE_HANDLER( interrupt_vector_w )
 	VERIFY_ACTIVECPU_VOID(interrupt_vector_w);
 	if (interrupt_vector[activecpu][0] != data)
 	{
-		//LOG(("CPU#%d interrupt_vector_w $%02x\n", activecpu, data));
+		/*LOG(("CPU#%d interrupt_vector_w $%02x\n", activecpu, data));*/
 		interrupt_vector[activecpu][0] = data;
 
 		/* make sure there are no queued interrupts */

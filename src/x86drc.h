@@ -204,15 +204,15 @@ extern const UINT8 scale_lookup[];
 **	MODRM EMITTERS
 **#################################################################################################*/
 
-// op  reg,reg
+/* op  reg,reg*/
 #define MODRM_REG(reg, rm) 		\
 do { OP1(0xc0 | (((reg) & 7) << 3) | ((rm) & 7)); } while (0)
 
-// op  reg,[addr]
+/* op  reg,[addr]*/
 #define MODRM_MABS(reg, addr)	\
 do { OP1(0x05 | (((reg) & 7) << 3)); OP4(addr); } while (0)
 
-// op  reg,[base+disp]
+/* op  reg,[base+disp]*/
 #define MODRM_MBD(reg, base, disp) \
 do {														\
 	if ((UINT32)(disp) == 0 && (base) != REG_ESP && (base) != REG_EBP) \
@@ -249,7 +249,7 @@ do {														\
 	}														\
 } while (0)
 
-// op  reg,[base+indx*scale+disp]
+/* op  reg,[base+indx*scale+disp]*/
 #define MODRM_MBISD(reg, base, indx, scale, disp)			\
 do {														\
 	if ((scale) == 1 && (base) == NO_BASE)					\

@@ -40,7 +40,7 @@ struct MemPtr
 	 * requirements for the data chunk itself, which immediately follows this header.
 	 *
 	 * uint8_t data[numBytes];
-	 * uint8_t guardData[]; // copy of mGuardData string
+	 * uint8_t guardData[]; /* copy of mGuardData string*/
 	 */
 };
 typedef struct MemPtr MemPtr;

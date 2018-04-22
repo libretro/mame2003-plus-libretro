@@ -242,7 +242,7 @@ struct GfxElement *decodegfx(const UINT8 *src,const struct GfxLayout *gl)
 	else
 	{
 		if (0 && gl->planes <= 4 && !(gfx->width & 1))
-//		if (gl->planes <= 4 && !(gfx->width & 1))
+/*		if (gl->planes <= 4 && !(gfx->width & 1))*/
 		{
 			gfx->flags |= GFX_PACKED;
 			gfx->line_modulo = gfx->width/2;
@@ -357,7 +357,7 @@ static INLINE void blockmove_NtoN_transpen_noremap_flipx8(
 
 	srcmodulo += srcwidth;
 	dstmodulo -= srcwidth;
-	//srcdata += srcwidth-1;
+	/*srcdata += srcwidth-1;*/
 	srcdata -= 3;
 
 	trans4 = transpen * 0x01010101;
@@ -446,7 +446,7 @@ static INLINE void blockmove_NtoN_transpen_noremap_flipx16(
 
 	srcmodulo += srcwidth;
 	dstmodulo -= srcwidth;
-	//srcdata += srcwidth-1;
+	/*srcdata += srcwidth-1;*/
 
 	while (srcheight)
 	{
@@ -503,7 +503,7 @@ static INLINE void blockmove_NtoN_transpen_noremap_flipx32(
 
 	srcmodulo += srcwidth;
 	dstmodulo -= srcwidth;
-	//srcdata += srcwidth-1;
+	/*srcdata += srcwidth-1;*/
 
 	while (srcheight)
 	{
@@ -716,7 +716,7 @@ int pdrawgfx_shadow_lowpri = 0;
 #undef alpha_blend
 
 /* 32-bit version */
-//* AAT032503: added limited 32-bit shadow and highlight support
+/** AAT032503: added limited 32-bit shadow and highlight support*/
 static INLINE UINT32 SHADOW32(UINT32 c) {
 	c = (c>>9&0x7c00) | (c>>6&0x03e0) | (c>>3&0x001f);
 	return(((UINT32*)palette_shadow_table)[c]); }
@@ -4818,7 +4818,7 @@ DECLARE(blockmove_NtoN_opaque_noremap_flipx,(
 
 	srcmodulo += srcwidth;
 	dstmodulo -= srcwidth;
-	//srcdata += srcwidth-1;
+	/*srcdata += srcwidth-1;*/
 
 	while (srcheight)
 	{
@@ -4889,7 +4889,7 @@ DECLARE(blockmove_NtoN_opaque_remap_flipx,(
 
 	srcmodulo += srcwidth;
 	dstmodulo -= srcwidth;
-	//srcdata += srcwidth-1;
+	/*srcdata += srcwidth-1;*/
 
 	while (srcheight)
 	{
@@ -4961,7 +4961,7 @@ DECLARE(blockmove_NtoN_blend_noremap_flipx,(
 
 	srcmodulo += srcwidth;
 	dstmodulo -= srcwidth;
-	//srcdata += srcwidth-1;
+	/*srcdata += srcwidth-1;*/
 
 	while (srcheight)
 	{
@@ -5035,7 +5035,7 @@ DECLARE(blockmove_NtoN_blend_remap_flipx,(
 
 	srcmodulo += srcwidth;
 	dstmodulo -= srcwidth;
-	//srcdata += srcwidth-1;
+	/*srcdata += srcwidth-1;*/
 
 	while (srcheight)
 	{
@@ -5332,7 +5332,7 @@ DECLARE(copybitmap_core,(
 
 		if (flipx)
 		{
-			//if ((sx-ox) == 0) sd += gfx->width - sw;
+			/*if ((sx-ox) == 0) sd += gfx->width - sw;*/
 			sd += src->width -1 -(sx-ox);
 		}
 		else
@@ -5340,9 +5340,9 @@ DECLARE(copybitmap_core,(
 
 		if (flipy)
 		{
-			//if ((sy-oy) == 0) sd += sm * (gfx->height - sh);
-			//dd += dm * (sh - 1);
-			//dm = -dm;
+			/*if ((sy-oy) == 0) sd += sm * (gfx->height - sh);*/
+			/*dd += dm * (sh - 1);*/
+			/*dm = -dm;*/
 			sd += sm * (src->height -1 -(sy-oy));
 			sm = -sm;
 		}

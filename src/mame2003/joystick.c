@@ -118,7 +118,7 @@ void osd_customize_inputport_defaults(struct ipd *defaults)
 #endif
 }
 
-// These calibration functions should never actually be used (as long as needs_calibration returns 0 anyway).
+/* These calibration functions should never actually be used (as long as needs_calibration returns 0 anyway).*/
 int osd_joystick_needs_calibration(void) { return 0; }
 void osd_joystick_start_calibration(void){ }
 const char *osd_joystick_calibrate_next(void) { return 0; }
