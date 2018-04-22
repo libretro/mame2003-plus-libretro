@@ -394,7 +394,7 @@ else
    TARGET := $(TARGET_NAME)_libretro.dll
    CC = gcc
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
-   CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -Wno-missing-field-initializers
+   CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__
 ifeq ($(BUILD_C89),1)
    CFLAGS += -std=c89
    $(info BUILD_C89==1 -- compiling with -std=c89)
@@ -420,7 +420,7 @@ CFLAGS += -DRETRO_PROFILE=$(RETRO_PROFILE)
 
 ifneq ($(platform), sncps3)
 ifeq (,$(findstring msvc,$(platform)))
-CFLAGS += -Wall -Wno-sign-compare -Wunused \
+CFLAGS += -Wall -Wunused \
 	-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
 	-Wshadow -Wstrict-prototypes \
 	-Wformat-security -Wwrite-strings \
@@ -429,7 +429,7 @@ endif
 endif
 
 ifeq ($(DEBUG), 1)
-   CFLAGS += -O0 -Wall -Wno-unused -g
+   CFLAGS += -O0 -g
 else
    CFLAGS += -O2 -DNDEBUG
 endif
