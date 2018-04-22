@@ -3,10 +3,10 @@
 *				(initial work based on David Hedley's pcemu)                *
 ****************************************************************************/
 
-// file will be included in all cpu variants
-// put non i86 instructions in own files (i286, i386, nec)
-// function renaming will be added when neccessary
-// timing value should move to separate array
+/* file will be included in all cpu variants*/
+/* put non i86 instructions in own files (i286, i386, nec)*/
+/* function renaming will be added when neccessary*/
+/* timing value should move to separate array*/
 
 static void PREFIX86(_add_br8)(void);
 static void PREFIX86(_add_wr16)(void);

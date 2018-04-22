@@ -160,7 +160,7 @@ extern UINT32	CD_trans_type;			/* 0 = DATA, 1 = INFO   */ /*maybe signed int*/
 
 extern UINT32	CD_actual_size;			/* used by "calcactualsize" and "getactualsize"*/
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/******************************************************************/
 
 extern sect_t	CD_sect[CDB_SECT_NUM];	/* sector buffer*/
 extern part_t	CD_part[CDB_SEL_NUM];	/* buffer partitions*/
@@ -170,9 +170,8 @@ extern UINT32	CD_free_space;		/* free space in sector units*/
 extern UINT8	CD_filt_num;		/* cdrom drive connector*/
 extern UINT8	CD_mpeg_filt_num;	/* mpeg connector*/
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/******************************************************************/
 
-/**************/
 #define CDB_STAT_BUSY		0x00		/* status change in progress*/
 #define CDB_STAT_PAUSE		0x01		/* temporarily stopped*/
 #define CDB_STAT_STDBY		0x02		/* stopped*/

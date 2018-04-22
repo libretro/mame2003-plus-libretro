@@ -327,12 +327,12 @@ enum
 typedef struct
 {
 	UINT32 global_regs[32];
-	UINT32 local_regs[64]; //stack registers which contain the most recent stack
-						   //current stack frame (maximun 16 registers) is always in registers
+	UINT32 local_regs[64]; /*stack registers which contain the most recent stack*/
+						   /*current stack frame (maximun 16 registers) is always in registers*/
 
 	/* internal stuff */
-	UINT32			ppc; //previous pc
-	UINT16			op;	 //opcode
+	UINT32			ppc; /*previous pc*/
+	UINT16			op;	 /*opcode*/
 	int				delay;
 	int				delay_pc;
 
@@ -408,7 +408,7 @@ static void (*e132xs_op[0x100])(void) = {
 	e132xs_br,   e132xs_trap, e132xs_trap,  e132xs_trap		/* BR, TRAPxx - TRAP */
 };
 
-static UINT32 entry_point = 0xffffff00;	//default @ MEM3
+static UINT32 entry_point = 0xffffff00;	/*default @ MEM3*/
 
 /* Return the entry point for a determinated trap */
 UINT32 get_trap_addr(UINT8 trap_no)
@@ -443,32 +443,32 @@ UINT32 get_emu_code_addr(UINT8 num) /* num is OP */
 
 #define OP					e132xs.op
 
-// TODO: i need to use these 3 define?
-#define SET_PC(val)		PC = (val & 0xfffffffe) //PC(0) = 0
-#define SET_SP(val)		SP = (val & 0xfffffffc) //SP(0) = SP(1) = 0
-#define SET_UB(val)		UB = (val & 0xfffffffc) //UB(0) = UB(1) = 0
+/* TODO: i need to use these 3 define?*/
+#define SET_PC(val)		PC = (val & 0xfffffffe) /*PC(0) = 0*/
+#define SET_SP(val)		SP = (val & 0xfffffffc) /*SP(0) = SP(1) = 0*/
+#define SET_UB(val)		UB = (val & 0xfffffffc) /*UB(0) = UB(1) = 0*/
 
-#define PPC				e132xs.ppc //previous pc
-#define PC				e132xs.global_regs[0] //Program Counter
-#define SR				e132xs.global_regs[1] //Status Register
-#define FER				e132xs.global_regs[2] //Floating-Point Exception Register
-//#define ?? global_regs[3 - 15] //General Purpose Registers
-//#define ?? global_regs[16] //reserved
-//#define ?? global_regs[17] //reserved
-#define SP				e132xs.global_regs[18] //Stack Pointer
-#define UB				e132xs.global_regs[19] //Upper Stack Bound
-#define BCR				e132xs.global_regs[20] //Bus Control Register
-#define TPR				e132xs.global_regs[21] //Timer Prescaler Register
-#define TCR				e132xs.global_regs[22] //Timer Compare Register
-#define TR				e132xs.global_regs[23] //Timer Register
-#define WCR				e132xs.global_regs[24] //Watchdog Compare Register
-#define ISR				e132xs.global_regs[25] //Input Status Register
-#define FCR				e132xs.global_regs[26] //Function Control Register
-#define MCR				e132xs.global_regs[27] //Memory Control Register
-//#define ??			e132xs.global_regs[28] //reserved
-//#define ??			e132xs.global_regs[29] //reserved
-//#define ??			e132xs.global_regs[30] //reserved
-//#define ??			e132xs.global_regs[31] //reserved
+#define PPC				e132xs.ppc /*previous pc*/
+#define PC				e132xs.global_regs[0] /*Program Counter*/
+#define SR				e132xs.global_regs[1] /*Status Register*/
+#define FER				e132xs.global_regs[2] /*Floating-Point Exception Register*/
+/*#define ?? global_regs[3 - 15] */ /*General Purpose Registers*/
+/*#define ?? global_regs[16] */ /*reserved*/
+/*#define ?? global_regs[17] */ /*reserved*/
+#define SP				e132xs.global_regs[18] /*Stack Pointer*/
+#define UB				e132xs.global_regs[19] /*Upper Stack Bound*/
+#define BCR				e132xs.global_regs[20] /*Bus Control Register*/
+#define TPR				e132xs.global_regs[21] /*Timer Prescaler Register*/
+#define TCR				e132xs.global_regs[22] /*Timer Compare Register*/
+#define TR				e132xs.global_regs[23] /*Timer Register*/
+#define WCR				e132xs.global_regs[24] /*Watchdog Compare Register*/
+#define ISR				e132xs.global_regs[25] /*Input Status Register*/
+#define FCR				e132xs.global_regs[26] /*Function Control Register*/
+#define MCR				e132xs.global_regs[27] /*Memory Control Register*/
+/*#define ??			e132xs.global_regs[28] */ /*reserved*/
+/*#define ??			e132xs.global_regs[29] */ /*reserved*/
+/*#define ??			e132xs.global_regs[30] */ /*reserved*/
+/*#define ??			e132xs.global_regs[31] */ /*reserved*/
 
 /* Registers Number	*/
 #define REG_BCR			20
@@ -482,7 +482,7 @@ UINT32 get_emu_code_addr(UINT8 num) /* num is OP */
 #define SET_L_REG(code,val)		e132xs.local_regs[code] = val
 
 #define S_BIT					((OP & 0x100) >> 8)
-#define N_BIT					S_BIT	//it's the same bit but with different name and use
+#define N_BIT					S_BIT	/*it's the same bit but with different name and use*/
 #define D_BIT					((OP & 0x200) >> 9)
 #define N_VALUE					((N_BIT << 4 ) | (OP & 0x0f))
 #define D_CODE					((OP & 0xf0) >> 4)
@@ -518,26 +518,26 @@ UINT32 get_emu_code_addr(UINT8 num) /* num is OP */
 		}
 
 /* SR flags */
-#define GET_C					( SR & 0x00000001) //bit 0 //CARRY
-#define GET_Z					((SR & 0x00000002)>>1) //bit 1 //ZERO
-#define GET_N					((SR & 0x00000004)>>2) //bit 2 //NEGATIVE
-#define GET_V					((SR & 0x00000008)>>3) //bit 3 //OVERFLOW
-#define GET_M					((SR & 0x00000010)>>4) //bit 4 //CACHE-MODE
-#define GET_H					((SR & 0x00000020)>>5) //bit 5 //HIGHGLOBAL
-//#define RESERVED				((SR & 0x00000040)>>6) //bit 6 //always 0
-#define GET_I					((SR & 0x00000080)>>7) //bit 7 //INTERRUPT-MODE
-#define GET_FTE					((SR & 0x00001f00)>>8) //bits 12 - 8 	//Floating-Point Trap Enable
-#define	GET_FRM					((SR & 0x00006000)>>13) //bits 14 - 13 //Floating-Point Rounding Mode
-#define GET_L					((SR & 0x00008000)>>15) //bit 15 //INTERRUPT-LOCK
-#define GET_T					((SR & 0x00010000)>>16) //bit 16 //TRACE-MODE
-#define GET_P					((SR & 0x00020000)>>17) //bit 17 //TRACE PENDING
-#define GET_S					((SR & 0x00040000)>>18) //bit 18 //SUPERVISOR STATE
-#define GET_ILC					((SR & 0x00180000)>>19) //bits 20 - 19 //INSTRUCTION-LENGTH
-#define GET_FL					((SR & 0x01e00000)>>21) //bits 24 - 21 //FRAME LENGTH
-#define GET_FP					((SR & 0xfe000000)>>25) //bits 31 - 25 //FRAME POINTER
+#define GET_C					( SR & 0x00000001) /*bit 0 */ /*CARRY*/
+#define GET_Z					((SR & 0x00000002)>>1) /*bit 1 */ /*ZERO*/
+#define GET_N					((SR & 0x00000004)>>2) /*bit 2 */ /*NEGATIVE*/
+#define GET_V					((SR & 0x00000008)>>3) /*bit 3 */ /*OVERFLOW*/
+#define GET_M					((SR & 0x00000010)>>4) /*bit 4 */ /*CACHE-MODE*/
+#define GET_H					((SR & 0x00000020)>>5) /*bit 5 */ /*HIGHGLOBAL*/
+/*#define RESERVED				((SR & 0x00000040)>>6) */ /*bit 6 //always 0*/
+#define GET_I					((SR & 0x00000080)>>7) /*bit 7 */ /*INTERRUPT-MODE*/
+#define GET_FTE					((SR & 0x00001f00)>>8) /*bits 12 - 8 	*/ /*Floating-Point Trap Enable*/
+#define	GET_FRM					((SR & 0x00006000)>>13) /*bits 14 - 13 */ /*Floating-Point Rounding Mode*/
+#define GET_L					((SR & 0x00008000)>>15) /*bit 15 */ /*INTERRUPT-LOCK*/
+#define GET_T					((SR & 0x00010000)>>16) /*bit 16 */ /*TRACE-MODE*/
+#define GET_P					((SR & 0x00020000)>>17) /*bit 17 */ /*TRACE PENDING*/
+#define GET_S					((SR & 0x00040000)>>18) /*bit 18 */ /*SUPERVISOR STATE*/
+#define GET_ILC					((SR & 0x00180000)>>19) /*bits 20 - 19 */ /*INSTRUCTION-LENGTH*/
+#define GET_FL					((SR & 0x01e00000)>>21) /*bits 24 - 21 */ /*FRAME LENGTH*/
+#define GET_FP					((SR & 0xfe000000)>>25) /*bits 31 - 25 */ /*FRAME POINTER*/
 
-// TODO: do i need to use this?
-#define SET_SR(val)				(SR = (SR & 0xffff0000) | (val & 0x0000ffff)) //when SR is addressed, only low 15 bits can be changed
+/* TODO: do i need to use this?*/
+#define SET_SR(val)				(SR = (SR & 0xffff0000) | (val & 0x0000ffff)) /*when SR is addressed, only low 15 bits can be changed*/
 
 #define SET_C(val)				(SR = (SR & 0xfffffffe) |  val)
 #define SET_Z(val)				(SR = (SR & 0xfffffffd) | (val << 1))
@@ -545,7 +545,7 @@ UINT32 get_emu_code_addr(UINT8 num) /* num is OP */
 #define SET_V(val)				(SR = (SR & 0xfffffff7) | (val << 3))
 #define SET_M(val)				(SR = (SR & 0xffffffef) | (val << 4))
 #define SET_H(val)				(SR = (SR & 0xffffffdf) | (val << 5))
-//#define RESERVED
+/*#define RESERVED*/
 #define SET_I(val)				(SR = (SR & 0xffffff7f) | (val << 7))
 #define SET_FTE(val)			(SR = (SR & 0xffffe0ff) | (val << 8))
 #define	SET_FRM(val)			(SR = (SR & 0xffff9fff) | (val << 13))
@@ -557,12 +557,12 @@ UINT32 get_emu_code_addr(UINT8 num) /* num is OP */
 #define SET_FL(val)				(SR = (SR & 0xfe1fffff) | (val << 21))
 #define SET_FP(val)				(SR = (SR & 0x1fffffff) | (val << 25))
 
-// TODO: do i need to use these?
+/* TODO: do i need to use these?*/
 /* FER flags */
-#define GET_ACCRUED				(FER & 0x0000001f) //bits  4 - 0 //Floating-Point Accrued Exceptions
-#define GET_ACTUAL				(FER & 0x00001f00) //bits 12 - 8 //Floating-Point Actual  Exceptions
-//other bits are reversed, in particular 7 - 5 for the operating system.
-//the user program can only changes the above 2 flags
+#define GET_ACCRUED				(FER & 0x0000001f) /*bits  4 - 0 */ /*Floating-Point Accrued Exceptions*/
+#define GET_ACTUAL				(FER & 0x00001f00) /*bits 12 - 8 */ /*Floating-Point Actual  Exceptions*/
+/*other bits are reversed, in particular 7 - 5 for the operating system.*/
+/*the user program can only changes the above 2 flags*/
 
 
 static UINT8 e132xs_reg_layout[] =
@@ -650,16 +650,16 @@ INT32 immediate_value(void)
 			return ret;
 
 		case 20:
-			return 32;	//bit 5 = 1, others = 0
+			return 32;	/*bit 5 = 1, others = 0*/
 
 		case 21:
-			return 64;	//bit 6 = 1, others = 0
+			return 64;	/*bit 6 = 1, others = 0*/
 
 		case 22:
-			return 128; //bit 7 = 1, others = 0
+			return 128; /*bit 7 = 1, others = 0*/
 
 		case 23:
-			return 0x80000000; //bit 31 = 1, others = 0 (2 at the power of 31)
+			return 0x80000000; /*bit 31 = 1, others = 0 (2 at the power of 31)*/
 
 		case 24:
 			return -8;
@@ -686,7 +686,7 @@ INT32 immediate_value(void)
 			return -1;
 	}
 
-	return 0; //it should never executed
+	return 0; /*it should never executed*/
 }
 
 INT32 get_const(void)
@@ -787,35 +787,35 @@ INT32 get_dis(UINT32 val )
 
 void execute_br(INT32 rel)
 {
-	// Reip - TODO: if in get_pcrel() is read the next pc, do i need to increment the pc?
+	/* Reip - TODO: if in get_pcrel() is read the next pc, do i need to increment the pc?*/
 	/* MooglyGuy - No, you need to decrement it by two, since after e132xs_execute() you'll
 	               be incrementing PC by two. If you don't decrement, it'll skip over the
 	               next opcode. See below. */
 	PPC = PC;
 	PC += rel;
-//	PC -= 2;
+/*	PC -= 2;*/
 	SET_M(0);
 
-	//TODO: change when there's latency
-//	if target is on-chip cache
+	/*TODO: change when there's latency*/
+/*	if target is on-chip cache*/
 	e132xs_ICount -= 2;
-//	else 2 + memory read latency
+/*	else 2 + memory read latency*/
 
 }
 
 void execute_dbr(INT32 rel)
 {
-	// Reip - TODO: if in get_pcrel() is read the next pc, do i need to increment the pc?
-	//              block all the exception except the reset
+	/* Reip - TODO: if in get_pcrel() is read the next pc, do i need to increment the pc?*/
+	/*              block all the exception except the reset*/
 	/* MooglyGuy - Well, I'm not quite sure about that. */
 
 	e132xs.delay_pc = PC + rel;
 	e132xs.delay    = DELAY_TAKEN;
 
-	//TODO: change when there's latency
-//	if target in on-chip cache
+	/*TODO: change when there's latency*/
+/*	if target in on-chip cache*/
 	e132xs_ICount -= 1;
-//	else 1 + memory read latency cycles exceeding (dealy instruction cycles - 1)
+/*	else 1 + memory read latency cycles exceeding (dealy instruction cycles - 1)*/
 }
 
 void execute_trap(UINT32 addr)
@@ -824,7 +824,7 @@ void execute_trap(UINT32 addr)
 
 	write_addr = GET_FP + GET_FL;
 	WRITE_W(write_addr, (PC & 0xfffffffe) | GET_S);
-	WRITE_W(write_addr + 1, SR); //TODO: or +4 because it's 32bit?
+	WRITE_W(write_addr + 1, SR); /*TODO: or +4 because it's 32bit?*/
 	SET_FP(write_addr);
 	SET_FL(6);
 	SET_M(0);
@@ -835,14 +835,14 @@ void execute_trap(UINT32 addr)
 	PC = addr;
 	PC -= 2;
 
-	e132xs_ICount -= 2;	// TODO: + delay...
+	e132xs_ICount -= 2;	/* TODO: + delay...*/
 }
 
 void e132xs_init(void)
 {
 	int cpu = cpu_getactivecpu();
 
-	//TODO: add the reserved registers too? and the local registers too?
+	/*TODO: add the reserved registers too? and the local registers too?*/
 
 	state_save_register_UINT32("e132xs", cpu, "PC",  &PC,  1);
 	state_save_register_UINT32("e132xs", cpu, "SR",  &SR,  1);
@@ -861,7 +861,7 @@ void e132xs_init(void)
 
 void e132xs_reset(void *param)
 {
-	//TODO: other to do at reset?
+	/*TODO: other to do at reset?*/
 
 	SET_S(1);
 	SET_FL(6);
@@ -885,7 +885,7 @@ int e132xs_execute(int cycles)
 
 		if( e132xs.delay == DELAY_EXECUTE )
 		{
-			//TODO: should i use change_pc32bedw or something similar?
+			/*TODO: should i use change_pc32bedw or something similar?*/
 			PC = e132xs.delay_pc;
 			e132xs.delay_pc = 0;
 			e132xs.delay = NO_DELAY;
@@ -919,7 +919,7 @@ int e132xs_execute(int cycles)
 
 	} while( e132xs_ICount > 0 );
 
-	return cycles - e132xs_ICount;  //TODO: check this
+	return cycles - e132xs_ICount;  /*TODO: check this*/
 }
 
 unsigned e132xs_get_context(void *regs)
@@ -938,7 +938,7 @@ void e132xs_set_context(void *regs)
 	if (regs)
 		e132xs = *(e132xs_regs *)regs;
 
-	//TODO: other to do? check interrupt?
+	/*TODO: other to do? check interrupt?*/
 
 }
 
@@ -966,7 +966,7 @@ unsigned e132xs_get_reg(int regnum)
 		default:
 			if (regnum <= REG_SP_CONTENTS)
 			{
-				//TODO: add stack
+				/*TODO: add stack*/
 			}
 	}
 
@@ -995,7 +995,7 @@ void e132xs_set_reg(int regnum, unsigned val)
 		default:
 			if (regnum <= REG_SP_CONTENTS)
 			{
-				//TODO: add stack
+				/*TODO: add stack*/
 			}
 	}
 
@@ -1011,7 +1011,7 @@ void e132xs_set_irq_callback(int (*callback)(int irqline))
 
 const char *e132xs_info(void *context, int regnum)
 {
-	static char buffer[16][47+1]; // TODO: check the length!
+	static char buffer[16][47+1]; /* TODO: check the length!*/
 	static int which = 0;
 	e132xs_regs *r = context;
 
@@ -1111,7 +1111,7 @@ unsigned e132xs_dasm(char *buffer, unsigned pc)
 
 
 /* Opcodes */
-//TODO: Add the opcodes inline?
+/*TODO: Add the opcodes inline?*/
 
 void e132xs_chk(void)
 {
@@ -1135,9 +1135,9 @@ void e132xs_chk(void)
 		val2 = GET_G_REG(D_CODE);
 	}
 
-	//TODO: test it with Rs = PC and CHK, PC, PC
+	/*TODO: test it with Rs = PC and CHK, PC, PC*/
 
-	//if CHK, L0, L0 -> NOP, only in the debugger, here it's the same
+	/*if CHK, L0, L0 -> NOP, only in the debugger, here it's the same*/
 	if( (!(S_CODE == SR_CODE && !S_BIT) && (val2 > val1)) || ((S_CODE == SR_CODE && !S_BIT) && (val2 == 0)) )
 	{
 		UINT32 addr = get_trap_addr(RANGE_ERROR);
@@ -1154,16 +1154,16 @@ void e132xs_chk(void)
 
 void e132xs_movd(void)
 {
-	//Rd denotes PC
+	/*Rd denotes PC*/
 	if( D_CODE == PC_CODE && !D_BIT )
 	{
-		// RET instruction
+		/* RET instruction*/
 
 		unsigned char old_s, old_l;
-		UINT8 difference; //really it's 7 bits
+		UINT8 difference; /*really it's 7 bits*/
 
 		if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) )
-		{	//future expansion
+		{	/*future expansion*/
 			verboselog( 1, "Denoted PC or SR used in RET instruction @ %x\n", PC );
 		}
 		else
@@ -1195,8 +1195,8 @@ void e132xs_movd(void)
 
 			difference = GET_FP - ( ( SP & 0x1fc ) >> 2 );
 
-			// bit 6 of difference is sign
-			if( difference & 0x40 ) //else it's finished
+			/* bit 6 of difference is sign*/
+			if( difference & 0x40 ) /*else it's finished*/
 			{
 				do
 				{
@@ -1205,27 +1205,27 @@ void e132xs_movd(void)
 					SET_L_REG( ( SP & 0xfc ), READ_W( SP ) );
 
 					difference++;
-					difference = ((difference & 0x7f) + ((difference & 0x80) >> 7)) & 0x7f; //TODO: ok?
+					difference = ((difference & 0x7f) + ((difference & 0x80) >> 7)) & 0x7f; /*TODO: ok?*/
 
 				} while( !( difference & 0x40 ) );
 			}
 		}
 
-		//TODO: no 1!
+		/*TODO: no 1!*/
 		e132xs_ICount -= 1;
 	}
-	//Rd doesn't denote PC and Rs denotes SR
+	/*Rd doesn't denote PC and Rs denotes SR*/
 	else if( S_CODE == SR_CODE && !S_BIT )
 	{
 		SET_RD(0, NOINC);
 		SET_RD(0, INC);
 		SET_Z(1);
 		SET_N(0);
-		//SET_V(); //undefined
+		/*SET_V(); */ /*undefined*/
 
 		e132xs_ICount -= 2;
 	}
-	//Rd doesn't denote PC and Rs doesn't denote SR
+	/*Rd doesn't denote PC and Rs doesn't denote SR*/
 	else
 	{
 		UINT32 val1, val2;
@@ -1247,7 +1247,7 @@ void e132xs_movd(void)
 		tmp = COMBINE_U64_U32_U32(val1, val2);
 		SET_Z(tmp == 0 ? 1 : 0);
 		SET_N(SIGN_BIT(val1));
-		//SET_V(); //undefined
+		/*SET_V(); */ /*undefined*/
 
 		e132xs_ICount -= 2;
 	}
@@ -1259,7 +1259,7 @@ void e132xs_divu(void)
 	UINT32 dividend_low, dividend_high;
 	UINT32 divisor;
 
-	//TODO: can D_CODE be PC or SR?
+	/*TODO: can D_CODE be PC or SR?*/
 
 	if( S_CODE == D_CODE && S_CODE == (D_CODE + INC) )
 	{
@@ -1297,9 +1297,9 @@ void e132xs_divu(void)
 
 			if( divisor == 0 || dividend > 0xffffffff )
 			{
-				//Rd//Rdf -> undefined
-				//Z -> undefined
-				//N -> undefined
+				/*Rd*/ /*Rdf -> undefined*/
+				/*Z -> undefined*/
+				/*N -> undefined*/
 				UINT32 addr;
 				SET_V(1);
 				addr = get_trap_addr(RANGE_ERROR);
@@ -1330,7 +1330,7 @@ void e132xs_divs(void)
 	INT32 dividend_low, dividend_high;
 	INT32 divisor;
 
-	//TODO: can D_CODE be PC or SR?
+	/*TODO: can D_CODE be PC or SR?*/
 
 	if( S_CODE == D_CODE && S_CODE == (D_CODE + INC) )
 	{
@@ -1368,9 +1368,9 @@ void e132xs_divs(void)
 
 			if( divisor == 0 || dividend > 0xffffffff || (dividend_high & 0x80000000) )
 			{
-				//Rd//Rdf -> undefined
-				//Z -> undefined
-				//N -> undefined
+				/*Rd*/ /*Rdf -> undefined*/
+				/*Z -> undefined*/
+				/*N -> undefined*/
 				UINT32 addr;
 				SET_V(1);
 				addr = get_trap_addr(RANGE_ERROR);
@@ -1382,8 +1382,8 @@ void e132xs_divs(void)
 
 				quotient = dividend / divisor;
 				remainder = dividend % divisor;
-				//a non-zero remainder has the sign bit of the dividend
-				//TODO: add the above comment? isn't the dividend non-negative signed?
+				/*a non-zero remainder has the sign bit of the dividend*/
+				/*TODO: add the above comment? isn't the dividend non-negative signed?*/
 
 				SET_RD( remainder, NOINC );
 				SET_RD( quotient, INC );
@@ -1501,7 +1501,7 @@ void e132xs_sum(void)
 	}
 	else
 	{
-		if( S_CODE == SR_CODE ) //source denotes SR
+		if( S_CODE == SR_CODE ) /*source denotes SR*/
 			op1 = GET_C;
 		else
 			op1 = GET_G_REG(S_CODE);
@@ -1515,9 +1515,9 @@ void e132xs_sum(void)
 	op1 += const_val;
 	SET_RD(op1, NOINC);
 	SET_Z((op1 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op1)); //sign
-//	SET_V(); //TODO!
-//	SET_C(); //carry //TODO!
+	SET_N(SIGN_BIT(op1)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
+/*	SET_C(); */ /*carry //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -1532,7 +1532,7 @@ void e132xs_sums(void)
 	}
 	else
 	{
-		if( S_CODE == SR_CODE ) //source denotes SR
+		if( S_CODE == SR_CODE ) /*source denotes SR*/
 			op1 = GET_C;
 		else
 			op1 = GET_G_REG(S_CODE);
@@ -1543,8 +1543,8 @@ void e132xs_sums(void)
 	op1 += const_val;
 	SET_RD(op1, NOINC);
 	SET_Z((op1 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op1)); //sign
-//	SET_V(); //TODO!
+	SET_N(SIGN_BIT(op1)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
 
 	e132xs_ICount -= 1;
 
@@ -1565,7 +1565,7 @@ void e132xs_cmp(void)
 	}
 	else
 	{
-		if( S_CODE == SR_CODE ) //source denotes SR
+		if( S_CODE == SR_CODE ) /*source denotes SR*/
 			op1 = GET_C;
 		else
 			op1 = GET_G_REG(S_CODE);
@@ -1585,17 +1585,17 @@ void e132xs_cmp(void)
 	else
 		SET_Z(0);
 
-	if( (INT32) op2 < (INT32) op1 )	//TODO: should it be if( op2 < (INT32) op1 ) or is the one already implemented?
+	if( (INT32) op2 < (INT32) op1 )	/*TODO: should it be if( op2 < (INT32) op1 ) or is the one already implemented?*/
 		SET_N(1);
 	else
 		SET_N(0);
 
-//	SET_V(); //TODO!
+/*	SET_V(); */ /*TODO!*/
 
 	if( op2 < op1 )
-		SET_C(1); //borrow
+		SET_C(1); /*borrow*/
 	else
-		SET_C(0); //borrow
+		SET_C(0); /*borrow*/
 
 	e132xs_ICount -= 1;
 }
@@ -1666,7 +1666,7 @@ void e132xs_add(void)
 	}
 	else
 	{
-		if( S_CODE == SR_CODE ) //source denotes SR
+		if( S_CODE == SR_CODE ) /*source denotes SR*/
 			op1 = GET_C;
 		else
 			op1 = GET_G_REG(S_CODE);
@@ -1687,9 +1687,9 @@ void e132xs_add(void)
 	op2 += op1;
 	SET_RD(op2, NOINC);
 	SET_Z((op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
-//	SET_C(); //carry //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
+/*	SET_C(); */ /*carry //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -1704,7 +1704,7 @@ void e132xs_adds(void)
 	}
 	else
 	{
-		if( S_CODE == SR_CODE ) //source denotes SR
+		if( S_CODE == SR_CODE ) /*source denotes SR*/
 			op1 = GET_C;
 		else
 			op1 = GET_G_REG(S_CODE);
@@ -1722,8 +1722,8 @@ void e132xs_adds(void)
 	op2 += op1;
 	SET_RD(op2, NOINC);
 	SET_Z((op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
 
 	e132xs_ICount -= 1;
 
@@ -1862,7 +1862,7 @@ void e132xs_subc(void)
 	}
 	else
 	{
-		if( S_CODE != SR_CODE ) //source doesn't denote SR
+		if( S_CODE != SR_CODE ) /*source doesn't denote SR*/
 			op1 += GET_G_REG(S_CODE);
 	}
 
@@ -1878,9 +1878,9 @@ void e132xs_subc(void)
 	op2 -= op1;
 	SET_RD(op2, NOINC);
 	SET_Z(GET_Z & (op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
-//	SET_C(); //borrow //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
+/*	SET_C(); */ /*borrow //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -1914,7 +1914,7 @@ void e132xs_sub(void)
 	}
 	else
 	{
-		if( S_CODE == SR_CODE ) //source denotes SR
+		if( S_CODE == SR_CODE ) /*source denotes SR*/
 			op1 = GET_C;
 		else
 			op1 = GET_G_REG(S_CODE);
@@ -1935,9 +1935,9 @@ void e132xs_sub(void)
 	op2 -= op1;
 	SET_RD(op2, NOINC);
 	SET_Z((op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
-//	SET_C(); //borrow //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
+/*	SET_C(); */ /*borrow //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -1952,7 +1952,7 @@ void e132xs_subs(void)
 	}
 	else
 	{
-		if( S_CODE == SR_CODE ) //source denotes SR
+		if( S_CODE == SR_CODE ) /*source denotes SR*/
 			op1 = GET_C;
 		else
 			op1 = GET_G_REG(S_CODE);
@@ -1970,8 +1970,8 @@ void e132xs_subs(void)
 	op2 -= op1;
 	SET_RD(op2, NOINC);
 	SET_Z((op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
 
 	e132xs_ICount -= 1;
 
@@ -1993,7 +1993,7 @@ void e132xs_addc(void)
 	}
 	else
 	{
-		if( S_CODE != SR_CODE ) //source doesn't denote SR
+		if( S_CODE != SR_CODE ) /*source doesn't denote SR*/
 			op1 += GET_G_REG(S_CODE);
 	}
 
@@ -2009,9 +2009,9 @@ void e132xs_addc(void)
 	op2 += op1;
 	SET_RD(op2, NOINC);
 	SET_Z(GET_Z & (op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
-//	SET_C(); //carry //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
+/*	SET_C(); */ /*carry //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -2057,7 +2057,7 @@ void e132xs_neg(void)
 	}
 	else
 	{
-		if( S_CODE == SR_CODE ) //source denote SR
+		if( S_CODE == SR_CODE ) /*source denote SR*/
 			op1 = GET_C;
 		else
 			op1 = GET_G_REG(S_CODE);
@@ -2067,9 +2067,9 @@ void e132xs_neg(void)
 
 	SET_RD(op2, NOINC);
 	SET_Z(GET_Z & (op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
-//	SET_C(); //carry //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
+/*	SET_C(); */ /*carry //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -2084,7 +2084,7 @@ void e132xs_negs(void)
 	}
 	else
 	{
-		if( S_CODE == SR_CODE ) //source denotes SR
+		if( S_CODE == SR_CODE ) /*source denotes SR*/
 			op1 = GET_C;
 		else
 			op1 = GET_G_REG(S_CODE);
@@ -2094,12 +2094,12 @@ void e132xs_negs(void)
 
 	SET_RD(op2, NOINC);
 	SET_Z((op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
 
 	e132xs_ICount -= 1;
 
-	if( GET_V && S_CODE != 1 ) //trap doesn't occur when source is SR
+	if( GET_V && S_CODE != 1 ) /*trap doesn't occur when source is SR*/
 	{
 		UINT32 addr = get_trap_addr(RANGE_ERROR);
 		execute_trap(addr);
@@ -2126,17 +2126,17 @@ void e132xs_cmpi(void)
 	else
 		SET_Z(0);
 
-	if( (INT32) op2 < (INT32) op1 )	//TODO: should it be if( op2 < (INT32) op1 ) or is the one already implemented?
+	if( (INT32) op2 < (INT32) op1 )	/*TODO: should it be if( op2 < (INT32) op1 ) or is the one already implemented?*/
 		SET_N(1);
 	else
 		SET_N(0);
 
-//	SET_V(); //TODO!
+/*	SET_V(); */ /*TODO!*/
 
 	if( op2 < op1 )
-		SET_C(1); //borrow
+		SET_C(1); /*borrow*/
 	else
-		SET_C(0); //borrow
+		SET_C(0); /*borrow*/
 
 	e132xs_ICount -= 1;
 }
@@ -2199,9 +2199,9 @@ void e132xs_addi(void)
 	op2 += op1;
 	SET_RD(op2, NOINC);
 	SET_Z((op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
-//	SET_C(); //carry //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
+/*	SET_C(); */ /*carry //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -2227,8 +2227,8 @@ void e132xs_addsi(void)
 	op2 += op1;
 	SET_RD(op2, NOINC);
 	SET_Z((op2 == 0 ? 1: 0));
-	SET_N(SIGN_BIT(op2)); //sign
-//	SET_V(); //TODO!
+	SET_N(SIGN_BIT(op2)); /*sign*/
+/*	SET_V(); */ /*TODO!*/
 
 	e132xs_ICount -= 1;
 
@@ -2247,7 +2247,7 @@ void e132xs_cmpbi(void)
 	if( N_VALUE )
 	{
 		if( N_VALUE == 31 )
-			val1 = 0x7fffffff; //bit 31 = 0, others = 1
+			val1 = 0x7fffffff; /*bit 31 = 0, others = 1*/
 		else
 			val1 = (UINT32) immediate_value();
 	}
@@ -2282,7 +2282,7 @@ void e132xs_andni(void)
 	UINT32 op1, op2, ret;
 
 	if( N_VALUE == 31 )
-		op1 = ~0x7fffffff; //bit 31 = 0, others = 1
+		op1 = ~0x7fffffff; /*bit 31 = 0, others = 1*/
 	else
 		op1 = ~immediate_value();
 
@@ -2368,7 +2368,7 @@ void e132xs_shrdi(void)
 	SET_RD(low_order, INC);
 	SET_Z((val == 0 ? 1: 0));
 	SET_N(SIGN_BIT(high_order));
-//	SET_C(); //TODO!
+/*	SET_C(); */ /*TODO!*/
 
 	e132xs_ICount -= 2;
 }
@@ -2377,9 +2377,9 @@ void e132xs_shrd(void)
 {
 	UINT32 low_order, high_order;
 	UINT64 val;
-	unsigned int n = OP & 0x1f; //TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0
+	unsigned int n = OP & 0x1f; /*TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0*/
 
-	//RESULT UNDEFINED IF LS DENOTES THE SAME REGISTER AS LD OR LDF
+	/*RESULT UNDEFINED IF LS DENOTES THE SAME REGISTER AS LD OR LDF*/
 	if( S_CODE != D_CODE && S_CODE != (D_CODE + INC) )
 	{
 		high_order = GET_L_REG(D_CODE);
@@ -2396,7 +2396,7 @@ void e132xs_shrd(void)
 		SET_RD(low_order, INC);
 		SET_Z((val == 0 ? 1: 0));
 		SET_N(SIGN_BIT(high_order));
-//		SET_C(); //TODO!
+/*		SET_C(); */ /*TODO!*/
 	}
 
 	e132xs_ICount -= 2;
@@ -2405,7 +2405,7 @@ void e132xs_shrd(void)
 void e132xs_shr(void)
 {
 	UINT32 ret;
-	unsigned int n = OP & 0x1f; //TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0
+	unsigned int n = OP & 0x1f; /*TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0*/
 
 	ret = GET_L_REG(D_CODE);
 
@@ -2413,7 +2413,7 @@ void e132xs_shr(void)
 	SET_RD(ret, NOINC);
 	SET_Z((ret == 0 ? 1: 0));
 	SET_N(SIGN_BIT(ret));
-//	SET_C(); //??? //TODO!
+/*	SET_C(); */ /*??? //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -2448,7 +2448,7 @@ void e132xs_sardi(void)
 	SET_RD(low_order, INC);
 	SET_Z((val == 0 ? 1: 0));
 	SET_N(SIGN_BIT(high_order));
-//	SET_C(); //?? //TODO!
+/*	SET_C(); */ /*?? //TODO!*/
 
 	e132xs_ICount -= 2;
 }
@@ -2457,10 +2457,10 @@ void e132xs_sard(void)
 {
 	INT32 low_order, high_order;
 	INT64 val;
-	unsigned int n = OP & 0x1f; //TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0
+	unsigned int n = OP & 0x1f; /*TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0*/
 	int sign_bit;
 
-	//RESULT UNDEFINED IF LS DENOTES THE SAME REGISTER AS LD OR LDF
+	/*RESULT UNDEFINED IF LS DENOTES THE SAME REGISTER AS LD OR LDF*/
 	if( S_CODE != D_CODE && S_CODE != (D_CODE + INC) )
 	{
 		high_order = GET_L_REG(D_CODE);
@@ -2487,7 +2487,7 @@ void e132xs_sard(void)
 		SET_RD(low_order, INC);
 		SET_Z((val == 0 ? 1: 0));
 		SET_N(SIGN_BIT(high_order));
-//		SET_C(); //TODO!
+/*		SET_C(); */ /*TODO!*/
 	}
 
 	e132xs_ICount -= 2;
@@ -2496,7 +2496,7 @@ void e132xs_sard(void)
 void e132xs_sar(void)
 {
 	INT32 ret;
-	unsigned int n = OP & 0x1f; //TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0
+	unsigned int n = OP & 0x1f; /*TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0*/
 	int sign_bit;
 
 	ret = GET_L_REG(D_CODE);
@@ -2516,7 +2516,7 @@ void e132xs_sar(void)
 	SET_RD(ret, NOINC);
 	SET_Z((ret == 0 ? 1: 0));
 	SET_N(SIGN_BIT(ret));
-//	SET_C(); //TODO!
+/*	SET_C(); */ /*TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -2540,8 +2540,8 @@ void e132xs_shldi(void)
 	SET_RD(low_order, INC);
 	SET_Z((val == 0 ? 1: 0));
 	SET_N(SIGN_BIT(high_order));
-//	SET_V(); // = ~GET_N ? //TODO!
-//	SET_C(); //undefined
+/*	SET_V(); */ /* = ~GET_N ? //TODO!*/
+/*	SET_C(); */ /*undefined*/
 
 	e132xs_ICount -= 2;
 }
@@ -2550,9 +2550,9 @@ void e132xs_shld(void)
 {
 	UINT32 low_order, high_order;
 	UINT64 val;
-	unsigned int n = OP & 0x1f; //TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0
+	unsigned int n = OP & 0x1f; /*TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0*/
 
-	//RESULT UNDEFINED IF LS DENOTES THE SAME REGISTER AS LD OR LDF
+	/*RESULT UNDEFINED IF LS DENOTES THE SAME REGISTER AS LD OR LDF*/
 	if( S_CODE != D_CODE && S_CODE != (D_CODE + INC) )
 	{
 		high_order = GET_L_REG(D_CODE);
@@ -2569,8 +2569,8 @@ void e132xs_shld(void)
 		SET_RD(low_order, INC);
 		SET_Z((val == 0 ? 1: 0));
 		SET_N(SIGN_BIT(high_order));
-	//	SET_V(); // = ~GET_N ? //TODO!
-	//	SET_C(); //undefined
+	/*	SET_V(); */ /* = ~GET_N ? //TODO!*/
+	/*	SET_C(); */ /*undefined*/
 	}
 
 	e132xs_ICount -= 2;
@@ -2579,7 +2579,7 @@ void e132xs_shld(void)
 void e132xs_shl(void)
 {
 	UINT32 ret;
-	unsigned int n = OP & 0x1f; //TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0
+	unsigned int n = OP & 0x1f; /*TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0*/
 
 	ret = GET_L_REG(D_CODE);
 
@@ -2587,8 +2587,8 @@ void e132xs_shl(void)
 	SET_RD(ret, NOINC);
 	SET_Z((ret == 0 ? 1: 0));
 	SET_N(SIGN_BIT(ret));
-//	SET_V(); // = ~GET_N ? //TODO!
-//	SET_C(); //undefined
+/*	SET_V(); */ /* = ~GET_N ? //TODO!*/
+/*	SET_C(); */ /*undefined*/
 
 	e132xs_ICount -= 1;
 }
@@ -2623,11 +2623,11 @@ void e132xs_testlz(void)
 void e132xs_rol(void)
 {
 	UINT32 val;
-	unsigned int n = OP & 0x1f; //TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0
+	unsigned int n = OP & 0x1f; /*TODO: is it correct? documentation says bits 4..0 of source, but source uses bits are 3..0*/
 
 	val = GET_L_REG(D_CODE);
 
-	//TODO: if n = 0 skip it ?
+	/*TODO: if n = 0 skip it ?*/
 	while( n > 0 )
 	{
 		val = (val << 1) | ((val & 0x80000000) >> 31);
@@ -2636,13 +2636,13 @@ void e132xs_rol(void)
 
 	SET_Z((val == 0 ? 1: 0));
 	SET_N(SIGN_BIT(val));
-	//V -> undefined
-	//C -> undefined
+	/*V -> undefined*/
+	/*C -> undefined*/
 
 	e132xs_ICount -= 1;
 }
 
-//TODO: add trap error
+/*TODO: add trap error*/
 void e132xs_ldxx1(void)
 {
 	UINT32 load;
@@ -2658,27 +2658,27 @@ void e132xs_ldxx1(void)
 		switch( DD( next_op ) )
 		{
 			case 0:
-				// LDBS.A
+				/* LDBS.A*/
 				load = (INT8) READ_B(dis);
 				SET_RS( load, NOINC );
 
 				break;
 
 			case 1:
-				// LDBU.A
+				/* LDBU.A*/
 				load = (UINT8) READ_B(dis);
 				SET_RS( load, NOINC );
 
 				break;
 
 			case 2:
-				// LDHS.A
+				/* LDHS.A*/
 				if( dis & 1 )
 				{
 					load = (INT16) READ_HW(dis);
 					SET_RS( load, NOINC );
 				}
-				// LDHU.A
+				/* LDHU.A*/
 				else
 				{
 					load = (UINT16) READ_HW(dis);
@@ -2688,24 +2688,24 @@ void e132xs_ldxx1(void)
 				break;
 
 			case 3:
-				// LDD.IOA
+				/* LDD.IOA*/
 				if( ( dis & 2 ) && ( dis & 1 ) )
 				{
-					// used in an I/O address
+					/* used in an I/O address*/
 					load = READ_W(dis);
 					SET_RS( load, NOINC );
 					load = READ_W(dis + 4);
 					SET_RS( load, INC );
 
 				}
-				// LDW.IOA
+				/* LDW.IOA*/
 				else if( ( dis & 2 ) && !( dis & 1 ) )
 				{
-					// used in an I/O address
+					/* used in an I/O address*/
 					load = READ_W(dis);
 					SET_RS( load, NOINC );
 				}
-				// LDD.A
+				/* LDD.A*/
 				else if( !( dis & 2 ) && ( dis & 1 ) )
 				{
 					load = READ_W(dis);
@@ -2713,7 +2713,7 @@ void e132xs_ldxx1(void)
 					load = READ_W(dis + 4);
 					SET_RS( load, INC );
 				}
-				// LDW.A
+				/* LDW.A*/
 				else
 				{
 					load = READ_W(dis);
@@ -2728,7 +2728,7 @@ void e132xs_ldxx1(void)
 		switch( DD( next_op ) )
 		{
 			case 0:
-				// LDBS.D
+				/* LDBS.D*/
 				if( D_BIT )
 				{
 					load = (INT8) READ_B( GET_L_REG(D_CODE) + dis );
@@ -2742,7 +2742,7 @@ void e132xs_ldxx1(void)
 				break;
 
 			case 1:
-				// LDBU.D
+				/* LDBU.D*/
 				if( D_BIT )
 				{
 					load = (UINT8) READ_B( GET_L_REG(D_CODE) + dis );
@@ -2756,7 +2756,7 @@ void e132xs_ldxx1(void)
 				break;
 
 			case 2:
-				// LDHS.D
+				/* LDHS.D*/
 				if( dis & 1 )
 				{
 					if( D_BIT )
@@ -2769,7 +2769,7 @@ void e132xs_ldxx1(void)
 					}
 					SET_RS( load, NOINC );
 				}
-				// LDHU.D
+				/* LDHU.D*/
 				else
 				{
 					if( D_BIT )
@@ -2786,10 +2786,10 @@ void e132xs_ldxx1(void)
 				break;
 
 			case 3:
-				// LDD.IOD
+				/* LDD.IOD*/
 				if( ( dis & 2 ) && ( dis & 1 ) )
 				{
-					// used in an I/O address
+					/* used in an I/O address*/
 
 					if( D_BIT )
 					{
@@ -2811,12 +2811,12 @@ void e132xs_ldxx1(void)
 					}
 					SET_RS( load, INC );
 
-					e132xs_ICount -= 1; //extra cycle
+					e132xs_ICount -= 1; /*extra cycle*/
 				}
-				// LDW.IOD
+				/* LDW.IOD*/
 				else if( ( dis & 2 ) && !( dis & 1 ) )
 				{
-					// used in an I/O address
+					/* used in an I/O address*/
 
 					if( D_BIT )
 					{
@@ -2828,7 +2828,7 @@ void e132xs_ldxx1(void)
 					}
 					SET_RS( load, NOINC );
 				}
-				// LDD.D
+				/* LDD.D*/
 				else if( !( dis & 2 ) && ( dis & 1 ) )
 				{
 					if( D_BIT )
@@ -2851,9 +2851,9 @@ void e132xs_ldxx1(void)
 					}
 					SET_RS( load, INC );
 
-					e132xs_ICount -= 1; //extra cycle
+					e132xs_ICount -= 1; /*extra cycle*/
 				}
-				// LDW.D
+				/* LDW.D*/
 				else
 				{
 					if( D_BIT )
@@ -2894,7 +2894,7 @@ void e132xs_ldxx2(void)
 		switch( DD( next_op ) )
 		{
 			case 0:
-				// LDBS.N
+				/* LDBS.N*/
 				if( D_BIT )
 				{
 					load = (INT8) READ_B( GET_L_REG(D_CODE) );
@@ -2910,7 +2910,7 @@ void e132xs_ldxx2(void)
 				break;
 
 			case 1:
-				// LDBU.N
+				/* LDBU.N*/
 				if( D_BIT )
 				{
 					load = (UINT8) READ_B( GET_L_REG(D_CODE) );
@@ -2926,7 +2926,7 @@ void e132xs_ldxx2(void)
 				break;
 
 			case 2:
-				// LDHS.N
+				/* LDHS.N*/
 				if( dis & 1 )
 				{
 					if( D_BIT )
@@ -2941,7 +2941,7 @@ void e132xs_ldxx2(void)
 					}
 					SET_RS( load, NOINC );
 				}
-				// LDHU.N
+				/* LDHU.N*/
 				else
 				{
 					if( D_BIT )
@@ -2960,10 +2960,10 @@ void e132xs_ldxx2(void)
 				break;
 
 			case 3:
-				// LDW.S
+				/* LDW.S*/
 				if( ( dis & 2 ) && ( dis & 1 ) )
 				{
-					//TODO: other? read notes in the docs
+					/*TODO: other? read notes in the docs*/
 					if( D_BIT )
 					{
 						load = READ_W( GET_L_REG(D_CODE) );
@@ -2976,14 +2976,14 @@ void e132xs_ldxx2(void)
 					}
 					SET_RS( load, NOINC );
 
-					e132xs_ICount -= 2; //extra cycles
+					e132xs_ICount -= 2; /*extra cycles*/
 				}
-				// Reserved
+				/* Reserved*/
 				else if( ( dis & 2 ) && !( dis & 1 ) )
 				{
 					verboselog( 0, "- Reserved Load instruction @ %x\n", PC );
 				}
-				// LDD.N
+				/* LDD.N*/
 				else if( !( dis & 2 ) && ( dis & 1 ) )
 				{
 					if( D_BIT )
@@ -3000,9 +3000,9 @@ void e132xs_ldxx2(void)
 					}
 					SET_RS( load, NOINC );
 
-					e132xs_ICount -= 1; //extra cycle
+					e132xs_ICount -= 1; /*extra cycle*/
 				}
-				// LDW.N
+				/* LDW.N*/
 				else
 				{
 					if( D_BIT )
@@ -3026,7 +3026,7 @@ void e132xs_ldxx2(void)
 }
 
 
-//TODO: add trap error
+/*TODO: add trap error*/
 void e132xs_stxx1(void)
 {
 	UINT32 val;
@@ -3051,24 +3051,24 @@ void e132xs_stxx1(void)
 		switch( DD( next_op ) )
 		{
 			case 0:
-				// STBS.A
+				/* STBS.A*/
 				WRITE_B( dis, (INT8) val );
 
 				break;
 
 			case 1:
-				// STBU.A
+				/* STBU.A*/
 				WRITE_B( dis, (UINT8) val );
 
 				break;
 
 			case 2:
-				// STHS.A
+				/* STHS.A*/
 				if( dis & 1 )
 				{
 					WRITE_HW( dis, (INT16) val );
 				}
-				// STHU.A
+				/* STHU.A*/
 				else
 				{
 					WRITE_HW( dis, (UINT16) val );
@@ -3077,10 +3077,10 @@ void e132xs_stxx1(void)
 				break;
 
 			case 3:
-				// STD.IOA
+				/* STD.IOA*/
 				if( ( dis & 2 ) && ( dis & 1 ) )
 				{
-					// used in an I/O address
+					/* used in an I/O address*/
 					UINT32 val2;
 
 					if( S_BIT )
@@ -3095,15 +3095,15 @@ void e132xs_stxx1(void)
 					WRITE_W( dis, val );
 					WRITE_W( dis + 4, val2 );
 
-					e132xs_ICount -= 1; //extra cycle
+					e132xs_ICount -= 1; /*extra cycle*/
 				}
-				// STW.IOA
+				/* STW.IOA*/
 				else if( ( dis & 2 ) && !( dis & 1 ) )
 				{
-					// used in an I/O address
+					/* used in an I/O address*/
 					WRITE_W( dis, val );
 				}
-				// STD.A
+				/* STD.A*/
 				else if( !( dis & 2 ) && ( dis & 1 ) )
 				{
 					UINT32 val2;
@@ -3120,9 +3120,9 @@ void e132xs_stxx1(void)
 					WRITE_W( dis, val );
 					WRITE_W( dis + 4, val2 );
 
-					e132xs_ICount -= 1; //extra cycle
+					e132xs_ICount -= 1; /*extra cycle*/
 				}
-				// STW.A
+				/* STW.A*/
 				else
 				{
 					WRITE_W( dis, val );
@@ -3136,7 +3136,7 @@ void e132xs_stxx1(void)
 		switch( DD( next_op ) )
 		{
 			case 0:
-				// STBS.D
+				/* STBS.D*/
 				if( D_BIT )
 				{
 					WRITE_B( GET_L_REG(D_CODE) + dis, (INT8) val );
@@ -3149,7 +3149,7 @@ void e132xs_stxx1(void)
 				break;
 
 			case 1:
-				// STBU.D
+				/* STBU.D*/
 				if( D_BIT )
 				{
 					WRITE_B( GET_L_REG(D_CODE) + dis, (UINT8) val );
@@ -3162,7 +3162,7 @@ void e132xs_stxx1(void)
 				break;
 
 			case 2:
-				// STHS.D
+				/* STHS.D*/
 				if( dis & 1 )
 				{
 					if( D_BIT )
@@ -3174,7 +3174,7 @@ void e132xs_stxx1(void)
 						WRITE_HW( GET_G_REG(D_CODE) + dis, (INT16) val );
 					}
 				}
-				// STHU.D
+				/* STHU.D*/
 				else
 				{
 					if( D_BIT )
@@ -3190,10 +3190,10 @@ void e132xs_stxx1(void)
 				break;
 
 			case 3:
-				// STD.IOD
+				/* STD.IOD*/
 				if( ( dis & 2 ) && ( dis & 1 ) )
 				{
-					// used in an I/O address
+					/* used in an I/O address*/
 					UINT32 val2;
 
 					if( S_BIT )
@@ -3216,12 +3216,12 @@ void e132xs_stxx1(void)
 						WRITE_W( GET_G_REG(D_CODE) + dis + 4, val2 );
 					}
 
-					e132xs_ICount -= 1; //extra cycle
+					e132xs_ICount -= 1; /*extra cycle*/
 				}
-				// STW.IOD
+				/* STW.IOD*/
 				else if( ( dis & 2 ) && !( dis & 1 ) )
 				{
-					// used in an I/O address
+					/* used in an I/O address*/
 					if( D_BIT )
 					{
 						WRITE_W( GET_L_REG(D_CODE) + dis, val );
@@ -3231,7 +3231,7 @@ void e132xs_stxx1(void)
 						WRITE_W( GET_G_REG(D_CODE) + dis, val );
 					}
 				}
-				// STD.D
+				/* STD.D*/
 				else if( !( dis & 2 ) && ( dis & 1 ) )
 				{
 					UINT32 val2;
@@ -3256,9 +3256,9 @@ void e132xs_stxx1(void)
 						WRITE_W( GET_G_REG(D_CODE) + dis + 4, val2 );
 					}
 
-					e132xs_ICount -= 1; //extra cycle
+					e132xs_ICount -= 1; /*extra cycle*/
 				}
-				// STW.D
+				/* STW.D*/
 				else
 				{
 					if( D_BIT )
@@ -3318,24 +3318,24 @@ void e132xs_stxx2(void)
 		switch( DD( next_op ) )
 		{
 			case 0:
-				// STBS.N
+				/* STBS.N*/
 				WRITE_B( addr, (INT8) val );
 
 				break;
 
 			case 1:
-				// STBU.N
+				/* STBU.N*/
 				WRITE_B( addr, (UINT8) val );
 
 				break;
 
 			case 2:
-				// STHS.N
+				/* STHS.N*/
 				if( dis & 1 )
 				{
 					WRITE_HW( addr, (INT16) val );
 				}
-				// STHU.N
+				/* STHU.N*/
 				else
 				{
 					WRITE_HW( addr, (UINT16) val );
@@ -3344,19 +3344,19 @@ void e132xs_stxx2(void)
 				break;
 
 			case 3:
-				// STW.S
+				/* STW.S*/
 				if( ( dis & 2 ) && ( dis & 1 ) )
 				{
 					WRITE_W( addr, val );
 
-					e132xs_ICount -= 2; //extra cycles
+					e132xs_ICount -= 2; /*extra cycles*/
 				}
-				// Reserved
+				/* Reserved*/
 				else if( ( dis & 2 ) && !( dis & 1 ) )
 				{
 					verboselog( 0, "Reserved Store instruction @ %x\n", PC );
 				}
-				// STD.N
+				/* STD.N*/
 				else if( !( dis & 2 ) && ( dis & 1 ) )
 				{
 					UINT32 val2;
@@ -3373,9 +3373,9 @@ void e132xs_stxx2(void)
 					WRITE_W( addr, val );
 					WRITE_W( addr + 4, val2 );
 
-					e132xs_ICount -= 1; //extra cycle
+					e132xs_ICount -= 1; /*extra cycle*/
 				}
-				// STW.N
+				/* STW.N*/
 				else
 				{
 					WRITE_W( addr, val );
@@ -3406,7 +3406,7 @@ void e132xs_shri(void)
 	SET_RD(val, NOINC);
 	SET_Z((val == 0 ? 1: 0));
 	SET_N(SIGN_BIT(val));
-//	SET_C(); // 1 if( val & n ) ? //TODO!
+/*	SET_C(); */ /* 1 if( val & n ) ? //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -3440,7 +3440,7 @@ void e132xs_sari(void)
 	SET_RD(val, NOINC);
 	SET_Z((val == 0 ? 1: 0));
 	SET_N(SIGN_BIT(val));
-//	SET_C(); // 1 if( val & n ) ? //TODO!
+/*	SET_C(); */ /* 1 if( val & n ) ? //TODO!*/
 
 	e132xs_ICount -= 1;
 }
@@ -3461,9 +3461,9 @@ void e132xs_shli(void)
 	val <<= N_VALUE;
 	SET_RD(val, NOINC);
 	SET_Z((val == 0 ? 1: 0));
-	SET_N(SIGN_BIT(val)); //sign
-//	SET_V(); // = ~GET_N ? //TODO!
-//	SET_C(); //undefined
+	SET_N(SIGN_BIT(val)); /*sign*/
+/*	SET_V(); */ /* = ~GET_N ? //TODO!*/
+/*	SET_C(); */ /*undefined*/
 
 	e132xs_ICount -= 1;
 }
@@ -3475,7 +3475,7 @@ void e132xs_mulu(void)
 
 	op1 = op2 = 0;
 
-	//PC or SR aren't denoted, else result is undefined
+	/*PC or SR aren't denoted, else result is undefined*/
 	if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) || (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
 		verboselog( 1, "Denoted PC or SR in MULU instruction @ x\n", PC );
@@ -3507,9 +3507,9 @@ void e132xs_mulu(void)
 		SET_RD(high_order, NOINC);
 		SET_RD(low_order, INC);
 		SET_Z((double_word == 0 ? 1: 0));
-		SET_N(SIGN_BIT(high_order)); //sign
-	//	SET_V(); //undefined
-	//	SET_C(); //undefined
+		SET_N(SIGN_BIT(high_order)); /*sign*/
+	/*	SET_V(); */ /*undefined*/
+	/*	SET_C(); */ /*undefined*/
 	}
 
 	if( op1 <= 0xffff  && op2 <= 0xffff )
@@ -3525,7 +3525,7 @@ void e132xs_muls(void)
 
 	op1 = op2 = 0;
 
-	//PC or SR aren't denoted, else result is undefined
+	/*PC or SR aren't denoted, else result is undefined*/
 	if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) || (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
 		verboselog( 1, "Denoted PC or SR in MULS instruction @ x\n", PC );
@@ -3557,9 +3557,9 @@ void e132xs_muls(void)
 		SET_RD(high_order, NOINC);
 		SET_RD(low_order, INC);
 		SET_Z((double_word == 0 ? 1: 0));
-		SET_N(SIGN_BIT(high_order)); //sign
-	//	SET_V(); //undefined
-	//	SET_C(); //undefined
+		SET_N(SIGN_BIT(high_order)); /*sign*/
+	/*	SET_V(); */ /*undefined*/
+	/*	SET_C(); */ /*undefined*/
 	}
 
 	if( ( op1 >= 0xffff8000 && op1 <= 0x7fff ) && ( op2 >= 0xffff8000 && op2 <= 0x7fff ) )
@@ -3578,29 +3578,29 @@ void e132xs_set(void)
 	}
 	else if( D_CODE == SR_CODE && !D_BIT )
 	{
-		//TODO: add fetch opcode (when is there the pipeline?)
+		/*TODO: add fetch opcode (when is there the pipeline?)*/
 
-		//TODO: no 1!
+		/*TODO: no 1!*/
 		e132xs_ICount -= 1;
 	}
 	else
 	{
 		switch( n )
 		{
-			// SETADR
+			/* SETADR*/
 			case 0:
 			{
 				UINT32 val;
 				val =  (SP & 0xfffffe00) | (GET_FP << 2);
 
-				//plus carry into bit 9
+				/*plus carry into bit 9*/
 				val += (((SP & 0x100) && !SIGN_BIT(SR)) ? 1 : 0);
 
 				SET_RD(val, NOINC);
 
 				break;
 			}
-			// Reserved
+			/* Reserved*/
 			case 1:
 			case 16:
 			case 17:
@@ -3608,7 +3608,7 @@ void e132xs_set(void)
 				verboselog( 0, "Used reserved N value (%d) in e132xs_set @ %x\n", n, PC );
 				break;
 
-			// SETxx
+			/* SETxx*/
 			case 2:
 				SET_RD(1, NOINC);
 				break;
@@ -3925,7 +3925,7 @@ void e132xs_mul(void)
 
 	op1 = op2 = 0;
 
-	//PC or SR aren't denoted, else result is undefined
+	/*PC or SR aren't denoted, else result is undefined*/
 	if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) || (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
 		verboselog( 1, "Denoted PC or SR in MUL instruction @ x\n", PC );
@@ -3950,13 +3950,13 @@ void e132xs_mul(void)
 			op2 = GET_G_REG(D_CODE);
 		}
 
-		single_word = (op1 * op2) & 0xffffffff; //only the low-order word is taken
+		single_word = (op1 * op2) & 0xffffffff; /*only the low-order word is taken*/
 
 		SET_RD(single_word, NOINC);
 		SET_Z((single_word == 0 ? 1: 0));
-		SET_N(SIGN_BIT(single_word)); //sign
-	//	SET_V(); //undefined
-	//	SET_C(); //undefined
+		SET_N(SIGN_BIT(single_word)); /*sign*/
+	/*	SET_V(); */ /*undefined*/
+	/*	SET_C(); */ /*undefined*/
 	}
 
 	if( ( op1 >= 0xffff8000 && op1 <= 0x7fff ) && ( op2 >= 0xffff8000 && op2 <= 0x7fff ) )
@@ -4023,7 +4023,7 @@ void e132xs_fcvtd(void)
 
 void e132xs_extend(void)
 {
-	//TODO: add locks, overflow error and other things
+	/*TODO: add locks, overflow error and other things*/
 	UINT16 ext_opcode;
 	UINT32 vals, vald;
 
@@ -4035,7 +4035,7 @@ void e132xs_extend(void)
 
 	switch( ext_opcode )
 	{
-		// signed or unsigned multiplication, single word product
+		/* signed or unsigned multiplication, single word product*/
 		case EMUL:
 		{
 			UINT32 result;
@@ -4045,7 +4045,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// unsigned multiplication, double word product
+		/* unsigned multiplication, double word product*/
 		case EMULU:
 		{
 			UINT64 result;
@@ -4058,7 +4058,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// signed multiplication, double word product
+		/* signed multiplication, double word product*/
 		case EMULS:
 		{
 			INT64 result;
@@ -4071,7 +4071,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// signed multiply/add, single word product sum
+		/* signed multiply/add, single word product sum*/
 		case EMAC:
 		{
 			INT32 result;
@@ -4081,7 +4081,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// signed multiply/add, double word product sum
+		/* signed multiply/add, double word product sum*/
 		case EMACD:
 		{
 			INT64 result;
@@ -4095,7 +4095,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// signed multiply/substract, single word product difference
+		/* signed multiply/substract, single word product difference*/
 		case EMSUB:
 		{
 			INT32 result;
@@ -4105,7 +4105,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// signed multiply/substract, double word product difference
+		/* signed multiply/substract, double word product difference*/
 		case EMSUBD:
 		{
 			INT64 result;
@@ -4119,7 +4119,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// signed half-word multiply/add, single word product sum
+		/* signed half-word multiply/add, single word product sum*/
 		case EHMAC:
 		{
 			INT32 result;
@@ -4129,7 +4129,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// signed half-word multiply/add, double word product sum
+		/* signed half-word multiply/add, double word product sum*/
 		case EHMACD:
 		{
 			INT64 result;
@@ -4143,7 +4143,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// half-word complex multiply
+		/* half-word complex multiply*/
 		case EHCMULD:
 		{
 			UINT32 result;
@@ -4156,7 +4156,7 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// half-word complex multiply/add
+		/* half-word complex multiply/add*/
 		case EHCMACD:
 		{
 			UINT32 result;
@@ -4169,8 +4169,8 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// half-word (complex) add/substract
-		// Ls is not used and should denote the same register as Ld
+		/* half-word (complex) add/substract*/
+		/* Ls is not used and should denote the same register as Ld*/
 		case EHCSUMD:
 		{
 			UINT32 result;
@@ -4185,8 +4185,8 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// half-word (complex) add/substract with fixed point adjustment
-		// Ls is not used and should denote the same register as Ld
+		/* half-word (complex) add/substract with fixed point adjustment*/
+		/* Ls is not used and should denote the same register as Ld*/
 		case EHCFFTD:
 		{
 			UINT32 result;
@@ -4201,8 +4201,8 @@ void e132xs_extend(void)
 
 			break;
 		}
-		// half-word (complex) add/substract with fixed point adjustment and shift
-		// Ls is not used and should denote the same register as Ld
+		/* half-word (complex) add/substract with fixed point adjustment and shift*/
+		/* Ls is not used and should denote the same register as Ld*/
 		case EHCFFTSD:
 		{
 			UINT32 result;
@@ -4222,7 +4222,7 @@ void e132xs_extend(void)
 			break;
 	}
 
-	e132xs_ICount -= 1; //TODO: with the latency it can change
+	e132xs_ICount -= 1; /*TODO: with the latency it can change*/
 }
 
 void e132xs_do(void)
@@ -4407,7 +4407,7 @@ void e132xs_dbnv(void)
 		e132xs_ICount -= 1;
 }
 
-void e132xs_dbe(void) //or DBZ
+void e132xs_dbe(void) /*or DBZ*/
 {
 	if( GET_Z )
 		execute_dbr(get_pcrel());
@@ -4415,7 +4415,7 @@ void e132xs_dbe(void) //or DBZ
 		e132xs_ICount -= 1;
 }
 
-void e132xs_dbne(void) //or DBNZ
+void e132xs_dbne(void) /*or DBNZ*/
 {
 	if( !GET_Z )
 		execute_dbr(get_pcrel());
@@ -4423,7 +4423,7 @@ void e132xs_dbne(void) //or DBNZ
 		e132xs_ICount -= 1;
 }
 
-void e132xs_dbc(void) //or DBST
+void e132xs_dbc(void) /*or DBST*/
 {
 	if( GET_C )
 		execute_dbr(get_pcrel());
@@ -4431,7 +4431,7 @@ void e132xs_dbc(void) //or DBST
 		e132xs_ICount -= 1;
 }
 
-void e132xs_dbnc(void) //or DBHE
+void e132xs_dbnc(void) /*or DBHE*/
 {
 	if( !GET_C )
 		execute_dbr(get_pcrel());
@@ -4455,7 +4455,7 @@ void e132xs_dbht(void)
 		e132xs_ICount -= 1;
 }
 
-void e132xs_dbn(void) //or DBLT
+void e132xs_dbn(void) /*or DBLT*/
 {
 	if( GET_N )
 		execute_dbr(get_pcrel());
@@ -4463,7 +4463,7 @@ void e132xs_dbn(void) //or DBLT
 		e132xs_ICount -= 1;
 }
 
-void e132xs_dbnn(void) //or DBGE
+void e132xs_dbnn(void) /*or DBGE*/
 {
 	if( !GET_N )
 		execute_dbr(get_pcrel());
@@ -4494,27 +4494,27 @@ void e132xs_dbr(void)
 
 void e132xs_frame(void)
 {
-	//TODO: check the bounds?
+	/*TODO: check the bounds?*/
 
-	UINT8 difference; //really it's 7 bits
+	UINT8 difference; /*really it's 7 bits*/
 
 	SET_FP((GET_FP - S_CODE));
 
 	if( D_CODE )
 		SET_FL( D_CODE );
 	else
-		SET_FL( 16 ); //when Ld is L0
+		SET_FL( 16 ); /*when Ld is L0*/
 
 	SET_M( 0 );
 
-	//TODO: SP uses bits 8..0 as in the doc or 7..2 ?
+	/*TODO: SP uses bits 8..0 as in the doc or 7..2 ?*/
 	if( GET_FL )
 		difference = ( SP & 0x1fc ) + ( 64 - 10 ) - ( GET_FP + GET_FL );
 	else
 		difference = ( SP & 0x1fc ) + ( 64 - 10 ) - ( GET_FP + 16 );
 
-	// bit 6 of difference is sign
-	if( difference & 0x40 ) //else it's finished
+	/* bit 6 of difference is sign*/
+	if( difference & 0x40 ) /*else it's finished*/
 	{
 		unsigned char tmp_flag;
 
@@ -4536,7 +4536,7 @@ void e132xs_frame(void)
 		}
 	}
 
-	//TODO: no 1!
+	/*TODO: no 1!*/
 	e132xs_ICount -= 1;
 }
 
@@ -4544,7 +4544,7 @@ void e132xs_call(void)
 {
 	INT32 const_val;
 
-	//TODO: add -> bit 0 of const must be 0 ?
+	/*TODO: add -> bit 0 of const must be 0 ?*/
 	const_val = get_const();
 
 	verboselog( 0, "Immediate value for CALL: %04x\n", const_val );
@@ -4575,9 +4575,9 @@ void e132xs_call(void)
 	PPC = PC;
 	PC = const_val;
 
-	//TODO: add interrupt locks, errors, ....
+	/*TODO: add interrupt locks, errors, ....*/
 
-	//TODO: no 1!
+	/*TODO: no 1!*/
 	e132xs_ICount -= 1;
 }
 
@@ -4597,7 +4597,7 @@ void e132xs_bnv(void)
 		e132xs_ICount -= 1;
 }
 
-void e132xs_be(void) //or BZ
+void e132xs_be(void) /*or BZ*/
 {
 	if( GET_Z )
 		execute_br(get_pcrel());
@@ -4605,7 +4605,7 @@ void e132xs_be(void) //or BZ
 		e132xs_ICount -= 1;
 }
 
-void e132xs_bne(void) //or BNZ
+void e132xs_bne(void) /*or BNZ*/
 {
 	if( !GET_Z )
 		execute_br(get_pcrel());
@@ -4613,7 +4613,7 @@ void e132xs_bne(void) //or BNZ
 		e132xs_ICount -= 1;
 }
 
-void e132xs_bc(void) //or BST
+void e132xs_bc(void) /*or BST*/
 {
 	if( GET_C )
 		execute_br(get_pcrel());
@@ -4621,7 +4621,7 @@ void e132xs_bc(void) //or BST
 		e132xs_ICount -= 1;
 }
 
-void e132xs_bnc(void) //or BHE
+void e132xs_bnc(void) /*or BHE*/
 {
 	if( !GET_C )
 		execute_br(get_pcrel());
@@ -4645,7 +4645,7 @@ void e132xs_bht(void)
 		e132xs_ICount -= 1;
 }
 
-void e132xs_bn(void) //or BLT
+void e132xs_bn(void) /*or BLT*/
 {
 	if( GET_N )
 		execute_br(get_pcrel());
@@ -4653,7 +4653,7 @@ void e132xs_bn(void) //or BLT
 		e132xs_ICount -= 1;
 }
 
-void e132xs_bnn(void) //or BGE
+void e132xs_bnn(void) /*or BGE*/
 {
 	if( !GET_N )
 		execute_br(get_pcrel());
@@ -4687,8 +4687,8 @@ void e132xs_trap(void)
 	unsigned int code;
 	UINT32 addr;
 
-	addr = 0xffffff00 | (OP & 0xfc); //TODO: what do i need to use? 0xffffff00 or entry_point or GET_TRAP_ADDR ?
-	//TODO: what is the trapno ?
+	addr = 0xffffff00 | (OP & 0xfc); /*TODO: what do i need to use? 0xffffff00 or entry_point or GET_TRAP_ADDR ?*/
+	/*TODO: what is the trapno ?*/
 	code = ((OP & 0x300) >> 6) | (OP & 0x03);
 
 	switch( code )

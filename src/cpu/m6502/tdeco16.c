@@ -119,7 +119,7 @@ OP(13) { int tmp; m6502_ICount -= 3; RD_IMM;
 	if (DECO16_VERBOSE)
 		logerror("%04x: OP13 %02x\n",activecpu_get_pc(),tmp);
 
-//bank select control?
+/*bank select control?*/
 
 	  			} /*  */
 #define deco16_33 m6502_33 								/* 2 ILL */
@@ -191,9 +191,9 @@ OP(67) {
 	int tmp; m6502_ICount -= 2; RD_IMM;
 	m6502.a=cpu_readport16(0);
 
-//	logerror("%04x: VBL (0x67)\n",activecpu_get_pc());
+/*	logerror("%04x: VBL (0x67)\n",activecpu_get_pc());*/
 
-// really - wait for status?
+/* really - wait for status?*/
 
 } /*  */
 OP(87) { int tmp; m6502_ICount -= 3; RD_IMM;
@@ -277,12 +277,12 @@ OP(0b) { int tmp; m6502_ICount -= 3; RD_IMM;
 OP(4b) { int tmp; m6502_ICount -= 3; RD_IMM;
 	logerror("%04x: OP4B %02x\n",activecpu_get_pc(),tmp);
 
-//	m6502.a=cpu_readport16(0);
+/*	m6502.a=cpu_readport16(0);*/
 
-//tilt??
+/*tilt??*/
 
-//VBL on expr-raider
-//VBL on boomrang (bit 2)
+/*VBL on expr-raider*/
+/*VBL on boomrang (bit 2)*/
 
 	  			}
 #define deco16_6b m6502_6b 								/* 2 ILL */
@@ -371,7 +371,7 @@ OP(8f) { int tmp; m6502_ICount -= 3; RD_IMM;
 
 	cpu_writeport16(0,tmp);
 
-//swap bank in/out
+/*swap bank in/out*/
 
 	  			} /*  */
 #define deco16_af m6502_af								/* 5 BBS2 ZPG */

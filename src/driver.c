@@ -2670,7 +2670,7 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( angelkds )	/* 833-6599 (c) 1988 Sega / Nasco? */
 
 	/* Sega System 16 games */
-	// Not working
+	/* Not working */
 	DRIVER( alexkidd )	/* (c) 1986 (protected) */
 	DRIVER( aliensya )	/* (c) 1987 (protected) */
 	DRIVER( aliensyb )	/* (c) 1987 (protected) */
@@ -2718,7 +2718,7 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( toutrun )	/* (protected) */
 	DRIVER( toutruna )	/* (protected) */
 
-	// Working
+	/* Working */
 	DRIVER( aburner )	/* (c) 1987 */
 	DRIVER( aburner2 )  /* (c) 1987 */
 	DRIVER( alexkida )	/* (c) 1986 */

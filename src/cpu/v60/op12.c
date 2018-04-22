@@ -78,13 +78,13 @@ UINT8 f12Flag1, f12Flag2;
 
 UINT8 if12;
 
-// Decode the first operand of the instruction and prepare
-// writing to the second operand.
+/* Decode the first operand of the instruction and prepare*/
+/* writing to the second operand.*/
 void F12DecodeFirstOperand(UINT32 (*DecodeOp1)(void), UINT8 dim1)
 {
 	if12 = OpRead8(PC + 1);
 
-	// Check if F1 or F2
+	/* Check if F1 or F2*/
 	if (if12 & 0x80)
 	{
 		modDim = dim1;
@@ -96,7 +96,7 @@ void F12DecodeFirstOperand(UINT32 (*DecodeOp1)(void), UINT8 dim1)
 	}
 	else
 	{
-		// Check D flag
+		/* Check D flag*/
 		if (if12 & 0x20)
 		{
 			modDim = dim1;
@@ -140,7 +140,7 @@ void F12WriteSecondOperand(UINT8 dim2)
 {
 	modDim = dim2;
 
-	// Check if F1 or F2
+	/* Check if F1 or F2*/
 	if (if12 & 0x80)
 	{
 		modM = if12 & 0x20;
@@ -150,7 +150,7 @@ void F12WriteSecondOperand(UINT8 dim2)
 	}
 	else
 	{
-		// Check D flag
+		/* Check D flag*/
 		if (if12 & 0x20)
 		{
 			switch (dim2)
@@ -180,12 +180,12 @@ void F12WriteSecondOperand(UINT8 dim2)
 
 
 
-// Decode both format 1/2 operands
+/* Decode both format 1/2 operands*/
 void F12DecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*DecodeOp2)(void), UINT8 dim2)
 {
 	UINT8 _if12 = OpRead8(PC + 1);
 
-	// Check if F1 or F2
+	/* Check if F1 or F2*/
 	if (_if12 & 0x80)
 	{
 		modDim = dim1;
@@ -204,7 +204,7 @@ void F12DecodeOperands(UINT32 (*DecodeOp1)(void), UINT8 dim1, UINT32 (*DecodeOp2
 	}
 	else
 	{
-		// Check D flag
+		/* Check D flag*/
 		if (_if12 & 0x20)
 		{
 			if (DecodeOp2==ReadAMAddress)
@@ -423,7 +423,7 @@ UINT32 opCHKAR(void)
 {
 	F12DecodeOperands(ReadAM,0,ReadAM,0);
 
-	// No MMU and memory permissions yet @@@
+	/* No MMU and memory permissions yet @@@*/
 	_Z = 1;
 	_CY = 0;
 	_S = 0;
@@ -435,7 +435,7 @@ UINT32 opCHKAW(void)
 {
 	F12DecodeOperands(ReadAM,0,ReadAM,0);
 
-	// No MMU and memory permissions yet @@@
+	/* No MMU and memory permissions yet @@@*/
 	_Z = 1;
 	_CY = 0;
 	_S = 0;
@@ -447,7 +447,7 @@ UINT32 opCHKAE(void)
 {
 	F12DecodeOperands(ReadAM,0,ReadAM,0);
 
-	// No MMU and memory permissions yet @@@
+	/* No MMU and memory permissions yet @@@*/
 	_Z = 1;
 	_CY = 0;
 	_S = 0;
@@ -785,14 +785,14 @@ UINT32 opLDTASK(void)
 
 	v60ReloadStack();
 
-	// 31 registers supported, _not_ 32
+	/* 31 registers supported, _not_ 32*/
 	for(i=0; i<31; i++)
 		if(f12Op1 & (1<<i)) {
 			v60.reg[i] = MemRead32(f12Op2);
 			f12Op2 += 4;
 		}
 
-	// #### Ignore the virtual addressing crap.
+	/* #### Ignore the virtual addressing crap.*/
 
 	F12END();
 }
@@ -905,8 +905,8 @@ UINT32 opMOVTHB(void)
 	F12DecodeFirstOperand(ReadAM,1);
 	modWriteValB = (UINT8)(f12Op1&0xFF);
 
-	// Check for overflow: the truncated bits must match the sign
-	//  of the result, otherwise overflow
+	/* Check for overflow: the truncated bits must match the sign*/
+	/*  of the result, otherwise overflow*/
 	if (((modWriteValB&0x80)==0x80 && ((f12Op1&0xFF00)==0xFF00)) ||
 		  ((modWriteValB&0x80)==0 && ((f12Op1&0xFF00)==0x0000)))
 		_OV = 0;
@@ -922,8 +922,8 @@ UINT32 opMOVTWB(void)
 	F12DecodeFirstOperand(ReadAM,2);
 	modWriteValB = (UINT8)(f12Op1&0xFF);
 
-	// Check for overflow: the truncated bits must match the sign
-	//  of the result, otherwise overflow
+	/* Check for overflow: the truncated bits must match the sign*/
+	/*  of the result, otherwise overflow*/
 	if (((modWriteValB&0x80)==0x80 && ((f12Op1&0xFFFFFF00)==0xFFFFFF00)) ||
 		  ((modWriteValB&0x80)==0 && ((f12Op1&0xFFFFFF00)==0x00000000)))
 		_OV = 0;
@@ -939,8 +939,8 @@ UINT32 opMOVTWH(void)
 	F12DecodeFirstOperand(ReadAM,2);
 	modWriteValH = (UINT16)(f12Op1&0xFFFF);
 
-	// Check for overflow: the truncated bits must match the sign
-	//  of the result, otherwise overflow
+	/* Check for overflow: the truncated bits must match the sign*/
+	/*  of the result, otherwise overflow*/
 	if (((modWriteValH&0x8000)==0x8000 && ((f12Op1&0xFFFF0000)==0xFFFF0000)) ||
 		  ((modWriteValH&0x8000)==0 && ((f12Op1&0xFFFF0000)==0x00000000)))
 		_OV = 0;
@@ -984,7 +984,7 @@ UINT32 opMULB(void)
 
 	F12LOADOP2BYTE();
 
-	// @@@ OV not set!!
+	/* @@@ OV not set!!*/
 	tmp=(INT8)appb * (INT32)(INT8)f12Op1;
 	appb = tmp;
 	_Z = (appb == 0);
@@ -1003,7 +1003,7 @@ UINT32 opMULH(void)
 
 	F12LOADOP2HALF();
 
-	// @@@ OV not set!!
+	/* @@@ OV not set!!*/
 	tmp=(INT16)apph * (INT32)(INT16)f12Op1;
 	apph = tmp;
 	_Z = (apph == 0);
@@ -1022,7 +1022,7 @@ UINT32 opMULW(void)
 
 	F12LOADOP2WORD();
 
-	// @@@ OV not set!!
+	/* @@@ OV not set!!*/
 	tmp=(INT32)appw * (INT64)(INT32)f12Op1;
 	appw = tmp;
 	_Z = (appw == 0);
@@ -1041,7 +1041,7 @@ UINT32 opMULUB(void)
 
 	F12LOADOP2BYTE();
 
-	// @@@ OV not set!!
+	/* @@@ OV not set!!*/
 	tmp = appb * (UINT8)f12Op1;
 	appb = tmp;
 	_Z = (appb == 0);
@@ -1060,7 +1060,7 @@ UINT32 opMULUH(void)
 
 	F12LOADOP2HALF();
 
-	// @@@ OV not set!!
+	/* @@@ OV not set!!*/
 	tmp=apph * (UINT16)f12Op1;
 	apph = tmp;
 	_Z = (apph == 0);
@@ -1079,7 +1079,7 @@ UINT32 opMULUW(void)
 
 	F12LOADOP2WORD();
 
-	// @@@ OV not set!!
+	/* @@@ OV not set!!*/
 	tmp=(UINT64)appw * (UINT64)f12Op1;
 	appw = tmp;
 	_Z = (appw == 0);
@@ -1626,7 +1626,7 @@ UINT32 opSETF(void)
 {
 	F12DecodeFirstOperand(ReadAM,0);
 
-	// Normalize the flags
+	/* Normalize the flags*/
 	NORMALIZEFLAGS();
 
 	switch (f12Op1 & 0xF)
@@ -1712,7 +1712,7 @@ UINT32 opSETF(void)
 }
 */
 
-// During the shift, the overflow is set if the sign bit changes at any point during the shift
+/* During the shift, the overflow is set if the sign bit changes at any point during the shift*/
 #define SHIFTLEFT_OV(val, count, bitsize) \
 {\
 	UINT32 tmp; \
@@ -1751,7 +1751,7 @@ UINT32 opSHAB(void)
 
 	count=(INT8)(f12Op1&0xFF);
 
-	// Special case: destination unchanged, flags set
+	/* Special case: destination unchanged, flags set*/
 	if (count == 0)
 	{
 		_CY = _OV = 0;
@@ -1761,16 +1761,16 @@ UINT32 opSHAB(void)
 	{
 		SHIFTLEFT_OV(appb, count, 8);
 
-		// @@@ Undefined what happens to CY when count >= bitsize
+		/* @@@ Undefined what happens to CY when count >= bitsize*/
 		SHIFTLEFT_CY(appb, count, 8);
 
-		// do the actual shift...
+		/* do the actual shift...*/
 		if (count >= 8)
 			appb = 0;
 		else
 			appb <<= count;
 
-		// and set zero and sign
+		/* and set zero and sign*/
 		SetSZPF_Byte(appb);
 	}
 	else
@@ -1788,7 +1788,7 @@ UINT32 opSHAB(void)
 		SetSZPF_Byte(appb);
 	}
 
-//	printf("SHAB: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appb, _CY, _Z, _OV, _S);
+/*	printf("SHAB: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appb, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2BYTE();
 	F12END();
@@ -1805,7 +1805,7 @@ UINT32 opSHAH(void)
 
 	count=(INT8)(f12Op1&0xFF);
 
-	// Special case: destination unchanged, flags set
+	/* Special case: destination unchanged, flags set*/
 	if (count == 0)
 	{
 		_CY = _OV = 0;
@@ -1815,16 +1815,16 @@ UINT32 opSHAH(void)
 	{
 		SHIFTLEFT_OV(apph, count, 16);
 
-		// @@@ Undefined what happens to CY when count >= bitsize
+		/* @@@ Undefined what happens to CY when count >= bitsize*/
 		SHIFTLEFT_CY(apph, count, 16);
 
-		// do the actual shift...
+		/* do the actual shift...*/
 		if (count >= 16)
 			apph = 0;
 		else
 			apph <<= count;
 
-		// and set zero and sign
+		/* and set zero and sign*/
 		SetSZPF_Word(apph);
 	}
 	else
@@ -1842,7 +1842,7 @@ UINT32 opSHAH(void)
 		SetSZPF_Word(apph);
 	}
 
-//	printf("SHAH: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, apph, _CY, _Z, _OV, _S);
+/*	printf("SHAH: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, apph, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2HALF();
 	F12END();
@@ -1859,7 +1859,7 @@ UINT32 opSHAW(void)
 
 	count=(INT8)(f12Op1&0xFF);
 
-	// Special case: destination unchanged, flags set
+	/* Special case: destination unchanged, flags set*/
 	if (count == 0)
 	{
 		_CY = _OV = 0;
@@ -1869,16 +1869,16 @@ UINT32 opSHAW(void)
 	{
 		SHIFTLEFT_OV(appw, count, 32);
 
-		// @@@ Undefined what happens to CY when count >= bitsize
+		/* @@@ Undefined what happens to CY when count >= bitsize*/
 		SHIFTLEFT_CY(appw, count, 32);
 
-		// do the actual shift...
+		/* do the actual shift...*/
 		if (count >= 32)
 			appw = 0;
 		else
 			appw <<= count;
 
-		// and set zero and sign
+		/* and set zero and sign*/
 		SetSZPF_Long(appw);
 	}
 	else
@@ -1896,7 +1896,7 @@ UINT32 opSHAW(void)
 		SetSZPF_Long(appw);
 	}
 
-//	printf("SHAW: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, appw, _CY, _Z, _OV, _S);
+/*	printf("SHAW: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, appw, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2WORD();
 	F12END();
@@ -1916,36 +1916,36 @@ UINT32 opSHLB(void) /* TRUSTED */
 	count=(INT8)(f12Op1&0xFF);
 	if (count>0)
 	{
-		// left shift flags:
-		// carry gets the last bit shifted out,
-		// overflow is always CLEARed
+		/* left shift flags:*/
+		/* carry gets the last bit shifted out,*/
+		/* overflow is always CLEARed*/
 
-		_OV = 0;	// default to no overflow
+		_OV = 0;	/* default to no overflow*/
 
-		// now handle carry
+		/* now handle carry*/
 		tmp = appb & 0xff;
 		tmp <<= count;
-		SetCFB(tmp);	// set carry properly
+		SetCFB(tmp);	/* set carry properly*/
 
-		// do the actual shift...
+		/* do the actual shift...*/
 		appb <<= count;
 
-		// and set zero and sign
+		/* and set zero and sign*/
 		SetSZPF_Byte(appb);
 	}
 	else
 	{
 		if (count == 0)
 		{
-			// special case: clear carry and overflow, do nothing else
+			/* special case: clear carry and overflow, do nothing else*/
 			_CY = _OV = 0;
-			SetSZPF_Byte(appb);	// doc. is unclear if this is true...
+			SetSZPF_Byte(appb);	/* doc. is unclear if this is true...*/
 		}
 		else
 		{
-			// right shift flags:
-			// carry = last bit shifted out
-			// overflow always cleared
+			/* right shift flags:*/
+			/* carry = last bit shifted out*/
+			/* overflow always cleared*/
 			tmp = appb & 0xff;
 			tmp >>= ((-count)-1);
 			_CY = (UINT8)(tmp & 0x1);
@@ -1956,7 +1956,7 @@ UINT32 opSHLB(void) /* TRUSTED */
 		}
 	}
 
-//	printf("SHLB: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appb, _CY, _Z, _OV, _S);
+/*	printf("SHLB: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appb, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2BYTE();
 	F12END();
@@ -1973,39 +1973,39 @@ UINT32 opSHLH(void) /* TRUSTED */
 	F12LOADOP2HALF();
 
 	count=(INT8)(f12Op1&0xFF);
-//	printf("apph: %x count: %d  ", apph, count);
+/*	printf("apph: %x count: %d  ", apph, count);*/
 	if (count>0)
 	{
-		// left shift flags:
-		// carry gets the last bit shifted out,
-		// overflow is always CLEARed
+		/* left shift flags:*/
+		/* carry gets the last bit shifted out,*/
+		/* overflow is always CLEARed*/
 
 		_OV = 0;
 
-		// now handle carry
+		/* now handle carry*/
 		tmp = apph & 0xffff;
 		tmp <<= count;
-		SetCFW(tmp);	// set carry properly
+		SetCFW(tmp);	/* set carry properly*/
 
-		// do the actual shift...
+		/* do the actual shift...*/
 		apph <<= count;
 
-		// and set zero and sign
+		/* and set zero and sign*/
 		SetSZPF_Word(apph);
 	}
 	else
 	{
 		if (count == 0)
 		{
-			// special case: clear carry and overflow, do nothing else
+			/* special case: clear carry and overflow, do nothing else*/
 			_CY = _OV = 0;
-			SetSZPF_Word(apph);	// doc. is unclear if this is true...
+			SetSZPF_Word(apph);	/* doc. is unclear if this is true...*/
 		}
 		else
 		{
-			// right shift flags:
-			// carry = last bit shifted out
-			// overflow always cleared
+			/* right shift flags:*/
+			/* carry = last bit shifted out*/
+			/* overflow always cleared*/
 			tmp = apph & 0xffff;
 			tmp >>= ((-count)-1);
 			_CY = (UINT8)(tmp & 0x1);
@@ -2016,7 +2016,7 @@ UINT32 opSHLH(void) /* TRUSTED */
 		}
 	}
 
-//	printf("SHLH: %x _CY: %d _Z: %d _OV: %d _S: %d\n", apph, _CY, _Z, _OV, _S);
+/*	printf("SHLH: %x _CY: %d _Z: %d _OV: %d _S: %d\n", apph, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2HALF();
 	F12END();
@@ -2035,36 +2035,36 @@ UINT32 opSHLW(void) /* TRUSTED */
 	count=(INT8)(f12Op1&0xFF);
 	if (count>0)
 	{
-		// left shift flags:
-		// carry gets the last bit shifted out,
-		// overflow is always CLEARed
+		/* left shift flags:*/
+		/* carry gets the last bit shifted out,*/
+		/* overflow is always CLEARed*/
 
 		_OV = 0;
 
-		// now handle carry
+		/* now handle carry*/
 		tmp = appw & 0xffffffff;
 		tmp <<= count;
-		SetCFL(tmp);	// set carry properly
+		SetCFL(tmp);	/* set carry properly*/
 
-		// do the actual shift...
+		/* do the actual shift...*/
 		appw <<= count;
 
-		// and set zero and sign
+		/* and set zero and sign*/
 		SetSZPF_Long(appw);
 	}
 	else
 	{
 		if (count == 0)
 		{
-			// special case: clear carry and overflow, do nothing else
+			/* special case: clear carry and overflow, do nothing else*/
 			_CY = _OV = 0;
-			SetSZPF_Long(appw);	// doc. is unclear if this is true...
+			SetSZPF_Long(appw);	/* doc. is unclear if this is true...*/
 		}
 		else
 		{
-			// right shift flags:
-			// carry = last bit shifted out
-			// overflow always cleared
+			/* right shift flags:*/
+			/* carry = last bit shifted out*/
+			/* overflow always cleared*/
 			tmp = (UINT64)(appw & 0xffffffff);
 			tmp >>= ((-count)-1);
 			_CY = (UINT8)(tmp & 0x1);
@@ -2075,7 +2075,7 @@ UINT32 opSHLW(void) /* TRUSTED */
 		}
 	}
 
-//	printf("SHLW: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appw, _CY, _Z, _OV, _S);
+/*	printf("SHLW: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appw, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2WORD();
 	F12END();

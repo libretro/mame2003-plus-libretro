@@ -7,7 +7,7 @@
 #define __I86_H_
 
 /* compile with V20,V30,V33 when configured (HAS_V20,...) */
-//#define INCLUDE_V20
+/*#define INCLUDE_V20*/
 
 #define I86_NMI_INT_VECTOR 2
 

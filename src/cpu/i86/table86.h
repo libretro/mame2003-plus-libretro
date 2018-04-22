@@ -96,22 +96,22 @@ static void (*PREFIX86(_instruction)[256])(void) =
 	 PREFIX86(_pop_bp),           /* 0x5d */
 	 PREFIX86(_pop_si),           /* 0x5e */
 	 PREFIX86(_pop_di),           /* 0x5f */
-	 PREFIX86(_invalid), // PREFIX86(_pusha),            /* 0x60 */
-	 PREFIX86(_invalid), // PREFIX86(_popa),             /* 0x61 */
-	 PREFIX86(_invalid), // PREFIX86(_bound),            /* 0x62 */
+	 PREFIX86(_invalid), /* PREFIX86(_pusha),*/            /* 0x60 */
+	 PREFIX86(_invalid), /* PREFIX86(_popa),*/             /* 0x61 */
+	 PREFIX86(_invalid), /* PREFIX86(_bound),*/           /* 0x62 */
 	 PREFIX86(_invalid),
 	 PREFIX86(_invalid),
 	 PREFIX86(_invalid),
 	 PREFIX86(_invalid),
 	 PREFIX86(_invalid),
-	 PREFIX86(_invalid), //i_push_d16),         /* 0x68 */
-	 PREFIX86(_invalid), //i_imul_d16),         /* 0x69 */
-	 PREFIX86(_invalid), //i_push_d8),          /* 0x6a */
-	 PREFIX86(_invalid), //i_imul_d8),          /* 0x6b */
-	 PREFIX86(_invalid), //i_insb),             /* 0x6c */
-	 PREFIX86(_invalid), //i_insw),             /* 0x6d */
-	 PREFIX86(_invalid), //i_outsb),            /* 0x6e */
-	 PREFIX86(_invalid), //i_outsw),            /* 0x6f */
+	 PREFIX86(_invalid), /*i_push_d16),*/         /* 0x68 */
+	 PREFIX86(_invalid), /*i_imul_d16),*/         /* 0x69 */
+	 PREFIX86(_invalid), /*i_push_d8),*/          /* 0x6a */
+	 PREFIX86(_invalid), /*i_imul_d8),*/         /* 0x6b */
+	 PREFIX86(_invalid), /*i_insb),*/             /* 0x6c */
+	 PREFIX86(_invalid), /*i_insw),*/             /* 0x6d */
+	 PREFIX86(_invalid), /*i_outsb),*/            /* 0x6e */
+	 PREFIX86(_invalid), /*i_outsw),*/            /* 0x6f */
 	 PREFIX86(_jo),               /* 0x70 */
 	 PREFIX86(_jno),              /* 0x71 */
 	 PREFIX86(_jb),               /* 0x72 */
@@ -192,16 +192,16 @@ static void (*PREFIX86(_instruction)[256])(void) =
 	 PREFIX86(_mov_bpd16),        /* 0xbd */
 	 PREFIX86(_mov_sid16),        /* 0xbe */
 	 PREFIX86(_mov_did16),        /* 0xbf */
-	 PREFIX86(_invalid), // PREFIX86(_rotshft_bd8),      /* 0xc0 */
-	 PREFIX86(_invalid), // PREFIX86(_rotshft_wd8),      /* 0xc1 */
+	 PREFIX86(_invalid), /* PREFIX86(_rotshft_bd8),*/      /* 0xc0 */
+	 PREFIX86(_invalid), /* PREFIX86(_rotshft_wd8),*/      /* 0xc1 */
 	 PREFIX86(_ret_d16),          /* 0xc2 */
 	 PREFIX86(_ret),              /* 0xc3 */
 	 PREFIX86(_les_dw),           /* 0xc4 */
 	 PREFIX86(_lds_dw),           /* 0xc5 */
 	 PREFIX86(_mov_bd8),          /* 0xc6 */
 	 PREFIX86(_mov_wd16),         /* 0xc7 */
-	 PREFIX86(_invalid), //i_enter),            /* 0xc8 */
-	 PREFIX86(_invalid), //leave),            /* 0xc9 */
+	 PREFIX86(_invalid), /*i_enter),*/           /* 0xc8 */
+	 PREFIX86(_invalid), /*leave), */         /* 0xc9 */
 	 PREFIX86(_retf_d16),         /* 0xca */
 	 PREFIX86(_retf),             /* 0xcb */
 	 PREFIX86(_int3),             /* 0xcc */

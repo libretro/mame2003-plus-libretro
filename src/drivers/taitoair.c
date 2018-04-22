@@ -659,7 +659,7 @@ static MACHINE_DRIVER_START( airsys )
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)
 
-	// video hardware
+	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(64*16, 64*16)
 	MDRV_VISIBLE_AREA(0*16, 32*16-1, 3*16, 28*16-1)
@@ -669,7 +669,7 @@ static MACHINE_DRIVER_START( airsys )
 	MDRV_VIDEO_START(taitoair)
 	MDRV_VIDEO_UPDATE(taitoair)
 
-	// sound hardware
+	/* sound hardware */
 	MDRV_SOUND_ADD(YM2610, airsys_ym2610_interface)
 MACHINE_DRIVER_END
 

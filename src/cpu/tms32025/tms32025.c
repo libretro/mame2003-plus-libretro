@@ -297,7 +297,7 @@ static INLINE void MODIFY_AR_ARP(void)
 	}
 	if (R.opcode.b.l & 8)
 	{
-//		MODIFY_ARB(ARP);
+/*		MODIFY_ARB(ARP);*/
 		MODIFY_ARP(R.opcode.b.l & 7);
 	}
 }
@@ -1758,7 +1758,7 @@ static int process_IRQs(void)
 			return R.tms32025_irq_cycles;
 		}
 		if ((R.IFR & 0x08) && (IMR & 0x08)) {		/* Timer IRQ (internal) */
-//			logerror("TMS32025:  Active TINT (Timer)\n");
+/*			logerror("TMS32025:  Active TINT (Timer)\n");*/
 			R.PC = 0x0018;
 			R.idle = 0;
 			R.IFR &= (~0x08);

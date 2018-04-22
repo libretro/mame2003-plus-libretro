@@ -24,11 +24,11 @@
 
 #define IM_SID          0x80
 #define IM_SOD          0x40
-//#define IM_IEN          0x20
-#define IM_INTR         0x20 //AT: the 8085 ignores bit 0x20. we move IM_INTR here for compatibility.
+/*#define IM_IEN          0x20*/
+#define IM_INTR         0x20 /*AT: the 8085 ignores bit 0x20. we move IM_INTR here for compatibility.*/
 #define IM_TRAP         0x10
-//#define IM_INTR         0x08
-#define IM_IEN          0x08 //AT: RIM returns IEN status on this bit. SIM checks this bit to allow masking RST55-75
+/*#define IM_INTR         0x08*/
+#define IM_IEN          0x08 /*AT: RIM returns IEN status on this bit. SIM checks this bit to allow masking RST55-75*/
 #define IM_RST75        0x04
 #define IM_RST65        0x02
 #define IM_RST55        0x01

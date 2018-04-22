@@ -1012,12 +1012,12 @@ void nec_set_irq_line(int irqline, int state)
 		I.irq_state = state;
 		if (state == CLEAR_LINE)
 		{
-	//		if (!I.IF)	NS010718 fix interrupt request loss
+	/*		if (!I.IF)	NS010718 fix interrupt request loss*/
 				I.pending_irq &= ~INT_IRQ;
 		}
 		else
 		{
-	//		if (I.IF)	NS010718 fix interrupt request loss
+	/*		if (I.IF)	NS010718 fix interrupt request loss*/
 				I.pending_irq |= INT_IRQ;
 		}
 	}
@@ -1080,11 +1080,11 @@ int v20_execute(int cycles)
 	cpu_type=V20;
 
 	while(nec_ICount>0) {
-//		if (I.pending_irq) {
-		if (I.IF && I.pending_irq) {	// NS010718 fix interrupt request loss
+/*		if (I.pending_irq) {*/
+		if (I.IF && I.pending_irq) {	/* NS010718 fix interrupt request loss*/
 			/* No interrupt allowed between last instruction and this one */
 			if (no_interrupt==1)
-				no_interrupt=-1;	// NS010726 use intermediate flag to properly handle cycle skip optimizations
+				no_interrupt=-1;	/* NS010726 use intermediate flag to properly handle cycle skip optimizations*/
 			else
 			{
 				no_interrupt=0;
@@ -1174,11 +1174,11 @@ int v30_execute(int cycles) {
 	cpu_type=V30;
 
 	while(nec_ICount>0) {
-//		if (I.pending_irq) {
-		if (I.IF && I.pending_irq) {	// NS010718 fix interrupt request loss
+/*		if (I.pending_irq) {*/
+		if (I.IF && I.pending_irq) {	/* NS010718 fix interrupt request loss*/
 			/* No interrupt allowed between last instruction and this one */
 			if (no_interrupt==1)
-				no_interrupt=-1;	// NS010726 use intermediate flag to properly handle cycle skip optimizations
+				no_interrupt=-1;	/* NS010726 use intermediate flag to properly handle cycle skip optimizations*/
 			else
 			{
 				no_interrupt=0;
@@ -1225,11 +1225,11 @@ int v33_execute(int cycles)
 	cpu_type=V33;
 
 	while(nec_ICount>0) {
-//		if (I.pending_irq) {
-		if (I.IF && I.pending_irq) {	// NS010718 fix interrupt request loss
+/*		if (I.pending_irq) {*/
+		if (I.IF && I.pending_irq) {	/* NS010718 fix interrupt request loss*/
 			/* No interrupt allowed between last instruction and this one */
 			if (no_interrupt==1)
-				no_interrupt=-1;	// NS010726 use intermediate flag to properly handle cycle skip optimizations
+				no_interrupt=-1;	/* NS010726 use intermediate flag to properly handle cycle skip optimizations*/
 			else
 			{
 				no_interrupt=0;

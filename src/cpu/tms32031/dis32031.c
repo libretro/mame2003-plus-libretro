@@ -61,69 +61,69 @@ static const char *condition[32] =
 	"??", "??", "??", "??", "??", "??", "??", "??"
 };
 
-//
-// for instructions 0x000-0x3f
-//	G = (op >> 21) & 3;
-//	G == 0 -> register  -> 000ooooo o00ddddd 00000000 000sssss
-//	G == 1 -> direct    -> 000ooooo o01ddddd DDDDDDDD DDDDDDDD
-//	G == 2 -> indirect  -> 000ooooo o10ddddd mmmmmaaa DDDDDDDD
-//	G == 3 -> immediate -> 000ooooo o11ddddd iiiiiiii iiiiiiii
-//
-// for instructions 0x040-0x7f
-//	T = (op >> 21) & 3;                       (src1)   (src2)
-//	T == 0 -> reg reg   -> 001ooooo o00ddddd 000sssss 000SSSSS
-//	T == 1 -> ind reg	-> 001ooooo o01ddddd mmmmmaaa 000SSSSS
-//	T == 2 -> reg ind	-> 001ooooo o10ddddd 000sssss MMMMMAAA
-//	T == 3 -> ind ind	-> 001ooooo o11ddddd mmmmmaaa MMMMMAAA
-//
-// for instructions 0x100-0x1ff
-//	10ooooPP dDsssSSS mmmmmaaa MMMMMAAA
-//	10ooooPP dDsssSSS 111rrrrr 111RRRRR
-//
-// conditional branches
-//	xxxxxxBa aaDccccc 00000000 000sssss
-//	xxxxxxBa aaDccccc iiiiiiii iiiiiiii
-//		D=0(standard) or 1(delayed)
-//		B=0(register) or 1(immediate)
-//
-// status register
-//	31-14 = 0
-//	13 = GIE
-//	12 = CC
-//	11 = CE
-//	10 = CF
-//	9 = 0
-//	8 = RM
-//	7 = OVM
-//	6 = LUF (latched FP underflow)
-//	5 = LV (latched overflow)
-//	4 = UF (FP underflow)
-//	3 = N
-//	2 = Z
-//	1 = V
-//	0 = C
-//
-// conditions:
-//	0 = U (unconditional)
-//	1 = LO (C)
-//	2 = LS (C | Z)
-//	3 = HI (~C & ~Z)
-//	4 = HS (~C)
-//	5 = EQ (Z)
-//	6 = NE (~Z)
-//	7 = LT (N)
-//	8 = LE (N | Z)
-//	9 = GT (~N & ~Z)
-//	10 = GE (~N)
-//	12 = NV (~V)
-//	13 = V (V)
-//	14 = NUF (~UF)
-//	15 = UF (UF)
-//	16 = NLV (~LV)
-//	17 = LV (LV)
-//	18 = NLUF (~LUF)
-//	19 = LUF (LUF)
-//	20 = ZUF (Z | UF)
+/**/
+/* for instructions 0x000-0x3f*/
+/*	G = (op >> 21) & 3;*/
+/*	G == 0 -> register  -> 000ooooo o00ddddd 00000000 000sssss*/
+/*	G == 1 -> direct    -> 000ooooo o01ddddd DDDDDDDD DDDDDDDD*/
+/*	G == 2 -> indirect  -> 000ooooo o10ddddd mmmmmaaa DDDDDDDD*/
+/*	G == 3 -> immediate -> 000ooooo o11ddddd iiiiiiii iiiiiiii*/
+/**/
+/* for instructions 0x040-0x7f*/
+/*	T = (op >> 21) & 3;                       (src1)   (src2)*/
+/*	T == 0 -> reg reg   -> 001ooooo o00ddddd 000sssss 000SSSSS*/
+/*	T == 1 -> ind reg	-> 001ooooo o01ddddd mmmmmaaa 000SSSSS*/
+/*	T == 2 -> reg ind	-> 001ooooo o10ddddd 000sssss MMMMMAAA*/
+/*	T == 3 -> ind ind	-> 001ooooo o11ddddd mmmmmaaa MMMMMAAA*/
+/**/
+/* for instructions 0x100-0x1ff*/
+/*	10ooooPP dDsssSSS mmmmmaaa MMMMMAAA*/
+/*	10ooooPP dDsssSSS 111rrrrr 111RRRRR*/
+/**/
+/* conditional branches*/
+/*	xxxxxxBa aaDccccc 00000000 000sssss*/
+/*	xxxxxxBa aaDccccc iiiiiiii iiiiiiii*/
+/*		D=0(standard) or 1(delayed)*/
+/*		B=0(register) or 1(immediate)*/
+/**/
+/* status register*/
+/*	31-14 = 0*/
+/*	13 = GIE*/
+/*	12 = CC*/
+/*	11 = CE*/
+/*	10 = CF*/
+/*	9 = 0*/
+/*	8 = RM*/
+/*	7 = OVM*/
+/*	6 = LUF (latched FP underflow)*/
+/*	5 = LV (latched overflow)*/
+/*	4 = UF (FP underflow)*/
+/*	3 = N*/
+/*	2 = Z*/
+/*	1 = V*/
+/*	0 = C*/
+/**/
+/* conditions:*/
+/*	0 = U (unconditional)*/
+/*	1 = LO (C)*/
+/*	2 = LS (C | Z)*/
+/*	3 = HI (~C & ~Z)*/
+/*	4 = HS (~C)*/
+/*	5 = EQ (Z)*/
+/*	6 = NE (~Z)*/
+/*	7 = LT (N)*/
+/*	8 = LE (N | Z)*/
+/*	9 = GT (~N & ~Z)*/
+/*	10 = GE (~N)*/
+/*	12 = NV (~V)*/
+/*	13 = V (V)*/
+/*	14 = NUF (~UF)*/
+/*	15 = UF (UF)*/
+/*	16 = NLV (~LV)*/
+/*	17 = LV (LV)*/
+/*	18 = NLUF (~LUF)*/
+/*	19 = LUF (LUF)*/
+/*	20 = ZUF (Z | UF)*/
 
 void append_indirect(UINT8 ma, INT8 disp, char *buffer)
 {
@@ -584,7 +584,7 @@ unsigned dasm_tms32031(char *buffer, unsigned pc)
 
 
 		case 0x100: case 0x101:	case 0x102: case 0x103:
-		case 0x104: case 0x105:	case 0x106: case 0x107:	// MPYF3||ADDF3
+		case 0x104: case 0x105:	case 0x106: case 0x107:	/* MPYF3||ADDF3*/
 		{
 			static const UINT8 srctable[] = { 3,4,1,2, 3,1,4,2, 1,2,3,4, 3,1,2,4 };
 			disasm_parallel_3op3op("MPYF3", "ADDF3", op, FLOAT, srctable, buffer);
@@ -593,7 +593,7 @@ unsigned dasm_tms32031(char *buffer, unsigned pc)
 
 
 		case 0x108: case 0x109:	case 0x10a: case 0x10b:
-		case 0x10c: case 0x10d:	case 0x10e: case 0x10f:	// MPYF3||SUBF3
+		case 0x10c: case 0x10d:	case 0x10e: case 0x10f:	/* MPYF3||SUBF3*/
 		{
 			static const UINT8 srctable[] = { 3,4,1,2, 3,1,4,2, 1,2,3,4, 3,1,2,4 };
 			disasm_parallel_3op3op("MPYF3", "SUBF3", op, FLOAT, srctable, buffer);
@@ -602,7 +602,7 @@ unsigned dasm_tms32031(char *buffer, unsigned pc)
 
 
 		case 0x110: case 0x111:	case 0x112: case 0x113:
-		case 0x114: case 0x115:	case 0x116: case 0x117:	// MPYI3||ADDI3
+		case 0x114: case 0x115:	case 0x116: case 0x117:	/* MPYI3||ADDI3*/
 		{
 			static const UINT8 srctable[] = { 3,4,1,2, 3,1,4,2, 1,2,3,4, 3,1,2,4 };
 			disasm_parallel_3op3op("MPYI3", "ADDI3", op, INTEGER, srctable, buffer);
@@ -611,7 +611,7 @@ unsigned dasm_tms32031(char *buffer, unsigned pc)
 
 
 		case 0x118: case 0x119:	case 0x11a: case 0x11b:
-		case 0x11c: case 0x11d:	case 0x11e: case 0x11f:	// MPYI3||SUBI3
+		case 0x11c: case 0x11d:	case 0x11e: case 0x11f:	/* MPYI3||SUBI3*/
 		{
 			static const UINT8 srctable[] = { 3,4,1,2, 3,1,4,2, 1,2,3,4, 3,1,2,4 };
 			disasm_parallel_3op3op("MPYI3", "SUBI3", op, INTEGER, srctable, buffer);
@@ -619,110 +619,110 @@ unsigned dasm_tms32031(char *buffer, unsigned pc)
 		}
 
 
-		case 0x180: case 0x181:	case 0x182: case 0x183:	// STF||STF
+		case 0x180: case 0x181:	case 0x182: case 0x183:	/* STF||STF*/
 			disasm_parallel_storestore("STF", "STF", op, FLOAT, buffer);
 			break;
 
-		case 0x184: case 0x185:	case 0x186: case 0x187:	// STI||STI
+		case 0x184: case 0x185:	case 0x186: case 0x187:	/* STI||STI*/
 			disasm_parallel_storestore("STI", "STI", op, INTEGER, buffer);
 			break;
 
 
-		case 0x188: case 0x189:	case 0x18a: case 0x18b:	// LDF||LDF
+		case 0x188: case 0x189:	case 0x18a: case 0x18b:	/* LDF||LDF*/
 			disasm_parallel_loadload("LDF", "LDF", op, FLOAT, buffer);
 			break;
 
-		case 0x18c: case 0x18d:	case 0x18e: case 0x18f:	// LDI||LDI
+		case 0x18c: case 0x18d:	case 0x18e: case 0x18f:	/* LDI||LDI*/
 			disasm_parallel_loadload("LDI", "LDI", op, INTEGER, buffer);
 			break;
 
 
-		case 0x190: case 0x191:	case 0x192: case 0x193:	// ABSF||STF
+		case 0x190: case 0x191:	case 0x192: case 0x193:	/* ABSF||STF*/
 			disasm_parallel_3opstore("ABSF", "STF", op, FLOAT | NOSOURCE1, buffer);
 			break;
 
-		case 0x194: case 0x195:	case 0x196: case 0x197:	// ABSI||STI
+		case 0x194: case 0x195:	case 0x196: case 0x197:	/* ABSI||STI*/
 			disasm_parallel_3opstore("ABSI", "STI", op, INTEGER | NOSOURCE1, buffer);
 			break;
 
 
-		case 0x198: case 0x199:	case 0x19a: case 0x19b:	// ADDF3||STF
+		case 0x198: case 0x199:	case 0x19a: case 0x19b:	/* ADDF3||STF*/
 			disasm_parallel_3opstore("ADDF3", "STF", op, FLOAT, buffer);
 			break;
 
-		case 0x19c: case 0x19d:	case 0x19e: case 0x19f:	// ADDI3||STI
+		case 0x19c: case 0x19d:	case 0x19e: case 0x19f:	/* ADDI3||STI*/
 			disasm_parallel_3opstore("ADDI3", "STI", op, INTEGER, buffer);
 			break;
 
 
-		case 0x1a0: case 0x1a1:	case 0x1a2: case 0x1a3:	// AND3||STI
+		case 0x1a0: case 0x1a1:	case 0x1a2: case 0x1a3:	/* AND3||STI*/
 			disasm_parallel_3opstore("AND3", "STI", op, INTEGER, buffer);
 			break;
 
-		case 0x1a4: case 0x1a5:	case 0x1a6: case 0x1a7:	// ASH3||STI
+		case 0x1a4: case 0x1a5:	case 0x1a6: case 0x1a7:	/* ASH3||STI*/
 			disasm_parallel_3opstore("ASH3", "STI", op, INTEGER, buffer);
 			break;
 
 
-		case 0x1a8: case 0x1a9:	case 0x1aa: case 0x1ab:	// FIX||STI
+		case 0x1a8: case 0x1a9:	case 0x1aa: case 0x1ab:	/* FIX||STI*/
 			disasm_parallel_3opstore("FIX", "STF", op, FLOAT | NOSOURCE1, buffer);
 			break;
 
-		case 0x1ac: case 0x1ad:	case 0x1ae: case 0x1af:	// FLOAT||STF
+		case 0x1ac: case 0x1ad:	case 0x1ae: case 0x1af:	/* FLOAT||STF*/
 			disasm_parallel_3opstore("FLOAT", "STF", op, FLOAT | NOSOURCE1, buffer);
 			break;
 
 
-		case 0x1b0: case 0x1b1:	case 0x1b2: case 0x1b3:	// LDF||STF
+		case 0x1b0: case 0x1b1:	case 0x1b2: case 0x1b3:	/* LDF||STF*/
 			disasm_parallel_3opstore("LDF", "STF", op, FLOAT | NOSOURCE1, buffer);
 			break;
 
-		case 0x1b4: case 0x1b5:	case 0x1b6: case 0x1b7:	// LDI||STI
+		case 0x1b4: case 0x1b5:	case 0x1b6: case 0x1b7:	/* LDI||STI*/
 			disasm_parallel_3opstore("LDI", "STI", op, INTEGER | NOSOURCE1, buffer);
 			break;
 
 
-		case 0x1b8: case 0x1b9:	case 0x1ba: case 0x1bb:	// LSH3||STI
+		case 0x1b8: case 0x1b9:	case 0x1ba: case 0x1bb:	/* LSH3||STI*/
 			disasm_parallel_3opstore("LSH3", "STI", op, INTEGER, buffer);
 			break;
 
-		case 0x1bc: case 0x1bd:	case 0x1be: case 0x1bf:	// MPYF3||STF
+		case 0x1bc: case 0x1bd:	case 0x1be: case 0x1bf:	/* MPYF3||STF*/
 			disasm_parallel_3opstore("MPYF3", "STF", op, FLOAT, buffer);
 			break;
 
 
-		case 0x1c0: case 0x1c1:	case 0x1c2: case 0x1c3:	// MPYI3||STI
+		case 0x1c0: case 0x1c1:	case 0x1c2: case 0x1c3:	/* MPYI3||STI*/
 			disasm_parallel_3opstore("MPYI3", "STI", op, INTEGER, buffer);
 			break;
 
-		case 0x1c4: case 0x1c5:	case 0x1c6: case 0x1c7:	// NEGF||STF
+		case 0x1c4: case 0x1c5:	case 0x1c6: case 0x1c7:	/* NEGF||STF*/
 			disasm_parallel_3opstore("NEGF", "STF", op, FLOAT | NOSOURCE1, buffer);
 			break;
 
 
-		case 0x1c8: case 0x1c9:	case 0x1ca: case 0x1cb:	// NEGI||STI
+		case 0x1c8: case 0x1c9:	case 0x1ca: case 0x1cb:	/* NEGI||STI*/
 			disasm_parallel_3opstore("NEGI", "STI", op, INTEGER | NOSOURCE1, buffer);
 			break;
 
-		case 0x1cc: case 0x1cd:	case 0x1ce: case 0x1cf:	// NOT||STI
+		case 0x1cc: case 0x1cd:	case 0x1ce: case 0x1cf:	/* NOT||STI*/
 			disasm_parallel_3opstore("NOT", "STI", op, INTEGER | NOSOURCE1, buffer);
 			break;
 
 
-		case 0x1d0: case 0x1d1:	case 0x1d2: case 0x1d3:	// OR3||STI
+		case 0x1d0: case 0x1d1:	case 0x1d2: case 0x1d3:	/* OR3||STI*/
 			disasm_parallel_3opstore("OR3", "STI", op, INTEGER, buffer);
 			break;
 
-		case 0x1d4: case 0x1d5:	case 0x1d6: case 0x1d7:	// SUBF3||STF
+		case 0x1d4: case 0x1d5:	case 0x1d6: case 0x1d7:	/* SUBF3||STF*/
 			disasm_parallel_3opstore("SUBF3", "STF", op, FLOAT, buffer);
 			break;
 
 
-		case 0x1d8: case 0x1d9:	case 0x1da: case 0x1db:	// SUBI3||STI
+		case 0x1d8: case 0x1d9:	case 0x1da: case 0x1db:	/* SUBI3||STI*/
 			disasm_parallel_3opstore("SUBI3", "STI", op, INTEGER, buffer);
 			break;
 
-		case 0x1dc: case 0x1dd:	case 0x1de: case 0x1df:	// XOR3||STI
+		case 0x1dc: case 0x1dd:	case 0x1de: case 0x1df:	/* XOR3||STI*/
 			disasm_parallel_3opstore("XOR3", "STI", op, INTEGER, buffer);
 			break;
 

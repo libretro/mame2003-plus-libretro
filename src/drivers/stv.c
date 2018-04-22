@@ -2028,7 +2028,7 @@ static void stv_SMPC_w8 (int offset, UINT8 data)
 				smpc_ram[0x5d]=0xff;
 
 			/*	 //This is for RTC,cartridge code and similar stuff.../*/
-			/*	if(!(stv_scu[40] & 0x0080)) /*System Manager(SMPC) irq*/  // we can't check this .. breaks controls .. probably issues elsewhere? /*/
+			/*	if(!(stv_scu[40] & 0x0080)) */ /*System Manager(SMPC) irq*/  /* we can't check this .. breaks controls .. probably issues elsewhere? */
 				{
 					logerror ("Interrupt: System Manager (SMPC) at scanline %04x, Vector 0x47 Level 0x08\n",scanline);
 					cpu_set_irq_line_and_vector(0, 8, HOLD_LINE , 0x47);

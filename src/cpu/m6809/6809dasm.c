@@ -505,8 +505,8 @@ unsigned Dasm6809 (char *buffer, unsigned pc)
 				ea = (activecpu_get_reg(regid_6809[reg]) + offset) & 0xffff;
 				buffer += sprintf (buffer, "%s,%s", sym1, regs_6809[reg]);
 			}
-//			  if( pb == 0x8c )
-//				  buffer += sprintf (buffer, " ; ($%04X)", offset + pc);
+/*			  if( pb == 0x8c )*/
+/*				  buffer += sprintf (buffer, " ; ($%04X)", offset + pc);*/
 		}
 		else
 		if( pb2 == 0x89 || pb2 == 0x8d || pb2 == 0x8f )
@@ -539,8 +539,8 @@ unsigned Dasm6809 (char *buffer, unsigned pc)
 				ea = (activecpu_get_reg(regid_6809[reg]) + offset) & 0xffff;
                 buffer += sprintf (buffer, "%s,%s", sym1, regs_6809[reg]);
 			}
-//			  if( pb == 0x8d )
-//				  buffer += sprintf (buffer, " ; ($%04X)", offset + pc);
+/*			  if( pb == 0x8d )*/
+/*				  buffer += sprintf (buffer, " ; ($%04X)", offset + pc);*/
 		}
 		else
 		if( pb & 0x80 )

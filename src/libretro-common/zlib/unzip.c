@@ -120,7 +120,7 @@ extern int errno;
 
 
 const char unz_copyright[] =
-" unzip 1.01 Copyright 1998-2004 Gilles Vollant - http://www.winimage.com/zLibDll";
+" unzip 1.01 Copyright 1998-2004 Gilles Vollant - http:/**/www.winimage.com/zLibDll";
 
 /* unz_file_info_interntal contain internal info about a file in zipfile*/
 typedef struct unz_file_info64_internal_s
@@ -960,7 +960,7 @@ local int unz64local_GetCurrentFileInfoInternal (unzFile file,
    if (unz64local_getLong(&s->z_filefunc, s->filestream,&file_info.external_fa) != UNZ_OK)
       err=UNZ_ERRNO;
 
-   // relative offset of local header
+   /* relative offset of local header */
    if (unz64local_getLong(&s->z_filefunc, s->filestream,&uL) != UNZ_OK)
       err=UNZ_ERRNO;
    file_info_internal.offset_curfile = uL;
@@ -983,7 +983,7 @@ local int unz64local_GetCurrentFileInfoInternal (unzFile file,
       lSeek -= uSizeRead;
    }
 
-   // Read extrafield
+   /* Read extrafield */
    if ((err==UNZ_OK) && (extraField!=NULL))
    {
       ZPOS64_T uSizeRead ;
@@ -1014,7 +1014,7 @@ local int unz64local_GetCurrentFileInfoInternal (unzFile file,
    {
       uLong acc = 0;
 
-      // since lSeek now points to after the extra field we need to move back
+      /* since lSeek now points to after the extra field we need to move back */
       lSeek -= file_info.size_file_extra;
 
       if (lSeek!=0)
@@ -1288,15 +1288,14 @@ extern int ZEXPORT unzLocateFile (unzFile file, const char *szFileName, int iCas
 }
 
 
-/*
-///////////////////////////////////////////
-// Contributed by Ryan Haksi (mailto://cryogen@infoserve.net)
-// I need random access
-//
-// Further optimization could be realized by adding an ability
-// to cache the directory in memory. The goal being a single
-// comprehensive file read to put the file I need in a memory.
-*/
+/************************************************************
+ Contributed by Ryan Haksi (mailto://cryogen@infoserve.net)
+ I need random access
+
+ Further optimization could be realized by adding an ability
+ to cache the directory in memory. The goal being a single
+ comprehensive file read to put the file I need in a memory.
+*************************************************************/
 
 /*
    typedef struct unz_file_pos_s
@@ -1372,8 +1371,7 @@ extern int ZEXPORT unzGoToFilePos(
 }
 
 /*
-// Unzip Helper Functions - should be here?
-///////////////////////////////////////////
+ Unzip Helper Functions - should be here?
 */
 
 /*
@@ -1662,10 +1660,10 @@ extern ZPOS64_T ZEXPORT unzGetCurrentFileZStreamPos64( unzFile file)
    file_in_zip64_read_info_s* pfile_in_zip_read_info;
    s=(unz64_s*)file;
    if (file==NULL)
-      return 0; //UNZ_PARAMERROR;
+      return 0; /* UNZ_PARAMERROR; */
    pfile_in_zip_read_info=s->pfile_in_zip_read;
    if (pfile_in_zip_read_info==NULL)
-      return 0; //UNZ_PARAMERROR;
+      return 0; /*UNZ_PARAMERROR; */
    return pfile_in_zip_read_info->pos_in_zipfile +
       pfile_in_zip_read_info->byte_before_the_zipfile;
 }
@@ -1835,7 +1833,7 @@ extern int ZEXPORT unzReadCurrentFile  (unzFile file, voidp buf, unsigned len)
          if (err!=BZ_OK)
             break;
 #endif
-      } // end Z_BZIP2ED
+      } /* end Z_BZIP2ED */
       else
       {
          ZPOS64_T uTotalOutBefore,uTotalOutAfter;
@@ -2082,7 +2080,7 @@ extern ZPOS64_T ZEXPORT unzGetOffset64(unzFile file)
    unz64_s* s;
 
    if (file==NULL)
-      return 0; //UNZ_PARAMERROR;
+      return 0; /*UNZ_PARAMERROR;*/
    s=(unz64_s*)file;
    if (!s->current_file_ok)
       return 0;
@@ -2097,7 +2095,7 @@ extern uLong ZEXPORT unzGetOffset (unzFile file)
    ZPOS64_T offset64;
 
    if (file==NULL)
-      return 0; //UNZ_PARAMERROR;
+      return 0; /*UNZ_PARAMERROR;*/
    offset64 = unzGetOffset64(file);
    return (uLong)offset64;
 }

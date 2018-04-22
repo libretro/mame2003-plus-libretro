@@ -158,9 +158,9 @@ typedef struct
 int sh2_icount;
 static SH2 sh2;
 
-// Atrocious hack that makes the soldivid music correct
+/* Atrocious hack that makes the soldivid music correct*/
 
-//static const int div_tab[4] = { 3, 5, 7, 0 };
+/*static const int div_tab[4] = { 3, 5, 7, 0 };*/
 static const int div_tab[4] = { 3, 5, 3, 0 };
 
 enum {
@@ -297,7 +297,7 @@ static INLINE void sh2_exception(const char *message, int irqline)
 		if (irqline <= ((sh2.sr >> 4) & 15)) /* If the cpu forbids this interrupt */
 			return;
 
-		// if this is an sh2 internal irq, use its vector
+		/* if this is an sh2 internal irq, use its vector*/
 		if (sh2.internal_irq_level == irqline)
 		{
 			vector = sh2.internal_irq_vector;
@@ -2463,7 +2463,7 @@ static void sh2_recalc_irq(void)
 	int irq = 0, vector = -1;
 	int i, level;
 
-	// Timer irqs
+	/* Timer irqs*/
 	if((sh2.m[4]>>8) & sh2.m[4] & (ICF|OCFA|OCFB|OVF))
 	{
 		level = (sh2.m[0x18] >> 24) & 15;
@@ -2480,7 +2480,7 @@ static void sh2_recalc_irq(void)
 		}
 	}
 
-	// DMA irqs
+	/* DMA irqs*/
 	for(i=0; i<2; i++)
 	{
 		if((sh2.m[0x63+4*i] & 6) == 6) {
@@ -2653,13 +2653,13 @@ WRITE32_HANDLER( sh2_internal_w )
 	UINT32 old = sh2.m[offset];
 	COMBINE_DATA(sh2.m+offset);
 
-	//	if(offset != 0x20)
-	//		logerror("sh2_internal_w:  Write %08x (%x), %08x @ %08x\n", 0xfffffe00+offset*4, offset, data, mem_mask);
+	/*	if(offset != 0x20)*/
+	/*		logerror("sh2_internal_w:  Write %08x (%x), %08x @ %08x\n", 0xfffffe00+offset*4, offset, data, mem_mask);*/
 
 	switch( offset )
 	{
-		// Timers
-	case 0x04: // TIER, FTCSR, FRC
+		/* Timers*/
+	case 0x04: /* TIER, FTCSR, FRC*/
 		if((mem_mask & 0x00ffffff) != 0xffffff)
 			sh2_timer_resync();
 		logerror("SH2.%d: TIER write %04x @ %04x\n", sh2.cpu_number, data >> 16, mem_mask>>16);
@@ -2669,7 +2669,7 @@ WRITE32_HANDLER( sh2_internal_w )
 			sh2_timer_activate();
 		sh2_recalc_irq();
 		break;
-	case 0x05: // OCRx, TCR, TOCR
+	case 0x05: /* OCRx, TCR, TOCR*/
 		logerror("SH2.%d: TCR write %08x @ %08x\n", sh2.cpu_number, data, mem_mask);
 		sh2_timer_resync();
 		if(sh2.m[5] & 0x10)
@@ -2679,38 +2679,38 @@ WRITE32_HANDLER( sh2_internal_w )
 		sh2_timer_activate();
 		break;
 
-	case 0x06: // ICR
+	case 0x06: /* ICR*/
 		break;
 
-		// Interrupt vectors
-	case 0x18: // IPRB, VCRA
-	case 0x19: // VCRB, VCRC
-	case 0x1a: // VCRD
+		/* Interrupt vectors*/
+	case 0x18: /* IPRB, VCRA*/
+	case 0x19: /* VCRB, VCRC*/
+	case 0x1a: /* VCRD*/
 		sh2_recalc_irq();
 		break;
 
-		// DMA
-	case 0x1c: // DRCR0, DRCR1
+		/* DMA*/
+	case 0x1c: /* DRCR0, DRCR1*/
 		break;
 
-		// Watchdog
-	case 0x20: // WTCNT, RSTCSR
+		/* Watchdog*/
+	case 0x20: /* WTCNT, RSTCSR*/
 		break;
 
-		// Standby and cache
-	case 0x24: // SBYCR, CCR
+		/* Standby and cache*/
+	case 0x24: /* SBYCR, CCR*/
 		break;
 
-		// Interrupt vectors cont.
-	case 0x38: // ICR, IRPA
+		/* Interrupt vectors cont.*/
+	case 0x38: /* ICR, IRPA*/
 		break;
-	case 0x39: // VCRWDT
+	case 0x39: /* VCRWDT*/
 		break;
 
-		// Division box
-	case 0x40: // DVSR
+		/* Division box*/
+	case 0x40: /* DVSR*/
 		break;
-	case 0x41: // DVDNT
+	case 0x41: /* DVDNT*/
 		{
 			INT32 a = sh2.m[0x41];
 			INT32 b = sh2.m[0x40];
@@ -2729,16 +2729,16 @@ WRITE32_HANDLER( sh2_internal_w )
 			}
 			break;
 		}
-	case 0x42: // DVCR
+	case 0x42: /* DVCR*/
 		sh2.m[0x42] = (sh2.m[0x42] & ~0x00001000) | (old & sh2.m[0x42] & 0x00010000);
 		sh2_recalc_irq();
 		break;
-	case 0x43: // VCRDIV
+	case 0x43: /* VCRDIV*/
 		sh2_recalc_irq();
 		break;
-	case 0x44: // DVDNTH
+	case 0x44: /* DVDNTH*/
 		break;
-	case 0x45: // DVDNTL
+	case 0x45: /* DVDNTL*/
 		{
 			INT64 a = sh2.m[0x45] | ((UINT64)(sh2.m[0x44]) << 32);
 			INT64 b = sh2.m[0x40];
@@ -2769,45 +2769,45 @@ WRITE32_HANDLER( sh2_internal_w )
 			break;
 		}
 
-		// DMA controller
-	case 0x60: // SAR0
-	case 0x61: // DAR0
+		/* DMA controller*/
+	case 0x60: /* SAR0*/
+	case 0x61: /* DAR0*/
 		break;
-	case 0x62: // DTCR0
+	case 0x62: /* DTCR0*/
 		sh2.m[0x62] &= 0xffffff;
 		break;
-	case 0x63: // CHCR0
+	case 0x63: /* CHCR0*/
 		sh2.m[0x63] = (sh2.m[0x63] & ~2) | (old & sh2.m[0x63] & 2);
 		sh2_dmac_check(0);
 		break;
-	case 0x64: // SAR1
-	case 0x65: // DAR1
+	case 0x64: /* SAR1*/
+	case 0x65: /* DAR1*/
 		break;
-	case 0x66: // DTCR1
+	case 0x66: /* DTCR1*/
 		sh2.m[0x66] &= 0xffffff;
 		break;
-	case 0x67: // CHCR1
+	case 0x67: /* CHCR1*/
 		sh2.m[0x67] = (sh2.m[0x67] & ~2) | (old & sh2.m[0x67] & 2);
 		sh2_dmac_check(1);
 		break;
-	case 0x68: // VCRDMA0
-	case 0x6a: // VCRDMA1
+	case 0x68: /* VCRDMA0*/
+	case 0x6a: /* VCRDMA1*/
 		sh2_recalc_irq();
 		break;
-	case 0x6c: // DMAOR
+	case 0x6c: /* DMAOR*/
 		sh2.m[0x6c] = (sh2.m[0x6c] & ~6) | (old & sh2.m[0x6c] & 6);
 		sh2_dmac_check(0);
 		sh2_dmac_check(1);
 		break;
 
-		// Bus controller
-	case 0x78: // BCR1
-	case 0x79: // BCR2
-	case 0x7a: // WCR
-	case 0x7b: // MCR
-	case 0x7c: // RTCSR
-	case 0x7d: // RTCNT
-	case 0x7e: // RTCOR
+		/* Bus controller*/
+	case 0x78: /* BCR1*/
+	case 0x79: /* BCR2*/
+	case 0x7a: /* WCR*/
+	case 0x7b: /* MCR*/
+	case 0x7c: /* RTCSR*/
+	case 0x7d: /* RTCNT*/
+	case 0x7e: /* RTCOR*/
 		break;
 
 	default:
@@ -2818,31 +2818,31 @@ WRITE32_HANDLER( sh2_internal_w )
 
 READ32_HANDLER( sh2_internal_r )
 {
-	//	logerror("sh2_internal_r:  Read %08x (%x) @ %08x\n", 0xfffffe00+offset*4, offset, mem_mask);
+	/*	logerror("sh2_internal_r:  Read %08x (%x) @ %08x\n", 0xfffffe00+offset*4, offset, mem_mask);*/
 	switch( offset )
 	{
-	case 0x04: // TIER, FTCSR, FRC
+	case 0x04: /* TIER, FTCSR, FRC*/
 		sh2_timer_resync();
 		return (sh2.m[4] & 0xffff0000) | sh2.frc;
-	case 0x05: // OCRx, TCR, TOCR
+	case 0x05: /* OCRx, TCR, TOCR*/
 		if(sh2.m[5] & 0x10)
 			return (sh2.ocrb << 16) | (sh2.m[5] & 0xffff);
 		else
 			return (sh2.ocra << 16) | (sh2.m[5] & 0xffff);
-	case 0x06: // ICR
+	case 0x06: /* ICR*/
 		return sh2.icr << 16;
 
-	case 0x38: // ICR, IPRA
+	case 0x38: /* ICR, IPRA*/
 		return (sh2.m[0x38] & 0x7fffffff) | (sh2.nmi_line_state == ASSERT_LINE ? 0 : 0x80000000);
 
-	case 0x78: // BCR1
+	case 0x78: /* BCR1*/
 		return sh2.is_slave ? 0x00008000 : 0;
 
-	case 0x41: // dvdntl mirrors
+	case 0x41: /* dvdntl mirrors*/
 	case 0x47:
 		return sh2.m[0x45];
 
-	case 0x46: // dvdnth mirror
+	case 0x46: /* dvdnth mirror*/
 		return sh2.m[0x44];
 	}
 	return sh2.m[offset];
@@ -3091,7 +3091,7 @@ void sh2_init(void)
 	if (!sh2.m)
 	{
 		logerror("SH2 failed to malloc FREGS\n");
-		//raise( SIGABRT );
+		/*raise( SIGABRT );*/
 	}
 
 	state_save_register_UINT32("sh2", cpu, "PC",  &sh2.pc, 1);

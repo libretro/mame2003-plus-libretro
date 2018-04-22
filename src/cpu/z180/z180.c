@@ -1832,7 +1832,7 @@ void z180_reset(void *param)
 		if( !SZHVC_add || !SZHVC_sub )
 		{
 			LOG(("Z180: failed to allocate 2 * 128K flags arrays!!!\n"));
-			//raise(SIGABRT);
+			/*raise(SIGABRT);*/
 		}
 		padd = &SZHVC_add[	0*256];
 		padc = &SZHVC_add[256*256];

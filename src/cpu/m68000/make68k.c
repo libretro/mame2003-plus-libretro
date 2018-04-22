@@ -483,7 +483,7 @@ void MemoryBanking(int BaseCode)
 #endif
 
 	/* Mask to 24 bits */
-//	fprintf(fp, "\t\t and   esi,0ffffffh\n");
+/**/	fprintf(fp, "\t\t and   esi,0ffffffh\n");
 
 #ifdef ASMBANK
 	/* Assembler bank switch - 64k granularity */
@@ -1054,7 +1054,7 @@ void Memory_Read(char Size,int AReg,const char *Flags,int Mask)
 			 break;
 	}
 
-// AccessType = NORMAL;
+/**/ AccessType = NORMAL;
 
 #else
 
@@ -1307,21 +1307,21 @@ void Memory_Fetch(char Size,int Dreg,int Extend)
 		}
 		else
 		{
-			 // if address is exact multiple of 4, long read will work
-			// otherwise we need to get words address-2 and address+4
+			 /**/ if address is exact multiple of 4, long read will work
+			/**/ otherwise we need to get words address-2 and address+4
 
-			// Always read long
+			/**/ Always read long
 		 fprintf(fp, "\t\t test  esi,2\n");
 if (!ppro)
 {
 			fprintf(fp, "\t\t mov   %s,dword [esi+ebp]\n",regnameslong[Dreg]);
 
-			// OK ?
+			/**/ OK ?
 			fprintf(fp, "\t\t jz    short FL%3.3d\n",loopcount+1);
 
-			// no, so get high word
+			/**/ no, so get high word
 			fprintf(fp, "\t\t mov   %s,dword [esi+ebp-4]\n",regnameslong[Dreg]);
-			// and get low word
+			/**/ and get low word
 			fprintf(fp, "\t\t mov   %s,word [esi+ebp+4]\n",regnamesword[Dreg]);
 
 			fprintf(fp, "FL%3.3d:\n",++loopcount);
@@ -1399,33 +1399,33 @@ void ExtensionDecode(int SaveEDX)
 	{
 		  /* 68020 Extension */
 
-		// eax holds scaled index
+		/**/ eax holds scaled index
 
-		// might be faster just to push all regs
+		/**/ might be faster just to push all regs
 		fprintf(fp, "\t\t push  ebx\n");
 		fprintf(fp, "\t\t push  ecx\n");
 
-		// copies for later use
+		/**/ copies for later use
 		fprintf(fp, "\t\t mov   ecx,eax\n");
 		fprintf(fp, "\t\t mov   edx,eax\n");
 
-		// check E bit to see if displacement or full format
+		/**/ check E bit to see if displacement or full format
 		fprintf(fp, "\t\t test  edx,0x0100\n");
 		fprintf(fp, "\t\t jz   short %s_a\n",Label);
-		// full mode so check IS (index supress)
+		/**/ full mode so check IS (index supress)
 		fprintf(fp, "\t\t test  edx,0x0040\n");
 		fprintf(fp, "\t\t jz   short %s_b\n",Label);
-		// set index to 0, it's not added
+		/**/ set index to 0, it's not added
 		ClearRegister(EAX);
-		fprintf(fp, "\t\t jmp  short %s_d\n",Label);  // near
+		fprintf(fp, "\t\t jmp  short %s_d\n",Label);  /**/ near
 
-		// add displacement
+		/**/ add displacement
   fprintf(fp, "%s_a:\n",Label);
 		fprintf(fp, "\t\t movsx eax,al\n");
 		fprintf(fp, "\t\t lea   edi,[edi+eax]\n");
 
   fprintf(fp, "%s_b:\n",Label);
-		// calc index always scale (68k will scale by 1)
+		/**/ calc index always scale (68k will scale by 1)
 		fprintf(fp, "\t\t mov   eax,edx\n");
 		fprintf(fp, "\t\t shr   eax,12\n");
 		fprintf(fp, "\t\t test  edx,0x0800\n");
@@ -1438,51 +1438,51 @@ void ExtensionDecode(int SaveEDX)
 		fprintf(fp, "\t\t and   ecx,byte 3\n");
 		fprintf(fp, "\t\t shl   eax,cl\n");
 
-		// if brief mode we can add index and exit
+		/**/ if brief mode we can add index and exit
 		fprintf(fp, "\t\t test  edx,0x0100\n");
 		fprintf(fp, "\t\t jz    near %s_i2\n",Label);
 
   fprintf(fp, "%s_d:\n",Label);
-		// check BS (base supress)
-		// if BS is 1 then set edi to 0
+		/**/ check BS (base supress)
+		/**/ if BS is 1 then set edi to 0
 		fprintf(fp, "\t\t test  edx,0x0080\n");
 		fprintf(fp, "\t\t jz    short %s_4a\n",Label);
 		ClearRegister(EDI);
-		// if null displacement skip over
+		/**/ if null displacement skip over
 		fprintf(fp, "%s_4a:\n",Label);
 		fprintf(fp, "\t\t test  edx,0x0020\n");
 		fprintf(fp, "\t\t jz    short %s_f\n",Label);
 
-		// **** calc base displacement ****
-		// is it long
+		/**/ **** calc base displacement ****
+		/**/ is it long
 		fprintf(fp, "\t\t test  edx,0x0010\n");
 		fprintf(fp, "\t\t jz    short %s_e\n",Label);
-		// fetch long base
+		/**/ fetch long base
 		Memory_Fetch('L',EBX,FALSE);
 		fprintf(fp, "\t\t lea   edi,[edi+ebx]\n");
 		fprintf(fp, "\t\t add   esi,byte 4\n");
 		fprintf(fp, "\t\t jmp   short %s_f\n",Label);
 
-		// fetch word base
+		/**/ fetch word base
   fprintf(fp, "%s_e:\n",Label);
 		Memory_Fetch('W',EBX,TRUE);
 		fprintf(fp, "\t\t lea   edi,[edi+ebx]\n");
 		fprintf(fp, "\t\t add   esi,byte 2\n");
 
-		// **** indirect? ****
+		/**/ **** indirect? ****
   fprintf(fp, "%s_f:\n",Label);
 		fprintf(fp, "\t\t test  edx,0x0003\n");
 		fprintf(fp, "\t\t jz    near %s_7a\n",Label);
-		// pre or post indirect
+		/**/ pre or post indirect
 		fprintf(fp, "\t\t test  edx,0x0004\n");
 		fprintf(fp, "\t\t jnz   short %s_g\n",Label);
-		// do pre
+		/**/ do pre
 		fprintf(fp, "\t\t lea   edi,[edi+eax]\n");
 		Memory_Read('L',EDI,"ABCDSDB",2);
 		fprintf(fp, "\t\t mov   edi,eax\n");
 		fprintf(fp, "\t\t jmp   short %s_h\n",Label);
 
-		// do post
+		/**/ do post
  fprintf(fp, "%s_g:\n",Label);
 		fprintf(fp, "\t\t push  eax\n");
 		Memory_Read('L',EDI,"-B-DS-B",2);
@@ -1491,26 +1491,26 @@ void ExtensionDecode(int SaveEDX)
  fprintf(fp, "%s_7a:\n",Label);
 		fprintf(fp, "\t\t lea   edi,[edi+eax]\n");
 
-		// **** outer displacement ****
-		// if null displacement skip over
+		/**/ **** outer displacement ****
+		/**/ if null displacement skip over
  fprintf(fp, "%s_h:\n",Label);
 		fprintf(fp, "\t\t test  edx,0x0002\n");
 		fprintf(fp, "\t\t jz    short %s_j\n",Label);
-		// word or long?
+		/**/ word or long?
 		fprintf(fp, "\t\t test  edx,0x0001\n");
 		fprintf(fp, "\t\t jz    short %s_i\n",Label);
-		// fetch long
+		/**/ fetch long
 		Memory_Fetch('L',EAX,FALSE);
 		fprintf(fp, "\t\t add   esi,byte 4\n");
 		fprintf(fp, "\t\t jmp   short %s_i2\n",Label);
-		// fetch word
+		/**/ fetch word
   fprintf(fp, "%s_i:\n",Label);
 		Memory_Fetch('W',EAX,TRUE);
 		fprintf(fp, "\t\t add   esi,byte 2\n");
   fprintf(fp, "%s_i2:\n",Label);
 		fprintf(fp, "\t\t lea   edi,[edi+eax]\n");
 
-		// **** exit ****
+		/**/ **** exit ****
   fprintf(fp, "%s_j:\n",Label);
 		fprintf(fp, "\t\t pop   ecx\n");
 		fprintf(fp, "\t\t pop   ebx\n");
@@ -1617,7 +1617,7 @@ void EffectiveAddressCalculate(int mode,char Size,int Rreg,int SaveEDX)
 			/* Get Word */
 
 			Memory_Fetch('W',EDI,TRUE);
-//		 fprintf(fp, "\t\t movsx edi,di\n");
+/**/		 fprintf(fp, "\t\t movsx edi,di\n");
 			fprintf(fp, "\t\t add   esi,byte 2\n");
 			break;
 
@@ -1634,7 +1634,7 @@ void EffectiveAddressCalculate(int mode,char Size,int Rreg,int SaveEDX)
 			AccessType = PCREL;
 
 			Memory_Fetch('W',EAX,TRUE);
-//		 fprintf(fp, "\t\t movsx eax,ax\n");
+/**/		 fprintf(fp, "\t\t movsx eax,ax\n");
 			fprintf(fp, "\t\t mov   EDI,ESI           ; Get PC\n");
 			fprintf(fp, "\t\t add   esi,byte 2\n");
 			fprintf(fp, "\t\t add   edi,eax         ; Add Offset to PC\n");
@@ -2579,7 +2579,7 @@ void dump_bit_dynamic( int sreg, int type, int mode, int dreg )
 	if (mode == 7) BaseCode |= dreg ;
 
 
-	// A7+, A7-
+	/**/ A7+, A7-
 
 #ifdef  A7ROUTINE
 	if ((mode > 2) && (mode < 5))
@@ -2748,7 +2748,7 @@ void dump_bit_static(int type, int mode, int dreg )
 	BaseCode = Opcode & 0x08f8 ;
 	if (mode == 7) BaseCode |= dreg ;
 
-	// A7+, A7-
+	/**/ A7+, A7-
 
 #ifdef  A7ROUTINE
 	if ((mode > 2) && (mode < 5))
@@ -4226,48 +4226,48 @@ void mull(void)
 						fprintf(fp, "\t\t and   ecx,byte 7\n");
 					}
 
-					Memory_Fetch('W', EBX, FALSE );							// fetch the next word
+					Memory_Fetch('W', EBX, FALSE );							/**/ fetch the next word
 					fprintf(fp, "\t\t add   esi,byte 2\n\n");
 
-					EffectiveAddressRead(Dest,'L',ECX,EAX,"ABCDSDB",FALSE);	// read from the EA
+					EffectiveAddressRead(Dest,'L',ECX,EAX,"ABCDSDB",FALSE);	/**/ read from the EA
 
-					fprintf(fp, "\t\t mov   ecx,ebx\n");					// save 2nd word in ecx
-					fprintf(fp, "\t\t shr   ebx,12\n");						// ebx = Dl register
-					fprintf(fp, "\t\t and   ebx,7\n");						// 0-7
+					fprintf(fp, "\t\t mov   ecx,ebx\n");					/**/ save 2nd word in ecx
+					fprintf(fp, "\t\t shr   ebx,12\n");						/**/ ebx = Dl register
+					fprintf(fp, "\t\t and   ebx,7\n");						/**/ 0-7
 
 					Label = GenerateLabel(BaseCode,1);
 
-					fprintf(fp, "\t\t test  ecx,0x0800\n");					// signed/unsigned?
-					fprintf(fp, "\t\t jz    short %s\n",Label);				// skip if unsigned
+					fprintf(fp, "\t\t test  ecx,0x0800\n");					/**/ signed/unsigned?
+					fprintf(fp, "\t\t jz    short %s\n",Label);				/**/ skip if unsigned
 
-					fprintf(fp, "\t\t imul   dword [%s+EBX*4]\n",REG_DAT);	// signed 32x32->64
-					fprintf(fp, "\t\t jmp   short %s_1\n",Label);			// skip
+					fprintf(fp, "\t\t imul   dword [%s+EBX*4]\n",REG_DAT);	/**/ signed 32x32->64
+					fprintf(fp, "\t\t jmp   short %s_1\n",Label);			/**/ skip
 
 				fprintf(fp, "%s:\n",Label);
-					fprintf(fp, "\t\t mul  dword [%s+EBX*4]\n",REG_DAT);	// unsigned 32x32->64
+					fprintf(fp, "\t\t mul  dword [%s+EBX*4]\n",REG_DAT);	/**/ unsigned 32x32->64
 
 				fprintf(fp, "%s_1:\n",Label);
-					fprintf(fp, "\t\t mov   [%s+EBX*4],eax\n",REG_DAT);		// store Dl back
+					fprintf(fp, "\t\t mov   [%s+EBX*4],eax\n",REG_DAT);		/**/ store Dl back
 
-					fprintf(fp, "\t\t test  ecx,0x0400\n");					// do we care?
-					fprintf(fp, "\t\t jz    short %s_2\n",Label);			// if not, skip
-					fprintf(fp, "\t\t and   ecx,7\n");						// get Dh register
-					fprintf(fp, "\t\t mov   [%s+ECX*4],edx\n",REG_DAT);		// store upper 32 bits
-					SetFlags('L',EDX,TRUE,FALSE,FALSE);						// set the flags
-					fprintf(fp, "\t\t and   edx,~0x0800\n");				// clear the overflow
-					fprintf(fp, "\t\t jmp   short %s_3\n",Label);			// skip
+					fprintf(fp, "\t\t test  ecx,0x0400\n");					/**/ do we care?
+					fprintf(fp, "\t\t jz    short %s_2\n",Label);			/**/ if not, skip
+					fprintf(fp, "\t\t and   ecx,7\n");						/**/ get Dh register
+					fprintf(fp, "\t\t mov   [%s+ECX*4],edx\n",REG_DAT);		/**/ store upper 32 bits
+					SetFlags('L',EDX,TRUE,FALSE,FALSE);						/**/ set the flags
+					fprintf(fp, "\t\t and   edx,~0x0800\n");				/**/ clear the overflow
+					fprintf(fp, "\t\t jmp   short %s_3\n",Label);			/**/ skip
 
 				fprintf(fp, "%s_2:\n",Label);
-					fprintf(fp, "\t\t mov   ebx,edx\n");					// save upper 32 in ebx
-					SetFlags('L',EAX,TRUE,FALSE,FALSE);						// set the flags
-					fprintf(fp, "\t\t sar   eax,31\n");						// eax = sign-extended
-					fprintf(fp, "\t\t test  ecx,0x0800\n");					// signed/unsigned?
-					fprintf(fp, "\t\t jnz   short %s_4\n",Label);			// skip if signed
-					fprintf(fp, "\t\t xor   eax,eax\n");					// always use 0 for unsigned
+					fprintf(fp, "\t\t mov   ebx,edx\n");					/**/ save upper 32 in ebx
+					SetFlags('L',EAX,TRUE,FALSE,FALSE);						/**/ set the flags
+					fprintf(fp, "\t\t sar   eax,31\n");						/**/ eax = sign-extended
+					fprintf(fp, "\t\t test  ecx,0x0800\n");					/**/ signed/unsigned?
+					fprintf(fp, "\t\t jnz   short %s_4\n",Label);			/**/ skip if signed
+					fprintf(fp, "\t\t xor   eax,eax\n");					/**/ always use 0 for unsigned
 				fprintf(fp, "%s_4:\n",Label);
-					fprintf(fp, "\t\t cmp   eax,ebx\n");					// compare upper 32 against eax
-					fprintf(fp, "\t\t je    short %s_3\n",Label);			// if equal to sign extension, skip
-					fprintf(fp, "\t\t or    edx,0x0800\n");					// set the overflow
+					fprintf(fp, "\t\t cmp   eax,ebx\n");					/**/ compare upper 32 against eax
+					fprintf(fp, "\t\t je    short %s_3\n",Label);			/**/ if equal to sign extension, skip
+					fprintf(fp, "\t\t or    edx,0x0800\n");					/**/ set the overflow
 
 				fprintf(fp, "%s_3:\n",Label);
 					Completed();
@@ -4308,105 +4308,105 @@ void divl(void)
 					if ((Dest >= 2) && (Dest <=10))
 						SavePreviousPC();
 
-					fprintf(fp, "\t\t push  edx\n");					// save edx
+					fprintf(fp, "\t\t push  edx\n");					/**/ save edx
 					fprintf(fp, "\t\t add   esi,byte 2\n\n");
-					fprintf(fp, "\t\t and   ecx,byte 7\n");				// read from ea
+					fprintf(fp, "\t\t and   ecx,byte 7\n");				/**/ read from ea
 
-					Memory_Fetch('W', EDX, FALSE );						// fetch 2nd word in ecx
+					Memory_Fetch('W', EDX, FALSE );						/**/ fetch 2nd word in ecx
 					fprintf(fp, "\t\t add   esi,byte 2\n\n");
 
 					EffectiveAddressRead(Dest,'L',ECX,EBX,"---DSDB",FALSE);
 
-					fprintf(fp, "\t\t push  esi\n");					// save and 0 esi
+					fprintf(fp, "\t\t push  esi\n");					/**/ save and 0 esi
 					ClearRegister(ESI);
 
 					Label = GenerateLabel(BaseCode,1);
 
-					fprintf(fp, "\t\t test  ebx,ebx\n");				// check divisor against 0
-					fprintf(fp, "\t\t jz    near %s_ZERO\n",Label);		// handle divide-by-zero
-// low part always used
-					fprintf(fp, "\t\t mov   ecx,edx\n");				// ecx = extension word
-					fprintf(fp, "\t\t shr   edx,12\n");					// edx = Dq register
-					fprintf(fp, "\t\t and   edx,7\n");					// 0-7
-					fprintf(fp, "\t\t mov   eax,[%s+edx*4]\n",REG_DAT);	// eax = Dq register value
+					fprintf(fp, "\t\t test  ebx,ebx\n");				/**/ check divisor against 0
+					fprintf(fp, "\t\t jz    near %s_ZERO\n",Label);		/**/ handle divide-by-zero
+/**/ low part always used
+					fprintf(fp, "\t\t mov   ecx,edx\n");				/**/ ecx = extension word
+					fprintf(fp, "\t\t shr   edx,12\n");					/**/ edx = Dq register
+					fprintf(fp, "\t\t and   edx,7\n");					/**/ 0-7
+					fprintf(fp, "\t\t mov   eax,[%s+edx*4]\n",REG_DAT);	/**/ eax = Dq register value
 
-					ClearRegister(EDX);									// edx = 0
-					fprintf(fp, "\t\t test  ecx,0x0400\n");				// check size
-					fprintf(fp, "\t\t jz    short %s_1\n",Label);		// skip if 32-bit dividend
-// high longword (64bit)
-					fprintf(fp, "\t\t mov   edx,ecx\n");				// edx = extension word
-					fprintf(fp, "\t\t and   edx,7\n");					// 0-7
-					fprintf(fp, "\t\t mov   edx,[%s+edx*4]\n",REG_DAT);	// fetch upper 32-bits
+					ClearRegister(EDX);									/**/ edx = 0
+					fprintf(fp, "\t\t test  ecx,0x0400\n");				/**/ check size
+					fprintf(fp, "\t\t jz    short %s_1\n",Label);		/**/ skip if 32-bit dividend
+/**/ high longword (64bit)
+					fprintf(fp, "\t\t mov   edx,ecx\n");				/**/ edx = extension word
+					fprintf(fp, "\t\t and   edx,7\n");					/**/ 0-7
+					fprintf(fp, "\t\t mov   edx,[%s+edx*4]\n",REG_DAT);	/**/ fetch upper 32-bits
 
-					fprintf(fp, "\t\t test  ecx,0x0800\n");				// signed?
-					fprintf(fp, "\t\t jz    near %s_3\n",Label);		// if not, skip to unsigned 64-bit
-					fprintf(fp, "\t\t jmp   near %s_2\n",Label);		// skip to signed 64-bit case
+					fprintf(fp, "\t\t test  ecx,0x0800\n");				/**/ signed?
+					fprintf(fp, "\t\t jz    near %s_3\n",Label);		/**/ if not, skip to unsigned 64-bit
+					fprintf(fp, "\t\t jmp   near %s_2\n",Label);		/**/ skip to signed 64-bit case
 
-				fprintf(fp, "%s_1:\n",Label);							// short case
-					ClearRegister(EDX);									// clear edx
-					fprintf(fp, "\t\t test  ecx,0x0800\n");				// signed?
-					fprintf(fp, "\t\t jz    short %s_3\n",Label);		// if not, don't convert
-					fprintf(fp, "\t\t cdq\n");							// sign extend into edx
-// signed
-				fprintf(fp, "%s_2:\n",Label);							// signed 32/64-bit case
-					fprintf(fp, "\t\t or    esi,1\n");					// esi |= 1 to indicate signed
-					fprintf(fp, "\t\t test  ebx,ebx\n");				// check divisor sign
-					fprintf(fp, "\t\t jge   short %s_2b\n",Label);		// if >= 0, don't set
-					fprintf(fp, "\t\t or    esi,2\n");					// esi |= 2 to indicate negative divisor
-					fprintf(fp, "\t\t neg   ebx\n");					// make positive
+				fprintf(fp, "%s_1:\n",Label);							/**/ short case
+					ClearRegister(EDX);									/**/ clear edx
+					fprintf(fp, "\t\t test  ecx,0x0800\n");				/**/ signed?
+					fprintf(fp, "\t\t jz    short %s_3\n",Label);		/**/ if not, don't convert
+					fprintf(fp, "\t\t cdq\n");							/**/ sign extend into edx
+/**/ signed
+				fprintf(fp, "%s_2:\n",Label);							/**/ signed 32/64-bit case
+					fprintf(fp, "\t\t or    esi,1\n");					/**/ esi |= 1 to indicate signed
+					fprintf(fp, "\t\t test  ebx,ebx\n");				/**/ check divisor sign
+					fprintf(fp, "\t\t jge   short %s_2b\n",Label);		/**/ if >= 0, don't set
+					fprintf(fp, "\t\t or    esi,2\n");					/**/ esi |= 2 to indicate negative divisor
+					fprintf(fp, "\t\t neg   ebx\n");					/**/ make positive
 				fprintf(fp, "%s_2b:\n",Label);
-					fprintf(fp, "\t\t test  edx,edx\n");				// check dividend sign
-					fprintf(fp, "\t\t jge   short %s_3\n",Label);		// if >= 0, don't set
-					fprintf(fp, "\t\t push  ebx\n");					// save ebx
-					fprintf(fp, "\t\t push  ecx\n");					// save ecx
-					ClearRegister(EBX);									// clear ebx
-					ClearRegister(ECX);									// clear ecx
-					fprintf(fp, "\t\t sub   ebx,eax\n");				// ebx = 0 - eax
-					fprintf(fp, "\t\t sbb   ecx,edx\n");				// ecx = 0 - edx
-					fprintf(fp, "\t\t mov   eax,ebx\n");				// eax = ebx
-					fprintf(fp, "\t\t mov   edx,ecx\n");				// edx = ecx
-					fprintf(fp, "\t\t pop   ecx\n");					// restore ecx
-					fprintf(fp, "\t\t pop   ebx\n");					// restore ebx
-					fprintf(fp, "\t\t or    esi,4\n");					// esi |= 4 to indicate negative dividend
-// unsigned
-				fprintf(fp, "%s_3:\n",Label);							// unsigned 32/64-bit case
-					fprintf(fp, "\t\t cmp   ebx,edx\n");				// check ebx against upper 32 bits
-					fprintf(fp, "\t\t jbe   near %s_OVERFLOW\n",Label);	// generate overflow
-					fprintf(fp, "\t\t div   ebx\n");					// do the divide
-					fprintf(fp, "\t\t test  esi,esi\n");				// see if we need to post process
-					fprintf(fp, "\t\t jz    short %s_4\n",Label);		// if not, skip
-					fprintf(fp, "\t\t jpo   short %s_4\n",Label);		// if PO (pos*pos or neg*neg), leave the result
-					fprintf(fp, "\t\t neg   eax\n");					// negate the result
+					fprintf(fp, "\t\t test  edx,edx\n");				/**/ check dividend sign
+					fprintf(fp, "\t\t jge   short %s_3\n",Label);		/**/ if >= 0, don't set
+					fprintf(fp, "\t\t push  ebx\n");					/**/ save ebx
+					fprintf(fp, "\t\t push  ecx\n");					/**/ save ecx
+					ClearRegister(EBX);									/**/ clear ebx
+					ClearRegister(ECX);									/**/ clear ecx
+					fprintf(fp, "\t\t sub   ebx,eax\n");				/**/ ebx = 0 - eax
+					fprintf(fp, "\t\t sbb   ecx,edx\n");				/**/ ecx = 0 - edx
+					fprintf(fp, "\t\t mov   eax,ebx\n");				/**/ eax = ebx
+					fprintf(fp, "\t\t mov   edx,ecx\n");				/**/ edx = ecx
+					fprintf(fp, "\t\t pop   ecx\n");					/**/ restore ecx
+					fprintf(fp, "\t\t pop   ebx\n");					/**/ restore ebx
+					fprintf(fp, "\t\t or    esi,4\n");					/**/ esi |= 4 to indicate negative dividend
+/**/ unsigned
+				fprintf(fp, "%s_3:\n",Label);							/**/ unsigned 32/64-bit case
+					fprintf(fp, "\t\t cmp   ebx,edx\n");				/**/ check ebx against upper 32 bits
+					fprintf(fp, "\t\t jbe   near %s_OVERFLOW\n",Label);	/**/ generate overflow
+					fprintf(fp, "\t\t div   ebx\n");					/**/ do the divide
+					fprintf(fp, "\t\t test  esi,esi\n");				/**/ see if we need to post process
+					fprintf(fp, "\t\t jz    short %s_4\n",Label);		/**/ if not, skip
+					fprintf(fp, "\t\t jpo   short %s_4\n",Label);		/**/ if PO (pos*pos or neg*neg), leave the result
+					fprintf(fp, "\t\t neg   eax\n");					/**/ negate the result
 
-// store results
+/**/ store results
 				fprintf(fp, "%s_4:\n",Label);
-					fprintf(fp, "\t\t mov   ebx,ecx\n");				// ebx = extension word
-					fprintf(fp, "\t\t and   ebx,7\n");					// get Dr in ebx
-					fprintf(fp, "\t\t shr   ecx,12\n");					// ecx = Dq
-					fprintf(fp, "\t\t and   ecx,7\n");					// 0-7
-					fprintf(fp, "\t\t mov   [%s+ebx*4],edx\n",REG_DAT);	// store remainder first
-					fprintf(fp, "\t\t mov   [%s+ecx*4],eax\n",REG_DAT);	// store quotient second
-					fprintf(fp, "\t\t pop   esi\n");					// restore esi
-					fprintf(fp, "\t\t pop   edx\n");					// restore edx
-					SetFlags('L',EAX,TRUE,FALSE,FALSE);					// set the flags
+					fprintf(fp, "\t\t mov   ebx,ecx\n");				/**/ ebx = extension word
+					fprintf(fp, "\t\t and   ebx,7\n");					/**/ get Dr in ebx
+					fprintf(fp, "\t\t shr   ecx,12\n");					/**/ ecx = Dq
+					fprintf(fp, "\t\t and   ecx,7\n");					/**/ 0-7
+					fprintf(fp, "\t\t mov   [%s+ebx*4],edx\n",REG_DAT);	/**/ store remainder first
+					fprintf(fp, "\t\t mov   [%s+ecx*4],eax\n",REG_DAT);	/**/ store quotient second
+					fprintf(fp, "\t\t pop   esi\n");					/**/ restore esi
+					fprintf(fp, "\t\t pop   edx\n");					/**/ restore edx
+					SetFlags('L',EAX,TRUE,FALSE,FALSE);					/**/ set the flags
 				fprintf(fp, "%s_5:\n",Label);
-					fprintf(fp, "\t\t and   edx,~1\n");					// clear the carry
+					fprintf(fp, "\t\t and   edx,~1\n");					/**/ clear the carry
 					Completed();
 
 					fprintf(fp, "%s_ZERO:\t\t ;Do divide by zero trap\n", Label);
 					/* Correct cycle counter for error */
-					fprintf(fp, "\t\t pop   esi\n");					// restore esi
-					fprintf(fp, "\t\t pop   edx\n");					// restore edx
+					fprintf(fp, "\t\t pop   esi\n");					/**/ restore esi
+					fprintf(fp, "\t\t pop   edx\n");					/**/ restore edx
 					fprintf(fp, "\t\t add   dword [%s],byte %d\n",ICOUNT,95);
 				fprintf(fp,"\t\t jmp short %s_5\n",Label);
 					Exception(5,BaseCode);
 
 				fprintf(fp, "%s_OVERFLOW:\n",Label);
-//set overflow
-					fprintf(fp, "\t\t pop   esi\n");					// restore esi
-					fprintf(fp, "\t\t pop   edx\n");					// restore edx
-					fprintf(fp, "\t\t or    edx,0x0800\n");				// set the overflow bit
-					fprintf(fp, "\t\t jmp   near %s_5\n",Label);		// done
+/**/set overflow
+					fprintf(fp, "\t\t pop   esi\n");					/**/ restore esi
+					fprintf(fp, "\t\t pop   edx\n");					/**/ restore edx
+					fprintf(fp, "\t\t or    edx,0x0800\n");				/**/ set the overflow bit
+					fprintf(fp, "\t\t jmp   near %s_5\n",Label);		/**/ done
 
 				}
 
@@ -4417,7 +4417,7 @@ void divl(void)
 
 void bfext(void)
 {
-// just bfextu/bfexts for now
+/**/ just bfextu/bfexts for now
 	char allow[] = "0-2--56789a-----" ;
 	char *Label = NULL ;
 	int mode,dreg,sign,Opcode,BaseCode,Dest ;
@@ -4451,32 +4451,32 @@ void bfext(void)
 						Memory_Fetch('W', EAX, FALSE ) ;
 						fprintf(fp, "\t\t add   esi,byte 2\n\n");
 
-						EffectiveAddressRead(Dest,'L',ECX,EDX,"ABCDSDB",FALSE);		// edx = dword
+						EffectiveAddressRead(Dest,'L',ECX,EDX,"ABCDSDB",FALSE);		/**/ edx = dword
 
 						fprintf(fp, "\t\t mov   ecx,eax\n");
 						fprintf(fp, "\t\t shr   ecx,byte 6\n");
 						fprintf(fp, "\t\t test  eax,0x0800\n");
 						fprintf(fp, "\t\t je    short %s_1\n",Label);
-	//get offset from Dx
+	/**/get offset from Dx
 						fprintf(fp, "\t\t and   ecx,byte 7\n");
 						fprintf(fp, "\t\t mov   ecx,[%s+ECX*4]\n",REG_DAT);
-	//get offset from extension
+	/**/get offset from extension
 						fprintf(fp, "%s_1:\n",Label);
-						fprintf(fp, "\t\t and   ecx,31\n");							// ecx = offset
+						fprintf(fp, "\t\t and   ecx,31\n");							/**/ ecx = offset
 						fprintf(fp, "\t\t mov   ebx,eax\n");
 						fprintf(fp, "\t\t test  eax,0x0020\n");
 						fprintf(fp, "\t\t je    short %s_2\n",Label);
-	//get width from Dy
+	/**/get width from Dy
 						fprintf(fp, "\t\t and   ebx,byte 7\n");
 						fprintf(fp, "\t\t mov   ebx,[%s+EBX*4]\n",REG_DAT);
-	//get width from extension
+	/**/get width from extension
 						fprintf(fp, "%s_2:\n",Label);
-	//fix 0=32
+	/**/fix 0=32
 						fprintf(fp, "\t\t sub   ebx,byte 1\n");
 						fprintf(fp, "\t\t and   ebx,byte 31\n");
-						fprintf(fp, "\t\t add   ebx,byte 1\n");						// ebx = width
+						fprintf(fp, "\t\t add   ebx,byte 1\n");						/**/ ebx = width
 						fprintf(fp, "\t\t rol   edx,cl\n");
-	// check for N
+	/**/ check for N
 						fprintf(fp, "\t\t mov   ecx,32\n");
 						fprintf(fp, "\t\t sub   ecx,ebx\n");
 						fprintf(fp, "\t\t mov   ebx,edx\n");
@@ -4490,7 +4490,7 @@ void bfext(void)
 						fprintf(fp, "\t\t mov   [%s+EAX*4],ebx\n",REG_DAT);
 						fprintf(fp, "\t\t test  ebx,ebx\n");
 						fprintf(fp, "\t\t jnz   short %s_3\n",Label);
-	//zero flag
+	/**/zero flag
 						fprintf(fp, "\t\t or    edx,40h\n");
 						fprintf(fp, "%s_3:\n",Label);
 						Completed();
@@ -4533,7 +4533,7 @@ void not(void)
 						BaseCode |= sreg ;
 					}
 
-					// A7+, A7-
+					/**/ A7+, A7-
 
 #ifdef  A7ROUTINE
 					if ((leng == 0) && (sreg == 7) && (mode > 2) && (mode < 5))
@@ -4968,7 +4968,7 @@ void nbcd(void)
 			if (mode == 7)
 				BaseCode |= sreg ;
 
-			// A7+, A7-
+			/**/ A7+, A7-
 
 #ifdef  A7ROUTINE
 			if ((sreg == 7) && (mode > 2) && (mode < 5))
@@ -5169,7 +5169,7 @@ void tst(void)
 					BaseCode |= sreg ;
 				}
 
-				// A7+, A7-
+				/**/ A7+, A7-
 
 #ifdef  A7ROUTINE
 				if ((leng == 0) && (sreg == 7) && (mode > 2) && (mode < 5))
@@ -7168,7 +7168,7 @@ void asl_asr(void)
 										/* > 31 Shifts */
 
 										fprintf(fp, "%s_32:\n",Label);
-										fprintf(fp, "\t\t mov   dl,40h\n");	 // Zero flag
+										fprintf(fp, "\t\t mov   dl,40h\n");	 /**/ Zero flag
 										ClearRegister(EAX);
 										EffectiveAddressWrite(0,Size,EBX,EAX,"----S-B",TRUE);
 									}
@@ -7642,7 +7642,7 @@ void CodeSegmentBegin(void)
 	fprintf(fp, "\t\t EXTERN %sOP_RAM\n", PREF);
 
 	fprintf(fp, "\t\t EXTERN %sopcode_entry\n", PREF);
-//	fprintf(fp, "\t\t EXTERN %scur_mrhard\n", PREF);
+/**/	fprintf(fp, "\t\t EXTERN %scur_mrhard\n", PREF);
 
 #ifdef MAME_DEBUG
 	fprintf(fp, "\t\t EXTERN %sm68k_illegal_opcode\n", PREF);

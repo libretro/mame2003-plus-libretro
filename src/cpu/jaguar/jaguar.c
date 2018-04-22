@@ -571,7 +571,7 @@ int jaguargpu_execute(int cycles)
 	do
 	{
 		/* debugging */
-		//if (jaguar.PC < 0xf03000 || jaguar.PC > 0xf04000) { fprintf(stderr, "GPU: jaguar.PC = %06X (ppc = %06X)\n", jaguar.PC, jaguar.ppc); exit(1); }
+		/*if (jaguar.PC < 0xf03000 || jaguar.PC > 0xf04000) { fprintf(stderr, "GPU: jaguar.PC = %06X (ppc = %06X)\n", jaguar.PC, jaguar.ppc); exit(1); }*/
 		jaguar.ppc = jaguar.PC;
 		CALL_MAME_DEBUG;
 
@@ -617,7 +617,7 @@ int jaguardsp_execute(int cycles)
 	do
 	{
 		/* debugging */
-		//if (jaguar.PC < 0xf1b000 || jaguar.PC > 0xf1d000) { fprintf(stderr, "DSP: jaguar.PC = %06X\n", jaguar.PC); exit(1); }
+		/*if (jaguar.PC < 0xf1b000 || jaguar.PC > 0xf1d000) { fprintf(stderr, "DSP: jaguar.PC = %06X\n", jaguar.PC); exit(1); }*/
 		jaguar.ppc = jaguar.PC;
 		CALL_MAME_DEBUG;
 
@@ -693,9 +693,9 @@ static INLINE unsigned common_get_reg(int regnum)
 		default:
 			if (regnum <= REG_SP_CONTENTS)
 			{
-//				unsigned offset = REG_SP_CONTENTS - regnum;
-//				if (offset < PC_STACK_DEPTH)
-//					return jaguar.pc_stack[offset];
+/*				unsigned offset = REG_SP_CONTENTS - regnum;*/
+/*				if (offset < PC_STACK_DEPTH)*/
+/*					return jaguar.pc_stack[offset];*/
 			}
 	}
 	return 0;
@@ -762,9 +762,9 @@ static INLINE void common_set_reg(int regnum, unsigned val)
 		default:
 			if (regnum <= REG_SP_CONTENTS)
 			{
-//				unsigned offset = REG_SP_CONTENTS - regnum;
-//				if (offset < PC_STACK_DEPTH)
-//					jaguar.pc_stack[offset] = val;
+/*				unsigned offset = REG_SP_CONTENTS - regnum;*/
+/*				if (offset < PC_STACK_DEPTH)*/
+/*					jaguar.pc_stack[offset] = val;*/
 			}
     }
 }

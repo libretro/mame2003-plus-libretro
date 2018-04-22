@@ -184,7 +184,7 @@ unsigned tms32025_dasm(char *buffer, unsigned pc);
  *	address 0 , and data is in word entities only.
  */
 
-// #define TMS32025_ROM_RDMEM(A) (cpu_readmem18bew_word((A<<1)+TMS32025_PGM_OFFSET))
+/* #define TMS32025_ROM_RDMEM(A) (cpu_readmem18bew_word((A<<1)+TMS32025_PGM_OFFSET))*/
 #define TMS32025_ROM_RDMEM(A) (cpu_readmem18bew_word(TMS32025_PRGM_BANK(A)))
 
 /****************************************************************************
@@ -194,7 +194,7 @@ unsigned tms32025_dasm(char *buffer, unsigned pc);
  *	address 0 , and data is in word entities only.
  */
 
-// #define TMS32025_ROM_WRMEM(A,V) (cpu_writemem18bew_word((A<<1)+TMS32025_PGM_OFFSET,V))
+/* #define TMS32025_ROM_WRMEM(A,V) (cpu_writemem18bew_word((A<<1)+TMS32025_PGM_OFFSET,V))*/
 #define TMS32025_ROM_WRMEM(A,V) (cpu_writemem18bew_word(TMS32025_PRGM_BANK(A),V))
 
 
@@ -203,7 +203,7 @@ unsigned tms32025_dasm(char *buffer, unsigned pc);
  *	Read a 16 bit Opcode.
  */
 
-// #define TMS32025_RDOP(A) (cpu_readop16((A<<1)+TMS32025_PGM_OFFSET))
+/* #define TMS32025_RDOP(A) (cpu_readop16((A<<1)+TMS32025_PGM_OFFSET))*/
 #define TMS32025_RDOP(A) (cpu_readop16(TMS32025_PRGM_BANK(A)))
 
 
@@ -212,7 +212,7 @@ unsigned tms32025_dasm(char *buffer, unsigned pc);
  *	for reading opcode arguments.
  */
 
-// #define TMS32025_RDOP_ARG(A) (cpu_readop_arg16((A<<1)+TMS32025_PGM_OFFSET))
+/* #define TMS32025_RDOP_ARG(A) (cpu_readop_arg16((A<<1)+TMS32025_PGM_OFFSET))*/
 #define TMS32025_RDOP_ARG(A) (cpu_readop_arg16(TMS32025_PRGM_BANK(A)))
 
 
@@ -221,14 +221,14 @@ unsigned tms32025_dasm(char *buffer, unsigned pc);
  *	Read a word from given RAM memory location.
  */
 
-// #define TMS32025_RAM_RDMEM(A) (cpu_readmem18bew_word((A<<1)+TMS32025_DATA_OFFSET))
+/* #define TMS32025_RAM_RDMEM(A) (cpu_readmem18bew_word((A<<1)+TMS32025_DATA_OFFSET))*/
 #define TMS32025_RAM_RDMEM(A) (cpu_readmem18bew_word(TMS32025_DATA_BANK(A)))
 
 
 /****************************************************************************
  *	Write a word to given RAM memory location.
  */
-// #define TMS32025_RAM_WRMEM(A,V) (cpu_writemem18bew_word((A<<1)+TMS32025_DATA_OFFSET,V))
+/* #define TMS32025_RAM_WRMEM(A,V) (cpu_writemem18bew_word((A<<1)+TMS32025_DATA_OFFSET,V))*/
 #define TMS32025_RAM_WRMEM(A,V) (cpu_writemem18bew_word(TMS32025_DATA_BANK(A),V))
 
 

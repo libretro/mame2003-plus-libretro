@@ -5790,11 +5790,11 @@ static void ldildi(void)
 
 /*-----------------------------------------------------*/
 
-//	src2 = ind(OP)
-//	dst2 = ind(OP >> 8)
-//	sreg3 = ((OP >> 16) & 7)
-//	sreg1 = ((OP >> 19) & 7)
-//	dreg1 = ((OP >> 22) & 7)
+/*	src2 = ind(OP)*/
+/*	dst2 = ind(OP >> 8)*/
+/*	sreg3 = ((OP >> 16) & 7)*/
+/*	sreg1 = ((OP >> 19) & 7)*/
+/*	dreg1 = ((OP >> 22) & 7)*/
 
 static void absfstf(void)
 {

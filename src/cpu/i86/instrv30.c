@@ -352,7 +352,7 @@ static void PREFIXV30(_0fpre) (void)	/* Opcode 0x0f */
 
 	case 0x1f:							/* 0F 1f C6 - NOT1 si,07 */
 		ModRM = FETCH;
-		//tmp = GetRMWord(ModRM);
+		/*tmp = GetRMWord(ModRM);*/
 		if (ModRM >= 0xc0)
 		{
 			tmp = I.regs.w[Mod_RM.RM.w[ModRM]];
@@ -518,7 +518,7 @@ static void PREFIXV30(_0fpre) (void)	/* Opcode 0x0f */
 				di++;
 			}
 			I.OverVal = I.CarryVal;
-			nec_ICount -= 7 + 19 * (I.regs.b[CL] + 1);	// 7+19n, n #operand bytes
+			nec_ICount -= 7 + 19 * (I.regs.b[CL] + 1);	/* 7+19n, n #operand bytes*/
 		}
 		break;
 	case 0x28:							/* 0F 28 C7 - ROL4 bh */
@@ -592,7 +592,7 @@ static void PREFIXV30(_0fpre) (void)	/* Opcode 0x0f */
 		PutbackRMByte(ModRM, tmp);
 		break;
 
-	case 0x2B:							// 0F 2b c2 - ROR4 bx
+	case 0x2B:							/* 0F 2b c2 - ROR4 bx*/
 		ModRM = FETCH;
 		/*
 		 * /* tmp = GetRMWord(ModRM); 
@@ -1043,7 +1043,7 @@ static void PREFIXV30(_0fpre) (void)	/* Opcode 0x0f */
 		 * PUSH IP
 		 * MOV  CS,0:[intnum*4+2]
 		 * MOV  IP,0:[intnum*4]
-		 * MD <- 0; // Enable 8080 emulation
+		 * MD <- 0; /* Enable 8080 emulation*/
 		 * 
 		 * Note:
 		 * BRKEM instruction do software interrupt and then New CS,IP loaded
@@ -1268,7 +1268,7 @@ static void PREFIXV30(_setalc) (void)	/* Opcode 0xd6 */
 	 * 
 	 */
 	I.regs.b[AL] = (CF) ? 0xff : 0x00;
-	nec_ICount -= 3;					// V30
+	nec_ICount -= 3;					/* V30*/
 	logerror("PC=%06x : SETALC\n", activecpu_get_pc() - 1);
 }
 

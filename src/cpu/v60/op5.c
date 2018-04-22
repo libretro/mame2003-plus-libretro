@@ -42,7 +42,7 @@ UINT32 opBRKV(void)
 
 UINT32 opCLRTLBA(void)
 {
-	// @@@ TLB not yet supported
+	/* @@@ TLB not yet supported*/
 	logerror("Skipping CLRTLBA opcode! PC=%x\n", PC);
 	return 1;
 }
@@ -58,8 +58,8 @@ UINT32 opDISPOSE(void)
 
 UINT32 opHALT(void)
 {
-	// @@@ It should wait for an interrupt to occur
-	//logerror("HALT found: skipping");
+	/* @@@ It should wait for an interrupt to occur*/
+	/*logerror("HALT found: skipping");*/
 	return 1;
 }
 
@@ -83,7 +83,7 @@ UINT32 opTRAPFL(void)
 
 	if ((TKCW & 0x1F0) & ((PSW & 0x1F00) >> 4))
 	{
-		// @@@ FPU exception
+		/* @@@ FPU exception*/
 		logerror("Hit TRAPFL! PC=%x\n", PC);
 		abort();
 	}

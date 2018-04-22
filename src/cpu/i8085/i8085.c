@@ -146,7 +146,7 @@ int i8085_ICount = 0;
 static i8085_Regs I;
 static UINT8 ZS[256];
 static UINT8 ZSP[256];
-static UINT8 RIM_IEN = 0; //AT: IEN status latch used by the RIM instruction
+static UINT8 RIM_IEN = 0; /*AT: IEN status latch used by the RIM instruction*/
 static UINT8 ROP(void)
 {
 	return cpu_readop(I.PC.w.l++);
@@ -316,7 +316,7 @@ static INLINE void execute_one(int opcode)
 			if( I.cputype ) {
 				i8085_ICount -= 7;		/* RIM	*/
 				I.AF.b.h = I.IM;
-				I.AF.b.h |= RIM_IEN; RIM_IEN = 0; //AT: read and clear IEN status latch
+				I.AF.b.h |= RIM_IEN; RIM_IEN = 0; /*AT: read and clear IEN status latch*/
 /*				survival_prot ^= 0x01; */
 			} else {
 				i8085_ICount -= 4;		/* NOP undocumented */
@@ -393,14 +393,14 @@ static INLINE void execute_one(int opcode)
 				i8085_ICount -= 7;		/* SIM	*/
 				if ((I.IM ^ I.AF.b.h) & 0x80)
 					if (I.sod_callback) (*I.sod_callback)(I.AF.b.h >> 7);
-//AT
-				//I.IM &= (IM_SID + IM_IEN + IM_TRAP);
-				//I.IM |= (I.AF.b.h & ~(IM_SID + IM_SOD + IM_IEN + IM_TRAP));
+/*AT*/
+				/*I.IM &= (IM_SID + IM_IEN + IM_TRAP);*/
+				/*I.IM |= (I.AF.b.h & ~(IM_SID + IM_SOD + IM_IEN + IM_TRAP));*/
 
-				// overwrite RST5.5-7.5 interrupt masks only when bit 0x08 of the accumulator is set
+				/* overwrite RST5.5-7.5 interrupt masks only when bit 0x08 of the accumulator is set*/
 				if (I.AF.b.h & 0x08)
 					I.IM = (I.IM & ~(IM_RST55+IM_RST65+IM_RST75)) | (I.AF.b.h & (IM_RST55+IM_RST65+IM_RST75));
-//ZT
+/*ZT*/
 				if (I.AF.b.h & 0x80) I.IM |= IM_SOD;
 			} else {
 				i8085_ICount -= 4;		/* NOP undocumented */
@@ -1181,10 +1181,10 @@ static void Interrupt(void)
 		I.PC.w.l++; 	/* skip HALT instr */
 		I.HALT = 0;
 	}
-//AT
-	I.IREQ &= ~I.ISRV; // remove serviced IRQ flag
-	RIM_IEN = (I.ISRV==IM_TRAP) ? I.IM & IM_IEN : 0; // latch general interrupt enable bit on TRAP or NMI
-//ZT
+/*AT*/
+	I.IREQ &= ~I.ISRV; /* remove serviced IRQ flag*/
+	RIM_IEN = (I.ISRV==IM_TRAP) ? I.IM & IM_IEN : 0; /* latch general interrupt enable bit on TRAP or NMI*/
+/*ZT*/
 	I.IM &= ~IM_IEN;		/* remove general interrupt enable bit */
 
 	if( I.ISRV == IM_INTR )
@@ -1198,22 +1198,22 @@ static void Interrupt(void)
 		if( I.ISRV == IM_RST55 )
 		{
 			LOG(("Interrupt get RST5.5 vector\n"));
-			//I.IRQ1 = (I.irq_callback)(1);
-			I.irq_state[I8085_RST55_LINE] = CLEAR_LINE; //AT: processing RST5.5, reset interrupt line
+			/*I.IRQ1 = (I.irq_callback)(1);*/
+			I.irq_state[I8085_RST55_LINE] = CLEAR_LINE; /*AT: processing RST5.5, reset interrupt line*/
 		}
 
 		if( I.ISRV == IM_RST65	)
 		{
 			LOG(("Interrupt get RST6.5 vector\n"));
-			//I.IRQ1 = (I.irq_callback)(2);
-			I.irq_state[I8085_RST65_LINE] = CLEAR_LINE; //AT: processing RST6.5, reset interrupt line
+			/*I.IRQ1 = (I.irq_callback)(2);*/
+			I.irq_state[I8085_RST65_LINE] = CLEAR_LINE; /*AT: processing RST6.5, reset interrupt line*/
 		}
 
 		if( I.ISRV == IM_RST75 )
 		{
 			LOG(("Interrupt get RST7.5 vector\n"));
-			//I.IRQ1 = (I.irq_callback)(3);
-			I.irq_state[I8085_RST75_LINE] = CLEAR_LINE; //AT: processing RST7.5, reset interrupt line
+			/*I.IRQ1 = (I.irq_callback)(3);*/
+			I.irq_state[I8085_RST75_LINE] = CLEAR_LINE; /*AT: processing RST7.5, reset interrupt line*/
 		}
 	}
 
@@ -1331,13 +1331,13 @@ void i8085_init(void)
  ****************************************************************************/
 void i8085_reset(void *param)
 {
-	int cputype_bak = I.cputype; //AT: backup cputype(0=8080, 1=8085)
+	int cputype_bak = I.cputype; /*AT: backup cputype(0=8080, 1=8085)*/
 
 	init_tables();
-	memset(&I, 0, sizeof(i8085_Regs)); //AT: this also resets I.cputype so 8085 features were never ever used!
+	memset(&I, 0, sizeof(i8085_Regs)); /*AT: this also resets I.cputype so 8085 features were never ever used!*/
 	change_pc16(I.PC.d);
 
-	I.cputype = cputype_bak; //AT: restore cputype
+	I.cputype = cputype_bak; /*AT: restore cputype*/
 }
 
 /****************************************************************************
@@ -1557,8 +1557,8 @@ void i8085_set_INTR(int state)
 	if( state )
 	{
 		I.IREQ |= IM_INTR;				/* request INTR */
-		//I.INTR = state;
-		I.INTR = I8085_INTR; //AT: I.INTR is supposed to hold IRQ0 vector(0x38) (0xff in this implementation)
+		/*I.INTR = state;*/
+		I.INTR = I8085_INTR; /*AT: I.INTR is supposed to hold IRQ0 vector(0x38) (0xff in this implementation)*/
 		if( I.IM & IM_INTR ) return;	/* if masked, ignore it for now */
 		if( !I.ISRV )					/* if no higher priority IREQ is serviced */
 		{

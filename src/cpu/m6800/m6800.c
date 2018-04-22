@@ -85,7 +85,7 @@ enum {
 /* 6800 Registers */
 typedef struct
 {
-//	int 	subtype;		/* CPU subtype */
+/*	int 	subtype;		// CPU subtype */
 	PAIR	ppc;			/* Previous program counter */
 	PAIR	pc; 			/* Program counter */
 	PAIR	s;				/* Stack pointer */
@@ -517,7 +517,7 @@ static void check_timer_event(void)
 	/* OCI */
 	if( CTD >= OCD)
 	{
-		OCH++;	// next IRQ point
+		OCH++;	/* next IRQ point*/
 		m6800.tcsr |= TCSR_OCF;
 		m6800.pending_tcsr |= TCSR_OCF;
 		MODIFIED_tcsr;
@@ -527,7 +527,7 @@ static void check_timer_event(void)
 	/* TOI */
 	if( CTD >= TOD)
 	{
-		TOH++;	// next IRQ point
+		TOH++;	/* next IRQ point*/
 #if 0
 		CLEANUP_conters;
 #endif
@@ -566,7 +566,7 @@ static void state_register(const char *type)
 
 void m6800_init(void)
 {
-//	m6800.subtype   = SUBTYPE_M6800;
+/*	m6800.subtype   = SUBTYPE_M6800;*/
 	m6800.insn = m6800_insn;
 	m6800.cycles = cycles_6800;
 	state_register("m6800");
@@ -1070,7 +1070,7 @@ const char *m6800_info(void *context, int regnum)
 		case CPU_INFO_REG+M6800_CC: sprintf(buffer[which], "CC:%02X", r->cc); break;
 		case CPU_INFO_REG+M6800_NMI_STATE: sprintf(buffer[which], "NMI:%X", r->nmi_state); break;
 		case CPU_INFO_REG+M6800_IRQ_STATE: sprintf(buffer[which], "IRQ:%X", r->irq_state[M6800_IRQ_LINE]); break;
-//		case CPU_INFO_REG+M6800_TIN_STATE: sprintf(buffer[which], "TIN:%X", r->irq_state[M6800_TIN_LINE]); break;
+/*		case CPU_INFO_REG+M6800_TIN_STATE: sprintf(buffer[which], "TIN:%X", r->irq_state[M6800_TIN_LINE]); break;*/
 		case CPU_INFO_FLAGS:
 			sprintf(buffer[which], "%c%c%c%c%c%c%c%c",
 				r->cc & 0x80 ? '?':'.',
@@ -1109,7 +1109,7 @@ unsigned m6800_dasm(char *buffer, unsigned pc)
 #if (HAS_M6801)
 void m6801_init(void)
 {
-//	m6800.subtype = SUBTYPE_M6801;
+/*	m6800.subtype = SUBTYPE_M6801;*/
 	m6800.insn = m6803_insn;
 	m6800.cycles = cycles_6803;
 	state_register("m6801");
@@ -1167,7 +1167,7 @@ unsigned m6801_dasm(char *buffer, unsigned pc)
 #if (HAS_M6802)
 void m6802_init(void)
 {
-//	m6800.subtype   = SUBTYPE_M6802;
+/*	m6800.subtype   = SUBTYPE_M6802;*/
 	m6800.insn = m6800_insn;
 	m6800.cycles = cycles_6800;
 	state_register("m6802");
@@ -1225,7 +1225,7 @@ unsigned m6802_dasm(char *buffer, unsigned pc)
 #if (HAS_M6803)
 void m6803_init(void)
 {
-//	m6800.subtype = SUBTYPE_M6803;
+/*	m6800.subtype = SUBTYPE_M6803;*/
 	m6800.insn = m6803_insn;
 	m6800.cycles = cycles_6803;
 	state_register("m6803");
@@ -1579,7 +1579,7 @@ unsigned m6803_dasm(char *buffer, unsigned pc)
 #if (HAS_M6808)
 void m6808_init(void)
 {
-//	m6800.subtype = SUBTYPE_M6808;
+/*	m6800.subtype = SUBTYPE_M6808;*/
 	m6800.insn = m6800_insn;
 	m6800.cycles = cycles_6800;
 	state_register("m6808");
@@ -1636,7 +1636,7 @@ unsigned m6808_dasm(char *buffer, unsigned pc)
 #if (HAS_HD63701)
 void hd63701_init(void)
 {
-//	m6800.subtype = SUBTYPE_HD63701;
+/*	m6800.subtype = SUBTYPE_HD63701;*/
 	m6800.insn = hd63701_insn;
 	m6800.cycles = cycles_63701;
 	state_register("hd63701");
@@ -2009,7 +2009,7 @@ unsigned hd63701_dasm(char *buffer, unsigned pc)
 #if (HAS_NSC8105)
 void nsc8105_init(void)
 {
-//	m6800.subtype = SUBTYPE_NSC8105;
+/*	m6800.subtype = SUBTYPE_NSC8105;*/
 	m6800.insn = nsc8105_insn;
 	m6800.cycles = cycles_nsc8105;
 	state_register("nsc8105");
@@ -2378,7 +2378,7 @@ READ_HANDLER( m6803_internal_registers_r )
 			return 0;
 		case 0x08:
 			m6800.pending_tcsr = 0;
-//logerror("CPU #%d PC %04x: warning - read TCSR register\n",cpu_getactivecpu(),activecpu_get_pc());
+/*logerror("CPU #%d PC %04x: warning - read TCSR register\n",cpu_getactivecpu(),activecpu_get_pc());*/
 			return m6800.tcsr;
 		case 0x09:
 			if(!(m6800.pending_tcsr&TCSR_TOF))
@@ -2499,7 +2499,7 @@ WRITE_HANDLER( m6803_internal_registers_w )
 			MODIFIED_tcsr;
 			if( !(CC & 0x10) )
 				CHECK_IRQ2;
-//logerror("CPU #%d PC %04x: TCSR = %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data);
+/*logerror("CPU #%d PC %04x: TCSR = %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data);*/
 			break;
 		case 0x09:
 			latch09 = data & 0xff;	/* 6301 only */

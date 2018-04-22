@@ -15,16 +15,16 @@ extern "C" {
   7811 (4kbyte),7812(8),7814(16) have internal rom at 0x0000
 */
 
-// unfortunatly memory configuration differs with internal rom size
+/* unfortunatly memory configuration differs with internal rom size*/
 typedef enum {
 	TYPE_7810,
-	TYPE_7810_GAMEMASTER, // a few modifications until internal rom dumped
+	TYPE_7810_GAMEMASTER, /* a few modifications until internal rom dumped*/
 	TYPE_7807
-//	TYPE_78C10, // stop instruction added
-//	TYPE_78IV,
-//	TYPE_78K0,
-//	TYPE_78K0S
-//	millions of subtypes
+/*	TYPE_78C10, */ /* stop instruction added*/
+/*	TYPE_78IV,*/
+/*	TYPE_78K0,*/
+/*	TYPE_78K0S*/
+/*	millions of subtypes*/
 } UPD7810_TYPE;
 
 /* Supply an instance of this function in your driver code:
@@ -33,7 +33,7 @@ typedef enum {
  */
 typedef int (*upd7810_io_callback)(int ioline, int state);
 
-// use it as reset parameter in the Machine struct
+/* use it as reset parameter in the Machine struct*/
 typedef struct {
     UPD7810_TYPE type;
     upd7810_io_callback io_callback;

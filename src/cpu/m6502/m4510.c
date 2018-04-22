@@ -6,7 +6,7 @@
  *	 Copyright (c) 2000 Peter Trauner, all rights reserved
  *   documentation preliminary databook
  *	 documentation by michael steil mist@c64.org
- *	 available at ftp://ftp.funet.fi/pub/cbm/c65
+ *	 available at ftp:/*ftp.funet.fi/pub/cbm/c65*/
  *
  *	 - This source code is released as freeware for non-commercial purposes.
  *	 - You are free to use and redistribute this code in modified or
@@ -301,11 +301,11 @@ void m4510_set_reg (int regnum, unsigned val)
 		case M4510_P: m4510.p = val; break;
 		case M4510_MEM_LOW:
 			m4510.low = val;
-			// change the memory registers
+			/* change the memory registers*/
 			break;
 		case M4510_MEM_HIGH:
 			m4510.high = val;
-			// change the memory registers
+			/* change the memory registers*/
 			break;
 		case M4510_A: m4510.a = val; break;
 		case M4510_X: m4510.x = val; break;

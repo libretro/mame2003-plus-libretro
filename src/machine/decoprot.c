@@ -1076,7 +1076,7 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 			return ((((DECO_PORT(0x40)&0x00f0)<<8) | ((DECO_PORT(0x40)&0x000c)<<6) | ((DECO_PORT(0x40)&0x0003)<<10)) ^ deco16_xor);/* & (~deco16_mask);*/
 
 		case 0x7e2/2:
-			return ((((DECO_PORT(0x96)&0xf000)<<0) | ((DECO_PORT(0x96)&0x00f0)<<4) | ((DECO_PORT(0x96)&0x000f)<<4))) ^ deco16_xor;/* | ((DECO_PORT(0x96)&0x0001)<<7));/* ^ deco16_xor);*/ // & (~deco16_mask);*/
+			return ((((DECO_PORT(0x96)&0xf000)<<0) | ((DECO_PORT(0x96)&0x00f0)<<4) | ((DECO_PORT(0x96)&0x000f)<<4))) ^ deco16_xor;/* | ((DECO_PORT(0x96)&0x0001)<<7));*/ /* ^ deco16_xor);*/ /* & (~deco16_mask);*/
 		case 0x18c/2:
 			return (((DECO_PORT(0x22)&0xfff0)>>4) | ((DECO_PORT(0x22)&0x000e)<<11) | ((DECO_PORT(0x22)&0x0001)<<15));/* ^ deco16_xor);*/ /* & (~deco16_mask);*/
 		case 0x1fa/2:

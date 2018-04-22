@@ -2050,91 +2050,91 @@ static void blmove(void)
 static void cexec_l(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cexec_l\n");
+	/*logerror("020:cexec_l\n");*/
 }
 
 static void cexec_s(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cexec_s\n");
+	/*logerror("020:cexec_s\n");*/
 }
 
 static void clip(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:clip\n");
+	/*logerror("020:clip\n");*/
 }
 
 static void cmovcg_a(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovcg_a\n");
+	/*logerror("020:cmovcg_a\n");*/
 }
 
 static void cmovcg_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovcg_b\n");
+	/*logerror("020:cmovcg_b\n");*/
 }
 
 static void cmovcm_f(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovcm_f\n");
+	/*logerror("020:cmovcm_f\n");*/
 }
 
 static void cmovcm_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovcm_b\n");
+	/*logerror("020:cmovcm_b\n");*/
 }
 
 static void cmovgc_a(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovgc_a\n");
+	/*logerror("020:cmovgc_a\n");*/
 }
 
 static void cmovgc_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovgc_b\n");
+	/*logerror("020:cmovgc_b\n");*/
 }
 
 static void cmovgc_a_s(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovgc_a_s\n");
+	/*logerror("020:cmovgc_a_s\n");*/
 }
 
 static void cmovgc_b_s(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovgc_b_s\n");
+	/*logerror("020:cmovgc_b_s\n");*/
 }
 
 static void cmovmc_f(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovmc_f\n");
+	/*logerror("020:cmovmc_f\n");*/
 }
 
 static void cmovmc_f_va(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovmc_f_va\n");
+	/*logerror("020:cmovmc_f_va\n");*/
 }
 
 static void cmovmc_f_vb(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovmc_f_vb\n");
+	/*logerror("020:cmovmc_f_vb\n");*/
 }
 
 static void cmovmc_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cmovmc_b\n");
+	/*logerror("020:cmovmc_b\n");*/
 }
 
 #define CMPK(R)				       		       			    \
@@ -2160,91 +2160,91 @@ static void cmp_k_b(void)
 static void cvdxyl_a(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cvdxyl_a\n");
+	/*logerror("020:cvdxyl_a\n");*/
 }
 
 static void cvdxyl_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cvdxyl_b\n");
+	/*logerror("020:cvdxyl_b\n");*/
 }
 
 static void cvmxyl_a(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cvmxyl_a\n");
+	/*logerror("020:cvmxyl_a\n");*/
 }
 
 static void cvmxyl_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cvmxyl_b\n");
+	/*logerror("020:cvmxyl_b\n");*/
 }
 
 static void cvsxyl_a(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cvsxyl_a\n");
+	/*logerror("020:cvsxyl_a\n");*/
 }
 
 static void cvsxyl_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:cvsxyl_b\n");
+	/*logerror("020:cvsxyl_b\n");*/
 }
 
 static void exgps_a(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:exgps_a\n");
+	/*logerror("020:exgps_a\n");*/
 }
 
 static void exgps_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:exgps_b\n");
+	/*logerror("020:exgps_b\n");*/
 }
 
 static void fline(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:fline\n");
+	/*logerror("020:fline\n");*/
 }
 
 static void fpixeq(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:fpixeq\n");
+	/*logerror("020:fpixeq\n");*/
 }
 
 static void fpixne(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:fpixne\n");
+	/*logerror("020:fpixne\n");*/
 }
 
 static void getps_a(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:getps_a\n");
+	/*logerror("020:getps_a\n");*/
 }
 
 static void getps_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:getps_b\n");
+	/*logerror("020:getps_b\n");*/
 }
 
 static void idle(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:idle\n");
+	/*logerror("020:idle\n");*/
 }
 
 static void linit(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:linit\n");
+	/*logerror("020:linit\n");*/
 }
 
 static void mwait(void)
@@ -2255,19 +2255,19 @@ static void mwait(void)
 static void pfill_xy(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:pfill_xy\n");
+	/*logerror("020:pfill_xy\n");*/
 }
 
 static void pixblt_l_m_l(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:pixblt_l_m_l\n");
+	/*logerror("020:pixblt_l_m_l\n");*/
 }
 
 static void retm(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:retm\n");
+	/*logerror("020:retm\n");*/
 }
 
 #define RMO(R)			       		       			    		\
@@ -2348,59 +2348,59 @@ static void rpix_b(void)
 static void setcdp(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:setcdp\n");
+	/*logerror("020:setcdp\n");*/
 }
 
 static void setcmp(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:setcmp\n");
+	/*logerror("020:setcmp\n");*/
 }
 
 static void setcsp(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:setcsp\n");
+	/*logerror("020:setcsp\n");*/
 }
 
 static void swapf_a(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:swapf_a\n");
+	/*logerror("020:swapf_a\n");*/
 }
 
 static void swapf_b(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:swapf_b\n");
+	/*logerror("020:swapf_b\n");*/
 }
 
 static void tfill_xy(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:tfill_xy\n");
+	/*logerror("020:tfill_xy\n");*/
 }
 
 static void trapl(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:trapl\n");
+	/*logerror("020:trapl\n");*/
 }
 
 static void vblt_b_l(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:vblt_b_l\n");
+	/*logerror("020:vblt_b_l\n");*/
 }
 
 static void vfill_l(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:vfill_l\n");
+	/*logerror("020:vfill_l\n");*/
 }
 
 static void vlcol(void)
 {
 	if (!state.is_34020) { unimpl(); return; }
-	//logerror("020:vlcol\n");
+	/*logerror("020:vlcol\n");*/
 }

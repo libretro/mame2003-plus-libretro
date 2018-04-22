@@ -560,7 +560,7 @@ static UINT32 update_cycle_counting(void)
 	UINT32 cyclesleft = compare - count;
 	double newtime;
 
-//printf("Update: count=%08X  compare=%08X  delta=%08X  SR=%08X  time=%f\n", count, compare, cyclesleft, (UINT32)SR, TIME_IN_CYCLES(((UINT64)cyclesleft * 2), cpu_getactivecpu()));
+/*printf("Update: count=%08X  compare=%08X  delta=%08X  SR=%08X  time=%f\n", count, compare, cyclesleft, (UINT32)SR, TIME_IN_CYCLES(((UINT64)cyclesleft * 2), cpu_getactivecpu()));*/
 
 	/* modify the timer to go off */
 	newtime = TIME_IN_CYCLES(((UINT64)cyclesleft * 2), cpu_getactivecpu());
@@ -1254,7 +1254,7 @@ static INLINE void handle_cop2(UINT32 op)
 
 int mips3_execute(int cycles)
 {
-//printf("mips3_execute (PC=%08X)\n", mips3.pc);
+/*printf("mips3_execute (PC=%08X)\n", mips3.pc);*/
 
 	/* count cycles and interrupt cycles */
 	mips3_icount = cycles;
@@ -1504,7 +1504,7 @@ int mips3_execute(int cycles)
 
 	} while (mips3_icount > 0 || mips3.nextpc != ~0);
 
-//printf("mips3_execute done (PC=%08X)\n", mips3.pc);
+/*printf("mips3_execute done (PC=%08X)\n", mips3.pc);*/
 
 	mips3_icount -= mips3.interrupt_cycles;
 	mips3.interrupt_cycles = 0;
@@ -1640,9 +1640,9 @@ unsigned mips3_get_reg(int regnum)
 		default:
 			if (regnum <= REG_SP_CONTENTS)
 			{
-//				unsigned offset = REG_SP_CONTENTS - regnum;
-//				if (offset < PC_STACK_DEPTH)
-//					return mips3.pc_stack[offset];
+/*				unsigned offset = REG_SP_CONTENTS - regnum;*/
+/*				if (offset < PC_STACK_DEPTH)*/
+/*					return mips3.pc_stack[offset];*/
 			}
 	}
 	return 0;
@@ -1775,9 +1775,9 @@ void mips3_set_reg(int regnum, unsigned val)
 		default:
 			if (regnum <= REG_SP_CONTENTS)
 			{
-//				unsigned offset = REG_SP_CONTENTS - regnum;
-//				if (offset < PC_STACK_DEPTH)
-//					mips3.pc_stack[offset] = val;
+/*				unsigned offset = REG_SP_CONTENTS - regnum;*/
+/*				if (offset < PC_STACK_DEPTH)*/
+/*					mips3.pc_stack[offset] = val;*/
 			}
     }
 }

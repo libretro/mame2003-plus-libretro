@@ -1,7 +1,7 @@
-// V60.C
-// Undiscover the beast!
-// Main hacking and coding by Farfetch'd
-// Portability fixes by Richter Belmont
+/* V60.C*/
+/* Undiscover the beast!*/
+/* Main hacking and coding by Farfetch'd*/
+/* Portability fixes by Richter Belmont*/
 
 #include "cpuintrf.h"
 #include "osd_cpu.h"
@@ -13,15 +13,15 @@
 #include <stdarg.h>
 #include "v60.h"
 
-// memory accessors
+/* memory accessors*/
 #include "v60mem.c"
 
 
-// macros stolen from MAME for flags calc
-// note that these types are in x86 naming:
-// byte = 8 bit, word = 16 bit, long = 32 bit
+/* macros stolen from MAME for flags calc*/
+/* note that these types are in x86 naming:*/
+/* byte = 8 bit, word = 16 bit, long = 32 bit*/
 
-// parameter x = result, y = source 1, z = source 2
+/* parameter x = result, y = source 1, z = source 2*/
 
 #define SetOFL_Add(x,y,z)	(_OV = (((x) ^ (y)) & ((x) ^ (z)) & 0x80000000) ? 1: 0)
 #define SetOFW_Add(x,y,z)	(_OV = (((x) ^ (y)) & ((x) ^ (z)) & 0x8000) ? 1 : 0)
@@ -65,7 +65,7 @@
 #define SETREG8(a, b)  (a) = ((a) & ~0xff) | ((b) & 0xff)
 #define SETREG16(a, b) (a) = ((a) & ~0xffff) | ((b) & 0xffff)
 
-// Ultra Function Tables
+/* Ultra Function Tables*/
 static UINT32 (*OpCodeTable[256])(void);
 
 typedef struct
@@ -81,7 +81,7 @@ typedef struct
 #undef PPC
 #endif
 
-// v60 Register Inside (Hm... It's not a pentium inside :-))) )
+/* v60 Register Inside (Hm... It's not a pentium inside :-))) )*/
 struct v60info {
 	struct cpu_info info;
 	UINT32 reg[68];
@@ -101,7 +101,7 @@ int v60_ICount;
 #define _Z v60.flags.Z
 
 
-// Defines of all v60 register...
+/* Defines of all v60 register...*/
 #define R0 v60.reg[0]
 #define R1 v60.reg[1]
 #define R2 v60.reg[2]
@@ -140,7 +140,7 @@ int v60_ICount;
 
 #define PPC		v60.PPC
 
-// Privileged registers
+/* Privileged registers*/
 #define ISP		v60.reg[36]
 #define L0SP	v60.reg[37]
 #define L1SP	v60.reg[38]
@@ -151,7 +151,7 @@ int v60_ICount;
 #define SYCW	v60.reg[43]
 #define TKCW	v60.reg[44]
 #define PIR		v60.reg[45]
-//10-14 reserved
+/*10-14 reserved*/
 #define PSW2	v60.reg[51]
 #define ATBR0	v60.reg[52]
 #define ATLR0	v60.reg[53]
@@ -166,10 +166,10 @@ int v60_ICount;
 #define ADTR1	v60.reg[62]
 #define ADTMR0	v60.reg[63]
 #define ADTMR1	v60.reg[64]
-//29-31 reserved
+/*29-31 reserved*/
 #define TCB		v60.tcb
 
-// Register names
+/* Register names*/
 const char *v60_reg_names[69] = {
 	"R0", "R1", "R2", "R3",
 	"R4", "R5", "R6", "R7",
@@ -191,7 +191,7 @@ const char *v60_reg_names[69] = {
 	"TCB"
 };
 
-// Defines...
+/* Defines...*/
 #define UPDATEPSW()	\
 { \
   PSW &= 0xfffffff0; \
@@ -240,7 +240,7 @@ static void v60WritePSW(UINT32 newval)
 	PSW = newval;
 	UPDATECPUFLAGS();
 
-	// Now check if we must swap SP
+	/* Now check if we must swap SP*/
 	oldIS = (oldval >> 28) & 1;
 	newIS = (newval >> 28) & 1;
 
@@ -277,10 +277,10 @@ static UINT32 f2u(float f)
 }
 
 
-// Addressing mode decoding functions
+/* Addressing mode decoding functions*/
 #include "am.c"
 
-// Opcode functions
+/* Opcode functions*/
 #include "op12.c"
 #include "op2.c"
 #include "op3.c"
@@ -295,7 +295,7 @@ UINT32 opUNHANDLED(void)
 	abort();
 }
 
-// Opcode jump table
+/* Opcode jump table*/
 #include "optable.c"
 
 static int v60_default_irq_cb(int irqline)
@@ -308,7 +308,7 @@ static void base_init(const char *type)
 	int cpu = cpu_getactivecpu();
 	static int opt_init = 0;
 	if(!opt_init) {
-		InitTables();	// set up opcode tables
+		InitTables();	/* set up opcode tables*/
 #ifdef MAME_DEBUG
 		v60_dasm_init();
 #endif
@@ -333,8 +333,8 @@ static void base_init(const char *type)
 void v60_init(void)
 {
 	base_init("v60");
-	// Set PIR (Processor ID) for NEC v60. LSB is reserved to NEC,
-	// so I don't know what it contains.
+	/* Set PIR (Processor ID) for NEC v60. LSB is reserved to NEC,*/
+	/* so I don't know what it contains.*/
 	PIR = 0x00006000;
 	v60.info = v60_i;
 }
@@ -342,8 +342,8 @@ void v60_init(void)
 void v70_init(void)
 {
 	base_init("v70");
-	// Set PIR (Processor ID) for NEC v70. LSB is reserved to NEC,
-	// so I don't know what it contains.
+	/* Set PIR (Processor ID) for NEC v70. LSB is reserved to NEC,*/
+	/* so I don't know what it contains.*/
 	PIR = 0x00007000;
 	v60.info = v70_i;
 }
@@ -375,22 +375,22 @@ static void v60_do_irq(int vector)
 	UPDATEPSW();
 	tempPSW=PSW;
 	v60WritePSW(PSW|((1<<28)));	
-	// Push PC and PSW onto the stack
+	/* Push PC and PSW onto the stack*/
 	SP-=4;
 	MemWrite32(SP, tempPSW);
 	SP-=4;
 	MemWrite32(SP, PC);
 
-	// Change to interrupt context
-	PSW &= ~(3 << 24);  // PSW.EL = 0
-	PSW &= ~(1 << 18);  // PSW.IE = 0
-	PSW &= ~(1 << 16);  // PSW.TE = 0
-	PSW &= ~(1 << 27);  // PSW.TP = 0
-	PSW &= ~(1 << 17);  // PSW.AE = 0
-	PSW &= ~(1 << 29);  // PSW.EM = 0
-	PSW |=  (1 << 31);  // PSW.ASA = 1
+	/* Change to interrupt context*/
+	PSW &= ~(3 << 24);  /* PSW.EL = 0*/
+	PSW &= ~(1 << 18);  /* PSW.IE = 0*/
+	PSW &= ~(1 << 16);  /* PSW.TE = 0*/
+	PSW &= ~(1 << 27);  /* PSW.TP = 0*/
+	PSW &= ~(1 << 17);  /* PSW.AE = 0*/
+	PSW &= ~(1 << 29);  /* PSW.EM = 0*/
+	PSW |=  (1 << 31);  /* PSW.ASA = 1*/
 
-	// Jump to vector for user interrupt
+	/* Jump to vector for user interrupt*/
 	PC = GETINTVECT(vector);
 }
 
@@ -440,7 +440,7 @@ void v60_set_irq_callback(int (*irq_cb)(int irqline))
 	v60.irq_cb = irq_cb;
 }
 
-// Actual cycles/instruction is unknown
+/* Actual cycles/instruction is unknown*/
 
 int v60_execute(int cycles)
 {

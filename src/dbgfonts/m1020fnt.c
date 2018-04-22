@@ -1,6 +1,6 @@
 /*****************************************************************
  * Generated from M. Kuhn's Public Domain Unicode fonts
- * http://www.cl.cam.ac.uk/~mgk25/unicode.html
+ * http:/*www.cl.cam.ac.uk/~mgk25/unicode.html
  *****************************************************************/
 
 static UINT8 fontdata[] =

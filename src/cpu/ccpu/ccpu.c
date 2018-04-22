@@ -473,9 +473,9 @@ static CINEBYTE acc_a0 = 0;      /* bit0 of A-reg at last accumulator access */
 
 static CINESTATE state = state_A;/* C-CPU state machine current state */
 
-//static CINEWORD  ram[256];       /* C-CPU ram (for all pages) */
-//#define CCPU_RAM_RDMEM(a) (ram[a])
-//#define CCPU_RAM_WRMEM(a,v) (ram[a]=v)
+/*static CINEWORD  ram[256];       // C-CPU ram (for all pages) */
+/*#define CCPU_RAM_RDMEM(a) (ram[a])*/
+/*#define CCPU_RAM_WRMEM(a,v) (ram[a]=v)*/
 
 static int ccpu_jmi_dip = 0;     /* as set by cineSetJMI */
 static int ccpu_msize = 0;       /* as set by cineSetMSize */

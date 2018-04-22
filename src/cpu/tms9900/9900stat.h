@@ -190,99 +190,99 @@ static INLINE void setst_c_lae(UINT16 to, UINT16 val)
 
 #if defined(__POWERPC__) && !defined(__GNUC__)
 
-// setst_add_32_laeco :
-// - computes a+b
-// - sets L, A, E, Carry and Overflow in st
-//
-// a -> r3, b -> r4, st -> r5
-// preserve r6-r12
+/* setst_add_32_laeco :*/
+/* - computes a+b*/
+/* - sets L, A, E, Carry and Overflow in st*/
+/**/
+/* a -> r3, b -> r4, st -> r5*/
+/* preserve r6-r12*/
 
 static INT32 asm setst_add_32_laeco(register INT32 a, register INT32 b, register INT16 st)
 {
-  addco. r3, b, a   // add, set CR0, and set CA and OV
-  clrlwi st, st, 21 // clear L, A, E, C, O flags (-> keep bits 21-31)
-  mcrxr cr1         // move XER (-> CA and CO bits) to CR1
+  addco. r3, b, a   /* add, set CR0, and set CA and OV*/
+  clrlwi st, st, 21 /* clear L, A, E, C, O flags (-> keep bits 21-31)*/
+  mcrxr cr1         /* move XER (-> CA and CO bits) to CR1*/
 
-  beq- null_result  // if EQ is set, jump to null_result.  No jump is more likely than a jump.
-  bgt+ positive_result  // if GT is set, jump to positive_result.  A jump is more likely than no jump.
-  ori st, st, ST_L  // if result < 0, set ST_L
-  b next    // now set carry & overflow as needed
+  beq- null_result  /* if EQ is set, jump to null_result.  No jump is more likely than a jump.*/
+  bgt+ positive_result  /* if GT is set, jump to positive_result.  A jump is more likely than no jump.*/
+  ori st, st, ST_L  /* if result < 0, set ST_L*/
+  b next    /* now set carry & overflow as needed*/
 
 null_result:
-  ori st, st, ST_E  // if result == 0, set ST_E
+  ori st, st, ST_E  /* if result == 0, set ST_E*/
   b next
 
 positive_result:
-  ori st, st, ST_L | ST_A   // if result > 0, set ST_L and ST_A
+  ori st, st, ST_L | ST_A   /* if result > 0, set ST_L and ST_A*/
 
 next:
-  bf+ cr1*4+2, nocarry  // if CA is not set, jump to nocarry.  A jump is more likely than no jump.
-  ori st, st, ST_C  // else set ST_C
+  bf+ cr1*4+2, nocarry  /* if CA is not set, jump to nocarry.  A jump is more likely than no jump.*/
+  ori st, st, ST_C  /* else set ST_C*/
 nocarry:
-  bflr+ cr1*4+1     // if OV is not set, return.  A jump is more likely than no jump.
-  ori st, st, ST_O  // else set ST_O
-  blr   // return
+  bflr+ cr1*4+1     /* if OV is not set, return.  A jump is more likely than no jump.*/
+  ori st, st, ST_O  /* else set ST_O*/
+  blr   /* return*/
 }
 
-// setst_sub_32_laeco :
-// - computes a-b
-// - sets L, A, E, Carry and Overflow in ST
-//
-// a -> r3, b -> r4, st -> r5
-// preserve r6-r12
+/* setst_sub_32_laeco :*/
+/* - computes a-b*/
+/* - sets L, A, E, Carry and Overflow in ST*/
+/**/
+/* a -> r3, b -> r4, st -> r5*/
+/* preserve r6-r12*/
 
 static INT32 asm setst_sub_32_laeco(register INT32 a, register INT32 b, register INT16 st)
 {
-  subco. r3, a, b   // sub, set CR0, and set CA and OV
-  clrlwi st, st, 21 // clear L, A, E, C, O flags (-> keep bits 21-31)
-  mcrxr cr1         // move XER (-> CA and CO bits) to CR1
+  subco. r3, a, b   /* sub, set CR0, and set CA and OV*/
+  clrlwi st, st, 21 /* clear L, A, E, C, O flags (-> keep bits 21-31)*/
+  mcrxr cr1         /* move XER (-> CA and CO bits) to CR1*/
 
-  beq- null_result  // if EQ is set, jump to null_result.  No jump is more likely than a jump.
-  bgt+ positive_result  // if GT is set, jump to positive_result.  A jump is more likely than no jump.
-  ori st, st, ST_L  // if result < 0, set ST_L
-  b next    // now set carry & overflow as needed
+  beq- null_result  /* if EQ is set, jump to null_result.  No jump is more likely than a jump.*/
+  bgt+ positive_result  /* if GT is set, jump to positive_result.  A jump is more likely than no jump.*/
+  ori st, st, ST_L  /* if result < 0, set ST_L*/
+  b next    /* now set carry & overflow as needed*/
 
 null_result:
-  ori st, st, ST_E  // if result == 0, set ST_E
+  ori st, st, ST_E  /* if result == 0, set ST_E*/
   b next
 
 positive_result:
-  ori st, st, ST_L | ST_A   // if result > 0, set ST_L and ST_A
+  ori st, st, ST_L | ST_A   /* if result > 0, set ST_L and ST_A*/
 
 next:
-  bf- cr1*4+2, nocarry  // if CA is not set, jump to nocarry.  No jump is more likely than a jump.
-  ori st, st, ST_C  // else set ST_C
+  bf- cr1*4+2, nocarry  /* if CA is not set, jump to nocarry.  No jump is more likely than a jump.*/
+  ori st, st, ST_C  /* else set ST_C*/
 nocarry:
-  bflr+ cr1*4+1     // if OV is not set, return.  A jump is more likely than no jump.
-  ori st, st, ST_O  // else set ST_O
-  blr   // return
+  bflr+ cr1*4+1     /* if OV is not set, return.  A jump is more likely than no jump.*/
+  ori st, st, ST_O  /* else set ST_O*/
+  blr   /* return*/
 }
 
-//
-// Set laeco for add
-//
+/**/
+/* Set laeco for add*/
+/**/
 static INT16 asm setst_add_laeco(register INT16 a, register INT16 b)
-{ // a -> r3, b -> r4
-  lwz r6, I(RTOC)   // load pointer to I
+{ /* a -> r3, b -> r4*/
+  lwz r6, I(RTOC)   /* load pointer to I*/
 
-  slwi a, a, 16     // shift a
-  slwi b, b, 16     // shift b
+  slwi a, a, 16     /* shift a*/
+  slwi b, b, 16     /* shift b*/
 
-  lhz r5, 4(r6)     // load ST
+  lhz r5, 4(r6)     /* load ST*/
 
-  mflr r12  // save LR (we KNOW setst_add_32_laeco will not alter this register)
+  mflr r12  /* save LR (we KNOW setst_add_32_laeco will not alter this register)*/
 
-  bl setst_add_32_laeco // perform addition and set flags
+  bl setst_add_32_laeco /* perform addition and set flags*/
 
-  mtlr r12  // restore LR
-  srwi r3, r3, 16   // shift back result
-  sth r5, 4(r6)     // save new ST
-  blr       // and return
+  mtlr r12  /* restore LR*/
+  srwi r3, r3, 16   /* shift back result*/
+  sth r5, 4(r6)     /* save new ST*/
+  blr       /* and return*/
 }
 
-//
-//  Set laeco for subtract
-//
+/**/
+/*  Set laeco for subtract*/
+/**/
 static INT16 asm setst_sub_laeco(register INT16 a, register INT16 b)
 {
   lwz r6, I(RTOC)
@@ -294,7 +294,7 @@ static INT16 asm setst_sub_laeco(register INT16 a, register INT16 b)
 
   mflr r12
 
-  bl setst_sub_32_laeco // perform substraction and set flags
+  bl setst_sub_32_laeco /* perform substraction and set flags*/
 
   mtlr r12
   srwi r3, r3, 16
@@ -302,34 +302,34 @@ static INT16 asm setst_sub_laeco(register INT16 a, register INT16 b)
   blr
 }
 
-//
-// Set laecop for add (BYTE)
-//
+/**/
+/* Set laecop for add (BYTE)*/
+/**/
 static INT8 asm setst_addbyte_laecop(register INT8 a, register INT8 b)
-{ // a -> r3, b -> r4
-  lwz r6, I(RTOC)   // load pointer to I
+{ /* a -> r3, b -> r4*/
+  lwz r6, I(RTOC)   /* load pointer to I*/
 
-  slwi a, a, 24     // shift a
-  slwi b, b, 24     // shift b
+  slwi a, a, 24     /* shift a*/
+  slwi b, b, 24     /* shift b*/
 
-  lhz r5, 4(r6)     // load ST
+  lhz r5, 4(r6)     /* load ST*/
 
-  mflr r12  // save LR (we KNOW setst_add_32_laeco will not alter this register)
+  mflr r12  /* save LR (we KNOW setst_add_32_laeco will not alter this register)*/
 
-  bl setst_add_32_laeco // perform addition and set flags
+  bl setst_add_32_laeco /* perform addition and set flags*/
 
-  srwi r3, r3, 24   // shift back result
-  mtlr r12  // restore LR
-  sth r5, 4(r6)     // save new ST
-  stb r3, lastparity(RTOC)  // copy result to lastparity
-  blr       // and return
+  srwi r3, r3, 24   /* shift back result*/
+  mtlr r12  /* restore LR*/
+  sth r5, 4(r6)     /* save new ST*/
+  stb r3, lastparity(RTOC)  /* copy result to lastparity*/
+  blr       /* and return*/
 }
 
-//
-// Set laecop for subtract (BYTE)
-//
+/**/
+/* Set laecop for subtract (BYTE)*/
+/**/
 static INT8 asm setst_subbyte_laecop(register INT8 a, register INT8 b)
-{ // a -> r3, b -> r4
+{ /* a -> r3, b -> r4*/
   lwz r6, I(RTOC)
 
   slwi a, a, 24
@@ -339,7 +339,7 @@ static INT8 asm setst_subbyte_laecop(register INT8 a, register INT8 b)
 
   mflr r12
 
-  bl setst_sub_32_laeco // perform substraction and set flags
+  bl setst_sub_32_laeco /* perform substraction and set flags*/
 
   srwi r3, r3, 24
   mtlr r12
@@ -512,7 +512,7 @@ static INLINE UINT16 setst_sra_laec(INT16 a, UINT16 c)
 	if (c != 0)
 	{
 		a = arithmetic_right_shift(a, c-1);
-		if (a & 1)  // The carry bit equals the last bit that is shifted out
+		if (a & 1)  /* The carry bit equals the last bit that is shifted out*/
 			I.STATUS |= ST_C;
 		a = arithmetic_right_shift(a, 1);
 	}
@@ -554,9 +554,9 @@ static INLINE UINT16 setst_srl_laec(UINT16 a,UINT16 c)
 }
 
 
-//
-// Meat of SRC
-//
+/**/
+/* Meat of SRC*/
+/**/
 static INLINE UINT16 setst_src_laec(UINT16 a,UINT16 c)
 {
 	I.STATUS &= ~ (ST_L | ST_A | ST_E | ST_C);
@@ -564,7 +564,7 @@ static INLINE UINT16 setst_src_laec(UINT16 a,UINT16 c)
 	if (c != 0)
 	{
 		a = logical_right_shift(a, c) | (a << (16-c));
-		if (a & 0x8000) // The carry bit equals the last bit that is shifted out
+		if (a & 0x8000) /* The carry bit equals the last bit that is shifted out*/
 			I.STATUS |= ST_C;
 	}
 
@@ -579,9 +579,9 @@ static INLINE UINT16 setst_src_laec(UINT16 a,UINT16 c)
 }
 
 
-//
-// Meat of SLA
-//
+/**/
+/* Meat of SLA*/
+/**/
 static INLINE UINT16 setst_sla_laeco(UINT16 a, UINT16 c)
 {
 	I.STATUS &= ~ (ST_L | ST_A | ST_E | ST_C | ST_O);
@@ -595,13 +595,13 @@ static INLINE UINT16 setst_sla_laeco(UINT16 a, UINT16 c)
 			mask = 0xFFFF << (16-c-1);
 			ousted_bits = a & mask;
 
-			if (ousted_bits)        // If ousted_bits is neither all 0s
-				if (ousted_bits ^ mask)   // nor all 1s,
-					I.STATUS |= ST_O;   // we set overflow
+			if (ousted_bits)        /* If ousted_bits is neither all 0s*/
+				if (ousted_bits ^ mask)   /* nor all 1s,*/
+					I.STATUS |= ST_O;   /* we set overflow*/
 		}
 
 		a <<= c-1;
-		if (a & 0x8000) // The carry bit equals the last bit that is shifted out
+		if (a & 0x8000) /* The carry bit equals the last bit that is shifted out*/
 			I.STATUS |= ST_C;
 
 		a <<= 1;

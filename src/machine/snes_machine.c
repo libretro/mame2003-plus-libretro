@@ -544,8 +544,8 @@ READ_HANDLER( snes_r_io )
 #else
 			return readinputport(9);
 #endif	/* MAME_DEBUG */
-/*		case 0x4101: /*PC: a104 - a10e - a12a	*/ //only nss_actr*/
-/*		case 0x420c: /*PC: 9c7d - 8fab			*/ //only nss_ssoc*/
+/*		case 0x4101: // PC: a104 - a10e - a12a	*/ /*only nss_actr*/
+/*		case 0x420c: // PC: 9c7d - 8fab			*/ /*only nss_ssoc*/
 		default:
 			printf("offset = %x pc = %x\n",offset,activecpu_get_pc());
 	}

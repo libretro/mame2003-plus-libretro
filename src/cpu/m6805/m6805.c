@@ -388,7 +388,7 @@ static void Interrupt(void)
 			RM16( AMASK - 5, &pPC );
 		}
 
-		}	// CC & IFLAG
+		}	/* CC & IFLAG*/
 			m6805.pending_interrupts &= ~(1<<M6805_IRQ_LINE);
 		}
 		m6805_ICount -= 11;

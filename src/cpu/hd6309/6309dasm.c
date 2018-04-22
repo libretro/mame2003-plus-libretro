@@ -58,9 +58,9 @@ enum HD6309_ADDRESSING_MODES {
 };
 
 /* number of opcodes in each page */
-//#define NUMPG1OPS 237
-//#define NUMPG2OPS 118
-//#define NUMPG3OPS 83
+/*#define NUMPG1OPS 237*/
+/*#define NUMPG2OPS 118*/
+/*#define NUMPG3OPS 83*/
 
 #if 0
 static char modenames[10][19] = {
@@ -704,7 +704,7 @@ unsigned Dasm6309 (char *buffer, unsigned pc)
 
 	pc += p;
 
-	if( opcode != 0x1f &&	// reg <-> reg instructions
+	if( opcode != 0x1f &&	/* reg <-> reg instructions*/
 		opcode != 0x1e &&
 		opcode != 0x31 &&
 		opcode != 0x30 &&

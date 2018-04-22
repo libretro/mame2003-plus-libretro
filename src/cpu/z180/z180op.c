@@ -211,8 +211,7 @@ OP(op,3c) { _A = INC(_A);											} /* INC  A 		  */
 OP(op,3d) { _A = DEC(_A);											} /* DEC  A 		  */
 OP(op,3e) { _A = ARG(); 											} /* LD   A,n		  */
 OP(op,3f) { _F = ((_F&(SF|ZF|PF|CF))|((_F&CF)<<4)|(_A&(YF|XF)))^CF; } /* CCF			  */
-//OP(op,3f) { _F = ((_F & ~(HF|NF)) | ((_F & CF)<<4)) ^ CF; 		  } /* CCF				*/
-
+/*OP(op,3f) { _F = ((_F & ~(HF|NF)) | ((_F & CF)<<4)) ^ CF; 	    } */ /* CCF		      */
 OP(op,40) { 														} /* LD   B,B		  */
 OP(op,41) { _B = _C;												} /* LD   B,C		  */
 OP(op,42) { _B = _D;												} /* LD   B,D		  */

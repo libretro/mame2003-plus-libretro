@@ -55,7 +55,7 @@ int opCVTWS(void)
 
 	F2DecodeFirstOperand(ReadAM,2);
 
-	// Convert to float
+	/* Convert to float*/
 	val = (float)(INT32)f2Op1;
 	modWriteValW = f2u(val);
 
@@ -74,7 +74,7 @@ int opCVTSW(void)
 
 	F2DecodeFirstOperand(ReadAM,2);
 
-	// Convert to UINT32
+	/* Convert to UINT32*/
 	val = u2f(f2Op1);
 	modWriteValW = (UINT32)val;
 

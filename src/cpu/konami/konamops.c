@@ -274,7 +274,7 @@ static INLINE void sex( void )
 	UINT16 t;
 	t = SIGNED(B);
 	D = t;
-//	CLR_NZV;	NS 20020905: applying the same fix that was applied to 6809 and 6309
+/*	CLR_NZV;	NS 20020905: applying the same fix that was applied to 6809 and 6309*/
 	CLR_NZ;
 	SET_NZ16(t);
 }
@@ -3734,46 +3734,46 @@ static INLINE void opcode2( void )
 	PC++;
 
 	switch ( ireg2 ) {
-//	case 0x00: EA=0; break; /* auto increment */
-//	case 0x01: EA=0; break; /* double auto increment */
-//	case 0x02: EA=0; break; /* auto decrement */
-//	case 0x03: EA=0; break; /* double auto decrement */
-//	case 0x04: EA=0; break; /* postbyte offs */
-//	case 0x05: EA=0; break; /* postword offs */
-//	case 0x06: EA=0; break; /* normal */
+/*	case 0x00: EA=0; break; /* auto increment */
+/*	case 0x01: EA=0; break; /* double auto increment */
+/*	case 0x02: EA=0; break; /* auto decrement */
+/*	case 0x03: EA=0; break; /* double auto decrement */
+/*	case 0x04: EA=0; break; /* postbyte offs */
+/*	case 0x05: EA=0; break; /* postword offs */
+/*	case 0x06: EA=0; break; /* normal */
 	case 0x07:
 		EAD=0;
 		(*konami_extended[konami.ireg])();
         konami_ICount -= 2;
 		return;
-//	case 0x08: EA=0; break; /* indirect - auto increment */
-//	case 0x09: EA=0; break; /* indirect - double auto increment */
-//	case 0x0a: EA=0; break; /* indirect - auto decrement */
-//	case 0x0b: EA=0; break; /* indirect - double auto decrement */
-//	case 0x0c: EA=0; break; /* indirect - postbyte offs */
-//	case 0x0d: EA=0; break; /* indirect - postword offs */
-//	case 0x0e: EA=0; break; /* indirect - normal */
+/*	case 0x08: EA=0; break; /* indirect - auto increment */
+/*	case 0x09: EA=0; break; /* indirect - double auto increment */
+/*	case 0x0a: EA=0; break; /* indirect - auto decrement */
+/*	case 0x0b: EA=0; break; /* indirect - double auto decrement */
+/*	case 0x0c: EA=0; break; /* indirect - postbyte offs */
+/*	case 0x0d: EA=0; break; /* indirect - postword offs */
+/*	case 0x0e: EA=0; break; /* indirect - normal */
 	case 0x0f:				/* indirect - extended */
 		IMMWORD(ea);
 		EA=RM16(EAD);
         konami_ICount-=4;
 		break;
-//	case 0x10: EA=0; break; /* auto increment */
-//	case 0x11: EA=0; break; /* double auto increment */
-//	case 0x12: EA=0; break; /* auto decrement */
-//	case 0x13: EA=0; break; /* double auto decrement */
-//	case 0x14: EA=0; break; /* postbyte offs */
-//	case 0x15: EA=0; break; /* postword offs */
-//	case 0x16: EA=0; break; /* normal */
-//	case 0x17: EA=0; break; /* extended */
-//	case 0x18: EA=0; break; /* indirect - auto increment */
-//	case 0x19: EA=0; break; /* indirect - double auto increment */
-//	case 0x1a: EA=0; break; /* indirect - auto decrement */
-//	case 0x1b: EA=0; break; /* indirect - double auto decrement */
-//	case 0x1c: EA=0; break; /* indirect - postbyte offs */
-//	case 0x1d: EA=0; break; /* indirect - postword offs */
-//	case 0x1e: EA=0; break; /* indirect - normal */
-//	case 0x1f: EA=0; break; /* indirect - extended */
+/*	case 0x10: EA=0; break; /* auto increment */
+/*	case 0x11: EA=0; break; /* double auto increment */
+/*	case 0x12: EA=0; break; /* auto decrement */
+/*	case 0x13: EA=0; break; /* double auto decrement */
+/*	case 0x14: EA=0; break; /* postbyte offs */
+/*	case 0x15: EA=0; break; /* postword offs */
+/*	case 0x16: EA=0; break; /* normal */
+/*	case 0x17: EA=0; break; /* extended */
+/*	case 0x18: EA=0; break; /* indirect - auto increment */
+/*	case 0x19: EA=0; break; /* indirect - double auto increment */
+/*	case 0x1a: EA=0; break; /* indirect - auto decrement */
+/*	case 0x1b: EA=0; break; /* indirect - double auto decrement */
+/*	case 0x1c: EA=0; break; /* indirect - postbyte offs */
+/*	case 0x1d: EA=0; break; /* indirect - postword offs */
+/*	case 0x1e: EA=0; break; /* indirect - normal */
+/*	case 0x1f: EA=0; break; /* indirect - extended */
 
 /* base X */
     case 0x20:              /* auto increment */
@@ -3809,7 +3809,7 @@ static INLINE void opcode2( void )
 	case 0x26:				/* normal */
 		EA=X;
 		break;
-//	case 0x27: EA=0; break; /* extended */
+/*	case 0x27: EA=0; break; /* extended */
 	case 0x28:				/* indirect - auto increment */
 		EA=X;
 		X++;
@@ -3851,7 +3851,7 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=3;
 		break;
-//	case 0x2f: EA=0; break; /* indirect - extended */
+/*	case 0x2f: EA=0; break; /* indirect - extended */
 
 /* base Y */
     case 0x30:              /* auto increment */
@@ -3887,7 +3887,7 @@ static INLINE void opcode2( void )
 	case 0x36:				/* normal */
 		EA=Y;
 		break;
-//	case 0x37: EA=0; break; /* extended */
+/*	case 0x37: EA=0; break; /* extended */
 	case 0x38:				/* indirect - auto increment */
 		EA=Y;
 		Y++;
@@ -3929,24 +3929,24 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=3;
 		break;
-//	case 0x3f: EA=0; break; /* indirect - extended */
+/*	case 0x3f: EA=0; break; /* indirect - extended */
 
-//  case 0x40: EA=0; break; /* auto increment */
-//	case 0x41: EA=0; break; /* double auto increment */
-//	case 0x42: EA=0; break; /* auto decrement */
-//	case 0x43: EA=0; break; /* double auto decrement */
-//	case 0x44: EA=0; break; /* postbyte offs */
-//	case 0x45: EA=0; break; /* postword offs */
-//	case 0x46: EA=0; break; /* normal */
-//	case 0x47: EA=0; break; /* extended */
-//	case 0x48: EA=0; break; /* indirect - auto increment */
-//	case 0x49: EA=0; break; /* indirect - double auto increment */
-//	case 0x4a: EA=0; break; /* indirect - auto decrement */
-//	case 0x4b: EA=0; break; /* indirect - double auto decrement */
-//	case 0x4c: EA=0; break; /* indirect - postbyte offs */
-//	case 0x4d: EA=0; break; /* indirect - postword offs */
-//	case 0x4e: EA=0; break; /* indirect - normal */
-//	case 0x4f: EA=0; break; /* indirect - extended */
+/*  case 0x40: EA=0; break; /* auto increment */
+/*	case 0x41: EA=0; break; /* double auto increment */
+/*	case 0x42: EA=0; break; /* auto decrement */
+/*	case 0x43: EA=0; break; /* double auto decrement */
+/*	case 0x44: EA=0; break; /* postbyte offs */
+/*	case 0x45: EA=0; break; /* postword offs */
+/*	case 0x46: EA=0; break; /* normal */
+/*	case 0x47: EA=0; break; /* extended */
+/*	case 0x48: EA=0; break; /* indirect - auto increment */
+/*	case 0x49: EA=0; break; /* indirect - double auto increment */
+/*	case 0x4a: EA=0; break; /* indirect - auto decrement */
+/*	case 0x4b: EA=0; break; /* indirect - double auto decrement */
+/*	case 0x4c: EA=0; break; /* indirect - postbyte offs */
+/*	case 0x4d: EA=0; break; /* indirect - postword offs */
+/*	case 0x4e: EA=0; break; /* indirect - normal */
+/*	case 0x4f: EA=0; break; /* indirect - extended */
 
 /* base U */
     case 0x50:              /* auto increment */
@@ -3982,7 +3982,7 @@ static INLINE void opcode2( void )
 	case 0x56:				/* normal */
 		EA=U;
 		break;
-//	case 0x57: EA=0; break; /* extended */
+/*	case 0x57: EA=0; break; /* extended */
 	case 0x58:				/* indirect - auto increment */
 		EA=U;
 		U++;
@@ -4024,7 +4024,7 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=3;
 		break;
-//	case 0x5f: EA=0; break; /* indirect - extended */
+/*	case 0x5f: EA=0; break; /* indirect - extended */
 
 /* base S */
     case 0x60:              /* auto increment */
@@ -4060,7 +4060,7 @@ static INLINE void opcode2( void )
 	case 0x66:				/* normal */
 		EAD=SD;
 		break;
-//	case 0x67: EA=0; break; /* extended */
+/*	case 0x67: EA=0; break; /* extended */
 	case 0x68:				/* indirect - auto increment */
 		EAD=SD;
 		S++;
@@ -4102,7 +4102,7 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=3;
 		break;
-//	case 0x6f: EA=0; break; /* indirect - extended */
+/*	case 0x6f: EA=0; break; /* indirect - extended */
 
 /* base PC */
     case 0x70:              /* auto increment */
@@ -4138,7 +4138,7 @@ static INLINE void opcode2( void )
 	case 0x76:				/* normal */
 		EAD=PCD;
 		break;
-//	case 0x77: EA=0; break; /* extended */
+/*	case 0x77: EA=0; break; /* extended */
 	case 0x78:				/* indirect - auto increment */
 		EAD=PCD;
 		PC++;
@@ -4180,40 +4180,40 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=3;
 		break;
-//	case 0x7f: EA=0; break; /* indirect - extended */
+/*	case 0x7f: EA=0; break; /* indirect - extended */
 
-//  case 0x80: EA=0; break; /* register a */
-//	case 0x81: EA=0; break; /* register b */
-//	case 0x82: EA=0; break; /* ???? */
-//	case 0x83: EA=0; break; /* ???? */
-//	case 0x84: EA=0; break; /* ???? */
-//	case 0x85: EA=0; break; /* ???? */
-//	case 0x86: EA=0; break; /* ???? */
-//	case 0x87: EA=0; break; /* register d */
-//	case 0x88: EA=0; break; /* indirect - register a */
-//	case 0x89: EA=0; break; /* indirect - register b */
-//	case 0x8a: EA=0; break; /* indirect - ???? */
-//	case 0x8b: EA=0; break; /* indirect - ???? */
-//	case 0x8c: EA=0; break; /* indirect - ???? */
-//	case 0x8d: EA=0; break; /* indirect - ???? */
-//	case 0x8e: EA=0; break; /* indirect - register d */
-//	case 0x8f: EA=0; break; /* indirect - ???? */
-//	case 0x90: EA=0; break; /* register a */
-//	case 0x91: EA=0; break; /* register b */
-//	case 0x92: EA=0; break; /* ???? */
-//	case 0x93: EA=0; break; /* ???? */
-//	case 0x94: EA=0; break; /* ???? */
-//	case 0x95: EA=0; break; /* ???? */
-//	case 0x96: EA=0; break; /* ???? */
-//	case 0x97: EA=0; break; /* register d */
-//	case 0x98: EA=0; break; /* indirect - register a */
-//	case 0x99: EA=0; break; /* indirect - register b */
-//	case 0x9a: EA=0; break; /* indirect - ???? */
-//	case 0x9b: EA=0; break; /* indirect - ???? */
-//	case 0x9c: EA=0; break; /* indirect - ???? */
-//	case 0x9d: EA=0; break; /* indirect - ???? */
-//	case 0x9e: EA=0; break; /* indirect - register d */
-//	case 0x9f: EA=0; break; /* indirect - ???? */
+/*  case 0x80: EA=0; break; /* register a */
+/*	case 0x81: EA=0; break; /* register b */
+/*	case 0x82: EA=0; break; /* ???? */
+/*	case 0x83: EA=0; break; /* ???? */
+/*	case 0x84: EA=0; break; /* ???? */
+/*	case 0x85: EA=0; break; /* ???? */
+/*	case 0x86: EA=0; break; /* ???? */
+/*	case 0x87: EA=0; break; /* register d */
+/*	case 0x88: EA=0; break; /* indirect - register a */
+/*	case 0x89: EA=0; break; /* indirect - register b */
+/*	case 0x8a: EA=0; break; /* indirect - ???? */
+/*	case 0x8b: EA=0; break; /* indirect - ???? */
+/*	case 0x8c: EA=0; break; /* indirect - ???? */
+/*	case 0x8d: EA=0; break; /* indirect - ???? */
+/*	case 0x8e: EA=0; break; /* indirect - register d */
+/*	case 0x8f: EA=0; break; /* indirect - ???? */
+/*	case 0x90: EA=0; break; /* register a */
+/*	case 0x91: EA=0; break; /* register b */
+/*	case 0x92: EA=0; break; /* ???? */
+/*	case 0x93: EA=0; break; /* ???? */
+/*	case 0x94: EA=0; break; /* ???? */
+/*	case 0x95: EA=0; break; /* ???? */
+/*	case 0x96: EA=0; break; /* ???? */
+/*	case 0x97: EA=0; break; /* register d */
+/*	case 0x98: EA=0; break; /* indirect - register a */
+/*	case 0x99: EA=0; break; /* indirect - register b */
+/*	case 0x9a: EA=0; break; /* indirect - ???? */
+/*	case 0x9b: EA=0; break; /* indirect - ???? */
+/*	case 0x9c: EA=0; break; /* indirect - ???? */
+/*	case 0x9d: EA=0; break; /* indirect - ???? */
+/*	case 0x9e: EA=0; break; /* indirect - register d */
+/*	case 0x9f: EA=0; break; /* indirect - ???? */
 	case 0xa0:				/* register a */
 		EA=X+SIGNED(A);
         konami_ICount-=1;
@@ -4222,11 +4222,11 @@ static INLINE void opcode2( void )
 		EA=X+SIGNED(B);
         konami_ICount-=1;
 		break;
-//	case 0xa2: EA=0; break; /* ???? */
-//	case 0xa3: EA=0; break; /* ???? */
-//	case 0xa4: EA=0; break; /* ???? */
-//	case 0xa5: EA=0; break; /* ???? */
-//	case 0xa6: EA=0; break; /* ???? */
+/*	case 0xa2: EA=0; break; /* ???? */
+/*	case 0xa3: EA=0; break; /* ???? */
+/*	case 0xa4: EA=0; break; /* ???? */
+/*	case 0xa5: EA=0; break; /* ???? */
+/*	case 0xa6: EA=0; break; /* ???? */
 	case 0xa7:				/* register d */
 		EA=X+D;
         konami_ICount-=4;
@@ -4241,11 +4241,11 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=4;
 		break;
-//	case 0xaa: EA=0; break; /* indirect - ???? */
-//	case 0xab: EA=0; break; /* indirect - ???? */
-//	case 0xac: EA=0; break; /* indirect - ???? */
-//	case 0xad: EA=0; break; /* indirect - ???? */
-//	case 0xae: EA=0; break; /* indirect - ???? */
+/*	case 0xaa: EA=0; break; /* indirect - ???? */
+/*	case 0xab: EA=0; break; /* indirect - ???? */
+/*	case 0xac: EA=0; break; /* indirect - ???? */
+/*	case 0xad: EA=0; break; /* indirect - ???? */
+/*	case 0xae: EA=0; break; /* indirect - ???? */
 	case 0xaf:				/* indirect - register d */
 		EA=X+D;
 		EA=RM16(EAD);
@@ -4259,11 +4259,11 @@ static INLINE void opcode2( void )
 		EA=Y+SIGNED(B);
         konami_ICount-=1;
 		break;
-//	case 0xb2: EA=0; break; /* ???? */
-//	case 0xb3: EA=0; break; /* ???? */
-//	case 0xb4: EA=0; break; /* ???? */
-//	case 0xb5: EA=0; break; /* ???? */
-//	case 0xb6: EA=0; break; /* ???? */
+/*	case 0xb2: EA=0; break; /* ???? */
+/*	case 0xb3: EA=0; break; /* ???? */
+/*	case 0xb4: EA=0; break; /* ???? */
+/*	case 0xb5: EA=0; break; /* ???? */
+/*	case 0xb6: EA=0; break; /* ???? */
 	case 0xb7:				/* register d */
 		EA=Y+D;
         konami_ICount-=4;
@@ -4278,39 +4278,39 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=4;
 		break;
-//	case 0xba: EA=0; break; /* indirect - ???? */
-//	case 0xbb: EA=0; break; /* indirect - ???? */
-//	case 0xbc: EA=0; break; /* indirect - ???? */
-//	case 0xbd: EA=0; break; /* indirect - ???? */
-//	case 0xbe: EA=0; break; /* indirect - ???? */
+/*	case 0xba: EA=0; break; /* indirect - ???? */
+/*	case 0xbb: EA=0; break; /* indirect - ???? */
+/*	case 0xbc: EA=0; break; /* indirect - ???? */
+/*	case 0xbd: EA=0; break; /* indirect - ???? */
+/*	case 0xbe: EA=0; break; /* indirect - ???? */
 	case 0xbf:				/* indirect - register d */
 		EA=Y+D;
 		EA=RM16(EAD);
         konami_ICount-=7;
 		break;
-//	case 0xc0: EA=0; break; /* register a */
-//	case 0xc1: EA=0; break; /* register b */
-//	case 0xc2: EA=0; break; /* ???? */
-//	case 0xc3: EA=0; break; /* ???? */
+/*	case 0xc0: EA=0; break; /* register a */
+/*	case 0xc1: EA=0; break; /* register b */
+/*	case 0xc2: EA=0; break; /* ???? */
+/*	case 0xc3: EA=0; break; /* ???? */
 	case 0xc4:
 		EAD=0;
 		(*konami_direct[konami.ireg])();
         konami_ICount -= 1;
 		return;
-//	case 0xc5: EA=0; break; /* ???? */
-//	case 0xc6: EA=0; break; /* ???? */
-//	case 0xc7: EA=0; break; /* register d */
-//	case 0xc8: EA=0; break; /* indirect - register a */
-//	case 0xc9: EA=0; break; /* indirect - register b */
-//	case 0xca: EA=0; break; /* indirect - ???? */
-//	case 0xcb: EA=0; break; /* indirect - ???? */
+/*	case 0xc5: EA=0; break; /* ???? */
+/*	case 0xc6: EA=0; break; /* ???? */
+/*	case 0xc7: EA=0; break; /* register d */
+/*	case 0xc8: EA=0; break; /* indirect - register a */
+/*	case 0xc9: EA=0; break; /* indirect - register b */
+/*	case 0xca: EA=0; break; /* indirect - ???? */
+/*	case 0xcb: EA=0; break; /* indirect - ???? */
 	case 0xcc:				/* indirect - direct */
 		DIRWORD(ea);
         konami_ICount-=4;
 		break;
-//	case 0xcd: EA=0; break; /* indirect - ???? */
-//	case 0xce: EA=0; break; /* indirect - register d */
-//	case 0xcf: EA=0; break; /* indirect - ???? */
+/*	case 0xcd: EA=0; break; /* indirect - ???? */
+/*	case 0xce: EA=0; break; /* indirect - register d */
+/*	case 0xcf: EA=0; break; /* indirect - ???? */
 	case 0xd0:				/* register a */
 		EA=U+SIGNED(A);
         konami_ICount-=1;
@@ -4319,11 +4319,11 @@ static INLINE void opcode2( void )
 		EA=U+SIGNED(B);
         konami_ICount-=1;
 		break;
-//	case 0xd2: EA=0; break; /* ???? */
-//	case 0xd3: EA=0; break; /* ???? */
-//	case 0xd4: EA=0; break; /* ???? */
-//	case 0xd5: EA=0; break; /* ???? */
-//	case 0xd6: EA=0; break; /* ???? */
+/*	case 0xd2: EA=0; break; /* ???? */
+/*	case 0xd3: EA=0; break; /* ???? */
+/*	case 0xd4: EA=0; break; /* ???? */
+/*	case 0xd5: EA=0; break; /* ???? */
+/*	case 0xd6: EA=0; break; /* ???? */
 	case 0xd7:				/* register d */
 		EA=U+D;
         konami_ICount-=4;
@@ -4338,11 +4338,11 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=4;
 		break;
-//	case 0xda: EA=0; break; /* indirect - ???? */
-//	case 0xdb: EA=0; break; /* indirect - ???? */
-//	case 0xdc: EA=0; break; /* indirect - ???? */
-//	case 0xdd: EA=0; break; /* indirect - ???? */
-//	case 0xde: EA=0; break; /* indirect - ???? */
+/*	case 0xda: EA=0; break; /* indirect - ???? */
+/*	case 0xdb: EA=0; break; /* indirect - ???? */
+/*	case 0xdc: EA=0; break; /* indirect - ???? */
+/*	case 0xdd: EA=0; break; /* indirect - ???? */
+/*	case 0xde: EA=0; break; /* indirect - ???? */
 	case 0xdf:				/* indirect - register d */
 		EA=U+D;
 		EA=RM16(EAD);
@@ -4356,11 +4356,11 @@ static INLINE void opcode2( void )
 		EA=S+SIGNED(B);
         konami_ICount-=1;
 		break;
-//	case 0xe2: EA=0; break; /* ???? */
-//	case 0xe3: EA=0; break; /* ???? */
-//	case 0xe4: EA=0; break; /* ???? */
-//	case 0xe5: EA=0; break; /* ???? */
-//	case 0xe6: EA=0; break; /* ???? */
+/*	case 0xe2: EA=0; break; /* ???? */
+/*	case 0xe3: EA=0; break; /* ???? */
+/*	case 0xe4: EA=0; break; /* ???? */
+/*	case 0xe5: EA=0; break; /* ???? */
+/*	case 0xe6: EA=0; break; /* ???? */
 	case 0xe7:				/* register d */
 		EA=S+D;
         konami_ICount-=4;
@@ -4375,11 +4375,11 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=4;
 		break;
-//	case 0xea: EA=0; break; /* indirect - ???? */
-//	case 0xeb: EA=0; break; /* indirect - ???? */
-//	case 0xec: EA=0; break; /* indirect - ???? */
-//	case 0xed: EA=0; break; /* indirect - ???? */
-//	case 0xee: EA=0; break; /* indirect - ???? */
+/*	case 0xea: EA=0; break; /* indirect - ???? */
+/*	case 0xeb: EA=0; break; /* indirect - ???? */
+/*	case 0xec: EA=0; break; /* indirect - ???? */
+/*	case 0xed: EA=0; break; /* indirect - ???? */
+/*	case 0xee: EA=0; break; /* indirect - ???? */
 	case 0xef:				/* indirect - register d */
 		EA=S+D;
 		EA=RM16(EAD);
@@ -4393,11 +4393,11 @@ static INLINE void opcode2( void )
 		EA=PC+SIGNED(B);
         konami_ICount-=1;
 		break;
-//	case 0xf2: EA=0; break; /* ???? */
-//	case 0xf3: EA=0; break; /* ???? */
-//	case 0xf4: EA=0; break; /* ???? */
-//	case 0xf5: EA=0; break; /* ???? */
-//	case 0xf6: EA=0; break; /* ???? */
+/*	case 0xf2: EA=0; break; /* ???? */
+/*	case 0xf3: EA=0; break; /* ???? */
+/*	case 0xf4: EA=0; break; /* ???? */
+/*	case 0xf5: EA=0; break; /* ???? */
+/*	case 0xf6: EA=0; break; /* ???? */
 	case 0xf7:				/* register d */
 		EA=PC+D;
         konami_ICount-=4;
@@ -4412,11 +4412,11 @@ static INLINE void opcode2( void )
 		EA=RM16(EAD);
         konami_ICount-=4;
 		break;
-//	case 0xfa: EA=0; break; /* indirect - ???? */
-//	case 0xfb: EA=0; break; /* indirect - ???? */
-//	case 0xfc: EA=0; break; /* indirect - ???? */
-//	case 0xfd: EA=0; break; /* indirect - ???? */
-//	case 0xfe: EA=0; break; /* indirect - ???? */
+/*	case 0xfa: EA=0; break; /* indirect - ???? */
+/*	case 0xfb: EA=0; break; /* indirect - ???? */
+/*	case 0xfc: EA=0; break; /* indirect - ???? */
+/*	case 0xfd: EA=0; break; /* indirect - ???? */
+/*	case 0xfe: EA=0; break; /* indirect - ???? */
 	case 0xff:				/* indirect - register d */
 		EA=PC+D;
 		EA=RM16(EAD);

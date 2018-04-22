@@ -64,7 +64,7 @@ Any comments/updates/bug reports to:
 #include <stdlib.h>
 
 #ifdef MAME_DEBUG
-//#include "nechost.h"
+/*#include "nechost.h"*/
 
 /* Little endian uint read */
 #define	le_uint8(ptr) (*(UINT8*)ptr)
@@ -205,7 +205,7 @@ static int addrsize;
   "mov %Eb,%Gb",      "mov %Ev,%Gw",     "mov %Gb,%Eb",    "mov %Gw,%Ew",
   "mov %Ew,%Sw",      "ldea %Gw,%M ",    "mov %Sw,%Ew",    "pop %Ev",
 /* 9 */
-//above LDEA is wrong!
+/*above LDEA is wrong!*/
 
   "nop",              "xch cw,aw",       "xch dw,aw",      "xch bw,aw",
   "xch sp,aw",        "xch bp,aw",       "xch ix,aw",      "xch iy,aw",
@@ -350,7 +350,7 @@ static char *addr_to_hex(UINT32 addr, int splitup) {
     if (fp_segment(addr)==0 || fp_offset(addr)==0xffff) /* 'coz of wraparound */
       sprintf(buffer, "%04X", (unsigned)fp_offset(addr) );
     else
-//      sprintf(buffer, "%04X:%04X", (unsigned)fp_segment(addr), (unsigned)fp_offset(addr) );
+/*      sprintf(buffer, "%04X:%04X", (unsigned)fp_segment(addr), (unsigned)fp_offset(addr) );*/
       sprintf(buffer, "%04X:%04X", (unsigned)addr >> 4, (unsigned)addr - ((addr >> 4) << 4) );
 
   } else {
@@ -642,8 +642,8 @@ static void percent(char type, char subtype)
 {
   INT32 vofs = 0;
   char *name;
-  //int extend = (addrsize == 32) ? 4 : 2;
-  int extend = 2;	// NEC only has 16 Bit
+  /*int extend = (addrsize == 32) ? 4 : 2;*/
+  int extend = 2;	/* NEC only has 16 Bit*/
 
   UINT8 c;
   unsigned d;
@@ -668,9 +668,9 @@ static void percent(char type, char subtype)
        break;
 
   case 'G':                          /* reg(r/m) picks register */
-    //   if (subtype == 'F')                 /* 80*87 operand?   */
-    //     reg_name(RM(modrm()), subtype);
-    //   else
+    /*   if (subtype == 'F')                 /* 80*87 operand?   */*/
+    /*     reg_name(RM(modrm()), subtype);*/
+    /*   else*/
          reg_name(REG(modrm()), subtype);
        must_do_size = 0;
        break;
@@ -753,8 +753,8 @@ static void percent(char type, char subtype)
        break;
 
   case '2':
-       d=getbyte();	// 0f xx
-       //wordop = d & 1;
+       d=getbyte();	/* 0f xx*/
+       /*wordop = d & 1;*/
        ua_str(second[d]);
        break;
 
@@ -869,10 +869,10 @@ unsigned Dasmnec(char* buffer, unsigned pc)
 	sibv = -1;     /* set modrm and sib flags */
 	opsize = addrsize = 16;
 
-	//c = getbyte();			/* read opcode */
+	/*c = getbyte();			/* read opcode */*/
 	c = getopcode();
 	wordop = c & 1;
-	//wordop=0;
+	/*wordop=0;*/
 	must_do_size = 1;
 	invalid_opcode = 0;
 	ua_str(opmap1[c]);

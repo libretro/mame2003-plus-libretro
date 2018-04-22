@@ -8676,9 +8676,9 @@ static void SETB(void)
 		case 0x1d:	/* TMM */
 			TMM |= (1 << bit);
 			break;
-//		case 0x1e:	/* PT */
-//			PT is input only
-//			break;
+/*		case 0x1e:	// PT */
+/*			PT is input only*/
+/*			break;*/
 		default:
 			logerror("uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
 			break;
@@ -8726,9 +8726,9 @@ static void CLR(void)
 		case 0x1d:	/* TMM */
 			TMM &= ~(1 << bit);
 			break;
-//		case 0x1e:	/* PT */
-//			PT is input only
-//			break;
+/*		case 0x1e:	// PT */
+/*			PT is input only*/
+/*			break;*/
 		default:
 			logerror("uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
 			break;

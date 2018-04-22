@@ -315,15 +315,15 @@ unsigned dasm_dsp32(char *buffer, unsigned pc)
 		case 0x3c:	case 0x3d:	case 0x3e:	case 0x3f:
 			if ((op & 0x7f) == 7)
 				sprintf(buffer, "a%d = %s(%s)",
-						(op >> 21) & 3, 							// aN
-						functable[(op >> 23) & 15],					// G
-						dasm_XYZ((op >> 7) & 0x7f, tempbuf[0]));	// Y
+						(op >> 21) & 3, 							/* aN*/
+						functable[(op >> 23) & 15],					/* G*/
+						dasm_XYZ((op >> 7) & 0x7f, tempbuf[0]));	/* Y*/
 			else
 				sprintf(buffer, "%s = a%d = %s(%s)",
-						dasm_XYZ((op >> 0) & 0x7f, tempbuf[2]),		// Z
-						(op >> 21) & 3, 							// aN
-						functable[(op >> 23) & 15],					// G
-						dasm_XYZ((op >> 7) & 0x7f, tempbuf[0]));	// Y
+						dasm_XYZ((op >> 0) & 0x7f, tempbuf[2]),		/* Z*/
+						(op >> 21) & 3, 							/* aN*/
+						functable[(op >> 23) & 15],					/* G*/
+						dasm_XYZ((op >> 7) & 0x7f, tempbuf[0]));	/* Y*/
 			break;
 		
 		/* CA formats 0/1 */
@@ -497,9 +497,9 @@ unsigned dasm_dsp32(char *buffer, unsigned pc)
 					break;
 				
 				case 7:
-//					if (threeop)
-//						sprintf(buffer, "%s%s%s - %s%s", condbuf, rS2, s, rS1, s);
-//					else
+/*					if (threeop)*/
+/*						sprintf(buffer, "%s%s%s - %s%s", condbuf, rS2, s, rS1, s);*/
+/*					else*/
 						sprintf(buffer, "%s%s%s - %s%s", condbuf, rD, s, rS1, s);
 					break;
 				
@@ -541,9 +541,9 @@ unsigned dasm_dsp32(char *buffer, unsigned pc)
 					break;
 				
 				case 15:
-//					if (threeop)
-//						sprintf(buffer, "%s%s%s & %s%s", condbuf, rS1, s, rS2, s);
-//					else
+/*					if (threeop)*/
+/*						sprintf(buffer, "%s%s%s & %s%s", condbuf, rS1, s, rS2, s);*/
+/*					else*/
 						sprintf(buffer, "%s%s%s & %s%s", condbuf, rD, s, rS1, s);
 					break;
 			}

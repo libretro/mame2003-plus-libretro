@@ -101,23 +101,23 @@ static void i286_code_descriptor(UINT16 selector, UINT16 offset)
 			I.base[CS]=word2|((word3&0xff)<<16);
 			I.rights[CS]=word3>>8;
 			I.pc=I.base[CS]+offset;
-		} else { // systemdescriptor
+		} else { /* systemdescriptor*/
 			switch (word3&0xf00) {
-			case 0x400: // call gate
-				// word3&0x1f words to be copied from stack to stack
+			case 0x400: /* call gate*/
+				/* word3&0x1f words to be copied from stack to stack*/
 				i286_data_descriptor(CS, word2);
 				I.pc=I.base[CS]+word1;
 				break;
-			case 0x500: // task gate
+			case 0x500: /* task gate*/
 				i286_data_descriptor(CS, word2);
 				I.pc=I.base[CS]+word1;
 				break;
-			case 0x600: // interrupt gate
+			case 0x600: /* interrupt gate*/
 				I.TF = I.IF = 0;
 				i286_data_descriptor(CS, word2);
 				I.pc=I.base[CS]+word1;
 				break;
-			case 0x700: // trap gate
+			case 0x700: /* trap gate*/
 				i286_data_descriptor(CS, word2);
 				I.pc=I.base[CS]+word1;
 				break;
@@ -134,7 +134,7 @@ static void i286_interrupt_descriptor(UINT16 number)
 {
 	UINT16 word1,word2,word3;
 	if ((number<<3)>=I.idtr.limit) {
-		;// go into shutdown mode
+		;/* go into shutdown mode*/
 		return;
 	}
 	PREFIX(_pushf());
@@ -144,16 +144,16 @@ static void i286_interrupt_descriptor(UINT16 number)
 	word2=ReadWord(I.idtr.base+(number<<3)+2);
 	word3=ReadWord(I.idtr.base+(number<<3)+4);
 	switch (word3&0xf00) {
-	case 0x500: // task gate
+	case 0x500: /* task gate*/
 		i286_data_descriptor(CS, word2);
 		I.pc=I.base[CS]+word1;
 		break;
-	case 0x600: // interrupt gate
+	case 0x600: /* interrupt gate*/
 		I.TF = I.IF = 0;
 		i286_data_descriptor(CS, word2);
 		I.pc=I.base[CS]+word1;
 		break;
-	case 0x700: // trap gate
+	case 0x700: /* trap gate*/
 		i286_data_descriptor(CS, word2);
 		I.pc=I.base[CS]+word1;
 		break;

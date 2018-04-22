@@ -40,14 +40,14 @@ static INLINE void illegal( void )
 
 static void IIError(void)
 {
-	SEII;			// Set illegal Instruction Flag
-	illegal();		// Vector to Trap handler
+	SEII;			/* Set illegal Instruction Flag*/
+	illegal();		/* Vector to Trap handler*/
 }
 
 static void DZError(void)
 {
-	SEDZ;			// Set Division by Zero Flag
-	illegal();		// Vector to Trap handler
+	SEDZ;			/* Set Division by Zero Flag*/
+	illegal();		/* Vector to Trap handler*/
 }
 
 #ifdef macintosh

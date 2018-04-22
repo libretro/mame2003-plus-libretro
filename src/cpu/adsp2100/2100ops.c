@@ -314,7 +314,7 @@ static INLINE int CONDITION(int c)
 
 static void wr_inval(INT32 val)
 {
-   //logerror( "ADSP %04x: Writing to an invalid register!", adsp2100.ppc );
+   /*logerror( "ADSP %04x: Writing to an invalid register!", adsp2100.ppc );*/
 }
 
 static void wr_ax0(INT32 val)   { adsp2100.core.ax0.s = val; }
@@ -415,7 +415,7 @@ static void (*wr_reg[4][16])(INT32) =
 
 static INT32 rd_inval(void)
 {
-   //logerror( "ADSP %04x: Writing to an invalid register!", adsp2100.ppc );
+   /*logerror( "ADSP %04x: Writing to an invalid register!", adsp2100.ppc );*/
    return 0;
 }
 static INT32 rd_ax0(void)   { return adsp2100.core.ax0.s; }
@@ -736,7 +736,7 @@ void alu_op_ar(int op)
 	INT32 yop = (op >> 11) & 3;
 	INT32 res;
 
-	//switch ((op >> 13) & 15)
+	/*switch ((op >> 13) & 15)*/
 	switch (op & (15<<13))  /*JB*/
 	{
 		case 0x00<<13:
@@ -875,7 +875,7 @@ void alu_op_af(int op)
 	INT32 yop = (op >> 11) & 3;
 	INT32 res;
 
-//	switch ((op >> 13) & 15)
+/*	switch ((op >> 13) & 15)*/
 	switch (op & (15<<13))  /*JB*/
 	{
 		case 0x00<<13:
@@ -1013,7 +1013,7 @@ void mac_op_mr(int op)
 	INT32 temp;
 	INT64 res;
 
-//	switch ((op >> 13) & 15)
+/*	switch ((op >> 13) & 15)*/
 	switch (op & (15<<13))	/*JB*/
 	{
 		case 0x00<<13:
@@ -1177,7 +1177,7 @@ void mac_op_mf(int op)
 	INT32 temp;
 	INT64 res;
 
-//	switch ((op >> 13) & 15)
+/*	switch ((op >> 13) & 15)*/
 	switch (op & (15<<13))	/*JB*/
 	{
 		case 0x00<<13:
@@ -1336,7 +1336,7 @@ void shift_op(int op)
 	INT32 xop = (op >> 8) & 7;
 	UINT32 res;
 
-//	switch ((op >> 11) & 15)
+/*	switch ((op >> 11) & 15)*/
 	switch (op & (15<<11))	/*JB*/
 	{
 		case 0x00<<11:
@@ -1519,7 +1519,7 @@ void shift_op_imm(int op)
 	INT32 xop = (op >> 8) & 7;
 	UINT32 res;
 
-//	switch ((op >> 11) & 15)
+/*	switch ((op >> 11) & 15)*/
 	switch (op & (15<<11))	/*JB*/
 	{
 		case 0x00<<11:

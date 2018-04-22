@@ -67,7 +67,7 @@ UINT32	CD_trans_type;			/* 0 = DATA, 1 = INFO   */ /*maybe signed int*/
 
 UINT32	CD_actual_size;			/* used by "calcactualsize" and "getactualsize"*/
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/******************************************************************/
 
 sect_t	CD_sect[CDB_SECT_NUM];	/* sector buffer*/
 part_t	CD_part[CDB_SEL_NUM];	/* buffer partitions*/
@@ -77,7 +77,7 @@ UINT32	CD_free_space;		/* free space in sector units*/
 UINT8	CD_filt_num;		/* cdrom drive connector*/
 UINT8	CD_mpeg_filt_num;	/* mpeg connector*/
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/******************************************************************/
 
 
 UINT32	CD_cur_fad;			/* current pickup position info*/
@@ -114,11 +114,11 @@ UINT32		cdda_pos;
 
 
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/******************************************************************/
 
 #define ISO_BUFF_SIZE	(2352 * 16)	/* cache size*/
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/******************************************************************/
 
  char	* iso_buff = NULL;
 static FILE	* iso_file = NULL;
@@ -164,7 +164,7 @@ static UINT32	iso_track_num;
 static INT32	iso_size;		/* < 0 means not present*/
 static UINT32	iso_type;		/* 0 = ISO 1 = BIN*/
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/******************************************************************/
 /* CD Block Interface*/
 
 
@@ -411,7 +411,7 @@ void iso_seek_sector(UINT32 fad){
 
 }
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/********************************************************/
 
 UINT32 iso_get_track_info(UINT32 tn, UINT32 * ctrl, UINT32 * idx, UINT32 * fad){
 
@@ -435,7 +435,7 @@ void iso_get_leadout_info(UINT32 * ctrl, UINT32 * idx, UINT32 * fad){
 UINT32 iso_get_first_track(void){	return(iso_track_first); }
 UINT32 iso_get_last_track(void){		return(iso_track_last); }
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/********************************************************/
 
 UINT32 iso_get_status(void){
 
@@ -450,7 +450,7 @@ UINT32 iso_get_status(void){
 	return(stat);
 }
 
-/*//////////////////////////////////////////////////////////*/
+/********************************************************/
 /* Local Procedures*/
 
 static void iso_build_disc_bin(void){
@@ -609,7 +609,7 @@ static void iso_build_disc_iso(void){
 	iso_type = 0;
 }
 
-/*/*//////////////////////////////////////////////////////////*/ //*/
+/********************************************************/
 
 void iso_shutdown(void){
 

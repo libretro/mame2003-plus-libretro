@@ -107,7 +107,7 @@ static INLINE void eorb_di(void);
 static INLINE void eorb_ex(void);
 static INLINE void eorb_im(void);
 static INLINE void eorb_ix(void);
-//INLINE void illegal(void);
+/*INLINE void illegal(void);*/
 static void illegal(void);
 static INLINE void inc_ex(void);
 static INLINE void inc_ix(void);
@@ -246,7 +246,7 @@ static INLINE void cpx_di(void);
 static INLINE void cpx_ex(void);
 static INLINE void cpx_im(void);
 static INLINE void cpx_ix(void);
-//INLINE void trap(void);
+/*INLINE void trap(void);*/
 static void trap(void);
 
 static void (*m6800_insn[0x100])(void) = {

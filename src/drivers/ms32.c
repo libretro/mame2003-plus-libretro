@@ -329,21 +329,21 @@ static MEMORY_READ32_START( ms32_readmem )
 	{ 0xfd000000, 0xfd000003, ms32_sound_r },
 	{ 0xfd0e0000, 0xfd0e0003, ms32_read_inputs3 }, /* analog controls in f1superb? */
 
-/*/**/{ 0xfd104000, 0xfd105fff, MRA32_RAM },  // f1superb /*/
-/*/**/{ 0xfd144000, 0xfd145fff, MRA32_RAM },  // f1superb /*/
+/**/{ 0xfd104000, 0xfd105fff, MRA32_RAM },  /* f1superb */
+/**/{ 0xfd144000, 0xfd145fff, MRA32_RAM },  /* f1superb */
 
 	{ 0xfd180000, 0xfd19ffff, ms32_priram_r },	/* priority ram */
 	{ 0xfd1a0000, 0xfd1bffff, ms32_priram_r },	/* mirror only used by memory test in service mode */
 
 	{ 0xfd400000, 0xfd43ffff, MRA32_RAM }, /* Palette */
-/*/**/{ 0xfd440000, 0xfd47ffff, MRA32_RAM },  // f1superb color /*/
+/**/{ 0xfd440000, 0xfd47ffff, MRA32_RAM },  /* f1superb color */
 
-/*/**/{ 0xfdc00000, 0xfdc006ff, MRA32_RAM },  // f1superb /*/
-/*/**/{ 0xfde00000, 0xfde01fff, MRA32_RAM },  // f1superb lineram /*/
+/**/{ 0xfdc00000, 0xfdc006ff, MRA32_RAM },  /* f1superb */
+/**/{ 0xfde00000, 0xfde01fff, MRA32_RAM },  /* f1superb lineram */
 	{ 0xfe000000, 0xfe01ffff, ms32_rozram_r },	/* roz layer */
 	{ 0xfe020000, 0xfe03ffff, ms32_rozram_r },	/* mirror only used by memory test in service mode */
 	{ 0xfe200000, 0xfe201fff, ms32_lineram_r }, /* line ram for roz layer */
-/*/**/{ 0xfe202000, 0xfe2fffff, MRA32_RAM },  // f1superb vram /*/
+/**/{ 0xfe202000, 0xfe2fffff, MRA32_RAM },  /* f1superb vram */
 
 	{ 0xfe800000, 0xfe83ffff, ms32_spram_r },	/* sprites */
 	{ 0xfe840000, 0xfe87ffff, ms32_spram_r },	/* mirror only used by memory test in service mode */
@@ -369,7 +369,7 @@ static MEMORY_WRITE32_START( ms32_writemem )
 	{ 0xfce00034, 0xfce00037, MWA32_NOP }, /* irq ack?*/
 	{ 0xfce00038, 0xfce0003b, reset_sub_w },
 	{ 0xfce00050, 0xfce0005f, MWA32_NOP },	/* watchdog? I haven't investigated*/
-/*	{ 0xfce00000, 0xfce0007f, MWA32_RAM, &ms32_fce00000 },  // registers not ram? /*/
+/*	{ 0xfce00000, 0xfce0007f, MWA32_RAM, &ms32_fce00000 },  /* registers not ram? */
 	{ 0xfce00280, 0xfce0028f, ms32_brightness_w },	/* global brightness control*/
 	{ 0xfce00600, 0xfce0065f, MWA32_RAM, &ms32_roz_ctrl },	/* roz control registers */
 /*	{ 0xfce00800, 0xfce0085f, */ /* f1superb, roz #2 control?*/
@@ -378,8 +378,8 @@ static MEMORY_WRITE32_START( ms32_writemem )
 	{ 0xfce00a7c, 0xfce00a7f, pip_w },	/* ??? layer related? seems to be always 0*/
 /*	{ 0xfce00e00, 0xfce00e03,  },	coin counters + something else*/
 
-/*	{ 0xfd104000, 0xfd105fff, MWA32_RAM },  // f1superb /*/
-/*	{ 0xfd144000, 0xfd145fff, MWA32_RAM },  // f1superb /*/
+/*	{ 0xfd104000, 0xfd105fff, MWA32_RAM },  /* f1superb */
+/*	{ 0xfd144000, 0xfd145fff, MWA32_RAM },  /* f1superb */
 
 	{ 0xfd180000, 0xfd19ffff, ms32_priram_w, &ms32_priram },	/* priority ram */
 	{ 0xfd1a0000, 0xfd1bffff, ms32_priram_w },			/* mirror only used by memory test in service mode */
@@ -387,16 +387,16 @@ static MEMORY_WRITE32_START( ms32_writemem )
 	{ 0xfd1c0000, 0xfd1c0003, MWA32_RAM, &ms32_mahjong_input_select }, /* ?*/
 
 	{ 0xfd400000, 0xfd43ffff, ms32_palram_w, &ms32_palram }, /* Palette */
-/*/**/{ 0xfd440000, 0xfd47ffff, MWA32_RAM },  // f1superb color /*/
-/*	{ 0xfdc00000, 0xfdc006ff, MWA32_RAM },  // f1superb /*/
-/*	{ 0xfde00000, 0xfde01fff, MWA32_RAM },  // f1superb, lineram #2? /*/
+/**/{ 0xfd440000, 0xfd47ffff, MWA32_RAM },  /* f1superb color */
+/*	{ 0xfdc00000, 0xfdc006ff, MWA32_RAM },  // f1superb */
+/*	{ 0xfde00000, 0xfde01fff, MWA32_RAM },  // f1superb, lineram #2? */
 
 	{ 0xfe000000, 0xfe01ffff, ms32_rozram_w, &ms32_rozram },	/* roz layer */
 	{ 0xfe020000, 0xfe03ffff, ms32_rozram_w },		/* mirror only used by memory test in service mode */
 	{ 0xfe1ffc88, 0xfe1fffff, MWA32_NOP },	/* gratia writes here before falling into lineram, could be a mirror */
 	{ 0xfe200000, 0xfe201fff, ms32_lineram_w, &ms32_lineram }, /* line ram for roz layer */
-/*/**/{ 0xfe202000, 0xfe2fffff, MWA32_RAM },  // f1superb vram /*/
-/*/**/{ 0xfe100000, 0xfe1fffff, MWA32_RAM },  // gratia writes here ?! /*/
+/**/{ 0xfe202000, 0xfe2fffff, MWA32_RAM },  /* f1superb vram */
+/**/{ 0xfe100000, 0xfe1fffff, MWA32_RAM },  /* gratia writes here ?! /*/
 	{ 0xfe800000, 0xfe83ffff, ms32_spram_w, &ms32_spram },	/* sprites */
 	{ 0xfe840000, 0xfe87ffff, ms32_spram_w },		/* mirror only used by memory test in service mode */
 	{ 0xfec00000, 0xfec07fff, ms32_txram_w, &ms32_txram },	/* tx layer */

@@ -496,7 +496,7 @@ static const UINT8 op65ce02[256][3] = {
 #endif
 
 #if (HAS_M4510)
-// only map instead of aug and 20 bit memory management
+/* only map instead of aug and 20 bit memory management*/
 static const UINT8 op4510[256][3] = {
 	{brk,imm,VAL},{ora,idx,MRD},{cle,imp,0	},{see,imp,0  },/* 00 */
 	{tsb,zpg,0	},{ora,zpg,ZRD},{asl,zpg,ZRW},{rmb,zpg,ZRW},
@@ -593,7 +593,7 @@ static const UINT8 opdeco16[256][3] =
    {cli,imp,0  },{eor,aby,MRD},{ill,non,0  },{ill,non,0	},
    {ill,non,0  },{eor,abx,MRD},{lsr,abx,MRW},{ill,non,0	},
    {rts,imp,0  },{adc,idx,MRD},{ill,non,0  },{ill,non,0	},/* 60 */
-   {ill,non,0  },{adc,zpg,ZRD},{ror,zpg,ZRW},{vbl,zpg,0	},  		// MISH
+   {ill,non,0  },{adc,zpg,ZRD},{ror,zpg,ZRW},{vbl,zpg,0	},  		/* MISH*/
    {pla,imp,0  },{adc,imm,VAL},{ror,acc,0  },{ill,non,0	},
    {jmp,ind,JMP},{adc,aba,MRD},{ror,aba,MRW},{ill,non,0	},
    {bvs,rel,BRA},{adc,idy,MRD},{ill,non,0  },{ill,non,0	},/* 70 */
@@ -956,7 +956,7 @@ unsigned int Dasm6502Helper(CPU_TYPE *this, char *buffer, unsigned pc)
 		addr = ARGWORD(pc);
 		pc += 2;
 		addr |= ARGBYTE(pc++)<<16;
-//		symbol = set_ea_info( 0, addr, EA_UINT16, access );
+/*		symbol = set_ea_info( 0, addr, EA_UINT16, access );*/
 		dst += sprintf(dst,"#%.6x", addr);
 		break;
 

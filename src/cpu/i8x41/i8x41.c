@@ -2039,7 +2039,7 @@ unsigned i8x41_get_reg(int regnum)
 	case I8X41_R6:	return R(6);
 	case I8X41_R7:	return R(7);
 	case I8X41_DATA:
-//		logerror("i8x41 #%d:%03x  Reading DATA DBBI %02x.  State was %02x,  ", cpu_getactivecpu(), PC, DBBO, STATE);
+/*		logerror("i8x41 #%d:%03x  Reading DATA DBBI %02x.  State was %02x,  ", cpu_getactivecpu(), PC, DBBO, STATE);*/
 			STATE &= ~OBF;	/* reset the output buffer full flag */
 			if( ENABLE & FLAGS)
 			{
@@ -2048,7 +2048,7 @@ unsigned i8x41_get_reg(int regnum)
 				else P2_HS &= 0xdf;
 				WP(0x02, (P2 & P2_HS) );	/* Clear the DBBO IRQ out on P24 */
 			}
-//		logerror("STATE now %02x\n", STATE);
+/*		logerror("STATE now %02x\n", STATE);*/
 			return DBBO;
 	case I8X41_DATA_DASM:	/* Same as I8X41_DATA, except this is used by the */
 							/* debugger and does not upset the flag states */
@@ -2092,7 +2092,7 @@ void i8x41_set_reg (int regnum, unsigned val)
 	case I8X41_R6:	R(6) = val; break;
 	case I8X41_R7:	R(7) = val; break;
 	case I8X41_DATA:
-//		logerror("i8x41 #%d:%03x  Setting DATA DBBI to %02x. State was %02x  ", cpu_getactivecpu(), PC, val,STATE);
+/*		logerror("i8x41 #%d:%03x  Setting DATA DBBI to %02x. State was %02x  ", cpu_getactivecpu(), PC, val,STATE);*/
 			DBBI = val;
 			if( i8x41.subtype == 8041 ) /* plain 8041 had no split input/output DBB buffers */
 				DBBO = val;
@@ -2107,7 +2107,7 @@ void i8x41_set_reg (int regnum, unsigned val)
 				else P2_HS &= 0xef;
 				WP(0x02, (P2 & P2_HS) );	/* Assert the DBBI IRQ out on P25 */
 			}
-//		logerror("State now %02x\n", STATE);
+/*		logerror("State now %02x\n", STATE);*/
 			break;
 	case I8X41_DATA_DASM:	/* Same as I8X41_DATA, except this is used by the */
 							/* debugger and does not upset the flag states */
@@ -2116,7 +2116,7 @@ void i8x41_set_reg (int regnum, unsigned val)
 				DBBO = val;
 			break;
 	case I8X41_CMND:
-//		logerror("i8x41 #%d:%03x  Setting CMND DBBI to %02x. State was %02x,  ", cpu_getactivecpu(), PC, val,STATE);
+/*		logerror("i8x41 #%d:%03x  Setting CMND DBBI to %02x. State was %02x,  ", cpu_getactivecpu(), PC, val,STATE);*/
 			DBBI = val;
 			if( i8x41.subtype == 8041 ) /* plain 8041 had no split input/output DBB buffers */
 				DBBO = val;
@@ -2131,7 +2131,7 @@ void i8x41_set_reg (int regnum, unsigned val)
 				else P2_HS &= 0xef;
 				WP(0x02, (P2 & P2_HS) );	/* Assert the DBBI IRQ out on P25 */
 			}
-//		logerror("State now %02x\n", STATE);
+/*		logerror("State now %02x\n", STATE);*/
 			break;
 	case I8X41_CMND_DASM:	/* Same as I8X41_CMND, except this is used by the */
 							/* debugger and does not upset the flag states */

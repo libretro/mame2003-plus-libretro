@@ -1021,9 +1021,9 @@ unsigned r3000_get_reg(int regnum)
 		default:
 			if (regnum <= REG_SP_CONTENTS)
 			{
-//				unsigned offset = REG_SP_CONTENTS - regnum;
-//				if (offset < PC_STACK_DEPTH)
-//					return r3000.pc_stack[offset];
+/*				unsigned offset = REG_SP_CONTENTS - regnum;*/
+/*				if (offset < PC_STACK_DEPTH)*/
+/*					return r3000.pc_stack[offset];*/
 			}
 	}
 	return 0;
@@ -1080,9 +1080,9 @@ void r3000_set_reg(int regnum, unsigned val)
 		default:
 			if (regnum <= REG_SP_CONTENTS)
 			{
-//				unsigned offset = REG_SP_CONTENTS - regnum;
-//				if (offset < PC_STACK_DEPTH)
-//					r3000.pc_stack[offset] = val;
+/*				unsigned offset = REG_SP_CONTENTS - regnum;*/
+/*				if (offset < PC_STACK_DEPTH)*/
+/*					r3000.pc_stack[offset] = val;*/
 			}
     }
 }

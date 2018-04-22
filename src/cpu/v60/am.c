@@ -1,21 +1,21 @@
 
-// NOTE for bit string/field addressing
-// ************************************
-// modDim must be passed as 10 for bit string instructions,
-// and as 11 for bit field instructions
+/* NOTE for bit string/field addressing*/
+/* *************************************/
+/* modDim must be passed as 10 for bit string instructions,*/
+/* and as 11 for bit field instructions*/
 
 
 
-// Output variables for ReadAMAddress()
+/* Output variables for ReadAMAddress()*/
 UINT8 amFlag;
 UINT32 amOut;
 UINT32 bamOffset;
 
-// Appo temp var
+/* Appo temp var*/
 UINT32 amLength1,amLength2,amLength3,amLength4;
 
 
-// Global vars used by AM functions
+/* Global vars used by AM functions*/
 UINT32 modAdd;
 UINT8 modM;
 UINT8 modVal;
@@ -25,10 +25,10 @@ UINT16 modWriteValH;
 UINT32 modWriteValW;
 UINT8 modDim;
 
-// Addressing mode functions and tables
-#include "am1.c" // ReadAM
-#include "am2.c" // ReadAMAddress
-#include "am3.c" // WriteAM
+/* Addressing mode functions and tables*/
+#include "am1.c" /* ReadAM*/
+#include "am2.c" /* ReadAMAddress*/
+#include "am3.c" /* WriteAM*/
 
 /*
   Input:

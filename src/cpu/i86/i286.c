@@ -184,7 +184,7 @@ void i286_reset (void *param)
 	static int urinit=1;
 
 	/* in my docu not all registers are initialized! */
-	//memset( &I, 0, sizeof(I) );
+	/*memset( &I, 0, sizeof(I) );*/
 
 	if (urinit) {
 		i286_urinit();
@@ -388,7 +388,7 @@ int i286_execute(int num_cycles)
 	while(i286_ICount>0)
 	{
 
-//#define VERBOSE_DEBUG
+/*#define VERBOSE_DEBUG*/
 #ifdef VERBOSE_DEBUG
 		printf("[%04x:%04x]=%02x\tF:%04x\tAX=%04x\tBX=%04x\tCX=%04x\tDX=%04x %d%d%d%d%d%d%d%d%d\n",I.sregs[CS],I.pc - I.base[CS],ReadByte(I.pc),I.flags,I.regs.w[AX],I.regs.w[BX],I.regs.w[CX],I.regs.w[DX], I.AuxVal?1:0, I.OverVal?1:0, I.SignVal?1:0, I.ZeroVal?1:0, I.CarryVal?1:0, I.ParityVal?1:0,I.TF, I.IF, I.DirVal<0?1:0);
 #endif
@@ -398,7 +398,7 @@ int i286_execute(int num_cycles)
 		seg_prefix=FALSE;
 		I.prevpc = I.pc;
 
-		TABLE286 // call instruction
+		TABLE286 /* call instruction*/
     }
 
 	/* adjust for any interrupts that came in */

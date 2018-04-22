@@ -179,93 +179,93 @@ static int decode_AM(unsigned ipc, unsigned pc, int m, int opsize, char *out)
 	unsigned char mod = readop(pc);
 	if(m) {
 		switch(mod>>5) {
-		case 0: // Double displacement (8 bit)
+		case 0: /* Double displacement (8 bit)*/
 			out_AM_DoubleDisplacement(mod&0x1F, read8(pc+1), read8(pc+2), opsize, out);
 			return 3;
 
-		case 1: // Double displacement (16 bit)
+		case 1: /* Double displacement (16 bit)*/
 			out_AM_DoubleDisplacement(mod&0x1F, read16(pc+1), read16(pc+3), opsize, out);
 			return 5;
 
-		case 2: // Double displacement (32 bit)
+		case 2: /* Double displacement (32 bit)*/
 			out_AM_DoubleDisplacement(mod&0x1F, read32(pc+1), read32(pc+5), opsize, out);
 			return 9;
 
-		case 3: // Register
+		case 3: /* Register*/
 			out_AM_Register(mod&0x1F, out);
 			return 1;
 
-		case 4: // Autoincrement
+		case 4: /* Autoincrement*/
 			out_AM_Autoincrement(mod&0x1F, opsize, out);
 			return 1;
 
-		case 5: // Autodecrement
+		case 5: /* Autodecrement*/
 			out_AM_Autodecrement(mod&0x1F, opsize, out);
 			return 1;
 
 		case 6:
 			switch (readop(pc+1)>>5)
 				{
-				case 0: // Displacement indexed (8 bit)
+				case 0: /* Displacement indexed (8 bit)*/
 					out_AM_DisplacementIndexed(readop(pc+1)&0x1F, mod&0x1F, read8(pc+2), opsize, out);
 					return 3;
 
-				case 1: // Displacement indexed (16 bit)
+				case 1: /* Displacement indexed (16 bit)*/
 					out_AM_DisplacementIndexed(readop(pc+1)&0x1F, mod&0x1F, read16(pc+2), opsize, out);
 					return 4;
 
-				case 2: // Displacement indexed (32 bit)
+				case 2: /* Displacement indexed (32 bit)*/
 					out_AM_DisplacementIndexed(readop(pc+1)&0x1F, mod&0x1F, read32(pc+2), opsize, out);
 					return 6;
 
-				case 3:	// Register indirect indexed
+				case 3:	/* Register indirect indexed*/
 					out_AM_RegisterIndirectIndexed(readop(pc+1)&0x1F, mod&0x1F, opsize, out);
 					return 2;
 
-				case 4: // Displacement indirect indexed (8 bit)
+				case 4: /* Displacement indirect indexed (8 bit)*/
 					out_AM_DisplacementIndirectIndexed(readop(pc+1)&0x1F, mod&0x1F, read8(pc+2), opsize, out);
 					return 3;
 
-				case 5: // Displacement indirect indexed (16 bit)
+				case 5: /* Displacement indirect indexed (16 bit)*/
 					out_AM_DisplacementIndirectIndexed(readop(pc+1)&0x1F, mod&0x1F, read16(pc+2), opsize, out);
 					return 4;
 
-				case 6: // Displacement indirect indexed (32 bit)
+				case 6: /* Displacement indirect indexed (32 bit)*/
 					out_AM_DisplacementIndirectIndexed(readop(pc+1)&0x1F, mod&0x1F, read32(pc+2), opsize, out);
 					return 6;
 
 				case 7:
 					switch (readop(pc+1)&0x1F)
 						{
-						case 16: // PC Displacement Indexed (8 bit)
+						case 16: /* PC Displacement Indexed (8 bit)*/
 							out_AM_PCDisplacementIndexed(ipc, read8(pc+2), mod&0x1F, opsize, out);
 							return 3;
 
-						case 17: // PC Displacement Indexed (16 bit)
+						case 17: /* PC Displacement Indexed (16 bit)*/
 							out_AM_PCDisplacementIndexed(ipc, read16(pc+2), mod&0x1F, opsize, out);
 							return 4;
 
-						case 18: // PC Displacement Indexed (32 bit)
+						case 18: /* PC Displacement Indexed (32 bit)*/
 							out_AM_PCDisplacementIndexed(ipc, read32(pc+2), mod&0x1F, opsize, out);
 							return 6;
 
-						case 19: // Direct Address Indexed
+						case 19: /* Direct Address Indexed*/
 							out_AM_DirectAddressIndexed(read32(pc+2), mod&0x1F, opsize, out);
 							return 6;
 
-						case 24: // PC Displacement Indirect Indexed(8 bit)
+						case 24: /* PC Displacement Indirect Indexed(8 bit)*/
 							out_AM_PCDisplacementIndirectIndexed(ipc, read8(pc+2), mod&0x1F, opsize, out);
 							return 3;
 
-						case 25: // PC Displacement Indirect Indexed (16 bit)
+						case 25: /* PC Displacement Indirect Indexed (16 bit)*/
 							out_AM_PCDisplacementIndirectIndexed(ipc, read16(pc+2), mod&0x1F, opsize, out);
 							return 4;
 
-						case 26: // PC Displacement Indirect Indexed (32 bit)
+						case 26: /* PC Displacement Indirect Indexed (32 bit)*/
 							out_AM_PCDisplacementIndirectIndexed(ipc, read32(pc+2), mod&0x1F, opsize, out);
 							return 6;
 
-						case 27: // Direct Address Deferred Indexed
+						case 27: /* Direct Address Deferred Indexed*/
 							out_AM_DirectAddressDeferredIndexed(read32(pc+2), mod&0x1F, opsize, out);
 							return 6;
 
@@ -285,31 +285,31 @@ static int decode_AM(unsigned ipc, unsigned pc, int m, int opsize, char *out)
 		}
 	} else {
 		switch(mod>>5) {
-		case 0: // Displacement (8 bit)
+		case 0: /* Displacement (8 bit)*/
 			out_AM_Displacement(mod&0x1F, read8(pc+1), opsize, out);
 			return 2;
 
-		case 1: // Displacement (16 bit)
+		case 1: /* Displacement (16 bit)*/
 			out_AM_Displacement(mod&0x1F, read16(pc+1), opsize, out);
 			return 3;
 
-		case 2: // Displacement (32 bit)
+		case 2: /* Displacement (32 bit)*/
 			out_AM_Displacement(mod&0x1F, read32(pc+1), opsize, out);
 			return 5;
 
-		case 3: // Register indirect
+		case 3: /* Register indirect*/
 			out_AM_RegisterIndirect(mod&0x1F, opsize, out);
 			return 1;
 
-		case 4: // Displacement indirect (8 bit)
+		case 4: /* Displacement indirect (8 bit)*/
 			out_AM_DisplacementIndirect(mod&0x1F, read8(pc+1), opsize, out);
 			return 2;
 
-		case 5: // Displacement indirect (16 bit)
+		case 5: /* Displacement indirect (16 bit)*/
 			out_AM_DisplacementIndirect(mod&0x1F, read16(pc+1), opsize, out);
 			return 3;
 
-		case 6: // Displacement indirect (32 bit)
+		case 6: /* Displacement indirect (32 bit)*/
 			out_AM_DisplacementIndirect(mod&0x1F, read32(pc+1), opsize, out);
 			return 5;
 
@@ -334,34 +334,34 @@ static int decode_AM(unsigned ipc, unsigned pc, int m, int opsize, char *out)
 				out_AM_Immediate(mod&0x1F, opsize, out);
 				return 1;
 
-			case 16: // PC Displacement (8 bit)
+			case 16: /* PC Displacement (8 bit)*/
 				out_AM_PCDisplacement(ipc, read8(pc+1), opsize, out);
 				return 2;
 
-			case 17: // PC Displacement (16 bit)
+			case 17: /* PC Displacement (16 bit)*/
 				out_AM_PCDisplacement(ipc, read16(pc+1), opsize, out);
 				return 3;
 
-			case 18: // PC Displacement (32 bit)
+			case 18: /* PC Displacement (32 bit)*/
 				out_AM_PCDisplacement(ipc, read32(pc+1), opsize, out);
 				return 5;
 
-			case 19: // Direct Address
+			case 19: /* Direct Address*/
 				out_AM_DirectAddress(read32(pc+1), opsize, out);
 				return 5;
 
 
 			case 20:
 				switch(opsize&0x7F) {
-				case 0: // Immediate (8 bit)
+				case 0: /* Immediate (8 bit)*/
 					out_AM_Immediate(read8(pc+1), opsize, out);
 					return 2;
 
-				case 1: // Immediate (16 bit)
+				case 1: /* Immediate (16 bit)*/
 					out_AM_Immediate(read16(pc+1), opsize, out);
 					return 3;
 
-				case 2: // Immediate (32 bit)
+				case 2: /* Immediate (32 bit)*/
 					out_AM_Immediate(read32(pc+1), opsize, out);
 					return 5;
 
@@ -370,31 +370,31 @@ static int decode_AM(unsigned ipc, unsigned pc, int m, int opsize, char *out)
 					return 1;
 				}
 
-			case 24: // PC Displacement Indirect (8 bit)
+			case 24: /* PC Displacement Indirect (8 bit)*/
 				out_AM_PCDisplacementIndirect(ipc, read8(pc+1), opsize, out);
 				return 2;
 
-			case 25: // PC Displacement Indirect (16 bit)
+			case 25: /* PC Displacement Indirect (16 bit)*/
 				out_AM_PCDisplacementIndirect(ipc, read16(pc+1), opsize, out);
 				return 3;
 
-			case 26: // PC Displacement Indirect (32 bit)
+			case 26: /* PC Displacement Indirect (32 bit)*/
 				out_AM_PCDisplacementIndirect(ipc, read32(pc+1), opsize, out);
 				return 5;
 
-			case 27: // Direct Address Deferred
+			case 27: /* Direct Address Deferred*/
 				out_AM_DirectAddressDeferred(read32(pc+1), opsize, out);
 				return 5;
 
-			case 28: // PC Double Displacement (8 bit)
+			case 28: /* PC Double Displacement (8 bit)*/
 				out_AM_PCDoubleDisplacement(ipc, read8(pc+1), read8(pc+2), opsize, out);
 				return 3;
 
-			case 29: // PC Double Displacement (16 bit)
+			case 29: /* PC Double Displacement (16 bit)*/
 				out_AM_PCDoubleDisplacement(ipc, read16(pc+1), read16(pc+3), opsize, out);
 				return 3;
 
-			case 30: // PC Double Displacement (32 bit)
+			case 30: /* PC Double Displacement (32 bit)*/
 				out_AM_PCDoubleDisplacement(ipc, read32(pc+1), read32(pc+5), opsize, out);
 				return 3;
 
@@ -729,12 +729,12 @@ DEFINE_EASY_OPCODE(BRKV, "brkv", F5, 0, 0)
 DEFINE_EASY_OPCODE(BSR, "bsr", F4b, 0, 0)
 DEFINE_EASY_OPCODE(CALL, "call", F1F2, 0, 2)
 DEFINE_EASY_OPCODE(CAXI, "caxi", F1, 2, 2)
-DEFINE_EASY_OPCODE(CHKAR, "chkar", F1F2, 0, 0) // ?
-DEFINE_EASY_OPCODE(CHKAW, "chkaw", F1F2, 0, 0) // ?
+DEFINE_EASY_OPCODE(CHKAR, "chkar", F1F2, 0, 0) /* ?*/
+DEFINE_EASY_OPCODE(CHKAW, "chkaw", F1F2, 0, 0) /* ?*/
 DEFINE_EASY_OPCODE(CHKAE, "chkae", F1F2, 0, 0)
 DEFINE_EASY_OPCODE(CHLVL, "chlvl", F1F2, 0, 0)
 DEFINE_EASY_OPCODE(CLR1, "clr1", F1F2, 2, 2)
-DEFINE_EASY_OPCODE(CLRTLB, "clrtlb", F3, 0, 0) // ?
+DEFINE_EASY_OPCODE(CLRTLB, "clrtlb", F3, 0, 0) /* ?*/
 DEFINE_EASY_OPCODE(CLRTLBA, "clrtlba", F5, 0, 0)
 DEFINE_TRIPLE_OPCODE(CMP, "cmp", F1F2)
 DEFINE_EASY_OPCODE(CMPBFS, "cmpbfs", F7b, 0x82, 2)
@@ -775,10 +775,10 @@ DEFINE_EASY_OPCODE(DIVUX, "divux", F1F2, 2, 3)
 DEFINE_EASY_OPCODE(EXTBFS, "extbfs", F7b, 0x82, 2)
 DEFINE_EASY_OPCODE(EXTBFZ, "extbfz", F7b, 0x82, 2)
 DEFINE_EASY_OPCODE(EXTBFL, "extbfl", F7b, 0x82, 2)
-DEFINE_EASY_OPCODE(GETATE, "getate", F1F2, 0, 3) // ?
+DEFINE_EASY_OPCODE(GETATE, "getate", F1F2, 0, 3) /* ?*/
 DEFINE_EASY_OPCODE(GETPSW, "getpsw", F3, 2, 0)
-DEFINE_EASY_OPCODE(GETPTE, "getpte", F1F2, 0, 2) // ?
-DEFINE_EASY_OPCODE(GETRA, "getra", F1F2, 0, 2) // ?
+DEFINE_EASY_OPCODE(GETPTE, "getpte", F1F2, 0, 2) /* ?*/
+DEFINE_EASY_OPCODE(GETRA, "getra", F1F2, 0, 2) /* ?*/
 DEFINE_EASY_OPCODE(HALT, "halt", F5, 0, 0)
 DEFINE_TRIPLE_OPCODE(IN, "in", F1F2)
 DEFINE_TRIPLE_OPCODE(INC, "inc", F3)
@@ -880,10 +880,10 @@ DEFINE_TRIPLE_OPCODE(TEST, "test", F3)
 DEFINE_EASY_OPCODE(TEST1, "test1", F1F2, 2, 2)
 DEFINE_EASY_OPCODE(TRAP, "trap", F3, 0, 0)
 DEFINE_EASY_OPCODE(TRAPFL, "trapfl", F5, 0, 0)
-DEFINE_EASY_OPCODE(UPDATE, "update", F1F2, 0, 3) // ?
+DEFINE_EASY_OPCODE(UPDATE, "update", F1F2, 0, 3) /* ?*/
 DEFINE_EASY_OPCODE(UPDPSWH, "updpsw.h", F1F2, 2, 2)
 DEFINE_EASY_OPCODE(UPDPSWW, "updpsw.w", F1F2, 2, 2)
-DEFINE_EASY_OPCODE(UPDPTE, "updpte", F1F2, 0, 2) // ?
+DEFINE_EASY_OPCODE(UPDPTE, "updpte", F1F2, 0, 2) /* ?*/
 DEFINE_TRIPLE_OPCODE(XCH, "xch", F1)
 DEFINE_TRIPLE_OPCODE(XOR, "xor", F1F2)
 DEFINE_EASY_OPCODE(XORBSU, "xorbsu", F7b, 0x80, 0x80)

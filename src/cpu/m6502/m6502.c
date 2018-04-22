@@ -50,7 +50,7 @@
 #endif
 
 #ifdef RUNTIME_LOADER
-// currently debugger has symbols of 65ce02, 6509, 4510 so all in 1 library
+/* currently debugger has symbols of 65ce02, 6509, 4510 so all in 1 library*/
 #include "m6509.h"
 #include "m65ce02.h"
 #include "m4510.h"

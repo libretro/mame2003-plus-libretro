@@ -432,7 +432,7 @@ void arm_set_context(void *src)
 
 unsigned arm_get_pc(void)
 {
-	return R15;//&ADDRESS_MASK;
+	return R15;/*&ADDRESS_MASK;*/
 }
 
 void arm_set_pc(unsigned val)
@@ -754,7 +754,7 @@ static void HandleMemSingle( data32_t insn )
 	/* Calculate Rn, accounting for PC */
 	rn = (insn & INSN_RN) >> INSN_RN_SHIFT;
 
-//	if (rn==0xf) logerror("%08x:  Source R15\n",R15);
+/*	if (rn==0xf) logerror("%08x:  Source R15\n",R15);*/
 
 	if (insn & INSN_SDT_P)
 	{
@@ -772,7 +772,7 @@ static void HandleMemSingle( data32_t insn )
 		{
 			SetRegister(rn,rnv);
 
-	//check writeback???
+	/*check writeback???*/
 		}
 		else if (rn == eR15)
 		{
@@ -844,7 +844,7 @@ static void HandleMemSingle( data32_t insn )
 				so writeback is effectively ignored */
 			if (rd==rn) {
 				SetRegister(rn,GetRegister(rd));
-				//todo: check for offs... ?
+				/*todo: check for offs... ?*/
 			}
 			else {
 
@@ -860,7 +860,7 @@ static void HandleMemSingle( data32_t insn )
 				so writeback is effectively ignored */
 			if (rd==rn) {
 				SetRegister(rn,GetRegister(rd));
-			//	logerror("Arm %08x: LDR style with rn==rn\n",R15);
+			/*	logerror("Arm %08x: LDR style with rn==rn\n",R15);*/
 			}
 			else {
 				SetRegister(rn,(rnv - off));
@@ -871,7 +871,7 @@ static void HandleMemSingle( data32_t insn )
 		}
 	}
 
-//	arm_check_irq_state()
+/*	arm_check_irq_state()*/
 
 } /* HandleMemSingle */
 
@@ -1045,7 +1045,7 @@ static void HandleALU( data32_t insn )
 				SetRegister(rdn,rd|oldMode); /* Todo: Should mask rd?? Mode not affected by S bit? */
 
 				/* IRQ masks may have changed in this instruction */
-//				arm_check_irq_state();
+/*				arm_check_irq_state();*/
 			}
 			else
 				/* S Flag is set - update PSR & mode */
@@ -1059,7 +1059,7 @@ static void HandleALU( data32_t insn )
 			R15 = rd;
 
 			/* IRQ masks may have changed in this instruction */
-//			arm_check_irq_state();
+/*			arm_check_irq_state();*/
 		} else {
 			if (ARM_DEBUG_CORE)
 				logerror("%08x: TST class on R15 no s bit set\n",R15);
@@ -1296,15 +1296,15 @@ static data32_t decodeShift( data32_t insn, data32_t *pCarry)
 	/* All shift types ending in 1 are Rk, not #k */
 	if( t & 1 )
 	{
-//		logerror("%08x:  RegShift %02x %02x\n",R15, k>>1,GetRegister(k >> 1));
+/*		logerror("%08x:  RegShift %02x %02x\n",R15, k>>1,GetRegister(k >> 1));*/
 		if (ARM_DEBUG_CORE && (insn&0x80)==0x80)
 			logerror("%08x:  RegShift ERROR (p36)\n",R15);
 
-		//see p35 for check on this
+		/*see p35 for check on this*/
 		k = GetRegister(k >> 1)&0x1f;
 		if( k == 0 ) /* Register shift by 0 is a no-op */
 		{
-//			logerror("%08x:  NO-OP Regshift\n",R15);
+/*			logerror("%08x:  NO-OP Regshift\n",R15);*/
 			if (pCarry) *pCarry = R15 & C_MASK;
 			return rm;
 		}

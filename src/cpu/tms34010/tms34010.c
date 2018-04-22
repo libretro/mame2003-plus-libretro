@@ -1851,7 +1851,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 
 		case REG020_PMASKL:
 		case REG020_PMASKH:
-			//if (data) logerror("Plane masking not supported. PC=%08X\n", activecpu_get_pc());
+			/*if (data) logerror("Plane masking not supported. PC=%08X\n", activecpu_get_pc());*/
 			break;
 
 		case REG020_DPYCTL:
@@ -1984,7 +1984,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 
 READ16_HANDLER( tms34010_io_register_r )
 {
-	//int cpunum = cpu_getactivecpu();
+	/*int cpunum = cpu_getactivecpu();*/
 	int result, total;
 
 #if 0
@@ -2025,7 +2025,7 @@ READ16_HANDLER( tms34010_io_register_r )
 
 READ16_HANDLER( tms34020_io_register_r )
 {
-	//int cpunum = cpu_getactivecpu();
+	/*int cpunum = cpu_getactivecpu();*/
 	int result, total;
 
 #if 0
@@ -2221,7 +2221,7 @@ void tms34010_host_w(int cpunum, int reg, int data)
 
 		/* error case */
 		default:
-			//logerror("tms34010_host_control_w called on invalid register %d\n", reg);
+			/*logerror("tms34010_host_control_w called on invalid register %d\n", reg);*/
 			break;
 	}
 
@@ -2280,7 +2280,7 @@ int tms34010_host_r(int cpunum, int reg)
 
 		/* error case */
 		default:
-			//logerror("tms34010_host_control_r called on invalid register %d\n", reg);
+			/*logerror("tms34010_host_control_r called on invalid register %d\n", reg);*/
 			break;
 	}
 

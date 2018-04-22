@@ -574,17 +574,17 @@ static data8_t RP(offs_t port)
 	switch (port)
 	{
 	case UPD7810_PORTA:
-		if (upd7810.ma)	// NS20031301 no need to read if the port is set as output
+		if (upd7810.ma)	/* NS20031301 no need to read if the port is set as output*/
 			upd7810.pa_in = cpu_readport16(port);
 		data = (upd7810.pa_in & upd7810.ma) | (upd7810.pa_out & ~upd7810.ma);
 		break;
 	case UPD7810_PORTB:
-		if (upd7810.mb)	// NS20031301 no need to read if the port is set as output
+		if (upd7810.mb)	/* NS20031301 no need to read if the port is set as output*/
 			upd7810.pb_in = cpu_readport16(port);
 		data = (upd7810.pb_in & upd7810.mb) | (upd7810.pb_out & ~upd7810.mb);
 		break;
 	case UPD7810_PORTC:
-		if (upd7810.mc)	// NS20031301 no need to read if the port is set as output
+		if (upd7810.mc)	/* NS20031301 no need to read if the port is set as output*/
 			upd7810.pc_in = cpu_readport16(port);
 		data = (upd7810.pc_in & upd7810.mc) | (upd7810.pc_out & ~upd7810.mc);
 		if (upd7810.mcc & 0x01) 	/* PC0 = TxD output */
@@ -639,7 +639,7 @@ static data8_t RP(offs_t port)
 			break;
 		}
 		break;
-	case UPD7807_PORTT:	// NS20031301 partial implementation
+	case UPD7807_PORTT:	/* NS20031301 partial implementation*/
 		data = cpu_readport16(port);
 		break;
 	default:
@@ -654,20 +654,20 @@ static void WP(offs_t port, data8_t data)
 	{
 	case UPD7810_PORTA:
 		upd7810.pa_out = data;
-//		data = (data & ~upd7810.ma) | (upd7810.pa_in & upd7810.ma);
-		data = (data & ~upd7810.ma) | (upd7810.ma);	// NS20031401
+/*		data = (data & ~upd7810.ma) | (upd7810.pa_in & upd7810.ma);*/
+		data = (data & ~upd7810.ma) | (upd7810.ma);	/* NS20031401*/
 		cpu_writeport16(port, data);
 		break;
 	case UPD7810_PORTB:
 		upd7810.pb_out = data;
-//		data = (data & ~upd7810.mb) | (upd7810.pb_in & upd7810.mb);
-		data = (data & ~upd7810.mb) | (upd7810.mb);	// NS20031401
+/*		data = (data & ~upd7810.mb) | (upd7810.pb_in & upd7810.mb);*/
+		data = (data & ~upd7810.mb) | (upd7810.mb);	/* NS20031401*/
 		cpu_writeport16(port, data);
 		break;
 	case UPD7810_PORTC:
 		upd7810.pc_out = data;
-//		data = (data & ~upd7810.mc) | (upd7810.pc_in & upd7810.mc);
-		data = (data & ~upd7810.mc) | (upd7810.mc);	// NS20031401
+/*		data = (data & ~upd7810.mc) | (upd7810.pc_in & upd7810.mc);*/
+		data = (data & ~upd7810.mc) | (upd7810.mc);	/* NS20031401*/
 		if (upd7810.mcc & 0x01) 	/* PC0 = TxD output */
 			data = (data & ~0x01) | (upd7810.txd & 1 ? 0x01 : 0x00);
 		if (upd7810.mcc & 0x02) 	/* PC1 = RxD input */
@@ -1581,18 +1581,18 @@ void upd7810_reset (void *param)
 	switch (upd7810.config.type)
 	{
 		case TYPE_7810_GAMEMASTER:
-		    // needed for lcd screen/ram selection; might be internal in cpu and therefor not needed; 0x10 written in some games
+		    /* needed for lcd screen/ram selection; might be internal in cpu and therefor not needed; 0x10 written in some games*/
 			MC = 0xff&~0x7;
-			WP( UPD7810_PORTC, 1 ); //hyper space
+			WP( UPD7810_PORTC, 1 ); /*hyper space*/
 			PCD=0x8000;
 			break;
 		default:
 			MC = 0xff;
 	}
 	MF = 0xff;
-	// gamemaster falling block "and"s to enable interrupts
+	/* gamemaster falling block "and"s to enable interrupts*/
 	MKL = 0xff;
-	MKH = 0xff; //?
+	MKH = 0xff; /*?*/
 }
 
 void upd7807_reset (void *param)
@@ -1867,7 +1867,7 @@ void upd7810_set_irq_line(int irqline, int state)
 		else
 		if (irqline == UPD7810_INTF2)
 			IRR |= INTF2;
-		// gamemaster hack
+		/* gamemaster hack*/
 		else
 		if (irqline == UPD7810_INTFE1)
 			IRR |= INTFE1;

@@ -38,7 +38,7 @@ extern int e132xs_ICount;
 #define WRITE_W(addr, val) (cpu_writemem32bedw_dword(addr, val))
 
 #define READ_OP(addr)	READ_HW(addr)
-//#define READ_OP(addr)	(cpu_readop16(addr))
+/*#define READ_OP(addr)	(cpu_readop16(addr))*/
 
 
 #define PC_CODE			 0
@@ -88,8 +88,8 @@ extern int e132xs_ICount;
 #define PRIVILEGE_ERROR		RANGE_ERROR
 #define FRAME_ERROR			RANGE_ERROR
 #define RESERVED2			61
-#define RESET				62	// reserved if not mapped @ MEM3
-#define ERROR_ENTRY			63	// for instruction code of all ones
+#define RESET				62	/* reserved if not mapped @ MEM3*/
+#define ERROR_ENTRY			63	/* for instruction code of all ones*/
 
 /* Traps code */
 #define	TRAPLE		4

@@ -3,8 +3,8 @@
 *				(initial work based on David Hedley's pcemu)                *
 ****************************************************************************/
 
-// file will be included in all cpu variants
-// timing value should move to separate array
+/* file will be included in all cpu variants*/
+/* timing value should move to separate array*/
 
 static void PREFIX186(_pusha)(void);
 static void PREFIX186(_popa)(void);

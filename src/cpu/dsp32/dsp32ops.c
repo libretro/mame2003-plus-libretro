@@ -382,8 +382,8 @@ static INLINE void dau_set_val_flags(int aidx, double res)
 	else if (absres > 3.40282e38)
 	{
 		dsp32.VUflags = VFLAGBIT;
-//		debug_key_pressed = 1;
-//		fprintf(stderr, "Result = %g\n", absres);
+/*		debug_key_pressed = 1;*/
+/*		fprintf(stderr, "Result = %g\n", absres);*/
 		res = (res < 0) ? -3.40282e38 : 3.40282e38;
 	}
 }
@@ -427,8 +427,8 @@ static INLINE UINT32 double_to_dsp(double val)
 		return 0x00000000;
 	else if (exponent > 255)
 	{
-//		debug_key_pressed = 1;
-//		fprintf(stderr, "Exponent = %d\n", exponent);
+/*		debug_key_pressed = 1;*/
+/*		fprintf(stderr, "Exponent = %d\n", exponent);*/
 		return ((INT32)id.i[BYTE_XOR_BE(0)] >= 0) ? 0x7fffffff : 0x800000ff;
 	}
 	else if ((INT32)id.i[BYTE_XOR_BE(0)] >= 0)

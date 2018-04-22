@@ -246,16 +246,16 @@ UINT32 RRimm_format(char *dest, UINT16 op, unsigned *pc)
 			return ret;
 
 		case 20:
-			return 32;	//bit 5 = 1, others = 0
+			return 32;	/*bit 5 = 1, others = 0*/
 
 		case 21:
-			return 64;	//bit 6 = 1, others = 0
+			return 64;	/*bit 6 = 1, others = 0*/
 
 		case 22:
-			return 128; //bit 7 = 1, others = 0
+			return 128; /*bit 7 = 1, others = 0*/
 
 		case 23:
-			return 0x80000000; //bit 31 = 1, others = 0 (2 at the power of 31)
+			return 0x80000000; /*bit 31 = 1, others = 0 (2 at the power of 31)*/
 
 		case 24:
 			return -8;
@@ -282,7 +282,7 @@ UINT32 RRimm_format(char *dest, UINT16 op, unsigned *pc)
 			return -1;
 
 		default:
-			return 0; //should never goes here
+			return 0; /*should never goes here*/
 	}
 }
 
@@ -311,7 +311,7 @@ INT32 PCrel_format(UINT16 op, unsigned pc)
 {
 	INT32 ret;
 
-	if( op & 0x80 ) //bit 7 = 1
+	if( op & 0x80 ) /*bit 7 = 1*/
 	{
 		UINT16 next;
 
@@ -324,14 +324,14 @@ INT32 PCrel_format(UINT16 op, unsigned pc)
 		ret |= (next & 0xfffe);
 
 		if( next & 1 )
-			ret |= 0xff800000; //ok?
+			ret |= 0xff800000; /*ok?*/
 	}
 	else
 	{
 		ret = op & 0x7e;
 
 		if( op & 1 )
-			ret |= 0xffffff80; //ok?
+			ret |= 0xffffff80; /*ok?*/
 	}
 
 	return ret;
@@ -411,7 +411,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 	switch( op_num )
 	{
-		// CHK - CHKZ - NOP
+		/* CHK - CHKZ - NOP*/
 		case 0x00: case 0x01: case 0x02: case 0x03:
 
 			if( source_bit && dest_bit && source_code == 0 && dest_code == 0 )
@@ -434,7 +434,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// MOVD - RET
+		/* MOVD - RET*/
 		case 0x04: case 0x05: case 0x06: case 0x07:
 
 			RR_format(source, dest, op);
@@ -454,7 +454,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// DIVU
+		/* DIVU*/
 		case 0x08: case 0x09: case 0x0a: case 0x0b:
 
 			RR_format(source, dest, op);
@@ -462,7 +462,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// DIVS
+		/* DIVS*/
 		case 0x0c: case 0x0d: case 0x0e: case 0x0f:
 
 			RR_format(source, dest, op);
@@ -470,7 +470,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// XMx - XXx
+		/* XMx - XXx*/
 		case 0x10: case 0x11: case 0x12: case 0x13:
 		{
 			int xcode;
@@ -515,7 +515,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// MASK
+		/* MASK*/
 		case 0x14: case 0x15: case 0x16: case 0x17:
 		{
 			UINT32 const_val = RRconst_format(source, dest, op, &pc);
@@ -525,7 +525,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// SUM
+		/* SUM*/
 		case 0x18: case 0x19: case 0x1a: case 0x1b:
 		{
 			UINT32 const_val = RRconst_format(source, dest, op, &pc);
@@ -542,7 +542,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// SUMS
+		/* SUMS*/
 		case 0x1c: case 0x1d: case 0x1e: case 0x1f:
 		{
 			UINT32 const_val = RRconst_format(source, dest, op, &pc);
@@ -559,7 +559,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// CMP
+		/* CMP*/
 		case 0x20: case 0x21: case 0x22: case 0x23:
 
 			RR_format(source, dest, op);
@@ -575,7 +575,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// MOV
+		/* MOV*/
 		case 0x24: case 0x25: case 0x26: case 0x27:
 
 			RR_format(source, dest, op);
@@ -583,7 +583,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// ADD
+		/* ADD*/
 		case 0x28: case 0x29: case 0x2a: case 0x2b:
 
 			RR_format(source, dest, op);
@@ -599,7 +599,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// ADDS
+		/* ADDS*/
 		case 0x2c: case 0x2d: case 0x2e: case 0x2f:
 
 			RR_format(source, dest, op);
@@ -615,7 +615,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// CMPB
+		/* CMPB*/
 		case 0x30: case 0x31: case 0x32: case 0x33:
 
 			RR_format(source, dest, op);
@@ -623,7 +623,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// ANDN
+		/* ANDN*/
 		case 0x34: case 0x35: case 0x36: case 0x37:
 
 			RR_format(source, dest, op);
@@ -631,7 +631,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// OR
+		/* OR*/
 		case 0x38: case 0x39: case 0x3a: case 0x3b:
 
 			RR_format(source, dest, op);
@@ -639,7 +639,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// XOR
+		/* XOR*/
 		case 0x3c: case 0x3d: case 0x3e: case 0x3f:
 
 			RR_format(source, dest, op);
@@ -647,7 +647,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// SUBC
+		/* SUBC*/
 		case 0x40: case 0x41: case 0x42: case 0x43:
 
 			RR_format(source, dest, op);
@@ -663,7 +663,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// NOT
+		/* NOT*/
 		case 0x44: case 0x45: case 0x46: case 0x47:
 
 			RR_format(source, dest, op);
@@ -672,7 +672,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// SUB
+		/* SUB*/
 		case 0x48: case 0x49: case 0x4a: case 0x4b:
 
 			RR_format(source, dest, op);
@@ -688,7 +688,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// SUBS
+		/* SUBS*/
 		case 0x4c: case 0x4d: case 0x4e: case 0x4f:
 
 			RR_format(source, dest, op);
@@ -704,7 +704,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// ADDC
+		/* ADDC*/
 		case 0x50: case 0x51: case 0x52: case 0x53:
 
 			RR_format(source, dest, op);
@@ -720,7 +720,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// AND
+		/* AND*/
 		case 0x54: case 0x55: case 0x56: case 0x57:
 
 			RR_format(source, dest, op);
@@ -728,7 +728,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// NEG
+		/* NEG*/
 		case 0x58: case 0x59: case 0x5a: case 0x5b:
 
 			RR_format(source, dest, op);
@@ -744,7 +744,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// NEGS
+		/* NEGS*/
 		case 0x5c: case 0x5d: case 0x5e: case 0x5f:
 
 			RR_format(source, dest, op);
@@ -760,7 +760,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// CMPI
+		/* CMPI*/
 		case 0x60: case 0x61: case 0x62: case 0x63:
 		{
 			UINT32 imm = RRimm_format(dest, op, &pc);
@@ -770,7 +770,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// MOVI
+		/* MOVI*/
 		case 0x64: case 0x65: case 0x66: case 0x67:
 		{
 			UINT32 imm = RRimm_format(dest, op, &pc);
@@ -780,7 +780,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// ADDI
+		/* ADDI*/
 		case 0x68: case 0x69: case 0x6a: case 0x6b:
 		{
 			UINT32 imm = RRimm_format(dest, op, &pc);
@@ -797,7 +797,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// ADDSI
+		/* ADDSI*/
 		case 0x6c: case 0x6d: case 0x6e: case 0x6f:
 		{
 			UINT32 imm = RRimm_format(dest, op, &pc);
@@ -814,7 +814,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// CMPBI
+		/* CMPBI*/
 		case 0x70: case 0x71: case 0x72: case 0x73:
 		{
 			UINT32 imm = RRimm_format(dest, op, &pc);
@@ -826,7 +826,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			else
 			{
 				if( N_VALUE(op) == 31 )
-					imm = 0x7fffffff; //bit 31 = 0, others = 1
+					imm = 0x7fffffff; /*bit 31 = 0, others = 1*/
 
 				buffer += sprintf(buffer, "CMPBI %s, %x", dest, imm);
 			}
@@ -834,20 +834,20 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// ANDNI
+		/* ANDNI*/
 		case 0x74: case 0x75: case 0x76: case 0x77:
 		{
 			UINT32 imm = RRimm_format(dest, op, &pc);
 
 			if( N_VALUE(op) == 31 )
-				imm = 0x7fffffff; //bit 31 = 0, others = 1
+				imm = 0x7fffffff; /*bit 31 = 0, others = 1*/
 
 			buffer += sprintf(buffer, "ANDNI %s, %x", dest, imm);
 
 			break;
 		}
 
-		// ORI
+		/* ORI*/
 		case 0x78: case 0x79: case 0x7a: case 0x7b:
 		{
 			UINT32 imm = RRimm_format(dest, op, &pc);
@@ -857,7 +857,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// XORI
+		/* XORI*/
 		case 0x7c: case 0x7d: case 0x7e: case 0x7f:
 		{
 			UINT32 imm = RRimm_format(dest, op, &pc);
@@ -867,7 +867,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// SHRDI
+		/* SHRDI*/
 		case 0x80: case 0x81:
 		{
 			UINT8 n = Ln_format(dest, op);
@@ -877,7 +877,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// SHRD
+		/* SHRD*/
 		case 0x82:
 
 			LL_format(source, dest, op);
@@ -886,7 +886,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// SHR
+		/* SHR*/
 		case 0x83:
 
 			LL_format(source, dest, op);
@@ -895,7 +895,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// SARDI
+		/* SARDI*/
 		case 0x84: case 0x85:
 		{
 			UINT8 n = Ln_format(dest, op);
@@ -905,7 +905,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// SARD
+		/* SARD*/
 		case 0x86:
 
 			LL_format(source, dest, op);
@@ -914,7 +914,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// SAR
+		/* SAR*/
 		case 0x87:
 
 			LL_format(source, dest, op);
@@ -923,7 +923,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// SHLDI
+		/* SHLDI*/
 		case 0x88: case 0x89:
 		{
 			UINT8 n = Ln_format(dest, op);
@@ -933,7 +933,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// SHLD
+		/* SHLD*/
 		case 0x8a:
 
 			LL_format(source, dest, op);
@@ -942,7 +942,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// SHL
+		/* SHL*/
 		case 0x8b:
 
 			LL_format(source, dest, op);
@@ -951,7 +951,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// RESERVED
+		/* RESERVED*/
 		case 0x8c: case 0x8d:
 		case 0xac: case 0xad: case 0xae: case 0xaf:
 
@@ -959,7 +959,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// TESTLZ
+		/* TESTLZ*/
 		case 0x8e:
 
 			LL_format(source, dest, op);
@@ -968,7 +968,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// ROL
+		/* ROL*/
 		case 0x8f:
 
 			LL_format(source, dest, op);
@@ -977,7 +977,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// LDxx.D/A/IOD/IOA
+		/* LDxx.D/A/IOD/IOA*/
 		case 0x90: case 0x91: case 0x92: case 0x93:
 		{
 			UINT16 next_op = READ_OP(pc + 2);
@@ -991,22 +991,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 				switch( DD( next_op ) )
 				{
 					case 0:
-						// LDBS.A
+						/* LDBS.A*/
 						buffer += sprintf(buffer, "LDBS.A 0, %s, %x", source, dis);
 						break;
 
 					case 1:
-						// LDBU.A
+						/* LDBU.A*/
 						buffer += sprintf(buffer, "LDBU.A 0, %s, %x", source, dis);
 						break;
 
 					case 2:
-						// LDHS.A
+						/* LDHS.A*/
 						if( dis & 1 )
 						{
 							buffer += sprintf(buffer, "LDHS.A 0, %s, %x", source, dis);
 						}
-						// LDHU.A
+						/* LDHU.A*/
 						else
 						{
 							buffer += sprintf(buffer, "LDHU.A 0, %s, %x", source, dis);
@@ -1015,22 +1015,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 						break;
 
 					case 3:
-						// LDD.IOA
+						/* LDD.IOA*/
 						if( ( dis & 2 ) && ( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "LDD.IOA 0, %s, %x", source, dis);
 						}
-						// LDW.IOA
+						/* LDW.IOA*/
 						else if( ( dis & 2 ) && !( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "LDW.IOA 0, %s, %x", source, dis);
 						}
-						// LDD.A
+						/* LDD.A*/
 						else if( !( dis & 2 ) && ( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "LDD.A 0, %s, %x", source, dis);
 						}
-						// LDW.A
+						/* LDW.A*/
 						else
 						{
 							buffer += sprintf(buffer, "LDW.A 0, %s, %x", source, dis);
@@ -1044,22 +1044,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 				switch( DD( next_op ) )
 				{
 					case 0:
-						// LDBS.D
+						/* LDBS.D*/
 						buffer += sprintf(buffer, "LDBS.D %s, %s, %x", dest, source, dis);
 						break;
 
 					case 1:
-						// LDBU.D
+						/* LDBU.D*/
 						buffer += sprintf(buffer, "LDBU.D %s, %s, %x", dest, source, dis);
 						break;
 
 					case 2:
-						// LDHS.D
+						/* LDHS.D*/
 						if( dis & 1 )
 						{
 							buffer += sprintf(buffer, "LDHS.D %s, %s, %x", dest, source, dis);
 						}
-						// LDHU.D
+						/* LDHU.D*/
 						else
 						{
 							buffer += sprintf(buffer, "LDHU.D %s, %s, %x", dest, source, dis);
@@ -1067,22 +1067,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 						break;
 
 					case 3:
-						// LDD.IOD
+						/* LDD.IOD*/
 						if( ( dis & 2 ) && ( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "LDD.IOD %s, %s, %x", dest, source, dis);
 						}
-						// LDW.IOD
+						/* LDW.IOD*/
 						else if( ( dis & 2 ) && !( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "LDW.IOD %s, %s, %x", dest, source, dis);
 						}
-						// LDD.D
+						/* LDD.D*/
 						else if( !( dis & 2 ) && ( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "LDD.D %s, %s, %x", dest, source, dis);
 						}
-						// LDW.D
+						/* LDW.D*/
 						else
 						{
 							buffer += sprintf(buffer, "LDW.D %s, %s, %x", dest, source, dis);
@@ -1095,7 +1095,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 			}
 
-		// LDxx.N/S
+		/* LDxx.N/S*/
 		case 0x94: case 0x95: case 0x96: case 0x97:
 		{
 			UINT16 next_op = READ_OP(pc + 2);
@@ -1113,22 +1113,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			switch( DD( next_op ) )
 			{
 				case 0:
-					// LDBS.N
+					/* LDBS.N*/
 					buffer += sprintf(buffer, "LDBS.N %s, %s, %x", dest, source, dis);
 					break;
 
 				case 1:
-					// LDBU.N
+					/* LDBU.N*/
 					buffer += sprintf(buffer, "LDBU.N %s, %s, %x", dest, source, dis);
 					break;
 
 				case 2:
-					// LDHS.N
+					/* LDHS.N*/
 					if( dis & 1 )
 					{
 						buffer += sprintf(buffer, "LDHS.N %s, %s, %x", dest, source, dis);
 					}
-					// LDHU.N
+					/* LDHU.N*/
 					else
 					{
 						buffer += sprintf(buffer, "LDHU.N %s, %s, %x", dest, source, dis);
@@ -1137,22 +1137,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 					break;
 
 				case 3:
-					// LDW.S
+					/* LDW.S*/
 					if( ( dis & 2 ) && ( dis & 1 ) )
 					{
 						buffer += sprintf(buffer, "LDW.S %s, %s, %x", dest, source, dis);
 					}
-					// Reserved
+					/* Reserved*/
 					else if( ( dis & 2 ) && !( dis & 1 ) )
 					{
 						buffer += sprintf(buffer, "Reserved");
 					}
-					// LDD.N
+					/* LDD.N*/
 					else if( !( dis & 2 ) && ( dis & 1 ) )
 					{
 						buffer += sprintf(buffer, "LDD.N %s, %s, %x", dest, source, dis);
 					}
-					// LDW.N
+					/* LDW.N*/
 					else
 					{
 						buffer += sprintf(buffer, "LDW.N %s, %s, %x", dest, source, dis);
@@ -1164,7 +1164,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// STxx.D/A/IOD/IOA
+		/* STxx.D/A/IOD/IOA*/
 		case 0x98: case 0x99: case 0x9a: case 0x9b:
 		{
 			UINT16 next_op = READ_OP(pc + 2);
@@ -1178,22 +1178,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 				switch( DD( next_op ) )
 				{
 					case 0:
-						// STBS.A
+						/* STBS.A*/
 						buffer += sprintf(buffer, "STBS.A 0, %s, %x", source, dis);
 						break;
 
 					case 1:
-						// STBU.A
+						/* STBU.A*/
 						buffer += sprintf(buffer, "STBU.A 0, %s, %x", source, dis);
 						break;
 
 					case 2:
-						// STHS.A
+						/* STHS.A*/
 						if( dis & 1 )
 						{
 							buffer += sprintf(buffer, "STHS.A 0, %s, %x", source, dis);
 						}
-						// STHU.A
+						/* STHU.A*/
 						else
 						{
 							buffer += sprintf(buffer, "STHU.A 0, %s, %x", source, dis);
@@ -1202,22 +1202,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 						break;
 
 					case 3:
-						// STD.IOA
+						/* STD.IOA*/
 						if( ( dis & 2 ) && ( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "STD.IOA 0, %s, %x", source, dis);
 						}
-						// STW.IOA
+						/* STW.IOA*/
 						else if( ( dis & 2 ) && !( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "STW.IOA 0, %s, %x", source, dis);
 						}
-						// STD.A
+						/* STD.A*/
 						else if( !( dis & 2 ) && ( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "STD.A 0, %s, %x", source, dis);
 						}
-						// STW.A
+						/* STW.A*/
 						else
 						{
 							buffer += sprintf(buffer, "STW.A 0, %s, %x", source, dis);
@@ -1231,22 +1231,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 				switch( DD( next_op ) )
 				{
 					case 0:
-						// STBS.D
+						/* STBS.D*/
 						buffer += sprintf(buffer, "STBS.D %s, %s, %x", dest, source, dis);
 						break;
 
 					case 1:
-						// STBU.D
+						/* STBU.D*/
 						buffer += sprintf(buffer, "STBU.D %s, %s, %x", dest, source, dis);
 						break;
 
 					case 2:
-						// STHS.D
+						/* STHS.D*/
 						if( dis & 1 )
 						{
 							buffer += sprintf(buffer, "STHS.D %s, %s, %x", dest, source, dis);
 						}
-						// STHU.D
+						/* STHU.D*/
 						else
 						{
 							buffer += sprintf(buffer, "STHU.D %s, %s, %x", dest, source, dis);
@@ -1254,22 +1254,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 						break;
 
 					case 3:
-						// STD.IOD
+						/* STD.IOD*/
 						if( ( dis & 2 ) && ( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "STD.IOD %s, %s, %x", dest, source, dis);
 						}
-						// STW.IOD
+						/* STW.IOD*/
 						else if( ( dis & 2 ) && !( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "STW.IOD %s, %s, %x", dest, source, dis);
 						}
-						// STD.D
+						/* STD.D*/
 						else if( !( dis & 2 ) && ( dis & 1 ) )
 						{
 							buffer += sprintf(buffer, "STD.D %s, %s, %x", dest, source, dis);
 						}
-						// STW.D
+						/* STW.D*/
 						else
 						{
 							buffer += sprintf(buffer, "STW.D %s, %s, %x", dest, source, dis);
@@ -1282,7 +1282,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 			}
 
-		// STxx.N/S
+		/* STxx.N/S*/
 		case 0x9c: case 0x9d: case 0x9e: case 0x9f:
 		{
 			UINT16 next_op = READ_OP(pc + 2);
@@ -1300,22 +1300,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			switch( DD( next_op ) )
 			{
 				case 0:
-					// STBS.N
+					/* STBS.N*/
 					buffer += sprintf(buffer, "STBS.N %s, %s, %x", dest, source, dis);
 					break;
 
 				case 1:
-					// STBU.N
+					/* STBU.N*/
 					buffer += sprintf(buffer, "STBU.N %s, %s, %x", dest, source, dis);
 					break;
 
 				case 2:
-					// STHS.N
+					/* STHS.N*/
 					if( dis & 1 )
 					{
 						buffer += sprintf(buffer, "STHS.N %s, %s, %x", dest, source, dis);
 					}
-					// STHU.N
+					/* STHU.N*/
 					else
 					{
 						buffer += sprintf(buffer, "STHU.N %s, %s, %x", dest, source, dis);
@@ -1324,22 +1324,22 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 					break;
 
 				case 3:
-					// STW.S
+					/* STW.S*/
 					if( ( dis & 2 ) && ( dis & 1 ) )
 					{
 						buffer += sprintf(buffer, "STW.S %s, %s, %x", dest, source, dis);
 					}
-					// Reserved
+					/* Reserved*/
 					else if( ( dis & 2 ) && !( dis & 1 ) )
 					{
 						buffer += sprintf(buffer, "Reserved");
 					}
-					// STD.N
+					/* STD.N*/
 					else if( !( dis & 2 ) && ( dis & 1 ) )
 					{
 						buffer += sprintf(buffer, "STD.N %s, %s, %x", dest, source, dis);
 					}
-					// STW.N
+					/* STW.N*/
 					else
 					{
 						buffer += sprintf(buffer, "STW.N %s, %s, %x", dest, source, dis);
@@ -1351,7 +1351,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// SHRI
+		/* SHRI*/
 		case 0xa0: case 0xa1: case 0xa2: case 0xa3:
 		{
 			UINT8 n = Rn_format(dest, op);
@@ -1361,7 +1361,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// SARI
+		/* SARI*/
 		case 0xa4: case 0xa5: case 0xa6: case 0xa7:
 		{
 			UINT8 n = Rn_format(dest, op);
@@ -1371,7 +1371,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// SHLI
+		/* SHLI*/
 		case 0xa8: case 0xa9: case 0xaa: case 0xab:
 		{
 			UINT8 n = Rn_format(dest, op);
@@ -1381,7 +1381,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// MULU
+		/* MULU*/
 		case 0xb0: case 0xb1: case 0xb2: case 0xb3:
 
 			RR_format(source, dest, op);
@@ -1390,7 +1390,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// MULS
+		/* MULS*/
 		case 0xb4: case 0xb5: case 0xb6: case 0xb7:
 
 			RR_format(source, dest, op);
@@ -1399,7 +1399,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// SETxx - SETADR - FETCH
+		/* SETxx - SETADR - FETCH*/
 		case 0xb8: case 0xb9: case 0xba: case 0xbb:
 		{
 			UINT8 n = Rn_format(dest, op);
@@ -1420,7 +1420,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// MUL
+		/* MUL*/
 		case 0xbc: case 0xbd: case 0xbe: case 0xbf:
 
 			RR_format(source, dest, op);
@@ -1429,77 +1429,77 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// FADD
+		/* FADD*/
 		case 0xc0:
 
 			break;
 
-		// FADDD
+		/* FADDD*/
 		case 0xc1:
 
 			break;
 
-		// FSUB
+		/* FSUB*/
 		case 0xc2:
 
 			break;
 
-		// FSUBD
+		/* FSUBD*/
 		case 0xc3:
 
 			break;
 
-		// FMUL
+		/* FMUL*/
 		case 0xc4:
 
 			break;
 
-		// FMULD
+		/* FMULD*/
 		case 0xc5:
 
 			break;
 
-		// FDIV
+		/* FDIV*/
 		case 0xc6:
 
 			break;
 
-		// FDIVD
+		/* FDIVD*/
 		case 0xc7:
 
 			break;
 
-		// FCMP
+		/* FCMP*/
 		case 0xc8:
 
 			break;
 
-		// FCMPD
+		/* FCMPD*/
 		case 0xc9:
 
 			break;
 
-		// FCMPU
+		/* FCMPU*/
 		case 0xca:
 
 			break;
 
-		// FCMPUD
+		/* FCMPUD*/
 		case 0xcb:
 
 			break;
 
-		// FCVT
+		/* FCVT*/
 		case 0xcc:
 
 			break;
 
-		// FCVTD
+		/* FCVTD*/
 		case 0xcd:
 
 			break;
 
-		// EXTEND
+		/* EXTEND*/
 		case 0xce:
 		{
 			UINT16 extended_op;
@@ -1578,12 +1578,12 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DO
+		/* DO*/
 		case 0xcf:
 
 			break;
 
-		// LDW.R
+		/* LDW.R*/
 		case 0xd0: case 0xd1:
 
 			LR_format(source, dest, op);
@@ -1592,7 +1592,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// LDD.R
+		/* LDD.R*/
 		case 0xd2: case 0xd3:
 
 			LR_format(source, dest, op);
@@ -1601,7 +1601,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// LDW.P
+		/* LDW.P*/
 		case 0xd4: case 0xd5:
 
 			LR_format(source, dest, op);
@@ -1610,7 +1610,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// LDD.P
+		/* LDD.P*/
 		case 0xd6: case 0xd7:
 
 			LR_format(source, dest, op);
@@ -1619,7 +1619,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// STW.R
+		/* STW.R*/
 		case 0xd8: case 0xd9:
 
 			LR_format(source, dest, op);
@@ -1628,7 +1628,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// STD.R
+		/* STD.R*/
 		case 0xda: case 0xdb:
 
 			LR_format(source, dest, op);
@@ -1637,7 +1637,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// STW.P
+		/* STW.P*/
 		case 0xdc: case 0xdd:
 
 			LR_format(source, dest, op);
@@ -1646,7 +1646,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// STD.P
+		/* STD.P*/
 		case 0xde: case 0xdf:
 
 			LR_format(source, dest, op);
@@ -1655,7 +1655,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// DBV
+		/* DBV*/
 		case 0xe0:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1665,7 +1665,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBNV
+		/* DBNV*/
 		case 0xe1:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1675,7 +1675,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBE
+		/* DBE*/
 		case 0xe2:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1685,7 +1685,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBNE
+		/* DBNE*/
 		case 0xe3:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1695,7 +1695,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBC
+		/* DBC*/
 		case 0xe4:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1705,7 +1705,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBNC
+		/* DBNC*/
 		case 0xe5:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1715,7 +1715,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBSE
+		/* DBSE*/
 		case 0xe6:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1725,7 +1725,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBHT
+		/* DBHT*/
 		case 0xe7:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1735,7 +1735,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBN
+		/* DBN*/
 		case 0xe8:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1745,7 +1745,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBNN
+		/* DBNN*/
 		case 0xe9:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1755,7 +1755,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBLE
+		/* DBLE*/
 		case 0xea:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1765,7 +1765,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBGT
+		/* DBGT*/
 		case 0xeb:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1775,7 +1775,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// DBR
+		/* DBR*/
 		case 0xec:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1785,7 +1785,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// FRAME
+		/* FRAME*/
 		case 0xed:
 
 			LL_format(source, dest, op);
@@ -1794,7 +1794,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 			break;
 
-		// CALL
+		/* CALL*/
 		case 0xee: case 0xef:
 		{
 			UINT32 const_val = RRconst_format(source, dest, op, &pc);
@@ -1811,7 +1811,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BV
+		/* BV*/
 		case 0xf0:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1821,7 +1821,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BNV
+		/* BNV*/
 		case 0xf1:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1831,7 +1831,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BE
+		/* BE*/
 		case 0xf2:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1841,7 +1841,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BNE
+		/* BNE*/
 		case 0xf3:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1851,7 +1851,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BC
+		/* BC*/
 		case 0xf4:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1861,7 +1861,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BNC
+		/* BNC*/
 		case 0xf5:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1871,7 +1871,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BSE
+		/* BSE*/
 		case 0xf6:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1881,7 +1881,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BHT
+		/* BHT*/
 		case 0xf7:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1891,7 +1891,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BN
+		/* BN*/
 		case 0xf8:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1901,7 +1901,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BNN
+		/* BNN*/
 		case 0xf9:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1911,7 +1911,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BLE
+		/* BLE*/
 		case 0xfa:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1921,7 +1921,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BGT
+		/* BGT*/
 		case 0xfb:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1931,7 +1931,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// BR
+		/* BR*/
 		case 0xfc:
 		{
 			INT32 rel = PCrel_format(op, pc);
@@ -1941,7 +1941,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 			break;
 		}
 
-		// TRAPxx - TRAP
+		/* TRAPxx - TRAP*/
 		case 0xfd: case 0xfe: case 0xff:
 
 			break;

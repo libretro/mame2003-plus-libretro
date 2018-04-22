@@ -230,8 +230,8 @@ static CINESTATE tJMI_BB_A (int opcode);
 static CINESTATE tJMI_BB_B (int opcode);
 static CINESTATE tJMI_B_BB1 (int opcode);
 static CINESTATE tJPP_AA_B (int opcode);
-//static CINESTATE tJPP_A_B (int opcode);
-//static CINESTATE tJPP_BB_B (int opcode);
+/*static CINESTATE tJPP_A_B (int opcode);*/
+/*static CINESTATE tJPP_BB_B (int opcode);*/
 static CINESTATE tJPP_B_BB (int opcode);
 static CINESTATE tOUT_A_A (int opcode);
 static CINESTATE tOUT_B_BB (int opcode);
