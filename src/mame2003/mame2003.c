@@ -343,7 +343,6 @@ static void update_variables(void)
    led_state_cb = ledintf.set_led_state;
 
     options.use_samples = 1;
-    options.cheat = 1;
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -359,10 +358,12 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->geometry.max_width = width;
    info->geometry.max_height = height;
    info->geometry.aspect_ratio = (rotated && !options.tate_mode) ? (float)videoConfig.aspect_y / (float)videoConfig.aspect_x : (float)videoConfig.aspect_x / (float)videoConfig.aspect_y;
-   if ( Machine->drv->frames_per_second < 60.0 ) info->timing.fps = 60.0; 
-
+   
+   if (Machine->drv->frames_per_second < 60.0 )
+       info->timing.fps = 60.0; 
    else 
-   info->timing.fps = Machine->drv->frames_per_second; // qbert is 61 fps
+      info->timing.fps = Machine->drv->frames_per_second; /* qbert is 61 fps */
+
    info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
 }
 

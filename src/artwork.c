@@ -2057,8 +2057,8 @@ static int artwork_load(const struct GameDriver *driver, int width, int height, 
 		if (driver)
 			load_bitmap(driver->name, piece);
 	}
-// debugging
-//	fprintf(stderr, "backdrops=%d overlays=%d bezels=%d\n", num_underlays, num_overlays, num_bezels);
+
+/*	fprintf(stderr, "backdrops=%d overlays=%d bezels=%d\n", num_underlays, num_overlays, num_bezels);*/
 
 	return 1;
 }

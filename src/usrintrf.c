@@ -1529,7 +1529,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 	{
 		if ((in->type & ~IPF_MASK) == switch_name && input_port_name(in) != 0 &&
 				(in->type & IPF_UNUSED) == 0 &&
-				!(!options.cheat && (in->type & IPF_CHEAT)))
+				!(in->type & IPF_CHEAT))
 		{
 			entry[total] = in;
 			menu_item[total] = input_port_name(in);
@@ -1578,7 +1578,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 		else
 		{
 			if (((in-1)->type & ~IPF_MASK) == switch_setting &&
-					!(!options.cheat && ((in-1)->type & IPF_CHEAT)))
+					!((in-1)->type & IPF_CHEAT))
 				arrowize |= 1;
 		}
 	}
@@ -1595,7 +1595,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 		else
 		{
 			if (((in+1)->type & ~IPF_MASK) == switch_setting &&
-					!(!options.cheat && ((in+1)->type & IPF_CHEAT)))
+					!((in+1)->type & IPF_CHEAT))
 				arrowize |= 2;
 		}
 	}
@@ -1623,7 +1623,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 			else
 			{
 				if (((in+1)->type & ~IPF_MASK) == switch_setting &&
-						!(!options.cheat && ((in+1)->type & IPF_CHEAT)))
+						!((in+1)->type & IPF_CHEAT))
 					entry[sel]->default_value = (in+1)->default_value & entry[sel]->mask;
 			}
 
@@ -1647,7 +1647,7 @@ static int switchmenu(struct mame_bitmap *bitmap, int selected, UINT32 switch_na
 			else
 			{
 				if (((in-1)->type & ~IPF_MASK) == switch_setting &&
-						!(!options.cheat && ((in-1)->type & IPF_CHEAT)))
+						!((in-1)->type & IPF_CHEAT))
 					entry[sel]->default_value = (in-1)->default_value & entry[sel]->mask;
 			}
 
@@ -1712,7 +1712,7 @@ static int setdefcodesettings(struct mame_bitmap *bitmap,int selected)
 	while (in->type != IPT_END)
 	{
 		if (in->name != 0  && (in->type & ~IPF_MASK) != IPT_UNKNOWN && (in->type & ~IPF_MASK) != IPT_OSD_RESERVED && (in->type & IPF_UNUSED) == 0
-			&& !(!options.cheat && (in->type & IPF_CHEAT)))
+			&& !(in->type & IPF_CHEAT))
 		{
 			entry[total] = in;
 			menu_item[total] = in->name;
@@ -2035,7 +2035,7 @@ static int settraksettings(struct mame_bitmap *bitmap,int selected)
 	while (in->type != IPT_END)
 	{
 		if (((in->type & 0xff) > IPT_ANALOG_START) && ((in->type & 0xff) < IPT_ANALOG_END)
-				&& !(!options.cheat && (in->type & IPF_CHEAT)))
+				&& !(in->type & IPF_CHEAT))
 		{
 			entry[total] = in;
 			total++;
@@ -2284,9 +2284,9 @@ int showcopyright(struct mame_bitmap *bitmap)
 	strcat (pause_buffer, "\n\n");
 	strcat (pause_buffer, ui_getstring(UI_copyright3));
 
-	setup_selected = -1;////
+	setup_selected = -1;
 	
-	// Prep pause action
+	/* Prep pause action */
     pause_action = pause_action_showcopyright;
     pause_bitmap = bitmap;
     pause_done = 0;
@@ -2462,7 +2462,7 @@ int showgamewarnings(struct mame_bitmap *bitmap)
     int i;
     pause_action = pause_action_start_emulator;
 
-    // Fill pause_buffer with text
+    /* Fill pause_buffer with text */
 
 	if (Machine->gamedrv->flags &
 			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
@@ -2564,14 +2564,14 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 	}
 
 	/* not needed */
-	//erase_screen(bitmap);
-	//update_video_and_audio();
+	/*erase_screen(bitmap);*/
+	/*update_video_and_audio();*/
 
 	return 0;
 }
 
 
-#if 0 // Will hang
+#if 0 /* Will hang */
 int showgameinfo(struct mame_bitmap *bitmap)
 {
 	/* clear the input memory */
@@ -2759,7 +2759,7 @@ static int displayhistory (struct mame_bitmap *bitmap, int selected)
 	static char *buf = 0;
 	int maxcols,maxrows;
 	int sel;
-	int bufsize = 256 * 1024; // 256KB of history.dat buffer, enough for everything
+	int bufsize = 256 * 1024; /* 256KB of history.dat buffer, enough for everything */
 
 	sel = selected - 1;
 
@@ -2986,7 +2986,7 @@ static void setup_menu_init(void)
 		while (in->type != IPT_END)
 		{
 			if ((in->type & ~IPF_MASK) == IPT_DIPSWITCH_NAME && input_port_name(in) != 0 &&
-					(in->type & IPF_UNUSED) == 0 &&	!(!options.cheat && (in->type & IPF_CHEAT)))
+					(in->type & IPF_UNUSED) == 0 &&	!(in->type & IPF_CHEAT))
 				num++;
 			in++;
 		}
@@ -3008,7 +3008,7 @@ static void setup_menu_init(void)
 		while (in->type != IPT_END)
 		{
 			if (((in->type & 0xff) > IPT_ANALOG_START) && ((in->type & 0xff) < IPT_ANALOG_END)
-					&& !(!options.cheat && (in->type & IPF_CHEAT)))
+					&& !(in->type & IPF_CHEAT))
 				num++;
 			in++;
 		}
@@ -3029,10 +3029,7 @@ static void setup_menu_init(void)
 	menu_item[menu_total] = ui_getstring (UI_gameinfo); menu_action[menu_total++] = UI_GAMEINFO;
 	menu_item[menu_total] = ui_getstring (UI_history); menu_action[menu_total++] = UI_HISTORY;
 
-	if (options.cheat)
-	{
-		menu_item[menu_total] = ui_getstring (UI_cheat); menu_action[menu_total++] = UI_CHEAT;
-	}
+	menu_item[menu_total] = ui_getstring (UI_cheat); menu_action[menu_total++] = UI_CHEAT;
 
 	if (Machine->gamedrv->clone_of == &driver_neogeo ||
 			(Machine->gamedrv->clone_of &&
@@ -3271,14 +3268,6 @@ static void onscrd_discrete(struct mame_bitmap *bitmap,int increment,int arg)
 #endif /* HAS_DISCRETE */
 /* K.Wilkins Feb2003 Additional of Disrete Sound System ADJUSTMENT sliders */
 
-static void onscrd_volume(struct mame_bitmap *bitmap,int increment,int arg)
-{
-}
-
-static void onscrd_mixervol(struct mame_bitmap *bitmap,int increment,int arg)
-{
-}
-
 static void onscrd_brightness(struct mame_bitmap *bitmap,int increment,int arg)
 {
 	char buf[20];
@@ -3370,20 +3359,6 @@ static void onscrd_init(void)
 
 	if (Machine->sample_rate)
 	{
-		onscrd_fnc[item] = onscrd_volume;
-		onscrd_arg[item] = 0;
-		item++;
-
-		for (ch = 0;ch < MIXER_MAX_CHANNELS;ch++)
-		{
-			if (mixer_get_name(ch) != 0)
-			{
-				onscrd_fnc[item] = onscrd_mixervol;
-				onscrd_arg[item] = ch;
-				item++;
-			}
-		}
-
 		/* K.Wilkins Feb2003 Additional of Disrete Sound System ADJUSTMENT sliders */
 #if HAS_DISCRETE
 		/* See if there is a discrete sound sub-system present */
@@ -3410,15 +3385,12 @@ static void onscrd_init(void)
 		/* K.Wilkins Feb2003 Additional of Disrete Sound System ADJUSTMENT sliders */
 	}
 
-	if (options.cheat)
-	{
-		for (ch = 0;ch < cpu_gettotalcpu();ch++)
-		{
-			onscrd_fnc[item] = onscrd_overclock;
-			onscrd_arg[item] = ch;
-			item++;
-		}
-	}
+    for (ch = 0;ch < cpu_gettotalcpu();ch++)
+    {
+        onscrd_fnc[item] = onscrd_overclock;
+        onscrd_arg[item] = ch;
+        item++;
+    }
 
 	onscrd_fnc[item] = onscrd_brightness;
 	onscrd_arg[item] = 0;
@@ -3525,7 +3497,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 {
 
 	/* This call is for the cheat, it must be called once a frame */
-	if (options.cheat) DoCheat(bitmap);
+	DoCheat(bitmap);
    
 	if (setup_selected == 0 && input_ui_pressed(IPT_UI_CONFIGURE))
 	{

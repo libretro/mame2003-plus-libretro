@@ -495,15 +495,8 @@ extern void (*pause_action)(void);
 void pause_action_start_emulator(void)
 {
     init_user_interface();
-
-    /* enable artwork now */
     artwork_enable(1);
-
-    /* disable cheat if no roms */
-    if (!gamedrv->rom)
-        options.cheat = 0;
-    else
-        InitCheat();
+    InitCheat();
 
     /* load the NVRAM now */
     if (Machine->drv->nvram_handler)
@@ -557,9 +550,7 @@ void run_machine_core_done(void)
         }
     }
 
-    /* stop the cheat engine */
-    if (options.cheat)
-        StopCheat();
+    StopCheat();
 
     /* save input ports settings */
     save_input_port_settings();

@@ -74,9 +74,9 @@ static int discrete_stream=0;
 static int discrete_stereo=0;
 
 /* Uncomment this line to log discrete sound output to a file */
-//#define DISCRETE_WAVELOG
+/*#define DISCRETE_WAVELOG*/
 /* Uncomment this line to log discrete sound debug log information to a file */
-//#define DISCRETE_DEBUGLOG
+/*#define DISCRETE_DEBUGLOG*/
 
 #ifdef DISCRETE_WAVELOG
 #include "wavwrite.h"
