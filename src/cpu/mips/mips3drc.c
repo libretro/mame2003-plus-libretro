@@ -4249,17 +4249,18 @@ static UINT32 recompile_cop0(struct drccore *drc, UINT32 pc, UINT32 op)
 			_mov_m32abs_r32(&mips3.ccr[0][RDREG], REG_EAX);							/* mov	[mips3.ccr[0][RDREG]],eax*/
 			return RECOMPILE_SUCCESSFUL_CP(1,4);
 
-/*		case 0x08:	/* BC */*/
-/*			switch (RTREG)*/
-/*			{*/
-/*				case 0x00:	/* BCzF */	if (!mips3.cf[0][0]) ADDPC(SIMMVAL);				break;*/
-/*				case 0x01:	/* BCzF */	if (mips3.cf[0][0]) ADDPC(SIMMVAL);					break;*/
-/*				case 0x02:	/* BCzFL */	invalid_instruction(op);							break;*/
-/*				case 0x03:	/* BCzTL */	invalid_instruction(op);							break;*/
-/*				default:	invalid_instruction(op);										break;*/
-/*			}*/
-/*			break;*/
-
+/*
+		case 0x08:	// BC
+//			switch (RTREG)
+//			{
+//				case 0x00:	// BCzF     if (!mips3.cf[0][0]) ADDPC(SIMMVAL);				break;
+//				case 0x01:	// BCzF     if (mips3.cf[0][0]) ADDPC(SIMMVAL);					break;
+//				case 0x02:	// BCzFL    invalid_instruction(op);							break;
+//				case 0x03:	// BCzTL    invalid_instruction(op);							break;
+//				default:	invalid_instruction(op);										break;
+//			}
+//			break;
+*/
 		case 0x10:
 		case 0x11:
 		case 0x12:
