@@ -10,6 +10,7 @@
 #include <utils/sha1.h>
 #include <zlib.h>
 #include <time.h>
+#include <string.h>
 
 
 
