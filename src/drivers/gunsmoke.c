@@ -77,10 +77,10 @@ VIDEO_START( gunsmoke );
 #if GUNSMOKE_HACK
 static READ_HANDLER( gunsmoke_input_r )
 {
-	if ((activecpu_get_pc() == 0x0173) || (activecpu_get_pc() == 0x0181))	// to get correct coinage
+	if ((activecpu_get_pc() == 0x0173) || (activecpu_get_pc() == 0x0181))	/* to get correct coinage*/
 		return (readinputport(4));
 
-	if ((readinputport(3) & 0x80) == 0x00)	// "debug mode" ?
+	if ((readinputport(3) & 0x80) == 0x00)	/* "debug mode" ?*/
 		return ((readinputport(4) & 0xc0) | (readinputport(5) & 0x3f));
 	else
 		return (readinputport(4));
@@ -212,7 +212,7 @@ INPUT_PORTS_START( gunsmoke )
 	PORT_DIPNAME( 0x40, 0x40, "Freeze" )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )				// Also "debug mode"
+	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )				/* Also "debug mode"*/
 
 	PORT_START      /* DSW1 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_B ) )
@@ -254,10 +254,10 @@ INPUT_PORTS_START( gunsmoke )
 	PORT_DIPSETTING(    0x06, "Level 9" )
 	PORT_DIPSETTING(    0x05, "Level 10" )
 	PORT_DIPSETTING(    0x04, "Ending message" )
-//	PORT_DIPSETTING(    0x03, "Demonstration" )
-//	PORT_DIPSETTING(    0x02, "Demonstration" )
-//	PORT_DIPSETTING(    0x01, "Demonstration" )
-//	PORT_DIPSETTING(    0x00, "Invalid Level" )
+/*	PORT_DIPSETTING(    0x03, "Demonstration" )*/
+/*	PORT_DIPSETTING(    0x02, "Demonstration" )*/
+/*	PORT_DIPSETTING(    0x01, "Demonstration" )*/
+/*	PORT_DIPSETTING(    0x00, "Invalid Level" )*/
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
@@ -319,7 +319,7 @@ INPUT_PORTS_START( gunsmoka )
 	PORT_DIPNAME( 0x40, 0x40, "Freeze" )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )				// Also "debug mode"
+	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )				/* Also "debug mode"*/
 
 	PORT_START      /* DSW1 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_B ) )
@@ -361,10 +361,10 @@ INPUT_PORTS_START( gunsmoka )
 	PORT_DIPSETTING(    0x06, "Level 9" )
 	PORT_DIPSETTING(    0x05, "Level 10" )
 	PORT_DIPSETTING(    0x04, "Ending message" )
-//	PORT_DIPSETTING(    0x03, "Demonstration" )
-//	PORT_DIPSETTING(    0x02, "Demonstration" )
-//	PORT_DIPSETTING(    0x01, "Demonstration" )
-//	PORT_DIPSETTING(    0x00, "Invalid Level" )
+/*	PORT_DIPSETTING(    0x03, "Demonstration" )*/
+/*	PORT_DIPSETTING(    0x02, "Demonstration" )*/
+/*	PORT_DIPSETTING(    0x01, "Demonstration" )*/
+/*	PORT_DIPSETTING(    0x00, "Invalid Level" )*/
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )

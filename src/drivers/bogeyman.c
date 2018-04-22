@@ -145,10 +145,10 @@ INPUT_PORTS_START( bogeyman )
 	PORT_DIPSETTING(    0x02, "50000" )
 	PORT_DIPSETTING(    0x00, "none" )
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x0c, "Easy" )			// Normal
-	PORT_DIPSETTING(    0x08, "Medium" )			//   |
-	PORT_DIPSETTING(    0x04, "Hard" )			//   |
-	PORT_DIPSETTING(    0x00, "Hardest" )			//  HARD
+	PORT_DIPSETTING(    0x0c, "Easy" )			/* Normal*/
+	PORT_DIPSETTING(    0x08, "Medium" )			/*   |*/
+	PORT_DIPSETTING(    0x04, "Hard" )			/*   |*/
+	PORT_DIPSETTING(    0x00, "Hardest" )			/*  HARD*/
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )

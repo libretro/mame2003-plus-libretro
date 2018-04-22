@@ -144,7 +144,7 @@ static MEMORY_WRITE16_START( opwolf_writemem )
 	{ 0x0ff000, 0x0fffff, cchip_w },
 	{ 0x100000, 0x107fff, MWA16_RAM },
 	{ 0x200000, 0x200fff, paletteram16_xxxxRRRRGGGGBBBB_word_w, &paletteram16 },
-	{ 0x380000, 0x380003, rainbow_spritectrl_w },	// usually 0x4, changes when you fire
+	{ 0x380000, 0x380003, rainbow_spritectrl_w },	/* usually 0x4, changes when you fire*/
 	{ 0x3c0000, 0x3c0001, MWA16_NOP },	/* watchdog ?? */
 	{ 0x3e0000, 0x3e0001, taitosound_port16_msb_w },
 	{ 0x3e0002, 0x3e0003, taitosound_comm16_msb_w },
@@ -165,7 +165,7 @@ static MEMORY_READ_START( sub_z80_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8800, 0x8800, z80_input1_r },	/* read at PC=$637: poked to $c004 */
 	{ 0x9800, 0x9800, z80_input2_r },	/* read at PC=$631: poked to $c005 */
-	{ 0xc000, 0xcfff, MRA_RAM },	// does upper half exist ?
+	{ 0xc000, 0xcfff, MRA_RAM },	/* does upper half exist ?*/
 MEMORY_END
 
 static MEMORY_WRITE_START( sub_z80_writemem )
@@ -189,15 +189,15 @@ MEMORY_END
 static UINT8 adpcm_b[0x08];
 static UINT8 adpcm_c[0x08];
 
-//static unsigned char adpcm_d[0x08];
-//0 - start ROM offset LSB
-//1 - start ROM offset MSB
-//2 - end ROM offset LSB
-//3 - end ROM offset MSB
-//start & end need to be multiplied by 16 to get a proper _byte_ address in adpcm ROM
-//4 - always zero write (start trigger ?)
-//5 - different values
-//6 - different values
+/*static unsigned char adpcm_d[0x08];*/
+/*0 - start ROM offset LSB*/
+/*1 - start ROM offset MSB*/
+/*2 - end ROM offset LSB*/
+/*3 - end ROM offset MSB*/
+/*start & end need to be multiplied by 16 to get a proper _byte_ address in adpcm ROM*/
+/*4 - always zero write (start trigger ?)*/
+/*5 - different values*/
+/*6 - different values*/
 
 static WRITE_HANDLER( opwolf_adpcm_b_w )
 {
@@ -206,7 +206,7 @@ static WRITE_HANDLER( opwolf_adpcm_b_w )
 
 	adpcm_b[offset] = data;
 
-	if (offset==0x04) //trigger ?
+	if (offset==0x04) /*trigger ?*/
 	{
 		start = adpcm_b[0] + adpcm_b[1]*256;
 		end   = adpcm_b[2] + adpcm_b[3]*256;
@@ -226,7 +226,7 @@ static WRITE_HANDLER( opwolf_adpcm_c_w )
 
 	adpcm_c[offset] = data;
 
-	if (offset==0x04) //trigger ?
+	if (offset==0x04) /*trigger ?*/
 	{
 		start = adpcm_c[0] + adpcm_c[1]*256;
 		end   = adpcm_c[2] + adpcm_c[3]*256;
@@ -328,7 +328,7 @@ INPUT_PORTS_START( opwolf )
 	PORT_DIPSETTING(    0x04, "5" )
 	PORT_DIPSETTING(    0x0c, "6" )
 	PORT_DIPSETTING(    0x08, "7" )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )	// Manual says all 3 unused
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )	/* Manual says all 3 unused*/
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )

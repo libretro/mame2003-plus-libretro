@@ -65,8 +65,8 @@ WRITE_HANDLER(speedspn_global_display_w);
 
 static READ_HANDLER(speedspn_irq_ack_r)
 {
-	// I think this simply acknowledges the IRQ #0, it's read within the handler and the
-	//  value is discarded
+	/* I think this simply acknowledges the IRQ #0, it's read within the handler and the*/
+	/*  value is discarded*/
 	return 0;
 }
 
@@ -139,12 +139,12 @@ static PORT_WRITE_START( writeport )
 PORT_END
 
 static PORT_READ_START( readport )
-	{ 0x10, 0x10, input_port_0_r }, // inputs
-	{ 0x11, 0x11, input_port_1_r }, // inputs
-	{ 0x12, 0x12, input_port_2_r }, // inputs
+	{ 0x10, 0x10, input_port_0_r }, /* inputs*/
+	{ 0x11, 0x11, input_port_1_r }, /* inputs*/
+	{ 0x12, 0x12, input_port_2_r }, /* inputs*/
 	{ 0x13, 0x13, input_port_3_r },
-	{ 0x14, 0x14, input_port_4_r }, // inputs
-	{ 0x16, 0x16, speedspn_irq_ack_r }, // @@@ could be watchdog, value is discarded
+	{ 0x14, 0x14, input_port_4_r }, /* inputs*/
+	{ 0x16, 0x16, speedspn_irq_ack_r }, /* @@@ could be watchdog, value is discarded*/
 PORT_END
 
 /* sound cpu */
@@ -159,7 +159,7 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem2 )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x87ff, MWA_RAM },
-	{ 0x9000, 0x9000, MWA_NOP }, // ??
+	{ 0x9000, 0x9000, MWA_NOP }, /* ??*/
 	{ 0x9800, 0x9800, OKIM6295_data_0_w },
 MEMORY_END
 
@@ -339,7 +339,7 @@ ROM_START( speedspn )
 	ROM_CONTINUE(            0x10000, 0x078000 ) /* banked data */
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* CPU2 code */
-	ROM_LOAD( "tch-ss2.u96", 0x00000, 0x10000, CRC(4611fd0c) SHA1(b49ad6a8be6ccfef0b2ed187fb3b008fb7eeb2b5) ) // FIRST AND SECOND HALF IDENTICAL
+	ROM_LOAD( "tch-ss2.u96", 0x00000, 0x10000, CRC(4611fd0c) SHA1(b49ad6a8be6ccfef0b2ed187fb3b008fb7eeb2b5) ) /* FIRST AND SECOND HALF IDENTICAL*/
 
 	ROM_REGION( 0x080000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "tch-ss3.u95", 0x00000, 0x080000, CRC(1c9deb5e) SHA1(89f01a8e8bdb0eee47e9195b312d2e65d41d3548) )

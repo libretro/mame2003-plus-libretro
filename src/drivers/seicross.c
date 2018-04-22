@@ -94,7 +94,7 @@ static READ_HANDLER( friskyt_portB_r )
 
 static WRITE_HANDLER( friskyt_portB_w )
 {
-//logerror("PC %04x: 8910 port B = %02x\n",activecpu_get_pc(),data);
+/*logerror("PC %04x: 8910 port B = %02x\n",activecpu_get_pc(),data);*/
 	/* bit 0 is IRQ enable */
 	interrupt_enable_w(0,data & 1);
 

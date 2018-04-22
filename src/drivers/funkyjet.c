@@ -207,8 +207,8 @@ INPUT_PORTS_START( sotsugyo )
 
 	PORT_START	/* System Inputs */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )		// Not working - see notes
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )		// See notes
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )		/* Not working - see notes*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )		/* See notes*/
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_VBLANK )
 
 	/* Dips seem inverted with respect to other Deco games */
@@ -257,7 +257,7 @@ INPUT_PORTS_START( sotsugyo )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )		// See notes
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )		/* See notes*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END

@@ -299,7 +299,7 @@ static WRITE_HANDLER ( tontonb_bank_w )
 
 logerror("%04x: bank %02x\n",activecpu_get_pc(),data);
 
-	if (data == 0) return;	// tontonb fix?
+	if (data == 0) return;	/* tontonb fix?*/
 
 	data &= 0x0f;
 
@@ -315,7 +315,7 @@ static WRITE_HANDLER ( dynax_bank_w )
 	data8_t *rom = memory_region(REGION_CPU1);
 	int address;
 
-//logerror("%04x: bank %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: bank %02x\n",activecpu_get_pc(),data);*/
 
 	majs101b_dsw_select = data & 0x60;
 
@@ -333,7 +333,7 @@ static WRITE_HANDLER ( dynax_bank_w )
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x6fff, MRA_ROM },
 	{ 0x7000, 0x7fff, MRA_RAM },
-	{ 0x8000, 0xffff, MRA_BANK1 },	// banked ROMs not present in royalmah
+	{ 0x8000, 0xffff, MRA_BANK1 },	/* banked ROMs not present in royalmah*/
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
@@ -375,8 +375,8 @@ static PORT_READ_START( dondenmj_readport )
 	{ 0x01, 0x01, AY8910_read_port_0_r },
 	{ 0x10, 0x10, input_port_11_r },
 	{ 0x11, 0x11, input_port_10_r },
-	{ 0x85, 0x85, input_port_12_r },	// DSW2
-	{ 0x86, 0x86, input_port_13_r },	// DSW3
+	{ 0x85, 0x85, input_port_12_r },	/* DSW2*/
+	{ 0x86, 0x86, input_port_13_r },	/* DSW3*/
 PORT_END
 
 static PORT_WRITE_START( dondenmj_writeport )
@@ -391,8 +391,8 @@ static PORT_READ_START( mjdiplob_readport )
 	{ 0x01, 0x01, AY8910_read_port_0_r },
 	{ 0x10, 0x10, input_port_11_r },
 	{ 0x11, 0x11, input_port_10_r },
-	{ 0x62, 0x62, input_port_12_r },	// DSW2
-	{ 0x63, 0x63, input_port_13_r },	// DSW3
+	{ 0x62, 0x62, input_port_12_r },	/* DSW2*/
+	{ 0x63, 0x63, input_port_13_r },	/* DSW3*/
 PORT_END
 
 static PORT_WRITE_START( mjdiplob_writeport )
@@ -407,8 +407,8 @@ static PORT_READ_START( tontonb_readport )
 	{ 0x01, 0x01, AY8910_read_port_0_r },
 	{ 0x10, 0x10, input_port_11_r },
 	{ 0x11, 0x11, input_port_10_r },
-	{ 0x46, 0x46, input_port_13_r },	// DSW2
-	{ 0x47, 0x47, input_port_12_r },	// DSW3
+	{ 0x46, 0x46, input_port_13_r },	/* DSW2*/
+	{ 0x47, 0x47, input_port_12_r },	/* DSW3*/
 PORT_END
 
 static PORT_WRITE_START( tontonb_writeport )
@@ -436,16 +436,16 @@ PORT_END
 
 static PORT_READ_START( mjderngr_readport )
 	{ 0x01, 0x01, AY8910_read_port_0_r },
-//	{ 0x10, 0x10, input_port_11_r },
+/*	{ 0x10, 0x10, input_port_11_r },*/
 	{ 0x11, 0x11, input_port_10_r },
-	{ 0x40, 0x40, input_port_13_r },	// DSW2
-	{ 0x4c, 0x4c, input_port_12_r },	// DSW3
+	{ 0x40, 0x40, input_port_13_r },	/* DSW2*/
+	{ 0x4c, 0x4c, input_port_12_r },	/* DSW3*/
 PORT_END
 
 static PORT_WRITE_START( mjderngr_writeport )
 	{ 0x02, 0x02, AY8910_write_port_0_w },
 	{ 0x03, 0x03, AY8910_control_port_0_w },
-	{ 0x10, 0x10, mjderngr_coin_w },	// palette bank is set separately
+	{ 0x10, 0x10, mjderngr_coin_w },	/* palette bank is set separately*/
 	{ 0x11, 0x11, royalmah_input_port_select_w },
 	{ 0x20, 0x20, dynax_bank_w },
 	{ 0x60, 0x60, mjderngr_palbank_w },
@@ -504,8 +504,8 @@ INPUT_PORTS_START( royalmah )
 	PORT_BITX(0x08, IP_ACTIVE_LOW, 0, "P2 M",            IP_KEY_DEFAULT,    IP_JOY_NONE )
 	PORT_BITX(0x10, IP_ACTIVE_LOW, 0, "P2 Kan",          IP_KEY_DEFAULT,    IP_JOY_NONE )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )	// "COIN2"
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )	// "COIN1", but not working
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )	/* "COIN2"*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )	/* "COIN1", but not working*/
 
 	PORT_START	/* P2 IN1 */
 	PORT_BITX(0x01, IP_ACTIVE_LOW, 0, "P2 B",            IP_KEY_DEFAULT,    IP_JOY_NONE )
@@ -695,7 +695,7 @@ INPUT_PORTS_START( tontonb )
 	PORT_DIPSETTING(    0x10, "5" )
 	PORT_DIPSETTING(    0x20, "10" )
 	PORT_DIPSETTING(    0x30, "20" )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		// affects videoram - flip screen ?
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		/* affects videoram - flip screen ?*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, "Debug Mode ?" )
@@ -703,46 +703,46 @@ INPUT_PORTS_START( tontonb )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* DSW3 (inport $47 -> 0x73b1) */
-	PORT_DIPNAME( 0x03, 0x03, "Winnings" )			// check code at 0x0e6d
-	PORT_DIPSETTING(    0x00, "32 24 16 12 8 4 2 1" )	// table at 0x4e7d
-	PORT_DIPSETTING(    0x03, "50 30 15 8 5 3 2 1" )	// table at 0x4e4d
-	PORT_DIPSETTING(    0x02, "100 50 25 10 5 3 2 1" )	// table at 0x4e5d
-	PORT_DIPSETTING(    0x01, "200 100 50 10 5 3 2 1" )	// table at 0x4e6d
-	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		// check code at 0x5184
+	PORT_DIPNAME( 0x03, 0x03, "Winnings" )			/* check code at 0x0e6d*/
+	PORT_DIPSETTING(    0x00, "32 24 16 12 8 4 2 1" )	/* table at 0x4e7d*/
+	PORT_DIPSETTING(    0x03, "50 30 15 8 5 3 2 1" )	/* table at 0x4e4d*/
+	PORT_DIPSETTING(    0x02, "100 50 25 10 5 3 2 1" )	/* table at 0x4e5d*/
+	PORT_DIPSETTING(    0x01, "200 100 50 10 5 3 2 1" )	/* table at 0x4e6d*/
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		/* check code at 0x5184*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		// stores something at 0x76ff
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		/* stores something at 0x76ff*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )		// check code at 0x1482, 0x18c2, 0x1a1d, 0x1a83, 0x2d2f and 0x2d85
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )		/* check code at 0x1482, 0x18c2, 0x1a1d, 0x1a83, 0x2d2f and 0x2d85*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x60, 0x60, "Maximum Payout ?" )		// check code at 0x1ab7
+	PORT_DIPNAME( 0x60, 0x60, "Maximum Payout ?" )		/* check code at 0x1ab7*/
 	PORT_DIPSETTING(    0x00, "100" )
 	PORT_DIPSETTING(    0x20, "200" )
 	PORT_DIPSETTING(    0x40, "300" )
 	PORT_DIPSETTING(    0x60, "500" )
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )		// check code at 0x18c2, 0x1a1d, 0x2d2f and 0x2d85
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )		/* check code at 0x18c2, 0x1a1d, 0x2d2f and 0x2d85*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
 	PORT_START	/* DSW2 (inport $46 -> 0x73b2) */
-	PORT_DIPNAME( 0x01, 0x00, "Special Combinaisons" )	// see notes
+	PORT_DIPNAME( 0x01, 0x00, "Special Combinaisons" )	/* see notes*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )		// check code at 0x07c5
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )		/* check code at 0x07c5*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		// check code at 0x5375
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		/* check code at 0x5375*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		// check code at 0x5241
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		/* check code at 0x5241*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )		// untested ?
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )		/* untested ?*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		// check code at 0x13aa
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		/* check code at 0x13aa*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, "Full Tests" )
@@ -870,60 +870,60 @@ INPUT_PORTS_START( mjdiplob )
 	PORT_DIPSETTING(    0x10, "5" )
 	PORT_DIPSETTING(    0x20, "10" )
 	PORT_DIPSETTING(    0x30, "20" )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		// affects videoram - flip screen ?
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		/* affects videoram - flip screen ?*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Debug Mode ?" )		// check code at 0x0b94 and 0x0de2
+	PORT_DIPNAME( 0x80, 0x80, "Debug Mode ?" )		/* check code at 0x0b94 and 0x0de2*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* DSW2 (inport $62 -> 0x76fb) */
-	PORT_DIPNAME( 0x03, 0x03, "Winnings" )			// check code at 0x09cd
-	PORT_DIPSETTING(    0x00, "32 24 16 12 8 4 2 1" )	// table at 0x4b82
-	PORT_DIPSETTING(    0x03, "50 30 15 8 5 3 2 1" )	// table at 0x4b52
-	PORT_DIPSETTING(    0x02, "100 50 25 10 5 3 2 1" )	// table at 0x4b62
-	PORT_DIPSETTING(    0x01, "200 100 50 10 5 3 2 1" )	// table at 0x4b72
+	PORT_DIPNAME( 0x03, 0x03, "Winnings" )			/* check code at 0x09cd*/
+	PORT_DIPSETTING(    0x00, "32 24 16 12 8 4 2 1" )	/* table at 0x4b82*/
+	PORT_DIPSETTING(    0x03, "50 30 15 8 5 3 2 1" )	/* table at 0x4b52*/
+	PORT_DIPSETTING(    0x02, "100 50 25 10 5 3 2 1" )	/* table at 0x4b62*/
+	PORT_DIPSETTING(    0x01, "200 100 50 10 5 3 2 1" )	/* table at 0x4b72*/
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x30, 0x30, "Maximum Payout ?" )		// check code at 0x166c
+	PORT_DIPNAME( 0x30, 0x30, "Maximum Payout ?" )		/* check code at 0x166c*/
 	PORT_DIPSETTING(    0x00, "100" )
 	PORT_DIPSETTING(    0x10, "200" )
 	PORT_DIPSETTING(    0x20, "300" )
 	PORT_DIPSETTING(    0x30, "500" )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		// check code at 0x2c64
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		/* check code at 0x2c64*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )		// check code at 0x2c64
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )		/* check code at 0x2c64*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
 	PORT_START	/* DSW3 (inport $63 -> 0x76fc) */
-	PORT_DIPNAME( 0x01, 0x00, "Special Combinaisons" )	// see notes
+	PORT_DIPNAME( 0x01, 0x00, "Special Combinaisons" )	/* see notes*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		// check code at 0x531f and 0x5375
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		/* check code at 0x531f and 0x5375*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		// check code at 0x5240
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		/* check code at 0x5240*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )		// check code at 0x2411
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )		/* check code at 0x2411*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		// check code at 0x2411 and 0x4beb
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		/* check code at 0x2411 and 0x4beb*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		// check code at 0x24ff, 0x25f2, 0x3fcf and 0x45d7
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		/* check code at 0x24ff, 0x25f2, 0x3fcf and 0x45d7*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Full Tests" )			// seems to hang after the last animation
+	PORT_DIPNAME( 0x80, 0x80, "Full Tests" )			/* seems to hang after the last animation*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -1048,20 +1048,20 @@ INPUT_PORTS_START( majs101b )
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Debug Mode ?" )		// check code at 0x1635
+	PORT_DIPNAME( 0x80, 0x80, "Debug Mode ?" )		/* check code at 0x1635*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* DSW2 (inport $00 (after out 0,$40) -> 0x76fa) */
-	PORT_DIPNAME( 0x03, 0x03, "Winnings" )			// check code at 0x14e4
-	PORT_DIPSETTING(    0x00, "32 24 16 12 8 4 2 1" )	// table at 0x1539
-	PORT_DIPSETTING(    0x03, "50 30 15 8 5 3 2 1" )	// table at 0x1509
-	PORT_DIPSETTING(    0x02, "100 50 25 10 5 3 2 1" )	// table at 0x1519
-	PORT_DIPSETTING(    0x01, "200 100 50 10 5 3 2 1" )	// table at 0x1529
-	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		// check code at 0x1220, 0x128d, 0x13b1, 0x13cb and 0x2692
+	PORT_DIPNAME( 0x03, 0x03, "Winnings" )			/* check code at 0x14e4*/
+	PORT_DIPSETTING(    0x00, "32 24 16 12 8 4 2 1" )	/* table at 0x1539*/
+	PORT_DIPSETTING(    0x03, "50 30 15 8 5 3 2 1" )	/* table at 0x1509*/
+	PORT_DIPSETTING(    0x02, "100 50 25 10 5 3 2 1" )	/* table at 0x1519*/
+	PORT_DIPSETTING(    0x01, "200 100 50 10 5 3 2 1" )	/* table at 0x1529*/
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		/* check code at 0x1220, 0x128d, 0x13b1, 0x13cb and 0x2692*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x38, 0x00, "Maximum Payout ?" )		// check code at 0x12c1
+	PORT_DIPNAME( 0x38, 0x00, "Maximum Payout ?" )		/* check code at 0x12c1*/
 	PORT_DIPSETTING(    0x20, "200" )
 	PORT_DIPSETTING(    0x10, "300" )
 	PORT_DIPSETTING(    0x30, "400" )
@@ -1069,8 +1069,8 @@ INPUT_PORTS_START( majs101b )
 	PORT_DIPSETTING(    0x28, "600" )
 	PORT_DIPSETTING(    0x18, "700" )
 	PORT_DIPSETTING(    0x00, "1000" )
-//	PORT_DIPSETTING(    0x38, "1000" )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		// check code at 0x1333
+/*	PORT_DIPSETTING(    0x38, "1000" )*/
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		/* check code at 0x1333*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, "Background" )
@@ -1078,51 +1078,51 @@ INPUT_PORTS_START( majs101b )
 	PORT_DIPSETTING(    0x80, "Gray" )
 
 	PORT_START	/* DSW3 (inport $00 (after out 0,$00) -> 0x76fc) */
-	PORT_DIPNAME( 0x01, 0x00, "Special Combinaisons" )	// see notes
+	PORT_DIPNAME( 0x01, 0x00, "Special Combinaisons" )	/* see notes*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )		// check code at 0x1cf9
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )		/* check code at 0x1cf9*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		// check code at 0x21a9, 0x21dc and 0x2244
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		/* check code at 0x21a9, 0x21dc and 0x2244*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		// check code at 0x2b7f
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		/* check code at 0x2b7f*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )		// check code at 0x50ba
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )		/* check code at 0x50ba*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		// check code at 0x1f65
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		/* check code at 0x1f65*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		// check code at 0x6412
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		/* check code at 0x6412*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )		// check code at 0x2cb2 and 0x2d02
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )		/* check code at 0x2cb2 and 0x2d02*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* DSW4 (inport $00 (after out 0,$20) -> 0x76fb) */
-	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Unknown ) )		// stored at 0x702f - check code at 0x1713,
-	PORT_DIPSETTING(    0x00, "0" )				// 0x33d1, 0x3408, 0x3415, 0x347c, 0x3492, 0x350d,
-	PORT_DIPSETTING(    0x01, "1" )				// 0x4af9, 0x4b1f and 0x61f6
+	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Unknown ) )		/* stored at 0x702f - check code at 0x1713,*/
+	PORT_DIPSETTING(    0x00, "0" )				/* 0x33d1, 0x3408, 0x3415, 0x347c, 0x3492, 0x350d,*/
+	PORT_DIPSETTING(    0x01, "1" )				/* 0x4af9, 0x4b1f and 0x61f6*/
 	PORT_DIPSETTING(    0x02, "2" )
 	PORT_DIPSETTING(    0x03, "3" )
-	PORT_DIPNAME( 0x0c, 0x00, "Difficulty ?" )		// check code at 0x4b5c and 0x6d72
-	PORT_DIPSETTING(    0x00, "Easy" )				// 0x05 - 0x03, 0x02, 0x02, 0x01
-	PORT_DIPSETTING(    0x04, "Normal" )			// 0x0a - 0x05, 0x02, 0x02, 0x01
-	PORT_DIPSETTING(    0x08, "Hard" )				// 0x0f - 0x06, 0x03, 0x02, 0x01
-	PORT_DIPSETTING(    0x0c, "Hardest" )			// 0x14 - 0x0a, 0x06, 0x02, 0x01
-	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Unknown ) )		// check code at 0x228e
+	PORT_DIPNAME( 0x0c, 0x00, "Difficulty ?" )		/* check code at 0x4b5c and 0x6d72*/
+	PORT_DIPSETTING(    0x00, "Easy" )				/* 0x05 - 0x03, 0x02, 0x02, 0x01*/
+	PORT_DIPSETTING(    0x04, "Normal" )			/* 0x0a - 0x05, 0x02, 0x02, 0x01*/
+	PORT_DIPSETTING(    0x08, "Hard" )				/* 0x0f - 0x06, 0x03, 0x02, 0x01*/
+	PORT_DIPSETTING(    0x0c, "Hardest" )			/* 0x14 - 0x0a, 0x06, 0x02, 0x01*/
+	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Unknown ) )		/* check code at 0x228e*/
 	PORT_DIPSETTING(    0x00, "0x00" )
 	PORT_DIPSETTING(    0x10, "0x10" )
 	PORT_DIPSETTING(    0x20, "0x20" )
 	PORT_DIPSETTING(    0x30, "0x30" )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		// check code at 0x11e4
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )		/* check code at 0x11e4*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Full Tests" )			// check code at 0x006d
+	PORT_DIPNAME( 0x80, 0x80, "Full Tests" )			/* check code at 0x006d*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -1266,11 +1266,11 @@ ROM_START( suzume )
 	ROM_LOAD( "p5.bin",     0x04000, 0x1000, CRC(2fde346b) SHA1(7f45aa4427b4cb6bf6cc5919d397b25d53e133f3) )
 	ROM_LOAD( "p6.bin",     0x05000, 0x1000, CRC(57f42ac7) SHA1(209b2f62a64ddf544578f144d9ec83478603c8b2) )
 	/* bank switched ROMs follow */
-	ROM_LOAD( "1.1a",       0x10000, 0x08000, CRC(f670dd47) SHA1(d0236021ae4dd5a10603dde038eb777feeff016f) )	// 0
-	ROM_LOAD( "2.1c",       0x18000, 0x08000, CRC(140b11aa) SHA1(6f6a96135434324dcb486596920cb785fe2bf1a2) )	// 1
-	ROM_LOAD( "3.1d",       0x20000, 0x08000, CRC(3d437b61) SHA1(175308086e1d7ab566c82dcaeef9f50690edf92a) )	// 2
-	ROM_LOAD( "4.1e",       0x28000, 0x08000, CRC(9da8952e) SHA1(956d16b82ff8fe733a7b3135d082e18ea5167dfe) )	// 3
-	ROM_LOAD( "5.1h",       0x30000, 0x08000, CRC(04a6f41a) SHA1(37117faf6bc823770413faa7618387ca6f16fa34) )	// 4
+	ROM_LOAD( "1.1a",       0x10000, 0x08000, CRC(f670dd47) SHA1(d0236021ae4dd5a10603dde038eb777feeff016f) )	/* 0*/
+	ROM_LOAD( "2.1c",       0x18000, 0x08000, CRC(140b11aa) SHA1(6f6a96135434324dcb486596920cb785fe2bf1a2) )	/* 1*/
+	ROM_LOAD( "3.1d",       0x20000, 0x08000, CRC(3d437b61) SHA1(175308086e1d7ab566c82dcaeef9f50690edf92a) )	/* 2*/
+	ROM_LOAD( "4.1e",       0x28000, 0x08000, CRC(9da8952e) SHA1(956d16b82ff8fe733a7b3135d082e18ea5167dfe) )	/* 3*/
+	ROM_LOAD( "5.1h",       0x30000, 0x08000, CRC(04a6f41a) SHA1(37117faf6bc823770413faa7618387ca6f16fa34) )	/* 4*/
 
 	ROM_REGION( 0x0020, REGION_PROMS, ROMREGION_DISPOSE )
 	ROM_LOAD( "ic6k.bin",   0x0000, 0x0020, CRC(97e1defe) SHA1(b5002218b2292f7623dd9a205ce183dedeec03f1) )
@@ -1280,10 +1280,10 @@ ROM_START( dondenmj )
 	ROM_REGION( 0x90000, REGION_CPU1, 0 )
 	ROM_LOAD( "dn5.1h",     0x00000, 0x08000, CRC(3080252e) SHA1(e039087afc36a0c594da093ea599b81a1d757139) )
 	/* bank switched ROMs follow */
-	ROM_LOAD( "dn1.1e",     0x18000, 0x08000, CRC(1cd9c48a) SHA1(12bc519889dacea59ae49672ad5313fff3a99f12) )	// 1
-	ROM_LOAD( "dn2.1d",     0x20000, 0x04000, CRC(7a72929d) SHA1(7955f41883fa53876172bac417955ed0b5eb43f4) )	// 2
-	ROM_LOAD( "dn3.2h",     0x30000, 0x08000, CRC(b09d2897) SHA1(0cde3e16ca333be01a5ab3a232f2ea602faec7a2) )	// 4
-	ROM_LOAD( "dn4.2e",     0x50000, 0x08000, CRC(67d7dcd6) SHA1(6b708a29de1f4738eb2d4e667327d9433ff7216c) )	// 8
+	ROM_LOAD( "dn1.1e",     0x18000, 0x08000, CRC(1cd9c48a) SHA1(12bc519889dacea59ae49672ad5313fff3a99f12) )	/* 1*/
+	ROM_LOAD( "dn2.1d",     0x20000, 0x04000, CRC(7a72929d) SHA1(7955f41883fa53876172bac417955ed0b5eb43f4) )	/* 2*/
+	ROM_LOAD( "dn3.2h",     0x30000, 0x08000, CRC(b09d2897) SHA1(0cde3e16ca333be01a5ab3a232f2ea602faec7a2) )	/* 4*/
+	ROM_LOAD( "dn4.2e",     0x50000, 0x08000, CRC(67d7dcd6) SHA1(6b708a29de1f4738eb2d4e667327d9433ff7216c) )	/* 8*/
 
 	ROM_REGION( 0x0020, REGION_PROMS, ROMREGION_DISPOSE )
 	ROM_LOAD( "ic6k.bin",   0x0000, 0x0020, CRC(97e1defe) SHA1(b5002218b2292f7623dd9a205ce183dedeec03f1) )
@@ -1293,10 +1293,10 @@ ROM_START( mjdiplob )
 	ROM_REGION( 0x90000, REGION_CPU1, 0 )
 	ROM_LOAD( "071.4l",     0x00000, 0x10000, CRC(81a6d6b0) SHA1(c6169e6d5f35304a0c3efcc2175c3213650f179c) )
 	/* bank switched ROMs follow */
-	ROM_RELOAD(             0x10000, 0x10000 )				// 0,1
-	ROM_LOAD( "072.4k",     0x20000, 0x10000, CRC(a992bb85) SHA1(e60231e04831dac122d1d49a68641ee47b57faaf) )	// 2,3
-	ROM_LOAD( "073.4j",     0x30000, 0x10000, CRC(562ed64f) SHA1(42b4a7e5a8de4dde83c12d7b9facf561bc872978) )	// 4,5
-	ROM_LOAD( "074.4h",     0x40000, 0x10000, CRC(1eba0140) SHA1(0d0b95be338d7450ad3b24cc47e24e94f86dcefe) )	// 6,7
+	ROM_RELOAD(             0x10000, 0x10000 )				/* 0,1*/
+	ROM_LOAD( "072.4k",     0x20000, 0x10000, CRC(a992bb85) SHA1(e60231e04831dac122d1d49a68641ee47b57faaf) )	/* 2,3*/
+	ROM_LOAD( "073.4j",     0x30000, 0x10000, CRC(562ed64f) SHA1(42b4a7e5a8de4dde83c12d7b9facf561bc872978) )	/* 4,5*/
+	ROM_LOAD( "074.4h",     0x40000, 0x10000, CRC(1eba0140) SHA1(0d0b95be338d7450ad3b24cc47e24e94f86dcefe) )	/* 6,7*/
 
 	ROM_REGION( 0x0020, REGION_PROMS, ROMREGION_DISPOSE )
 	ROM_LOAD( "ic6k.bin",   0x0000, 0x0020, CRC(c1e427df) SHA1(9a9980d93dff4b87a940398b18277acaf946eeab) )
@@ -1306,11 +1306,11 @@ ROM_START( tontonb )
 	ROM_REGION( 0x90000, REGION_CPU1, 0 )
 	ROM_LOAD( "091.5e",   	0x00000, 0x10000, CRC(d8d67b59) SHA1(7e7a85df738f80fc031cda8a104ac9c7b3e24785) )
 	/* bank switched ROMs follow */
-	ROM_RELOAD(             0x10000, 0x10000 )				// 0,1
-	/**/													// 2,3 unused
-	ROM_LOAD( "093.5b",   	0x30000, 0x10000, CRC(24b6be55) SHA1(11390d6ed55d7d0b7b84c6d36d4ac5330a06abba) )	// 4,5
-	/**/													// 6,7 unused
-	ROM_LOAD( "092.5c",   	0x50000, 0x10000, CRC(7ff2738b) SHA1(89a49f89705f499439dc024fc70c87141a84780b) )	// 8,9
+	ROM_RELOAD(             0x10000, 0x10000 )				/* 0,1*/
+	/**/													/* 2,3 unused*/
+	ROM_LOAD( "093.5b",   	0x30000, 0x10000, CRC(24b6be55) SHA1(11390d6ed55d7d0b7b84c6d36d4ac5330a06abba) )	/* 4,5*/
+	/**/													/* 6,7 unused*/
+	ROM_LOAD( "092.5c",   	0x50000, 0x10000, CRC(7ff2738b) SHA1(89a49f89705f499439dc024fc70c87141a84780b) )	/* 8,9*/
 
 	ROM_REGION( 0x0020, REGION_PROMS, ROMREGION_DISPOSE )
 	ROM_LOAD( "ic6k.bin",   0x0000, 0x0020, CRC(97e1defe) SHA1(b5002218b2292f7623dd9a205ce183dedeec03f1) )
@@ -1320,11 +1320,11 @@ ROM_START( majs101b )
 	ROM_REGION( 0x90000, REGION_CPU1, 0 )
 	ROM_LOAD( "171.3e",     0x00000, 0x10000, CRC(fa3c553b) SHA1(fda212559c4d55610a12ad2927afe21f9069c7b6) )
 	/* bank switched ROMs follow */
-	/**/													// 0,1 unused
-	ROM_RELOAD(             0x20000, 0x10000 )				// 2,3
-	ROM_LOAD( "172.3f",     0x30000, 0x20000, CRC(7da39a63) SHA1(34d07978a326c83e5b51ce19619d52a75a501795) )	// 4,5,6,7
-	ROM_LOAD( "173.3h",     0x50000, 0x20000, CRC(7a9e71ae) SHA1(ce1bde6e05f81b7dbb14015514397ed72f8dd92a) )	// 8,9,a,b
-	ROM_LOAD( "174.3j",     0x70000, 0x10000, CRC(972c2cc9) SHA1(ba78d29d1723783dbd0e8c754d2422caad5ab367) )	// c,d
+	/**/													/* 0,1 unused*/
+	ROM_RELOAD(             0x20000, 0x10000 )				/* 2,3*/
+	ROM_LOAD( "172.3f",     0x30000, 0x20000, CRC(7da39a63) SHA1(34d07978a326c83e5b51ce19619d52a75a501795) )	/* 4,5,6,7*/
+	ROM_LOAD( "173.3h",     0x50000, 0x20000, CRC(7a9e71ae) SHA1(ce1bde6e05f81b7dbb14015514397ed72f8dd92a) )	/* 8,9,a,b*/
+	ROM_LOAD( "174.3j",     0x70000, 0x10000, CRC(972c2cc9) SHA1(ba78d29d1723783dbd0e8c754d2422caad5ab367) )	/* c,d*/
 
 	ROM_REGION( 0x0020, REGION_PROMS, ROMREGION_DISPOSE )
 	ROM_LOAD( "ic6k.bin",   0x0000, 0x0020, CRC(c1e427df) SHA1(9a9980d93dff4b87a940398b18277acaf946eeab) )
@@ -1334,11 +1334,11 @@ ROM_START( mjderngr )
 	ROM_REGION( 0xb0000, REGION_CPU1, 0 )
 	ROM_LOAD( "2201.1a",    0x00000, 0x08000, CRC(54ec531d) SHA1(c5d9c575f6bdc499bae35123d7ad5bd4869b6ed9) )
 	/* bank switched ROMs follow */
-	ROM_CONTINUE(           0x10000, 0x08000 )				// 0
-	ROM_LOAD( "2202.1b",    0x30000, 0x10000, CRC(edcf97f2) SHA1(8143f41d511fa01bd86faf829eb2c139292d705f) )	// 4,5
-	ROM_LOAD( "2203.1d",    0x50000, 0x10000, CRC(a33368c0) SHA1(e216b65d7ed59d7cbf2b5d078799915d707b5291) )	// 8,9
-	ROM_LOAD( "2204.1e",    0x70000, 0x20000, CRC(ed5fde4b) SHA1(d55487ae1007d43b71f06ae5c407c75db7054515) )	// c,d,e,f
-	ROM_LOAD( "2205.1f",    0x90000, 0x20000, CRC(cfb8075d) SHA1(31f613a1a9b5f4295b552aeeddb760605ce2ac70) )	// 0x10,0x11,0x12,0x13
+	ROM_CONTINUE(           0x10000, 0x08000 )				/* 0*/
+	ROM_LOAD( "2202.1b",    0x30000, 0x10000, CRC(edcf97f2) SHA1(8143f41d511fa01bd86faf829eb2c139292d705f) )	/* 4,5*/
+	ROM_LOAD( "2203.1d",    0x50000, 0x10000, CRC(a33368c0) SHA1(e216b65d7ed59d7cbf2b5d078799915d707b5291) )	/* 8,9*/
+	ROM_LOAD( "2204.1e",    0x70000, 0x20000, CRC(ed5fde4b) SHA1(d55487ae1007d43b71f06ae5c407c75db7054515) )	/* c,d,e,f*/
+	ROM_LOAD( "2205.1f",    0x90000, 0x20000, CRC(cfb8075d) SHA1(31f613a1a9b5f4295b552aeeddb760605ce2ac70) )	/* 0x10,0x11,0x12,0x13*/
 
 	ROM_REGION( 0x400, REGION_PROMS, ROMREGION_DISPOSE )
 	ROM_LOAD( "ic3g.bin",   0x000, 0x200, CRC(d43f4c7c) SHA1(117d2e4e8d5bea3e5dc903a4b87bd71786ae009c) )

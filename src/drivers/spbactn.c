@@ -55,7 +55,7 @@
  U112: TECMO-5
 
  --- Team Japump!!! ---
- http://www.rainemu.com/japump/
+ http:://www.rainemu.com/japump/
  http://japump.i.am/
  Dumped by Noel Miruru
  17/Oct/2000
@@ -157,7 +157,7 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( spbactn_writemem )
 	{ 0x00000, 0x3ffff, MWA16_ROM },
-	{ 0x40000, 0x43fff, MWA16_RAM },	// main ram
+	{ 0x40000, 0x43fff, MWA16_RAM },	/* main ram*/
 	{ 0x50000, 0x50fff, MWA16_RAM, &spbactn_spvideoram },
 	{ 0x60000, 0x67fff, MWA16_RAM, &spbactn_fgvideoram },
 	{ 0x70000, 0x77fff, MWA16_RAM, &spbactn_bgvideoram },
@@ -166,7 +166,7 @@ static MEMORY_WRITE16_START( spbactn_writemem )
 	/* this is an awful lot of unknowns */
 	{ 0x90000, 0x90001, MWA16_NOP },
 	{ 0x90010, 0x90011, soundcommand_w },
-//	{ 0x90020, 0x90021, soundcommand_w },
+/*	{ 0x90020, 0x90021, soundcommand_w },*/
 	{ 0x90030, 0x90031, MWA16_NOP },
 
 	{ 0x90080, 0x90081, MWA16_NOP },
@@ -219,8 +219,8 @@ INPUT_PORTS_START( spbactn )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )		// Left flipper
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON3 )		// "Shake"
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )		/* Left flipper*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON3 )		/* "Shake"*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -229,15 +229,15 @@ INPUT_PORTS_START( spbactn )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )		// "Shake" (duplicated)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )		// Right flipper
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )		/* "Shake" (duplicated)*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )		/* Right flipper*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START	/* IN2 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1 )		// Press mulitple times for multiple players
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1 )		/* Press mulitple times for multiple players*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -263,7 +263,7 @@ INPUT_PORTS_START( spbactn )
 	PORT_DIPSETTING(    0x28, "1 Coin/1 Credit 2/3" )
 	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x00, "1 Coin/1 Credit 5/6" )
-	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Lives ) )		// Balls
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Lives ) )		/* Balls*/
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0xc0, "3" )
 	PORT_DIPSETTING(    0x80, "4" )
@@ -280,16 +280,16 @@ INPUT_PORTS_START( spbactn )
 	PORT_DIPSETTING(    0x0c, "200k and 800k" )
 	PORT_DIPSETTING(    0x08, "200k" )
 	PORT_DIPSETTING(    0x00, "None" )
-	PORT_DIPNAME( 0x10, 0x10, "Hit Difficulty" )		// From .xls file - WHAT does that mean ?
+	PORT_DIPNAME( 0x10, 0x10, "Hit Difficulty" )		/* From .xls file - WHAT does that mean ?*/
 	PORT_DIPSETTING(    0x10, "Normal" )
 	PORT_DIPSETTING(    0x00, "Difficult" )
-	PORT_DIPNAME( 0x20, 0x20, "Display Instructions" )	// "Change Software" in .xls file
+	PORT_DIPNAME( 0x20, 0x20, "Display Instructions" )	/* "Change Software" in .xls file*/
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )	// To be confirmed
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )	/* To be confirmed*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Match" )				// Check code at 0x00bf8c
+	PORT_DIPNAME( 0x80, 0x80, "Match" )				/* Check code at 0x00bf8c*/
 	PORT_DIPSETTING(    0x80, "1/20" )
 	PORT_DIPSETTING(    0x00, "1/40" )
 INPUT_PORTS_END

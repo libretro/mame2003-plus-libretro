@@ -170,8 +170,8 @@ static MEMORY_READ_START( readmem )
 	{ 0xd603, 0xd603, input_port_3_r },	/* player inputs */
 	{ 0xd608, 0xd608, input_port_4_r },	/* wheel */
 	{ 0xd609, 0xd609, input_port_5_r },	/* coin + accelerator */
-//	{ 0xd60a, 0xd60a, other inputs, not used?
-//	{ 0xd60b, 0xd60b, other inputs, not used?
+/*	{ 0xd60a, 0xd60a, other inputs, not used?*/
+/*	{ 0xd60b, 0xd60b, other inputs, not used?*/
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
@@ -182,18 +182,18 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x9000, 0x9fff, buggychl_sprite_lookup_w },
 	{ 0xa000, 0xbfff, buggychl_chargen_w, &buggychl_character_ram },
 	{ 0xc800, 0xcfff, videoram_w, &videoram, &videoram_size },
-//	{ 0xd000, 0xd000, horizon
+/*	{ 0xd000, 0xd000, horizon*/
 	{ 0xd100, 0xd100, buggychl_ctrl_w },
 	{ 0xd200, 0xd200, bankswitch_w },
 	{ 0xd300, 0xd300, watchdog_reset_w },
-//	{ 0xd301, 0xd301,
-//	{ 0xd302, 0xd302, reset mcu
+/*	{ 0xd301, 0xd301,*/
+/*	{ 0xd302, 0xd302, reset mcu*/
 	{ 0xd303, 0xd303, buggychl_sprite_lookup_bank_w },
-//	{ 0xd304, 0xd307, sccon 1-4
+/*	{ 0xd304, 0xd307, sccon 1-4*/
 	{ 0xd400, 0xd400, buggychl_mcu_w },
 	{ 0xd500, 0xd57f, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xd610, 0xd610, sound_command_w },
-//	{ 0xd613, 0xd613, reset sound cpu & sound chips
+/*	{ 0xd613, 0xd613, reset sound cpu & sound chips*/
 	{ 0xd618, 0xd618, MWA_NOP },	/* accelerator clear */
 	{ 0xd700, 0xd7ff, paletteram_xxxxRRRRGGGGBBBB_swap_w, &paletteram },
 	{ 0xd840, 0xd85f, MWA_RAM, &buggychl_scrollv },
@@ -206,7 +206,7 @@ static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x3fff, MRA_ROM },
 	{ 0x4000, 0x47ff, MRA_RAM },
 	{ 0x5000, 0x5000, soundlatch_r },
-//	{ 0x5001, 0x5001, MRA_RAM },	/* is command pending? */
+/*	{ 0x5001, 0x5001, MRA_RAM },	 // is command pending? /*/
 	{ 0xe000, 0xefff, MRA_ROM },	/* space for diagnostics ROM */
 MEMORY_END
 
@@ -220,7 +220,7 @@ static MEMORY_WRITE_START( sound_writemem )
 	{ 0x4810, 0x481d, MSM5232_0_w },
 	{ 0x4820, 0x4820, MWA_RAM },	/* VOL/BAL   for the 7630 on the MSM5232 output */
 	{ 0x4830, 0x4830, MWA_RAM },	/* TRBL/BASS for the 7630 on the MSM5232 output  */
-//	{ 0x5000, 0x5000, MWA_RAM },	/* to main cpu */
+/*	{ 0x5000, 0x5000, MWA_RAM },	 // to main cpu /*/
 	{ 0x5001, 0x5001, nmi_enable_w },
 	{ 0x5002, 0x5002, nmi_disable_w },
 	{ 0x5003, 0x5003, sound_enable_w },
@@ -250,7 +250,7 @@ MEMORY_END
 
 INPUT_PORTS_START( buggychl )
 	PORT_START	/* IN0 */
-	PORT_DIPNAME( 0x03, 0x03, "Game Over Bonus" )	// Arks/Flags/Fuel
+	PORT_DIPNAME( 0x03, 0x03, "Game Over Bonus" )	/* Arks/Flags/Fuel*/
 	PORT_DIPSETTING(    0x03, "2000/1000/50" )
 	PORT_DIPSETTING(    0x02, "1000/500/30" )
 	PORT_DIPSETTING(    0x01, "500/200/10" )
@@ -259,10 +259,10 @@ INPUT_PORTS_START( buggychl )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x18, "Easy" )			// 1300 units of fuel
-	PORT_DIPSETTING(    0x10, "Normal" )		// 1200 units of fuel
-	PORT_DIPSETTING(    0x08, "Hard" )			// 1100 units of fuel
-	PORT_DIPSETTING(    0x00, "Hardest" )		// 1000 units of fuel
+	PORT_DIPSETTING(    0x18, "Easy" )			/* 1300 units of fuel*/
+	PORT_DIPSETTING(    0x10, "Normal" )		/* 1200 units of fuel*/
+	PORT_DIPSETTING(    0x08, "Hard" )			/* 1100 units of fuel*/
+	PORT_DIPSETTING(    0x00, "Hardest" )		/* 1000 units of fuel*/
 	PORT_SERVICE( 0x20, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )

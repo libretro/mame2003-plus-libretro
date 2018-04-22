@@ -274,7 +274,7 @@ MEMORY_END
 static MEMORY_WRITE_START( combasc_writemem )
 	{ 0x0000, 0x0007, combasc_pf_control_w },
 	{ 0x0020, 0x005f, combasc_scrollram_w },
-//	{ 0x0060, 0x00ff, MWA_RAM },					/* RAM */
+/*	{ 0x0060, 0x00ff, MWA_RAM },					 // RAM /*/
 	{ 0x0200, 0x0201, protection_w },
 	{ 0x0206, 0x0206, protection_clock_w },
 	{ 0x0408, 0x0408, combasc_coin_counter_w },	/* coin counters */
@@ -327,8 +327,8 @@ static MEMORY_WRITE_START( writemem_sound )
 	{ 0x87f0, 0x87ff, MWA_RAM },				/* ??? */
  	{ 0x9000, 0x9000, YM2203_control_port_0_w },/* YM 2203 */
 	{ 0x9001, 0x9001, YM2203_write_port_0_w },	/* YM 2203 */
-	//{ 0x9800, 0x9800, combasc_unknown_w_1 },	/* OKIM5205? */
-	//{ 0xa800, 0xa800, combasc_unknown_w_2 },	/* OKIM5205? */
+	/*{ 0x9800, 0x9800, combasc_unknown_w_1 },	 // OKIM5205? /*/
+	/*{ 0xa800, 0xa800, combasc_unknown_w_2 },	 // OKIM5205? /*/
 	{ 0x8800, 0xfffb, MWA_ROM },				/* ROM */
 	{ 0xfffc, 0xffff, MWA_RAM },				/* ??? */
 MEMORY_END

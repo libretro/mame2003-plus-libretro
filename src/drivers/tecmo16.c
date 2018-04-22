@@ -174,7 +174,7 @@ INPUT_PORTS_START( fstarfrc )
 	PORT_DIPNAME( 0x40, 0x40, "Allow Continue" )
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Free_Play ) )	//flagged as "unused" in the manual
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Free_Play ) )	/*flagged as "unused" in the manual*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -184,12 +184,12 @@ INPUT_PORTS_START( fstarfrc )
 	PORT_DIPSETTING(    0x03, "3" )
 	PORT_DIPSETTING(    0x02, "4" )
 	PORT_DIPSETTING(    0x01, "5" )
-	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Difficulty ) )	//enemy shot speed
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Difficulty ) )	/*enemy shot speed*/
 	PORT_DIPSETTING(    0x04, "Easy" )
 	PORT_DIPSETTING(    0x0c, "Medium"  )
 	PORT_DIPSETTING(    0x08, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest"  )
-	PORT_DIPNAME( 0x30, 0x30, "Level Up Speed" )	//rate of power-up
+	PORT_DIPNAME( 0x30, 0x30, "Level Up Speed" )	/*rate of power-up*/
 	PORT_DIPSETTING(    0x30, "Fast" )
 	PORT_DIPSETTING(    0x20, "Fastest" )
 	PORT_DIPSETTING(    0x10, "Slow" )
@@ -198,7 +198,7 @@ INPUT_PORTS_START( fstarfrc )
 	PORT_DIPSETTING(    0xc0, "200000,1000000" )
 	PORT_DIPSETTING(    0x80, "220000,1200000" )
 	PORT_DIPSETTING(    0x40, "240000,1400000" )
-	PORT_DIPSETTING(    0x00, "every 500000,once at highest score" )	//beating the hi-score gives you an extra life
+	PORT_DIPSETTING(    0x00, "every 500000,once at highest score" )	/*beating the hi-score gives you an extra life*/
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW,  IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )

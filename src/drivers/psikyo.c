@@ -139,7 +139,7 @@ WRITE32_HANDLER( psikyo_soundlatch_w )
 		ack_latch = 1;
 		soundlatch_w(0, data & 0xff);
 		cpu_set_nmi_line(1,PULSE_LINE);
-		cpu_spinuntil_time(TIME_IN_USEC(50));	// Allow the other cpu to reply
+		cpu_spinuntil_time(TIME_IN_USEC(50));	/* Allow the other cpu to reply*/
 	}
 }
 
@@ -156,7 +156,7 @@ WRITE32_HANDLER( s1945_soundlatch_w )
 		ack_latch = 1;
 		soundlatch_w(0, (data >> 16) & 0xff);
 		cpu_set_nmi_line(1,PULSE_LINE);
-		cpu_spinuntil_time(TIME_IN_USEC(50));	// Allow the other cpu to reply
+		cpu_spinuntil_time(TIME_IN_USEC(50));	/* Allow the other cpu to reply*/
 	}
 }
 
@@ -192,7 +192,7 @@ static void s1945_mcu_init(const UINT8 *mcu_table)
 
 WRITE32_HANDLER( s1945_mcu_w )
 {
-	// Accesses are always bytes, so resolve it
+	/* Accesses are always bytes, so resolve it*/
 	int suboff;
 	for(suboff=0; suboff < 3; suboff++)
 		if(!((0xff << (8*suboff)) & mem_mask))
@@ -222,7 +222,7 @@ WRITE32_HANDLER( s1945_mcu_w )
 			s1945_mcu_index = s1945_mcu_inlatch;
 			break;
 		case 0x013:
-//			logerror("MCU: Table read index %02x\n", s1945_mcu_index);
+/*			logerror("MCU: Table read index %02x\n", s1945_mcu_index);*/
 			s1945_mcu_latching = 1;
 			s1945_mcu_latch1 = s1945_mcu_table[s1945_mcu_index];
 			break;
@@ -232,7 +232,7 @@ WRITE32_HANDLER( s1945_mcu_w )
 				s1945_mcu_latching &= ~1;
 				s1945_mcu_latch2 = 0x55;
 			} else {
-				// Go figure.
+				/* Go figure.*/
 				s1945_mcu_latching &= ~1;
 				s1945_mcu_latching |= 2;
 			}
@@ -244,12 +244,12 @@ WRITE32_HANDLER( s1945_mcu_w )
 			s1945_mcu_latching |= 4;
 			break;
 		default:
-//			logerror("MCU: function %02x, direction %02x, latch1 %02x, latch2 %02x (%x)\n", data, s1945_mcu_direction, s1945_mcu_latch1, s1945_mcu_latch2, activecpu_get_pc());
+/*			logerror("MCU: function %02x, direction %02x, latch1 %02x, latch2 %02x (%x)\n", data, s1945_mcu_direction, s1945_mcu_latch1, s1945_mcu_latch2, activecpu_get_pc());*/
 			break;
 		}
 		break;
 	default:
-//		logerror("MCU.w %x, %02x (%x)\n", offset, data, activecpu_get_pc());
+/*		logerror("MCU.w %x, %02x (%x)\n", offset, data, activecpu_get_pc());*/
 		;
 	}
 }
@@ -312,26 +312,26 @@ static WRITE32_HANDLER( paletteram32_xRRRRRGGGGGBBBBB_dword_w )
 }
 
 static MEMORY_READ32_START( psikyo_readmem )
-	{ 0x000000, 0x0fffff, MRA32_ROM			},	// ROM (not all used)
-	{ 0x400000, 0x401fff, MRA32_RAM			},	// Sprites Data
-	{ 0x600000, 0x601fff, MRA32_RAM			},	// Palette
-	{ 0x800000, 0x801fff, MRA32_RAM			},	// Layer 0
-	{ 0x802000, 0x803fff, MRA32_RAM			},	// Layer 1
-	{ 0x804000, 0x807fff, MRA32_RAM			},	// RAM + Vregs
-//	{ 0xc00000, 0xc0000b, psikyo_input_r	},	Depends on board, see DRIVER_INIT
-	{ 0xfe0000, 0xffffff, MRA32_RAM			},	// RAM
+	{ 0x000000, 0x0fffff, MRA32_ROM			},	/* ROM (not all used)*/
+	{ 0x400000, 0x401fff, MRA32_RAM			},	/* Sprites Data*/
+	{ 0x600000, 0x601fff, MRA32_RAM			},	/* Palette*/
+	{ 0x800000, 0x801fff, MRA32_RAM			},	/* Layer 0*/
+	{ 0x802000, 0x803fff, MRA32_RAM			},	/* Layer 1*/
+	{ 0x804000, 0x807fff, MRA32_RAM			},	/* RAM + Vregs*/
+/*	{ 0xc00000, 0xc0000b, psikyo_input_r	},	Depends on board, see DRIVER_INIT*/
+	{ 0xfe0000, 0xffffff, MRA32_RAM			},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE32_START( psikyo_writemem )
-	{ 0x000000, 0x0fffff, MWA32_ROM							},	// ROM (not all used)
-	{ 0x400000, 0x401fff, MWA32_RAM, &spriteram32, &spriteram_size },	// Sprites, buffered by two frames (list buffered + fb buffered)
-	{ 0x600000, 0x601fff, paletteram32_xRRRRRGGGGGBBBBB_dword_w, &paletteram32	},	// Palette
-	{ 0x800000, 0x801fff, psikyo_vram_0_w, &psikyo_vram_0	},	// Layer 0
-	{ 0x802000, 0x803fff, psikyo_vram_1_w, &psikyo_vram_1	},	// Layer 1
-	{ 0x804000, 0x807fff, MWA32_RAM, &psikyo_vregs			},	// RAM + Vregs
-//	{ 0xc00004, 0xc0000b, s1945_mcu_w						},	MCU on sh404, see DRIVER_INIT
-//	{ 0xc00010, 0xc00013, psikyo_soundlatch_w				},	Depends on board, see DRIVER_INIT
-	{ 0xfe0000, 0xffffff, MWA32_RAM							},	// RAM
+	{ 0x000000, 0x0fffff, MWA32_ROM							},	/* ROM (not all used)*/
+	{ 0x400000, 0x401fff, MWA32_RAM, &spriteram32, &spriteram_size },	/* Sprites, buffered by two frames (list buffered + fb buffered)*/
+	{ 0x600000, 0x601fff, paletteram32_xRRRRRGGGGGBBBBB_dword_w, &paletteram32	},	/* Palette*/
+	{ 0x800000, 0x801fff, psikyo_vram_0_w, &psikyo_vram_0	},	/* Layer 0*/
+	{ 0x802000, 0x803fff, psikyo_vram_1_w, &psikyo_vram_1	},	/* Layer 1*/
+	{ 0x804000, 0x807fff, MWA32_RAM, &psikyo_vregs			},	/* RAM + Vregs*/
+/*	{ 0xc00004, 0xc0000b, s1945_mcu_w						},	MCU on sh404, see DRIVER_INIT*/
+/*	{ 0xc00010, 0xc00013, psikyo_soundlatch_w				},	Depends on board, see DRIVER_INIT*/
+	{ 0xfe0000, 0xffffff, MWA32_RAM							},	/* RAM*/
 MEMORY_END
 
 
@@ -366,15 +366,15 @@ WRITE_HANDLER( sngkace_sound_bankswitch_w )
 }
 
 static MEMORY_READ_START( sngkace_sound_readmem )
-	{ 0x0000, 0x77ff, MRA_ROM		},	// ROM
-	{ 0x7800, 0x7fff, MRA_RAM		},	// RAM
-	{ 0x8000, 0xffff, MRA_BANK1		},	// Banked ROM
+	{ 0x0000, 0x77ff, MRA_ROM		},	/* ROM*/
+	{ 0x7800, 0x7fff, MRA_RAM		},	/* RAM*/
+	{ 0x8000, 0xffff, MRA_BANK1		},	/* Banked ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( sngkace_sound_writemem )
-	{ 0x0000, 0x77ff, MWA_ROM		},	// ROM
-	{ 0x7800, 0x7fff, MWA_RAM		},	// RAM
-	{ 0x8000, 0xffff, MWA_ROM		},	// Banked ROM
+	{ 0x0000, 0x77ff, MWA_ROM		},	/* ROM*/
+	{ 0x7800, 0x7fff, MWA_RAM		},	/* RAM*/
+	{ 0x8000, 0xffff, MWA_ROM		},	/* Banked ROM*/
 MEMORY_END
 
 
@@ -410,15 +410,15 @@ WRITE_HANDLER( gunbird_sound_bankswitch_w )
 }
 
 static MEMORY_READ_START( gunbird_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM		},	// ROM
-	{ 0x8000, 0x81ff, MRA_RAM		},	// RAM
-	{ 0x8200, 0xffff, MRA_BANK1		},	// Banked ROM
+	{ 0x0000, 0x7fff, MRA_ROM		},	/* ROM*/
+	{ 0x8000, 0x81ff, MRA_RAM		},	/* RAM*/
+	{ 0x8200, 0xffff, MRA_BANK1		},	/* Banked ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( gunbird_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM		},	// ROM
-	{ 0x8000, 0x81ff, MWA_RAM		},	// RAM
-	{ 0x8200, 0xffff, MWA_ROM		},	// Banked ROM
+	{ 0x0000, 0x7fff, MWA_ROM		},	/* ROM*/
+	{ 0x8000, 0x81ff, MWA_RAM		},	/* RAM*/
+	{ 0x8200, 0xffff, MWA_ROM		},	/* Banked ROM*/
 MEMORY_END
 
 
@@ -497,7 +497,7 @@ PORT_END
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW,  IPT_SERVICE1 ) \
 	PORT_BITX(0x0020, IP_ACTIVE_LOW,  IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE ) \
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW,  IPT_TILT     ) \
-	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL  )	// From Sound CPU
+	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL  )	/* From Sound CPU*/
 
 
 /***************************************************************************
@@ -506,15 +506,15 @@ PORT_END
 
 INPUT_PORTS_START( samuraia )
 
-	PORT_START	// IN0 - c00000&1
+	PORT_START	/* IN0 - c00000&1*/
 	PSIKYO_PORT_PLAYER2
 
 	PSIKYO_PORT_PLAYER1
 
-	PORT_START	// IN1 - c00008&9
+	PORT_START	/* IN1 - c00008&9*/
 	PSIKYO_PORT_COIN
 
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused?
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused?*/
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -523,7 +523,7 @@ INPUT_PORTS_START( samuraia )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - c00004&5
+	PORT_START	/* IN2 - c00004&5*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -545,7 +545,7 @@ INPUT_PORTS_START( samuraia )
 	PORT_DIPSETTING(      0x0000, "600K" )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	// [Free Play] on all for free play
+	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	/* [Free Play] on all for free play*/
 	PORT_DIPSETTING(      0x0100, "A+B/A&B" )
 	PORT_DIPSETTING(      0x0000, "A&B/A [Free Play]" )
 	PORT_DIPNAME( 0x0e00, 0x0e00, DEF_STR( Coin_A ) )
@@ -568,11 +568,11 @@ INPUT_PORTS_START( samuraia )
 	PORT_DIPSETTING(      0x0000, "1C 6C [Free Play]" )
 	PORT_DIPNAME( 0x8000, 0x8000, "2C Start, 1C Continue" )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) // Forces 1C_1C
+	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) /* Forces 1C_1C*/
 
-	PORT_START	// IN3 - c00002&3
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_VBLANK  )	// vblank
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused?
+	PORT_START	/* IN3 - c00002&3*/
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_VBLANK  )	/* vblank*/
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused?*/
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -580,7 +580,7 @@ INPUT_PORTS_START( samuraia )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused?
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused?*/
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -589,7 +589,7 @@ INPUT_PORTS_START( samuraia )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN4 - c00006&7
+	PORT_START	/* IN4 - c00006&7*/
 
 	/***********************************************
 
@@ -612,7 +612,7 @@ INPUT_PORTS_START( samuraia )
 	PORT_DIPSETTING(      0x00bf, "Hong Kong" )
 	PORT_DIPSETTING(      0x007f, "Taiwan" )
 
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused?
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused?*/
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -625,15 +625,15 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( sngkace )
 
-	PORT_START	// IN0 - c00000&1
+	PORT_START	/* IN0 - c00000&1*/
 	PSIKYO_PORT_PLAYER2
 
 	PSIKYO_PORT_PLAYER1
 
-	PORT_START	// IN1 - c00008&9
+	PORT_START	/* IN1 - c00008&9*/
 	PSIKYO_PORT_COIN
 
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused?
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused?*/
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -642,7 +642,7 @@ INPUT_PORTS_START( sngkace )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - c00004&5
+	PORT_START	/* IN2 - c00004&5*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -664,7 +664,7 @@ INPUT_PORTS_START( sngkace )
 	PORT_DIPSETTING(      0x0000, "600K" )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	// [Free Play] on all for free play
+	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	/* [Free Play] on all for free play*/
 	PORT_DIPSETTING(      0x0100, "A+B/A&B" )
 	PORT_DIPSETTING(      0x0000, "A&B/A [Free Play]" )
 	PORT_DIPNAME( 0x0e00, 0x0e00, DEF_STR( Coin_A ) )
@@ -687,11 +687,11 @@ INPUT_PORTS_START( sngkace )
 	PORT_DIPSETTING(      0x0000, "1C 6C [Free Play]" )
 	PORT_DIPNAME( 0x8000, 0x8000, "2C Start, 1C Continue" )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) // Forces 1C_1C
+	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) /* Forces 1C_1C*/
 
-	PORT_START	// IN3 - c00002&3
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_VBLANK  )	// vblank
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused?
+	PORT_START	/* IN3 - c00002&3*/
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_VBLANK  )	/* vblank*/
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused?*/
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -699,7 +699,7 @@ INPUT_PORTS_START( sngkace )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused?
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused?*/
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -708,7 +708,7 @@ INPUT_PORTS_START( sngkace )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN4 - c00006&7
+	PORT_START	/* IN4 - c00006&7*/
 
 	/***********************************************
 
@@ -724,7 +724,7 @@ INPUT_PORTS_START( sngkace )
 
 	************************************************/
 
-#if 0 // See Patch in MACHINE_INIT, only text not logo
+#if 0 /* See Patch in MACHINE_INIT, only text not logo*/
 	PORT_DIPNAME( 0x00ff, 0x00ff, "Country" )
 	PORT_DIPSETTING(      0x00ff, "Japan" )
 	PORT_DIPSETTING(      0x00ef, "USA & Canada" )
@@ -732,7 +732,7 @@ INPUT_PORTS_START( sngkace )
 	PORT_DIPSETTING(      0x00bf, "Hong Kong" )
 	PORT_DIPSETTING(      0x007f, "Taiwan" )
 #endif
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused?
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused?*/
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -750,12 +750,12 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( btlkroad )
 
-	PORT_START	// IN0 - c00000&1
+	PORT_START	/* IN0 - c00000&1*/
 	PSIKYO_PORT_PLAYER2
 
 	PSIKYO_PORT_PLAYER1
 
-	PORT_START	// IN1 - c00002&3
+	PORT_START	/* IN1 - c00002&3*/
 	PSIKYO_PORT_COIN
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN               )
@@ -767,7 +767,7 @@ INPUT_PORTS_START( btlkroad )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
 
-	PORT_START	// IN2 - c00004&5
+	PORT_START	/* IN2 - c00004&5*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -779,10 +779,10 @@ INPUT_PORTS_START( btlkroad )
 	PORT_DIPSETTING(      0x000c, "Normal" )
 	PORT_DIPSETTING(      0x0004, "Hard" )
 	PORT_DIPSETTING(      0x0000, "Hardest" )
-	PORT_DIPNAME( 0x0010, 0x0010, "Unknown 2-4" )	// used
+	PORT_DIPNAME( 0x0010, 0x0010, "Unknown 2-4" )	/* used*/
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0020, 0x0020, "Unknown 2-5" )	// used (energy lost?)
+	PORT_DIPNAME( 0x0020, 0x0020, "Unknown 2-5" )	/* used (energy lost?)*/
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0040, 0x0040, "Use DSW 3 (Debug)" )
@@ -790,7 +790,7 @@ INPUT_PORTS_START( btlkroad )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	// [Free Play] on all for free play
+	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	/* [Free Play] on all for free play*/
 	PORT_DIPSETTING(      0x0100, "A+B/A&B" )
 	PORT_DIPSETTING(      0x0000, "A&B/A [Free Play]" )
 	PORT_DIPNAME( 0x0e00, 0x0e00, DEF_STR( Coin_A ) )
@@ -813,7 +813,7 @@ INPUT_PORTS_START( btlkroad )
 	PORT_DIPSETTING(      0x0000, "1C 6C [Free Play]" )
 	PORT_DIPNAME( 0x8000, 0x8000, "2C Start, 1C Continue" )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) // Forces 1C_1C
+	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) /* Forces 1C_1C*/
 
 	/***********************************************
 
@@ -828,7 +828,7 @@ INPUT_PORTS_START( btlkroad )
 
 	************************************************/
 
-	PORT_START	// IN3 - c00006&7
+	PORT_START	/* IN3 - c00006&7*/
 	PORT_DIPNAME( 0x000f, 0x0000, "Copyright (Country)" )
 	PORT_DIPSETTING(      0x000f, "Psikyo (Japan)" )
 	PORT_DIPSETTING(      0x000e, "Jaleco+Psikyo (USA & Canada)" )
@@ -840,13 +840,13 @@ INPUT_PORTS_START( btlkroad )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	// vblank
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	/* vblank*/
 
-	// This DSW is used for debugging the game
-	PORT_DIPNAME( 0x0100, 0x0100, "Unknown 3-0" )	// tested!
+	/* This DSW is used for debugging the game*/
+	PORT_DIPNAME( 0x0100, 0x0100, "Unknown 3-0" )	/* tested!*/
 	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0200, 0x0200, "Unknown 3-1" )	// tested!
+	PORT_DIPNAME( 0x0200, 0x0200, "Unknown 3-1" )	/* tested!*/
 	PORT_DIPSETTING(      0x0200, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0400, 0x0400, "Unknown 3-2" )
@@ -855,7 +855,7 @@ INPUT_PORTS_START( btlkroad )
 	PORT_DIPNAME( 0x0800, 0x0800, "Unknown 3-3" )
 	PORT_DIPSETTING(      0x0800, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x1000, 0x1000, "Unknown 3-4" )	// tested!
+	PORT_DIPNAME( 0x1000, 0x1000, "Unknown 3-4" )	/* tested!*/
 	PORT_DIPSETTING(      0x1000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x2000, 0x2000, "Unknown 3-5" )
@@ -864,7 +864,7 @@ INPUT_PORTS_START( btlkroad )
 	PORT_DIPNAME( 0x4000, 0x4000, "Unknown 3-6" )
 	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x8000, 0x8000, "Unknown 3-7" )	// tested!
+	PORT_DIPNAME( 0x8000, 0x8000, "Unknown 3-7" )	/* tested!*/
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
@@ -877,12 +877,12 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( gunbird )
 
-	PORT_START	// IN0 - c00000&1
+	PORT_START	/* IN0 - c00000&1*/
 	PSIKYO_PORT_PLAYER2
 
 	PSIKYO_PORT_PLAYER1
 
-	PORT_START	// IN1 - c00002&3
+	PORT_START	/* IN1 - c00002&3*/
 	PSIKYO_PORT_COIN
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -894,7 +894,7 @@ INPUT_PORTS_START( gunbird )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - c00004&5
+	PORT_START	/* IN2 - c00004&5*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -916,7 +916,7 @@ INPUT_PORTS_START( gunbird )
 	PORT_DIPSETTING(      0x0000, "600K" )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	// [Free Play] on all for free play
+	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	/* [Free Play] on all for free play*/
 	PORT_DIPSETTING(      0x0100, "A+B/A&B" )
 	PORT_DIPSETTING(      0x0000, "A&B/A [Free Play]" )
 	PORT_DIPNAME( 0x0e00, 0x0e00, DEF_STR( Coin_A ) )
@@ -939,9 +939,9 @@ INPUT_PORTS_START( gunbird )
 	PORT_DIPSETTING(      0x0000, "1C 6C [Free Play]" )
 	PORT_DIPNAME( 0x8000, 0x8000, "2C Start, 1C Continue" )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) // Forces 1C_1C
+	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) /* Forces 1C_1C*/
 
-	PORT_START	// IN3 - c00006&7
+	PORT_START	/* IN3 - c00006&7*/
 
 	/***********************************************
 
@@ -972,27 +972,27 @@ INPUT_PORTS_START( gunbird )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	// vblank
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	/* vblank*/
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 
 INPUT_PORTS_END
 
 INPUT_PORTS_START( gunbirdj )
 
-	PORT_START	// IN0 - c00000&1
+	PORT_START	/* IN0 - c00000&1*/
 	PSIKYO_PORT_PLAYER2
 
 	PSIKYO_PORT_PLAYER1
 
-	PORT_START	// IN1 - c00002&3
+	PORT_START	/* IN1 - c00002&3*/
 	PSIKYO_PORT_COIN
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1004,7 +1004,7 @@ INPUT_PORTS_START( gunbirdj )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - c00004&5
+	PORT_START	/* IN2 - c00004&5*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -1026,7 +1026,7 @@ INPUT_PORTS_START( gunbirdj )
 	PORT_DIPSETTING(      0x0000, "600K" )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	// [Free Play] on all for free play
+	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	/* [Free Play] on all for free play*/
 	PORT_DIPSETTING(      0x0100, "A+B/A&B" )
 	PORT_DIPSETTING(      0x0000, "A&B/A [Free Play]" )
 	PORT_DIPNAME( 0x0e00, 0x0e00, DEF_STR( Coin_A ) )
@@ -1049,9 +1049,9 @@ INPUT_PORTS_START( gunbirdj )
 	PORT_DIPSETTING(      0x0000, "1C 6C [Free Play]" )
 	PORT_DIPNAME( 0x8000, 0x8000, "2C Start, 1C Continue" )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) // Forces 1C_1C
+	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) /* Forces 1C_1C*/
 
-	PORT_START	// IN3 - c00006&7
+	PORT_START	/* IN3 - c00006&7*/
 
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1060,16 +1060,16 @@ INPUT_PORTS_START( gunbirdj )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	// vblank
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	/* vblank*/
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 
 INPUT_PORTS_END
 
@@ -1080,12 +1080,12 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( s1945 )
 
-	PORT_START	// IN0 - c00000&1
+	PORT_START	/* IN0 - c00000&1*/
 	PSIKYO_PORT_PLAYER2
 
 	PSIKYO_PORT_PLAYER1
 
-	PORT_START	// IN1 - c00002&3
+	PORT_START	/* IN1 - c00002&3*/
 	PSIKYO_PORT_COIN
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1097,7 +1097,7 @@ INPUT_PORTS_START( s1945 )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - c00004&5
+	PORT_START	/* IN2 - c00004&5*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -1119,7 +1119,7 @@ INPUT_PORTS_START( s1945 )
 	PORT_DIPSETTING(      0x0000, "800K" )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	// No freeplay for s1945
+	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	/* No freeplay for s1945*/
 	PORT_DIPSETTING(      0x0100, "A+B/A&B" )
 	PORT_DIPSETTING(      0x0000, "A&B/A" )
 	PORT_DIPNAME( 0x0e00, 0x0e00, DEF_STR( Coin_A ) )
@@ -1142,9 +1142,9 @@ INPUT_PORTS_START( s1945 )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
 	PORT_DIPNAME( 0x8000, 0x8000, "2C Start, 1C Continue" )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) ) // Forces 1C_1C
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) ) /* Forces 1C_1C*/
 
-	PORT_START	// IN3 - c00006&7
+	PORT_START	/* IN3 - c00006&7*/
 
 	/***********************************************
 
@@ -1176,27 +1176,27 @@ INPUT_PORTS_START( s1945 )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	// vblank
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	/* vblank*/
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 
 INPUT_PORTS_END
 
 INPUT_PORTS_START( s1945j )
 
-	PORT_START	// IN0 - c00000&1
+	PORT_START	/* IN0 - c00000&1*/
 	PSIKYO_PORT_PLAYER2
 
 	PSIKYO_PORT_PLAYER1
 
-	PORT_START	// IN1 - c00002&3
+	PORT_START	/* IN1 - c00002&3*/
 	PSIKYO_PORT_COIN
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1208,7 +1208,7 @@ INPUT_PORTS_START( s1945j )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - c00004&5
+	PORT_START	/* IN2 - c00004&5*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -1230,7 +1230,7 @@ INPUT_PORTS_START( s1945j )
 	PORT_DIPSETTING(      0x0000, "800K" )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	// No freeplay for s1945?
+	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	/* No freeplay for s1945?*/
 	PORT_DIPSETTING(      0x0100, "A+B/A&B" )
 	PORT_DIPSETTING(      0x0000, "A&B/A" )
 	PORT_DIPNAME( 0x0e00, 0x0e00, DEF_STR( Coin_A ) )
@@ -1253,9 +1253,9 @@ INPUT_PORTS_START( s1945j )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
 	PORT_DIPNAME( 0x8000, 0x8000, "2C Start, 1C Continue" )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) ) // Forces 1C_1C
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) ) /* Forces 1C_1C*/
 
-	PORT_START	// IN3 - c00006&7
+	PORT_START	/* IN3 - c00006&7*/
 
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1264,16 +1264,16 @@ INPUT_PORTS_START( s1945j )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	// vblank
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	/* vblank*/
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 
 INPUT_PORTS_END
 
@@ -1284,12 +1284,12 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( tengai )
 
-	PORT_START	// IN0 - c00000&1
+	PORT_START	/* IN0 - c00000&1*/
 	PSIKYO_PORT_PLAYER2
 
 	PSIKYO_PORT_PLAYER1
 
-	PORT_START	// IN1 - c00002&3
+	PORT_START	/* IN1 - c00002&3*/
 	PSIKYO_PORT_COIN
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1301,7 +1301,7 @@ INPUT_PORTS_START( tengai )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - c00004&5
+	PORT_START	/* IN2 - c00004&5*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -1323,7 +1323,7 @@ INPUT_PORTS_START( tengai )
 	PORT_DIPSETTING(      0x0000, "800K" )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	// [Free Play] on all for free play
+	PORT_DIPNAME( 0x0100, 0x0100, "Credits/Coinage" )	/* [Free Play] on all for free play*/
 	PORT_DIPSETTING(      0x0100, "A+B/A&B" )
 	PORT_DIPSETTING(      0x0000, "A&B/A [Free Play]" )
 	PORT_DIPNAME( 0x0e00, 0x0e00, DEF_STR( Coin_A ) )
@@ -1346,9 +1346,9 @@ INPUT_PORTS_START( tengai )
 	PORT_DIPSETTING(      0x0000, "1C 6C [Free Play]" )
 	PORT_DIPNAME( 0x8000, 0x8000, "2C Start, 1C Continue" )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) // Forces 1C_1C
+	PORT_DIPSETTING(      0x0000, "On [Free Play]" ) /* Forces 1C_1C*/
 
-	PORT_START	// IN3 - c00006&7
+	PORT_START	/* IN3 - c00006&7*/
 
 	/***********************************************
 
@@ -1366,16 +1366,16 @@ INPUT_PORTS_START( tengai )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	// vblank
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_VBLANK  )	/* vblank*/
 
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested!
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested!*/
 
 INPUT_PORTS_END
 
@@ -1403,8 +1403,8 @@ static struct GfxLayout layout_16x16x4 =
 
 static struct GfxDecodeInfo psikyo_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4, 0x000, 0x20 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x4, 0x800, 0x48 }, // [1] Layer 0 + 1
+	{ REGION_GFX1, 0, &layout_16x16x4, 0x000, 0x20 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x4, 0x800, 0x48 }, /* [1] Layer 0 + 1*/
 	{ -1 }
 };
 
@@ -1451,7 +1451,7 @@ static MACHINE_DRIVER_START( sngkace )
 	MDRV_CPU_PORTS(sngkace_sound_readport,sngkace_sound_writeport)
 
 	MDRV_FRAMES_PER_SECOND(59.3)
-	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	// we're using IPT_VBLANK
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	/* we're using IPT_VBLANK*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -1504,7 +1504,7 @@ static MACHINE_DRIVER_START( gunbird )
 	MDRV_CPU_PORTS(gunbird_sound_readport,gunbird_sound_writeport)
 
 	MDRV_FRAMES_PER_SECOND(59.3)
-	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	// we're using IPT_VBLANK
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	/* we're using IPT_VBLANK*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -1562,7 +1562,7 @@ static MACHINE_DRIVER_START( s1945 )
 	/* MCU should go here */
 
 	MDRV_FRAMES_PER_SECOND(59.3)
-	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	// we're using IPT_VBLANK
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	/* we're using IPT_VBLANK*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -1611,8 +1611,8 @@ OSC:	32.000, 14.31818 MHz
 ROM_START( samuraia )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "4-u127.bin", 0x000000, 0x040000, CRC(8c9911ca) SHA1(821ba648b9a1d495c600cbf4606f2dbddc6f9e6f) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "5-u126.bin", 0x000002, 0x040000, CRC(d20c3ef0) SHA1(264e5a7e45e130a9e7152468733337668dc5b65f) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "4-u127.bin", 0x000000, 0x040000, CRC(8c9911ca) SHA1(821ba648b9a1d495c600cbf4606f2dbddc6f9e6f) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "5-u126.bin", 0x000002, 0x040000, CRC(d20c3ef0) SHA1(264e5a7e45e130a9e7152468733337668dc5b65f) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "3-u58.bin", 0x00000, 0x20000, CRC(310f5c76) SHA1(dbfd1c5a7a514bccd89fc4f7191744cf76bb745d) )
@@ -1625,20 +1625,20 @@ ROM_START( samuraia )
 	ROM_LOAD( "u34.bin",  0x000000, 0x100000, CRC(e6a75bd8) SHA1(1aa84ea54584b6c8b2846194b48bf6d2afa67fee) )
 	ROM_LOAD( "u35.bin",  0x100000, 0x100000, CRC(c4ca0164) SHA1(c75422de2e0127cdc23d8c223b674a5bd85b00fb) )
 
-//	ROM_REGION( 0x100000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
+/*	ROM_REGION( 0x100000, REGION_SOUND1, ROMREGION_SOUNDONLY )	 // Samples /*/
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "u68.bin",  0x000000, 0x100000, CRC(9a7f6c34) SHA1(c549b209bce1d2c6eeb512db198ad20c3f5fb0ea) )
 
 	ROM_REGION( 0x040000, REGION_USER1, 0 )	/* Sprites LUT */
-	ROM_LOAD( "u11.bin",  0x000000, 0x040000, CRC(11a04d91) SHA1(5d146a9a39a70f2ee212ceab9a5469598432449e) ) // x1xxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "u11.bin",  0x000000, 0x040000, CRC(11a04d91) SHA1(5d146a9a39a70f2ee212ceab9a5469598432449e) ) /* x1xxxxxxxxxxxxxxxx = 0xFF*/
 
 ROM_END
 
 ROM_START( sngkace )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "1-u127.bin", 0x000000, 0x040000, CRC(6c45b2f8) SHA1(08473297e174f3a6d67043f3b16f4e6b9c68b826) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "2-u126.bin", 0x000002, 0x040000, CRC(845a6760) SHA1(3b8fed294e28d9d8ef5cb5ec88b9ade396146a48) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "1-u127.bin", 0x000000, 0x040000, CRC(6c45b2f8) SHA1(08473297e174f3a6d67043f3b16f4e6b9c68b826) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "2-u126.bin", 0x000002, 0x040000, CRC(845a6760) SHA1(3b8fed294e28d9d8ef5cb5ec88b9ade396146a48) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "3-u58.bin", 0x00000, 0x20000, CRC(310f5c76) SHA1(dbfd1c5a7a514bccd89fc4f7191744cf76bb745d) )
@@ -1651,12 +1651,12 @@ ROM_START( sngkace )
 	ROM_LOAD( "u34.bin",  0x000000, 0x100000, CRC(e6a75bd8) SHA1(1aa84ea54584b6c8b2846194b48bf6d2afa67fee) )
 	ROM_LOAD( "u35.bin",  0x100000, 0x100000, CRC(c4ca0164) SHA1(c75422de2e0127cdc23d8c223b674a5bd85b00fb) )
 
-//	ROM_REGION( 0x100000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
+/*	ROM_REGION( 0x100000, REGION_SOUND1, ROMREGION_SOUNDONLY )	 // Samples /*/
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "u68.bin",  0x000000, 0x100000, CRC(9a7f6c34) SHA1(c549b209bce1d2c6eeb512db198ad20c3f5fb0ea) )
 
 	ROM_REGION( 0x040000, REGION_USER1, 0 )	/* Sprites LUT */
-	ROM_LOAD( "u11.bin",  0x000000, 0x040000, CRC(11a04d91) SHA1(5d146a9a39a70f2ee212ceab9a5469598432449e) ) // x1xxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "u11.bin",  0x000000, 0x040000, CRC(11a04d91) SHA1(5d146a9a39a70f2ee212ceab9a5469598432449e) ) /* x1xxxxxxxxxxxxxxxx = 0xFF*/
 
 ROM_END
 
@@ -1681,9 +1681,9 @@ DRIVER_INIT( sngkace )
 	/* sound latch */
 	install_mem_write32_handler(0, 0xc00010, 0xc00013, psikyo_soundlatch_w);
 
-	psikyo_ka302c_banking = 0; // SH201B doesn't have any gfx banking
-	psikyo_switch_banks(0, 0); // sngkace / samuraia don't use banking
-	psikyo_switch_banks(1, 1); // They share REGION_GFX2 to save memory on other boards
+	psikyo_ka302c_banking = 0; /* SH201B doesn't have any gfx banking*/
+	psikyo_switch_banks(0, 0); /* sngkace / samuraia don't use banking*/
+	psikyo_switch_banks(1, 1); /* They share REGION_GFX2 to save memory on other boards*/
 
 	/* Enable other regions */
 #if 0
@@ -1721,8 +1721,8 @@ Chips:	PS2001B
 ROM_START( gunbird )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "4-u46.bin", 0x000000, 0x040000, CRC(b78ec99d) SHA1(399b79931652d9df1632cd4d7ec3d214e473a5c3) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "5-u39.bin", 0x000002, 0x040000, CRC(925f095d) SHA1(301a536119a0320a756e9c6e51fb10e36b90ef16) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "4-u46.bin", 0x000000, 0x040000, CRC(b78ec99d) SHA1(399b79931652d9df1632cd4d7ec3d214e473a5c3) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "5-u39.bin", 0x000002, 0x040000, CRC(925f095d) SHA1(301a536119a0320a756e9c6e51fb10e36b90ef16) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "3-u71.bin", 0x00000, 0x20000, CRC(2168e4ba) SHA1(ca7ad6acb5f806ce2528e7b52c19e8cceecb8543) )
@@ -1751,8 +1751,8 @@ ROM_END
 ROM_START( gunbirdk )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "1k-u46.bin", 0x000000, 0x080000, CRC(745cee52) SHA1(6c5bb92c92c55f882484417bc1aa580684019610) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "2k-u39.bin", 0x000002, 0x080000, CRC(669632fb) SHA1(885dea42e6da35e9166a208b18dbd930642c26cd) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "1k-u46.bin", 0x000000, 0x080000, CRC(745cee52) SHA1(6c5bb92c92c55f882484417bc1aa580684019610) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "2k-u39.bin", 0x000002, 0x080000, CRC(669632fb) SHA1(885dea42e6da35e9166a208b18dbd930642c26cd) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "k3-u71.bin", 0x00000, 0x20000, CRC(11994055) SHA1(619776c178361f23de37ff14e87284ec0f1f4f10) )
@@ -1781,8 +1781,8 @@ ROM_END
 ROM_START( gunbirdj )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "1-u46.bin", 0x000000, 0x040000, CRC(474abd69) SHA1(27f37333075f9c92849101aad4875e69004d747b) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "2-u39.bin", 0x000002, 0x040000, CRC(3e3e661f) SHA1(b5648546f390539b0f727a9a62d1b9516254ae21) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "1-u46.bin", 0x000000, 0x040000, CRC(474abd69) SHA1(27f37333075f9c92849101aad4875e69004d747b) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "2-u39.bin", 0x000002, 0x040000, CRC(3e3e661f) SHA1(b5648546f390539b0f727a9a62d1b9516254ae21) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "3-u71.bin", 0x00000, 0x20000, CRC(2168e4ba) SHA1(ca7ad6acb5f806ce2528e7b52c19e8cceecb8543) )
@@ -1812,8 +1812,8 @@ ROM_END
 ROM_START( btlkroad )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "4-u46.bin", 0x000000, 0x040000, CRC(8a7a28b4) SHA1(f7197be673dfd0ddf46998af81792b81d8fe9fbf) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "5-u39.bin", 0x000002, 0x040000, CRC(933561fa) SHA1(f6f3b1e14b1cfeca26ef8260ac4771dc1531c357) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "4-u46.bin", 0x000000, 0x040000, CRC(8a7a28b4) SHA1(f7197be673dfd0ddf46998af81792b81d8fe9fbf) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "5-u39.bin", 0x000002, 0x040000, CRC(933561fa) SHA1(f6f3b1e14b1cfeca26ef8260ac4771dc1531c357) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "3-u71.bin", 0x00000, 0x20000, CRC(22411fab) SHA1(1094cb51712e40ae65d0082b408572bdec06ae8b) )
@@ -1823,7 +1823,7 @@ ROM_START( btlkroad )
 	ROM_LOAD( "u14.bin",  0x000000, 0x200000, CRC(282d89c3) SHA1(3b4b17f4a37efa2f7e232488aaba7c77d10c84d2) )
 	ROM_LOAD( "u24.bin",  0x200000, 0x200000, CRC(bbe9d3d1) SHA1(9da0b0b993e8271a8119e9c2f602e52325983f79) )
 	ROM_LOAD( "u15.bin",  0x400000, 0x200000, CRC(d4d1b07c) SHA1(232109db8f6e137fbc8826f38a96057067cb19dc) )
-//	ROM_LOAD( "u25.bin",  CRC(00600000) , 0x100000	NOT PRESENT
+/*	ROM_LOAD( "u25.bin",  CRC(00600000) , 0x100000	NOT PRESENT*/
 
 	ROM_REGION( 0x200000, REGION_GFX2, ROMREGION_DISPOSE )	/* Layers 0 + 1 */
 	ROM_LOAD( "u33.bin",  0x000000, 0x200000, CRC(4c8577f1) SHA1(d27043514632954a06667ac63f4a4e4a31870511) )
@@ -1872,8 +1872,8 @@ Chips:	PS2001B
 ROM_START( s1945jn )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "1-u46.bin", 0x000000, 0x080000, CRC(45fa8086) SHA1(f1753b9420596f4b828c77e877a044ba5fb01b28) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "2-u39.bin", 0x000002, 0x080000, CRC(0152ab8c) SHA1(2aef4cb88341b35f20bb551716f1e5ac2731e9ba) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "1-u46.bin", 0x000000, 0x080000, CRC(45fa8086) SHA1(f1753b9420596f4b828c77e877a044ba5fb01b28) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "2-u39.bin", 0x000002, 0x080000, CRC(0152ab8c) SHA1(2aef4cb88341b35f20bb551716f1e5ac2731e9ba) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "3-u71.bin", 0x00000, 0x20000, CRC(e3e366bd) SHA1(1f5b5909745802e263a896265ea365df76d3eaa5) )
@@ -1937,15 +1937,15 @@ Chips:	PS2001B
 ROM_START( s1945 )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "2s.u40", 0x000000, 0x040000, CRC(9b10062a) SHA1(cf963bba157422b659d8d64b4493eb7d69cd07b7) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "3s.u41", 0x000002, 0x040000, CRC(f87e871a) SHA1(567167c7fcfb622f78e211d74b04060c3d29d6b7) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "2s.u40", 0x000000, 0x040000, CRC(9b10062a) SHA1(cf963bba157422b659d8d64b4493eb7d69cd07b7) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "3s.u41", 0x000002, 0x040000, CRC(f87e871a) SHA1(567167c7fcfb622f78e211d74b04060c3d29d6b7) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "3-u63.bin", 0x00000, 0x20000, CRC(42d40ae1) SHA1(530a5a3f78ac489b84a631ea6ce21010a4f4d31b) )
 	ROM_RELOAD(            0x10000, 0x20000             )
 
 	ROM_REGION( 0x000100, REGION_CPU3, 0 )		/* MCU? */
-	 //	ROM_LOAD( "4-u59.bin", 0x00000, 0x00100, NO_DUMP )
+	 /*	ROM_LOAD( "4-u59.bin", 0x00000, 0x00100, NO_DUMP )*/
 
 	ROM_REGION( 0x800000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
 	ROM_LOAD( "u20.bin",  0x000000, 0x200000, CRC(28a27fee) SHA1(913f3bc4d0c6fb6b776a020c8099bf96f16fd06f) )
@@ -1957,7 +1957,7 @@ ROM_START( s1945 )
 	ROM_LOAD( "u34.bin",  0x000000, 0x200000, CRC(aaf83e23) SHA1(1c75d09ff42c0c215f8c66c699ca75688c95a05e) )
 
 	ROM_REGION( 0x200000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "u61.bin",  0x000000, 0x200000, CRC(a839cf47) SHA1(e179eb505c80d5bb3ccd9e228f2cf428c62b72ee) )	// 8 bit signed pcm (16KHz)
+	ROM_LOAD( "u61.bin",  0x000000, 0x200000, CRC(a839cf47) SHA1(e179eb505c80d5bb3ccd9e228f2cf428c62b72ee) )	/* 8 bit signed pcm (16KHz)*/
 
 	ROM_REGION( 0x040000, REGION_USER1, 0 )	/* */
 	ROM_LOAD( "u1.bin",  0x000000, 0x040000, CRC(dee22654) SHA1(5df05b0029ff7b1f7f04b41da7823d2aa8034bd2) )
@@ -1967,15 +1967,15 @@ ROM_END
 ROM_START( s1945j )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "1-u40.bin", 0x000000, 0x040000, CRC(c00eb012) SHA1(080dae010ca83548ebdb3324585d15e48baf0541) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "2-u41.bin", 0x000002, 0x040000, CRC(3f5a134b) SHA1(18bb3bb1e1adadcf522795f5cf7d4dc5a5dd1f30) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "1-u40.bin", 0x000000, 0x040000, CRC(c00eb012) SHA1(080dae010ca83548ebdb3324585d15e48baf0541) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "2-u41.bin", 0x000002, 0x040000, CRC(3f5a134b) SHA1(18bb3bb1e1adadcf522795f5cf7d4dc5a5dd1f30) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "3-u63.bin", 0x00000, 0x20000, CRC(42d40ae1) SHA1(530a5a3f78ac489b84a631ea6ce21010a4f4d31b) )
 	ROM_RELOAD(            0x10000, 0x20000             )
 
 	ROM_REGION( 0x000100, REGION_CPU3, 0 )		/* MCU */
-	 //	ROM_LOAD( "4-u59.bin", 0x00000, 0x00100, NO_DUMP )
+	 /*	ROM_LOAD( "4-u59.bin", 0x00000, 0x00100, NO_DUMP )*/
 
 	ROM_REGION( 0x800000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
 	ROM_LOAD( "u20.bin",  0x000000, 0x200000, CRC(28a27fee) SHA1(913f3bc4d0c6fb6b776a020c8099bf96f16fd06f) )
@@ -1987,7 +1987,7 @@ ROM_START( s1945j )
 	ROM_LOAD( "u34.bin",  0x000000, 0x200000, CRC(aaf83e23) SHA1(1c75d09ff42c0c215f8c66c699ca75688c95a05e) )
 
 	ROM_REGION( 0x200000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "u61.bin",  0x000000, 0x200000, CRC(a839cf47) SHA1(e179eb505c80d5bb3ccd9e228f2cf428c62b72ee) )	// 8 bit signed pcm (16KHz)
+	ROM_LOAD( "u61.bin",  0x000000, 0x200000, CRC(a839cf47) SHA1(e179eb505c80d5bb3ccd9e228f2cf428c62b72ee) )	/* 8 bit signed pcm (16KHz)*/
 
 	ROM_REGION( 0x040000, REGION_USER1, 0 )	/* */
 	ROM_LOAD( "u1.bin",  0x000000, 0x040000, CRC(dee22654) SHA1(5df05b0029ff7b1f7f04b41da7823d2aa8034bd2) )
@@ -2006,7 +2006,7 @@ DRIVER_INIT( s1945 )
 	install_mem_write32_handler(0, 0xc00004, 0xc0000b, s1945_mcu_w);
 	s1945_mcu_init(s1945_table);
 
-	psikyo_ka302c_banking = 0; // Banking is controlled by mcu
+	psikyo_ka302c_banking = 0; /* Banking is controlled by mcu*/
 }
 
 DRIVER_INIT( s1945j )
@@ -2021,7 +2021,7 @@ DRIVER_INIT( s1945j )
 	install_mem_write32_handler(0, 0xc00004, 0xc0000b, s1945_mcu_w);
 	s1945_mcu_init(s1945j_table);
 
-	psikyo_ka302c_banking = 0; // Banking is controlled by mcu
+	psikyo_ka302c_banking = 0; /* Banking is controlled by mcu*/
 }
 
 /***************************************************************************
@@ -2048,15 +2048,15 @@ Chips:	PS2001B
 ROM_START( tengai )
 
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* Main CPU Code */
-	ROM_LOAD32_WORD_SWAP( "2-u40.bin", 0x000000, 0x080000, CRC(ab6fe58a) SHA1(6687a3af192b3eab60d75ca286ebb8e0636297b5) ) // 1&0
-	ROM_LOAD32_WORD_SWAP( "3-u41.bin", 0x000002, 0x080000, CRC(02e42e39) SHA1(6cdb7b1cebab50c0a44cd60cd437f0e878ccac5c) ) // 3&2
+	ROM_LOAD32_WORD_SWAP( "2-u40.bin", 0x000000, 0x080000, CRC(ab6fe58a) SHA1(6687a3af192b3eab60d75ca286ebb8e0636297b5) ) /* 1&0*/
+	ROM_LOAD32_WORD_SWAP( "3-u41.bin", 0x000002, 0x080000, CRC(02e42e39) SHA1(6cdb7b1cebab50c0a44cd60cd437f0e878ccac5c) ) /* 3&2*/
 
 	ROM_REGION( 0x030000, REGION_CPU2, 0 )		/* Sound CPU Code */
 	ROM_LOAD( "1-u63.bin", 0x00000, 0x20000, CRC(2025e387) SHA1(334b0eb3b416d46ccaadff3eee6f1abba63285fb) )
 	ROM_RELOAD(            0x10000, 0x20000             )
 
 	ROM_REGION( 0x000100, REGION_CPU3, 0 )		/* MCU */
-	//	ROM_LOAD( "4-u59.bin", 0x00000, 0x00100, NO_DUMP )
+	/*	ROM_LOAD( "4-u59.bin", 0x00000, 0x00100, NO_DUMP )*/
 
 	ROM_REGION( 0x600000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
 	ROM_LOAD16_WORD_SWAP( "u20.bin",  0x000000, 0x200000, CRC(ed42ef73) SHA1(74693fcc83a2654ddb18fd513d528033863d6116) )
@@ -2067,7 +2067,7 @@ ROM_START( tengai )
 	ROM_LOAD16_WORD_SWAP( "u34.bin",  0x000000, 0x400000, CRC(2a2e2eeb) SHA1(f1d99353c0affc5c908985e6f2a5724e5223cccc) ) /* four banks of 0x100000 */
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "u61.bin",  0x000000, 0x200000, CRC(a63633c5) SHA1(89e75a40518926ebcc7d88dea86c01ba0bb496e5) )	// 8 bit signed pcm (16KHz)
+	ROM_LOAD( "u61.bin",  0x000000, 0x200000, CRC(a63633c5) SHA1(89e75a40518926ebcc7d88dea86c01ba0bb496e5) )	/* 8 bit signed pcm (16KHz)*/
 	ROM_LOAD( "u62.bin",  0x200000, 0x200000, CRC(3ad0c357) SHA1(35f78cfa2eafa93ab96b24e336f569ee84af06b6) )
 
 	ROM_REGION( 0x040000, REGION_USER1, 0 )	/* Sprites LUT */
@@ -2087,7 +2087,7 @@ DRIVER_INIT( tengai )
 	install_mem_write32_handler(0, 0xc00004, 0xc0000b, s1945_mcu_w);
 	s1945_mcu_init(0);
 
-	psikyo_ka302c_banking = 0; // Banking is controlled by mcu
+	psikyo_ka302c_banking = 0; /* Banking is controlled by mcu*/
 }
 
 
@@ -2100,8 +2100,8 @@ DRIVER_INIT( tengai )
 ***************************************************************************/
 
 /* Working Games */
-GAME ( 1993, samuraia, 0,        sngkace,  samuraia, sngkace,  ROT270, "Psikyo", "Samurai Aces (World)"  ) // Banpresto?
-GAME ( 1993, sngkace,  samuraia, sngkace,  sngkace,  sngkace,  ROT270, "Psikyo", "Sengoku Ace (Japan)"   ) // Banpresto?
+GAME ( 1993, samuraia, 0,        sngkace,  samuraia, sngkace,  ROT270, "Psikyo", "Samurai Aces (World)"  ) /* Banpresto?*/
+GAME ( 1993, sngkace,  samuraia, sngkace,  sngkace,  sngkace,  ROT270, "Psikyo", "Sengoku Ace (Japan)"   ) /* Banpresto?*/
 GAME ( 1994, gunbird,  0,        gunbird,  gunbird,  gunbird,  ROT270, "Psikyo", "Gunbird (World)"      )
 GAME ( 1994, gunbirdk, gunbird,  gunbird,  gunbirdj, gunbird,  ROT270, "Psikyo", "Gunbird (Korea)"      )
 GAME ( 1994, gunbirdj, gunbird,  gunbird,  gunbirdj, gunbird,  ROT270, "Psikyo", "Gunbird (Japan)"      )

@@ -307,7 +307,7 @@ INPUT_PORTS_START( thndzone )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )			// Adds 4 credits/coins !
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )			/* Adds 4 credits/coins !*/
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_VBLANK )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -361,7 +361,7 @@ INPUT_PORTS_START( thndzone )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )		// Check code at 0x001490
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )		/* Check code at 0x001490*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -430,11 +430,11 @@ INPUT_PORTS_START( dassault )
 	PORT_DIPSETTING(    0x30, "2" )
 	PORT_DIPSETTING(    0x20, "3" )
 	PORT_DIPSETTING(    0x10, "4" )
-//	PORT_DIPSETTING(    0x00, "4 (buggy)" )
+/*	PORT_DIPSETTING(    0x00, "4 (buggy)" )*/
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )		// Check code at 0x0014bc
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )		/* Check code at 0x0014bc*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -508,7 +508,7 @@ INPUT_PORTS_START( dassaul4 )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )		// Check code at 0x0014a4
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )		/* Check code at 0x0014a4*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 

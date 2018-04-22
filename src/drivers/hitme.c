@@ -267,7 +267,7 @@ PORT_END
 
 static PORT_WRITE_START( hitme_writeport )
 	{ 0x1d, 0x1d, output_port_0_w }, /* OUT0 */
-//	{ 0x1e, 0x1e, output_port_1_r }, /* OUT1 */
+/*	{ 0x1e, 0x1e, output_port_1_r },  // OUT1 /*/
 PORT_END
 
 static MACHINE_DRIVER_START( hitme )

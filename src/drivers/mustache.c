@@ -11,7 +11,7 @@
 
 ***************************************************************************/
 #include "driver.h"
-#include "sndhrdw/seibu.h" // for seibu_sound_decrypt on the MAIN cpu (not sound)
+#include "sndhrdw/seibu.h" /* for seibu_sound_decrypt on the MAIN cpu (not sound)*/
 #include "sndhrdw/t5182.h"
 #include "vidhrdw/generic.h"
 

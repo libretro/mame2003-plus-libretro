@@ -352,7 +352,7 @@ static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xc000, 0xc7ff, MRA_RAM },
 	{ 0xc800, 0xc800, soundlatch_r },
-	{ 0xe006, 0xe006, avengers_soundlatch2_r }, //AT: (avengers061gre)
+	{ 0xe006, 0xe006, avengers_soundlatch2_r }, /*AT: (avengers061gre)*/
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
@@ -914,7 +914,7 @@ static MACHINE_DRIVER_START( trojan )
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,4)
 
-	MDRV_CPU_ADD(Z80, 4000000) // 3.579545 Mhz (?)
+	MDRV_CPU_ADD(Z80, 4000000) /* 3.579545 Mhz (?)*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* ? */
 	MDRV_CPU_MEMORY(adpcm_readmem,adpcm_writemem)
 	MDRV_CPU_PORTS(adpcm_readport,adpcm_writeport)
@@ -943,16 +943,16 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( avengers )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(Z80, 6000000) //AT: (avengers37b16gre)
+	MDRV_CPU_ADD(Z80, 6000000) /*AT: (avengers37b16gre)*/
 	MDRV_CPU_MEMORY(avengers_readmem,avengers_writemem)
-	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1) // RST 38h triggered by software
+	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1) /* RST 38h triggered by software*/
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)        /* 3 MHz (?) */
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,4)
 
-	MDRV_CPU_ADD(Z80, 4000000) // 3.579545 Mhz (?)
+	MDRV_CPU_ADD(Z80, 4000000) /* 3.579545 Mhz (?)*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* ? */
 	MDRV_CPU_MEMORY(adpcm_readmem,adpcm_writemem)
 	MDRV_CPU_PORTS(avengers_adpcm_readport,adpcm_writeport)

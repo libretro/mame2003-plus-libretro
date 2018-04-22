@@ -931,7 +931,7 @@ ROM_START( docastlo )
 
 	ROM_REGION( 0x0200, REGION_PROMS, 0 )
 	/* which prom? this set has the same gfx as douni so i'm using that prom */
-//	ROM_LOAD( "09c.bin",      0x0000, 0x0200, CRC(066f52bc) SHA1(99f4f2d0181bcaf389c16f127cc3e632d62ee417) ) /* color prom */
+/*	ROM_LOAD( "09c.bin",      0x0000, 0x0200, CRC(066f52bc) SHA1(99f4f2d0181bcaf389c16f127cc3e632d62ee417) )  // color prom /*/
 	ROM_LOAD( "dorevc9.bin",  0x0000, 0x0200, CRC(96624ebe) SHA1(74ff21dc85dcb013c941ec6c06cafdb5bcc16960) ) /* color prom */
 ROM_END
 

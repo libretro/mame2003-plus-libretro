@@ -354,15 +354,15 @@ Stephh's notes (based on some tests) :
 #include "machine/eeprom.h"
 #include "machine/random.h"
 
-#define OSC_A	(32215900)	// System 32 master crystal is 32215900 Hz
+#define OSC_A	(32215900)	/* System 32 master crystal is 32215900 Hz*/
 #define MAX_COLOURS (16384)
 enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
 static unsigned char irq_status;
 static data16_t *system32_shared_ram;
-data16_t *system32_mixerregs[2];		// mixer registers
-static int s32_blo, s32_bhi;		// bank high and low values
-static int s32_f1_prot;			// port f1 is used to protect the sound program on some games
+data16_t *system32_mixerregs[2];		/* mixer registers*/
+static int s32_blo, s32_bhi;		/* bank high and low values*/
+static int s32_f1_prot;			/* port f1 is used to protect the sound program on some games*/
 static data16_t *sys32_protram;
 static int tocab, fromcab;
 static data16_t *system32_workram;
@@ -522,11 +522,11 @@ static READ16_HANDLER(ga2_wakeup_protection_r)
 	return prot[offset];
 }
 
-// the protection board on many system32 games has full dma/bus access
-// and can write things into work RAM.  we simulate that here for burning rival.
+/* the protection board on many system32 games has full dma/bus access*/
+/* and can write things into work RAM.  we simulate that here for burning rival.*/
 static READ16_HANDLER(brival_protection_r)
 {
-	if (!mem_mask)	// only trap on word-wide reads
+	if (!mem_mask)	/* only trap on word-wide reads*/
 	{
 		switch (offset)
 		{
@@ -590,7 +590,7 @@ static WRITE16_HANDLER(brival_protboard_w)
 	memcpy(&sys32_protram[protAddress[curProtType][1]], ret, 16);
 }
 
-// protection ram is 8-bits wide and only occupies every other address
+/* protection ram is 8-bits wide and only occupies every other address*/
 static READ16_HANDLER(arabfgt_protboard_r)
 {
 	int PC = activecpu_get_pc();
@@ -600,7 +600,7 @@ static READ16_HANDLER(arabfgt_protboard_r)
 	{
 		cmpVal = activecpu_get_reg(1);
 
-		// R0 always contains the value the protection is supposed to return (!)
+		/* R0 always contains the value the protection is supposed to return (!)*/
 		return cmpVal;
 	}
 	else
@@ -629,7 +629,7 @@ static READ16_HANDLER(sys32_read_ff)
 
 static READ16_HANDLER(sys32_read_random)
 {
-	return mame_rand(); // new random.c random number code, see clouds in ga2
+	return mame_rand(); /* new random.c random number code, see clouds in ga2*/
 }
 
 int analogRead[8];
@@ -686,7 +686,7 @@ static READ16_HANDLER( system32_io_r )
 	case 0x02:
 		return 0xffff;
 	case 0x03:
-		// f1lap
+		/* f1lap*/
 		return 0xffff;
 	case 0x04:
 		return readinputport(0x03);
@@ -695,10 +695,10 @@ static READ16_HANDLER( system32_io_r )
 	case 0x06:
 		return 0xffff;
 	case 0x07:
-		// scross
+		/* scross*/
 		return sys32_tilebank_external;
 	case 0x0e:
-		// f1lap
+		/* f1lap*/
 		return 0xffff;
 	default:
 		logerror("Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
@@ -726,22 +726,22 @@ static WRITE16_HANDLER( system32_io_w )
 		}
 		break;
 	case 0x04:
-		// f1lap
+		/* f1lap*/
 		break;
 	case 0x06:
-		// jp_v60_write_cab / titlef
+		/* jp_v60_write_cab / titlef*/
 		tocab = data;
 		cpu_set_irq_line(1, 0, HOLD_LINE);
 		break;
 	case 0x07:
-		// multi32 tilebank per layer
+		/* multi32 tilebank per layer*/
 		COMBINE_DATA(&sys32_tilebank_external);
 		break;
 	case 0x0e:
 		COMBINE_DATA(&sys32_displayenable);
 		break;
 	case 0x0f:
-		// orunners unknown
+		/* orunners unknown*/
 		break;
 	default:
 		logerror("Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
@@ -781,11 +781,11 @@ static WRITE16_HANDLER( system32_io_2_w )
 
 	switch(offset) {
 	case 0x00:
-		// orunners: Used by the hardware to switch the analog input ports to set B
+		/* orunners: Used by the hardware to switch the analog input ports to set B*/
 		analogSwitch=data;
 		break;
 	case 0x0a:
-		// orunners unknown
+		/* orunners unknown*/
 		break;
 	default:
 		logerror("Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
@@ -814,7 +814,7 @@ void system32_set_colour (int offset)
 	g = (g << 4) | (g2 << 3);
 	b = (b << 4) | (b2 << 3);
 
-	// there might be better ways of doing this ... but for now its functional ;-)
+	/* there might be better ways of doing this ... but for now its functional ;-)*/
 	r_bright = sys32_brightness[0][0]; r_bright &= 0x3f;
 	g_bright = sys32_brightness[0][1]; g_bright &= 0x3f;
 	b_bright = sys32_brightness[0][2]; b_bright &= 0x3f;
@@ -831,7 +831,7 @@ static WRITE16_HANDLER( system32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w 
 	int r,g,b;
 	int r2,g2,b2;
 
-	COMBINE_DATA(&scrambled_paletteram16[0][offset]); // it expects to read back the same values?
+	COMBINE_DATA(&scrambled_paletteram16[0][offset]); /* it expects to read back the same values?*/
 
 	/* rearrange the data to normal format ... */
 
@@ -855,8 +855,8 @@ static WRITE16_HANDLER( system32_paletteram16_xBGRBBBBGGGGRRRR_word_w )
 {
 	COMBINE_DATA(&paletteram16[offset]);
 
-	// some games use 8-bit writes to some palette regions
-	// (especially for the text layer palettes)
+	/* some games use 8-bit writes to some palette regions*/
+	/* (especially for the text layer palettes)*/
 
 	system32_set_colour(offset);
 }
@@ -875,60 +875,60 @@ static WRITE16_HANDLER( jp_v60_write_cab )
 
 static MEMORY_READ16_START( system32_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
-	{ 0x200000, 0x23ffff, MRA16_RAM }, // work RAM
-	{ 0x300000, 0x31ffff, sys32_videoram_r }, // Tile Ram
-	{ 0x400000, 0x41ffff, MRA16_RAM }, // sprite RAM
+	{ 0x200000, 0x23ffff, MRA16_RAM }, /* work RAM*/
+	{ 0x300000, 0x31ffff, sys32_videoram_r }, /* Tile Ram*/
+	{ 0x400000, 0x41ffff, MRA16_RAM }, /* sprite RAM*/
 	{ 0x500002, 0x500003, jp_v60_read_cab },
-	{ 0x500000, 0x50000d, MRA16_RAM },	// Unknown
+	{ 0x500000, 0x50000d, MRA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x6100ff, MRA16_RAM }, // Palette + mixer registers (Monitor A)
+	{ 0x600000, 0x6100ff, MRA16_RAM }, /* Palette + mixer registers (Monitor A)*/
 
-	{ 0x700000, 0x701fff, MRA16_RAM },	// shared RAM
-	{ 0x800000, 0x80000f, MRA16_RAM },	// Unknown
-	{ 0x80007e, 0x80007f, MRA16_RAM },	// Unknown f1lap
-	{ 0x801000, 0x801003, MRA16_RAM },	// Unknown
-	{ 0xa00000, 0xa00001, MRA16_RAM }, // Unknown dbzvrvs
+	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
+	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
+	{ 0x80007e, 0x80007f, MRA16_RAM },	/* Unknown f1lap*/
+	{ 0x801000, 0x801003, MRA16_RAM },	/* Unknown*/
+	{ 0xa00000, 0xa00001, MRA16_RAM }, /* Unknown dbzvrvs*/
 
 	{ 0xc00000, 0xc0003f, system32_io_r },
-// 0xc00040, 0xc0005f - Game specific implementation of the analog controls
+/* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_r },
 
 	{ 0xd80000, 0xd80001, sys32_read_random },
-	{ 0xd80002, 0xd80003, MRA16_RAM }, // Unknown harddunk
-	{ 0xe00000, 0xe0000f, MRA16_RAM },   // Unknown
-	{ 0xe80000, 0xe80003, MRA16_RAM }, // Unknown
-	{ 0xf00000, 0xffffff, MRA16_BANK1 }, // High rom mirror
+	{ 0xd80002, 0xd80003, MRA16_RAM }, /* Unknown harddunk*/
+	{ 0xe00000, 0xe0000f, MRA16_RAM },   /* Unknown*/
+	{ 0xe80000, 0xe80003, MRA16_RAM }, /* Unknown*/
+	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( system32_writemem )
 	{ 0x000000, 0x1fffff, MWA16_ROM },
 	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram },
 	{ 0x300000, 0x31ffff, sys32_videoram_w },
-	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, // Sprites
-	{ 0x500000, 0x50000d, MWA16_RAM },	// Unknown
+	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, /* Sprites*/
+	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x607fff, system32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &scrambled_paletteram16[0] },	// magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?
-	{ 0x608000, 0x60ffff, system32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, // Palettes
-	{ 0x610000, 0x6100ff, MWA16_RAM, &system32_mixerregs[0] }, // mixer chip registers
+	{ 0x600000, 0x607fff, system32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &scrambled_paletteram16[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
+	{ 0x608000, 0x60ffff, system32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, /* Palettes*/
+	{ 0x610000, 0x6100ff, MWA16_RAM, &system32_mixerregs[0] }, /* mixer chip registers*/
 
-	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, // Shared ram with the z80
-	{ 0x800000, 0x80000f, MWA16_RAM },	// Unknown
-	{ 0x80007e, 0x80007f, MWA16_RAM },	// Unknown f1lap
-	{ 0x801000, 0x801003, MWA16_RAM },	// Unknown
-	{ 0x81002a, 0x81002b, MWA16_RAM },	// Unknown dbzvrvs
-	{ 0x810100, 0x810101, MWA16_RAM },	// Unknown dbzvrvs
-	{ 0xa00000, 0xa00fff, MWA16_RAM, &sys32_protram },	// protection RAM
+	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
+	{ 0x800000, 0x80000f, MWA16_RAM },	/* Unknown*/
+	{ 0x80007e, 0x80007f, MWA16_RAM },	/* Unknown f1lap*/
+	{ 0x801000, 0x801003, MWA16_RAM },	/* Unknown*/
+	{ 0x81002a, 0x81002b, MWA16_RAM },	/* Unknown dbzvrvs*/
+	{ 0x810100, 0x810101, MWA16_RAM },	/* Unknown dbzvrvs*/
+	{ 0xa00000, 0xa00fff, MWA16_RAM, &sys32_protram },	/* protection RAM*/
 
 	{ 0xc00000, 0xc0003f, system32_io_w },
-// 0xc00040, 0xc0005f - Game specific implementation of the analog controls
+/* 0xc00040, 0xc0005f - Game specific implementation of the analog controls*/
 	{ 0xc00060, 0xc0007f, system32_io_2_w },
 
-	{ 0xd00000, 0xd00005, MWA16_RAM }, // Unknown
+	{ 0xd00000, 0xd00005, MWA16_RAM }, /* Unknown*/
 	{ 0xd00006, 0xd00007, irq_ack_w },
-	{ 0xd00008, 0xd0000b, MWA16_RAM }, // Unknown
-	{ 0xd80000, 0xd80003, MWA16_RAM }, // Unknown titlef / harddunk
-	{ 0xe00000, 0xe0000f, MWA16_RAM },   // Unknown
-	{ 0xe80000, 0xe80003, MWA16_RAM }, // Unknown
+	{ 0xd00008, 0xd0000b, MWA16_RAM }, /* Unknown*/
+	{ 0xd80000, 0xd80003, MWA16_RAM }, /* Unknown titlef / harddunk*/
+	{ 0xe00000, 0xe0000f, MWA16_RAM },   /* Unknown*/
+	{ 0xe80000, 0xe80003, MWA16_RAM }, /* Unknown*/
 	{ 0xf00000, 0xffffff, MWA16_ROM },
 MEMORY_END
 
@@ -939,7 +939,7 @@ static READ_HANDLER( system32_bank_r )
 	return sys32_SoundMemBank[offset];
 }
 
-// the Z80's work RAM is fully shared with the V60 or V70 and battery backed up.
+/* the Z80's work RAM is fully shared with the V60 or V70 and battery backed up.*/
 static READ_HANDLER( sys32_shared_snd_r )
 {
 	data8_t *RAM = (data8_t *)system32_shared_ram;
@@ -954,8 +954,8 @@ static WRITE_HANDLER( sys32_shared_snd_w )
 	RAM[offset] = data;
 }
 
-// some games require that port f1 be a magic echo-back latch.
-// thankfully, it's not required to do any math or anything on the values.
+/* some games require that port f1 be a magic echo-back latch.*/
+/* thankfully, it's not required to do any math or anything on the values.*/
 static READ_HANDLER( sys32_sound_prot_r )
 {
 	return s32_f1_prot;
@@ -991,15 +991,15 @@ static void s32_recomp_bank(void)
 
 	switch (s32_blo & 0xc0)
 	{
-		case 0x00:	// normal case
+		case 0x00:	/* normal case*/
 			Bank = (((remapbhi[s32_bhi]<<6) + (s32_blo)) << 13);
 			break;
 		case 0x40:
 		case 0xc0:
-			// SegaSonic (prototype) needs this alternate interpretation.
-//			Bank = (((remapbhi[s32_bhi]<<5) + (s32_blo&0x3f)) << 13);
-			// all other s32 games work with this, notably Super Visual Football
-			// and Alien3: The Gun
+			/* SegaSonic (prototype) needs this alternate interpretation.*/
+/*			Bank = (((remapbhi[s32_bhi]<<5) + (s32_blo&0x3f)) << 13);*/
+			/* all other s32 games work with this, notably Super Visual Football*/
+			/* and Alien3: The Gun*/
 			Bank = (((remapbhi[s32_bhi]<<6) + (s32_blo&0x3f)) << 13);
 			break;
 	}
@@ -1093,7 +1093,7 @@ static MEMORY_WRITE_START( jpcab_writemem )
 MEMORY_END
 
 static PORT_READ_START( jpcab_readport )
-	{ 0x04, 0x04, IORP_NOP },		// interrupt control
+	{ 0x04, 0x04, IORP_NOP },		/* interrupt control*/
 	{ 0x80, 0x83, IORP_NOP },
 	{ 0x90, 0x93, IORP_NOP },
 	{ 0xc0, 0xc1, IORP_NOP },
@@ -1220,17 +1220,17 @@ static READ16_HANDLER ( sys32_gun_p2_y_c00056_r ) { int retdata; retdata = sys32
 
 /* Generic entry for 2 players games - to be used for games which haven't been tested yet */
 INPUT_PORTS_START( system32 )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1240,29 +1240,29 @@ INPUT_PORTS_START( system32 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
 /* Generic entry for 4 players games - to be used for games which haven't been tested yet */
 INPUT_PORTS_START( sys32_4p )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN4 )
@@ -1272,13 +1272,13 @@ INPUT_PORTS_START( sys32_4p )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	SYSTEM32_PLAYER_INPUTS(3, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	SYSTEM32_PLAYER_INPUTS(4, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START4 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1287,7 +1287,7 @@ INPUT_PORTS_START( sys32_4p )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( arescue )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1300,20 +1300,20 @@ INPUT_PORTS_START( arescue )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	PORT_BIT(0x01,  IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT(0x02,  IP_ACTIVE_LOW, IPT_BUTTON2 )
 	PORT_BIT(0xfc,  IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1321,46 +1321,46 @@ INPUT_PORTS_START( arescue )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 4
+	PORT_START	/* port 4*/
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1 |IPF_REVERSE, 30, 10, 0, 0xff )
 
-	PORT_START	// port 5
+	PORT_START	/* port 5*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 6
+	PORT_START	/* port 6*/
         PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 7
+	PORT_START	/* port 7*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 8
+	PORT_START	/* port 8*/
 	PORT_ANALOG( 0xff, 0x80,  IPT_AD_STICK_Z | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 9
+	PORT_START	/* port 9*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port A
+	PORT_START	/* port A*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port B
+	PORT_START	/* port B*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( holo )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1369,31 +1369,31 @@ INPUT_PORTS_START( holo )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( svf )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1402,31 +1402,31 @@ INPUT_PORTS_START( svf )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( ga2 )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN4 )
@@ -1435,13 +1435,13 @@ INPUT_PORTS_START( ga2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	SYSTEM32_PLAYER_INPUTS(3, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	SYSTEM32_PLAYER_INPUTS(4, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START4 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1450,20 +1450,20 @@ INPUT_PORTS_START( ga2 )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( ga2j )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1472,13 +1472,13 @@ INPUT_PORTS_START( ga2j )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	SYSTEM32_PLAYER_INPUTS(3, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	SYSTEM32_PLAYER_INPUTS(4, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START4 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1487,20 +1487,20 @@ INPUT_PORTS_START( ga2j )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( spidey )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN4 )
@@ -1509,13 +1509,13 @@ INPUT_PORTS_START( spidey )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	SYSTEM32_PLAYER_INPUTS(3, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	SYSTEM32_PLAYER_INPUTS(4, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START4 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1524,20 +1524,20 @@ INPUT_PORTS_START( spidey )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( spideyj )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1546,33 +1546,33 @@ INPUT_PORTS_START( spideyj )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	SYSTEM32_PLAYER_INPUTS(3, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	SYSTEM32_PLAYER_INPUTS(4, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START4 )
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( brival )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1581,10 +1581,10 @@ INPUT_PORTS_START( brival )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
@@ -1594,12 +1594,12 @@ INPUT_PORTS_START( brival )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( f1en )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1612,20 +1612,20 @@ INPUT_PORTS_START( f1en )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_BUTTON2, "Gear Up",   IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON3, "Gear Down", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1633,33 +1633,33 @@ INPUT_PORTS_START( f1en )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 4
+	PORT_START	/* port 4*/
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 5
+	PORT_START	/* port 5*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 6
+	PORT_START	/* port 6*/
 	PORT_ANALOG( 0xff, 0, IPT_PEDAL | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 7
+	PORT_START	/* port 7*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 8
+	PORT_START	/* port 8*/
 	PORT_ANALOG( 0xff, 0, IPT_PEDAL2 | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 9
+	PORT_START	/* port 9*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port A
+	PORT_START	/* port A*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port B
+	PORT_START	/* port B*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( radm )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1672,21 +1672,21 @@ INPUT_PORTS_START( radm )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON2, "Light", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_BUTTON3, "Wiper", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1694,33 +1694,33 @@ INPUT_PORTS_START( radm )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 4
+	PORT_START	/* port 4*/
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 5
+	PORT_START	/* port 5*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 6
+	PORT_START	/* port 6*/
 	PORT_ANALOG( 0xff, 0, IPT_PEDAL | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 7
+	PORT_START	/* port 7*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 8
+	PORT_START	/* port 8*/
 	PORT_ANALOG( 0xff, 0, IPT_PEDAL2 | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 9
+	PORT_START	/* port 9*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port A
+	PORT_START	/* port A*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port B
+	PORT_START	/* port B*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( radr )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1733,19 +1733,19 @@ INPUT_PORTS_START( radr )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_TOGGLE, "Gear Change", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1753,50 +1753,50 @@ INPUT_PORTS_START( radr )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 4
+	PORT_START	/* port 4*/
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 5
+	PORT_START	/* port 5*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 6
+	PORT_START	/* port 6*/
 	PORT_ANALOG( 0xff, 0, IPT_PEDAL | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 7
+	PORT_START	/* port 7*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 8
+	PORT_START	/* port 8*/
 	PORT_ANALOG( 0xff, 0, IPT_PEDAL2 | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 9
+	PORT_START	/* port 9*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port A
+	PORT_START	/* port A*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port B
+	PORT_START	/* port B*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( alien3 )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	// trigger
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	// button
+	PORT_START	/* 0xc00000 - port 1*/
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	/* trigger*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	/* button*/
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1804,44 +1804,44 @@ INPUT_PORTS_START( alien3 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE2 )
 	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00050 - port 7  - player 1 lightgun X axis
+	PORT_START	/* 0xc00050 - port 7  - player 1 lightgun X axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 15, 0, 0xff )
 
-	PORT_START	// 0xc00052 - port 8  - player 1 lightgun Y axis
+	PORT_START	/* 0xc00052 - port 8  - player 1 lightgun Y axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 15, 0, 0xff )
 
-	PORT_START	// 0xc00054 - port 9  - player 2 lightgun X axis
+	PORT_START	/* 0xc00054 - port 9  - player 2 lightgun X axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 35, 15, 0, 0xff )
 
-	PORT_START	// 0xc00056 - port 10 - player 2 lightgun Y axis
+	PORT_START	/* 0xc00056 - port 10 - player 2 lightgun Y axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 35, 15, 0, 0xff )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( sonic )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
-	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )	// active_high makes player3 control labels visible in service mode
+	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )	/* active_high makes player3 control labels visible in service mode*/
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1851,51 +1851,51 @@ INPUT_PORTS_START( sonic )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START // 0xc00040 - port 7  - player 1 trackball X axis
+	PORT_START /* 0xc00040 - port 7  - player 1 trackball X axis*/
 	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X | IPF_PLAYER1 | IPF_REVERSE, 100, 15, 0, 0 )
 
-	PORT_START // 0xc00044 - port 8  - player 1 trackball Y axis
+	PORT_START /* 0xc00044 - port 8  - player 1 trackball Y axis*/
 	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y | IPF_PLAYER1, 100, 15, 0, 0 )
 
-	PORT_START // 0xc00048 - port 9  - player 2 trackball X axis
+	PORT_START /* 0xc00048 - port 9  - player 2 trackball X axis*/
 	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X | IPF_PLAYER2 | IPF_REVERSE, 100, 15, 0, 0 )
 
-	PORT_START // 0xc0004c - port 10 - player 2 trackball Y axis
+	PORT_START /* 0xc0004c - port 10 - player 2 trackball Y axis*/
 	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y | IPF_PLAYER2, 100, 15, 0, 0 )
 
-	PORT_START // 0xc00050 - port 11 - player 3 trackball X axis
+	PORT_START /* 0xc00050 - port 11 - player 3 trackball X axis*/
 	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_X | IPF_PLAYER3 | IPF_REVERSE, 100, 15, 0, 0 )
 
-	PORT_START // 0xc00054 - port 12 - player 3 trackball Y axis
+	PORT_START /* 0xc00054 - port 12 - player 3 trackball Y axis*/
 	PORT_ANALOG( 0xff, 0, IPT_TRACKBALL_Y | IPF_PLAYER3, 100, 15, 0, 0 )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( jpark )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1904,46 +1904,46 @@ INPUT_PORTS_START( jpark )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00050 - port 7  - player 1 lightgun X axis
+	PORT_START	/* 0xc00050 - port 7  - player 1 lightgun X axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 15, 0x40, 0xc0 )
 
-	PORT_START	// 0xc00052 - port 8  - player 1 lightgun Y axis
+	PORT_START	/* 0xc00052 - port 8  - player 1 lightgun Y axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 15, 0x39, 0xbf )
 
-	PORT_START	// 0xc00054 - port 9  - player 2 lightgun X axis
+	PORT_START	/* 0xc00054 - port 9  - player 2 lightgun X axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 35, 15, 0x40, 0xc0 )
 
-	PORT_START	// 0xc00056 - port 10 - player 2 lightgun Y axis
+	PORT_START	/* 0xc00056 - port 10 - player 2 lightgun Y axis*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 35, 15, 0x39, 0xbf )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( f1lap )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_BUTTON2, "Gear Up",	 IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_BUTTON3, "Gear Down", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_BUTTON4, "Overtake",  IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1951,46 +1951,46 @@ INPUT_PORTS_START( f1lap )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 4
+	PORT_START	/* port 4*/
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 5
+	PORT_START	/* port 5*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 6
+	PORT_START	/* port 6*/
 	PORT_ANALOG( 0xff, 0, IPT_PEDAL | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 7
+	PORT_START	/* port 7*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 8
+	PORT_START	/* port 8*/
 	PORT_ANALOG( 0xff, 0, IPT_PEDAL2 | IPF_PLAYER1, 30, 10, 0, 0xff )
 
-	PORT_START	// port 9
+	PORT_START	/* port 9*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port A
+	PORT_START	/* port A*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port B
+	PORT_START	/* port B*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( darkedge )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// PSW1
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	// PSW2
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* PSW1*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* PSW2*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM data
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data*/
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, UNKNOWN, BUTTON1, BUTTON2, UNKNOWN)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, UNKNOWN, BUTTON1, BUTTON2, UNKNOWN)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1999,10 +1999,10 @@ INPUT_PORTS_START( darkedge )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
+	PORT_START	/* 0xc00060 - port 4*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00062 - port 5
+	PORT_START	/* 0xc00062 - port 5*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
@@ -2012,7 +2012,7 @@ INPUT_PORTS_START( darkedge )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
 
-	PORT_START	// 0xc00064 - port 6
+	PORT_START	/* 0xc00064 - port 6*/
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -2073,11 +2073,11 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static MACHINE_DRIVER_START( system32 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(V60, OSC_A/2/12) // Reality is 16.somethingMHz, use magic /12 factor to get approximate speed
+	MDRV_CPU_ADD(V60, OSC_A/2/12) /* Reality is 16.somethingMHz, use magic /12 factor to get approximate speed*/
 	MDRV_CPU_MEMORY(system32_readmem,system32_writemem)
 	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
 
-	MDRV_CPU_ADD_TAG("sound", Z80, OSC_A/4)	// verified on real PCB
+	MDRV_CPU_ADD_TAG("sound", Z80, OSC_A/4)	/* verified on real PCB*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem_32, sound_writemem_32)
 	MDRV_CPU_PORTS(sound_readport_32, sound_writeport_32)
@@ -2089,7 +2089,7 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_NVRAM_HANDLER(system32)
 
 	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_AFTER_VBLANK | VIDEO_RGB_DIRECT | VIDEO_HAS_SHADOWS ) // RGB_DIRECT will be needed for alpha
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_AFTER_VBLANK | VIDEO_RGB_DIRECT | VIDEO_HAS_SHADOWS ) /* RGB_DIRECT will be needed for alpha*/
 	MDRV_SCREEN_SIZE(40*8, 28*8)
 	MDRV_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
@@ -2103,7 +2103,7 @@ static MACHINE_DRIVER_START( system32 )
 	MDRV_SOUND_ADD(RF5C68, sys32_rf5c68_interface)
 MACHINE_DRIVER_END
 
-// system 32 hi-res mode is 416x224.  Yes that's TRUSTED.
+/* system 32 hi-res mode is 416x224.  Yes that's TRUSTED.*/
 static MACHINE_DRIVER_START( sys32_hi )
 	MDRV_IMPORT_FROM( system32 )
 
@@ -2116,10 +2116,10 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( jpark )
 	MDRV_IMPORT_FROM( system32 )
 
-	MDRV_CPU_ADD_TAG("cabinet", Z80, OSC_A/8)	// ???
+	MDRV_CPU_ADD_TAG("cabinet", Z80, OSC_A/8)	/* ???*/
 	MDRV_CPU_MEMORY( jpcab_readmem, jpcab_writemem )
 	MDRV_CPU_PORTS( jpcab_readport, jpcab_writeport )
-//	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)		// CPU has an IRQ handler, it appears to be periodic
+/*	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)		*/ /* CPU has an IRQ handler, it appears to be periodic*/
 
 MACHINE_DRIVER_END
 
@@ -2545,7 +2545,7 @@ ROM_START( sonic )
 	ROM_LOAD( "epr15785.36", 0x00000, 0x40000, CRC(0fe7422e) SHA1(b7eaf4736ba155965317bb4ef3b33fc122635151) )
 	ROM_RELOAD(              0x100000, 0x40000             )
 	ROM_LOAD( "mpr15784.35", 0x180000, 0x100000, CRC(42f06714) SHA1(30e45bb2d9b492f0c1acc4fbe1e5869f0559300b) )
-	ROM_LOAD( "mpr15782.33", 0x280000, 0x100000, CRC(cf56b5a0) SHA1(5786228aab120c3361524ba93b418b24fd5b8ffb) ) // (this is the only rom unchanged from the prototype)
+	ROM_LOAD( "mpr15782.33", 0x280000, 0x100000, CRC(cf56b5a0) SHA1(5786228aab120c3361524ba93b418b24fd5b8ffb) ) /* (this is the only rom unchanged from the prototype)*/
 	ROM_LOAD( "mpr15783.34", 0x380000, 0x100000, CRC(e4220eea) SHA1(a546c8bfc24e0695cf79c49e1a867d2595a1ed7f) )
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
@@ -2558,9 +2558,9 @@ ROM_START( sonic )
 	ROMX_LOAD( "mpr15794.28", 0x000004, 0x200000, CRC(8672b480) SHA1(61659e3856cdff0b2bca190a7e60c81b86ea2089) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "mpr15796.26", 0x000006, 0x200000, CRC(95b8011c) SHA1(ebc56ae49a76d04de60b0f81506769219a9885a7) , ROM_SKIP(6)|ROM_GROUPWORD )
 
-	// NOTE: these last 4 are in fact 16 megabit ROMs,
-	// but they were dumped as 8 because the top half
-	// is "FF" in all of them.
+	/* NOTE: these last 4 are in fact 16 megabit ROMs,*/
+	/* but they were dumped as 8 because the top half*/
+	/* is "FF" in all of them.*/
 	ROMX_LOAD( "mpr15791.31", 0x800000, 0x100000, CRC(42217066) SHA1(46d14c632da1bed02bc0a637e34ab9cbf356c5de) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "mpr15793.29", 0x800002, 0x100000, CRC(75bafe55) SHA1(ad33dae062c4bdf8d17d3f6f7c333aa2e7da260e) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "mpr15795.27", 0x800004, 0x100000, CRC(7f3dad30) SHA1(84be1c31df35e1c7fef77e83d6d135378789a1ef) , ROM_SKIP(6)|ROM_GROUPWORD )
@@ -2971,7 +2971,7 @@ ROM_END
 
 static WRITE16_HANDLER( trap_w )
 {
-//	printf("Write %x to magic (mask=%x) at PC=%x\n", data, mem_mask, activecpu_get_pc());
+/*	printf("Write %x to magic (mask=%x) at PC=%x\n", data, mem_mask, activecpu_get_pc());*/
 }
 
 static DRIVER_INIT ( s32 )
@@ -3066,7 +3066,7 @@ static DRIVER_INIT ( holo )
 	system32_use_default_eeprom = EEPROM_SYS32_0;
 	multi32 = 0;
 	system32_mixerShift = 4;
-	system32_temp_kludge = 1;	// holoseum requires the tx tilemap to be flipped
+	system32_temp_kludge = 1;	/* holoseum requires the tx tilemap to be flipped*/
 }
 
 static DRIVER_INIT ( sonic )
@@ -3134,12 +3134,12 @@ static READ16_HANDLER( arescue_handshake_r )
 
 static READ16_HANDLER( arescue_818000_r )
 {
-	return 0; // 0/1 master/slave
+	return 0; /* 0/1 master/slave*/
 }
 
 static READ16_HANDLER( arescue_81000f_r )
 {
-	return 1; // 0/1 2player/1player
+	return 1; /* 0/1 2player/1player*/
 }
 
 
@@ -3200,16 +3200,16 @@ static DRIVER_INIT( arescue )
 	install_mem_read16_handler(0, 0xc00050, 0xc00057, system32_io_analog_r);
 	install_mem_write16_handler(0, 0xc00050, 0xc00057, system32_io_analog_w);
 
-	install_mem_read16_handler(0, 0xa00000, 0xa00006, arescue_dsp_r);  		// protection
+	install_mem_read16_handler(0, 0xa00000, 0xa00006, arescue_dsp_r);  		/* protection*/
 	install_mem_write16_handler(0, 0xa00000, 0xa00006, arescue_dsp_w);
 
-	install_mem_read16_handler(0, 0x818000, 0x818003, arescue_818000_r);	// master/slave
+	install_mem_read16_handler(0, 0x818000, 0x818003, arescue_818000_r);	/* master/slave*/
 
-	install_mem_read16_handler(0, 0x810000, 0x810fff, arescue_comms_r);		// comms space
+	install_mem_read16_handler(0, 0x810000, 0x810fff, arescue_comms_r);		/* comms space*/
 	install_mem_write16_handler(0, 0x810000, 0x810fff, arescue_comms_w);
 
-	install_mem_read16_handler(0, 0x810001, 0x810001, arescue_handshake_r); //  handshake
-	install_mem_read16_handler(0, 0x81000f, 0x81000f, arescue_81000f_r);	//  1player game
+	install_mem_read16_handler(0, 0x810001, 0x810001, arescue_handshake_r); /*  handshake*/
+	install_mem_read16_handler(0, 0x81000f, 0x81000f, arescue_81000f_r);	/*  1player game*/
 
 }
 

@@ -351,7 +351,7 @@ OVERLAY_END
 
 OVERLAY_START( gypsyjug_overlay )
 	OVERLAY_RECT(            0,    0, SCR_HORZ*8,        2*8, MAKE_ARGB(0x04, 32,192, 64))
-//	OVERLAY_RECT(            0,  2*8, SCR_HORZ*8,        6*8, MAKE_ARGB(0x04, 64, 64,192))
+/*	OVERLAY_RECT(            0,  2*8, SCR_HORZ*8,        6*8, MAKE_ARGB(0x04, 64, 64,192))*/
 	OVERLAY_RECT(            0,  2*8, SCR_HORZ*8,        3*8, MAKE_ARGB(0x04, 32,192, 64))
 	OVERLAY_RECT(            0,  3*8, SCR_HORZ*8,        6*8, MAKE_ARGB(0x04, 64, 64,192))
 	OVERLAY_RECT(            0,  6*8, SCR_HORZ*8,        9*8, MAKE_ARGB(0x04,192,160, 32))

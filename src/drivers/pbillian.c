@@ -136,7 +136,7 @@ static READ_HANDLER(data_408_r)
 	
 	switch(select_408)
 	{
-		case    0: return 0; //pb?
+		case    0: return 0; /*pb?*/
 		case    1: return is_pbillian?input_port_3_r(0):((spriteram[0x20]&1)?0x8c:input_port_3_r(0));
 	
 							/* 
@@ -158,9 +158,9 @@ static READ_HANDLER(data_408_r)
 		case    2: return input_port_4_r(0);	
 		case    4: return input_port_0_r(0);
 		case    8: return input_port_1_r(0);
-		case 0x20: return 0; //pb ? 
-		case 0x80: return 0; //pb?
-		case 0xf0: return 0; //hs? 
+		case 0x20: return 0; /*pb ? */
+		case 0x80: return 0; /*pb?*/
+		case 0xf0: return 0; /*hs? */
 		
 	}
 	logerror("408[%x] r at %x\n",select_408,activecpu_get_previouspc());
@@ -215,8 +215,8 @@ static PORT_READ_START( readport )
 	{ 0x0000, 0x01ff, paletteram_r },
 	{ 0x0401, 0x0401, AY8910_read_port_0_r },
 	{ 0x0408, 0x0408, data_408_r},
-	{ 0x0418, 0x0418, MRA_NOP },  //?
-	{ 0x041b, 0x041b, MRA_NOP },  //?
+	{ 0x0418, 0x0418, MRA_NOP },  /*?*/
+	{ 0x041b, 0x041b, MRA_NOP },  /*?*/
 PORT_END
 
 static PORT_WRITE_START( writeport )
@@ -227,7 +227,7 @@ static PORT_WRITE_START( writeport )
 	{ 0x408, 0x408, select_408_w},
 	{ 0x410, 0x410, data_410_w },
 	{ 0x41a, 0x41a, data_41a_w},
-	{ 0x419, 0x419, MWA_NOP },  //? watchdog ?
+	{ 0x419, 0x419, MWA_NOP },  /*? watchdog ?*/
 PORT_END
 
 INPUT_PORTS_START( pbillian )
@@ -336,12 +336,12 @@ INPUT_PORTS_START( hotsmash )
 	
 	PORT_START 
 
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )//$42d
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )/*$42d*/
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x2, IP_ACTIVE_LOW, IPT_SERVICE1)
 
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )//$49c , coin ?? game crashes
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )/*$49c , coin ?? game crashes*/
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )
 		
 	PORT_START

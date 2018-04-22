@@ -17,7 +17,7 @@
 /*  - Space Invaders Deluxe still says Space Invaders Part II,              */
 /*    because according to KLOV, Midway was only allowed to make minor      */
 /*    modifications of the Taito code.  Read all about it here:             */
-/*    http://www.klov.com/S/Space_Invaders_Deluxe.html                      */
+/*    http: //www.klov.com/S/Space_Invaders_Deluxe.html                      /*/
 /*                                                                          */
 /*                                                                          */
 /*  To Do:                                                                  */
@@ -1091,8 +1091,8 @@ INPUT_PORTS_END
 static MEMORY_READ_START( rollingc_readmem )
 	{ 0x0000, 0x1fff, MRA_ROM },
 	{ 0x2000, 0x3fff, MRA_RAM },
-//  { 0x2000, 0x2002, MRA_RAM },
-//  { 0x2003, 0x2003, hack },
+/*  { 0x2000, 0x2002, MRA_RAM },*/
+/*  { 0x2003, 0x2003, hack },*/
 	{ 0x4000, 0x5fff, MRA_ROM },
 	{ 0xa000, 0xbfff, schaser_colorram_r },
 	{ 0xe400, 0xffff, MRA_RAM },
@@ -1589,7 +1589,7 @@ INPUT_PORTS_START( boothill )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 1C_2C ) )
-//	PORT_DIPSETTING(    0x03, DEF_STR( 1C_2C ) )
+/*	PORT_DIPSETTING(    0x03, DEF_STR( 1C_2C ) )*/
 	PORT_DIPNAME( 0x0c, 0x00, "Time" )
 	PORT_DIPSETTING(    0x00, "64" )
 	PORT_DIPSETTING(    0x04, "74" )
@@ -1773,12 +1773,12 @@ static int sfl_int=0;
 
 static READ_HANDLER( sfl_input_r )
 {
-	sfl_int^=0x80;//vblank flag ?
+	sfl_int^=0x80;/*vblank flag ?*/
 	return sfl_int|input_port_1_r(0);
 }
 
 static MEMORY_READ_START( sflush_readmem )
-	{ 0x0000, 0x1fff, MRA_RAM}, //?
+	{ 0x0000, 0x1fff, MRA_RAM}, /*?*/
 	{ 0x4000, 0x5fff, MRA_RAM},
 	{ 0xa000, 0xbfff, schaser_colorram_r},
 	{ 0x8008, 0x8008, input_port_2_r},
@@ -2309,9 +2309,9 @@ INPUT_PORTS_START( spacefev )
 	PORT_DIPSETTING(    0x01, "4" )
 	PORT_DIPSETTING(    0x02, "5" )
 	PORT_DIPSETTING(    0x03, "6" )
-//	PORT_DIPNAME( 0xfc, 0x00, DEF_STR( Unknown ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-//	PORT_DIPSETTING(    0xfc, DEF_STR( Off ) )
+/*	PORT_DIPNAME( 0xfc, 0x00, DEF_STR( Unknown ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( On ) )*/
+/*	PORT_DIPSETTING(    0xfc, DEF_STR( Off ) )*/
 INPUT_PORTS_END
 
 
@@ -2722,7 +2722,7 @@ INPUT_PORTS_START( seawolf )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x0c, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_TILT ) // Reset High Scores
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_TILT ) /* Reset High Scores*/
 	PORT_DIPNAME( 0xe0, 0x20, "Extended Play" )
 	PORT_DIPSETTING(    0x00, "None" )
 	PORT_DIPSETTING(    0x20, "2000" )

@@ -114,13 +114,13 @@ static READ_HANDLER( sauro_sound_command_r )
 static WRITE_HANDLER( sauro_coin1_w )
 {
 	coin_counter_w(0, data);
-	coin_counter_w(0, 0); // to get the coin counter working in sauro, as it doesn't write 0
+	coin_counter_w(0, 0); /* to get the coin counter working in sauro, as it doesn't write 0*/
 }
 
 static WRITE_HANDLER( sauro_coin2_w )
 {
 	coin_counter_w(1, data);
-	coin_counter_w(1, 0); // to get the coin counter working in sauro, as it doesn't write 0
+	coin_counter_w(1, 0); /* to get the coin counter working in sauro, as it doesn't write 0*/
 }
 
 static MEMORY_READ_START( sauro_readmem )
@@ -169,7 +169,7 @@ static MEMORY_WRITE_START( sauro_sound_writemem )
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0xc000, 0xc000, YM3812_control_port_0_w },
 	{ 0xc001, 0xc001, YM3812_write_port_0_w },
-//	{ 0xa000, 0xa000, ADPCM_trigger },
+/*	{ 0xa000, 0xa000, ADPCM_trigger },*/
 	{ 0xe000, 0xe006, MWA_NOP },
 	{ 0xe00e, 0xe00f, MWA_NOP },
 MEMORY_END
@@ -188,7 +188,7 @@ static MEMORY_WRITE_START( trckydoc_writemem )
 	{ 0x0000, 0xdfff, MWA_ROM },
 	{ 0xe000, 0xe7ff, MWA_RAM },
 	{ 0xe800, 0xebff, MWA_RAM, &spriteram, &spriteram_size },
-	{ 0xec00, 0xefff, trckydoc_spriteram_mirror_w }, // it clears sprites from the screen by writing here to set some of the attributes
+	{ 0xec00, 0xefff, trckydoc_spriteram_mirror_w }, /* it clears sprites from the screen by writing here to set some of the attributes*/
 	{ 0xf000, 0xf3ff, tecfri_videoram_w, &tecfri_videoram },
 	{ 0xf400, 0xf7ff, tecfri_colorram_w, &tecfri_colorram },
 	{ 0xf820, 0xf820, YM3812_control_port_0_w },
@@ -340,11 +340,11 @@ static struct YM3526interface ym3812_interface =
 
 static MACHINE_DRIVER_START( tecfri )
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", Z80, 4000000)        // 4 MHz???
+	MDRV_CPU_ADD_TAG("main", Z80, 4000000)        /* 4 MHz???*/
 	MDRV_CPU_VBLANK_INT(irq0_line_hold, 1)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(5000)  // frames per second, vblank duration (otherwise sprites lag)
+	MDRV_VBLANK_DURATION(5000)  /* frames per second, vblank duration (otherwise sprites lag)*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -376,10 +376,10 @@ static MACHINE_DRIVER_START( sauro )
 	MDRV_CPU_MEMORY(sauro_readmem, sauro_writemem)
 	MDRV_CPU_PORTS(sauro_readport, sauro_writeport)
 
-	MDRV_CPU_ADD(Z80, 4000000)	// 4 MHz?
+	MDRV_CPU_ADD(Z80, 4000000)	/* 4 MHz?*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sauro_sound_readmem, sauro_sound_writemem)
-	MDRV_CPU_VBLANK_INT(sauro_interrupt, 8) // ?
+	MDRV_CPU_VBLANK_INT(sauro_interrupt, 8) /* ?*/
 
 	MDRV_GFXDECODE(sauro_gfxdecodeinfo)
 
@@ -436,12 +436,12 @@ ROM_START( trckydoc )
 	ROM_LOAD( "trckydoc.c1",    0x08000, 0x4000, CRC(1d25574b) SHA1(924e4376a7fe6cdfff0fa6045aaa3f7c0633d275) )
 	ROM_LOAD( "trckydoc.a1",    0x0c000, 0x4000, CRC(436c59ba) SHA1(2aa9c155c432a3c81420520c53bb944dcc613a94) )
 
-	ROM_REGION( 0x0c00, REGION_PROMS, 0 ) // colour proms
+	ROM_REGION( 0x0c00, REGION_PROMS, 0 ) /* colour proms*/
 	ROM_LOAD( "tdclr3.prm",    0x0000, 0x0100, CRC(671d0140) SHA1(7d5fcd9589c46590b0a240cac428f993201bec2a) )
 	ROM_LOAD( "tdclr2.prm",    0x0400, 0x0100, CRC(874f9050) SHA1(db40d68f5166657fce0eadcd82143112b0388894) )
 	ROM_LOAD( "tdclr1.prm",    0x0800, 0x0100, CRC(57f127b0) SHA1(3d2b18a7a31933579f06d92fa0cc3f0e1fe8b98a) )
 
-	ROM_REGION( 0x0200, REGION_USER1, 0 ) // unknown
+	ROM_REGION( 0x0200, REGION_USER1, 0 ) /* unknown*/
 	ROM_LOAD( "tdprm.prm",    0x0000, 0x0200,  CRC(5261bc11) SHA1(1cc7a9a7376e65f4587b75ef9382049458656372) )
 ROM_END
 

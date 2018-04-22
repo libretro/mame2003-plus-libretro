@@ -178,17 +178,17 @@ NEP-16
 #include "vidhrdw/generic.h"
 #include <time.h>
 
-#define BIOS_SKIP 1 // Skip Bios as it takes too long and doesn't complete atm.
+#define BIOS_SKIP 1 /* Skip Bios as it takes too long and doesn't complete atm.*/
 
-// Defined in vidhrdw
+/* Defined in vidhrdw*/
 extern void skns_sprite_kludge(int x, int y);
 
 data32_t *skns_tilemapA_ram, *skns_tilemapB_ram, *skns_v3slc_ram;
 data32_t *skns_palette_ram, *skns_v3t_ram, *skns_main_ram, *skns_cache_ram;
 data32_t *skns_pal_regs, *skns_v3_regs, *skns_spc_regs;
 
-data32_t skns_v3t_dirty[0x4000]; // allocate this elsewhere?
-data32_t skns_v3t_4bppdirty[0x8000]; // allocate this elsewhere?
+data32_t skns_v3t_dirty[0x4000]; /* allocate this elsewhere?*/
+data32_t skns_v3t_4bppdirty[0x8000]; /* allocate this elsewhere?*/
 int skns_v3t_somedirty,skns_v3t_4bpp_somedirty;
 
 static UINT8 bright_spc_b=0x00, bright_spc_g=0x00, bright_spc_r=0x00;
@@ -289,7 +289,7 @@ static void hit_recalc(void)
 }
 
 WRITE32_HANDLER ( skns_hit_w )
-//void hit_w(UINT32 adr, UINT32 data, int type)
+/*void hit_w(UINT32 adr, UINT32 data, int type)*/
 {
 	int adr = offset * 4;
 
@@ -346,7 +346,7 @@ WRITE32_HANDLER ( skns_hit_w )
 		hit.org = data;
 	break;
 	default:
-//		log_write("HIT", adr, data, type);
+/*		log_write("HIT", adr, data, type);*/
 	break;
 	}
 	hit_recalc();
@@ -354,17 +354,17 @@ WRITE32_HANDLER ( skns_hit_w )
 
 WRITE32_HANDLER ( skns_hit2_w )
 {
-//	log_event("HIT", "Set disconnect to %02x", data);
+/*	log_event("HIT", "Set disconnect to %02x", data);*/
 	hit.disconnect = data;
 }
 
 
 READ32_HANDLER( skns_hit_r )
-//UINT32 hit_r(UINT32 adr, int type)
+/*UINT32 hit_r(UINT32 adr, int type)*/
 {
 	int adr = offset *4;
 
-//	log_read("HIT", adr, type);
+/*	log_read("HIT", adr, type);*/
 
 	if(hit.disconnect)
 		return 0x0000;
@@ -440,7 +440,7 @@ READ32_HANDLER( skns_hit_r )
 	case 0xbc:
 		return hit.z2_p2;
 	default:
-//		log_read("HIT", adr, type);
+/*		log_read("HIT", adr, type);*/
 	return 0;
 	}
 }
@@ -472,10 +472,10 @@ static INTERRUPT_GEN(skns_interrupt)
 	switch(cpu_getiloops())
 	{
 		case 0:
-			interrupt = 5; // VBLANK
+			interrupt = 5; /* VBLANK*/
 			break;
 		case 1:
-			interrupt = 1; // SPC
+			interrupt = 1; /* SPC*/
 			break;
 	}
 	cpu_set_irq_line(0,interrupt,HOLD_LINE);
@@ -534,7 +534,7 @@ INPUT_PORTS_START( skns )
 
 	PORT_START  /* DSW */
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR(Flip_Screen) ) // This port affects 0x040191c8 function
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR(Flip_Screen) ) /* This port affects 0x040191c8 function*/
 	PORT_DIPSETTING(    0x02, DEF_STR(Off) )
 	PORT_DIPSETTING(    0x00, DEF_STR(On) )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR(Unknown) )
@@ -614,7 +614,7 @@ INPUT_PORTS_START( jjparads )
 
 	PORT_START  /* DSW */
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR(Flip_Screen) ) // This port affects 0x040191c8 function
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR(Flip_Screen) ) /* This port affects 0x040191c8 function*/
 	PORT_DIPSETTING(    0x02, DEF_STR(Off) )
 	PORT_DIPSETTING(    0x00, DEF_STR(On) )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR(Unknown) )
@@ -676,10 +676,10 @@ static WRITE32_HANDLER( skns_io_w )
 	case 2:
 		if(((mem_mask & 0xff000000) == 0))
 		{ /* Coin Lock/Count */
-//			coin_counter_w(0, data & 0x01000000);
-//			coin_counter_w(1, data & 0x02000000);
-//			coin_lockout_w(0, ~data & 0x04000000);
-//			coin_lockout_w(1, ~data & 0x08000000); // Works in puzzloop, others behave strange.
+/*			coin_counter_w(0, data & 0x01000000);*/
+/*			coin_counter_w(1, data & 0x02000000);*/
+/*			coin_lockout_w(0, ~data & 0x04000000);*/
+/*			coin_lockout_w(1, ~data & 0x08000000); */ /* Works in puzzloop, others behave strange.*/
 		}
 		if(((mem_mask & 0x00ff0000) == 0))
 		{ /* Analogue Input Select */
@@ -745,8 +745,8 @@ static READ32_HANDLER( msm6242_r )
 
 	time(&tms);
 	tm = localtime(&tms);
-	// The clock is not y2k-compatible, wrap back 10 years, screw the leap years
-	//  tm->tm_year -= 10;
+	/* The clock is not y2k-compatible, wrap back 10 years, screw the leap years*/
+	/*  tm->tm_year -= 10;*/
 
 	switch(offset) {
 	case 0:
@@ -789,9 +789,9 @@ static void palette_set_rgb_brightness (int offset, UINT8 brightness_r, UINT8 br
 
 	alpha = ((skns_palette_ram[offset] >> 15  ) & 0x1);
 
-	if(offset<(0x40*256)) { // 1st half is for Sprites
+	if(offset<(0x40*256)) { /* 1st half is for Sprites*/
 		use_bright = use_spc_bright;
-	} else { // V3 bg's
+	} else { /* V3 bg's*/
 		use_bright = use_v3_bright;
 	}
 
@@ -811,7 +811,7 @@ static void palette_set_rgb_brightness (int offset, UINT8 brightness_r, UINT8 br
 	palette_set_color(offset,r,g,b);
 }
 
-// This ignores the alpha values atm.
+/* This ignores the alpha values atm.*/
 static int spc_changed=0, v3_changed=0;
 
 static WRITE32_HANDLER ( skns_pal_regs_w )
@@ -820,50 +820,50 @@ static WRITE32_HANDLER ( skns_pal_regs_w )
 
 	switch ( offset )
 	{
-	case (0x00/4): // RWRA0
+	case (0x00/4): /* RWRA0*/
 		if( use_spc_bright != (data&1) ) {
 			use_spc_bright = data&1;
 			spc_changed = 1;
 		}
 		break;
-	case (0x04/4): // RWRA1
+	case (0x04/4): /* RWRA1*/
 		if( bright_spc_g != (data&0xff) ) {
 			bright_spc_g = data&0xff;
 			spc_changed = 1;
 		}
 		break;
-	case (0x08/4): // RWRA2
+	case (0x08/4): /* RWRA2*/
 		if( bright_spc_r != (data&0xff) ) {
 			bright_spc_r = data&0xff;
 			spc_changed = 1;
 		}
 		break;
-	case (0x0C/4): // RWRA3
+	case (0x0C/4): /* RWRA3*/
 		if( bright_spc_b != (data&0xff) ) {
 			bright_spc_b = data&0xff;
 			spc_changed = 1;
 		}
 		break;
 
-	case (0x10/4): // RWRB0
+	case (0x10/4): /* RWRB0*/
 		if( use_v3_bright != (data&1) ) {
 			use_v3_bright = data&1;
 			v3_changed = 1;
 		}
 		break;
-	case (0x14/4): // RWRB1
+	case (0x14/4): /* RWRB1*/
 		if( bright_v3_g != (data&0xff) ) {
 			bright_v3_g = data&0xff;
 			v3_changed = 1;
 		}
 		break;
-	case (0x18/4): // RWRB2
+	case (0x18/4): /* RWRB2*/
 		if( bright_v3_r != (data&0xff) ) {
 			bright_v3_r = data&0xff;
 			v3_changed = 1;
 		}
 		break;
-	case (0x1C/4): // RWRB3
+	case (0x1C/4): /* RWRB3*/
 		if( bright_v3_b != (data&0xff) ) {
 			bright_v3_b = data&0xff;
 			v3_changed = 1;
@@ -900,12 +900,12 @@ static WRITE32_HANDLER ( skns_palette_ram_w )
 
 	alpha = ((skns_palette_ram[offset] >> 15  ) & 0x1);
 
-	if(offset<(0x40*256)) { // 1st half is for Sprites
+	if(offset<(0x40*256)) { /* 1st half is for Sprites*/
 		use_bright = use_spc_bright;
 		brightness_b = bright_spc_b;
 		brightness_g = bright_spc_g;
 		brightness_r = bright_spc_r;
-	} else { // V3 bg's
+	} else { /* V3 bg's*/
 		use_bright = use_v3_bright;
 		brightness_b = bright_v3_b;
 		brightness_g = bright_v3_g;
@@ -940,7 +940,7 @@ static WRITE32_HANDLER( skns_v3t_w )
 	skns_v3t_4bpp_somedirty = 1;
 
 	data = skns_v3t_ram[offset];
-// i think we need to swap around to decode .. endian issues?
+/* i think we need to swap around to decode .. endian issues?*/
 	btiles[offset*4+0] = (data & 0xff000000) >> 24;
 	btiles[offset*4+1] = (data & 0x00ff0000) >> 16;
 	btiles[offset*4+2] = (data & 0x0000ff00) >> 8;
@@ -963,7 +963,7 @@ static MEMORY_READ32_START( skns_readmem )
 	/* In between is write only */
 	{ 0x0040000c, 0x0040000f, nova_input_port_3_r } ,
 	{ 0x00800000, 0x00801fff, MRA32_RAM       }, /* 'backup' RAM */
-//	{ 0x00c00000, 0x00c00003, skns_ymz280_r   }, /* ymz280 (sound) */
+/*	{ 0x00c00000, 0x00c00003, skns_ymz280_r   },  // ymz280 (sound) /*/
 	{ 0x01000000, 0x0100000f, msm6242_r       } ,
 	{ 0x02000000, 0x02003fff, MRA32_RAM       }, /* 'spc' RAM */
 	{ 0x02100000, 0x0210003f, MRA32_RAM       }, /* 'spc' */
@@ -1047,7 +1047,7 @@ static struct YMZ280Binterface ymz280b_intf =
 	{ 33333333/2 },
 	{ REGION_SOUND1 },
 	{ YM3012_VOL(100,MIXER_PAN_LEFT,100,MIXER_PAN_RIGHT) },
-	{ 0 }	// irq ?
+	{ 0 }	/* irq ?*/
 };
 
 static MACHINE_DRIVER_START(skns)
@@ -1179,21 +1179,21 @@ static READ32_HANDLER( panicstr_speedup_r )
 	return skns_main_ram[0x0f19e4/4];
 }
 
-static READ32_HANDLER( sengekis_speedup_r ) // 60006ee  600308e
+static READ32_HANDLER( sengekis_speedup_r ) /* 60006ee  600308e*/
 {
 	if (activecpu_get_pc()==0x60006ee) cpu_spinuntil_int();
 	return skns_main_ram[0xb74bc/4];
 }
 
-static READ32_HANDLER( sengekij_speedup_r ) // 60006ee  600308e
+static READ32_HANDLER( sengekij_speedup_r ) /* 60006ee  600308e*/
 {
 	if (activecpu_get_pc()==0x60006ee) cpu_spinuntil_int();
 	return skns_main_ram[0xb7380/4];
 }
 
 static DRIVER_INIT( skns )     { install_mem_read32_handler(0, 0x6000028, 0x600002b, bios_skip_r );  }
-static DRIVER_INIT( galpani4 ) { skns_sprite_kludge(-5,-1); init_skns();  } // Idle Loop caught by sh-2 core
-static DRIVER_INIT( galpanis ) { skns_sprite_kludge(-5,-1); init_skns();  } // Idle Loop caught by sh-2 core
+static DRIVER_INIT( galpani4 ) { skns_sprite_kludge(-5,-1); init_skns();  } /* Idle Loop caught by sh-2 core*/
+static DRIVER_INIT( galpanis ) { skns_sprite_kludge(-5,-1); init_skns();  } /* Idle Loop caught by sh-2 core*/
 static DRIVER_INIT( cyvern )   { skns_sprite_kludge(+0,+2); init_skns(); install_mem_read32_handler(0, 0x604d3c8, 0x604d3cb, cyvern_speedup_r );   }
 static DRIVER_INIT( galpans2 ) { skns_sprite_kludge(-1,-1); init_skns(); install_mem_read32_handler(0, 0x60fb6bc, 0x60fb6bf, galpans2_speedup_r );  }
 static DRIVER_INIT( gutsn )    { skns_sprite_kludge(+0,+0); init_skns(); install_mem_read32_handler(0, 0x600c780, 0x600c783, gutsn_speedup_r );  }
@@ -1208,7 +1208,7 @@ static DRIVER_INIT( ryouran )  { skns_sprite_kludge(+5,+1); init_skns(); install
 static DRIVER_INIT( teljan )   { skns_sprite_kludge(+5,+1); init_skns(); install_mem_read32_handler(0, 0x6002fb4, 0x6002fb7, teljan_speedup_r );  }
 static DRIVER_INIT( sengekis ) { skns_sprite_kludge(-192,-272); init_skns(); install_mem_read32_handler(0, 0x60b74bc, 0x60b74bf, sengekis_speedup_r ); }
 static DRIVER_INIT( sengekij ) { skns_sprite_kludge(-192,-272); init_skns(); install_mem_read32_handler(0, 0x60b7380, 0x60b7383, sengekij_speedup_r ); }
-static DRIVER_INIT( sarukani ) { skns_sprite_kludge(-1,-1); init_skns();  } // Speedup is in skns_io_w()
+static DRIVER_INIT( sarukani ) { skns_sprite_kludge(-1,-1); init_skns();  } /* Speedup is in skns_io_w()*/
 
 
 
@@ -1673,7 +1673,7 @@ GAMEX( 1998, cyvern,   skns,    skns, skns,     cyvern,   ROT90, "Kaneko", "Cyve
 GAMEX( 1999, galpans2, skns,    skns, skns,     galpans2, ROT0,  "Kaneko", "Gals Panic S2 (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, panicstr, skns,    skns, skns,     panicstr, ROT0,  "Kaneko", "Panic Street (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, senknow , skns,    skns, skns,     senknow,  ROT0,  "Kaneko / Kouyousha", "Sen-Know (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 2000, gutsn,    skns,    skns, skns,     gutsn,    ROT0,  "Kaneko / Kouyousha", "Guts'n (Japan)", GAME_IMPERFECT_GRAPHICS ) // quite fragile, started working of it's own accord in 0.69 :)
+GAMEX( 2000, gutsn,    skns,    skns, skns,     gutsn,    ROT0,  "Kaneko / Kouyousha", "Guts'n (Japan)", GAME_IMPERFECT_GRAPHICS ) /* quite fragile, started working of it's own accord in 0.69 :)*/
 GAMEX( 1998, puzzloop, skns,    skns, skns,     puzzloop, ROT0,  "Mitchell", "Puzz Loop (Europe)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, puzloopj, puzzloop,skns, skns,     puzloopj, ROT0,  "Mitchell", "Puzz Loop (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1998, puzloopu, puzzloop,skns, skns,     puzloopu, ROT0,  "Mitchell", "Puzz Loop (USA)", GAME_IMPERFECT_GRAPHICS )

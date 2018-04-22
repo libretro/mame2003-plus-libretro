@@ -122,7 +122,7 @@ static void nmi_callback(int param)
 
 static WRITE_HANDLER( sound_arm_nmi_w )
 {
-//	sound_nmi_enabled = 1;
+/*	sound_nmi_enabled = 1;*/
 	cpu_set_nmi_line(1,CLEAR_LINE);
 	timer_set(TIME_IN_USEC(50),0,nmi_callback);	/* kludge until the K053260 is emulated correctly */
 }
@@ -249,7 +249,7 @@ INPUT_PORTS_START( parodius )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "No Use" )
+/*	PORT_DIPSETTING(    0x00, "No Use" )*/
 
 	PORT_START	/* DSW #2 */
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )
@@ -313,7 +313,7 @@ static struct K053260_interface k053260_interface =
 	{ 3579545 },
 	{ REGION_SOUND1 }, /* memory region */
 	{ { MIXER(70,MIXER_PAN_LEFT), MIXER(70,MIXER_PAN_RIGHT) } },
-//	{ sound_nmi_callback }
+/*	{ sound_nmi_callback }*/
 };
 
 

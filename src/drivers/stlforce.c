@@ -112,8 +112,8 @@ static MEMORY_WRITE16_START( stlforce_writemem )
 	{ 0x105000, 0x107fff, MWA16_RAM }, /* unknown / ram */
 	{ 0x108000, 0x108fff, MWA16_RAM, &stlforce_spriteram }, /* or is this not sprite ram .. */
 	{ 0x109000, 0x11ffff, MWA16_RAM },
-//	{ 0x400010, 0x400013, MWA16_NOP },
-//	{ 0x40001E, 0x40001F, MWA16_NOP },
+/*	{ 0x400010, 0x400013, MWA16_NOP },*/
+/*	{ 0x40001E, 0x40001F, MWA16_NOP },*/
 	{ 0x410000, 0x410001, OKIM6295_data_0_lsb_w },
 MEMORY_END
 
@@ -141,9 +141,9 @@ INPUT_PORTS_START( stlforce )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_SERVICE( 0x0008, IP_ACTIVE_LOW )
-	PORT_BIT( 0x0010, IP_ACTIVE_HIGH,IPT_UNKNOWN )		// To be confirmed (see notes)
+	PORT_BIT( 0x0010, IP_ACTIVE_HIGH,IPT_UNKNOWN )		/* To be confirmed (see notes)*/
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )		// To be confirmed (see notes)
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )		/* To be confirmed (see notes)*/
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
@@ -217,7 +217,7 @@ static MACHINE_DRIVER_START( stlforce )
 	MDRV_VIDEO_UPDATE(stlforce)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(OKIM6295, okim6295_interface) // guess
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface) /* guess*/
 MACHINE_DRIVER_END
 
 ROM_START( stlforce )
@@ -226,7 +226,7 @@ ROM_START( stlforce )
 	ROM_LOAD16_BYTE( "stlforce.104", 0x00001, 0x20000, CRC(69b5f429) SHA1(5bd20fad91a22f4d62f85a5190d72dd824ee26a5) )
 
 	ROM_REGION( 0x80000, REGION_SOUND1, 0 ) /* samples */
-	ROM_LOAD( "stlforce.u1", 0x00000, 0x80000, CRC(0a55edf1) SHA1(091f12e8110c62df22b370a2e710c930ba06e8ca) ) // 1xxxxxxxxxxxxxxxxxx = 0xFF (can probably be cut)
+	ROM_LOAD( "stlforce.u1", 0x00000, 0x80000, CRC(0a55edf1) SHA1(091f12e8110c62df22b370a2e710c930ba06e8ca) ) /* 1xxxxxxxxxxxxxxxxxx = 0xFF (can probably be cut)*/
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 ) /* 16x16 bg tiles & 8x8 tx tiles merged */
 	ROM_LOAD16_BYTE( "stlforce.u27", 0x000001, 0x080000, CRC(c42ef365) SHA1(40e9ee29ea14b3bc2fbfa4e6acb7d680cf72f01a) )

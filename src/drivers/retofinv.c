@@ -127,7 +127,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x5fff, MWA_ROM },
-//	{ 0x7fff, 0x7fff, MWA_NOP },
+/*	{ 0x7fff, 0x7fff, MWA_NOP },*/
 	{ 0x8000, 0x83ff, retofinv_fg_videoram_w, &retofinv_fg_videoram, &retofinv_videoram_size },
 	{ 0x8400, 0x87ff, retofinv_fg_colorram_w, &retofinv_fg_colorram },
 	{ 0x8800, 0x9fff, MWA_RAM, &sharedram },

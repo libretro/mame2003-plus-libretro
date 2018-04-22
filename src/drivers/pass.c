@@ -132,8 +132,8 @@ MEMORY_END
 static MEMORY_WRITE16_START( pass_writemem )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x080000, 0x083fff, MWA16_RAM },
-	{ 0x200000, 0x200fff, pass_bg_videoram_w, &pass_bg_videoram }, // Background
-	{ 0x210000, 0x213fff, pass_fg_videoram_w, &pass_fg_videoram }, // Foreground
+	{ 0x200000, 0x200fff, pass_bg_videoram_w, &pass_bg_videoram }, /* Background*/
+	{ 0x210000, 0x213fff, pass_fg_videoram_w, &pass_fg_videoram }, /* Foreground*/
 	{ 0x220000, 0x2203ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
 	{ 0x230000, 0x230001, pass_soundwrite },
 MEMORY_END
@@ -167,28 +167,28 @@ MEMORY_END
 /* todo : work out function of unknown but used dsw */
 INPUT_PORTS_START( pass )
 	PORT_START	/* DSW */
-	PORT_DIPNAME( 0x0001, 0x0001, "Unknown SW 0-0" )	// USED ! Check code at 0x0046ea
+	PORT_DIPNAME( 0x0001, 0x0001, "Unknown SW 0-0" )	/* USED ! Check code at 0x0046ea*/
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0002, 0x0002, "Unused SW 0-1" )		// Unused ?
+	PORT_DIPNAME( 0x0002, 0x0002, "Unused SW 0-1" )		/* Unused ?*/
 	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0004, 0x0004, "Unused SW 0-2" )		// Unused ?
+	PORT_DIPNAME( 0x0004, 0x0004, "Unused SW 0-2" )		/* Unused ?*/
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0008, 0x0008, "Unused SW 0-3" )		// Unused ?
+	PORT_DIPNAME( 0x0008, 0x0008, "Unused SW 0-3" )		/* Unused ?*/
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0010, 0x0010, "Unused SW 0-4" )		// Unused ?
+	PORT_DIPNAME( 0x0010, 0x0010, "Unused SW 0-4" )		/* Unused ?*/
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0020, 0x0020, "Unused SW 0-5" )		// Unused ?
+	PORT_DIPNAME( 0x0020, 0x0020, "Unused SW 0-5" )		/* Unused ?*/
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0040, 0x0040, "Unused SW 0-6" )		// Unused ?
+	PORT_DIPNAME( 0x0040, 0x0040, "Unused SW 0-6" )		/* Unused ?*/
 	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0080, 0x0080, "Unused SW 0-7" )		// Unused ?
+	PORT_DIPNAME( 0x0080, 0x0080, "Unused SW 0-7" )		/* Unused ?*/
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Lives ) )
@@ -196,16 +196,16 @@ INPUT_PORTS_START( pass )
 	PORT_DIPSETTING(      0x0300, "3" )
 	PORT_DIPSETTING(      0x0100, "4" )
 	PORT_DIPSETTING(      0x0200, "5" )
-	PORT_DIPNAME( 0x0400, 0x0400, "Unused SW 0-10" )	// Unused ?
+	PORT_DIPNAME( 0x0400, 0x0400, "Unused SW 0-10" )	/* Unused ?*/
 	PORT_DIPSETTING(      0x0400, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x1800, 0x0000, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(      0x0000, "Easy" )			// Time = 99
-	PORT_DIPSETTING(      0x1800, "Normal" )			// Time = 88
-	PORT_DIPSETTING(      0x0800, "Hard" )			// Time = 77
-	PORT_DIPSETTING(      0x1000, "Hardest" )			// Time = 66
+	PORT_DIPSETTING(      0x0000, "Easy" )			/* Time = 99*/
+	PORT_DIPSETTING(      0x1800, "Normal" )			/* Time = 88*/
+	PORT_DIPSETTING(      0x0800, "Hard" )			/* Time = 77*/
+	PORT_DIPSETTING(      0x1000, "Hardest" )			/* Time = 66*/
 	PORT_DIPNAME( 0xe000, 0xe000, DEF_STR( Coinage ) )
-//	PORT_DIPSETTING(      0x0000, DEF_STR( 4C_1C ) )
+/*	PORT_DIPSETTING(      0x0000, DEF_STR( 4C_1C ) )*/
 	PORT_DIPSETTING(      0x8000, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x4000, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0xc000, DEF_STR( 2C_1C ) )

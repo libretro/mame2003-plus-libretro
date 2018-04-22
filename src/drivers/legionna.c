@@ -248,9 +248,9 @@ static WRITE16_HANDLER( mcu_w )
 
 	switch (offset)
 	{
-		// 61a bit 0 is flipscreen
-		// 61c probably layer disables, like Dcon
-		// 620 - 62a scroll control;  is there a layer priority switch...?
+		/* 61a bit 0 is flipscreen*/
+		/* 61c probably layer disables, like Dcon*/
+		/* 620 - 62a scroll control;  is there a layer priority switch...?*/
 
 		case (0x620/2):
 		{
@@ -380,9 +380,9 @@ static WRITE16_HANDLER( cop2_mcu_w )
 			break;
 		}
 
-		// 65a bit 0 is flipscreen
-		// 65c probably layer disables, like Dcon? Used on screen when you press P1-4 start (values 13, 11, 0 seen)
-		// 660 - 66a scroll control;  is there a layer priority switch...?
+		/* 65a bit 0 is flipscreen*/
+		/* 65c probably layer disables, like Dcon? Used on screen when you press P1-4 start (values 13, 11, 0 seen)*/
+		/* 660 - 66a scroll control;  is there a layer priority switch...?*/
 
 		case (0x660/2):
 		{
@@ -471,7 +471,7 @@ static READ16_HANDLER( godzilla_cop_mcu_r )
 			return input_port_3_word_r(0,0);
 
 	}
-//logerror("CPU0 PC %06x unknown MCU read offset: %04x\n",activecpu_get_previouspc(),offset);
+/*logerror("CPU0 PC %06x unknown MCU read offset: %04x\n",activecpu_get_previouspc(),offset);*/
 
 	return mcu_ram[offset];
 }
@@ -502,8 +502,8 @@ static WRITE16_HANDLER( godzilla_cop_mcu_w )
 			seibu_main_word_w(6,mcu_ram[offset],0xff00);
 			break;
 		}
-//		default:
-//		logerror("CPU0 PC %06x MCU write offset: %04x data: %04x\n",activecpu_get_previouspc(),offset*2,data);
+/*		default:*/
+/*		logerror("CPU0 PC %06x MCU write offset: %04x data: %04x\n",activecpu_get_previouspc(),offset*2,data);*/
 	}
 }
 
@@ -539,9 +539,9 @@ static READ16_HANDLER( sdgndmrb_cop_mcu_r )
 		case (0x75c/2):
 			return input_port_5_word_r(0,0);
 	}
-//	return rand();
-//	logerror("CPU0 PC %06x MCU read offset: %04x\n",activecpu_get_previouspc(),offset*2);
-//	usrintf_showmessage("CPU0 PC %06x MCU read offset: %04x",activecpu_get_previouspc(),offset*2);
+/*	return rand();*/
+/*	logerror("CPU0 PC %06x MCU read offset: %04x\n",activecpu_get_previouspc(),offset*2);*/
+/*	usrintf_showmessage("CPU0 PC %06x MCU read offset: %04x",activecpu_get_previouspc(),offset*2);*/
 
 	return mcu_ram[offset];
 }
@@ -634,9 +634,9 @@ static WRITE16_HANDLER( sdgndmrb_cop_mcu_w )
 			break;
 		}
 
-//		default:
-//		logerror("CPU0 PC %06x MCU write offset: %04x data: %04x\n",activecpu_get_previouspc(),offset*2,data);
-//		usrintf_showmessage("CPU0 PC %06x MCU write offset: %04x data: %04x",activecpu_get_previouspc(),offset*2,data);
+/*		default:*/
+/*		logerror("CPU0 PC %06x MCU write offset: %04x data: %04x\n",activecpu_get_previouspc(),offset*2,data);*/
+/*		usrintf_showmessage("CPU0 PC %06x MCU write offset: %04x data: %04x",activecpu_get_previouspc(),offset*2,data);*/
 	}
 }
 
@@ -652,10 +652,10 @@ static MEMORY_READ16_START( legionna_readmem )
 
 	/* The 4000-4fff area contains PALETTE words and may be extra paletteram? */
 	{ 0x104000, 0x104fff, MRA16_RAM },	/* palette mirror ? */
-//	{ 0x104000, 0x10401f, MRA16_RAM },	/* debugging... */
-//	{ 0x104200, 0x1043ff, MRA16_RAM },	/* ??? */
-//	{ 0x104600, 0x1047ff, MRA16_RAM },	/* ??? */
-//	{ 0x104800, 0x10481f, MRA16_RAM },	/* ??? */
+/*	{ 0x104000, 0x10401f, MRA16_RAM },	 // debugging... /*/
+/*	{ 0x104200, 0x1043ff, MRA16_RAM },	 // ??? /*/
+/*	{ 0x104600, 0x1047ff, MRA16_RAM },	 // ??? /*/
+/*	{ 0x104800, 0x10481f, MRA16_RAM },	 // ??? /*/
 
 	{ 0x105000, 0x105fff, MRA16_RAM },	/* spriteram */
 	{ 0x106000, 0x106fff, MRA16_RAM },
@@ -673,11 +673,11 @@ static MEMORY_WRITE16_START( legionna_writemem )
 
 	/* The 4000-4fff area contains PALETTE words and may be extra paletteram? */
 	{ 0x104000, 0x104fff, MWA16_RAM },
-//	{ 0x104000, 0x104fff, legionna_paletteram16_w },
-//	{ 0x104000, 0x10401f, MWA16_RAM },
-//	{ 0x104200, 0x1043ff, MWA16_RAM },
-//	{ 0x104600, 0x1047ff, MWA16_RAM },
-//	{ 0x104800, 0x10481f, MWA16_RAM },
+/*	{ 0x104000, 0x104fff, legionna_paletteram16_w },*/
+/*	{ 0x104000, 0x10401f, MWA16_RAM },*/
+/*	{ 0x104200, 0x1043ff, MWA16_RAM },*/
+/*	{ 0x104600, 0x1047ff, MWA16_RAM },*/
+/*	{ 0x104800, 0x10481f, MWA16_RAM },*/
 
 	{ 0x105000, 0x105fff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x106000, 0x106fff, MWA16_RAM },	/* is this used outside inits ?? */
@@ -881,7 +881,7 @@ INPUT_PORTS_START( legionna )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
-//	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+/*	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )*/
 INPUT_PORTS_END
 
 
@@ -968,8 +968,8 @@ INPUT_PORTS_START( heatbrl )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_START4 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_COIN4 )	// haven't found coin4, maybe it doesn't exist
-//	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_COIN4 )	/* haven't found coin4, maybe it doesn't exist*/
+/*	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )*/
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW,  IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER3 )

@@ -237,7 +237,7 @@ static WRITE16_HANDLER( dspram_w )
 static READ16_HANDLER( dsp_HOLD_signal_r )
 {
 	/* HOLD signal is active low */
-	//	logerror("TMS32025:%04x Reading %01x level from HOLD signal\n",activecpu_get_previouspc(),dsp_HOLD_signal);
+	/*	logerror("TMS32025:%04x Reading %01x level from HOLD signal\n",activecpu_get_previouspc(),dsp_HOLD_signal);*/
 
 	return dsp_HOLD_signal;
 }
@@ -349,7 +349,7 @@ static MEMORY_WRITE16_START( airsys_writemem )
 	{ 0x180000, 0x183fff, MWA16_RAM },			/* "gradiation ram (0)" */
 	{ 0x184000, 0x187fff, MWA16_RAM },			/* "gradiation ram (1)" */
 	{ 0x188000, 0x18bfff, airsys_paletteram16_w, &paletteram16 },
-//	{ 0x188000, 0x18bfff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
+/*	{ 0x188000, 0x18bfff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },*/
 	{ 0x800000, 0x820fff, TC0080VCO_word_w },		/* tilemaps, sprites */
 	{ 0x908000, 0x90ffff, MWA16_RAM, &taitoair_line_ram },	/* "line ram" */
 	{ 0x910000, 0x91ffff, MWA16_RAM, &dsp_ram },	/* "dsp common ram" (TMS320C25) */
@@ -521,7 +521,7 @@ INPUT_PORTS_START( ainferno )
 	PORT_START  /* DSWA */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, "Mechanized (alt)?" )
-	PORT_DIPSETTING(    0x01, "Special Sensors" )	// on its test mode screen
+	PORT_DIPSETTING(    0x01, "Special Sensors" )	/* on its test mode screen*/
 	PORT_DIPSETTING(    0x02, "Mechanized" )
 	PORT_DIPSETTING(    0x03, "Standard" )
 	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
@@ -651,7 +651,7 @@ static MACHINE_DRIVER_START( airsys )
 	MDRV_CPU_ADD(Z80,8000000 / 2)			/* 4 MHz ??? */
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 
-	MDRV_CPU_ADD(TMS32025,24000000)			/* 24 MHz ??? *///
+	MDRV_CPU_ADD(TMS32025,24000000)			/* 24 MHz ??? */
 	MDRV_CPU_MEMORY(DSP_readmem,DSP_writemem)
 	MDRV_CPU_PORTS(DSP_readport,DSP_writeport)
 
@@ -659,7 +659,7 @@ static MACHINE_DRIVER_START( airsys )
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(10)
 
-	/* video hardware */
+	// video hardware
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(64*16, 64*16)
 	MDRV_VISIBLE_AREA(0*16, 32*16-1, 3*16, 28*16-1)
@@ -669,7 +669,7 @@ static MACHINE_DRIVER_START( airsys )
 	MDRV_VIDEO_START(taitoair)
 	MDRV_VIDEO_UPDATE(taitoair)
 
-	/* sound hardware */
+	// sound hardware
 	MDRV_SOUND_ADD(YM2610, airsys_ym2610_interface)
 MACHINE_DRIVER_END
 
@@ -695,8 +695,8 @@ ROM_START( topland )
 	ROM_CONTINUE(          0x10000, 0x0c000 )
 
 	ROM_REGION( 0x24000, REGION_CPU3, 0 )	/* TMS320C25 */
-	ROM_LOAD16_BYTE( "b62-21.35", 0x20000, 0x02000, CRC(5f38460d) SHA1(0593718d15b30b10f7686959932e2c934de2a529) )	// cpu board
-	ROM_LOAD16_BYTE( "b62-20.6",  0x20001, 0x02000, CRC(a4afe958) SHA1(7593a327f4ea0cc9e28fd3269278871f62fb0598) )	// cpu board
+	ROM_LOAD16_BYTE( "b62-21.35", 0x20000, 0x02000, CRC(5f38460d) SHA1(0593718d15b30b10f7686959932e2c934de2a529) )	/* cpu board*/
+	ROM_LOAD16_BYTE( "b62-20.6",  0x20001, 0x02000, CRC(a4afe958) SHA1(7593a327f4ea0cc9e28fd3269278871f62fb0598) )	/* cpu board*/
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )	/* 16x16 tiles */
 	ROM_LOAD16_BYTE( "b62-33.39",  0x000000, 0x20000, CRC(38786867) SHA1(7292e3fa69cad6494f2e8e7efa9c3f989bdf958d) )
@@ -719,7 +719,7 @@ ROM_START( topland )
 	ROM_LOAD( "b62-18.31", 0x00000, 0x20000, CRC(3a4e687a) SHA1(43f07fe19dec351e851defdf9c7810fb9df04736) )
 
 	ROM_REGION( 0x02000, REGION_USER1, 0 )	/* unknown */
-	ROM_LOAD( "b62-28.22", 0x00000, 0x02000, CRC(c4be68a6) SHA1(2c07a0e71d11bca67427331217c507d849500ec1) )	// video board
+	ROM_LOAD( "b62-28.22", 0x00000, 0x02000, CRC(c4be68a6) SHA1(2c07a0e71d11bca67427331217c507d849500ec1) )	/* video board*/
 ROM_END
 
 ROM_START( ainferno )
@@ -760,7 +760,7 @@ ROM_START( ainferno )
 	ROM_LOAD( "c45-06.31", 0x00000, 0x20000, CRC(6a7976d4) SHA1(a465f9bb874b1eff08742b33cc3c364703b281ca) )
 
 	ROM_REGION( 0x02000, REGION_USER1, 0 )
-	ROM_LOAD( "c45-xx.22", 0x00000, 0x02000, NO_DUMP )	// video board
+	ROM_LOAD( "c45-xx.22", 0x00000, 0x02000, NO_DUMP )	/* video board*/
 	/* Readme says 7 pals on video board and 6 on cpu board */
 ROM_END
 

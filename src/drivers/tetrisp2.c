@@ -152,15 +152,15 @@ static WRITE16_HANDLER( rockn2_adpcmbank_w )
 
 	char banktable[9][3]=
 	{
-		{  0,  1,  2 },		// bank $00
-		{  3,  4,  5 },		// bank $04
-		{  6,  7,  8 },		// bank $08
-		{  9, 10, 11 },		// bank $0c
-		{ 12, 13, 14 },		// bank $10
-		{ 15, 16, 17 },		// bank $14
-		{ 18, 19, 20 },		// bank $18
-		{  0,  0,  0 },		// bank $1c
-		{  0,  5, 14 },		// bank $20
+		{  0,  1,  2 },		/* bank $00*/
+		{  3,  4,  5 },		/* bank $04*/
+		{  6,  7,  8 },		/* bank $08*/
+		{  9, 10, 11 },		/* bank $0c*/
+		{ 12, 13, 14 },		/* bank $10*/
+		{ 15, 16, 17 },		/* bank $14*/
+		{ 18, 19, 20 },		/* bank $18*/
+		{  0,  0,  0 },		/* bank $1c*/
+		{  0,  5, 14 },		/* bank $20*/
 	};
 
 	rockn_adpcmbank = data;
@@ -273,155 +273,155 @@ WRITE16_HANDLER( tetrisp2_coincounter_w )
 ***************************************************************************/
 
 static MEMORY_READ16_START( tetrisp2_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM				},	// ROM
-	{ 0x100000, 0x103fff, MRA16_RAM				},	// Object RAM
-	{ 0x104000, 0x107fff, MRA16_RAM				},	// Spare Object RAM
-	{ 0x108000, 0x10ffff, MRA16_RAM				},	// Work RAM
-	{ 0x200000, 0x23ffff, tetrisp2_priority_r	},	// Priority
-	{ 0x300000, 0x31ffff, MRA16_RAM				},	// Palette
-	{ 0x400000, 0x403fff, MRA16_RAM				},	// Foreground
-	{ 0x404000, 0x407fff, MRA16_RAM				},	// Background
-	{ 0x408000, 0x409fff, MRA16_RAM				},	// ???
-	{ 0x500000, 0x50ffff, MRA16_RAM				},	// Line
-	{ 0x600000, 0x60ffff, MRA16_RAM				},	// Rotation
-	{ 0x650000, 0x651fff, MRA16_RAM				},	// Rotation (mirror)
-	{ 0x800002, 0x800003, tetrisp2_sound_r		},	// Sound
-	{ 0x900000, 0x903fff, tetrisp2_nvram_r	    },	// NVRAM
-	{ 0x904000, 0x907fff, tetrisp2_nvram_r	    },	// NVRAM (mirror)
-	{ 0xbe0000, 0xbe0001, MRA16_NOP				},	// INT-level1 dummy read
-	{ 0xbe0002, 0xbe0003, input_port_0_word_r	},	// Inputs
-	{ 0xbe0004, 0xbe0005, tetrisp2_ip_1_word_r	},	// Inputs & protection
-	{ 0xbe0008, 0xbe0009, input_port_2_word_r	},	// Inputs
-	{ 0xbe000a, 0xbe000b, watchdog_reset16_r	},	// Watchdog
+	{ 0x000000, 0x0fffff, MRA16_ROM				},	/* ROM*/
+	{ 0x100000, 0x103fff, MRA16_RAM				},	/* Object RAM*/
+	{ 0x104000, 0x107fff, MRA16_RAM				},	/* Spare Object RAM*/
+	{ 0x108000, 0x10ffff, MRA16_RAM				},	/* Work RAM*/
+	{ 0x200000, 0x23ffff, tetrisp2_priority_r	},	/* Priority*/
+	{ 0x300000, 0x31ffff, MRA16_RAM				},	/* Palette*/
+	{ 0x400000, 0x403fff, MRA16_RAM				},	/* Foreground*/
+	{ 0x404000, 0x407fff, MRA16_RAM				},	/* Background*/
+	{ 0x408000, 0x409fff, MRA16_RAM				},	/* ???*/
+	{ 0x500000, 0x50ffff, MRA16_RAM				},	/* Line*/
+	{ 0x600000, 0x60ffff, MRA16_RAM				},	/* Rotation*/
+	{ 0x650000, 0x651fff, MRA16_RAM				},	/* Rotation (mirror)*/
+	{ 0x800002, 0x800003, tetrisp2_sound_r		},	/* Sound*/
+	{ 0x900000, 0x903fff, tetrisp2_nvram_r	    },	/* NVRAM*/
+	{ 0x904000, 0x907fff, tetrisp2_nvram_r	    },	/* NVRAM (mirror)*/
+	{ 0xbe0000, 0xbe0001, MRA16_NOP				},	/* INT-level1 dummy read*/
+	{ 0xbe0002, 0xbe0003, input_port_0_word_r	},	/* Inputs*/
+	{ 0xbe0004, 0xbe0005, tetrisp2_ip_1_word_r	},	/* Inputs & protection*/
+	{ 0xbe0008, 0xbe0009, input_port_2_word_r	},	/* Inputs*/
+	{ 0xbe000a, 0xbe000b, watchdog_reset16_r	},	/* Watchdog*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( tetrisp2_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM									},	// ROM
-	{ 0x100000, 0x103fff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Object RAM
-	{ 0x104000, 0x107fff, MWA16_RAM									},	// Spare Object RAM
-	{ 0x108000, 0x10ffff, MWA16_RAM									},	// Work RAM
-	{ 0x200000, 0x23ffff, tetrisp2_priority_w, &tetrisp2_priority	},	// Priority
-	{ 0x300000, 0x31ffff, tetrisp2_palette_w, &paletteram16			},	// Palette
-	{ 0x400000, 0x403fff, tetrisp2_vram_fg_w, &tetrisp2_vram_fg		},	// Foreground
-	{ 0x404000, 0x407fff, tetrisp2_vram_bg_w, &tetrisp2_vram_bg		},	// Background
-	{ 0x408000, 0x409fff, MWA16_RAM									},	// ???
-	{ 0x500000, 0x50ffff, MWA16_RAM									},	// Line
-	{ 0x600000, 0x60ffff, tetrisp2_vram_rot_w, &tetrisp2_vram_rot	},	// Rotation
-	{ 0x650000, 0x651fff, tetrisp2_vram_rot_w						},	// Rotation (mirror)
-	{ 0x800000, 0x800003, tetrisp2_sound_w							},	// Sound
-	{ 0x900000, 0x903fff, tetrisp2_nvram_w, &tetrisp2_nvram, &tetrisp2_nvram_size	},	// NVRAM
-	{ 0x904000, 0x907fff, tetrisp2_nvram_w							},	// NVRAM (mirror)
-	{ 0xb00000, 0xb00001, tetrisp2_coincounter_w					},	// Coin Counter
-	{ 0xb20000, 0xb20001, MWA16_NOP									},	// ???
-	{ 0xb40000, 0xb4000b, MWA16_RAM, &tetrisp2_scroll_fg			},	// Foreground Scrolling
-	{ 0xb40010, 0xb4001b, MWA16_RAM, &tetrisp2_scroll_bg			},	// Background Scrolling
-	{ 0xb4003e, 0xb4003f, MWA16_NOP									},	// scr_size
-	{ 0xb60000, 0xb6002f, MWA16_RAM, &tetrisp2_rotregs				},	// Rotation Registers
-	{ 0xba0000, 0xba001f, tetrisp2_systemregs_w						},	// system param
-	{ 0xba001a, 0xba001b, MWA16_NOP									},	// Lev 4 irq ack
-	{ 0xba001e, 0xba001f, MWA16_NOP									},	// Lev 2 irq ack
+	{ 0x000000, 0x0fffff, MWA16_ROM									},	/* ROM*/
+	{ 0x100000, 0x103fff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Object RAM*/
+	{ 0x104000, 0x107fff, MWA16_RAM									},	/* Spare Object RAM*/
+	{ 0x108000, 0x10ffff, MWA16_RAM									},	/* Work RAM*/
+	{ 0x200000, 0x23ffff, tetrisp2_priority_w, &tetrisp2_priority	},	/* Priority*/
+	{ 0x300000, 0x31ffff, tetrisp2_palette_w, &paletteram16			},	/* Palette*/
+	{ 0x400000, 0x403fff, tetrisp2_vram_fg_w, &tetrisp2_vram_fg		},	/* Foreground*/
+	{ 0x404000, 0x407fff, tetrisp2_vram_bg_w, &tetrisp2_vram_bg		},	/* Background*/
+	{ 0x408000, 0x409fff, MWA16_RAM									},	/* ???*/
+	{ 0x500000, 0x50ffff, MWA16_RAM									},	/* Line*/
+	{ 0x600000, 0x60ffff, tetrisp2_vram_rot_w, &tetrisp2_vram_rot	},	/* Rotation*/
+	{ 0x650000, 0x651fff, tetrisp2_vram_rot_w						},	/* Rotation (mirror)*/
+	{ 0x800000, 0x800003, tetrisp2_sound_w							},	/* Sound*/
+	{ 0x900000, 0x903fff, tetrisp2_nvram_w, &tetrisp2_nvram, &tetrisp2_nvram_size	},	/* NVRAM*/
+	{ 0x904000, 0x907fff, tetrisp2_nvram_w							},	/* NVRAM (mirror)*/
+	{ 0xb00000, 0xb00001, tetrisp2_coincounter_w					},	/* Coin Counter*/
+	{ 0xb20000, 0xb20001, MWA16_NOP									},	/* ???*/
+	{ 0xb40000, 0xb4000b, MWA16_RAM, &tetrisp2_scroll_fg			},	/* Foreground Scrolling*/
+	{ 0xb40010, 0xb4001b, MWA16_RAM, &tetrisp2_scroll_bg			},	/* Background Scrolling*/
+	{ 0xb4003e, 0xb4003f, MWA16_NOP									},	/* scr_size*/
+	{ 0xb60000, 0xb6002f, MWA16_RAM, &tetrisp2_rotregs				},	/* Rotation Registers*/
+	{ 0xba0000, 0xba001f, tetrisp2_systemregs_w						},	/* system param*/
+	{ 0xba001a, 0xba001b, MWA16_NOP									},	/* Lev 4 irq ack*/
+	{ 0xba001e, 0xba001f, MWA16_NOP									},	/* Lev 2 irq ack*/
 MEMORY_END
 
 static MEMORY_READ16_START( rockn_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM				},	// ROM
-	{ 0x100000, 0x103fff, MRA16_RAM				},	// Object RAM
-	{ 0x104000, 0x107fff, MRA16_RAM				},	// Spare Object RAM
-	{ 0x108000, 0x10ffff, MRA16_RAM				},	// Work RAM
-	{ 0x200000, 0x23ffff, tetrisp2_priority_r	},	// Priority
-	{ 0x300000, 0x31ffff, MRA16_RAM				},	// Palette
-	{ 0x400000, 0x403fff, MRA16_RAM				},	// Foreground
-	{ 0x404000, 0x407fff, MRA16_RAM				},	// Background
-	{ 0x408000, 0x409fff, MRA16_RAM				},	// ???
-	{ 0x500000, 0x50ffff, MRA16_RAM				},	// Line
-	{ 0x600000, 0x60ffff, MRA16_RAM				},	// Rotation
-	{ 0x900000, 0x903fff, rockn_nvram_r		    },	// NVRAM
-	{ 0xa30000, 0xa30001, rockn_soundvolume_r	},	// Sound Volume
-	{ 0xa40002, 0xa40003, tetrisp2_sound_r		},	// Sound
-	{ 0xa44000, 0xa44001, rockn_adpcmbank_r		},	// Sound Bank
-	{ 0xbe0000, 0xbe0001, MRA16_NOP				},	// INT-level1 dummy read
-	{ 0xbe0002, 0xbe0003, input_port_0_word_r	},	// Inputs
-	{ 0xbe0004, 0xbe0005, input_port_1_word_r	},	// Inputs
-	{ 0xbe0008, 0xbe0009, input_port_2_word_r	},	// Inputs
-	{ 0xbe000a, 0xbe000b, watchdog_reset16_r	},	// Watchdog
+	{ 0x000000, 0x0fffff, MRA16_ROM				},	/* ROM*/
+	{ 0x100000, 0x103fff, MRA16_RAM				},	/* Object RAM*/
+	{ 0x104000, 0x107fff, MRA16_RAM				},	/* Spare Object RAM*/
+	{ 0x108000, 0x10ffff, MRA16_RAM				},	/* Work RAM*/
+	{ 0x200000, 0x23ffff, tetrisp2_priority_r	},	/* Priority*/
+	{ 0x300000, 0x31ffff, MRA16_RAM				},	/* Palette*/
+	{ 0x400000, 0x403fff, MRA16_RAM				},	/* Foreground*/
+	{ 0x404000, 0x407fff, MRA16_RAM				},	/* Background*/
+	{ 0x408000, 0x409fff, MRA16_RAM				},	/* ???*/
+	{ 0x500000, 0x50ffff, MRA16_RAM				},	/* Line*/
+	{ 0x600000, 0x60ffff, MRA16_RAM				},	/* Rotation*/
+	{ 0x900000, 0x903fff, rockn_nvram_r		    },	/* NVRAM*/
+	{ 0xa30000, 0xa30001, rockn_soundvolume_r	},	/* Sound Volume*/
+	{ 0xa40002, 0xa40003, tetrisp2_sound_r		},	/* Sound*/
+	{ 0xa44000, 0xa44001, rockn_adpcmbank_r		},	/* Sound Bank*/
+	{ 0xbe0000, 0xbe0001, MRA16_NOP				},	/* INT-level1 dummy read*/
+	{ 0xbe0002, 0xbe0003, input_port_0_word_r	},	/* Inputs*/
+	{ 0xbe0004, 0xbe0005, input_port_1_word_r	},	/* Inputs*/
+	{ 0xbe0008, 0xbe0009, input_port_2_word_r	},	/* Inputs*/
+	{ 0xbe000a, 0xbe000b, watchdog_reset16_r	},	/* Watchdog*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( rockn_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM									},	// ROM
-	{ 0x100000, 0x103fff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Object RAM
-	{ 0x104000, 0x107fff, MWA16_RAM									},	// Spare Object RAM
-	{ 0x108000, 0x10ffff, MWA16_RAM									},	// Work RAM
-	{ 0x200000, 0x23ffff, rockn_priority_w, &tetrisp2_priority	    },	// Priority
-	{ 0x300000, 0x31ffff, tetrisp2_palette_w, &paletteram16			},	// Palette
-	{ 0x400000, 0x403fff, tetrisp2_vram_fg_w, &tetrisp2_vram_fg		},	// Foreground
-	{ 0x404000, 0x407fff, tetrisp2_vram_bg_w, &tetrisp2_vram_bg		},	// Background
-	{ 0x408000, 0x409fff, MWA16_RAM									},	// ???
-	{ 0x500000, 0x50ffff, MWA16_RAM									},	// Line
-	{ 0x600000, 0x60ffff, tetrisp2_vram_rot_w, &tetrisp2_vram_rot	},	// Rotation
-	{ 0x900000, 0x903fff, tetrisp2_nvram_w, &tetrisp2_nvram, &tetrisp2_nvram_size	},	// NVRAM
-	{ 0xa30000, 0xa30001, rockn_soundvolume_w						},	// Sound Volume
-	{ 0xa40000, 0xa40003, tetrisp2_sound_w							},	// Sound
-	{ 0xa44000, 0xa44001, rockn_adpcmbank_w							},	// Sound Bank
-	{ 0xa48000, 0xa48001, MWA16_NOP									},	// YMZ280 Reset
-	{ 0xb00000, 0xb00001, tetrisp2_coincounter_w					},	// Coin Counter
-	{ 0xb20000, 0xb20001, MWA16_NOP									},	// ???
-	{ 0xb40000, 0xb4000b, MWA16_RAM, &tetrisp2_scroll_fg			},	// Foreground Scrolling
-	{ 0xb40010, 0xb4001b, MWA16_RAM, &tetrisp2_scroll_bg			},	// Background Scrolling
-	{ 0xb4003e, 0xb4003f, MWA16_NOP									},	// scr_size
-	{ 0xb60000, 0xb6002f, MWA16_RAM, &tetrisp2_rotregs				},	// Rotation Registers
-	{ 0xba0000, 0xba001f, rockn_systemregs_w						},	// system param
-	{ 0xba001a, 0xba001b, MWA16_NOP									},	// Lev 4 irq ack
-	{ 0xba001e, 0xba001f, MWA16_NOP									},	// Lev 2 irq ack
+	{ 0x000000, 0x0fffff, MWA16_ROM									},	/* ROM*/
+	{ 0x100000, 0x103fff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Object RAM*/
+	{ 0x104000, 0x107fff, MWA16_RAM									},	/* Spare Object RAM*/
+	{ 0x108000, 0x10ffff, MWA16_RAM									},	/* Work RAM*/
+	{ 0x200000, 0x23ffff, rockn_priority_w, &tetrisp2_priority	    },	/* Priority*/
+	{ 0x300000, 0x31ffff, tetrisp2_palette_w, &paletteram16			},	/* Palette*/
+	{ 0x400000, 0x403fff, tetrisp2_vram_fg_w, &tetrisp2_vram_fg		},	/* Foreground*/
+	{ 0x404000, 0x407fff, tetrisp2_vram_bg_w, &tetrisp2_vram_bg		},	/* Background*/
+	{ 0x408000, 0x409fff, MWA16_RAM									},	/* ???*/
+	{ 0x500000, 0x50ffff, MWA16_RAM									},	/* Line*/
+	{ 0x600000, 0x60ffff, tetrisp2_vram_rot_w, &tetrisp2_vram_rot	},	/* Rotation*/
+	{ 0x900000, 0x903fff, tetrisp2_nvram_w, &tetrisp2_nvram, &tetrisp2_nvram_size	},	/* NVRAM*/
+	{ 0xa30000, 0xa30001, rockn_soundvolume_w						},	/* Sound Volume*/
+	{ 0xa40000, 0xa40003, tetrisp2_sound_w							},	/* Sound*/
+	{ 0xa44000, 0xa44001, rockn_adpcmbank_w							},	/* Sound Bank*/
+	{ 0xa48000, 0xa48001, MWA16_NOP									},	/* YMZ280 Reset*/
+	{ 0xb00000, 0xb00001, tetrisp2_coincounter_w					},	/* Coin Counter*/
+	{ 0xb20000, 0xb20001, MWA16_NOP									},	/* ???*/
+	{ 0xb40000, 0xb4000b, MWA16_RAM, &tetrisp2_scroll_fg			},	/* Foreground Scrolling*/
+	{ 0xb40010, 0xb4001b, MWA16_RAM, &tetrisp2_scroll_bg			},	/* Background Scrolling*/
+	{ 0xb4003e, 0xb4003f, MWA16_NOP									},	/* scr_size*/
+	{ 0xb60000, 0xb6002f, MWA16_RAM, &tetrisp2_rotregs				},	/* Rotation Registers*/
+	{ 0xba0000, 0xba001f, rockn_systemregs_w						},	/* system param*/
+	{ 0xba001a, 0xba001b, MWA16_NOP									},	/* Lev 4 irq ack*/
+	{ 0xba001e, 0xba001f, MWA16_NOP									},	/* Lev 2 irq ack*/
 MEMORY_END
 
 static MEMORY_READ16_START( rockn2_readmem )
-    { 0x000000, 0x0fffff, MRA16_ROM				},	// ROM
-	{ 0x100000, 0x103fff, MRA16_RAM				},	// Object RAM
-	{ 0x104000, 0x107fff, MRA16_RAM				},	// Spare Object RAM
-	{ 0x108000, 0x10ffff, MRA16_RAM				},	// Work RAM
-	{ 0x200000, 0x23ffff, tetrisp2_priority_r	},	// Priority
-	{ 0x300000, 0x31ffff, MRA16_RAM				},	// Palette
-	{ 0x500000, 0x50ffff, MRA16_RAM				},	// Line
-	{ 0x600000, 0x60ffff, MRA16_RAM				},	// Rotation
-	{ 0x800000, 0x803fff, MRA16_RAM				},	// Foreground
-	{ 0x804000, 0x807fff, MRA16_RAM				},	// Background
-	{ 0x808000, 0x809fff, MRA16_RAM				},	// ???
-	{ 0x900000, 0x903fff, rockn_nvram_r		},	// NVRAM
-	{ 0xa30000, 0xa30001, rockn_soundvolume_r	},	// Sound Volume
-	{ 0xa40002, 0xa40003, tetrisp2_sound_r		},	// Sound
-	{ 0xa44000, 0xa44001, rockn_adpcmbank_r		},	// Sound Bank
-	{ 0xbe0000, 0xbe0001, MRA16_NOP				},	// INT-level1 dummy read
-	{ 0xbe0002, 0xbe0003, input_port_0_word_r	},	// Inputs
-	{ 0xbe0004, 0xbe0005, input_port_1_word_r	},	// Inputs
-	{ 0xbe0008, 0xbe0009, input_port_2_word_r	},	// Inputs
-	{ 0xbe000a, 0xbe000b, watchdog_reset16_r	},	// Watchdog
+    { 0x000000, 0x0fffff, MRA16_ROM				},	/* ROM*/
+	{ 0x100000, 0x103fff, MRA16_RAM				},	/* Object RAM*/
+	{ 0x104000, 0x107fff, MRA16_RAM				},	/* Spare Object RAM*/
+	{ 0x108000, 0x10ffff, MRA16_RAM				},	/* Work RAM*/
+	{ 0x200000, 0x23ffff, tetrisp2_priority_r	},	/* Priority*/
+	{ 0x300000, 0x31ffff, MRA16_RAM				},	/* Palette*/
+	{ 0x500000, 0x50ffff, MRA16_RAM				},	/* Line*/
+	{ 0x600000, 0x60ffff, MRA16_RAM				},	/* Rotation*/
+	{ 0x800000, 0x803fff, MRA16_RAM				},	/* Foreground*/
+	{ 0x804000, 0x807fff, MRA16_RAM				},	/* Background*/
+	{ 0x808000, 0x809fff, MRA16_RAM				},	/* ???*/
+	{ 0x900000, 0x903fff, rockn_nvram_r		},	/* NVRAM*/
+	{ 0xa30000, 0xa30001, rockn_soundvolume_r	},	/* Sound Volume*/
+	{ 0xa40002, 0xa40003, tetrisp2_sound_r		},	/* Sound*/
+	{ 0xa44000, 0xa44001, rockn_adpcmbank_r		},	/* Sound Bank*/
+	{ 0xbe0000, 0xbe0001, MRA16_NOP				},	/* INT-level1 dummy read*/
+	{ 0xbe0002, 0xbe0003, input_port_0_word_r	},	/* Inputs*/
+	{ 0xbe0004, 0xbe0005, input_port_1_word_r	},	/* Inputs*/
+	{ 0xbe0008, 0xbe0009, input_port_2_word_r	},	/* Inputs*/
+	{ 0xbe000a, 0xbe000b, watchdog_reset16_r	},	/* Watchdog*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( rockn2_writemem )
-    { 0x000000, 0x0fffff, MWA16_ROM									},	// ROM
-	{ 0x100000, 0x103fff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Object RAM
-	{ 0x104000, 0x107fff, MWA16_RAM									},	// Spare Object RAM
-	{ 0x108000, 0x10ffff, MWA16_RAM									},	// Work RAM
-	{ 0x200000, 0x23ffff, rockn_priority_w, &tetrisp2_priority	},	// Priority
-	{ 0x300000, 0x31ffff, tetrisp2_palette_w, &paletteram16			},	// Palette
-	{ 0x500000, 0x50ffff, MWA16_RAM									},	// Line
-	{ 0x600000, 0x60ffff, tetrisp2_vram_rot_w, &tetrisp2_vram_rot	},	// Rotation
-	{ 0x800000, 0x803fff, tetrisp2_vram_fg_w, &tetrisp2_vram_fg		},	// Foreground
-	{ 0x804000, 0x807fff, tetrisp2_vram_bg_w, &tetrisp2_vram_bg		},	// Background
-	{ 0x808000, 0x809fff, MWA16_RAM									},	// ???
-	{ 0x900000, 0x903fff, tetrisp2_nvram_w, &tetrisp2_nvram, &tetrisp2_nvram_size	},	// NVRAM
-	{ 0xa30000, 0xa30001, rockn_soundvolume_w						},	// Sound Volume
-	{ 0xa40000, 0xa40003, tetrisp2_sound_w							},	// Sound
-	{ 0xa44000, 0xa44001, rockn2_adpcmbank_w						},	// Sound Bank
-	{ 0xa48000, 0xa48001, MWA16_NOP									},	// YMZ280 Reset
-	{ 0xb00000, 0xb00001, tetrisp2_coincounter_w					},	// Coin Counter
-	{ 0xb20000, 0xb20001, MWA16_NOP									},	// ???
-	{ 0xb40000, 0xb4000b, MWA16_RAM, &tetrisp2_scroll_fg			},	// Foreground Scrolling
-	{ 0xb40010, 0xb4001b, MWA16_RAM, &tetrisp2_scroll_bg			},	// Background Scrolling
-	{ 0xb4003e, 0xb4003f, MWA16_NOP									},	// scr_size
-	{ 0xb60000, 0xb6002f, MWA16_RAM, &tetrisp2_rotregs				},	// Rotation Registers
-	{ 0xba0000, 0xba001f, rockn_systemregs_w						},	// system param
-	{ 0xba001a, 0xba001b, MWA16_NOP									},	// Lev 4 irq ack
-	{ 0xba001e, 0xba001f, MWA16_NOP									},	// Lev 2 irq ack
+    { 0x000000, 0x0fffff, MWA16_ROM									},	/* ROM*/
+	{ 0x100000, 0x103fff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Object RAM*/
+	{ 0x104000, 0x107fff, MWA16_RAM									},	/* Spare Object RAM*/
+	{ 0x108000, 0x10ffff, MWA16_RAM									},	/* Work RAM*/
+	{ 0x200000, 0x23ffff, rockn_priority_w, &tetrisp2_priority	},	/* Priority*/
+	{ 0x300000, 0x31ffff, tetrisp2_palette_w, &paletteram16			},	/* Palette*/
+	{ 0x500000, 0x50ffff, MWA16_RAM									},	/* Line*/
+	{ 0x600000, 0x60ffff, tetrisp2_vram_rot_w, &tetrisp2_vram_rot	},	/* Rotation*/
+	{ 0x800000, 0x803fff, tetrisp2_vram_fg_w, &tetrisp2_vram_fg		},	/* Foreground*/
+	{ 0x804000, 0x807fff, tetrisp2_vram_bg_w, &tetrisp2_vram_bg		},	/* Background*/
+	{ 0x808000, 0x809fff, MWA16_RAM									},	/* ???*/
+	{ 0x900000, 0x903fff, tetrisp2_nvram_w, &tetrisp2_nvram, &tetrisp2_nvram_size	},	/* NVRAM*/
+	{ 0xa30000, 0xa30001, rockn_soundvolume_w						},	/* Sound Volume*/
+	{ 0xa40000, 0xa40003, tetrisp2_sound_w							},	/* Sound*/
+	{ 0xa44000, 0xa44001, rockn2_adpcmbank_w						},	/* Sound Bank*/
+	{ 0xa48000, 0xa48001, MWA16_NOP									},	/* YMZ280 Reset*/
+	{ 0xb00000, 0xb00001, tetrisp2_coincounter_w					},	/* Coin Counter*/
+	{ 0xb20000, 0xb20001, MWA16_NOP									},	/* ???*/
+	{ 0xb40000, 0xb4000b, MWA16_RAM, &tetrisp2_scroll_fg			},	/* Foreground Scrolling*/
+	{ 0xb40010, 0xb4001b, MWA16_RAM, &tetrisp2_scroll_bg			},	/* Background Scrolling*/
+	{ 0xb4003e, 0xb4003f, MWA16_NOP									},	/* scr_size*/
+	{ 0xb60000, 0xb6002f, MWA16_RAM, &tetrisp2_rotregs				},	/* Rotation Registers*/
+	{ 0xba0000, 0xba001f, rockn_systemregs_w						},	/* system param*/
+	{ 0xba001a, 0xba001b, MWA16_NOP									},	/* Lev 4 irq ack*/
+	{ 0xba001e, 0xba001f, MWA16_NOP									},	/* Lev 2 irq ack*/
 MEMORY_END
 
 /***************************************************************************
@@ -437,7 +437,7 @@ MEMORY_END
 ***************************************************************************/
 
 INPUT_PORTS_START( tetrisp2 )
-	PORT_START	// IN0 - $be0002.w
+	PORT_START	/* IN0 - $be0002.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
@@ -456,7 +456,7 @@ INPUT_PORTS_START( tetrisp2 )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// IN1 - $be0004.w
+	PORT_START	/* IN1 - $be0004.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_START1   )
@@ -466,8 +466,8 @@ INPUT_PORTS_START( tetrisp2 )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_COIN2    )
 
-	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_SPECIAL  )	// ?
-	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_SPECIAL  )	// ?
+	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_SPECIAL  )	/* ?*/
+	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_SPECIAL  )	/* ?*/
 	PORT_BIT(  0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -475,7 +475,7 @@ INPUT_PORTS_START( tetrisp2 )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN2 - $be0008.w
+	PORT_START	/* IN2 - $be0008.w*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 4C_1C ) )
@@ -531,7 +531,7 @@ INPUT_PORTS_END
 
 
 INPUT_PORTS_START( teplus2j )
-	PORT_START	// IN0 - $be0002.w
+	PORT_START	/* IN0 - $be0002.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
@@ -539,7 +539,7 @@ INPUT_PORTS_START( teplus2j )
 	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )
 	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )
-	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused button
+	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused button*/
 
 	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
@@ -548,9 +548,9 @@ INPUT_PORTS_START( teplus2j )
 	PORT_BIT(  0x1000, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )
 	PORT_BIT(  0x2000, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
-	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused button
+	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused button*/
 
-	PORT_START	// IN1 - $be0004.w
+	PORT_START	/* IN1 - $be0004.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_START1   )
@@ -560,8 +560,8 @@ INPUT_PORTS_START( teplus2j )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_COIN2    )
 
-	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_SPECIAL  )	// ?
-	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_SPECIAL  )	// ?
+	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_SPECIAL  )	/* ?*/
+	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_SPECIAL  )	/* ?*/
 	PORT_BIT(  0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -573,7 +573,7 @@ INPUT_PORTS_START( teplus2j )
 	The code for checking the "service mode" and "free play" DSWs
 	is (deliberately?) bugged in this set
 */
-	PORT_START	// IN2 - $be0008.w
+	PORT_START	/* IN2 - $be0008.w*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 4C_1C ) )
@@ -607,8 +607,8 @@ INPUT_PORTS_START( teplus2j )
 	PORT_DIPNAME( 0x0400, 0x0400, "Vs Mode Rounds" )
 	PORT_DIPSETTING(      0x0000, "1" )
 	PORT_DIPSETTING(      0x0400, "3" )
-	PORT_BIT(  0x0800, IP_ACTIVE_LOW, IPT_UNUSED  ) // Language dip
-	PORT_DIPNAME( 0x1000, 0x1000, "Unknown 2-4" )	// F.B.I. Logo (in the USA set?)
+	PORT_BIT(  0x0800, IP_ACTIVE_LOW, IPT_UNUSED  ) /* Language dip*/
+	PORT_DIPNAME( 0x1000, 0x1000, "Unknown 2-4" )	/* F.B.I. Logo (in the USA set?)*/
 	PORT_DIPSETTING(      0x1000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x2000, 0x2000, "Voice" )
@@ -629,7 +629,7 @@ INPUT_PORTS_END
 
 
 INPUT_PORTS_START( rockn )
-	PORT_START	//$be0002.w
+	PORT_START	/*$be0002.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1 )
@@ -647,7 +647,7 @@ INPUT_PORTS_START( rockn )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	//$be0004.w
+	PORT_START	/*$be0004.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_START1   )
@@ -665,8 +665,8 @@ INPUT_PORTS_START( rockn )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	//$be0008.w
-	PORT_DIPNAME( 0x0001, 0x0001, "DIPSW 1-1") // All these used to be marked 'Cheat', can't think why.
+	PORT_START	/*$be0008.w*/
+	PORT_DIPNAME( 0x0001, 0x0001, "DIPSW 1-1") /* All these used to be marked 'Cheat', can't think why.*/
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0002, 0x0002, "DIPSW 1-2")
@@ -753,10 +753,10 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo tetrisp2_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x8,   0x0000, 0x10 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x8, 0x1000, 0x10 }, // [1] Background
-	{ REGION_GFX3, 0, &layout_16x16x8, 0x2000, 0x10 }, // [2] Rotation
-	{ REGION_GFX4, 0, &layout_8x8x8,   0x6000, 0x10 }, // [3] Foreground
+	{ REGION_GFX1, 0, &layout_8x8x8,   0x0000, 0x10 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x8, 0x1000, 0x10 }, /* [1] Background*/
+	{ REGION_GFX3, 0, &layout_16x16x8, 0x2000, 0x10 }, /* [2] Rotation*/
+	{ REGION_GFX4, 0, &layout_8x8x8,   0x6000, 0x10 }, /* [3] Foreground*/
 	{ -1 }
 };
 
@@ -775,7 +775,7 @@ static struct YMZ280Binterface ymz280b_intf =
 	{ 16934400 },
 	{ REGION_SOUND1 },
 	{ YM3012_VOL(100,MIXER_PAN_LEFT,100,MIXER_PAN_RIGHT) },
-	{ 0 }	// irq
+	{ 0 }	/* irq*/
 };
 
 void rockn_timer_level4_callback(int param)
@@ -962,7 +962,7 @@ ROM_START( tetrisp2 )
 	ROM_LOAD( "96019-04.6",  0x000000, 0x100000, CRC(b849dec9) SHA1(fa7ac00fbe587a74c3fb8c74a0f91f7afeb8682f) )
 
 	ROM_REGION( 0x080000, REGION_GFX4, ROMREGION_DISPOSE )	/* 8x8x8 (Foreground) */
-	ROM_LOAD( "tetp2-10.bin", 0x000000, 0x080000, CRC(34dd1bad) SHA1(9bdf1dde11f82839676400de5dd7acb06ea8cdb2) )	// 11111xxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "tetp2-10.bin", 0x000000, 0x080000, CRC(34dd1bad) SHA1(9bdf1dde11f82839676400de5dd7acb06ea8cdb2) )	/* 11111xxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
 	ROM_LOAD( "96019-07.7", 0x000000, 0x400000, CRC(a8a61954) SHA1(86c3db10b348ba1f44ff696877b8b20845fa53de) )
@@ -993,7 +993,7 @@ Custom:	SS91022-03
 
 ROM_START( teplus2j )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* 68000 Code */
-	ROM_LOAD16_BYTE( "tet2-4v2.2", 0x000000, 0x080000, CRC(5bfa32c8) SHA1(55fb2872695fcfbad13f5c0723302e72da69e44a) )	// v2.2
+	ROM_LOAD16_BYTE( "tet2-4v2.2", 0x000000, 0x080000, CRC(5bfa32c8) SHA1(55fb2872695fcfbad13f5c0723302e72da69e44a) )	/* v2.2*/
 	ROM_LOAD16_BYTE( "tet2-1v2.2", 0x000001, 0x080000, CRC(919116d0) SHA1(3e1c0fd4c9175b2900a4717fbb9e8b591c5f534d) )
 
 	ROM_REGION( 0x800000, REGION_GFX1, ROMREGION_DISPOSE )	/* 8x8x8 (Sprites) */
@@ -1007,7 +1007,7 @@ ROM_START( teplus2j )
 	ROM_LOAD( "96019-04.6",  0x000000, 0x100000, CRC(b849dec9) SHA1(fa7ac00fbe587a74c3fb8c74a0f91f7afeb8682f) )
 
 	ROM_REGION( 0x080000, REGION_GFX4, ROMREGION_DISPOSE )	/* 8x8x8 (Foreground) */
-	ROM_LOAD( "tetp2-10.bin", 0x000000, 0x080000, CRC(34dd1bad) SHA1(9bdf1dde11f82839676400de5dd7acb06ea8cdb2) )	// 11111xxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "tetp2-10.bin", 0x000000, 0x080000, CRC(34dd1bad) SHA1(9bdf1dde11f82839676400de5dd7acb06ea8cdb2) )	/* 11111xxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
 	ROM_LOAD( "96019-07.7", 0x000000, 0x400000, CRC(a8a61954) SHA1(86c3db10b348ba1f44ff696877b8b20845fa53de) )
@@ -1037,22 +1037,22 @@ ROM_START( rockn )
 
 	/* from the bootleg set, are they right for this? */
 	ROM_REGION( 0x7000000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(c354f753) SHA1(bf538c02e2162a93d8c6793a1211e21480156223)  ) // COMMON AREA
-	ROM_FILL(            0x0400000, 0x0c00000, 0xffffffff ) // BANK AREA
-	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(5b42999e) SHA1(376c773f292eae8b75db11bad3cb6ec5fe48392e)  ) // bank 0
-	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(8306f302) SHA1(8c0437d7ab8d74d4d15f4a641d30602e39cdd99d)  ) // bank 0
-	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(3fda842c) SHA1(2b9e7c548b689bab491237e36a2dcf4782a81d79)  ) // bank 0
-	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(86d4f289) SHA1(908490ab0cf8d33cf3e127f71edee3bece70b86d)  ) // bank 1
-	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(f8dbf47d) SHA1(f19f7ae26e3b8af17a4e66e6722dd2f5c36d33f8)  ) // bank 1
-	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(525aff97) SHA1(b18e5bdf67d3a89f39c59f4f9bd3bb608dacc7f7)  ) // bank 1
-	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(5bd8bb95) SHA1(3b33c42778f7d50ca1513d37e7bc4a4efcc3cf82)  ) // bank 2
-	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(304c1643) SHA1(0be090077e00d4b9abce2fac4821c630b6a40f22)  ) // bank 2
-	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(78c22c56) SHA1(eb48d188d25538a1d381ca760f8e98096ee12bfe)  ) // bank 2
-	ROM_LOAD( "sound10", 0x3400000, 0x0400000, CRC(d5e8d8a5) SHA1(df7db3c8b110ce1aa85e627537afb744c98877bd)  ) // bank 3
-	ROM_LOAD( "sound11", 0x3800000, 0x0400000, CRC(569ef4dd) SHA1(777f8a3aef741655555364d00a1eaa472ac4b922)  ) // bank 3
-	ROM_LOAD( "sound12", 0x3c00000, 0x0400000, CRC(aae8d59c) SHA1(ccca1f511ce0ea8d452f3b1d24350b5cee402ad2)  ) // bank 3
-	ROM_LOAD( "sound13", 0x4000000, 0x0400000, CRC(9ec1459b) SHA1(10e08a47636dec431cdb8e105cf61287fe9c6637)  ) // bank 4
-	ROM_LOAD( "sound14", 0x4400000, 0x0400000, CRC(b26f9a81) SHA1(0d1c8e382eb5877f9a748ff289be97cbdb73b0cc)  ) // bank 4
+	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(c354f753) SHA1(bf538c02e2162a93d8c6793a1211e21480156223)  ) /* COMMON AREA*/
+	ROM_FILL(            0x0400000, 0x0c00000, 0xffffffff ) /* BANK AREA*/
+	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(5b42999e) SHA1(376c773f292eae8b75db11bad3cb6ec5fe48392e)  ) /* bank 0*/
+	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(8306f302) SHA1(8c0437d7ab8d74d4d15f4a641d30602e39cdd99d)  ) /* bank 0*/
+	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(3fda842c) SHA1(2b9e7c548b689bab491237e36a2dcf4782a81d79)  ) /* bank 0*/
+	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(86d4f289) SHA1(908490ab0cf8d33cf3e127f71edee3bece70b86d)  ) /* bank 1*/
+	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(f8dbf47d) SHA1(f19f7ae26e3b8af17a4e66e6722dd2f5c36d33f8)  ) /* bank 1*/
+	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(525aff97) SHA1(b18e5bdf67d3a89f39c59f4f9bd3bb608dacc7f7)  ) /* bank 1*/
+	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(5bd8bb95) SHA1(3b33c42778f7d50ca1513d37e7bc4a4efcc3cf82)  ) /* bank 2*/
+	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(304c1643) SHA1(0be090077e00d4b9abce2fac4821c630b6a40f22)  ) /* bank 2*/
+	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(78c22c56) SHA1(eb48d188d25538a1d381ca760f8e98096ee12bfe)  ) /* bank 2*/
+	ROM_LOAD( "sound10", 0x3400000, 0x0400000, CRC(d5e8d8a5) SHA1(df7db3c8b110ce1aa85e627537afb744c98877bd)  ) /* bank 3*/
+	ROM_LOAD( "sound11", 0x3800000, 0x0400000, CRC(569ef4dd) SHA1(777f8a3aef741655555364d00a1eaa472ac4b922)  ) /* bank 3*/
+	ROM_LOAD( "sound12", 0x3c00000, 0x0400000, CRC(aae8d59c) SHA1(ccca1f511ce0ea8d452f3b1d24350b5cee402ad2)  ) /* bank 3*/
+	ROM_LOAD( "sound13", 0x4000000, 0x0400000, CRC(9ec1459b) SHA1(10e08a47636dec431cdb8e105cf61287fe9c6637)  ) /* bank 4*/
+	ROM_LOAD( "sound14", 0x4400000, 0x0400000, CRC(b26f9a81) SHA1(0d1c8e382eb5877f9a748ff289be97cbdb73b0cc)  ) /* bank 4*/
 ROM_END
 
 /***************************************************************************
@@ -1097,22 +1097,22 @@ ROM_START( rockna )
 	ROM_LOAD( "98344_10.bin", 0x000000, 0x080000, CRC(918663a8) SHA1(aedacb741c986ef8159385cfef866cb7e3ef6cb6) )
 
 	ROM_REGION( 0x7000000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(c354f753) SHA1(bf538c02e2162a93d8c6793a1211e21480156223)  ) // COMMON AREA
-	ROM_FILL(                 0x0400000, 0x0c00000, 0xffffffff ) // BANK AREA
-	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(5b42999e) SHA1(376c773f292eae8b75db11bad3cb6ec5fe48392e)  ) // bank 0
-	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(8306f302) SHA1(8c0437d7ab8d74d4d15f4a641d30602e39cdd99d)  ) // bank 0
-	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(3fda842c) SHA1(2b9e7c548b689bab491237e36a2dcf4782a81d79)  ) // bank 0
-	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(86d4f289) SHA1(908490ab0cf8d33cf3e127f71edee3bece70b86d)  ) // bank 1
-	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(f8dbf47d) SHA1(f19f7ae26e3b8af17a4e66e6722dd2f5c36d33f8)  ) // bank 1
-	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(525aff97) SHA1(b18e5bdf67d3a89f39c59f4f9bd3bb608dacc7f7)  ) // bank 1
-	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(5bd8bb95) SHA1(3b33c42778f7d50ca1513d37e7bc4a4efcc3cf82)  ) // bank 2
-	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(304c1643) SHA1(0be090077e00d4b9abce2fac4821c630b6a40f22)  ) // bank 2
-	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(78c22c56) SHA1(eb48d188d25538a1d381ca760f8e98096ee12bfe)  ) // bank 2
-	ROM_LOAD( "sound10", 0x3400000, 0x0400000, CRC(d5e8d8a5) SHA1(df7db3c8b110ce1aa85e627537afb744c98877bd)  ) // bank 3
-	ROM_LOAD( "sound11", 0x3800000, 0x0400000, CRC(569ef4dd) SHA1(777f8a3aef741655555364d00a1eaa472ac4b922)  ) // bank 3
-	ROM_LOAD( "sound12", 0x3c00000, 0x0400000, CRC(aae8d59c) SHA1(ccca1f511ce0ea8d452f3b1d24350b5cee402ad2)  ) // bank 3
-	ROM_LOAD( "sound13", 0x4000000, 0x0400000, CRC(9ec1459b) SHA1(10e08a47636dec431cdb8e105cf61287fe9c6637)  ) // bank 4
-	ROM_LOAD( "sound14", 0x4400000, 0x0400000, CRC(b26f9a81) SHA1(0d1c8e382eb5877f9a748ff289be97cbdb73b0cc)  ) // bank 4
+	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(c354f753) SHA1(bf538c02e2162a93d8c6793a1211e21480156223)  ) /* COMMON AREA*/
+	ROM_FILL(                 0x0400000, 0x0c00000, 0xffffffff ) /* BANK AREA*/
+	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(5b42999e) SHA1(376c773f292eae8b75db11bad3cb6ec5fe48392e)  ) /* bank 0*/
+	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(8306f302) SHA1(8c0437d7ab8d74d4d15f4a641d30602e39cdd99d)  ) /* bank 0*/
+	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(3fda842c) SHA1(2b9e7c548b689bab491237e36a2dcf4782a81d79)  ) /* bank 0*/
+	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(86d4f289) SHA1(908490ab0cf8d33cf3e127f71edee3bece70b86d)  ) /* bank 1*/
+	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(f8dbf47d) SHA1(f19f7ae26e3b8af17a4e66e6722dd2f5c36d33f8)  ) /* bank 1*/
+	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(525aff97) SHA1(b18e5bdf67d3a89f39c59f4f9bd3bb608dacc7f7)  ) /* bank 1*/
+	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(5bd8bb95) SHA1(3b33c42778f7d50ca1513d37e7bc4a4efcc3cf82)  ) /* bank 2*/
+	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(304c1643) SHA1(0be090077e00d4b9abce2fac4821c630b6a40f22)  ) /* bank 2*/
+	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(78c22c56) SHA1(eb48d188d25538a1d381ca760f8e98096ee12bfe)  ) /* bank 2*/
+	ROM_LOAD( "sound10", 0x3400000, 0x0400000, CRC(d5e8d8a5) SHA1(df7db3c8b110ce1aa85e627537afb744c98877bd)  ) /* bank 3*/
+	ROM_LOAD( "sound11", 0x3800000, 0x0400000, CRC(569ef4dd) SHA1(777f8a3aef741655555364d00a1eaa472ac4b922)  ) /* bank 3*/
+	ROM_LOAD( "sound12", 0x3c00000, 0x0400000, CRC(aae8d59c) SHA1(ccca1f511ce0ea8d452f3b1d24350b5cee402ad2)  ) /* bank 3*/
+	ROM_LOAD( "sound13", 0x4000000, 0x0400000, CRC(9ec1459b) SHA1(10e08a47636dec431cdb8e105cf61287fe9c6637)  ) /* bank 4*/
+	ROM_LOAD( "sound14", 0x4400000, 0x0400000, CRC(b26f9a81) SHA1(0d1c8e382eb5877f9a748ff289be97cbdb73b0cc)  ) /* bank 4*/
 ROM_END
 
 ROM_START( rockn2 )
@@ -1134,29 +1134,29 @@ ROM_START( rockn2 )
 	ROM_LOAD( "front", 0x000000, 0x080000, CRC(ae74d5b3) SHA1(07aa6ee540a783e3f2a8710a7095d922cff1d443)  )
 
 	ROM_REGION( 0x7000000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(4e9611a3) SHA1(2a9b1d5afc0ea9a3285f9fc6b49a1c3abd8cd2a5)  ) // COMMON AREA
-	ROM_FILL(              0x0400000, 0x0c00000, 0xffffffff ) 		  // BANK AREA
-	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(ec600f13) SHA1(151cb0a16782c8bba223d0f6881b80c1e43bc9bc)  ) // bank 0
-	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(8306f302) SHA1(8c0437d7ab8d74d4d15f4a641d30602e39cdd99d)  ) // bank 0
-	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(3fda842c) SHA1(2b9e7c548b689bab491237e36a2dcf4782a81d79)  ) // bank 0
-	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(86d4f289) SHA1(908490ab0cf8d33cf3e127f71edee3bece70b86d)  ) // bank 1
-	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(f8dbf47d) SHA1(f19f7ae26e3b8af17a4e66e6722dd2f5c36d33f8)  ) // bank 1
-	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(06f7bd63) SHA1(d8b27212ebba99f5129483550aeac5b86ff2a1d2)  ) // bank 1
-	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(22f042f6) SHA1(649bdf43dd698150992e68b23fd758bca56c615b)  ) // bank 2
-	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(dd294d8e) SHA1(49d889d341ab6167d9741340eb27902923b6cb42)  ) // bank 2
-	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(8fedee6e) SHA1(540c01d1c5f410abb1f86f33a5a532208946cb7c)  ) // bank 2
-	ROM_LOAD( "sound10", 0x3400000, 0x0400000, CRC(01292f11) SHA1(da88b14bf8df34e7574cf8c9f5dd385db13ab34c)  ) // bank 3
-	ROM_LOAD( "sound11", 0x3800000, 0x0400000, CRC(20dc76ba) SHA1(078397f2de54d4ca91035dce11419ac0d934fbfa)  ) // bank 3
-	ROM_LOAD( "sound12", 0x3c00000, 0x0400000, CRC(11fff0bc) SHA1(2767fcc3a5d3200750b011c97a83073719a9325f)  ) // bank 3
-	ROM_LOAD( "sound13", 0x4000000, 0x0400000, CRC(2367dd18) SHA1(b58f757ce4c832c5462637f4e08d7be511ca0c96)  ) // bank 4
-	ROM_LOAD( "sound14", 0x4400000, 0x0400000, CRC(75ced8c0) SHA1(fda17464767be073a36c117f5212411b66197dd9)  ) // bank 4
-	ROM_LOAD( "sound15", 0x4800000, 0x0400000, CRC(aeaca380) SHA1(1c389911aa766abec389b1c79a1542759ac58b9f)  ) // bank 4
-	ROM_LOAD( "sound16", 0x4c00000, 0x0400000, CRC(21d50e32) SHA1(24eaceb7c0b868b6e8fc16b403dae2427e422bf6)  ) // bank 5
-	ROM_LOAD( "sound17", 0x5000000, 0x0400000, CRC(de785a2a) SHA1(1f5ae46ac9476a31a431ce0f0cf124e1c8c930a6)  ) // bank 5
-	ROM_LOAD( "sound18", 0x5400000, 0x0400000, CRC(18cabb1e) SHA1(c769820e2e84eff0e4ce956236656ae757e3299c)  ) // bank 5
-	ROM_LOAD( "sound19", 0x5800000, 0x0400000, CRC(33c89e53) SHA1(7d216f5db6b30c9b05a9a77030498ff68ae6fbad)  ) // bank 6
-	ROM_LOAD( "sound20", 0x5c00000, 0x0400000, CRC(89c1b088) SHA1(9b4118815959a5fb65b2a293015f592a46f4126f)  ) // bank 6
-	ROM_LOAD( "sound21", 0x6000000, 0x0400000, CRC(13db74bd) SHA1(ab87438bbac97d46b1b8195b61dca1d72172a621)  ) // bank 6
+	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(4e9611a3) SHA1(2a9b1d5afc0ea9a3285f9fc6b49a1c3abd8cd2a5)  ) /* COMMON AREA*/
+	ROM_FILL(              0x0400000, 0x0c00000, 0xffffffff ) 		  /* BANK AREA*/
+	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(ec600f13) SHA1(151cb0a16782c8bba223d0f6881b80c1e43bc9bc)  ) /* bank 0*/
+	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(8306f302) SHA1(8c0437d7ab8d74d4d15f4a641d30602e39cdd99d)  ) /* bank 0*/
+	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(3fda842c) SHA1(2b9e7c548b689bab491237e36a2dcf4782a81d79)  ) /* bank 0*/
+	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(86d4f289) SHA1(908490ab0cf8d33cf3e127f71edee3bece70b86d)  ) /* bank 1*/
+	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(f8dbf47d) SHA1(f19f7ae26e3b8af17a4e66e6722dd2f5c36d33f8)  ) /* bank 1*/
+	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(06f7bd63) SHA1(d8b27212ebba99f5129483550aeac5b86ff2a1d2)  ) /* bank 1*/
+	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(22f042f6) SHA1(649bdf43dd698150992e68b23fd758bca56c615b)  ) /* bank 2*/
+	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(dd294d8e) SHA1(49d889d341ab6167d9741340eb27902923b6cb42)  ) /* bank 2*/
+	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(8fedee6e) SHA1(540c01d1c5f410abb1f86f33a5a532208946cb7c)  ) /* bank 2*/
+	ROM_LOAD( "sound10", 0x3400000, 0x0400000, CRC(01292f11) SHA1(da88b14bf8df34e7574cf8c9f5dd385db13ab34c)  ) /* bank 3*/
+	ROM_LOAD( "sound11", 0x3800000, 0x0400000, CRC(20dc76ba) SHA1(078397f2de54d4ca91035dce11419ac0d934fbfa)  ) /* bank 3*/
+	ROM_LOAD( "sound12", 0x3c00000, 0x0400000, CRC(11fff0bc) SHA1(2767fcc3a5d3200750b011c97a83073719a9325f)  ) /* bank 3*/
+	ROM_LOAD( "sound13", 0x4000000, 0x0400000, CRC(2367dd18) SHA1(b58f757ce4c832c5462637f4e08d7be511ca0c96)  ) /* bank 4*/
+	ROM_LOAD( "sound14", 0x4400000, 0x0400000, CRC(75ced8c0) SHA1(fda17464767be073a36c117f5212411b66197dd9)  ) /* bank 4*/
+	ROM_LOAD( "sound15", 0x4800000, 0x0400000, CRC(aeaca380) SHA1(1c389911aa766abec389b1c79a1542759ac58b9f)  ) /* bank 4*/
+	ROM_LOAD( "sound16", 0x4c00000, 0x0400000, CRC(21d50e32) SHA1(24eaceb7c0b868b6e8fc16b403dae2427e422bf6)  ) /* bank 5*/
+	ROM_LOAD( "sound17", 0x5000000, 0x0400000, CRC(de785a2a) SHA1(1f5ae46ac9476a31a431ce0f0cf124e1c8c930a6)  ) /* bank 5*/
+	ROM_LOAD( "sound18", 0x5400000, 0x0400000, CRC(18cabb1e) SHA1(c769820e2e84eff0e4ce956236656ae757e3299c)  ) /* bank 5*/
+	ROM_LOAD( "sound19", 0x5800000, 0x0400000, CRC(33c89e53) SHA1(7d216f5db6b30c9b05a9a77030498ff68ae6fbad)  ) /* bank 6*/
+	ROM_LOAD( "sound20", 0x5c00000, 0x0400000, CRC(89c1b088) SHA1(9b4118815959a5fb65b2a293015f592a46f4126f)  ) /* bank 6*/
+	ROM_LOAD( "sound21", 0x6000000, 0x0400000, CRC(13db74bd) SHA1(ab87438bbac97d46b1b8195b61dca1d72172a621)  ) /* bank 6*/
 ROM_END
 
 ROM_START( rockn3 )
@@ -1178,28 +1178,28 @@ ROM_START( rockn3 )
 	ROM_LOAD( "front", 0x000000, 0x080000, CRC(8100039e) SHA1(e07b1e2f3cbcb1c086edd628d20423ecd4f74860)  )
 
 	ROM_REGION( 0x7000000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(e2f69042) SHA1(deb361a53ed6a9033e21c2f805f327cc3e9b11c6)  ) // COMMON AREA
-	ROM_FILL(                 0x0400000, 0x0c00000, 0xffffffff ) 		 // BANK AREA
-	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(b328b18f) SHA1(22edebcabd6c8ed65d8c9e501621991d404c430d)  ) // bank 0
-	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(f46438e3) SHA1(718f54fc0e3689f5ab29bef2ec13eb2aa9b117fc)  ) // bank 0
-	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(b979e887) SHA1(10852ceb1b9e24fb87cf9339bc9fb4ae066a1221)  ) // bank 0
-	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(0bb2c212) SHA1(4f8ab3c96c3e1aa337a3fe871cffc04ec603f8c0)  ) // bank 1
-	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(3116e437) SHA1(f1b06592a6f0eba92eb4511d3ca03a3bb51e8c9d)  ) // bank 1
-	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(26b37ef6) SHA1(f7090f3ec81f0c651c53d460b476e63f52dd06dc)  ) // bank 1
-	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(1dd3f4e3) SHA1(8474e00b962368164c717e5fe2e926852f3b4426)  ) // bank 2
-	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(a1b03d67) SHA1(95f89a37e97d62706e15fd5571ff2e70dd98fee2)  ) // bank 2
-	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(35107aac) SHA1(d56a66e15c46c33cf6c9c28edf48b730b681d21a)  ) // bank 2
-	ROM_LOAD( "sound10", 0x3400000, 0x0400000, CRC(059ec592) SHA1(205210af558eb7e8e1399b2a506ef0285c5feda3)  ) // bank 3
-	ROM_LOAD( "sound11", 0x3800000, 0x0400000, CRC(84d4badb) SHA1(fc20f97a008f000a49e7cadd559789516643704a)  ) // bank 3
-	ROM_LOAD( "sound12", 0x3c00000, 0x0400000, CRC(4527a9b7) SHA1(a73ebece5c84bf14f8d25bbd869b7b43b1fcd042)  ) // bank 3
-	ROM_LOAD( "sound13", 0x4000000, 0x0400000, CRC(bfa4b7ce) SHA1(4100f2deabb8994e8e3ff897a1db13693ab64c11)  ) // bank 4
-	ROM_LOAD( "sound14", 0x4400000, 0x0400000, CRC(a2ccd2ce) SHA1(fc6325219f7b8e68c22a129f5ec4e900e326fb9d)  ) // bank 4
-	ROM_LOAD( "sound15", 0x4800000, 0x0400000, CRC(95baf678) SHA1(f7b39a3379f16df0560a22d4f42165ebbe05cebe)  ) // bank 4
-	ROM_LOAD( "sound16", 0x4c00000, 0x0400000, CRC(5883c84b) SHA1(54aec4e1e2f5edc198aebc4788caf5062f9a5b6c)  ) // bank 5
-	ROM_LOAD( "sound17", 0x5000000, 0x0400000, CRC(f92098ce) SHA1(9b13cd37ad5d7baf36b20218c4bced956084ec45)  ) // bank 5
-	ROM_LOAD( "sound18", 0x5400000, 0x0400000, CRC(dbb2c228) SHA1(f7cd24026236e2c616376c695b9e986cc221f36d)  ) // bank 5
-	ROM_LOAD( "sound19", 0x5800000, 0x0400000, CRC(9efdae1c) SHA1(6158a1804fbaa9ce27ae7e12cfda5f49084b4998)  ) // bank 6
-	ROM_LOAD( "sound20", 0x5c00000, 0x0400000, CRC(5f301b83) SHA1(e24e85c43a62871360545aa42dfa439045334b79)  ) // bank 6
+	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(e2f69042) SHA1(deb361a53ed6a9033e21c2f805f327cc3e9b11c6)  ) /* COMMON AREA*/
+	ROM_FILL(                 0x0400000, 0x0c00000, 0xffffffff ) 		 /* BANK AREA*/
+	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(b328b18f) SHA1(22edebcabd6c8ed65d8c9e501621991d404c430d)  ) /* bank 0*/
+	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(f46438e3) SHA1(718f54fc0e3689f5ab29bef2ec13eb2aa9b117fc)  ) /* bank 0*/
+	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(b979e887) SHA1(10852ceb1b9e24fb87cf9339bc9fb4ae066a1221)  ) /* bank 0*/
+	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(0bb2c212) SHA1(4f8ab3c96c3e1aa337a3fe871cffc04ec603f8c0)  ) /* bank 1*/
+	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(3116e437) SHA1(f1b06592a6f0eba92eb4511d3ca03a3bb51e8c9d)  ) /* bank 1*/
+	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(26b37ef6) SHA1(f7090f3ec81f0c651c53d460b476e63f52dd06dc)  ) /* bank 1*/
+	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(1dd3f4e3) SHA1(8474e00b962368164c717e5fe2e926852f3b4426)  ) /* bank 2*/
+	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(a1b03d67) SHA1(95f89a37e97d62706e15fd5571ff2e70dd98fee2)  ) /* bank 2*/
+	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(35107aac) SHA1(d56a66e15c46c33cf6c9c28edf48b730b681d21a)  ) /* bank 2*/
+	ROM_LOAD( "sound10", 0x3400000, 0x0400000, CRC(059ec592) SHA1(205210af558eb7e8e1399b2a506ef0285c5feda3)  ) /* bank 3*/
+	ROM_LOAD( "sound11", 0x3800000, 0x0400000, CRC(84d4badb) SHA1(fc20f97a008f000a49e7cadd559789516643704a)  ) /* bank 3*/
+	ROM_LOAD( "sound12", 0x3c00000, 0x0400000, CRC(4527a9b7) SHA1(a73ebece5c84bf14f8d25bbd869b7b43b1fcd042)  ) /* bank 3*/
+	ROM_LOAD( "sound13", 0x4000000, 0x0400000, CRC(bfa4b7ce) SHA1(4100f2deabb8994e8e3ff897a1db13693ab64c11)  ) /* bank 4*/
+	ROM_LOAD( "sound14", 0x4400000, 0x0400000, CRC(a2ccd2ce) SHA1(fc6325219f7b8e68c22a129f5ec4e900e326fb9d)  ) /* bank 4*/
+	ROM_LOAD( "sound15", 0x4800000, 0x0400000, CRC(95baf678) SHA1(f7b39a3379f16df0560a22d4f42165ebbe05cebe)  ) /* bank 4*/
+	ROM_LOAD( "sound16", 0x4c00000, 0x0400000, CRC(5883c84b) SHA1(54aec4e1e2f5edc198aebc4788caf5062f9a5b6c)  ) /* bank 5*/
+	ROM_LOAD( "sound17", 0x5000000, 0x0400000, CRC(f92098ce) SHA1(9b13cd37ad5d7baf36b20218c4bced956084ec45)  ) /* bank 5*/
+	ROM_LOAD( "sound18", 0x5400000, 0x0400000, CRC(dbb2c228) SHA1(f7cd24026236e2c616376c695b9e986cc221f36d)  ) /* bank 5*/
+	ROM_LOAD( "sound19", 0x5800000, 0x0400000, CRC(9efdae1c) SHA1(6158a1804fbaa9ce27ae7e12cfda5f49084b4998)  ) /* bank 6*/
+	ROM_LOAD( "sound20", 0x5c00000, 0x0400000, CRC(5f301b83) SHA1(e24e85c43a62871360545aa42dfa439045334b79)  ) /* bank 6*/
 ROM_END
 
 ROM_START( rockn4 )
@@ -1221,17 +1221,17 @@ ROM_START( rockn4 )
 	ROM_LOAD( "front", 0x000000, 0x100000, CRC(37d50259) SHA1(fd02f98a981470c47889f0b2f813ce59373a4b42)  )
 
 	ROM_REGION( 0x7000000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(918ea8eb) SHA1(0cd82859634635b6ce49db36fb91ed3365a101eb)  ) // COMMON AREA
-	ROM_FILL(              0x0400000, 0x0c00000, 0xffffffff ) 		  // BANK AREA
-	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(c548e51e) SHA1(4fe1e35c9ed4366dce98b4f4c00f94e202ef15dc)  ) // bank 0
-	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(ffda0253) SHA1(9b8ae98accc2f72a1cd881086f89e647e4904ad9)  ) // bank 0
-	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(1f813af5) SHA1(a72d842e39b9fc955a2fc6721673b34b1b591e4a)  ) // bank 0
-	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(035c4ff3) SHA1(9290c49244dc45ad5d6543775c5f2cc507e54e77)  ) // bank 1
-	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(0f01f7b0) SHA1(e0c6daa1606dd5aaac59a7ae75d76e937e9c0151)  ) // bank 1
-	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(31574b1c) SHA1(a08b50b4c4f2be32892b7534f2192101f8af6762)  ) // bank 1
-	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(388e2c91) SHA1(493ef760858a82cbc38de59c4db3f273c0ddfdfb)  ) // bank 2
-	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(6e7e3f23) SHA1(4b9b959f79254d0633f1c4324b7ee6a17e222308)  ) // bank 2
-	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(39fa512f) SHA1(d07426bc74492496756b67b8ded1b507726720c7)  ) // bank 2
+	ROM_LOAD( "sound00", 0x0000000, 0x0400000, CRC(918ea8eb) SHA1(0cd82859634635b6ce49db36fb91ed3365a101eb)  ) /* COMMON AREA*/
+	ROM_FILL(              0x0400000, 0x0c00000, 0xffffffff ) 		  /* BANK AREA*/
+	ROM_LOAD( "sound01", 0x1000000, 0x0400000, CRC(c548e51e) SHA1(4fe1e35c9ed4366dce98b4f4c00f94e202ef15dc)  ) /* bank 0*/
+	ROM_LOAD( "sound02", 0x1400000, 0x0400000, CRC(ffda0253) SHA1(9b8ae98accc2f72a1cd881086f89e647e4904ad9)  ) /* bank 0*/
+	ROM_LOAD( "sound03", 0x1800000, 0x0400000, CRC(1f813af5) SHA1(a72d842e39b9fc955a2fc6721673b34b1b591e4a)  ) /* bank 0*/
+	ROM_LOAD( "sound04", 0x1c00000, 0x0400000, CRC(035c4ff3) SHA1(9290c49244dc45ad5d6543775c5f2cc507e54e77)  ) /* bank 1*/
+	ROM_LOAD( "sound05", 0x2000000, 0x0400000, CRC(0f01f7b0) SHA1(e0c6daa1606dd5aaac59a7ae75d76e937e9c0151)  ) /* bank 1*/
+	ROM_LOAD( "sound06", 0x2400000, 0x0400000, CRC(31574b1c) SHA1(a08b50b4c4f2be32892b7534f2192101f8af6762)  ) /* bank 1*/
+	ROM_LOAD( "sound07", 0x2800000, 0x0400000, CRC(388e2c91) SHA1(493ef760858a82cbc38de59c4db3f273c0ddfdfb)  ) /* bank 2*/
+	ROM_LOAD( "sound08", 0x2c00000, 0x0400000, CRC(6e7e3f23) SHA1(4b9b959f79254d0633f1c4324b7ee6a17e222308)  ) /* bank 2*/
+	ROM_LOAD( "sound09", 0x3000000, 0x0400000, CRC(39fa512f) SHA1(d07426bc74492496756b67b8ded1b507726720c7)  ) /* bank 2*/
 ROM_END
 
 

@@ -207,10 +207,10 @@ static int blit_draw(int src,int sx,int flags)
 	int xinc = (dynax_blit_flip & 1) ? -1 : 1;
 	int yinc = (dynax_blit_flip & 2) ? -1 : 1;
 
-//if (src == 0x2a88ae) return src;
-//if (src == 0x2a0e7c) return src;
-//if (src == 0x279a4b) return src;
-//if (src == 0x276e11) return src;
+/*if (src == 0x2a88ae) return src;*/
+/*if (src == 0x2a0e7c) return src;*/
+/*if (src == 0x279a4b) return src;*/
+/*if (src == 0x276e11) return src;*/
 
 	pen_size = fetch_word(src_data,src_len,&bit_addr,4) + 1;
 	arg_size = fetch_word(src_data,src_len,&bit_addr,4) + 1;
@@ -227,7 +227,7 @@ static int blit_draw(int src,int sx,int flags)
 		cmd = fetch_word(src_data,src_len,&bit_addr,3);
 		switch (cmd)
 		{
-			case 0:	// NEXT
+			case 0:	/* NEXT*/
 				/* next line */
 				dynax_blit_y += yinc;
 				x = sx;
@@ -235,9 +235,9 @@ static int blit_draw(int src,int sx,int flags)
 
 			default:
 				usrintf_showmessage("%06x: unknown command %02x",src,cmd);
-//				return (bit_addr + 7) / 8;
+/*				return (bit_addr + 7) / 8;*/
 
-			case 1:	// LINE
+			case 1:	/* LINE*/
 				{
 					int length = fetch_word(src_data,src_len,&bit_addr,arg_size);
 					int pen = fetch_word(src_data,src_len,&bit_addr,pen_size);
@@ -251,7 +251,7 @@ static int blit_draw(int src,int sx,int flags)
 				}
 				break;
 
-			case 2:	// COPY
+			case 2:	/* COPY*/
 				{
 					int length = fetch_word(src_data,src_len,&bit_addr,arg_size);
 					while (length-- >= 0)
@@ -265,19 +265,19 @@ static int blit_draw(int src,int sx,int flags)
 				}
 				break;
 
-			case 3:	// SKIP
+			case 3:	/* SKIP*/
 				x += fetch_word(src_data,src_len,&bit_addr,arg_size);
 				break;
 
-			case 5:	// CHGA
+			case 5:	/* CHGA*/
 				arg_size = fetch_word(src_data,src_len,&bit_addr,4) + 1;
 				break;
 
-			case 6:	// CHGP
+			case 6:	/* CHGP*/
 				pen_size = fetch_word(src_data,src_len,&bit_addr,3) + 1;
 				break;
 
-			case 7:	// STOP
+			case 7:	/* STOP*/
 				return (bit_addr + 7) / 8;
 		}
 	}
@@ -342,13 +342,13 @@ if (dynax_blit_flip & 0xfc) usrintf_showmessage("dynax_blit_flip = %02x",dynax_b
 			break;
 
 		case 0x05:
-//			unknown; related to the dest layer
+/*			unknown; related to the dest layer*/
 			break;
 
 		case 0x06:
-			// related to pen, can be 0 or 1 for 0x10 blitter command
-			// 0 = only bits 7-4 of dynax_blit_pen contain data
-			// 1 = bits 3-0 contain data as well
+			/* related to pen, can be 0 or 1 for 0x10 blitter command*/
+			/* 0 = only bits 7-4 of dynax_blit_pen contain data*/
+			/* 1 = bits 3-0 contain data as well*/
 			dynax_blit_pen_mode = data;
 			break;
 
@@ -675,7 +675,7 @@ static void copylayer(struct mame_bitmap *bitmap,const struct rectangle *cliprec
 
 	int palbase = dynax_palette_base[layer];
 
-if (palbase == 0xff) palbase = 0;	// workaround for ddenlovr dynax logo
+if (palbase == 0xff) palbase = 0;	/* workaround for ddenlovr dynax logo*/
 
 	if (((dynax_layer_enable2 << 4) | dynax_layer_enable) & (1 << layer))
 	{
@@ -696,7 +696,7 @@ if (palbase == 0xff) palbase = 0;	// workaround for ddenlovr dynax logo
 VIDEO_UPDATE(ddenlovr)
 {
 #if 0
-	static int base = 0x24bbed;//0x294a82;//0x27c47a; ;// = 0x279a4b;//0x2a0e7c;//0x2a88ae;//0x24bbed;
+	static int base = 0x24bbed;/*0x294a82;*/ /*0x27c47a; ;/* = 0x279a4b;*/ //0x2a0e7c;/*0x2a88ae;*/ //0x24bbed;*/
 
 	int next;
 	memset(pixmap[0],0,512*512);
@@ -743,13 +743,13 @@ if (keyboard_pressed(KEYCODE_Z))
 		}
 		fillbitmap(framebuffer,dynax_bgcolor,&Machine->visible_area);
 
-//if (!keyboard_pressed(KEYCODE_Q))
+/*if (!keyboard_pressed(KEYCODE_Q))*/
 		copylayer(framebuffer,&Machine->visible_area,order[pri][0]);
-//if (!keyboard_pressed(KEYCODE_W))
+/*if (!keyboard_pressed(KEYCODE_W))*/
 		copylayer(framebuffer,&Machine->visible_area,order[pri][1]);
-//if (!keyboard_pressed(KEYCODE_E))
+/*if (!keyboard_pressed(KEYCODE_E))*/
 		copylayer(framebuffer,&Machine->visible_area,order[pri][2]);
-//if (!keyboard_pressed(KEYCODE_R))
+/*if (!keyboard_pressed(KEYCODE_R))*/
 		copylayer(framebuffer,&Machine->visible_area,order[pri][3]);
 
 		if (extra_layers)
@@ -761,13 +761,13 @@ if (keyboard_pressed(KEYCODE_Z))
 			usrintf_showmessage("priority2 = %02x",pri);
 			pri = 0;
 		}
-//if (!keyboard_pressed(KEYCODE_A))
+/*if (!keyboard_pressed(KEYCODE_A))*/
 		copylayer(framebuffer,&Machine->visible_area,order[pri][0]+4);
-//if (!keyboard_pressed(KEYCODE_S))
+/*if (!keyboard_pressed(KEYCODE_S))*/
 		copylayer(framebuffer,&Machine->visible_area,order[pri][1]+4);
-//if (!keyboard_pressed(KEYCODE_D))
+/*if (!keyboard_pressed(KEYCODE_D))*/
 		copylayer(framebuffer,&Machine->visible_area,order[pri][2]+4);
-//if (!keyboard_pressed(KEYCODE_F))
+/*if (!keyboard_pressed(KEYCODE_F))*/
 		copylayer(framebuffer,&Machine->visible_area,order[pri][3]+4);
 		}
 	}
@@ -930,8 +930,8 @@ READ_HANDLER( quiz365_input_r )
 	if (!(quiz365_select & 0x01))	return readinputport(3);
 	if (!(quiz365_select & 0x02))	return readinputport(4);
 	if (!(quiz365_select & 0x04))	return readinputport(5);
-	if (!(quiz365_select & 0x08))	return 0xff;//rand();
-	if (!(quiz365_select & 0x10))	return 0xff;//rand();
+	if (!(quiz365_select & 0x08))	return 0xff;/*rand();*/
+	if (!(quiz365_select & 0x10))	return 0xff;/*rand();*/
 	return 0xff;
 }
 
@@ -945,7 +945,7 @@ static data8_t rongrong_select2;
 
 READ_HANDLER( rongrong_input2_r )
 {
-//logerror("%04x: rongrong_input2_r offset %d select %x\n",activecpu_get_pc(),offset,rongrong_select2 );
+/*logerror("%04x: rongrong_input2_r offset %d select %x\n",activecpu_get_pc(),offset,rongrong_select2 );*/
 	/* 0 and 1 are read from offset 1, 2 from offset 0... */
 	switch( rongrong_select2 )
 	{
@@ -964,7 +964,7 @@ WRITE_HANDLER( rongrong_select2_w )
 
 READ16_HANDLER( quiz365_input2_r )
 {
-//logerror("%04x: rongrong_input2_r offset %d select %x\n",activecpu_get_pc(),offset,rongrong_select2 );
+/*logerror("%04x: rongrong_input2_r offset %d select %x\n",activecpu_get_pc(),offset,rongrong_select2 );*/
 	/* 0 and 1 are read from offset 1, 2 from offset 0... */
 	switch( rongrong_select2 )
 	{
@@ -995,77 +995,77 @@ static WRITE16_HANDLER( quiz365_coincounter_w )
 
 
 static MEMORY_READ16_START( quiz365_readmem )
-	{ 0x000000, 0x17ffff, MRA16_ROM					},	// ROM
-	{ 0x300286, 0x300287, ddenlovr_gfxrom_r			},	// Video Chip
-	{ 0x300270, 0x300271, unk16_r		},	// ? must be 78 on startup (not necessary in ddlover)
-	{ 0x300204, 0x300207, quiz365_input2_r		},	//
-	{ 0x300340, 0x30035f, rtc16_r				},	// 6242RTC
+	{ 0x000000, 0x17ffff, MRA16_ROM					},	/* ROM*/
+	{ 0x300286, 0x300287, ddenlovr_gfxrom_r			},	/* Video Chip*/
+	{ 0x300270, 0x300271, unk16_r		},	/* ? must be 78 on startup (not necessary in ddlover)*/
+	{ 0x300204, 0x300207, quiz365_input2_r		},	/**/
+	{ 0x300340, 0x30035f, rtc16_r				},	/* 6242RTC*/
 	{ 0x300384, 0x300385, AY8910_read_port_0_lsb_r	},
-	{ 0x3002c0, 0x3002c1, OKIM6295_status_0_lsb_r	},	// Sound
-	{ 0xff0000, 0xffffff, MRA16_RAM					},	// RAM
+	{ 0x3002c0, 0x3002c1, OKIM6295_status_0_lsb_r	},	/* Sound*/
+	{ 0xff0000, 0xffffff, MRA16_RAM					},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( quiz365_writemem )
-	{ 0x000000, 0x17ffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x2003ff, ddenlovr_palette_w	},	// Palette
-//	{ 0x201000, 0x2017ff, MWA16_RAM 					},	// ?
-	{ 0x300240, 0x300247, ddenlovr_palette_base_w },	// palette base for the 4 layers
-//	{ 0x300248, 0x30024f, 			},	// layer related? palette bank?
-	{ 0x300200, 0x300201, quiz365_select2_w	},	//
-	{ 0x300202, 0x300203, quiz365_coincounter_w		},	// Coin Counters + more stuff written on startup
+	{ 0x000000, 0x17ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x2003ff, ddenlovr_palette_w	},	/* Palette*/
+/*	{ 0x201000, 0x2017ff, MWA16_RAM 					},	*/ /* ?*/
+	{ 0x300240, 0x300247, ddenlovr_palette_base_w },	/* palette base for the 4 layers*/
+/*	{ 0x300248, 0x30024f, 			},	*/ /* layer related? palette bank?*/
+	{ 0x300200, 0x300201, quiz365_select2_w	},	/**/
+	{ 0x300202, 0x300203, quiz365_coincounter_w		},	/* Coin Counters + more stuff written on startup*/
 	{ 0x300268, 0x300269, ddenlovr_bgcolor_w },
 	{ 0x30026a, 0x30026b, ddenlovr_priority_w },
 	{ 0x30026c, 0x30026d, ddenlovr_layer_enable_w },
 	{ 0x300280, 0x300283, ddenlovr_blitter_w			},
-	{ 0x3003ca, 0x3003cb, ddenlovr_blitter_irq_ack_w	},	// Blitter irq acknowledge
-	{ 0x300300, 0x300301, YM2413_register_port_0_lsb_w	},	// Sound
-	{ 0x300302, 0x300303, YM2413_data_port_0_lsb_w		},	//
-//	{ 0x300340, 0x30035f,  					},	// 6242RTC
+	{ 0x3003ca, 0x3003cb, ddenlovr_blitter_irq_ack_w	},	/* Blitter irq acknowledge*/
+	{ 0x300300, 0x300301, YM2413_register_port_0_lsb_w	},	/* Sound*/
+	{ 0x300302, 0x300303, YM2413_data_port_0_lsb_w		},	/**/
+/*	{ 0x300340, 0x30035f,  					},	*/ /* 6242RTC*/
 	{ 0x300380, 0x300381, AY8910_control_port_0_lsb_w	},
 	{ 0x300382, 0x300383, AY8910_write_port_0_lsb_w		},
-	{ 0x3002c0, 0x3002c1, OKIM6295_data_0_lsb_w 		},	//
+	{ 0x3002c0, 0x3002c1, OKIM6295_data_0_lsb_w 		},	/**/
 	{ 0x3003c2, 0x3003c3, quiz365_oki_bank1_w },
 	{ 0x3003cc, 0x3003cd, quiz365_oki_bank2_w },
-	{ 0xff0000, 0xffffff, MWA16_RAM						},	// RAM
+	{ 0xff0000, 0xffffff, MWA16_RAM						},	/* RAM*/
 MEMORY_END
 
 
 static MEMORY_READ16_START( ddenlovr_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM					},	// ROM
-	{ 0xe00086, 0xe00087, ddenlovr_gfxrom_r			},	// Video Chip
-	{ 0xe00070, 0xe00071, unk16_r		},	// ? must be 78 on startup (not necessary in ddlover)
-	{ 0xe00100, 0xe00101, input_port_0_word_r		},	// P1?
-	{ 0xe00102, 0xe00103, input_port_1_word_r		},	// P2?
-	{ 0xe00104, 0xe00105, ddenlovr_special_r		},	// Coins + ?
-	{ 0xe00200, 0xe00201, input_port_3_word_r		},	// DSW
-	{ 0xe00500, 0xe0051f, rtc16_r 				},	// 6242RTC
+	{ 0x000000, 0x07ffff, MRA16_ROM					},	/* ROM*/
+	{ 0xe00086, 0xe00087, ddenlovr_gfxrom_r			},	/* Video Chip*/
+	{ 0xe00070, 0xe00071, unk16_r		},	/* ? must be 78 on startup (not necessary in ddlover)*/
+	{ 0xe00100, 0xe00101, input_port_0_word_r		},	/* P1?*/
+	{ 0xe00102, 0xe00103, input_port_1_word_r		},	/* P2?*/
+	{ 0xe00104, 0xe00105, ddenlovr_special_r		},	/* Coins + ?*/
+	{ 0xe00200, 0xe00201, input_port_3_word_r		},	/* DSW*/
+	{ 0xe00500, 0xe0051f, rtc16_r 				},	/* 6242RTC*/
 	{ 0xe00604, 0xe00605, AY8910_read_port_0_lsb_r	},
-	{ 0xe00700, 0xe00701, OKIM6295_status_0_lsb_r	},	// Sound
-	{ 0xff0000, 0xffffff, MRA16_RAM					},	// RAM
+	{ 0xe00700, 0xe00701, OKIM6295_status_0_lsb_r	},	/* Sound*/
+	{ 0xff0000, 0xffffff, MRA16_RAM					},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( ddenlovr_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
 	{ 0x300000, 0x300001, ddenlovr_oki_bank_w			},
-	{ 0xd00000, 0xd003ff, ddenlovr_palette_w	},	// Palette
-//	{ 0xd01000, 0xd017ff, MWA16_RAM 					},	// ? B0 on startup, then 00
-	{ 0xe00040, 0xe00047, ddenlovr_palette_base_w },	// palette base for the 4 layers
-//	{ 0xe00048, 0xe0004f, 			},	// layer related? palette bank? see notes at beginning of driver
+	{ 0xd00000, 0xd003ff, ddenlovr_palette_w	},	/* Palette*/
+/*	{ 0xd01000, 0xd017ff, MWA16_RAM 					},	*/ /* ? B0 on startup, then 00*/
+	{ 0xe00040, 0xe00047, ddenlovr_palette_base_w },	/* palette base for the 4 layers*/
+/*	{ 0xe00048, 0xe0004f, 			},	*/ /* layer related? palette bank? see notes at beginning of driver*/
 	{ 0xe00068, 0xe00069, ddenlovr_bgcolor_w },
 	{ 0xe0006a, 0xe0006b, ddenlovr_priority_w },
 	{ 0xe0006c, 0xe0006d, ddenlovr_layer_enable_w },
 	{ 0xe00080, 0xe00083, ddenlovr_blitter_w			},
-	{ 0xe00302, 0xe00303, ddenlovr_blitter_irq_ack_w	},	// Blitter irq acknowledge
-	{ 0xe00308, 0xe00309, ddenlovr_coincounter_0_w		},	// Coin Counters
-	{ 0xe0030c, 0xe0030d, ddenlovr_coincounter_1_w		},	//
-	{ 0xe00400, 0xe00401, YM2413_register_port_0_lsb_w	},	// Sound
-	{ 0xe00402, 0xe00403, YM2413_data_port_0_lsb_w		},	//
-//	{ 0xe00500, 0xe0051f, 					},	// 6242RTC
-//	{ 0xe00302, 0xe00303, MWA16_NOP						},	// ?
+	{ 0xe00302, 0xe00303, ddenlovr_blitter_irq_ack_w	},	/* Blitter irq acknowledge*/
+	{ 0xe00308, 0xe00309, ddenlovr_coincounter_0_w		},	/* Coin Counters*/
+	{ 0xe0030c, 0xe0030d, ddenlovr_coincounter_1_w		},	/**/
+	{ 0xe00400, 0xe00401, YM2413_register_port_0_lsb_w	},	/* Sound*/
+	{ 0xe00402, 0xe00403, YM2413_data_port_0_lsb_w		},	/**/
+/*	{ 0xe00500, 0xe0051f, 					},	*/ /* 6242RTC*/
+/*	{ 0xe00302, 0xe00303, MWA16_NOP						},	*/ /* ?*/
 	{ 0xe00600, 0xe00601, AY8910_control_port_0_lsb_w	},
 	{ 0xe00602, 0xe00603, AY8910_write_port_0_lsb_w		},
-	{ 0xe00700, 0xe00701, OKIM6295_data_0_lsb_w 		},	//
-	{ 0xff0000, 0xffffff, MWA16_RAM						},	// RAM
+	{ 0xe00700, 0xe00701, OKIM6295_data_0_lsb_w 		},	/**/
+	{ 0xff0000, 0xffffff, MWA16_RAM						},	/* RAM*/
 MEMORY_END
 
 
@@ -1113,7 +1113,7 @@ static WRITE16_HANDLER( nettoqc_coincounter_w )
 	{
 		coin_counter_w(0, data & 0x01);
 		coin_counter_w(1, data & 0x04);
-		//                data & 0x80 ?
+		/*                data & 0x80 ?*/
 	}
 }
 
@@ -1124,39 +1124,39 @@ static WRITE16_HANDLER( nettoqc_oki_bank_w )
 }
 
 static MEMORY_READ16_START( nettoqc_readmem )
-	{ 0x000000, 0x17ffff, MRA16_ROM					},	// ROM
-	{ 0x200c02, 0x200c03, nettoqc_protection_r		},	//
-	{ 0x300070, 0x300071, unk16_r					},	// ? must be 78 on startup (not necessary in ddlover)
-	{ 0x300086, 0x300087, ddenlovr_gfxrom_r			},	// Video Chip
-	{ 0x300100, 0x30011f, rtc16_r					},	// 6242RTC
-	{ 0x300180, 0x300181, input_port_0_word_r		},	//
-	{ 0x300182, 0x300183, input_port_1_word_r		},	//
-	{ 0x300184, 0x300185, nettoqc_special_r			},	// Coins + ?
-	{ 0x300186, 0x300187, nettoqc_input_r			},	// DSW's
-	{ 0x300240, 0x300241, OKIM6295_status_0_lsb_r	},	// Sound
-	{ 0xff0000, 0xffffff, MRA16_RAM					},	// RAM
+	{ 0x000000, 0x17ffff, MRA16_ROM					},	/* ROM*/
+	{ 0x200c02, 0x200c03, nettoqc_protection_r		},	/**/
+	{ 0x300070, 0x300071, unk16_r					},	/* ? must be 78 on startup (not necessary in ddlover)*/
+	{ 0x300086, 0x300087, ddenlovr_gfxrom_r			},	/* Video Chip*/
+	{ 0x300100, 0x30011f, rtc16_r					},	/* 6242RTC*/
+	{ 0x300180, 0x300181, input_port_0_word_r		},	/**/
+	{ 0x300182, 0x300183, input_port_1_word_r		},	/**/
+	{ 0x300184, 0x300185, nettoqc_special_r			},	/* Coins + ?*/
+	{ 0x300186, 0x300187, nettoqc_input_r			},	/* DSW's*/
+	{ 0x300240, 0x300241, OKIM6295_status_0_lsb_r	},	/* Sound*/
+	{ 0xff0000, 0xffffff, MRA16_RAM					},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( nettoqc_writemem )
-	{ 0x000000, 0x17ffff, MWA16_ROM								},	// ROM
-	{ 0x200000, 0x2003ff, ddenlovr_palette_w					},	// Palette
-	{ 0x200e0a, 0x200e0d, MWA16_RAM, &nettoqc_protection_val	},	//
-	{ 0x201000, 0x2017ff, MWA16_RAM 							},	// ?
-	{ 0x300040, 0x300047, ddenlovr_palette_base_w				},	// palette base for the 4 layers
+	{ 0x000000, 0x17ffff, MWA16_ROM								},	/* ROM*/
+	{ 0x200000, 0x2003ff, ddenlovr_palette_w					},	/* Palette*/
+	{ 0x200e0a, 0x200e0d, MWA16_RAM, &nettoqc_protection_val	},	/**/
+	{ 0x201000, 0x2017ff, MWA16_RAM 							},	/* ?*/
+	{ 0x300040, 0x300047, ddenlovr_palette_base_w				},	/* palette base for the 4 layers*/
 	{ 0x300068, 0x300069, ddenlovr_bgcolor_w					},
 	{ 0x30006a, 0x30006b, ddenlovr_priority_w					},
 	{ 0x30006c, 0x30006d, ddenlovr_layer_enable_w				},
 	{ 0x300080, 0x300083, ddenlovr_blitter_w					},
-	{ 0x3000c0, 0x3000c1, YM2413_register_port_0_lsb_w			},	// Sound
-	{ 0x3000c2, 0x3000c3, YM2413_data_port_0_lsb_w				},	//
-	{ 0x300140, 0x300141, AY8910_control_port_0_lsb_w			},	//
-	{ 0x300142, 0x300143, AY8910_write_port_0_lsb_w				},	//
-	{ 0x300188, 0x300189, nettoqc_coincounter_w					},	// Coin Counters
-	{ 0x30018a, 0x30018b, nettoqc_select_w						},	//
+	{ 0x3000c0, 0x3000c1, YM2413_register_port_0_lsb_w			},	/* Sound*/
+	{ 0x3000c2, 0x3000c3, YM2413_data_port_0_lsb_w				},	/**/
+	{ 0x300140, 0x300141, AY8910_control_port_0_lsb_w			},	/**/
+	{ 0x300142, 0x300143, AY8910_write_port_0_lsb_w				},	/**/
+	{ 0x300188, 0x300189, nettoqc_coincounter_w					},	/* Coin Counters*/
+	{ 0x30018a, 0x30018b, nettoqc_select_w						},	/**/
 	{ 0x30018c, 0x30018d, nettoqc_oki_bank_w					},
-	{ 0x300240, 0x300241, OKIM6295_data_0_lsb_w 				},	//
-	{ 0x3001ca, 0x3001cb, ddenlovr_blitter_irq_ack_w			},	// Blitter irq acknowledge
-	{ 0xff0000, 0xffffff, MWA16_RAM								},	// RAM
+	{ 0x300240, 0x300241, OKIM6295_data_0_lsb_w 				},	/**/
+	{ 0x3001ca, 0x3001cb, ddenlovr_blitter_irq_ack_w			},	/* Blitter irq acknowledge*/
+	{ 0xff0000, 0xffffff, MWA16_RAM								},	/* RAM*/
 MEMORY_END
 
 
@@ -1170,8 +1170,8 @@ READ_HANDLER( rongrong_input_r )
 {
 	if (!(rongrong_select & 0x01))	return readinputport(3);
 	if (!(rongrong_select & 0x02))	return readinputport(4);
-	if (!(rongrong_select & 0x04))	return 0xff;//rand();
-	if (!(rongrong_select & 0x08))	return 0xff;//rand();
+	if (!(rongrong_select & 0x04))	return 0xff;/*rand();*/
+	if (!(rongrong_select & 0x08))	return 0xff;/*rand();*/
 	if (!(rongrong_select & 0x10))	return readinputport(5);
 	return 0xff;
 }
@@ -1180,7 +1180,7 @@ WRITE_HANDLER( rongrong_select_w )
 {
 	UINT8 *rom = memory_region(REGION_CPU1);
 
-//logerror("%04x: rongrong_select_w %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: rongrong_select_w %02x\n",activecpu_get_pc(),data);*/
 	/* bits 0-4 = **both** ROM bank **AND** input select */
 	cpu_setbank(1, &rom[0x10000 + 0x8000 * (data & 0x1f)]);
 	rongrong_select = data;
@@ -1192,86 +1192,86 @@ WRITE_HANDLER( rongrong_select_w )
 
 
 static MEMORY_READ_START( quizchq_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM					},	// ROM
-	{ 0x6000, 0x6fff, MRA_RAM					},	// RAM
-	{ 0x7000, 0x7fff, MRA_BANK2					},	// RAM (Banked)
-	{ 0x8000, 0xffff, MRA_BANK1					},	// ROM (Banked)
+	{ 0x0000, 0x5fff, MRA_ROM					},	/* ROM*/
+	{ 0x6000, 0x6fff, MRA_RAM					},	/* RAM*/
+	{ 0x7000, 0x7fff, MRA_BANK2					},	/* RAM (Banked)*/
+	{ 0x8000, 0xffff, MRA_BANK1					},	/* ROM (Banked)*/
 MEMORY_END
 
 static MEMORY_WRITE_START( quizchq_writemem )
-	{ 0x0000, 0x5fff, MWA_ROM					},	// ROM
-	{ 0x6000, 0x6fff, MWA_RAM					},	// RAM
-	{ 0x7000, 0x7fff, MWA_BANK2					},	// RAM (Banked)
-	{ 0x8000, 0x81ff, rongrong_palette_w	},	// ROM (Banked)
-	{ 0x8000, 0xffff, MWA_ROM					},	// ROM (Banked)
+	{ 0x0000, 0x5fff, MWA_ROM					},	/* ROM*/
+	{ 0x6000, 0x6fff, MWA_RAM					},	/* RAM*/
+	{ 0x7000, 0x7fff, MWA_BANK2					},	/* RAM (Banked)*/
+	{ 0x8000, 0x81ff, rongrong_palette_w	},	/* ROM (Banked)*/
+	{ 0x8000, 0xffff, MWA_ROM					},	/* ROM (Banked)*/
 MEMORY_END
 
 static PORT_READ_START( quizchq_readport )
-	{ 0x03, 0x03, rongrong_gfxrom_r			},	// Video Chip
-//	{ 0x1b, 0x1b,	// bit 5 = busy flag?
-	{ 0x1c, 0x1c, rongrong_input_r		},	//
-	{ 0x22, 0x23, rongrong_input2_r		},	//
-	{ 0x40, 0x40, OKIM6295_status_0_r	},	//
-	{ 0x98, 0x98, unk_r		},	// ? must be 78 on startup
-	{ 0xa0, 0xaf, rtc_r },	// 6242RTC
+	{ 0x03, 0x03, rongrong_gfxrom_r			},	/* Video Chip*/
+/*	{ 0x1b, 0x1b,	*/ /* bit 5 = busy flag?*/
+	{ 0x1c, 0x1c, rongrong_input_r		},	/**/
+	{ 0x22, 0x23, rongrong_input2_r		},	/**/
+	{ 0x40, 0x40, OKIM6295_status_0_r	},	/**/
+	{ 0x98, 0x98, unk_r		},	/* ? must be 78 on startup*/
+	{ 0xa0, 0xaf, rtc_r },	/* 6242RTC*/
 PORT_END
 
 static PORT_WRITE_START( quizchq_writeport )
 	{ 0x00, 0x01, rongrong_blitter_w	},
-	{ 0x1e, 0x1e, rongrong_select_w		},	//
-	{ 0x20, 0x20, rongrong_select2_w	},	//
-	{ 0x40, 0x40, OKIM6295_data_0_w		},	//
-	{ 0x60, 0x60, YM2413_register_port_0_w	},	// Sound
-	{ 0x61, 0x61, YM2413_data_port_0_w		},	//
-	{ 0x80, 0x83, rongrong_palette_base_w },	// palette base for the 4 layers
+	{ 0x1e, 0x1e, rongrong_select_w		},	/**/
+	{ 0x20, 0x20, rongrong_select2_w	},	/**/
+	{ 0x40, 0x40, OKIM6295_data_0_w		},	/**/
+	{ 0x60, 0x60, YM2413_register_port_0_w	},	/* Sound*/
+	{ 0x61, 0x61, YM2413_data_port_0_w		},	/**/
+	{ 0x80, 0x83, rongrong_palette_base_w },	/* palette base for the 4 layers*/
 	{ 0x94, 0x94, dynax_bgcolor_w },
 	{ 0x95, 0x95, dynax_priority_w },
 	{ 0x96, 0x96, dynax_layer_enable_w },
-//	{ 0xa0, 0xaf, },	// 6242RTC
+/*	{ 0xa0, 0xaf, },	*/ /* 6242RTC*/
 	{ 0xc0, 0xc0, quizchq_oki_bank_w },
-	{ 0xc2, 0xc2, IOWP_NOP },	// enables palette RAM at f000
+	{ 0xc2, 0xc2, IOWP_NOP },	/* enables palette RAM at f000*/
 PORT_END
 
 
 
 static MEMORY_READ_START( rongrong_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM					},	// ROM
-	{ 0x6000, 0x6fff, MRA_RAM					},	// RAM
-	{ 0x7000, 0x7fff, MRA_BANK2					},	// RAM (Banked)
-	{ 0x8000, 0xffff, MRA_BANK1					},	// ROM (Banked)
+	{ 0x0000, 0x5fff, MRA_ROM					},	/* ROM*/
+	{ 0x6000, 0x6fff, MRA_RAM					},	/* RAM*/
+	{ 0x7000, 0x7fff, MRA_BANK2					},	/* RAM (Banked)*/
+	{ 0x8000, 0xffff, MRA_BANK1					},	/* ROM (Banked)*/
 MEMORY_END
 
 static MEMORY_WRITE_START( rongrong_writemem )
-	{ 0x0000, 0x5fff, MWA_ROM					},	// ROM
-	{ 0x6000, 0x6fff, MWA_RAM					},	// RAM
-	{ 0x7000, 0x7fff, MWA_BANK2					},	// RAM (Banked)
+	{ 0x0000, 0x5fff, MWA_ROM					},	/* ROM*/
+	{ 0x6000, 0x6fff, MWA_RAM					},	/* RAM*/
+	{ 0x7000, 0x7fff, MWA_BANK2					},	/* RAM (Banked)*/
 	{ 0xf000, 0xf1ff, rongrong_palette_w	},
-	{ 0x8000, 0xffff, MWA_ROM					},	// ROM (Banked)
+	{ 0x8000, 0xffff, MWA_ROM					},	/* ROM (Banked)*/
 MEMORY_END
 
 static PORT_READ_START( rongrong_readport )
-	{ 0x03, 0x03, rongrong_gfxrom_r			},	// Video Chip
-//	{ 0x1b, 0x1b,	// bit 5 = busy flag?
-	{ 0x1c, 0x1c, rongrong_input_r		},	//
-	{ 0xa2, 0xa3, rongrong_input2_r		},	//
-	{ 0x40, 0x40, OKIM6295_status_0_r	},	//
-	{ 0x98, 0x98, unk_r		},	// ? must be 78 on startup
-	{ 0x20, 0x2f, rtc_r },	// 6242RTC
+	{ 0x03, 0x03, rongrong_gfxrom_r			},	/* Video Chip*/
+/*	{ 0x1b, 0x1b,	*/ /* bit 5 = busy flag?*/
+	{ 0x1c, 0x1c, rongrong_input_r		},	/**/
+	{ 0xa2, 0xa3, rongrong_input2_r		},	/**/
+	{ 0x40, 0x40, OKIM6295_status_0_r	},	/**/
+	{ 0x98, 0x98, unk_r		},	/* ? must be 78 on startup*/
+	{ 0x20, 0x2f, rtc_r },	/* 6242RTC*/
 PORT_END
 
 static PORT_WRITE_START( rongrong_writeport )
 	{ 0x00, 0x01, rongrong_blitter_w	},
-	{ 0x1e, 0x1e, rongrong_select_w		},	//
-	{ 0xa0, 0xa0, rongrong_select2_w	},	//
-	{ 0x40, 0x40, OKIM6295_data_0_w		},	//
-	{ 0x60, 0x60, YM2413_register_port_0_w	},	// Sound
-	{ 0x61, 0x61, YM2413_data_port_0_w		},	//
-	{ 0x80, 0x83, rongrong_palette_base_w },	// palette base for the 4 layers
+	{ 0x1e, 0x1e, rongrong_select_w		},	/**/
+	{ 0xa0, 0xa0, rongrong_select2_w	},	/**/
+	{ 0x40, 0x40, OKIM6295_data_0_w		},	/**/
+	{ 0x60, 0x60, YM2413_register_port_0_w	},	/* Sound*/
+	{ 0x61, 0x61, YM2413_data_port_0_w		},	/**/
+	{ 0x80, 0x83, rongrong_palette_base_w },	/* palette base for the 4 layers*/
 	{ 0x94, 0x94, dynax_bgcolor_w },
 	{ 0x95, 0x95, dynax_priority_w },
 	{ 0x96, 0x96, dynax_layer_enable_w },
-//	{ 0x20, 0x2f, },	// 6242RTC
-	{ 0xc2, 0xc2, IOWP_NOP },	// enables palette RAM at f000, and protection device at f705/f706/f601
+/*	{ 0x20, 0x2f, },	*/ /* 6242RTC*/
+	{ 0xc2, 0xc2, IOWP_NOP },	/* enables palette RAM at f000, and protection device at f705/f706/f601*/
 PORT_END
 /*
 1e input select,1c input read
@@ -1312,11 +1312,11 @@ static WRITE_HANDLER( mmpanic_soundlatch_w )
 
 static WRITE_HANDLER( mmpanic_blitter_w )
 {
-	blitter_w(0,offset,data,0xdf);	// RST 18
+	blitter_w(0,offset,data,0xdf);	/* RST 18*/
 }
 static WRITE_HANDLER( mmpanic_blitter2_w )
 {
-	blitter_w(1,offset,data,0xdf);	// RST 18
+	blitter_w(1,offset,data,0xdf);	/* RST 18*/
 }
 
 /* A led for each of the 9 buttons */
@@ -1356,43 +1356,43 @@ static READ_HANDLER( mmpanic_link_r )	{ return 0xff; }
 /* Main CPU */
 
 static MEMORY_READ_START( mmpanic_readmem )
-	{ 0x0051, 0x0051, magic_r					},	// ?
-	{ 0x0000, 0x5fff, MRA_ROM					},	// ROM
-	{ 0x6000, 0x6fff, MRA_RAM					},	// RAM
-	{ 0x7000, 0x7fff, MRA_BANK2					},	// RAM (Banked)
-	{ 0x8000, 0xffff, MRA_BANK1					},	// ROM (Banked)
+	{ 0x0051, 0x0051, magic_r					},	/* ?*/
+	{ 0x0000, 0x5fff, MRA_ROM					},	/* ROM*/
+	{ 0x6000, 0x6fff, MRA_RAM					},	/* RAM*/
+	{ 0x7000, 0x7fff, MRA_BANK2					},	/* RAM (Banked)*/
+	{ 0x8000, 0xffff, MRA_BANK1					},	/* ROM (Banked)*/
 MEMORY_END
 
 static MEMORY_WRITE_START( mmpanic_writemem )
-	{ 0x0000, 0x5fff, MWA_ROM					},	// ROM
-	{ 0x6000, 0x6fff, MWA_RAM					},	// RAM
-	{ 0x7000, 0x7fff, MWA_BANK2					},	// RAM (Banked)
-	{ 0x8000, 0x81ff, rongrong_palette_w		},	// ROM (Banked)
-	{ 0x8000, 0xffff, MWA_ROM					},	// ROM (Banked)
+	{ 0x0000, 0x5fff, MWA_ROM					},	/* ROM*/
+	{ 0x6000, 0x6fff, MWA_RAM					},	/* RAM*/
+	{ 0x7000, 0x7fff, MWA_BANK2					},	/* RAM (Banked)*/
+	{ 0x8000, 0x81ff, rongrong_palette_w		},	/* ROM (Banked)*/
+	{ 0x8000, 0xffff, MWA_ROM					},	/* ROM (Banked)*/
 MEMORY_END
 
 static PORT_READ_START( mmpanic_readport )
-	{ 0x00, 0x0f, rtc_r					},	// 6242RTC
-	{ 0x38, 0x38, unk_r					},	// ? must be 78 on startup
-	{ 0x58, 0x58, unk_r					},	// ? must be 78 on startup
-	{ 0x63, 0x63, rongrong_gfxrom_r		},	// Video Chip
+	{ 0x00, 0x0f, rtc_r					},	/* 6242RTC*/
+	{ 0x38, 0x38, unk_r					},	/* ? must be 78 on startup*/
+	{ 0x58, 0x58, unk_r					},	/* ? must be 78 on startup*/
+	{ 0x63, 0x63, rongrong_gfxrom_r		},	/* Video Chip*/
 	{ 0x6a, 0x6a, input_port_0_r		},
 	{ 0x6b, 0x6b, input_port_1_r		},
-	{ 0x6c, 0x6d, mmpanic_link_r		},	// Other cabinets?
-	{ 0x7c, 0x7c, OKIM6295_status_0_r	},	// Sound
-	{ 0x94, 0x94, input_port_2_r		},	// DSW 1
-	{ 0x98, 0x98, input_port_3_r		},	// DSW 2
-	{ 0x9c, 0x9c, input_port_4_r		},	// DSW 1&2 high bits
+	{ 0x6c, 0x6d, mmpanic_link_r		},	/* Other cabinets?*/
+	{ 0x7c, 0x7c, OKIM6295_status_0_r	},	/* Sound*/
+	{ 0x94, 0x94, input_port_2_r		},	/* DSW 1*/
+	{ 0x98, 0x98, input_port_3_r		},	/* DSW 2*/
+	{ 0x9c, 0x9c, input_port_4_r		},	/* DSW 1&2 high bits*/
 PORT_END
 
 static PORT_WRITE_START( mmpanic_writeport )
-	{ 0x00, 0x0f, IOWP_NOP					},	// 6242RTC
-	// Layers 0-3:
+	{ 0x00, 0x0f, IOWP_NOP					},	/* 6242RTC*/
+	/* Layers 0-3:*/
 	{ 0x20, 0x23, rongrong_palette_base_w	},
 	{ 0x34, 0x34, dynax_bgcolor_w			},
 	{ 0x35, 0x35, dynax_priority_w			},
 	{ 0x36, 0x36, dynax_layer_enable_w		},
-	// Layers 4-7:
+	/* Layers 4-7:*/
 	{ 0x40, 0x43, dynax_palette_base2_w		},
 	{ 0x54, 0x54, dynax_bgcolor2_w			},
 	{ 0x55, 0x55, dynax_priority2_w			},
@@ -1404,38 +1404,38 @@ static PORT_WRITE_START( mmpanic_writeport )
 	{ 0x69, 0x69, mmpanic_lockout_w			},
 	{ 0x74, 0x74, mmpanic_rombank_w			},
 
-	{ 0x78, 0x78, IOWP_NOP					},	// 0, during RST 08 (irq acknowledge?)
+	{ 0x78, 0x78, IOWP_NOP					},	/* 0, during RST 08 (irq acknowledge?)*/
 
-	{ 0x7c, 0x7c, OKIM6295_data_0_w			},	// Sound
-	{ 0x8c, 0x8c, mmpanic_soundlatch_w		},	//
-	{ 0x88, 0x88, mmpanic_leds_w			},	// Leds
-	{ 0x90, 0x90, IOWP_NOP					},	// written just before port 8c
-	{ 0xa6, 0xa6, mmpanic_leds2_w			},	//
+	{ 0x7c, 0x7c, OKIM6295_data_0_w			},	/* Sound*/
+	{ 0x8c, 0x8c, mmpanic_soundlatch_w		},	/**/
+	{ 0x88, 0x88, mmpanic_leds_w			},	/* Leds*/
+	{ 0x90, 0x90, IOWP_NOP					},	/* written just before port 8c*/
+	{ 0xa6, 0xa6, mmpanic_leds2_w			},	/**/
 PORT_END
 
 /* Sound CPU */
 
 static MEMORY_READ_START( mmpanic_sound_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM					},	// ROM
-	{ 0x6000, 0x66ff, MRA_RAM					},	// RAM
-	{ 0x8000, 0xffff, MRA_ROM					},	// ROM
+	{ 0x0000, 0x5fff, MRA_ROM					},	/* ROM*/
+	{ 0x6000, 0x66ff, MRA_RAM					},	/* RAM*/
+	{ 0x8000, 0xffff, MRA_ROM					},	/* ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( mmpanic_sound_writemem )
-	{ 0x0000, 0x5fff, MWA_ROM					},	// ROM
-	{ 0x6000, 0x66ff, MWA_RAM					},	// RAM
-	{ 0x8000, 0xffff, MWA_ROM					},	// ROM
+	{ 0x0000, 0x5fff, MWA_ROM					},	/* ROM*/
+	{ 0x6000, 0x66ff, MWA_RAM					},	/* RAM*/
+	{ 0x8000, 0xffff, MWA_ROM					},	/* ROM*/
 MEMORY_END
 
 static PORT_READ_START( mmpanic_sound_readport )
 	{ 0x00, 0x00, soundlatch_r		},
-	{ 0x02, 0x02, IORP_NOP			},	// read just before port 00
-	{ 0x04, 0x04, IORP_NOP			},	// read only once at the start
+	{ 0x02, 0x02, IORP_NOP			},	/* read just before port 00*/
+	{ 0x04, 0x04, IORP_NOP			},	/* read only once at the start*/
 PORT_END
 
 static PORT_WRITE_START( mmpanic_sound_writeport )
-	{ 0x04, 0x04, IOWP_NOP					},	// 0, during NMI
-	{ 0x06, 0x06, IOWP_NOP					},	// almost always 1, sometimes 0
+	{ 0x04, 0x04, IOWP_NOP					},	/* 0, during NMI*/
+	{ 0x06, 0x06, IOWP_NOP					},	/* almost always 1, sometimes 0*/
 	{ 0x08, 0x08, YM2413_register_port_0_w	},
 	{ 0x09, 0x09, YM2413_data_port_0_w		},
 	{ 0x0c, 0x0c, AY8910_write_port_0_w		},
@@ -1445,7 +1445,7 @@ PORT_END
 
 
 INPUT_PORTS_START( ddenlovr )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -1455,7 +1455,7 @@ INPUT_PORTS_START( ddenlovr )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
@@ -1465,18 +1465,18 @@ INPUT_PORTS_START( ddenlovr )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 
-	PORT_START	// IN2 - Coins + ?
+	PORT_START	/* IN2 - Coins + ?*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW,  IPT_COIN1    )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW,  IPT_COIN2    )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )
 	PORT_BITX( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	/* Test */
 	PORT_BIT(  0x10, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
-	PORT_BIT(  0x20, IP_ACTIVE_LOW,  IPT_SPECIAL  )	// ? quiz365
-	PORT_BIT(  0x40, IP_ACTIVE_HIGH, IPT_SPECIAL  )	// blitter irq flag
-	PORT_BIT(  0x80, IP_ACTIVE_HIGH, IPT_SPECIAL  )	// blitter busy flag
+	PORT_BIT(  0x20, IP_ACTIVE_LOW,  IPT_SPECIAL  )	/* ? quiz365*/
+	PORT_BIT(  0x40, IP_ACTIVE_HIGH, IPT_SPECIAL  )	/* blitter irq flag*/
+	PORT_BIT(  0x80, IP_ACTIVE_HIGH, IPT_SPECIAL  )	/* blitter busy flag*/
 
 	/* one of the dips selects the nudity level */
-	PORT_START	// IN3 - DSW
+	PORT_START	/* IN3 - DSW*/
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x02, 0x02, "Unknown 1-1" )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
@@ -1493,7 +1493,7 @@ INPUT_PORTS_START( ddenlovr )
 	PORT_DIPNAME( 0x20, 0x20, "Unknown 1-5*" )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, "Unknown 1-6*" )	// 6&7
+	PORT_DIPNAME( 0x40, 0x40, "Unknown 1-6*" )	/* 6&7*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, "Unknown 1-7*" )
@@ -1503,7 +1503,7 @@ INPUT_PORTS_END
 
 
 INPUT_PORTS_START( nettoqc )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_BUTTON1  | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2  | IPF_PLAYER1 )
@@ -1513,7 +1513,7 @@ INPUT_PORTS_START( nettoqc )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_BUTTON1  | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2  | IPF_PLAYER2 )
@@ -1523,17 +1523,17 @@ INPUT_PORTS_START( nettoqc )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - Coins + ?
+	PORT_START	/* IN2 - Coins + ?*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW,  IPT_COIN1    )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW,  IPT_COIN2    )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )
 	PORT_BITX( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	/* Test */
-	PORT_BIT(  0x10, IP_ACTIVE_HIGH, IPT_SPECIAL  )	// blitter busy flag
-	PORT_BIT(  0x20, IP_ACTIVE_HIGH, IPT_SPECIAL  )	// ?
-	PORT_BIT(  0x40, IP_ACTIVE_HIGH, IPT_SPECIAL  )	// blitter irq flag
+	PORT_BIT(  0x10, IP_ACTIVE_HIGH, IPT_SPECIAL  )	/* blitter busy flag*/
+	PORT_BIT(  0x20, IP_ACTIVE_HIGH, IPT_SPECIAL  )	/* ?*/
+	PORT_BIT(  0x40, IP_ACTIVE_HIGH, IPT_SPECIAL  )	/* blitter irq flag*/
 	PORT_BIT(  0x80, IP_ACTIVE_HIGH, IPT_SPECIAL  )
 
-	PORT_START	// IN3 - DSW
+	PORT_START	/* IN3 - DSW*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
@@ -1557,7 +1557,7 @@ INPUT_PORTS_START( nettoqc )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN4 - DSW
+	PORT_START	/* IN4 - DSW*/
 	PORT_DIPNAME( 0x03, 0x03, "Unknown 2-0&1*" )
 	PORT_DIPSETTING(    0x02, "0" )
 	PORT_DIPSETTING(    0x03, "1" )
@@ -1582,7 +1582,7 @@ INPUT_PORTS_START( nettoqc )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN5 - DSW
+	PORT_START	/* IN5 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-8*" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1594,14 +1594,14 @@ INPUT_PORTS_START( nettoqc )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_DIPNAME( 0x80, 0x00, "Detailed Tests" )	// menu "8 OPTION" in service mode
+	PORT_DIPNAME( 0x80, 0x00, "Detailed Tests" )	/* menu "8 OPTION" in service mode*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
 
 INPUT_PORTS_START( quiz365 )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -1611,7 +1611,7 @@ INPUT_PORTS_START( quiz365 )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
@@ -1621,17 +1621,17 @@ INPUT_PORTS_START( quiz365 )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 
-	PORT_START	// IN2 - Coins + ?
+	PORT_START	/* IN2 - Coins + ?*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW,  IPT_COIN1    )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW,  IPT_COIN2    )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )
 	PORT_BITX( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	/* Test */
 	PORT_BIT(  0x10, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
-	PORT_BIT(  0x20, IP_ACTIVE_LOW,  IPT_SPECIAL  )	// ? quiz365
-	PORT_BIT(  0x40, IP_ACTIVE_HIGH, IPT_SPECIAL  )	// blitter irq flag
-	PORT_BIT(  0x80, IP_ACTIVE_HIGH, IPT_SPECIAL  )	// blitter busy flag
+	PORT_BIT(  0x20, IP_ACTIVE_LOW,  IPT_SPECIAL  )	/* ? quiz365*/
+	PORT_BIT(  0x40, IP_ACTIVE_HIGH, IPT_SPECIAL  )	/* blitter irq flag*/
+	PORT_BIT(  0x80, IP_ACTIVE_HIGH, IPT_SPECIAL  )	/* blitter busy flag*/
 
-	PORT_START	// IN3 - DSW
+	PORT_START	/* IN3 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1657,7 +1657,7 @@ INPUT_PORTS_START( quiz365 )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN4 - DSW
+	PORT_START	/* IN4 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1683,12 +1683,12 @@ INPUT_PORTS_START( quiz365 )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN5 - DSW
+	PORT_START	/* IN5 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x02, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x04, 0x00, "Detailed Tests" )	// menu "8 OPTION" in service mode
+	PORT_DIPNAME( 0x04, 0x00, "Detailed Tests" )	/* menu "8 OPTION" in service mode*/
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, "Unknown 1-3" )
@@ -1699,7 +1699,7 @@ INPUT_PORTS_END
 
 
 INPUT_PORTS_START( rongrong )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -1709,7 +1709,7 @@ INPUT_PORTS_START( rongrong )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
@@ -1719,17 +1719,17 @@ INPUT_PORTS_START( rongrong )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 
-	PORT_START	// IN2 - Coins + ?
+	PORT_START	/* IN2 - Coins + ?*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW,  IPT_COIN1    )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW,  IPT_COIN2    )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )
 	PORT_BITX( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	/* Test */
 	PORT_BIT(  0x10, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
-	PORT_BIT(  0x20, IP_ACTIVE_LOW,  IPT_SPECIAL  )	// ? quiz365
-	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_SPECIAL  )	// ? blitter irq flag ?
-	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_SPECIAL  )	// ? blitter busy flag ?
+	PORT_BIT(  0x20, IP_ACTIVE_LOW,  IPT_SPECIAL  )	/* ? quiz365*/
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_SPECIAL  )	/* ? blitter irq flag ?*/
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_SPECIAL  )	/* ? blitter busy flag ?*/
 
-	PORT_START	// IN3 - DSW
+	PORT_START	/* IN3 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1755,7 +1755,7 @@ INPUT_PORTS_START( rongrong )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN4 - DSW
+	PORT_START	/* IN4 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1781,7 +1781,7 @@ INPUT_PORTS_START( rongrong )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN5 - DSW
+	PORT_START	/* IN5 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1798,7 +1798,7 @@ INPUT_PORTS_START( rongrong )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( quizchq )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
@@ -1808,7 +1808,7 @@ INPUT_PORTS_START( quizchq )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
@@ -1818,17 +1818,17 @@ INPUT_PORTS_START( quizchq )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - Coins + ?
+	PORT_START	/* IN2 - Coins + ?*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_COIN2    )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	/* Test */
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_UNKNOWN  )
-	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_SPECIAL  )	// ? quiz365
-	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_SPECIAL  )	// ? blitter irq flag ?
-	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_SPECIAL  )	// ? blitter busy flag ?
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_SPECIAL  )	/* ? quiz365*/
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_SPECIAL  )	/* ? blitter irq flag ?*/
+	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_SPECIAL  )	/* ? blitter busy flag ?*/
 
-	PORT_START	// IN3 - DSW
+	PORT_START	/* IN3 - DSW*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
@@ -1852,7 +1852,7 @@ INPUT_PORTS_START( quizchq )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN4 - DSW
+	PORT_START	/* IN4 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 2-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1876,7 +1876,7 @@ INPUT_PORTS_START( quizchq )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 
-	PORT_START	// IN5 - DSW
+	PORT_START	/* IN5 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1893,18 +1893,18 @@ INPUT_PORTS_START( quizchq )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( mmpanic )
-	PORT_START	// IN0 6a (68 = 1:used? 2:normal 3:goes to 69)
+	PORT_START	/* IN0 6a (68 = 1:used? 2:normal 3:goes to 69)*/
 	PORT_BIT_IMPULSE( 0x01, IP_ACTIVE_LOW, IPT_COIN1, 2 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested?
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested?*/
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	/* Test */
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested?
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested?*/
 	PORT_BITX(0x20, IP_ACTIVE_LOW, 0, "8", KEYCODE_8_PAD, IP_JOY_NONE )
 	PORT_BITX(0x40, IP_ACTIVE_LOW, 0, "9", KEYCODE_9_PAD, IP_JOY_NONE )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL )	// busy?
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL )	/* busy?*/
 
-	PORT_START	// IN1 6b (68 = 0 & 1)
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	// tested
+	PORT_START	/* IN1 6b (68 = 0 & 1)*/
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* tested*/
 	PORT_BITX(0x02, IP_ACTIVE_LOW, 0, "1", KEYCODE_1_PAD, IP_JOY_NONE )
 	PORT_BITX(0x04, IP_ACTIVE_LOW, 0, "2", KEYCODE_2_PAD, IP_JOY_NONE )
 	PORT_BITX(0x08, IP_ACTIVE_LOW, 0, "3", KEYCODE_3_PAD, IP_JOY_NONE )
@@ -1913,7 +1913,7 @@ INPUT_PORTS_START( mmpanic )
 	PORT_BITX(0x40, IP_ACTIVE_LOW, 0, "6", KEYCODE_6_PAD, IP_JOY_NONE )
 	PORT_BITX(0x80, IP_ACTIVE_LOW, 0, "7", KEYCODE_7_PAD, IP_JOY_NONE )
 
-	PORT_START	// IN2 - DSW
+	PORT_START	/* IN2 - DSW*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
@@ -1926,23 +1926,23 @@ INPUT_PORTS_START( mmpanic )
 	PORT_DIPSETTING(    0x10, "3" )
 	PORT_DIPSETTING(    0x0c, "4" )
 	PORT_DIPSETTING(    0x08, "5" )
-//	PORT_DIPSETTING(    0x04, "5" )
-//	PORT_DIPSETTING(    0x00, "5" )
+/*	PORT_DIPSETTING(    0x04, "5" )*/
+/*	PORT_DIPSETTING(    0x00, "5" )*/
 	PORT_DIPNAME( 0x20, 0x20, "Linked Cabinets" )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Unknown 1-7*" )	// 2-0 is related to the same thing (flip?)
+	PORT_DIPNAME( 0x80, 0x80, "Unknown 1-7*" )	/* 2-0 is related to the same thing (flip?)*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN3 - DSW
+	PORT_START	/* IN3 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 2-0*" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, "Unknown 2-1*" )	// reg 1 of blitter
+	PORT_DIPNAME( 0x02, 0x02, "Unknown 2-1*" )	/* reg 1 of blitter*/
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0c, 0x0c, "Unknown 2-2&3*" )
@@ -1950,25 +1950,25 @@ INPUT_PORTS_START( mmpanic )
 	PORT_DIPSETTING(    0x08, "20" )
 	PORT_DIPSETTING(    0x04, "40" )
 	PORT_DIPSETTING(    0x00, "80" )
-	PORT_DIPNAME( 0x10, 0x10, "Unknown 2-4*" )	// used?
+	PORT_DIPNAME( 0x10, 0x10, "Unknown 2-4*" )	/* used?*/
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, "Unknown 2-5*" )	// used?
+	PORT_DIPNAME( 0x20, 0x20, "Unknown 2-5*" )	/* used?*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, "Unknown 2-6*" )	// 6 & 7?
+	PORT_DIPNAME( 0x40, 0x40, "Unknown 2-6*" )	/* 6 & 7?*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, "Unknown 2-7*" )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN4 - DSW
+	PORT_START	/* IN4 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "Set Date" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x02, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x04, 0x04, "Unknown 3-2*" )	// used?
+	PORT_DIPNAME( 0x04, 0x04, "Unknown 3-2*" )	/* used?*/
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, "Unknown 3-3*" )
@@ -1980,7 +1980,7 @@ INPUT_PORTS_START( mmpanic )
 	PORT_DIPNAME( 0x20, 0x20, "Unknown 3-5" )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, "Unknown 3-6*" )	// used?
+	PORT_DIPNAME( 0x40, 0x40, "Unknown 3-6*" )	/* used?*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, "Unknown 3-7*" )
@@ -2089,7 +2089,7 @@ static INTERRUPT_GEN( quizchq_irq )
 
 static INTERRUPT_GEN( rtc_irq )
 {
-//	cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0xfc);
+/*	cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0xfc);*/
 }
 
 static MACHINE_DRIVER_START( quizchq )
@@ -2099,7 +2099,7 @@ static MACHINE_DRIVER_START( quizchq )
 	MDRV_CPU_MEMORY(quizchq_readmem,quizchq_writemem)
 	MDRV_CPU_PORTS(quizchq_readport,quizchq_writeport)
 	MDRV_CPU_VBLANK_INT(quizchq_irq,1)
-//	MDRV_CPU_PERIODIC_INT(rtc_irq,1)
+/*	MDRV_CPU_PERIODIC_INT(rtc_irq,1)*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -2148,9 +2148,9 @@ static INTERRUPT_GEN( mmpanic_irq )
 		return;
 
 	if ((++count % 60) == 0)
-		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0xe7);	// RST 20, clock
+		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0xe7);	/* RST 20, clock*/
 	else
-		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0xcf);	// RST 08, vblank
+		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0xcf);	/* RST 08, vblank*/
 }
 
 static MACHINE_DRIVER_START( mmpanic )
@@ -2164,7 +2164,7 @@ static MACHINE_DRIVER_START( mmpanic )
 	MDRV_CPU_ADD_TAG("sound", Z80, 8000000)	/* ? */
 	MDRV_CPU_MEMORY(mmpanic_sound_readmem,mmpanic_sound_writemem)
 	MDRV_CPU_PORTS(mmpanic_sound_readport,mmpanic_sound_writeport)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)	// NMI by main cpu
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)	/* NMI by main cpu*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -2176,7 +2176,7 @@ static MACHINE_DRIVER_START( mmpanic )
 	MDRV_PALETTE_LENGTH(0x100)
 	MDRV_COLORTABLE_LENGTH(0x100)
 
-	MDRV_VIDEO_START(mmpanic)	// extra layers
+	MDRV_VIDEO_START(mmpanic)	/* extra layers*/
 	MDRV_VIDEO_UPDATE(ddenlovr)
 
 	/* sound hardware */
@@ -2275,7 +2275,7 @@ ROM_START( quizchq )
 	ROM_LOAD( "nwc7308.s2a",  0x300000, 0x20000, CRC(6eb5c81d) SHA1(c8e31e246e1235c045f5a881c6db43a2aff848ff) )
 
 	ROM_REGION( 0x80000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "nwc7301.1f",   0x00000, 0x80000, CRC(52c672e8) SHA1(bc05155f4d9c711cc2ed187a4dd2207b886452f0) )	// 2 banks
+	ROM_LOAD( "nwc7301.1f",   0x00000, 0x80000, CRC(52c672e8) SHA1(bc05155f4d9c711cc2ed187a4dd2207b886452f0) )	/* 2 banks*/
 ROM_END
 
 ROM_START( quizchql )
@@ -2296,7 +2296,7 @@ ROM_START( quizchql )
 	ROM_LOAD( "12.rom",       0x400000, 0x20000, CRC(43f8e5c7) SHA1(de4c8cc0948b0ce9e1ddf4bea434a7640db451e2) )
 
 	ROM_REGION( 0x80000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "1snd.rom",     0x00000, 0x80000, CRC(cebb9220) SHA1(7a2ee750f2e608a37858b849914316dc778bcae2) )	// 2 banks
+	ROM_LOAD( "1snd.rom",     0x00000, 0x80000, CRC(cebb9220) SHA1(7a2ee750f2e608a37858b849914316dc778bcae2) )	/* 2 banks*/
 ROM_END
 
 
@@ -2316,8 +2316,8 @@ ROM_START( quiz365 )
 	ROM_LOAD( "7807.rom", 0x380000, 0x080000, CRC(60fb1dfe) SHA1(35317220b6401ccb03bb4ab7d3c0b6ab7637d82a) )
 
 	ROM_REGION( 0x100000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "7801.rom", 0x080000, 0x080000, CRC(285cc62a) SHA1(7cb3bd0ead303787964bcf7a0ecf896b6a6bfa54) )	// bank 2,3
-	ROM_CONTINUE(         0x000000, 0x080000 )				// bank 0,1
+	ROM_LOAD( "7801.rom", 0x080000, 0x080000, CRC(285cc62a) SHA1(7cb3bd0ead303787964bcf7a0ecf896b6a6bfa54) )	/* bank 2,3*/
+	ROM_CONTINUE(         0x000000, 0x080000 )				/* bank 0,1*/
 ROM_END
 
 
@@ -2373,7 +2373,7 @@ ROM_START( nettoqc )
 	ROM_LOAD16_BYTE( "10303.rom", 0x000001, 0x080000, CRC(30c114c3) SHA1(fa9c26d465d2d919e141bbc080a04ac0f87c7010) )
 	ROM_LOAD16_BYTE( "10306.rom", 0x100000, 0x040000, CRC(f19fe827) SHA1(37907bf3206af5f4613dc80b6bd91c87dd6645ab) )
 	ROM_LOAD16_BYTE( "10304.rom", 0x100001, 0x040000, CRC(da1f56e5) SHA1(76c865927ee8392dd77476a248816e04e60c784a) )
-	ROM_CONTINUE(                 0x100001, 0x040000 )	// 1ST AND 2ND HALF IDENTICAL
+	ROM_CONTINUE(                 0x100001, 0x040000 )	/* 1ST AND 2ND HALF IDENTICAL*/
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )	/* blitter data */
 	ROM_LOAD( "10307.rom", 0x000000, 0x100000, CRC(c7a3b05f) SHA1(c931670c5d14f8446404ad00d785fa73d97dedfc) )
@@ -2422,8 +2422,8 @@ ROM_START( ddenlovr )
 	ROM_LOAD( "1139h.3c", 0x400000, 0x080000, CRC(be1189ca) SHA1(34b4102c6341ade03a1d44b6049ffa15666c6bb6) )
 
 	ROM_REGION( 0x200000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "1131h.1f", 0x080000, 0x080000, CRC(32f68241) SHA1(585b5e0d2d959af8b57ecc0a277aeda27e5cae9c) )	// bank 2, 3
-	ROM_LOAD( "1132h.1e", 0x100000, 0x080000, CRC(2de6363d) SHA1(2000328e41bc0261f19e02323434e9dfdc61013a) )	// bank 4, 5
+	ROM_LOAD( "1131h.1f", 0x080000, 0x080000, CRC(32f68241) SHA1(585b5e0d2d959af8b57ecc0a277aeda27e5cae9c) )	/* bank 2, 3*/
+	ROM_LOAD( "1132h.1e", 0x100000, 0x080000, CRC(2de6363d) SHA1(2000328e41bc0261f19e02323434e9dfdc61013a) )	/* bank 4, 5*/
 ROM_END
 
 
@@ -2451,7 +2451,7 @@ ROM_START( hanakanz )
 	ROM_LOAD( "50780.12b",    0x280000, 0x80000, CRC(6dfd8a86) SHA1(4d0c9f2028533ebe51f2963cb776bde5c802883e) )
 
 	ROM_REGION( 0x80000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "50710.1c",     0x00000, 0x80000, CRC(72ae072f) SHA1(024af2ae6aa12b7f76d12a9c589f07ec7f47e395) )	// 2 banks
+	ROM_LOAD( "50710.1c",     0x00000, 0x80000, CRC(72ae072f) SHA1(024af2ae6aa12b7f76d12a9c589f07ec7f47e395) )	/* 2 banks*/
 ROM_END
 
 

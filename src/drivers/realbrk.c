@@ -47,12 +47,12 @@ static data16_t *realbrk_dsw_select;
 static READ16_HANDLER( realbrk_dsw_r )
 {
 	data16_t sel = ~realbrk_dsw_select[0];
-	if (sel & 0x01)	return	(readinputport(2) & 0x00ff) << 8;		// DSW1 low bits
-	if (sel & 0x02)	return	(readinputport(3) & 0x00ff) << 8;		// DSW2 low bits
-	if (sel & 0x04)	return	(readinputport(4) & 0x00ff) << 8;		// DSW3 low bits
-	if (sel & 0x08)	return	(readinputport(5) & 0x00ff) << 8;		// DSW4 low bits
+	if (sel & 0x01)	return	(readinputport(2) & 0x00ff) << 8;		/* DSW1 low bits*/
+	if (sel & 0x02)	return	(readinputport(3) & 0x00ff) << 8;		/* DSW2 low bits*/
+	if (sel & 0x04)	return	(readinputport(4) & 0x00ff) << 8;		/* DSW3 low bits*/
+	if (sel & 0x08)	return	(readinputport(5) & 0x00ff) << 8;		/* DSW4 low bits*/
 
-	if (sel & 0x10)	return	((readinputport(2) & 0x0300) << 0) |	// DSWs high 2 bits
+	if (sel & 0x10)	return	((readinputport(2) & 0x0300) << 0) |	/* DSWs high 2 bits*/
 							((readinputport(3) & 0x0300) << 2) |
 							((readinputport(4) & 0x0300) << 4) |
 							((readinputport(5) & 0x0300) << 6) ;
@@ -68,41 +68,41 @@ static READ16_HANDLER( realbrk_dsw_r )
 ***************************************************************************/
 
 static MEMORY_READ16_START( realbrk_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM					},	// ROM
-	{ 0x200000, 0x203fff, MRA16_RAM					},	// Sprites
-	{ 0x400000, 0x40ffff, MRA16_RAM					},	// Palette
-	{ 0x600000, 0x601fff, MRA16_RAM					},	// Background	(0)
-	{ 0x602000, 0x603fff, MRA16_RAM					},	// Background	(1)
-	{ 0x604000, 0x604fff, MRA16_RAM					},	// Text			(2)
-	{ 0x606000, 0x60600f, MRA16_RAM					},	// Scroll + Video Regs
-	{ 0x605000, 0x61ffff, MRA16_RAM					},	//
-	{ 0x800002, 0x800003, YMZ280B_status_0_msb_r	},	// YMZ280
-	{ 0xc00000, 0xc00001, input_port_0_word_r		},	// P1 & P2 (Inputs)
-	{ 0xc00002, 0xc00003, input_port_1_word_r		},	// Coins
-	{ 0xc00004, 0xc00005, realbrk_dsw_r				},	// 4 x DSW (10 bits each)
-	{ 0xfe0000, 0xfeffff, MRA16_RAM					},	// RAM
-	{ 0xff0000, 0xfffbff, MRA16_RAM					},	// RAM
-	{ 0xfffc00, 0xffffff, MRA16_RAM					},	// TMP68301 Registers
+	{ 0x000000, 0x0fffff, MRA16_ROM					},	/* ROM*/
+	{ 0x200000, 0x203fff, MRA16_RAM					},	/* Sprites*/
+	{ 0x400000, 0x40ffff, MRA16_RAM					},	/* Palette*/
+	{ 0x600000, 0x601fff, MRA16_RAM					},	/* Background	(0)*/
+	{ 0x602000, 0x603fff, MRA16_RAM					},	/* Background	(1)*/
+	{ 0x604000, 0x604fff, MRA16_RAM					},	/* Text			(2)*/
+	{ 0x606000, 0x60600f, MRA16_RAM					},	/* Scroll + Video Regs*/
+	{ 0x605000, 0x61ffff, MRA16_RAM					},	/**/
+	{ 0x800002, 0x800003, YMZ280B_status_0_msb_r	},	/* YMZ280*/
+	{ 0xc00000, 0xc00001, input_port_0_word_r		},	/* P1 & P2 (Inputs)*/
+	{ 0xc00002, 0xc00003, input_port_1_word_r		},	/* Coins*/
+	{ 0xc00004, 0xc00005, realbrk_dsw_r				},	/* 4 x DSW (10 bits each)*/
+	{ 0xfe0000, 0xfeffff, MRA16_RAM					},	/* RAM*/
+	{ 0xff0000, 0xfffbff, MRA16_RAM					},	/* RAM*/
+	{ 0xfffc00, 0xffffff, MRA16_RAM					},	/* TMP68301 Registers*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( realbrk_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM							},	// ROM
-	{ 0x200000, 0x203fff, MWA16_RAM, &spriteram16			},	// Sprites
-	{ 0x400000, 0x40ffff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16	},	// Palette
-	{ 0x600000, 0x601fff, realbrk_vram_0_w, &realbrk_vram_0	},	// Background	(0)
-	{ 0x602000, 0x603fff, realbrk_vram_1_w, &realbrk_vram_1	},	// Background	(1)
-	{ 0x604000, 0x604fff, realbrk_vram_2_w, &realbrk_vram_2	},	// Text			(2)
-	{ 0x606000, 0x60600f, realbrk_vregs_w, &realbrk_vregs  	},	// Scroll + Video Regs
-	{ 0x605000, 0x61ffff, MWA16_RAM							},	//
-	{ 0x800000, 0x800001, YMZ280B_register_0_msb_w			},	// YMZ280
-	{ 0x800002, 0x800003, YMZ280B_data_0_msb_w				},	//
-	{ 0x800008, 0x800009, YM2413_register_port_0_lsb_w		},	// YM2413
-	{ 0x80000a, 0x80000b, YM2413_data_port_0_lsb_w			},	//
-	{ 0xc00004, 0xc00005, MWA16_RAM, &realbrk_dsw_select	},	// DSW select
-	{ 0xfe0000, 0xfeffff, MWA16_RAM							},	// RAM
-	{ 0xff0000, 0xfffbff, MWA16_RAM							},	// RAM
-	{ 0xfffd0a, 0xfffd0b, realbrk_flipscreen_w				},	// Hack! Parallel port data register
-	{ 0xfffc00, 0xffffff, tmp68301_regs_w, &tmp68301_regs	},	// TMP68301 Registers
+	{ 0x000000, 0x0fffff, MWA16_ROM							},	/* ROM*/
+	{ 0x200000, 0x203fff, MWA16_RAM, &spriteram16			},	/* Sprites*/
+	{ 0x400000, 0x40ffff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16	},	/* Palette*/
+	{ 0x600000, 0x601fff, realbrk_vram_0_w, &realbrk_vram_0	},	/* Background	(0)*/
+	{ 0x602000, 0x603fff, realbrk_vram_1_w, &realbrk_vram_1	},	/* Background	(1)*/
+	{ 0x604000, 0x604fff, realbrk_vram_2_w, &realbrk_vram_2	},	/* Text			(2)*/
+	{ 0x606000, 0x60600f, realbrk_vregs_w, &realbrk_vregs  	},	/* Scroll + Video Regs*/
+	{ 0x605000, 0x61ffff, MWA16_RAM							},	/**/
+	{ 0x800000, 0x800001, YMZ280B_register_0_msb_w			},	/* YMZ280*/
+	{ 0x800002, 0x800003, YMZ280B_data_0_msb_w				},	/**/
+	{ 0x800008, 0x800009, YM2413_register_port_0_lsb_w		},	/* YM2413*/
+	{ 0x80000a, 0x80000b, YM2413_data_port_0_lsb_w			},	/**/
+	{ 0xc00004, 0xc00005, MWA16_RAM, &realbrk_dsw_select	},	/* DSW select*/
+	{ 0xfe0000, 0xfeffff, MWA16_RAM							},	/* RAM*/
+	{ 0xff0000, 0xfffbff, MWA16_RAM							},	/* RAM*/
+	{ 0xfffd0a, 0xfffd0b, realbrk_flipscreen_w				},	/* Hack! Parallel port data register*/
+	{ 0xfffc00, 0xffffff, tmp68301_regs_w, &tmp68301_regs	},	/* TMP68301 Registers*/
 MEMORY_END
 
 
@@ -117,14 +117,14 @@ MEMORY_END
 ***************************************************************************/
 
 INPUT_PORTS_START( realbrk )
-	PORT_START	// IN0 - $c00000.w
+	PORT_START	/* IN0 - $c00000.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
 	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )
 	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )
-	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNUSED )	// BUTTON3 | IPF_PLAYER2 in test mode
+	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNUSED )	/* BUTTON3 | IPF_PLAYER2 in test mode*/
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -132,10 +132,10 @@ INPUT_PORTS_START( realbrk )
 	PORT_BIT(  0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x1000, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )
 	PORT_BIT(  0x2000, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )
-	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNUSED )	// BUTTON3 | IPF_PLAYER1 in test mode
+	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNUSED )	/* BUTTON3 | IPF_PLAYER1 in test mode*/
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_START1 )
 
-	PORT_START	// IN1 - $c00002.w
+	PORT_START	/* IN1 - $c00002.w*/
 	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0100, IP_ACTIVE_LOW,  IPT_COIN1 )
 	PORT_BIT(  0x0200, IP_ACTIVE_LOW,  IPT_COIN2 )
@@ -143,10 +143,10 @@ INPUT_PORTS_START( realbrk )
 	PORT_BITX( 0x0800, IP_ACTIVE_LOW,  IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )
 	PORT_BIT(  0x1000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x2000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT(  0x4000, IP_ACTIVE_HIGH, IPT_UNKNOWN )	// the vblank routine wants these 2 bits high
+	PORT_BIT(  0x4000, IP_ACTIVE_HIGH, IPT_UNKNOWN )	/* the vblank routine wants these 2 bits high*/
 	PORT_BIT(  0x8000, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - $c00004.w (DSW1)
+	PORT_START	/* IN2 - $c00004.w (DSW1)*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 4C_1C ) )
@@ -176,7 +176,7 @@ INPUT_PORTS_START( realbrk )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_SERVICE( 0x0200, IP_ACTIVE_LOW )
 
-	PORT_START	// IN3 - $c00004.w (DSW2)
+	PORT_START	/* IN3 - $c00004.w (DSW2)*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Lives ) )
 	PORT_DIPSETTING(      0x0000, "4" )
 	PORT_DIPSETTING(      0x0001, "5" )
@@ -199,10 +199,10 @@ INPUT_PORTS_START( realbrk )
 	PORT_DIPSETTING(      0x0000, "1" )
 	PORT_DIPSETTING(      0x0080, "2" )
 
-	PORT_START	// IN4 - $c00004.w (DSW3) - Unused
+	PORT_START	/* IN4 - $c00004.w (DSW3) - Unused*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
-	PORT_START	// IN5 - $c00004.w (DSW4) - Unused
+	PORT_START	/* IN5 - $c00004.w (DSW4) - Unused*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -248,10 +248,10 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo realbrk_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x8,		0, 0x80		},	// [0] Backgrounds
-	{ REGION_GFX2, 0, &layout_8x8x4,		0, 0x800	},	// [1] Text
-	{ REGION_GFX3, 0, &layout_16x16x8,		0, 0x80		},	// [2] Sprites (256 colors)
-	{ REGION_GFX4, 0, &layout_16x16x4,		0, 0x800	},	// [3] Sprites (16 colors)
+	{ REGION_GFX1, 0, &layout_16x16x8,		0, 0x80		},	/* [0] Backgrounds*/
+	{ REGION_GFX2, 0, &layout_8x8x4,		0, 0x800	},	/* [1] Text*/
+	{ REGION_GFX3, 0, &layout_16x16x8,		0, 0x80		},	/* [2] Sprites (256 colors)*/
+	{ REGION_GFX4, 0, &layout_16x16x4,		0, 0x800	},	/* [3] Sprites (16 colors)*/
 	{ -1 }
 };
 
@@ -385,8 +385,8 @@ ROM_START( realbrk )
 	ROM_LOAD32_WORD( "52311.9a", 0x0000002, 0x400000, CRC(136a93a4) SHA1(b4bd46ba6c2b367aaf362f67d8be4757f1160864) )
 
 	ROM_REGION( 0x40000, REGION_GFX2, ROMREGION_DISPOSE )	/* Text Layer */
-	ROM_LOAD16_BYTE( "52305.1a", 0x000000, 0x020000, CRC(56546fb4) SHA1(5e4dc1665ca96bf24b89d92c24f5ff8420cb465e) )	// 1xxxxxxxxxxxxxxxx = 0xFF
-	ROM_LOAD16_BYTE( "52304.1b", 0x000001, 0x020000, CRC(b22b0aac) SHA1(8c62e19071a4031d0dcad621cce0ba550702659b) )	// 1xxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD16_BYTE( "52305.1a", 0x000000, 0x020000, CRC(56546fb4) SHA1(5e4dc1665ca96bf24b89d92c24f5ff8420cb465e) )	/* 1xxxxxxxxxxxxxxxx = 0xFF*/
+	ROM_LOAD16_BYTE( "52304.1b", 0x000001, 0x020000, CRC(b22b0aac) SHA1(8c62e19071a4031d0dcad621cce0ba550702659b) )	/* 1xxxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0xc00000, REGION_GFX3, ROMREGION_DISPOSE )	/* Sprites (256 colors) */
 	ROM_LOAD32_WORD( "52306.9f", 0x0000000, 0x400000, CRC(5ff0f666) SHA1(e3f1d9dc84fbef73af37cefd90bdf87a35f59e0e) )

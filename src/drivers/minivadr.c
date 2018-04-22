@@ -29,7 +29,7 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x1fff, MWA_ROM },
 	{ 0xa000, 0xbfff, minivadr_videoram_w, &videoram, &videoram_size },
-	{ 0xe008, 0xe008, MWA_NOP },		// ???
+	{ 0xe008, 0xe008, MWA_NOP },		/* ???*/
 MEMORY_END
 
 

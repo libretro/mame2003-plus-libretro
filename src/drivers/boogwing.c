@@ -90,10 +90,10 @@ static void boogie_drawsprites(struct mame_bitmap *bitmap,const struct rectangle
 		fy = y & 0x4000;
 		multi = (1 << ((y & 0x0600) >> 9)) - 1;	/* 1x, 2x, 4x, 8x height */
 
-		// Todo:  This should be verified from the prom
+		/* Todo:  This should be verified from the prom*/
 		if (gfx_region==4)
 		{
-			// Sprite 2 priority vs sprite 1
+			/* Sprite 2 priority vs sprite 1*/
 			if ((spriteram_base[offs+2]&0xc000)==0xc000)
 				spri=4;
 			else if ((spriteram_base[offs+2]&0xc000))
@@ -101,17 +101,17 @@ static void boogie_drawsprites(struct mame_bitmap *bitmap,const struct rectangle
 			else
 				spri=64;
 
-			// Transparency
+			/* Transparency*/
 			if (spriteram_base[offs+2]&0x2000)
 				trans=TRANSPARENCY_ALPHA;
 
 			if (deco16_priority==0x2)
 			{
-				// Additional sprite alpha in this mode
+				/* Additional sprite alpha in this mode*/
 				if (spriteram_base[offs+2]&0x8000)
 					trans=TRANSPARENCY_ALPHA;
 
-				// Sprite vs playfield
+				/* Sprite vs playfield*/
 				if ((spriteram_base[offs+2]&0xc000)==0xc000)
 					pri=4;
 				else if ((spriteram_base[offs+2]&0xc000)==0x8000)
@@ -129,13 +129,13 @@ static void boogie_drawsprites(struct mame_bitmap *bitmap,const struct rectangle
 		}
 		else
 		{
-			// Sprite 1 priority vs sprite 2
-			if (spriteram_base[offs+2]&0x8000)		// todo - check only in pri mode 2??
+			/* Sprite 1 priority vs sprite 2*/
+			if (spriteram_base[offs+2]&0x8000)		/* todo - check only in pri mode 2??*/
 				spri=8;
 			else
 				spri=32;
 
-			// Sprite vs playfield
+			/* Sprite vs playfield*/
 			if (deco16_priority==0x1)
 			{
 				if ((spriteram_base[offs+2]&0xc000))
@@ -203,7 +203,7 @@ static int boogwing_bank_callback2(const int bank)
 {
 	int offset=((bank>>4) & 0x7) * 0x1000;
 	if ((bank&0xf)==0xa)
-		offset+=0x800; // strange - transporter level
+		offset+=0x800; /* strange - transporter level*/
 	return offset;
 }
 
@@ -217,7 +217,7 @@ VIDEO_START(boogwing)
 	deco16_set_tilemap_bank_callback(2,boogwing_bank_callback2);
 	deco16_set_tilemap_bank_callback(3,boogwing_bank_callback2);
 	deco16_set_tilemap_colour_base(1,0);
-	deco16_set_tilemap_transparency_mask(1, 0x1f); // 5bpp graphics
+	deco16_set_tilemap_transparency_mask(1, 0x1f); /* 5bpp graphics*/
 
 	alpha_set_level(0x80);
 

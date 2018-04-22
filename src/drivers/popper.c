@@ -101,39 +101,39 @@ static READ_HANDLER( popper_sharedram_r )
 	return popper_sharedram[offset];
 }
 
-//e000                  e001                  e002                  e003
-//76543210              76543210              76543210              76543210
-//x-------  unused      x-------  unused      x-------  unused      x-------  unused
-//-x------  dsw1:1      -x------  dsw1:2      -x------  dsw1:3      -x------  dsw1:4
-//--x-----  unused      --x-----  unused      --x-----  unused      --x-----  unused
-//---x----  dsw2:1      ---x----  dsw2:2      ---x----  dsw2:3      ---x----  dsw2:4
-//----x---  service     ----xxxx  p1 udlr     ----x---  unused      ----xxxx  p2 udlr
-//-----x--  coin a                            -----x--  coin b
-//------x-  start 1                           ------x-  start 2
-//-------x  p1 b1                             -------x  p2 b1
-//
-//e004                  e005                  e006                  e007
-//x-------  dsw1:5      x-------  dsw1:6      x-------  dsw1:7      x-------  dsw1:8
-//-x------  unused      -x------  unused      -x------  unused      -x------  unused
-//--x-----  dsw2:5      --x-----  dsw2:6      --x-----  dsw2:7      --x-----  dsw2:8
-//---xxxxx  unused      ---xxxxx  unused      ---xxxxx  unused      ---xxxxx  unused
-//
-//dsw1                  dsw2
-//87654321              87654321
-//xx------  extra       x-------  stop
-//--xx----  poppers     -x------  clear (current level)
-//----xx--  coin b      --x-----  upright (cabinet)
-//------xx  coin a      ---x----  crt dir. (flip screen)
-//                      ----x---  pass (unlimited lives)
-//                      -----x--  free play
-//                      ------x-  continue
-//                      -------x  sound
+/*e000                  e001                  e002                  e003*/
+/*76543210              76543210              76543210              76543210*/
+/*x-------  unused      x-------  unused      x-------  unused      x-------  unused*/
+/*-x------  dsw1:1      -x------  dsw1:2      -x------  dsw1:3      -x------  dsw1:4*/
+/*--x-----  unused      --x-----  unused      --x-----  unused      --x-----  unused*/
+/*---x----  dsw2:1      ---x----  dsw2:2      ---x----  dsw2:3      ---x----  dsw2:4*/
+/*----x---  service     ----xxxx  p1 udlr     ----x---  unused      ----xxxx  p2 udlr*/
+/*-----x--  coin a                            -----x--  coin b*/
+/*------x-  start 1                           ------x-  start 2*/
+/*-------x  p1 b1                             -------x  p2 b1*/
+/**/
+/*e004                  e005                  e006                  e007*/
+/*x-------  dsw1:5      x-------  dsw1:6      x-------  dsw1:7      x-------  dsw1:8*/
+/*-x------  unused      -x------  unused      -x------  unused      -x------  unused*/
+/*--x-----  dsw2:5      --x-----  dsw2:6      --x-----  dsw2:7      --x-----  dsw2:8*/
+/*---xxxxx  unused      ---xxxxx  unused      ---xxxxx  unused      ---xxxxx  unused*/
+/**/
+/*dsw1                  dsw2*/
+/*87654321              87654321*/
+/*xx------  extra       x-------  stop*/
+/*--xx----  poppers     -x------  clear (current level)*/
+/*----xx--  coin b      --x-----  upright (cabinet)*/
+/*------xx  coin a      ---x----  crt dir. (flip screen)*/
+/*                      ----x---  pass (unlimited lives)*/
+/*                      -----x--  free play*/
+/*                      ------x-  continue*/
+/*                      -------x  sound*/
 static READ_HANDLER( popper_input_ports_r )
 {
 	data8_t data=0;
 	switch (offset)
 	{
-		//           player inputs        dsw1                           dsw2
+		/*           player inputs        dsw1                           dsw2*/
 		case 0: data=readinputport(0) | ((readinputport(4)&0x02)<<5) | ((readinputport(5)&0x01)<<4); break;
 		case 1: data=readinputport(1) | ((readinputport(4)&0x01)<<6) | ((readinputport(5)&0x02)<<3); break;
 		case 2: data=readinputport(2) | ((readinputport(4)&0x08)<<3) | ((readinputport(5)&0x04)<<2); break;
@@ -160,11 +160,11 @@ static WRITE_HANDLER( popper_sharedram_w )
 static MEMORY_READ_START( popper_readmem )
 	{ 0x0000, 0x5fff, MRA_ROM },
 	{ 0xc000, 0xd7ff, MRA_RAM },
-	{ 0xd800, 0xdfff, MRA_RAM },					//shared with sound cpu
+	{ 0xd800, 0xdfff, MRA_RAM },					/*shared with sound cpu*/
 	{ 0xe000, 0xe007, popper_input_ports_r },
 	{ 0xe400, 0xe400, popper_soundcpu_nmi_r },
-	{ 0xf800, 0xf800, MRA_NOP },					//?? read once at startup
-	{ 0xfc00, 0xfc00, MRA_NOP },					//?? possibly watchdog
+	{ 0xf800, 0xf800, MRA_NOP },					/*?? read once at startup*/
+	{ 0xfc00, 0xfc00, MRA_NOP },					/*?? possibly watchdog*/
 	{ 0xffff, 0xffff, MRA_NOP },
 MEMORY_END
 
@@ -178,19 +178,19 @@ static MEMORY_WRITE_START( popper_writemem )
 	{ 0xca00, 0xce1f, popper_attribram_w, &popper_attribram },
 	{ 0xce20, 0xcfff, MWA_RAM },
 	{ 0xd000, 0xd7ff, MWA_RAM, &popper_spriteram, &popper_spriteram_size },
-	{ 0xd800, 0xdfff, MWA_RAM, &popper_sharedram },	//shared with sound cpu
+	{ 0xd800, 0xdfff, MWA_RAM, &popper_sharedram },	/*shared with sound cpu*/
 	{ 0xe000, 0xe000, interrupt_enable_w },
 	{ 0xe001, 0xe001, popper_flipscreen_w },
-	{ 0xe002, 0xe002, popper_e002_w },				//?? seems to be graphic related
+	{ 0xe002, 0xe002, popper_e002_w },				/*?? seems to be graphic related*/
 	{ 0xe003, 0xe003, popper_gfx_bank_w },
-	{ 0xe004, 0xe007, MWA_NOP },					//?? range cleared once when the SP is set
+	{ 0xe004, 0xe007, MWA_NOP },					/*?? range cleared once when the SP is set*/
 MEMORY_END
 
 static MEMORY_READ_START( popper_sound_readmem )
 	{ 0x0000, 0x0fff, MRA_ROM },
-	{ 0x8002, 0x8002, MRA_NOP },					//?? all read once at startup and the
-	{ 0x8003, 0x8003, MRA_NOP },					//?? result ignored, looks like part
-	{ 0xa002, 0xa002, MRA_NOP },					//?? of AY8910 initialisation
+	{ 0x8002, 0x8002, MRA_NOP },					/*?? all read once at startup and the*/
+	{ 0x8003, 0x8003, MRA_NOP },					/*?? result ignored, looks like part*/
+	{ 0xa002, 0xa002, MRA_NOP },					/*?? of AY8910 initialisation*/
 	{ 0xd800, 0xdfff, popper_sharedram_r },
 MEMORY_END
 
@@ -198,10 +198,10 @@ static MEMORY_WRITE_START( popper_sound_writemem )
 	{ 0x0000, 0x0fff, MWA_ROM },
 	{ 0x8000, 0x8000, AY8910_control_port_0_w },
 	{ 0x8001, 0x8001, AY8910_write_port_0_w },
-	{ 0x8002, 0x8002, MWA_NOP },					//?? same writes as 0x8000 (mostly)
+	{ 0x8002, 0x8002, MWA_NOP },					/*?? same writes as 0x8000 (mostly)*/
 	{ 0xa000, 0xa000, AY8910_control_port_1_w },
 	{ 0xa001, 0xa001, AY8910_write_port_1_w },
-	{ 0xa002, 0xa002, MWA_NOP },					//?? same writes as 0xa000
+	{ 0xa002, 0xa002, MWA_NOP },					/*?? same writes as 0xa000*/
 	{ 0xd800, 0xdfff, popper_sharedram_w },
 MEMORY_END
 
@@ -209,7 +209,7 @@ INPUT_PORTS_START( popper )
 	PORT_START	/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START1 )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )			//ignored if held for 12 or more frames
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )			/*ignored if held for 12 or more frames*/
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SERVICE1 )
 
 	PORT_START	/* IN1 */
@@ -221,7 +221,7 @@ INPUT_PORTS_START( popper )
 	PORT_START	/* IN2 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN2 )			//ignored if held for 12 or more frames
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN2 )			/*ignored if held for 12 or more frames*/
 
 	PORT_START	/* IN3 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
@@ -230,50 +230,50 @@ INPUT_PORTS_START( popper )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
 
 	PORT_START	/* IN4 - FAKE DSW1 */
-	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_A ) )		//SW1:1-2
+	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_A ) )		/*SW1:1-2*/
 	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x0c, 0x08, DEF_STR( Coin_B ) )		//SW1:3-4
+	PORT_DIPNAME( 0x0c, 0x08, DEF_STR( Coin_B ) )		/*SW1:3-4*/
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_6C ) )
-	PORT_DIPNAME( 0x30, 0x10, DEF_STR( Lives ) )		//SW1:5-6
+	PORT_DIPNAME( 0x30, 0x10, DEF_STR( Lives ) )		/*SW1:5-6*/
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0x10, "3" )
 	PORT_DIPSETTING(    0x20, "4" )
 	PORT_DIPSETTING(    0x30, "5" )
-	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Bonus_Life ) )	//SW1:7-8
+	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Bonus_Life ) )	/*SW1:7-8*/
 	PORT_DIPSETTING(    0x00, "20k, then every 70k" )
 	PORT_DIPSETTING(    0x40, "30k, then every 70k" )
 	PORT_DIPSETTING(    0x80, "40k, then every 70k" )
 	PORT_DIPSETTING(    0xc0, "50k, then every 70k" )
 
 	PORT_START	/* IN5 - FAKE DSW2 */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Demo_Sounds ) )	//SW2:1
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Demo_Sounds ) )	/*SW2:1*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x00, "Allow Continue" )		//SW2:2 (stored in 0xd987, never read)
+	PORT_DIPNAME( 0x02, 0x00, "Allow Continue" )		/*SW2:2 (stored in 0xd987, never read)*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Free_Play ) )	//SW2:3
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Free_Play ) )	/*SW2:3*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_BITX(    0x08, 0x00, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Pass (unlimited lives)", IP_KEY_NONE, IP_JOY_NONE )	//SW2:4
+	PORT_BITX(    0x08, 0x00, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Pass (unlimited lives)", IP_KEY_NONE, IP_JOY_NONE )	/*SW2:4*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Flip_Screen ) )	//SW2:5
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Flip_Screen ) )	/*SW2:5*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Cabinet ) )		//SW2:6
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Cabinet ) )		/*SW2:6*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
-	PORT_BITX(    0x40, 0x00, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Clear (current level)", IP_KEY_NONE, IP_JOY_NONE )	//SW2:7
+	PORT_BITX(    0x40, 0x00, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Clear (current level)", IP_KEY_NONE, IP_JOY_NONE )	/*SW2:7*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, "Stop" )					//SW2:8
+	PORT_DIPNAME( 0x80, 0x00, "Stop" )					/*SW2:8*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -328,7 +328,7 @@ static MACHINE_DRIVER_START( popper )
 	MDRV_CPU_ADD(Z80,18432000/12)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(popper_sound_readmem,popper_sound_writemem)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,4)		//NMIs caused by the main CPU
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,4)		/*NMIs caused by the main CPU*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)

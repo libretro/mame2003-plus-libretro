@@ -91,7 +91,7 @@ Stephh's notes (based on the game M68EC020 code and some tests) :
 #include "cpu/m68000/m68000.h"
 
 #define MASTER_CLOCK 32000000
-#define ENABLE_FAST_BG_DRAW  1 // if enabled, inaccurate, but faster background drawing is enabled
+#define ENABLE_FAST_BG_DRAW  1 /* if enabled, inaccurate, but faster background drawing is enabled*/
 
 static unsigned int *spriteram32;
 static unsigned int *spritebuf32a;
@@ -116,7 +116,7 @@ static struct tilemap *dreamwld_bg2_tilemap;
 
 static void draw_sprites(struct mame_bitmap *bitmap)
 {
-	UINT32 *source = spritebuf32b;			// sprbuf iq_132 fix me!
+	UINT32 *source = spritebuf32b;			/* sprbuf iq_132 fix me!*/
 	UINT32 *finish = spritebuf32b + 0x1000 / 4;
 	UINT16 *redirect = (UINT16 *)memory_region(REGION_GFX3);
 
@@ -135,7 +135,7 @@ static void draw_sprites(struct mame_bitmap *bitmap)
 		ysize = (source[0] & 0x0e000000) >> 25;
 
 
-		tileno = (source[1] & 0x0001ffff) >>0; //gamezfan For Cute Fighter Sprites 
+		tileno = (source[1] & 0x0001ffff) >>0; /*gamezfan For Cute Fighter Sprites */
 		colour = (source[1] & 0x3f000000) >>24;
 		xflip  = (source[1] & 0x40000000);
 		yflip  = (source[1] & 0x80000000);
@@ -155,7 +155,7 @@ static void draw_sprites(struct mame_bitmap *bitmap)
 			ypos += 16 * ysize;
 		}
 
-		ysize++; xsize++; // size 0 = 1 tile
+		ysize++; xsize++; /* size 0 = 1 tile*/
 
 		xpos -=16;
 
@@ -213,8 +213,8 @@ static void get_dreamwld_bg2_tile_info(int tile_index)
 
 static VIDEO_START( dreamwld )
 {
-	dreamwld_bg_tilemap = tilemap_create(get_dreamwld_bg_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE, 16, 16, 64,64); //gamezfan for Gaialast changed to 16,16,64,64
-	dreamwld_bg2_tilemap = tilemap_create(get_dreamwld_bg2_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 16, 16, 64,64); //^^
+	dreamwld_bg_tilemap = tilemap_create(get_dreamwld_bg_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE, 16, 16, 64,64); /*gamezfan for Gaialast changed to 16,16,64,64*/
+	dreamwld_bg2_tilemap = tilemap_create(get_dreamwld_bg2_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 16, 16, 64,64); /*^^*/
 	tilemap_set_transparent_pen(dreamwld_bg2_tilemap,0);
 	dreamwld_tilebankold[0] = dreamwld_tilebankold[1] = -1;
 	dreamwld_tilebank[0] = dreamwld_tilebank[1] = 0;
@@ -237,14 +237,14 @@ static VIDEO_UPDATE( dreamwld )
 	dreamwld_tilebank[0] = (dreamwld_bg_scroll[(0x400/4)+4]>>6)&1;
 	dreamwld_tilebank[1] = (dreamwld_bg_scroll[(0x400/4)+5]>>6)&1;
 
-#ifdef ENABLE_FAST_BG_DRAW // FAST! OLD STYLE, NO LINE SCROLL
+#ifdef ENABLE_FAST_BG_DRAW /* FAST! OLD STYLE, NO LINE SCROLL*/
 
 	tilemap_set_scrolly( dreamwld_bg_tilemap,0, dreamwld_bg_scroll[(0x400/4)]+32 );
 	tilemap_set_scrolly( dreamwld_bg2_tilemap,0, dreamwld_bg_scroll[(0x400/4)+2]+32 );
 	tilemap_set_scrollx( dreamwld_bg_tilemap,0, dreamwld_bg_scroll[(0x400/4)+1]+3 );
 	tilemap_set_scrollx( dreamwld_bg2_tilemap,0, dreamwld_bg_scroll[(0x400/4)+3]+5 );
 
-#else	// SLOW! NEW STYLE. LINE SCROLL
+#else	/* SLOW! NEW STYLE. LINE SCROLL*/
 
 	layer0_scrolly = dreamwld_bg_scroll[(0x400 / 4)] + 32;
 	layer1_scrolly = dreamwld_bg_scroll[(0x400 / 4) + 2] + 32;
@@ -269,7 +269,7 @@ static VIDEO_UPDATE( dreamwld )
 				x0 = ((UINT16 *)dreamwld_bg_scroll)[0x000/2 + j/16];
 			else
 				/* per-line rowscroll */
-				x0 = ((UINT16 *)dreamwld_bg_scroll)[(0x000/2 + ((j + layer0_scrolly)&0xff))]; // different handling to psikyo.c? ( + scrolly )
+				x0 = ((UINT16 *)dreamwld_bg_scroll)[(0x000/2 + ((j + layer0_scrolly)&0xff))]; /* different handling to psikyo.c? ( + scrolly )*/
 		}
 
 		tilemap_set_scrollx(
@@ -286,7 +286,7 @@ static VIDEO_UPDATE( dreamwld )
 				x1 = ((UINT16 *)dreamwld_bg_scroll)[(0x200/2 + j/16)];
 			else
 				/* per-line rowscroll */
-				x1 = ((UINT16 *)dreamwld_bg_scroll)[(0x200/2 + ((j + layer1_scrolly)&0xff))];  // different handling to psikyo.c? ( + scrolly )
+				x1 = ((UINT16 *)dreamwld_bg_scroll)[(0x200/2 + ((j + layer1_scrolly)&0xff))];  /* different handling to psikyo.c? ( + scrolly )*/
 		}
 
 		tilemap_set_scrollx(
@@ -358,25 +358,25 @@ static void dreamwld_oki_setbank(UINT8 chip, UINT8 bank )
 
 static WRITE32_HANDLER( dreamwld_6295_0_bank_w )
 {
-	if (1) //ACCESSING_BITS_0_7)
+	if (1) /*ACCESSING_BITS_0_7)*/
 	{
 		dreamwld_oki_setbank(0,data&0x3);
 	}
 	else
 	{
-	//	logerror("OKI0: unk bank write %x mem_mask %8x\n", data, mem_mask);
+	/*	logerror("OKI0: unk bank write %x mem_mask %8x\n", data, mem_mask);*/
 	}
 }
 
 static WRITE32_HANDLER( dreamwld_6295_1_bank_w )
 {
-	if (1) //ACCESSING_BITS_0_7)
+	if (1) /*ACCESSING_BITS_0_7)*/
 	{
 		dreamwld_oki_setbank(1,data&0x3);
 	}
 	else
 	{
-	//	logerror("OKI1: unk bank write %x mem_mask %8x\n", data, mem_mask);
+	/*	logerror("OKI1: unk bank write %x mem_mask %8x\n", data, mem_mask);*/
 	}
 }
 
@@ -387,7 +387,7 @@ static READ32_HANDLER(dreamwld_6295_0_r)
 
 static WRITE32_HANDLER(dreamwld_6295_0_w)
 {
-	if (1) // msb
+	if (1) /* msb*/
 	{
 		OKIM6295_data_0_w(0, data >> 24);
 	}
@@ -400,7 +400,7 @@ static READ32_HANDLER(dreamwld_6295_1_r)
 
 static WRITE32_HANDLER(dreamwld_6295_1_w)
 {
-	if (1) // msb
+	if (1) /* msb*/
 	{
 		OKIM6295_data_1_w(0, data >> 24);
 	}
@@ -439,17 +439,17 @@ static MEMORY_WRITE32_START( dreamwld_writemem )
 	{ 0x600000, 0x601fff, dreamwld_palette_w, &paletteram32 },
 	{ 0x800000, 0x801fff, dreamwld_bg_videoram_w, &dreamwld_bg_videoram },
 	{ 0x802000, 0x803fff, dreamwld_bg2_videoram_w, &dreamwld_bg2_videoram },
-	{ 0x804000, 0x805fff, MWA32_RAM, &dreamwld_bg_scroll },  // scroll regs etc.
-	{ 0xc0000c, 0xc0000f, dreamwld_6295_0_bank_w }, // sfx
+	{ 0x804000, 0x805fff, MWA32_RAM, &dreamwld_bg_scroll },  /* scroll regs etc.*/
+	{ 0xc0000c, 0xc0000f, dreamwld_6295_0_bank_w }, /* sfx*/
 	{ 0xc00018, 0xc0001b, dreamwld_6295_0_w },
-	{ 0xc0002c, 0xc0002f, dreamwld_6295_1_bank_w }, // sfx
+	{ 0xc0002c, 0xc0002f, dreamwld_6295_1_bank_w }, /* sfx*/
 	{ 0xc00028, 0xc0002b, dreamwld_6295_1_w },
 	{ 0xfe0000, 0xffffff, MWA32_RAM },
 MEMORY_END
 
 
 INPUT_PORTS_START( dreamwld )
-	// mame can't handle 32-bit inputs, so we set them as 16-bit and assemble them later
+	/* mame can't handle 32-bit inputs, so we set them as 16-bit and assemble them later*/
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -738,7 +738,7 @@ INPUT_PORTS_START( gaialast )
    PORT_DIPNAME( 0x0004,  0x0000, "Bomb Stock" ) 
    PORT_DIPSETTING(       0x0004, "2" )
    PORT_DIPSETTING(       0x0000, "3" )
-   PORT_DIPNAME( 0x0008,  0x0000, "Lock Vertical Scroll" )  // if Off the game pans the screen up/down when you move up/down
+   PORT_DIPNAME( 0x0008,  0x0000, "Lock Vertical Scroll" )  /* if Off the game pans the screen up/down when you move up/down*/
    PORT_DIPSETTING(       0x0008, DEF_STR( Off ) )
    PORT_DIPSETTING(       0x0000, DEF_STR( On ) )
    PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unknown ) )
@@ -842,14 +842,14 @@ ROM_START( baryon )
 	ROM_LOAD32_BYTE( "6.bin", 0x000001, 0x040000, CRC(abccbb3d) SHA1(01524f094543d872d775306024f51258a11e9240) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 87C52 MCU Code */
-//	ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP ) /* can't be dumped. */
+/*	ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP )  // can't be dumped. /*/
 
 	ROM_REGION( 0x6bd, REGION_USER1, 0 ) /* Protection data  */
 	ROM_LOAD( "protdata.bin", 0x000, 0x6bd, CRC(117f32a8) SHA1(837bea09d3e59ab9e13bd1103b1fc988edb361c0) ) /* extracted */
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 ) /* OKI Samples */
 	ROM_LOAD( "1.bin", 0x000000, 0x80000, CRC(e0349074) SHA1(f3d53d96dff586a0ad1632f52e5559cdce5ed0d8) )
-	ROM_RELOAD(0x80000,0x80000) // for the banks
+	ROM_RELOAD(0x80000,0x80000) /* for the banks*/
 
 	ROM_REGION( 0x100000, REGION_SOUND2, 0 ) /* OKI Samples */
 
@@ -876,7 +876,7 @@ ROM_START( cutefght )
     ROM_LOAD32_BYTE( "4_semicom", 0x000003, 0x080000, CRC(476a3bf5) SHA1(5be1c70bbf4fcfc534b7f20bfceaa8da2e961330) )
 
     ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 87C52 MCU Code */
-   // ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP ) /* can't be dumped. */
+   /* ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP )  // can't be dumped. /*/
 
     ROM_REGION( 0x701, REGION_USER1, ROMREGION_ERASEFF ) /* Protection data */
     ROM_LOAD( "protdata.bin", 0x000, 0x701 , CRC(764c3c0e) SHA1(ae044d016850b730b2d97ccb7845b6b438c1e074) )
@@ -912,7 +912,7 @@ ROM_START( dreamwld )
 	ROM_LOAD32_BYTE( "4.bin", 0x000001, 0x040000, CRC(3ef5d51b) SHA1(82a00b4ff7155f6d5553870dfd510fed9469d9b5) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 87C52 MCU Code */
-	//ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP ) /* can't be dumped. */
+	/*ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP )  // can't be dumped. /*/
 
 	ROM_REGION( 0x6c9, REGION_USER1, 0 ) /* Protection data  */
 	/* The MCU supplies this data.
@@ -924,11 +924,11 @@ ROM_START( dreamwld )
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 ) /* OKI Samples - 1st chip*/
 	ROM_LOAD( "5.bin", 0x000000, 0x80000, CRC(9689570a) SHA1(4414233da8f46214ca7e9022df70953922a63aa4) )
-	ROM_RELOAD(0x80000,0x80000) // for the banks
+	ROM_RELOAD(0x80000,0x80000) /* for the banks*/
 
 	ROM_REGION( 0x100000, REGION_SOUND2, 0 ) /* OKI Samples - 2nd chip*/
 	ROM_LOAD( "6.bin", 0x000000, 0x80000, CRC(c8b91f30) SHA1(706004ca56d0a74bc7a3dfd73a21cdc09eb90f05) )
-	ROM_RELOAD(0x80000,0x80000) // for the banks
+	ROM_RELOAD(0x80000,0x80000) /* for the banks*/
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 ) /* Sprite Tiles - decoded */
 	ROM_LOAD16_WORD_SWAP( "9.bin", 0x000000, 0x200000, CRC(fa84e3af) SHA1(5978737d348fd382f4ec004d29870656c864d137) )
@@ -952,7 +952,7 @@ ROM_START( gaialast )
 	ROM_LOAD32_BYTE( "3", 0x000003, 0x040000, CRC(a8e845d8) SHA1(f8c7e702bd747a22e76c861effec4cd3cd2f3fc9) )
 	
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 87C52 MCU Code */
-	//ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP ) /* can't be dumped. */
+	/*ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP )  // can't be dumped. /*/
 	
 	ROM_REGION( 0x6c9, REGION_USER1, ROMREGION_ERASEFF ) /* Protection data */
 	ROM_LOAD( "protdata.bin", 0x000, 0x6c9 , CRC(d3403b7b) SHA1(712a7f27fc41b632d584237f7641e8ae20035111) )
@@ -986,7 +986,7 @@ ROM_START( rolcrush )
 	ROM_LOAD32_BYTE( "mx27c2000_1.bin", 0x000003, 0x040000, CRC(a37e15b2) SHA1(f0fc945a894d6ed58daf05390a17051d0f3cda20) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 87C52 MCU Code */
-	//ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP ) /* can't be dumped. */
+	/*ROM_LOAD( "87c52.mcu", 0x00000, 0x10000 , NO_DUMP )  // can't be dumped. /*/
 
 	ROM_REGION( 0x745, REGION_USER1, ROMREGION_ERASE00 ) /* Protection data  */
     ROM_LOAD( "protdata.bin", 0x000, 0x745, CRC(06b8a880) SHA1(b7d4bf26d34cb544825270c2c474bbd4c81a6c9e) ) /* extracted */

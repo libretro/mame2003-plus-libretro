@@ -111,7 +111,7 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x01ff, MWA_RAM },
 	{ 0x0500, 0x0503, MWA_RAM },
-	{ 0x0504, 0x0507, MWA_NOP },  // ???
+	{ 0x0504, 0x0507, MWA_NOP },  /* ???*/
 	{ 0x0600, 0x0600, MWA_RAM, &copsnrob_trucky },
 	{ 0x0700, 0x07ff, MWA_RAM, &copsnrob_truckram },
 	{ 0x0800, 0x08ff, MWA_RAM, &copsnrob_bulletsram },
@@ -289,7 +289,7 @@ ROM_START( copsnrob )
 	ROM_LOAD( "5773.e7",      0x1a00, 0x0200, CRC(ff7c95f4) SHA1(fd66d7e655ab96ec6ca4f8cf0d078c68b86ac75a) )
 	ROM_LOAD( "5772.d7",      0x1c00, 0x0200, CRC(8d26afdc) SHA1(367f7e25c08a79277550d018681fffcdbd578029) )
 	ROM_LOAD( "5771.b7",      0x1e00, 0x0200, CRC(d61758d6) SHA1(7ce9ad1096405126a8bf57c1f8bad1afa178b751) )
-	ROM_RELOAD(               0xfe00, 0x0200 ) // For 6502 vectors
+	ROM_RELOAD(               0xfe00, 0x0200 ) /* For 6502 vectors*/
 
 	ROM_REGION( 0x0200, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "5782.m3",      0x0000, 0x0200, CRC(82b86852) SHA1(17cf6698ceeb3b917d8ef13ed8242062d3bd57b8) )

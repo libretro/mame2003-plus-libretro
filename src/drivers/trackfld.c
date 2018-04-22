@@ -158,7 +158,7 @@ static WRITE_HANDLER( coin_w )
 static MEMORY_READ_START( readmem )
 	{ 0x1200, 0x1200, input_port_4_r }, /* DIP 2 */
 	{ 0x1280, 0x1280, input_port_0_r }, /* IO Coin */
-//	{ 0x1281, 0x1281, input_port_1_r }, /* P1 IO */
+/*	{ 0x1281, 0x1281, input_port_1_r },  // P1 IO /*/
 	{ 0x1281, 0x1281, konami_IN1_r },	/* P1 IO and handle fake button for cheating */
 	{ 0x1282, 0x1282, input_port_2_r }, /* P2 IO */
 	{ 0x1283, 0x1283, input_port_3_r }, /* DIP 1 */
@@ -191,7 +191,7 @@ static MEMORY_READ_START( mastkin_readmem )
 	{ 0x1200, 0x1200, input_port_4_r }, /* DIP 2 */
 	{ 0x1280, 0x1280, input_port_0_r }, /* IO Coin */
 	{ 0x1281, 0x1281, input_port_1_r }, /* P1 IO */
-//	{ 0x1282, 0x1282, input_port_2_r }, /* unused */
+/*	{ 0x1282, 0x1282, input_port_2_r },  // unused /*/
 	{ 0x1283, 0x1283, input_port_3_r }, /* DIP 1 */
 	{ 0x1800, 0x1fff, MRA_RAM },
 	{ 0x2800, 0x3fff, MRA_RAM },
@@ -287,7 +287,7 @@ INPUT_PORTS_START( trackfld )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
-//	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+/*	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )*/
 	/* Fake button to press buttons 1 and 3 impossibly fast. Handle via konami_IN1_r */
 	PORT_BITX(0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_CHEAT | IPF_PLAYER1, "Run Like Hell Cheat", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 
@@ -393,19 +393,19 @@ INPUT_PORTS_START( mastkin )
 	PORT_DIPNAME( 0x02, 0x02, "Timer Speed" )
 	PORT_DIPSETTING(    0x02, "Normal" )
 	PORT_DIPSETTING(    0x00, "Fast" )
-	PORT_DIPNAME( 0x0c, 0x04, DEF_STR( Difficulty ) )	// "Damage"
-	PORT_DIPSETTING(    0x0c, "Easy" )				//   0x03
-	PORT_DIPSETTING(    0x04, "Normal" )			//   0x07
-	PORT_DIPSETTING(    0x08, "Hard" )				//   0x0b
-	PORT_DIPSETTING(    0x00, "Very Hard" )			//   0x0f
+	PORT_DIPNAME( 0x0c, 0x04, DEF_STR( Difficulty ) )	/* "Damage"*/
+	PORT_DIPSETTING(    0x0c, "Easy" )				/*   0x03*/
+	PORT_DIPSETTING(    0x04, "Normal" )			/*   0x07*/
+	PORT_DIPSETTING(    0x08, "Hard" )				/*   0x0b*/
+	PORT_DIPSETTING(    0x00, "Very Hard" )			/*   0x0f*/
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x10, "4" )
 	PORT_DIPSETTING(    0x00, "5" )
-	PORT_DIPNAME( 0x20, 0x00, "Internal speed" )		// Check code at 0x8576
-	PORT_DIPSETTING(    0x20, "Slow" )				//   0x0c00
-	PORT_DIPSETTING(    0x00, "Fast" )				//   0x0a00
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )		// Stored at 0x284e but not read back
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )		// Cocktail Mode, not used
+	PORT_DIPNAME( 0x20, 0x00, "Internal speed" )		/* Check code at 0x8576*/
+	PORT_DIPSETTING(    0x20, "Slow" )				/*   0x0c00*/
+	PORT_DIPSETTING(    0x00, "Fast" )				/*   0x0a00*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )		/* Stored at 0x284e but not read back*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )		/* Cocktail Mode, not used*/
 
 	PORT_START      /* DSW1 */
 	PORT_DIPNAME( 0x0f, 0x00, DEF_STR( Coin_B ) )
@@ -420,11 +420,11 @@ INPUT_PORTS_START( mastkin )
 	PORT_DIPSETTING(    0x02, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_5C ) )
-//	PORT_DIPSETTING(    0x0b, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x0d, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x0f, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x0b, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0x0d, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0x0f, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0xf0, 0x00, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 3C_1C ) )
@@ -437,11 +437,11 @@ INPUT_PORTS_START( mastkin )
 	PORT_DIPSETTING(    0x20, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x30, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( 1C_5C ) )
-//	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )*/
 INPUT_PORTS_END
 
 

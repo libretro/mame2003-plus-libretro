@@ -73,78 +73,78 @@ WRITE16_HANDLER( afega_soundlatch_w )
 */
 
 static MEMORY_READ16_START( afega_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM					},	// ROM
-	{ 0x080000, 0x080001, input_port_0_word_r		},	// Buttons
-	{ 0x080002, 0x080003, input_port_1_word_r		},	// P1 + P2
-	{ 0x080004, 0x080005, input_port_2_word_r		},	// 2 x DSW
+	{ 0x000000, 0x07ffff, MRA16_ROM					},	/* ROM*/
+	{ 0x080000, 0x080001, input_port_0_word_r		},	/* Buttons*/
+	{ 0x080002, 0x080003, input_port_1_word_r		},	/* P1 + P2*/
+	{ 0x080004, 0x080005, input_port_2_word_r		},	/* 2 x DSW*/
 	{ 0x080012, 0x080013, afega_unknown_r           },
-/**/{ 0x088000, 0x0885ff, MRA16_RAM					},	// Palette
-/**/{ 0x08c000, 0x08c003, MRA16_RAM					},	// Scroll
-/**/{ 0x08c004, 0x08c007, MRA16_RAM					},	//
-/**/{ 0x090000, 0x091fff, MRA16_RAM					},	// Layer 0
-/**/{ 0x092000, 0x093fff, MRA16_RAM           		},	// ?
-/**/{ 0x09c000, 0x09c7ff, MRA16_RAM					},	// Layer 1
-	{ 0x3c0000, 0x3c7fff, MRA16_RAM					},	// RAM
-	{ 0x3c8000, 0x3c8fff, MRA16_RAM					},	// Sprites
-	{ 0x3c9000, 0x3cffff, MRA16_RAM					},	// RAM
-	{ 0xff8000, 0xff8fff, MRA16_BANK1				},	// Sprites Mirror
+/**/{ 0x088000, 0x0885ff, MRA16_RAM					},	/* Palette*/
+/**/{ 0x08c000, 0x08c003, MRA16_RAM					},	/* Scroll*/
+/**/{ 0x08c004, 0x08c007, MRA16_RAM					},	/**/
+/**/{ 0x090000, 0x091fff, MRA16_RAM					},	/* Layer 0*/
+/**/{ 0x092000, 0x093fff, MRA16_RAM           		},	/* ?*/
+/**/{ 0x09c000, 0x09c7ff, MRA16_RAM					},	/* Layer 1*/
+	{ 0x3c0000, 0x3c7fff, MRA16_RAM					},	/* RAM*/
+	{ 0x3c8000, 0x3c8fff, MRA16_RAM					},	/* Sprites*/
+	{ 0x3c9000, 0x3cffff, MRA16_RAM					},	/* RAM*/
+	{ 0xff8000, 0xff8fff, MRA16_BANK1				},	/* Sprites Mirror*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( afega_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x080000, 0x08001d, MWA16_RAM						},	//
-	{ 0x08001e, 0x08001f, afega_soundlatch_w			},	// To Sound CPU
-	{ 0x080020, 0x087fff, MWA16_RAM						},	//
-	{ 0x088000, 0x0885ff, afega_palette_w, &paletteram16},	// Palette
-	{ 0x088600, 0x08bfff, MWA16_RAM						},	//
-	{ 0x08c000, 0x08c003, MWA16_RAM, &afega_scroll_0	},	// Scroll
-	{ 0x08c004, 0x08c007, MWA16_RAM, &afega_scroll_1	},	//
-	{ 0x08c008, 0x08ffff, MWA16_RAM						},	//
-	{ 0x090000, 0x091fff, afega_vram_0_w, &afega_vram_0	},	// Layer 0
-	{ 0x092000, 0x093fff, MWA16_RAM						},	// ?
-	{ 0x09c000, 0x09c7ff, afega_vram_1_w, &afega_vram_1	},	// Layer 1
-	{ 0x3c0000, 0x3c7fff, MWA16_RAM						},	// RAM
-	{ 0x3c8000, 0x3c8fff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Sprites
-	{ 0x3c9000, 0x3cffff, MWA16_RAM						},	// RAM
-	{ 0xff8000, 0xff8fff, MWA16_BANK1				},	// Sprites Mirror
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x080000, 0x08001d, MWA16_RAM						},	/**/
+	{ 0x08001e, 0x08001f, afega_soundlatch_w			},	/* To Sound CPU*/
+	{ 0x080020, 0x087fff, MWA16_RAM						},	/**/
+	{ 0x088000, 0x0885ff, afega_palette_w, &paletteram16},	/* Palette*/
+	{ 0x088600, 0x08bfff, MWA16_RAM						},	/**/
+	{ 0x08c000, 0x08c003, MWA16_RAM, &afega_scroll_0	},	/* Scroll*/
+	{ 0x08c004, 0x08c007, MWA16_RAM, &afega_scroll_1	},	/**/
+	{ 0x08c008, 0x08ffff, MWA16_RAM						},	/**/
+	{ 0x090000, 0x091fff, afega_vram_0_w, &afega_vram_0	},	/* Layer 0*/
+	{ 0x092000, 0x093fff, MWA16_RAM						},	/* ?*/
+	{ 0x09c000, 0x09c7ff, afega_vram_1_w, &afega_vram_1	},	/* Layer 1*/
+	{ 0x3c0000, 0x3c7fff, MWA16_RAM						},	/* RAM*/
+	{ 0x3c8000, 0x3c8fff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Sprites*/
+	{ 0x3c9000, 0x3cffff, MWA16_RAM						},	/* RAM*/
+	{ 0xff8000, 0xff8fff, MWA16_BANK1				},	/* Sprites Mirror*/
 MEMORY_END
 
 /* redhawk has main ram / sprites in a different location */
 
 static MEMORY_READ16_START( redhawk_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM					},	// ROM
-	{ 0x080000, 0x080001, input_port_0_word_r		},	// Buttons
-	{ 0x080002, 0x080003, input_port_1_word_r		},	// P1 + P2
-	{ 0x080004, 0x080005, input_port_2_word_r		},	// 2 x DSW
-/**/{ 0x088000, 0x0885ff, MRA16_RAM					},	// Palette
-/**/{ 0x08c000, 0x08c003, MRA16_RAM					},	// Scroll
-/**/{ 0x08c004, 0x08c007, MRA16_RAM					},	//
-/**/{ 0x090000, 0x091fff, MRA16_RAM					},	// Layer 0
-/**/{ 0x092000, 0x093fff, MRA16_RAM					},	// ?
-/**/{ 0x09c000, 0x09c7ff, MRA16_RAM					},	// Layer 1
-	{ 0x0c0000, 0x0c7fff, MRA16_RAM					},	// RAM
-	{ 0x0c8000, 0x0c8fff, MRA16_RAM					},	// Sprites
-	{ 0x0c9000, 0x0cffff, MRA16_RAM					},	// RAM
-	{ 0xff8000, 0xff8fff, MRA16_BANK1				},	// Sprites Mirror
+	{ 0x000000, 0x07ffff, MRA16_ROM					},	/* ROM*/
+	{ 0x080000, 0x080001, input_port_0_word_r		},	/* Buttons*/
+	{ 0x080002, 0x080003, input_port_1_word_r		},	/* P1 + P2*/
+	{ 0x080004, 0x080005, input_port_2_word_r		},	/* 2 x DSW*/
+/**/{ 0x088000, 0x0885ff, MRA16_RAM					},	/* Palette*/
+/**/{ 0x08c000, 0x08c003, MRA16_RAM					},	/* Scroll*/
+/**/{ 0x08c004, 0x08c007, MRA16_RAM					},	/**/
+/**/{ 0x090000, 0x091fff, MRA16_RAM					},	/* Layer 0*/
+/**/{ 0x092000, 0x093fff, MRA16_RAM					},	/* ?*/
+/**/{ 0x09c000, 0x09c7ff, MRA16_RAM					},	/* Layer 1*/
+	{ 0x0c0000, 0x0c7fff, MRA16_RAM					},	/* RAM*/
+	{ 0x0c8000, 0x0c8fff, MRA16_RAM					},	/* Sprites*/
+	{ 0x0c9000, 0x0cffff, MRA16_RAM					},	/* RAM*/
+	{ 0xff8000, 0xff8fff, MRA16_BANK1				},	/* Sprites Mirror*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( redhawk_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x080000, 0x08001d, MWA16_RAM						},	//
-	{ 0x08001e, 0x08001f, afega_soundlatch_w			},	// To Sound CPU
-	{ 0x080020, 0x087fff, MWA16_RAM						},	//
-	{ 0x088000, 0x0885ff, afega_palette_w, &paletteram16},	// Palette
-	{ 0x088600, 0x08bfff, MWA16_RAM						},	//
-	{ 0x08c000, 0x08c003, MWA16_RAM, &afega_scroll_0	},	// Scroll
-	{ 0x08c004, 0x08c007, MWA16_RAM, &afega_scroll_1	},	//
-	{ 0x08c008, 0x08ffff, MWA16_RAM						},	//
-	{ 0x090000, 0x091fff, afega_vram_0_w, &afega_vram_0	},	// Layer 0
-	{ 0x092000, 0x093fff, MWA16_RAM						},	// ?
-	{ 0x09c000, 0x09c7ff, afega_vram_1_w, &afega_vram_1	},	// Layer 1
-	{ 0x0c0000, 0x0c7fff, MWA16_RAM						},	// RAM
-	{ 0x0c8000, 0x0c8fff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Sprites
-	{ 0x0c9000, 0x0cffff, MWA16_RAM						},	// RAM
-	{ 0xff8000, 0xff8fff, MWA16_BANK1				},	// Sprites Mirror
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x080000, 0x08001d, MWA16_RAM						},	/**/
+	{ 0x08001e, 0x08001f, afega_soundlatch_w			},	/* To Sound CPU*/
+	{ 0x080020, 0x087fff, MWA16_RAM						},	/**/
+	{ 0x088000, 0x0885ff, afega_palette_w, &paletteram16},	/* Palette*/
+	{ 0x088600, 0x08bfff, MWA16_RAM						},	/**/
+	{ 0x08c000, 0x08c003, MWA16_RAM, &afega_scroll_0	},	/* Scroll*/
+	{ 0x08c004, 0x08c007, MWA16_RAM, &afega_scroll_1	},	/**/
+	{ 0x08c008, 0x08ffff, MWA16_RAM						},	/**/
+	{ 0x090000, 0x091fff, afega_vram_0_w, &afega_vram_0	},	/* Layer 0*/
+	{ 0x092000, 0x093fff, MWA16_RAM						},	/* ?*/
+	{ 0x09c000, 0x09c7ff, afega_vram_1_w, &afega_vram_1	},	/* Layer 1*/
+	{ 0x0c0000, 0x0c7fff, MWA16_RAM						},	/* RAM*/
+	{ 0x0c8000, 0x0c8fff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Sprites*/
+	{ 0x0c9000, 0x0cffff, MWA16_RAM						},	/* RAM*/
+	{ 0xff8000, 0xff8fff, MWA16_BANK1				},	/* Sprites Mirror*/
 MEMORY_END
 
 
@@ -157,19 +157,19 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ_START( afega_sound_readmem )
-	{ 0x0000, 0xefff, MRA_ROM					},	// ROM
-	{ 0xf000, 0xf7ff, MRA_RAM					},	// RAM
-	{ 0xf800, 0xf800, soundlatch_r				},	// From Main CPU
-	{ 0xf809, 0xf809, YM2151_status_port_0_r	},	// YM2151
-	{ 0xf80a, 0xf80a, OKIM6295_status_0_r		},	// M6295
+	{ 0x0000, 0xefff, MRA_ROM					},	/* ROM*/
+	{ 0xf000, 0xf7ff, MRA_RAM					},	/* RAM*/
+	{ 0xf800, 0xf800, soundlatch_r				},	/* From Main CPU*/
+	{ 0xf809, 0xf809, YM2151_status_port_0_r	},	/* YM2151*/
+	{ 0xf80a, 0xf80a, OKIM6295_status_0_r		},	/* M6295*/
 MEMORY_END
 
 static MEMORY_WRITE_START( afega_sound_writemem )
-	{ 0x0000, 0xefff, MWA_ROM					},	// ROM
-	{ 0xf000, 0xf7ff, MWA_RAM					},	// RAM
-	{ 0xf808, 0xf808, YM2151_register_port_0_w	},	// YM2151
-	{ 0xf809, 0xf809, YM2151_data_port_0_w		},	//
-	{ 0xf80a, 0xf80a, OKIM6295_data_0_w			},	// M6295
+	{ 0x0000, 0xefff, MWA_ROM					},	/* ROM*/
+	{ 0xf000, 0xf7ff, MWA_RAM					},	/* RAM*/
+	{ 0xf808, 0xf808, YM2151_register_port_0_w	},	/* YM2151*/
+	{ 0xf809, 0xf809, YM2151_data_port_0_w		},	/**/
+	{ 0xf80a, 0xf80a, OKIM6295_data_0_w			},	/* M6295*/
 MEMORY_END
 
 
@@ -186,7 +186,7 @@ MEMORY_END
 ***************************************************************************/
 
 INPUT_PORTS_START( stagger1 )
-	PORT_START	// IN0 - $080000.w
+	PORT_START	/* IN0 - $080000.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_COIN2    )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -197,7 +197,7 @@ INPUT_PORTS_START( stagger1 )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN1 - $080002.w
+	PORT_START	/* IN1 - $080002.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -216,7 +216,7 @@ INPUT_PORTS_START( stagger1 )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - $080004.w
+	PORT_START	/* IN2 - $080004.w*/
 	PORT_SERVICE( 0x0001, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
@@ -269,7 +269,7 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( grdnstrm )
-	PORT_START	// IN0 - $080000.w
+	PORT_START	/* IN0 - $080000.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_COIN2    )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -280,7 +280,7 @@ INPUT_PORTS_START( grdnstrm )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN1 - $080002.w
+	PORT_START	/* IN1 - $080002.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -299,7 +299,7 @@ INPUT_PORTS_START( grdnstrm )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - $080004.w
+	PORT_START	/* IN2 - $080004.w*/
 	PORT_SERVICE( 0x0001, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
@@ -352,7 +352,7 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( bubl2000 )
-	PORT_START	// IN0 - $080000.w
+	PORT_START	/* IN0 - $080000.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_COIN2    )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -363,7 +363,7 @@ INPUT_PORTS_START( bubl2000 )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN1 - $080002.w
+	PORT_START	/* IN1 - $080002.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -382,7 +382,7 @@ INPUT_PORTS_START( bubl2000 )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - $080004.w
+	PORT_START	/* IN2 - $080004.w*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -420,7 +420,7 @@ INPUT_PORTS_START( bubl2000 )
 	PORT_DIPSETTING(      0x0c00, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(      0x1400, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(      0x0400, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(      0x0000, "Disabled" )
+/*	PORT_DIPSETTING(      0x0000, "Disabled" )*/
 	PORT_DIPNAME( 0xe000, 0xe000, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x8000, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x4000, DEF_STR( 3C_1C ) )
@@ -429,7 +429,7 @@ INPUT_PORTS_START( bubl2000 )
 	PORT_DIPSETTING(      0x6000, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(      0xa000, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(      0x2000, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(      0x0000, "Disabled" )
+/*	PORT_DIPSETTING(      0x0000, "Disabled" )*/
 INPUT_PORTS_END
 
 
@@ -488,17 +488,17 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo grdnstrm_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4, 256*1, 16 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x8, 256*3, 16 }, // [1] Layer 0
-	{ REGION_GFX3, 0, &layout_8x8x4,   256*2, 16 }, // [2] Layer 1
+	{ REGION_GFX1, 0, &layout_16x16x4, 256*1, 16 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x8, 256*3, 16 }, /* [1] Layer 0*/
+	{ REGION_GFX3, 0, &layout_8x8x4,   256*2, 16 }, /* [2] Layer 1*/
 	{ -1 }
 };
 
 static struct GfxDecodeInfo stagger1_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4_2, 256*1, 16 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x4,   256*0, 16 }, // [1] Layer 0
-	{ REGION_GFX3, 0, &layout_8x8x4,     256*2, 16 }, // [2] Layer 1
+	{ REGION_GFX1, 0, &layout_16x16x4_2, 256*1, 16 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x4,   256*0, 16 }, /* [1] Layer 0*/
+	{ REGION_GFX3, 0, &layout_8x8x4,     256*2, 16 }, /* [2] Layer 1*/
 	{ -1 }
 };
 
@@ -690,7 +690,7 @@ ROM_START( stagger1 )
 	ROM_LOAD( "4.bin", 0x00000, 0x80000, CRC(46463d36) SHA1(4265bc4d24ff64e39d9273965701c740d7e3fee0) )
 
 	ROM_REGION( 0x00100, REGION_GFX3, ROMREGION_DISPOSE | ROMREGION_ERASEFF )	/* Layer 1, 8x8x4 */
-	// Unused
+	/* Unused*/
 
 	ROM_REGION( 0x40000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
 	ROM_LOAD( "5", 0x00000, 0x40000, CRC(e911ce33) SHA1(a29c4dea98a22235122303325c63c15fadd3431d) )
@@ -736,7 +736,7 @@ ROM_START( redhawk )
 	ROM_LOAD( "4", 0x000000, 0x080000, CRC(d6427b8a) SHA1(556de1b5ce29d1c3c54bb315dcaa4dd0848ca462) )
 
 	ROM_REGION( 0x00100, REGION_GFX3, ROMREGION_DISPOSE | ROMREGION_ERASEFF )	/* Layer 1, 8x8x4 */
-	// Unused
+	/* Unused*/
 
 	ROM_REGION( 0x40000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
 	ROM_LOAD( "5", 0x00000, 0x40000, CRC(e911ce33) SHA1(a29c4dea98a22235122303325c63c15fadd3431d) )

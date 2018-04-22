@@ -259,7 +259,7 @@ static MEMORY_WRITE16_START( shadfrce_writemem )
 	{ 0x142000, 0x143fff, MWA16_RAM, &shadfrce_spvideoram, &spriteram_size }, /* sprites */
 	{ 0x180000, 0x187fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 }, /* ?? */
 	/* probably video registers etc. */
-//	{ 0x1c0000, 0x1d000d, MWA16_RAM, &shadfrce_videoregs },
+/*	{ 0x1c0000, 0x1d000d, MWA16_RAM, &shadfrce_videoregs },*/
 	{ 0x1c0000, 0x1c0001, shadfrce_bg0scrollx_w }, /* SCROLL X */
 	{ 0x1c0002, 0x1c0003, shadfrce_bg0scrolly_w }, /* SCROLL Y */
 	{ 0x1c0004, 0x1c0005, shadfrce_bg1scrollx_w }, /* SCROLL X */
@@ -343,8 +343,8 @@ INPUT_PORTS_START( shadfrce )
 
 	PORT_START	/* Fake IN4 (system inputs) */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )			// Only in "test mode" ?
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )			// Only in "test mode" ?
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )			/* Only in "test mode" ?*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )			/* Only in "test mode" ?*/
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START	/* Fake IN5 (misc) */
@@ -360,7 +360,7 @@ INPUT_PORTS_START( shadfrce )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x06, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x08, 0x08, "Continue Price" )			// What does that mean ?
+	PORT_DIPNAME( 0x08, 0x08, "Continue Price" )			/* What does that mean ?*/
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Free_Play ) )
@@ -378,8 +378,8 @@ INPUT_PORTS_START( shadfrce )
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x01, "Easy" )
 	PORT_DIPSETTING(    0x03, "Normal" )
-	PORT_DIPSETTING(    0x02, "Hard" )					// "Advanced"
-	PORT_DIPSETTING(    0x00, "Hardest" )				// "Expert"
+	PORT_DIPSETTING(    0x02, "Hard" )					/* "Advanced"*/
+	PORT_DIPSETTING(    0x00, "Hardest" )				/* "Expert"*/
 	PORT_DIPNAME( 0x0c, 0x0c, "Stage Clear Energy Regain" )
 	PORT_DIPSETTING(    0x04, "50%" )
 	PORT_DIPSETTING(    0x0c, "25%" )
@@ -403,8 +403,8 @@ INPUT_PORTS_START( shadfrce )
 	PORT_START	/* IN0 - $1d0020.w */
 	SHADFRCE_PLAYER_INPUT( IPF_PLAYER1, IPT_START1 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_COIN2 )			// Only in "test mode" ?
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_SERVICE1 )			// Only in "test mode" ?
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_COIN2 )			/* Only in "test mode" ?*/
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_SERVICE1 )			/* Only in "test mode" ?*/
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_DIPNAME( 0x1000, 0x1000, "Unused DIP 2-7" )
 	PORT_DIPSETTING(      0x1000, DEF_STR( Off ) )
@@ -420,8 +420,8 @@ INPUT_PORTS_START( shadfrce )
 	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0100, "Easy" )
 	PORT_DIPSETTING(      0x0300, "Normal" )
-	PORT_DIPSETTING(      0x0200, "Hard" )				// "Advanced"
-	PORT_DIPSETTING(      0x0000, "Hardest" )				// "Expert"
+	PORT_DIPSETTING(      0x0200, "Hard" )				/* "Advanced"*/
+	PORT_DIPSETTING(      0x0000, "Hardest" )				/* "Expert"*/
 	PORT_DIPNAME( 0x0c00, 0x0c00, "Stage Clear Energy Regain" )
 	PORT_DIPSETTING(      0x0400, "50%" )
 	PORT_DIPSETTING(      0x0c00, "25%" )
@@ -453,7 +453,7 @@ INPUT_PORTS_START( shadfrce )
 	PORT_DIPSETTING(      0x0200, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0x0600, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(      0x0400, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x0800, 0x0800, "Continue Price" )		// What does that mean ?
+	PORT_DIPNAME( 0x0800, 0x0800, "Continue Price" )		/* What does that mean ?*/
 	PORT_DIPSETTING(      0x0800, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Free_Play ) )

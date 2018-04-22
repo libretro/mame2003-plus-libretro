@@ -161,7 +161,7 @@ WRITE_HANDLER( vb_scrollx_hi_w )
 	vb_scrollx_hi = (data & 0x02) << 7;
 	vb_bgprombank_w((data >> 2)&0x07);
 	vb_spprombank_w((data >> 5)&0x07);
-	//logerror("%04x: vb_scrollx_hi = %d\n",activecpu_get_previouspc(), vb_scrollx_hi);
+	/*logerror("%04x: vb_scrollx_hi = %d\n",activecpu_get_previouspc(), vb_scrollx_hi);*/
 }
 
 static MEMORY_READ_START( readmem )
@@ -184,8 +184,8 @@ static MEMORY_READ_START( vball2pj_readmem )
 	{ 0x1002, 0x1002, input_port_2_r },
 	{ 0x1003, 0x1003, input_port_3_r },
 	{ 0x1004, 0x1004, input_port_4_r },
-	{ 0x1005, 0x1005, MRA_RAM },		//Strange, that these are read!
-	{ 0x1006, 0x1006, MRA_RAM },		//Strange, that these are read!
+	{ 0x1005, 0x1005, MRA_RAM },		/*Strange, that these are read!*/
+	{ 0x1006, 0x1006, MRA_RAM },		/*Strange, that these are read!*/
 	{ 0x4000, 0x7fff, MRA_BANK1 },
 	{ 0x8000, 0xffff, MRA_ROM },
 MEMORY_END
@@ -193,17 +193,17 @@ MEMORY_END
 WRITE_HANDLER(vb_scrollx_lo_w)
 {
 	vb_scrollx_lo = data;
-	//logerror("%04x: vb_scrollx_lo =%d\n",activecpu_get_previouspc(), vb_scrollx_lo);
+	/*logerror("%04x: vb_scrollx_lo =%d\n",activecpu_get_previouspc(), vb_scrollx_lo);*/
 }
 
-//Cheaters note: Scores are stored in ram @ 0x57-0x58 (though the space is used for other things between matches)
+/*Cheaters note: Scores are stored in ram @ 0x57-0x58 (though the space is used for other things between matches)*/
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x07ff, MWA_RAM },
 	{ 0x0800, 0x08ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x1008, 0x1008, vb_scrollx_hi_w },
 	{ 0x1009, 0x1009, vb_bankswitch_w },
 	{ 0x100a, 0x100a, MWA_RAM },
-	{ 0x100b, 0x100b, MWA_RAM },		//Counts from 0 to 7 continuously
+	{ 0x100b, 0x100b, MWA_RAM },		/*Counts from 0 to 7 continuously*/
 	{ 0x100c, 0x100c, vb_scrollx_lo_w },
 	{ 0x100d, 0x100d, cpu_sound_command_w },
 	{ 0x100e, 0x100e, MWA_RAM, &vb_scrolly_lo },
@@ -289,7 +289,7 @@ INPUT_PORTS_START (vball)
 
 	PORT_START
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ))
-// I've adjusted these to what I think is correct from gameplay testing - SJE - 03/28/03
+/* I've adjusted these to what I think is correct from gameplay testing - SJE - 03/28/03*/
 	PORT_DIPSETTING(    0x02, "Easy")
 	PORT_DIPSETTING(    0x03, "Medium")
 	PORT_DIPSETTING(    0x01, "Hard")
@@ -346,7 +346,7 @@ INPUT_PORTS_START (vball2pj)
 	PORT_DIPSETTING(    0x03, "2:00")
 	PORT_DIPSETTING(    0x02, "2:15")
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Difficulty ))
-// This ordering is assumed. Someone has to play it a lot and find out.
+/* This ordering is assumed. Someone has to play it a lot and find out.*/
 	PORT_DIPSETTING(    0x04, "Easy")
 	PORT_DIPSETTING(    0x00, "Medium")
 	PORT_DIPSETTING(    0x08, "Hard")
@@ -515,7 +515,7 @@ ROM_START( vball2pj )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* region#2: music CPU, 64kb */
 	ROM_LOAD( "25j1-0.47",  0x00000, 0x8000,  CRC(10ca79ad) SHA1(aad4a09d6745ca0b5665cb00ff7a4e08ea434068) )
-//ROM_LOAD( "vball04.bin",  0x00000, 0x8000,  CRC(534dfbd9) SHA1(d0cb37caf94fa85da4ebdfe15e7a78109084bf91) )
+/*ROM_LOAD( "vball04.bin",  0x00000, 0x8000,  CRC(534dfbd9) SHA1(d0cb37caf94fa85da4ebdfe15e7a78109084bf91) )*/
 
    /* the original has the image data stored in a special ceramic embedded package made by Toshiba
      with part number 'TOSHIBA TRJ-101' (which has been dumped using a custom made adapter)

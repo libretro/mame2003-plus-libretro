@@ -144,12 +144,12 @@ static READ32_HANDLER( port2_r )
 
 static WRITE32_HANDLER( control_w )
 {
-	// bit $80000000 = BSMT access/ROM read
-	// bit $20000000 = toggled every 64 IRQ4's
-	// bit $10000000 = ????
-	// bit $00800000 = EEPROM data
-	// bit $00400000 = EEPROM clock
-	// bit $00200000 = EEPROM enable (on 1)
+	/* bit $80000000 = BSMT access/ROM read*/
+	/* bit $20000000 = toggled every 64 IRQ4's*/
+	/* bit $10000000 = ????*/
+	/* bit $00800000 = EEPROM data*/
+	/* bit $00400000 = EEPROM clock*/
+	/* bit $00200000 = EEPROM enable (on 1)*/
 
 	COMBINE_DATA(&control_data);
 
@@ -240,13 +240,13 @@ static WRITE32_HANDLER( speedup_w )
 
 struct EEPROM_interface eeprom_interface_policetr =
 {
-	8,				// address bits	8
-	16,				// data bits	16
-	"*110",			// read			1 10 aaaaaa
-	"*101",			// write		1 01 aaaaaa dddddddddddddddd
-	"*111",			// erase		1 11 aaaaaa
-	"*10000xxxx",	// lock			1 00 00xxxx
-	"*10011xxxx"	// unlock		1 00 11xxxx
+	8,				/* address bits	8*/
+	16,				/* data bits	16*/
+	"*110",			/* read			1 10 aaaaaa*/
+	"*101",			/* write		1 01 aaaaaa dddddddddddddddd*/
+	"*111",			/* erase		1 11 aaaaaa*/
+	"*10000xxxx",	/* lock			1 00 00xxxx*/
+	"*10011xxxx"	/* unlock		1 00 11xxxx*/
 };
 
 
@@ -283,13 +283,13 @@ MEMORY_END
 static MEMORY_WRITE32_START( policetr_writemem )
 	{ 0x00000000, 0x0001ffff, MWA32_RAM, &policetr_rambase },
 	{ 0x00200000, 0x0020000f, policetr_video_w },
-	{ 0x00500000, 0x00500003, MWA32_NOP },		// copies ROM here at startup, plus checksum
+	{ 0x00500000, 0x00500003, MWA32_NOP },		/* copies ROM here at startup, plus checksum*/
 	{ 0x00700000, 0x00700003, bsmt2000_reg_w },
 	{ 0x00800000, 0x00800003, bsmt2000_data_w },
 	{ 0x00900000, 0x00900003, policetr_palette_offset_w },
 	{ 0x00920000, 0x00920003, policetr_palette_data_w },
 	{ 0x00a00000, 0x00a00003, control_w },
-	{ 0x00e00000, 0x00e00003, MWA32_NOP },		// watchdog???
+	{ 0x00e00000, 0x00e00003, MWA32_NOP },		/* watchdog???*/
 	{ 0x1fc00000, 0x1fdfffff, MWA32_ROM, &rom_base },
 MEMORY_END
 
@@ -299,11 +299,11 @@ static MEMORY_WRITE32_START( sshooter_writemem )
 	{ 0x00200000, 0x00200003, bsmt2000_data_w },
 	{ 0x00300000, 0x00300003, policetr_palette_offset_w },
 	{ 0x00320000, 0x00320003, policetr_palette_data_w },
-	{ 0x00500000, 0x00500003, MWA32_NOP },		// copies ROM here at startup, plus checksum
+	{ 0x00500000, 0x00500003, MWA32_NOP },		/* copies ROM here at startup, plus checksum*/
 	{ 0x00700000, 0x00700003, bsmt2000_reg_w },
 	{ 0x00800000, 0x0080000f, policetr_video_w },
 	{ 0x00a00000, 0x00a00003, control_w },
-	{ 0x00e00000, 0x00e00003, MWA32_NOP },		// watchdog???
+	{ 0x00e00000, 0x00e00003, MWA32_NOP },		/* watchdog???*/
 	{ 0x1fc00000, 0x1fdfffff, MWA32_ROM, &rom_base },
 MEMORY_END
 
@@ -348,7 +348,7 @@ INPUT_PORTS_START( policetr )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_SPECIAL )		// EEPROM read
+	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_SPECIAL )		/* EEPROM read*/
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -506,7 +506,7 @@ ROM_START( policeto )
 	ROM_LOAD32_BYTE( "pt-u113.v11", 0x00000, 0x20000, CRC(3d62f6d6) SHA1(342ffa38a6972bbb03c89b4dd603c2cc60609d3d) )
 	ROM_LOAD32_BYTE( "pt-u112.v11", 0x00001, 0x20000, CRC(942b280b) SHA1(c342ba3255203ce28ff59479da00f26f0bd026e0) )
 	ROM_LOAD32_BYTE( "pt-u111.v11", 0x00002, 0x20000, CRC(da6c45a7) SHA1(471bd372d2ad5bcb29af19dae09f3cfab4b010fd) )
-	ROM_LOAD32_BYTE( "pt-u110.v11", 0x00003, 0x20000, CRC(1360ac2b) SHA1(789673403d3acac7b3c9ebd7914b65f287a94a11) ) // Fails Checksum, Bug in the program/checksum code???
+	ROM_LOAD32_BYTE( "pt-u110.v11", 0x00003, 0x20000, CRC(1360ac2b) SHA1(789673403d3acac7b3c9ebd7914b65f287a94a11) ) /* Fails Checksum, Bug in the program/checksum code???*/
 
 	ROM_REGION( 0x600000, REGION_SOUND1, 0 )
 	ROM_LOAD( "pt-u160.bin", 0x000000, 0x100000, CRC(f267f813) SHA1(ae58507947fe2e9701b5df46565fd9908e2f9d77) )
@@ -548,14 +548,14 @@ ROM_START( sshooter )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 )		/* dummy region for R3000 */
 
 	ROM_REGION( 0x800000, REGION_GFX1, ROMREGION_ERASE00 )
-	ROM_LOAD16_BYTE( "ss-u121.bin", 0x000000, 0x100000, CRC(22e27dd6) SHA1(cb9e8c450352bb116a9c0407cc8ce6d8ae9d9881) ) // 1:1
-	ROM_LOAD16_BYTE( "ss-u120.bin", 0x000001, 0x100000, CRC(30173b1b) SHA1(366464444ce208391ca350f1639403f0c2217330) ) // 1:2
-	ROM_LOAD16_BYTE( "ss-u125.bin", 0x200000, 0x100000, CRC(79e8520a) SHA1(682e5c7954f96db65a137f05cde67c310b85b526) ) // 2:1
-	ROM_LOAD16_BYTE( "ss-u124.bin", 0x200001, 0x100000, CRC(8e805970) SHA1(bfc9940ed6425f136d768170275279c590da7003) ) // 2:2
-	ROM_LOAD16_BYTE( "ss-u123.bin", 0x400000, 0x100000, CRC(d045bb62) SHA1(839209ff6a8e5db63a51a3494a6c973e0068a3c6) ) // 3:1
-	ROM_LOAD16_BYTE( "ss-u122.bin", 0x400001, 0x100000, CRC(163cc133) SHA1(a5e84b5060fd32362aa097d0194ce72e8a90357c) ) // 3:2
-	ROM_LOAD16_BYTE( "ss-u127.bin", 0x600000, 0x100000, CRC(76a7a591) SHA1(9fd7cce21b01f388966a3e8388ba95820ac10bfd) ) // 4:1
-	ROM_LOAD16_BYTE( "ss-u126.bin", 0x600001, 0x100000, CRC(ab1b9d60) SHA1(ff51a71443f7774d3abf96c2eb8ef6a54d73dd8e) ) // 4:2
+	ROM_LOAD16_BYTE( "ss-u121.bin", 0x000000, 0x100000, CRC(22e27dd6) SHA1(cb9e8c450352bb116a9c0407cc8ce6d8ae9d9881) ) /* 1:1*/
+	ROM_LOAD16_BYTE( "ss-u120.bin", 0x000001, 0x100000, CRC(30173b1b) SHA1(366464444ce208391ca350f1639403f0c2217330) ) /* 1:2*/
+	ROM_LOAD16_BYTE( "ss-u125.bin", 0x200000, 0x100000, CRC(79e8520a) SHA1(682e5c7954f96db65a137f05cde67c310b85b526) ) /* 2:1*/
+	ROM_LOAD16_BYTE( "ss-u124.bin", 0x200001, 0x100000, CRC(8e805970) SHA1(bfc9940ed6425f136d768170275279c590da7003) ) /* 2:2*/
+	ROM_LOAD16_BYTE( "ss-u123.bin", 0x400000, 0x100000, CRC(d045bb62) SHA1(839209ff6a8e5db63a51a3494a6c973e0068a3c6) ) /* 3:1*/
+	ROM_LOAD16_BYTE( "ss-u122.bin", 0x400001, 0x100000, CRC(163cc133) SHA1(a5e84b5060fd32362aa097d0194ce72e8a90357c) ) /* 3:2*/
+	ROM_LOAD16_BYTE( "ss-u127.bin", 0x600000, 0x100000, CRC(76a7a591) SHA1(9fd7cce21b01f388966a3e8388ba95820ac10bfd) ) /* 4:1*/
+	ROM_LOAD16_BYTE( "ss-u126.bin", 0x600001, 0x100000, CRC(ab1b9d60) SHA1(ff51a71443f7774d3abf96c2eb8ef6a54d73dd8e) ) /* 4:2*/
 
 	ROM_REGION32_BE( 0x100000, REGION_USER1, 0 )	/* 2MB for R3000 code */
 	ROM_LOAD32_BYTE( "ss-u113.v17", 0x00000, 0x40000, CRC(a8c96af5) SHA1(a62458156603b74e0d84ce6928f7bb868bf5a219) )
@@ -564,9 +564,9 @@ ROM_START( sshooter )
 	ROM_LOAD32_BYTE( "ss-u110.v17", 0x00003, 0x40000, CRC(8ae744ce) SHA1(659cd27865cf5507aae6b064c5bc24b927cf5f5a) )
 
 	ROM_REGION( 0x600000, REGION_SOUND1, 0 )
-	ROM_LOAD( "ss-u160.bin", 0x000000, 0x100000, CRC(1c603d42) SHA1(880992871be52129684052d542946de0cc32ba9a) ) // 1:1
+	ROM_LOAD( "ss-u160.bin", 0x000000, 0x100000, CRC(1c603d42) SHA1(880992871be52129684052d542946de0cc32ba9a) ) /* 1:1*/
 	ROM_RELOAD(              0x3f8000, 0x100000 )
-	ROM_LOAD( "ss-u162.bin", 0x100000, 0x100000, CRC(40ef448a) SHA1(c96f7b169be2576e9f3783af84c07259efefb812) ) // 2:1
+	ROM_LOAD( "ss-u162.bin", 0x100000, 0x100000, CRC(40ef448a) SHA1(c96f7b169be2576e9f3783af84c07259efefb812) ) /* 2:1*/
 	ROM_RELOAD(              0x4f8000, 0x100000 )
 ROM_END
 

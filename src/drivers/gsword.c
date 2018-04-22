@@ -368,15 +368,15 @@ PORT_END
 
 static MEMORY_READ_START( josvolly_sound_readmem )
 	{ 0x0000, 0x0fff, MRA_ROM },
-//	{ 0x2000, 0x3fff, MRA_ROM }, another ROM probably, not sure which one (tested on boot)
+/*	{ 0x2000, 0x3fff, MRA_ROM }, another ROM probably, not sure which one (tested on boot)*/
 	{ 0x4000, 0x43ff, MRA_RAM },
-//	{ 0xa000, 0xa000, soundlatch_r },
+/*	{ 0xa000, 0xa000, soundlatch_r },*/
 MEMORY_END
 
 static MEMORY_WRITE_START( josvolly_sound_writemem )
 	{ 0x0000, 0x0fff, MWA_ROM },
 	{ 0x4000, 0x43ff, MWA_RAM },
-//	{ 0x8000, 0x8000, gsword_adpcm_data_w },
+/*	{ 0x8000, 0x8000, gsword_adpcm_data_w },*/
 MEMORY_END
 
 static PORT_READ_START( josvolly_sound_readport )

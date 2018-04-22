@@ -100,7 +100,7 @@ READ_HANDLER( mahjong_panel_0_r )
 		case 0x10: return readinputport(7);
 		case 0x20: return readinputport(8);
 	}
-//	usrintf_showmessage("Reading input port %02x at PC = %05x",sengokumj_mux_data,activecpu_get_pc());
+/*	usrintf_showmessage("Reading input port %02x at PC = %05x",sengokumj_mux_data,activecpu_get_pc());*/
 	return readinputport(3);
 }
 
@@ -248,28 +248,28 @@ INPUT_PORTS_START( sengokmj )
 /*$c000-$c001:Dip Switches.On most of them I have NO clue on what they really are */
 /*they are checked at $d0107 afterwards btw*/
 	PORT_START
-	PORT_DIPNAME( 0x01,   0x00, DEF_STR( Demo_Sounds ) )//$992e
+	PORT_DIPNAME( 0x01,   0x00, DEF_STR( Demo_Sounds ) )/*$992e*/
 	PORT_DIPSETTING(	  0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(	  0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02,   0x02, "Re-start" )
 	PORT_DIPSETTING(	  0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(	  0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04,   0x04, "Double G" )//$8850
+	PORT_DIPNAME( 0x04,   0x04, "Double G" )/*$8850*/
 	PORT_DIPSETTING(	  0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(	  0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08,   0x08, "Double L" )//$8852
+	PORT_DIPNAME( 0x08,   0x08, "Double L" )/*$8852*/
 	PORT_DIPSETTING(	  0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(	  0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10,   0x10, "Kamon" )//$9930
+	PORT_DIPNAME( 0x10,   0x10, "Kamon" )/*$9930*/
 	PORT_DIPSETTING(	  0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(   	  0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x20,   0x20, DEF_STR( Unused ) )
 	PORT_DIPSETTING(	  0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(	  0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40,   0x40, "Out Sw" )//$995a
+	PORT_DIPNAME( 0x40,   0x40, "Out Sw" )/*$995a*/
 	PORT_DIPSETTING(	  0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(	  0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80,   0x80, "Hopper" )//$8932
+	PORT_DIPNAME( 0x80,   0x80, "Hopper" )/*$8932*/
 	PORT_DIPSETTING(	  0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(	  0x00, DEF_STR( On ) )
 	PORT_START
@@ -332,7 +332,7 @@ INPUT_PORTS_START( sengokmj )
 	PORT_DIPNAME( 0x01, 0x01, "Door" )
 	PORT_DIPSETTING(	0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-	PORT_SERVICE( 0x02, IP_ACTIVE_LOW )//"Service Mode"
+	PORT_SERVICE( 0x02, IP_ACTIVE_LOW )/*"Service Mode"*/
 	PORT_DIPNAME( 0x04, 0x04, "Opt. 1st" )
 	PORT_DIPSETTING(	0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )

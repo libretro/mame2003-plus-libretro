@@ -101,13 +101,13 @@ static MEMORY_WRITE_START( thepit_writemem )
 	{ 0x9400, 0x97ff, videoram_w },
 	{ 0x9800, 0x983f, thepit_attributes_w, &thepit_attributesram },
 	{ 0x9840, 0x985f, MWA_RAM, &spriteram, &spriteram_size },
-	{ 0x9860, 0x98ff, MWA_RAM }, // Probably unused
-	{ 0xa000, 0xa000, MWA_NOP }, // Not hooked up according to the schematics
+	{ 0x9860, 0x98ff, MWA_RAM }, /* Probably unused*/
+	{ 0xa000, 0xa000, MWA_NOP }, /* Not hooked up according to the schematics*/
 	{ 0xb000, 0xb000, interrupt_enable_w },
-	{ 0xb001, 0xb001, MWA_NOP }, // Unused, but initialized
-	{ 0xb002, 0xb002, MWA_NOP }, // coin_lockout_w
+	{ 0xb001, 0xb001, MWA_NOP }, /* Unused, but initialized*/
+	{ 0xb002, 0xb002, MWA_NOP }, /* coin_lockout_w*/
 	{ 0xb003, 0xb003, thepit_sound_enable_w },
-	{ 0xb004, 0xb005, MWA_NOP }, // Unused, but initialized
+	{ 0xb004, 0xb005, MWA_NOP }, /* Unused, but initialized*/
 	{ 0xb006, 0xb006, flip_screen_x_w },
 	{ 0xb007, 0xb007, flip_screen_y_w },
 	{ 0xb800, 0xb800, soundlatch_w },
@@ -131,12 +131,12 @@ static MEMORY_WRITE_START( intrepid_writemem )
 	{ 0x9400, 0x97ff, colorram_w, &colorram },
 	{ 0x9800, 0x983f, thepit_attributes_w, &thepit_attributesram },
 	{ 0x9840, 0x985f, MWA_RAM, &spriteram, &spriteram_size },
-	{ 0x9860, 0x98ff, MWA_RAM }, // Probably unused
+	{ 0x9860, 0x98ff, MWA_RAM }, /* Probably unused*/
 	{ 0xb000, 0xb000, interrupt_enable_w },
-	{ 0xb001, 0xb001, MWA_NOP }, // Unused, but initialized
-	{ 0xb002, 0xb002, MWA_NOP }, // coin_lockout_w
+	{ 0xb001, 0xb001, MWA_NOP }, /* Unused, but initialized*/
+	{ 0xb002, 0xb002, MWA_NOP }, /* coin_lockout_w*/
 	{ 0xb003, 0xb003, thepit_sound_enable_w },
-	{ 0xb004, 0xb004, MWA_NOP }, // Unused, but initialized
+	{ 0xb004, 0xb004, MWA_NOP }, /* Unused, but initialized*/
 	{ 0xb005, 0xb005, intrepid_graphics_bank_select_w },
 	{ 0xb006, 0xb006, flip_screen_x_w },
 	{ 0xb007, 0xb007, flip_screen_y_w },
@@ -495,8 +495,8 @@ INPUT_PORTS_START( suprmous )
 	PORT_DIPNAME( 0x18, 0x00, DEF_STR( Lives ) )  /* The game reads these together */
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x08, "5" )
-  //PORT_DIPSETTING(    0x10, "5" )
-  //PORT_DIPSETTING(    0x18, "5" )
+  /*PORT_DIPSETTING(    0x10, "5" )*/
+  /*PORT_DIPSETTING(    0x18, "5" )*/
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x10, "5000" )
 	PORT_DIPSETTING(    0x00, "10000" )

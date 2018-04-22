@@ -272,7 +272,7 @@ static MEMORY_WRITE_START( liberat2_writemem )
 	{ 0x4e00, 0x4e3f, atari_vg_earom_w },
 	{ 0x5000, 0x501f, pokey2_w },
 	{ 0x5800, 0x581f, pokey1_w },
-	//{ 0x6000, 0x601f, pokey1_w }, /* bug ??? */
+	/*{ 0x6000, 0x601f, pokey1_w },  // bug ??? /*/
 	{ 0x6000, 0xbfff, MWA_ROM },
 	{ 0xfffa, 0xffff, MWA_ROM },
 

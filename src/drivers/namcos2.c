@@ -1366,8 +1366,8 @@ INPUT_PORTS_START( assault )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_START	 /* 63B05Z0 - $3002 */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
-//	PORT_START	 /* 63B05Z0 - $3003 */
-//	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+/*	PORT_START	  // 63B05Z0 - $3003 /*/
+/*	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )*/
 
 	PORT_START	/* fake port15 for single joystick control */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_CHEAT )
@@ -1769,12 +1769,12 @@ static MACHINE_DRIVER_START( default )
 	MDRV_CPU_MEMORY(readmem_slave_default,writemem_slave_default)
 	MDRV_CPU_VBLANK_INT(namcos2_68k_slave_vblank,1)
 
-	MDRV_CPU_ADD(M6809,3072000) // Sound handling
+	MDRV_CPU_ADD(M6809,3072000) /* Sound handling*/
 	MDRV_CPU_MEMORY(readmem_sound,writemem_sound)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)
 	MDRV_CPU_PERIODIC_INT(irq1_line_hold,120)
 
-	MDRV_CPU_ADD(HD63705,2048000) // I/O handling
+	MDRV_CPU_ADD(HD63705,2048000) /* I/O handling*/
 	MDRV_CPU_MEMORY(readmem_mcu,writemem_mcu)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
@@ -1808,12 +1808,12 @@ static MACHINE_DRIVER_START( gollygho )
 	MDRV_CPU_MEMORY(readmem_slave_default,writemem_slave_default)
 	MDRV_CPU_VBLANK_INT(namcos2_68k_slave_vblank,1)
 
-	MDRV_CPU_ADD(M6809,3072000) // Sound handling
+	MDRV_CPU_ADD(M6809,3072000) /* Sound handling*/
 	MDRV_CPU_MEMORY(readmem_sound,writemem_sound)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)
 	MDRV_CPU_PERIODIC_INT(irq1_line_hold,120)
 
-	MDRV_CPU_ADD(HD63705,2048000) // I/O handling
+	MDRV_CPU_ADD(HD63705,2048000) /* I/O handling*/
 	MDRV_CPU_MEMORY(readmem_mcu,writemem_mcu)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
@@ -1847,12 +1847,12 @@ static MACHINE_DRIVER_START( finallap )
 	MDRV_CPU_MEMORY(readmem_slave_finallap,writemem_slave_finallap)
 	MDRV_CPU_VBLANK_INT(namcos2_68k_slave_vblank,1)
 
-	MDRV_CPU_ADD(M6809,3072000) // Sound handling
+	MDRV_CPU_ADD(M6809,3072000) /* Sound handling*/
 	MDRV_CPU_MEMORY(readmem_sound,writemem_sound)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)
 	MDRV_CPU_PERIODIC_INT(irq1_line_hold,120)
 
-	MDRV_CPU_ADD(HD63705,2048000) // I/O handling
+	MDRV_CPU_ADD(HD63705,2048000) /* I/O handling*/
 	MDRV_CPU_MEMORY(readmem_mcu,writemem_mcu)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
@@ -1887,12 +1887,12 @@ static MACHINE_DRIVER_START( sgunner )
 	MDRV_CPU_MEMORY(readmem_slave_sgunner,writemem_slave_sgunner)
 	MDRV_CPU_VBLANK_INT(namcos2_68k_slave_vblank,1)
 
-	MDRV_CPU_ADD(M6809,3072000) // Sound handling
+	MDRV_CPU_ADD(M6809,3072000) /* Sound handling*/
 	MDRV_CPU_MEMORY(readmem_sound,writemem_sound)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)
 	MDRV_CPU_PERIODIC_INT(irq1_line_hold,120)
 
-	MDRV_CPU_ADD(HD63705,2048000) // I/O handling
+	MDRV_CPU_ADD(HD63705,2048000) /* I/O handling*/
 	MDRV_CPU_MEMORY(readmem_mcu,writemem_mcu)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 

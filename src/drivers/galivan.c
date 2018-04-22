@@ -53,7 +53,7 @@ static MACHINE_INIT( galivan )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	cpu_setbank(1,&RAM[0x10000]);
-//	layers = 0x60;
+/*	layers = 0x60;*/
 }
 
 static WRITE_HANDLER( galivan_sound_command_w )
@@ -154,8 +154,8 @@ PORT_END
 static PORT_WRITE_START( ninjemak_writeport )
 	{ 0x80, 0x80, ninjemak_gfxbank_w },
 	{ 0x85, 0x85, galivan_sound_command_w },
-//	{ 0x86, 0x86, IOWP_NOP },			// ??
-//	{ 0x87, 0x87, IOWP_NOP },			// ??
+/*	{ 0x86, 0x86, IOWP_NOP },			*/ /* ??*/
+/*	{ 0x87, 0x87, IOWP_NOP },			*/ /* ??*/
 PORT_END
 
 
@@ -233,12 +233,12 @@ PORT_END
 	/* This is how the Bonus Life are defined in Service Mode */
 	/* However, to keep the way Bonus Life are definedin MAME, */
 	/* below are the same values, but using the MAME way */
-//	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )
-//	PORT_DIPSETTING(    0x04, "20k" )
-//	PORT_DIPSETTING(    0x00, "50k" )
-//	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )
-//	PORT_DIPSETTING(    0x08, "every 60k" )
-//	PORT_DIPSETTING(    0x00, "every 90k" )
+/*	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x04, "20k" )*/
+/*	PORT_DIPSETTING(    0x00, "50k" )*/
+/*	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x08, "every 60k" )*/
+/*	PORT_DIPSETTING(    0x00, "every 90k" )*/
 #define NIHON_BONUS_LIFE \
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) ) \
 	PORT_DIPSETTING(    0x0c, "20k and every 60k" ) \

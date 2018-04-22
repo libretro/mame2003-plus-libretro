@@ -96,7 +96,7 @@ static WRITE_HANDLER( m92_soundlatch_w )
 	{
 		timer_set(TIME_NOW,V30_ASSERT,setvector_callback);
 		soundlatch_w(0,data);
-//		logerror("soundlatch_w %02x\n",data);
+/*		logerror("soundlatch_w %02x\n",data);*/
 	}
 }
 
@@ -112,7 +112,7 @@ static READ_HANDLER( m92_soundlatch_r )
 	if (offset == 0)
 	{
 		int res = soundlatch_r(offset);
-//		logerror("soundlatch_r %02x\n",res);
+/*		logerror("soundlatch_r %02x\n",res);*/
 		return res;
 	}
 	else return 0xff;
@@ -497,10 +497,10 @@ static INTERRUPT_GEN( m107_raster_interrupt )
 	}
 
 	/* Kludge to get Fire Barrel running */
-//	else if (line==118)
-//	{
-//		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, m107_IRQ_3);
-//	}
+/*	else if (line==118)*/
+/*	{*/
+/*		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, m107_IRQ_3);*/
+/*	}*/
 
 	/* Redraw screen, then set vblank and trigger the VBL interrupt */
 	else if (line==248) {

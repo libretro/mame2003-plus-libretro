@@ -33,10 +33,10 @@ READ_HANDLER( buggychl_mcu_r );
 READ_HANDLER( buggychl_mcu_status_r );
 
 
-//not used
-//WRITE_HANDLER( msisaac_textbank1_w );
+/*not used*/
+/*WRITE_HANDLER( msisaac_textbank1_w );*/
 
-//used
+/*used*/
 WRITE_HANDLER( msisaac_fg_scrolly_w );
 WRITE_HANDLER( msisaac_fg_scrollx_w );
 WRITE_HANDLER( msisaac_bg_scrolly_w );
@@ -111,7 +111,7 @@ static WRITE_HANDLER( ms_unknown_w )
 /* To test the game without the MCU simply comment out #define USE_MCU */
 
 /* Disabled because the mcu dump is currently unavailable. -AS */
-//#define USE_MCU
+/*#define USE_MCU*/
 
 #ifndef USE_MCU
 static UINT8 mcu_val = 0;
@@ -147,15 +147,15 @@ MCU simulation TODO:
  		/*With this command the MCU controls body direction  */
  		case 0x02:
  		{
- 			//direction:
- 			//0-left
- 			//1-leftup
- 			//2-up
- 			//3-rigtup
- 			//4-right
- 			//5-rightdwn
- 			//6-down
- 			//7-leftdwn
+ 			/*direction:*/
+ 			/*0-left*/
+ 			/*1-leftup*/
+ 			/*2-up*/
+ 			/*3-rigtup*/
+ 			/*4-right*/
+ 			/*5-rightdwn*/
+ 			/*6-down*/
+ 			/*7-leftdwn*/
 
  			UINT8 val= (readinputport(4)>>2) & 0x0f;
  			/* bit0 = left
@@ -200,7 +200,7 @@ static READ_HANDLER( msisaac_mcu_status_r )
 #ifdef USE_MCU
 	return buggychl_mcu_status_r(offset);
 #else
-	return 3;	//mcu ready / cpu data ready
+	return 3;	/*mcu ready / cpu data ready*/
 #endif
 }
 
@@ -209,8 +209,8 @@ static WRITE_HANDLER( msisaac_mcu_w )
 #ifdef USE_MCU
 	buggychl_mcu_w(offset,data);
 #else
-	//if(data != 0x0a && data != 0x42 && data != 0x02)
-	//	usrintf_showmessage("PC = %04x %02x",activecpu_get_pc(),data);
+	/*if(data != 0x0a && data != 0x42 && data != 0x02)*/
+	/*	usrintf_showmessage("PC = %04x %02x",activecpu_get_pc(),data);*/
 	mcu_val = data;
 #endif
 }
@@ -227,7 +227,7 @@ static MEMORY_READ_START( readmem )
 	{ 0xf082, 0xf082, input_port_2_r },
 	{ 0xf083, 0xf083, input_port_3_r },
 	{ 0xf084, 0xf084, input_port_4_r },
-//{ 0xf086, 0xf086, input_port_5_r },
+/*{ 0xf086, 0xf086, input_port_5_r },*/
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
@@ -236,16 +236,16 @@ static MEMORY_WRITE_START( writemem )
 
 	{ 0xe800, 0xefff, paletteram_xxxxRRRRGGGGBBBB_w, &paletteram },
 
-//{ 0xf400, 0xf43f, msisaac_fg_colorram_w, &colorram },
+/*{ 0xf400, 0xf43f, msisaac_fg_colorram_w, &colorram },*/
 
-	{ 0xf0a3, 0xf0a3, ms_unknown_w },			//???? written in interrupt routine
+	{ 0xf0a3, 0xf0a3, ms_unknown_w },			/*???? written in interrupt routine*/
 
-	{ 0xf060, 0xf060, sound_command_w },		//sound command
-	{ 0xf061, 0xf061, MWA_NOP /*sound_reset*/},	//????
+	{ 0xf060, 0xf060, sound_command_w },		/*sound command*/
+	{ 0xf061, 0xf061, MWA_NOP /*sound_reset*/},	/*????*/
 
 	{ 0xf000, 0xf000, msisaac_bg2_textbank_w },
-	{ 0xf001, 0xf001, MWA_RAM }, 			//???
-	{ 0xf002, 0xf002, MWA_RAM }, 			//???
+	{ 0xf001, 0xf001, MWA_RAM }, 			/*???*/
+	{ 0xf002, 0xf002, MWA_RAM }, 			/*???*/
 
 	{ 0xf0c0, 0xf0c0, msisaac_fg_scrollx_w },
 	{ 0xf0c1, 0xf0c1, msisaac_fg_scrolly_w },
@@ -256,15 +256,15 @@ static MEMORY_WRITE_START( writemem )
 
 	{ 0xf0e0, 0xf0e0, msisaac_mcu_w },
 
-	{ 0xf100, 0xf17f, MWA_RAM, &spriteram },	//sprites
+	{ 0xf100, 0xf17f, MWA_RAM, &spriteram },	/*sprites*/
 	{ 0xf400, 0xf7ff, msisaac_fg_videoram_w, &videoram },
 	{ 0xf800, 0xfbff, msisaac_bg2_videoram_w,&msisaac_videoram2 },
 	{ 0xfc00, 0xffff, msisaac_bg_videoram_w, &msisaac_videoram },
 
 
-//	{ 0xf801, 0xf801, msisaac_bgcolor_w },
-//	{ 0xfc00, 0xfc00, flip_screen_w },
-//	{ 0xfc03, 0xfc04, msisaac_coin_counter_w },
+/*	{ 0xf801, 0xf801, msisaac_bgcolor_w },*/
+/*	{ 0xfc00, 0xfc00, flip_screen_w },*/
+/*	{ 0xfc03, 0xfc04, msisaac_coin_counter_w },*/
 MEMORY_END
 
 
@@ -309,7 +309,7 @@ static UINT8 snd_ctrl1=0;
 static WRITE_HANDLER( sound_control_0_w )
 {
 	snd_ctrl0 = data & 0xff;
-	//usrintf_showmessage("SND0 0=%2x 1=%2x", snd_ctrl0, snd_ctrl1);
+	/*usrintf_showmessage("SND0 0=%2x 1=%2x", snd_ctrl0, snd_ctrl1);*/
 
 	mixer_set_volume (6, vol_ctrl[  snd_ctrl0     & 15 ]);	/* group1 from msm5232 */
 	mixer_set_volume (7, vol_ctrl[ (snd_ctrl0>>4) & 15 ]);	/* group2 from msm5232 */
@@ -318,7 +318,7 @@ static WRITE_HANDLER( sound_control_0_w )
 static WRITE_HANDLER( sound_control_1_w )
 {
 	snd_ctrl1 = data & 0xff;
-	//usrintf_showmessage("SND1 0=%2x 1=%2x", snd_ctrl0, snd_ctrl1);
+	/*usrintf_showmessage("SND1 0=%2x 1=%2x", snd_ctrl0, snd_ctrl1);*/
 }
 
 
@@ -451,12 +451,12 @@ INPUT_PORTS_START( msisaac )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )	//??
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )	/*??*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_TILT )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN2 )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )	//??
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )	//??
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )	/*??*/
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )	/*??*/
 
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -587,11 +587,11 @@ ROM_START( msisaac )
 	ROM_REGION( 0x0800,  REGION_CPU3, 0 )	/* 2k for the microcontroller */
 	ROM_LOAD( "a34.mcu"       , 0x0000, 0x0800, NO_DUMP )
 
-// I tried following MCUs; none of them work with this game:
-//	ROM_LOAD( "a30-14"    , 0x0000, 0x0800, CRC(c4690279) )	//40love
-//	ROM_LOAD( "a22-19.31",  0x0000, 0x0800, CRC(06a71df0) )  	//buggy challenge
-//	ROM_LOAD( "a45-19",     0x0000, 0x0800, CRC(5378253c) )  	//flstory
-//	ROM_LOAD( "a54-19",     0x0000, 0x0800, CRC(e08b8846) )  	//lkage
+/* I tried following MCUs; none of them work with this game:*/
+/*	ROM_LOAD( "a30-14"    , 0x0000, 0x0800, CRC(c4690279) )	*/ /*40love*/
+/*	ROM_LOAD( "a22-19.31",  0x0000, 0x0800, CRC(06a71df0) )  	*/ /*buggy challenge*/
+/*	ROM_LOAD( "a45-19",     0x0000, 0x0800, CRC(5378253c) )  	*/ /*flstory*/
+/*	ROM_LOAD( "a54-19",     0x0000, 0x0800, CRC(e08b8846) )  	*/ /*lkage*/
 
 	ROM_REGION( 0x8000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "a34_02.bin", 0x0000, 0x2000, CRC(50da1a81) SHA1(8aa5a896f3e1173155d4574f5e1c2703e334cf44) )

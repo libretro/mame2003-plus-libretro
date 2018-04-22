@@ -54,7 +54,7 @@ MACHINE_INIT( yunsung8 )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1) + 0x24000;
 
-	yunsung8_videoram_0 = RAM + 0x0000;	// Ram is banked
+	yunsung8_videoram_0 = RAM + 0x0000;	/* Ram is banked*/
 	yunsung8_videoram_1 = RAM + 0x2000;
 	yunsung8_videobank_w(0,0);
 }
@@ -73,8 +73,8 @@ WRITE_HANDLER( yunsung8_bankswitch_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
-	int bank			=	data & 7;		// ROM bank
-	yunsung8_layers_ctrl	=	data & 0x30;	// Layers enable
+	int bank			=	data & 7;		/* ROM bank*/
+	yunsung8_layers_ctrl	=	data & 0x30;	/* Layers enable*/
 
 	if (data & ~0x37)	logerror("CPU #0 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
 
@@ -94,35 +94,35 @@ WRITE_HANDLER( yunsung8_bankswitch_w )
 */
 
 static MEMORY_READ_START( yunsung8_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1				},	// Banked ROM
-	{ 0xc000, 0xdfff, yunsung8_videoram_r	},	// Video RAM (Banked)
-	{ 0xe000, 0xffff, MRA_RAM				},	// RAM
+	{ 0x0000, 0x7fff, MRA_ROM				},	/* ROM*/
+	{ 0x8000, 0xbfff, MRA_BANK1				},	/* Banked ROM*/
+	{ 0xc000, 0xdfff, yunsung8_videoram_r	},	/* Video RAM (Banked)*/
+	{ 0xe000, 0xffff, MRA_RAM				},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( yunsung8_writemem )
-	{ 0x0000, 0x0000, MWA_ROM				},	// ROM
-	{ 0x0001, 0x0001, yunsung8_bankswitch_w	},	// ROM Bank (again?)
-	{ 0x0002, 0xbfff, MWA_ROM				},	// ROM
-	{ 0xc000, 0xdfff, yunsung8_videoram_w	},	// Video RAM (Banked)
-	{ 0xe000, 0xffff, MWA_RAM				},	// RAM
+	{ 0x0000, 0x0000, MWA_ROM				},	/* ROM*/
+	{ 0x0001, 0x0001, yunsung8_bankswitch_w	},	/* ROM Bank (again?)*/
+	{ 0x0002, 0xbfff, MWA_ROM				},	/* ROM*/
+	{ 0xc000, 0xdfff, yunsung8_videoram_w	},	/* Video RAM (Banked)*/
+	{ 0xe000, 0xffff, MWA_RAM				},	/* RAM*/
 MEMORY_END
 
 
 static PORT_READ_START( yunsung8_readport )
-	{ 0x00, 0x00, input_port_0_r		},	// Coins
-	{ 0x01, 0x01, input_port_1_r		},	// P1
-	{ 0x02, 0x02, input_port_2_r		},	// P2
-	{ 0x03, 0x03, input_port_3_r		},	// DSW 1
-	{ 0x04, 0x04, input_port_4_r		},	// DSW 2
+	{ 0x00, 0x00, input_port_0_r		},	/* Coins*/
+	{ 0x01, 0x01, input_port_1_r		},	/* P1*/
+	{ 0x02, 0x02, input_port_2_r		},	/* P2*/
+	{ 0x03, 0x03, input_port_3_r		},	/* DSW 1*/
+	{ 0x04, 0x04, input_port_4_r		},	/* DSW 2*/
 PORT_END
 
 static PORT_WRITE_START( yunsung8_writeport )
-	{ 0x00, 0x00, yunsung8_videobank_w	},	// Video RAM Bank
-	{ 0x01, 0x01, yunsung8_bankswitch_w	},	// ROM Bank + Layers Enable
-	{ 0x02, 0x02, soundlatch_w			},	// To Sound CPU
-	{ 0x06, 0x06, yunsung8_flipscreen_w	},	// Flip Screen
-	{ 0x07, 0x07, IOWP_NOP				},	// ? (end of IRQ, random value)
+	{ 0x00, 0x00, yunsung8_videobank_w	},	/* Video RAM Bank*/
+	{ 0x01, 0x01, yunsung8_bankswitch_w	},	/* ROM Bank + Layers Enable*/
+	{ 0x02, 0x02, soundlatch_w			},	/* To Sound CPU*/
+	{ 0x06, 0x06, yunsung8_flipscreen_w	},	/* Flip Screen*/
+	{ 0x07, 0x07, IOWP_NOP				},	/* ? (end of IRQ, random value)*/
 PORT_END
 
 
@@ -162,20 +162,20 @@ WRITE_HANDLER( yunsung8_adpcm_w )
 
 
 static MEMORY_READ_START( yunsung8_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM						},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK2						},	// Banked ROM
-	{ 0xf000, 0xf7ff, MRA_RAM						},	// RAM
-	{ 0xf800, 0xf800, soundlatch_r					},	// From Main CPU
+	{ 0x0000, 0x7fff, MRA_ROM						},	/* ROM*/
+	{ 0x8000, 0xbfff, MRA_BANK2						},	/* Banked ROM*/
+	{ 0xf000, 0xf7ff, MRA_RAM						},	/* RAM*/
+	{ 0xf800, 0xf800, soundlatch_r					},	/* From Main CPU*/
 MEMORY_END
 
 static MEMORY_WRITE_START( yunsung8_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM						},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM						},	// Banked ROM
-	{ 0xe000, 0xe000, yunsung8_sound_bankswitch_w	},	// ROM Bank
+	{ 0x0000, 0x7fff, MWA_ROM						},	/* ROM*/
+	{ 0x8000, 0xbfff, MWA_ROM						},	/* Banked ROM*/
+	{ 0xe000, 0xe000, yunsung8_sound_bankswitch_w	},	/* ROM Bank*/
 	{ 0xe400, 0xe400, yunsung8_adpcm_w				},
-	{ 0xec00, 0xec00, YM3812_control_port_0_w		},	// YM3812
+	{ 0xec00, 0xec00, YM3812_control_port_0_w		},	/* YM3812*/
 	{ 0xec01, 0xec01, YM3812_write_port_0_w			},
-	{ 0xf000, 0xf7ff, MWA_RAM						},	// RAM
+	{ 0xf000, 0xf7ff, MWA_RAM						},	/* RAM*/
 MEMORY_END
 
 
@@ -195,7 +195,7 @@ MEMORY_END
 
 INPUT_PORTS_START( magix )
 
-	PORT_START	// IN0 - Coins
+	PORT_START	/* IN0 - Coins*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_START2   )
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -205,27 +205,27 @@ INPUT_PORTS_START( magix )
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_COIN1    )
 
-	PORT_START	// IN1 - Player 1
+	PORT_START	/* IN1 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_UNKNOWN  )
-	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )	// same as button1 !?
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )	/* same as button1 !?*/
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 
-	PORT_START	// IN2 - Player 2
+	PORT_START	/* IN2 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_UNKNOWN  )
-	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )	// same as button1 !?
+	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )	/* same as button1 !?*/
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
 	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 
-	PORT_START	// IN3 - DSW 1
+	PORT_START	/* IN3 - DSW 1*/
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Easy" )
@@ -248,11 +248,11 @@ INPUT_PORTS_START( magix )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( 1C_4C ) )
 
-	PORT_START	// IN4 - DSW 2
+	PORT_START	/* IN4 - DSW 2*/
 	PORT_DIPNAME( 0x01, 0x01, "Title" )
 	PORT_DIPSETTING(    0x01, "Magix" )
 	PORT_DIPSETTING(    0x00, "Rock" )
-	PORT_DIPNAME( 0x02, 0x02, "Unknown 2-1" )	// the rest seems unused
+	PORT_DIPNAME( 0x02, 0x02, "Unknown 2-1" )	/* the rest seems unused*/
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04, 0x04, "Unknown 2-2" )
@@ -283,7 +283,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( cannball )
 
-	PORT_START	// IN0 - Coins
+	PORT_START	/* IN0 - Coins*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_START2   )
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -293,7 +293,7 @@ INPUT_PORTS_START( cannball )
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_COIN1    )
 
-	PORT_START	// IN1 - Player 1
+	PORT_START	/* IN1 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )
@@ -303,7 +303,7 @@ INPUT_PORTS_START( cannball )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 
-	PORT_START	// IN2 - Player 2
+	PORT_START	/* IN2 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )
@@ -313,7 +313,7 @@ INPUT_PORTS_START( cannball )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 
-	PORT_START	// IN3 - DSW 1
+	PORT_START	/* IN3 - DSW 1*/
 	PORT_SERVICE( 0x01, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Easy" )
@@ -336,7 +336,7 @@ INPUT_PORTS_START( cannball )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( 1C_4C ) )
 
-	PORT_START	// IN4 - DSW 2
+	PORT_START	/* IN4 - DSW 2*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 2-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -400,8 +400,8 @@ static struct GfxLayout layout_8x8x8 =
 
 static struct GfxDecodeInfo yunsung8_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x8, 0, 0x08 }, // [0] Tiles (Background)
-	{ REGION_GFX2, 0, &layout_8x8x4, 0,	0x40 }, // [1] Tiles (Text)
+	{ REGION_GFX1, 0, &layout_8x8x8, 0, 0x08 }, /* [0] Tiles (Background)*/
+	{ REGION_GFX2, 0, &layout_8x8x4, 0,	0x40 }, /* [1] Tiles (Text)*/
 	{ -1 }
 };
 
@@ -519,8 +519,8 @@ ROM_START( magix )
 	ROM_LOAD( "yunsung8.01",  0x180000, 0x80000, CRC(4590d782) SHA1(af875166207793572b9ecf01bb6a24feba562a96) )
 
 	ROM_REGION( 0x40000, REGION_GFX2, ROMREGION_DISPOSE )	/* Text */
-	ROM_LOAD( "yunsung8.05", 0x00000, 0x20000, CRC(862d378c) SHA1(a4e2cf14b5b25c6b8725dd285ddea65ce9ee257a) )	// only first $8000 bytes != 0
-	ROM_LOAD( "yunsung8.06", 0x20000, 0x20000, CRC(8b2ab901) SHA1(1a5c05dd0cf830b645357a62d8e6e876b44c6b7f) )	// only first $8000 bytes != 0
+	ROM_LOAD( "yunsung8.05", 0x00000, 0x20000, CRC(862d378c) SHA1(a4e2cf14b5b25c6b8725dd285ddea65ce9ee257a) )	/* only first $8000 bytes != 0*/
+	ROM_LOAD( "yunsung8.06", 0x20000, 0x20000, CRC(8b2ab901) SHA1(1a5c05dd0cf830b645357a62d8e6e876b44c6b7f) )	/* only first $8000 bytes != 0*/
 
 ROM_END
 
@@ -574,4 +574,4 @@ ROM_END
 ***************************************************************************/
 
 GAMEX( 1995, cannball, 0, yunsung8, cannball, 0, ROT0, "Yun Sung / Soft Vision", "Cannon Ball",  GAME_IMPERFECT_SOUND )
-GAMEX( 1995, magix,    0, yunsung8, magix,    0, ROT0, "Yun Sung",               "Magix / Rock", GAME_IMPERFECT_SOUND ) // Title: DSW
+GAMEX( 1995, magix,    0, yunsung8, magix,    0, ROT0, "Yun Sung",               "Magix / Rock", GAME_IMPERFECT_SOUND ) /* Title: DSW*/

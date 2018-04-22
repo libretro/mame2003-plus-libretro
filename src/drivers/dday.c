@@ -131,8 +131,8 @@ INPUT_PORTS_START( dday )
 	PORT_DIPSETTING(    0x04, "15000" )
 	PORT_DIPSETTING(    0x08, "20000" )
 	PORT_DIPSETTING(    0x0c, "25000" )
-	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )//No Difficulty setting?
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )// Clearly old code revision, ddayc works much better
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )/*No Difficulty setting?*/
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )/* Clearly old code revision, ddayc works much better*/
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
@@ -140,9 +140,9 @@ INPUT_PORTS_START( dday )
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Start with 20000 Pts" )//Works the same as Centuri License, but not as well
-	PORT_DIPSETTING(    0x80, "No (Lives =A)" )// Doesn't mention extended play, just gives lives
-	PORT_DIPSETTING(    0x00, "Yes (Lives =B)" )// Also alters table for Extended Play
+	PORT_DIPNAME( 0x80, 0x80, "Start with 20000 Pts" )/*Works the same as Centuri License, but not as well*/
+	PORT_DIPSETTING(    0x80, "No (Lives =A)" )/* Doesn't mention extended play, just gives lives*/
+	PORT_DIPSETTING(    0x00, "Yes (Lives =B)" )/* Also alters table for Extended Play*/
 
 	PORT_START      /* DSW 1 */
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
@@ -188,12 +188,12 @@ INPUT_PORTS_START( ddayc )
 	PORT_START      /* IN 0 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1 ) // Fire Button
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1 ) /* Fire Button*/
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 ) // Distance Button
-	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_UNKNOWN ) // Doesn't seem to be
-                                                  // accessed
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 ) /* Distance Button*/
+	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_UNKNOWN ) /* Doesn't seem to be*/
+                                                  /* accessed*/
 	PORT_START      /* DSW 0 */
 	PORT_DIPNAME( 0x03, 0x01, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "A=2 B=5" )
@@ -206,11 +206,11 @@ INPUT_PORTS_START( ddayc )
 	PORT_DIPSETTING(    0x08, "8000" )
 	PORT_DIPSETTING(    0x0c, "10000" )
 	PORT_DIPNAME( 0x30, 0x10, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x30, "Easy" )   // Easy   - No Bombs, No Troop Carriers
-	PORT_DIPSETTING(    0x20, "Normal" ) // Normal - No Bombs, Troop Carriers
-	PORT_DIPSETTING(    0x10, "Hard" )   // Hard   - Bombs, Troop Carriers
-//PORT_DIPSETTING(    0x00, "Hard" ) // Same as 0x10
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) // Doesn't seem to be used
+	PORT_DIPSETTING(    0x30, "Easy" )   /* Easy   - No Bombs, No Troop Carriers*/
+	PORT_DIPSETTING(    0x20, "Normal" ) /* Normal - No Bombs, Troop Carriers*/
+	PORT_DIPSETTING(    0x10, "Hard" )   /* Hard   - Bombs, Troop Carriers*/
+/*PORT_DIPSETTING(    0x00, "Hard" ) */ /* Same as 0x10*/
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) /* Doesn't seem to be used*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, "Start with 20000 Pts" )
@@ -329,7 +329,7 @@ static MACHINE_DRIVER_START( dday )
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(256)
-	MDRV_COLORTABLE_LENGTH(256)//8*8+8*4+8*4,
+	MDRV_COLORTABLE_LENGTH(256)/*8*8+8*4+8*4,*/
 	MDRV_PALETTE_INIT(dday)
 
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_HAS_SHADOWS)

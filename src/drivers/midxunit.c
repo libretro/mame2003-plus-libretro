@@ -131,7 +131,7 @@ INPUT_PORTS_START( revx )
 	PORT_DIPSETTING(      0x0300, "USA" )
 	PORT_DIPSETTING(      0x0100, "French" )
 	PORT_DIPSETTING(      0x0200, "German" )
-//	PORT_DIPSETTING(      0x0000, DEF_STR( Unused ))
+/*	PORT_DIPSETTING(      0x0000, DEF_STR( Unused ))*/
 	PORT_DIPNAME( 0x0400, 0x0400, "Bill Validator" )
 	PORT_DIPSETTING(      0x0400, DEF_STR( Off ))
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ))

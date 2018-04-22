@@ -83,7 +83,7 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0x160000, 0x1607ff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x300000, 0x300001, gotcha_gfxbank_select_w },
 	{ 0x300002, 0x300009, gotcha_scroll_w },
-//	{ 0x30000c, 0x30000d,
+/*	{ 0x30000c, 0x30000d,*/
 	{ 0x30000e, 0x30000f, gotcha_gfxbank_w },
 	{ 0x320000, 0x320fff, gotcha_fgvideoram_w, &gotcha_fgvideoram },
 	{ 0x322000, 0x322fff, gotcha_bgvideoram_w, &gotcha_bgvideoram },
@@ -101,7 +101,7 @@ static MEMORY_WRITE_START( sound_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0xc000, 0xc000, YM2151_register_port_0_w },
 	{ 0xc001, 0xc001, YM2151_data_port_0_w },
-	{ 0xc002, 0xc003, OKIM6295_data_0_w },	// TWO addresses!
+	{ 0xc002, 0xc003, OKIM6295_data_0_w },	/* TWO addresses!*/
 	{ 0xd000, 0xd7ff, MWA_RAM },
 MEMORY_END
 
@@ -253,7 +253,7 @@ static MACHINE_DRIVER_START( gotcha )
 	MDRV_CPU_ADD(Z80,6000000)	/* 6 MHz ? */
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
-//	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)
+/*	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)

@@ -559,7 +559,7 @@ INPUT_PORTS_START( hangonjr ) /* Used By Hang On Jr */
 	PORT_DIPSETTING(    0x10, "Medium" )
 	PORT_DIPSETTING(    0x08, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )  // These three dips seems to be unused
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )  /* These three dips seems to be unused*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
@@ -609,13 +609,13 @@ INPUT_PORTS_START( ridleofp ) /* Used By Riddle Of Pythagoras */
 	PORT_DIPSETTING(    0x02, "3" )
 	PORT_DIPSETTING(    0x01, "4" )
 	PORT_BITX( 0,       0x00, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "98", IP_KEY_NONE, IP_JOY_NONE )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )  // Unknown
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )  /* Unknown*/
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, "Difficulty?" )	// To be tested ! I don't see what else it could do
+	PORT_DIPNAME( 0x08, 0x08, "Difficulty?" )	/* To be tested ! I don't see what else it could do*/
 	PORT_DIPSETTING(    0x08, "Easy" )
 	PORT_DIPSETTING(    0x00, "Hard" )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )  // Unknown
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )  /* Unknown*/
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Bonus_Life ) )
@@ -623,7 +623,7 @@ INPUT_PORTS_START( ridleofp ) /* Used By Riddle Of Pythagoras */
 	PORT_DIPSETTING(    0x40, "100K 200K 500K 1M 2M 5M 10M" )
 	PORT_DIPSETTING(    0x20, "200K 500K 1M 2M 5M 10M" )
 	PORT_DIPSETTING(    0x00, "None" )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )  // Unknown
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )  /* Unknown*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -635,7 +635,7 @@ INPUT_PORTS_START( ridleofp ) /* Used By Riddle Of Pythagoras */
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_START1 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN ) // Would Be IPT_START2 but the code doesn't use it
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN ) /* Would Be IPT_START2 but the code doesn't use it*/
 
 	PORT_START	/* Port 0xe1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_UNKNOWN )

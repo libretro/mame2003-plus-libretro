@@ -39,7 +39,7 @@ extern unsigned char* s2636_2_ram;  /* Video RAM for S2636 #2 */
 extern unsigned char s2636_1_dirty[4];
 extern unsigned char s2636_2_dirty[4];
 
-// in vidhrdw/malzak.c
+/* in vidhrdw/malzak.c*/
 VIDEO_START( malzak );
 VIDEO_UPDATE( malzak );
 WRITE_HANDLER( playfield_w );
@@ -102,7 +102,7 @@ static MEMORY_READ_START( readmem )
 	{ 0x1500, 0x15ff, malzak_s2636_2_r },
 	{ 0x1600, 0x16ff, MRA_RAM },
 	{ 0x1700, 0x17ff, MRA_RAM },
-	{ 0x1800, 0x1fff, saa5050_r },  // SAA 5050 video RAM
+	{ 0x1800, 0x1fff, saa5050_r },  /* SAA 5050 video RAM*/
 	{ 0x2000, 0x2fff, MRA_ROM },
 	{ 0x3000, 0x3fff, ram_mirror_r },
 	{ 0x4000, 0x4fff, MRA_ROM },
@@ -117,12 +117,12 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x1100, 0x11ff, MWA_RAM },
 	{ 0x1200, 0x12ff, MWA_RAM },
 	{ 0x1300, 0x13ff, MWA_RAM },
-	{ 0x1400, 0x14ff, malzak_s2636_1_w }, // S2636 offset $CB bit 40 tested as collision ?
+	{ 0x1400, 0x14ff, malzak_s2636_1_w }, /* S2636 offset $CB bit 40 tested as collision ?*/
 	{ 0x1500, 0x15ff, malzak_s2636_2_w },
 	{ 0x1600, 0x16ff, playfield_w },
 	{ 0x1600, 0x16ff, MWA_RAM },
 	{ 0x1700, 0x17ff, MWA_RAM },
-	{ 0x1800, 0x1fff, saa5050_w },  // SAA 5050 video RAM
+	{ 0x1800, 0x1fff, saa5050_w },  /* SAA 5050 video RAM*/
 	{ 0x2000, 0x2fff, MWA_ROM },
 	{ 0x3000, 0x3fff, ram_mirror_w },
 	{ 0x4000, 0x4fff, MWA_ROM },
@@ -138,11 +138,11 @@ static READ_HANDLER( s2650_data_r )
 
 static WRITE_HANDLER( port40_w )
 {
-//	usrintf_showmessage("S2650 [0x%04x]: port 0x40 write: 0x%02x",cpunum_get_pc_byte(0),data);
-//	if(data & 0x01)
-//		irqenable = 1;
-//	else
-//		irqenable = 0;
+/*	usrintf_showmessage("S2650 [0x%04x]: port 0x40 write: 0x%02x",cpunum_get_pc_byte(0),data);*/
+/*	if(data & 0x01)*/
+/*		irqenable = 1;*/
+/*	else*/
+/*		irqenable = 0;*/
 }
 
 static WRITE_HANDLER( port60_w )
@@ -157,7 +157,7 @@ static WRITE_HANDLER( portc0_w )
 
 static READ_HANDLER( collision_r )
 {
-	// High 4 bits seem to refer to the row affected.
+	/* High 4 bits seem to refer to the row affected.*/
 	static int counter;
 
 	if(++counter > 15)
@@ -166,17 +166,17 @@ static READ_HANDLER( collision_r )
 }
 
 static PORT_READ_START( readport )
-	{ 0x00, 0x00, collision_r }, // returns where a collision can occur.
-    { 0x80, 0x80, input_port_0_r },  //controls
-	{ S2650_DATA_PORT, S2650_DATA_PORT, s2650_data_r },  // read upon death
+	{ 0x00, 0x00, collision_r }, /* returns where a collision can occur.*/
+    { 0x80, 0x80, input_port_0_r },  /*controls*/
+	{ S2650_DATA_PORT, S2650_DATA_PORT, s2650_data_r },  /* read upon death*/
     { S2650_SENSE_PORT, S2650_SENSE_PORT, input_port_3_r },
 PORT_END
 
 static PORT_WRITE_START( writeport )
-	{ 0x40, 0x40, port40_w },  // possibly sound codes for dual SN76477s
-	{ 0x60, 0x60, port60_w },  // possibly playfield scroll X offset
-	{ 0xa0, 0xa0, MWA_NOP },  // echoes I/O port read from port 0x80
-	{ 0xc0, 0xc0, portc0_w },  // possibly playfield scroll Y offset
+	{ 0x40, 0x40, port40_w },  /* possibly sound codes for dual SN76477s*/
+	{ 0x60, 0x60, port60_w },  /* possibly playfield scroll X offset*/
+	{ 0xa0, 0xa0, MWA_NOP },  /* echoes I/O port read from port 0x80*/
+	{ 0xc0, 0xc0, portc0_w },  /* possibly playfield scroll Y offset*/
 PORT_END
 
 INPUT_PORTS_START( malzak )
@@ -195,37 +195,37 @@ INPUT_PORTS_START( malzak )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    )
 
     PORT_START
-//	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Lives ) )
-//	PORT_DIPSETTING(    0x00, "3" )
-//	PORT_DIPSETTING(    0x01, "4" )
-//    PORT_DIPNAME( 0x02, 0x00, "Lightning Speed" )
-//	PORT_DIPSETTING(    0x00, "Slow" )
-//	PORT_DIPSETTING(    0x02, "Fast" )
-//	PORT_DIPNAME( 0x1C, 0x04, DEF_STR( Coinage ) )
-//	PORT_DIPSETTING(	0x00, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(	0x04, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x08, DEF_STR( 1C_2C ) )
-//	PORT_DIPSETTING(	0x0C, DEF_STR( 1C_3C ) )
-//	PORT_DIPSETTING(	0x10, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(	0x14, DEF_STR( 1C_5C ) )
-//	PORT_DIPSETTING(	0x18, DEF_STR( 1C_6C ) )
-//	PORT_DIPSETTING(	0x1C, DEF_STR( 1C_7C ) )
-//	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Bonus_Life ) )
-//	PORT_DIPSETTING(    0x00, "1000" )
-//	PORT_DIPSETTING(    0x20, "1500" )
-  //  PORT_DIPNAME( 0x40, 0x00, "Extended Play" )
-//	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-//	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
+/*	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Lives ) )*/
+/*	PORT_DIPSETTING(    0x00, "3" )*/
+/*	PORT_DIPSETTING(    0x01, "4" )*/
+/*    PORT_DIPNAME( 0x02, 0x00, "Lightning Speed" )*/
+/*	PORT_DIPSETTING(    0x00, "Slow" )*/
+/*	PORT_DIPSETTING(    0x02, "Fast" )*/
+/*	PORT_DIPNAME( 0x1C, 0x04, DEF_STR( Coinage ) )*/
+/*	PORT_DIPSETTING(	0x00, DEF_STR( 2C_1C ) )*/
+/*	PORT_DIPSETTING(	0x04, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x08, DEF_STR( 1C_2C ) )*/
+/*	PORT_DIPSETTING(	0x0C, DEF_STR( 1C_3C ) )*/
+/*	PORT_DIPSETTING(	0x10, DEF_STR( 1C_4C ) )*/
+/*	PORT_DIPSETTING(	0x14, DEF_STR( 1C_5C ) )*/
+/*	PORT_DIPSETTING(	0x18, DEF_STR( 1C_6C ) )*/
+/*	PORT_DIPSETTING(	0x1C, DEF_STR( 1C_7C ) )*/
+/*	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Bonus_Life ) )*/
+/*	PORT_DIPSETTING(    0x00, "1000" )*/
+/*	PORT_DIPSETTING(    0x20, "1500" )*/
+  /*  PORT_DIPNAME( 0x40, 0x00, "Extended Play" )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( No ) )*/
+/*	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )*/
 
 	PORT_START
-//	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN3 )
-//	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
-//	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1 )
-//	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )
-//	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )
-//	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY )
-//	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY )
-//	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP  | IPF_4WAY )
+/*	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN3 )*/
+/*	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )*/
+/*	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1 )*/
+/*	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )*/
+/*	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY )*/
+/*	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY )*/
+/*	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY )*/
+/*	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP  | IPF_4WAY )*/
 
 	PORT_START	/* SENSE */
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
@@ -241,9 +241,9 @@ static struct GfxLayout charlayout =
 	{ 7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8 },
 	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16,
 	  8*16, 9*16, 10*16, 11*16, 12*16, 13*16, 14*16, 15*16 },
-//	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+/*	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },*/
 	16*16
-//	8*8
+/*	8*8*/
 };
 
 static struct GfxLayout s2636_character10 =
@@ -318,7 +318,7 @@ static	unsigned	short	saa5050_colortable[64 * 2] =
 	7,0, 7,1, 7,2, 7,3, 7,4, 7,5, 7,6, 7,7
 };
 
-//add s2636 decodes here (i.e. from zac2650) and maybe re-arrange them
+/*add s2636 decodes here (i.e. from zac2650) and maybe re-arrange them*/
 static struct GfxDecodeInfo malzak_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &charlayout,  0, 16 },
@@ -334,8 +334,8 @@ static int val = -1;
 
 static INTERRUPT_GEN( malzak_interrupt )
 {
-//	if(irqenable != 0)
-//		cpu_set_irq_line_and_vector(0,0,HOLD_LINE,0x0300);
+/*	if(irqenable != 0)*/
+/*		cpu_set_irq_line_and_vector(0,0,HOLD_LINE,0x0300);*/
 }
 
 static PALETTE_INIT( malzak )
@@ -380,7 +380,7 @@ static MACHINE_DRIVER_START( malzak )
 	MDRV_CPU_ADD(S2650, 3800000/4/3)
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_PORTS(readport,writeport)
-//	MDRV_CPU_VBLANK_INT(malzak_interrupt,1)
+/*	MDRV_CPU_VBLANK_INT(malzak_interrupt,1)*/
 
 	MDRV_FRAMES_PER_SECOND(50)
 	MDRV_VBLANK_DURATION(SAA5050_VBLANK)
@@ -418,7 +418,7 @@ ROM_START( malzak )
 	ROM_REGION( 0x0800, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "malzak.1",     0x0000, 0x0800, CRC(74d5ff7b) SHA1(cae326370dc83b86542f9d070e2dc91b1b833356) )
 
-	ROM_REGION(0x01000, REGION_GFX2,0) // internal character set?
+	ROM_REGION(0x01000, REGION_GFX2,0) /* internal character set?*/
 	ROM_LOAD("p2000.chr", 0x0140, 0x08c0, BAD_DUMP CRC(78c17e3e))
 
 ROM_END

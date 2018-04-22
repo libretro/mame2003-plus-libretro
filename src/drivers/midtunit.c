@@ -90,8 +90,8 @@ const char *const mk_sample_names_tunit[] =
 
 static struct Samplesinterface mk_samples_tunit =
 {
-	2,	// 2 channels
-	100, // volume
+	2,	/* 2 channels*/
+	100, /* volume*/
 	mk_sample_names_tunit
 };
 
@@ -102,9 +102,9 @@ const char *const nba_jam_sample_names_tunit[] =
 	"main-theme-02",
 	"team-select-01",
 	"team-select-02",
-	"ingame-01", // First & third quarter
+	"ingame-01", /* First & third quarter*/
 	"ingame-02",
-	"ingame-03", // Second & fourth quarter
+	"ingame-03", /* Second & fourth quarter*/
 	"ingame-04",
 	"intermission-01",
 	"intermission-02",
@@ -117,8 +117,8 @@ const char *const nba_jam_sample_names_tunit[] =
 
 static struct Samplesinterface nba_jam_samples_tunit =
 {
-	2,	// 2 channels
-	100, // volume
+	2,	/* 2 channels*/
+	100, /* volume*/
 	nba_jam_sample_names_tunit
 };
 
@@ -204,7 +204,7 @@ INPUT_PORTS_START( mk )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )
-	//There should be an additional block button for player 2, but I coudn't find it.
+	/*There should be an additional block button for player 2, but I coudn't find it.*/
 
 	PORT_START
 	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -299,8 +299,8 @@ INPUT_PORTS_START( mk2 )
 	PORT_BITX(0x0800, IP_ACTIVE_LOW, 0, "Volume Down", KEYCODE_MINUS, IP_JOY_NONE )
 	PORT_BITX(0x1000, IP_ACTIVE_LOW, 0, "Volume Up", KEYCODE_EQUALS, IP_JOY_NONE )
 	PORT_BIT( 0x6000, IP_ACTIVE_LOW, IPT_UNUSED )
-	//PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED ) //Renamed to unused because without it the game seemed to hold P1 Block down-someone with more experience should check
+	/*PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )*/
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED ) /*Renamed to unused because without it the game seemed to hold P1 Block down-someone with more experience should check*/
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
@@ -423,7 +423,7 @@ INPUT_PORTS_START( jdreddp )
 	PORT_DIPNAME( 0x0001, 0x0001, "Test Switch" )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ))
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ))
-	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unused )) //listed as 'Powerup Test' in service mode, does nothing
+	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unused )) /*listed as 'Powerup Test' in service mode, does nothing*/
 	PORT_DIPSETTING(      0x0002, DEF_STR( Off ))
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ))
 	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unused ))
@@ -441,11 +441,11 @@ INPUT_PORTS_START( jdreddp )
 	PORT_DIPNAME( 0x0040, 0x0040, "Validator" )
 	PORT_DIPSETTING(      0x0000, "Installed" )
 	PORT_DIPSETTING(      0x0040, "None" )
-	PORT_DIPNAME( 0x0080, 0x0080, "Freeze" ) //listed as 2/3 player in service mode
+	PORT_DIPNAME( 0x0080, 0x0080, "Freeze" ) /*listed as 2/3 player in service mode*/
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ))
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ))
 	PORT_DIPNAME( 0x0300, 0x0000, "Coin Counters" )
-//	PORT_DIPSETTING(      0x0300, "1 Counter, 1 count/coin" )
+/*	PORT_DIPSETTING(      0x0300, "1 Counter, 1 count/coin" )*/
 	PORT_DIPSETTING(      0x0200, "1 Counter, Totalizing" )
 	PORT_DIPSETTING(      0x0100, "2 Counters, 1 count/coin" )
 	PORT_DIPSETTING(      0x0000, "1 Counter, 1 count/coin" )
@@ -457,11 +457,11 @@ INPUT_PORTS_START( jdreddp )
 	PORT_DIPNAME( 0x7000, 0x5000, DEF_STR( Coinage ))
 	PORT_DIPSETTING(      0x7000, "1" )
 	PORT_DIPSETTING(      0x3000, "2" )
-	PORT_DIPSETTING(      0x5000, "3" ) // the game reads this as Skip Power up Test and Coinage 3
+	PORT_DIPSETTING(      0x5000, "3" ) /* the game reads this as Skip Power up Test and Coinage 3*/
 	PORT_DIPSETTING(      0x1000, "4" )
 	PORT_DIPSETTING(      0x6000, "ECA" )
-//	PORT_DIPSETTING(      0x4000, DEF_STR( Unused ))
-//	PORT_DIPSETTING(      0x2000, DEF_STR( Unused ))
+/*	PORT_DIPSETTING(      0x4000, DEF_STR( Unused ))*/
+/*	PORT_DIPSETTING(      0x2000, DEF_STR( Unused ))*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ))
 	PORT_DIPNAME( 0x8000, 0x0000, "Coinage Source" )
 	PORT_DIPSETTING(      0x8000, "Dipswitch" )
@@ -551,20 +551,20 @@ INPUT_PORTS_START( nbajam )
 	PORT_DIPSETTING(      0x0300, "1 Counter, 1 count/coin" )
 	PORT_DIPSETTING(      0x0200, "1 Counter, Totalizing" )
 	PORT_DIPSETTING(      0x0100, "2 Counters, 1 count/coin" )
-//	PORT_DIPSETTING(      0x0000, "1 Counter, 1 count/coin" )
+/*	PORT_DIPSETTING(      0x0000, "1 Counter, 1 count/coin" )*/
 	PORT_DIPNAME( 0x0c00, 0x0c00, "Country" )
 	PORT_DIPSETTING(      0x0c00, "USA" )
 	PORT_DIPSETTING(      0x0800, "French" )
 	PORT_DIPSETTING(      0x0400, "German" )
-//	PORT_DIPSETTING(      0x0000, DEF_STR( Unused ))
+/*	PORT_DIPSETTING(      0x0000, DEF_STR( Unused ))*/
 	PORT_DIPNAME( 0x7000, 0x7000, DEF_STR( Coinage ))
 	PORT_DIPSETTING(      0x7000, "1" )
 	PORT_DIPSETTING(      0x3000, "2" )
 	PORT_DIPSETTING(      0x5000, "3" )
 	PORT_DIPSETTING(      0x1000, "4" )
 	PORT_DIPSETTING(      0x6000, "ECA" )
-//	PORT_DIPSETTING(      0x4000, DEF_STR( Unused ))
-//	PORT_DIPSETTING(      0x2000, DEF_STR( Unused ))
+/*	PORT_DIPSETTING(      0x4000, DEF_STR( Unused ))*/
+/*	PORT_DIPSETTING(      0x2000, DEF_STR( Unused ))*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ))
 	PORT_DIPNAME( 0x8000, 0x0000, "Coinage Source" )
 	PORT_DIPSETTING(      0x8000, "Dipswitch" )
@@ -654,20 +654,20 @@ INPUT_PORTS_START( nbajamte )
 	PORT_DIPSETTING(      0x0300, "1 Counter, 1 count/coin" )
 	PORT_DIPSETTING(      0x0200, "1 Counter, Totalizing" )
 	PORT_DIPSETTING(      0x0100, "2 Counters, 1 count/coin" )
-//	PORT_DIPSETTING(      0x0000, "1 Counter, 1 count/coin" )
+/*	PORT_DIPSETTING(      0x0000, "1 Counter, 1 count/coin" )*/
 	PORT_DIPNAME( 0x0c00, 0x0c00, "Country" )
 	PORT_DIPSETTING(      0x0c00, "USA" )
 	PORT_DIPSETTING(      0x0800, "French" )
 	PORT_DIPSETTING(      0x0400, "German" )
-//	PORT_DIPSETTING(      0x0000, DEF_STR( Unused ))
+/*	PORT_DIPSETTING(      0x0000, DEF_STR( Unused ))*/
 	PORT_DIPNAME( 0x7000, 0x7000, DEF_STR( Coinage ))
 	PORT_DIPSETTING(      0x7000, "1" )
 	PORT_DIPSETTING(      0x3000, "2" )
 	PORT_DIPSETTING(      0x5000, "3" )
 	PORT_DIPSETTING(      0x1000, "4" )
 	PORT_DIPSETTING(      0x6000, "ECA" )
-//	PORT_DIPSETTING(      0x4000, DEF_STR( Unused ))
-//	PORT_DIPSETTING(      0x2000, DEF_STR( Unused ))
+/*	PORT_DIPSETTING(      0x4000, DEF_STR( Unused ))*/
+/*	PORT_DIPSETTING(      0x2000, DEF_STR( Unused ))*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ))
 	PORT_DIPNAME( 0x8000, 0x0000, "Coinage Source" )
 	PORT_DIPSETTING(      0x8000, "Dipswitch" )
@@ -741,19 +741,19 @@ static MACHINE_DRIVER_START( tunit_adpcm )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( mk )
-	mk_playing_mortal_kombat_t = true; // --> Let the sound hardware know we are playing Mortal Kombat.
+	mk_playing_mortal_kombat_t = true; /* --> Let the sound hardware know we are playing Mortal Kombat.*/
 	
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(tunit_core)
 	MDRV_IMPORT_FROM(williams_adpcm_sound)
 
-	// Lets add our Mortal Kombat music sample packs.
+	/* Lets add our Mortal Kombat music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(SAMPLES, mk_samples_tunit)	
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( nbajam )
-	nba_jam_playing = true; // --> Let the sound hardware know we are playing NBA Jam.
+	nba_jam_playing = true; /* --> Let the sound hardware know we are playing NBA Jam.*/
 	nba_jam_title_screen = false;
 	nba_jam_select_screen = false;
 	nba_jam_intermission = false;
@@ -768,7 +768,7 @@ static MACHINE_DRIVER_START( nbajam )
 	MDRV_IMPORT_FROM(tunit_core)
 	MDRV_IMPORT_FROM(williams_adpcm_sound)
 
-	// Lets add our NBA Jam music sample packs.
+	/* Lets add our NBA Jam music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(SAMPLES, nba_jam_samples_tunit)
 MACHINE_DRIVER_END

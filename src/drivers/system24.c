@@ -100,7 +100,7 @@ VIDEO_START(system24);
 VIDEO_UPDATE(system24);
 
 
-// Floppy Fisk Controller
+/* Floppy Fisk Controller*/
 
 static int fdc_status, fdc_track, fdc_sector, fdc_data;
 static int fdc_phys_track, fdc_irq, fdc_drq, fdc_span, fdc_index_count;
@@ -137,7 +137,7 @@ static READ16_HANDLER( fdc_r )
 		int res = fdc_data;
 		if(fdc_drq) {
 			fdc_span--;
-			//			logerror("Read %02x (%d)\n", res, fdc_span);
+			/*			logerror("Read %02x (%d)\n", res, fdc_span);*/
 			if(fdc_span) {
 				fdc_pt++;
 				fdc_data = *fdc_pt;
@@ -222,7 +222,7 @@ static WRITE16_HANDLER( fdc_w )
 			break;
 		case 3:
 			if(fdc_drq) {
-				//				logerror("Write %02x (%d)\n", data, fdc_span);
+				/*				logerror("Write %02x (%d)\n", data, fdc_span);*/
 				*fdc_pt++ = data;
 				fdc_span--;
 				if(!fdc_span) {
@@ -254,7 +254,7 @@ static WRITE16_HANDLER( fdc_ctrl_w )
 }
 
 
-// I/O Mappers
+/* I/O Mappers*/
 
 static UINT8 hotrod_io_r(int port)
 {
@@ -269,11 +269,11 @@ static UINT8 hotrod_io_r(int port)
 		return 0xff;
 	case 4:
 		return readinputport(2);
-	case 5: // Dip switches
+	case 5: /* Dip switches*/
 		return readinputport(3);
 	case 6:
 		return readinputport(4);
-	case 7: // DAC
+	case 7: /* DAC*/
 		return 0xff;
 	}
 	return 0x00;
@@ -294,11 +294,11 @@ static UINT8 dcclub_io_r(int port)
 		return 0xff;
 	case 4:
 		return readinputport(2);
-	case 5: // Dip switches
+	case 5: /* Dip switches*/
 		return readinputport(3);
 	case 6:
 		return readinputport(4);
-	case 7: // DAC
+	case 7: /* DAC*/
 		return 0xff;
 	}
 	return 0x00;
@@ -319,11 +319,11 @@ static UINT8 mahmajn_io_r(int port)
 		return 0xff;
 	case 4:
 		return readinputport(8);
-	case 5: // Dip switches
+	case 5: /* Dip switches*/
 		return readinputport(9);
 	case 6:
 		return readinputport(10);
-	case 7: // DAC
+	case 7: /* DAC*/
 		return 0xff;
 	}
 	return 0x00;
@@ -336,7 +336,7 @@ static void mahmajn_io_w(int port, UINT8 data)
 		if(data & 4)
 			cur_input_line = (cur_input_line + 1) & 7;
 		break;
-	case 7: // DAC
+	case 7: /* DAC*/
 		DAC_0_signed_data_w(0, data);
 		break;
 	default:
@@ -347,9 +347,9 @@ static void mahmajn_io_w(int port, UINT8 data)
 static void hotrod_io_w(int port, UINT8 data)
 {
 	switch(port) {
-	case 3: // Lamps
+	case 3: /* Lamps*/
 		break;
-	case 7: // DAC
+	case 7: /* DAC*/
 		DAC_0_signed_data_w(0, data);
 		break;
 	default:
@@ -374,7 +374,7 @@ static READ16_HANDLER( hotrod3_ctrl_r )
 {
 	if(ACCESSING_LSB) {
 		switch(offset) {
-			// Steering dials
+			/* Steering dials*/
 		case 0:
 			return readinputport(5) & 0xff;
 		case 1:
@@ -393,7 +393,7 @@ static READ16_HANDLER( hotrod3_ctrl_r )
 		case 7:
 			return 0xff;
 
-		case 8: { // Serial ADCs for the accel
+		case 8: { /* Serial ADCs for the accel*/
 			int v = hotrod_ctrl_cur & 0x80;
 			hotrod_ctrl_cur <<= 1;
 			return v ? 0xff : 0;
@@ -415,7 +415,7 @@ static WRITE16_HANDLER( iod_w )
 }
 
 
-// Cpu #1 reset control
+/* Cpu #1 reset control*/
 
 static unsigned char resetcontrol, prev_resetcontrol;
 
@@ -442,7 +442,7 @@ static void resetcontrol_w(UINT8 data)
 }
 
 
-// Rom board bank access
+/* Rom board bank access*/
 
 static unsigned char curbank;
 static const UINT16 *rom_base;
@@ -472,7 +472,7 @@ static READ16_HANDLER(rombank_r)
 }
 
 
-// Shared banks access
+/* Shared banks access*/
 
 static UINT16 *ramlo, *ramhi, *ramprg;
 
@@ -512,7 +512,7 @@ static READ16_HANDLER( rom_r )
 }
 
 
-// YM2151
+/* YM2151*/
 
 static READ16_HANDLER( ym_status_r )
 {
@@ -532,7 +532,7 @@ static WRITE16_HANDLER( ym_data_w )
 }
 
 
-// Protection magic latch
+/* Protection magic latch*/
 
 static UINT8  mahmajn_mlt[8] = { 5, 1, 6, 2, 3, 7, 4, 0 };
 static UINT8 mahmajn2_mlt[8] = { 6, 0, 5, 3, 1, 4, 2, 7 };
@@ -576,7 +576,7 @@ static WRITE16_HANDLER( mlatch_w )
 }
 
 
-// Timers and IRQs
+/* Timers and IRQs*/
 
 enum {
 	IRQ_YM2151 = 1,
@@ -678,9 +678,9 @@ static INTERRUPT_GEN(irq_vbl)
 		cpu_set_irq_line(1, 1+irq, HOLD_LINE);
 
 	if(!cpu_getiloops()) {
-		// Ensure one index pulse every 20 frames
-		// The is some code in bnzabros at 0x852 that makes it crash
-		// if the pulse train is too fast
+		/* Ensure one index pulse every 20 frames*/
+		/* The is some code in bnzabros at 0x852 that makes it crash*/
+		/* if the pulse train is too fast*/
 		fdc_index_count++;
 		if(fdc_index_count >= 20)
 			fdc_index_count = 0;
@@ -732,10 +732,10 @@ static MEMORY_WRITE16_START( system24_writemem )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x080000, 0x0fffff, MWA16_RAM, &ramlo },
 	{ 0x200000, 0x20ffff, sys24_tile_w },
-	{ 0x220000, 0x220001, MWA16_NOP }, // Unknown, always 0
-	{ 0x240000, 0x240001, MWA16_NOP }, // Horizontal synchronization register
-	{ 0x260000, 0x260001, MWA16_NOP }, // Vertical synchronization register
-	{ 0x270000, 0x270001, MWA16_NOP }, // Video synchronization switch
+	{ 0x220000, 0x220001, MWA16_NOP }, /* Unknown, always 0*/
+	{ 0x240000, 0x240001, MWA16_NOP }, /* Horizontal synchronization register*/
+	{ 0x260000, 0x260001, MWA16_NOP }, /* Vertical synchronization register*/
+	{ 0x270000, 0x270001, MWA16_NOP }, /* Video synchronization switch*/
 	{ 0x280000, 0x29ffff, sys24_char_w },
 	{ 0x400000, 0x403fff, system24temp_sys16_paletteram1_w, &paletteram16 },
 	{ 0x404000, 0x40401f, sys24_mixer_w },
@@ -794,10 +794,10 @@ static MEMORY_WRITE16_START( system24_writemem2 )
 	{ 0x000000, 0x03ffff, MWA16_RAM, &ramprg },
 	{ 0x080000, 0x0fffff, ramlo_w },
 	{ 0x200000, 0x20ffff, sys24_tile_w },
-	{ 0x220000, 0x220001, MWA16_NOP }, // Unknown, always 0
-	{ 0x240000, 0x240001, MWA16_NOP }, // Horizontal synchronization register
-	{ 0x260000, 0x260001, MWA16_NOP }, // Vertical synchronization register
-	{ 0x270000, 0x270001, MWA16_NOP }, // Video synchronization switch
+	{ 0x220000, 0x220001, MWA16_NOP }, /* Unknown, always 0*/
+	{ 0x240000, 0x240001, MWA16_NOP }, /* Horizontal synchronization register*/
+	{ 0x260000, 0x260001, MWA16_NOP }, /* Vertical synchronization register*/
+	{ 0x270000, 0x270001, MWA16_NOP }, /* Video synchronization switch*/
 	{ 0x280000, 0x29ffff, sys24_char_w },
 	{ 0x400000, 0x403fff, system24temp_sys16_paletteram1_w },
 	{ 0x404000, 0x40401f, sys24_mixer_w },
@@ -867,13 +867,13 @@ static DRIVER_INIT(hotrod)
 	system24temp_sys16_io_set_callbacks(hotrod_io_r, hotrod_io_w, resetcontrol_w, iod_r, iod_w);
 	mlatch_table = 0;
 
-	// Sector  Size
-	// 1       8192
-	// 2       1024
-	// 3       1024
-	// 4       1024
-	// 5        512
-	// 6        256
+	/* Sector  Size*/
+	/* 1       8192*/
+	/* 2       1024*/
+	/* 3       1024*/
+	/* 4       1024*/
+	/* 5        512*/
+	/* 6        256*/
 
 	track_size = 0x2f00;
 }
@@ -883,14 +883,14 @@ static DRIVER_INIT(bnzabros)
 	system24temp_sys16_io_set_callbacks(hotrod_io_r, hotrod_io_w, resetcontrol_w, iod_r, iod_w);
 	mlatch_table = bnzabros_mlt;
 
-	// Sector  Size
-	// 1       2048
-	// 2       2048
-	// 3       2048
-	// 4       2048
-	// 5       2048
-	// 6       1024
-	// 7        256
+	/* Sector  Size*/
+	/* 1       2048*/
+	/* 2       2048*/
+	/* 3       2048*/
+	/* 4       2048*/
+	/* 5       2048*/
+	/* 6       1024*/
+	/* 7        256*/
 
 	track_size = 0x2d00;
 }
@@ -1413,7 +1413,7 @@ ROM_START( bnzabros )
 	ROM_LOAD( "bb-disk.bin",        0x000000, 0x1c2000, CRC(ea7a3302) SHA1(5f92efb2e1135c1f3eeca38ba5789739a22dbd11) )
 ROM_END
 
-ROM_START( quizmeku ) // Quiz Mekuromeku Story
+ROM_START( quizmeku ) /* Quiz Mekuromeku Story*/
 	 ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
 	 ROM_LOAD16_BYTE( "epr15343.ic2", 0x000000, 0x20000, CRC(c72399a7) SHA1(bfbf0079ea63f89bca4ce9081aed5d5c1d9d169a) )
 	 ROM_LOAD16_BYTE( "epr15342.ic1", 0x000001, 0x20000, CRC(0968ac84) SHA1(4e1170ac123adaec32819754b5075531ff1925fe) )

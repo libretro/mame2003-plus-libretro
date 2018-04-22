@@ -50,7 +50,7 @@ void gcpinbal_interrupt1(int x)
 
 void gcpinbal_interrupt3(int x)
 {
-	// IRQ3 is from the M6585
+	/* IRQ3 is from the M6585*/
 	if (!ADPCM_playing(0))
 	{
 		cpu_set_irq_line(0,3,HOLD_LINE);
@@ -93,7 +93,7 @@ static READ16_HANDLER( ioc_r )
 
 	}
 
-//logerror("CPU #0 PC %06x: warning - read unmapped ioc offset %06x\n",activecpu_get_pc(),offset);
+/*logerror("CPU #0 PC %06x: warning - read unmapped ioc offset %06x\n",activecpu_get_pc(),offset);*/
 
 	return gcpinbal_ioc_ram[offset];
 }
@@ -103,20 +103,20 @@ static WRITE16_HANDLER( ioc_w )
 {
 	COMBINE_DATA(&gcpinbal_ioc_ram[offset]);
 
-//	switch (offset)
-//	{
-//		case 0x??:	/* */
-//			return;
-//
-//		case 0x88/2:	/* coin control (+ others) ??? */
-//			coin_lockout_w(0, ~data & 0x01);
-//			coin_lockout_w(1, ~data & 0x02);
-//usrintf_showmessage(" address %04x value %04x",offset,data);
-//	}
+/*	switch (offset)*/
+/*	{*/
+/*		case 0x??:	 // /*/
+/*			return;*/
+/**/
+/*		case 0x88/2:	 // coin control (+ others) ??? /*/
+/*			coin_lockout_w(0, ~data & 0x01);*/
+/*			coin_lockout_w(1, ~data & 0x02);*/
+/*usrintf_showmessage(" address %04x value %04x",offset,data);*/
+/*	}*/
 
 	switch (offset)
 	{
-		// these are all written every frame
+		/* these are all written every frame*/
 		case 0x3b:
 		case 0xa:
 		case 0xc:
@@ -128,7 +128,7 @@ static WRITE16_HANDLER( ioc_w )
 		case 0x47:
 			break;
 
-		// MSM6585 bank, coin LEDs, maybe others?
+		/* MSM6585 bank, coin LEDs, maybe others?*/
 		case 0x44:
 			if (data & 0x10)
 			{
@@ -143,13 +143,13 @@ static WRITE16_HANDLER( ioc_w )
 		case 0x45:
 			break;
 
-		// OKIM6295
+		/* OKIM6295*/
 		case 0x50:
 		case 0x51:
 			OKIM6295_data_0_w(0, data>>8);
 			break;
 
-		// MSM6585 ADPCM - mini emulation
+		/* MSM6585 ADPCM - mini emulation*/
 		case 0x60:
 			start &= 0xffff00;
 			start |= (data>>8);
@@ -239,13 +239,13 @@ INPUT_PORTS_START( gcpinbal )
 	PORT_DIPSETTING(      0x0008, "500k" )
 	PORT_DIPSETTING(      0x000c, "1000k" )
 	PORT_DIPSETTING(      0x0000, "None" )
-	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Flip_Screen ) )	// to be confirmed - code at 0x000508
+	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Flip_Screen ) )	/* to be confirmed - code at 0x000508*/
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Demo_Sounds ) )	// to be confirmed - code at 0x00b6d0, 0x00b7e4, 0x00bae4
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Demo_Sounds ) )	/* to be confirmed - code at 0x00b6d0, 0x00b7e4, 0x00bae4*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0040, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Unused ) )
@@ -279,18 +279,18 @@ INPUT_PORTS_START( gcpinbal )
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )	// Item right
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	// Inner flipper right
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )	// Outer flipper right
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON8 | IPF_PLAYER1 )	// Tilt right
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )	/* Item right*/
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	/* Inner flipper right*/
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )	/* Outer flipper right*/
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON8 | IPF_PLAYER1 )	/* Tilt right*/
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )	// Item left
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	// Inner flipper left
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )	// Outer flipper left
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON7 | IPF_PLAYER1 )	// Tilt left
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )	/* Item left*/
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	/* Inner flipper left*/
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )	/* Outer flipper left*/
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON7 | IPF_PLAYER1 )	/* Tilt left*/
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START1 )
 
 	PORT_START	/* IN1 */
@@ -299,7 +299,7 @@ INPUT_PORTS_START( gcpinbal )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )	// This bit gets tested (search for d8 00 87)
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* This bit gets tested (search for d8 00 87)*/
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -345,7 +345,7 @@ static struct GfxLayout tilelayout =
 	16,16,	/* 16*16 sprites */
 	RGN_FRAC(1,1),
 	4,	/* 4 bits per pixel */
-//	{ 16, 48, 0, 32 },
+/*	{ 16, 48, 0, 32 },*/
 	{ 48, 16, 32, 0 },
 	{ 8, 9, 10, 11, 12, 13, 14, 15, 0, 1, 2, 3, 4, 5, 6, 7 },
 	{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64, 8*64, 9*64, 10*64, 11*64, 12*64, 13*64, 14*64, 15*64 },
@@ -387,7 +387,7 @@ static struct ADPCMinterface adpcm_interface =
 
 VIDEO_EOF( gcpinbal )
 {
-//	buffer_spriteram16_w(0,0,0);
+/*	buffer_spriteram16_w(0,0,0);*/
 }
 
 static MACHINE_DRIVER_START( gcpinbal )

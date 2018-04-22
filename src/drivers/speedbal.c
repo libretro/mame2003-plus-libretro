@@ -67,7 +67,7 @@ unsigned char *speedbal_sharedram;
 
 READ_HANDLER( speedbal_sharedram_r )
 {
-//  if (offset==0x0) speedbal_sharedram[offset]+=1;
+/*  if (offset==0x0) speedbal_sharedram[offset]+=1;*/
   return speedbal_sharedram[offset];
 }
 
@@ -79,7 +79,7 @@ WRITE_HANDLER( speedbal_sharedram_w )
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0xdbff, MRA_ROM },
-	{ 0xdc00, 0xdfff, speedbal_sharedram_r },  // shared with SOUND
+	{ 0xdc00, 0xdfff, speedbal_sharedram_r },  /* shared with SOUND*/
 	{ 0xe000, 0xe1ff, speedbal_background_videoram_r },
 	{ 0xe800, 0xefff, speedbal_foreground_videoram_r },
 	{ 0xf000, 0xffff, MRA_RAM },
@@ -87,7 +87,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0xdbff, MWA_ROM },
-	{ 0xdc00, 0xdfff, speedbal_sharedram_w, &speedbal_sharedram },  // shared with SOUND
+	{ 0xdc00, 0xdfff, speedbal_sharedram_w, &speedbal_sharedram },  /* shared with SOUND*/
 	{ 0xe000, 0xe1ff, speedbal_background_videoram_w, &speedbal_background_videoram, &speedbal_background_videoram_size },
 	{ 0xe800, 0xefff, speedbal_foreground_videoram_w, &speedbal_foreground_videoram, &speedbal_foreground_videoram_size },
 	{ 0xf000, 0xf5ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram },
@@ -97,13 +97,13 @@ MEMORY_END
 
 static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
-	{ 0xdc00, 0xdfff, speedbal_sharedram_r }, // shared with MAIN CPU
+	{ 0xdc00, 0xdfff, speedbal_sharedram_r }, /* shared with MAIN CPU*/
 	{ 0xf000, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0xdc00, 0xdfff, speedbal_sharedram_w }, // shared with MAIN CPU
+	{ 0xdc00, 0xdfff, speedbal_sharedram_w }, /* shared with MAIN CPU*/
 	{ 0xf000, 0xffff, MWA_RAM },
 MEMORY_END
 

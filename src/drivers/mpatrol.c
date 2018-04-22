@@ -61,7 +61,7 @@ READ_HANDLER( mpatrol_input_port_3_r );
 /* if a read from this address doesn't return the value it expects. */
 READ_HANDLER( mpatrol_protection_r )
 {
-//logerror("%04x: read protection\n",activecpu_get_pc());
+/*logerror("%04x: read protection\n",activecpu_get_pc());*/
 	return activecpu_get_reg(Z80_DE) & 0xff;
 }
 

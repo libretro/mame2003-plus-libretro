@@ -101,7 +101,7 @@ static	int collh,cxh,cyrh,cyqh;
 static MEMORY_READ_START( marinedt_readmem )
 	{ 0x0000, 0x37ff, MRA_ROM },
 	{ 0x4000, 0x43ff, MRA_RAM },
-	{ 0x4400, 0x47ff, MRA_RAM },	//unused, vram mirror?
+	{ 0x4400, 0x47ff, MRA_RAM },	/*unused, vram mirror?*/
 	{ 0x4000, 0x4bff, MRA_RAM },
 MEMORY_END
 
@@ -109,12 +109,12 @@ static MEMORY_WRITE_START( marinedt_writemem )
 	{ 0x0000, 0x37ff, MWA_ROM },
 	{ 0x4000, 0x47ff, MWA_RAM },
 	{ 0x4800, 0x4bff, videoram_w, &videoram, &videoram_size },
-	{ 0x4c00, 0x4c00, MWA_NOP },	//?? maybe off by one error
+	{ 0x4c00, 0x4c00, MWA_NOP },	/*?? maybe off by one error*/
 MEMORY_END
 
 static READ_HANDLER( marinedt_port1_r )
 {
-//might need to be reversed for cocktail stuff
+/*might need to be reversed for cocktail stuff*/
 
 	/* x/y multiplexed */
 	return readinputport(3 + ((marinedt_pf&0x08)>>3));
@@ -122,11 +122,11 @@ static READ_HANDLER( marinedt_port1_r )
 
 static READ_HANDLER( marinedt_coll_r )
 {
-	//76543210
-	//x------- obj1 to obj2 collision
-	//-xxx---- unused
-    //----x--- obj1 to playfield collision
-	//-----xxx unused
+	/*76543210*/
+	/*x------- obj1 to obj2 collision*/
+	/*-xxx---- unused*/
+    /*----x--- obj1 to playfield collision*/
+	/*-----xxx unused*/
 
 	if (keyboard_pressed(KEYCODE_X)) return 0x80;
 	if (keyboard_pressed(KEYCODE_Z)) return 0x08;
@@ -134,28 +134,28 @@ static READ_HANDLER( marinedt_coll_r )
 	return coll | collh;
 }
 
-//are these returning only during a collision?
-//id imagine they are returning the pf char where the collission took place?
-//what about where there is lots of colls?
-//maybe the first on a scanline basis
+/*are these returning only during a collision?*/
+/*id imagine they are returning the pf char where the collission took place?*/
+/*what about where there is lots of colls?*/
+/*maybe the first on a scanline basis*/
 static READ_HANDLER( marinedt_obj1_x_r )
 {
-	//76543210
-	//xxxx---- unknown
-	//----xxxx x pos in video ram
+	/*76543210*/
+	/*xxxx---- unknown*/
+	/*----xxxx x pos in video ram*/
 
 	unsigned char *RAM = memory_region(REGION_CPU1);
 if(RAM[0x430e]) --cx; else ++cx;
-//figure out why inc/dec based on 430e?
+/*figure out why inc/dec based on 430e?*/
 	return cx | (cxh<<4);
 }
 
 static READ_HANDLER( marinedt_obj1_yr_r )
 {
-	//76543210
-	//xxxx---- unknown
-	//----xxxx row in current screen quarter
-//has to be +1 if cx went over?
+	/*76543210*/
+	/*xxxx---- unknown*/
+	/*----xxxx row in current screen quarter*/
+/*has to be +1 if cx went over?*/
 if (cx==0x10) cyr++;
 
 	return cyr | (cyrh<<4);
@@ -163,21 +163,21 @@ if (cx==0x10) cyr++;
 
 static READ_HANDLER( marinedt_obj1_yq_r )
 {
-	//76543210
-	//xx------ unknown
-	//--xx---- screen quarter when flipped?
-    //----xx-- unknown
-	//------xx screen quarter
+	/*76543210*/
+	/*xx------ unknown*/
+	/*--xx---- screen quarter when flipped?*/
+    /*----xx-- unknown*/
+	/*------xx screen quarter*/
 
 	return cyq | (cyqh<<4);
 }
 
 static PORT_READ_START( marinedt_readport )
-	{ 0x00, 0x00, input_port_0_r },		//dips coinage
-	{ 0x01, 0x01, marinedt_port1_r },	//trackball xy muxed
+	{ 0x00, 0x00, input_port_0_r },		/*dips coinage*/
+	{ 0x01, 0x01, marinedt_port1_r },	/*trackball xy muxed*/
 	{ 0x02, 0x02, marinedt_obj1_x_r },
-	{ 0x03, 0x03, input_port_1_r },		//buttons
-	{ 0x04, 0x04, input_port_2_r },		//dips
+	{ 0x03, 0x03, input_port_1_r },		/*buttons*/
+	{ 0x04, 0x04, input_port_2_r },		/*dips*/
 	{ 0x06, 0x06, marinedt_obj1_yr_r },
 	{ 0x0a, 0x0a, marinedt_obj1_yq_r },
 	{ 0x0e, 0x0e, marinedt_coll_r },
@@ -194,45 +194,45 @@ static WRITE_HANDLER( marinedt_music_w ){	marinedt_music = data; }
 
 static WRITE_HANDLER( marinedt_sound_w )
 {
-	//76543210
-	//xx------ ??
-	//--x----- jet sound
-	//---x---- foam
-    //----x--- ink
-	//-----x-- collision
-    //------x- dots hit
-	//-------x ??
+	/*76543210*/
+	/*xx------ ??*/
+	/*--x----- jet sound*/
+	/*---x---- foam*/
+    /*----x--- ink*/
+	/*-----x-- collision*/
+    /*------x- dots hit*/
+	/*-------x ??*/
 
 	marinedt_sound = data;
 }
 
 static WRITE_HANDLER( marinedt_pd_w )
 {
-	//76543210
-	//xxx----- ?? unused
-	//---x---- ?? the rest should be used based on the table
-    //----x--- ??
-	//-----x-- ??
-    //------x- obj2 enable
-	//-------x obj1 enable
+	/*76543210*/
+	/*xxx----- ?? unused*/
+	/*---x---- ?? the rest should be used based on the table*/
+    /*----x--- ??*/
+	/*-----x-- ??*/
+    /*------x- obj2 enable*/
+	/*-------x obj1 enable*/
 
 	marinedt_pd = data;
 }
 
 static WRITE_HANDLER( marinedt_pf_w )
 {
-	//76543210
-	//xxxx---- ?? unused (will need to understand table of written values)
-    //----x--- xy trackball select
-	//-----x-- ?? flip screen/controls
-    //------x- ?? upright/cocktail
-	//-------x ?? service mode
+	/*76543210*/
+	/*xxxx---- ?? unused (will need to understand table of written values)*/
+    /*----x--- xy trackball select*/
+	/*-----x-- ?? flip screen/controls*/
+    /*------x- ?? upright/cocktail*/
+	/*-------x ?? service mode*/
 
 	marinedt_pf = data;
 
-//if(data&0xf0)
-//	logerror("pf:%02x %d\n",marinedt_pf);
-//logerror("pd:%02x %d\n",marinedt_pd, cpu_getcurrentframe());
+/*if(data&0xf0)*/
+/*	logerror("pf:%02x %d\n",marinedt_pf);*/
+/*logerror("pd:%02x %d\n",marinedt_pd, cpu_getcurrentframe());*/
 
 }
 
@@ -301,12 +301,12 @@ INPUT_PORTS_START( marinedt )
     PORT_DIPNAME( 0x01, 0x00, DEF_STR( Bonus_Life ) )
     PORT_DIPSETTING(    0x01, "5000" )
     PORT_DIPSETTING(    0x00, "10000" )
-//cheat?
-    PORT_DIPNAME( 0x02, 0x00, "ignore internal bounce?" )	//maybe die/bounce of rocks/coral?
+/*cheat?*/
+    PORT_DIPNAME( 0x02, 0x00, "ignore internal bounce?" )	/*maybe die/bounce of rocks/coral?*/
     PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
     PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-//freezes the game before the reset
-//doesn't seem to be done as a dip, but what about mixing with diops like this?
+/*freezes the game before the reset*/
+/*doesn't seem to be done as a dip, but what about mixing with diops like this?*/
 	PORT_BITX(0x04, IP_ACTIVE_HIGH, IPT_SERVICE | IPF_TOGGLE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Upright ) )
@@ -324,7 +324,7 @@ INPUT_PORTS_START( marinedt )
     PORT_DIPSETTING(    0xc0, "6" )
 
     PORT_START  /* IN3 - FAKE MUXED */
-//check all bits are used
+/*check all bits are used*/
     PORT_ANALOG( 0xff, 0x00, IPT_TRACKBALL_X | IPF_REVERSE, 25, 10, 0, 0 )
 
     PORT_START  /* IN4 - FAKE MUXED */
@@ -336,7 +336,7 @@ static struct GfxLayout marinedt_charlayout =
 	8,8,
 	RGN_FRAC(1,3),
 	3,
-	{ RGN_FRAC(2,3), RGN_FRAC(1,3), RGN_FRAC(0,3) },	//maybe 120
+	{ RGN_FRAC(2,3), RGN_FRAC(1,3), RGN_FRAC(0,3) },	/*maybe 120*/
 	{ STEP8(0,1) },
 	{ STEP8(0,8) },
 	8*8
@@ -355,7 +355,7 @@ static struct GfxLayout marinedt_objlayout =
 
 static struct GfxDecodeInfo marinedt_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &marinedt_charlayout, 0,  4 },	//really only 1 colour set?
+	{ REGION_GFX1, 0, &marinedt_charlayout, 0,  4 },	/*really only 1 colour set?*/
 	{ REGION_GFX2, 0, &marinedt_objlayout,  48, 4 },
 	{ REGION_GFX3, 0, &marinedt_objlayout,  32, 4 },
 	{ -1 }
@@ -373,20 +373,20 @@ PALETTE_INIT( marinedt )
 		bit0 = (~color_prom[i] >> 0) & 0x01;
 		bit1 = (~color_prom[i] >> 1) & 0x01;
 		bit2 = (~color_prom[i] >> 2) & 0x01;
-//		*(palette++) = 0x92 * bit0 + 0x46 * bit1 + 0x27 * bit2;
+/*		*(palette++) = 0x92 * bit0 + 0x46 * bit1 + 0x27 * bit2;*/
 		r = 0x27 * bit0 + 0x46 * bit1 + 0x92 * bit2;
 		/* green component */
 		bit0 = (~color_prom[i] >> 3) & 0x01;
 		bit1 = (~color_prom[i] >> 4) & 0x01;
 		bit2 = (~color_prom[i] >> 5) & 0x01;
-//		*(palette++) = 0x92 * bit0 + 0x46 * bit1 + 0x27 * bit2;
+/*		*(palette++) = 0x92 * bit0 + 0x46 * bit1 + 0x27 * bit2;*/
 		g = 0x27 * bit0 + 0x46 * bit1 + 0x92 * bit2;
 		/* blue component */
 		bit0 = (~color_prom[i] >> 5) & 0x01;
 		bit1 = (~color_prom[i] >> 6) & 0x01;
 		bit2 = (~color_prom[i] >> 7) & 0x01;
 bit0=0;
-//		*(palette++) = 0x92 * bit0 + 0x46 * bit1 + 0x27 * bit2;
+/*		*(palette++) = 0x92 * bit0 + 0x46 * bit1 + 0x27 * bit2;*/
 		b = 0x27 * bit0 + 0x46 * bit1 + 0x92 * bit2;
 
 		palette_set_color(i,r,g,b);
@@ -407,7 +407,7 @@ fillbitmap(bitmap, Machine->pens[0], cliprect);
 		flipx = 1;
 		flipy = 0;
 
-//logerror("%x\n",videoram[offs]);
+/*logerror("%x\n",videoram[offs]);*/
 
 		drawgfx(bitmap,Machine->gfx[0],
 				videoram[offs],
@@ -416,46 +416,46 @@ fillbitmap(bitmap, Machine->pens[0], cliprect);
 				8*sx,8*sy,
 				cliprect,TRANSPARENCY_NONE,0);
 	}
-//{
-//int x,yr,yq;
+/*{*/
+/*int x,yr,yq;*/
 
-//x=((256-20-marinedt_obj1_x)%128)/8;
-//yr=(((256+2-marinedt_obj1_y+10)%64)/8)*2+((256-20-marinedt_obj1_x)>127?1:0);
-//yr=yr<<4;
-//yq=(256+2-marinedt_obj1_y+10)/64;
-//yq=yq<<8;
-//	{
-//		sx = (x+yr+yq)%32;
-//		sy = (x+yr+yq)/32;
-//		flipx = 1;
-//		flipy = 0;
+/*x=((256-20-marinedt_obj1_x)%128)/8;*/
+/*yr=(((256+2-marinedt_obj1_y+10)%64)/8)*2+((256-20-marinedt_obj1_x)>127?1:0);*/
+/*yr=yr<<4;*/
+/*yq=(256+2-marinedt_obj1_y+10)/64;*/
+/*yq=yq<<8;*/
+/*	{*/
+/*		sx = (x+yr+yq)%32;*/
+/*		sy = (x+yr+yq)/32;*/
+/*		flipx = 1;*/
+/*		flipy = 0;*/
 
-//logerror("%x\n",videoram[offs]);
+/*logerror("%x\n",videoram[offs]);*/
 
-//		drawgfx(bitmap,Machine->gfx[0],
-//				0,
-//				0,
-//				flipx,flipy,
-//				8*sx,8*sy,
-//				cliprect,TRANSPARENCY_NONE,0);
-//	}
-//}
+/*		drawgfx(bitmap,Machine->gfx[0],*/
+/*				0,*/
+/*				0,*/
+/*				flipx,flipy,*/
+/*				8*sx,8*sy,*/
+/*				cliprect,TRANSPARENCY_NONE,0);*/
+/*	}*/
+/*}*/
 
 {
-//	char buf[40];
-//	sprintf(buf,"%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X", marinedt_p2, marinedt_p3, marinedt_p4, marinedt_p5, marinedt_p6, marinedt_p8, marinedt_p9, marinedt_pa, marinedt_pd, marinedt_pf);
-//	usrintf_showmessage(buf);
-//	ui_drawbox(bitmap, 16, 230, 200,25);
-// 	ui_text(bitmap, "02 03 04 05 06 08 09 0a 0d 0f", 20, 234);
-// 	ui_text(bitmap, buf, 20, 244);
+/*	char buf[40];*/
+/*	sprintf(buf,"%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X", marinedt_p2, marinedt_p3, marinedt_p4, marinedt_p5, marinedt_p6, marinedt_p8, marinedt_p9, marinedt_pa, marinedt_pd, marinedt_pf);*/
+/*	usrintf_showmessage(buf);*/
+/*	ui_drawbox(bitmap, 16, 230, 200,25);*/
+/* 	ui_text(bitmap, "02 03 04 05 06 08 09 0a 0d 0f", 20, 234);*/
+/* 	ui_text(bitmap, buf, 20, 244);*/
 
-//  	if (marinedt_sound&0x02) ui_text(bitmap, "dot", 10, 4+36);
-//  	if (marinedt_sound&0x04) ui_text(bitmap, "col", 50, 4+36);
-//  	if (marinedt_sound&0x08) ui_text(bitmap, "ink", 90, 4+36);
-//  	if (marinedt_sound&0x10) ui_text(bitmap, "foam", 130, 4+36);
-//  	if (marinedt_sound&0x20) ui_text(bitmap, "jet", 180, 4+36);
+/*  	if (marinedt_sound&0x02) ui_text(bitmap, "dot", 10, 4+36);*/
+/*  	if (marinedt_sound&0x04) ui_text(bitmap, "col", 50, 4+36);*/
+/*  	if (marinedt_sound&0x08) ui_text(bitmap, "ink", 90, 4+36);*/
+/*  	if (marinedt_sound&0x10) ui_text(bitmap, "foam", 130, 4+36);*/
+/*  	if (marinedt_sound&0x20) ui_text(bitmap, "jet", 180, 4+36);*/
 
-//obj to obj coll
+/*obj to obj coll*/
 collh=0;cxh=0;cyrh=0;cyqh=0;
 
 #if 0
@@ -472,14 +472,14 @@ if (marinedt_pd&0x03)
 			collh=0x80;
 
 			cxh=((256-32-marinedt_obj1_x+16)%128)/8;cxh&=0x0f;
-		//-1 fudge?
+		/*-1 fudge?*/
 			cyrh=(((256-marinedt_obj1_y-1+16)%64)/8)*2+((256-32-marinedt_obj1_x+16)>127?1:0);cyrh&=0x0f;
 			cyqh=(256-marinedt_obj1_y-1+16)/64;cyqh&=0x0f;
 		}
 }
 #endif
 
-//pf collision?
+/*pf collision?*/
 
 #if 0
 if (marinedt_pd&0x01)
@@ -502,13 +502,13 @@ if (marinedt_pd&0x01)
 if(coll)
 {
 --i;--j;
-//	plot_pixel(bitmap, 256-32-marinedt_obj1_x+i, 256-marinedt_obj1_y+j-1,Machine->pens[2]);
+/*	plot_pixel(bitmap, 256-32-marinedt_obj1_x+i, 256-marinedt_obj1_y+j-1,Machine->pens[2]);*/
 
-//determine collision registers
+/*determine collision registers*/
 {
 
 	cx=((256-32-marinedt_obj1_x+i)%128)/8;cx&=0x0f;
-//-1 fudge?
+/*-1 fudge?*/
 	cyr=(((256-marinedt_obj1_y+j-1)%64)/8)*2+((256-32-marinedt_obj1_x+i)>127?1:0);cyr&=0x0f;
 	cyq=(256-marinedt_obj1_y+j-1)/64;cyq&=0x0f;
 
@@ -518,7 +518,7 @@ if(coll)
 		flipx = 1;
 		flipy = 0;
 
-//logerror("%x\n",videoram[offs]);
+/*logerror("%x\n",videoram[offs]);*/
 
 		drawgfx(bitmap,Machine->gfx[0],
 				0,
@@ -531,42 +531,42 @@ if(coll)
 
 
 }
-//{
-//	plot_pixel(bitmap, 256-28-marinedt_obj1_x+i, 256-2-marinedt_obj1_y+j,Machine->pens[1]);
-//			plot_pixel(bitmap, 256+i, 32+j,Machine->pens[1]);
-//}
+/*{*/
+/*	plot_pixel(bitmap, 256-28-marinedt_obj1_x+i, 256-2-marinedt_obj1_y+j,Machine->pens[1]);*/
+/*			plot_pixel(bitmap, 256+i, 32+j,Machine->pens[1]);*/
+/*}*/
 
-//	drawgfx(bitmap,Machine->gfx[1],
-//			((marinedt_obj1_a&0x04)<<1)+((marinedt_obj1_a&0x38)>>3),
-//			marinedt_obj1_a&0x03,
-//			1,marinedt_obj1_a&0x80,
-//			256,32,
-//			cliprect,TRANSPARENCY_PEN,0);
+/*	drawgfx(bitmap,Machine->gfx[1],*/
+/*			((marinedt_obj1_a&0x04)<<1)+((marinedt_obj1_a&0x38)>>3),*/
+/*			marinedt_obj1_a&0x03,*/
+/*			1,marinedt_obj1_a&0x80,*/
+/*			256,32,*/
+/*			cliprect,TRANSPARENCY_PEN,0);*/
 
-//if(coll)
-//	drawgfx(bitmap,Machine->gfx[1],
-//			1,
-//			marinedt_obj1_a&0x03,
-//			1,0,
-//			256,96,
-//			cliprect,TRANSPARENCY_NONE,0);
-//else
-//	drawgfx(bitmap,Machine->gfx[2],
-//			1,
-//			marinedt_obj1_a&0x03,
-//			1,0,
-//			256,96,
-//			cliprect,TRANSPARENCY_NONE,0);
+/*if(coll)*/
+/*	drawgfx(bitmap,Machine->gfx[1],*/
+/*			1,*/
+/*			marinedt_obj1_a&0x03,*/
+/*			1,0,*/
+/*			256,96,*/
+/*			cliprect,TRANSPARENCY_NONE,0);*/
+/*else*/
+/*	drawgfx(bitmap,Machine->gfx[2],*/
+/*			1,*/
+/*			marinedt_obj1_a&0x03,*/
+/*			1,0,*/
+/*			256,96,*/
+/*			cliprect,TRANSPARENCY_NONE,0);*/
 
 }
 #endif
-// x------- flipx (really y cause of rotation?!)
-// -x------ flipy, unused ??
-// --xxx--- sprite
-// -----x-- bank
-// ------xx colour
+/* x------- flipx (really y cause of rotation?!)*/
+/* -x------ flipy, unused ??*/
+/* --xxx--- sprite*/
+/* -----x-- bank*/
+/* ------xx colour*/
 
-//note the 22 mod in the code, possibly for flipped
+/*note the 22 mod in the code, possibly for flipped*/
 if (marinedt_pd&0x02)
 		drawgfx(bitmap,Machine->gfx[2],
 				((marinedt_obj2_a&0x04)<<1)+((marinedt_obj2_a&0x38)>>3),
@@ -575,10 +575,10 @@ if (marinedt_pd&0x02)
 				256-32-marinedt_obj2_x,256-marinedt_obj2_y-1,
 				cliprect,TRANSPARENCY_PEN,0);
 
-//at x+6 flush with the bottom, x-6 one off flush with the top
-//at y+6 2 off flush with the left, y-6 flush with the right
-//at y-1 overlap is equal at 5 pixels on left and right
-//at x overlap is 6 on left and 5 on right, x+1 may be correct
+/*at x+6 flush with the bottom, x-6 one off flush with the top*/
+/*at y+6 2 off flush with the left, y-6 flush with the right*/
+/*at y-1 overlap is equal at 5 pixels on left and right*/
+/*at x overlap is 6 on left and 5 on right, x+1 may be correct*/
 if (marinedt_pd&0x01)
 		drawgfx(bitmap,Machine->gfx[1],
 				((marinedt_obj1_a&0x04)<<1)+((marinedt_obj1_a&0x38)>>3),
@@ -589,8 +589,8 @@ if (marinedt_pd&0x01)
 }
 
 
-//if(coll)
-//	plot_pixel(bitmap, 256-32-marinedt_obj1_x+i, 256-marinedt_obj1_y+j-1,Machine->pens[1]);
+/*if(coll)*/
+/*	plot_pixel(bitmap, 256-32-marinedt_obj1_x+i, 256-marinedt_obj1_y+j-1,Machine->pens[1]);*/
 }
 
 static MACHINE_DRIVER_START( marinedt )
@@ -616,7 +616,7 @@ static MACHINE_DRIVER_START( marinedt )
 	MDRV_VIDEO_UPDATE(marinedt)
 
 	/* sound hardware */
-	//discrete sound
+	/*discrete sound*/
 MACHINE_DRIVER_END
 
 /***************************************************************************
@@ -647,10 +647,10 @@ ROM_START( marinedt )
 	ROM_LOAD( "mg13",     0x0000, 0x1000, CRC(17817044) SHA1(8c9b96620e3c414952e6d85c6e81b0df85c88e7a) )
 
 	ROM_REGION( 0x0080, REGION_PROMS, 0 )
-	ROM_LOAD( "mg14.bpr", 0x0000, 0x0020, CRC(f75f4e3a) SHA1(36e665987f475c57435fa8c224a2a3ce0c5e672b) )	//char clr
-	ROM_LOAD( "mg15.bpr", 0x0020, 0x0020, CRC(cd3ab489) SHA1(a77478fb94d0cf8f4317f89cc9579def7c294b4f) )	//obj clr
-	ROM_LOAD( "mg16.bpr", 0x0040, 0x0020, CRC(92c868bc) SHA1(483ae6f47845ddacb701528e82bd388d7d66a0fb) )	//?? collisions
-	ROM_LOAD( "mg17.bpr", 0x0060, 0x0020, CRC(13261a02) SHA1(050edd18e4f79d19d5206f55f329340432fd4099) )	//?? table of increasing values
+	ROM_LOAD( "mg14.bpr", 0x0000, 0x0020, CRC(f75f4e3a) SHA1(36e665987f475c57435fa8c224a2a3ce0c5e672b) )	/*char clr*/
+	ROM_LOAD( "mg15.bpr", 0x0020, 0x0020, CRC(cd3ab489) SHA1(a77478fb94d0cf8f4317f89cc9579def7c294b4f) )	/*obj clr*/
+	ROM_LOAD( "mg16.bpr", 0x0040, 0x0020, CRC(92c868bc) SHA1(483ae6f47845ddacb701528e82bd388d7d66a0fb) )	/*?? collisions*/
+	ROM_LOAD( "mg17.bpr", 0x0060, 0x0020, CRC(13261a02) SHA1(050edd18e4f79d19d5206f55f329340432fd4099) )	/*?? table of increasing values*/
 ROM_END
 
 GAMEX( 1981, marinedt, 0, marinedt, marinedt, 0, ROT270, "Taito", "Marine Date", GAME_NO_SOUND | GAME_NOT_WORKING )

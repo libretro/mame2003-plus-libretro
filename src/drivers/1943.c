@@ -439,9 +439,9 @@ ROM_START( 1943mii ) /* Prototype, location test or actual limited release? - PC
 	ROM_LOAD( "23.8k",        0x8000, 0x8000, CRC(b6dfdf85) SHA1(c223ae136f67e5f9910cbfa49b9827e5122e018e) )    /* back background */
 
 	ROM_REGION( 0x0c00, REGION_PROMS, 0 )
-//  PCB had standard BM0x for bproms 1 through 3, but clearly these should use the Kai BPROMs for correct colors
-//  BPROMs 4 through 8 macth the Kai set - labels were a non descript yellow dot with prom number
-//  BPROMs 9 through 12 are unique - labels were a non descript yellow dot with prom number
+/*  PCB had standard BM0x for bproms 1 through 3, but clearly these should use the Kai BPROMs for correct colors*/
+/*  BPROMs 4 through 8 macth the Kai set - labels were a non descript yellow dot with prom number*/
+/*  BPROMs 9 through 12 are unique - labels were a non descript yellow dot with prom number*/
 	ROM_LOAD( "bmk01.bin",    0x0000, 0x0100, CRC(e001ea33) SHA1(4204bdf87820ac84bab2a1b5571a2ee28c4cdfc5) )	/* red component */
 	ROM_LOAD( "bmk02.bin",    0x0100, 0x0100, CRC(af34d91a) SHA1(94bc6514c980fdd1cb013ff0819d6f32464c581c) )	/* green component */
 	ROM_LOAD( "bmk03.bin",    0x0200, 0x0100, CRC(43e9f6ef) SHA1(e1f58368fe0bd9b53f6c286ce5009b218a5197dc) )	/* blue component */

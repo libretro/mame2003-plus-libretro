@@ -71,18 +71,18 @@ static READ_HANDLER ( unk_port_r )
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
-	{ 0x8000, 0xbfff, MRA_BANK2 }, // banked port 1?
+	{ 0x8000, 0xbfff, MRA_BANK2 }, /* banked port 1?*/
 	{ 0xc400, 0xc7ff, MRA_RAM },
 	{ 0xc800, 0xcfff, MRA_RAM },
-	{ 0xd000, 0xdfff, MRA_BANK1 }, // banked port 0?
+	{ 0xd000, 0xdfff, MRA_BANK1 }, /* banked port 0?*/
 	{ 0xe000, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0xbfff, MWA_ROM },
-	{ 0xc400, 0xcfff, funybubl_paldatawrite, &funybubl_paletteram }, // palette?
-	{ 0xd000, 0xdfff, MWA_BANK1 }, // banked port 0?
+	{ 0xc400, 0xcfff, funybubl_paldatawrite, &funybubl_paletteram }, /* palette?*/
+	{ 0xd000, 0xdfff, MWA_BANK1 }, /* banked port 0?*/
 	{ 0xe000, 0xffff, MWA_RAM },
 MEMORY_END
 
@@ -104,8 +104,8 @@ WRITE_HANDLER( funybubl_soundcommand_w )
 
 
 static PORT_WRITE_START( writeport )
-	{ 0x00, 0x00, vidram_bank_w	},	// vidram bank
-	{ 0x01, 0x01, bank2_w }, // rom bank?
+	{ 0x00, 0x00, vidram_bank_w	},	/* vidram bank*/
+	{ 0x01, 0x01, bank2_w }, /* rom bank?*/
 
 	{ 0x03, 0x03, funybubl_soundcommand_w	},
 
@@ -117,14 +117,14 @@ PORT_END
 
 static MEMORY_READ_START( soundreadmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
-	{ 0x8000, 0x87ff, MRA_RAM }, // ram?
+	{ 0x8000, 0x87ff, MRA_RAM }, /* ram?*/
 	{ 0x9800, 0x9800, OKIM6295_status_0_r },
 	{ 0xa000, 0xa000, soundlatch_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( soundwritemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0x8000, 0x87ff, MWA_RAM }, // ram?
+	{ 0x8000, 0x87ff, MWA_RAM }, /* ram?*/
 	{ 0x9800, 0x9800, OKIM6295_data_0_w },
 MEMORY_END
 
@@ -298,7 +298,7 @@ static void funybubl_drawsprites( struct mame_bitmap *bitmap, const struct recta
 		if (source[3+0x10] & 0x80) tile += 0x1000;
 		if (source[3+0x10] & 0x20) xpos += 0x100;
 
-		// bits 0x40 (not used?) and 0x10 (just set during transition period of x co-ord 0xff and 0x00) ...
+		/* bits 0x40 (not used?) and 0x10 (just set during transition period of x co-ord 0xff and 0x00) ...*/
 
 		xpos -= 8;
 		ypos -= 14;
@@ -363,8 +363,8 @@ static MACHINE_DRIVER_START( funybubl )
 
 	MDRV_CPU_ADD(Z80,8000000)		 /* ? MHz */
 	MDRV_CPU_MEMORY(soundreadmem,soundwritemem)
-//	MDRV_CPU_PORTS(readport,writeport)
-//	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+/*	MDRV_CPU_PORTS(readport,writeport)*/
+/*	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -373,7 +373,7 @@ static MACHINE_DRIVER_START( funybubl )
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER )
 	MDRV_SCREEN_SIZE(512, 256)
 	MDRV_VISIBLE_AREA(12*8, 512-12*8-1, 16, 256-16-1)
-//	MDRV_VISIBLE_AREA(0*8, 512-1, 0, 256-1)
+/*	MDRV_VISIBLE_AREA(0*8, 512-1, 0, 256-1)*/
 
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(0x400)
@@ -393,7 +393,7 @@ ROM_START( funybubl )
 	ROM_RELOAD ( 0x10000, 0x40000 )
 
 
-	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT  ) // bg gfx 8x8x8
+	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT  ) /* bg gfx 8x8x8*/
 	ROM_LOAD( "7.bin", 0x000000, 0x40000, CRC(87603d7b) SHA1(21aec4cd011691f8608c3ddab83697bd89634fc8) )
 	ROM_LOAD( "8.bin", 0x040000, 0x40000, CRC(ab6031bd) SHA1(557793817f98c07c82caab4293aed7dffa4dbf7b) )
 	ROM_LOAD( "9.bin", 0x080000, 0x40000, CRC(0e8352ff) SHA1(29679a7ece2585e1a66296439b68bd56c937e313) )

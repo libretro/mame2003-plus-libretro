@@ -86,12 +86,12 @@ WRITE_HANDLER( mexico86_bankswitch_w );
 VIDEO_UPDATE( mexico86 );
 VIDEO_UPDATE( kikikai );
 
-//AT
+/*AT*/
 static READ_HANDLER( kiki_2203_r )
 {
 	return(YM2203Read(0,0) & 0x7f);
 }
-//ZT
+/*ZT*/
 
 static unsigned char *shared;
 
@@ -137,14 +137,14 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xe7ff, shared_w, &shared },  /* shared with sound cpu */
-	//{ 0xc000, 0xcfff, MWA_RAM, &mexico86_videoram },
-	{ 0xc000, 0xd4ff, MWA_RAM, &mexico86_videoram }, //AT: corrected size
+	/*{ 0xc000, 0xcfff, MWA_RAM, &mexico86_videoram },*/
+	{ 0xc000, 0xd4ff, MWA_RAM, &mexico86_videoram }, /*AT: corrected size*/
 	{ 0xd500, 0xd7ff, MWA_RAM, &mexico86_objectram, &mexico86_objectram_size },
 	{ 0xe800, 0xe8ff, MWA_RAM, &mexico86_protection_ram },  /* shared with mcu */
 	{ 0xe900, 0xefff, MWA_RAM },
 	{ 0xf000, 0xf000, mexico86_bankswitch_w },  /* program and gfx ROM banks */
 	{ 0xf008, 0xf008, mexico86_f008_w },    /* cpu reset lines + other unknown stuff */
-	{ 0xf018, 0xf018, MWA_NOP },    // watchdog_reset_w },
+	{ 0xf018, 0xf018, MWA_NOP },    /* watchdog_reset_w },*/
 	{ 0xf800, 0xffff, MWA_RAM },    /* communication ram */
 MEMORY_END
 
@@ -152,8 +152,8 @@ static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xa7ff, shared_r },
 	{ 0xa800, 0xbfff, MRA_RAM },
-	//{ 0xc000, 0xc000, YM2203_status_port_0_r },
-	{ 0xc000, 0xc000, kiki_2203_r }, //AT
+	/*{ 0xc000, 0xc000, YM2203_status_port_0_r },*/
+	{ 0xc000, 0xc000, kiki_2203_r }, /*AT*/
 	{ 0xc001, 0xc001, YM2203_read_port_0_r },
 MEMORY_END
 
@@ -311,7 +311,7 @@ INPUT_PORTS_START( kikikai )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-//AT
+/*AT*/
 	PORT_START      /* DSW0 */
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
@@ -324,7 +324,7 @@ INPUT_PORTS_START( kikikai )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-#if 0 // old coinage settings
+#if 0 /* old coinage settings*/
 	PORT_DIPNAME( 0x30, 0x30, "Coin 1" )
 	PORT_DIPSETTING(    0x30, "A:1C/1C B:1C/1C" )
 	PORT_DIPSETTING(    0x20, "A:1C/2C B:2C/1C" )
@@ -337,7 +337,7 @@ INPUT_PORTS_START( kikikai )
 	PORT_DIPSETTING(    0x00, "A:2C/3C B:1C/6C" )
 #endif
 
-	// coinage copied from Japanese manual but type B doesn't work
+	/* coinage copied from Japanese manual but type B doesn't work*/
 	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )
@@ -371,7 +371,7 @@ INPUT_PORTS_START( kikikai )
 	PORT_DIPNAME( 0x80, 0x00, "Number Match" )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-//ZT
+/*ZT*/
 
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN3 )
@@ -473,7 +473,7 @@ ROM_START( kikikai )
 	ROM_LOAD( "a85-17.rom", 0x00000, 0x08000, CRC(c141d5ab) SHA1(fe3622ba283e514416c43a44f83f922a958b27cd) ) /* 1st half, main code        */
 	ROM_CONTINUE(           0x20000, 0x08000 )             /* 2nd half, banked at 0x8000 */
 	ROM_LOAD( "a85-16.rom", 0x10000, 0x10000, CRC(4094d750) SHA1(05e0ad177a3eb144b203784ecb6242a0fc5c4d4d) ) /* banked at 0x8000           */
-	ROM_COPY(  REGION_CPU1, 0x10000, 0x08000, 0x04000 ) //AT: set as default to avoid banking problems
+	ROM_COPY(  REGION_CPU1, 0x10000, 0x08000, 0x04000 ) /*AT: set as default to avoid banking problems*/
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )    /* 64k for the audio cpu */
 	ROM_LOAD( "a85-11.rom", 0x0000, 0x8000, CRC(cc3539db) SHA1(4239a40fdee65cba613e4b4ec54cf7899480e366) )
@@ -498,7 +498,7 @@ ROM_START( kicknrun )
 	ROM_LOAD( "a87-08.bin", 0x00000, 0x08000, CRC(715e1b04) SHA1(60b7259758ec73f1cc945556e9c2b25766b745a8) ) /* 1st half, main code        */
 	ROM_CONTINUE(           0x20000, 0x08000 )             /* 2nd half, banked at 0x8000 */
 	ROM_LOAD( "a87-07.bin", 0x10000, 0x10000, CRC(6cb6ebfe) SHA1(fca61fc2ad8fadc1e15b9ff84c7469b68d16e885) ) /* banked at 0x8000           */
-	ROM_COPY(  REGION_CPU1, 0x10000, 0x08000, 0x04000 ) //AT: set as default to avoid banking problems
+	ROM_COPY(  REGION_CPU1, 0x10000, 0x08000, 0x04000 ) /*AT: set as default to avoid banking problems*/
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )    /* 64k for the audio cpu */
 	ROM_LOAD( "a87-06.bin", 0x0000, 0x8000, CRC(1625b587) SHA1(7336384e13c114915de5e439df5731ce3fc2054a) )
@@ -527,7 +527,7 @@ ROM_START( mexico86 )
 	ROM_LOAD( "2_g.bin",    0x00000, 0x08000, CRC(2bbfe0fb) SHA1(8f047e001ea8e49d28f73e546c82812af1c2533c) ) /* 1st half, main code        */
 	ROM_CONTINUE(           0x20000, 0x08000 )             /* 2nd half, banked at 0x8000 */
 	ROM_LOAD( "1_f.bin",    0x10000, 0x10000, CRC(0b93e68e) SHA1(c6fbcce83103e3e71a7a1ef9f18a10622ed6b951) ) /* banked at 0x8000           */
-	ROM_COPY(  REGION_CPU1, 0x10000, 0x08000, 0x04000 ) //AT: set as default to avoid banking problems
+	ROM_COPY(  REGION_CPU1, 0x10000, 0x08000, 0x04000 ) /*AT: set as default to avoid banking problems*/
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )    /* 64k for the audio cpu */
 	ROM_LOAD( "a87-06.bin", 0x0000, 0x8000, CRC(1625b587) SHA1(7336384e13c114915de5e439df5731ce3fc2054a) )

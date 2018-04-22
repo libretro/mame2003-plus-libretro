@@ -35,16 +35,16 @@ MEMORY_END
 
 static MEMORY_READ_START( readmem_sound )
 	{ 0x0000, 0x07ff, MRA_RAM },
-//	{ 0x1000, 0x10ff, beezer_6840_r },
+/*	{ 0x1000, 0x10ff, beezer_6840_r },*/
 	{ 0x1800, 0x18ff, via_1_r },
 	{ 0xe000, 0xffff, MRA_ROM },
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem_sound )
 	{ 0x0000, 0x07ff, MWA_RAM },
-//	{ 0x1000, 0x10ff, beezer_6840_w },
+/*	{ 0x1000, 0x10ff, beezer_6840_w },*/
 	{ 0x1800, 0x18ff, via_1_w },
-//	{ 0x8000, 0x9fff, beezer_dac_w },
+/*	{ 0x8000, 0x9fff, beezer_dac_w },*/
 	{ 0xe000, 0xffff, MWA_ROM },
 MEMORY_END
 

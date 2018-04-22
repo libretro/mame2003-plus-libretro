@@ -1102,8 +1102,8 @@ ROM_START( gulfwar2 )
 	ROM_LOAD( "06-u51.bin",			0x00000, 0x08000, CRC(75504f95) SHA1(5bd23e700e1bd4f0fac622dfb7c8cc69ba764956) )
 
 	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* Co-Processor TMS320C10 MCU code */
-	ROM_LOAD16_BYTE( "02-u1.rom",	0x8001, 0x2000, CRC(abefe4ca) SHA1(f05f12a1ff19411f34f4eee98ce9ba450fec38f2) ) // Same code as Twin Cobra
-	ROM_LOAD16_BYTE( "01-u2.rom",	0x8000, 0x2000, CRC(01399b65) SHA1(4867ec815e22c9124c7aa00ebb6089c2611fa31f) ) // Same code as Twin Cobra
+	ROM_LOAD16_BYTE( "02-u1.rom",	0x8001, 0x2000, CRC(abefe4ca) SHA1(f05f12a1ff19411f34f4eee98ce9ba450fec38f2) ) /* Same code as Twin Cobra*/
+	ROM_LOAD16_BYTE( "01-u2.rom",	0x8000, 0x2000, CRC(01399b65) SHA1(4867ec815e22c9124c7aa00ebb6089c2611fa31f) ) /* Same code as Twin Cobra*/
 
 	ROM_REGION( 0x0c000, REGION_GFX1, ROMREGION_DISPOSE )	/* chars */
 	ROM_LOAD( "03-u9.bin",			0x00000, 0x04000, CRC(1b7934b3) SHA1(c7f5ac364dec4c7843c30e098fd02e0901bdf4b7) )

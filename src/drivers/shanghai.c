@@ -388,7 +388,7 @@ rwp /= 2;
 			cpx = fifo[1];
 			cpy = fifo[2];
 		}
-//		else if ((fifo[0] & 0xff00) == 0x8800)	/* ALINE */
+/*		else if ((fifo[0] & 0xff00) == 0x8800)	 // ALINE /*/
 		else if ((fifo[0] & 0xfff8) == 0x8800)	/* ALINE */
 		{
 			INT16 ex,ey,sx,sy;
@@ -444,7 +444,7 @@ rwp /= 2;
 				}
 			}
 		}
-//		else if ((fifo[0] & 0xff00) == 0x9000)	/* ARCT */
+/*		else if ((fifo[0] & 0xff00) == 0x9000)	 // ARCT /*/
 		else if ((fifo[0] & 0xfff8) == 0x9000)	/* ARCT */
 		{
 			INT16 pcx,pcy;
@@ -527,7 +527,7 @@ rwp /= 2;
 				}
 			}
 		}
-//		else if ((fifo[0] & 0xff00) == 0xc000)	/* AFRCT */
+/*		else if ((fifo[0] & 0xff00) == 0xc000)	 // AFRCT /*/
 		else if ((fifo[0] & 0xfff8) == 0xc000)	/* AFRCT */
 		{
 			INT16 pcx,pcy;
@@ -574,7 +574,7 @@ rwp /= 2;
 				}
 			}
 		}
-//		else if ((fifo[0] & 0xff00) == 0xcc00)	/* DOT */
+/*		else if ((fifo[0] & 0xff00) == 0xcc00)	 // DOT /*/
 		else if ((fifo[0] & 0xfff8) == 0xcc00)	/* DOT */
 		{
 			int dst;
@@ -583,7 +583,7 @@ rwp /= 2;
 
 			PLOT(dst,fifo[0] & 0x0007)
 		}
-//		else if ((fifo[0] & 0xf000) == 0xe000)	/* AGCPY */
+/*		else if ((fifo[0] & 0xf000) == 0xe000)	 // AGCPY /*/
 		else if ((fifo[0] & 0xf0f8) == 0xe000)	/* AGCPY */
 		{
 			INT16 pcx,pcy;
@@ -625,8 +625,8 @@ static WRITE_HANDLER( HD63484_address_w )
 
 	reg[offset] = data;
 	regno = reg[0];	/* only low 8 bits are used */
-//if (offset == 0)
-//	logerror("PC %05x: HD63484 select register %02x\n",activecpu_get_pc(),regno);
+/*if (offset == 0)*/
+/*	logerror("PC %05x: HD63484 select register %02x\n",activecpu_get_pc(),regno);*/
 }
 
 static WRITE_HANDLER( HD63484_data_w )

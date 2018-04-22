@@ -80,8 +80,8 @@ static WRITE16_HANDLER( sshangha_protection16_w )
 	logerror("CPU #0 PC %06x: warning - write unmapped control address %06x %04x\n",activecpu_get_pc(),offset<<1,data);
 
 	if (offset == (0x260 >> 1)) {
-		//soundlatch_w(0,data&0xff);
-		//cpu_set_irq_line(1, IRQ_LINE_NMI, PULSE_LINE);
+		/*soundlatch_w(0,data&0xff);*/
+		/*cpu_set_irq_line(1, IRQ_LINE_NMI, PULSE_LINE);*/
 	}
 }
 
@@ -103,7 +103,7 @@ static READ16_HANDLER( sshangha_protection16_r )
 		case 0x0ac >> 1: /* DIPS */
 			return (readinputport(3) + (readinputport(4) << 8));
 
-		// Protection TODO
+		/* Protection TODO*/
 	}
 
 	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n",activecpu_get_pc(),offset<<1);
@@ -149,7 +149,7 @@ static MEMORY_READ16_START( sshangha_readmem )
 	{ 0x000000, 0x03ffff, MRA16_ROM },
 
 	{ 0x084000, 0x0847ff, sshanghb_protection16_r },
-	{ 0x101000, 0x101001, deco_71_r },//bootleg hack
+	{ 0x101000, 0x101001, deco_71_r },/*bootleg hack*/
 
 	{ 0x200000, 0x207fff, MRA16_RAM },
 	{ 0x340000, 0x340fff, MRA16_RAM },
@@ -188,7 +188,7 @@ static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0xc000, 0xc000, YM2203_status_port_0_r },
 	{ 0xf800, 0xffff, MRA_RAM },
-//	{ 0xf800, 0xf800, soundlatch_r },
+/*	{ 0xf800, 0xf800, soundlatch_r },*/
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
@@ -206,9 +206,9 @@ INPUT_PORTS_START( sshangha )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	// "Pick Tile"
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	// "Cancel"
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )	// "Help"
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	/* "Pick Tile"*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	/* "Cancel"*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )	/* "Help"*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
 
 	PORT_START	/* Player 2 controls (0xfec046.b) */
@@ -216,9 +216,9 @@ INPUT_PORTS_START( sshangha )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	// "Pick Tile"
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	// "Cancel"
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )	// "Help"
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	/* "Pick Tile"*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	/* "Cancel"*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )	/* "Help"*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
 	PORT_START	/* Credits */
@@ -234,14 +234,14 @@ INPUT_PORTS_START( sshangha )
 	/* Dips seem inverted with respect to other Deco games */
 
 	PORT_START	/* Dip switch bank 1 (0xfec04a.b, inverted bits order) */
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )	// To be confirmed
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )	/* To be confirmed*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x20, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x10, 0x10, "Coin Mode" )			// Check code at 0x0010f2
+	PORT_DIPNAME( 0x10, 0x10, "Coin Mode" )			/* Check code at 0x0010f2*/
 	PORT_DIPSETTING(    0x10, "Mode 1" )
 	PORT_DIPSETTING(    0x00, "Mode 2" )
 	/* Settings for "Mode 1" */
@@ -277,7 +277,7 @@ INPUT_PORTS_START( sshangha )
 #if SSHANGHA_HACK
 	PORT_DIPNAME( 0x20, 0x20, "Debug Mode" )
 #else
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// See notes
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		/* See notes*/
 #endif
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )

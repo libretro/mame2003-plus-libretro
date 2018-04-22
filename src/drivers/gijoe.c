@@ -166,18 +166,18 @@ static void dmaend_callback(int data)
 
 static INTERRUPT_GEN( gijoe_interrupt )
 {
-	// global interrupt masking (*this game only)
+	/* global interrupt masking (*this game only)*/
 	if (!K056832_is_IRQ_enabled(0)) return;
 
 	if (K053246_is_IRQ_enabled())
 	{
 		gijoe_objdma();
 
-		// 42.7us(clr) + 341.3us(xfer) delay at 6Mhz dotclock
+		/* 42.7us(clr) + 341.3us(xfer) delay at 6Mhz dotclock*/
 		timer_adjust(dmadelay_timer, TIME_IN_USEC(JOE_DMADELAY), 0, 0);
 	}
 
-	// trigger V-blank interrupt
+	/* trigger V-blank interrupt*/
 	if (cur_control2 & 0x0080)
 		cpu_set_irq_line(0, 5, HOLD_LINE);
 }
@@ -210,14 +210,14 @@ static void sound_nmi(void)
 
 static MEMORY_READ16_START( readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },
-	{ 0x100000, 0x100fff, MRA16_RAM },			// Sprites
-	{ 0x120000, 0x121fff, K056832_ram_word_r },	// Graphic planes
-	{ 0x122000, 0x123fff, K056832_ram_word_r },	// Graphic planes mirror read
-	{ 0x130000, 0x131fff, K056832_rom_word_r },	// Passthrough to tile roms
-	{ 0x180000, 0x18ffff, MRA16_RAM },			// Main RAM.  Spec. 180000-1803ff, 180400-187fff
+	{ 0x100000, 0x100fff, MRA16_RAM },			/* Sprites*/
+	{ 0x120000, 0x121fff, K056832_ram_word_r },	/* Graphic planes*/
+	{ 0x122000, 0x123fff, K056832_ram_word_r },	/* Graphic planes mirror read*/
+	{ 0x130000, 0x131fff, K056832_rom_word_r },	/* Passthrough to tile roms*/
+	{ 0x180000, 0x18ffff, MRA16_RAM },			/* Main RAM.  Spec. 180000-1803ff, 180400-187fff*/
 	{ 0x190000, 0x190fff, MRA16_RAM },
 	{ 0x1c0014, 0x1c0015, sound_status_r },
-	{ 0x1c0000, 0x1c001f, MRA16_RAM },			// sound regs read fall through
+	{ 0x1c0000, 0x1c001f, MRA16_RAM },			/* sound regs read fall through*/
 	{ 0x1e0000, 0x1e0001, input_port_2_word_r },
 	{ 0x1e0002, 0x1e0003, input_port_3_word_r },
 	{ 0x1e4000, 0x1e4001, input_port_1_word_r },
@@ -239,14 +239,14 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0x120000, 0x121fff, K056832_ram_word_w },
 	{ 0x122000, 0x123fff, K056832_ram_word_w },
 	{ 0x130000, 0x131fff, MWA16_ROM },
-	{ 0x160000, 0x160007, K056832_b_word_w },	// VSCCS (board dependent)
-	{ 0x170000, 0x170001, MWA16_NOP },			// Watchdog
+	{ 0x160000, 0x160007, K056832_b_word_w },	/* VSCCS (board dependent)*/
+	{ 0x170000, 0x170001, MWA16_NOP },			/* Watchdog*/
 	{ 0x180000, 0x18ffff, MWA16_RAM, &gijoe_workram },
 	{ 0x190000, 0x190fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
 	{ 0x1a0000, 0x1a001f, K053251_lsb_w },
 	{ 0x1b0000, 0x1b003f, K056832_word_w },
 	{ 0x1c000c, 0x1c000d, sound_cmd_w },
-	{ 0x1c0000, 0x1c001f, MWA16_RAM },			// sound regs write fall through
+	{ 0x1c0000, 0x1c001f, MWA16_RAM },			/* sound regs write fall through*/
 	{ 0x1d0000, 0x1d0001, sound_irq_w },
 	{ 0x1e8000, 0x1e8001, control2_w },
 MEMORY_END
@@ -271,8 +271,8 @@ INPUT_PORTS_START( gijoe )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW,  IPT_START2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW,  IPT_START3 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW,  IPT_START4 )
-	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_SPECIAL )  // EEPROM data
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW,  IPT_SPECIAL )  // EEPROM ready (always 1)
+	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_SPECIAL )  /* EEPROM data*/
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW,  IPT_SPECIAL )  /* EEPROM ready (always 1)*/
 	PORT_BITX(0x0800, IP_ACTIVE_LOW,  IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 
 	PORT_START

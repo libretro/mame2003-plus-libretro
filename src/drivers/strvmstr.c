@@ -123,11 +123,11 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x87ff, MWA_RAM, &generic_nvram, &generic_nvram_size },
 	{ 0x9000, 0x9000, strvmstr_control_w },
-	{ 0x9800, 0x9800, MWA_NOP }, //always 0
-	{ 0xa000, 0xa000, a000_w }, //bit 8 and 7 always actived? bit 6 actived in message edit (c0, e0, df)
+	{ 0x9800, 0x9800, MWA_NOP }, /*always 0*/
+	{ 0xa000, 0xa000, a000_w }, /*bit 8 and 7 always actived? bit 6 actived in message edit (c0, e0, df)*/
 	{ 0xb000, 0xb000, b000_w },
-	{ 0xb800, 0xb800, b800_w }, //80, 83, 84, 86, 98, 94, 81, e0, a0
-	{ 0xb801, 0xb801, MWA_NOP }, //always 0
+	{ 0xb800, 0xb800, b800_w }, /*80, 83, 84, 86, 98, 94, 81, e0, a0*/
+	{ 0xb801, 0xb801, MWA_NOP }, /*always 0*/
 	{ 0xc000, 0xc7ff, strvmstr_fg_w, &fg_videoram },
 	{ 0xe000, 0xe7ff, strvmstr_bg_w, &bg_videoram },	
 MEMORY_END
@@ -267,7 +267,7 @@ static INTERRUPT_GEN( strvmstr_interrupt )
 #define CLOCK 12000000/4-50000
 
 static MACHINE_DRIVER_START( strvmstr )
-	MDRV_CPU_ADD(Z80,CLOCK) //should be ok, it gives the 300 interrupts expected
+	MDRV_CPU_ADD(Z80,CLOCK) /*should be ok, it gives the 300 interrupts expected*/
 	MDRV_CPU_FLAGS(CPU_16BIT_PORT)
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_PORTS(readport,0)

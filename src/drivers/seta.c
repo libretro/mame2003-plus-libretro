@@ -1096,10 +1096,10 @@ static unsigned char *sharedram;
 	timer(uPD71054) struct
 ------------------------------*/
 static struct st_chip {
-	void			*timer[3];			// Timer
-	unsigned short	max[3];				// Max counter
-	unsigned short	write_select;		// Max counter write select
-	unsigned char	reg[4];				//
+	void			*timer[3];			/* Timer*/
+	unsigned short	max[3];				/* Max counter*/
+	unsigned short	write_select;		/* Max counter write select*/
+	unsigned char	reg[4];				/**/
 } uPD71054;
 
 /*------------------------------
@@ -1201,7 +1201,7 @@ WRITE16_HANDLER( timer_regs_w )
 		break;
 	}
 }
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 
 
@@ -1241,13 +1241,13 @@ static void utoukond_ym3438_interrupt(int linestate)
 static struct YM2612interface utoukond_ym3438_intf =
 {
 	1,
-	6000000,	// ?
+	6000000,	/* ?*/
 	{ YM3012_VOL(30,MIXER_PAN_LEFT,30,MIXER_PAN_RIGHT) },
-	{ 0 },		// port I/O
+	{ 0 },		/* port I/O*/
 	{ 0 },
 	{ 0 },
 	{ 0 },
-	{ utoukond_ym3438_interrupt }	// IRQ handler
+	{ utoukond_ym3438_interrupt }	/* IRQ handler*/
 };
 
 /***************************************************************************
@@ -1273,7 +1273,7 @@ READ16_HANDLER( mirror_ram_r )
 WRITE16_HANDLER( mirror_ram_w )
 {
 	COMBINE_DATA(&mirror_ram[offset]);
-//	logerror("PC %06X - Mirror RAM Written: %04X <- %04X\n", activecpu_get_pc(), offset*2, data);
+/*	logerror("PC %06X - Mirror RAM Written: %04X <- %04X\n", activecpu_get_pc(), offset*2, data);*/
 }
 
 
@@ -1312,7 +1312,7 @@ static WRITE16_HANDLER( sub_ctrl_w )
 
 	switch(offset)
 	{
-		case 0/2:	// bit 0: reset sub cpu?
+		case 0/2:	/* bit 0: reset sub cpu?*/
 			if (ACCESSING_LSB)
 			{
 				if ( !(old_data&1) && (data&1) )
@@ -1321,14 +1321,14 @@ static WRITE16_HANDLER( sub_ctrl_w )
 			}
 			break;
 
-		case 2/2:	// ?
+		case 2/2:	/* ?*/
 			break;
 
-		case 4/2:	// not sure
+		case 4/2:	/* not sure*/
 			if (ACCESSING_LSB)	soundlatch_w(0, data & 0xff);
 			break;
 
-		case 6/2:	// not sure
+		case 6/2:	/* not sure*/
 			if (ACCESSING_LSB)	soundlatch2_w(0, data & 0xff);
 			break;
 	}
@@ -1436,29 +1436,29 @@ VIDEO_EOF( seta_buffer_sprites )
 
 
 static MEMORY_READ16_START( tndrcade_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0x380000, 0x3803ff, MRA16_RAM				},	// Palette
-/**/{ 0x400000, 0x400001, MRA16_RAM				},	// ? $4000
-/**/{ 0x600000, 0x600607, MRA16_RAM				},	// Sprites Y
-	{ 0xa00000, 0xa00fff, sharedram_68000_r		},	// Shared RAM
-	{ 0xc00000, 0xc03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xe00000, 0xe03fff, MRA16_RAM				},	// RAM (Mirrored?)
-	{ 0xffc000, 0xffffff, mirror_ram_r			},	// RAM (Mirrored?)
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x380000, 0x3803ff, MRA16_RAM				},	/* Palette*/
+/**/{ 0x400000, 0x400001, MRA16_RAM				},	/* ? $4000*/
+/**/{ 0x600000, 0x600607, MRA16_RAM				},	/* Sprites Y*/
+	{ 0xa00000, 0xa00fff, sharedram_68000_r		},	/* Shared RAM*/
+	{ 0xc00000, 0xc03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xe00000, 0xe03fff, MRA16_RAM				},	/* RAM (Mirrored?)*/
+	{ 0xffc000, 0xffffff, mirror_ram_r			},	/* RAM (Mirrored?)*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( tndrcade_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x200001, MWA16_NOP						},	// ? 0
-	{ 0x280000, 0x280001, MWA16_NOP						},	// ? 0 / 1 (sub cpu related?)
-	{ 0x300000, 0x300001, MWA16_NOP						},	// ? 0 / 1
-	{ 0x380000, 0x3803ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x400000, 0x400001, MWA16_RAM						},	// ? $4000
-	{ 0x600000, 0x600607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0x800000, 0x800007, sub_ctrl_w					},	// Sub CPU Control?
-	{ 0xa00000, 0xa00fff, sharedram_68000_w				},	// Shared RAM
-	{ 0xc00000, 0xc03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &mirror_ram		},	// RAM (Mirrored?)
-	{ 0xffc000, 0xffffff, mirror_ram_w					},	// RAM (Mirrored?)
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x200001, MWA16_NOP						},	/* ? 0*/
+	{ 0x280000, 0x280001, MWA16_NOP						},	/* ? 0 / 1 (sub cpu related?)*/
+	{ 0x300000, 0x300001, MWA16_NOP						},	/* ? 0 / 1*/
+	{ 0x380000, 0x3803ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x400000, 0x400001, MWA16_RAM						},	/* ? $4000*/
+	{ 0x600000, 0x600607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0x800000, 0x800007, sub_ctrl_w					},	/* Sub CPU Control?*/
+	{ 0xa00000, 0xa00fff, sharedram_68000_w				},	/* Shared RAM*/
+	{ 0xc00000, 0xc03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &mirror_ram		},	/* RAM (Mirrored?)*/
+	{ 0xffc000, 0xffffff, mirror_ram_w					},	/* RAM (Mirrored?)*/
 MEMORY_END
 
 
@@ -1468,35 +1468,35 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( downtown_readmem )
-	{ 0x000000, 0x09ffff, MRA16_ROM				},	// ROM
-	{ 0x100000, 0x103fff, seta_sound_word_r		},	// Sound
-	{ 0x200000, 0x200001, MRA16_NOP				},	// watchdog? (twineagl)
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700000, 0x7003ff, MRA16_RAM				},	// Palette
-	{ 0x900000, 0x901fff, MRA16_RAM				},	// VRAM
-	{ 0x902000, 0x903fff, MRA16_RAM				},	// VRAM
-	{ 0xb00000, 0xb00fff, sharedram_68000_r		},	// Shared RAM
-	{ 0xd00000, 0xd003ff, MRA16_RAM				},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xf00000, 0xffffff, MRA16_RAM				},	// RAM
+	{ 0x000000, 0x09ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x100000, 0x103fff, seta_sound_word_r		},	/* Sound*/
+	{ 0x200000, 0x200001, MRA16_NOP				},	/* watchdog? (twineagl)*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700000, 0x7003ff, MRA16_RAM				},	/* Palette*/
+	{ 0x900000, 0x901fff, MRA16_RAM				},	/* VRAM*/
+	{ 0x902000, 0x903fff, MRA16_RAM				},	/* VRAM*/
+	{ 0xb00000, 0xb00fff, sharedram_68000_r		},	/* Shared RAM*/
+	{ 0xd00000, 0xd003ff, MRA16_RAM				},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xf00000, 0xffffff, MRA16_RAM				},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( downtown_writemem )
-	{ 0x000000, 0x09ffff, MWA16_ROM						},	// ROM
-	{ 0x100000, 0x103fff, seta_sound_word_w				},	// Sound
-	{ 0x200000, 0x200001, MWA16_NOP						},	// watchdog?
-	{ 0x300000, 0x300001, MWA16_NOP 					},	// IRQ enable/acknowledge?
-	{ 0x400000, 0x400007, twineagl_tilebank_w			},	// special tile banking to animate water in twineagl
-	{ 0x500000, 0x500001, MWA16_NOP						},	// ?
-	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x800000, 0x800005, MWA16_RAM, &seta_vctrl_0		},	// VRAM Ctrl
-	{ 0x900000, 0x903fff, seta_vram_0_w, &seta_vram_0	},	// VRAM
-	{ 0xa00000, 0xa00007, sub_ctrl_w					},	// Sub CPU Control?
-	{ 0xb00000, 0xb00fff, sharedram_68000_w				},	// Shared RAM
-	{ 0xc00000, 0xc00001, MWA16_RAM						},	// ? $4000
-	{ 0xd00000, 0xd00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xf00000, 0xffffff, MWA16_RAM						},	// RAM
+	{ 0x000000, 0x09ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x100000, 0x103fff, seta_sound_word_w				},	/* Sound*/
+	{ 0x200000, 0x200001, MWA16_NOP						},	/* watchdog?*/
+	{ 0x300000, 0x300001, MWA16_NOP 					},	/* IRQ enable/acknowledge?*/
+	{ 0x400000, 0x400007, twineagl_tilebank_w			},	/* special tile banking to animate water in twineagl*/
+	{ 0x500000, 0x500001, MWA16_NOP						},	/* ?*/
+	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x800000, 0x800005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM Ctrl*/
+	{ 0x900000, 0x903fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM*/
+	{ 0xa00000, 0xa00007, sub_ctrl_w					},	/* Sub CPU Control?*/
+	{ 0xb00000, 0xb00fff, sharedram_68000_w				},	/* Shared RAM*/
+	{ 0xc00000, 0xc00001, MWA16_RAM						},	/* ? $4000*/
+	{ 0xd00000, 0xd00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xf00000, 0xffffff, MWA16_RAM						},	/* RAM*/
 MEMORY_END
 
 
@@ -1506,21 +1506,21 @@ MEMORY_END
 
 READ16_HANDLER ( calibr50_ip_r )
 {
-	int dir1 = readinputport(4) & 0xfff;	// analog port
-	int dir2 = readinputport(5) & 0xfff;	// analog port
+	int dir1 = readinputport(4) & 0xfff;	/* analog port*/
+	int dir2 = readinputport(5) & 0xfff;	/* analog port*/
 
 	switch (offset)
 	{
-		case 0x00/2:	return readinputport(0);	// p1
-		case 0x02/2:	return readinputport(1);	// p2
+		case 0x00/2:	return readinputport(0);	/* p1*/
+		case 0x02/2:	return readinputport(1);	/* p2*/
 
-		case 0x08/2:	return readinputport(2);	// Coins
+		case 0x08/2:	return readinputport(2);	/* Coins*/
 
-		case 0x10/2:	return (dir1&0xff);			// lower 8 bits of p1 rotation
-		case 0x12/2:	return (dir1>>8);			// upper 4 bits of p1 rotation
-		case 0x14/2:	return (dir2&0xff);			// lower 8 bits of p2 rotation
-		case 0x16/2:	return (dir2>>8);			// upper 4 bits of p2 rotation
-		case 0x18/2:	return 0xffff;				// ? (value's read but not used)
+		case 0x10/2:	return (dir1&0xff);			/* lower 8 bits of p1 rotation*/
+		case 0x12/2:	return (dir1>>8);			/* upper 4 bits of p1 rotation*/
+		case 0x14/2:	return (dir2&0xff);			/* lower 8 bits of p2 rotation*/
+		case 0x16/2:	return (dir2>>8);			/* upper 4 bits of p2 rotation*/
+		case 0x18/2:	return 0xffff;				/* ? (value's read but not used)*/
 		default:
 			logerror("PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
 			return 0;
@@ -1533,43 +1533,43 @@ WRITE16_HANDLER( calibr50_soundlatch_w )
 	{
 		soundlatch_word_w(0,data,mem_mask);
 		cpu_set_nmi_line(1,PULSE_LINE);
-		cpu_spinuntil_time(TIME_IN_USEC(50));	// Allow the other cpu to reply
+		cpu_spinuntil_time(TIME_IN_USEC(50));	/* Allow the other cpu to reply*/
 	}
 }
 
 static MEMORY_READ16_START( calibr50_readmem )
-	{ 0x000000, 0x09ffff, MRA16_ROM				},	// ROM
-	{ 0xff0000, 0xffffff, MRA16_RAM				},	// RAM
-	{ 0x100000, 0x100007, MRA16_NOP				},	// ? (same as a00010-a00017?)
-	{ 0x200000, 0x200fff, MRA16_RAM				},	// NVRAM
-	{ 0x300000, 0x300001, MRA16_NOP				},	// ? (value's read but not used)
-	{ 0x400000, 0x400001, watchdog_reset16_r	},	// Watchdog
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700000, 0x7003ff, MRA16_RAM				},	// Palette
-	{ 0x900000, 0x901fff, MRA16_RAM				},	// VRAM
-	{ 0x902000, 0x903fff, MRA16_RAM				},	// VRAM
-	{ 0x904000, 0x904fff, MRA16_RAM				},	//
-	{ 0xa00000, 0xa00019, calibr50_ip_r			},	// Input Ports
-/**/{ 0xd00000, 0xd00607, MRA16_RAM				},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xb00000, 0xb00001, soundlatch2_word_r	},	// From Sub CPU
-/**/{ 0xc00000, 0xc00001, MRA16_RAM				},	// ? $4000
+	{ 0x000000, 0x09ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xff0000, 0xffffff, MRA16_RAM				},	/* RAM*/
+	{ 0x100000, 0x100007, MRA16_NOP				},	/* ? (same as a00010-a00017?)*/
+	{ 0x200000, 0x200fff, MRA16_RAM				},	/* NVRAM*/
+	{ 0x300000, 0x300001, MRA16_NOP				},	/* ? (value's read but not used)*/
+	{ 0x400000, 0x400001, watchdog_reset16_r	},	/* Watchdog*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700000, 0x7003ff, MRA16_RAM				},	/* Palette*/
+	{ 0x900000, 0x901fff, MRA16_RAM				},	/* VRAM*/
+	{ 0x902000, 0x903fff, MRA16_RAM				},	/* VRAM*/
+	{ 0x904000, 0x904fff, MRA16_RAM				},	/**/
+	{ 0xa00000, 0xa00019, calibr50_ip_r			},	/* Input Ports*/
+/**/{ 0xd00000, 0xd00607, MRA16_RAM				},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xb00000, 0xb00001, soundlatch2_word_r	},	/* From Sub CPU*/
+/**/{ 0xc00000, 0xc00001, MRA16_RAM				},	/* ? $4000*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( calibr50_writemem )
-	{ 0x000000, 0x09ffff, MWA16_ROM						},	// ROM
-	{ 0xff0000, 0xffffff, MWA16_RAM						},	// RAM
-	{ 0x200000, 0x200fff, MWA16_RAM						},	// NVRAM
-	{ 0x300000, 0x300001, MWA16_NOP						},	// ? (random value)
-	{ 0x500000, 0x500001, MWA16_NOP						},	// ?
-	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x800000, 0x800005, MWA16_RAM, &seta_vctrl_0		},	// VRAM Ctrl
-	{ 0x900000, 0x903fff, seta_vram_0_w, &seta_vram_0	},	// VRAM
-	{ 0x904000, 0x904fff, MWA16_RAM						},	//
-	{ 0xd00000, 0xd00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xb00000, 0xb00001, calibr50_soundlatch_w			},	// To Sub CPU
-	{ 0xc00000, 0xc00001, MWA16_RAM						},	// ? $4000
+	{ 0x000000, 0x09ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xff0000, 0xffffff, MWA16_RAM						},	/* RAM*/
+	{ 0x200000, 0x200fff, MWA16_RAM						},	/* NVRAM*/
+	{ 0x300000, 0x300001, MWA16_NOP						},	/* ? (random value)*/
+	{ 0x500000, 0x500001, MWA16_NOP						},	/* ?*/
+	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x800000, 0x800005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM Ctrl*/
+	{ 0x900000, 0x903fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM*/
+	{ 0x904000, 0x904fff, MWA16_RAM						},	/**/
+	{ 0xd00000, 0xd00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xb00000, 0xb00001, calibr50_soundlatch_w			},	/* To Sub CPU*/
+	{ 0xc00000, 0xc00001, MWA16_RAM						},	/* ? $4000*/
 MEMORY_END
 
 
@@ -1626,39 +1626,39 @@ WRITE16_HANDLER( usclssic_lockout_w )
 
 
 static MEMORY_READ16_START( usclssic_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM					},	// ROM
-	{ 0xff0000, 0xffffff, MRA16_RAM					},	// RAM
-	{ 0x800000, 0x800607, MRA16_RAM					},	// Sprites Y
-/**/{ 0x900000, 0x900001, MRA16_RAM					},	// ?
-	{ 0xa00000, 0xa00005, MRA16_RAM					},	// VRAM Ctrl
-/**/{ 0xb00000, 0xb003ff, MRA16_RAM					},	// Palette
-	{ 0xb40000, 0xb40003, usclssic_trackball_x_r	},	// TrackBall X
-	{ 0xb40004, 0xb40007, usclssic_trackball_y_r	},	// TrackBall Y + Buttons
-	{ 0xb40010, 0xb40011, input_port_2_word_r		},	// Coins
-	{ 0xb40018, 0xb4001f, usclssic_dsw_r			},	// 2 DSWs
-	{ 0xb80000, 0xb80001, MRA16_NOP					},	// watchdog (value is discarded)?
-	{ 0xc00000, 0xc03fff, MRA16_RAM					},	// Sprites Code + X + Attr
-	{ 0xd00000, 0xd01fff, MRA16_RAM					},	// VRAM
-	{ 0xd02000, 0xd03fff, MRA16_RAM					},	// VRAM
-	{ 0xd04000, 0xd04fff, MRA16_RAM					},	//
-	{ 0xe00000, 0xe00fff, MRA16_RAM					},	// NVRAM? (odd bytes)
+	{ 0x000000, 0x07ffff, MRA16_ROM					},	/* ROM*/
+	{ 0xff0000, 0xffffff, MRA16_RAM					},	/* RAM*/
+	{ 0x800000, 0x800607, MRA16_RAM					},	/* Sprites Y*/
+/**/{ 0x900000, 0x900001, MRA16_RAM					},	/* ?*/
+	{ 0xa00000, 0xa00005, MRA16_RAM					},	/* VRAM Ctrl*/
+/**/{ 0xb00000, 0xb003ff, MRA16_RAM					},	/* Palette*/
+	{ 0xb40000, 0xb40003, usclssic_trackball_x_r	},	/* TrackBall X*/
+	{ 0xb40004, 0xb40007, usclssic_trackball_y_r	},	/* TrackBall Y + Buttons*/
+	{ 0xb40010, 0xb40011, input_port_2_word_r		},	/* Coins*/
+	{ 0xb40018, 0xb4001f, usclssic_dsw_r			},	/* 2 DSWs*/
+	{ 0xb80000, 0xb80001, MRA16_NOP					},	/* watchdog (value is discarded)?*/
+	{ 0xc00000, 0xc03fff, MRA16_RAM					},	/* Sprites Code + X + Attr*/
+	{ 0xd00000, 0xd01fff, MRA16_RAM					},	/* VRAM*/
+	{ 0xd02000, 0xd03fff, MRA16_RAM					},	/* VRAM*/
+	{ 0xd04000, 0xd04fff, MRA16_RAM					},	/**/
+	{ 0xe00000, 0xe00fff, MRA16_RAM					},	/* NVRAM? (odd bytes)*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( usclssic_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0xff0000, 0xffffff, MWA16_RAM						},	// RAM
-	{ 0x800000, 0x800607, MWA16_RAM , &spriteram16		},	// Sprites Y
-	{ 0x900000, 0x900001, MWA16_RAM						},	// ? $4000
-	{ 0xa00000, 0xa00005, MWA16_RAM, &seta_vctrl_0		},	// VRAM Ctrl
-	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0xb40000, 0xb40001, usclssic_lockout_w			},	// Coin Lockout + Tiles Banking
-	{ 0xb40010, 0xb40011, calibr50_soundlatch_w			},	// To Sub CPU
-	{ 0xb40018, 0xb40019, watchdog_reset16_w			},	// Watchdog
-	{ 0xb4000a, 0xb4000b, MWA16_NOP						},	// ? (value's not important. In lev2&6)
-	{ 0xc00000, 0xc03fff, MWA16_RAM , &spriteram16_2	},	// Sprites Code + X + Attr
-	{ 0xd00000, 0xd03fff, seta_vram_0_w, &seta_vram_0	},	// VRAM
-	{ 0xd04000, 0xd04fff, MWA16_RAM						},	//
-	{ 0xe00000, 0xe00fff, MWA16_RAM						},	// NVRAM? (odd bytes)
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xff0000, 0xffffff, MWA16_RAM						},	/* RAM*/
+	{ 0x800000, 0x800607, MWA16_RAM , &spriteram16		},	/* Sprites Y*/
+	{ 0x900000, 0x900001, MWA16_RAM						},	/* ? $4000*/
+	{ 0xa00000, 0xa00005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM Ctrl*/
+	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0xb40000, 0xb40001, usclssic_lockout_w			},	/* Coin Lockout + Tiles Banking*/
+	{ 0xb40010, 0xb40011, calibr50_soundlatch_w			},	/* To Sub CPU*/
+	{ 0xb40018, 0xb40019, watchdog_reset16_w			},	/* Watchdog*/
+	{ 0xb4000a, 0xb4000b, MWA16_NOP						},	/* ? (value's not important. In lev2&6)*/
+	{ 0xc00000, 0xc03fff, MWA16_RAM , &spriteram16_2	},	/* Sprites Code + X + Attr*/
+	{ 0xd00000, 0xd03fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM*/
+	{ 0xd04000, 0xd04fff, MWA16_RAM						},	/**/
+	{ 0xe00000, 0xe00fff, MWA16_RAM						},	/* NVRAM? (odd bytes)*/
 MEMORY_END
 
 
@@ -1668,30 +1668,30 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( atehate_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM				},	// ROM
-	{ 0x900000, 0x9fffff, MRA16_RAM				},	// RAM
-	{ 0x100000, 0x103fff, seta_sound_word_r		},	// Sound
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700000, 0x7003ff, MRA16_RAM				},	// Palette
-	{ 0xa00000, 0xa00607, MRA16_RAM				},	// Sprites Y
-	{ 0xb00000, 0xb00001, input_port_0_word_r	},	// P1
-	{ 0xb00002, 0xb00003, input_port_1_word_r	},	// P2
-	{ 0xb00004, 0xb00005, input_port_2_word_r	},	// Coins
-/**/{ 0xc00000, 0xc00001, MRA16_RAM				},	// ? 0x4000
-	{ 0xe00000, 0xe03fff, MRA16_RAM				},	// Sprites Code + X + Attr
+	{ 0x000000, 0x0fffff, MRA16_ROM				},	/* ROM*/
+	{ 0x900000, 0x9fffff, MRA16_RAM				},	/* RAM*/
+	{ 0x100000, 0x103fff, seta_sound_word_r		},	/* Sound*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700000, 0x7003ff, MRA16_RAM				},	/* Palette*/
+	{ 0xa00000, 0xa00607, MRA16_RAM				},	/* Sprites Y*/
+	{ 0xb00000, 0xb00001, input_port_0_word_r	},	/* P1*/
+	{ 0xb00002, 0xb00003, input_port_1_word_r	},	/* P2*/
+	{ 0xb00004, 0xb00005, input_port_2_word_r	},	/* Coins*/
+/**/{ 0xc00000, 0xc00001, MRA16_RAM				},	/* ? 0x4000*/
+	{ 0xe00000, 0xe03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( atehate_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM					},	// ROM
-	{ 0x900000, 0x9fffff, MWA16_RAM					},	// RAM
-	{ 0x100000, 0x103fff, seta_sound_word_w			},	// Sound
-	{ 0x200000, 0x200001, MWA16_NOP					},	// ? watchdog ?
-	{ 0x300000, 0x300001, MWA16_NOP					},	// ? 0 (irq ack lev 2?)
-	{ 0x500000, 0x500001, MWA16_NOP					},	// ? (end of lev 1: bit 4 goes 1,0,1)
-	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16	},	// Sprites Y
-	{ 0xc00000, 0xc00001, MWA16_RAM					},	// ? 0x4000
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	// Sprites Code + X + Attr
+	{ 0x000000, 0x0fffff, MWA16_ROM					},	/* ROM*/
+	{ 0x900000, 0x9fffff, MWA16_RAM					},	/* RAM*/
+	{ 0x100000, 0x103fff, seta_sound_word_w			},	/* Sound*/
+	{ 0x200000, 0x200001, MWA16_NOP					},	/* ? watchdog ?*/
+	{ 0x300000, 0x300001, MWA16_NOP					},	/* ? 0 (irq ack lev 2?)*/
+	{ 0x500000, 0x500001, MWA16_NOP					},	/* ? (end of lev 1: bit 4 goes 1,0,1)*/
+	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16	},	/* Sprites Y*/
+	{ 0xc00000, 0xc00001, MWA16_RAM					},	/* ? 0x4000*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	/* Sprites Code + X + Attr*/
 MEMORY_END
 
 /***************************************************************************
@@ -1699,52 +1699,52 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( blandia_readmem )
-	{ 0x000000, 0x1fffff, MRA16_ROM				},	// ROM (up to 2MB)
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// RAM (main ram for zingzip, wrofaero writes to 20f000-20ffff)
-	{ 0x210000, 0x21ffff, MRA16_RAM				},	// RAM (gundhara)
-	{ 0x300000, 0x30ffff, MRA16_RAM				},	// RAM (wrofaero only?)
-	{ 0x500000, 0x500005, MRA16_RAM				},	// (gundhara)
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700000, 0x7003ff, MRA16_RAM				},	// (rezon,jjsquawk)
-	{ 0x700400, 0x700fff, MRA16_RAM				},	// Palette
-	{ 0x701000, 0x70ffff, MRA16_RAM				},	//
-/**/{ 0x800000, 0x800607, MRA16_RAM				},	// Sprites Y
-	{ 0x880000, 0x880001, MRA16_RAM				},	// ? 0xc000
-	{ 0x900000, 0x903fff, MRA16_RAM				},	// Sprites Code + X + Attr
-/**/{ 0xa00000, 0xa00005, MRA16_RAM				},	// VRAM 0&1 Ctrl
-/**/{ 0xa80000, 0xa80005, MRA16_RAM				},	// VRAM 2&3 Ctrl
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// VRAM 0&1
-	{ 0xb04000, 0xb0ffff, MRA16_RAM				},	// (jjsquawk)
-	{ 0xb80000, 0xb83fff, MRA16_RAM				},	// VRAM 2&3
-	{ 0xb84000, 0xb8ffff, MRA16_RAM				},	// (jjsquawk)
-	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	// Sound
+	{ 0x000000, 0x1fffff, MRA16_ROM				},	/* ROM (up to 2MB)*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM (main ram for zingzip, wrofaero writes to 20f000-20ffff)*/
+	{ 0x210000, 0x21ffff, MRA16_RAM				},	/* RAM (gundhara)*/
+	{ 0x300000, 0x30ffff, MRA16_RAM				},	/* RAM (wrofaero only?)*/
+	{ 0x500000, 0x500005, MRA16_RAM				},	/* (gundhara)*/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700000, 0x7003ff, MRA16_RAM				},	/* (rezon,jjsquawk)*/
+	{ 0x700400, 0x700fff, MRA16_RAM				},	/* Palette*/
+	{ 0x701000, 0x70ffff, MRA16_RAM				},	/**/
+/**/{ 0x800000, 0x800607, MRA16_RAM				},	/* Sprites Y*/
+	{ 0x880000, 0x880001, MRA16_RAM				},	/* ? 0xc000*/
+	{ 0x900000, 0x903fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+/**/{ 0xa00000, 0xa00005, MRA16_RAM				},	/* VRAM 0&1 Ctrl*/
+/**/{ 0xa80000, 0xa80005, MRA16_RAM				},	/* VRAM 2&3 Ctrl*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* VRAM 0&1*/
+	{ 0xb04000, 0xb0ffff, MRA16_RAM				},	/* (jjsquawk)*/
+	{ 0xb80000, 0xb83fff, MRA16_RAM				},	/* VRAM 2&3*/
+	{ 0xb84000, 0xb8ffff, MRA16_RAM				},	/* (jjsquawk)*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( blandia_writemem )
-	{ 0x000000, 0x1fffff, MWA16_ROM						},	// ROM (up to 2MB)
-	{ 0x200000, 0x20ffff, MWA16_RAM						},	// RAM
-	{ 0x210000, 0x21ffff, MWA16_RAM						},	// RAM (gundhara)
-	{ 0x300000, 0x30ffff, MWA16_RAM						},	// RAM (wrofaero only?)
-	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	// Coin Lockout + Video Registers
-	{ 0x700000, 0x7003ff, MWA16_RAM						},	// (rezon,jjsquawk)
-	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x701000, 0x70ffff, MWA16_RAM						},	//
-	{ 0x800000, 0x800607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0x880000, 0x880001, MWA16_RAM						},	// ? 0xc000
-	{ 0x900000, 0x903fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xa00000, 0xa00005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0xa80000, 0xa80005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xb00000, 0xb03fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0xb04000, 0xb0ffff, MWA16_RAM						},	// (jjsquawk)
-	{ 0xb80000, 0xb83fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0xb84000, 0xb8ffff, MWA16_RAM						},	// (jjsquawk)
-	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	// Sound
-	{ 0xd00000, 0xd00007, MWA16_NOP						},	// ?
-	{ 0xe00000, 0xe00001, MWA16_NOP						},	// ? VBlank IRQ Ack
-	{ 0xf00000, 0xf00001, MWA16_NOP						},	// ? Sound  IRQ Ack
+	{ 0x000000, 0x1fffff, MWA16_ROM						},	/* ROM (up to 2MB)*/
+	{ 0x200000, 0x20ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x210000, 0x21ffff, MWA16_RAM						},	/* RAM (gundhara)*/
+	{ 0x300000, 0x30ffff, MWA16_RAM						},	/* RAM (wrofaero only?)*/
+	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	/* Coin Lockout + Video Registers*/
+	{ 0x700000, 0x7003ff, MWA16_RAM						},	/* (rezon,jjsquawk)*/
+	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x701000, 0x70ffff, MWA16_RAM						},	/**/
+	{ 0x800000, 0x800607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0x880000, 0x880001, MWA16_RAM						},	/* ? 0xc000*/
+	{ 0x900000, 0x903fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xa00000, 0xa00005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0xa80000, 0xa80005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xb00000, 0xb03fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0xb04000, 0xb0ffff, MWA16_RAM						},	/* (jjsquawk)*/
+	{ 0xb80000, 0xb83fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0xb84000, 0xb8ffff, MWA16_RAM						},	/* (jjsquawk)*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	/* Sound*/
+	{ 0xd00000, 0xd00007, MWA16_NOP						},	/* ?*/
+	{ 0xe00000, 0xe00001, MWA16_NOP						},	/* ? VBlank IRQ Ack*/
+	{ 0xf00000, 0xf00001, MWA16_NOP						},	/* ? Sound  IRQ Ack*/
 MEMORY_END
 
 
@@ -1754,52 +1754,52 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( blandiap_readmem )
-	{ 0x000000, 0x1fffff, MRA16_ROM				},	// ROM (up to 2MB)
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// RAM (main ram for zingzip, wrofaero writes to 20f000-20ffff)
-	{ 0x210000, 0x21ffff, MRA16_RAM				},	// RAM (gundhara)
-	{ 0x300000, 0x30ffff, MRA16_RAM				},	// RAM (wrofaero only?)
-	{ 0x500000, 0x500005, MRA16_RAM				},	// (gundhara)
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700000, 0x7003ff, MRA16_RAM				},	// (rezon,jjsquawk)
-	{ 0x700400, 0x700fff, MRA16_RAM				},	// Palette
-	{ 0x701000, 0x70ffff, MRA16_RAM				},	//
-	{ 0x800000, 0x803fff, MRA16_RAM				},	// VRAM 0&1
-	{ 0x804000, 0x80ffff, MRA16_RAM				},	// (jjsquawk)
-	{ 0x880000, 0x883fff, MRA16_RAM				},	// VRAM 2&3
-	{ 0x884000, 0x88ffff, MRA16_RAM				},	// (jjsquawk)
-/**/{ 0x900000, 0x900005, MRA16_RAM				},	// VRAM 0&1 Ctrl
-/**/{ 0x980000, 0x980005, MRA16_RAM				},	// VRAM 2&3 Ctrl
-/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	// Sprites Y
-/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	// Sound
+	{ 0x000000, 0x1fffff, MRA16_ROM				},	/* ROM (up to 2MB)*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM (main ram for zingzip, wrofaero writes to 20f000-20ffff)*/
+	{ 0x210000, 0x21ffff, MRA16_RAM				},	/* RAM (gundhara)*/
+	{ 0x300000, 0x30ffff, MRA16_RAM				},	/* RAM (wrofaero only?)*/
+	{ 0x500000, 0x500005, MRA16_RAM				},	/* (gundhara)*/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700000, 0x7003ff, MRA16_RAM				},	/* (rezon,jjsquawk)*/
+	{ 0x700400, 0x700fff, MRA16_RAM				},	/* Palette*/
+	{ 0x701000, 0x70ffff, MRA16_RAM				},	/**/
+	{ 0x800000, 0x803fff, MRA16_RAM				},	/* VRAM 0&1*/
+	{ 0x804000, 0x80ffff, MRA16_RAM				},	/* (jjsquawk)*/
+	{ 0x880000, 0x883fff, MRA16_RAM				},	/* VRAM 2&3*/
+	{ 0x884000, 0x88ffff, MRA16_RAM				},	/* (jjsquawk)*/
+/**/{ 0x900000, 0x900005, MRA16_RAM				},	/* VRAM 0&1 Ctrl*/
+/**/{ 0x980000, 0x980005, MRA16_RAM				},	/* VRAM 2&3 Ctrl*/
+/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	/* Sprites Y*/
+/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( blandiap_writemem )
-	{ 0x000000, 0x1fffff, MWA16_ROM						},	// ROM (up to 2MB)
-	{ 0x200000, 0x20ffff, MWA16_RAM						},	// RAM
-	{ 0x210000, 0x21ffff, MWA16_RAM						},	// RAM (gundhara)
-	{ 0x300000, 0x30ffff, MWA16_RAM						},	// RAM (wrofaero only?)
-	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	// Coin Lockout + Video Registers
-	{ 0x700000, 0x7003ff, MWA16_RAM						},	// (rezon,jjsquawk)
-	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x701000, 0x70ffff, MWA16_RAM						},	//
-	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0x804000, 0x80ffff, MWA16_RAM						},	// (jjsquawk)
-	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0x884000, 0x88ffff, MWA16_RAM						},	// (jjsquawk)
-	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xa80000, 0xa80001, MWA16_RAM						},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	// Sound
-	{ 0xd00000, 0xd00007, MWA16_NOP						},	// ?
-	{ 0xe00000, 0xe00001, MWA16_NOP						},	// ? VBlank IRQ Ack
-	{ 0xf00000, 0xf00001, MWA16_NOP						},	// ? Sound  IRQ Ack
+	{ 0x000000, 0x1fffff, MWA16_ROM						},	/* ROM (up to 2MB)*/
+	{ 0x200000, 0x20ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x210000, 0x21ffff, MWA16_RAM						},	/* RAM (gundhara)*/
+	{ 0x300000, 0x30ffff, MWA16_RAM						},	/* RAM (wrofaero only?)*/
+	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	/* Coin Lockout + Video Registers*/
+	{ 0x700000, 0x7003ff, MWA16_RAM						},	/* (rezon,jjsquawk)*/
+	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x701000, 0x70ffff, MWA16_RAM						},	/**/
+	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0x804000, 0x80ffff, MWA16_RAM						},	/* (jjsquawk)*/
+	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0x884000, 0x88ffff, MWA16_RAM						},	/* (jjsquawk)*/
+	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MWA16_RAM						},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	/* Sound*/
+	{ 0xd00000, 0xd00007, MWA16_NOP						},	/* ?*/
+	{ 0xe00000, 0xe00001, MWA16_NOP						},	/* ? VBlank IRQ Ack*/
+	{ 0xf00000, 0xf00001, MWA16_NOP						},	/* ? Sound  IRQ Ack*/
 MEMORY_END
 
 
@@ -1810,37 +1810,37 @@ MEMORY_END
 
 static int gun_input_bit = 0, gun_input_src = 0;
 
-static READ16_HANDLER( zombraid_gun_r ) // Serial interface
+static READ16_HANDLER( zombraid_gun_r ) /* Serial interface*/
 {
-	int data = readinputport(4 + gun_input_src); // Input Ports 5-8
+	int data = readinputport(4 + gun_input_src); /* Input Ports 5-8*/
 	return (data >> gun_input_bit) & 1;
 }
 
-// Bit 0 is clock, 1 is data, 2 is reset
+/* Bit 0 is clock, 1 is data, 2 is reset*/
 static WRITE16_HANDLER( zombraid_gun_w )
 {
 	static int bit_count = 0, old_clock = 0;
 
-	if(data&4) { bit_count = 0; return; } // Reset
+	if(data&4) { bit_count = 0; return; } /* Reset*/
 
-	if((data&1) == old_clock) return; // No change
+	if((data&1) == old_clock) return; /* No change*/
 
-	if(old_clock == 0) // Rising edge
+	if(old_clock == 0) /* Rising edge*/
 	{
 		switch (bit_count)
 		{
 			case 0:
-			case 1: // Starting sequence 2,3,2,3. Other inputs?
+			case 1: /* Starting sequence 2,3,2,3. Other inputs?*/
 				break;
-			case 2: // First bit of source
+			case 2: /* First bit of source*/
 				gun_input_src = (gun_input_src&2) | (data>>1);
 				break;
-			case 3: // Second bit of source
+			case 3: /* Second bit of source*/
 				gun_input_src = (gun_input_src&1) | (data&2);
 				break;
 			default:
 				gun_input_bit = bit_count - 4;
-				gun_input_bit = 8 - gun_input_bit; // Reverse order
+				gun_input_bit = 8 - gun_input_bit; /* Reverse order*/
 				break;
 		}
 		bit_count++;
@@ -1850,56 +1850,56 @@ static WRITE16_HANDLER( zombraid_gun_w )
 }
 
 static MEMORY_READ16_START( wrofaero_readmem )
-	{ 0x000000, 0x1fffff, MRA16_ROM				},	// ROM (up to 2MB)
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// RAM (main ram for zingzip, wrofaero writes to 20f000-20ffff)
-	{ 0x210000, 0x21ffff, MRA16_RAM				},	// RAM (gundhara)
-	{ 0x300000, 0x30ffff, MRA16_RAM				},	// RAM (wrofaero only?)
-	{ 0x500000, 0x500005, MRA16_RAM				},	// (gundhara)
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700000, 0x7003ff, MRA16_RAM				},	// (rezon,jjsquawk)
-	{ 0x700400, 0x700fff, MRA16_RAM				},	// Palette
-	{ 0x701000, 0x70ffff, MRA16_RAM				},	//
-	{ 0x800000, 0x803fff, MRA16_RAM				},	// VRAM 0&1
-	{ 0x804000, 0x80ffff, MRA16_RAM				},	// (jjsquawk)
-	{ 0x880000, 0x883fff, MRA16_RAM				},	// VRAM 2&3
-	{ 0x884000, 0x88ffff, MRA16_RAM				},	// (jjsquawk)
-/**/{ 0x900000, 0x900005, MRA16_RAM				},	// VRAM 0&1 Ctrl
-/**/{ 0x980000, 0x980005, MRA16_RAM				},	// VRAM 2&3 Ctrl
-/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	// Sprites Y
-/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	// Sound
+	{ 0x000000, 0x1fffff, MRA16_ROM				},	/* ROM (up to 2MB)*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM (main ram for zingzip, wrofaero writes to 20f000-20ffff)*/
+	{ 0x210000, 0x21ffff, MRA16_RAM				},	/* RAM (gundhara)*/
+	{ 0x300000, 0x30ffff, MRA16_RAM				},	/* RAM (wrofaero only?)*/
+	{ 0x500000, 0x500005, MRA16_RAM				},	/* (gundhara)*/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700000, 0x7003ff, MRA16_RAM				},	/* (rezon,jjsquawk)*/
+	{ 0x700400, 0x700fff, MRA16_RAM				},	/* Palette*/
+	{ 0x701000, 0x70ffff, MRA16_RAM				},	/**/
+	{ 0x800000, 0x803fff, MRA16_RAM				},	/* VRAM 0&1*/
+	{ 0x804000, 0x80ffff, MRA16_RAM				},	/* (jjsquawk)*/
+	{ 0x880000, 0x883fff, MRA16_RAM				},	/* VRAM 2&3*/
+	{ 0x884000, 0x88ffff, MRA16_RAM				},	/* (jjsquawk)*/
+/**/{ 0x900000, 0x900005, MRA16_RAM				},	/* VRAM 0&1 Ctrl*/
+/**/{ 0x980000, 0x980005, MRA16_RAM				},	/* VRAM 2&3 Ctrl*/
+/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	/* Sprites Y*/
+/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( wrofaero_writemem )
-	{ 0x000000, 0x1fffff, MWA16_ROM						},	// ROM (up to 2MB)
-	{ 0x200000, 0x20ffff, MWA16_RAM, &seta_workram		},	// RAM (pointer for zombraid crosshair hack)
-	{ 0x210000, 0x21ffff, MWA16_RAM						},	// RAM (gundhara)
-	{ 0x300000, 0x30ffff, MWA16_RAM						},	// RAM (wrofaero only?)
-	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	// Coin Lockout + Video Registers
-	{ 0x700000, 0x7003ff, MWA16_RAM						},	// (rezon,jjsquawk)
-	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x701000, 0x70ffff, MWA16_RAM						},	//
-	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0x804000, 0x80ffff, MWA16_RAM						},	// (jjsquawk)
-	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0x884000, 0x88ffff, MWA16_RAM						},	// (jjsquawk)
-	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xa80000, 0xa80001, MWA16_RAM						},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	// Sound
+	{ 0x000000, 0x1fffff, MWA16_ROM						},	/* ROM (up to 2MB)*/
+	{ 0x200000, 0x20ffff, MWA16_RAM, &seta_workram		},	/* RAM (pointer for zombraid crosshair hack)*/
+	{ 0x210000, 0x21ffff, MWA16_RAM						},	/* RAM (gundhara)*/
+	{ 0x300000, 0x30ffff, MWA16_RAM						},	/* RAM (wrofaero only?)*/
+	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	/* Coin Lockout + Video Registers*/
+	{ 0x700000, 0x7003ff, MWA16_RAM						},	/* (rezon,jjsquawk)*/
+	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x701000, 0x70ffff, MWA16_RAM						},	/**/
+	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0x804000, 0x80ffff, MWA16_RAM						},	/* (jjsquawk)*/
+	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0x884000, 0x88ffff, MWA16_RAM						},	/* (jjsquawk)*/
+	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MWA16_RAM						},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	/* Sound*/
 #if __uPD71054_TIMER
-	{ 0xd00000, 0xd00007, timer_regs_w					},	// ?
+	{ 0xd00000, 0xd00007, timer_regs_w					},	/* ?*/
 #else
-	{ 0xd00000, 0xd00007, MWA16_NOP						},	// ?
+	{ 0xd00000, 0xd00007, MWA16_NOP						},	/* ?*/
 #endif
-	{ 0xe00000, 0xe00001, MWA16_NOP						},	// ? VBlank IRQ Ack
-	{ 0xf00000, 0xf00001, MWA16_NOP						},	// ? Sound  IRQ Ack
+	{ 0xe00000, 0xe00001, MWA16_NOP						},	/* ? VBlank IRQ Ack*/
+	{ 0xf00000, 0xf00001, MWA16_NOP						},	/* ? Sound  IRQ Ack*/
 MEMORY_END
 
 
@@ -1910,34 +1910,34 @@ MEMORY_END
 
 /* similar to krzybowl */
 static MEMORY_READ16_START( blockcar_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	// ROM
-	{ 0xf00000, 0xf03fff, MRA16_RAM				},	// RAM
-	{ 0xf04000, 0xf041ff, MRA16_RAM				},	// Backup RAM?
-	{ 0xf05000, 0xf050ff, MRA16_RAM				},	// Backup RAM?
-	{ 0x300000, 0x300003, seta_dsw_r			},	// DSW
-	{ 0x500000, 0x500001, input_port_0_word_r	},	// P1
-	{ 0x500002, 0x500003, input_port_1_word_r	},	// P2
-	{ 0x500004, 0x500005, input_port_2_word_r	},	// Coins
-	{ 0xa00000, 0xa03fff, seta_sound_word_r		},	// Sound
-	{ 0xb00000, 0xb003ff, MRA16_RAM				},	// Palette
-	{ 0xc00000, 0xc03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-/**/{ 0xd00000, 0xd00001, MRA16_RAM				},	// ? 0x4000
-/**/{ 0xe00000, 0xe00607, MRA16_RAM				},	// Sprites Y
+	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xf00000, 0xf03fff, MRA16_RAM				},	/* RAM*/
+	{ 0xf04000, 0xf041ff, MRA16_RAM				},	/* Backup RAM?*/
+	{ 0xf05000, 0xf050ff, MRA16_RAM				},	/* Backup RAM?*/
+	{ 0x300000, 0x300003, seta_dsw_r			},	/* DSW*/
+	{ 0x500000, 0x500001, input_port_0_word_r	},	/* P1*/
+	{ 0x500002, 0x500003, input_port_1_word_r	},	/* P2*/
+	{ 0x500004, 0x500005, input_port_2_word_r	},	/* Coins*/
+	{ 0xa00000, 0xa03fff, seta_sound_word_r		},	/* Sound*/
+	{ 0xb00000, 0xb003ff, MRA16_RAM				},	/* Palette*/
+	{ 0xc00000, 0xc03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+/**/{ 0xd00000, 0xd00001, MRA16_RAM				},	/* ? 0x4000*/
+/**/{ 0xe00000, 0xe00607, MRA16_RAM				},	/* Sprites Y*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( blockcar_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM					},	// ROM
-	{ 0xf00000, 0xf03fff, MWA16_RAM					},	// RAM
-	{ 0xf04000, 0xf041ff, MWA16_RAM					},	// Backup RAM?
-	{ 0xf05000, 0xf050ff, MWA16_RAM					},	// Backup RAM?
-	{ 0x100000, 0x100001, MWA16_NOP					},	// ? 1 (start of interrupts, main loop: watchdog?)
-	{ 0x200000, 0x200001, MWA16_NOP					},	// ? 0/1 (IRQ acknowledge?)
-	{ 0x400000, 0x400001, seta_vregs_w, &seta_vregs	},	// Coin Lockout + Sound Enable (bit 4?)
-	{ 0xa00000, 0xa03fff, seta_sound_word_w			},	// Sound
-	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0xc00000, 0xc03fff, MWA16_RAM, &spriteram16_2	},	// Sprites Code + X + Attr
-	{ 0xd00000, 0xd00001, MWA16_RAM					},	// ? 0x4000
-	{ 0xe00000, 0xe00607, MWA16_RAM, &spriteram16	},	// Sprites Y
+	{ 0x000000, 0x03ffff, MWA16_ROM					},	/* ROM*/
+	{ 0xf00000, 0xf03fff, MWA16_RAM					},	/* RAM*/
+	{ 0xf04000, 0xf041ff, MWA16_RAM					},	/* Backup RAM?*/
+	{ 0xf05000, 0xf050ff, MWA16_RAM					},	/* Backup RAM?*/
+	{ 0x100000, 0x100001, MWA16_NOP					},	/* ? 1 (start of interrupts, main loop: watchdog?)*/
+	{ 0x200000, 0x200001, MWA16_NOP					},	/* ? 0/1 (IRQ acknowledge?)*/
+	{ 0x400000, 0x400001, seta_vregs_w, &seta_vregs	},	/* Coin Lockout + Sound Enable (bit 4?)*/
+	{ 0xa00000, 0xa03fff, seta_sound_word_w			},	/* Sound*/
+	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0xc00000, 0xc03fff, MWA16_RAM, &spriteram16_2	},	/* Sprites Code + X + Attr*/
+	{ 0xd00000, 0xd00001, MWA16_RAM					},	/* ? 0x4000*/
+	{ 0xe00000, 0xe00607, MWA16_RAM, &spriteram16	},	/* Sprites Y*/
 MEMORY_END
 
 
@@ -1947,48 +1947,48 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( daioh_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM				},	// ROM
-	{ 0x100000, 0x10ffff, MRA16_RAM				},	// RAM
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x500006, 0x500007, input_port_4_word_r	},	// Buttons 4,5,6
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
+	{ 0x000000, 0x0fffff, MRA16_ROM				},	/* ROM*/
+	{ 0x100000, 0x10ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x500006, 0x500007, input_port_4_word_r	},	/* Buttons 4,5,6*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
 	{ 0x700000, 0x7003ff, MRA16_RAM				},
-	{ 0x700400, 0x700fff, MRA16_RAM				},  // Palette
+	{ 0x700400, 0x700fff, MRA16_RAM				},  /* Palette*/
 	{ 0x701000, 0x70ffff, MRA16_RAM				},
-	{ 0x800000, 0x803fff, MRA16_RAM				},	// VRAM 0&1
-	{ 0x804000, 0x80ffff, MRA16_RAM				},	//
-	{ 0x880000, 0x883fff, MRA16_RAM				},	// VRAM 2&3
-	{ 0x884000, 0x88ffff, MRA16_RAM				},	//
-	{ 0x900000, 0x900005, MRA16_RAM				},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MRA16_RAM				},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MRA16_RAM				},	// Sprites Y
-	{ 0xa80000, 0xa80001, MRA16_RAM				},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xb04000, 0xb13fff, MRA16_RAM				},	//
-	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	// Sound
+	{ 0x800000, 0x803fff, MRA16_RAM				},	/* VRAM 0&1*/
+	{ 0x804000, 0x80ffff, MRA16_RAM				},	/**/
+	{ 0x880000, 0x883fff, MRA16_RAM				},	/* VRAM 2&3*/
+	{ 0x884000, 0x88ffff, MRA16_RAM				},	/**/
+	{ 0x900000, 0x900005, MRA16_RAM				},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MRA16_RAM				},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MRA16_RAM				},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MRA16_RAM				},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xb04000, 0xb13fff, MRA16_RAM				},	/**/
+	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( daioh_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM						},	// ROM
-	{ 0x100000, 0x10ffff, MWA16_RAM						},	// RAM
-	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	// Coin Lockout + Video Registers
+	{ 0x000000, 0x0fffff, MWA16_ROM						},	/* ROM*/
+	{ 0x100000, 0x10ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	/* Coin Lockout + Video Registers*/
 	{ 0x700000, 0x7003ff, MWA16_RAM						},
-	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x701000, 0x70ffff, MWA16_RAM						},	//
-	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0x804000, 0x80ffff, MWA16_RAM						},	//
-	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0x884000, 0x88ffff, MWA16_RAM						},	//
-	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xa80000, 0xa80001, MWA16_RAM						},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xb04000, 0xb13fff, MWA16_RAM						},	//
-	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	// Sound
-	{ 0xe00000, 0xe00001, MWA16_NOP						},	//
+	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x701000, 0x70ffff, MWA16_RAM						},	/**/
+	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0x804000, 0x80ffff, MWA16_RAM						},	/**/
+	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0x884000, 0x88ffff, MWA16_RAM						},	/**/
+	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MWA16_RAM						},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xb04000, 0xb13fff, MWA16_RAM						},	/**/
+	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	/* Sound*/
+	{ 0xe00000, 0xe00001, MWA16_NOP						},	/**/
 MEMORY_END
 
 
@@ -1997,40 +1997,40 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( drgnunit_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0x080000, 0x0bffff, MRA16_RAM				},	// ROM (qzkklgy2)
-	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	// RAM (qzkklogy)
-	{ 0xffc000, 0xffffff, MRA16_RAM				},	// RAM (drgnunit,stg)
-	{ 0x100000, 0x103fff, seta_sound_word_r		},	// Sound
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700000, 0x7003ff, MRA16_RAM				},	// Palette
-	{ 0x900000, 0x901fff, MRA16_RAM				},	// VRAM
-	{ 0x902000, 0x903fff, MRA16_RAM				},	// VRAM
-	{ 0xb00000, 0xb00001, input_port_0_word_r	},	// P1
-	{ 0xb00002, 0xb00003, input_port_1_word_r	},	// P2
-	{ 0xb00004, 0xb00005, input_port_2_word_r	},	// Coins
-	{ 0xb00006, 0xb00007, MRA16_NOP				},	// unused (qzkklogy)
-/**/{ 0xc00000, 0xc00001, MRA16_RAM				},	// ? $4000
-/**/{ 0xd00000, 0xd00607, MRA16_RAM				},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MRA16_RAM				},	// Sprites Code + X + Attr
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x080000, 0x0bffff, MRA16_RAM				},	/* ROM (qzkklgy2)*/
+	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	/* RAM (qzkklogy)*/
+	{ 0xffc000, 0xffffff, MRA16_RAM				},	/* RAM (drgnunit,stg)*/
+	{ 0x100000, 0x103fff, seta_sound_word_r		},	/* Sound*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700000, 0x7003ff, MRA16_RAM				},	/* Palette*/
+	{ 0x900000, 0x901fff, MRA16_RAM				},	/* VRAM*/
+	{ 0x902000, 0x903fff, MRA16_RAM				},	/* VRAM*/
+	{ 0xb00000, 0xb00001, input_port_0_word_r	},	/* P1*/
+	{ 0xb00002, 0xb00003, input_port_1_word_r	},	/* P2*/
+	{ 0xb00004, 0xb00005, input_port_2_word_r	},	/* Coins*/
+	{ 0xb00006, 0xb00007, MRA16_NOP				},	/* unused (qzkklogy)*/
+/**/{ 0xc00000, 0xc00001, MRA16_RAM				},	/* ? $4000*/
+/**/{ 0xd00000, 0xd00607, MRA16_RAM				},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( drgnunit_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x080000, 0x0bffff, MWA16_RAM						},	// ROM (qzkklgy2)
-	{ 0xf00000, 0xf0ffff, MWA16_RAM						},	// RAM (qzkklogy)
-	{ 0xffc000, 0xffffff, MWA16_RAM						},	// RAM (drgnunit,stg)
-	{ 0x100000, 0x103fff, seta_sound_word_w				},	// Sound
-	{ 0x200000, 0x200001, MWA16_NOP						},	// Watchdog
-	{ 0x300000, 0x300001, MWA16_NOP						},	// ? IRQ Ack
-	{ 0x500000, 0x500001, seta_vregs_w, &seta_vregs		},	// Coin Lockout + Video Registers
-	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x800000, 0x800005, MWA16_RAM, &seta_vctrl_0		},	// VRAM Ctrl
-	{ 0x900000, 0x903fff, seta_vram_0_w, &seta_vram_0	},	// VRAM
-	{ 0x904000, 0x90ffff, MWA16_NOP						},	// unused (qzkklogy)
-	{ 0xc00000, 0xc00001, MWA16_RAM						},	// ? $4000
-	{ 0xd00000, 0xd00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x080000, 0x0bffff, MWA16_RAM						},	/* ROM (qzkklgy2)*/
+	{ 0xf00000, 0xf0ffff, MWA16_RAM						},	/* RAM (qzkklogy)*/
+	{ 0xffc000, 0xffffff, MWA16_RAM						},	/* RAM (drgnunit,stg)*/
+	{ 0x100000, 0x103fff, seta_sound_word_w				},	/* Sound*/
+	{ 0x200000, 0x200001, MWA16_NOP						},	/* Watchdog*/
+	{ 0x300000, 0x300001, MWA16_NOP						},	/* ? IRQ Ack*/
+	{ 0x500000, 0x500001, seta_vregs_w, &seta_vregs		},	/* Coin Lockout + Video Registers*/
+	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x800000, 0x800005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM Ctrl*/
+	{ 0x900000, 0x903fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM*/
+	{ 0x904000, 0x90ffff, MWA16_NOP						},	/* unused (qzkklogy)*/
+	{ 0xc00000, 0xc00001, MWA16_RAM						},	/* ? $4000*/
+	{ 0xd00000, 0xd00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
 MEMORY_END
 
 
@@ -2039,52 +2039,52 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( extdwnhl_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM				},	// ROM
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// RAM
-	{ 0x210000, 0x21ffff, MRA16_RAM				},	// RAM
-	{ 0x220000, 0x23ffff, MRA16_RAM				},	// RAM (sokonuke)
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x400008, 0x40000b, seta_dsw_r			},	// DSW
-	{ 0x40000c, 0x40000d, watchdog_reset16_r	},	// Watchdog (extdwnhl, MUST RETURN $FFFF)
-	{ 0x500004, 0x500007, MRA16_NOP				},	// IRQ Ack  (extdwnhl)
-	{ 0x600400, 0x600fff, MRA16_RAM				},	// Palette
-	{ 0x601000, 0x610bff, MRA16_RAM				},	//
-	{ 0x800000, 0x803fff, MRA16_RAM				},	// VRAM 0&1
-	{ 0x804000, 0x80ffff, MRA16_RAM				},	//
-	{ 0x880000, 0x883fff, MRA16_RAM				},	// VRAM 2&3
-	{ 0x884000, 0x88ffff, MRA16_RAM				},	//
-/**/{ 0x900000, 0x900005, MRA16_RAM				},	// VRAM 0&1 Ctrl
-/**/{ 0x980000, 0x980005, MRA16_RAM				},	// VRAM 2&3 Ctrl
-/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	// Sprites Y
-/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xb04000, 0xb13fff, MRA16_RAM				},	//
-	{ 0xe00000, 0xe03fff, seta_sound_word_r		},	// Sound
+	{ 0x000000, 0x0fffff, MRA16_ROM				},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x210000, 0x21ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x220000, 0x23ffff, MRA16_RAM				},	/* RAM (sokonuke)*/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x400008, 0x40000b, seta_dsw_r			},	/* DSW*/
+	{ 0x40000c, 0x40000d, watchdog_reset16_r	},	/* Watchdog (extdwnhl, MUST RETURN $FFFF)*/
+	{ 0x500004, 0x500007, MRA16_NOP				},	/* IRQ Ack  (extdwnhl)*/
+	{ 0x600400, 0x600fff, MRA16_RAM				},	/* Palette*/
+	{ 0x601000, 0x610bff, MRA16_RAM				},	/**/
+	{ 0x800000, 0x803fff, MRA16_RAM				},	/* VRAM 0&1*/
+	{ 0x804000, 0x80ffff, MRA16_RAM				},	/**/
+	{ 0x880000, 0x883fff, MRA16_RAM				},	/* VRAM 2&3*/
+	{ 0x884000, 0x88ffff, MRA16_RAM				},	/**/
+/**/{ 0x900000, 0x900005, MRA16_RAM				},	/* VRAM 0&1 Ctrl*/
+/**/{ 0x980000, 0x980005, MRA16_RAM				},	/* VRAM 2&3 Ctrl*/
+/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	/* Sprites Y*/
+/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xb04000, 0xb13fff, MRA16_RAM				},	/**/
+	{ 0xe00000, 0xe03fff, seta_sound_word_r		},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( extdwnhl_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x20ffff, MWA16_RAM						},	// RAM
-	{ 0x210000, 0x21ffff, MWA16_RAM						},	// RAM
-	{ 0x220000, 0x23ffff, MWA16_RAM						},	// RAM (sokonuke)
-	{ 0x40000c, 0x40000d, watchdog_reset16_w			},	// Watchdog (sokonuke)
-	{ 0x500000, 0x500003, seta_vregs_w, &seta_vregs		},	// Coin Lockout + Video Registers
-	{ 0x500004, 0x500007, MWA16_NOP						},	// IRQ Ack (sokonuke)
-	{ 0x600400, 0x600fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x601000, 0x610bff, MWA16_RAM						},	//
-	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0x804000, 0x80ffff, MWA16_RAM						},	//
-	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0x884000, 0x88ffff, MWA16_RAM						},	//
-	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xa80000, 0xa80001, MWA16_RAM						},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xb04000, 0xb13fff, MWA16_RAM						},	//
-	{ 0xe00000, 0xe03fff, seta_sound_word_w				},	// Sound
+	{ 0x000000, 0x0fffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x210000, 0x21ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x220000, 0x23ffff, MWA16_RAM						},	/* RAM (sokonuke)*/
+	{ 0x40000c, 0x40000d, watchdog_reset16_w			},	/* Watchdog (sokonuke)*/
+	{ 0x500000, 0x500003, seta_vregs_w, &seta_vregs		},	/* Coin Lockout + Video Registers*/
+	{ 0x500004, 0x500007, MWA16_NOP						},	/* IRQ Ack (sokonuke)*/
+	{ 0x600400, 0x600fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x601000, 0x610bff, MWA16_RAM						},	/**/
+	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0x804000, 0x80ffff, MWA16_RAM						},	/**/
+	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0x884000, 0x88ffff, MWA16_RAM						},	/**/
+	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MWA16_RAM						},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xb04000, 0xb13fff, MWA16_RAM						},	/**/
+	{ 0xe00000, 0xe03fff, seta_sound_word_w				},	/* Sound*/
 MEMORY_END
 
 /***************************************************************************
@@ -2092,93 +2092,93 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( kamenrid_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// ROM
-	{ 0x500000, 0x500001, input_port_0_word_r	},	// P1
-	{ 0x500002, 0x500003, input_port_1_word_r	},	// P2
-	{ 0x500004, 0x500007, seta_dsw_r		},	// DSW
-	{ 0x500008, 0x500009, input_port_2_word_r	},	// Coins
-	{ 0x50000c, 0x50000d, watchdog_reset16_r	},	// xx Watchdog?
-	{ 0x700000, 0x7003ff, MRA16_RAM				},	// Palette
-	{ 0x700400, 0x700fff, MRA16_RAM				},	// Palette
-	{ 0x701000, 0x703fff, MRA16_RAM				},	// Palette
-	{ 0x800000, 0x801fff, MRA16_RAM				},	// VRAM 0
-	{ 0x802000, 0x803fff, MRA16_RAM				},	// VRAM 1
-	{ 0x804000, 0x807fff, MRA16_RAM				},	// tested
-	{ 0x880000, 0x881fff, MRA16_RAM				},	// VRAM 2
-	{ 0x882000, 0x883fff, MRA16_RAM				},	// VRAM 3
-	{ 0x884000, 0x887fff, MRA16_RAM				},	// tested
-	{ 0xa00000, 0xa00607, MRA16_RAM			 	},	// Sprites Y
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xb04000, 0xb07fff, MRA16_RAM				},	// tested
-	{ 0xd00000, 0xd03fff, seta_sound_word_r		},	// Sound
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* ROM*/
+	{ 0x500000, 0x500001, input_port_0_word_r	},	/* P1*/
+	{ 0x500002, 0x500003, input_port_1_word_r	},	/* P2*/
+	{ 0x500004, 0x500007, seta_dsw_r		},	/* DSW*/
+	{ 0x500008, 0x500009, input_port_2_word_r	},	/* Coins*/
+	{ 0x50000c, 0x50000d, watchdog_reset16_r	},	/* xx Watchdog?*/
+	{ 0x700000, 0x7003ff, MRA16_RAM				},	/* Palette*/
+	{ 0x700400, 0x700fff, MRA16_RAM				},	/* Palette*/
+	{ 0x701000, 0x703fff, MRA16_RAM				},	/* Palette*/
+	{ 0x800000, 0x801fff, MRA16_RAM				},	/* VRAM 0*/
+	{ 0x802000, 0x803fff, MRA16_RAM				},	/* VRAM 1*/
+	{ 0x804000, 0x807fff, MRA16_RAM				},	/* tested*/
+	{ 0x880000, 0x881fff, MRA16_RAM				},	/* VRAM 2*/
+	{ 0x882000, 0x883fff, MRA16_RAM				},	/* VRAM 3*/
+	{ 0x884000, 0x887fff, MRA16_RAM				},	/* tested*/
+	{ 0xa00000, 0xa00607, MRA16_RAM			 	},	/* Sprites Y*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xb04000, 0xb07fff, MRA16_RAM				},	/* tested*/
+	{ 0xd00000, 0xd03fff, seta_sound_word_r		},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( kamenrid_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x20ffff, MWA16_RAM						},	// ROM
-	{ 0x50000c, 0x50000d, watchdog_reset16_w			},	// Watchdog (sokonuke)
-	{ 0x600000, 0x600005, seta_vregs_w, &seta_vregs		},	// ? Coin Lockout + Video Registers
-	{ 0x600006, 0x600007, MWA16_NOP						},	// ?
-	{ 0x700000, 0x7003ff, MWA16_RAM						},	// Palette RAM (tested)
-	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x701000, 0x703fff, MWA16_RAM	},	// Palette
-	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0x804000, 0x807fff, MWA16_RAM	},	// tested
-	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0x884000, 0x887fff, MWA16_RAM	},	// tested
-	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MWA16_RAM , &spriteram16		},	// Sprites Y
-	{ 0xa80000, 0xa80001, MWA16_RAM						},	// ? $4000
-	{ 0xb00000, 0xb03fff, MWA16_RAM , &spriteram16_2	},	// Sprites Code + X + Attr
-	{ 0xb04000, 0xb07fff, MWA16_RAM },	// tested
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM						},	/* ROM*/
+	{ 0x50000c, 0x50000d, watchdog_reset16_w			},	/* Watchdog (sokonuke)*/
+	{ 0x600000, 0x600005, seta_vregs_w, &seta_vregs		},	/* ? Coin Lockout + Video Registers*/
+	{ 0x600006, 0x600007, MWA16_NOP						},	/* ?*/
+	{ 0x700000, 0x7003ff, MWA16_RAM						},	/* Palette RAM (tested)*/
+	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x701000, 0x703fff, MWA16_RAM	},	/* Palette*/
+	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0x804000, 0x807fff, MWA16_RAM	},	/* tested*/
+	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0x884000, 0x887fff, MWA16_RAM	},	/* tested*/
+	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MWA16_RAM , &spriteram16		},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MWA16_RAM						},	/* ? $4000*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM , &spriteram16_2	},	/* Sprites Code + X + Attr*/
+	{ 0xb04000, 0xb07fff, MWA16_RAM },	/* tested*/
 #if __uPD71054_TIMER
-	{ 0xc00000, 0xc00007, timer_regs_w					},	// ?
+	{ 0xc00000, 0xc00007, timer_regs_w					},	/* ?*/
 #else
-	{ 0xc00000, 0xc00007, MWA16_NOP						},	// ?
+	{ 0xc00000, 0xc00007, MWA16_NOP						},	/* ?*/
 #endif
-	{ 0xd00000, 0xd03fff, seta_sound_word_w				},	// Sound
+	{ 0xd00000, 0xd03fff, seta_sound_word_w				},	/* Sound*/
 MEMORY_END
 
 /* almast identical to kamenrid */
 static MEMORY_READ16_START( madshark_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM				},	// ROM
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// ROM
-	{ 0x500000, 0x500001, input_port_0_word_r	},	// P1
-	{ 0x500002, 0x500003, input_port_1_word_r	},	// P2
-	{ 0x500004, 0x500005, input_port_2_word_r	},	// Coins
-	{ 0x500008, 0x50000b, seta_dsw_r			},	// DSW
-	{ 0x700400, 0x700fff, MRA16_RAM				},	// Palette
-	{ 0x800000, 0x801fff, MRA16_RAM				},	// VRAM 0
-	{ 0x802000, 0x803fff, MRA16_RAM				},	// VRAM 1
-	{ 0x880000, 0x881fff, MRA16_RAM				},	// VRAM 2
-	{ 0x882000, 0x883fff, MRA16_RAM				},	// VRAM 3
-	{ 0xa00000, 0xa00607, MRA16_RAM			 	},	// Sprites Y
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xd00000, 0xd03fff, seta_sound_word_r		},	// Sound
+	{ 0x000000, 0x0fffff, MRA16_ROM				},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* ROM*/
+	{ 0x500000, 0x500001, input_port_0_word_r	},	/* P1*/
+	{ 0x500002, 0x500003, input_port_1_word_r	},	/* P2*/
+	{ 0x500004, 0x500005, input_port_2_word_r	},	/* Coins*/
+	{ 0x500008, 0x50000b, seta_dsw_r			},	/* DSW*/
+	{ 0x700400, 0x700fff, MRA16_RAM				},	/* Palette*/
+	{ 0x800000, 0x801fff, MRA16_RAM				},	/* VRAM 0*/
+	{ 0x802000, 0x803fff, MRA16_RAM				},	/* VRAM 1*/
+	{ 0x880000, 0x881fff, MRA16_RAM				},	/* VRAM 2*/
+	{ 0x882000, 0x883fff, MRA16_RAM				},	/* VRAM 3*/
+	{ 0xa00000, 0xa00607, MRA16_RAM			 	},	/* Sprites Y*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xd00000, 0xd03fff, seta_sound_word_r		},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( madshark_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x20ffff, MWA16_RAM						},	// ROM
-	{ 0x50000c, 0x50000d, watchdog_reset16_w			},	// Watchdog
-	{ 0x600000, 0x600005, seta_vregs_w, &seta_vregs		},	// ? Coin Lockout + Video Registers
-	{ 0x600006, 0x600007, MWA16_NOP						},	// ?
-	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MWA16_RAM , &spriteram16		},	// Sprites Y
-	{ 0xa80000, 0xa80001, MWA16_RAM						},	// ? $4000
-	{ 0xb00000, 0xb03fff, MWA16_RAM , &spriteram16_2	},	// Sprites Code + X + Attr
+	{ 0x000000, 0x0fffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM						},	/* ROM*/
+	{ 0x50000c, 0x50000d, watchdog_reset16_w			},	/* Watchdog*/
+	{ 0x600000, 0x600005, seta_vregs_w, &seta_vregs		},	/* ? Coin Lockout + Video Registers*/
+	{ 0x600006, 0x600007, MWA16_NOP						},	/* ?*/
+	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MWA16_RAM , &spriteram16		},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MWA16_RAM						},	/* ? $4000*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM , &spriteram16_2	},	/* Sprites Code + X + Attr*/
 #if __uPD71054_TIMER
-	{ 0xc00000, 0xc00007, timer_regs_w					},	// ?
+	{ 0xc00000, 0xc00007, timer_regs_w					},	/* ?*/
 #else
-	{ 0xc00000, 0xc00007, MWA16_NOP						},	// ?
+	{ 0xc00000, 0xc00007, MWA16_NOP						},	/* ?*/
 #endif
-	{ 0xd00000, 0xd03fff, seta_sound_word_w				},	// Sound
+	{ 0xd00000, 0xd03fff, seta_sound_word_w				},	/* Sound*/
 MEMORY_END
 
 
@@ -2189,7 +2189,7 @@ MEMORY_END
 
 static READ16_HANDLER( krzybowl_input_r )
 {
-	// analog ports
+	/* analog ports*/
 	int dir1x = readinputport(4) & 0xfff;
 	int dir1y = readinputport(5) & 0xfff;
 	int dir2x = readinputport(6) & 0xfff;
@@ -2212,35 +2212,35 @@ static READ16_HANDLER( krzybowl_input_r )
 }
 
 static MEMORY_READ16_START( krzybowl_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	// RAM
-	{ 0x100000, 0x100001, MRA16_NOP				},	// ?
-	{ 0x200000, 0x200001, MRA16_NOP				},	// ?
-	{ 0x300000, 0x300003, seta_dsw_r			},	// DSW
-	{ 0x500000, 0x500001, input_port_0_word_r	},	// P1
-	{ 0x500002, 0x500003, input_port_1_word_r	},	// P2
-	{ 0x500004, 0x500005, input_port_2_word_r	},	// Coins
-	{ 0x600000, 0x60000f, krzybowl_input_r		},	// P1
-	{ 0x8000f0, 0x8000f1, MRA16_RAM				},	// NVRAM
-	{ 0x800100, 0x8001ff, MRA16_RAM				},	// NVRAM
-	{ 0xa00000, 0xa03fff, seta_sound_word_r		},	// Sound
-	{ 0xb00000, 0xb003ff, MRA16_RAM				},	// Palette
-	{ 0xc00000, 0xc03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-/**/{ 0xd00000, 0xd00001, MRA16_RAM				},	// ? 0x4000
-/**/{ 0xe00000, 0xe00607, MRA16_RAM				},	// Sprites Y
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x100000, 0x100001, MRA16_NOP				},	/* ?*/
+	{ 0x200000, 0x200001, MRA16_NOP				},	/* ?*/
+	{ 0x300000, 0x300003, seta_dsw_r			},	/* DSW*/
+	{ 0x500000, 0x500001, input_port_0_word_r	},	/* P1*/
+	{ 0x500002, 0x500003, input_port_1_word_r	},	/* P2*/
+	{ 0x500004, 0x500005, input_port_2_word_r	},	/* Coins*/
+	{ 0x600000, 0x60000f, krzybowl_input_r		},	/* P1*/
+	{ 0x8000f0, 0x8000f1, MRA16_RAM				},	/* NVRAM*/
+	{ 0x800100, 0x8001ff, MRA16_RAM				},	/* NVRAM*/
+	{ 0xa00000, 0xa03fff, seta_sound_word_r		},	/* Sound*/
+	{ 0xb00000, 0xb003ff, MRA16_RAM				},	/* Palette*/
+	{ 0xc00000, 0xc03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+/**/{ 0xd00000, 0xd00001, MRA16_RAM				},	/* ? 0x4000*/
+/**/{ 0xe00000, 0xe00607, MRA16_RAM				},	/* Sprites Y*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( krzybowl_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM					},	// ROM
-	{ 0xf00000, 0xf0ffff, MWA16_RAM					},	// RAM
-	{ 0x400000, 0x400001, MWA16_NOP					},	// ?
-	{ 0x8000f0, 0x8000f1, MWA16_RAM					},	// NVRAM
-	{ 0x800100, 0x8001ff, MWA16_RAM					},	// NVRAM
-	{ 0xa00000, 0xa03fff, seta_sound_word_w			},	// Sound
-	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0xc00000, 0xc03fff, MWA16_RAM, &spriteram16_2	},	// Sprites Code + X + Attr
-	{ 0xd00000, 0xd00001, MWA16_RAM					},	// ? 0x4000
-	{ 0xe00000, 0xe00607, MWA16_RAM, &spriteram16	},	// Sprites Y
+	{ 0x000000, 0x07ffff, MWA16_ROM					},	/* ROM*/
+	{ 0xf00000, 0xf0ffff, MWA16_RAM					},	/* RAM*/
+	{ 0x400000, 0x400001, MWA16_NOP					},	/* ?*/
+	{ 0x8000f0, 0x8000f1, MWA16_RAM					},	/* NVRAM*/
+	{ 0x800100, 0x8001ff, MWA16_RAM					},	/* NVRAM*/
+	{ 0xa00000, 0xa03fff, seta_sound_word_w			},	/* Sound*/
+	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0xc00000, 0xc03fff, MWA16_RAM, &spriteram16_2	},	/* Sprites Code + X + Attr*/
+	{ 0xd00000, 0xd00001, MWA16_RAM					},	/* ? 0x4000*/
+	{ 0xe00000, 0xe00607, MWA16_RAM, &spriteram16	},	/* Sprites Y*/
 MEMORY_END
 
 
@@ -2250,7 +2250,7 @@ MEMORY_END
 
 WRITE16_HANDLER( msgundam_vregs_w )
 {
-	// swap $500002 with $500004
+	/* swap $500002 with $500004*/
 	switch( offset )
 	{
 		case 1:	offset = 2;	break;
@@ -2262,47 +2262,47 @@ WRITE16_HANDLER( msgundam_vregs_w )
 /* Mirror RAM is necessary or startup, to clear Work RAM after the test */
 
 static MEMORY_READ16_START( msgundam_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0x100000, 0x1fffff, MRA16_ROM				},	// ROM
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// RAM
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700400, 0x700fff, MRA16_RAM				},	// Palette
-	{ 0x800000, 0x800607, MRA16_RAM				},	// Sprites Y
-	{ 0x900000, 0x903fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xa00000, 0xa03fff, MRA16_RAM				},	// VRAM 0&1
-	{ 0xa80000, 0xa83fff, MRA16_RAM				},	// VRAM 2&3
-	{ 0xb00000, 0xb00005, MRA16_RAM				},	// VRAM 0&1 Ctrl
-	{ 0xb80000, 0xb80005, MRA16_RAM				},	// VRAM 1&2 Ctrl
-	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	// Sound
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x100000, 0x1fffff, MRA16_ROM				},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700400, 0x700fff, MRA16_RAM				},	/* Palette*/
+	{ 0x800000, 0x800607, MRA16_RAM				},	/* Sprites Y*/
+	{ 0x900000, 0x903fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xa00000, 0xa03fff, MRA16_RAM				},	/* VRAM 0&1*/
+	{ 0xa80000, 0xa83fff, MRA16_RAM				},	/* VRAM 2&3*/
+	{ 0xb00000, 0xb00005, MRA16_RAM				},	/* VRAM 0&1 Ctrl*/
+	{ 0xb80000, 0xb80005, MRA16_RAM				},	/* VRAM 1&2 Ctrl*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( msgundam_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x100000, 0x1fffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x20ffff, MWA16_RAM, &mirror_ram		},	// RAM
-	{ 0x210000, 0x21ffff, mirror_ram_w					},	// Mirrored RAM
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x100000, 0x1fffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM, &mirror_ram		},	/* RAM*/
+	{ 0x210000, 0x21ffff, mirror_ram_w					},	/* Mirrored RAM*/
 	{ 0x220000, 0x22ffff, mirror_ram_w					},
 	{ 0x230000, 0x23ffff, mirror_ram_w					},
 	{ 0x240000, 0x24ffff, mirror_ram_w					},
-	{ 0x400000, 0x400001, MWA16_NOP						},	// Lev 2 IRQ Ack
-	{ 0x400004, 0x400005, MWA16_NOP						},	// Lev 4 IRQ Ack
-	{ 0x500000, 0x500005, msgundam_vregs_w, &seta_vregs		},	// Coin Lockout + Video Registers
-	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x800000, 0x800607, MWA16_RAM , &spriteram16		},	// Sprites Y
-	{ 0x880000, 0x880001, MWA16_RAM						},	// ? 0x4000
-	{ 0x900000, 0x903fff, MWA16_RAM , &spriteram16_2	},	// Sprites Code + X + Attr
-	{ 0xa00000, 0xa03fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0xa80000, 0xa83fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0xb00000, 0xb00005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0xb80000, 0xb80005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	// Sound
+	{ 0x400000, 0x400001, MWA16_NOP						},	/* Lev 2 IRQ Ack*/
+	{ 0x400004, 0x400005, MWA16_NOP						},	/* Lev 4 IRQ Ack*/
+	{ 0x500000, 0x500005, msgundam_vregs_w, &seta_vregs		},	/* Coin Lockout + Video Registers*/
+	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x800000, 0x800607, MWA16_RAM , &spriteram16		},	/* Sprites Y*/
+	{ 0x880000, 0x880001, MWA16_RAM						},	/* ? 0x4000*/
+	{ 0x900000, 0x903fff, MWA16_RAM , &spriteram16_2	},	/* Sprites Code + X + Attr*/
+	{ 0xa00000, 0xa03fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0xa80000, 0xa83fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0xb00000, 0xb00005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0xb80000, 0xb80005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	/* Sound*/
 #if __uPD71054_TIMER
-	{ 0xd00000, 0xd00007, timer_regs_w					},	// ?
+	{ 0xd00000, 0xd00007, timer_regs_w					},	/* ?*/
 #else
-	{ 0xd00000, 0xd00007, MWA16_NOP						},	// ?
+	{ 0xd00000, 0xd00007, MWA16_NOP						},	/* ?*/
 #endif
 MEMORY_END
 
@@ -2316,39 +2316,39 @@ MEMORY_END
 /* similar to wrofaero */
 
 static MEMORY_READ16_START( oisipuzl_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0x100000, 0x17ffff, MRA16_ROM				},	// ROM
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// RAM
-	{ 0x300000, 0x300003, seta_dsw_r			},	// DSW
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x700000, 0x703fff, seta_sound_word_r		},	// Sound
-	{ 0x800000, 0x803fff, MRA16_RAM				},	// VRAM 0&1
-	{ 0x880000, 0x883fff, MRA16_RAM				},	// VRAM 2&3
-/**/{ 0x900000, 0x900005, MRA16_RAM				},	// VRAM 0&1 Ctrl
-/**/{ 0x980000, 0x980005, MRA16_RAM				},	// VRAM 2&3 Ctrl
-/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	// Sprites Y
-/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xc00400, 0xc00fff, MRA16_RAM				},	// Palette
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x100000, 0x17ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x300000, 0x300003, seta_dsw_r			},	/* DSW*/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x700000, 0x703fff, seta_sound_word_r		},	/* Sound*/
+	{ 0x800000, 0x803fff, MRA16_RAM				},	/* VRAM 0&1*/
+	{ 0x880000, 0x883fff, MRA16_RAM				},	/* VRAM 2&3*/
+/**/{ 0x900000, 0x900005, MRA16_RAM				},	/* VRAM 0&1 Ctrl*/
+/**/{ 0x980000, 0x980005, MRA16_RAM				},	/* VRAM 2&3 Ctrl*/
+/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	/* Sprites Y*/
+/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xc00400, 0xc00fff, MRA16_RAM				},	/* Palette*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( oisipuzl_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x100000, 0x17ffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x20ffff, MWA16_RAM						},	// RAM
-	{ 0x400000, 0x400001, MWA16_NOP						},	// ? IRQ Ack
-	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	// Coin Lockout + Video Registers
-	{ 0x700000, 0x703fff, seta_sound_word_w				},	// Sound
-	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xa80000, 0xa80001, MWA16_RAM						},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xc00400, 0xc00fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x100000, 0x17ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x400000, 0x400001, MWA16_NOP						},	/* ? IRQ Ack*/
+	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	/* Coin Lockout + Video Registers*/
+	{ 0x700000, 0x703fff, seta_sound_word_w				},	/* Sound*/
+	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MWA16_RAM						},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xc00400, 0xc00fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
 MEMORY_END
 
 /***************************************************************************
@@ -2358,41 +2358,41 @@ MEMORY_END
 /* the same as oisipuzl with the sound system replaced */
 
 static MEMORY_READ16_START( triplfun_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0x100000, 0x17ffff, MRA16_ROM				},	// ROM
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// RAM
-	{ 0x300000, 0x300003, seta_dsw_r			},	// DSW
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x500006, 0x500007, OKIM6295_status_0_lsb_r }, // tfun sound
-	{ 0x700000, 0x703fff, MRA16_RAM				},	// old sound
-	{ 0x800000, 0x803fff, MRA16_RAM				},	// VRAM 0&1
-	{ 0x880000, 0x883fff, MRA16_RAM				},	// VRAM 2&3
-/**/{ 0x900000, 0x900005, MRA16_RAM				},	// VRAM 0&1 Ctrl
-/**/{ 0x980000, 0x980005, MRA16_RAM				},	// VRAM 2&3 Ctrl
-/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	// Sprites Y
-/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xc00400, 0xc00fff, MRA16_RAM				},	// Palette
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x100000, 0x17ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x300000, 0x300003, seta_dsw_r			},	/* DSW*/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x500006, 0x500007, OKIM6295_status_0_lsb_r }, /* tfun sound*/
+	{ 0x700000, 0x703fff, MRA16_RAM				},	/* old sound*/
+	{ 0x800000, 0x803fff, MRA16_RAM				},	/* VRAM 0&1*/
+	{ 0x880000, 0x883fff, MRA16_RAM				},	/* VRAM 2&3*/
+/**/{ 0x900000, 0x900005, MRA16_RAM				},	/* VRAM 0&1 Ctrl*/
+/**/{ 0x980000, 0x980005, MRA16_RAM				},	/* VRAM 2&3 Ctrl*/
+/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	/* Sprites Y*/
+/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xc00400, 0xc00fff, MRA16_RAM				},	/* Palette*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( triplfun_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x100000, 0x17ffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x20ffff, MWA16_RAM						},	// RAM
-	{ 0x400000, 0x400001, MWA16_NOP						},	// ? IRQ Ack
-	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	// Coin Lockout + Video Registers
-	{ 0x500006, 0x500007, OKIM6295_data_0_lsb_w         },  // tfun sound
-	{ 0x700000, 0x703fff, MWA16_RAM						},	// old sound
-	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xa80000, 0xa80001, MWA16_RAM						},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0xc00400, 0xc00fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x100000, 0x17ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x400000, 0x400001, MWA16_NOP						},	/* ? IRQ Ack*/
+	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	/* Coin Lockout + Video Registers*/
+	{ 0x500006, 0x500007, OKIM6295_data_0_lsb_w         },  /* tfun sound*/
+	{ 0x700000, 0x703fff, MWA16_RAM						},	/* old sound*/
+	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MWA16_RAM						},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0xc00400, 0xc00fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
 MEMORY_END
 
 /***************************************************************************
@@ -2426,7 +2426,7 @@ READ16_HANDLER( kiwame_input_r )
 		case 0x00/2:	return readinputport( i );
 		case 0x02/2:	return 0xffff;
 		case 0x04/2:	return readinputport( 2 );
-//		case 0x06/2:
+/*		case 0x06/2:*/
 		case 0x08/2:	return 0xffff;
 
 		default:
@@ -2436,27 +2436,27 @@ READ16_HANDLER( kiwame_input_r )
 }
 
 static MEMORY_READ16_START( kiwame_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// RAM
-	{ 0xfffc00, 0xffffff, kiwame_nvram_r		},	// NVRAM + Regs ?
-	{ 0x800000, 0x803fff, MRA16_RAM				},	// Sprites Code + X + Attr
-/**/{ 0x900000, 0x900001, MRA16_RAM				},	// ? 0x4000
-/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	// Sprites Y
-	{ 0xb00000, 0xb003ff, MRA16_RAM				},	// Palette
-	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	// Sound
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM*/
+	{ 0xfffc00, 0xffffff, kiwame_nvram_r		},	/* NVRAM + Regs ?*/
+	{ 0x800000, 0x803fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+/**/{ 0x900000, 0x900001, MRA16_RAM				},	/* ? 0x4000*/
+/**/{ 0xa00000, 0xa00607, MRA16_RAM				},	/* Sprites Y*/
+	{ 0xb00000, 0xb003ff, MRA16_RAM				},	/* Palette*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	/* Sound*/
 	{ 0xd00000, 0xd00009, kiwame_input_r		},
-	{ 0xe00000, 0xe00003, seta_dsw_r			},	// DSW
+	{ 0xe00000, 0xe00003, seta_dsw_r			},	/* DSW*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( kiwame_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x20ffff, MWA16_RAM						},	// RAM
-	{ 0xfffc00, 0xffffff, kiwame_nvram_w, &kiwame_nvram	},	// NVRAM + Regs ?
-	{ 0x800000, 0x803fff, MWA16_RAM, &spriteram16_2		},	// Sprites Code + X + Attr
-	{ 0x900000, 0x900001, MWA16_RAM						},	// ? 0x4000
-	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	// Sprites Y
-	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	// Sound
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM						},	/* RAM*/
+	{ 0xfffc00, 0xffffff, kiwame_nvram_w, &kiwame_nvram	},	/* NVRAM + Regs ?*/
+	{ 0x800000, 0x803fff, MWA16_RAM, &spriteram16_2		},	/* Sprites Code + X + Attr*/
+	{ 0x900000, 0x900001, MWA16_RAM						},	/* ? 0x4000*/
+	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16		},	/* Sprites Y*/
+	{ 0xb00000, 0xb003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_w				},	/* Sound*/
 MEMORY_END
 
 
@@ -2466,47 +2466,47 @@ MEMORY_END
 
 static READ16_HANDLER( thunderl_protection_r )
 {
-//	logerror("PC %06X - Protection Read\n", activecpu_get_pc());
+/*	logerror("PC %06X - Protection Read\n", activecpu_get_pc());*/
 	return 0x00dd;
 }
 static WRITE16_HANDLER( thunderl_protection_w )
 {
-//	logerror("PC %06X - Protection Written: %04X <- %04X\n", activecpu_get_pc(), offset*2, data);
+/*	logerror("PC %06X - Protection Written: %04X <- %04X\n", activecpu_get_pc(), offset*2, data);*/
 }
 
 /* Similar to downtown etc. */
 
 static MEMORY_READ16_START( thunderl_readmem )
-	{ 0x000000, 0x00ffff, MRA16_ROM				},	// ROM
-	{ 0xffc000, 0xffffff, MRA16_RAM				},	// RAM
-	{ 0x100000, 0x103fff, seta_sound_word_r		},	// Sound
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700000, 0x7003ff, MRA16_RAM				},	// Palette
-	{ 0xb00000, 0xb00001, input_port_0_word_r	},	// P1
-	{ 0xb00002, 0xb00003, input_port_1_word_r	},	// P2
-	{ 0xb00004, 0xb00005, input_port_2_word_r	},	// Coins
-	{ 0xb0000c, 0xb0000d, thunderl_protection_r	},	// Protection (not in wits)
-	{ 0xb00008, 0xb00009, input_port_4_word_r	},	// P3 (wits)
-	{ 0xb0000a, 0xb0000b, input_port_5_word_r	},	// P4 (wits)
-/**/{ 0xc00000, 0xc00001, MRA16_RAM				},	// ? 0x4000
-/**/{ 0xd00000, 0xd00607, MRA16_RAM				},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xe04000, 0xe07fff, MRA16_RAM				},	// (wits)
+	{ 0x000000, 0x00ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xffc000, 0xffffff, MRA16_RAM				},	/* RAM*/
+	{ 0x100000, 0x103fff, seta_sound_word_r		},	/* Sound*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700000, 0x7003ff, MRA16_RAM				},	/* Palette*/
+	{ 0xb00000, 0xb00001, input_port_0_word_r	},	/* P1*/
+	{ 0xb00002, 0xb00003, input_port_1_word_r	},	/* P2*/
+	{ 0xb00004, 0xb00005, input_port_2_word_r	},	/* Coins*/
+	{ 0xb0000c, 0xb0000d, thunderl_protection_r	},	/* Protection (not in wits)*/
+	{ 0xb00008, 0xb00009, input_port_4_word_r	},	/* P3 (wits)*/
+	{ 0xb0000a, 0xb0000b, input_port_5_word_r	},	/* P4 (wits)*/
+/**/{ 0xc00000, 0xc00001, MRA16_RAM				},	/* ? 0x4000*/
+/**/{ 0xd00000, 0xd00607, MRA16_RAM				},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xe04000, 0xe07fff, MRA16_RAM				},	/* (wits)*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( thunderl_writemem )
-	{ 0x000000, 0x00ffff, MWA16_ROM					},	// ROM
-	{ 0xffc000, 0xffffff, MWA16_RAM					},	// RAM
-	{ 0x100000, 0x103fff, seta_sound_word_w			},	// Sound
-	{ 0x200000, 0x200001, MWA16_NOP					},	// ?
-	{ 0x300000, 0x300001, MWA16_NOP					},	// ?
-	{ 0x400000, 0x40ffff, thunderl_protection_w		},	// Protection (not in wits)
-	{ 0x500000, 0x500001, seta_vregs_w, &seta_vregs	},	// Coin Lockout
-	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0xc00000, 0xc00001, MWA16_RAM					},	// ? 0x4000
-	{ 0xd00000, 0xd00607, MWA16_RAM, &spriteram16	},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	// Sprites Code + X + Attr
-	{ 0xe04000, 0xe07fff, MWA16_RAM					},	// (wits)
+	{ 0x000000, 0x00ffff, MWA16_ROM					},	/* ROM*/
+	{ 0xffc000, 0xffffff, MWA16_RAM					},	/* RAM*/
+	{ 0x100000, 0x103fff, seta_sound_word_w			},	/* Sound*/
+	{ 0x200000, 0x200001, MWA16_NOP					},	/* ?*/
+	{ 0x300000, 0x300001, MWA16_NOP					},	/* ?*/
+	{ 0x400000, 0x40ffff, thunderl_protection_w		},	/* Protection (not in wits)*/
+	{ 0x500000, 0x500001, seta_vregs_w, &seta_vregs	},	/* Coin Lockout*/
+	{ 0x700000, 0x7003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0xc00000, 0xc00001, MWA16_RAM					},	/* ? 0x4000*/
+	{ 0xd00000, 0xd00607, MWA16_RAM, &spriteram16	},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	/* Sprites Code + X + Attr*/
+	{ 0xe04000, 0xe07fff, MWA16_RAM					},	/* (wits)*/
 MEMORY_END
 
 
@@ -2515,32 +2515,32 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( umanclub_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	// ROM
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// RAM
-	{ 0x300000, 0x3003ff, MRA16_RAM				},	// Palette
-	{ 0x300400, 0x300fff, MRA16_RAM				},	//
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0xa00000, 0xa00607, MRA16_RAM				},	// Sprites Y
-/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
-	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	// Sound
+	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x300000, 0x3003ff, MRA16_RAM				},	/* Palette*/
+	{ 0x300400, 0x300fff, MRA16_RAM				},	/**/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0xa00000, 0xa00607, MRA16_RAM				},	/* Sprites Y*/
+/**/{ 0xa80000, 0xa80001, MRA16_RAM				},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_r		},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( umanclub_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM					},	// ROM
-	{ 0x200000, 0x20ffff, MWA16_RAM					},	// RAM
-	{ 0x300000, 0x3003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x300400, 0x300fff, MWA16_RAM					},	//
-	{ 0x400000, 0x400001, MWA16_NOP					},	// ? (end of lev 2)
-	{ 0x400004, 0x400005, MWA16_NOP					},	// ? (end of lev 2)
-	{ 0x500000, 0x500001, seta_vregs_w, &seta_vregs	},	// Coin Lockout + Video Registers
-	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16	},	// Sprites Y
-	{ 0xa80000, 0xa80001, MWA16_RAM					},	// ? 0x4000
-	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2	},	// Sprites Code + X + Attr
-	{ 0xc00000, 0xc03fff, seta_sound_word_w			},	// Sound
+	{ 0x000000, 0x03ffff, MWA16_ROM					},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM					},	/* RAM*/
+	{ 0x300000, 0x3003ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x300400, 0x300fff, MWA16_RAM					},	/**/
+	{ 0x400000, 0x400001, MWA16_NOP					},	/* ? (end of lev 2)*/
+	{ 0x400004, 0x400005, MWA16_NOP					},	/* ? (end of lev 2)*/
+	{ 0x500000, 0x500001, seta_vregs_w, &seta_vregs	},	/* Coin Lockout + Video Registers*/
+	{ 0xa00000, 0xa00607, MWA16_RAM, &spriteram16	},	/* Sprites Y*/
+	{ 0xa80000, 0xa80001, MWA16_RAM					},	/* ? 0x4000*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM, &spriteram16_2	},	/* Sprites Code + X + Attr*/
+	{ 0xc00000, 0xc03fff, seta_sound_word_w			},	/* Sound*/
 MEMORY_END
 
 /***************************************************************************
@@ -2557,34 +2557,34 @@ static WRITE16_HANDLER( utoukond_soundlatch_w )
 }
 
 static MEMORY_READ16_START( utoukond_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM				},	// ROM
-	{ 0x200000, 0x20ffff, MRA16_RAM				},	// ROM
-	{ 0x400000, 0x400001, input_port_0_word_r	},	// P1
-	{ 0x400002, 0x400003, input_port_1_word_r	},	// P2
-	{ 0x400004, 0x400005, input_port_2_word_r	},	// Coins
-	{ 0x600000, 0x600003, seta_dsw_r			},	// DSW
-	{ 0x700400, 0x700fff, MRA16_RAM				},	// Palette
-	{ 0x800000, 0x801fff, MRA16_RAM				},	// VRAM 0
-	{ 0x802000, 0x803fff, MRA16_RAM				},	// VRAM 1
-	{ 0x880000, 0x881fff, MRA16_RAM				},	// VRAM 2
-	{ 0x882000, 0x883fff, MRA16_RAM				},	// VRAM 3
-	{ 0xa00000, 0xa00607, MRA16_RAM			 	},	// Sprites Y
-	{ 0xb00000, 0xb03fff, MRA16_RAM				},	// Sprites Code + X + Attr
+	{ 0x000000, 0x0fffff, MRA16_ROM				},	/* ROM*/
+	{ 0x200000, 0x20ffff, MRA16_RAM				},	/* ROM*/
+	{ 0x400000, 0x400001, input_port_0_word_r	},	/* P1*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/* P2*/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/* Coins*/
+	{ 0x600000, 0x600003, seta_dsw_r			},	/* DSW*/
+	{ 0x700400, 0x700fff, MRA16_RAM				},	/* Palette*/
+	{ 0x800000, 0x801fff, MRA16_RAM				},	/* VRAM 0*/
+	{ 0x802000, 0x803fff, MRA16_RAM				},	/* VRAM 1*/
+	{ 0x880000, 0x881fff, MRA16_RAM				},	/* VRAM 2*/
+	{ 0x882000, 0x883fff, MRA16_RAM				},	/* VRAM 3*/
+	{ 0xa00000, 0xa00607, MRA16_RAM			 	},	/* Sprites Y*/
+	{ 0xb00000, 0xb03fff, MRA16_RAM				},	/* Sprites Code + X + Attr*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( utoukond_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x20ffff, MWA16_RAM						},	// ROM
-	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	// ? Coin Lockout + Video Registers
-	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	// VRAM 0
-	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	// VRAM 2
-	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	// VRAM 0&1 Ctrl
-	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	// VRAM 2&3 Ctrl
-	{ 0xa00000, 0xa00607, MWA16_RAM , &spriteram16		},	// Sprites Y
-	{ 0xb00000, 0xb03fff, MWA16_RAM , &spriteram16_2	},	// Sprites Code + X + Attr
-	{ 0xc00000, 0xc00001, utoukond_soundlatch_w			},	// To Sound CPU (cause an IRQ)
-	{ 0xe00000, 0xe00001, MWA16_NOP						},	// ? ack
+	{ 0x000000, 0x0fffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x20ffff, MWA16_RAM						},	/* ROM*/
+	{ 0x500000, 0x500005, seta_vregs_w, &seta_vregs		},	/* ? Coin Lockout + Video Registers*/
+	{ 0x700400, 0x700fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x800000, 0x803fff, seta_vram_0_w, &seta_vram_0	},	/* VRAM 0*/
+	{ 0x880000, 0x883fff, seta_vram_2_w, &seta_vram_2	},	/* VRAM 2*/
+	{ 0x900000, 0x900005, MWA16_RAM, &seta_vctrl_0		},	/* VRAM 0&1 Ctrl*/
+	{ 0x980000, 0x980005, MWA16_RAM, &seta_vctrl_2		},	/* VRAM 2&3 Ctrl*/
+	{ 0xa00000, 0xa00607, MWA16_RAM , &spriteram16		},	/* Sprites Y*/
+	{ 0xb00000, 0xb03fff, MWA16_RAM , &spriteram16_2	},	/* Sprites Code + X + Attr*/
+	{ 0xc00000, 0xc00001, utoukond_soundlatch_w			},	/* To Sound CPU (cause an IRQ)*/
+	{ 0xe00000, 0xe00001, MWA16_NOP						},	/* ? ack*/
 MEMORY_END
 
 
@@ -2619,29 +2619,29 @@ static WRITE_HANDLER( sub_bankswitch_lockout_w )
 static READ_HANDLER( ff_r )	{return 0xff;}
 
 static MEMORY_READ_START( tndrcade_sub_readmem )
-	{ 0x0000, 0x01ff, MRA_RAM				},	// RAM
-	{ 0x0800, 0x0800, ff_r					},	// ? (bits 0/1/2/3: 1 -> do test 0-ff/100-1e0/5001-57ff/banked rom)
-//	{ 0x0800, 0x0800, soundlatch_r			},	//
-//	{ 0x0801, 0x0801, soundlatch2_r			},	//
-	{ 0x1000, 0x1000, input_port_0_r		},	// P1
-	{ 0x1001, 0x1001, input_port_1_r		},	// P2
-	{ 0x1002, 0x1002, input_port_2_r		},	// Coins
+	{ 0x0000, 0x01ff, MRA_RAM				},	/* RAM*/
+	{ 0x0800, 0x0800, ff_r					},	/* ? (bits 0/1/2/3: 1 -> do test 0-ff/100-1e0/5001-57ff/banked rom)*/
+/*	{ 0x0800, 0x0800, soundlatch_r			},	*/ /**/
+/*	{ 0x0801, 0x0801, soundlatch2_r			},	*/ /**/
+	{ 0x1000, 0x1000, input_port_0_r		},	/* P1*/
+	{ 0x1001, 0x1001, input_port_1_r		},	/* P2*/
+	{ 0x1002, 0x1002, input_port_2_r		},	/* Coins*/
 	{ 0x2001, 0x2001, YM2203_read_port_0_r	},
-	{ 0x5000, 0x57ff, MRA_RAM				},	// Shared RAM
-	{ 0x6000, 0x7fff, MRA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1				},	// Banked ROM
-	{ 0xc000, 0xffff, MRA_ROM				},	// ROM
+	{ 0x5000, 0x57ff, MRA_RAM				},	/* Shared RAM*/
+	{ 0x6000, 0x7fff, MRA_ROM				},	/* ROM*/
+	{ 0x8000, 0xbfff, MRA_BANK1				},	/* Banked ROM*/
+	{ 0xc000, 0xffff, MRA_ROM				},	/* ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( tndrcade_sub_writemem )
-	{ 0x0000, 0x01ff, MWA_RAM					},	// RAM
-	{ 0x1000, 0x1000, sub_bankswitch_lockout_w	},	// ROM Bank + Coin Lockout
+	{ 0x0000, 0x01ff, MWA_RAM					},	/* RAM*/
+	{ 0x1000, 0x1000, sub_bankswitch_lockout_w	},	/* ROM Bank + Coin Lockout*/
 	{ 0x2000, 0x2000, YM2203_control_port_0_w	},
 	{ 0x2001, 0x2001, YM2203_write_port_0_w		},
 	{ 0x3000, 0x3000, YM3812_control_port_0_w	},
 	{ 0x3001, 0x3001, YM3812_write_port_0_w		},
-	{ 0x5000, 0x57ff, MWA_RAM, &sharedram		},	// Shared RAM
-	{ 0x6000, 0xffff, MWA_ROM					},	// ROM
+	{ 0x5000, 0x57ff, MWA_RAM, &sharedram		},	/* Shared RAM*/
+	{ 0x6000, 0xffff, MWA_ROM					},	/* ROM*/
 MEMORY_END
 
 /***************************************************************************
@@ -2649,25 +2649,25 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ_START( twineagl_sub_readmem )
-	{ 0x0000, 0x01ff, MRA_RAM			},	// RAM
-	{ 0x0800, 0x0800, soundlatch_r		},	//
-	{ 0x0801, 0x0801, soundlatch2_r		},	//
-	{ 0x1000, 0x1000, input_port_0_r	},	// P1
-	{ 0x1001, 0x1001, input_port_1_r	},	// P2
-	{ 0x1002, 0x1002, input_port_2_r	},	// Coins
-	{ 0x5000, 0x57ff, MRA_RAM			},	// Shared RAM
-	{ 0x7000, 0x7fff, MRA_ROM			},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1			},	// Banked ROM
-	{ 0xc000, 0xffff, MRA_ROM			},	// ROM
+	{ 0x0000, 0x01ff, MRA_RAM			},	/* RAM*/
+	{ 0x0800, 0x0800, soundlatch_r		},	/**/
+	{ 0x0801, 0x0801, soundlatch2_r		},	/**/
+	{ 0x1000, 0x1000, input_port_0_r	},	/* P1*/
+	{ 0x1001, 0x1001, input_port_1_r	},	/* P2*/
+	{ 0x1002, 0x1002, input_port_2_r	},	/* Coins*/
+	{ 0x5000, 0x57ff, MRA_RAM			},	/* Shared RAM*/
+	{ 0x7000, 0x7fff, MRA_ROM			},	/* ROM*/
+	{ 0x8000, 0xbfff, MRA_BANK1			},	/* Banked ROM*/
+	{ 0xc000, 0xffff, MRA_ROM			},	/* ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( twineagl_sub_writemem )
-	{ 0x0000, 0x01ff, MWA_RAM				},	// RAM
-	{ 0x1000, 0x1000, sub_bankswitch_lockout_w	},	// ROM Bank + Coin Lockout
-	{ 0x5000, 0x57ff, MWA_RAM, &sharedram	},	// Shared RAM
-	{ 0x7000, 0x7fff, MWA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM				},	// ROM
-	{ 0xc000, 0xffff, MWA_ROM				},	// ROM
+	{ 0x0000, 0x01ff, MWA_RAM				},	/* RAM*/
+	{ 0x1000, 0x1000, sub_bankswitch_lockout_w	},	/* ROM Bank + Coin Lockout*/
+	{ 0x5000, 0x57ff, MWA_RAM, &sharedram	},	/* Shared RAM*/
+	{ 0x7000, 0x7fff, MWA_ROM				},	/* ROM*/
+	{ 0x8000, 0xbfff, MWA_ROM				},	/* ROM*/
+	{ 0xc000, 0xffff, MWA_ROM				},	/* ROM*/
 MEMORY_END
 
 /***************************************************************************
@@ -2676,43 +2676,43 @@ MEMORY_END
 
 READ_HANDLER( downtown_ip_r )
 {
-	int dir1 = readinputport(4);	// analog port
-	int dir2 = readinputport(5);	// analog port
+	int dir1 = readinputport(4);	/* analog port*/
+	int dir2 = readinputport(5);	/* analog port*/
 
 	dir1 = (~ (0x800 >> ((dir1 * 12)/0x100)) ) & 0xfff;
 	dir2 = (~ (0x800 >> ((dir2 * 12)/0x100)) ) & 0xfff;
 
 	switch (offset)
 	{
-		case 0:	return (readinputport(2) & 0xf0) + (dir1>>8);	// upper 4 bits of p1 rotation + coins
-		case 1:	return (dir1&0xff);			// lower 8 bits of p1 rotation
-		case 2:	return readinputport(0);	// p1
-		case 3:	return 0xff;				// ?
-		case 4:	return (dir2>>8);			// upper 4 bits of p2 rotation + ?
-		case 5:	return (dir2&0xff);			// lower 8 bits of p2 rotation
-		case 6:	return readinputport(1);	// p2
-		case 7:	return 0xff;				// ?
+		case 0:	return (readinputport(2) & 0xf0) + (dir1>>8);	/* upper 4 bits of p1 rotation + coins*/
+		case 1:	return (dir1&0xff);			/* lower 8 bits of p1 rotation*/
+		case 2:	return readinputport(0);	/* p1*/
+		case 3:	return 0xff;				/* ?*/
+		case 4:	return (dir2>>8);			/* upper 4 bits of p2 rotation + ?*/
+		case 5:	return (dir2&0xff);			/* lower 8 bits of p2 rotation*/
+		case 6:	return readinputport(1);	/* p2*/
+		case 7:	return 0xff;				/* ?*/
 	}
 
 	return 0;
 }
 
 static MEMORY_READ_START( downtown_sub_readmem )
-	{ 0x0000, 0x01ff, MRA_RAM			},	// RAM
-	{ 0x0800, 0x0800, soundlatch_r		},	//
-	{ 0x0801, 0x0801, soundlatch2_r		},	//
-	{ 0x1000, 0x1007, downtown_ip_r		},	// Input Ports
-	{ 0x5000, 0x57ff, MRA_RAM			},	// Shared RAM
-	{ 0x7000, 0x7fff, MRA_ROM			},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1			},	// Banked ROM
-	{ 0xc000, 0xffff, MRA_ROM			},	// ROM
+	{ 0x0000, 0x01ff, MRA_RAM			},	/* RAM*/
+	{ 0x0800, 0x0800, soundlatch_r		},	/**/
+	{ 0x0801, 0x0801, soundlatch2_r		},	/**/
+	{ 0x1000, 0x1007, downtown_ip_r		},	/* Input Ports*/
+	{ 0x5000, 0x57ff, MRA_RAM			},	/* Shared RAM*/
+	{ 0x7000, 0x7fff, MRA_ROM			},	/* ROM*/
+	{ 0x8000, 0xbfff, MRA_BANK1			},	/* Banked ROM*/
+	{ 0xc000, 0xffff, MRA_ROM			},	/* ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( downtown_sub_writemem )
-	{ 0x0000, 0x01ff, MWA_RAM				},	// RAM
-	{ 0x1000, 0x1000, sub_bankswitch_lockout_w		},	// ROM Bank + Coin Lockout
-	{ 0x5000, 0x57ff, MWA_RAM, &sharedram	},	// Shared RAM
-	{ 0x7000, 0xffff, MWA_ROM				},	// ROM
+	{ 0x0000, 0x01ff, MWA_RAM				},	/* RAM*/
+	{ 0x1000, 0x1000, sub_bankswitch_lockout_w		},	/* ROM Bank + Coin Lockout*/
+	{ 0x5000, 0x57ff, MWA_RAM, &sharedram	},	/* Shared RAM*/
+	{ 0x7000, 0xffff, MWA_ROM				},	/* ROM*/
 MEMORY_END
 
 /***************************************************************************
@@ -2722,22 +2722,22 @@ MEMORY_END
 WRITE_HANDLER( calibr50_soundlatch2_w )
 {
 	soundlatch2_w(0,data);
-	cpu_spinuntil_time(TIME_IN_USEC(50));	// Allow the other cpu to reply
+	cpu_spinuntil_time(TIME_IN_USEC(50));	/* Allow the other cpu to reply*/
 }
 
 static MEMORY_READ_START( calibr50_sub_readmem )
-	{ 0x0000, 0x1fff, seta_sound_r		},	// Sound
-	{ 0x4000, 0x4000, soundlatch_r		},	// From Main CPU
-	{ 0x8000, 0xbfff, MRA_BANK1			},	// Banked ROM
-	{ 0xc000, 0xffff, MRA_ROM			},	// ROM
+	{ 0x0000, 0x1fff, seta_sound_r		},	/* Sound*/
+	{ 0x4000, 0x4000, soundlatch_r		},	/* From Main CPU*/
+	{ 0x8000, 0xbfff, MRA_BANK1			},	/* Banked ROM*/
+	{ 0xc000, 0xffff, MRA_ROM			},	/* ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( calibr50_sub_writemem )
-	{ 0x0000, 0x1fff, seta_sound_w				},	// Sound
-	{ 0x4000, 0x4000, sub_bankswitch_w			},	// Bankswitching
-	{ 0x8000, 0xbfff, MWA_ROM					},	// Banked ROM
-	{ 0xc000, 0xc000, calibr50_soundlatch2_w	},	// To Main CPU
-	{ 0xc000, 0xffff, MWA_ROM					},	// ROM
+	{ 0x0000, 0x1fff, seta_sound_w				},	/* Sound*/
+	{ 0x4000, 0x4000, sub_bankswitch_w			},	/* Bankswitching*/
+	{ 0x8000, 0xbfff, MWA_ROM					},	/* Banked ROM*/
+	{ 0xc000, 0xc000, calibr50_soundlatch2_w	},	/* To Main CPU*/
+	{ 0xc000, 0xffff, MWA_ROM					},	/* ROM*/
 MEMORY_END
 
 /***************************************************************************
@@ -2745,26 +2745,26 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ_START( metafox_sub_readmem )
-	{ 0x0000, 0x01ff, MRA_RAM			},	// RAM
-	{ 0x0800, 0x0800, soundlatch_r		},	//
-	{ 0x0801, 0x0801, soundlatch2_r		},	//
-	{ 0x1000, 0x1000, input_port_2_r	},	// Coins
-	{ 0x1002, 0x1002, input_port_0_r	},	// P1
-//	{ 0x1004, 0x1004, MRA_NOP			},	// ?
-	{ 0x1006, 0x1006, input_port_1_r	},	// P2
-	{ 0x5000, 0x57ff, MRA_RAM			},	// Shared RAM
-	{ 0x7000, 0x7fff, MRA_ROM			},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1			},	// Banked ROM
-	{ 0xc000, 0xffff, MRA_ROM			},	// ROM
+	{ 0x0000, 0x01ff, MRA_RAM			},	/* RAM*/
+	{ 0x0800, 0x0800, soundlatch_r		},	/**/
+	{ 0x0801, 0x0801, soundlatch2_r		},	/**/
+	{ 0x1000, 0x1000, input_port_2_r	},	/* Coins*/
+	{ 0x1002, 0x1002, input_port_0_r	},	/* P1*/
+/*	{ 0x1004, 0x1004, MRA_NOP			},	*/ /* ?*/
+	{ 0x1006, 0x1006, input_port_1_r	},	/* P2*/
+	{ 0x5000, 0x57ff, MRA_RAM			},	/* Shared RAM*/
+	{ 0x7000, 0x7fff, MRA_ROM			},	/* ROM*/
+	{ 0x8000, 0xbfff, MRA_BANK1			},	/* Banked ROM*/
+	{ 0xc000, 0xffff, MRA_ROM			},	/* ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( metafox_sub_writemem )
-	{ 0x0000, 0x01ff, MWA_RAM				},	// RAM
-	{ 0x1000, 0x1000, sub_bankswitch_lockout_w		},	// ROM Bank + Coin Lockout
-	{ 0x5000, 0x57ff, MWA_RAM, &sharedram	},	// Shared RAM
-	{ 0x7000, 0x7fff, MWA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM				},	// ROM
-	{ 0xc000, 0xffff, MWA_ROM				},	// ROM
+	{ 0x0000, 0x01ff, MWA_RAM				},	/* RAM*/
+	{ 0x1000, 0x1000, sub_bankswitch_lockout_w		},	/* ROM Bank + Coin Lockout*/
+	{ 0x5000, 0x57ff, MWA_RAM, &sharedram	},	/* Shared RAM*/
+	{ 0x7000, 0x7fff, MWA_ROM				},	/* ROM*/
+	{ 0x8000, 0xbfff, MWA_ROM				},	/* ROM*/
+	{ 0xc000, 0xffff, MWA_ROM				},	/* ROM*/
 MEMORY_END
 
 
@@ -2792,7 +2792,7 @@ static PORT_WRITE_START( utoukond_sound_writeport )
 	{ 0x01, 0x01, YM2612_data_port_0_A_w },
 	{ 0x02, 0x02, YM2612_control_port_0_B_w },
 	{ 0x03, 0x03, YM2612_data_port_0_B_w },
-	{ 0x80, 0x80, IOWP_NOP }, //?
+	{ 0x80, 0x80, IOWP_NOP }, /*?*/
 PORT_END
 
 
@@ -2879,13 +2879,13 @@ PORT_END
 ***************************************************************************/
 
 INPUT_PORTS_START( arbalest )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE2_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE2_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -2895,17 +2895,17 @@ INPUT_PORTS_START( arbalest )
 	PORT_BIT_IMPULSE( 0x0040, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT_IMPULSE( 0x0080, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x4001, 0x0000, "Licensed To" )
 	PORT_DIPSETTING(      0x0000, "Taito" )
-//	PORT_DIPSETTING(      0x4000, "Taito" )
+/*	PORT_DIPSETTING(      0x4000, "Taito" )*/
 	PORT_DIPSETTING(      0x4001, "Romstar" )
 	PORT_DIPSETTING(      0x0001, "Jordan" )
 	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_SERVICE( 0x0004, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x0008, 0x0008, "Unknown 2-4" )	// not used, according to manual
+	PORT_DIPNAME( 0x0008, 0x0008, "Unknown 2-4" )	/* not used, according to manual*/
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0030, 0x0030, DEF_STR( Coin_A ) )
@@ -2934,8 +2934,8 @@ INPUT_PORTS_START( arbalest )
 	PORT_DIPSETTING(      0x0000, "2" )
 	PORT_DIPSETTING(      0x3000, "3" )
 	PORT_DIPSETTING(      0x2000, "5" )
-//                        0x4000  License (see first dsw)
-	PORT_DIPNAME( 0x8000, 0x8000, "Coinage Type" )	// not supported
+/*                        0x4000  License (see first dsw)*/
+	PORT_DIPNAME( 0x8000, 0x8000, "Coinage Type" )	/* not supported*/
 	PORT_DIPSETTING(      0x8000, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
 INPUT_PORTS_END
@@ -2946,7 +2946,7 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( atehate )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_BUTTON3  |  IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_BUTTON4  |  IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON1  |  IPF_PLAYER1 )
@@ -2956,7 +2956,7 @@ INPUT_PORTS_START( atehate )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START1  )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_BUTTON3  |  IPF_PLAYER2 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_BUTTON4  |  IPF_PLAYER2 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON1  |  IPF_PLAYER2 )
@@ -2966,17 +2966,17 @@ INPUT_PORTS_START( atehate )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START2  )
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT_IMPULSE( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1, 5 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT(  0x0010, IP_ACTIVE_LOW,  IPT_UNKNOWN ) // 4 Bits Called "Cut DSW"
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW,  IPT_UNKNOWN ) /* 4 Bits Called "Cut DSW"*/
 	PORT_BIT(  0x0020, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
-	PORT_START	// IN3 - 2 DSWs - $e00001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $e00001 & 3.b*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( 3C_1C ) )
@@ -2998,7 +2998,7 @@ INPUT_PORTS_START( atehate )
 	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0040, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0080, 0x0080, "Unknown 2-7" )	// manual: unused
+	PORT_DIPNAME( 0x0080, 0x0080, "Unknown 2-7" )	/* manual: unused*/
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
@@ -3029,13 +3029,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( blandia )
-	PORT_START	// IN0 - Player 1 - $400000.w
+	PORT_START	/* IN0 - Player 1 - $400000.w*/
 	JOY_TYPE1_3BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2 - $400002.w
+	PORT_START	/* IN1 - Player 2 - $400002.w*/
 	JOY_TYPE1_3BUTTONS(2)
 
-	PORT_START	// IN2 - Coins - $400004.w
+	PORT_START	/* IN2 - Coins - $400004.w*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -3045,11 +3045,11 @@ INPUT_PORTS_START( blandia )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0002, 0x0002, "Coinage Type" )	// not supported
+	PORT_DIPNAME( 0x0002, 0x0002, "Coinage Type" )	/* not supported*/
 	PORT_DIPSETTING(      0x0002, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
 	PORT_DIPNAME( 0x001c, 0x001c, DEF_STR( Coin_A ) )
@@ -3100,13 +3100,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( blockcar )
-	PORT_START	// IN0 - Player 1 - $500001.b
-	JOY_TYPE1_2BUTTONS(1)	// button2 = speed up
+	PORT_START	/* IN0 - Player 1 - $500001.b*/
+	JOY_TYPE1_2BUTTONS(1)	/* button2 = speed up*/
 
-	PORT_START	// IN1 - Player 2 - $500003.b
+	PORT_START	/* IN1 - Player 2 - $500003.b*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins + DSW - $500005.b
+	PORT_START	/* IN2 - Coins + DSW - $500005.b*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -3115,7 +3115,7 @@ INPUT_PORTS_START( blockcar )
 	PORT_DIPSETTING(      0x0010, "Thunder & Lightning 2" )
 	PORT_DIPSETTING(      0x0000, "Block Carnival" )
 
-	PORT_START	// IN3 - 2 DSWs - $300003 & 1.b
+	PORT_START	/* IN3 - 2 DSWs - $300003 & 1.b*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0002, "Easy"    )
 	PORT_DIPSETTING(      0x0003, "Normal"  )
@@ -3147,7 +3147,7 @@ INPUT_PORTS_START( blockcar )
 	PORT_DIPNAME( 0x0400, 0x0400, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0400, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0800, 0x0800, "Unknown 1-3" )	// service mode, according to a file in the archive
+	PORT_DIPNAME( 0x0800, 0x0800, "Unknown 1-3" )	/* service mode, according to a file in the archive*/
 	PORT_DIPSETTING(      0x0800, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x3000, 0x3000, DEF_STR( Coin_A ) )
@@ -3169,13 +3169,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( calibr50 )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE2_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE2_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -3185,7 +3185,7 @@ INPUT_PORTS_START( calibr50 )
 	PORT_BIT_IMPULSE( 0x0040, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT_IMPULSE( 0x0080, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x4001, 0x4000, "Licensed To" )
 	PORT_DIPSETTING(      0x0001, "Romstar"       )
 	PORT_DIPSETTING(      0x4001, "Taito America" )
@@ -3226,15 +3226,15 @@ INPUT_PORTS_START( calibr50 )
 	PORT_DIPNAME( 0x2000, 0x2000, "Erase Backup Ram" )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x2000, DEF_STR( On ) )
-	//                    0x4000  Country / License (see first dsw)
+	/*                    0x4000  Country / License (see first dsw)*/
 	PORT_DIPNAME( 0x8000, 0x8000, "Unknown 2-7" )	/* manual: "Don't Touch" */
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN4 - Rotation Player 1
+	PORT_START	/* IN4 - Rotation Player 1*/
 	JOY_ROTATION(1, Z, X)
 
-	PORT_START	// IN5 - Rotation Player 2
+	PORT_START	/* IN5 - Rotation Player 2*/
 	JOY_ROTATION(2, N, M)
 INPUT_PORTS_END
 
@@ -3255,16 +3255,16 @@ INPUT_PORTS_START( daioh )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	/* These are NOT Dip Switches but jumpers */
-	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unused ) )	// JP9
+	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unused ) )	/* JP9*/
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unused ) )	// JP8
+	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unused ) )	/* JP8*/
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unused ) )	// JP7
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unused ) )	/* JP7*/
 	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0080, 0x0080, "Country" )			// JP6
+	PORT_DIPNAME( 0x0080, 0x0080, "Country" )			/* JP6*/
 	PORT_DIPSETTING(      0x0080, "USA (6 buttons)" )
 	PORT_DIPSETTING(      0x0000, "Japan (2 buttons)" )
 
@@ -3330,18 +3330,18 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( drgnunit )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_3BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_3BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_TILT     )
-	PORT_DIPNAME( 0x0010, 0x0010, "Coinage Type" ) // not supported
+	PORT_DIPNAME( 0x0010, 0x0010, "Coinage Type" ) /* not supported*/
 	PORT_DIPSETTING(      0x0010, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
 	PORT_DIPNAME( 0x0020, 0x0020, "Title" )
@@ -3353,7 +3353,7 @@ INPUT_PORTS_START( drgnunit )
 	PORT_DIPSETTING(      0x0040, "Seta USA / Taito America" )
 	PORT_DIPSETTING(      0x0000, "Seta USA / Romstar" )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0003, 0x0002, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0003, "Easy" )
 	PORT_DIPSETTING(      0x0002, "Normal" )
@@ -3405,13 +3405,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( downtown )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE2_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE2_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -3421,7 +3421,7 @@ INPUT_PORTS_START( downtown )
 	PORT_BIT_IMPULSE( 0x0040, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT_IMPULSE( 0x0080, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0001, 0x0000, "Sales" )
 	PORT_DIPSETTING(      0x0001, "Japan Only" )
 	PORT_DIPSETTING(      0x0000, "World" )
@@ -3442,7 +3442,7 @@ INPUT_PORTS_START( downtown )
 	PORT_DIPSETTING(      0x00c0, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(      0x0080, DEF_STR( 1C_2C ) )
-// other coinage
+/* other coinage*/
 #if 0
 	PORT_DIPNAME( 0x0030, 0x0030, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 4C_1C ) )
@@ -3474,14 +3474,14 @@ INPUT_PORTS_START( downtown )
 	PORT_DIPNAME( 0x4000, 0x0000, "World License" )
 	PORT_DIPSETTING(      0x4000, "Romstar" )
 	PORT_DIPSETTING(      0x0000, "Taito" )
-	PORT_DIPNAME( 0x8000, 0x8000, "Coinage Type" )	// not supported
+	PORT_DIPNAME( 0x8000, 0x8000, "Coinage Type" )	/* not supported*/
 	PORT_DIPSETTING(      0x8000, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
 
-	PORT_START	// IN4 - Rotation Player 1
+	PORT_START	/* IN4 - Rotation Player 1*/
 	JOY_ROTATION(1, Z, X)
 
-	PORT_START	// IN5 - Rotation Player 2
+	PORT_START	/* IN5 - Rotation Player 2*/
 	JOY_ROTATION(1, N, M)
 INPUT_PORTS_END
 
@@ -3492,13 +3492,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( eightfrc )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -3508,7 +3508,7 @@ INPUT_PORTS_START( eightfrc )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0005, DEF_STR( 3C_1C ) )
@@ -3563,7 +3563,7 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( extdwnhl )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 | IPF_2WAY )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 | IPF_2WAY )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -3573,7 +3573,7 @@ INPUT_PORTS_START( extdwnhl )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START1  )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 | IPF_2WAY )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 | IPF_2WAY )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -3583,15 +3583,15 @@ INPUT_PORTS_START( extdwnhl )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START2  )
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_SERVICE )	// "test"
+	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_SERVICE )	/* "test"*/
 	/* These are NOT Dip Switches but jumpers */
 	PORT_DIPNAME( 0x0030, 0x0030, "Country" )
 	PORT_DIPSETTING(      0x0030, "World" )
-//	PORT_DIPSETTING(      0x0020, "World" )	// duplicated settings
+/*	PORT_DIPSETTING(      0x0020, "World" )	*/ /* duplicated settings*/
 	PORT_DIPSETTING(      0x0010, "USA" )
 	PORT_DIPSETTING(      0x0000, "Japan" )
 	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unused ) )
@@ -3601,7 +3601,7 @@ INPUT_PORTS_START( extdwnhl )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - 2 DSWs - $400009 & b.b
+	PORT_START	/* IN3 - 2 DSWs - $400009 & b.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -3657,13 +3657,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( gundhara )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_3BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_3BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -3673,7 +3673,7 @@ INPUT_PORTS_START( gundhara )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0005, DEF_STR( 3C_1C ) )
@@ -3726,27 +3726,27 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( zombraid )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN  )
-	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_BUTTON1		|	IPF_PLAYER1  )	// Trigger
-	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_BUTTON2		|	IPF_PLAYER1  )	// Reload
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_BUTTON1		|	IPF_PLAYER1  )	/* Trigger*/
+	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_BUTTON2		|	IPF_PLAYER1  )	/* Reload*/
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START1   )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN  )
-	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_BUTTON1		|	IPF_PLAYER2  )	// Trigger
-	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_BUTTON2		|	IPF_PLAYER2  )	// Reload
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_BUTTON1		|	IPF_PLAYER2  )	/* Trigger*/
+	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_BUTTON2		|	IPF_PLAYER2  )	/* Reload*/
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START2   )
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -3821,13 +3821,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( jjsquawk )
-	PORT_START	// IN0 - Player 1 - $400000.w
+	PORT_START	/* IN0 - Player 1 - $400000.w*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2 - $400002.w
+	PORT_START	/* IN1 - Player 2 - $400002.w*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins - $400004.w
+	PORT_START	/* IN2 - Coins - $400004.w*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -3837,7 +3837,7 @@ INPUT_PORTS_START( jjsquawk )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( 3C_1C ) )
@@ -3859,7 +3859,7 @@ INPUT_PORTS_START( jjsquawk )
 	PORT_DIPNAME( 0x0040, 0x0000, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0080, 0x0080, "Unknown 2-7" )	// ?? screen related
+	PORT_DIPNAME( 0x0080, 0x0080, "Unknown 2-7" )	/* ?? screen related*/
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
@@ -3889,13 +3889,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( kamenrid )
-	PORT_START	// IN0 - Player 1
-	JOY_TYPE1_2BUTTONS(1)	// BUTTON3 in "test mode" only
+	PORT_START	/* IN0 - Player 1*/
+	JOY_TYPE1_2BUTTONS(1)	/* BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN1 - Player 2
-	JOY_TYPE1_2BUTTONS(2)	// BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - Player 2*/
+	JOY_TYPE1_2BUTTONS(2)	/* BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -3914,24 +3914,24 @@ INPUT_PORTS_START( kamenrid )
 	PORT_DIPSETTING(      0x0080, "USA" )
 	PORT_DIPSETTING(      0x0000, "Japan" )
 
-	PORT_START	// IN3 - 2 DSWs - $500005 & 7.b
+	PORT_START	/* IN3 - 2 DSWs - $500005 & 7.b*/
 	PORT_SERVICE( 0x0001, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unused ) )		// masked at 0x001682
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unused ) )		/* masked at 0x001682*/
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unused ) )		// masked at 0x001682
+	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unused ) )		/* masked at 0x001682*/
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )			// (displays debug infos)
-	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unused ) )		// masked at 0x001682
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )			/* (displays debug infos)*/
+	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unused ) )		/* masked at 0x001682*/
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )			// (unknown effect at 0x00606a, 0x0060de, 0x00650a)
-	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unused ) )		// check code at 0x001792
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )			/* (unknown effect at 0x00606a, 0x0060de, 0x00650a)*/
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unused ) )		/* check code at 0x001792*/
 	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Flip_Screen ) )
@@ -3975,13 +3975,13 @@ INPUT_PORTS_END
 	PORT_ANALOG( 0x0fff, 0x0000, IPT_TRACKBALL_##_dir_ | IPF_PLAYER##_n_ | IPF_REVERSE, 70, 30, 0, 0 )
 
 INPUT_PORTS_START( krzybowl )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_3BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_3BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT_IMPULSE( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1, 5 )
@@ -3991,7 +3991,7 @@ INPUT_PORTS_START( krzybowl )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -4039,16 +4039,16 @@ INPUT_PORTS_START( krzybowl )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN4 - Rotation X Player 1
+	PORT_START	/* IN4 - Rotation X Player 1*/
 	KRZYBOWL_TRACKBALL(X,1)
 
-	PORT_START	// IN5 - Rotation Y Player 1
+	PORT_START	/* IN5 - Rotation Y Player 1*/
 	KRZYBOWL_TRACKBALL(Y,1)
 
-	PORT_START	// IN6 - Rotation X Player 2
+	PORT_START	/* IN6 - Rotation X Player 2*/
 	KRZYBOWL_TRACKBALL(X|IPF_REVERSE,2)
 
-	PORT_START	// IN7 - Rotation Y Player 2
+	PORT_START	/* IN7 - Rotation Y Player 2*/
 	KRZYBOWL_TRACKBALL(Y,2)
 INPUT_PORTS_END
 
@@ -4058,13 +4058,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( madshark )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -4083,7 +4083,7 @@ INPUT_PORTS_START( madshark )
 	PORT_DIPSETTING(      0x0080, "Japan" )
 	PORT_DIPSETTING(      0x0000, "World" )
 
-	PORT_START	// IN3 - 2 DSWs
+	PORT_START	/* IN3 - 2 DSWs*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -4136,13 +4136,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( metafox )
-	PORT_START	// IN0
+	PORT_START	/* IN0*/
 	JOY_TYPE2_2BUTTONS(1)
 
-	PORT_START	// IN1
+	PORT_START	/* IN1*/
 	JOY_TYPE2_2BUTTONS(2)
 
-	PORT_START	// IN2
+	PORT_START	/* IN2*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -4152,7 +4152,7 @@ INPUT_PORTS_START( metafox )
 	PORT_BIT_IMPULSE( 0x0040, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT_IMPULSE( 0x0080, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x4001, 0x4001, "Licensed To"    )
 	PORT_DIPSETTING(      0x0001, "Jordan"        )
 	PORT_DIPSETTING(      0x4001, "Romstar"       )
@@ -4192,8 +4192,8 @@ INPUT_PORTS_START( metafox )
 	PORT_DIPSETTING(      0x0000, "2" )
 	PORT_DIPSETTING(      0x3000, "3" )
 	PORT_DIPSETTING(      0x2000, "5" )
-//	PORT_DIPNAME( 0x4000, 0x4000, "License" )
-	PORT_DIPNAME( 0x8000, 0x8000, "Coinage Type" )	// not supported
+/*	PORT_DIPNAME( 0x4000, 0x4000, "License" )*/
+	PORT_DIPNAME( 0x8000, 0x8000, "Coinage Type" )	/* not supported*/
 	PORT_DIPSETTING(      0x8000, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
 INPUT_PORTS_END
@@ -4206,13 +4206,13 @@ INPUT_PORTS_END
 
 
 INPUT_PORTS_START( msgundam )
-	PORT_START	// IN0 - Player 1 - $400000.w
+	PORT_START	/* IN0 - Player 1 - $400000.w*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2 - $400002.w
+	PORT_START	/* IN1 - Player 2 - $400002.w*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins - $400004.w
+	PORT_START	/* IN2 - Coins - $400004.w*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -4224,7 +4224,7 @@ INPUT_PORTS_START( msgundam )
 	PORT_DIPSETTING(      0x0080, "English" )
 	PORT_DIPSETTING(      0x0000, "Japanese" )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 3C_1C ) )
@@ -4253,7 +4253,7 @@ INPUT_PORTS_START( msgundam )
 	PORT_DIPNAME( 0x0100, 0x0100, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0100, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0600, 0x0600, DEF_STR( Difficulty ) )	// unverified, from the manual
+	PORT_DIPNAME( 0x0600, 0x0600, DEF_STR( Difficulty ) )	/* unverified, from the manual*/
 	PORT_DIPSETTING(      0x0400, "Easy"    )
 	PORT_DIPSETTING(      0x0600, "Normal"  )
 	PORT_DIPSETTING(      0x0200, "Hard"    )
@@ -4274,13 +4274,13 @@ INPUT_PORTS_START( msgundam )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( msgunda1 )
-	PORT_START	// IN0 - Player 1 - $400000.w
+	PORT_START	/* IN0 - Player 1 - $400000.w*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2 - $400002.w
+	PORT_START	/* IN1 - Player 2 - $400002.w*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins - $400004.w
+	PORT_START	/* IN2 - Coins - $400004.w*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -4290,10 +4290,10 @@ INPUT_PORTS_START( msgunda1 )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	/* this set seems to be a japan set, english mode doesn't work correctly */
 	PORT_DIPNAME( 0x0080, 0x0000, "Language" )
-//	PORT_DIPSETTING(      0x0080, "English" )
+/*	PORT_DIPSETTING(      0x0080, "English" )*/
 	PORT_DIPSETTING(      0x0000, "Japanese" )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 3C_1C ) )
@@ -4322,7 +4322,7 @@ INPUT_PORTS_START( msgunda1 )
 	PORT_DIPNAME( 0x0100, 0x0100, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0100, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0600, 0x0600, DEF_STR( Difficulty ) )	// unverified, from the manual
+	PORT_DIPNAME( 0x0600, 0x0600, DEF_STR( Difficulty ) )	/* unverified, from the manual*/
 	PORT_DIPSETTING(      0x0400, "Easy"    )
 	PORT_DIPSETTING(      0x0600, "Normal"  )
 	PORT_DIPSETTING(      0x0200, "Hard"    )
@@ -4348,13 +4348,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( oisipuzl )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -4364,7 +4364,7 @@ INPUT_PORTS_START( oisipuzl )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0002, "Easy" )
 	PORT_DIPSETTING(      0x0003, "Normal" )
@@ -4373,7 +4373,7 @@ INPUT_PORTS_START( oisipuzl )
 	PORT_DIPNAME( 0x0004, 0x0000, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0008, 0x0008, "Unknown 1-3" )	// these seem unused
+	PORT_DIPNAME( 0x0008, 0x0008, "Unknown 1-3" )	/* these seem unused*/
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0010, 0x0010, "Unknown 1-4" )
@@ -4405,7 +4405,7 @@ INPUT_PORTS_START( oisipuzl )
 	PORT_DIPSETTING(      0x3000, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(      0x2800, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(      0x2000, DEF_STR( 1C_4C ) )
-	PORT_DIPNAME( 0x8000, 0x8000, "Unknown 2-7" )		// this seems unused
+	PORT_DIPNAME( 0x8000, 0x8000, "Unknown 2-7" )		/* this seems unused*/
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -4417,15 +4417,15 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( kiwame )
-	PORT_START	// IN0 - Unused
-	PORT_START	// IN1 - Unused
+	PORT_START	/* IN0 - Unused*/
+	PORT_START	/* IN1 - Unused*/
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT_IMPULSE( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1, 5 )
 
-	PORT_START	// IN3 - 2 DSWs - $e00001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $e00001 & 3.b*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( 3C_1C ) )
@@ -4484,14 +4484,14 @@ bit	0		a	b	c	d	lc
 	5		st	bt
 */
 
-	PORT_START	// IN4
+	PORT_START	/* IN4*/
 	PORT_BITX(0x0001, IP_ACTIVE_LOW, 0, "P1 LC",  KEYCODE_RCONTROL, IP_JOY_NONE )
 	PORT_BIT (0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT (0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x0008, IP_ACTIVE_LOW, 0, "P1 FF",  KEYCODE_RALT,     IP_JOY_NONE )
 	PORT_BIT (0xfff0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN5
+	PORT_START	/* IN5*/
 	PORT_BITX(0x0001, IP_ACTIVE_LOW, 0, "P1 B",     KEYCODE_B,      IP_JOY_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "P1 F",     KEYCODE_F,      IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "P1 J",     KEYCODE_J,      IP_JOY_NONE )
@@ -4500,7 +4500,7 @@ bit	0		a	b	c	d	lc
 	PORT_BITX(0x0020, IP_ACTIVE_LOW, 0, "P1 BT",    KEYCODE_X,      IP_JOY_NONE )
 	PORT_BIT (0xffc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN6
+	PORT_START	/* IN6*/
 	PORT_BITX(0x0001, IP_ACTIVE_LOW, 0, "P1 A",   KEYCODE_A,        IP_JOY_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "P1 E",   KEYCODE_E,        IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "P1 I",   KEYCODE_I,        IP_JOY_NONE )
@@ -4509,7 +4509,7 @@ bit	0		a	b	c	d	lc
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_START1  )
 	PORT_BIT (0xffc0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN7
+	PORT_START	/* IN7*/
 	PORT_BITX(0x0001, IP_ACTIVE_LOW, 0, "P1 C",   KEYCODE_C,     IP_JOY_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "P1 G",   KEYCODE_G,     IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "P1 K",   KEYCODE_K,     IP_JOY_NONE )
@@ -4517,7 +4517,7 @@ bit	0		a	b	c	d	lc
 	PORT_BITX(0x0010, IP_ACTIVE_LOW, 0, "P1 Ron", KEYCODE_Z,     IP_JOY_NONE )
 	PORT_BIT (0xffe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN8
+	PORT_START	/* IN8*/
 	PORT_BITX(0x0001, IP_ACTIVE_LOW, 0, "P1 D",   KEYCODE_D,    IP_JOY_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "P1 H",   KEYCODE_H,    IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "P1 L",   KEYCODE_L,    IP_JOY_NONE )
@@ -4532,33 +4532,33 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( qzkklogy )
-	PORT_START	// IN0 - Player 1 - $b00001.b
+	PORT_START	/* IN0 - Player 1 - $b00001.b*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
-	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )	// pause (cheat)
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* pause (cheat)*/
 	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START1  )
 
-	PORT_START	// IN1 - Player 2 - $b00003.b
+	PORT_START	/* IN1 - Player 2 - $b00003.b*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
-	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )	// pause (cheat)
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* pause (cheat)*/
 	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START2  )
 
-	PORT_START	// IN2 - Coins - $b00005.b
+	PORT_START	/* IN2 - Coins - $b00005.b*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0003, 0x0003, "Unknown 1-0&1*" )
 	PORT_DIPSETTING(      0x0000, "0" )
 	PORT_DIPSETTING(      0x0001, "1" )
@@ -4612,7 +4612,7 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( qzkklgy2 )
-	PORT_START	// IN0 - Player 1 - $b00001.b
+	PORT_START	/* IN0 - Player 1 - $b00001.b*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
@@ -4622,7 +4622,7 @@ INPUT_PORTS_START( qzkklgy2 )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START1  )
 
-	PORT_START	// IN1 - Player 2 - $b00003.b
+	PORT_START	/* IN1 - Player 2 - $b00003.b*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
@@ -4632,13 +4632,13 @@ INPUT_PORTS_START( qzkklgy2 )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_START2  )
 
-	PORT_START	// IN2 - Coins - $b00005.b
+	PORT_START	/* IN2 - Coins - $b00005.b*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0003, 0x0003, "Unknown 1-0&1*" )
 	PORT_DIPSETTING(      0x0000, "0" )
 	PORT_DIPSETTING(      0x0001, "1" )
@@ -4691,13 +4691,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( rezon )
-	PORT_START	// IN0 - Player 1
-	JOY_TYPE1_3BUTTONS(1)	// 1 used??
+	PORT_START	/* IN0 - Player 1*/
+	JOY_TYPE1_3BUTTONS(1)	/* 1 used??*/
 
-	PORT_START	// IN1 - Player 2
-	JOY_TYPE1_3BUTTONS(2)	// 1 used ??
+	PORT_START	/* IN1 - Player 2*/
+	JOY_TYPE1_3BUTTONS(2)	/* 1 used ??*/
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -4707,7 +4707,7 @@ INPUT_PORTS_START( rezon )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -4721,7 +4721,7 @@ INPUT_PORTS_START( rezon )
 	PORT_DIPSETTING(      0x0000, "Upright 1 Controller" )
 	PORT_DIPSETTING(      0x0018, "Upright 2 Controllers" )
 	PORT_DIPSETTING(      0x0008, DEF_STR( Cocktail ) )
-//	PORT_DIPSETTING(      0x0010, "10" )				/* Unused / Not Defined */
+/*	PORT_DIPSETTING(      0x0010, "10" )				 // Unused / Not Defined /*/
 	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -4769,13 +4769,13 @@ INPUT_PORTS_END
 	pressing P1's button3 freezes the game (pressing P2's button3 resumes it).
 */
 INPUT_PORTS_START( neobattl )
-	PORT_START	// IN0 - Player 1 - $400000.w
-	JOY_TYPE1_1BUTTON(1)	// bump to 3 buttons for freezing to work
+	PORT_START	/* IN0 - Player 1 - $400000.w*/
+	JOY_TYPE1_1BUTTON(1)	/* bump to 3 buttons for freezing to work*/
 
-	PORT_START	// IN1 - Player 2 - $400002.w
-	JOY_TYPE1_1BUTTON(2)	// bump to 3 buttons for freezing to work
+	PORT_START	/* IN1 - Player 2 - $400002.w*/
+	JOY_TYPE1_1BUTTON(2)	/* bump to 3 buttons for freezing to work*/
 
-	PORT_START	// IN2 - Coins - $400004.w
+	PORT_START	/* IN2 - Coins - $400004.w*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -4785,26 +4785,26 @@ INPUT_PORTS_START( neobattl )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unknown ) )	// used
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unknown ) )	/* used*/
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_BITX(    0x0008, 0x0008, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Stage Select", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unknown ) )	// unused?
+	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unknown ) )	/* unused?*/
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unknown ) )	// unused?
+	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unknown ) )	/* unused?*/
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unknown ) )	// unused?
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unknown ) )	/* unused?*/
 	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
@@ -4845,13 +4845,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( sokonuke )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_1BUTTON(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_1BUTTON(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -4861,7 +4861,7 @@ INPUT_PORTS_START( sokonuke )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN3 - 2 DSWs - $400009 & b.b
+	PORT_START	/* IN3 - 2 DSWs - $400009 & b.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -4879,7 +4879,7 @@ INPUT_PORTS_START( sokonuke )
 	PORT_DIPNAME( 0x0020, 0x0020, "Unknown 1-5*" )
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unknown ) )	// unused?
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unknown ) )	/* unused?*/
 	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
@@ -4905,7 +4905,7 @@ INPUT_PORTS_START( sokonuke )
 	PORT_DIPNAME( 0x4000, 0x4000, "Cheap Continue" )
 	PORT_DIPSETTING(      0x4000, DEF_STR( No ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x8000, 0x8000, DEF_STR( Unknown ) )	// unused?
+	PORT_DIPNAME( 0x8000, 0x8000, DEF_STR( Unknown ) )	/* unused?*/
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -4917,27 +4917,27 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( stg )
-	PORT_START	// IN0 - Player 1 - $b00001.b
+	PORT_START	/* IN0 - Player 1 - $b00001.b*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2 - $b00003.b
+	PORT_START	/* IN1 - Player 2 - $b00003.b*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins - $b00005.b
+	PORT_START	/* IN2 - Coins - $b00005.b*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN  )
-//	PORT_DIPNAME( 0x00f0, 0x00f0, "Title" )
+/*	PORT_DIPNAME( 0x00f0, 0x00f0, "Title" )*/
 	/* This is the index in a table with pointers to the
 	   title logo, but the table is filled with just 1 value */
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(      0x0002, "Easy"    ) // 0
-	PORT_DIPSETTING(      0x0003, "Normal"  ) // 4
-	PORT_DIPSETTING(      0x0001, "Hard"    ) // 8
-	PORT_DIPSETTING(      0x0000, "Hardest" ) // b
+	PORT_DIPSETTING(      0x0002, "Easy"    ) /* 0*/
+	PORT_DIPSETTING(      0x0003, "Normal"  ) /* 4*/
+	PORT_DIPSETTING(      0x0001, "Hard"    ) /* 8*/
+	PORT_DIPSETTING(      0x0000, "Hardest" ) /* b*/
 	PORT_DIPNAME( 0x0004, 0x0004, "Unknown 1-2" )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -4986,13 +4986,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( thunderl )
-	PORT_START	// IN0 - Player 1
-	JOY_TYPE1_2BUTTONS(1)	// button2 = speed up
+	PORT_START	/* IN0 - Player 1*/
+	JOY_TYPE1_2BUTTONS(1)	/* button2 = speed up*/
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins + DSW
+	PORT_START	/* IN2 - Coins + DSW*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -5006,11 +5006,11 @@ INPUT_PORTS_START( thunderl )
 	PORT_DIPSETTING(      0x00e0, "Seta (Visco License)" )
 	PORT_DIPSETTING(      0x00a0, "Visco" )
 	PORT_DIPSETTING(      0x0060, "None" )
-//	PORT_DIPSETTING(      0x0040, "None" )
-//	PORT_DIPSETTING(      0x0020, "None" )
-//	PORT_DIPSETTING(      0x0000, "None" )
+/*	PORT_DIPSETTING(      0x0040, "None" )*/
+/*	PORT_DIPSETTING(      0x0020, "None" )*/
+/*	PORT_DIPSETTING(      0x0000, "None" )*/
 
-	PORT_START	// IN3 - 2 DSWs - $600003 & 1.b
+	PORT_START	/* IN3 - 2 DSWs - $600003 & 1.b*/
 	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x000c, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x000d, DEF_STR( 3C_1C ) )
@@ -5048,7 +5048,7 @@ INPUT_PORTS_START( thunderl )
 
 	PORT_SERVICE( 0x0100, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x0200, 0x0000, DEF_STR( Flip_Screen ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )		// WEIRD!
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )		/* WEIRD!*/
 	PORT_DIPSETTING(      0x0200, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0400, 0x0000, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Upright ) )
@@ -5076,13 +5076,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( tndrcade )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_START1   )
@@ -5092,7 +5092,7 @@ INPUT_PORTS_START( tndrcade )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0002, "Easy"    )
 	PORT_DIPSETTING(      0x0003, "Normal"  )
@@ -5111,7 +5111,7 @@ INPUT_PORTS_START( tndrcade )
 	PORT_DIPNAME( 0x0040, 0x0040, "Allow Continue" )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0040, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0080, 0x0000, "Licensed To" )	// + coin mode (not supported)
+	PORT_DIPNAME( 0x0080, 0x0000, "Licensed To" )	/* + coin mode (not supported)*/
 	PORT_DIPSETTING(      0x0080, "Taito America Corp." )
 	PORT_DIPSETTING(      0x0000, "Taito Corp. Japan" )
 
@@ -5143,13 +5143,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( tndrcadj )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_START1   )
@@ -5159,7 +5159,7 @@ INPUT_PORTS_START( tndrcadj )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0002, "Easy"    )
 	PORT_DIPSETTING(      0x0003, "Normal"  )
@@ -5211,13 +5211,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( twineagl )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_START1   )
@@ -5227,8 +5227,8 @@ INPUT_PORTS_START( twineagl )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
-	PORT_DIPNAME( 0x4001, 0x4001, "Copyright" )		// Always "Seta" if sim. players = 1
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
+	PORT_DIPNAME( 0x4001, 0x4001, "Copyright" )		/* Always "Seta" if sim. players = 1*/
 	PORT_DIPSETTING(      0x4001, "Seta (Taito license)" )
 	PORT_DIPSETTING(      0x0001, "Taito" )
 	PORT_DIPSETTING(      0x4000, "Taito America" )
@@ -5237,7 +5237,7 @@ INPUT_PORTS_START( twineagl )
 	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_SERVICE( 0x0004, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x0008, 0x0000, DEF_STR( Cabinet ) )	// Only if simultaneous players = 1
+	PORT_DIPNAME( 0x0008, 0x0000, DEF_STR( Cabinet ) )	/* Only if simultaneous players = 1*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Upright ) )
 	PORT_DIPSETTING(      0x0008, DEF_STR( Cocktail ) )
 	PORT_DIPNAME( 0x0030, 0x0030, DEF_STR( Coin_A ) )
@@ -5265,7 +5265,7 @@ INPUT_PORTS_START( twineagl )
 	PORT_DIPSETTING(      0x0000, "2" )
 	PORT_DIPSETTING(      0x3000, "3" )
 	PORT_DIPSETTING(      0x2000, "5" )
-	PORT_DIPNAME( 0x8000, 0x8000, "Coinage Type" )	// not supported
+	PORT_DIPNAME( 0x8000, 0x8000, "Coinage Type" )	/* not supported*/
 	PORT_DIPSETTING(      0x8000, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
 INPUT_PORTS_END
@@ -5277,13 +5277,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( umanclub )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -5293,14 +5293,14 @@ INPUT_PORTS_START( umanclub )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs
+	PORT_START	/* IN3 - 2 DSWs*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0004, 0x0004, "Unknown 2-2*" )	//?
+	PORT_DIPNAME( 0x0004, 0x0004, "Unknown 2-2*" )	/*?*/
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_BITX(    0x0008, 0x0008, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Stage Select", IP_KEY_NONE, IP_JOY_NONE )
@@ -5352,13 +5352,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( utoukond )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_3BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_3BUTTONS(2)
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -5377,7 +5377,7 @@ INPUT_PORTS_START( utoukond )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - 2 DSWs
+	PORT_START	/* IN3 - 2 DSWs*/
 	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0005, DEF_STR( 3C_1C ) )
@@ -5443,22 +5443,22 @@ INPUT_PORTS_END
 	PORT_ANALOG( 0x0fff, 0x0000, IPT_TRACKBALL_##_dir_ | IPF_CENTER, 70, 30, 0, 0 )
 
 INPUT_PORTS_START( usclssic )
-	PORT_START	// IN0
+	PORT_START	/* IN0*/
 	TRACKBALL(X)
 	PORT_BIT   ( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT   ( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT   ( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT   ( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1
+	PORT_START	/* IN1*/
 	TRACKBALL(Y)
 	PORT_BIT   ( 0x1000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT   ( 0x2000, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT   ( 0x4000, IP_ACTIVE_HIGH, IPT_START1  )
 	PORT_BIT   ( 0x8000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
-	PORT_START	// IN2
-	PORT_BIT(  0x0001, IP_ACTIVE_LOW,  IPT_UNKNOWN  )	// tested (sound related?)
+	PORT_START	/* IN2*/
+	PORT_BIT(  0x0001, IP_ACTIVE_LOW,  IPT_UNKNOWN  )	/* tested (sound related?)*/
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
@@ -5467,7 +5467,7 @@ INPUT_PORTS_START( usclssic )
 	PORT_BIT(  0x0040, IP_ACTIVE_HIGH, IPT_SERVICE1 )
 	PORT_BIT(  0x0080, IP_ACTIVE_HIGH, IPT_TILT     )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, "Credits For 9-Hole" )
 	PORT_DIPSETTING(      0x0001, "2" )
 	PORT_DIPSETTING(      0x0000, "3" )
@@ -5520,14 +5520,14 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( wrofaero )
-	PORT_START	// IN0 - Player 1 - $400000.w
-	JOY_TYPE1_3BUTTONS(1)	// 3rd button selects the weapon
-							// when the dsw for cheating is on
+	PORT_START	/* IN0 - Player 1 - $400000.w*/
+	JOY_TYPE1_3BUTTONS(1)	/* 3rd button selects the weapon*/
+							/* when the dsw for cheating is on*/
 
-	PORT_START	// IN1 - Player 2 - $400002.w
+	PORT_START	/* IN1 - Player 2 - $400002.w*/
 	JOY_TYPE1_3BUTTONS(2)
 
-	PORT_START	// IN2 - Coins - $400004.w
+	PORT_START	/* IN2 - Coins - $400004.w*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -5537,17 +5537,17 @@ INPUT_PORTS_START( wrofaero )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0002, 0x0002, "Unknown 1-1*" )	// tested
+	PORT_DIPNAME( 0x0002, 0x0002, "Unknown 1-1*" )	/* tested*/
 	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0004, 0x0004, "Unknown 1-2*" )	// tested
+	PORT_DIPNAME( 0x0004, 0x0004, "Unknown 1-2*" )	/* tested*/
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_BITX(    0x0008, 0x0008, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Stage & Weapon Select", IP_KEY_NONE, IP_JOY_NONE )	// P2 Start Is Freeze Screen...
+	PORT_BITX(    0x0008, 0x0008, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Stage & Weapon Select", IP_KEY_NONE, IP_JOY_NONE )	/* P2 Start Is Freeze Screen...*/
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0010, 0x0010, "Unknown 1-4" )
@@ -5597,18 +5597,18 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( wits )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins + DSW
+	PORT_START	/* IN2 - Coins + DSW*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
 	PORT_BIT_IMPULSE( 0x0002, IP_ACTIVE_LOW, IPT_COIN2, 5 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_TILT     )
-	PORT_DIPNAME( 0x0010, 0x0010, "Unknown 3-4*" )	// Jumpers, I guess
+	PORT_DIPNAME( 0x0010, 0x0010, "Unknown 3-4*" )	/* Jumpers, I guess*/
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0020, 0x0020, "Unknown 3-5*" )
@@ -5620,7 +5620,7 @@ INPUT_PORTS_START( wits )
 	PORT_DIPSETTING(      0x0040, "Visco (Japan Only)" )
 	PORT_DIPSETTING(      0x0000, "Athena (Japan Only)" )
 
-	PORT_START	// IN3 - 2 DSWs - $600003 & 1.b
+	PORT_START	/* IN3 - 2 DSWs - $600003 & 1.b*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0002, "Easy" )
 	PORT_DIPSETTING(      0x0003, "Normal" )
@@ -5664,10 +5664,10 @@ INPUT_PORTS_START( wits )
 	PORT_DIPSETTING(      0x4000, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
 
-	PORT_START	// IN4 - Player 3
+	PORT_START	/* IN4 - Player 3*/
 	JOY_TYPE1_2BUTTONS(3)
 
-	PORT_START	// IN5 - Player 4
+	PORT_START	/* IN5 - Player 4*/
 	JOY_TYPE1_2BUTTONS(4)
 INPUT_PORTS_END
 
@@ -5677,15 +5677,15 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( zingzip )
-	PORT_START	// IN0 - Player 1 - $400000.w
+	PORT_START	/* IN0 - Player 1 - $400000.w*/
 	JOY_TYPE1_2BUTTONS(1)
 
-	PORT_START	// IN1 - Player 2 - $400002.w
+	PORT_START	/* IN1 - Player 2 - $400002.w*/
 	JOY_TYPE1_2BUTTONS(2)
 
-	PORT_START	// IN2 - Coins - $400004.w
+	PORT_START	/* IN2 - Coins - $400004.w*/
 	PORT_BIT_IMPULSE( 0x0001, IP_ACTIVE_LOW, IPT_COIN1, 5 )
-	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  ) // no coin 2
+	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN  ) /* no coin 2*/
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_TILT     )
 	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -5693,7 +5693,7 @@ INPUT_PORTS_START( zingzip )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - 2 DSWs - $600001 & 3.b
+	PORT_START	/* IN3 - 2 DSWs - $600001 & 3.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -5852,9 +5852,9 @@ static struct GfxLayout layout_packed_6bits_2roms =
 
 static struct GfxDecodeInfo blandia_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms,       0,           32 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_packed_6bits_3roms, 16*32+64*32, 32 }, // [1] Layer 1
-	{ REGION_GFX3, 0, &layout_packed_6bits_3roms, 16*32,       32 }, // [2] Layer 2
+	{ REGION_GFX1, 0, &layout_planes_2roms,       0,           32 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_packed_6bits_3roms, 16*32+64*32, 32 }, /* [1] Layer 1*/
+	{ REGION_GFX3, 0, &layout_packed_6bits_3roms, 16*32,       32 }, /* [2] Layer 2*/
 	{ -1 }
 };
 
@@ -5864,8 +5864,8 @@ static struct GfxDecodeInfo blandia_gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo downtown_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms,       512*0, 32 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_planes_2roms_split, 512*0, 32 }, // [1] Layer 1
+	{ REGION_GFX1, 0, &layout_planes_2roms,       512*0, 32 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_planes_2roms_split, 512*0, 32 }, /* [1] Layer 1*/
 	{ -1 }
 };
 
@@ -5875,9 +5875,9 @@ static struct GfxDecodeInfo downtown_gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo jjsquawk_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms,       0,             32 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_packed_6bits_2roms, 512 + 64*32*0, 32 }, // [1] Layer 1
-	{ REGION_GFX3, 0, &layout_packed_6bits_2roms, 512 + 64*32*1, 32 }, // [2] Layer 2
+	{ REGION_GFX1, 0, &layout_planes_2roms,       0,             32 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_packed_6bits_2roms, 512 + 64*32*0, 32 }, /* [1] Layer 1*/
+	{ REGION_GFX3, 0, &layout_packed_6bits_2roms, 512 + 64*32*1, 32 }, /* [2] Layer 2*/
 	{ -1 }
 };
 
@@ -5887,9 +5887,9 @@ static struct GfxDecodeInfo jjsquawk_gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo msgundam_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms, 512*0, 32 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_packed,       512*2, 32 }, // [1] Layer 1
-	{ REGION_GFX3, 0, &layout_packed,       512*1, 32 }, // [2] Layer 2
+	{ REGION_GFX1, 0, &layout_planes_2roms, 512*0, 32 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_packed,       512*2, 32 }, /* [1] Layer 1*/
+	{ REGION_GFX3, 0, &layout_packed,       512*1, 32 }, /* [2] Layer 2*/
 	{ -1 }
 };
 
@@ -5899,8 +5899,8 @@ static struct GfxDecodeInfo msgundam_gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo qzkklgy2_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms,	512*0, 32 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_packed, 		512*0, 32 }, // [1] Layer 1
+	{ REGION_GFX1, 0, &layout_planes_2roms,	512*0, 32 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_packed, 		512*0, 32 }, /* [1] Layer 1*/
 	{ -1 }
 };
 
@@ -5910,7 +5910,7 @@ static struct GfxDecodeInfo qzkklgy2_gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo tndrcade_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms, 512*0, 32 }, // [0] Sprites
+	{ REGION_GFX1, 0, &layout_planes_2roms, 512*0, 32 }, /* [0] Sprites*/
 	{ -1 }
 };
 
@@ -5923,8 +5923,8 @@ static struct GfxDecodeInfo tndrcade_gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo usclssic_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms,       512*0+256, 32/2 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_packed_6bits_3roms, 512*1, 32 }, // [1] Layer 1
+	{ REGION_GFX1, 0, &layout_planes_2roms,       512*0+256, 32/2 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_packed_6bits_3roms, 512*1, 32 }, /* [1] Layer 1*/
 	{ -1 }
 };
 
@@ -5934,9 +5934,9 @@ static struct GfxDecodeInfo usclssic_gfxdecodeinfo[] =
 
 static struct GfxDecodeInfo zingzip_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_planes_2roms,       512*0, 32 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_packed_6bits_2roms, 512*2, 32 }, // [1] Layer 1
-	{ REGION_GFX3, 0, &layout_packed,             512*1, 32 }, // [2] Layer 2
+	{ REGION_GFX1, 0, &layout_planes_2roms,       512*0, 32 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_packed_6bits_2roms, 512*2, 32 }, /* [1] Layer 1*/
+	{ REGION_GFX3, 0, &layout_packed,             512*1, 32 }, /* [2] Layer 2*/
 	{ -1 }
 };
 
@@ -6568,7 +6568,7 @@ static INTERRUPT_GEN( wrofaero_interrupt )
 
 MACHINE_INIT( wrofaero ) { uPD71054_timer_init(); }
 MACHINE_STOP( wrofaero ) { uPD71054_timer_stop(); }
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 
 
@@ -6584,11 +6584,11 @@ static MACHINE_DRIVER_START( gundhara )
 	MDRV_CPU_ADD(M68000, 16000000)
 	MDRV_CPU_MEMORY(wrofaero_readmem,wrofaero_writemem)
 #if	__uPD71054_TIMER
-//	MDRV_CPU_VBLANK_INT( wrofaero_interrupt, 1 )
+/*	MDRV_CPU_VBLANK_INT( wrofaero_interrupt, 1 )*/
 	MDRV_CPU_VBLANK_INT(seta_interrupt_1_and_2,SETA_INTERRUPTS_NUM)
 #else
 	MDRV_CPU_VBLANK_INT(seta_interrupt_2_and_4,SETA_INTERRUPTS_NUM)
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -6596,7 +6596,7 @@ static MACHINE_DRIVER_START( gundhara )
 #if	__uPD71054_TIMER
 	MDRV_MACHINE_INIT( wrofaero )
 	MDRV_MACHINE_STOP( wrofaero )
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -6669,7 +6669,7 @@ static MACHINE_DRIVER_START( kamenrid )
 #if	__uPD71054_TIMER
 	MDRV_MACHINE_INIT( wrofaero )
 	MDRV_MACHINE_STOP( wrofaero )
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -6683,7 +6683,7 @@ static MACHINE_DRIVER_START( kamenrid )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(X1_010, seta_sound_intf_16MHz) // ?
+	MDRV_SOUND_ADD(X1_010, seta_sound_intf_16MHz) /* ?*/
 MACHINE_DRIVER_END
 
 
@@ -6735,7 +6735,7 @@ static MACHINE_DRIVER_START( madshark )
 #if	__uPD71054_TIMER
 	MDRV_MACHINE_INIT( wrofaero )
 	MDRV_MACHINE_STOP( wrofaero )
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -6771,7 +6771,7 @@ static MACHINE_DRIVER_START( msgundam )
 	MDRV_CPU_VBLANK_INT( wrofaero_interrupt, 1 )
 #else
 	MDRV_CPU_VBLANK_INT(seta_interrupt_2_and_4,SETA_INTERRUPTS_NUM)
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 	MDRV_FRAMES_PER_SECOND(56.66)	/* between 56 and 57 to match a real PCB's game speed */
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -6779,7 +6779,7 @@ static MACHINE_DRIVER_START( msgundam )
 #if	__uPD71054_TIMER
 	MDRV_MACHINE_INIT( wrofaero )
 	MDRV_MACHINE_STOP( wrofaero )
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -6820,7 +6820,7 @@ static MACHINE_DRIVER_START( oisipuzl )
 	MDRV_GFXDECODE(msgundam_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
 
-	MDRV_VIDEO_START(oisipuzl_2_layers)	// flip is inverted for the tilemaps
+	MDRV_VIDEO_START(oisipuzl_2_layers)	/* flip is inverted for the tilemaps*/
 	MDRV_VIDEO_UPDATE(seta)
 
 	/* sound hardware */
@@ -6859,7 +6859,7 @@ static MACHINE_DRIVER_START( triplfun )
 	MDRV_GFXDECODE(msgundam_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
 
-	MDRV_VIDEO_START(oisipuzl_2_layers)	// flip is inverted for the tilemaps
+	MDRV_VIDEO_START(oisipuzl_2_layers)	/* flip is inverted for the tilemaps*/
 	MDRV_VIDEO_UPDATE(seta)
 
 	/* sound hardware */
@@ -7069,7 +7069,7 @@ static MACHINE_DRIVER_START( wrofaero )
 	MDRV_CPU_VBLANK_INT( wrofaero_interrupt, 1 )
 #else
 	MDRV_CPU_VBLANK_INT(seta_interrupt_2_and_4,SETA_INTERRUPTS_NUM)
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -7077,7 +7077,7 @@ static MACHINE_DRIVER_START( wrofaero )
 #if	__uPD71054_TIMER
 	MDRV_MACHINE_INIT( wrofaero )
 	MDRV_MACHINE_STOP( wrofaero )
-#endif	// __uPD71054_TIMER
+#endif	/* __uPD71054_TIMER*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -7150,7 +7150,7 @@ ROM_START( tndrcade )
 	ROM_LOAD16_BYTE( "ua0-1.1g", 0x040001, 0x020000, CRC(fa906626) SHA1(a1d28328afa8dda98dd20f3f5a19c0dbf2ebaf36) )
 
 	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* 65c02 Code */
-	ROM_LOAD( "ua10-5.8m", 0x004000, 0x020000, CRC(8eff6122) SHA1(1adc1643018e612df85643014b78525106478889) )	// $1fffd=2 (country code)
+	ROM_LOAD( "ua10-5.8m", 0x004000, 0x020000, CRC(8eff6122) SHA1(1adc1643018e612df85643014b78525106478889) )	/* $1fffd=2 (country code)*/
 	ROM_RELOAD(            0x00c000, 0x020000             )
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
@@ -7172,7 +7172,7 @@ ROM_START( tndrcadj )
 	ROM_LOAD16_BYTE( "ua0-1.1g", 0x040001, 0x020000, CRC(fa906626) SHA1(a1d28328afa8dda98dd20f3f5a19c0dbf2ebaf36) )
 
 	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* 65c02 Code */
-	ROM_LOAD( "thcade5.bin", 0x004000, 0x020000, CRC(8cb9df7b) SHA1(5b504657f4cc1ea265913ff670aed108ceddba46) )	// $1fffd=1 (country code jp)
+	ROM_LOAD( "thcade5.bin", 0x004000, 0x020000, CRC(8cb9df7b) SHA1(5b504657f4cc1ea265913ff670aed108ceddba46) )	/* $1fffd=1 (country code jp)*/
 	ROM_RELOAD(              0x00c000, 0x020000             )
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
@@ -7282,17 +7282,17 @@ ROM_START( usclssic )
 	ROM_LOAD16_BYTE( "ue001006.116", 0x100001, 0x080000, CRC(a6ab6ef4) SHA1(9f54f116d1d8e54d64ba541195baa66c5ca960bd) )
 
 	ROM_REGION( 0x600000, REGION_GFX2, ROMREGION_DISPOSE )	/* Layer 1 */
-	ROM_LOAD( "ue001010.120", 0x000000, 0x080000, CRC(dd683031) SHA1(06ed38a243666c1acaf8eb3fdba51d18fc2a70bc) )	// planes 01
+	ROM_LOAD( "ue001010.120", 0x000000, 0x080000, CRC(dd683031) SHA1(06ed38a243666c1acaf8eb3fdba51d18fc2a70bc) )	/* planes 01*/
 	ROM_LOAD( "ue001011.121", 0x080000, 0x080000, CRC(0e27bc49) SHA1(f9ec4f4c15c86f608607a5ec916f5182a8e265fa) )
 	ROM_LOAD( "ue001012.122", 0x100000, 0x080000, CRC(961dfcdc) SHA1(9de95692860abd4206db22ad7ade9f02f0c03506) )
 	ROM_LOAD( "ue001013.123", 0x180000, 0x080000, CRC(03e9eb79) SHA1(e7cabfd73b73c7df8d79c113db5eca110bf2f05e) )
 
-	ROM_LOAD( "ue001014.124", 0x200000, 0x080000, CRC(9576ace7) SHA1(a5350934533241daf63c561a88d952bb6976b81b) )	// planes 23
+	ROM_LOAD( "ue001014.124", 0x200000, 0x080000, CRC(9576ace7) SHA1(a5350934533241daf63c561a88d952bb6976b81b) )	/* planes 23*/
 	ROM_LOAD( "ue001015.125", 0x280000, 0x080000, CRC(631d6eb1) SHA1(df342c20e2b3c29eab3c72440c11be60d14d3557) )
 	ROM_LOAD( "ue001016.126", 0x300000, 0x080000, CRC(f44a8686) SHA1(649f6f95cc67fa2f4551af19a2b607c811318820) )
 	ROM_LOAD( "ue001017.127", 0x380000, 0x080000, CRC(7f568258) SHA1(ac36e87386f9d5c68c66a9469e1b30ee66c4cb7f) )
 
-	ROM_LOAD( "ue001018.128", 0x400000, 0x080000, CRC(4bd98f23) SHA1(be6483253a5ea1efe7c7f6b4432fe819b906894c) )	// planes 45
+	ROM_LOAD( "ue001018.128", 0x400000, 0x080000, CRC(4bd98f23) SHA1(be6483253a5ea1efe7c7f6b4432fe819b906894c) )	/* planes 45*/
 	ROM_LOAD( "ue001019.129", 0x480000, 0x080000, CRC(6d9f5a33) SHA1(8d300adf2b3299df78e274c4c7f2ee2d8e1e2575) )
 	ROM_LOAD( "ue001020.130", 0x500000, 0x080000, CRC(bc07403f) SHA1(f994b6d1dee23f5dabdb328f955f4380a8ca9d52) )
 	ROM_LOAD( "ue001021.131", 0x580000, 0x080000, CRC(98c03efd) SHA1(761c51d5573e6f35c48b8b9ee5d88cbde02e92a7) )
@@ -7461,18 +7461,18 @@ ROM_START( rezon )
 	ROM_LOAD16_BYTE( "us001001.u3",  0x000000, 0x020000, CRC(ab923052) SHA1(26761c228b63c300f635787e63e1276b6e3083f0) )
 	ROM_LOAD16_BYTE( "us001002.u4",  0x000001, 0x020000, CRC(3dafa0d5) SHA1(80cdff86b99d364acbbf1322c73b2f26b1a93167) )
 	/* empty gap */
-	ROM_LOAD16_BYTE( "us001004.103", 0x100000, 0x020000, CRC(54871c7c) SHA1(2f807b15760b1e712fa69eee6f33cc8a36ee1c02) ) // 1xxxxxxxxxxxxxxxx = 0x00
-	ROM_LOAD16_BYTE( "us001003.102", 0x100001, 0x020000, CRC(1ac3d272) SHA1(0f19bc9c19e355dad5b463b0fa33127523bf141b) ) // 1xxxxxxxxxxxxxxxx = 0x00
+	ROM_LOAD16_BYTE( "us001004.103", 0x100000, 0x020000, CRC(54871c7c) SHA1(2f807b15760b1e712fa69eee6f33cc8a36ee1c02) ) /* 1xxxxxxxxxxxxxxxx = 0x00*/
+	ROM_LOAD16_BYTE( "us001003.102", 0x100001, 0x020000, CRC(1ac3d272) SHA1(0f19bc9c19e355dad5b463b0fa33127523bf141b) ) /* 1xxxxxxxxxxxxxxxx = 0x00*/
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
 	ROM_LOAD( "us001006.u64",  0x000000, 0x080000, CRC(a4916e96) SHA1(bfb63b72273e4fbf0843b3201bb4fddaf54909a7) )
 	ROM_LOAD( "us001005.u63",  0x080000, 0x080000, CRC(e6251ebc) SHA1(f02a4c8373e33fc57e18e39f1b5ecff3f6d9ca9e) )
 
 	ROM_REGION( 0x080000, REGION_GFX2, ROMREGION_DISPOSE )	/* Layer 1 */
-	ROM_LOAD( "us001007.u66",  0x000000, 0x080000, CRC(3760b935) SHA1(f5fe69f7e93c90a5b6c1dff236402b962821e33f) ) // 1xxxxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "us001007.u66",  0x000000, 0x080000, CRC(3760b935) SHA1(f5fe69f7e93c90a5b6c1dff236402b962821e33f) ) /* 1xxxxxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x080000, REGION_GFX3, ROMREGION_DISPOSE )	/* Layer 2 */
-	ROM_LOAD( "us001008.u68",  0x000000, 0x080000, CRC(0ab73910) SHA1(78e2c0570c5c6f5e1cdb2fbeae73376923127024) ) // 1xxxxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "us001008.u68",  0x000000, 0x080000, CRC(0ab73910) SHA1(78e2c0570c5c6f5e1cdb2fbeae73376923127024) ) /* 1xxxxxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD16_WORD_SWAP( "us001009.u70",  0x000000, 0x100000, CRC(0d7d2e2b) SHA1(cfba19314ecb0a49ed9ff8df32cd6a3fe37ff526) )
@@ -7482,16 +7482,16 @@ ROM_START( stg )
 	ROM_REGION( 0x080000, REGION_CPU1, 0 )		/* 68000 Code */
 	ROM_LOAD16_BYTE( "att01003.u27", 0x000000, 0x020000, CRC(7a640a93) SHA1(28c54eca9502d06ca55c2db91bfe7d149af006ed) )
 	ROM_LOAD16_BYTE( "att01001.u9",  0x000001, 0x020000, CRC(4fa88ad3) SHA1(55e0e689758511cdf514a633ffe3d7729e281b52) )
-	ROM_LOAD16_BYTE( "att01004.u33", 0x040000, 0x020000, CRC(bbd45ca1) SHA1(badb11faf5779e8444dd95eb08a94fbf9f73cc2c) ) // 1xxxxxxxxxxxxxxxx = 0xFF
-	ROM_LOAD16_BYTE( "att01002.u17", 0x040001, 0x020000, CRC(2f8fd80c) SHA1(b8e16adc84b918b5eee05d032a7841e8d726eeeb) ) // 1xxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD16_BYTE( "att01004.u33", 0x040000, 0x020000, CRC(bbd45ca1) SHA1(badb11faf5779e8444dd95eb08a94fbf9f73cc2c) ) /* 1xxxxxxxxxxxxxxxx = 0xFF*/
+	ROM_LOAD16_BYTE( "att01002.u17", 0x040001, 0x020000, CRC(2f8fd80c) SHA1(b8e16adc84b918b5eee05d032a7841e8d726eeeb) ) /* 1xxxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
 	ROM_LOAD( "att01006.u32", 0x000000, 0x080000, CRC(6ad78ea2) SHA1(eb8fc9833fb1c7041f5e0a3b37c8de9156a034b6) )
 	ROM_LOAD( "att01005.u26", 0x080000, 0x080000, CRC(a347ff00) SHA1(8455c5e7dfa25646b1782ab3bcf62fca91ca03ad) )
 
 	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE )	/* Layer 1 */
-	ROM_LOAD( "att01008.u39", 0x000000, 0x080000, CRC(20c47457) SHA1(53ddf8c076aa35fb87edc739bc9e9612a5a1526b) ) // FIRST AND SECOND HALF IDENTICAL
-	ROM_LOAD( "att01007.u42", 0x080000, 0x080000, CRC(ac975544) SHA1(5cdd2c7aada7179d4bdaf8578134c0ef672a2704) ) // FIRST AND SECOND HALF IDENTICAL
+	ROM_LOAD( "att01008.u39", 0x000000, 0x080000, CRC(20c47457) SHA1(53ddf8c076aa35fb87edc739bc9e9612a5a1526b) ) /* FIRST AND SECOND HALF IDENTICAL*/
+	ROM_LOAD( "att01007.u42", 0x080000, 0x080000, CRC(ac975544) SHA1(5cdd2c7aada7179d4bdaf8578134c0ef672a2704) ) /* FIRST AND SECOND HALF IDENTICAL*/
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "att01009.u47", 0x000000, 0x080000, CRC(4276b58d) SHA1(a2e77dc3295791520c6cb25dea4e910b5a7bc137) )
@@ -7521,7 +7521,7 @@ ROM_START( blandia )
 	/* The c0000-fffff region is bankswitched */
 	ROM_REGION( 0x240000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "ux001013.069",  0x000000, 0x0c0000, CRC(5cd273cd) SHA1(602e1f10454e2b1c941f2e6983872bb9ca77a542) )
-	// skip c0000-fffff (banked region)
+	/* skip c0000-fffff (banked region)*/
 	ROM_CONTINUE(              0x100000, 0x040000             )
 	ROM_LOAD( "ux001014.070",  0x140000, 0x080000, CRC(86b49b4e) SHA1(045b352950d848907af4c22b817d154b2cfff382) )
 ROM_END
@@ -7552,7 +7552,7 @@ ROM_START( blandiap )
 	ROM_LOAD( "v1-3.bin",  0x0a0000, 0x020000, CRC(7f18e4fb) SHA1(0e51e3f88b90c07a1352bcd42e6438c947d4856e) )
 
 	ROM_REGION( 0x0c0000, REGION_GFX3, ROMREGION_DISPOSE )	/* Layer 2 */
-	ROM_LOAD( "v2-2.bin",  0x000000, 0x020000, CRC(c4f15638) SHA1(6be0f3e90ab23189caadfd99b3e4ded74749ebbc) )	// identical to v2-1
+	ROM_LOAD( "v2-2.bin",  0x000000, 0x020000, CRC(c4f15638) SHA1(6be0f3e90ab23189caadfd99b3e4ded74749ebbc) )	/* identical to v2-1*/
 	ROM_LOAD( "v2-5.bin",  0x020000, 0x020000, CRC(c2e57622) SHA1(994a4774d68f2d562d985951b06216d59f38afe9) )
 	ROM_LOAD( "v2-1.bin",  0x040000, 0x020000, CRC(c4f15638) SHA1(6be0f3e90ab23189caadfd99b3e4ded74749ebbc) )
 	ROM_LOAD( "v2-4.bin",  0x060000, 0x020000, CRC(16ec2130) SHA1(187f548563577ca36cced9ae184d27e6fcdd7e6a) )
@@ -7573,10 +7573,10 @@ ROM_START( blandiap )
 	ROM_CONTINUE(         0x1c0000, 0x020000             )
 	ROM_LOAD( "s-5.bin",  0x0a0000, 0x020000, CRC(4bb0146a) SHA1(1e3c1739ea3c85296573426e55f25dce11f0ed2b) )
 	ROM_CONTINUE(         0x1e0000, 0x020000             )
-	ROM_LOAD( "s-6.bin",  0x100000, 0x020000, CRC(9f8f34ee) SHA1(60abb70ae87595ebae23df68d62f3b0ed4a2e768) )	// skip c0000-fffff (banked region)
-	ROM_CONTINUE(         0x200000, 0x020000             )	// this half is 0
+	ROM_LOAD( "s-6.bin",  0x100000, 0x020000, CRC(9f8f34ee) SHA1(60abb70ae87595ebae23df68d62f3b0ed4a2e768) )	/* skip c0000-fffff (banked region)*/
+	ROM_CONTINUE(         0x200000, 0x020000             )	/* this half is 0*/
 	ROM_LOAD( "s-7.bin",  0x120000, 0x020000, CRC(e077dd39) SHA1(a6f0881a026161710adc132bcf7cb95c4c8f2528) )
-	ROM_CONTINUE(         0x220000, 0x020000             )	// this half is 0
+	ROM_CONTINUE(         0x220000, 0x020000             )	/* this half is 0*/
 ROM_END
 
 ROM_START( blockcar )
@@ -7601,8 +7601,8 @@ ROM_START( qzkklogy )
 	ROM_LOAD16_BYTE( "2.u17", 0x040001, 0x020000, CRC(65fa1b8d) SHA1(81fd7785f138a189de978fd30dbfca36687cda17) )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
-	ROM_LOAD( "t2709u32.u32", 0x000000, 0x080000, CRC(900f196c) SHA1(b60741c3242ce56cb61ea68093b571489db0c6fa) ) // FIRST AND SECOND HALF IDENTICAL
-	ROM_LOAD( "t2709u26.u26", 0x080000, 0x080000, CRC(416ac849) SHA1(3bd5dd13a8f2693e8f160a4ecfff3b7610644f5f) ) // FIRST AND SECOND HALF IDENTICAL
+	ROM_LOAD( "t2709u32.u32", 0x000000, 0x080000, CRC(900f196c) SHA1(b60741c3242ce56cb61ea68093b571489db0c6fa) ) /* FIRST AND SECOND HALF IDENTICAL*/
+	ROM_LOAD( "t2709u26.u26", 0x080000, 0x080000, CRC(416ac849) SHA1(3bd5dd13a8f2693e8f160a4ecfff3b7610644f5f) ) /* FIRST AND SECOND HALF IDENTICAL*/
 
 	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE )	/* Layer 1 */
 	ROM_LOAD( "t2709u42.u39", 0x000000, 0x080000, CRC(194d5704) SHA1(ab2833f7427d0608850c158b813bc49935ac7d6d) )
@@ -7636,14 +7636,14 @@ ROM_START( zingzip )
 	ROM_LOAD( "uy001005.63",		0x080000, 0x080000, CRC(4aac128e) SHA1(3ac64c84a40f86e29e33a218babcd21cae6dbfdb) )
 
 	ROM_REGION( 0x200000, REGION_GFX2, ROMREGION_DISPOSE )	/* Layer 1 */
-	ROM_LOAD( "uy001008.66",		0x000000, 0x100000, CRC(1dff7c4b) SHA1(94f581f4aae1ef417dce6e62a611a523205e8c27) ) // FIRST AND SECOND HALF IDENTICAL
+	ROM_LOAD( "uy001008.66",		0x000000, 0x100000, CRC(1dff7c4b) SHA1(94f581f4aae1ef417dce6e62a611a523205e8c27) ) /* FIRST AND SECOND HALF IDENTICAL*/
 	ROM_LOAD16_BYTE( "uy001007.65",	0x100000, 0x080000, CRC(ec5b3ab9) SHA1(e82fb050ae4e2486e43418fcb5fa726d92c5cd21) )
 
 	ROM_REGION( 0x200000, REGION_GFX3, ROMREGION_DISPOSE )	/* Layer 2 */
-	ROM_LOAD( "uy001010.68",		0x000000, 0x100000, CRC(bdbcdf03) SHA1(857f541697f76086ac6c761a3505678a3d3499df) ) // FIRST AND SECOND HALF IDENTICAL
+	ROM_LOAD( "uy001010.68",		0x000000, 0x100000, CRC(bdbcdf03) SHA1(857f541697f76086ac6c761a3505678a3d3499df) ) /* FIRST AND SECOND HALF IDENTICAL*/
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "uy001011.70",		0x000000, 0x100000, CRC(bd845f55) SHA1(345b79cfcd8c924d6ba365814286e518438f10bc) ) // uy001017 + uy001018
+	ROM_LOAD( "uy001011.70",		0x000000, 0x100000, CRC(bd845f55) SHA1(345b79cfcd8c924d6ba365814286e518438f10bc) ) /* uy001017 + uy001018*/
 ROM_END
 
 ROM_START( atehate )
@@ -7867,7 +7867,7 @@ ROM_START( eightfrc )
 
 	ROM_REGION( 0x240000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "u70.bin",  0x000000, 0x0c0000, CRC(dfdb67a3) SHA1(0fed6fb498dcfc1276facd0ecd2dfde45ff671f2) )
-	// skip c0000-fffff (banked region)
+	/* skip c0000-fffff (banked region)*/
 	ROM_CONTINUE(         0x100000, 0x040000             )
 	ROM_LOAD( "u69.bin",  0x140000, 0x100000, CRC(82ec08f1) SHA1(f17300d3cf990ef5c11056fd922f8cae0b2c918f) )
 ROM_END
@@ -7912,10 +7912,10 @@ ROM_START( extdwnhl )
 	ROM_LOAD16_BYTE( "fw001005.205", 0x200000, 0x100000, CRC(5c33b2f1) SHA1(9ea848aeaccbba0b71e60b39cf844665bd97928f) )
 
 	ROM_REGION( 0x200000, REGION_GFX3, ROMREGION_DISPOSE )	/* Layer 2 */
-	ROM_LOAD( "fw001006.152",  0x000000, 0x200000, CRC(d00e8ddd) SHA1(e13692034afec1a0e86d19abfb9efa518b374147) )	// FIRST AND SECOND HALF IDENTICAL
+	ROM_LOAD( "fw001006.152",  0x000000, 0x200000, CRC(d00e8ddd) SHA1(e13692034afec1a0e86d19abfb9efa518b374147) )	/* FIRST AND SECOND HALF IDENTICAL*/
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "fw001007.026",  0x080000, 0x080000, CRC(16d84d7a) SHA1(fdc13776ba1ec9c48a33a9f2dfe8a0e55c54d89e) )	// swapped halves
+	ROM_LOAD( "fw001007.026",  0x080000, 0x080000, CRC(16d84d7a) SHA1(fdc13776ba1ec9c48a33a9f2dfe8a0e55c54d89e) )	/* swapped halves*/
 	ROM_CONTINUE(              0x000000, 0x080000             )
 ROM_END
 
@@ -7941,7 +7941,7 @@ ROM_START( gundhara )
 	ROM_LOAD16_BYTE( "bpgh-011.u67", 0x200000, 0x100000, CRC(49aff270) SHA1(de25209e520cd8747042078440ee20866097d0cb) )
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "bpgh-013.u70",  0x080000, 0x080000, CRC(0fa5d503) SHA1(fd7a80cd25c23e737cc2c3d11de2291e22313b58) )	// swapped halves
+	ROM_LOAD( "bpgh-013.u70",  0x080000, 0x080000, CRC(0fa5d503) SHA1(fd7a80cd25c23e737cc2c3d11de2291e22313b58) )	/* swapped halves*/
 	ROM_CONTINUE(              0x000000, 0x080000             )
 ROM_END
 
@@ -7985,7 +7985,7 @@ ROM_START( zombraid )
 
 	ROM_REGION( 0x480000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "fy001012.b",  0x000000, 0x080000, CRC(fd30e102) SHA1(ae02f94f69aa301b0c37921ca1117e3ad20467b5) )
-	// skip 80000-fffff (banked region)
+	/* skip 80000-fffff (banked region)*/
 	ROM_CONTINUE(            0x100000, 0x180000 )
 	ROM_LOAD( "fy001011.a",  0x280000, 0x200000, CRC(e3c431de) SHA1(1030adacbbfabc00231417e09f3de40e3052f65c) )
 ROM_END
@@ -8042,7 +8042,7 @@ ROM_END
 
 ROM_START( neobattl )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )		/* 68000 Code */
-	ROM_LOAD16_BYTE( "bp923001.u45", 0x000000, 0x020000, CRC(0d0aeb73) SHA1(5ca631d5d68e53029f379d9877a056997c6c6afa) )	// 1CC74: "SD GUNDAM v0.00. 1992/11/04 10:04:33"
+	ROM_LOAD16_BYTE( "bp923001.u45", 0x000000, 0x020000, CRC(0d0aeb73) SHA1(5ca631d5d68e53029f379d9877a056997c6c6afa) )	/* 1CC74: "SD GUNDAM v0.00. 1992/11/04 10:04:33"*/
 	ROM_LOAD16_BYTE( "bp923002.u46", 0x000001, 0x020000, CRC(9731fbbc) SHA1(196c913fb67496f9da2943ad1e69edf89cb65fdf) )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
@@ -8166,10 +8166,10 @@ DRIVER_INIT( metafox )
 	data16_t *RAM = (data16_t *) memory_region(REGION_CPU1);
 
 	/* This game uses the 21c000-21ffff area for protection? */
-//	install_mem_read16_handler (0, 0x21c000, 0x21ffff, MRA16_NOP);
-//	install_mem_write16_handler(0, 0x21c000, 0x21ffff, MWA16_NOP);
+/*	install_mem_read16_handler (0, 0x21c000, 0x21ffff, MRA16_NOP);*/
+/*	install_mem_write16_handler(0, 0x21c000, 0x21ffff, MWA16_NOP);*/
 
-	RAM[0x8ab1c/2] = 0x4e71;	// patch protection test: "cp error"
+	RAM[0x8ab1c/2] = 0x4e71;	/* patch protection test: "cp error"*/
 	RAM[0x8ab1e/2] = 0x4e71;
 	RAM[0x8ab20/2] = 0x4e71;
 }
@@ -8213,7 +8213,7 @@ DRIVER_INIT ( blandia )
 
 DRIVER_INIT( eightfrc )
 {
-	install_mem_read16_handler(0, 0x500004, 0x500005, MRA16_NOP);	// watchdog??
+	install_mem_read16_handler(0, 0x500004, 0x500005, MRA16_NOP);	/* watchdog??*/
 }
 
 
@@ -8238,7 +8238,7 @@ DRIVER_INIT( kiwame )
 
 DRIVER_INIT( rezon )
 {
-	install_mem_read16_handler(0, 0x500006, 0x500007, MRA16_NOP);	// irq ack?
+	install_mem_read16_handler(0, 0x500006, 0x500007, MRA16_NOP);	/* irq ack?*/
 }
 
 
@@ -8252,25 +8252,25 @@ DRIVER_INIT( rezon )
 /* Working Games: */
 
 /* 68000 + 65C02 */
-GAME( 1987, tndrcade, 0,        tndrcade, tndrcade, 0,        ROT270, "[Seta] (Taito license)", "Thundercade / Twin Formation" ) // Title/License: DSW
-GAME( 1987, tndrcadj, tndrcade, tndrcade, tndrcadj, 0,        ROT270, "[Seta] (Taito license)", "Tokusyu Butai U.A.G. (Japan)" ) // License: DSW
-GAME( 1988, twineagl, 0,        twineagl, twineagl, twineagl, ROT270, "Seta (Taito license)",   "Twin Eagle - Revenge Joe's Brother" ) // Country/License: DSW
-GAME( 1989, downtown, 0,        downtown, downtown, downtown, ROT270, "Seta",                   "DownTown" ) // Country/License: DSW
-GAME( 1989, downtowj, downtown, downtown, downtown, downtown, ROT270, "Seta",                   "DownTown (joystick hack)" ) // Country/License: DSW
-GAMEX(1989, usclssic, 0,        usclssic, usclssic, 0,        ROT270, "Seta",                   "U.S. Classic", GAME_WRONG_COLORS ) // Country/License: DSW
-GAME( 1989, calibr50, 0,        calibr50, calibr50, 0,        ROT270, "Athena / Seta",          "Caliber 50" ) // Country/License: DSW
-GAME( 1989, arbalest, 0,        metafox,  arbalest, arbalest, ROT270, "Seta",                   "Arbalester" ) // Country/License: DSW
-GAME( 1989, metafox,  0,        metafox,  metafox,  metafox,  ROT270, "Seta",                   "Meta Fox" ) // Country/License: DSW
+GAME( 1987, tndrcade, 0,        tndrcade, tndrcade, 0,        ROT270, "[Seta] (Taito license)", "Thundercade / Twin Formation" ) /* Title/License: DSW*/
+GAME( 1987, tndrcadj, tndrcade, tndrcade, tndrcadj, 0,        ROT270, "[Seta] (Taito license)", "Tokusyu Butai U.A.G. (Japan)" ) /* License: DSW*/
+GAME( 1988, twineagl, 0,        twineagl, twineagl, twineagl, ROT270, "Seta (Taito license)",   "Twin Eagle - Revenge Joe's Brother" ) /* Country/License: DSW*/
+GAME( 1989, downtown, 0,        downtown, downtown, downtown, ROT270, "Seta",                   "DownTown" ) /* Country/License: DSW*/
+GAME( 1989, downtowj, downtown, downtown, downtown, downtown, ROT270, "Seta",                   "DownTown (joystick hack)" ) /* Country/License: DSW*/
+GAMEX(1989, usclssic, 0,        usclssic, usclssic, 0,        ROT270, "Seta",                   "U.S. Classic", GAME_WRONG_COLORS ) /* Country/License: DSW*/
+GAME( 1989, calibr50, 0,        calibr50, calibr50, 0,        ROT270, "Athena / Seta",          "Caliber 50" ) /* Country/License: DSW*/
+GAME( 1989, arbalest, 0,        metafox,  arbalest, arbalest, ROT270, "Seta",                   "Arbalester" ) /* Country/License: DSW*/
+GAME( 1989, metafox,  0,        metafox,  metafox,  metafox,  ROT270, "Seta",                   "Meta Fox" ) /* Country/License: DSW*/
 
 /* 68000 */
 GAME( 1989, drgnunit, 0,        drgnunit, drgnunit, 0,        ROT0,   "Seta",                   "Dragon Unit / Castle of Dragon" )
-GAME( 1989, wits,     0,        wits,     wits,     0,        ROT0,   "Athena (Visco license)", "Wit's (Japan)" ) // Country/License: DSW
-GAME( 1990, thunderl, 0,        thunderl, thunderl, 0,        ROT270, "Seta",                   "Thunder & Lightning" ) // Country/License: DSW
+GAME( 1989, wits,     0,        wits,     wits,     0,        ROT0,   "Athena (Visco license)", "Wit's (Japan)" ) /* Country/License: DSW*/
+GAME( 1990, thunderl, 0,        thunderl, thunderl, 0,        ROT270, "Seta",                   "Thunder & Lightning" ) /* Country/License: DSW*/
 GAME( 1991, rezon,    0,        rezon,    rezon,    rezon,    ROT0,   "Allumer",                "Rezon" )
 GAME( 1991, stg,      0,        drgnunit, stg,      0,        ROT270, "Athena / Tecmo",         "Strike Gunner S.T.G" )
 GAME( 1992, blandia,  0,        blandia,  blandia,  blandia,  ROT0,   "Allumer",                "Blandia" )
 GAME( 1992, blandiap, blandia,  blandiap, blandia,  0,        ROT0,   "Allumer",                "Blandia (prototype)" )
-GAME( 1992, blockcar, 0,        blockcar, blockcar, 0,        ROT90,  "Visco",                  "Block Carnival / Thunder & Lightning 2" ) // Title: DSW
+GAME( 1992, blockcar, 0,        blockcar, blockcar, 0,        ROT90,  "Visco",                  "Block Carnival / Thunder & Lightning 2" ) /* Title: DSW*/
 GAME( 1992, qzkklogy, 0,        drgnunit, qzkklogy, 0,        ROT0,   "Tecmo",                  "Quiz Kokology" )
 GAME( 1992, neobattl, 0,        umanclub, neobattl, 0,        ROT270, "Banpresto / Sotsu Agency. Sunrise", "SD Gundam Neo Battling (Japan)" )
 GAME( 1992, umanclub, 0,        umanclub, umanclub, 0,        ROT0,   "Tsuburaya Prod. / Banpresto", "Ultraman Club - Tatakae! Ultraman Kyoudai!!" )

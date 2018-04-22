@@ -161,7 +161,7 @@ static READ_HANDLER( playmark_snd_command_r )
 	}
 	else if ((playmark_oki_control & 0x38) == 0x28) {
 		data = (OKIM6295_status_0_r(0) & 0x0f);
-//		logerror("PortB reading %02x from the OKI status port\n",data);
+/*		logerror("PortB reading %02x from the OKI status port\n",data);*/
 	}
 
 	return data;
@@ -203,7 +203,7 @@ static WRITE_HANDLER( playmark_snd_control_w )
 
 	if ((data & 0x38) == 0x18)
 	{
-//		logerror("Writing %02x to OKI1, PortC=%02x, Code=%02x\n",playmark_oki_command,playmark_oki_control,playmark_snd_command);
+/*		logerror("Writing %02x to OKI1, PortC=%02x, Code=%02x\n",playmark_oki_command,playmark_oki_control,playmark_snd_command);*/
 		OKIM6295_data_0_w(0, playmark_oki_command);
 	}
 }
@@ -241,7 +241,7 @@ static MEMORY_WRITE16_START( bigtwin_writemem )
 	{ 0x700016, 0x700017, coinctrl_w },
 	{ 0x70001e, 0x70001f, playmark_snd_command_w },
 	{ 0x780000, 0x7807ff, bigtwin_paletteram_w, &paletteram16 },
-//	{ 0xe00000, 0xe00001, ?? written on startup
+/*	{ 0xe00000, 0xe00001, ?? written on startup*/
 	{ 0xff0000, 0xffffff, MWA16_RAM },
 MEMORY_END
 
@@ -257,7 +257,7 @@ static MEMORY_READ16_START( wbeachvl_readmem )
 	{ 0x710014, 0x710015, input_port_2_word_r },
 	{ 0x710018, 0x710019, input_port_3_word_r },
 	{ 0x71001a, 0x71001b, input_port_4_word_r },
-//	{ 0x71001c, 0x71001d, playmark_snd_status??? },
+/*	{ 0x71001c, 0x71001d, playmark_snd_status??? },*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( wbeachvl_writemem )
@@ -268,9 +268,9 @@ static MEMORY_WRITE16_START( wbeachvl_writemem )
 	{ 0x508000, 0x509fff, wbeachvl_txvideoram_w, &wbeachvl_videoram1 },
 	{ 0x510000, 0x51000b, wbeachvl_scroll_w },
 	{ 0x51000c, 0x51000d, MWA16_NOP },	/* always 3? */
-//	{ 0x700000, 0x700001, ?? written on startup
+/*	{ 0x700000, 0x700001, ?? written on startup*/
 	{ 0x710016, 0x710017, wbeachvl_coin_eeprom_w },
-	{ 0x71001e, 0x71001f, MWA16_NOP },//playmark_snd_command_w },
+	{ 0x71001e, 0x71001f, MWA16_NOP },/*playmark_snd_command_w },*/
 	{ 0x780000, 0x780fff, paletteram16_RRRRRGGGGGBBBBBx_word_w, &paletteram16 },
 	{ 0xff0000, 0xffffff, MWA16_RAM },
 #if 0
@@ -639,7 +639,7 @@ ROM_START( bigtwin )
 	ROM_LOAD16_BYTE( "3.301",        0x000001, 0x80000, CRC(5aba6990) SHA1(4f664a91819fdd27821fa607425701d83fcbd8ce) )
 
 	ROM_REGION( 0x4000, REGION_CPU2, 0 )	/* sound (PIC16C57) */
-//	ROM_LOAD( "16c57hs.bin",  PIC16C57_PGM_OFFSET, 0x1000, CRC(b4c95cc3) SHA1(7fc9b141e7782aa5c17310ee06db99d884537c30) )
+/*	ROM_LOAD( "16c57hs.bin",  PIC16C57_PGM_OFFSET, 0x1000, CRC(b4c95cc3) SHA1(7fc9b141e7782aa5c17310ee06db99d884537c30) )*/
 	/* ROM will be copied here by the init code from REGION_USER1 */
 
 	ROM_REGION( 0x3000, REGION_USER1, ROMREGION_DISPOSE )

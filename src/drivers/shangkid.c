@@ -810,13 +810,13 @@ ROM_START( hiryuken )
 
 	/* The Sound CPU is a dedicated Sample Player */
 	ROM_REGION( 0x1e000, REGION_CPU3, 0 ) /* Z80 (NEC D780C-1) */
-	ROM_LOAD( "cr11ic51.bin", 0x00000, 0x4000, CRC(2e2d6afe) SHA1(1414a06b6cf14dfd69ca6cf35e4eb7d75af3f219) )	// 12.51
-//	ROM_LOAD( "cr12ic43.bin", 0x04000, 0x4000, CRC(dd29a0c8) SHA1(8411c31fefdce8c9233fe531b5bf3b6c43c03cba) )	// not present in this set
-//	ROM_LOAD( "cr13ic44.bin", 0x08000, 0x4000, CRC(879d0de0) SHA1(b1422cf239381ac949867c42ca8101fa8dcac9d6) )	// not present in this set
-	ROM_LOAD( "cr07ic47.bin", 0x10000, 0x4000, CRC(20540f7c) SHA1(85c0b913948a67a34b25f0974fdd22e1dbb63166) )	// 8.47
+	ROM_LOAD( "cr11ic51.bin", 0x00000, 0x4000, CRC(2e2d6afe) SHA1(1414a06b6cf14dfd69ca6cf35e4eb7d75af3f219) )	/* 12.51*/
+/*	ROM_LOAD( "cr12ic43.bin", 0x04000, 0x4000, CRC(dd29a0c8) SHA1(8411c31fefdce8c9233fe531b5bf3b6c43c03cba) )	*/ /* not present in this set*/
+/*	ROM_LOAD( "cr13ic44.bin", 0x08000, 0x4000, CRC(879d0de0) SHA1(b1422cf239381ac949867c42ca8101fa8dcac9d6) )	*/ /* not present in this set*/
+	ROM_LOAD( "cr07ic47.bin", 0x10000, 0x4000, CRC(20540f7c) SHA1(85c0b913948a67a34b25f0974fdd22e1dbb63166) )	/* 8.47*/
 	ROM_LOAD( "9.48",         0x14000, 0x4000, CRC(8da23cad) SHA1(051459d7b5395336d698b03f1cc8566f33b62c8b) )
 	ROM_LOAD( "10.49",        0x18000, 0x4000, CRC(52b82fee) SHA1(99a2952af6493586745463c33b11ab69251af063) )
-	ROM_LOAD( "cr10ic50.bin", 0x1c000, 0x2000, CRC(873a5f2d) SHA1(32f806da319807bef68b5e810815ef2aba6ea0a7) )	// 11.50
+	ROM_LOAD( "cr10ic50.bin", 0x1c000, 0x2000, CRC(873a5f2d) SHA1(32f806da319807bef68b5e810815ef2aba6ea0a7) )	/* 11.50*/
 
 	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE|ROMREGION_INVERT ) /* 8x8 tiles */
 	ROM_LOAD( "21.21",        0x0000, 0x2000, CRC(ce20a1d4) SHA1(4d5708a1b8b3ac81afeebd82eb6a3d9763ef3d39) )
@@ -825,9 +825,9 @@ ROM_START( hiryuken )
 	ROM_REGION( 0x18000, REGION_GFX2, ROMREGION_DISPOSE|ROMREGION_INVERT ) /* 16x16 sprites */
 	ROM_LOAD( "15.114",       0x00000, 0x4000, CRC(ed07854e) SHA1(caebd227c458717a5fc58daa6e774b1a09e68d34) )
 	ROM_LOAD( "16.113",       0x04000, 0x4000, CRC(85cf1939) SHA1(8bf410a91aba40b0336e3c6c5b2c2b353aeea420) )
-	ROM_LOAD( "cr16i112.bin", 0x08000, 0x4000, CRC(cbed446c) SHA1(cc36ab32b42f6ec8ce574f040f7fb034b1351467) )	// 17.112
-	ROM_LOAD( "cr17i111.bin", 0x0c000, 0x4000, CRC(b0a44330) SHA1(9d52856243e21ab906ee1701b6485411f2933707) )	// 18.111
-	ROM_LOAD( "cr18ic99.bin", 0x10000, 0x4000, CRC(ff7efd7c) SHA1(95f83a9aa2f0845efe2c9c72d29e7a08c78d9b1f) )	// 19.99
+	ROM_LOAD( "cr16i112.bin", 0x08000, 0x4000, CRC(cbed446c) SHA1(cc36ab32b42f6ec8ce574f040f7fb034b1351467) )	/* 17.112*/
+	ROM_LOAD( "cr17i111.bin", 0x0c000, 0x4000, CRC(b0a44330) SHA1(9d52856243e21ab906ee1701b6485411f2933707) )	/* 18.111*/
+	ROM_LOAD( "cr18ic99.bin", 0x10000, 0x4000, CRC(ff7efd7c) SHA1(95f83a9aa2f0845efe2c9c72d29e7a08c78d9b1f) )	/* 19.99*/
 	ROM_LOAD( "20.100",       0x14000, 0x4000, CRC(4bc77ca0) SHA1(22a057c3c29ff9feb0afab0cb76b37c4a1363cb1) )
 
 	ROM_REGION( 0xa80, REGION_PROMS, 0 )
@@ -835,17 +835,17 @@ ROM_START( hiryuken )
 	ROM_LOAD( "g.35",         0x100, 0x100, CRC(e79de8cf) SHA1(65cc626c91830eafbf5a7e4ce7571cbb0ada91c1) ) /* 82S129 - green */
 	ROM_LOAD( "b.27",         0x200, 0x100, CRC(d6ab3448) SHA1(efb879e7c5dd50ea70fb5ed5e4d3b87ab2c1b8b9) ) /* 82S129 - blue */
 
-	ROM_LOAD( "cr29ic28.bin", 0x300, 0x100, CRC(7ca273c1) SHA1(20d85547d96bea8b310c943c45e4978a7e5b5585) ) /* 82S129 - unknown */					// m.28
-	ROM_LOAD( "cr32ic69.bin", 0x400, 0x200, CRC(410d6f86) SHA1(3cfaef3702dbda3e7c7eb84a93561e36778aec3e) ) /* 82S147 - sprite-related (zoom?) */	// ic69
-	ROM_LOAD( "cr33-108.bin", 0x600, 0x200, CRC(d33c02ae) SHA1(1a2146ae404a5e8a701e1d547a8409a376d4bee4) ) /* 82S147 - sprite-related (zoom?) */	// ic108
+	ROM_LOAD( "cr29ic28.bin", 0x300, 0x100, CRC(7ca273c1) SHA1(20d85547d96bea8b310c943c45e4978a7e5b5585) ) /* 82S129 - unknown */					/* m.28*/
+	ROM_LOAD( "cr32ic69.bin", 0x400, 0x200, CRC(410d6f86) SHA1(3cfaef3702dbda3e7c7eb84a93561e36778aec3e) ) /* 82S147 - sprite-related (zoom?) */	/* ic69*/
+	ROM_LOAD( "cr33-108.bin", 0x600, 0x200, CRC(d33c02ae) SHA1(1a2146ae404a5e8a701e1d547a8409a376d4bee4) ) /* 82S147 - sprite-related (zoom?) */	/* ic108*/
 
-	ROM_LOAD( "cr26ic12.bin", 0x800, 0x100, CRC(85b5e958) SHA1(f211b5122fccf84e4aa1556c0290b5cb83935386) ) /* 82S129 - tile pen priority? */		// sc.12
-	ROM_LOAD( "cr27ic15.bin", 0x900, 0x100, CRC(f7a19fe2) SHA1(d88e0743aa858b132f636fcd5d493ccb1af82224) ) /* 82S129 - sprite pen transparency */	// sp.15
+	ROM_LOAD( "cr26ic12.bin", 0x800, 0x100, CRC(85b5e958) SHA1(f211b5122fccf84e4aa1556c0290b5cb83935386) ) /* 82S129 - tile pen priority? */		/* sc.12*/
+	ROM_LOAD( "cr27ic15.bin", 0x900, 0x100, CRC(f7a19fe2) SHA1(d88e0743aa858b132f636fcd5d493ccb1af82224) ) /* 82S129 - sprite pen transparency */	/* sp.15*/
 
-	ROM_LOAD( "cr25ic8.bin",  0xa00, 0x020, CRC(c85e09ad) SHA1(f42e3840ec0e4720067eda7c536b6dcc540e63ff) ) /* 82S123 */							// a.8
-	ROM_LOAD( "cr22ic8.bin",  0xa20, 0x020, CRC(1a7e0b06) SHA1(648d58a4ad14f4b242e492cf302d6678d899cf4f) ) /* 82S123 - main CPU banking */		// 1.8
-	ROM_LOAD( "cr23ic22.bin", 0xa40, 0x020, CRC(efb5f265) SHA1(3de15e03cb12956d34074abb48236537f2b47dba) ) /* 82S123 - coprocessor banking */		// 2.22
-	ROM_LOAD( "cr24ic42.bin", 0xa60, 0x020, CRC(823878aa) SHA1(eb5026270890e5af9193e354b7e814f32238a9bf) ) /* 82S123 - sample player banking */	// 3.42
+	ROM_LOAD( "cr25ic8.bin",  0xa00, 0x020, CRC(c85e09ad) SHA1(f42e3840ec0e4720067eda7c536b6dcc540e63ff) ) /* 82S123 */							/* a.8*/
+	ROM_LOAD( "cr22ic8.bin",  0xa20, 0x020, CRC(1a7e0b06) SHA1(648d58a4ad14f4b242e492cf302d6678d899cf4f) ) /* 82S123 - main CPU banking */		/* 1.8*/
+	ROM_LOAD( "cr23ic22.bin", 0xa40, 0x020, CRC(efb5f265) SHA1(3de15e03cb12956d34074abb48236537f2b47dba) ) /* 82S123 - coprocessor banking */		/* 2.22*/
+	ROM_LOAD( "cr24ic42.bin", 0xa60, 0x020, CRC(823878aa) SHA1(eb5026270890e5af9193e354b7e814f32238a9bf) ) /* 82S123 - sample player banking */	/* 3.42*/
 ROM_END
 
 ROM_START( dynamski )

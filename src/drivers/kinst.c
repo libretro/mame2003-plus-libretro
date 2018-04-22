@@ -492,12 +492,12 @@ static DRIVER_INIT( kinst2 )
 	static const UINT8 kinst2_control_map[8] = { 2,4,1,0,3,5,6,7 };
 	UINT8 *features;
 
-	// read: $80 on ki2 = $90 on ki
-	// read: $88 on ki2 = $a0 on ki
-	// write: $80 on ki2 = $90 on ki
-	// write: $90 on ki2 = $88 on ki
-	// write: $98 on ki2 = $80 on ki
-	// write: $a0 on ki2 = $98 on ki
+	/* read: $80 on ki2 = $90 on ki*/
+	/* read: $88 on ki2 = $a0 on ki*/
+	/* write: $80 on ki2 = $90 on ki*/
+	/* write: $90 on ki2 = $88 on ki*/
+	/* write: $98 on ki2 = $80 on ki*/
+	/* write: $a0 on ki2 = $98 on ki*/
 
 	dcs_init();
 	memcpy(rombase, memory_region(REGION_USER1), memory_region_length(REGION_USER1));

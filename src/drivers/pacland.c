@@ -128,7 +128,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x7800, 0x7800, MWA_NOP },	/* ??? */
 	{ 0x8000, 0x8800, pacland_halt_mcu_w },
 	{ 0x9000, 0x9800, pacland_flipscreen_w },
-	//{ 0x8000, 0xffff, MWA_ROM },
+	/*{ 0x8000, 0xffff, MWA_ROM },*/
 MEMORY_END
 
 static MEMORY_READ_START( mcu_readmem )
@@ -152,9 +152,9 @@ static MEMORY_WRITE_START( mcu_writemem )
 	{ 0x1000, 0x10ff, namcos1_wavedata_w, &namco_wavedata },		/* PSG device, shared RAM */
 	{ 0x1100, 0x113f, namcos1_sound_w, &namco_soundregs }, /* PSG device */
 	{ 0x1000, 0x13ff, sharedram1_w },
-	{ 0x2000, 0x2000, MWA_NOP }, // ???? (w)
-	{ 0x4000, 0x4000, MWA_NOP }, // ???? (w)
-	{ 0x6000, 0x6000, MWA_NOP }, // ???? (w)
+	{ 0x2000, 0x2000, MWA_NOP }, /* ???? (w)*/
+	{ 0x4000, 0x4000, MWA_NOP }, /* ???? (w)*/
+	{ 0x6000, 0x6000, MWA_NOP }, /* ???? (w)*/
 	{ 0x8000, 0x9fff, MWA_ROM },
 	{ 0xc000, 0xc7ff, MWA_RAM },
 	{ 0xf000, 0xffff, MWA_ROM },
@@ -198,7 +198,7 @@ INPUT_PORTS_START( pacland )
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x40, "4" )
 	PORT_DIPSETTING(    0x60, "5" )
-	//PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
+	/*PORT_SERVICE( 0x80, IP_ACTIVE_LOW )*/
 
 	PORT_START      /* DSWB */
 	PORT_DIPNAME( 0x01, 0x00, "Trip Select" )
@@ -312,7 +312,7 @@ static MACHINE_DRIVER_START( pacland )
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
 	MDRV_CPU_ADD(HD63701, 6000000/3.9)	/* or compatible 6808 with extra instructions */
-//			6000000/4,		/* ??? */
+/*			6000000/4,		 // ??? /*/
 	MDRV_CPU_MEMORY(mcu_readmem,mcu_writemem)
 	MDRV_CPU_PORTS(mcu_readport,mcu_writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)

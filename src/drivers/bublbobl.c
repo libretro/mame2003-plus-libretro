@@ -224,7 +224,7 @@ WRITE_HANDLER( bublbobl_mcu_port1_w )
 		cpu_set_irq_line(0, 0, HOLD_LINE);
 	}
 
-	// bit 7: select read or write shared RAM
+	/* bit 7: select read or write shared RAM*/
 
 	port1_out = data;
 }
@@ -242,7 +242,7 @@ WRITE_HANDLER( bublbobl_mcu_port2_w )
 
 		if (port1_out & 0x80)
 		{
-			// read
+			/* read*/
 			if ((address & 0x0800) == 0x0000)
 				port3_in = readinputport((address & 3) + 1);
 			else if ((address & 0x0c00) == 0x0c00)
@@ -295,7 +295,7 @@ static MEMORY_WRITE_START( bublbobl_writemem )
 	{ 0xe000, 0xf7ff, bublbobl_sharedram1_w, &bublbobl_sharedram1 },
 	{ 0xf800, 0xf9ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram },
 	{ 0xfa00, 0xfa00, bublbobl_sound_command_w },
-//	{ 0xfa03, 0xfa03,  }, clocks reset to sound cpu
+/*	{ 0xfa03, 0xfa03,  }, clocks reset to sound cpu*/
 	{ 0xfa80, 0xfa80, watchdog_reset_w },
 	{ 0xfb00, 0xfb00, bublbobl_nmitrigger_w },	/* not used by Bubble Bobble, only by Tokio */
 	{ 0xfb40, 0xfb40, bublbobl_bankswitch_w },
@@ -434,7 +434,7 @@ static MEMORY_READ_START( tokio_sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0x8fff, MRA_RAM },
 	{ 0x9000, 0x9000, soundlatch_r },
-//	{ 0x9800, 0x9800, MRA_NOP },	/* ??? */
+/*	{ 0x9800, 0x9800, MRA_NOP },	 // ??? /*/
 	{ 0xb000, 0xb000, YM2203_status_port_0_r },
 	{ 0xb001, 0xb001, YM2203_read_port_0_r },
 	{ 0xe000, 0xefff, MRA_ROM },	/* space for diagnostic ROM? */
@@ -443,7 +443,7 @@ MEMORY_END
 static MEMORY_WRITE_START( tokio_sound_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x8fff, MWA_RAM },
-//	{ 0x9000, 0x9000, MWA_NOP },	/* ??? */
+/*	{ 0x9000, 0x9000, MWA_NOP },	 // ??? /*/
 	{ 0xa000, 0xa000, bublbobl_sh_nmi_disable_w },
 	{ 0xa800, 0xa800, bublbobl_sh_nmi_enable_w },
 	{ 0xb000, 0xb000, YM2203_control_port_0_w },
@@ -459,10 +459,10 @@ INPUT_PORTS_START( bublbobl )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SPECIAL )	// output: coin lockout
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL )	// output: select 1-way or 2-way coin counter
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL )	// output: trigger IRQ on main CPU (jumper switchable to vblank)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL )	// output: select read or write shared RAM
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SPECIAL )	/* output: coin lockout*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL )	/* output: select 1-way or 2-way coin counter*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL )	/* output: trigger IRQ on main CPU (jumper switchable to vblank)*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL )	/* output: select read or write shared RAM*/
 
 	PORT_START      /* DSW0 */
 	PORT_DIPNAME( 0x01, 0x00, "Language" )

@@ -78,21 +78,21 @@ static MEMORY_READ_START( metlclsh_readmem )
 	{ 0xc001, 0xc001, input_port_1_r			},
 	{ 0xc002, 0xc002, input_port_2_r			},
 	{ 0xc003, 0xc003, input_port_3_r			},
-//	{ 0xc800, 0xc82f, MRA_RAM					},	// not actually read
-//	{ 0xcc00, 0xcc2f, MRA_RAM					},	// ""
+/*	{ 0xc800, 0xc82f, MRA_RAM					},	*/ /* not actually read*/
+/*	{ 0xcc00, 0xcc2f, MRA_RAM					},	*/ /* ""*/
 	{ 0xd000, 0xd000, YM2203_status_port_0_r	},
-//	{ 0xd800, 0xdfff, MRA_RAM					},	// not actually read
+/*	{ 0xd800, 0xdfff, MRA_RAM					},	*/ /* not actually read*/
 	{ 0xe800, 0xe9ff, MRA_RAM					},
-	{ 0xfff0, 0xffff, MRA_ROM					},	// Reset/IRQ vectors
+	{ 0xfff0, 0xffff, MRA_ROM					},	/* Reset/IRQ vectors*/
 MEMORY_END
 
 static MEMORY_WRITE_START( metlclsh_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM					},
 	{ 0x8000, 0x9fff, sharedram_w, &sharedram	},
 	{ 0xa000, 0xbfff, MWA_ROM					},
-	{ 0xc080, 0xc080, MWA_NOP					},	// ? 0
-	{ 0xc0c2, 0xc0c2, metlclsh_cause_irq		},	// cause irq on cpu #2
-	{ 0xc0c3, 0xc0c3, metlclsh_ack_nmi			},	// nmi ack
+	{ 0xc080, 0xc080, MWA_NOP					},	/* ? 0*/
+	{ 0xc0c2, 0xc0c2, metlclsh_cause_irq		},	/* cause irq on cpu #2*/
+	{ 0xc0c3, 0xc0c3, metlclsh_ack_nmi			},	/* nmi ack*/
 	{ 0xc800, 0xc82f, paletteram_xxxxBBBBGGGGRRRR_split1_w, &paletteram		},
 	{ 0xcc00, 0xcc2f, paletteram_xxxxBBBBGGGGRRRR_split2_w, &paletteram_2	},
 	{ 0xd000, 0xd000, YM2203_control_port_0_w	},
@@ -139,22 +139,22 @@ static MEMORY_READ_START( metlclsh_readmem2 )
 	{ 0xc002, 0xc002, input_port_2_r	},
 	{ 0xc003, 0xc003, input_port_3_r	},
 	{ 0xd000, 0xd7ff, MRA_BANK1			},
-	{ 0xfff0, 0xffff, MRA_ROM			},	// Reset/IRQ vectors
+	{ 0xfff0, 0xffff, MRA_ROM			},	/* Reset/IRQ vectors*/
 MEMORY_END
 
 static MEMORY_WRITE_START( metlclsh_writemem2 )
 	{ 0x0000, 0x7fff, MWA_ROM						},
 	{ 0x8000, 0x9fff, sharedram_w					},
-	{ 0xc000, 0xc000, metlclsh_gfxbank_w			},	// bg tiles bank
-	{ 0xc0c0, 0xc0c0, metlclsh_cause_nmi2			},	// cause nmi on cpu #1
-	{ 0xc0c1, 0xc0c1, metlclsh_ack_irq2				},	// irq ack
-	{ 0xd000, 0xd7ff, metlclsh_bgram_w, &metlclsh_bgram	},	// this is banked
-	{ 0xe417, 0xe417, metlclsh_ack_nmi2				},	// nmi ack
-	{ 0xe301, 0xe301, metlclsh_flipscreen_w			},	// 0/1
+	{ 0xc000, 0xc000, metlclsh_gfxbank_w			},	/* bg tiles bank*/
+	{ 0xc0c0, 0xc0c0, metlclsh_cause_nmi2			},	/* cause nmi on cpu #1*/
+	{ 0xc0c1, 0xc0c1, metlclsh_ack_irq2				},	/* irq ack*/
+	{ 0xd000, 0xd7ff, metlclsh_bgram_w, &metlclsh_bgram	},	/* this is banked*/
+	{ 0xe417, 0xe417, metlclsh_ack_nmi2				},	/* nmi ack*/
+	{ 0xe301, 0xe301, metlclsh_flipscreen_w			},	/* 0/1*/
 	{ 0xe401, 0xe401, metlclsh_rambank_w			},
 	{ 0xe402, 0xe403, MWA_RAM, &metlclsh_scrollx	},
-//	{ 0xe404, 0xe404, MWA_NOP						},	// ? 0
-//	{ 0xe410, 0xe410, MWA_NOP						},	// ? 0 on startup only
+/*	{ 0xe404, 0xe404, MWA_NOP						},	*/ /* ? 0*/
+/*	{ 0xe410, 0xe410, MWA_NOP						},	*/ /* ? 0 on startup only*/
 	{ 0xfff0, 0xffff, MWA_ROM						},
 MEMORY_END
 
@@ -227,7 +227,7 @@ INPUT_PORTS_START( metlclsh )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )	// cpu2 will clr c040 on startup forever
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )	/* cpu2 will clr c040 on startup forever*/
 	PORT_BIT_IMPULSE( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1, 1 )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 INPUT_PORTS_END
@@ -274,9 +274,9 @@ static struct GfxLayout tilelayout8 =
 
 static struct GfxDecodeInfo metlclsh_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &spritelayout, 0x00, 2 }, // [0] Sprites
-	{ REGION_GFX2, 0, &tilelayout16, 0x10, 1 }, // [1] Background
-	{ REGION_GFX3, 0, &tilelayout8,  0x20, 4 }, // [2] Foreground
+	{ REGION_GFX1, 0, &spritelayout, 0x00, 2 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &tilelayout16, 0x10, 1 }, /* [1] Background*/
+	{ REGION_GFX3, 0, &tilelayout8,  0x20, 4 }, /* [2] Foreground*/
 	{ -1 }
 };
 
@@ -295,7 +295,7 @@ static void metlclsh_irqhandler(int linestate)
 static struct YM2203interface metlclsh_ym2203_interface =
 {
 	1,
-	1500000,	// ?
+	1500000,	/* ?*/
 	{ YM2203_VOL(50,10) },
 	{ 0 },
 	{ 0 },
@@ -306,7 +306,7 @@ static struct YM2203interface metlclsh_ym2203_interface =
 static struct YM3526interface metlclsh_ym3526_interface =
 {
 	1,
-	3000000,	// ?
+	3000000,	/* ?*/
 	{ 50 },
 	{ metlclsh_irqhandler },
 };
@@ -328,17 +328,17 @@ static MACHINE_INIT( metlclsh )
 static MACHINE_DRIVER_START( metlclsh )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M6809, 1500000)        // ?
+	MDRV_CPU_ADD(M6809, 1500000)        /* ?*/
 	MDRV_CPU_MEMORY(metlclsh_readmem, metlclsh_writemem)
-	// IRQ by YM3526, NMI by cpu #2
+	/* IRQ by YM3526, NMI by cpu #2*/
 
-	MDRV_CPU_ADD(M6809, 1500000)        // ?
+	MDRV_CPU_ADD(M6809, 1500000)        /* ?*/
 	MDRV_CPU_MEMORY(metlclsh_readmem2, metlclsh_writemem2)
 	MDRV_CPU_VBLANK_INT(metlclsh_interrupt2,2)
-	// IRQ by cpu #1, NMI by coins insertion
+	/* IRQ by cpu #1, NMI by coins insertion*/
 
 	MDRV_FRAMES_PER_SECOND(58)
-	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	// we're using IPT_VBLANK
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	/* we're using IPT_VBLANK*/
 
 	MDRV_MACHINE_INIT(metlclsh)
 
@@ -430,12 +430,12 @@ ROM_START( metlclsh )
 	ROM_LOAD( "cs03.bin",    0x00000, 0x8000, CRC(51c4720c) SHA1(7fd93bdcf029e7d2509b73b32f61fddf85f3453f) )
 	ROM_COPY( REGION_CPU2, 0x7ff0, 0xfff0, 0x10 )
 
-	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )	// Sprites
+	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites*/
 	ROM_LOAD( "cs06.bin",    0x00000, 0x8000, CRC(9f61403f) SHA1(0ebb1cb9d4983746b6b32ec948e7b9efd90783d1) )
 	ROM_LOAD( "cs07.bin",    0x08000, 0x8000, CRC(d0610ea5) SHA1(3dfa16cbe93a4c08993111f78a8dd22c874fdd28) )
 	ROM_LOAD( "cs08.bin",    0x10000, 0x8000, CRC(a8b02125) SHA1(145a22b2910b2fbfb28925f58968ee2bdeae1dda) )
 
-	ROM_REGION( 0x10000, REGION_GFX2, ROMREGION_DISPOSE )	// Background
+	ROM_REGION( 0x10000, REGION_GFX2, ROMREGION_DISPOSE )	/* Background*/
 	ROM_LOAD( "cs01.bin",    0x00000, 0x1000, CRC(9c72343d) SHA1(c5618be7874ab6c930b0e68935c93f1958a1916d) )
 	ROM_CONTINUE(            0x04000, 0x1000 )
 	ROM_CONTINUE(            0x08000, 0x1000 )
@@ -453,11 +453,11 @@ ROM_START( metlclsh )
 	ROM_CONTINUE(            0x0b000, 0x1000 )
 	ROM_CONTINUE(            0x0f000, 0x1000 )
 
-	ROM_REGION( 0x04000, REGION_GFX3, ROMREGION_DISPOSE )	// Foreground
+	ROM_REGION( 0x04000, REGION_GFX3, ROMREGION_DISPOSE )	/* Foreground*/
 	ROM_LOAD( "cs05.bin",    0x00000, 0x4000, CRC(f90c9c6b) SHA1(ca8e497e9c388078343dd1303beef6ee38748d6a) )
-	ROM_CONTINUE(            0x00000, 0x4000 )	// first half is empty
+	ROM_CONTINUE(            0x00000, 0x4000 )	/* first half is empty*/
 
-	ROM_REGION( 0x020, REGION_PROMS, 0 )	// ?
+	ROM_REGION( 0x020, REGION_PROMS, 0 )	/* ?*/
 	ROM_LOAD( "82s123.prm",   0x0000, 0x20, CRC(6844cc88) SHA1(89d23367aa6ff541205416e82781fe938dfeeb52) )
 ROM_END
 

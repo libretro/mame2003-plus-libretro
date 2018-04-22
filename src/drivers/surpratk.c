@@ -93,7 +93,7 @@ static MEMORY_READ_START( surpratk_readmem )
 	{ 0x5f8e, 0x5f8e, input_port_4_r },
 	{ 0x5f8f, 0x5f8f, input_port_2_r },
 	{ 0x5f90, 0x5f90, input_port_3_r },
-//	{ 0x5f91, 0x5f91, YM2151_status_port_0_r },	/* ? */
+/*	{ 0x5f91, 0x5f91, YM2151_status_port_0_r },	 // ? /*/
 	{ 0x5fa0, 0x5faf, K053244_r },
 	{ 0x5fc0, 0x5fc0, watchdog_reset_r },
 	{ 0x4000, 0x7fff, K052109_r },
@@ -176,7 +176,7 @@ INPUT_PORTS_START( surpratk )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "No Use" )
+/*	PORT_DIPSETTING(    0x00, "No Use" )*/
 
 	PORT_START	/* DSW #2 */
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )

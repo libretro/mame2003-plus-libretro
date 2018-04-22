@@ -46,8 +46,8 @@ static WRITE_HANDLER( kopunch_lamp_w )
 {
 	set_led_status(0,~data & 0x80);
 
-//	if ((data & 0x7f) != 0x7f)
-//		usrintf_showmessage("port 38 = %02x",data);
+/*	if ((data & 0x7f) != 0x7f)*/
+/*		usrintf_showmessage("port 38 = %02x",data);*/
 }
 
 static WRITE_HANDLER( kopunch_coin_w )
@@ -55,8 +55,8 @@ static WRITE_HANDLER( kopunch_coin_w )
 	coin_counter_w(0,~data & 0x80);
 	coin_counter_w(1,~data & 0x40);
 
-//	if ((data & 0x3f) != 0x3f)
-//		usrintf_showmessage("port 34 = %02x",data);
+/*	if ((data & 0x3f) != 0x3f)*/
+/*		usrintf_showmessage("port 34 = %02x",data);*/
 }
 
 
@@ -71,7 +71,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x2000, 0x23ff, MWA_RAM },
 	{ 0x6000, 0x63ff, kopunch_videoram_w, &videoram },
 	{ 0x7000, 0x70ff, kopunch_videoram2_w, &kopunch_videoram2 },
-	{ 0x7100, 0x7aff, MWA_RAM },	// ???
+	{ 0x7100, 0x7aff, MWA_RAM },	/* ???*/
 MEMORY_END
 
 static READ_HANDLER( pip_r )
@@ -87,18 +87,18 @@ static PORT_READ_START( readport )
 PORT_END
 
 static PORT_WRITE_START( writeport )
-	{ 0x33, 0x33, IOWP_NOP },	// ???
+	{ 0x33, 0x33, IOWP_NOP },	/* ???*/
 	{ 0x34, 0x34, kopunch_coin_w },
-	{ 0x35, 0x35, IOWP_NOP },	// ???
-	{ 0x36, 0x36, IOWP_NOP },	// ???
-	{ 0x37, 0x37, IOWP_NOP },	// ???
+	{ 0x35, 0x35, IOWP_NOP },	/* ???*/
+	{ 0x36, 0x36, IOWP_NOP },	/* ???*/
+	{ 0x37, 0x37, IOWP_NOP },	/* ???*/
 	{ 0x38, 0x38, kopunch_lamp_w },
-	{ 0x39, 0x39, IOWP_NOP },	// ???
-	{ 0x3b, 0x3b, IOWP_NOP },	// ???
+	{ 0x39, 0x39, IOWP_NOP },	/* ???*/
+	{ 0x3b, 0x3b, IOWP_NOP },	/* ???*/
 	{ 0x3c, 0x3c, kopunch_scroll_x_w },
 	{ 0x3d, 0x3d, kopunch_scroll_y_w },
 	{ 0x3e, 0x3e, kopunch_gfxbank_w },
-	{ 0x3f, 0x3f, IOWP_NOP },	// ???
+	{ 0x3f, 0x3f, IOWP_NOP },	/* ???*/
 PORT_END
 
 
@@ -237,7 +237,7 @@ ROM_END
 
 static DRIVER_INIT( kopunch )
 {
-//	UINT8 *rom = memory_region(REGION_CPU1);
+/*	UINT8 *rom = memory_region(REGION_CPU1);*/
 
 	/* It looks like there is a security chip, that changes instruction of the form:
 		0334: 3E 0C       ld   a,$0C

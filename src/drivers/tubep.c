@@ -158,10 +158,10 @@ static WRITE_HANDLER( tubep_LS259_w )
 				coin_counter_w(offset,data&1);
 				break;
 		case 2:
-				//something...
+				/*something...*/
 				break;
 		case 5:
-				//screen_flip_w(offset,data&1);	/* bit 0 = screen flip, active high */
+				/*screen_flip_w(offset,data&1);	 // bit 0 = screen flip, active high /*/
 				break;
 		case 6:
 				tubep_background_romselect_w(offset,data);	/* bit0 = 0->select roms: B1,B3,B5; bit0 = 1->select roms: B2,B4,B6 */
@@ -207,8 +207,8 @@ PORT_END
 
 static WRITE_HANDLER( main_cpu_irq_line_clear_w )
 {
-//	cpu_set_irq_line(0,CLEAR_LINE);
-//not used - handled by MAME anyway (because it is usual Vblank int)
+/*	cpu_set_irq_line(0,CLEAR_LINE);*/
+/*not used - handled by MAME anyway (because it is usual Vblank int)*/
 	return;
 }
 
@@ -334,7 +334,7 @@ static WRITE_HANDLER( rjammer_LS259_w )
 				coin_counter_w(offset,data&1);	/* bit 0 = coin counter */
 				break;
 		case 5:
-				//screen_flip_w(offset,data&1);	/* bit 0 = screen flip, active high */
+				/*screen_flip_w(offset,data&1);	 // bit 0 = screen flip, active high /*/
 				break;
 		default:
 				break;
@@ -433,7 +433,7 @@ static READ_HANDLER( rjammer_soundlatch_r )
 static WRITE_HANDLER( rjammer_voice_startstop_w )
 {
 	/* bit 0 of data selects voice start/stop (reset pin on MSM5205)*/
-	// 0 -stop; 1-start
+	/* 0 -stop; 1-start*/
 	MSM5205_reset_w (0, (data&1)^1 );
 
 	return;
@@ -441,7 +441,7 @@ static WRITE_HANDLER( rjammer_voice_startstop_w )
 static WRITE_HANDLER( rjammer_voice_frequency_select_w )
 {
 	/* bit 0 of data selects voice frequency on MSM5205 */
-	// 0 -4 KHz; 1- 8KHz
+	/* 0 -4 KHz; 1- 8KHz*/
 	if (data&1)
 		MSM5205_playmode_w(0,MSM5205_S48_4B);	/* 8 KHz */
 	else
@@ -488,7 +488,7 @@ static WRITE_HANDLER( rjammer_voice_input_w )
 static WRITE_HANDLER( rjammer_voice_intensity_control_w )
 {
 	/* 4 LSB bits select the intensity (analog circuit that alters the output from MSM5205) */
-	// need to buffer the data
+	/* need to buffer the data*/
 	return;
 }
 
@@ -522,27 +522,27 @@ PORT_END
 
 static WRITE_HANDLER( ay8910_portA_0_w )
 {
-		//analog sound control
+		/*analog sound control*/
 }
 static WRITE_HANDLER( ay8910_portB_0_w )
 {
-		//analog sound control
+		/*analog sound control*/
 }
 static WRITE_HANDLER( ay8910_portA_1_w )
 {
-		//analog sound control
+		/*analog sound control*/
 }
 static WRITE_HANDLER( ay8910_portB_1_w )
 {
-		//analog sound control
+		/*analog sound control*/
 }
 static WRITE_HANDLER( ay8910_portA_2_w )
 {
-		//analog sound control
+		/*analog sound control*/
 }
 static WRITE_HANDLER( ay8910_portB_2_w )
 {
-		//analog sound control
+		/*analog sound control*/
 }
 
 

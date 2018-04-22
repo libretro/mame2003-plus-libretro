@@ -116,18 +116,18 @@ static READ16_HANDLER(reg_f80000_r)
 {
 	UINT16 dt;
 
-	// 0 means ok, no errors. -1 means error
+	/* 0 means ok, no errors. -1 means error*/
 	if (device_status == DS_CMD)
 		return 0;
 
 	if (device_status == DS_WRITE_ACK)
 	{
-		// Notice, this is the maximum. I think the device lets 68k just writes 4/5 bytes,
-		// they contain "LUNA". Then, it starts sending to the 68k a bunch of stuff, including
-		// 68k code.
+		/* Notice, this is the maximum. I think the device lets 68k just writes 4/5 bytes,*/
+		/* they contain "LUNA". Then, it starts sending to the 68k a bunch of stuff, including*/
+		/* 68k code.*/
 		if (device_write_ptr == 0x10000)
 		{
-//			logerror("DEVICE write finished\n");
+/*			logerror("DEVICE write finished\n");*/
 			device_status = DS_READ_ACK;
 			device_write_ptr = 0;
 			device_read_ptr = 0;
@@ -147,14 +147,14 @@ static READ16_HANDLER(reg_f80000_r)
 
 	if (device_status == DS_READ_ACK)
 	{
-//		logerror("Read ACK\n");
+/*		logerror("Read ACK\n");*/
 		device_status = DS_READ;
 		return 0;
 	}
 
 	dt = device[device_read_ptr];
 
-//	logerror("DEVICE read %x: %x (at %x)\n", device_read_ptr, dt, cpunum_get_pc(0));
+/*	logerror("DEVICE read %x: %x (at %x)\n", device_read_ptr, dt, cpunum_get_pc(0));*/
 
 	device_read_ptr++;
 	device_read_ptr &= 0xFFFF;
@@ -164,17 +164,17 @@ static READ16_HANDLER(reg_f80000_r)
 	return dt<<8;
 }
 
-// Write 0x13
-// Read something (acknowledge? If -1, write -1 and restart)
-// Write data
-// Read value (!=1 is ok)
+/* Write 0x13*/
+/* Read something (acknowledge? If -1, write -1 and restart)*/
+/* Write data*/
+/* Read value (!=1 is ok)*/
 
 static READ16_HANDLER(reg_b80000_r)
 {
 	if (ACCESSING_MSB)
 	{
-		// Bit 7: 0 = ready to write
-		// Bit 6: 0 = ready to read
+		/* Bit 7: 0 = ready to write*/
+		/* Bit 6: 0 = ready to read*/
 		return 0;
 	}
 
@@ -183,7 +183,7 @@ static READ16_HANDLER(reg_b80000_r)
 
 static WRITE16_HANDLER(reg_e80000_w)
 {
-	// Only LSB
+	/* Only LSB*/
 	data >>= 8;
 
 	if (device_status == DS_CMD)
@@ -191,7 +191,7 @@ static WRITE16_HANDLER(reg_e80000_w)
 		switch (data)
 		{
 		case 0x13:
-//			logerror("DEVICE mode WRITE (cmd 0x13)\n");
+/*			logerror("DEVICE mode WRITE (cmd 0x13)\n");*/
 			device_status = DS_WRITE;
 			device_write_ptr = 0;
 			break;
@@ -200,10 +200,10 @@ static WRITE16_HANDLER(reg_e80000_w)
 		return;
 	}
 
-	// @@@ Should skip the writes while in read mode?
+	/* @@@ Should skip the writes while in read mode?*/
 	if (device_status == DS_READ || device_status == DS_READ_ACK)
 	{
-//		logerror("EEPROM write %x: %x\n", device_write_ptr, data);
+/*		logerror("EEPROM write %x: %x\n", device_write_ptr, data);*/
 		return;
 	}
 
@@ -293,7 +293,7 @@ MEMORY_END
 static PORT_READ_START( readport )
 	{ 0x00, 0x00, YMF262_status_0_r },
 	{ 0x40, 0x40, soundlatch_r },
-	//{ 0x60, 0x60, YMZ280B_status_0_r },
+	/*{ 0x60, 0x60, YMZ280B_status_0_r },*/
 PORT_END
 
 static PORT_WRITE_START( writeport )
@@ -306,7 +306,7 @@ static PORT_WRITE_START( writeport )
 
 	{ 0x30, 0x30, deroon_bankswitch_w },
 
-	//{ 0x50, 0x50, to_main_cpu_latch_w },
+	/*{ 0x50, 0x50, to_main_cpu_latch_w },*/
 	{ 0x50, 0x50, IOWP_NOP },
 
 	{ 0x60, 0x60, YMZ280B_register_0_w },
@@ -434,7 +434,7 @@ static struct YMZ280Binterface ymz280b_interface =
 static MACHINE_DRIVER_START( deroon )
 	MDRV_CPU_ADD(M68000, 16000000/8) /* the /8 divider is here only for OPL3 testing */
 	MDRV_CPU_MEMORY(readmem,writemem)
-	//MDRV_CPU_VBLANK_INT(irq1_line_hold,1)
+	/*MDRV_CPU_VBLANK_INT(irq1_line_hold,1)*/
 
 	MDRV_CPU_ADD(Z80, 16000000/2 )	/* 8 MHz ??? */
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -444,10 +444,10 @@ static MACHINE_DRIVER_START( deroon )
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
-//	MDRV_GFXDECODE(gfxdecodeinfo)
+/*	MDRV_GFXDECODE(gfxdecodeinfo)*/
 
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_AFTER_VBLANK)
-	MDRV_SCREEN_SIZE(32*8, 32*8) 	//was:64*8, 64*8
+	MDRV_SCREEN_SIZE(32*8, 32*8) 	/*was:64*8, 64*8*/
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
 	MDRV_PALETTE_LENGTH(0x800)
 
@@ -463,15 +463,15 @@ MACHINE_DRIVER_END
 
 
 ROM_START( deroon )
-	ROM_REGION( 0x100000, REGION_CPU1, 0 ) // Main Program
+	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* Main Program*/
 	ROM_LOAD16_BYTE( "t001upau.bin", 0x00000, 0x80000, CRC(14b92c18) SHA1(b47b8c828222a3f7c0fe9271899bd38171d972fb) )
 	ROM_LOAD16_BYTE( "t002upal.bin", 0x00001, 0x80000, CRC(0fb05c68) SHA1(5140592e15414770fb46d5ac9ba8f76e3d4ab323) )
 
-	ROM_REGION( 0x048000, REGION_CPU2, 0 ) // Sound Porgram
+	ROM_REGION( 0x048000, REGION_CPU2, 0 ) /* Sound Porgram*/
 	ROM_LOAD( "t003uz1.bin", 0x000000, 0x008000, CRC(8bdfafa0) SHA1(c0cf3eb7a65d967958fe2aace171859b0faf7753) )
 	ROM_CONTINUE(            0x010000, 0x038000 ) /* banked part */
 
-	ROM_REGION( 0xb00000, REGION_GFX1, 0 ) // Graphics - mostly (maybe all?) not tile based
+	ROM_REGION( 0xb00000, REGION_GFX1, 0 ) /* Graphics - mostly (maybe all?) not tile based*/
 	ROM_LOAD( "t101uah1.j66", 0x000000, 0x200000, CRC(74baf845) SHA1(935d2954ba227a894542be492654a2750198e1bc) )
 	ROM_LOAD( "t102ual1.j67", 0x200000, 0x200000, CRC(1a02c4a3) SHA1(5155eeaef009fc9a9f258e3e54ca2a7f78242df5) )
 	ROM_LOAD( "t103ubl1.j08", 0x400000, 0x200000, CRC(75431ec5) SHA1(c03e724c15e1fe7a0a385332f849e9ac9d149887) )
@@ -480,10 +480,10 @@ ROM_START( deroon )
 	ROM_LOAD( "t202ubc1.w62", 0x900000, 0x100000, CRC(f051dae1) SHA1(f5677c07fe644b3838657370f0309fb09244c619) )
 	ROM_LOAD( "t301ubd1.w63", 0xa00000, 0x100000, CRC(8b026177) SHA1(3887856bdaec4d9d3669fe3bc958ef186fbe9adb) )
 
-	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) // YMZ280B Samples
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) /* YMZ280B Samples*/
 	ROM_LOAD( "t401uya1.w16", 0x000000, 0x200000, CRC(92111992) SHA1(ae27e11ae76dec0b9892ad32e1a8bf6ab11f2e6c) )
 
-	ROM_REGION( 0x080000, REGION_SOUND2, 0 ) // M6295 Samples
+	ROM_REGION( 0x080000, REGION_SOUND2, 0 ) /* M6295 Samples*/
 	ROM_LOAD( "t501uad1.w01", 0x000000, 0x080000, CRC(2fbcfe27) SHA1(f25c830322423f0959a36955edb563a6150f2142) )
 ROM_END
 
@@ -492,11 +492,11 @@ ROM_START( tkdensho )
 	ROM_LOAD16_BYTE( "aeprge-2.pal", 0x00000, 0x80000, CRC(25e453d6) SHA1(9c84e2af42eff5cc9b14c1759d5bab42fa7bb663) )
 	ROM_LOAD16_BYTE( "aeprgo-2.pau", 0x00001, 0x80000, CRC(22d59510) SHA1(5ade482d6ab9a22df2ee8337458c22cfa9045c73) )
 
-	ROM_REGION( 0x038000, REGION_CPU2, 0 ) // Sound Porgram
+	ROM_REGION( 0x038000, REGION_CPU2, 0 ) /* Sound Porgram*/
 	ROM_LOAD( "aesprg-2.z1", 0x000000, 0x008000, CRC(43550ab6) SHA1(2580129ef8ebd9295249175de4ba985c752e06fe) )
 	ROM_CONTINUE(            0x010000, 0x018000 ) /* banked part */
 
-	ROM_REGION( 0x2900000, REGION_GFX1, 0 ) // Graphics - mostly (maybe all?) not tile based
+	ROM_REGION( 0x2900000, REGION_GFX1, 0 ) /* Graphics - mostly (maybe all?) not tile based*/
 	ROM_LOAD( "ae100h.ah1",    0x0000000, 0x0400000, CRC(06be252b) SHA1(08d1bb569fd2e66e2c2f47da7780b31945232e62) )
 	ROM_LOAD( "ae100.al1",     0x0400000, 0x0400000, CRC(009cdff4) SHA1(fd88f07313d14fd4429b09a1e8d6b595df3b98e5) )
 	ROM_LOAD( "ae101h.bh1",    0x0800000, 0x0400000, CRC(f2469eff) SHA1(ba49d15cc7949437ba9f56d9b425a5f0e62137df) )
@@ -511,11 +511,11 @@ ROM_START( tkdensho )
 	ROM_LOAD( "ae202w76.bc1",  0x2000000, 0x0100000, CRC(5cc857ca) SHA1(2553fb5220433acc15dfb726dc064fe333e51d88) )
 	ROM_LOAD( "ae300w36.bd1",  0x2100000, 0x0080000, CRC(e829f29e) SHA1(e56bfe2669ed1d1ae394c644def426db129d97e3) )
 
-	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) // YMZ280B Samples
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* YMZ280B Samples*/
 	ROM_LOAD( "ae400t23.ya1", 0x000000, 0x200000, CRC(c6ffb043) SHA1(e0c6c5f6b840f63c9a685a2c3be66efa4935cbeb) )
 	ROM_LOAD( "ae401t24.yb1", 0x200000, 0x200000, CRC(d83f1a73) SHA1(412b7ac9ff09a984c28b7d195330d78c4aac3dc5) )
 
-	ROM_REGION( 0x080000, REGION_SOUND2, 0 ) // M6295 Samples
+	ROM_REGION( 0x080000, REGION_SOUND2, 0 ) /* M6295 Samples*/
 	ROM_LOAD( "ae500w07.ad1", 0x000000, 0x080000, CRC(3734f92c) SHA1(048555b5aa89eaf983305c439ba08d32b4a1bb80) )
 ROM_END
 
@@ -526,11 +526,11 @@ static DRIVER_INIT( deroon )
 
 	memcpy(protram, ROM+0xC46/2, 0x10);
 
-	// Patch the long eeprom write delay to speedup bootstrapping
+	/* Patch the long eeprom write delay to speedup bootstrapping*/
 	ROM[0x39C2/2] = 0x1;
 
-//	ROM[0x448/2] = 0x4E71;
-//	ROM[0x44A/2] = 0x4E71;
+/*	ROM[0x448/2] = 0x4E71;*/
+/*	ROM[0x44A/2] = 0x4E71;*/
 }
 
 GAMEX( 1996, deroon,      0, deroon, deroon, deroon,     ROT0, "Tecmo", "Deroon DeroDero", GAME_NOT_WORKING | GAME_NO_SOUND )

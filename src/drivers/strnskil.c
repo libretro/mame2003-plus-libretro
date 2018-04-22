@@ -98,7 +98,7 @@ static MEMORY_WRITE_START( strnskil_writemem1 )
 	{ 0xd809, 0xd809, MWA_NOP }, /* coin counter? */
 	{ 0xd80a, 0xd80b, strnskil_scroll_x_w },
 
-//	{ 0xd80c, 0xd80c, MWA_NOP },		/* protection reset? */
+/*	{ 0xd80c, 0xd80c, MWA_NOP },		 // protection reset? /*/
 	{ 0xd80d, 0xd80d, protection_w },	/* protection data write (pettanp) */
 MEMORY_END
 
@@ -467,7 +467,7 @@ ROM_START( pettanp )
 	ROM_LOAD( "16-2.97",  0x0500,  0x0200, CRC(7f95d4b2) SHA1(68dc311739a4d5d72f4cfbace27f3a82f05316ff) ) /* bg */
 
 	ROM_REGION( 0x0100, REGION_USER1, 0 ) /* scroll control PROM */
-//	ROM_LOAD( "16-6",     0x0000,  0x0100, NO_DUMP )
+/*	ROM_LOAD( "16-6",     0x0000,  0x0100, NO_DUMP )*/
 
 	ROM_REGION( 0x1000, REGION_USER2, 0 ) /* protection? */
 	ROM_LOAD( "tvg12-16.2", 0x0000,  0x1000, CRC(3abc6ba8) SHA1(15e0b0f9d068f6094e2be4f4f1dea0ff6e85686b) )

@@ -186,7 +186,7 @@ static MEMORY_READ_START( readmem )
 	{ 0x0800, 0x0fff, cloak_sharedram_r },
 	{ 0x2800, 0x29ff, MRA_RAM },
 	{ 0x1000, 0x100f, pokey1_r },		/* DSW0 also */
-//	{ 0x1008, 0x1008, MRA_RAM },
+/*	{ 0x1008, 0x1008, MRA_RAM },*/
 	{ 0x1800, 0x180f, pokey2_r },		/* DSW1 also */
 	{ 0x2000, 0x2000, input_port_0_r },	/* IN0 */
 	{ 0x2200, 0x2200, input_port_1_r },	/* IN1 */
@@ -208,7 +208,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x3200, 0x327f, cloak_paletteram_w },
 	{ 0x3800, 0x3801, cloak_coin_counter_w },
 	{ 0x3803, 0x3803, cloak_flipscreen_w },
-	{ 0x3805, 0x3805, MWA_NOP },	// ???
+	{ 0x3805, 0x3805, MWA_NOP },	/* ???*/
 	{ 0x3806, 0x3807, cloak_led_w },
 	{ 0x3a00, 0x3a00, watchdog_reset_w },
 	{ 0x3c00, 0x3c00, cloak_irq_reset_0_w },
@@ -259,21 +259,21 @@ INPUT_PORTS_START( cloak )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_LEFT   | IPF_8WAY )
 
 	PORT_START	/* IN1 */
-	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )		// player 2 controls, not used
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )		/* player 2 controls, not used*/
 
 	PORT_START	/* IN2 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_VBLANK )
 	PORT_SERVICE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )		// cocktail mode switch, not used
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )		/* cocktail mode switch, not used*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )		// player 2 button 1, not used
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )		/* player 2 button 1, not used*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON5 )
 
 	PORT_START	/* IN3 */
-	PORT_BIT( 0x2f, IP_ACTIVE_LOW, IPT_UNUSED )		// not connected
-	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_UNUSED )	// pulled high
+	PORT_BIT( 0x2f, IP_ACTIVE_LOW, IPT_UNUSED )		/* not connected*/
+	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_UNUSED )	/* pulled high*/
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_START2 )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_START1 )
 
@@ -292,7 +292,7 @@ INPUT_PORTS_START( cloak )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_DIPNAME( 0x40, 0x00, "Demo Freeze Mode" )	// when active, press button 1 to freeze
+	PORT_DIPNAME( 0x40, 0x00, "Demo Freeze Mode" )	/* when active, press button 1 to freeze*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )

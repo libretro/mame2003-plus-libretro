@@ -149,7 +149,7 @@ unsigned jrpacman_decode_roms(int address)
 		if (cumulative > address)
 			return RAM[address] ^ Jr_PacManTable[i].value;
 	}
-	return RAM[address]; // this should never happen!
+	return RAM[address]; /* this should never happen!*/
 }
 #else
 static INLINE WordBit(word theWord, int theBit)
@@ -206,7 +206,7 @@ int jrpacman_romdecode(int offset)
 	Z80_GetRegs(&Regs);
 
 	{
-	int m1 = !Regs.M1;//active low (supposedly means opcode read)
+	int m1 = !Regs.M1;/*active low (supposedly means opcode read)*/
 
 	/* Pal 8C (16L8) */
 	int pcbe =  !(addressBus >= 0x0000 && addressBus <= 0x3fff ||
@@ -272,7 +272,7 @@ int jrpacman_romdecode(int offset)
 
 	int ns3 =  ( !md7 );
 
-//	DebugPrint("%04x: %02x & %02x | %02x = %02x",addressBus,RAM[addressBus],~(1<<0) & ~(1<<2) & ~(1<<7), (d0) | (d2<<2) | (d7<<7),(RAM[addressBus] & ~(1<<0) & ~(1<<2) & ~(1<<7)) | (d0) | (d2<<2) | (d7<<7));
+/*	DebugPrint("%04x: %02x & %02x | %02x = %02x",addressBus,RAM[addressBus],~(1<<0) & ~(1<<2) & ~(1<<7), (d0) | (d2<<2) | (d7<<7),(RAM[addressBus] & ~(1<<0) & ~(1<<2) & ~(1<<7)) | (d0) | (d2<<2) | (d7<<7));*/
 /*	printf("%04x: %02x & %02x | %02x = %02x\n",addressBus,RAM[addressBus],~(1<<0) & ~(1<<2) & ~(1<<7), (d0) | (d2<<2) | (d7<<7),(RAM[addressBus] & ~(1<<0) & ~(1<<2) & ~(1<<7)) | (d0) | (d2<<2) | (d7<<7));
 	{static int i=0;
 	if (i++>100)
@@ -283,7 +283,7 @@ int jrpacman_romdecode(int offset)
 	{
 		int temp= ((int)RAM[addressBus] & 0x7A) | ((d7<<7) | (d2<<2) | (d0));
 
-//		if (Z80_Trace==1)
+/*		if (Z80_Trace==1)*/
 			if (!used[addressBus])
 			{
 				used[addressBus]=1;
@@ -376,7 +376,7 @@ rom file,\n");
 			printf("Enter file prefix (files will be named
 'prefix'.8d 'prefix'.8e, etc.\n");
 			gets(line);
-			// kill newline:
+			/* kill newline:*/
 			for (l=line;*l!='\n' && *l!='\0';l++)
 				{}
 			*l = '\0';
@@ -456,12 +456,12 @@ the top of this file. It is included here for completeness.
 ***************************************************************************/
 
 
-// CreateJrDecodeTable.c
-//
-// Copyright (C) 1997 David Caldwell
-// This program is published under the GNU Public License.
-//
-// Comments, questions to: david@indigita.com
+/* CreateJrDecodeTable.c*/
+/**/
+/* Copyright (C) 1997 David Caldwell*/
+/* This program is published under the GNU Public License.*/
+/**/
+/* Comments, questions to: david@indigita.com*/
 
 #include <stdio.h>
 

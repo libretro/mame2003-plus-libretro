@@ -92,7 +92,7 @@ static struct GfxLayout spritelayout =
 struct GfxDecodeInfo yumefuda_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0x0000, &charlayout,   0, 16 },
-//	{ REGION_GFX1, 0x0000, &spritelayout, 0, 8 },
+/*	{ REGION_GFX1, 0x0000, &spritelayout, 0, 8 },*/
 	{ -1 } /* end of array */
 };
 
@@ -112,19 +112,19 @@ static UINT8 prot_lock,nvram_lock;
 static READ_HANDLER( custom_ram_r )
 {
 	logerror("Custom RAM read at %02x PC = %x\n",offset+0xaf80,activecpu_get_pc());
-	return cus_ram[offset];// ^ 0x55;
+	return cus_ram[offset];/* ^ 0x55;*/
 }
 
 static WRITE_HANDLER( custom_ram_w )
 {
-//	logerror("Custom RAM write at %02x : %02x PC = %x\n",offset+0xaf80,data,activecpu_get_pc());
+/*	logerror("Custom RAM write at %02x : %02x PC = %x\n",offset+0xaf80,data,activecpu_get_pc());*/
 	if(prot_lock)	{ cus_ram[offset] = data; }
 }
 
 /*this might be used as NVRAM commands btw*/
 static WRITE_HANDLER( prot_lock_w )
 {
-//	logerror("PC %04x Prot lock value written %02x\n",activecpu_get_pc(),data);
+/*	logerror("PC %04x Prot lock value written %02x\n",activecpu_get_pc(),data);*/
 	prot_lock = data;
 }
 
@@ -155,7 +155,7 @@ static MEMORY_WRITE_START( writemem )
 	{   0x8000, 0x9fff, MWA_ROM },
 	{	0xa7fc, 0xa7fc, prot_lock_w },
 	{   0xa7ff, 0xa7ff, nvram_lock_w },
-	{	0xaf80, 0xafff, custom_ram_w ,&cus_ram }, //260d - 2626
+	{	0xaf80, 0xafff, custom_ram_w ,&cus_ram }, /*260d - 2626*/
 	{	0xb000, 0xb0ff, paletteram_BBGGGRRR_w , &paletteram },/*Wrong format?*/
 	{	0xc000, 0xc3ff, yumefuda_vram_w	, &videoram },
 	{	0xd000, 0xd3ff, MWA_RAM,&colorram },
@@ -171,7 +171,7 @@ PORT_END
 static PORT_WRITE_START( writeport )
 	{ 	0x00, 0x00, AY8910_control_port_0_w },
 	{ 	0x01, 0x01, AY8910_write_port_0_w },
-	{	0xc0, 0xc0,	port_c0_w }, //watchdog write?
+	{	0xc0, 0xc0,	port_c0_w }, /*watchdog write?*/
 PORT_END
 
 static struct AY8910interface ay8910_interface =

@@ -153,14 +153,14 @@ MEMORY_END
 static MEMORY_WRITE_START( ultraman_writemem_sound )
 	{ 0x0000, 0x7fff, MWA_ROM },					/* ROM */
 	{ 0x8000, 0xbfff, MWA_RAM },					/* RAM */
-//	{ 0xd000, 0xd000, MWA_NOP },					/* ??? */
+/*	{ 0xd000, 0xd000, MWA_NOP },					 // ??? /*/
 	{ 0xe000, 0xe000, OKIM6295_data_0_w },			/* M6295 */
 	{ 0xf000, 0xf000, YM2151_register_port_0_w },	/* YM2151 */
 	{ 0xf001, 0xf001, YM2151_data_port_0_w },		/* YM2151 */
 MEMORY_END
 
 static PORT_WRITE_START( ultraman_writeport_sound )
-//	{ 0x00, 0x00, MWA_NOP },						/* ??? */
+/*	{ 0x00, 0x00, MWA_NOP },						 // ??? /*/
 PORT_END
 
 

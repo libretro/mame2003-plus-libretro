@@ -64,7 +64,7 @@ WRITE_HANDLER( mainevt_bankswitch_w )
 	cpu_setbank(1,&RAM[bankaddress]);
 
 	/* TODO: bit 5 = select work RAM or palette? */
-//	palette_selected = data & 0x20;
+/*	palette_selected = data & 0x20;*/
 
 	/* bit 6 = enable char ROM reading through the video RAM */
 	K052109_set_RMRD_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
@@ -106,7 +106,7 @@ WRITE_HANDLER( mainevt_sh_bankswitch_w )
 {
 	int bank_A,bank_B;
 
-//logerror("CPU #1 PC: %04x bank switch = %02x\n",activecpu_get_pc(),data);
+/*logerror("CPU #1 PC: %04x bank switch = %02x\n",activecpu_get_pc(),data);*/
 
 	/* bits 0-3 select the 007232 banks */
 	bank_A=(data&0x3);
@@ -121,7 +121,7 @@ WRITE_HANDLER( dv_sh_bankswitch_w )
 {
 	int bank_A,bank_B;
 
-//logerror("CPU #1 PC: %04x bank switch = %02x\n",activecpu_get_pc(),data);
+/*logerror("CPU #1 PC: %04x bank switch = %02x\n",activecpu_get_pc(),data);*/
 
 	/* bits 0-3 select the 007232 banks */
 	bank_A=(data&0x3);
@@ -531,7 +531,7 @@ INPUT_PORTS_START( devstors )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
  	PORT_START
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )
@@ -642,7 +642,7 @@ INPUT_PORTS_START( devstor2 )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
  	PORT_START
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )

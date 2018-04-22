@@ -66,7 +66,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x2000, 0x2000, tagteam_flipscreen_w },
 	{ 0x2001, 0x2001, tagteam_control_w },
 	{ 0x2002, 0x2002, sound_command_w },
-//	{ 0x2003, 0x2003, MWA_NOP }, /* Appears to increment when you're out of the ring */
+/*	{ 0x2003, 0x2003, MWA_NOP },  // Appears to increment when you're out of the ring /*/
 	{ 0x4000, 0x43ff, tagteam_mirrorvideoram_w },
 	{ 0x4400, 0x47ff, tagteam_mirrorcolorram_w },
 	{ 0x4800, 0x4bff, tagteam_videoram_w, &videoram },
@@ -148,10 +148,10 @@ INPUT_PORTS_START( bigprowr )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
 	PORT_DIPNAME( 0x60, 0x00, DEF_STR( Cabinet ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )			// "Upright, Single Controls"
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )			/* "Upright, Single Controls"*/
 	PORT_DIPSETTING(    0x40, "Upright, Dual Controls" )
-//	PORT_DIPSETTING(    0x20, "Cocktail, Single Controls" )	// IMPOSSIBLE !
-	PORT_DIPSETTING(    0x60, DEF_STR( Cocktail ) )			// "Cocktail, Dual Controls"
+/*	PORT_DIPSETTING(    0x20, "Cocktail, Single Controls" )	*/ /* IMPOSSIBLE !*/
+	PORT_DIPSETTING(    0x60, DEF_STR( Cocktail ) )			/* "Cocktail, Dual Controls"*/
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK  )
 
 	PORT_START      /* DSW2 */
@@ -208,20 +208,20 @@ INPUT_PORTS_START( tagteam )
 	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( 1C_3C ) )			// 1C_6C when "Coin Mode 2"
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_3C ) )			/* 1C_6C when "Coin Mode 2"*/
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_3C ) )			// 1C_6C when "Coin Mode 2"
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_3C ) )			/* 1C_6C when "Coin Mode 2"*/
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
 	PORT_DIPNAME( 0x60, 0x00, DEF_STR( Cabinet ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )			// "Upright, Single Controls"
+	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )			/* "Upright, Single Controls"*/
 	PORT_DIPSETTING(    0x40, "Upright, Dual Controls" )
-//	PORT_DIPSETTING(    0x20, "Cocktail, Single Controls" )	// IMPOSSIBLE !
-	PORT_DIPSETTING(    0x60, DEF_STR( Cocktail ) )			// "Cocktail, Dual Controls"
+/*	PORT_DIPSETTING(    0x20, "Cocktail, Single Controls" )	*/ /* IMPOSSIBLE !*/
+	PORT_DIPSETTING(    0x60, DEF_STR( Cocktail ) )			/* "Cocktail, Dual Controls"*/
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK  )
 
 	PORT_START      /* DSW2 */
@@ -240,7 +240,7 @@ INPUT_PORTS_START( tagteam )
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0xe0, 0x00, "Coin Mode" )				// Check code at 0xff5c
+	PORT_DIPNAME( 0xe0, 0x00, "Coin Mode" )				/* Check code at 0xff5c*/
 	PORT_DIPSETTING(    0x00, "Mode 1" )
 	PORT_DIPSETTING(    0x80, "Mode 2" )
 	/* Other values (0x20, 0x40, 0x60, 0xa0, 0xc0, 0xe0) : "Mode 1" */

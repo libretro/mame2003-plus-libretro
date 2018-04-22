@@ -251,8 +251,8 @@ INPUT_PORTS_START( wc90b )
 	PORT_DIPSETTING(    0x20, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
 	PORT_DIPNAME( 0x40, 0x40, "Countdown Speed" )
-	PORT_DIPSETTING(    0x40, "Normal" )					// 60/60
-	PORT_DIPSETTING(    0x00, "Fast" )						// 56/60
+	PORT_DIPSETTING(    0x40, "Normal" )					/* 60/60*/
+	PORT_DIPSETTING(    0x00, "Fast" )						/* 56/60*/
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
@@ -341,7 +341,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ REGION_GFX2, 0x1a000, &tilelayout,			3*16*16, 16*16 },
 	{ REGION_GFX2, 0x1c000, &tilelayout,			3*16*16, 16*16 },
 	{ REGION_GFX2, 0x1e000, &tilelayout,			3*16*16, 16*16 },
-	{ REGION_GFX3, 0x00000, &spritelayout,		0*16*16, 16*16 }, // sprites
+	{ REGION_GFX3, 0x00000, &spritelayout,		0*16*16, 16*16 }, /* sprites*/
 	{ -1 } /* end of array */
 };
 
@@ -376,7 +376,7 @@ static MACHINE_DRIVER_START( wc90b )
 	MDRV_CPU_MEMORY(wc90b_readmem2,wc90b_writemem2)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
-	MDRV_CPU_ADD(Z80, 2510000) // based on goal92 speed measured by guru (although maybe it should be 10mhz / 4 which is close)
+	MDRV_CPU_ADD(Z80, 2510000) /* based on goal92 speed measured by guru (although maybe it should be 10mhz / 4 which is close)*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* 2.51 MHz */
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 								/* IRQs are triggered by the main CPU */

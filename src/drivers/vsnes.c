@@ -230,25 +230,25 @@ static WRITE_HANDLER( vsnes_coin_counter_w )
 {
 	coin_counter_w( 0, data & 0x01 );
 	coin = data;
-	if( data & 0xfe ) //"bnglngby" and "cluclu"
+	if( data & 0xfe ) /*"bnglngby" and "cluclu"*/
 	{
-		//do something?
+		/*do something?*/
 		logerror("vsnes_coin_counter_w: pc = 0x%04x - data = 0x%02x\n", activecpu_get_pc(), data);
 	}
 }
 
 static READ_HANDLER( vsnes_coin_counter_r )
 {
-	//only for platoon
+	/*only for platoon*/
 	return coin;
 }
 
 static WRITE_HANDLER( vsnes_coin_counter_1_w )
 {
 	coin_counter_w( 1, data & 0x01 );
-	if( data & 0xfe ) //vsbball service mode
+	if( data & 0xfe ) /*vsbball service mode*/
 	{
-		//do something?
+		/*do something?*/
 		logerror("vsnes_coin_counter_1_w: pc = 0x%04x - data = 0x%02x\n", activecpu_get_pc(), data);
 	}
 
@@ -921,7 +921,7 @@ INPUT_PORTS_START( vsbball )
 	PORT_DIPSETTING(    0x28, "300 Pts" )
 	PORT_DIPSETTING(    0x18, "350 Pts" )
 	PORT_DIPSETTING(    0x38, "400 Pts" )
-	PORT_DIPNAME( 0x40, 0x00, "Bonus Play" ) //?
+	PORT_DIPNAME( 0x40, 0x00, "Bonus Play" ) /*?*/
 	PORT_DIPSETTING(	0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )
@@ -996,7 +996,7 @@ INPUT_PORTS_START( vsbballj )
 	PORT_DIPSETTING(    0x28, "300 Pts" )
 	PORT_DIPSETTING(    0x18, "350 Pts" )
 	PORT_DIPSETTING(    0x38, "400 Pts" )
-	PORT_DIPNAME( 0x40, 0x00, "Bonus Play" ) //?
+	PORT_DIPNAME( 0x40, 0x00, "Bonus Play" ) /*?*/
 	PORT_DIPSETTING(	0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )
@@ -1192,9 +1192,9 @@ INPUT_PORTS_START( cstlevna )
 	PORT_DIPSETTING(	0x20, "200k" )
 	PORT_DIPSETTING(	0x10, "300k" )
 	PORT_DIPSETTING(	0x30, "400k" )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Difficulty ) )	// Damage taken
-	PORT_DIPSETTING(	0x00, "Normal" )				// Normal
-	PORT_DIPSETTING(	0x40, "Hard" )					// Double
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Difficulty ) )	/* Damage taken*/
+	PORT_DIPSETTING(	0x00, "Normal" )				/* Normal*/
+	PORT_DIPSETTING(	0x40, "Hard" )					/* Double*/
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x80, DEF_STR( On ) )
@@ -1221,7 +1221,7 @@ INPUT_PORTS_START( iceclimb )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(	0x00, "Normal" )
 	PORT_DIPSETTING(	0x20, "Hard" )
-	PORT_DIPNAME( 0x40, 0x00, "Time before bear appears" ) //?
+	PORT_DIPNAME( 0x40, 0x00, "Time before bear appears" ) /*?*/
 	PORT_DIPSETTING(	0x00, "Long" )
 	PORT_DIPSETTING(	0x40, "Short" )
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unused ) )
@@ -1235,7 +1235,7 @@ INPUT_PORTS_START( iceclmbj )
 	PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 )	/* BUTTON A on a nes */
 	PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )	/* BUTTON B on a nes */
 	PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_START1 )				/* SELECT on a nes */
-	PORT_BIT ( 0x08, IP_ACTIVE_LOW,  IPT_SPECIAL ) // protection /* START on a nes */
+	PORT_BIT ( 0x08, IP_ACTIVE_LOW,  IPT_SPECIAL ) /* protection  // START on a nes /*/
 	PORT_BIT ( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT ( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT ( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
@@ -1245,7 +1245,7 @@ INPUT_PORTS_START( iceclmbj )
 	PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER1 )	/* BUTTON A on a nes */
 	PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER1 )	/* BUTTON B on a nes */
 	PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_START2 )				/* SELECT on a nes */
-	PORT_BIT ( 0x08, IP_ACTIVE_LOW,  IPT_SPECIAL ) // protection /* START on a nes */
+	PORT_BIT ( 0x08, IP_ACTIVE_LOW,  IPT_SPECIAL ) /* protection  // START on a nes /*/
 	PORT_BIT ( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT ( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT ( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
@@ -1442,7 +1442,7 @@ INPUT_PORTS_START( machridj )
 	PORT_DIPSETTING(	0x02, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(	0x06, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(	0x07, DEF_STR( Free_Play ) )
-	PORT_DIPNAME( 0x18, 0x00, "Km 1st Race" ) //?
+	PORT_DIPNAME( 0x18, 0x00, "Km 1st Race" ) /*?*/
 	PORT_DIPSETTING(	0x00, "12" )
 	PORT_DIPSETTING(	0x10, "15" )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )
@@ -1942,7 +1942,7 @@ INPUT_PORTS_START( bnglngby )
 	PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 )	/* BUTTON A on a nes */
 	PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )	/* BUTTON B on a nes */
 	PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_START1 )				/* SELECT on a nes */
-	PORT_BIT ( 0x08, IP_ACTIVE_LOW,  IPT_SPECIAL ) // protection /* START on a nes */
+	PORT_BIT ( 0x08, IP_ACTIVE_LOW,  IPT_SPECIAL ) /* protection  // START on a nes /*/
 	PORT_BIT ( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT ( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT ( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
@@ -1952,7 +1952,7 @@ INPUT_PORTS_START( bnglngby )
 	PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER1 )	/* BUTTON A on a nes */
 	PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER1 )	/* BUTTON B on a nes */
 	PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_START2 )				/* SELECT on a nes */
-	PORT_BIT ( 0x08, IP_ACTIVE_LOW,  IPT_SPECIAL ) // protection /* START on a nes */
+	PORT_BIT ( 0x08, IP_ACTIVE_LOW,  IPT_SPECIAL ) /* protection  // START on a nes /*/
 	PORT_BIT ( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT ( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT ( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
@@ -2237,7 +2237,7 @@ ROM_END
 
 ROM_START( vsgshoe )
 	ROM_REGION( 0x20000,REGION_CPU1, 0 ) /* 6502 memory */
-	ROM_LOAD( "mds-gm5.1d",  0x10000, 0x4000, CRC(063b342f) SHA1(66f69de27db5b08969f9250d0a6760e7311bd9bf)  ) // its probably not bad .. just banked somehow
+	ROM_LOAD( "mds-gm5.1d",  0x10000, 0x4000, CRC(063b342f) SHA1(66f69de27db5b08969f9250d0a6760e7311bd9bf)  ) /* its probably not bad .. just banked somehow*/
 	ROM_LOAD( "mds-gm5.1c",  0x14000, 0x2000, CRC(e1b7915e) SHA1(ed0fdf74b05a3ccd1645c4f580436fd439f81dea) )
 	ROM_LOAD( "mds-gm5.1b",  0x16000, 0x2000, CRC(5b73aa3c) SHA1(4069a6139091fbff48758953bd894808a8356d46) )
 	ROM_LOAD( "mds-gm5.1a",  0x18000, 0x2000, CRC(70e606bc) SHA1(8207ded20cb9109d605ce73deb722de3514ed9bf) )
@@ -2317,7 +2317,7 @@ ROM_START( excitbkj )
 
 	ROM_REGION( 0x4000,REGION_GFX1, 0 ) /* PPU memory */
 	ROM_LOAD( "eb4-48ba.bin",  0x0000, 0x2000, CRC(62a76c52) SHA1(7ebd0dac976abe8636f4f75a3b2a473d7a54934d) )
-//	ROM_LOAD( "eb4-48aa.bin",  0x2000, 0x2000, CRC(a9b49a05) SHA1(c14706e6a5524f81e79c101e32deef9f3d60de3f) )
+/*	ROM_LOAD( "eb4-48aa.bin",  0x2000, 0x2000, CRC(a9b49a05) SHA1(c14706e6a5524f81e79c101e32deef9f3d60de3f) )*/
 	ROM_LOAD( "eb-2a",         0x2000, 0x2000, CRC(a9b49a05) SHA1(c14706e6a5524f81e79c101e32deef9f3d60de3f) )
 ROM_END
 
@@ -2684,7 +2684,7 @@ ROM_START( vsbbaljb )
 	ROM_LOAD( "ba_1d_a3.bin",  0x08000, 0x02000, CRC(e234d609) SHA1(a148d6b57fbc9d5f91737fa30c2df2c2b66df404) )
 	ROM_LOAD( "ba_1c_a3.bin",  0x0a000, 0x02000, CRC(ca1a9591) SHA1(3544f244c59d3dab40c2745e84775b7c1defaf54) )
 	ROM_LOAD( "ba_1b_a3.bin",  0x0c000, 0x02000, CRC(50e1f6cf) SHA1(8eb4ccb4817295084280ffd1ee5261eee02485c5) )
-	ROM_LOAD( "ba_1a_a3.bin",  0x0e000, 0x02000, BAD_DUMP CRC(4312aa6d) SHA1(dfadbbb6b03a3c1b5cc56c6c60f5005d4b572d8d) ) //FIXED BITS (xxxxxxx1)
+	ROM_LOAD( "ba_1a_a3.bin",  0x0e000, 0x02000, BAD_DUMP CRC(4312aa6d) SHA1(dfadbbb6b03a3c1b5cc56c6c60f5005d4b572d8d) ) /*FIXED BITS (xxxxxxx1)*/
 
 	ROM_REGION( 0x4000,REGION_GFX1, 0 ) /* PPU memory */
 	ROM_LOAD( "ba_2b_a.bin",  0x0000, 0x2000, CRC(919147d0) SHA1(9fccdfccc2a3ec634e350880ded7053f36c377bc) )

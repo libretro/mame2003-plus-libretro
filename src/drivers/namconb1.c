@@ -601,7 +601,7 @@ static MEMORY_READ32_START( namconb2_readmem )
 	{ 0x000000, 0x0fffff, MRA32_ROM },
 	{ 0x1c0000, 0x1cffff, MRA32_RAM },	/* workram */
 	{ 0x1e4000, 0x1e4003, MRA32_NOP },	/* ? */
-//	{ 0x200000, 0x23ffff, MRA32_RAM },	/* workram (shared with MCU) */
+/*	{ 0x200000, 0x23ffff, MRA32_RAM },	 // workram (shared with MCU) /*/
 	{ 0x200000, 0x2fffff, MRA32_RAM },	/* workram (shared with MCU) */
 	{ 0x400000, 0x4fffff, MRA32_BANK1 },/* data ROMs */
 	{ 0x600000, 0x6023ff, MRA32_RAM }, /* ? */
@@ -1166,9 +1166,9 @@ INPUT_PORTS_START( machbrkr )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED ) /* C75 status */
 
 	PORT_START
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 ) // self test: up
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 ) // self test: enter
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON3 ) // self test: down
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 ) /* self test: up*/
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 ) /* self test: enter*/
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON3 ) /* self test: down*/
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_START1 )
 
 	PORT_START
@@ -1250,7 +1250,7 @@ GAMEX( 1996, sws96,    0,        namconb1, namconb1, sws96,    ROT0,  "Namco", "
 GAMEX( 1997, sws97,    0,        namconb1, namconb1, sws97,    ROT0,  "Namco", "Super World Stadium '97 (Japan)", GAME_NO_SOUND )
 GAMEX( 1994, vshoot,   0,        namconb1, namconb1, vshoot,   ROT0,  "Namco", "J-League Soccer V-Shoot", GAME_NO_SOUND )
 
-//     YEAR, NAME,     PARENT,   MACHINE,  INPUT,    INIT,     MNTR,  COMPANY, FULLNAME,   FLAGS)
+/*     YEAR, NAME,     PARENT,   MACHINE,  INPUT,    INIT,     MNTR,  COMPANY, FULLNAME,   FLAGS)*/
 GAMEX( 1994, outfxies, 0,		 namconb2, namconb1, outfxies, ROT0, "Namco", "Outfoxies", GAME_IMPERFECT_GRAPHICS|GAME_NO_SOUND )
 GAMEX( 1994, outfxesj, outfxies, namconb2, namconb1, outfxies, ROT0, "Namco", "Outfoxies (Japan)", GAME_IMPERFECT_GRAPHICS|GAME_NO_SOUND )
 GAMEX( 1995, machbrkr, 0,		 namconb2, namconb1, machbrkr, ROT0, "Namco", "Mach Breakers (Japan)", GAME_IMPERFECT_GRAPHICS|GAME_NO_SOUND )

@@ -170,22 +170,22 @@ static READ16_HANDLER(histryma_700000_r)
 
 	static const UINT16 table[128] =
 	{
-		0x00, 0x02, 0x01, 0x03, 0x08, 0x0a, 0x09, 0x0b,		// 0x00 .. 0x0e
-		0x04, 0x06, 0x05, 0x07, 0x0c, 0x0e, 0x0d, 0x0f,		// 0x10 .. 0x1e
-		0x20, 0x22, 0x21, 0x23, 0x28, 0x2a, 0x29, 0x2b,		// 0x20 .. 0x2e
-		0x24, 0x26, 0x25, 0x27, 0x2c, 0x2e, 0x2d, 0x2f,		// 0x30 .. 0x3e
-		0x10, 0x12, 0x11, 0x13, 0x18, 0x1a, 0x19, 0x1b,		// 0x40 .. 0x4e
-		0x14, 0x16, 0x15, 0x17, 0x1c, 0x1e, 0x1d, 0x1f,		// 0x50 .. 0x5e
-		0x30, 0x32, 0x31, 0x33, 0x38, 0x3a, 0x39, 0x3b,		// 0x60 .. 0x6e
-		0x34, 0x36, 0x35, 0x37, 0x3c, 0x3e, 0x3d, 0x3f,		// 0x70 .. 0x7e
-		0x80, 0x82, 0x81, 0x83, 0x88, 0x8a, 0x89, 0x8b,		// 0x80 .. 0x8e
-		0x84, 0x86, 0x85, 0x87, 0x8c, 0x8e, 0x8d, 0x8f,		// 0x90 .. 0x9e
-		0xa0, 0xa2, 0xa1, 0xa3, 0xa8, 0xaa, 0xa9, 0xab,		// 0xa0 .. 0xae
-		0xa4, 0xa6, 0xa5, 0xa7, 0xac, 0xae, 0xad, 0xaf,		// 0xb0 .. 0xbe
-		0x90, 0x92, 0x91, 0x93, 0x98, 0x9a, 0x99, 0x9b,		// 0xc0 .. 0xce
-		0x94, 0x96, 0x95, 0x97, 0x9c, 0x9e, 0x9d, 0x9f,		// 0xd0 .. 0xde
-		0xb0, 0xb2, 0xb1, 0xb3, 0xb8, 0xba, 0xb9, 0xbb,		// 0xe0 .. 0xee
-		0xb4, 0xb6, 0xb5, 0xb7, 0xbc, 0xbe, 0xbd, 0xbf,		// 0xf0 .. 0xfe
+		0x00, 0x02, 0x01, 0x03, 0x08, 0x0a, 0x09, 0x0b,		/* 0x00 .. 0x0e*/
+		0x04, 0x06, 0x05, 0x07, 0x0c, 0x0e, 0x0d, 0x0f,		/* 0x10 .. 0x1e*/
+		0x20, 0x22, 0x21, 0x23, 0x28, 0x2a, 0x29, 0x2b,		/* 0x20 .. 0x2e*/
+		0x24, 0x26, 0x25, 0x27, 0x2c, 0x2e, 0x2d, 0x2f,		/* 0x30 .. 0x3e*/
+		0x10, 0x12, 0x11, 0x13, 0x18, 0x1a, 0x19, 0x1b,		/* 0x40 .. 0x4e*/
+		0x14, 0x16, 0x15, 0x17, 0x1c, 0x1e, 0x1d, 0x1f,		/* 0x50 .. 0x5e*/
+		0x30, 0x32, 0x31, 0x33, 0x38, 0x3a, 0x39, 0x3b,		/* 0x60 .. 0x6e*/
+		0x34, 0x36, 0x35, 0x37, 0x3c, 0x3e, 0x3d, 0x3f,		/* 0x70 .. 0x7e*/
+		0x80, 0x82, 0x81, 0x83, 0x88, 0x8a, 0x89, 0x8b,		/* 0x80 .. 0x8e*/
+		0x84, 0x86, 0x85, 0x87, 0x8c, 0x8e, 0x8d, 0x8f,		/* 0x90 .. 0x9e*/
+		0xa0, 0xa2, 0xa1, 0xa3, 0xa8, 0xaa, 0xa9, 0xab,		/* 0xa0 .. 0xae*/
+		0xa4, 0xa6, 0xa5, 0xa7, 0xac, 0xae, 0xad, 0xaf,		/* 0xb0 .. 0xbe*/
+		0x90, 0x92, 0x91, 0x93, 0x98, 0x9a, 0x99, 0x9b,		/* 0xc0 .. 0xce*/
+		0x94, 0x96, 0x95, 0x97, 0x9c, 0x9e, 0x9d, 0x9f,		/* 0xd0 .. 0xde*/
+		0xb0, 0xb2, 0xb1, 0xb3, 0xb8, 0xba, 0xb9, 0xbb,		/* 0xe0 .. 0xee*/
+		0xb4, 0xb6, 0xb5, 0xb7, 0xbc, 0xbe, 0xbd, 0xbf,		/* 0xf0 .. 0xfe*/
 	};
 
 	UINT16 data = fitfight_700000_data;
@@ -341,8 +341,8 @@ static READ16_HANDLER(bbprot_700000_r)
 
 static WRITE16_HANDLER(fitfight_700000_w)
 {
-	COMBINE_DATA(&fof_700000[offset]);		// really needed for scrolling ?
-	if (data < 0x0200)				// to avoid considering writes of 0x0200
+	COMBINE_DATA(&fof_700000[offset]);		/* really needed for scrolling ?*/
+	if (data < 0x0200)				/* to avoid considering writes of 0x0200*/
 		fitfight_700000_data = data;
 }
 
@@ -350,10 +350,10 @@ static MEMORY_READ16_START( fitfight_readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },
 
 	{ 0x200000, 0x200001, input_port_0_word_r },
-	{ 0x300000, 0x300001, input_port_1_word_r },	// for 'histryma' only
+	{ 0x300000, 0x300001, input_port_1_word_r },	/* for 'histryma' only*/
 	{ 0x400000, 0x400001, input_port_2_word_r },
 	{ 0x500000, 0x500001, input_port_3_word_r },
-//	{ 0x700000, 0x700001, xxxx }, /* see init */
+/*	{ 0x700000, 0x700001, xxxx },  // see init /*/
 
 	{ 0xb00000, 0xb0ffff, MRA16_RAM },
 	{ 0xc00000, 0xc003ff, MRA16_RAM },
@@ -423,7 +423,7 @@ MEMORY_END
 /* I've put the inputs the same way they can be read in the "test mode" */
 
 INPUT_PORTS_START( fitfight )
-	PORT_START	// 0x200000.w
+	PORT_START	/* 0x200000.w*/
 	/* players inputs -> 0xe022cc.w */
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -442,18 +442,18 @@ INPUT_PORTS_START( fitfight )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// 0x300000.w (unused)
+	PORT_START	/* 0x300000.w (unused)*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// 0x400000.w
+	PORT_START	/* 0x400000.w*/
 	/* LSB : system inputs -> 0xe022cf.b */
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_COIN4 )
-	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )			// "Test"
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* "Test"*/
 	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )			// "Fault" (= "Tilt" ?)
+	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* "Fault" (= "Tilt" ?)*/
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	/* MSB : SW2 -> 0xe04c26.b (cpl) */
 	PORT_DIPNAME( 0xf800, 0xf800, "Time" )
@@ -499,7 +499,7 @@ INPUT_PORTS_START( fitfight )
 	PORT_DIPSETTING(      0x0600, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0x0700, DEF_STR( 1C_1C ) )
 
-	PORT_START	// 0x500000.w
+	PORT_START	/* 0x500000.w*/
 	/* MSB : SW3 -> 0xe04c24.b (cpl) */
 	PORT_DIPNAME( 0xe000, 0xe000, "Next Credit" )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 4C_1C ) )
@@ -524,11 +524,11 @@ INPUT_PORTS_START( fitfight )
 	PORT_DIPSETTING(      0x0200, DEF_STR( On ) )
 	PORT_SERVICE( 0x0100, IP_ACTIVE_LOW )
 	/* LSB : SW1 -> 0xe04c25.b (cpl) */
-	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Demo_Sounds ) )	// To be confirmed
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Demo_Sounds ) )	/* To be confirmed*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0080, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0070, 0x0060, "Needed Points/Maximum Rounds" )	// see notes
-//	PORT_DIPSETTING(      0x0070, "Endless" )
+	PORT_DIPNAME( 0x0070, 0x0060, "Needed Points/Maximum Rounds" )	/* see notes*/
+/*	PORT_DIPSETTING(      0x0070, "Endless" )*/
 	PORT_DIPSETTING(      0x0060, "1/2" )
 	PORT_DIPSETTING(      0x0050, "2/3" )
 	PORT_DIPSETTING(      0x0040, "2/4" )
@@ -536,13 +536,13 @@ INPUT_PORTS_START( fitfight )
 	PORT_DIPSETTING(      0x0020, "3/6" )
 	PORT_DIPSETTING(      0x0010, "4/7" )
 	PORT_DIPSETTING(      0x0000, "4/8" )
-	PORT_DIPNAME( 0x0008, 0x0000, "Select All Players" )		// in a 1 player game
-	PORT_DIPSETTING(      0x0008, DEF_STR( No ) )			// only Ryo and Robert available
+	PORT_DIPNAME( 0x0008, 0x0000, "Select All Players" )		/* in a 1 player game*/
+	PORT_DIPSETTING(      0x0008, DEF_STR( No ) )			/* only Ryo and Robert available*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unused ) )		// must be Off during P.O.S.T. !
+	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unused ) )		/* must be Off during P.O.S.T. !*/
 	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unused ) )
@@ -551,7 +551,7 @@ INPUT_PORTS_START( fitfight )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( histryma )
-	PORT_START	// 0x200000.w
+	PORT_START	/* 0x200000.w*/
 	/* players inputs -> 0xe02cf2.w and 0xe02cf8.w */
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -570,7 +570,7 @@ INPUT_PORTS_START( histryma )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// 0x300000.w
+	PORT_START	/* 0x300000.w*/
 	/* LSB : players extra inputs -> 0xe02cf5.b and 0xe02cfb.b */
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )
@@ -583,21 +583,21 @@ INPUT_PORTS_START( histryma )
 	/* MSB : unused */
 	PORT_BIT(  0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// 0x400000.w
+	PORT_START	/* 0x400000.w*/
 	/* LSB : system inputs -> 0xe02cf7.b and 0xe02cfd.b */
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )			// "Test"
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* "Test"*/
 	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )			// "Fault" (= "Tilt" ?)
-	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )			// "Test" (duplicated)
+	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* "Fault" (= "Tilt" ?)*/
+	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* "Test" (duplicated)*/
 	/* MSB : SW2 -> 0xe05874.b (cpl) */
 	PORT_DIPNAME( 0xf800, 0x0000, "Time" )
-//	PORT_DIPSETTING(      0xf800, "15" )				// duplicated setting
-//	PORT_DIPSETTING(      0xf000, "15" )				// duplicated setting
-//	PORT_DIPSETTING(      0xe800, "15" )				// duplicated setting
+/*	PORT_DIPSETTING(      0xf800, "15" )				*/ /* duplicated setting*/
+/*	PORT_DIPSETTING(      0xf000, "15" )				*/ /* duplicated setting*/
+/*	PORT_DIPSETTING(      0xe800, "15" )				*/ /* duplicated setting*/
 	PORT_DIPSETTING(      0xe000, "15" )
 	PORT_DIPSETTING(      0xd800, "18" )
 	PORT_DIPSETTING(      0xd000, "21" )
@@ -637,7 +637,7 @@ INPUT_PORTS_START( histryma )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 4C_3C ) )
 	PORT_DIPSETTING(      0x0700, DEF_STR( 1C_1C ) )
 
-	PORT_START	// 0x500000.w
+	PORT_START	/* 0x500000.w*/
 	/* MSB : SW3 -> 0xe05872.b (cpl) */
 	PORT_DIPNAME( 0xe000, 0xe000, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(      0xe000, DEF_STR( 1C_1C ) )
@@ -662,11 +662,11 @@ INPUT_PORTS_START( histryma )
 	PORT_DIPSETTING(      0x0200, DEF_STR( On ) )
 	PORT_SERVICE( 0x0100, IP_ACTIVE_LOW )
 	/* LSB : SW1 -> 0xe05873.b (cpl) */
-	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Demo_Sounds ) )	// To be confirmed
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Demo_Sounds ) )	/* To be confirmed*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0080, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0070, 0x0060, "Needed Points/Maximum Points" )	// see notes
-//	PORT_DIPSETTING(      0x0070, "Endless" )				// ends on a draw
+	PORT_DIPNAME( 0x0070, 0x0060, "Needed Points/Maximum Points" )	/* see notes*/
+/*	PORT_DIPSETTING(      0x0070, "Endless" )				*/ /* ends on a draw*/
 	PORT_DIPSETTING(      0x0060, "1/2" )
 	PORT_DIPSETTING(      0x0050, "2/3" )
 	PORT_DIPSETTING(      0x0040, "2/4" )
@@ -674,13 +674,13 @@ INPUT_PORTS_START( histryma )
 	PORT_DIPSETTING(      0x0020, "3/6" )
 	PORT_DIPSETTING(      0x0010, "4/7" )
 	PORT_DIPSETTING(      0x0000, "4/8" )
-	PORT_DIPNAME( 0x0008, 0x0000, "Buttons" )				// 3 or 6 buttons as default ?
+	PORT_DIPNAME( 0x0008, 0x0000, "Buttons" )				/* 3 or 6 buttons as default ?*/
 	PORT_DIPSETTING(      0x0008, "3" )
 	PORT_DIPSETTING(      0x0000, "6" )
 	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unused ) )		// must be Off during P.O.S.T. !
+	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unused ) )		/* must be Off during P.O.S.T. !*/
 	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unused ) )
@@ -693,7 +693,7 @@ INPUT_PORTS_END
    (the only difference being that there is no "Needed Points/Maximum Points"
    Dip Switch, the value always being set to "2/3") */
 INPUT_PORTS_START( bbprot )
-	PORT_START	// 0x300000.w
+	PORT_START	/* 0x300000.w*/
 	/* players inputs -> 0xe0545e.w and 0xe05464.w */
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -712,7 +712,7 @@ INPUT_PORTS_START( bbprot )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// 0x380000.w
+	PORT_START	/* 0x380000.w*/
 	/* LSB : players extra inputs -> 0xe05461.b and 0xe05467.b */
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )
@@ -725,21 +725,21 @@ INPUT_PORTS_START( bbprot )
 	/* MSB : unused */
 	PORT_BIT(  0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// 0x400000.w
+	PORT_START	/* 0x400000.w*/
 	/* LSB : system inputs -> 0xe05463.b and 0xe05469.b */
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2 )
 	PORT_BIT(  0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )			// "Test"
+	PORT_BIT(  0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* "Test"*/
 	PORT_BIT(  0x0020, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )			// "Fault" (= "Tilt" ?)
-	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )			// "Test" (duplicated)
+	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* "Fault" (= "Tilt" ?)*/
+	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* "Test" (duplicated)*/
 	/* MSB : SW2 -> 0xe07e84.b (cpl) */
 	PORT_DIPNAME( 0xf800, 0x0000, "Time" )
-//	PORT_DIPSETTING(      0xf800, "15" )				// duplicated setting
-//	PORT_DIPSETTING(      0xf000, "15" )				// duplicated setting
-//	PORT_DIPSETTING(      0xe800, "15" )				// duplicated setting
+/*	PORT_DIPSETTING(      0xf800, "15" )				*/ /* duplicated setting*/
+/*	PORT_DIPSETTING(      0xf000, "15" )				*/ /* duplicated setting*/
+/*	PORT_DIPSETTING(      0xe800, "15" )				*/ /* duplicated setting*/
 	PORT_DIPSETTING(      0xe000, "15" )
 	PORT_DIPSETTING(      0xd800, "18" )
 	PORT_DIPSETTING(      0xd000, "21" )
@@ -779,7 +779,7 @@ INPUT_PORTS_START( bbprot )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 4C_3C ) )
 	PORT_DIPSETTING(      0x0700, DEF_STR( 1C_1C ) )
 
-	PORT_START	// 0x480000.w
+	PORT_START	/* 0x480000.w*/
 	/* MSB : SW3 -> 0xe07e82.b (cpl) */
 	PORT_DIPNAME( 0xe000, 0xe000, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(      0xe000, DEF_STR( 1C_1C ) )
@@ -804,7 +804,7 @@ INPUT_PORTS_START( bbprot )
 	PORT_DIPSETTING(      0x0200, DEF_STR( On ) )
 	PORT_SERVICE( 0x0100, IP_ACTIVE_LOW )
 	/* LSB : SW1 -> 0xe07e83.b (cpl) */
-	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Demo_Sounds ) )	// To be confirmed
+	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Demo_Sounds ) )	/* To be confirmed*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0080, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unused ) )
@@ -816,13 +816,13 @@ INPUT_PORTS_START( bbprot )
 	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0008, 0x0000, "Buttons" )				// 3 or 6 buttons as default ?
+	PORT_DIPNAME( 0x0008, 0x0000, "Buttons" )				/* 3 or 6 buttons as default ?*/
 	PORT_DIPSETTING(      0x0008, "3" )
 	PORT_DIPSETTING(      0x0000, "6" )
 	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unused ) )		// must be Off during P.O.S.T. !
+	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unused ) )		/* must be Off during P.O.S.T. !*/
 	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unused ) )
@@ -909,7 +909,7 @@ static MACHINE_DRIVER_START( fitfight )
 	MDRV_VIDEO_START(fitfight)
 	MDRV_VIDEO_UPDATE(fitfight)
 
-//	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+/*	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)*/
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( bbprot )
@@ -930,7 +930,7 @@ static MACHINE_DRIVER_START( bbprot )
 	MDRV_VIDEO_START(fitfight)
 	MDRV_VIDEO_UPDATE(fitfight)
 
-//	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+/*	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)*/
 MACHINE_DRIVER_END
 
 /***
@@ -1109,16 +1109,16 @@ ROM_END
 
 static DRIVER_INIT( fitfight )
 {
-//	data16_t *mem16 = (data16_t *)memory_region(REGION_CPU1);
-//	mem16[0x0165B2/2]=0x4e71; // for now so it boots
+/*	data16_t *mem16 = (data16_t *)memory_region(REGION_CPU1);*/
+/*	mem16[0x0165B2/2]=0x4e71; */ /* for now so it boots*/
 	install_mem_read16_handler (0, 0x700000, 0x700001, fitfight_700000_r);
 	bbprot_kludge = 0;
 }
 
 static DRIVER_INIT( histryma )
 {
-//	data16_t *mem16 = (data16_t *)memory_region(REGION_CPU1);
-//	mem16[0x017FDC/2]=0x4e71; // for now so it boots
+/*	data16_t *mem16 = (data16_t *)memory_region(REGION_CPU1);*/
+/*	mem16[0x017FDC/2]=0x4e71; */ /* for now so it boots*/
 	install_mem_read16_handler (0, 0x700000, 0x700001, histryma_700000_r);
 	bbprot_kludge = 0;
 }

@@ -372,7 +372,7 @@ static WRITE_HANDLER( sound_bankswitch_w )	/* assumes Z80 sandwiched between 68K
 
 static MEMORY_READ16_START( topspeed_readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },
-	{ 0x400000, 0x40ffff, sharedram_r },	// all shared ??
+	{ 0x400000, 0x40ffff, sharedram_r },	/* all shared ??*/
 	{ 0x500000, 0x503fff, paletteram16_word_r },
 	{ 0x7e0000, 0x7e0001, MRA16_NOP },
 	{ 0x7e0002, 0x7e0003, taitosound_comm16_lsb_r },
@@ -743,7 +743,7 @@ static struct GfxDecodeInfo topspeed_gfxdecodeinfo[] =
 {
 	{ REGION_GFX2, 0x0, &tile16x8_layout,  0, 256 },	/* sprite parts */
 	{ REGION_GFX1, 0x0, &charlayout,  0, 256 },		/* sprites & playfield */
-	// Road Lines gfxdecodable ?
+	/* Road Lines gfxdecodable ?*/
 	{ -1 } /* end of array */
 };
 
@@ -867,7 +867,7 @@ ROM_START( topspeed )
 	ROM_REGION( 0x10000, REGION_USER1, 0 )
 	ROM_LOAD( "b14-30.88", 0x00000, 0x10000, CRC(dccb0c7f) SHA1(42f0af72f559133b74912a4478e1323062be4b77) )	/* zoom tables for zoom sprite h/w */
 
-// One dump has this 0x10000 long, but just contains the same stuff repeated 8 times //
+/* One dump has this 0x10000 long, but just contains the same stuff repeated 8 times */ /**/
 	ROM_REGION( 0x2000, REGION_USER2, 0 )
 	ROM_LOAD( "b14-31.90",  0x0000,  0x2000,  CRC(5c6b013d) SHA1(6d02d4560076213b6fb6fe856143bb533090603e) )	/* microcontroller */
 
@@ -913,7 +913,7 @@ ROM_END
 
 ROM_START( fullthrl )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )	/* 128K for 68000 code (CPU A) */
-	ROM_LOAD16_BYTE     ( "b14-67", 0x00000, 0x10000, CRC(284c943f) SHA1(e4720b138052d9cbf1290aeca8f9dd7fe2cffcc5) )	// Later rev?
+	ROM_LOAD16_BYTE     ( "b14-67", 0x00000, 0x10000, CRC(284c943f) SHA1(e4720b138052d9cbf1290aeca8f9dd7fe2cffcc5) )	/* Later rev?*/
 	ROM_LOAD16_BYTE     ( "b14-68", 0x00001, 0x10000, CRC(54cf6196) SHA1(0e86a7bf7d43526222160f4cd09f8d29fa9abdc4) )
 	ROM_LOAD16_WORD_SWAP( "b14-05", 0x80000, 0x80000, CRC(6557e9d8) SHA1(ff528b27fcaef5c181f5f3a56d6a41b935cf07e1) )	/* data rom */
 
@@ -949,7 +949,7 @@ ROM_END
 
 DRIVER_INIT( topspeed )
 {
-//	taitosnd_setz80_soundcpu( 2 );
+/*	taitosnd_setz80_soundcpu( 2 );*/
 
 	cpua_ctrl = 0xff;
 	state_save_register_UINT16("main1", 0, "control", &cpua_ctrl, 1);

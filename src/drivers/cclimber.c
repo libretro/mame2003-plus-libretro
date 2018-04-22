@@ -213,7 +213,7 @@ static MEMORY_READ_START( cannonb_readmem )
 
 	{ 0x8800, 0x8800, MRA_NOP }, /* must not return what's written (game will reset after coin insert if it returns 0xff)*/
 
-//{ 0x8800, 0x8bff, MRA_RAM },
+/*{ 0x8800, 0x8bff, MRA_RAM },*/
 
 	{ 0x9000, 0x93ff, MRA_RAM },	/* video RAM */
 	{ 0x9800, 0x981f, MRA_RAM },	/* column scroll registers */
@@ -236,7 +236,7 @@ static MEMORY_WRITE_START( cannonb_writemem )
 	{ 0x8000, 0x83ff, MWA_RAM },
 
 	{ 0x8800, 0x88ff, cclimber_bigsprite_videoram_w, &cclimber_bsvideoram, &cclimber_bsvideoram_size },
-//{ 0x8900, 0x8bff, MWA_RAM },  /* not used, but initialized */
+/*{ 0x8900, 0x8bff, MWA_RAM },   // not used, but initialized /*/
 	{ 0x9000, 0x93ff, videoram_w, &videoram, &videoram_size },
 	{ 0x9400, 0x97ff, videoram_w }, /* mirror address, used by Crazy Climber to draw windows */
 	/* 9800-9bff and 9c00-9fff share the same RAM, interleaved */
@@ -293,7 +293,7 @@ INPUT_PORTS_START( cclimber )
 	PORT_DIPSETTING(    0x01, "4" )
 	PORT_DIPSETTING(    0x02, "5" )
 	PORT_DIPSETTING(    0x03, "6" )
-	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		// Look code at 0x03c4 : 0x8076 is never tested !
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )		/* Look code at 0x03c4 : 0x8076 is never tested !*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
 	PORT_BITX(    0x08, 0x00, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Rack Test", KEYCODE_F1, IP_JOY_NONE )
@@ -304,11 +304,11 @@ INPUT_PORTS_START( cclimber )
 	PORT_DIPSETTING(    0x20, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Coin_B ) )		// Also "Bonus Life" due to code at 0x03d4
-	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )		// Bonus life : 30000 points
-	PORT_DIPSETTING(    0x40, DEF_STR( 1C_2C ) )		// Bonus life : 50000 points
-	PORT_DIPSETTING(    0x80, DEF_STR( 1C_3C ) )		// Bonus life : 30000 points
-	PORT_DIPSETTING(    0xc0, DEF_STR( Free_Play ) )	// Bonus life : 50000 points
+	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Coin_B ) )		/* Also "Bonus Life" due to code at 0x03d4*/
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )		/* Bonus life : 30000 points*/
+	PORT_DIPSETTING(    0x40, DEF_STR( 1C_2C ) )		/* Bonus life : 50000 points*/
+	PORT_DIPSETTING(    0x80, DEF_STR( 1C_3C ) )		/* Bonus life : 30000 points*/
+	PORT_DIPSETTING(    0xc0, DEF_STR( Free_Play ) )	/* Bonus life : 50000 points*/
 
 	PORT_START      /* IN2 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
@@ -403,11 +403,11 @@ INPUT_PORTS_START( cannonb )
 	PORT_DIPNAME( 0x02, 0x00, "Player title" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Bonus_Life ) ) //there is cocktail mode around here
-	PORT_DIPSETTING(    0x00, "7000" )//on
-	PORT_DIPSETTING(    0x04, "10000" )//cocktail off
-	PORT_DIPSETTING(    0x08, "15000" )//on
-	PORT_DIPSETTING(    0x0c, "20000" )//cocktail off
+	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Bonus_Life ) ) /*there is cocktail mode around here*/
+	PORT_DIPSETTING(    0x00, "7000" )/*on*/
+	PORT_DIPSETTING(    0x04, "10000" )/*cocktail off*/
+	PORT_DIPSETTING(    0x08, "15000" )/*on*/
+	PORT_DIPSETTING(    0x0c, "20000" )/*cocktail off*/
 	PORT_DIPNAME( 0x70, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x70, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(    0x50, DEF_STR( 4C_1C ) )
@@ -1197,8 +1197,8 @@ INPUT_PORTS_START( swimmer )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
 	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x00, "Easy" )		// labeled this way for similarities with 'swimmerb'
-	PORT_DIPSETTING(    0x40, "Hard" )		// labeled this way for similarities with 'swimmerb'
+	PORT_DIPSETTING(    0x00, "Easy" )		/* labeled this way for similarities with 'swimmerb'*/
+	PORT_DIPSETTING(    0x40, "Hard" )		/* labeled this way for similarities with 'swimmerb'*/
 	PORT_DIPSETTING(    0x80, "Harder" )
 	PORT_DIPSETTING(    0xc0, "Hardest" )
 

@@ -12,7 +12,7 @@
 MACHINE_INIT( espial )
 {
 	/* we must start with NMI interrupts disabled */
-	//interrupt_enable = 0;
+	/*interrupt_enable = 0;*/
 	cpu_interrupt_enable(0,0);
 }
 

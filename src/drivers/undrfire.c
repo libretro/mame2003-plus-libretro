@@ -289,12 +289,12 @@ static READ32_HANDLER( unknown_hardware_r )
 	{
 		case 0x00:	/* $600002-3 */
 		{
-			return 0xffff;	// no idea what they should be
+			return 0xffff;	/* no idea what they should be*/
 		}
 
 		case 0x01:	/* $600004-5 */
 		{
-			return 0xffff0000;	// no idea what they should be
+			return 0xffff0000;	/* no idea what they should be*/
 		}
 	}
 
@@ -385,17 +385,17 @@ static MEMORY_READ32_START( undrfire_readmem )
 	{ 0x000000, 0x1fffff, MRA32_ROM },
 	{ 0x200000, 0x21ffff, MRA32_RAM },	/* main CPUA ram */
 	{ 0x300000, 0x303fff, MRA32_RAM },	/* sprite ram */
-//	{ 0x304000, 0x304003, MRA32_RAM },	// debugging
-//	{ 0x304400, 0x304403, MRA32_RAM },	// debugging
+/*	{ 0x304000, 0x304003, MRA32_RAM },	*/ /* debugging*/
+/*	{ 0x304400, 0x304403, MRA32_RAM },	*/ /* debugging*/
 	{ 0x500000, 0x500007, undrfire_input_r },
 	{ 0x600000, 0x600007, unknown_hardware_r },	/* unknown byte reads at $156e */
 	{ 0x700000, 0x7007ff, MRA32_RAM },
 	{ 0x800000, 0x80ffff, TC0480SCP_long_r },	  /* tilemaps */
-	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_r },	// debugging
+	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_r },	/* debugging*/
 	{ 0x900000, 0x90ffff, TC0100SCN_long_r },	/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_r },
 	{ 0xa00000, 0xa0ffff, MRA32_RAM },	/* palette ram */
-	{ 0xb00000, 0xb003ff, MRA32_RAM },	// ?? single bytes
+	{ 0xb00000, 0xb003ff, MRA32_RAM },	/* ?? single bytes*/
 	{ 0xf00000, 0xf00007, undrfire_lightgun_r },	/* stick coords read at $11b2-bc */
 MEMORY_END
 
@@ -403,8 +403,8 @@ static MEMORY_WRITE32_START( undrfire_writemem )
 	{ 0x000000, 0x1fffff, MWA32_ROM },
 	{ 0x200000, 0x21ffff, MWA32_RAM, &undrfire_ram },
 	{ 0x300000, 0x303fff, MWA32_RAM, &spriteram32, &spriteram_size },
-//	{ 0x304000, 0x304003, MWA32_RAM },	// ??? doesn't change
-//	{ 0x304400, 0x304403, MWA32_RAM },	// ??? doesn't change
+/*	{ 0x304000, 0x304003, MWA32_RAM },	*/ /* ??? doesn't change*/
+/*	{ 0x304400, 0x304403, MWA32_RAM },	*/ /* ??? doesn't change*/
 	{ 0x400000, 0x400003, motor_control_w },	/* gun vibration */
 	{ 0x500000, 0x500007, undrfire_input_w },	/* eerom etc. */
 	{ 0x600000, 0x600007, unknown_int_req_w },	/* int request for unknown hardware */
@@ -414,7 +414,7 @@ static MEMORY_WRITE32_START( undrfire_writemem )
 	{ 0x900000, 0x90ffff, TC0100SCN_long_w },	/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_w },
 	{ 0xa00000, 0xa0ffff, color_ram_w, &paletteram32 },
-	{ 0xb00000, 0xb003ff, MWA32_RAM },	// single bytes, blending ??
+	{ 0xb00000, 0xb003ff, MWA32_RAM },	/* single bytes, blending ??*/
 	{ 0xd00000, 0xd00003, rotate_control_w },	/* perhaps port based rotate control? */
 MEMORY_END
 

@@ -463,7 +463,7 @@ static MACHINE_DRIVER_START( konamigq )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER )
-#if 0 //defined( MAME_DEBUG )
+#if 0 /*defined( MAME_DEBUG )*/
 	MDRV_SCREEN_SIZE( 1024, 1024 )
 	MDRV_VISIBLE_AREA( 0, 1023, 0, 1023 )
 #else

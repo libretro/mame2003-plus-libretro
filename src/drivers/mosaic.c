@@ -241,7 +241,7 @@ INPUT_PORTS_START( gfire2 )
 	PORT_DIPSETTING(    0x0c, "Easy" )
 	PORT_DIPSETTING(    0x08, "Normal" )
 	PORT_DIPSETTING(    0x04, "Hard" )
-//	PORT_DIPSETTING(    0x00, "Hard" )
+/*	PORT_DIPSETTING(    0x00, "Hard" )*/
 	PORT_DIPNAME( 0x02, 0x02, "Bonus Time" )
 	PORT_DIPSETTING(    0x00, "*2 +30" )
 	PORT_DIPSETTING(    0x02, "*2 +50" )

@@ -57,13 +57,13 @@ VIDEO_START( coolpool )
 
 void coolpool_to_shiftreg(unsigned int address, UINT16* shiftreg)
 {
-//logerror("%08x:coolpool_to_shiftreg(%08x)\n", activecpu_get_pc(), address);
+/*logerror("%08x:coolpool_to_shiftreg(%08x)\n", activecpu_get_pc(), address);*/
 	memcpy(shiftreg, &ram_base[TOWORD(address)], TOBYTE(0x1000));
 }
 
 void coolpool_from_shiftreg(unsigned int address, UINT16* shiftreg)
 {
-//logerror("%08x:coolpool_from_shiftreg(%08x)\n", activecpu_get_pc(), address);
+/*logerror("%08x:coolpool_from_shiftreg(%08x)\n", activecpu_get_pc(), address);*/
 	memcpy(&ram_base[TOWORD(address)], shiftreg, TOBYTE(0x1000));
 }
 
@@ -92,8 +92,8 @@ WRITE16_HANDLER( coolpool_34010_io_register_w )
 
 void coolpool_dpyint_callback(int scanline)
 {
-//	if (scanline < Machine->visible_area.max_y)
-//		force_partial_update(scanline - 1);
+/*	if (scanline < Machine->visible_area.max_y)*/
+/*		force_partial_update(scanline - 1);*/
 }
 
 
@@ -166,7 +166,7 @@ VIDEO_UPDATE( coolpool )
 	/* adjust for when DPYADR was written */
 	if (cliprect->min_y > dpyadrscan)
 		offset += (cliprect->min_y - dpyadrscan) * dudate;
-//printf("DPYADR = %04X DPYTAP = %04X (%d-%d)\n", dpyadr, dpytap, cliprect->min_y, cliprect->max_y);
+/*printf("DPYADR = %04X DPYTAP = %04X (%d-%d)\n", dpyadr, dpytap, cliprect->min_y, cliprect->max_y);*/
 
 	/* render the visible section */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
@@ -245,7 +245,7 @@ static WRITE16_HANDLER( coolpool_iop_w )
 
 static READ16_HANDLER( coolpool_iop_r )
 {
-//	logerror("%08x:IOP read %04x\n",activecpu_get_pc(),iop_answer);
+/*	logerror("%08x:IOP read %04x\n",activecpu_get_pc(),iop_answer);*/
 	cpu_set_irq_line(0, 1, CLEAR_LINE);
 
 	return iop_answer;
@@ -254,14 +254,14 @@ static READ16_HANDLER( coolpool_iop_r )
 static READ16_HANDLER( dsp_cmd_r )
 {
 	cmd_pending = 0;
-//	logerror("%08x:IOP cmd_r %04x\n",activecpu_get_pc(),iop_cmd);
+/*	logerror("%08x:IOP cmd_r %04x\n",activecpu_get_pc(),iop_cmd);*/
 	return iop_cmd;
 }
 
 static WRITE16_HANDLER( dsp_answer_w )
 {
 	logerror("%08x:IOP answer %04x\n",activecpu_get_pc(),data);
-//usrintf_showmessage("IOP answer %04x",data);
+/*usrintf_showmessage("IOP answer %04x",data);*/
 	iop_answer = data;
 	cpu_set_irq_line(0, 1, ASSERT_LINE);
 }
@@ -284,7 +284,7 @@ static READ16_HANDLER( dsp_rom_r )
 {
 	data8_t *rom = memory_region(REGION_USER2);
 
-//usrintf_showmessage("read rom addr %06x",romaddr);
+/*usrintf_showmessage("read rom addr %06x",romaddr);*/
 	return rom[romaddr & (memory_region_length(REGION_USER2)-1)];
 }
 
@@ -315,7 +315,7 @@ WRITE16_HANDLER( dsp_dac_w )
 
 static MEMORY_READ16_START( amerdart_readmem )
 	{ TOBYTE(0x00000000), TOBYTE(0x000fffff), MRA16_RAM },
-	{ TOBYTE(0x05000000), TOBYTE(0x0500000f), amerdart_input_r },	// IOP
+	{ TOBYTE(0x05000000), TOBYTE(0x0500000f), amerdart_input_r },	/* IOP*/
 	{ TOBYTE(0x06000000), TOBYTE(0x06007fff), MRA16_RAM },
 	{ TOBYTE(0xc0000000), TOBYTE(0xc00001ff), tms34010_io_register_r },
 	{ TOBYTE(0xffb00000), TOBYTE(0xffffffff), MRA16_RAM },
@@ -323,9 +323,9 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( amerdart_writemem )
 	{ TOBYTE(0x00000000), TOBYTE(0x000fffff), MWA16_RAM, &ram_base },
-//	{ TOBYTE(0x04000000), TOBYTE(0x0400000f), ???_w },	DSP reset, coin counters
-	{ TOBYTE(0x05000000), TOBYTE(0x0500000f), amerdart_input_w },	// IOP
-	{ TOBYTE(0x06000000), TOBYTE(0x06007fff), MWA16_RAM },	// NVRAM
+/*	{ TOBYTE(0x04000000), TOBYTE(0x0400000f), ???_w },	DSP reset, coin counters*/
+	{ TOBYTE(0x05000000), TOBYTE(0x0500000f), amerdart_input_w },	/* IOP*/
+	{ TOBYTE(0x06000000), TOBYTE(0x06007fff), MWA16_RAM },	/* NVRAM*/
 	{ TOBYTE(0xc0000000), TOBYTE(0xc00001ff), tms34010_io_register_w },
 	{ TOBYTE(0xffb00000), TOBYTE(0xffffffff), MWA16_ROM, &code_rom },
 MEMORY_END
@@ -347,44 +347,44 @@ MEMORY_END
 
 static MEMORY_READ16_START( coolpool_readmem )
 	{ TOBYTE(0x00000000), TOBYTE(0x001fffff), MRA16_RAM },
-	{ TOBYTE(0x01000000), TOBYTE(0x010000ff), tlc34076_lsb_r },	// IMSG176P-40
-	{ TOBYTE(0x02000000), TOBYTE(0x0200000f), coolpool_iop_r },	// "IOP"
-//	{ TOBYTE(0x02000010), TOBYTE(0x0200001f), 				// "IOP"
+	{ TOBYTE(0x01000000), TOBYTE(0x010000ff), tlc34076_lsb_r },	/* IMSG176P-40*/
+	{ TOBYTE(0x02000000), TOBYTE(0x0200000f), coolpool_iop_r },	/* "IOP"*/
+/*	{ TOBYTE(0x02000010), TOBYTE(0x0200001f), 				*/ /* "IOP"*/
 	{ TOBYTE(0x03000000), TOBYTE(0x03ffffff), coolpool_gfxrom_r },
-	{ TOBYTE(0x06000000), TOBYTE(0x06007fff), MRA16_RAM },	// NVRAM
+	{ TOBYTE(0x06000000), TOBYTE(0x06007fff), MRA16_RAM },	/* NVRAM*/
 	{ TOBYTE(0xc0000000), TOBYTE(0xc00001ff), tms34010_io_register_r },
 	{ TOBYTE(0xffe00000), TOBYTE(0xffffffff), MRA16_RAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( coolpool_writemem )
-	{ TOBYTE(0x00000000), TOBYTE(0x001fffff), MWA16_RAM, &ram_base },	// video + work ram
-	{ TOBYTE(0x01000000), TOBYTE(0x010000ff), tlc34076_lsb_w },	// IMSG176P-40
-	{ TOBYTE(0x02000000), TOBYTE(0x0200000f), coolpool_iop_w },	// "IOP"
-	{ TOBYTE(0x03000000), TOBYTE(0x0300000f), coolpool_misc_w },	// IOP reset + other stuff
-	{ TOBYTE(0x06000000), TOBYTE(0x06007fff), MWA16_RAM },	// NVRAM
+	{ TOBYTE(0x00000000), TOBYTE(0x001fffff), MWA16_RAM, &ram_base },	/* video + work ram*/
+	{ TOBYTE(0x01000000), TOBYTE(0x010000ff), tlc34076_lsb_w },	/* IMSG176P-40*/
+	{ TOBYTE(0x02000000), TOBYTE(0x0200000f), coolpool_iop_w },	/* "IOP"*/
+	{ TOBYTE(0x03000000), TOBYTE(0x0300000f), coolpool_misc_w },	/* IOP reset + other stuff*/
+	{ TOBYTE(0x06000000), TOBYTE(0x06007fff), MWA16_RAM },	/* NVRAM*/
 	{ TOBYTE(0xc0000000), TOBYTE(0xc00001ff), coolpool_34010_io_register_w },
 	{ TOBYTE(0xffe00000), TOBYTE(0xffffffff), MWA16_ROM, &code_rom },
 MEMORY_END
 
 static MEMORY_READ16_START( nballsht_readmem )
 	{ TOBYTE(0x00000000), TOBYTE(0x001fffff), MRA16_RAM },
-	{ TOBYTE(0x02000000), TOBYTE(0x0200000f), coolpool_iop_r },	// "IOP"
-//	{ TOBYTE(0x02000010), TOBYTE(0x0200001f), 				// "IOP"
-	{ TOBYTE(0x04000000), TOBYTE(0x040000ff), tlc34076_lsb_r },	// IMSG176P-40
-	{ TOBYTE(0x06000000), TOBYTE(0x0601ffff), MRA16_RAM },	// more NVRAM?
-	{ TOBYTE(0x06020000), TOBYTE(0x0603ffff), MRA16_RAM },	// NVRAM
+	{ TOBYTE(0x02000000), TOBYTE(0x0200000f), coolpool_iop_r },	/* "IOP"*/
+/*	{ TOBYTE(0x02000010), TOBYTE(0x0200001f), 				*/ /* "IOP"*/
+	{ TOBYTE(0x04000000), TOBYTE(0x040000ff), tlc34076_lsb_r },	/* IMSG176P-40*/
+	{ TOBYTE(0x06000000), TOBYTE(0x0601ffff), MRA16_RAM },	/* more NVRAM?*/
+	{ TOBYTE(0x06020000), TOBYTE(0x0603ffff), MRA16_RAM },	/* NVRAM*/
 	{ TOBYTE(0xc0000000), TOBYTE(0xc00001ff), tms34010_io_register_r },
 	{ TOBYTE(0xff000000), TOBYTE(0xff7fffff), coolpool_gfxrom_r },
 	{ TOBYTE(0xffc00000), TOBYTE(0xffffffff), MRA16_RAM },
 MEMORY_END
 
 static MEMORY_WRITE16_START( nballsht_writemem )
-	{ TOBYTE(0x00000000), TOBYTE(0x001fffff), MWA16_RAM, &ram_base },	// video + work ram
-	{ TOBYTE(0x02000000), TOBYTE(0x0200000f), coolpool_iop_w },	// "IOP"
-	{ TOBYTE(0x03000000), TOBYTE(0x0300000f), coolpool_misc_w },	// IOP reset + other stuff
+	{ TOBYTE(0x00000000), TOBYTE(0x001fffff), MWA16_RAM, &ram_base },	/* video + work ram*/
+	{ TOBYTE(0x02000000), TOBYTE(0x0200000f), coolpool_iop_w },	/* "IOP"*/
+	{ TOBYTE(0x03000000), TOBYTE(0x0300000f), coolpool_misc_w },	/* IOP reset + other stuff*/
 	{ TOBYTE(0x04000000), TOBYTE(0x040000ff), tlc34076_lsb_w },
-	{ TOBYTE(0x06000000), TOBYTE(0x0601ffff), MWA16_RAM },	// more NVRAM?
-	{ TOBYTE(0x06020000), TOBYTE(0x0603ffff), MWA16_RAM },	// NVRAM
+	{ TOBYTE(0x06000000), TOBYTE(0x0601ffff), MWA16_RAM },	/* more NVRAM?*/
+	{ TOBYTE(0x06020000), TOBYTE(0x0603ffff), MWA16_RAM },	/* NVRAM*/
 	{ TOBYTE(0xc0000000), TOBYTE(0xc00001ff), coolpool_34010_io_register_w },
 	{ TOBYTE(0xffc00000), TOBYTE(0xffffffff), MWA16_ROM, &code_rom },
 MEMORY_END
@@ -423,7 +423,7 @@ static PORT_WRITE16_START( DSP_writeport )
 	{ TMS32025_PORT_RANGE (0x00, 0x01), dsp_romaddr_w },
 	{ TMS32025_PORT_RANGE (0x02, 0x02), dsp_answer_w },
 	{ TMS32025_PORT_RANGE (0x03, 0x03), dsp_dac_w },
-//	{ TMS32025_PORT_RANGE( TMS32025_HOLDA, TMS32025_HOLDA ), dsp_HOLDA_signal_w },
+/*	{ TMS32025_PORT_RANGE( TMS32025_HOLDA, TMS32025_HOLDA ), dsp_HOLDA_signal_w },*/
 PORT_END
 
 
@@ -526,30 +526,30 @@ INPUT_PORTS_START( 9ballsht )
 	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SERVICE4 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_START4 )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	// correct
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )	// correct
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	// correct
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	// correct
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	// correct
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )	// correct
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	/* correct*/
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )	/* correct*/
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	/* correct*/
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	/* correct*/
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	/* correct*/
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )	/* correct*/
 
 	PORT_START
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_START1 )					// correct
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START2 )					// correct
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_START1 )					/* correct*/
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START2 )					/* correct*/
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_COIN1 )					// correct
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_COIN1 )					/* correct*/
 	PORT_BITX(0x0010, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_COIN2 )					// correct
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_COIN2 )					/* correct*/
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_COIN3 )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SERVICE1 )					// correct
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )	// correct
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )	// correct
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )	// correct
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )	// correct
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )	// correct
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )	// correct
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )	// correct
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )	// correct
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SERVICE1 )					/* correct*/
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )	/* correct*/
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )	/* correct*/
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )	/* correct*/
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )	/* correct*/
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )	/* correct*/
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )	/* correct*/
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )	/* correct*/
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )	/* correct*/
 INPUT_PORTS_END
 
 

@@ -99,11 +99,11 @@ MEMORY_END
 
 static MEMORY_WRITE_START( flower_mn_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0xa000, 0xa000, MWA_NOP },	//watchdog?
-	{ 0xa001, 0xa001, MWA_NOP },	//flip screen - check code at 0x759f
-	{ 0xa002, 0xa002, flower_irq_ack },	//irq ack / enable, maybe?
-	{ 0xa004, 0xa004, MWA_NOP },	//nmi enable (routine is empty)
-	{ 0xc000, 0xffff, flower_sharedram_w, &flower_sharedram },	//c23b-c62a cleared for something
+	{ 0xa000, 0xa000, MWA_NOP },	/*watchdog?*/
+	{ 0xa001, 0xa001, MWA_NOP },	/*flip screen - check code at 0x759f*/
+	{ 0xa002, 0xa002, flower_irq_ack },	/*irq ack / enable, maybe?*/
+	{ 0xa004, 0xa004, MWA_NOP },	/*nmi enable (routine is empty)*/
+	{ 0xc000, 0xffff, flower_sharedram_w, &flower_sharedram },	/*c23b-c62a cleared for something*/
 MEMORY_END
 
 static MEMORY_READ_START( flower_sl_readmem )
@@ -115,8 +115,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( flower_sl_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0xa003, 0xa003, MWA_NOP },	//irq enable
-	{ 0xa005, 0xa005, MWA_NOP },	//nmi enable (routine is empty)
+	{ 0xa003, 0xa003, MWA_NOP },	/*irq enable*/
+	{ 0xa005, 0xa005, MWA_NOP },	/*nmi enable (routine is empty)*/
 	{ 0xa400, 0xa400, sound_command_w },
 	{ 0xc000, 0xffff, flower_sharedram_w },
 MEMORY_END
@@ -149,18 +149,18 @@ INPUT_PORTS_START( flower )
 	PORT_BITX(    0x10, 0x10, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Invulnerability", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, "Keep Items on Life Loss" )	// check code at 0x74a2
+	PORT_DIPNAME( 0x20, 0x00, "Keep Items on Life Loss" )	/* check code at 0x74a2*/
 	PORT_DIPSETTING(    0x20, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Shot Range" )			// check code at 0x75f9
+	PORT_DIPNAME( 0x80, 0x80, "Shot Range" )			/* check code at 0x75f9*/
 	PORT_DIPSETTING(    0x80, "Medium" )
 	PORT_DIPSETTING(    0x00, "Long" )
 
 	PORT_START	/* IN1 (CPU0) */
-	PORT_DIPNAME( 0x07, 0x05, DEF_STR( Lives ) )		// what should be the default value ?
+	PORT_DIPNAME( 0x07, 0x05, DEF_STR( Lives ) )		/* what should be the default value ?*/
 	PORT_DIPSETTING(    0x07, "1" )
 	PORT_DIPSETTING(    0x06, "2" )
 	PORT_DIPSETTING(    0x05, "3" )
@@ -174,7 +174,7 @@ INPUT_PORTS_START( flower )
 	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x18, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Cabinet ) )		// check code at 0x759f
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Cabinet ) )		/* check code at 0x759f*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Cocktail ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
@@ -189,9 +189,9 @@ INPUT_PORTS_START( flower )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )			// Fire (normal or laser)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )			// Missile
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 )			// Cutter
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )			/* Fire (normal or laser)*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )			/* Missile*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 )			/* Cutter*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START	/* IN1 (CPU1) */
@@ -199,9 +199,9 @@ INPUT_PORTS_START( flower )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_COCKTAIL )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_COCKTAIL )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_COCKTAIL )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )	// Fire (normal or laser)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )	// Missile
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_COCKTAIL )	// Cutter
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )	/* Fire (normal or laser)*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )	/* Missile*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_COCKTAIL )	/* Cutter*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -254,12 +254,12 @@ static MACHINE_DRIVER_START( flower )
 	MDRV_CPU_ADD(Z80,8000000)
 	MDRV_CPU_MEMORY(flower_mn_readmem,flower_mn_writemem)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,10)
-//	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1) //nmis stuff up the writes to shared ram
+/*	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1) */ /*nmis stuff up the writes to shared ram*/
 
 	MDRV_CPU_ADD(Z80,8000000)
 	MDRV_CPU_MEMORY(flower_sl_readmem,flower_sl_writemem)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
-//	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)
+/*	MDRV_CPU_VBLANK_INT(nmi_line_pulse,1)*/
 
 	MDRV_CPU_ADD(Z80,8000000)
 	MDRV_CPU_MEMORY(flower_sn_readmem,flower_sn_writemem)
@@ -292,10 +292,10 @@ ROM_START( flower )
 	ROM_LOAD( "2.5f",   0x0000, 0x8000, CRC(7c7ee2d8) SHA1(1e67bfe0f3585be5a6e6719ccf9db764bafbcb01) )
 
 	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* sound cpu */
-	ROM_LOAD( "3.d9",   0x0000, 0x4000, CRC(8866c2b0) SHA1(d00f31994673e8087a1406f98e8832d07cedeb66) ) // 1xxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "3.d9",   0x0000, 0x4000, CRC(8866c2b0) SHA1(d00f31994673e8087a1406f98e8832d07cedeb66) ) /* 1xxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x2000, REGION_GFX1, 0 ) /* tx layer */
-	ROM_LOAD( "10.13e", 0x0000, 0x2000, CRC(62f9b28c) SHA1(d57d06b99e72a4f68f197a5b6c042c926cc70ca0) ) // FIRST AND SECOND HALF IDENTICAL
+	ROM_LOAD( "10.13e", 0x0000, 0x2000, CRC(62f9b28c) SHA1(d57d06b99e72a4f68f197a5b6c042c926cc70ca0) ) /* FIRST AND SECOND HALF IDENTICAL*/
 
 	ROM_REGION( 0x8000, REGION_GFX2, 0 ) /* sprites */
 	ROM_LOAD( "12.16e", 0x0000, 0x2000, CRC(e3779f7f) SHA1(8e12d06b3cdc2fcb7b77cc35f8eca45544cc4873) )

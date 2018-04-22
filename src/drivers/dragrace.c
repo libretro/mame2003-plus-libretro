@@ -76,21 +76,21 @@ static void dragrace_update_misc_flags(void)
 	set_led_status(0, dragrace_misc_flags & 0x00008000);
 	set_led_status(1, dragrace_misc_flags & 0x80000000);
 
-	discrete_sound_w(0x06,  ~dragrace_misc_flags & 0x0000001f);		// Speed1 data*
-	discrete_sound_w(0x04, (dragrace_misc_flags & 0x00000020) ? 1: 0);	// Explosion1 enable
-	discrete_sound_w(0x00, (dragrace_misc_flags & 0x00000040) ? 1: 0);	// Screech1 enable
-	discrete_sound_w(0x0a, (dragrace_misc_flags & 0x00000200) ? 1: 0);	// KLEXPL1 enable
-	discrete_sound_w(0x08, (dragrace_misc_flags & 0x00000800) ? 1: 0);	// Motor1 enable
+	discrete_sound_w(0x06,  ~dragrace_misc_flags & 0x0000001f);		/* Speed1 data**/
+	discrete_sound_w(0x04, (dragrace_misc_flags & 0x00000020) ? 1: 0);	/* Explosion1 enable*/
+	discrete_sound_w(0x00, (dragrace_misc_flags & 0x00000040) ? 1: 0);	/* Screech1 enable*/
+	discrete_sound_w(0x0a, (dragrace_misc_flags & 0x00000200) ? 1: 0);	/* KLEXPL1 enable*/
+	discrete_sound_w(0x08, (dragrace_misc_flags & 0x00000800) ? 1: 0);	/* Motor1 enable*/
 
-	discrete_sound_w(0x07, (~dragrace_misc_flags & 0x001f0000) >> 0x10);	// Speed2 data*
-	discrete_sound_w(0x05, (dragrace_misc_flags & 0x00200000) ? 1: 0);	// Explosion2 enable
-	discrete_sound_w(0x01, (dragrace_misc_flags & 0x00400000) ? 1: 0);	// Screech2 enable
-	discrete_sound_w(0x0b, (dragrace_misc_flags & 0x02000000) ? 1: 0);	// KLEXPL2 enable
-	discrete_sound_w(0x09, (dragrace_misc_flags & 0x08000000) ? 1: 0);	// Motor2 enable
+	discrete_sound_w(0x07, (~dragrace_misc_flags & 0x001f0000) >> 0x10);	/* Speed2 data**/
+	discrete_sound_w(0x05, (dragrace_misc_flags & 0x00200000) ? 1: 0);	/* Explosion2 enable*/
+	discrete_sound_w(0x01, (dragrace_misc_flags & 0x00400000) ? 1: 0);	/* Screech2 enable*/
+	discrete_sound_w(0x0b, (dragrace_misc_flags & 0x02000000) ? 1: 0);	/* KLEXPL2 enable*/
+	discrete_sound_w(0x09, (dragrace_misc_flags & 0x08000000) ? 1: 0);	/* Motor2 enable*/
 
-	discrete_sound_w(0x0c, (dragrace_misc_flags & 0x00001000) ? 1: 0);	// Attract enable
-	discrete_sound_w(0x02, (dragrace_misc_flags & 0x00002000) ? 1: 0);	// LoTone enable
-	discrete_sound_w(0x03, (dragrace_misc_flags & 0x20000000) ? 1: 0);	// HiTone enable
+	discrete_sound_w(0x0c, (dragrace_misc_flags & 0x00001000) ? 1: 0);	/* Attract enable*/
+	discrete_sound_w(0x02, (dragrace_misc_flags & 0x00002000) ? 1: 0);	/* LoTone enable*/
+	discrete_sound_w(0x03, (dragrace_misc_flags & 0x20000000) ? 1: 0);	/* HiTone enable*/
 }
 
 WRITE_HANDLER( dragrace_misc_w )

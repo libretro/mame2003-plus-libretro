@@ -194,7 +194,7 @@ static MEMORY_WRITE_START( tugboat_writemem )
 	{ 0x0000, 0x01ff, MWA_RAM, &tugboat_ram },
 	{ 0x1060, 0x1060, AY8910_control_port_0_w },
 	{ 0x1061, 0x1061, AY8910_write_port_0_w },
-	{ 0x10a0, 0x10a1, tugboat_hd46505_0_w },	// scrolling is performed changing the start_addr register (0C/0D)
+	{ 0x10a0, 0x10a1, tugboat_hd46505_0_w },	/* scrolling is performed changing the start_addr register (0C/0D)*/
 	{ 0x10c0, 0x10c1, tugboat_hd46505_1_w },
 	{ 0x11e4, 0x11e7, pia_0_w },
 	{ 0x11e8, 0x11eb, pia_1_w },

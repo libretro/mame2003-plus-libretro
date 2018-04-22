@@ -95,10 +95,10 @@ PROM  : Type MB7051
 #include "vidhrdw/generic.h"
 #include "cpu/z80/z80.h"
 
-//VIDEO_START( shougi )
-//{
-//	generic_vh_start();
-//}
+/*VIDEO_START( shougi )*/
+/*{*/
+/*	generic_vh_start();*/
+/*}*/
 
 #include "vidhrdw/res_net.h"
 /***************************************************************************
@@ -165,16 +165,16 @@ int offs;
 
 	for (offs = 0;offs <0x4000; offs++)
 	{
-	//	if (dirtybuffer[offs])
+	/*	if (dirtybuffer[offs])*/
 		{
 			int sx, sy, x, data1, data2, color, data;
 
-	//		dirtybuffer[offs] = 0;
+	/*		dirtybuffer[offs] = 0;*/
 
 			sx = offs >> 8;		/*00..0x3f (64*4=256)*/
 			sy = offs & 0xff;	/*00..0xff*/
-	//		if (flipscreen[0]) sx = 31 - sx;
-	//		if (flipscreen[1]) sy = 31 - sy;
+	/*		if (flipscreen[0]) sx = 31 - sx;*/
+	/*		if (flipscreen[1]) sy = 31 - sy;*/
 
 			data1 = videoram[offs];				/* color */
 			data2 = videoram[0x4000 + offs];	/* pixel data */
@@ -189,7 +189,7 @@ int offs;
 		}
 	}
 	/* copy the character mapped graphics */
-	//copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
+	/*copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);*/
 }
 
 
@@ -198,8 +198,8 @@ int offs;
 static data8_t *cpu_sharedram;
 static UINT8 cpu_sharedram_control_val = 0;
 
-//to do:
-// add separate sharedram/r/w() for both CPUs and use control value to verify access
+/*to do:*/
+/* add separate sharedram/r/w() for both CPUs and use control value to verify access*/
 
 static WRITE_HANDLER ( cpu_sharedram_sub_w )
 {
@@ -286,10 +286,10 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x480a, 0x480a, MWA_NOP },
 	{ 0x4803, 0x4803, MWA_NOP },
 	{ 0x480b, 0x480b, MWA_NOP },
-	{ 0x4804, 0x4804, MWA_NOP },//halt/run MCU
-	{ 0x480c, 0x480c, MWA_NOP },//halt/run MCU
+	{ 0x4804, 0x4804, MWA_NOP },/*halt/run MCU*/
+	{ 0x480c, 0x480c, MWA_NOP },/*halt/run MCU*/
 
-	{ 0x4807, 0x4807, MWA_NOP },//?????? connected to +5v via resistor
+	{ 0x4807, 0x4807, MWA_NOP },/*?????? connected to +5v via resistor*/
 	{ 0x480f, 0x480f, MWA_NOP },
 
 	{ 0x5800, 0x5800, shougi_watchdog_reset_w },		/* game won't boot if watchdog doesn't work */
@@ -331,8 +331,8 @@ MEMORY_END
 
 INPUT_PORTS_START( shougi )
 	PORT_START	/* Player 1 controls */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START2 )//+-
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START1 )//+-
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START2 )/*+-*/
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START1 )/*+-*/
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON2 )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY )
@@ -351,8 +351,8 @@ INPUT_PORTS_START( shougi )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL  )
 
 	PORT_START	/* Coin, Start */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )//+
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )//?
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )/*+*/
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )/*?*/
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON3 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON4 )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN3 )

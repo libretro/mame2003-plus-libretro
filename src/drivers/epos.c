@@ -53,7 +53,7 @@ WRITE_HANDLER( dealer_decrypt_rom )
 		counter = (counter - 1) & 0x0F;
 	}
 
-//	logerror("PC %08x: ctr=%04x\n",activecpu_get_pc(),counter);
+/*	logerror("PC %08x: ctr=%04x\n",activecpu_get_pc(),counter);*/
 
 	switch(counter)
 	{
@@ -129,7 +129,7 @@ PORT_END
 static PORT_WRITE_START( dealer_writeport )
 	{ 0x10, 0x13, ppi8255_0_w },
 	{ 0x20, 0x24, dealer_decrypt_rom },
-//	{ 0x40, 0x40, watchdog_reset_w },
+/*	{ 0x40, 0x40, watchdog_reset_w },*/
 PORT_END
 
 static ppi8255_interface ppi8255_intf =
@@ -339,13 +339,13 @@ INPUT_PORTS_START( dealer )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
 	PORT_START      /* IN2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) //cancel
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) //draw
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 ) //stand
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) /*cancel*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) /*draw*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 ) /*stand*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 ) //play
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 ) /*play*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON6 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON7 ) //coin in
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON7 ) /*coin in*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON8 )
 INPUT_PORTS_END
 
@@ -656,7 +656,7 @@ Dave
 
 		newbyte = 0;
 #if 1
-//53:9a
+/*53:9a*/
 		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
 		newbyte += ((oldbyte & 0x02 ) ^ 0x00) / 0x02;
 		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
@@ -668,7 +668,7 @@ Dave
 #endif
 
 #if 0
-//53:bb
+/*53:bb*/
 		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
 		newbyte += ((oldbyte & 0x02 ) ^ 0x02) * 0x10;
 		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
@@ -680,7 +680,7 @@ Dave
 #endif
 
 #if 0
-//f3:9a
+/*f3:9a*/
 		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
 		newbyte += ((oldbyte & 0x02 ) ^ 0x00) / 0x02;
 		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
@@ -692,7 +692,7 @@ Dave
 #endif
 
 #if 0
-//f3:1b
+/*f3:1b*/
 		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
 		newbyte += ((oldbyte & 0x02 ) ^ 0x00) * 0x40;
 		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;
@@ -704,7 +704,7 @@ Dave
 #endif
 
 #if 0
-//d2:1b
+/*d2:1b*/
 		newbyte += ((oldbyte & 0x01 ) ^ 0x01) * 0x04;
 		newbyte += ((oldbyte & 0x02 ) ^ 0x00) * 0x40;
 		newbyte += ((oldbyte & 0x04 ) ^ 0x00) / 0x02;

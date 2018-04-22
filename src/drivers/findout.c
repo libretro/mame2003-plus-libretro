@@ -32,14 +32,14 @@ static WRITE_HANDLER( findout_bitmap_w )
 
 	fg = drawctrl[0] & 7;
 	bg = 2;
-	mask = 0xff;//drawctrl[2];
+	mask = 0xff;/*drawctrl[2];*/
 	bits = drawctrl[1];
 
 	sx = 8*(offset % 64);
 	sy = offset / 64;
 
-//if (mask != bits)
-//	usrintf_showmessage("color %02x bits %02x mask %02x\n",fg,bits,mask);
+/*if (mask != bits)*/
+/*	usrintf_showmessage("color %02x bits %02x mask %02x\n",fg,bits,mask);*/
 
 	if (mask & 0x80) plot_pixel(tmpbitmap,sx+0,sy,(bits & 0x80) ? fg : bg);
 	if (mask & 0x40) plot_pixel(tmpbitmap,sx+1,sy,(bits & 0x40) ? fg : bg);
@@ -55,7 +55,7 @@ static WRITE_HANDLER( findout_bitmap_w )
 static READ_HANDLER( portC_r )
 {
 	return 4;
-//	return (rand()&2);
+/*	return (rand()&2);*/
 }
 
 static WRITE_HANDLER( lamps_w )
@@ -77,8 +77,8 @@ static WRITE_HANDLER( sound_w )
 	/* bit 7 goes directly to the sound amplifier */
 	DAC_data_w(0,((data & 0x80) >> 7) * 255);
 
-//	logerror("%04x: sound_w %02x\n",activecpu_get_pc(),data);
-//	usrintf_showmessage("%02x",data);
+/*	logerror("%04x: sound_w %02x\n",activecpu_get_pc(),data);*/
+/*	usrintf_showmessage("%02x",data);*/
 }
 
 static ppi8255_interface ppi8255_intf =

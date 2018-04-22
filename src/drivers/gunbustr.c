@@ -173,7 +173,7 @@ usrintf_showmessage(t);
 				coin_counter_w(1, data & 0x04000000);
 				coin_word = (data >> 16) &0xffff;
 			}
-//logerror("CPU #0 PC %06x: write input %06x\n",activecpu_get_pc(),offset);
+/*logerror("CPU #0 PC %06x: write input %06x\n",activecpu_get_pc(),offset);*/
 		}
 	}
 }

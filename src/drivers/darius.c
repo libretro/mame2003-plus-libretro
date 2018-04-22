@@ -244,7 +244,7 @@ static WRITE16_HANDLER( darius_ioc_w )
 			return;
 
 		case 0x28:	/* unknown, written by both cpus - always 0? */
-//usrintf_showmessage(" address %04x value %04x",offset,data);
+/*usrintf_showmessage(" address %04x value %04x",offset,data);*/
 			return;
 
 		case 0x30:	/* coin control */
@@ -255,7 +255,7 @@ static WRITE16_HANDLER( darius_ioc_w )
 			coin_counter_w(0, data & 0x08);
 			coin_counter_w(1, data & 0x40);
 			coin_word = data &0xffff;
-//usrintf_showmessage(" address %04x value %04x",offset,data);
+/*usrintf_showmessage(" address %04x value %04x",offset,data);*/
 			return;
 	}
 
@@ -324,7 +324,7 @@ static int nmi_enable = 0;
 static void reset_sound_region(void)
 {
 	cpu_setbank( STATIC_BANK1, memory_region(REGION_CPU2) + (banknum * 0x8000) + 0x10000 );
-//	cpu_setbank( 1, memory_region(REGION_CPU2) + (banknum * 0x8000) + 0x10000 );
+/*	cpu_setbank( 1, memory_region(REGION_CPU2) + (banknum * 0x8000) + 0x10000 );*/
 
 }
 
@@ -332,8 +332,8 @@ static WRITE_HANDLER( sound_bankswitch_w )
 {
 		banknum = data &0x03;
 		reset_sound_region();
-//		banknum = data;
-//		reset_sound_region();
+/*		banknum = data;*/
+/*		reset_sound_region();*/
 }
 
 static WRITE_HANDLER( adpcm_command_w )
@@ -439,9 +439,9 @@ static WRITE_HANDLER( darius_da_pan )
 
 static WRITE_HANDLER( darius_write_portA0 )
 {
-	// volume control FM #0 PSG #0 A
-	//usrintf_showmessage(" pan %02x %02x %02x %02x %02x", darius_pan[0], darius_pan[1], darius_pan[2], darius_pan[3], darius_pan[4] );
-	//usrintf_showmessage(" A0 %02x A1 %02x B0 %02x B1 %02x", port[0], port[1], port[2], port[3] );
+	/* volume control FM #0 PSG #0 A*/
+	/*usrintf_showmessage(" pan %02x %02x %02x %02x %02x", darius_pan[0], darius_pan[1], darius_pan[2], darius_pan[3], darius_pan[4] );*/
+	/*usrintf_showmessage(" A0 %02x A1 %02x B0 %02x B1 %02x", port[0], port[1], port[2], port[3] );*/
 	darius_vol[0] = darius_def_vol[(data>>4)&0x0f];
 	darius_vol[6] = darius_def_vol[(data>>0)&0x0f];
 	update_fm0();
@@ -450,8 +450,8 @@ static WRITE_HANDLER( darius_write_portA0 )
 
 static WRITE_HANDLER( darius_write_portA1 )
 {
-	// volume control FM #1 PSG #1 A
-	//usrintf_showmessage(" pan %02x %02x %02x %02x %02x", darius_pan[0], darius_pan[1], darius_pan[2], darius_pan[3], darius_pan[4] );
+	/* volume control FM #1 PSG #1 A*/
+	/*usrintf_showmessage(" pan %02x %02x %02x %02x %02x", darius_pan[0], darius_pan[1], darius_pan[2], darius_pan[3], darius_pan[4] );*/
 	darius_vol[3] = darius_def_vol[(data>>4)&0x0f];
 	darius_vol[7] = darius_def_vol[(data>>0)&0x0f];
 	update_fm1();
@@ -460,8 +460,8 @@ static WRITE_HANDLER( darius_write_portA1 )
 
 static WRITE_HANDLER( darius_write_portB0 )
 {
-	// volume control PSG #0 B/C
-	//usrintf_showmessage(" pan %02x %02x %02x %02x %02x", darius_pan[0], darius_pan[1], darius_pan[2], darius_pan[3], darius_pan[4] );
+	/* volume control PSG #0 B/C*/
+	/*usrintf_showmessage(" pan %02x %02x %02x %02x %02x", darius_pan[0], darius_pan[1], darius_pan[2], darius_pan[3], darius_pan[4] );*/
 	darius_vol[1] = darius_def_vol[(data>>4)&0x0f];
 	darius_vol[2] = darius_def_vol[(data>>0)&0x0f];
 	update_psg0( 1 );
@@ -470,8 +470,8 @@ static WRITE_HANDLER( darius_write_portB0 )
 
 static WRITE_HANDLER( darius_write_portB1 )
 {
-	// volume control PSG #1 B/C
-	//usrintf_showmessage(" pan %02x %02x %02x %02x %02x", darius_pan[0], darius_pan[1], darius_pan[2], darius_pan[3], darius_pan[4] );
+	/* volume control PSG #1 B/C*/
+	/*usrintf_showmessage(" pan %02x %02x %02x %02x %02x", darius_pan[0], darius_pan[1], darius_pan[2], darius_pan[3], darius_pan[4] );*/
 	darius_vol[4] = darius_def_vol[(data>>4)&0x0f];
 	darius_vol[5] = darius_def_vol[(data>>0)&0x0f];
 	update_psg1( 1 );
@@ -509,7 +509,7 @@ static MEMORY_WRITE_START( darius_sound_writemem )
 	{ 0xcc00, 0xcc00, darius_psg1_pan },
 	{ 0xd000, 0xd000, darius_da_pan },
 	{ 0xd400, 0xd400, adpcm_command_w },	/* ADPCM command for second Z80 to read from port 0x00 */
-//	{ 0xd800, 0xd800, display_value },	/* ??? */
+/*	{ 0xd800, 0xd800, display_value },	 // ??? /*/
 	{ 0xdc00, 0xdc00, sound_bankswitch_w },
 MEMORY_END
 
@@ -1061,7 +1061,7 @@ ROM_START( dariuse )
 	ROM_LOAD16_BYTE( "dae-67.bin",   0x00001, 0x10000, CRC(b99aea8c) SHA1(859ada7c472ab2ac308faa775066e79ed1f4ad71) )
 	/* middle area is empty */
 	ROM_LOAD16_BYTE( "dae-70.bin",   0x40000, 0x10000, CRC(54590b31) SHA1(2b89846f14a5cb19b58ab4999bc5ae11671bbb5a) )	/* 2 data roms */
-	ROM_LOAD16_BYTE( "a96_30.154",   0x40001, 0x10000, CRC(9eb5e127) SHA1(50e2fe5ec7f79ecf1fb5107298da13ef5ab37162) )	// dae-69.bin
+	ROM_LOAD16_BYTE( "a96_30.154",   0x40001, 0x10000, CRC(9eb5e127) SHA1(50e2fe5ec7f79ecf1fb5107298da13ef5ab37162) )	/* dae-69.bin*/
 
    	ROM_REGION( 0x30000, REGION_CPU2, 0 )	/* Z80 sound cpu */
 	ROM_LOAD( "a96_57.33",  0x00000, 0x10000, CRC(33ceb730) SHA1(05070ea503ac57ff8445145d6f97115f7aad90a5) )
@@ -1112,14 +1112,14 @@ ROM_END
 
 static DRIVER_INIT( darius )
 {
-//	taitosnd_setz80_soundcpu( 2 );
+/*	taitosnd_setz80_soundcpu( 2 );*/
 
 	cpua_ctrl = 0xff;
 	state_save_register_UINT16("main1", 0, "control", &cpua_ctrl, 1);
 	state_save_register_func_postload(parse_control);
 
 	banknum = -1;
-	// (there are other sound vars that may need saving too) //
+	/* (there are other sound vars that may need saving too) */ /**/
 	state_save_register_int("sound1", 0, "sound region", &banknum);
 	state_save_register_int("sound2", 0, "sound region", &adpcm_command);
 	state_save_register_int("sound3", 0, "sound region", &nmi_enable);
@@ -1148,7 +1148,7 @@ MACHINE_INIT( darius )
 		darius_pan[i] = 0x80;	/* center */
 	}
 	for( i = 0; i < 0x10; i++ ){
-		//logerror( "calc %d = %d\n", i, (int)(100.0f / (float)pow(10.0f, (32.0f - (i * (32.0f / (float)(0xf)))) / 20.0f)) );
+		/*logerror( "calc %d = %d\n", i, (int)(100.0f / (float)pow(10.0f, (32.0f - (i * (32.0f / (float)(0xf)))) / 20.0f)) );*/
 		darius_def_vol[i] = (int)(100.0f / (float)pow(10.0f, (32.0f - (i * (32.0f / (float)(0xf)))) / 20.0f));
 	}
 }

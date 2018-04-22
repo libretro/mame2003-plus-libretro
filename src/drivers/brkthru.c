@@ -232,8 +232,8 @@ INPUT_PORTS_START( brkthru )
 	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, "Upright 1 Player" )
 	PORT_DIPSETTING(    0x40, "Upright 2 Players" )
-//	PORT_DIPSETTING(    0x80, DEF_STR( Cocktail ) )		// "Cocktail 1 Player" - IMPOSSIBLE !
-	PORT_DIPSETTING(    0xc0, DEF_STR( Cocktail ) )		// "Cocktail 2 Players"
+/*	PORT_DIPSETTING(    0x80, DEF_STR( Cocktail ) )		*/ /* "Cocktail 1 Player" - IMPOSSIBLE !*/
+	PORT_DIPSETTING(    0xc0, DEF_STR( Cocktail ) )		/* "Cocktail 2 Players"*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( brkthruj )
@@ -294,8 +294,8 @@ INPUT_PORTS_START( brkthruj )
 	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, "Upright 1 Player" )
 	PORT_DIPSETTING(    0x40, "Upright 2 Players" )
-//	PORT_DIPSETTING(    0x80, DEF_STR( Cocktail ) )		// "Cocktail 1 Player" - IMPOSSIBLE !
-	PORT_DIPSETTING(    0xc0, DEF_STR( Cocktail ) )		// "Cocktail 2 Players"
+/*	PORT_DIPSETTING(    0x80, DEF_STR( Cocktail ) )		*/ /* "Cocktail 1 Player" - IMPOSSIBLE !*/
+	PORT_DIPSETTING(    0xc0, DEF_STR( Cocktail ) )		/* "Cocktail 2 Players"*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( darwin )

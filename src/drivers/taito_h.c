@@ -583,7 +583,7 @@ static struct GfxDecodeInfo recordbr_gfxdecodeinfo[] =
 static struct GfxDecodeInfo dleague_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &tilelayout, 0,     32*16 },
-	{ REGION_GFX2, 0, &charlayout, 32*16, 16    },	// seems to be bogus...?
+	{ REGION_GFX2, 0, &charlayout, 32*16, 16    },	/* seems to be bogus...?*/
 	{ -1 } /* end of array */
 };
 

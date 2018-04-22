@@ -69,37 +69,37 @@ static WRITE16_HANDLER( yunsun16_sound_bank_w )
 }
 
 static MEMORY_READ16_START( yunsun16_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM					},	// ROM
-	{ 0xff0000, 0xffffff, MRA16_RAM					},	// RAM
-	{ 0x800000, 0x800001, input_port_0_word_r		},	// P1 + P2
-	{ 0x800018, 0x800019, input_port_1_word_r		},	// Coins
-	{ 0x80001a, 0x80001b, input_port_2_word_r		},	// DSW1
-	{ 0x80001c, 0x80001d, input_port_3_word_r		},	// DSW2
-	{ 0x800188, 0x800189, OKIM6295_status_0_lsb_r	},	// Sound
-	{ 0x900000, 0x903fff, MRA16_RAM					},	// Palette
-	{ 0x908000, 0x90bfff, MRA16_RAM					},	// Layer 1
-	{ 0x90c000, 0x90ffff, MRA16_RAM					},	// Layer 0
-	{ 0x910000, 0x910fff, MRA16_RAM					},	// Sprites
+	{ 0x000000, 0x07ffff, MRA16_ROM					},	/* ROM*/
+	{ 0xff0000, 0xffffff, MRA16_RAM					},	/* RAM*/
+	{ 0x800000, 0x800001, input_port_0_word_r		},	/* P1 + P2*/
+	{ 0x800018, 0x800019, input_port_1_word_r		},	/* Coins*/
+	{ 0x80001a, 0x80001b, input_port_2_word_r		},	/* DSW1*/
+	{ 0x80001c, 0x80001d, input_port_3_word_r		},	/* DSW2*/
+	{ 0x800188, 0x800189, OKIM6295_status_0_lsb_r	},	/* Sound*/
+	{ 0x900000, 0x903fff, MRA16_RAM					},	/* Palette*/
+	{ 0x908000, 0x90bfff, MRA16_RAM					},	/* Layer 1*/
+	{ 0x90c000, 0x90ffff, MRA16_RAM					},	/* Layer 0*/
+	{ 0x910000, 0x910fff, MRA16_RAM					},	/* Sprites*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( yunsun16_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM					},	// ROM
-	{ 0xff0000, 0xffffff, MWA16_RAM					},	// RAM
-	{ 0x800030, 0x800031, MWA16_NOP					},	// ? (value: don't care)
-	{ 0x800100, 0x800101, MWA16_NOP					},	// ? $9100
-	{ 0x800102, 0x800103, MWA16_NOP					},	// ? $9080
-	{ 0x800104, 0x800105, MWA16_NOP					},	// ? $90c0
-	{ 0x80010a, 0x80010b, MWA16_NOP					},	// ? $9000
-	{ 0x80010c, 0x80010f, MWA16_RAM, &yunsun16_scroll_1	},	// Scrolling
-	{ 0x800114, 0x800117, MWA16_RAM, &yunsun16_scroll_0	},	//
-	{ 0x800154, 0x800155, MWA16_RAM, &yunsun16_priority	},	// Priority
-	{ 0x800180, 0x800181, yunsun16_sound_bank_w		},	// Sound
-	{ 0x800188, 0x800189, OKIM6295_data_0_lsb_w		},	//
-	{ 0x8001fe, 0x8001ff, MWA16_NOP					},	// ? 0 (during int)
-	{ 0x900000, 0x903fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x908000, 0x90bfff, yunsun16_vram_1_w, &yunsun16_vram_1		},	// Layer 1
-	{ 0x90c000, 0x90ffff, yunsun16_vram_0_w, &yunsun16_vram_0		},	// Layer 0
-	{ 0x910000, 0x910fff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Sprites
+	{ 0x000000, 0x07ffff, MWA16_ROM					},	/* ROM*/
+	{ 0xff0000, 0xffffff, MWA16_RAM					},	/* RAM*/
+	{ 0x800030, 0x800031, MWA16_NOP					},	/* ? (value: don't care)*/
+	{ 0x800100, 0x800101, MWA16_NOP					},	/* ? $9100*/
+	{ 0x800102, 0x800103, MWA16_NOP					},	/* ? $9080*/
+	{ 0x800104, 0x800105, MWA16_NOP					},	/* ? $90c0*/
+	{ 0x80010a, 0x80010b, MWA16_NOP					},	/* ? $9000*/
+	{ 0x80010c, 0x80010f, MWA16_RAM, &yunsun16_scroll_1	},	/* Scrolling*/
+	{ 0x800114, 0x800117, MWA16_RAM, &yunsun16_scroll_0	},	/**/
+	{ 0x800154, 0x800155, MWA16_RAM, &yunsun16_priority	},	/* Priority*/
+	{ 0x800180, 0x800181, yunsun16_sound_bank_w		},	/* Sound*/
+	{ 0x800188, 0x800189, OKIM6295_data_0_lsb_w		},	/**/
+	{ 0x8001fe, 0x8001ff, MWA16_NOP					},	/* ? 0 (during int)*/
+	{ 0x900000, 0x903fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x908000, 0x90bfff, yunsun16_vram_1_w, &yunsun16_vram_1		},	/* Layer 1*/
+	{ 0x90c000, 0x90ffff, yunsun16_vram_0_w, &yunsun16_vram_0		},	/* Layer 0*/
+	{ 0x910000, 0x910fff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Sprites*/
 MEMORY_END
 
 
@@ -121,7 +121,7 @@ number 0 on each voice. That sample is 00000-00000.
 
 DRIVER_INIT( magicbub )
 {
-//	remove_mem_write16_handler (0, 0x800180, 0x800181 );
+/*	remove_mem_write16_handler (0, 0x800180, 0x800181 );*/
 	install_mem_write16_handler(0, 0x800188, 0x800189, magicbub_sound_command_w);
 }
 
@@ -134,25 +134,25 @@ DRIVER_INIT( magicbub )
 ***************************************************************************/
 
 static MEMORY_READ_START( yunsun16_sound_readmem )
-	{ 0x0000, 0xdfff, MRA_ROM		},	// ROM
-	{ 0xe000, 0xe7ff, MRA_RAM		},	// RAM
+	{ 0x0000, 0xdfff, MRA_ROM		},	/* ROM*/
+	{ 0xe000, 0xe7ff, MRA_RAM		},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( yunsun16_sound_writemem )
-	{ 0x0000, 0xdfff, MWA_ROM		},	// ROM
-	{ 0xe000, 0xe7ff, MWA_RAM		},	// RAM
+	{ 0x0000, 0xdfff, MWA_ROM		},	/* ROM*/
+	{ 0xe000, 0xe7ff, MWA_RAM		},	/* RAM*/
 MEMORY_END
 
 static PORT_READ_START( yunsun16_sound_readport )
-	{ 0x10, 0x10, YM3812_status_port_0_r	},	// YM3812
-	{ 0x18, 0x18, soundlatch_r				},	// From Main CPU
-	{ 0x1c, 0x1c, OKIM6295_status_0_r		},	// M6295
+	{ 0x10, 0x10, YM3812_status_port_0_r	},	/* YM3812*/
+	{ 0x18, 0x18, soundlatch_r				},	/* From Main CPU*/
+	{ 0x1c, 0x1c, OKIM6295_status_0_r		},	/* M6295*/
 PORT_END
 
 static PORT_WRITE_START( yunsun16_sound_writeport )
-	{ 0x10, 0x10, YM3812_control_port_0_w	},	// YM3812
+	{ 0x10, 0x10, YM3812_control_port_0_w	},	/* YM3812*/
 	{ 0x11, 0x11, YM3812_write_port_0_w		},
-	{ 0x1c, 0x1c, OKIM6295_data_0_w			},	// M6295
+	{ 0x1c, 0x1c, OKIM6295_data_0_w			},	/* M6295*/
 PORT_END
 
 
@@ -171,7 +171,7 @@ PORT_END
 
 INPUT_PORTS_START( magicbub )
 
-	PORT_START	// IN0 - $800000.w
+	PORT_START	/* IN0 - $800000.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -190,7 +190,7 @@ INPUT_PORTS_START( magicbub )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - $800019.b
+	PORT_START	/* IN1 - $800019.b*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1   )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -200,7 +200,7 @@ INPUT_PORTS_START( magicbub )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - $80001b.b
+	PORT_START	/* IN2 - $80001b.b*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( 2C_1C ) )
@@ -223,7 +223,7 @@ INPUT_PORTS_START( magicbub )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_START	// IN3 - $80001d.b
+	PORT_START	/* IN3 - $80001d.b*/
 	PORT_DIPNAME( 0x0001, 0x0001, "Unknown 2-0" )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -257,7 +257,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( shocking )
 
-	PORT_START	// IN0 - $800000.w
+	PORT_START	/* IN0 - $800000.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -276,7 +276,7 @@ INPUT_PORTS_START( shocking )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - $800019.b
+	PORT_START	/* IN1 - $800019.b*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1   )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -286,7 +286,7 @@ INPUT_PORTS_START( shocking )
 	PORT_BIT(  0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - $80001b.b
+	PORT_START	/* IN2 - $80001b.b*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( 2C_1C ) )
@@ -296,7 +296,7 @@ INPUT_PORTS_START( shocking )
 	PORT_DIPSETTING(      0x0006, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(      0x0005, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
-	PORT_DIPNAME( 0x0008, 0x0008, "Unknown 1-3" )		// rest unused
+	PORT_DIPNAME( 0x0008, 0x0008, "Unknown 1-3" )		/* rest unused*/
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0010, 0x0010, "Unknown 1-4" )
@@ -312,7 +312,7 @@ INPUT_PORTS_START( shocking )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $80001d.b
+	PORT_START	/* IN3 - $80001d.b*/
 	PORT_DIPNAME( 0x0007, 0x0007, "Unknown 2-0&1&2" )
 	PORT_DIPSETTING(      0x0004, "0" )
 	PORT_DIPSETTING(      0x0005, "1" )
@@ -376,8 +376,8 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo yunsun16_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x8, 0x1000, 0x10 }, // [0] Layers
-	{ REGION_GFX2, 0, &layout_16x16x4, 0x0000, 0x20 }, // [1] Sprites
+	{ REGION_GFX1, 0, &layout_16x16x8, 0x1000, 0x10 }, /* [0] Layers*/
+	{ REGION_GFX2, 0, &layout_16x16x4, 0x0000, 0x20 }, /* [1] Sprites*/
 	{ -1 }
 };
 

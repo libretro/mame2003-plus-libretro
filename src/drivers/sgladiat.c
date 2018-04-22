@@ -95,8 +95,8 @@ static WRITE_HANDLER( sgladiat_soundlatch_w )
 	soundlatch_w( offset, data );
 
 	/* trigger NMI on sound CPU */
-//	cpu_set_nmi_line(2, PULSE_LINE);
-	cpu_set_nmi_line(2, PULSE_LINE);	// safer because NMI can be lost in rare occations
+/*	cpu_set_nmi_line(2, PULSE_LINE);*/
+	cpu_set_nmi_line(2, PULSE_LINE);	/* safer because NMI can be lost in rare occations*/
 }
 
 static READ_HANDLER( sgladiat_soundlatch_r )
@@ -107,7 +107,7 @@ static READ_HANDLER( sgladiat_soundlatch_r )
 
 static READ_HANDLER( sgladiat_sound_nmi_ack_r )
 {
-//	cpu_set_nmi_line(2, CLEAR_LINE);
+/*	cpu_set_nmi_line(2, CLEAR_LINE);*/
 	return 0;
 }
 
@@ -144,12 +144,12 @@ static MEMORY_WRITE_START( sgladiat_writemem_cpuA )
 	{ 0xa600, 0xa600, sglatiat_flipscreen_w },
 	{ 0xa700, 0xa700, snk_cpuA_nmi_ack_w },
 	{ 0xd000, 0xd7ff, MWA_RAM, &shared_ram2 },
-//		{ 0xd200, 0xd200, MWA_RAM }, /* ?0x24 */
-//		{ 0xd300, 0xd300, MWA_RAM }, /* ------xx: msb scrollx */
-//		{ 0xd400, 0xd400, MWA_RAM }, /* xscroll (sprite) */
-//		{ 0xd500, 0xd500, MWA_RAM }, /* yscroll (sprite) */
-//		{ 0xd600, 0xd600, MWA_RAM }, /* xscroll (bg) */
-//		{ 0xd700, 0xd700, MWA_RAM }, /* yscroll (bg) */
+/*		{ 0xd200, 0xd200, MWA_RAM },  // ?0x24 /*/
+/*		{ 0xd300, 0xd300, MWA_RAM },  // ------xx: msb scrollx /*/
+/*		{ 0xd400, 0xd400, MWA_RAM },  // xscroll (sprite) /*/
+/*		{ 0xd500, 0xd500, MWA_RAM },  // yscroll (sprite) /*/
+/*		{ 0xd600, 0xd600, MWA_RAM },  // xscroll (bg) /*/
+/*		{ 0xd700, 0xd700, MWA_RAM },  // yscroll (bg) /*/
 	{ 0xd800, 0xdfff, MWA_RAM, &spriteram },
 	{ 0xe000, 0xe7ff, MWA_RAM, &videoram },
 	{ 0xe800, 0xefff, MWA_RAM },
@@ -185,7 +185,7 @@ static MEMORY_WRITE_START( sgladiat_writemem_sound )
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0xe000, 0xe000, AY8910_control_port_0_w },
 	{ 0xe001, 0xe001, AY8910_write_port_0_w },
-	{ 0xe002, 0xe003, MWA_NOP },	// leftover wave generator ports?
+	{ 0xe002, 0xe003, MWA_NOP },	/* leftover wave generator ports?*/
 	{ 0xe004, 0xe004, AY8910_control_port_1_w },
 	{ 0xe005, 0xe005, AY8910_write_port_1_w },
 MEMORY_END
@@ -199,7 +199,7 @@ static MACHINE_DRIVER_START( sgladiat )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_MEMORY(sgladiat_readmem_cpuA,sgladiat_writemem_cpuA)
-//	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+/*	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)*/
 
 	MDRV_CPU_ADD(Z80, 5000000)
 	MDRV_CPU_MEMORY(sgladiat_readmem_cpuB,sgladiat_writemem_cpuB)
@@ -208,7 +208,7 @@ static MACHINE_DRIVER_START( sgladiat )
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_MEMORY(sgladiat_readmem_sound,sgladiat_writemem_sound)
 	MDRV_CPU_PORTS(sgladiat_readport,0)
-	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 244)	// Marvin's frequency, sounds ok
+	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 244)	/* Marvin's frequency, sounds ok*/
 
 	MDRV_FRAMES_PER_SECOND(60.606060)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)

@@ -174,7 +174,7 @@ static MEMORY_WRITE_START( skyarmy_writemem )
         { 0x9000, 0x93FF, skyarmy_colorram_w, &skyarmy_colorram }, /* Color RAM */
         { 0x9800, 0x983F, spriteram_w, &spriteram, &spriteram_size }, /* Sprites */
         { 0x9840, 0x985F, skyarmy_scrollram_w, &skyarmy_scrollram }, /* Sprites */
-        { 0xa004, 0xa004, nmi_enable_w }, // ???
+        { 0xa004, 0xa004, nmi_enable_w }, /* ???*/
         { 0xa005, 0xa005, MWA_NOP }, 
         { 0xa006, 0xa006, MWA_NOP }, 
         { 0xa007, 0xa007, MWA_NOP }, 

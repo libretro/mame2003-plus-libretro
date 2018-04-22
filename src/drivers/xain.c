@@ -98,13 +98,13 @@ static WRITE_HANDLER( xain_irqB_clear_w )
 
 static READ_HANDLER( xain_68705_r )
 {
-//	logerror("read 68705\n");
+/*	logerror("read 68705\n");*/
 	return 0x4d;	/* fake P5 checksum test pass */
 }
 
 static WRITE_HANDLER( xain_68705_w )
 {
-//	logerror("write %02x to 68705\n",data);
+/*	logerror("write %02x to 68705\n",data);*/
 }
 
 static INTERRUPT_GEN( xainA_interrupt )
@@ -129,7 +129,7 @@ static MEMORY_READ_START( readmem )
 	{ 0x3a03, 0x3a03, input_port_3_r },
 	{ 0x3a04, 0x3a04, xain_68705_r },	/* from the 68705 */
 	{ 0x3a05, 0x3a05, input_port_4_r },
-//	{ 0x3a06, 0x3a06, MRA_NOP },	/* ?? read (and discarded) on startup. Maybe reset the 68705 */
+/*	{ 0x3a06, 0x3a06, MRA_NOP },	 // ?? read (and discarded) on startup. Maybe reset the 68705 /*/
 	{ 0x4000, 0x7fff, MRA_BANK1 },
 	{ 0x8000, 0xffff, MRA_ROM },
 MEMORY_END

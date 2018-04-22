@@ -73,7 +73,7 @@ extern WRITE_HANDLER( marvins_palette_bank_w );
 **
 ***************************************************************************/
 
-// see drivers\snk.c
+/* see drivers\snk.c*/
 
 
 /***************************************************************************
@@ -198,7 +198,7 @@ static MEMORY_WRITE_START( marvins_writemem_CPUA )
 	{ 0x0000, 0x5fff, MWA_ROM },
 	{ 0x6000, 0x6000, marvins_palette_bank_w },
 	{ 0x8300, 0x8300, sound_command_w },
-	{ 0x8600, 0x8600, MWA_RAM },	// video attribute
+	{ 0x8600, 0x8600, MWA_RAM },	/* video attribute*/
 	{ 0x8700, 0x8700, snk_cpuA_nmi_ack_w },
 	{ 0xc000, 0xcfff, MWA_RAM, &spriteram },
 	{ 0xd000, 0xdfff, marvins_background_ram_w, &spriteram_3 },
@@ -239,9 +239,9 @@ MEMORY_END
 static MEMORY_WRITE_START( madcrash_writemem_CPUA )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8300, 0x8300, sound_command_w },
-	{ 0x8600, 0x86ff, MWA_RAM },	// video attribute
+	{ 0x8600, 0x86ff, MWA_RAM },	/* video attribute*/
 	{ 0x8700, 0x8700, snk_cpuA_nmi_ack_w },
-//	{ 0xc800, 0xc800, marvins_palette_bank_w },	// palette bank switch (c8f1 for Vanguard)
+/*	{ 0xc800, 0xc800, marvins_palette_bank_w },	*/ /* palette bank switch (c8f1 for Vanguard)*/
 	{ 0xc800, 0xc8ff, MWA_RAM },
 	{ 0xc000, 0xcfff, MWA_RAM, &spriteram },
 	{ 0xd000, 0xdfff, marvins_background_ram_w, &spriteram_3 },
@@ -472,7 +472,7 @@ INPUT_PORTS_START( madcrash )
 	PORT_DIPSETTING(    0x04, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
 	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coinage ) )
-//	PORT_DIPSETTING(    0x08, DEF_STR( 5C_1C ) )
+/*	PORT_DIPSETTING(    0x08, DEF_STR( 5C_1C ) )*/
 	PORT_DIPSETTING(    0x10, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) )
@@ -488,7 +488,7 @@ INPUT_PORTS_START( madcrash )
 
 	PORT_START	/* DSW2 */
 	PORT_DIPNAME( 0x01, 0x00, "Bonus Life Occurence" )
-	PORT_DIPSETTING(    0x01, "1st, 2nd, then every 2nd" )	// Check the "Non Bugs" page
+	PORT_DIPSETTING(    0x01, "1st, 2nd, then every 2nd" )	/* Check the "Non Bugs" page*/
 	PORT_DIPSETTING(    0x00, "1st and 2nd only" )
 	PORT_DIPNAME( 0x06, 0x04, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x06, "Easy" )
@@ -502,11 +502,11 @@ INPUT_PORTS_START( madcrash )
 	PORT_DIPSETTING(    0x00, "Freeze" )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )				// Check the "Non Bugs" page
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )				/* Check the "Non Bugs" page*/
 	PORT_DIPNAME( 0x40, 0x40, "Unused SW 2-6" )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Unknown SW 2-7" )			// tested in many places
+	PORT_DIPNAME( 0x80, 0x80, "Unknown SW 2-7" )			/* tested in many places*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -577,7 +577,7 @@ static MACHINE_DRIVER_START( marvins )
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(readmem_sound,writemem_sound)
 	MDRV_CPU_PORTS(readport_sound,0)
-	MDRV_CPU_PERIODIC_INT(nmi_line_assert, 244)	// schematics show a separate 244Hz timer
+	MDRV_CPU_PERIODIC_INT(nmi_line_assert, 244)	/* schematics show a separate 244Hz timer*/
 
 	MDRV_FRAMES_PER_SECOND(60.606060)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)

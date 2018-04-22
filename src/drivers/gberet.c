@@ -129,7 +129,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xf000, 0xf000, gberet_coincounter_w },
 	{ 0xf200, 0xf200, MWA_NOP },		/* Loads the snd command into the snd latch */
 	{ 0xf400, 0xf400, SN76496_0_w },	/* This address triggers the SN chip to read the data port. */
-//	{ 0xf600, 0xf600, MWA_NOP },
+/*	{ 0xf600, 0xf600, MWA_NOP },*/
 MEMORY_END
 
 static MEMORY_WRITE_START( gberetb_writemem )
@@ -140,11 +140,11 @@ static MEMORY_WRITE_START( gberetb_writemem )
 	{ 0xd100, 0xd1ff, MWA_RAM },
 	{ 0xd200, 0xdfff, MWA_RAM },
 	{ 0xe000, 0xe03f, MWA_RAM },
-//	{ 0xe800, 0xe8ff, MWA_RAM },
+/*	{ 0xe800, 0xe8ff, MWA_RAM },*/
 	{ 0xe900, 0xe9ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xf800, 0xf800, MWA_NOP },	/* NMI acknowledge */
 	{ 0xf900, 0xf901, gberetb_scroll_w },
-//	{ 0xe043, 0xe043, MWA_RAM, &gberet_spritebank },
+/*	{ 0xe043, 0xe043, MWA_RAM, &gberet_spritebank },*/
 	{ 0xe044, 0xe044, gberet_e044_w },
 	{ 0xf400, 0xf400, SN76496_0_w },
 MEMORY_END

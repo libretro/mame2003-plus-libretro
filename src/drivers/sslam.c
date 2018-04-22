@@ -153,15 +153,15 @@ INPUT_PORTS_START( sslam )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
 
 	PORT_START
-	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Unknown ) )		// 0x000522 = 0x00400e
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Unknown ) )		/* 0x000522 = 0x00400e*/
 	PORT_DIPSETTING(    0x03, "0" )
 	PORT_DIPSETTING(    0x02, "1" )
 	PORT_DIPSETTING(    0x01, "2" )
 	PORT_DIPSETTING(    0x00, "3" )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )		// 0x00052e = 0x004004 - code at 0xc069b2 and 0xc069d6
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )		/* 0x00052e = 0x004004 - code at 0xc069b2 and 0xc069d6*/
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, "Time" )				// 0x000530 = 0x004006
+	PORT_DIPNAME( 0x08, 0x08, "Time" )				/* 0x000530 = 0x004006*/
 	PORT_DIPSETTING(    0x08, "Table 1" )
 	PORT_DIPSETTING(    0x00, "Table 2" )
 	PORT_DIPNAME( 0x30, 0x30, "Starting Score" )
@@ -172,7 +172,7 @@ INPUT_PORTS_START( sslam )
 	PORT_DIPNAME( 0x40, 0x40, "Max Players" )
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0x40, "4" )
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )	// 0x000524 - code at 0xc0eb4e
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )	/* 0x000524 - code at 0xc0eb4e*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -261,7 +261,7 @@ static MACHINE_DRIVER_START( sslam )
 	MDRV_VIDEO_UPDATE(sslam)
 
 	/* sound hardware */
-//	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+/*	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)*/
 MACHINE_DRIVER_END
 
 ROM_START( sslam )

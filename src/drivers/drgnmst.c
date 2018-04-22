@@ -144,13 +144,13 @@ static WRITE_HANDLER( drgnmst_snd_control_w )
 	switch(drgnmst_oki_control & 0x1f)
 	{
 		case 0x11:
-//					logerror("Writing %02x to OKI1",drgnmst_oki_command);
-//					logerror(", PortC=%02x, Code=%02x, Bank0=%01x, Bank1=%01x\n",drgnmst_oki_control,drgnmst_snd_command,drgnmst_oki0_bank,drgnmst_oki1_bank);
+/*					logerror("Writing %02x to OKI1",drgnmst_oki_command);*/
+/*					logerror(", PortC=%02x, Code=%02x, Bank0=%01x, Bank1=%01x\n",drgnmst_oki_control,drgnmst_snd_command,drgnmst_oki0_bank,drgnmst_oki1_bank);*/
 					OKIM6295_data_1_w(0, drgnmst_oki_command);
 					break;
 		case 0x15:
-//					logerror("Writing %02x to OKI0",drgnmst_oki_command);
-//					logerror(", PortC=%02x, Code=%02x, Bank0=%01x, Bank1=%01x\n",drgnmst_oki_control,drgnmst_snd_command,drgnmst_oki0_bank,drgnmst_oki1_bank);
+/*					logerror("Writing %02x to OKI0",drgnmst_oki_command);*/
+/*					logerror(", PortC=%02x, Code=%02x, Bank0=%01x, Bank1=%01x\n",drgnmst_oki_control,drgnmst_snd_command,drgnmst_oki0_bank,drgnmst_oki1_bank);*/
 					OKIM6295_data_0_w(0, drgnmst_oki_command);
 					break;
 		default:	break;
@@ -193,7 +193,7 @@ static MEMORY_WRITE16_START( drgnmst_writemem )
 	{ 0x800120, 0x800121, MWA16_RAM },
 	{ 0x80014a, 0x80014b, MWA16_RAM },
 
-	{ 0x800154, 0x800155, MWA16_RAM, &drgnmst_vidregs2 }, // seems to be priority control
+	{ 0x800154, 0x800155, MWA16_RAM, &drgnmst_vidregs2 }, /* seems to be priority control*/
 
 	{ 0x800180, 0x800181, drgnmst_snd_command_w },
 	{ 0x800188, 0x800189, drgnmst_snd_flag_w },
@@ -205,8 +205,8 @@ static MEMORY_WRITE16_START( drgnmst_writemem )
 	{ 0x908000, 0x90bfff, drgnmst_bg_videoram_w, &drgnmst_bg_videoram },
 	{ 0x90c000, 0x90ffff, drgnmst_fg_videoram_w, &drgnmst_fg_videoram },
 
-	{ 0x920000, 0x923fff, MWA16_RAM, &drgnmst_rowscrollram }, // rowscroll ram
-	{ 0x930000, 0x9307ff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Sprites
+	{ 0x920000, 0x923fff, MWA16_RAM, &drgnmst_rowscrollram }, /* rowscroll ram*/
+	{ 0x930000, 0x9307ff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Sprites*/
 
 	{ 0xff0000, 0xffffff, MWA16_RAM },
 MEMORY_END
@@ -428,7 +428,7 @@ ROM_START( drgnmst )
 	ROM_LOAD16_BYTE( "dm1000o", 0x00001, 0x80000, CRC(ba48e9cf) SHA1(1107f927424107918bb10ff23f40c50579b23836) )
 
 	ROM_REGION( 0x4000, REGION_CPU2, 0 ) /* PIC16C55 Code */
-//	ROM_LOAD( "pic16c55", PIC16C55_PGM_OFFSET, 0x400, CRC(531c9f8d) SHA1(8ec180b0566f2ce1e08f0347e5ad402c73b44049) )
+/*	ROM_LOAD( "pic16c55", PIC16C55_PGM_OFFSET, 0x400, CRC(531c9f8d) SHA1(8ec180b0566f2ce1e08f0347e5ad402c73b44049) )*/
 	/* ROM will be copied here by the init code from the USER1 region */
 
 	ROM_REGION( 0x1000, REGION_USER1, ROMREGION_DISPOSE )

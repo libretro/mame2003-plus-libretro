@@ -187,7 +187,7 @@ static void sasuke_start_counter(void)
 	sasuke_counter = 0;
 
 	sasuke_timer = timer_alloc(sasuke_update_counter);
-	timer_adjust(sasuke_timer, TIME_NOW, 0, TIME_IN_HZ(11289000/8));	// 1.4 MHz
+	timer_adjust(sasuke_timer, TIME_NOW, 0, TIME_IN_HZ(11289000/8));	/* 1.4 MHz*/
 }
 
 
@@ -216,10 +216,10 @@ static READ_HANDLER( vanguard_port_3_r )
 static MEMORY_READ_START( satansat_readmem )
 	{ 0x0000, 0x1fff, MRA_RAM },
 	{ 0x4000, 0x97ff, MRA_ROM },
-	{ 0xb004, 0xb004, input_port_0_r },	// IN0
-	{ 0xb005, 0xb005, sasuke_port_1_r },	// IN1 + music0 playing
+	{ 0xb004, 0xb004, input_port_0_r },	/* IN0*/
+	{ 0xb005, 0xb005, sasuke_port_1_r },	/* IN1 + music0 playing*/
 	{ 0xb006, 0xb006, input_port_2_r },	/* DSW */
-	{ 0xb007, 0xb007, sasuke_port_3_r },	// IN2 + binary counter
+	{ 0xb007, 0xb007, sasuke_port_3_r },	/* IN2 + binary counter*/
 	{ 0xf800, 0xffff, MRA_ROM },
 MEMORY_END
 
@@ -253,10 +253,10 @@ MEMORY_END
 
 static MEMORY_READ_START( vanguard_readmem )
 	{ 0x0000, 0x1fff, MRA_RAM },
-	{ 0x3104, 0x3104, input_port_0_r },	// IN0
-	{ 0x3105, 0x3105, input_port_1_r },	// IN1
+	{ 0x3104, 0x3104, input_port_0_r },	/* IN0*/
+	{ 0x3105, 0x3105, input_port_1_r },	/* IN1*/
 	{ 0x3106, 0x3106, input_port_2_r },	/* DSW */
-	{ 0x3107, 0x3107, vanguard_port_3_r },	// IN2 + music0 playing
+	{ 0x3107, 0x3107, vanguard_port_3_r },	/* IN2 + music0 playing*/
 	{ 0x4000, 0xbfff, MRA_ROM },
 	{ 0xf000, 0xffff, MRA_ROM },	/* for the reset / interrupt vectors */
 MEMORY_END
@@ -273,7 +273,7 @@ static MEMORY_WRITE_START( vanguard_writemem )
 	{ 0x3103, 0x3103, rockola_flipscreen_w },
 	{ 0x3200, 0x3200, rockola_scrollx_w },
 	{ 0x3300, 0x3300, rockola_scrolly_w },
-	{ 0x3400, 0x3400, vanguard_speech_w },	// speech
+	{ 0x3400, 0x3400, vanguard_speech_w },	/* speech*/
 	{ 0x4000, 0xbfff, MWA_ROM },
 MEMORY_END
 
@@ -298,7 +298,7 @@ static MEMORY_WRITE_START( fantasy_writemem )
 	{ 0x2100, 0x2103, fantasy_sound_w },
 	{ 0x2200, 0x2200, rockola_scrollx_w },
 	{ 0x2300, 0x2300, rockola_scrolly_w },
-	{ 0x2400, 0x2400, fantasy_speech_w },	// speech
+	{ 0x2400, 0x2400, fantasy_speech_w },	/* speech*/
 	{ 0x3000, 0xbfff, MWA_ROM },
 MEMORY_END
 
@@ -330,7 +330,7 @@ MEMORY_END
 
 /* Derived from Zarzon. Might not reflect the actual hardware. */
 INPUT_PORTS_START( sasuke )
-    PORT_START  // IN0
+    PORT_START  /* IN0*/
     PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_2WAY )
     PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY )
     PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1 )
@@ -340,7 +340,7 @@ INPUT_PORTS_START( sasuke )
     PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_START1 )
     PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_START2 )
 
-	PORT_START	// IN1
+	PORT_START	/* IN1*/
     PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
     PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
     PORT_BIT( 0x7C, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -371,14 +371,14 @@ INPUT_PORTS_START( sasuke )
 	PORT_DIPSETTING (   0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING (   0x80, DEF_STR( On ) )
 
-	PORT_START  // IN2
+	PORT_START  /* IN2*/
 	PORT_BIT_IMPULSE( 0x01, IP_ACTIVE_HIGH, IPT_COIN1, 1 )
 	PORT_BIT( 0x0e, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* connected to a counter - random number generator? */
 INPUT_PORTS_END
 
 INPUT_PORTS_START( satansat )
-    PORT_START  // IN0
+    PORT_START  /* IN0*/
     PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_2WAY )
     PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY )
     PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1 )
@@ -388,7 +388,7 @@ INPUT_PORTS_START( satansat )
     PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON2 )
     PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_COCKTAIL )
 
-	PORT_START	// IN1
+	PORT_START	/* IN1*/
     PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
     PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
     PORT_BIT( 0x7C, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -418,14 +418,14 @@ INPUT_PORTS_START( satansat )
 	PORT_DIPSETTING (   0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING (   0x80, DEF_STR( On ) )
 
-	PORT_START  // IN2
+	PORT_START  /* IN2*/
 	PORT_BIT_IMPULSE( 0x01, IP_ACTIVE_HIGH, IPT_COIN1, 1 )
 	PORT_BIT( 0x0e, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* connected to a counter - random number generator? */
 INPUT_PORTS_END
 
 INPUT_PORTS_START( vanguard )
-	PORT_START	// IN0
+	PORT_START	/* IN0*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON3 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON4 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2 )
@@ -435,7 +435,7 @@ INPUT_PORTS_START( vanguard )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY )
 
-	PORT_START	// IN1
+	PORT_START	/* IN1*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON3 | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON4 | IPF_COCKTAIL )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_COCKTAIL )
@@ -445,7 +445,7 @@ INPUT_PORTS_START( vanguard )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
 
-	PORT_START	// DSW0
+	PORT_START	/* DSW0*/
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
@@ -475,7 +475,7 @@ INPUT_PORTS_START( vanguard )
 /*	PORT_DIPSETTING(    0x30, "3" ) */
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )
 
-	PORT_START	// IN2
+	PORT_START	/* IN2*/
 	PORT_BIT_IMPULSE( 0x01, IP_ACTIVE_HIGH, IPT_COIN2, 1 )
 	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_HIGH, IPT_COIN1, 1 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -487,7 +487,7 @@ INPUT_PORTS_START( vanguard )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( fantasy )
-	PORT_START	// IN0
+	PORT_START	/* IN0*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -497,7 +497,7 @@ INPUT_PORTS_START( fantasy )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY )
 
-	PORT_START	// IN1
+	PORT_START	/* IN1*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -507,7 +507,7 @@ INPUT_PORTS_START( fantasy )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
 
-	PORT_START	// DSW0
+	PORT_START	/* DSW0*/
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
@@ -539,7 +539,7 @@ INPUT_PORTS_START( fantasy )
 	PORT_DIPSETTING(    0x80, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
 
-	PORT_START	// IN2
+	PORT_START	/* IN2*/
 	PORT_BIT_IMPULSE( 0x01, IP_ACTIVE_HIGH, IPT_COIN2, 1 )
 	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_HIGH, IPT_COIN1, 1 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -551,8 +551,8 @@ INPUT_PORTS_START( fantasy )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( nibbler )
-	PORT_START	// IN0
-	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 0", KEYCODE_Z, CODE_NONE ) // slow down
+	PORT_START	/* IN0*/
+	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 0", KEYCODE_Z, CODE_NONE ) /* slow down*/
 	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 1", KEYCODE_X, CODE_NONE )
 	PORT_BITX(0x04, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 2", KEYCODE_C, CODE_NONE )
 	PORT_BITX(0x08, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 3", KEYCODE_V, CODE_NONE )
@@ -561,17 +561,17 @@ INPUT_PORTS_START( nibbler )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY )
 
-	PORT_START	// IN1
-	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 4", KEYCODE_B, CODE_NONE ) // pause
-	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 5", KEYCODE_N, CODE_NONE ) // unpause
-	PORT_BITX(0x04, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 6", KEYCODE_M, CODE_NONE ) // end game
+	PORT_START	/* IN1*/
+	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 4", KEYCODE_B, CODE_NONE ) /* pause*/
+	PORT_BITX(0x02, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 5", KEYCODE_N, CODE_NONE ) /* unpause*/
+	PORT_BITX(0x04, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 6", KEYCODE_M, CODE_NONE ) /* end game*/
 	PORT_BITX(0x08, IP_ACTIVE_HIGH, IPT_SERVICE, "Debug 7", KEYCODE_K, CODE_NONE )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
 
-	PORT_START	// DSW0
+	PORT_START	/* DSW0*/
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x01, "4" )
@@ -593,7 +593,7 @@ INPUT_PORTS_START( nibbler )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( 2C_3C ) )
 
-	PORT_START	// IN2
+	PORT_START	/* IN2*/
 	PORT_BIT_IMPULSE( 0x01, IP_ACTIVE_HIGH, IPT_COIN2, 1 )
 	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_HIGH, IPT_COIN1, 1 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -605,7 +605,7 @@ INPUT_PORTS_START( nibbler )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( pballoon )
-	PORT_START	// IN0
+	PORT_START	/* IN0*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -615,7 +615,7 @@ INPUT_PORTS_START( pballoon )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY )
 
-	PORT_START	// IN1
+	PORT_START	/* IN1*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -625,7 +625,7 @@ INPUT_PORTS_START( pballoon )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
 
-	PORT_START	// DSW0
+	PORT_START	/* DSW0*/
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
@@ -657,7 +657,7 @@ INPUT_PORTS_START( pballoon )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN2
+	PORT_START	/* IN2*/
 	PORT_BIT_IMPULSE( 0x01, IP_ACTIVE_HIGH, IPT_COIN2, 1 )
 	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_HIGH, IPT_COIN1, 1 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -778,9 +778,9 @@ static struct SN76477interface sasuke_sn76477_intf =
 	{ CAP_U(2.2),	CAP_U(22),	CAP_U(2.2) },		/* 23  oneshot_cap	 */
 	{ RES_K(100),	RES_K(47),	RES_K(150) },		/* 24  oneshot_res	 */
 
-	// ic48		GND: 2,22,26,27,28	+5V: 1,15,25
-	// ic51		GND: 2,26,27		+5V: 1,15,22,25,28
-	// ic52		GND: 2,22,27,28		+5V: 1,15,25,26
+	/* ic48		GND: 2,22,26,27,28	+5V: 1,15,25*/
+	/* ic51		GND: 2,26,27		+5V: 1,15,22,25,28*/
+	/* ic52		GND: 2,22,27,28		+5V: 1,15,25,26*/
 };
 
 static struct SN76477interface satansat_sn76477_intf =
@@ -804,7 +804,7 @@ static struct SN76477interface satansat_sn76477_intf =
 	{ 0 },					/* 23  oneshot_cap	 */
 	{ 0 }					/* 24  oneshot_res	 */
 
-	// ???		GND: 2,26,27		+5V: 15,25
+	/* ???		GND: 2,26,27		+5V: 15,25*/
 };
 
 static struct SN76477interface vanguard_sn76477_intf =
@@ -828,8 +828,8 @@ static struct SN76477interface vanguard_sn76477_intf =
 	{ 0,			0 },		/* 23  oneshot_cap	 */
 	{ 0,			0 }		/* 24  oneshot_res	 */
 
-	// SHOT A	GND: 2,9,26,27	+5V: 15,25
-	// SHOT B	GND: 1,2,26,27	+5V: 15,25,28
+	/* SHOT A	GND: 2,9,26,27	+5V: 15,25*/
+	/* SHOT B	GND: 1,2,26,27	+5V: 15,25,28*/
 };
 
 static struct SN76477interface fantasy_sn76477_intf =
@@ -853,7 +853,7 @@ static struct SN76477interface fantasy_sn76477_intf =
 	{ 0 },				/* 23  oneshot_cap	 */
 	{ 0 }				/* 24  oneshot_res	 */
 
-	// BOMB		GND:	2,9,26,27		+5V: 15,25
+	/* BOMB		GND:	2,9,26,27		+5V: 15,25*/
 };
 
 /* Interrupt Generators */
@@ -895,46 +895,46 @@ static INTERRUPT_GEN( rockola_interrupt )
 
 static MACHINE_INIT( sasuke )
 {
-	//rockola_set_music_clock(M_LN2 * (RES_K(1) + RES_K(10) * 2) * CAP_U(1));
-	// adjusted
+	/*rockola_set_music_clock(M_LN2 * (RES_K(1) + RES_K(10) * 2) * CAP_U(1));*/
+	/* adjusted*/
 	rockola_set_music_clock(1 / 72.1);
 
-	// adjusted
+	/* adjusted*/
 	rockola_set_music_freq(38000);
 
-	// ic48
-	SN76477_envelope_1_w(0, 1);	// pin 1
-	SN76477_envelope_2_w(0, 0);	// pin 28
-	SN76477_vco_w(0, 0);		// pin 22
-	SN76477_mixer_a_w(0, 0);	// pin 26
-	SN76477_mixer_b_w(0, 1);	// pin 25
-	SN76477_mixer_c_w(0, 0);	// pin 27
+	/* ic48*/
+	SN76477_envelope_1_w(0, 1);	/* pin 1*/
+	SN76477_envelope_2_w(0, 0);	/* pin 28*/
+	SN76477_vco_w(0, 0);		/* pin 22*/
+	SN76477_mixer_a_w(0, 0);	/* pin 26*/
+	SN76477_mixer_b_w(0, 1);	/* pin 25*/
+	SN76477_mixer_c_w(0, 0);	/* pin 27*/
 
-	// ic51
-	SN76477_envelope_1_w(1, 1);	// pin 1
-	SN76477_envelope_2_w(1, 1);	// pin 28
-	SN76477_vco_w(1, 1);		// pin 22
-	SN76477_mixer_a_w(1, 0);	// pin 26
-	SN76477_mixer_b_w(1, 1);	// pin 25
-	SN76477_mixer_c_w(1, 0);	// pin 27
+	/* ic51*/
+	SN76477_envelope_1_w(1, 1);	/* pin 1*/
+	SN76477_envelope_2_w(1, 1);	/* pin 28*/
+	SN76477_vco_w(1, 1);		/* pin 22*/
+	SN76477_mixer_a_w(1, 0);	/* pin 26*/
+	SN76477_mixer_b_w(1, 1);	/* pin 25*/
+	SN76477_mixer_c_w(1, 0);	/* pin 27*/
 
-	// ic52
-	SN76477_envelope_1_w(2, 1);	// pin 1
-	SN76477_envelope_2_w(2, 0);	// pin 28
-	SN76477_vco_w(2, 0);		// pin 22
-	SN76477_mixer_a_w(2, 1);	// pin 26
-	SN76477_mixer_b_w(2, 1);	// pin 25
-	SN76477_mixer_c_w(2, 0);	// pin 27
+	/* ic52*/
+	SN76477_envelope_1_w(2, 1);	/* pin 1*/
+	SN76477_envelope_2_w(2, 0);	/* pin 28*/
+	SN76477_vco_w(2, 0);		/* pin 22*/
+	SN76477_mixer_a_w(2, 1);	/* pin 26*/
+	SN76477_mixer_b_w(2, 1);	/* pin 25*/
+	SN76477_mixer_c_w(2, 0);	/* pin 27*/
 
 	sasuke_start_counter();
 }
 
 static MACHINE_INIT( satansat )
 {
-	// same as sasuke
+	/* same as sasuke*/
 	rockola_set_music_freq(38000);
 
-	// ???
+	/* ???*/
 	SN76477_mixer_a_w(0, 0);
 	SN76477_mixer_b_w(0, 1);
 	SN76477_mixer_c_w(0, 0);
@@ -944,15 +944,15 @@ static MACHINE_INIT( satansat )
 
 static MACHINE_INIT( vanguard )
 {
-	// 41.6 Hz update (measured)
+	/* 41.6 Hz update (measured)*/
 	rockola_set_music_clock(1 / 41.6);
 
-	// SHOT A
+	/* SHOT A*/
 	SN76477_mixer_a_w(0, 0);
 	SN76477_mixer_b_w(0, 1);
 	SN76477_mixer_c_w(0, 0);
 
-	// SHOT B
+	/* SHOT B*/
 	SN76477_envelope_1_w(1, 0);
 	SN76477_envelope_2_w(1, 1);
 	SN76477_mixer_a_w(1, 0);
@@ -962,7 +962,7 @@ static MACHINE_INIT( vanguard )
 
 static MACHINE_INIT( fantasy )
 {
-	// BOMB
+	/* BOMB*/
 	SN76477_mixer_a_w(0, 0);
 	SN76477_mixer_b_w(0, 1);
 	SN76477_mixer_c_w(0, 0);
@@ -970,7 +970,7 @@ static MACHINE_INIT( fantasy )
 
 static MACHINE_INIT( pballoon )
 {
-	// 40.3 Hz update (measured)
+	/* 40.3 Hz update (measured)*/
 	rockola_set_music_clock(1 / 40.3);
 
 	machine_init_fantasy();
@@ -979,8 +979,8 @@ static MACHINE_INIT( pballoon )
 /* Machine Drivers */
 
 static MACHINE_DRIVER_START( sasuke )
-	// basic machine hardware
-	MDRV_CPU_ADD_TAG("main", M6502, 11289000/16) // 700 kHz
+	/* basic machine hardware*/
+	MDRV_CPU_ADD_TAG("main", M6502, 11289000/16) /* 700 kHz*/
 	MDRV_CPU_MEMORY(satansat_readmem,sasuke_writemem)
 	MDRV_CPU_VBLANK_INT(satansat_interrupt, 2)
 
@@ -989,7 +989,7 @@ static MACHINE_DRIVER_START( sasuke )
 
 	MDRV_MACHINE_INIT(sasuke)
 
-	// video hardware
+	/* video hardware*/
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
@@ -1001,32 +1001,32 @@ static MACHINE_DRIVER_START( sasuke )
 	MDRV_VIDEO_START(satansat)
 	MDRV_VIDEO_UPDATE(rockola)
 
-	// sound hardware
+	/* sound hardware*/
 	MDRV_SOUND_ADD(CUSTOM, custom_interface)
 	MDRV_SOUND_ADD_TAG("samples", SAMPLES, sasuke_samples_interface)
 	MDRV_SOUND_ADD_TAG("SN76477", SN76477, sasuke_sn76477_intf)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( satansat )
-	// basic machine hardware
+	/* basic machine hardware*/
 	MDRV_IMPORT_FROM(sasuke)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(satansat_readmem,satansat_writemem)
 
 	MDRV_MACHINE_INIT(satansat)
 
-	// video hardware
+	/* video hardware*/
 	MDRV_GFXDECODE(satansat_gfxdecodeinfo)
 
-	// sound hardware
+	/* sound hardware*/
 	MDRV_SOUND_REPLACE("samples", SAMPLES, vanguard_samples_interface)
 	MDRV_SOUND_REPLACE("SN76477", SN76477, satansat_sn76477_intf)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( vanguard )
-	// basic machine hardware
-	//MDRV_CPU_ADD_TAG("main", M6502, 11289000/8)	// 1.4 MHz
-	MDRV_CPU_ADD_TAG("main", M6502, 930000)		// adjusted
+	/* basic machine hardware*/
+	/*MDRV_CPU_ADD_TAG("main", M6502, 11289000/8)	*/ /* 1.4 MHz*/
+	MDRV_CPU_ADD_TAG("main", M6502, 930000)		/* adjusted*/
 	MDRV_CPU_MEMORY(vanguard_readmem,vanguard_writemem)
 	MDRV_CPU_VBLANK_INT(rockola_interrupt, 2)
 
@@ -1035,7 +1035,7 @@ static MACHINE_DRIVER_START( vanguard )
 
 	MDRV_MACHINE_INIT(vanguard)
 
-	// video hardware
+	/* video hardware*/
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
@@ -1047,42 +1047,42 @@ static MACHINE_DRIVER_START( vanguard )
 	MDRV_VIDEO_START(rockola)
 	MDRV_VIDEO_UPDATE(rockola)
 
-	// sound hardware
+	/* sound hardware*/
 	MDRV_SOUND_ADD(CUSTOM, custom_interface)
 	MDRV_SOUND_ADD_TAG("samples", SAMPLES, vanguard_samples_interface)
 	MDRV_SOUND_ADD_TAG("SN76477", SN76477, vanguard_sn76477_intf)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( fantasy )
-	// basic machine hardware
+	/* basic machine hardware*/
 	MDRV_IMPORT_FROM(vanguard)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(fantasy_readmem,fantasy_writemem)
 
 	MDRV_MACHINE_INIT(fantasy)
 
-	// sound hardware
+	/* sound hardware*/
 	MDRV_SOUND_REPLACE("samples", SAMPLES, fantasy_samples_interface)
 	MDRV_SOUND_REPLACE("SN76477", SN76477, fantasy_sn76477_intf)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( nibbler )
-	// basic machine hardware
+	/* basic machine hardware*/
 	MDRV_IMPORT_FROM(fantasy)
 
-	// sound hardware
+	/* sound hardware*/
 	MDRV_SOUND_REMOVE("samples")
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( pballoon )
-	// basic machine hardware
+	/* basic machine hardware*/
 	MDRV_IMPORT_FROM(nibbler)
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(pballoon_readmem,pballoon_writemem)
 
 	MDRV_MACHINE_INIT(pballoon)
 
-	// video hardware
+	/* video hardware*/
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 MACHINE_DRIVER_END
 

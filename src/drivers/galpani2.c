@@ -45,13 +45,13 @@ WRITE16_HANDLER(galpani2_eeprom_w)
 	COMBINE_DATA( &eeprom_word );
 	if ( ACCESSING_LSB )
 	{
-		// latch the bit
+		/* latch the bit*/
 		EEPROM_write_bit(data & 0x02);
 
-		// reset line asserted: reset.
+		/* reset line asserted: reset.*/
 		EEPROM_set_cs_line((data & 0x08) ? CLEAR_LINE : ASSERT_LINE );
 
-		// clock line asserted: write latch or select next bit to read
+		/* clock line asserted: write latch or select next bit to read*/
 		EEPROM_set_clock_line((data & 0x04) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
@@ -128,7 +128,7 @@ static void galpani2_mcu_nmi(void)
 		case 0x00:
 			break;
 
-		case 0x0a:	// Copy N bytes from RAM1 to RAM2
+		case 0x0a:	/* Copy N bytes from RAM1 to RAM2*/
 			mcu_src		=	(cpunum_read_byte(0, mcu_address + 2)<<8) +
 							(cpunum_read_byte(0, mcu_address + 3)<<0) ;
 
@@ -191,9 +191,9 @@ WRITE16_HANDLER( galpani2_coin_lockout_w )
 		coin_counter_w(1, data & 0x0200);
 		coin_lockout_w(0,~data & 0x0400);
 		coin_lockout_w(1,~data & 0x0800);
-		// & 0x1000		CARD in lockout?
-		// & 0x2000		CARD in lockout?
-		// & 0x4000		CARD out
+		/* & 0x1000		CARD in lockout?*/
+		/* & 0x2000		CARD in lockout?*/
+		/* & 0x4000		CARD out*/
 	}
 }
 
@@ -219,57 +219,57 @@ WRITE16_HANDLER( galpani2_oki_1_bank_w )
 
 
 static MEMORY_READ16_START( galpani2_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM					},	// ROM
-	{ 0x100000, 0x10ffff, MRA16_RAM					},	// Work RAM
-	{ 0x300000, 0x301fff, MRA16_RAM					},	// ?
-	{ 0x302000, 0x303fff, MRA16_RAM					},	// Sprites
-	{ 0x304000, 0x30401f, MRA16_RAM					},	// Sprites Regs
-	{ 0x310000, 0x3101ff, MRA16_RAM					},	// Background Palette
-	{ 0x318000, 0x318001, galpani2_eeprom_r			},	// EEPROM
-	{ 0x380000, 0x38ffff, MRA16_RAM					},	// ? + Sprites Palette
-	{ 0x400000, 0x43ffff, MRA16_RAM					},	// Background 0
-	{ 0x440000, 0x440001, MRA16_RAM					},	// Background 0 Scroll X
-	{ 0x480000, 0x480001, MRA16_RAM					},	// Background 0 Scroll Y
-	{ 0x500000, 0x53ffff, MRA16_RAM					},	// Background 1
-	{ 0x540000, 0x540001, MRA16_RAM					},	// Background 1 Scroll X
-	{ 0x580000, 0x580001, MRA16_RAM					},	// Background 1 Scroll Y
-	{ 0x780000, 0x780001, input_port_0_word_r		},	// Input Ports
-	{ 0x780002, 0x780003, input_port_1_word_r		},	//
-	{ 0x780004, 0x780005, input_port_2_word_r		},	//
-	{ 0x780006, 0x780007, input_port_3_word_r		},	//
-	{ 0xc00000, 0xc00001, OKIM6295_status_0_lsb_r	},	// 2 x OKIM6295
-	{ 0xc40000, 0xc40001, OKIM6295_status_1_lsb_r	},	//
+	{ 0x000000, 0x0fffff, MRA16_ROM					},	/* ROM*/
+	{ 0x100000, 0x10ffff, MRA16_RAM					},	/* Work RAM*/
+	{ 0x300000, 0x301fff, MRA16_RAM					},	/* ?*/
+	{ 0x302000, 0x303fff, MRA16_RAM					},	/* Sprites*/
+	{ 0x304000, 0x30401f, MRA16_RAM					},	/* Sprites Regs*/
+	{ 0x310000, 0x3101ff, MRA16_RAM					},	/* Background Palette*/
+	{ 0x318000, 0x318001, galpani2_eeprom_r			},	/* EEPROM*/
+	{ 0x380000, 0x38ffff, MRA16_RAM					},	/* ? + Sprites Palette*/
+	{ 0x400000, 0x43ffff, MRA16_RAM					},	/* Background 0*/
+	{ 0x440000, 0x440001, MRA16_RAM					},	/* Background 0 Scroll X*/
+	{ 0x480000, 0x480001, MRA16_RAM					},	/* Background 0 Scroll Y*/
+	{ 0x500000, 0x53ffff, MRA16_RAM					},	/* Background 1*/
+	{ 0x540000, 0x540001, MRA16_RAM					},	/* Background 1 Scroll X*/
+	{ 0x580000, 0x580001, MRA16_RAM					},	/* Background 1 Scroll Y*/
+	{ 0x780000, 0x780001, input_port_0_word_r		},	/* Input Ports*/
+	{ 0x780002, 0x780003, input_port_1_word_r		},	/**/
+	{ 0x780004, 0x780005, input_port_2_word_r		},	/**/
+	{ 0x780006, 0x780007, input_port_3_word_r		},	/**/
+	{ 0xc00000, 0xc00001, OKIM6295_status_0_lsb_r	},	/* 2 x OKIM6295*/
+	{ 0xc40000, 0xc40001, OKIM6295_status_1_lsb_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( galpani2_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM								},	// ROM
-	{ 0x100000, 0x10ffff, MWA16_RAM, &galpani2_ram				},	// Work RAM
-	{ 0x300000, 0x301fff, MWA16_RAM								},	// ?
-	{ 0x302000, 0x303fff, MWA16_RAM, &spriteram16, &spriteram_size			},	// Sprites
-	{ 0x304000, 0x30401f, kaneko16_sprites_regs_w, &kaneko16_sprites_regs	},	// Sprites Regs
-	{ 0x30c000, 0x30c001, MWA16_NOP								},	// ? hblank effect ?
-	{ 0x310000, 0x3101ff, galpani2_palette_0_w, &galpani2_palette_0		},	// ?
-	{ 0x314000, 0x314001, MWA16_NOP								},	// ? flip backgrounds ?
-	{ 0x318000, 0x318001, galpani2_eeprom_w						},	// EEPROM
-	{ 0x380000, 0x387fff, MWA16_RAM								},	// Palette?
-	{ 0x388000, 0x38ffff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16	},	// Palette
-	{ 0x400000, 0x43ffff, galpani2_bg8_0_w, &galpani2_bg8_0		},	// Background 0
-	{ 0x440000, 0x440001, MWA16_RAM, &galpani2_bg8_0_scrollx	},	// Background 0 Scroll X
-	{ 0x480000, 0x480001, MWA16_RAM, &galpani2_bg8_0_scrolly	},	// Background 0 Scroll Y
-	{ 0x4c0000, 0x4c0001, MWA16_NOP								},	// ? 0 at startup only
-	{ 0x500000, 0x53ffff, galpani2_bg8_1_w, &galpani2_bg8_1		},	// Background 1
-	{ 0x540000, 0x540001, MWA16_RAM, &galpani2_bg8_1_scrollx	},	// Background 1 Scroll X
-	{ 0x580000, 0x580001, MWA16_RAM, &galpani2_bg8_1_scrolly	},	// Background 1 Scroll Y
-	{ 0x5c0000, 0x5c0001, MWA16_NOP								},	// ? 0 at startup only
-	{ 0x600000, 0x600001, MWA16_NOP								},	// Watchdog
-//	{ 0x640000, 0x640001, MWA16_NOP								},	// ? 0 before resetting and at startup
-//	{ 0x680000, 0x680001, MWA16_NOP								},	// ? 0 -> 1 -> 0 (lev 5) / 0 -> $10 -> 0
-{ 0x680000, 0x680001, galpani2_mcu_nmi_w	},	// ? 0 -> 1 -> 0 (lev 5) / 0 -> $10 -> 0
-	{ 0x6c0000, 0x6c0001, galpani2_coin_lockout_w				},	// Coin + Card Lockout
-	{ 0xc00000, 0xc00001, OKIM6295_data_0_lsb_w					},	// 2 x OKIM6295
-	{ 0xc40000, 0xc40001, OKIM6295_data_1_lsb_w					},	//
-	{ 0xc80000, 0xc80001, galpani2_oki_0_bank_w					},	//
-	{ 0xcc0000, 0xcc0001, galpani2_oki_1_bank_w					},	//
+	{ 0x000000, 0x0fffff, MWA16_ROM								},	/* ROM*/
+	{ 0x100000, 0x10ffff, MWA16_RAM, &galpani2_ram				},	/* Work RAM*/
+	{ 0x300000, 0x301fff, MWA16_RAM								},	/* ?*/
+	{ 0x302000, 0x303fff, MWA16_RAM, &spriteram16, &spriteram_size			},	/* Sprites*/
+	{ 0x304000, 0x30401f, kaneko16_sprites_regs_w, &kaneko16_sprites_regs	},	/* Sprites Regs*/
+	{ 0x30c000, 0x30c001, MWA16_NOP								},	/* ? hblank effect ?*/
+	{ 0x310000, 0x3101ff, galpani2_palette_0_w, &galpani2_palette_0		},	/* ?*/
+	{ 0x314000, 0x314001, MWA16_NOP								},	/* ? flip backgrounds ?*/
+	{ 0x318000, 0x318001, galpani2_eeprom_w						},	/* EEPROM*/
+	{ 0x380000, 0x387fff, MWA16_RAM								},	/* Palette?*/
+	{ 0x388000, 0x38ffff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16	},	/* Palette*/
+	{ 0x400000, 0x43ffff, galpani2_bg8_0_w, &galpani2_bg8_0		},	/* Background 0*/
+	{ 0x440000, 0x440001, MWA16_RAM, &galpani2_bg8_0_scrollx	},	/* Background 0 Scroll X*/
+	{ 0x480000, 0x480001, MWA16_RAM, &galpani2_bg8_0_scrolly	},	/* Background 0 Scroll Y*/
+	{ 0x4c0000, 0x4c0001, MWA16_NOP								},	/* ? 0 at startup only*/
+	{ 0x500000, 0x53ffff, galpani2_bg8_1_w, &galpani2_bg8_1		},	/* Background 1*/
+	{ 0x540000, 0x540001, MWA16_RAM, &galpani2_bg8_1_scrollx	},	/* Background 1 Scroll X*/
+	{ 0x580000, 0x580001, MWA16_RAM, &galpani2_bg8_1_scrolly	},	/* Background 1 Scroll Y*/
+	{ 0x5c0000, 0x5c0001, MWA16_NOP								},	/* ? 0 at startup only*/
+	{ 0x600000, 0x600001, MWA16_NOP								},	/* Watchdog*/
+/*	{ 0x640000, 0x640001, MWA16_NOP								},	*/ /* ? 0 before resetting and at startup*/
+/*	{ 0x680000, 0x680001, MWA16_NOP								},	*/ /* ? 0 -> 1 -> 0 (lev 5) / 0 -> $10 -> 0*/
+{ 0x680000, 0x680001, galpani2_mcu_nmi_w	},	/* ? 0 -> 1 -> 0 (lev 5) / 0 -> $10 -> 0*/
+	{ 0x6c0000, 0x6c0001, galpani2_coin_lockout_w				},	/* Coin + Card Lockout*/
+	{ 0xc00000, 0xc00001, OKIM6295_data_0_lsb_w					},	/* 2 x OKIM6295*/
+	{ 0xc40000, 0xc40001, OKIM6295_data_1_lsb_w					},	/**/
+	{ 0xc80000, 0xc80001, galpani2_oki_0_bank_w					},	/**/
+	{ 0xcc0000, 0xcc0001, galpani2_oki_1_bank_w					},	/**/
 MEMORY_END
 
 
@@ -296,25 +296,25 @@ READ16_HANDLER( galpani2_bankedrom_r )
 
 
 static MEMORY_READ16_START( galpani2_readmem2 )
-	{ 0x000000, 0x03ffff, MRA16_ROM					},	// ROM
-	{ 0x100000, 0x13ffff, MRA16_RAM					},	// Work RAM
-	{ 0x400000, 0x4fffff, MRA16_RAM					},	// bg15
-	{ 0x500000, 0x5fffff, MRA16_RAM					},	// bg15
-	{ 0x800000, 0xffffff, galpani2_bankedrom_r		},	// Banked ROM
+	{ 0x000000, 0x03ffff, MRA16_ROM					},	/* ROM*/
+	{ 0x100000, 0x13ffff, MRA16_RAM					},	/* Work RAM*/
+	{ 0x400000, 0x4fffff, MRA16_RAM					},	/* bg15*/
+	{ 0x500000, 0x5fffff, MRA16_RAM					},	/* bg15*/
+	{ 0x800000, 0xffffff, galpani2_bankedrom_r		},	/* Banked ROM*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( galpani2_writemem2 )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0x100000, 0x13ffff, MWA16_RAM, &galpani2_ram2		},	// Work RAM
-	{ 0x400000, 0x4fffff, galpani2_bg15_w, &galpani2_bg15	},	// bg15
-	{ 0x500000, 0x5fffff, MWA16_RAM							},	// bg15
-	{ 0x600000, 0x600001, MWA16_NOP						},	// ? 0 at startup only
-	{ 0x640000, 0x640001, MWA16_NOP						},	// ? 0 at startup only
-	{ 0x680000, 0x680001, MWA16_NOP						},	// ? 0 at startup only
-	{ 0x6c0000, 0x6c0001, MWA16_NOP						},	// ? 0 at startup only
-	{ 0x700000, 0x700001, MWA16_NOP						},	// Watchdog
-	{ 0x780000, 0x780001, MWA16_NOP						},	// ? 0 -> 1 -> 0 (lev 5)
-	{ 0x7c0000, 0x7c0001, MWA16_RAM, &galpani2_rombank	},	// Rom Bank
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x100000, 0x13ffff, MWA16_RAM, &galpani2_ram2		},	/* Work RAM*/
+	{ 0x400000, 0x4fffff, galpani2_bg15_w, &galpani2_bg15	},	/* bg15*/
+	{ 0x500000, 0x5fffff, MWA16_RAM							},	/* bg15*/
+	{ 0x600000, 0x600001, MWA16_NOP						},	/* ? 0 at startup only*/
+	{ 0x640000, 0x640001, MWA16_NOP						},	/* ? 0 at startup only*/
+	{ 0x680000, 0x680001, MWA16_NOP						},	/* ? 0 at startup only*/
+	{ 0x6c0000, 0x6c0001, MWA16_NOP						},	/* ? 0 at startup only*/
+	{ 0x700000, 0x700001, MWA16_NOP						},	/* Watchdog*/
+	{ 0x780000, 0x780001, MWA16_NOP						},	/* ? 0 -> 1 -> 0 (lev 5)*/
+	{ 0x7c0000, 0x7c0001, MWA16_RAM, &galpani2_rombank	},	/* Rom Bank*/
 MEMORY_END
 
 
@@ -327,7 +327,7 @@ MEMORY_END
 ***************************************************************************/
 
 INPUT_PORTS_START( galpani2 )
-	PORT_START	// IN0 - DSW + Player - 780000.w
+	PORT_START	/* IN0 - DSW + Player - 780000.w*/
 	PORT_DIPNAME( 0x0007, 0x0007, "Unknown 2-0&1&2*" )
 	PORT_DIPSETTING(      0x007, "7" )
 	PORT_DIPSETTING(      0x006, "6" )
@@ -340,16 +340,16 @@ INPUT_PORTS_START( galpani2 )
 	PORT_DIPNAME( 0x0008, 0x0008, "Unknown 2-3*" )
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0030, 0x0030, "Unknown 2-4&5" )	// from?
-	PORT_DIPSETTING(      0x0030, "3" )	// 2
-	PORT_DIPSETTING(      0x0020, "2" )	// 0
-	PORT_DIPSETTING(      0x0010, "1" )	// 3
-	PORT_DIPSETTING(      0x0000, "0" )	// 4
-	PORT_DIPNAME( 0x00c0, 0x00c0, "Unknown 2-6&7" )	// to?
-	PORT_DIPSETTING(      0x00c0, "3" )	// 9
-	PORT_DIPSETTING(      0x0080, "2" )	// 1
-	PORT_DIPSETTING(      0x0040, "1" )	// 4
-	PORT_DIPSETTING(      0x0000, "0" )	// 6
+	PORT_DIPNAME( 0x0030, 0x0030, "Unknown 2-4&5" )	/* from?*/
+	PORT_DIPSETTING(      0x0030, "3" )	/* 2*/
+	PORT_DIPSETTING(      0x0020, "2" )	/* 0*/
+	PORT_DIPSETTING(      0x0010, "1" )	/* 3*/
+	PORT_DIPSETTING(      0x0000, "0" )	/* 4*/
+	PORT_DIPNAME( 0x00c0, 0x00c0, "Unknown 2-6&7" )	/* to?*/
+	PORT_DIPSETTING(      0x00c0, "3" )	/* 9*/
+	PORT_DIPSETTING(      0x0080, "2" )	/* 1*/
+	PORT_DIPSETTING(      0x0040, "1" )	/* 4*/
+	PORT_DIPSETTING(      0x0000, "0" )	/* 6*/
 
 	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -360,7 +360,7 @@ INPUT_PORTS_START( galpani2 )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_START1  )
 	PORT_BIT_IMPULSE( 0x8000, IP_ACTIVE_LOW, IPT_COIN1, 1 )
 
-	PORT_START	// IN1 - DSW + Player - 780002.w
+	PORT_START	/* IN1 - DSW + Player - 780002.w*/
 	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(      0x000f, "1 Coin/1 Credit  1/1" )
 	PORT_DIPSETTING(      0x000e, "2 Coin/1 Credit  2/1" )
@@ -398,18 +398,18 @@ INPUT_PORTS_START( galpani2 )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_START2  )
 	PORT_BIT_IMPULSE( 0x8000, IP_ACTIVE_LOW, IPT_COIN2, 1 )
 
-	PORT_START	// IN2 - Coins - 780004.w
+	PORT_START	/* IN2 - Coins - 780004.w*/
 	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0400, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
 	PORT_BIT(  0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT(  0x2000, IP_ACTIVE_LOW, IPT_SPECIAL )	// CARD full
-	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_SPECIAL )	// CARD full
-	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_SPECIAL )	// CARD empty
+	PORT_BIT(  0x2000, IP_ACTIVE_LOW, IPT_SPECIAL )	/* CARD full*/
+	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_SPECIAL )	/* CARD full*/
+	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_SPECIAL )	/* CARD empty*/
 
-	PORT_START	// IN3 - ? - 780006.w
+	PORT_START	/* IN3 - ? - 780006.w*/
 	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -448,7 +448,7 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo galpani2_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x8,	0,	0x40	}, // [0] Sprites
+	{ REGION_GFX1, 0, &layout_16x16x8,	0,	0x40	}, /* [0] Sprites*/
 	{ -1 }
 };
 
@@ -478,8 +478,8 @@ INTERRUPT_GEN( galpani2_interrupt )
 	{
 		case 3:  cpu_set_irq_line(0, 3, HOLD_LINE); break;
 		case 2:  cpu_set_irq_line(0, 4, HOLD_LINE); break;
-		case 1:  cpu_set_irq_line(0, 5, HOLD_LINE); break;	// vblank?
-		case 0:  cpu_set_irq_line(0, 6, HOLD_LINE); break;	// hblank?
+		case 1:  cpu_set_irq_line(0, 5, HOLD_LINE); break;	/* vblank?*/
+		case 0:  cpu_set_irq_line(0, 6, HOLD_LINE); break;	/* hblank?*/
 	}
 }
 
@@ -518,7 +518,7 @@ static MACHINE_DRIVER_START( galpani2 )
 	MDRV_SCREEN_SIZE(320, 256)
 	MDRV_VISIBLE_AREA(0, 320-1, 0, 256-1-16)
 	MDRV_GFXDECODE(galpani2_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x4000 + 0x200 + 0x8000)	// sprites, bg8, bg15
+	MDRV_PALETTE_LENGTH(0x4000 + 0x200 + 0x8000)	/* sprites, bg8, bg15*/
 	MDRV_COLORTABLE_LENGTH(0x4000)
 
 	MDRV_PALETTE_INIT(galpani2)
@@ -631,13 +631,13 @@ ROM_START( galpani2 )
 	ROM_LOAD16_BYTE( "g204t1.27", 0x400001, 0x040000, CRC(39059f66) SHA1(6bf41738033a13b63d96babf827c73c914323425) )
 
 	ROM_REGION( 0x140000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "gp2-100.043", 0x040000, 0x100000, CRC(4235ac5b) SHA1(7e35831523fbb2d0587b9ab93c13b2b43dc481a8) )	// $10 x $10000
+	ROM_LOAD( "gp2-100.043", 0x040000, 0x100000, CRC(4235ac5b) SHA1(7e35831523fbb2d0587b9ab93c13b2b43dc481a8) )	/* $10 x $10000*/
 	ROM_COPY( REGION_SOUND1, 0x0c0000, 0, 0x40000 )
 
 	ROM_REGION( 0x400000, REGION_SOUND2, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "gp2-102.045", 0x000000, 0x100000, CRC(b4bee779) SHA1(a41098e4b8e48577719dc4bd7f09f5e893e8b388) )	//  $8 x $40000
+	ROM_LOAD( "gp2-102.045", 0x000000, 0x100000, CRC(b4bee779) SHA1(a41098e4b8e48577719dc4bd7f09f5e893e8b388) )	/*  $8 x $40000*/
 	ROM_CONTINUE(            0x200000, 0x100000 )
-	ROM_LOAD( "gp2-101.044", 0x100000, 0x100000, CRC(f75ba6a0) SHA1(91cc0c019a7ebfa2562bbe570af029f00b5e0699) )	//  $4 x $40000
+	ROM_LOAD( "gp2-101.044", 0x100000, 0x100000, CRC(f75ba6a0) SHA1(91cc0c019a7ebfa2562bbe570af029f00b5e0699) )	/*  $4 x $40000*/
 	ROM_RELOAD(              0x300000, 0x100000 )
 ROM_END
 /*

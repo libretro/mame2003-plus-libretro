@@ -96,8 +96,8 @@ MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x2fff, MWA_ROM },
-//	{ 0x3000, 0x3000, MWA_NOP },
-//	{ 0x3800, 0x3800, MWA_NOP },
+/*	{ 0x3000, 0x3000, MWA_NOP },*/
+/*	{ 0x3800, 0x3800, MWA_NOP },*/
 	{ 0x4000, 0x43ff, redclash_videoram_w, &videoram },
 	{ 0x5000, 0x5007, MWA_NOP },	/* to sound board */
 	{ 0x5800, 0x5800, redclash_star0_w },

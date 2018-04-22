@@ -173,16 +173,16 @@ INPUT_PORTS_START( hcastle )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Cocktail ) )
-	PORT_DIPNAME( 0x18, 0x10, DEF_STR( Difficulty ) )	// "Difficulty 1"
-	PORT_DIPSETTING(    0x18, "Easy" )				// "Easy"
-	PORT_DIPSETTING(    0x10, "Normal" )			// "Nomal" !
-	PORT_DIPSETTING(    0x08, "Hard" )				// "Difficult"
-	PORT_DIPSETTING(    0x00, "Hardest" )			// "Very Difficult"
-	PORT_DIPNAME( 0x60, 0x40, "Damage" )			// "Difficulty 2"
-	PORT_DIPSETTING(    0x60, "Small" )				// "Strong"
-	PORT_DIPSETTING(    0x40, "Normal" )			// "Nomal" !
-	PORT_DIPSETTING(    0x20, "Big" )				// "Weak"
-	PORT_DIPSETTING(    0x00, "Biggest" )			// "Very Weak"
+	PORT_DIPNAME( 0x18, 0x10, DEF_STR( Difficulty ) )	/* "Difficulty 1"*/
+	PORT_DIPSETTING(    0x18, "Easy" )				/* "Easy"*/
+	PORT_DIPSETTING(    0x10, "Normal" )			/* "Nomal" !*/
+	PORT_DIPSETTING(    0x08, "Hard" )				/* "Difficult"*/
+	PORT_DIPSETTING(    0x00, "Hardest" )			/* "Very Difficult"*/
+	PORT_DIPNAME( 0x60, 0x40, "Damage" )			/* "Difficulty 2"*/
+	PORT_DIPSETTING(    0x60, "Small" )				/* "Strong"*/
+	PORT_DIPSETTING(    0x40, "Normal" )			/* "Nomal" !*/
+	PORT_DIPSETTING(    0x20, "Big" )				/* "Weak"*/
+	PORT_DIPSETTING(    0x00, "Biggest" )			/* "Very Weak"*/
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -221,7 +221,7 @@ INPUT_PORTS_START( hcastle )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalidity" )			// Disables the 2 coin slots
+/*	PORT_DIPSETTING(    0x00, "Invalidity" )			*/ /* Disables the 2 coin slots*/
 
 	PORT_START
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
@@ -261,7 +261,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 static void irqhandler(int linestate)
 {
-//	cpu_set_irq_line(1,0,linestate);
+/*	cpu_set_irq_line(1,0,linestate);*/
 }
 
 static void volume_callback(int v)

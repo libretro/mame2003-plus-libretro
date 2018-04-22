@@ -40,16 +40,16 @@ static WRITE_HANDLER( mermaid_AY8910_control_port_w )
 #if 0
 static READ_HANDLER( mermaid_f800_r )
 {
-	// collision register active LO
-	// Bit 0
-	// Bit 1 - Sprite - Foreground
-	// Bit 2 - Sprite - Stream
-	// Bit 3
-	// Bit 4
-	// Bit 5
-	// Bit 6
-	// Bit 7
-	//return rand() & 0xff;
+	/* collision register active LO*/
+	/* Bit 0*/
+	/* Bit 1 - Sprite - Foreground*/
+	/* Bit 2 - Sprite - Stream*/
+	/* Bit 3*/
+	/* Bit 4*/
+	/* Bit 5*/
+	/* Bit 6*/
+	/* Bit 7*/
+	/*return rand() & 0xff;*/
 	return 0x00;
 }
 #endif
@@ -65,7 +65,7 @@ static MEMORY_READ_START( readmem )
 	{ 0xe800, 0xe800, input_port_1_r },
 	{ 0xf000, 0xf000, input_port_2_r },
 	{ 0xf800, 0xf800, input_port_3_r },
-//	{ 0xf800, 0xf800, mermaid_f800_r },
+/*	{ 0xf800, 0xf800, mermaid_f800_r },*/
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )

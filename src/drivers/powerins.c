@@ -73,33 +73,33 @@ static WRITE16_HANDLER( powerin2_soundlatch_w )
 }
 
 static MEMORY_READ16_START( powerins_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM					},	// ROM
-	{ 0x100000, 0x100001, input_port_0_word_r		},	// Coins + Start Buttons
-	{ 0x100002, 0x100003, input_port_1_word_r		},	// P1 + P2
-	{ 0x100008, 0x100009, input_port_2_word_r		},	// DSW 1
-	{ 0x10000a, 0x10000b, input_port_3_word_r		},	// DSW 2
-	{ 0x10003e, 0x10003f, OKIM6295_status_0_lsb_r	},	// OKI Status
-	{ 0x120000, 0x120fff, MRA16_RAM					},	// Palette
-/**/{ 0x130000, 0x130007, MRA16_RAM					},	// VRAM 0 Control
-	{ 0x140000, 0x143fff, MRA16_RAM					},	// VRAM 0
-	{ 0x170000, 0x170fff, MRA16_RAM					},	// VRAM 1
-	{ 0x180000, 0x18ffff, MRA16_RAM					},	// RAM + Sprites
+	{ 0x000000, 0x0fffff, MRA16_ROM					},	/* ROM*/
+	{ 0x100000, 0x100001, input_port_0_word_r		},	/* Coins + Start Buttons*/
+	{ 0x100002, 0x100003, input_port_1_word_r		},	/* P1 + P2*/
+	{ 0x100008, 0x100009, input_port_2_word_r		},	/* DSW 1*/
+	{ 0x10000a, 0x10000b, input_port_3_word_r		},	/* DSW 2*/
+	{ 0x10003e, 0x10003f, OKIM6295_status_0_lsb_r	},	/* OKI Status*/
+	{ 0x120000, 0x120fff, MRA16_RAM					},	/* Palette*/
+/**/{ 0x130000, 0x130007, MRA16_RAM					},	/* VRAM 0 Control*/
+	{ 0x140000, 0x143fff, MRA16_RAM					},	/* VRAM 0*/
+	{ 0x170000, 0x170fff, MRA16_RAM					},	/* VRAM 1*/
+	{ 0x180000, 0x18ffff, MRA16_RAM					},	/* RAM + Sprites*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( powerins_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM								},	// ROM
-	{ 0x100014, 0x100015, powerins_flipscreen_w					},	// Flip Screen
-	{ 0x100016, 0x100017, MWA16_NOP								},	// ? always 1
-	{ 0x100018, 0x100019, powerins_tilebank_w					},	// Tiles Banking (VRAM 0)
-	{ 0x10001e, 0x10001f, powerin2_soundlatch_w					},	// Sound Latch
-	{ 0x100030, 0x100031, powerins_okibank_w					},	// Sound
-	{ 0x10003e, 0x10003f, OKIM6295_data_0_lsb_w					},	//
-	{ 0x120000, 0x120fff, powerins_paletteram16_w, &paletteram16	},	// Palette
-	{ 0x130000, 0x130007, MWA16_RAM, &powerins_vctrl_0			},	// VRAM 0 Control
-	{ 0x140000, 0x143fff, powerins_vram_0_w, &powerins_vram_0	},	// VRAM 0
-	{ 0x170000, 0x170fff, powerins_vram_1_w, &powerins_vram_1	},	// VRAM 1
-	{ 0x171000, 0x171fff, powerins_vram_1_w						},	// Mirror of VRAM 1?
-	{ 0x180000, 0x18ffff, MWA16_RAM, &spriteram16				},	// RAM + Sprites
+	{ 0x000000, 0x0fffff, MWA16_ROM								},	/* ROM*/
+	{ 0x100014, 0x100015, powerins_flipscreen_w					},	/* Flip Screen*/
+	{ 0x100016, 0x100017, MWA16_NOP								},	/* ? always 1*/
+	{ 0x100018, 0x100019, powerins_tilebank_w					},	/* Tiles Banking (VRAM 0)*/
+	{ 0x10001e, 0x10001f, powerin2_soundlatch_w					},	/* Sound Latch*/
+	{ 0x100030, 0x100031, powerins_okibank_w					},	/* Sound*/
+	{ 0x10003e, 0x10003f, OKIM6295_data_0_lsb_w					},	/**/
+	{ 0x120000, 0x120fff, powerins_paletteram16_w, &paletteram16	},	/* Palette*/
+	{ 0x130000, 0x130007, MWA16_RAM, &powerins_vctrl_0			},	/* VRAM 0 Control*/
+	{ 0x140000, 0x143fff, powerins_vram_0_w, &powerins_vram_0	},	/* VRAM 0*/
+	{ 0x170000, 0x170fff, powerins_vram_1_w, &powerins_vram_1	},	/* VRAM 1*/
+	{ 0x171000, 0x171fff, powerins_vram_1_w						},	/* Mirror of VRAM 1?*/
+	{ 0x180000, 0x18ffff, MWA16_RAM, &spriteram16				},	/* RAM + Sprites*/
 MEMORY_END
 
 /* There is an hidden test mode screen (set 18ff08 to 4 during test mode)
@@ -109,29 +109,29 @@ MEMORY_END
 static MEMORY_READ_START( readmem_snd )
 	{ 0x0000, 0xbfff, MRA_ROM },
 	{ 0xc000, 0xdfff, MRA_RAM },
-	{ 0xe000, 0xe000, MRA_NOP }, // ?
+	{ 0xe000, 0xe000, MRA_NOP }, /* ?*/
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem_snd )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xdfff, MWA_RAM },
-	{ 0xe000, 0xe000, MWA_NOP }, // ? written only once ?
-	{ 0xe001, 0xe001, MWA_NOP }, // ?
+	{ 0xe000, 0xe000, MWA_NOP }, /* ? written only once ?*/
+	{ 0xe001, 0xe001, MWA_NOP }, /* ?*/
 MEMORY_END
 
 static PORT_READ_START( readport_snd )
 	{ 0x00, 0x00, soundlatch_r },
-	{ 0x01, 0x01, MRA_NOP }, // ?
+	{ 0x01, 0x01, MRA_NOP }, /* ?*/
 	{ 0x80, 0x80, OKIM6295_status_0_r },
 	{ 0x88, 0x88, OKIM6295_status_1_r },
 PORT_END
 
 static PORT_WRITE_START( writeport_snd )
-	{ 0x00, 0x00, MWA_NOP }, // ?
-	{ 0x01, 0x01, MWA_NOP }, // ?
+	{ 0x00, 0x00, MWA_NOP }, /* ?*/
+	{ 0x01, 0x01, MWA_NOP }, /* ?*/
 	{ 0x80, 0x80, OKIM6295_data_0_w },
 	{ 0x88, 0x88, OKIM6295_data_1_w },
-	{ 0x90, 0x97, MWA_NOP }, // oki bank ?
+	{ 0x90, 0x97, MWA_NOP }, /* oki bank ?*/
 PORT_END
 
 /***************************************************************************
@@ -141,7 +141,7 @@ PORT_END
 ***************************************************************************/
 
 INPUT_PORTS_START( powerins )
-	PORT_START	// IN0 - $100000 - Coins
+	PORT_START	/* IN0 - $100000 - Coins*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2    )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -151,7 +151,7 @@ INPUT_PORTS_START( powerins )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN1 - $100002 - Player 1 & 2
+	PORT_START	/* IN1 - $100002 - Player 1 & 2*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT	 | IPF_PLAYER1 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -170,7 +170,7 @@ INPUT_PORTS_START( powerins )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4        | IPF_PLAYER2 )
 
-	PORT_START	// IN2 - $100008 - DSW 1
+	PORT_START	/* IN2 - $100008 - DSW 1*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -178,7 +178,7 @@ INPUT_PORTS_START( powerins )
 	PORT_DIPSETTING(      0x0008, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x000c, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(      0x0000, DEF_STR( 2C_1C ) ) /* 2C to start, 1C to continue */
+/*	PORT_DIPSETTING(      0x0000, DEF_STR( 2C_1C ) )  // 2C to start, 1C to continue /*/
 	PORT_DIPSETTING(      0x000e, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(      0x0006, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(      0x000a, DEF_STR( 1C_3C ) )
@@ -187,7 +187,7 @@ INPUT_PORTS_START( powerins )
 	PORT_DIPSETTING(      0x0040, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0060, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(      0x0000, DEF_STR( 2C_1C ) ) /* 2C to start, 1C to continue */
+/*	PORT_DIPSETTING(      0x0000, DEF_STR( 2C_1C ) )  // 2C to start, 1C to continue /*/
 	PORT_DIPSETTING(      0x0070, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(      0x0030, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(      0x0050, DEF_STR( 1C_3C ) )
@@ -196,7 +196,7 @@ INPUT_PORTS_START( powerins )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On )  )
 
-	PORT_START	// IN3 - $10000a - DSW 2
+	PORT_START	/* IN3 - $10000a - DSW 2*/
 	PORT_DIPNAME( 0x0001, 0x0001, "Coin Chutes" )
 	PORT_DIPSETTING(      0x0001, "1 Chute" )
 	PORT_DIPSETTING(      0x0000, "2 Chutes" )
@@ -285,9 +285,9 @@ static struct GfxLayout layout_16x16x4_swap =
 
 static struct GfxDecodeInfo powerins_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4,      0x000, 0x20 }, // [0] Tiles
-	{ REGION_GFX2, 0, &layout_8x8x4,        0x200, 0x10 }, // [1] Tiles
-	{ REGION_GFX3, 0, &layout_16x16x4_swap, 0x400, 0x40 }, // [2] Sprites
+	{ REGION_GFX1, 0, &layout_16x16x4,      0x000, 0x20 }, /* [0] Tiles*/
+	{ REGION_GFX2, 0, &layout_8x8x4,        0x200, 0x10 }, /* [1] Tiles*/
+	{ REGION_GFX3, 0, &layout_16x16x4_swap, 0x400, 0x40 }, /* [2] Sprites*/
 	{ -1 }
 };
 
@@ -304,7 +304,7 @@ static struct GfxDecodeInfo powerins_gfxdecodeinfo[] =
 
 MACHINE_INIT( powerins )
 {
-	oki_bank = -1;	// samples bank "unitialised"
+	oki_bank = -1;	/* samples bank "unitialised"*/
 }
 
 static struct OKIM6295interface powerins_okim6295_interface =

@@ -83,8 +83,8 @@ static READ_HANDLER( zaccaria_dsw_r )
 
 static WRITE_HANDLER( ay8910_port0a_w )
 {
-	// bits 0-2 go to a weird kind of DAC ??
-	// bits 3-4 control the analog drum emulation on 8910 #0 ch. A
+	/* bits 0-2 go to a weird kind of DAC ??*/
+	/* bits 3-4 control the analog drum emulation on 8910 #0 ch. A*/
 
 	if (data & 1)	/* DAC enable */
 	{
@@ -181,22 +181,22 @@ static WRITE_HANDLER( zaccaria_port1b_w )
 {
 	port1b = data;
 
-	// bit 0 = /RS
+	/* bit 0 = /RS*/
 
-	// bit 1 = /WS
+	/* bit 1 = /WS*/
 	if (~data & 2) tms5220_data_w(0,port1a);
 
-	// bit 3 = "ACS" (goes, inverted, to input port 6 bit 3)
+	/* bit 3 = "ACS" (goes, inverted, to input port 6 bit 3)*/
 	acs = ~data & 0x08;
 
-	// bit 4 = led (for testing?)
+	/* bit 4 = led (for testing?)*/
 	set_led_status(0,~data & 0x10);
 }
 
 static READ_HANDLER( zaccaria_ca2_r )
 {
-// TODO: this doesn't work, why?
-//	return !tms5220_ready_r();
+/* TODO: this doesn't work, why?*/
+/*	return !tms5220_ready_r();*/
 
 static int counter;
 counter = (counter+1) & 0x0f;

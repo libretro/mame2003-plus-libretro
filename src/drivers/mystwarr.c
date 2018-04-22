@@ -132,7 +132,7 @@ static READ16_HANDLER( mweeprom_r )
 		return res;
 	}
 
-//	logerror("msb access to eeprom port\n");
+/*	logerror("msb access to eeprom port\n");*/
 
 	return 0;
 }
@@ -152,7 +152,7 @@ static READ16_HANDLER( vseeprom_r )
 		return res;
 	}
 
-//	logerror("msb access to eeprom port\n");
+/*	logerror("msb access to eeprom port\n");*/
 
 	return 0;
 }
@@ -167,7 +167,7 @@ static WRITE16_HANDLER( mweeprom_w )
 		return;
 	}
 
-//	logerror("unknown LSB write %x to eeprom\n", data);
+/*	logerror("unknown LSB write %x to eeprom\n", data);*/
 
 }
 
@@ -346,7 +346,7 @@ static WRITE16_HANDLER( irq_ack_w )
 	{
 		mw_irq_control = data&0xff;
 
-//		if ((data &0xf0) != 0xd0) logerror("Unknown write to IRQ reg: %x\n", data);
+/*		if ((data &0xf0) != 0xd0) logerror("Unknown write to IRQ reg: %x\n", data);*/
 
 	}
 }
@@ -414,7 +414,7 @@ static WRITE16_HANDLER( K053247_scattered_word_w )
 {
 	if (offset & 0x0078)
 	{
-//		printf("spr write %x to %x (PC=%x)\n", data, offset, activecpu_get_pc());
+/*		printf("spr write %x to %x (PC=%x)\n", data, offset, activecpu_get_pc());*/
 		COMBINE_DATA(spriteram16+offset);
 	}
 	else
@@ -428,7 +428,7 @@ static WRITE16_HANDLER( K053247_scattered_word_w )
 /* 68000 memory handlers */
 /* Mystic Warriors */
 static MEMORY_READ16_START( readmem )
-	{ 0x000000, 0x1fffff, MRA16_ROM },	// main program
+	{ 0x000000, 0x1fffff, MRA16_ROM },	/* main program*/
 	{ 0x200000, 0x20ffff, MRA16_RAM },
 	{ 0x400000, 0x40ffff, K053247_scattered_word_r },
 	{ 0x482000, 0x48200f, K055673_rom_word_r },
@@ -439,7 +439,7 @@ static MEMORY_READ16_START( readmem )
 	{ 0x498014, 0x498015, sound_status_r },
 	{ 0x498000, 0x49801f, MRA16_RAM },
 	{ 0x600000, 0x601fff, K056832_ram_word_r },
-	{ 0x602000, 0x603fff, K056832_ram_word_r },	// tilemap RAM mirror read(essential)
+	{ 0x602000, 0x603fff, K056832_ram_word_r },	/* tilemap RAM mirror read(essential)*/
 	{ 0x680000, 0x683fff, K056832_rom_word_r },
 	{ 0x700000, 0x701fff, MRA16_RAM },
 #if MW_DEBUG
@@ -461,21 +461,21 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0x48a000, 0x48a01f, K054338_word_w },
 	{ 0x48c000, 0x48c03f, K056832_word_w },
 	{ 0x490000, 0x490001, mweeprom_w },
-	{ 0x492000, 0x492001, MWA16_NOP },	// watchdog
+	{ 0x492000, 0x492001, MWA16_NOP },	/* watchdog*/
 	{ 0x49800c, 0x49800d, sound_cmd1_w },
 	{ 0x49800e, 0x49800f, sound_cmd2_w },
 	{ 0x498000, 0x49801f, MWA16_RAM },
 	{ 0x49a000, 0x49a001, sound_irq_w },
 	{ 0x49c000, 0x49c01f, K053252_word_w },
-	{ 0x49e000, 0x49e007, irq_ack_w },	// VSCCS (custom)
+	{ 0x49e000, 0x49e007, irq_ack_w },	/* VSCCS (custom)*/
 	{ 0x600000, 0x601fff, K056832_ram_word_w },
-	{ 0x602000, 0x603fff, K056832_ram_word_w },	// tilemap RAM mirror write(essential)
+	{ 0x602000, 0x603fff, K056832_ram_word_w },	/* tilemap RAM mirror write(essential)*/
 	{ 0x700000, 0x701fff, paletteram16_xrgb_word_w, &paletteram16 },
 MEMORY_END
 
 /* Metamorphic Force */
 static MEMORY_READ16_START( mmreadmem )
-	{ 0x000000, 0x1fffff, MRA16_ROM },	// main program
+	{ 0x000000, 0x1fffff, MRA16_ROM },	/* main program*/
 	{ 0x200000, 0x20ffff, MRA16_RAM },
 	{ 0x210000, 0x210fff, K053247_word_r },
 	{ 0x211000, 0x21ffff, MRA16_RAM },
@@ -488,9 +488,9 @@ static MEMORY_READ16_START( mmreadmem )
 	{ 0x274002, 0x274003, mmplayer2_r },
 	{ 0x278000, 0x278001, mmcoins_r },
 	{ 0x278002, 0x278003, vseeprom_r },
-	{ 0x27c000, 0x27c001, MRA16_NOP },	// watchdog lives here
+	{ 0x27c000, 0x27c001, MRA16_NOP },	/* watchdog lives here*/
 	{ 0x300000, 0x301fff, K056832_ram_word_r },
-	{ 0x302000, 0x303fff, K056832_ram_word_r },	// tilemap RAM mirror read(essential)
+	{ 0x302000, 0x303fff, K056832_ram_word_r },	/* tilemap RAM mirror read(essential)*/
 	{ 0x310000, 0x311fff, K056832_rom_word_r },
 	{ 0x320000, 0x321fff, K053250_0_rom_r },
 	{ 0x330000, 0x331fff, MRA16_RAM },
@@ -511,7 +511,7 @@ static MEMORY_WRITE16_START( mmwritemem )
 	{ 0x211000, 0x21ffff, MWA16_RAM },
 	{ 0x240000, 0x240007, K053246_word_w },
 	{ 0x244010, 0x24401f, K053247_reg_word_w },
- 	{ 0x24c000, 0x24ffff, K053250_0_ram_w },	// "LVC RAM" (53250_ram)
+ 	{ 0x24c000, 0x24ffff, K053250_0_ram_w },	/* "LVC RAM" (53250_ram)*/
 	{ 0x250000, 0x25000f, K053250_0_w },
 	{ 0x254000, 0x25401f, K054338_word_w },
 	{ 0x258000, 0x2580ff, K055555_word_w },
@@ -524,19 +524,19 @@ static MEMORY_WRITE16_START( mmwritemem )
 	{ 0x270000, 0x27003f, K056832_word_w },
 	{ 0x27C000, 0x27C001, mmeeprom_w },
 	{ 0x300000, 0x301fff, K056832_ram_word_w },
-	{ 0x302000, 0x303fff, K056832_ram_word_w },	// tilemap RAM mirror write(essential)
+	{ 0x302000, 0x303fff, K056832_ram_word_w },	/* tilemap RAM mirror write(essential)*/
 	{ 0x330000, 0x331fff, paletteram16_xrgb_word_w, &paletteram16 },
 MEMORY_END
 
 /* Violent Storm */
 static MEMORY_READ16_START( vsreadmem )
-	{ 0x000000, 0x1fffff, MRA16_ROM },		// main program
+	{ 0x000000, 0x1fffff, MRA16_ROM },		/* main program*/
 	{ 0x200000, 0x20ffff, MRA16_RAM },
 	{ 0x210000, 0x210fff, K053247_word_r },
 	{ 0x211000, 0x21ffff, MRA16_RAM },
 	{ 0x244000, 0x24400f, K055673_rom_word_r },
- 	{ 0x24c000, 0x24ffff, MRA16_RAM },		// K053250_0_ram_r
-	{ 0x250000, 0x25000f, MRA16_RAM },		// K053250_0_r
+ 	{ 0x24c000, 0x24ffff, MRA16_RAM },		/* K053250_0_ram_r*/
+	{ 0x250000, 0x25000f, MRA16_RAM },		/* K053250_0_r*/
 	{ 0x25c000, 0x25c03f, K055550_word_r },
 	{ 0x268014, 0x268015, sound_status_r },
 	{ 0x268000, 0x26801f, MRA16_RAM },
@@ -544,9 +544,9 @@ static MEMORY_READ16_START( vsreadmem )
 	{ 0x274002, 0x274003, mmplayer2_r },
 	{ 0x278000, 0x278001, mmcoins_r },
 	{ 0x278002, 0x278003, vseeprom_r },
-	{ 0x27c000, 0x27c001, MRA16_NOP },		// watchdog lives here
+	{ 0x27c000, 0x27c001, MRA16_NOP },		/* watchdog lives here*/
 	{ 0x300000, 0x301fff, K056832_ram_word_r },
-	{ 0x302000, 0x303fff, K056832_ram_word_r }, // tilemap RAM mirror read(essential)
+	{ 0x302000, 0x303fff, K056832_ram_word_r }, /* tilemap RAM mirror read(essential)*/
 	{ 0x304000, 0x3041ff, MRA16_RAM },
 	{ 0x310000, 0x311fff, K056832_rom_word_r },
 	{ 0x330000, 0x331fff, MRA16_RAM },
@@ -567,8 +567,8 @@ static MEMORY_WRITE16_START( vswritemem )
 	{ 0x211000, 0x21ffff, MWA16_RAM },
 	{ 0x240000, 0x240007, K053246_word_w },
 	{ 0x244010, 0x24401f, K053247_reg_word_w },
- 	{ 0x24c000, 0x24ffff, MWA16_RAM },			// K053250_0_ram_w
-	{ 0x250000, 0x25000f, MWA16_RAM },			// K053250_0_w
+ 	{ 0x24c000, 0x24ffff, MWA16_RAM },			/* K053250_0_ram_w*/
+	{ 0x250000, 0x25000f, MWA16_RAM },			/* K053250_0_w*/
 	{ 0x254000, 0x25401f, K054338_word_w },
 	{ 0x258000, 0x2580ff, K055555_word_w },
 	{ 0x25c000, 0x25c03f, K055550_word_w },
@@ -581,12 +581,12 @@ static MEMORY_WRITE16_START( vswritemem )
 	{ 0x270000, 0x27003f, K056832_word_w },
 	{ 0x27C000, 0x27C001, mmeeprom_w },
 	{ 0x300000, 0x301fff, K056832_ram_word_w },
-	{ 0x302000, 0x303fff, K056832_ram_word_w }, // tilemap RAM mirror write(essential)
+	{ 0x302000, 0x303fff, K056832_ram_word_w }, /* tilemap RAM mirror write(essential)*/
 	{ 0x304000, 0x3041ff, MWA16_RAM },
 	{ 0x330000, 0x331fff, paletteram16_xrgb_word_w, &paletteram16 },
 MEMORY_END
 
-// Martial Champion specific interfaces
+/* Martial Champion specific interfaces*/
 static READ16_HANDLER( K053247_martchmp_word_r )
 {
 	if (offset & 0x0018)
@@ -622,38 +622,38 @@ static WRITE16_HANDLER( mccontrol_w )
 	if (ACCESSING_MSB)
 	{
 		mw_irq_control = data>>8;
-		// bit 0 = watchdog
-		// bit 1 = IRQ enable
-		// bit 2 = OBJCHA
+		/* bit 0 = watchdog*/
+		/* bit 1 = IRQ enable*/
+		/* bit 2 = OBJCHA*/
 
 		K053246_set_OBJCHA_line((data&0x04) ? ASSERT_LINE : CLEAR_LINE);
 
-//		if (data & 0xf8) logerror("Unk write %x to mccontrol\n", data);
+/*		if (data & 0xf8) logerror("Unk write %x to mccontrol\n", data);*/
 
 	}
 
-//	else logerror("write %x to LSB of mccontrol\n", data);
+/*	else logerror("write %x to LSB of mccontrol\n", data);*/
 
 }
 
 /* Martial Champion */
 static MEMORY_READ16_START( mcreadmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM },			// main program
-	{ 0x100000, 0x10ffff, MRA16_RAM },			// work RAM
-	{ 0x300000, 0x3fffff, MRA16_ROM },			// data ROM
-	{ 0x402000, 0x40200f, K055673_rom_word_r },	// sprite ROM readback
+	{ 0x000000, 0x0fffff, MRA16_ROM },			/* main program*/
+	{ 0x100000, 0x10ffff, MRA16_RAM },			/* work RAM*/
+	{ 0x300000, 0x3fffff, MRA16_ROM },			/* data ROM*/
+	{ 0x402000, 0x40200f, K055673_rom_word_r },	/* sprite ROM readback*/
 	{ 0x412000, 0x412001, mccontrol_r },
 	{ 0x414000, 0x414001, player1_r },
 	{ 0x414002, 0x414003, player2_r },
-	{ 0x416000, 0x416001, mmcoins_r },			// coin
-	{ 0x416002, 0x416003, mweeprom_r },			// eeprom read
-	{ 0x418014, 0x418015, sound_status_r },		// z80 status
-	{ 0x418000, 0x41801f, MRA16_RAM },			// sound regs fall through
-	{ 0x480000, 0x483fff, K053247_martchmp_word_r },// sprite RAM
-	{ 0x600000, 0x601fff, MRA16_RAM },			// palette RAM
-	{ 0x680000, 0x681fff, K056832_ram_word_r },	// tilemap RAM
-	{ 0x682000, 0x683fff, K056832_ram_word_r },	// tilemap RAM mirror read(essential)
-	{ 0x700000, 0x703fff, K056832_rom_word_r },	// tile ROM readback
+	{ 0x416000, 0x416001, mmcoins_r },			/* coin*/
+	{ 0x416002, 0x416003, mweeprom_r },			/* eeprom read*/
+	{ 0x418014, 0x418015, sound_status_r },		/* z80 status*/
+	{ 0x418000, 0x41801f, MRA16_RAM },			/* sound regs fall through*/
+	{ 0x480000, 0x483fff, K053247_martchmp_word_r },/* sprite RAM*/
+	{ 0x600000, 0x601fff, MRA16_RAM },			/* palette RAM*/
+	{ 0x680000, 0x681fff, K056832_ram_word_r },	/* tilemap RAM*/
+	{ 0x682000, 0x683fff, K056832_ram_word_r },	/* tilemap RAM mirror read(essential)*/
+	{ 0x700000, 0x703fff, K056832_rom_word_r },	/* tile ROM readback*/
 #if MW_DEBUG
 	{ 0x400000, 0x4000ff, K055555_word_r },
 	{ 0x402010, 0x40201f, K053247_reg_word_r },
@@ -667,45 +667,45 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( mcwritemem )
 	{ 0x100000, 0x10ffff, MWA16_RAM, &gx_workram },
-	{ 0x400000, 0x4000ff, K055555_word_w },		// PCU2
-	{ 0x402010, 0x40201f, K053247_reg_word_w },	// OBJSET2
-	{ 0x404000, 0x404007, K053246_word_w },		// OBJSET1
-	{ 0x40a000, 0x40a01f, K054338_word_w },		// CLTC
-	{ 0x40c000, 0x40c03f, K056832_word_w },		// VACSET
-	{ 0x40e000, 0x40e03f, K053990_martchmp_word_w }, // protection
+	{ 0x400000, 0x4000ff, K055555_word_w },		/* PCU2*/
+	{ 0x402010, 0x40201f, K053247_reg_word_w },	/* OBJSET2*/
+	{ 0x404000, 0x404007, K053246_word_w },		/* OBJSET1*/
+	{ 0x40a000, 0x40a01f, K054338_word_w },		/* CLTC*/
+	{ 0x40c000, 0x40c03f, K056832_word_w },		/* VACSET*/
+	{ 0x40e000, 0x40e03f, K053990_martchmp_word_w }, /* protection*/
 	{ 0x410000, 0x410001, mweeprom_w },
 	{ 0x412000, 0x412001, mccontrol_w },
-	{ 0x41c000, 0x41c01f, K053252_word_w },		// CCU
-	{ 0x41e000, 0x41e007, K056832_b_word_w },	// VSCCS
+	{ 0x41c000, 0x41c01f, K053252_word_w },		/* CCU*/
+	{ 0x41e000, 0x41e007, K056832_b_word_w },	/* VSCCS*/
 	{ 0x41800c, 0x41800d, sound_cmd1_w },
 	{ 0x41800e, 0x41800f, sound_cmd2_w },
-	{ 0x418000, 0x41801f, MWA16_RAM },			// sound regs fall through
+	{ 0x418000, 0x41801f, MWA16_RAM },			/* sound regs fall through*/
 	{ 0x41a000, 0x41a001, sound_irq_w },
 	{ 0x480000, 0x483fff, K053247_martchmp_word_w, &spriteram16 },
 	{ 0x600000, 0x601fff, paletteram16_xrgb_word_w, &paletteram16 },
 	{ 0x680000, 0x681fff, K056832_ram_word_w },
-	{ 0x682000, 0x683fff, K056832_ram_word_w },	// tilemap RAM mirror write(essential)
+	{ 0x682000, 0x683fff, K056832_ram_word_w },	/* tilemap RAM mirror write(essential)*/
 MEMORY_END
 
 /* Ultimate Battler Dadandarn */
 static MEMORY_READ16_START( dddreadmem )
-	{ 0x000000, 0x1fffff, MRA16_ROM },	// main program and data ROM
+	{ 0x000000, 0x1fffff, MRA16_ROM },	/* main program and data ROM*/
 	{ 0x400000, 0x40ffff, K053247_scattered_word_r },
-	{ 0x410000, 0x411fff, K056832_ram_word_r },	// tilemap RAM
-	{ 0x412000, 0x413fff, K056832_ram_word_r }, // tilemap RAM mirror read(essential)
+	{ 0x410000, 0x411fff, K056832_ram_word_r },	/* tilemap RAM*/
+	{ 0x412000, 0x413fff, K056832_ram_word_r }, /* tilemap RAM mirror read(essential)*/
 	{ 0x420000, 0x421fff, MRA16_RAM },
 	{ 0x440000, 0x443fff, K056832_rom_word_r },
 	{ 0x450000, 0x45000f, K055673_rom_word_r },
 	{ 0x470000, 0x470fff, MRA16_RAM },
 	{ 0x48a014, 0x48a015, sound_status_msb_r },
-	{ 0x48a000, 0x48a01f, MRA16_RAM },	// sound regs fall-through
-	{ 0x48e000, 0x48e001, dddcoins_r },	// bit 3 (0x8) is test switch
+	{ 0x48a000, 0x48a01f, MRA16_RAM },	/* sound regs fall-through*/
+	{ 0x48e000, 0x48e001, dddcoins_r },	/* bit 3 (0x8) is test switch*/
 	{ 0x48e020, 0x48e021, dddeeprom_r },
 	{ 0x600000, 0x60ffff, MRA16_RAM },
 	{ 0x680000, 0x68003f, K055550_word_r },
-	{ 0x800000, 0x87ffff, ddd_053936_tilerom_0_r },	// 256k tilemap readback
-	{ 0xa00000, 0xa7ffff, ddd_053936_tilerom_1_r }, // 128k tilemap readback
-	{ 0xc00000, 0xdfffff, ddd_053936_tilerom_2_r },	// tile character readback
+	{ 0x800000, 0x87ffff, ddd_053936_tilerom_0_r },	/* 256k tilemap readback*/
+	{ 0xa00000, 0xa7ffff, ddd_053936_tilerom_1_r }, /* 128k tilemap readback*/
+	{ 0xc00000, 0xdfffff, ddd_053936_tilerom_2_r },	/* tile character readback*/
 #if MW_DEBUG
 	{ 0x430000, 0x430007, K053246_reg_word_r },
 	{ 0x450010, 0x45001f, K053247_reg_word_r },
@@ -720,51 +720,51 @@ MEMORY_END
 static MEMORY_WRITE16_START( dddwritemem )
 	{ 0x400000, 0x40ffff, K053247_scattered_word_w, &spriteram16 },
 	{ 0x410000, 0x411fff, K056832_ram_word_w },
-	{ 0x412000, 0x413fff, K056832_ram_word_w },	// tile RAM mirror write(essential)
+	{ 0x412000, 0x413fff, K056832_ram_word_w },	/* tile RAM mirror write(essential)*/
 	{ 0x420000, 0x421fff, paletteram16_xrgb_word_w, &paletteram16 },
 	{ 0x430000, 0x430007, K053246_word_w },
 	{ 0x450010, 0x45001f, K053247_reg_word_w },
 	{ 0x460000, 0x46001f, MWA16_RAM, &K053936_0_ctrl },
 	{ 0x470000, 0x470fff, MWA16_RAM, &K053936_0_linectrl },
-	{ 0x480000, 0x48003f, K056832_word_w },		// VACSET
-	{ 0x482000, 0x482007, K056832_b_word_w },	// VSCCS
+	{ 0x480000, 0x48003f, K056832_word_w },		/* VACSET*/
+	{ 0x482000, 0x482007, K056832_b_word_w },	/* VSCCS*/
 	{ 0x484000, 0x484003, ddd_053936_clip_w },
 	{ 0x486000, 0x48601f, K053252_word_w },
 	{ 0x488000, 0x4880ff, K055555_word_w },
 	{ 0x48a00c, 0x48a00d, sound_cmd1_msb_w },
 	{ 0x48a00e, 0x48a00f, sound_cmd2_msb_w },
-	{ 0x48a000, 0x48a01f, MWA16_RAM },	// sound regs fall-through
+	{ 0x48a000, 0x48a01f, MWA16_RAM },	/* sound regs fall-through*/
 	{ 0x48c000, 0x48c01f, K054338_word_w },
 	{ 0x600000, 0x60ffff, MWA16_RAM, &gx_workram },
 	{ 0x680000, 0x68003f, K055550_word_w },
 	{ 0x6a0000, 0x6a0001, mmeeprom_w },
 	{ 0x6c0000, 0x6c0001, ddd_053936_enable_w },
 	{ 0x6e0000, 0x6e0001, sound_irq_w },
-	{ 0xe00000, 0xe00001, MWA16_NOP },	// watchdog
+	{ 0xe00000, 0xe00001, MWA16_NOP },	/* watchdog*/
 MEMORY_END
 
 /* Gaiapolis */
-// a00000 = the 128k tilemap
-// 800000 = the 256k tilemap
-// c00000 = 936 tiles (7fffff window)
+/* a00000 = the 128k tilemap*/
+/* 800000 = the 256k tilemap*/
+/* c00000 = 936 tiles (7fffff window)*/
 static MEMORY_READ16_START( gaiareadmem )
-	{ 0x000000, 0x2fffff, MRA16_ROM },	// main program
+	{ 0x000000, 0x2fffff, MRA16_ROM },	/* main program*/
 	{ 0x400000, 0x40ffff, K053247_scattered_word_r },
-	{ 0x410000, 0x411fff, K056832_ram_word_r },	// tilemap RAM
-	{ 0x412000, 0x413fff, K056832_ram_word_r }, // tilemap RAM mirror read(essential)
+	{ 0x410000, 0x411fff, K056832_ram_word_r },	/* tilemap RAM*/
+	{ 0x412000, 0x413fff, K056832_ram_word_r }, /* tilemap RAM mirror read(essential)*/
 	{ 0x420000, 0x421fff, MRA16_RAM },
 	{ 0x440000, 0x441fff, K056832_rom_word_r },
 	{ 0x450000, 0x45000f, K055673_rom_word_r },
 	{ 0x470000, 0x470fff, MRA16_RAM },
 	{ 0x48a014, 0x48a015, sound_status_msb_r },
-	{ 0x48a000, 0x48a01f, MRA16_RAM },	// sound regs fall-through
-	{ 0x48e000, 0x48e001, dddcoins_r },	// bit 3 (0x8) is test switch
+	{ 0x48a000, 0x48a01f, MRA16_RAM },	/* sound regs fall-through*/
+	{ 0x48e000, 0x48e001, dddcoins_r },	/* bit 3 (0x8) is test switch*/
 	{ 0x48e020, 0x48e021, dddeeprom_r },
 	{ 0x600000, 0x60ffff, MRA16_RAM },
 	{ 0x660000, 0x6600ff, K054000_lsb_r },
-	{ 0x800000, 0x87ffff, gai_053936_tilerom_0_r },	// 256k tilemap readback
-	{ 0xa00000, 0xa7ffff, ddd_053936_tilerom_1_r }, // 128k tilemap readback
-	{ 0xc00000, 0xdfffff, gai_053936_tilerom_2_r },	// tile character readback
+	{ 0x800000, 0x87ffff, gai_053936_tilerom_0_r },	/* 256k tilemap readback*/
+	{ 0xa00000, 0xa7ffff, ddd_053936_tilerom_1_r }, /* 128k tilemap readback*/
+	{ 0xc00000, 0xdfffff, gai_053936_tilerom_2_r },	/* tile character readback*/
 #if MW_DEBUG
 	{ 0x430000, 0x430007, K053246_reg_word_r },
 	{ 0x450010, 0x45001f, K053247_reg_word_r },
@@ -779,28 +779,28 @@ MEMORY_END
 static MEMORY_WRITE16_START( gaiawritemem )
 	{ 0x400000, 0x40ffff, K053247_scattered_word_w, &spriteram16 },
 	{ 0x410000, 0x411fff, K056832_ram_word_w },
-	{ 0x412000, 0x413fff, K056832_ram_word_w },	// tilemap RAM mirror write(essential)
+	{ 0x412000, 0x413fff, K056832_ram_word_w },	/* tilemap RAM mirror write(essential)*/
 	{ 0x412000, 0x4120ff, MWA16_RAM },
 	{ 0x420000, 0x421fff, paletteram16_xrgb_word_w, &paletteram16 },
 	{ 0x430000, 0x430007, K053246_word_w },
 	{ 0x450010, 0x45001f, K053247_reg_word_w },
 	{ 0x460000, 0x46001f, MWA16_RAM, &K053936_0_ctrl  },
 	{ 0x470000, 0x470fff, MWA16_RAM, &K053936_0_linectrl },
-	{ 0x480000, 0x48003f, K056832_word_w },		// VACSET
-	{ 0x482000, 0x482007, K056832_b_word_w },	// VSCCS
+	{ 0x480000, 0x48003f, K056832_word_w },		/* VACSET*/
+	{ 0x482000, 0x482007, K056832_b_word_w },	/* VSCCS*/
 	{ 0x484000, 0x484003, ddd_053936_clip_w },
 	{ 0x486000, 0x48601f, K053252_word_w },
 	{ 0x488000, 0x4880ff, K055555_word_w },
 	{ 0x48a00c, 0x48a00d, sound_cmd1_msb_w },
 	{ 0x48a00e, 0x48a00f, sound_cmd2_msb_w },
-	{ 0x48a000, 0x48a01f, MWA16_RAM },	// sound regs fall-through
+	{ 0x48a000, 0x48a01f, MWA16_RAM },	/* sound regs fall-through*/
 	{ 0x48c000, 0x48c01f, K054338_word_w },
 	{ 0x600000, 0x60ffff, MWA16_RAM, &gx_workram },
 	{ 0x660000, 0x6600ff, K054000_lsb_w },
 	{ 0x6a0000, 0x6a0001, mmeeprom_w },
 	{ 0x6c0000, 0x6c0001, ddd_053936_enable_w },
 	{ 0x6e0000, 0x6e0001, sound_irq_w },
-	{ 0xe00000, 0xe00001, MWA16_NOP }, 	// watchdog
+	{ 0xe00000, 0xe00001, MWA16_NOP }, 	/* watchdog*/
 MEMORY_END
 
 /**********************************************************************************/
@@ -852,7 +852,7 @@ static MEMORY_WRITE_START( sound_writemem )
 	{ 0xe630, 0xe7ff, MWA_RAM },
 	{ 0xf000, 0xf000, soundlatch3_w },
 	{ 0xf800, 0xf800, sound_bankswitch_w },
-	{ 0xfff0, 0xfff3, MWA_NOP },	// unknown write
+	{ 0xfff0, 0xfff3, MWA_NOP },	/* unknown write*/
 MEMORY_END
 
 static struct K054539interface k054539_interface =
@@ -1608,7 +1608,7 @@ ROM_START( metamrph )
 	ROM_LOAD64_WORD( "224a13", 0x000006, 2*1024*1024, CRC(86b58feb) SHA1(5a43746e2cd3c7aca21496c092aef83e64b3ab2c) )
 
 	/* K053250 linescroll/zoom thingy */
-	ROM_REGION( 0x80000, REGION_GFX3, 0 ) // NOTE: region must be 2xROM size for unpacking
+	ROM_REGION( 0x80000, REGION_GFX3, 0 ) /* NOTE: region must be 2xROM size for unpacking*/
 	ROM_LOAD( "224a14", 0x000000, 0x40000, CRC(3c79b404) SHA1(7c6bb4cbf050f314ea0cd3e8bc6e1947d0573084) )
 
 	/* sound data */
@@ -1643,7 +1643,7 @@ ROM_START( metamrpj )
 	ROM_LOAD64_WORD( "224a13", 0x000006, 2*1024*1024, CRC(86b58feb) SHA1(5a43746e2cd3c7aca21496c092aef83e64b3ab2c) )
 
 	/* K053250 linescroll/zoom thingy */
-	ROM_REGION( 0x80000, REGION_GFX3, 0 ) // NOTE: region must be 2xROM size for unpacking
+	ROM_REGION( 0x80000, REGION_GFX3, 0 ) /* NOTE: region must be 2xROM size for unpacking*/
 	ROM_LOAD( "224a14", 0x000000, 0x40000, CRC(3c79b404) SHA1(7c6bb4cbf050f314ea0cd3e8bc6e1947d0573084) )
 
 	/* sound data */
@@ -1861,14 +1861,14 @@ static DRIVER_INIT(mystwarr)
 		ADD_SKIPPER16(0x1bac, 0x200000, 0x540, 0x6ff, -1, 0xffff)
 	#endif
 
-	// soften chorus(chip 0 channel 0-3), boost voice(chip 0 channel 4-7)
+	/* soften chorus(chip 0 channel 0-3), boost voice(chip 0 channel 4-7)*/
 	for (i=0; i<=3; i++)
 	{
 		K054539_set_gain(0, i, 0.8);
 		K054539_set_gain(0, i+4, 2.0);
 	}
 
-	// soften percussions(chip 1 channel 0-7)
+	/* soften percussions(chip 1 channel 0-7)*/
 	for (i=0; i<=7; i++) K054539_set_gain(1, i, 0.5);
 }
 
@@ -1882,7 +1882,7 @@ static DRIVER_INIT(dadandrn)
 		ADD_SKIPPER16(0x442a, 0x600000, 0x400, 0x4ff, -1, 0xffff)
 	#endif
 
-	// boost voice(chip 0 channel 4-7)
+	/* boost voice(chip 0 channel 4-7)*/
 	for (i=4; i<=7; i++) K054539_set_gain(0, i, 2.0);
 }
 
@@ -1896,7 +1896,7 @@ static DRIVER_INIT(viostorm)
 		ADD_SKIPPER16(0x0a9c, 0x200000, 0xf400, 0xf9df, -1, 0xffff)
 	#endif
 
-	// boost voice(chip 0 channel 4-7)
+	/* boost voice(chip 0 channel 4-7)*/
 	for (i=4; i<=7; i++) K054539_set_gain(0, i, 2.0);
 }
 
@@ -1908,7 +1908,7 @@ static DRIVER_INIT(metamrph)
 
 	K053250_unpack_pixels(REGION_GFX3);
 
-	// boost voice(chip 0 channel 4-7) and soften other channels
+	/* boost voice(chip 0 channel 4-7) and soften other channels*/
 	for (i=0; i<=3; i++)
 	{
 		K054539_set_gain(0, i,   0.8);
@@ -1926,7 +1926,7 @@ static DRIVER_INIT(martchmp)
 
 	K054539_init_flags(K054539_REVERSE_STEREO);
 
-	// boost voice(chip 0 channel 4-7)
+	/* boost voice(chip 0 channel 4-7)*/
 	for (i=4; i<=7; i++) K054539_set_gain(0, i, 1.4);
 }
 
@@ -1940,7 +1940,7 @@ static DRIVER_INIT(gaiapols)
 		ADD_SKIPPER16(0x200e4a, 0x600000, 0x540, 0x6ff, -1, 0xffff)
 	#endif
 
-	// boost voice(chip 0 channel 5-7)
+	/* boost voice(chip 0 channel 5-7)*/
 	for (i=5; i<=7; i++) K054539_set_gain(0, i, 2.0);
 }
 

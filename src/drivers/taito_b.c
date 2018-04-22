@@ -314,12 +314,12 @@ static INTERRUPT_GEN( selfeena_interrupt )
 	cpu_set_irq_line(0, 6, HOLD_LINE);
 }
 
-void sbm_interrupt5(int x)//4
+void sbm_interrupt5(int x)/*4*/
 {
 	cpu_set_irq_line(0,5,HOLD_LINE);
 }
 
-static INTERRUPT_GEN( sbm_interrupt )//5
+static INTERRUPT_GEN( sbm_interrupt )/*5*/
 {
 	timer_set(TIME_IN_CYCLES(10000,0),0,sbm_interrupt5);
 	cpu_set_irq_line(0, 4, HOLD_LINE);
@@ -368,12 +368,12 @@ static WRITE16_HANDLER( gain_control_w )
 		if (offset==0)
 		{
 			MB87078_data_w(0, data>>8, 0);
-            //logerror("MB87078 dsel=0 data=%4x\n",data);
+            /*logerror("MB87078 dsel=0 data=%4x\n",data);*/
 		}
 		else
 		{
 			MB87078_data_w(0, data>>8, 1);
-            //logerror("MB87078 dsel=1 data=%4x\n",data);
+            /*logerror("MB87078 dsel=1 data=%4x\n",data);*/
 		}
 	}
 }
@@ -627,9 +627,9 @@ static MEMORY_WRITE16_START( hitice_writemem )
 	{ 0x700002, 0x700003, taitosound_comm16_msb_w },
 
 	{ 0xb00000, 0xb7ffff, hitice_pixelram_w, &taitob_pixelram },
-//	{ 0xbffff0, 0xbffff1, ???
+/*	{ 0xbffff0, 0xbffff1, ???*/
 	{ 0xbffff2, 0xbffff5, hitice_pixel_scroll_w },
-//	{ 0xbffffa, 0xbffffb, ???
+/*	{ 0xbffffa, 0xbffffb, ???*/
 MEMORY_END
 
 
@@ -876,12 +876,12 @@ static MEMORY_READ16_START( silentd_readmem )
 	{ 0x210000, 0x210001, input_port_5_word_r },
 	{ 0x220000, 0x220001, input_port_6_word_r },
 	{ 0x230000, 0x230001, input_port_7_word_r },
-//	{ 0x240000, 0x240001, MRA16_NOP },	/* read 4 times at init */
+/*	{ 0x240000, 0x240001, MRA16_NOP },	 // read 4 times at init /*/
 
 	{ 0x100000, 0x100001, MRA16_NOP },
 	{ 0x100002, 0x100003, taitosound_comm16_msb_r },
-//	{ 0x10001a, 0x10001b, MRA16_NOP },	// ??? read at $1e344
-//	{ 0x10001c, 0x10001d, MRA16_NOP },	// ??? read at $1e356
+/*	{ 0x10001a, 0x10001b, MRA16_NOP },	*/ /* ??? read at $1e344*/
+/*	{ 0x10001c, 0x10001d, MRA16_NOP },	*/ /* ??? read at $1e356*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( silentd_writemem )
@@ -893,7 +893,7 @@ static MEMORY_WRITE16_START( silentd_writemem )
 	TC0180VCU_MEMW( 0x500000 )
 
 	{ 0x200000, 0x20000f, TC0220IOC_halfword_w },
-	{ 0x240000, 0x240001, MWA16_NOP }, // ???
+	{ 0x240000, 0x240001, MWA16_NOP }, /* ???*/
 
 	{ 0x100000, 0x100001, taitosound_port16_msb_w },
 	{ 0x100002, 0x100003, taitosound_comm16_msb_w },
@@ -1129,7 +1129,7 @@ MEMORY_END
 
 INPUT_PORTS_START( rastsag2 )
 	PORT_START /* DSW A */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )  // all 2 "unused" in manual
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )  /* all 2 "unused" in manual*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ))
 	PORT_DIPSETTING(    0x00, DEF_STR( On ))
 	TAITO_B_DSWA_2_4
@@ -1668,7 +1668,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( rambo3 )
 	PORT_START /* DSW A */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )  // all 5 "unused" in manual
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )  /* all 5 "unused" in manual*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ))
 	PORT_DIPSETTING(    0x00, DEF_STR( On ))
 	TAITO_B_DSWA_2_4
@@ -2029,7 +2029,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( viofight )
 	PORT_START /* DSW A */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )  // all 7 "unused" in manual
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )  /* all 7 "unused" in manual*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	TAITO_B_DSWA_2_4
@@ -2407,7 +2407,7 @@ INPUT_PORTS_START( ryujin )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( sbm )
-	PORT_START /* DSW A *///+-ok
+	PORT_START /* DSW A */ /*+-ok */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ))
 	PORT_DIPSETTING(    0x00, DEF_STR( On ))
@@ -2430,7 +2430,7 @@ INPUT_PORTS_START( sbm )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START /* DSW B */ //+-ok
+	PORT_START /* DSW B */ /*+-ok*/
 	TAITO_DIFFICULTY_8
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ))
@@ -2452,18 +2452,18 @@ INPUT_PORTS_START( sbm )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ))
 
 	PORT_START      /* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )//sound select UP
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )//sound select DOWN
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )//ok (object test)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )//ok (object test)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )//-- unused in test modes
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )//-- unused in test modes
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )//BEN IN (ticket dispenser)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )//LADY ????
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )/*sound select UP*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )/*sound select DOWN*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )/*ok (object test)*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )/*ok (object test)*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )/*-- unused in test modes*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )/*-- unused in test modes*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )/*BEN IN (ticket dispenser)*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )/*LADY ????*/
 
 	PORT_START      /* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )//select; ok (1P in object test)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )//start ; ok (2P in object test)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )/*select; ok (1P in object test)*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )/*start ; ok (2P in object test)*/
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -2472,14 +2472,14 @@ INPUT_PORTS_START( sbm )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START      /* IN2 */
-	PORT_BIT(         0x01, IP_ACTIVE_LOW, IPT_TILT )       //ok
-	PORT_BIT(         0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )	//ok
-	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_COIN1, 2 )   //ok
-	PORT_BIT_IMPULSE( 0x08, IP_ACTIVE_LOW, IPT_COIN2, 2 )   //ok
+	PORT_BIT(         0x01, IP_ACTIVE_LOW, IPT_TILT )       /*ok*/
+	PORT_BIT(         0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )	/*ok*/
+	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_LOW, IPT_COIN1, 2 )   /*ok*/
+	PORT_BIT_IMPULSE( 0x08, IP_ACTIVE_LOW, IPT_COIN2, 2 )   /*ok*/
 	/* BUTTON1 ACTIVE LOW, - game thinks that punching pad has already been raised */
-	PORT_BIT(         0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )//PHOTO 1 (punching pad photosensor 1)
-	PORT_BIT(         0x20, IP_ACTIVE_HIGH,IPT_BUTTON2 | IPF_PLAYER1 )//PHOTO 2 (punching pad photosensor 2)
-	PORT_BIT(         0x40, IP_ACTIVE_HIGH,IPT_BUTTON3 | IPF_PLAYER1 )//PHOTO 3	(punching pad photosensor 3)
+	PORT_BIT(         0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )/*PHOTO 1 (punching pad photosensor 1)*/
+	PORT_BIT(         0x20, IP_ACTIVE_HIGH,IPT_BUTTON2 | IPF_PLAYER1 )/*PHOTO 2 (punching pad photosensor 2)*/
+	PORT_BIT(         0x40, IP_ACTIVE_HIGH,IPT_BUTTON3 | IPF_PLAYER1 )/*PHOTO 3	(punching pad photosensor 3)*/
  	/*To simulate a punch:
 		- wait for "READY GO!" message,
 		- press button1 + button 2 (LCTRL + ALT) (you'll hear a "punching" sound),
@@ -2487,7 +2487,7 @@ INPUT_PORTS_START( sbm )
  		The time passed between the presses will be used to calculate the power of your punch.
 		The longer the time - the less power.
 	*/
-	PORT_BIT(         0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )//PHOTO 4  ??? ACTIVE_LOW  ??? (punching pad photosensor 4)
+	PORT_BIT(         0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )/*PHOTO 4  ??? ACTIVE_LOW  ??? (punching pad photosensor 4)*/
 INPUT_PORTS_END
 
 
@@ -2636,7 +2636,7 @@ static void mb87078_gain_changed(int channel, int percent)
 		mixer_set_volume(2,percent);
 		mixer_set_volume(3,percent);
 		mixer_set_volume(4,percent);
-		//usrintf_showmessage("MB87078 gain ch#%i percent=%i",channel,percent);
+		/*usrintf_showmessage("MB87078 gain ch#%i percent=%i",channel,percent);*/
 	}
 }
 
@@ -3034,7 +3034,7 @@ MACHINE_DRIVER_END
 static void masterw_patch(void)
 {
 	data16_t *rom = (data16_t*)memory_region(REGION_CPU1);
-	rom[ 0x3fffe/2 ] = 2; //US version
+	rom[ 0x3fffe/2 ] = 2; /*US version*/
 }
 #endif
 
@@ -3132,8 +3132,8 @@ static void ryujin_patch(void)
 {
 	data16_t *rom = (data16_t*)memory_region(REGION_CPU1);
 	rom[ 0x62/2 ] = 1;
-	//0 (already in rom) - Taito Corporation 1993
-	//1 - Taito America corp with blue FBI logo
+	/*0 (already in rom) - Taito Corporation 1993*/
+	/*1 - Taito America corp with blue FBI logo*/
 }
 #endif
 
@@ -3170,7 +3170,7 @@ MACHINE_DRIVER_END
 static void sbm_patch(void)
 {
 	data16_t *rom = (data16_t*)memory_region(REGION_CPU1);
-	rom[ 0x7ffff/2 ] = 2; //US version
+	rom[ 0x7ffff/2 ] = 2; /*US version*/
 }
 #endif
 
@@ -3274,9 +3274,9 @@ ROM_START( nastar )
 	ROM_REGION( 0x80000, REGION_SOUND2, 0 )
 	ROM_LOAD( "b81-02.2", 0x00000, 0x80000, CRC(20ec3b86) SHA1(fcdcc7f0a09feb824d8d73b1af0aae7ec30fd1ed) )
 
-//	ROM_REGION( 0x1000, REGION_USER1)	/* PALs */
-//	ROM_LOAD( "b81-05.21", 0x0000, 0x0001 )
-//	ROM_LOAD( "b81-06.22", 0x0000, 0x0001 )
+/*	ROM_REGION( 0x1000, REGION_USER1)	 // PALs /*/
+/*	ROM_LOAD( "b81-05.21", 0x0000, 0x0001 )*/
+/*	ROM_LOAD( "b81-06.22", 0x0000, 0x0001 )*/
 
 ROM_END
 
@@ -3604,9 +3604,9 @@ ROM_START( viofight )
 	ROM_REGION( 0x80000, REGION_SOUND1, 0 )
 	ROM_LOAD( "c16-05.47", 0x000000, 0x80000, CRC(a49d064a) SHA1(f9ed675cfaae69b68c99c7dce7c2a457b5b5c293) )
 
-//	ROM_REGION( 0x1000, REGION_USER1)	/* PALs */
-//	ROM_LOAD( "c16-08.34", 0x0000, 0x0001 )
-//	ROM_LOAD( "c16-09.35", 0x0000, 0x0001 )
+/*	ROM_REGION( 0x1000, REGION_USER1)	 // PALs /*/
+/*	ROM_LOAD( "c16-08.34", 0x0000, 0x0001 )*/
+/*	ROM_LOAD( "c16-09.35", 0x0000, 0x0001 )*/
 
 ROM_END
 

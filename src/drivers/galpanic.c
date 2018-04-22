@@ -158,23 +158,23 @@ static READ16_HANDLER(galpanib_calc_r)
 
 	switch (offset)
 	{
-		case 0x00 >> 1:	// watchdog
+		case 0x00 >> 1:	/* watchdog*/
 			return watchdog_reset_r(0);
 
 		case 0x04 >> 1:
 			/* This is similar to the hit detection from SuperNova, but much simpler */
 
-			// X Absolute Collision
+			/* X Absolute Collision*/
 			if      (hit.x1p >  hit.x2p)	data |= 0x0200;
 			else if (hit.x1p == hit.x2p)	data |= 0x0400;
 			else if (hit.x1p <  hit.x2p)	data |= 0x0800;
 
-			// Y Absolute Collision
+			/* Y Absolute Collision*/
 			if      (hit.y1p >  hit.y2p)	data |= 0x2000;
 			else if (hit.y1p == hit.y2p)	data |= 0x4000;
 			else if (hit.y1p <  hit.y2p)	data |= 0x8000;
 
-			// XY Overlap Collision
+			/* XY Overlap Collision*/
 			hit.x12 = (hit.x1p) - (hit.x2p + hit.x2s);
 			hit.y12 = (hit.y1p) - (hit.y2p + hit.y2s);
 			hit.x21 = (hit.x1p + hit.x1s) - (hit.x2p);
@@ -205,7 +205,7 @@ static WRITE16_HANDLER(galpanib_calc_w)
 {
 	switch (offset)
 	{
-		// p is position, s is size
+		/* p is position, s is size*/
 		case 0x00 >> 1:
 			hit.x1p = data;
 			break;
@@ -246,7 +246,7 @@ static WRITE16_HANDLER( galpanic_bgvideoram_mirror_w )
 	int i;
 	for(i = 0; i < 8; i++)
 	{
-		// or offset + i * 0x2000 ?
+		/* or offset + i * 0x2000 ?*/
 		galpanic_bgvideoram_w(offset * 8 + i, data, mem_mask);
 	}
 }
@@ -319,7 +319,7 @@ static MEMORY_READ16_START( comad_readmem )
 	{ 0x800000, 0x800001, input_port_0_word_r },
 	{ 0x800002, 0x800003, input_port_1_word_r },
 	{ 0x800004, 0x800005, input_port_2_word_r },
-//	{ 0x800006, 0x800007,  },	??
+/*	{ 0x800006, 0x800007,  },	??*/
 	{ 0x80000a, 0x80000b, kludge },	/* bits 8-a = timer? palette update code waits for them to be 111 */
 	{ 0x80000c, 0x80000d, kludge },	/* missw96 bits 8-a = timer? palette update code waits for them to be 111 */
 	{ 0xc00000, 0xc0ffff, MRA16_RAM },	/* missw96 */
@@ -350,7 +350,7 @@ static MEMORY_READ16_START( fantsia2_readmem )
 	{ 0x800000, 0x800001, input_port_0_word_r },
 	{ 0x800002, 0x800003, input_port_1_word_r },
 	{ 0x800004, 0x800005, input_port_2_word_r },
-//	{ 0x800006, 0x800007,  },	??
+/*	{ 0x800006, 0x800007,  },	??*/
 	{ 0x800008, 0x800009, kludge },	/* bits 8-a = timer? palette update code waits for them to be 111 */
 	{ 0xf80000, 0xf8ffff, MRA16_RAM },
 	{ 0xc80000, 0xc80001, OKIM6295_status_0_msb_r },
@@ -391,11 +391,11 @@ static MEMORY_WRITE16_START( galhustl_writemem )
 	{ 0x520000, 0x53ffff, galpanic_bgvideoram_w, &galpanic_bgvideoram },
 	{ 0x580000, 0x583fff, galpanic_bgvideoram_mirror_w },
 	{ 0x600000, 0x6007ff, galpanic_paletteram_w, &paletteram16 },	/* 1024 colors, but only 512 seem to be used */
-	{ 0x600800, 0x600fff, MWA16_RAM }, // writes only 1?
-	{ 0x680000, 0x68001f, MWA16_RAM }, // regs?
+	{ 0x600800, 0x600fff, MWA16_RAM }, /* writes only 1?*/
+	{ 0x680000, 0x68001f, MWA16_RAM }, /* regs?*/
 	{ 0x700000, 0x700fff, MWA16_RAM, &spriteram16, &spriteram_size },
-	{ 0x780000, 0x78001f, MWA16_RAM }, // regs?
-	{ 0xa00000, 0xa00001, MWA16_NOP }, // ?
+	{ 0x780000, 0x78001f, MWA16_RAM }, /* regs?*/
+	{ 0xa00000, 0xa00001, MWA16_NOP }, /* ?*/
 	{ 0x900000, 0x900001, galpanic_6295_bankswitch_w },
 	{ 0xd00000, 0xd00001, OKIM6295_data_0_msb_w },
 	{ 0xe80000, 0xe8ffff, MWA16_RAM },

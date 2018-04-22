@@ -252,9 +252,9 @@ MEMORY_END
 
 static MEMORY_WRITE_START( rockclim_writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0x4000, 0x47ff, rockclim_videoram_w,&rockclim_videoram  },//4800 - 4803 = bg scroll ?
+	{ 0x4000, 0x47ff, rockclim_videoram_w,&rockclim_videoram  },/*4800 - 4803 = bg scroll ?*/
 	{ 0x4800, 0x4803, rockclim_scroll_w },
-	{ 0x5000, 0x53ff, MWA_RAM },//?
+	{ 0x5000, 0x53ff, MWA_RAM },/*?*/
 	{ 0x6000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0x9000, 0x93ff, galaxian_videoram_w, &galaxian_videoram },
@@ -262,7 +262,7 @@ static MEMORY_WRITE_START( rockclim_writemem )
 	{ 0x9840, 0x985f, MWA_RAM, &galaxian_spriteram, &galaxian_spriteram_size },
 	{ 0x9860, 0x987f, MWA_RAM, &galaxian_bulletsram, &galaxian_bulletsram_size },
 	{ 0x9880, 0x98ff, MWA_RAM },
-	{ 0xa000, 0xa002, galaxian_gfxbank_w },// a002 - sprite bank
+	{ 0xa000, 0xa002, galaxian_gfxbank_w },/* a002 - sprite bank*/
 	{ 0xa003, 0xa003, galaxian_coin_counter_w },
 	{ 0xa004, 0xa007, galaxian_lfo_freq_w },
 	{ 0xa800, 0xa802, galaxian_background_enable_w },
@@ -485,7 +485,7 @@ static MEMORY_WRITE_START( kingball_writemem )
 	{ 0xa800, 0xa802, galaxian_background_enable_w },
 	{ 0xa803, 0xa803, galaxian_noise_enable_w },
 	{ 0xa805, 0xa805, galaxian_shoot_enable_w },
-	{ 0xa806, 0xa807, galaxian_vol_w }, //
+	{ 0xa806, 0xa807, galaxian_vol_w }, /**/
 	{ 0xb000, 0xb000, kingball_sound1_w },
 	{ 0xb001, 0xb001, galaxian_nmi_enable_w },
 	{ 0xb002, 0xb002, kingball_sound2_w },
@@ -535,11 +535,11 @@ static MEMORY_WRITE_START( _4in1_writemem )
 	{ 0x5860, 0x587f, MWA_RAM, &galaxian_bulletsram, &galaxian_bulletsram_size },
 	{ 0x5880, 0x58ff, MWA_RAM },
 	{ 0x6000, 0x6001, galaxian_leds_w },
-//	{ 0x6002, 0x6002, galaxian_coin_lockout_w },
+/*	{ 0x6002, 0x6002, galaxian_coin_lockout_w },*/
 	{ 0x6003, 0x6003, galaxian_coin_counter_w },
 	{ 0x6004, 0x6007, galaxian_lfo_freq_w },
 	{ 0x6800, 0x6802, galaxian_background_enable_w },
-//	{ 0x6803, 0x6803, galaxian_noise_enable_w }, /* not hooked up? */
+/*	{ 0x6803, 0x6803, galaxian_noise_enable_w },  // not hooked up? /*/
 	{ 0x6805, 0x6805, galaxian_shoot_enable_w },
 	{ 0x6806, 0x6807, galaxian_vol_w },
 	{ 0x7001, 0x7001, galaxian_nmi_enable_w },
@@ -685,14 +685,14 @@ static MEMORY_WRITE_START( dkongjrm_writemem )
 	{ 0x9840, 0x987f, MWA_RAM, &galaxian_spriteram,  &galaxian_spriteram_size },
 	{ 0x98c0, 0x98ff, MWA_RAM, &galaxian_spriteram2, &galaxian_spriteram2_size },
 	{ 0xa003, 0xa003, galaxian_coin_counter_w },
-  //{ 0xa004, 0xa007, galaxian_lfo_freq_w },
+  /*{ 0xa004, 0xa007, galaxian_lfo_freq_w },*/
 	{ 0xa800, 0xa802, galaxian_background_enable_w },
 	{ 0xa803, 0xa803, galaxian_noise_enable_w },
-  //{ 0xa805, 0xa805, galaxian_shoot_enable_w },
+  /*{ 0xa805, 0xa805, galaxian_shoot_enable_w },*/
 	{ 0xa806, 0xa807, galaxian_vol_w },
 	{ 0xb000, 0xb000, galaxian_gfxbank_w },
 	{ 0xb001, 0xb001, galaxian_nmi_enable_w },
-  //{ 0xb004, 0xb004, galaxian_stars_enable_w },
+  /*{ 0xb004, 0xb004, galaxian_stars_enable_w },*/
 	{ 0xb006, 0xb006, galaxian_flip_screen_x_w },
 	{ 0xb007, 0xb007, galaxian_flip_screen_y_w },
 	{ 0xb800, 0xb800, galaxian_pitch_w },
@@ -718,15 +718,15 @@ static MEMORY_WRITE_START( ozon1_writemem )
 	{ 0x4800, 0x4bff, galaxian_videoram_w, &galaxian_videoram },
 	{ 0x4c18, 0x4c1f, MWA_NOP },
 	{ 0x4c38, 0x4c3f, MWA_NOP },
-	{ 0x4de0, 0x4fe0, MWA_NOP }, //writes every 0x20
+	{ 0x4de0, 0x4fe0, MWA_NOP }, /*writes every 0x20*/
 	{ 0x5000, 0x503f, galaxian_attributesram_w, &galaxian_attributesram },
 	{ 0x5040, 0x505f, MWA_RAM, &galaxian_spriteram, &galaxian_spriteram_size },
-	{ 0x5060, 0x5060, MWA_NOP }, //after this, it writes 0x4fe0 - 0x4de0
-	{ 0x6801, 0x6801, MWA_NOP }, //continuosly 0 and 1
+	{ 0x5060, 0x5060, MWA_NOP }, /*after this, it writes 0x4fe0 - 0x4de0*/
+	{ 0x6801, 0x6801, MWA_NOP }, /*continuosly 0 and 1*/
 	{ 0x6802, 0x6802, galaxian_coin_counter_w },
-	{ 0x6806, 0x6806, MWA_NOP }, //only one 0 at reset
-	{ 0x6807, 0x6807, MWA_NOP }, //only one 0 at reset
-	{ 0x8103, 0x8103, MWA_NOP }, //only one 9b at reset
+	{ 0x6806, 0x6806, MWA_NOP }, /*only one 0 at reset*/
+	{ 0x6807, 0x6807, MWA_NOP }, /*only one 0 at reset*/
+	{ 0x8103, 0x8103, MWA_NOP }, /*only one 9b at reset*/
 MEMORY_END
 
 static PORT_WRITE_START( ozon1_writeport )
@@ -1122,8 +1122,8 @@ INPUT_PORTS_START( gteikokb )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED )		// Not tested due to code removed at 0x00ab, 0x1b26 and 0x1c97
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )		// Not tested due to code removed at 0x1901
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED )		/* Not tested due to code removed at 0x00ab, 0x1b26 and 0x1c97*/
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )		/* Not tested due to code removed at 0x1901*/
 
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
@@ -1143,7 +1143,7 @@ INPUT_PORTS_START( gteikokb )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x00, "7000" )
 	PORT_DIPSETTING(    0x01, "None" )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )		// Not read due to code at 0x012b
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )		/* Not read due to code at 0x012b*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Lives ) )
@@ -1164,8 +1164,8 @@ INPUT_PORTS_START( gteikob2 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED )		// Not tested due to code removed at 0x00ab, 0x1b26 and 0x1c97
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )		// Not tested due to code removed at 0x1901
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNUSED )		/* Not tested due to code removed at 0x00ab, 0x1b26 and 0x1c97*/
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )		/* Not tested due to code removed at 0x1901*/
 
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
@@ -1185,7 +1185,7 @@ INPUT_PORTS_START( gteikob2 )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x00, "7000" )
 	PORT_DIPSETTING(    0x01, "None" )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )		// Not read due to code at 0x012b
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )		/* Not read due to code at 0x012b*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Lives ) )
@@ -1302,7 +1302,7 @@ INPUT_PORTS_START( warofbug )
 	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x80, DEF_STR( 2C_1C ) )
+/*	PORT_DIPSETTING(    0x80, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(    0xc0, DEF_STR( Free_Play ) )
 
 	PORT_START      /* DSW0 */
@@ -1368,7 +1368,7 @@ INPUT_PORTS_START( exodus )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_SERVICE( 0x40, IP_ACTIVE_HIGH )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )		// Not tested due to code removed at 0x1901 and 0x191a
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )		/* Not tested due to code removed at 0x1901 and 0x191a*/
 
 
 
@@ -1390,7 +1390,7 @@ INPUT_PORTS_START( exodus )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x00, "7000" )
 	PORT_DIPSETTING(    0x01, "None" )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )		// Not read due to code at 0x012b
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )		/* Not read due to code at 0x012b*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Lives ) )
@@ -1748,9 +1748,9 @@ INPUT_PORTS_START( orbitron )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL )
 	PORT_DIPNAME( 0x60, 0x40, DEF_STR( Coinage ) )		/* Routine at 0x00e1 */
 	PORT_DIPSETTING(    0x00, "A 2C/1C  B 1C/3C" )
-//	PORT_DIPSETTING(    0x20, "A 2C/1C  B 1C/3C" )
+/*	PORT_DIPSETTING(    0x20, "A 2C/1C  B 1C/3C" )*/
 	PORT_DIPSETTING(    0x40, "A 1C/1C  B 1C/6C" )
-//	PORT_DIPSETTING(    0x60, "A 1C/1C  B 1C/6C" )
+/*	PORT_DIPSETTING(    0x60, "A 1C/1C  B 1C/6C" )*/
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_8WAY | IPF_COCKTAIL )
 
 	PORT_START      /* DSW0 */
@@ -1995,9 +1995,9 @@ INPUT_PORTS_START( mooncrsg )
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x00, "30000" )
 	PORT_DIPSETTING(    0x40, "50000" )
-//	PORT_DIPNAME( 0x80, 0x80, "Language" )			Always "English" due to code at 0x2f77
-//	PORT_DIPSETTING(    0x80, "English" )
-//	PORT_DIPSETTING(    0x00, "English" )
+/*	PORT_DIPNAME( 0x80, 0x80, "Language" )			Always "English" due to code at 0x2f77*/
+/*	PORT_DIPSETTING(    0x80, "English" )*/
+/*	PORT_DIPSETTING(    0x00, "English" )*/
 
 	PORT_START	/* DSW */
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_A ) )
@@ -2033,12 +2033,12 @@ INPUT_PORTS_START( smooncrs )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNUSED )		/* Not read due to code at 0x2b1c and 0x3306 */
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNUSED )		/* Not read due to code at 0x2b1c and 0x3306 */
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED )
-//	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Bonus_Life ) )	Always "50000" due to code at 0x2f68
-//	PORT_DIPSETTING(    0x00, "30000" )
-//	PORT_DIPSETTING(    0x40, "50000" )
-//	PORT_DIPNAME( 0x80, 0x80, "Language" )			Always "English" due to code at 0x2f53
-//	PORT_DIPSETTING(    0x80, "English" )
-//	PORT_DIPSETTING(    0x00, "Japanese" )
+/*	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Bonus_Life ) )	Always "50000" due to code at 0x2f68*/
+/*	PORT_DIPSETTING(    0x00, "30000" )*/
+/*	PORT_DIPSETTING(    0x40, "50000" )*/
+/*	PORT_DIPNAME( 0x80, 0x80, "Language" )			Always "English" due to code at 0x2f53*/
+/*	PORT_DIPSETTING(    0x80, "English" )*/
+/*	PORT_DIPSETTING(    0x00, "Japanese" )*/
 
 	PORT_START	/* DSW */
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_A ) )
@@ -2082,11 +2082,11 @@ INPUT_PORTS_START( mooncrsa )
 	PORT_DIPSETTING(    0x00, "Japanese" )
 
 	PORT_START	/* DSW */
-//	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_A ) )		Not used due to code at 0x01c0
-//	PORT_DIPSETTING(    0x03, DEF_STR( 4C_1C ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
-//	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+/*	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_A ) )		Not used due to code at 0x01c0*/
+/*	PORT_DIPSETTING(    0x03, DEF_STR( 4C_1C ) )*/
+/*	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )*/
+/*	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_2C ) )
@@ -2118,9 +2118,9 @@ INPUT_PORTS_START( fantazia )
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x00, "30000" )
 	PORT_DIPSETTING(    0x40, "50000" )
-//	PORT_DIPNAME( 0x80, 0x80, "Language" )			Always "English" due to code at 0x2f53
-//	PORT_DIPSETTING(    0x80, "English" )
-//	PORT_DIPSETTING(    0x00, "Japanese" )
+/*	PORT_DIPNAME( 0x80, 0x80, "Language" )			Always "English" due to code at 0x2f53*/
+/*	PORT_DIPSETTING(    0x80, "English" )*/
+/*	PORT_DIPSETTING(    0x00, "Japanese" )*/
 
 	PORT_START	/* DSW */
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_B ) )
@@ -2165,11 +2165,11 @@ INPUT_PORTS_START( eagle )
 	PORT_DIPSETTING(    0x00, "Japanese" )
 
 	PORT_START	/* DSW */
-//	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_A ) )		Not used due to code at 0x01c0
-//	PORT_DIPSETTING(    0x03, DEF_STR( 4C_1C ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
-//	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+/*	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_A ) )		Not used due to code at 0x01c0*/
+/*	PORT_DIPSETTING(    0x03, DEF_STR( 4C_1C ) )*/
+/*	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )*/
+/*	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_2C ) )
@@ -2211,15 +2211,15 @@ INPUT_PORTS_START( eagle2 )
 	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Coin_B ) )		Not used due to code at 0x01c0,
-//	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )		but "Free Play" is checked
-//	PORT_DIPSETTING(    0x04, DEF_STR( 1C_2C ) )
-//	PORT_DIPSETTING(    0x08, DEF_STR( 1C_3C ) )
-//	PORT_DIPSETTING(    0x0c, DEF_STR( Free_Play ) )
+/*	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Coin_B ) )		Not used due to code at 0x01c0,*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )		but "Free Play" is checked*/
+/*	PORT_DIPSETTING(    0x04, DEF_STR( 1C_2C ) )*/
+/*	PORT_DIPSETTING(    0x08, DEF_STR( 1C_3C ) )*/
+/*	PORT_DIPSETTING(    0x0c, DEF_STR( Free_Play ) )*/
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+/*	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )*/
 	PORT_DIPSETTING(    0x0c, DEF_STR( On ) )
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
 INPUT_PORTS_END
@@ -2256,9 +2256,9 @@ INPUT_PORTS_START( mooncrgx )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x04, 0x04, "Language" )			Always "English" due to code removed at 0x2f4b
-//	PORT_DIPSETTING(    0x04, "English" )
-//	PORT_DIPSETTING(    0x00, "Japanese" )
+/*	PORT_DIPNAME( 0x04, 0x04, "Language" )			Always "English" due to code removed at 0x2f4b*/
+/*	PORT_DIPSETTING(    0x04, "English" )*/
+/*	PORT_DIPSETTING(    0x00, "Japanese" )*/
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Cocktail ) )
@@ -2486,9 +2486,9 @@ INPUT_PORTS_START( kingball )
 	PORT_SERVICE( 0x40, IP_ACTIVE_HIGH )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SERVICE1 )
 	/* Hack? - possibly multiplexed via writes to $b003 */
-	//PORT_DIPNAME( 0x80, 0x80, "Speech" )
-	//PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	//PORT_DIPSETTING(    0x80, DEF_STR( On ) )
+	/*PORT_DIPNAME( 0x80, 0x80, "Speech" )*/
+	/*PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+	/*PORT_DIPSETTING(    0x80, DEF_STR( On ) )*/
 
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
@@ -2525,7 +2525,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( scorpnmc )
 	PORT_START      /* IN0 - 0xa000 */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SERVICE1 )		// COIN2? (it ALWAYS adds 1 credit)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SERVICE1 )		/* COIN2? (it ALWAYS adds 1 credit)*/
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
@@ -2541,7 +2541,7 @@ INPUT_PORTS_START( scorpnmc )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_COCKTAIL )
-	PORT_DIPNAME( 0xc0, 0x40, DEF_STR( Difficulty ) )	// Check code at 0x0118
+	PORT_DIPNAME( 0xc0, 0x40, DEF_STR( Difficulty ) )	/* Check code at 0x0118*/
 	PORT_DIPSETTING(	0x00, "Easy" )
 	PORT_DIPSETTING(	0x40, "Normal" )
 	PORT_DIPSETTING(	0x80, "Hard" )
@@ -2550,7 +2550,7 @@ INPUT_PORTS_START( scorpnmc )
 	PORT_START      /* DSW0? - 0xb001 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_DIPNAME( 0x0c, 0x04, DEF_STR( Lives ) )		// Check code at 0x00eb
+	PORT_DIPNAME( 0x0c, 0x04, DEF_STR( Lives ) )		/* Check code at 0x00eb*/
 	PORT_DIPSETTING(	0x00, "2" )
 	PORT_DIPSETTING(	0x04, "3" )
 	PORT_DIPSETTING(	0x08, "4" )
@@ -2561,7 +2561,7 @@ INPUT_PORTS_START( scorpnmc )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )
 
 	PORT_START      /* DSW1? - 0xb002 */
-	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )		// Check code at 0x00fe
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )		/* Check code at 0x00fe*/
 	PORT_DIPSETTING(	0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(	0x01, DEF_STR( Cocktail ) )
 	PORT_DIPNAME( 0x06, 0x02, DEF_STR( Coinage ) )
@@ -2583,7 +2583,7 @@ INPUT_PORTS_START( frogg )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_4WAY )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_4WAY )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_SPECIAL )		// See notes
+	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_SPECIAL )		/* See notes*/
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_4WAY )
 
@@ -2593,7 +2593,7 @@ INPUT_PORTS_START( frogg )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_COCKTAIL )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_SPECIAL )		// See notes
+	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_SPECIAL )		/* See notes*/
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Lives ) )
 	PORT_DIPSETTING(	0xc0, "3" )
 	PORT_DIPSETTING(	0x40, "5" )
@@ -2601,15 +2601,15 @@ INPUT_PORTS_START( frogg )
 	PORT_BITX( 0,		0x00, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "255", IP_KEY_NONE, IP_JOY_NONE )
 
 	PORT_START      /* DSW0 */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )		// also affects coinage (see 'res' intruction at 0x3084)
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )		/* also affects coinage (see 'res' intruction at 0x3084)*/
 	PORT_DIPSETTING(	0x01, DEF_STR( Upright ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( Cocktail ) )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )		// not tested due to code at 0x3084
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )		/* not tested due to code at 0x3084*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Coinage ) )		// when "Cabinet" Dip Switch set to "Upright"
-	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )		// "A 1/1 B 1/6" if "Cabinet" Dip Switch set to "Cocktail"
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_1C ) )		// "A 2/1 B 1/3" if "Cabinet" Dip Switch set to "Cocktail"
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Coinage ) )		/* when "Cabinet" Dip Switch set to "Upright"*/
+	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )		/* "A 1/1 B 1/6" if "Cabinet" Dip Switch set to "Cocktail"*/
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_1C ) )		/* "A 2/1 B 1/3" if "Cabinet" Dip Switch set to "Cocktail"*/
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNUSED )
@@ -2637,13 +2637,13 @@ INPUT_PORTS_START( 4in1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
-	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL )	// See fake ports
+	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* See fake ports*/
 
 	PORT_START      /* DSW0 */
-	PORT_BIT( 0x3b, IP_ACTIVE_HIGH, IPT_SPECIAL )	// See fake ports
+	PORT_BIT( 0x3b, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* See fake ports*/
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Lives ) )
-	PORT_DIPSETTING(    0x00, "3" )			// 2 when continue (Scramble PT2)
-	PORT_DIPSETTING(    0x04, "5" )			// 2 when continue (Scramble PT2)
+	PORT_DIPSETTING(    0x00, "3" )			/* 2 when continue (Scramble PT2)*/
+	PORT_DIPSETTING(    0x04, "5" )			/* 2 when continue (Scramble PT2)*/
 	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_UNUSED )
 
 	PORT_START      /* The Ghost Muncher PT3 - FAKE DSW0 (bits 0 to 5) and IN1 (bits 6 and 7) */
@@ -2652,16 +2652,16 @@ INPUT_PORTS_START( 4in1 )
 	PORT_DIPSETTING(    0x02, "15000" )
 	PORT_DIPSETTING(    0x03, "20000" )
 	PORT_DIPSETTING(    0x00, "None" )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL )	// Lives
-//	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* Lives*/
+/*	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x08, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x10, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x20, DEF_STR( On ) )*/
 	PORT_DIPNAME( 0xc0, 0x00, "Coinage (GM PT3)" )
 	PORT_DIPSETTING(    0x40, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
@@ -2669,20 +2669,20 @@ INPUT_PORTS_START( 4in1 )
 	PORT_DIPSETTING(    0xc0, DEF_STR( Free_Play ) )
 
 	PORT_START      /* Scramble PT2 - FAKE DSW0 (bits 0 to 5) and IN1 (bits 6 and 7) */
-//	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL )	// Lives
+/*	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x01, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x02, DEF_STR( On ) )*/
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* Lives*/
 	PORT_DIPNAME( 0x08, 0x00, "Allow Continue (S PT2)" )
 	PORT_DIPSETTING(    0x08, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )	// Scramble PT2 - Check code at 0x00c2
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )	/* Scramble PT2 - Check code at 0x00c2*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )	// Scramble PT2 - Check code at 0x00cc
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )	/* Scramble PT2 - Check code at 0x00cc*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
 	PORT_DIPNAME( 0xc0, 0x00, "Coinage (S PT2)" )
@@ -2697,43 +2697,43 @@ INPUT_PORTS_START( 4in1 )
 	PORT_DIPSETTING(    0x02, "5000" )
 	PORT_DIPSETTING(    0x03, "7000" )
 	PORT_DIPSETTING(    0x00, "None" )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL )	// Lives
-//	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* Lives*/
+/*	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x08, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x10, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x20, DEF_STR( On ) )*/
 	PORT_DIPNAME( 0xc0, 0x00, "Coinage (G PT5)" )
 	PORT_DIPSETTING(    0x40, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x80, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x80, DEF_STR( 1C_1C ) )*/
 	PORT_DIPSETTING(    0xc0, DEF_STR( Free_Play ) )
 
 	PORT_START      /* Galactic Convoy - FAKE DSW0 (bits 0 to 5) and IN1 (bits 6 and 7) */
 	PORT_DIPNAME( 0x01, 0x00, "Bonus Life (GC)" )
 	PORT_DIPSETTING(    0x00, "50000" )
 	PORT_DIPSETTING(    0x01, "80000" )
-//	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL )	// Lives
-//	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unused ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x02, DEF_STR( On ) )*/
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* Lives*/
+/*	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x08, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x10, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unused ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x20, DEF_STR( On ) )*/
 	PORT_DIPNAME( 0xc0, 0x00, "Coinage (GC)" )
 	PORT_DIPSETTING(    0x40, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x80, DEF_STR( 2C_1C ) )	// 1 credit for 1st coin !
+/*	PORT_DIPSETTING(    0x80, DEF_STR( 2C_1C ) )	*/ /* 1 credit for 1st coin !*/
 	PORT_DIPSETTING(    0xc0, DEF_STR( Free_Play ) )
 INPUT_PORTS_END
 
@@ -2784,7 +2784,7 @@ INPUT_PORTS_START( bagmanmc )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(	0x40, "30000" )
 	PORT_DIPSETTING(	0x00, "40000" )
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )	// Check code at 0x2d78 and 0x2e6b
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )	/* Check code at 0x2d78 and 0x2e6b*/
 	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x80, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -2877,7 +2877,7 @@ INPUT_PORTS_START( rockclim )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICKRIGHT_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICKRIGHT_UP     | IPF_8WAY )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICKRIGHT_DOWN   | IPF_8WAY )
-	PORT_DIPNAME( 0x40, 0x40, "Unknown 1" ) //code at $7713
+	PORT_DIPNAME( 0x40, 0x40, "Unknown 1" ) /*code at $7713*/
 	PORT_DIPSETTING(    0x00, "0" )
 	PORT_DIPSETTING(    0x40, "1" )
 
@@ -2889,7 +2889,7 @@ INPUT_PORTS_START( rockclim )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICKLEFT_RIGHT | IPF_8WAY  )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICKLEFT_UP     | IPF_8WAY )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICKLEFT_DOWN   | IPF_8WAY )
-	PORT_DIPNAME( 0x40, 0x40, "Unknown 2" ) //code at $7720
+	PORT_DIPNAME( 0x40, 0x40, "Unknown 2" ) /*code at $7720*/
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x40, "5" )
 
@@ -2981,7 +2981,7 @@ INPUT_PORTS_START( ozon1 )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
 	PORT_DIPNAME( 0x06, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, "A 1C/1C  B 2C/1C" )
-	PORT_DIPSETTING(    0x02, "A 1C-2C  B ?C/?C" ) // when you insert a coin with COIN2 it starts an infinite loop
+	PORT_DIPSETTING(    0x02, "A 1C-2C  B ?C/?C" ) /* when you insert a coin with COIN2 it starts an infinite loop*/
 	PORT_DIPSETTING(    0x04, "A 1C-3C  B 3C/1C" )
 	PORT_DIPSETTING(    0x06, "A 1C-4C  B 4C/1C" )
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
@@ -3262,7 +3262,7 @@ static struct GfxLayout rockclim_charlayout =
 {
 	8,8,
 	256,
-	4,//?
+	4,/*?*/
 	{ 4, 0,4096*8+4,4096*8, },
 	{ 3, 2, 1, 0,11 ,10, 9, 8 },
 	{ 0*8*2, 1*8*2, 2*8*2, 3*8*2, 4*8*2, 5*8*2, 6*8*2, 7*8*2 },
@@ -3760,7 +3760,7 @@ static MACHINE_DRIVER_START( drivfrcg )
 	MDRV_COLORTABLE_LENGTH(8*4)
 	MDRV_GFXDECODE(gmgalax_gfxdecodeinfo)
 
-//	MDRV_PALETTE_INIT(galaxian)
+/*	MDRV_PALETTE_INIT(galaxian)*/
 
 	MDRV_VIDEO_START(drivfrcg)
 	MDRV_VIDEO_UPDATE(galaxian)
@@ -3870,10 +3870,10 @@ ROM_END
 
 ROM_START( moonaln )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /* 64k for code */
-	ROM_LOAD( "galx.u",       0x0000, 0x0800, CRC(79e4007d) SHA1(d55050498a670d1c022ba3caad34f8fcaccf4a30) ) // prg1.bin
+	ROM_LOAD( "galx.u",       0x0000, 0x0800, CRC(79e4007d) SHA1(d55050498a670d1c022ba3caad34f8fcaccf4a30) ) /* prg1.bin*/
 	ROM_LOAD( "prg2.bin",     0x0800, 0x0800, CRC(59580b30) SHA1(e659426ad8c4e5e10a7cdd07d8b4fea93f875026) )
 	ROM_LOAD( "prg3.bin",     0x1000, 0x0800, CRC(b64e9d12) SHA1(3b07902ea61388f54c03d65082e78dfc0fa8d3d2) )
-	ROM_LOAD( "superg.y",     0x1800, 0x0800, CRC(9463f753) SHA1(d9cb35c19aafec43d08b048bbe2337a790f6ba9d) ) // prg4.bin
+	ROM_LOAD( "superg.y",     0x1800, 0x0800, CRC(9463f753) SHA1(d9cb35c19aafec43d08b048bbe2337a790f6ba9d) ) /* prg4.bin*/
 	ROM_LOAD( "prg5.bin",     0x2000, 0x0800, CRC(8bb78987) SHA1(5f24dba0bb31fc8bda5bf570d568472befc4d740) )
 
 	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -4015,15 +4015,15 @@ ROM_START( pisces )
 	ROM_LOAD( "p6.bin",       0x2800, 0x0800, CRC(5ab2822f) SHA1(bbcac3aab943dd9b173de11ddf02ff75d16b1582) )
 
 	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
-//	ROM_LOAD( "pisces.1j",    0x0000, 0x1000, CRC(2dba9e0e) )
-//	ROM_LOAD( "pisces.1k",    0x1000, 0x1000, CRC(cdc5aa26) )
+/*	ROM_LOAD( "pisces.1j",    0x0000, 0x1000, CRC(2dba9e0e) )*/
+/*	ROM_LOAD( "pisces.1k",    0x1000, 0x1000, CRC(cdc5aa26) )*/
 	ROM_LOAD( "g09.bin",      0x0000, 0x0800, CRC(9503a23a) SHA1(23848de56841dd1de9ef74d5a9c981c784098175) )
 	ROM_LOAD( "g11.bin",      0x0800, 0x0800, CRC(0adfc3fe) SHA1(a4da488632d9906066db45ae62747caf5ffbf2d8) )
 	ROM_LOAD( "g10.bin",      0x1000, 0x0800, CRC(3e61f849) SHA1(efa0059bc843af0c3bb94f4bc0a8286ca5069179) )
 	ROM_LOAD( "g12.bin",      0x1800, 0x0800, CRC(7130e9eb) SHA1(e6bb7a9b4f2fc001296e1060d0671b7a88599c8b) )
 
 	ROM_REGION( 0x0020, REGION_PROMS, 0 )
-	ROM_LOAD( "colour.bin",   0x0000, 0x0020, CRC(57a45057) SHA1(d4ec6a54f72640e5b485aa59e206c090e67ff640) )	// same as checkman.clr
+	ROM_LOAD( "colour.bin",   0x0000, 0x0020, CRC(57a45057) SHA1(d4ec6a54f72640e5b485aa59e206c090e67ff640) )	/* same as checkman.clr*/
 ROM_END
 
 ROM_START( piscesb )
@@ -4036,16 +4036,16 @@ ROM_START( piscesb )
 	ROM_LOAD( "p6.bin",       0x2800, 0x0800, CRC(5ab2822f) SHA1(bbcac3aab943dd9b173de11ddf02ff75d16b1582) )
 
 	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
-//	ROM_LOAD( "pisces.1j",    0x0000, 0x1000, CRC(2dba9e0e) )
-//	ROM_LOAD( "pisces.1k",    0x1000, 0x1000, CRC(cdc5aa26) )
+/*	ROM_LOAD( "pisces.1j",    0x0000, 0x1000, CRC(2dba9e0e) )*/
+/*	ROM_LOAD( "pisces.1k",    0x1000, 0x1000, CRC(cdc5aa26) )*/
 	ROM_LOAD( "g09.bin",      0x0000, 0x0800, CRC(9503a23a) SHA1(23848de56841dd1de9ef74d5a9c981c784098175) )
 	ROM_LOAD( "g11.bin",      0x0800, 0x0800, CRC(0adfc3fe) SHA1(a4da488632d9906066db45ae62747caf5ffbf2d8) )
 	ROM_LOAD( "g10.bin",      0x1000, 0x0800, CRC(3e61f849) SHA1(efa0059bc843af0c3bb94f4bc0a8286ca5069179) )
 	ROM_LOAD( "g12.bin",      0x1800, 0x0800, CRC(7130e9eb) SHA1(e6bb7a9b4f2fc001296e1060d0671b7a88599c8b) )
 
 	ROM_REGION( 0x0020, REGION_PROMS, 0 )
-//	ROM_LOAD( "6331-1j.86",   0x0000, 0x0020, CRC(24652bc4) SHA1(d89575f3749c75dc963317fe451ffeffd9856e4d) ) /* very close to Galaxian */
-	ROM_LOAD( "colour.bin",   0x0000, 0x0020, CRC(57a45057) SHA1(d4ec6a54f72640e5b485aa59e206c090e67ff640) )	// same as checkman.clr
+/*	ROM_LOAD( "6331-1j.86",   0x0000, 0x0020, CRC(24652bc4) SHA1(d89575f3749c75dc963317fe451ffeffd9856e4d) )  // very close to Galaxian /*/
+	ROM_LOAD( "colour.bin",   0x0000, 0x0020, CRC(57a45057) SHA1(d4ec6a54f72640e5b485aa59e206c090e67ff640) )	/* same as checkman.clr*/
 ROM_END
 
 ROM_START( uniwars )
@@ -5092,7 +5092,7 @@ ROM_START( bagmanmc )
 
 
 	ROM_REGION( 0x0020, REGION_PROMS, 0 )
-	ROM_LOAD( "bagmanmc.clr", 0x0000, 0x0020, NO_DUMP )	// missing
+	ROM_LOAD( "bagmanmc.clr", 0x0000, 0x0020, NO_DUMP )	/* missing*/
 ROM_END
 
 ROM_START( dkongjrm )
@@ -5206,8 +5206,8 @@ ROM_START( vpool )
 	ROM_CONTINUE(             0x3800, 0x0800 )
 
 	ROM_REGION( 0x1000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "hustler.5f", 0x0000, 0x0800, CRC(0bdfad0e) SHA1(8e6f1737604f3801c03fa2e9a5e6a2778b54bae8) ) // vidpoolh.bin
-	ROM_LOAD( "hustler.5h", 0x0800, 0x0800, CRC(8e062177) SHA1(7e52a1669804b6c2f694cfc64b04abc8246bb0c2) ) // vidpoolk.bin
+	ROM_LOAD( "hustler.5f", 0x0000, 0x0800, CRC(0bdfad0e) SHA1(8e6f1737604f3801c03fa2e9a5e6a2778b54bae8) ) /* vidpoolh.bin*/
+	ROM_LOAD( "hustler.5h", 0x0800, 0x0800, CRC(8e062177) SHA1(7e52a1669804b6c2f694cfc64b04abc8246bb0c2) ) /* vidpoolk.bin*/
 
 	ROM_REGION( 0x0020, REGION_PROMS, 0 )
 	ROM_LOAD( "hustler.clr",  0x0000, 0x0020, CRC(aa1f7f5e) SHA1(311dd17aa11490a1173c76223e4ccccf8ea29850) )

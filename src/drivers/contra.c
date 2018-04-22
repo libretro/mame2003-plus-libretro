@@ -94,7 +94,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x2800, 0x2bff, contra_text_cram_w, &contra_text_cram },
 	{ 0x2c00, 0x2fff, contra_text_vram_w, &contra_text_vram },
 	{ 0x3000, 0x37ff, MWA_RAM, &spriteram },/* 2nd bank is at 0x5000 */
-	{ 0x3800, 0x3fff, MWA_RAM }, // second sprite buffer
+	{ 0x3800, 0x3fff, MWA_RAM }, /* second sprite buffer*/
 	{ 0x4000, 0x43ff, contra_bg_cram_w, &contra_bg_cram },
 	{ 0x4400, 0x47ff, contra_bg_vram_w, &contra_bg_vram },
 	{ 0x4800, 0x5fff, MWA_RAM },
@@ -184,7 +184,7 @@ INPUT_PORTS_START( contra )
 	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
-	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )//marvins.c
+	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )/*marvins.c*/
 	/* 0x00 is invalid */
 
 	PORT_START	/* DSW1 */

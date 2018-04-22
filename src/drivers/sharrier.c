@@ -16,10 +16,10 @@
 /***************************************************************************/
 
 static void generate_gr_screen(
-	int w, // 512
-	int bitmap_width, // 1024
-	int skip, // 8
-	int start_color,int end_color, // 0..4
+	int w, /* 512*/
+	int bitmap_width, /* 1024*/
+	int skip, /* 8*/
+	int start_color,int end_color, /* 0..4*/
 	int source_size )
 {
 	/* preprocess road data, expanding it into a form more easily rendered */
@@ -32,13 +32,13 @@ static void generate_gr_screen(
 	    int center_offset=0;
 		sys16_gr_bitmap_width = bitmap_width;
 
-//logerror( "generating road gfx; bitmap_width = %d\n", bitmap_width );
+/*logerror( "generating road gfx; bitmap_width = %d\n", bitmap_width );*/
 
 		memcpy( buf,gr,source_size ); /* copy from ROM to temp buffer */
 		memset( gr,0,256*bitmap_width ); /* erase */
 
 		if( w!=sys16_gr_bitmap_width ){
-			if( skip>0 ) // needs mirrored RHS
+			if( skip>0 ) /* needs mirrored RHS*/
 				grr=gr;
 			else {
 				center_offset= bitmap_width-w;
@@ -46,7 +46,7 @@ static void generate_gr_screen(
 			}
 		}
 
-		for( row_offset=0; row_offset<256; row_offset++ ){ // build gr_bitmap
+		for( row_offset=0; row_offset<256; row_offset++ ){ /* build gr_bitmap*/
 			UINT8 last_bit;
 			UINT8 color_data[4];
 
@@ -60,7 +60,7 @@ static void generate_gr_screen(
 				for( bit_offset=0; bit_offset<8; bit_offset++ ){
 					UINT8 bit=((buf[0]&0x80)==0)|(((buf[0x4000]&0x80)==0)<<1);
 					if( bit!=last_bit && bit==0 && row_offset>1 ){
-						// color flipped to 0? advance color[0]
+						/* color flipped to 0? advance color[0]*/
 						if (color_data[0]+end_color <= end_color){
 							color_data[0]+=end_color;
 						}
@@ -69,15 +69,15 @@ static void generate_gr_screen(
 						}
 					}
 					*gr++ = color_data[bit];
-//					logerror( "%01x", color_data[bit] );
+/*					logerror( "%01x", color_data[bit] );*/
 					last_bit=bit;
 					buf[0] <<= 1; buf[0x4000] <<= 1;
 				}
 				buf++;
 			}
-//			logerror( "\n" );
+/*			logerror( "\n" );*/
 
-			if( grr!=NULL ){ // need mirrored RHS
+			if( grr!=NULL ){ /* need mirrored RHS*/
 				const UINT8 *temp = gr-1-skip;
 				for( byte_offset=0; byte_offset<w-skip; byte_offset++){
 					*gr++ = *temp--;
@@ -93,9 +93,9 @@ static void generate_gr_screen(
 		{
 			int i=1;
 			while ( (1<<i) < sys16_gr_bitmap_width ) i++;
-			sys16_gr_bitmap_width=i; // power of 2
+			sys16_gr_bitmap_width=i; /* power of 2*/
 		}
-//		logerror( "width = %d\n", sys16_gr_bitmap_width );
+/*		logerror( "width = %d\n", sys16_gr_bitmap_width );*/
 		free( buf0 );
 	}
 }
@@ -175,10 +175,10 @@ static READ16_HANDLER( ho_io_y_r ){ return (input_port_1_r( offset ) << 8) + inp
 
 static READ16_HANDLER( ho_io_highscoreentry_r ){
 	int mode= sys16_extraram4[0x3000/2];
-	if( mode&4 ){	// brake
+	if( mode&4 ){	/* brake*/
 		if(ho_io_y_r(0,0) & 0x00ff) return 0xffff;
 	}
-	else if( mode&8 ){ // button
+	else if( mode&8 ){ /* button*/
 		if(ho_io_y_r(0,0) & 0xff00) return 0xffff;
 	}
 	return 0;
@@ -200,9 +200,9 @@ static MEMORY_READ16_START( hangon_readmem )
 	{ 0xc68000, 0xc68fff, SYS16_MRA16_EXTRAM2 },
 	{ 0xc7e000, 0xc7ffff, SYS16_MRA16_EXTRAM3 },
 	{ 0xe00002, 0xe00003, sys16_coinctrl_r },
-	{ 0xe01000, 0xe01001, input_port_2_word_r }, // service
-	{ 0xe0100c, 0xe0100d, input_port_4_word_r }, // dip2
-	{ 0xe0100a, 0xe0100b, input_port_3_word_r }, // dip1
+	{ 0xe01000, 0xe01001, input_port_2_word_r }, /* service*/
+	{ 0xe0100c, 0xe0100d, input_port_4_word_r }, /* dip2*/
+	{ 0xe0100a, 0xe0100b, input_port_3_word_r }, /* dip1*/
 	{ 0xe03020, 0xe03021, ho_io_highscoreentry_r },
 	{ 0xe03028, 0xe03029, ho_io_x_r },
 	{ 0xe0302a, 0xe0302b, ho_io_y_r },
@@ -380,9 +380,9 @@ static MEMORY_READ16_START( harrier_readmem )
 	{ 0x124000, 0x127fff, shared_ram_r },
 	{ 0x130000, 0x130fff, SYS16_MRA16_SPRITERAM },
 	{ 0x140002, 0x140003, sys16_coinctrl_r },
-	{ 0x140010, 0x140011, input_port_2_word_r }, // service
-	{ 0x140014, 0x140015, input_port_3_word_r }, // dip1
-	{ 0x140016, 0x140017, input_port_4_word_r }, // dip2
+	{ 0x140010, 0x140011, input_port_2_word_r }, /* service*/
+	{ 0x140014, 0x140015, input_port_3_word_r }, /* dip1*/
+	{ 0x140016, 0x140017, input_port_4_word_r }, /* dip2*/
 	{ 0x140024, 0x140027, sh_motor_status_r },
 	{ 0xc68000, 0xc68fff, SYS16_MRA16_EXTRAM2 },
 MEMORY_END
@@ -469,7 +469,7 @@ static MACHINE_INIT( harrier ){
 	sys16_textlayer_hi_min=0;
 	sys16_textlayer_hi_max=0xff;
 
-//*disable illegal rom writes
+/**disable illegal rom writes*/
 	sys16_patch_code( 0x8112, 0x4a);
 	sys16_patch_code( 0x83d2, 0x4a);
 	sys16_patch_code( 0x83d6, 0x4a);
@@ -559,22 +559,22 @@ static READ16_HANDLER( er_io_analog_r )
 {
 	switch( er_io_analog_sel )
 	{
-		case 0:		// accel
+		case 0:		/* accel*/
 			if(input_port_1_r( offset ) & 1)
 				return 0xff;
 			else
 				return 0;
-		case 4:		// brake
+		case 4:		/* brake*/
 			if(input_port_1_r( offset ) & 2)
 				return 0xff;
 			else
 				return 0;
-		case 8:		// bank up down?
+		case 8:		/* bank up down?*/
 			if(input_port_1_r( offset ) & 4)
 				return 0xff;
 			else
 				return 0;
-		case 12:	// handle
+		case 12:	/* handle*/
 			return input_port_0_r( offset );
 
 	}
@@ -601,9 +601,9 @@ static MEMORY_READ16_START( enduror_readmem )
 	{ 0x124000, 0x127fff, shared_ram_r },
 	{ 0x130000, 0x130fff, SYS16_MRA16_SPRITERAM },
 	{ 0x140002, 0x140003, sys16_coinctrl_r },
-	{ 0x140010, 0x140011, input_port_2_word_r }, // service
-	{ 0x140014, 0x140015, input_port_3_word_r }, // dip1
-	{ 0x140016, 0x140017, input_port_4_word_r }, // dip2
+	{ 0x140010, 0x140011, input_port_2_word_r }, /* service*/
+	{ 0x140014, 0x140015, input_port_3_word_r }, /* dip1*/
+	{ 0x140016, 0x140017, input_port_4_word_r }, /* dip2*/
 	{ 0x140030, 0x140031, er_io_analog_r },
 	{ 0xe00000, 0xe00001, er_reset2_r },
 MEMORY_END
@@ -663,14 +663,14 @@ PORT_END
 
 static MEMORY_READ_START( enduror_b2_sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
-//	{ 0xc000, 0xc7ff, MRA_RAM },
+/*	{ 0xc000, 0xc7ff, MRA_RAM },*/
 	{ 0xf000, 0xf7ff, SegaPCM_r },
 	{ 0xf800, 0xffff, MRA_RAM },
 MEMORY_END
 
 static MEMORY_WRITE_START( enduror_b2_sound_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
-//	{ 0xc000, 0xc7ff, MWA_RAM },
+/*	{ 0xc000, 0xc7ff, MWA_RAM },*/
 	{ 0xf000, 0xf7ff, SegaPCM_w },
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
@@ -718,8 +718,8 @@ static MACHINE_INIT( enduror ){
 	sys16_spritesystem = sys16_sprite_sharrier;
 	sys16_sprxoffset = -0xc0;
 	sys16_fgxoffset = 13;
-//	sys16_sprxoffset = -0xbb;
-//	sys16_fgxoffset = 8;
+/*	sys16_sprxoffset = -0xbb;*/
+/*	sys16_fgxoffset = 8;*/
 	sys16_textlayer_lo_min=0;
 	sys16_textlayer_lo_max=0;
 	sys16_textlayer_hi_min=0;
@@ -751,7 +751,7 @@ static void enduror_sprite_decode( void ){
 	sys16_interleave_sprite_data( 8*0x20000 );
 	generate_gr_screen(512,1024,8,0,4,0x8000);
 
-//	enduror_decode_data (rom,rom,0x10000);	// no decrypt info.
+/*	enduror_decode_data (rom,rom,0x10000);	*/ /* no decrypt info.*/
 	enduror_decode_data (rom+0x10000/2,rom+0x10000/2,0x10000);
 	enduror_decode_data2(rom+0x20000/2,rom+0x20000/2,0x10000);
 }
@@ -772,8 +772,8 @@ static void endurora_opcode_decode( void )
 	memcpy(rom+(diff+0x10000)/2,rom+0x10000/2,0x20000);
 	memcpy(rom+diff/2,rom+0x30000/2,0x10000);
 
-	// patch code to force a reset on cpu2 when starting a new game.
-	// Undoubtly wrong, but something like it is needed for the game to work
+	/* patch code to force a reset on cpu2 when starting a new game.*/
+	/* Undoubtly wrong, but something like it is needed for the game to work*/
 	rom[(0x1866 + diff)/2] = 0x4a79;
 	rom[(0x1868 + diff)/2] = 0x00e0;
 	rom[(0x186a + diff)/2] = 0x0000;
@@ -792,8 +792,8 @@ static void endurob2_opcode_decode( void )
 	endurob2_decode_data (rom,rom+diff/2,0x10000);
 	endurob2_decode_data2(rom+0x10000/2,rom+(diff+0x10000)/2,0x10000);
 
-	// patch code to force a reset on cpu2 when starting a new game.
-	// Undoubtly wrong, but something like it is needed for the game to work
+	/* patch code to force a reset on cpu2 when starting a new game.*/
+	/* Undoubtly wrong, but something like it is needed for the game to work*/
 	rom[(0x1866 + diff)/2] = 0x4a79;
 	rom[(0x1868 + diff)/2] = 0x00e0;
 	rom[(0x186a + diff)/2] = 0x0000;
@@ -803,7 +803,7 @@ static DRIVER_INIT( enduror )
 {
 	machine_init_sys16_onetime();
 	sys16_MaxShadowColors=NumOfShadowColors / 2;
-//	sys16_MaxShadowColors=0;
+/*	sys16_MaxShadowColors=0;*/
 
 	enduror_sprite_decode();
 }
@@ -812,7 +812,7 @@ static DRIVER_INIT( endurobl )
 {
 	machine_init_sys16_onetime();
 	sys16_MaxShadowColors=NumOfShadowColors / 2;
-//	sys16_MaxShadowColors=0;
+/*	sys16_MaxShadowColors=0;*/
 
 	endurob_sprite_decode();
 	endurora_opcode_decode();
@@ -822,7 +822,7 @@ static DRIVER_INIT( endurob2 )
 {
 	machine_init_sys16_onetime();
 	sys16_MaxShadowColors=NumOfShadowColors / 2;
-//	sys16_MaxShadowColors=0;
+/*	sys16_MaxShadowColors=0;*/
 
 	endurob_sprite_decode();
 	endurob2_opcode_decode();
@@ -960,8 +960,8 @@ ROM_START( enduror )
 
 	ROM_LOAD16_BYTE( "7641.rom", 0x10000, 0x8000, CRC(2503ae7c) SHA1(27009d5b47dc207145048edfcc1ac8ffda5f0b78) )
 	ROM_LOAD16_BYTE( "7637.rom", 0x10001, 0x8000, CRC(82a27a8c) SHA1(4b182d8c23454aed7d786c9824932957319b6eff) )
-	ROM_LOAD16_BYTE( "7642.rom", 0x20000, 0x8000, CRC(1c453bea) SHA1(c6e606cdcb1690de05ef5283b48a8a61b2e0ad51) )	// enduro.a06 / .a09
-	ROM_LOAD16_BYTE( "7638.rom", 0x20001, 0x8000, CRC(70544779) SHA1(e6403edd7fc0ad5d447c25be5d7f10889aa109ff) )	// looks like encrypted versions of
+	ROM_LOAD16_BYTE( "7642.rom", 0x20000, 0x8000, CRC(1c453bea) SHA1(c6e606cdcb1690de05ef5283b48a8a61b2e0ad51) )	/* enduro.a06 / .a09*/
+	ROM_LOAD16_BYTE( "7638.rom", 0x20001, 0x8000, CRC(70544779) SHA1(e6403edd7fc0ad5d447c25be5d7f10889aa109ff) )	/* looks like encrypted versions of*/
 
 	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
 	ROM_LOAD( "7644.rom", 0x00000, 0x08000, CRC(e7a4ff90) SHA1(06d18470019041e32be9a969870cd995de626cd6) )
@@ -1012,9 +1012,9 @@ ROM_START( enduror )
 	ROM_REGION( 0x10000, REGION_CPU3, 0 ) /* second 68000 CPU */
 	ROM_LOAD16_BYTE("7634.rom", 0x0000, 0x8000, CRC(3e07fd32) SHA1(7acb9e9712ecfe928c421c84dece783e75077746) )
 	ROM_LOAD16_BYTE("7635.rom", 0x0001, 0x8000, CRC(22f762ab) SHA1(70fa87da76c714db7213c42128a0b6a27644a1d4) )
-	// alternate version??
-//	ROM_LOAD16_BYTE("7634a.rom", 0x0000, 0x8000, CRC(aec83731) )
-//	ROM_LOAD16_BYTE("7635a.rom", 0x0001, 0x8000, CRC(b2fce96f) )
+	/* alternate version??*/
+/*	ROM_LOAD16_BYTE("7634a.rom", 0x0000, 0x8000, CRC(aec83731) )*/
+/*	ROM_LOAD16_BYTE("7635a.rom", 0x0001, 0x8000, CRC(b2fce96f) )*/
 
 	ROM_REGION( 0x40000, REGION_GFX3, 0 ) /* Road Graphics  (region size should be gr_bitmapwidth*256, 0 )*/
 	ROM_LOAD( "7633.rom", 0x0000, 0x8000, CRC(6f146210) SHA1(2f58f0c3563b434ed02700b9ca1545a696a5716e) )
@@ -1024,13 +1024,13 @@ ROM_START( endurobl )
 	ROM_REGION( 0x040000+0x010000+0x040000, REGION_CPU1, 0 ) /* 68000 code + space for RAM + space for decrypted opcodes */
 	ROM_LOAD16_BYTE( "7.13j", 0x030000, 0x08000, CRC(f1d6b4b7) SHA1(32bd966191cbb36d1e60ed1a06d4caa023dd6b88) )
 	ROM_CONTINUE (            0x000000, 0x08000 )
-	ROM_LOAD16_BYTE( "4.13h", 0x030001, 0x08000, CRC(43bff873) SHA1(04e906c1965a6211fb8e13987db52f1f99cc0203) )				// rom de-coded
-	ROM_CONTINUE (            0x000001, 0x08000 )		// data de-coded
+	ROM_LOAD16_BYTE( "4.13h", 0x030001, 0x08000, CRC(43bff873) SHA1(04e906c1965a6211fb8e13987db52f1f99cc0203) )				/* rom de-coded*/
+	ROM_CONTINUE (            0x000001, 0x08000 )		/* data de-coded*/
 
 	ROM_LOAD16_BYTE( "8.14j", 0x010000, 0x08000, CRC(2153154a) SHA1(145d8ed59812d26ca412a01ae77cd7872adaba5a) )
 	ROM_LOAD16_BYTE( "5.14h", 0x010001, 0x08000, CRC(0a97992c) SHA1(7a6fc8c575637107ed07a30f6f0f8cb8877cbb43) )
-	ROM_LOAD16_BYTE( "9.15j", 0x020000, 0x08000, CRC(db3bff1c) SHA1(343ed27a690800683cdd5128dcdb28c7b45288a3) )	// one byte difference from
-	ROM_LOAD16_BYTE( "6.15h", 0x020001, 0x08000, CRC(54b1885a) SHA1(f53d906390e5414e73c4cdcbc102d3cb3e719e67) )	// enduro.a06 / enduro.a09
+	ROM_LOAD16_BYTE( "9.15j", 0x020000, 0x08000, CRC(db3bff1c) SHA1(343ed27a690800683cdd5128dcdb28c7b45288a3) )	/* one byte difference from*/
+	ROM_LOAD16_BYTE( "6.15h", 0x020001, 0x08000, CRC(54b1885a) SHA1(f53d906390e5414e73c4cdcbc102d3cb3e719e67) )	/* enduro.a06 / enduro.a09*/
 
 	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE ) /* tiles */
 	ROM_LOAD( "7644.rom", 0x00000, 0x08000, CRC(e7a4ff90) SHA1(06d18470019041e32be9a969870cd995de626cd6) )
@@ -1250,9 +1250,9 @@ INPUT_PORTS_START( enduror )
 	PORT_START	/* handle right left */
 		PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_REVERSE | IPF_CENTER, 100, 4, 0x0, 0xff )
 	PORT_START	/* Fake Buttons */
-		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 )	// accel
-		PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2 )	// brake
-		PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN )	// wheelie
+		PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 )	/* accel*/
+		PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2 )	/* brake*/
+		PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN )	/* wheelie*/
 	PORT_START
 		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1285,8 +1285,8 @@ INPUT_PORTS_START( enduror )
 		PORT_DIPNAME( 0x80, 0x00, DEF_STR( Demo_Sounds ) )
 		PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	//PORT_START	/* Y */
-	//PORT_ANALOG( 0xff, 0x0, IPT_AD_STICK_Y | IPF_CENTER , 100, 8, 0x0, 0xff )
+	/*PORT_START	 // Y /*/
+	/*PORT_ANALOG( 0xff, 0x0, IPT_AD_STICK_Y | IPF_CENTER , 100, 8, 0x0, 0xff )*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( sharrier )

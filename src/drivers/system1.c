@@ -28,8 +28,8 @@ static MACHINE_INIT( system1 )
 	/* skip the long IC CHECK in Teddyboy Blues and Choplifter */
 	/* this is not a ROM patch, the game checks a RAM location */
 	/* before doing the test */
-//	memory_region(REGION_CPU1)[0xeffe] = 0x4f;
-//	memory_region(REGION_CPU1)[0xefff] = 0x4b;
+/*	memory_region(REGION_CPU1)[0xeffe] = 0x4f;*/
+/*	memory_region(REGION_CPU1)[0xefff] = 0x4b;*/
 
 	system1_define_background_memory(system1_BACKGROUND_MEMORY_SINGLE);
 }
@@ -39,55 +39,55 @@ static MACHINE_INIT( wbml )
 	/* skip the long IC CHECK in Teddyboy Blues and Choplifter */
 	/* this is not a ROM patch, the game checks a RAM location */
 	/* before doing the test */
-//	memory_region(REGION_CPU1)[0xeffe] = 0x4f;
-//	memory_region(REGION_CPU1)[0xefff] = 0x4b;
+/*	memory_region(REGION_CPU1)[0xeffe] = 0x4f;*/
+/*	memory_region(REGION_CPU1)[0xefff] = 0x4b;*/
 
 	system1_define_background_memory(system1_BACKGROUND_MEMORY_BANKED);
 }
 
-// Noboranka: there seems to be some protection? involving reads / writes to ports in the 2x region
+/* Noboranka: there seems to be some protection? involving reads / writes to ports in the 2x region*/
 
 static int inport16_step,inport17_step,inport23_step;
 
 static READ_HANDLER( inport16_r )
 {
-//	logerror("IN  $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport16_step);
+/*	logerror("IN  $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport16_step);*/
 	return(inport16_step);
 }
 
 static READ_HANDLER( inport1c_r )
 {
-//	logerror("IN  $1c : pc = %04x - data = 0x80\n",activecpu_get_pc());
-	return(0x80);	// infinite loop (at 0x0fb3) until bit 7 is set
+/*	logerror("IN  $1c : pc = %04x - data = 0x80\n",activecpu_get_pc());*/
+	return(0x80);	/* infinite loop (at 0x0fb3) until bit 7 is set*/
 }
 
 static READ_HANDLER( inport22_r )
 {
-//	logerror("IN  $22 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport17_step);
+/*	logerror("IN  $22 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport17_step);*/
 	return(inport17_step);
 }
 
 static READ_HANDLER( inport23_r )
 {
-//	logerror("IN  $23 : pc = %04x - step = %02x\n",activecpu_get_pc(),inport23_step);
+/*	logerror("IN  $23 : pc = %04x - step = %02x\n",activecpu_get_pc(),inport23_step);*/
 	return(inport23_step);
 }
 
 static WRITE_HANDLER( outport16_w )
 {
-//	logerror("OUT $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);
+/*	logerror("OUT $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
 	inport16_step = data;
 }
 
 static WRITE_HANDLER( outport17_w )
 {
-//	logerror("OUT $17 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);
+/*	logerror("OUT $17 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
 	inport17_step = data;
 }
 
 static WRITE_HANDLER( outport24_w )
 {
-//	logerror("OUT $24 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);
+/*	logerror("OUT $24 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
 	inport23_step = data;
 }
 
@@ -97,9 +97,9 @@ WRITE_HANDLER( hvymetal_videomode_w )
 	unsigned char *rom = memory_region(REGION_CPU1);
 
 	/* patch out the obnoxiously long startup RAM tests */
-//	rom[0x4a55 + memory_region_length(REGION_CPU1) / 2] = 0xc3;
-//	rom[0x4a56] = 0xb6;
-//	rom[0x4a57] = 0x4a;
+/*	rom[0x4a55 + memory_region_length(REGION_CPU1) / 2] = 0xc3;*/
+/*	rom[0x4a56] = 0xb6;*/
+/*	rom[0x4a57] = 0x4a;*/
 
 	bankaddress = 0x10000 + (((data & 0x04)>>2) * 0x4000) + (((data & 0x40)>>5) * 0x4000);
 	cpu_setbank(1,&rom[bankaddress]);
@@ -166,7 +166,7 @@ static MEMORY_WRITE_START( blockgal_writemem )
 	{ 0xd800, 0xddff, system1_paletteram_w, &paletteram },
 	{ 0xe800, 0xeeff, system1_backgroundram_w, &system1_backgroundram, &system1_backgroundram_size },
 	{ 0xe000, 0xe6ff, MWA_RAM, &system1_videoram, &system1_videoram_size },
-	{ 0xe7bd, 0xe7bd, MWA_RAM, &system1_scroll_y },	// ???
+	{ 0xe7bd, 0xe7bd, MWA_RAM, &system1_scroll_y },	/* ???*/
 	{ 0xe7c0, 0xe7c1, MWA_RAM, &system1_scroll_x },
 	{ 0xf000, 0xf3ff, system1_background_collisionram_w, &system1_background_collisionram },
 	{ 0xf800, 0xfbff, system1_sprites_collisionram_w, &system1_sprites_collisionram },
@@ -2017,8 +2017,8 @@ INPUT_PORTS_END
 INPUT_PORTS_START( noboranb )
 	PORT_START  /* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )				// shot
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 )				// fly
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )				/* shot*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 )				/* fly*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY )
@@ -2027,8 +2027,8 @@ INPUT_PORTS_START( noboranb )
 
 	PORT_START  /* IN2 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )		// shot
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )		// fly
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )		/* shot*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )		/* fly*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_COCKTAIL )
@@ -4004,21 +4004,21 @@ static DRIVER_INIT( noboranb )
 	/* Patch to get PRG ROMS ('T', 'R' and 'S) status as "GOOD" in the "test mode" */
 	/* not really needed */
 
-//	data8_t *ROM = memory_region(REGION_CPU1);
+/*	data8_t *ROM = memory_region(REGION_CPU1);*/
 
-//	ROM[0x3296] = 0x18;		// 'jr' instead of 'jr z' - 'T' (PRG Main ROM)
-//	ROM[0x32be] = 0x18;		// 'jr' instead of 'jr z' - 'R' (Banked ROM 1)
-//	ROM[0x32ea] = 0x18;		// 'jr' instead of 'jr z' - 'S' (Banked ROM 2)
+/*	ROM[0x3296] = 0x18;		*/ /* 'jr' instead of 'jr z' - 'T' (PRG Main ROM)*/
+/*	ROM[0x32be] = 0x18;		*/ /* 'jr' instead of 'jr z' - 'R' (Banked ROM 1)*/
+/*	ROM[0x32ea] = 0x18;		*/ /* 'jr' instead of 'jr z' - 'S' (Banked ROM 2)*/
 
 	/* Patch to avoid the internal checksum that will hang the game after an amount of time
 	   (check code at 0x3313 in 'R' (banked ROM 1)) */
 
-//	ROM[0x10000 + 0 * 0x8000 + 0x3347] = 0x18;	// 'jr' instead of 'jr z'
+/*	ROM[0x10000 + 0 * 0x8000 + 0x3347] = 0x18;	*/ /* 'jr' instead of 'jr z'*/
 
 	/* Patch to get sound in later levels(the program enters into a tight loop)*/
 	data8_t *ROM2 = memory_region(REGION_CPU2);
 
-	ROM2[0x02f9] = 0x28;//'jr z' instead of 'jr'
+	ROM2[0x02f9] = 0x28;/*'jr z' instead of 'jr'*/
 }
 
 

@@ -84,7 +84,7 @@ READ16_HANDLER( aquarium_coins_r )
 
 WRITE16_HANDLER( aquarium_sound_w )
 {
-//	usrintf_showmessage("sound write %04x",data);
+/*	usrintf_showmessage("sound write %04x",data);*/
 
 	soundlatch_w(1,data&0xff);
 	cpu_set_irq_line( 1, IRQ_LINE_NMI, PULSE_LINE );
@@ -160,12 +160,12 @@ INPUT_PORTS_START( aquarium )
 	PORT_DIPSETTING(      0x000c, "1/1" )
 	PORT_DIPSETTING(      0x0008, "2/3" )
 	PORT_DIPSETTING(      0x0004, "3/5" )
-//	PORT_DIPSETTING(      0x0000, "1/1" )
+/*	PORT_DIPSETTING(      0x0000, "1/1" )*/
 	PORT_DIPNAME( 0x0030, 0x0030, "Winning Rounds (Player VS Player)" )
 	PORT_DIPSETTING(      0x0030, "1/1" )
 	PORT_DIPSETTING(      0x0020, "2/3" )
 	PORT_DIPSETTING(      0x0010, "3/5" )
-//	PORT_DIPSETTING(      0x0000, "1/1" )
+/*	PORT_DIPSETTING(      0x0000, "1/1" )*/
 	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -184,10 +184,10 @@ INPUT_PORTS_START( aquarium )
 	PORT_DIPNAME( 0x0800, 0x0800, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0800, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Flip_Screen ) )	// to be confirmed - code at 0x01f82c
+	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Flip_Screen ) )	/* to be confirmed - code at 0x01f82c*/
 	PORT_DIPSETTING(      0x1000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Demo_Sounds ) )	// to be confirmed - code at 0x0037de
+	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Demo_Sounds ) )	/* to be confirmed - code at 0x0037de*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x2000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x4000, 0x4000, DEF_STR( Unused ) )
@@ -230,7 +230,7 @@ INPUT_PORTS_START( aquarium )
 	PORT_START	/* FAKE DSW to support language */
 	PORT_DIPNAME( 0xffff, 0x0001, "Language" )
 	PORT_DIPSETTING(      0x0000, "Japanese" )
-	PORT_DIPSETTING(      0x0001, "English" )		// This is a guess of what should be the value
+	PORT_DIPSETTING(      0x0001, "English" )		/* This is a guess of what should be the value*/
 #endif
 INPUT_PORTS_END
 
@@ -383,16 +383,16 @@ ROM_START( aquarium )
 	ROM_RELOAD( 		0x010000, 0x40000 )
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE ) /* BG Tiles */
-	ROM_LOAD( "aquar1",      0x000000, 0x080000, CRC(575df6ac) SHA1(071394273e512666fe124facdd8591a767ad0819) ) // 4bpp
+	ROM_LOAD( "aquar1",      0x000000, 0x080000, CRC(575df6ac) SHA1(071394273e512666fe124facdd8591a767ad0819) ) /* 4bpp*/
 	/* data is expanded here from USER1 */
 	ROM_REGION( 0x100000, REGION_USER1, ROMREGION_DISPOSE ) /* BG Tiles */
-	ROM_LOAD( "aquar6",      0x000000, 0x020000, CRC(9065b146) SHA1(befc218bbcd63453ea7eb8f976796d36f2b2d552) ) // 1bpp
+	ROM_LOAD( "aquar6",      0x000000, 0x020000, CRC(9065b146) SHA1(befc218bbcd63453ea7eb8f976796d36f2b2d552) ) /* 1bpp*/
 
 	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE ) /* BG Tiles */
-	ROM_LOAD( "aquar8",      0x000000, 0x080000, CRC(915520c4) SHA1(308207cb20f1ed6df365710c808644a6e4f07614) ) // 4bpp
+	ROM_LOAD( "aquar8",      0x000000, 0x080000, CRC(915520c4) SHA1(308207cb20f1ed6df365710c808644a6e4f07614) ) /* 4bpp*/
 	/* data is expanded here from USER2 */
 	ROM_REGION( 0x100000, REGION_USER2, ROMREGION_DISPOSE ) /* BG Tiles */
-	ROM_LOAD( "aquar7",      0x000000, 0x020000, CRC(b96b2b82) SHA1(2b719d0c185d1eca4cd9ea66bed7842b74062288) ) // 1bpp
+	ROM_LOAD( "aquar7",      0x000000, 0x020000, CRC(b96b2b82) SHA1(2b719d0c185d1eca4cd9ea66bed7842b74062288) ) /* 1bpp*/
 
 	ROM_REGION( 0x060000, REGION_GFX2, ROMREGION_DISPOSE ) /* FG Tiles */
 	ROM_LOAD( "aquar2",   0x000000, 0x020000, CRC(aa071b05) SHA1(517415bfd8e4dd51c6eb03a25c706f8613d34a09) )

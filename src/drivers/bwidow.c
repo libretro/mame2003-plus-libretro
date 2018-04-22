@@ -372,7 +372,7 @@ MEMORY_END
 static MEMORY_WRITE_START( spacduel_writemem )
 	{ 0x0000, 0x03ff, MWA_RAM },
 	{ 0x0905, 0x0906, MWA_NOP }, /* ignore? */
-//	{ 0x0c00, 0x0c00, coin_counter_w }, /* coin out */
+/*	{ 0x0c00, 0x0c00, coin_counter_w },  // coin out /*/
 	{ 0x0c80, 0x0c80, avgdvg_go_w },
 	{ 0x0d00, 0x0d00, MWA_NOP }, /* watchdog clear */
 	{ 0x0d80, 0x0d80, avgdvg_reset_w },
@@ -397,8 +397,8 @@ MEMORY_END
 
 INPUT_PORTS_START( bwidow )
 	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )	// To fit "Coin B" Dip Switch
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )	// To fit "Coin A" Dip Switch
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )	/* To fit "Coin B" Dip Switch*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )	/* To fit "Coin A" Dip Switch*/
 	PORT_BIT( 0x0c, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_SERVICE( 0x10, IP_ACTIVE_LOW )
 	PORT_BITX( 0x20, IP_ACTIVE_LOW, IPT_SERVICE, "Diagnostic Step", KEYCODE_F1, IP_JOY_NONE )
@@ -476,8 +476,8 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( gravitar )
 	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )	// To fit "Coin B" Dip Switch
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )	// To fit "Coin A" Dip Switch
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )	/* To fit "Coin B" Dip Switch*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )	/* To fit "Coin A" Dip Switch*/
 	PORT_BIT( 0x0c, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_SERVICE( 0x10, IP_ACTIVE_LOW )
 	PORT_BITX( 0x20, IP_ACTIVE_LOW, IPT_SERVICE, "Diagnostic Step", KEYCODE_F1, IP_JOY_NONE )
@@ -550,8 +550,8 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( lunarbat )
 	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )	// To be similar with other games
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )	// To be similar with other games
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )	/* To be similar with other games*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )	/* To be similar with other games*/
 	PORT_BIT( 0x0c, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_SERVICE( 0x10, IP_ACTIVE_LOW )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -584,8 +584,8 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( spacduel )
 	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )	// To fit "Coin B" Dip Switch
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )	// To fit "Coin A" Dip Switch
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )	/* To fit "Coin B" Dip Switch*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 )	/* To fit "Coin A" Dip Switch*/
 	PORT_BIT( 0x0c, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_SERVICE( 0x10, IP_ACTIVE_LOW )
 	PORT_BITX( 0x20, IP_ACTIVE_LOW, IPT_SERVICE, "Diagnostic Step", KEYCODE_F1, IP_JOY_NONE )

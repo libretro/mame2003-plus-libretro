@@ -551,7 +551,7 @@ INPUT_PORTS_START( gridiron )
 	PORT_DIPNAME( 0x03, 0x03, "Start Credits (P1&P2)/Extra" )
 	PORT_DIPSETTING (   0x01, "1&1/200%" )
 	PORT_DIPSETTING (   0x03, "1&2/100%" )
-//	PORT_DIPSETTING (   0x00, "2&1/200%" )				// Is this setting possible ?
+/*	PORT_DIPSETTING (   0x00, "2&1/200%" )				*/ /* Is this setting possible ?*/
 	PORT_DIPSETTING (   0x02, "2&2/100%" )
 	/* This Dip Switch only has an effect in a 2 players game.
 	   If offense player selects his formation before defense player,
@@ -612,7 +612,7 @@ INPUT_PORTS_START( gridiron )
 	PORT_DIPSETTING (   0x18, "1:00/0:45 Extra" )
 	PORT_DIPSETTING (   0x38, "1:00/0:35 Extra" )
 	PORT_DIPSETTING (   0x58, "1:00/0:30 Extra" )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )		// Check code at 0x14b4
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )		/* Check code at 0x14b4*/
 	PORT_DIPSETTING (   0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING (   0x80, DEF_STR( On ) )
 
@@ -665,24 +665,24 @@ INPUT_PORTS_START( teedoff )
 	PORT_DIPSETTING (   0x20, "6" )
 	PORT_DIPSETTING (   0x10, "7" )
 	PORT_DIPSETTING (   0x00, "8" )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Cabinet ) )			// Check code at 0x0c5c
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Cabinet ) )			/* Check code at 0x0c5c*/
 	PORT_DIPSETTING (   0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING (   0x40, DEF_STR( Cocktail ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )		// Check code at 0x5dd0
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Demo_Sounds ) )		/* Check code at 0x5dd0*/
 	PORT_DIPSETTING (   0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING (   0x80, DEF_STR( On ) )
 
 	PORT_START /* DSW2 - Active LOW */
 	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_DIPNAME( 0x18, 0x18, "Penalty (Over Par)" )		// Check table at 0x2d67
-	PORT_DIPSETTING (   0x10, "1/1/2/3/4" )				// +1 / +2 / +3 / +4 / +5 or +6
+	PORT_DIPNAME( 0x18, 0x18, "Penalty (Over Par)" )		/* Check table at 0x2d67*/
+	PORT_DIPSETTING (   0x10, "1/1/2/3/4" )				/* +1 / +2 / +3 / +4 / +5 or +6*/
 	PORT_DIPSETTING (   0x18, "1/2/3/3/4" )
 	PORT_DIPSETTING (   0x08, "1/2/3/4/4" )
 	PORT_DIPSETTING (   0x00, "2/3/3/4/4" )
 	PORT_DIPNAME( 0x20, 0x20, "Bonus Balls (Multiple coins)" )
 	PORT_DIPSETTING (   0x20, "None" )
 	PORT_DIPSETTING (   0x00, "+1" )
-	PORT_DIPNAME( 0xc0, 0xc0, "Difficulty?" )				// Check table at 0x5df9
+	PORT_DIPNAME( 0xc0, 0xc0, "Difficulty?" )				/* Check table at 0x5df9*/
 	PORT_DIPSETTING (   0x80, "Easy" )
 	PORT_DIPSETTING (   0xc0, "Normal" )
 	PORT_DIPSETTING (   0x40, "Hard" )

@@ -93,11 +93,11 @@ static int decrypt(int const param1, int const param2, int const enc_prev_word, 
 			break;
 
 		case 1:
-			k =	(BIT(dec_prev_word, 2) << 0) |	// always 1
+			k =	(BIT(dec_prev_word, 2) << 0) |	/* always 1*/
 				(BIT(enc_prev_word, 4) << 1) |
 				(BIT(dec_prev_word,14) << 2) |
 				(BIT(res, 1)           << 3) |
-				(BIT(dec_prev_word,12) << 4);	// always 0
+				(BIT(dec_prev_word,12) << 4);	/* always 0*/
 			break;
 
 		case 2:
@@ -109,7 +109,7 @@ static int decrypt(int const param1, int const param2, int const enc_prev_word, 
 			break;
 
 		case 3:
-			k =	(BIT(dec_prev_word, 2) << 0) |	// always 1
+			k =	(BIT(dec_prev_word, 2) << 0) |	/* always 1*/
 				(BIT(dec_prev_word, 9) << 1) |
 				(BIT(enc_prev_word, 5) << 2) |
 				(BIT(dec_prev_word, 1) << 3) |
@@ -239,7 +239,7 @@ static MEMORY_WRITE16_START( bigkarnk_writemem )
 	{ 0x100000, 0x101fff, gaelco_vram_w, &gaelco_videoram },		/* Video RAM */
 	{ 0x102000, 0x103fff, MWA16_RAM },								/* Screen RAM */
 	{ 0x108000, 0x108007, MWA16_RAM, &gaelco_vregs },				/* Video Registers */
-//	{ 0x10800c, 0x10800d, watchdog_reset_w },						/* INT 6 ACK/Watchdog timer */
+/*	{ 0x10800c, 0x10800d, watchdog_reset_w },						 // INT 6 ACK/Watchdog timer /*/
 	{ 0x200000, 0x2007ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },/* Palette */
 	{ 0x440000, 0x440fff, MWA16_RAM, &gaelco_spriteram },			/* Sprite RAM */
 	{ 0x70000e, 0x70000f, bigkarnk_sound_command_w },				/* Triggers a FIRQ on the sound CPU */
@@ -259,7 +259,7 @@ MEMORY_END
 static MEMORY_WRITE_START( bigkarnk_writemem_snd )
 	{ 0x0000, 0x07ff, MWA_RAM },				/* RAM */
 	{ 0x0800, 0x0800, OKIM6295_data_0_w },		/* OKI6295 */
-//	{ 0x0900, 0x0900, MWA_NOP },				/* enable sound output? */
+/*	{ 0x0900, 0x0900, MWA_NOP },				 // enable sound output? /*/
 	{ 0x0a00, 0x0a00, YM3812_control_port_0_w },/* YM3812 */
 	{ 0x0a01, 0x0a01, YM3812_write_port_0_w },	/* YM3812 */
 	{ 0x0c00, 0xffff, MWA_ROM },				/* ROM */
@@ -457,7 +457,7 @@ static MEMORY_WRITE16_START( maniacsq_writemem )
 	{ 0x100000, 0x101fff, gaelco_vram_w, &gaelco_videoram },		/* Video RAM */
 	{ 0x102000, 0x103fff, MWA16_RAM },						        /* Screen RAM */
 	{ 0x108000, 0x108007, MWA16_RAM, &gaelco_vregs },				/* Video Registers */
-//	{ 0x10800c, 0x10800d, watchdog_reset_w },						/* INT 6 ACK/Watchdog timer */
+/*	{ 0x10800c, 0x10800d, watchdog_reset_w },						 // INT 6 ACK/Watchdog timer /*/
 	{ 0x200000, 0x2007ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },/* Palette */
 	{ 0x440000, 0x440fff, MWA16_RAM, &gaelco_spriteram },			/* Sprite RAM */
 	{ 0x70000c, 0x70000d, OKIM6295_bankswitch_w },					/* OKI6295 bankswitch */
@@ -650,7 +650,7 @@ static MEMORY_WRITE16_START( thoop_writemem )
 	{ 0x100000, 0x101fff, thoop_vram_encrypted_w, &gaelco_videoram },	/* Video RAM */
 	{ 0x102000, 0x103fff, thoop_encrypted_w, &gaelco_screen },								/* Screen RAM */
 	{ 0x108000, 0x108007, MWA16_RAM, &gaelco_vregs },		/* Video Registers */
-//	{ 0x10800c, 0x10800d, watchdog_reset_w },					/* INT 6 ACK/Watchdog timer */
+/*	{ 0x10800c, 0x10800d, watchdog_reset_w },					 // INT 6 ACK/Watchdog timer /*/
 	{ 0x200000, 0x2007ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },/* Palette */
 	{ 0x440000, 0x440fff, MWA16_RAM, &gaelco_spriteram },		/* Sprite RAM */
 	{ 0x70000c, 0x70000d, OKIM6295_bankswitch_w },					/* OKI6295 bankswitch */

@@ -224,8 +224,8 @@ static MEMORY_READ32_START( readmem )
 	{ 0x804000, 0x807fff, MRA32_RAM },
 	{ 0x808000, 0x80bfff, MRA32_RAM },
 
-	{ 0xC00000, 0xC00003, io32_r },	// player inputs
-	{ 0xC00004, 0xC00007, io32_1_r }, // dip switches
+	{ 0xC00000, 0xC00003, io32_r },	/* player inputs*/
+	{ 0xC00004, 0xC00007, io32_1_r }, /* dip switches*/
 	{ 0xC00024, 0xC00027, silk_6295_0_r },
 	{ 0xC0002C, 0xC0002f, silk_ym_r },
 	{ 0xC00030, 0xC00033, silk_6295_1_r },
@@ -235,12 +235,12 @@ MEMORY_END
 
 static MEMORY_WRITE32_START( writemem )
 	{ 0x000000, 0x1fffff, MWA32_ROM },
-	{ 0x40c000, 0x40cfff, MWA32_RAM, &silkroad_sprram }, // sprites
-	{ 0x600000, 0x603fff, paletteram32_xRRRRRGGGGGBBBBB_dword_w, &paletteram32 }, // palette
+	{ 0x40c000, 0x40cfff, MWA32_RAM, &silkroad_sprram }, /* sprites*/
+	{ 0x600000, 0x603fff, paletteram32_xRRRRRGGGGGBBBBB_dword_w, &paletteram32 }, /* palette*/
 
-	{ 0x800000, 0x803fff, silkroad_fgram_w, &silkroad_vidram },  // lower Layer
-	{ 0x804000, 0x807fff, silkroad_fgram2_w, &silkroad_vidram2 },  // higher layer
-	{ 0x808000, 0x80bfff, silkroad_fgram3_w, &silkroad_vidram3 }, // even higher layer
+	{ 0x800000, 0x803fff, silkroad_fgram_w, &silkroad_vidram },  /* lower Layer*/
+	{ 0x804000, 0x807fff, silkroad_fgram2_w, &silkroad_vidram2 },  /* higher layer*/
+	{ 0x808000, 0x80bfff, silkroad_fgram3_w, &silkroad_vidram3 }, /* even higher layer*/
 
 
 	{ 0xC00024, 0xC00027, silk_6295_0_w },
@@ -248,7 +248,7 @@ static MEMORY_WRITE32_START( writemem )
 	{ 0xC0002C, 0xC0002f, silk_ym_dataport_w },
 	{ 0xC00030, 0xC00033, silk_6295_1_w },
 
-	// C00038 appears to be the coin counter, bit 0 is pulsed when a coin is inserted
+	/* C00038 appears to be the coin counter, bit 0 is pulsed when a coin is inserted*/
 /*
 	{ 0xC00034, 0xC00037, MWA32_NOP },
 */
@@ -294,7 +294,7 @@ INPUT_PORTS_START( silkroad )
 	PORT_BITX(0x0020, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* Not mentioned in the "test mode" */
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SPECIAL )	/* See notes - Stephh*/
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	// this input makes the 020 lock up...- RB
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* this input makes the 020 lock up...- RB*/
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -320,14 +320,14 @@ INPUT_PORTS_START( silkroad )
 	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x00e0, 0x0000, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(      0x0060, "Easiest" )				// "1"
-	PORT_DIPSETTING(      0x0040, "Easier" )				// "2"
-	PORT_DIPSETTING(      0x0020, "Easy" )				// "3"
-	PORT_DIPSETTING(      0x0000, "Normal" )				// "4"
-	PORT_DIPSETTING(      0x00e0, "Medium" )				// "5"
-	PORT_DIPSETTING(      0x00c0, "Hard" )				// "6"
-	PORT_DIPSETTING(      0x00a0, "Harder" )				// "7"
-	PORT_DIPSETTING(      0x0080, "Hardest" )				// "8"
+	PORT_DIPSETTING(      0x0060, "Easiest" )				/* "1"*/
+	PORT_DIPSETTING(      0x0040, "Easier" )				/* "2"*/
+	PORT_DIPSETTING(      0x0020, "Easy" )				/* "3"*/
+	PORT_DIPSETTING(      0x0000, "Normal" )				/* "4"*/
+	PORT_DIPSETTING(      0x00e0, "Medium" )				/* "5"*/
+	PORT_DIPSETTING(      0x00c0, "Hard" )				/* "6"*/
+	PORT_DIPSETTING(      0x00a0, "Harder" )				/* "7"*/
+	PORT_DIPSETTING(      0x0080, "Hardest" )				/* "8"*/
 	PORT_DIPNAME( 0x0100, 0x0100, "Unused DIP B-0" )
 	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -340,9 +340,9 @@ INPUT_PORTS_START( silkroad )
 	PORT_DIPNAME( 0x0800, 0x0000, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0800, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x1000, 0x1000, "Chute Type" )			// "Coin Box"
-	PORT_DIPSETTING(      0x1000, "Single" )				// "1"
-	PORT_DIPSETTING(      0x0000, "Multi" )			// "2"
+	PORT_DIPNAME( 0x1000, 0x1000, "Chute Type" )			/* "Coin Box"*/
+	PORT_DIPSETTING(      0x1000, "Single" )				/* "1"*/
+	PORT_DIPSETTING(      0x0000, "Multi" )			/* "2"*/
 	PORT_DIPNAME( 0xe000, 0xe000, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING( 0x0000, DEF_STR(5C_1C))
 	PORT_DIPSETTING( 0x2000, DEF_STR(4C_1C))
@@ -353,9 +353,9 @@ INPUT_PORTS_START( silkroad )
 	PORT_DIPSETTING( 0xa000, DEF_STR(1C_3C))
 	PORT_DIPSETTING( 0x8000, DEF_STR(1C_4C))
 
-//	PORT_START	/* Misc inputs */
-//	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* VBLANK ? */
-//	PORT_BIT( 0xff7f, IP_ACTIVE_LOW, IPT_UNUSED ) /* unknown / unused */
+/*	PORT_START	 // Misc inputs /*/
+/*	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL )	 // VBLANK ? /*/
+/*	PORT_BIT( 0xff7f, IP_ACTIVE_LOW, IPT_UNUSED )  // unknown / unused /*/
 INPUT_PORTS_END
 
 
@@ -435,7 +435,7 @@ DRIVER_INIT( silkroad )
 	int len = 0x0200000;
 	unsigned char *buffer;
 
-	int tileoffset = 0x1300*64; // verify
+	int tileoffset = 0x1300*64; /* verify*/
 
 	src += tileoffset; len -=tileoffset;
 
@@ -456,20 +456,20 @@ ROM_START( silkroad )
 
 	ROM_REGION( 0x1800000, REGION_GFX1, ROMREGION_DISPOSE | ROMREGION_INVERT )
 	/* Sprites */
-	ROM_LOAD( "rom12.bin",	0x0000000, 0x0200000, CRC(96393d04) SHA1(f512bb8603510d39e649f4ec1c5e2d0e4bf3a2cc) ) // 0
-	ROM_LOAD( "rom08.bin",	0x0800000, 0x0200000, CRC(23f1d462) SHA1(6ca8052b16ccc1fe59716e03f66bd33af5145b37) ) // 0
-	ROM_LOAD( "rom04.bin",	0x1000000, 0x0200000, CRC(2cf6ed30) SHA1(e96585cd109debc45960090d73b15db87e91ce0f) ) // 0
+	ROM_LOAD( "rom12.bin",	0x0000000, 0x0200000, CRC(96393d04) SHA1(f512bb8603510d39e649f4ec1c5e2d0e4bf3a2cc) ) /* 0*/
+	ROM_LOAD( "rom08.bin",	0x0800000, 0x0200000, CRC(23f1d462) SHA1(6ca8052b16ccc1fe59716e03f66bd33af5145b37) ) /* 0*/
+	ROM_LOAD( "rom04.bin",	0x1000000, 0x0200000, CRC(2cf6ed30) SHA1(e96585cd109debc45960090d73b15db87e91ce0f) ) /* 0*/
 
-	ROM_LOAD( "rom13.bin",	0x0200000, 0x0200000, CRC(4ca1698e) SHA1(4fffc2f2a5fb434c42463ce904fd811866c53f81) ) // 1
-	ROM_LOAD( "rom09.bin",	0x0a00000, 0x0200000, CRC(ef0b5bf4) SHA1(acd3bc5070de84608c5da0d091094382853cb048) ) // 1
-	ROM_LOAD( "rom05.bin",	0x1200000, 0x0200000, CRC(512d6e25) SHA1(fc0a56663d77bbdfbd4242e14a55563073634582) ) // 1
-	ROM_LOAD( "rom14.bin",	0x0400000, 0x0200000, CRC(d00b19c4) SHA1(d5b955dca5d0d251166a7f35a0bbbda6a91ecbd0) ) // 2
-	ROM_LOAD( "rom10.bin",	0x0c00000, 0x0200000, CRC(7d324280) SHA1(cdf6d9342292f693cc5ec1b72816f2788963fcec) ) // 2
-	ROM_LOAD( "rom06.bin",	0x1400000, 0x0200000, CRC(3ac26060) SHA1(98ad8efbbf8020daf7469db3e0fda02af6c4c767) ) // 2
+	ROM_LOAD( "rom13.bin",	0x0200000, 0x0200000, CRC(4ca1698e) SHA1(4fffc2f2a5fb434c42463ce904fd811866c53f81) ) /* 1*/
+	ROM_LOAD( "rom09.bin",	0x0a00000, 0x0200000, CRC(ef0b5bf4) SHA1(acd3bc5070de84608c5da0d091094382853cb048) ) /* 1*/
+	ROM_LOAD( "rom05.bin",	0x1200000, 0x0200000, CRC(512d6e25) SHA1(fc0a56663d77bbdfbd4242e14a55563073634582) ) /* 1*/
+	ROM_LOAD( "rom14.bin",	0x0400000, 0x0200000, CRC(d00b19c4) SHA1(d5b955dca5d0d251166a7f35a0bbbda6a91ecbd0) ) /* 2*/
+	ROM_LOAD( "rom10.bin",	0x0c00000, 0x0200000, CRC(7d324280) SHA1(cdf6d9342292f693cc5ec1b72816f2788963fcec) ) /* 2*/
+	ROM_LOAD( "rom06.bin",	0x1400000, 0x0200000, CRC(3ac26060) SHA1(98ad8efbbf8020daf7469db3e0fda02af6c4c767) ) /* 2*/
 	/* Backgrounds */
-	ROM_LOAD( "rom07.bin",	0x0600000, 0x0200000, CRC(9fc6ff9d) SHA1(51c3ca9709a01e0ad6bc76c0d674ed03f9822598) ) // 3
-	ROM_LOAD( "rom11.bin",	0x0e00000, 0x0200000, CRC(11abaf1c) SHA1(19e86f3ebfec518a96c0520f36cfc1b525e7e55c) ) // 3
-	ROM_LOAD( "rom15.bin",	0x1600000, 0x0200000, CRC(26a3b168) SHA1(a4b7955cc4d4fbec7c975a9456f2219ef33f1166) ) // 3
+	ROM_LOAD( "rom07.bin",	0x0600000, 0x0200000, CRC(9fc6ff9d) SHA1(51c3ca9709a01e0ad6bc76c0d674ed03f9822598) ) /* 3*/
+	ROM_LOAD( "rom11.bin",	0x0e00000, 0x0200000, CRC(11abaf1c) SHA1(19e86f3ebfec518a96c0520f36cfc1b525e7e55c) ) /* 3*/
+	ROM_LOAD( "rom15.bin",	0x1600000, 0x0200000, CRC(26a3b168) SHA1(a4b7955cc4d4fbec7c975a9456f2219ef33f1166) ) /* 3*/
 
 	ROM_REGION( 0x080000, REGION_SOUND1, 0 )
 	ROM_LOAD( "rom00.bin", 0x000000, 0x080000, CRC(b10ba7ab) SHA1(a6a3ae71b803af9c31d7e97dc86cfcc123ee9a40) )

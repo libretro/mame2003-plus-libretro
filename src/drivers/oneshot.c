@@ -131,10 +131,10 @@ static MEMORY_WRITE16_START( oneshot_writemem )
 	{ 0x080000, 0x087fff, MWA16_RAM },
 	{ 0x0c0000, 0x0c07ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
 	{ 0x120000, 0x120fff, MWA16_RAM, &oneshot_sprites },
-	{ 0x180000, 0x180fff, oneshot_mid_videoram_w, &oneshot_mid_videoram }, // some people , girl etc.
-	{ 0x181000, 0x181fff, oneshot_fg_videoram_w, &oneshot_fg_videoram }, // credits etc.
-	{ 0x182000, 0x182fff, oneshot_bg_videoram_w, &oneshot_bg_videoram }, // credits etc.
-	{ 0x188000, 0x18800f, MWA16_RAM, &oneshot_scroll },	// scroll registers???
+	{ 0x180000, 0x180fff, oneshot_mid_videoram_w, &oneshot_mid_videoram }, /* some people , girl etc.*/
+	{ 0x181000, 0x181fff, oneshot_fg_videoram_w, &oneshot_fg_videoram }, /* credits etc.*/
+	{ 0x182000, 0x182fff, oneshot_bg_videoram_w, &oneshot_bg_videoram }, /* credits etc.*/
+	{ 0x188000, 0x18800f, MWA16_RAM, &oneshot_scroll },	/* scroll registers???*/
 	{ 0x190010, 0x190011, soundlatch_word_w },
 	{ 0x190018, 0x190019, soundbank_w },
 MEMORY_END
@@ -158,29 +158,29 @@ MEMORY_END
 
 INPUT_PORTS_START( oneshot )
 	PORT_START	/* DSW 1	(0x19c020.l -> 0x08006c.l) */
-	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coinage ) )		// 0x080084.l : credits (00-09)
+	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coinage ) )		/* 0x080084.l : credits (00-09)*/
 	PORT_DIPSETTING(    0x03, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x0c, 0x00, "Gun X Shift Left" )		// 0x0824ec.l (not in "test mode")
+	PORT_DIPNAME( 0x0c, 0x00, "Gun X Shift Left" )		/* 0x0824ec.l (not in "test mode")*/
 	PORT_DIPSETTING(    0x04, "30" )
 	PORT_DIPSETTING(    0x00, "35" )
 	PORT_DIPSETTING(    0x08, "40" )
 	PORT_DIPSETTING(    0x0c, "50" )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Demo_Sounds ) )	// 0x082706.l - to be confirmed
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Demo_Sounds ) )	/* 0x082706.l - to be confirmed*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_SERVICE( 0x20, IP_ACTIVE_HIGH )			// 0x0824fe.l
-	PORT_DIPNAME( 0x40, 0x00, "Start Round" )			// 0x08224e.l
+	PORT_SERVICE( 0x20, IP_ACTIVE_HIGH )			/* 0x0824fe.l*/
+	PORT_DIPNAME( 0x40, 0x00, "Start Round" )			/* 0x08224e.l*/
 	PORT_DIPSETTING(    0x00, "Gun Trigger" )
 	PORT_DIPSETTING(    0x40, "Start Button" )
-	PORT_DIPNAME( 0x80, 0x00, "Gun Test" )			// 0x082286.l
+	PORT_DIPNAME( 0x80, 0x00, "Gun Test" )			/* 0x082286.l*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
 	PORT_START	/* DSW 2	(0x19c024.l -> 0x08006e.l) */
-	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )		// 0x082500.l
+	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Lives ) )		/* 0x082500.l*/
 	PORT_DIPSETTING(    0x01, "1" )
 	PORT_DIPSETTING(    0x02, "2" )
 	PORT_DIPSETTING(    0x00, "3" )
@@ -191,15 +191,15 @@ INPUT_PORTS_START( oneshot )
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Difficulty ) )	// 0x082506.l
-	PORT_DIPSETTING(    0x10, "Easy" )				// 0
-	PORT_DIPSETTING(    0x00, "Normal" )			// 1
-	PORT_DIPSETTING(    0x20, "Hard" )				// 2
-	PORT_DIPSETTING(    0x30, "Hardest" )			// 3
-	PORT_DIPNAME( 0x40, 0x00, "Round Select" )		// 0x082f16.l - only after 1st stage
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )		// "On"  in the "test mode"
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )			// "Off" in the "test mode"
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Free_Play ) )	// 0x0800ca.l
+	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Difficulty ) )	/* 0x082506.l*/
+	PORT_DIPSETTING(    0x10, "Easy" )				/* 0*/
+	PORT_DIPSETTING(    0x00, "Normal" )			/* 1*/
+	PORT_DIPSETTING(    0x20, "Hard" )				/* 2*/
+	PORT_DIPSETTING(    0x30, "Hardest" )			/* 3*/
+	PORT_DIPNAME( 0x40, 0x00, "Round Select" )		/* 0x082f16.l - only after 1st stage*/
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )		/* "On"  in the "test mode"*/
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )			/* "Off" in the "test mode"*/
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Free_Play ) )	/* 0x0800ca.l*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
@@ -257,40 +257,40 @@ INPUT_PORTS_START( maddonna )
 	PORT_DIPNAME( 0x04, 0x04, "Girl Pictures" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		// Not defined in the manual
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		/* Not defined in the manual*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		// Not defined in the manual
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		/* Not defined in the manual*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, "Invulnerability" )		// This one was not defined in the manual
+	PORT_DIPNAME( 0x40, 0x00, "Invulnerability" )		/* This one was not defined in the manual*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_HIGH )
 
 	PORT_START /* DSW B */
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x00, "Easy" )				// 2 Monsters at start, but "dumber"??
-	PORT_DIPSETTING(    0x01, "Normal" )			// 2 Monsters at start
-	PORT_DIPSETTING(    0x02, "Hard" )				// 3 Monsters at start
-	PORT_DIPSETTING(    0x03, "Hardest" )			// 4 Monsters at start
+	PORT_DIPSETTING(    0x00, "Easy" )				/* 2 Monsters at start, but "dumber"??*/
+	PORT_DIPSETTING(    0x01, "Normal" )			/* 2 Monsters at start*/
+	PORT_DIPSETTING(    0x02, "Hard" )				/* 3 Monsters at start*/
+	PORT_DIPSETTING(    0x03, "Hardest" )			/* 4 Monsters at start*/
 	PORT_DIPNAME( 0x0c, 0x08, "Time Per Round" )
 	PORT_DIPSETTING(    0x08, "80 Seconds" )
 	PORT_DIPSETTING(    0x04, "90 Seconds" )
 	PORT_DIPSETTING(    0x00, "100 Seconds" )
-//	PORT_DIPSETTING(    0x0c, "?? Seconds" )		// Not Defined for On+On
+/*	PORT_DIPSETTING(    0x0c, "?? Seconds" )		*/ /* Not Defined for On+On*/
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x10, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		// Not defined in the manual
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )		/* Not defined in the manual*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0xc0, 0x00, "Hurry Up!" )			// Controls "Hurry Up!" banner & Vampire - Not defined the in manual
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )		// No Hurry up
-	PORT_DIPSETTING(    0x40, "On - 10" )			// The rest show the banner but is there a difference in how the Vampire shows up???
+	PORT_DIPNAME( 0xc0, 0x00, "Hurry Up!" )			/* Controls "Hurry Up!" banner & Vampire - Not defined the in manual*/
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )		/* No Hurry up*/
+	PORT_DIPSETTING(    0x40, "On - 10" )			/* The rest show the banner but is there a difference in how the Vampire shows up???*/
 	PORT_DIPSETTING(    0x80, "On - 01" )
 	PORT_DIPSETTING(    0xc0, "On - 11" )
 
@@ -413,7 +413,7 @@ static MACHINE_DRIVER_START( maddonna )
 	MDRV_IMPORT_FROM(oneshot)
 
 	/* video hardware */
-	MDRV_VIDEO_UPDATE(maddonna) // no crosshair
+	MDRV_VIDEO_UPDATE(maddonna) /* no crosshair*/
 MACHINE_DRIVER_END
 
 
@@ -440,7 +440,7 @@ ROM_START( oneshot )
 	ROM_LOAD( "1shot.u14", 0x080000, 0x080000, CRC(222e33f8) SHA1(2665afdf4cb1a29325df62efc1843a4b2cf34a4e) )
 
 	ROM_REGION( 0x10000, REGION_USER1, 0 )
-	ROM_LOAD( "1shot.mb", 0x00000, 0x10000, CRC(6b213183) SHA1(599c59d155d11edb151bfaed1d24ef964462a447) ) // motherboard rom, zooming?
+	ROM_LOAD( "1shot.mb", 0x00000, 0x10000, CRC(6b213183) SHA1(599c59d155d11edb151bfaed1d24ef964462a447) ) /* motherboard rom, zooming?*/
 ROM_END
 
 ROM_START( maddonna )
@@ -449,7 +449,7 @@ ROM_START( maddonna )
 	ROM_LOAD16_BYTE( "maddonna.b15", 0x00001, 0x20000, CRC(e36c0e26) SHA1(f261b2c74eeca05df302aa4956f5d02121d42054) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 Code */
-	ROM_LOAD( "x13.ua2", 0x00000, 0x010000, CRC(f2080071) SHA1(68cbae9559879b2dc19c41a7efbd13ab4a569d3f) ) // b13
+	ROM_LOAD( "x13.ua2", 0x00000, 0x010000, CRC(f2080071) SHA1(68cbae9559879b2dc19c41a7efbd13ab4a569d3f) ) /* b13*/
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 ) /* Sprites */
 	ROM_LOAD( "maddonna.b5",  0x000000, 0x080000, CRC(838d3244) SHA1(7339143481ec043219825f282450ff53bb718f8c) )
@@ -465,7 +465,7 @@ ROM_START( maddonna )
 	/* no samples for this game */
 
 	ROM_REGION( 0x10000, REGION_USER1, 0 )
-	ROM_LOAD( "x1", 0x00000, 0x10000, CRC(6b213183) SHA1(599c59d155d11edb151bfaed1d24ef964462a447) ) // motherboard rom, zooming?
+	ROM_LOAD( "x1", 0x00000, 0x10000, CRC(6b213183) SHA1(599c59d155d11edb151bfaed1d24ef964462a447) ) /* motherboard rom, zooming?*/
 ROM_END
 
 ROM_START( maddonnb )
@@ -491,7 +491,7 @@ ROM_START( maddonnb )
 	/* no samples for this game */
 
 	ROM_REGION( 0x10000, REGION_USER1, 0 )
-	ROM_LOAD( "x1", 0x00000, 0x10000, CRC(6b213183) SHA1(599c59d155d11edb151bfaed1d24ef964462a447) ) // motherboard rom, zooming?
+	ROM_LOAD( "x1", 0x00000, 0x10000, CRC(6b213183) SHA1(599c59d155d11edb151bfaed1d24ef964462a447) ) /* motherboard rom, zooming?*/
 ROM_END
 
 

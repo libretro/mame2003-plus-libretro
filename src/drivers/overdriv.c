@@ -124,7 +124,7 @@ static READ16_HANDLER( eeprom_r )
 {
 	int res;
 
-//logerror("%06x eeprom_r\n",activecpu_get_pc());
+/*logerror("%06x eeprom_r\n",activecpu_get_pc());*/
 	/* bit 6 is EEPROM data */
 	res = (EEPROM_read_bit() << 6) | input_port_0_word_r(0,0);
 
@@ -133,7 +133,7 @@ static READ16_HANDLER( eeprom_r )
 
 static WRITE16_HANDLER( eeprom_w )
 {
-//logerror("%06x: write %04x to eeprom_w\n",activecpu_get_pc(),data);
+/*logerror("%06x: write %04x to eeprom_w\n",activecpu_get_pc(),data);*/
 	if (ACCESSING_LSB)
 	{
 		/* bit 0 is data */
@@ -180,7 +180,7 @@ static WRITE16_HANDLER( cpuA_ctrl_w )
 		coin_counter_w(0,data & 0x10);
 		coin_counter_w(1,data & 0x20);
 
-//logerror("%06x: write %04x to cpuA_ctrl_w\n",activecpu_get_pc(),data);
+/*logerror("%06x: write %04x to cpuA_ctrl_w\n",activecpu_get_pc(),data);*/
 	}
 }
 
@@ -293,24 +293,24 @@ static MEMORY_READ16_START( overdriv_readmem2 )
 	{ 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x080000, 0x083fff, MRA16_RAM },
 { 0x0c0000, 0x0c1fff, MRA16_RAM },
-{ 0x100000, 0x10000f, MRA16_NOP },	// K053250 #0
-{ 0x108000, 0x10800f, MRA16_NOP },	// K053250 #1
+{ 0x100000, 0x10000f, MRA16_NOP },	/* K053250 #0*/
+{ 0x108000, 0x10800f, MRA16_NOP },	/* K053250 #1*/
 	{ 0x118000, 0x118fff, K053247_word_r },
 	{ 0x120000, 0x120001, K053246_word_r },
 	{ 0x128000, 0x128001, cpuB_ctrl_r },
 	{ 0x200000, 0x203fff, sharedram_r },
 { 0x208000, 0x20bfff, MRA16_RAM },
 
-{ 0x218000, 0x219fff, MRA16_NOP },	// K053250 #0 gfx ROM read (LSB)
-{ 0x220000, 0x221fff, MRA16_NOP },	// K053250 #1 gfx ROM read (LSB)
+{ 0x218000, 0x219fff, MRA16_NOP },	/* K053250 #0 gfx ROM read (LSB)*/
+{ 0x220000, 0x221fff, MRA16_NOP },	/* K053250 #1 gfx ROM read (LSB)*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( overdriv_writemem2 )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x080000, 0x083fff, MWA16_RAM },	/* work RAM */
 { 0x0c0000, 0x0c1fff, MWA16_RAM },
-{ 0x100000, 0x10000f, MWA16_NOP },	// K053250 #0
-{ 0x108000, 0x10800f, MWA16_NOP },	// K053250 #1
+{ 0x100000, 0x10000f, MWA16_NOP },	/* K053250 #0*/
+{ 0x108000, 0x10800f, MWA16_NOP },	/* K053250 #1*/
 	{ 0x118000, 0x118fff, K053247_word_w },
 	{ 0x128000, 0x128001, cpuB_ctrl_w },	/* enable K053247 ROM reading, plus something else */
 	{ 0x130000, 0x130007, K053246_word_w },
@@ -357,7 +357,7 @@ INPUT_PORTS_START( overdriv )
 	PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// ?
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* ?*/
 
 	PORT_START
 	PORT_ANALOG( 0xff, 0x80, IPT_DIAL | IPF_CENTER, 100, 50, 0, 0 )

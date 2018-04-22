@@ -166,7 +166,7 @@ WRITE_HANDLER( cosmicg_output_w )
 				 break;
 
 		case 9:  if (data) sample_start(3, 11, 0); break;	/* Got Ship */
-//		case 11: watchdog_reset_w(0, 0); break;				/* Watchdog */
+/*		case 11: watchdog_reset_w(0, 0); break;				 // Watchdog /*/
 		case 13: if (data) sample_start(8, 13-gun_die_select, 0); break;  /* Got Monster / Gunshot */
 		case 14: gun_die_select = data; break;
 		case 15: if (data) sample_start(5, 14, 0); break;	/* Coin Extend (extra base) */
@@ -626,7 +626,7 @@ INPUT_PORTS_START( cosmica )
 	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_2C ) )
-  //PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+  /*PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x30, "5000" )
 	PORT_DIPSETTING(    0x20, "10000" )
@@ -981,7 +981,7 @@ INPUT_PORTS_START( nomnlnd )
 	PORT_DIPSETTING(    0x00, "None" )
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )*/
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Lives ) )
@@ -1029,7 +1029,7 @@ INPUT_PORTS_START( nomnlndg )
 	PORT_DIPSETTING(    0x00, "None" )
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )*/
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Lives ) )

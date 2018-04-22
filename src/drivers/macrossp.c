@@ -263,7 +263,7 @@ static READ32_HANDLER ( macrossp_soundstatus_r )
 {
 	static int toggle;
 
-//	logerror("%08x read soundstatus\n",activecpu_get_pc());
+/*	logerror("%08x read soundstatus\n",activecpu_get_pc());*/
 
 	/* bit 1 is sound status */
 	/* bit 0 unknown - it is expected to toggle, vblank? */
@@ -279,7 +279,7 @@ static WRITE32_HANDLER( macrossp_soundcmd_w )
 {
 	if (ACCESSING_MSW32)
 	{
-		//logerror("%08x write soundcmd %08x (%08x)\n",activecpu_get_pc(),data,mem_mask);
+		/*logerror("%08x write soundcmd %08x (%08x)\n",activecpu_get_pc(),data,mem_mask);*/
 		soundlatch_word_w(0,data >> 16,0);
 		sndpending = 1;
 		cpu_set_irq_line(1,2,HOLD_LINE);
@@ -290,7 +290,7 @@ static WRITE32_HANDLER( macrossp_soundcmd_w )
 
 static READ16_HANDLER( macrossp_soundcmd_r )
 {
-//	logerror("%06x read soundcmd\n",activecpu_get_pc());
+/*	logerror("%06x read soundcmd\n",activecpu_get_pc());*/
 	sndpending = 0;
 	return soundlatch_word_r(offset,mem_mask);
 }
@@ -316,7 +316,7 @@ static MEMORY_READ32_START( readmem )
 
 	{ 0xf00000, 0xf1ffff, MRA32_RAM },
 
-//	{ 0xfe0000, 0xfe0003, MRA32_NOP },
+/*	{ 0xfe0000, 0xfe0003, MRA32_NOP },*/
 MEMORY_END
 
 static MEMORY_WRITE32_START( writemem )
@@ -342,17 +342,17 @@ static MEMORY_WRITE32_START( writemem )
 
 	{ 0xa00000, 0xa03fff, paletteram32_macrossp_w, &paletteram32 },
 
-	{ 0xb00004, 0xb00007, MWA32_NOP },	// ????
-	{ 0xb00008, 0xb0000b, MWA32_NOP },	// ????
-//	{ 0xb0000c, 0xb0000f, MWA32_NOP },
-	{ 0xb00010, 0xb00013, MWA32_RAM },	// macrossp palette fade
-//	{ 0xb00020, 0xb00023, MWA32_NOP },
+	{ 0xb00004, 0xb00007, MWA32_NOP },	/* ????*/
+	{ 0xb00008, 0xb0000b, MWA32_NOP },	/* ????*/
+/*	{ 0xb0000c, 0xb0000f, MWA32_NOP },*/
+	{ 0xb00010, 0xb00013, MWA32_RAM },	/* macrossp palette fade*/
+/*	{ 0xb00020, 0xb00023, MWA32_NOP },*/
 
 	{ 0xc00000, 0xc00003, macrossp_soundcmd_w },
 
 	{ 0xf00000, 0xf1ffff, MWA32_RAM, &macrossp_mainram }, /* Main Ram */
 
-//	{ 0xfe0000, 0xfe0003, MWA32_NOP },
+/*	{ 0xfe0000, 0xfe0003, MWA32_NOP },*/
 MEMORY_END
 
 
@@ -478,10 +478,10 @@ INPUT_PORTS_START( macrossp )
 	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x1000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )	// See above for manual listing....
+	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )	/* See above for manual listing....*/
 	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x4000, 0x4000, "Language" )	// See title page for difference :-)
+	PORT_DIPNAME( 0x4000, 0x4000, "Language" )	/* See title page for difference :-)*/
 	PORT_DIPSETTING(      0x4000, "Japanese" )
 	PORT_DIPSETTING(      0x0000, "English" )
 	PORT_SERVICE( 0x8000, IP_ACTIVE_LOW )
@@ -646,7 +646,7 @@ INPUT_PORTS_START( quizmoon )
 	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x1000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Flip_Screen ) )	// See in test mode ok but not working.... 
+	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Flip_Screen ) )	/* See in test mode ok but not working.... */
 	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x4000, 0x4000, DEF_STR( Unused ) )
@@ -750,7 +750,7 @@ static void irqhandler(int irq)
 
 	/* IRQ lines 1 & 4 on the sound 68000 are definitely triggered by the ES5506,
 	but I haven't noticed the ES5506 ever assert the line - maybe only used when developing the game? */
-//	cpu_set_irq_line(1,1,irq ? ASSERT_LINE : CLEAR_LINE);
+/*	cpu_set_irq_line(1,1,irq ? ASSERT_LINE : CLEAR_LINE);*/
 }
 
 static struct ES5506interface es5506_interface =
@@ -771,7 +771,7 @@ static MACHINE_DRIVER_START( macrossp )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68EC020, 50000000/2)	/* 25 MHz */
 	MDRV_CPU_MEMORY(readmem,writemem)
-	MDRV_CPU_VBLANK_INT(irq3_line_hold,1) // there are others ...
+	MDRV_CPU_VBLANK_INT(irq3_line_hold,1) /* there are others ...*/
 
 	MDRV_CPU_ADD(M68000, 32000000/2)	/* 16 MHz */
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -781,7 +781,7 @@ static MACHINE_DRIVER_START( macrossp )
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	/* video hardware */
-//	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_RGB_DIRECT) /* only needs 6 bits because of alpha blending */
+/*	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_RGB_DIRECT)  // only needs 6 bits because of alpha blending /*/
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN) /* only needs 6 bits because of alpha blending */
 	MDRV_SCREEN_SIZE(32*16, 16*16)
 	MDRV_VISIBLE_AREA(0*16, 24*16-1, 0*16, 15*16-1)
@@ -819,7 +819,7 @@ ROM_START( macrossp )
 	ROM_LOAD16_BYTE( "bp964a.u21", 0x000000, 0x080000, CRC(87bdd2fc) SHA1(c33f087ebca6e98db195404788ca8e0cc6663622) )
 
 	ROM_REGION( 0x20000, REGION_USER1, 0 )
-	ROM_LOAD( "bp964a.u49", 0x000000, 0x020000, CRC(ad203f76) SHA1(3eb86eeeb020349dfd88ebc8b4fc9579d1cc50fb) )  // 'BIOS'
+	ROM_LOAD( "bp964a.u49", 0x000000, 0x020000, CRC(ad203f76) SHA1(3eb86eeeb020349dfd88ebc8b4fc9579d1cc50fb) )  /* 'BIOS'*/
 
 	ROM_REGION( 0x1000000, REGION_GFX1, 0 ) /* sprites - 16x16x8 */
 	ROM_LOAD32_BYTE( "bp964a.u9",  0x000003, 0x400000, CRC(bd51a70d) SHA1(3447ae9d368e4e33df2d4e2848b4fd5aa0fc6840) )
@@ -865,7 +865,7 @@ ROM_START( quizmoon )
 	ROM_LOAD16_BYTE( "u21.bin", 0x000000, 0x020000, CRC(6fc625c6) SHA1(542bc025cf0e37686eae5d6c80bc5e047d6389fd) )
 
 	ROM_REGION( 0x20000, REGION_USER1, 0 )
-	ROM_LOAD( "u49.bin", 0x000000, 0x020000, CRC(1590ad81) SHA1(04fb8119d9eafc6d2a921700dfb11e9c8b705c88) )  // 'BIOS'
+	ROM_LOAD( "u49.bin", 0x000000, 0x020000, CRC(1590ad81) SHA1(04fb8119d9eafc6d2a921700dfb11e9c8b705c88) )  /* 'BIOS'*/
 
 	ROM_REGION( 0x1000000, REGION_GFX1, 0 )
 	ROM_LOAD32_BYTE( "u9.bin",  0x0000003, 0x0400000, CRC(aaaf2ca9) SHA1(b9e59590daf4cdee4b1deeb6d4ecc80eb12a2e18) )

@@ -308,9 +308,9 @@ static WRITE_HANDLER( lastmiss_i8751_w )
  	if ((readinputport(2)&3)!=3 && latch) {coin++; latch=0;snd=0x400;i8751_return=0x400;return;}
 	if (i8751_value==0x007a) i8751_return=0x0185; /* Japan ID code */
 	if (i8751_value==0x007b) i8751_return=0x0184; /* USA ID code */
-	if (i8751_value==0x0001) {coin=snd=0;}//???
-	if (i8751_value==0x0000) {i8751_return=0x0184;}//???
-	if (i8751_value==0x0401) i8751_return=0x0184; //???
+	if (i8751_value==0x0001) {coin=snd=0;}/*???*/
+	if (i8751_value==0x0000) {i8751_return=0x0184;}/*???*/
+	if (i8751_value==0x0401) i8751_return=0x0184; /*???*/
 	if ((i8751_value>>8)==0x01) i8751_return=0x0184; /* Coinage setup */
 	if ((i8751_value>>8)==0x02) {i8751_return=snd | ((coin / 10) << 4) | (coin % 10); snd=0;} /* Coin return */
 	if ((i8751_value>>8)==0x03) {i8751_return=0; coin--; } /* Coin clear */

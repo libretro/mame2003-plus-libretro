@@ -153,7 +153,7 @@ static WRITE_HANDLER( wc_b0 )
 	if (wcb0!=data)
 	{
 		wcb0 = data;
-		//logerror("wcb0=%i pc=%4x\n",wcb0, activecpu_get_pc() );
+		/*logerror("wcb0=%i pc=%4x\n",wcb0, activecpu_get_pc() );*/
 	}
 }
 static int wcb1=-1;
@@ -162,7 +162,7 @@ static WRITE_HANDLER( wc_b1 )
 	if (wcb1!=data)
 	{
 		wcb1 = data;
-		//logerror("wcb1=%i pc=%4x\n",wcb1, activecpu_get_pc() );
+		/*logerror("wcb1=%i pc=%4x\n",wcb1, activecpu_get_pc() );*/
 	}
 }
 static int wcb2=-1;
@@ -171,7 +171,7 @@ static WRITE_HANDLER( wc_b2 )
 	if (wcb2!=data)
 	{
 		wcb2 = data;
-		//logerror("wcb2=%i pc=%4x\n",wcb2, activecpu_get_pc() );
+		/*logerror("wcb2=%i pc=%4x\n",wcb2, activecpu_get_pc() );*/
 	}
 }
 
@@ -236,14 +236,14 @@ INPUT_PORTS_START( wallc )
 	PORT_DIPSETTING(	0x00, "Normal" )
 
 	PORT_START	/* b200 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 )	//Right curve button; select current playfield in test mode
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	//not used ?
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )	//service?? plays loud,high-pitched sound
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 )	//Left curve button; browse playfields in test mode
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )	//ok
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )	//ok
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )	//ok
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )	//ok
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 )	/*Right curve button; select current playfield in test mode*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/*not used ?*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )	/*service?? plays loud,high-pitched sound*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 )	/*Left curve button; browse playfields in test mode*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )	/*ok*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )	/*ok*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )	/*ok*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )	/*ok*/
 
 	PORT_START	/* b400 - player position 8 bit analog input - value read is used as position of the player directly - what type of input is that ? DIAL ?*/
 	PORT_ANALOG( 0xff, 0x00, IPT_DIAL | IPF_PLAYER1 | IPF_REVERSE, 50, 3, 0, 0 )

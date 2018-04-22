@@ -34,7 +34,7 @@ WRITE_HANDLER( spdodgeb_videoram_w );
 
 
 /* private globals */
-static int toggle=0;//, soundcode = 0;
+static int toggle=0;/*, soundcode = 0;*/
 static int adpcm_pos[2],adpcm_end[2],adpcm_idle[2];
 /* end of private globals */
 
@@ -98,7 +98,7 @@ static void spd_adpcm_int(int chip)
 static int mcu63701_command;
 static int inputs[4];
 
-#if 0	// default - more sensitive (state change and timing measured on real board?)
+#if 0	/* default - more sensitive (state change and timing measured on real board?)*/
 static void mcu63705_update_inputs(void)
 {
 	static int running[2],jumped[2];
@@ -163,7 +163,7 @@ static void mcu63705_update_inputs(void)
 	inputs[2] = running[0] | buttons[0];
 	inputs[3] = running[1] | buttons[1];
 }
-#else	// alternate - less sensitive
+#else	/* alternate - less sensitive*/
 static void mcu63705_update_inputs(void)
 {
 #define DBLTAP_TOLERANCE 5
@@ -173,7 +173,7 @@ static void mcu63705_update_inputs(void)
 #define A 0x10
 #define D 0x20
 
-	static UINT8 tapc[4] = {0,0,0,0};	// R1, R2, L1, L2
+	static UINT8 tapc[4] = {0,0,0,0};	/* R1, R2, L1, L2*/
 	static UINT8 last_port[2] = {0,0};
 	static UINT8 last_dash[2] = {0,0};
 	UINT8 curr_port[2];
@@ -227,7 +227,7 @@ static void mcu63705_update_inputs(void)
 
 static READ_HANDLER( mcu63701_r )
 {
-//	logerror("CPU #0 PC %04x: read from port %02x of 63701 data address 3801\n",activecpu_get_pc(),offset);
+/*	logerror("CPU #0 PC %04x: read from port %02x of 63701 data address 3801\n",activecpu_get_pc(),offset);*/
 
 	if (mcu63701_command == 0) return 0x6a;
 	else switch (offset)
@@ -243,7 +243,7 @@ static READ_HANDLER( mcu63701_r )
 
 static WRITE_HANDLER( mcu63701_w )
 {
-//	logerror("CPU #0 PC %04x: write %02x to 63701 control address 3800\n",activecpu_get_pc(),data);
+/*	logerror("CPU #0 PC %04x: write %02x to 63701 control address 3800\n",activecpu_get_pc(),data);*/
 	mcu63701_command = data;
 	mcu63705_update_inputs();
 }
@@ -274,12 +274,12 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x0fff, MWA_RAM },
 	{ 0x1000, 0x10ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x2000, 0x2fff, spdodgeb_videoram_w, &spdodgeb_videoram },
-//	{ 0x3000, 0x3000, MWA_RAM },
-//	{ 0x3001, 0x3001, MWA_RAM },
+/*	{ 0x3000, 0x3000, MWA_RAM },*/
+/*	{ 0x3001, 0x3001, MWA_RAM },*/
 	{ 0x3002, 0x3002, sound_command_w },
-//	{ 0x3003, 0x3003, MWA_RAM },
+/*	{ 0x3003, 0x3003, MWA_RAM },*/
 	{ 0x3004, 0x3004, spdodgeb_scrollx_lo_w },
-//	{ 0x3005, 0x3005, MWA_RAM }, /* mcu63701_output_w */
+/*	{ 0x3005, 0x3005, MWA_RAM },  // mcu63701_output_w /*/
 	{ 0x3006, 0x3006, spdodgeb_ctrl_w },	/* scroll hi, flip screen, bank switch, palette select */
 	{ 0x3800, 0x3800, mcu63701_w },
 	{ 0x4000, 0xffff, MWA_ROM },

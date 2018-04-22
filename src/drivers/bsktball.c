@@ -340,7 +340,7 @@ static DISCRETE_SOUND_START(bsktball_sound_interface)
 	/************************************************/
 	/* Bounce is a trigger fed directly to the amp  */
 	/************************************************/
-	DISCRETE_FILTER2(BSKTBALL_BOUNCE_SND, 1, BSKTBALL_BOUNCE_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	// remove DC
+	DISCRETE_FILTER2(BSKTBALL_BOUNCE_SND, 1, BSKTBALL_BOUNCE_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	/* remove DC*/
 
 	/************************************************/
 	/* Crowd effect is variable amplitude, filtered */

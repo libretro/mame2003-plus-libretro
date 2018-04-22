@@ -161,8 +161,8 @@ MEMORY_WRITE16_START( writemem )
 	{ 0x958000, 0x958001, led_w },
 	{ 0x960000, 0x960001, MWA16_NOP },	/* enable NVRAM? */
 	{ 0x968000, 0x968001, avgdvg_reset_word_w },
-//	{ 0x970000, 0x970001, avgdvg_go_w },
-//	{ 0x978000, 0x978001, watchdog_reset_w },
+/*	{ 0x970000, 0x970001, avgdvg_go_w },*/
+/*	{ 0x978000, 0x978001, watchdog_reset_w },*/
 	/* the following is wrong, but it's the only way I found to fix the service mode */
 	{ 0x978000, 0x978001, avgdvg_go_word_w },
 MEMORY_END

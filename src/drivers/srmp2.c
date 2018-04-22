@@ -105,7 +105,7 @@ static DRIVER_INIT( srmp2 )
 	data16_t *RAM = (data16_t *) memory_region(REGION_CPU1);
 
 	/* Fix "ERROR BACK UP" and "ERROR IOX" */
-	RAM[0x20c80 / 2] = 0x4e75;								// RTS
+	RAM[0x20c80 / 2] = 0x4e75;								/* RTS*/
 }
 
 static DRIVER_INIT( srmp3 )
@@ -113,22 +113,22 @@ static DRIVER_INIT( srmp3 )
 	data8_t *RAM = memory_region(REGION_CPU1);
 
 	/* BANK ROM (0x08000 - 0x1ffff) Check skip [MAIN ROM side] */
-	RAM[0x00000 + 0x7b69] = 0x00;							// NOP
-	RAM[0x00000 + 0x7b6a] = 0x00;							// NOP
+	RAM[0x00000 + 0x7b69] = 0x00;							/* NOP*/
+	RAM[0x00000 + 0x7b6a] = 0x00;							/* NOP*/
 
 	/* MAIN ROM (0x00000 - 0x07fff) Check skip [BANK ROM side] */
-	RAM[0x08000 + 0xc10b] = 0x00;							// NOP
-	RAM[0x08000 + 0xc10c] = 0x00;							// NOP
-	RAM[0x08000 + 0xc10d] = 0x00;							// NOP
-	RAM[0x08000 + 0xc10e] = 0x00;							// NOP
-	RAM[0x08000 + 0xc10f] = 0x00;							// NOP
-	RAM[0x08000 + 0xc110] = 0x00;							// NOP
-	RAM[0x08000 + 0xc111] = 0x00;							// NOP
+	RAM[0x08000 + 0xc10b] = 0x00;							/* NOP*/
+	RAM[0x08000 + 0xc10c] = 0x00;							/* NOP*/
+	RAM[0x08000 + 0xc10d] = 0x00;							/* NOP*/
+	RAM[0x08000 + 0xc10e] = 0x00;							/* NOP*/
+	RAM[0x08000 + 0xc10f] = 0x00;							/* NOP*/
+	RAM[0x08000 + 0xc110] = 0x00;							/* NOP*/
+	RAM[0x08000 + 0xc111] = 0x00;							/* NOP*/
 
 	/* "ERR IOX" Check skip [MAIN ROM side] */
-	RAM[0x00000 + 0x784e] = 0x00;							// NOP
-	RAM[0x00000 + 0x784f] = 0x00;							// NOP
-	RAM[0x00000 + 0x7850] = 0x00;							// NOP
+	RAM[0x00000 + 0x784e] = 0x00;							/* NOP*/
+	RAM[0x00000 + 0x784f] = 0x00;							/* NOP*/
+	RAM[0x00000 + 0x7850] = 0x00;							/* NOP*/
 }
 
 static MACHINE_INIT( srmp2 )
@@ -484,7 +484,7 @@ static WRITE_HANDLER( srmp3_input_1_w )
 		else if (data == 0x49) qqq49++;
 		else qqqzz++;
 
-//		usrintf_showmessage("%04X %04X %04X %04X", qqq01, qqq02, qqq49, qqqzz);
+/*		usrintf_showmessage("%04X %04X %04X %04X", qqq01, qqq02, qqq49, qqqzz);*/
 	}
 }
 
@@ -512,8 +512,8 @@ static READ_HANDLER( srmp3_input_r )
 
 	logerror("PC:%04X          srmp3_input_r\n", activecpu_get_pc());
 
-	// PC:0x8903	ROM:0xC903
-	// PC:0x7805	ROM:0x7805
+	/* PC:0x8903	ROM:0xC903*/
+	/* PC:0x7805	ROM:0x7805*/
 
 	if ((activecpu_get_pc() == 0x8903) || (activecpu_get_pc() == 0x7805))	/* Panel keys */
 	{
@@ -533,8 +533,8 @@ static READ_HANDLER( srmp3_input_r )
 		}
 	}
 
-	// PC:0x8926	ROM:0xC926
-	// PC:0x7822	ROM:0x7822
+	/* PC:0x8926	ROM:0xC926*/
+	/* PC:0x7822	ROM:0x7822*/
 
 	if ((activecpu_get_pc() == 0x8926) || (activecpu_get_pc() == 0x7822))	/* Analizer and memory reset keys */
 	{
@@ -946,7 +946,7 @@ INPUT_PORTS_START( ponchin )
 	PORT_DIPNAME( 0x30, 0x30, "Player Score" )
 	PORT_DIPSETTING(    0x30, "1000" )
 	PORT_DIPSETTING(    0x20, "2000" )
-//	PORT_DIPSETTING(    0x10, "1000" )
+/*	PORT_DIPSETTING(    0x10, "1000" )*/
 	PORT_DIPSETTING(    0x00, "3000" )
 	PORT_BITX(    0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Debug Mode", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
@@ -1153,7 +1153,7 @@ static MACHINE_DRIVER_START( srmp3 )
 	/* basic machine hardware */
 
 	MDRV_CPU_ADD(Z80, 3500000)		/* 3.50 MHz ? */
-	//		4000000,				/* 4.00 MHz ? */
+	/*		4000000,				 // 4.00 MHz ? /*/
 	MDRV_CPU_MEMORY(srmp3_readmem,srmp3_writemem)
 	MDRV_CPU_PORTS(srmp3_readport,srmp3_writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)

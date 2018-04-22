@@ -83,14 +83,14 @@ MEMORY_END
 
 static PORT_READ_START( readport )
 	{ 0x30, 0x30, input_port_12_r },
-	{ 0xc1, 0xc2, key_matrix_r },	// 0xc0-c3 8255ppi
+	{ 0xc1, 0xc2, key_matrix_r },	/* 0xc0-c3 8255ppi*/
 	{ 0xd1, 0xd1, YM2203_read_port_0_r },
 PORT_END
 
 static PORT_WRITE_START( writeport )
 	{ 0x30, 0x30, bank_sel_w },
 	{ 0xc0, 0xc0, input_sel_w },
-	{ 0xc3, 0xc3, IOWP_NOP },		// 0xc0-c3 8255ppi
+	{ 0xc3, 0xc3, IOWP_NOP },		/* 0xc0-c3 8255ppi*/
 	{ 0xd0, 0xd0, YM2203_control_port_0_w },
 	{ 0xd1, 0xd1, YM2203_write_port_0_w },
 PORT_END
@@ -230,15 +230,15 @@ INPUT_PORTS_START( mayumi )
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START // 12
+	PORT_START /* 12*/
     PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
     PORT_BIT( 0x40, IP_ACTIVE_LOW , IPT_COIN1 )
     PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_SERVICE( 0x10, IP_ACTIVE_HIGH )
-    PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SERVICE2 ) // analyzer
+    PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SERVICE2 ) /* analyzer*/
     PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
     PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-    PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SERVICE4 ) // memory reset
+    PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SERVICE4 ) /* memory reset*/
 
 INPUT_PORTS_END
 
@@ -307,7 +307,7 @@ MACHINE_DRIVER_END
 ROM_START( mayumi )
 	ROM_REGION( 0x20000, REGION_CPU1, 0 ) /* CPU */
 	ROM_LOAD( "my00.bin",  0x00000, 0x08000, CRC(33189e37) SHA1(cbf75f56360ef7da5b7b1207b58cd0d72bcaf207) )
-	ROM_LOAD( "my01.bin",  0x10000, 0x10000, CRC(5280fb39) SHA1(cee7653f4353031701ec1608881b37073b178d9f) ) // Banked
+	ROM_LOAD( "my01.bin",  0x10000, 0x10000, CRC(5280fb39) SHA1(cee7653f4353031701ec1608881b37073b178d9f) ) /* Banked*/
 	ROM_COPY( REGION_CPU1, 0x10000, 0x08000, 0x4000 )
 
 	ROM_REGION( 0x30000, REGION_GFX1, ROMREGION_DISPOSE ) /* gfx */
@@ -316,9 +316,9 @@ ROM_START( mayumi )
 	ROM_LOAD( "my30.bin", 0x20000, 0x10000, CRC(7f22d53f) SHA1(f8e5874ba0fa003ba0d6a504b2169acdf1491484) )
 
 	ROM_REGION( 0x0300, REGION_PROMS, 0 ) /* color PROMs */
-	ROM_LOAD( "my-9m.bin", 0x0000,  0x0100, CRC(b18fd669) SHA1(e2b1477c1bc49994b0b652d63a2205363aab9a74) ) // R
-	ROM_LOAD( "my-9l.bin", 0x0100,  0x0100, CRC(f3fef561) SHA1(247f579fe91ad7e516c93a873b2ecca780bf6da0) ) // G
-	ROM_LOAD( "my-9k.bin", 0x0200,  0x0100, CRC(3e7a8012) SHA1(24129586a1c39f68dad274b5afbdd6c027ab0901) ) // B
+	ROM_LOAD( "my-9m.bin", 0x0000,  0x0100, CRC(b18fd669) SHA1(e2b1477c1bc49994b0b652d63a2205363aab9a74) ) /* R*/
+	ROM_LOAD( "my-9l.bin", 0x0100,  0x0100, CRC(f3fef561) SHA1(247f579fe91ad7e516c93a873b2ecca780bf6da0) ) /* G*/
+	ROM_LOAD( "my-9k.bin", 0x0200,  0x0100, CRC(3e7a8012) SHA1(24129586a1c39f68dad274b5afbdd6c027ab0901) ) /* B*/
 ROM_END
 
 GAME ( 1988, mayumi, 0, mayumi, mayumi, 0, ROT0, "[Sanritsu] Victory L.L.C.",  "Kikiippatsu Mayumi-chan (Japan)" )

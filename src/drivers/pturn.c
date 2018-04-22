@@ -242,19 +242,19 @@ static READ_HANDLER (pturn_custom_r)
 	switch(addr)
 	{
 		case 0xc803:
-			// pc=4a4,4a7 : dummy read?
+			/* pc=4a4,4a7 : dummy read?*/
 			return 0x00;
 
 		case 0xCA73:
-			// pc=0x0123 , bit6 must be 0
-			// pc=0x0545 , +40 must be 0xfe (check at 0577)
+			/* pc=0x0123 , bit6 must be 0*/
+			/* pc=0x0545 , +40 must be 0xfe (check at 0577)*/
 			return 0xbe;
 
-		//case 0xca00:
-		//  return 0x00; // pc=0x0131 for protect reset?
+		/*case 0xca00:*/
+		/*  return 0x00; */ /* pc=0x0131 for protect reset?*/
 
 		case 0xca74:
-			// pc=0x04db ,must be 66 (check at 016A)
+			/* pc=0x04db ,must be 66 (check at 016A)*/
 			return 0x66;
 	}
 	return 0x00;

@@ -151,12 +151,12 @@ static void dbz2_sound_irq(int irq)
 static MEMORY_READ16_START( dbz2readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },
 	{ 0x480000, 0x48ffff, MRA16_RAM },
-	{ 0x490000, 0x491fff, K054157_ram_word_r },	// '157 RAM is mirrored twice
+	{ 0x490000, 0x491fff, K054157_ram_word_r },	/* '157 RAM is mirrored twice*/
 	{ 0x492000, 0x493fff, K054157_ram_word_r },
-	{ 0x498000, 0x49ffff, K054157_rom_word_8000_r },	// code near a60 in dbz2, subroutine at 730 in dbz
+	{ 0x498000, 0x49ffff, K054157_rom_word_8000_r },	/* code near a60 in dbz2, subroutine at 730 in dbz*/
 	{ 0x4a0000, 0x4a0fff, K053247_word_r },
 	{ 0x4a1000, 0x4a3fff, MRA16_RAM },
-	{ 0x4a8000, 0x4abfff, MRA16_RAM },			// palette
+	{ 0x4a8000, 0x4abfff, MRA16_RAM },			/* palette*/
 	{ 0x4c0000, 0x4c0001, K053246_word_r },
 	{ 0x4e0000, 0x4e0001, dbz2_inp0_r },
 	{ 0x4e0002, 0x4e0003, dbz2_inp1_r },
@@ -165,8 +165,8 @@ static MEMORY_READ16_START( dbz2readmem )
 	{ 0x508000, 0x509fff, MRA16_RAM },
 	{ 0x510000, 0x513fff, MRA16_RAM },
 	{ 0x518000, 0x51bfff, MRA16_RAM },
-	{ 0x600000, 0x6fffff, MRA16_NOP }, 			// PSAC 1 ROM readback window
-	{ 0x700000, 0x7fffff, MRA16_NOP }, 			// PSAC 2 ROM readback window
+	{ 0x600000, 0x6fffff, MRA16_NOP }, 			/* PSAC 1 ROM readback window*/
+	{ 0x700000, 0x7fffff, MRA16_NOP }, 			/* PSAC 2 ROM readback window*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( dbz2writemem )
@@ -186,12 +186,12 @@ static MEMORY_WRITE16_START( dbz2writemem )
 	{ 0x4e8000, 0x4e8001, MWA16_NOP },
 	{ 0x4f0000, 0x4f0001, dbz2_sound_command_w },
 	{ 0x4f4000, 0x4f4001, dbz2_sound_cause_nmi },
-	{ 0x4f8000, 0x4f801f, MWA16_NOP },			// 251 #1
-	{ 0x4fc000, 0x4fc01f, K053251_lsb_w },		// 251 #2
+	{ 0x4f8000, 0x4f801f, MWA16_NOP },			/* 251 #1*/
+	{ 0x4fc000, 0x4fc01f, K053251_lsb_w },		/* 251 #2*/
 	{ 0x500000, 0x501fff, dbz2_bg2_videoram_w, &dbz2_bg2_videoram },
 	{ 0x508000, 0x509fff, dbz2_bg_videoram_w, &dbz2_bg_videoram },
-	{ 0x510000, 0x513fff, MWA16_RAM, &K053936_0_linectrl }, // ?? guess, it might not be
-	{ 0x518000, 0x51bfff, MWA16_RAM, &K053936_1_linectrl }, // ?? guess, it might not be
+	{ 0x510000, 0x513fff, MWA16_RAM, &K053936_0_linectrl }, /* ?? guess, it might not be*/
+	{ 0x518000, 0x51bfff, MWA16_RAM, &K053936_1_linectrl }, /* ?? guess, it might not be*/
 MEMORY_END
 
 /* dbz2 sound */
@@ -245,15 +245,15 @@ INPUT_PORTS_START( dbz )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START
-	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) ) // I think this is right, but can't stomach the game long enough to check
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) ) /* I think this is right, but can't stomach the game long enough to check*/
 	PORT_DIPSETTING(    0x01, "Easy" )
 	PORT_DIPSETTING(    0x03, "Normal" )
 	PORT_DIPSETTING(    0x02, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) ) // seems unused
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) ) /* seems unused*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Flip_Screen ) ) // Definitely correct 
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Flip_Screen ) ) /* Definitely correct */
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
@@ -265,7 +265,7 @@ INPUT_PORTS_START( dbz )
 	PORT_DIPNAME( 0x40, 0x00, "Language" )
 	PORT_DIPSETTING(    0x00, "English" )
 	PORT_DIPSETTING(    0x40, "Japanese" )
-	PORT_DIPNAME( 0x80, 0x00, "Mask ROM Test" ) //NOP'd
+	PORT_DIPNAME( 0x80, 0x00, "Mask ROM Test" ) /*NOP'd*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
@@ -273,7 +273,7 @@ INPUT_PORTS_START( dbz )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_SERVICE, "Test Switch", KEYCODE_F2, IP_JOY_NONE )				// "Test"
+	PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_SERVICE, "Test Switch", KEYCODE_F2, IP_JOY_NONE )				/* "Test"*/
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
@@ -313,7 +313,7 @@ INPUT_PORTS_START( dbz )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Disabled" )
+/*	PORT_DIPSETTING(    0x00, "Disabled" )*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( dbz2 )
@@ -366,7 +366,7 @@ INPUT_PORTS_START( dbz2 )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_SERVICE, "Test Switch", KEYCODE_F2, IP_JOY_NONE )		// "Test"
+	PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_SERVICE, "Test Switch", KEYCODE_F2, IP_JOY_NONE )		/* "Test"*/
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
@@ -406,7 +406,7 @@ INPUT_PORTS_START( dbz2 )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Disabled" )
+/*	PORT_DIPSETTING(    0x00, "Disabled" )*/
 INPUT_PORTS_END
 
 /**********************************************************************************/
@@ -584,11 +584,11 @@ static DRIVER_INIT(dbz)
 
 	ROM = (data16_t *)memory_region(REGION_CPU1);
 
-	// nop out dbz1's mask rom test
-	// tile ROM test
+	/* nop out dbz1's mask rom test*/
+	/* tile ROM test*/
 	ROM[0x790/2] = 0x4e71;
 	ROM[0x792/2] = 0x4e71;
-	// PSAC2 ROM test
+	/* PSAC2 ROM test*/
 	ROM[0x982/2] = 0x4e71;
 	ROM[0x984/2] = 0x4e71;
 	ROM[0x986/2] = 0x4e71;

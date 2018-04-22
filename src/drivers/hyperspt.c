@@ -138,7 +138,7 @@ static MEMORY_READ_START( hyperspt_readmem )
 	{ 0x1000, 0x10ff, MRA_RAM },
 	{ 0x1600, 0x1600, input_port_4_r }, /* DIP 2 */
 	{ 0x1680, 0x1680, input_port_0_r }, /* IO Coin */
-//	{ 0x1681, 0x1681, input_port_1_r }, /* P1 IO */
+/*	{ 0x1681, 0x1681, input_port_1_r },  // P1 IO /*/
 	{ 0x1681, 0x1681, konami_IN1_r }, /* P1 IO and handle fake button for cheating */
 	{ 0x1682, 0x1682, input_port_2_r }, /* P2 IO */
 	{ 0x1683, 0x1683, input_port_3_r }, /* DIP 1 */
@@ -211,7 +211,7 @@ INPUT_PORTS_START( hyperspt )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
-//	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+/*	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )*/
 	/* Fake button to press buttons 1 and 3 impossibly fast. Handle via konami_IN1_r */
 	PORT_BITX(0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_CHEAT | IPF_PLAYER1, "Run Like Hell Cheat", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 

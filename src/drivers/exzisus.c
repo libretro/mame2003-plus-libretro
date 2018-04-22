@@ -184,7 +184,7 @@ static MEMORY_WRITE_START( cpua_writemem )
 	{ 0xf001, 0xf001, taitosound_comm_w },
 	{ 0xf400, 0xf400, exzisus_cpua_bankswitch_w },
 	{ 0xf402, 0xf402, exzisus_coincounter_w },
-	{ 0xf404, 0xf404, MWA_NOP }, // ??
+	{ 0xf404, 0xf404, MWA_NOP }, /* ??*/
 	{ 0xf800, 0xffff, exzisus_sharedram_ac_w },
 MEMORY_END
 

@@ -141,7 +141,7 @@ Stephh's additional notes (based on the game Z80 code and some tests) :
 
 ***************************************************************************/
 
-//#define USE_MCU
+/*#define USE_MCU*/
 
 
 #include <math.h>
@@ -477,7 +477,7 @@ static MEMORY_WRITE_START( cyclshtg_writemem )
 	{ 0xdca0, 0xdcbf, nycaptor_scrlram_w, &nycaptor_scrlram },
 	{ 0xdce1, 0xdce1, MWA_NOP},
 	{ 0xdd00, 0xdeff, nycaptor_palette_w },
-	//{ 0xdf03, 0xdf03, nycaptor_gfxctrl_w },
+	/*{ 0xdf03, 0xdf03, nycaptor_gfxctrl_w },*/
 	{ 0xe000, 0xffff, nycaptor_sharedram_w,&nycaptor_sharedram },
 MEMORY_END
 
@@ -530,7 +530,7 @@ INPUT_PORTS_START( cyclshtg )
  PORT_START
 
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
-	  PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )//?
+	  PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )/*?*/
 	  PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
     PORT_DIPNAME( 0x08, 0x08, "Tilt" )
 	  PORT_DIPSETTING(    0x08, DEF_STR( No ) )
@@ -684,8 +684,8 @@ static struct GfxLayout spritelayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &charlayout,     0, 16 },//16 kolorow
-	{ REGION_GFX1, 0, &spritelayout, 256, 16 },//paleta 2, 16 kolorow
+	{ REGION_GFX1, 0, &charlayout,     0, 16 },/*16 kolorow*/
+	{ REGION_GFX1, 0, &spritelayout, 256, 16 },/*paleta 2, 16 kolorow*/
 	{ -1 }	/* end of array */
 };
 

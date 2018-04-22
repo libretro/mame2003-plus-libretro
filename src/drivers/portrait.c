@@ -79,8 +79,8 @@ static READ_HANDLER(a000_r)
 		  Bit 6 = Service Switch 1? (Inverted?) (If 0, then switch is on!)
 		  Bit 7 = Service Switch 2? (Inverted?) (If 0, then switch is on!)
 		*/
-		return	((input_port_4_r(0)^0x03)<<6)|	//Grab cab switches
-				(input_port_0_r(0) & 0x3f);		//Grab player inputs
+		return	((input_port_4_r(0)^0x03)<<6)|	/*Grab cab switches*/
+				(input_port_0_r(0) & 0x3f);		/*Grab player inputs*/
 
 	/*Player Inputs and Camera ready status? Note: it's inverted, but perhaps it works if I change to ACTIVE_LOW signal*/
 	case 0x10:
@@ -117,7 +117,7 @@ static WRITE_HANDLER(a000_w)
 		return;
 
 	case 0x10: /* DAC? */
-		//DAC_0_data_w( 0, data );
+		/*DAC_0_data_w( 0, data );*/
 		return;
 
 	case 0x18:
@@ -173,7 +173,7 @@ INPUT_PORTS_START( portrait )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON2 )	/*camera status ready flag?*/
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
-	PORT_START       /* DSW 1 */				//Most (but not all) verified and correct!
+	PORT_START       /* DSW 1 */				/*Most (but not all) verified and correct!*/
 	PORT_DIPNAME( 0x0f, 0x07, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
@@ -204,7 +204,7 @@ INPUT_PORTS_START( portrait )
 	PORT_DIPSETTING(    0x80, "Easy" )
 	PORT_DIPSETTING(    0x00, "Difficult" )
 
-	PORT_START      /* DSW 2 */						//Verified to be correct (from attract mode at least)
+	PORT_START      /* DSW 2 */						/*Verified to be correct (from attract mode at least)*/
 	PORT_DIPNAME( 0x01, 0x01, "Game Play" )
 	PORT_DIPSETTING(    0x01, "Normal Play" )
 	PORT_DIPSETTING(    0x00, "Freeplay (255 Cameras)" )

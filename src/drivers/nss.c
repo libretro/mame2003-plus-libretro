@@ -179,7 +179,7 @@ INPUT_PORTS_START( snes )
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x04, "4" )
 	PORT_DIPSETTING(    0x00, "5" )
-	PORT_DIPNAME( 0x30, 0x00, "Time limit per level?" ) // taken from the scan of nss_adam
+	PORT_DIPNAME( 0x30, 0x00, "Time limit per level?" ) /* taken from the scan of nss_adam*/
 	PORT_DIPSETTING(    0x10, "104 sec." )
 	PORT_DIPSETTING(    0x20, "112 sec." )
 	PORT_DIPSETTING(    0x00, "120 sec." )
@@ -376,7 +376,7 @@ ROM_END
 ROM_START( nss_smw )
 	NSS_BIOS
 	ROM_REGION( 0x100000, REGION_USER3, 0 )
-	ROM_LOAD( "mw.ic1", 0x00000, 0x40000, BAD_DUMP CRC(cfa601e7) SHA1(5c9a9a9fccd4b4fcbbda06dfdee41e92dc4e9097) ) // half size?
+	ROM_LOAD( "mw.ic1", 0x00000, 0x40000, BAD_DUMP CRC(cfa601e7) SHA1(5c9a9a9fccd4b4fcbbda06dfdee41e92dc4e9097) ) /* half size?*/
 
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, REGION_USER4, 0 )
@@ -386,7 +386,7 @@ ROM_END
 ROM_START( nss_fzer )
 	NSS_BIOS
 	ROM_REGION( 0x100000, REGION_USER3, 0 )
-	ROM_LOAD( "fz.ic2", 0x00000, 0x40000, BAD_DUMP CRC(cd281855) SHA1(c9f7895028bbeed3deaa82f4fb51f2569093124b) ) // maybe wrong size?
+	ROM_LOAD( "fz.ic2", 0x00000, 0x40000, BAD_DUMP CRC(cd281855) SHA1(c9f7895028bbeed3deaa82f4fb51f2569093124b) ) /* maybe wrong size?*/
 
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, REGION_USER4, 0 )
@@ -396,7 +396,7 @@ ROM_END
 ROM_START( nss_sten )
 	NSS_BIOS
 	ROM_REGION( 0x100000, REGION_USER3, 0 )
-	ROM_LOAD( "st.ic1", 0x00000, 0x40000, BAD_DUMP CRC(e94b48d9) SHA1(1ce9c25f8fb62798bbe016b2d1de1724d52e5674) )// maybe wrong size?
+	ROM_LOAD( "st.ic1", 0x00000, 0x40000, BAD_DUMP CRC(e94b48d9) SHA1(1ce9c25f8fb62798bbe016b2d1de1724d52e5674) )/* maybe wrong size?*/
 
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, REGION_USER4, 0 )
@@ -404,15 +404,15 @@ ROM_START( nss_sten )
 ROM_END
 
 GAMEX( 199?, nss,       0,		  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: BIOS", NOT_A_DRIVER )
-GAMEX( 1992, nss_actr,  nss,	  snes,	     snes,    snes,		ROT0, "Enix",						"Nintendo Super System: Act Raiser", GAME_NO_SOUND | GAME_NOT_WORKING ) // time broken
-GAMEX( 1992, nss_adam,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: The Addams Family", GAME_NO_SOUND | GAME_NOT_WORKING ) // crashes mame
-GAMEX( 1992, nss_aten,  nss,	  snes,	     snes,    snes,		ROT0, "Absolute Entertainment Inc.","Nintendo Super System: David Crane's Amazing Tennis", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS ) // gfx problems with net
+GAMEX( 1992, nss_actr,  nss,	  snes,	     snes,    snes,		ROT0, "Enix",						"Nintendo Super System: Act Raiser", GAME_NO_SOUND | GAME_NOT_WORKING ) /* time broken*/
+GAMEX( 1992, nss_adam,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: The Addams Family", GAME_NO_SOUND | GAME_NOT_WORKING ) /* crashes mame*/
+GAMEX( 1992, nss_aten,  nss,	  snes,	     snes,    snes,		ROT0, "Absolute Entertainment Inc.","Nintendo Super System: David Crane's Amazing Tennis", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS ) /* gfx problems with net*/
 GAMEX( 1992, nss_con3,  nss,	  snes,	     snes,    snes,		ROT0, "Konami",						"Nintendo Super System: Contra 3: The Alien Wars", GAME_NO_SOUND )
 GAMEX( 1992, nss_lwep,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: Lethal Weapon", GAME_NO_SOUND )
-GAMEX( 1992, nss_ncaa,  nss,	  snes,	     snes,    snes,		ROT0, "Sculptured Software Inc.",	"Nintendo Super System: NCAA Basketball", GAME_NO_SOUND | GAME_NOT_WORKING ) // severe gfx problems, no inputs
-GAMEX( 1992, nss_rob3,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: Robocop 3", GAME_NO_SOUND | GAME_NOT_WORKING ) // invisible enemy? gameplay prob?
-GAMEX( 1992, nss_skin,  nss,	  snes,	     snes,    snes,		ROT0, "Irem",						"Nintendo Super System: Skins Game", GAME_NO_SOUND | GAME_NOT_WORKING ) // uses some gfx modes not implemented
-GAMEX( 1992, nss_ssoc,  nss,	  snes,	     snes,    snes,		ROT0, "Human Inc.",					"Nintendo Super System: Super Soccer", GAME_NO_SOUND | GAME_NOT_WORKING ) // lots of gfx problems
-GAMEX( 199?, nss_smw,   nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: Super Mario World", GAME_NO_SOUND | GAME_NOT_WORKING ) // bad rom
-GAMEX( 199?, nss_fzer,  nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: F-Zero", GAME_NO_SOUND | GAME_NOT_WORKING ) // bad rom
-GAMEX( 199?, nss_sten,  nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: Super Tennis", GAME_NO_SOUND | GAME_NOT_WORKING ) // bad rom
+GAMEX( 1992, nss_ncaa,  nss,	  snes,	     snes,    snes,		ROT0, "Sculptured Software Inc.",	"Nintendo Super System: NCAA Basketball", GAME_NO_SOUND | GAME_NOT_WORKING ) /* severe gfx problems, no inputs*/
+GAMEX( 1992, nss_rob3,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: Robocop 3", GAME_NO_SOUND | GAME_NOT_WORKING ) /* invisible enemy? gameplay prob?*/
+GAMEX( 1992, nss_skin,  nss,	  snes,	     snes,    snes,		ROT0, "Irem",						"Nintendo Super System: Skins Game", GAME_NO_SOUND | GAME_NOT_WORKING ) /* uses some gfx modes not implemented*/
+GAMEX( 1992, nss_ssoc,  nss,	  snes,	     snes,    snes,		ROT0, "Human Inc.",					"Nintendo Super System: Super Soccer", GAME_NO_SOUND | GAME_NOT_WORKING ) /* lots of gfx problems*/
+GAMEX( 199?, nss_smw,   nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: Super Mario World", GAME_NO_SOUND | GAME_NOT_WORKING ) /* bad rom*/
+GAMEX( 199?, nss_fzer,  nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: F-Zero", GAME_NO_SOUND | GAME_NOT_WORKING ) /* bad rom*/
+GAMEX( 199?, nss_sten,  nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: Super Tennis", GAME_NO_SOUND | GAME_NOT_WORKING ) /* bad rom*/

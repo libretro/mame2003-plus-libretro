@@ -61,7 +61,7 @@ static UINT8 *shared_ram, *shared_auxram;
 static UINT8 *hal21_vreg, *hal21_sndfifo;
 
 /**************************************************************************/
-// Test Handlers
+/* Test Handlers*/
 
 static WRITE_HANDLER( aso_scroll_sync_w )
 {
@@ -76,11 +76,11 @@ static void hal21_sound_scheduler(int mode, int data)
 
 	switch (mode)
 	{
-		case 0: // init
+		case 0: /* init*/
 			fftail = ffhead = ffcount = hold = busy = 0;
 		return;
 
-		case 1: // cut-through or capture
+		case 1: /* cut-through or capture*/
 			if (data & ~0x1f) busy = 1; else
 			if (data && busy)
 			{
@@ -94,11 +94,11 @@ static void hal21_sound_scheduler(int mode, int data)
 			}
 		break;
 
-		case 2: // acknowledge
+		case 2: /* acknowledge*/
 			if (busy) { busy = 0; hold = 4; }
 		return;
 
-		case 3: // release
+		case 3: /* release*/
 			if (!busy)
 			{
 				if (hold) hold--; else
@@ -420,7 +420,7 @@ INPUT_PORTS_START( hal21 )
 	PORT_DIPSETTING(    0x10, DEF_STR( Demo_Sounds) )
 	PORT_DIPSETTING(    0x08, "Infinite Lives" )
 	PORT_DIPSETTING(    0x00, "Freeze" )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Flip_Screen ) ) // 0x20 -> fe65
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Flip_Screen ) ) /* 0x20 -> fe65*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
@@ -610,9 +610,9 @@ static MEMORY_READ_START( aso_readmem_sound )
 	{ 0xd000, 0xd000, hal21_soundcommand_r },
 	{ 0xe000, 0xe000, CPUC_ready_r },
 	{ 0xf000, 0xf000, YM3526_status_port_0_r },
-	{ 0xf002, 0xf002, MRA_NOP }, // unknown read
-	{ 0xf004, 0xf004, MRA_NOP }, // unknown read
-	{ 0xf006, 0xf006, MRA_NOP }, // unknown read
+	{ 0xf002, 0xf002, MRA_NOP }, /* unknown read*/
+	{ 0xf004, 0xf004, MRA_NOP }, /* unknown read*/
+	{ 0xf006, 0xf006, MRA_NOP }, /* unknown read*/
 MEMORY_END
 
 static MEMORY_WRITE_START( aso_writemem_sound )
@@ -626,7 +626,7 @@ MEMORY_END
 
 static struct AY8910interface ay8910_interface = {
 	2, /* number of chips */
-	1500000, // hand tuned
+	1500000, /* hand tuned*/
 	{ 25,40 },
 	{ 0 },
 	{ 0 },
@@ -646,17 +646,17 @@ static MEMORY_WRITE_START( hal21_writemem_sound )
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0xe000, 0xe000, AY8910_control_port_0_w },
 	{ 0xe001, 0xe001, AY8910_write_port_0_w },
-	{ 0xe002, 0xe002, hal21_soundack_w }, // bitfielded(0-5) acknowledge write, details unknown
+	{ 0xe002, 0xe002, hal21_soundack_w }, /* bitfielded(0-5) acknowledge write, details unknown*/
 	{ 0xe008, 0xe008, AY8910_control_port_1_w },
 	{ 0xe009, 0xe009, AY8910_write_port_1_w },
 MEMORY_END
 
 static PORT_READ_START( hal21_readport_sound )
-	{ 0x0000, 0x0000, MRA_NOP }, // external sound ROM detection?
+	{ 0x0000, 0x0000, MRA_NOP }, /* external sound ROM detection?*/
 PORT_END
 
 static PORT_WRITE_START( hal21_writeport_sound )
-	{ 0x0000, 0x0000, MWA_NOP }, // external sound ROM switch?
+	{ 0x0000, 0x0000, MWA_NOP }, /* external sound ROM switch?*/
 PORT_END
 
 /**************************** ASO/Alpha Mission *************************/
@@ -826,7 +826,7 @@ static MACHINE_DRIVER_START( hal21 )
 	MDRV_CPU_MEMORY(hal21_readmem_sound,hal21_writemem_sound)
 	MDRV_CPU_PORTS(hal21_readport_sound,hal21_writeport_sound)
 	MDRV_CPU_VBLANK_INT(hal21_sound_interrupt,1)
-	MDRV_CPU_PERIODIC_INT(irq0_line_hold,220) // music tempo, hand tuned
+	MDRV_CPU_PERIODIC_INT(irq0_line_hold,220) /* music tempo, hand tuned*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)

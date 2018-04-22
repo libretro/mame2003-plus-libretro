@@ -34,9 +34,9 @@ INTERRUPT_GEN( rotaryf_interrupt )
 static MEMORY_READ_START( rotaryf_readmem )
 	{ 0x0000, 0x03ff, MRA_ROM },
 	{ 0x4000, 0x57ff, MRA_ROM },
-//	{ 0x6ffb, 0x6ffb, random_r }, ??
-//	{ 0x6ffd, 0x6ffd, random_r }, ??
-//	{ 0x6fff, 0x6fff, random_r }, ??
+/*	{ 0x6ffb, 0x6ffb, random_r }, ??*/
+/*	{ 0x6ffd, 0x6ffd, random_r }, ??*/
+/*	{ 0x6fff, 0x6fff, random_r }, ??*/
 	{ 0x7000, 0x73ff, MRA_RAM },
 	{ 0x8000, 0x9fff, MRA_RAM },
 	{ 0xa000, 0xa1ff, MRA_RAM },
@@ -45,22 +45,22 @@ MEMORY_END
 static MEMORY_WRITE_START( rotaryf_writemem )
 	{ 0x0000, 0x03ff, MWA_ROM },
 	{ 0x4000, 0x57ff, MWA_ROM },
-	{ 0x7000, 0x73ff, MWA_RAM }, // clears to 1ff ?
+	{ 0x7000, 0x73ff, MWA_RAM }, /* clears to 1ff ?*/
 	{ 0x8000, 0x9fff, c8080bw_videoram_w, &videoram, &videoram_size },
 	{ 0xa000, 0xa1ff, MWA_RAM },
 MEMORY_END
 
 static PORT_READ_START( rotaryf_readport )
-//	{ 0x00, 0x00, input_port_0_r },
+/*	{ 0x00, 0x00, input_port_0_r },*/
 	{ 0x21, 0x21, input_port_1_r },
 	{ 0x29, 0x29, input_port_2_r },
 	{ 0x26, 0x26, input_port_3_r },
-//	{ 0x28, 0x28, c8080bw_shift_data_r },
+/*	{ 0x28, 0x28, c8080bw_shift_data_r },*/
 PORT_END
 
 static PORT_WRITE_START( rotaryf_writeport )
-//	{ 0x21, 0x21, c8080bw_shift_amount_w },
-//	{ 0x28, 0x28, c8080bw_shift_data_w },
+/*	{ 0x21, 0x21, c8080bw_shift_amount_w },*/
+/*	{ 0x28, 0x28, c8080bw_shift_data_w },*/
 PORT_END
 
 INPUT_PORTS_START( rotaryf )
@@ -111,9 +111,9 @@ INPUT_PORTS_START( rotaryf )
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING( 0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING( 0x40, DEF_STR( On ) )
-//	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
-//	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_2WAY | IPF_PLAYER2 )
-//	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2 )
+/*	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )*/
+/*	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_2WAY | IPF_PLAYER2 )*/
+/*	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_2WAY | IPF_PLAYER2 )*/
 
 	PORT_START		/* Dummy port for cocktail mode */
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )

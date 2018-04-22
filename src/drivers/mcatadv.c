@@ -111,24 +111,24 @@ static MEMORY_READ16_START( mcatadv_readmem )
 	{ 0x200000, 0x200005, MRA16_RAM },
 	{ 0x300000, 0x300005, MRA16_RAM },
 
-//	{ 0x180018, 0x18001f, MRA16_NOP }, // ?
+/*	{ 0x180018, 0x18001f, MRA16_NOP }, */ /* ?*/
 
-	{ 0x400000, 0x401fff, MRA16_RAM }, // Tilemap 0
-	{ 0x500000, 0x501fff, MRA16_RAM }, // Tilemap 1
+	{ 0x400000, 0x401fff, MRA16_RAM }, /* Tilemap 0*/
+	{ 0x500000, 0x501fff, MRA16_RAM }, /* Tilemap 1*/
 
 	{ 0x600000, 0x601fff, MRA16_RAM },
 	{ 0x602000, 0x602fff, MRA16_RAM },
 
-	{ 0x700000, 0x707fff, MRA16_RAM }, // Sprites
-	{ 0x708000, 0x70ffff, MRA16_RAM }, // Tests more than is needed?
+	{ 0x700000, 0x707fff, MRA16_RAM }, /* Sprites*/
+	{ 0x708000, 0x70ffff, MRA16_RAM }, /* Tests more than is needed?*/
 
-	{ 0x800000, 0x800001, input_port_0_word_r },	// Inputs
-	{ 0x800002, 0x800003, input_port_1_word_r },	// Inputs
-	{ 0xa00000, 0xa00003, mcatadv_dsw_r },		// Dip Switches
+	{ 0x800000, 0x800001, input_port_0_word_r },	/* Inputs*/
+	{ 0x800002, 0x800003, input_port_1_word_r },	/* Inputs*/
+	{ 0xa00000, 0xa00003, mcatadv_dsw_r },		/* Dip Switches*/
 
 	{ 0xb00000, 0xb0000f, MRA16_RAM },
 
-	{ 0xb0001e, 0xb0001f, mcat_wd_r }, // MCAT Only
+	{ 0xb0001e, 0xb0001f, mcat_wd_r }, /* MCAT Only*/
 	{ 0xc00000, 0xc00001, soundlatch2_word_r },
 MEMORY_END
 
@@ -138,18 +138,18 @@ static MEMORY_WRITE16_START( mcatadv_writemem )
 	{ 0x200000, 0x200005, MWA16_RAM, &mcatadv_scroll },
 	{ 0x300000, 0x300005, MWA16_RAM, &mcatadv_scroll2 },
 
-	{ 0x400000, 0x401fff, mcatadv_videoram1_w, &mcatadv_videoram1 }, // Tilemap 0
-	{ 0x500000, 0x501fff, mcatadv_videoram2_w, &mcatadv_videoram2 }, // Tilemap 1
+	{ 0x400000, 0x401fff, mcatadv_videoram1_w, &mcatadv_videoram1 }, /* Tilemap 0*/
+	{ 0x500000, 0x501fff, mcatadv_videoram2_w, &mcatadv_videoram2 }, /* Tilemap 1*/
 
 	{ 0x600000, 0x601fff, paletteram16_xGGGGGRRRRRBBBBB_word_w, &paletteram16 },
-	{ 0x602000, 0x602fff, MWA16_RAM }, // Bigger than needs to be?
+	{ 0x602000, 0x602fff, MWA16_RAM }, /* Bigger than needs to be?*/
 
-	{ 0x700000, 0x707fff, MWA16_RAM, &spriteram16, &spriteram_size }, // Sprites, two halves for double buffering
-	{ 0x708000, 0x70ffff, MWA16_RAM }, // Tests more than is needed?
+	{ 0x700000, 0x707fff, MWA16_RAM, &spriteram16, &spriteram_size }, /* Sprites, two halves for double buffering*/
+	{ 0x708000, 0x70ffff, MWA16_RAM }, /* Tests more than is needed?*/
 
-//	{ 0x900000, 0x900001, mcat_coin_w }, // Lockout / Counter MCAT Only
+/*	{ 0x900000, 0x900001, mcat_coin_w }, */ /* Lockout / Counter MCAT Only*/
 	{ 0xb00000, 0xb0000f, MWA16_RAM, &mcatadv_vidregs },
-	{ 0xb00018, 0xb00019, watchdog_reset16_w }, // NOST Only
+	{ 0xb00018, 0xb00019, watchdog_reset16_w }, /* NOST Only*/
 	{ 0xc00000, 0xc00001, mcat_soundlatch_w },
 MEMORY_END
 
@@ -164,17 +164,17 @@ static WRITE_HANDLER ( mcatadv_sound_bw_w )
 
 
 static MEMORY_READ_START( mcatadv_sound_readmem )
-	{ 0x0000, 0x3fff, MRA_ROM		},	// ROM
-	{ 0x4000, 0xbfff, MRA_BANK1		},	// ROM
-	{ 0xc000, 0xdfff, MRA_RAM		},	// RAM
+	{ 0x0000, 0x3fff, MRA_ROM		},	/* ROM*/
+	{ 0x4000, 0xbfff, MRA_BANK1		},	/* ROM*/
+	{ 0xc000, 0xdfff, MRA_RAM		},	/* RAM*/
 	{ 0xe000, 0xe000, YM2610_status_port_0_A_r		},
 	{ 0xe002, 0xe002, YM2610_status_port_0_B_r		},
 MEMORY_END
 
 static MEMORY_WRITE_START( mcatadv_sound_writemem )
-	{ 0x0000, 0x3fff, MWA_ROM		},	// ROM
-	{ 0x4000, 0xbfff, MWA_ROM		},	// ROM
-	{ 0xc000, 0xdfff, MWA_RAM		},	// RAM
+	{ 0x0000, 0x3fff, MWA_ROM		},	/* ROM*/
+	{ 0x4000, 0xbfff, MWA_ROM		},	/* ROM*/
+	{ 0xc000, 0xdfff, MWA_RAM		},	/* RAM*/
 	{ 0xe000, 0xe000, YM2610_control_port_0_A_w },
 	{ 0xe001, 0xe001, YM2610_data_port_0_A_w },
 	{ 0xe002, 0xe002, YM2610_control_port_0_B_w },
@@ -192,15 +192,15 @@ PORT_END
 
 
 static MEMORY_READ_START( nost_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM		},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1		},	// ROM
-	{ 0xc000, 0xdfff, MRA_RAM		},	// RAM
+	{ 0x0000, 0x7fff, MRA_ROM		},	/* ROM*/
+	{ 0x8000, 0xbfff, MRA_BANK1		},	/* ROM*/
+	{ 0xc000, 0xdfff, MRA_RAM		},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( nost_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM		},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM		},	// ROM
-	{ 0xc000, 0xdfff, MWA_RAM		},	// RAM
+	{ 0x0000, 0x7fff, MWA_ROM		},	/* ROM*/
+	{ 0x8000, 0xbfff, MWA_ROM		},	/* ROM*/
+	{ 0xc000, 0xdfff, MWA_RAM		},	/* RAM*/
 MEMORY_END
 
 static PORT_READ_START( nost_sound_readport )
@@ -221,32 +221,32 @@ PORT_END
 /*** Inputs ***/
 
 INPUT_PORTS_START( mcatadv )
-	PORT_START	// IN0
+	PORT_START	/* IN0*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )	// "Fire"
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )	// "Jump"
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )	// See notes
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )	/* "Fire"*/
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )	/* "Jump"*/
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )	/* See notes*/
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1
+	PORT_START	/* IN1*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )	// "Fire"
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )	// "Jump"
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )	/* "Fire"*/
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )	/* "Jump"*/
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0xfc00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// DSW1
+	PORT_START	/* DSW1*/
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
@@ -280,7 +280,7 @@ INPUT_PORTS_START( mcatadv )
 	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( 1C_4C ) )
 	*/
-	PORT_START	// DSW2
+	PORT_START	/* DSW2*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x02, "Easy" )
 	PORT_DIPSETTING(    0x03, "Normal" )
@@ -300,38 +300,38 @@ INPUT_PORTS_START( mcatadv )
 	PORT_DIPSETTING(    0x40, "Upright 1 Player" )
 	PORT_DIPSETTING(    0xc0, "Upright 2 Players" )
 	PORT_DIPSETTING(    0x80, DEF_STR( Cocktail ) )
-//	PORT_DIPSETTING(    0x00, "Upright 2 Players" )		// duplicated setting (NEVER tested)
+/*	PORT_DIPSETTING(    0x00, "Upright 2 Players" )		*/ /* duplicated setting (NEVER tested)*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( nost )
-	PORT_START	// IN0
+	PORT_START	/* IN0*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )					// Button 2 in "test mode"
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )					// Button 3 in "test mode"
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )					/* Button 2 in "test mode"*/
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )					/* Button 3 in "test mode"*/
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )					// "test" 3 in "test mode"
-	PORT_BIT( 0x0800, IP_ACTIVE_HIGH, IPT_UNKNOWN )					// Must be LOW or startup freezes !
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )					/* "test" 3 in "test mode"*/
+	PORT_BIT( 0x0800, IP_ACTIVE_HIGH, IPT_UNKNOWN )					/* Must be LOW or startup freezes !*/
 	PORT_BIT( 0xf400, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1
+	PORT_START	/* IN1*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )					// Button 2 in "test mode"
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )					// Button 3 in "test mode"
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )					/* Button 2 in "test mode"*/
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )					/* Button 3 in "test mode"*/
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0xfc00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// DSW1
+	PORT_START	/* DSW1*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x02, "2" )
 	PORT_DIPSETTING(    0x03, "3" )
@@ -354,7 +354,7 @@ INPUT_PORTS_START( nost )
 	PORT_DIPSETTING(    0x40, "1000k 2000k" )
 	PORT_DIPSETTING(    0x00, "None" )
 
-	PORT_START	// DSW2
+	PORT_START	/* DSW2*/
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
@@ -409,7 +409,7 @@ struct YM2610interface mcatadv_ym2610_interface =
 {
 	1,
 	16000000/2,	/* ? */
-	{ MIXERG(8,MIXER_GAIN_4x,MIXER_PAN_CENTER) }, // volume of AY-3-8910 voices
+	{ MIXERG(8,MIXER_GAIN_4x,MIXER_PAN_CENTER) }, /* volume of AY-3-8910 voices*/
 	{ 0 },	/* A_r */
 	{ 0 },	/* B_r */
 	{ 0 },	/* A_w */
@@ -433,7 +433,7 @@ static MACHINE_DRIVER_START( mcatadv )
 	MDRV_CPU_MEMORY(mcatadv_readmem,mcatadv_writemem)
 	MDRV_CPU_VBLANK_INT(irq1_line_hold,1)
 
-	MDRV_CPU_ADD_TAG("sound", Z80, 28000000/4) // Guess, 3.5MHz is too slow and CPU comms fail reporting U9 bad.
+	MDRV_CPU_ADD_TAG("sound", Z80, 28000000/4) /* Guess, 3.5MHz is too slow and CPU comms fail reporting U9 bad.*/
 	MDRV_CPU_MEMORY(mcatadv_sound_readmem,mcatadv_sound_writemem)
 	MDRV_CPU_PORTS(mcatadv_sound_readport,mcatadv_sound_writeport)
 
@@ -450,7 +450,7 @@ static MACHINE_DRIVER_START( mcatadv )
 	MDRV_MACHINE_INIT(mcatadv)
 
 	MDRV_VIDEO_START(mcatadv)
-	MDRV_VIDEO_EOF(mcatadv) // Buffer Spriteram
+	MDRV_VIDEO_EOF(mcatadv) /* Buffer Spriteram*/
 	MDRV_VIDEO_UPDATE(mcatadv)
 
 	/* sound hardware */

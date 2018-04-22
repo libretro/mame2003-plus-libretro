@@ -30,7 +30,7 @@ static void get_tile_info(int tile_index)
 
 	code |= ((attr & 0x03) << 8);
 
-//	attr & 0x0c ?
+/*	attr & 0x0c ?*/
 
 	SET_TILE_INFO(0, code, attr >> 4, 0)
 }
@@ -71,13 +71,13 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x07ff, MWA_RAM },
 	{ 0x1000, 0x17ff, tryout_videoram_w , &videoram },
 	{ 0x4000, 0xcfff, MWA_ROM },
-	{ 0xd000, 0xd7ff, MWA_RAM }, // ?
+	{ 0xd000, 0xd7ff, MWA_RAM }, /* ?*/
 	{ 0xe301, 0xe301, MWA_RAM },
 	{ 0xe302, 0xe302, MWA_RAM },
 	{ 0xe400, 0xe404, MWA_RAM },
 	{ 0xe410, 0xe410, MWA_RAM },
-	{ 0xe414, 0xe414, tryout_sound_command_w }, // maybe
-	{ 0xe417, 0xe417, tryout_nmi_reset_w }, // maybe
+	{ 0xe414, 0xe414, tryout_sound_command_w }, /* maybe*/
+	{ 0xe417, 0xe417, tryout_nmi_reset_w }, /* maybe*/
 	{ 0xf000, 0xffff, MWA_ROM },
 MEMORY_END
 
@@ -154,7 +154,7 @@ VIDEO_START( tryout )
 {	
 	fg_tilemap = tilemap_create(get_tile_info,get_fg_memory_offset_tryout,TILEMAP_OPAQUE,8,8,32,32);
 
-//	tilemap_set_transparent_pen(fg_tilemap,0);
+/*	tilemap_set_transparent_pen(fg_tilemap,0);*/
 
 	return 0;
 }
@@ -185,7 +185,7 @@ static INTERRUPT_GEN( tryout_interrupt )
 {
 	if (input_port_3_r(0) & 0xc0)
 		cpu_set_nmi_line(0, ASSERT_LINE);
-//		nmi_line_pulse();
+/*		nmi_line_pulse();*/
 }
 
 PALETTE_INIT( tryout )
@@ -273,10 +273,10 @@ ROM_END
 
 DRIVER_INIT( tryout )
 {
-	// ?
+	/* ?*/
 	install_mem_write_handler( 0, 0xc800, 0xcfff, MWA_NOP );
 
-	// interrupt_enable_w ?
+	/* interrupt_enable_w ?*/
 	install_mem_write_handler( 1, 0xd000, 0xd000, MWA_NOP );
 }
 

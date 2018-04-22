@@ -49,7 +49,7 @@ VIDEO_UPDATE(pbillrd);
 VIDEO_UPDATE(freekick);
 WRITE_HANDLER( freek_videoram_w );
 
-static int oigas_inval,oigas_outval,oigas_cnt;//oigas
+static int oigas_inval,oigas_outval,oigas_cnt;/*oigas*/
 static int romaddr;
 
 static WRITE_HANDLER( snd_rom_addr_l_w )
@@ -151,11 +151,11 @@ static MEMORY_WRITE_START( gigas_writemem )
 	{ 0xd000, 0xd7ff, freek_videoram_w, &freek_videoram },
 	{ 0xd800, 0xd8ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xd900, 0xdfff, MWA_RAM },
-	{ 0xe000, 0xe001, MWA_NOP },// probably not flipscreen
+	{ 0xe000, 0xe001, MWA_NOP },/* probably not flipscreen*/
 	{ 0xe002, 0xe003, coin_w },
 	{ 0xe004, 0xe004, nmi_enable_w },
 	{ 0xe005, 0xe005, MWA_NOP},
-	{ 0xf000, 0xf000, MWA_NOP }, //bankswitch ?
+	{ 0xf000, 0xf000, MWA_NOP }, /*bankswitch ?*/
 	{ 0xfc00, 0xfc00, SN76496_0_w },
 	{ 0xfc01, 0xfc01, SN76496_1_w },
 	{ 0xfc02, 0xfc02, SN76496_2_w },
@@ -164,7 +164,7 @@ MEMORY_END
 
 static PORT_READ_START( gigas_readport )
 	{ 0x00, 0x00, gigas_spinner_r },
-	{ 0x01, 0x01, MRA_NOP }, //unused dip 3
+	{ 0x01, 0x01, MRA_NOP }, /*unused dip 3*/
 PORT_END
 
 static PORT_WRITE_START( gigas_writeport )
@@ -226,7 +226,7 @@ static READ_HANDLER(oigas_2_r)
 
 static PORT_READ_START( oigas_readport )
 	{ 0x00, 0x00, gigas_spinner_r },
-	{ 0x01, 0x01, IORP_NOP }, //unused dip 3
+	{ 0x01, 0x01, IORP_NOP }, /*unused dip 3*/
 	{ 0x02, 0x02, oigas_2_r },
 	{ 0x03, 0x03, oigas_3_r },
 PORT_END
@@ -268,13 +268,13 @@ MEMORY_END
 static MEMORY_READ_START( freekckb_readmem )
 	{ 0x0000, 0xcfff, MRA_ROM },
 	{ 0xd000, 0xdfff, MRA_RAM },
-	{ 0xe000, 0xe7ff, MRA_RAM },	// tilemap
-	{ 0xe800, 0xe8ff, MRA_RAM },	// sprites
+	{ 0xe000, 0xe7ff, MRA_RAM },	/* tilemap*/
+	{ 0xe800, 0xe8ff, MRA_RAM },	/* sprites*/
 	{ 0xec00, 0xec03, ppi8255_0_r },
 	{ 0xf000, 0xf003, ppi8255_1_r },
 	{ 0xf800, 0xf800, input_port_3_r },
 	{ 0xf801, 0xf801, input_port_4_r },
-	{ 0xf802, 0xf802, MRA_NOP },	//MUST return bit 0 = 0, otherwise game resets
+	{ 0xf802, 0xf802, MRA_NOP },	/*MUST return bit 0 = 0, otherwise game resets*/
 	{ 0xf803, 0xf803, spinner_r },
 MEMORY_END
 
@@ -880,7 +880,7 @@ static struct SN76496interface sn76496_interface =
 static MACHINE_DRIVER_START( pbillrd )
 	MDRV_CPU_ADD(Z80, 12000000/2)	/* 6 MHz? */
 	MDRV_CPU_MEMORY(pbillrd_readmem,pbillrd_writemem)
-	MDRV_CPU_PERIODIC_INT(irq0_line_pulse,60*3) //??
+	MDRV_CPU_PERIODIC_INT(irq0_line_pulse,60*3) /*??*/
 	MDRV_CPU_VBLANK_INT(freekick_irqgen,1)
 
 	MDRV_FRAMES_PER_SECOND(60)
@@ -905,7 +905,7 @@ static MACHINE_DRIVER_START( freekckb )
 	MDRV_CPU_ADD(Z80, 12000000/2)	/* 6 MHz? */
 	MDRV_CPU_MEMORY(freekckb_readmem,freekckb_writemem)
 	MDRV_CPU_PORTS(freekckb_readport,freekckb_writeport)
-	MDRV_CPU_PERIODIC_INT(irq0_line_pulse,60*3) //??
+	MDRV_CPU_PERIODIC_INT(irq0_line_pulse,60*3) /*??*/
 	MDRV_CPU_VBLANK_INT(freekick_irqgen,1)
 
 	MDRV_FRAMES_PER_SECOND(60)
@@ -928,7 +928,7 @@ static MACHINE_DRIVER_START( freekckb )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( gigas )
-	MDRV_CPU_ADD_TAG("main",Z80, 18432000/6)	//confirmed
+	MDRV_CPU_ADD_TAG("main",Z80, 18432000/6)	/*confirmed*/
 	MDRV_CPU_MEMORY(gigas_readmem,gigas_writemem)
 	MDRV_CPU_PORTS(gigas_readport,gigas_writeport)
 	MDRV_CPU_PERIODIC_INT(irq0_line_pulse,60*3)
@@ -1022,8 +1022,8 @@ from an original counter run board before they all die :-(
 
 ROM_START( freekick )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /* Z80 Code */
-	// Custom (NS6201-A 1987.9)
-	ROM_LOAD( "freekck.cpu", 0x00000, 0x10000, NO_DUMP ) // missing, might be the same as the bootleg but not confirmed
+	/* Custom (NS6201-A 1987.9)*/
+	ROM_LOAD( "freekck.cpu", 0x00000, 0x10000, NO_DUMP ) /* missing, might be the same as the bootleg but not confirmed*/
 
 	ROM_REGION( 0x08000, REGION_USER1, 0 ) /* sound data */
 	ROM_LOAD( "11.1e",       0x00000, 0x08000, CRC(a6030ba9) SHA1(f363100f54a7a80701a6395c7539b8daa60db054) )
@@ -1049,20 +1049,20 @@ ROM_END
 
 ROM_START( freekckb )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /* Z80 Code */
-	ROM_LOAD( "freekbl8.q7", 0x00000, 0x10000, CRC(4208cfe5) SHA1(21628cbe8a217fbae30a6c24c9cc4c790fe45d65) ) // this was on the bootleg, would normally be battery backed inside cpu?
+	ROM_LOAD( "freekbl8.q7", 0x00000, 0x10000, CRC(4208cfe5) SHA1(21628cbe8a217fbae30a6c24c9cc4c790fe45d65) ) /* this was on the bootleg, would normally be battery backed inside cpu?*/
 
 	ROM_REGION( 0x08000, REGION_USER1, 0 ) /* sound data */
-	ROM_LOAD( "11.1e",       0x00000, 0x08000, CRC(a6030ba9) SHA1(f363100f54a7a80701a6395c7539b8daa60db054) )		// freekbl1.e2
+	ROM_LOAD( "11.1e",       0x00000, 0x08000, CRC(a6030ba9) SHA1(f363100f54a7a80701a6395c7539b8daa60db054) )		/* freekbl1.e2*/
 
 	ROM_REGION( 0xc000, REGION_GFX1, ROMREGION_DISPOSE ) /* GFX */
-	ROM_LOAD( "12.1h",       0x000000, 0x04000, CRC(fb82e486) SHA1(bc672272dc32b2aa64e991992172c44bea1ca65c) )	// freekbl2.f2
-	ROM_LOAD( "13.1j",       0x004000, 0x04000, CRC(3ad78ee2) SHA1(033285d4ab7d6f46abf4c1bd4671c874738f0ac1) )	// freekbl3.j2
-	ROM_LOAD( "14.1l",       0x008000, 0x04000, CRC(0185695f) SHA1(126994c69de157fc7c452ccc7f1a767f5085da27) )	// freekbl4.k2
+	ROM_LOAD( "12.1h",       0x000000, 0x04000, CRC(fb82e486) SHA1(bc672272dc32b2aa64e991992172c44bea1ca65c) )	/* freekbl2.f2*/
+	ROM_LOAD( "13.1j",       0x004000, 0x04000, CRC(3ad78ee2) SHA1(033285d4ab7d6f46abf4c1bd4671c874738f0ac1) )	/* freekbl3.j2*/
+	ROM_LOAD( "14.1l",       0x008000, 0x04000, CRC(0185695f) SHA1(126994c69de157fc7c452ccc7f1a767f5085da27) )	/* freekbl4.k2*/
 
 	ROM_REGION( 0xc000, REGION_GFX2, ROMREGION_DISPOSE ) /* GFX */
-	ROM_LOAD( "15.1m",       0x000000, 0x04000, CRC(0fa7c13c) SHA1(24b0ca73b0e35474e2392d8e729bcd44b80f9135) )	// freekbl5.m2
-	ROM_LOAD( "16.1p",       0x004000, 0x04000, CRC(2b996e89) SHA1(c6900449d27e89c3b444fb028694fdcda8e79322) )	// freekbl6.n2
-	ROM_LOAD( "17.1r",       0x008000, 0x04000, CRC(e7894def) SHA1(5c97b7cce43d1e51c709603a0d2394b8119764bd) )	// freekbl7.r2
+	ROM_LOAD( "15.1m",       0x000000, 0x04000, CRC(0fa7c13c) SHA1(24b0ca73b0e35474e2392d8e729bcd44b80f9135) )	/* freekbl5.m2*/
+	ROM_LOAD( "16.1p",       0x004000, 0x04000, CRC(2b996e89) SHA1(c6900449d27e89c3b444fb028694fdcda8e79322) )	/* freekbl6.n2*/
+	ROM_LOAD( "17.1r",       0x008000, 0x04000, CRC(e7894def) SHA1(5c97b7cce43d1e51c709603a0d2394b8119764bd) )	/* freekbl7.r2*/
 
 	ROM_REGION( 0x0600, REGION_PROMS, 0 )
     ROM_LOAD( "8j.bpr",    0x0000, 0x0100, CRC(53a6bc21) SHA1(d4beedc226004c1aa9b6aae29bee9c8a9b0fff7c) )
@@ -1075,21 +1075,21 @@ ROM_END
 
 ROM_START( countrun )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /* Z80 Code */
-	//  Custom CPU (pack) No. NS6201-A 1988.3 COUNTER RUN
-	ROM_LOAD( "countrun.cpu", 0x00000, 0x10000, NO_DUMP ) // missing
+	/*  Custom CPU (pack) No. NS6201-A 1988.3 COUNTER RUN*/
+	ROM_LOAD( "countrun.cpu", 0x00000, 0x10000, NO_DUMP ) /* missing*/
 
 	ROM_REGION( 0x08000, REGION_USER1, 0 ) /* sound data */
 	ROM_LOAD( "c-run.e1", 0x00000, 0x08000, CRC(2c3b6f8f) SHA1(ee7d71e6d8bb7138d5d029a10a95471d387b5f29) )
 
 	ROM_REGION( 0xc000, REGION_GFX1, ROMREGION_DISPOSE ) /* GFX */
-	ROM_LOAD( "c-run.h1", 0x000000, 0x04000, CRC(3385b7b5) SHA1(3f8f96f2a5406369dd56a9fe9f509ebee4a0179a) ) // rom 2
-	ROM_LOAD( "c-run.j1", 0x004000, 0x04000, CRC(58dc148d) SHA1(3b2e5c6ced885d945f6c02fbab7c6d40db78c66a) ) // rom 3
-	ROM_LOAD( "c-run.l1", 0x008000, 0x04000, CRC(3201f1e9) SHA1(72bd35600bf6e38741730f39bfd2a19f359bfb93) ) // rom 4
+	ROM_LOAD( "c-run.h1", 0x000000, 0x04000, CRC(3385b7b5) SHA1(3f8f96f2a5406369dd56a9fe9f509ebee4a0179a) ) /* rom 2*/
+	ROM_LOAD( "c-run.j1", 0x004000, 0x04000, CRC(58dc148d) SHA1(3b2e5c6ced885d945f6c02fbab7c6d40db78c66a) ) /* rom 3*/
+	ROM_LOAD( "c-run.l1", 0x008000, 0x04000, CRC(3201f1e9) SHA1(72bd35600bf6e38741730f39bfd2a19f359bfb93) ) /* rom 4*/
 
 	ROM_REGION( 0xc000, REGION_GFX2, ROMREGION_DISPOSE ) /* GFX */
-	ROM_LOAD( "c-run.m1", 0x000000, 0x04000, CRC(1efab3b4) SHA1(7ce39cecf2809d3a7cbca5c6dffee738ba6f7b11) ) // rom 5
-	ROM_LOAD( "c-run.p1", 0x004000, 0x04000, CRC(d0bf8d42) SHA1(b8d1bd155dba065475c84db768f14a3562fe21e0) ) // rom 6
-	ROM_LOAD( "c-run.r1", 0x008000, 0x04000, CRC(4bb4a3e3) SHA1(179696464fce548ec333eec233025840fdb1eac2) ) // rom 7
+	ROM_LOAD( "c-run.m1", 0x000000, 0x04000, CRC(1efab3b4) SHA1(7ce39cecf2809d3a7cbca5c6dffee738ba6f7b11) ) /* rom 5*/
+	ROM_LOAD( "c-run.p1", 0x004000, 0x04000, CRC(d0bf8d42) SHA1(b8d1bd155dba065475c84db768f14a3562fe21e0) ) /* rom 6*/
+	ROM_LOAD( "c-run.r1", 0x008000, 0x04000, CRC(4bb4a3e3) SHA1(179696464fce548ec333eec233025840fdb1eac2) ) /* rom 7*/
 
 	ROM_REGION( 0x0600, REGION_PROMS, 0 )
 	ROM_LOAD( "prom5.bpr",    0x0000, 0x0100, CRC(63c114ad) SHA1(db881c4ff92cb04a94988587503346a44eb89b69) )
@@ -1102,7 +1102,7 @@ ROM_END
 
 ROM_START( countrb2 )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /* Z80 Code */
-	ROM_LOAD( "crunbl.8", 0x00000, 0x10000, CRC(318f95d9) SHA1(f2386b9d26d1bc98728aad9e257363b381043dc9) ) // encrypted? bad? its strange anyway
+	ROM_LOAD( "crunbl.8", 0x00000, 0x10000, CRC(318f95d9) SHA1(f2386b9d26d1bc98728aad9e257363b381043dc9) ) /* encrypted? bad? its strange anyway*/
 
 	ROM_REGION( 0x01000, REGION_CPU2, 0 )
 	ROM_LOAD( "68705.uc",  0x00000, 0x01000, NO_DUMP )
@@ -1111,14 +1111,14 @@ ROM_START( countrb2 )
 	ROM_LOAD( "c-run.e1", 0x00000, 0x08000, CRC(2c3b6f8f) SHA1(ee7d71e6d8bb7138d5d029a10a95471d387b5f29) )
 
 	ROM_REGION( 0xc000, REGION_GFX1, ROMREGION_DISPOSE ) /* GFX */
-	ROM_LOAD( "c-run.h1", 0x000000, 0x04000, CRC(3385b7b5) SHA1(3f8f96f2a5406369dd56a9fe9f509ebee4a0179a) ) // rom 2
-	ROM_LOAD( "c-run.j1", 0x004000, 0x04000, CRC(58dc148d) SHA1(3b2e5c6ced885d945f6c02fbab7c6d40db78c66a) ) // rom 3
-	ROM_LOAD( "c-run.l1", 0x008000, 0x04000, CRC(3201f1e9) SHA1(72bd35600bf6e38741730f39bfd2a19f359bfb93) ) // rom 4
+	ROM_LOAD( "c-run.h1", 0x000000, 0x04000, CRC(3385b7b5) SHA1(3f8f96f2a5406369dd56a9fe9f509ebee4a0179a) ) /* rom 2*/
+	ROM_LOAD( "c-run.j1", 0x004000, 0x04000, CRC(58dc148d) SHA1(3b2e5c6ced885d945f6c02fbab7c6d40db78c66a) ) /* rom 3*/
+	ROM_LOAD( "c-run.l1", 0x008000, 0x04000, CRC(3201f1e9) SHA1(72bd35600bf6e38741730f39bfd2a19f359bfb93) ) /* rom 4*/
 
 	ROM_REGION( 0xc000, REGION_GFX2, ROMREGION_DISPOSE ) /* GFX */
-	ROM_LOAD( "c-run.m1", 0x000000, 0x04000, CRC(1efab3b4) SHA1(7ce39cecf2809d3a7cbca5c6dffee738ba6f7b11) ) // rom 5
-	ROM_LOAD( "c-run.p1", 0x004000, 0x04000, CRC(d0bf8d42) SHA1(b8d1bd155dba065475c84db768f14a3562fe21e0) ) // rom 6
-	ROM_LOAD( "c-run.r1", 0x008000, 0x04000, CRC(4bb4a3e3) SHA1(179696464fce548ec333eec233025840fdb1eac2) ) // rom 7
+	ROM_LOAD( "c-run.m1", 0x000000, 0x04000, CRC(1efab3b4) SHA1(7ce39cecf2809d3a7cbca5c6dffee738ba6f7b11) ) /* rom 5*/
+	ROM_LOAD( "c-run.p1", 0x004000, 0x04000, CRC(d0bf8d42) SHA1(b8d1bd155dba065475c84db768f14a3562fe21e0) ) /* rom 6*/
+	ROM_LOAD( "c-run.r1", 0x008000, 0x04000, CRC(4bb4a3e3) SHA1(179696464fce548ec333eec233025840fdb1eac2) ) /* rom 7*/
 
 	ROM_REGION( 0x0600, REGION_PROMS, 0 )
 	ROM_LOAD( "prom5.bpr",    0x0000, 0x0100, CRC(63c114ad) SHA1(db881c4ff92cb04a94988587503346a44eb89b69) )
@@ -1137,14 +1137,14 @@ ROM_START( countrnb )
 	ROM_LOAD( "c-run.e1", 0x00000, 0x08000, CRC(2c3b6f8f) SHA1(ee7d71e6d8bb7138d5d029a10a95471d387b5f29) )
 
 	ROM_REGION( 0xc000, REGION_GFX1, ROMREGION_DISPOSE ) /* GFX */
-	ROM_LOAD( "c-run.h1", 0x000000, 0x04000, CRC(3385b7b5) SHA1(3f8f96f2a5406369dd56a9fe9f509ebee4a0179a) ) // rom 2
-	ROM_LOAD( "c-run.j1", 0x004000, 0x04000, CRC(58dc148d) SHA1(3b2e5c6ced885d945f6c02fbab7c6d40db78c66a) ) // rom 3
-	ROM_LOAD( "c-run.l1", 0x008000, 0x04000, CRC(3201f1e9) SHA1(72bd35600bf6e38741730f39bfd2a19f359bfb93) ) // rom 4
+	ROM_LOAD( "c-run.h1", 0x000000, 0x04000, CRC(3385b7b5) SHA1(3f8f96f2a5406369dd56a9fe9f509ebee4a0179a) ) /* rom 2*/
+	ROM_LOAD( "c-run.j1", 0x004000, 0x04000, CRC(58dc148d) SHA1(3b2e5c6ced885d945f6c02fbab7c6d40db78c66a) ) /* rom 3*/
+	ROM_LOAD( "c-run.l1", 0x008000, 0x04000, CRC(3201f1e9) SHA1(72bd35600bf6e38741730f39bfd2a19f359bfb93) ) /* rom 4*/
 
 	ROM_REGION( 0xc000, REGION_GFX2, ROMREGION_DISPOSE ) /* GFX */
-	ROM_LOAD( "c-run.m1", 0x000000, 0x04000, CRC(1efab3b4) SHA1(7ce39cecf2809d3a7cbca5c6dffee738ba6f7b11) ) // rom 5
-	ROM_LOAD( "c-run.p1", 0x004000, 0x04000, CRC(d0bf8d42) SHA1(b8d1bd155dba065475c84db768f14a3562fe21e0) ) // rom 6
-	ROM_LOAD( "c-run.r1", 0x008000, 0x04000, CRC(4bb4a3e3) SHA1(179696464fce548ec333eec233025840fdb1eac2) ) // rom 7
+	ROM_LOAD( "c-run.m1", 0x000000, 0x04000, CRC(1efab3b4) SHA1(7ce39cecf2809d3a7cbca5c6dffee738ba6f7b11) ) /* rom 5*/
+	ROM_LOAD( "c-run.p1", 0x004000, 0x04000, CRC(d0bf8d42) SHA1(b8d1bd155dba065475c84db768f14a3562fe21e0) ) /* rom 6*/
+	ROM_LOAD( "c-run.r1", 0x008000, 0x04000, CRC(4bb4a3e3) SHA1(179696464fce548ec333eec233025840fdb1eac2) ) /* rom 7*/
 
 	ROM_REGION( 0x0600, REGION_PROMS, 0 )
 	ROM_LOAD( "prom5.bpr",    0x0000, 0x0100, CRC(63c114ad) SHA1(db881c4ff92cb04a94988587503346a44eb89b69) )
@@ -1249,7 +1249,7 @@ GAMEX(1986, gigasb,   0,        gigas,    gigas,    gigas, ROT270, "bootleg", "G
 GAMEX(1986, oigas,    gigasb,   oigas,    gigas,    gigas, ROT270, "bootleg", "Oigas (bootleg)", GAME_NO_COCKTAIL )
 GAMEX(1986, gigasm2b, 0,        gigas,    gigasm2,  gigas, ROT270, "bootleg", "Gigas Mark II (bootleg)", GAME_NO_COCKTAIL )
 GAME( 1987, pbillrd,  0,        pbillrd,  pbillrd,  0,     ROT0,   "Nihon System", "Perfect Billiard" )
-GAMEX(1987, pbillrds, pbillrd,  pbillrd,  pbillrd,  0,     ROT0,   "Nihon System", "Perfect Billiard (Sega)", GAME_UNEMULATED_PROTECTION )	// encrypted
+GAMEX(1987, pbillrds, pbillrd,  pbillrd,  pbillrd,  0,     ROT0,   "Nihon System", "Perfect Billiard (Sega)", GAME_UNEMULATED_PROTECTION )	/* encrypted*/
 GAMEX(1987, freekick, 0,        freekckb, freekckb, 0,     ROT270, "Nihon System (Sega license)", "Free Kick", GAME_NOT_WORKING )
 GAME( 1987, freekckb, freekick, freekckb, freekckb, 0,     ROT270, "bootleg", "Free Kick (bootleg)" )
 GAMEX(1988, countrun, 0,        freekckb, countrun, 0,     ROT0,   "Nihon System (Sega license)", "Counter Run", GAME_NOT_WORKING )

@@ -186,7 +186,7 @@ static MEMORY_WRITE_START( thief_writemem )
 MEMORY_END
 
 static PORT_READ_START( readport )
-	{ 0x31, 0x31, thief_io_r }, // 8255
+	{ 0x31, 0x31, thief_io_r }, /* 8255*/
 	{ 0x41, 0x41, AY8910_read_port_0_r },
 	{ 0x43, 0x43, AY8910_read_port_1_r },
 PORT_END
@@ -194,7 +194,7 @@ PORT_END
 static PORT_WRITE_START( writeport )
 	{ 0x00, 0x00, MWA_NOP }, /* watchdog */
 	{ 0x10, 0x10, thief_video_control_w },
-	{ 0x30, 0x30, thief_input_select_w }, // 8255
+	{ 0x30, 0x30, thief_input_select_w }, /* 8255*/
 	{ 0x33, 0x33, tape_control_w },
 	{ 0x40, 0x40, AY8910_control_port_0_w },
 	{ 0x41, 0x41, AY8910_write_port_0_w },
@@ -213,7 +213,7 @@ INPUT_PORTS_START( sharkatt )
 	PORT_START      /* IN0 */
 	PORT_DIPNAME( 0x7f, 0x7f, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(    0x7f, DEF_STR( 1C_1C ) ) // if any are set
+	PORT_DIPSETTING(    0x7f, DEF_STR( 1C_1C ) ) /* if any are set*/
 	PORT_SERVICE( 0x80, IP_ACTIVE_HIGH )
 
 	PORT_START      /* IN1 */
@@ -221,7 +221,7 @@ INPUT_PORTS_START( sharkatt )
 	PORT_DIPSETTING(	0x00, "3" )
 	PORT_DIPSETTING(	0x01, "4" )
 	PORT_DIPSETTING(	0x02, "5" )
-//	PORT_DIPSETTING(	0x03, "5" )
+/*	PORT_DIPSETTING(	0x03, "5" )*/
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )

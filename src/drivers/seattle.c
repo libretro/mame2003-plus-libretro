@@ -397,11 +397,11 @@ static int dma_fetch_next(int which)
 	data |= cpunum_read_byte(0, address++) << 24;
 	galileo_regs[0x830/4 + which] = data;
 
-//	logerror("DMA Fetch Record: bytes=%08X src=%08X dst=%08X nextrec=%08X\n",
-//		galileo_regs[0x800/4 + which],
-//		galileo_regs[0x810/4 + which],
-//		galileo_regs[0x820/4 + which],
-//		galileo_regs[0x830/4 + which]);
+/*	logerror("DMA Fetch Record: bytes=%08X src=%08X dst=%08X nextrec=%08X\n",*/
+/*		galileo_regs[0x800/4 + which],*/
+/*		galileo_regs[0x810/4 + which],*/
+/*		galileo_regs[0x820/4 + which],*/
+/*		galileo_regs[0x830/4 + which]);*/
 	return 1;
 }
 
@@ -409,7 +409,7 @@ static void perform_dma(int which);
 
 static void dma_finished_callback(int which)
 {
-//	logerror("DMA%d finished\n", which);
+/*	logerror("DMA%d finished\n", which);*/
 	galileo_regs[0x840/4 + which] &= ~0x4000;
 	galileo_regs[0x840/4 + which] &= ~0x1000;
 
@@ -643,7 +643,7 @@ static READ32_HANDLER( galileo_r )
 		}
 
 		case 0xc00/4:		/* PCI internal command */
-			// code at 40188 loops until this returns non-zero in bit 0
+			/* code at 40188 loops until this returns non-zero in bit 0*/
 			result = 0x0001;
 			break;
 
@@ -842,7 +842,7 @@ static WRITE32_HANDLER( asic_fifo_w )
 static READ32_HANDLER( unknown1_r )
 {
 logerror("%06X:unknown1_r\n", activecpu_get_pc());
-	// code at 1FC10248 loops until this returns non-zero in bit 6
+	/* code at 1FC10248 loops until this returns non-zero in bit 6*/
 	return 0x0040;
 }
 
@@ -990,11 +990,11 @@ static MEMORY_READ32_START( seattle_readmem )
 	{ 0x88000000, 0x883fffff, voodoo_regs_r },
 	{ 0x88400000, 0x887fffff, voodoo_framebuf_r },
 	{ 0x9fc00000, 0x9fc7ffff, MRA32_BANK3 },
-	{ 0xa0000000, 0xa07fffff, MRA32_RAM },			// wg3dh only has 4MB; sfrush, blitz99 8MB
+	{ 0xa0000000, 0xa07fffff, MRA32_RAM },			/* wg3dh only has 4MB; sfrush, blitz99 8MB*/
 	{ 0xa8000000, 0xa83fffff, voodoo_regs_r },
 	{ 0xa8400000, 0xa87fffff, voodoo_framebuf_r },
 	{ 0xaa000000, 0xaa0003ff, ide_controller32_0_r },
-	{ 0xaa00040c, 0xaa00040f, MRA32_NOP },			// IDE-related, but annoying
+	{ 0xaa00040c, 0xaa00040f, MRA32_NOP },			/* IDE-related, but annoying*/
 	{ 0xaa000f00, 0xaa000f07, ide_bus_master32_0_r },
 	{ 0xac000000, 0xac000fff, galileo_r },
 	{ 0xb6000000, 0xb600003f, midway_ioasic_r },
@@ -1003,7 +1003,7 @@ static MEMORY_READ32_START( seattle_readmem )
 	{ 0xb7400000, 0xb7400003, MRA32_RAM },
 	{ 0xb7500000, 0xb7500003, vblank_signalled_r },
 	{ 0xb7600000, 0xb7600003, unknown1_r },
-	{ 0xb7900000, 0xb7900003, MRA32_NOP },			// very noisy -- status LEDs?
+	{ 0xb7900000, 0xb7900003, MRA32_NOP },			/* very noisy -- status LEDs?*/
 	{ 0xb7f00000, 0xb7f00003, MRA32_RAM },
 	{ 0xbfc00000, 0xbfc7ffff, MRA32_ROM },
 MEMORY_END
@@ -1016,7 +1016,7 @@ static MEMORY_WRITE32_START( seattle_writemem )
 	{ 0x88400000, 0x887fffff, voodoo_framebuf_w },
 	{ 0x88800000, 0x88ffffff, voodoo_textureram_w },
 	{ 0x9fc00000, 0x9fc7ffff, MWA32_ROM },
-	{ 0xa0000000, 0xa07fffff, MWA32_RAM, &rambase },			// wg3dh only has 4MB
+	{ 0xa0000000, 0xa07fffff, MWA32_RAM, &rambase },			/* wg3dh only has 4MB*/
 	{ 0xa8000000, 0xa83fffff, voodoo_regs_w, &voodoo_regs },
 	{ 0xa8400000, 0xa87fffff, voodoo_framebuf_w },
 	{ 0xa8800000, 0xa8ffffff, voodoo_textureram_w },
@@ -1030,8 +1030,8 @@ static MEMORY_WRITE32_START( seattle_writemem )
 	{ 0xb7300000, 0xb7300003, vblank_enable_w, &vblank_enable },
 	{ 0xb7400000, 0xb7400003, vblank_config_w, &vblank_config },
 	{ 0xb7700000, 0xb7700003, vblank_clear_w },
-	{ 0xb7800000, 0xb7800003, MWA32_NOP },						// unknown
-	{ 0xb7900000, 0xb7900003, MWA32_NOP },						// very noisy -- status LEDs?
+	{ 0xb7800000, 0xb7800003, MWA32_NOP },						/* unknown*/
+	{ 0xb7900000, 0xb7900003, MWA32_NOP },						/* very noisy -- status LEDs?*/
 	{ 0xb7f00000, 0xb7f00003, asic_reset_w, &asic_reset },
 	{ 0xbfc00000, 0xbfc7ffff, MWA32_ROM, &rombase },
 MEMORY_END
@@ -1588,14 +1588,14 @@ INPUT_PORTS_START( blitz )
 	PORT_DIPSETTING(      0x0009, "Mode 3" )
 	PORT_DIPSETTING(      0x0002, "Mode 4" )
 	PORT_DIPSETTING(      0x000c, "Mode ECA" )
-//	PORT_DIPSETTING(      0x0004, "Not Used 1" )		/* Marked as Unused in the manual */
-//	PORT_DIPSETTING(      0x0008, "Not Used 2" )		/* Marked as Unused in the manual */
+/*	PORT_DIPSETTING(      0x0004, "Not Used 1" )		 // Marked as Unused in the manual /*/
+/*	PORT_DIPSETTING(      0x0008, "Not Used 2" )		 // Marked as Unused in the manual /*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ))
 	PORT_DIPNAME( 0x0030, 0x0030, "Curency Type" )
 	PORT_DIPSETTING(      0x0030, "USA" )
 	PORT_DIPSETTING(      0x0020, "French" )
 	PORT_DIPSETTING(      0x0010, "German" )
-//	PORT_DIPSETTING(      0x0000, "Not Used" )		/* Marked as Unused in the manual */
+/*	PORT_DIPSETTING(      0x0000, "Not Used" )		 // Marked as Unused in the manual /*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ))
 	PORT_DIPNAME( 0x0040, 0x0000, DEF_STR( Unknown ))	/* Marked as Unused in the manual */
 	PORT_DIPSETTING(      0x0040, "0" )
@@ -1609,8 +1609,8 @@ INPUT_PORTS_START( blitz )
 	PORT_DIPNAME( 0x0600, 0x0200, "Graphics Mode" )
 	PORT_DIPSETTING(      0x0200, "512x385 @ 25KHz" )
 	PORT_DIPSETTING(      0x0400, "512x256 @ 15KHz" )
-//	PORT_DIPSETTING(      0x0600, "0" )			/* Marked as Unused in the manual */
-//	PORT_DIPSETTING(      0x0000, "3" )			/* Marked as Unused in the manual */
+/*	PORT_DIPSETTING(      0x0600, "0" )			 // Marked as Unused in the manual /*/
+/*	PORT_DIPSETTING(      0x0000, "3" )			 // Marked as Unused in the manual /*/
 	PORT_DIPNAME( 0x1800, 0x1800, "Graphics Speed" )
 	PORT_DIPSETTING(      0x0000, "45 MHz" )
 	PORT_DIPSETTING(      0x0800, "47 MHz" )
@@ -1708,8 +1708,8 @@ INPUT_PORTS_START( blitz99 )
 	PORT_DIPSETTING(      0x001a, "German 3" )
 	PORT_DIPSETTING(      0x0018, "German 4" )
 	PORT_DIPSETTING(      0x0016, "German 5" )
-//	PORT_DIPSETTING(      0x0014, "German 5" )
-//	PORT_DIPSETTING(      0x0012, "German 5" )
+/*	PORT_DIPSETTING(      0x0014, "German 5" )*/
+/*	PORT_DIPSETTING(      0x0012, "German 5" )*/
 	PORT_DIPSETTING(      0x0010, "German ECA" )
 	PORT_DIPSETTING(      0x000e, "U.K. 1 ECA" )
 	PORT_DIPSETTING(      0x000c, "U.K. 2 ECA" )
@@ -1731,8 +1731,8 @@ INPUT_PORTS_START( blitz99 )
 	PORT_DIPNAME( 0x0600, 0x0200, "Graphics Mode" )
 	PORT_DIPSETTING(      0x0200, "512x385 @ 25KHz" )
 	PORT_DIPSETTING(      0x0400, "512x256 @ 15KHz" )
-//	PORT_DIPSETTING(      0x0600, "0" )			/* Marked as Unused in the manual */
-//	PORT_DIPSETTING(      0x0000, "3" )			/* Marked as Unused in the manual */
+/*	PORT_DIPSETTING(      0x0600, "0" )			 // Marked as Unused in the manual /*/
+/*	PORT_DIPSETTING(      0x0000, "3" )			 // Marked as Unused in the manual /*/
 	PORT_DIPNAME( 0x1800, 0x1800, "Graphics Speed" )
 	PORT_DIPSETTING(      0x0000, "45 MHz" )
 	PORT_DIPSETTING(      0x0800, "47 MHz" )
@@ -1830,8 +1830,8 @@ INPUT_PORTS_START( carnevil )
 	PORT_DIPSETTING(      0x001a, "German 3" )
 	PORT_DIPSETTING(      0x0018, "German 4" )
 	PORT_DIPSETTING(      0x0016, "German 5" )
-//	PORT_DIPSETTING(      0x0014, "German 5" )
-//	PORT_DIPSETTING(      0x0012, "German 5" )
+/*	PORT_DIPSETTING(      0x0014, "German 5" )*/
+/*	PORT_DIPSETTING(      0x0012, "German 5" )*/
 	PORT_DIPSETTING(      0x0010, "German ECA" )
 	PORT_DIPSETTING(      0x000e, "U.K. 1" )
 	PORT_DIPSETTING(      0x000c, "U.K. 2" )
@@ -1851,10 +1851,10 @@ INPUT_PORTS_START( carnevil )
 	PORT_DIPSETTING(      0x0100, "0" )
 	PORT_DIPSETTING(      0x0000, "1" )
 	PORT_DIPNAME( 0x0600, 0x0400, "Resolution" )
-//	PORT_DIPSETTING(      0x0600, "0" )
-//	PORT_DIPSETTING(      0x0200, "Medium" )
+/*	PORT_DIPSETTING(      0x0600, "0" )*/
+/*	PORT_DIPSETTING(      0x0200, "Medium" )*/
 	PORT_DIPSETTING(      0x0400, "Low" )
-//	PORT_DIPSETTING(      0x0000, "3" )
+/*	PORT_DIPSETTING(      0x0000, "3" )*/
 	PORT_DIPNAME( 0x1800, 0x1800, "Graphics Speed" )
 	PORT_DIPSETTING(      0x0000, "45 MHz" )
 	PORT_DIPSETTING(      0x0800, "47 MHz" )
@@ -2206,8 +2206,8 @@ static DRIVER_INIT( biofreak )
 	init_common(MIDWAY_IOASIC_STANDARD, 231/* no alternates */, 80);
 
 	/* speedups */
-//	install_mem_write32_handler(0, 0x802502bc, 0x802502bf, generic_speedup_w);
-//	generic_speedup = &rambase[0x2502bc/4];
+/*	install_mem_write32_handler(0, 0x802502bc, 0x802502bf, generic_speedup_w);*/
+/*	generic_speedup = &rambase[0x2502bc/4];*/
 }
 
 

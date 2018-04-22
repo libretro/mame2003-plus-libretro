@@ -313,8 +313,8 @@ static WRITE_HANDLER( bank_select_w )
 
 	if ((data!=0x02) && (data!=0xfd))
 	{
-//		logerror("WRONG BANK SELECT = %x !!!!\n",data);
-//		usrintf_showmessage("WRONG BANK SELECT = %x !!!!\n",data);
+/*		logerror("WRONG BANK SELECT = %x !!!!\n",data);*/
+/*		usrintf_showmessage("WRONG BANK SELECT = %x !!!!\n",data);*/
 	}
 
 	banknum = data&1;
@@ -327,15 +327,15 @@ static UINT8 pix2[2];
 
 static WRITE_HANDLER( pix1_w )
 {
-//	if ( data > 7 )
-//		logerror("pix1 = %2x\n",data);
+/*	if ( data > 7 )*/
+/*		logerror("pix1 = %2x\n",data);*/
 
 	pix1 = data;
 }
 static WRITE_HANDLER( pix2_w )
 {
-//	if ( (data!=0x00) && (data!=0xff) )
-//		logerror("pix2 = %2x\n",data);
+/*	if ( (data!=0x00) && (data!=0xff) )*/
+/*		logerror("pix2 = %2x\n",data);*/
 
 	pix2[0] = pix2[1];
 	pix2[1] = data;
@@ -438,7 +438,7 @@ static WRITE_HANDLER( undoukai_mcu_w )
 	int d;
 	int i;
 
-//	logerror("mcu_w %02x\n",data);
+/*	logerror("mcu_w %02x\n",data);*/
 
 
 	if (mcu_cmd != -1)
@@ -531,8 +531,8 @@ static WRITE_HANDLER( undoukai_mcu_w )
 				break;
 
 			case 0x05:
-//				mcu_out[0][0] = 255*cos(PI*mcu_in[0][0]/180);
-//				mcu_out[0][1] = 255*sin(PI*mcu_in[0][0]/180);
+/*				mcu_out[0][0] = 255*cos(PI*mcu_in[0][0]/180);*/
+/*				mcu_out[0][1] = 255*sin(PI*mcu_in[0][0]/180);*/
 
 				d = mcu_in[0][0] & 0x7f;
 				mcu_out[0][0] = mcu_data1[d];
@@ -554,7 +554,7 @@ static WRITE_HANDLER( undoukai_mcu_w )
 						case 0x06: mcu_out[0][0] = 0x14; break;
 						case 0x07: mcu_out[0][0] = 0xb6; break;
 						default:
-						//	usrintf_showmessage("cmd06: %02x %02x",mcu_in[0][0],mcu_in[0][1]);
+						/*	usrintf_showmessage("cmd06: %02x %02x",mcu_in[0][0],mcu_in[0][1]);*/
 							logerror("cmd06: %02x %02x\n",mcu_in[0][0],mcu_in[0][1]);
 					}
 				break;
@@ -583,8 +583,8 @@ static WRITE_HANDLER( undoukai_mcu_w )
 			default:
 				from_mcu = 0x5d;
 
-//				usrintf_showmessage("unknown cmd%02x: %02x %02x %02x %02x",data,mcu_in[0][0],mcu_in[0][1],mcu_in[0][2],mcu_in[0][3]);
-//				logerror("unknown cmd%02x: %02x %02x %02x %02x\n",data,mcu_in[0][0],mcu_in[0][1],mcu_in[0][2],mcu_in[0][3]);
+/*				usrintf_showmessage("unknown cmd%02x: %02x %02x %02x %02x",data,mcu_in[0][0],mcu_in[0][1],mcu_in[0][2],mcu_in[0][3]);*/
+/*				logerror("unknown cmd%02x: %02x %02x %02x %02x\n",data,mcu_in[0][0],mcu_in[0][1],mcu_in[0][2],mcu_in[0][3]);*/
 		}
 	}
 }
@@ -592,7 +592,7 @@ static WRITE_HANDLER( undoukai_mcu_w )
 static READ_HANDLER( undoukai_mcu_r )
 {
 
-//	logerror("mcu_r %02x\n",from_mcu);
+/*	logerror("mcu_r %02x\n",from_mcu);*/
 
 	return from_mcu;
 }
@@ -679,8 +679,8 @@ static MEMORY_READ_START( readmem )
 	{ 0x8800, 0x8800, fortyl_mcu_r },
 	{ 0x8801, 0x8801, fortyl_mcu_status_r },
 
-	//{ 0x8802, 0x8802, pix1_r }, // this one is here just for debugging
-	{ 0x8803, 0x8803, pix2_r }, // and this one _is_ used.
+	/*{ 0x8802, 0x8802, pix1_r }, */ /* this one is here just for debugging*/
+	{ 0x8803, 0x8803, pix2_r }, /* and this one _is_ used.*/
 
 	{ 0x8804, 0x8804, from_snd_r },
 	{ 0x8805, 0x8805, snd_flag_r },
@@ -709,11 +709,11 @@ static MEMORY_WRITE_START( writemem )
 
 
 	{ 0x8800, 0x8800, fortyl_mcu_w },
-	{ 0x8801, 0x8801, pix1_w },		//pixel layer related
+	{ 0x8801, 0x8801, pix1_w },		/*pixel layer related*/
 	{ 0x8802, 0x8802, bank_select_w },
-	{ 0x8803, 0x8803, pix2_w },		//pixel layer related
+	{ 0x8803, 0x8803, pix2_w },		/*pixel layer related*/
 	{ 0x8804, 0x8804, sound_command_w },
-//	{ 0x8805, 0x8805, MWA_NOP /*sound_reset*/},	//????
+/*	{ 0x8805, 0x8805, MWA_NOP },*/ /*/*sound_reset*/ /*????*/
 	{ 0x880c, 0x880c, fortyl_pixram_sel_w }, /* pixram bank select */
 	{ 0x880d, 0x880d, MWA_NOP }, /* unknown */
 
@@ -737,8 +737,8 @@ static MEMORY_READ_START( undoukai_readmem )
 	{ 0xa800, 0xa800, undoukai_mcu_r },
 	{ 0xa801, 0xa801, undoukai_mcu_status_r },
 
-	//{ 0xa802, 0xa802, pix1_r }, // this one is here just for debugging
-	{ 0xa803, 0xa803, pix2_r }, // and this one _is_ used.
+	/*{ 0xa802, 0xa802, pix1_r }, */ /* this one is here just for debugging*/
+	{ 0xa803, 0xa803, pix2_r }, /* and this one _is_ used.*/
 
 	{ 0xa804, 0xa804, from_snd_r },
 	{ 0xa805, 0xa805, snd_flag_r },
@@ -758,11 +758,11 @@ static MEMORY_WRITE_START( undoukai_writemem )
 	{ 0xa000, 0xa7ff, MWA_RAM },	/* M5517P on main board */
 
 	{ 0xa800, 0xa800, undoukai_mcu_w },
-	{ 0xa801, 0xa801, pix1_w },		//pixel layer related
+	{ 0xa801, 0xa801, pix1_w },		/*pixel layer related*/
 	{ 0xa802, 0xa802, bank_select_w },
-	{ 0xa803, 0xa803, pix2_w },		//pixel layer related
+	{ 0xa803, 0xa803, pix2_w },		/*pixel layer related*/
 	{ 0xa804, 0xa804, sound_command_w },
-	{ 0xa805, 0xa805, MWA_NOP /*sound_reset*/},	//????
+	{ 0xa805, 0xa805, MWA_NOP /*sound_reset*/},	/*????*/
 	{ 0xa807, 0xa807, MWA_NOP }, /* unknown */
 	{ 0xa80c, 0xa80c, fortyl_pixram_sel_w }, /* pixram bank select */
 	{ 0xa80d, 0xa80d, MWA_NOP }, /* unknown */
@@ -820,7 +820,7 @@ static UINT8 snd_ctrl3=0;
 static WRITE_HANDLER( sound_control_0_w )
 {
 	snd_ctrl0 = data & 0xff;
-//	usrintf_showmessage("SND0 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3);
+/*	usrintf_showmessage("SND0 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3);*/
 
 	/* this definitely controls main melody voice on 2'-1 and 4'-1 outputs */
 	mixer_set_volume (3, vol_ctrl[ (snd_ctrl0>>4) & 15 ]);	/* group1 from msm5232 */
@@ -829,7 +829,7 @@ static WRITE_HANDLER( sound_control_0_w )
 static WRITE_HANDLER( sound_control_1_w )
 {
 	snd_ctrl1 = data & 0xff;
-//	usrintf_showmessage("SND1 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3);
+/*	usrintf_showmessage("SND1 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3);*/
 	mixer_set_volume (4, vol_ctrl[ (snd_ctrl1>>4) & 15 ]);	/* group2 from msm5232 */
 }
 
@@ -838,7 +838,7 @@ static WRITE_HANDLER( sound_control_2_w )
 	int i;
 
 	snd_ctrl2 = data & 0xff;
-//	usrintf_showmessage("SND2 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3);
+/*	usrintf_showmessage("SND2 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3);*/
 
 	for (i=0; i<3; i++)
 		mixer_set_volume (i, vol_ctrl[ (snd_ctrl2>>4) & 15 ]);	/* ym2149f all */
@@ -847,7 +847,7 @@ static WRITE_HANDLER( sound_control_2_w )
 static WRITE_HANDLER( sound_control_3_w ) /* unknown */
 {
 	snd_ctrl3 = data & 0xff;
-//	usrintf_showmessage("SND3 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3);
+/*	usrintf_showmessage("SND3 0=%02x 1=%02x 2=%02x 3=%02x", snd_ctrl0, snd_ctrl1, snd_ctrl2, snd_ctrl3);*/
 }
 
 static MEMORY_WRITE_START( writemem_sound )
@@ -973,14 +973,14 @@ INPUT_PORTS_START( 40love )
 	PORT_DIPSETTING(    0x80, "Double Slot" )
 
 	PORT_START
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	//??
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	//??
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH,IPT_COIN1 )	//OK
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH,IPT_COIN2 )	//OK
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )	//OK
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )	//OK
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1 )	//OK
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_TILT )	//OK
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	/*??*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/*??*/
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH,IPT_COIN1 )	/*OK*/
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH,IPT_COIN2 )	/*OK*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )	/*OK*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )	/*OK*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1 )	/*OK*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_TILT )	/*OK*/
 
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY )
@@ -1229,8 +1229,8 @@ static MACHINE_DRIVER_START( undoukai )
 	MDRV_CPU_MEMORY(readmem_sound,writemem_sound)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)	/* source/number of IRQs is unknown */
 
-//	MDRV_CPU_ADD(M68705,18432000/6)
-//	MDRV_CPU_MEMORY(mcu_readmem,mcu_writemem)
+/*	MDRV_CPU_ADD(M68705,18432000/6)*/
+/*	MDRV_CPU_MEMORY(mcu_readmem,mcu_writemem)*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)

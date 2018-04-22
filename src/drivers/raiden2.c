@@ -170,37 +170,37 @@ static MEMORY_READ_START( raiden2_readmem )
 	{ 0x00000, 0x003ff, MRA_RAM },
 
 	/* I have my doubts these are really mapped here, protection? */
-	{ 0x00740, 0x00740, input_port_2_r }, // dip 1
-	{ 0x00741, 0x00741, input_port_3_r }, // dip 2
-	{ 0x00744, 0x00744, input_port_0_r }, // player 1
-	{ 0x00745, 0x00745, input_port_1_r }, // player 2
-	{ 0x0074b, 0x0074d, input_port_4_r }, // start buttons
+	{ 0x00740, 0x00740, input_port_2_r }, /* dip 1*/
+	{ 0x00741, 0x00741, input_port_3_r }, /* dip 2*/
+	{ 0x00744, 0x00744, input_port_0_r }, /* player 1*/
+	{ 0x00745, 0x00745, input_port_1_r }, /* player 2*/
+	{ 0x0074b, 0x0074d, input_port_4_r }, /* start buttons*/
 	{ 0x00400, 0x007ff, raiden2_kludge_r },
 
 	{ 0x00800, 0x0afff, MRA_RAM },
 
-	{ 0x0b000, 0x0bfff, MRA_RAM }, // protection?
+	{ 0x0b000, 0x0bfff, MRA_RAM }, /* protection?*/
 
-	{ 0x0c000, 0x0cfff, MRA_RAM }, // sprites
-	{ 0x0d000, 0x0d7ff, MRA_RAM }, // background
-	{ 0x0d800, 0x0dfff, MRA_RAM }, // middle
-	{ 0x0e800, 0x0f7ff, MRA_RAM }, // front
+	{ 0x0c000, 0x0cfff, MRA_RAM }, /* sprites*/
+	{ 0x0d000, 0x0d7ff, MRA_RAM }, /* background*/
+	{ 0x0d800, 0x0dfff, MRA_RAM }, /* middle*/
+	{ 0x0e800, 0x0f7ff, MRA_RAM }, /* front*/
 	{ 0x0f800, 0x0ffff, MRA_RAM }, /* Stack area */
 
 	{ 0x10000, 0x1efff, MRA_RAM },
 
-	{ 0x1f000, 0x1ffff, MRA_RAM }, // palette
+	{ 0x1f000, 0x1ffff, MRA_RAM }, /* palette*/
 
-	{ 0x20000, 0x3ffff, MRA_BANK1 }, // rom
-	{ 0x40000, 0xfffff, MRA_BANK2 }, // rom
+	{ 0x20000, 0x3ffff, MRA_BANK1 }, /* rom*/
+	{ 0x40000, 0xfffff, MRA_BANK2 }, /* rom*/
 MEMORY_END
 
 static MEMORY_WRITE_START( raiden2_writemem )
 	{ 0x00000, 0x003ff, MWA_RAM },
-//	{ 0x00400, 0x007ff, MWA_RAM },
+/*	{ 0x00400, 0x007ff, MWA_RAM },*/
 	{ 0x00800, 0x0afff, MWA_RAM },
 
-	{ 0x0b000, 0x0bfff, MWA_RAM }, // protection?
+	{ 0x0b000, 0x0bfff, MWA_RAM }, /* protection?*/
 
 	{ 0x0c000, 0x0cfff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0x0d000, 0x0d7ff, raiden2_background_w, &back_data },

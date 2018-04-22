@@ -860,7 +860,7 @@ static MEMORY_WRITE32_START( namcos22s_writemem )
 	{ 0x460000, 0x463fff, MWA32_RAM },
 	{ 0x700000, 0x70001f, namcos22_system_controller_w, &namcos22_system_controller },
 	{ 0x800000, 0x800003, MWA32_RAM }, /* ? */
-	//0838
+	/*0838*/
 	{ 0x810000, 0x81000f, MWA32_RAM }, /* ? */
 	{ 0x810200, 0x8103ff, MWA32_RAM }, /* depth cueing density */
 	{ 0x810400, 0x810403, MWA32_RAM }, /* ? air combat22 */
@@ -924,7 +924,7 @@ SimulatePropCycleMCU( void )
 
 		data = 0;
 		if( readinputport( 2 ) & 0x20 ) data |= 0x0100;
-		namcos22_shareram[(0xa0bd04-0xa04000)/4] = data<<16; // start1
+		namcos22_shareram[(0xa0bd04-0xa04000)/4] = data<<16; /* start1*/
 
 		dx = 0; dy = 0;
 		if( readinputport( 2 ) & 0x04 ) dx++;
@@ -944,7 +944,7 @@ SimulateCyberCyclesMCU( void )
 {
 	data32_t data = 0;
 return;
-	if( keyboard_pressed(KEYCODE_SPACE) ) data |= 0x01000; // "view switch"
+	if( keyboard_pressed(KEYCODE_SPACE) ) data |= 0x01000; /* "view switch"*/
 	namcos22_shareram[(0xa0bd00 - 0xa04000)/4] = data;
 
 	data = 0; /* ? */
@@ -957,7 +957,7 @@ SimulateTimeCrisisMCU( void )
 	/* x------- -------- -------- -------- (w)
 	 * -------- x------- -------- -------- (r) status
 	 */
-//	namcos22_shareram[(0xa0b000 - 0xa04000)/4] ^= 0x00800000;
+/*	namcos22_shareram[(0xa0b000 - 0xa04000)/4] ^= 0x00800000;*/
 }
 
 static INTERRUPT_GEN( namcos22s_interrupt )
@@ -1834,11 +1834,11 @@ INPUT_PORTS_START( propcycl )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_START1 )
 
-//	PORT_START
-//	PORT_ANALOG( 0xffff, 0x8000, IPT_AD_STICK_X|IPF_CENTER, 100, 4, 0x00, 0xffff )
+/*	PORT_START*/
+/*	PORT_ANALOG( 0xffff, 0x8000, IPT_AD_STICK_X|IPF_CENTER, 100, 4, 0x00, 0xffff )*/
 
-//	PORT_START
-//	PORT_ANALOG( 0xffff, 0x8000, IPT_AD_STICK_Y|IPF_CENTER, 100, 4, 0x00, 0xffff )
+/*	PORT_START*/
+/*	PORT_ANALOG( 0xffff, 0x8000, IPT_AD_STICK_Y|IPF_CENTER, 100, 4, 0x00, 0xffff )*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( victlap )
@@ -2521,13 +2521,13 @@ GAMEX( 1995, airco22b, 0,        namcos22s, victlap,  airco22,  ROT0, "Namco", "
 GAMEX( 1995, alpinerd, 0,        namcos22s, alpiner,  alpiner,  ROT0, "Namco", "Alpine Racer (Rev. AR2 Ver.D)"             , GAME_NO_SOUND|GAME_NOT_WORKING ) /* encrypted gfx */
 GAMEX( 1995, alpinerc, alpinerd, namcos22s, alpiner,  alpiner,  ROT0, "Namco", "Alpine Racer (Rev. AR2 Ver.C)"             , GAME_NO_SOUND|GAME_NOT_WORKING ) /* encrypted gfx */
 GAMEX( 1995, cybrcycc, 0,        namcos22s, cybrcycc, cybrcyc,  ROT0, "Namco", "Cyber Cycles (Rev. CB2 Ver.C)"             , GAME_NO_SOUND|GAME_NOT_WORKING ) /* almost */
-//GAMEX( 1995, dirtdshx, "Dirt Dash")
+/*GAMEX( 1995, dirtdshx, "Dirt Dash")*/
 GAMEX( 1995, timecrsa, 0,        namcos22s, timecris, timecris, ROT0, "Namco", "Time Crisis (Rev. TS2 Ver.A)"              , GAME_NO_SOUND|GAME_NOT_WORKING ) /* locks up */
-//GAMEX( 1995, timecris, 0, namcos22s, timecris, timecris, ROT0, "Namco", "Time Crisis (Rev. TS2 Ver.B)"              , GAME_NO_SOUND|GAME_NOT_WORKING )
+/*GAMEX( 1995, timecris, 0, namcos22s, timecris, timecris, ROT0, "Namco", "Time Crisis (Rev. TS2 Ver.B)"              , GAME_NO_SOUND|GAME_NOT_WORKING )*/
 GAMEX( 1996, propcycl, 0,        namcos22s, propcycl, propcycl, ROT0, "Namco", "Prop Cycle (Rev PR2 Ver.A)"                , GAME_NO_SOUND|GAME_IMPERFECT_GRAPHICS )
-//GAMEX( 1996, tokyowrx, "Tokyo Wars")
-//GAMEX( 1996, alpinr2x, "Alpine Racer 2")
-//GAMEX( 1996, alpinesx, "Alpine Surfer")
-//GAMEX( 1996, aquajetx, "Aqua Jet")
-//GAMEX( 1997, armdilox, "Armidillo Racing")
-//GAMEX( 199?, downhbkx, "Downhill Bikers")
+/*GAMEX( 1996, tokyowrx, "Tokyo Wars")*/
+/*GAMEX( 1996, alpinr2x, "Alpine Racer 2")*/
+/*GAMEX( 1996, alpinesx, "Alpine Surfer")*/
+/*GAMEX( 1996, aquajetx, "Aqua Jet")*/
+/*GAMEX( 1997, armdilox, "Armidillo Racing")*/
+/*GAMEX( 199?, downhbkx, "Downhill Bikers")*/

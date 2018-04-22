@@ -74,7 +74,7 @@ Or use these cheats:
 data32_t *psikyo4_vidregs, *ps4_ram, *ps4_io_select;
 data32_t *bgpen_1, *bgpen_2, *screen1_brt, *screen2_brt;
 
-#define MASTER_CLOCK 57272700	// main oscillator frequency
+#define MASTER_CLOCK 57272700	/* main oscillator frequency*/
 
 /* defined in vidhrdw/psikyo4.c */
 VIDEO_START( psikyo4 );
@@ -93,21 +93,21 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo gfxdecodeinfops4[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x8, 0x000, 0x80 }, // 8bpp tiles
+	{ REGION_GFX1, 0, &layout_16x16x8, 0x000, 0x80 }, /* 8bpp tiles*/
 	{ -1 }
 };
 
 static struct EEPROM_interface eeprom_interface_93C56 =
 {
-	8,		// address bits	8
-	8,		// data bits	8
-	"*110x",	// read			110x aaaaaaaa
-	"*101x",	// write		101x aaaaaaaa dddddddd
-	"*111x",	// erase		111x aaaaaaaa
-	"*10000xxxxxxx",// lock			100x 00xxxx
-	"*10011xxxxxxx",// unlock		100x 11xxxx
-//	"*10001xxxx",	// write all	1 00 01xxxx dddddddddddddddd
-//	"*10010xxxx"	// erase all	1 00 10xxxx
+	8,		/* address bits	8*/
+	8,		/* data bits	8*/
+	"*110x",	/* read			110x aaaaaaaa*/
+	"*101x",	/* write		101x aaaaaaaa dddddddd*/
+	"*111x",	/* erase		111x aaaaaaaa*/
+	"*10000xxxxxxx",/* lock			100x 00xxxx*/
+	"*10011xxxxxxx",/* unlock		100x 11xxxx*/
+/*	"*10001xxxx",	*/ /* write all	1 00 01xxxx dddddddddddddddd*/
+/*	"*10010xxxx"	*/ /* erase all	1 00 10xxxx*/
 };
 
 static NVRAM_HANDLER(93C56)
@@ -123,7 +123,7 @@ static NVRAM_HANDLER(93C56)
 		{
 			EEPROM_load(file);
 		}
-		else	// these games want the eeprom all zeros by default
+		else	/* these games want the eeprom all zeros by default*/
 		{
 			int length;
 			UINT8 *dat;
@@ -193,7 +193,7 @@ static WRITE32_HANDLER( ps4_paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_
 	r = ((paletteram32[offset] & 0xff000000) >>24);
 
 	palette_set_color(offset,r,g,b);
-	palette_set_color(offset+0x800,r,g,b); // For screen 2
+	palette_set_color(offset+0x800,r,g,b); /* For screen 2*/
 }
 
 static WRITE32_HANDLER( ps4_bgpen_1_dword_w )
@@ -205,7 +205,7 @@ static WRITE32_HANDLER( ps4_bgpen_1_dword_w )
 	g = ((bgpen_1[0] & 0x00ff0000) >>16);
 	r = ((bgpen_1[0] & 0xff000000) >>24);
 
-	palette_set_color(0x1000,r,g,b); // Clear colour for screen 1
+	palette_set_color(0x1000,r,g,b); /* Clear colour for screen 1*/
 }
 
 static WRITE32_HANDLER( ps4_bgpen_2_dword_w )
@@ -217,7 +217,7 @@ static WRITE32_HANDLER( ps4_bgpen_2_dword_w )
 	g = ((bgpen_2[0] & 0x00ff0000) >>16);
 	r = ((bgpen_2[0] & 0xff000000) >>24);
 
-	palette_set_color(0x1001,r,g,b); // Clear colour for screen 2
+	palette_set_color(0x1001,r,g,b); /* Clear colour for screen 2*/
 }
 
 static WRITE32_HANDLER( ps4_screen1_brt_w )
@@ -280,7 +280,7 @@ static WRITE32_HANDLER( ps4_vidregs_w )
 #if ROMTEST
 	if(offset==2) /* Configure bank for gfx test */
 	{
-		if (!(mem_mask & 0x000000ff) || !(mem_mask & 0x0000ff00))	// Bank
+		if (!(mem_mask & 0x000000ff) || !(mem_mask & 0x0000ff00))	/* Bank*/
 		{
 			unsigned char *ROM = memory_region(REGION_GFX1);
 			cpu_setbank(2,&ROM[0x2000 * (psikyo4_vidregs[offset]&0xfff)]); /* Bank comes from vidregs */
@@ -307,22 +307,22 @@ static READ32_HANDLER( psh_ymf_fm_r )
 
 static WRITE32_HANDLER( psh_ymf_fm_w )
 {
-	if (!(mem_mask & 0xff000000))	// FM bank 1 address (OPL2/OPL3 compatible)
+	if (!(mem_mask & 0xff000000))	/* FM bank 1 address (OPL2/OPL3 compatible)*/
 	{
 		YMF278B_control_port_0_A_w(0, data>>24);
 	}
 
-	if (!(mem_mask & 0x00ff0000))	// FM bank 1 data
+	if (!(mem_mask & 0x00ff0000))	/* FM bank 1 data*/
 	{
 		YMF278B_data_port_0_A_w(0, data>>16);
 	}
 
-	if (!(mem_mask & 0x0000ff00))	// FM bank 2 address (OPL3/YMF 262 extended)
+	if (!(mem_mask & 0x0000ff00))	/* FM bank 2 address (OPL3/YMF 262 extended)*/
 	{
 		YMF278B_control_port_0_B_w(0, data>>8);
 	}
 
-	if (!(mem_mask & 0x000000ff))	// FM bank 2 data
+	if (!(mem_mask & 0x000000ff))	/* FM bank 2 data*/
 	{
 		YMF278B_data_port_0_B_w(0, data);
 	}
@@ -330,57 +330,57 @@ static WRITE32_HANDLER( psh_ymf_fm_w )
 
 static WRITE32_HANDLER( psh_ymf_pcm_w )
 {
-	if (!(mem_mask & 0xff000000))	// PCM address (OPL4/YMF 278B extended)
+	if (!(mem_mask & 0xff000000))	/* PCM address (OPL4/YMF 278B extended)*/
 	{
 		YMF278B_control_port_0_C_w(0, data>>24);
 
 #if ROMTEST
-		if (data>>24 == 0x06)	// Reset Sample reading (They always write this code immediately before reading data)
+		if (data>>24 == 0x06)	/* Reset Sample reading (They always write this code immediately before reading data)*/
 		{
 			sample_offs = 0;
 		}
 #endif
 	}
 
-	if (!(mem_mask & 0x00ff0000))	// PCM data
+	if (!(mem_mask & 0x00ff0000))	/* PCM data*/
 	{
 		YMF278B_data_port_0_C_w(0, data>>16);
 	}
 }
 
 static MEMORY_READ32_START( ps4_readmem )
-	{ 0x00000000, 0x000fffff, MRA32_ROM },	// program ROM (1 meg)
-	{ 0x02000000, 0x021fffff, MRA32_BANK1 }, // data ROM
+	{ 0x00000000, 0x000fffff, MRA32_ROM },	/* program ROM (1 meg)*/
+	{ 0x02000000, 0x021fffff, MRA32_BANK1 }, /* data ROM*/
 	{ 0x03000000, 0x030037ff, MRA32_RAM },
 	{ 0x03003fe0, 0x03003fe3, ps4_eeprom_r },
-	{ 0x03003fe4, 0x03003fe7, MRA32_NOP }, // also writes to this address - might be vblank?
-//	{ 0x03003fe8, 0x03003fef, MRA32_RAM }, // vid regs?
+	{ 0x03003fe4, 0x03003fe7, MRA32_NOP }, /* also writes to this address - might be vblank?*/
+/*	{ 0x03003fe8, 0x03003fef, MRA32_RAM }, */ /* vid regs?*/
 	{ 0x03004000, 0x03005fff, MRA32_RAM },
-	{ 0x05000000, 0x05000003, psh_ymf_fm_r }, // read YMF status
-	{ 0x05800000, 0x05800007, ps4_io32_r }, // Screen 1+2's Controls
-	{ 0x06000000, 0x060fffff, MRA32_RAM },	// main RAM (1 meg)
+	{ 0x05000000, 0x05000003, psh_ymf_fm_r }, /* read YMF status*/
+	{ 0x05800000, 0x05800007, ps4_io32_r }, /* Screen 1+2's Controls*/
+	{ 0x06000000, 0x060fffff, MRA32_RAM },	/* main RAM (1 meg)*/
 
 #if ROMTEST
-	{ 0x05000004, 0x05000007, ps4_sample_r }, // data for rom tests (Used to verify Sample rom)
-	{ 0x03006000, 0x03007fff, MRA32_BANK2 }, // data for rom tests (gfx), data is controlled by vidreg
+	{ 0x05000004, 0x05000007, ps4_sample_r }, /* data for rom tests (Used to verify Sample rom)*/
+	{ 0x03006000, 0x03007fff, MRA32_BANK2 }, /* data for rom tests (gfx), data is controlled by vidreg*/
 #endif
 MEMORY_END
 
 static MEMORY_WRITE32_START( ps4_writemem )
-	{ 0x00000000, 0x000fffff, MWA32_ROM },	// program ROM (1 meg)
+	{ 0x00000000, 0x000fffff, MWA32_ROM },	/* program ROM (1 meg)*/
 	{ 0x03000000, 0x030037ff, MWA32_RAM, &spriteram32, &spriteram_size },
 	{ 0x03003fe0, 0x03003fe3, ps4_eeprom_w },
-//	{ 0x03003fe4, 0x03003fe7, MWA32_NOP }, // might be vblank?
-	{ 0x03003fe4, 0x03003fef, ps4_vidregs_w, &psikyo4_vidregs }, // vid regs?
-	{ 0x03003ff0, 0x03003ff3, ps4_screen1_brt_w }, // screen 1 brightness
-	{ 0x03003ff4, 0x03003ff7, ps4_bgpen_1_dword_w, &bgpen_1 }, // screen 1 clear colour
-	{ 0x03003ff8, 0x03003ffb, ps4_screen2_brt_w }, // screen 2 brightness
-	{ 0x03003ffc, 0x03003fff, ps4_bgpen_2_dword_w, &bgpen_2 }, // screen 2 clear colour
-	{ 0x03004000, 0x03005fff, ps4_paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w, &paletteram32 }, // palette
-	{ 0x05000000, 0x05000003, psh_ymf_fm_w }, // first 2 OPL4 register banks
-	{ 0x05000004, 0x05000007, psh_ymf_pcm_w }, // third OPL4 register bank
-	{ 0x05800008, 0x0580000b, MWA32_RAM, &ps4_io_select }, // Used by Mahjong games to choose input (also maps normal loderndf inputs to offsets)
-	{ 0x06000000, 0x060fffff, MWA32_RAM, &ps4_ram },	// work RAM
+/*	{ 0x03003fe4, 0x03003fe7, MWA32_NOP }, */ /* might be vblank?*/
+	{ 0x03003fe4, 0x03003fef, ps4_vidregs_w, &psikyo4_vidregs }, /* vid regs?*/
+	{ 0x03003ff0, 0x03003ff3, ps4_screen1_brt_w }, /* screen 1 brightness*/
+	{ 0x03003ff4, 0x03003ff7, ps4_bgpen_1_dword_w, &bgpen_1 }, /* screen 1 clear colour*/
+	{ 0x03003ff8, 0x03003ffb, ps4_screen2_brt_w }, /* screen 2 brightness*/
+	{ 0x03003ffc, 0x03003fff, ps4_bgpen_2_dword_w, &bgpen_2 }, /* screen 2 clear colour*/
+	{ 0x03004000, 0x03005fff, ps4_paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w, &paletteram32 }, /* palette*/
+	{ 0x05000000, 0x05000003, psh_ymf_fm_w }, /* first 2 OPL4 register banks*/
+	{ 0x05000004, 0x05000007, psh_ymf_pcm_w }, /* third OPL4 register bank*/
+	{ 0x05800008, 0x0580000b, MWA32_RAM, &ps4_io_select }, /* Used by Mahjong games to choose input (also maps normal loderndf inputs to offsets)*/
+	{ 0x06000000, 0x060fffff, MWA32_RAM, &ps4_ram },	/* work RAM*/
 MEMORY_END
 
 static void irqhandler(int linestate)
@@ -540,11 +540,11 @@ INPUT_PORTS_START( hotgmck )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START /* IN8 system inputs */
-	PORT_BIT(  0x01, IP_ACTIVE_LOW,  IPT_COIN1    ) // Screen 1
+	PORT_BIT(  0x01, IP_ACTIVE_LOW,  IPT_COIN1    ) /* Screen 1*/
 	PORT_BIT(  0x02, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
-	PORT_BIT(  0x04, IP_ACTIVE_LOW,  IPT_COIN2    ) // Screen 2
+	PORT_BIT(  0x04, IP_ACTIVE_LOW,  IPT_COIN2    ) /* Screen 2*/
 	PORT_BIT(  0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
-	PORT_BIT(  0x10, IP_ACTIVE_LOW,  IPT_SERVICE1 ) // Screen 1
+	PORT_BIT(  0x10, IP_ACTIVE_LOW,  IPT_SERVICE1 ) /* Screen 1*/
 	PORT_BITX( 0x20, IP_ACTIVE_LOW,  IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 #if ROMTEST
 	PORT_DIPNAME( 0x40, 0x40, "Debug" ) /* Unknown effects */
@@ -553,7 +553,7 @@ INPUT_PORTS_START( hotgmck )
 #else
 	PORT_BIT(  0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 #endif
-	PORT_BIT(  0x80, IP_ACTIVE_LOW,  IPT_SERVICE2 ) // Screen 2
+	PORT_BIT(  0x80, IP_ACTIVE_LOW,  IPT_SERVICE2 ) /* Screen 2*/
 
 #if !DUAL_SCREEN
 	PORT_START /* IN9 fake port for screen switching */
@@ -571,7 +571,7 @@ INPUT_PORTS_START( loderndf )
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )
 	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER1 )
-	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 ) // Can be used as Retry button
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 ) /* Can be used as Retry button*/
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START1 )
 
 	PORT_START	/* IN1 player 2 controls */
@@ -581,17 +581,17 @@ INPUT_PORTS_START( loderndf )
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )
 	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER2 )
-	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 ) // Can be used as Retry button
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 ) /* Can be used as Retry button*/
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2 )
 
 	UNUSED_PORT /* IN2 unused? */
 
 	PORT_START /* IN3 system inputs */
-	PORT_BIT(  0x01, IP_ACTIVE_LOW,  IPT_COIN1    ) // Screen 1
-	PORT_BIT(  0x02, IP_ACTIVE_LOW,  IPT_COIN2    ) // Screen 1 - 2nd slot
-	PORT_BIT(  0x04, IP_ACTIVE_LOW,  IPT_COIN3    ) // Screen 2
-	PORT_BIT(  0x08, IP_ACTIVE_LOW,  IPT_COIN4    ) // Screen 2 - 2nd slot
-	PORT_BIT(  0x10, IP_ACTIVE_LOW,  IPT_SERVICE1 ) // Screen 1
+	PORT_BIT(  0x01, IP_ACTIVE_LOW,  IPT_COIN1    ) /* Screen 1*/
+	PORT_BIT(  0x02, IP_ACTIVE_LOW,  IPT_COIN2    ) /* Screen 1 - 2nd slot*/
+	PORT_BIT(  0x04, IP_ACTIVE_LOW,  IPT_COIN3    ) /* Screen 2*/
+	PORT_BIT(  0x08, IP_ACTIVE_LOW,  IPT_COIN4    ) /* Screen 2 - 2nd slot*/
+	PORT_BIT(  0x10, IP_ACTIVE_LOW,  IPT_SERVICE1 ) /* Screen 1*/
 	PORT_BITX( 0x20, IP_ACTIVE_LOW,  IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 #if ROMTEST
 	PORT_DIPNAME( 0x40, 0x40, "Debug" ) /* Must be high for rom test, unknown other side-effects */
@@ -600,7 +600,7 @@ INPUT_PORTS_START( loderndf )
 #else
 	PORT_BIT(  0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 #endif
-	PORT_BIT(  0x80, IP_ACTIVE_LOW,  IPT_SERVICE2 ) // Screen 2
+	PORT_BIT(  0x80, IP_ACTIVE_LOW,  IPT_SERVICE2 ) /* Screen 2*/
 
 	PORT_START	/* IN4 player 1 controls on second screen */
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER3 )
@@ -609,7 +609,7 @@ INPUT_PORTS_START( loderndf )
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER3 )
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER3 )
 	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER3 )
-	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER3 ) // Can be used as Retry button
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER3 ) /* Can be used as Retry button*/
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START3 )
 
 	PORT_START	/* IN5 player 2 controls on second screen */
@@ -619,7 +619,7 @@ INPUT_PORTS_START( loderndf )
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER4 )
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER4 )
 	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_BUTTON2        | IPF_PLAYER4 )
-	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER4 ) // Can be used as Retry button
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER4 ) /* Can be used as Retry button*/
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START4 )
 
 	UNUSED_PORT /* IN6 unused? */
@@ -660,11 +660,11 @@ INPUT_PORTS_START( hotdebut )
 	UNUSED_PORT /* IN2 unused? */
 
 	PORT_START /* IN3 system inputs */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1    ) // Screen 1
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2    ) // Screen 1 - 2nd slot
-	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_COIN3    ) // Screen 2
-	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_COIN4    ) // Screen 2 - 2nd slot
-	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_SERVICE1 ) // Screen 1
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1    ) /* Screen 1*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2    ) /* Screen 1 - 2nd slot*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_COIN3    ) /* Screen 2*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_COIN4    ) /* Screen 2 - 2nd slot*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_SERVICE1 ) /* Screen 1*/
 	PORT_BITX(0x20, IP_ACTIVE_LOW,  IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 #if ROMTEST
 	PORT_DIPNAME( 0x40, 0x40, "Debug" ) /* Must be high for rom test, unknown other side-effects */
@@ -673,7 +673,7 @@ INPUT_PORTS_START( hotdebut )
 #else
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 #endif
-	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_SERVICE2 ) // Screen 2
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_SERVICE2 ) /* Screen 2*/
 
 	PORT_START	/* IN4 player 1 controls on second screen */
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 )
@@ -803,7 +803,7 @@ ROM_START( loderndf )
 	ROM_LOAD32_WORD( "1h.u12", 0x1000002, 0x800000, CRC(78f40d0d) SHA1(243acb73a183a41a3e35a2c746ad31dd6fcd3ef4) )
 
 	ROM_REGION( 0x800000, REGION_SOUND1, 0 )
-	ROM_LOAD( "snd0.u10", 0x000000, 0x800000, CRC(2da3788f) SHA1(199d4d750a107cbdf8c16cd5b097171743769d9c) ) // Fails hidden rom test
+	ROM_LOAD( "snd0.u10", 0x000000, 0x800000, CRC(2da3788f) SHA1(199d4d750a107cbdf8c16cd5b097171743769d9c) ) /* Fails hidden rom test*/
 ROM_END
 
 ROM_START( loderdfa )
@@ -818,7 +818,7 @@ ROM_START( loderdfa )
 	ROM_LOAD32_WORD( "1h.u12", 0x1000002, 0x800000, CRC(78f40d0d) SHA1(243acb73a183a41a3e35a2c746ad31dd6fcd3ef4) )
 
 	ROM_REGION( 0x800000, REGION_SOUND1, 0 )
-	ROM_LOAD( "snd0.u10", 0x000000, 0x800000, CRC(2da3788f) SHA1(199d4d750a107cbdf8c16cd5b097171743769d9c) ) // Fails hidden rom test
+	ROM_LOAD( "snd0.u10", 0x000000, 0x800000, CRC(2da3788f) SHA1(199d4d750a107cbdf8c16cd5b097171743769d9c) ) /* Fails hidden rom test*/
 ROM_END
 
 ROM_START( hotdebut )
@@ -895,7 +895,7 @@ static DRIVER_INIT( hotgmck )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	cpu_setbank(1,&RAM[0x100000]);
-	install_mem_read32_handler (0, 0x5800000, 0x5800007, hotgmck_io32_r ); // Different Inputs
+	install_mem_read32_handler (0, 0x5800000, 0x5800007, hotgmck_io32_r ); /* Different Inputs*/
 }
 
 static DRIVER_INIT( loderndf )

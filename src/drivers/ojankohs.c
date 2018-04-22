@@ -179,7 +179,7 @@ static READ_HANDLER( ojankoc_keymatrix_r )
 
 static READ_HANDLER( ojankohs_ay8910_0_r )
 {
-	// DIPSW 2
+	/* DIPSW 2*/
 	return (((readinputport(2) & 0x01) << 7) | ((readinputport(2) & 0x02) << 5) |
 	        ((readinputport(2) & 0x04) << 3) | ((readinputport(2) & 0x08) << 1) |
 	        ((readinputport(2) & 0x10) >> 1) | ((readinputport(2) & 0x20) >> 3) |
@@ -188,7 +188,7 @@ static READ_HANDLER( ojankohs_ay8910_0_r )
 
 static READ_HANDLER( ojankohs_ay8910_1_r )
 {
-	// DIPSW 1
+	/* DIPSW 1*/
 	return (((readinputport(3) & 0x01) << 7) | ((readinputport(3) & 0x02) << 5) |
 	        ((readinputport(3) & 0x04) << 3) | ((readinputport(3) & 0x08) << 1) |
 	        ((readinputport(3) & 0x10) >> 1) | ((readinputport(3) & 0x20) >> 3) |
@@ -197,22 +197,22 @@ static READ_HANDLER( ojankohs_ay8910_1_r )
 
 static READ_HANDLER( ojankoy_ay8910_0_r )
 {
-	return readinputport(2);				// DIPSW 2
+	return readinputport(2);				/* DIPSW 2*/
 }
 
 static READ_HANDLER( ojankoy_ay8910_1_r )
 {
-	return readinputport(3);				// DIPSW 1
+	return readinputport(3);				/* DIPSW 1*/
 }
 
 static READ_HANDLER( ccasino_dipsw3_r )
 {
-	return (readinputport(9) ^ 0xff);		// DIPSW 3
+	return (readinputport(9) ^ 0xff);		/* DIPSW 3*/
 }
 
 static READ_HANDLER( ccasino_dipsw4_r )
 {
-	return (readinputport(10) ^ 0xff);		// DIPSW 4
+	return (readinputport(10) ^ 0xff);		/* DIPSW 4*/
 }
 
 static WRITE_HANDLER( ojankoy_coinctr_w )
@@ -289,8 +289,8 @@ static PORT_WRITE_START( writeport_ojankohs )
 	{ 0x05, 0x05, ojankohs_msm5205_w },
 	{ 0x06, 0x06, AY8910_write_port_0_w },
 	{ 0x07, 0x07, AY8910_control_port_0_w },
-	{ 0x10, 0x10, IOWP_NOP },				// unknown
-	{ 0x11, 0x11, IOWP_NOP },				// unknown
+	{ 0x10, 0x10, IOWP_NOP },				/* unknown*/
+	{ 0x11, 0x11, IOWP_NOP },				/* unknown*/
 PORT_END
 
 static PORT_WRITE_START( writeport_ojankoy )
@@ -321,7 +321,7 @@ static PORT_WRITE_START( writeport_ccasino )
 	{ 0x05, 0x05, ojankohs_msm5205_w },
 	{ 0x06, 0x06, AY8910_write_port_0_w },
 	{ 0x07, 0x07, AY8910_control_port_0_w },
-	{ 0x08, 0x0f, ccasino_palette_w },		// 16bit address access
+	{ 0x08, 0x0f, ccasino_palette_w },		/* 16bit address access*/
 	{ 0x10, 0x10, IOWP_NOP },
 	{ 0x11, 0x11, IOWP_NOP },
 PORT_END
@@ -344,9 +344,9 @@ PORT_END
 INPUT_PORTS_START( ojankohs )
 	PORT_START	/* (0) TEST SW */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )		// MEMORY RESET
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE2 )		// ANALYZER
-	PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	// TEST
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )		/* MEMORY RESET*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE2 )		/* ANALYZER*/
+	PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	/* TEST*/
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -359,7 +359,7 @@ INPUT_PORTS_START( ojankohs )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )			// COIN1
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )			/* COIN1*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START	/* (2) DIPSW-1 */
@@ -453,9 +453,9 @@ INPUT_PORTS_END
 INPUT_PORTS_START( ojankoy )
 	PORT_START	/* (0) TEST SW */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )		// MEMORY RESET
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE2 )		// ANALYZER
-	PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	// TEST
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )		/* MEMORY RESET*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE2 )		/* ANALYZER*/
+	PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	/* TEST*/
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -468,7 +468,7 @@ INPUT_PORTS_START( ojankoy )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )			// COIN1
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )			/* COIN1*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START	/* (2) DIPSW-1 */
@@ -572,9 +572,9 @@ INPUT_PORTS_END
 INPUT_PORTS_START( ccasino )
 	PORT_START	/* (0) TEST SW */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )		// MEMORY RESET
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE2 )		// ANALYZER
-	PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	// TEST
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )		/* MEMORY RESET*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE2 )		/* ANALYZER*/
+	PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	/* TEST*/
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -587,7 +587,7 @@ INPUT_PORTS_START( ccasino )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )			// COIN1
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )			/* COIN1*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START	/* (2) DIPSW-1 */

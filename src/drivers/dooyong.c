@@ -335,7 +335,7 @@ INPUT_PORTS_START( lastday )
 	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0xc2, 0xc2, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x42, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )
+/*	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(    0xc2, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x82, DEF_STR( 1C_2C ) )
@@ -383,7 +383,7 @@ INPUT_PORTS_START( gulfstrm )
 	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0xc2, 0xc2, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x42, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )
+/*	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(    0xc2, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x82, DEF_STR( 1C_2C ) )
@@ -462,7 +462,7 @@ INPUT_PORTS_START( pollux )
 	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0xc2, 0xc2, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x42, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )
+/*	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(    0xc2, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x82, DEF_STR( 1C_2C ) )
@@ -541,7 +541,7 @@ INPUT_PORTS_START( bluehawk )
 	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0xc2, 0xc2, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x42, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )
+/*	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(    0xc2, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x82, DEF_STR( 1C_2C ) )
@@ -620,7 +620,7 @@ INPUT_PORTS_START( primella )
 	PORT_DIPSETTING(    0x20, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0xc2, 0xc2, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x42, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )
+/*	PORT_DIPSETTING(    0xc0, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(    0xc2, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x82, DEF_STR( 1C_2C ) )
@@ -699,7 +699,7 @@ INPUT_PORTS_START( rshark )
 	PORT_DIPSETTING(      0x0020, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0x00c2, 0x00c2, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(      0x0042, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(      0x00c0, DEF_STR( 2C_1C ) )
+/*	PORT_DIPSETTING(      0x00c0, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(      0x00c2, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(      0x0002, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(      0x0082, DEF_STR( 1C_2C ) )
@@ -1104,7 +1104,7 @@ static MACHINE_DRIVER_START( rshark )
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START( superx ) // dif mem map
+static MACHINE_DRIVER_START( superx ) /* dif mem map*/
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 8000000)	/* measured on super-x */
@@ -1375,7 +1375,7 @@ ROM_END
 
 ROM_START( bluehawn )
 	ROM_REGION( 0x30000, REGION_CPU1, 0 )	/* 64k for code + 128k for banks */
-	ROM_LOAD( "rom19",        0x00000, 0x20000, CRC(24149246) SHA1(458fd429a895353b8636c717dcd58d57b8723012) )	// ROM2
+	ROM_LOAD( "rom19",        0x00000, 0x20000, CRC(24149246) SHA1(458fd429a895353b8636c717dcd58d57b8723012) )	/* ROM2*/
 	ROM_RELOAD(               0x10000, 0x20000 )	/* banked at 0x8000-0xbfff */
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* sound */
@@ -1385,13 +1385,13 @@ ROM_START( bluehawn )
 	ROM_LOAD( "rom3ntc",      0x00000, 0x10000, CRC(31eb221a) SHA1(7b893972227047d2f609fd1f97cc006eba2c9579) )
 
 	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_DISPOSE )	/* sprites */
-	ROM_LOAD16_WORD_SWAP( "dy-bh-m3",     0x00000, 0x80000, CRC(8809d157) SHA1(7f86378f9fcb95ab83b68f37a29732bb8cb3d95a) )	// ROM7+ROM8+ROM13+ROM14
+	ROM_LOAD16_WORD_SWAP( "dy-bh-m3",     0x00000, 0x80000, CRC(8809d157) SHA1(7f86378f9fcb95ab83b68f37a29732bb8cb3d95a) )	/* ROM7+ROM8+ROM13+ROM14*/
 
 	ROM_REGION( 0x80000, REGION_GFX3, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "dy-bh-m1",     0x00000, 0x80000, CRC(51816b2c) SHA1(72fb055de7979e40195316ef38a2e8c54be12e2b) )	// ROM9+ROM10+ROM15+ROM16
+	ROM_LOAD16_WORD_SWAP( "dy-bh-m1",     0x00000, 0x80000, CRC(51816b2c) SHA1(72fb055de7979e40195316ef38a2e8c54be12e2b) )	/* ROM9+ROM10+ROM15+ROM16*/
 
 	ROM_REGION( 0x80000, REGION_GFX4, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "dy-bh-m2",     0x00000, 0x80000, CRC(f9daace6) SHA1(5e7892bad170ab9bd52426629ad49843fbc31996) )	// ROM11+ROM12+ROM17+ROM18
+	ROM_LOAD16_WORD_SWAP( "dy-bh-m2",     0x00000, 0x80000, CRC(f9daace6) SHA1(5e7892bad170ab9bd52426629ad49843fbc31996) )	/* ROM11+ROM12+ROM17+ROM18*/
 
 	ROM_REGION( 0x40000, REGION_GFX5, 0 )	/* tiles + tilemaps (together!) */
 	ROM_LOAD16_BYTE( "rom6",         0x00000, 0x20000, CRC(e6bd9daa) SHA1(3b478fd02b145d13e49539df5260191a5254be19) )
@@ -1562,22 +1562,22 @@ ROM_START( superx )
 	ROM_LOAD16_WORD_SWAP( "spxo-m05.10m",    0x00000, 0x200000, CRC(9120dd84) SHA1(bcf1fdc860d51b9bcfec1e84940ef21dfc41b5dc) )
 
 	ROM_REGION( 0x100000, REGION_GFX2, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "spxb-m04.8f",    0x00000, 0x100000, CRC(91a7ac6e) SHA1(b7fb79c2e4f5eecb7128b86ee2b1070eed905d2a) ) // bomb
+	ROM_LOAD16_WORD_SWAP( "spxb-m04.8f",    0x00000, 0x100000, CRC(91a7ac6e) SHA1(b7fb79c2e4f5eecb7128b86ee2b1070eed905d2a) ) /* bomb*/
 
 	ROM_REGION( 0x100000, REGION_GFX3, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "spxb-m03.8j",    0x00000, 0x100000, CRC(8b42861b) SHA1(6eb1f6bfe0b8e987e624a6fe7e025c6918804cf9) ) // title logo
+	ROM_LOAD16_WORD_SWAP( "spxb-m03.8j",    0x00000, 0x100000, CRC(8b42861b) SHA1(6eb1f6bfe0b8e987e624a6fe7e025c6918804cf9) ) /* title logo*/
 
 	ROM_REGION( 0x100000, REGION_GFX4, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "spxb-m02.8a",    0x00000, 0x100000, CRC(21b8db78) SHA1(e7c51c9566ebce5b5db5af48f33e2194b518715f)) // title screen upper background
+	ROM_LOAD16_WORD_SWAP( "spxb-m02.8a",    0x00000, 0x100000, CRC(21b8db78) SHA1(e7c51c9566ebce5b5db5af48f33e2194b518715f)) /* title screen upper background*/
 
 	ROM_REGION( 0x100000, REGION_GFX5, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "spxb-m01.8c",    0x00000, 0x100000, CRC(60c69129) SHA1(6871b08e354c7cf5fb16b0ed4562c537e2ce9194) ) // title screen lower background
+	ROM_LOAD16_WORD_SWAP( "spxb-m01.8c",    0x00000, 0x100000, CRC(60c69129) SHA1(6871b08e354c7cf5fb16b0ed4562c537e2ce9194) ) /* title screen lower background*/
 
 	ROM_REGION( 0x80000, REGION_GFX6, 0 )	/* top 4 bits of tilemaps */
-	ROM_LOAD( "spxb-ms3.10f",    0x00000, 0x20000, CRC(8bf8c77d) SHA1(a89e50bd571e754cb56a17fe4ada6a804e74520b)) // bomb
-	ROM_LOAD( "spxb-ms4.10j",    0x20000, 0x20000, CRC(d418a900) SHA1(0d69afa48d3072c7fecfc5d6dd63717b9f61c0fc) ) // title logo
-	ROM_LOAD( "spxb-ms2.10a",    0x40000, 0x20000, CRC(5ec87adf) SHA1(cdd0864ea23b2c6d8ace519fc66e77f59813e206) ) // title screen upper background
-	ROM_LOAD( "spxb-ms1.10c",    0x60000, 0x20000, CRC(40b4fe6c) SHA1(5ab63ce83522c32039ee33c59e713d2fb37aac44) ) // title screen lower background
+	ROM_LOAD( "spxb-ms3.10f",    0x00000, 0x20000, CRC(8bf8c77d) SHA1(a89e50bd571e754cb56a17fe4ada6a804e74520b)) /* bomb*/
+	ROM_LOAD( "spxb-ms4.10j",    0x20000, 0x20000, CRC(d418a900) SHA1(0d69afa48d3072c7fecfc5d6dd63717b9f61c0fc) ) /* title logo*/
+	ROM_LOAD( "spxb-ms2.10a",    0x40000, 0x20000, CRC(5ec87adf) SHA1(cdd0864ea23b2c6d8ace519fc66e77f59813e206) ) /* title screen upper background*/
+	ROM_LOAD( "spxb-ms1.10c",    0x60000, 0x20000, CRC(40b4fe6c) SHA1(5ab63ce83522c32039ee33c59e713d2fb37aac44) ) /* title screen lower background*/
 
 	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* OKI6295 samples */
 	ROM_LOAD( "4.7v",     0x00000, 0x20000, CRC(434290b5) SHA1(3f2fb5aed1f109add17f00fe3a2364eedc7172ae) )
@@ -1597,22 +1597,22 @@ ROM_START( superxm )
 	ROM_LOAD16_WORD_SWAP( "spxo-m05.10m",    0x00000, 0x200000, CRC(9120dd84) SHA1(bcf1fdc860d51b9bcfec1e84940ef21dfc41b5dc) )
 
 	ROM_REGION( 0x100000, REGION_GFX2, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "spxb-m04.8f",    0x00000, 0x100000, CRC(91a7ac6e) SHA1(b7fb79c2e4f5eecb7128b86ee2b1070eed905d2a) ) // bomb
+	ROM_LOAD16_WORD_SWAP( "spxb-m04.8f",    0x00000, 0x100000, CRC(91a7ac6e) SHA1(b7fb79c2e4f5eecb7128b86ee2b1070eed905d2a) ) /* bomb*/
 
 	ROM_REGION( 0x100000, REGION_GFX3, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "spxb-m03.8j",    0x00000, 0x100000, CRC(8b42861b) SHA1(6eb1f6bfe0b8e987e624a6fe7e025c6918804cf9) ) // title logo
+	ROM_LOAD16_WORD_SWAP( "spxb-m03.8j",    0x00000, 0x100000, CRC(8b42861b) SHA1(6eb1f6bfe0b8e987e624a6fe7e025c6918804cf9) ) /* title logo*/
 
 	ROM_REGION( 0x100000, REGION_GFX4, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "spxb-m02.8a",    0x00000, 0x100000, CRC(21b8db78) SHA1(e7c51c9566ebce5b5db5af48f33e2194b518715f)) // title screen upper background
+	ROM_LOAD16_WORD_SWAP( "spxb-m02.8a",    0x00000, 0x100000, CRC(21b8db78) SHA1(e7c51c9566ebce5b5db5af48f33e2194b518715f)) /* title screen upper background*/
 
 	ROM_REGION( 0x100000, REGION_GFX5, 0 )	/* tiles + tilemaps (together!) */
-	ROM_LOAD16_WORD_SWAP( "spxb-m01.8c",    0x00000, 0x100000, CRC(60c69129) SHA1(6871b08e354c7cf5fb16b0ed4562c537e2ce9194) ) // title screen lower background
+	ROM_LOAD16_WORD_SWAP( "spxb-m01.8c",    0x00000, 0x100000, CRC(60c69129) SHA1(6871b08e354c7cf5fb16b0ed4562c537e2ce9194) ) /* title screen lower background*/
 
 	ROM_REGION( 0x80000, REGION_GFX6, 0 )	/* top 4 bits of tilemaps */
-	ROM_LOAD( "spxb-ms3.10f",    0x00000, 0x20000, CRC(8bf8c77d) SHA1(a89e50bd571e754cb56a17fe4ada6a804e74520b)) // bomb
-	ROM_LOAD( "spxb-ms4.10j",    0x20000, 0x20000, CRC(d418a900) SHA1(0d69afa48d3072c7fecfc5d6dd63717b9f61c0fc) ) // title logo
-	ROM_LOAD( "spxb-ms2.10a",    0x40000, 0x20000, CRC(5ec87adf) SHA1(cdd0864ea23b2c6d8ace519fc66e77f59813e206) ) // title screen upper background
-	ROM_LOAD( "spxb-ms1.10c",    0x60000, 0x20000, CRC(40b4fe6c) SHA1(5ab63ce83522c32039ee33c59e713d2fb37aac44) ) // title screen lower background
+	ROM_LOAD( "spxb-ms3.10f",    0x00000, 0x20000, CRC(8bf8c77d) SHA1(a89e50bd571e754cb56a17fe4ada6a804e74520b)) /* bomb*/
+	ROM_LOAD( "spxb-ms4.10j",    0x20000, 0x20000, CRC(d418a900) SHA1(0d69afa48d3072c7fecfc5d6dd63717b9f61c0fc) ) /* title logo*/
+	ROM_LOAD( "spxb-ms2.10a",    0x40000, 0x20000, CRC(5ec87adf) SHA1(cdd0864ea23b2c6d8ace519fc66e77f59813e206) ) /* title screen upper background*/
+	ROM_LOAD( "spxb-ms1.10c",    0x60000, 0x20000, CRC(40b4fe6c) SHA1(5ab63ce83522c32039ee33c59e713d2fb37aac44) ) /* title screen lower background*/
 
 	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* OKI6295 samples */
 	ROM_LOAD( "4.7v",     0x00000, 0x20000, CRC(434290b5) SHA1(3f2fb5aed1f109add17f00fe3a2364eedc7172ae) )

@@ -302,7 +302,7 @@ INPUT_PORTS_START( wwfwfest )
 	PORT_DIPSETTING(    0x01, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
 	PORT_DIPNAME( 0x0c, 0x0c, "Players" )
-//	PORT_DIPSETTING(	0x00, "2" )
+/*	PORT_DIPSETTING(	0x00, "2" )*/
 	PORT_DIPSETTING(	0x04, "2" )
 	PORT_DIPSETTING(	0x08, "3" )
 	PORT_DIPSETTING(	0x0c, "4" )

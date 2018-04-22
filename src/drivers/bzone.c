@@ -813,7 +813,7 @@ ROM_START( bzonec ) /* cocktail version */
 	ROM_LOAD( "bz1a7800",   0x7800, 0x0800, CRC(04babf45) SHA1(a59da5ff49fc398ca4a948e28f05250af776b898) )
 	ROM_RELOAD(             0xf800, 0x0800 )	/* for reset/interrupt vectors */
 	/* Mathbox ROMs */
-	ROM_LOAD( "036422.01",  0x3000, 0x0800, CRC(7414177b) SHA1(147d97a3b475e738ce00b1a7909bbd787ad06eda) )	// bz3a3000
+	ROM_LOAD( "036422.01",  0x3000, 0x0800, CRC(7414177b) SHA1(147d97a3b475e738ce00b1a7909bbd787ad06eda) )	/* bz3a3000*/
 	ROM_LOAD( "bz3b3800",   0x3800, 0x0800, CRC(76cf57f6) SHA1(1b8f3fcd664ed04ce60d94fdf27e56b20d52bdbd) )
 ROM_END
 

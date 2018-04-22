@@ -199,8 +199,8 @@ INPUT_PORTS_START( triplhnt )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN2 )
 
 	PORT_START /* 0C48 */
-// default to service enabled to make users calibrate gun
-//	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
+/* default to service enabled to make users calibrate gun*/
+/*	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )*/
 	PORT_BITX(    0x40, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )

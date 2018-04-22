@@ -175,11 +175,11 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x0806, 0x0807, skydiver_start_lamp_2_w },
 	{ 0x0808, 0x0809, skydiver_lamp_y_w },
 	{ 0x080a, 0x080b, skydiver_lamp_d_w },
-	// { 0x080c, 0x080d, skydiver_sound_enable_w },
-	// { 0x1000, 0x1001, skydiver_jump1_lamps_w },
+	/* { 0x080c, 0x080d, skydiver_sound_enable_w },*/
+	/* { 0x1000, 0x1001, skydiver_jump1_lamps_w },*/
 	{ 0x1002, 0x1003, skydiver_coin_lockout_w },
-	// { 0x1006, 0x1007, skydiver_jump2_lamps_w },
-	// { 0x1008, 0x100b, skydiver_whistle_w },
+	/* { 0x1006, 0x1007, skydiver_jump2_lamps_w },*/
+	/* { 0x1008, 0x100b, skydiver_whistle_w },*/
 	{ 0x100c, 0x100d, skydiver_nmion_w },
 	{ 0x100e, 0x100f, skydiver_width_w },
 	{ 0x2000, 0x2000, watchdog_reset_w },
@@ -187,8 +187,8 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x2004, 0x2005, skydiver_lamp_v_w },
 	{ 0x2006, 0x2007, skydiver_lamp_e_w },
 	{ 0x2008, 0x2009, skydiver_lamp_r_w },
-	// { 0x200a, 0x200d, skydiver_oct_w },
-	// { 0x200e, 0x200f, skydiver_noise_reset_w },
+	/* { 0x200a, 0x200d, skydiver_oct_w },*/
+	/* { 0x200e, 0x200f, skydiver_noise_reset_w },*/
 	{ 0x2800, 0x3fff, MWA_ROM },
 	{ 0x7800, 0x7fff, MWA_ROM },
 	{ 0xf800, 0xffff, MWA_ROM },

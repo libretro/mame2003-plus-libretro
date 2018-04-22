@@ -236,7 +236,7 @@ static WRITE_HANDLER( snddata_w )
 		AY8910_control_port_1_w(0,offset);
 	else if ((p1 & 0xe0) == 0x40)
 		AY8910_write_port_1_w(0,offset);
-	else // if ((p2 & 0xf0) != 0x70)
+	else /* if ((p2 & 0xf0) != 0x70)*/
 		/* the port address is the data, while the data seems to be control bits */
 		logerror("%04x: snddata_w ctrl = %02x, p1 = %02x, p2 = %02x, data = %02x\n",activecpu_get_pc(),data,p1,p2,offset);
 }
@@ -289,8 +289,8 @@ static MEMORY_WRITE_START( i8039_writemem )
 MEMORY_END
 
 static PORT_READ_START( i8039_readport )
-//	{ 0x00, 0xff, },
-//	{ I8039_t1, I8039_t1,  },
+/*	{ 0x00, 0xff, },*/
+/*	{ I8039_t1, I8039_t1,  },*/
 PORT_END
 
 static PORT_WRITE_START( i8039_writeport )

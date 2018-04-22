@@ -183,22 +183,22 @@ static void *dmadelay_timer;
 #define ESTATE_END	2
 #define ESTATE_ERROR	3
 
-//    opcode 1
-// dragoonj
-//  ESC Opcode 1 : 000000xx 000000xx 00000xx0 00000000
-// tbyahhoo  sprites at c00000
-//  ESC Opcode 1 : 0000ffff 0000ffff 0000ffff 0000000e
-// sexyparo  sprites at c00604
-//  ESC Opcode 1 : 00000000 00000000 00d20000 00000000
-//  ESC Opcode 1 : 00000000 00000000 00d21000 00000000
-// salmndr2
-//  ESC Opcode 1 : 00c1f7f8 0022002c 00c00060 00010014
-// tokkae
-//  ESC Opcode 1 : 00c00000 0000000x 00000023 0000ffff
-// puzldama
-//  ESC Opcode 1 : 002xxxxx 00236102 xxxxxx01 xxxxxxxx
+/*    opcode 1*/
+/* dragoonj*/
+/*  ESC Opcode 1 : 000000xx 000000xx 00000xx0 00000000*/
+/* tbyahhoo  sprites at c00000*/
+/*  ESC Opcode 1 : 0000ffff 0000ffff 0000ffff 0000000e*/
+/* sexyparo  sprites at c00604*/
+/*  ESC Opcode 1 : 00000000 00000000 00d20000 00000000*/
+/*  ESC Opcode 1 : 00000000 00000000 00d21000 00000000*/
+/* salmndr2*/
+/*  ESC Opcode 1 : 00c1f7f8 0022002c 00c00060 00010014*/
+/* tokkae*/
+/*  ESC Opcode 1 : 00c00000 0000000x 00000023 0000ffff*/
+/* puzldama*/
+/*  ESC Opcode 1 : 002xxxxx 00236102 xxxxxx01 xxxxxxxx*/
 
-// Say hello to gokuparo at 0x2a285c
+/* Say hello to gokuparo at 0x2a285c*/
 
 static struct sprite_entry {
 	int pri;
@@ -231,7 +231,7 @@ static void generate_sprites(UINT32 src, UINT32 spr, int count)
 			ecount++;
 		}
 	}
-	//qsort(sprites, ecount, sizeof(struct sprite_entry), pri_comp);
+	/*qsort(sprites, ecount, sizeof(struct sprite_entry), pri_comp);*/
 
 	for(i=0; i<ecount; i++) {
 		unsigned int adr = sprites[i].adr;
@@ -365,7 +365,7 @@ static void sal2_esc(UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
 
 static void sexyparo_esc(UINT32 p1, UINT32 p2, UINT32 p3, UINT32 p4)
 {
-	// The d20000 should probably be p3
+	/* The d20000 should probably be p3*/
 	generate_sprites(0xc00604, 0xd20000, 0xfc);
 }
 
@@ -412,9 +412,9 @@ static WRITE32_HANDLER( esc_w )
 		params = (cpu_readmem24bedw_word(data+12) << 16) | cpu_readmem24bedw_word(data+14);
 
 		switch(opcode) {
-		case 5: // Reset
+		case 5: /* Reset*/
 			break;
-		case 2: // Load program
+		case 2: /* Load program*/
 			for(i=0; i<4096; i++)
 				esc_program[i] = cpu_readmem24bedw(params+i);
 /*
@@ -429,7 +429,7 @@ static WRITE32_HANDLER( esc_w )
 			}
 */
 			break;
-		case 1: // Run program
+		case 1: /* Run program*/
 			if(esc_cb) {
 				UINT32 p1 = (cpu_readmem24bedw_word(params+0)<<16) | cpu_readmem24bedw_word(params+2);
 				UINT32 p2 = (cpu_readmem24bedw_word(params+4)<<16) | cpu_readmem24bedw_word(params+6);
@@ -439,7 +439,7 @@ static WRITE32_HANDLER( esc_w )
 			}
 			break;
 		default:
-//			logerror("Unknown ESC opcode %d\n", opcode);
+/*			logerror("Unknown ESC opcode %d\n", opcode);*/
 			break;
 		}
 		cpu_writemem24bedw(data+9, ESTATE_END);
@@ -456,7 +456,7 @@ static WRITE32_HANDLER( esc_w )
 		   there is not normal command parsing here. */
 		if (opcode == ESC_INIT_CONSTANT)
 		{
-//			logerror("Got ESC_INIT_CONSTANT, 'booting' ESC\n");
+/*			logerror("Got ESC_INIT_CONSTANT, 'booting' ESC\n");*/
 			return;
 		}
 
@@ -490,13 +490,13 @@ static NVRAM_HANDLER(konamigx_93C46)
 
 static READ32_HANDLER( eeprom_r )
 {
-	// d5a000 = DIP switches #1 (RDPORT1)
-	// d5a001 = DIP switches #2
-	// d5a002 = input port: service4/3/2/1 coin 4/3/2/1
-	// d5a003 = objint stat, exioint stat, trackint stat, excgint stat, escint stat,
-	//	    excpuint stat, objdma stat, eeprom do
+	/* d5a000 = DIP switches #1 (RDPORT1)*/
+	/* d5a001 = DIP switches #2*/
+	/* d5a002 = input port: service4/3/2/1 coin 4/3/2/1*/
+	/* d5a003 = objint stat, exioint stat, trackint stat, excgint stat, escint stat,*/
+	/*	    excpuint stat, objdma stat, eeprom do*/
 
-	// note: racin' force expects bit 1 of the eeprom port to toggle
+	/* note: racin' force expects bit 1 of the eeprom port to toggle*/
 	return(readinputport(6)<<24 | readinputport(7)<<16 | readinputport(0)<<8 | EEPROM_read_bit() | gx_rdport1_3);
 }
 
@@ -539,40 +539,40 @@ static WRITE32_HANDLER( eeprom_w )
 		*/
 
 		konamigx_wrport1_1 = (data>>16)&0xff;
-//		logerror("write %x to IRQ register (PC=%x)\n", konamigx_wrport1_1, activecpu_get_pc());
+/*		logerror("write %x to IRQ register (PC=%x)\n", konamigx_wrport1_1, activecpu_get_pc());*/
 
-		// gx_syncen is to ensure each IRQ is trigger at least once after being enabled
+		/* gx_syncen is to ensure each IRQ is trigger at least once after being enabled*/
 		if (konamigx_wrport1_1 & 0x80) gx_syncen |= konamigx_wrport1_1 & 0x1f;
 	}
 }
 
 static WRITE32_HANDLER( control_w )
 {
-	//logerror("write %x to control register (mask=%x)\n", data, mem_mask);
+	/*logerror("write %x to control register (mask=%x)\n", data, mem_mask);*/
 
-	// known controls:
-	// bit 23 = reset graphics chips
-	// bit 22 = 0 to halt 68000, 1 to let it run (SOUNDRESET)
-	// bit 21 = VRAM-CHARD 0=VRAM, 1=ROM
-	// bit 20 = OBJCHA line for '246
-	// bit 19 = select top 2 sprite priority bits to be 14/15 or 16/17 of the
-	//          spritelist "color" word.
-	// bit 18 = if 0, the top 2 sprite priority bits are "11" else use bit 19's
-	//          results.
-	// bit 17 = DOTSEL1 : 0 = 6M, 1=8M, 2=12M, 3=16M
-	// bit 16 = DOTSEL0
+	/* known controls:*/
+	/* bit 23 = reset graphics chips*/
+	/* bit 22 = 0 to halt 68000, 1 to let it run (SOUNDRESET)*/
+	/* bit 21 = VRAM-CHARD 0=VRAM, 1=ROM*/
+	/* bit 20 = OBJCHA line for '246*/
+	/* bit 19 = select top 2 sprite priority bits to be 14/15 or 16/17 of the*/
+	/*          spritelist "color" word.*/
+	/* bit 18 = if 0, the top 2 sprite priority bits are "11" else use bit 19's*/
+	/*          results.*/
+	/* bit 17 = DOTSEL1 : 0 = 6M, 1=8M, 2=12M, 3=16M*/
+	/* bit 16 = DOTSEL0*/
 	if (!(mem_mask & 0x00ff0000))
 	{
 		if (data & 0x400000)
 		{
-			// enable 68k
-			// clear the halt condition and reset the 68000
+			/* enable 68k*/
+			/* clear the halt condition and reset the 68000*/
 			cpu_set_halt_line(1, CLEAR_LINE);
 			cpu_set_reset_line(1, PULSE_LINE);
 		}
 		else
 		{
-			// disable 68k
+			/* disable 68k*/
 			cpu_set_halt_line(1, ASSERT_LINE);
 		}
 
@@ -615,14 +615,14 @@ static READ32_HANDLER(waitskip_r)
 
 static READ32_HANDLER( ccu_r )
 {
-	// the routine at 204abe in opengolf polls to see if we're in vblank (it wants values between 0x111 and 0x1df)
+	/* the routine at 204abe in opengolf polls to see if we're in vblank (it wants values between 0x111 and 0x1df)*/
 	if (offset == 0x1c/4)
 	{
 		return 0x01002000;
 	}
 	else
 	{
-//		logerror("Read unhandled CCU register %x\n", offset);
+/*		logerror("Read unhandled CCU register %x\n", offset);*/
 	}
 
 	return 0;
@@ -632,14 +632,14 @@ static WRITE32_HANDLER( ccu_w )
 {
 	if (offset == 0x1c/4)
 	{
-		// vblank interrupt ACK
+		/* vblank interrupt ACK*/
 		if (!(mem_mask & 0xff000000))
 		{
 			cpu_set_irq_line(0, 1, CLEAR_LINE);
 			gx_syncen |= 0x20;
 		}
 
-		// hblank interrupt ACK
+		/* hblank interrupt ACK*/
 		if (!(mem_mask & 0x0000ff00))
 		{
 			cpu_set_irq_line(0, 2, CLEAR_LINE);
@@ -653,14 +653,14 @@ static int konamigx_irq_callback(int irqline)
 {
 	switch (irqline)
 	{
-		// IRQ 3 ACK (object DMA end)
+		/* IRQ 3 ACK (object DMA end)*/
 		case 2: gx_rdport1_3 |= 0x80; break;
 
-		// IRQ 4 ACK (ESC)
+		/* IRQ 4 ACK (ESC)*/
 		case 3: gx_rdport1_3 |= 0x8; break;
 	}
 
-	return(0); // DUMMY: really don't know how to return appropriate values as in irq_line_vector[0][irqline]
+	return(0); /* DUMMY: really don't know how to return appropriate values as in irq_line_vector[0][irqline]*/
 }
 
 /*
@@ -673,18 +673,18 @@ static int konamigx_irq_callback(int irqline)
 
 static void dmaend_callback(int data)
 {
-	// foul-proof (CPU0 could be deactivated while we wait)
+	/* foul-proof (CPU0 could be deactivated while we wait)*/
 	if (resume_trigger && suspension_active) { suspension_active = 0; cpu_trigger(resume_trigger); }
 
-	// DMA busy flag must be cleared before triggering IRQ 3
+	/* DMA busy flag must be cleared before triggering IRQ 3*/
 	gx_rdport1_3 &= ~2;
 
-	// IRQ 3 is the "object DMA end" IRQ also happens during vblank
+	/* IRQ 3 is the "object DMA end" IRQ also happens during vblank*/
 	if ((konamigx_wrport1_1 & 0x84) == 0x84 || (gx_syncen & 4))
 	{
 		gx_syncen &= ~4;
 
-		// lower OBJINT-REQ flag and trigger interrupt
+		/* lower OBJINT-REQ flag and trigger interrupt*/
 		gx_rdport1_3 &= ~0x80;
 		cpu_set_irq_line(0, 3, HOLD_LINE);
 	}
@@ -692,27 +692,27 @@ static void dmaend_callback(int data)
 
 static void dmastart_callback(int data)
 {
-	// raise the DMA busy flag
+	/* raise the DMA busy flag*/
 	gx_rdport1_3 |= 2;
 
-	// begin transfer if DMAEN(bit4 of OBJSET1) is set (see p.48)
+	/* begin transfer if DMAEN(bit4 of OBJSET1) is set (see p.48)*/
 	if (K053246_read_register(5) & 0x10)
 	{
-		// disabled by default since it doesn't work too well in MAME
+		/* disabled by default since it doesn't work too well in MAME*/
 		konamigx_objdma();
 	}
 
-	// simulate DMA delay
+	/* simulate DMA delay*/
 	timer_adjust(dmadelay_timer, TIME_IN_USEC(120), 0, 0);
 }
 
 
 static INTERRUPT_GEN(konamigx_vbinterrupt)
 {
-	// lift idle suspension
+	/* lift idle suspension*/
 	if (resume_trigger && suspension_active) { suspension_active = 0; cpu_trigger(resume_trigger); }
 
-	// IRQ 1 is the main 60hz vblank interrupt
+	/* IRQ 1 is the main 60hz vblank interrupt*/
 	if (gx_syncen & 0x20)
 	{
 		gx_syncen &= ~0x20;
@@ -729,13 +729,13 @@ static INTERRUPT_GEN(konamigx_vbinterrupt)
 
 static INTERRUPT_GEN(konamigx_vbinterrupt_type4)
 {
-	// lift idle suspension
+	/* lift idle suspension*/
 	if (resume_trigger && suspension_active) { suspension_active = 0; cpu_trigger(resume_trigger); }
 
-	// IRQ 1 is the main 60hz vblank interrupt
-	// the gx_syncen & 0x20 test doesn't work on type 3 or 4 ROM boards, likely because the ROM board
-	// generates the timing in those cases.  With this change, rushing heroes and rng2 boot :)
-	if (1) // gx_syncen & 0x20)
+	/* IRQ 1 is the main 60hz vblank interrupt*/
+	/* the gx_syncen & 0x20 test doesn't work on type 3 or 4 ROM boards, likely because the ROM board*/
+	/* generates the timing in those cases.  With this change, rushing heroes and rng2 boot :)*/
+	if (1) /* gx_syncen & 0x20)*/
 	{
 		gx_syncen &= ~0x20;
 
@@ -755,9 +755,9 @@ static INTERRUPT_GEN(konamigx_hbinterrupt)
 	{
 		konamigx_vbinterrupt_type4();
 	}
-	else	// hblank
+	else	/* hblank*/
 	{
-		// IRQ 2 is a programmable interrupt with scanline resolution
+		/* IRQ 2 is a programmable interrupt with scanline resolution*/
 		if (gx_syncen & 0x40)
 		{
 			gx_syncen &= ~0x40;
@@ -787,7 +787,7 @@ static READ32_HANDLER( sound020_r )
 	if (!(mem_mask & 0xff000000))
 	{
 		MSW = sndto020[reg];
-		if (reg == 2) MSW &= ~3; // supress VOLWR busy flags
+		if (reg == 2) MSW &= ~3; /* supress VOLWR busy flags*/
 		rv |= MSW<<24;
 	}
 
@@ -797,28 +797,28 @@ static READ32_HANDLER( sound020_r )
 		rv |= LSW<<8;
 	}
 
-//	printf("Read 68k @ %x (PC=%x)\n", reg, activecpu_get_pc());
+/*	printf("Read 68k @ %x (PC=%x)\n", reg, activecpu_get_pc());*/
 
-	// we clearly have some problem because some games require these hacks
-	// perhaps 68000/68020 timing is skewed?
+	/* we clearly have some problem because some games require these hacks*/
+	/* perhaps 68000/68020 timing is skewed?*/
 	switch (snd020_hack)
 	{
-		case 1: // Lethal Enforcer init
+		case 1: /* Lethal Enforcer init*/
 			if (reg == 0) rv |= 0xff00;
 			break;
-		case 2: // Winning Spike
+		case 2: /* Winning Spike*/
 			if (activecpu_get_pc() == 0x2026fe) rv = 0xc0c0c0c0;
 			break;
-		case 3: // Run'n Gun 2
+		case 3: /* Run'n Gun 2*/
 			if (activecpu_get_pc() == 0x24f122) rv = 0xc0c0c0c0;
 			break;
-		case 4:	// Rushing Heroes
+		case 4:	/* Rushing Heroes*/
 			if (activecpu_get_pc() == 0x20eda6) rv = 0xc0c0c0c0;
 			break;
-		case 5:	// Vs. Net Soccer
+		case 5:	/* Vs. Net Soccer*/
 			if (activecpu_get_pc() == 0x24c63e) rv = 0xc0c0c0c0;
 			break;
-		case 6: // Slam Dunk 2
+		case 6: /* Slam Dunk 2*/
 			if (activecpu_get_pc() == 0x24f21c) rv = 0xc0c0c0c0;
 			break;
 	}
@@ -875,11 +875,11 @@ static WRITE32_HANDLER( adc0834_w )
 {
 	int clk, cs, di;
 
-	clk = (data >> 24)&1;		// clock
-	di = (data >> 25)&1;		// data in
-	cs = ((data >> 26)^1)&1;	// chip select
+	clk = (data >> 24)&1;		/* clock*/
+	di = (data >> 25)&1;		/* data in*/
+	cs = ((data >> 26)^1)&1;	/* chip select*/
 
-	// resync states if CS drops
+	/* resync states if CS drops*/
 	if (!cs)
 	{
 		analog_state = 0;
@@ -887,12 +887,12 @@ static WRITE32_HANDLER( adc0834_w )
 		return;
 	}
 
-	// CS is up, we act on the rising edge of CLK
+	/* CS is up, we act on the rising edge of CLK*/
 	if ((clk) && (!analog_prevclk))
 	{
 		switch (analog_state)
 		{
-			case 0:	  // wait for addr
+			case 0:	  /* wait for addr*/
 			case 1:
 			case 2:
 			case 3:
@@ -902,21 +902,21 @@ static WRITE32_HANDLER( adc0834_w )
 			      	analog_state++;
 				break;
 
-			case 5:	// got command, latch in the proper analog read
+			case 5:	/* got command, latch in the proper analog read*/
 				if (analog_cmd & 4)
 				{
-					analog_latch = readinputport(10);	// gas
+					analog_latch = readinputport(10);	/* gas*/
 				}
 				else
 				{
-					analog_latch = readinputport(9);	// steer
+					analog_latch = readinputport(9);	/* steer*/
 				}
 				analog_val = (analog_latch & 0x80)<<17;
 				analog_latch <<= 1;
 				analog_state++;
 				break;
 
-			case 6:	// clock out the data
+			case 6:	/* clock out the data*/
 				analog_val = (analog_latch & 0x80)<<17;
 				analog_latch <<= 1;
 				break;
@@ -1104,7 +1104,7 @@ static WRITE32_HANDLER( type4_prot_w )
 
 				if ((last_prot_op == 0xa56) || (last_prot_op == 0xd96) || (last_prot_op == 0xd14) || (last_prot_op == 0xd1c))
 				{
-					// memcpy from c01000 to c01400 for 0x400 bytes (startup check for type 4 games)
+					/* memcpy from c01000 to c01400 for 0x400 bytes (startup check for type 4 games)*/
 					for (i = 0; i < 0x400; i += 2)
 					{
 						cpu_writemem24bedw_word(0xc01400+i, cpu_readmem24bedw_word(0xc01000+i));
@@ -1121,7 +1121,7 @@ static WRITE32_HANDLER( type4_prot_w )
 					cpu_set_irq_line(0, 4, HOLD_LINE);
 				}
 
-				// don't accidentally do a phony command
+				/* don't accidentally do a phony command*/
 				last_prot_op = -1;
 			}
 		}
@@ -1129,7 +1129,7 @@ static WRITE32_HANDLER( type4_prot_w )
 	}
 }
 
-// cabinet lamps for type 1 games
+/* cabinet lamps for type 1 games*/
 static WRITE32_HANDLER( type1_cablamps_w )
 {
 	set_led_status(0, (data>>24)&1);
@@ -1139,23 +1139,23 @@ static WRITE32_HANDLER( type1_cablamps_w )
 /* 68020 memory handlers */
 
 static MEMORY_READ32_START( readmem )
-	{ 0x000000, 0x01ffff, MRA32_ROM },		// bios
-	{ 0x200000, 0x2fffff, MRA32_ROM },		// game program
-	{ 0x400000, 0x5fffff, MRA32_ROM },		// data ROM
-	{ 0xc00000, 0xc1ffff, MRA32_RAM },		// work ram
-	{ 0xd00000, 0xd01fff, K056832_5bpp_rom_long_r },	// tile ROM readthrough (for test menu)
-	{ 0xd20000, 0xd20fff, K053247_long_r },	// sprite RAM
-	{ 0xd21000, 0xd23fff, MRA32_RAM },		// additional RAM in the sprite region
-	{ 0xd44000, 0xd44003, le2_gun_H_r },	// gun horizontal position
-	{ 0xd44004, 0xd44007, le2_gun_V_r },	// gun vertical position
-	{ 0xd4c000, 0xd4c01f, ccu_r },			// CRT control unit
-	{ 0xd52010, 0xd5201f, sound020_r },		// shared RAM with sound 68000
-	{ 0xd5a000, 0xd5a003, eeprom_r },		// EEPROM read
-	{ 0xd5c000, 0xd5c003, players_r },		// player 1 & 2 JAMMA inputs
-	{ 0xd5e000, 0xd5e003, service_r },		// service switch
-	{ 0xd90000, 0xd97fff, MRA32_RAM },		// palette RAM
-	{ 0xda0000, 0xda1fff, K056832_ram_long_r },	// tilemap RAM
-	{ 0xda2000, 0xda3fff, K056832_ram_long_r },	// tilemap RAM mirror read
+	{ 0x000000, 0x01ffff, MRA32_ROM },		/* bios*/
+	{ 0x200000, 0x2fffff, MRA32_ROM },		/* game program*/
+	{ 0x400000, 0x5fffff, MRA32_ROM },		/* data ROM*/
+	{ 0xc00000, 0xc1ffff, MRA32_RAM },		/* work ram*/
+	{ 0xd00000, 0xd01fff, K056832_5bpp_rom_long_r },	/* tile ROM readthrough (for test menu)*/
+	{ 0xd20000, 0xd20fff, K053247_long_r },	/* sprite RAM*/
+	{ 0xd21000, 0xd23fff, MRA32_RAM },		/* additional RAM in the sprite region*/
+	{ 0xd44000, 0xd44003, le2_gun_H_r },	/* gun horizontal position*/
+	{ 0xd44004, 0xd44007, le2_gun_V_r },	/* gun vertical position*/
+	{ 0xd4c000, 0xd4c01f, ccu_r },			/* CRT control unit*/
+	{ 0xd52010, 0xd5201f, sound020_r },		/* shared RAM with sound 68000*/
+	{ 0xd5a000, 0xd5a003, eeprom_r },		/* EEPROM read*/
+	{ 0xd5c000, 0xd5c003, players_r },		/* player 1 & 2 JAMMA inputs*/
+	{ 0xd5e000, 0xd5e003, service_r },		/* service switch*/
+	{ 0xd90000, 0xd97fff, MRA32_RAM },		/* palette RAM*/
+	{ 0xda0000, 0xda1fff, K056832_ram_long_r },	/* tilemap RAM*/
+	{ 0xda2000, 0xda3fff, K056832_ram_long_r },	/* tilemap RAM mirror read*/
 #if GX_DEBUG
 	{ 0xd40000, 0xd4003f, K056832_long_r },
 	{ 0xd50000, 0xd500ff, K055555_long_r },
@@ -1168,48 +1168,48 @@ static MEMORY_WRITE32_START( writemem )
 	{ 0xcc0000, 0xcc0003, esc_w },
 	{ 0xd20000, 0xd20fff, K053247_long_w },
 	{ 0xd21000, 0xd23fff, MWA32_RAM },
-	{ 0xd40000, 0xd4003f, K056832_long_w },		// VACSET
-	{ 0xd44000, 0xd4400f, konamigx_tilebank_w },// VSCCS
-	{ 0xd48000, 0xd48007, K053246_long_w },		// OBJSET1
-	{ 0xd4a010, 0xd4a01f, K053247_reg_long_w },	// OBJSET2
-	{ 0xd4c000, 0xd4c01f, ccu_w },				// CCU1(ccu_w)
-	{ 0xd4e000, 0xd4e01f, MWA32_NOP },			// CCU2(not used by GX)
-	{ 0xd50000, 0xd500ff, K055555_long_w },		// PCU2
+	{ 0xd40000, 0xd4003f, K056832_long_w },		/* VACSET*/
+	{ 0xd44000, 0xd4400f, konamigx_tilebank_w },/* VSCCS*/
+	{ 0xd48000, 0xd48007, K053246_long_w },		/* OBJSET1*/
+	{ 0xd4a010, 0xd4a01f, K053247_reg_long_w },	/* OBJSET2*/
+	{ 0xd4c000, 0xd4c01f, ccu_w },				/* CCU1(ccu_w)*/
+	{ 0xd4e000, 0xd4e01f, MWA32_NOP },			/* CCU2(not used by GX)*/
+	{ 0xd50000, 0xd500ff, K055555_long_w },		/* PCU2*/
 	{ 0xd52000, 0xd5200f, sound020_w },
 	{ 0xd56000, 0xd56003, eeprom_w },
 	{ 0xd58000, 0xd58003, control_w },
-	{ 0xd80000, 0xd8001f, K054338_long_w },		// CLTC
+	{ 0xd80000, 0xd8001f, K054338_long_w },		/* CLTC*/
 	{ 0xda0000, 0xda1fff, K056832_ram_long_w },
-	{ 0xda2000, 0xda3fff, K056832_ram_long_w },	// tilemap RAM mirror write
+	{ 0xda2000, 0xda3fff, K056832_ram_long_w },	/* tilemap RAM mirror write*/
 	{ 0xd90000, 0xd97fff, konamigx_palette_w, &paletteram32 },
 MEMORY_END
 
 static MEMORY_READ32_START( type1readmem )
-	{ 0x000000, 0x01ffff, MRA32_ROM },		// bios
-	{ 0x200000, 0x2fffff, MRA32_ROM },		// game program
-	{ 0x400000, 0x7fffff, MRA32_ROM },		// data ROM
-	{ 0xc00000, 0xc1ffff, MRA32_RAM },		// work ram
+	{ 0x000000, 0x01ffff, MRA32_ROM },		/* bios*/
+	{ 0x200000, 0x2fffff, MRA32_ROM },		/* game program*/
+	{ 0x400000, 0x7fffff, MRA32_ROM },		/* data ROM*/
+	{ 0xc00000, 0xc1ffff, MRA32_RAM },		/* work ram*/
 	{ 0xd00000, 0xd01fff, K056832_6bpp_rom_long_r },
-	{ 0xd20000, 0xd20fff, K053247_long_r },	// sprite RAM
-	{ 0xd21000, 0xd23fff, MRA32_RAM },		// additional RAM in the sprite region
-	{ 0xd4a000, 0xd4a01f, gx6bppspr_r },	// sprite ROM readback
-	{ 0xd4c000, 0xd4c01f, ccu_r },			// CRT control unit
-	{ 0xd52010, 0xd5201f, sound020_r },		// shared RAM with sound 68000
-	{ 0xd5a000, 0xd5a003, eeprom_r },		// EEPROM read
-	{ 0xd5c000, 0xd5c003, players_r },		// player 1 & 2 JAMMA inputs
-	{ 0xd5e000, 0xd5e003, service_r }, 		// service switch
-	{ 0xd90000, 0xd97fff, MRA32_RAM },		// palette RAM
-	{ 0xda0000, 0xda1fff, K056832_ram_long_r },	// tilemap RAM
-	{ 0xda2000, 0xda3fff, K056832_ram_long_r },	// tilemap RAM mirror read
-	{ 0xdc0000, 0xdc1fff, MRA32_RAM },		// LAN?  (Racin Force has, KOG doesn't)
-	{ 0xdd0000, 0xdd00ff, MRA32_NOP },		// LAN board
+	{ 0xd20000, 0xd20fff, K053247_long_r },	/* sprite RAM*/
+	{ 0xd21000, 0xd23fff, MRA32_RAM },		/* additional RAM in the sprite region*/
+	{ 0xd4a000, 0xd4a01f, gx6bppspr_r },	/* sprite ROM readback*/
+	{ 0xd4c000, 0xd4c01f, ccu_r },			/* CRT control unit*/
+	{ 0xd52010, 0xd5201f, sound020_r },		/* shared RAM with sound 68000*/
+	{ 0xd5a000, 0xd5a003, eeprom_r },		/* EEPROM read*/
+	{ 0xd5c000, 0xd5c003, players_r },		/* player 1 & 2 JAMMA inputs*/
+	{ 0xd5e000, 0xd5e003, service_r }, 		/* service switch*/
+	{ 0xd90000, 0xd97fff, MRA32_RAM },		/* palette RAM*/
+	{ 0xda0000, 0xda1fff, K056832_ram_long_r },	/* tilemap RAM*/
+	{ 0xda2000, 0xda3fff, K056832_ram_long_r },	/* tilemap RAM mirror read*/
+	{ 0xdc0000, 0xdc1fff, MRA32_RAM },		/* LAN?  (Racin Force has, KOG doesn't)*/
+	{ 0xdd0000, 0xdd00ff, MRA32_NOP },		/* LAN board*/
 	{ 0xddc000, 0xddcfff, adc0834_r },
-	{ 0xe80000, 0xe81fff, MRA32_RAM },	// chips 21L+19L / S
-	{ 0xec0000, 0xedffff, MRA32_RAM },	// chips 20J+23J+18J / S
-	{ 0xf00000, 0xf3ffff, type1_roz_r1 },	// ROM readback
-	{ 0xf40000, 0xf7ffff, type1_roz_r2 },	// ROM readback
-	{ 0xf80000, 0xf80fff, MRA32_RAM },	// chip 21Q / S
-	{ 0xfc0000, 0xfc00ff, MRA32_RAM },	// chip 22N / S
+	{ 0xe80000, 0xe81fff, MRA32_RAM },	/* chips 21L+19L / S*/
+	{ 0xec0000, 0xedffff, MRA32_RAM },	/* chips 20J+23J+18J / S*/
+	{ 0xf00000, 0xf3ffff, type1_roz_r1 },	/* ROM readback*/
+	{ 0xf40000, 0xf7ffff, type1_roz_r2 },	/* ROM readback*/
+	{ 0xf80000, 0xf80fff, MRA32_RAM },	/* chip 21Q / S*/
+	{ 0xfc0000, 0xfc00ff, MRA32_RAM },	/* chip 22N / S*/
 MEMORY_END
 
 static MEMORY_WRITE32_START( type1writemem )
@@ -1217,22 +1217,22 @@ static MEMORY_WRITE32_START( type1writemem )
 	{ 0xcc0000, 0xcc0003, esc_w },
 	{ 0xd20000, 0xd20fff, K053247_long_w },
 	{ 0xd21000, 0xd23fff, MWA32_RAM },
-	{ 0xd40000, 0xd4003f, K056832_long_w },		// VACSET
-	{ 0xd44000, 0xd4400f, konamigx_tilebank_w },	// VSCCS
-	{ 0xd48000, 0xd48007, K053246_long_w },		// OBJSET1
-	{ 0xd4a010, 0xd4a01f, K053247_reg_long_w },	// OBJSET2
-	{ 0xd4c000, 0xd4c01f, ccu_w },			// CCU1(ccu_w)
-	{ 0xd4e000, 0xd4e01f, MWA32_NOP },		// CCU2(not used by GX)
-	{ 0xd50000, 0xd500ff, K055555_long_w },		// PCU2
+	{ 0xd40000, 0xd4003f, K056832_long_w },		/* VACSET*/
+	{ 0xd44000, 0xd4400f, konamigx_tilebank_w },	/* VSCCS*/
+	{ 0xd48000, 0xd48007, K053246_long_w },		/* OBJSET1*/
+	{ 0xd4a010, 0xd4a01f, K053247_reg_long_w },	/* OBJSET2*/
+	{ 0xd4c000, 0xd4c01f, ccu_w },			/* CCU1(ccu_w)*/
+	{ 0xd4e000, 0xd4e01f, MWA32_NOP },		/* CCU2(not used by GX)*/
+	{ 0xd50000, 0xd500ff, K055555_long_w },		/* PCU2*/
 	{ 0xd52000, 0xd5200f, sound020_w },
 	{ 0xd56000, 0xd56003, eeprom_w },
 	{ 0xd58000, 0xd58003, control_w },
-	{ 0xd80000, 0xd8001f, K054338_long_w },		// CLTC
+	{ 0xd80000, 0xd8001f, K054338_long_w },		/* CLTC*/
 	{ 0xda0000, 0xda1fff, K056832_ram_long_w },
-	{ 0xda2000, 0xda3fff, K056832_ram_long_w },	// tilemap RAM mirror write
+	{ 0xda2000, 0xda3fff, K056832_ram_long_w },	/* tilemap RAM mirror write*/
 	{ 0xd90000, 0xd97fff, konamigx_palette_w, &paletteram32 },
-	{ 0xdc0000, 0xdc1fff, MWA32_RAM },		// LAN? (Racin Force has, KOG doesn't)
-	{ 0xdd0000, 0xdd00ff, MWA32_NOP },		// LAN board
+	{ 0xdc0000, 0xdc1fff, MWA32_RAM },		/* LAN? (Racin Force has, KOG doesn't)*/
+	{ 0xdd0000, 0xdd00ff, MWA32_NOP },		/* LAN board*/
 	{ 0xdda000, 0xddafff, adc0834_w },
 	{ 0xdde000, 0xdde003, type1_cablamps_w },
 	{ 0xe00000, 0xe0001f, MWA32_RAM, (data32_t**)&K053936_1_ctrl },
@@ -1245,21 +1245,21 @@ static MEMORY_WRITE32_START( type1writemem )
 MEMORY_END
 
 static MEMORY_READ32_START( type3readmem )
-	{ 0x000000, 0x01ffff, MRA32_ROM },		// bios
-	{ 0x200000, 0x2fffff, MRA32_ROM },		// game program
-	{ 0x400000, 0x5fffff, MRA32_ROM },		// data ROM
-	{ 0xc00000, 0xc1ffff, MRA32_RAM },		// work ram
-	{ 0xd00000, 0xd01fff, K056832_rom_long_r },	// tile ROM readthrough (for test menu)
-	{ 0xd20000, 0xd20fff, K053247_long_r },	// sprite RAM
-	{ 0xd21000, 0xd23fff, MRA32_RAM },		// additional RAM in the sprite region
-//	{ 0xd4a000, 0xd4bfff, K053246_long_r },	// sprite ROM readthrough (for test menu)
-	{ 0xd4c000, 0xd4c01f, ccu_r },			// CRT control unit
-	{ 0xd52010, 0xd5201f, sound020_r },		// shared RAM with sound 68000
-	{ 0xd5a000, 0xd5a003, eeprom_r },		// EEPROM read
-	{ 0xd5c000, 0xd5c003, players_r },		// player 1 & 2 JAMMA inputs
-	{ 0xd5e000, 0xd5e003, service_r }, 		// service switch
-	{ 0xd90000, 0xd97fff, MRA32_RAM },		// palette RAM
-	{ 0xda0000, 0xda1fff, K056832_ram_long_r },	// tilemap RAM
+	{ 0x000000, 0x01ffff, MRA32_ROM },		/* bios*/
+	{ 0x200000, 0x2fffff, MRA32_ROM },		/* game program*/
+	{ 0x400000, 0x5fffff, MRA32_ROM },		/* data ROM*/
+	{ 0xc00000, 0xc1ffff, MRA32_RAM },		/* work ram*/
+	{ 0xd00000, 0xd01fff, K056832_rom_long_r },	/* tile ROM readthrough (for test menu)*/
+	{ 0xd20000, 0xd20fff, K053247_long_r },	/* sprite RAM*/
+	{ 0xd21000, 0xd23fff, MRA32_RAM },		/* additional RAM in the sprite region*/
+/*	{ 0xd4a000, 0xd4bfff, K053246_long_r },	*/ /* sprite ROM readthrough (for test menu)*/
+	{ 0xd4c000, 0xd4c01f, ccu_r },			/* CRT control unit*/
+	{ 0xd52010, 0xd5201f, sound020_r },		/* shared RAM with sound 68000*/
+	{ 0xd5a000, 0xd5a003, eeprom_r },		/* EEPROM read*/
+	{ 0xd5c000, 0xd5c003, players_r },		/* player 1 & 2 JAMMA inputs*/
+	{ 0xd5e000, 0xd5e003, service_r }, 		/* service switch*/
+	{ 0xd90000, 0xd97fff, MRA32_RAM },		/* palette RAM*/
+	{ 0xda0000, 0xda1fff, K056832_ram_long_r },	/* tilemap RAM*/
 	{ 0xe60000, 0xe60fff, MRA32_RAM },
 	{ 0xe80000, 0xe87fff, MRA32_RAM },
 	{ 0xea0000, 0xea3fff, MRA32_RAM },
@@ -1288,31 +1288,31 @@ static MEMORY_WRITE32_START( type3writemem )
 	{ 0xe20000, 0xe20003, MWA32_NOP },
 	{ 0xe40000, 0xe40003, MWA32_NOP },
 	{ 0xe60000, 0xe60fff, MWA32_RAM, (data32_t**)&K053936_1_linectrl },
-	{ 0xe80000, 0xe87fff, konamigx_555_palette_w, &paletteram32 }, 	// main monitor palette (twice as large as reality)
-	{ 0xea0000, 0xea3fff, konamigx_555_palette2_w, &gx_subpaletteram32 }, // sub monitor palette
+	{ 0xe80000, 0xe87fff, konamigx_555_palette_w, &paletteram32 }, 	/* main monitor palette (twice as large as reality)*/
+	{ 0xea0000, 0xea3fff, konamigx_555_palette2_w, &gx_subpaletteram32 }, /* sub monitor palette*/
 	{ 0xf00000, 0xf07fff, MWA32_RAM },
 MEMORY_END
 
 static MEMORY_READ32_START( type4readmem )
-	{ 0x000000, 0x01ffff, MRA32_ROM },		// bios
-	{ 0x200000, 0x2fffff, MRA32_ROM },		// game program
-	{ 0x400000, 0x5fffff, MRA32_ROM },		// data ROM
-	{ 0xc00000, 0xc1ffff, MRA32_RAM },		// work ram
-	{ 0xd00000, 0xd01fff, K056832_rom_long_r },	// tile ROM readthrough (for test menu)
-	{ 0xd20000, 0xd20fff, K053247_long_r },	// sprite RAM
-	{ 0xd21000, 0xd23fff, MRA32_RAM },		// additional RAM in the sprite region
-	{ 0xd4a000, 0xd4bfff, K053246_long_r },	// sprite ROM readthrough (for test menu)
-	{ 0xd4c000, 0xd4c01f, ccu_r },			// CRT control unit
-	{ 0xd52010, 0xd5201f, sound020_r },		// shared RAM with sound 68000
-	{ 0xd5a000, 0xd5a003, eeprom_r },		// EEPROM read
-	{ 0xd5c000, 0xd5c003, players_r },		// player 1 & 2 JAMMA inputs
-	{ 0xd5e000, 0xd5e003, service_r }, 		// service switch
-	{ 0xd90000, 0xd97fff, MRA32_RAM },		// palette RAM
-	{ 0xda0000, 0xda1fff, K056832_ram_long_r },	// tilemap RAM
+	{ 0x000000, 0x01ffff, MRA32_ROM },		/* bios*/
+	{ 0x200000, 0x2fffff, MRA32_ROM },		/* game program*/
+	{ 0x400000, 0x5fffff, MRA32_ROM },		/* data ROM*/
+	{ 0xc00000, 0xc1ffff, MRA32_RAM },		/* work ram*/
+	{ 0xd00000, 0xd01fff, K056832_rom_long_r },	/* tile ROM readthrough (for test menu)*/
+	{ 0xd20000, 0xd20fff, K053247_long_r },	/* sprite RAM*/
+	{ 0xd21000, 0xd23fff, MRA32_RAM },		/* additional RAM in the sprite region*/
+	{ 0xd4a000, 0xd4bfff, K053246_long_r },	/* sprite ROM readthrough (for test menu)*/
+	{ 0xd4c000, 0xd4c01f, ccu_r },			/* CRT control unit*/
+	{ 0xd52010, 0xd5201f, sound020_r },		/* shared RAM with sound 68000*/
+	{ 0xd5a000, 0xd5a003, eeprom_r },		/* EEPROM read*/
+	{ 0xd5c000, 0xd5c003, players_r },		/* player 1 & 2 JAMMA inputs*/
+	{ 0xd5e000, 0xd5e003, service_r }, 		/* service switch*/
+	{ 0xd90000, 0xd97fff, MRA32_RAM },		/* palette RAM*/
+	{ 0xda0000, 0xda1fff, K056832_ram_long_r },	/* tilemap RAM*/
 	{ 0xe60000, 0xe60fff, MRA32_RAM },
 	{ 0xe80000, 0xe8ffff, MRA32_RAM },
 	{ 0xea0000, 0xea7fff, MRA32_RAM },
-	{ 0xec0000, 0xec0003, type3_sync_r },		// type 4 polls this too
+	{ 0xec0000, 0xec0003, type3_sync_r },		/* type 4 polls this too*/
 	{ 0xf00000, 0xf07fff, MRA32_RAM },
 MEMORY_END
 
@@ -1336,10 +1336,10 @@ static MEMORY_WRITE32_START( type4writemem )
 	{ 0xe00000, 0xe0001f, MWA32_RAM, (data32_t**)&K053936_1_ctrl },
 	{ 0xe20000, 0xe20003, MWA32_NOP },
 	{ 0xe40000, 0xe40003, MWA32_NOP },
-	{ 0xe60000, 0xe60fff, MWA32_RAM, (data32_t**)&K053936_1_linectrl },  // 29C & 29G (PSAC2 line control)
-	{ 0xe80000, 0xe8ffff, konamigx_palette_w, &paletteram32 }, // 11G/13G/15G (main screen palette RAM) (twice as large as reality)
-	{ 0xea0000, 0xea7fff, konamigx_palette2_w, &gx_subpaletteram32 }, // 5G/7G/9G (sub screen palette RAM)
-	{ 0xf00000, 0xf07fff, konamigx_t4_psacmap_w, &gx_psacram },	// PSAC2 tilemap
+	{ 0xe60000, 0xe60fff, MWA32_RAM, (data32_t**)&K053936_1_linectrl },  /* 29C & 29G (PSAC2 line control)*/
+	{ 0xe80000, 0xe8ffff, konamigx_palette_w, &paletteram32 }, /* 11G/13G/15G (main screen palette RAM) (twice as large as reality)*/
+	{ 0xea0000, 0xea7fff, konamigx_palette2_w, &gx_subpaletteram32 }, /* 5G/7G/9G (sub screen palette RAM)*/
+	{ 0xf00000, 0xf07fff, konamigx_t4_psacmap_w, &gx_psacram },	/* PSAC2 tilemap*/
 MEMORY_END
 
 /**********************************************************************************/
@@ -1372,7 +1372,7 @@ static READ16_HANDLER( sndcomm68k_r )
 
 static WRITE16_HANDLER( sndcomm68k_w )
 {
-//	logerror("68K: write %x to %x\n", data, offset);
+/*	logerror("68K: write %x to %x\n", data, offset);*/
 	sndto020[offset] = data;
 }
 
@@ -1392,7 +1392,7 @@ static MEMORY_WRITE16_START( sndwritemem )
 	{ 0x300000, 0x300001, tms57002_data_word_w },
 	{ 0x400000, 0x40000f, sndcomm68k_w },
 	{ 0x500000, 0x500001, tms57002_control_word_w },
-	{ 0x580000, 0x580001, MWA16_NOP }, // unknown write
+	{ 0x580000, 0x580001, MWA16_NOP }, /* unknown write*/
 MEMORY_END
 
 /* 68000 timer interrupt controller */
@@ -1513,7 +1513,7 @@ MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( dragoonj )
 	MDRV_IMPORT_FROM(konamigx)
-	MDRV_CPU_REPLACE("main", M68EC020, 26400000) // needs higher clock to stop sprite flickerings
+	MDRV_CPU_REPLACE("main", M68EC020, 26400000) /* needs higher clock to stop sprite flickerings*/
 	MDRV_VISIBLE_AREA(40, 40+384-1, 16, 16+224-1)
 	MDRV_VIDEO_START(dragoonj)
 MACHINE_DRIVER_END
@@ -1752,7 +1752,7 @@ INPUT_PORTS_START( racinfrc )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )		// racin force needs this set to get past the calibration screen
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )		/* racin force needs this set to get past the calibration screen*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
@@ -2965,7 +2965,7 @@ ROM_START(vsnetscr)
 
 	/* sound data */
 	ROM_REGION( 0x400000, REGION_SOUND1, 0 )
-	// probably should be 4M byte mode like Rushing Heroes
+	/* probably should be 4M byte mode like Rushing Heroes*/
 	ROM_LOAD( "627a23.7r", 0x000000, 0x200000, BAD_DUMP CRC(b0266eb6) SHA1(65fafcee4b8f9a6e9f05df6f1fb4db519e97f776) )
 ROM_END
 
@@ -3208,7 +3208,7 @@ MACHINE_INIT(konamigx)
 
 	tms57002_init();
 
-	// sound CPU initially disabled?
+	/* sound CPU initially disabled?*/
 	cpu_set_halt_line(1, ASSERT_LINE);
 }
 
@@ -3235,7 +3235,7 @@ static DRIVER_INIT(konamigx)
 
 	dmadelay_timer = timer_alloc(dmaend_callback);
 
-	// running down the list is not a good idea but easier than maintaining individual drivers
+	/* running down the list is not a good idea but easier than maintaining individual drivers*/
 	if (!strcmp(Machine->gamedrv->name, "racinfrc"))
 	{
 		konamigx_cfgport = 11;
@@ -3291,13 +3291,13 @@ static DRIVER_INIT(konamigx)
 	{
 		data32_t *rom = (data32_t*)memory_region(REGION_CPU1);
 
-		// The display is initialized after POST but the copyright screen disabled
-		// planes B,C,D and didn't bother restoring them. I've spent a good
-		// amount of time chasing this bug but the cause remains inconclusive.
-		// My guess is the CCU somehow masked or delayed vblank interrupts
-		// during the copyright message.
-		rom[0x810f1] &= ~1;      // fix checksum
-		rom[0x872ea] |= 0xe0000; // enable plane B,C,D
+		/* The display is initialized after POST but the copyright screen disabled*/
+		/* planes B,C,D and didn't bother restoring them. I've spent a good*/
+		/* amount of time chasing this bug but the cause remains inconclusive.*/
+		/* My guess is the CCU somehow masked or delayed vblank interrupts*/
+		/* during the copyright message.*/
+		rom[0x810f1] &= ~1;      /* fix checksum*/
+		rom[0x872ea] |= 0xe0000; /* enable plane B,C,D*/
 
 		#if GX_SKIPIDLE
 			ADD_SKIPPER32(0x2060d4, 0xc00000, 0x13e48, 0x14027, 0, -1)
@@ -3307,7 +3307,7 @@ static DRIVER_INIT(konamigx)
 		readback = BPP6;
 		konamigx_cfgport = 7;
 
-		// boost voice(chip 1 channel 3-7)
+		/* boost voice(chip 1 channel 3-7)*/
 		for (i=3; i<=7; i++) K054539_set_gain(1, i, 2.0);
 	}
 
@@ -3320,7 +3320,7 @@ static DRIVER_INIT(konamigx)
 		esc_cb = dragoonj_esc;
 		konamigx_cfgport = 7;
 
-		// soften percussions(chip 1 channel 0-3), boost voice(chip 1 channel 4-7)
+		/* soften percussions(chip 1 channel 0-3), boost voice(chip 1 channel 4-7)*/
 		for (i=0; i<=3; i++)
 		{
 			K054539_set_gain(1, i, 0.8);
@@ -3375,7 +3375,7 @@ static DRIVER_INIT(konamigx)
 	{
 		snd020_hack = 2;
 		konamigx_cfgport = 8;
-		// Winning Spike uses the type 4 Xilinx protection
+		/* Winning Spike uses the type 4 Xilinx protection*/
 		install_mem_write32_handler(0, 0xcc0000, 0xcc0007, type4_prot_w );
 	}
 

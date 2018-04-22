@@ -623,7 +623,7 @@ static DISCRETE_SOUND_START(atarifb_sound_interface)
 	/************************************************/
 	/* Hit is a trigger fed directly to the amp     */
 	/************************************************/
-	DISCRETE_FILTER2(ATARIFB_HIT_SND, 1, ATARIFB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	// remove DC
+	DISCRETE_FILTER2(ATARIFB_HIT_SND, 1, ATARIFB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	/* remove DC*/
 
 	/************************************************/
 	/* Crowd effect is variable amplitude, filtered */
@@ -684,7 +684,7 @@ static DISCRETE_SOUND_START(abaseb_sound_interface)
 	/************************************************/
 	/* Hit is a trigger fed directly to the amp     */
 	/************************************************/
-	DISCRETE_FILTER2(ABASEB_HIT_SND, 1, ABASEB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	// remove DC
+	DISCRETE_FILTER2(ABASEB_HIT_SND, 1, ABASEB_HIT_EN, 10.0, 5, DISC_FILTER_HIGHPASS)	/* remove DC*/
 
 	/************************************************/
 	/* Crowd effect is variable amplitude, filtered */

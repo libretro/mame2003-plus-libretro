@@ -258,7 +258,7 @@ static MEMORY_WRITE16_START( robocop2_writemem )
 
 	{ 0x180000, 0x1807ff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x18c064, 0x18c065, cninja_sound_w },
-//	{ 0x18c000, 0x18c0ff, cninja_loopback_w }, /* Protection writes */
+/*	{ 0x18c000, 0x18c0ff, cninja_loopback_w },  // Protection writes /*/
 	{ 0x198000, 0x198001, buffer_spriteram16_w }, /* DMA flag */
 	{ 0x1a8000, 0x1a9fff, deco16_nonbuffered_palette_w, &paletteram16 },
 	{ 0x1b0000, 0x1b0007, cninja_irq_w },

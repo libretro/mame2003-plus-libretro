@@ -65,45 +65,45 @@ READ_HANDLER( clshroad_input_r )
 
 
 static MEMORY_READ_START( clshroad_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM				},	// ROM
-	{ 0x8000, 0x95ff, MRA_RAM				},	// Work   RAM
-	{ 0x9600, 0x97ff, clshroad_sharedram_r	},	// Shared RAM
-	{ 0x9800, 0x9dff, MRA_RAM				},	// Work   RAM
-	{ 0x9e00, 0x9fff, MRA_RAM				},	// Sprite RAM
-	{ 0xa100, 0xa107, clshroad_input_r		},	// Inputs
-	{ 0xa800, 0xafff, MRA_RAM				},	// Layer  1
-	{ 0xc000, 0xc7ff, MRA_RAM				},	// Layers 0
+	{ 0x0000, 0x7fff, MRA_ROM				},	/* ROM*/
+	{ 0x8000, 0x95ff, MRA_RAM				},	/* Work   RAM*/
+	{ 0x9600, 0x97ff, clshroad_sharedram_r	},	/* Shared RAM*/
+	{ 0x9800, 0x9dff, MRA_RAM				},	/* Work   RAM*/
+	{ 0x9e00, 0x9fff, MRA_RAM				},	/* Sprite RAM*/
+	{ 0xa100, 0xa107, clshroad_input_r		},	/* Inputs*/
+	{ 0xa800, 0xafff, MRA_RAM				},	/* Layer  1*/
+	{ 0xc000, 0xc7ff, MRA_RAM				},	/* Layers 0*/
 MEMORY_END
 
 static MEMORY_WRITE_START( clshroad_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM									},	// ROM
-	{ 0x8000, 0x95ff, MWA_RAM									},	// Work   RAM
-	{ 0x9600, 0x97ff, clshroad_sharedram_w, &clshroad_sharedram	},	// Shared RAM
-	{ 0x9800, 0x9dff, MWA_RAM									},	// Work   RAM
-	{ 0x9e00, 0x9fff, MWA_RAM, &spriteram, &spriteram_size		},	// Sprite RAM
-	{ 0xa001, 0xa001, MWA_NOP									},	// ? Interrupt related
-	{ 0xa004, 0xa004, clshroad_flipscreen_w						},	// Flip Screen
-	{ 0xa800, 0xafff, clshroad_vram_1_w, &clshroad_vram_1		},	// Layer 1
-	{ 0xb000, 0xb003, MWA_RAM, &clshroad_vregs					},	// Scroll
-	{ 0xc000, 0xc7ff, clshroad_vram_0_w, &clshroad_vram_0		},	// Layers 0
+	{ 0x0000, 0x7fff, MWA_ROM									},	/* ROM*/
+	{ 0x8000, 0x95ff, MWA_RAM									},	/* Work   RAM*/
+	{ 0x9600, 0x97ff, clshroad_sharedram_w, &clshroad_sharedram	},	/* Shared RAM*/
+	{ 0x9800, 0x9dff, MWA_RAM									},	/* Work   RAM*/
+	{ 0x9e00, 0x9fff, MWA_RAM, &spriteram, &spriteram_size		},	/* Sprite RAM*/
+	{ 0xa001, 0xa001, MWA_NOP									},	/* ? Interrupt related*/
+	{ 0xa004, 0xa004, clshroad_flipscreen_w						},	/* Flip Screen*/
+	{ 0xa800, 0xafff, clshroad_vram_1_w, &clshroad_vram_1		},	/* Layer 1*/
+	{ 0xb000, 0xb003, MWA_RAM, &clshroad_vregs					},	/* Scroll*/
+	{ 0xc000, 0xc7ff, clshroad_vram_0_w, &clshroad_vram_0		},	/* Layers 0*/
 MEMORY_END
 
 static MEMORY_READ_START( clshroad_sound_readmem )
-	{ 0x0000, 0x1fff, MRA_ROM				},	// ROM
-	{ 0x9600, 0x97ff, clshroad_sharedram_r	},	// Shared RAM
+	{ 0x0000, 0x1fff, MRA_ROM				},	/* ROM*/
+	{ 0x9600, 0x97ff, clshroad_sharedram_r	},	/* Shared RAM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( clshroad_sound_writemem )
-	{ 0x0000, 0x1fff, MWA_ROM				},	// ROM
+	{ 0x0000, 0x1fff, MWA_ROM				},	/* ROM*/
 	{ 0x4000, 0x7fff, wiping_sound_w, &wiping_soundregs },
-	{ 0x9600, 0x97ff, clshroad_sharedram_w	},	// Shared RAM
-	{ 0xa003, 0xa003, MWA_NOP				},	// ? Interrupt related
+	{ 0x9600, 0x97ff, clshroad_sharedram_w	},	/* Shared RAM*/
+	{ 0xa003, 0xa003, MWA_NOP				},	/* ? Interrupt related*/
 MEMORY_END
 
 
 
 INPUT_PORTS_START( clshroad )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
@@ -113,7 +113,7 @@ INPUT_PORTS_START( clshroad )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_COCKTAIL )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_COCKTAIL )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_COCKTAIL )
@@ -123,7 +123,7 @@ INPUT_PORTS_START( clshroad )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// IN2 - DSW 1
+	PORT_START	/* IN2 - DSW 1*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
@@ -132,11 +132,11 @@ INPUT_PORTS_START( clshroad )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Cocktail ) )
-	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Difficulty ) )	// Damage when falling
-	PORT_DIPSETTING(    0x18, "Normal"  )	// 8
-	PORT_DIPSETTING(    0x10, "Hard"    )	// A
-	PORT_DIPSETTING(    0x08, "Harder"  )	// C
-	PORT_DIPSETTING(    0x00, "Hardest" )	// E
+	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Difficulty ) )	/* Damage when falling*/
+	PORT_DIPSETTING(    0x18, "Normal"  )	/* 8*/
+	PORT_DIPSETTING(    0x10, "Hard"    )	/* A*/
+	PORT_DIPSETTING(    0x08, "Harder"  )	/* C*/
+	PORT_DIPSETTING(    0x00, "Hardest" )	/* E*/
 	PORT_BITX(    0x20, 0x20, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Invulnerability", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -147,7 +147,7 @@ INPUT_PORTS_START( clshroad )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN3 - DSW 2
+	PORT_START	/* IN3 - DSW 2*/
 /*
 first bit OFF is:	0 			0	<- value
 					1			1
@@ -181,13 +181,13 @@ But the values seems unused then.
 	PORT_DIPNAME( 0x40, 0x40, "Unknown 2-6" )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Unknown 2-7" )	//?
+	PORT_DIPNAME( 0x80, 0x80, "Unknown 2-7" )	/*?*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( firebatl )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
@@ -197,7 +197,7 @@ INPUT_PORTS_START( firebatl )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_COCKTAIL )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_COCKTAIL )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_COCKTAIL )
@@ -207,7 +207,7 @@ INPUT_PORTS_START( firebatl )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// IN2 - DSW 1
+	PORT_START	/* IN2 - DSW 1*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -233,7 +233,7 @@ INPUT_PORTS_START( firebatl )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN3 - DSW 2
+	PORT_START	/* IN3 - DSW 2*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 2-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -296,17 +296,17 @@ static struct GfxLayout layout_16x16x4 =
 
 static struct GfxDecodeInfo firebatl_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4,   0, 16 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x4,	 16,  1 }, // [1] Layer 0
-	{ REGION_GFX3, 0, &layout_8x8x2,   512, 64 }, // [2] Layer 1
+	{ REGION_GFX1, 0, &layout_16x16x4,   0, 16 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x4,	 16,  1 }, /* [1] Layer 0*/
+	{ REGION_GFX3, 0, &layout_8x8x2,   512, 64 }, /* [2] Layer 1*/
 	{ -1 }
 };
 
 static struct GfxDecodeInfo clshroad_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4, 0, 16 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x4, 0x90,  1 }, // [1] Layer 0
-	{ REGION_GFX3, 0, &layout_8x8x4,   0, 16 }, // [2] Layer 1
+	{ REGION_GFX1, 0, &layout_16x16x4, 0, 16 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x4, 0x90,  1 }, /* [1] Layer 0*/
+	{ REGION_GFX3, 0, &layout_8x8x4,   0, 16 }, /* [2] Layer 1*/
 	{ -1 }
 };
 

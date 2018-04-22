@@ -117,7 +117,7 @@ static WRITE32_HANDLER( color_ram_w )
 
 static void groundfx_interrupt5(int x)
 {
-	cpu_set_irq_line(0,5,HOLD_LINE); //from 5... ADC port
+	cpu_set_irq_line(0,5,HOLD_LINE); /*from 5... ADC port*/
 }
 
 
@@ -277,11 +277,11 @@ static MEMORY_READ32_START( groundfx_readmem )
 	{ 0x600000, 0x600003, groundfx_adc_r },
 	{ 0x700000, 0x7007ff, MRA32_RAM },
 	{ 0x800000, 0x80ffff, TC0480SCP_long_r },	  /* tilemaps */
-	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_r },	// debugging
+	{ 0x830000, 0x83002f, TC0480SCP_ctrl_long_r },	/* debugging*/
 	{ 0x900000, 0x90ffff, TC0100SCN_long_r },	/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_r },
 	{ 0xa00000, 0xa0ffff, MRA32_RAM }, /* palette ram */
-	{ 0xb00000, 0xb003ff, MRA32_RAM },	// ?? single bytes
+	{ 0xb00000, 0xb003ff, MRA32_RAM },	/* ?? single bytes*/
 	{ 0xc00000, 0xc00007, MRA32_NOP }, /* Network? */
 MEMORY_END
 
@@ -298,7 +298,7 @@ static MEMORY_WRITE32_START( groundfx_writemem )
 	{ 0x900000, 0x90ffff, TC0100SCN_long_w },	/* piv tilemaps */
 	{ 0x920000, 0x92000f, TC0100SCN_ctrl_long_w },
 	{ 0xa00000, 0xa0ffff, color_ram_w, &paletteram32 },
-	{ 0xb00000, 0xb003ff, MWA32_RAM },	// single bytes, blending ??
+	{ 0xb00000, 0xb003ff, MWA32_RAM },	/* single bytes, blending ??*/
 	{ 0xd00000, 0xd00003, rotate_control_w },	/* perhaps port based rotate control? */
 	/* f00000 is seat control? */
 MEMORY_END

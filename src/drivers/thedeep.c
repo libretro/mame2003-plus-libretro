@@ -98,22 +98,22 @@ static WRITE_HANDLER( thedeep_protection_w )
 				protection_index = 0;
 
 			if ( protection_index < 0x19b )
-// d000-d00c:	hl += a * b
-// d00d-d029:	input a (e.g. $39) output hl (e.g. h=$03 l=$09).
-// 				Replace trainling 0's with space ($10). 00 -> '  '
-// d02a-d039:	input a (e.g. $39) output hl (e.g. h=$03 l=$09).
-// 				Replace trainling 0's with space ($10). 00 -> ' 0'
-// d03a-d046:	input a (e.g. $39) output hl (e.g. h=$03 l=$09). 00 -> '00'
-// d047-d086:	a /= e (e can be 0!)
-// d087-d0a4:	print ASCII string from HL to IX (sub $30 to every char)
-// d0a4-d0be:	print any string from HL to IX
-// d0bf-d109:	print ASCII string from HL to IX. Color is in c. (e.g. "game over")
-// d10a-d11f:	print 2 digit decimal number in hl to ix, color c. change ix
-// d120-d157:	update score: add 3 BCD bytes at ix to those at iy, then clear those at ix
-// d158-d165:	print digit: (IX+0) <- H; (IX+1) <-L. ix+=40
-// d166-d174:	hl = (hl + 2*a)
-// d175-d181:	hl *= e (e must be non zero)
-// d182-d19a:	hl /= de
+/* d000-d00c:	hl += a * b*/
+/* d00d-d029:	input a (e.g. $39) output hl (e.g. h=$03 l=$09).*/
+/* 				Replace trainling 0's with space ($10). 00 -> '  '*/
+/* d02a-d039:	input a (e.g. $39) output hl (e.g. h=$03 l=$09).*/
+/* 				Replace trainling 0's with space ($10). 00 -> ' 0'*/
+/* d03a-d046:	input a (e.g. $39) output hl (e.g. h=$03 l=$09). 00 -> '00'*/
+/* d047-d086:	a /= e (e can be 0!)*/
+/* d087-d0a4:	print ASCII string from HL to IX (sub $30 to every char)*/
+/* d0a4-d0be:	print any string from HL to IX*/
+/* d0bf-d109:	print ASCII string from HL to IX. Color is in c. (e.g. "game over")*/
+/* d10a-d11f:	print 2 digit decimal number in hl to ix, color c. change ix*/
+/* d120-d157:	update score: add 3 BCD bytes at ix to those at iy, then clear those at ix*/
+/* d158-d165:	print digit: (IX+0) <- H; (IX+1) <-L. ix+=40*/
+/* d166-d174:	hl = (hl + 2*a)*/
+/* d175-d181:	hl *= e (e must be non zero)*/
+/* d182-d19a:	hl /= de*/
 				protection_data = memory_region(REGION_CPU3)[0x185+protection_index++];
 			else
 				protection_data = 0xc9;
@@ -145,38 +145,38 @@ static WRITE_HANDLER( thedeep_e100_w )
 }
 
 static MEMORY_READ_START( thedeep_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1				},	// ROM (banked)
-	{ 0xc000, 0xcfff, MRA_RAM				},	// RAM
-	{ 0xd000, 0xdfff, MRA_RAM				},	// RAM (MCU data copied here)
-	{ 0xe000, 0xe000, thedeep_protection_r	},	// From MCU
-	{ 0xe004, 0xe004, thedeep_e004_r		},	// ?
-	{ 0xe008, 0xe008, input_port_0_r		},	// P1 (Inputs)
-	{ 0xe009, 0xe009, input_port_1_r		},	// P2
-	{ 0xe00a, 0xe00a, input_port_2_r		},	// DSW1
-	{ 0xe00b, 0xe00b, input_port_3_r		},	// DSW2
-	{ 0xe400, 0xe7ff, MRA_RAM				},	// Sprites
-	{ 0xe800, 0xefff, MRA_RAM				},	// Text Layer
-	{ 0xf000, 0xf7ff, MRA_RAM				},	// Background Layer
-	{ 0xf800, 0xf83f, MRA_RAM				},	// Column Scroll
-	{ 0xf840, 0xffff, MRA_RAM				},	//
+	{ 0x0000, 0x7fff, MRA_ROM				},	/* ROM*/
+	{ 0x8000, 0xbfff, MRA_BANK1				},	/* ROM (banked)*/
+	{ 0xc000, 0xcfff, MRA_RAM				},	/* RAM*/
+	{ 0xd000, 0xdfff, MRA_RAM				},	/* RAM (MCU data copied here)*/
+	{ 0xe000, 0xe000, thedeep_protection_r	},	/* From MCU*/
+	{ 0xe004, 0xe004, thedeep_e004_r		},	/* ?*/
+	{ 0xe008, 0xe008, input_port_0_r		},	/* P1 (Inputs)*/
+	{ 0xe009, 0xe009, input_port_1_r		},	/* P2*/
+	{ 0xe00a, 0xe00a, input_port_2_r		},	/* DSW1*/
+	{ 0xe00b, 0xe00b, input_port_3_r		},	/* DSW2*/
+	{ 0xe400, 0xe7ff, MRA_RAM				},	/* Sprites*/
+	{ 0xe800, 0xefff, MRA_RAM				},	/* Text Layer*/
+	{ 0xf000, 0xf7ff, MRA_RAM				},	/* Background Layer*/
+	{ 0xf800, 0xf83f, MRA_RAM				},	/* Column Scroll*/
+	{ 0xf840, 0xffff, MRA_RAM				},	/**/
 MEMORY_END
 
 static MEMORY_WRITE_START( thedeep_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM				},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM				},	// ROM (banked)
-	{ 0xc000, 0xcfff, MWA_RAM				},	// RAM
-	{ 0xd000, 0xdfff, MWA_RAM				},	// RAM (MCU data copied here)
-	{ 0xe000, 0xe000, thedeep_protection_w	},	// To MCU
-	{ 0xe004, 0xe004, thedeep_nmi_w			},	//
-	{ 0xe00c, 0xe00c, thedeep_sound_w		},	// To Sound CPU
-	{ 0xe100, 0xe100, thedeep_e100_w		},	// ?
-	{ 0xe210, 0xe213, MWA_RAM, &thedeep_scroll				},	// Scroll
-	{ 0xe400, 0xe7ff, MWA_RAM, &spriteram, &spriteram_size	},	// Sprites
-	{ 0xe800, 0xefff, thedeep_vram_1_w, &thedeep_vram_1		},	// Text Layer
-	{ 0xf000, 0xf7ff, thedeep_vram_0_w, &thedeep_vram_0		},	// Background Layer
-	{ 0xf800, 0xf83f, MWA_RAM, &thedeep_scroll2				},	// Column Scroll
-	{ 0xf840, 0xffff, MWA_RAM								},	//
+	{ 0x0000, 0x7fff, MWA_ROM				},	/* ROM*/
+	{ 0x8000, 0xbfff, MWA_ROM				},	/* ROM (banked)*/
+	{ 0xc000, 0xcfff, MWA_RAM				},	/* RAM*/
+	{ 0xd000, 0xdfff, MWA_RAM				},	/* RAM (MCU data copied here)*/
+	{ 0xe000, 0xe000, thedeep_protection_w	},	/* To MCU*/
+	{ 0xe004, 0xe004, thedeep_nmi_w			},	/**/
+	{ 0xe00c, 0xe00c, thedeep_sound_w		},	/* To Sound CPU*/
+	{ 0xe100, 0xe100, thedeep_e100_w		},	/* ?*/
+	{ 0xe210, 0xe213, MWA_RAM, &thedeep_scroll				},	/* Scroll*/
+	{ 0xe400, 0xe7ff, MWA_RAM, &spriteram, &spriteram_size	},	/* Sprites*/
+	{ 0xe800, 0xefff, thedeep_vram_1_w, &thedeep_vram_1		},	/* Text Layer*/
+	{ 0xf000, 0xf7ff, thedeep_vram_0_w, &thedeep_vram_0		},	/* Background Layer*/
+	{ 0xf800, 0xf83f, MWA_RAM, &thedeep_scroll2				},	/* Column Scroll*/
+	{ 0xf840, 0xffff, MWA_RAM								},	/**/
 MEMORY_END
 
 /***************************************************************************
@@ -186,16 +186,16 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ_START( thedeep_sound_readmem )
-	{ 0x0000, 0x07ff, MRA_RAM					},	// RAM
-	{ 0x3000, 0x3000, soundlatch_r				},	// From Main CPU
-	{ 0x8000, 0xffff, MRA_ROM					},	// ROM
+	{ 0x0000, 0x07ff, MRA_RAM					},	/* RAM*/
+	{ 0x3000, 0x3000, soundlatch_r				},	/* From Main CPU*/
+	{ 0x8000, 0xffff, MRA_ROM					},	/* ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( thedeep_sound_writemem )
-	{ 0x0000, 0x07ff, MWA_RAM					},	// RAM
-	{ 0x0800, 0x0800, YM2203_control_port_0_w	},	// YM2203
-	{ 0x0801, 0x0801, YM2203_write_port_0_w		},	//
-	{ 0x8000, 0xffff, MWA_ROM					},	// ROM
+	{ 0x0000, 0x07ff, MWA_RAM					},	/* RAM*/
+	{ 0x0800, 0x0800, YM2203_control_port_0_w	},	/* YM2203*/
+	{ 0x0801, 0x0801, YM2203_write_port_0_w		},	/**/
+	{ 0x8000, 0xffff, MWA_ROM					},	/* ROM*/
 MEMORY_END
 
 
@@ -206,8 +206,8 @@ MEMORY_END
 ***************************************************************************/
 
 INPUT_PORTS_START( thedeep )
-	PORT_START	// IN0 - e008
-	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    )	// Up / down shown in service mode
+	PORT_START	/* IN0 - e008*/
+	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    )	/* Up / down shown in service mode*/
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  )
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
@@ -216,7 +216,7 @@ INPUT_PORTS_START( thedeep )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START1  )
 
-	PORT_START	// IN1 - e009
+	PORT_START	/* IN1 - e009*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
@@ -226,7 +226,7 @@ INPUT_PORTS_START( thedeep )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2  )
 
-	PORT_START	// IN2 - e00a
+	PORT_START	/* IN2 - e00a*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
@@ -250,7 +250,7 @@ INPUT_PORTS_START( thedeep )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN3 - e00b
+	PORT_START	/* IN3 - e00b*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x02, "Easy" )
 	PORT_DIPSETTING(    0x03, "Normal" )
@@ -271,7 +271,7 @@ INPUT_PORTS_START( thedeep )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 
-	PORT_START	// IN4 - read by the mcu
+	PORT_START	/* IN4 - read by the mcu*/
 	PORT_BIT_IMPULSE( 0x01, IP_ACTIVE_HIGH, IPT_COIN1,    1 )
 	PORT_BIT_IMPULSE( 0x02, IP_ACTIVE_HIGH, IPT_COIN2,    1 )
 	PORT_BIT_IMPULSE( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1, 1 )
@@ -308,9 +308,9 @@ static struct GfxLayout layout_16x16x4 =
 
 static struct GfxDecodeInfo thedeep_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4,	0x080,  8 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x4,	0x100, 16 }, // [1] Background Layer
-	{ REGION_GFX3, 0, &layout_8x8x2,	0x000, 16 }, // [2] Text Layer
+	{ REGION_GFX1, 0, &layout_16x16x4,	0x080,  8 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x4,	0x100, 16 }, /* [1] Background Layer*/
+	{ REGION_GFX3, 0, &layout_8x8x2,	0x000, 16 }, /* [2] Text Layer*/
 	{ -1 }
 };
 
@@ -440,7 +440,7 @@ ROM_START( thedeep )
 	ROM_LOAD( "dp-12.rom", 0x8000, 0x8000, CRC(c4e848c4) SHA1(d2dec5c8d7d59703f5485cab9124bf4f835fe728) )
 
 	ROM_REGION( 0x1000, REGION_CPU3, 0 )		/* i8751 Code */
-	ROM_LOAD( "dp-14", 0x0000, 0x1000, CRC(0b886dad) SHA1(487192764342f8b0a320d20a378bf94f84592da9) )	// 1xxxxxxxxxxx = 0xFF
+	ROM_LOAD( "dp-14", 0x0000, 0x1000, CRC(0b886dad) SHA1(487192764342f8b0a320d20a378bf94f84592da9) )	/* 1xxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x40000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
 	ROM_LOAD( "dp-08.rom", 0x00000, 0x10000, CRC(c5624f6b) SHA1(a3c0b13cddae760f30c7344d718cd69cad990054) )
@@ -458,8 +458,8 @@ ROM_START( thedeep )
 	ROM_LOAD( "dp-11.rom", 0x0000, 0x4000, CRC(196e23d1) SHA1(ed14e63fccb3e5dce462d9b8155e78749eaf9b3b) )
 
 	ROM_REGION( 0x600, REGION_PROMS, ROMREGION_DISPOSE )	/* Colors */
-	ROM_LOAD( "fi-1", 0x000, 0x200, CRC(f31efe09) SHA1(808c90fe02ed7b4000967c331b8773c4168b8a97) )	// FIXED BITS (xxxxxx0xxxxxx0x0)
-	ROM_LOAD( "fi-2", 0x200, 0x200, CRC(f305c8d5) SHA1(f82c709dc75a3c681d6f0ebf2702cb90110b1f0c) )	// FIXED BITS (0000xxxx)
+	ROM_LOAD( "fi-1", 0x000, 0x200, CRC(f31efe09) SHA1(808c90fe02ed7b4000967c331b8773c4168b8a97) )	/* FIXED BITS (xxxxxx0xxxxxx0x0)*/
+	ROM_LOAD( "fi-2", 0x200, 0x200, CRC(f305c8d5) SHA1(f82c709dc75a3c681d6f0ebf2702cb90110b1f0c) )	/* FIXED BITS (0000xxxx)*/
 	ROM_LOAD( "fi-3", 0x400, 0x200, CRC(f61a9686) SHA1(24082f60b72268d240ceca6999bdf18872625cd2) )
 ROM_END
 
@@ -472,7 +472,7 @@ ROM_START( rundeep )
 	ROM_LOAD( "dp-12.rom", 0x8000, 0x8000, CRC(c4e848c4) SHA1(d2dec5c8d7d59703f5485cab9124bf4f835fe728) )
 
 	ROM_REGION( 0x1000, REGION_CPU3, 0 )		/* i8751 Code */
-	ROM_LOAD( "dp-14", 0x0000, 0x1000, CRC(0b886dad) SHA1(487192764342f8b0a320d20a378bf94f84592da9) )	// 1xxxxxxxxxxx = 0xFF
+	ROM_LOAD( "dp-14", 0x0000, 0x1000, CRC(0b886dad) SHA1(487192764342f8b0a320d20a378bf94f84592da9) )	/* 1xxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x40000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
 	ROM_LOAD( "dp-08.rom", 0x00000, 0x10000, CRC(c5624f6b) SHA1(a3c0b13cddae760f30c7344d718cd69cad990054) )
@@ -490,8 +490,8 @@ ROM_START( rundeep )
 	ROM_LOAD( "11", 0x0000, 0x4000, CRC(5d29e4b9) SHA1(608345291062e9ce329ebe9a8c1e65d52e358785) )
 
 	ROM_REGION( 0x600, REGION_PROMS, ROMREGION_DISPOSE )	/* Colors */
-	ROM_LOAD( "fi-1", 0x000, 0x200, CRC(f31efe09) SHA1(808c90fe02ed7b4000967c331b8773c4168b8a97) )	// FIXED BITS (xxxxxx0xxxxxx0x0)
-	ROM_LOAD( "fi-2", 0x200, 0x200, CRC(f305c8d5) SHA1(f82c709dc75a3c681d6f0ebf2702cb90110b1f0c) )	// FIXED BITS (0000xxxx)
+	ROM_LOAD( "fi-1", 0x000, 0x200, CRC(f31efe09) SHA1(808c90fe02ed7b4000967c331b8773c4168b8a97) )	/* FIXED BITS (xxxxxx0xxxxxx0x0)*/
+	ROM_LOAD( "fi-2", 0x200, 0x200, CRC(f305c8d5) SHA1(f82c709dc75a3c681d6f0ebf2702cb90110b1f0c) )	/* FIXED BITS (0000xxxx)*/
 	ROM_LOAD( "fi-3", 0x400, 0x200, CRC(f61a9686) SHA1(24082f60b72268d240ceca6999bdf18872625cd2) )
 ROM_END
 

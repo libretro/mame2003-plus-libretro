@@ -1701,8 +1701,8 @@ GAME( 1984, pc_hgaly,playch10, playch10, playc10g, pc_gun,   ROT0, "Nintendo", "
 GAME( 1984, pc_wgnmn,playch10, playch10, playc10g, pc_gun,   ROT0, "Nintendo", "PlayChoice-10: Wild Gunman" )
 
 /* A-Board Games */
-GAME( 1986, pc_grdus,playch10, playch10, playch10, pcaboard, ROT0, "Konami", "PlayChoice-10: Gradius" ) // date: 860917
-GAME( 1986, pc_grdue,pc_grdus, playch10, playch10, pcaboard, ROT0, "Konami", "PlayChoice-10: Gradius (older)" ) // date: 860219
+GAME( 1986, pc_grdus,playch10, playch10, playch10, pcaboard, ROT0, "Konami", "PlayChoice-10: Gradius" ) /* date: 860917*/
+GAME( 1986, pc_grdue,pc_grdus, playch10, playch10, pcaboard, ROT0, "Konami", "PlayChoice-10: Gradius (older)" ) /* date: 860219*/
 GAME( 1987, pc_tkfld,playch10, playch10, playch10, pcaboard, ROT0, "Konami (Nintendo of America license)", "PlayChoice-10: Track & Field" )
 
 /* B-Board Games */

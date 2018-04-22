@@ -49,7 +49,7 @@ static WRITE16_HANDLER( K052109_halfword_w )
 	/* is this a bug in the game or something else? */
 	if (!ACCESSING_LSB)
 		K052109_w(offset,(data >> 8) & 0xff);
-//		logerror("%06x half %04x = %04x\n",activecpu_get_pc(),offset,data);
+/*		logerror("%06x half %04x = %04x\n",activecpu_get_pc(),offset,data);*/
 }
 
 static READ16_HANDLER( K051937_halfword_r )
@@ -119,7 +119,7 @@ static WRITE16_HANDLER( cpuA_ctrl_w )
 		irqAen = data & 0x20;
 
 		/* other bits unknown */
-//logerror("%06x: write %04x to c0000\n",activecpu_get_pc(),data);
+/*logerror("%06x: write %04x to c0000\n",activecpu_get_pc(),data);*/
 	}
 }
 
@@ -320,7 +320,7 @@ INPUT_PORTS_START( gradius3 )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
 	PORT_START	/* DSW2 */
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )

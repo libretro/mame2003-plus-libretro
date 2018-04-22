@@ -442,8 +442,8 @@ static WRITE_HANDLER( alibaba_sound_w )
 
 static READ_HANDLER( alibaba_mystery_1_r )
 {
-	// The return value determines what the mystery item is.  Each bit corresponds
-	// to a question mark
+	/* The return value determines what the mystery item is.  Each bit corresponds*/
+	/* to a question mark*/
 
 	return rand() & 0x0f;
 }
@@ -453,8 +453,8 @@ static READ_HANDLER( alibaba_mystery_2_r )
 {
 	static int mystery = 0;
 
-	// The single bit return value determines when the mystery is lit up.
-	// This is certainly wrong
+	/* The single bit return value determines when the mystery is lit up.*/
+	/* This is certainly wrong*/
 
 	mystery++;
 	return (mystery >> 10) & 1;
@@ -675,7 +675,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x5002, 0x5002, MWA_NOP },
 	{ 0x5003, 0x5003, pengo_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
-// 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games
+/* 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games*/
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
@@ -722,7 +722,7 @@ static MEMORY_WRITE_START( mspacman_writemem )
 	{ 0x5003, 0x5003, pengo_flipscreen_w },
  	{ 0x5004, 0x5005, pacman_leds_w },
 	{ 0x5006, 0x5006, mspacman_activate_rom },	/* Not actually, just handy */
-// 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games
+/* 	{ 0x5006, 0x5006, pacman_coin_lockout_global_w },	this breaks many games*/
  	{ 0x5007, 0x5007, pacman_coin_counter_w },
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x5060, 0x506f, MWA_RAM, &spriteram_2 },
@@ -836,10 +836,10 @@ static MEMORY_WRITE_START( bigbucks_writemem )
 	{ 0x5000, 0x5000, interrupt_enable_w },
 	{ 0x5001, 0x5001, pengo_sound_enable_w },
 	{ 0x5003, 0x5003, pengo_flipscreen_w },
-	{ 0x5007, 0x5007, MWA_NOP }, //?
+	{ 0x5007, 0x5007, MWA_NOP }, /*?*/
 	{ 0x5040, 0x505f, pengo_sound_w, &pengo_soundregs },
 	{ 0x50c0, 0x50c0, watchdog_reset_w },
-	{ 0x5100, 0x5100, MWA_NOP }, //?
+	{ 0x5100, 0x5100, MWA_NOP }, /*?*/
 	{ 0x6000, 0x6000, bigbucks_bank_w },
 	{ 0x8000, 0x9fff, MWA_ROM },
 MEMORY_END
@@ -1102,8 +1102,8 @@ INPUT_PORTS_START( mspacpls )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_COCKTAIL )
 	PORT_SERVICE( 0x10, IP_ACTIVE_LOW )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )	// Also invincibility when playing
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )	// Also speed-up when playing
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )	/* Also invincibility when playing*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )	/* Also speed-up when playing*/
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
@@ -1717,9 +1717,9 @@ INPUT_PORTS_START( vanvan )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		// Missile effect
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )		// Killer car is destroyed
-	PORT_DIPSETTING(    0x08, DEF_STR( On ) )			// Killer car is not destroyed
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		/* Missile effect*/
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )		/* Killer car is destroyed*/
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )			/* Killer car is not destroyed*/
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
@@ -1791,9 +1791,9 @@ INPUT_PORTS_START( vanvank )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		// Missile effect
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )		// Killer car is destroyed
-	PORT_DIPSETTING(    0x08, DEF_STR( On ) )			// Killer car is not destroyed
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )		/* Missile effect*/
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )		/* Killer car is destroyed*/
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )			/* Killer car is not destroyed*/
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
@@ -1854,10 +1854,10 @@ INPUT_PORTS_START( dremshpr )
 	PORT_DIPSETTING(    0x40, DEF_STR( 1C_3C ) )
 
 	PORT_START	/* DSW 2 */
-  //PORT_BITX(    0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Invulnerability", IP_KEY_NONE, IP_JOY_NONE )
-  //PORT_DIPSETTING(    0x00, DEF_STR( Off ) )		/* turning this on crashes puts the */
-  //PORT_DIPSETTING(    0x01, DEF_STR( On ) )       /* emulated machine in an infinite loop once in a while */
-//	PORT_DIPNAME( 0xff, 0x00, DEF_STR( Unused ) )
+  /*PORT_BITX(    0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Invulnerability", IP_KEY_NONE, IP_JOY_NONE )*/
+  /*PORT_DIPSETTING(    0x00, DEF_STR( Off ) )		 // turning this on crashes puts the /*/
+  /*PORT_DIPSETTING(    0x01, DEF_STR( On ) )        // emulated machine in an infinite loop once in a while /*/
+/*	PORT_DIPNAME( 0xff, 0x00, DEF_STR( Unused ) )*/
 	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
@@ -1939,7 +1939,7 @@ INPUT_PORTS_START( jumpshot )
 
 	PORT_START /* DSW 1 */
 	PORT_DIPNAME( 0x03, 0x01, "Time"  )
-//	PORT_DIPSETTING(    0x00,  "2 Minutes"  )
+/*	PORT_DIPSETTING(    0x00,  "2 Minutes"  )*/
 	PORT_DIPSETTING(    0x02,  "2 Minutes" )
 	PORT_DIPSETTING(    0x03,  "3 Minutes" )
 	PORT_DIPSETTING(    0x01,  "4 Minutes"  )
@@ -2009,11 +2009,11 @@ INPUT_PORTS_START( shootbul )
 	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNUSED )
 INPUT_PORTS_END
 
-// New Atlantic City Action / Board Walk Casino Inputs //
-// Annoyingly enough, you can't get into service mode on bwcasino if the
-// cocktail mode is set. To test player 2's inputs, select Upright Mode on
-// the dipswitches, and enter test mode. Now select cocktail mode and you
-// can test everything. Wierd.
+/* New Atlantic City Action / Board Walk Casino Inputs */ /**/
+/* Annoyingly enough, you can't get into service mode on bwcasino if the*/
+/* cocktail mode is set. To test player 2's inputs, select Upright Mode on*/
+/* the dipswitches, and enter test mode. Now select cocktail mode and you*/
+/* can test everything. Wierd.*/
 
 INPUT_PORTS_START( bwcasino )
 	PORT_START /* IN0 */
@@ -2073,10 +2073,10 @@ INPUT_PORTS_START( bwcasino )
 	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNUSED )
 INPUT_PORTS_END
 
-// ATLANTIC CITY ACTION (acitya)
-// Unlike "Boardwalk Casino", "Atlantic City Action" does not appear to
-// have a cocktail mode, and uses service button connected differently to
-// "Boardwalk"
+/* ATLANTIC CITY ACTION (acitya)*/
+/* Unlike "Boardwalk Casino", "Atlantic City Action" does not appear to*/
+/* have a cocktail mode, and uses service button connected differently to*/
+/* "Boardwalk"*/
 INPUT_PORTS_START( acitya )
 	PORT_START /* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -2932,8 +2932,8 @@ ROM_START( hangly3 )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
 	ROM_LOAD( "hm1.6e",   0x0000, 0x0800, CRC(9d027c4a) SHA1(88e094880057451a75cdc2ce9477403021813982) )
 	ROM_LOAD( "hm5.6k",	  0x0800, 0x0800, CRC(194c7189) SHA1(fd423bac2810015313841c7b935054565390fbd0) )
-	ROM_LOAD( "hangly2.6f",   0x1000, 0x0800, CRC(5ba228bb) SHA1(b0e902cdf98bee72d6ec8069eec96adce3245074) ) // hm2.6f
-	ROM_LOAD( "hangly2.6m",   0x1800, 0x0800, CRC(baf5461e) SHA1(754586a6449fd54a342f260e572c1cd60ab70815) ) // hm6.6m
+	ROM_LOAD( "hangly2.6f",   0x1000, 0x0800, CRC(5ba228bb) SHA1(b0e902cdf98bee72d6ec8069eec96adce3245074) ) /* hm2.6f*/
+	ROM_LOAD( "hangly2.6m",   0x1800, 0x0800, CRC(baf5461e) SHA1(754586a6449fd54a342f260e572c1cd60ab70815) ) /* hm6.6m*/
 	ROM_LOAD( "hm3.6h",   0x2000, 0x0800, CRC(08419c4a) SHA1(7e5001adad401080c788737c1d2349f218750442) )
 	ROM_LOAD( "hm7.6n",   0x2800, 0x0800, CRC(ab74b51f) SHA1(1bce8933ed7807eb7aca9670df8994f8d1a8b5b7) )
 	ROM_LOAD( "hm4.6j",   0x3000, 0x0800, CRC(5039b082) SHA1(086a6ac4742734167d283b1121fce29d8ac4a6cd) )
@@ -4183,7 +4183,7 @@ static void korosuke_rom_decode(void)
 	rom[0x044c + diff] = 0xc9;
 	rom[0x1973 + diff] = 0x18;
 	rom[0x238c + diff] = 0xc9;
-	rom[0x3ae9 + diff] = 0xe6;	// not changed
+	rom[0x3ae9 + diff] = 0xe6;	/* not changed*/
 	rom[0x3aeb + diff] = 0x00;
 	rom[0x3aec + diff] = 0xc9;
 	rom[0x3af1 + diff] = 0x86;

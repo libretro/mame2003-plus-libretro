@@ -208,10 +208,10 @@ static data32_t to_main;
 static READ32_HANDLER ( ms32_read_inputs1 )
 {
 	int a,b,c,d;
-	a = readinputport(0);	// unknown
-	b = readinputport(1);	// System inputs
-	c = readinputport(2);	// Player 1 inputs
-	d = readinputport(3);	// Player 2 inputs
+	a = readinputport(0);	/* unknown*/
+	b = readinputport(1);	/* System inputs*/
+	c = readinputport(2);	/* Player 1 inputs*/
+	d = readinputport(3);	/* Player 2 inputs*/
 	return a << 24 | b << 16 | c << 0 | d << 8;
 }
 
@@ -219,31 +219,31 @@ static READ32_HANDLER ( ms32_read_inputs1 )
 static READ32_HANDLER ( ms32_mahjong_read_inputs1 )
 {
 	int a,b,c,d;
-	a = readinputport(0);	// unknown
-	b = readinputport(1);	// System inputs
+	a = readinputport(0);	/* unknown*/
+	b = readinputport(1);	/* System inputs*/
 
 	switch (ms32_mahjong_input_select[0])
 	{
 		case 0x01:
-			c = readinputport(8);	// Player 1 inputs
+			c = readinputport(8);	/* Player 1 inputs*/
 			break;
 		case 0x02:
-			c = readinputport(9);	// Player 1 inputs
+			c = readinputport(9);	/* Player 1 inputs*/
 			break;
 		case 0x04:
-			c = readinputport(10);	// Player 1 inputs
+			c = readinputport(10);	/* Player 1 inputs*/
 			break;
 		case 0x08:
-			c = readinputport(11);	// Player 1 inputs
+			c = readinputport(11);	/* Player 1 inputs*/
 			break;
 		case 0x10:
-			c = readinputport(12);	// Player 1 inputs
+			c = readinputport(12);	/* Player 1 inputs*/
 			break;
 		default:
 			c = 0;
 
 	}
-	d = readinputport(3);	// Player 2 inputs
+	d = readinputport(3);	/* Player 2 inputs*/
 	return a << 24 | b << 16 | c << 0 | d << 8;
 }
 
@@ -251,18 +251,18 @@ static READ32_HANDLER ( ms32_mahjong_read_inputs1 )
 static READ32_HANDLER ( ms32_read_inputs2 )
 {
 	int a,b,c,d;
-	a = readinputport(4);	// Dip 1
-	b = readinputport(5);	// Dip 2
-	c = readinputport(6);	// Dip 3
-	d = readinputport(7);	// unused ?
+	a = readinputport(4);	/* Dip 1*/
+	b = readinputport(5);	/* Dip 2*/
+	c = readinputport(6);	/* Dip 3*/
+	d = readinputport(7);	/* unused ?*/
 	return a << 8 | b << 0 | c << 16 | d << 24;
 }
 
 static READ32_HANDLER ( ms32_read_inputs3 )
 {
 	int a,b,c,d;
-	a = readinputport(10); // unused?
-	b = readinputport(10); // unused?
+	a = readinputport(10); /* unused?*/
+	b = readinputport(10); /* unused?*/
 	c = readinputport(9);
 	d = (readinputport(8) - 0xb0) & 0xff;
 	return a << 24 | b << 16 | c << 8 | d << 0;
@@ -273,7 +273,7 @@ static WRITE32_HANDLER( ms32_sound_w )
 	soundlatch_w(0, data & 0xff);
 	cpu_set_irq_line(1, IRQ_LINE_NMI, ASSERT_LINE);
 
-	// give the Z80 time to respond
+	/* give the Z80 time to respond*/
 	cpu_spinuntil_time(TIME_IN_USEC(40));
 }
 
@@ -284,7 +284,7 @@ static READ32_HANDLER( ms32_sound_r )
 
 static WRITE32_HANDLER( reset_sub_w )
 {
-	if(data) cpu_set_reset_line(1,PULSE_LINE); // 0 too ?
+	if(data) cpu_set_reset_line(1,PULSE_LINE); /* 0 too ?*/
 }
 
 
@@ -329,21 +329,21 @@ static MEMORY_READ32_START( ms32_readmem )
 	{ 0xfd000000, 0xfd000003, ms32_sound_r },
 	{ 0xfd0e0000, 0xfd0e0003, ms32_read_inputs3 }, /* analog controls in f1superb? */
 
-///**/{ 0xfd104000, 0xfd105fff, MRA32_RAM }, /* f1superb */
-///**/{ 0xfd144000, 0xfd145fff, MRA32_RAM }, /* f1superb */
+/*/**/{ 0xfd104000, 0xfd105fff, MRA32_RAM },  // f1superb /*/
+/*/**/{ 0xfd144000, 0xfd145fff, MRA32_RAM },  // f1superb /*/
 
 	{ 0xfd180000, 0xfd19ffff, ms32_priram_r },	/* priority ram */
 	{ 0xfd1a0000, 0xfd1bffff, ms32_priram_r },	/* mirror only used by memory test in service mode */
 
 	{ 0xfd400000, 0xfd43ffff, MRA32_RAM }, /* Palette */
-///**/{ 0xfd440000, 0xfd47ffff, MRA32_RAM }, /* f1superb color */
+/*/**/{ 0xfd440000, 0xfd47ffff, MRA32_RAM },  // f1superb color /*/
 
-///**/{ 0xfdc00000, 0xfdc006ff, MRA32_RAM }, /* f1superb */
-///**/{ 0xfde00000, 0xfde01fff, MRA32_RAM }, /* f1superb lineram */
+/*/**/{ 0xfdc00000, 0xfdc006ff, MRA32_RAM },  // f1superb /*/
+/*/**/{ 0xfde00000, 0xfde01fff, MRA32_RAM },  // f1superb lineram /*/
 	{ 0xfe000000, 0xfe01ffff, ms32_rozram_r },	/* roz layer */
 	{ 0xfe020000, 0xfe03ffff, ms32_rozram_r },	/* mirror only used by memory test in service mode */
 	{ 0xfe200000, 0xfe201fff, ms32_lineram_r }, /* line ram for roz layer */
-///**/{ 0xfe202000, 0xfe2fffff, MRA32_RAM }, /* f1superb vram */
+/*/**/{ 0xfe202000, 0xfe2fffff, MRA32_RAM },  // f1superb vram /*/
 
 	{ 0xfe800000, 0xfe83ffff, ms32_spram_r },	/* sprites */
 	{ 0xfe840000, 0xfe87ffff, ms32_spram_r },	/* mirror only used by memory test in service mode */
@@ -363,40 +363,40 @@ static WRITE32_HANDLER( pip_w )
 
 static MEMORY_WRITE32_START( ms32_writemem )
 	{ 0x00000000, 0x001fffff, MWA32_ROM },
-	{ 0xfc000000, 0xfc007fff, MWA32_RAM, &ms32_fc000000 },	// NVRAM?
+	{ 0xfc000000, 0xfc007fff, MWA32_RAM, &ms32_fc000000 },	/* NVRAM?*/
 	{ 0xfc800000, 0xfc800003, ms32_sound_w }, /* sound? */
 	{ 0xfce00000, 0xfce00003, ms32_gfxctrl_w },	/* flip screen + other unknown bits */
-	{ 0xfce00034, 0xfce00037, MWA32_NOP }, // irq ack?
+	{ 0xfce00034, 0xfce00037, MWA32_NOP }, /* irq ack?*/
 	{ 0xfce00038, 0xfce0003b, reset_sub_w },
-	{ 0xfce00050, 0xfce0005f, MWA32_NOP },	// watchdog? I haven't investigated
-//	{ 0xfce00000, 0xfce0007f, MWA32_RAM, &ms32_fce00000 }, /* registers not ram? */
-	{ 0xfce00280, 0xfce0028f, ms32_brightness_w },	// global brightness control
+	{ 0xfce00050, 0xfce0005f, MWA32_NOP },	/* watchdog? I haven't investigated*/
+/*	{ 0xfce00000, 0xfce0007f, MWA32_RAM, &ms32_fce00000 },  // registers not ram? /*/
+	{ 0xfce00280, 0xfce0028f, ms32_brightness_w },	/* global brightness control*/
 	{ 0xfce00600, 0xfce0065f, MWA32_RAM, &ms32_roz_ctrl },	/* roz control registers */
-//	{ 0xfce00800, 0xfce0085f, // f1superb, roz #2 control?
+/*	{ 0xfce00800, 0xfce0085f, */ /* f1superb, roz #2 control?*/
 	{ 0xfce00a00, 0xfce00a17, MWA32_RAM, &ms32_tx_scroll },	/* tx layer scroll */
 	{ 0xfce00a20, 0xfce00a37, MWA32_RAM, &ms32_bg_scroll },	/* bg layer scroll */
-	{ 0xfce00a7c, 0xfce00a7f, pip_w },	// ??? layer related? seems to be always 0
-//	{ 0xfce00e00, 0xfce00e03,  },	coin counters + something else
+	{ 0xfce00a7c, 0xfce00a7f, pip_w },	/* ??? layer related? seems to be always 0*/
+/*	{ 0xfce00e00, 0xfce00e03,  },	coin counters + something else*/
 
-//	{ 0xfd104000, 0xfd105fff, MWA32_RAM }, /* f1superb */
-//	{ 0xfd144000, 0xfd145fff, MWA32_RAM }, /* f1superb */
+/*	{ 0xfd104000, 0xfd105fff, MWA32_RAM },  // f1superb /*/
+/*	{ 0xfd144000, 0xfd145fff, MWA32_RAM },  // f1superb /*/
 
 	{ 0xfd180000, 0xfd19ffff, ms32_priram_w, &ms32_priram },	/* priority ram */
 	{ 0xfd1a0000, 0xfd1bffff, ms32_priram_w },			/* mirror only used by memory test in service mode */
 
-	{ 0xfd1c0000, 0xfd1c0003, MWA32_RAM, &ms32_mahjong_input_select }, // ?
+	{ 0xfd1c0000, 0xfd1c0003, MWA32_RAM, &ms32_mahjong_input_select }, /* ?*/
 
 	{ 0xfd400000, 0xfd43ffff, ms32_palram_w, &ms32_palram }, /* Palette */
-///**/{ 0xfd440000, 0xfd47ffff, MWA32_RAM }, /* f1superb color */
-//	{ 0xfdc00000, 0xfdc006ff, MWA32_RAM }, /* f1superb */
-//	{ 0xfde00000, 0xfde01fff, MWA32_RAM }, /* f1superb, lineram #2? */
+/*/**/{ 0xfd440000, 0xfd47ffff, MWA32_RAM },  // f1superb color /*/
+/*	{ 0xfdc00000, 0xfdc006ff, MWA32_RAM },  // f1superb /*/
+/*	{ 0xfde00000, 0xfde01fff, MWA32_RAM },  // f1superb, lineram #2? /*/
 
 	{ 0xfe000000, 0xfe01ffff, ms32_rozram_w, &ms32_rozram },	/* roz layer */
 	{ 0xfe020000, 0xfe03ffff, ms32_rozram_w },		/* mirror only used by memory test in service mode */
 	{ 0xfe1ffc88, 0xfe1fffff, MWA32_NOP },	/* gratia writes here before falling into lineram, could be a mirror */
 	{ 0xfe200000, 0xfe201fff, ms32_lineram_w, &ms32_lineram }, /* line ram for roz layer */
-///**/{ 0xfe202000, 0xfe2fffff, MWA32_RAM }, /* f1superb vram */
-///**/{ 0xfe100000, 0xfe1fffff, MWA32_RAM }, /* gratia writes here ?! */
+/*/**/{ 0xfe202000, 0xfe2fffff, MWA32_RAM },  // f1superb vram /*/
+/*/**/{ 0xfe100000, 0xfe1fffff, MWA32_RAM },  // gratia writes here ?! /*/
 	{ 0xfe800000, 0xfe83ffff, ms32_spram_w, &ms32_spram },	/* sprites */
 	{ 0xfe840000, 0xfe87ffff, ms32_spram_w },		/* mirror only used by memory test in service mode */
 	{ 0xfec00000, 0xfec07fff, ms32_txram_w, &ms32_txram },	/* tx layer */
@@ -551,15 +551,15 @@ INPUT_PORTS_START( bbbxing )
 	MS32_UNKNOWN_INPUTS
 
 	MS32_SYSTEM_INPUTS
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )			// BUTTON5 in "test mode"
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )			// BUTTON5 in "test mode"
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* BUTTON5 in "test mode"*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )			/* BUTTON5 in "test mode"*/
 
-	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)	// BUTTON4 in "test mode"
-	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)	// BUTTON4 in "test mode"
+	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)	/* BUTTON4 in "test mode"*/
+	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)	/* BUTTON4 in "test mode"*/
 
 	MS32_DIP1
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Easy" )
 	PORT_DIPSETTING(    0xc0, "Normal" )
@@ -583,7 +583,7 @@ INPUT_PORTS_START( bbbxing )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 #if 0	/* this is what you have in the "test mode", but I don't see what this means 8( */
 	PORT_DIPNAME( 0x80, 0x80, "Jyogi" )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
@@ -649,14 +649,14 @@ INPUT_PORTS_START( desertwr )
 
 	MS32_DIP1
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Easy" )
 	PORT_DIPSETTING(    0xc0, "Normal" )
 	PORT_DIPSETTING(    0x40, "Hard" )
 	PORT_DIPSETTING(    0x80, "Hardest" )
 	PORT_DIPNAME( 0x30, 0x30, "Armors" )
-//	PORT_DIPSETTING(    0x00, "2" )		// duplicate setting ?
+/*	PORT_DIPSETTING(    0x00, "2" )		*/ /* duplicate setting ?*/
 	PORT_DIPSETTING(    0x10, "2" )
 	PORT_DIPSETTING(    0x30, "3" )
 	PORT_DIPSETTING(    0x20, "4" )
@@ -673,7 +673,7 @@ INPUT_PORTS_START( desertwr )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 	PORT_DIPNAME( 0x80, 0x00, "Language" )
 	PORT_DIPSETTING(    0x80, "Japanese" )
 	PORT_DIPSETTING(    0x00, "English" )
@@ -710,12 +710,12 @@ INPUT_PORTS_START( gametngk )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	// BUTTON3 and BUTTON4 in "test mode"
-	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	// BUTTON3 and BUTTON4 in "test mode"
+	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	/* BUTTON3 and BUTTON4 in "test mode"*/
+	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	/* BUTTON3 and BUTTON4 in "test mode"*/
 
 	MS32_DIP1
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Easy" )
 	PORT_DIPSETTING(    0xc0, "Normal" )
@@ -739,7 +739,7 @@ INPUT_PORTS_START( gametngk )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x00, "Language" )
 	PORT_DIPSETTING(    0x80, "Japanese" )
@@ -780,12 +780,12 @@ INPUT_PORTS_START( tetrisp )
 	/* There are inputs for players 3 and 4 in the "test mode",
 	   but NO addresses are read to check them ! */
 
-	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	// BUTTON3 and BUTTON4 in "test mode"
-	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	// BUTTON3 and BUTTON4 in "test mode"
+	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	/* BUTTON3 and BUTTON4 in "test mode"*/
+	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	/* BUTTON3 and BUTTON4 in "test mode"*/
 
 	MS32_DIP1
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Easy" )
 	PORT_DIPSETTING(    0xc0, "Normal" )
@@ -800,7 +800,7 @@ INPUT_PORTS_START( tetrisp )
 	PORT_DIPSETTING(    0x0c, "All Modes" )
 	PORT_DIPSETTING(    0x04, "Normal and Puzzle Modes" )
 	PORT_DIPSETTING(    0x08, "VS Mode" )
-//	PORT_DIPSETTING(    0x00, "Normal and Puzzle Modes" )		// "can't play normal mode" in "test mode"
+/*	PORT_DIPSETTING(    0x00, "Normal and Puzzle Modes" )		*/ /* "can't play normal mode" in "test mode"*/
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
@@ -808,7 +808,7 @@ INPUT_PORTS_START( tetrisp )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 	PORT_DIPNAME( 0x80, 0x00, "Language" )
 	PORT_DIPSETTING(    0x80, "Japanese" )
 	PORT_DIPSETTING(    0x00, "English" )
@@ -850,7 +850,7 @@ INPUT_PORTS_START( tp2m32 )
 
 	MS32_DIP1
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0xc0, 0xc0, "Endless Difficulty" )
 	PORT_DIPSETTING(    0x00, "Easy" )
 	PORT_DIPSETTING(    0xc0, "Normal" )
@@ -873,7 +873,7 @@ INPUT_PORTS_START( tp2m32 )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 	PORT_DIPNAME( 0x80, 0x00, "Language" )
 	PORT_DIPSETTING(    0x80, "Japanese" )
 	PORT_DIPSETTING(    0x00, "English" )
@@ -910,12 +910,12 @@ INPUT_PORTS_START( p47aces )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	// BUTTON3 and BUTTON4 in "test mode"
-	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	// BUTTON3 and BUTTON4 in "test mode"
+	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	/* BUTTON3 and BUTTON4 in "test mode"*/
+	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)	/* BUTTON3 and BUTTON4 in "test mode"*/
 
 	MS32_DIP1
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Easy" )
 	PORT_DIPSETTING(    0xc0, "Normal" )
@@ -939,7 +939,7 @@ INPUT_PORTS_START( p47aces )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 	PORT_DIPNAME( 0x80, 0x00, "Language" )
 	PORT_DIPSETTING(    0x80, "Japanese" )
 	PORT_DIPSETTING(    0x00, "English" )
@@ -961,7 +961,7 @@ INPUT_PORTS_START( p47aces )
 	PORT_DIPNAME( 0x03, 0x03, "FG/BG X offset" )
 	PORT_DIPSETTING(    0x03, "0/0" )
 	PORT_DIPSETTING(    0x02, "5/5" )
-//	PORT_DIPSETTING(    0x01, "5/5" )
+/*	PORT_DIPSETTING(    0x01, "5/5" )*/
 	PORT_DIPSETTING(    0x00, "2/4" )
 
 	MS32_UNUSED_PORT
@@ -975,12 +975,12 @@ INPUT_PORTS_START( gratia )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)	// BUTTON4 in "test mode"
-	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)	// BUTTON4 in "test mode"
+	MS32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)	/* BUTTON4 in "test mode"*/
+	MS32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)	/* BUTTON4 in "test mode"*/
 
 	MS32_DIP1
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x00, "Easy" )
 	PORT_DIPSETTING(    0xc0, "Normal" )
@@ -1004,7 +1004,7 @@ INPUT_PORTS_START( gratia )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x00, "Language" )
 	PORT_DIPSETTING(    0x80, "Japanese" )
@@ -1049,8 +1049,8 @@ INPUT_PORTS_START( hayaosi1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER3 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )	// "Buzzer" (input 0 in "test mode")
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER3 )	// "Buzzer" (input 0 in "test mode")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )	/* "Buzzer" (input 0 in "test mode")*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER3 )	/* "Buzzer" (input 0 in "test mode")*/
 
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
@@ -1059,12 +1059,12 @@ INPUT_PORTS_START( hayaosi1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER3 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )	// "Buzzer" (input 0 in "test mode")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )	/* "Buzzer" (input 0 in "test mode")*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 
-	MS32_DIP1	// "Service Mode" Dip Switch doesn't work ! Use the "Test" button instead !
+	MS32_DIP1	/* "Service Mode" Dip Switch doesn't work ! Use the "Test" button instead !*/
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0xc0, 0xc0, "Computer's AI (VS Mode)" )
 	PORT_DIPSETTING(    0x40, "Low" )
 	PORT_DIPSETTING(    0xc0, "Normal" )
@@ -1084,20 +1084,20 @@ INPUT_PORTS_START( hayaosi1 )
 	PORT_DIPSETTING(    0x10, "Default + 0:15" )
 	/* Round   Default    More */
       /*   1       10        15  */
-	PORT_DIPNAME( 0x08, 0x08, "Questions (VS Mode)" )	// TO DO : check all rounds
+	PORT_DIPNAME( 0x08, 0x08, "Questions (VS Mode)" )	/* TO DO : check all rounds*/
 	PORT_DIPSETTING(    0x08, "Default" )
 	PORT_DIPSETTING(    0x00, "More" )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )		// "Unused" ?
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )		/* "Unused" ?*/
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )		// "Demo Sounds" ?
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )		/* "Demo Sounds" ?*/
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )		// "Flip Screen" ?
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )		/* "Flip Screen" ?*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1127,19 +1127,19 @@ INPUT_PORTS_START( hayaosi1 )
 
 INPUT_PORTS_END
 
-INPUT_PORTS_START( kirarast )	// player 1 inputs done? others?
+INPUT_PORTS_START( kirarast )	/* player 1 inputs done? others?*/
 	MS32_UNKNOWN_INPUTS
 
 	MS32_SYSTEM_INPUTS
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	MS32_UNUSED_PORT // p1
-	MS32_UNUSED_PORT // p2
+	MS32_UNUSED_PORT /* p1*/
+	MS32_UNUSED_PORT /* p2*/
 
 	MS32_DIP1
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0xe0, 0xe0, DEF_STR (Difficulty) )
 	PORT_DIPSETTING(    0x00, "Easiest" )
 	PORT_DIPSETTING(    0x80, "Very Easy" )
@@ -1165,7 +1165,7 @@ INPUT_PORTS_START( kirarast )	// player 1 inputs done? others?
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1193,7 +1193,7 @@ INPUT_PORTS_START( kirarast )	// player 1 inputs done? others?
 
 	MS32_UNUSED_PORT
 
-	PORT_START	// Mahjong Inputs 0x01
+	PORT_START	/* Mahjong Inputs 0x01*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BITX( 0x02, IP_ACTIVE_LOW, 0, "P1 A",     KEYCODE_A,        IP_JOY_NONE )
 	PORT_BITX( 0x04, IP_ACTIVE_LOW, 0, "P1 E",     KEYCODE_E,        IP_JOY_NONE )
@@ -1203,7 +1203,7 @@ INPUT_PORTS_START( kirarast )	// player 1 inputs done? others?
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// Mahjong Inputs 0x02
+	PORT_START	/* Mahjong Inputs 0x02*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX( 0x02, IP_ACTIVE_LOW, 0, "P1 B",     KEYCODE_B,        IP_JOY_NONE )
 	PORT_BITX( 0x04, IP_ACTIVE_LOW, 0, "P1 F",     KEYCODE_F,        IP_JOY_NONE )
@@ -1213,7 +1213,7 @@ INPUT_PORTS_START( kirarast )	// player 1 inputs done? others?
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// Mahjong Inputs 0x04
+	PORT_START	/* Mahjong Inputs 0x04*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX( 0x02, IP_ACTIVE_LOW, 0, "P1 C",     KEYCODE_C,        IP_JOY_NONE )
 	PORT_BITX( 0x04, IP_ACTIVE_LOW, 0, "P1 G",     KEYCODE_G,        IP_JOY_NONE )
@@ -1223,7 +1223,7 @@ INPUT_PORTS_START( kirarast )	// player 1 inputs done? others?
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// Mahjong Inputs 0x08
+	PORT_START	/* Mahjong Inputs 0x08*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX( 0x02, IP_ACTIVE_LOW, 0, "P1 D",     KEYCODE_D,        IP_JOY_NONE )
 	PORT_BITX( 0x04, IP_ACTIVE_LOW, 0, "P1 H",     KEYCODE_H,        IP_JOY_NONE )
@@ -1233,7 +1233,7 @@ INPUT_PORTS_START( kirarast )	// player 1 inputs done? others?
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// Mahjong Inputs 0x10
+	PORT_START	/* Mahjong Inputs 0x10*/
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1260,7 +1260,7 @@ INPUT_PORTS_START( kirarast )	// player 1 inputs done? others?
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( f1superb )	// Mostly wrong !
+INPUT_PORTS_START( f1superb )	/* Mostly wrong !*/
 	MS32_UNKNOWN_INPUTS
 
 	MS32_SYSTEM_INPUTS
@@ -1289,7 +1289,7 @@ INPUT_PORTS_START( f1superb )	// Mostly wrong !
 
 	MS32_DIP1
 
-	PORT_START	// DIP2
+	PORT_START	/* DIP2*/
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1315,7 +1315,7 @@ INPUT_PORTS_START( f1superb )	// Mostly wrong !
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DIP3
+	PORT_START	/* DIP3*/
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1343,14 +1343,14 @@ INPUT_PORTS_START( f1superb )	// Mostly wrong !
 
 	MS32_UNUSED_PORT
 
-	PORT_START	// Acceleration (wrong?)
+	PORT_START	/* Acceleration (wrong?)*/
 	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_REVERSE | IPF_PLAYER1, 50, 15, 0, 0xff)
 
 
-	PORT_START	// Steering
+	PORT_START	/* Steering*/
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 50, 15, 0x00, 0xff)
 
-	PORT_START	// Shift + Brake
+	PORT_START	/* Shift + Brake*/
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1531,7 +1531,7 @@ static MEMORY_WRITE_START( ms32_snd_writemem )
 	{ 0x3f10, 0x3f10, to_main_w },
 	{ 0x3f20, 0x3f20, MWA_NOP }, /* to_main2_w  ? */
 	{ 0x3f40, 0x3f40, MWA_NOP },   /* YMF271 pin 4 (bit 1) , YMF271 pin 39 (bit 4) */
-	{ 0x3f70, 0x3f70, MWA_NOP },   // watchdog? banking? very noisy
+	{ 0x3f70, 0x3f70, MWA_NOP },   /* watchdog? banking? very noisy*/
 	{ 0x3f80, 0x3f80, ms32_snd_bank_w },
 	{ 0x4000, 0x7fff, MWA_RAM },
 	{ 0x8000, 0xffff, MWA_ROM },
@@ -1560,7 +1560,7 @@ static MACHINE_INIT( ms32 )
 static MACHINE_DRIVER_START( ms32 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(V70, 20000000/9) // 20MHz
+	MDRV_CPU_ADD(V70, 20000000/9) /* 20MHz*/
 	MDRV_CPU_MEMORY(ms32_readmem,ms32_writemem)
 	MDRV_CPU_VBLANK_INT(ms32_interrupt,32)
 
@@ -1625,7 +1625,7 @@ ROM_START( bbbxing )
 	ROM_RELOAD(              0x010000, 0x40000 )
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY ) /* samples */
-	ROM_LOAD( "bbbx22.bin",  0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) // common samples
+	ROM_LOAD( "bbbx22.bin",  0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) /* common samples*/
 	ROM_LOAD( "bbbx23.bin",  0x200000, 0x200000, CRC(b7875a23) SHA1(62bb4c1318f98ea68894658d92ce08e84d386d0c) )
 ROM_END
 
@@ -1732,7 +1732,7 @@ ROM_START( desertwr )
 	ROM_RELOAD(              0x010000, 0x40000 )
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY ) /* samples */
-	ROM_LOAD( "92042-01.33", 0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) // common samples
+	ROM_LOAD( "92042-01.33", 0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) /* common samples*/
 	ROM_LOAD( "94038-13.34", 0x200000, 0x200000, CRC(b0cac8f2) SHA1(f7d2e32d9c2f301341f7c02678c2c1e09ce655ba) )
 ROM_END
 
@@ -1784,7 +1784,7 @@ ROM_START( f1superb )
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY ) /* samples */
 	ROM_LOAD( "f1sb23.bin", 0x000000, 0x200000, CRC(bfefa3ab) SHA1(7770cc9b091e258ede7f2780df61a592cc008dd7) )
-	ROM_LOAD( "f1sb24.bin", 0x200000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) // common samples
+	ROM_LOAD( "f1sb24.bin", 0x200000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) /* common samples*/
 ROM_END
 
 ROM_START( gratia )
@@ -1817,7 +1817,7 @@ ROM_START( gratia )
 	ROM_RELOAD(              0x010000, 0x40000 )
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY ) /* samples */
-	ROM_LOAD( "92042.01", 0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) // common rom?
+	ROM_LOAD( "92042.01", 0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) /* common rom?*/
 	ROM_LOAD( "94019.10", 0x200000, 0x200000, CRC(a751e316) SHA1(3d658370c71b83582fd132b3da441089df9bfd05) )
 ROM_END
 
@@ -1841,7 +1841,7 @@ ROM_START( gratiaa )
 	ROM_LOAD( "94019.09", 0x200000, 0x200000, CRC(711ab08b) SHA1(185b80b965ac3aba4857b4f83637008c2c1cc6ff) )
 
 	ROM_REGION( 0x200000, REGION_GFX3, 0 ) /* bg tiles, don't dispose since we use GFX_RAW */
-	ROM_LOAD( "94019.07", 0x000000, 0x200000, BAD_DUMP CRC(acb75824) SHA1(3b43e00a2d240761565042c8feead25a83ef0eb1)  )	// FIXED BITS (xxxxxxxx11111111)
+	ROM_LOAD( "94019.07", 0x000000, 0x200000, BAD_DUMP CRC(acb75824) SHA1(3b43e00a2d240761565042c8feead25a83ef0eb1)  )	/* FIXED BITS (xxxxxxxx11111111)*/
 
 	ROM_REGION( 0x080000, REGION_GFX4, 0 ) /* tx tiles, don't dispose since we use GFX_RAW */
 	ROM_LOAD( "94019.030",0x000000, 0x080000, CRC(026b5379) SHA1(b9237477f1bf8ae83174e8231492fe667e6d6a13) )
@@ -1851,7 +1851,7 @@ ROM_START( gratiaa )
 	ROM_RELOAD(              0x010000, 0x40000 )
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY ) /* samples */
-	ROM_LOAD( "92042.01", 0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) // common rom?
+	ROM_LOAD( "92042.01", 0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) /* common rom?*/
 	ROM_LOAD( "94019.10", 0x200000, 0x200000, CRC(a751e316) SHA1(3d658370c71b83582fd132b3da441089df9bfd05) )
 ROM_END
 
@@ -1921,7 +1921,7 @@ ROM_START( hayaosi1 )
 	ROM_RELOAD(              0x010000, 0x40000 )
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY ) /* samples - 8-bit signed PCM */
-	ROM_LOAD( "mr92042.01",  0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) // common samples
+	ROM_LOAD( "mr92042.01",  0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) /* common samples*/
 	ROM_LOAD( "mr93038.01",  0x200000, 0x200000, CRC(b8a38bfc) SHA1(1aa7b69beebceb6f09a1ee006de054cb84002e94) )
 ROM_END
 
@@ -2058,7 +2058,7 @@ ROM_START( tetrisp )
 	ROM_RELOAD(              0x010000, 0x40000 )
 
 	ROM_REGION( 0x400000, REGION_SOUND1, ROMREGION_SOUNDONLY ) /* samples */
-	ROM_LOAD( "mr95024.22", 0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) // common samples
+	ROM_LOAD( "mr95024.22", 0x000000, 0x200000, CRC(0fa26f65) SHA1(e92b14862fbce33ea4ab4567ec48199bfcbbdd84) ) /* common samples*/
 	ROM_LOAD( "mr95024.23", 0x200000, 0x200000, CRC(57502a17) SHA1(ce880188854dc17d9ebbfa3c373469cf5e6858c2) )
 ROM_END
 
@@ -2153,26 +2153,26 @@ static void decrypt_ms32_tx(int addr_xor,int data_xor)
 		j = 0;
 		i ^= addr_xor;
 
-		if (BIT(i,18)) j ^= 0x40000;	// 18
-		if (BIT(i,17)) j ^= 0x60000;	// 17
-		if (BIT(i, 7)) j ^= 0x70000;	// 16
-		if (BIT(i, 3)) j ^= 0x78000;	// 15
-		if (BIT(i,14)) j ^= 0x7c000;	// 14
-		if (BIT(i,13)) j ^= 0x7e000;	// 13
-		if (BIT(i, 0)) j ^= 0x7f000;	// 12
-		if (BIT(i,11)) j ^= 0x7f800;	// 11
-		if (BIT(i,10)) j ^= 0x7fc00;	// 10
+		if (BIT(i,18)) j ^= 0x40000;	/* 18*/
+		if (BIT(i,17)) j ^= 0x60000;	/* 17*/
+		if (BIT(i, 7)) j ^= 0x70000;	/* 16*/
+		if (BIT(i, 3)) j ^= 0x78000;	/* 15*/
+		if (BIT(i,14)) j ^= 0x7c000;	/* 14*/
+		if (BIT(i,13)) j ^= 0x7e000;	/* 13*/
+		if (BIT(i, 0)) j ^= 0x7f000;	/* 12*/
+		if (BIT(i,11)) j ^= 0x7f800;	/* 11*/
+		if (BIT(i,10)) j ^= 0x7fc00;	/* 10*/
 
-		if (BIT(i, 9)) j ^= 0x00200;	//  9
-		if (BIT(i, 8)) j ^= 0x00300;	//  8
-		if (BIT(i,16)) j ^= 0x00380;	//  7
-		if (BIT(i, 6)) j ^= 0x003c0;	//  6
-		if (BIT(i,12)) j ^= 0x003e0;	//  5
-		if (BIT(i, 4)) j ^= 0x003f0;	//  4
-		if (BIT(i,15)) j ^= 0x003f8;	//  3
-		if (BIT(i, 2)) j ^= 0x003fc;	//  2
-		if (BIT(i, 1)) j ^= 0x003fe;	//  1
-		if (BIT(i, 5)) j ^= 0x003ff;	//  0
+		if (BIT(i, 9)) j ^= 0x00200;	/*  9*/
+		if (BIT(i, 8)) j ^= 0x00300;	/*  8*/
+		if (BIT(i,16)) j ^= 0x00380;	/*  7*/
+		if (BIT(i, 6)) j ^= 0x003c0;	/*  6*/
+		if (BIT(i,12)) j ^= 0x003e0;	/*  5*/
+		if (BIT(i, 4)) j ^= 0x003f0;	/*  4*/
+		if (BIT(i,15)) j ^= 0x003f8;	/*  3*/
+		if (BIT(i, 2)) j ^= 0x003fc;	/*  2*/
+		if (BIT(i, 1)) j ^= 0x003fe;	/*  1*/
+		if (BIT(i, 5)) j ^= 0x003ff;	/*  0*/
 
 		i ^= addr_xor;
 
@@ -2208,27 +2208,27 @@ static void decrypt_ms32_bg(int addr_xor,int data_xor)
 		j = (i & ~0xfffff);	/* top bits are not affected */
 		i ^= addr_xor;
 
-		if (BIT(i,19)) j ^= 0x80000;	// 19
-		if (BIT(i, 8)) j ^= 0xc0000;	// 18
-		if (BIT(i,17)) j ^= 0xe0000;	// 17
-		if (BIT(i, 2)) j ^= 0xf0000;	// 16
-		if (BIT(i,15)) j ^= 0xf8000;	// 15
-		if (BIT(i,14)) j ^= 0xfc000;	// 14
-		if (BIT(i,13)) j ^= 0xfe000;	// 13
-		if (BIT(i,12)) j ^= 0xff000;	// 12
-		if (BIT(i, 1)) j ^= 0xff800;	// 11
-		if (BIT(i,10)) j ^= 0xffc00;	// 10
+		if (BIT(i,19)) j ^= 0x80000;	/* 19*/
+		if (BIT(i, 8)) j ^= 0xc0000;	/* 18*/
+		if (BIT(i,17)) j ^= 0xe0000;	/* 17*/
+		if (BIT(i, 2)) j ^= 0xf0000;	/* 16*/
+		if (BIT(i,15)) j ^= 0xf8000;	/* 15*/
+		if (BIT(i,14)) j ^= 0xfc000;	/* 14*/
+		if (BIT(i,13)) j ^= 0xfe000;	/* 13*/
+		if (BIT(i,12)) j ^= 0xff000;	/* 12*/
+		if (BIT(i, 1)) j ^= 0xff800;	/* 11*/
+		if (BIT(i,10)) j ^= 0xffc00;	/* 10*/
 
-		if (BIT(i, 9)) j ^= 0x00200;	//  9
-		if (BIT(i, 3)) j ^= 0x00300;	//  8
-		if (BIT(i, 7)) j ^= 0x00380;	//  7
-		if (BIT(i, 6)) j ^= 0x003c0;	//  6
-		if (BIT(i, 5)) j ^= 0x003e0;	//  5
-		if (BIT(i, 4)) j ^= 0x003f0;	//  4
-		if (BIT(i,18)) j ^= 0x003f8;	//  3
-		if (BIT(i,16)) j ^= 0x003fc;	//  2
-		if (BIT(i,11)) j ^= 0x003fe;	//  1
-		if (BIT(i, 0)) j ^= 0x003ff;	//  0
+		if (BIT(i, 9)) j ^= 0x00200;	/*  9*/
+		if (BIT(i, 3)) j ^= 0x00300;	/*  8*/
+		if (BIT(i, 7)) j ^= 0x00380;	/*  7*/
+		if (BIT(i, 6)) j ^= 0x003c0;	/*  6*/
+		if (BIT(i, 5)) j ^= 0x003e0;	/*  5*/
+		if (BIT(i, 4)) j ^= 0x003f0;	/*  4*/
+		if (BIT(i,18)) j ^= 0x003f8;	/*  3*/
+		if (BIT(i,16)) j ^= 0x003fc;	/*  2*/
+		if (BIT(i,11)) j ^= 0x003fe;	/*  1*/
+		if (BIT(i, 0)) j ^= 0x003ff;	/*  0*/
 
 		i ^= addr_xor;
 
@@ -2276,7 +2276,7 @@ static DRIVER_INIT (ss92048_01)
 
 static DRIVER_INIT (kirarast)
 {
-//	{ 0xfcc00004, 0xfcc00007, ms32_mahjong_read_inputs1 }
+/*	{ 0xfcc00004, 0xfcc00007, ms32_mahjong_read_inputs1 }*/
 	install_mem_read32_handler(0, 0xfcc00004, 0xfcc00007, ms32_mahjong_read_inputs1 );
 
 	init_ss92047_01();
@@ -2284,7 +2284,7 @@ static DRIVER_INIT (kirarast)
 
 static DRIVER_INIT (47pie2)
 {
-//	{ 0xfcc00004, 0xfcc00007, ms32_mahjong_read_inputs1 }
+/*	{ 0xfcc00004, 0xfcc00007, ms32_mahjong_read_inputs1 }*/
 	install_mem_read32_handler(0, 0xfcc00004, 0xfcc00007, ms32_mahjong_read_inputs1 );
 
 	init_ss92048_01();
@@ -2302,7 +2302,7 @@ static DRIVER_INIT (tp2m32)
 static DRIVER_INIT (f1superb)
 {
 	data32_t *pROM = (data32_t *)memory_region(REGION_CPU1);
-	pROM[0x19d04/4]=0x167a021a; // bne->br  : sprite Y offset table is always copied to RAM
+	pROM[0x19d04/4]=0x167a021a; /* bne->br  : sprite Y offset table is always copied to RAM*/
 	init_ss92046_01();
 }
 

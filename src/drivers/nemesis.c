@@ -111,9 +111,9 @@ WRITE16_HANDLER( salamand_soundlatch_word_w )
 		cpu_set_irq_line(1,0,HOLD_LINE);
 	}
 
-//logerror("z80 data write\n");
+/*logerror("z80 data write\n");*/
 
-//cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+/*cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);*/
 }
 
 static int gx400_irq1_cnt;
@@ -231,13 +231,13 @@ READ16_HANDLER( konamigt_input_word_r )
 
 	int ret=0x0000;
 
-//	if(data&0x10) ret|=0x0800;			// turbo/gear?
-//	if(data&0x80) ret|=0x0400;			// turbo?
-	if(data&0x20) ret|=0x0300;			// brake		(0-3)
+/*	if(data&0x10) ret|=0x0800;			*/ /* turbo/gear?*/
+/*	if(data&0x80) ret|=0x0400;			*/ /* turbo?*/
+	if(data&0x20) ret|=0x0300;			/* brake		(0-3)*/
 
-	if(data&0x40) ret|=0xf000;			// accel		(0-f)
+	if(data&0x40) ret|=0xf000;			/* accel		(0-f)*/
 
-	ret|=data2&0x7f;					// steering wheel, not exactly sure if DIAL works ok.
+	ret|=data2&0x7f;					/* steering wheel, not exactly sure if DIAL works ok.*/
 
 	return ret;
 }
@@ -247,16 +247,16 @@ static UINT16 hcrash_selected_ip;
 
 static WRITE16_HANDLER( selected_ip_w )
 {
-	if (ACCESSING_LSB) hcrash_selected_ip = data & 0xff;	// latch the value
+	if (ACCESSING_LSB) hcrash_selected_ip = data & 0xff;	/* latch the value*/
 }
 
 static READ16_HANDLER( selected_ip_r )
 {
 	switch (hcrash_selected_ip & 0xf)
-	{												// From WEC Le Mans Schems:
-		case 0xc:  return input_port_8_r(offset);	// Accel - Schems: Accelevr
+	{												/* From WEC Le Mans Schems:*/
+		case 0xc:  return input_port_8_r(offset);	/* Accel - Schems: Accelevr*/
 		case 0:    return input_port_8_r(offset);
-		case 0xd:  return input_port_9_r(offset);	// Wheel - Schems: Handlevr
+		case 0xd:  return input_port_9_r(offset);	/* Wheel - Schems: Handlevr*/
 		case 1:    return input_port_9_r(offset);
 
 		default: return ~0;
@@ -350,7 +350,7 @@ static READ_HANDLER( nemesis_portA_r )
    bit 7:     unused by this software version. Bubble Memory version uses this bit.
 */
 
-	int res = (activecpu_gettotalcycles() / 1024) & 0x2f; // this should be 0x0f, but it doesn't work
+	int res = (activecpu_gettotalcycles() / 1024) & 0x2f; /* this should be 0x0f, but it doesn't work*/
 
 	res |= 0xd0;
 
@@ -650,7 +650,7 @@ static MEMORY_WRITE16_START( hcrash_writemem )
 	{ 0x0C0000, 0x0C0001, salamand_soundlatch_word_w },
 	{ 0x0C0008, 0x0C0009, MWA16_NOP },        /* Watchdog at $c0005 */
 	{ 0x0c2800, 0x0c2801, MWA16_NOP },
-	{ 0x0c2802, 0x0c2803, gx400_irq2_enable_word_w }, // or at 0x0c2804 ?
+	{ 0x0c2802, 0x0c2803, gx400_irq2_enable_word_w }, /* or at 0x0c2804 ?*/
 	{ 0x0c2804, 0x0c2805, MWA16_NOP },
 	{ 0x0c4000, 0x0c4001, selected_ip_w },
 	{ 0x0c4002, 0x0c4003, MWA16_NOP }, /* latches the value read previously */
@@ -1112,7 +1112,7 @@ INPUT_PORTS_START( konamigt )
 	PORT_START	/* IN7 */
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON1 )
-//	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON4 )
+/*	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON4 )*/
 INPUT_PORTS_END
 
 
@@ -1183,7 +1183,7 @@ INPUT_PORTS_START( rf2 )
 	PORT_START	/* IN7 */
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON1 )
-//	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON4 )
+/*	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON4 )*/
 
 INPUT_PORTS_END
 
@@ -1891,7 +1891,7 @@ INPUT_PORTS_START( hcrash )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BITX(0x08, IP_ACTIVE_HIGH, IPT_BUTTON2, "Brake", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON3 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL )	// must be 0 otherwise game freezes when using WEC Le Mans 24 cabinet
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* must be 0 otherwise game freezes when using WEC Le Mans 24 cabinet*/
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
@@ -1930,7 +1930,7 @@ INPUT_PORTS_START( hcrash )
 	PORT_DIPSETTING(    0x03, "Konami GT without brake" )
 	PORT_DIPSETTING(    0x02, "WEC Le Mans 24 Upright" )
 	PORT_DIPSETTING(    0x01, "Konami GT with brake" )
-	// 0x00 WEC Le Mans 24 Upright again
+	/* 0x00 WEC Le Mans 24 Upright again*/
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1956,7 +1956,7 @@ INPUT_PORTS_START( hcrash )
 	PORT_START	/* IN7 */
 	PORT_BITX( 0x20,IP_ACTIVE_HIGH, IPT_BUTTON2, "Brake", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON1 )
-//	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON4 )
+/*	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON4 )*/
     
 	/* WEC Le Mans 24 specific control */
 	PORT_START	/* IN8 - Accelerator */
@@ -2188,7 +2188,7 @@ static MACHINE_DRIVER_START( nemesis )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000,18432000/2)         /* 9.216 MHz? */
-//			14318180/2,	/* From schematics, should be accurate */
+/*			14318180/2,	 // From schematics, should be accurate /*/
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(nemesis_interrupt,1)
 

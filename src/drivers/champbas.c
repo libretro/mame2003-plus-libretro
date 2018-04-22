@@ -72,7 +72,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x5fff, MWA_ROM },
-	//{ 0x6000, 0x63ff, champbas_protection_w },
+	/*{ 0x6000, 0x63ff, champbas_protection_w },*/
 	{ 0x7000, 0x7000, AY8910_write_port_0_w },
 	{ 0x7001, 0x7001, AY8910_control_port_0_w },
 	{ 0x7800, 0x7fff, MWA_ROM },
@@ -83,7 +83,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xa000, 0xa000, interrupt_enable_w },
 	{ 0xa002, 0xa002, champbas_gfxbank_w },
 	{ 0xa003, 0xa003, champbas_flipscreen_w },
-	//{ 0xa006, 0xa007, champbas_protection_w },
+	/*{ 0xa006, 0xa007, champbas_protection_w },*/
 	{ 0xa060, 0xa06f, MWA_RAM, &spriteram_2 },
 	{ 0xa080, 0xa080, soundlatch_w },
 	{ 0xa0c0, 0xa0c0, watchdog_reset_w },

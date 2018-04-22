@@ -81,7 +81,7 @@ INPUT_PORTS_START( fcombat )
 
 	PORT_START      /* dip switches/VBLANK (0xe200) */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNUSED )		/* VBLANK */
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )		// related to vblank
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )		/* related to vblank*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Coinage ) )
@@ -113,7 +113,7 @@ static READ_HANDLER( fcombat_protection_r )
 	   Check code at 0x76c8 for more infos.
 	*/
 
-	return 0xff;	// seems enough
+	return 0xff;	/* seems enough*/
 }
 
 
@@ -142,12 +142,12 @@ static MEMORY_READ_START( fcombat_readmem )
 	{ 0xe000, 0xe000, fcombat_port01_r },
 	{ 0xe100, 0xe100, input_port_2_r },
 	{ 0xe200, 0xe200, fcombat_port3_r },
-	{ 0xe300, 0xe300, MRA_RAM }, // unknown - even checked in "demo mode" - affects 0xec00 and 0xed00
-	{ 0xe400, 0xe400, fcombat_protection_r }, // protection?
-	{ 0xc000, 0xc7ff, MRA_RAM }, // ram?
-	{ 0xd000, 0xd7ff, MRA_RAM }, // bgs?
-	{ 0xd800, 0xd87f, MRA_RAM }, // sprites?
-	{ 0xd880, 0xd8ff, MRA_RAM }, // something else ..
+	{ 0xe300, 0xe300, MRA_RAM }, /* unknown - even checked in "demo mode" - affects 0xec00 and 0xed00*/
+	{ 0xe400, 0xe400, fcombat_protection_r }, /* protection?*/
+	{ 0xc000, 0xc7ff, MRA_RAM }, /* ram?*/
+	{ 0xd000, 0xd7ff, MRA_RAM }, /* bgs?*/
+	{ 0xd800, 0xd87f, MRA_RAM }, /* sprites?*/
+	{ 0xd880, 0xd8ff, MRA_RAM }, /* something else ..*/
 MEMORY_END
 
 static MEMORY_WRITE_START( fcombat_writemem )
@@ -157,18 +157,18 @@ static MEMORY_WRITE_START( fcombat_writemem )
 	{ 0xd800, 0xd87f, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xd880, 0xd8ff, MWA_RAM },
 
-	{ 0xe800, 0xe800, exerion_videoreg_w },	// at least bit 0 for flip screen and joystick input multiplexor
+	{ 0xe800, 0xe800, exerion_videoreg_w },	/* at least bit 0 for flip screen and joystick input multiplexor*/
 
-	{ 0xe900, 0xe900, MWA_RAM },	// video ?
-	{ 0xea00, 0xea00, MWA_RAM },	// video ?
-	{ 0xeb00, 0xeb00, MWA_RAM },	// video ?
+	{ 0xe900, 0xe900, MWA_RAM },	/* video ?*/
+	{ 0xea00, 0xea00, MWA_RAM },	/* video ?*/
+	{ 0xeb00, 0xeb00, MWA_RAM },	/* video ?*/
 
-	{ 0xec00, 0xec00, MWA_RAM },	// affected by read at 0xe300
-	{ 0xed00, 0xed00, MWA_RAM },	// affected by read at 0xe300
+	{ 0xec00, 0xec00, MWA_RAM },	/* affected by read at 0xe300*/
+	{ 0xed00, 0xed00, MWA_RAM },	/* affected by read at 0xe300*/
 
-	{ 0xe300, 0xe300, MWA_RAM },	// for debug purpose
+	{ 0xe300, 0xe300, MWA_RAM },	/* for debug purpose*/
 
-	{ 0xee00, 0xee00, MWA_RAM },	// related to protection ? - doesn't seem to have any effect
+	{ 0xee00, 0xee00, MWA_RAM },	/* related to protection ? - doesn't seem to have any effect*/
 
 	/* erk ... */
 
@@ -401,7 +401,7 @@ ROM_START( fcombat )
 	ROM_LOAD( "fcprom_a.c2",  0x0000, 0x0020, CRC(7ac480f0) SHA1(f491fe4da19d8c037e3733a5836de35cc438907e) ) /* palette */
 	ROM_LOAD( "fcprom_d.k12", 0x0020, 0x0100, CRC(9a348250) SHA1(faf8db4c42adee07795d06bea20704f8c51090ff) ) /* fg char lookup table */
 	ROM_LOAD( "fcprom_b.c4",  0x0120, 0x0100, CRC(ac9049f6) SHA1(57aa5b5df3e181bad76149745a422c3dd1edad49) ) /* sprite lookup table */
-//	ROM_LOAD( "exerion.i3",   0x0220, 0x0100, CRC(fe72ab79) ) /* bg char lookup table */
+/*	ROM_LOAD( "exerion.i3",   0x0220, 0x0100, CRC(fe72ab79) )  // bg char lookup table /*/
 	ROM_LOAD( "fcprom_c.a9",  0x0320, 0x0100, CRC(768ac120) SHA1(ceede1d6cbeae08da96ef52bdca2718a839d88ab) ) /* bg char mixer */
 ROM_END
 

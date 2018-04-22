@@ -184,18 +184,18 @@ static WRITE_HANDLER( sound_command_w )
 
 	switch (offset)
 	{
-		// 0x90 triggers a jump to non-existant address(development system?) and must be filtered
+		/* 0x90 triggers a jump to non-existant address(development system?) and must be filtered*/
 		case 0x00:
 			if (data != 0x90) soundlatch_w(0, data);
 		break;
 
-		// explosion sound trigger(analog?)
+		/* explosion sound trigger(analog?)*/
 		case 0x08:
 			discrete_sound_w(2, dsc1);
 			discrete_sound_w(3, dsc1^=1);
 		break;
 
-		// player shot sound trigger(analog?)
+		/* player shot sound trigger(analog?)*/
 		case 0x0a:
 			discrete_sound_w(0, dsc0);
 			discrete_sound_w(1, dsc0^=1);
@@ -250,8 +250,8 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xf004, 0xf005, wiz_char_bank_select_w },
 	{ 0xf006, 0xf006, wiz_flipx_w },
 	{ 0xf007, 0xf007, wiz_flipy_w },
-	{ 0xf008, 0xf00f, MWA_NOP },			// initialized by Stinger/Scion
-	{ 0xf800, 0xf80f, sound_command_w },	// sound registers
+	{ 0xf008, 0xf00f, MWA_NOP },			/* initialized by Stinger/Scion*/
+	{ 0xf800, 0xf80f, sound_command_w },	/* sound registers*/
 	{ 0xf818, 0xf818, wiz_bgcolor_w },
 MEMORY_END
 
@@ -484,13 +484,13 @@ INPUT_PORTS_START( scion )
 	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x20, DEF_STR( On ) )		/* See notes */
+/*	PORT_DIPSETTING(    0x20, DEF_STR( On ) )		 // See notes /*/
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x40, DEF_STR( On ) )		/* See notes */
+/*	PORT_DIPSETTING(    0x40, DEF_STR( On ) )		 // See notes /*/
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x80, DEF_STR( On ) )		/* See notes */
+/*	PORT_DIPSETTING(    0x80, DEF_STR( On ) )		 // See notes /*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( kungfut )
@@ -556,7 +556,7 @@ INPUT_PORTS_START( kungfut )
 	PORT_DIPSETTING(    0x18, "5" )
 	PORT_DIPNAME( 0x60, 0x00, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x00, "20000 40000" )
-//	PORT_DIPSETTING(    0x20, "20000 40000" )		// duplicated setting
+/*	PORT_DIPSETTING(    0x20, "20000 40000" )		*/ /* duplicated setting*/
 	PORT_DIPSETTING(    0x10, "20000 80000" )
 	PORT_DIPSETTING(    0x30, "30000 90000" )
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unused ) )
@@ -701,7 +701,7 @@ static struct AY8910interface stinger_ay8910_interface =
 {
 	2,				/* 2 chips */
 	18432000/12,	/* ? */
-	{ 12, 12 },		// 25 causes clipping
+	{ 12, 12 },		/* 25 causes clipping*/
 	{ 0 },
 	{ 0 },
 	{ 0 },
@@ -709,9 +709,9 @@ static struct AY8910interface stinger_ay8910_interface =
 };
 
 
-//* ANALOG SOUND STARTS
+/** ANALOG SOUND STARTS*/
 
-// cut-and-pasted from Asteroid
+/* cut-and-pasted from Asteroid*/
 const struct discrete_lfsr_desc stinger_lfsr={
 	16,			/* Bit Length */
 	0,			/* Reset Value */
@@ -736,14 +736,14 @@ DISCRETE_SOUND_START(stinger_discrete_interface)
 #define STINGER_BOOM_EN2	NODE_93
 #define STINGER_BOOM_OUT	NODE_92
 
-	// triggers are interleaved to give each circuit sufficient time to reset
-	DISCRETE_INPUT	(STINGER_SHOT_EN1, 0, 0x000f, 0) // even-inteval shots
-	DISCRETE_INPUT	(STINGER_SHOT_EN2, 1, 0x000f, 0) // odd-inteval shots
-	DISCRETE_INPUT	(STINGER_BOOM_EN1, 2, 0x000f, 0) // even-inteval explosions
-	DISCRETE_INPUT	(STINGER_BOOM_EN2, 3, 0x000f, 0) // odd-inteval explosions
+	/* triggers are interleaved to give each circuit sufficient time to reset*/
+	DISCRETE_INPUT	(STINGER_SHOT_EN1, 0, 0x000f, 0) /* even-inteval shots*/
+	DISCRETE_INPUT	(STINGER_SHOT_EN2, 1, 0x000f, 0) /* odd-inteval shots*/
+	DISCRETE_INPUT	(STINGER_BOOM_EN1, 2, 0x000f, 0) /* even-inteval explosions*/
+	DISCRETE_INPUT	(STINGER_BOOM_EN2, 3, 0x000f, 0) /* odd-inteval explosions*/
 
-	//---------------------------------------
-	// Sample Shot Sound Circuit
+	/*---------------------------------------*/
+	/* Sample Shot Sound Circuit*/
 
 	#define SHOT_IN1	NODE_01
 	#define SHOT_IN2	NODE_02
@@ -758,8 +758,8 @@ DISCRETE_SOUND_START(stinger_discrete_interface)
 	DISCRETE_MULTIPLY	(SHOT_AMP, 1, SHOT_MOD,  800)
 	DISCRETE_SQUAREWAVE	(STINGER_SHOT_OUT, 1, SHOT_FRQ, SHOT_AMP, 50, 0, 0)
 
-	//---------------------------------------
-	// Sample Explosion Sound Circuit
+	/*---------------------------------------*/
+	/* Sample Explosion Sound Circuit*/
 
 	#define BOOM_IN1	NODE_11
 	#define BOOM_IN2	NODE_12
@@ -772,14 +772,14 @@ DISCRETE_SOUND_START(stinger_discrete_interface)
 	DISCRETE_MULTIPLY	(BOOM_AMP, 1, BOOM_MOD, 1500)
 	DISCRETE_LFSR_NOISE	(STINGER_BOOM_OUT, 1, 1, 1800, BOOM_AMP, 0, 0, &stinger_lfsr)
 
-	//---------------------------------------
+	/*---------------------------------------*/
 
 	DISCRETE_ADDER2	(STINGER_FINAL_MIX, 1, STINGER_SHOT_OUT, STINGER_BOOM_OUT)
 	DISCRETE_GAIN	(STINGER_FINAL_GAIN, STINGER_FINAL_MIX, 5.0)
 	DISCRETE_OUTPUT	(STINGER_FINAL_GAIN, 100)
 
 DISCRETE_SOUND_END
-//* ANALOG SOUND ENDS
+/** ANALOG SOUND ENDS*/
 
 
 static MACHINE_DRIVER_START( wiz )

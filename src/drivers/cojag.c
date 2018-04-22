@@ -228,13 +228,13 @@ static READ32_HANDLER( jamma_r )
 
 static READ32_HANDLER( status_r )
 {
-	// D23-20 = /SER-4-1
-	// D19-16 = COINR4-1
-	// D7     = /VSYNCNEQ
-	// D6     = /S-TEST
-	// D5     = /VOLUMEUP
-	// D4     = /VOLUMEDOWN
-	// D3-D0  = ACTC4-1
+	/* D23-20 = /SER-4-1*/
+	/* D19-16 = COINR4-1*/
+	/* D7     = /VSYNCNEQ*/
+	/* D6     = /S-TEST*/
+	/* D5     = /VOLUMEUP*/
+	/* D4     = /VOLUMEDOWN*/
+	/* D3-D0  = ACTC4-1*/
 	return readinputport(2) | (readinputport(2) << 16);
 }
 
@@ -276,15 +276,15 @@ static WRITE32_HANDLER( eeprom_enable_w )
 
 static WRITE32_HANDLER( eeprom_data_w )
 {
-//	if (eeprom_enable)
+/*	if (eeprom_enable)*/
 	{
 		if (cojag_is_r3000)
 			((UINT32 *)generic_nvram)[offset] = data & 0x000000ff;
 		else
 			((UINT32 *)generic_nvram)[offset] = data & 0xff000000;
 	}
-//	else
-//		logerror("%08X:error writing to disabled EEPROM\n", activecpu_get_previouspc());
+/*	else*/
+/*		logerror("%08X:error writing to disabled EEPROM\n", activecpu_get_previouspc());*/
 	eeprom_enable = 0;
 }
 
@@ -505,7 +505,7 @@ static WRITE32_HANDLER( area51mx_main_speedup_w )
  *************************************/
 
 static MEMORY_READ32_START( r3000_readmem )
-{ 0x00000000, 0x0000ffff, MRA32_NOP },		// just to shut up the logging
+{ 0x00000000, 0x0000ffff, MRA32_NOP },		/* just to shut up the logging*/
 
 	{ 0x04000000, 0x047fffff, MRA32_RAM },
 	{ 0x04e00000, 0x04e003ff, ide_controller32_0_r },
@@ -515,16 +515,16 @@ static MEMORY_READ32_START( r3000_readmem )
 	{ 0x04f02200, 0x04f022ff, jaguar_blitter_r },
 	{ 0x04f03000, 0x04f03fff, MRA32_RAM },
 	{ 0x04f10000, 0x04f103ff, jaguar_jerry_regs32_r },
-	{ 0x04f16000, 0x04f1600b, cojag_gun_input_r },	// GPI02
-	{ 0x04f17000, 0x04f17003, status_r },			// GPI03
-	{ 0x04f17c00, 0x04f17c03, jamma_r },			// GPI05
+	{ 0x04f16000, 0x04f1600b, cojag_gun_input_r },	/* GPI02*/
+	{ 0x04f17000, 0x04f17003, status_r },			/* GPI03*/
+	{ 0x04f17c00, 0x04f17c03, jamma_r },			/* GPI05*/
 	{ 0x04f1a100, 0x04f1a13f, dspctrl_r },
 	{ 0x04f1a140, 0x04f1a17f, jaguar_serial_r },
 	{ 0x04f1b000, 0x04f1cfff, MRA32_RAM },
 
 	{ 0x06000000, 0x06000003, misc_control_r },
 	{ 0x10000000, 0x1007ffff, MRA32_RAM },
-	{ 0x12000000, 0x120fffff, MRA32_RAM },	// tested in self-test only?
+	{ 0x12000000, 0x120fffff, MRA32_RAM },	/* tested in self-test only?*/
 	{ 0x18000000, 0x18001fff, eeprom_data_r },
 	{ 0x1fc00000, 0x1fdfffff, MRA32_ROM },
 MEMORY_END
@@ -540,14 +540,14 @@ static MEMORY_WRITE32_START( r3000_writemem )
 	{ 0x04f03000, 0x04f03fff, MWA32_RAM, &jaguar_gpu_ram },
 	{ 0x04f0b000, 0x04f0bfff, MWA32_BANK3 },
 	{ 0x04f10000, 0x04f103ff, jaguar_jerry_regs32_w },
-	{ 0x04f17800, 0x04f17803, latch_w },	// GPI04
+	{ 0x04f17800, 0x04f17803, latch_w },	/* GPI04*/
 	{ 0x04f1a100, 0x04f1a13f, dspctrl_w },
 	{ 0x04f1a140, 0x04f1a17f, jaguar_serial_w },
 	{ 0x04f1b000, 0x04f1cfff, MWA32_RAM, &jaguar_dsp_ram },
 
 	{ 0x06000000, 0x06000003, misc_control_w },
 	{ 0x10000000, 0x1007ffff, MWA32_RAM },
-	{ 0x12000000, 0x120fffff, MWA32_RAM },	// tested in self-test only?
+	{ 0x12000000, 0x120fffff, MWA32_RAM },	/* tested in self-test only?*/
 	{ 0x14000004, 0x14000007, watchdog_reset32_w },
 	{ 0x16000000, 0x16000003, eeprom_enable_w },
 	{ 0x18000000, 0x18001fff, eeprom_data_w, (data32_t **)&generic_nvram, &generic_nvram_size },
@@ -569,9 +569,9 @@ static MEMORY_READ32_START( m68020_readmem )
 	{ 0xf02200, 0xf022ff, jaguar_blitter_r },
 	{ 0xf03000, 0xf03fff, MRA32_RAM },
 	{ 0xf10000, 0xf103ff, jaguar_jerry_regs32_r },
-	{ 0xf16000, 0xf1600b, cojag_gun_input_r },	// GPI02
-	{ 0xf17000, 0xf17003, status_r },			// GPI03
-	{ 0xf17c00, 0xf17c03, jamma_r },			// GPI05
+	{ 0xf16000, 0xf1600b, cojag_gun_input_r },	/* GPI02*/
+	{ 0xf17000, 0xf17003, status_r },			/* GPI03*/
+	{ 0xf17c00, 0xf17c03, jamma_r },			/* GPI05*/
 	{ 0xf1a100, 0xf1a13f, dspctrl_r },
 	{ 0xf1a140, 0xf1a17f, jaguar_serial_r },
 	{ 0xf1b000, 0xf1cfff, MRA32_RAM },
@@ -594,7 +594,7 @@ static MEMORY_WRITE32_START( m68020_writemem )
 	{ 0xf03000, 0xf03fff, MWA32_RAM, &jaguar_gpu_ram },
 	{ 0xf0b000, 0xf0bfff, MWA32_BANK3 },
 	{ 0xf10000, 0xf103ff, jaguar_jerry_regs32_w },
-//	{ 0xf17800, 0xf17803, latch_w },	// GPI04
+/*	{ 0xf17800, 0xf17803, latch_w },	*/ /* GPI04*/
 	{ 0xf1a100, 0xf1a13f, dspctrl_w },
 	{ 0xf1a140, 0xf1a17f, jaguar_serial_w },
 	{ 0xf1b000, 0xf1cfff, MWA32_RAM, &jaguar_dsp_ram },
@@ -682,10 +682,10 @@ INPUT_PORTS_START( area51 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_COIN4 )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_SPECIAL )	// volume down
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL )	// volume up
-	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )			// s-test
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SPECIAL )	// vsyncneq
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_SPECIAL )	/* volume down*/
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL )	/* volume up*/
+	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )			/* s-test*/
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SPECIAL )	/* vsyncneq*/
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START				/* fake analog X */
@@ -701,8 +701,8 @@ INPUT_PORTS_START( area51 )
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 70, 10, 0, 255 )
 
 	PORT_START				/* gun triggers */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_SPECIAL )	// gun data valid
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_SPECIAL )	// gun data valid
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_SPECIAL )	/* gun data valid*/
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_SPECIAL )	/* gun data valid*/
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0xfff0, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -743,14 +743,14 @@ INPUT_PORTS_START( vcircle )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_COIN4 )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_SPECIAL )	// volume down
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL )	// volume up
-	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )			// s-test
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SPECIAL )	// vsyncneq
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_SPECIAL )	/* volume down*/
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL )	/* volume up*/
+	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )			/* s-test*/
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SPECIAL )	/* vsyncneq*/
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_BIT( 0x000f, IP_ACTIVE_HIGH, IPT_SPECIAL )	// coin returns
+	PORT_BIT( 0x000f, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* coin returns*/
 	PORT_BIT( 0x00f0, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END

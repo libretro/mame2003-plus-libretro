@@ -213,7 +213,7 @@ static WRITE32_HANDLER( latch_w )
 
 	if (!(mem_mask & 0x00ff0000))
 	{
-//		cage_reset_w(data & 0x00100000);
+/*		cage_reset_w(data & 0x00100000);*/
 		coin_counter_w(0, data & 0x00080000);
 		coin_counter_w(1, data & 0x00010000);
 	}
@@ -230,7 +230,7 @@ static WRITE32_HANDLER( mo_command_w )
 
 static WRITE32_HANDLER( led_w )
 {
-//	logerror("LED = %08X & %08X\n", data, ~mem_mask);
+/*	logerror("LED = %08X & %08X\n", data, ~mem_mask);*/
 }
 
 
@@ -322,9 +322,9 @@ static void tmek_protection_r(offs_t offset, data16_t *data)
 		/* status register; the code spins on this waiting for the high bit to be set */
 		case 0xdb8700:
 		case 0xdb87c0:
-//			if (protmode != 0)
+/*			if (protmode != 0)*/
 			{
-				*data = -1;//0x8000;
+				*data = -1;/*0x8000;*/
 			}
 			break;
 	}
@@ -353,21 +353,21 @@ static void primage_update_mode(offs_t offset)
 		/* this is from the code at $20f90 */
 		if (protaddr[1] == 0xdcc7c4 && protaddr[2] == 0xdcc7c4 && protaddr[3] == 0xdc4010)
 		{
-//			logerror("prot:Entering mode 1\n");
+/*			logerror("prot:Entering mode 1\n");*/
 			protmode = 1;
 		}
 
 		/* this is from the code at $27592 */
 		if (protaddr[0] == 0xdcc7ca && protaddr[1] == 0xdcc7ca && protaddr[2] == 0xdcc7c6 && protaddr[3] == 0xdc4022)
 		{
-//			logerror("prot:Entering mode 2\n");
+/*			logerror("prot:Entering mode 2\n");*/
 			protmode = 2;
 		}
 
 		/* this is from the code at $3d8dc */
 		if (protaddr[0] == 0xdcc7c0 && protaddr[1] == 0xdcc7c0 && protaddr[2] == 0xdc80f2 && protaddr[3] == 0xdc7af2)
 		{
-//			logerror("prot:Entering mode 3\n");
+/*			logerror("prot:Entering mode 3\n");*/
 			protmode = 3;
 		}
 	}
@@ -430,7 +430,7 @@ static void primrage_protection_w(offs_t offset, data16_t data)
 	if (protmode == 2)
 	{
 		int temp = (offset - 0xdc7800) / 2;
-//		logerror("prot:mode 2 param = %04X\n", temp);
+/*		logerror("prot:mode 2 param = %04X\n", temp);*/
 		protresult = temp * 0x6915 + 0x6915;
 	}
 
@@ -438,7 +438,7 @@ static void primrage_protection_w(offs_t offset, data16_t data)
 	{
 		if (offset == 0xdc4700)
 		{
-//			logerror("prot:Clearing mode 3\n");
+/*			logerror("prot:Clearing mode 3\n");*/
 			protmode = 0;
 		}
 	}
@@ -527,7 +527,7 @@ static void primrage_protection_r(offs_t offset, data16_t *data)
 	{
 		/* status register; the code spins on this waiting for the high bit to be set */
 		case 0xdc4700:
-//			if (protmode != 0)
+/*			if (protmode != 0)*/
 			{
 				*data = 0x8000;
 			}
@@ -539,7 +539,7 @@ static void primrage_protection_r(offs_t offset, data16_t *data)
 			{
 				*data = protresult;
 				protmode = 0;
-//				logerror("prot:Clearing mode 2\n");
+/*				logerror("prot:Clearing mode 2\n");*/
 			}
 			break;
 
@@ -547,7 +547,7 @@ static void primrage_protection_r(offs_t offset, data16_t *data)
 			if (protmode == 1)
 			{
 				protmode = 0;
-//				logerror("prot:Clearing mode 1\n");
+/*				logerror("prot:Clearing mode 1\n");*/
 			}
 			break;
 	}
@@ -643,7 +643,7 @@ static MEMORY_WRITE32_START( writemem )
 	{ 0xe08000, 0xe08003, latch_w },
 	{ 0xe0a000, 0xe0a003, atarigen_scanline_int_ack32_w },
 	{ 0xe0c000, 0xe0c003, atarigen_video_int_ack32_w },
-	{ 0xe0e000, 0xe0e003, MWA32_NOP },//watchdog_reset_w },
+	{ 0xe0e000, 0xe0e003, MWA32_NOP },/*watchdog_reset_w },*/
 	{ 0xf80000, 0xffffff, MWA32_RAM },
 MEMORY_END
 
@@ -735,7 +735,7 @@ INPUT_PORTS_START( primrage )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1 )
 
 	PORT_START		/* 68.SW (A1=1) */
-// bit 0x0008 does something
+/* bit 0x0008 does something*/
 	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )

@@ -185,7 +185,7 @@ static WRITE16_HANDLER( wildfang_protection_w )
 
 		data >>= 8;
 
-//		logerror("PC %06x: prot = %02x\n",activecpu_get_pc(),data);
+/*		logerror("PC %06x: prot = %02x\n",activecpu_get_pc(),data);*/
 
 		switch (data & 0xf0)
 		{
@@ -223,7 +223,7 @@ static WRITE16_HANDLER( wildfang_protection_w )
 
 static READ16_HANDLER( wildfang_protection_r )
 {
-//	logerror("PC %06x: read prot %02x\n",activecpu_get_pc(),prot);
+/*	logerror("PC %06x: read prot %02x\n",activecpu_get_pc(),prot);*/
 	return prot;
 }
 
@@ -313,7 +313,7 @@ static WRITE16_HANDLER( raiga_protection_w )
 
 		data >>= 8;
 
-//		logerror("PC %06x: prot = %02x\n",activecpu_get_pc(),data);
+/*		logerror("PC %06x: prot = %02x\n",activecpu_get_pc(),data);*/
 
 		switch (data & 0xf0)
 		{
@@ -327,7 +327,7 @@ static WRITE16_HANDLER( raiga_protection_w )
 			case 0x20:	/* low 4 bits of jump code */
 				jumpcode |= data & 0x0f;
 				logerror("requested protection jumpcode %02x\n",jumpcode);
-//				jumpcode = 0;
+/*				jumpcode = 0;*/
 				if (raiga_jumppoints[jumpcode] == -2)
 				{
 					raiga_jumppoints = jumppoints_other;
@@ -359,7 +359,7 @@ static WRITE16_HANDLER( raiga_protection_w )
 
 static READ16_HANDLER( raiga_protection_r )
 {
-//	logerror("PC %06x: read prot %02x\n",activecpu_get_pc(),prot);
+/*	logerror("PC %06x: read prot %02x\n",activecpu_get_pc(),prot);*/
 	return prot;
 }
 
@@ -574,7 +574,7 @@ INPUT_PORTS_START( wildfang )
 	PORT_DIPNAME( 0x0200, 0x0200, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0200, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0100, 0x0100, "Title" )	// also affects Difficulty Table (see above)
+	PORT_DIPNAME( 0x0100, 0x0100, "Title" )	/* also affects Difficulty Table (see above)*/
 	PORT_DIPSETTING(      0x0100, "Wild Fang" )
 	PORT_DIPSETTING(      0x0000, "Tecmo Knight" )
 INPUT_PORTS_END

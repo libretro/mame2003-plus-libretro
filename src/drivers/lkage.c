@@ -95,7 +95,7 @@ static MEMORY_READ_START( readmem )
 	{ 0xf084, 0xf084, input_port_4_r },	/* P1 controls */
 	{ 0xf086, 0xf086, input_port_5_r },	/* P2 controls */
 	{ 0xf087, 0xf087, lkage_mcu_status_r },
-//	{ 0xf0a3, 0xf0a3, MRA_NOP }, /* unknown */
+/*	{ 0xf0a3, 0xf0a3, MRA_NOP },  // unknown /*/
 	{ 0xf0c0, 0xf0c5, MRA_RAM },
 	{ 0xf100, 0xf15f, MRA_RAM },
 	{ 0xf400, 0xffff, MRA_RAM },
@@ -105,16 +105,16 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0xdfff, MWA_ROM },
 	{ 0xe000, 0xe7ff, MWA_RAM },
 	{ 0xe800, 0xefff, MWA_RAM, &paletteram },
-//	paletteram_xxxxRRRRGGGGBBBB_w, &paletteram },
+/*	paletteram_xxxxRRRRGGGGBBBB_w, &paletteram },*/
 	{ 0xf000, 0xf003, MWA_RAM, &lkage_vreg }, /* video registers */
 	{ 0xf060, 0xf060, lkage_sound_command_w },
 	{ 0xf061, 0xf061, MWA_NOP }, /* unknown */
 	{ 0xf062, 0xf062, lkage_mcu_w },
-//	{ 0xf063, 0xf063, MWA_NOP }, /* unknown */
-//	{ 0xf0a2, 0xf0a2, MWA_NOP }, /* unknown */
-//	{ 0xf0a3, 0xf0a3, MWA_NOP }, /* unknown */
+/*	{ 0xf063, 0xf063, MWA_NOP },  // unknown /*/
+/*	{ 0xf0a2, 0xf0a2, MWA_NOP },  // unknown /*/
+/*	{ 0xf0a3, 0xf0a3, MWA_NOP },  // unknown /*/
 	{ 0xf0c0, 0xf0c5, MWA_RAM, &lkage_scroll }, /* scrolling */
-//	{ 0xf0e1, 0xf0e1, MWA_NOP }, /* unknown */
+/*	{ 0xf0e1, 0xf0e1, MWA_NOP },  // unknown /*/
 	{ 0xf100, 0xf15f, MWA_RAM, &spriteram }, /* spriteram */
 	{ 0xf400, 0xffff, lkage_videoram_w, &videoram }, /* videoram */
 MEMORY_END
@@ -537,15 +537,15 @@ static READ_HANDLER( fake_mcu_r )
 
 static WRITE_HANDLER( fake_mcu_w )
 {
-	//if(data != 1 && data != 0xa6 && data != 0x34 && data != 0x48)
-	//	usrintf_showmessage("PC = %04x %02x",activecpu_get_pc(),data);
+	/*if(data != 1 && data != 0xa6 && data != 0x34 && data != 0x48)*/
+	/*	usrintf_showmessage("PC = %04x %02x",activecpu_get_pc(),data);*/
 
 	mcu_val = data;
 }
 
 static READ_HANDLER( fake_status_r )
 {
-	static int res = 3;// cpu data/mcu ready status
+	static int res = 3;/* cpu data/mcu ready status*/
 
 	return res;
 }

@@ -66,12 +66,12 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x0000, subs_noise_reset_w },
 	{ 0x0020, 0x0020, subs_steer_reset_w },
-//	{ 0x0040, 0x0040, subs_timer_reset_w },
+/*	{ 0x0040, 0x0040, subs_timer_reset_w },*/
 	{ 0x0060, 0x0061, subs_lamp1_w },
 	{ 0x0062, 0x0063, subs_lamp2_w },
 	{ 0x0064, 0x0065, subs_sonar2_w },
 	{ 0x0066, 0x0067, subs_sonar1_w },
-// Schematics show crash and explode reversed.  But this is proper.
+/* Schematics show crash and explode reversed.  But this is proper.*/
 	{ 0x0068, 0x0069, subs_explode_w },
 	{ 0x006a, 0x006b, subs_crash_w },
 	{ 0x006c, 0x006d, subs_invert1_w },

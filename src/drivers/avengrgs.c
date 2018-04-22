@@ -76,12 +76,12 @@ static READ32_HANDLER( avengrs_control_r )
 
 static READ32_HANDLER(test2_r)
 {
-//	logerror("%08x:  Test2_r %d\n",activecpu_get_pc(),offset);
+/*	logerror("%08x:  Test2_r %d\n",activecpu_get_pc(),offset);*/
 	return 0xffffffff;
 }
 static READ32_HANDLER(test3_r)
 {
-//	logerror("%08x:  Test3_r %d\n",activecpu_get_pc(),offset);
+/*	logerror("%08x:  Test3_r %d\n",activecpu_get_pc(),offset);*/
 	return 0xffffffff;
 }
 
@@ -96,7 +96,7 @@ static WRITE32_HANDLER( avengrs_eprom_w )
 		}
 	}
 	else if (mem_mask==0xffffff00) {
-		//volume control todo
+		/*volume control todo*/
 	}
 	else
 		logerror("%08x:  eprom_w %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
@@ -145,10 +145,10 @@ static MEMORY_READ32_START( readmem )
 	{ 0x0000000, 0x00fffff, MRA32_ROM },
 	{ 0x0100000, 0x011ffff, MRA32_RAM },
 
-//	{ 0x0200000, 0x020000f, test2_r },
-	{ 0x0200070, 0x020007f, test2_r }, //vbl in 70 $10
+/*	{ 0x0200000, 0x020000f, test2_r },*/
+	{ 0x0200070, 0x020007f, test2_r }, /*vbl in 70 $10*/
 	{ 0x0204000, 0x0206fff, MRA32_RAM },
-//	{ 0x0200000, 0x02000ff, MRA32_RAM },
+/*	{ 0x0200000, 0x02000ff, MRA32_RAM },*/
 	{ 0x0300000, 0x0307fff, MRA32_RAM },
 
 	{ 0x0400000, 0x0400003, avengrs_control_r },
@@ -165,11 +165,11 @@ static MEMORY_WRITE32_START( writemem )
 
 	{ 0x0200080, 0x02000ff, MWA32_RAM },
 	{ 0x0204000, 0x0206fff, MWA32_RAM, &spriteram32, &spriteram_size },
-	{ 0x0300000, 0x0307fff, MWA32_RAM }, //palette scratch pad?
+	{ 0x0300000, 0x0307fff, MWA32_RAM }, /*palette scratch pad?*/
 	{ 0x044001c, 0x044001f, MWA32_NOP },
 	{ 0x0500000, 0x0500003, avengrs_eprom_w },
 
-	{ 0x2280000, 0x229ffff, MWA32_RAM, &avengrgs_ram1 }, //index buffer
+	{ 0x2280000, 0x229ffff, MWA32_RAM, &avengrgs_ram1 }, /*index buffer*/
 	{ 0x22a0000, 0x22a3fff, avengrs_palette_w, &paletteram32 },
 	{ 0x22a4000, 0x22a7fff, MWA32_RAM, &avengrgs_ram2 },
 	{ 0x2600000, 0x2600007, avengrs_sound_w },
@@ -233,7 +233,7 @@ static struct GfxLayout spritelayout =
 static struct GfxLayout charlayout =
 {
 	8,8,
-	255, //todo
+	255, /*todo*/
 	4,
 	{ RGN_FRAC(1,2)+16, RGN_FRAC(1,2)+0, 16, 0 },
 	{ 15,13,11,9,7,5,3,1 },
@@ -338,7 +338,7 @@ ROM_END
 static READ32_HANDLER( avengrgs_speedup_r )
 {
 	data32_t a=avengrgs_ram[0x89a0/4];
-//	logerror("Read %08x\n",activecpu_get_pc());
+/*	logerror("Read %08x\n",activecpu_get_pc());*/
 	if (activecpu_get_pc()==0x3236 && (a&1)) cpu_spinuntil_int();
 
 	return a;

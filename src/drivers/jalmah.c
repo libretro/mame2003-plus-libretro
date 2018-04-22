@@ -126,7 +126,7 @@ static struct GfxDecodeInfo jalmah_gfxdecodeinfo[] =
 static MACHINE_DRIVER_START( jalmah )
 	MDRV_CPU_ADD(M68000, 8000000)
 	MDRV_CPU_MEMORY(readmem,writemem)
-//	MDRV_CPU_VBLANK_INT(irq1_line_hold,1)
+/*	MDRV_CPU_VBLANK_INT(irq1_line_hold,1)*/
 
 
 	MDRV_FRAMES_PER_SECOND(60)

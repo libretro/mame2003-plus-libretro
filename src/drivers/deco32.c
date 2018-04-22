@@ -159,7 +159,7 @@ static READ32_HANDLER( deco32_irq_controller_r )
 			return 0xffffff80 | 0x1 | 0x10; /* Assume VBL takes priority over possible raster/lightgun irq */
 
 		return 0xffffff80 | cpu_getvblank() | (cpu_getiloops() ? 0x40 : 0x20);
-//		return 0xffffff80 | cpu_getvblank() | (0x40); //test for lock load guns
+/*		return 0xffffff80 | cpu_getvblank() | (0x40); */ /*test for lock load guns*/
 	}
 
 	logerror("%08x: Unmapped IRQ read %08x (%08x)\n",activecpu_get_pc(),offset,mem_mask);
@@ -172,7 +172,7 @@ static WRITE32_HANDLER( deco32_irq_controller_w )
 
 	switch (offset) {
 	case 0: /* IRQ enable - probably an irq mask, but only values used are 0xc8 and 0xca */
-//		logerror("%08x:  IRQ write %d %08x\n",activecpu_get_pc(),offset,data);
+/*		logerror("%08x:  IRQ write %d %08x\n",activecpu_get_pc(),offset,data);*/
 		raster_enable=(data&0xff)==0xc8; /* 0xca seems to be off */
 		break;
 
@@ -224,7 +224,7 @@ static READ32_HANDLER( fghthist_control_r )
 {
 	switch (offset) {
 	case 0: return 0xffff0000 | readinputport(0);
-	case 1: return 0xffff0000 | readinputport(1); //check top bits??
+	case 1: return 0xffff0000 | readinputport(1); /*check top bits??*/
 	case 2: return 0xfffffffe | EEPROM_read_bit();
 	}
 
@@ -244,28 +244,28 @@ static WRITE32_HANDLER( fghthist_eeprom_w )
 
 static READ32_HANDLER( dragngun_service_r )
 {
-//	logerror("%08x:Read service\n",activecpu_get_pc());
+/*	logerror("%08x:Read service\n",activecpu_get_pc());*/
 	return readinputport(3);
 }
 
 static READ32_HANDLER( lockload_gun_mirror_r )
 {
-//logerror("%08x:Read gun %d\n",activecpu_get_pc(),offset);
-//return ((rand()%0xffff)<<16) | rand()%0xffff;
+/*logerror("%08x:Read gun %d\n",activecpu_get_pc(),offset);*/
+/*return ((rand()%0xffff)<<16) | rand()%0xffff;*/
 	if (offset) /* Mirror of player 1 and player 2 fire buttons */
 		return readinputport(5) | ((rand()%0xff)<<16);
-	return readinputport(4) | readinputport(6) | (readinputport(6)<<16) | (readinputport(6)<<24); //((rand()%0xff)<<16);
+	return readinputport(4) | readinputport(6) | (readinputport(6)<<16) | (readinputport(6)<<24); /*((rand()%0xff)<<16);*/
 }
 
 static READ32_HANDLER( dragngun_prot_r )
 {
-//	logerror("%08x:Read prot %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);
+/*	logerror("%08x:Read prot %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
 
 	static int strobe=0;
 	if (!strobe) strobe=8;
 	else strobe=0;
 
-//definitely vblank in locked load
+/*definitely vblank in locked load*/
 
 	switch (offset<<1) {
 	case 0x140/2: return 0xffff0000 | readinputport(0); /* IN0 */
@@ -287,13 +287,13 @@ static READ32_HANDLER( dragngun_lightgun_r )
 	case 7: return readinputport(7); break;
 	}
 
-//	logerror("Illegal lightgun port %d read \n",dragngun_lightgun_port);
+/*	logerror("Illegal lightgun port %d read \n",dragngun_lightgun_port);*/
 	return 0;
 }
 
 static WRITE32_HANDLER( dragngun_lightgun_w )
 {
-//	logerror("Lightgun port %d\n",dragngun_lightgun_port);
+/*	logerror("Lightgun port %d\n",dragngun_lightgun_port);*/
 	dragngun_lightgun_port=offset;
 }
 
@@ -468,7 +468,7 @@ static WRITE32_HANDLER( tattass_control_w )
 
 	/* Volume in high byte */
 	if (mem_mask==0xffff00ff) {
-		//TODO:  volume attenuation == ((data>>8)&0xff);
+		/*TODO:  volume attenuation == ((data>>8)&0xff);*/
 		return;
 	}
 
@@ -484,7 +484,7 @@ static WRITE32_HANDLER( tattass_control_w )
 	/* bit 0x4 fade cancel? */
 	/* bit 0x8 ?? */
 	/* Bit 0x100 ?? */
-	//logerror("%08x: %08x data\n",data,mem_mask);
+	/*logerror("%08x: %08x data\n",data,mem_mask);*/
 }
 
 /**********************************************************************************/
@@ -501,15 +501,15 @@ static READ32_HANDLER( nslasher_prot_r )
 		ret &= ~(0x100000);
 		ret |= vblank;
 
-		vblank ^= 0x100000; // iq_132
+		vblank ^= 0x100000; /* iq_132*/
 
 		return ret; /* IN1 */
 	}
 
-	case 0x35a: return (EEPROM_read_bit()<< 16) | 0xffff; // Debug switch in low word??
+	case 0x35a: return (EEPROM_read_bit()<< 16) | 0xffff; /* Debug switch in low word??*/
 	}
 
-	//logerror("%08x: Read unmapped prot %08x (%08x)\n",cpu_get_pc(space->cpu),offset<<1,mem_mask);
+	/*logerror("%08x: Read unmapped prot %08x (%08x)\n",cpu_get_pc(space->cpu),offset<<1,mem_mask);*/
 
 	return 0xffffffff;
 }
@@ -628,12 +628,12 @@ static MEMORY_WRITE32_START( fghthist_writemem )
 	{ 0x12002c, 0x12002f, fghthist_eeprom_w },
 	{ 0x1201fc, 0x1201ff, deco32_sound_w },
 	{ 0x140000, 0x140003, MWA32_NOP }, /* VBL irq ack */
-	//148000 - IRQ mask (ca)...
+	/*148000 - IRQ mask (ca)...*/
 	{ 0x168000, 0x169fff, deco32_buffered_palette_w, &paletteram32 },
 	{ 0x16c008, 0x16c00b, deco32_palette_dma_w },
 
 	{ 0x178000, 0x178fff, MWA32_RAM, &spriteram32, &spriteram_size },
-	{ 0x179000, 0x179fff, MWA32_RAM, &spriteram32_2 }, // ?
+	{ 0x179000, 0x179fff, MWA32_RAM, &spriteram32_2 }, /* ?*/
 	{ 0x17c010, 0x17c013, buffer_spriteram32_w },
 
 	{ 0x182000, 0x183fff, deco32_pf1_data_w, &deco32_pf1_data },
@@ -732,8 +732,8 @@ static MEMORY_READ32_START( dragngun_readmem )
 	{ 0x218000, 0x21ffff, MRA32_RAM },
 	{ 0x220000, 0x221fff, MRA32_RAM }, /* Main spriteram */
 
-	{ 0x204800, 0x204fff, MRA32_RAM }, //0x10 byte increments only
-	{ 0x228000, 0x2283ff, MRA32_RAM }, //0x10 byte increments only
+	{ 0x204800, 0x204fff, MRA32_RAM }, /*0x10 byte increments only*/
+	{ 0x228000, 0x2283ff, MRA32_RAM }, /*0x10 byte increments only*/
 
 	{ 0x300000, 0x3fffff, MRA32_ROM },
 
@@ -750,7 +750,7 @@ static MEMORY_WRITE32_START( dragngun_writemem )
 	{ 0x128000, 0x12800f, deco32_irq_controller_w },
 
 	{ 0x130000, 0x131fff, deco32_buffered_palette_w, &paletteram32 },
-	{ 0x138000, 0x138003, MWA32_NOP }, // palette mode?  check
+	{ 0x138000, 0x138003, MWA32_NOP }, /* palette mode?  check*/
 	{ 0x138008, 0x13800b, deco32_palette_dma_w },
 
 	{ 0x180000, 0x18001f, MWA32_RAM, &deco32_pf12_control },
@@ -765,7 +765,7 @@ static MEMORY_WRITE32_START( dragngun_writemem )
 	{ 0x1e0000, 0x1e0fff, MWA32_RAM, &deco32_pf3_rowscroll },
 	{ 0x1e4000, 0x1e4fff, MWA32_RAM, &deco32_pf4_rowscroll },
 
-	{ 0x204800, 0x204fff, MWA32_RAM }, // ace? 0x10 byte increments only  // 13f ff stuff
+	{ 0x204800, 0x204fff, MWA32_RAM }, /* ace? 0x10 byte increments only  */ /* 13f ff stuff*/
 
 	{ 0x208000, 0x208fff, MWA32_RAM, &dragngun_sprite_layout_0_ram },
 	{ 0x20c000, 0x20cfff, MWA32_RAM, &dragngun_sprite_layout_1_ram },
@@ -790,7 +790,7 @@ static MEMORY_READ32_START( lockload_readmem )
 	{ 0x120000, 0x120fff, dragngun_prot_r },
 	{ 0x128000, 0x12800f, deco32_irq_controller_r },
 	{ 0x130000, 0x131fff, MRA32_RAM },
-	{ 0x138000, 0x138003, MRA32_RAM }, //palette dma complete in bit 0x8? ack?  return 0 else tight loop
+	{ 0x138000, 0x138003, MRA32_RAM }, /*palette dma complete in bit 0x8? ack?  return 0 else tight loop*/
 
 	{ 0x170000, 0x170007, lockload_gun_mirror_r }, /* Not on Dragongun */
 
@@ -812,14 +812,14 @@ static MEMORY_READ32_START( lockload_readmem )
 	{ 0x218000, 0x21ffff, MRA32_RAM },
 	{ 0x220000, 0x221fff, MRA32_RAM }, /* Main spriteram */
 
-	{ 0x204800, 0x204fff, MRA32_RAM }, //0x10 byte increments only
-	{ 0x228000, 0x2283ff, MRA32_RAM }, //0x10 byte increments only
+	{ 0x204800, 0x204fff, MRA32_RAM }, /*0x10 byte increments only*/
+	{ 0x228000, 0x2283ff, MRA32_RAM }, /*0x10 byte increments only*/
 
 	{ 0x300000, 0x3fffff, MRA32_ROM },
 
 	{ 0x400000, 0x400003, dragngun_oki_2_r },
 	{ 0x420000, 0x420003, dragngun_eeprom_r },
-//	{ 0x438000, 0x438003, dragngun_lightgun_r },
+/*	{ 0x438000, 0x438003, dragngun_lightgun_r },*/
 	{ 0x440000, 0x440003, dragngun_service_r },
 MEMORY_END
 
@@ -831,7 +831,7 @@ static MEMORY_WRITE32_START( lockload_writemem )
 	{ 0x128000, 0x12800f, deco32_irq_controller_w },
 
 	{ 0x130000, 0x131fff, deco32_buffered_palette_w, &paletteram32 },
-	{ 0x138000, 0x138003, MWA32_NOP }, // palette mode?  check
+	{ 0x138000, 0x138003, MWA32_NOP }, /* palette mode?  check*/
 	{ 0x138008, 0x13800b, deco32_palette_dma_w },
 	{ 0x178008, 0x17800f, MWA32_NOP }, /* Gun read ACK's */
 
@@ -847,7 +847,7 @@ static MEMORY_WRITE32_START( lockload_writemem )
 	{ 0x1e0000, 0x1e0fff, MWA32_RAM, &deco32_pf3_rowscroll },
 	{ 0x1e4000, 0x1e4fff, MWA32_RAM, &deco32_pf4_rowscroll },
 
-	{ 0x204800, 0x204fff, MWA32_RAM }, // ace? 0x10 byte increments only  // 13f ff stuff
+	{ 0x204800, 0x204fff, MWA32_RAM }, /* ace? 0x10 byte increments only  */ /* 13f ff stuff*/
 
 	{ 0x208000, 0x208fff, MWA32_RAM, &dragngun_sprite_layout_0_ram },
 	{ 0x20c000, 0x20cfff, MWA32_RAM, &dragngun_sprite_layout_1_ram },
@@ -862,7 +862,7 @@ static MEMORY_WRITE32_START( lockload_writemem )
 	{ 0x300000, 0x3fffff, MWA32_ROM },
 	{ 0x400000, 0x400003, dragngun_oki_2_w },
 	{ 0x420000, 0x420003, dragngun_eeprom_w },
-//	{ 0x430000, 0x43001f, dragngun_lightgun_w },
+/*	{ 0x430000, 0x43001f, dragngun_lightgun_w },*/
 	{ 0x500000, 0x500003, dragngun_sprite_control_w },
 MEMORY_END
 
@@ -1318,7 +1318,7 @@ INPUT_PORTS_START( dragngun )
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_SPECIAL ) //check  //test BUTTON F2
+	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_SPECIAL ) /*check  */ /*test BUTTON F2*/
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -1363,7 +1363,7 @@ INPUT_PORTS_START( dragngun )
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_VBLANK )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BITX(0x0004, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN ) //check  //test BUTTON F2
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN ) /*check  */ /*test BUTTON F2*/
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1402,10 +1402,10 @@ INPUT_PORTS_START( lockload )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
 
 	PORT_START
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 ) //reset button??
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 ) /*reset button??*/
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )  //service??
-	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_SPECIAL ) //check  //test BUTTON F2
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )  /*service??*/
+	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_SPECIAL ) /*check  */ /*test BUTTON F2*/
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
@@ -1447,11 +1447,11 @@ INPUT_PORTS_START( lockload )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
 	PORT_START
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN2 ) //IPT_VBLANK )
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN2 ) /*IPT_VBLANK )*/
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BITX(0x0004, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-//	PORT_BITX(0x0004, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 ) //check  //test BUTTON F2
+/*	PORT_BITX(0x0004, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )*/
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 ) /*check  */ /*test BUTTON F2*/
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
@@ -1573,7 +1573,7 @@ static struct GfxLayout spritelayout =
 	RGN_FRAC(1,1),
 	4,
 	{ 16, 0, 24, 8 },
-//	{ 24, 16, 8, 0 },
+/*	{ 24, 16, 8, 0 },*/
 	{ 64*8+0, 64*8+1, 64*8+2, 64*8+3, 64*8+4, 64*8+5, 64*8+6, 64*8+7,
 		0, 1, 2, 3, 4, 5, 6, 7 },
 	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32,
@@ -1627,7 +1627,7 @@ static struct GfxLayout spritelayout2 =
 	RGN_FRAC(1,5),
 	5,
 	{ 0x800000*8, 0x600000*8, 0x400000*8, 0x200000*8, 0 },
-	{ //7,6,5,4,3,2,1,0,16*8+7, 16*8+6, 16*8+5, 16*8+4, 16*8+3, 16*8+2, 16*8+1, 16*8+0,
+	{ /*7,6,5,4,3,2,1,0,16*8+7, 16*8+6, 16*8+5, 16*8+4, 16*8+3, 16*8+2, 16*8+1, 16*8+0,*/
 16*8+0, 16*8+1, 16*8+2, 16*8+3, 16*8+4, 16*8+5, 16*8+6, 16*8+7,
 0,1,2,3,4,5,6,7
 
@@ -1807,8 +1807,8 @@ static const UINT8 tattass_default_eprom[0x160] =
 
 static struct EEPROM_interface eeprom_interface_tattass =
 {
-	10,				// address bits	10  ==> } 1024 byte eprom
-	8,				// data bits	8
+	10,				/* address bits	10  ==> } 1024 byte eprom*/
+	8,				/* data bits	8*/
 };
 
 static NVRAM_HANDLER(tattass)
@@ -1973,7 +1973,7 @@ static MACHINE_DRIVER_START( lockload )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(ARM, 28000000/4)
 	MDRV_CPU_MEMORY(lockload_readmem,lockload_writemem)
-	MDRV_CPU_VBLANK_INT(deco32_vbl_interrupt,2) // From 2
+	MDRV_CPU_VBLANK_INT(deco32_vbl_interrupt,2) /* From 2*/
 
 	MDRV_CPU_ADD(H6280, 32220000/8)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -2518,8 +2518,8 @@ ROM_START( fghthsta )
 	ROM_REGION(0x100000, REGION_CPU1, 0 ) /* ARM 32 bit code */
 	ROM_LOAD32_WORD( "le-00.1f", 0x000000, 0x80000, CRC(a5c410eb) SHA1(e2b0cb2351782e1155ecc4029010beb7326fd874) )
 	ROM_LOAD32_WORD( "le-01.2f", 0x000002, 0x80000, CRC(7e148aa2) SHA1(b21e16604c4d29611f91d629deb9f041eaf41e9b) )
-//	ROM_LOAD32_WORD( "kz00.out", 0x000000, 0x80000, CRC(03a3dd5c) )
-//	ROM_LOAD32_WORD( "kz01.out", 0x000002, 0x80000, CRC(086796d6) )
+/*	ROM_LOAD32_WORD( "kz00.out", 0x000000, 0x80000, CRC(03a3dd5c) )*/
+/*	ROM_LOAD32_WORD( "kz01.out", 0x000002, 0x80000, CRC(086796d6) )*/
 
 	ROM_REGION(0x10000, REGION_CPU2, 0 ) /* Sound CPU */
 	ROM_LOAD( "kz02.18k",  0x00000,  0x10000,  CRC(5fd2309c) SHA1(2fb7af54d5cd9bf7dd6fb4f6b82aa52b03294f1f) )
@@ -2609,18 +2609,18 @@ ROM_START( lockload )
 	ROM_LOAD32_BYTE( "mbm-15.a25",  0x400003, 0x100000,  CRC(789ce7b1) SHA1(3fb390ce0620ce7a63f7f46eac1ff0eb8ed76d26) )
 
 	ROM_REGION( 0x100000, REGION_GFX5, 0 ) /* Video data - same as Dragongun, probably leftover from a conversion */
-//	ROM_LOAD( "dgma17.bin",  0x00000,  0x100000,  CRC(7799ed23) SHA1(ae28ad4fa6033a3695fa83356701b3774b26e6b0) ) /* Todo - fix filenames */
-//	ROM_LOAD( "dgma18.bin",  0x00000,  0x100000,  CRC(ded66da9) SHA1(5134cb47043cc190a35ebdbf1912166669f9c055) )
-//	ROM_LOAD( "dgma19.bin",  0x00000,  0x100000,  CRC(bdd1ed20) SHA1(2435b23210b8fee4d39c30d4d3c6ea40afaa3b93) )
-//	ROM_LOAD( "dgma20.bin",  0x00000,  0x100000,  CRC(fa0462f0) SHA1(1a52617ad4d7abebc0f273dd979f4cf2d6a0306b) )
-//	ROM_LOAD( "dgma21.bin",  0x00000,  0x100000,  CRC(2d0a28ae) SHA1(d87f6f71bb76880e4d4f1eab8e0451b5c3df69a5) )
-//	ROM_LOAD( "dgma22.bin",  0x00000,  0x100000,  CRC(c85f3559) SHA1(a5d5cf9b18c9ef6a92d7643ca1ec9052de0d4a01) )
-//	ROM_LOAD( "dgma23.bin",  0x00000,  0x100000,  CRC(ba907d6a) SHA1(1fd99b66e6297c8d927c1cf723a613b4ee2e2f90) )
-//	ROM_LOAD( "dgma24.bin",  0x00000,  0x100000,  CRC(5cec45c8) SHA1(f99a26afaca9d9320477e469b09e3873bc8c156f) )
-//	ROM_LOAD( "dgma25.bin",  0x00000,  0x100000,  CRC(d65d895c) SHA1(4508dfff95a7aff5109dc74622cbb4503b0b5840) )
-//	ROM_LOAD( "dgma26.bin",  0x00000,  0x100000,  CRC(246a06c5) SHA1(447252be976a5059925f4ad98df8564b70198f62) )
-//	ROM_LOAD( "dgma27.bin",  0x00000,  0x100000,  CRC(3fcbd10f) SHA1(70fc7b88bbe35bbae1de14364b03d0a06d541de5) )
-//	ROM_LOAD( "dgma28.bin",  0x00000,  0x100000,  CRC(5a2ec71d) SHA1(447c404e6bb696f7eb7c61992a99b9be56f5d6b0) )
+/*	ROM_LOAD( "dgma17.bin",  0x00000,  0x100000,  CRC(7799ed23) SHA1(ae28ad4fa6033a3695fa83356701b3774b26e6b0) )  // Todo - fix filenames /*/
+/*	ROM_LOAD( "dgma18.bin",  0x00000,  0x100000,  CRC(ded66da9) SHA1(5134cb47043cc190a35ebdbf1912166669f9c055) )*/
+/*	ROM_LOAD( "dgma19.bin",  0x00000,  0x100000,  CRC(bdd1ed20) SHA1(2435b23210b8fee4d39c30d4d3c6ea40afaa3b93) )*/
+/*	ROM_LOAD( "dgma20.bin",  0x00000,  0x100000,  CRC(fa0462f0) SHA1(1a52617ad4d7abebc0f273dd979f4cf2d6a0306b) )*/
+/*	ROM_LOAD( "dgma21.bin",  0x00000,  0x100000,  CRC(2d0a28ae) SHA1(d87f6f71bb76880e4d4f1eab8e0451b5c3df69a5) )*/
+/*	ROM_LOAD( "dgma22.bin",  0x00000,  0x100000,  CRC(c85f3559) SHA1(a5d5cf9b18c9ef6a92d7643ca1ec9052de0d4a01) )*/
+/*	ROM_LOAD( "dgma23.bin",  0x00000,  0x100000,  CRC(ba907d6a) SHA1(1fd99b66e6297c8d927c1cf723a613b4ee2e2f90) )*/
+/*	ROM_LOAD( "dgma24.bin",  0x00000,  0x100000,  CRC(5cec45c8) SHA1(f99a26afaca9d9320477e469b09e3873bc8c156f) )*/
+/*	ROM_LOAD( "dgma25.bin",  0x00000,  0x100000,  CRC(d65d895c) SHA1(4508dfff95a7aff5109dc74622cbb4503b0b5840) )*/
+/*	ROM_LOAD( "dgma26.bin",  0x00000,  0x100000,  CRC(246a06c5) SHA1(447252be976a5059925f4ad98df8564b70198f62) )*/
+/*	ROM_LOAD( "dgma27.bin",  0x00000,  0x100000,  CRC(3fcbd10f) SHA1(70fc7b88bbe35bbae1de14364b03d0a06d541de5) )*/
+/*	ROM_LOAD( "dgma28.bin",  0x00000,  0x100000,  CRC(5a2ec71d) SHA1(447c404e6bb696f7eb7c61992a99b9be56f5d6b0) )*/
 
 	ROM_REGION(0x100000, REGION_SOUND1, 0 )
 	ROM_LOAD( "mbm-06.n17",  0x00000, 0x100000,  CRC(f34d5999) SHA1(265b5f4e8598bcf9183bf9bd95db69b01536acb2) )
@@ -2629,7 +2629,7 @@ ROM_START( lockload )
 	ROM_LOAD( "mbm-07.n21",  0x00000, 0x80000,  CRC(414f3793) SHA1(ed5f63e57390d503193fd1e9f7294ae1da6d3539) )
 
 	ROM_REGION(0x80000, REGION_SOUND3, 0 )
-	ROM_LOAD( "mar-07.n19",  0x00000, 0x80000,  CRC(40287d62) SHA1(c00cb08bcdae55bcddc14c38e88b0484b1bc9e3e) )	// same as dragngun, unused?
+	ROM_LOAD( "mar-07.n19",  0x00000, 0x80000,  CRC(40287d62) SHA1(c00cb08bcdae55bcddc14c38e88b0484b1bc9e3e) )	/* same as dragngun, unused?*/
 ROM_END
 
 ROM_START( tattass )
@@ -2879,7 +2879,7 @@ static READ32_HANDLER( captaven_skip )
 	data32_t ret=deco32_ram[0x748c/4];
 
 	if (activecpu_get_pc()==0x39e8 && (ret&0xff)!=0) {
-//		logerror("CPU Spin - %d cycles left this frame ran %d (%d)\n",cycles_left_to_run(),cycles_currently_ran(),cycles_left_to_run()+cycles_currently_ran());
+/*		logerror("CPU Spin - %d cycles left this frame ran %d (%d)\n",cycles_left_to_run(),cycles_currently_ran(),cycles_left_to_run()+cycles_currently_ran());*/
 		cpu_spinuntil_int();
 	}
 
@@ -2891,7 +2891,7 @@ static READ32_HANDLER( dragngun_skip )
 	data32_t ret=deco32_ram[0x1f15c/4];
 
 	if (activecpu_get_pc()==0x628c && (ret&0xff)!=0) {
-		//logerror("%08x (%08x): CPU Spin - %d cycles left this frame ran %d (%d)\n",activecpu_get_pc(),ret,cycles_left_to_run(),cycles_currently_ran(),cycles_left_to_run()+cycles_currently_ran());
+		/*logerror("%08x (%08x): CPU Spin - %d cycles left this frame ran %d (%d)\n",activecpu_get_pc(),ret,cycles_left_to_run(),cycles_currently_ran(),cycles_left_to_run()+cycles_currently_ran());*/
 		cpu_spinuntil_int();
 	}
 
@@ -2904,7 +2904,7 @@ static READ32_HANDLER( tattass_skip )
 	data32_t ret=deco32_ram[0];
 
 	if (activecpu_get_pc()==0x1c5ec && left>32) {
-		//logerror("%08x (%08x): CPU Spin - %d cycles left this frame ran %d (%d)\n",activecpu_get_pc(),ret,cycles_left_to_run(),cycles_currently_ran(),cycles_left_to_run()+cycles_currently_ran());
+		/*logerror("%08x (%08x): CPU Spin - %d cycles left this frame ran %d (%d)\n",activecpu_get_pc(),ret,cycles_left_to_run(),cycles_currently_ran(),cycles_left_to_run()+cycles_currently_ran());*/
 		cpu_spinuntil_int();
 	}
 
@@ -2949,7 +2949,7 @@ static DRIVER_INIT( dragngun )
 	memcpy(DST_RAM+0x80000,SRC_RAM,0x10000);
 	memcpy(DST_RAM+0x110000,SRC_RAM+0x10000,0x10000);
 
-	ROM[0x1b32c/4]=0xe1a00000;//  NOP test switch lock
+	ROM[0x1b32c/4]=0xe1a00000;/*  NOP test switch lock*/
 
 	raster_offset=0;
 	install_mem_read32_handler(0, 0x11f15c, 0x11f15f, dragngun_skip);
@@ -2964,7 +2964,7 @@ static DRIVER_INIT( fghthist )
 static DRIVER_INIT( lockload )
 {
 	data8_t *RAM = memory_region(REGION_CPU1);
-//	data32_t *ROM = (UINT32 *)memory_region(REGION_CPU1);
+/*	data32_t *ROM = (UINT32 *)memory_region(REGION_CPU1);*/
 
 	deco74_decrypt(REGION_GFX1);
 	deco74_decrypt(REGION_GFX2);
@@ -2974,9 +2974,9 @@ static DRIVER_INIT( lockload )
 	memcpy(RAM+0x300000,RAM+0x100000,0x100000);
 	memset(RAM+0x100000,0,0x100000);
 
-//	ROM[0x3fe3c0/4]=0xe1a00000;//  NOP test switch lock
-//	ROM[0x3fe3cc/4]=0xe1a00000;//  NOP test switch lock
-//	ROM[0x3fe40c/4]=0xe1a00000;//  NOP test switch lock
+/*	ROM[0x3fe3c0/4]=0xe1a00000;*/ /*  NOP test switch lock*/
+/*	ROM[0x3fe3cc/4]=0xe1a00000;*/ /*  NOP test switch lock*/
+/*	ROM[0x3fe40c/4]=0xe1a00000;*/ /*  NOP test switch lock*/
 }
 
 static DRIVER_INIT( tattass )

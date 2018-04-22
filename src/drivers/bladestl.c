@@ -89,7 +89,7 @@ static WRITE_HANDLER( bladestl_sh_irqtrigger_w )
 {
 	soundlatch_w(offset, data);
 	cpu_set_irq_line(1, M6809_IRQ_LINE, HOLD_LINE);
-	//logerror("(sound) write %02x\n", data);
+	/*logerror("(sound) write %02x\n", data);*/
 }
 
 static WRITE_HANDLER( bladestl_port_B_w ){

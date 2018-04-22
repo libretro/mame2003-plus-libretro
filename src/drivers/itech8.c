@@ -1116,7 +1116,7 @@ INPUT_PORTS_START( dynobop )
 	UNUSED_ANALOG	/* analog F */
 
 	PORT_START	/* fake "shoot" port */
-//	PORT_BIT_NAME( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON4, "Shoot" )
+/*	PORT_BIT_NAME( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON4, "Shoot" )*/
 INPUT_PORTS_END
 
 

@@ -89,8 +89,8 @@ extern VIDEO_UPDATE( ashnojoe );
 
 static READ16_HANDLER(fake_4a00a_r)
 {
-	//if it returns 1 there's no sound. is it used to sync the game and sound?
-	//or just a debug enable/disble register?
+	/*if it returns 1 there's no sound. is it used to sync the game and sound?*/
+	/*or just a debug enable/disble register?*/
 	return 0;
 	return 1;
 }
@@ -100,7 +100,7 @@ static WRITE16_HANDLER( ashnojoe_soundlatch_w )
 	if(ACCESSING_LSB)
 	{
 		soundlatch_w(0,data & 0xff);
-		//needed?
+		/*needed?*/
 		cpu_set_irq_line(1,0,HOLD_LINE);
 	}
 }
@@ -110,10 +110,10 @@ static MEMORY_READ16_START( ashnojoe_readmem )
 	{ 0x040000, 0x043fff, MRA16_RAM },
 	{ 0x044000, 0x048fff, MRA16_RAM },
 	{ 0x049000, 0x049fff, MRA16_RAM },
-	{ 0x04a000, 0x04a001, input_port_0_word_r }, // p1 inputs, coins
-	{ 0x04a002, 0x04a003, input_port_1_word_r }, // p2 inputs
-	{ 0x04a004, 0x04a005, input_port_2_word_r }, // dipswitches
-	{ 0x04a00a, 0x04a00b, fake_4a00a_r }, // ??
+	{ 0x04a000, 0x04a001, input_port_0_word_r }, /* p1 inputs, coins*/
+	{ 0x04a002, 0x04a003, input_port_1_word_r }, /* p2 inputs*/
+	{ 0x04a004, 0x04a005, input_port_2_word_r }, /* dipswitches*/
+	{ 0x04a00a, 0x04a00b, fake_4a00a_r }, /* ??*/
 	{ 0x04c000, 0x04ffff, MRA16_RAM },
 	{ 0x080000, 0x0bffff, MRA16_ROM },
 MEMORY_END
@@ -138,7 +138,7 @@ MEMORY_END
 
 static READ_HANDLER(fake_6_r)
 {
-	// if it returns 0 the cpu doesn't read from port $4 ?
+	/* if it returns 0 the cpu doesn't read from port $4 ?*/
 	int ret = 0;
 	ret ^= 1;
 	return ret;
@@ -168,8 +168,8 @@ MEMORY_END
 static PORT_READ_START( sound_readport )
 	{ 0x00, 0x00, YM2203_status_port_0_r },
 	{ 0x01, 0x01, YM2203_read_port_0_r },
-	{ 0x04, 0x04, soundlatch_r }, //PC: 15D -> cp $7f
-	{ 0x06, 0x06, fake_6_r/*soundlatch_r */}, //PC: 14A -> and $1
+	{ 0x04, 0x04, soundlatch_r }, /*PC: 15D -> cp $7f*/
+	{ 0x06, 0x06, fake_6_r/*soundlatch_r */}, /*PC: 14A -> and $1*/
 PORT_END
 
 static PORT_WRITE_START( sound_writeport )
@@ -186,7 +186,7 @@ INPUT_PORTS_START( ashnojoe )
 	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER1 )
-	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_UNKNOWN )  // anything else and the controls don't work
+	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_UNKNOWN )  /* anything else and the controls don't work*/
 	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_SERVICE1 )
@@ -205,7 +205,7 @@ INPUT_PORTS_START( ashnojoe )
 	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_4WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 )
-	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_UNKNOWN )  // anything else and the controls don't work
+	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_UNKNOWN )  /* anything else and the controls don't work*/
 	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	/* unused ? */
@@ -306,7 +306,7 @@ static void irqhandler(int irq)
 
 static WRITE_HANDLER(writeA)
 {
-	if (data == 0xff) return;	// this gets called at 8910 startup with 0xff before the 5205 exists, causing a crash
+	if (data == 0xff) return;	/* this gets called at 8910 startup with 0xff before the 5205 exists, causing a crash*/
 
 	MSM5205_reset_w(0, !(data & 0x01));
 }

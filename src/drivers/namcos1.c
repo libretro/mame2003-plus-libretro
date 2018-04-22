@@ -273,10 +273,10 @@ static MEMORY_WRITE_START( main_writemem )
 	{ 0xc000, 0xdfff, MWA_BANK7 },
 	{ 0xe000, 0xefff, namcos1_bankswitch_w },
 	{ 0xf000, 0xf000, namcos1_cpu_control_w },
-	{ 0xf200, 0xf200, MWA_NOP }, // watchdog
-	{ 0xf400, 0xf400, MWA_NOP }, // unknown
-	{ 0xf600, 0xf600, MWA_NOP }, // main video update(handler installs separately)
-	{ 0xfa00, 0xfa00, namcos1_sub_firq_w }, // asserts FIRQ on CPU1
+	{ 0xf200, 0xf200, MWA_NOP }, /* watchdog*/
+	{ 0xf400, 0xf400, MWA_NOP }, /* unknown*/
+	{ 0xf600, 0xf600, MWA_NOP }, /* main video update(handler installs separately)*/
+	{ 0xfa00, 0xfa00, namcos1_sub_firq_w }, /* asserts FIRQ on CPU1*/
 	{ 0xfc00, 0xfc01, namcos1_subcpu_bank_w },
 MEMORY_END
 
@@ -300,10 +300,10 @@ static MEMORY_WRITE_START( sub_writemem )
 	{ 0xa000, 0xbfff, MWA_BANK14 },
 	{ 0xc000, 0xdfff, MWA_BANK15 },
 	{ 0xe000, 0xefff, namcos1_bankswitch_w },
-	{ 0xf000, 0xf000, MWA_NOP }, // IO Chip
-	{ 0xf200, 0xf200, MWA_NOP }, // watchdog
-	{ 0xf400, 0xf400, MWA_NOP }, // unknown
-	{ 0xf600, 0xf600, MWA_NOP }, // sub video update(handler installs separately)
+	{ 0xf000, 0xf000, MWA_NOP }, /* IO Chip*/
+	{ 0xf200, 0xf200, MWA_NOP }, /* watchdog*/
+	{ 0xf400, 0xf400, MWA_NOP }, /* unknown*/
+	{ 0xf600, 0xf600, MWA_NOP }, /* sub video update(handler installs separately)*/
 MEMORY_END
 
 
@@ -496,7 +496,7 @@ MEMORY_END
 
 static PORT_READ_START( mcu_readport )
 	{ HD63701_PORT1, HD63701_PORT1, input_port_3_r },
-	{ 0x0101, 0x0101, MRA_NOP }, // unknown port read(added to cut the number of error warnings)
+	{ 0x0101, 0x0101, MRA_NOP }, /* unknown port read(added to cut the number of error warnings)*/
 PORT_END
 
 static PORT_WRITE_START( mcu_writeport )
@@ -1178,9 +1178,9 @@ static MACHINE_DRIVER_START( ns1 )
 	MDRV_CPU_PORTS(mcu_readport, mcu_writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
-	MDRV_FRAMES_PER_SECOND(60) // 60.606060?
+	MDRV_FRAMES_PER_SECOND(60) /* 60.606060?*/
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
-	MDRV_INTERLEAVE(240) // necessary to ensure the 1st and 2nd CPU's work in tandem
+	MDRV_INTERLEAVE(240) /* necessary to ensure the 1st and 2nd CPU's work in tandem*/
 	MDRV_MACHINE_INIT(namcos1)
 	MDRV_NVRAM_HANDLER(generic_0fill)
 
@@ -1207,10 +1207,10 @@ static MACHINE_DRIVER_START( bakutotu )
 
 	MDRV_IMPORT_FROM(ns1)
 
-	//MDRV_CPU_REPLACE("main",M6809,49152000/24) // reduces screen flickers(optional)
-	//MDRV_CPU_REPLACE("sub",M6809,49152000/24) // reduces screen flickers(optional)
+	/*MDRV_CPU_REPLACE("main",M6809,49152000/24) */ /* reduces screen flickers(optional)*/
+	/*MDRV_CPU_REPLACE("sub",M6809,49152000/24) */ /* reduces screen flickers(optional)*/
 
-	// heavy sync required to prevent CPUs from fighting for video RAM access and going into deadlocks
+	/* heavy sync required to prevent CPUs from fighting for video RAM access and going into deadlocks*/
 	MDRV_INTERLEAVE(640)
 
 MACHINE_DRIVER_END
@@ -1274,10 +1274,10 @@ ROM_START( shadowld )
 
 	ROM_REGION( 0xd0000, REGION_CPU4, 0 )       /* the MCU & voice */
 	ROM_LOAD( "ns1-mcu.bin",        0x0f000, 0x01000, CRC(ffb5c0bd) SHA1(7a38c0cc2553c627f4ec507fb6e807cf7d537c02) )
-	ROM_LOAD( "yd_voi-0.bin",       0x20000, 0x10000, CRC(448bc6a1) SHA1(89033eb023bb770bfedf925040bbe32f4bea4937) ) // yd1.v0 + yd1.v3
+	ROM_LOAD( "yd_voi-0.bin",       0x20000, 0x10000, CRC(448bc6a1) SHA1(89033eb023bb770bfedf925040bbe32f4bea4937) ) /* yd1.v0 + yd1.v3*/
 	ROM_CONTINUE(                   0x10000, 0x10000 )
-	ROM_LOAD( "yd_voi-1.bin",       0x30000, 0x20000, CRC(7809035c) SHA1(d1d12db8f1d2c25545ccb92c0a2f2af2d0267161) ) // yd1.v1 + yd1.v4
-	ROM_LOAD( "yd_voi-2.bin",       0x50000, 0x20000, CRC(73bffc16) SHA1(a927e503bf8650e6b638d5c357cb48586cfa025b) ) // yd1.v2 + yd1.v5
+	ROM_LOAD( "yd_voi-1.bin",       0x30000, 0x20000, CRC(7809035c) SHA1(d1d12db8f1d2c25545ccb92c0a2f2af2d0267161) ) /* yd1.v1 + yd1.v4*/
+	ROM_LOAD( "yd_voi-2.bin",       0x50000, 0x20000, CRC(73bffc16) SHA1(a927e503bf8650e6b638d5c357cb48586cfa025b) ) /* yd1.v2 + yd1.v5*/
 
 	ROM_REGION( 0x20000, REGION_GFX1, 0 )  /* character mask */
 	ROM_LOAD( "yd_chr-8.bin",       0x00000, 0x20000, CRC(0c8e69d0) SHA1(cedf12db2d9b14396cc8a15ccb025b96c92e190d) )
@@ -1326,10 +1326,10 @@ ROM_START( youkaidk )
 
 	ROM_REGION( 0xd0000, REGION_CPU4, 0 )       /* the MCU & voice */
 	ROM_LOAD( "ns1-mcu.bin",        0x0f000, 0x01000, CRC(ffb5c0bd) SHA1(7a38c0cc2553c627f4ec507fb6e807cf7d537c02) )
-	ROM_LOAD( "yd_voi-0.bin",       0x20000, 0x10000, CRC(448bc6a1) SHA1(89033eb023bb770bfedf925040bbe32f4bea4937) ) // yd1.v0 + yd1.v3
+	ROM_LOAD( "yd_voi-0.bin",       0x20000, 0x10000, CRC(448bc6a1) SHA1(89033eb023bb770bfedf925040bbe32f4bea4937) ) /* yd1.v0 + yd1.v3*/
 	ROM_CONTINUE(                   0x10000, 0x10000 )
-	ROM_LOAD( "yd_voi-1.bin",       0x30000, 0x20000, CRC(7809035c) SHA1(d1d12db8f1d2c25545ccb92c0a2f2af2d0267161) ) // yd1.v1 + yd1.v4
-	ROM_LOAD( "yd_voi-2.bin",       0x50000, 0x20000, CRC(73bffc16) SHA1(a927e503bf8650e6b638d5c357cb48586cfa025b) ) // yd1.v2 + yd1.v5
+	ROM_LOAD( "yd_voi-1.bin",       0x30000, 0x20000, CRC(7809035c) SHA1(d1d12db8f1d2c25545ccb92c0a2f2af2d0267161) ) /* yd1.v1 + yd1.v4*/
+	ROM_LOAD( "yd_voi-2.bin",       0x50000, 0x20000, CRC(73bffc16) SHA1(a927e503bf8650e6b638d5c357cb48586cfa025b) ) /* yd1.v2 + yd1.v5*/
 
 	ROM_REGION( 0x20000, REGION_GFX1, 0 )  /* character mask */
 	ROM_LOAD( "yd_chr-8.bin",       0x00000, 0x20000, CRC(0c8e69d0) SHA1(cedf12db2d9b14396cc8a15ccb025b96c92e190d) )
@@ -1377,10 +1377,10 @@ ROM_START( yokaidko )
 
 	ROM_REGION( 0xd0000, REGION_CPU4, 0 )       /* the MCU & voice */
 	ROM_LOAD( "ns1-mcu.bin",        0x0f000, 0x01000, CRC(ffb5c0bd) SHA1(7a38c0cc2553c627f4ec507fb6e807cf7d537c02) )
-	ROM_LOAD( "yd_voi-0.bin",       0x20000, 0x10000, CRC(448bc6a1) SHA1(89033eb023bb770bfedf925040bbe32f4bea4937) ) // yd1.v0 + yd1.v3
+	ROM_LOAD( "yd_voi-0.bin",       0x20000, 0x10000, CRC(448bc6a1) SHA1(89033eb023bb770bfedf925040bbe32f4bea4937) ) /* yd1.v0 + yd1.v3*/
 	ROM_CONTINUE(                   0x10000, 0x10000 )
-	ROM_LOAD( "yd_voi-1.bin",       0x30000, 0x20000, CRC(7809035c) SHA1(d1d12db8f1d2c25545ccb92c0a2f2af2d0267161) ) // yd1.v1 + yd1.v4
-	ROM_LOAD( "yd_voi-2.bin",       0x50000, 0x20000, CRC(73bffc16) SHA1(a927e503bf8650e6b638d5c357cb48586cfa025b) ) // yd1.v2 + yd1.v5
+	ROM_LOAD( "yd_voi-1.bin",       0x30000, 0x20000, CRC(7809035c) SHA1(d1d12db8f1d2c25545ccb92c0a2f2af2d0267161) ) /* yd1.v1 + yd1.v4*/
+	ROM_LOAD( "yd_voi-2.bin",       0x50000, 0x20000, CRC(73bffc16) SHA1(a927e503bf8650e6b638d5c357cb48586cfa025b) ) /* yd1.v2 + yd1.v5*/
 
 	ROM_REGION( 0x20000, REGION_GFX1, 0 )  /* character mask */
 	ROM_LOAD( "yd_chr-8.bin",       0x00000, 0x20000, CRC(0c8e69d0) SHA1(cedf12db2d9b14396cc8a15ccb025b96c92e190d) )
@@ -2035,9 +2035,9 @@ ROM_START( bakutotu )
 	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE ) /* sprites */
 	ROM_LOAD( "bk_obj-0.bin",       0x00000, 0x20000, CRC(88c627c1) SHA1(10b331d8eec2cba327a8fa6f3213880e8e50a38d) )
 
-	// obj1 and 2 may not exist on the real board
-	ROM_LOAD( "bk_obj-3.bin",       0x20000, 0x20000, CRC(f7d1909a) SHA1(3f74a186f29b8f13a4c33de8f5b3d241bd6ded89) ) // dummy mirroring obj3
-	ROM_LOAD( "bk_obj-4.bin",       0x40000, 0x20000, CRC(27ed1441) SHA1(74fa3ad01cbf01ee3be9d5cc2d241885c8a90b18) ) // dummy mirroring obj4
+	/* obj1 and 2 may not exist on the real board*/
+	ROM_LOAD( "bk_obj-3.bin",       0x20000, 0x20000, CRC(f7d1909a) SHA1(3f74a186f29b8f13a4c33de8f5b3d241bd6ded89) ) /* dummy mirroring obj3*/
+	ROM_LOAD( "bk_obj-4.bin",       0x40000, 0x20000, CRC(27ed1441) SHA1(74fa3ad01cbf01ee3be9d5cc2d241885c8a90b18) ) /* dummy mirroring obj4*/
 
 	ROM_LOAD( "bk_obj-3.bin",       0x60000, 0x20000, CRC(f7d1909a) SHA1(3f74a186f29b8f13a4c33de8f5b3d241bd6ded89) )
 	ROM_LOAD( "bk_obj-4.bin",       0x80000, 0x20000, CRC(27ed1441) SHA1(74fa3ad01cbf01ee3be9d5cc2d241885c8a90b18) )
@@ -2688,7 +2688,7 @@ GAME( 1987, galag88j, galaga88, ns1,     galaga88,galaga88, ROT270, "Namco", "Ga
 GAME( 1988, ws,       0,        ns1,     splatter,ws,       ROT0,   "Namco", "World Stadium (Japan)" )
 GAME( 1988, berabohm, 0,        ns1,     berabohm,berabohm, ROT0,   "Namco", "Beraboh Man (Japan version C)" )
 GAME( 1988, beraboho, berabohm, ns1,     berabohm,berabohm, ROT0,   "Namco", "Beraboh Man (Japan version B)" )
-//GAME( 1988, alice,    0,        ns1,     ns1,     alice,    ROT0,   "Namco", "Alice In Wonderland" )
+/*GAME( 1988, alice,    0,        ns1,     ns1,     alice,    ROT0,   "Namco", "Alice In Wonderland" )*/
 GAME( 1988, mmaze,    0,        ns1,     mmaze,   alice,    ROT0,   "Namco", "Marchen Maze (Japan)" )
 GAME( 1988, bakutotu, 0,        bakutotu,bakutotu,bakutotu, ROT0,   "Namco", "Bakutotsu Kijuutei" )
 GAME( 1988, wldcourt, 0,        ns1,     wldcourt,wldcourt, ROT0,   "Namco", "World Court (Japan)" )

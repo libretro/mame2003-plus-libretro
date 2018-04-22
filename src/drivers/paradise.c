@@ -51,46 +51,46 @@ static WRITE_HANDLER( paradise_okibank_w )
 
 
 static MEMORY_READ_START( paradise_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM		},	// ROM
-	{ 0x8000, 0xbfff, MRA_BANK1		},	// ROM (banked)
-	{ 0xc000, 0xffff, MRA_RAM		},	// RAM
+	{ 0x0000, 0x7fff, MRA_ROM		},	/* ROM*/
+	{ 0x8000, 0xbfff, MRA_BANK1		},	/* ROM (banked)*/
+	{ 0xc000, 0xffff, MRA_RAM		},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( paradise_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM		},	// ROM
-	{ 0x8000, 0xbfff, MWA_ROM		},	// ROM (banked)
-	{ 0xc000, 0xc7ff, paradise_vram_2_w,&paradise_vram_2	},	// Background
-	{ 0xc800, 0xcfff, paradise_vram_1_w,&paradise_vram_1	},	// Midground
-	{ 0xd000, 0xd7ff, paradise_vram_0_w,&paradise_vram_0	},	// Foreground
-	{ 0xd800, 0xd8ff, MWA_RAM								},	// RAM
-	{ 0xd900, 0xe0ff, MWA_RAM, &spriteram, &spriteram_size	},	// Sprites
-	{ 0xe100, 0xffff, MWA_RAM								},	// RAM
+	{ 0x0000, 0x7fff, MWA_ROM		},	/* ROM*/
+	{ 0x8000, 0xbfff, MWA_ROM		},	/* ROM (banked)*/
+	{ 0xc000, 0xc7ff, paradise_vram_2_w,&paradise_vram_2	},	/* Background*/
+	{ 0xc800, 0xcfff, paradise_vram_1_w,&paradise_vram_1	},	/* Midground*/
+	{ 0xd000, 0xd7ff, paradise_vram_0_w,&paradise_vram_0	},	/* Foreground*/
+	{ 0xd800, 0xd8ff, MWA_RAM								},	/* RAM*/
+	{ 0xd900, 0xe0ff, MWA_RAM, &spriteram, &spriteram_size	},	/* Sprites*/
+	{ 0xe100, 0xffff, MWA_RAM								},	/* RAM*/
 MEMORY_END
 
 
 
 static PORT_READ_START( paradise_readport )
-	{ 0x0000, 0x17ff, paletteram_r			},	// Palette
-	{ 0x2010, 0x2010, OKIM6295_status_0_r	},	// OKI 0
-	{ 0x2030, 0x2030, OKIM6295_status_1_r	},	// OKI 1
-	{ 0x2020, 0x2020, input_port_0_r		},	// DSW 1
-	{ 0x2021, 0x2021, input_port_1_r		},	// DSW 2
-	{ 0x2022, 0x2022, input_port_2_r		},	// P1
-	{ 0x2023, 0x2023, input_port_3_r		},	// P2
-	{ 0x2024, 0x2024, input_port_4_r		},	// Coins
-	{ 0x8000, 0xffff, videoram_r			},	// Pixmap
+	{ 0x0000, 0x17ff, paletteram_r			},	/* Palette*/
+	{ 0x2010, 0x2010, OKIM6295_status_0_r	},	/* OKI 0*/
+	{ 0x2030, 0x2030, OKIM6295_status_1_r	},	/* OKI 1*/
+	{ 0x2020, 0x2020, input_port_0_r		},	/* DSW 1*/
+	{ 0x2021, 0x2021, input_port_1_r		},	/* DSW 2*/
+	{ 0x2022, 0x2022, input_port_2_r		},	/* P1*/
+	{ 0x2023, 0x2023, input_port_3_r		},	/* P2*/
+	{ 0x2024, 0x2024, input_port_4_r		},	/* Coins*/
+	{ 0x8000, 0xffff, videoram_r			},	/* Pixmap*/
 PORT_END
 
 static PORT_WRITE_START( paradise_writeport )
-	{ 0x0000, 0x17ff, paradise_palette_w	},	// Palette
-	{ 0x1800, 0x1800, paradise_priority_w	},	// Layers priority
-	{ 0x2001, 0x2001, paradise_flipscreen_w	},	// Flip Screen
-	{ 0x2004, 0x2004, paradise_palbank_w	},	// Layers palette bank
-	{ 0x2006, 0x2006, paradise_rombank_w	},	// ROM bank
-	{ 0x2007, 0x2007, paradise_okibank_w	},	// OKI 1 samples bank
-	{ 0x2010, 0x2010, OKIM6295_data_0_w		},	// OKI 0
-	{ 0x2030, 0x2030, OKIM6295_data_1_w		},	// OKI 1
-	{ 0x8000, 0xffff, paradise_pixmap_w		},	// Pixmap
+	{ 0x0000, 0x17ff, paradise_palette_w	},	/* Palette*/
+	{ 0x1800, 0x1800, paradise_priority_w	},	/* Layers priority*/
+	{ 0x2001, 0x2001, paradise_flipscreen_w	},	/* Flip Screen*/
+	{ 0x2004, 0x2004, paradise_palbank_w	},	/* Layers palette bank*/
+	{ 0x2006, 0x2006, paradise_rombank_w	},	/* ROM bank*/
+	{ 0x2007, 0x2007, paradise_okibank_w	},	/* OKI 1 samples bank*/
+	{ 0x2010, 0x2010, OKIM6295_data_0_w		},	/* OKI 0*/
+	{ 0x2030, 0x2030, OKIM6295_data_1_w		},	/* OKI 1*/
+	{ 0x8000, 0xffff, paradise_pixmap_w		},	/* Pixmap*/
 PORT_END
 
 
@@ -105,7 +105,7 @@ PORT_END
 ***************************************************************************/
 
 INPUT_PORTS_START( paradise )
-	PORT_START	// IN0 - port $2020 - DSW 1
+	PORT_START	/* IN0 - port $2020 - DSW 1*/
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x03, "Easy" )
 	PORT_DIPSETTING(    0x02, "Normal" )
@@ -128,7 +128,7 @@ INPUT_PORTS_START( paradise )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN1 - port $2021 - DSW 2
+	PORT_START	/* IN1 - port $2021 - DSW 2*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
@@ -153,27 +153,27 @@ INPUT_PORTS_START( paradise )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN2 - port $2022 - Player 1
+	PORT_START	/* IN2 - port $2022 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER1 )
-	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
-	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* alias for button1?*/
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* alias for button1?*/
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START1  )
 
-	PORT_START	// IN3 - port $2023 - Player 2
+	PORT_START	/* IN3 - port $2023 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_BUTTON1        | IPF_PLAYER2 )
-	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
-	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	// alias for button1?
+	PORT_BIT(  0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* alias for button1?*/
+	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* alias for button1?*/
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2  )
 
-	PORT_START	// IN4 - port $2024 - Coins
+	PORT_START	/* IN4 - port $2024 - Coins*/
 	PORT_BIT_IMPULSE(  0x01, IP_ACTIVE_LOW, IPT_COIN1, 5)
 	PORT_BIT_IMPULSE(  0x02, IP_ACTIVE_LOW, IPT_COIN2, 5)
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -226,10 +226,10 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo paradise_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x8,	0x100, 1  }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_8x8x4,	0x400, 16 }, // [1] Background
-	{ REGION_GFX3, 0, &layout_8x8x8,	0x300, 1  }, // [2] Midground
-	{ REGION_GFX4, 0, &layout_8x8x8,	0x000, 1  }, // [3] Foreground
+	{ REGION_GFX1, 0, &layout_16x16x8,	0x100, 1  }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_8x8x4,	0x400, 16 }, /* [1] Background*/
+	{ REGION_GFX3, 0, &layout_8x8x8,	0x300, 1  }, /* [2] Midground*/
+	{ REGION_GFX4, 0, &layout_8x8x8,	0x000, 1  }, /* [3] Foreground*/
 	{ -1 }
 };
 

@@ -146,8 +146,8 @@ static PORT_WRITE_START( writeport )
 	{ 0x6800, 0x69ff, iqblock_fgvideoram_w },	/* initialized up to 6fff... bug or larger tilemap? */
 	{ 0x7000, 0x7fff, iqblock_bgvideoram_w },
 	{ 0x5080, 0x5083, ppi8255_0_w },
-	{ 0x50b0, 0x50b0, YM2413_register_port_0_w }, // UM3567_register_port_0_w
-	{ 0x50b1, 0x50b1, YM2413_data_port_0_w }, // UM3567_data_port_0_w
+	{ 0x50b0, 0x50b0, YM2413_register_port_0_w }, /* UM3567_register_port_0_w*/
+	{ 0x50b1, 0x50b1, YM2413_data_port_0_w }, /* UM3567_data_port_0_w*/
 	{ 0x50c0, 0x50c0, iqblock_irqack_w },
 PORT_END
 
@@ -162,27 +162,27 @@ INPUT_PORTS_START( iqblock )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 )				// "test mode" only
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 )				/* "test mode" only*/
 
 	PORT_START
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )					// "test mode" only
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )					/* "test mode" only*/
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )	// "test mode" only
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )	/* "test mode" only*/
 
 	PORT_START
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 )				// "test mode" only
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 )				// "test mode" only
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_COCKTAIL )	// "test mode" only
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_COCKTAIL )	// "test mode" only
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 )				/* "test mode" only*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 )				/* "test mode" only*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_COCKTAIL )	/* "test mode" only*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_COCKTAIL )	/* "test mode" only*/
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_DIPNAME( 0x03, 0x03, "Unknown SW 0-0&1" )	// Difficulty ? Read notes above
+	PORT_DIPNAME( 0x03, 0x03, "Unknown SW 0-0&1" )	/* Difficulty ? Read notes above*/
 	PORT_DIPSETTING(    0x03, "0" )
 	PORT_DIPSETTING(    0x02, "1" )
 	PORT_DIPSETTING(    0x01, "2" )
@@ -206,7 +206,7 @@ INPUT_PORTS_START( iqblock )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START
-	PORT_DIPNAME( 0x01, 0x00, "Demo Sounds?" )	// To be confirmed ! Read notes above
+	PORT_DIPNAME( 0x01, 0x00, "Demo Sounds?" )	/* To be confirmed ! Read notes above*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Free_Play ) )
@@ -317,7 +317,7 @@ static MACHINE_DRIVER_START( iqblock )
 	MDRV_VIDEO_UPDATE(iqblock)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(YM2413, ym2413_interface) // UM3567
+	MDRV_SOUND_ADD(YM2413, ym2413_interface) /* UM3567*/
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( cabaret )
@@ -344,7 +344,7 @@ static MACHINE_DRIVER_START( cabaret )
 	MDRV_VIDEO_UPDATE(iqblock)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(YM2413, ym2413_interface) // UM3567
+	MDRV_SOUND_ADD(YM2413, ym2413_interface) /* UM3567*/
 MACHINE_DRIVER_END
 
 
@@ -462,7 +462,7 @@ static DRIVER_INIT( cabaret )
 	/* decrypt the program ROM */
 	for (i = 0;i < 0xf000;i++)
 	{
-		if ((i & 0xb206) == 0xa002) rom[i] ^= 0x01;	// could be (i & 0x3206) == 0x2002
+		if ((i & 0xb206) == 0xa002) rom[i] ^= 0x01;	/* could be (i & 0x3206) == 0x2002*/
 	}
 
 	/* initialize pointers for I/O mapped RAM */

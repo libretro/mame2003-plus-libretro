@@ -355,7 +355,7 @@ static void raster_interrupt(int busy)
 		if (neogeo_raster_enable && scanline_read)
 		{
 			do_refresh = 1;
-//logerror("partial refresh at raster line %d (raster counter %03x)\n",line,current_rastercounter);
+/*logerror("partial refresh at raster line %d (raster counter %03x)\n",line,current_rastercounter);*/
 			scanline_read = 0;
 		}
 	}
@@ -364,7 +364,7 @@ static void raster_interrupt(int busy)
 	{
 		if (line == irq2start)
 		{
-//logerror("trigger IRQ2 at raster line %d (raster counter %d)\n",line,current_rastercounter);
+/*logerror("trigger IRQ2 at raster line %d (raster counter %d)\n",line,current_rastercounter);*/
 			if (!busy)
 			{
 				if (neogeo_raster_enable)
@@ -409,7 +409,7 @@ static void raster_interrupt(int busy)
 		}
 
 		/* return a standard vblank interrupt */
-//logerror("trigger IRQ1\n");
+/*logerror("trigger IRQ1\n");*/
 		vblank_int = 1;	   /* vertical blank */
 	}
 
@@ -444,7 +444,7 @@ static READ16_HANDLER( timer16_r )
 	int coinflip = pd4990a_testbit_r(0);
 	int databit = pd4990a_databit_r(0);
 
-//	logerror("CPU %04x - Read timer\n",activecpu_get_pc());
+/*	logerror("CPU %04x - Read timer\n",activecpu_get_pc());*/
 
 	res = (readinputport(4) & ~(readinputport(5) & 0x20)) ^ (coinflip << 6) ^ (databit << 7);
 
@@ -462,14 +462,14 @@ static READ16_HANDLER( timer16_r )
 static WRITE16_HANDLER( neo_z80_w )
 {
 	/* tpgold uses 16-bit writes, this can't be correct */
-//	if (ACCESSING_LSB)
-//		return;
+/*	if (ACCESSING_LSB)*/
+/*		return;*/
 
 	soundlatch_w(0,(data>>8)&0xff);
 	pending_command = 1;
 	cpu_set_irq_line(1, IRQ_LINE_NMI, PULSE_LINE);
 	/* spin for a while to let the Z80 read the command (fixes hanging sound in pspikes2) */
-//	cpu_spinuntil_time(TIME_IN_USEC(20));
+/*	cpu_spinuntil_time(TIME_IN_USEC(20));*/
 	cpu_boost_interleave(0, TIME_IN_USEC(20));
 }
 
@@ -496,19 +496,19 @@ cpu #0 (PC=00C18C40): unmapped memory word write to 00380000 = 0000 & 00FF
 	switch (mjneogo_select)
 	{
 		case 0x00:
-		res = 0; // nothing?
+		res = 0; /* nothing?*/
 		break;
 		case 0x09:
-		res = (readinputport(7) << 8); // a,b,c,d,e,g ....
+		res = (readinputport(7) << 8); /* a,b,c,d,e,g ....*/
 		break;
 		case 0x12:
-		res = (readinputport(8) << 8); // h,i,j,k,l ...
+		res = (readinputport(8) << 8); /* h,i,j,k,l ...*/
 		break;
 		case 0x1b:
-		res = (readinputport(0) << 8); // player 1 normal inputs?
+		res = (readinputport(0) << 8); /* player 1 normal inputs?*/
 		break;
 		case 0x24:
-		res = (readinputport(9) << 8); // call etc.
+		res = (readinputport(9) << 8); /* call etc.*/
 		break;
 		default:
 		break;
@@ -658,7 +658,7 @@ static WRITE16_HANDLER( neo_irq2pos_16_w )
 
 	if (irq2control & IRQ2CTRL_LOAD_RELATIVE)
 	{
-//		int line = (irq2pos_value + 3) / 0x180;	/* ridhero gives 0x17d */
+/*		int line = (irq2pos_value + 3) / 0x180;	 // ridhero gives 0x17d /*/
 		int line = (irq2pos_value + 0x3b) / 0x180;	/* turfmast goes as low as 0x145 */
 
 		irq2start = current_rasterline + line;
@@ -719,7 +719,7 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( neogeo_writemem )
 	{ 0x000000, 0x0fffff, MWA16_ROM },	  /* ghost pilots writes to ROM */
-	{ 0x100000, 0x10ffff, MWA16_BANK1 },	// WORK RAM
+	{ 0x100000, 0x10ffff, MWA16_BANK1 },	/* WORK RAM*/
 /*	{ 0x200000, 0x200fff, whp copies ROM data here. Why? Is there RAM in the banked ROM space? */
 /* trally writes to 200000-200003 as well, probably looking for a serial link */
 /* both games write to 0000fe before writing to 200000. The two things could be related. */
@@ -753,10 +753,10 @@ static MEMORY_WRITE16_START( neogeo_writemem )
 	{ 0x3c0006, 0x3c0007, neo_control_16_w },	/* IRQ2 control */
 	{ 0x3c0008, 0x3c000b, neo_irq2pos_16_w },	/* IRQ2 position */
 	{ 0x3c000c, 0x3c000d, neo_irqack_w },		/* IRQ acknowledge */
-//	{ 0x3c000e, 0x3c000f }, /* Unknown, see control_r */
+/*	{ 0x3c000e, 0x3c000f },  // Unknown, see control_r /*/
 
-	{ 0x400000, 0x401fff, neogeo_paletteram16_w },	// COLOR RAM BANK1
-	{ 0x6a0000, 0x6a1fff, MWA16_RAM },	// COLOR RAM BANK0 (used only in startup tests?)
+	{ 0x400000, 0x401fff, neogeo_paletteram16_w },	/* COLOR RAM BANK1*/
+	{ 0x6a0000, 0x6a1fff, MWA16_RAM },	/* COLOR RAM BANK0 (used only in startup tests?)*/
 	{ 0x800000, 0x800fff, neogeo_memcard16_w }, 	/* mem card */
 	{ 0xd00000, 0xd0ffff, neogeo_sram16_w, &neogeo_sram16 },	/* 64k battery backed SRAM */
 MEMORY_END
@@ -963,8 +963,8 @@ INPUT_PORTS_START( neogeo )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN ) // having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) // having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL )  /* handled by fake IN5 */
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -976,12 +976,12 @@ INPUT_PORTS_START( neogeo )
 	PORT_DIPSETTING(	0x00,"Japan" )
 	PORT_DIPSETTING(	0x01,"USA" )
 	PORT_DIPSETTING(	0x02,"Europe" )
-//	PORT_DIPNAME( 0x04, 0x04,"Machine Mode" )
-//	PORT_DIPSETTING(	0x00,"Home" )
-//	PORT_DIPSETTING(	0x04,"Arcade" )
-	PORT_DIPNAME( 0x60, 0x60,"Game Slots" )		// Stored at 0x47 of NVRAM
+/*	PORT_DIPNAME( 0x04, 0x04,"Machine Mode" )*/
+/*	PORT_DIPSETTING(	0x00,"Home" )*/
+/*	PORT_DIPSETTING(	0x04,"Arcade" )*/
+	PORT_DIPNAME( 0x60, 0x60,"Game Slots" )		/* Stored at 0x47 of NVRAM*/
 	PORT_DIPSETTING(	0x60,"2" )
-//	PORT_DIPSETTING(	0x40,"2" )
+/*	PORT_DIPSETTING(	0x40,"2" )*/
 	PORT_DIPSETTING(	0x20,"4" )
 	PORT_DIPSETTING(	0x00,"6" )
 #endif
@@ -1020,7 +1020,7 @@ INPUT_PORTS_START( mjneogeo )
 
 	PORT_START		/* IN2 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )   /* Player 1 Start */
-	PORT_BITX(0x02, IP_ACTIVE_LOW, 0, "Next Game",KEYCODE_7, IP_JOY_NONE ) // select
+	PORT_BITX(0x02, IP_ACTIVE_LOW, 0, "Next Game",KEYCODE_7, IP_JOY_NONE ) /* select*/
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START2 )   /* Player 2 Start */
 	PORT_BITX(0x08, IP_ACTIVE_LOW, 0, "Previous Game",KEYCODE_8, IP_JOY_NONE )
 	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* memory card inserted */
@@ -1054,8 +1054,8 @@ INPUT_PORTS_START( mjneogeo )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN ) // having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) // having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL )  /* handled by fake IN5 */
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -1067,12 +1067,12 @@ INPUT_PORTS_START( mjneogeo )
 	PORT_DIPSETTING(	0x00,"Japan" )
 	PORT_DIPSETTING(	0x01,"USA" )
 	PORT_DIPSETTING(	0x02,"Europe" )
-//	PORT_DIPNAME( 0x04, 0x04,"Machine Mode" )
-//	PORT_DIPSETTING(	0x00,"Home" )
-//	PORT_DIPSETTING(	0x04,"Arcade" )
-	PORT_DIPNAME( 0x60, 0x60,"Game Slots" )		// Stored at 0x47 of NVRAM
+/*	PORT_DIPNAME( 0x04, 0x04,"Machine Mode" )*/
+/*	PORT_DIPSETTING(	0x00,"Home" )*/
+/*	PORT_DIPSETTING(	0x04,"Arcade" )*/
+	PORT_DIPNAME( 0x60, 0x60,"Game Slots" )		/* Stored at 0x47 of NVRAM*/
 	PORT_DIPSETTING(	0x60,"2" )
-//	PORT_DIPSETTING(	0x40,"2" )
+/*	PORT_DIPSETTING(	0x40,"2" )*/
 	PORT_DIPSETTING(	0x20,"4" )
 	PORT_DIPSETTING(	0x00,"6" )
 #endif
@@ -1169,8 +1169,8 @@ INPUT_PORTS_START( irrmaze )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN ) // having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) // having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL )  /* handled by fake IN5 */
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -1182,9 +1182,9 @@ INPUT_PORTS_START( irrmaze )
 	PORT_DIPSETTING(	0x00,"Japan" )
 	PORT_DIPSETTING(	0x01,"USA" )
 	PORT_DIPSETTING(	0x02,"Europe" )
-//	PORT_DIPNAME( 0x04, 0x04,"Machine Mode" )
-//	PORT_DIPSETTING(	0x00,"Home" )
-//	PORT_DIPSETTING(	0x04,"Arcade" )
+/*	PORT_DIPNAME( 0x04, 0x04,"Machine Mode" )*/
+/*	PORT_DIPSETTING(	0x00,"Home" )*/
+/*	PORT_DIPSETTING(	0x04,"Arcade" )*/
 #endif
 
 	PORT_START		/* Test switch */
@@ -1207,7 +1207,7 @@ INPUT_PORTS_START( popbounc )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
-	PORT_BIT( 0x90, IP_ACTIVE_LOW, IPT_BUTTON1 ) // note it needs it from 0x80 when using paddle
+	PORT_BIT( 0x90, IP_ACTIVE_LOW, IPT_BUTTON1 ) /* note it needs it from 0x80 when using paddle*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 )
 
@@ -1216,7 +1216,7 @@ INPUT_PORTS_START( popbounc )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
-	PORT_BIT( 0x90, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 ) // note it needs it from 0x80 when using paddle
+	PORT_BIT( 0x90, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 ) /* note it needs it from 0x80 when using paddle*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 
@@ -1256,8 +1256,8 @@ INPUT_PORTS_START( popbounc )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN ) // having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) // having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SPECIAL )  /* handled by fake IN5 */
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -1269,12 +1269,12 @@ INPUT_PORTS_START( popbounc )
 	PORT_DIPSETTING(	0x00,"Japan" )
 	PORT_DIPSETTING(	0x01,"USA" )
 	PORT_DIPSETTING(	0x02,"Europe" )
-//	PORT_DIPNAME( 0x04, 0x04,"Machine Mode" )
-//	PORT_DIPSETTING(	0x00,"Home" )
-//	PORT_DIPSETTING(	0x04,"Arcade" )
-	PORT_DIPNAME( 0x60, 0x60,"Game Slots" )		// Stored at 0x47 of NVRAM
+/*	PORT_DIPNAME( 0x04, 0x04,"Machine Mode" )*/
+/*	PORT_DIPSETTING(	0x00,"Home" )*/
+/*	PORT_DIPSETTING(	0x04,"Arcade" )*/
+	PORT_DIPNAME( 0x60, 0x60,"Game Slots" )		/* Stored at 0x47 of NVRAM*/
 	PORT_DIPSETTING(	0x60,"2" )
-//	PORT_DIPSETTING(	0x40,"2" )
+/*	PORT_DIPSETTING(	0x40,"2" )*/
 	PORT_DIPSETTING(	0x20,"4" )
 	PORT_DIPSETTING(	0x00,"6" )
 #endif
@@ -1382,7 +1382,7 @@ static MACHINE_DRIVER_START( neogeo )
 	   Metal Slug have been verified to also appear on the MVS itself so its
 	   probably correct in all cases, however to avoid confusion we use 304 unless
 	   a game *needs* 320 */
-//	MDRV_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
+/*	MDRV_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)*/
 	MDRV_VISIBLE_AREA(1*8, 39*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(neogeo_mvs_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(4096)
@@ -1462,10 +1462,10 @@ SYSTEM_BIOS_START( neogeo )
  	SYSTEM_BIOS_ADD( 5, "japan",      "Japan MVS (Ver. 3)" )
 	SYSTEM_BIOS_ADD( 6, "japan-a",   "Japan MVS (Ver. 2)" )
 
-//	SYSTEM_BIOS_ADD( 7, "uni-bios.10","Unibios MVS (Hack, Ver. 1.0)" )
-//	SYSTEM_BIOS_ADD( 8, "uni-bios.11","Unibios MVS (Hack, Ver. 1.1)" )
-//	SYSTEM_BIOS_ADD( 9, "debug",      "Debug MVS (Hack?)" )
-//	SYSTEM_BIOS_ADD(10, "asia-aes",   "Asia AES" )
+/*	SYSTEM_BIOS_ADD( 7, "uni-bios.10","Unibios MVS (Hack, Ver. 1.0)" )*/
+/*	SYSTEM_BIOS_ADD( 8, "uni-bios.11","Unibios MVS (Hack, Ver. 1.1)" )*/
+/*	SYSTEM_BIOS_ADD( 9, "debug",      "Debug MVS (Hack?)" )*/
+/*	SYSTEM_BIOS_ADD(10, "asia-aes",   "Asia AES" )*/
 SYSTEM_BIOS_END
 
 #define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \
@@ -1480,10 +1480,10 @@ SYSTEM_BIOS_END
 	ROM_LOAD16_WORD_SWAP_BIOS( 5, "vs-bios.rom",  0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) /* Japan, Ver 6 VS Bios */ \
 	ROM_LOAD16_WORD_SWAP_BIOS( 6, "sp-j2.rom",    0x00000, 0x020000, CRC(acede59c) SHA1(b6f97acd282fd7e94d9426078a90f059b5e9dd91) ) /* Japan, Older */ \
 
-//	ROM_LOAD16_WORD_SWAP_BIOS( 7, "uni-bios.10",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) /* Universe Bios v1.0 (hack) */
-//	ROM_LOAD16_WORD_SWAP_BIOS( 8, "uni-bios.11",  0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7) ) /* Universe Bios v1.1 (hack) */
-//	ROM_LOAD16_WORD_SWAP_BIOS( 9, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */
-//	ROM_LOAD16_WORD_SWAP_BIOS(10, "aes-bios.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */
+/*	ROM_LOAD16_WORD_SWAP_BIOS( 7, "uni-bios.10",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) )  // Universe Bios v1.0 (hack) /*/
+/*	ROM_LOAD16_WORD_SWAP_BIOS( 8, "uni-bios.11",  0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7) )  // Universe Bios v1.1 (hack) /*/
+/*	ROM_LOAD16_WORD_SWAP_BIOS( 9, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) )  // Debug (Development) Bios /*/
+/*	ROM_LOAD16_WORD_SWAP_BIOS(10, "aes-bios.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) )  // AES Console (Asia?) Bios /*/
 
 /* note you'll have to modify the last for lines of each block to use the extra bios roms,
    they're hacks / homebrew / console bios roms so Mame doesn't list them by default */
@@ -2651,8 +2651,8 @@ ROM_START( androdun )
 	ROM_LOAD16_BYTE( "049-c1.bin", 0x000000, 0x100000, CRC(7ace6db3) SHA1(c41cc9de8c0788dcc49ca494fd3bb3124062d9dd) ) /* Plane 0,1 */
 	ROM_LOAD16_BYTE( "049-c2.bin", 0x000001, 0x100000, CRC(b17024f7) SHA1(fcf7efae48fcdccaf5255c145de414fb246128f0) ) /* Plane 2,3 */
 	/* these just contain junk, probably shouldn't be here */
-//	ROM_LOAD16_BYTE( "049-c3.bin", 0x200000, 0x100000, CRC(2e0f3f9a) SHA1(8ee3442be92835922762420e8d0ff86dc14b3d69) ) /* Plane 0,1 */
-//	ROM_LOAD16_BYTE( "049-c4.bin", 0x200001, 0x100000, CRC(4a19fb92) SHA1(171219f0b38a04bfcee5b823c043a8181dfc87f8) ) /* Plane 2,3 */
+/*	ROM_LOAD16_BYTE( "049-c3.bin", 0x200000, 0x100000, CRC(2e0f3f9a) SHA1(8ee3442be92835922762420e8d0ff86dc14b3d69) )  // Plane 0,1 /*/
+/*	ROM_LOAD16_BYTE( "049-c4.bin", 0x200001, 0x100000, CRC(4a19fb92) SHA1(171219f0b38a04bfcee5b823c043a8181dfc87f8) )  // Plane 2,3 /*/
 ROM_END
 
 ROM_START( ncommand )
@@ -2847,7 +2847,7 @@ ROM_START( fatfursp )
 	ROM_LOAD16_WORD_SWAP( "058-p1.bin", 0x000000, 0x100000, CRC(2f585ba2) SHA1(429b4bf43fb9b1082c15d645ca328f9d175b976b) )
 	ROM_LOAD16_WORD_SWAP( "058-p2.bin", 0x100000, 0x080000, CRC(d7c71a6b) SHA1(b3428063031a2e5857da40a5d2ffa87fb550c1bb) )
 	/* rom below is just a modified p1 */
-//	ROM_LOAD16_WORD_SWAP( "058-p3.bin", 0x180000, 0x080000, CRC(9f0c1e1a) SHA1(02861b0f230541becccc3df6a2c85dbe8733e7ce) )
+/*	ROM_LOAD16_WORD_SWAP( "058-p3.bin", 0x180000, 0x080000, CRC(9f0c1e1a) SHA1(02861b0f230541becccc3df6a2c85dbe8733e7ce) )*/
 
 	NEO_SFIX_128K( "058-s1.bin", CRC(2df03197) SHA1(24083cfc97e720ac9e131c9fe37df57e27c49294) )
 
@@ -3439,7 +3439,7 @@ ROM_START( kof95 )
 	NEO_BIOS_SOUND_128K( "084-m1.bin", CRC(6f2d7429) SHA1(6f8462e4f07af82a5ca3197895d5dcbb67bdaa61) )
 
 	ROM_REGION( 0x900000, REGION_SOUND1, ROMREGION_SOUNDONLY )
-//	ROM_LOAD( "084-v1.bin", 0x000000, 0x400000, CRC(21469561) SHA1(f35c72d31f026efc9e74bc4f198a123999ab3fc3) ) // bad old rom ?
+/*	ROM_LOAD( "084-v1.bin", 0x000000, 0x400000, CRC(21469561) SHA1(f35c72d31f026efc9e74bc4f198a123999ab3fc3) ) */ /* bad old rom ?*/
  	ROM_LOAD( "084-v1.bin", 0x000000, 0x400000, CRC(84861b56) SHA1(1b6c91ddaed01f45eb9b7e49d9c2b9b479d50da6) )
 	ROM_LOAD( "084-v2.bin", 0x400000, 0x200000, CRC(b38a2803) SHA1(dbc2c8606ca09ed7ff20906b022da3cf053b2f09) )
 	/* 600000-7fffff empty */
@@ -5714,7 +5714,7 @@ ROM_START( kof2001 )
 	/* The M1 ROM is encrypted, we load it here for reference and replace it with a decrypted version */
 	ROM_REGION( 0x40000, REGION_USER4, 0 )
 	ROM_LOAD( "265-262-m1.bin", 0x00000, 0x20000, CRC(1d5aab51) SHA1(52327c5bcad87770419057097cca20a3b187bec3) ) /* yes it really does have a strange name */
-//	NEO_BIOS_SOUND_128K( "262-m1d.bin",  CRC(73c1f5b0) SHA1(27975713e091ecc2a370061080d0920a3c4fde63) )
+/*	NEO_BIOS_SOUND_128K( "262-m1d.bin",  CRC(73c1f5b0) SHA1(27975713e091ecc2a370061080d0920a3c4fde63) )*/
 	NEO_BIOS_SOUND_128K( "265-262_decrypted-m1.bin",   CRC(2fb0a8a5) SHA1(9878370ff8cef3e9c9f307ad64c29522dd625c8f) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
@@ -5895,7 +5895,7 @@ ROM_START( crswd2bl )
 	ROM_LOAD16_BYTE( "054-c2.c2", 0x000001, 0x400000, CRC(d6c6183d) SHA1(cc546ff063fae2c01c109fabcd5b2d29ec3299db) )
 ROM_END
 
-// MVS cart
+/* MVS cart*/
 ROM_START( lasthope )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
 	ROM_LOAD16_WORD_SWAP( "NGDT-300-P1.bin", 0x000000, 0x100000, CRC(3776a88f) SHA1(ea8b669da06d7c6b5ff7fa97a195f56a9253a7a1) )
@@ -6466,7 +6466,7 @@ WRITE16_HANDLER ( kof98_prot_w )
 		mem16[0x100/2] = 0x4e45; mem16[0x102/2] = 0x4f2d;
 		break;
 
-		default: // 00aa is written, but not needed?
+		default: /* 00aa is written, but not needed?*/
 		logerror ("%06x kof98 - unknown protection write %04x\n",activecpu_get_pc(), data);
 		break;
 	}
@@ -6667,7 +6667,7 @@ static WRITE16_HANDLER( mv0_prot_w )
 	}
 }
 
-// incomplete
+/* incomplete*/
 static READ16_HANDLER( mv0_bankswitch_r )
 {
 	if( mv0_bankswitch_offset[ 0 ] == 0xffff && mv0_bankswitch_offset[ 1 ] == 0xffff ){

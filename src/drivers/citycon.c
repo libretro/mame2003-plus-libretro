@@ -49,7 +49,7 @@ MEMORY_END
 
 static MEMORY_READ_START( readmem_sound )
 	{ 0x0000, 0x0fff, MRA_RAM },
-//	{ 0x4002, 0x4002, AY8910_read_port_0_r },	/* ?? */
+/*	{ 0x4002, 0x4002, AY8910_read_port_0_r },	 // ?? /*/
 	{ 0x6001, 0x6001, YM2203_read_port_0_r },
 	{ 0x8000, 0xffff, MRA_ROM },
 MEMORY_END
@@ -176,7 +176,7 @@ static struct GfxLayout spritelayout =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-//	{ REGION_GFX1, 0x00000, &charlayout, 512, 32 },	/* colors 512-639 */
+/*	{ REGION_GFX1, 0x00000, &charlayout, 512, 32 },	 // colors 512-639 /*/
 	{ REGION_GFX1, 0x00000, &charlayout, 640, 32 },	/* colors 512-639 */
 	{ REGION_GFX2, 0x00000, &spritelayout, 0, 16 },	/* colors 0-255 */
 	{ REGION_GFX2, 0x01000, &spritelayout, 0, 16 },

@@ -640,7 +640,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( cadash )
 	PORT_START	/* DSWA */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	// Manual says leave it off
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	/* Manual says leave it off*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
@@ -674,7 +674,7 @@ INPUT_PORTS_START( cadash )
 	PORT_DIPSETTING(    0xc0, "Stand alone" )
 	PORT_DIPSETTING(    0x80, "Master" )
 	PORT_DIPSETTING(    0x00, "Slave" )
-//	PORT_DIPSETTING(    0x40, "Stand alone" )
+/*	PORT_DIPSETTING(    0x40, "Stand alone" )*/
 
 	/* IN0 */
 	CADASH_PLAYERS_INPUT( IPF_PLAYER1 )
@@ -688,7 +688,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( cadashj )
 	PORT_START	/* DSWA */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	// Manual says leave it off
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	/* Manual says leave it off*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
@@ -716,7 +716,7 @@ INPUT_PORTS_START( cadashj )
 	PORT_DIPSETTING(    0xc0, "Stand alone" )
 	PORT_DIPSETTING(    0x80, "Master" )
 	PORT_DIPSETTING(    0x00, "Slave" )
-//	PORT_DIPSETTING(    0x40, "Stand alone" )
+/*	PORT_DIPSETTING(    0x40, "Stand alone" )*/
 
 	/* IN0 */
 	CADASH_PLAYERS_INPUT( IPF_PLAYER1 )
@@ -730,7 +730,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( cadashu )
 	PORT_START	/* DSWA */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	// Manual says leave it off
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	/* Manual says leave it off*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
@@ -758,7 +758,7 @@ INPUT_PORTS_START( cadashu )
 	PORT_DIPSETTING(    0xc0, "Stand alone" )
 	PORT_DIPSETTING(    0x80, "Master" )
 	PORT_DIPSETTING(    0x00, "Slave" )
-//	PORT_DIPSETTING(    0x40, "Stand alone" )
+/*	PORT_DIPSETTING(    0x40, "Stand alone" )*/
 
 	/* IN0 */
 	CADASH_PLAYERS_INPUT( IPF_PLAYER1 )
@@ -1287,10 +1287,10 @@ ROM_START( cadash )
 	ROM_LOAD( "c21-07.57",   0x00000, 0x08000, CRC(f02292bd) SHA1(0a5c06a048ad67f90e0d766b504582e9eef035f7) )
 
 	ROM_REGION( 0x01000, REGION_USER2, 0 )	/* pals ? */
-//	ROM_LOAD( "c21-09",   0x00000, 0x00ada, CRC(f02292bd) SHA1(0a5c06a048ad67f90e0d766b504582e9eef035f7) )
-//	ROM_LOAD( "c21-10",   0x00000, 0x00ada, CRC(f02292bd) SHA1(0a5c06a048ad67f90e0d766b504582e9eef035f7) )
-//	ROM_LOAD( "c21-11-1", 0x00000, 0x00ada, CRC(f02292bd) SHA1(0a5c06a048ad67f90e0d766b504582e9eef035f7) )
-//	ROM_LOAD( "c21-12",   0x00000, 0x00cd5, CRC(f02292bd) SHA1(0a5c06a048ad67f90e0d766b504582e9eef035f7) )
+/*	ROM_LOAD( "c21-09",   0x00000, 0x00ada, CRC(f02292bd) SHA1(0a5c06a048ad67f90e0d766b504582e9eef035f7) )*/
+/*	ROM_LOAD( "c21-10",   0x00000, 0x00ada, CRC(f02292bd) SHA1(0a5c06a048ad67f90e0d766b504582e9eef035f7) )*/
+/*	ROM_LOAD( "c21-11-1", 0x00000, 0x00ada, CRC(f02292bd) SHA1(0a5c06a048ad67f90e0d766b504582e9eef035f7) )*/
+/*	ROM_LOAD( "c21-12",   0x00000, 0x00cd5, CRC(f02292bd) SHA1(0a5c06a048ad67f90e0d766b504582e9eef035f7) )*/
 ROM_END
 
 ROM_START( cadashj )
@@ -1325,11 +1325,11 @@ ROM_START( cadashu )
 	ROM_LOAD16_BYTE( "c21-15-2.14",  0x40001, 0x20000, CRC(f915d26a) SHA1(cdc7e6a35077ebff937350aee1eee332352e9383) )
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
-	// bad dump so used checksum from other sets //
+	/* bad dump so used checksum from other sets */ /**/
 	ROM_LOAD( "c21-02.9",  0x00000, 0x80000, CRC(205883b9) SHA1(5aafee8cab3f949a7db91bcc26912f331041b51e) )	/* SCR tiles (8 x 8) */
 
 	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_DISPOSE )
-	// bad dump so used checksum from other sets //
+	/* bad dump so used checksum from other sets */ /**/
 	ROM_LOAD( "c21-01.1",  0x00000, 0x80000, CRC(1ff6f39c) SHA1(742f296efc8073fafa73da2c8d7d26ca9514b6bf) )	/* Sprites (16 x 16) */
 
 	ROM_REGION( 0x1c000, REGION_CPU2, 0 )	/* sound cpu */

@@ -170,9 +170,9 @@ static WRITE32_HANDLER( atarigx2_protection_w )
 {
 	{
 		int pc = activecpu_get_previouspc();
-//		if (pc == 0x11cbe || pc == 0x11c30)
-//			logerror("%06X:Protection W@%04X = %04X  (result to %06X)\n", pc, offset, data, activecpu_get_reg(M68K_A2));
-//		else
+/*		if (pc == 0x11cbe || pc == 0x11c30)*/
+/*			logerror("%06X:Protection W@%04X = %04X  (result to %06X)\n", pc, offset, data, activecpu_get_reg(M68K_A2));*/
+/*		else*/
 		if (ACCESSING_MSW32)
 			logerror("%06X:Protection W@%04X = %04X\n", pc, offset * 4, data >> 16);
 		else
@@ -197,7 +197,7 @@ static READ32_HANDLER( atarigx2_protection_r )
 {
 	static const UINT32 lookup_table[][2] =
 	{
-		// sprite flipping
+		/* sprite flipping*/
 		{ 0x0000e54f, 0<<11 },
 		{ 0x00024602, 5<<11 },
 		{ 0x0004ec02, 7<<11 },
@@ -253,7 +253,7 @@ static READ32_HANDLER( atarigx2_protection_r )
 		{ 0x000e1064, 3<<11 },
 
 
-		// initialization
+		/* initialization*/
 
 		{ 0x00000241, 0x0000 },
 		{ 0x0002F1CC, 0x0000 },
@@ -947,7 +947,7 @@ static READ32_HANDLER( atarigx2_protection_r )
 		{ 0x0C5CD659, 0x0c60 },
 		{ 0x0C5E7C17, 0x0000 },
 
-		// in-game demo
+		/* in-game demo*/
 
 		{ 0x0740E366, 0x0000 },
 		{ 0x07426EEA, 0x03e0 },
@@ -1035,7 +1035,7 @@ static READ32_HANDLER( atarigx2_protection_r )
 		{ 0x071E50A7, 0x2827 },
 
 
-		// troid screen
+		/* troid screen*/
 
 		{ 0x07C0B2D7, 0x0019 },
 		{ 0x07C222F6, 0x7fff },
@@ -1102,7 +1102,7 @@ static READ32_HANDLER( atarigx2_protection_r )
 		{ 0x083CCC66, 0x1843 },
 		{ 0x083E9C6C, 0x0001 },
 
-		// atari screen
+		/* atari screen*/
 
 		{ 0x0BC0C176, 0x0000 },
 		{ 0x0BC2894F, 0x7774 },
@@ -1214,7 +1214,7 @@ static MEMORY_WRITE32_START( main_writemem )
 	{ 0xe06000, 0xe06003, atarigen_sound_upper32_w },
 	{ 0xe08000, 0xe08003, latch_w },
 	{ 0xe0c000, 0xe0c003, atarigen_video_int_ack32_w },
-	{ 0xe0e000, 0xe0e003, MWA32_NOP },//watchdog_reset_w },
+	{ 0xe0e000, 0xe0e003, MWA32_NOP },/*watchdog_reset_w },*/
 	{ 0xff8000, 0xffffff, MWA32_RAM },
 MEMORY_END
 

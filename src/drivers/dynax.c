@@ -189,7 +189,7 @@ static int hnoridur_bank;
 static WRITE_HANDLER( hnoridur_rombank_w )
 {
 	data8_t *ROM = memory_region(REGION_CPU1) + 0x10000 + 0x8000*data;
-//logerror("%04x: rom bank = %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: rom bank = %02x\n",activecpu_get_pc(),data);*/
 	cpu_setbank(1,ROM);
 	hnoridur_bank = data;
 }
@@ -217,7 +217,7 @@ static WRITE_HANDLER( hnoridur_palette_w )
 			palette_ram[256*palbank + offset] = data;
 			break;
 
-		// hnoridur: R/W RAM
+		/* hnoridur: R/W RAM*/
 		case 0x18:
 		{
 			data8_t *RAM = memory_region(REGION_CPU1) + 0x10000 + hnoridur_bank * 0x8000;
@@ -253,7 +253,7 @@ static WRITE_HANDLER( yarunara_palette_w )
 			palette_ram[addr] = data;
 			break;
 
-		case 0x1c:	// RTC
+		case 0x1c:	/* RTC*/
 			return;
 
 		default:
@@ -262,8 +262,8 @@ static WRITE_HANDLER( yarunara_palette_w )
 	}
 
 	{
-		int br = palette_ram[addr & ~0x10];		// bbbrrrrr
-		int bg = palette_ram[addr | 0x10];		// bb0ggggg
+		int br = palette_ram[addr & ~0x10];		/* bbbrrrrr*/
+		int bg = palette_ram[addr | 0x10];		/* bb0ggggg*/
 		int r = br & 0x1f;
 		int g = bg & 0x1f;
 		int b = ((bg & 0xc0)>>3) | ((br & 0xe0)>>5);
@@ -317,7 +317,7 @@ static void adpcm_int(int data)
 	toggle = 1 - toggle;
 	if (toggle)
 	{
-		if (resetkludge)	// don't know what's wrong, but NMIs when the 5205 is reset make the game crash
+		if (resetkludge)	/* don't know what's wrong, but NMIs when the 5205 is reset make the game crash*/
 		cpu_set_nmi_line(0,PULSE_LINE);
 	}
 }
@@ -409,30 +409,30 @@ MEMORY_END
 
 
 static MEMORY_READ_START( yarunara_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM		},	// ROM
-	{ 0x6000, 0x6fff, MRA_RAM		},	// RAM
-	{ 0x7000, 0x7fff, MRA_RAM		},	// NVRAM
-	{ 0x8000, 0xffff, MRA_BANK1		},	// ROM (Banked)
+	{ 0x0000, 0x5fff, MRA_ROM		},	/* ROM*/
+	{ 0x6000, 0x6fff, MRA_RAM		},	/* RAM*/
+	{ 0x7000, 0x7fff, MRA_RAM		},	/* NVRAM*/
+	{ 0x8000, 0xffff, MRA_BANK1		},	/* ROM (Banked)*/
 MEMORY_END
 static MEMORY_WRITE_START( yarunara_writemem )
-	{ 0x0000, 0x5fff, MWA_ROM					},	// ROM
-	{ 0x6000, 0x6fff, MWA_RAM					},	// RAM
+	{ 0x0000, 0x5fff, MWA_ROM					},	/* ROM*/
+	{ 0x6000, 0x6fff, MWA_RAM					},	/* RAM*/
 	{ 0x7000, 0x7fff, MWA_RAM, &generic_nvram, &generic_nvram_size },
-	{ 0x8000, 0x81ff, yarunara_palette_w		},	// Palette or RTC
-	{ 0x8000, 0xffff, MWA_ROM					},	// ROM (Banked)
+	{ 0x8000, 0x81ff, yarunara_palette_w		},	/* Palette or RTC*/
+	{ 0x8000, 0xffff, MWA_ROM					},	/* ROM (Banked)*/
 MEMORY_END
 
 
 static MEMORY_READ_START( nanajign_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM					},	// ROM
-	{ 0x6000, 0x7fff, MRA_RAM					},	// RAM
-	{ 0x8000, 0xffff, MRA_BANK1					},	// ROM (Banked)
+	{ 0x0000, 0x5fff, MRA_ROM					},	/* ROM*/
+	{ 0x6000, 0x7fff, MRA_RAM					},	/* RAM*/
+	{ 0x8000, 0xffff, MRA_BANK1					},	/* ROM (Banked)*/
 MEMORY_END
 static MEMORY_WRITE_START( nanajign_writemem )
-	{ 0x0000, 0x5fff, MWA_ROM					},	// ROM
-	{ 0x6000, 0x7fff, MWA_RAM					},	// RAM
+	{ 0x0000, 0x5fff, MWA_ROM					},	/* ROM*/
+	{ 0x6000, 0x7fff, MWA_RAM					},	/* RAM*/
 	{ 0x8000, 0x80ff, nanajign_palette_w		},
-	{ 0x8000, 0xffff, MWA_ROM					},	// ROM (Banked)
+	{ 0x8000, 0xffff, MWA_ROM					},	/* ROM (Banked)*/
 MEMORY_END
 
 
@@ -440,219 +440,219 @@ MEMORY_END
 
 
 static PORT_READ_START( hanamai_readport )
-	{ 0x60, 0x60, hanamai_keyboard_0_r		},	// P1
-	{ 0x61, 0x61, hanamai_keyboard_1_r		},	// P2
-	{ 0x62, 0x62, input_port_2_r			},	// Coins
-	{ 0x63, 0x63, ret_ff					},	// ?
-	{ 0x78, 0x78, YM2203_status_port_0_r	},	// YM2203
-	{ 0x79, 0x79, YM2203_read_port_0_r		},	// 2 x DSW
+	{ 0x60, 0x60, hanamai_keyboard_0_r		},	/* P1*/
+	{ 0x61, 0x61, hanamai_keyboard_1_r		},	/* P2*/
+	{ 0x62, 0x62, input_port_2_r			},	/* Coins*/
+	{ 0x63, 0x63, ret_ff					},	/* ?*/
+	{ 0x78, 0x78, YM2203_status_port_0_r	},	/* YM2203*/
+	{ 0x79, 0x79, YM2203_read_port_0_r		},	/* 2 x DSW*/
 PORT_END
 static PORT_WRITE_START( hanamai_writeport )
-	{ 0x00, 0x00, dynax_extra_scrollx_w		},	// screen scroll X
-	{ 0x20, 0x20, dynax_extra_scrolly_w		},	// screen scroll Y
-	{ 0x41, 0x47, dynax_blitter_rev2_w		},	// Blitter
-	{ 0x50, 0x50, dynax_rombank_w			},	// BANK ROM Select	hnkochou only
-	{ 0x64, 0x64, hanamai_keyboard_w		},	// keyboard row select
-	{ 0x65, 0x65, dynax_rombank_w			},	// BANK ROM Select  hanamai only
-	{ 0x66, 0x66, dynax_vblank_ack_w		},	// VBlank IRQ Ack
-	{ 0x67, 0x67, adpcm_data_w				},	// MSM5205 data
-	{ 0x68, 0x68, dynax_layer_enable_w		},	// Layers Enable
-	{ 0x69, 0x69, hanamai_priority_w		},	// layer priority
-	{ 0x6a, 0x6a, dynax_blit_dest_w			},	// Destination Layer
-	{ 0x6b, 0x6b, dynax_blit_pen_w			},	// Destination Pen
-	{ 0x6c, 0x6c, dynax_blit_palette01_w	},	// Layers Palettes (Low Bits)
-	{ 0x6d, 0x6d, dynax_blit_palette2_w		},	//
-	{ 0x6e, 0x6e, dynax_blit_backpen_w		},	// Background Color
-	{ 0x70, 0x70, adpcm_reset_w				},	// MSM5205 reset
-	{ 0x71, 0x71, dynax_flipscreen_w		},	// Flip Screen
-	{ 0x72, 0x72, dynax_coincounter_0_w		},	// Coin Counters
-	{ 0x73, 0x73, dynax_coincounter_1_w		},	//
-	{ 0x74, 0x74, dynax_blitter_ack_w		},	// Blitter IRQ Ack
-	{ 0x76, 0x76, dynax_blit_palbank_w		},	// Layers Palettes (High Bit)
-	{ 0x77, 0x77, hanamai_layer_half_w		},	// half of the interleaved layer to write to
-	{ 0x78, 0x78, YM2203_control_port_0_w	},	// YM2203
-	{ 0x79, 0x79, YM2203_write_port_0_w		},	//
-	{ 0x7a, 0x7a, AY8910_control_port_0_w	},	// AY8910
-	{ 0x7b, 0x7b, AY8910_write_port_0_w		},	//
-//	{ 0x7c, 0x7c, IOWP_NOP					},	// CRT Controller
-//	{ 0x7d, 0x7d, IOWP_NOP					},	// CRT Controller
+	{ 0x00, 0x00, dynax_extra_scrollx_w		},	/* screen scroll X*/
+	{ 0x20, 0x20, dynax_extra_scrolly_w		},	/* screen scroll Y*/
+	{ 0x41, 0x47, dynax_blitter_rev2_w		},	/* Blitter*/
+	{ 0x50, 0x50, dynax_rombank_w			},	/* BANK ROM Select	hnkochou only*/
+	{ 0x64, 0x64, hanamai_keyboard_w		},	/* keyboard row select*/
+	{ 0x65, 0x65, dynax_rombank_w			},	/* BANK ROM Select  hanamai only*/
+	{ 0x66, 0x66, dynax_vblank_ack_w		},	/* VBlank IRQ Ack*/
+	{ 0x67, 0x67, adpcm_data_w				},	/* MSM5205 data*/
+	{ 0x68, 0x68, dynax_layer_enable_w		},	/* Layers Enable*/
+	{ 0x69, 0x69, hanamai_priority_w		},	/* layer priority*/
+	{ 0x6a, 0x6a, dynax_blit_dest_w			},	/* Destination Layer*/
+	{ 0x6b, 0x6b, dynax_blit_pen_w			},	/* Destination Pen*/
+	{ 0x6c, 0x6c, dynax_blit_palette01_w	},	/* Layers Palettes (Low Bits)*/
+	{ 0x6d, 0x6d, dynax_blit_palette2_w		},	/**/
+	{ 0x6e, 0x6e, dynax_blit_backpen_w		},	/* Background Color*/
+	{ 0x70, 0x70, adpcm_reset_w				},	/* MSM5205 reset*/
+	{ 0x71, 0x71, dynax_flipscreen_w		},	/* Flip Screen*/
+	{ 0x72, 0x72, dynax_coincounter_0_w		},	/* Coin Counters*/
+	{ 0x73, 0x73, dynax_coincounter_1_w		},	/**/
+	{ 0x74, 0x74, dynax_blitter_ack_w		},	/* Blitter IRQ Ack*/
+	{ 0x76, 0x76, dynax_blit_palbank_w		},	/* Layers Palettes (High Bit)*/
+	{ 0x77, 0x77, hanamai_layer_half_w		},	/* half of the interleaved layer to write to*/
+	{ 0x78, 0x78, YM2203_control_port_0_w	},	/* YM2203*/
+	{ 0x79, 0x79, YM2203_write_port_0_w		},	/**/
+	{ 0x7a, 0x7a, AY8910_control_port_0_w	},	/* AY8910*/
+	{ 0x7b, 0x7b, AY8910_write_port_0_w		},	/**/
+/*	{ 0x7c, 0x7c, IOWP_NOP					},	*/ /* CRT Controller*/
+/*	{ 0x7d, 0x7d, IOWP_NOP					},	*/ /* CRT Controller*/
 PORT_END
 
 
 static PORT_READ_START( hnoridur_readport )
-	{ 0x21, 0x21, input_port_2_r			},	// Coins
-	{ 0x22, 0x22, hanamai_keyboard_1_r		},	// P2
-	{ 0x23, 0x23, hanamai_keyboard_0_r		},	// P1
-	{ 0x24, 0x24, input_port_1_r			},	// DSW2
-	{ 0x25, 0x25, input_port_9_r			},	// DSW4
-	{ 0x26, 0x26, input_port_8_r			},	// DSW3
-	{ 0x36, 0x36, AY8910_read_port_0_r		},	// AY8910, DSW1
-	{ 0x57, 0x57, ret_ff					},	// ?
+	{ 0x21, 0x21, input_port_2_r			},	/* Coins*/
+	{ 0x22, 0x22, hanamai_keyboard_1_r		},	/* P2*/
+	{ 0x23, 0x23, hanamai_keyboard_0_r		},	/* P1*/
+	{ 0x24, 0x24, input_port_1_r			},	/* DSW2*/
+	{ 0x25, 0x25, input_port_9_r			},	/* DSW4*/
+	{ 0x26, 0x26, input_port_8_r			},	/* DSW3*/
+	{ 0x36, 0x36, AY8910_read_port_0_r		},	/* AY8910, DSW1*/
+	{ 0x57, 0x57, ret_ff					},	/* ?*/
 PORT_END
 static PORT_WRITE_START( hnoridur_writeport )
-	{ 0x01, 0x07, dynax_blitter_rev2_w		},	// Blitter
-	{ 0x20, 0x20, hanamai_keyboard_w		},	// keyboard row select
-	{ 0x30, 0x30, adpcm_reset_w				},	// MSM5205 reset
-	{ 0x32, 0x32, adpcm_data_w				},	// MSM5205 data
-	{ 0x34, 0x34, YM2413_register_port_0_w	},	// YM2413
-	{ 0x35, 0x35, YM2413_data_port_0_w		},	//
-	{ 0x38, 0x38, AY8910_write_port_0_w		},	// AY8910
-	{ 0x3a, 0x3a, AY8910_control_port_0_w	},	//
-//	{ 0x10, 0x10, IOWP_NOP					},	// CRT Controller
-//	{ 0x11, 0x11, IOWP_NOP					},	// CRT Controller
-	{ 0x40, 0x40, dynax_blit_pen_w			},	// Destination Pen
-	{ 0x41, 0x41, dynax_blit_dest_w			},	// Destination Layer
-	{ 0x42, 0x42, dynax_blit_palette01_w	},	// Layers Palettes
-	{ 0x43, 0x43, dynax_blit_palette2_w		},	//
-	{ 0x44, 0x44, hanamai_priority_w		},	// layer priority and enable
-	{ 0x45, 0x45, dynax_blit_backpen_w		},	// Background Color
+	{ 0x01, 0x07, dynax_blitter_rev2_w		},	/* Blitter*/
+	{ 0x20, 0x20, hanamai_keyboard_w		},	/* keyboard row select*/
+	{ 0x30, 0x30, adpcm_reset_w				},	/* MSM5205 reset*/
+	{ 0x32, 0x32, adpcm_data_w				},	/* MSM5205 data*/
+	{ 0x34, 0x34, YM2413_register_port_0_w	},	/* YM2413*/
+	{ 0x35, 0x35, YM2413_data_port_0_w		},	/**/
+	{ 0x38, 0x38, AY8910_write_port_0_w		},	/* AY8910*/
+	{ 0x3a, 0x3a, AY8910_control_port_0_w	},	/**/
+/*	{ 0x10, 0x10, IOWP_NOP					},	*/ /* CRT Controller*/
+/*	{ 0x11, 0x11, IOWP_NOP					},	*/ /* CRT Controller*/
+	{ 0x40, 0x40, dynax_blit_pen_w			},	/* Destination Pen*/
+	{ 0x41, 0x41, dynax_blit_dest_w			},	/* Destination Layer*/
+	{ 0x42, 0x42, dynax_blit_palette01_w	},	/* Layers Palettes*/
+	{ 0x43, 0x43, dynax_blit_palette2_w		},	/**/
+	{ 0x44, 0x44, hanamai_priority_w		},	/* layer priority and enable*/
+	{ 0x45, 0x45, dynax_blit_backpen_w		},	/* Background Color*/
 	{ 0x47, 0x47, hnoridur_palbank_w		},
-	{ 0x50, 0x50, dynax_extra_scrollx_w		},	// screen scroll X
-	{ 0x51, 0x51, dynax_extra_scrolly_w		},	// screen scroll Y
-	{ 0x54, 0x54, hnoridur_rombank_w		},	// BANK ROM Select
-	{ 0x56, 0x56, dynax_vblank_ack_w		},	// VBlank IRQ Ack
-	{ 0x60, 0x60, dynax_flipscreen_w		},	// Flip Screen
-	{ 0x61, 0x61, hanamai_layer_half_w		},	// half of the interleaved layer to write to
-	{ 0x62, 0x62, hnoridur_layer_half2_w		},	//
-	{ 0x67, 0x67, dynax_blitter_ack_w		},	// Blitter IRQ Ack
-	{ 0x70, 0x70, dynax_coincounter_0_w		},	// Coin Counters
-	{ 0x71, 0x71, dynax_coincounter_1_w		},	//
+	{ 0x50, 0x50, dynax_extra_scrollx_w		},	/* screen scroll X*/
+	{ 0x51, 0x51, dynax_extra_scrolly_w		},	/* screen scroll Y*/
+	{ 0x54, 0x54, hnoridur_rombank_w		},	/* BANK ROM Select*/
+	{ 0x56, 0x56, dynax_vblank_ack_w		},	/* VBlank IRQ Ack*/
+	{ 0x60, 0x60, dynax_flipscreen_w		},	/* Flip Screen*/
+	{ 0x61, 0x61, hanamai_layer_half_w		},	/* half of the interleaved layer to write to*/
+	{ 0x62, 0x62, hnoridur_layer_half2_w		},	/**/
+	{ 0x67, 0x67, dynax_blitter_ack_w		},	/* Blitter IRQ Ack*/
+	{ 0x70, 0x70, dynax_coincounter_0_w		},	/* Coin Counters*/
+	{ 0x71, 0x71, dynax_coincounter_1_w		},	/**/
 PORT_END
 
 
-// Almost identical to hnoridur
+/* Almost identical to hnoridur*/
 static PORT_READ_START( mcnpshnt_readport )
-	{ 0x21, 0x21, input_port_2_r			},	// Coins
-	{ 0x22, 0x22, hanamai_keyboard_1_r		},	// P2
-	{ 0x23, 0x23, hanamai_keyboard_0_r		},	// P1
-	{ 0x24, 0x24, input_port_0_r			},	// DSW2
-	{ 0x26, 0x26, input_port_1_r			},	// DSW3
-	{ 0x57, 0x57, ret_ff					},	// ?
+	{ 0x21, 0x21, input_port_2_r			},	/* Coins*/
+	{ 0x22, 0x22, hanamai_keyboard_1_r		},	/* P2*/
+	{ 0x23, 0x23, hanamai_keyboard_0_r		},	/* P1*/
+	{ 0x24, 0x24, input_port_0_r			},	/* DSW2*/
+	{ 0x26, 0x26, input_port_1_r			},	/* DSW3*/
+	{ 0x57, 0x57, ret_ff					},	/* ?*/
 PORT_END
 static PORT_WRITE_START( mcnpshnt_writeport )
-	{ 0x01, 0x07, dynax_blitter_rev2_w		},	// Blitter
-//	{ 0x10, 0x10, IOWP_NOP					},	// CRT Controller
-//	{ 0x11, 0x11, IOWP_NOP					},	// CRT Controller
-	{ 0x20, 0x20, hanamai_keyboard_w		},	// keyboard row select
-	{ 0x30, 0x30, adpcm_reset_w				},	// MSM5205 reset
-	{ 0x32, 0x32, adpcm_data_w				},	// MSM5205 data
-	{ 0x34, 0x34, YM2413_register_port_0_w	},	// YM2413
-	{ 0x35, 0x35, YM2413_data_port_0_w		},	//
-	{ 0x38, 0x38, AY8910_write_port_0_w		},	// AY8910
-	{ 0x3a, 0x3a, AY8910_control_port_0_w	},	//
-	{ 0x40, 0x40, dynax_blit_pen_w			},	// Destination Pen
-	{ 0x41, 0x41, dynax_blit_dest_w			},	// Destination Layer
-	{ 0x42, 0x42, dynax_blit_palette01_w	},	// Layers Palettes
-	{ 0x43, 0x43, dynax_blit_palette2_w		},	//
-	{ 0x44, 0x44, hanamai_priority_w		},	// layer priority and enable
-	{ 0x45, 0x45, dynax_blit_backpen_w		},	// Background Color
+	{ 0x01, 0x07, dynax_blitter_rev2_w		},	/* Blitter*/
+/*	{ 0x10, 0x10, IOWP_NOP					},	*/ /* CRT Controller*/
+/*	{ 0x11, 0x11, IOWP_NOP					},	*/ /* CRT Controller*/
+	{ 0x20, 0x20, hanamai_keyboard_w		},	/* keyboard row select*/
+	{ 0x30, 0x30, adpcm_reset_w				},	/* MSM5205 reset*/
+	{ 0x32, 0x32, adpcm_data_w				},	/* MSM5205 data*/
+	{ 0x34, 0x34, YM2413_register_port_0_w	},	/* YM2413*/
+	{ 0x35, 0x35, YM2413_data_port_0_w		},	/**/
+	{ 0x38, 0x38, AY8910_write_port_0_w		},	/* AY8910*/
+	{ 0x3a, 0x3a, AY8910_control_port_0_w	},	/**/
+	{ 0x40, 0x40, dynax_blit_pen_w			},	/* Destination Pen*/
+	{ 0x41, 0x41, dynax_blit_dest_w			},	/* Destination Layer*/
+	{ 0x42, 0x42, dynax_blit_palette01_w	},	/* Layers Palettes*/
+	{ 0x43, 0x43, dynax_blit_palette2_w		},	/**/
+	{ 0x44, 0x44, hanamai_priority_w		},	/* layer priority and enable*/
+	{ 0x45, 0x45, dynax_blit_backpen_w		},	/* Background Color*/
 	{ 0x47, 0x47, hnoridur_palbank_w		},
-	{ 0x50, 0x50, dynax_extra_scrollx_w		},	// screen scroll X
-	{ 0x51, 0x51, dynax_extra_scrolly_w		},	// screen scroll Y
-	{ 0x54, 0x54, hnoridur_rombank_w		},	// BANK ROM Select
-	{ 0x56, 0x56, dynax_vblank_ack_w		},	// VBlank IRQ Ack
-	{ 0x60, 0x60, dynax_flipscreen_w		},	// Flip Screen
-	{ 0x61, 0x61, nanajign_layer_half_w		},	// half of the interleaved layer to write to
-	{ 0x62, 0x62, hnoridur_layer_half2_w		},	//
-	{ 0x67, 0x67, dynax_blitter_ack_w		},	// Blitter IRQ Ack
-	{ 0x70, 0x70, dynax_coincounter_0_w		},	// Coin Counters
-	{ 0x71, 0x71, dynax_coincounter_1_w		},	//
+	{ 0x50, 0x50, dynax_extra_scrollx_w		},	/* screen scroll X*/
+	{ 0x51, 0x51, dynax_extra_scrolly_w		},	/* screen scroll Y*/
+	{ 0x54, 0x54, hnoridur_rombank_w		},	/* BANK ROM Select*/
+	{ 0x56, 0x56, dynax_vblank_ack_w		},	/* VBlank IRQ Ack*/
+	{ 0x60, 0x60, dynax_flipscreen_w		},	/* Flip Screen*/
+	{ 0x61, 0x61, nanajign_layer_half_w		},	/* half of the interleaved layer to write to*/
+	{ 0x62, 0x62, hnoridur_layer_half2_w		},	/**/
+	{ 0x67, 0x67, dynax_blitter_ack_w		},	/* Blitter IRQ Ack*/
+	{ 0x70, 0x70, dynax_coincounter_0_w		},	/* Coin Counters*/
+	{ 0x71, 0x71, dynax_coincounter_1_w		},	/**/
 PORT_END
 
 
 static PORT_READ_START( sprtmtch_readport )
-	{ 0x10, 0x10, YM2203_status_port_0_r	},	// YM2203
-	{ 0x11, 0x11, YM2203_read_port_0_r		},	// 2 x DSW
-	{ 0x20, 0x20, input_port_0_r			},	// P1
-	{ 0x21, 0x21, input_port_1_r			},	// P2
-	{ 0x22, 0x22, input_port_2_r			},	// Coins
-	{ 0x23, 0x23, ret_ff					},	// ?
+	{ 0x10, 0x10, YM2203_status_port_0_r	},	/* YM2203*/
+	{ 0x11, 0x11, YM2203_read_port_0_r		},	/* 2 x DSW*/
+	{ 0x20, 0x20, input_port_0_r			},	/* P1*/
+	{ 0x21, 0x21, input_port_1_r			},	/* P2*/
+	{ 0x22, 0x22, input_port_2_r			},	/* Coins*/
+	{ 0x23, 0x23, ret_ff					},	/* ?*/
 PORT_END
 static PORT_WRITE_START( sprtmtch_writeport )
-	{ 0x01, 0x07, dynax_blitter_rev2_w		},	// Blitter
-	{ 0x10, 0x10, YM2203_control_port_0_w	},	// YM2203
-	{ 0x11, 0x11, YM2203_write_port_0_w		},	//
-//	{ 0x12, 0x12, IOWP_NOP					},	// CRT Controller
-//	{ 0x13, 0x13, IOWP_NOP					},	// CRT Controller
-	{ 0x30, 0x30, dynax_layer_enable_w		},	// Layers Enable
-	{ 0x31, 0x31, dynax_rombank_w			},	// BANK ROM Select
-	{ 0x32, 0x32, dynax_blit_dest_w			},	// Destination Layer
-	{ 0x33, 0x33, dynax_blit_pen_w			},	// Destination Pen
-	{ 0x34, 0x34, dynax_blit_palette01_w	},	// Layers Palettes (Low Bits)
-	{ 0x35, 0x35, dynax_blit_palette2_w		},	//
-	{ 0x36, 0x36, dynax_blit_backpen_w		},	// Background Color
-	{ 0x37, 0x37, dynax_vblank_ack_w		},	// VBlank IRQ Ack
-//	{ 0x40, 0x40, adpcm_reset_w				},	// MSM5205 reset
-	{ 0x41, 0x41, dynax_flipscreen_w		},	// Flip Screen
-	{ 0x42, 0x42, dynax_coincounter_0_w		},	// Coin Counters
-	{ 0x43, 0x43, dynax_coincounter_1_w		},	//
-	{ 0x44, 0x44, dynax_blitter_ack_w		},	// Blitter IRQ Ack
-	{ 0x45, 0x45, dynax_blit_palbank_w		},	// Layers Palettes (High Bit)
+	{ 0x01, 0x07, dynax_blitter_rev2_w		},	/* Blitter*/
+	{ 0x10, 0x10, YM2203_control_port_0_w	},	/* YM2203*/
+	{ 0x11, 0x11, YM2203_write_port_0_w		},	/**/
+/*	{ 0x12, 0x12, IOWP_NOP					},	*/ /* CRT Controller*/
+/*	{ 0x13, 0x13, IOWP_NOP					},	*/ /* CRT Controller*/
+	{ 0x30, 0x30, dynax_layer_enable_w		},	/* Layers Enable*/
+	{ 0x31, 0x31, dynax_rombank_w			},	/* BANK ROM Select*/
+	{ 0x32, 0x32, dynax_blit_dest_w			},	/* Destination Layer*/
+	{ 0x33, 0x33, dynax_blit_pen_w			},	/* Destination Pen*/
+	{ 0x34, 0x34, dynax_blit_palette01_w	},	/* Layers Palettes (Low Bits)*/
+	{ 0x35, 0x35, dynax_blit_palette2_w		},	/**/
+	{ 0x36, 0x36, dynax_blit_backpen_w		},	/* Background Color*/
+	{ 0x37, 0x37, dynax_vblank_ack_w		},	/* VBlank IRQ Ack*/
+/*	{ 0x40, 0x40, adpcm_reset_w				},	*/ /* MSM5205 reset*/
+	{ 0x41, 0x41, dynax_flipscreen_w		},	/* Flip Screen*/
+	{ 0x42, 0x42, dynax_coincounter_0_w		},	/* Coin Counters*/
+	{ 0x43, 0x43, dynax_coincounter_1_w		},	/**/
+	{ 0x44, 0x44, dynax_blitter_ack_w		},	/* Blitter IRQ Ack*/
+	{ 0x45, 0x45, dynax_blit_palbank_w		},	/* Layers Palettes (High Bit)*/
 PORT_END
 
 
 
 static PORT_READ_START( mjfriday_readport )
-	{ 0x63, 0x63, hanamai_keyboard_0_r		},	// P1
-	{ 0x62, 0x62, hanamai_keyboard_1_r		},	// P2
-	{ 0x61, 0x61, input_port_2_r			},	// Coins
-	{ 0x64, 0x64, input_port_0_r			},	// DSW
-	{ 0x67, 0x67, input_port_1_r			},	// DSW
+	{ 0x63, 0x63, hanamai_keyboard_0_r		},	/* P1*/
+	{ 0x62, 0x62, hanamai_keyboard_1_r		},	/* P2*/
+	{ 0x61, 0x61, input_port_2_r			},	/* Coins*/
+	{ 0x64, 0x64, input_port_0_r			},	/* DSW*/
+	{ 0x67, 0x67, input_port_1_r			},	/* DSW*/
 PORT_END
 static PORT_WRITE_START( mjfriday_writeport )
-	{ 0x41, 0x47, dynax_blitter_rev2_w		},	// Blitter
-//	{ 0x50, 0x50, IOWP_NOP					},	// CRT Controller
-//	{ 0x51, 0x51, IOWP_NOP					},	// CRT Controller
-	{ 0x60, 0x60, hanamai_keyboard_w		},	// keyboard row select
-	{ 0x70, 0x70, YM2413_register_port_0_w	},	// YM2413
-	{ 0x71, 0x71, YM2413_data_port_0_w		},	//
-	{ 0x00, 0x00, dynax_blit_pen_w			},	// Destination Pen
-	{ 0x01, 0x01, dynax_blit_palette01_w	},	// Layers Palettes (Low Bits)
-	{ 0x02, 0x02, dynax_rombank_w			},	// BANK ROM Select
-	{ 0x03, 0x03, dynax_blit_backpen_w		},	// Background Color
-	{ 0x10, 0x11, mjdialq2_blit_dest_w		},	// Destination Layer
-	{ 0x12, 0x12, dynax_blit_palbank_w		},	// Layers Palettes (High Bit)
-	{ 0x13, 0x13, dynax_flipscreen_w		},	// Flip Screen
-	{ 0x14, 0x14, dynax_coincounter_0_w		},	// Coin Counters
-	{ 0x15, 0x15, dynax_coincounter_1_w		},	//
-	{ 0x16, 0x17, mjdialq2_layer_enable_w	},	// Layers Enable
-//	{ 0x80, 0x80, IOWP_NOP					},	// IRQ ack?
+	{ 0x41, 0x47, dynax_blitter_rev2_w		},	/* Blitter*/
+/*	{ 0x50, 0x50, IOWP_NOP					},	*/ /* CRT Controller*/
+/*	{ 0x51, 0x51, IOWP_NOP					},	*/ /* CRT Controller*/
+	{ 0x60, 0x60, hanamai_keyboard_w		},	/* keyboard row select*/
+	{ 0x70, 0x70, YM2413_register_port_0_w	},	/* YM2413*/
+	{ 0x71, 0x71, YM2413_data_port_0_w		},	/**/
+	{ 0x00, 0x00, dynax_blit_pen_w			},	/* Destination Pen*/
+	{ 0x01, 0x01, dynax_blit_palette01_w	},	/* Layers Palettes (Low Bits)*/
+	{ 0x02, 0x02, dynax_rombank_w			},	/* BANK ROM Select*/
+	{ 0x03, 0x03, dynax_blit_backpen_w		},	/* Background Color*/
+	{ 0x10, 0x11, mjdialq2_blit_dest_w		},	/* Destination Layer*/
+	{ 0x12, 0x12, dynax_blit_palbank_w		},	/* Layers Palettes (High Bit)*/
+	{ 0x13, 0x13, dynax_flipscreen_w		},	/* Flip Screen*/
+	{ 0x14, 0x14, dynax_coincounter_0_w		},	/* Coin Counters*/
+	{ 0x15, 0x15, dynax_coincounter_1_w		},	/**/
+	{ 0x16, 0x17, mjdialq2_layer_enable_w	},	/* Layers Enable*/
+/*	{ 0x80, 0x80, IOWP_NOP					},	*/ /* IRQ ack?*/
 PORT_END
 
 
 static PORT_READ_START( nanajign_readport )
-	{ 0x11, 0x11, input_port_2_r			},	// Coins
-	{ 0x12, 0x12, hanamai_keyboard_1_r		},	// P2
-	{ 0x13, 0x13, hanamai_keyboard_0_r		},	// P1
-	{ 0x14, 0x14, input_port_0_r			},	// DSW1
-	{ 0x15, 0x15, input_port_1_r			},	// DSW2
-	{ 0x16, 0x16, input_port_8_r			},	// DSW3
+	{ 0x11, 0x11, input_port_2_r			},	/* Coins*/
+	{ 0x12, 0x12, hanamai_keyboard_1_r		},	/* P2*/
+	{ 0x13, 0x13, hanamai_keyboard_0_r		},	/* P1*/
+	{ 0x14, 0x14, input_port_0_r			},	/* DSW1*/
+	{ 0x15, 0x15, input_port_1_r			},	/* DSW2*/
+	{ 0x16, 0x16, input_port_8_r			},	/* DSW3*/
 PORT_END
 static PORT_WRITE_START( nanajign_writeport )
-	{ 0x00, 0x00, adpcm_reset_w				},	// MSM5205 reset
-	{ 0x02, 0x02, adpcm_data_w				},	// MSM5205 data
-	{ 0x04, 0x04, YM2413_register_port_0_w	},	// YM2413
-	{ 0x05, 0x05, YM2413_data_port_0_w		},	//
-	{ 0x08, 0x08, AY8910_write_port_0_w		},	// AY8910
-	{ 0x0a, 0x0a, AY8910_control_port_0_w	},	//
-	{ 0x10, 0x10, hanamai_keyboard_w		},	// keyboard row select
-//	{ 0x20, 0x21, IOWP_NOP					},	// CRT Controller
-	{ 0x31, 0x37, dynax_blitter_rev2_w		},	// Blitter
-	{ 0x40, 0x40, dynax_coincounter_0_w		},	// Coin Counter
-	{ 0x50, 0x50, dynax_flipscreen_w		},	// Flip Screen
-	{ 0x51, 0x51, hanamai_layer_half_w		},	// half of the interleaved layer to write to
-	{ 0x52, 0x52, hnoridur_layer_half2_w		},	//
-	{ 0x57, 0x57, dynax_blitter_ack_w		},	// Blitter IRQ Ack
-	{ 0x60, 0x60, dynax_extra_scrollx_w		},	// screen scroll X
-	{ 0x62, 0x62, dynax_extra_scrolly_w		},	// screen scroll Y
-	{ 0x6a, 0x6a, hnoridur_rombank_w		},	// BANK ROM Select
-	{ 0x6c, 0x6c, dynax_vblank_ack_w		},	// VBlank IRQ Ack
-	{ 0x70, 0x70, dynax_blit_pen_w			},	// Destination Pen
-	{ 0x71, 0x71, dynax_blit_dest_w			},	// Destination Layer
-	{ 0x72, 0x72, dynax_blit_palette01_w	},	// Layers Palettes
-	{ 0x73, 0x73, dynax_blit_palette2_w		},	//
-	{ 0x74, 0x74, hanamai_priority_w		},	// layer priority and enable
-	{ 0x75, 0x75, dynax_blit_backpen_w		},	// Background Color
+	{ 0x00, 0x00, adpcm_reset_w				},	/* MSM5205 reset*/
+	{ 0x02, 0x02, adpcm_data_w				},	/* MSM5205 data*/
+	{ 0x04, 0x04, YM2413_register_port_0_w	},	/* YM2413*/
+	{ 0x05, 0x05, YM2413_data_port_0_w		},	/**/
+	{ 0x08, 0x08, AY8910_write_port_0_w		},	/* AY8910*/
+	{ 0x0a, 0x0a, AY8910_control_port_0_w	},	/**/
+	{ 0x10, 0x10, hanamai_keyboard_w		},	/* keyboard row select*/
+/*	{ 0x20, 0x21, IOWP_NOP					},	*/ /* CRT Controller*/
+	{ 0x31, 0x37, dynax_blitter_rev2_w		},	/* Blitter*/
+	{ 0x40, 0x40, dynax_coincounter_0_w		},	/* Coin Counter*/
+	{ 0x50, 0x50, dynax_flipscreen_w		},	/* Flip Screen*/
+	{ 0x51, 0x51, hanamai_layer_half_w		},	/* half of the interleaved layer to write to*/
+	{ 0x52, 0x52, hnoridur_layer_half2_w		},	/**/
+	{ 0x57, 0x57, dynax_blitter_ack_w		},	/* Blitter IRQ Ack*/
+	{ 0x60, 0x60, dynax_extra_scrollx_w		},	/* screen scroll X*/
+	{ 0x62, 0x62, dynax_extra_scrolly_w		},	/* screen scroll Y*/
+	{ 0x6a, 0x6a, hnoridur_rombank_w		},	/* BANK ROM Select*/
+	{ 0x6c, 0x6c, dynax_vblank_ack_w		},	/* VBlank IRQ Ack*/
+	{ 0x70, 0x70, dynax_blit_pen_w			},	/* Destination Pen*/
+	{ 0x71, 0x71, dynax_blit_dest_w			},	/* Destination Layer*/
+	{ 0x72, 0x72, dynax_blit_palette01_w	},	/* Layers Palettes*/
+	{ 0x73, 0x73, dynax_blit_palette2_w		},	/**/
+	{ 0x74, 0x74, hanamai_priority_w		},	/* layer priority and enable*/
+	{ 0x75, 0x75, dynax_blit_backpen_w		},	/* Background Color*/
 	{ 0x77, 0x77, hnoridur_palbank_w		},
 PORT_END
 
@@ -685,10 +685,10 @@ static READ_HANDLER( yarunara_input_r )
 			switch( yarunara_select )
 			{
 				case 0x00:
-					return readinputport(2);	// coins
+					return readinputport(2);	/* coins*/
 
 				case 0x02:
-					return 0xff;	// bit 7 must be 1. Bit 2?
+					return 0xff;	/* bit 7 must be 1. Bit 2?*/
 
 				default:
 					return 0xff;
@@ -699,13 +699,13 @@ static READ_HANDLER( yarunara_input_r )
 		{
 			switch( yarunara_select )
 			{
-				// player 2
-				case 0x01:	//quiztvqq
+				/* player 2*/
+				case 0x01:	/*quiztvqq*/
 				case 0x81:
 					return readinputport(3 + 5 + yarunara_ip++);
 
-				// player 1
-				case 0x02:	//quiztvqq
+				/* player 1*/
+				case 0x02:	/*quiztvqq*/
 				case 0x82:
 					return readinputport(3 + yarunara_ip++);
 
@@ -724,7 +724,7 @@ static WRITE_HANDLER( yarunara_rombank_w )
 
 	hnoridur_bank = data;
 	if (data == 0x1c)
-		rom[0x0d] = 0x00;	// RTC
+		rom[0x0d] = 0x00;	/* RTC*/
 }
 
 WRITE_HANDLER( yarunara_flipscreen_w )
@@ -733,38 +733,38 @@ WRITE_HANDLER( yarunara_flipscreen_w )
 }
 
 static PORT_READ_START( yarunara_readport )
-	{ 0x02, 0x03, yarunara_input_r		},	// Controls
-	{ 0x4c, 0x4c, input_port_0_r		},	// DSW 1
-	{ 0x4f, 0x4f, input_port_1_r		},	// DSW 2
+	{ 0x02, 0x03, yarunara_input_r		},	/* Controls*/
+	{ 0x4c, 0x4c, input_port_0_r		},	/* DSW 1*/
+	{ 0x4f, 0x4f, input_port_1_r		},	/* DSW 2*/
 PORT_END
 
 static PORT_WRITE_START( yarunara_writeport )
-	{ 0x00, 0x01, yarunara_input_w			},	// Controls
-	{ 0x11, 0x17, dynax_blitter_rev2_w		},	// Blitter
-	{ 0x20, 0x20, adpcm_reset_w				},	// MSM5205 reset
-	{ 0x22, 0x22, adpcm_data_w				},	// MSM5205 data
-	{ 0x24, 0x24, YM2413_register_port_0_w	},	// YM2413
-	{ 0x25, 0x25, YM2413_data_port_0_w		},	//
-	{ 0x28, 0x28, AY8910_write_port_0_w		},	// AY8910
-	{ 0x2a, 0x2a, AY8910_control_port_0_w	},	//
-	{ 0x48, 0x48, dynax_extra_scrollx_w		},	// screen scroll X
-	{ 0x49, 0x49, dynax_extra_scrolly_w		},	// screen scroll Y
-	{ 0x4a, 0x4a, yarunara_rombank_w		},	// BANK ROM Select
-	{ 0x4b, 0x4b, dynax_vblank_ack_w		},	// VBlank IRQ Ack
+	{ 0x00, 0x01, yarunara_input_w			},	/* Controls*/
+	{ 0x11, 0x17, dynax_blitter_rev2_w		},	/* Blitter*/
+	{ 0x20, 0x20, adpcm_reset_w				},	/* MSM5205 reset*/
+	{ 0x22, 0x22, adpcm_data_w				},	/* MSM5205 data*/
+	{ 0x24, 0x24, YM2413_register_port_0_w	},	/* YM2413*/
+	{ 0x25, 0x25, YM2413_data_port_0_w		},	/**/
+	{ 0x28, 0x28, AY8910_write_port_0_w		},	/* AY8910*/
+	{ 0x2a, 0x2a, AY8910_control_port_0_w	},	/**/
+	{ 0x48, 0x48, dynax_extra_scrollx_w		},	/* screen scroll X*/
+	{ 0x49, 0x49, dynax_extra_scrolly_w		},	/* screen scroll Y*/
+	{ 0x4a, 0x4a, yarunara_rombank_w		},	/* BANK ROM Select*/
+	{ 0x4b, 0x4b, dynax_vblank_ack_w		},	/* VBlank IRQ Ack*/
 
 	{ 0x50, 0x50, yarunara_flipscreen_w		},
-	{ 0x51, 0x51, yarunara_layer_half_w		},	// half of the interleaved layer to write to
-	{ 0x52, 0x52, yarunara_layer_half2_w	},	//
-	// 53 ?
-	// 54 ?
-	{ 0x57, 0x57, dynax_blitter_ack_w		},	// Blitter IRQ Ack
-	{ 0x68, 0x68, dynax_blit_pen_w			},	// Destination Pen
-	{ 0x69, 0x69, dynax_blit_dest_w			},	// Destination Layer
-	{ 0x6a, 0x6a, dynax_blit_palette01_w	},	// Layers Palettes
-	{ 0x6b, 0x6b, dynax_blit_palette2_w		},	//
-	{ 0x6c, 0x6c, hanamai_priority_w		},	// layer priority and enable
-	{ 0x6d, 0x6d, dynax_blit_backpen_w		},	// Background Color
-	// 6e ?
+	{ 0x51, 0x51, yarunara_layer_half_w		},	/* half of the interleaved layer to write to*/
+	{ 0x52, 0x52, yarunara_layer_half2_w	},	/**/
+	/* 53 ?*/
+	/* 54 ?*/
+	{ 0x57, 0x57, dynax_blitter_ack_w		},	/* Blitter IRQ Ack*/
+	{ 0x68, 0x68, dynax_blit_pen_w			},	/* Destination Pen*/
+	{ 0x69, 0x69, dynax_blit_dest_w			},	/* Destination Layer*/
+	{ 0x6a, 0x6a, dynax_blit_palette01_w	},	/* Layers Palettes*/
+	{ 0x6b, 0x6b, dynax_blit_palette2_w		},	/**/
+	{ 0x6c, 0x6c, hanamai_priority_w		},	/* layer priority and enable*/
+	{ 0x6d, 0x6d, dynax_blit_backpen_w		},	/* Background Color*/
+	/* 6e ?*/
 PORT_END
 
 
@@ -879,9 +879,9 @@ INPUT_PORTS_START( hanamai )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE )	// Test
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	// Analyzer
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// Memory Reset
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE )	/* Test*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* Analyzer*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* Memory Reset*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -981,12 +981,12 @@ INPUT_PORTS_START( hnkochou )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )		// Pay
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 )		/* Pay*/
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	// Test (there isn't a dip switch)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	// Analyzer
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// Memory Reset
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN3 )		// Note
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	/* Test (there isn't a dip switch)*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* Analyzer*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* Memory Reset*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN3 )		/* Note*/
 	PORT_BIT_IMPULSE( 0x40, IP_ACTIVE_LOW, IPT_COIN1, 2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -1086,9 +1086,9 @@ INPUT_PORTS_START( hnoridur )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE )	// Test
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	// Analyzer
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// Memory Reset
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE )	/* Test*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* Analyzer*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* Memory Reset*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -1188,7 +1188,7 @@ INPUT_PORTS_END
 
 
 INPUT_PORTS_START( sprtmtch )
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
@@ -1198,7 +1198,7 @@ INPUT_PORTS_START( sprtmtch )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START1 )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
@@ -1208,7 +1208,7 @@ INPUT_PORTS_START( sprtmtch )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// IN2 - Coins
+	PORT_START	/* IN2 - Coins*/
 	PORT_BIT_IMPULSE(  0x01, IP_ACTIVE_LOW, IPT_COIN1, 10)
 	PORT_BIT_IMPULSE(  0x02, IP_ACTIVE_LOW, IPT_COIN2, 10)
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -1218,7 +1218,7 @@ INPUT_PORTS_START( sprtmtch )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN3 - DSW
+	PORT_START	/* IN3 - DSW*/
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
@@ -1242,8 +1242,8 @@ INPUT_PORTS_START( sprtmtch )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 
-	PORT_START	// IN4 - DSW
-	PORT_DIPNAME( 0x07, 0x04, DEF_STR( Difficulty ) )	// Time
+	PORT_START	/* IN4 - DSW*/
+	PORT_DIPNAME( 0x07, 0x04, DEF_STR( Difficulty ) )	/* Time*/
 	PORT_DIPSETTING(    0x00, "1 (Easy)" )
 	PORT_DIPSETTING(    0x01, "2" )
 	PORT_DIPSETTING(    0x02, "3" )
@@ -1319,14 +1319,14 @@ INPUT_PORTS_START( mjfriday )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	// "17B"
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	// "18B"
-	PORT_SERVICE(0x04, IP_ACTIVE_LOW )	// Test (there isn't a dip switch)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	// Analyzer
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// Memory Reset
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// "06B"
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* "17B"*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* "18B"*/
+	PORT_SERVICE(0x04, IP_ACTIVE_LOW )	/* Test (there isn't a dip switch)*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* Analyzer*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* Memory Reset*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* "06B"*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )	// "18A"
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* "18A"*/
 
 	PORT_START
 	PORT_BITX(0x01, IP_ACTIVE_LOW, 0, "A",   KEYCODE_A,        IP_JOY_NONE )
@@ -1424,14 +1424,14 @@ INPUT_PORTS_START( mjdialq2 )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	// "17B"
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	// "18B"
-	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	// Test (there isn't a dip switch)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	// Analyzer
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// Memory Reset
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// "06B"
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* "17B"*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* "18B"*/
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )	/* Test (there isn't a dip switch)*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* Analyzer*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* Memory Reset*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* "06B"*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )	// "18A"
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* "18A"*/
 
 	PORT_START
 	PORT_BITX(0x01, IP_ACTIVE_LOW, 0, "A",   KEYCODE_A,        IP_JOY_NONE )
@@ -1475,17 +1475,17 @@ INPUT_PORTS_START( mjdialq2 )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( yarunara )
-	PORT_START	// IN0 - DSW
+	PORT_START	/* IN0 - DSW*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x08, "Easy" )		// 1,6
-	PORT_DIPSETTING(    0x0c, "Normal" ) 	// 3,4
-	PORT_DIPSETTING(    0x04, "Hard" )		// 5,2
-	PORT_DIPSETTING(    0x00, "Hardest" )	// 7,0
+	PORT_DIPSETTING(    0x08, "Easy" )		/* 1,6*/
+	PORT_DIPSETTING(    0x0c, "Normal" ) 	/* 3,4*/
+	PORT_DIPSETTING(    0x04, "Hard" )		/* 5,2*/
+	PORT_DIPSETTING(    0x00, "Hardest" )	/* 7,0*/
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1499,7 +1499,7 @@ INPUT_PORTS_START( yarunara )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN1 - DSW
+	PORT_START	/* IN1 - DSW*/
 	PORT_DIPNAME( 0x01, 0x01, "PINFU with TSUMO" )
 	PORT_DIPSETTING(    0x01, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
@@ -1523,17 +1523,17 @@ INPUT_PORTS_START( yarunara )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 
-	PORT_START	// IN2
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )	// "17B"
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN  )	// "18B"
-	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	// Test
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	// Analyzer
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// Memory Reset
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN  )	// "06B"
+	PORT_START	/* IN2*/
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN  )	/* "17B"*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN  )	/* "18B"*/
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	/* Test*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* Analyzer*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* Memory Reset*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN  )	/* "06B"*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
 
-	PORT_START	// IN3
+	PORT_START	/* IN3*/
 	PORT_BITX(0x01, IP_ACTIVE_LOW, 0, "A",     KEYCODE_A,        IP_JOY_NONE )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, 0, "E",     KEYCODE_E,        IP_JOY_NONE )
 	PORT_BITX(0x04, IP_ACTIVE_LOW, 0, "I",     KEYCODE_I,        IP_JOY_NONE )
@@ -1541,7 +1541,7 @@ INPUT_PORTS_START( yarunara )
 	PORT_BITX(0x10, IP_ACTIVE_LOW, 0, "Kan",   KEYCODE_LCONTROL, IP_JOY_NONE )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1                                )
 
-	PORT_START	// IN4
+	PORT_START	/* IN4*/
 	PORT_BITX(0x01, IP_ACTIVE_LOW, 0, "B",     KEYCODE_B,        IP_JOY_NONE )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, 0, "F",     KEYCODE_F,        IP_JOY_NONE )
 	PORT_BITX(0x04, IP_ACTIVE_LOW, 0, "J",     KEYCODE_J,        IP_JOY_NONE )
@@ -1549,7 +1549,7 @@ INPUT_PORTS_START( yarunara )
 	PORT_BITX(0x10, IP_ACTIVE_LOW, 0, "Reach", KEYCODE_LSHIFT,   IP_JOY_NONE )
 	PORT_BITX(0x20, IP_ACTIVE_LOW, 0, "Bet",   KEYCODE_RCONTROL, IP_JOY_NONE )
 
-	PORT_START	// IN5
+	PORT_START	/* IN5*/
 	PORT_BITX(0x01, IP_ACTIVE_LOW, 0, "C",     KEYCODE_C,        IP_JOY_NONE )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, 0, "G",     KEYCODE_G,        IP_JOY_NONE )
 	PORT_BITX(0x04, IP_ACTIVE_LOW, 0, "K",     KEYCODE_K,        IP_JOY_NONE )
@@ -1557,7 +1557,7 @@ INPUT_PORTS_START( yarunara )
 	PORT_BITX(0x10, IP_ACTIVE_LOW, 0, "Ron",   KEYCODE_Z,        IP_JOY_NONE )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN6
+	PORT_START	/* IN6*/
 	PORT_BITX(0x01, IP_ACTIVE_LOW, 0, "D",     KEYCODE_D,        IP_JOY_NONE )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, 0, "H",     KEYCODE_H,        IP_JOY_NONE )
 	PORT_BITX(0x04, IP_ACTIVE_LOW, 0, "L",     KEYCODE_L,        IP_JOY_NONE )
@@ -1565,7 +1565,7 @@ INPUT_PORTS_START( yarunara )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN7
+	PORT_START	/* IN7*/
 	PORT_BITX(0x01, IP_ACTIVE_LOW, 0, "1",   KEYCODE_1_PAD,        IP_JOY_NONE )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, 0, "2",   KEYCODE_2_PAD,        IP_JOY_NONE )
 	PORT_BITX(0x04, IP_ACTIVE_LOW, 0, "3",   KEYCODE_3_PAD,        IP_JOY_NONE )
@@ -1573,21 +1573,21 @@ INPUT_PORTS_START( yarunara )
 	PORT_BITX(0x10, IP_ACTIVE_LOW, 0, "5",   KEYCODE_5_PAD,        IP_JOY_NONE )
 	PORT_BITX(0x20, IP_ACTIVE_LOW, 0, "6",   KEYCODE_6_PAD,        IP_JOY_NONE )
 
-	// Keyboard 2
-	PORT_START	// IN8
+	/* Keyboard 2*/
+	PORT_START	/* IN8*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN9
+	PORT_START	/* IN9*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN10
+	PORT_START	/* IN10*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN11
+	PORT_START	/* IN11*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN12
+	PORT_START	/* IN12*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( quiztvqq )
-	PORT_START	// IN0 - DSW
+	PORT_START	/* IN0 - DSW*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
@@ -1611,7 +1611,7 @@ INPUT_PORTS_START( quiztvqq )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN1 - DSW
+	PORT_START	/* IN1 - DSW*/
 	PORT_DIPNAME( 0x03, 0x03, "Unknown 2-0&1" )
 	PORT_DIPSETTING(    0x03, "0" )
 	PORT_DIPSETTING(    0x02, "1" )
@@ -1634,17 +1634,17 @@ INPUT_PORTS_START( quiztvqq )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
 
-	PORT_START	// IN2
+	PORT_START	/* IN2*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	// Test, during boot
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )	/* Test, during boot*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2   )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1   )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN3
+	PORT_START	/* IN3*/
 	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
 	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
@@ -1652,17 +1652,17 @@ INPUT_PORTS_START( quiztvqq )
 	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_START1 )
 
-	PORT_START	// IN4
+	PORT_START	/* IN4*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN5
+	PORT_START	/* IN5*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN6
+	PORT_START	/* IN6*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN7
+	PORT_START	/* IN7*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	// Keyboard 2
-	PORT_START	// IN8
+	/* Keyboard 2*/
+	PORT_START	/* IN8*/
 	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
@@ -1670,13 +1670,13 @@ INPUT_PORTS_START( quiztvqq )
 	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// IN9
+	PORT_START	/* IN9*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN10
+	PORT_START	/* IN10*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN11
+	PORT_START	/* IN11*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_START	// IN12
+	PORT_START	/* IN12*/
 	PORT_BIT( 0x3f, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -1694,9 +1694,9 @@ INPUT_PORTS_START( mcnpshnt )
 	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x18, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )*/
 	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	//*
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	/***/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Demo_Sounds ) )
@@ -1722,10 +1722,10 @@ INPUT_PORTS_START( mcnpshnt )
 	PORT_BITX(    0x10, 0x10, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Choose Bonus", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	//*
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	/***/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )	//*
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )	/***/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
@@ -1733,9 +1733,9 @@ INPUT_PORTS_START( mcnpshnt )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE )	// Test
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	// Analyzer
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// Memory Reset
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE )	/* Test*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* Analyzer*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* Memory Reset*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -1801,7 +1801,7 @@ INPUT_PORTS_START( nanajign )
 	PORT_DIPSETTING(    0x10, "5" )
 	PORT_DIPSETTING(    0x08, "6" )
 	PORT_DIPSETTING(    0x00, "7" )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )		//?
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )		/*?*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Flip_Screen ) )
@@ -1812,7 +1812,7 @@ INPUT_PORTS_START( nanajign )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )	//*
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )	/***/
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
@@ -1821,13 +1821,13 @@ INPUT_PORTS_START( nanajign )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )	//*
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )	/***/
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	//*
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	/***/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )	//*
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )	/***/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
@@ -1835,9 +1835,9 @@ INPUT_PORTS_START( nanajign )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE )	// Test
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	// Analyzer
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	// Memory Reset
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE )	/* Test*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* Analyzer*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* Memory Reset*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -1976,7 +1976,7 @@ static MACHINE_DRIVER_START( hanamai )
 	MDRV_VISIBLE_AREA(0, 512-1, 16, 256-1)
 	MDRV_PALETTE_LENGTH(512)
 
-	MDRV_PALETTE_INIT(sprtmtch)			// static palette
+	MDRV_PALETTE_INIT(sprtmtch)			/* static palette*/
 	MDRV_VIDEO_START(hanamai)
 	MDRV_VIDEO_UPDATE(hanamai)
 
@@ -2075,7 +2075,7 @@ static MACHINE_DRIVER_START( sprtmtch )
 	MDRV_VISIBLE_AREA(0, 512-1, 16, 256-1)
 	MDRV_PALETTE_LENGTH(512)
 
-	MDRV_PALETTE_INIT(sprtmtch)			// static palette
+	MDRV_PALETTE_INIT(sprtmtch)			/* static palette*/
 	MDRV_VIDEO_START(sprtmtch)
 	MDRV_VIDEO_UPDATE(sprtmtch)
 
@@ -2096,7 +2096,7 @@ static MACHINE_DRIVER_START( roldfrog )
 	MDRV_CPU_PORTS(sprtmtch_readport,sprtmtch_writeport)
 	MDRV_CPU_VBLANK_INT(sprtmtch_vblank_interrupt,1)	/* IM 0 needs an opcode on the data bus */
 
-// Until the protection on the 68000 is figured out (or it will crash)
+/* Until the protection on the 68000 is figured out (or it will crash)*/
 #if 0
 	MDRV_CPU_ADD(M68000, 10000000)	/* 10 MHz??? */
 	MDRV_CPU_MEMORY(roldfrog_readmem,roldfrog_writemem)
@@ -2113,9 +2113,9 @@ static MACHINE_DRIVER_START( roldfrog )
 	MDRV_SCREEN_SIZE(512, 256)
 	MDRV_VISIBLE_AREA(0, 512-1, 16, 256-1)
 	MDRV_PALETTE_LENGTH(512)
-	MDRV_GFXDECODE(gfxdecodeinfo)	// has gfx
+	MDRV_GFXDECODE(gfxdecodeinfo)	/* has gfx*/
 
-	// no static palette
+	/* no static palette*/
 	MDRV_VIDEO_START(sprtmtch)
 	MDRV_VIDEO_UPDATE(sprtmtch)
 
@@ -2155,7 +2155,7 @@ static MACHINE_DRIVER_START( mjfriday )
 	MDRV_VISIBLE_AREA(0, 256-1, 16, 256-1)
 	MDRV_PALETTE_LENGTH(512)
 
-	MDRV_PALETTE_INIT(sprtmtch)			// static palette
+	MDRV_PALETTE_INIT(sprtmtch)			/* static palette*/
 	MDRV_VIDEO_START(mjdialq2)
 	MDRV_VIDEO_UPDATE(mjdialq2)
 
@@ -2197,7 +2197,7 @@ static MACHINE_DRIVER_START( yarunara )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(yarunara_readmem,yarunara_writemem)
 	MDRV_CPU_PORTS(yarunara_readport,yarunara_writeport)
-	MDRV_CPU_PERIODIC_INT(yarunara_clock_interrupt,10)	// RTC
+	MDRV_CPU_PERIODIC_INT(yarunara_clock_interrupt,10)	/* RTC*/
 
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_VISIBLE_AREA(0, 336-1, 8, 256-1-8-1)
@@ -2215,7 +2215,7 @@ static MACHINE_DRIVER_START( mcnpshnt )
 	MDRV_CPU_MEMORY(mcnpshnt_readmem,mcnpshnt_writemem)
 	MDRV_CPU_PORTS(mcnpshnt_readport,mcnpshnt_writeport)
 
-	MDRV_VIDEO_START(mcnpshnt)	// different priorities
+	MDRV_VIDEO_START(mcnpshnt)	/* different priorities*/
 MACHINE_DRIVER_END
 
 
@@ -2275,7 +2275,7 @@ ROM_START( hanamai )
 	ROM_LOAD( "1612.10c", 0x120000, 0x10000, CRC(8d9fb6e1) SHA1(2763f73069147d62fd46bb961b64cc9598687a28) )
 
 	ROM_REGION( 0x400, REGION_PROMS, ROMREGION_DISPOSE )	/* Color PROMs */
-	ROM_LOAD( "2.3j",  0x000, 0x200, CRC(7b0618a5) SHA1(df3aadcc7d54fab0c07f85d20c138a45798644e4) )	// FIXED BITS (0xxxxxxx)
+	ROM_LOAD( "2.3j",  0x000, 0x200, CRC(7b0618a5) SHA1(df3aadcc7d54fab0c07f85d20c138a45798644e4) )	/* FIXED BITS (0xxxxxxx)*/
 	ROM_LOAD( "1.4j",  0x200, 0x200, CRC(9cfcdd2d) SHA1(a649e9381754c4a19ccecc6e558067cc3ff27f91) )
 ROM_END
 
@@ -2313,7 +2313,7 @@ ROM_START( hnkochou )
 	ROM_LOAD( "2001.15e", 0x0c0000, 0x20000, CRC(09ace2b5) SHA1(1756e3a52523557aa481c6bd6cdf168567af82ff) )
 
 	ROM_REGION( 0x400, REGION_PROMS, ROMREGION_DISPOSE )	/* Color PROMs */
-	ROM_LOAD( "2.3j",  0x000, 0x200, CRC(7b0618a5) SHA1(df3aadcc7d54fab0c07f85d20c138a45798644e4) )	// FIXED BITS (0xxxxxxx)
+	ROM_LOAD( "2.3j",  0x000, 0x200, CRC(7b0618a5) SHA1(df3aadcc7d54fab0c07f85d20c138a45798644e4) )	/* FIXED BITS (0xxxxxxx)*/
 	ROM_LOAD( "1.4j",  0x200, 0x200, CRC(9cfcdd2d) SHA1(a649e9381754c4a19ccecc6e558067cc3ff27f91) )
 ROM_END
 
@@ -2391,7 +2391,7 @@ ROM_START( drgpunch )
 	ROM_LOAD( "2408.5a", 0xa0000, 0x20000, CRC(3a91e2b9) SHA1(b762c38ff2ebbd4ed832ca772973a15dd4a4ad73) )
 
 	ROM_REGION( 0x400, REGION_PROMS, ROMREGION_DISPOSE )	/* Color PROMs */
-	ROM_LOAD( "2.18g", 0x000, 0x200, CRC(9adccc33) SHA1(acf4d5a28430378dbccc1b9fa0b6391cc8149fee) )	// FIXED BITS (0xxxxxxx)
+	ROM_LOAD( "2.18g", 0x000, 0x200, CRC(9adccc33) SHA1(acf4d5a28430378dbccc1b9fa0b6391cc8149fee) )	/* FIXED BITS (0xxxxxxx)*/
 	ROM_LOAD( "1.17g", 0x200, 0x200, CRC(324fa9cf) SHA1(a03e23d9a9687dec4c23a8e41254a3f4b70c7e25) )
 ROM_END
 
@@ -2405,7 +2405,7 @@ ROM_START( sprtmtch )
 	ROM_LOAD( "3103.5c", 0x20000, 0x20000, CRC(ad29d7bd) SHA1(09ab84164e5cd14b595f33d129863735901aa922) )
 
 	ROM_REGION( 0x400, REGION_PROMS, ROMREGION_DISPOSE )	/* Color PROMs */
-	ROM_LOAD( "18g", 0x000, 0x200, CRC(dcc4e0dd) SHA1(4e0fb8fd7192bf32247966742df4b80585f32c37) )	// FIXED BITS (0xxxxxxx)
+	ROM_LOAD( "18g", 0x000, 0x200, CRC(dcc4e0dd) SHA1(4e0fb8fd7192bf32247966742df4b80585f32c37) )	/* FIXED BITS (0xxxxxxx)*/
 	ROM_LOAD( "17g", 0x200, 0x200, CRC(5443ebfb) SHA1(5b63220a3f6520e353db99b06e645640d1cfde2f) )
 ROM_END
 
@@ -2479,7 +2479,7 @@ ROM_START( roldfrga )
 	ROM_LOAD16_BYTE( "roldfrog.004",	0x200000, 0x080000, CRC(709281f5) SHA1(01453168df4dc84069346cecd1fba9adeae6fcb8) )
 	ROM_LOAD16_BYTE( "roldfrog.008",	0x200001, 0x080000, CRC(39adcba4) SHA1(6c8c945b6383fa2549e6654b427a7ce4c7ff46b5) )
 	ROM_LOAD16_BYTE( "roldfrog.005",	0x300000, 0x080000, CRC(b683160c) SHA1(526a772108a6bf71207a7b6de7cbd14f8e9496bc) )
-	ROM_LOAD16_BYTE( "9",	            0x300001, 0x080000, CRC(fd515b58) SHA1(7926ab9afbc260219351a02b56b82ede883f9aab) )	// differs with roldfrog.009 by 1 byte
+	ROM_LOAD16_BYTE( "9",	            0x300001, 0x080000, CRC(fd515b58) SHA1(7926ab9afbc260219351a02b56b82ede883f9aab) )	/* differs with roldfrog.009 by 1 byte*/
 
 	ROM_REGION( 0x10000, REGION_GFX1, 0 )	/* blitter data ?? */
 
@@ -2518,7 +2518,7 @@ ROM_START( mjfriday )
 	ROM_LOAD( "2604.2e",  0x060000, 0x20000, CRC(3cc1a65d) SHA1(221dc17042e46e58dc4634eef798568747aef3a2) )
 
 	ROM_REGION( 0x400, REGION_PROMS, ROMREGION_DISPOSE )	/* Color PROMs */
-	ROM_LOAD( "d26_2.9e", 0x000, 0x200, CRC(d6db5c60) SHA1(89ee10d092011c2c4eaab2c097aa88f5bb98bb97) )	// FIXED BITS (0xxxxxxx)
+	ROM_LOAD( "d26_2.9e", 0x000, 0x200, CRC(d6db5c60) SHA1(89ee10d092011c2c4eaab2c097aa88f5bb98bb97) )	/* FIXED BITS (0xxxxxxx)*/
 	ROM_LOAD( "d26_1.8e", 0x200, 0x200, CRC(af5edf32) SHA1(7202e0aa1ee3f22e3c5fb69a88db455a241929c5) )
 ROM_END
 
@@ -2565,7 +2565,7 @@ ROM_START( maya )
 	/* blitter data will be decrypted here*/
 
 	ROM_REGION( 0x400, REGION_PROMS, ROMREGION_DISPOSE )	/* Color PROMs */
-	ROM_LOAD( "prom2.5b",  0x000, 0x200, CRC(d276bf61) SHA1(987058b37182a54a360a80a2f073b000606a11c9) )	// FIXED BITS (0xxxxxxx)
+	ROM_LOAD( "prom2.5b",  0x000, 0x200, CRC(d276bf61) SHA1(987058b37182a54a360a80a2f073b000606a11c9) )	/* FIXED BITS (0xxxxxxx)*/
 	ROM_LOAD( "prom1.6b",  0x200, 0x200, CRC(e38eb360) SHA1(739960dd57ec3305edd57aa63816a81ddfbebf3e) )
 ROM_END
 
@@ -2611,10 +2611,10 @@ CRT Controller: HD46505SP (6845)
 ROM_START( mjdialq2 )
 	ROM_REGION( 0x78000, REGION_CPU1, 0 )	/* Z80 Code */
 	ROM_LOAD( "5201.2b", 0x00000, 0x10000, CRC(5186c2df) SHA1(f05ae3fd5e6c39f3bf2263eaba645d89c454bd70) )
-	ROM_RELOAD(          0x10000, 0x08000 )				// 1
-	ROM_CONTINUE(        0x20000, 0x08000 )				// 3
-	ROM_LOAD( "5202.2c", 0x30000, 0x08000, CRC(8e8b0038) SHA1(44130bb29b569610826e1fc7e4b2822f0e1034b1) )	// 5
-	ROM_CONTINUE(        0x70000, 0x08000 )				// d
+	ROM_RELOAD(          0x10000, 0x08000 )				/* 1*/
+	ROM_CONTINUE(        0x20000, 0x08000 )				/* 3*/
+	ROM_LOAD( "5202.2c", 0x30000, 0x08000, CRC(8e8b0038) SHA1(44130bb29b569610826e1fc7e4b2822f0e1034b1) )	/* 5*/
+	ROM_CONTINUE(        0x70000, 0x08000 )				/* d*/
 
 	ROM_REGION( 0xa0000, REGION_GFX1, 0 )	/* blitter data */
 	ROM_LOAD( "5207.2h", 0x00000, 0x20000, CRC(7794cd62) SHA1(7fa2fd50d7c975c381dda36f505df0e152196bb5) )
@@ -2624,7 +2624,7 @@ ROM_START( mjdialq2 )
 	ROM_LOAD( "5203.2d", 0x80000, 0x20000, CRC(706072d7) SHA1(d4692296d234b824961a94390e6d646ed9a7d5fd) )
 
 	ROM_REGION( 0x400, REGION_PROMS, ROMREGION_DISPOSE )	/* Color PROMs */
-	ROM_LOAD( "d52-2.9e", 0x000, 0x200, CRC(18585ce3) SHA1(7f2e20bb09c1d810910094a6b19e5151666d74ac) )	// FIXED BITS (0xxxxxxx)
+	ROM_LOAD( "d52-2.9e", 0x000, 0x200, CRC(18585ce3) SHA1(7f2e20bb09c1d810910094a6b19e5151666d74ac) )	/* FIXED BITS (0xxxxxxx)*/
 	ROM_LOAD( "d52-1.8e", 0x200, 0x200, CRC(8868247a) SHA1(97652025c411b379dfab576dc7f2d8d0d61d0828) )
 ROM_END
 
@@ -2732,13 +2732,13 @@ D6410288L-1 (SUB)
 ROM_START( quiztvqq )
 	ROM_REGION( 0x10000 + 0x28*0x8000, REGION_CPU1, 0 )	/* Z80 Code */
 	ROM_LOAD( "6401.2d",      0x000000, 0x020000, CRC(ce0e237c) SHA1(fd94a45052e3a68ef8cda2853b911a9993675fa6) )
-	// 14-17
+	/* 14-17*/
 	ROM_RELOAD(               0x0b0000, 0x020000 )
-	// 04-07
+	/* 04-07*/
 	ROM_LOAD( "6402.4d",      0x030000, 0x020000, CRC(cf7a9aa8) SHA1(9eaa8b318479e82cbcf133c227c61be92d282996) )
-	// 24-27
+	/* 24-27*/
 	ROM_CONTINUE(             0x130000, 0x020000 )
-	// 08-0b
+	/* 08-0b*/
 	ROM_LOAD( "6403.5d",      0x050000, 0x020000, CRC(62402ac9) SHA1(bf52d22b119d54410dad4949b0687bb0edf3e143) )
 
 	ROM_REGION( 0x1a0000, REGION_GFX1, 0 )	/* blitter data */
@@ -2781,15 +2781,15 @@ D6107068L-1 (SUB)
 ROM_START( mjangels )
 	ROM_REGION( 0x10000 + 0x28*0x8000, REGION_CPU1, 0 )	/* Z80 Code */
 	ROM_LOAD( "612-01.2d",    0x000000, 0x020000, CRC(cd353ba9) SHA1(8344dc5dd482ad6d36aa1e6b5824a09a3627dc65) )
-	// 00-03
+	/* 00-03*/
 	ROM_RELOAD(               0x010000, 0x20000 )
-	// 0c-0f
+	/* 0c-0f*/
 	ROM_RELOAD(               0x070000, 0x20000 )
-	// 24-27
+	/* 24-27*/
 	ROM_RELOAD(               0x130000, 0x20000 )
-	// 04-07
+	/* 04-07*/
 	ROM_LOAD( "612-02.4d",    0x030000, 0x020000, CRC(c1be70f9) SHA1(a0bd266b15c1677e5f41411217ca91d25c75e347) )
-	// 08-0b
+	/* 08-0b*/
 	ROM_LOAD( "612-03.5d",    0x050000, 0x020000, CRC(62402ac9) SHA1(bf52d22b119d54410dad4949b0687bb0edf3e143) )
 
 	ROM_REGION( 0x1c0000, REGION_GFX1, 0 )	/* blitter data */
@@ -2957,7 +2957,7 @@ ROM_END
 
 GAME ( 1988, hanamai,  0,        hanamai,  hanamai,  0,    ROT180, "Dynax",                  "Hana no Mai (Japan)"                                   )
 GAME ( 1989, hnkochou, hanamai,  hanamai,  hnkochou, 0,    ROT180, "Dynax",                  "Hana Kochou [BET] (Japan)"                             )
-GAMEX( 1989, hnoridur, 0,        hnoridur, hnoridur, 0,    ROT180, "Dynax",                  "Hana Oriduru (Japan)",                                 GAME_IMPERFECT_GRAPHICS ) // 1 rom is bad
+GAMEX( 1989, hnoridur, 0,        hnoridur, hnoridur, 0,    ROT180, "Dynax",                  "Hana Oriduru (Japan)",                                 GAME_IMPERFECT_GRAPHICS ) /* 1 rom is bad*/
 GAME ( 1989, drgpunch, 0,        sprtmtch, sprtmtch, 0,    ROT0,   "Dynax",                  "Dragon Punch (Japan)"                                  )
 GAME ( 1989, sprtmtch, drgpunch, sprtmtch, sprtmtch, 0,    ROT0,   "Dynax (Fabtek license)", "Sports Match"                                          )
 GAME ( 1989, mjfriday, 0,        mjfriday, mjfriday, 0,    ROT180, "Dynax",                  "Mahjong Friday (Japan)"                                )
@@ -2970,6 +2970,6 @@ GAME ( 1992, quiztvqq, 0,        yarunara, quiztvqq, 0,    ROT180, "Dynax",     
 GAME ( 1994, maya,     0,        sprtmtch, sprtmtch, maya, ROT0,   "Promat",                 "Maya"                                                  )
 
 
-// should move these to splash.c, its a protected bootleg of splash, not dynax stuff */
+/* should move these to splash.c, its a protected bootleg of splash, not dynax stuff */
 GAMEX(1993, roldfrog, 0,        roldfrog, sprtmtch, 0,    ROT0,   "Microhard", "The Return of Lady Frog", GAME_NOT_WORKING )
 GAMEX(1993, roldfrga, roldfrog, roldfrog, sprtmtch, 0,    ROT0,   "Microhard", "The Return of Lady Frog (set 2)", GAME_NOT_WORKING )

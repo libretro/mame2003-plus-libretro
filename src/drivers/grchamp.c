@@ -133,11 +133,11 @@ READ_HANDLER( PC3259_2_r )
 	int result = 0;
 	if( grchamp_player_ypos<128 )
 	{
-		result |= 0x4; // crash on bottom half of screen
+		result |= 0x4; /* crash on bottom half of screen*/
 	}
 	if( grchamp_collision&2 )
 	{
-		result = rand()&0xff; // OBJECT crash
+		result = rand()&0xff; /* OBJECT crash*/
 	}
 	return result;
 }
@@ -286,15 +286,15 @@ PORT_END
 
 static PORT_WRITE_START( writeport )
 	{ 0x00, 0x00, grchamp_control0_w },
-	{ 0x01, 0x01, PC3259_control_w }, // ?
+	{ 0x01, 0x01, PC3259_control_w }, /* ?*/
 	{ 0x02, 0x02, grchamp_player_xpos_w },
 	{ 0x03, 0x03, grchamp_player_ypos_w },
 	{ 0x04, 0x04, grchamp_tile_select_w },
 	{ 0x07, 0x07, grchamp_rain_xpos_w },
 	{ 0x08, 0x08, grchamp_rain_ypos_w },
 	{ 0x09, 0x09, grchamp_coinled_w },
-	{ 0x0a, 0x0a, MWA_NOP }, // ?
-	{ 0x0d, 0x0d, MWA_NOP }, // watchdog?
+	{ 0x0a, 0x0a, MWA_NOP }, /* ?*/
+	{ 0x0d, 0x0d, MWA_NOP }, /* watchdog?*/
 	{ 0x0e, 0x0e, grchamp_sound_w },
 	{ 0x10, 0x13, grchamp_comm_w },
 	{ 0x20, 0x20, grchamp_led_data0_w },
@@ -484,11 +484,11 @@ INPUT_PORTS_START( grchamp )
 
 	PORT_START /* Accel */
 	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL, 100, 16, 0x00, 0xff, KEYCODE_LCONTROL, IP_JOY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT )
-	//mask,default,type,sensitivity,delta,min,max
+	/*mask,default,type,sensitivity,delta,min,max*/
 
 	PORT_START /* Wheel */
 	PORT_ANALOG( 0xff, 0x40, IPT_DIAL | IPF_REVERSE, 25, 5, 0x00, 0x7f )
-	//mask,default,type,sensitivity,delta,min,max
+	/*mask,default,type,sensitivity,delta,min,max*/
 INPUT_PORTS_END
 
 ROM_START( grchamp )

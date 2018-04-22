@@ -45,7 +45,7 @@ VIDEO_UPDATE(bigstrkb);
 static MEMORY_READ16_START( bigstrkb_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	/* most region sizes are unknown */
-//	{ 0x0c0000, 0x0cffff, megasys1_vregs_C_r },
+/*	{ 0x0c0000, 0x0cffff, megasys1_vregs_C_r },*/
 	{ 0x0D0000, 0x0dffff, MRA16_RAM },
 	{ 0x0E0000, 0x0E3fff, MRA16_RAM },
 	{ 0x0e8000, 0x0ebfff, MRA16_RAM },
@@ -61,13 +61,13 @@ static MEMORY_READ16_START( bigstrkb_readmem )
 	{ 0xE00000, 0xE00001, OKIM6295_status_0_lsb_r },
 	{ 0xE00002, 0xE00003, OKIM6295_status_1_lsb_r },
 
-	{ 0xF00000, 0xFFFFFF, MRA16_RAM },	// main RAM
+	{ 0xF00000, 0xFFFFFF, MRA16_RAM },	/* main RAM*/
 MEMORY_END
 
 
 static MEMORY_WRITE16_START( bigstrkb_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
-//	{ 0x0c0000, 0x0cffff, megasys1_vregs_C_w, &megasys1_vregs },
+/*	{ 0x0c0000, 0x0cffff, megasys1_vregs_C_w, &megasys1_vregs },*/
 
 	{ 0x0C2004, 0x0C2005, MWA16_NOP },
 	{ 0x0C200C, 0x0C200d, MWA16_NOP },
@@ -75,9 +75,9 @@ static MEMORY_WRITE16_START( bigstrkb_writemem )
 	{ 0x0C2108, 0x0C2109, MWA16_NOP },
 	{ 0x0C2200, 0x0C2201, MWA16_NOP },
 	{ 0x0C2208, 0x0C2209, MWA16_NOP },
-	{ 0x0c2308, 0x0c2309, MWA16_NOP },	// bit 0 of DSW1 (flip screen) - use vregs
+	{ 0x0c2308, 0x0c2309, MWA16_NOP },	/* bit 0 of DSW1 (flip screen) - use vregs*/
 
-	{ 0x0D0000, 0x0dffff, MWA16_RAM },  // 0xd2000 - 0xd3fff?   0xd8000?
+	{ 0x0D0000, 0x0dffff, MWA16_RAM },  /* 0xd2000 - 0xd3fff?   0xd8000?*/
 
 	{ 0x0e0000, 0x0e3fff, bsb_videoram2_w, &bsb_videoram2 },
 	{ 0x0e8000, 0x0ebfff, bsb_videoram3_w, &bsb_videoram3 },
@@ -128,7 +128,7 @@ INPUT_PORTS_START( bigstrkb )
 	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x0b, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0x0a, DEF_STR( 1C_6C ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )	// also set "Coin B" to "Free Play"
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )	/* also set "Coin B" to "Free Play"*/
 	/* 0x01 to 0x05 gives 2C_3C */
 	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(    0x70, DEF_STR( 4C_1C ) )
@@ -141,11 +141,11 @@ INPUT_PORTS_START( bigstrkb )
 	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )	// also set "Coin A" to "Free Play"
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )	/* also set "Coin A" to "Free Play"*/
 	/* 0x10 to 0x50 gives 2C_3C */
 
 	PORT_START	/* DSW1 (0x700002.w) */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )	// Check code at 0x00097c (flip screen)
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )	/* Check code at 0x00097c (flip screen)*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )
@@ -154,17 +154,17 @@ INPUT_PORTS_START( bigstrkb )
 	PORT_DIPSETTING(    0x04, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
 	PORT_DIPNAME( 0x18, 0x18, "Timer Speed" )
-	PORT_DIPSETTING(    0x08, "Slow" )				// 65
-	PORT_DIPSETTING(    0x18, "Normal" )			// 50
-	PORT_DIPSETTING(    0x10, "Fast" )				// 35
-	PORT_DIPSETTING(    0x00, "Fastest" )			// 25
+	PORT_DIPSETTING(    0x08, "Slow" )				/* 65*/
+	PORT_DIPSETTING(    0x18, "Normal" )			/* 50*/
+	PORT_DIPSETTING(    0x10, "Fast" )				/* 35*/
+	PORT_DIPSETTING(    0x00, "Fastest" )			/* 25*/
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, "2 Players Game" )
 	PORT_DIPSETTING(    0x00, "1 Credit" )
 	PORT_DIPSETTING(    0x40, "2 Credits" )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )		// Check code at 0x000c50 (test mode ?)
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )		/* Check code at 0x000c50 (test mode ?)*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -253,7 +253,7 @@ static MACHINE_DRIVER_START( bigstrkb )
 	MDRV_VIDEO_UPDATE(bigstrkb)
 
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-//	MDRV_SOUND_ADD(YM2151, ym2151_interface)
+/*	MDRV_SOUND_ADD(YM2151, ym2151_interface)*/
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
 MACHINE_DRIVER_END
 
@@ -265,16 +265,16 @@ ROM_START( bigstrkb )
 	ROM_LOAD16_BYTE( "footgaa.016", 0x00000, 0x40000, CRC(1c6b8709) SHA1(b371cb1421877247d88ffc52ad090b3c6279b78f) )
 
 	ROM_REGION( 0x40000, REGION_GFX1, ROMREGION_DISPOSE  ) /* 8x8x4 FG Tiles */
-	ROM_LOAD( "footgaa.005", 0x00000, 0x10000, CRC(d97c9bfe) SHA1(03410a6b5348362575b2463ac9968975eeb0bc39) ) // FIRST AND SECOND HALF IDENTICAL
-	ROM_LOAD( "footgaa.006", 0x10000, 0x10000, CRC(1ae56e8b) SHA1(632ef5ca0ba043115d94e925d23a48cc28eeeb40) ) // FIRST AND SECOND HALF IDENTICAL
-	ROM_LOAD( "footgaa.007", 0x20000, 0x10000, CRC(a45fa6b6) SHA1(95ea6cf98b1fb7600c034f4cedda3cc46a51e199) ) // FIRST AND SECOND HALF IDENTICAL
+	ROM_LOAD( "footgaa.005", 0x00000, 0x10000, CRC(d97c9bfe) SHA1(03410a6b5348362575b2463ac9968975eeb0bc39) ) /* FIRST AND SECOND HALF IDENTICAL*/
+	ROM_LOAD( "footgaa.006", 0x10000, 0x10000, CRC(1ae56e8b) SHA1(632ef5ca0ba043115d94e925d23a48cc28eeeb40) ) /* FIRST AND SECOND HALF IDENTICAL*/
+	ROM_LOAD( "footgaa.007", 0x20000, 0x10000, CRC(a45fa6b6) SHA1(95ea6cf98b1fb7600c034f4cedda3cc46a51e199) ) /* FIRST AND SECOND HALF IDENTICAL*/
 	ROM_LOAD( "footgaa.008", 0x30000, 0x10000, CRC(2700888c) SHA1(ef3b4393cd36f5bbe7fdb8a78c8d0bc15022d027) )
 
 	ROM_REGION( 0x200000, REGION_GFX2, ROMREGION_INVERT | ROMREGION_DISPOSE  ) /* 16x16x4 BG Tiles */
-	ROM_LOAD( "footgaa.001", 0x000000, 0x80000, CRC(0e440841) SHA1(169ce2ba3ace707466fa1138c0841b7a6c90629f) ) // x1xxxxxxxxxxxxxxxxx = 0xFF
-	ROM_LOAD( "footgaa.002", 0x080000, 0x80000, CRC(92a15164) SHA1(31f641a6ab3a6115fbbdf89d65e8316c92bddf2a) ) // x1xxxxxxxxxxxxxxxxx = 0xFF
-	ROM_LOAD( "footgaa.003", 0x100000, 0x80000, CRC(da127b89) SHA1(085c201abcbd7ba3c87e4cf066f7928daebedd5d) ) // x1xxxxxxxxxxxxxxxxx = 0xFF
-	ROM_LOAD( "footgaa.004", 0x180000, 0x80000, CRC(3e6b0d92) SHA1(d8bf2e2d82dc985e8912b23620b19391396bc1af) ) // x1xxxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "footgaa.001", 0x000000, 0x80000, CRC(0e440841) SHA1(169ce2ba3ace707466fa1138c0841b7a6c90629f) ) /* x1xxxxxxxxxxxxxxxxx = 0xFF*/
+	ROM_LOAD( "footgaa.002", 0x080000, 0x80000, CRC(92a15164) SHA1(31f641a6ab3a6115fbbdf89d65e8316c92bddf2a) ) /* x1xxxxxxxxxxxxxxxxx = 0xFF*/
+	ROM_LOAD( "footgaa.003", 0x100000, 0x80000, CRC(da127b89) SHA1(085c201abcbd7ba3c87e4cf066f7928daebedd5d) ) /* x1xxxxxxxxxxxxxxxxx = 0xFF*/
+	ROM_LOAD( "footgaa.004", 0x180000, 0x80000, CRC(3e6b0d92) SHA1(d8bf2e2d82dc985e8912b23620b19391396bc1af) ) /* x1xxxxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x080000, REGION_GFX3, ROMREGION_INVERT | ROMREGION_DISPOSE ) /* 16x16x4 Sprites */
 	ROM_LOAD( "footgaa.011", 0x000000, 0x20000, CRC(c3924fea) SHA1(85b6775b5aa8c518a1e169b97379a210e25e67c9) )

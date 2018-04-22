@@ -103,7 +103,7 @@ INPUT_PORTS_START( denjinmk )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( On ) )
 	PORT_SERVICE( 0x0040, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x0080, 0x0080, "Language" ) //it actually skips the story entirely, so just remain JP as default
+	PORT_DIPNAME( 0x0080, 0x0080, "Language" ) /*it actually skips the story entirely, so just remain JP as default*/
 	PORT_DIPSETTING(      0x0080, "Japanese" )
 	PORT_DIPSETTING(      0x0000, "English" )
 
@@ -190,7 +190,7 @@ INPUT_PORTS_START( denjinmk )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
 	PORT_START
-	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNUSED ) //unused according to the test mode
+	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNUSED ) /*unused according to the test mode*/
 INPUT_PORTS_END
 
 

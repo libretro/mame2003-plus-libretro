@@ -105,7 +105,7 @@ static MEMORY_READ16_START( f1gp_readmem1 )
 	{ 0xffd000, 0xffdfff, MRA16_RAM },
 	{ 0xffe000, 0xffefff, MRA16_RAM },
 	{ 0xfff000, 0xfff001, input_port_0_word_r },
-//	{ 0xfff002, 0xfff003,  },	analog wheel?
+/*	{ 0xfff002, 0xfff003,  },	analog wheel?*/
 	{ 0xfff004, 0xfff005, input_port_1_word_r },
 	{ 0xfff006, 0xfff007, input_port_2_word_r },
 	{ 0xfff008, 0xfff009, command_pending_r },
@@ -115,18 +115,18 @@ MEMORY_END
 static MEMORY_WRITE16_START( f1gp_writemem1 )
 	{ 0x000000, 0x01ffff, MWA16_ROM },
 	{ 0xc00000, 0xc3ffff, f1gp_zoomdata_w },
-	{ 0xd00000, 0xd01fff, f1gp_rozvideoram_w, &f1gp_rozvideoram },					// BACK VRAM
+	{ 0xd00000, 0xd01fff, f1gp_rozvideoram_w, &f1gp_rozvideoram },					/* BACK VRAM*/
 	{ 0xd02000, 0xd03fff, f1gp_rozvideoram_w },	/* mirror */
 	{ 0xd04000, 0xd05fff, f1gp_rozvideoram_w },	/* mirror */
 	{ 0xd06000, 0xd07fff, f1gp_rozvideoram_w },	/* mirror */
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &f1gp_spr1cgram, &f1gp_spr1cgram_size },		// SPR-1 CG RAM
-	{ 0xe04000, 0xe07fff, MWA16_RAM, &f1gp_spr2cgram, &f1gp_spr2cgram_size },		// SPR-2 CG RAM
-	{ 0xf00000, 0xf003ff, MWA16_RAM, &f1gp_spr1vram },								// SPR-1 VRAM
-	{ 0xf10000, 0xf103ff, MWA16_RAM, &f1gp_spr2vram },								// SPR-2 VRAM
-	{ 0xff8000, 0xffbfff, MWA16_RAM },												// WORK RAM-1
-	{ 0xffc000, 0xffcfff, sharedram_w, &sharedram },								// DUAL RAM
-	{ 0xffd000, 0xffdfff, f1gp_fgvideoram_w, &f1gp_fgvideoram },					// CHARACTER
-	{ 0xffe000, 0xffefff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },	// PALETTE
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &f1gp_spr1cgram, &f1gp_spr1cgram_size },		/* SPR-1 CG RAM*/
+	{ 0xe04000, 0xe07fff, MWA16_RAM, &f1gp_spr2cgram, &f1gp_spr2cgram_size },		/* SPR-2 CG RAM*/
+	{ 0xf00000, 0xf003ff, MWA16_RAM, &f1gp_spr1vram },								/* SPR-1 VRAM*/
+	{ 0xf10000, 0xf103ff, MWA16_RAM, &f1gp_spr2vram },								/* SPR-2 VRAM*/
+	{ 0xff8000, 0xffbfff, MWA16_RAM },												/* WORK RAM-1*/
+	{ 0xffc000, 0xffcfff, sharedram_w, &sharedram },								/* DUAL RAM*/
+	{ 0xffd000, 0xffdfff, f1gp_fgvideoram_w, &f1gp_fgvideoram },					/* CHARACTER*/
+	{ 0xffe000, 0xffefff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },	/* PALETTE*/
 	{ 0xfff000, 0xfff001, f1gp_gfxctrl_w },
 	{ 0xfff002, 0xfff005, f1gp_fgscroll_w },
 	{ 0xfff008, 0xfff009, sound_command_w },
@@ -144,7 +144,7 @@ static MEMORY_READ16_START( f1gp2_readmem1 )
 	{ 0xffd000, 0xffdfff, MRA16_RAM },
 	{ 0xffe000, 0xffefff, MRA16_RAM },
 	{ 0xfff000, 0xfff001, input_port_0_word_r },
-//	{ 0xfff002, 0xfff003,  },	analog wheel?
+/*	{ 0xfff002, 0xfff003,  },	analog wheel?*/
 	{ 0xfff004, 0xfff005, input_port_1_word_r },
 	{ 0xfff006, 0xfff007, input_port_2_word_r },
 	{ 0xfff008, 0xfff009, command_pending_r },
@@ -153,13 +153,13 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( f1gp2_writemem1 )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0xa00000, 0xa07fff, MWA16_RAM, &f1gp2_sprcgram },								// SPR-1 CG RAM + SPR-2 CG RAM
-	{ 0xd00000, 0xd01fff, f1gp_rozvideoram_w, &f1gp_rozvideoram },					// BACK VRAM
-	{ 0xe00000, 0xe00fff, MWA16_RAM, &f1gp2_spritelist },							// not checked + SPR-1 VRAM + SPR-2 VRAM
-	{ 0xff8000, 0xffbfff, MWA16_RAM },												// WORK RAM-1
-	{ 0xffc000, 0xffcfff, sharedram_w, &sharedram },								// DUAL RAM
-	{ 0xffd000, 0xffdfff, f1gp_fgvideoram_w, &f1gp_fgvideoram },					// CHARACTER
-	{ 0xffe000, 0xffefff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },	// PALETTE
+	{ 0xa00000, 0xa07fff, MWA16_RAM, &f1gp2_sprcgram },								/* SPR-1 CG RAM + SPR-2 CG RAM*/
+	{ 0xd00000, 0xd01fff, f1gp_rozvideoram_w, &f1gp_rozvideoram },					/* BACK VRAM*/
+	{ 0xe00000, 0xe00fff, MWA16_RAM, &f1gp2_spritelist },							/* not checked + SPR-1 VRAM + SPR-2 VRAM*/
+	{ 0xff8000, 0xffbfff, MWA16_RAM },												/* WORK RAM-1*/
+	{ 0xffc000, 0xffcfff, sharedram_w, &sharedram },								/* DUAL RAM*/
+	{ 0xffd000, 0xffdfff, f1gp_fgvideoram_w, &f1gp_fgvideoram },					/* CHARACTER*/
+	{ 0xffe000, 0xffefff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },	/* PALETTE*/
 	{ 0xfff000, 0xfff001, f1gp2_gfxctrl_w },
 	{ 0xfff008, 0xfff009, sound_command_w },
 	{ 0xfff020, 0xfff02f, MWA16_RAM, &K053936_0_ctrl },
@@ -197,8 +197,8 @@ static PORT_READ_START( sound_readport )
 PORT_END
 
 static PORT_WRITE_START( sound_writeport )
-	{ 0x00, 0x00, f1gp_sh_bankswitch_w },	// f1gp
-	{ 0x0c, 0x0c, f1gp_sh_bankswitch_w },	// f1gp2
+	{ 0x00, 0x00, f1gp_sh_bankswitch_w },	/* f1gp*/
+	{ 0x0c, 0x0c, f1gp_sh_bankswitch_w },	/* f1gp2*/
 	{ 0x14, 0x14, pending_command_clear_w },
 	{ 0x18, 0x18, YM2610_control_port_0_A_w },
 	{ 0x19, 0x19, YM2610_data_port_0_A_w },
@@ -249,7 +249,7 @@ INPUT_PORTS_START( f1gp )
 	PORT_DIPSETTING(      0x2000, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(      0x1000, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
-	PORT_DIPNAME( 0x8000, 0x8000, "2 to Start, 1 to Cont." )	// Other desc. was too long !
+	PORT_DIPNAME( 0x8000, 0x8000, "2 to Start, 1 to Cont." )	/* Other desc. was too long !*/
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
@@ -354,7 +354,7 @@ INPUT_PORTS_START( f1gp2 )
 	PORT_DIPSETTING(      0x2000, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(      0x1000, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_6C ) )
-	PORT_DIPNAME( 0x8000, 0x8000, "2 to Start, 1 to Cont." )	// Other desc. was too long !
+	PORT_DIPNAME( 0x8000, 0x8000, "2 to Start, 1 to Cont." )	/* Other desc. was too long !*/
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )

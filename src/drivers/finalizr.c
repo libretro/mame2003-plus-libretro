@@ -114,7 +114,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x0001, 0x0001, MWA_RAM, &finalizr_scroll },
 	{ 0x0003, 0x0003, finalizr_videoctrl_w },
 	{ 0x0004, 0x0004, MWA_RAM, &finalizr_interrupt_enable },
-//	{ 0x0020, 0x003f, MWA_RAM, &finalizr_scroll },
+/*	{ 0x0020, 0x003f, MWA_RAM, &finalizr_scroll },*/
 	{ 0x0818, 0x0818, watchdog_reset_w },
 	{ 0x0819, 0x0819, finalizr_coin_w },
 	{ 0x081a, 0x081a, SN76496_0_w },	/* This address triggers the SN chip to read the data port. */

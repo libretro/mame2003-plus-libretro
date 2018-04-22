@@ -237,7 +237,7 @@ GetLives(void)
 
 static WRITE_HANDLER( coinplus_w )
 {
-	int dsw = readinputport(3); // DIP1
+	int dsw = readinputport(3); /* DIP1*/
 	coin_counter_w( 0, data&1 );
 	coin_counter_w( 1, data&2 );
 	if( data&1 )
@@ -398,7 +398,7 @@ static WRITE_HANDLER( beast_data_w )
 {
 	prot_busy_count = 1;
 
-//	logerror( "0x%04x: prot_w(0x%02x)\n", cpu_get_pc(space->cpu), data );
+/*	logerror( "0x%04x: prot_w(0x%02x)\n", cpu_get_pc(space->cpu), data );*/
 
 	watchdog_reset_w(0,0);
 
@@ -450,7 +450,7 @@ static WRITE_HANDLER( beast_data_w )
 			}
 			break;
 
-		case 0x01: // pc=7389
+		case 0x01: /* pc=7389*/
 			OutputProtectionState(0, 0x01 );
 			break;
 
@@ -458,26 +458,26 @@ static WRITE_HANDLER( beast_data_w )
 			CommonProt(0,0x02 );
 			break;
 
-		case 0x03: /* prepare for memory write to protection device ram (pc == 0x7987) */ // -> 0x02
+		case 0x03: /* prepare for memory write to protection device ram (pc == 0x7987) */ /* -> 0x02*/
 			logerror( "[WRITE BYTES]\n" );
 			prot_mode = ePROT_WRITE_BYTES;
 			prot_offs = 0;
 			break;
 
 		case 0x04:
-			ProtectionOut( 0,0 ); // ?
-			ProtectionOut( 1,0 ); // ?
-			ProtectionOut( 2,0 ); // ?
-			ProtectionOut( 3,0 ); // ?
+			ProtectionOut( 0,0 ); /* ?*/
+			ProtectionOut( 1,0 ); /* ?*/
+			ProtectionOut( 2,0 ); /* ?*/
+			ProtectionOut( 3,0 ); /* ?*/
 			CommonProt(4,0x04 );
 			break;
 
 		case 0x05: /* 0x71f4 */
-			ProtectionOut( 0,readinputport(1) ); // to $42
-			ProtectionOut( 1,0 ); // ?
-			ProtectionOut( 2,readinputport(2) ); // to $43
-			ProtectionOut( 3,0 ); // ?
-			ProtectionOut( 4,0 ); // ?
+			ProtectionOut( 0,readinputport(1) ); /* to $42*/
+			ProtectionOut( 1,0 ); /* ?*/
+			ProtectionOut( 2,readinputport(2) ); /* to $43*/
+			ProtectionOut( 3,0 ); /* ?*/
+			ProtectionOut( 4,0 ); /* ?*/
 			CommonProt(5,0x05 );
 			break;
 
@@ -495,9 +495,9 @@ static WRITE_HANDLER( beast_data_w )
 			break;
 
 		case 0x09:
-			ProtectionOut( 0,0 ); // ?
-			ProtectionOut( 1,0 ); // ?
-			ProtectionOut( 2,0 ); // ?
+			ProtectionOut( 0,0 ); /* ?*/
+			ProtectionOut( 1,0 ); /* ?*/
+			ProtectionOut( 2,0 ); /* ?*/
 			CommonProt(3, 0x09 );
 			break;
 
@@ -598,7 +598,7 @@ static WRITE_HANDLER( beast_data_w )
 		default:
 		case 0x97:
 		case 0x9a:
-		//	logerror( "!!0x%04x: prot_w(0x%02x)\n", cpu_get_pc(space->cpu), data );
+		/*	logerror( "!!0x%04x: prot_w(0x%02x)\n", cpu_get_pc(space->cpu), data );*/
 			break;
 		}
 	}
@@ -734,13 +734,13 @@ static WRITE_HANDLER( cpu3_bankswitch_w )
 
 /******************************************************************************/
 
-static WRITE_HANDLER ( djboy_spriteram_w ) // pandora_spriteram_w
+static WRITE_HANDLER ( djboy_spriteram_w ) /* pandora_spriteram_w*/
 {
 	offset = BITSWAP16(offset,  15,14,13,12, 11,   7,6,5,4,3,2,1,0,   10,9,8  );
 	spriteram[offset] = data;
 }
 
-static READ_HANDLER( djboy_spriteram_r ) // pandora_spriteram_r
+static READ_HANDLER( djboy_spriteram_r ) /* pandora_spriteram_r*/
 {
 	offset = BITSWAP16(offset,  15,14,13,12, 11,  7,6,5,4,3,2,1,0,  10,9,8  );
 	return spriteram[offset];
@@ -1030,7 +1030,7 @@ ROM_START( djboy )
 	ROM_LOAD( "bs001.1f", 0x080000, 0x80000, CRC(fdf36e6b) SHA1(a8762458dfd5201304247c113ceb85e96e33d423) )
 	ROM_LOAD( "bs002.1d", 0x100000, 0x80000, CRC(c52fee7f) SHA1(bd33117f7a57899fd4ec0a77413107edd9c44629) )
 	ROM_LOAD( "bs003.1k", 0x180000, 0x80000, CRC(ed89acb4) SHA1(611af362606b73cd2cf501678b463db52dcf69c4) )
-	ROM_LOAD( "bs07.1b",  0x1f0000, 0x10000, CRC(d9b7a220) SHA1(ba3b528d50650c209c986268bb29b42ff1276eb2) )  // replaces last 0x200 tiles
+	ROM_LOAD( "bs07.1b",  0x1f0000, 0x10000, CRC(d9b7a220) SHA1(ba3b528d50650c209c986268bb29b42ff1276eb2) )  /* replaces last 0x200 tiles*/
 
 	ROM_REGION( 0x100000, REGION_GFX2, 0 ) /* background */
 	ROM_LOAD( "bs004.1s", 0x000000, 0x80000, CRC(2f1392c3) SHA1(1bc3030b3612766a02133eef0b4d20013c0495a4) )
@@ -1044,5 +1044,5 @@ ROM_START( djboy )
 ROM_END
 
 /*    YEAR, NAME,   PARENT, MACHINE, INPUT, INIT,  MNTR, COMPANY,  FULLNAME, FLAGS */
-GAME( 1989, djboy,  0,      djboy,   djboy, djboy, ROT0, "Kaneko", "DJ Boy" ) // Sammy & Williams logos in FG ROM
+GAME( 1989, djboy,  0,      djboy,   djboy, djboy, ROT0, "Kaneko", "DJ Boy" ) /* Sammy & Williams logos in FG ROM*/
 

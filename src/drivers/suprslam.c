@@ -155,7 +155,7 @@ static MEMORY_WRITE16_START( suprslam_writemem )
 	{ 0xfd0000, 0xfdffff, MWA16_RAM },
 	{ 0xfe0000, 0xfe0fff, suprslam_screen_videoram_w, &suprslam_screen_videoram },
 	{ 0xff0000, 0xff1fff, suprslam_bg_videoram_w, &suprslam_bg_videoram },
-//	{ 0xff2000, 0xff203f, MWA16_RAM }, /* ?? */
+/*	{ 0xff2000, 0xff203f, MWA16_RAM },  // ?? /*/
 	{ 0xff8000, 0xff8fff, MWA16_RAM, &K053936_0_linectrl },
 	{ 0xff9000, 0xff9001, sound_command_w },
 	{ 0xffa000, 0xffafff, paletteram16_xGGGGGBBBBBRRRRR_word_w, &paletteram16 },
@@ -217,10 +217,10 @@ INPUT_PORTS_START( suprslam )
 	PORT_START		/* IN0 */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN3 )				// Only in "test mode"
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN3 )				/* Only in "test mode"*/
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SERVICE2 )				// "Test"
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SERVICE2 )				/* "Test"*/
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_SERVICE1 )
 

@@ -160,7 +160,7 @@ static MEMORY_WRITE_START( yamato_writemem )
 	{ 0x8800, 0x88ff, cclimber_bigsprite_videoram_w, &cclimber_bsvideoram, &cclimber_bsvideoram_size },
 	{ 0x8900, 0x8bff, MWA_RAM },  /* not used, but initialized */
 	{ 0x9000, 0x93ff, videoram_w, &videoram, &videoram_size },
-//{ 0x9400, 0x97ff, videoram_w }, /* mirror address, used by Crazy Climber to draw windows */
+/*{ 0x9400, 0x97ff, videoram_w },  // mirror address, used by Crazy Climber to draw windows /*/
 	/* 9800-9bff and 9c00-9fff share the same RAM, interleaved */
 	/* (9800-981f for scroll, 9c20-9c3f for color RAM, and so on) */
 	{ 0x9800, 0x981f, MWA_RAM, &cclimber_column_scroll },
@@ -171,9 +171,9 @@ static MEMORY_WRITE_START( yamato_writemem )
 	{ 0xa000, 0xa000, interrupt_enable_w },
 	{ 0xa001, 0xa001, flip_screen_x_w },
 	{ 0xa002, 0xa002, flip_screen_y_w },
-//{ 0xa004, 0xa004, cclimber_sample_trigger_w },
-//{ 0xa800, 0xa800, cclimber_sample_rate_w },
-//{ 0xb000, 0xb000, cclimber_sample_volume_w },
+/*{ 0xa004, 0xa004, cclimber_sample_trigger_w },*/
+/*{ 0xa800, 0xa800, cclimber_sample_rate_w },*/
+/*{ 0xb000, 0xb000, cclimber_sample_volume_w },*/
 MEMORY_END
 
 static PORT_WRITE_START( yamato_writeport )
@@ -287,7 +287,7 @@ static struct GfxLayout charlayout =
 static struct GfxLayout bscharlayout =
 {
 	8,8,    /* 8*8 characters */
-	512,//256,    /* 256 characters */
+	512,/*256,     // 256 characters /*/
 	2,      /* 2 bits per pixel */
 	{ 0, 512*8*8 }, /* the bitplanes are separated */
 	{ 0, 1, 2, 3, 4, 5, 6, 7 },     /* pretty straightforward layout */

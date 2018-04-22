@@ -154,8 +154,8 @@ Video sync   6 F   Video sync                 Post   6 F   Post
 	 +------+-------+------+------+
 */
 
-//**************************************************************************
-// Compiler Directives
+/****************************************************************************/
+/* Compiler Directives*/
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
@@ -164,8 +164,8 @@ Video sync   6 F   Video sync                 Post   6 F   Post
 #define HALLEYS_DEBUG 0
 
 
-//**************************************************************************
-// Driver Constants and Variables
+/****************************************************************************/
+/* Driver Constants and Variables*/
 
 #define GAME_BENBEROB 0
 #define GAME_HALLEYS  1
@@ -219,8 +219,8 @@ static int mVectorType, sndnmi_mask, firq_level;
 static void *blitter_reset_timer;
 
 
-//**************************************************************************
-// MB1551x Blitter Functions
+/****************************************************************************/
+/* MB1551x Blitter Functions*/
 
 static void blit(int offset)
 {
@@ -233,12 +233,12 @@ static void blit(int offset)
 	and become rather difficult to maintain.
 */
 
-// status attributes
+/* status attributes*/
 #define ACTIVE 0x02
 #define DECAY  0x10
 #define RETIRE 0x80
 
-// mode attributes
+/* mode attributes*/
 #define IGNORE_0 0x01
 #define MODE_02  0x02
 #define COLOR_ON 0x04
@@ -247,25 +247,25 @@ static void blit(int offset)
 #define MODE_40  0x40
 #define GROUP    0x80
 
-// color attributes
+/* color attributes*/
 #define PENCOLOR 0x0f
 #define BANKBIT1 0x80
 
-// code attributes
+/* code attributes*/
 #define COMMAND  0x0f
 #define BGLAYER  0x10
 #define BANKBIT0 0x40
 #define PLANE    0x80
 
-// special draw commands
-#define EFX1      0x8 // draws to back??
-#define HORIZBAR  0xe // draws 8-bit RGB horizontal bars
-#define STARPASS1 0x3 // draws the stars
-#define STARPASS2 0xd // modifies stars color
-#define TILEPASS1 0x5 // draws tiles(s1: embedded 8-bit RGB, s2: bit-packed pixel data)
-#define TILEPASS2 0xb // modifies tiles color/alpha
+/* special draw commands*/
+#define EFX1      0x8 /* draws to back??*/
+#define HORIZBAR  0xe /* draws 8-bit RGB horizontal bars*/
+#define STARPASS1 0x3 /* draws the stars*/
+#define STARPASS2 0xd /* modifies stars color*/
+#define TILEPASS1 0x5 /* draws tiles(s1: embedded 8-bit RGB, s2: bit-packed pixel data)*/
+#define TILEPASS2 0xb /* modifies tiles color/alpha*/
 
-// user flags
+/* user flags*/
 #define FLIP_X     0x0100
 #define FLIP_Y     0x0200
 #define SINGLE_PEN 0x0400
@@ -280,12 +280,12 @@ static void blit(int offset)
 #define ALPHAMODE  0x80000
 #define PPCD_ON    0x100000
 
-// hard-wired defs and interfaces
+/* hard-wired defs and interfaces*/
 #define HALLEYS_SPLIT   0xf4
 #define COLLISION_PORTA 0x67
 #define COLLISION_PORTB 0x8b
 
-// short cuts
+/* short cuts*/
 #define XMASK (SCREEN_WIDTH-1)
 #define YMASK (SCREEN_HEIGHT-1)
 
@@ -299,11 +299,11 @@ static void blit(int offset)
 	int status, flags, group, command, bank, layer, pen0, pen1;
 	int yclip, xclip, src_yskip, src_xskip, dst_skip, hclip, wclip, src_dy, src_dx;
 	DWORD *pal_ptr;
-	BYTE *src1_ptr, *src2_ptr; // esi alias, ebx alias
-	WORD *dst_ptr;             // edi alias
-	void *edi;                 // scratch
-	int eax, ebx, ecx, edx;    // scratch
-	WORD ax; BYTE al, ah;      // partial regs
+	BYTE *src1_ptr, *src2_ptr; /* esi alias, ebx alias*/
+	WORD *dst_ptr;             /* edi alias*/
+	void *edi;                 /* scratch*/
+	int eax, ebx, ecx, edx;    /* scratch*/
+	WORD ax; BYTE al, ah;      /* partial regs*/
 
 
 	param = blitter_ram + offset;
@@ -317,14 +317,14 @@ if (0) {
 #endif
 
 
-	// init blitter controls
+	/* init blitter controls*/
 	stptr = (int)param[0x2]<<8 | (int)param[0x3];
 	mode  = (int)param[0x5];
 	color = (int)param[0x6];
 	code  = (int)param[0x7];
 
 
-	// update sprite status
+	/* update sprite status*/
 	layer = (code>>3 & 2) | (code>>7 & 1);
 	offset >>= 4;
 	status = (stptr) ? cpu1_base[stptr] : ACTIVE;
@@ -337,13 +337,13 @@ if (0) {
 		if (offset >= HALLEYS_SPLIT) flags |= AD_HIGH; else
 		if (offset & 1) memcpy(param-0x10, param, 0x10); else group = param[0x15] & GROUP;
 
-		// HACK: force engine flame in group zero to increase collision accuracy
+		/* HACK: force engine flame in group zero to increase collision accuracy*/
 		if (offset == 0x1a || offset == 0x1b) group = 0;
 	}
 	else if (offset & 1) memcpy(param-0x10, param, 0x10);
 
 
-	// init draw parameters
+	/* init draw parameters*/
 	y = (int)param[0x8];
 	x = (int)param[0x9];
 	h = (int)param[0xa];
@@ -351,7 +351,7 @@ if (0) {
 	if (!h) return;
 
 
-	// translate source addresses
+	/* translate source addresses*/
 	src1 = (int)param[0xc]<<8 | (int)param[0xd];
 	src2 = (int)param[0xe]<<8 | (int)param[0xf];
 	flags |= src1 & (S1_IDLE | S1_REV);
@@ -362,18 +362,18 @@ if (0) {
 	pal_ptr = internal_palette;
 
 
-	// the crossroad of fate
+	/* the crossroad of fate*/
 	if (code & BGLAYER || command & 7) goto COMMAND_MODE;
 
 
-	// reject off-screen objects
+	/* reject off-screen objects*/
 	if (flags & MIRROR_Y) { flags |= FLIP_Y; y -= (h - 1); }
 	if (flags & MIRROR_X) { flags |= FLIP_X; x -= (w - 1); }
 	if (y > VIS_MAXY || (y + h) <= VIS_MINY) return;
 	if (x > VIS_MAXX || (x + w) <= VIS_MINX) return;
 
 
-	// clip objects against the visible area
+	/* clip objects against the visible area*/
 	yclip = y; xclip = x; hclip = h; wclip = w;
 	src_yskip = src_xskip = dst_skip = 0;
 	if (yclip < VIS_MINY) { src_yskip = VIS_MINY - yclip; yclip = VIS_MINY; hclip -= src_yskip; }
@@ -383,7 +383,7 @@ if (0) {
 	dst_skip = (yclip << SCREEN_WIDTH_L2) + xclip;
 
 
-	// adjust orientations
+	/* adjust orientations*/
 	eax = 0;
 	if (flags & (S1_REV | S2_REV)) { flags ^= FLIP_Y | FLIP_X; eax -= w * h - 8; }
 
@@ -405,7 +405,7 @@ if (0) {
 	else src_dx = 1;
 
 
-	// calculate entry points and loop constants
+	/* calculate entry points and loop constants*/
 	src1_ptr = gfx_plane02 + ((bank + src1)<<3) + eax;
 	src2_ptr = gfx_plane13 + ((bank + src2)<<3) + eax;
 
@@ -420,7 +420,7 @@ if (0) {
 	dst_ptr = render_layer[layer] + dst_skip;
 
 
-	// look up pen values and set rendering flags
+	/* look up pen values and set rendering flags*/
 	pen0 = code>>3 & 0x10;
 	pen1 = 0;
 	if (command == EFX1) { flags |= BACKMODE; pen0 |= SP_2BACK; }
@@ -433,7 +433,7 @@ if (0) {
 	else if (color & PENCOLOR) flags |= RGB_MASK;
 
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
 #define BLOCK_WIPE_COMMON { \
 	eax = wclip<<1; \
@@ -441,9 +441,9 @@ if (0) {
 	edi = dst_ptr; \
 	do { memset((BYTE*)edi, 0, eax); edi = (BYTE*)edi + SCREEN_BYTEWIDTH; } while (--ecx); }
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// multi-pen block or transparent blit
+	/* multi-pen block or transparent blit*/
 	if ((flags & (SINGLE_PEN | RGB_MASK | COLOR_ON)) == COLOR_ON)
 	{
 		if (!(flags & IGNORE_0)) BLOCK_WIPE_COMMON
@@ -500,7 +500,7 @@ if (0) {
 					src1_ptr += edx;
 					al |= *src2_ptr;
 					src2_ptr += edx;
-					if (al & 0xf) { dst_ptr[ecx] = (WORD)al | SP_COLLD; } // set collision flag on group one pixels
+					if (al & 0xf) { dst_ptr[ecx] = (WORD)al | SP_COLLD; } /* set collision flag on group one pixels*/
 				}
 				while (++ecx);
 				ecx = wclip; src1_ptr += src_dy; src2_ptr += src_dy; dst_ptr += SCREEN_WIDTH;
@@ -515,7 +515,7 @@ if (0) {
 					src1_ptr += edx;
 					al |= *src2_ptr;
 					src2_ptr += edx;
-					if (al & 0xf) { ax |= dst_ptr[ecx]; dst_ptr[ecx] = (WORD)al; } // combine collision flags in ax
+					if (al & 0xf) { ax |= dst_ptr[ecx]; dst_ptr[ecx] = (WORD)al; } /* combine collision flags in ax*/
 				}
 				while (++ecx);
 				ecx = wclip; src1_ptr += src_dy; src2_ptr += src_dy; dst_ptr += SCREEN_WIDTH;
@@ -523,7 +523,7 @@ if (0) {
 			while (--hclip);
 		}
 
-		// update collision list if object collided with the other group
+		/* update collision list if object collided with the other group*/
 		if (status & ACTIVE && ax & SP_COLLD)
 		{
 			collision_list[collision_count & (MAX_SPRITES-1)] = offset;
@@ -536,9 +536,9 @@ if (0) {
 
 	} else
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// multi-pen, RGB masked block or transparent blit
+	/* multi-pen, RGB masked block or transparent blit*/
 	if ((flags & (RGB_MASK | COLOR_ON)) == RGB_MASK + COLOR_ON)
 	{
 		if (!(flags & IGNORE_0)) BLOCK_WIPE_COMMON
@@ -563,9 +563,9 @@ if (0) {
 
 	} else
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// single-pen block or transparent blit
+	/* single-pen block or transparent blit*/
 	if ((flags & (SINGLE_PEN | COLOR_ON)) == SINGLE_PEN + COLOR_ON)
 	{
 		if (!(flags & IGNORE_0)) BLOCK_WIPE_COMMON
@@ -591,9 +591,9 @@ if (0) {
 
 	} else
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// transparent wipe
+	/* transparent wipe*/
 	if ((flags & (IGNORE_0 | COLOR_ON)) == IGNORE_0)
 	{
 		dst_ptr += wclip;
@@ -603,7 +603,7 @@ if (0) {
 
 		if (flags & PPCD_ON && !group)
 		{
-			// preserve collision flags when wiping group zero objects
+			/* preserve collision flags when wiping group zero objects*/
 			do {
 				do {
 					al = *src1_ptr;
@@ -643,17 +643,17 @@ if (0) {
 
 	} else
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// block wipe
+	/* block wipe*/
 	if ((flags & (IGNORE_0 | COLOR_ON)) == 0) BLOCK_WIPE_COMMON
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// End of Standard Mode
+	/* End of Standard Mode*/
 	return;
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
 
 COMMAND_MODE:
@@ -661,7 +661,7 @@ COMMAND_MODE:
 #define GFX_HI 0x10000
 
 
-	// reject illegal blits and adjust parameters
+	/* reject illegal blits and adjust parameters*/
 	if (command)
 	{
 		if (h > 8) return;
@@ -671,7 +671,7 @@ COMMAND_MODE:
 	}
 
 
-	// calculate entry points and loop constants
+	/* calculate entry points and loop constants*/
 	if (flags & S1_IDLE) src_dx = 0; else src_dx = 1;
 	if (flags & S1_REV ) src_dx = -src_dx;
 
@@ -681,7 +681,7 @@ COMMAND_MODE:
 	dst_base = render_layer[layer];
 
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
 #define WARP_WIPE_COMMON { \
 	ebx = y + h; \
@@ -691,12 +691,12 @@ COMMAND_MODE:
 		if (ecx > 0) { memset(dst_ptr, 0, ecx); eax = SCREEN_WIDTH - x; } else eax = w; \
 		memset(dst_ptr+x, 0, eax<<1); } }
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// specialized block wipe
+	/* specialized block wipe*/
 	if ((flags & (IGNORE_0 | COLOR_ON)) == 0)
 	{
-		// wipe star layer when the following conditions are met:
+		/* wipe star layer when the following conditions are met:*/
 		if (!command && y == 0xff && h == 1)
 		{
 			y = 0; h = SCREEN_HEIGHT;
@@ -706,7 +706,7 @@ COMMAND_MODE:
 			stars_enabled = ~layer & 1;
 		}
 
-		// wipe background and chain-wipe corresponding sprite layer when the command is zero
+		/* wipe background and chain-wipe corresponding sprite layer when the command is zero*/
 		else
 		{
 			WARP_WIPE_COMMON
@@ -715,9 +715,9 @@ COMMAND_MODE:
 
 	} else
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// gray shaded star map with 16x16 cells
+	/* gray shaded star map with 16x16 cells*/
 	if (command == STARPASS1 && flags & COLOR_ON)
 	{
 		/*
@@ -769,9 +769,9 @@ COMMAND_MODE:
 
 	} else
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// stars color modifier
+	/* stars color modifier*/
 	if (command == STARPASS2 && flags & COLOR_ON)
 	{
 		edx = SCREEN_WIDTH - x - w;
@@ -797,9 +797,9 @@ COMMAND_MODE:
 
 	} else
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// RGB 8x8 bit-packed transparent tile
+	/* RGB 8x8 bit-packed transparent tile*/
 	if (command == TILEPASS1 && flags & COLOR_ON)
 	{
 		/*
@@ -875,9 +875,9 @@ COMMAND_MODE:
 
 	} else
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-	// RGB horizontal bar(foreground only)
+	/* RGB horizontal bar(foreground only)*/
 	if (command == HORIZBAR && flags & COLOR_ON && !(layer & 1))
 	{
 		#define WARP_LINE_COMMON { \
@@ -891,14 +891,14 @@ COMMAND_MODE:
 
 		if (!(flags & S2_IDLE))
 		{
-			// double source mode
+			/* double source mode*/
 			src2_ptr += GFX_HI;
 			wclip = x + w;
 			w = 32;
 		}
 		else
 		{
-			// single source mode
+			/* single source mode*/
 			if (color & 4) src1_ptr += GFX_HI;
 			wclip = 32;
 		}
@@ -935,12 +935,12 @@ COMMAND_MODE:
 	}
 
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
-} // end of blit()
+} /* end of blit()*/
 
 
-// draws Ben Bero Beh's color backdrop(verification required)
+/* draws Ben Bero Beh's color backdrop(verification required)*/
 static WRITE_HANDLER( bgtile_w )
 {
 	int yskip, xskip, ecx;
@@ -968,7 +968,7 @@ static WRITE_HANDLER( bgtile_w )
 
 static READ_HANDLER( blitter_status_r )
 {
-	if (game_id==GAME_HALLEYS && activecpu_get_pc()==0x8017) return(0x55); // HACK: trick SRAM test on startup
+	if (game_id==GAME_HALLEYS && activecpu_get_pc()==0x8017) return(0x55); /* HACK: trick SRAM test on startup*/
 
 	return(0);
 }
@@ -1003,12 +1003,12 @@ static WRITE_HANDLER( blitter_w )
 		if (i==0 || (i==4 && !data))
 		{
 			blitter_busy = 0;
-			if (firq_level) cpu_set_irq_line(0, M6809_FIRQ_LINE, ASSERT_LINE); // make up delayed FIRQ's
+			if (firq_level) cpu_set_irq_line(0, M6809_FIRQ_LINE, ASSERT_LINE); /* make up delayed FIRQ's*/
 		}
 		else
 		{
 			blitter_busy = 1;
-			timer_adjust(blitter_reset_timer, TIME_IN_CYCLES(100, 0), 0, 0); // free blitter if no updates in 100 cycles
+			timer_adjust(blitter_reset_timer, TIME_IN_CYCLES(100, 0), 0, 0); /* free blitter if no updates in 100 cycles*/
 		}
 	}
 }
@@ -1038,7 +1038,7 @@ static READ_HANDLER( collision_id_r )
 	UPDATE: re-implemented pixel collision to accompany the hack method.
 */
 
-	if (game_id==GAME_HALLEYS && activecpu_get_pc()==0xb114) // HACK: collision detection bypass
+	if (game_id==GAME_HALLEYS && activecpu_get_pc()==0xb114) /* HACK: collision detection bypass*/
 	{
 		if (collision_count) { collision_count--; return(collision_list[collision_count]); }
 
@@ -1049,8 +1049,8 @@ static READ_HANDLER( collision_id_r )
 }
 
 
-//**************************************************************************
-// Video Initializations and Updates
+/****************************************************************************/
+/* Video Initializations and Updates*/
 
 static PALETTE_INIT( halleys )
 {
@@ -1063,15 +1063,15 @@ static PALETTE_INIT( halleys )
 		palette_set_color(count, 0, 0, 0);
 	}
 
-	// 00-31: palette RAM(ffc0-ffdf)
+	/* 00-31: palette RAM(ffc0-ffdf)*/
 
-	// 32-63: colors decoded through unknown PROMs
+	/* 32-63: colors decoded through unknown PROMs*/
 
-	// 64-255: unused
+	/* 64-255: unused*/
 
-	// 256-1023: palette mirrors
+	/* 256-1023: palette mirrors*/
 
-	// 1024-1279: gray shades
+	/* 1024-1279: gray shades*/
 	for (i=0; i<16; i++)
 	{
 		d = (i<<6&0xc0) | (i<<2&0x30) | (i&0x0c) | (i>>2&0x03) | BG_RGB;
@@ -1085,7 +1085,7 @@ static PALETTE_INIT( halleys )
 		}
 	}
 
-	// 1280-1535: RGB
+	/* 1280-1535: RGB*/
 	for (d=0; d<256; d++)
 	{
 		j = d + BG_RGB;
@@ -1113,19 +1113,19 @@ static void halleys_decode_rgb(DWORD *r, DWORD *g, DWORD *b, int addr, int data)
 
 	int bit0, bit1, bit2, bit3, bit4;
 
-	// the four 16x4-bit SN74S189 SRAM chips are assumed be the game's 32-byte palette RAM
+	/* the four 16x4-bit SN74S189 SRAM chips are assumed be the game's 32-byte palette RAM*/
 	sram_189 = paletteram;
 
-	// each of the three 32-byte 6330 PROM is wired to an RGB component output
+	/* each of the three 32-byte 6330 PROM is wired to an RGB component output*/
 	prom_6330 = memory_region(REGION_PROMS);
 
-	// latch1 holds 8 bits from the selected palette RAM address
+	/* latch1 holds 8 bits from the selected palette RAM address*/
 	latch1_273 = sram_189[addr];
 
-	// latch2 holds another 8 bits from somewhere on the data bus in a bit-swapped manner(inaccurate)
+	/* latch2 holds another 8 bits from somewhere on the data bus in a bit-swapped manner(inaccurate)*/
 	latch2_273 = (data>>4 & 0x0f)|(data<<1 & 0x10)|(data<<3 & 0x20)|(data<<5 & 0x40)|(data<<7 & 0x80);
 
-	// data from latch1 and 2 are combined and then decoded through PROMs to form three 8-bit tripplets
+	/* data from latch1 and 2 are combined and then decoded through PROMs to form three 8-bit tripplets*/
 	bit0 = latch1_273>>5 & 0x01;
 	bit1 = latch1_273>>3 & 0x02;
 
@@ -1158,7 +1158,7 @@ static WRITE_HANDLER( halleys_paletteram_IIRRGGBB_w )
 	pal_ptr[offset+SP_ALPHA] = j;
 	pal_ptr[offset+SP_COLLD] = j;
 
-	// 8-bit RGB format: IIRRGGBB
+	/* 8-bit RGB format: IIRRGGBB*/
 	i = d>>6 & 0x03;
 	r = d>>2 & 0x0c; r |= i;  r = r<<4 | r;
 	g = d    & 0x0c; g |= i;  g = g<<4 | g;
@@ -1183,19 +1183,19 @@ static VIDEO_START( halleys )
 
 	int dst, src, c;
 
-	// abort if DRIVER_INIT failed
+	/* abort if DRIVER_INIT failed*/
 	if (!init_success) return(1);
 
-	// abort on unsupported bit depths
+	/* abort on unsupported bit depths*/
 	if (Machine->scrbitmap->depth != 15 && Machine->scrbitmap->depth != 16) return(1);
 
-	// create short cuts to scroll registers
+	/* create short cuts to scroll registers*/
 	scrolly0 = io_ram + HALLEYS_Y0;
 	scrollx0 = io_ram + HALLEYS_X0;
 	scrolly1 = io_ram + HALLEYS_Y1;
 	scrollx1 = io_ram + HALLEYS_X1;
 
-	// fill alpha table
+	/* fill alpha table*/
 	for (src=0; src<256; src++)
 	for (dst=0; dst<256; dst++)
 	{
@@ -1214,7 +1214,7 @@ static VIDEO_START( halleys )
 static void copy_scroll_op(struct mame_bitmap *bitmap, WORD *source, int sx, int sy)
 {
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
 #define OPCOPY_COMMON { \
 	memcpy(edi, esi+sx, rcw); \
@@ -1222,7 +1222,7 @@ static void copy_scroll_op(struct mame_bitmap *bitmap, WORD *source, int sx, int
 	esi += SCREEN_WIDTH; \
 	edi += edx; }
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
 	WORD *esi, *edi;
 	int rcw, bch, ecx, edx;
@@ -1237,12 +1237,12 @@ static void copy_scroll_op(struct mame_bitmap *bitmap, WORD *source, int sx, int
 	edi = (WORD*)bitmap->line[VIS_MINY] + VIS_MINX;
 	edx = bitmap->rowpixels;
 
-	// draw top split
+	/* draw top split*/
 	for (ecx=bch; ecx; ecx--) OPCOPY_COMMON
 
 	esi = source + CLIP_SKIP;
 
-	// draw bottom split
+	/* draw bottom split*/
 	for (ecx=CLIP_H-bch; ecx; ecx--) OPCOPY_COMMON
 
 #undef OPCOPY_COMMON
@@ -1252,7 +1252,7 @@ static void copy_scroll_op(struct mame_bitmap *bitmap, WORD *source, int sx, int
 static void copy_scroll_xp(struct mame_bitmap *bitmap, WORD *source, int sx, int sy)
 {
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
 #define XCOPY_COMMON \
 	if (ecx) { \
@@ -1265,7 +1265,7 @@ static void copy_scroll_xp(struct mame_bitmap *bitmap, WORD *source, int sx, int
 			if (bx) edi[ecx+1] = bx; \
 			ecx += 2; } }
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
 #define YCOPY_COMMON { \
 	esi = src_base + sx; ecx = rcw; XCOPY_COMMON \
@@ -1273,7 +1273,7 @@ static void copy_scroll_xp(struct mame_bitmap *bitmap, WORD *source, int sx, int
 	src_base += SCREEN_WIDTH; \
 	edi += dst_adv; }
 
-//--------------------------------------------------------------------------
+/*--------------------------------------------------------------------------*/
 
 	int rcw, bch, dst_adv;
 
@@ -1291,12 +1291,12 @@ static void copy_scroll_xp(struct mame_bitmap *bitmap, WORD *source, int sx, int
 	edi = (WORD*)bitmap->line[VIS_MINY] + VIS_MINX;
 	dst_adv = bitmap->rowpixels - CLIP_W;
 
-	// draw top split
+	/* draw top split*/
 	for (edx=bch; edx; edx--) YCOPY_COMMON
 
 	src_base = source + CLIP_SKIP;
 
-	// draw bottom split
+	/* draw bottom split*/
 	for (edx=CLIP_H-bch; edx; edx--) YCOPY_COMMON
 
 #undef XCOPY_COMMON
@@ -1499,12 +1499,12 @@ static VIDEO_UPDATE( halleys )
 	else
 		fillbitmap(bitmap, bgcolor, cliprect);
 
-	if (readinputport(7)) copy_scroll_xp(bitmap, render_layer[3], *scrollx0, *scrolly0); // not used???
+	if (readinputport(7)) copy_scroll_xp(bitmap, render_layer[3], *scrollx0, *scrolly0); /* not used???*/
 	copy_scroll_xp(bitmap, render_layer[2], *scrollx1, *scrolly1);
 	copy_fixed_2b (bitmap, render_layer[1]);
 	copy_fixed_xp (bitmap, render_layer[0]);
 
-	// HALF-HACK: apply RGB filter when the following conditions are met
+	/* HALF-HACK: apply RGB filter when the following conditions are met*/
 	i = io_ram[0xa0];
 	j = io_ram[0xa1];
 	if (io_ram[0x2b] && (i>0xc6 && i<0xfe) && (j==0xc0 || j==0xed)) filter_bitmap(bitmap, i);
@@ -1523,8 +1523,8 @@ static VIDEO_UPDATE( benberob )
 }
 
 
-//**************************************************************************
-// Debug and Test Handlers
+/****************************************************************************/
+/* Debug and Test Handlers*/
 
 #if HALLEYS_DEBUG
 
@@ -1535,8 +1535,8 @@ static READ_HANDLER( debug_r ) { return(io_ram[offset]); }
 #endif
 
 
-//**************************************************************************
-// Interrupt and Hardware Handlers
+/****************************************************************************/
+/* Interrupt and Hardware Handlers*/
 
 static INTERRUPT_GEN( halleys_interrupt )
 {
@@ -1570,16 +1570,16 @@ static INTERRUPT_GEN( halleys_interrupt )
 				cpu_set_nmi_line(1, PULSE_LINE);
 			}
 
-			// clear collision list of this frame unconditionally
+			/* clear collision list of this frame unconditionally*/
 			collision_count = 0;
 		break;
 
-		// In Halley's Comet, NMI is used exclusively to handle coin input
+		/* In Halley's Comet, NMI is used exclusively to handle coin input*/
 		case 1:
 			cpu_set_nmi_line(0, PULSE_LINE);
 		break;
 
-		// FIRQ drives gameplay; we need both types of NMI each frame.
+		/* FIRQ drives gameplay; we need both types of NMI each frame.*/
 		case 2:
 			mVectorType = 1; cpu_set_irq_line(0, M6809_FIRQ_LINE, ASSERT_LINE);
 		break;
@@ -1617,7 +1617,7 @@ static INTERRUPT_GEN( benberob_interrupt )
 
 		case 2:
 		case 3:
-			// FIRQ must not happen when the blitter is being updated or it'll cause serious screen artifacts
+			/* FIRQ must not happen when the blitter is being updated or it'll cause serious screen artifacts*/
 			if (!blitter_busy) cpu_set_irq_line(0, M6809_FIRQ_LINE, ASSERT_LINE); else firq_level++;
 		break;
 	}
@@ -1658,10 +1658,10 @@ static WRITE_HANDLER( soundcommand_w )
 
 static READ_HANDLER( coin_lockout_r )
 {
-	// This is a hack, but it lets you coin up when COIN1 or COIN2 are signaled.
-	// See NMI for the twisted logic that is involved in handling coin input.
+	/* This is a hack, but it lets you coin up when COIN1 or COIN2 are signaled.*/
+	/* See NMI for the twisted logic that is involved in handling coin input.*/
 	int inp = readinputport(3);
-	int result = 0x01; // dual coin slots
+	int result = 0x01; /* dual coin slots*/
 
 	if (inp & 0x80) result |= 0x02;
 	if (inp & 0x40) result |= 0x04;
@@ -1676,41 +1676,41 @@ static READ_HANDLER( io_mirror_r )
 }
 
 
-//**************************************************************************
-// Memory Maps
+/****************************************************************************/
+/* Memory Maps*/
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x0fff, blitter_r },
 	{ 0x1000, 0xefff, MRA_ROM },
-	{ 0xf000, 0xfeff, MRA_RAM },        // work ram
+	{ 0xf000, 0xfeff, MRA_RAM },        /* work ram*/
 
-	{ 0xff66, 0xff66, collision_id_r }, // HACK: collision detection bypass(Halley's Comet only)
+	{ 0xff66, 0xff66, collision_id_r }, /* HACK: collision detection bypass(Halley's Comet only)*/
 	{ 0xff71, 0xff71, blitter_status_r },
 	{ 0xff80, 0xff83, io_mirror_r },
-	{ 0xff90, 0xff90, input_port_3_r }, // coin/start
-	{ 0xff91, 0xff91, input_port_4_r }, // player 1
-	{ 0xff92, 0xff92, input_port_5_r }, // player 2
-	{ 0xff93, 0xff93, input_port_6_r }, // unused?
+	{ 0xff90, 0xff90, input_port_3_r }, /* coin/start*/
+	{ 0xff91, 0xff91, input_port_4_r }, /* player 1*/
+	{ 0xff92, 0xff92, input_port_5_r }, /* player 2*/
+	{ 0xff93, 0xff93, input_port_6_r }, /* unused?*/
 	{ 0xff94, 0xff94, coin_lockout_r },
-	{ 0xff95, 0xff95, input_port_0_r }, // dipswitch 4
-	{ 0xff96, 0xff96, input_port_1_r }, // dipswitch 3
-	{ 0xff97, 0xff97, input_port_2_r }, // dipswitch 2
-	{ 0xff00, 0xffbf, MRA_RAM },        // I/O read fall-through
+	{ 0xff95, 0xff95, input_port_0_r }, /* dipswitch 4*/
+	{ 0xff96, 0xff96, input_port_1_r }, /* dipswitch 3*/
+	{ 0xff97, 0xff97, input_port_2_r }, /* dipswitch 2*/
+	{ 0xff00, 0xffbf, MRA_RAM },        /* I/O read fall-through*/
 
-	{ 0xffc0, 0xffdf, MRA_RAM },        // palette read
+	{ 0xffc0, 0xffdf, MRA_RAM },        /* palette read*/
 	{ 0xffe0, 0xffff, vector_r },
 MEMORY_END
 
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x0fff, blitter_w, &blitter_ram, &blitter_ramsize },
-	{ 0x1f00, 0x1fff, bgtile_w },       // background tiles?(Ben Bero Beh only)
+	{ 0x1f00, 0x1fff, bgtile_w },       /* background tiles?(Ben Bero Beh only)*/
 	{ 0x1000, 0xefff, MWA_ROM },
-	{ 0xf000, 0xfeff, MWA_RAM },        // work ram
+	{ 0xf000, 0xfeff, MWA_RAM },        /* work ram*/
 
 	{ 0xff8a, 0xff8a, soundcommand_w },
 	{ 0xff9c, 0xff9c, firq_ack_w },
-	{ 0xff00, 0xffbf, MWA_RAM, &io_ram, &io_ramsize }, // I/O write fall-through
+	{ 0xff00, 0xffbf, MWA_RAM, &io_ram, &io_ramsize }, /* I/O write fall-through*/
 
 	{ 0xffc0, 0xffdf, halleys_paletteram_IIRRGGBB_w, &paletteram },
 	{ 0xffe0, 0xffff, MWA_ROM },
@@ -1724,7 +1724,7 @@ static MEMORY_READ_START( sound_readmem )
 	{ 0x4803, 0x4803, AY8910_read_port_2_r },
 	{ 0x4805, 0x4805, AY8910_read_port_3_r },
 	{ 0x5000, 0x5000, soundlatch_r },
-	{ 0xe000, 0xefff, MRA_ROM }, // space for diagnostic ROM
+	{ 0xe000, 0xefff, MRA_ROM }, /* space for diagnostic ROM*/
 MEMORY_END
 
 
@@ -1741,8 +1741,8 @@ static MEMORY_WRITE_START( sound_writemem )
 MEMORY_END
 
 
-//**************************************************************************
-// Port Maps
+/****************************************************************************/
+/* Port Maps*/
 /*
 	Halley's Comet
 	Taito/Coin-it 1986
@@ -1754,7 +1754,7 @@ MEMORY_END
 */
 
 INPUT_PORTS_START( halleys )
-	PORT_START // 0xff95
+	PORT_START /* 0xff95*/
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Cocktail ) )
@@ -1778,7 +1778,7 @@ INPUT_PORTS_START( halleys )
 	PORT_DIPSETTING(    0x00, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( 1C_2C ) )
 
-	PORT_START // 0xff96
+	PORT_START /* 0xff96*/
 	PORT_DIPNAME( 0x03, 0x01, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x02, "Easiest" )
 	PORT_DIPSETTING(    0x03, "Easy" )
@@ -1801,7 +1801,7 @@ INPUT_PORTS_START( halleys )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START // 0xff97
+	PORT_START /* 0xff97*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown(3-1)" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1827,7 +1827,7 @@ INPUT_PORTS_START( halleys )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START // 0xff90
+	PORT_START /* 0xff90*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_START1 )
@@ -1837,17 +1837,17 @@ INPUT_PORTS_START( halleys )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_COIN2 )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN1 )
 
-	PORT_START // 0xff91
+	PORT_START /* 0xff91*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT| IPF_8WAY )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   | IPF_8WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 ) // WARP
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 ) // FIRE
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 ) /* WARP*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 ) /* FIRE*/
 
-	PORT_START // 0xff92
+	PORT_START /* 0xff92*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY |IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT| IPF_8WAY |IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY |IPF_PLAYER2 )
@@ -1857,9 +1857,9 @@ INPUT_PORTS_START( halleys )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 |IPF_PLAYER2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 |IPF_PLAYER2 )
 
-	PORT_START // 0xff93
+	PORT_START /* 0xff93*/
 
-	PORT_START // just to be safe
+	PORT_START /* just to be safe*/
 	PORT_DIPNAME( 0x01, 0x00, "Show Unused Layer" )
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
@@ -1867,7 +1867,7 @@ INPUT_PORTS_END
 
 
 INPUT_PORTS_START( benberob )
-	PORT_START // 0xff95
+	PORT_START /* 0xff95*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown(1-1)" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1892,7 +1892,7 @@ INPUT_PORTS_START( benberob )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	// 0xff96
+	/* 0xff96*/
 	PORT_START
 	PORT_DIPNAME( 0x0f, 0x00, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(    0x0f, DEF_STR( 9C_1C ) )
@@ -1929,7 +1929,7 @@ INPUT_PORTS_START( benberob )
 	PORT_DIPSETTING(    0x60, DEF_STR( 1C_7C ) )
 	PORT_DIPSETTING(    0x70, DEF_STR( 1C_8C ) )
 
-	PORT_START // 0xff97
+	PORT_START /* 0xff97*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown(3-1)" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1955,7 +1955,7 @@ INPUT_PORTS_START( benberob )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START // 0xff90
+	PORT_START /* 0xff90*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_START1 )
@@ -1965,17 +1965,17 @@ INPUT_PORTS_START( benberob )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_COIN2 )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN1 )
 
-	PORT_START // 0xff91
+	PORT_START /* 0xff91*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT| IPF_8WAY )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   | IPF_8WAY )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 ) // JUMP
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 ) // EXTINGUISHER
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 ) /* JUMP*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 ) /* EXTINGUISHER*/
 
-	PORT_START // 0xff92
+	PORT_START /* 0xff92*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY |IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT| IPF_8WAY |IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY |IPF_PLAYER2 )
@@ -1985,12 +1985,12 @@ INPUT_PORTS_START( benberob )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 |IPF_PLAYER2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 |IPF_PLAYER2 )
 
-	PORT_START // 0xff93
+	PORT_START /* 0xff93*/
 INPUT_PORTS_END
 
 
-//**************************************************************************
-// Machine Definitions and Initializations
+/****************************************************************************/
+/* Machine Definitions and Initializations*/
 
 static MACHINE_INIT( halleys )
 {
@@ -2011,31 +2011,31 @@ static MACHINE_INIT( halleys )
 
 static struct AY8910interface ay8910_interface =
 {
-	4,                                // 4 chips
-	6000000/4,                        // 1.5 MHz
+	4,                                /* 4 chips*/
+	6000000/4,                        /* 1.5 MHz*/
 	{ 15, 15, 15, MIXERG(15,MIXER_GAIN_2x,MIXER_PAN_CENTER) },
-	{ /*input_port_6_r*/0, 0, 0, 0 }, // port Aread
-	{ /*input_port_7_r*/0, 0, 0, 0 }, // port Bread
-	{ 0, /*DAC_0_data_w*/0, 0, 0 },   // port Awrite
-	{ 0, 0, 0, sndnmi_msk_w } // port Bwrite
+	{ /*input_port_6_r*/0, 0, 0, 0 }, /* port Aread*/
+	{ /*input_port_7_r*/0, 0, 0, 0 }, /* port Bread*/
+	{ 0, /*DAC_0_data_w*/0, 0, 0 },   /* port Awrite*/
+	{ 0, 0, 0, sndnmi_msk_w } /* port Bwrite*/
 };
 
 
 static MACHINE_DRIVER_START( halleys )
-	MDRV_CPU_ADD_TAG("main", M6809, 19968000/4) // 5Mhz?(19.968MHz XTAL)
+	MDRV_CPU_ADD_TAG("main", M6809, 19968000/4) /* 5Mhz?(19.968MHz XTAL)*/
 	MDRV_CPU_MEMORY(readmem, writemem)
 	MDRV_CPU_VBLANK_INT(halleys_interrupt, 4)
 
-	MDRV_CPU_ADD(Z80, 6000000/2) // 3MHz(6MHz XTAL)
+	MDRV_CPU_ADD(Z80, 6000000/2) /* 3MHz(6MHz XTAL)*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem, sound_writemem)
-	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 27306667) // 6000000/(4*16*16*10*16) = 36.621Hz(27306667ns period)
+	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 27306667) /* 6000000/(4*16*16*10*16) = 36.621Hz(27306667ns period)*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 	MDRV_MACHINE_INIT(halleys)
 
-	// video hardware
+	/* video hardware*/
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(SCREEN_WIDTH, SCREEN_HEIGHT)
 	MDRV_VISIBLE_AREA(VIS_MINX, VIS_MAXX, VIS_MINY, VIS_MAXY)
@@ -2046,32 +2046,32 @@ static MACHINE_DRIVER_START( halleys )
 	MDRV_VIDEO_START(halleys)
 	MDRV_VIDEO_UPDATE(halleys)
 
-	// sound hardware
+	/* sound hardware*/
 	MDRV_SOUND_ADD(AY8910, ay8910_interface)
 MACHINE_DRIVER_END
 
 
 static MACHINE_DRIVER_START( benberob )
 	MDRV_IMPORT_FROM(halleys)
-	MDRV_CPU_REPLACE("main", M6809, 1000000) // 19.968MHz/20? (CAUTION: timing critical)
+	MDRV_CPU_REPLACE("main", M6809, 1000000) /* 19.968MHz/20? (CAUTION: timing critical)*/
 	MDRV_CPU_VBLANK_INT(benberob_interrupt, 4)
 	MDRV_VIDEO_UPDATE(benberob)
 MACHINE_DRIVER_END
 
 
-//**************************************************************************
-// ROM Definitions
+/****************************************************************************/
+/* ROM Definitions*/
 
 ROM_START( benberob )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 ) //MAIN PRG
+	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /*MAIN PRG*/
 	ROM_LOAD( "a26_01.31",   0x4000, 0x4000, CRC(9ed566ba) SHA1(15c042e727b00b1dc6f24c72226d1a361fc0fa58) )
 	ROM_LOAD( "a26_02.52",   0x8000, 0x4000, CRC(a563a033) SHA1(c2c4a73f190303b7101e7849a638d35a80e4c36b) )
 	ROM_LOAD( "a26_03.50",   0xc000, 0x4000, CRC(975849ef) SHA1(2724c3b7cca724bee5ae8331037529bfd8285011) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) //SOUND
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /*SOUND*/
 	ROM_LOAD( "a26_12.5",    0x0000, 0x4000, CRC(7fd728f3) SHA1(772c14d9254e43a56f1e67ad4dd5d7840df50e34) )
 
-	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE ) //CHR
+	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE ) /*CHR*/
 	ROM_LOAD( "a26_06.78",   0x00000, 0x4000, CRC(79ae2e58) SHA1(726dbaf01dcb330a8a7bd69578b67ec48db01ae1) )
 	ROM_LOAD( "a26_07.77",   0x04000, 0x4000, CRC(fe976343) SHA1(68b655d00b1e7e72ab81974b39033f6c130dc829) )
 	ROM_LOAD( "a26_04.80",   0x08000, 0x4000, CRC(77d10723) SHA1(fd284de30c7740c56e7192e0d73a6939b8386538) )
@@ -2081,7 +2081,7 @@ ROM_START( benberob )
 	ROM_LOAD( "a26_08.91",   0x18000, 0x4000, CRC(7e63059d) SHA1(01e1e805fa2e05058ebd83aae95e26879b4a275d) )
 	ROM_LOAD( "a26_09.90",   0x1c000, 0x4000, CRC(ebd9a16c) SHA1(0230892f451cac310d5ad0d328cea0556b96157f) )
 
-	ROM_REGION( 0x0060, REGION_PROMS, 0 ) //COLOR (all identical!)
+	ROM_REGION( 0x0060, REGION_PROMS, 0 ) /*COLOR (all identical!)*/
 	ROM_LOAD( "a26_13.r",    0x0000, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
 	ROM_LOAD( "a26_13.g",    0x0020, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
 	ROM_LOAD( "a26_13.b",    0x0040, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
@@ -2089,13 +2089,13 @@ ROM_END
 
 
 ROM_START( halleys )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 ) //MAIN PRG
+	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /*MAIN PRG*/
 	ROM_LOAD( "a62_01.30",   0x0000, 0x4000, CRC(a5e82b3e) SHA1(c16c6a6c23a579454b8a2be4b951c35b04f2a856) )
 	ROM_LOAD( "a62_02.31",   0x4000, 0x4000, CRC(25f5bcd3) SHA1(9d72afe866df363d2ac33dab3ed6c3913f4de12d) )
 	ROM_LOAD( "a62-15.52",   0x8000, 0x4000, CRC(e65d8312) SHA1(29870fe0dbb30d23970a8a816849dc5807d70675) )
 	ROM_LOAD( "a62_04.50",   0xc000, 0x4000, CRC(fad74dfe) SHA1(92c0d42c5e186bc07c168ad581e52a5ae340c2b2) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) //SOUND
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /*SOUND*/
 	ROM_LOAD( "a62_13.5",    0x0000, 0x2000, CRC(7ce290db) SHA1(e3c72ba5d97cb07f0f72d2765a068af6fb5cca29) )
 	ROM_LOAD( "a62_14.4",    0x2000, 0x2000, CRC(ea74b1a2) SHA1(7be3b9e9d51cfa753ce97e92f7eebd9723fe5821) )
 
@@ -2103,13 +2103,13 @@ ROM_START( halleys )
 	ROM_LOAD( "a62_12.78",   0x00000, 0x4000, CRC(c5834a7a) SHA1(4a24b3fa707cde89ad5a52d4e994412fcf28e81f) )
 	ROM_LOAD( "a62_10.77",   0x04000, 0x4000, CRC(3ae7231e) SHA1(277f12570001d82104c79d3d0a58a0b57ed18778) )
 	ROM_LOAD( "a62_08.80",   0x08000, 0x4000, CRC(b9210dbe) SHA1(f72f2307e9acd2dd622a3efce71bd334b68a9b60) )
-	ROM_LOAD( "a62-16.79",   0x0c000, 0x4000, CRC(1165a622) SHA1(6a0b4a3eadf157f89c69b5202bd4f895f92a3ef1) ) //bad?
+	ROM_LOAD( "a62-16.79",   0x0c000, 0x4000, CRC(1165a622) SHA1(6a0b4a3eadf157f89c69b5202bd4f895f92a3ef1) ) /*bad?*/
 	ROM_LOAD( "a62_11.89",   0x10000, 0x4000, CRC(d0e9974e) SHA1(6826cfb4fbf098ed7b9d8b00e2684d7c85a13c11) )
 	ROM_LOAD( "a62_09.88",   0x14000, 0x4000, CRC(e93ef281) SHA1(8bfe1ecce1c7107a5bd1b43b531594c8cfc0719d) )
 	ROM_LOAD( "a62_07.91",   0x18000, 0x4000, CRC(64c95e8b) SHA1(4c3320a764b13a5751c0019c9fafb899ea2f908f) )
 	ROM_LOAD( "a62_05.90",   0x1c000, 0x4000, CRC(c3c877ef) SHA1(23180b106e50b7a2a230c5e9948832e5631972ae) )
 
-	ROM_REGION( 0x0060, REGION_PROMS, 0 ) //COLOR (all identical!)
+	ROM_REGION( 0x0060, REGION_PROMS, 0 ) /*COLOR (all identical!)*/
 	ROM_LOAD( "a26-13.109",  0x0000, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
 	ROM_LOAD( "a26-13.110",  0x0020, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
 	ROM_LOAD( "a26-13.111",  0x0040, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
@@ -2117,17 +2117,17 @@ ROM_END
 
 
 ROM_START( halleycj )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 ) //MAIN PRG
+	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /*MAIN PRG*/
 	ROM_LOAD( "a62_01.30",   0x0000, 0x4000, CRC(a5e82b3e) SHA1(c16c6a6c23a579454b8a2be4b951c35b04f2a856) )
 	ROM_LOAD( "a62_02.31",   0x4000, 0x4000, CRC(25f5bcd3) SHA1(9d72afe866df363d2ac33dab3ed6c3913f4de12d) )
 	ROM_LOAD( "a62_03-1.52", 0x8000, 0x4000, CRC(e2fffbe4) SHA1(a10ced7103a26fd6753765bf11b00ca018f49a48) )
 	ROM_LOAD( "a62_04.50",   0xc000, 0x4000, CRC(fad74dfe) SHA1(92c0d42c5e186bc07c168ad581e52a5ae340c2b2) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) //SOUND
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /*SOUND*/
 	ROM_LOAD( "a62_13.5",    0x0000, 0x2000, CRC(7ce290db) SHA1(e3c72ba5d97cb07f0f72d2765a068af6fb5cca29) )
 	ROM_LOAD( "a62_14.4",    0x2000, 0x2000, CRC(ea74b1a2) SHA1(7be3b9e9d51cfa753ce97e92f7eebd9723fe5821) )
 
-	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE ) //CHR
+	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE ) /*CHR*/
 	ROM_LOAD( "a62_12.78",   0x00000, 0x4000, CRC(c5834a7a) SHA1(4a24b3fa707cde89ad5a52d4e994412fcf28e81f) )
 	ROM_LOAD( "a62_10.77",   0x04000, 0x4000, CRC(3ae7231e) SHA1(277f12570001d82104c79d3d0a58a0b57ed18778) )
 	ROM_LOAD( "a62_08.80",   0x08000, 0x4000, CRC(b9210dbe) SHA1(f72f2307e9acd2dd622a3efce71bd334b68a9b60) )
@@ -2137,7 +2137,7 @@ ROM_START( halleycj )
 	ROM_LOAD( "a62_07.91",   0x18000, 0x4000, CRC(64c95e8b) SHA1(4c3320a764b13a5751c0019c9fafb899ea2f908f) )
 	ROM_LOAD( "a62_05.90",   0x1c000, 0x4000, CRC(c3c877ef) SHA1(23180b106e50b7a2a230c5e9948832e5631972ae) )
 
-	ROM_REGION( 0x0060, REGION_PROMS, 0 ) //COLOR (all identical!)
+	ROM_REGION( 0x0060, REGION_PROMS, 0 ) /*COLOR (all identical!)*/
 	ROM_LOAD( "a26-13.109",  0x0000, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
 	ROM_LOAD( "a26-13.110",  0x0020, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
 	ROM_LOAD( "a26-13.111",  0x0040, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
@@ -2145,17 +2145,17 @@ ROM_END
 
 
 ROM_START( halleysc )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 ) //MAIN PRG
+	ROM_REGION( 0x10000, REGION_CPU1, 0 ) /*MAIN PRG*/
 	ROM_LOAD( "a62_01.30",   0x0000, 0x4000, CRC(a5e82b3e) SHA1(c16c6a6c23a579454b8a2be4b951c35b04f2a856) )
 	ROM_LOAD( "a62_02.31",   0x4000, 0x4000, CRC(25f5bcd3) SHA1(9d72afe866df363d2ac33dab3ed6c3913f4de12d) )
 	ROM_LOAD( "a62_03.52",   0x8000, 0x4000, CRC(8e90a97b) SHA1(9199628ad5353a88e4478a13c48df1ccb5d2b538) )
 	ROM_LOAD( "a62_04.50",   0xc000, 0x4000, CRC(fad74dfe) SHA1(92c0d42c5e186bc07c168ad581e52a5ae340c2b2) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 ) //SOUND
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /*SOUND*/
 	ROM_LOAD( "a62_13.5",    0x0000, 0x2000, CRC(7ce290db) SHA1(e3c72ba5d97cb07f0f72d2765a068af6fb5cca29) )
 	ROM_LOAD( "a62_14.4",    0x2000, 0x2000, CRC(ea74b1a2) SHA1(7be3b9e9d51cfa753ce97e92f7eebd9723fe5821) )
 
-	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE ) //CHR
+	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE ) /*CHR*/
 	ROM_LOAD( "a62_12.78",   0x00000, 0x4000, CRC(c5834a7a) SHA1(4a24b3fa707cde89ad5a52d4e994412fcf28e81f) )
 	ROM_LOAD( "a62_10.77",   0x04000, 0x4000, CRC(3ae7231e) SHA1(277f12570001d82104c79d3d0a58a0b57ed18778) )
 	ROM_LOAD( "a62_08.80",   0x08000, 0x4000, CRC(b9210dbe) SHA1(f72f2307e9acd2dd622a3efce71bd334b68a9b60) )
@@ -2165,15 +2165,15 @@ ROM_START( halleysc )
 	ROM_LOAD( "a62_07.91",   0x18000, 0x4000, CRC(64c95e8b) SHA1(4c3320a764b13a5751c0019c9fafb899ea2f908f) )
 	ROM_LOAD( "a62_05.90",   0x1c000, 0x4000, CRC(c3c877ef) SHA1(23180b106e50b7a2a230c5e9948832e5631972ae) )
 
-	ROM_REGION( 0x0060, REGION_PROMS, 0 ) //COLOR (all identical!)
+	ROM_REGION( 0x0060, REGION_PROMS, 0 ) /*COLOR (all identical!)*/
 	ROM_LOAD( "a26-13.109",  0x0000, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
 	ROM_LOAD( "a26-13.110",  0x0020, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
 	ROM_LOAD( "a26-13.111",  0x0040, 0x0020, CRC(ec449aee) SHA1(aa33e82b592276d5ffd540d9a73d1b48d7d4accf) )
 ROM_END
 
 
-//**************************************************************************
-// Driver Initializations
+/****************************************************************************/
+/* Driver Initializations*/
 
 static int init_common(void)
 {
@@ -2182,34 +2182,34 @@ static int init_common(void)
 	BYTE al, ah, dl, dh;
 
 
-	// allocate memory for unpacked graphics
+	/* allocate memory for unpacked graphics*/
 	if (!(buf = auto_malloc(0x100000))) return(0);
 	gfx_plane02 = buf;
 	gfx_plane13 = buf + 0x80000;
 
 
-	// allocate memory for render layers
+	/* allocate memory for render layers*/
 	if (!(buf = auto_malloc(SCREEN_BYTESIZE * MAX_LAYERS))) return(0);
 	for (i=0; i<MAX_LAYERS; buf+=SCREEN_BYTESIZE, i++) render_layer[i] = (WORD*)buf;
 
 
-	// allocate memory for pre-processed ROMs
+	/* allocate memory for pre-processed ROMs*/
 	if (!(gfx1_base = auto_malloc(0x20000))) return(0);
 
 
-	// allocate memory for alpha table
+	/* allocate memory for alpha table*/
 	if (!(alpha_table = auto_malloc(sizeof(DWORD) * 0x10000))) return(0);
 
 
-	// allocate memory for internal palette
+	/* allocate memory for internal palette*/
 	if (!(internal_palette = auto_malloc(sizeof(DWORD) * PALETTE_SIZE))) return(0);
 
 
-	// allocate memory for hardware collision list
+	/* allocate memory for hardware collision list*/
 	if (!(collision_list = auto_malloc(MAX_SPRITES))) return(0);;
 
 
-	// decrypt main program ROM
+	/* decrypt main program ROM*/
 	rom = cpu1_base = memory_region(REGION_CPU1);
 	buf = gfx1_base;
 
@@ -2222,7 +2222,7 @@ static int init_common(void)
 	memcpy(rom, buf, 0x10000);
 
 
-	// swap graphics ROM addresses and unpack each pixel
+	/* swap graphics ROM addresses and unpack each pixel*/
 	rom = memory_region(REGION_GFX1);
 	buf = gfx_plane02;
 
@@ -2276,8 +2276,8 @@ static DRIVER_INIT( halleys )
 }
 
 
-//**************************************************************************
-// Game Definitions
+/****************************************************************************/
+/* Game Definitions*/
 
 GAMEX( 1984, benberob, 0,       benberob, benberob, benberob, ROT0, "Taito", "Ben Bero Beh (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS )
 GAMEX( 1986, halleys,  0,       halleys, halleys, halleys,  ROT90, "Taito America Corporation (Coin-It license)", "Halley's Comet (US)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )

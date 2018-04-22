@@ -1959,7 +1959,7 @@ ROM_START( secretab )
 	ROM_REGION( 0x80000, REGION_GFX4, ROMREGION_DISPOSE ) /* sprites */
 
 	ROM_REGION( 0x20000, REGION_SOUND1, 0 )	/* ADPCM samples */
-	ROM_LOAD( "sa_02.bin",      0x00000, 0x10000,CRC(439eb5a9) SHA1(8d6baad8a1e89279ef0a378941d3d9b49a606864) ) // both halves identical
+	ROM_LOAD( "sa_02.bin",      0x00000, 0x10000,CRC(439eb5a9) SHA1(8d6baad8a1e89279ef0a378941d3d9b49a606864) ) /* both halves identical*/
 
 	ROM_REGION( 0x10000, REGION_USER1, 0 )	/* Other Roms, work out what they're equivalent to and the correct decodes */
 	ROM_LOAD( "sa_07.bin",      0x00000, 0x10000,CRC(6ad2e575) SHA1(b6b159cb36e222fe62fc10271602226f027440e4) )
@@ -2134,7 +2134,7 @@ ROM_START( midresbj )
 	ROM_LOAD( "2",             0x20000, 0x10000, CRC(897ba6e4) SHA1(70fd9cba3922751cb317770d6effdc2fb94c1324) )
 	ROM_LOAD( "6",             0x30000, 0x10000, CRC(9fefb810) SHA1(863a81540261e78de5c612dea807ba29b12054d4) )
 	ROM_LOAD( "3",             0x40000, 0x10000, CRC(ebafe720) SHA1(b9f76d2f1b59f1d028e6156b831c5c8ada033641) )
-	ROM_LOAD( "7",             0x50000, 0x10000, CRC(bb8cf641) SHA1(a22e47a15d38d4f33e5a2c90f3a90a16a4231d2c) ) // slight changes, check (equivalent to 3.bin in above)
+	ROM_LOAD( "7",             0x50000, 0x10000, CRC(bb8cf641) SHA1(a22e47a15d38d4f33e5a2c90f3a90a16a4231d2c) ) /* slight changes, check (equivalent to 3.bin in above)*/
 	ROM_LOAD( "1",             0x60000, 0x10000, CRC(fd0bd8d3) SHA1(d6b19869ddc2a8ed4f38ba9d613b71853f2d13c0) )
 	ROM_LOAD( "5",             0x70000, 0x10000, CRC(fc46d5ed) SHA1(20ddf3f67f0dfb222ad8d3fd464b892ec9c9e4f5) )
 

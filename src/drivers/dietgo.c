@@ -121,9 +121,9 @@ VIDEO_UPDATE(dietgo)
 
 static READ16_HANDLER( dietgo_298 )
 {
-	// iq_132, Apparently MAME 0.78's auto-vblank handling sucks.
-	// Just flip it on and off every other read so that the game
-	// doesn't take a massive dump all over everything.
+	/* iq_132, Apparently MAME 0.78's auto-vblank handling sucks.*/
+	/* Just flip it on and off every other read so that the game*/
+	/* doesn't take a massive dump all over everything.*/
 
 	unsigned short ret;
 	static int vblank_fake;
@@ -134,7 +134,7 @@ static READ16_HANDLER( dietgo_298 )
 	ret &= ~8;
 	ret ^= vblank_fake;
 
-//	printf ("%4.4x\n", ret);
+/*	printf ("%4.4x\n", ret);*/
 
 	return ret;
 }
@@ -149,10 +149,10 @@ static MEMORY_READ16_START( dietgo_readmem )
 	{ 0x222000, 0x2227ff, MRA16_RAM },
 	{ 0x280000, 0x2807ff, MRA16_RAM },
 	{ 0x300000, 0x300bff, MRA16_RAM },
-	{ 0x340298, 0x340299, dietgo_298 }, //Fake V-blank hack and input_port_0_word_r
+	{ 0x340298, 0x340299, dietgo_298 }, /*Fake V-blank hack and input_port_0_word_r*/
 	{ 0x340342, 0x340343, input_port_1_word_r },
 	{ 0x340506, 0x340507, input_port_2_word_r },
-//  { 0x340000, 0x3407ff, dietgo_104_prot_r }, Bypass the prot read via the above hack.
+/*  { 0x340000, 0x3407ff, dietgo_104_prot_r }, Bypass the prot read via the above hack.*/
 	{ 0x380000, 0x38ffff, MRA16_RAM },
 MEMORY_END
 
@@ -259,8 +259,8 @@ INPUT_PORTS_START( dietgo )
 	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x4000, 0x4000, DEF_STR( Unknown ) ) // Demo_Sounds ) )
-	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) ) // Players dont move in attract mode if on!?
+	PORT_DIPNAME( 0x4000, 0x4000, DEF_STR( Unknown ) ) /* Demo_Sounds ) )*/
+	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) ) /* Players dont move in attract mode if on!?*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x8000, 0x8000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
@@ -447,6 +447,6 @@ static DRIVER_INIT( dietgo )
 }
 
 GAME( 1992, dietgo,   0,      dietgo, dietgo,  dietgo,    ROT0, "Data East Corporation", "Diet Go Go (Euro v1.1)"  )
-GAME( 1992, dietgoe,  dietgo, dietgo, dietgo,  dietgo,    ROT0, "Data East Corporation", "Diet Go Go (Euro v1.1,1992.08.04)" ) // weird, still version 1.1 but different date
+GAME( 1992, dietgoe,  dietgo, dietgo, dietgo,  dietgo,    ROT0, "Data East Corporation", "Diet Go Go (Euro v1.1,1992.08.04)" ) /* weird, still version 1.1 but different date*/
 GAME( 1992, dietgou,  dietgo, dietgo, dietgo,  dietgo,    ROT0, "Data East Corporation", "Diet Go Go (USA v1.1)" )
 GAME( 1992, dietgoj,  dietgo, dietgo, dietgo,  dietgo,    ROT0, "Data East Corporation", "Diet Go Go (Japan v1.1)" )

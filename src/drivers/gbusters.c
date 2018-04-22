@@ -57,8 +57,8 @@ static WRITE_HANDLER( gbusters_1f98_w )
 
 	/* other bits unused/unknown */
 	if (data & 0xfe){
-		//logerror("%04x: (1f98) write %02x\n",activecpu_get_pc(), data);
-		//usrintf_showmessage("$1f98 = %02x", data);
+		/*logerror("%04x: (1f98) write %02x\n",activecpu_get_pc(), data);*/
+		/*usrintf_showmessage("$1f98 = %02x", data);*/
 	}
 }
 
@@ -82,7 +82,7 @@ static WRITE_HANDLER( gbusters_coin_counter_w )
 		char baf[40];
 		logerror("%04x: (ccount) write %02x\n",activecpu_get_pc(), data);
 		sprintf(baf,"ccnt = %02x", data);
-//		usrintf_showmessage(baf);
+/*		usrintf_showmessage(baf);*/
 	}
 }
 
@@ -93,7 +93,7 @@ static WRITE_HANDLER( gbusters_unknown_w )
 {
 char baf[40];
 	sprintf(baf,"??? = %02x", data);
-//	usrintf_showmessage(baf);
+/*	usrintf_showmessage(baf);*/
 }
 }
 
@@ -203,7 +203,7 @@ INPUT_PORTS_START( gbusters )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
 	PORT_START	/* DSW #2 */
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )
@@ -400,8 +400,8 @@ static void gbusters_banking( int lines )
 	cpu_setbank( 1, &RAM[offs] );
 
 	if (lines & 0xf0){
-		//logerror("%04x: (lines) write %02x\n",activecpu_get_pc(), lines);
-		//usrintf_showmessage("lines = %02x", lines);
+		/*logerror("%04x: (lines) write %02x\n",activecpu_get_pc(), lines);*/
+		/*usrintf_showmessage("lines = %02x", lines);*/
 	}
 
 	/* other bits unknown */

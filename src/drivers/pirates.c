@@ -138,15 +138,15 @@ static WRITE16_HANDLER( pirates_out_w )
 		/* bit 7 used (function unknown) */
 	}
 
-//	logerror("%06x: out_w %04x\n",activecpu_get_pc(),data);
+/*	logerror("%06x: out_w %04x\n",activecpu_get_pc(),data);*/
 }
 
 static READ16_HANDLER( pirates_in1_r )
 {
-//	static int prot = 0xa3;
+/*	static int prot = 0xa3;*/
 	int bit;
 
-//	logerror("%06x: IN1_r\n",activecpu_get_pc());
+/*	logerror("%06x: IN1_r\n",activecpu_get_pc());*/
 
 #if 0
 	/* Pirates protection workaround. It more complicated than this... see code at
@@ -181,26 +181,26 @@ static MEMORY_READ16_START( pirates_readmem )
 	{ 0x100000, 0x10ffff, MRA16_RAM },
 	{ 0x300000, 0x300001, input_port_0_word_r },
 	{ 0x400000, 0x400001, pirates_in1_r },
-//	{ 0x500000, 0x5007ff, MRA16_RAM },
+/*	{ 0x500000, 0x5007ff, MRA16_RAM },*/
 	{ 0x800000, 0x803fff, MRA16_RAM },
-//	{ 0x900000, 0x903fff, MRA16_RAM },
+/*	{ 0x900000, 0x903fff, MRA16_RAM },*/
 	{ 0xa00000, 0xa00001, OKIM6295_status_0_lsb_r },
 MEMORY_END
 
 static MEMORY_WRITE16_START( pirates_writemem )
 	{ 0x000000, 0x0fffff, MWA16_ROM },
-	{ 0x100000, 0x10ffff, MWA16_RAM }, // main ram
+	{ 0x100000, 0x10ffff, MWA16_RAM }, /* main ram*/
 	{ 0x500000, 0x5007ff, MWA16_RAM, &pirates_spriteram },
-//	{ 0x500800, 0x50080f, MWA16_RAM },
+/*	{ 0x500800, 0x50080f, MWA16_RAM },*/
 	{ 0x600000, 0x600001, pirates_out_w },
-	{ 0x700000, 0x700001, MWA16_RAM, &pirates_scroll },	// scroll reg
+	{ 0x700000, 0x700001, MWA16_RAM, &pirates_scroll },	/* scroll reg*/
 	{ 0x800000, 0x803fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0x900000, 0x90017f, MWA16_RAM },  // more of tilemaps ?
+	{ 0x900000, 0x90017f, MWA16_RAM },  /* more of tilemaps ?*/
 	{ 0x900180, 0x90137f, pirates_tx_tileram_w, &pirates_tx_tileram },
 	{ 0x901380, 0x902a7f, pirates_fg_tileram_w, &pirates_fg_tileram },
-//	{ 0x902580, 0x902a7f, MWA16_RAM },  // more of tilemaps ?
+/*	{ 0x902580, 0x902a7f, MWA16_RAM },  */ /* more of tilemaps ?*/
 	{ 0x902a80, 0x904187, pirates_bg_tileram_w, &pirates_bg_tileram },
-//	{ 0x903c80, 0x904187, MWA16_RAM },  // more of tilemaps ?
+/*	{ 0x903c80, 0x904187, MWA16_RAM },  */ /* more of tilemaps ?*/
 	{ 0xa00000, 0xa00001, OKIM6295_data_0_lsb_w },
 MEMORY_END
 
@@ -209,7 +209,7 @@ MEMORY_END
 /* Input Ports */
 
 INPUT_PORTS_START( pirates )
-	PORT_START	// IN0 - 0x300000.w
+	PORT_START	/* IN0 - 0x300000.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
@@ -227,15 +227,15 @@ INPUT_PORTS_START( pirates )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// IN1 - 0x400000.w
+	PORT_START	/* IN1 - 0x400000.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX( 0x0008, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-	PORT_BIT(  0x0010, IP_ACTIVE_HIGH,IPT_SPECIAL )		// EEPROM data
-	PORT_BIT(  0x0020, IP_ACTIVE_HIGH, IPT_UNKNOWN )		// seems checked in "test mode"
-	PORT_BIT(  0x0040, IP_ACTIVE_HIGH, IPT_UNKNOWN )		// seems checked in "test mode"
-	PORT_BIT(  0x0080, IP_ACTIVE_HIGH,IPT_SPECIAL )		// protection (see pirates_in1_r)
+	PORT_BIT(  0x0010, IP_ACTIVE_HIGH,IPT_SPECIAL )		/* EEPROM data*/
+	PORT_BIT(  0x0020, IP_ACTIVE_HIGH, IPT_UNKNOWN )		/* seems checked in "test mode"*/
+	PORT_BIT(  0x0040, IP_ACTIVE_HIGH, IPT_UNKNOWN )		/* seems checked in "test mode"*/
+	PORT_BIT(  0x0080, IP_ACTIVE_HIGH,IPT_SPECIAL )		/* protection (see pirates_in1_r)*/
 	/* What do these bits do ? */
 	PORT_BIT(  0x0100, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT(  0x0200, IP_ACTIVE_HIGH, IPT_UNKNOWN )
@@ -485,7 +485,7 @@ static DRIVER_INIT( pirates )
 	pirates_decrypt_oki();
 
 	/* patch out protection check */
-	rom[0x62c0/2] = 0x6006; // beq -> bra
+	rom[0x62c0/2] = 0x6006; /* beq -> bra*/
 }
 
 static READ16_HANDLER( genix_prot_r ) {	if(!offset)	return 0x0004; else	return 0x0000; }

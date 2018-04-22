@@ -301,7 +301,7 @@ INPUT_PORTS_START( popeye )
 	PORT_DIPSETTING(    0x40, "Nintendo" )
 	PORT_DIPSETTING(    0x20, "Nintendo Co.,Ltd" )
 	PORT_DIPSETTING(    0x60, "Nintendo of America" )
-//	PORT_DIPSETTING(    0x00, "Nintendo of America" )
+/*	PORT_DIPSETTING(    0x00, "Nintendo of America" )*/
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* scans DSW1 one bit at a time */
 
 	PORT_START	/* DSW1 (FAKE - appears as bit 7 of DSW0, see code below) */
@@ -385,7 +385,7 @@ INPUT_PORTS_START( popeyef )
 	PORT_DIPSETTING(    0x40, "Nintendo" )
 	PORT_DIPSETTING(    0x20, "Nintendo Co.,Ltd" )
 	PORT_DIPSETTING(    0x60, "Nintendo of America" )
-//	PORT_DIPSETTING(    0x00, "Nintendo of America" )
+/*	PORT_DIPSETTING(    0x00, "Nintendo of America" )*/
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* scans DSW1 one bit at a time */
 
 	PORT_START	/* DSW1 (FAKE - appears as bit 7 of DSW0, see code below) */

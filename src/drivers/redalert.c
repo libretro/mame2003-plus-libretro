@@ -125,8 +125,8 @@ static MEMORY_WRITE_START( demoneye_writemem )
 	{ 0x4c00, 0x4fff, redalert_spriteram2_w, &redalert_spriteram2 },
 	{ 0x5000, 0x53ff, videoram_w, &videoram, &videoram_size },
 	{ 0x5400, 0x57ff, redalert_spriteram3_w, &redalert_spriteram3 },
-	{ 0x5800, 0x5bff, MWA_RAM }, //???
-	{ 0x5c00, 0x5fff, MWA_RAM }, //???
+	{ 0x5800, 0x5bff, MWA_RAM }, /*???*/
+	{ 0x5c00, 0x5fff, MWA_RAM }, /*???*/
 	{ 0x6000, 0xbfff, MWA_ROM },
 	{ 0xc130, 0xc130, MWA_NOP },
 	{ 0xc140, 0xc140, demoneye_c040_w },

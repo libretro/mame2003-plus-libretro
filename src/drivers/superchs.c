@@ -145,7 +145,7 @@ static WRITE32_HANDLER( superchs_input_w )
 	static data32_t mem[2];
 	COMBINE_DATA(&mem[offset]);
 	sprintf(t,"%08x %08x",mem[0],mem[1]);
-	//usrintf_showmessage(t);
+	/*usrintf_showmessage(t);*/
 	}
 	#endif
 

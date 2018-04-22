@@ -121,7 +121,7 @@ static PORT_WRITE_START( kikcubic_writeport )
 	{ 0x00, 0x00, kikcubic_coin_w },	/* also flip screen, and...? */
 	{ 0x04, 0x04, vigilant_bank_select_w },
 	{ 0x06, 0x06, m72_sound_command_w },
-//	{ 0x07, 0x07, IOWP_NOP },	/* ?? */
+/*	{ 0x07, 0x07, IOWP_NOP },	 // ?? /*/
 PORT_END
 
 static MEMORY_READ_START( sound_readmem )
@@ -293,10 +293,10 @@ INPUT_PORTS_START( kikcubic )
 	PORT_DIPSETTING(	0x40, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(	0x30, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( Free_Play ) )
-//	PORT_DIPSETTING(	0x10, "Undefined" )
-//	PORT_DIPSETTING(	0x20, "Undefined" )
-//	PORT_DIPSETTING(	0x80, "Undefined" )
-//	PORT_DIPSETTING(	0x90, "Undefined" )
+/*	PORT_DIPSETTING(	0x10, "Undefined" )*/
+/*	PORT_DIPSETTING(	0x20, "Undefined" )*/
+/*	PORT_DIPSETTING(	0x80, "Undefined" )*/
+/*	PORT_DIPSETTING(	0x90, "Undefined" )*/
 
 	PORT_START
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )

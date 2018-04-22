@@ -277,7 +277,7 @@ ROM_START( enigma2 )
 	ROM_LOAD( "5.11d",   	  0x4000, 0x0800, CRC(098ac15b) SHA1(cce28a2540a9eabb473391fff92895129ae41751) )
 	ROM_LOAD( "6.13d",   	  0x4800, 0x0800, CRC(240a9d4b) SHA1(ca1c69fafec0471141ce1254ddfaef54fecfcbf0) )
 
-	// the length of the correct rom should be 0x1000
+	/* the length of the correct rom should be 0x1000*/
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )
 	ROM_LOAD( "s.2f",         0x0000, 0x0800, BAD_DUMP CRC(9bceb714) SHA1(c3d9301cc93d073d7b2694346c26eddd36f94aae) )
 

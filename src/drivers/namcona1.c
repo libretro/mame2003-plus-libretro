@@ -343,16 +343,16 @@ INPUT_PORTS_START( xday2 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 ) /* prev */
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT( 0x8f, IP_ACTIVE_HIGH, IPT_UNUSED )
-	// 0x2000 enter was pressed (in game settings screen)
-	// 0x1000 exit was pressed (in game settings screen)
+	/* 0x2000 enter was pressed (in game settings screen)*/
+	/* 0x1000 exit was pressed (in game settings screen)*/
 
 	PORT_START
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON3 | IPF_PLAYER2 ) /* enter */
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 ) /* exit */
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x8f, IP_ACTIVE_HIGH, IPT_UNUSED )
-	// 0x2000 next was pressed (in game settings screen)
-	// 0x1000 prev was pressed (in game settings screen)
+	/* 0x2000 next was pressed (in game settings screen)*/
+	/* 0x1000 prev was pressed (in game settings screen)*/
 
 	PORT_START
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON3 | IPF_PLAYER3 )
@@ -448,10 +448,10 @@ simulate_mcu( void )
 		int p1 = readinputport(1);
 		int p2 = readinputport(2);
 		data32_t code = 0;
-		if( p2&0x40 ) code |= 0x2000; // enter (top-level of self-test)
-		if( p2&0x20 ) code |= 0x1000; // exit  (top-level of self-test)
-		if( p1&0x40 ) code |= 0x0020; // next  (top-level of self-test)
-		if( p1&0x20 ) code |= 0x0010; // prev  (top-level of self-test)
+		if( p2&0x40 ) code |= 0x2000; /* enter (top-level of self-test)*/
+		if( p2&0x20 ) code |= 0x1000; /* exit  (top-level of self-test)*/
+		if( p1&0x40 ) code |= 0x0020; /* next  (top-level of self-test)*/
+		if( p1&0x20 ) code |= 0x0010; /* prev  (top-level of self-test)*/
 		code = ~code;
 		mcu_ram[0xffc/2] = code>>16;
 		mcu_ram[0xffe/2] = code&0xffff;
@@ -735,9 +735,9 @@ blit_setup( int format, int *bytes_per_row, int *pitch, int mode )
 			break;
 
 		default:
-//		case 0x00f1:
-//		case 0x00f9:
-//		case 0x00fd:
+/*		case 0x00f1:*/
+/*		case 0x00f9:*/
+/*		case 0x00fd:*/
 			*bytes_per_row = (64 - (format>>2))*0x08;
 			*pitch = 0x200;
 			break;
@@ -757,12 +757,12 @@ blit_setup( int format, int *bytes_per_row, int *pitch, int mode )
 			break;
 
 		case 0x0000: /* Numan (used to clear spriteram) */
-//		0000 0000 0000 : src0
-//		0000 0001 0000 : dst0
-//		003d 75a0      : src (7AEB40)
-//		---- ----      : spriteram
-//		0800		   : numbytes
-//		0000		   : blit
+/*		0000 0000 0000 : src0*/
+/*		0000 0001 0000 : dst0*/
+/*		003d 75a0      : src (7AEB40)*/
+/*		---- ----      : spriteram*/
+/*		0800		   : numbytes*/
+/*		0000		   : blit*/
 			*bytes_per_row = 0x10;
 			*pitch = 0;
 			break;
@@ -778,10 +778,10 @@ blit_setup( int format, int *bytes_per_row, int *pitch, int mode )
 			break;
 
 		default:
-//		case 0x00f1:
-//		case 0x0781:
-//		case 0x07c1:
-//		case 0x07e1:
+/*		case 0x00f1:*/
+/*		case 0x0781:*/
+/*		case 0x07c1:*/
+/*		case 0x07e1:*/
 			*bytes_per_row = (64 - (format>>5))*0x40;
 			*pitch = 0x1000;
 			break;
@@ -911,13 +911,13 @@ static WRITE16_HANDLER( namcona1_vreg_w )
 
 static WRITE16_HANDLER( bogus_w )
 {
-//	extern int debug_key_pressed;
-//	debug_key_pressed = 1;
+/*	extern int debug_key_pressed;*/
+/*	debug_key_pressed = 1;*/
 }
 static READ16_HANDLER( bogus_r )
 {
-//	extern int debug_key_pressed;
-//	debug_key_pressed = 1;
+/*	extern int debug_key_pressed;*/
+/*	debug_key_pressed = 1;*/
 	return 0;
 }
 

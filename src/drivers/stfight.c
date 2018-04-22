@@ -231,7 +231,7 @@ DONE? (check on real board)
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-// machine
+/* machine*/
 DRIVER_INIT( empcity );
 DRIVER_INIT( stfight );
 MACHINE_INIT( stfight );
@@ -247,7 +247,7 @@ READ_HANDLER( stfight_fm_r );
 void stfight_adpcm_int( int data );
 WRITE_HANDLER( stfight_adpcm_control_w );
 
-// vidhrdw
+/* vidhrdw*/
 PALETTE_INIT( stfight );
 WRITE_HANDLER( stfight_text_char_w );
 WRITE_HANDLER( stfight_text_attr_w );
@@ -256,7 +256,7 @@ WRITE_HANDLER( stfight_sprite_bank_w );
 VIDEO_START( stfight );
 VIDEO_UPDATE( stfight );
 
-// vidhrdw
+/* vidhrdw*/
 extern unsigned char *stfight_text_char_ram;
 extern unsigned char *stfight_text_attr_ram;
 extern unsigned char *stfight_vh_latch_ram;

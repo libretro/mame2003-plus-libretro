@@ -142,7 +142,7 @@ static WRITE_HANDLER( tp84_filter_w )
 	C = 0;
 	if (offset & 0x020) C +=  47000;	/*  47000pF = 0.047uF */
 	if (offset & 0x040) C += 470000;	/* 470000pF = 0.47uF */
-//	set_RC_filter(1,1000,2200,1000,C);
+/*	set_RC_filter(1,1000,2200,1000,C);*/
 
 	/* 76489 #2 */
 	C = 0;
@@ -196,7 +196,7 @@ MEMORY_END
 
 /* CPU 2 read addresses */
 static MEMORY_READ_START( readmem_cpu2 )
-//	{ 0x0000, 0x0000, MRA_RAM },
+/*	{ 0x0000, 0x0000, MRA_RAM },*/
 	{ 0x2000, 0x2000, tp84_scanline_r }, /* beam position */
 	{ 0x6000, 0x67ff, MRA_RAM },
 	{ 0x8000, 0x87ff, sharedram_r },
@@ -205,7 +205,7 @@ MEMORY_END
 
 /* CPU 2 write addresses */
 static MEMORY_WRITE_START( writemem_cpu2 )
-//	{ 0x0000, 0x0000, MWA_RAM }, /* Watch dog ?*/
+/*	{ 0x0000, 0x0000, MWA_RAM },  // Watch dog ?/*/
 	{ 0x4000, 0x4000, interrupt_enable_w }, /* IRQ enable */
 	{ 0x6000, 0x679f, MWA_RAM },
 	{ 0x67a0, 0x67ff, MWA_RAM, &spriteram, &spriteram_size },	/* REAL (multiplexed) */

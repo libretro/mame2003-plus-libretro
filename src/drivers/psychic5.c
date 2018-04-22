@@ -351,7 +351,7 @@ WRITE_HANDLER( psychic5_coin_counter_w )
 	coin_counter_w(0, data & 0x01);
 	coin_counter_w(1, data & 0x02);
 
-	// bit 7 toggles flip screen
+	/* bit 7 toggles flip screen*/
 	if (data & 0x80)
 	{
 		flip_screen_set(!flip_screen);
@@ -373,11 +373,11 @@ static MEMORY_READ_START( readmem )
 	{ 0xc000, 0xdfff, psychic5_paged_ram_r },
 	{ 0xe000, 0xefff, MRA_RAM },
 	{ 0xf000, 0xf000, MRA_RAM },
-	{ 0xf001, 0xf001, MRA_NOP },	// ???
+	{ 0xf001, 0xf001, MRA_NOP },	/* ???*/
 	{ 0xf002, 0xf002, psychic5_bankselect_r },
 	{ 0xf003, 0xf003, psychic5_vram_page_select_r },
-	{ 0xf004, 0xf004, MRA_NOP },	// ???
-	{ 0xf005, 0xf005, MRA_NOP },	// ???
+	{ 0xf004, 0xf004, MRA_NOP },	/* ???*/
+	{ 0xf005, 0xf005, MRA_NOP },	/* ???*/
 	{ 0xf006, 0xf1ff, MRA_NOP },
 	{ 0xf200, 0xf7ff, MRA_RAM },
 	{ 0xf800, 0xffff, MRA_RAM },
@@ -393,7 +393,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xf001, 0xf001, psychic5_coin_counter_w },
 	{ 0xf002, 0xf002, psychic5_bankselect_w },
 	{ 0xf003, 0xf003, psychic5_vram_page_select_w },
-	{ 0xf004, 0xf004, MWA_NOP },	// ???
+	{ 0xf004, 0xf004, MWA_NOP },	/* ???*/
 	{ 0xf005, 0xf005, psychic5_title_screen_w },
 	{ 0xf006, 0xf1ff, MWA_NOP },
 	{ 0xf200, 0xf7ff, MWA_RAM, &spriteram, &spriteram_size },

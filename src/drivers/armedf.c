@@ -463,7 +463,7 @@ INPUT_PORTS_START( legion )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 #if LEGION_HACK
-	PORT_DIPNAME( 0x80, 0x80, "Allow Invulnerability" )		// see notes
+	PORT_DIPNAME( 0x80, 0x80, "Allow Invulnerability" )		/* see notes*/
 	PORT_DIPSETTING(    0x80, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
 #else
@@ -510,12 +510,12 @@ INPUT_PORTS_START( terraf )
 
 	PORT_START	/* DSW0 */
 	NIHON_LIVES
-//	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )
-//	PORT_DIPSETTING(    0x04, "20k" )
-//	PORT_DIPSETTING(    0x00, "50k" )
-//	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )
-//	PORT_DIPSETTING(    0x08, "60k" )
-//	PORT_DIPSETTING(    0x00, "90k" )
+/*	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x04, "20k" )*/
+/*	PORT_DIPSETTING(    0x00, "50k" )*/
+/*	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x08, "60k" )*/
+/*	PORT_DIPSETTING(    0x00, "90k" )*/
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x0c, "20k then every 60k" )
 	PORT_DIPSETTING(    0x04, "20k then every 90k" )
@@ -560,12 +560,12 @@ INPUT_PORTS_START( kodure )
 
 	PORT_START	/* DSW0 */
 	NIHON_LIVES
-//	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )
-//	PORT_DIPSETTING(    0x04, "00k" )
-//	PORT_DIPSETTING(    0x00, "50k" )
-//	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )
-//	PORT_DIPSETTING(    0x08, "60k" )
-//	PORT_DIPSETTING(    0x00, "90k" )
+/*	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x04, "00k" )*/
+/*	PORT_DIPSETTING(    0x00, "50k" )*/
+/*	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x08, "60k" )*/
+/*	PORT_DIPSETTING(    0x00, "90k" )*/
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x08, "50k then every 60k" )
 	PORT_DIPSETTING(    0x00, "50k then every 90k" )
@@ -626,12 +626,12 @@ INPUT_PORTS_START( cclimbr2 )
 
 	PORT_START	/* DSW0 */
 	NIHON_LIVES
-//	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )
-//	PORT_DIPSETTING(    0x04, "30k" )
-//	PORT_DIPSETTING(    0x00, "60k" )
-//	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )
-//	PORT_DIPSETTING(    0x08, "70k" )
-//	PORT_DIPSETTING(    0x00, "00k" )
+/*	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x04, "30k" )*/
+/*	PORT_DIPSETTING(    0x00, "60k" )*/
+/*	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x08, "70k" )*/
+/*	PORT_DIPSETTING(    0x00, "00k" )*/
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x0c, "30K and 100k" )
 	PORT_DIPSETTING(    0x08, "60k and 130k" )
@@ -679,12 +679,12 @@ INPUT_PORTS_START( armedf )
 
 	PORT_START	/* DSW0 */
 	NIHON_LIVES
-//	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )
-//	PORT_DIPSETTING(    0x04, "20k" )
-//	PORT_DIPSETTING(    0x00, "40k" )
-//	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )
-//	PORT_DIPSETTING(    0x08, "60k" )
-//	PORT_DIPSETTING(    0x00, "80k" )
+/*	PORT_DIPNAME( 0x04, 0x04, "1st Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x04, "20k" )*/
+/*	PORT_DIPSETTING(    0x00, "40k" )*/
+/*	PORT_DIPNAME( 0x08, 0x08, "2nd Bonus Life" )*/
+/*	PORT_DIPSETTING(    0x08, "60k" )*/
+/*	PORT_DIPSETTING(    0x00, "80k" )*/
 	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x0c, "20k then every 60k" )
 	PORT_DIPSETTING(    0x04, "20k then every 80k" )
@@ -705,12 +705,12 @@ INPUT_PORTS_START( armedf )
 	PORT_START	/* DSW1 */
 	NIHON_COINAGE_A
 	NIHON_COINAGE_B
-	PORT_DIPNAME( 0x30, 0x00, "Allow Continue" )		// not in the "test mode"
+	PORT_DIPNAME( 0x30, 0x00, "Allow Continue" )		/* not in the "test mode"*/
 	PORT_DIPSETTING(    0x30, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x20, "3 Times" )
 	PORT_DIPSETTING(    0x10, "5 Times" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Flip_Screen ) )	// not in the "test mode"
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Flip_Screen ) )	/* not in the "test mode"*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
@@ -922,31 +922,31 @@ ROM_START( legion )
 	ROM_REGION( 0x50000, REGION_CPU1, 0 )	/* 64K*8 for 68000 code */
 	ROM_LOAD16_BYTE( "lg1.bin", 0x000001, 0x010000, CRC(c4aeb724) SHA1(b4c0383f3b1fa6b1d5bdab0f3a5293c89a82a474) )
 	ROM_LOAD16_BYTE( "lg3.bin", 0x000000, 0x010000, CRC(777e4935) SHA1(225766940059b4c12e69332ea77eb618dbd1467b) )
-	ROM_LOAD16_BYTE( "legion.1b", 0x020001, 0x010000, CRC(c306660a) SHA1(31c6b868ba07677b5110c577335873354bff596f) ) // lg2
-	ROM_LOAD16_BYTE( "legion.1d", 0x020000, 0x010000, CRC(c2e45e1e) SHA1(95cc359145b1b03123262891feed358407ba105a) ) // lg4
+	ROM_LOAD16_BYTE( "legion.1b", 0x020001, 0x010000, CRC(c306660a) SHA1(31c6b868ba07677b5110c577335873354bff596f) ) /* lg2*/
+	ROM_LOAD16_BYTE( "legion.1d", 0x020000, 0x010000, CRC(c2e45e1e) SHA1(95cc359145b1b03123262891feed358407ba105a) ) /* lg4*/
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Z80 code (sound) */
-	ROM_LOAD( "legion.1h", 0x00000, 0x04000, CRC(2ca4f7f0) SHA1(7cf997af9dd74ced9d28c047069ccfb67d72e257) ) // lg9
+	ROM_LOAD( "legion.1h", 0x00000, 0x04000, CRC(2ca4f7f0) SHA1(7cf997af9dd74ced9d28c047069ccfb67d72e257) ) /* lg9*/
 
 	ROM_REGION( 0x08000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "lg8.bin", 0x00000, 0x08000, CRC(e0596570) SHA1(68ddc950efc55a16e6abc699e3bad18ea19d579f) )
 
 	ROM_REGION( 0x20000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "legion.1e", 0x00000, 0x10000, CRC(a9d70faf) SHA1(8b8b60ae49c55e931d6838e863463f6b2bf7adb0) ) // lg5
-	ROM_LOAD( "legion.1f", 0x18000, 0x08000, CRC(f018313b) SHA1(860bc9937202dc3a40c9fa7caad11c2c2aa19f5c) ) // lg6
+	ROM_LOAD( "legion.1e", 0x00000, 0x10000, CRC(a9d70faf) SHA1(8b8b60ae49c55e931d6838e863463f6b2bf7adb0) ) /* lg5*/
+	ROM_LOAD( "legion.1f", 0x18000, 0x08000, CRC(f018313b) SHA1(860bc9937202dc3a40c9fa7caad11c2c2aa19f5c) ) /* lg6*/
 
 	ROM_REGION( 0x20000, REGION_GFX3, ROMREGION_DISPOSE )
-	ROM_LOAD( "legion.1l", 0x00000, 0x10000, CRC(29b8adaa) SHA1(10338ebe7324960683de1f796dd311ed662e42b4) ) // lg13
+	ROM_LOAD( "legion.1l", 0x00000, 0x10000, CRC(29b8adaa) SHA1(10338ebe7324960683de1f796dd311ed662e42b4) ) /* lg13*/
 
 	ROM_REGION( 0x20000, REGION_GFX4, ROMREGION_DISPOSE )
-	ROM_LOAD( "legion.1k", 0x000000, 0x010000, CRC(ff5a0db9) SHA1(9308deb363d3b7686cc69485ec14201dd68f9a97) ) // lg12
-	ROM_LOAD( "legion.1j", 0x010000, 0x010000, CRC(bae220c8) SHA1(392ae0fb0351dcad7b0e8e0ed4a1dc6e07f493df) ) // lg11
+	ROM_LOAD( "legion.1k", 0x000000, 0x010000, CRC(ff5a0db9) SHA1(9308deb363d3b7686cc69485ec14201dd68f9a97) ) /* lg12*/
+	ROM_LOAD( "legion.1j", 0x010000, 0x010000, CRC(bae220c8) SHA1(392ae0fb0351dcad7b0e8e0ed4a1dc6e07f493df) ) /* lg11*/
 
 	ROM_REGION( 0x4000, REGION_GFX5, 0 )	/* data for mcu/blitter */
 	ROM_LOAD ( "lg7.bin", 0x0000, 0x4000, CRC(533e2b58) SHA1(a13ea4a530038760ffa87713903c59a932452717) )
 
 	ROM_REGION( 0x8000, REGION_USER1, 0 )	/* ? */
-	ROM_LOAD( "legion.1i",        0x0000, 0x8000, CRC(79f4a827) SHA1(25e4c1b5b8466627244b7226310e67e4261333b6) ) // lg10
+	ROM_LOAD( "legion.1i",        0x0000, 0x8000, CRC(79f4a827) SHA1(25e4c1b5b8466627244b7226310e67e4261333b6) ) /* lg10*/
 ROM_END
 
 ROM_START( legiono )

@@ -132,7 +132,7 @@ static MEMORY_WRITE_START( writemem )
     { 0x2800, 0x2803, exprraid_bgselect_w },
     { 0x2804, 0x2804, exprraid_scrolly_w },
     { 0x2805, 0x2806, exprraid_scrollx_w },
-    { 0x2807, 0x2807, MWA_NOP },	// Scroll related ?
+    { 0x2807, 0x2807, MWA_NOP },	/* Scroll related ?*/
     { 0x4000, 0xffff, MWA_ROM },
 MEMORY_END
 

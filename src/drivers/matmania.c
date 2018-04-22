@@ -99,7 +99,7 @@ static MEMORY_WRITE_START( matmania_writemem )
 	{ 0x3000, 0x3000, MWA_RAM, &matmania_pageselect },
 	{ 0x3010, 0x3010, matmania_sh_command_w },
 	{ 0x3020, 0x3020, MWA_RAM, &matmania_scroll },
-//	{ 0x3030, 0x3030, MWA_NOP },	/* ?? */
+/*	{ 0x3030, 0x3030, MWA_NOP },	 // ?? /*/
 	{ 0x3050, 0x307f, matmania_paletteram_w, &paletteram },
 	{ 0x4000, 0xffff, MWA_ROM },
 MEMORY_END

@@ -125,8 +125,8 @@ static PORT_WRITE_START( hnayayoi_writeport )
 	{ 0x00, 0x00, YM2203_control_port_0_w },
 	{ 0x01, 0x01, YM2203_write_port_0_w },
 	{ 0x06, 0x06, adpcm_data_w },
-//	{ 0x08, 0x08, IOWP_NOP },	// CRT Controller
-//	{ 0x09, 0x09, IOWP_NOP },	// CRT Controller
+/*	{ 0x08, 0x08, IOWP_NOP },	*/ /* CRT Controller*/
+/*	{ 0x09, 0x09, IOWP_NOP },	*/ /* CRT Controller*/
 	{ 0x0a, 0x0a, dynax_blitter_rev1_start_w },
 	{ 0x0c, 0x0c, dynax_blitter_rev1_clear_w },
 	{ 0x23, 0x23, adpcm_vclk_w },
@@ -156,8 +156,8 @@ static MEMORY_WRITE_START( hnfubuki_writemem )
 	{ 0xff00, 0xff00, YM2203_control_port_0_w },
 	{ 0xff01, 0xff01, YM2203_write_port_0_w },
 	{ 0xff06, 0xff06, adpcm_data_w },
-//	{ 0xff08, 0xff08, IOWP_NOP },	// CRT Controller
-//	{ 0xff09, 0xff09, IOWP_NOP },	// CRT Controller
+/*	{ 0xff08, 0xff08, IOWP_NOP },	*/ /* CRT Controller*/
+/*	{ 0xff09, 0xff09, IOWP_NOP },	*/ /* CRT Controller*/
 	{ 0xff0a, 0xff0a, dynax_blitter_rev1_start_w },
 	{ 0xff0c, 0xff0c, dynax_blitter_rev1_clear_w },
 	{ 0xff23, 0xff23, adpcm_vclk_w },
@@ -191,7 +191,7 @@ MEMORY_END
 static PORT_READ_START( untoucha_readport )
 	{ 0x11, 0x11, YM2203_status_port_0_r },
 	{ 0x51, 0x51, YM2203_read_port_0_r },
-	{ 0x16, 0x16, keyboard_0_r },	// bit 7 = blitter busy flag
+	{ 0x16, 0x16, keyboard_0_r },	/* bit 7 = blitter busy flag*/
 	{ 0x15, 0x15, keyboard_1_r },
 	{ 0x14, 0x14, input_port_3_r },
 PORT_END
@@ -200,8 +200,8 @@ static PORT_WRITE_START( untoucha_writeport )
 	{ 0x10, 0x10, YM2203_control_port_0_w },
 	{ 0x50, 0x50, YM2203_write_port_0_w },
 	{ 0x13, 0x13, adpcm_data_w },
-//	{ 0x12, 0x12, IOWP_NOP },	// CRT Controller
-//	{ 0x52, 0x52, IOWP_NOP },	// CRT Controller
+/*	{ 0x12, 0x12, IOWP_NOP },	*/ /* CRT Controller*/
+/*	{ 0x52, 0x52, IOWP_NOP },	*/ /* CRT Controller*/
 	{ 0x28, 0x28, dynax_blitter_rev1_start_w },
 	{ 0x20, 0x20, dynax_blitter_rev1_clear_w },
 	{ 0x31, 0x31, adpcm_vclk_w },
@@ -267,7 +267,7 @@ INPUT_PORTS_START( hnayayoi )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* DSW3 */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL )	// blitter busy flag
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* blitter busy flag*/
 	PORT_SERVICE( 0x02, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
@@ -396,7 +396,7 @@ INPUT_PORTS_START( hnfubuki )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* DSW3 */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL )	// blitter busy flag
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* blitter busy flag*/
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -590,7 +590,7 @@ INPUT_PORTS_END
 static void irqhandler(int irq)
 {
 usrintf_showmessage("irq");
-//	cpu_set_irq_line(2,0,irq ? ASSERT_LINE : CLEAR_LINE);
+/*	cpu_set_irq_line(2,0,irq ? ASSERT_LINE : CLEAR_LINE);*/
 }
 
 

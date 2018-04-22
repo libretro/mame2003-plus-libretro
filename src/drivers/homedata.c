@@ -361,7 +361,7 @@ static WRITE_HANDLER( reikaids_upd7807_portc_w )
 	   1 \ ROM bank
 	   0 /
 	  */
-//	logerror("%04x: port C wr %02x (STATUS %d DATA %d)\n",activecpu_get_pc(),data,BIT(data,2),BIT(data,6));
+/*	logerror("%04x: port C wr %02x (STATUS %d DATA %d)\n",activecpu_get_pc(),data,BIT(data,2),BIT(data,6));*/
 
 
 	cpu_setbank(2,memory_region(REGION_CPU2) + 0x10000 * (data & 0x03));
@@ -396,16 +396,16 @@ static MACHINE_INIT( reikaids_upd7807 )
 
 READ_HANDLER( reikaids_io_r )
 {
-	int res = readinputport(2);	// bit 4 = coin, bit 5 = service
+	int res = readinputport(2);	/* bit 4 = coin, bit 5 = service*/
 
-	res |= BIT(upd7807_portc,2) * 0x01;		// bit 0 = upd7807 status
-	res |= BIT(upd7807_portc,6) * 0x02;		// bit 1 = upd7807 data
-	if (vblank) res |= 0x04;				// bit 2 = vblank
-	res |= homedata_visible_page * 0x08;	// bit 3 = visible page
+	res |= BIT(upd7807_portc,2) * 0x01;		/* bit 0 = upd7807 status*/
+	res |= BIT(upd7807_portc,6) * 0x02;		/* bit 1 = upd7807 data*/
+	if (vblank) res |= 0x04;				/* bit 2 = vblank*/
+	res |= homedata_visible_page * 0x08;	/* bit 3 = visible page*/
 
 	vblank = 0;
 
-//logerror("%04x: io_r %02x\n",activecpu_get_pc(),res);
+/*logerror("%04x: io_r %02x\n",activecpu_get_pc(),res);*/
 
 	return res;
 }
@@ -414,14 +414,14 @@ static int snd_command;
 
 static READ_HANDLER( reikaids_snd_command_r )
 {
-//logerror("%04x: sndmcd_r (%02x)\n",activecpu_get_pc(),snd_command);
+/*logerror("%04x: sndmcd_r (%02x)\n",activecpu_get_pc(),snd_command);*/
 	return snd_command;
 }
 
 static WRITE_HANDLER( reikaids_snd_command_w )
 {
 	snd_command = data;
-//logerror("%04x: coprocessor_command_w %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: coprocessor_command_w %02x\n",activecpu_get_pc(),data);*/
 }
 
 
@@ -438,13 +438,13 @@ static int to_cpu,from_cpu;
 
 static WRITE_HANDLER( pteacher_snd_command_w )
 {
-//logerror("%04x: snd_command_w %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: snd_command_w %02x\n",activecpu_get_pc(),data);*/
 	from_cpu = data;
 }
 
 static READ_HANDLER( pteacher_snd_r )
 {
-//logerror("%04x: pteacher_snd_r %02x\n",activecpu_get_pc(),to_cpu);
+/*logerror("%04x: pteacher_snd_r %02x\n",activecpu_get_pc(),to_cpu);*/
 	return to_cpu;
 }
 
@@ -468,19 +468,19 @@ static READ_HANDLER( pteacher_keyboard_r )
 {
 	int dips = readinputport(0);
 
-//	logerror("%04x: keyboard_r with port A = %02x\n",activecpu_get_pc(),upd7807_porta);
+/*	logerror("%04x: keyboard_r with port A = %02x\n",activecpu_get_pc(),upd7807_porta);*/
 
 	if (upd7807_porta & 0x80)
 	{
 		/* player 1 + dip switches */
 		int row = (upd7807_porta & 0x07);
-		return readinputport(2 + row) | (((dips >> row) & 1) << 5);	// 0-5
+		return readinputport(2 + row) | (((dips >> row) & 1) << 5);	/* 0-5*/
 	}
 	if (upd7807_porta & 0x08)
 	{
 		/* player 2 (not supported) + dip switches */
 		int row = ((upd7807_porta >> 4) & 0x07);
-		return 0xdf | (((dips >> (row+5)) & 1) << 5);	// 6-11
+		return 0xdf | (((dips >> (row+5)) & 1) << 5);	/* 6-11*/
 	}
 
 	return 0xff;
@@ -499,7 +499,7 @@ logerror("%04x: read PA with PC *not* clear\n",activecpu_get_pc());
 static WRITE_HANDLER( pteacher_snd_answer_w )
 {
 	to_cpu = data;
-//logerror("%04x: to_cpu = %02x\n",activecpu_get_pc(),to_cpu);
+/*logerror("%04x: to_cpu = %02x\n",activecpu_get_pc(),to_cpu);*/
 }
 
 static WRITE_HANDLER( pteacher_upd7807_porta_w )
@@ -520,7 +520,7 @@ static WRITE_HANDLER( pteacher_upd7807_portc_w )
 	   0 input (coin)
 	  */
 
-//	logerror("%04x: port C wr %02x\n",activecpu_get_pc(),data);
+/*	logerror("%04x: port C wr %02x\n",activecpu_get_pc(),data);*/
 
 	cpu_setbank(2,memory_region(REGION_CPU2) + 0x10000 * ((data & 0x0c) >> 2));
 
@@ -568,11 +568,11 @@ MEMORY_READ_START( mrokumei_readmem )
 	{ 0x4000, 0x5fff, MRA_RAM },
 	{ 0x6000, 0x6fff, MRA_RAM }, /* work ram */
 	{ 0x7800, 0x7800, MRA_RAM }, /* only used to store the result of the ROM check */
-	{ 0x7801, 0x7802, mrokumei_keyboard_r },	// also vblank and active page
-	{ 0x7803, 0x7803, input_port_2_r },	// coin, service
-	{ 0x7804, 0x7804, input_port_0_r },	// DSW1
-	{ 0x7805, 0x7805, input_port_1_r },	// DSW2
-	{ 0x7ffe, 0x7ffe, MRA_NOP },	// ??? read every vblank, value discarded
+	{ 0x7801, 0x7802, mrokumei_keyboard_r },	/* also vblank and active page*/
+	{ 0x7803, 0x7803, input_port_2_r },	/* coin, service*/
+	{ 0x7804, 0x7804, input_port_0_r },	/* DSW1*/
+	{ 0x7805, 0x7805, input_port_1_r },	/* DSW2*/
+	{ 0x7ffe, 0x7ffe, MRA_NOP },	/* ??? read every vblank, value discarded*/
 	{ 0x8000, 0xffff, MRA_ROM },
 MEMORY_END
 
@@ -582,7 +582,7 @@ MEMORY_WRITE_START( mrokumei_writemem )
 	{ 0x6000, 0x6fff, MWA_RAM },
 	{ 0x7800, 0x7800, MWA_RAM }, /* only used to store the result of the ROM check */
 	{ 0x7ff0, 0x7ffd, MWA_RAM, &homedata_vreg },
-	{ 0x8000, 0x8000, mrokumei_blitter_start_w },	// in some games also ROM bank switch to access service ROM
+	{ 0x8000, 0x8000, mrokumei_blitter_start_w },	/* in some games also ROM bank switch to access service ROM*/
 	{ 0x8001, 0x8001, mrokumei_keyboard_select_w },
 	{ 0x8002, 0x8002, mrokumei_sound_cmd_w },
 	{ 0x8003, 0x8003, SN76496_0_w },
@@ -618,7 +618,7 @@ MEMORY_READ_START( reikaids_readmem )
 	{ 0x7800, 0x7800, MRA_RAM },
 	{ 0x7801, 0x7801, input_port_0_r },
 	{ 0x7802, 0x7802, input_port_1_r },
-	{ 0x7803, 0x7803, reikaids_io_r },	// coin, blitter, upd7807
+	{ 0x7803, 0x7803, reikaids_io_r },	/* coin, blitter, upd7807*/
 	{ 0x8000, 0xbfff, MRA_BANK1 },
 	{ 0xc000, 0xffff, MRA_ROM },
 MEMORY_END
@@ -668,7 +668,7 @@ MEMORY_READ_START( pteacher_readmem )
 	{ 0x4000, 0x5fff, MRA_RAM },
 	{ 0x6000, 0x6fff, MRA_RAM }, /* work ram */
 	{ 0x7800, 0x7800, MRA_RAM },
-	{ 0x7801, 0x7801, pteacher_io_r },	// vblank, visible page
+	{ 0x7801, 0x7801, pteacher_io_r },	/* vblank, visible page*/
 	{ 0x7ff2, 0x7ff2, pteacher_snd_r },
 	{ 0x8000, 0xbfff, MRA_BANK1 },
 	{ 0xc000, 0xffff, MRA_ROM },
@@ -774,7 +774,7 @@ INPUT_PORTS_START( mjhokite )
 	PORT_DIPNAME( 0x02, 0x02, "Freeze?" )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT )	// doesn't work in all games
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT )	/* doesn't work in all games*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -823,7 +823,7 @@ INPUT_PORTS_START( mjhokite )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( reikaids )
-	PORT_START	// IN0  - 0x7801
+	PORT_START	/* IN0  - 0x7801*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_PLAYER1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_PLAYER1 )
@@ -833,7 +833,7 @@ INPUT_PORTS_START( reikaids )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 ) /* jump */
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START1 )
 
-	PORT_START	// IN1 - 0x7802
+	PORT_START	/* IN1 - 0x7802*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_PLAYER2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_PLAYER2 )
@@ -843,7 +843,7 @@ INPUT_PORTS_START( reikaids )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 ) /* jump */
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// IN2 - 0x7803
+	PORT_START	/* IN2 - 0x7803*/
 	PORT_BIT(  0x01, IP_ACTIVE_HIGH,IPT_SPECIAL ) /* coprocessor status */
 	PORT_BIT(  0x02, IP_ACTIVE_HIGH,IPT_SPECIAL ) /* coprocessor data */
 	PORT_BIT(  0x04, IP_ACTIVE_HIGH,IPT_SPECIAL ) /* vblank */
@@ -853,7 +853,7 @@ INPUT_PORTS_START( reikaids )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW,	IPT_UNKNOWN  )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW,	IPT_UNKNOWN  )
 
-	PORT_START	// DSW1
+	PORT_START	/* DSW1*/
 	PORT_DIPNAME( 0x01, 0x01, "Allow Continue" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
@@ -877,7 +877,7 @@ INPUT_PORTS_START( reikaids )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DSW2
+	PORT_START	/* DSW2*/
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x03, "Easy" )
 	PORT_DIPSETTING(    0x02, "Normal" )
@@ -904,7 +904,7 @@ INPUT_PORTS_START( reikaids )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( battlcry )
-	PORT_START	// IN0  - 0x7801
+	PORT_START	/* IN0  - 0x7801*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_PLAYER1 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_PLAYER1 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_PLAYER1 )
@@ -914,7 +914,7 @@ INPUT_PORTS_START( battlcry )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 ) /* jump */
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START1 )
 
-	PORT_START	// IN1 - 0x7802
+	PORT_START	/* IN1 - 0x7802*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_PLAYER2 )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_4WAY | IPF_PLAYER2 )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_4WAY | IPF_PLAYER2 )
@@ -924,7 +924,7 @@ INPUT_PORTS_START( battlcry )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 ) /* jump */
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// IN2 - 0x7803
+	PORT_START	/* IN2 - 0x7803*/
 	PORT_BIT(  0x01, IP_ACTIVE_HIGH,IPT_SPECIAL ) /* coprocessor status */
 	PORT_BIT(  0x02, IP_ACTIVE_HIGH,IPT_SPECIAL ) /* coprocessor data */
 	PORT_BIT(  0x04, IP_ACTIVE_HIGH,IPT_SPECIAL ) /* vblank */
@@ -934,7 +934,7 @@ INPUT_PORTS_START( battlcry )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW,	IPT_UNKNOWN  )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW,	IPT_UNKNOWN  )
 
-	PORT_START	// DSW1
+	PORT_START	/* DSW1*/
 	PORT_DIPNAME( 0x01, 0x01, "Allow Continue" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
@@ -951,7 +951,7 @@ INPUT_PORTS_START( battlcry )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// DSW2
+	PORT_START	/* DSW2*/
 
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
@@ -1284,7 +1284,7 @@ static MACHINE_DRIVER_START( mrokumei )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
-	// visible area can be changed at runtime
+	/* visible area can be changed at runtime*/
 	MDRV_VISIBLE_AREA(0*8, 54*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(mrokumei_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(0x8000)
@@ -1295,7 +1295,7 @@ static MACHINE_DRIVER_START( mrokumei )
 	MDRV_VIDEO_EOF(homedata)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(SN76496, sn76496_interface)	// SN76489 actually
+	MDRV_SOUND_ADD(SN76496, sn76496_interface)	/* SN76489 actually*/
 	MDRV_SOUND_ADD(DAC, dac_interface)
 MACHINE_DRIVER_END
 
@@ -1343,7 +1343,7 @@ static MACHINE_DRIVER_START( reikaids )
 	MDRV_CPU_PORTS(reikaids_upd7807_readport,reikaids_upd7807_writeport)
 	MDRV_CPU_VBLANK_INT(upd7807_irq,1)
 
-	MDRV_INTERLEAVE(500)	// very high interleave required to sync for startup tests
+	MDRV_INTERLEAVE(500)	/* very high interleave required to sync for startup tests*/
 
 	MDRV_FRAMES_PER_SECOND(59)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -1383,7 +1383,7 @@ static MACHINE_DRIVER_START( pteacher )
 	MDRV_CPU_PORTS(pteacher_upd7807_readport,pteacher_upd7807_writeport)
 	MDRV_CPU_VBLANK_INT(upd7807_irq,1)
 
-	MDRV_INTERLEAVE(100)	// should be enough
+	MDRV_INTERLEAVE(100)	/* should be enough*/
 
 	MDRV_FRAMES_PER_SECOND(59)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -1393,7 +1393,7 @@ static MACHINE_DRIVER_START( pteacher )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
-	// visible area can be changed at runtime
+	/* visible area can be changed at runtime*/
 	MDRV_VISIBLE_AREA(0*8, 54*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(pteacher_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(0x8000)
@@ -1404,7 +1404,7 @@ static MACHINE_DRIVER_START( pteacher )
 	MDRV_VIDEO_EOF(homedata)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(SN76496, sn76496_interface)	// SN76489 actually
+	MDRV_SOUND_ADD(SN76496, sn76496_interface)	/* SN76489 actually*/
 	MDRV_SOUND_ADD(DAC, dac_interface)
 MACHINE_DRIVER_END
 
@@ -1584,7 +1584,7 @@ ROM_START( reikaids )
 	ROM_LOAD( "x82a02.bin", 0x00000, 0x040000, CRC(90fe700f) SHA1(bf7f9955a2cb1af43a272bf3366ff8c09ff6f7e6) )
 
 	ROM_REGION( 0x0100, REGION_USER2, 0 )
-	ROM_LOAD( "x82a19.bin", 0x0000, 0x0100, CRC(7ed947b4) SHA1(40c74a17976fab5d7f9da367083764934bb87281) )	// priority (not used)
+	ROM_LOAD( "x82a19.bin", 0x0000, 0x0100, CRC(7ed947b4) SHA1(40c74a17976fab5d7f9da367083764934bb87281) )	/* priority (not used)*/
 ROM_END
 
 
@@ -1620,7 +1620,7 @@ ROM_START( battlcry )
 	ROM_LOAD( "s88b02.f19", 0x00000, 0x040000, CRC(7044a542) SHA1(8efaa512f62fe9a37d2474c435c549118c019d67) )
 
 	ROM_REGION( 0x0100, REGION_USER2, 0 )
-	ROM_LOAD( "s88a19.l5", 0x0000, 0x0100, CRC(c8ead41e) SHA1(d1e733691de9f9b71c9724de73086d36f381fc74) )	// priority (not used)
+	ROM_LOAD( "s88a19.l5", 0x0000, 0x0100, CRC(c8ead41e) SHA1(d1e733691de9f9b71c9724de73086d36f381fc74) )	/* priority (not used)*/
 ROM_END
 
 

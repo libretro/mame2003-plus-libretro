@@ -102,12 +102,12 @@ READ_HANDLER( spdbuggy_ram_r )
 	}
 }
 
-// f002 read : watchdog reset
+/* f002 read : watchdog reset*/
 static MEMORY_READ_START ( spdbuggy_readmem )
 	{ 0x00000, 0x023ff, MRA_RAM },
 
 	{ 0x08000, 0x08fff, MRA_RAM },
-	{ 0x0a000, 0x0afff, MRA_RAM },	// shared?
+	{ 0x0a000, 0x0afff, MRA_RAM },	/* shared?*/
 	{ 0x18000, 0x18fff, MRA_RAM },
 
 	{ 0x10000, 0x17fff, MRA_ROM },
@@ -118,9 +118,9 @@ MEMORY_END
 static MEMORY_WRITE_START ( spdbuggy_writemem )
 	{ 0x00000, 0x023ff, MWA_RAM },
 
-	{ 0x08000, 0x08fff, spdbuggy_fgram_w, &spdbuggy_fgram	},	// fg
-	{ 0x18000, 0x18fff, spdbuggy_bgram_w, &spdbuggy_bgram	},	// bg
-	{ 0x0a000, 0x0afff, MWA_RAM },	// shared?
+	{ 0x08000, 0x08fff, spdbuggy_fgram_w, &spdbuggy_fgram	},	/* fg*/
+	{ 0x18000, 0x18fff, spdbuggy_bgram_w, &spdbuggy_bgram	},	/* bg*/
+	{ 0x0a000, 0x0afff, MWA_RAM },	/* shared?*/
 
 	{ 0x10000, 0x17fff, MWA_ROM },
 	{ 0x20000, 0x2ffff, MWA_ROM },
@@ -184,7 +184,7 @@ MEMORY_END
 
 INPUT_PORTS_START( spdbuggy )
 
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY )
@@ -194,7 +194,7 @@ INPUT_PORTS_START( spdbuggy )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - Player 2
+	PORT_START	/* IN1 - Player 2*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2 )
@@ -204,7 +204,7 @@ INPUT_PORTS_START( spdbuggy )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - Service
+	PORT_START	/* IN2 - Service*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -214,7 +214,7 @@ INPUT_PORTS_START( spdbuggy )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN3 - $aa6 - DSW 1
+	PORT_START	/* IN3 - $aa6 - DSW 1*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -240,7 +240,7 @@ INPUT_PORTS_START( spdbuggy )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// IN4 - $aa8 - DSW 2
+	PORT_START	/* IN4 - $aa8 - DSW 2*/
 	PORT_DIPNAME( 0x01, 0x01, "Unknown 2-0" )
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -259,7 +259,7 @@ INPUT_PORTS_START( spdbuggy )
 	PORT_DIPNAME( 0x60, 0x60, "Copyright" )
 	PORT_DIPSETTING(    0x60, "Tatsumi" )
 	PORT_DIPSETTING(    0x40, "Taito" )
-	PORT_DIPSETTING(    0x20, "Data East" )	// BUGGY BOY
+	PORT_DIPSETTING(    0x20, "Data East" )	/* BUGGY BOY*/
 	PORT_DIPSETTING(    0x00, "Tatsumi" )
 	PORT_DIPNAME( 0x80, 0x80, "Coin Slots" )
 	PORT_DIPSETTING(    0x80, "2" )
@@ -362,9 +362,9 @@ LAYOUT_CHUNKY_16x16x8( spritelayout,			 0x10000 )
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0x000000, &tilelayout,   256*0, 16 }, // [0] bg
-	{ REGION_GFX1, 0x030000, &charlayout,   256*1, 16 }, // [1] txt
-	{ REGION_GFX1, 0x038000, &spritelayout, 256*2, 16 }, // [2] sprites
+	{ REGION_GFX1, 0x000000, &tilelayout,   256*0, 16 }, /* [0] bg*/
+	{ REGION_GFX1, 0x030000, &charlayout,   256*1, 16 }, /* [1] txt*/
+	{ REGION_GFX1, 0x038000, &spritelayout, 256*2, 16 }, /* [2] sprites*/
 	{ -1 }
 };
 
@@ -482,27 +482,27 @@ ROM_START( spdbuggy )
 	ROM_REGION( 0x010000, REGION_CPU3, 0 )		/* Sound CPU Code */
 
 	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )	/* */
-	ROM_LOAD( "ic142.16", 0x00000, 0x08000, CRC(015db5d8) SHA1(39ef8b44f2eb9399fb1555cffa6763e06d59c181) )	// 8x8 plane 1
+	ROM_LOAD( "ic142.16", 0x00000, 0x08000, CRC(015db5d8) SHA1(39ef8b44f2eb9399fb1555cffa6763e06d59c181) )	/* 8x8 plane 1*/
 	ROM_LOAD( "ic43.18",  0x08000, 0x08000, CRC(876a5666) SHA1(db485cdf35f63c080c919ee86374f63e577092c3) )
 	ROM_LOAD( "ic144.19", 0x10000, 0x08000, CRC(838e0697) SHA1(0e9aff2c4065d79350ddb55edff57a899c33ef1c) )
-	ROM_LOAD( "ic145.20", 0x18000, 0x08000, CRC(11d8e2a8) SHA1(9bf198229a12d331e8e7352b7ee3f39f6891f517) )	// 8x8 plane 2
+	ROM_LOAD( "ic145.20", 0x18000, 0x08000, CRC(11d8e2a8) SHA1(9bf198229a12d331e8e7352b7ee3f39f6891f517) )	/* 8x8 plane 2*/
 	ROM_LOAD( "ic146.21", 0x20000, 0x08000, CRC(8b47d227) SHA1(a3e57594ad0085e8b1bd327c580eb36237f3e3d2) )
 	ROM_LOAD( "ic147.22", 0x28000, 0x08000, CRC(14033710) SHA1(e05afeb557ce14055fa8b4f6d8805307feaa1660) )
 
 	/* halves swapped */
-	ROM_LOAD( "ic46.12",  0x32000, 0x02000, CRC(8ea8fec4) SHA1(75e67c9a59a86fcdedf2a70fafd303baa552aa18) )	// 8x8 plane 1 (charset)
+	ROM_LOAD( "ic46.12",  0x32000, 0x02000, CRC(8ea8fec4) SHA1(75e67c9a59a86fcdedf2a70fafd303baa552aa18) )	/* 8x8 plane 1 (charset)*/
 	ROM_CONTINUE(         0x30000, 0x02000             )
-	ROM_LOAD( "ic47.13",  0x36000, 0x02000, CRC(459c2b03) SHA1(ff62a86195042a349fbe799c638cf590fe9572bb) )	// 8x8 plane 2
+	ROM_LOAD( "ic47.13",  0x36000, 0x02000, CRC(459c2b03) SHA1(ff62a86195042a349fbe799c638cf590fe9572bb) )	/* 8x8 plane 2*/
 	ROM_CONTINUE(         0x34000, 0x02000             )
 
-	// 16x16x8? chunky
-	ROM_LOAD( "ic140.15", 0x38000, 0x08000, CRC(82cabdd4) SHA1(94324fcf83c373621fc40553473ae3cb552ab704) )	//
-	ROM_LOAD( "ic139.14", 0x40000, 0x08000, CRC(1903a9ad) SHA1(526c404c15e3f04b4afb27dee66e9deb0a6b9704) )	// every bit
+	/* 16x16x8? chunky*/
+	ROM_LOAD( "ic140.15", 0x38000, 0x08000, CRC(82cabdd4) SHA1(94324fcf83c373621fc40553473ae3cb552ab704) )	/**/
+	ROM_LOAD( "ic139.14", 0x40000, 0x08000, CRC(1903a9ad) SHA1(526c404c15e3f04b4afb27dee66e9deb0a6b9704) )	/* every bit*/
 	ROM_LOAD( "ic141.17", 0x48000, 0x04000, CRC(67786327) SHA1(32cc1f5bc654497c968ddcd4af29720c6d659482) )
 
 	ROM_REGION( 0x8000, REGION_USER1, 0 )	/* ? zoom table or something ? */
-	ROM_LOAD( "ic138.5", 0x00000, 0x04000, CRC(7d84135b) SHA1(3c669c4e796e83672aceeb6de1aeea28f9f2fef0) )	// fn_data even
-	ROM_LOAD( "ic95.4",  0x04000, 0x04000, CRC(493ea590) SHA1(bde4e09bba2e53a0650f26976d81cd1e0bc88cb4) )	// odd
+	ROM_LOAD( "ic138.5", 0x00000, 0x04000, CRC(7d84135b) SHA1(3c669c4e796e83672aceeb6de1aeea28f9f2fef0) )	/* fn_data even*/
+	ROM_LOAD( "ic95.4",  0x04000, 0x04000, CRC(493ea590) SHA1(bde4e09bba2e53a0650f26976d81cd1e0bc88cb4) )	/* odd*/
 
 ROM_END
 
@@ -569,7 +569,7 @@ static struct tilemap *bg_tilemap, *fg_tilemap;
 static void spdbuggy_get_bg_tile_info( int tile_index )
 {
 	int code 		=	spdbuggy_bgram[tile_index*2] + spdbuggy_bgram[tile_index*2+1]*256;
-	SET_TILE_INFO(BG_GFX, code & 0x0fff, code >> 12, 0 );	// $3000 tiles!
+	SET_TILE_INFO(BG_GFX, code & 0x0fff, code >> 12, 0 );	/* $3000 tiles!*/
 }
 
 WRITE_HANDLER( spdbuggy_bgram_w )

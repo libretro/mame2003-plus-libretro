@@ -29,7 +29,7 @@ UINT32 *backfire_mainram;
 struct mame_bitmap * backfire_left;
 struct mame_bitmap * backfire_right;
 
-//UINT32 *backfire_180010, *backfire_188010;
+/*UINT32 *backfire_180010, *backfire_188010;*/
 UINT32 *backfire_left_priority, *backfire_right_priority;
 
 extern int deco16_pf1_colour_bank,deco16_pf2_colour_bank,deco16_pf3_colour_bank,deco16_pf4_colour_bank;
@@ -38,7 +38,7 @@ extern int deco16_pf1_colour_bank,deco16_pf2_colour_bank,deco16_pf3_colour_bank,
 
 static int backfire_bank_callback(int bank)
 {
-//  printf("bank callback %04x\n",bank); // bit 1 gets set too?
+/*  printf("bank callback %04x\n",bank); */ /* bit 1 gets set too?*/
 
 	bank = bank >> 4;
 
@@ -100,7 +100,7 @@ static void backfire_drawsprites(struct mame_bitmap *bitmap,const struct rectang
 
 	flip_screen = 1;
 
-	for (offs = (0x1400/4)-4;offs >= 0;offs -= 4) // 0x1400 for charlien
+	for (offs = (0x1400/4)-4;offs >= 0;offs -= 4) /* 0x1400 for charlien*/
 	{
 		int x,y,sprite,colour,multi,fx,fy,inc,flash,mult, pri;
 
@@ -113,18 +113,18 @@ static void backfire_drawsprites(struct mame_bitmap *bitmap,const struct rectang
 		x = backfire_spriteram32[offs+2]&0xffff;
 		colour = (x >>9) & 0x1f;
 
-		pri = (x&0xc000); // 2 bits or 1?
+		pri = (x&0xc000); /* 2 bits or 1?*/
 
 		switch (pri&0xc000) {
-			case 0x0000: pri=0;   break; // numbers, people, cars when in the air, status display..
-			case 0x4000: pri=0xf0;break; // cars most of the time
-			case 0x8000: pri=0;   break; // car wheels during jump?
+			case 0x0000: pri=0;   break; /* numbers, people, cars when in the air, status display..*/
+			case 0x4000: pri=0xf0;break; /* cars most of the time*/
+			case 0x8000: pri=0;   break; /* car wheels during jump?*/
 			case 0xc000: pri=0xf0;break; /* car wheels in race? */
 		}
 
-		// pri 0 = ontop of everything//
+		/* pri 0 = ontop of everything*/ /**/
 
-//      pri = 0;
+/*      pri = 0;*/
 
 		fx = y & 0x2000;
 		fy = y & 0x4000;
@@ -255,14 +255,14 @@ static READ32_HANDLER(backfire_eeprom_r)
 
 static READ32_HANDLER(backfire_control2_r)
 {
-//  logerror("%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);
+/*  logerror("%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
 	return (EEPROM_read_bit()<<24) | readinputport(1) | (readinputport(1)<<16);
 }
 
 #ifdef UNUSED_FUNCTION
 static READ32_HANDLER(backfire_control3_r)
 {
-//  logerror("%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);
+/*  logerror("%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
 	return (EEPROM_read_bit()<<24) | readinputport(2) | (readinputport(2)<<16);
 }
 #endif
@@ -332,7 +332,7 @@ WRITE32_HANDLER( backfire_pf4_data_w ) { data &=0x0000ffff; mem_mask &=0x0000fff
 #ifdef UNUSED_FUNCTION
 READ32_HANDLER( backfire_unknown_wheel_r )
 {
-	return readinputport(4); // maybe incorrect but no matter Backfire! only uses the joystick in this driver
+	return readinputport(4); /* maybe incorrect but no matter Backfire! only uses the joystick in this driver*/
 }
 
 READ32_HANDLER( backfire_wheel1_r )
@@ -359,7 +359,7 @@ static MEMORY_READ32_START( backfire_readmem )
 	{ 0x144000, 0x145fff, backfire_pf4_data_r },
 	{ 0x150000, 0x150fff, backfire_pf3_rowscroll_r },
 	{ 0x154000, 0x154fff, backfire_pf4_rowscroll_r },
-	{ 0x170000, 0x177fff, MRA32_RAM },// main ram
+	{ 0x170000, 0x177fff, MRA32_RAM },/* main ram*/
 	{ 0x184000, 0x185fff, MRA32_RAM },
 	{ 0x18c000, 0x18dfff, MRA32_RAM },
 	{ 0x190000, 0x190003, backfire_eeprom_r },
@@ -382,7 +382,7 @@ static MEMORY_WRITE32_START( backfire_writemem )
 	{ 0x150000, 0x150fff, backfire_pf3_rowscroll_w },
 	{ 0x154000, 0x154fff, backfire_pf4_rowscroll_w },
 	{ 0x160000, 0x161fff, backfire_nonbuffered_palette_w, &paletteram32 },
-	{ 0x170000, 0x177fff, MWA32_RAM, &backfire_mainram },// main ram
+	{ 0x170000, 0x177fff, MWA32_RAM, &backfire_mainram },/* main ram*/
 	{ 0x184000, 0x185fff, MWA32_RAM, &backfire_spriteram32_1 },
 	{ 0x18c000, 0x18dfff, MWA32_RAM, &backfire_spriteram32_2 },
 	{ 0x1a4000, 0x1a4003, backfire_eeprom_w },
@@ -437,10 +437,10 @@ INPUT_PORTS_START( backfire )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START
-	PORT_ANALOG ( 0x00ff, 0x0080, IPT_PADDLE, 30, 10, 0x00, 0xff)// not used
+	PORT_ANALOG ( 0x00ff, 0x0080, IPT_PADDLE, 30, 10, 0x00, 0xff)/* not used*/
 
 	PORT_START
-	PORT_ANALOG ( 0x00ff, 0x0080, IPT_PADDLE, 30, 10, 0x00, 0xff)// not used
+	PORT_ANALOG ( 0x00ff, 0x0080, IPT_PADDLE, 30, 10, 0x00, 0xff)/* not used*/
 
 	PORT_START
 	/* ?? */
@@ -533,7 +533,7 @@ static MACHINE_DRIVER_START( backfire )
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN )
 	MDRV_SCREEN_SIZE(80*8, 32*8)
-	MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1) //tweaked for single screen only display
+	MDRV_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1) /*tweaked for single screen only display*/
 	MDRV_GFXDECODE(gfxdecodeinfo_backfire)
 	MDRV_PALETTE_LENGTH(2048)
 	MDRV_ASPECT_RATIO(4,3)
@@ -636,7 +636,7 @@ ROM_END
 static void descramble_sound( void )
 {
 	UINT8 *rom = memory_region(REGION_SOUND1);
-	int length = 0x200000; // only the first rom is swapped on backfire!
+	int length = 0x200000; /* only the first rom is swapped on backfire!*/
 	UINT8 *buf1 = malloc(length);
 	UINT32 x;
 
@@ -661,10 +661,10 @@ static void descramble_sound( void )
 
 static READ32_HANDLER( backfire_speedup_r )
 {
-//  printf( "%08x\n",activecpu_get_pc());
+/*  printf( "%08x\n",activecpu_get_pc());*/
 
-	if (activecpu_get_pc()==0xce44)  cpu_spinuntil_time(TIME_IN_USEC(400)); // backfire
-	if (activecpu_get_pc()==0xcee4)  cpu_spinuntil_time(TIME_IN_USEC(400)); // backfira
+	if (activecpu_get_pc()==0xce44)  cpu_spinuntil_time(TIME_IN_USEC(400)); /* backfire*/
+	if (activecpu_get_pc()==0xcee4)  cpu_spinuntil_time(TIME_IN_USEC(400)); /* backfira*/
 
 	return backfire_mainram[0x18/4];
 }

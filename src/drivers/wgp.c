@@ -475,7 +475,7 @@ static WRITE16_HANDLER( rotate_port_w )
 	{
 		case 0x00:
 		{
-//logerror("CPU #0 PC %06x: warning - port %04x write %04x\n",activecpu_get_pc(),port_sel,data);
+/*logerror("CPU #0 PC %06x: warning - port %04x write %04x\n",activecpu_get_pc(),port_sel,data);*/
 
 			wgp_rotate_ctrl[port_sel] = data;
 			return;
@@ -624,7 +624,7 @@ static MEMORY_WRITE16_START( wgp_writemem )
 	{ 0x320000, 0x32000f, TC0100SCN_ctrl_word_0_w },
 	{ 0x400000, 0x40bfff, MWA16_RAM, &wgp_spritemap, &wgp_spritemap_size },
 	{ 0x40c000, 0x40dfff, MWA16_RAM, &spriteram16, &spriteram_size  },	/* sprite ram */
-	{ 0x40fff0, 0x40fff1, MWA16_NOP },	// ?? (writes 0x8000 and 0 alternately - Wgp2 just 0)
+	{ 0x40fff0, 0x40fff1, MWA16_NOP },	/* ?? (writes 0x8000 and 0 alternately - Wgp2 just 0)*/
 	{ 0x500000, 0x501fff, MWA16_RAM },	/* unknown/unused */
 	{ 0x502000, 0x517fff, wgp_pivram_word_w, &wgp_pivram },	/* piv tilemaps */
 	{ 0x520000, 0x52001f, wgp_piv_ctrl_word_w, &wgp_piv_ctrlram },
@@ -637,10 +637,10 @@ static MEMORY_READ16_START( wgp_cpub_readmem )	/* LAN areas not mapped... */
 	{ 0x100000, 0x103fff, MRA16_RAM },
 	{ 0x140000, 0x143fff, sharedram_r },
 	{ 0x200000, 0x200003, wgp_sound_r },
-//	{ 0x380000, 0x383fff, MRA16_RAM },	// LAN RAM
-	{ 0x380000, 0x380001, lan_status_r },	// ??
-	// a lan input area is read somewhere above the status
-	// (make the status return 0 and log)...
+/*	{ 0x380000, 0x383fff, MRA16_RAM },	*/ /* LAN RAM*/
+	{ 0x380000, 0x380001, lan_status_r },	/* ??*/
+	/* a lan input area is read somewhere above the status*/
+	/* (make the status return 0 and log)...*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( wgp_cpub_writemem )
@@ -648,7 +648,7 @@ static MEMORY_WRITE16_START( wgp_cpub_writemem )
 	{ 0x100000, 0x103fff, MWA16_RAM },
 	{ 0x140000, 0x143fff, sharedram_w },
 	{ 0x200000, 0x200003, wgp_sound_w },
-//	{ 0x380000, 0x383fff, MWA16_RAM },	// LAN RAM
+/*	{ 0x380000, 0x383fff, MWA16_RAM },	*/ /* LAN RAM*/
 MEMORY_END
 
 
@@ -788,7 +788,7 @@ MEMORY_END
 
 INPUT_PORTS_START( wgp )
 	PORT_START /* DSW A */
-	PORT_DIPNAME( 0x01, 0x01, "Motor Test" )				// Only available in "test mode"
+	PORT_DIPNAME( 0x01, 0x01, "Motor Test" )				/* Only available in "test mode"*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	TAITO_WGP_DSWA_2_4
@@ -850,18 +850,18 @@ INPUT_PORTS_START( wgp )
    inputs are replaced by discrete values derived from the fake
    input port above, so keyboard control is feasible. */
 
-//	PORT_START	/* accel, 0-255 */
-//	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_REVERSE | IPF_PLAYER1, 20, 25, 0, 0xff)
+/*	PORT_START	 // accel, 0-255 /*/
+/*	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_REVERSE | IPF_PLAYER1, 20, 25, 0, 0xff)*/
 
 	PORT_START	/* steer */
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_REVERSE | IPF_PLAYER1, 20, 25, 0, 0xff)
 
-//	PORT_START	/* steer offset */
+/*	PORT_START	 // steer offset /*/
 
-//	PORT_START	/* accel offset */
+/*	PORT_START	 // accel offset /*/
 
-//	PORT_START	/* brake, 0-0x30: needs to start at 0xff; then 0xcf is max brake */
-//	PORT_ANALOG( 0xff, 0xff, IPT_AD_STICK_X | IPF_PLAYER2, 10, 5, 0xcf, 0xff)
+/*	PORT_START	 // brake, 0-0x30: needs to start at 0xff; then 0xcf is max brake /*/
+/*	PORT_ANALOG( 0xff, 0xff, IPT_AD_STICK_X | IPF_PLAYER2, 10, 5, 0xcf, 0xff)*/
 
 	PORT_START	/* unknown */
 	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_PLAYER2, 20, 10, 0, 0xff)
@@ -870,7 +870,7 @@ INPUT_PORTS_END
 /* Same as 'wgp', but different coinage */
 INPUT_PORTS_START( wgpj )
 	PORT_START /* DSW A */
-	PORT_DIPNAME( 0x01, 0x01, "Motor Test" )				// Only available in "test mode"
+	PORT_DIPNAME( 0x01, 0x01, "Motor Test" )				/* Only available in "test mode"*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	TAITO_WGP_DSWA_2_4
@@ -932,18 +932,18 @@ INPUT_PORTS_START( wgpj )
    inputs are replaced by discrete values derived from the fake
    input port above, so keyboard control is feasible. */
 
-//	PORT_START	/* accel, 0-255 */
-//	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_REVERSE | IPF_PLAYER1, 20, 25, 0, 0xff)
+/*	PORT_START	 // accel, 0-255 /*/
+/*	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_REVERSE | IPF_PLAYER1, 20, 25, 0, 0xff)*/
 
 	PORT_START	/* steer */
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_REVERSE | IPF_PLAYER1, 20, 25, 0, 0xff)
 
-//	PORT_START	/* steer offset */
+/*	PORT_START	 // steer offset /*/
 
-//	PORT_START	/* accel offset */
+/*	PORT_START	 // accel offset /*/
 
-//	PORT_START	/* brake, 0-0x30: needs to start at 0xff; then 0xcf is max brake */
-//	PORT_ANALOG( 0xff, 0xff, IPT_AD_STICK_X | IPF_PLAYER2, 10, 5, 0xcf, 0xff)
+/*	PORT_START	 // brake, 0-0x30: needs to start at 0xff; then 0xcf is max brake /*/
+/*	PORT_ANALOG( 0xff, 0xff, IPT_AD_STICK_X | IPF_PLAYER2, 10, 5, 0xcf, 0xff)*/
 
 	PORT_START	/* unknown */
 	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_PLAYER2, 20, 10, 0, 0xff)
@@ -1077,18 +1077,18 @@ INPUT_PORTS_START( wgp2 )	/* Wgp2 has no "lumps" ? */
    inputs are replaced by discrete values derived from the fake
    input port above, so keyboard control is feasible. */
 
-//	PORT_START	/* accel, 0-255 */
-//	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_REVERSE | IPF_PLAYER1, 20, 25, 0, 0xff)
+/*	PORT_START	 // accel, 0-255 /*/
+/*	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_REVERSE | IPF_PLAYER1, 20, 25, 0, 0xff)*/
 
 	PORT_START	/* steer */
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_REVERSE | IPF_PLAYER1, 20, 25, 0, 0xff)
 
-//	PORT_START	/* steer offset */
+/*	PORT_START	 // steer offset /*/
 
-//	PORT_START	/* accel offset */
+/*	PORT_START	 // accel offset /*/
 
-//	PORT_START	/* brake, 0-0x30: needs to start at 0xff; then 0xcf is max brake */
-//	PORT_ANALOG( 0xff, 0xff, IPT_AD_STICK_X | IPF_PLAYER2, 10, 5, 0xcf, 0xff)
+/*	PORT_START	 // brake, 0-0x30: needs to start at 0xff; then 0xcf is max brake /*/
+/*	PORT_ANALOG( 0xff, 0xff, IPT_AD_STICK_X | IPF_PLAYER2, 10, 5, 0xcf, 0xff)*/
 
 	PORT_START	/* unknown */
 	PORT_ANALOG( 0xff, 0x00, IPT_AD_STICK_Y | IPF_PLAYER2, 20, 10, 0, 0xff)
@@ -1149,7 +1149,7 @@ static struct GfxDecodeInfo wgp_gfxdecodeinfo[] =
 **************************************************************/
 
 /* handler called by the YM2610 emulator when the internal timers cause an IRQ */
-static void irqhandler(int irq)	// assumes Z80 sandwiched between 68Ks
+static void irqhandler(int irq)	/* assumes Z80 sandwiched between 68Ks*/
 {
 	cpu_set_irq_line(1,0,irq ? ASSERT_LINE : CLEAR_LINE);
 }
@@ -1287,22 +1287,22 @@ ROM_START( wgp )
 	ROM_REGION( 0x80000, REGION_SOUND2, 0 )	/* Delta-T samples */
 	ROM_LOAD( "c32-12.7",  0x00000, 0x80000, CRC(df48a37b) SHA1(c0c191f4b8a5f55c0f1e52dac9cd3f7d15adace6) )
 
-//	Pals (Guru dump)
-//	ROM_LOAD( "c32-13.14", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-14.19", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-15.52", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-16.54", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-17.53", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-18.64", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-19.27", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-20.67", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-21.85", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-22.24", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-23.13", 0x00000, 0x00???, NO_DUMP )
+/*	Pals (Guru dump)*/
+/*	ROM_LOAD( "c32-13.14", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-14.19", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-15.52", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-16.54", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-17.53", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-18.64", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-19.27", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-20.67", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-21.85", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-22.24", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-23.13", 0x00000, 0x00???, NO_DUMP )*/
 
-//	Pals on lan interface board
-//	ROM_LOAD( "c32-34", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c32-35", 0x00000, 0x00???, NO_DUMP )
+/*	Pals on lan interface board*/
+/*	ROM_LOAD( "c32-34", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c32-35", 0x00000, 0x00???, NO_DUMP )*/
 ROM_END
 
 ROM_START( wgpj )
@@ -1384,8 +1384,8 @@ ROM_START( wgpjoya )	/* Older joystick version ??? */
 	ROM_LOAD16_WORD_SWAP( "c32-10.9",  0x80000, 0x80000, CRC(a44c66e9) SHA1(b5fa978e43303003969033b8096fd68885cfc202) )	/* data rom */
 
 	ROM_REGION( 0x40000, REGION_CPU3, 0 )	/* 256K for 68000 code (CPU B) */
-	ROM_LOAD16_BYTE( "c32-46.64", 0x00000, 0x20000, CRC(64191891) SHA1(91d1d51478f1c2785470de0ac2a048e367f7ea48) )	// older rev?
-	ROM_LOAD16_BYTE( "c32-45.63", 0x00001, 0x20000, CRC(759b39d5) SHA1(ed4ccd295c5595bdcac965b59293efb3c21ce48a) )	// older rev?
+	ROM_LOAD16_BYTE( "c32-46.64", 0x00000, 0x20000, CRC(64191891) SHA1(91d1d51478f1c2785470de0ac2a048e367f7ea48) )	/* older rev?*/
+	ROM_LOAD16_BYTE( "c32-45.63", 0x00001, 0x20000, CRC(759b39d5) SHA1(ed4ccd295c5595bdcac965b59293efb3c21ce48a) )	/* older rev?*/
 
 	ROM_REGION( 0x1c000, REGION_CPU2, 0 )	/* Z80 sound cpu */
 	ROM_LOAD( "c32-61.34",   0x00000, 0x04000, CRC(2fcad5a3) SHA1(f0f658490655b521af631af763c07e37834dc5a0) )
@@ -1448,8 +1448,8 @@ ROM_START( wgp2 )
 	ROM_REGION( 0x80000, REGION_SOUND2, 0 )	/* delta-t samples */
 	ROM_LOAD( "c32-12.7", 0x00000, 0x80000, CRC(df48a37b) SHA1(c0c191f4b8a5f55c0f1e52dac9cd3f7d15adace6) )
 
-//	WGP2 security board (has TC0190FMC)
-//	ROM_LOAD( "c73-06", 0x00000, 0x00???, NO_DUMP )
+/*	WGP2 security board (has TC0190FMC)*/
+/*	ROM_LOAD( "c73-06", 0x00000, 0x00???, NO_DUMP )*/
 ROM_END
 
 
@@ -1459,10 +1459,10 @@ DRIVER_INIT( wgp )
 	/* Patch for coding error that causes corrupt data in
 	   sprite tilemapping area from $4083c0-847f */
 	data16_t *ROM = (data16_t *)memory_region(REGION_CPU1);
-	ROM[0x25dc / 2] = 0x0602;	// faulty value is 0x0206
+	ROM[0x25dc / 2] = 0x0602;	/* faulty value is 0x0206*/
 #endif
 
-//	taitosnd_setz80_soundcpu( 2 );
+/*	taitosnd_setz80_soundcpu( 2 );*/
 	cpua_ctrl = 0xff;
 
 	state_save_register_UINT16("main1", 0, "control", &cpua_ctrl, 1);

@@ -157,7 +157,7 @@ INPUT_PORTS_START( mystston )
 	PORT_DIPNAME(0x40, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(   0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(   0x40, DEF_STR( Cocktail ) )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// VBLANK
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* VBLANK*/
 INPUT_PORTS_END
 
 
@@ -196,8 +196,8 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 static struct AY8910interface ay8910_interface =
 {
-	2,				// 2 chips
-	12000000/8,		// 1.5 MHz
+	2,				/* 2 chips*/
+	12000000/8,		/* 1.5 MHz*/
 	{ 30, 30 },
 	{ 0 },
 	{ 0 },
@@ -241,7 +241,7 @@ static INTERRUPT_GEN( mystston_interrupt )
 static MACHINE_DRIVER_START( mystston )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M6502, 12000000/8)	// 1.5 MHz
+	MDRV_CPU_ADD(M6502, 12000000/8)	/* 1.5 MHz*/
 	MDRV_CPU_MEMORY(readmem, writemem)
 	MDRV_CPU_VBLANK_INT(mystston_interrupt, 272)
 

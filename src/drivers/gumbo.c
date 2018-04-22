@@ -57,27 +57,27 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( gumbo_writemem )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
-	{ 0x080000, 0x083fff, MWA16_RAM }, // main ram
+	{ 0x080000, 0x083fff, MWA16_RAM }, /* main ram*/
 	{ 0x1c0300, 0x1c0301, OKIM6295_data_0_lsb_w },
 	{ 0x1b0000, 0x1b03ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0x1e0000, 0x1e0fff, gumbo_bg_videoram_w, &gumbo_bg_videoram }, // bg tilemap
-	{ 0x1f0000, 0x1f3fff, gumbo_fg_videoram_w, &gumbo_fg_videoram }, // fg tilemap
+	{ 0x1e0000, 0x1e0fff, gumbo_bg_videoram_w, &gumbo_bg_videoram }, /* bg tilemap*/
+	{ 0x1f0000, 0x1f3fff, gumbo_fg_videoram_w, &gumbo_fg_videoram }, /* fg tilemap*/
 MEMORY_END
 
 INPUT_PORTS_START( gumbo )
 	PORT_START	/* DSW */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	// "Rotate" - also IPT_START1
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	// "Help"
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	/* "Rotate" - also IPT_START1*/
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	/* "Help"*/
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	// "Rotate" - also IPT_START2
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	// "Help"
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	/* "Rotate" - also IPT_START2*/
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	/* "Help"*/
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
@@ -90,7 +90,7 @@ INPUT_PORTS_START( gumbo )
 	PORT_DIPSETTING(      0x0100, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0x0300, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(      0x0200, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x0400, 0x0400, "Helps" )			// "Power Count" in test mode
+	PORT_DIPNAME( 0x0400, 0x0400, "Helps" )			/* "Power Count" in test mode*/
 	PORT_DIPSETTING(      0x0000, "0" )
 	PORT_DIPSETTING(      0x0400, "1" )
 	PORT_DIPNAME( 0x0800, 0x0800, "Bonus Bar Level" )
@@ -147,9 +147,9 @@ static struct OKIM6295interface okim6295_interface =
 };
 
 static MACHINE_DRIVER_START( gumbo )
-	MDRV_CPU_ADD(M68000, 14318180 /2) // or 10mhz? ?
+	MDRV_CPU_ADD(M68000, 14318180 /2) /* or 10mhz? ?*/
 	MDRV_CPU_MEMORY(gumbo_readmem,gumbo_writemem)
-	MDRV_CPU_VBLANK_INT(irq1_line_hold,1) // all the same
+	MDRV_CPU_VBLANK_INT(irq1_line_hold,1) /* all the same*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)

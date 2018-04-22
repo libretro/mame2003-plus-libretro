@@ -121,7 +121,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xa100, 0xa11f, pengo_sound_w, &pengo_soundregs },
 	{ 0xa130, 0xa130, MWA_RAM, &rallyx_scrollx },
 	{ 0xa140, 0xa140, MWA_RAM, &rallyx_scrolly },
-	//{ 0xa170, 0xa170, MWA_NOP },	/* ????? */
+	/*{ 0xa170, 0xa170, MWA_NOP },	 // ????? /*/
 	{ 0xa180, 0xa180, rallyx_play_sound_w },
 	{ 0xa181, 0xa181, interrupt_enable_w },
 	{ 0xa183, 0xa183, rallyx_flipscreen_w },

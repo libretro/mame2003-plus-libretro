@@ -1038,7 +1038,7 @@ GAME ( 1980, phoenixt, phoenix, phoenix,  phoenixt, 0,        ROT90, "Taito", "P
 GAME ( 1980, phoenix3, phoenix, phoenix,  phoenix3, 0,        ROT90, "bootleg", "Phoenix (T.P.N.)" )
 GAME ( 1981, phoenixc, phoenix, phoenix,  phoenixt, 0,        ROT90, "bootleg?", "Phoenix (IRECSA, G.G.I Corp)" )
 GAME ( 1981, condor,   phoenix, condor,   condor,   0,        ROT90, "Sidam", "Condor" )
-// the following 2 were common bootlegs in england & france respectively
+/* the following 2 were common bootlegs in england & france respectively*/
 GAME ( 1980, falcon,   phoenix, phoenix,  phoenixt, 0,        ROT90, "bootleg", "Falcon" )
 GAME ( 1980, vautour,  phoenix, phoenix,  phoenixt, 0,        ROT90, "bootleg", "Vautour (Jeutel France)" )
 GAMEX( 1981, pleiads,  0,       pleiads,  pleiads,  0,        ROT90, "Tehkan", "Pleiads (Tehkan)", GAME_IMPERFECT_COLORS )

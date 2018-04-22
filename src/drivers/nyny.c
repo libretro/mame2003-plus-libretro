@@ -171,34 +171,34 @@ WRITE_HANDLER( snd_answer_w )
 
 
 static MEMORY_READ_START( readmem )
-	{ 0x0000, 0x1fff, nyny_videoram0_r }, // WE1 8k
-	{ 0x2000, 0x3fff, nyny_colourram0_r }, // WE3
-	{ 0x4000, 0x5fff, nyny_videoram1_r }, // WE2
-	{ 0x6000, 0x7fff, nyny_colourram1_r }, // WE4
-	{ 0x8000, 0x9fff, MRA_RAM }, // WE1 8k
-	{ 0xa000, 0xa007, MRA_RAM }, // SRAM
+	{ 0x0000, 0x1fff, nyny_videoram0_r }, /* WE1 8k*/
+	{ 0x2000, 0x3fff, nyny_colourram0_r }, /* WE3*/
+	{ 0x4000, 0x5fff, nyny_videoram1_r }, /* WE2*/
+	{ 0x6000, 0x7fff, nyny_colourram1_r }, /* WE4*/
+	{ 0x8000, 0x9fff, MRA_RAM }, /* WE1 8k*/
+	{ 0xa000, 0xa007, MRA_RAM }, /* SRAM*/
 	{ 0xa204, 0xa207, pia_0_r },
 	{ 0xa208, 0xa20b, pia_1_r },
 	{ 0xa300, 0xa300, snd_answer_r },
 	{ 0xa800, 0xbfff, MRA_ROM },
-	{ 0xc000, 0xdfff, MRA_RAM }, // WE2
+	{ 0xc000, 0xdfff, MRA_RAM }, /* WE2*/
 	{ 0xe000, 0xffff, MRA_ROM },
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
-	{ 0x0000, 0x1fff, nyny_videoram0_w }, // WE1
-	{ 0x2000, 0x3fff, nyny_colourram0_w }, // WE3
-	{ 0x4000, 0x5fff, nyny_videoram1_w }, // WE2
-	{ 0x6000, 0x7fff, nyny_colourram1_w }, // WE4
-	{ 0x8000, 0x9fff, MWA_RAM }, // WE1
-	{ 0xa000, 0xa007, MWA_RAM, &generic_nvram, &generic_nvram_size }, // SRAM (coin counter, shown when holding F2)
+	{ 0x0000, 0x1fff, nyny_videoram0_w }, /* WE1*/
+	{ 0x2000, 0x3fff, nyny_colourram0_w }, /* WE3*/
+	{ 0x4000, 0x5fff, nyny_videoram1_w }, /* WE2*/
+	{ 0x6000, 0x7fff, nyny_colourram1_w }, /* WE4*/
+	{ 0x8000, 0x9fff, MWA_RAM }, /* WE1*/
+	{ 0xa000, 0xa007, MWA_RAM, &generic_nvram, &generic_nvram_size }, /* SRAM (coin counter, shown when holding F2)*/
 	{ 0xa204, 0xa207, pia_0_w },
 	{ 0xa208, 0xa20b, pia_1_w },
 	{ 0xa300, 0xa300, shared_w_irq },
 	{ 0xa100, 0xa100, crtc6845_address_w },
 	{ 0xa101, 0xa101, crtc6845_register_w },
 	{ 0xa800, 0xbfff, MWA_ROM },
-	{ 0xc000, 0xdfff, MWA_RAM }, // WE2
+	{ 0xc000, 0xdfff, MWA_RAM }, /* WE2*/
 	{ 0xe000, 0xffff, MWA_ROM },
 MEMORY_END
 

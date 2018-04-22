@@ -168,7 +168,7 @@ ROM_START( hidnctch )
 	ROM_LOAD("hc_u108.bin", 0x000000,    0x080000, CRC(2bae46cb) SHA1(7c43f1002dfc20b9c1bb1647f7261dfa7ed2b4f9))
 
 	ROM_REGION( 0x080000, REGION_GFX3, 0 ) /* ? */
-	ROM_LOAD("hc_u107.bin", 0x000000,    0x08000, CRC(afd5263d) SHA1(71ace1b749d8a6b84d08b97185e7e512d04e4b8d) ) // same in landbrk
+	ROM_LOAD("hc_u107.bin", 0x000000,    0x08000, CRC(afd5263d) SHA1(71ace1b749d8a6b84d08b97185e7e512d04e4b8d) ) /* same in landbrk*/
 
 	ROM_REGION( 0x080000, REGION_GFX4, 0 ) /* ? */
 	ROM_LOAD("hc_u111.bin", 0x000000,    0x08000, CRC(79012474) SHA1(09a2d5705d7bc52cc2d1644c87c1e31ee44813ef))

@@ -82,12 +82,12 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xd9ff, MWA_RAM },
 	{ 0xda00, 0xdfff, MWA_RAM, &spriteram, &spriteram_size },
-	{ 0xe000, 0xe7ff, mnight_bgvideoram_w, &mnight_background_videoram, &mnight_backgroundram_size }, // VFY
-	{ 0xe800, 0xefff, mnight_fgvideoram_w, &mnight_foreground_videoram, &mnight_foregroundram_size }, //VFY
+	{ 0xe000, 0xe7ff, mnight_bgvideoram_w, &mnight_background_videoram, &mnight_backgroundram_size }, /* VFY*/
+	{ 0xe800, 0xefff, mnight_fgvideoram_w, &mnight_foreground_videoram, &mnight_foregroundram_size }, /*VFY*/
 	{ 0xf000, 0xf5ff, paletteram_RRRRGGGGBBBBxxxx_swap_w, &paletteram },
 	{ 0xf600, 0xf7ff, MWA_RAM },
 	{ 0xfa00, 0xfa00, soundlatch_w },
-	{ 0xfa01, 0xfa01, MWA_RAM },		   // unknown but used
+	{ 0xfa01, 0xfa01, MWA_RAM },		   /* unknown but used*/
 	{ 0xfa02, 0xfa02, mnight_bankselect_w },
 	{ 0xfa03, 0xfa03, mnight_sprite_overdraw_w, &mnight_spoverdraw_ram },
 	{ 0xfa08, 0xfa09, MWA_RAM, &mnight_scrollx_ram },
@@ -342,7 +342,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct YM2203interface ym2203_interface =
 {
 	2,	 /* 2 chips */
-	12000000/8, // lax 11/03/1999  (1250000 -> 1500000 ???)
+	12000000/8, /* lax 11/03/1999  (1250000 -> 1500000 ???)*/
 	{ YM2203_VOL(25,25), YM2203_VOL(25,25)},
 	{ 0 },
 	{ 0 },
@@ -397,7 +397,7 @@ ROM_START( mnight )
 	ROM_LOAD( "mn1-j7.bin",   0x00000, 0x10000, CRC(a0782a31) SHA1(8abd2f0b0c2c2eb876f324f7a095a5cdc773c187) )
 
 	ROM_REGION( 0x30000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "mn11-b20.bin", 0x00000, 0x4000, CRC(4d37e0f4) SHA1(a6d9aaccd97769197622cda45474e223c2ee1d98) )   // background tiles
+	ROM_LOAD( "mn11-b20.bin", 0x00000, 0x4000, CRC(4d37e0f4) SHA1(a6d9aaccd97769197622cda45474e223c2ee1d98) )   /* background tiles*/
 	ROM_CONTINUE(             0x18000, 0x4000 )
 	ROM_CONTINUE(             0x04000, 0x4000 )
 	ROM_CONTINUE(             0x1c000, 0x4000 )
@@ -411,7 +411,7 @@ ROM_START( mnight )
 	ROM_CONTINUE(             0x2c000, 0x4000 )
 
 	ROM_REGION( 0x30000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "mn7-e11.bin",  0x00000, 0x4000, CRC(4883059c) SHA1(53d4b9b0f0725c25e302ee1549a306778ec74d85) )	  // sprites tiles
+	ROM_LOAD( "mn7-e11.bin",  0x00000, 0x4000, CRC(4883059c) SHA1(53d4b9b0f0725c25e302ee1549a306778ec74d85) )	  /* sprites tiles*/
 	ROM_CONTINUE(             0x18000, 0x4000 )
 	ROM_CONTINUE(             0x04000, 0x4000 )
 	ROM_CONTINUE(             0x1c000, 0x4000 )
@@ -425,7 +425,7 @@ ROM_START( mnight )
 	ROM_CONTINUE(             0x2c000, 0x4000 )
 
 	ROM_REGION( 0x08000, REGION_GFX3, ROMREGION_DISPOSE )
-	ROM_LOAD( "mn10-b10.bin", 0x00000, 0x2000, CRC(37b8221f) SHA1(ac86e0ae8039fd30a028a893d08ce099f7765615) )	// foreground tiles OK
+	ROM_LOAD( "mn10-b10.bin", 0x00000, 0x2000, CRC(37b8221f) SHA1(ac86e0ae8039fd30a028a893d08ce099f7765615) )	/* foreground tiles OK*/
 	ROM_CONTINUE(             0x04000, 0x2000 )
 	ROM_CONTINUE(             0x02000, 0x2000 )
 	ROM_CONTINUE(             0x06000, 0x2000 )
@@ -443,7 +443,7 @@ ROM_START( arkarea )
 	ROM_LOAD( "arkarea.013",  0x00000, 0x8000, CRC(2d409d58) SHA1(6344b43db5459691728c3f843b643c84ea71dd8e) )
 
 	ROM_REGION( 0x30000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "arkarea.003",  0x00000, 0x4000, CRC(6f45a308) SHA1(b6994fe1f50d5e9cf38d3efbd69a2c5f76f33c56) )   // background tiles
+	ROM_LOAD( "arkarea.003",  0x00000, 0x4000, CRC(6f45a308) SHA1(b6994fe1f50d5e9cf38d3efbd69a2c5f76f33c56) )   /* background tiles*/
 	ROM_CONTINUE(             0x18000, 0x4000 )
 	ROM_CONTINUE(             0x04000, 0x4000 )
 	ROM_CONTINUE(             0x1c000, 0x4000 )
@@ -457,7 +457,7 @@ ROM_START( arkarea )
 	ROM_CONTINUE(             0x2c000, 0x4000 )
 
 	ROM_REGION( 0x30000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "arkarea.007",  0x00000, 0x4000, CRC(d5684a27) SHA1(4961e8a5df2510afb1ef3e937d0a5d52e91893a3) )   // sprites tiles
+	ROM_LOAD( "arkarea.007",  0x00000, 0x4000, CRC(d5684a27) SHA1(4961e8a5df2510afb1ef3e937d0a5d52e91893a3) )   /* sprites tiles*/
 	ROM_CONTINUE(             0x18000, 0x4000 )
 	ROM_CONTINUE(             0x04000, 0x4000 )
 	ROM_CONTINUE(             0x1c000, 0x4000 )
@@ -471,7 +471,7 @@ ROM_START( arkarea )
 	ROM_CONTINUE(             0x2c000, 0x4000 )
 
 	ROM_REGION( 0x08000, REGION_GFX3, ROMREGION_DISPOSE )
-	ROM_LOAD( "arkarea.004",  0x00000, 0x2000, CRC(69e36af2) SHA1(2bccef8f396dcb5261af0140af04c95ee8ecae11) ) // foreground tiles OK
+	ROM_LOAD( "arkarea.004",  0x00000, 0x2000, CRC(69e36af2) SHA1(2bccef8f396dcb5261af0140af04c95ee8ecae11) ) /* foreground tiles OK*/
 	ROM_CONTINUE(             0x04000, 0x2000 )
 	ROM_CONTINUE(             0x02000, 0x2000 )
 	ROM_CONTINUE(             0x06000, 0x2000 )

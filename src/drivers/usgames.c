@@ -42,8 +42,8 @@ static WRITE_HANDLER( usg_rombank_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
-//	logerror ("BANK WRITE? -%02x-\n",data);
-//usrintf_showmessage("%02x",data);
+/*	logerror ("BANK WRITE? -%02x-\n",data);*/
+/*usrintf_showmessage("%02x",data);*/
 
 	cpu_setbank( 1,&RAM[ 0x10000 + 0x4000 * data] );
 }
@@ -173,7 +173,7 @@ INPUT_PORTS_START( usg )
 	PORT_DIPNAME( 0x20, 0x20, "Test Switch" )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL ) // +12 Volts?
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL ) /* +12 Volts?*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_VBLANK )
 
 	PORT_START
@@ -343,14 +343,14 @@ ROM_START( usg82 )
 ROM_END
 
 
-ROM_START( usg185 ) // an upgraded 182?
+ROM_START( usg185 ) /* an upgraded 182?*/
 	ROM_REGION( 0x80000, REGION_CPU1, 0 )
 	ROM_LOAD( "usg182.u12",   0x08000, 0x08000, CRC(2f4ed125) SHA1(6ea2ce263b8abe8d283d1c85d403ec908a422448) )
 	/* for the banked region */
-	ROM_LOAD( "usg185.u36",   0x10000, 0x10000, CRC(b104744d) SHA1(fa2128c39a135b119ef625eed447afa523f912c0) ) // ROM 4
-	ROM_LOAD( "usg185.u35",   0x20000, 0x10000, CRC(795e71c8) SHA1(852dceab906f79d05da67a81f855c71738662430) ) // ROM 3
-	ROM_LOAD( "usg185.u28",   0x30000, 0x10000, CRC(c6ba8a81) SHA1(e826492626707e30782d4d2f42419357970d67b3) ) // ROM 2
-	ROM_LOAD( "usg185.u18",   0x40000, 0x10000, CRC(1cfd934d) SHA1(544c41c5fcc2e576f5a8c88996f9257956f6c580) ) // ROM 1
+	ROM_LOAD( "usg185.u36",   0x10000, 0x10000, CRC(b104744d) SHA1(fa2128c39a135b119ef625eed447afa523f912c0) ) /* ROM 4*/
+	ROM_LOAD( "usg185.u35",   0x20000, 0x10000, CRC(795e71c8) SHA1(852dceab906f79d05da67a81f855c71738662430) ) /* ROM 3*/
+	ROM_LOAD( "usg185.u28",   0x30000, 0x10000, CRC(c6ba8a81) SHA1(e826492626707e30782d4d2f42419357970d67b3) ) /* ROM 2*/
+	ROM_LOAD( "usg185.u18",   0x40000, 0x10000, CRC(1cfd934d) SHA1(544c41c5fcc2e576f5a8c88996f9257956f6c580) ) /* ROM 1*/
 ROM_END
 
 
@@ -358,19 +358,19 @@ ROM_START( usg252 )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 )
 	ROM_LOAD( "usg252.u12",   0x08000, 0x08000, CRC(766a855a) SHA1(e67ca9944d92192de423de6aa8a60f2e28b17db1) )
 	/* for the banked region */
-	ROM_LOAD( "usg252.u28",   0x1c000, 0x04000, CRC(d44d2ffa) SHA1(8bd756418b4f8ad11cb0f2044fb91c63d7771497) )	// ROM 2
+	ROM_LOAD( "usg252.u28",   0x1c000, 0x04000, CRC(d44d2ffa) SHA1(8bd756418b4f8ad11cb0f2044fb91c63d7771497) )	/* ROM 2*/
 	ROM_CONTINUE(             0x18000, 0x04000 )
 	ROM_CONTINUE(             0x14000, 0x04000 )
 	ROM_CONTINUE(             0x10000, 0x04000 )
-	ROM_LOAD( "usg252.u18",   0x2c000, 0x04000, CRC(2fff1da2) SHA1(c44718f7aab82f45379f21b68e8ee2668fe3a378) )	// ROM 1
+	ROM_LOAD( "usg252.u18",   0x2c000, 0x04000, CRC(2fff1da2) SHA1(c44718f7aab82f45379f21b68e8ee2668fe3a378) )	/* ROM 1*/
 	ROM_CONTINUE(             0x28000, 0x04000 )
 	ROM_CONTINUE(             0x24000, 0x04000 )
 	ROM_CONTINUE(             0x20000, 0x04000 )
-	ROM_LOAD( "usg252.u36",   0x3c000, 0x04000, CRC(b6d007be) SHA1(ec2afe983fd925d9f4602f47ddadd117bcc74972) )	// ROM 4
+	ROM_LOAD( "usg252.u36",   0x3c000, 0x04000, CRC(b6d007be) SHA1(ec2afe983fd925d9f4602f47ddadd117bcc74972) )	/* ROM 4*/
 	ROM_CONTINUE(             0x38000, 0x04000 )
 	ROM_CONTINUE(             0x34000, 0x04000 )
 	ROM_CONTINUE(             0x30000, 0x04000 )
-	ROM_LOAD( "usg252.u35",   0x4c000, 0x04000, CRC(9542295b) SHA1(56dd7b8fd581779656cb71cc42dbb9f77fb303f4) )	// ROM 3
+	ROM_LOAD( "usg252.u35",   0x4c000, 0x04000, CRC(9542295b) SHA1(56dd7b8fd581779656cb71cc42dbb9f77fb303f4) )	/* ROM 3*/
 	ROM_CONTINUE(             0x48000, 0x04000 )
 	ROM_CONTINUE(             0x44000, 0x04000 )
 	ROM_CONTINUE(             0x40000, 0x04000 )
@@ -381,6 +381,6 @@ ROM_END
 GAME( 1987, usg32,  0,     usg,    usg, 0, ROT0, "U.S. Games", "Super Duper Casino (California V3.2)" )
 GAME( 1988, usg83,  0,     usg,    usg, 0, ROT0, "U.S. Games", "Super Ten V8.3" )
 GAME( 1988, usg83x, usg83, usg,    usg, 0, ROT0, "U.S. Games", "Super Ten V8.3X" )
-GAME( 1988, usg82,  usg83, usg,    usg, 0, ROT0, "U.S. Games", "Super Ten V8.2" )	// "Feb.08,1988"
+GAME( 1988, usg82,  usg83, usg,    usg, 0, ROT0, "U.S. Games", "Super Ten V8.2" )	/* "Feb.08,1988"*/
 GAME( 1991, usg185, 0,     usg185, usg, 0, ROT0, "U.S. Games", "Games V18.7C" )
 GAME( 1992, usg252, 0,     usg185, usg, 0, ROT0, "U.S. Games", "Games V25.4X" )

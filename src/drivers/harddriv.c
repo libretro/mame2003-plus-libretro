@@ -480,27 +480,27 @@ static MEMORY_READ16_START( ds3snd_readmem )
 	{ ADSP_DATA_ADDR_RANGE(0x3800, 0x3bff), MRA16_RAM },		/* internal RAM */
 	{ ADSP_DATA_ADDR_RANGE(0x3fe0, 0x3fff), hdds3_control_r },	/* adsp control regs */
 	{ ADSP_PGM_ADDR_RANGE (0x0000, 0x3fff), MRA16_RAM },
-//
-//	/SIRQ2 = IRQ2
-//	/SRES -> RESET
-//
-//	2xx0 W = SWR0 (POUT)
-//	2xx1 W = SWR1 (SINT)
-//	2xx2 W = SWR2 (TFLAG)
-//	2xx3 W = SWR3 (INTSRC)
-//	2xx4 W = DACL
-//	2xx5 W = DACR
-//	2xx6 W = SRMADL
-//	2xx7 W = SRMADH
-//
-//	2xx0 R = SRD0 (PIN)
-//	2xx1 R = SRD1 (RSAT)
-//	2xx4 R = SROM
-//	2xx7 R = SFWCLR
-//
-//
-//	/XRES -> RESET
-//	communicate over serial I/O
+/**/
+/*	/SIRQ2 = IRQ2*/
+/*	/SRES -> RESET*/
+/**/
+/*	2xx0 W = SWR0 (POUT)*/
+/*	2xx1 W = SWR1 (SINT)*/
+/*	2xx2 W = SWR2 (TFLAG)*/
+/*	2xx3 W = SWR3 (INTSRC)*/
+/*	2xx4 W = DACL*/
+/*	2xx5 W = DACR*/
+/*	2xx6 W = SRMADL*/
+/*	2xx7 W = SRMADH*/
+/**/
+/*	2xx0 R = SRD0 (PIN)*/
+/*	2xx1 R = SRD1 (RSAT)*/
+/*	2xx4 R = SROM*/
+/*	2xx7 R = SFWCLR*/
+/**/
+/**/
+/*	/XRES -> RESET*/
+/*	communicate over serial I/O*/
 
 MEMORY_END
 
@@ -1145,13 +1145,13 @@ static MACHINE_DRIVER_START( ds4 )
 	MDRV_CPU_ADD_TAG("adsp", ADSP2101, 12000000)
 	MDRV_CPU_MEMORY(ds3_readmem,ds3_writemem)
 
-//	MDRV_CPU_ADD_TAG("sound", ADSP2105, 10000000)
-//	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
-//	MDRV_CPU_MEMORY(ds3snd_readmem,ds3snd_writemem)
+/*	MDRV_CPU_ADD_TAG("sound", ADSP2105, 10000000)*/
+/*	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)*/
+/*	MDRV_CPU_MEMORY(ds3snd_readmem,ds3snd_writemem)*/
 
-//	MDRV_CPU_ADD_TAG("sounddsp", ADSP2105, 10000000)
-//	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
-//	MDRV_CPU_MEMORY(ds3snd_readmem,ds3snd_writemem)
+/*	MDRV_CPU_ADD_TAG("sounddsp", ADSP2105, 10000000)*/
+/*	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)*/
+/*	MDRV_CPU_MEMORY(ds3snd_readmem,ds3snd_writemem)*/
 
 	MDRV_SOUND_ADD(DAC, dac2_interface)
 MACHINE_DRIVER_END

@@ -119,8 +119,8 @@ static MEMORY_WRITE_START( cpu1_writemem )
 	{ 0x4800, 0x4800, route16_out0_w },
 	{ 0x5000, 0x5000, route16_out1_w },
 	{ 0x8000, 0xbfff, route16_videoram1_w, &route16_videoram1, &route16_videoram_size },
-	{ 0xc000, 0xc000, MWA_RAM }, // Stratvox has an off by one error
-                                 // when clearing the screen
+	{ 0xc000, 0xc000, MWA_RAM }, /* Stratvox has an off by one error*/
+                                 /* when clearing the screen*/
 MEMORY_END
 
 static MEMORY_READ_START( routex_cpu1_readmem )
@@ -139,8 +139,8 @@ static MEMORY_WRITE_START( routex_cpu1_writemem )
 	{ 0x4800, 0x4800, route16_out0_w },
 	{ 0x5000, 0x5000, route16_out1_w },
 	{ 0x8000, 0xbfff, route16_videoram1_w, &route16_videoram1, &route16_videoram_size },
-	{ 0xc000, 0xc000, MWA_RAM }, // Stratvox has an off by one error
-                                 // when clearing the screen
+	{ 0xc000, 0xc000, MWA_RAM }, /* Stratvox has an off by one error*/
+                                 /* when clearing the screen*/
 MEMORY_END
 
 static MEMORY_READ_START( altcpu1_readmem )
@@ -160,7 +160,7 @@ static MEMORY_WRITE_START( altcpu1_writemem )
 	{ 0x5000, 0x5000, route16_out1_w },
 	{ 0x5800, 0x5800, speakres_out2_w },
 	{ 0x8000, 0xbfff, route16_videoram1_w, &route16_videoram1, &route16_videoram_size },
-	{ 0xc000, 0xc000, MWA_RAM }, // Speak & Rescue/Space Echo have same off by one error
+	{ 0xc000, 0xc000, MWA_RAM }, /* Speak & Rescue/Space Echo have same off by one error*/
 MEMORY_END
 
 static PORT_WRITE_START( cpu1_writeport )
@@ -176,10 +176,10 @@ MEMORY_END
 
 static MEMORY_WRITE_START( cpu2_writemem )
 	{ 0x0000, 0x1fff, MWA_ROM },
-	{ 0x2800, 0x2800, DAC_0_data_w }, // Not used by Route 16
+	{ 0x2800, 0x2800, DAC_0_data_w }, /* Not used by Route 16*/
 	{ 0x4000, 0x43ff, route16_sharedram_w },
 	{ 0x8000, 0xbfff, route16_videoram2_w, &route16_videoram2 },
-	{ 0xc000, 0xc1ff, MWA_NOP }, // Route 16 sometimes writes outside of
+	{ 0xc000, 0xc1ff, MWA_NOP }, /* Route 16 sometimes writes outside of*/
 MEMORY_END
 
 
@@ -188,17 +188,17 @@ INPUT_PORTS_START( route16 )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x01, "5" )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) ) // Doesn't seem to
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )                    // be referenced
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) ) /* Doesn't seem to*/
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )                    /* be referenced*/
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) ) // Doesn't seem to
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )                    // be referenced
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) ) /* Doesn't seem to*/
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )                    /* be referenced*/
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
 	PORT_DIPNAME( 0x18, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( 1C_2C ) )
-//	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) ) // Same as 0x08
+/*	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) ) */ /* Same as 0x08*/
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
@@ -482,7 +482,7 @@ MACHINE_DRIVER_END
 ***************************************************************************/
 
 ROM_START( route16 )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 )  // 64k for the first CPU
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )  /* 64k for the first CPU*/
 	ROM_LOAD( "route16.a0",   0x0000, 0x0800, CRC(8f9101bd) SHA1(b2c0156d41e295282387fb85fc272b031a6d1b64) )
 	ROM_LOAD( "route16.a1",   0x0800, 0x0800, CRC(389bc077) SHA1(b0606f6e647e81ceae7148bda96bd4673a51e823) )
 	ROM_LOAD( "route16.a2",   0x1000, 0x0800, CRC(1065a468) SHA1(4a707a42fb5a718043c173cb98ff3523eb274ccc) )
@@ -490,7 +490,7 @@ ROM_START( route16 )
 	ROM_LOAD( "route16.a4",   0x2000, 0x0800, CRC(f67d853a) SHA1(7479e84082e78f8670cc50858ce6a006d3063413) )
 	ROM_LOAD( "route16.a5",   0x2800, 0x0800, CRC(d85cf758) SHA1(5af21250ee44ab1a43b844ede5a777a3d33b78b5) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 )  // 64k for the second CPU
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )  /* 64k for the second CPU*/
 	ROM_LOAD( "route16.b0",   0x0000, 0x0800, CRC(0f9588a7) SHA1(dfaffec4dbabd98cdc21a416bd2966d9d3ae6ad1) )
 	ROM_LOAD( "route16.b1",   0x0800, 0x0800, CRC(2b326cf9) SHA1(c6602a9440a982c39f5836c6ab72283b6f9241be) )
 	ROM_LOAD( "route16.b2",   0x1000, 0x0800, CRC(529cad13) SHA1(b533d20df1f2580e237c3d60bfe3483486ad9a48) )
@@ -503,7 +503,7 @@ ROM_START( route16 )
 ROM_END
 
 ROM_START( route16a )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 )  // 64k for the first CPU
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )  /* 64k for the first CPU*/
 	ROM_LOAD( "vg-54",        0x0000, 0x0800, CRC(0c966319) SHA1(2f57e9a30dab864bbee2ccb0107c1b4212c5abaf) )
 	ROM_LOAD( "vg-55",        0x0800, 0x0800, CRC(a6a8c212) SHA1(a4a695d401b1e495c863c6938296a99592df0e7d) )
 	ROM_LOAD( "vg-56",        0x1000, 0x0800, CRC(5c74406a) SHA1(f106c27da6cac597afbabdef3ec7fa7d203905b0) )
@@ -511,7 +511,7 @@ ROM_START( route16a )
 	ROM_LOAD( "vg-58",        0x2000, 0x0800, CRC(40824e3c) SHA1(bc157e6babf00d2119b389fdb9d5822e1c764f51) )
 	ROM_LOAD( "vg-59",        0x2800, 0x0800, CRC(9313d2c2) SHA1(e08112f44ca454820752800d8b3b6408b73a4284) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 )  // 64k for the second CPU
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )  /* 64k for the second CPU*/
 	ROM_LOAD( "route16.b0",   0x0000, 0x0800, CRC(0f9588a7) SHA1(dfaffec4dbabd98cdc21a416bd2966d9d3ae6ad1) )
 	ROM_LOAD( "vg-61",        0x0800, 0x0800, CRC(b216c88c) SHA1(d011ef9f3727f87ae3482e271a0c2496f76036b4) )
 	ROM_LOAD( "route16.b2",   0x1000, 0x0800, CRC(529cad13) SHA1(b533d20df1f2580e237c3d60bfe3483486ad9a48) )
@@ -524,7 +524,7 @@ ROM_START( route16a )
 ROM_END
 
 ROM_START( route16b )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 )  // 64k for the first CPU
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )  /* 64k for the first CPU*/
 	ROM_LOAD( "rt16.0",       0x0000, 0x0800, CRC(b1f0f636) SHA1(f21915ed40ebdf64970fb7e3cd8071ebfc4aa0b5) )
 	ROM_LOAD( "rt16.1",       0x0800, 0x0800, CRC(3ec52fe5) SHA1(451969b5caedd665231ef78cf262679d6d4c8507) )
 	ROM_LOAD( "rt16.2",       0x1000, 0x0800, CRC(a8e92871) SHA1(68a709c14309d2b617997b76ae9d7b80fd326f39) )
@@ -532,7 +532,7 @@ ROM_START( route16b )
 	ROM_LOAD( "rt16.4",       0x2000, 0x0800, CRC(6dcaf8c4) SHA1(27d84cc29f2b75280678e9c77f270ee39af50228) )
 	ROM_LOAD( "rt16.5",       0x2800, 0x0800, CRC(63d7b05b) SHA1(d1e3473be283c92063674b9e69575081115bc456) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 )  // 64k for the second CPU
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )  /* 64k for the second CPU*/
 	ROM_LOAD( "rt16.6",       0x0000, 0x0800, CRC(fef605f3) SHA1(bfbffa0ded3e285c034f0ad832864021ef3f2256) )
 	ROM_LOAD( "rt16.7",       0x0800, 0x0800, CRC(d0d6c189) SHA1(75cec891e20cf05aae354c8950857aea83c6dadc) )
 	ROM_LOAD( "rt16.8",       0x1000, 0x0800, CRC(defc5797) SHA1(aec8179e647de70016e0e63b720f932752adacc1) )
@@ -545,7 +545,7 @@ ROM_START( route16b )
 ROM_END
 
 ROM_START( routex )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 )  // 64k for the first CPU
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )  /* 64k for the first CPU*/
 	ROM_LOAD( "routex01.a0",  0x0000, 0x0800, CRC(99b500e7) SHA1(2561c04a1425d7ac3309faf29fcfde63a0cda4da) )
 	ROM_LOAD( "rt16.1",       0x0800, 0x0800, CRC(3ec52fe5) SHA1(451969b5caedd665231ef78cf262679d6d4c8507) )
 	ROM_LOAD( "rt16.2",       0x1000, 0x0800, CRC(a8e92871) SHA1(68a709c14309d2b617997b76ae9d7b80fd326f39) )
@@ -554,7 +554,7 @@ ROM_START( routex )
 	ROM_LOAD( "routex06.a5",  0x2800, 0x0800, CRC(a39ef648) SHA1(866095d9880b60b01f7ca66b332f5f6c4b41a5ac) )
 	ROM_LOAD( "routex07.a6",  0x3000, 0x0800, CRC(89f80c1c) SHA1(dff37e0f2446a99890135891c59dc501866a25cc) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 )  // 64k for the second CPU
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )  /* 64k for the second CPU*/
 	ROM_LOAD( "routex11.b0",  0x0000, 0x0800, CRC(b51edd1d) SHA1(1ca10afd6851875c98b1d29aee457234c20ce0bf) )
 	ROM_LOAD( "rt16.7",       0x0800, 0x0800, CRC(d0d6c189) SHA1(75cec891e20cf05aae354c8950857aea83c6dadc) )
 	ROM_LOAD( "rt16.8",       0x1000, 0x0800, CRC(defc5797) SHA1(aec8179e647de70016e0e63b720f932752adacc1) )

@@ -280,7 +280,7 @@ static void mcu_process_command( void )
 		break;
 
 		case 0x41: { /* 0x41,0x00,0x00,stage# -> ? */
-//			int stage = mcu_buffer[3];
+/*			int stage = mcu_buffer[3];*/
 			mcu_buffer[0] = 2;
 			mcu_buffer[1] = 0x20;
 			mcu_buffer[2] = 0x78;
@@ -390,7 +390,7 @@ static INTERRUPT_GEN( renegade_interrupt )
 
 static WRITE_HANDLER( renegade_coin_counter_w )
 {
-	//coin_counter_w(offset,data);
+	/*coin_counter_w(offset,data);*/
 }
 
 
@@ -421,7 +421,7 @@ static MEMORY_WRITE_START( main_writemem )
 	{ 0x3803, 0x3803, renegade_flipscreen_w },
 	{ 0x3804, 0x3804, mcu_w },
 	{ 0x3805, 0x3805, bankswitch_w },
-	{ 0x3806, 0x3806, MWA_NOP }, // ?? watchdog
+	{ 0x3806, 0x3806, MWA_NOP }, /* ?? watchdog*/
 	{ 0x3807, 0x3807, renegade_coin_counter_w },
 	{ 0x4000, 0xffff, MWA_ROM },
 MEMORY_END
@@ -435,7 +435,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
 	{ 0x0000, 0x0fff, MWA_RAM },
-	{ 0x1800, 0x1800, MWA_NOP }, // this gets written the same values as 0x2000
+	{ 0x1800, 0x1800, MWA_NOP }, /* this gets written the same values as 0x2000*/
 	{ 0x2000, 0x2000, adpcm_play_w },
 	{ 0x2800, 0x2800, YM3526_control_port_0_w },
 	{ 0x2801, 0x2801, YM3526_write_port_0_w },
@@ -738,7 +738,7 @@ ROM_END
 
 ROM_START( kuniokun )
 	ROM_REGION( 0x14000, REGION_CPU1, 0 )	/* 64k for code + bank switched ROM */
-	ROM_LOAD( "nb-01.bin",    0x08000, 0x8000, CRC(93fcfdf5) SHA1(51cdb9377544ae17895e427f21d150ce195ab8e7) ) // original
+	ROM_LOAD( "nb-01.bin",    0x08000, 0x8000, CRC(93fcfdf5) SHA1(51cdb9377544ae17895e427f21d150ce195ab8e7) ) /* original*/
 	ROM_LOAD( "ta18-11.bin",  0x04000, 0x4000, CRC(f240f5cd) SHA1(ed6875e8ad2988e88389d4f63ff448d0823c195f) )
 	ROM_CONTINUE(			  0x10000, 0x4000 )
 
@@ -781,7 +781,7 @@ ROM_END
 
 ROM_START( kuniokub )
 	ROM_REGION( 0x14000, REGION_CPU1, 0 )	/* 64k for code + bank switched ROM */
-	ROM_LOAD( "ta18-10.bin",  0x08000, 0x8000, CRC(a90cf44a) SHA1(6d63d9c29da7b8c5bc391e074b6b8fe6ae3892ae) ) // bootleg
+	ROM_LOAD( "ta18-10.bin",  0x08000, 0x8000, CRC(a90cf44a) SHA1(6d63d9c29da7b8c5bc391e074b6b8fe6ae3892ae) ) /* bootleg*/
 	ROM_LOAD( "ta18-11.bin",  0x04000, 0x4000, CRC(f240f5cd) SHA1(ed6875e8ad2988e88389d4f63ff448d0823c195f) )
 	ROM_CONTINUE(			  0x10000, 0x4000 )
 

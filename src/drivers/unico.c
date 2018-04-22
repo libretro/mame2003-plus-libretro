@@ -64,43 +64,43 @@ static WRITE16_HANDLER( burglarx_sound_bank_w )
 }
 
 static MEMORY_READ16_START( readmem_burglarx )
-	{ 0x000000, 0x0fffff, MRA16_ROM						},	// ROM
-	{ 0xff0000, 0xffffff, MRA16_RAM						},	// RAM
-	{ 0x800000, 0x800001, input_port_0_word_r			},	// P1 + P2
-	{ 0x800018, 0x800019, input_port_1_word_r			},	// Buttons
-	{ 0x80001a, 0x80001b, input_port_2_word_r			},	// DSW
-	{ 0x80001c, 0x80001d, input_port_3_word_r			},	// DSW
-	{ 0x800188, 0x800189, OKIM6295_status_0_lsb_r		},	// Sound
-	{ 0x80018c, 0x80018d, YM3812_status_port_0_msb_r	},	//
-/**/{ 0x904000, 0x907fff, MRA16_RAM						},	// Layers
-/**/{ 0x908000, 0x90bfff, MRA16_RAM						},	//
-/**/{ 0x90c000, 0x90ffff, MRA16_RAM						},	//
-/**/{ 0x920000, 0x923fff, MRA16_RAM						},	// ? 0
-/**/{ 0x930000, 0x9307ff, MRA16_RAM						},	// Sprites
-/**/{ 0x940000, 0x947fff, MRA16_RAM						},	// Palette
+	{ 0x000000, 0x0fffff, MRA16_ROM						},	/* ROM*/
+	{ 0xff0000, 0xffffff, MRA16_RAM						},	/* RAM*/
+	{ 0x800000, 0x800001, input_port_0_word_r			},	/* P1 + P2*/
+	{ 0x800018, 0x800019, input_port_1_word_r			},	/* Buttons*/
+	{ 0x80001a, 0x80001b, input_port_2_word_r			},	/* DSW*/
+	{ 0x80001c, 0x80001d, input_port_3_word_r			},	/* DSW*/
+	{ 0x800188, 0x800189, OKIM6295_status_0_lsb_r		},	/* Sound*/
+	{ 0x80018c, 0x80018d, YM3812_status_port_0_msb_r	},	/**/
+/**/{ 0x904000, 0x907fff, MRA16_RAM						},	/* Layers*/
+/**/{ 0x908000, 0x90bfff, MRA16_RAM						},	/**/
+/**/{ 0x90c000, 0x90ffff, MRA16_RAM						},	/**/
+/**/{ 0x920000, 0x923fff, MRA16_RAM						},	/* ? 0*/
+/**/{ 0x930000, 0x9307ff, MRA16_RAM						},	/* Sprites*/
+/**/{ 0x940000, 0x947fff, MRA16_RAM						},	/* Palette*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem_burglarx )
-	{ 0x000000, 0x0fffff, MWA16_ROM							},	// ROM
-	{ 0xff0000, 0xffffff, MWA16_RAM							},	// RAM
-	{ 0x800030, 0x800031, MWA16_NOP							},	// ? 0
-	{ 0x80010c, 0x80010d, MWA16_RAM, &unico_scrollx_0		},	// Scroll
-	{ 0x80010e, 0x80010f, MWA16_RAM, &unico_scrolly_0		},	//
-	{ 0x800110, 0x800111, MWA16_RAM, &unico_scrolly_2		},	//
-	{ 0x800114, 0x800115, MWA16_RAM, &unico_scrollx_2		},	//
-	{ 0x800116, 0x800117, MWA16_RAM, &unico_scrollx_1		},	//
-	{ 0x800120, 0x800121, MWA16_RAM, &unico_scrolly_1		},	//
-	{ 0x800188, 0x800189, OKIM6295_data_0_lsb_w				},	// Sound
-	{ 0x80018a, 0x80018b, YM3812_data_port_0_msb_w			},	//
-	{ 0x80018c, 0x80018d, YM3812_register_port_0_msb_w		},	//
-	{ 0x80018e, 0x80018f, burglarx_sound_bank_w				},	//
-	{ 0x8001e0, 0x8001e1, MWA16_RAM							},	// ? IRQ Ack
-	{ 0x904000, 0x907fff, unico_vram_1_w, &unico_vram_1	},	// Layers
-	{ 0x908000, 0x90bfff, unico_vram_2_w, &unico_vram_2	},	//
-	{ 0x90c000, 0x90ffff, unico_vram_0_w, &unico_vram_0	},	//
-	{ 0x920000, 0x923fff, MWA16_RAM							},	// ? 0
-	{ 0x930000, 0x9307ff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Sprites
-	{ 0x940000, 0x947fff, unico_palette_w, &paletteram16	},	// Palette
+	{ 0x000000, 0x0fffff, MWA16_ROM							},	/* ROM*/
+	{ 0xff0000, 0xffffff, MWA16_RAM							},	/* RAM*/
+	{ 0x800030, 0x800031, MWA16_NOP							},	/* ? 0*/
+	{ 0x80010c, 0x80010d, MWA16_RAM, &unico_scrollx_0		},	/* Scroll*/
+	{ 0x80010e, 0x80010f, MWA16_RAM, &unico_scrolly_0		},	/**/
+	{ 0x800110, 0x800111, MWA16_RAM, &unico_scrolly_2		},	/**/
+	{ 0x800114, 0x800115, MWA16_RAM, &unico_scrollx_2		},	/**/
+	{ 0x800116, 0x800117, MWA16_RAM, &unico_scrollx_1		},	/**/
+	{ 0x800120, 0x800121, MWA16_RAM, &unico_scrolly_1		},	/**/
+	{ 0x800188, 0x800189, OKIM6295_data_0_lsb_w				},	/* Sound*/
+	{ 0x80018a, 0x80018b, YM3812_data_port_0_msb_w			},	/**/
+	{ 0x80018c, 0x80018d, YM3812_register_port_0_msb_w		},	/**/
+	{ 0x80018e, 0x80018f, burglarx_sound_bank_w				},	/**/
+	{ 0x8001e0, 0x8001e1, MWA16_RAM							},	/* ? IRQ Ack*/
+	{ 0x904000, 0x907fff, unico_vram_1_w, &unico_vram_1	},	/* Layers*/
+	{ 0x908000, 0x90bfff, unico_vram_2_w, &unico_vram_2	},	/**/
+	{ 0x90c000, 0x90ffff, unico_vram_0_w, &unico_vram_0	},	/**/
+	{ 0x920000, 0x923fff, MWA16_RAM							},	/* ? 0*/
+	{ 0x930000, 0x9307ff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Sprites*/
+	{ 0x940000, 0x947fff, unico_palette_w, &paletteram16	},	/* Palette*/
 MEMORY_END
 
 
@@ -122,8 +122,8 @@ static WRITE16_HANDLER( zeropnt_sound_bank_w )
 		memcpy(dst + 0x20000, src, 0x20000);
 
 		coin_counter_w(0,data & 0x1000);
-		set_led_status(0,data & 0x0800);	// Start 1
-		set_led_status(1,data & 0x0400);	// Start 2
+		set_led_status(0,data & 0x0800);	/* Start 1*/
+		set_led_status(1,data & 0x0400);	/* Start 2*/
 	}
 }
 
@@ -169,46 +169,46 @@ static READ16_HANDLER( unico_guny_1_msb_r )
 }
 
 static MEMORY_READ16_START( readmem_zeropnt )
-	{ 0x000000, 0x0fffff, MRA16_ROM						},	// ROM
-	{ 0xef0000, 0xefffff, MRA16_RAM						},	// RAM
-	{ 0x800018, 0x800019, input_port_0_word_r			},	// Buttons
-	{ 0x80001a, 0x80001b, input_port_1_word_r			},	// DSW
-	{ 0x80001c, 0x80001d, input_port_2_word_r			},	// DSW
-	{ 0x800170, 0x800171, unico_guny_0_msb_r			},	// Light Guns
-	{ 0x800174, 0x800175, unico_gunx_0_msb_r			},	//
-	{ 0x800178, 0x800179, unico_guny_1_msb_r			},	//
-	{ 0x80017c, 0x80017d, unico_gunx_1_msb_r			},	//
-	{ 0x800188, 0x800189, OKIM6295_status_0_lsb_r		},	// Sound
-	{ 0x80018c, 0x80018d, YM3812_status_port_0_msb_r	},	//
-/**/{ 0x904000, 0x907fff, MRA16_RAM						},	// Layers
-/**/{ 0x908000, 0x90bfff, MRA16_RAM						},	//
-/**/{ 0x90c000, 0x90ffff, MRA16_RAM						},	//
-/**/{ 0x920000, 0x923fff, MRA16_RAM						},	// ? 0
-/**/{ 0x930000, 0x9307ff, MRA16_RAM						},	// Sprites
-/**/{ 0x940000, 0x947fff, MRA16_RAM						},	// Palette
+	{ 0x000000, 0x0fffff, MRA16_ROM						},	/* ROM*/
+	{ 0xef0000, 0xefffff, MRA16_RAM						},	/* RAM*/
+	{ 0x800018, 0x800019, input_port_0_word_r			},	/* Buttons*/
+	{ 0x80001a, 0x80001b, input_port_1_word_r			},	/* DSW*/
+	{ 0x80001c, 0x80001d, input_port_2_word_r			},	/* DSW*/
+	{ 0x800170, 0x800171, unico_guny_0_msb_r			},	/* Light Guns*/
+	{ 0x800174, 0x800175, unico_gunx_0_msb_r			},	/**/
+	{ 0x800178, 0x800179, unico_guny_1_msb_r			},	/**/
+	{ 0x80017c, 0x80017d, unico_gunx_1_msb_r			},	/**/
+	{ 0x800188, 0x800189, OKIM6295_status_0_lsb_r		},	/* Sound*/
+	{ 0x80018c, 0x80018d, YM3812_status_port_0_msb_r	},	/**/
+/**/{ 0x904000, 0x907fff, MRA16_RAM						},	/* Layers*/
+/**/{ 0x908000, 0x90bfff, MRA16_RAM						},	/**/
+/**/{ 0x90c000, 0x90ffff, MRA16_RAM						},	/**/
+/**/{ 0x920000, 0x923fff, MRA16_RAM						},	/* ? 0*/
+/**/{ 0x930000, 0x9307ff, MRA16_RAM						},	/* Sprites*/
+/**/{ 0x940000, 0x947fff, MRA16_RAM						},	/* Palette*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem_zeropnt )
-	{ 0x000000, 0x0fffff, MWA16_ROM							},	// ROM
-	{ 0xef0000, 0xefffff, MWA16_RAM							},	// RAM
-	{ 0x800030, 0x800031, MWA16_NOP							},	// ? 0
-	{ 0x80010c, 0x80010d, MWA16_RAM, &unico_scrollx_0		},	// Scroll
-	{ 0x80010e, 0x80010f, MWA16_RAM, &unico_scrolly_0		},	//
-	{ 0x800110, 0x800111, MWA16_RAM, &unico_scrolly_2		},	//
-	{ 0x800114, 0x800115, MWA16_RAM, &unico_scrollx_2		},	//
-	{ 0x800116, 0x800117, MWA16_RAM, &unico_scrollx_1		},	//
-	{ 0x800120, 0x800121, MWA16_RAM, &unico_scrolly_1		},	//
-	{ 0x800188, 0x800189, OKIM6295_data_0_lsb_w				},	// Sound
-	{ 0x80018a, 0x80018b, YM3812_data_port_0_msb_w			},	//
-	{ 0x80018c, 0x80018d, YM3812_register_port_0_msb_w		},	//
-	{ 0x80018e, 0x80018f, zeropnt_sound_bank_w				},	//
-	{ 0x8001e0, 0x8001e1, MWA16_RAM							},	// ? IRQ Ack
-	{ 0x904000, 0x907fff, unico_vram_1_w, &unico_vram_1	},	// Layers
-	{ 0x908000, 0x90bfff, unico_vram_2_w, &unico_vram_2	},	//
-	{ 0x90c000, 0x90ffff, unico_vram_0_w, &unico_vram_0	},	//
-	{ 0x920000, 0x923fff, MWA16_RAM							},	// ? 0
-	{ 0x930000, 0x9307ff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Sprites
-	{ 0x940000, 0x947fff, unico_palette_w, &paletteram16	},	// Palette
+	{ 0x000000, 0x0fffff, MWA16_ROM							},	/* ROM*/
+	{ 0xef0000, 0xefffff, MWA16_RAM							},	/* RAM*/
+	{ 0x800030, 0x800031, MWA16_NOP							},	/* ? 0*/
+	{ 0x80010c, 0x80010d, MWA16_RAM, &unico_scrollx_0		},	/* Scroll*/
+	{ 0x80010e, 0x80010f, MWA16_RAM, &unico_scrolly_0		},	/**/
+	{ 0x800110, 0x800111, MWA16_RAM, &unico_scrolly_2		},	/**/
+	{ 0x800114, 0x800115, MWA16_RAM, &unico_scrollx_2		},	/**/
+	{ 0x800116, 0x800117, MWA16_RAM, &unico_scrollx_1		},	/**/
+	{ 0x800120, 0x800121, MWA16_RAM, &unico_scrolly_1		},	/**/
+	{ 0x800188, 0x800189, OKIM6295_data_0_lsb_w				},	/* Sound*/
+	{ 0x80018a, 0x80018b, YM3812_data_port_0_msb_w			},	/**/
+	{ 0x80018c, 0x80018d, YM3812_register_port_0_msb_w		},	/**/
+	{ 0x80018e, 0x80018f, zeropnt_sound_bank_w				},	/**/
+	{ 0x8001e0, 0x8001e1, MWA16_RAM							},	/* ? IRQ Ack*/
+	{ 0x904000, 0x907fff, unico_vram_1_w, &unico_vram_1	},	/* Layers*/
+	{ 0x908000, 0x90bfff, unico_vram_2_w, &unico_vram_2	},	/**/
+	{ 0x90c000, 0x90ffff, unico_vram_0_w, &unico_vram_0	},	/**/
+	{ 0x920000, 0x923fff, MWA16_RAM							},	/* ? 0*/
+	{ 0x930000, 0x9307ff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Sprites*/
+	{ 0x940000, 0x947fff, unico_palette_w, &paletteram16	},	/* Palette*/
 MEMORY_END
 
 
@@ -251,8 +251,8 @@ static WRITE32_HANDLER( zeropnt2_leds_w )
 	if ((mem_mask & 0x00ff0000) == 0)
 	{
 		coin_counter_w(0,data & 0x00010000);
-		set_led_status(0,data & 0x00800000);	// Start 1
-		set_led_status(1,data & 0x00400000);	// Start 2
+		set_led_status(0,data & 0x00800000);	/* Start 1*/
+		set_led_status(1,data & 0x00400000);	/* Start 2*/
 	}
 }
 
@@ -263,57 +263,57 @@ static WRITE32_HANDLER( zeropnt2_eeprom_w )
 
 	if ( ACCESSING_MSB32 )
 	{
-		// latch the bit
+		/* latch the bit*/
 		EEPROM_write_bit(data & 0x04000000);
 
-		// reset line asserted: reset.
+		/* reset line asserted: reset.*/
 		EEPROM_set_cs_line((data & 0x01000000) ? CLEAR_LINE : ASSERT_LINE);
 
-		// clock line asserted: write latch or select next bit to read
+		/* clock line asserted: write latch or select next bit to read*/
 		EEPROM_set_clock_line((data & 0x02000000) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
 
 static MEMORY_READ32_START( readmem_zeropnt2 )
-	{ 0x000000, 0x1fffff, MRA32_ROM						},	// ROM
-	{ 0x800018, 0x80001b, zeropnt2_coins_r				},	// Coins
-	{ 0x800024, 0x800027, zeropnt2_oki0_r				},	// Sound
-	{ 0x80002c, 0x80002f, zeropnt2_ym2151_status_r		},	//
-	{ 0x800030, 0x800033, zeropnt2_oki1_r				},	//
-	{ 0x800140, 0x800143, zeropnt2_guny_0_msb_r			},	// Light Guns
-	{ 0x800144, 0x800147, zeropnt2_gunx_0_msb_r			},	//
-	{ 0x800148, 0x80014b, zeropnt2_guny_1_msb_r			},	//
-	{ 0x80014c, 0x80014f, zeropnt2_gunx_1_msb_r			},	//
-	{ 0x800150, 0x800153, zeropnt2_dsw1_r				},	// DSW
-	{ 0x800154, 0x800157, zeropnt2_dsw2_r				},	// DSW
-	{ 0x80015c, 0x80015f, zeropnt2_buttons_r			},	// Buttons
-/**/{ 0x904000, 0x907fff, MRA32_RAM						},	// Layers
-/**/{ 0x908000, 0x90bfff, MRA32_RAM						},	//
-/**/{ 0x90c000, 0x90ffff, MRA32_RAM						},	//
-/**/{ 0x920000, 0x923fff, MRA32_RAM						},	// ? 0
-/**/{ 0x930000, 0x9307ff, MRA32_RAM						},	// Sprites
-/**/{ 0x940000, 0x947fff, MRA32_RAM						},	// Palette
-	{ 0xfe0000, 0xffffff, MRA32_RAM						},	// RAM
+	{ 0x000000, 0x1fffff, MRA32_ROM						},	/* ROM*/
+	{ 0x800018, 0x80001b, zeropnt2_coins_r				},	/* Coins*/
+	{ 0x800024, 0x800027, zeropnt2_oki0_r				},	/* Sound*/
+	{ 0x80002c, 0x80002f, zeropnt2_ym2151_status_r		},	/**/
+	{ 0x800030, 0x800033, zeropnt2_oki1_r				},	/**/
+	{ 0x800140, 0x800143, zeropnt2_guny_0_msb_r			},	/* Light Guns*/
+	{ 0x800144, 0x800147, zeropnt2_gunx_0_msb_r			},	/**/
+	{ 0x800148, 0x80014b, zeropnt2_guny_1_msb_r			},	/**/
+	{ 0x80014c, 0x80014f, zeropnt2_gunx_1_msb_r			},	/**/
+	{ 0x800150, 0x800153, zeropnt2_dsw1_r				},	/* DSW*/
+	{ 0x800154, 0x800157, zeropnt2_dsw2_r				},	/* DSW*/
+	{ 0x80015c, 0x80015f, zeropnt2_buttons_r			},	/* Buttons*/
+/**/{ 0x904000, 0x907fff, MRA32_RAM						},	/* Layers*/
+/**/{ 0x908000, 0x90bfff, MRA32_RAM						},	/**/
+/**/{ 0x90c000, 0x90ffff, MRA32_RAM						},	/**/
+/**/{ 0x920000, 0x923fff, MRA32_RAM						},	/* ? 0*/
+/**/{ 0x930000, 0x9307ff, MRA32_RAM						},	/* Sprites*/
+/**/{ 0x940000, 0x947fff, MRA32_RAM						},	/* Palette*/
+	{ 0xfe0000, 0xffffff, MRA32_RAM						},	/* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE32_START( writemem_zeropnt2 )
-	{ 0x000000, 0x1fffff, MWA32_ROM							},	// ROM
-	{ 0x800024, 0x800027, zeropnt2_oki0_w					},	// Sound
-	{ 0x800028, 0x80002b, zeropnt2_ym2151_reg_w				},	//
-	{ 0x80002c, 0x80002f, zeropnt2_ym2151_data_w			},	//
-	{ 0x800030, 0x800033, zeropnt2_oki1_w					},	//
-	{ 0x800034, 0x800037, zeropnt2_sound_bank_w				},	//
-	{ 0x800038, 0x80003b, zeropnt2_leds_w					},	// ?
-	{ 0x80010c, 0x800123, MWA32_RAM, &unico_scroll32		},	// Scroll
-	{ 0x8001e0, 0x8001e3, MWA32_RAM							},	// ? IRQ Ack
-	{ 0x8001f0, 0x8001f3, zeropnt2_eeprom_w					},	// EEPROM
-	{ 0x904000, 0x907fff, unico_vram32_1_w, &unico_vram32_1	},	// Layers
-	{ 0x908000, 0x90bfff, unico_vram32_2_w, &unico_vram32_2	},	//
-	{ 0x90c000, 0x90ffff, unico_vram32_0_w, &unico_vram32_0	},	//
-	{ 0x920000, 0x923fff, MWA32_RAM							},	// ? 0
-	{ 0x930000, 0x9307ff, MWA32_RAM, &spriteram32, &spriteram_size	},	// Sprites
-	{ 0x940000, 0x947fff, unico_palette32_w, &paletteram32	},	// Palette
-	{ 0xfe0000, 0xffffff, MWA32_RAM							},	// RAM
+	{ 0x000000, 0x1fffff, MWA32_ROM							},	/* ROM*/
+	{ 0x800024, 0x800027, zeropnt2_oki0_w					},	/* Sound*/
+	{ 0x800028, 0x80002b, zeropnt2_ym2151_reg_w				},	/**/
+	{ 0x80002c, 0x80002f, zeropnt2_ym2151_data_w			},	/**/
+	{ 0x800030, 0x800033, zeropnt2_oki1_w					},	/**/
+	{ 0x800034, 0x800037, zeropnt2_sound_bank_w				},	/**/
+	{ 0x800038, 0x80003b, zeropnt2_leds_w					},	/* ?*/
+	{ 0x80010c, 0x800123, MWA32_RAM, &unico_scroll32		},	/* Scroll*/
+	{ 0x8001e0, 0x8001e3, MWA32_RAM							},	/* ? IRQ Ack*/
+	{ 0x8001f0, 0x8001f3, zeropnt2_eeprom_w					},	/* EEPROM*/
+	{ 0x904000, 0x907fff, unico_vram32_1_w, &unico_vram32_1	},	/* Layers*/
+	{ 0x908000, 0x90bfff, unico_vram32_2_w, &unico_vram32_2	},	/**/
+	{ 0x90c000, 0x90ffff, unico_vram32_0_w, &unico_vram32_0	},	/**/
+	{ 0x920000, 0x923fff, MWA32_RAM							},	/* ? 0*/
+	{ 0x930000, 0x9307ff, MWA32_RAM, &spriteram32, &spriteram_size	},	/* Sprites*/
+	{ 0x940000, 0x947fff, unico_palette32_w, &paletteram32	},	/* Palette*/
+	{ 0xfe0000, 0xffffff, MWA32_RAM							},	/* RAM*/
 MEMORY_END
 
 
@@ -331,7 +331,7 @@ MEMORY_END
 
 INPUT_PORTS_START( burglarx )
 
-	PORT_START	// IN0 - $800000.w
+	PORT_START	/* IN0 - $800000.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -350,7 +350,7 @@ INPUT_PORTS_START( burglarx )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - $800019.b
+	PORT_START	/* IN1 - $800019.b*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_COIN2    )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -361,7 +361,7 @@ INPUT_PORTS_START( burglarx )
 	PORT_BIT(  0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN2 - $80001a.b
+	PORT_START	/* IN2 - $80001a.b*/
 	PORT_BIT(     0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_SERVICE( 0x0100, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x0200, 0x0200, DEF_STR( Free_Play ) )
@@ -386,7 +386,7 @@ INPUT_PORTS_START( burglarx )
 	PORT_DIPSETTING(      0xa000, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(      0x8000, DEF_STR( 1C_4C ) )
 
-	PORT_START	// IN3 - $80001c.b
+	PORT_START	/* IN3 - $80001c.b*/
 	PORT_BIT(     0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(      0x0200, "None" )
@@ -420,7 +420,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( zeropnt )
 
-	PORT_START	// IN0 - $800018.w
+	PORT_START	/* IN0 - $800018.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_HIGH, IPT_COIN1    )
 	PORT_BIT(  0x0002, IP_ACTIVE_HIGH, IPT_COIN2    )
 	PORT_BITX( 0x0004, IP_ACTIVE_HIGH, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
@@ -440,7 +440,7 @@ INPUT_PORTS_START( zeropnt )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
 
-	PORT_START	// IN1 - $80001a.b
+	PORT_START	/* IN1 - $80001a.b*/
 	PORT_BIT(     0x00ff, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_DIPNAME( 0x0100, 0x0000, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
@@ -467,7 +467,7 @@ INPUT_PORTS_START( zeropnt )
 	PORT_DIPSETTING(      0x4000, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(      0x6000, DEF_STR( 1C_4C ) )
 
-	PORT_START	// IN2 - $80001c.b
+	PORT_START	/* IN2 - $80001c.b*/
 	PORT_BIT(     0x00ff, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_DIPNAME( 0x0100, 0x0000, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
@@ -491,16 +491,16 @@ INPUT_PORTS_START( zeropnt )
 	PORT_DIPSETTING(      0x8000, "4" )
 	PORT_DIPSETTING(      0xc000, "5" )
 
-	PORT_START	// IN3 - $800170.b
+	PORT_START	/* IN3 - $800170.b*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 35, 15, 0, 0xff )
 
-	PORT_START	// IN4 - $800174.b
+	PORT_START	/* IN4 - $800174.b*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 35, 15, 0, 0xff )
 
-	PORT_START	// IN5 - $800178.b
+	PORT_START	/* IN5 - $800178.b*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 15, 0, 0xff )
 
-	PORT_START	// IN6 - $80017c.b
+	PORT_START	/* IN6 - $80017c.b*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 15, 0, 0xff )
 
 INPUT_PORTS_END
@@ -512,7 +512,7 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( zeropnt2 )
-	PORT_START	// IN0 - $800019.b
+	PORT_START	/* IN0 - $800019.b*/
 	PORT_BIT(  0x0001, IP_ACTIVE_HIGH, IPT_COIN1    )
 	PORT_BIT(  0x0002, IP_ACTIVE_HIGH, IPT_COIN2    )
 	PORT_BITX( 0x0004, IP_ACTIVE_HIGH, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
@@ -523,7 +523,7 @@ INPUT_PORTS_START( zeropnt2 )
 	PORT_BIT(  0x0080, IP_ACTIVE_HIGH, IPT_SERVICE1 )
 	PORT_BIT(  0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - $800150.b
+	PORT_START	/* IN1 - $800150.b*/
 	PORT_BIT(     0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_DIPNAME( 0x0100, 0x0100, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )
@@ -535,7 +535,7 @@ INPUT_PORTS_START( zeropnt2 )
 	PORT_DIPSETTING(      0x0800, DEF_STR(No) )
 	PORT_DIPSETTING(      0x0400, DEF_STR(Yes) )
 	PORT_DIPSETTING(      0x0c00, "Factory Setting" )
-//	PORT_DIPSETTING(      0x0000, "unused?" )
+/*	PORT_DIPSETTING(      0x0000, "unused?" )*/
 	PORT_DIPNAME( 0x1000, 0x1000, "Language" )
 	PORT_DIPSETTING(      0x1000, "English" )
 	PORT_DIPSETTING(      0x0000, "Japanese" )
@@ -549,7 +549,7 @@ INPUT_PORTS_START( zeropnt2 )
 	PORT_DIPSETTING(      0xa000, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(      0x8000, DEF_STR( 1C_4C ) )
 
-	PORT_START	// IN2 - $800154.b
+	PORT_START	/* IN2 - $800154.b*/
 	PORT_BIT(     0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_DIPNAME( 0x0100, 0x0100, "Korean Language" )
 	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )
@@ -563,9 +563,9 @@ INPUT_PORTS_START( zeropnt2 )
 	PORT_DIPSETTING(      0x1c00, "4" )
 	PORT_DIPSETTING(      0x1800, "5" )
 	PORT_DIPSETTING(      0x1400, "6" )
-//	PORT_DIPSETTING(      0x0800, "4" )
-//	PORT_DIPSETTING(      0x0400, "4" )
-//	PORT_DIPSETTING(      0x0000, "4" )
+/*	PORT_DIPSETTING(      0x0800, "4" )*/
+/*	PORT_DIPSETTING(      0x0400, "4" )*/
+/*	PORT_DIPSETTING(      0x0000, "4" )*/
 	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -575,19 +575,19 @@ INPUT_PORTS_START( zeropnt2 )
 	PORT_DIPSETTING(      0x4000, "Harder" )
 	PORT_DIPSETTING(      0x0000, "Hardest" )
 
-	PORT_START	// IN3 - $800140.b
+	PORT_START	/* IN3 - $800140.b*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER2, 35, 15, 0, 0xff )
 
-	PORT_START	// IN4 - $800144.b
+	PORT_START	/* IN4 - $800144.b*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER2, 35, 15, 0, 0xff )
 
-	PORT_START	// IN5 - $800148.b
+	PORT_START	/* IN5 - $800148.b*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_Y | IPF_PLAYER1, 35, 15, 0, 0xff )
 
-	PORT_START	// IN6 - $80014c.b
+	PORT_START	/* IN6 - $80014c.b*/
 	PORT_ANALOG( 0xff, 0x80, IPT_LIGHTGUN_X | IPF_PLAYER1, 35, 15, 0, 0xff )
 
-	PORT_START	// IN7 - $80015c.b
+	PORT_START	/* IN7 - $80015c.b*/
 	PORT_BIT(  0x00ff, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x0100, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT(  0x0200, IP_ACTIVE_LOW,  IPT_BUTTON1 | IPF_PLAYER2 )
@@ -596,7 +596,7 @@ INPUT_PORTS_START( zeropnt2 )
 	PORT_BIT(  0x1000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x2000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT(  0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL )	// EEPROM
+	PORT_BIT(  0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM*/
 INPUT_PORTS_END
 
 
@@ -626,8 +626,8 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo unico_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x8, 0x0, 0x20 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x8, 0x0, 0x20 }, // [1] Layers
+	{ REGION_GFX1, 0, &layout_16x16x8, 0x0, 0x20 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x8, 0x0, 0x20 }, /* [1] Layers*/
 	{ -1 }
 };
 
@@ -649,7 +649,7 @@ MACHINE_INIT( unico )
 static struct YM3812interface unico_ym3812_intf =
 {
 	1,
-	4000000,		/* ? */ //Would guess it as identical to zeropt2, any samples for confirmation?
+	4000000,		/* ? */ /*Would guess it as identical to zeropt2, any samples for confirmation?*/
 	{ 40 },
 	{ 0 },	/* IRQ Line */
 };
@@ -681,15 +681,15 @@ static struct YM2151interface zeropnt2_ym2151_intf =
 
 struct EEPROM_interface zeropnt2_eeprom_interface =
 {
-	7,				// address bits	7
-	8,				// data bits	8
-	"*110",			// read			1 10 aaaaaaa
-	"*101",			// write		1 01 aaaaaaa dddddddd
-	"*111",			// erase		1 11 aaaaaaa
-	"*10000xxxx",	// lock			1 00 00xxxx
-	"*10011xxxx",	// unlock		1 00 11xxxx
-//	"*10001xxxx"	// write all	1 00 01xxxx dddddddd
-//	"*10010xxxx"	// erase all	1 00 10xxxx
+	7,				/* address bits	7*/
+	8,				/* data bits	8*/
+	"*110",			/* read			1 10 aaaaaaa*/
+	"*101",			/* write		1 01 aaaaaaa dddddddd*/
+	"*111",			/* erase		1 11 aaaaaaa*/
+	"*10000xxxx",	/* lock			1 00 00xxxx*/
+	"*10011xxxx",	/* unlock		1 00 11xxxx*/
+/*	"*10001xxxx"	*/ /* write all	1 00 01xxxx dddddddd*/
+/*	"*10010xxxx"	*/ /* erase all	1 00 10xxxx*/
 };
 
 void nvram_handler_zeropnt2(mame_file *file,int read_or_write)
@@ -862,7 +862,7 @@ ROM_START( burglarx )
 	ROM_LOAD16_BYTE( "bx-rom16", 0x300001, 0x080000, CRC(55b28ef9) SHA1(48615d53ac955ba6aca86ad4f8b61f4d2675d840) )
 
 	ROM_REGION( 0x80000, REGION_SOUND1, 0 )	/* Samples */
-	ROM_LOAD( "bx-rom1.snd", 0x000000, 0x080000, CRC(8ae67138) SHA1(3ea44f805a1f978e0a1c1bb7f45507379b147bc0) )	// 2 x 40000
+	ROM_LOAD( "bx-rom1.snd", 0x000000, 0x080000, CRC(8ae67138) SHA1(3ea44f805a1f978e0a1c1bb7f45507379b147bc0) )	/* 2 x 40000*/
 
 ROM_END
 

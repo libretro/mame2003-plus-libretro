@@ -298,9 +298,9 @@ static PORT_READ_START( cvs_readport )
     { 0x002, 0x002, input_port_1_r },
 	{ 0x003, 0x003, input_port_2_r },
     { 0x004, 0x004, input_port_3_r },
-	{ 0x006, 0x006, input_port_4_r },		// Dip 1
-	{ 0x007, 0x007, input_port_5_r },		// Dip 2
-    { 0x010, 0x0ff, cvs_character_mode_r },	// Programmable Character Settings
+	{ 0x006, 0x006, input_port_4_r },		/* Dip 1*/
+	{ 0x007, 0x007, input_port_5_r },		/* Dip 2*/
+    { 0x010, 0x0ff, cvs_character_mode_r },	/* Programmable Character Settings*/
 	{ S2650_DATA_PORT, S2650_DATA_PORT, cvs_collision_clear },
 	{ S2650_CTRL_PORT, S2650_CTRL_PORT, cvs_collision_r },
     { S2650_SENSE_PORT, S2650_SENSE_PORT, input_port_6_r },

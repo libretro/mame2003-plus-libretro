@@ -138,10 +138,10 @@ static READ32_HANDLER( psac_rom_r )
 	return ROM[offset];
 }
 
-// irqs 3, 5, and 7 have valid vectors
-// irq 3 does ??? (vblank?)
-// irq 5 does ??? (polygon end of draw?)
-// irq 7 does nothing (it jsrs to a rts and then rte)
+/* irqs 3, 5, and 7 have valid vectors*/
+/* irq 3 does ??? (vblank?)*/
+/* irq 5 does ??? (polygon end of draw?)*/
+/* irq 7 does nothing (it jsrs to a rts and then rte)*/
 
 static INTERRUPT_GEN(polygonet_interrupt)
 {
@@ -157,7 +157,7 @@ static READ32_HANDLER( sound_r )
 {
 	int latch = soundlatch3_r(0);
 
-	if (latch == 0xe) latch = 0xf;	// hack: until 54539 NMI disable found
+	if (latch == 0xe) latch = 0xf;	/* hack: until 54539 NMI disable found*/
 
 	return latch<<8;
 }
@@ -212,7 +212,7 @@ static WRITE32_HANDLER( dsp_w )
 {
 	if (mem_mask == 0xffffff)
 	{
-		// write to 6000
+		/* write to 6000*/
 		if (data>>24 == 8)
 		{
 			dsp_state = 0;
@@ -221,7 +221,7 @@ static WRITE32_HANDLER( dsp_w )
 	}
 	else
 	{
-		// write to 6002
+		/* write to 6002*/
 		if (data>>8 == 0x97)
 		{
 			unsigned char *RAM = (unsigned char *)dsp_shared_ram;
@@ -284,7 +284,7 @@ static MEMORY_READ32_START( polygonet_readmem )
 	{ 0x540000, 0x540fff, polygonet_ttl_ram_r },
 	{ 0x541000, 0x54101f, MRA32_RAM },
 	{ 0x580000, 0x5807ff, MRA32_RAM },
-//	{ 0x580800, 0x580803, MRA32_RAM },	// network RAM / registers?
+/*	{ 0x580800, 0x580803, MRA32_RAM },	*/ /* network RAM / registers?*/
 	{ 0x600008, 0x60000b, sound_r },
 	{ 0x700000, 0x73ffff, psac_rom_r },
 	{ 0x780000, 0x79ffff, ttl_rom_r },
@@ -293,16 +293,16 @@ MEMORY_END
 
 static MEMORY_WRITE32_START( polygonet_writemem )
 	{ 0x000000, 0x1fffff, MWA32_ROM },
-	{ 0x200000, 0x21ffff, MWA32_RAM },	// PSAC2 tilemap
-	{ 0x440000, 0x440fff, MWA32_RAM,},	// PSAC2 lineram
+	{ 0x200000, 0x21ffff, MWA32_RAM },	/* PSAC2 tilemap*/
+	{ 0x440000, 0x440fff, MWA32_RAM,},	/* PSAC2 lineram*/
 	{ 0x4C0000, 0x4C0003, polygonet_eeprom_w },
 	{ 0x500000, 0x503fff, MWA32_RAM, &dsp_shared_ram },
 	{ 0x504000, 0x504003, dsp_2_w },
 	{ 0x506000, 0x506003, dsp_w },
 	{ 0x540000, 0x540fff, polygonet_ttl_ram_w },
 	{ 0x541000, 0x54101f, MWA32_RAM },
-	{ 0x580000, 0x5807ff, MWA32_RAM },	// A21K
-//	{ 0x580800, 0x580803, MWA32_RAM },	// network RAM / registers?
+	{ 0x580000, 0x5807ff, MWA32_RAM },	/* A21K*/
+/*	{ 0x580800, 0x580803, MWA32_RAM },	*/ /* network RAM / registers?*/
 	{ 0x600004, 0x600007, sound_w },
 	{ 0x640000, 0x640003, sound_irq_w },
 	{ 0x680000, 0x680003, watchdog_reset32_w },
@@ -444,7 +444,7 @@ INPUT_PORTS_START( polygonet )
 	PORT_DIPNAME(0x10, 0x00, "Monitors")
 	PORT_DIPSETTING(0x00, "1 Monitor")
 	PORT_DIPSETTING(0x10, "2 Monitors")
-//	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+/*	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNKNOWN )*/
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )

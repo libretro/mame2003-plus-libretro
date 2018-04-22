@@ -103,7 +103,7 @@ VIDEO_EOF( detatwin );
 
 static int tmnt_soundlatch;
 static int cbj_snd_irqlatch, cbj_nvram_bank;
-static data16_t cbj_nvram[0x400*0x20];	// 32k paged in a 1k window
+static data16_t cbj_nvram[0x400*0x20];	/* 32k paged in a 1k window*/
 
 static READ16_HANDLER( K052109_word_noA12_r )
 {
@@ -154,7 +154,7 @@ static READ16_HANDLER( K053245_scattered_word_r )
 	}
 }
 
-static WRITE16_HANDLER( K053245_scattered_word_w ) //*
+static WRITE16_HANDLER( K053245_scattered_word_w ) /***/
 {
 	COMBINE_DATA(spriteram16 + offset);
 
@@ -184,7 +184,7 @@ static WRITE16_HANDLER( K053244_word_noA1_w )
 
 static INTERRUPT_GEN(cbj_interrupt)
 {
-	// cheap IRQ multiplexing to avoid losing sound IRQs
+	/* cheap IRQ multiplexing to avoid losing sound IRQs*/
 	switch (cpu_getiloops())
 	{
 		case 0:
@@ -383,7 +383,7 @@ static void nmi_callback(int param)
 
 static WRITE_HANDLER( sound_arm_nmi_w )
 {
-//	sound_nmi_enabled = 1;
+/*	sound_nmi_enabled = 1;*/
 	cpu_set_nmi_line(1,CLEAR_LINE);
 	timer_set(TIME_IN_USEC(50),0,nmi_callback);	/* kludge until the K053260 is emulated correctly */
 }
@@ -435,7 +435,7 @@ static READ16_HANDLER( ssriders_protection_r )
 			/* collision table */
 			data = -cpu_readmem24bew_word(0x105818);
 			data = ((data / 8 - 4) & 0x1f) * 0x40;
-			// 0x1040c8 is the x scroll buffer, avoids stutter on slopes + scrolling (and it's actually more logical as HW pov)
+			/* 0x1040c8 is the x scroll buffer, avoids stutter on slopes + scrolling (and it's actually more logical as HW pov)*/
 			data += ((cpu_readmem24bew_word(0x105cb0) + cpu_readmem24bew_word(0x1040c8) - 6) / 8 + 12) & 0x3f;
  			return data;
 
@@ -804,7 +804,7 @@ static MEMORY_WRITE16_START( mia_writemem )
 	{ 0x100000, 0x107fff, K052109_word_noA12_w },
 	{ 0x140000, 0x140007, K051937_word_w },
 	{ 0x140400, 0x1407ff, K051960_word_w },
-//	{ 0x10e800, 0x10e801, MWA16_NOP }, ???
+/*	{ 0x10e800, 0x10e801, MWA16_NOP }, ???*/
 #if 0
 	{ 0x0c0000, 0x0c0001, tmnt_priority_w },
 #endif
@@ -836,7 +836,7 @@ static MEMORY_WRITE16_START( tmnt_writemem )
 	{ 0x0a0010, 0x0a0011, watchdog_reset16_w },
 	{ 0x0c0000, 0x0c0001, tmnt_priority_w },
 	{ 0x100000, 0x107fff, K052109_word_noA12_w },
-//	{ 0x10e800, 0x10e801, MWA16_NOP }, ???
+/*	{ 0x10e800, 0x10e801, MWA16_NOP }, ???*/
 	{ 0x140000, 0x140007, K051937_word_w },
 	{ 0x140400, 0x1407ff, K051960_word_w },
 MEMORY_END
@@ -1001,11 +1001,11 @@ static MEMORY_WRITE16_START( prmrsocr_writemem )
 MEMORY_END
 
 
-static MEMORY_READ16_START( tmnt2_readmem ) //*
+static MEMORY_READ16_START( tmnt2_readmem ) /***/
 	{ 0x000000, 0x0fffff, MRA16_ROM },
 	{ 0x104000, 0x107fff, MRA16_RAM },	/* main RAM */
 	{ 0x140000, 0x140fff, MRA16_RAM },
-	{ 0x180000, 0x183fff, MRA16_RAM },	// K053245_scattered_word_r
+	{ 0x180000, 0x183fff, MRA16_RAM },	/* K053245_scattered_word_r*/
 	{ 0x1c0000, 0x1c0001, input_port_0_word_r },
 	{ 0x1c0002, 0x1c0003, input_port_1_word_r },
 	{ 0x1c0004, 0x1c0005, input_port_4_word_r },
@@ -1014,7 +1014,7 @@ static MEMORY_READ16_START( tmnt2_readmem ) //*
 	{ 0x1c0102, 0x1c0103, ssriders_eeprom_r },
 	{ 0x1c0400, 0x1c0401, watchdog_reset16_r },
 	{ 0x1c0500, 0x1c057f, MRA16_RAM },	/* TMNT2 only (1J) unknown, mostly MCU blit offsets */
-//	{ 0x1c0800, 0x1c0801, ssriders_protection_r },	/* protection device */
+/*	{ 0x1c0800, 0x1c0801, ssriders_protection_r },	 // protection device /*/
 	{ 0x5a0000, 0x5a001f, K053244_word_noA1_r },
 	{ 0x5c0600, 0x5c0603, tmnt2_sound_r },	/* K053260 */
 	{ 0x600000, 0x603fff, K052109_word_r },
@@ -1023,7 +1023,7 @@ MEMORY_END
 static data16_t *tmnt2_1c0800,*sunset_104000;
 static data16_t *tmnt2_rom;
 
-#if 1 //*
+#if 1 /***/
 static INLINE UINT32 tmnt2_get_word(UINT32 addr)
 {
 	if (addr <= 0x07ffff/2) return(tmnt2_rom[addr]); else
@@ -1071,29 +1071,29 @@ WRITE16_HANDLER( tmnt2_1c0800_w )
 	for (i=0; i< 4; i++) src[i] = tmnt2_get_word(src_addr + i);
 	for (i=0; i<24; i++) mod[i] = tmnt2_get_word(mod_addr + i);
 
-	code = src[0];			// code
+	code = src[0];			/* code*/
 
 	i= src[1];
-	attr1 = i>>2 & 0x3f00;	// flip y, flip x and sprite size
-	attr2 = i & 0x380;		// mirror y, mirror x, shadow
-	cbase = i & 0x01f;		// base color
+	attr1 = i>>2 & 0x3f00;	/* flip y, flip x and sprite size*/
+	attr2 = i & 0x380;		/* mirror y, mirror x, shadow*/
+	cbase = i & 0x01f;		/* base color*/
 	cmod  = mod[0x2a/2]>>8;
 	color = (cbase != 0x0f && cmod <= 0x1f && !zlock) ? cmod : cbase;
 
-	xoffs = (INT16)src[2];	// local x
-	yoffs = (INT16)src[3];	// local y
+	xoffs = (INT16)src[2];	/* local x*/
+	yoffs = (INT16)src[3];	/* local y*/
 
 	i = mod[0];
-	attr2 |= i & 0x0060;	// priority
+	attr2 |= i & 0x0060;	/* priority*/
 	keepaspect = (i & 0x0014) == 0x0014;
-	if (i & 0x8000) { attr1 |= 0x8000; }	// active
-	if (keepaspect)	{ attr1 |= 0x4000; }	// keep aspect
-//	if (i & 0x????) { attr1 ^= 0x2000; yoffs = -yoffs; }	// flip y (not used?)
-	if (i & 0x4000) { attr1 ^= 0x1000; xoffs = -xoffs; }	// flip x
+	if (i & 0x8000) { attr1 |= 0x8000; }	/* active*/
+	if (keepaspect)	{ attr1 |= 0x4000; }	/* keep aspect*/
+/*	if (i & 0x????) { attr1 ^= 0x2000; yoffs = -yoffs; }	*/ /* flip y (not used?)*/
+	if (i & 0x4000) { attr1 ^= 0x1000; xoffs = -xoffs; }	/* flip x*/
 
-	xmod = (INT16)mod[6];	// global x
-	ymod = (INT16)mod[7];	// global y
-	zmod = (INT16)mod[8];	// global z
+	xmod = (INT16)mod[6];	/* global x*/
+	ymod = (INT16)mod[7];	/* global y*/
+	zmod = (INT16)mod[8];	/* global z*/
 	xzoom = mod[0x1c/2];
 	yzoom = (keepaspect) ? xzoom : mod[0x1e/2];
 
@@ -1163,7 +1163,7 @@ WRITE16_HANDLER( tmnt2_1c0800_w )
 	tmnt2_put_word(dst_addr +  6, (UINT32)xoffs);
 	tmnt2_put_word(dst_addr + 12, attr2 | color);
 }
-#else // for reference; do not remove
+#else /* for reference; do not remove*/
 WRITE16_HANDLER( tmnt2_1c0800_w )
 {
     COMBINE_DATA( tmnt2_1c0800 + offset);
@@ -1178,7 +1178,7 @@ WRITE16_HANDLER( tmnt2_1c0800_w )
 		CellVar = tmnt2_1c0800[0x04] | (tmnt2_1c0800[0x05] << 16 );
 		dst = tmnt2_1c0800[0x02] | (tmnt2_1c0800[0x03] << 16 );
 		CellSrc = tmnt2_1c0800[0x00] | (tmnt2_1c0800[0x01] << 16 );
-//        if ( CellDest >= 0x180000 && CellDest < 0x183fe0 ) {
+/*        if ( CellDest >= 0x180000 && CellDest < 0x183fe0 ) {*/
         CellVar -= 0x104000;
 		src = (data16_t *)(memory_region(REGION_CPU1) + CellSrc);
 
@@ -1195,9 +1195,9 @@ WRITE16_HANDLER( tmnt2_1c0800_w )
 		/* It fixes the enemies, though, they are not all purple when you throw them around. */
 		/* Also, the bosses don't blink when they are about to die - don't know */
 		/* if this is correct or not. */
-//		if (sunset_104000[CellVar + 0x15] & 0x001f)
-//			cpu_writemem24bew_word(dst+0x18,(cpu_readmem24bew_word(dst+0x18) & 0xffe0) |
-//					(sunset_104000[CellVar + 0x15] & 0x001f));
+/*		if (sunset_104000[CellVar + 0x15] & 0x001f)*/
+/*			cpu_writemem24bew_word(dst+0x18,(cpu_readmem24bew_word(dst+0x18) & 0xffe0) |*/
+/*					(sunset_104000[CellVar + 0x15] & 0x001f));*/
 
 		x = src[2];
 		if (sunset_104000[CellVar + 0x00] & 0x4000)
@@ -1246,12 +1246,12 @@ logerror("copy command %04x sprite %08x data %08x: %04x%04x %04x%04x  modifiers 
 	sunset_104000[CellVar + 0x17]
 	);
 #endif
-//        }
+/*        }*/
     }
 }
 #endif
 
-static MEMORY_WRITE16_START( tmnt2_writemem ) //*
+static MEMORY_WRITE16_START( tmnt2_writemem ) /***/
 	{ 0x000000, 0x0fffff, MWA16_ROM, &tmnt2_rom },
 	{ 0x104000, 0x107fff, MWA16_RAM, &sunset_104000 },	/* main RAM */
 	{ 0x140000, 0x140fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
@@ -1320,7 +1320,7 @@ static MEMORY_READ16_START( ssridersbl_readmem )
 	{ 0xc00404, 0xc00405, input_port_2_word_r },
 	{ 0xc00406, 0xc00407, ssridersbl_eeprom_r },
 	{ 0xc00600, 0xc00601, OKIM6295_status_0_lsb_r },
-	{ 0x75d288, 0x75d289, MRA16_NOP },	// read repeatedly in some test menus (PC=181f2)
+	{ 0x75d288, 0x75d289, MRA16_NOP },	/* read repeatedly in some test menus (PC=181f2)*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( ssridersbl_writemem )
@@ -1586,7 +1586,7 @@ INPUT_PORTS_START( mia )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
 	PORT_START	/* DSW2 */
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )
@@ -1718,7 +1718,7 @@ INPUT_PORTS_START( tmnt2p )
 	KONAMI_PLAYERS_INPUT_LSB( IPF_PLAYER2, IPT_UNKNOWN, IPT_START2 )
 
 	PORT_START      /* PLAYER 3 */
-//	KONAMI_PLAYERS_INPUT_LSB( IPF_PLAYER3, IPT_UNKNOWN, IPT_START3 )
+/*	KONAMI_PLAYERS_INPUT_LSB( IPF_PLAYER3, IPT_UNKNOWN, IPT_START3 )*/
 
 	PORT_START	/* DSW1 */
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) )
@@ -1754,7 +1754,7 @@ INPUT_PORTS_START( tmnt2p )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
 	PORT_START	/* DSW2 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
@@ -1781,7 +1781,7 @@ INPUT_PORTS_START( tmnt2p )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START      /* PLAYER 4 */
-//	KONAMI_PLAYERS_INPUT_LSB( IPF_PLAYER4, IPT_UNKNOWN, IPT_START4 )
+/*	KONAMI_PLAYERS_INPUT_LSB( IPF_PLAYER4, IPT_UNKNOWN, IPT_START4 )*/
 
 	PORT_START	/* DSW3 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
@@ -2039,7 +2039,7 @@ INPUT_PORTS_START( lgtnfght )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
 	PORT_START	/* DSW3 */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
@@ -2121,7 +2121,7 @@ INPUT_PORTS_START( glfgreat )
 	PORT_DIPSETTING(      0x00b0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(      0x00a0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(      0x0090, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(      0x0000, "Invalid" )
+/*	PORT_DIPSETTING(      0x0000, "Invalid" )*/
 	PORT_DIPNAME( 0x0300, 0x0100, "Players/Controllers" )
 	PORT_DIPSETTING(      0x0300, "4/1" )
 	PORT_DIPSETTING(      0x0200, "4/2" )
@@ -2165,7 +2165,7 @@ INPUT_PORTS_START( glfgreat )
 	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-//	PORT_SERVICE( 0x4000, IP_ACTIVE_LOW )
+/*	PORT_SERVICE( 0x4000, IP_ACTIVE_LOW )*/
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_SERVICE )
 	PORT_DIPNAME( 0x8000, 0x8000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
@@ -2303,21 +2303,21 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( qgakumon )
 	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )	// Joystick control : Left
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )	// Joystick control : Right
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	// Joystick control : Up
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	// Joystick control : Down
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )	// Joystick control : Button
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )	/* Joystick control : Left*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )	/* Joystick control : Right*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	/* Joystick control : Up*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	/* Joystick control : Down*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )	/* Joystick control : Button*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
 
 	PORT_START	/* IN1 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )	// Joystick control : Left
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )	// Joystick control : Right
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	// Joystick control : Up
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	// Joystick control : Down
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )	// Joystick control : Button
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )	/* Joystick control : Left*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )	/* Joystick control : Right*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	/* Joystick control : Up*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	/* Joystick control : Down*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )	/* Joystick control : Button*/
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
@@ -2463,7 +2463,7 @@ static struct K053260_interface k053260_interface_nmi =
 	{ 3579545 },
 	{ REGION_SOUND1 }, /* memory region */
 	{ { MIXER(70,MIXER_PAN_LEFT), MIXER(70,MIXER_PAN_RIGHT) } },
-//	{ sound_nmi_callback },
+/*	{ sound_nmi_callback },*/
 };
 
 static struct K053260_interface k053260_interface =
@@ -2481,7 +2481,7 @@ static struct K053260_interface glfgreat_k053260_interface =
 	{ 3579545 },
 	{ REGION_SOUND1 }, /* memory region */
 	{ { MIXER(100,MIXER_PAN_LEFT), MIXER(100,MIXER_PAN_RIGHT) } },
-//	{ sound_nmi_callback },
+/*	{ sound_nmi_callback },*/
 };
 
 static struct OKIM6295interface okim6295_interface =
@@ -2661,7 +2661,7 @@ static MACHINE_DRIVER_START( detatwin )
 
 	MDRV_VIDEO_START(detatwin)
 	MDRV_VIDEO_UPDATE(lgtnfght)
-	MDRV_VIDEO_EOF( detatwin ) //*
+	MDRV_VIDEO_EOF( detatwin ) /***/
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
@@ -2766,7 +2766,7 @@ static MACHINE_DRIVER_START( prmrsocr )
 MACHINE_DRIVER_END
 
 
-static MACHINE_DRIVER_START( tmnt2 ) //*
+static MACHINE_DRIVER_START( tmnt2 ) /***/
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 16000000)	/* 16 MHz */
@@ -3691,7 +3691,7 @@ ROM_START( sunsetbl )
 	ROM_LOAD16_WORD_SWAP( "sunsetb.04",   0x080000, 0x080000, CRC(8ff647b7) SHA1(75144ce928fc4e7d24d9dd50a93e11ea41903bc4) )
 
 	ROM_REGION( 0x100000, REGION_GFX1, 0 )	/* graphics (addressable by the main CPU) */
-	// should be sunsetb.09 and .10 from the bootleg, but .09 is a bad dump and .10 matches the parent's sr_12k, so we just use the parent's roms
+	/* should be sunsetb.09 and .10 from the bootleg, but .09 is a bad dump and .10 matches the parent's sr_12k, so we just use the parent's roms*/
 	ROM_LOAD( "sr_16k.rom",   0x000000, 0x080000, CRC(e2bdc619) SHA1(04449deb267b0beacfa33640b593eb16194aa0d9) )	/* tiles */
 	ROM_LOAD( "sr_12k.rom",   0x080000, 0x080000, CRC(2d8ca8b0) SHA1(7c882f79c2402cf75979c681071007d76e4db9ae) )
 
@@ -3749,11 +3749,11 @@ ROM_END
 
 ROM_START( prmrsocr )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 )
-	ROM_LOAD16_BYTE( "101eab08.1h", 0x000000, 0x40000, CRC(47208de6) SHA1(fe4ef56688d4a50f67a604357e7beea785106cd1) ) // 3.bin
-	ROM_LOAD16_BYTE( "101eab07.4h", 0x000001, 0x40000, CRC(5f408eca) SHA1(f2f6e126bfdcf884b477f49cb95f5e673357e9e0) ) // 3.bin
+	ROM_LOAD16_BYTE( "101eab08.1h", 0x000000, 0x40000, CRC(47208de6) SHA1(fe4ef56688d4a50f67a604357e7beea785106cd1) ) /* 3.bin*/
+	ROM_LOAD16_BYTE( "101eab07.4h", 0x000001, 0x40000, CRC(5f408eca) SHA1(f2f6e126bfdcf884b477f49cb95f5e673357e9e0) ) /* 3.bin*/
 
 	ROM_REGION( 0x30000, REGION_CPU2, 0 ) /* 64k for the audio CPU */
-	ROM_LOAD( "101_c05.5e",   0x00000, 0x20000, CRC(02c3679f) SHA1(e6d878185e73baca24ac98891c647856be9353c4) ) // 1.bin
+	ROM_LOAD( "101_c05.5e",   0x00000, 0x20000, CRC(02c3679f) SHA1(e6d878185e73baca24ac98891c647856be9353c4) ) /* 1.bin*/
 	ROM_RELOAD(               0x10000, 0x20000 )
 
     ROM_REGION( 0x080000, REGION_GFX1, 0 )	/* graphics (addressable by the main CPU) */
@@ -4073,15 +4073,15 @@ GAME( 1990, punkshtj, punkshot, punkshot, punksht2, gfx,      ROT0,  "Konami", "
 GAME( 1990, lgtnfght, 0,        lgtnfght, lgtnfght, gfx,      ROT90, "Konami", "Lightning Fighters (US)" )
 GAME( 1990, trigon,   lgtnfght, lgtnfght, lgtnfght, gfx,      ROT90, "Konami", "Trigon (Japan)" )
 
-GAME( 1991, blswhstl, 0,        detatwin, detatwin, gfx,      ROT90, "Konami", "Bells & Whistles (Version L)" )		// version L
-GAME( 1991, detatwin, blswhstl, detatwin, detatwin, gfx,      ROT90, "Konami", "Detana!! Twin Bee (Japan ver. J)" )	// version J
+GAME( 1991, blswhstl, 0,        detatwin, detatwin, gfx,      ROT90, "Konami", "Bells & Whistles (Version L)" )		/* version L*/
+GAME( 1991, detatwin, blswhstl, detatwin, detatwin, gfx,      ROT90, "Konami", "Detana!! Twin Bee (Japan ver. J)" )	/* version J*/
 
 GAMEX(1991, glfgreat, 0,        glfgreat, glfgreat, glfgreat, ROT0,  "Konami", "Golfing Greats", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAMEX(1991, glfgretj, glfgreat, glfgreat, glfgreat, glfgreat, ROT0,  "Konami", "Golfing Greats (Japan)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX(1991, tmnt2,    0,        tmnt2,    ssridr4p, gfx,      ROT0,  "Konami", "Teenage Mutant Ninja Turtles - Turtles in Time (US 4 Players ver. UAA)", GAME_UNEMULATED_PROTECTION )		// ver. UAA
-GAMEX(1991, tmnt22p,  tmnt2,    tmnt2,    ssriders, gfx,      ROT0,  "Konami", "Teenage Mutant Ninja Turtles - Turtles in Time (US 2 Players ver. UDA)", GAME_UNEMULATED_PROTECTION )		// ver. UDA
-GAMEX(1991, tmnt2a,   tmnt2,    tmnt2,    ssrid4ps, gfx,      ROT0,  "Konami", "Teenage Mutant Ninja Turtles - Turtles in Time (Asia 4 Players ver. ADA)", GAME_UNEMULATED_PROTECTION )	// ver. ADA
+GAMEX(1991, tmnt2,    0,        tmnt2,    ssridr4p, gfx,      ROT0,  "Konami", "Teenage Mutant Ninja Turtles - Turtles in Time (US 4 Players ver. UAA)", GAME_UNEMULATED_PROTECTION )		/* ver. UAA*/
+GAMEX(1991, tmnt22p,  tmnt2,    tmnt2,    ssriders, gfx,      ROT0,  "Konami", "Teenage Mutant Ninja Turtles - Turtles in Time (US 2 Players ver. UDA)", GAME_UNEMULATED_PROTECTION )		/* ver. UDA*/
+GAMEX(1991, tmnt2a,   tmnt2,    tmnt2,    ssrid4ps, gfx,      ROT0,  "Konami", "Teenage Mutant Ninja Turtles - Turtles in Time (Asia 4 Players ver. ADA)", GAME_UNEMULATED_PROTECTION )	/* ver. ADA*/
 
 GAME( 1993, qgakumon, 0,        tmnt2,    qgakumon, gfx,      ROT0,  "Konami", "Quiz Gakumon no Susume (Japan ver. JA2 Type L)" )
 

@@ -83,7 +83,7 @@ static void dblewing_drawsprites(struct mame_bitmap *bitmap,const struct rectang
 		x = spriteram16[offs+2];
 		colour = (x >>9) & 0x1f;
 
-		pri = (x&0xc000); // 2 bits or 1?
+		pri = (x&0xc000); /* 2 bits or 1?*/
 
 		switch (pri&0xc000) {
 		case 0x0000: pri=0; break;
@@ -217,70 +217,70 @@ static READ16_HANDLER ( dblewing_prot_r )
 {
 	switch(offset*2)
 	{
-		case 0x16a: return boss_move;          // boss 1 movement
-		case 0x6d6: return boss_move;          // boss 1 2nd pilot
-		case 0x748: return boss_move;          // boss 1 3rd pilot
+		case 0x16a: return boss_move;          /* boss 1 movement*/
+		case 0x6d6: return boss_move;          /* boss 1 2nd pilot*/
+		case 0x748: return boss_move;          /* boss 1 3rd pilot*/
 
-		case 0x566: return 0x0009;   	   	   // boss BGM,might be a variable one (read->write to the sound latch)
-		case 0x1ea: return boss_shoot_type;    // boss 1 shoot type
-		case 0x596: return boss_3_data;		   // boss 3 appearing
+		case 0x566: return 0x0009;   	   	   /* boss BGM,might be a variable one (read->write to the sound latch)*/
+		case 0x1ea: return boss_shoot_type;    /* boss 1 shoot type*/
+		case 0x596: return boss_3_data;		   /* boss 3 appearing*/
 		case 0x692:	return boss_4_data;
 		case 0x6b0: return boss_5_data;
 		case 0x51e: return boss_5sx_data;
 		case 0x784: return boss_6_data;
 
-		case 0x330: return 0; // controls bonuses such as shoot type,bombs etc.
-		case 0x1d4: return dblwings_70c_data;  //controls restart points
+		case 0x330: return 0; /* controls bonuses such as shoot type,bombs etc.*/
+		case 0x1d4: return dblwings_70c_data;  /*controls restart points*/
 
-		case 0x0ac: return (readinputport(2)& 0x40)<<4;//flip screen
-		case 0x4b0: return dblwings_608_data;//coinage
+		case 0x0ac: return (readinputport(2)& 0x40)<<4;/*flip screen*/
+		case 0x4b0: return dblwings_608_data;/*coinage*/
 		case 0x068:
 		{
-		  switch(readinputport(2) & 0x0300) //I don't know how to relationate this...
+		  switch(readinputport(2) & 0x0300) /*I don't know how to relationate this...*/
 			{
-				case 0x0000: return 0x000;//0
-				case 0x0100: return 0x060;//3
-				case 0x0200: return 0x0d0;//6
-				case 0x0300: return 0x160;//b
+				case 0x0000: return 0x000;/*0*/
+				case 0x0100: return 0x060;/*3*/
+				case 0x0200: return 0x0d0;/*6*/
+				case 0x0300: return 0x160;/*b*/
 			}
 		}
-		case 0x094: return dblwings_104_data;// p1 inputs select screen  OK
-		case 0x24c: return dblwings_008_data;//read DSW (mirror for coinage/territory)
-		case 0x298: return readinputport(1);//vblank
-		case 0x476: return readinputport(1);//mirror for coins
+		case 0x094: return dblwings_104_data;/* p1 inputs select screen  OK*/
+		case 0x24c: return dblwings_008_data;/*read DSW (mirror for coinage/territory)*/
+		case 0x298: return readinputport(1);/*vblank*/
+		case 0x476: return readinputport(1);/*mirror for coins*/
 		case 0x506: return readinputport(2);
 		case 0x5d8: return dblwings_406_data;
 		case 0x2b4: return readinputport(0);
-		case 0x1a8: return (readinputport(2) & 0x4000) >> 12;//allow continue
-		case 0x3ec: return dblwings_70c_data; //score entry
-		case 0x246: return dblwings_580_data; // these three controls "perfect bonus" I suppose...
+		case 0x1a8: return (readinputport(2) & 0x4000) >> 12;/*allow continue*/
+		case 0x3ec: return dblwings_70c_data; /*score entry*/
+		case 0x246: return dblwings_580_data; /* these three controls "perfect bonus" I suppose...*/
 		case 0x52e: return dblwings_580_data;
 		case 0x532: return dblwings_580_data;
 	}
 
 
-//  printf("dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);
+/*  printf("dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);*/
 
-	if ((offset*2)==0x0f8) return 0; // dblwings_080_data;
+	if ((offset*2)==0x0f8) return 0; /* dblwings_080_data;*/
 	if ((offset*2)==0x104) return 0;
 	if ((offset*2)==0x10e) return 0;
-	if ((offset*2)==0x206) return 0; // dblwings_70c_data;
+	if ((offset*2)==0x206) return 0; /* dblwings_70c_data;*/
 	if ((offset*2)==0x25c) return 0;
-	if ((offset*2)==0x284) return 0; // 3rd player 2nd boss
-	if ((offset*2)==0x432) return 0; // boss on water level?
-	if ((offset*2)==0x54a) return 0; // 3rd player 2nd boss
+	if ((offset*2)==0x284) return 0; /* 3rd player 2nd boss*/
+	if ((offset*2)==0x432) return 0; /* boss on water level?*/
+	if ((offset*2)==0x54a) return 0; /* 3rd player 2nd boss*/
 	if ((offset*2)==0x786) return 0;
 
-	//printf("dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);
+	/*printf("dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);*/
 	printf("dblewing prot r %08x, %04x, %04x\n",activecpu_get_pc(), offset*2, mem_mask);
 
-	return 0;//mame_rand(space->machine);
+	return 0;/*mame_rand(space->machine);*/
 }
 
 static WRITE16_HANDLER( dblewing_prot_w )
 {
-//  if(offset*2 != 0x380)
-//  printf("dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);
+/*  if(offset*2 != 0x380)*/
+/*  printf("dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
 
 	switch(offset*2)
 	{
@@ -294,14 +294,14 @@ static WRITE16_HANDLER( dblewing_prot_w )
 
 		case 0x104:
 			dblwings_104_data = data;
-			return; // p1 inputs select screen  OK
+			return; /* p1 inputs select screen  OK*/
 
 		case 0x18a:
 			dblwings_18a_data = data;
 			switch(dblwings_18a_data)
 			{
-				case 0x6b94: boss_5_data = 0x10; break; //initialize
-				case 0x7c68: boss_5_data = 0x60; break; //go up
+				case 0x6b94: boss_5_data = 0x10; break; /*initialize*/
+				case 0x7c68: boss_5_data = 0x60; break; /*go up*/
 				case 0xfb1d: boss_5_data = 0x50; break;
 				case 0x977c: boss_5_data = 0x50; break;
 				case 0x8a49: boss_5_data = 0x60; break;
@@ -315,7 +315,7 @@ static WRITE16_HANDLER( dblewing_prot_w )
 				case 0x3b28: boss_move = 2; break;
 				case 0x1d4d: boss_move = 1; break;
 			}
-			//popmessage("%04x",dblwings_200_data);
+			/*popmessage("%04x",dblwings_200_data);*/
 			return;
 		case 0x280:
 			dblwings_280_data = data;
@@ -327,9 +327,9 @@ static WRITE16_HANDLER( dblewing_prot_w )
 				case 0x02dd: boss_5sx_data = 0x50; break;
 				case 0x613c: boss_5sx_data = 0x50; break;
 			}
-			//printf("%04x\n",dblwings_280_data);
+			/*printf("%04x\n",dblwings_280_data);*/
 			return;
-		case 0x380: // sound write
+		case 0x380: /* sound write*/
 			soundlatch_w(0,data&0xff);
 			dblewing_sound_irq |= 0x02;
 		 	cpu_set_irq_line(1,0,(dblewing_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
@@ -358,11 +358,11 @@ static WRITE16_HANDLER( dblewing_prot_w )
 
 				case 0xeff5: boss_move = 1; break;
 				case 0xd2f1: boss_move = 2; break;
-				//default:   printf("%04x\n",dblwings_38e_data); break;
-				//case 0xe65a: boss_shoot_type = 0; break;
+				/*default:   printf("%04x\n",dblwings_38e_data); break;*/
+				/*case 0xe65a: boss_shoot_type = 0; break;*/
 			}
 			return;
-		case 0x58c: // 3rd player 1st level
+		case 0x58c: /* 3rd player 1st level*/
 			dblwings_58c_data = data;
 			if(dblwings_58c_data == 0)     { boss_move = 5; }
 			else                           { boss_move = 2; }
@@ -379,16 +379,16 @@ static WRITE16_HANDLER( dblewing_prot_w )
 			return;
 		case 0x406:
 			dblwings_406_data = data;
-			return;  // p2 inputs select screen  OK
+			return;  /* p2 inputs select screen  OK*/
 	}
 
-//  printf("dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);
+/*  printf("dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
 
 	if ((offset*2)==0x008) { dblwings_008_data = data; return; }
-	if ((offset*2)==0x080) { dblwings_080_data = data; return; } // p3 3rd boss?
+	if ((offset*2)==0x080) { dblwings_080_data = data; return; } /* p3 3rd boss?*/
 	if ((offset*2)==0x28c) { dblwings_28c_data = data; return; }
-	if ((offset*2)==0x408) { dblwings_408_data = data; return; } // 3rd player 1st level?
-	if ((offset*2)==0x40e) { dblwings_40e_data = data; return; } // 3rd player 2nd level?
+	if ((offset*2)==0x408) { dblwings_408_data = data; return; } /* 3rd player 1st level?*/
+	if ((offset*2)==0x40e) { dblwings_40e_data = data; return; } /* 3rd player 2nd level?*/
 	if ((offset*2)==0x608) { dblwings_608_data = data; return; }
 	if ((offset*2)==0x70c) { dblwings_70c_data = data; return; }
 	if ((offset*2)==0x78a) { dblwings_78a_data = data; return; }
@@ -409,9 +409,9 @@ static MEMORY_READ16_START( dblewing_readmem )
 	{ 0x300000, 0x3007ff, MRA16_RAM },
 	{ 0x320000, 0x3207ff, MRA16_RAM },
 	{ 0xff0000, 0xff3fff, MRA16_RAM },
-	{ 0xff4000, 0xff7fff, MRA16_RAM }, // mirrors for above correct.??
-	{ 0xff8000, 0xffbfff, MRA16_RAM }, //
-	{ 0xffc000, 0xffffff, MRA16_RAM }, //
+	{ 0xff4000, 0xff7fff, MRA16_RAM }, /* mirrors for above correct.??*/
+	{ 0xff8000, 0xffbfff, MRA16_RAM }, /**/
+	{ 0xffc000, 0xffffff, MRA16_RAM }, /**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( dblewing_writemem )
@@ -427,9 +427,9 @@ static MEMORY_WRITE16_START( dblewing_writemem )
 	{ 0x300000, 0x3007ff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x320000, 0x3207ff, paletteram16_xxxxBBBBGGGGRRRR_word_w, &paletteram16 },
 	{ 0xff0000, 0xff3fff, MWA16_RAM },
-	{ 0xff4000, 0xff7fff, MWA16_RAM }, // mirrors for above correct.??
-	{ 0xff8000, 0xffbfff, MWA16_RAM }, //
-	{ 0xffc000, 0xffffff, MWA16_RAM }, //
+	{ 0xff4000, 0xff7fff, MWA16_RAM }, /* mirrors for above correct.??*/
+	{ 0xff8000, 0xffbfff, MWA16_RAM }, /**/
+	{ 0xffc000, 0xffffff, MWA16_RAM }, /**/
 MEMORY_END
 
 
@@ -448,7 +448,7 @@ static MEMORY_READ_START( dblewing_sound_readmem )
 	{ 0xa000, 0xa001, YM2151_status_port_0_r },
 	{ 0xb000, 0xb000, OKIM6295_status_0_r },
 	{ 0xc000, 0xc000, soundlatch_r },
-	{ 0xd000, 0xd000, irq_latch_r }, //timing? sound latch?
+	{ 0xd000, 0xd000, irq_latch_r }, /*timing? sound latch?*/
 	{ 0xf000, 0xf000, OKIM6295_status_0_r },
 MEMORY_END
 
@@ -707,11 +707,11 @@ ROM_START( dblewing )
 	ROM_LOAD16_BYTE( "kp_00-.3d",    0x000001, 0x040000, CRC(547dc83e) SHA1(f6f96bd4338d366f06df718093f035afabc073d1) )
 	ROM_LOAD16_BYTE( "kp_01-.5d",    0x000000, 0x040000, CRC(7a210c33) SHA1(ced89140af6d6a1bc0ffb7728afca428ed007165) )
 
-	ROM_REGION( 0x18000, REGION_CPU2, 0 ) // sound cpu
+	ROM_REGION( 0x18000, REGION_CPU2, 0 ) /* sound cpu*/
 	ROM_LOAD( "kp_02-.10h",    0x00000, 0x08000, CRC(def035fa) SHA1(fd50314e5c94c25df109ee52c0ce701b0ff2140c) )
   ROM_CONTINUE(              0x10000, 0x08000 )
 
-  ROM_REGION( 0x10000, REGION_SOUND2, 0 ) // sound data
+  ROM_REGION( 0x10000, REGION_SOUND2, 0 ) /* sound data*/
 	ROM_COPY( REGION_CPU2,  0x00000, 0x00000, 0x8000 )
 	ROM_COPY( REGION_CPU2,  0x10000, 0x08000, 0x8000 )
 	

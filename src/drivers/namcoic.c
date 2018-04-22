@@ -204,8 +204,8 @@ draw_spriteC355( int page, struct mame_bitmap *bitmap, const struct rectangle *c
 			hpos&=0x7ff; if( hpos&0x400 ) hpos |= ~0x7ff;
 			hpos += -0x26 - dh;
 			vpos += -0x19 - dv;
-			// 0026 0145 0019 00f8 (lucky&wild)
-			// 0025 0145 0019 00f8 (point blank)
+			/* 0026 0145 0019 00f8 (lucky&wild)*/
+			/* 0025 0145 0019 00f8 (point blank)*/
 			clip.min_x = pWinAttr[0] - 0x26 - dh;
 			clip.max_x = pWinAttr[1] - 0x26 - dh;
 			clip.min_y = pWinAttr[2] - 0x19 - dv;
@@ -551,7 +551,7 @@ void namco_roz_draw(
 			int color = attrs&0xf;
 			int page;
 			int roz_pri;
-			//int roz_size = 128;
+			/*int roz_size = 128;*/
 			switch( namcos2_gametype )
 			{
 			case NAMCONB2_OUTFOXIES:

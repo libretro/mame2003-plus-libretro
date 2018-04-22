@@ -127,7 +127,7 @@ VIDEO_UPDATE(cshooter)
 
 INTERRUPT_GEN( cshooter_interrupt )
 {
-	cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0x08); // almost certainly wrong?
+	cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, 0x08); /* almost certainly wrong?*/
 }
 
 
@@ -158,15 +158,15 @@ WRITE_HANDLER ( cshooter_c700_w )
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
-	{ 0x8000, 0x87ff, MRA_RAM },			// to be confirmed
-	{ 0xb000, 0xb0ff, MRA_RAM },			// sound related ?
+	{ 0x8000, 0x87ff, MRA_RAM },			/* to be confirmed*/
+	{ 0xb000, 0xb0ff, MRA_RAM },			/* sound related ?*/
 	{ 0xc000, 0xc1ff, MRA_RAM },
 	{ 0xc200, 0xc200, input_port_0_r },
 	{ 0xc201, 0xc201, input_port_1_r },
 	{ 0xc202, 0xc202, input_port_2_r },
 	{ 0xc203, 0xc203, input_port_3_r },
 	{ 0xc204, 0xc204, input_port_4_r },
-	{ 0xc205, 0xc205, cshooter_coin_r },	// hack until I understand
+	{ 0xc205, 0xc205, cshooter_coin_r },	/* hack until I understand*/
 	{ 0xd000, 0xd7ff, MRA_RAM },
 	{ 0xd800, 0xdfff, MRA_RAM },
 	{ 0xe000, 0xffff, MRA_RAM },
@@ -174,12 +174,12 @@ MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
-	{ 0x8000, 0x87ff, MWA_RAM },			// to be confirmed
-	{ 0xc000, 0xc1ff, paletteram_BBGGGRRR_w, &paletteram },	// guess, maybe not
+	{ 0x8000, 0x87ff, MWA_RAM },			/* to be confirmed*/
+	{ 0xc000, 0xc1ff, paletteram_BBGGGRRR_w, &paletteram },	/* guess, maybe not*/
 	{ 0xc500, 0xc500, cshooter_c500_w },
-	{ 0xc600, 0xc600, MWA_NOP },			// see notes
+	{ 0xc600, 0xc600, MWA_NOP },			/* see notes*/
 	{ 0xc700, 0xc700, cshooter_c700_w },
-	{ 0xc801, 0xc801, MWA_NOP },			// see notes
+	{ 0xc801, 0xc801, MWA_NOP },			/* see notes*/
 	{ 0xd000, 0xd7ff, cshooter_txram_w, &cshooter_txram },
 	{ 0xd800, 0xdfff, MWA_RAM },
 	{ 0xe000, 0xffff, MWA_RAM },
@@ -201,10 +201,10 @@ MEMORY_END
 
 static MEMORY_WRITE_START( s_writemem )
 	{ 0x0000, 0x3fff, MWA_ROM },
-	{ 0xc000, 0xc000, MWA_NOP }, // YM2203_control_port_0_w ?
-	{ 0xc001, 0xc001, MWA_NOP }, // YM2203_write_port_0_w
-	{ 0xc800, 0xc800, MWA_NOP }, // YM2203_control_port_1_w ?
-	{ 0xc801, 0xc801, MWA_NOP }, // YM2203_write_port_1_w
+	{ 0xc000, 0xc000, MWA_NOP }, /* YM2203_control_port_0_w ?*/
+	{ 0xc001, 0xc001, MWA_NOP }, /* YM2203_write_port_0_w*/
+	{ 0xc800, 0xc800, MWA_NOP }, /* YM2203_control_port_1_w ?*/
+	{ 0xc801, 0xc801, MWA_NOP }, /* YM2203_write_port_1_w*/
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END
 
@@ -344,7 +344,7 @@ static MACHINE_DRIVER_START( cshooter )
 	MDRV_CPU_ADD(Z80,6000000)		 /* ? MHz */
 	MDRV_CPU_MEMORY(s_readmem,s_writemem)
 	MDRV_CPU_PORTS(s_readport,s_writeport)
-//	MDRV_CPU_VBLANK_INT(cshooter_interrupt,1)
+/*	MDRV_CPU_VBLANK_INT(cshooter_interrupt,1)*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -419,19 +419,19 @@ data in the custom SIPs. I am not sure though.
 
 
 ROM_START( cshooter )
-	ROM_REGION( 0x10000, REGION_CPU1, 0 )	// Main CPU?
+	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* Main CPU?*/
 	ROM_LOAD( "r1",  0x00000, 0x08000, CRC(fbe8c518) SHA1(bff8319f4892e6d06f1c7a679f67dc8407279cfa) )
 
-	ROM_REGION( 0x10000, REGION_CPU2, 0 )	// Sub/Sound CPU?
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* Sub/Sound CPU?*/
 	ROM_LOAD( "r4",  0x00000, 0x08000, CRC(84fed017) SHA1(9a564c9379eb48569cfba48562889277991864d8) )
 
 	ROM_REGION( 0x0800, REGION_CPU3, 0 )	/* 2k for the microcontroller */
 	ROM_LOAD( "68705.bin",    0x0000, 0x0800, NO_DUMP )
 
-	ROM_REGION( 0x02000, REGION_GFX1, 0 )	// TX Layer
-	ROM_LOAD( "r3",  0x00000, 0x02000, CRC(67b50a47) SHA1(b1f4aefc9437edbeefba5371149cc08c0b55c741) )	// only 1 byte difference with 3.f11, bad dump?
+	ROM_REGION( 0x02000, REGION_GFX1, 0 )	/* TX Layer*/
+	ROM_LOAD( "r3",  0x00000, 0x02000, CRC(67b50a47) SHA1(b1f4aefc9437edbeefba5371149cc08c0b55c741) )	/* only 1 byte difference with 3.f11, bad dump?*/
 
-	ROM_REGION( 0x10000, REGION_GFX2, 0 )	// Sprites & Backgrounds ?
+	ROM_REGION( 0x10000, REGION_GFX2, 0 )	/* Sprites & Backgrounds ?*/
 	ROM_LOAD( "r2",  0x00000, 0x10000, CRC(5ddf9f4e) SHA1(69e4d422ca272bf2e9f00edbe7d23760485fdfe6) )
 
 	ROM_REGION( 0x220, REGION_PROMS, 0 )
@@ -472,20 +472,20 @@ Note, all ROMs have official sticker, "(C) SEIBU KAIHATSU INC." and a number.
 */
 
 ROM_START( cshootre )
-	ROM_REGION( 2*0x10000, REGION_CPU1, 0 )	// Main CPU?
+	ROM_REGION( 2*0x10000, REGION_CPU1, 0 )	/* Main CPU?*/
 	ROM_LOAD( "1.k19",  0x00000, 0x08000, CRC(71418952) SHA1(9745ca006576381c9e9595d8e42ab276bab80a41) )
 
-	ROM_REGION( 2*0x10000, REGION_CPU2, 0 )	// Sub/Sound CPU?
-	ROM_LOAD( "5.6f",  0x00000, 0x02000, CRC(30be398c) SHA1(6c61200ee8888d6270c8cec50423b3b5602c2027) )	// 5.g6
+	ROM_REGION( 2*0x10000, REGION_CPU2, 0 )	/* Sub/Sound CPU?*/
+	ROM_LOAD( "5.6f",  0x00000, 0x02000, CRC(30be398c) SHA1(6c61200ee8888d6270c8cec50423b3b5602c2027) )	/* 5.g6*/
 
-	ROM_REGION( 0x02000, REGION_GFX1, 0 )	// TX Layer
-	ROM_LOAD( "3.f11",  0x00000, 0x02000, CRC(704c26d7) SHA1(e5964f409cbc2c4752e3969f3e84ace08d5ad9cb) )	// only 1 byte difference with R3, bad dump?
+	ROM_REGION( 0x02000, REGION_GFX1, 0 )	/* TX Layer*/
+	ROM_LOAD( "3.f11",  0x00000, 0x02000, CRC(704c26d7) SHA1(e5964f409cbc2c4752e3969f3e84ace08d5ad9cb) )	/* only 1 byte difference with R3, bad dump?*/
 
-	ROM_REGION( 0x10000, REGION_GFX2, 0 )	// Sprites & Backgrounds ?
+	ROM_REGION( 0x10000, REGION_GFX2, 0 )	/* Sprites & Backgrounds ?*/
 	ROM_LOAD( "2.k20",  0x00000, 0x10000, CRC(5812fe72) SHA1(3b28bff6b62a411d2195bb228952db62ad32ef3d) )
 
-	ROM_REGION( 0x08000, REGION_GFX3, 0 )	// ?? sound ?? unknown rom
-	ROM_LOAD( "4.7f",  0x00000, 0x08000, CRC(3cd715b4) SHA1(da735fb5d262908ddf7ed7dacdea68899f1723ff) )	// 4.g8
+	ROM_REGION( 0x08000, REGION_GFX3, 0 )	/* ?? sound ?? unknown rom*/
+	ROM_LOAD( "4.7f",  0x00000, 0x08000, CRC(3cd715b4) SHA1(da735fb5d262908ddf7ed7dacdea68899f1723ff) )	/* 4.g8*/
 ROM_END
 
 /*
@@ -511,19 +511,19 @@ SEI0030BU          SEI0060BU                             sw1 xx xxxxx
 */
 
 ROM_START( airraid )
-	ROM_REGION( 2*0x10000, REGION_CPU1, 0 )	// Main CPU?
+	ROM_REGION( 2*0x10000, REGION_CPU1, 0 )	/* Main CPU?*/
 	ROM_LOAD( "1.16j",  0x00000, 0x08000, CRC(7ac2cedf) SHA1(272831f51a2731e067b5aec6dba6bddd3c5350c9) )
 
-	ROM_REGION( 2*0x10000, REGION_CPU2, 0 )	// Sub/Sound CPU?
+	ROM_REGION( 2*0x10000, REGION_CPU2, 0 )	/* Sub/Sound CPU?*/
 	ROM_LOAD( "5.6f",  0x00000, 0x02000, CRC(30be398c) SHA1(6c61200ee8888d6270c8cec50423b3b5602c2027) )
 
-	ROM_REGION( 0x02000, REGION_GFX1, 0 )	// TX Layer
+	ROM_REGION( 0x02000, REGION_GFX1, 0 )	/* TX Layer*/
 	ROM_LOAD( "3.13e",  0x00000, 0x02000, CRC(672ec0e8) SHA1(a11cd90d6494251ceee3bc7c72f4e7b1580b77e2) )
 
-	ROM_REGION( 0x10000, REGION_GFX2, 0 )	// Sprites & Backgrounds ?
+	ROM_REGION( 0x10000, REGION_GFX2, 0 )	/* Sprites & Backgrounds ?*/
 	ROM_LOAD( "2.19j",  0x00000, 0x10000, CRC(842ae6c2) SHA1(0468445e4ab6f42bac786f9a258df3972fd1fde9) )
 
-	ROM_REGION( 0x08000, REGION_GFX3, 0 )	// ?? sound ?? unknown rom
+	ROM_REGION( 0x08000, REGION_GFX3, 0 )	/* ?? sound ?? unknown rom*/
 	ROM_LOAD( "4.7f",  0x00000, 0x08000, CRC(3cd715b4) SHA1(da735fb5d262908ddf7ed7dacdea68899f1723ff) )
 ROM_END
 

@@ -244,7 +244,7 @@ INPUT_PORTS_START( wwfsstar )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, "Super Techniques" )			// Check code at 0x014272
+	PORT_DIPNAME( 0x08, 0x08, "Super Techniques" )			/* Check code at 0x014272*/
 	PORT_DIPSETTING(    0x08, "Normal" )
 	PORT_DIPSETTING(    0x00, "Hard" )
 	PORT_DIPNAME( 0x30, 0x30, "Time" )

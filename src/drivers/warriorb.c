@@ -164,7 +164,7 @@ WRITE_HANDLER( warriorb_pancontrol )
 	offset = offset&3;
 	ninjaw_pandata[offset] = (data<<1) + data;   /* original volume*3 */
 
-//	usrintf_showmessage(" pan %02x %02x %02x %02x", ninjaw_pandata[0], ninjaw_pandata[1], ninjaw_pandata[2], ninjaw_pandata[3] );
+/*	usrintf_showmessage(" pan %02x %02x %02x %02x", ninjaw_pandata[0], ninjaw_pandata[1], ninjaw_pandata[2], ninjaw_pandata[3] );*/
 
 	if (offset < 2)
 		mixer_set_stereo_volume( 3, ninjaw_pandata[0], ninjaw_pandata[1] );
@@ -204,7 +204,7 @@ static MEMORY_WRITE16_START( darius2d_writemem )
 	{ 0x420000, 0x420007, TC0110PCR_step1_word_1_w },	/* palette (2nd screen) */
 	{ 0x600000, 0x6013ff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x800000, 0x80000f, TC0220IOC_halfword_w },
-//	{ 0x820000, 0x820001, MWA16_NOP },	// ???
+/*	{ 0x820000, 0x820001, MWA16_NOP },	*/ /* ???*/
 	{ 0x830000, 0x830003, warriorb_sound_w },
 MEMORY_END
 
@@ -234,7 +234,7 @@ static MEMORY_WRITE16_START( warriorb_writemem )
 	{ 0x420000, 0x420007, TC0110PCR_step1_word_1_w },	/* palette (2nd screen) */
 	{ 0x600000, 0x6013ff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x800000, 0x80000f, TC0510NIO_halfword_w },
-//	{ 0x820000, 0x820001, MWA16_NOP },	// ? uses bits 0,2,3
+/*	{ 0x820000, 0x820001, MWA16_NOP },	*/ /* ? uses bits 0,2,3*/
 	{ 0x830000, 0x830003, warriorb_sound_w },
 MEMORY_END
 
@@ -338,7 +338,7 @@ MEMORY_END
 
 INPUT_PORTS_START( darius2d )
 	PORT_START /* DSW A */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )  // used, but manual in japanese
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )  /* used, but manual in japanese*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, "Autofire" )
@@ -362,7 +362,7 @@ INPUT_PORTS_START( darius2d )
 	PORT_DIPSETTING(    0x20, "4" )
 	PORT_DIPSETTING(    0x10, "5" )
 	PORT_DIPSETTING(    0x00, "6" )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )  // in manual
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )  /* in manual*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, "Allow Continue" )
@@ -383,7 +383,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( warriorb )
 	PORT_START /* DSW A */
-	PORT_DIPNAME( 0x03, 0x03, "Vitality Recovery" ) //after finishing a level
+	PORT_DIPNAME( 0x03, 0x03, "Vitality Recovery" ) /*after finishing a level*/
 	PORT_DIPSETTING(    0x02, "Less" )
 	PORT_DIPSETTING(    0x03, "Normal" )
 	PORT_DIPSETTING(    0x01, "More" )
@@ -399,7 +399,7 @@ INPUT_PORTS_START( warriorb )
 	PORT_DIPNAME( 0x04, 0x04, "Gold Sheep at" )
 	PORT_DIPSETTING(    0x04, "50k only" )
 	PORT_DIPSETTING(    0x00, "50k and every 70k" )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )	//in manual
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )	/*in manual*/
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x10, 0x10, "Player Starting Strength" )
@@ -614,8 +614,8 @@ ROM_START( darius2d )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x100000 )	/* SCR (screen 2) */
 
 /* The actual board duplicates the SCR gfx roms for the 2nd TC0100SCN */
-//	ROM_LOAD( "c07-03.47", 0x00000, 0x80000, CRC(189bafce) SHA1(d885e444523489fe24269b90dec58e0d92cfbd6e) )
-//	ROM_LOAD( "c07-04.48", 0x80000, 0x80000, CRC(50421e81) SHA1(27ac420602f1dac00dc32903543a518e6f47fb2f) )
+/*	ROM_LOAD( "c07-03.47", 0x00000, 0x80000, CRC(189bafce) SHA1(d885e444523489fe24269b90dec58e0d92cfbd6e) )*/
+/*	ROM_LOAD( "c07-04.48", 0x80000, 0x80000, CRC(50421e81) SHA1(27ac420602f1dac00dc32903543a518e6f47fb2f) )*/
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* ADPCM samples */
 	ROM_LOAD( "c07-10.95", 0x00000, 0x80000, CRC(4bbe0ed9) SHA1(081b73c4e4d4fa548445e5548573099bcb1e9213) )
@@ -628,9 +628,9 @@ ROM_START( darius2d )
 	ROM_LOAD( "c07-13.37", 0x00000, 0x00400, CRC(3ca18eb3) SHA1(54560f02c2be67993940831222130e90cd171991) )
 	ROM_LOAD( "c07-14.38", 0x00000, 0x00400, CRC(baf2a193) SHA1(b7f103b5f5aab0702dd21fd7e3a82261ae1760e9) )
 
-// Pals, not dumped
-//	ROM_LOAD( "C07-15.78", 0x00000, 0x00?00, NO_DUMP )
-//	ROM_LOAD( "C07-16.79", 0x00000, 0x00?00, NO_DUMP )
+/* Pals, not dumped*/
+/*	ROM_LOAD( "C07-15.78", 0x00000, 0x00?00, NO_DUMP )*/
+/*	ROM_LOAD( "C07-16.79", 0x00000, 0x00?00, NO_DUMP )*/
 ROM_END
 
 ROM_START( drius2do )
@@ -660,8 +660,8 @@ ROM_START( drius2do )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x100000 )	/* SCR (screen 2) */
 
 /* The actual board duplicates the SCR gfx roms for the 2nd TC0100SCN */
-//	ROM_LOAD( "c07-03.47", 0x00000, 0x80000, CRC(189bafce) SHA1(d885e444523489fe24269b90dec58e0d92cfbd6e) )
-//	ROM_LOAD( "c07-04.48", 0x80000, 0x80000, CRC(50421e81) SHA1(27ac420602f1dac00dc32903543a518e6f47fb2f) )
+/*	ROM_LOAD( "c07-03.47", 0x00000, 0x80000, CRC(189bafce) SHA1(d885e444523489fe24269b90dec58e0d92cfbd6e) )*/
+/*	ROM_LOAD( "c07-04.48", 0x80000, 0x80000, CRC(50421e81) SHA1(27ac420602f1dac00dc32903543a518e6f47fb2f) )*/
 
 	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* ADPCM samples */
 	ROM_LOAD( "c07-10.95", 0x00000, 0x80000, CRC(4bbe0ed9) SHA1(081b73c4e4d4fa548445e5548573099bcb1e9213) )
@@ -713,8 +713,8 @@ ROM_START( warriorb )
 	ROM_REGION( 0x01000, REGION_USER1, 0 )	/* unknown roms */
 	ROM_LOAD( "d24-13.37", 0x00000, 0x400, CRC(3ca18eb3) SHA1(54560f02c2be67993940831222130e90cd171991) )
 	ROM_LOAD( "d24-14.38", 0x00000, 0x400, CRC(baf2a193) SHA1(b7f103b5f5aab0702dd21fd7e3a82261ae1760e9) )
-//	ROM_LOAD( "d24-15.78", 0x00000, 0xa??, NO_DUMP )	/* Pals */
-//	ROM_LOAD( "d24-16.79", 0x00000, 0xa??, NO_DUMP )
+/*	ROM_LOAD( "d24-15.78", 0x00000, 0xa??, NO_DUMP )	 // Pals /*/
+/*	ROM_LOAD( "d24-16.79", 0x00000, 0xa??, NO_DUMP )*/
 ROM_END
 
 

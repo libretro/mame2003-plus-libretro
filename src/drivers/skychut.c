@@ -70,7 +70,7 @@ static MEMORY_WRITE_START( skychut_writemem )
 	{ 0x4000, 0x43ff, videoram_w, &videoram, &videoram_size },
 	{ 0x4800, 0x4bff, skychut_colorram_w, &colorram }, /* foreground colour  */
 	{ 0x5000, 0x53ff, MWA_RAM, &iremm15_chargen }, /* background ????? */
-//	{ 0xa100, 0xa1ff, MWA_RAM }, /* Sound writes????? */
+/*	{ 0xa100, 0xa1ff, MWA_RAM },  // Sound writes????? /*/
 	{ 0xa400, 0xa400, skychut_ctrl_w },	/* line at bottom of screen?, sound, flip screen */
 	{ 0xfc00, 0xffff, MWA_ROM },	/* for the reset / interrupt vectors */
 MEMORY_END
@@ -239,7 +239,7 @@ MACHINE_DRIVER_END
 
 ***************************************************************************/
 
-ROM_START( andromed )//Jumps to an unmapped sub-routine at $2fc9
+ROM_START( andromed )/*Jumps to an unmapped sub-routine at $2fc9*/
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
 	ROM_LOAD( "am1",  0x1000, 0x0400, CRC(53df0152) SHA1(d27113740094d219b0e05a930d8daa4c22129183) )
 	ROM_LOAD( "am2",  0x1400, 0x0400, CRC(dab64957) SHA1(77ced520f8e78bb08ddab4213646cf55d834e63e) )
@@ -301,16 +301,16 @@ ROM_END
 
 ROM_START( greenber )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
-	ROM_LOAD( "gb1", 0x1000, 0x0400, CRC(018ff672) SHA1(54d082a332831afc28b47704a5656da0a8a902fa) ) // ok
-	ROM_LOAD( "gb2", 0x1400, 0x0400, CRC(ea8f2267) SHA1(ad5bb38a80fbc7c70c8fa6f41086a7ade81655bc) ) // ok
-	ROM_LOAD( "gb3", 0x1800, 0x0400, CRC(8f337920) SHA1(ac3d76eb368645ba23f5823b39c04fae49d481e1) ) // ok
-	ROM_LOAD( "gb4", 0x1c00, 0x0400, CRC(7eeac4eb) SHA1(c668ad45ebc4aca558371539031efc4ec3990e44) ) // ok
+	ROM_LOAD( "gb1", 0x1000, 0x0400, CRC(018ff672) SHA1(54d082a332831afc28b47704a5656da0a8a902fa) ) /* ok*/
+	ROM_LOAD( "gb2", 0x1400, 0x0400, CRC(ea8f2267) SHA1(ad5bb38a80fbc7c70c8fa6f41086a7ade81655bc) ) /* ok*/
+	ROM_LOAD( "gb3", 0x1800, 0x0400, CRC(8f337920) SHA1(ac3d76eb368645ba23f5823b39c04fae49d481e1) ) /* ok*/
+	ROM_LOAD( "gb4", 0x1c00, 0x0400, CRC(7eeac4eb) SHA1(c668ad45ebc4aca558371539031efc4ec3990e44) ) /* ok*/
 	ROM_RELOAD(      0xfc00, 0x0400 )	/* for the reset and interrupt vectors */
 	ROM_LOAD( "gb5", 0x2000, 0x0400, CRC(b2f8e69a) SHA1(44295e58da890a8c4aba6fe90defe9c578c95592) )
 	ROM_LOAD( "gb6", 0x2400, 0x0400, CRC(50ea8bd3) SHA1(a816c5fcc603b28c2ae59f217871a7e85fb794e1) )
-	ROM_LOAD( "gb7", 0x2800, 0x0400, NO_DUMP ) // 2be8 entry
+	ROM_LOAD( "gb7", 0x2800, 0x0400, NO_DUMP ) /* 2be8 entry*/
 	ROM_LOAD( "gb8", 0x2c00, 0x0400, CRC(34700b31) SHA1(c148e2475eaaa0e9d1e2412eea359a7ba744e563) )
-	ROM_LOAD( "gb9", 0x3000, 0x0400, CRC(c27b9ba3) SHA1(a2f4f0c4b61eb03bba13ae5d25dc01009a4f86ee) ) // ok ?
+	ROM_LOAD( "gb9", 0x3000, 0x0400, CRC(c27b9ba3) SHA1(a2f4f0c4b61eb03bba13ae5d25dc01009a4f86ee) ) /* ok ?*/
 ROM_END
 
 GAMEX( 1979, andromed, 0, skychut,    skychut,   0, ROT270, "Irem", "Andromeda (Japan?)", GAME_NO_COCKTAIL | GAME_NO_SOUND | GAME_IMPERFECT_COLORS | GAME_NOT_WORKING )

@@ -705,7 +705,7 @@ VIDEO_UPDATE( dblaxle );
 READ16_HANDLER ( sci_spriteframe_r );
 WRITE16_HANDLER( sci_spriteframe_w );
 
-//  These TC0150ROD prototypes will go in taitoic.h  //
+/*  These TC0150ROD prototypes will go in taitoic.h  */ /**/
 READ16_HANDLER ( TC0150ROD_word_r );	/* Road generator */
 WRITE16_HANDLER( TC0150ROD_word_w );
 
@@ -715,8 +715,8 @@ static int dblaxle_int6 = 0;
 static int ioc220_port = 0;
 static data16_t eep_latch = 0;
 
-//static data16_t *taitoz_ram;
-//static data16_t *motor_ram;
+/*static data16_t *taitoz_ram;*/
+/*static data16_t *motor_ram;*/
 
 static size_t taitoz_sharedram_size;
 data16_t *taitoz_sharedram;	/* read externally to draw Spacegun crosshair */
@@ -827,7 +827,7 @@ static INTERRUPT_GEN( sci_interrupt )
 
 static INTERRUPT_GEN( dblaxle_interrupt )
 {
-	// Unsure how many int6's per frame, copy SCI for now
+	/* Unsure how many int6's per frame, copy SCI for now*/
 	dblaxle_int6 = !dblaxle_int6;
 
 	if (dblaxle_int6)
@@ -838,7 +838,7 @@ static INTERRUPT_GEN( dblaxle_interrupt )
 
 static INTERRUPT_GEN( dblaxle_cpub_interrupt )
 {
-	// Unsure how many int6's per frame
+	/* Unsure how many int6's per frame*/
 	timer_set(TIME_IN_CYCLES(200000-500,0),0, taitoz_interrupt6);
 	cpu_set_irq_line(2, 4, HOLD_LINE);
 }
@@ -1258,13 +1258,13 @@ static WRITE16_HANDLER( taitoz_sound_w )
 		taitosound_comm_w (0, data & 0xff);
 
 #ifdef MAME_DEBUG
-//	if (data & 0xff00)
-//	{
-//		char buf[80];
-//
-//		sprintf(buf,"taitoz_sound_w to high byte: %04x",data);
-//		usrintf_showmessage(buf);
-//	}
+/*	if (data & 0xff00)*/
+/*	{*/
+/*		char buf[80];*/
+/**/
+/*		sprintf(buf,"taitoz_sound_w to high byte: %04x",data);*/
+/*		usrintf_showmessage(buf);*/
+/*	}*/
 #endif
 }
 
@@ -1322,7 +1322,7 @@ static MEMORY_WRITE16_START( contcirc_writemem )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x080000, 0x083fff, MWA16_RAM },
 	{ 0x084000, 0x087fff, sharedram_w, &taitoz_sharedram, &taitoz_sharedram_size },
-//	{ 0x090000, 0x090001, MWA16_NOP },	/* ??? */
+/*	{ 0x090000, 0x090001, MWA16_NOP },	 // ??? /*/
 	{ 0x100000, 0x100007, TC0110PCR_step1_rbswap_word_w },	/* palette */
 	{ 0x200000, 0x20ffff, TC0100SCN_word_0_w },	/* tilemaps */
 	{ 0x220000, 0x22000f, TC0100SCN_ctrl_word_0_w },
@@ -1410,7 +1410,7 @@ static MEMORY_WRITE16_START( enforce_writemem )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x100000, 0x103fff, MWA16_RAM },
 	{ 0x104000, 0x107fff, sharedram_w, &taitoz_sharedram, &taitoz_sharedram_size },
-	{ 0x200000, 0x200001, cpua_ctrl_w },	// works without?
+	{ 0x200000, 0x200001, cpua_ctrl_w },	/* works without?*/
 	{ 0x300000, 0x3006ff, MWA16_RAM, &spriteram16, &spriteram_size },
 	{ 0x400000, 0x401fff, TC0150ROD_word_w },	/* "root ram" ??? */
 	{ 0x500000, 0x500007, TC0110PCR_step1_rbswap_word_w },	/* palette */
@@ -1466,7 +1466,7 @@ static MEMORY_READ16_START( bshark_cpub_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x108000, 0x10bfff, MRA16_RAM },
 	{ 0x110000, 0x113fff, sharedram_r },
-//	{ 0x40000a, 0x40000b, taitoz_unknown_r },	// ???
+/*	{ 0x40000a, 0x40000b, taitoz_unknown_r },	*/ /* ???*/
 	{ 0x600000, 0x600001, YM2610_status_port_0_A_lsb_r },
 	{ 0x600002, 0x600003, YM2610_read_port_0_lsb_r },
 	{ 0x600004, 0x600005, YM2610_status_port_0_B_lsb_r },
@@ -1479,12 +1479,12 @@ static MEMORY_WRITE16_START( bshark_cpub_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x108000, 0x10bfff, MWA16_RAM },
 	{ 0x110000, 0x113fff, sharedram_w },
-//	{ 0x400000, 0x400007, MWA16_NOP },   // pan ???
+/*	{ 0x400000, 0x400007, MWA16_NOP },   */ /* pan ???*/
 	{ 0x600000, 0x600001, YM2610_control_port_0_A_lsb_w },
 	{ 0x600002, 0x600003, YM2610_data_port_0_A_lsb_w },
 	{ 0x600004, 0x600005, YM2610_control_port_0_B_lsb_w },
 	{ 0x600006, 0x600007, YM2610_data_port_0_B_lsb_w },
-	{ 0x60000c, 0x60000d, MWA16_NOP },	// interrupt controller?
+	{ 0x60000c, 0x60000d, MWA16_NOP },	/* interrupt controller?*/
 	{ 0x60000e, 0x60000f, MWA16_NOP },
 	{ 0x800000, 0x801fff, TC0150ROD_word_w },	/* "root ram" */
 MEMORY_END
@@ -1524,8 +1524,8 @@ static MEMORY_READ16_START( sci_readmem )
 	{ 0x800000, 0x801fff, paletteram16_word_r },
 	{ 0xa00000, 0xa0ffff, TC0100SCN_word_0_r },	/* tilemaps */
 	{ 0xa20000, 0xa2000f, TC0100SCN_ctrl_word_0_r },
-	{ 0xc00000, 0xc03fff, MRA16_RAM },	/* spriteram */	// Raine draws only 0x1000
-	{ 0xc08000, 0xc08001, sci_spriteframe_r },	// debugging
+	{ 0xc00000, 0xc03fff, MRA16_RAM },	/* spriteram */	/* Raine draws only 0x1000*/
+	{ 0xc08000, 0xc08001, sci_spriteframe_r },	/* debugging*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( sci_writemem )
@@ -1534,7 +1534,7 @@ static MEMORY_WRITE16_START( sci_writemem )
 	{ 0x108000, 0x10bfff, sharedram_w, &taitoz_sharedram, &taitoz_sharedram_size },
 	{ 0x10c000, 0x10ffff, MWA16_RAM },
 	{ 0x200000, 0x20000f, TC0220IOC_halfword_w },
-//	{ 0x400000, 0x400001, cpua_ctrl_w },	// ?? doesn't seem to fit what's written
+/*	{ 0x400000, 0x400001, cpua_ctrl_w },	*/ /* ?? doesn't seem to fit what's written*/
 	{ 0x420000, 0x420003, taitoz_sound_w },
 	{ 0x800000, 0x801fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
 	{ 0xa00000, 0xa0ffff, TC0100SCN_word_0_w },	/* tilemaps */
@@ -1582,9 +1582,9 @@ static MEMORY_WRITE16_START( nightstr_writemem )
 	{ 0xc00000, 0xc0ffff, TC0100SCN_word_0_w },	/* tilemaps */
 	{ 0xc20000, 0xc2000f, TC0100SCN_ctrl_word_0_w },
 	{ 0xd00000, 0xd007ff, MWA16_RAM, &spriteram16, &spriteram_size },
-//	{ 0xe00000, 0xe00001, MWA16_NOP },	/* ??? */
-//	{ 0xe00008, 0xe00009, MWA16_NOP },	/* ??? */
-//	{ 0xe00010, 0xe00011, MWA16_NOP },	/* ??? */
+/*	{ 0xe00000, 0xe00001, MWA16_NOP },	 // ??? /*/
+/*	{ 0xe00008, 0xe00009, MWA16_NOP },	 // ??? /*/
+/*	{ 0xe00010, 0xe00011, MWA16_NOP },	 // ??? /*/
 	{ 0xe40000, 0xe40007, bshark_stick_w },
 MEMORY_END
 
@@ -1618,7 +1618,7 @@ static MEMORY_WRITE16_START( aquajack_writemem )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x100000, 0x103fff, MWA16_RAM },
 	{ 0x104000, 0x107fff, sharedram_w, &taitoz_sharedram, &taitoz_sharedram_size },
-	{ 0x200000, 0x200001, cpua_ctrl_w },	// not needed, but it's probably like the others
+	{ 0x200000, 0x200001, cpua_ctrl_w },	/* not needed, but it's probably like the others*/
 	{ 0x300000, 0x300007, TC0110PCR_step1_word_w },	/* palette */
 	{ 0x800000, 0x801fff, TC0150ROD_word_w },
 	{ 0xa00000, 0xa0ffff, TC0100SCN_word_0_w },	/* tilemaps */
@@ -1632,8 +1632,8 @@ static MEMORY_READ16_START( aquajack_cpub_readmem )
 	{ 0x104000, 0x107fff, sharedram_r },
 	{ 0x200000, 0x20000f, TC0220IOC_halfword_r },
 	{ 0x300000, 0x300003, taitoz_sound_r },
-	{ 0x800800, 0x80083f, aquajack_unknown_r }, // Read regularly after write to 800800...
-//	{ 0x900000, 0x900007, taitoz_unknown_r },
+	{ 0x800800, 0x80083f, aquajack_unknown_r }, /* Read regularly after write to 800800...*/
+/*	{ 0x900000, 0x900007, taitoz_unknown_r },*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( aquajack_cpub_writemem )
@@ -1642,8 +1642,8 @@ static MEMORY_WRITE16_START( aquajack_cpub_writemem )
 	{ 0x104000, 0x107fff, sharedram_w, &taitoz_sharedram },
 	{ 0x200000, 0x20000f, TC0220IOC_halfword_w },
 	{ 0x300000, 0x300003, taitoz_sound_w },
-//	{ 0x800800, 0x800801, taitoz_unknown_w },
-//	{ 0x900000, 0x900007, taitoz_unknown_w },
+/*	{ 0x800800, 0x800801, taitoz_unknown_w },*/
+/*	{ 0x900000, 0x900007, taitoz_unknown_w },*/
 MEMORY_END
 
 
@@ -1689,10 +1689,10 @@ static MEMORY_WRITE16_START( spacegun_cpub_writemem )
 	{ 0xc00002, 0xc00003, YM2610_data_port_0_A_lsb_w },
 	{ 0xc00004, 0xc00005, YM2610_control_port_0_B_lsb_w },
 	{ 0xc00006, 0xc00007, YM2610_data_port_0_B_lsb_w },
-	{ 0xc0000c, 0xc0000d, MWA16_NOP },	// interrupt controller?
+	{ 0xc0000c, 0xc0000d, MWA16_NOP },	/* interrupt controller?*/
 	{ 0xc0000e, 0xc0000f, MWA16_NOP },
-//	{ 0xc20000, 0xc20003, YM2610_???? },	/* Pan (acc. to Raine) */
-//	{ 0xe00000, 0xe00001, MWA16_NOP },	/* ??? */
+/*	{ 0xc20000, 0xc20003, YM2610_???? },	 // Pan (acc. to Raine) /*/
+/*	{ 0xe00000, 0xe00001, MWA16_NOP },	 // ??? /*/
 	{ 0xf00000, 0xf00007, spacegun_lightgun_w },
 MEMORY_END
 
@@ -1708,7 +1708,7 @@ static MEMORY_READ16_START( dblaxle_readmem )
 	{ 0xa00000, 0xa0ffff, TC0480SCP_word_r },	  /* tilemaps */
 	{ 0xa30000, 0xa3002f, TC0480SCP_ctrl_word_r },
 	{ 0xc00000, 0xc03fff, MRA16_RAM },	/* spriteram */
-	{ 0xc08000, 0xc08001, sci_spriteframe_r },	// debugging
+	{ 0xc08000, 0xc08001, sci_spriteframe_r },	/* debugging*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( dblaxle_writemem )
@@ -1825,7 +1825,7 @@ INPUT_PORTS_START( contcirc )
 	PORT_START /* DSW A */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ) )
-	PORT_DIPSETTING(    0x00, "Cockpit" )	// analogue accelerator pedal
+	PORT_DIPSETTING(    0x00, "Cockpit" )	/* analogue accelerator pedal*/
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1846,7 +1846,7 @@ INPUT_PORTS_START( contcirc )
 	PORT_DIPSETTING(    0x0c, "Normal" )
 	PORT_DIPSETTING(    0x04, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_DIPNAME( 0x10, 0x10, "Steering wheel" )	//not sure what effect this has
+	PORT_DIPNAME( 0x10, 0x10, "Steering wheel" )	/*not sure what effect this has*/
 	PORT_DIPSETTING(    0x10, "Free" )
 	PORT_DIPSETTING(    0x00, "Locked" )
 	PORT_DIPNAME( 0x20, 0x00, "Enable 3d alternate frames" )
@@ -1896,7 +1896,7 @@ INPUT_PORTS_START( contcrcu )
 	PORT_START /* DSW A */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Upright ) )
-	PORT_DIPSETTING(    0x00, "Cockpit" )	// analogue accelerator pedal
+	PORT_DIPSETTING(    0x00, "Cockpit" )	/* analogue accelerator pedal*/
 	PORT_DIPNAME( 0x02, 0x02, "Discounted continues" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
@@ -1904,7 +1904,7 @@ INPUT_PORTS_START( contcrcu )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	TAITO_Z_COINAGE_JAPAN_8		// confirmed
+	TAITO_Z_COINAGE_JAPAN_8		/* confirmed*/
 
 	PORT_START /* DSW B */
 	PORT_DIPNAME( 0x03, 0x03, "Difficulty 1 (time/speed)" )
@@ -1917,16 +1917,16 @@ INPUT_PORTS_START( contcrcu )
 	PORT_DIPSETTING(    0x0c, "Normal" )
 	PORT_DIPSETTING(    0x04, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_DIPNAME( 0x10, 0x10, "Steering wheel" )	//not sure what effect this has
+	PORT_DIPNAME( 0x10, 0x10, "Steering wheel" )	/*not sure what effect this has*/
 	PORT_DIPSETTING(    0x10, "Free" )
 	PORT_DIPSETTING(    0x00, "Locked" )
 	PORT_DIPNAME( 0x20, 0x00, "Enable 3d alternate frames" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )	//acc. to manual
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )	/*acc. to manual*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )	//acc. to manual
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )	/*acc. to manual*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -1963,7 +1963,7 @@ INPUT_PORTS_START( contcrcu )
 	PORT_DIPSETTING(    0x00, "Analogue" )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( chasehq )	// IN3-6 perhaps used with cockpit setup? //
+INPUT_PORTS_START( chasehq )	/* IN3-6 perhaps used with cockpit setup? */ /**/
 	PORT_START /* DSW A */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x03, "Upright / Steering Lock" )
@@ -2069,7 +2069,7 @@ INPUT_PORTS_START( chasehq )	// IN3-6 perhaps used with cockpit setup? //
 	PORT_DIPSETTING(    0x00, "Analogue" )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( chasehqj )	// IN3-6 perhaps used with cockpit setup? //
+INPUT_PORTS_START( chasehqj )	/* IN3-6 perhaps used with cockpit setup? */ /**/
 	PORT_START /* DSW A */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x03, "Upright / Steering Lock" )
@@ -2185,8 +2185,8 @@ INPUT_PORTS_START( enforce )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )	// Says SHIFT HI in test mode !?
-	PORT_DIPSETTING(    0x08, DEF_STR( On ) )		// Says SHIFT LO in test mode !?
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )	/* Says SHIFT HI in test mode !?*/
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )		/* Says SHIFT LO in test mode !?*/
 	TAITO_Z_COINAGE_JAPAN_8
 
 	PORT_START /* DSW B */
@@ -2233,7 +2233,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( bshark )
 	PORT_START /* DSW A */
-	PORT_DIPNAME( 0x01, 0x01, "Mirror screen" )	// manual says first two must be off
+	PORT_DIPNAME( 0x01, 0x01, "Mirror screen" )	/* manual says first two must be off*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
@@ -2252,7 +2252,7 @@ INPUT_PORTS_START( bshark )
 	PORT_DIPSETTING(    0x08, "Medium" )
 	PORT_DIPSETTING(    0x04, "Fast" )
 	PORT_DIPSETTING(    0x00, "Fastest" )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )	// manual says all these must be off
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )	/* manual says all these must be off*/
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
@@ -2427,7 +2427,7 @@ INPUT_PORTS_START( bsharkjjs )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	/* Same as Fire, */
 INPUT_PORTS_END
 
-INPUT_PORTS_START( sci )	// dsws may be slightly wrong
+INPUT_PORTS_START( sci )	/* dsws may be slightly wrong*/
 	PORT_START /* DSW A */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, "Cockpit" )
@@ -2494,7 +2494,7 @@ INPUT_PORTS_START( sci )	// dsws may be slightly wrong
 	PORT_DIPSETTING(    0x00, "Analogue" )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( sciu )	// dsws may be slightly wrong
+INPUT_PORTS_START( sciu )	/* dsws may be slightly wrong*/
 	PORT_START /* DSW A */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x01, "Cockpit" )
@@ -2771,7 +2771,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( spacegun )
 	PORT_START /* DSW A */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	// Manual says Always Off
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )	/* Manual says Always Off*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, "Always have gunsight power up" )
@@ -2785,7 +2785,7 @@ INPUT_PORTS_START( spacegun )
 
 	PORT_START /* DSW B */
 	TAITO_Z_DIFFICULTY_8
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )	// Manual lists dips 3 through 6 and 8 as Always off
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )	/* Manual lists dips 3 through 6 and 8 as Always off*/
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
@@ -2855,7 +2855,7 @@ INPUT_PORTS_START( dblaxle )
 
 	PORT_START /* DSW B */
 	TAITO_Z_DIFFICULTY_8
-	PORT_DIPNAME( 0x04, 0x00, "Multi-machine hookup ?" )	// doesn't boot if on
+	PORT_DIPNAME( 0x04, 0x00, "Multi-machine hookup ?" )	/* doesn't boot if on*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, "Player Truck" )
@@ -2864,7 +2864,7 @@ INPUT_PORTS_START( dblaxle )
 	PORT_DIPNAME( 0x10, 0x10, "Back button" )
 	PORT_DIPSETTING(    0x10, "Normal" )
 	PORT_DIPSETTING(    0x00, "Inverted" )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	// causes "Root CPU Error" on "Icy Road" (Tourniquet)
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	/* causes "Root CPU Error" on "Icy Road" (Tourniquet)*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
@@ -2923,7 +2923,7 @@ INPUT_PORTS_START( pwheelsj )
 
 	PORT_START /* DSW B */
 	TAITO_Z_DIFFICULTY_8
-	PORT_DIPNAME( 0x04, 0x00, "Multi-machine hookup ?" )	// doesn't boot if on
+	PORT_DIPNAME( 0x04, 0x00, "Multi-machine hookup ?" )	/* doesn't boot if on*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, "Player Truck" )
@@ -2932,7 +2932,7 @@ INPUT_PORTS_START( pwheelsj )
 	PORT_DIPNAME( 0x10, 0x10, "Back button" )
 	PORT_DIPSETTING(    0x10, "Normal" )
 	PORT_DIPSETTING(    0x00, "Inverted" )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	// causes "Root CPU Error" on "Icy Road" (Tourniquet)
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )	/* causes "Root CPU Error" on "Icy Road" (Tourniquet)*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
@@ -3060,7 +3060,7 @@ Interface B is for games which lack a Z80 (Spacegun, Bshark).
 **************************************************************/
 
 /* handler called by the YM2610 emulator when the internal timers cause an IRQ */
-static void irqhandler(int irq)	// assumes Z80 sandwiched between 68Ks
+static void irqhandler(int irq)	/* assumes Z80 sandwiched between 68Ks*/
 {
 	cpu_set_irq_line(1,0,irq ? ASSERT_LINE : CLEAR_LINE);
 }
@@ -3068,8 +3068,8 @@ static void irqhandler(int irq)	// assumes Z80 sandwiched between 68Ks
 /* handler called by the YM2610 emulator when the internal timers cause an IRQ */
 static void irqhandlerb(int irq)
 {
-	// DG: this is probably specific to Z80 and wrong?
-//	cpu_set_irq_line(1,0,irq ? ASSERT_LINE : CLEAR_LINE);
+	/* DG: this is probably specific to Z80 and wrong?*/
+/*	cpu_set_irq_line(1,0,irq ? ASSERT_LINE : CLEAR_LINE);*/
 }
 
 static struct YM2610interface ym2610_interface =
@@ -3632,7 +3632,7 @@ ROM_START( chasehq )
 	ROM_LOAD( "b52-01.7",    0x00000, 0x00100, CRC(89719d17) SHA1(50181b8172b0fc08b149db18caf10659be9c517f) )	/* unused roms */
 	ROM_LOAD( "b52-03.135",  0x00000, 0x00400, CRC(a3f8490d) SHA1(349b8c9ba914603f72f800a3fc8e8277d756deb1) )
 	ROM_LOAD( "b52-06.24",   0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )
-	ROM_LOAD( "b52-18.93",   0x00000, 0x00100, CRC(60bdaf1a) SHA1(0cb9c6b821de9ccc1f38336608dd7ead46cb8d24) )	// identical to b52-18b
+	ROM_LOAD( "b52-18.93",   0x00000, 0x00100, CRC(60bdaf1a) SHA1(0cb9c6b821de9ccc1f38336608dd7ead46cb8d24) )	/* identical to b52-18b*/
 	ROM_LOAD( "b52-18a",     0x00000, 0x00100, CRC(6271be0d) SHA1(84282af98fc0de10e88282f7187cd865133ed6ce) )
 	ROM_LOAD( "b52-49.68",   0x00000, 0x02000, CRC(60dd2ed1) SHA1(8673b6b3355975fb91cd1491e0ac7c0f590e3824) )
 	ROM_LOAD( "b52-50.66",   0x00000, 0x10000, CRC(c189781c) SHA1(af3904ce51f715970965d110313491dbacf188b8) )
@@ -3640,8 +3640,8 @@ ROM_START( chasehq )
 	ROM_LOAD( "b52-126.136", 0x00000, 0x00400, CRC(fa2f840e) SHA1(dd61ee6833bd43bbf619d36ec46f2bfa00880f40) )
 	ROM_LOAD( "b52-127.156", 0x00000, 0x00400, CRC(77682a4f) SHA1(da2b3143f1c8688a22d8ec47bbb73b2f2e578480) )
 
-	// Various pals are listed in Malcor's notes: b52-118 thru 125,
-	// b52-16 thru 21, b52-25 thru 27
+	/* Various pals are listed in Malcor's notes: b52-118 thru 125,*/
+	/* b52-16 thru 21, b52-25 thru 27*/
 ROM_END
 
 ROM_START( chasehqj )
@@ -3692,7 +3692,7 @@ ROM_START( chasehqj )
 	ROM_LOAD( "b52-01.7",    0x00000, 0x00100, CRC(89719d17) SHA1(50181b8172b0fc08b149db18caf10659be9c517f) )	/* unused roms */
 	ROM_LOAD( "b52-03.135",  0x00000, 0x00400, CRC(a3f8490d) SHA1(349b8c9ba914603f72f800a3fc8e8277d756deb1) )
 	ROM_LOAD( "b52-06.24",   0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )
-	ROM_LOAD( "b52-18.93",   0x00000, 0x00100, CRC(60bdaf1a) SHA1(0cb9c6b821de9ccc1f38336608dd7ead46cb8d24) )	// identical to b52-18b
+	ROM_LOAD( "b52-18.93",   0x00000, 0x00100, CRC(60bdaf1a) SHA1(0cb9c6b821de9ccc1f38336608dd7ead46cb8d24) )	/* identical to b52-18b*/
 	ROM_LOAD( "b52-18a",     0x00000, 0x00100, CRC(6271be0d) SHA1(84282af98fc0de10e88282f7187cd865133ed6ce) )
 	ROM_LOAD( "b52-49.68",   0x00000, 0x02000, CRC(60dd2ed1) SHA1(8673b6b3355975fb91cd1491e0ac7c0f590e3824) )
 	ROM_LOAD( "b52-50.66",   0x00000, 0x10000, CRC(c189781c) SHA1(af3904ce51f715970965d110313491dbacf188b8) )
@@ -3742,7 +3742,7 @@ ROM_START( enforce )
 	ROM_LOAD( "b58-23.52",   0x00000, 0x00100, CRC(7b7d8ff4) SHA1(18842ed8160739cd2e2ccc2db605153dbed6cc0a) )
 	ROM_LOAD( "b58-24.51",   0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )
 	ROM_LOAD( "b58-25.75",   0x00000, 0x00100, CRC(de547342) SHA1(3b2b116d4016ddbf46c41c625c7fcfd76129baa7) )
-// Add pals...
+/* Add pals...*/
 ROM_END
 
 ROM_START( bshark )
@@ -3865,8 +3865,8 @@ ROM_START( bsharkjjs )
 
 	ROM_REGION( 0x10000, REGION_USER2, 0 )	/* unused ROMs */
 	ROM_LOAD( "c34_18.22", 0x00000, 0x10000, CRC(7245a6f6) SHA1(5bdde4e3bcde8c59dc84478c3cc079d7ef8ee9c5) )
-	ROM_LOAD( "c34_19.72", 0x00000, 0x00100, CRC(2ee9c404) SHA1(3a2ddaaaf7abe9f47f7e062b002fd3a61c80f60b) )	// road/sprite priority and palette select
-	ROM_LOAD( "c34_20.89", 0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )	// road A/B internal priority
+	ROM_LOAD( "c34_19.72", 0x00000, 0x00100, CRC(2ee9c404) SHA1(3a2ddaaaf7abe9f47f7e062b002fd3a61c80f60b) )	/* road/sprite priority and palette select*/
+	ROM_LOAD( "c34_20.89", 0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )	/* road A/B internal priority*/
 	ROM_LOAD( "c34_21.7",  0x00000, 0x00400, CRC(10728853) SHA1(45d7cc8e06fbe01295cc2194bca9586f0ef8b12b) )
 	ROM_LOAD( "c34_22.8",  0x00000, 0x00400, CRC(643e8bfc) SHA1(a6e6086fb8fbd102e01ec72fe60a4232f5909565) )
 ROM_END
@@ -3912,11 +3912,11 @@ ROM_START( sci )
 	ROM_REGION( 0x10000, REGION_USER2, 0 )
 	ROM_LOAD( "c09-16.rom", 0x00000, 0x10000, CRC(7245a6f6) SHA1(5bdde4e3bcde8c59dc84478c3cc079d7ef8ee9c5) )	/* unused roms */
 	ROM_LOAD( "c09-23.rom", 0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )
-//	ROM_LOAD( "c09-21.rom", 0x00000, 0x00???, NO_DUMP )	/* pals (Guru dump) */
-//	ROM_LOAD( "c09-22.rom", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c09-24.rom", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c09-25.rom", 0x00000, 0x00???, NO_DUMP )
-//	ROM_LOAD( "c09-26.rom", 0x00000, 0x00???, NO_DUMP )
+/*	ROM_LOAD( "c09-21.rom", 0x00000, 0x00???, NO_DUMP )	 // pals (Guru dump) /*/
+/*	ROM_LOAD( "c09-22.rom", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c09-24.rom", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c09-25.rom", 0x00000, 0x00???, NO_DUMP )*/
+/*	ROM_LOAD( "c09-26.rom", 0x00000, 0x00???, NO_DUMP )*/
 ROM_END
 
 ROM_START( scia )
@@ -4164,12 +4164,12 @@ ROM_START( spacegun )
 
 /*	(no unused 0x10000 rom like the rest?) */
 	ROM_REGION( 0x10000, REGION_USER2, 0 )
-//	ROM_LOAD( "c57-09.9",  0x00000, 0xada, CRC(306f130b) )	/* pals */
-//	ROM_LOAD( "c57-10.47", 0x00000, 0xcd5, CRC(f11474bd) )
-//	ROM_LOAD( "c57-11.48", 0x00000, 0xada, CRC(b33be19f) )
-//	ROM_LOAD( "c57-12.61", 0x00000, 0xcd5, CRC(f1847096) )
-//	ROM_LOAD( "c57-13.72", 0x00000, 0xada, CRC(795f0a85) )
-//	ROM_LOAD( "c57-14.96", 0x00000, 0xada, CRC(5b3c40b7) )
+/*	ROM_LOAD( "c57-09.9",  0x00000, 0xada, CRC(306f130b) )	 // pals /*/
+/*	ROM_LOAD( "c57-10.47", 0x00000, 0xcd5, CRC(f11474bd) )*/
+/*	ROM_LOAD( "c57-11.48", 0x00000, 0xada, CRC(b33be19f) )*/
+/*	ROM_LOAD( "c57-12.61", 0x00000, 0xcd5, CRC(f1847096) )*/
+/*	ROM_LOAD( "c57-13.72", 0x00000, 0xada, CRC(795f0a85) )*/
+/*	ROM_LOAD( "c57-14.96", 0x00000, 0xada, CRC(5b3c40b7) )*/
 ROM_END
 
 ROM_START( dblaxle )
@@ -4196,8 +4196,8 @@ ROM_START( dblaxle )
 	ROM_LOAD32_BYTE( "c78-07.33", 0x000001, 0x100000, CRC(9da00d5b) SHA1(f6b664c7495b936ce1b99852da45ec92cb37062a) )
 	ROM_LOAD32_BYTE( "c78-06.23", 0x000002, 0x100000, CRC(8309e91b) SHA1(3f27557bc82bf42cc77e3c7e363b51a0b119144d) )
 	ROM_LOAD32_BYTE( "c78-05.31", 0x000003, 0x100000, CRC(90001f68) SHA1(5c08dfe6a2e12e6ca84035815563f38fc2c2c029) )
-//	ROMX_LOAD      ( "c78-05l.1", 0x000003, 0x080000, CRC(f24bf972) , ROM_SKIP(7) )
-//	ROMX_LOAD      ( "c78-05h.2", 0x000007, 0x080000, CRC(c01039b5) , ROM_SKIP(7) )
+/*	ROMX_LOAD      ( "c78-05l.1", 0x000003, 0x080000, CRC(f24bf972) , ROM_SKIP(7) )*/
+/*	ROMX_LOAD      ( "c78-05h.2", 0x000007, 0x080000, CRC(c01039b5) , ROM_SKIP(7) )*/
 
 	ROM_REGION( 0x80000, REGION_GFX3, 0 )	/* don't dispose */
 	ROM_LOAD( "c78-09.12", 0x000000, 0x80000, CRC(0dbde6f5) SHA1(4049271e3738b54e0c56d191889b1aea5664d49f) )	/* ROD, road lines */
@@ -4206,15 +4206,15 @@ ROM_START( dblaxle )
 	ROM_LOAD16_WORD( "c78-04.3", 0x00000, 0x80000, CRC(cc1aa37c) SHA1(cfa2eb338dc81c98c637c2f0b14d2baea8b115f5) )	/* STY spritemap */
 
 	ROM_REGION( 0x180000, REGION_SOUND1, 0 )	/* ADPCM samples */
-	ROM_LOAD( "c78-12.33", 0x000000, 0x80000, CRC(fbb39585) SHA1(4b7cdf9a3fba71155871b3e52d2301e50bf817ca) )	// Half size ??
-	// ??? gap 0x80000-fffff //
+	ROM_LOAD( "c78-12.33", 0x000000, 0x80000, CRC(fbb39585) SHA1(4b7cdf9a3fba71155871b3e52d2301e50bf817ca) )	/* Half size ??*/
+	/* ??? gap 0x80000-fffff */ /**/
 	ROM_LOAD( "c78-13.46", 0x100000, 0x80000, CRC(1b363aa2) SHA1(0aae3988024654e98cc0c784307b1c329c8f0783) )
 
 	ROM_REGION( 0x80000, REGION_SOUND2, 0 )	/* Delta-T samples */
 	ROM_LOAD( "c78-14.31",  0x00000, 0x80000, CRC(9cad4dfb) SHA1(9187ef827a3f1bc9233d0e45e72c72c0956c5912) )
 
 	ROM_REGION( 0x10000, REGION_USER2, 0 )	/* unused roms */
-	ROM_LOAD( "c78-25.15",  0x00000, 0x10000, CRC(7245a6f6) SHA1(5bdde4e3bcde8c59dc84478c3cc079d7ef8ee9c5) )	// 98% compression
+	ROM_LOAD( "c78-25.15",  0x00000, 0x10000, CRC(7245a6f6) SHA1(5bdde4e3bcde8c59dc84478c3cc079d7ef8ee9c5) )	/* 98% compression*/
 	ROM_LOAD( "c78-15.22",  0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )
 	ROM_LOAD( "c78-21.74",  0x00000, 0x00100, CRC(2926bf27) SHA1(bfbbe6c71bb29a05959f3de0d940816139f9ebfe) )
 	ROM_LOAD( "c84-10.16",  0x00000, 0x00400, CRC(643e8bfc) SHA1(a6e6086fb8fbd102e01ec72fe60a4232f5909565) )
@@ -4260,7 +4260,7 @@ ROM_START( pwheelsj )
 	ROM_LOAD( "c78-03.31",  0x00000, 0x80000, CRC(9b926a2f) SHA1(cc2d612441a5cc587e097bb8380b56753b9a4f7c) )
 
 	ROM_REGION( 0x10000, REGION_USER2, 0 )	/* unused roms */
-	ROM_LOAD( "c78-25.15",  0x00000, 0x10000, CRC(7245a6f6) SHA1(5bdde4e3bcde8c59dc84478c3cc079d7ef8ee9c5) )	// 98% compression
+	ROM_LOAD( "c78-25.15",  0x00000, 0x10000, CRC(7245a6f6) SHA1(5bdde4e3bcde8c59dc84478c3cc079d7ef8ee9c5) )	/* 98% compression*/
 	ROM_LOAD( "c78-15.22",  0x00000, 0x00100, CRC(fbf81f30) SHA1(c868452c334792345dcced075f6df69cff9e31ca) )
 	ROM_LOAD( "c78-21.74",  0x00000, 0x00100, CRC(2926bf27) SHA1(bfbbe6c71bb29a05959f3de0d940816139f9ebfe) )
 	ROM_LOAD( "c84-10.16",  0x00000, 0x00400, CRC(643e8bfc) SHA1(a6e6086fb8fbd102e01ec72fe60a4232f5909565) )
@@ -4270,7 +4270,7 @@ ROM_END
 
 static DRIVER_INIT( taitoz )
 {
-//	taitosnd_setz80_soundcpu( 2 );
+/*	taitosnd_setz80_soundcpu( 2 );*/
 
 	cpua_ctrl = 0xff;
 	state_save_register_UINT16("main1", 0, "control", &cpua_ctrl, 1);

@@ -72,7 +72,7 @@ static MEMORY_READ16_START( readmem )
 	{ 0x098000, 0x098001, MRA16_RAM }, /* watchdog? */
 	{ 0x09ce00, 0x09ffff, MRA16_RAM },
 	{ 0x0c0000, 0x0cffff, MRA16_RAM },
-	{ 0x0f8000, 0x0f87ff, MRA16_RAM }, // never actually used
+	{ 0x0f8000, 0x0f87ff, MRA16_RAM }, /* never actually used*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem )
@@ -141,11 +141,11 @@ INPUT_PORTS_START( zerozone )
 	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x08, "In Game Default" )		// 130, 162 or 255 "lines"
-	PORT_DIPSETTING(    0x00, "Always Hard" )			// 255 "lines"
+	PORT_DIPSETTING(    0x08, "In Game Default" )		/* 130, 162 or 255 "lines"*/
+	PORT_DIPSETTING(    0x00, "Always Hard" )			/* 255 "lines"*/
 	PORT_DIPNAME( 0x10, 0x10, "Speed" )
-	PORT_DIPSETTING(    0x10, "Normal" )			// Drop every 20 frames
-	PORT_DIPSETTING(    0x00, "Fast" )				// Drop every 18 frames
+	PORT_DIPSETTING(    0x10, "Normal" )			/* Drop every 20 frames*/
+	PORT_DIPSETTING(    0x00, "Fast" )				/* Drop every 18 frames*/
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )

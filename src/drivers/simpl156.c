@@ -75,7 +75,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 	int offs;
 
 
-	for (offs = (0x1400/4)-4;offs >= 0;offs -= 4) // 0x1400 for charlien
+	for (offs = (0x1400/4)-4;offs >= 0;offs -= 4) /* 0x1400 for charlien*/
 	{
 		int x,y,sprite,colour,multi,fx,fy,inc,flash,mult, pri;
 
@@ -88,7 +88,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 		x = spriteram32[offs+2]&0xffff;
 		colour = (x >>9) & 0x1f;
 
-		pri = (x&0xc000); // 2 bits or 1?
+		pri = (x&0xc000); /* 2 bits or 1?*/
 
 		switch (pri&0xc000) {
 		case 0x0000: pri=0; break;
@@ -119,7 +119,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 			inc = 1;
 		}
 
-		if (1) // flip screen iq_132
+		if (1) /* flip screen iq_132*/
 		{
 			y=240-y;
 			x=304-x;
@@ -189,8 +189,8 @@ INPUT_PORTS_START( simpl156 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x0008, IP_ACTIVE_LOW )
-	PORT_BIT( 0x00f0, IP_ACTIVE_HIGH, IPT_VBLANK ) // all bits? check..
-	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_SPECIAL ) // eeprom?..
+	PORT_BIT( 0x00f0, IP_ACTIVE_HIGH, IPT_VBLANK ) /* all bits? check..*/
+	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_SPECIAL ) /* eeprom?..*/
 
 	PORT_START	/* 16bit */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1 | IPF_8WAY )
@@ -214,7 +214,7 @@ INPUT_PORTS_END
 
 static READ32_HANDLER( simpl156_inputs_read )
 {
-	// use a fake vblank switch otherwise the games will crap out...
+	/* use a fake vblank switch otherwise the games will crap out...*/
 
 	UINT32 returndata;
 	static UINT32 vblank_fake;
@@ -378,7 +378,7 @@ READ32_HANDLER( simpl156_6295_1_r )
 	return OKIM6295_status_1_r(0);
 }
 
-// write?
+/* write?*/
 WRITE32_HANDLER( simpl156_6295_0_w )
 {
 	if( ACCESSING_LSB32 ) {
@@ -395,10 +395,10 @@ WRITE32_HANDLER( simpl156_6295_1_w )
 
 static MEMORY_READ32_START( joemacr_readmem )
     { 0x000000, 0x07ffff, MRA32_ROM },
-	{ 0x100000, 0x107fff, simpl156_mainram_r }, // main ram
+	{ 0x100000, 0x107fff, simpl156_mainram_r }, /* main ram*/
 	{ 0x110000, 0x111fff, simpl156_spriteram_r },
 	{ 0x120000, 0x120fff, simpl156_palette_r },
-	{ 0x130000, 0x130003, simpl156_system_r }, // eeprom
+	{ 0x130000, 0x130003, simpl156_system_r }, /* eeprom*/
 	{ 0x140000, 0x14001f, simpl156_pf12_control_r },
 	{ 0x150000, 0x151fff, simpl156_pf1_data_r },
 	{ 0x152000, 0x153fff, simpl156_pf1_data_r },
@@ -408,12 +408,12 @@ static MEMORY_READ32_START( joemacr_readmem )
 	{ 0x180000, 0x180003, simpl156_6295_0_r },
 	{ 0x1c0000, 0x1c0003, simpl156_6295_1_r },
 	{ 0x200000, 0x200003, simpl156_inputs_read },
-	{ 0x201000, 0x201fff, MRA32_RAM },  // work ram (32-bit)
+	{ 0x201000, 0x201fff, MRA32_RAM },  /* work ram (32-bit)*/
 MEMORY_END
 
 static MEMORY_WRITE32_START( joemacr_writemem )
     { 0x000000, 0x07ffff, MWA32_ROM },
-	{ 0x100000, 0x107fff, simpl156_mainram_w, &simpl156_mainram },// main ram
+	{ 0x100000, 0x107fff, simpl156_mainram_w, &simpl156_mainram },/* main ram*/
 	{ 0x110000, 0x111fff, simpl156_spriteram_w, &spriteram32, &spriteram_size },
 	{ 0x120000, 0x120fff, simpl156_palette_w },
 	{ 0x130000, 0x130003, simpl156_eeprom_w },
@@ -423,17 +423,17 @@ static MEMORY_WRITE32_START( joemacr_writemem )
 	{ 0x154000, 0x155fff, simpl156_pf2_data_w },
 	{ 0x160000, 0x161fff, simpl156_pf1_rowscroll_w },
 	{ 0x164000, 0x164fff, simpl156_pf2_rowscroll_w },
-	{ 0x170000, 0x170003, MWA32_NOP }, // ?
+	{ 0x170000, 0x170003, MWA32_NOP }, /* ?*/
 	{ 0x180000, 0x180003, simpl156_6295_0_w },
 	{ 0x1c0000, 0x1c0003, simpl156_6295_1_w },
-	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, // work ram (32-bit)
+	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, /* work ram (32-bit)*/
 MEMORY_END
 
 static MEMORY_READ32_START( mitchell156_readmem )
     { 0x000000, 0x07ffff, MRA32_ROM },
 	{ 0x100000, 0x100003, simpl156_6295_0_r },
 	{ 0x140000, 0x140003, simpl156_6295_1_r },
-	{ 0x180000, 0x187fff, simpl156_mainram_r }, // main ram
+	{ 0x180000, 0x187fff, simpl156_mainram_r }, /* main ram*/
 	{ 0x190000, 0x191fff, simpl156_spriteram_r },
 	{ 0x1a0000, 0x1a0fff, simpl156_palette_r },
 	{ 0x1b0000, 0x1b0003, simpl156_system_r },
@@ -444,14 +444,14 @@ static MEMORY_READ32_START( mitchell156_readmem )
 	{ 0x1e0000, 0x1e1fff, simpl156_pf1_rowscroll_r },
 	{ 0x1e4000, 0x1e5fff, simpl156_pf2_rowscroll_r },
 	{ 0x200000, 0x200003, simpl156_inputs_read },
-	{ 0x201000, 0x201fff, MRA32_RAM }, // work ram (32-bit)
+	{ 0x201000, 0x201fff, MRA32_RAM }, /* work ram (32-bit)*/
 MEMORY_END
 
 static MEMORY_WRITE32_START( mitchell156_writemem )
     { 0x000000, 0x07ffff, MWA32_ROM },
 	{ 0x100000, 0x100003, simpl156_6295_0_w },
 	{ 0x140000, 0x140003, simpl156_6295_1_w },
-	{ 0x180000, 0x187fff, simpl156_mainram_w, &simpl156_mainram }, // main ram
+	{ 0x180000, 0x187fff, simpl156_mainram_w, &simpl156_mainram }, /* main ram*/
 	{ 0x190000, 0x191fff, simpl156_spriteram_w, &spriteram32, &spriteram_size },
 	{ 0x1a0000, 0x1a0fff, simpl156_palette_w },
 	{ 0x1b0000, 0x1b0003, simpl156_eeprom_w },
@@ -461,17 +461,17 @@ static MEMORY_WRITE32_START( mitchell156_writemem )
 	{ 0x1d4000, 0x1d5fff, simpl156_pf2_data_w },
 	{ 0x1e0000, 0x1e1fff, simpl156_pf1_rowscroll_w },
 	{ 0x1e4000, 0x1e5fff, simpl156_pf2_rowscroll_w },
-	{ 0x1f0000, 0x1f0003, MWA32_NOP }, // ?
-	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, // work ram (32-bit)
+	{ 0x1f0000, 0x1f0003, MWA32_NOP }, /* ?*/
+	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, /* work ram (32-bit)*/
 MEMORY_END
 
 
 static MEMORY_READ32_START( chainrec_readmem )
     { 0x000000, 0x07ffff, MRA32_ROM },
 	{ 0x200000, 0x200003, simpl156_inputs_read },
-	{ 0x201000, 0x201fff, MRA32_RAM },  // work ram (32-bit)
+	{ 0x201000, 0x201fff, MRA32_RAM },  /* work ram (32-bit)*/
 	{ 0x3c0000, 0x3c0003, simpl156_6295_1_r },
-	{ 0x400000, 0x407fff, simpl156_mainram_r }, // main ram
+	{ 0x400000, 0x407fff, simpl156_mainram_r }, /* main ram*/
 	{ 0x410000, 0x411fff, simpl156_spriteram_r },
 	{ 0x420000, 0x420fff, simpl156_palette_r },
 	{ 0x430000, 0x430003, simpl156_system_r },
@@ -486,9 +486,9 @@ MEMORY_END
 
 static MEMORY_WRITE32_START( chainrec_writemem )
     { 0x000000, 0x07ffff, MWA32_ROM },
-	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram },// work ram (32-bit)
+	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram },/* work ram (32-bit)*/
 	{ 0x3c0000, 0x3c0003, simpl156_6295_1_w },
-	{ 0x400000, 0x407fff, simpl156_mainram_w, &simpl156_mainram }, // main ram
+	{ 0x400000, 0x407fff, simpl156_mainram_w, &simpl156_mainram }, /* main ram*/
 	{ 0x410000, 0x411fff, simpl156_spriteram_w, &spriteram32, &spriteram_size },
 	{ 0x420000, 0x420fff, simpl156_palette_w },
 	{ 0x430000, 0x430003, simpl156_eeprom_w },
@@ -498,7 +498,7 @@ static MEMORY_WRITE32_START( chainrec_writemem )
 	{ 0x454000, 0x455fff, simpl156_pf2_data_w },
 	{ 0x460000, 0x461fff, simpl156_pf1_rowscroll_w },
 	{ 0x464000, 0x465fff, simpl156_pf2_rowscroll_w },
-	{ 0x470000, 0x470003, MWA32_NOP }, // ?
+	{ 0x470000, 0x470003, MWA32_NOP }, /* ?*/
 	{ 0x480000, 0x480003, simpl156_6295_0_w },
 MEMORY_END
 
@@ -506,9 +506,9 @@ MEMORY_END
 static MEMORY_READ32_START( magdrop_readmem )
     { 0x000000, 0x07ffff, MRA32_ROM },
 	{ 0x200000, 0x200003, simpl156_inputs_read },
-	{ 0x201000, 0x201fff, MRA32_RAM },  // work ram (32-bit)
+	{ 0x201000, 0x201fff, MRA32_RAM },  /* work ram (32-bit)*/
 	{ 0x340000, 0x340003, simpl156_6295_1_r },
-	{ 0x380000, 0x387fff, simpl156_mainram_r }, // main ram
+	{ 0x380000, 0x387fff, simpl156_mainram_r }, /* main ram*/
 	{ 0x390000, 0x391fff, simpl156_spriteram_r },
 	{ 0x3a0000, 0x3a0fff, simpl156_palette_r },
 	{ 0x3b0000, 0x3b0003, simpl156_system_r },
@@ -523,9 +523,9 @@ MEMORY_END
 
 static MEMORY_WRITE32_START( magdrop_writemem )
     { 0x000000, 0x07ffff, MWA32_ROM },
-	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, // work ram (32-bit)
+	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, /* work ram (32-bit)*/
 	{ 0x340000, 0x340003, simpl156_6295_1_w },
-	{ 0x380000, 0x387fff, simpl156_mainram_w, &simpl156_mainram },// main ram
+	{ 0x380000, 0x387fff, simpl156_mainram_w, &simpl156_mainram },/* main ram*/
 	{ 0x390000, 0x391fff, simpl156_spriteram_w, &spriteram32, &spriteram_size },
 	{ 0x3a0000, 0x3a0fff, simpl156_palette_w },
 	{ 0x3b0000, 0x3b0003, simpl156_eeprom_w },
@@ -535,7 +535,7 @@ static MEMORY_WRITE32_START( magdrop_writemem )
 	{ 0x3d4000, 0x3d5fff, simpl156_pf2_data_w },
 	{ 0x3e0000, 0x3e1fff, simpl156_pf1_rowscroll_w },
 	{ 0x3e4000, 0x3e5fff, simpl156_pf2_rowscroll_w },
-	{ 0x3f0000, 0x3f0003, MWA32_NOP }, // ?
+	{ 0x3f0000, 0x3f0003, MWA32_NOP }, /* ?*/
 	{ 0x400000, 0x400003, simpl156_6295_0_w },
 MEMORY_END
 
@@ -543,9 +543,9 @@ MEMORY_END
 static MEMORY_READ32_START( magdropp_readmem )
     { 0x000000, 0x07ffff, MRA32_ROM },
 	{ 0x200000, 0x200003, simpl156_inputs_read },
-	{ 0x201000, 0x201fff, MRA32_RAM }, // work ram (32-bit)
+	{ 0x201000, 0x201fff, MRA32_RAM }, /* work ram (32-bit)*/
 	{ 0x4c0000, 0x4c0003, simpl156_6295_1_r },
-	{ 0x680000, 0x687fff, simpl156_mainram_r }, // main ram
+	{ 0x680000, 0x687fff, simpl156_mainram_r }, /* main ram*/
 	{ 0x690000, 0x691fff, simpl156_spriteram_r },
 	{ 0x6a0000, 0x6a0fff, simpl156_palette_r },
 	{ 0x6b0000, 0x6b0003, simpl156_system_r },
@@ -560,9 +560,9 @@ MEMORY_END
 
 static MEMORY_WRITE32_START( magdropp_writemem )
     { 0x000000, 0x07ffff, MWA32_ROM },
-	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, // work ram (32-bit)
+	{ 0x201000, 0x201fff, MWA32_RAM, &simpl156_systemram }, /* work ram (32-bit)*/
 	{ 0x4c0000, 0x4c0003, simpl156_6295_1_w },
-	{ 0x680000, 0x687fff, simpl156_mainram_w, &simpl156_mainram }, // main ram
+	{ 0x680000, 0x687fff, simpl156_mainram_w, &simpl156_mainram }, /* main ram*/
 	{ 0x690000, 0x691fff, simpl156_spriteram_w, &spriteram32, &spriteram_size },
 	{ 0x6a0000, 0x6a0fff, simpl156_palette_w },
 	{ 0x6b0000, 0x6b0003, simpl156_eeprom_w },
@@ -572,7 +572,7 @@ static MEMORY_WRITE32_START( magdropp_writemem )
 	{ 0x6d4000, 0x6d5fff, simpl156_pf2_data_w },
 	{ 0x6e0000, 0x6e1fff, simpl156_pf1_rowscroll_w },
 	{ 0x6e4000, 0x6e5fff, simpl156_pf2_rowscroll_w },
-	{ 0x6f0000, 0x6f0003, MWA32_NOP }, // ?
+	{ 0x6f0000, 0x6f0003, MWA32_NOP }, /* ?*/
 	{ 0x780000, 0x780003, simpl156_6295_0_w },
 MEMORY_END
 
@@ -625,14 +625,14 @@ static NVRAM_HANDLER( simpl156 )
 		EEPROM_save(file);
 	else
 	{
-		EEPROM_init(&eeprom_interface_93C46);// 93c45
+		EEPROM_init(&eeprom_interface_93C46);/* 93c45*/
 
 		if (file) EEPROM_load(file);
 		else
 		{
 			if (simpl156_default_eeprom)	{ /* Set the EEPROM to Factory Defaults */
 
-				data8_t eeprom_data[0x100]; // lazy
+				data8_t eeprom_data[0x100]; /* lazy*/
 				memcpy (eeprom_data, simpl156_default_eeprom, 0x80);
 
 				EEPROM_set_data(eeprom_data,0x100);
@@ -669,7 +669,7 @@ static MACHINE_DRIVER_START( mitchell156 )
 	MDRV_CPU_MEMORY(mitchell156_readmem,mitchell156_writemem)
 	MDRV_CPU_VBLANK_INT(simpl156_vbl_interrupt,1)
 
-	MDRV_NVRAM_HANDLER(simpl156) // 93C45
+	MDRV_NVRAM_HANDLER(simpl156) /* 93C45*/
 
 	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -696,7 +696,7 @@ static MACHINE_DRIVER_START( joemacr )
 	MDRV_CPU_MEMORY(joemacr_readmem,joemacr_writemem)
 	MDRV_CPU_VBLANK_INT(simpl156_vbl_interrupt,1)
 
-	MDRV_NVRAM_HANDLER(simpl156) // 93C45
+	MDRV_NVRAM_HANDLER(simpl156) /* 93C45*/
 
 	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(TIME_IN_USEC(800))
@@ -723,7 +723,7 @@ static MACHINE_DRIVER_START( chainrec )
 	MDRV_CPU_MEMORY(chainrec_readmem,chainrec_writemem)
 	MDRV_CPU_VBLANK_INT(simpl156_vbl_interrupt,1)
 
-	MDRV_NVRAM_HANDLER(simpl156) // 93C45
+	MDRV_NVRAM_HANDLER(simpl156) /* 93C45*/
 
 	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(TIME_IN_USEC(800))
@@ -740,7 +740,7 @@ static MACHINE_DRIVER_START( chainrec )
 	MDRV_VIDEO_UPDATE(simpl156)
 
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(OKIM6295, adpcm_6295_interface) // not right!!
+	MDRV_SOUND_ADD(OKIM6295, adpcm_6295_interface) /* not right!!*/
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( magdrop )
@@ -750,7 +750,7 @@ static MACHINE_DRIVER_START( magdrop )
 	MDRV_CPU_MEMORY(magdrop_readmem,magdrop_writemem)
 	MDRV_CPU_VBLANK_INT(simpl156_vbl_interrupt,1)
 
-	MDRV_NVRAM_HANDLER(simpl156) // 93C45
+	MDRV_NVRAM_HANDLER(simpl156) /* 93C45*/
 
 	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(TIME_IN_USEC(800))
@@ -767,7 +767,7 @@ static MACHINE_DRIVER_START( magdrop )
 	MDRV_VIDEO_UPDATE(simpl156)
 
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(OKIM6295, adpcm_6295_interface) // not right!!
+	MDRV_SOUND_ADD(OKIM6295, adpcm_6295_interface) /* not right!!*/
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( magdropp )
@@ -777,7 +777,7 @@ static MACHINE_DRIVER_START( magdropp )
 	MDRV_CPU_MEMORY(magdropp_readmem,magdropp_writemem)
 	MDRV_CPU_VBLANK_INT(simpl156_vbl_interrupt,1)
 
-	MDRV_NVRAM_HANDLER(simpl156) // 93C45
+	MDRV_NVRAM_HANDLER(simpl156) /* 93C45*/
 
 	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(TIME_IN_USEC(800))
@@ -794,7 +794,7 @@ static MACHINE_DRIVER_START( magdropp )
 	MDRV_VIDEO_UPDATE(simpl156)
 
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(OKIM6295, adpcm_6295_interface) // not right!!
+	MDRV_SOUND_ADD(OKIM6295, adpcm_6295_interface) /* not right!!*/
 MACHINE_DRIVER_END
 
 static void simpl156_common_init(void)
@@ -902,7 +902,7 @@ ROM_START( joemacra )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 ) /* DE156 code (encrypted) */
 	ROM_LOAD( "mw00",    0x000000, 0x080000,  CRC(e1b78f40) SHA1(e611c317ada5a049a5e05d69c051e22a43fa2845) )
 
-	ROM_REGION( 0x100000, REGION_GFX1, 0 ) // rebuilt with roms from other set
+	ROM_REGION( 0x100000, REGION_GFX1, 0 ) /* rebuilt with roms from other set*/
 	ROM_LOAD( "mbn00",    0x000000, 0x100000, CRC(11b2dac7) SHA1(71a50f606caddeb0ef266e2d3df9e429a4873f21) )
 
 	ROM_REGION( 0x100000, REGION_GFX2, 0 )
@@ -1088,7 +1088,7 @@ ROM_START( charlien )
 	ROM_LOAD( "nd01-0.13h",    0x00000, 0x40000,  CRC(635a100a) SHA1(f6ec70890892e7557097ccd519de37247bb8c98d) )
 
 	ROM_REGION( 0x200000, REGION_SOUND2, 0 ) /* samples? (banked?) */
-	ROM_LOAD( "mbr-02.12f",    0x00000, 0x100000, CRC(4f67d333) SHA1(608f921bfa6b7020c0ce72e5229b3f1489208b23) ) // 00, 01, 04, 05
+	ROM_LOAD( "mbr-02.12f",    0x00000, 0x100000, CRC(4f67d333) SHA1(608f921bfa6b7020c0ce72e5229b3f1489208b23) ) /* 00, 01, 04, 05*/
 ROM_END
 
 /*

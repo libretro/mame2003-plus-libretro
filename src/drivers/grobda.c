@@ -66,7 +66,7 @@ static MEMORY_WRITE_START( writemem_cpu1 )
 	{ 0x4800, 0x480f, grobda_customio_1_w, &grobda_customio_1 },	/* custom I/O chip #1 interface */
 	{ 0x4810, 0x481f, grobda_customio_2_w, &grobda_customio_2 },	/* custom I/O chip #2 interface */
 	{ 0x5002, 0x5003, grobda_interrupt_ctrl_1_w },					/* Interrupt control */
-//	{ 0x5008, 0x5009, MWA_NOP },									/* ??? */
+/*	{ 0x5008, 0x5009, MWA_NOP },									 // ??? /*/
 	{ 0x500a, 0x500b, grobda_cpu2_enable_w },						/* sound CPU enable? */
 	{ 0x8000, 0x8000, watchdog_reset_w },	 						/* watchdog reset */
 	{ 0xa000, 0xffff, MWA_ROM },									/* ROM */

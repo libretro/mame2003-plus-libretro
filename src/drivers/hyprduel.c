@@ -295,7 +295,7 @@ static INLINE void blt_write(const int tmap, const offs_t offs, const data16_t d
 		case 2:	hyprduel_vram_1_w(offs,data,mask);	break;
 		case 3:	hyprduel_vram_2_w(offs,data,mask);	break;
 	}
-//	logerror("CPU #0 PC %06X : Blitter %X] %04X <- %04X & %04X\n",activecpu_get_pc(),tmap,offs,data,mask);
+/*	logerror("CPU #0 PC %06X : Blitter %X] %04X <- %04X & %04X\n",activecpu_get_pc(),tmap,offs,data,mask);*/
 }
 
 
@@ -320,7 +320,7 @@ static WRITE16_HANDLER( hyprduel_blitter_w )
 		int shift			=	(dst_offs & 0x80) ? 0 : 8;
 		data16_t mask		=	(dst_offs & 0x80) ? 0xff00 : 0x00ff;
 
-//		logerror("CPU #0 PC %06X : Blitter regs %08X, %08X, %08X\n",activecpu_get_pc(),tmap,src_offs,dst_offs);
+/*		logerror("CPU #0 PC %06X : Blitter regs %08X, %08X, %08X\n",activecpu_get_pc(),tmap,src_offs,dst_offs);*/
 
 		dst_offs >>= 7+1;
 		switch( tmap )
@@ -340,7 +340,7 @@ static WRITE16_HANDLER( hyprduel_blitter_w )
 
 			src_offs %= src_len;
 			b1 = blt_read(src,src_offs);
-//			logerror("CPU #0 PC %06X : Blitter opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs);
+/*			logerror("CPU #0 PC %06X : Blitter opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs);*/
 			src_offs++;
 
 			count = ((~b1) & 0x3f) + 1;
@@ -439,44 +439,44 @@ static WRITE16_HANDLER( hyprduel_blitter_w )
 
 static MEMORY_READ16_START( hyprduel_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
-	{ 0x400000, 0x41ffff, MRA16_RAM				},	// Layer 0
-	{ 0x420000, 0x43ffff, MRA16_RAM				},	// Layer 1
-	{ 0x440000, 0x45ffff, MRA16_RAM				},	// Layer 2
-	{ 0x460000, 0x46ffff, hyprduel_bankedrom_r	},	// Banked ROM
-	{ 0x470000, 0x473fff, MRA16_RAM				},	// Palette
-	{ 0x474000, 0x474fff, MRA16_RAM				},	// Sprites
-	{ 0x475000, 0x477fff, MRA16_RAM				},	// (only used memory test)
-	{ 0x478000, 0x4787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x4788a2, 0x4788a3, hyprduel_irq_cause_r	},	// IRQ Cause
-	{ 0xc00000, 0xc07fff, MRA16_RAM				},	// (sound driver controls)
-	{ 0xe00000, 0xe00001, input_port_0_word_r	},	// Inputs
-	{ 0xe00002, 0xe00003, input_port_1_word_r	},	//
-	{ 0xe00004, 0xe00005, input_port_2_word_r	},	//
-	{ 0xe00006, 0xe00007, input_port_3_word_r	},	//
+	{ 0x400000, 0x41ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0x460000, 0x46ffff, hyprduel_bankedrom_r	},	/* Banked ROM*/
+	{ 0x470000, 0x473fff, MRA16_RAM				},	/* Palette*/
+	{ 0x474000, 0x474fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x475000, 0x477fff, MRA16_RAM				},	/* (only used memory test)*/
+	{ 0x478000, 0x4787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x4788a2, 0x4788a3, hyprduel_irq_cause_r	},	/* IRQ Cause*/
+	{ 0xc00000, 0xc07fff, MRA16_RAM				},	/* (sound driver controls)*/
+	{ 0xe00000, 0xe00001, input_port_0_word_r	},	/* Inputs*/
+	{ 0xe00002, 0xe00003, input_port_1_word_r	},	/**/
+	{ 0xe00004, 0xe00005, input_port_2_word_r	},	/**/
+	{ 0xe00006, 0xe00007, input_port_3_word_r	},	/**/
 	{ 0xfe0000, 0xffffff, MRA16_RAM				},
 MEMORY_END
 
 static MEMORY_WRITE16_START( hyprduel_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM 					},
-	{ 0x400000, 0x41ffff, hyprduel_vram_0_w, &hyprduel_vram_0	},	// Layer 0
-	{ 0x420000, 0x43ffff, hyprduel_vram_1_w, &hyprduel_vram_1	},	// Layer 1
-	{ 0x440000, 0x45ffff, hyprduel_vram_2_w, &hyprduel_vram_2	},	// Layer 2
-	{ 0x470000, 0x473fff, hyprduel_paletteram_w, &paletteram16	},	// Palette
-	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size	},	// Sprites
+	{ 0x400000, 0x41ffff, hyprduel_vram_0_w, &hyprduel_vram_0	},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, hyprduel_vram_1_w, &hyprduel_vram_1	},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, hyprduel_vram_2_w, &hyprduel_vram_2	},	/* Layer 2*/
+	{ 0x470000, 0x473fff, hyprduel_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size	},	/* Sprites*/
 	{ 0x475000, 0x477fff, MWA16_RAM 					},
-	{ 0x478000, 0x4787ff, MWA16_RAM, &hyprduel_tiletable, &hyprduel_tiletable_size	},	// Tiles Set
-	{ 0x478840, 0x47884d, hyprduel_blitter_w, &hyprduel_blitter_regs	},	// Tiles Blitter
-	{ 0x478860, 0x47886b, hyprduel_window_w, &hyprduel_window	},	// Tilemap Window
-	{ 0x478870, 0x47887b, hypr_scrollreg_w				},	// Scroll Regs
-	{ 0x47887c, 0x47887d, hypr_scrollreg_init_w			},	// scroll regs all sets
+	{ 0x478000, 0x4787ff, MWA16_RAM, &hyprduel_tiletable, &hyprduel_tiletable_size	},	/* Tiles Set*/
+	{ 0x478840, 0x47884d, hyprduel_blitter_w, &hyprduel_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x478860, 0x47886b, hyprduel_window_w, &hyprduel_window	},	/* Tilemap Window*/
+	{ 0x478870, 0x47887b, hypr_scrollreg_w				},	/* Scroll Regs*/
+	{ 0x47887c, 0x47887d, hypr_scrollreg_init_w			},	/* scroll regs all sets*/
 	{ 0x478880, 0x478881, MWA16_NOP						},
 	{ 0x478890, 0x478891, MWA16_NOP						},
 	{ 0x4788a0, 0x4788a1, MWA16_NOP						},
-	{ 0x4788a2, 0x4788a3, hyprduel_irq_cause_w			},	// IRQ Acknowledge
-	{ 0x4788a4, 0x4788a5, MWA16_RAM, &hypr_irq_enable	},	// IRQ Enable
-	{ 0x4788aa, 0x4788ab, MWA16_RAM, &hyprduel_rombank		},	// Rom Bank
-	{ 0x4788ac, 0x4788ad, MWA16_RAM, &hyprduel_screenctrl	},	// Screen Control
-	{ 0x479700, 0x479713, MWA16_RAM, &hyprduel_videoregs	},	// Video Registers
+	{ 0x4788a2, 0x4788a3, hyprduel_irq_cause_w			},	/* IRQ Acknowledge*/
+	{ 0x4788a4, 0x4788a5, MWA16_RAM, &hypr_irq_enable	},	/* IRQ Enable*/
+	{ 0x4788aa, 0x4788ab, MWA16_RAM, &hyprduel_rombank		},	/* Rom Bank*/
+	{ 0x4788ac, 0x4788ad, MWA16_RAM, &hyprduel_screenctrl	},	/* Screen Control*/
+	{ 0x479700, 0x479713, MWA16_RAM, &hyprduel_videoregs	},	/* Video Registers*/
 	{ 0x800000, 0x800001, hypr_subcpu_control_w			},
 	{ 0xc00000, 0xc07fff, MWA16_RAM, &hypr_sharedram1	},
 	{ 0xe00000, 0xe00001, MWA16_NOP						},
@@ -493,13 +493,13 @@ static MEMORY_READ16_START( hyprduel_readmem2 )
 MEMORY_END
 
 static MEMORY_WRITE16_START( hyprduel_writemem2 )
-	{ 0x000000, 0x003fff, MWA16_RAM, &hypr_sub_sharedram1_2	},	// shadow ($c00000 - $c03fff : vector, write ok)
-	{ 0x004000, 0x007fff, MWA16_RAM, &hypr_sub_sharedram2_2	},	// shadow ($fe4000 - $fe7fff : read only)
+	{ 0x000000, 0x003fff, MWA16_RAM, &hypr_sub_sharedram1_2	},	/* shadow ($c00000 - $c03fff : vector, write ok)*/
+	{ 0x004000, 0x007fff, MWA16_RAM, &hypr_sub_sharedram2_2	},	/* shadow ($fe4000 - $fe7fff : read only)*/
 	{ 0x400000, 0x400001, YM2151_register_port_0_lsb_w	},
 	{ 0x400002, 0x400003, YM2151_data_port_0_lsb_w		},
 	{ 0x400004, 0x400005, OKIM6295_data_0_lsb_w			},
 	{ 0x800000, 0x800001, MWA16_NOP						},
-	{ 0xc00000, 0xc07fff, MWA16_RAM, &hypr_sub_sharedram1_1	},	// (sound driver)
+	{ 0xc00000, 0xc07fff, MWA16_RAM, &hypr_sub_sharedram1_1	},	/* (sound driver)*/
 	{ 0xfe0000, 0xffffff, MWA16_RAM, &hypr_sub_sharedram2_1	},
 MEMORY_END
 
@@ -621,8 +621,8 @@ static struct GfxLayout layout_8x8x8h =
 
 static struct GfxDecodeInfo gfxdecodeinfo_14220[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, // [0] 4 Bit Tiles
-	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, // [1] 8 Bit Tiles
+	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, /* [0] 4 Bit Tiles*/
+	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, /* [1] 8 Bit Tiles*/
 	{ -1 }
 };
 
@@ -726,10 +726,10 @@ ROM_START( hyprduel )
 	ROM_REGION( 0x8000, REGION_CPU2, 0 )
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )	/* Gfx + Prg + Data (Addressable by CPU & Blitter) */
-	ROMX_LOAD( "hd_m1.rom", 0x000000, 0x100000, BAD_DUMP CRC(582aab46) SHA1(b94bd7aee717c5e449c9138fd82ca9a6423cd382) , ROM_GROUPWORD | ROM_SKIP(6) )	// BAD ADDRESS LINES (mask=000100)
-	ROMX_LOAD( "hd_m2.rom", 0x000002, 0x100000, BAD_DUMP CRC(63da509e) SHA1(b7254fab2d6d68bf52b0cdbf4e32d990420e4627) , ROM_GROUPWORD | ROM_SKIP(6) )	// BAD ADDRESS LINES (mask=000100)
-	ROMX_LOAD( "hd_m3.rom", 0x000004, 0x100000, BAD_DUMP CRC(4dbb5a79) SHA1(5df5cfe7ab404ec97822c3edd86728b03aeb33d1) , ROM_GROUPWORD | ROM_SKIP(6) )	// BAD ADDRESS LINES (mask=000100)
-	ROMX_LOAD( "hd_m4.rom", 0x000006, 0x100000, BAD_DUMP CRC(8061d5dd) SHA1(1d953ba8d85e0513683e0094eb1f5bbfda4576bf) , ROM_GROUPWORD | ROM_SKIP(6) )	// BAD ADDRESS LINES (mask=000100)
+	ROMX_LOAD( "hd_m1.rom", 0x000000, 0x100000, BAD_DUMP CRC(582aab46) SHA1(b94bd7aee717c5e449c9138fd82ca9a6423cd382) , ROM_GROUPWORD | ROM_SKIP(6) )	/* BAD ADDRESS LINES (mask=000100)*/
+	ROMX_LOAD( "hd_m2.rom", 0x000002, 0x100000, BAD_DUMP CRC(63da509e) SHA1(b7254fab2d6d68bf52b0cdbf4e32d990420e4627) , ROM_GROUPWORD | ROM_SKIP(6) )	/* BAD ADDRESS LINES (mask=000100)*/
+	ROMX_LOAD( "hd_m3.rom", 0x000004, 0x100000, BAD_DUMP CRC(4dbb5a79) SHA1(5df5cfe7ab404ec97822c3edd86728b03aeb33d1) , ROM_GROUPWORD | ROM_SKIP(6) )	/* BAD ADDRESS LINES (mask=000100)*/
+	ROMX_LOAD( "hd_m4.rom", 0x000006, 0x100000, BAD_DUMP CRC(8061d5dd) SHA1(1d953ba8d85e0513683e0094eb1f5bbfda4576bf) , ROM_GROUPWORD | ROM_SKIP(6) )	/* BAD ADDRESS LINES (mask=000100)*/
 
 	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "97.11", 0x00000, 0x40000, CRC(bf3f8574) SHA1(9e743f05e53256c886d43e1f0c43d7417134b9b3) )

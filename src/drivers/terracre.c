@@ -145,7 +145,7 @@ static READ16_HANDLER( horekid_IN2_r )
 {
 	int data = readinputport(2);
 
-	if (!(data & 0x40))		// FAKE button 3 for "Debug Mode"
+	if (!(data & 0x40))		/* FAKE button 3 for "Debug Mode"*/
 	{
 		data &=  0x40;
 		data |= ~0x30;
@@ -313,10 +313,10 @@ INPUT_PORTS_START( terracre )
 	PORT_DIPSETTING(      0x0001, "5" )
 	PORT_DIPSETTING(      0x0000, "6" )
 	PORT_DIPNAME( 0x000c, 0x000c, DEF_STR( Bonus_Life ) )
-	PORT_DIPSETTING(      0x000c, "20k then every 60k" )	// "20000 60000" in the "test mode"
-	PORT_DIPSETTING(      0x0008, "30k then every 70k" )	// "30000 70000" in the "test mode"
-	PORT_DIPSETTING(      0x0004, "40k then every 80k" )	// "40000 80000" in the "test mode"
-	PORT_DIPSETTING(      0x0000, "50k then every 90k" )	// "50000 90000" in the "test mode"
+	PORT_DIPSETTING(      0x000c, "20k then every 60k" )	/* "20000 60000" in the "test mode"*/
+	PORT_DIPSETTING(      0x0008, "30k then every 70k" )	/* "30000 70000" in the "test mode"*/
+	PORT_DIPSETTING(      0x0004, "40k then every 80k" )	/* "40000 80000" in the "test mode"*/
+	PORT_DIPSETTING(      0x0000, "50k then every 90k" )	/* "50000 90000" in the "test mode"*/
 	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0010, DEF_STR( On ) )
@@ -342,7 +342,7 @@ INPUT_PORTS_START( terracre )
 	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x1000, "Easy" )
 	PORT_DIPSETTING(      0x0000, "Hard" )
-	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Flip_Screen ) )	// not in the "test mode"
+	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Flip_Screen ) )	/* not in the "test mode"*/
 	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_BITX(    0x4000, 0x4000, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Complete Invulnerability", IP_KEY_NONE, IP_JOY_NONE )
@@ -391,10 +391,10 @@ INPUT_PORTS_START( amazon )
 	PORT_DIPSETTING(      0x0001, "5" )
 	PORT_DIPSETTING(      0x0000, "6" )
 	PORT_DIPNAME( 0x000c, 0x000c, DEF_STR( Bonus_Life ) )
-	PORT_DIPSETTING(      0x000c, "20k then every 40k" )	// "20000 40000" in the "test mode"
-	PORT_DIPSETTING(      0x0008, "50k then every 40k" )	// "50000 40000" in the "test mode"
-	PORT_DIPSETTING(      0x0004, "20k then every 70k" )	// "20000 70000" in the "test mode"
-	PORT_DIPSETTING(      0x0000, "50k then every 70k" )	// "50000 70000" in the "test mode"
+	PORT_DIPSETTING(      0x000c, "20k then every 40k" )	/* "20000 40000" in the "test mode"*/
+	PORT_DIPSETTING(      0x0008, "50k then every 40k" )	/* "50000 40000" in the "test mode"*/
+	PORT_DIPSETTING(      0x0004, "20k then every 70k" )	/* "20000 70000" in the "test mode"*/
+	PORT_DIPSETTING(      0x0000, "50k then every 70k" )	/* "50000 70000" in the "test mode"*/
 	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0010, DEF_STR( On ) )
@@ -420,7 +420,7 @@ INPUT_PORTS_START( amazon )
 	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x1000, "Easy" )
 	PORT_DIPSETTING(      0x0000, "Hard" )
-	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Flip_Screen ) )	// not in the "test mode"
+	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Flip_Screen ) )	/* not in the "test mode"*/
 	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x4000, 0x4000, "Level" )
@@ -439,10 +439,10 @@ INPUT_PORTS_START( horekid )
 	PORT_DIPSETTING(      0x0001, "5" )
 	PORT_DIPSETTING(      0x0000, "6" )
 	PORT_DIPNAME( 0x000c, 0x000c, DEF_STR( Bonus_Life ) )
-	PORT_DIPSETTING(      0x000c, "20k then every 60k" )	// "20000 60000" in the "test mode"
-	PORT_DIPSETTING(      0x0008, "50k then every 60k" )	// "50000 60000" in the "test mode"
-	PORT_DIPSETTING(      0x0004, "20k then every 90k" )	// "20000 90000" in the "test mode"
-	PORT_DIPSETTING(      0x0000, "50k then every 90k" )	// "50000 90000" in the "test mode"
+	PORT_DIPSETTING(      0x000c, "20k then every 60k" )	/* "20000 60000" in the "test mode"*/
+	PORT_DIPSETTING(      0x0008, "50k then every 60k" )	/* "50000 60000" in the "test mode"*/
+	PORT_DIPSETTING(      0x0004, "20k then every 90k" )	/* "20000 90000" in the "test mode"*/
+	PORT_DIPSETTING(      0x0000, "50k then every 90k" )	/* "50000 90000" in the "test mode"*/
 	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0010, DEF_STR( On ) )
@@ -472,9 +472,9 @@ INPUT_PORTS_START( horekid )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_BITX(    0xc000, 0xc000, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Debug Mode", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(      0xc000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x8000, DEF_STR( On ) )		// "Cabinet" Dip Switch must be set to "Upright" too !
-//	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) )		// duplicated setting
-//	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )		// duplicated setting
+	PORT_DIPSETTING(      0x8000, DEF_STR( On ) )		/* "Cabinet" Dip Switch must be set to "Upright" too !*/
+/*	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) )		*/ /* duplicated setting*/
+/*	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )		*/ /* duplicated setting*/
 
 	PORT_START
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
@@ -493,7 +493,7 @@ INPUT_PORTS_START( horekid )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_CHEAT )	// fake button for "Debug Mode" (see read handler)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_CHEAT )	/* fake button for "Debug Mode" (see read handler)*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_START
 

@@ -78,20 +78,20 @@ READ_HANDLER( taitol_bankc_r );
 
 static void (*rambank_modify_notifiers[12])(int) =
 {
-	taitol_chardef14_m,	// 14
-	taitol_chardef15_m,	// 15
-	taitol_chardef16_m,	// 16
-	taitol_chardef17_m,	// 17
+	taitol_chardef14_m,	/* 14*/
+	taitol_chardef15_m,	/* 15*/
+	taitol_chardef16_m,	/* 16*/
+	taitol_chardef17_m,	/* 17*/
 
-	taitol_bg18_m,		// 18
-	taitol_bg19_m,		// 19
-	taitol_char1a_m,	// 1a
-	taitol_obj1b_m,		// 1b
+	taitol_bg18_m,		/* 18*/
+	taitol_bg19_m,		/* 19*/
+	taitol_char1a_m,	/* 1a*/
+	taitol_obj1b_m,		/* 1b*/
 
-	taitol_chardef1c_m,	// 1c
-	taitol_chardef1d_m,	// 1d
-	taitol_chardef1e_m,	// 1e
-	taitol_chardef1f_m,	// 1f
+	taitol_chardef1c_m,	/* 1c*/
+	taitol_chardef1d_m,	/* 1d*/
+	taitol_chardef1e_m,	/* 1e*/
+	taitol_chardef1f_m,	/* 1f*/
 };
 
 static void (*current_notifier[4])(int);
@@ -122,7 +122,7 @@ static void palette_notifier(int addr)
 	unsigned int g = ((byte0 & 0xf0)>>4) * 0x11;
 	unsigned int r = (byte0 & 0xf) * 0x11;
 
-	//	addr &= 0x1ff;
+	/*	addr &= 0x1ff;*/
 
 	if(addr > 0x200)
 	{
@@ -130,7 +130,7 @@ logerror("Large palette ? %03x (%04x)\n", addr, activecpu_get_pc());
 	}
 	else
 	{
-		//		r = g = b = ((addr & 0x1e) != 0)*255;
+		/*		r = g = b = ((addr & 0x1e) != 0)*255;*/
 		palette_set_color(addr/2, r, g, b);
 	}
 }
@@ -266,7 +266,7 @@ static INTERRUPT_GEN( vbl_interrupt )
 	/* kludge to make plgirls boot */
 	if (cpunum_get_reg(0,Z80_IM) != 2) return;
 
-	// What is really generating interrupts 0 and 1 is still to be found
+	/* What is really generating interrupts 0 and 1 is still to be found*/
 
 	if (cpu_getiloops() == 1 && (irq_enable & 1))
 		cpu_set_irq_line_and_vector(0, 0, HOLD_LINE, irq_adr_table[0]);
@@ -278,7 +278,7 @@ static INTERRUPT_GEN( vbl_interrupt )
 
 static WRITE_HANDLER( irq_adr_w )
 {
-//logerror("irq_adr_table[%d] = %02x\n",offset,data);
+/*logerror("irq_adr_table[%d] = %02x\n",offset,data);*/
 	irq_adr_table[offset] = data;
 }
 
@@ -289,7 +289,7 @@ static READ_HANDLER( irq_adr_r )
 
 static WRITE_HANDLER( irq_enable_w )
 {
-//logerror("irq_enable = %02x\n",data);
+/*logerror("irq_enable = %02x\n",data);*/
 	irq_enable = data;
 }
 
@@ -310,7 +310,7 @@ static WRITE_HANDLER( rombankswitch_w )
 			logerror("New rom size : %x\n", (high+1)*0x2000);
 		}
 
-//		logerror("robs %d, %02x (%04x)\n", offset, data, activecpu_get_pc());
+/*		logerror("robs %d, %02x (%04x)\n", offset, data, activecpu_get_pc());*/
 		cur_rombank = data;
 		cpu_setbank(1, memory_region(REGION_CPU1)+0x10000+0x2000*cur_rombank);
 	}
@@ -330,7 +330,7 @@ static WRITE_HANDLER( rombank2switch_w )
 			logerror("New rom2 size : %x\n", (high+1)*0x4000);
 		}
 
-//		logerror("robs2 %02x (%04x)\n", data, activecpu_get_pc());
+/*		logerror("robs2 %02x (%04x)\n", data, activecpu_get_pc());*/
 
 		cur_rombank2 = data;
 		cpu_setbank(6, memory_region(REGION_CPU3)+0x10000+0x4000*cur_rombank2);
@@ -352,7 +352,7 @@ static WRITE_HANDLER( rambankswitch_w )
 	if(cur_rambank[offset]!=data)
 	{
 		cur_rambank[offset]=data;
-//logerror("rabs %d, %02x (%04x)\n", offset, data, activecpu_get_pc());
+/*logerror("rabs %d, %02x (%04x)\n", offset, data, activecpu_get_pc());*/
 		if(data>=0x14 && data<=0x1f)
 		{
 			data -= 0x14;
@@ -463,7 +463,7 @@ static WRITE_HANDLER( mcu_data_w )
 {
 	last_data = data;
 	last_data_adr = activecpu_get_pc();
-//	logerror("mcu write %02x (%04x)\n", data, activecpu_get_pc());
+/*	logerror("mcu write %02x (%04x)\n", data, activecpu_get_pc());*/
 	switch(data)
 	{
 	case 0x43:
@@ -476,12 +476,12 @@ static WRITE_HANDLER( mcu_data_w )
 
 static WRITE_HANDLER( mcu_control_w )
 {
-//	logerror("mcu control %02x (%04x)\n", data, activecpu_get_pc());
+/*	logerror("mcu control %02x (%04x)\n", data, activecpu_get_pc());*/
 }
 
 static READ_HANDLER( mcu_data_r )
 {
-//	logerror("mcu read (%04x) [%02x, %04x]\n", activecpu_get_pc(), last_data, last_data_adr);
+/*	logerror("mcu read (%04x) [%02x, %04x]\n", activecpu_get_pc(), last_data, last_data_adr);*/
 	if(mcu_pos==mcu_reply_len)
 		return 0;
 
@@ -490,7 +490,7 @@ static READ_HANDLER( mcu_data_r )
 
 static READ_HANDLER( mcu_control_r )
 {
-//	logerror("mcu control read (%04x)\n", activecpu_get_pc());
+/*	logerror("mcu control read (%04x)\n", activecpu_get_pc());*/
 	return 0x1;
 }
 
@@ -687,9 +687,9 @@ static MEMORY_WRITE_START( fhawk_2_writemem )
 	{ 0xc000, 0xc000, rombank2switch_w },
 	{ 0xc800, 0xc800, taitosound_port_w },
 	{ 0xc801, 0xc801, taitosound_comm_w },
-	{ 0xd000, 0xd000, MWA_NOP },	// Direct copy of input port 0
+	{ 0xd000, 0xd000, MWA_NOP },	/* Direct copy of input port 0*/
 	{ 0xd004, 0xd004, control2_w },
-	{ 0xd005, 0xd006, MWA_NOP },	// Always 0
+	{ 0xd005, 0xd006, MWA_NOP },	/* Always 0*/
 	{ 0xe000, 0xffff, shared_w },
 MEMORY_END
 
@@ -715,7 +715,7 @@ static MEMORY_READ_START( raimais_readmem )
 	COMMON_BANKS_READ,
 	{ 0x8000, 0x87ff, MRA_RAM },
 	{ 0x8800, 0x8800, mux_r },
-	{ 0x8801, 0x8801, MRA_NOP },	// Watchdog or interrupt ack (value ignored)
+	{ 0x8801, 0x8801, MRA_NOP },	/* Watchdog or interrupt ack (value ignored)*/
 	{ 0x8c00, 0x8c00, MRA_NOP },
 	{ 0x8c01, 0x8c01, taitosound_comm_r },
 	{ 0xa000, 0xbfff, MRA_RAM },
@@ -810,7 +810,7 @@ MEMORY_END
 static MEMORY_WRITE_START( champwr_2_writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xdfff, shared_w },
-	{ 0xe000, 0xe000, MWA_NOP },	// Watchdog
+	{ 0xe000, 0xe000, MWA_NOP },	/* Watchdog*/
 	{ 0xe004, 0xe004, control2_w },
 	{ 0xe800, 0xe800, taitosound_port_w },
 	{ 0xe801, 0xe801, taitosound_comm_w },
@@ -846,7 +846,7 @@ static MEMORY_READ_START( kurikint_readmem )
 	{ 0x8000, 0x9fff, MRA_RAM },
 	{ 0xa000, 0xa7ff, MRA_RAM },
 	{ 0xa800, 0xa800, mux_r },
-	{ 0xa801, 0xa801, MRA_NOP },	// Watchdog or interrupt ack (value ignored)
+	{ 0xa801, 0xa801, MRA_NOP },	/* Watchdog or interrupt ack (value ignored)*/
 MEMORY_END
 
 static MEMORY_WRITE_START( kurikint_writemem )
@@ -887,8 +887,8 @@ MEMORY_END
 static MEMORY_READ_START( puzznic_readmem )
 	COMMON_BANKS_READ,
 	COMMON_SINGLE_READ,
-	{ 0xa800, 0xa800, MRA_NOP },	// Watchdog
-	{ 0xb000, 0xb7ff, MRA_RAM },	// Wrong, used to overcome protection
+	{ 0xa800, 0xa800, MRA_NOP },	/* Watchdog*/
+	{ 0xb000, 0xb7ff, MRA_RAM },	/* Wrong, used to overcome protection*/
 	{ 0xb800, 0xb800, mcu_data_r },
 	{ 0xb801, 0xb801, mcu_control_r },
 MEMORY_END
@@ -896,10 +896,10 @@ MEMORY_END
 static MEMORY_WRITE_START( puzznic_writemem )
 	COMMON_BANKS_WRITE,
 	COMMON_SINGLE_WRITE,
-	{ 0xb000, 0xb7ff, MWA_RAM },	// Wrong, used to overcome protection
+	{ 0xb000, 0xb7ff, MWA_RAM },	/* Wrong, used to overcome protection*/
 	{ 0xb800, 0xb800, mcu_data_w },
 	{ 0xb801, 0xb801, mcu_control_w },
-	{ 0xbc00, 0xbc00, MWA_NOP },	// Control register, function unknown
+	{ 0xbc00, 0xbc00, MWA_NOP },	/* Control register, function unknown*/
 MEMORY_END
 
 
@@ -911,8 +911,8 @@ MEMORY_END
 static MEMORY_WRITE_START( plotting_writemem )
 	COMMON_BANKS_WRITE,
 	COMMON_SINGLE_WRITE,
-	{ 0xa800, 0xa800, MWA_NOP },	// Watchdog or interrupt ack
-	{ 0xb800, 0xb800, MWA_NOP },	// Control register, function unknown
+	{ 0xa800, 0xa800, MWA_NOP },	/* Watchdog or interrupt ack*/
+	{ 0xb800, 0xb800, MWA_NOP },	/* Control register, function unknown*/
 MEMORY_END
 
 
@@ -922,14 +922,14 @@ static MEMORY_READ_START( palamed_readmem )
 	{ 0xa800, 0xa800, input_port_2_r },
 	{ 0xa801, 0xa801, input_port_3_r },
 	{ 0xa802, 0xa802, input_port_4_r },
-	{ 0xb001, 0xb001, MRA_NOP },	// Watchdog or interrupt ack
+	{ 0xb001, 0xb001, MRA_NOP },	/* Watchdog or interrupt ack*/
 MEMORY_END
 
 static MEMORY_WRITE_START( palamed_writemem )
 	COMMON_BANKS_WRITE,
 	COMMON_SINGLE_WRITE,
-	{ 0xa803, 0xa803, MWA_NOP },	// Control register, function unknown
-	{ 0xb000, 0xb000, MWA_NOP },	// Control register, function unknown (copy of 8822)
+	{ 0xa803, 0xa803, MWA_NOP },	/* Control register, function unknown*/
+	{ 0xb000, 0xb000, MWA_NOP },	/* Control register, function unknown (copy of 8822)*/
 MEMORY_END
 
 
@@ -939,15 +939,15 @@ static MEMORY_READ_START( cachat_readmem )
 	{ 0xa800, 0xa800, input_port_2_r },
 	{ 0xa801, 0xa801, input_port_3_r },
 	{ 0xa802, 0xa802, input_port_4_r },
-	{ 0xb001, 0xb001, MRA_NOP },	// Watchdog or interrupt ack (value ignored)
+	{ 0xb001, 0xb001, MRA_NOP },	/* Watchdog or interrupt ack (value ignored)*/
 	{ 0xfff8, 0xfff8, rombankswitch_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( cachat_writemem )
 	COMMON_BANKS_WRITE,
 	COMMON_SINGLE_WRITE,
-	{ 0xa803, 0xa803, MWA_NOP },	// Control register, function unknown
-	{ 0xb000, 0xb000, MWA_NOP },	// Control register, function unknown
+	{ 0xa803, 0xa803, MWA_NOP },	/* Control register, function unknown*/
+	{ 0xb000, 0xb000, MWA_NOP },	/* Control register, function unknown*/
 	{ 0xfff8, 0xfff8, rombankswitch_w },
 MEMORY_END
 
@@ -961,7 +961,7 @@ static MEMORY_READ_START( horshoes_readmem )
 	{ 0xa804, 0xa804, horshoes_tracky_hi_r },
 	{ 0xa808, 0xa808, horshoes_trackx_lo_r },
 	{ 0xa80c, 0xa80c, horshoes_trackx_hi_r },
-	{ 0xb801, 0xb801, MRA_NOP },	// Watchdog or interrupt ack
+	{ 0xb801, 0xb801, MRA_NOP },	/* Watchdog or interrupt ack*/
 MEMORY_END
 
 static MEMORY_WRITE_START( horshoes_writemem )
@@ -996,16 +996,16 @@ static WRITE_HANDLER (evilston_snd_w)
 static MEMORY_WRITE_START( evilston_writemem )
 	COMMON_BANKS_WRITE,
 	{ 0x8000, 0x9fff, MWA_RAM },
-	{ 0xa000, 0xa7ff, MWA_RAM,&shared_ram},//shared2_w },
-	{ 0xa800, 0xa800, MWA_RAM },//watchdog ?
-	{ 0xa804, 0xa804, MWA_RAM}, //coin couters/locks ?
+	{ 0xa000, 0xa7ff, MWA_RAM,&shared_ram},/*shared2_w },*/
+	{ 0xa800, 0xa800, MWA_RAM },/*watchdog ?*/
+	{ 0xa804, 0xa804, MWA_RAM}, /*coin couters/locks ?*/
 
 MEMORY_END
 
 static MEMORY_READ_START( evilston_2_readmem )
 	{ 0x0000, 0xbfff, MRA_ROM },
 	{ 0xc000, 0xdfff, MRA_RAM },
-	{ 0xe000, 0xe7ff, shared_r},//shared_r },
+	{ 0xe000, 0xe7ff, shared_r},/*shared_r },*/
 	{ 0xe800, 0xe800, YM2203_status_port_0_r },
 	{ 0xf000, 0xf7ff, MRA_BANK7 },
 MEMORY_END
@@ -1120,7 +1120,7 @@ INPUT_PORTS_START( fhawk )
 
 	PORT_START
 	TAITO_DIFFICULTY_8
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )  // all in manual
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )  /* all in manual*/
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
@@ -1155,7 +1155,7 @@ INPUT_PORTS_START( fhawkj )
 
 	PORT_START
 	TAITO_DIFFICULTY_8
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )  // all in manual
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )  /* all in manual*/
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )
@@ -1267,7 +1267,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( champwr )
 	PORT_START
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )  // all 2 in manual
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )  /* all 2 in manual*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	TAITO_L_DSWA_2_4
@@ -1445,7 +1445,7 @@ INPUT_PORTS_START( puzznic )
 	PORT_DIPSETTING(    0x40, "Stage one step back/Timer continuous" )
 	PORT_DIPSETTING(    0xc0, "Stage reset to start/Timer continuous" )
 	PORT_DIPSETTING(    0x80, "Stage reset to start/Timer reset to start" )
-//	PORT_DIPSETTING(    0x00, "No Use" )
+/*	PORT_DIPSETTING(    0x00, "No Use" )*/
 
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -1805,7 +1805,7 @@ INPUT_PORTS_START( plgirls )
 	PORT_DIPSETTING(    0x08, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x28, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -2122,7 +2122,7 @@ static struct GfxDecodeInfo gfxdecodeinfo1[] =
 {
 	{ REGION_GFX1, 0, &bg1_layout, 0, 16 },
 	{ REGION_GFX1, 0, &sp1_layout, 0, 16 },
-	{ 0,           0, &char_layout,  0, 16 },  // Ram-based
+	{ 0,           0, &char_layout,  0, 16 },  /* Ram-based*/
 	{ -1 }
 };
 
@@ -2130,7 +2130,7 @@ static struct GfxDecodeInfo gfxdecodeinfo2[] =
 {
 	{ REGION_GFX1, 0, &bg2_layout, 0, 16 },
 	{ REGION_GFX1, 0, &sp2_layout, 0, 16 },
-	{ 0,           0, &char_layout,  0, 16 },  // Ram-based
+	{ 0,           0, &char_layout,  0, 16 },  /* Ram-based*/
 	{ -1 }
 };
 
@@ -2153,7 +2153,7 @@ static WRITE_HANDLER( portA_w )
 		cur_bank = data & 0x03;
 		bankaddress = 0x10000 + (cur_bank-1) * 0x4000;
 		cpu_setbank(7,&RAM[bankaddress]);
-		//logerror ("YM2203 bank change val=%02x  pc=%04x\n",cur_bank, activecpu_get_pc() );
+		/*logerror ("YM2203 bank change val=%02x  pc=%04x\n",cur_bank, activecpu_get_pc() );*/
 	}
 }
 
@@ -2770,7 +2770,7 @@ ROM_END
 
 
 
-// bits 7..0 => bits 0..7
+/* bits 7..0 => bits 0..7*/
 static DRIVER_INIT( plotting )
 {
 	unsigned char tab[256];
@@ -2816,8 +2816,8 @@ GAME( 1989, puzznic,  0,        puzznic,  puzznic,  0,        ROT0,   "Taito Cor
 GAME( 1990, horshoes, 0,        horshoes, horshoes, 0,        ROT270, "Taito America Corporation", "American Horseshoes (US)" )
 GAME( 1990, palamed,  0,        palamed,  palamed,  0,        ROT0,   "Taito Corporation", "Palamedes (Japan)" )
 GAME( 1993, cachat,   0,        cachat,   cachat,   0,        ROT0,   "Taito Corporation", "Cachat (Japan)" )
-GAME( 1993, tubeit,   cachat,   cachat,   tubeit,   0,        ROT0,   "Taito Corporation", "Tube-It" )  // No (c) message
-GAME( 199?, cubybop,  0,        cachat,   cubybop,  0,        ROT0,   "Taito Corporation", "Cuby Bop (Location Test)" ) // No (c) message
+GAME( 1993, tubeit,   cachat,   cachat,   tubeit,   0,        ROT0,   "Taito Corporation", "Tube-It" )  /* No (c) message*/
+GAME( 199?, cubybop,  0,        cachat,   cubybop,  0,        ROT0,   "Taito Corporation", "Cuby Bop (Location Test)" ) /* No (c) message*/
 
 GAME( 1992, plgirls,  0,        cachat,   plgirls,  0,        ROT270, "Hot-B.", "Play Girls" )
 GAME( 1993, plgirls2, 0,        cachat,   plgirls2, 0,        ROT270, "Hot-B.", "Play Girls 2" )

@@ -395,8 +395,8 @@ static MEMORY_WRITE16_START( welltris_writemem )
 	{ 0xfff002, 0xfff003, welltris_gfxbank_w },
 	{ 0xfff004, 0xfff007, welltris_scrollreg_w },
 	{ 0xfff008, 0xfff009, sound_command_w },
-	{ 0xfff00c, 0xfff00d, MWA16_NOP },		// ??
-	{ 0xfff00e, 0xfff00f, MWA16_NOP },		// ??
+	{ 0xfff00c, 0xfff00d, MWA16_NOP },		/* ??*/
+	{ 0xfff00e, 0xfff00f, MWA16_NOP },		/* ??*/
 MEMORY_END
 
 static MEMORY_READ_START( sound_readmem )
@@ -559,7 +559,7 @@ INPUT_PORTS_START( welltris )
 	PORT_DIPSETTING(      0x0002, "Easy" )
 	PORT_DIPSETTING(      0x0003, "Normal" )
 	PORT_DIPSETTING(      0x0001, "Hard" )
-	PORT_DIPSETTING(      0x0000, "Hardest" )			// "Super" in test mode
+	PORT_DIPSETTING(      0x0000, "Hardest" )			/* "Super" in test mode*/
 	PORT_DIPNAME( 0x0004, 0x0000, "Coin Mode" )
 	PORT_DIPSETTING(      0x0004, "Mono Player" )
 	PORT_DIPSETTING(      0x0000, "Many Player" )

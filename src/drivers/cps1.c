@@ -83,8 +83,8 @@ const char *const ffight_sample_names[] =
 
 static struct Samplesinterface ff_samples =
 {
-	2,	// 2 channels
-	100, // volume
+	2,	/* 2 channels*/
+	100, /* volume*/
 	ffight_sample_names
 };
 
@@ -157,34 +157,34 @@ static READ_HANDLER( cps1_snd_fade_timer_r )
 
 static WRITE16_HANDLER( cps1_sound_command_w )
 {
-	// Debug.
+	/* Debug.*/
 	/*
 	if (data != 0xff) {
 		printf("%X\n", data);
 	}
 	*/
 	
-	// We are playing Final Fight. Let's use the samples.
+	/* We are playing Final Fight. Let's use the samples.*/
 	if(ff_playing_final_fight == true) {
 		switch (data) {
-			// stage 1 upper level music
+			/* stage 1 upper level music*/
 			case 0x40:
-				// Play the left channel.
+				/* Play the left channel.*/
 				sample_start(0, 0, 1);
 
-				// Play the right channel.
+				/* Play the right channel.*/
 				sample_start(1, 1, 1);
 
 				break;
-			// stage #1: basement
+			/* stage #1: basement*/
 			case 0x41:
 				sample_start(0, 2, 1);
 				sample_start(1, 3, 1);
 
 				break;
-			// stage #2: subway intro
+			/* stage #2: subway intro*/
 			case 0x42:
-				// play the normal version of the song unless playAlternateSong is true
+				/* play the normal version of the song unless playAlternateSong is true*/
 				if (ff_play_alternate_song == false) {
 					sample_start(0, 4, 1);
 					sample_start(1, 5, 1);
@@ -195,38 +195,38 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				}
 				
 				break;
-			// stage #2 exiting subway/alley
+			/* stage #2 exiting subway/alley*/
 			case 0x43:
 				sample_start(0, 6, 1);
 				sample_start(1, 7, 1);
 
 				break;
-			// double andore cage fight music
+			/* double andore cage fight music*/
 			case 0x44:
 				sample_start(0, 8, 1);
 				sample_start(1, 9, 1);
 
 				break;
-			// bay area sea side theme
+			/* bay area sea side theme*/
 			case 0x45:
 				sample_start(0, 10, 1);
 				sample_start(1, 11, 1);
 
-				// we'll provision the alternate songs if they're not already
+				/* we'll provision the alternate songs if they're not already*/
 				if (ff_provision_alt_song == false) {
 					ff_provision_alt_song = true;
 				}
 				
 				break;
-			// bathroom music for bay area
+			/* bathroom music for bay area*/
 			case 0x46:
 				sample_start(0, 12, 1);
 				sample_start(1, 13, 1);
 
 				break;
-			// bay area post-bathroom ending/boss / final boss room entrance
+			/* bay area post-bathroom ending/boss / final boss room entrance*/
 			case 0x47:
-				// play the normal version of the song unless playAlternateSong is true
+				/* play the normal version of the song unless playAlternateSong is true*/
 				if (ff_provision_alt_song == false) {
 					sample_start(0, 14, 1);
 					sample_start(1, 15, 1);
@@ -237,76 +237,76 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				}
 				
 				break;
-			// bonus stage music
+			/* bonus stage music*/
 			case 0x4c:
 				sample_start(0, 20, 1);
 				sample_start(1, 21, 1);
 
 				break;
-			// industrial music theme
+			/* industrial music theme*/
 			case 0x48:
 				sample_start(0, 16, 1);
 				sample_start(1, 17, 1);
 
 				break;
-			// industrial zone elevator ride music
+			/* industrial zone elevator ride music*/
 			case 0x49:
 				sample_start(0, 18, 1);
 				sample_start(1, 19, 1);
 
 				break;
-			// game start ditty
+			/* game start ditty*/
 			case 0x50:
 				sample_start(0, 22, 0);
 				sample_start(1, 23, 0);
 
-				// when the game starts, we'll reset all the alternate songs
+				/* when the game starts, we'll reset all the alternate songs*/
 				ff_provision_alt_song = false;
 				ff_play_alternate_song = false;
 				
 				break;
-			// post explosion ditty
+			/* post explosion ditty*/
 			case 0x51:
 				sample_start(0, 24, 0);
 				sample_start(1, 25, 0);
 
 				break;
-			// opening cinematic song
+			/* opening cinematic song*/
 			case 0x52:
 				sample_start(0, 46, 0);
 				sample_start(1, 47, 0);
 		
 				break;
-			// continue/dynamite song
+			/* continue/dynamite song*/
 			case 0x53:
 				sample_start(0, 32, 1);
 				sample_start(1, 33, 1);
 				
 				break;
-			// homosexual cheesy ending music
+			/* homosexual cheesy ending music*/
 			case 0x54:
 				sample_start(0, 48, 1);
 				sample_start(1, 49, 1);
 			
 				break;
-			// player select song
+			/* player select song*/
 			case 0x55:
 				sample_start(0, 30, 0);
 				sample_start(1, 31, 0);
 				
 				break;
-			// stage end/victory song
+			/* stage end/victory song*/
 			case 0x57:
 				sample_start(0, 28, 0);
 				sample_start(1, 29, 0);
 				
-				// when we beat a stage after the alternate songs are provisioned, we know that we should be playing the alternate songs
+				/* when we beat a stage after the alternate songs are provisioned, we know that we should be playing the alternate songs*/
 				if (ff_provision_alt_song == true) {
 					ff_play_alternate_song = true;
 				}
 				
 				break;
-			// final stage clear ditty
+			/* final stage clear ditty*/
 			case 0x58:
 				sample_start(0, 26, 0);
 				sample_start(1, 27, 0);
@@ -319,7 +319,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				if(ACCESSING_LSB)
 					soundlatch_w(0,data & 0xff);
 
-				// Lets stop the Final Fight sample music.
+				/* Lets stop the Final Fight sample music.*/
 				if(data == 0xf0 || data == 0xf2 || data == 0xf7) {
 					int a = 0;
 					
@@ -331,18 +331,18 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 				break;
 		}
 
-		// Determine how we should mix these samples together.
-		if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+		/* Determine how we should mix these samples together.*/
+		if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers.*/
 			sample_set_stereo_volume(1, 100, 100);
 		}
-		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+		else if(sample_playing(0) == 1 && sample_playing(1) == 0) { /* Left channel only. Lets make it play in both speakers.*/
 			sample_set_stereo_volume(0, 100, 100);
 		}
-		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+		else if(sample_playing(0) == 1 && sample_playing(1) == 1) { /* Both left and right channels. Lets make them play in there respective speakers.*/
 			sample_set_stereo_volume(0, 100, 0);
 			sample_set_stereo_volume(1, 0, 100);
 		}
-		else if(sample_playing(0) == 0 && sample_playing(1) == 0) { // No sample playing, revert to the default sound.
+		else if(sample_playing(0) == 0 && sample_playing(1) == 0) { /* No sample playing, revert to the default sound.*/
 			if(ACCESSING_LSB) {
 				soundlatch_w(0,data & 0xff);
 			}
@@ -356,7 +356,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 
 static WRITE16_HANDLER( cps1_coinctrl_w )
 {
-//	usrintf_showmessage("coinctrl %04x",data);
+/*	usrintf_showmessage("coinctrl %04x",data);*/
 
 	if (ACCESSING_MSB)
 	{
@@ -613,7 +613,7 @@ static MEMORY_WRITE_START( sound_writemem )
 	{ 0xf001, 0xf001, YM2151_data_port_0_w },
 	{ 0xf002, 0xf002, OKIM6295_data_0_w },
 	{ 0xf004, 0xf004, cps1_snd_bankswitch_w },
-//	{ 0xf006, 0xf006, MWA_NOP }, /* ???? Unknown ???? */
+/*	{ 0xf006, 0xf006, MWA_NOP },  // ???? Unknown ???? /*/
 MEMORY_END
 
 MEMORY_READ_START( qsound_readmem )
@@ -734,8 +734,8 @@ INPUT_PORTS_START( forgottn )
 
 	PORT_START      /* DSWB */
 	CPS1_DIFFICULTY_1
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )			// Check code at 0x00111c
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )			// (0x00112c in 'lostwrld')
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )			/* Check code at 0x00111c*/
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )			/* (0x00112c in 'lostwrld')*/
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
@@ -767,8 +767,8 @@ INPUT_PORTS_START( forgottn )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )			// Check code at 0x013c78
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )			// (0x013690 in 'lostwrld')
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )			/* Check code at 0x013c78*/
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )			/* (0x013690 in 'lostwrld')*/
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
@@ -815,7 +815,7 @@ INPUT_PORTS_START( ghouls )
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0xc0, "Upright 1 Player" )
 	PORT_DIPSETTING(    0x80, "Upright 2 Players" )
-//	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )
+/*	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 
 	PORT_START      /* DSWB */
@@ -850,7 +850,7 @@ INPUT_PORTS_START( ghouls )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// "Demo Sounds" in manual; doesn?t work
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		/* "Demo Sounds" in manual; doesn?t work*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, "Allow Continue" )
@@ -897,7 +897,7 @@ INPUT_PORTS_START( ghoulsu )
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0xc0, "Upright 1 Player" )
 	PORT_DIPSETTING(    0x80, "Upright 2 Players" )
-//	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )
+/*	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 
 	PORT_START      /* DSWB */
@@ -932,7 +932,7 @@ INPUT_PORTS_START( ghoulsu )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// "Demo Sounds" in manual; doesn?t work
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		/* "Demo Sounds" in manual; doesn?t work*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, "Allow Continue" )
@@ -978,7 +978,7 @@ INPUT_PORTS_START( daimakai )
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0xc0, "Upright 1 Player" )
 	PORT_DIPSETTING(    0x80, "Upright 2 Players" )
-//	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )
+/*	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 
 	PORT_START      /* DSWB */
@@ -1013,7 +1013,7 @@ INPUT_PORTS_START( daimakai )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		// "Demo Sounds" in manual; doesn?t work
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )		/* "Demo Sounds" in manual; doesn?t work*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x40, 0x40, "Allow Continue" )
@@ -1059,7 +1059,7 @@ INPUT_PORTS_START( strider )
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0xc0, "Upright 1 Player" )
 	PORT_DIPSETTING(    0x80, "Upright 2 Players" )
-//	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )
+/*	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 
 	PORT_START      /* DSWB */
@@ -1075,15 +1075,15 @@ INPUT_PORTS_START( strider )
 	PORT_DIPSETTING(    0x20, "30K, 50K then every 70K" )
 	PORT_DIPSETTING(    0x10, "20K & 60K only" )
 	PORT_DIPSETTING(    0x00, "30K & 60K only" )
-	PORT_DIPNAME( 0xc0, 0x00, "Internal Diff. on Life Loss" )		// Check code at 0x00d15a
+	PORT_DIPNAME( 0xc0, 0x00, "Internal Diff. on Life Loss" )		/* Check code at 0x00d15a*/
 	PORT_DIPSETTING(    0xc0, "-3" )
-//	PORT_DIPSETTING(    0x40, "-1" )
+/*	PORT_DIPSETTING(    0x40, "-1" )*/
 	PORT_DIPSETTING(    0x00, "-1" )
 	PORT_DIPSETTING(    0x80, "Default" )
 
 	PORT_START      /* DSWC */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
-	PORT_DIPSETTING(    0x00, "2" )						// "6" in the "test mode"
+	PORT_DIPSETTING(    0x00, "2" )						/* "6" in the "test mode"*/
 	PORT_DIPSETTING(    0x03, "3" )
 	PORT_DIPSETTING(    0x02, "4" )
 	PORT_DIPSETTING(    0x01, "5" )
@@ -1104,7 +1104,7 @@ INPUT_PORTS_START( strider )
 	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
 	PORT_BITX(    0x80, 0x80, IPT_DIPSWITCH_NAME, "Game Mode", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x80, "Game" )
-	PORT_DIPSETTING(    0x00, "Test" )					// To enable the "debug" features
+	PORT_DIPSETTING(    0x00, "Test" )					/* To enable the "debug" features*/
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1143,7 +1143,7 @@ INPUT_PORTS_START( stridrua )
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0xc0, "Upright 1 Player" )
 	PORT_DIPSETTING(    0x80, "Upright 2 Players" )
-//	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )
+/*	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 
 	PORT_START      /* DSWB */
@@ -1159,15 +1159,15 @@ INPUT_PORTS_START( stridrua )
 	PORT_DIPSETTING(    0x20, "30K, 50K then every 70K" )
 	PORT_DIPSETTING(    0x10, "20K & 60K only" )
 	PORT_DIPSETTING(    0x00, "30K & 60K only" )
-	PORT_DIPNAME( 0xc0, 0x00, "Internal Diff. on Life Loss" )		// Check code at 0x00d15a
+	PORT_DIPNAME( 0xc0, 0x00, "Internal Diff. on Life Loss" )		/* Check code at 0x00d15a*/
 	PORT_DIPSETTING(    0xc0, "-3" )
-//	PORT_DIPSETTING(    0x40, "-1" )
+/*	PORT_DIPSETTING(    0x40, "-1" )*/
 	PORT_DIPSETTING(    0x00, "-1" )
 	PORT_DIPSETTING(    0x80, "Default" )
 
 	PORT_START      /* DSWC */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
-	PORT_DIPSETTING(    0x00, "2" )						// "6" in the "test mode"
+	PORT_DIPSETTING(    0x00, "2" )						/* "6" in the "test mode"*/
 	PORT_DIPSETTING(    0x03, "3" )
 	PORT_DIPSETTING(    0x02, "4" )
 	PORT_DIPSETTING(    0x01, "5" )
@@ -1188,7 +1188,7 @@ INPUT_PORTS_START( stridrua )
 	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
 	PORT_BITX(    0x80, 0x80, IPT_DIPSWITCH_NAME, "Game Mode", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x80, "Game" )
-	PORT_DIPSETTING(    0x00, "Test" )					// To enable the "debug" features
+	PORT_DIPSETTING(    0x00, "Test" )					/* To enable the "debug" features*/
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1266,11 +1266,11 @@ INPUT_PORTS_START( dw )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Demo_Sounds ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )			// "ON"  in the "test mode"
-	PORT_DIPSETTING(    0x20, DEF_STR( On ) )			// "OFF" in the "test mode"
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )			/* "ON"  in the "test mode"*/
+	PORT_DIPSETTING(    0x20, DEF_STR( On ) )			/* "OFF" in the "test mode"*/
 	PORT_DIPNAME( 0x40, 0x40, "Allow Continue" )
-	PORT_DIPSETTING(    0x00, DEF_STR( No ) )			// "ON"  in the "test mode"
-	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )			// "OFF" in the "test mode"
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )			/* "ON"  in the "test mode"*/
+	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )			/* "OFF" in the "test mode"*/
 	PORT_BITX(    0x80, 0x80, IPT_DIPSWITCH_NAME, "Game Mode", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x80, "Game" )
 	PORT_DIPSETTING(    0x00, "Test" )
@@ -1314,7 +1314,7 @@ INPUT_PORTS_START( willow )
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0xc0, "Upright 1 Player" )
 	PORT_DIPSETTING(    0x80, "Upright 2 Players" )
-//	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )
+/*	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 
 	PORT_START      /* DSWB */
@@ -1330,7 +1330,7 @@ INPUT_PORTS_START( willow )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Stage Magic Continue" )		// Check code at 0x002e1c
+	PORT_DIPNAME( 0x80, 0x80, "Stage Magic Continue" )		/* Check code at 0x002e1c*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	/* When the Dip Switch is set to "On" , your magic and sword power will be increased
@@ -1366,7 +1366,7 @@ INPUT_PORTS_START( willow )
 	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
 	PORT_BITX(    0x80, 0x80, IPT_DIPSWITCH_NAME, "Game Mode", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x80, "Game" )
-	PORT_DIPSETTING(    0x00, "Test" )					// To enable the "debug" features
+	PORT_DIPSETTING(    0x00, "Test" )					/* To enable the "debug" features*/
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1412,7 +1412,7 @@ INPUT_PORTS_START( unsquad )
 
 	PORT_START      /* DSWB */
 	CPS1_DIFFICULTY_1
-	PORT_DIPNAME( 0x18, 0x18, "Damage" )				// Check code at 0x006f4e
+	PORT_DIPNAME( 0x18, 0x18, "Damage" )				/* Check code at 0x006f4e*/
 	PORT_DIPSETTING(    0x10, "Small" )
 	PORT_DIPSETTING(    0x18, "Normal" )
 	PORT_DIPSETTING(    0x08, "Big" )
@@ -1496,19 +1496,19 @@ INPUT_PORTS_START( ffight )
 
 	PORT_START      /* DSWB */
 	PORT_DIPNAME( 0x07, 0x04, "Difficulty Level 1" )
-	PORT_DIPSETTING(    0x07, "Easiest" )				// "01"
-	PORT_DIPSETTING(    0x06, "Easier" )				// "02"
-	PORT_DIPSETTING(    0x05, "Easy" )				// "03"
-	PORT_DIPSETTING(    0x04, "Normal" )				// "04"
-	PORT_DIPSETTING(    0x03, "Medium" )				// "05"
-	PORT_DIPSETTING(    0x02, "Hard" )				// "06"
-	PORT_DIPSETTING(    0x01, "Harder" )				// "07"
-	PORT_DIPSETTING(    0x00, "Hardest" )				// "08"
+	PORT_DIPSETTING(    0x07, "Easiest" )				/* "01"*/
+	PORT_DIPSETTING(    0x06, "Easier" )				/* "02"*/
+	PORT_DIPSETTING(    0x05, "Easy" )				/* "03"*/
+	PORT_DIPSETTING(    0x04, "Normal" )				/* "04"*/
+	PORT_DIPSETTING(    0x03, "Medium" )				/* "05"*/
+	PORT_DIPSETTING(    0x02, "Hard" )				/* "06"*/
+	PORT_DIPSETTING(    0x01, "Harder" )				/* "07"*/
+	PORT_DIPSETTING(    0x00, "Hardest" )				/* "08"*/
 	PORT_DIPNAME( 0x18, 0x10, "Difficulty Level 2" )
-	PORT_DIPSETTING(    0x18, "Easy" )				// "01"
-	PORT_DIPSETTING(    0x10, "Normal" )				// "02"
-	PORT_DIPSETTING(    0x08, "Hard" )				// "03"
-	PORT_DIPSETTING(    0x00, "Hardest" )				// "04"
+	PORT_DIPSETTING(    0x18, "Easy" )				/* "01"*/
+	PORT_DIPSETTING(    0x10, "Normal" )				/* "02"*/
+	PORT_DIPSETTING(    0x08, "Hard" )				/* "03"*/
+	PORT_DIPSETTING(    0x00, "Hardest" )				/* "04"*/
 	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x60, "100k" )
 	PORT_DIPSETTING(    0x40, "200k" )
@@ -1599,7 +1599,7 @@ INPUT_PORTS_START( 1941 )
 	PORT_DIPSETTING(    0x00, "4 Bars" )
 
 	PORT_START      /* DSWC */
-	PORT_DIPNAME( 0x01, 0x01, "Throttle Game Speed" ) 	// turning this off will break the game
+	PORT_DIPNAME( 0x01, 0x01, "Throttle Game Speed" ) 	/* turning this off will break the game*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unused ) )
@@ -1779,14 +1779,14 @@ INPUT_PORTS_START( mtwins )
 	PORT_START      /* DSWB */
 	CPS1_DIFFICULTY_1
 	PORT_DIPNAME( 0x38, 0x18, DEF_STR( Lives ) )
-//	PORT_DIPSETTING(    0x30, "1" )					// 0x38 energy, smallest damage
-//	PORT_DIPSETTING(    0x38, "1" )					// 0x38 energy, small damage
-//	PORT_DIPSETTING(    0x28, "1" )					// 0x38 energy, big damage
-//	PORT_DIPSETTING(    0x20, "1" )					// 0x38 energy, biggest damage
-	PORT_DIPSETTING(    0x10, "1" )					// 0x20 energy, smallest damage
-	PORT_DIPSETTING(    0x18, "2" )					// 0x20 energy, small damage
-	PORT_DIPSETTING(    0x08, "3" )					// 0x20 energy, big damage
-	PORT_DIPSETTING(    0x00, "4" )					// 0x20 energy, biggest damage
+/*	PORT_DIPSETTING(    0x30, "1" )					*/ /* 0x38 energy, smallest damage*/
+/*	PORT_DIPSETTING(    0x38, "1" )					*/ /* 0x38 energy, small damage*/
+/*	PORT_DIPSETTING(    0x28, "1" )					*/ /* 0x38 energy, big damage*/
+/*	PORT_DIPSETTING(    0x20, "1" )					*/ /* 0x38 energy, biggest damage*/
+	PORT_DIPSETTING(    0x10, "1" )					/* 0x20 energy, smallest damage*/
+	PORT_DIPSETTING(    0x18, "2" )					/* 0x20 energy, small damage*/
+	PORT_DIPSETTING(    0x08, "3" )					/* 0x20 energy, big damage*/
+	PORT_DIPSETTING(    0x00, "4" )					/* 0x20 energy, biggest damage*/
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1865,24 +1865,24 @@ INPUT_PORTS_START( msword )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START      /* DSWB */
-	PORT_DIPNAME( 0x07, 0x04, "Player's vitality consumption" )		// "Level 1"
-	PORT_DIPSETTING(    0x07, "1 (Easiest)" )				// "Easy 3"		(-1 every 28 frames)
-	PORT_DIPSETTING(    0x06, "2" )						// "Easy 2"		(-1 every 24 frames)
-	PORT_DIPSETTING(    0x05, "3" )						// "Easy 1"		(-1 every 20 frames)
-	PORT_DIPSETTING(    0x04, "4 (Normal)" )				// "Normal"		(-1 every 18 frames)
-	PORT_DIPSETTING(    0x03, "5" )						// "Difficult 1"	(-1 every 16 frames)
-	PORT_DIPSETTING(    0x02, "6" )						// "Difficult 2"	(-1 every 14 frames)
-	PORT_DIPSETTING(    0x01, "7" )						// "Difficult 3"	(-1 every 12 frames)
-	PORT_DIPSETTING(    0x00, "8 (Hardest)" )				// "Difficult 4"	(-1 every 8 frames)
-	PORT_DIPNAME( 0x38, 0x38, "Enemy's vitality and attacking power" )	// "Level 2"
-	PORT_DIPSETTING(    0x20, "1 (Easiest)" )				// "Easy 3"
-	PORT_DIPSETTING(    0x28, "2" )						// "Easy 2"
-	PORT_DIPSETTING(    0x30, "3" )						// "Easy 1"
-	PORT_DIPSETTING(    0x38, "4 (Normal)" )				// "Normal"
-	PORT_DIPSETTING(    0x18, "5" )						// "Difficult 1"
-	PORT_DIPSETTING(    0x10, "6" )						// "Difficult 2"
-	PORT_DIPSETTING(    0x08, "7" )						// "Difficult 3"
-	PORT_DIPSETTING(    0x00, "8 (Hardest)" )				// "Difficult 4"
+	PORT_DIPNAME( 0x07, 0x04, "Player's vitality consumption" )		/* "Level 1"*/
+	PORT_DIPSETTING(    0x07, "1 (Easiest)" )				/* "Easy 3"		(-1 every 28 frames)*/
+	PORT_DIPSETTING(    0x06, "2" )						/* "Easy 2"		(-1 every 24 frames)*/
+	PORT_DIPSETTING(    0x05, "3" )						/* "Easy 1"		(-1 every 20 frames)*/
+	PORT_DIPSETTING(    0x04, "4 (Normal)" )				/* "Normal"		(-1 every 18 frames)*/
+	PORT_DIPSETTING(    0x03, "5" )						/* "Difficult 1"	(-1 every 16 frames)*/
+	PORT_DIPSETTING(    0x02, "6" )						/* "Difficult 2"	(-1 every 14 frames)*/
+	PORT_DIPSETTING(    0x01, "7" )						/* "Difficult 3"	(-1 every 12 frames)*/
+	PORT_DIPSETTING(    0x00, "8 (Hardest)" )				/* "Difficult 4"	(-1 every 8 frames)*/
+	PORT_DIPNAME( 0x38, 0x38, "Enemy's vitality and attacking power" )	/* "Level 2"*/
+	PORT_DIPSETTING(    0x20, "1 (Easiest)" )				/* "Easy 3"*/
+	PORT_DIPSETTING(    0x28, "2" )						/* "Easy 2"*/
+	PORT_DIPSETTING(    0x30, "3" )						/* "Easy 1"*/
+	PORT_DIPSETTING(    0x38, "4 (Normal)" )				/* "Normal"*/
+	PORT_DIPSETTING(    0x18, "5" )						/* "Difficult 1"*/
+	PORT_DIPSETTING(    0x10, "6" )						/* "Difficult 2"*/
+	PORT_DIPSETTING(    0x08, "7" )						/* "Difficult 3"*/
+	PORT_DIPSETTING(    0x00, "8 (Hardest)" )				/* "Difficult 4"*/
 	PORT_DIPNAME( 0x40, 0x00, "Stage Select" )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -1892,10 +1892,10 @@ INPUT_PORTS_START( msword )
 
 	PORT_START      /* DSWC */
 	PORT_DIPNAME( 0x03, 0x03, "Vitality Packs" )
-	PORT_DIPSETTING(    0x00, "1" )						// 0x0320
-	PORT_DIPSETTING(    0x03, "2" )						// 0x0640
-	PORT_DIPSETTING(    0x02, "3 (2 when continue)" )			// 0x0960 (0x0640 when continue)
-	PORT_DIPSETTING(    0x01, "4 (3 when continue)" )			// 0x0c80 (0x0960 when continue)
+	PORT_DIPSETTING(    0x00, "1" )						/* 0x0320*/
+	PORT_DIPSETTING(    0x03, "2" )						/* 0x0640*/
+	PORT_DIPSETTING(    0x02, "3 (2 when continue)" )			/* 0x0960 (0x0640 when continue)*/
+	PORT_DIPSETTING(    0x01, "4 (3 when continue)" )			/* 0x0c80 (0x0960 when continue)*/
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -2050,7 +2050,7 @@ INPUT_PORTS_START( nemo )
 	PORT_DIPNAME( 0x18, 0x18, "Life Bar" )
 	PORT_DIPSETTING(    0x00, "Minimun" )
 	PORT_DIPSETTING(    0x18, "Medium" )
-//	PORT_DIPSETTING(    0x10, "Medium" )
+/*	PORT_DIPSETTING(    0x10, "Medium" )*/
 	PORT_DIPSETTING(    0x08, "Maximum" )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
@@ -2085,7 +2085,7 @@ INPUT_PORTS_START( nemo )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
 	PORT_BITX(    0x80, 0x80, IPT_DIPSWITCH_NAME, "Game Mode", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x80, "Game" )
-	PORT_DIPSETTING(    0x00, "Test" )					// To enable the "debug" features
+	PORT_DIPSETTING(    0x00, "Test" )					/* To enable the "debug" features*/
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -3320,14 +3320,14 @@ INPUT_PORTS_START( qad )
 
 	PORT_START      /* DSWB */
 	PORT_DIPNAME( 0x07, 0x04, DEF_STR( Difficulty ) )
-//	PORT_DIPSETTING(    0x07, "Easiest" )
+/*	PORT_DIPSETTING(    0x07, "Easiest" )*/
 	PORT_DIPSETTING(    0x06, "Easiest" )
 	PORT_DIPSETTING(    0x05, "Easy" )
 	PORT_DIPSETTING(    0x04, "Normal" )
 	PORT_DIPSETTING(    0x03, "Hard" )
 	PORT_DIPSETTING(    0x02, "Hardest" )
-//	PORT_DIPSETTING(    0x01, "Hardest" )
-//	PORT_DIPSETTING(    0x00, "Hardest" )
+/*	PORT_DIPSETTING(    0x01, "Hardest" )*/
+/*	PORT_DIPSETTING(    0x00, "Hardest" )*/
 	PORT_DIPNAME( 0x18, 0x10, "Wisdom" )
 	PORT_DIPSETTING(    0x18, "Easy" )
 	PORT_DIPSETTING(    0x10, "Normal" )
@@ -3339,9 +3339,9 @@ INPUT_PORTS_START( qad )
 	PORT_DIPSETTING(    0xa0, "3" )
 	PORT_DIPSETTING(    0xc0, "4" )
 	PORT_DIPSETTING(    0xe0, "5" )
-//	PORT_DIPSETTING(    0x40, "1" )
-//	PORT_DIPSETTING(    0x20, "1" )
-//	PORT_DIPSETTING(    0x00, "1" )
+/*	PORT_DIPSETTING(    0x40, "1" )*/
+/*	PORT_DIPSETTING(    0x20, "1" )*/
+/*	PORT_DIPSETTING(    0x00, "1" )*/
 
 	PORT_START      /* DSWC */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )
@@ -3425,9 +3425,9 @@ INPUT_PORTS_START( qadj )
 	PORT_DIPSETTING(    0x05, "2" )
 	PORT_DIPSETTING(    0x04, "3" )
 	PORT_DIPSETTING(    0x03, "4" )
-//	PORT_DIPSETTING(    0x02, "4" )
-//	PORT_DIPSETTING(    0x01, "4" )
-//	PORT_DIPSETTING(    0x00, "4" )
+/*	PORT_DIPSETTING(    0x02, "4" )*/
+/*	PORT_DIPSETTING(    0x01, "4" )*/
+/*	PORT_DIPSETTING(    0x00, "4" )*/
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -3438,11 +3438,11 @@ INPUT_PORTS_START( qadj )
 	PORT_DIPSETTING(    0xa0, "1" )
 	PORT_DIPSETTING(    0xc0, "2" )
 	PORT_DIPSETTING(    0xe0, "3" )
-//	PORT_DIPSETTING(    0x00, "1" )
-//	PORT_DIPSETTING(    0x20, "1" )
-//	PORT_DIPSETTING(    0x80, "1" )
-//	PORT_DIPSETTING(    0x40, "2" )
-//	PORT_DIPSETTING(    0x60, "3" )
+/*	PORT_DIPSETTING(    0x00, "1" )*/
+/*	PORT_DIPSETTING(    0x20, "1" )*/
+/*	PORT_DIPSETTING(    0x80, "1" )*/
+/*	PORT_DIPSETTING(    0x40, "2" )*/
+/*	PORT_DIPSETTING(    0x60, "3" )*/
 
 	PORT_START      /* DSWC */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
@@ -3533,9 +3533,9 @@ INPUT_PORTS_START( qtono2 )
 	PORT_DIPSETTING(    0xe0, "3" )
 	PORT_DIPSETTING(    0xa0, "4" )
 	PORT_DIPSETTING(    0xc0, "5" )
-//	PORT_DIPSETTING(    0x40, "?" )
-//	PORT_DIPSETTING(    0x20, "?" )
-//	PORT_DIPSETTING(    0x00, "?" )
+/*	PORT_DIPSETTING(    0x40, "?" )*/
+/*	PORT_DIPSETTING(    0x20, "?" )*/
+/*	PORT_DIPSETTING(    0x00, "?" )*/
 
 	PORT_START      /* DSWC */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
@@ -3659,7 +3659,7 @@ INPUT_PORTS_START( megaman )
 	PORT_DIPSETTING(    0x0d, DEF_STR( Free_Play ) )
 	/* 0x00 to 0x0c 1 Coin/1 Credit */
 	PORT_DIPNAME( 0x60, 0x60, "Coin slots" )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 	PORT_DIPSETTING(    0x40, "1, Individual" )
 	PORT_DIPSETTING(    0x20, "1, Common" )
 	PORT_DIPSETTING(    0x60, "2, Common" )
@@ -3772,7 +3772,7 @@ INPUT_PORTS_START( rockmanj )
 	PORT_DIPSETTING(    0x0d, DEF_STR( Free_Play ) )
 	/* 0x00 to 0x0c 1 Coin/1 Credit */
 	PORT_DIPNAME( 0x60, 0x60, "Coin slots" )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 	PORT_DIPSETTING(    0x40, "1, Individual" )
 	PORT_DIPSETTING(    0x20, "1, Common" )
 	PORT_DIPSETTING(    0x60, "2, Common" )
@@ -3964,17 +3964,17 @@ static MACHINE_DRIVER_START( cps1 )
 	MDRV_SOUND_ADD_TAG("okim", OKIM6295, okim6295_interface_7576)
 MACHINE_DRIVER_END
 
-// For Final Fight.
+/* For Final Fight.*/
 static MACHINE_DRIVER_START( ffight_hack )
 	ff_playing_final_fight = true;
 	
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1)
 
-	// Lets add our Final Fight music sample packs.
+	/* Lets add our Final Fight music sample packs.*/
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(SAMPLES, ff_samples)
-	//MDRV_SOUND_ADD(SAMPLES, ff_samplesR)
+	/*MDRV_SOUND_ADD(SAMPLES, ff_samplesR)*/
 MACHINE_DRIVER_END
 
 
@@ -5214,9 +5214,9 @@ ROM_END
 
 ROM_START( sf2 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "sf2e.30g",      0x00000, 0x20000, CRC(fe39ee33) SHA1(22558eb15e035b09b80935a32b8425d91cd79669) )	// matches sf2u.30i
+	ROM_LOAD16_BYTE( "sf2e.30g",      0x00000, 0x20000, CRC(fe39ee33) SHA1(22558eb15e035b09b80935a32b8425d91cd79669) )	/* matches sf2u.30i*/
 	ROM_LOAD16_BYTE( "sf2e.37g",      0x00001, 0x20000, CRC(fb92cd74) SHA1(bf1ccfe7cc1133f0f65556430311108722add1f2) )
-	ROM_LOAD16_BYTE( "sf2e.31g",      0x40000, 0x20000, CRC(69a0a301) SHA1(86a3954335310865b14ce8b4e0e4499feb14fc12) )	// matches sf2u.31i
+	ROM_LOAD16_BYTE( "sf2e.31g",      0x40000, 0x20000, CRC(69a0a301) SHA1(86a3954335310865b14ce8b4e0e4499feb14fc12) )	/* matches sf2u.31i*/
 	ROM_LOAD16_BYTE( "sf2e.38g",      0x40001, 0x20000, CRC(5e22db70) SHA1(6565946591a18eaf46f04c1aa449ee0ae9ac2901) )
 	ROM_LOAD16_BYTE( "sf2e.28g",      0x80000, 0x20000, CRC(8bf9f1e5) SHA1(bbcef63f35e5bff3f373968ba1278dd6bd86b593) )
 	ROM_LOAD16_BYTE( "sf2e.35g",      0x80001, 0x20000, CRC(626ef934) SHA1(507bda3e4519de237aca919cf72e543403ec9724) )
@@ -7683,18 +7683,18 @@ static DRIVER_INIT( pang3 )
 
 GAME( 1988, forgottn, 0,        forgottn, forgottn, cps1,     ROT0,   "Capcom", "Forgotten Worlds (US)" )
 GAME( 1988, lostwrld, forgottn, forgottn, forgottn, cps1,     ROT0,   "Capcom", "Lost Worlds (Japan)" )
-GAME( 1988, ghouls,   0,        cps1,     ghouls,   cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (World)" )						// Wed.26.10.1988 in the ROMS
-GAME( 1988, ghoulsu,  ghouls,   cps1,     ghoulsu,  cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (US)" )						// Wed.26.10.1988 in the ROMS
-GAME( 1988, daimakai, ghouls,   cps1,     daimakai, cps1,     ROT0,   "Capcom", "Dai Makai-Mura (Japan)" )						// Wed.26.10.1988 in the ROMS
+GAME( 1988, ghouls,   0,        cps1,     ghouls,   cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (World)" )						/* Wed.26.10.1988 in the ROMS*/
+GAME( 1988, ghoulsu,  ghouls,   cps1,     ghoulsu,  cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (US)" )						/* Wed.26.10.1988 in the ROMS*/
+GAME( 1988, daimakai, ghouls,   cps1,     daimakai, cps1,     ROT0,   "Capcom", "Dai Makai-Mura (Japan)" )						/* Wed.26.10.1988 in the ROMS*/
 GAME( 1989, strider,  0,        cps1,     strider,  cps1,     ROT0,   "Capcom", "Strider (US set 1)" )
 GAME( 1989, stridrua, strider,  cps1,     stridrua, cps1,     ROT0,   "Capcom", "Strider (US set 2)" )
 GAME( 1989, striderj, strider,  cps1,     strider,  cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan set 1)" )
 GAME( 1989, stridrja, strider,  cps1,     strider,  cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan set 2)" )
-GAME( 1989, dw,       0,        cps1,     dw,       cps1,     ROT0,   "Capcom", "Dynasty Wars (World)" )						// (c) Capcom U.S.A.
+GAME( 1989, dw,       0,        cps1,     dw,       cps1,     ROT0,   "Capcom", "Dynasty Wars (World)" )						/* (c) Capcom U.S.A.*/
 GAME( 1989, dwj,      dw,       cps1,     dw,       cps1,     ROT0,   "Capcom", "Tenchi wo Kurau (Japan)" )
 GAME( 1989, willow,   0,        cps1,     willow,   cps1,     ROT0,   "Capcom", "Willow (US)" )
-GAME( 1989, willowj,  willow,   cps1,     willow,   cps1,     ROT0,   "Capcom", "Willow (Japan, Japanese)" )					// Japan "warning"
-GAME( 1989, willowje, willow,   cps1,     willow,   cps1,     ROT0,   "Capcom", "Willow (Japan, English)" )						// (c) Capcom U.S.A. but Japan "warning"
+GAME( 1989, willowj,  willow,   cps1,     willow,   cps1,     ROT0,   "Capcom", "Willow (Japan, Japanese)" )					/* Japan "warning"*/
+GAME( 1989, willowje, willow,   cps1,     willow,   cps1,     ROT0,   "Capcom", "Willow (Japan, English)" )						/* (c) Capcom U.S.A. but Japan "warning"*/
 GAME( 1989, unsquad,  0,        cps1,     unsquad,  cps1,     ROT0,   "Capcom", "U.N. Squadron (US)" )
 GAME( 1989, area88,   unsquad,  cps1,     unsquad,  cps1,     ROT0,   "Capcom", "Area 88 (Japan)" )
 
@@ -7712,23 +7712,23 @@ GAME( 1989, ffightj1, ffight,   cps1,     ffight,   cps1,     ROT0,   "Capcom", 
 
 GAME( 1990, 1941,     0,        cps1,     1941,     cps1,     ROT270, "Capcom", "1941 - Counter Attack (World)" )
 GAME( 1990, 1941j,    1941,     cps1,     1941,     cps1,     ROT270, "Capcom", "1941 - Counter Attack (Japan)" )
-GAME( 1990, mercs,    0,        cps1,     mercs,    cps1,     ROT270, "Capcom", "Mercs (World 900302)" )						// "ETC"
+GAME( 1990, mercs,    0,        cps1,     mercs,    cps1,     ROT270, "Capcom", "Mercs (World 900302)" )						/* "ETC"*/
 GAME( 1990, mercsu,   mercs,    cps1,     mercs,    cps1,     ROT270, "Capcom", "Mercs (US 900302)" )
 GAME( 1990, mercsua,  mercs,    cps1,     mercs,    cps1,     ROT270, "Capcom", "Mercs (US 900608)" )
 GAME( 1990, mercsj,   mercs,    cps1,     mercs,    cps1,     ROT270, "Capcom", "Senjou no Ookami II (Japan 900302)" )
-GAME( 1990, mtwins,   0,        cps1,     mtwins,   cps1,     ROT0,   "Capcom", "Mega Twins (World 900619)" )					// "ETC" - (c) Capcom U.S.A. with World "warning"
+GAME( 1990, mtwins,   0,        cps1,     mtwins,   cps1,     ROT0,   "Capcom", "Mega Twins (World 900619)" )					/* "ETC" - (c) Capcom U.S.A. with World "warning"*/
 GAME( 1990, chikij,   mtwins,   cps1,     mtwins,   cps1,     ROT0,   "Capcom", "Chiki Chiki Boys (Japan 900619)" )
-GAME( 1990, msword,   0,        cps1,     msword,   cps1,     ROT0,   "Capcom", "Magic Sword - Heroic Fantasy (World 900725)" )		// 25.07.1990  "Other Country"
-GAME( 1990, mswordr1, msword,   cps1,     msword,   cps1,     ROT0,   "Capcom", "Magic Sword - Heroic Fantasy (World 900623)" )		// 23.06.1990  "Other Country"
-GAME( 1990, mswordu,  msword,   cps1,     msword,   cps1,     ROT0,   "Capcom", "Magic Sword - Heroic Fantasy (US 900725)" )			// 25.07.1990  "U.S.A."
-GAME( 1990, mswordj,  msword,   cps1,     msword,   cps1,     ROT0,   "Capcom", "Magic Sword (Japan 900623)" )					// 23.06.1990  "Japan"
-GAME( 1990, cawing,   0,        cps1,     cawing,   cps1,     ROT0,   "Capcom", "Carrier Air Wing (World 901012)" )				// "ETC"
+GAME( 1990, msword,   0,        cps1,     msword,   cps1,     ROT0,   "Capcom", "Magic Sword - Heroic Fantasy (World 900725)" )		/* 25.07.1990  "Other Country"*/
+GAME( 1990, mswordr1, msword,   cps1,     msword,   cps1,     ROT0,   "Capcom", "Magic Sword - Heroic Fantasy (World 900623)" )		/* 23.06.1990  "Other Country"*/
+GAME( 1990, mswordu,  msword,   cps1,     msword,   cps1,     ROT0,   "Capcom", "Magic Sword - Heroic Fantasy (US 900725)" )			/* 25.07.1990  "U.S.A."*/
+GAME( 1990, mswordj,  msword,   cps1,     msword,   cps1,     ROT0,   "Capcom", "Magic Sword (Japan 900623)" )					/* 23.06.1990  "Japan"*/
+GAME( 1990, cawing,   0,        cps1,     cawing,   cps1,     ROT0,   "Capcom", "Carrier Air Wing (World 901012)" )				/* "ETC"*/
 GAME( 1990, cawingu,  cawing,   cps1,     cawing,   cps1,     ROT0,   "Capcom", "Carrier Air Wing (US 901012)" )
 GAME( 1990, cawingj,  cawing,   cps1,     cawing,   cps1,     ROT0,   "Capcom", "U.S. Navy (Japan 901012)" )
-GAME( 1990, nemo,     0,        cps1,     nemo,     cps1,     ROT0,   "Capcom", "Nemo (World 901130)" )						// "ETC"
+GAME( 1990, nemo,     0,        cps1,     nemo,     cps1,     ROT0,   "Capcom", "Nemo (World 901130)" )						/* "ETC"*/
 GAME( 1990, nemoj,    nemo,     cps1,     nemo,     cps1,     ROT0,   "Capcom", "Nemo (Japan 901120)" )
-GAME( 1991, sf2,      0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910522)" )	// "ETC"
-GAME( 1991, sf2eb,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910214)" )	// "ETC"
+GAME( 1991, sf2,      0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910522)" )	/* "ETC"*/
+GAME( 1991, sf2eb,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910214)" )	/* "ETC"*/
 GAME( 1991, sf2ua,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910206)" )
 GAME( 1991, sf2ub,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910214)" )
 GAME( 1991, sf2ud,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910318)" )
@@ -7739,29 +7739,29 @@ GAME( 1991, sf2uk,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", 
 GAME( 1991, sf2j,     sf2,      sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 911210)" )
 GAME( 1991, sf2ja,    sf2,      sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910214)" )
 GAME( 1991, sf2jc,    sf2,      sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910306)" )
-GAME( 1991, 3wonders, 0,        cps1,     3wonders, cps1,     ROT0,   "Capcom", "Three Wonders (World 910520)" )					// "ETC"
+GAME( 1991, 3wonders, 0,        cps1,     3wonders, cps1,     ROT0,   "Capcom", "Three Wonders (World 910520)" )					/* "ETC"*/
 GAME( 1991, 3wonderu, 3wonders, cps1,     3wonders, cps1,     ROT0,   "Capcom", "Three Wonders (US 910520)" )
 GAME( 1991, wonder3,  3wonders, cps1,     3wonders, cps1,     ROT0,   "Capcom", "Wonder 3 (Japan 910520)" )
-GAME( 1991, kod,      0,        cps1,     kod,      cps1,     ROT0,   "Capcom", "The King of Dragons (World 910711)" )				// "ETC"
+GAME( 1991, kod,      0,        cps1,     kod,      cps1,     ROT0,   "Capcom", "The King of Dragons (World 910711)" )				/* "ETC"*/
 GAME( 1991, kodu,     kod,      cps1,     kodj,     cps1,     ROT0,   "Capcom", "The King of Dragons (US 910910)" )
 GAME( 1991, kodj,     kod,      cps1,     kodj,     cps1,     ROT0,   "Capcom", "The King of Dragons (Japan 910805)" )
-GAMEX(1991, kodb,     kod,      cps1,     kod,      cps1,     ROT0,   "Capcom", "The King of Dragons (bootleg)", GAME_NOT_WORKING )		// 910731  "ETC"
-GAME( 1991, captcomm, 0,        cps1,     captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (World 911014)" )				// "OTHER COUNTRY"
+GAMEX(1991, kodb,     kod,      cps1,     kod,      cps1,     ROT0,   "Capcom", "The King of Dragons (bootleg)", GAME_NOT_WORKING )		/* 910731  "ETC"*/
+GAME( 1991, captcomm, 0,        cps1,     captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (World 911014)" )				/* "OTHER COUNTRY"*/
 GAME( 1991, captcomu, captcomm, cps1,     captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (US 910928)" )
 GAME( 1991, captcomj, captcomm, cps1,     captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (Japan 911202)" )
-GAME( 1991, knights,  0,        cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)" )				// "ETC"
+GAME( 1991, knights,  0,        cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)" )				/* "ETC"*/
 GAME( 1991, knightsu, knights,  cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (US 911127)" )
 GAME( 1991, knightsj, knights,  cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127)" )
-GAME( 1992, sf2ce,    0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (World 920313)" )	// "ETC"
+GAME( 1992, sf2ce,    0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (World 920313)" )	/* "ETC"*/
 GAME( 1992, sf2ceua,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920313)" )
 GAME( 1992, sf2ceub,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920513)" )
 GAME( 1992, sf2ceuc,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920803)" )
 GAME( 1992, sf2cej,   sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (Japan 920513)" )
-GAME( 1992, sf2rb,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Rainbow set 1)" )	// 920322 - based on World version
-GAME( 1992, sf2rb2,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Rainbow set 2)" )	// 920322 - based on World version
-GAME( 1992, sf2red,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Red Wave)" )		// 920313 - based on World version
-GAME( 1992, sf2v004,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II! - Champion Edition (V004)" )		// "102092" !!! - based on (heavily modified) World version
-GAME( 1992, sf2accp2, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Accelerator Pt.II)" )  // 920313 - based on USA version
+GAME( 1992, sf2rb,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Rainbow set 1)" )	/* 920322 - based on World version*/
+GAME( 1992, sf2rb2,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Rainbow set 2)" )	/* 920322 - based on World version*/
+GAME( 1992, sf2red,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Red Wave)" )		/* 920313 - based on World version*/
+GAME( 1992, sf2v004,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II! - Champion Edition (V004)" )		/* "102092" !!! - based on (heavily modified) World version*/
+GAME( 1992, sf2accp2, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Accelerator Pt.II)" )  /* 920313 - based on USA version*/
 GAMEX(1992, sf2m1,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1)", GAME_NOT_WORKING )
 GAMEX(1992, sf2m2,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M2)", GAME_NOT_WORKING )
 GAMEX(1992, sf2m3,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3)", GAME_NOT_WORKING )
@@ -7771,7 +7771,7 @@ GAME (1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg",
 GAME (1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M7)" )
 GAME (1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (YYC)" )
 GAME (1992, sf2koryu, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Kouryu)" )
-GAME( 1992, varth,    0,        cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" )		// "ETC"
+GAME( 1992, varth,    0,        cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" )		/* "ETC"*/
 GAME( 1992, varthu,   varth,    cps1,     varth,    cps1,     ROT270, "Capcom (Romstar license)", "Varth - Operation Thunderstorm (US 920612)" )
 GAME( 1992, varthj,   varth,    cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (Japan 920714)" )
 GAME( 1992, cworld2j, 0,        cps1,     cworld2j, cps1,     ROT0,   "Capcom", "Capcom World 2 (Japan 920611)" )
@@ -7783,20 +7783,20 @@ GAME( 1995, qtono2,   0,        cps1,     qtono2,   cps1,     ROT0,   "Capcom", 
 GAME( 1995, megaman,  0,        cps1,     megaman,  cps1,     ROT0,   "Capcom", "Mega Man - The Power Battle (CPS1 Asia 951006)" )
 GAME( 1995, rockmanj, megaman,  cps1,     megaman,  cps1,     ROT0,   "Capcom", "Rockman - The Power Battle (CPS1 Japan 950922)" )
 
-GAME( 1992, wof,      0,        qsound,   wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (World 921002)" )				// "ETC"
-GAME( 1992, wofa,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Sangokushi II (Asia 921005)" )					// World "warning"
-GAME( 1992, wofu,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (US 921031)" )					// World "warning"
+GAME( 1992, wof,      0,        qsound,   wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (World 921002)" )				/* "ETC"*/
+GAME( 1992, wofa,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Sangokushi II (Asia 921005)" )					/* World "warning"*/
+GAME( 1992, wofu,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (US 921031)" )					/* World "warning"*/
 GAME( 1992, wofj,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Tenchi wo Kurau II - Sekiheki no Tatakai (Japan 921031)" )
-GAME( 1993, dino,     0,        qsound,   dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)" )			// "ETC"
+GAME( 1993, dino,     0,        qsound,   dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)" )			/* "ETC"*/
 GAME( 1993, dinou,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs and Dinosaurs (US 930201)" )
 GAME( 1993, dinoj,    dino,     qsound,   dino,     dino ,    ROT0,   "Capcom", "Cadillacs Kyouryuu-Shinseiki (Japan 930201)" )
-GAME( 1993, punisher, 0,        qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (World 930422)" )					// "ETC"
+GAME( 1993, punisher, 0,        qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (World 930422)" )					/* "ETC"*/
 GAME( 1993, punishru, punisher, qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (US 930422)" )
 GAME( 1993, punishrj, punisher, qsound,   punisher, punisher, ROT0,   "Capcom", "The Punisher (Japan 930422)" )
-GAME( 1993, slammast, 0,        qsound,   slammast, slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (World 930713)" )		// "ETC"
+GAME( 1993, slammast, 0,        qsound,   slammast, slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (World 930713)" )		/* "ETC"*/
 GAME( 1993, slammasu, slammast, qsound,   slammast, slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (US 930713)" )
 GAME( 1993, mbomberj, slammast, qsound,   slammast, slammast, ROT0,   "Capcom", "Muscle Bomber - The Body Explosion (Japan 930713)" )
-GAME( 1993, mbombrd,  slammast, qsound,   slammast, slammast, ROT0,   "Capcom", "Muscle Bomber Duo - Ultimate Team Battle (World 931206)" )  // "ETC"
+GAME( 1993, mbombrd,  slammast, qsound,   slammast, slammast, ROT0,   "Capcom", "Muscle Bomber Duo - Ultimate Team Battle (World 931206)" )  /* "ETC"*/
 GAME( 1993, mbombrdj, slammast, qsound,   slammast, slammast, ROT0,   "Capcom", "Muscle Bomber Duo - Heat Up Warriors (Japan 931206)" )
 
 GAME( 1994, pnickj,   0,        cps1,     pnickj,   cps1,     ROT0,   "Compile (Capcom license)", "Pnickies (Japan 940608)" )

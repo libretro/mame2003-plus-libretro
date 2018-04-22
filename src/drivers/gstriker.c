@@ -302,7 +302,7 @@ static MEMORY_READ16_START( readmem )
 	{ 0x1c0000, 0x1c0fff, MRA16_RAM },
 	{ 0xffc000, 0xffffff, MRA16_RAM },
 
-//	{ 0x200060, 0x200061, dmmy },
+/*	{ 0x200060, 0x200061, dmmy },*/
 	{ 0x200080, 0x200081, input_port_1_word_r },
 	{ 0x200082, 0x200083, input_port_2_word_r },
 	{ 0x200084, 0x200085, input_port_0_word_r },
@@ -359,10 +359,10 @@ INPUT_PORTS_START( gstriker )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_SERVICE2 )				// "Test"
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_SERVICE2 )				/* "Test"*/
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN) // vbl?
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN) /* vbl?*/
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
 
 	PORT_START      /* IN1 */
@@ -373,7 +373,7 @@ INPUT_PORTS_START( gstriker )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )	// "Spare"
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )	/* "Spare"*/
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
 
 	PORT_START
@@ -384,7 +384,7 @@ INPUT_PORTS_START( gstriker )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )	// "Spare"
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )	/* "Spare"*/
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
 
 	PORT_START
@@ -398,16 +398,16 @@ INPUT_PORTS_START( gstriker )
 	PORT_DIPSETTING(      0x0008, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0x000c, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x0010, 0x0000, "2 Players VS CPU Game" )		// "Cooperation Coin"
+	PORT_DIPNAME( 0x0010, 0x0000, "2 Players VS CPU Game" )		/* "Cooperation Coin"*/
 	PORT_DIPSETTING(      0x0010, "1 Credit" )
 	PORT_DIPSETTING(      0x0000, "2 Credits" )
-	PORT_DIPNAME( 0x0020, 0x0000, "Player VS Player Game" )		// "Competitive Coin"
+	PORT_DIPNAME( 0x0020, 0x0000, "Player VS Player Game" )		/* "Competitive Coin"*/
 	PORT_DIPSETTING(      0x0020, "1 Credit" )
 	PORT_DIPSETTING(      0x0000, "2 Credits" )
 	PORT_DIPNAME( 0x0040, 0x0040, "New Challenger" )			/* unknown purpose */
 	PORT_DIPSETTING(      0x0040, DEF_STR( No ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x0080, 0x0080, "Maximum Players" )			// "Cabinet Type"
+	PORT_DIPNAME( 0x0080, 0x0080, "Maximum Players" )			/* "Cabinet Type"*/
 	PORT_DIPSETTING(      0x0000, "1" )
 	PORT_DIPSETTING(      0x0080, "2" )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
@@ -416,23 +416,23 @@ INPUT_PORTS_START( gstriker )
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0001, "Normal" )
 	PORT_DIPSETTING(      0x0000, "Hard" )
-	PORT_DIPNAME( 0x0006, 0x0006, "Player(s) VS CPU Time" )		// "Tournament  Time"
+	PORT_DIPNAME( 0x0006, 0x0006, "Player(s) VS CPU Time" )		/* "Tournament  Time"*/
 	PORT_DIPSETTING(      0x0006, "1:30" )
 	PORT_DIPSETTING(      0x0004, "2:00" )
 	PORT_DIPSETTING(      0x0002, "3:00" )
 	PORT_DIPSETTING(      0x0000, "4:00" )
-	PORT_DIPNAME( 0x0018, 0x0018, "Player VS Player Time" )		// "Competitive Time"
+	PORT_DIPNAME( 0x0018, 0x0018, "Player VS Player Time" )		/* "Competitive Time"*/
 	PORT_DIPSETTING(      0x0018, "2:00" )
 	PORT_DIPSETTING(      0x0010, "3:00" )
 	PORT_DIPSETTING(      0x0008, "4:00" )
 	PORT_DIPSETTING(      0x0000, "5:00" )
-	PORT_DIPNAME( 0x0020, 0x0000, DEF_STR( Demo_Sounds ) )		// "Demo Sound"
+	PORT_DIPNAME( 0x0020, 0x0000, DEF_STR( Demo_Sounds ) )		/* "Demo Sound"*/
 	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0040, 0x0040, "Communication Mode" )			// "Master/Slave"
+	PORT_DIPNAME( 0x0040, 0x0040, "Communication Mode" )			/* "Master/Slave"*/
 	PORT_DIPSETTING(      0x0040, "Master" )
 	PORT_DIPSETTING(      0x0000, "Slave" )
-	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )					// "Self Test Mode"
+	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )					/* "Self Test Mode"*/
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* probably unused */
 INPUT_PORTS_END
 
@@ -474,12 +474,12 @@ ROM_START( gstriker )
 	ROM_LOAD( "human-3.u87",  0x00000, 0x20000, CRC(2f28c01e) SHA1(63829ad7969d197b2f2c87cb88bdb9e9880ed2d6) )
 	ROM_RELOAD(               0x10000, 0x20000 )
 
-	ROM_REGION( 0x20000, REGION_GFX1, 0 ) // score tilemap
+	ROM_REGION( 0x20000, REGION_GFX1, 0 ) /* score tilemap*/
 	ROM_LOAD( "human-2.u79",  0x00000, 0x20000, CRC(a981993b) SHA1(ed92c7581d2b84a8628744dd5f8a2266c45dcd5b) )
 
-	ROM_REGION( 0x200000, REGION_GFX2, 0 ) // scroll tilemap
+	ROM_REGION( 0x200000, REGION_GFX2, 0 ) /* scroll tilemap*/
 	ROM_LOAD( "scrgs105.u2",  0x00000, 0x200000, CRC(d584b568) SHA1(64c5e4fdbb859873e51f62d8f5314598108270ef) )
-	ROM_LOAD( "scrgs105.u4",  0x00000, 0x200000, CRC(d584b568) SHA1(64c5e4fdbb859873e51f62d8f5314598108270ef) ) // same content, dif pos on board
+	ROM_LOAD( "scrgs105.u4",  0x00000, 0x200000, CRC(d584b568) SHA1(64c5e4fdbb859873e51f62d8f5314598108270ef) ) /* same content, dif pos on board*/
 
 	ROM_REGION( 0x1000000, REGION_GFX3, 0 )
 	ROM_LOAD( "scrgs101.u25", 0x000000, 0x200000, CRC(becaea24) SHA1(e96fca863f49f50992f56c7defa5a69599608785) )
@@ -502,12 +502,12 @@ ROM_START( vgoalsoc )
 	ROM_REGION( 0x40000, REGION_CPU2, 0 )
 	ROM_LOAD( "c16_u65.u65",  0x000000, 0x040000, CRC(2f7bf23c) SHA1(1a1a06f57bbac59807679e3762cb2f23ab1ad35e) )
 
-	ROM_REGION( 0x20000, REGION_GFX1, 0 ) // score tilemap
+	ROM_REGION( 0x20000, REGION_GFX1, 0 ) /* score tilemap*/
 	ROM_LOAD( "c16_u48.u48",  0x000000, 0x020000, CRC(ca059e7f) SHA1(2fa48b0fec1210575f3a1ecee7d2aec0af3fa9c4) )
 
-	ROM_REGION( 0x100000, REGION_GFX2, 0 ) // screen tilemap
+	ROM_REGION( 0x100000, REGION_GFX2, 0 ) /* screen tilemap*/
 	ROM_LOAD( "c13_u20.u20",  0x000000, 0x100000, CRC(bc6e07e8) SHA1(3f164165a2eed909aaf38d1ae23a622482d39f96) )
-	ROM_LOAD( "c13_u17.u17",  0x000000, 0x100000, CRC(bc6e07e8) SHA1(3f164165a2eed909aaf38d1ae23a622482d39f96) ) // same content, dif pos on board
+	ROM_LOAD( "c13_u17.u17",  0x000000, 0x100000, CRC(bc6e07e8) SHA1(3f164165a2eed909aaf38d1ae23a622482d39f96) ) /* same content, dif pos on board*/
 
 	ROM_REGION( 0x400000, REGION_GFX3, 0 )
 	ROM_LOAD( "c13_u11.u11",  0x000000, 0x200000, CRC(76d09f27) SHA1(ffef83954426f9e56bbe2d98b32cea675c063fab) )
@@ -527,12 +527,12 @@ ROM_START( vgoalsca )
 	ROM_REGION( 0x40000, REGION_CPU2, 0 )
 	ROM_LOAD( "c16_u65.u65",  0x000000, 0x040000, CRC(2f7bf23c) SHA1(1a1a06f57bbac59807679e3762cb2f23ab1ad35e) )
 
-	ROM_REGION( 0x20000, REGION_GFX1, 0 ) // fixed tile
+	ROM_REGION( 0x20000, REGION_GFX1, 0 ) /* fixed tile*/
 	ROM_LOAD( "c16_u48.u48",  0x000000, 0x020000, CRC(ca059e7f) SHA1(2fa48b0fec1210575f3a1ecee7d2aec0af3fa9c4) )
 
-	ROM_REGION( 0x200000, REGION_GFX2, 0 ) // scroll tile
+	ROM_REGION( 0x200000, REGION_GFX2, 0 ) /* scroll tile*/
 	ROM_LOAD( "vgoalc16.u20", 0x000000, 0x200000, CRC(2b211fb2) SHA1(4e04e099a1dae7abdb0732808a5d74fdc7afcf45) )
-	ROM_LOAD( "vgoalc16.u17", 0x000000, 0x200000, CRC(2b211fb2) SHA1(4e04e099a1dae7abdb0732808a5d74fdc7afcf45) ) // same content, dif pos on board
+	ROM_LOAD( "vgoalc16.u17", 0x000000, 0x200000, CRC(2b211fb2) SHA1(4e04e099a1dae7abdb0732808a5d74fdc7afcf45) ) /* same content, dif pos on board*/
 
 	ROM_REGION( 0x400000, REGION_GFX3, 0 )
 	ROM_LOAD( "vgoalc16.u11", 0x000000, 0x200000, CRC(5bc3146c) SHA1(ede4def1ddc4390fed8fd89643900967faff3640) )
@@ -552,10 +552,10 @@ ROM_START( worldc94 )
 	ROM_REGION( 0x40000, REGION_CPU2, 0 )
 	ROM_LOAD( "12",           0x000000, 0x040000, CRC(f316e7fc) SHA1(a2215605518e7293774735371c65abcead99bd88) )
 
-	ROM_REGION( 0x20000, REGION_GFX1, 0 ) // fixed tile
+	ROM_REGION( 0x20000, REGION_GFX1, 0 ) /* fixed tile*/
 	ROM_LOAD( "11",           0x000000, 0x020000, CRC(37d6dcb6) SHA1(679dd8b615497fff23c4638d413b5d4a724d3f2a) )
 
-	ROM_REGION( 0x200000, REGION_GFX2, 0 ) // scroll tile
+	ROM_REGION( 0x200000, REGION_GFX2, 0 ) /* scroll tile*/
 	ROM_LOAD( "u17",          0x000000, 0x200000, CRC(a5e40a61) SHA1(a2cb452fb069862570870653b29b045d12caf062) )
 	ROM_LOAD( "u20",          0x000000, 0x200000, CRC(a5e40a61) SHA1(a2cb452fb069862570870653b29b045d12caf062) )
 

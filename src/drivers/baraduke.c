@@ -107,7 +107,7 @@ static MEMORY_WRITE_START( baraduke_writemem )
 	{ 0x4000, 0x43ff, baraduke_sharedram_w, &sharedram },/* shared RAM with the MCU */
 	{ 0x4800, 0x4fff, MWA_RAM, &baraduke_textram },/* video RAM (text layer) */
 	{ 0x8000, 0x8000, watchdog_reset_w },		/* watchdog reset */
-//	{ 0x8800, 0x8800, MWA_NOP },				/* ??? */
+/*	{ 0x8800, 0x8800, MWA_NOP },				 // ??? /*/
 	{ 0xb000, 0xb002, baraduke_scroll0_w },		/* scroll (layer 0) */
 	{ 0xb004, 0xb006, baraduke_scroll1_w },		/* scroll (layer 1) */
 	{ 0x6000, 0xffff, MWA_ROM },				/* ROM */
@@ -138,8 +138,8 @@ static MEMORY_WRITE_START( mcu_writemem )
 	{ 0x1000, 0x10ff, namcos1_wavedata_w, &namco_wavedata },/* PSG device, shared RAM */
 	{ 0x1100, 0x113f, namcos1_sound_w, &namco_soundregs },/* PSG device */
 	{ 0x1000, 0x13ff, baraduke_sharedram_w },	/* shared RAM with the 6809 */
-//	{ 0x8000, 0x8000, MWA_NOP },				/* ??? */
-//	{ 0x8800, 0x8800, MWA_NOP },				/* ??? */
+/*	{ 0x8000, 0x8000, MWA_NOP },				 // ??? /*/
+/*	{ 0x8800, 0x8800, MWA_NOP },				 // ??? /*/
 	{ 0x8000, 0xbfff, MWA_ROM },				/* MCU external ROM */
 	{ 0xc000, 0xc800, MWA_RAM },				/* RAM */
 	{ 0xf000, 0xffff, MWA_ROM },				/* MCU internal ROM */

@@ -72,8 +72,8 @@ static MEMORY_READ_START( readmem )
 	{ 0xec10, 0xec10, input_port_4_r },
 	{ 0xec12, 0xec12, input_port_5_r },
 	{ 0xec20, 0xec20, AY8910_read_port_0_r },
-	{ 0xec21, 0xec21, input_port_6_r }, //ltcasino -> pc: F3F3 (A in service) and F3FD (B in service)
-	{ 0xec3e, 0xec3e, MRA_NOP }, //not used
+	{ 0xec21, 0xec21, input_port_6_r }, /*ltcasino -> pc: F3F3 (A in service) and F3FD (B in service)*/
+	{ 0xec3e, 0xec3e, MRA_NOP }, /*not used*/
 
 	{ 0xf000, 0xffff, MRA_ROM },
 MEMORY_END
@@ -97,7 +97,7 @@ MEMORY_END
 
 INPUT_PORTS_START( ltcasino )
 	PORT_START /* Q in service */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 ) //or start2?
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 ) /*or start2?*/
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -110,13 +110,13 @@ INPUT_PORTS_START( ltcasino )
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) //off to enter service
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) /*off to enter service*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) //off to enter service
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) /*off to enter service*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) ) //off to enter service
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) ) /*off to enter service*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -189,7 +189,7 @@ INPUT_PORTS_START( ltcasino )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, "?" ) //set this LOW after insert a coin
+	PORT_DIPNAME( 0x40, 0x40, "?" ) /*set this LOW after insert a coin*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN2 )
@@ -210,10 +210,10 @@ INPUT_PORTS_START( ltcasino )
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) //off to enter service
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) /*off to enter service*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_SERVICE( 0x40, IP_ACTIVE_HIGH ) //service?
+	PORT_SERVICE( 0x40, IP_ACTIVE_HIGH ) /*service?*/
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -244,8 +244,8 @@ INPUT_PORTS_START( ltcasino )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-/*	PORT_START // A and B in service  //is there a switch?
-	PORT_DIPNAME( 0x01, 0x01, "6" ) // from 1 to 0x40 seem affect the credit 
+/*	PORT_START // A and B in service is there a switch? 
+	PORT_DIPNAME( 0x01, 0x01, "6" ) // from 1 to 0x40 seem affect the credit
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
@@ -284,7 +284,7 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( ltcasin2 )
 	PORT_START /* Q in service */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 ) //start?
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 ) /*start?*/
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -297,13 +297,13 @@ INPUT_PORTS_START( ltcasin2 )
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) //off to enter service
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) /*off to enter service*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) //off to enter service
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) /*off to enter service*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) ) //off to enter service
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) ) /*off to enter service*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -378,7 +378,7 @@ INPUT_PORTS_START( ltcasin2 )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) //off to get the race start
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) /*off to get the race start*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )
@@ -401,10 +401,10 @@ INPUT_PORTS_START( ltcasin2 )
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) //off to enter service
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) /*off to enter service*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_SERVICE( 0x40, IP_ACTIVE_HIGH ) //service?
+	PORT_SERVICE( 0x40, IP_ACTIVE_HIGH ) /*service?*/
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -435,7 +435,7 @@ INPUT_PORTS_START( ltcasin2 )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-/*	PORT_START // A and B in service  //is there a switch?
+/*	PORT_START // A and B in service  is there a switch?
 	PORT_DIPNAME( 0x01, 0x01, "6" ) 
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )

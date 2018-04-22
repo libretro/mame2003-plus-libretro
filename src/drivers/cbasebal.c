@@ -40,7 +40,7 @@ static WRITE_HANDLER( cbasebal_bankswitch_w )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
 	/* bits 0-4 select ROM bank */
-//logerror("%04x: bankswitch %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: bankswitch %02x\n",activecpu_get_pc(),data);*/
 	bankaddress = 0x10000 + (data & 0x1f) * 0x4000;
 	cpu_setbank(1,&RAM[bankaddress]);
 

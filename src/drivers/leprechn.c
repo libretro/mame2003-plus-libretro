@@ -50,18 +50,18 @@ MEMORY_END
 static MEMORY_READ_START( sound_readmem )
     { 0x0000, 0x01ff, MRA_RAM },
     { 0x0800, 0x0800, soundlatch_r },
-    { 0x0804, 0x0804, MRA_RAM },   // ???
-    { 0x0805, 0x0805, leprechn_sh_0805_r },   // ???
-    { 0x080c, 0x080c, MRA_RAM },   // ???
-    { 0xa001, 0xa001, AY8910_read_port_0_r }, // ???
+    { 0x0804, 0x0804, MRA_RAM },   /* ???*/
+    { 0x0805, 0x0805, leprechn_sh_0805_r },   /* ???*/
+    { 0x080c, 0x080c, MRA_RAM },   /* ???*/
+    { 0xa001, 0xa001, AY8910_read_port_0_r }, /* ???*/
     { 0xf000, 0xffff, MRA_ROM},
 MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
     { 0x0000, 0x01ff, MWA_RAM },
-    { 0x0801, 0x0803, MWA_RAM },   // ???
-    { 0x0806, 0x0806, MWA_RAM },   // ???
-    { 0x081e, 0x081e, MWA_RAM },   // ???
+    { 0x0801, 0x0803, MWA_RAM },   /* ???*/
+    { 0x0806, 0x0806, MWA_RAM },   /* ???*/
+    { 0x081e, 0x081e, MWA_RAM },   /* ???*/
     { 0xa000, 0xa000, AY8910_control_port_0_w },
     { 0xa002, 0xa002, AY8910_write_port_0_w },
     { 0xf000, 0xffff, MWA_ROM},
@@ -69,9 +69,9 @@ MEMORY_END
 
 
 INPUT_PORTS_START( leprechn )
-    // All of these ports are read indirectly through a VIA mapped at 0x2800
+    /* All of these ports are read indirectly through a VIA mapped at 0x2800*/
     PORT_START      /* Input Port 0 */
-    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT ) // This is called "Slam" in the game
+    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT ) /* This is called "Slam" in the game*/
     PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
     PORT_BITX(0x10, IP_ACTIVE_LOW, 0, "Advance", KEYCODE_F1, IP_JOY_NONE )
     PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -163,10 +163,10 @@ static struct AY8910interface ay8910_interface =
 static MACHINE_DRIVER_START( leprechn )
 
 	/* basic machine hardware */
-	// A good test to verify that the relative CPU speeds of the main
-	// and sound are correct, is when you finish a level, the sound
-	// should stop before the display switches to the name of the
-	// next level
+	/* A good test to verify that the relative CPU speeds of the main*/
+	/* and sound are correct, is when you finish a level, the sound*/
+	/* should stop before the display switches to the name of the*/
+	/* next level*/
 	MDRV_CPU_ADD(M6502, 1250000)    /* 1.25 MHz ??? */
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)

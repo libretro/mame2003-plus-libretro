@@ -164,22 +164,22 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4, 0x000, 0x100 }, // 4bpp tiles
-	{ REGION_GFX1, 0, &layout_16x16x8, 0x000, 0x100 }, // 8bpp tiles
+	{ REGION_GFX1, 0, &layout_16x16x4, 0x000, 0x100 }, /* 4bpp tiles*/
+	{ REGION_GFX1, 0, &layout_16x16x8, 0x000, 0x100 }, /* 8bpp tiles*/
 	{ -1 }
 };
 
 static struct EEPROM_interface eeprom_interface_93C56 =
 {
-	8,		// address bits	8
-	8,		// data bits	8
-	"*110x",	// read			110x aaaaaaaa
-	"*101x",	// write		101x aaaaaaaa dddddddd
-	"*111x",	// erase		111x aaaaaaaa
-	"*10000xxxxxxx",// lock			100x 00xxxx
-	"*10011xxxxxxx",// unlock		100x 11xxxx
-//	"*10001xxxx",	// write all	1 00 01xxxx dddddddddddddddd
-//	"*10010xxxx"	// erase all	1 00 10xxxx
+	8,		/* address bits	8*/
+	8,		/* data bits	8*/
+	"*110x",	/* read			110x aaaaaaaa*/
+	"*101x",	/* write		101x aaaaaaaa dddddddd*/
+	"*111x",	/* erase		111x aaaaaaaa*/
+	"*10000xxxxxxx",/* lock			100x 00xxxx*/
+	"*10011xxxxxxx",/* unlock		100x 11xxxx*/
+/*	"*10001xxxx",	*/ /* write all	1 00 01xxxx dddddddddddddddd*/
+/*	"*10010xxxx"	*/ /* erase all	1 00 10xxxx*/
 };
 
 static NVRAM_HANDLER(93C56)
@@ -195,7 +195,7 @@ static NVRAM_HANDLER(93C56)
 		{
 			EEPROM_load(file);
 		}
-		else	// these games want the eeprom all zeros by default
+		else	/* these games want the eeprom all zeros by default*/
 		{
 			int length;
 			UINT8 *dat;
@@ -287,7 +287,7 @@ static WRITE32_HANDLER( psikyosh_vidregs_w )
 #if ROMTEST
 	if(offset==4) /* Configure bank for gfx test */
 	{
-		if (!(mem_mask & 0x000000ff) || !(mem_mask & 0x0000ff00))	// Bank
+		if (!(mem_mask & 0x000000ff) || !(mem_mask & 0x0000ff00))	/* Bank*/
 		{
 			unsigned char *ROM = memory_region(REGION_GFX1);
 			cpu_setbank(2,&ROM[0x20000 * (psikyosh_vidregs[offset]&0xfff)]); /* Bank comes from vidregs */
@@ -314,22 +314,22 @@ static READ32_HANDLER( psh_ymf_fm_r )
 
 static WRITE32_HANDLER( psh_ymf_fm_w )
 {
-	if (!(mem_mask & 0xff000000))	// FM bank 1 address (OPL2/OPL3 compatible)
+	if (!(mem_mask & 0xff000000))	/* FM bank 1 address (OPL2/OPL3 compatible)*/
 	{
 		YMF278B_control_port_0_A_w(0, data>>24);
 	}
 
-	if (!(mem_mask & 0x00ff0000))	// FM bank 1 data
+	if (!(mem_mask & 0x00ff0000))	/* FM bank 1 data*/
 	{
 		YMF278B_data_port_0_A_w(0, data>>16);
 	}
 
-	if (!(mem_mask & 0x0000ff00))	// FM bank 2 address (OPL3/YMF 262 extended)
+	if (!(mem_mask & 0x0000ff00))	/* FM bank 2 address (OPL3/YMF 262 extended)*/
 	{
 		YMF278B_control_port_0_B_w(0, data>>8);
 	}
 
-	if (!(mem_mask & 0x000000ff))	// FM bank 2 data
+	if (!(mem_mask & 0x000000ff))	/* FM bank 2 data*/
 	{
 		YMF278B_data_port_0_B_w(0, data);
 	}
@@ -337,92 +337,92 @@ static WRITE32_HANDLER( psh_ymf_fm_w )
 
 static WRITE32_HANDLER( psh_ymf_pcm_w )
 {
-	if (!(mem_mask & 0xff000000))	// PCM address (OPL4/YMF 278B extended)
+	if (!(mem_mask & 0xff000000))	/* PCM address (OPL4/YMF 278B extended)*/
 	{
 		YMF278B_control_port_0_C_w(0, data>>24);
 
 #if ROMTEST
-		if (data>>24 == 0x06)	// Reset Sample reading (They always write this code immediately before reading data)
+		if (data>>24 == 0x06)	/* Reset Sample reading (They always write this code immediately before reading data)*/
 		{
 			sample_offs = 0;
 		}
 #endif
 	}
 
-	if (!(mem_mask & 0x00ff0000))	// PCM data
+	if (!(mem_mask & 0x00ff0000))	/* PCM data*/
 	{
 		YMF278B_data_port_0_C_w(0, data>>16);
 	}
 }
 
 static MEMORY_READ32_START( ps3v1_readmem )
-	{ 0x00000000, 0x000fffff, MRA32_ROM },	// program ROM (1 meg)
-	{ 0x02000000, 0x021fffff, MRA32_BANK1 }, // data ROM
-	{ 0x03000000, 0x03003fff, MRA32_RAM },	// sprites
+	{ 0x00000000, 0x000fffff, MRA32_ROM },	/* program ROM (1 meg)*/
+	{ 0x02000000, 0x021fffff, MRA32_BANK1 }, /* data ROM*/
+	{ 0x03000000, 0x03003fff, MRA32_RAM },	/* sprites*/
 	{ 0x03004000, 0x0300ffff, MRA32_RAM },
 	{ 0x03040000, 0x03044fff, MRA32_RAM },
 	{ 0x03050000, 0x030501ff, MRA32_RAM },
-	{ 0x0305ffdc, 0x0305ffdf, MRA32_NOP }, // also writes to this address - might be vblank reads?
-	{ 0x0305ffe0, 0x0305ffff, MRA32_RAM }, //  video registers
-	{ 0x05000000, 0x05000003, psh_ymf_fm_r }, // read YMF status
+	{ 0x0305ffdc, 0x0305ffdf, MRA32_NOP }, /* also writes to this address - might be vblank reads?*/
+	{ 0x0305ffe0, 0x0305ffff, MRA32_RAM }, /*  video registers*/
+	{ 0x05000000, 0x05000003, psh_ymf_fm_r }, /* read YMF status*/
 	{ 0x05800000, 0x05800003, io32_r },
 	{ 0x05800004, 0x05800007, psh_eeprom_r },
-	{ 0x06000000, 0x060fffff, MRA32_RAM }, // main RAM (1 meg)
+	{ 0x06000000, 0x060fffff, MRA32_RAM }, /* main RAM (1 meg)*/
 
 #if ROMTEST
-	{ 0x05000004, 0x05000007, psh_sample_r }, // data for rom tests (Used to verify Sample rom)
-	{ 0x03060000, 0x0307ffff, MRA32_BANK2 }, // data for rom tests (gfx), data is controlled by vidreg
-	{ 0x04060000, 0x0407ffff, MRA32_BANK2 }, // data for rom tests (gfx) (Mirrored?)
+	{ 0x05000004, 0x05000007, psh_sample_r }, /* data for rom tests (Used to verify Sample rom)*/
+	{ 0x03060000, 0x0307ffff, MRA32_BANK2 }, /* data for rom tests (gfx), data is controlled by vidreg*/
+	{ 0x04060000, 0x0407ffff, MRA32_BANK2 }, /* data for rom tests (gfx) (Mirrored?)*/
 #endif
 MEMORY_END
 
 static MEMORY_WRITE32_START( ps3v1_writemem )
-	{ 0x00000000, 0x000fffff, MWA32_ROM },	// program ROM (1 meg)
-	{ 0x02000000, 0x021fffff, MWA32_ROM }, // data ROM
-	{ 0x03000000, 0x03003fff, MWA32_RAM, &spriteram32, &spriteram_size },	// sprites (might be a bit longer)
-	{ 0x03004000, 0x0300ffff, MWA32_RAM, &psikyosh_bgram }, // backgrounds
-	{ 0x03040000, 0x03044fff, paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w, &paletteram32 }, // palette..
-	{ 0x03050000, 0x030501ff, MWA32_RAM, &psikyosh_zoomram }, // a gradient sometimes ...
-	{ 0x0305ffdc, 0x0305ffdf, MWA32_RAM }, // also reads from this address
-	{ 0x0305ffe0, 0x0305ffff, psikyosh_vidregs_w, &psikyosh_vidregs }, //  video registers
-	{ 0x05000000, 0x05000003, psh_ymf_fm_w }, // first 2 OPL4 register banks
-	{ 0x05000004, 0x05000007, psh_ymf_pcm_w }, // third OPL4 register bank
+	{ 0x00000000, 0x000fffff, MWA32_ROM },	/* program ROM (1 meg)*/
+	{ 0x02000000, 0x021fffff, MWA32_ROM }, /* data ROM*/
+	{ 0x03000000, 0x03003fff, MWA32_RAM, &spriteram32, &spriteram_size },	/* sprites (might be a bit longer)*/
+	{ 0x03004000, 0x0300ffff, MWA32_RAM, &psikyosh_bgram }, /* backgrounds*/
+	{ 0x03040000, 0x03044fff, paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w, &paletteram32 }, /* palette..*/
+	{ 0x03050000, 0x030501ff, MWA32_RAM, &psikyosh_zoomram }, /* a gradient sometimes ...*/
+	{ 0x0305ffdc, 0x0305ffdf, MWA32_RAM }, /* also reads from this address*/
+	{ 0x0305ffe0, 0x0305ffff, psikyosh_vidregs_w, &psikyosh_vidregs }, /*  video registers*/
+	{ 0x05000000, 0x05000003, psh_ymf_fm_w }, /* first 2 OPL4 register banks*/
+	{ 0x05000004, 0x05000007, psh_ymf_pcm_w }, /* third OPL4 register bank*/
 	{ 0x05800004, 0x05800007, psh_eeprom_w },
-	{ 0x06000000, 0x060fffff, MWA32_RAM, &psh_ram }, // work RAM
+	{ 0x06000000, 0x060fffff, MWA32_RAM, &psh_ram }, /* work RAM*/
 MEMORY_END
 
 static MEMORY_READ32_START( ps5_readmem )
-	{ 0x00000000, 0x000fffff, MRA32_ROM }, // program ROM (1 meg)
+	{ 0x00000000, 0x000fffff, MRA32_ROM }, /* program ROM (1 meg)*/
 	{ 0x03000000, 0x03000003, io32_r },
 	{ 0x03000004, 0x03000007, psh_eeprom_r },
 	{ 0x03100000, 0x03100003, psh_ymf_fm_r },
-	{ 0x04000000, 0x04003fff, MRA32_RAM },	// sprites
+	{ 0x04000000, 0x04003fff, MRA32_RAM },	/* sprites*/
 	{ 0x04004000, 0x0400ffff, MRA32_RAM },
 	{ 0x04040000, 0x04044fff, MRA32_RAM },
 	{ 0x04050000, 0x040501ff, MRA32_RAM },
-	{ 0x0405ffdc, 0x0405ffdf, MRA32_NOP }, // also writes to this address - might be vblank reads?
-	{ 0x0405ffe0, 0x0405ffff, MRA32_RAM }, // video registers
-	{ 0x05000000, 0x0507ffff, MRA32_BANK1 }, // data ROM
+	{ 0x0405ffdc, 0x0405ffdf, MRA32_NOP }, /* also writes to this address - might be vblank reads?*/
+	{ 0x0405ffe0, 0x0405ffff, MRA32_RAM }, /* video registers*/
+	{ 0x05000000, 0x0507ffff, MRA32_BANK1 }, /* data ROM*/
 	{ 0x06000000, 0x060fffff, MRA32_RAM },
 
 #if ROMTEST
-	{ 0x03100004, 0x03100007, psh_sample_r }, // data for rom tests (Used to verify Sample rom)
-	{ 0x04060000, 0x0407ffff, MRA32_BANK2 }, // data for rom tests (gfx), data is controlled by vidreg
+	{ 0x03100004, 0x03100007, psh_sample_r }, /* data for rom tests (Used to verify Sample rom)*/
+	{ 0x04060000, 0x0407ffff, MRA32_BANK2 }, /* data for rom tests (gfx), data is controlled by vidreg*/
 #endif
 MEMORY_END
 
 static MEMORY_WRITE32_START( ps5_writemem )
-	{ 0x00000000, 0x000fffff, MWA32_ROM },	// program ROM (1 meg)
+	{ 0x00000000, 0x000fffff, MWA32_ROM },	/* program ROM (1 meg)*/
 	{ 0x03000004, 0x03000007, psh_eeprom_w },
-	{ 0x03100000, 0x03100003, psh_ymf_fm_w }, // first 2 OPL4 register banks
-	{ 0x03100004, 0x03100007, psh_ymf_pcm_w }, // third OPL4 register bank
+	{ 0x03100000, 0x03100003, psh_ymf_fm_w }, /* first 2 OPL4 register banks*/
+	{ 0x03100004, 0x03100007, psh_ymf_pcm_w }, /* third OPL4 register bank*/
 	{ 0x04000000, 0x04003fff, MWA32_RAM, &spriteram32, &spriteram_size },
-	{ 0x04004000, 0x0400ffff, MWA32_RAM, &psikyosh_bgram }, // backgrounds
+	{ 0x04004000, 0x0400ffff, MWA32_RAM, &psikyosh_bgram }, /* backgrounds*/
 	{ 0x04040000, 0x04044fff, paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w, &paletteram32 },
 	{ 0x04050000, 0x040501ff, MWA32_RAM, &psikyosh_zoomram },
-	{ 0x0405ffdc, 0x0405ffdf, MWA32_RAM }, // also reads from this address
-	{ 0x0405ffe0, 0x0405ffff, psikyosh_vidregs_w, &psikyosh_vidregs }, // video registers
-	{ 0x05000000, 0x0507ffff, MWA32_ROM }, // data ROM
+	{ 0x0405ffdc, 0x0405ffdf, MWA32_RAM }, /* also reads from this address*/
+	{ 0x0405ffe0, 0x0405ffff, psikyosh_vidregs_w, &psikyosh_vidregs }, /* video registers*/
+	{ 0x05000000, 0x0507ffff, MWA32_ROM }, /* data ROM*/
 	{ 0x06000000, 0x060fffff, MWA32_RAM, &psh_ram },
 MEMORY_END
 
@@ -831,8 +831,8 @@ PC  : 0001AE7C: MOV.L   @R3,R0
 PC  : 0001AE7E: TST     R0,R0
 PC  : 0001AE80: BT      $0001AE74
 */
-	if (activecpu_get_pc()==0x0001AFAC) cpu_spinuntil_int(); // Character Select + InGame
-	if (activecpu_get_pc()==0x0001AE76) cpu_spinuntil_int(); // Everything Else?
+	if (activecpu_get_pc()==0x0001AFAC) cpu_spinuntil_int(); /* Character Select + InGame*/
+	if (activecpu_get_pc()==0x0001AE76) cpu_spinuntil_int(); /* Everything Else?*/
 
 	return psh_ram[0x00000C/4];
 }
@@ -848,9 +848,9 @@ PC  : 0609FC70: MOV.L   @R3,R0  // whats there into r0
 PC  : 0609FC72: TST     R0,R0 // test
 PC  : 0609FC74: BT      $0609FC68
 */
-	if (activecpu_get_pc()==0x609FC6A) cpu_spinuntil_int(); // Title Screens
-	if (activecpu_get_pc()==0x609FED4) cpu_spinuntil_int(); // In Game
-	if (activecpu_get_pc()==0x60A0172) cpu_spinuntil_int(); // Attract Demo
+	if (activecpu_get_pc()==0x609FC6A) cpu_spinuntil_int(); /* Title Screens*/
+	if (activecpu_get_pc()==0x609FED4) cpu_spinuntil_int(); /* In Game*/
+	if (activecpu_get_pc()==0x60A0172) cpu_spinuntil_int(); /* Attract Demo*/
 
 	return psh_ram[0x00000C/4];
 }
@@ -867,8 +867,8 @@ PC  : 00047622: MOV.L   @R3,R0
 PC  : 00047624: TST     R0,R0
 PC  : 00047626: BT      $00047618
 */
-	if (activecpu_get_pc()==0x0004761C) cpu_spinuntil_int(); // title
-	if (activecpu_get_pc()==0x00047978) cpu_spinuntil_int(); // ingame
+	if (activecpu_get_pc()==0x0004761C) cpu_spinuntil_int(); /* title*/
+	if (activecpu_get_pc()==0x00047978) cpu_spinuntil_int(); /* ingame*/
 
 	return psh_ram[0x00000C/4];
 }
@@ -884,9 +884,9 @@ PC  : 060A10F4: MOV.L   @R1,R2
 PC  : 060A10F6: TST     R2,R2
 PC  : 060A10F8: BT      $060A10EC
 */
-	if (activecpu_get_pc()==0x060A10EE) cpu_spinuntil_int(); // title
-	if (activecpu_get_pc()==0x060A165A) cpu_spinuntil_int(); // attract
-	if (activecpu_get_pc()==0x060A1382) cpu_spinuntil_int(); // game
+	if (activecpu_get_pc()==0x060A10EE) cpu_spinuntil_int(); /* title*/
+	if (activecpu_get_pc()==0x060A165A) cpu_spinuntil_int(); /* attract*/
+	if (activecpu_get_pc()==0x060A1382) cpu_spinuntil_int(); /* game*/
 
 	return psh_ram[0x00000C/4];
 }
@@ -911,10 +911,10 @@ PC  : 0602897E: BT      $06028972
 
 static READ32_HANDLER( s1945iii_speedup_r )
 {
-	if (activecpu_get_pc()==0x0602B464) cpu_spinuntil_int(); // start up text
-	if (activecpu_get_pc()==0x0602B6E2) cpu_spinuntil_int(); // intro attract
-	if (activecpu_get_pc()==0x0602BC1E) cpu_spinuntil_int(); // game attract
-	if (activecpu_get_pc()==0x0602B97C) cpu_spinuntil_int(); // game
+	if (activecpu_get_pc()==0x0602B464) cpu_spinuntil_int(); /* start up text*/
+	if (activecpu_get_pc()==0x0602B6E2) cpu_spinuntil_int(); /* intro attract*/
+	if (activecpu_get_pc()==0x0602BC1E) cpu_spinuntil_int(); /* game attract*/
+	if (activecpu_get_pc()==0x0602B97C) cpu_spinuntil_int(); /* game*/
 
 	return psh_ram[0x06000C/4];
 }
@@ -922,20 +922,20 @@ static READ32_HANDLER( s1945iii_speedup_r )
 
 static READ32_HANDLER( dragnblz_speedup_r )
 {
-	if (activecpu_get_pc()==0x06027440) cpu_spinuntil_int(); // startup texts
-	if (activecpu_get_pc()==0x060276E6) cpu_spinuntil_int(); // attract intro
-	if (activecpu_get_pc()==0x06027C74) cpu_spinuntil_int(); // attract game
-	if (activecpu_get_pc()==0x060279A8) cpu_spinuntil_int(); // game
+	if (activecpu_get_pc()==0x06027440) cpu_spinuntil_int(); /* startup texts*/
+	if (activecpu_get_pc()==0x060276E6) cpu_spinuntil_int(); /* attract intro*/
+	if (activecpu_get_pc()==0x06027C74) cpu_spinuntil_int(); /* attract game*/
+	if (activecpu_get_pc()==0x060279A8) cpu_spinuntil_int(); /* game*/
 
 	return psh_ram[0x006000C/4];
 }
 
 static READ32_HANDLER( gnbarich_speedup_r )
 {
-	if (activecpu_get_pc()==0x0602CAE8) cpu_spinuntil_int(); // startup texts
-	if (activecpu_get_pc()==0x0602CD88) cpu_spinuntil_int(); // attract intro
-	if (activecpu_get_pc()==0x0602D2F0) cpu_spinuntil_int(); // attract game
-	if (activecpu_get_pc()==0x0602D042) cpu_spinuntil_int(); // game
+	if (activecpu_get_pc()==0x0602CAE8) cpu_spinuntil_int(); /* startup texts*/
+	if (activecpu_get_pc()==0x0602CD88) cpu_spinuntil_int(); /* attract intro*/
+	if (activecpu_get_pc()==0x0602D2F0) cpu_spinuntil_int(); /* attract game*/
+	if (activecpu_get_pc()==0x0602D042) cpu_spinuntil_int(); /* game*/
 
 	return psh_ram[0x006000C/4];
 }
@@ -997,14 +997,14 @@ static DRIVER_INIT( dragnblz )
 /*     YEAR  NAME      PARENT    MACHINE    INPUT     INIT      MONITOR COMPANY   FULLNAME FLAGS */
 
 /* ps3-v1 */
-GAMEX( 1997, soldivid, 0,        psikyo3v1, soldivid, soldivid, ROT0,   "Psikyo", "Sol Divide - The Sword Of Darkness", GAME_IMPERFECT_SOUND ) // Music Tempo
-GAMEX( 1997, s1945ii,  0,        psikyo3v1, s1945ii,  s1945ii,  ROT270, "Psikyo", "Strikers 1945 II", GAME_IMPERFECT_GRAPHICS ) // linescroll/zoom
+GAMEX( 1997, soldivid, 0,        psikyo3v1, soldivid, soldivid, ROT0,   "Psikyo", "Sol Divide - The Sword Of Darkness", GAME_IMPERFECT_SOUND ) /* Music Tempo*/
+GAMEX( 1997, s1945ii,  0,        psikyo3v1, s1945ii,  s1945ii,  ROT270, "Psikyo", "Strikers 1945 II", GAME_IMPERFECT_GRAPHICS ) /* linescroll/zoom*/
 GAME ( 1998, daraku,   0,        psikyo3v1, daraku,   daraku,   ROT0,   "Psikyo", "Daraku Tenshi - The Fallen Angels" )
 GAME ( 1998, sbomberb, 0,        psikyo3v1, sbomberb, sbomberb, ROT270, "Psikyo", "Space Bomber (ver. B)" )
 
 /* ps5 */
 GAME ( 1998, gunbird2, 0,        psikyo5,   gunbird2, gunbird2, ROT270, "Psikyo", "Gunbird 2" )
-GAMEX( 1999, s1945iii, 0,        psikyo5,   s1945iii, s1945iii, ROT270, "Psikyo", "Strikers 1945 III (World) / Strikers 1999 (Japan)", GAME_IMPERFECT_GRAPHICS ) // linescroll/zoom
+GAMEX( 1999, s1945iii, 0,        psikyo5,   s1945iii, s1945iii, ROT270, "Psikyo", "Strikers 1945 III (World) / Strikers 1999 (Japan)", GAME_IMPERFECT_GRAPHICS ) /* linescroll/zoom*/
 
 /* ps5v2 */
 GAMEX( 2000, dragnblz, 0,        psikyo5,   dragnblz, dragnblz, ROT270, "Psikyo", "Dragon Blaze", GAME_IMPERFECT_GRAPHICS )

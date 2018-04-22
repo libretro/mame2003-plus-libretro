@@ -131,14 +131,14 @@ static data16_t *metro_irq_levels, *metro_irq_vectors, *metro_irq_enable;
 
 READ16_HANDLER( metro_irq_cause_r )
 {
-	return	requested_int[0] * 0x01 +	// vblank
+	return	requested_int[0] * 0x01 +	/* vblank*/
 			requested_int[1] * 0x02 +
-			requested_int[2] * 0x04 +	// blitter
+			requested_int[2] * 0x04 +	/* blitter*/
 			requested_int[3] * 0x08 +
 			requested_int[4] * 0x10 +
 			requested_int[5] * 0x20 +
-			requested_int[6] * 0x40 +	// unused
-			requested_int[7] * 0x80 ;	// unused
+			requested_int[6] * 0x40 +	/* unused*/
+			requested_int[7] * 0x80 ;	/* unused*/
 }
 
 
@@ -181,7 +181,7 @@ static void update_irq_state(void)
 /* For games that supply an *IRQ Vector* on the data bus */
 int metro_irq_callback(int int_level)
 {
-//	logerror("CPU #0 PC %06X: irq callback returns %04X\n",activecpu_get_pc(),metro_irq_vectors[int_level]);
+/*	logerror("CPU #0 PC %06X: irq callback returns %04X\n",activecpu_get_pc(),metro_irq_vectors[int_level]);*/
 	return metro_irq_vectors[int_level]&0xff;
 }
 
@@ -194,17 +194,17 @@ MACHINE_INIT( metro )
 
 WRITE16_HANDLER( metro_irq_cause_w )
 {
-//if (data & ~0x15)	logerror("CPU #0 PC %06X : unknown bits of irqcause written: %04X\n",activecpu_get_pc(),data);
+/*if (data & ~0x15)	logerror("CPU #0 PC %06X : unknown bits of irqcause written: %04X\n",activecpu_get_pc(),data);*/
 
 	if (ACCESSING_LSB)
 	{
 		data &= ~*metro_irq_enable;
 		if (data & 0x01)	requested_int[0] = 0;
-		if (data & 0x02)	requested_int[1] = 0;	// DAITORIDE, BALCUBE, KARATOUR, MOUJA
+		if (data & 0x02)	requested_int[1] = 0;	/* DAITORIDE, BALCUBE, KARATOUR, MOUJA*/
 		if (data & 0x04)	requested_int[2] = 0;
-		if (data & 0x08)	requested_int[3] = 0;	// KARATOUR
+		if (data & 0x08)	requested_int[3] = 0;	/* KARATOUR*/
 		if (data & 0x10)	requested_int[4] = 0;
-		if (data & 0x20)	requested_int[5] = 0;	// KARATOUR, BLZNTRND
+		if (data & 0x20)	requested_int[5] = 0;	/* KARATOUR, BLZNTRND*/
 		if (data & 0x40)	requested_int[6] = 0;
 		if (data & 0x80)	requested_int[7] = 0;
 	}
@@ -232,8 +232,8 @@ INTERRUPT_GEN( metro_interrupt )
 /* Lev 1. Lev 2 seems sound related */
 INTERRUPT_GEN( bangball_interrupt )
 {
-	requested_int[0] = 1;	// set scroll regs if a flag is set
-	requested_int[4] = 1;	// clear that flag
+	requested_int[0] = 1;	/* set scroll regs if a flag is set*/
+	requested_int[4] = 1;	/* clear that flag*/
 	update_irq_state();
 }
 
@@ -250,7 +250,7 @@ INTERRUPT_GEN( karatour_interrupt )
 	{
 		case 0:
 			requested_int[0] = 1;
-			requested_int[5] = 1;	// write the scroll registers
+			requested_int[5] = 1;	/* write the scroll registers*/
 			timer_set(TIME_IN_USEC(DEFAULT_REAL_60HZ_VBLANK_DURATION), 0, vblank_end_callback);
 			update_irq_state();
 			break;
@@ -297,7 +297,7 @@ INTERRUPT_GEN( dokyusei_interrupt )
 			requested_int[1] = 1;
 			update_irq_state();
 			break;
-		case 1:	// needed?
+		case 1:	/* needed?*/
 			requested_int[5] = 1;
 			update_irq_state();
 			break;
@@ -317,7 +317,7 @@ static void ymf278b_interrupt(int active)
 
 ***************************************************************************/
 
-// #define TEST_SOUND
+/* #define TEST_SOUND*/
 
 #ifdef TEST_SOUND
 static int metro_io_callback(int ioline, int state)
@@ -413,8 +413,8 @@ if (!BIT(data,0) || !BIT(data,5))
 
 	if (BIT(portb,7) && !BIT(data,7))	/* clock 1->0 */
 	{
-//		metro_soundstatus = porta;
-		metro_soundstatus = 0;	// ???
+/*		metro_soundstatus = porta;*/
+		metro_soundstatus = 0;	/* ???*/
 logerror("%04x: to_cpu = %02x\n",activecpu_get_pc(),porta);
 	}
 
@@ -464,7 +464,7 @@ logerror("OKIM6295_status_r %02x\n",porta);
 
 static MEMORY_READ_START( upd7810_readmem )
 	{ 0x0000, 0x3fff, MRA_ROM },	/* External ROM */
-//	{ 0x4000, 0x7fff, MRA_BANK1 },	/* External ROM (Banked) */
+/*	{ 0x4000, 0x7fff, MRA_BANK1 },	 // External ROM (Banked) /*/
 	{ 0x8000, 0x87ff, MRA_RAM },	/* External RAM */
 	{ 0xff00, 0xffff, MRA_RAM },	/* Internal RAM */
 MEMORY_END
@@ -483,7 +483,7 @@ PORT_END
 static PORT_WRITE_START( upd7810_writeport )
 	{ UPD7810_PORTA, UPD7810_PORTA, daitorid_porta_w },
 	{ UPD7810_PORTB, UPD7810_PORTB, daitorid_portb_w },
-//	{ UPD7810_PORTC, UPD7810_PORTC, daitorid_sound_rombank_w },
+/*	{ UPD7810_PORTC, UPD7810_PORTC, daitorid_sound_rombank_w },*/
 PORT_END
 
 static void metro_sound_irq_handler(int state)
@@ -504,7 +504,7 @@ WRITE16_HANDLER( metro_soundlatch_w )
 {
 	if ( ACCESSING_LSB && (Machine->sample_rate != 0) )
 	{
-//		soundlatch_w(0,data & 0xff);
+/*		soundlatch_w(0,data & 0xff);*/
 	}
 }
 
@@ -522,14 +522,14 @@ WRITE16_HANDLER( metro_soundstatus_w )
 
 READ16_HANDLER( metro_soundstatus_r )
 {
-//	return metro_soundstatus & 1;
+/*	return metro_soundstatus & 1;*/
 	return rand() & 1;
 }
 
 
 READ16_HANDLER( dharma_soundstatus_r )
 {
-//	return readinputport(0) | (metro_soundstatus ? 0x80 : 0);
+/*	return readinputport(0) | (metro_soundstatus ? 0x80 : 0);*/
 	return readinputport(0) | (0);
 }
 #endif
@@ -618,8 +618,8 @@ WRITE16_HANDLER( metro_coin_lockout_1word_w )
 {
 	if (ACCESSING_LSB)
 	{
-//		coin_lockout_w(0, data & 1);
-//		coin_lockout_w(1, data & 2);
+/*		coin_lockout_w(0, data & 1);*/
+/*		coin_lockout_w(1, data & 2);*/
 	}
 	if (data & ~3)	logerror("CPU #0 PC %06X : unknown bits of coin lockout written: %04X\n",activecpu_get_pc(),data);
 }
@@ -627,7 +627,7 @@ WRITE16_HANDLER( metro_coin_lockout_1word_w )
 
 WRITE16_HANDLER( metro_coin_lockout_4words_w )
 {
-//	coin_lockout_w( (offset >> 1) & 1, offset & 1 );
+/*	coin_lockout_w( (offset >> 1) & 1, offset & 1 );*/
 	if (data & ~1)	logerror("CPU #0 PC %06X : unknown bits of coin lockout written: %04X\n",activecpu_get_pc(),data);
 }
 
@@ -735,7 +735,7 @@ static INLINE void blt_write(const int tmap, const offs_t offs, const data16_t d
 		case 2:	metro_vram_1_w(offs,data,mask);	break;
 		case 3:	metro_vram_2_w(offs,data,mask);	break;
 	}
-//	logerror("CPU #0 PC %06X : Blitter %X] %04X <- %04X & %04X\n",activecpu_get_pc(),tmap,offs,data,mask);
+/*	logerror("CPU #0 PC %06X : Blitter %X] %04X <- %04X & %04X\n",activecpu_get_pc(),tmap,offs,data,mask);*/
 }
 
 
@@ -760,7 +760,7 @@ WRITE16_HANDLER( metro_blitter_w )
 		int shift			=	(dst_offs & 0x80) ? 0 : 8;
 		data16_t mask		=	(dst_offs & 0x80) ? 0xff00 : 0x00ff;
 
-//		logerror("CPU #0 PC %06X : Blitter regs %08X, %08X, %08X\n",activecpu_get_pc(),tmap,src_offs,dst_offs);
+/*		logerror("CPU #0 PC %06X : Blitter regs %08X, %08X, %08X\n",activecpu_get_pc(),tmap,src_offs,dst_offs);*/
 
 		dst_offs >>= 7+1;
 		switch( tmap )
@@ -780,7 +780,7 @@ WRITE16_HANDLER( metro_blitter_w )
 
 			src_offs %= src_len;
 			b1 = blt_read(src,src_offs);
-//			logerror("CPU #0 PC %06X : Blitter opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs);
+/*			logerror("CPU #0 PC %06X : Blitter opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs);*/
 			src_offs++;
 
 			count = ((~b1) & 0x3f) + 1;
@@ -925,44 +925,44 @@ static READ16_HANDLER( balcube_dsw_r )
 
 
 static MEMORY_READ16_START( balcube_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	// RAM
-	{ 0x300000, 0x300001, ymf278b_r				},	// Sound
-	{ 0x400000, 0x41ffff, balcube_dsw_r			},	// DSW x 3
-	{ 0x600000, 0x61ffff, MRA16_RAM				},	// Layer 0
-	{ 0x620000, 0x63ffff, MRA16_RAM				},	// Layer 1
-	{ 0x640000, 0x65ffff, MRA16_RAM				},	// Layer 2
-	{ 0x660000, 0x66ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0x670000, 0x673fff, MRA16_RAM				},	// Palette
-	{ 0x674000, 0x674fff, MRA16_RAM				},	// Sprites
-	{ 0x678000, 0x6787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x6788a2, 0x6788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0x500000, 0x500001, input_port_0_word_r	},	// Inputs
-	{ 0x500002, 0x500003, input_port_1_word_r	},	//
-	{ 0x500006, 0x500007, MRA16_NOP				},	//
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x300000, 0x300001, ymf278b_r				},	/* Sound*/
+	{ 0x400000, 0x41ffff, balcube_dsw_r			},	/* DSW x 3*/
+	{ 0x600000, 0x61ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0x620000, 0x63ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0x640000, 0x65ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0x660000, 0x66ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0x670000, 0x673fff, MRA16_RAM				},	/* Palette*/
+	{ 0x674000, 0x674fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x678000, 0x6787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x6788a2, 0x6788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0x500000, 0x500001, input_port_0_word_r	},	/* Inputs*/
+	{ 0x500002, 0x500003, input_port_1_word_r	},	/**/
+	{ 0x500006, 0x500007, MRA16_NOP				},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( balcube_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0xf00000, 0xf0ffff, MWA16_RAM						},	// RAM
-	{ 0x300000, 0x30000b, ymf278b_w						},	// Sound
-	{ 0x500002, 0x500009, metro_coin_lockout_4words_w	},	// Coin Lockout
-	{ 0x670000, 0x673fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x674000, 0x674fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x600000, 0x61ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x620000, 0x63ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x640000, 0x65ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x678000, 0x6787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size		},	// Tiles Set
-	{ 0x678840, 0x67884d, metro_blitter_w, &metro_blitter_regs		},	// Tiles Blitter
-	{ 0x678860, 0x67886b, metro_window_w, &metro_window				},	// Tilemap Window
-	{ 0x678870, 0x67887b, MWA16_RAM, &metro_scroll		},	// Scroll
-	{ 0x678880, 0x678881, MWA16_NOP						},	// ? increasing
-	{ 0x678890, 0x678891, MWA16_NOP						},	// ? increasing
-	{ 0x6788a2, 0x6788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x6788a4, 0x6788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x6788aa, 0x6788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x6788ac, 0x6788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x679700, 0x679713, MWA16_RAM, &metro_videoregs	},	// Video Registers
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xf00000, 0xf0ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x300000, 0x30000b, ymf278b_w						},	/* Sound*/
+	{ 0x500002, 0x500009, metro_coin_lockout_4words_w	},	/* Coin Lockout*/
+	{ 0x670000, 0x673fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x674000, 0x674fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x600000, 0x61ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x620000, 0x63ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x640000, 0x65ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x678000, 0x6787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size		},	/* Tiles Set*/
+	{ 0x678840, 0x67884d, metro_blitter_w, &metro_blitter_regs		},	/* Tiles Blitter*/
+	{ 0x678860, 0x67886b, metro_window_w, &metro_window				},	/* Tilemap Window*/
+	{ 0x678870, 0x67887b, MWA16_RAM, &metro_scroll		},	/* Scroll*/
+	{ 0x678880, 0x678881, MWA16_NOP						},	/* ? increasing*/
+	{ 0x678890, 0x678891, MWA16_NOP						},	/* ? increasing*/
+	{ 0x6788a2, 0x6788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x6788a4, 0x6788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x6788aa, 0x6788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x6788ac, 0x6788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x679700, 0x679713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
 MEMORY_END
 
 
@@ -971,46 +971,46 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( bangball_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	// RAM
-	{ 0xf10000, 0xf10fff, MRA16_RAM				},	// RAM (bug in the ram test routine)
-	{ 0xb00000, 0xb00001, ymf278b_r				},	// Sound
-	{ 0xc00000, 0xc1ffff, balcube_dsw_r			},	// DSW x 3
-	{ 0xd00000, 0xd00001, input_port_0_word_r	},	// Inputs
-	{ 0xd00002, 0xd00003, input_port_1_word_r	},	//
-	{ 0xd00006, 0xd00007, MRA16_NOP				},	//
-	{ 0xe00000, 0xe1ffff, MRA16_RAM				},	// Layer 0
-	{ 0xe20000, 0xe3ffff, MRA16_RAM				},	// Layer 1
-	{ 0xe40000, 0xe5ffff, MRA16_RAM				},	// Layer 2
-	{ 0xe60000, 0xe6ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0xe70000, 0xe73fff, MRA16_RAM				},	// Palette
-	{ 0xe74000, 0xe74fff, MRA16_RAM				},	// Sprites
-	{ 0xe78000, 0xe787ff, MRA16_RAM				},	// Tiles Set
-	{ 0xe788a2, 0xe788a3, metro_irq_cause_r		},	// IRQ Cause
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	/* RAM*/
+	{ 0xf10000, 0xf10fff, MRA16_RAM				},	/* RAM (bug in the ram test routine)*/
+	{ 0xb00000, 0xb00001, ymf278b_r				},	/* Sound*/
+	{ 0xc00000, 0xc1ffff, balcube_dsw_r			},	/* DSW x 3*/
+	{ 0xd00000, 0xd00001, input_port_0_word_r	},	/* Inputs*/
+	{ 0xd00002, 0xd00003, input_port_1_word_r	},	/**/
+	{ 0xd00006, 0xd00007, MRA16_NOP				},	/**/
+	{ 0xe00000, 0xe1ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0xe20000, 0xe3ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0xe40000, 0xe5ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0xe60000, 0xe6ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0xe70000, 0xe73fff, MRA16_RAM				},	/* Palette*/
+	{ 0xe74000, 0xe74fff, MRA16_RAM				},	/* Sprites*/
+	{ 0xe78000, 0xe787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0xe788a2, 0xe788a3, metro_irq_cause_r		},	/* IRQ Cause*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( bangball_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0xf00000, 0xf0ffff, MWA16_RAM						},	// RAM
-	{ 0xf10000, 0xf10fff, MWA16_RAM						},	// RAM
-	{ 0xb00000, 0xb0000b, ymf278b_w						},	// Sound
-	{ 0xd00002, 0xd00009, metro_coin_lockout_4words_w	},	// Coin Lockout
-	{ 0xe00000, 0xe1ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0xe20000, 0xe3ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0xe40000, 0xe5ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0xe70000, 0xe73fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0xe74000, 0xe74fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0xe78000, 0xe787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size		},	// Tiles Set
-	{ 0xe78840, 0xe7884d, metro_blitter_w, &metro_blitter_regs		},	// Tiles Blitter
-	{ 0xe78860, 0xe7886b, metro_window_w, &metro_window				},	// Tilemap Window
-	{ 0xe78870, 0xe7887b, MWA16_RAM, &metro_scroll		},	// Scroll
-	{ 0xe78880, 0xe78881, MWA16_NOP						},	// ? increasing
-	{ 0xe78890, 0xe78891, MWA16_NOP						},	// ? increasing
-	{ 0xe788a2, 0xe788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0xe788a4, 0xe788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0xe788aa, 0xe788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0xe788ac, 0xe788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0xe79700, 0xe79713, MWA16_RAM, &metro_videoregs	},	// Video Registers
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xf00000, 0xf0ffff, MWA16_RAM						},	/* RAM*/
+	{ 0xf10000, 0xf10fff, MWA16_RAM						},	/* RAM*/
+	{ 0xb00000, 0xb0000b, ymf278b_w						},	/* Sound*/
+	{ 0xd00002, 0xd00009, metro_coin_lockout_4words_w	},	/* Coin Lockout*/
+	{ 0xe00000, 0xe1ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0xe20000, 0xe3ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0xe40000, 0xe5ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0xe70000, 0xe73fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0xe74000, 0xe74fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0xe78000, 0xe787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size		},	/* Tiles Set*/
+	{ 0xe78840, 0xe7884d, metro_blitter_w, &metro_blitter_regs		},	/* Tiles Blitter*/
+	{ 0xe78860, 0xe7886b, metro_window_w, &metro_window				},	/* Tilemap Window*/
+	{ 0xe78870, 0xe7887b, MWA16_RAM, &metro_scroll		},	/* Scroll*/
+	{ 0xe78880, 0xe78881, MWA16_NOP						},	/* ? increasing*/
+	{ 0xe78890, 0xe78891, MWA16_NOP						},	/* ? increasing*/
+	{ 0xe788a2, 0xe788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0xe788a4, 0xe788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0xe788aa, 0xe788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0xe788ac, 0xe788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0xe79700, 0xe79713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
 MEMORY_END
 
 
@@ -1019,44 +1019,44 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( daitorid_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	// ROM
-	{ 0x800000, 0x80ffff, MRA16_RAM				},	// RAM
-	{ 0x400000, 0x41ffff, MRA16_RAM				},	// Layer 0
-	{ 0x420000, 0x43ffff, MRA16_RAM				},	// Layer 1
-	{ 0x440000, 0x45ffff, MRA16_RAM				},	// Layer 2
-	{ 0x460000, 0x46ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0x470000, 0x473fff, MRA16_RAM				},	// Palette
-	{ 0x474000, 0x474fff, MRA16_RAM				},	// Sprites
-	{ 0x478000, 0x4787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x4788a2, 0x4788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0xc00000, 0xc00001, dharma_soundstatus_r	},	// Inputs
-	{ 0xc00002, 0xc00003, input_port_1_word_r	},	//
-	{ 0xc00004, 0xc00005, input_port_2_word_r	},	//
-	{ 0xc00006, 0xc00007, input_port_3_word_r	},	//
+	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x800000, 0x80ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x400000, 0x41ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0x460000, 0x46ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0x470000, 0x473fff, MRA16_RAM				},	/* Palette*/
+	{ 0x474000, 0x474fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x478000, 0x4787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x4788a2, 0x4788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0xc00000, 0xc00001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0xc00002, 0xc00003, input_port_1_word_r	},	/**/
+	{ 0xc00004, 0xc00005, input_port_2_word_r	},	/**/
+	{ 0xc00006, 0xc00007, input_port_3_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( daitorid_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0x800000, 0x80ffff, MWA16_RAM						},	// RAM
-	{ 0x400000, 0x41ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x420000, 0x43ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x440000, 0x45ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x470000, 0x473fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x478000, 0x4787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x478840, 0x47884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x478860, 0x47886b, metro_window_w, &metro_window			},	// Tilemap Window
-	{ 0x478870, 0x47887b, MWA16_RAM, &metro_scroll		},	// Scroll
-	{ 0x478880, 0x478881, MWA16_NOP						},	// ? increasing
-	{ 0x478890, 0x478891, MWA16_NOP						},	// ? increasing
-	{ 0x4788a2, 0x4788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x4788a4, 0x4788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x4788a8, 0x4788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0x4788aa, 0x4788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x4788ac, 0x4788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x479700, 0x479713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0xc00000, 0xc00001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0xc00002, 0xc00009, metro_coin_lockout_4words_w	},	// Coin Lockout
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x800000, 0x80ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x400000, 0x41ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x470000, 0x473fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x478000, 0x4787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x478840, 0x47884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x478860, 0x47886b, metro_window_w, &metro_window			},	/* Tilemap Window*/
+	{ 0x478870, 0x47887b, MWA16_RAM, &metro_scroll		},	/* Scroll*/
+	{ 0x478880, 0x478881, MWA16_NOP						},	/* ? increasing*/
+	{ 0x478890, 0x478891, MWA16_NOP						},	/* ? increasing*/
+	{ 0x4788a2, 0x4788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x4788a4, 0x4788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x4788a8, 0x4788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0x4788aa, 0x4788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x4788ac, 0x4788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x479700, 0x479713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0xc00000, 0xc00001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0xc00002, 0xc00009, metro_coin_lockout_4words_w	},	/* Coin Lockout*/
 MEMORY_END
 
 
@@ -1065,44 +1065,44 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( dharma_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	// ROM
-	{ 0x400000, 0x40ffff, MRA16_RAM				},	// RAM
-	{ 0x800000, 0x81ffff, MRA16_RAM				},	// Layer 0
-	{ 0x820000, 0x83ffff, MRA16_RAM				},	// Layer 1
-	{ 0x840000, 0x85ffff, MRA16_RAM				},	// Layer 2
-	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0x870000, 0x873fff, MRA16_RAM				},	// Palette
-	{ 0x874000, 0x874fff, MRA16_RAM				},	// Sprites
-	{ 0x878000, 0x8787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0xc00000, 0xc00001, dharma_soundstatus_r	},	// Inputs
-	{ 0xc00002, 0xc00003, input_port_1_word_r	},	//
-	{ 0xc00004, 0xc00005, input_port_2_word_r	},	//
-	{ 0xc00006, 0xc00007, input_port_3_word_r	},	//
+	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x400000, 0x40ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x800000, 0x81ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0x820000, 0x83ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0x840000, 0x85ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0x870000, 0x873fff, MRA16_RAM				},	/* Palette*/
+	{ 0x874000, 0x874fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x878000, 0x8787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0xc00000, 0xc00001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0xc00002, 0xc00003, input_port_1_word_r	},	/**/
+	{ 0xc00004, 0xc00005, input_port_2_word_r	},	/**/
+	{ 0xc00006, 0xc00007, input_port_3_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( dharma_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0x400000, 0x40ffff, MWA16_RAM						},	// RAM
-	{ 0x800000, 0x81ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x820000, 0x83ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x840000, 0x85ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0x878880, 0x878881, MWA16_NOP						},	// ? increasing
-	{ 0x878890, 0x878891, MWA16_NOP						},	// ? increasing
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x879700, 0x879713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0xc00000, 0xc00001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0xc00002, 0xc00009, metro_coin_lockout_4words_w	},	// Coin Lockout
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x400000, 0x40ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x800000, 0x81ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x820000, 0x83ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x840000, 0x85ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0x878880, 0x878881, MWA16_NOP						},	/* ? increasing*/
+	{ 0x878890, 0x878891, MWA16_NOP						},	/* ? increasing*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x879700, 0x879713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0xc00000, 0xc00001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0xc00002, 0xc00009, metro_coin_lockout_4words_w	},	/* Coin Lockout*/
 MEMORY_END
 
 
@@ -1131,46 +1131,46 @@ KARATOUR_VRAM( 1 )
 KARATOUR_VRAM( 2 )
 
 static MEMORY_READ16_START( karatour_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0xffc000, 0xffffff, MRA16_RAM				},	// RAM
-	{ 0x400000, 0x400001, metro_soundstatus_r	},	// From Sound CPU
-	{ 0x400002, 0x400003, input_port_0_word_r	},	// Inputs
-	{ 0x400004, 0x400005, input_port_1_word_r	},	//
-	{ 0x400006, 0x400007, input_port_2_word_r	},	//
-	{ 0x40000a, 0x40000b, input_port_3_word_r	},	//
-	{ 0x40000c, 0x40000d, input_port_4_word_r	},	//
-	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0x870000, 0x873fff, MRA16_RAM				},	// Palette
-	{ 0x874000, 0x874fff, MRA16_RAM				},	// Sprites
-	{ 0x875000, 0x875fff, karatour_vram_0_r		},	// Layer 0 (Part of)
-	{ 0x876000, 0x876fff, karatour_vram_1_r		},	// Layer 1 (Part of)
-	{ 0x877000, 0x877fff, karatour_vram_2_r		},	// Layer 2 (Part of)
-	{ 0x878000, 0x8787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	// IRQ Cause
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xffc000, 0xffffff, MRA16_RAM				},	/* RAM*/
+	{ 0x400000, 0x400001, metro_soundstatus_r	},	/* From Sound CPU*/
+	{ 0x400002, 0x400003, input_port_0_word_r	},	/* Inputs*/
+	{ 0x400004, 0x400005, input_port_1_word_r	},	/**/
+	{ 0x400006, 0x400007, input_port_2_word_r	},	/**/
+	{ 0x40000a, 0x40000b, input_port_3_word_r	},	/**/
+	{ 0x40000c, 0x40000d, input_port_4_word_r	},	/**/
+	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0x870000, 0x873fff, MRA16_RAM				},	/* Palette*/
+	{ 0x874000, 0x874fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x875000, 0x875fff, karatour_vram_0_r		},	/* Layer 0 (Part of)*/
+	{ 0x876000, 0x876fff, karatour_vram_1_r		},	/* Layer 1 (Part of)*/
+	{ 0x877000, 0x877fff, karatour_vram_2_r		},	/* Layer 2 (Part of)*/
+	{ 0x878000, 0x8787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	/* IRQ Cause*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( karatour_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0xffc000, 0xffffff, MWA16_RAM						},	// RAM
-	{ 0x400000, 0x400001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0x400002, 0x400003, metro_coin_lockout_1word_w	},	// Coin Lockout
-	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x875000, 0x875fff, karatour_vram_0_w				},	// Layer 0 (Part of)
-	{ 0x876000, 0x876fff, karatour_vram_1_w				},	// Layer 1 (Part of)
-	{ 0x877000, 0x877fff, karatour_vram_2_w				},	// Layer 2 (Part of)
-	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x878800, 0x878813, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	// Scroll
-	{ 0x878880, 0x878881, MWA16_NOP						},	// ? increasing
-	{ 0x878890, 0x878891, MWA16_NOP						},	// ? increasing
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xffc000, 0xffffff, MWA16_RAM						},	/* RAM*/
+	{ 0x400000, 0x400001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0x400002, 0x400003, metro_coin_lockout_1word_w	},	/* Coin Lockout*/
+	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x875000, 0x875fff, karatour_vram_0_w				},	/* Layer 0 (Part of)*/
+	{ 0x876000, 0x876fff, karatour_vram_1_w				},	/* Layer 1 (Part of)*/
+	{ 0x877000, 0x877fff, karatour_vram_2_w				},	/* Layer 2 (Part of)*/
+	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x878800, 0x878813, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	/* Scroll*/
+	{ 0x878880, 0x878881, MWA16_NOP						},	/* ? increasing*/
+	{ 0x878890, 0x878891, MWA16_NOP						},	/* ? increasing*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
 MEMORY_END
 
 
@@ -1181,43 +1181,43 @@ MEMORY_END
 /* same limited tilemap access as karatour */
 
 static MEMORY_READ16_START( kokushi_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0x7fc000, 0x7fffff, MRA16_RAM				},	// RAM
-	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0x870000, 0x873fff, MRA16_RAM				},	// Palette
-	{ 0x874000, 0x874fff, MRA16_RAM				},	// Sprites
-	{ 0x875000, 0x875fff, karatour_vram_0_r		},	// Layer 0 (Part of)
-	{ 0x876000, 0x876fff, karatour_vram_1_r		},	// Layer 1 (Part of)
-	{ 0x877000, 0x877fff, karatour_vram_2_r		},	// Layer 2 (Part of)
-	{ 0x878000, 0x8787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0xc00000, 0xc00001, dharma_soundstatus_r	},	// From Sound CPU
-	{ 0xc00002, 0xc00003, input_port_1_word_r	},	// Inputs
-	{ 0xc00004, 0xc00005, input_port_2_word_r	},	//
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x7fc000, 0x7fffff, MRA16_RAM				},	/* RAM*/
+	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0x870000, 0x873fff, MRA16_RAM				},	/* Palette*/
+	{ 0x874000, 0x874fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x875000, 0x875fff, karatour_vram_0_r		},	/* Layer 0 (Part of)*/
+	{ 0x876000, 0x876fff, karatour_vram_1_r		},	/* Layer 1 (Part of)*/
+	{ 0x877000, 0x877fff, karatour_vram_2_r		},	/* Layer 2 (Part of)*/
+	{ 0x878000, 0x8787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0xc00000, 0xc00001, dharma_soundstatus_r	},	/* From Sound CPU*/
+	{ 0xc00002, 0xc00003, input_port_1_word_r	},	/* Inputs*/
+	{ 0xc00004, 0xc00005, input_port_2_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( kokushi_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x7fc000, 0x7fffff, MWA16_RAM						},	// RAM
-	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x875000, 0x875fff, karatour_vram_0_w				},	// Layer 0 (Part of)
-	{ 0x876000, 0x876fff, karatour_vram_1_w				},	// Layer 1 (Part of)
-	{ 0x877000, 0x877fff, karatour_vram_2_w				},	// Layer 2 (Part of)
-	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	// Scroll Regs - WRONG
-//	{ 0x878880, 0x878881, MWA16_NOP						},	// ? increasing
-	{ 0x878890, 0x878891, MWA16_NOP						},	// ? increasing
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x879700, 0x879713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0xc00000, 0xc00001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0xc00002, 0xc00009, metro_coin_lockout_4words_w	},	// Coin Lockout
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x7fc000, 0x7fffff, MWA16_RAM						},	/* RAM*/
+	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x875000, 0x875fff, karatour_vram_0_w				},	/* Layer 0 (Part of)*/
+	{ 0x876000, 0x876fff, karatour_vram_1_w				},	/* Layer 1 (Part of)*/
+	{ 0x877000, 0x877fff, karatour_vram_2_w				},	/* Layer 2 (Part of)*/
+	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs - WRONG*/
+/*	{ 0x878880, 0x878881, MWA16_NOP						},	*/ /* ? increasing*/
+	{ 0x878890, 0x878891, MWA16_NOP						},	/* ? increasing*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x879700, 0x879713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0xc00000, 0xc00001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0xc00002, 0xc00009, metro_coin_lockout_4words_w	},	/* Coin Lockout*/
 MEMORY_END
 
 
@@ -1227,48 +1227,48 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( lastfort_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	// ROM
-	{ 0x400000, 0x40ffff, MRA16_RAM				},	// RAM
-	{ 0x800000, 0x81ffff, MRA16_RAM				},	// Layer 0
-	{ 0x820000, 0x83ffff, MRA16_RAM				},	// Layer 1
-	{ 0x840000, 0x85ffff, MRA16_RAM				},	// Layer 2
-	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0x870000, 0x873fff, MRA16_RAM				},	// Palette
-	{ 0x874000, 0x874fff, MRA16_RAM				},	// Sprites
-	{ 0x878000, 0x8787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0xc00000, 0xc00001, metro_soundstatus_r	},	// From Sound CPU
-	{ 0xc00002, 0xc00003, MRA16_NOP				},	//
-	{ 0xc00004, 0xc00005, input_port_0_word_r	},	// Inputs
-	{ 0xc00006, 0xc00007, input_port_1_word_r	},	//
-	{ 0xc00008, 0xc00009, input_port_2_word_r	},	//
-	{ 0xc0000a, 0xc0000b, input_port_3_word_r	},	//
-	{ 0xc0000c, 0xc0000d, input_port_4_word_r	},	//
-	{ 0xc0000e, 0xc0000f, input_port_5_word_r	},	//
+	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x400000, 0x40ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x800000, 0x81ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0x820000, 0x83ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0x840000, 0x85ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0x870000, 0x873fff, MRA16_RAM				},	/* Palette*/
+	{ 0x874000, 0x874fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x878000, 0x8787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0xc00000, 0xc00001, metro_soundstatus_r	},	/* From Sound CPU*/
+	{ 0xc00002, 0xc00003, MRA16_NOP				},	/**/
+	{ 0xc00004, 0xc00005, input_port_0_word_r	},	/* Inputs*/
+	{ 0xc00006, 0xc00007, input_port_1_word_r	},	/**/
+	{ 0xc00008, 0xc00009, input_port_2_word_r	},	/**/
+	{ 0xc0000a, 0xc0000b, input_port_3_word_r	},	/**/
+	{ 0xc0000c, 0xc0000d, input_port_4_word_r	},	/**/
+	{ 0xc0000e, 0xc0000f, input_port_5_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( lastfort_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0x400000, 0x40ffff, MWA16_RAM						},	// RAM
-	{ 0x800000, 0x81ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x820000, 0x83ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x840000, 0x85ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x878800, 0x878813, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	// Scroll
-	{ 0x878880, 0x878881, MWA16_NOP						},	// ? increasing
-	{ 0x878890, 0x878891, MWA16_NOP						},	// ? increasing
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0xc00000, 0xc00001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0xc00002, 0xc00003, metro_coin_lockout_1word_w	},	// Coin Lockout
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x400000, 0x40ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x800000, 0x81ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x820000, 0x83ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x840000, 0x85ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x878800, 0x878813, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	/* Scroll*/
+	{ 0x878880, 0x878881, MWA16_NOP						},	/* ? increasing*/
+	{ 0x878890, 0x878891, MWA16_NOP						},	/* ? increasing*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0xc00000, 0xc00001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0xc00002, 0xc00003, metro_coin_lockout_1word_w	},	/* Coin Lockout*/
 MEMORY_END
 
 
@@ -1307,7 +1307,7 @@ static data16_t *gakusai_input_sel;
 static READ16_HANDLER( gakusai_input_r )
 {
 	data16_t input_sel = (*gakusai_input_sel) ^ 0x3e;
-	// Bit 0 ??
+	/* Bit 0 ??*/
 	if (input_sel & 0x0002)	return readinputport(0);
 	if (input_sel & 0x0004)	return readinputport(1);
 	if (input_sel & 0x0008)	return readinputport(2);
@@ -1325,62 +1325,62 @@ WRITE16_HANDLER( gakusai_eeprom_w )
 {
 	if (ACCESSING_LSB)
 	{
-		// latch the bit
+		/* latch the bit*/
 		EEPROM_write_bit(data & 0x01);
 
-		// reset line asserted: reset.
+		/* reset line asserted: reset.*/
 		EEPROM_set_cs_line((data & 0x04) ? CLEAR_LINE : ASSERT_LINE );
 
-		// clock line asserted: write latch or select next bit to read
+		/* clock line asserted: write latch or select next bit to read*/
 		EEPROM_set_clock_line((data & 0x02) ? ASSERT_LINE : CLEAR_LINE );
 	}
 }
 
 static MEMORY_READ16_START( gakusai_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM					},	// ROM
-	{ 0xff0000, 0xffffff, MRA16_RAM					},	// RAM
-	{ 0x200000, 0x21ffff, MRA16_RAM					},	// Layer 0
-	{ 0x220000, 0x23ffff, MRA16_RAM					},	// Layer 1
-	{ 0x240000, 0x25ffff, MRA16_RAM					},	// Layer 2
-	{ 0x260000, 0x26ffff, metro_bankedrom_r			},	// Banked ROM
-	{ 0x270000, 0x273fff, MRA16_RAM					},	// Palette
-	{ 0x274000, 0x274fff, MRA16_RAM					},	// Sprites
-	{ 0x278000, 0x2787ff, MRA16_RAM					},	// Tiles Set
-	{ 0x278832, 0x278833, metro_irq_cause_r			},	// IRQ Cause
-	{ 0x278880, 0x278881, gakusai_input_r			},	// Inputs
-	{ 0x278882, 0x278883, input_port_5_word_r		},	//
-	{ 0x27880e, 0x27880f, MRA16_RAM					},	// Screen Control
-	{ 0x700000, 0x700001, OKIM6295_status_0_lsb_r	},	// Sound
-	{ 0xc00000, 0xc00001, gakusai_eeprom_r			},	// EEPROM
+	{ 0x000000, 0x07ffff, MRA16_ROM					},	/* ROM*/
+	{ 0xff0000, 0xffffff, MRA16_RAM					},	/* RAM*/
+	{ 0x200000, 0x21ffff, MRA16_RAM					},	/* Layer 0*/
+	{ 0x220000, 0x23ffff, MRA16_RAM					},	/* Layer 1*/
+	{ 0x240000, 0x25ffff, MRA16_RAM					},	/* Layer 2*/
+	{ 0x260000, 0x26ffff, metro_bankedrom_r			},	/* Banked ROM*/
+	{ 0x270000, 0x273fff, MRA16_RAM					},	/* Palette*/
+	{ 0x274000, 0x274fff, MRA16_RAM					},	/* Sprites*/
+	{ 0x278000, 0x2787ff, MRA16_RAM					},	/* Tiles Set*/
+	{ 0x278832, 0x278833, metro_irq_cause_r			},	/* IRQ Cause*/
+	{ 0x278880, 0x278881, gakusai_input_r			},	/* Inputs*/
+	{ 0x278882, 0x278883, input_port_5_word_r		},	/**/
+	{ 0x27880e, 0x27880f, MRA16_RAM					},	/* Screen Control*/
+	{ 0x700000, 0x700001, OKIM6295_status_0_lsb_r	},	/* Sound*/
+	{ 0xc00000, 0xc00001, gakusai_eeprom_r			},	/* EEPROM*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( gakusai_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0xff0000, 0xffffff, MWA16_RAM						},	// RAM
-	{ 0x200000, 0x21ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x220000, 0x23ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x240000, 0x25ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x270000, 0x273fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x274000, 0x274fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x278000, 0x2787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x27880e, 0x27880f, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x278810, 0x27881f, MWA16_RAM, &metro_irq_levels	},	// IRQ Levels
-	{ 0x278820, 0x27882f, MWA16_RAM, &metro_irq_vectors	},	// IRQ Vectors
-	{ 0x278830, 0x278831, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x278832, 0x278833, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x278836, 0x278837, watchdog_reset16_w			},	// Watchdog
-	{ 0x278840, 0x27884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x278860, 0x27886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x278850, 0x27885b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0x278870, 0x278871, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x278888, 0x278889, MWA16_RAM, &gakusai_input_sel	},	// Inputs
-	{ 0x279700, 0x279713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x400000, 0x400001, MWA16_NOP						},	// ? 5
-	{ 0x500000, 0x500001, gakusai_oki_bank_lo_w			},	// Sound
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xff0000, 0xffffff, MWA16_RAM						},	/* RAM*/
+	{ 0x200000, 0x21ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x220000, 0x23ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x240000, 0x25ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x270000, 0x273fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x274000, 0x274fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x278000, 0x2787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x27880e, 0x27880f, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x278810, 0x27881f, MWA16_RAM, &metro_irq_levels	},	/* IRQ Levels*/
+	{ 0x278820, 0x27882f, MWA16_RAM, &metro_irq_vectors	},	/* IRQ Vectors*/
+	{ 0x278830, 0x278831, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x278832, 0x278833, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x278836, 0x278837, watchdog_reset16_w			},	/* Watchdog*/
+	{ 0x278840, 0x27884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x278860, 0x27886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x278850, 0x27885b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0x278870, 0x278871, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x278888, 0x278889, MWA16_RAM, &gakusai_input_sel	},	/* Inputs*/
+	{ 0x279700, 0x279713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x400000, 0x400001, MWA16_NOP						},	/* ? 5*/
+	{ 0x500000, 0x500001, gakusai_oki_bank_lo_w			},	/* Sound*/
 	{ 0x600000, 0x600001, YM2413_register_port_0_lsb_w	},
 	{ 0x600002, 0x600003, YM2413_data_port_0_lsb_w		},
 	{ 0x700000, 0x700001, OKIM6295_data_0_lsb_w 		},
-	{ 0xc00000, 0xc00001, gakusai_eeprom_w				},	// EEPROM
+	{ 0xc00000, 0xc00001, gakusai_eeprom_w				},	/* EEPROM*/
 	{ 0xd00000, 0xd00001, gakusai_oki_bank_hi_w			},
 MEMORY_END
 
@@ -1390,53 +1390,53 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( gakusai2_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM					},	// ROM
-	{ 0xff0000, 0xffffff, MRA16_RAM					},	// RAM
-	{ 0x600000, 0x61ffff, MRA16_RAM					},	// Layer 0
-	{ 0x620000, 0x63ffff, MRA16_RAM					},	// Layer 1
-	{ 0x640000, 0x65ffff, MRA16_RAM					},	// Layer 2
-	{ 0x660000, 0x66ffff, metro_bankedrom_r			},	// Banked ROM
-	{ 0x670000, 0x673fff, MRA16_RAM					},	// Palette
-	{ 0x674000, 0x674fff, MRA16_RAM					},	// Sprites
-	{ 0x675000, 0x675fff, MRA16_RAM					},	// Sprites?
-	{ 0x678000, 0x6787ff, MRA16_RAM					},	// Tiles Set
-	{ 0x678832, 0x678833, metro_irq_cause_r			},	// IRQ Cause
-	{ 0x678880, 0x678881, gakusai_input_r			},	// Inputs
-	{ 0x678882, 0x678883, input_port_5_word_r		},	//
-	{ 0x67880e, 0x67880f, MRA16_RAM					},	// Screen Control
-	{ 0xb00000, 0xb00001, OKIM6295_status_0_lsb_r	},	// Sound
-	{ 0xe00000, 0xe00001, gakusai_eeprom_r			},	// EEPROM
+	{ 0x000000, 0x07ffff, MRA16_ROM					},	/* ROM*/
+	{ 0xff0000, 0xffffff, MRA16_RAM					},	/* RAM*/
+	{ 0x600000, 0x61ffff, MRA16_RAM					},	/* Layer 0*/
+	{ 0x620000, 0x63ffff, MRA16_RAM					},	/* Layer 1*/
+	{ 0x640000, 0x65ffff, MRA16_RAM					},	/* Layer 2*/
+	{ 0x660000, 0x66ffff, metro_bankedrom_r			},	/* Banked ROM*/
+	{ 0x670000, 0x673fff, MRA16_RAM					},	/* Palette*/
+	{ 0x674000, 0x674fff, MRA16_RAM					},	/* Sprites*/
+	{ 0x675000, 0x675fff, MRA16_RAM					},	/* Sprites?*/
+	{ 0x678000, 0x6787ff, MRA16_RAM					},	/* Tiles Set*/
+	{ 0x678832, 0x678833, metro_irq_cause_r			},	/* IRQ Cause*/
+	{ 0x678880, 0x678881, gakusai_input_r			},	/* Inputs*/
+	{ 0x678882, 0x678883, input_port_5_word_r		},	/**/
+	{ 0x67880e, 0x67880f, MRA16_RAM					},	/* Screen Control*/
+	{ 0xb00000, 0xb00001, OKIM6295_status_0_lsb_r	},	/* Sound*/
+	{ 0xe00000, 0xe00001, gakusai_eeprom_r			},	/* EEPROM*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( gakusai2_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0xff0000, 0xffffff, MWA16_RAM						},	// RAM
-	{ 0x600000, 0x61ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x620000, 0x63ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x640000, 0x65ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x670000, 0x673fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x674000, 0x674fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x675000, 0x675fff, MWA16_RAM						},	// Sprites?
-	{ 0x678000, 0x6787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x67880e, 0x67880f, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x678810, 0x67881f, MWA16_RAM, &metro_irq_levels	},	// IRQ Levels
-	{ 0x678820, 0x67882f, MWA16_RAM, &metro_irq_vectors	},	// IRQ Vectors
-	{ 0x678830, 0x678831, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x678832, 0x678833, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x678836, 0x678837, watchdog_reset16_w			},	// Watchdog
-	{ 0x678840, 0x67884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x678860, 0x67886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x678850, 0x67885b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0x678870, 0x678871, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x678888, 0x678889, MWA16_RAM, &gakusai_input_sel	},	// Inputs
-	{ 0x679700, 0x679713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x800000, 0x800001, MWA16_NOP						},	// ? 5
-	{ 0x900000, 0x900001, gakusai_oki_bank_lo_w			},	// Sound
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xff0000, 0xffffff, MWA16_RAM						},	/* RAM*/
+	{ 0x600000, 0x61ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x620000, 0x63ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x640000, 0x65ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x670000, 0x673fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x674000, 0x674fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x675000, 0x675fff, MWA16_RAM						},	/* Sprites?*/
+	{ 0x678000, 0x6787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x67880e, 0x67880f, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x678810, 0x67881f, MWA16_RAM, &metro_irq_levels	},	/* IRQ Levels*/
+	{ 0x678820, 0x67882f, MWA16_RAM, &metro_irq_vectors	},	/* IRQ Vectors*/
+	{ 0x678830, 0x678831, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x678832, 0x678833, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x678836, 0x678837, watchdog_reset16_w			},	/* Watchdog*/
+	{ 0x678840, 0x67884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x678860, 0x67886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x678850, 0x67885b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0x678870, 0x678871, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x678888, 0x678889, MWA16_RAM, &gakusai_input_sel	},	/* Inputs*/
+	{ 0x679700, 0x679713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x800000, 0x800001, MWA16_NOP						},	/* ? 5*/
+	{ 0x900000, 0x900001, gakusai_oki_bank_lo_w			},	/* Sound*/
 	{ 0xa00000, 0xa00001, gakusai_oki_bank_hi_w			},
 	{ 0xb00000, 0xb00001, OKIM6295_data_0_lsb_w 		},
 	{ 0xc00000, 0xc00001, YM2413_register_port_0_lsb_w	},
 	{ 0xc00002, 0xc00003, YM2413_data_port_0_lsb_w		},
-	{ 0xe00000, 0xe00001, gakusai_eeprom_w				},	// EEPROM
+	{ 0xe00000, 0xe00001, gakusai_eeprom_w				},	/* EEPROM*/
 MEMORY_END
 
 
@@ -1446,7 +1446,7 @@ MEMORY_END
 
 READ16_HANDLER( dokyusp_eeprom_r )
 {
-	// clock line asserted: write latch or select next bit to read
+	/* clock line asserted: write latch or select next bit to read*/
 	EEPROM_set_clock_line(CLEAR_LINE);
 	EEPROM_set_clock_line(ASSERT_LINE);
 
@@ -1457,10 +1457,10 @@ WRITE16_HANDLER( dokyusp_eeprom_bit_w )
 {
 	if (ACCESSING_LSB)
 	{
-		// latch the bit
+		/* latch the bit*/
 		EEPROM_write_bit(data & 0x01);
 
-		// clock line asserted: write latch or select next bit to read
+		/* clock line asserted: write latch or select next bit to read*/
 		EEPROM_set_clock_line(CLEAR_LINE);
 		EEPROM_set_clock_line(ASSERT_LINE);
 	}
@@ -1470,57 +1470,57 @@ WRITE16_HANDLER( dokyusp_eeprom_reset_w )
 {
 	if (ACCESSING_LSB)
 	{
-		// reset line asserted: reset.
+		/* reset line asserted: reset.*/
 		EEPROM_set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 	}
 }
 
 static MEMORY_READ16_START( dokyusp_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM					},	// ROM
-	{ 0xff0000, 0xffffff, MRA16_RAM					},	// RAM
-	{ 0x200000, 0x21ffff, MRA16_RAM					},	// Layer 0
-	{ 0x220000, 0x23ffff, MRA16_RAM					},	// Layer 1
-	{ 0x240000, 0x25ffff, MRA16_RAM					},	// Layer 2
-	{ 0x260000, 0x26ffff, metro_bankedrom_r			},	// Banked ROM
-	{ 0x270000, 0x273fff, MRA16_RAM					},	// Palette
-	{ 0x274000, 0x274fff, MRA16_RAM					},	// Sprites
-	{ 0x278000, 0x2787ff, MRA16_RAM					},	// Tiles Set
-	{ 0x278832, 0x278833, metro_irq_cause_r			},	// IRQ Cause
-	{ 0x278880, 0x278881, gakusai_input_r			},	// Inputs
-	{ 0x278882, 0x278883, input_port_5_word_r		},	//
-	{ 0x27880e, 0x27880f, MRA16_RAM					},	// Screen Control
-	{ 0x700000, 0x700001, OKIM6295_status_0_lsb_r	},	// Sound
-	{ 0xd00000, 0xd00001, dokyusp_eeprom_r			},	// EEPROM
+	{ 0x000000, 0x03ffff, MRA16_ROM					},	/* ROM*/
+	{ 0xff0000, 0xffffff, MRA16_RAM					},	/* RAM*/
+	{ 0x200000, 0x21ffff, MRA16_RAM					},	/* Layer 0*/
+	{ 0x220000, 0x23ffff, MRA16_RAM					},	/* Layer 1*/
+	{ 0x240000, 0x25ffff, MRA16_RAM					},	/* Layer 2*/
+	{ 0x260000, 0x26ffff, metro_bankedrom_r			},	/* Banked ROM*/
+	{ 0x270000, 0x273fff, MRA16_RAM					},	/* Palette*/
+	{ 0x274000, 0x274fff, MRA16_RAM					},	/* Sprites*/
+	{ 0x278000, 0x2787ff, MRA16_RAM					},	/* Tiles Set*/
+	{ 0x278832, 0x278833, metro_irq_cause_r			},	/* IRQ Cause*/
+	{ 0x278880, 0x278881, gakusai_input_r			},	/* Inputs*/
+	{ 0x278882, 0x278883, input_port_5_word_r		},	/**/
+	{ 0x27880e, 0x27880f, MRA16_RAM					},	/* Screen Control*/
+	{ 0x700000, 0x700001, OKIM6295_status_0_lsb_r	},	/* Sound*/
+	{ 0xd00000, 0xd00001, dokyusp_eeprom_r			},	/* EEPROM*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( dokyusp_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0xff0000, 0xffffff, MWA16_RAM						},	// RAM
-	{ 0x200000, 0x21ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x220000, 0x23ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x240000, 0x25ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x270000, 0x273fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x274000, 0x274fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x278000, 0x2787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x27880e, 0x27880f, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x278810, 0x27881f, MWA16_RAM, &metro_irq_levels	},	// IRQ Levels
-	{ 0x278820, 0x27882f, MWA16_RAM, &metro_irq_vectors	},	// IRQ Vectors
-	{ 0x278830, 0x278831, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x278832, 0x278833, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x278836, 0x278837, watchdog_reset16_w			},	// Watchdog
-	{ 0x278840, 0x27884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x278860, 0x27886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x278850, 0x27885b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0x278870, 0x278871, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x278888, 0x278889, MWA16_RAM, &gakusai_input_sel	},	// Inputs
-	{ 0x279700, 0x279713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x400000, 0x400001, MWA16_NOP						},	// ? 5
-	{ 0x500000, 0x500001, gakusai_oki_bank_lo_w			},	// Sound
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xff0000, 0xffffff, MWA16_RAM						},	/* RAM*/
+	{ 0x200000, 0x21ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x220000, 0x23ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x240000, 0x25ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x270000, 0x273fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x274000, 0x274fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x278000, 0x2787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x27880e, 0x27880f, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x278810, 0x27881f, MWA16_RAM, &metro_irq_levels	},	/* IRQ Levels*/
+	{ 0x278820, 0x27882f, MWA16_RAM, &metro_irq_vectors	},	/* IRQ Vectors*/
+	{ 0x278830, 0x278831, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x278832, 0x278833, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x278836, 0x278837, watchdog_reset16_w			},	/* Watchdog*/
+	{ 0x278840, 0x27884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x278860, 0x27886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x278850, 0x27885b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0x278870, 0x278871, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x278888, 0x278889, MWA16_RAM, &gakusai_input_sel	},	/* Inputs*/
+	{ 0x279700, 0x279713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x400000, 0x400001, MWA16_NOP						},	/* ? 5*/
+	{ 0x500000, 0x500001, gakusai_oki_bank_lo_w			},	/* Sound*/
 	{ 0x600000, 0x600001, YM2413_register_port_0_lsb_w	},
 	{ 0x600002, 0x600003, YM2413_data_port_0_lsb_w		},
 	{ 0x700000, 0x700001, OKIM6295_data_0_lsb_w 		},
-	{ 0xc00000, 0xc00001, dokyusp_eeprom_reset_w		},	// EEPROM
-	{ 0xd00000, 0xd00001, dokyusp_eeprom_bit_w			},	// EEPROM
+	{ 0xc00000, 0xc00001, dokyusp_eeprom_reset_w		},	/* EEPROM*/
+	{ 0xd00000, 0xd00001, dokyusp_eeprom_bit_w			},	/* EEPROM*/
 MEMORY_END
 
 
@@ -1529,51 +1529,51 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( dokyusei_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM					},	// ROM
-	{ 0xff0000, 0xffffff, MRA16_RAM					},	// RAM
-	{ 0x400000, 0x41ffff, MRA16_RAM					},	// Layer 0
-	{ 0x420000, 0x43ffff, MRA16_RAM					},	// Layer 1
-	{ 0x440000, 0x45ffff, MRA16_RAM					},	// Layer 2
-	{ 0x460000, 0x46ffff, metro_bankedrom_r			},	// Banked ROM
-	{ 0x470000, 0x473fff, MRA16_RAM					},	// Palette
-	{ 0x474000, 0x474fff, MRA16_RAM					},	// Sprites
-	{ 0x478000, 0x4787ff, MRA16_RAM					},	// Tiles Set
-//	{ 0x478832, 0x478833, metro_irq_cause_r			},	// IRQ Cause
-	{ 0x478880, 0x478881, gakusai_input_r			},	// Inputs
-	{ 0x478882, 0x478883, input_port_5_word_r		},	//
-	{ 0x478884, 0x478885, input_port_6_word_r		},	// 2 x DSW
-	{ 0x478886, 0x478887, input_port_7_word_r		},	//
-	{ 0xd00000, 0xd00001, OKIM6295_status_0_lsb_r	},	// Sound
+	{ 0x000000, 0x03ffff, MRA16_ROM					},	/* ROM*/
+	{ 0xff0000, 0xffffff, MRA16_RAM					},	/* RAM*/
+	{ 0x400000, 0x41ffff, MRA16_RAM					},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, MRA16_RAM					},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, MRA16_RAM					},	/* Layer 2*/
+	{ 0x460000, 0x46ffff, metro_bankedrom_r			},	/* Banked ROM*/
+	{ 0x470000, 0x473fff, MRA16_RAM					},	/* Palette*/
+	{ 0x474000, 0x474fff, MRA16_RAM					},	/* Sprites*/
+	{ 0x478000, 0x4787ff, MRA16_RAM					},	/* Tiles Set*/
+/*	{ 0x478832, 0x478833, metro_irq_cause_r			},	*/ /* IRQ Cause*/
+	{ 0x478880, 0x478881, gakusai_input_r			},	/* Inputs*/
+	{ 0x478882, 0x478883, input_port_5_word_r		},	/**/
+	{ 0x478884, 0x478885, input_port_6_word_r		},	/* 2 x DSW*/
+	{ 0x478886, 0x478887, input_port_7_word_r		},	/**/
+	{ 0xd00000, 0xd00001, OKIM6295_status_0_lsb_r	},	/* Sound*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( dokyusei_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0xff0000, 0xffffff, MWA16_RAM						},	// RAM
-	{ 0x400000, 0x41ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x420000, 0x43ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x440000, 0x45ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x460000, 0x46ffff, MWA16_NOP						},	// DSW Selection
-	{ 0x470000, 0x473fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x478000, 0x4787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x47880e, 0x47880f, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x478810, 0x47881f, MWA16_RAM, &metro_irq_levels	},	// IRQ Levels
-	{ 0x478820, 0x47882f, MWA16_RAM, &metro_irq_vectors	},	// IRQ Vectors
-	{ 0x478830, 0x478831, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x478832, 0x478833, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x478836, 0x478837, MWA16_NOP						},	// ? watchdog ?
-	{ 0x478840, 0x47884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x478860, 0x47886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x478850, 0x47885b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0x478870, 0x478871, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x479700, 0x479713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x478888, 0x478889, MWA16_RAM, &gakusai_input_sel	},	// Inputs
-	{ 0x800000, 0x800001, gakusai_oki_bank_hi_w			},	// Samples Bank?
-	{ 0x900000, 0x900001, MWA16_NOP						},	// ? 4
-	{ 0xa00000, 0xa00001, gakusai_oki_bank_lo_w			},	// Samples Bank
-	{ 0xc00000, 0xc00001, YM2413_register_port_0_lsb_w	},	// Sound
-	{ 0xc00002, 0xc00003, YM2413_data_port_0_lsb_w		},	//
-	{ 0xd00000, 0xd00001, OKIM6295_data_0_lsb_w			},	//
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xff0000, 0xffffff, MWA16_RAM						},	/* RAM*/
+	{ 0x400000, 0x41ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x460000, 0x46ffff, MWA16_NOP						},	/* DSW Selection*/
+	{ 0x470000, 0x473fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x478000, 0x4787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x47880e, 0x47880f, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x478810, 0x47881f, MWA16_RAM, &metro_irq_levels	},	/* IRQ Levels*/
+	{ 0x478820, 0x47882f, MWA16_RAM, &metro_irq_vectors	},	/* IRQ Vectors*/
+	{ 0x478830, 0x478831, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x478832, 0x478833, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x478836, 0x478837, MWA16_NOP						},	/* ? watchdog ?*/
+	{ 0x478840, 0x47884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x478860, 0x47886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x478850, 0x47885b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0x478870, 0x478871, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x479700, 0x479713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x478888, 0x478889, MWA16_RAM, &gakusai_input_sel	},	/* Inputs*/
+	{ 0x800000, 0x800001, gakusai_oki_bank_hi_w			},	/* Samples Bank?*/
+	{ 0x900000, 0x900001, MWA16_NOP						},	/* ? 4*/
+	{ 0xa00000, 0xa00001, gakusai_oki_bank_lo_w			},	/* Samples Bank*/
+	{ 0xc00000, 0xc00001, YM2413_register_port_0_lsb_w	},	/* Sound*/
+	{ 0xc00002, 0xc00003, YM2413_data_port_0_lsb_w		},	/**/
+	{ 0xd00000, 0xd00001, OKIM6295_data_0_lsb_w			},	/**/
 MEMORY_END
 
 
@@ -1582,48 +1582,48 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( pangpoms_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	// ROM
-	{ 0xc00000, 0xc0ffff, MRA16_RAM				},	// RAM
-	{ 0x400000, 0x41ffff, MRA16_RAM				},	// Layer 0
-	{ 0x420000, 0x43ffff, MRA16_RAM				},	// Layer 1
-	{ 0x440000, 0x45ffff, MRA16_RAM				},	// Layer 2
-	{ 0x460000, 0x46ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0x470000, 0x473fff, MRA16_RAM				},	// Palette
-	{ 0x474000, 0x474fff, MRA16_RAM				},	// Sprites
-	{ 0x478000, 0x4787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x4788a2, 0x4788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0x800000, 0x800001, metro_soundstatus_r	},	// From Sound CPU
-	{ 0x800002, 0x800003, MRA16_NOP				},	//
-	{ 0x800004, 0x800005, input_port_0_word_r	},	// Inputs
-	{ 0x800006, 0x800007, input_port_1_word_r	},	//
-	{ 0x800008, 0x800009, input_port_2_word_r	},	//
-	{ 0x80000a, 0x80000b, input_port_3_word_r	},	//
-	{ 0x80000c, 0x80000d, input_port_4_word_r	},	//
-	{ 0x80000e, 0x80000f, input_port_5_word_r	},	//
+	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xc00000, 0xc0ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x400000, 0x41ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0x460000, 0x46ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0x470000, 0x473fff, MRA16_RAM				},	/* Palette*/
+	{ 0x474000, 0x474fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x478000, 0x4787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x4788a2, 0x4788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0x800000, 0x800001, metro_soundstatus_r	},	/* From Sound CPU*/
+	{ 0x800002, 0x800003, MRA16_NOP				},	/**/
+	{ 0x800004, 0x800005, input_port_0_word_r	},	/* Inputs*/
+	{ 0x800006, 0x800007, input_port_1_word_r	},	/**/
+	{ 0x800008, 0x800009, input_port_2_word_r	},	/**/
+	{ 0x80000a, 0x80000b, input_port_3_word_r	},	/**/
+	{ 0x80000c, 0x80000d, input_port_4_word_r	},	/**/
+	{ 0x80000e, 0x80000f, input_port_5_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( pangpoms_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0xc00000, 0xc0ffff, MWA16_RAM						},	// RAM
-	{ 0x400000, 0x41ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x420000, 0x43ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x440000, 0x45ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x470000, 0x473fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x478000, 0x4787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x478800, 0x478813, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x478840, 0x47884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x478860, 0x47886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x478870, 0x47887b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0x478880, 0x478881, MWA16_NOP						},	// ? increasing
-	{ 0x478890, 0x478891, MWA16_NOP						},	// ? increasing
-	{ 0x4788a2, 0x4788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x4788a4, 0x4788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x4788a8, 0x4788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0x4788aa, 0x4788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x4788ac, 0x4788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x800000, 0x800001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0x800002, 0x800003, metro_coin_lockout_1word_w	},	// Coin Lockout
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xc00000, 0xc0ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x400000, 0x41ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x470000, 0x473fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x478000, 0x4787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x478800, 0x478813, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x478840, 0x47884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x478860, 0x47886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x478870, 0x47887b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0x478880, 0x478881, MWA16_NOP						},	/* ? increasing*/
+	{ 0x478890, 0x478891, MWA16_NOP						},	/* ? increasing*/
+	{ 0x4788a2, 0x4788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x4788a4, 0x4788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x4788a8, 0x4788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0x4788aa, 0x4788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x4788ac, 0x4788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x800000, 0x800001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0x800002, 0x800003, metro_coin_lockout_1word_w	},	/* Coin Lockout*/
 MEMORY_END
 
 
@@ -1632,44 +1632,44 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( poitto_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	// ROM
-	{ 0x400000, 0x40ffff, MRA16_RAM				},	// RAM
-	{ 0xc00000, 0xc1ffff, MRA16_RAM				},	// Layer 0
-	{ 0xc20000, 0xc3ffff, MRA16_RAM				},	// Layer 1
-	{ 0xc40000, 0xc5ffff, MRA16_RAM				},	// Layer 2
-	{ 0xc60000, 0xc6ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0xc70000, 0xc73fff, MRA16_RAM				},	// Palette
-	{ 0xc74000, 0xc74fff, MRA16_RAM				},	// Sprites
-	{ 0xc78000, 0xc787ff, MRA16_RAM				},	// Tiles Set
-	{ 0xc788a2, 0xc788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0x800000, 0x800001, dharma_soundstatus_r	},	// Inputs
-	{ 0x800002, 0x800003, input_port_1_word_r	},	//
-	{ 0x800004, 0x800005, input_port_2_word_r	},	//
-	{ 0x800006, 0x800007, input_port_3_word_r	},	//
+	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x400000, 0x40ffff, MRA16_RAM				},	/* RAM*/
+	{ 0xc00000, 0xc1ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0xc20000, 0xc3ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0xc40000, 0xc5ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0xc60000, 0xc6ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0xc70000, 0xc73fff, MRA16_RAM				},	/* Palette*/
+	{ 0xc74000, 0xc74fff, MRA16_RAM				},	/* Sprites*/
+	{ 0xc78000, 0xc787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0xc788a2, 0xc788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0x800000, 0x800001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0x800002, 0x800003, input_port_1_word_r	},	/**/
+	{ 0x800004, 0x800005, input_port_2_word_r	},	/**/
+	{ 0x800006, 0x800007, input_port_3_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( poitto_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0x400000, 0x40ffff, MWA16_RAM						},	// RAM
-	{ 0xc00000, 0xc1ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0xc20000, 0xc3ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0xc40000, 0xc5ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0xc70000, 0xc73fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0xc74000, 0xc74fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0xc78000, 0xc787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0xc78800, 0xc78813, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0xc78840, 0xc7884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0xc78860, 0xc7886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0xc78870, 0xc7887b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0xc78880, 0xc78881, MWA16_NOP						},	// ? increasing
-	{ 0xc78890, 0xc78891, MWA16_NOP						},	// ? increasing
-	{ 0xc788a2, 0xc788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0xc788a4, 0xc788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0xc788a8, 0xc788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0xc788aa, 0xc788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0xc788ac, 0xc788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x800000, 0x800001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0x800002, 0x800009, metro_coin_lockout_4words_w	},	// Coin Lockout
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x400000, 0x40ffff, MWA16_RAM						},	/* RAM*/
+	{ 0xc00000, 0xc1ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0xc20000, 0xc3ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0xc40000, 0xc5ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0xc70000, 0xc73fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0xc74000, 0xc74fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0xc78000, 0xc787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0xc78800, 0xc78813, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0xc78840, 0xc7884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0xc78860, 0xc7886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0xc78870, 0xc7887b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0xc78880, 0xc78881, MWA16_NOP						},	/* ? increasing*/
+	{ 0xc78890, 0xc78891, MWA16_NOP						},	/* ? increasing*/
+	{ 0xc788a2, 0xc788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0xc788a4, 0xc788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0xc788a8, 0xc788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0xc788aa, 0xc788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0xc788ac, 0xc788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x800000, 0x800001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0x800002, 0x800009, metro_coin_lockout_4words_w	},	/* Coin Lockout*/
 MEMORY_END
 
 
@@ -1678,48 +1678,48 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( skyalert_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	// ROM
-	{ 0xc00000, 0xc0ffff, MRA16_RAM				},	// RAM
-	{ 0x800000, 0x81ffff, MRA16_RAM				},	// Layer 0
-	{ 0x820000, 0x83ffff, MRA16_RAM				},	// Layer 1
-	{ 0x840000, 0x85ffff, MRA16_RAM				},	// Layer 2
-	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0x870000, 0x873fff, MRA16_RAM				},	// Palette
-	{ 0x874000, 0x874fff, MRA16_RAM				},	// Sprites
-	{ 0x878000, 0x8787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0x400000, 0x400001, metro_soundstatus_r	},	// From Sound CPU
-	{ 0x400002, 0x400003, MRA16_NOP				},	//
-	{ 0x400004, 0x400005, input_port_0_word_r	},	// Inputs
-	{ 0x400006, 0x400007, input_port_1_word_r	},	//
-	{ 0x400008, 0x400009, input_port_2_word_r	},	//
-	{ 0x40000a, 0x40000b, input_port_3_word_r	},	//
-	{ 0x40000c, 0x40000d, input_port_4_word_r	},	//
-	{ 0x40000e, 0x40000f, input_port_5_word_r	},	//
+	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xc00000, 0xc0ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x800000, 0x81ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0x820000, 0x83ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0x840000, 0x85ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0x860000, 0x86ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0x870000, 0x873fff, MRA16_RAM				},	/* Palette*/
+	{ 0x874000, 0x874fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x878000, 0x8787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0x400000, 0x400001, metro_soundstatus_r	},	/* From Sound CPU*/
+	{ 0x400002, 0x400003, MRA16_NOP				},	/**/
+	{ 0x400004, 0x400005, input_port_0_word_r	},	/* Inputs*/
+	{ 0x400006, 0x400007, input_port_1_word_r	},	/**/
+	{ 0x400008, 0x400009, input_port_2_word_r	},	/**/
+	{ 0x40000a, 0x40000b, input_port_3_word_r	},	/**/
+	{ 0x40000c, 0x40000d, input_port_4_word_r	},	/**/
+	{ 0x40000e, 0x40000f, input_port_5_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( skyalert_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0xc00000, 0xc0ffff, MWA16_RAM						},	// RAM
-	{ 0x800000, 0x81ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x820000, 0x83ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x840000, 0x85ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x878800, 0x878813, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	// Scroll
-	{ 0x878880, 0x878881, MWA16_NOP						},	// ? increasing
-	{ 0x878890, 0x878891, MWA16_NOP						},	// ? increasing
-	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x400000, 0x400001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0x400002, 0x400003, metro_coin_lockout_1word_w	},	// Coin Lockout
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xc00000, 0xc0ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x800000, 0x81ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x820000, 0x83ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x840000, 0x85ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x870000, 0x873fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x874000, 0x874fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x878000, 0x8787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x878800, 0x878813, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x878840, 0x87884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x878860, 0x87886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x878870, 0x87887b, MWA16_RAM, &metro_scroll		},	/* Scroll*/
+	{ 0x878880, 0x878881, MWA16_NOP						},	/* ? increasing*/
+	{ 0x878890, 0x878891, MWA16_NOP						},	/* ? increasing*/
+	{ 0x8788a2, 0x8788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x8788a4, 0x8788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x8788a8, 0x8788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0x8788aa, 0x8788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x8788ac, 0x8788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x400000, 0x400001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0x400002, 0x400003, metro_coin_lockout_1word_w	},	/* Coin Lockout*/
 MEMORY_END
 
 
@@ -1728,44 +1728,44 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( pururun_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	// ROM
-	{ 0x800000, 0x80ffff, MRA16_RAM				},	// RAM
-	{ 0xc00000, 0xc1ffff, MRA16_RAM				},	// Layer 0
-	{ 0xc20000, 0xc3ffff, MRA16_RAM				},	// Layer 1
-	{ 0xc40000, 0xc5ffff, MRA16_RAM				},	// Layer 2
-	{ 0xc60000, 0xc6ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0xc70000, 0xc73fff, MRA16_RAM				},	// Palette
-	{ 0xc74000, 0xc74fff, MRA16_RAM				},	// Sprites
-	{ 0xc78000, 0xc787ff, MRA16_RAM				},	// Tiles Set
-	{ 0xc788a2, 0xc788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0x400000, 0x400001, dharma_soundstatus_r	},	// Inputs
-	{ 0x400002, 0x400003, input_port_1_word_r	},	//
-	{ 0x400004, 0x400005, input_port_2_word_r	},	//
-	{ 0x400006, 0x400007, input_port_3_word_r	},	//
+	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x800000, 0x80ffff, MRA16_RAM				},	/* RAM*/
+	{ 0xc00000, 0xc1ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0xc20000, 0xc3ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0xc40000, 0xc5ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0xc60000, 0xc6ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0xc70000, 0xc73fff, MRA16_RAM				},	/* Palette*/
+	{ 0xc74000, 0xc74fff, MRA16_RAM				},	/* Sprites*/
+	{ 0xc78000, 0xc787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0xc788a2, 0xc788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0x400000, 0x400001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0x400002, 0x400003, input_port_1_word_r	},	/**/
+	{ 0x400004, 0x400005, input_port_2_word_r	},	/**/
+	{ 0x400006, 0x400007, input_port_3_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( pururun_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	// ROM
-	{ 0x800000, 0x80ffff, MWA16_RAM						},	// RAM
-	{ 0xc00000, 0xc1ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0xc20000, 0xc3ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0xc40000, 0xc5ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0xc70000, 0xc73fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0xc74000, 0xc74fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0xc78000, 0xc787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0xc78840, 0xc7884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0xc78860, 0xc7886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0xc78870, 0xc7887b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0xc78880, 0xc78881, MWA16_NOP						},	// ? increasing
-	{ 0xc78890, 0xc78891, MWA16_NOP						},	// ? increasing
-	{ 0xc788a2, 0xc788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0xc788a4, 0xc788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0xc788a8, 0xc788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0xc788aa, 0xc788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0xc788ac, 0xc788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0xc79700, 0xc79713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x400000, 0x400001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0x400002, 0x400009, metro_coin_lockout_4words_w	},	// Coin Lockout
+	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x800000, 0x80ffff, MWA16_RAM						},	/* RAM*/
+	{ 0xc00000, 0xc1ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0xc20000, 0xc3ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0xc40000, 0xc5ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0xc70000, 0xc73fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0xc74000, 0xc74fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0xc78000, 0xc787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0xc78840, 0xc7884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0xc78860, 0xc7886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0xc78870, 0xc7887b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0xc78880, 0xc78881, MWA16_NOP						},	/* ? increasing*/
+	{ 0xc78890, 0xc78891, MWA16_NOP						},	/* ? increasing*/
+	{ 0xc788a2, 0xc788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0xc788a4, 0xc788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0xc788a8, 0xc788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0xc788aa, 0xc788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0xc788ac, 0xc788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0xc79700, 0xc79713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x400000, 0x400001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0x400002, 0x400009, metro_coin_lockout_4words_w	},	/* Coin Lockout*/
 MEMORY_END
 
 
@@ -1774,44 +1774,44 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( toride2g_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0x400000, 0x4cffff, MRA16_RAM				},	// RAM (4xc000-4xffff mirrored?)
-	{ 0xc00000, 0xc1ffff, MRA16_RAM				},	// Layer 0
-	{ 0xc20000, 0xc3ffff, MRA16_RAM				},	// Layer 1
-	{ 0xc40000, 0xc5ffff, MRA16_RAM				},	// Layer 2
-	{ 0xc60000, 0xc6ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0xc70000, 0xc73fff, MRA16_RAM				},	// Palette
-	{ 0xc74000, 0xc74fff, MRA16_RAM				},	// Sprites
-	{ 0xc78000, 0xc787ff, MRA16_RAM				},	// Tiles Set
-	{ 0xc788a2, 0xc788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0x800000, 0x800001, dharma_soundstatus_r	},	// Inputs
-	{ 0x800002, 0x800003, input_port_1_word_r	},	//
-	{ 0x800004, 0x800005, input_port_2_word_r	},	//
-	{ 0x800006, 0x800007, input_port_3_word_r	},	//
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x400000, 0x4cffff, MRA16_RAM				},	/* RAM (4xc000-4xffff mirrored?)*/
+	{ 0xc00000, 0xc1ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0xc20000, 0xc3ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0xc40000, 0xc5ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0xc60000, 0xc6ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0xc70000, 0xc73fff, MRA16_RAM				},	/* Palette*/
+	{ 0xc74000, 0xc74fff, MRA16_RAM				},	/* Sprites*/
+	{ 0xc78000, 0xc787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0xc788a2, 0xc788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0x800000, 0x800001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0x800002, 0x800003, input_port_1_word_r	},	/**/
+	{ 0x800004, 0x800005, input_port_2_word_r	},	/**/
+	{ 0x800006, 0x800007, input_port_3_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( toride2g_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0x400000, 0x4cffff, MWA16_RAM						},	// RAM (4xc000-4xffff mirrored?)
-	{ 0xc00000, 0xc1ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0xc20000, 0xc3ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0xc40000, 0xc5ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0xc70000, 0xc73fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0xc74000, 0xc74fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0xc78000, 0xc787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0xc78840, 0xc7884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0xc78860, 0xc7886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0xc78870, 0xc7887b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0xc78880, 0xc78881, MWA16_NOP						},	// ? increasing
-	{ 0xc78890, 0xc78891, MWA16_NOP						},	// ? increasing
-	{ 0xc788a2, 0xc788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0xc788a4, 0xc788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0xc788a8, 0xc788a9, metro_soundlatch_w			},	// To Sound CPU
-	{ 0xc788aa, 0xc788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0xc788ac, 0xc788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0xc79700, 0xc79713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x800000, 0x800001, metro_soundstatus_w			},	// To Sound CPU
-	{ 0x800002, 0x800009, metro_coin_lockout_4words_w	},	// Coin Lockout
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x400000, 0x4cffff, MWA16_RAM						},	/* RAM (4xc000-4xffff mirrored?)*/
+	{ 0xc00000, 0xc1ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0xc20000, 0xc3ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0xc40000, 0xc5ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0xc70000, 0xc73fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0xc74000, 0xc74fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0xc78000, 0xc787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0xc78840, 0xc7884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0xc78860, 0xc7886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0xc78870, 0xc7887b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0xc78880, 0xc78881, MWA16_NOP						},	/* ? increasing*/
+	{ 0xc78890, 0xc78891, MWA16_NOP						},	/* ? increasing*/
+	{ 0xc788a2, 0xc788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0xc788a4, 0xc788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0xc788a8, 0xc788a9, metro_soundlatch_w			},	/* To Sound CPU*/
+	{ 0xc788aa, 0xc788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0xc788ac, 0xc788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0xc79700, 0xc79713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x800000, 0x800001, metro_soundstatus_w			},	/* To Sound CPU*/
+	{ 0x800002, 0x800009, metro_coin_lockout_4words_w	},	/* Coin Lockout*/
 MEMORY_END
 
 
@@ -1882,48 +1882,48 @@ static PORT_WRITE_START( blzntrnd_sound_writeport )
 PORT_END
 
 static MEMORY_READ16_START( blzntrnd_readmem )
-	{ 0x000000, 0x1fffff, MRA16_ROM				},	// ROM
-	{ 0xff0000, 0xffffff, MRA16_RAM				},	// RAM
-//	{ 0x300000, 0x300001, MRA16_NOP				},	// Sound
-	{ 0x200000, 0x21ffff, MRA16_RAM				},	// Layer 0
-	{ 0x220000, 0x23ffff, MRA16_RAM				},	// Layer 1
-	{ 0x240000, 0x25ffff, MRA16_RAM				},	// Layer 2
-	{ 0x260000, 0x26ffff, metro_bankedrom_r		},	// Banked ROM
-	{ 0x270000, 0x273fff, MRA16_RAM				},	// Palette
-	{ 0x274000, 0x274fff, MRA16_RAM				},	// Sprites
-	{ 0x278000, 0x2787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x2788a2, 0x2788a3, metro_irq_cause_r		},	// IRQ Cause
-	{ 0xe00000, 0xe00001, input_port_0_word_r	},	// Inputs
-	{ 0xe00002, 0xe00003, input_port_1_word_r	},	//
-	{ 0xe00004, 0xe00005, input_port_2_word_r	},	//
-	{ 0xe00006, 0xe00007, input_port_3_word_r	},	//
-	{ 0xe00008, 0xe00009, input_port_4_word_r	},	//
-	{ 0x400000, 0x43ffff, MRA16_RAM				},	// 053936
+	{ 0x000000, 0x1fffff, MRA16_ROM				},	/* ROM*/
+	{ 0xff0000, 0xffffff, MRA16_RAM				},	/* RAM*/
+/*	{ 0x300000, 0x300001, MRA16_NOP				},	*/ /* Sound*/
+	{ 0x200000, 0x21ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0x220000, 0x23ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0x240000, 0x25ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0x260000, 0x26ffff, metro_bankedrom_r		},	/* Banked ROM*/
+	{ 0x270000, 0x273fff, MRA16_RAM				},	/* Palette*/
+	{ 0x274000, 0x274fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x278000, 0x2787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x2788a2, 0x2788a3, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0xe00000, 0xe00001, input_port_0_word_r	},	/* Inputs*/
+	{ 0xe00002, 0xe00003, input_port_1_word_r	},	/**/
+	{ 0xe00004, 0xe00005, input_port_2_word_r	},	/**/
+	{ 0xe00006, 0xe00007, input_port_3_word_r	},	/**/
+	{ 0xe00008, 0xe00009, input_port_4_word_r	},	/**/
+	{ 0x400000, 0x43ffff, MRA16_RAM				},	/* 053936*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( blzntrnd_writemem )
-	{ 0x000000, 0x1fffff, MWA16_ROM						},	// ROM
-	{ 0x200000, 0x21ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x220000, 0x23ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x240000, 0x25ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x260000, 0x26ffff, MWA16_NOP				},	// ??????
-	{ 0x270000, 0x273fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x274000, 0x274fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x278000, 0x2787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size		},	// Tiles Set
-	{ 0x278860, 0x27886b, metro_window_w, &metro_window				},	// Tilemap Window
-	{ 0x278870, 0x27887b, MWA16_RAM, &metro_scroll		},	// Scroll
-	{ 0x278890, 0x278891, MWA16_NOP						},	// ? increasing
-	{ 0x2788a2, 0x2788a3, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x2788a4, 0x2788a5, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x2788aa, 0x2788ab, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x2788ac, 0x2788ad, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x279700, 0x279713, MWA16_RAM, &metro_videoregs	},	// Video Registers
-	{ 0x400000, 0x43ffff, metro_K053936_w, &metro_K053936_ram	},	// 053936
-	{ 0x500000, 0x500fff, MWA16_RAM, &K053936_0_linectrl },	// 053936 line control
-	{ 0x600000, 0x60001f, MWA16_RAM, &K053936_0_ctrl	},	// 053936 control
+	{ 0x000000, 0x1fffff, MWA16_ROM						},	/* ROM*/
+	{ 0x200000, 0x21ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x220000, 0x23ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x240000, 0x25ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x260000, 0x26ffff, MWA16_NOP				},	/* ??????*/
+	{ 0x270000, 0x273fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x274000, 0x274fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x278000, 0x2787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size		},	/* Tiles Set*/
+	{ 0x278860, 0x27886b, metro_window_w, &metro_window				},	/* Tilemap Window*/
+	{ 0x278870, 0x27887b, MWA16_RAM, &metro_scroll		},	/* Scroll*/
+	{ 0x278890, 0x278891, MWA16_NOP						},	/* ? increasing*/
+	{ 0x2788a2, 0x2788a3, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x2788a4, 0x2788a5, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x2788aa, 0x2788ab, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x2788ac, 0x2788ad, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x279700, 0x279713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
+	{ 0x400000, 0x43ffff, metro_K053936_w, &metro_K053936_ram	},	/* 053936*/
+	{ 0x500000, 0x500fff, MWA16_RAM, &K053936_0_linectrl },	/* 053936 line control*/
+	{ 0x600000, 0x60001f, MWA16_RAM, &K053936_0_ctrl	},	/* 053936 control*/
 	{ 0xe00000, 0xe00001, MWA16_NOP },
 	{ 0xe00002, 0xe00003, blzntrnd_sound_w },
-	{ 0xff0000, 0xffffff, MWA16_RAM						},	// RAM
+	{ 0xff0000, 0xffffff, MWA16_RAM						},	/* RAM*/
 MEMORY_END
 
 
@@ -1932,51 +1932,51 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( mouja_readmem )
-	{ 0x000000, 0x07ffff, MRA16_ROM				},	// ROM
-	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	// RAM
-	{ 0x400000, 0x41ffff, MRA16_RAM				},	// Layer 0
-	{ 0x420000, 0x43ffff, MRA16_RAM				},	// Layer 1
-	{ 0x440000, 0x45ffff, MRA16_RAM				},	// Layer 2
-	{ 0x470000, 0x473fff, MRA16_RAM				},	// Palette
-	{ 0x474000, 0x474fff, MRA16_RAM				},	// Sprites
-	{ 0x478000, 0x4787ff, MRA16_RAM				},	// Tiles Set
-	{ 0x478832, 0x478833, metro_irq_cause_r		},	// IRQ Cause
-	{ 0x478880, 0x478881, input_port_0_word_r	},	// Inputs
-	{ 0x478882, 0x478883, input_port_1_word_r	},	//
-	{ 0x478884, 0x478885, input_port_2_word_r	},	//
-	{ 0x478886, 0x478887, input_port_3_word_r	},	//
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
+	{ 0xf00000, 0xf0ffff, MRA16_RAM				},	/* RAM*/
+	{ 0x400000, 0x41ffff, MRA16_RAM				},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, MRA16_RAM				},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, MRA16_RAM				},	/* Layer 2*/
+	{ 0x470000, 0x473fff, MRA16_RAM				},	/* Palette*/
+	{ 0x474000, 0x474fff, MRA16_RAM				},	/* Sprites*/
+	{ 0x478000, 0x4787ff, MRA16_RAM				},	/* Tiles Set*/
+	{ 0x478832, 0x478833, metro_irq_cause_r		},	/* IRQ Cause*/
+	{ 0x478880, 0x478881, input_port_0_word_r	},	/* Inputs*/
+	{ 0x478882, 0x478883, input_port_1_word_r	},	/**/
+	{ 0x478884, 0x478885, input_port_2_word_r	},	/**/
+	{ 0x478886, 0x478887, input_port_3_word_r	},	/**/
 	{ 0xd00000, 0xd00001, OKIM6295_status_0_lsb_r },
 #if 0
-	{ 0x460000, 0x46ffff, metro_bankedrom_r		},	// Banked ROM
+	{ 0x460000, 0x46ffff, metro_bankedrom_r		},	/* Banked ROM*/
 #endif
 MEMORY_END
 
 static MEMORY_WRITE16_START( mouja_writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM						},	// ROM
-	{ 0xf00000, 0xf0ffff, MWA16_RAM						},	// RAM
-	{ 0x400000, 0x41ffff, metro_vram_0_w, &metro_vram_0	},	// Layer 0
-	{ 0x420000, 0x43ffff, metro_vram_1_w, &metro_vram_1	},	// Layer 1
-	{ 0x440000, 0x45ffff, metro_vram_2_w, &metro_vram_2	},	// Layer 2
-	{ 0x470000, 0x473fff, metro_paletteram_w, &paletteram16	},	// Palette
-	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size				},	// Sprites
-	{ 0x478000, 0x4787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	// Tiles Set
-	{ 0x47880e, 0x47880f, MWA16_RAM, &metro_screenctrl	},	// Screen Control
-	{ 0x478810, 0x47881f, MWA16_RAM, &metro_irq_levels	},	// IRQ Levels
-	{ 0x478820, 0x47882f, MWA16_RAM, &metro_irq_vectors	},	// IRQ Vectors
-	{ 0x478830, 0x478831, MWA16_RAM, &metro_irq_enable	},	// IRQ Enable
-	{ 0x478832, 0x478833, metro_irq_cause_w				},	// IRQ Acknowledge
-	{ 0x478836, 0x478837, watchdog_reset16_w			},	// Watchdog
-	{ 0x478860, 0x47886b, metro_window_w, &metro_window	},	// Tilemap Window
-	{ 0x478850, 0x47885b, MWA16_RAM, &metro_scroll		},	// Scroll Regs
-	{ 0x479700, 0x479713, MWA16_RAM, &metro_videoregs	},	// Video Registers
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
+	{ 0xf00000, 0xf0ffff, MWA16_RAM						},	/* RAM*/
+	{ 0x400000, 0x41ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
+	{ 0x420000, 0x43ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
+	{ 0x440000, 0x45ffff, metro_vram_2_w, &metro_vram_2	},	/* Layer 2*/
+	{ 0x470000, 0x473fff, metro_paletteram_w, &paletteram16	},	/* Palette*/
+	{ 0x474000, 0x474fff, MWA16_RAM, &spriteram16, &spriteram_size				},	/* Sprites*/
+	{ 0x478000, 0x4787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},	/* Tiles Set*/
+	{ 0x47880e, 0x47880f, MWA16_RAM, &metro_screenctrl	},	/* Screen Control*/
+	{ 0x478810, 0x47881f, MWA16_RAM, &metro_irq_levels	},	/* IRQ Levels*/
+	{ 0x478820, 0x47882f, MWA16_RAM, &metro_irq_vectors	},	/* IRQ Vectors*/
+	{ 0x478830, 0x478831, MWA16_RAM, &metro_irq_enable	},	/* IRQ Enable*/
+	{ 0x478832, 0x478833, metro_irq_cause_w				},	/* IRQ Acknowledge*/
+	{ 0x478836, 0x478837, watchdog_reset16_w			},	/* Watchdog*/
+	{ 0x478860, 0x47886b, metro_window_w, &metro_window	},	/* Tilemap Window*/
+	{ 0x478850, 0x47885b, MWA16_RAM, &metro_scroll		},	/* Scroll Regs*/
+	{ 0x479700, 0x479713, MWA16_RAM, &metro_videoregs	},	/* Video Registers*/
 	{ 0xc00000, 0xc00001, YM2413_register_port_0_lsb_w	},
 	{ 0xc00002, 0xc00003, YM2413_data_port_0_lsb_w		},
 	{ 0xd00000, 0xd00001, OKIM6295_data_0_msb_w },
 
 #if 0
-	{ 0x478840, 0x47884d, metro_blitter_w, &metro_blitter_regs	},	// Tiles Blitter
-	{ 0x47883a, 0x47883b, MWA16_RAM, &metro_rombank		},	// Rom Bank
-	{ 0x800002, 0x800009, metro_coin_lockout_4words_w	},	// Coin Lockout
+	{ 0x478840, 0x47884d, metro_blitter_w, &metro_blitter_regs	},	/* Tiles Blitter*/
+	{ 0x47883a, 0x47883b, MWA16_RAM, &metro_rombank		},	/* Rom Bank*/
+	{ 0x800002, 0x800009, metro_coin_lockout_4words_w	},	/* Coin Lockout*/
 #endif
 MEMORY_END
 
@@ -2054,14 +2054,14 @@ MEMORY_END
 ***************************************************************************/
 
 INPUT_PORTS_START( balcube )
-	PORT_START	// IN0 - $500000
+	PORT_START	/* IN0 - $500000*/
 	COINS
 
-	PORT_START	// IN1 - $500002
+	PORT_START	/* IN1 - $500002*/
 	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)
 	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)
 
-	PORT_START	// IN2 - Strangely mapped in the 0x400000-0x41ffff range
+	PORT_START	/* IN2 - Strangely mapped in the 0x400000-0x41ffff range*/
 	COINAGE_DSW
 
 	PORT_DIPNAME( 0x0300, 0x0300, "Difficulty?" )
@@ -2088,8 +2088,8 @@ INPUT_PORTS_START( balcube )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x8000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - Strangely mapped in the 0x400000-0x41ffff range
-	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )	// unused
+	PORT_START	/* IN3 - Strangely mapped in the 0x400000-0x41ffff range*/
+	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused*/
 INPUT_PORTS_END
 
 
@@ -2098,14 +2098,14 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( bangball )
-	PORT_START	// IN0 - $d00000
+	PORT_START	/* IN0 - $d00000*/
 	COINS
 
-	PORT_START	// IN1 - $d00002
+	PORT_START	/* IN1 - $d00002*/
 	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)
 	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)
 
-	PORT_START	// IN2 - Strangely mapped in the 0xc00000-0xc1ffff range
+	PORT_START	/* IN2 - Strangely mapped in the 0xc00000-0xc1ffff range*/
 	COINAGE_DSW
 
 	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )
@@ -2131,8 +2131,8 @@ INPUT_PORTS_START( bangball )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - Strangely mapped in the 0xc00000-0xc1ffff range
-	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )	// used for debug
+	PORT_START	/* IN3 - Strangely mapped in the 0xc00000-0xc1ffff range*/
+	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* used for debug*/
 INPUT_PORTS_END
 
 
@@ -2162,7 +2162,7 @@ INPUT_PORTS_START( blzntrnd )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x00c0, 0x0000, "Control Panel" )
 	PORT_DIPSETTING(      0x0000, "4 Players" )
-//	PORT_DIPSETTING(      0x0040, "4 Players" )
+/*	PORT_DIPSETTING(      0x0040, "4 Players" )*/
 	PORT_DIPSETTING(      0x0080, "1P & 2P Tag only" )
 	PORT_DIPSETTING(      0x00c0, "1P & 2P vs only" )
 	PORT_DIPNAME( 0x0300, 0x0300, "Half Continue" )
@@ -2403,21 +2403,21 @@ INPUT_PORTS_END
 
 */
 INPUT_PORTS_START( daitorid )
-	PORT_START	// IN0 - $c00000
+	PORT_START	/* IN0 - $c00000*/
 	COINS
 
-	PORT_START	// IN1 - $c00002
-	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
-	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - $c00002*/
+	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
+	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - $c00004
+	PORT_START	/* IN2 - $c00004*/
 	COINAGE_DSW
 
-	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )		// Timer speed
-	PORT_DIPSETTING(      0x0200, "Easy" )				//   Slow
-	PORT_DIPSETTING(      0x0300, "Normal" )				//   Normal
-	PORT_DIPSETTING(      0x0100, "Hard" )				//   Fast
-	PORT_DIPSETTING(      0x0000, "Hardest" )				//   Fastest
+	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )		/* Timer speed*/
+	PORT_DIPSETTING(      0x0200, "Easy" )				/*   Slow*/
+	PORT_DIPSETTING(      0x0300, "Normal" )				/*   Normal*/
+	PORT_DIPSETTING(      0x0100, "Hard" )				/*   Fast*/
+	PORT_DIPSETTING(      0x0000, "Hardest" )				/*   Fastest*/
 	PORT_DIPNAME( 0x0400, 0x0400, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0400, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -2437,7 +2437,7 @@ INPUT_PORTS_START( daitorid )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $c00006
+	PORT_START	/* IN3 - $c00006*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -2454,26 +2454,26 @@ INPUT_PORTS_END
    Even if there are 4 "tables" the 2 first ones and the 2 last ones
    contains the same values for the timer. */
 INPUT_PORTS_START( dharma )
-	PORT_START	// IN0 - $c00000
+	PORT_START	/* IN0 - $c00000*/
 	COINS
 
-	PORT_START	// IN1 - $c00002
-	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
-	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - $c00002*/
+	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
+	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - $c00004
+	PORT_START	/* IN2 - $c00004*/
 	COINAGE_DSW
 
-	PORT_DIPNAME( 0x0300, 0x0300, "Time" )				// Check code at 0x00da0a and see notes
-	PORT_DIPSETTING(      0x0000, "Table 1" )				//   Table offset : 0x00e668
-//	PORT_DIPSETTING(      0x0100, "Table 1" )				//   Table offset : 0x00e6c0
-//	PORT_DIPSETTING(      0x0200, "Table 2" )				//   Table offset : 0x00e718
-	PORT_DIPSETTING(      0x0300, "Table 2" )				//   Table offset : 0x00e770
-	PORT_DIPNAME( 0x0c00, 0x0c00, DEF_STR( Difficulty ) )		// Timer (crab) speed
-	PORT_DIPSETTING(      0x0800, "Easy" )				//   Slow
-	PORT_DIPSETTING(      0x0c00, "Normal" )				//   Normal
-	PORT_DIPSETTING(      0x0400, "Hard" )				//   Fast
-	PORT_DIPSETTING(      0x0000, "Hardest" )				//   Fastest
+	PORT_DIPNAME( 0x0300, 0x0300, "Time" )				/* Check code at 0x00da0a and see notes*/
+	PORT_DIPSETTING(      0x0000, "Table 1" )				/*   Table offset : 0x00e668*/
+/*	PORT_DIPSETTING(      0x0100, "Table 1" )				*/ /*   Table offset : 0x00e6c0*/
+/*	PORT_DIPSETTING(      0x0200, "Table 2" )				*/ /*   Table offset : 0x00e718*/
+	PORT_DIPSETTING(      0x0300, "Table 2" )				/*   Table offset : 0x00e770*/
+	PORT_DIPNAME( 0x0c00, 0x0c00, DEF_STR( Difficulty ) )		/* Timer (crab) speed*/
+	PORT_DIPSETTING(      0x0800, "Easy" )				/*   Slow*/
+	PORT_DIPSETTING(      0x0c00, "Normal" )				/*   Normal*/
+	PORT_DIPSETTING(      0x0400, "Hard" )				/*   Fast*/
+	PORT_DIPSETTING(      0x0000, "Hardest" )				/*   Fastest*/
 	PORT_DIPNAME( 0x1000, 0x1000, "2 Players Game" )
 	PORT_DIPSETTING(      0x1000, "2 Credits" )
 	PORT_DIPSETTING(      0x0000, "1 Credit" )
@@ -2487,7 +2487,7 @@ INPUT_PORTS_START( dharma )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $c00006
+	PORT_START	/* IN3 - $c00006*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -2497,13 +2497,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( karatour )
-	PORT_START	// IN0 - $400002
+	PORT_START	/* IN0 - $400002*/
 	JOY_LSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// IN1 - $400004
+	PORT_START	/* IN1 - $400004*/
 	COINS
 
-	PORT_START	// IN2 - $400006
+	PORT_START	/* IN2 - $400006*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Lives ) )
 	PORT_DIPSETTING(      0x0001, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
@@ -2527,7 +2527,7 @@ INPUT_PORTS_START( karatour )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $40000a
+	PORT_START	/* IN3 - $40000a*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 2C_1C ) )
@@ -2551,7 +2551,7 @@ INPUT_PORTS_START( karatour )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_SERVICE( 0x0080, IP_ACTIVE_LOW )
 
-	PORT_START	// IN4 - $40000c
+	PORT_START	/* IN4 - $40000c*/
 	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 INPUT_PORTS_END
 
@@ -2561,13 +2561,13 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( ladykill )
-	PORT_START	// IN0 - $400002
+	PORT_START	/* IN0 - $400002*/
 	JOY_LSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// IN1 - $400004
+	PORT_START	/* IN1 - $400004*/
 	COINS
 
-	PORT_START	// IN2 - $400006
+	PORT_START	/* IN2 - $400006*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Lives ) )
 	PORT_DIPSETTING(      0x0001, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
@@ -2589,7 +2589,7 @@ INPUT_PORTS_START( ladykill )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $40000a
+	PORT_START	/* IN3 - $40000a*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 2C_1C ) )
@@ -2615,19 +2615,19 @@ INPUT_PORTS_START( ladykill )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN4 - $40000c
+	PORT_START	/* IN4 - $40000c*/
 	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 INPUT_PORTS_END
 
 /* Same as 'ladykill' but NO "Nudity" Dip Switch */
 INPUT_PORTS_START( moegonta )
-	PORT_START	// IN0 - $400002
+	PORT_START	/* IN0 - $400002*/
 	JOY_LSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// IN1 - $400004
+	PORT_START	/* IN1 - $400004*/
 	COINS
 
-	PORT_START	// IN2 - $400006
+	PORT_START	/* IN2 - $400006*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Lives ) )
 	PORT_DIPSETTING(      0x0001, "1" )
 	PORT_DIPSETTING(      0x0000, "2" )
@@ -2649,7 +2649,7 @@ INPUT_PORTS_START( moegonta )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $40000a
+	PORT_START	/* IN3 - $40000a*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 2C_1C ) )
@@ -2675,7 +2675,7 @@ INPUT_PORTS_START( moegonta )
 	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN4 - $40000c
+	PORT_START	/* IN4 - $40000c*/
 	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 INPUT_PORTS_END
 
@@ -2689,24 +2689,24 @@ INPUT_PORTS_END
    Is it due to different GFX ROMS or to an emulation bug ?
 */
 INPUT_PORTS_START( lastfort )
-	PORT_START	// IN0 - $c00004
+	PORT_START	/* IN0 - $c00004*/
 	COINS
 
-	PORT_START	// IN1 - $c00006
-	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - $c00006*/
+	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - $c00008
-	JOY_LSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
+	PORT_START	/* IN2 - $c00008*/
+	JOY_LSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN3 - $c0000a
+	PORT_START	/* IN3 - $c0000a*/
 	COINAGE_DSW
 
-	PORT_START	// IN4 - $c0000c
-	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )		// Timer speed
-	PORT_DIPSETTING(      0x0000, "Easiest" )				//   Slowest
-	PORT_DIPSETTING(      0x0001, "Easy" )				//   Slow
-	PORT_DIPSETTING(      0x0003, "Normal" )				//   Normal
-	PORT_DIPSETTING(      0x0002, "Hard" )				//   Fast
+	PORT_START	/* IN4 - $c0000c*/
+	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )		/* Timer speed*/
+	PORT_DIPSETTING(      0x0000, "Easiest" )				/*   Slowest*/
+	PORT_DIPSETTING(      0x0001, "Easy" )				/*   Slow*/
+	PORT_DIPSETTING(      0x0003, "Normal" )				/*   Normal*/
+	PORT_DIPSETTING(      0x0002, "Hard" )				/*   Fast*/
 	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -2724,9 +2724,9 @@ INPUT_PORTS_START( lastfort )
 	PORT_DIPSETTING(      0x0040, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0080, 0x0080, "Tiles" )
 	PORT_DIPSETTING(      0x0080, "Mahjong" )
-//	PORT_DIPSETTING(      0x0000, "Cards" )				// Not working - See notes
+/*	PORT_DIPSETTING(      0x0000, "Cards" )				*/ /* Not working - See notes*/
 
-	PORT_START	// IN5 - $c0000e
+	PORT_START	/* IN5 - $c0000e*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -2737,24 +2737,24 @@ INPUT_PORTS_END
 
 /* Same as 'lastfort' but WORKING "Tiles" Dip Switch */
 INPUT_PORTS_START( lastfero )
-	PORT_START	// IN0 - $c00004
+	PORT_START	/* IN0 - $c00004*/
 	COINS
 
-	PORT_START	// IN1 - $c00006
-	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - $c00006*/
+	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - $c00008
-	JOY_LSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
+	PORT_START	/* IN2 - $c00008*/
+	JOY_LSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN3 - $c0000a
+	PORT_START	/* IN3 - $c0000a*/
 	COINAGE_DSW
 
-	PORT_START	// IN4 - $c0000c
-	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )		// Timer speed
-	PORT_DIPSETTING(      0x0000, "Easiest" )				//   Slowest
-	PORT_DIPSETTING(      0x0001, "Easy" )				//   Slow
-	PORT_DIPSETTING(      0x0003, "Normal" )				//   Normal
-	PORT_DIPSETTING(      0x0002, "Hard" )				//   Fast
+	PORT_START	/* IN4 - $c0000c*/
+	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )		/* Timer speed*/
+	PORT_DIPSETTING(      0x0000, "Easiest" )				/*   Slowest*/
+	PORT_DIPSETTING(      0x0001, "Easy" )				/*   Slow*/
+	PORT_DIPSETTING(      0x0003, "Normal" )				/*   Normal*/
+	PORT_DIPSETTING(      0x0002, "Hard" )				/*   Fast*/
 	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -2774,7 +2774,7 @@ INPUT_PORTS_START( lastfero )
 	PORT_DIPSETTING(      0x0080, "Mahjong" )
 	PORT_DIPSETTING(      0x0000, "Cards" )
 
-	PORT_START	// IN5 - $c0000e
+	PORT_START	/* IN5 - $c0000e*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -2784,7 +2784,7 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( dokyusei )
-	PORT_START	// IN0 - $478880.w
+	PORT_START	/* IN0 - $478880.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "A",   KEYCODE_A,        IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "E",   KEYCODE_E,        IP_JOY_NONE )
@@ -2795,7 +2795,7 @@ INPUT_PORTS_START( dokyusei )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - $478880.w
+	PORT_START	/* IN1 - $478880.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "B",     KEYCODE_B, IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "F",     KEYCODE_F, IP_JOY_NONE )
@@ -2806,7 +2806,7 @@ INPUT_PORTS_START( dokyusei )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - $478880.w
+	PORT_START	/* IN2 - $478880.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "C",   KEYCODE_C,      IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "G",   KEYCODE_G,      IP_JOY_NONE )
@@ -2817,7 +2817,7 @@ INPUT_PORTS_START( dokyusei )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN3 - $478880.w
+	PORT_START	/* IN3 - $478880.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "D",   KEYCODE_D,     IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "H",   KEYCODE_H,     IP_JOY_NONE )
@@ -2828,10 +2828,10 @@ INPUT_PORTS_START( dokyusei )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN4 - $478880.w
+	PORT_START	/* IN4 - $478880.w*/
 	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN5 - $478882.w
+	PORT_START	/* IN5 - $478882.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT_IMPULSE(  0x0002, IP_ACTIVE_LOW, IPT_COIN1, 2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -2842,7 +2842,7 @@ INPUT_PORTS_START( dokyusei )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START // IN6 - $478884.w
+	PORT_START /* IN6 - $478884.w*/
 	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0300, "Easy" )
 	PORT_DIPSETTING(      0x0200, "Normal" )
@@ -2867,7 +2867,7 @@ INPUT_PORTS_START( dokyusei )
 	PORT_DIPSETTING(      0x8000, DEF_STR( No ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Yes ) )
 
-	PORT_START // IN7 - $478886.w
+	PORT_START /* IN7 - $478886.w*/
 	PORT_DIPNAME( 0x0100, 0x0100, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -2878,7 +2878,7 @@ INPUT_PORTS_START( dokyusei )
 	PORT_DIPSETTING(      0x0400, "Return to default" )
 	PORT_DIPSETTING(      0x0000, "Keep current status" )
 	PORT_SERVICE( 0x0800, IP_ACTIVE_LOW )
-	PORT_DIPNAME( 0x1000, 0x0000, "Self Test" ) //!
+	PORT_DIPNAME( 0x1000, 0x0000, "Self Test" ) /*!*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( No ) )
 	PORT_DIPSETTING(      0x1000, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x2000, 0x2000, "Unknown 2-5" )
@@ -2900,7 +2900,7 @@ INPUT_PORTS_END
 /* Same as dokyusei, without the DSWs (these games have an eeprom) */
 
 INPUT_PORTS_START( gakusai )
-	PORT_START	// IN0 - $278880.w
+	PORT_START	/* IN0 - $278880.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "A",   KEYCODE_A,        IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "E",   KEYCODE_E,        IP_JOY_NONE )
@@ -2911,7 +2911,7 @@ INPUT_PORTS_START( gakusai )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - $278880.w
+	PORT_START	/* IN1 - $278880.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "B",   KEYCODE_B, IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "F",   KEYCODE_F, IP_JOY_NONE )
@@ -2922,7 +2922,7 @@ INPUT_PORTS_START( gakusai )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - $278880.w
+	PORT_START	/* IN2 - $278880.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "C",     KEYCODE_C,      IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "G",     KEYCODE_G,      IP_JOY_NONE )
@@ -2933,7 +2933,7 @@ INPUT_PORTS_START( gakusai )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN3 - $278880.w
+	PORT_START	/* IN3 - $278880.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BITX(0x0002, IP_ACTIVE_LOW, 0, "D",   KEYCODE_D,     IP_JOY_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_LOW, 0, "H",   KEYCODE_H,     IP_JOY_NONE )
@@ -2944,10 +2944,10 @@ INPUT_PORTS_START( gakusai )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN4 - $278880.w
+	PORT_START	/* IN4 - $278880.w*/
 	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN5 - $278882.w
+	PORT_START	/* IN5 - $278882.w*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT_IMPULSE(  0x0002, IP_ACTIVE_LOW, IPT_COIN1, 2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -2965,7 +2965,7 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( mouja )
-	PORT_START	// IN0 - $478880
+	PORT_START	/* IN0 - $478880*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
@@ -2983,7 +2983,7 @@ INPUT_PORTS_START( mouja )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 
-	PORT_START	// IN1 - $478882
+	PORT_START	/* IN1 - $478882*/
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_START1 )
@@ -2993,7 +2993,7 @@ INPUT_PORTS_START( mouja )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX(0x0080, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 
-	PORT_START	// IN2 - $478884
+	PORT_START	/* IN2 - $478884*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -3040,7 +3040,7 @@ INPUT_PORTS_START( mouja )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $478886
+	PORT_START	/* IN3 - $478886*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -3050,24 +3050,24 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( pangpoms )
-	PORT_START	// IN0 - $800004
+	PORT_START	/* IN0 - $800004*/
 	COINS
 
-	PORT_START	// IN1 - $800006
+	PORT_START	/* IN1 - $800006*/
 	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// IN2 - $800008
+	PORT_START	/* IN2 - $800008*/
 	JOY_LSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// IN3 - $80000a
+	PORT_START	/* IN3 - $80000a*/
 	COINAGE_DSW
 
-	PORT_START	// IN4 - $80000c
+	PORT_START	/* IN4 - $80000c*/
 	PORT_DIPNAME( 0x0003, 0x0003, "Time Speed" )
-	PORT_DIPSETTING(      0x0000, "Slowest" )	// 60 (1 game sec. lasts x/60 real sec.)
-	PORT_DIPSETTING(      0x0001, "Slow"    )	// 90
-	PORT_DIPSETTING(      0x0003, "Normal"  )	// 120
-	PORT_DIPSETTING(      0x0002, "Fast"    )	// 150
+	PORT_DIPSETTING(      0x0000, "Slowest" )	/* 60 (1 game sec. lasts x/60 real sec.)*/
+	PORT_DIPSETTING(      0x0001, "Slow"    )	/* 90*/
+	PORT_DIPSETTING(      0x0003, "Normal"  )	/* 120*/
+	PORT_DIPSETTING(      0x0002, "Fast"    )	/* 150*/
 	PORT_DIPNAME( 0x000c, 0x000c, DEF_STR( Lives ) )
 	PORT_DIPSETTING(      0x0008, "1" )
 	PORT_DIPSETTING(      0x0004, "2" )
@@ -3085,7 +3085,7 @@ INPUT_PORTS_START( pangpoms )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0080, DEF_STR( On ) )
 
-	PORT_START	// IN5 - $80000e
+	PORT_START	/* IN5 - $80000e*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -3095,14 +3095,14 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( poitto )
-	PORT_START	// IN0 - $800000
+	PORT_START	/* IN0 - $800000*/
 	COINS
 
-	PORT_START	// IN1 - $800002
-	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
-	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - $800002*/
+	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
+	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - $800004
+	PORT_START	/* IN2 - $800004*/
 	COINAGE_DSW
 
 	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )
@@ -3129,7 +3129,7 @@ INPUT_PORTS_START( poitto )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $800006
+	PORT_START	/* IN3 - $800006*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -3139,20 +3139,20 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( puzzli )
-	PORT_START	// IN0 - $c00000
+	PORT_START	/* IN0 - $c00000*/
 	COINS
 
-	PORT_START	// IN1 - $c00002
-	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		// BUTTON3 in "test mode" only
-	JOY_MSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		// BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - $c00002*/
+	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		/* BUTTON3 in "test mode" only*/
+	JOY_MSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		/* BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - $c00004
+	PORT_START	/* IN2 - $c00004*/
 	COINAGE_DSW
 
 	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0200, "Easy" )
 	PORT_DIPSETTING(      0x0300, "Normal" )
-//	PORT_DIPSETTING(      0x0100, "Normal" )			// Duplicated setting
+/*	PORT_DIPSETTING(      0x0100, "Normal" )			*/ /* Duplicated setting*/
 	PORT_DIPSETTING(      0x0000, "Hard" )
 	PORT_DIPNAME( 0x0400, 0x0400, "Join In" )
 	PORT_DIPSETTING(      0x0000, DEF_STR( No ) )
@@ -3173,7 +3173,7 @@ INPUT_PORTS_START( puzzli )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $c00006
+	PORT_START	/* IN3 - $c00006*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -3183,14 +3183,14 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( 3kokushi )
-	PORT_START	// IN0 - $c00000
+	PORT_START	/* IN0 - $c00000*/
 	COINS
 
-	PORT_START	// IN1 - $c00002
+	PORT_START	/* IN1 - $c00002*/
 	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 	JOY_MSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
 
-	PORT_START	// IN2 - $c00004
+	PORT_START	/* IN2 - $c00004*/
 	PORT_DIPNAME( 0x0007, 0x0007, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( 2C_1C ) )
@@ -3215,11 +3215,11 @@ INPUT_PORTS_START( 3kokushi )
 	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0080, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )		// Timer speed
-	PORT_DIPSETTING(      0x0200, "Easy" )				//   Slow
-	PORT_DIPSETTING(      0x0300, "Normal" )				//   Normal
-	PORT_DIPSETTING(      0x0100, "Hard" )				//   Fast
-	PORT_DIPSETTING(      0x0000, "Hardest" )				//   Fastest
+	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )		/* Timer speed*/
+	PORT_DIPSETTING(      0x0200, "Easy" )				/*   Slow*/
+	PORT_DIPSETTING(      0x0300, "Normal" )				/*   Normal*/
+	PORT_DIPSETTING(      0x0100, "Hard" )				/*   Fast*/
+	PORT_DIPSETTING(      0x0000, "Hardest" )				/*   Fastest*/
 	PORT_DIPNAME( 0x0400, 0x0400, DEF_STR( Unused ) )
 	PORT_DIPSETTING(      0x0400, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -3245,17 +3245,17 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 INPUT_PORTS_START( pururun )
-	PORT_START	// IN0 - $400000
+	PORT_START	/* IN0 - $400000*/
 	COINS
 
-	PORT_START	// IN1 - $400002
-	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		// BUTTON3 in "test mode" only
-	JOY_MSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		// BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - $400002*/
+	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		/* BUTTON3 in "test mode" only*/
+	JOY_MSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		/* BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - $400004
+	PORT_START	/* IN2 - $400004*/
 	COINAGE_DSW
 
-	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )		// Distance to goal
+	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )		/* Distance to goal*/
 	PORT_DIPSETTING(      0x0200, "Easiest" )
 	PORT_DIPSETTING(      0x0100, "Easy" )
 	PORT_DIPSETTING(      0x0300, "Normal" )
@@ -3279,7 +3279,7 @@ INPUT_PORTS_START( pururun )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $400006
+	PORT_START	/* IN3 - $400006*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -3304,19 +3304,19 @@ INPUT_PORTS_END
 
 */
 INPUT_PORTS_START( skyalert )
-	PORT_START	// IN0 - $400004
+	PORT_START	/* IN0 - $400004*/
 	COINS
 
-	PORT_START	// IN1 - $400006
-	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		// BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - $400006*/
+	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		/* BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - $400008
-	JOY_LSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		// BUTTON3 in "test mode" only
+	PORT_START	/* IN2 - $400008*/
+	JOY_LSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)		/* BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN3 - $40000a
+	PORT_START	/* IN3 - $40000a*/
 	COINAGE_DSW
 
-	PORT_START	// IN4 - $40000c
+	PORT_START	/* IN4 - $40000c*/
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(      0x0002, "Easy" )
 	PORT_DIPSETTING(      0x0003, "Normal" )
@@ -3327,7 +3327,7 @@ INPUT_PORTS_START( skyalert )
 	PORT_DIPSETTING(      0x0004, "2" )
 	PORT_DIPSETTING(      0x000c, "3" )
 	PORT_DIPSETTING(      0x0000, "4" )
-	PORT_DIPNAME( 0x0030, 0x0030, DEF_STR( Bonus_Life ) )		// See notes
+	PORT_DIPNAME( 0x0030, 0x0030, DEF_STR( Bonus_Life ) )		/* See notes*/
 	PORT_DIPSETTING(      0x0030, "100K, every 400K" )
 	PORT_DIPSETTING(      0x0020, "200K, every 400K" )
 	PORT_DIPSETTING(      0x0010, "200K" )
@@ -3339,7 +3339,7 @@ INPUT_PORTS_START( skyalert )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0080, DEF_STR( On ) )
 
-	PORT_START	// IN5 - $40000e
+	PORT_START	/* IN5 - $40000e*/
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -3353,14 +3353,14 @@ INPUT_PORTS_END
    proposed, but there is no evidence that one "table" is harder
    than another. */
 INPUT_PORTS_START( toride2g )
-	PORT_START	// IN0 - $800000
+	PORT_START	/* IN0 - $800000*/
 	COINS
 
-	PORT_START	// IN1 - $800002
-	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
-	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		// BUTTON2 and BUTTON3 in "test mode" only
+	PORT_START	/* IN1 - $800002*/
+	JOY_LSB(1, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
+	JOY_MSB(2, BUTTON1, UNKNOWN, UNKNOWN, UNKNOWN)		/* BUTTON2 and BUTTON3 in "test mode" only*/
 
-	PORT_START	// IN2 - $800004
+	PORT_START	/* IN2 - $800004*/
 	COINAGE_DSW
 
 	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )
@@ -3368,7 +3368,7 @@ INPUT_PORTS_START( toride2g )
 	PORT_DIPSETTING(      0x0300, "Normal" )
 	PORT_DIPSETTING(      0x0100, "Hard" )
 	PORT_DIPSETTING(      0x0000, "Hardest" )
-	PORT_DIPNAME( 0x0400, 0x0400, "Levels" )				// See notes
+	PORT_DIPNAME( 0x0400, 0x0400, "Levels" )				/* See notes*/
 	PORT_DIPSETTING(      0x0400, "Table 1" )
 	PORT_DIPSETTING(      0x0000, "Table 2" )
 	PORT_DIPNAME( 0x0800, 0x0000, "Retry Level On Continue" )
@@ -3387,8 +3387,8 @@ INPUT_PORTS_START( toride2g )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	// IN3 - $800006
-	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )	// BIT 6 !?
+	PORT_START	/* IN3 - $800006*/
+	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* BIT 6 !?*/
 INPUT_PORTS_END
 
 
@@ -3479,39 +3479,39 @@ static struct GfxLayout layout_053936_16 =
 
 static struct GfxDecodeInfo gfxdecodeinfo_14100[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, // [0] 4 Bit Tiles
+	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, /* [0] 4 Bit Tiles*/
 	{ -1 }
 };
 
 static struct GfxDecodeInfo gfxdecodeinfo_14220[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, // [0] 4 Bit Tiles
-	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, // [1] 8 Bit Tiles
+	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, /* [0] 4 Bit Tiles*/
+	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, /* [1] 8 Bit Tiles*/
 	{ -1 }
 };
 
 static struct GfxDecodeInfo gfxdecodeinfo_blzntrnd[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, // [0] 4 Bit Tiles
-	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, // [1] 8 Bit Tiles
-	{ REGION_GFX3, 0, &layout_053936,   0x0,  0x20 }, // [2] 053936 Tiles
+	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, /* [0] 4 Bit Tiles*/
+	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, /* [1] 8 Bit Tiles*/
+	{ REGION_GFX3, 0, &layout_053936,   0x0,  0x20 }, /* [2] 053936 Tiles*/
 	{ -1 }
 };
 
 static struct GfxDecodeInfo gfxdecodeinfo_gstrik2[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, // [0] 4 Bit Tiles
-	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, // [1] 8 Bit Tiles
-	{ REGION_GFX3, 0, &layout_053936_16,0x0,  0x20 }, // [2] 053936 Tiles
+	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, /* [0] 4 Bit Tiles*/
+	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, /* [1] 8 Bit Tiles*/
+	{ REGION_GFX3, 0, &layout_053936_16,0x0,  0x20 }, /* [2] 053936 Tiles*/
 	{ -1 }
 };
 
 static struct GfxDecodeInfo gfxdecodeinfo_14300[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, // [0] 4 Bit Tiles
-	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, // [1] 8 Bit Tiles
-	{ REGION_GFX1, 0, &layout_16x16x4q, 0x0, 0x200 }, // [2] 4 Bit Tiles 16x16
-	{ REGION_GFX1, 0, &layout_16x16x8o, 0x0, 0x200 }, // [2] 8 Bit Tiles 16x16
+	{ REGION_GFX1, 0, &layout_8x8x4,    0x0, 0x200 }, /* [0] 4 Bit Tiles*/
+	{ REGION_GFX1, 0, &layout_8x8x8h,   0x0,  0x20 }, /* [1] 8 Bit Tiles*/
+	{ REGION_GFX1, 0, &layout_16x16x4q, 0x0, 0x200 }, /* [2] 4 Bit Tiles 16x16*/
+	{ REGION_GFX1, 0, &layout_16x16x8o, 0x0, 0x200 }, /* [2] 8 Bit Tiles 16x16*/
 	{ -1 }
 };
 
@@ -3655,7 +3655,7 @@ static MACHINE_DRIVER_START( dharma )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	// M6295
+	/* M6295*/
 MACHINE_DRIVER_END
 
 
@@ -3685,7 +3685,7 @@ static MACHINE_DRIVER_START( karatour )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	// M6295, YM2413
+	/* M6295, YM2413*/
 MACHINE_DRIVER_END
 
 
@@ -3715,7 +3715,7 @@ static MACHINE_DRIVER_START( 3kokushi )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	// M6295, YM2413
+	/* M6295, YM2413*/
 MACHINE_DRIVER_END
 
 
@@ -3745,7 +3745,7 @@ static MACHINE_DRIVER_START( lastfort )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	// M6295, YM2413
+	/* M6295, YM2413*/
 MACHINE_DRIVER_END
 
 
@@ -3907,7 +3907,7 @@ static MACHINE_DRIVER_START( pangpoms )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	// M6295, YM2413
+	/* M6295, YM2413*/
 MACHINE_DRIVER_END
 
 
@@ -3937,7 +3937,7 @@ static MACHINE_DRIVER_START( poitto )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	// M6295, YM2413
+	/* M6295, YM2413*/
 MACHINE_DRIVER_END
 
 
@@ -3967,7 +3967,7 @@ static MACHINE_DRIVER_START( pururun )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	// M6295, YM2151, Y3012
+	/* M6295, YM2151, Y3012*/
 MACHINE_DRIVER_END
 
 
@@ -3997,7 +3997,7 @@ static MACHINE_DRIVER_START( skyalert )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	// M6295, YM2413
+	/* M6295, YM2413*/
 MACHINE_DRIVER_END
 
 
@@ -4027,7 +4027,7 @@ static MACHINE_DRIVER_START( toride2g )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	// M6295, YM2413
+	/* M6295, YM2413*/
 MACHINE_DRIVER_END
 
 
@@ -4258,8 +4258,8 @@ ROM_START( balcube )
 	ROMX_LOAD( "3", 0x000006, 0x080000, CRC(eef1d3b4) SHA1(be535963c00390e34a2305586397a16325f3c3c0) , ROM_GROUPWORD | ROM_SKIP(6))
 
 	ROM_REGION( 0x280000, REGION_SOUND1, ROMREGION_SOUNDONLY )
-	ROM_LOAD( "yrw801-m", 0x000000, 0x200000, CRC(2a9d8d43) SHA1(32760893ce06dbe3930627755ba065cc3d8ec6ca) )	    // Yamaha YRW801 2MB ROM with samples for the OPL4.
-	ROM_LOAD( "7",        0x200000, 0x080000, CRC(f769287d) SHA1(dd0f781b4a1a1fd6bf0a50048b4996f3cf41e155) )	    // PCM 16 Bit (Signed)
+	ROM_LOAD( "yrw801-m", 0x000000, 0x200000, CRC(2a9d8d43) SHA1(32760893ce06dbe3930627755ba065cc3d8ec6ca) )	    /* Yamaha YRW801 2MB ROM with samples for the OPL4.*/
+	ROM_LOAD( "7",        0x200000, 0x080000, CRC(f769287d) SHA1(dd0f781b4a1a1fd6bf0a50048b4996f3cf41e155) )	    /* PCM 16 Bit (Signed)*/
 ROM_END
 
 
@@ -4423,14 +4423,14 @@ ROM_START( gstrik2 )
 	ROMX_LOAD( "chr6.82", 0x0800004, 0x200000, CRC(32eb33b0) SHA1(2ea06484ca326b44a35ee470343147a9d91d5626) , ROM_GROUPWORD | ROM_SKIP(6))
 	ROMX_LOAD( "chr7.81", 0x0800006, 0x200000, CRC(2d30a21e) SHA1(749e86b7935ef71556eaee4caf6f954634e9bcbf) , ROM_GROUPWORD | ROM_SKIP(6))
 	/* not populated */
-//	ROMX_LOAD( "chr8.88", 0x1000000, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))
-//	ROMX_LOAD( "chr9.87", 0x1000002, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))
-//	ROMX_LOAD( "chr10.86", 0x1000004, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))
-//	ROMX_LOAD( "chr11.85", 0x1000006, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))
-//	ROMX_LOAD( "chr12.92", 0x1800000, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))
-//	ROMX_LOAD( "chr13.91", 0x1800002, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))
-//	ROMX_LOAD( "chr14.90", 0x1800004, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))
-//	ROMX_LOAD( "chr15.89", 0x1800006, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))
+/*	ROMX_LOAD( "chr8.88", 0x1000000, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))*/
+/*	ROMX_LOAD( "chr9.87", 0x1000002, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))*/
+/*	ROMX_LOAD( "chr10.86", 0x1000004, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))*/
+/*	ROMX_LOAD( "chr11.85", 0x1000006, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))*/
+/*	ROMX_LOAD( "chr12.92", 0x1800000, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))*/
+/*	ROMX_LOAD( "chr13.91", 0x1800002, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))*/
+/*	ROMX_LOAD( "chr14.90", 0x1800004, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))*/
+/*	ROMX_LOAD( "chr15.89", 0x1800006, 0x200000, CRC() SHA1() , ROM_GROUPWORD | ROM_SKIP(6))*/
 
 	ROM_REGION( 0x200000, REGION_GFX3, ROMREGION_DISPOSE )	/* 053936 gfx data */
 	ROM_LOAD( "psacrom.60", 0x000000, 0x200000,  CRC(73f1f279) SHA1(1135b2b1eb4c52249bc12ee178340bbb202a94c8) )
@@ -4512,7 +4512,7 @@ ROM_START( dharma )
 	ROM_LOAD16_BYTE( "jc-6", 0x000001, 0x020000, CRC(bc5a202e) SHA1(c2b6d2e44e3605e0525bde4030c5162badad4d4b) )
 
 	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "ja-8", 0x000000, 0x020000, CRC(af7ebc4c) SHA1(6abf0036346da10be56932f9674f8c250a3ea592) )	// (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)
+	ROM_LOAD( "ja-8", 0x000000, 0x020000, CRC(af7ebc4c) SHA1(6abf0036346da10be56932f9674f8c250a3ea592) )	/* (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)*/
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "jb-2", 0x000000, 0x080000, CRC(2c07c29b) SHA1(26244145139df1ffe2b6ec25a32e5009da6a5aba) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -4567,7 +4567,7 @@ ROM_START( karatour )
 	ROM_LOAD16_BYTE( "kt003.10g", 0x000001, 0x040000, CRC(abe1b991) SHA1(9b6327169d66717dd9dd74816bc33eb208c3763c) )
 
 	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "kt001.1i", 0x000000, 0x020000, CRC(1dd2008c) SHA1(488b6f5d15bdbc069ee2cd6d7a0980a228d2f790) )	// 11xxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "kt001.1i", 0x000000, 0x020000, CRC(1dd2008c) SHA1(488b6f5d15bdbc069ee2cd6d7a0980a228d2f790) )	/* 11xxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "ktmask.15f", 0x000000, 0x100000, CRC(f6bf20a5) SHA1(cb4cb249eb1c106fe7ef0ace735c0cc3106f1ab7) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -4617,7 +4617,7 @@ ROM_START( ladykill )
 	ROM_LOAD16_BYTE( "e3.bin",    0x000001, 0x040000, CRC(581a55ea) SHA1(41bfcaae84e583bf185948ab53ec39c05180a7a4) )
 
 	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "e1.1i",    0x000000, 0x020000, CRC(a4d95cfb) SHA1(2fd8a5cbb0dc289bd5294519dbd5369bfb4c2d4d) )	// 11xxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "e1.1i",    0x000000, 0x020000, CRC(a4d95cfb) SHA1(2fd8a5cbb0dc289bd5294519dbd5369bfb4c2d4d) )	/* 11xxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "ladyj-4.15f", 0x000000, 0x100000, CRC(65e5906c) SHA1(cc3918c2094ca819ec4043055564e1dbff4a4750) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -4638,7 +4638,7 @@ ROM_START( moegonta )
 	ROM_LOAD16_BYTE( "j3.10g",    0x000001, 0x040000, CRC(b555e6ab) SHA1(adfc6eafec612c8770b9f832a0a2574c53c3d047) )
 
 	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "e1.1i",    0x000000, 0x020000, CRC(a4d95cfb) SHA1(2fd8a5cbb0dc289bd5294519dbd5369bfb4c2d4d) )	// 11xxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "e1.1i",    0x000000, 0x020000, CRC(a4d95cfb) SHA1(2fd8a5cbb0dc289bd5294519dbd5369bfb4c2d4d) )	/* 11xxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "ladyj-4.15f", 0x000000, 0x100000, CRC(65e5906c) SHA1(cc3918c2094ca819ec4043055564e1dbff4a4750) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -4682,7 +4682,7 @@ ROM_START( lastfort )
 	ROM_LOAD16_BYTE( "tr_jc10", 0x000001, 0x020000, CRC(8d04da04) SHA1(5c7e65a39929e94d1fa99aeb5fed7030b110451f) )
 
 	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "tr_jb12", 0x000000, 0x020000, CRC(8a8f5fef) SHA1(530b4966ec058cd80a2fc5f9e961239ce59d0b89) )	// (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)
+	ROM_LOAD( "tr_jb12", 0x000000, 0x020000, CRC(8a8f5fef) SHA1(530b4966ec058cd80a2fc5f9e961239ce59d0b89) )	/* (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)*/
 
 	ROM_REGION( 0x100000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "tr_jc02", 0x000000, 0x020000, CRC(db3c5b79) SHA1(337f4c547a6267f317415cbc78cdac41574b1024) , ROM_SKIP(7))
@@ -4719,7 +4719,7 @@ ROM_START( lastfero )
 	ROM_LOAD16_BYTE( "tre_jc10", 0x000001, 0x020000, CRC(9536369c) SHA1(39291e92c107be35d130ff29533b42581efc308b) )
 
 	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "tr_jb12", 0x000000, 0x020000, CRC(8a8f5fef) SHA1(530b4966ec058cd80a2fc5f9e961239ce59d0b89) )	// (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)
+	ROM_LOAD( "tr_jb12", 0x000000, 0x020000, CRC(8a8f5fef) SHA1(530b4966ec058cd80a2fc5f9e961239ce59d0b89) )	/* (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)*/
 
 	ROM_REGION( 0x100000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "tre_jc02", 0x000000, 0x020000, CRC(11cfbc84) SHA1(fb7005be7678564713b5480569f2cdab6c36f029) , ROM_SKIP(7))
@@ -4762,7 +4762,7 @@ ROM_START( dokyusei )
 	ROMX_LOAD( "3.bin", 0x000006, 0x200000, CRC(5f6d7969) SHA1(bcb48c5808f268ca35a28f162d4e9da9df65b843) , ROM_GROUPWORD | ROM_SKIP(6))
 
 	ROM_REGION( 0x100000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
-	ROM_LOAD( "7.bin", 0x000000, 0x100000, CRC(c572aee1) SHA1(2a3baf962617577f8ac3f9e58fb4e5a0dae4f0e8) )	// 4 x 0x40000
+	ROM_LOAD( "7.bin", 0x000000, 0x100000, CRC(c572aee1) SHA1(2a3baf962617577f8ac3f9e58fb4e5a0dae4f0e8) )	/* 4 x 0x40000*/
 ROM_END
 
 
@@ -4998,7 +4998,7 @@ ROM_START( poitto )
 	ROM_LOAD16_BYTE( "pt-jd06.20c", 0x000001, 0x020000, CRC(3092d9d4) SHA1(4ff95355fdf94eaa55c0ad46e6ce3b505e3ef790) )
 
 	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "pt-jc08.3i", 0x000000, 0x020000, CRC(f32d386a) SHA1(655c561aec1112d88c1b94725e932059e5d1d5a8) )	// 1xxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "pt-jc08.3i", 0x000000, 0x020000, CRC(f32d386a) SHA1(655c561aec1112d88c1b94725e932059e5d1d5a8) )	/* 1xxxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "pt-2.15i", 0x000000, 0x080000, CRC(05d15d01) SHA1(24405908fb8207228cd3419657e0be49e413f152) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -5069,7 +5069,7 @@ ROM_START( 3kokushi )
 	ROM_LOAD16_BYTE( "6.bin",        0x000001, 0x040000, CRC(aac25540) SHA1(811de761bb1b3cc47d811b00f4b5c960c8f061d0) )
 
 	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "8.bin",       0x000000, 0x020000, CRC(f56cca45) SHA1(4739b83b0b3a4235fac10def3d26b0bd190eb12a) )	// (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)
+	ROM_LOAD( "8.bin",       0x000000, 0x020000, CRC(f56cca45) SHA1(4739b83b0b3a4235fac10def3d26b0bd190eb12a) )	/* (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)*/
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "2.bin",        0x000000, 0x080000, CRC(291f8149) SHA1(82f460517543ef544c21a81e51987fb2f5c6273d) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -5154,7 +5154,7 @@ ROM_START( skyalert )
 	ROM_LOAD16_BYTE( "sa_c_10.bin", 0x000001, 0x020000, CRC(f10bb216) SHA1(d904030fbb838d906ca69a77cffe286e903b273d) )
 
 	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "sa_b_12.bin", 0x000000, 0x020000, CRC(f358175d) SHA1(781d0f846217aa71e3c6d73c1d63bd87d1fa6b48) )	// (c)1992 Imagetek (1xxxxxxxxxxxxxxxx = 0xFF)
+	ROM_LOAD( "sa_b_12.bin", 0x000000, 0x020000, CRC(f358175d) SHA1(781d0f846217aa71e3c6d73c1d63bd87d1fa6b48) )	/* (c)1992 Imagetek (1xxxxxxxxxxxxxxxx = 0xFF)*/
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "sa_a_02.bin", 0x000000, 0x040000, CRC(f4f81d41) SHA1(85e587b4fda71fa5b944b0ac158d36c00e290f5f) , ROM_SKIP(7))
@@ -5253,4 +5253,4 @@ GAMEX( 1997, gakusai,  0,        gakusai,  gakusai,  gakusai,  ROT0,   "MakeSoft
 GAME ( 1998, gakusai2, 0,        gakusai2, gakusai,  gakusai,  ROT0,   "MakeSoft",                   "Mahjong Gakuensai 2 (Japan)"                    )
 
 GAMEX( 1994, blzntrnd, 0,        blzntrnd, blzntrnd, blzntrnd, ROT0,   "Human Amusement",            "Blazing Tornado",                 GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1996, gstrik2,  0,        gstrik2,  gstrik2,  blzntrnd, ROT0,   "Human Amusement",            "Grand Striker 2 (Japan)",			GAME_IMPERFECT_GRAPHICS ) // priority between rounds
+GAMEX( 1996, gstrik2,  0,        gstrik2,  gstrik2,  blzntrnd, ROT0,   "Human Amusement",            "Grand Striker 2 (Japan)",			GAME_IMPERFECT_GRAPHICS ) /* priority between rounds*/

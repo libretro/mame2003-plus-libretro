@@ -127,8 +127,8 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 
 			dy = (source[0] & 0xf000)>>12;
 
-			pri		=	 ((source[1] & 0x3c00)>>10);	// Priority (1 = Low)
-			pri_mask 	=	~((1 << (pri+1)) - 1);		// Above the first "pri" levels
+			pri		=	 ((source[1] & 0x3c00)>>10);	/* Priority (1 = Low)*/
+			pri_mask 	=	~((1 << (pri+1)) - 1);		/* Above the first "pri" levels*/
 
 			for(i=0;i<=dy;i++)
 			{
@@ -308,8 +308,8 @@ static WRITE16_HANDLER( mwarr_brightness_w )
 	}
 }
 
-// super-sexy iq_132 custom function.
-// replace built-in vblank function with a cheap hack as it works better.
+/* super-sexy iq_132 custom function.*/
+/* replace built-in vblank function with a cheap hack as it works better.*/
 static READ16_HANDLER( input1_r )
 {
 	static int vblank;
@@ -334,7 +334,7 @@ static MEMORY_READ16_START( mwarr_readmem )
 	{ 0x104000, 0x104fff, MRA16_RAM },
 	{ 0x108000, 0x108fff, MRA16_RAM },
 	{ 0x110000, 0x110001, input_port_0_word_r },
-	{ 0x110002, 0x110003, input1_r }, //input_port_1_word_r)
+	{ 0x110002, 0x110003, input1_r }, /*input_port_1_word_r)*/
 	{ 0x110004, 0x110005, input_port_2_word_r },
 	{ 0x110000, 0x11ffff, MRA16_RAM },
 	{ 0x180000, 0x180001, OKIM6295_status_0_lsb_r },
@@ -385,7 +385,7 @@ INPUT_PORTS_START( mwarr )
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_VBLANK )
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SPECIAL ) // otherwise it doesn't boot
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SPECIAL ) /* otherwise it doesn't boot*/
 	PORT_BIT( 0xfff0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START

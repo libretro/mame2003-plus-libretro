@@ -109,8 +109,8 @@ static WRITE_HANDLER( chqflag_vreg_w )
 			palette_set_brightness(i,brt);
 	}
 
-//if ((data & 0xf8) && (data & 0xf8) != 0x88)
-//	usrintf_showmessage("chqflag_vreg_w %02x",data);
+/*if ((data & 0xf8) && (data & 0xf8) != 0x88)*/
+/*	usrintf_showmessage("chqflag_vreg_w %02x",data);*/
 
 
 	/* other bits unknown. bit 5 is used. */
@@ -191,7 +191,7 @@ static MEMORY_READ_START( chqflag_readmem_sound )
 	{ 0xb000, 0xb00d, K007232_read_port_1_r },	/* 007232 (chip 2) */
 	{ 0xc001, 0xc001, YM2151_status_port_0_r },	/* YM2151 */
 	{ 0xd000, 0xd000, soundlatch_r },			/* soundlatch_r */
-	//{ 0xe000, 0xe000, MRA_NOP },				/* ??? */
+	/*{ 0xe000, 0xe000, MRA_NOP },				 // ??? /*/
 MEMORY_END
 
 static WRITE_HANDLER( k007232_bankswitch_w )
@@ -258,7 +258,7 @@ INPUT_PORTS_START( chqflag )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Coin Slot 2 Invalidity" )
+/*	PORT_DIPSETTING(    0x00, "Coin Slot 2 Invalidity" )*/
 
 	PORT_START	/* DSW #2 (according to the manual SW1 thru SW5 are not used) */
 	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unused ) )

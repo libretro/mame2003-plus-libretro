@@ -113,7 +113,7 @@ static MACHINE_INIT( firetrap )
 
 static READ_HANDLER( firetrap_8751_r )
 {
-	//logerror("PC:%04x read from 8751\n",activecpu_get_pc());
+	/*logerror("PC:%04x read from 8751\n",activecpu_get_pc());*/
 	return i8751_return;
 }
 
@@ -358,9 +358,9 @@ INPUT_PORTS_START( firetrap )
 
 	PORT_START      /* DSW0 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x01, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0x01, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0x02, DEF_STR( 1C_1C ) )*/
 	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
@@ -441,9 +441,9 @@ INPUT_PORTS_START( firetpbl )
 
 	PORT_START      /* DSW0 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x01, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0x01, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(    0x02, DEF_STR( 1C_1C ) )*/
 	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )

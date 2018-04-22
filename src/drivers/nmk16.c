@@ -234,11 +234,11 @@ static READ16_HANDLER( tharrier_mcu_r )
 
 static WRITE16_HANDLER( tharrier_mcu_control_w )
 {
-//	logerror("%04x: mcu_control_w %02x\n",activecpu_get_pc(),data);
+/*	logerror("%04x: mcu_control_w %02x\n",activecpu_get_pc(),data);*/
 }
 
 
-static int respcount; // used with mcu function
+static int respcount; /* used with mcu function*/
 
 static MACHINE_INIT( nmk16 )
 {
@@ -353,7 +353,7 @@ static MEMORY_WRITE16_START( vandyke_writemem )
 	{ 0x088000, 0x0887ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
 	{ 0x08c000, 0x08c007, vandyke_scroll_w },
 	{ 0x090000, 0x093fff, nmk_bgvideoram_w, &nmk_bgvideoram },
-//	{ 0x094000, 0x097fff, MWA16_RAM }, /* what is this */
+/*	{ 0x094000, 0x097fff, MWA16_RAM },  // what is this /*/
 	{ 0x09d000, 0x09d7ff, nmk_txvideoram_w, &nmk_txvideoram },
 	{ 0x0f0000, 0x0fffff, MWA16_RAM, &nmk16_mainram }, /* not tested in tests .. hardly used probably some registers not ram */
 MEMORY_END
@@ -449,7 +449,7 @@ PORT_END
 static MEMORY_READ16_START( tharrier_readmem )
     { 0x000000, 0x03ffff, MRA16_ROM },
 	{ 0x080000, 0x080001, input_port_0_word_r },
-	{ 0x080002, 0x080003, tharrier_mcu_r }, //ok
+	{ 0x080002, 0x080003, tharrier_mcu_r }, /*ok*/
 	{ 0x080004, 0x080005, input_port_2_word_r },
 	{ 0x08000e, 0x08000f, soundlatch2_word_r },	/* from Z80 */
 	{ 0x080202, 0x080203, input_port_3_word_r },
@@ -463,20 +463,20 @@ MEMORY_END
 static MEMORY_WRITE16_START( tharrier_writemem )
     { 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x080010, 0x080011, tharrier_mcu_control_w },
-//	{ 0x080012, 0x080013, MWA16_NOP },
-//	{ 0x080014, 0x080015, nmk_flipscreen_w },
-//	{ 0x080018, 0x080019, nmk_tilebank_w },
+/*	{ 0x080012, 0x080013, MWA16_NOP },*/
+/*	{ 0x080014, 0x080015, nmk_flipscreen_w },*/
+/*	{ 0x080018, 0x080019, nmk_tilebank_w },*/
 	{ 0x08001e, 0x08001f, soundlatch_word_w },
 	{ 0x088000, 0x0883ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
-//	{ 0x08c000, 0x08c007, nmk_scroll_w },
+/*	{ 0x08c000, 0x08c007, nmk_scroll_w },*/
 	{ 0x090000, 0x093fff, nmk_bgvideoram_w, &nmk_bgvideoram },
 	{ 0x09c000, 0x09c7ff, MWA16_RAM },/* Unused txvideoram area? */
 	{ 0x09d000, 0x09d7ff, nmk_txvideoram_w, &nmk_txvideoram },
 	{ 0x0f0000, 0x0fffff, nmk16_mainram_strange_w, &nmk16_mainram },
 MEMORY_END
 
-//Read input port 1 030c8/  BAD
-//3478  GOOD
+/*Read input port 1 030c8/  BAD*/
+/*3478  GOOD*/
 
 static MEMORY_READ16_START( mustang_readmem )
     { 0x000000, 0x03ffff, MRA16_ROM },
@@ -494,11 +494,11 @@ static MEMORY_WRITE16_START( mustang_writemem )
     { 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x08000e, 0x08000f, MWA16_NOP },
 	{ 0x080014, 0x080015, nmk_flipscreen_w },
-	{ 0x080016, 0x080017, MWA16_NOP	}, // frame number?
+	{ 0x080016, 0x080017, MWA16_NOP	}, /* frame number?*/
 	{ 0x08001e, 0x08001f, NMK004_w },
 	{ 0x088000, 0x0887ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
 	{ 0x08c000, 0x08c001, mustang_scroll_w },
-	{ 0x08c002, 0x08c087, MWA16_NOP	}, // ??
+	{ 0x08c002, 0x08c087, MWA16_NOP	}, /* ??*/
 	{ 0x090000, 0x093fff, nmk_bgvideoram_w, &nmk_bgvideoram },
 	{ 0x09c000, 0x09c7ff, nmk_txvideoram_w, &nmk_txvideoram },
 	{ 0x0f0000, 0x0fffff, nmk16_mainram_strange_w, &nmk16_mainram },
@@ -520,11 +520,11 @@ static MEMORY_WRITE16_START( mustangb_writemem)
     { 0x000000, 0x03ffff, MWA16_ROM },
 	{ 0x08000e, 0x08000f, MWA16_NOP },
 	{ 0x080014, 0x080015, nmk_flipscreen_w },
-	{ 0x080016, 0x080017, MWA16_NOP	}, // frame number?
+	{ 0x080016, 0x080017, MWA16_NOP	}, /* frame number?*/
 	{ 0x08001e, 0x08001f, seibu_main_mustb_w },
 	{ 0x088000, 0x0887ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
 	{ 0x08c000, 0x08c001, mustang_scroll_w },
-	{ 0x08c002, 0x08c087, MWA16_NOP	}, // ??
+	{ 0x08c002, 0x08c087, MWA16_NOP	}, /* ??*/
 	{ 0x090000, 0x093fff, nmk_bgvideoram_w, &nmk_bgvideoram },
 	{ 0x09c000, 0x09c7ff, nmk_txvideoram_w, &nmk_txvideoram },
 	{ 0x0f0000, 0x0fffff, nmk16_mainram_strange_w, &nmk16_mainram },
@@ -581,42 +581,42 @@ static WRITE16_HANDLER( hachamf_mainram_w )
 		case 0xe182/2: PROT_INPUT(0xe182/2,0x865d,0xe004/2,0x00080002); break;
 		case 0xe51e/2: PROT_INPUT(0xe51e/2,0x0f82,0xe008/2,0x00080008); break;
 		case 0xe6b4/2: PROT_INPUT(0xe6b4/2,0x79be,0xe00c/2,0x0008000a); break;
-		case 0xe10e/2: PROT_JSR(0xe10e,0x8007,0x870a);//870a not 9d66
+		case 0xe10e/2: PROT_JSR(0xe10e,0x8007,0x870a);/*870a not 9d66*/
 					  PROT_JSR(0xe10e,0x8000,0xd9c6); break;
-		case 0xe11e/2: PROT_JSR(0xe11e,0x8038,0x972a);//972a
+		case 0xe11e/2: PROT_JSR(0xe11e,0x8038,0x972a);/*972a*/
 					  PROT_JSR(0xe11e,0x8031,0xd1f8); break;
-		case 0xe12e/2: PROT_JSR(0xe12e,0x8019,0x9642);//OK-9642
+		case 0xe12e/2: PROT_JSR(0xe12e,0x8019,0x9642);/*OK-9642*/
 					  PROT_JSR(0xe12e,0x8022,0xda06); break;
-		case 0xe13e/2: PROT_JSR(0xe13e,0x802a,0x9d66);//9d66 not 9400 - OK
+		case 0xe13e/2: PROT_JSR(0xe13e,0x802a,0x9d66);/*9d66 not 9400 - OK*/
 					  PROT_JSR(0xe13e,0x8013,0x81aa); break;
-		case 0xe14e/2: PROT_JSR(0xe14e,0x800b,0xb3f2);//b3f2 - OK
+		case 0xe14e/2: PROT_JSR(0xe14e,0x800b,0xb3f2);/*b3f2 - OK*/
 					  PROT_JSR(0xe14e,0x8004,0x8994); break;
-		case 0xe15e/2: PROT_JSR(0xe15e,0x803c,0xb59e);//b59e - OK
+		case 0xe15e/2: PROT_JSR(0xe15e,0x803c,0xb59e);/*b59e - OK*/
 					  PROT_JSR(0xe15e,0x8035,0x8d0c); break;
-		case 0xe16e/2: PROT_JSR(0xe16e,0x801d,0x9ac2);//9ac2 - OK
+		case 0xe16e/2: PROT_JSR(0xe16e,0x801d,0x9ac2);/*9ac2 - OK*/
 				 	  PROT_JSR(0xe16e,0x8026,0x8c36); break;
-		case 0xe17e/2: PROT_JSR(0xe17e,0x802e,0xc366);//c366 - OK
+		case 0xe17e/2: PROT_JSR(0xe17e,0x802e,0xc366);/*c366 - OK*/
 					  PROT_JSR(0xe17e,0x8017,0x870a); break;
-		case 0xe18e/2: PROT_JSR(0xe18e,0x8004,0xd620);        //unused
-					  PROT_JSR(0xe18e,0x8008,0x972a); break; //unused
-		case 0xe19e/2: PROT_JSR(0xe19e,0x8030,0xd9c6);//OK-d9c6
+		case 0xe18e/2: PROT_JSR(0xe18e,0x8004,0xd620);        /*unused*/
+					  PROT_JSR(0xe18e,0x8008,0x972a); break; /*unused*/
+		case 0xe19e/2: PROT_JSR(0xe19e,0x8030,0xd9c6);/*OK-d9c6*/
 					  PROT_JSR(0xe19e,0x8039,0x9642); break;
-		case 0xe1ae/2: PROT_JSR(0xe1ae,0x8011,0xd1f8);//d1f8 not c67e
+		case 0xe1ae/2: PROT_JSR(0xe1ae,0x8011,0xd1f8);/*d1f8 not c67e*/
 					  PROT_JSR(0xe1ae,0x802a,0x9d66); break;
-		case 0xe1be/2: PROT_JSR(0xe1be,0x8022,0xda06);//da06
+		case 0xe1be/2: PROT_JSR(0xe1be,0x8022,0xda06);/*da06*/
 					  PROT_JSR(0xe1be,0x801b,0xb3f2); break;
-		case 0xe1ce/2: PROT_JSR(0xe1ce,0x8003,0x81aa);//81aa
+		case 0xe1ce/2: PROT_JSR(0xe1ce,0x8003,0x81aa);/*81aa*/
 					  PROT_JSR(0xe1ce,0x800c,0xb59e); break;
-		case 0xe1de/2: PROT_JSR(0xe1de,0x8034,0x8994);//8994 - OK
+		case 0xe1de/2: PROT_JSR(0xe1de,0x8034,0x8994);/*8994 - OK*/
 					  PROT_JSR(0xe1de,0x803d,0x9ac2); break;
-		case 0xe1ee/2: PROT_JSR(0xe1ee,0x8015,0x8d0c);//8d0c not 82f6
+		case 0xe1ee/2: PROT_JSR(0xe1ee,0x8015,0x8d0c);/*8d0c not 82f6*/
 					  PROT_JSR(0xe1ee,0x802e,0xc366); break;
-		case 0xe1fe/2: PROT_JSR(0xe1fe,0x8026,0x8c36);//8c36
-					  PROT_JSR(0xe1fe,0x8016,0xd620); break;  //unused
+		case 0xe1fe/2: PROT_JSR(0xe1fe,0x8026,0x8c36);/*8c36*/
+					  PROT_JSR(0xe1fe,0x8016,0xd620); break;  /*unused*/
 		case 0xef00/2:
 			if(nmk16_mainram[0xef00/2] == 0x60fe)
 			{
-				nmk16_mainram[0xef00/2] = 0x0000; //this is the coin counter
+				nmk16_mainram[0xef00/2] = 0x0000; /*this is the coin counter*/
 				nmk16_mainram[0xef02/2] = 0x0000;
 				nmk16_mainram[0xef04/2] = 0x4ef9;
 				nmk16_mainram[0xef06/2] = 0x0000;
@@ -626,7 +626,7 @@ static WRITE16_HANDLER( hachamf_mainram_w )
 	}
 }
 
-static int hachamf_mcu_type; // 0 - hachamf, 1 = tdragon
+static int hachamf_mcu_type; /* 0 - hachamf, 1 = tdragon*/
 static void hachamf_mcu_run(void)
 {
 	UINT8 dsw_setting = hachamf_mcu_type;
@@ -650,7 +650,7 @@ static void hachamf_mcu_run(void)
 	}
 
 	/*needed because of the uncompatibility of the dsw settings.*/
-	if(dsw_setting) // Thunder Dragon
+	if(dsw_setting) /* Thunder Dragon*/
 	{
 		dsw[0] = (input_port_3_word_r(0,0) & 0x7);
 		dsw[1] = (input_port_3_word_r(0,0) & 0x38) >> 3;
@@ -658,7 +658,7 @@ static void hachamf_mcu_run(void)
 		{
 			switch(dsw[i] & 7)
 			{
-				case 0: nmk16_mainram[0x9000/2]|=0x4000; break; //free play
+				case 0: nmk16_mainram[0x9000/2]|=0x4000; break; /*free play*/
 				case 1: coin_count_frac[i] = 1; coin_count[i] = 4; break;
 				case 2: coin_count_frac[i] = 1; coin_count[i] = 3; break;
 				case 3: coin_count_frac[i] = 1; coin_count[i] = 2; break;
@@ -669,7 +669,7 @@ static void hachamf_mcu_run(void)
 			}
 		}
 	}
-	else // Hacha Mecha Fighter
+	else /* Hacha Mecha Fighter*/
 	{
 		dsw[0] = (input_port_2_word_r(0,0) & 0x0700) >> 8;
 		dsw[1] = (input_port_2_word_r(0,0) & 0x3800) >> 11;
@@ -677,7 +677,7 @@ static void hachamf_mcu_run(void)
 		{
 			switch(dsw[i] & 7)
 			{
-				case 0: nmk16_mainram[0x9000/2]|=0x4000; break; //free play
+				case 0: nmk16_mainram[0x9000/2]|=0x4000; break; /*free play*/
 				case 1: coin_count_frac[i] = 4; coin_count[i] = 1; break;
 				case 2: coin_count_frac[i] = 3; coin_count[i] = 1; break;
 				case 3: coin_count_frac[i] = 2; coin_count[i] = 1; break;
@@ -692,7 +692,7 @@ static void hachamf_mcu_run(void)
 	/*read the coin port*/
 	coin_input = (~(input_port_0_word_r(0,0)));
 
-	if(coin_input & 0x01)//coin 1
+	if(coin_input & 0x01)/*coin 1*/
 	{
 		if((input_pressed & 0x01) == 0)
 		{
@@ -713,7 +713,7 @@ static void hachamf_mcu_run(void)
 	else
 		input_pressed = (input_pressed & 0xfe);
 
-	if(coin_input & 0x02)//coin 2
+	if(coin_input & 0x02)/*coin 2*/
 	{
 		if((input_pressed & 0x02) == 0)
 		{
@@ -734,7 +734,7 @@ static void hachamf_mcu_run(void)
 	else
 		input_pressed = (input_pressed & 0xfd);
 
-	if(coin_input & 0x04)//service 1
+	if(coin_input & 0x04)/*service 1*/
 	{
 		if((input_pressed & 0x04) == 0)
 			nmk16_mainram[0xef00/2]++;
@@ -744,11 +744,11 @@ static void hachamf_mcu_run(void)
 		input_pressed = (input_pressed & 0xfb);
 
 	/*The 0x9000 ram address is the status */
-	if(nmk16_mainram[0xef00/2] > 0 && nmk16_mainram[0x9000/2] & 0x8000) //enable start button
+	if(nmk16_mainram[0xef00/2] > 0 && nmk16_mainram[0x9000/2] & 0x8000) /*enable start button*/
 	{
-		if(coin_input & 0x08)//start 1
+		if(coin_input & 0x08)/*start 1*/
 		{
-			if((input_pressed & 0x08) == 0 && (!(nmk16_mainram[0x9000/2] & 0x0200))) //start 1
+			if((input_pressed & 0x08) == 0 && (!(nmk16_mainram[0x9000/2] & 0x0200))) /*start 1*/
 				start_helper = 1;
 
 			input_pressed = (input_pressed & 0xf7) | 8;
@@ -756,10 +756,10 @@ static void hachamf_mcu_run(void)
 		else
 			input_pressed = (input_pressed & 0xf7);
 
-		if(coin_input & 0x10)//start 2
+		if(coin_input & 0x10)/*start 2*/
 		{
 			/*Decrease two coins to let two players play with one start 2 button and two credits inserted at the insert coin screen.*/
-			if((input_pressed & 0x10) == 0 && (!(nmk16_mainram[0x9000/2] & 0x0100))) // start 2
+			if((input_pressed & 0x10) == 0 && (!(nmk16_mainram[0x9000/2] & 0x0100))) /* start 2*/
 				start_helper = (nmk16_mainram[0x9000/2] == 0x8000) ? (3) : (2);
 
 			input_pressed = (input_pressed & 0xef) | 0x10;
@@ -834,7 +834,7 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( bioship_writemem )
     { 0x000000, 0x03ffff, MWA16_ROM },
-//	{ 0x080014, 0x080015, nmk_flipscreen_w },
+/*	{ 0x080014, 0x080015, nmk_flipscreen_w },*/
 	{ 0x08001e, 0x08001f, NMK004_w },
 	{ 0x084000, 0x084001, bioship_bank_w },
 	{ 0x088000, 0x0887ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
@@ -890,7 +890,7 @@ static WRITE16_HANDLER( tdragon_mainram_w )
 		case 0xef00/2:
 			if(nmk16_mainram[0xef00/2] == 0x60fe)
 			{
-				nmk16_mainram[0xef00/2] = 0x0000; //this is the coin counter
+				nmk16_mainram[0xef00/2] = 0x0000; /*this is the coin counter*/
 				nmk16_mainram[0xef02/2] = 0x0000;
 				nmk16_mainram[0xef04/2] = 0x4ef9;
 				nmk16_mainram[0xef06/2] = 0x0000;
@@ -947,7 +947,7 @@ static MEMORY_READ16_START( ssmissin_readmem )
 	{ 0x0c0006, 0x0c0007, input_port_2_word_r },
 	{ 0x0cc000, 0x0cffff, nmk_bgvideoram_r },
 	{ 0x0d0000, 0x0d07ff, nmk_txvideoram_r },
-	{ 0x0d0800, 0x0d0fff, nmk_txvideoram_r }, // mirrors for air attack
+	{ 0x0d0800, 0x0d0fff, nmk_txvideoram_r }, /* mirrors for air attack*/
 	{ 0x0d1000, 0x0d17ff, nmk_txvideoram_r },
 	{ 0x0d1800, 0x0d1fff, nmk_txvideoram_r },
 MEMORY_END
@@ -1059,7 +1059,7 @@ static MEMORY_WRITE16_START( gunnail_writemem )
 	{ 0x088000, 0x0887ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
 	{ 0x08c000, 0x08c1ff, gunnail_scrollx_w, &gunnail_scrollram },
 	{ 0x08c200, 0x08c201, gunnail_scrolly_w },
-//	{ 0x08c202, 0x08c7ff, MWA16_RAM },	// unknown
+/*	{ 0x08c202, 0x08c7ff, MWA16_RAM },	*/ /* unknown*/
 	{ 0x090000, 0x093fff, nmk_bgvideoram_w, &nmk_bgvideoram },
 	{ 0x09c000, 0x09cfff, nmk_txvideoram_w, &nmk_txvideoram },
 	{ 0x09d000, 0x09dfff, nmk_txvideoram_w }, /* mirror */
@@ -1103,7 +1103,7 @@ static MEMORY_WRITE16_START( raphero_writemem )
 	{ 0x10001e, 0x10001f, macross2_sound_command_w },	/* to Z80 */
 	{ 0x120000, 0x1207ff, paletteram16_RRRRGGGGBBBBRGBx_word_w, &paletteram16 },
 	{ 0x130000, 0x1307ff, nmk_scroll_3_w, &gunnail_scrollram },
-//	{ 0x130010, 0x1307ff, MWA16_RAM },	/* 0 only? */
+/*	{ 0x130010, 0x1307ff, MWA16_RAM },	 // 0 only? /*/
 	{ 0x140000, 0x14ffff, nmk_bgvideoram_w, &nmk_bgvideoram },
 	{ 0x170000, 0x170fff, nmk_txvideoram_w, &nmk_txvideoram },
 	{ 0x171000, 0x171fff, nmk_txvideoram_w },	/* mirror */
@@ -1334,20 +1334,20 @@ INPUT_PORTS_END
 INPUT_PORTS_START( manybloc )
 	PORT_START	/* IN0 - 0x080000 */
 	PORT_BIT( 0x7fff, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW,  IPT_UNKNOWN )		// VBLANK ? Check code at 0x005640
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW,  IPT_UNKNOWN )		/* VBLANK ? Check code at 0x005640*/
 
 	PORT_START	/* IN1 - 0x080002 */
 	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_START1 )
-	PORT_BIT( 0x0002, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER1 )	// select fruits
-	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER1 )	// help
+	PORT_BIT( 0x0002, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER1 )	/* select fruits*/
+	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER1 )	/* help*/
 	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )
 	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY )
 	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY )
 	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_8WAY )
 	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_START2 )
-	PORT_BIT( 0x0200, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )	// select fruits
-	PORT_BIT( 0x0400, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 )	// help
+	PORT_BIT( 0x0200, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )	/* select fruits*/
+	PORT_BIT( 0x0400, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 )	/* help*/
 	PORT_BIT( 0x0800, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_COCKTAIL )
 	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_COCKTAIL )
@@ -1364,18 +1364,18 @@ INPUT_PORTS_START( manybloc )
 	PORT_DIPNAME( 0x0004, 0x0000, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Cabinet ) )		// "Play Type"
-	PORT_DIPSETTING(      0x0008, DEF_STR( Upright ) )		//   "Uplight" !
-	PORT_DIPSETTING(      0x0000, DEF_STR( Cocktail ) )		//   "Table"
-	PORT_SERVICE( 0x0010, IP_ACTIVE_HIGH )				// "Test Mode"
+	PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Cabinet ) )		/* "Play Type"*/
+	PORT_DIPSETTING(      0x0008, DEF_STR( Upright ) )		/*   "Uplight" !*/
+	PORT_DIPSETTING(      0x0000, DEF_STR( Cocktail ) )		/*   "Table"*/
+	PORT_SERVICE( 0x0010, IP_ACTIVE_HIGH )				/* "Test Mode"*/
 	PORT_DIPNAME( 0x0060, 0x0000, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(      0x0060, "Easy" )				//   "Level 1
-	PORT_DIPSETTING(      0x0000, "Normal" )				//   "Level 2
-	PORT_DIPSETTING(      0x0020, "Hard" )				//   "Level 3
-	PORT_DIPSETTING(      0x0040, "Hardest" )				//   "Level 4
-	PORT_DIPNAME( 0x0080, 0x0000, DEF_STR( Flip_Screen ) )	// "Display"
-	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )			//   "Normal"
-	PORT_DIPSETTING(      0x0080, DEF_STR( On ) )			//   "Inverse"
+	PORT_DIPSETTING(      0x0060, "Easy" )				/*   "Level 1*/
+	PORT_DIPSETTING(      0x0000, "Normal" )				/*   "Level 2*/
+	PORT_DIPSETTING(      0x0020, "Hard" )				/*   "Level 3*/
+	PORT_DIPSETTING(      0x0040, "Hardest" )				/*   "Level 4*/
+	PORT_DIPNAME( 0x0080, 0x0000, DEF_STR( Flip_Screen ) )	/* "Display"*/
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )			/*   "Normal"*/
+	PORT_DIPSETTING(      0x0080, DEF_STR( On ) )			/*   "Inverse"*/
 	PORT_DIPNAME( 0x0700, 0x0000, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(      0x0700, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(      0x0600, DEF_STR( 4C_1C ) )
@@ -1414,14 +1414,14 @@ INPUT_PORTS_START( tharrier )
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_START1)
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START2) //title
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_START2) /*title*/
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN)
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2  ) //in game
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START2  ) /*in game*/
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1487,14 +1487,14 @@ INPUT_PORTS_START( tharrier )
 	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP  | IPF_8WAY )
 	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_BUTTON3 )
 
-	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_UNKNOWN )//coin ?
+	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_UNKNOWN )/*coin ?*/
 	PORT_BIT( 0x0200, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2)
 	PORT_BIT( 0x0400, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2)
 	PORT_BIT( 0x0800, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT  | IPF_8WAY  | IPF_PLAYER2)
 	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN | IPF_8WAY  | IPF_PLAYER2 )
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_8WAY  | IPF_PLAYER2 ) 
-	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_UNKNOWN ) //coin ?
+	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_UNKNOWN ) /*coin ?*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( mustang )
@@ -1504,7 +1504,7 @@ INPUT_PORTS_START( mustang )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// TEST in service mode
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* TEST in service mode*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -1587,7 +1587,7 @@ INPUT_PORTS_START( hachamf )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) //bryan:  test mode in some games?
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) /*bryan:  test mode in some games?*/
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1667,7 +1667,7 @@ INPUT_PORTS_START( hachamfb )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) //bryan:  test mode in some games?
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) /*bryan:  test mode in some games?*/
 
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1747,7 +1747,7 @@ INPUT_PORTS_START( strahl )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) //bryan:  test mode in some games?
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) /*bryan:  test mode in some games?*/
 
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1901,7 +1901,7 @@ INPUT_PORTS_START( bioship )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) //bryan:  test mode in some games?
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN ) /*bryan:  test mode in some games?*/
 
 	PORT_START      /* IN1 */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
@@ -1977,7 +1977,7 @@ INPUT_PORTS_START( tdragon )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	// TEST in service mode
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* TEST in service mode*/
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -2102,7 +2102,7 @@ INPUT_PORTS_START( ssmissin )
 	PORT_START		/* IN0 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )		// "Servise" in "test mode"
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )		/* "Servise" in "test mode"*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -2114,16 +2114,16 @@ INPUT_PORTS_START( ssmissin )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )		// "Fire"
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )		// "Bomb"
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )		/* "Fire"*/
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )		/* "Bomb"*/
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )		// "Fire"
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )		// "Bomb"
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )		/* "Fire"*/
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )		/* "Bomb"*/
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -2157,7 +2157,7 @@ INPUT_PORTS_START( ssmissin )
 	PORT_DIPSETTING(      0x0200, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 #if 0
-	PORT_DIPNAME( 0x1c00, 0x1c00, DEF_STR( Coin_B ) )	// initialised but not read back
+	PORT_DIPNAME( 0x1c00, 0x1c00, DEF_STR( Coin_B ) )	/* initialised but not read back*/
 	PORT_DIPSETTING(      0x0400, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(      0x1400, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0c00, DEF_STR( 2C_1C ) )
@@ -2192,7 +2192,7 @@ INPUT_PORTS_START( airattck )
 	PORT_START
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )		// "Servise" in "test mode"
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )		/* "Servise" in "test mode"*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -2204,16 +2204,16 @@ INPUT_PORTS_START( airattck )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )		// "Fire"
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )		// "Bomb"
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )		/* "Fire"*/
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )		/* "Bomb"*/
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )		// "Fire"
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )		// "Bomb"
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )		/* "Fire"*/
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )		/* "Bomb"*/
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
@@ -3075,7 +3075,7 @@ static MACHINE_DRIVER_START( manybloc )
 	MDRV_PALETTE_LENGTH(512)
 
 	MDRV_VIDEO_START(macross)
-//	MDRV_VIDEO_EOF(nmk)
+/*	MDRV_VIDEO_EOF(nmk)*/
 	MDRV_VIDEO_UPDATE(manybloc)
 
 	/* sound hardware */
@@ -3291,11 +3291,11 @@ MACHINE_DRIVER_END
 static INTERRUPT_GEN( hachamf_interrupt )
 {
 	if (cpu_getiloops() == 0) {
-		hachamf_mcu_run(); // run mcu sim
+		hachamf_mcu_run(); /* run mcu sim*/
 
 		cpu_set_irq_line(0, 4, HOLD_LINE);
 	} else {
-		cpu_set_irq_line(0, 2, HOLD_LINE); // tdragon
+		cpu_set_irq_line(0, 2, HOLD_LINE); /* tdragon*/
 	}
 }
 
@@ -3332,7 +3332,7 @@ static MACHINE_DRIVER_START( hachamfb )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 10000000) /* 10 MHz ? */
 	MDRV_CPU_MEMORY(hachamfb_readmem,hachamfb_writemem)
-	MDRV_CPU_VBLANK_INT(nmk_interrupt,2)// No mcu
+	MDRV_CPU_VBLANK_INT(nmk_interrupt,2)/* No mcu*/
 	MDRV_CPU_PERIODIC_INT(irq1_line_hold,112)/* ???????? */
 
 	MDRV_FRAMES_PER_SECOND(56)
@@ -3516,14 +3516,14 @@ static MACHINE_DRIVER_START( raphero )
 	MDRV_CPU_VBLANK_INT(irq4_line_hold,1)
 	MDRV_CPU_PERIODIC_INT(irq1_line_hold,112)/* ???????? */
 
-//	MDRV_CPU_ADD(Z80, 4000000) // tmp90c841 ?
-//<ianpatt> looks like the tmp90c841 is a microcontroller from toshiba compatible with the z80 instruction set
-//<ianpatt> and luckily it isn't one of the versions with embedded ROM
-//	MDRV_CPU_FLAGS(CPU_AUDIO_CPU) /* 4 MHz ? */
-//	MDRV_CPU_MEMORY(macross2_sound_readmem,macross2_sound_writemem)
-//	MDRV_CPU_PORTS(macross2_sound_readport,macross2_sound_writeport)
+/*	MDRV_CPU_ADD(Z80, 4000000) */ /* tmp90c841 ?*/
+/*<ianpatt> looks like the tmp90c841 is a microcontroller from toshiba compatible with the z80 instruction set*/
+/*<ianpatt> and luckily it isn't one of the versions with embedded ROM*/
+/*	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)  // 4 MHz ? /*/
+/*	MDRV_CPU_MEMORY(macross2_sound_readmem,macross2_sound_writemem)*/
+/*	MDRV_CPU_PORTS(macross2_sound_readport,macross2_sound_writeport)*/
 
-	MDRV_FRAMES_PER_SECOND(56) // measured
+	MDRV_FRAMES_PER_SECOND(56) /* measured*/
 	MDRV_VBLANK_DURATION(TIME_IN_USEC(2500))
 	MDRV_MACHINE_INIT(nmk16)
 
@@ -4770,14 +4770,14 @@ GAMEX( 1992, strahl,   0,       strahl,   strahl,   0,        ROT0,   "UPL",				
 GAMEX( 1992, strahla,  strahl,  strahl,   strahl,   0,        ROT0,   "UPL",				            "Koutetsu Yousai Strahl (Japan set 2)", GAME_IMPERFECT_SOUND )
 GAMEX( 1991, tdragon,  0,       tdragon,  tdragon,  tdragon,  ROT270, "NMK (Tecmo license)",			"Thunder Dragon", GAME_IMPERFECT_SOUND )
 
-GAMEX( 1991, hachamf,  0,       hachamf,  hachamf,  hachamf,  ROT0,   "NMK",				            "Hacha Mecha Fighter", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND ) // Playable but there are Still Protection Problems
-GAMEX( 1991, hachamfb, hachamf, hachamfb, hachamfb, hachamfb, ROT0,   "bootleg",                        "Hacha Mecha Fighter (unprotected)", GAME_IMPERFECT_SOUND ) // appears to be a Thunder Dragon conversion, could be bootleg?
+GAMEX( 1991, hachamf,  0,       hachamf,  hachamf,  hachamf,  ROT0,   "NMK",				            "Hacha Mecha Fighter", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND ) /* Playable but there are Still Protection Problems*/
+GAMEX( 1991, hachamfb, hachamf, hachamfb, hachamfb, hachamfb, ROT0,   "bootleg",                        "Hacha Mecha Fighter (unprotected)", GAME_IMPERFECT_SOUND ) /* appears to be a Thunder Dragon conversion, could be bootleg?*/
 GAMEX( 1992, macross,  0,       macross,  macross,  nmk,      ROT270, "Banpresto",			            "Super Spacefortress Macross / Chou-Jikuu Yousai Macross", GAME_IMPERFECT_SOUND )
 GAMEX( 1993, gunnail,  0,       gunnail,  gunnail,  nmk,      ROT270, "NMK / Tecmo",			        "GunNail", GAME_IMPERFECT_SOUND )
 GAMEX( 1993, macross2, 0,       macross2, macross2, 0,        ROT0,   "Banpresto",			            "Super Spacefortress Macross II / Chou-Jikuu Yousai Macross II", GAME_NO_COCKTAIL )
 GAMEX( 1993, tdragon2, 0,       tdragon2, tdragon2, 0,        ROT270, "NMK",				            "Thunder Dragon 2 (9th Nov. 1993)", GAME_NO_COCKTAIL )
 GAMEX( 1993, bigbang,  tdragon2,tdragon2, tdragon2, 0,        ROT270, "NMK",				            "Big Bang (9th Nov. 1993)", GAME_NO_COCKTAIL )
-GAMEX( 1994, raphero,  0,       raphero,  tdragon2, 0,        ROT270, "Media Trading Corp",             "Rapid Hero", GAME_NO_SOUND ) // 23rd July 1993 in test mode, (c)1994 on title screen
+GAMEX( 1994, raphero,  0,       raphero,  tdragon2, 0,        ROT270, "Media Trading Corp",             "Rapid Hero", GAME_NO_SOUND ) /* 23rd July 1993 in test mode, (c)1994 on title screen*/
 
 GAMEX( 1992, sabotenb, 0,       bjtwin,   sabotenb, nmk,      ROT0,   "NMK / Tecmo",			        "Saboten Bombers (set 1)", GAME_NO_COCKTAIL )
 GAMEX( 1992, sabotnba, sabotenb,bjtwin,   sabotenb, nmk,      ROT0,   "NMK / Tecmo",			        "Saboten Bombers (set 2)", GAME_NO_COCKTAIL )
@@ -4786,14 +4786,14 @@ GAMEX( 1995, nouryoku, 0,       bjtwin,   nouryoku, nmk,      ROT0,   "Tecmo",		
 
 /* Non NMK boards */
 
-// these use the seibu sound system (sound / music stolen from Raiden) rather than the bootleggers copying the nmk004
-GAMEX( 1990, mustangb, mustang, mustangb, mustang,  0,        ROT0,   "bootleg",			            "US AAF Mustang (Bootleg)", GAME_UNEMULATED_PROTECTION ) // Playable but there are Still Protection Problems
+/* these use the seibu sound system (sound / music stolen from Raiden) rather than the bootleggers copying the nmk004*/
+GAMEX( 1990, mustangb, mustang, mustangb, mustang,  0,        ROT0,   "bootleg",			            "US AAF Mustang (Bootleg)", GAME_UNEMULATED_PROTECTION ) /* Playable but there are Still Protection Problems*/
 GAME(  1991, tdragonb, tdragon, tdragonb, tdragon,  tdragonb, ROT270, "NMK / Tecmo",			        "Thunder Dragon (Bootleg)" )
 
-// these are from Comad, based on the Thunder Dragon code?
+/* these are from Comad, based on the Thunder Dragon code?*/
 GAMEX( 1992, ssmissin, 0,       ssmissin, ssmissin, ssmissin, ROT270, "Comad",				            "S.S. Mission", GAME_NO_COCKTAIL )
 GAMEX( 1996, airattck, 0,       ssmissin, airattck, ssmissin, ROT270, "Comad",                          "Air Attack (set 1)", GAME_NO_COCKTAIL )
 GAMEX( 1996, airattcka,airattck,ssmissin, airattck, ssmissin, ROT270, "Comad",                          "Air Attack (set 2)", GAME_NO_COCKTAIL )
 
-// bee-oh board?
+/* bee-oh board?*/
 GAMEX( 1991, manybloc, 0,       manybloc, manybloc, 0,        ROT270, "Bee-Oh",                         "Many Block", GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )

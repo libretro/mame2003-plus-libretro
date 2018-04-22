@@ -366,7 +366,7 @@ static MACHINE_DRIVER_START( looping )
 	MDRV_CPU_PORTS(0,looping_writeport)
 	MDRV_CPU_VBLANK_INT(looping_interrupt,1)
 
-	MDRV_CPU_ADD(TMS9980, 2000000) // ?
+	MDRV_CPU_ADD(TMS9980, 2000000) /* ?*/
 	MDRV_CPU_MEMORY(looping_io_readmem,looping_io_writemem)
 	MDRV_CPU_PORTS(0,looping_io_writeport)
 
@@ -425,7 +425,7 @@ INPUT_PORTS_START( looping )
 	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_7C ) )
 	PORT_DIPSETTING(    0x00, "1 Coin/10 Credits" )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )		// Check code at 0x2c00
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )		/* Check code at 0x2c00*/
 	PORT_DIPSETTING(	0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Lives ) )
@@ -470,14 +470,14 @@ INPUT_PORTS_START( skybump )
 	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_7C ) )
 	PORT_DIPSETTING(    0x00, "1 Coin/10 Credits" )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )		// Check code at 0x2c00
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )		/* Check code at 0x2c00*/
 	PORT_DIPSETTING(	0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x60, 0x40, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x40, "3" )
 	PORT_DIPSETTING(    0x60, "5" )
 	PORT_BITX( 0,       0x00, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", IP_KEY_NONE, IP_JOY_NONE )
-//	PORT_BITX( 0,       0x20, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", IP_KEY_NONE, IP_JOY_NONE )
+/*	PORT_BITX( 0,       0x20, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", IP_KEY_NONE, IP_JOY_NONE )*/
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )

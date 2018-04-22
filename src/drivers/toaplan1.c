@@ -61,7 +61,7 @@ Notes:
 #include "cpu/tms32010/tms32010.h"
 #include "toaplan1.h"
 
-// Fire Shark / Same Same Same! sound
+/* Fire Shark / Same Same Same! sound*/
 data8_t to_mcu;
 data8_t cmdavailable;
 
@@ -94,7 +94,7 @@ static MEMORY_WRITE16_START( rallybik_writemem )
 	{ 0x100002, 0x100003, toaplan1_tileram_offs_w },
 	{ 0x100004, 0x100007, toaplan1_tileram16_w },
 	{ 0x100010, 0x10001f, toaplan1_scroll_regs_w },
-//	{ 0x140000, 0x140001, ?? video frame related ??  },
+/*	{ 0x140000, 0x140001, ?? video frame related ??  },*/
 	{ 0x140002, 0x140003, toaplan1_intenable_w },
 	{ 0x140008, 0x14000f, toaplan1_bcu_control_w },
 	{ 0x144000, 0x1447ff, toaplan1_colorram1_w, &toaplan1_colorram1, &toaplan1_colorram1_size },
@@ -130,7 +130,7 @@ static MEMORY_WRITE16_START( truxton_writemem )
 	{ 0x100002, 0x100003, toaplan1_tileram_offs_w },
 	{ 0x100004, 0x100007, toaplan1_tileram16_w },
 	{ 0x100010, 0x10001f, toaplan1_scroll_regs_w },
-//	{ 0x140000, 0x140001, ?? video frame related ??  },
+/*	{ 0x140000, 0x140001, ?? video frame related ??  },*/
 	{ 0x140002, 0x140003, toaplan1_intenable_w },
 	{ 0x140008, 0x14000f, toaplan1_bcu_control_w },
 	{ 0x144000, 0x1447ff, toaplan1_colorram1_w, &toaplan1_colorram1, &toaplan1_colorram1_size },
@@ -547,7 +547,7 @@ READ_HANDLER(vimana_dswb_invert_r)
  
 READ_HANDLER(vimana_tjump_invert_r)
 {
-	return (input_port_6_r(0)^0xFF)|0xC0; // high 2 bits of port G always read as 1
+	return (input_port_6_r(0)^0xFF)|0xC0; /* high 2 bits of port G always read as 1*/
 } 
  
 static MEMORY_READ_START( vimana_hd647180_readmem )
@@ -574,15 +574,15 @@ static PORT_READ_START( vimana_hd647180_readport )
 PORT_END
 
 static PORT_WRITE_START( vimana_hd647180_writeport )
-        { 0x32, 0x32, MWA_NOP }, // DMA WAIT/Control register
-	{ 0x33, 0x33, MWA_NOP }, // IL (int vector low) register
-	{ 0x36, 0x36, MWA_NOP }, // refresh control register for RFSH pin
-	{ 0x71, 0x71, MWA_NOP }, // ddr for port B
-	{ 0x72, 0x72, MWA_NOP }, // ddr for port C
-	{ 0x73, 0x73, MWA_NOP }, // ddr for port D
-	{ 0x74, 0x74, MWA_NOP }, // ddr for port E
-	{ 0x75, 0x75, MWA_NOP }, // ddr for port F
-	{ 0x84, 0x84, toaplan1_coin_w },  // Coin counter/lockout // needs verify
+        { 0x32, 0x32, MWA_NOP }, /* DMA WAIT/Control register*/
+	{ 0x33, 0x33, MWA_NOP }, /* IL (int vector low) register*/
+	{ 0x36, 0x36, MWA_NOP }, /* refresh control register for RFSH pin*/
+	{ 0x71, 0x71, MWA_NOP }, /* ddr for port B*/
+	{ 0x72, 0x72, MWA_NOP }, /* ddr for port C*/
+	{ 0x73, 0x73, MWA_NOP }, /* ddr for port D*/
+	{ 0x74, 0x74, MWA_NOP }, /* ddr for port E*/
+	{ 0x75, 0x75, MWA_NOP }, /* ddr for port F*/
+	{ 0x84, 0x84, toaplan1_coin_w },  /* Coin counter/lockout */ /* needs verify*/
 	{ 0x87, 0x87, YM3812_control_port_0_w },
 	{ 0x8f, 0x8f, YM3812_write_port_0_w },
 PORT_END
@@ -750,9 +750,9 @@ INPUT_PORTS_START( truxton )
 	PORT_DIPSETTING(    0x04, "US/Taito America" )
 	PORT_DIPSETTING(    0x01, "US/Romstar" )
 	PORT_DIPSETTING(    0x00, "Japan/Taito Corp" )
-//	PORT_DIPSETTING(    0x05, "Same as 0x04" )
-//	PORT_DIPSETTING(    0x03, "Same as 0x02" )
-//	PORT_DIPSETTING(    0x07, "Same as 0x06" )
+/*	PORT_DIPSETTING(    0x05, "Same as 0x04" )*/
+/*	PORT_DIPSETTING(    0x03, "Same as 0x02" )*/
+/*	PORT_DIPSETTING(    0x07, "Same as 0x06" )*/
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
@@ -816,7 +816,7 @@ INPUT_PORTS_START( hellfire )
 	PORT_START		/* Territory Jumper block */
 	PORT_DIPNAME( 0x03, 0x02, "Territory" )
 	PORT_DIPSETTING(    0x02, "Europe" )
-//	PORT_DIPSETTING(    0x03, "Europe" )
+/*	PORT_DIPSETTING(    0x03, "Europe" )*/
 	PORT_DIPSETTING(    0x01, "US" )
 	PORT_DIPSETTING(    0x00, "Japan" )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unused ) )
@@ -885,7 +885,7 @@ INPUT_PORTS_START( hellfir1 )
 	PORT_START		/* Territory Jumper block */
 	PORT_DIPNAME( 0x03, 0x02, "Territory" )
 	PORT_DIPSETTING(    0x02, "Europe" )
-//	PORT_DIPSETTING(    0x03, "Europe" )
+/*	PORT_DIPSETTING(    0x03, "Europe" )*/
 	PORT_DIPSETTING(    0x01, "US" )
 	PORT_DIPSETTING(    0x00, "Japan" )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unused ) )
@@ -954,7 +954,7 @@ INPUT_PORTS_START( zerowing )
 	PORT_START		/* Territory Jumper block */
 	PORT_DIPNAME( 0x03, 0x02, "Territory" )
 	PORT_DIPSETTING(    0x02, "Europe" )
-//	PORT_DIPSETTING(    0x03, "Europe" )
+/*	PORT_DIPSETTING(    0x03, "Europe" )*/
 	PORT_DIPSETTING(    0x01, "US" )
 	PORT_DIPSETTING(    0x00, "Japan" )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unused ) )
@@ -1268,9 +1268,9 @@ INPUT_PORTS_START( samesam2 )
 	PORT_DIPNAME( 0x01, 0x00, "Show Territory Notice" )
 	PORT_DIPSETTING(    0x01, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
-//	PORT_DIPNAME( 0x02, 0x00, "Show Territory Notice" )	/* Same as Bit 1 */
-//	PORT_DIPSETTING(    0x02, DEF_STR( No ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+/*	PORT_DIPNAME( 0x02, 0x00, "Show Territory Notice" )	 // Same as Bit 1 */
+/*	PORT_DIPSETTING(    0x02, DEF_STR( No ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )*/
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
@@ -1475,19 +1475,19 @@ INPUT_PORTS_START( vimana )
 	PORT_DIPSETTING(    0x02, "Europe" )
 	PORT_DIPSETTING(    0x01, "USA" )
 	PORT_DIPSETTING(    0x07, "USA (Romstar license)" )
-    //  PORT_DIPSETTING(    0x00, "Japan (distributed by Tecmo)" )
-    //  PORT_DIPSETTING(    0x0f, "Japan (distributed by Tecmo)" )
+    /*  PORT_DIPSETTING(    0x00, "Japan (distributed by Tecmo)" )*/
+    /*  PORT_DIPSETTING(    0x0f, "Japan (distributed by Tecmo)" )*/
 	PORT_DIPSETTING(    0x04, "Korea")
 	PORT_DIPSETTING(    0x03, "Hong_Kong" )
 	PORT_DIPSETTING(    0x08, "Hong Kong (Honest Trading license)" )
 	PORT_DIPSETTING(    0x05, "Taiwan" )
 	PORT_DIPSETTING(    0x06, "Taiwan (Spacy license)" )
-    //  PORT_DIPSETTING(    0x09, "???" )
-    //  PORT_DIPSETTING(    0x0a, "???" )
-    //  PORT_DIPSETTING(    0x0b, "???" )
-    //  PORT_DIPSETTING(    0x0c, "???" )
-    //  PORT_DIPSETTING(    0x0d, "???" )
-    //  PORT_DIPSETTING(    0x0e, "???" )
+    /*  PORT_DIPSETTING(    0x09, "???" )*/
+    /*  PORT_DIPSETTING(    0x0a, "???" )*/
+    /*  PORT_DIPSETTING(    0x0b, "???" )*/
+    /*  PORT_DIPSETTING(    0x0c, "???" )*/
+    /*  PORT_DIPSETTING(    0x0d, "???" )*/
+    /*  PORT_DIPSETTING(    0x0e, "???" )*/
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -1564,19 +1564,19 @@ INPUT_PORTS_START( vimanan )
 	PORT_DIPSETTING(    0x02, "Europe" )
 	PORT_DIPSETTING(    0x01, "USA" )
 	PORT_DIPSETTING(    0x07, "USA (Romstar license)" )
-    //  PORT_DIPSETTING(    0x00, "Japan (distributed by Tecmo)" )
-    //  PORT_DIPSETTING(    0x0f, "Japan (distributed by Tecmo)" )
+    /*  PORT_DIPSETTING(    0x00, "Japan (distributed by Tecmo)" )*/
+    /*  PORT_DIPSETTING(    0x0f, "Japan (distributed by Tecmo)" )*/
 	PORT_DIPSETTING(    0x04, "Korea")
 	PORT_DIPSETTING(    0x03, "Hong_Kong" )
 	PORT_DIPSETTING(    0x08, "Hong Kong (Honest Trading license)" )
 	PORT_DIPSETTING(    0x05, "Taiwan" )
 	PORT_DIPSETTING(    0x06, "Taiwan (Spacy license)" )
-    //  PORT_DIPSETTING(    0x09, "???" )
-    //  PORT_DIPSETTING(    0x0a, "???" )
-    //  PORT_DIPSETTING(    0x0b, "???" )
-    //  PORT_DIPSETTING(    0x0c, "???" )
-    //  PORT_DIPSETTING(    0x0d, "???" )
-    //  PORT_DIPSETTING(    0x0e, "???" )
+    /*  PORT_DIPSETTING(    0x09, "???" )*/
+    /*  PORT_DIPSETTING(    0x0a, "???" )*/
+    /*  PORT_DIPSETTING(    0x0b, "???" )*/
+    /*  PORT_DIPSETTING(    0x0c, "???" )*/
+    /*  PORT_DIPSETTING(    0x0d, "???" )*/
+    /*  PORT_DIPSETTING(    0x0e, "???" )*/
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
 

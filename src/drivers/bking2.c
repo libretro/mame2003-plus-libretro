@@ -101,7 +101,7 @@ static READ_HANDLER( mcu_status_r )
 {
 	static int res = 3;
 
-	return res;//cpu data / MCU ready
+	return res;/*cpu data / MCU ready*/
 }
 
 
@@ -132,7 +132,7 @@ static WRITE_HANDLER( mcu_data_w )
 
 static READ_HANDLER( mcu_data_r )
 {
-//	usrintf_showmessage("MCU-r1 PC = %04x %02x",activecpu_get_pc(),mcu_val);
+/*	usrintf_showmessage("MCU-r1 PC = %04x %02x",activecpu_get_pc(),mcu_val);*/
 	switch(mcu_val)
 	{
 		/* Shot counter control at the green (check $bdf and afterwards in that condition)*/
@@ -143,8 +143,8 @@ static READ_HANDLER( mcu_data_r )
 
 static READ_HANDLER( mcu_data_r2 )
 {
-//	usrintf_showmessage("MCU-r2 PC = %04x %02x",activecpu_get_pc(),mcu_val);
-	return 0x31; //no "bad rom.", no "bad ext."
+/*	usrintf_showmessage("MCU-r2 PC = %04x %02x",activecpu_get_pc(),mcu_val);*/
+	return 0x31; /*no "bad rom.", no "bad ext."*/
 }
 
 static MEMORY_READ_START( readmem )
@@ -188,7 +188,7 @@ static PORT_WRITE_START( writeport )
 	{ 0x09, 0x09, bking2_cont2_w },
 	{ 0x0a, 0x0a, bking2_cont3_w },
 	{ 0x0b, 0x0b, bking2_soundlatch_w },
-//	{ 0x0c, 0x0c, bking2_eport2_w },   this is not shown to be connected anywhere
+/*	{ 0x0c, 0x0c, bking2_eport2_w },   this is not shown to be connected anywhere*/
 	{ 0x0d, 0x0d, bking2_hitclr_w },
 
 	{ 0x2f, 0x2f, mcu_data_w },
@@ -199,7 +199,7 @@ PORT_END
 
 static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x1fff, MRA_ROM },
-	{ 0x2000, 0x2fff, MRA_ROM }, //only bking3
+	{ 0x2000, 0x2fff, MRA_ROM }, /*only bking3*/
 	{ 0x4000, 0x43ff, MRA_RAM },
 	{ 0x4401, 0x4401, AY8910_read_port_0_r },
 	{ 0x4403, 0x4403, AY8910_read_port_1_r },
@@ -212,7 +212,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( sound_writemem )
 	{ 0x0000, 0x1fff, MWA_ROM },
-	{ 0x2000, 0x2fff, MWA_ROM }, //only bking3
+	{ 0x2000, 0x2fff, MWA_ROM }, /*only bking3*/
 	{ 0x4000, 0x43ff, MWA_RAM },
 	{ 0x4400, 0x4400, AY8910_control_port_0_w },
 	{ 0x4401, 0x4401, AY8910_write_port_0_w },
@@ -652,7 +652,7 @@ ROM_START( bking3 )
 	ROM_LOAD( "a24-07.8f",    0x3000, 0x1000, CRC(75a74d2d) SHA1(d433e8fcf3819b845936e7e107fef414f72bfc16) )
 	ROM_LOAD( "a24-08.7f",    0x4000, 0x1000, CRC(9fe07cf9) SHA1(23fdae48e519a171bf4adeeadf2fdfedfd56f4ea) )
 	ROM_LOAD( "a24-09.5f",    0x5000, 0x1000, CRC(51545ced) SHA1(4addad527c6fd675506bf584ec8670a23767787c) )
-	ROM_LOAD( "a24-01.4f",    0x6000, 0x1000, CRC(a86b3e62) SHA1(f97a13e31e622b5ac55c23458c65a49c2998196a) ) //another one: a24-10.4f
+	ROM_LOAD( "a24-01.4f",    0x6000, 0x1000, CRC(a86b3e62) SHA1(f97a13e31e622b5ac55c23458c65a49c2998196a) ) /*another one: a24-10.4f*/
 	ROM_LOAD( "a24-11.2f",    0x7000, 0x1000, CRC(b39db430) SHA1(4f48a34f3aaa1e998a4a5656bc3f399d9e6633c4) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )		/* Sound ROMs */
@@ -661,7 +661,7 @@ ROM_START( bking3 )
 	ROM_LOAD( "a24-20.4b",    0x2000, 0x1000, CRC(0e9e16d6) SHA1(43c69602a8d9c34c527ce54472db84168acc4ef4) )
 
 	ROM_REGION( 0x0800, REGION_CPU3, 0 )	/* 2k for the microcontroller */
-	ROM_LOAD( "a24_22",    0x0000,  0x0800, NO_DUMP ) //M68705P5S uC 3MHz xtal
+	ROM_LOAD( "a24_22",    0x0000,  0x0800, NO_DUMP ) /*M68705P5S uC 3MHz xtal*/
 
 	ROM_REGION( 0x6000, REGION_GFX1, ROMREGION_DISPOSE ) /* Tiles */
 	ROM_LOAD( "a24-12.5a",    0x0000, 0x1000, CRC(c5fe4817) SHA1(fbf82d9d85e18b76c7e939932df074a545e73f42) )
@@ -689,9 +689,9 @@ ROM_START( bking3 )
 	ROM_REGION( 0x1000, REGION_USER2, 0 )
 	ROM_LOAD( "a24-21.25",    0x0000, 0x1000, CRC(3106fcac) SHA1(08454adfb58e5df84140d86ed52fa4ef684df9f1) ) /* extra rom on the same SUB PCB where is the mcu */
 
-//missing?
-//"a24_03" 	A24_03 - TI TBP28S46N - Not read
-//"a24_04" 	A24_04 - Bipolar PROM - Not read
+/*missing?*/
+/*"a24_03" 	A24_03 - TI TBP28S46N - Not read*/
+/*"a24_04" 	A24_04 - Bipolar PROM - Not read*/
 
 ROM_END
 

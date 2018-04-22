@@ -176,11 +176,11 @@ static INTERRUPT_GEN(moo_interrupt)
 	{
 		moo_objdma(game_type);
 
-		// schedule DMA end interrupt (delay shortened to catch up with V-blank)
+		/* schedule DMA end interrupt (delay shortened to catch up with V-blank)*/
 		timer_set(TIME_IN_USEC(MOO_DMADELAY), 0, dmaend_callback);
 	}
 
-	// trigger V-blank interrupt
+	/* trigger V-blank interrupt*/
 	if (cur_control2 & 0x20)
 		cpu_set_irq_line(0, 5, HOLD_LINE);
 }
@@ -189,10 +189,10 @@ static INTERRUPT_GEN(moobl_interrupt)
 {
 	moo_objdma(game_type);
 
-	// schedule DMA end interrupt (delay shortened to catch up with V-blank)
+	/* schedule DMA end interrupt (delay shortened to catch up with V-blank)*/
 	timer_set(TIME_IN_USEC(MOO_DMADELAY), 0, dmaend_callback);
 
-	// trigger V-blank interrupt
+	/* trigger V-blank interrupt*/
 	cpu_set_irq_line(0, 5, HOLD_LINE);
 }
 
@@ -248,7 +248,7 @@ static WRITE_HANDLER( sound_bankswitch_w )
 }
 
 
-#if 0 // (for reference; do not remove)
+#if 0 /* (for reference; do not remove)*/
 
 /* the interface with the 053247 is weird. The chip can address only 0x1000 bytes */
 /* of RAM, but they put 0x10000 there. The CPU can access them all. */
@@ -278,12 +278,12 @@ static WRITE16_HANDLER( K053247_scattered_word_w )
 #endif
 
 
-static READ16_HANDLER( player1_r ) 	// players 1 and 3
+static READ16_HANDLER( player1_r ) 	/* players 1 and 3*/
 {
 	return input_port_2_r(0) | (input_port_4_r(0)<<8);
 }
 
-static READ16_HANDLER( player2_r )	// players 2 and 4
+static READ16_HANDLER( player2_r )	/* players 2 and 4*/
 {
 	return input_port_3_r(0) | (input_port_5_r(0)<<8);
 }
@@ -294,7 +294,7 @@ static WRITE16_HANDLER( moo_prot_w )
 
 	COMBINE_DATA(&protram[offset]);
 
-	if (offset == 0xc)	// trigger operation
+	if (offset == 0xc)	/* trigger operation*/
 	{
 		src1 = (protram[1]&0xff)<<16 | protram[0];
 		src2 = (protram[3]&0xff)<<16 | protram[2];
@@ -668,7 +668,7 @@ static MACHINE_DRIVER_START( moo )
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(1200) // should give IRQ4 sufficient time to update scroll registers
+	MDRV_VBLANK_DURATION(1200) /* should give IRQ4 sufficient time to update scroll registers*/
 
 	MDRV_MACHINE_INIT(moo)
 
@@ -698,7 +698,7 @@ static MACHINE_DRIVER_START( moobl )
 	MDRV_CPU_VBLANK_INT(moobl_interrupt, 1)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(1200) // should give IRQ4 sufficient time to update scroll registers
+	MDRV_VBLANK_DURATION(1200) /* should give IRQ4 sufficient time to update scroll registers*/
 
 	MDRV_MACHINE_INIT(moo)
 	MDRV_NVRAM_HANDLER(moo)
@@ -887,7 +887,7 @@ ROM_START( moobl )
 	ROM_LOAD( "moo07.rom", 0x100000, 0x080000, CRC(b9e29f50) SHA1(c2af095df0af45064d49210085370425b319b82b) )
 	ROM_LOAD( "moo08.rom", 0x180000, 0x080000, CRC(e6937229) SHA1(089b3d4af33e8d8fbc1f3abb81e047a7a590567c) )
 
-	// sprites from bootleg not included in dump, taken from original game
+	/* sprites from bootleg not included in dump, taken from original game*/
 	ROM_REGION( 0x800000, REGION_GFX2, 0 )
 	ROM_LOAD( "151a10", 0x000000, 0x200000, CRC(376c64f1) SHA1(eb69c5a27f9795e28f04a503955132f0a9e4de12) )
 	ROM_LOAD( "151a11", 0x200000, 0x200000, CRC(e7f49225) SHA1(1255b214f29b6507540dad5892c60a7ae2aafc5c) )
@@ -895,32 +895,32 @@ ROM_START( moobl )
 	ROM_LOAD( "151a13", 0x600000, 0x200000, CRC(4771f525) SHA1(218d86b6230919b5db0304dac00513eb6b27ba9a) )
 
 	ROM_REGION( 0x340000, REGION_SOUND1, 0 )
-	ROM_LOAD( "moo01.rom", 0x000000, 0x040000, CRC(3311338a) SHA1(c0b5cd16f0275b5b93a2ea4fc64013c848c5fa43) )//bank 0 lo & hi
-	ROM_CONTINUE(          0x040000+0x30000, 0x010000)//bank 1 hi
-	ROM_CONTINUE(          0x080000+0x30000, 0x010000)//bank 2 hi
-	ROM_CONTINUE(          0x0c0000+0x30000, 0x010000)//bank 3 hi
-	ROM_CONTINUE(          0x100000+0x30000, 0x010000)//bank 4 hi
-	ROM_RELOAD(            0x040000, 0x30000 )//bank 1 lo
-	ROM_RELOAD(            0x080000, 0x30000 )//bank 2 lo
-	ROM_RELOAD(            0x0c0000, 0x30000 )//bank 3 lo
-	ROM_RELOAD(            0x100000, 0x30000 )//bank 4 lo
-	ROM_RELOAD(            0x140000, 0x30000 )//bank 5 lo
-	ROM_RELOAD(            0x180000, 0x30000 )//bank 6 lo
-	ROM_RELOAD(            0x1c0000, 0x30000 )//bank 7 lo
-	ROM_RELOAD(            0x200000, 0x30000 )//bank 8 lo
-	ROM_RELOAD(            0x240000, 0x30000 )//bank 9 lo
-	ROM_RELOAD(            0x280000, 0x30000 )//bank a lo
-	ROM_RELOAD(            0x2c0000, 0x30000 )//bank b lo
-	ROM_RELOAD(            0x300000, 0x30000 )//bank c lo
+	ROM_LOAD( "moo01.rom", 0x000000, 0x040000, CRC(3311338a) SHA1(c0b5cd16f0275b5b93a2ea4fc64013c848c5fa43) )/*bank 0 lo & hi*/
+	ROM_CONTINUE(          0x040000+0x30000, 0x010000)/*bank 1 hi*/
+	ROM_CONTINUE(          0x080000+0x30000, 0x010000)/*bank 2 hi*/
+	ROM_CONTINUE(          0x0c0000+0x30000, 0x010000)/*bank 3 hi*/
+	ROM_CONTINUE(          0x100000+0x30000, 0x010000)/*bank 4 hi*/
+	ROM_RELOAD(            0x040000, 0x30000 )/*bank 1 lo*/
+	ROM_RELOAD(            0x080000, 0x30000 )/*bank 2 lo*/
+	ROM_RELOAD(            0x0c0000, 0x30000 )/*bank 3 lo*/
+	ROM_RELOAD(            0x100000, 0x30000 )/*bank 4 lo*/
+	ROM_RELOAD(            0x140000, 0x30000 )/*bank 5 lo*/
+	ROM_RELOAD(            0x180000, 0x30000 )/*bank 6 lo*/
+	ROM_RELOAD(            0x1c0000, 0x30000 )/*bank 7 lo*/
+	ROM_RELOAD(            0x200000, 0x30000 )/*bank 8 lo*/
+	ROM_RELOAD(            0x240000, 0x30000 )/*bank 9 lo*/
+	ROM_RELOAD(            0x280000, 0x30000 )/*bank a lo*/
+	ROM_RELOAD(            0x2c0000, 0x30000 )/*bank b lo*/
+	ROM_RELOAD(            0x300000, 0x30000 )/*bank c lo*/
 
-	ROM_LOAD( "moo02.rom", 0x140000+0x30000, 0x010000, CRC(2cf3a7c6) SHA1(06f495ba8250b34c32569d49c8b84e6edef562d3) )//bank 5 hi
-	ROM_CONTINUE(          0x180000+0x30000, 0x010000)//bank 6 hi
-	ROM_CONTINUE(          0x1c0000+0x30000, 0x010000)//bank 7 hi
-	ROM_CONTINUE(          0x200000+0x30000, 0x010000)//bank 8 hi
-	ROM_CONTINUE(          0x240000+0x30000, 0x010000)//bank 9 hi
-	ROM_CONTINUE(          0x280000+0x30000, 0x010000)//bank a hi
-	ROM_CONTINUE(          0x2c0000+0x30000, 0x010000)//bank b hi
-	ROM_CONTINUE(          0x300000+0x30000, 0x010000)//bank c hi
+	ROM_LOAD( "moo02.rom", 0x140000+0x30000, 0x010000, CRC(2cf3a7c6) SHA1(06f495ba8250b34c32569d49c8b84e6edef562d3) )/*bank 5 hi*/
+	ROM_CONTINUE(          0x180000+0x30000, 0x010000)/*bank 6 hi*/
+	ROM_CONTINUE(          0x1c0000+0x30000, 0x010000)/*bank 7 hi*/
+	ROM_CONTINUE(          0x200000+0x30000, 0x010000)/*bank 8 hi*/
+	ROM_CONTINUE(          0x240000+0x30000, 0x010000)/*bank 9 hi*/
+	ROM_CONTINUE(          0x280000+0x30000, 0x010000)/*bank a hi*/
+	ROM_CONTINUE(          0x2c0000+0x30000, 0x010000)/*bank b hi*/
+	ROM_CONTINUE(          0x300000+0x30000, 0x010000)/*bank c hi*/
 ROM_END
 
 GAME( 1992, moo,     0,       moo,     moo,     moo,      ROT0, "Konami", "Wild West C.O.W.-Boys of Moo Mesa (World version EA)")

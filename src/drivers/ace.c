@@ -233,7 +233,7 @@ INPUT_PORTS_START( ace )
 	PORT_START	/* enemy fire c011 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
 
-//c012
+/*c012*/
 
 
 	PORT_START	/* VBLANK??? read from 0xc014 */

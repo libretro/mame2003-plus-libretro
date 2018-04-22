@@ -323,7 +323,7 @@ static MEMORY_READ_START( readmem )
 	{ 0xc003, 0xc003, input_port_3_r },
 	{ 0xc004, 0xc004, input_port_4_r },
 	{ 0xc200, 0xc200, MRA_RAM },
-	{ 0xc201, 0xc201, MRA_RAM },		// unknown but used
+	{ 0xc201, 0xc201, MRA_RAM },		/* unknown but used*/
 	{ 0xc202, 0xc202, ninjakd2_bankselect_r },
 	{ 0xc203, 0xc203, MRA_RAM },
 	{ 0xc208, 0xc209, MRA_RAM },
@@ -336,7 +336,7 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc200, 0xc200, soundlatch_w },
-	{ 0xc201, 0xc201, MWA_RAM },		// unknown but used
+	{ 0xc201, 0xc201, MWA_RAM },		/* unknown but used*/
 	{ 0xc202, 0xc202, ninjakd2_bankselect_w },
 	{ 0xc203, 0xc203, ninjakd2_sprite_overdraw_w, &ninjakd2_spoverdraw_ram },
 	{ 0xc208, 0xc209, MWA_RAM, &ninjakd2_scrollx_ram },
@@ -589,7 +589,7 @@ ROM_START( ninjakd2 )
 	ROM_LOAD( "nk2_05.rom",   0x28000, 0x8000, CRC(5dac9426) SHA1(0916cddbbe1e93c32b96fe28e145d34b2a892e80) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )
-	ROM_LOAD( "nk2_06.rom",   0x0000, 0x10000, CRC(d3a18a79) SHA1(e4df713f89d8a8b43ef831b14864c50ec9b53f0b) )  // sound z80 code encrypted
+	ROM_LOAD( "nk2_06.rom",   0x0000, 0x10000, CRC(d3a18a79) SHA1(e4df713f89d8a8b43ef831b14864c50ec9b53f0b) )  /* sound z80 code encrypted*/
 
 	ROM_REGION( 0x20000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "nk2_11.rom",   0x00000, 0x4000, CRC(41a714b3) SHA1(b05f48d71a9837914c12c13e0b479c8a6dc8c25e) )	/* background tiles */

@@ -67,7 +67,7 @@ static READ_HANDLER( thunderx_bankedram_r )
 	{
 		if (pmcbank)
 		{
-//			logerror("%04x read pmcram %04x\n",activecpu_get_pc(),offset);
+/*			logerror("%04x read pmcram %04x\n",activecpu_get_pc(),offset);*/
 			return pmcram[offset];
 		}
 		else
@@ -86,7 +86,7 @@ static WRITE_HANDLER( thunderx_bankedram_w )
 		ram[offset] = data;
 	else if (rambank & 0x10)
 	{
-//			if (offset == 0x200)	debug_signal_breakpoint(1);
+/*			if (offset == 0x200)	debug_signal_breakpoint(1);*/
 		if (pmcbank)
 		{
 			logerror("%04x pmcram %04x = %02x\n",activecpu_get_pc(),offset,data);
@@ -170,21 +170,21 @@ this is the data written to internal ram on startup:
 	03 6c 04 40 04
 */
 
-// run_collisions
-//
-// collide objects from s0 to e0 against
-// objects from s1 to e1
-//
-// only compare objects with the specified bits (cm) set in their flags
-// only set object 0's hit bit if (hm & 0x40) is true
-//
-// the data format is:
-//
-// +0 : flags
-// +1 : width (4 pixel units)
-// +2 : height (4 pixel units)
-// +3 : x (2 pixel units) of center of object
-// +4 : y (2 pixel units) of center of object
+/* run_collisions*/
+/**/
+/* collide objects from s0 to e0 against*/
+/* objects from s1 to e1*/
+/**/
+/* only compare objects with the specified bits (cm) set in their flags*/
+/* only set object 0's hit bit if (hm & 0x40) is true*/
+/**/
+/* the data format is:*/
+/**/
+/* +0 : flags*/
+/* +1 : width (4 pixel units)*/
+/* +2 : height (4 pixel units)*/
+/* +3 : x (2 pixel units) of center of object*/
+/* +4 : y (2 pixel units) of center of object*/
 
 static void run_collisions(int s0, int e0, int s1, int e1, int cm, int hm)
 {
@@ -197,10 +197,10 @@ static void run_collisions(int s0, int e0, int s1, int e1, int cm, int hm)
 	{
 		int	l0,r0,b0,t0;
 
-		// check valid
+		/* check valid*/
 		if (!(p0[0] & cm))			continue;
 
-		// get area
+		/* get area*/
 		l0 = p0[3] - p0[1];
 		r0 = p0[3] + p0[1];
 		t0 = p0[4] - p0[2];
@@ -211,31 +211,31 @@ static void run_collisions(int s0, int e0, int s1, int e1, int cm, int hm)
 		{
 			int	l1,r1,b1,t1;
 
-			// check valid
+			/* check valid*/
 			if (!(p1[0] & hm))		continue;
 
-			// get area
+			/* get area*/
 			l1 = p1[3] - p1[1];
 			r1 = p1[3] + p1[1];
 			t1 = p1[4] - p1[2];
 			b1 = p1[4] + p1[2];
 
-			// overlap check
+			/* overlap check*/
 			if (l1 >= r0)	continue;
 			if (l0 >= r1)	continue;
 			if (t1 >= b0)	continue;
 			if (t0 >= b1)	continue;
 
-			// set flags
+			/* set flags*/
 			p0[0] = (p0[0] & 0x9f) | 0x10;
 			p1[0] = (p1[0] & 0x9b) | 0x10;
 		}
 	}
 }
 
-// calculate_collisions
-//
-// emulates K052591 collision detection
+/* calculate_collisions*/
+/**/
+/* emulates K052591 collision detection*/
 
 static void calculate_collisions( void )
 {
@@ -243,24 +243,24 @@ static void calculate_collisions( void )
 	int	X1,Y1;
 	int	CM,HM;
 
-	// the data at 0x00 to 0x06 defines the operation
-	//
-	// 0x00 : word : last byte of set 0
-	// 0x02 : byte : last byte of set 1
-	// 0x03 : byte : collide mask
-	// 0x04 : byte : hit mask
-	// 0x05 : byte : first byte of set 0
-	// 0x06 : byte : first byte of set 1
-	//
-	// the USA version is slightly different:
-	//
-	// 0x05 : word : first byte of set 0
-	// 0x07 : byte : first byte of set 1
-	//
-	// the operation is to intersect set 0 with set 1
-	// collide mask specifies objects to ignore
-	// hit mask is 40 to set bit on object 0 and object 1
-	// hit mask is 20 to set bit on object 1 only
+	/* the data at 0x00 to 0x06 defines the operation*/
+	/**/
+	/* 0x00 : word : last byte of set 0*/
+	/* 0x02 : byte : last byte of set 1*/
+	/* 0x03 : byte : collide mask*/
+	/* 0x04 : byte : hit mask*/
+	/* 0x05 : byte : first byte of set 0*/
+	/* 0x06 : byte : first byte of set 1*/
+	/**/
+	/* the USA version is slightly different:*/
+	/**/
+	/* 0x05 : word : first byte of set 0*/
+	/* 0x07 : byte : first byte of set 1*/
+	/**/
+	/* the operation is to intersect set 0 with set 1*/
+	/* collide mask specifies objects to ignore*/
+	/* hit mask is 40 to set bit on object 0 and object 1*/
+	/* hit mask is 20 to set bit on object 1 only*/
 
 	Y0 = pmcram[0];
 	Y0 = (Y0 << 8) + pmcram[1];
@@ -269,7 +269,7 @@ static void calculate_collisions( void )
 
 	if (pmcram[5] < 16)
 	{
-		// US Thunder Cross uses this form
+		/* US Thunder Cross uses this form*/
 		X0 = pmcram[5];
 		X0 = (X0 << 8) + pmcram[6];
 		X0 = (X0 - 16) / 5;
@@ -277,7 +277,7 @@ static void calculate_collisions( void )
 	}
 	else
 	{
-		// Japan Thunder Cross uses this form
+		/* Japan Thunder Cross uses this form*/
 		X0 = (pmcram[5] - 16) / 5;
 		X1 = (pmcram[6] - 16) / 5;
 	}
@@ -290,7 +290,7 @@ static void calculate_collisions( void )
 
 static WRITE_HANDLER( thunderx_1f98_w )
 {
-// logerror("%04x: 1f98_w %02x\n",activecpu_get_pc(),data);
+/* logerror("%04x: 1f98_w %02x\n",activecpu_get_pc(),data);*/
 
 	/* bit 0 = enable char ROM reading through the video RAM */
 	K052109_set_RMRD_line((data & 0x01) ? ASSERT_LINE : CLEAR_LINE);
@@ -315,7 +315,7 @@ WRITE_HANDLER( scontra_bankswitch_w )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	int offs;
 
-//logerror("%04x: bank switch %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: bank switch %02x\n",activecpu_get_pc(),data);*/
 
 	/* bits 0-3 ROM bank */
 	offs = 0x10000 + (data & 0x0f)*0x2000;
@@ -334,7 +334,7 @@ WRITE_HANDLER( scontra_bankswitch_w )
 
 static WRITE_HANDLER( thunderx_videobank_w )
 {
-//logerror("%04x: select video ram bank %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: select video ram bank %02x\n",activecpu_get_pc(),data);*/
 	/* 0x01 = work RAM at 4000-5fff */
 	/* 0x00 = palette at 5800-5fff */
 	/* 0x10 = unknown RAM at 5800-5fff */
@@ -523,7 +523,7 @@ INPUT_PORTS_START( scontra )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
 	PORT_START	/* DSW #2 */
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )
@@ -627,7 +627,7 @@ INPUT_PORTS_START( thunderx )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
  	PORT_START
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )
@@ -949,7 +949,7 @@ static void thunderx_banking( int lines )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	int offs;
 
-//	logerror("thunderx %04x: bank select %02x\n", activecpu_get_pc(), lines );
+/*	logerror("thunderx %04x: bank select %02x\n", activecpu_get_pc(), lines );*/
 
 	offs = 0x10000 + (((lines & 0x0f) ^ 0x08) * 0x2000);
 	if (offs >= 0x28000) offs -= 0x20000;

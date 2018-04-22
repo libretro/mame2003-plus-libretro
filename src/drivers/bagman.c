@@ -194,7 +194,7 @@ static MEMORY_READ_START( readmem )
 	{ 0x9000, 0x93ff, MRA_RAM },
 	{ 0x9800, 0x9bff, MRA_RAM },
 	{ 0xa000, 0xa000, bagman_pal16r6_r },
-	//{ 0xa800, 0xa805, bagman_ls259_r }, /*just for debugging purposes*/
+	/*{ 0xa800, 0xa805, bagman_ls259_r },  //just for debugging purposes/*/
 	{ 0xb000, 0xb000, input_port_2_r }, /* DSW */
 	{ 0xb800, 0xb800, MRA_NOP },
 	{ 0xc000, 0xffff, MRA_ROM },	/* Super Bagman only */
@@ -259,7 +259,7 @@ PORT_END
 static PORT_WRITE_START( writeport )
 	{ 0x08, 0x08, AY8910_control_port_0_w },
 	{ 0x09, 0x09, AY8910_write_port_0_w },
-	//{ 0x56, 0x56, IOWP_NOP },
+	/*{ 0x56, 0x56, IOWP_NOP },*/
 PORT_END
 
 

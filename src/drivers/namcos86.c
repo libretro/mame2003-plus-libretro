@@ -434,8 +434,8 @@ static MEMORY_WRITE_START( writemem1 )
 	{ 0x6400, 0x6400, namco_voice1_play_w },
 	{ 0x6600, 0x6600, namco_voice1_select_w },
 	{ 0x6800, 0x6800, bankswitch1_ext_w },
-//	{ 0x6c00, 0x6c00, MWA_NOP }, /* ??? */
-//	{ 0x6e00, 0x6e00, MWA_NOP }, /* ??? */
+/*	{ 0x6c00, 0x6c00, MWA_NOP },  // ??? /*/
+/*	{ 0x6e00, 0x6e00, MWA_NOP },  // ??? /*/
 
 	{ 0x8000, 0x8000, watchdog_reset_w },
 	{ 0x8400, 0x8400, int_ack1_w }, /* IRQ acknowledge */
@@ -447,7 +447,7 @@ static MEMORY_WRITE_START( writemem1 )
 	{ 0x9004, 0x9006, rthunder_scroll1_w },	/* scroll + priority */
 
 	{ 0x9400, 0x9402, rthunder_scroll2_w },	/* scroll + priority */
-//	{ 0x9403, 0x9403 } sub CPU rom bank select would be here
+/*	{ 0x9403, 0x9403 } sub CPU rom bank select would be here*/
 	{ 0x9404, 0x9406, rthunder_scroll3_w },	/* scroll + priority */
 
 	{ 0xa000, 0xa000, rthunder_backcolor_w },
@@ -1081,7 +1081,7 @@ INPUT_PORTS_START( wndrmomo )
 	PORT_DIPSETTING(    0x00, "Type A" )
 	PORT_DIPSETTING(    0x02, "Type B" )
 	PORT_DIPSETTING(    0x04, "Type C" )
-//	PORT_DIPSETTING(    0x06, "Type A" )
+/*	PORT_DIPSETTING(    0x06, "Type A" )*/
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )

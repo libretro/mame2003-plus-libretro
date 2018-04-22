@@ -54,8 +54,8 @@ static MEMORY_WRITE16_START( rohga_writemem )
 	{ 0x240000, 0x24000f, MWA16_RAM, &deco16_pf34_control },
 	{ 0x280000, 0x2807ff, deco16_104_rohga_prot_w, &deco16_prot_ram }, /* Protection writes */
 	{ 0x280800, 0x280fff, deco16_104_rohga_prot_w }, /* Mirror */
-//	{ 0x300000, 0x300001, MWA16_NOP },
-//	{ 0x310000, 0x310003, MWA16_NOP },
+/*	{ 0x300000, 0x300001, MWA16_NOP },*/
+/*	{ 0x310000, 0x310003, MWA16_NOP },*/
 	{ 0x310008, 0x31000b, MWA16_NOP }, /* Palette control?  0000 1111 always written */
 	{ 0x322000, 0x322001, deco16_priority_w },
 	{ 0x3c0000, 0x3c1fff, deco16_pf1_data_w, &deco16_pf1_data },

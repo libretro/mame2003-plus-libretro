@@ -108,7 +108,7 @@ static MEMORY_WRITE_START( bootleg_writemem )
 	{ 0x00000, 0x3ffff, MWA_ROM },
 	{ 0x6000e, 0x60fff, MWA_RAM, &spriteram },
 	{ 0xa0000, 0xa3fff, MWA_RAM },
-//	{ 0xd0000, 0xdffff, m90_bootleg_video_w, &m90_video_data },
+/*	{ 0xd0000, 0xdffff, m90_bootleg_video_w, &m90_video_data },*/
 	{ 0xe0000, 0xe03ff, paletteram_xBBBBBGGGGGRRRRR_w, &paletteram },
 	{ 0xffff0, 0xfffff, MWA_ROM },
 MEMORY_END
@@ -160,15 +160,15 @@ PORT_END
 static PORT_READ_START( bbmanw_sound_readport )
 	{ 0x41, 0x41, YM2151_status_port_0_r },
 	{ 0x42, 0x42, soundlatch_r },
-//	{ 0x41, 0x41, m72_sample_r },
+/*	{ 0x41, 0x41, m72_sample_r },*/
 PORT_END
 
 static PORT_WRITE_START( bbmanw_sound_writeport )
 	{ 0x40, 0x40, YM2151_register_port_0_w },
 	{ 0x41, 0x41, YM2151_data_port_0_w },
 	{ 0x42, 0x42, m72_sound_irq_ack_w },
-//	{ 0x40, 0x41, rtype2_sample_addr_w },
-//	{ 0x42, 0x42, m72_sample_w },
+/*	{ 0x40, 0x41, rtype2_sample_addr_w },*/
+/*	{ 0x42, 0x42, m72_sample_w },*/
 PORT_END
 
 /*****************************************************************************/
@@ -219,7 +219,7 @@ INPUT_PORTS_START( hasamu )
 	/* Coin Mode 1 */
 	IREM_COIN_MODE_1_NEW
 	/* Coin Mode 2, not supported yet */
-//	IREM_COIN_MODE_2
+/*	IREM_COIN_MODE_2*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( dynablst )
@@ -264,7 +264,7 @@ INPUT_PORTS_START( dynablst )
 	/* Coin Mode 1 */
 	IREM_COIN_MODE_1_NEW
 	/* Coin Mode 2, not supported yet */
-//	IREM_COIN_MODE_2
+/*	IREM_COIN_MODE_2*/
 
 	IREM_JOYSTICK_3_4(3)
 	IREM_JOYSTICK_3_4(4)
@@ -313,7 +313,7 @@ INPUT_PORTS_START( bombrman ) /* Does not appear to support 4 players or cocktai
 	/* Coin Mode 1 */
 	IREM_COIN_MODE_1_NEW
 	/* Coin Mode 2, not supported yet */
-//	IREM_COIN_MODE_2
+/*	IREM_COIN_MODE_2*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( bbmanw )
@@ -358,7 +358,7 @@ INPUT_PORTS_START( bbmanw )
 	/* Coin Mode 1 */
 	IREM_COIN_MODE_1_NEW
 	/* Coin Mode 2, not supported yet */
-//	IREM_COIN_MODE_2
+/*	IREM_COIN_MODE_2*/
 
 	IREM_JOYSTICK_3_4(3)
 	IREM_JOYSTICK_3_4(4)
@@ -424,7 +424,7 @@ INPUT_PORTS_START( quizf1 )
 	/* Coin Mode 1 */
 	IREM_COIN_MODE_1_NEW
 	/* Coin Mode 2, not supported yet */
-//	IREM_COIN_MODE_2
+/*	IREM_COIN_MODE_2*/
 INPUT_PORTS_END
 
 INPUT_PORTS_START( m97 )
@@ -471,7 +471,7 @@ INPUT_PORTS_START( m97 )
 	/* Coin Mode 1 */
 	IREM_COIN_MODE_1_NEW
 	/* Coin Mode 2, not supported yet */
-//	IREM_COIN_MODE_2
+/*	IREM_COIN_MODE_2*/
 INPUT_PORTS_END
 
 /*****************************************************************************/

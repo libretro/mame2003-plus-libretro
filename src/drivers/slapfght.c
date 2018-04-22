@@ -358,7 +358,7 @@ static PORT_WRITE_START( writeport )
 	{ 0x00, 0x00, slapfight_port_00_w },
 	{ 0x01, 0x01, slapfight_port_01_w },
 	{ 0x02, 0x03, slapfight_flipscreen_w },
-//	{ 0x04, 0x04, getstar_port_04_w   },
+/*	{ 0x04, 0x04, getstar_port_04_w   },*/
 	{ 0x06, 0x06, slapfight_port_06_w },
 	{ 0x07, 0x07, slapfight_port_07_w },
 	{ 0x08, 0x08, slapfight_port_08_w },	/* select bank 0 */
@@ -383,7 +383,7 @@ static MEMORY_WRITE_START( perfrman_sound_writemem )
 	{ 0xa090, 0xa090, AY8910_control_port_1_w },
 	{ 0xa092, 0xa092, AY8910_write_port_1_w },
 	{ 0xa0e0, 0xa0e0, getstar_sh_intenable_w }, /* maybe a0f0 also -LE */
-//	{ 0xa0f0, 0xa0f0, MWA_NOP },
+/*	{ 0xa0f0, 0xa0f0, MWA_NOP },*/
 MEMORY_END
 
 static MEMORY_READ_START( sound_readmem )
@@ -447,7 +447,7 @@ INPUT_PORTS_START( perfrman )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
+/*	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )*/
 	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 2C_3C ) )
@@ -506,7 +506,7 @@ INPUT_PORTS_START( tigerh )
 	PORT_START  /* DSW1 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
+/*	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )*/
 	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 2C_3C ) )
@@ -648,7 +648,7 @@ INPUT_PORTS_START( getstar )
 	PORT_START  /* DSW1 */
 	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
+/*	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )*/
 	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 2C_3C ) )

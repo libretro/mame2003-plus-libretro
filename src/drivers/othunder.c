@@ -190,7 +190,7 @@ static READ16_HANDLER( othunder_lightgun_r )
 			return input_port_8_word_r(0,mem_mask);	/* P2Y */
 	}
 
-//logerror("CPU #0 lightgun_r offset %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),offset);
+/*logerror("CPU #0 lightgun_r offset %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),offset);*/
 
 	return 0x0;
 }
@@ -259,9 +259,9 @@ static MEMORY_WRITE16_START( othunder_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x080000, 0x08ffff, MWA16_RAM, &othunder_ram },
 	{ 0x090000, 0x09000f, othunder_output_bypass_w },
-//	{ 0x090006, 0x090007, eeprom_w },
-//	{ 0x090008, 0x090009, MWA16_NOP },   /* coin ctr, lockout ? */
-//	{ 0x09000c, 0x09000d, MWA16_NOP },   /* ?? (keeps writing 0x77) */
+/*	{ 0x090006, 0x090007, eeprom_w },*/
+/*	{ 0x090008, 0x090009, MWA16_NOP },    // coin ctr, lockout ? /*/
+/*	{ 0x09000c, 0x09000d, MWA16_NOP },    // ?? (keeps writing 0x77) /*/
 	{ 0x100000, 0x100007, TC0110PCR_step1_rbswap_word_w },	/* palette */
 	{ 0x200000, 0x20ffff, TC0100SCN_word_0_w },	/* tilemaps */
 	{ 0x220000, 0x22000f, TC0100SCN_ctrl_word_0_w },
@@ -612,10 +612,10 @@ ROM_START( othunder )
 	ROM_LOAD( "b67-07", 0x00000, 0x80000, CRC(4f834357) SHA1(f34705ce64870a8b24ec2639505079cc031fb719) )
 
 	ROM_REGION( 0x10000, REGION_USER2, 0 )
-//	ROM_LOAD( "b67-09", 0x00000, 0xd56, CRC(130fd2ab) )	/* pals ? */
-//	ROM_LOAD( "b67-10", 0x00000, 0xcd5, CRC(312f9e2a) )
-//	ROM_LOAD( "b67-11", 0x00000, 0xada, CRC(f863b864) )
-//	ROM_LOAD( "b67-12", 0x00000, 0xcd5, CRC(653d86bb) )
+/*	ROM_LOAD( "b67-09", 0x00000, 0xd56, CRC(130fd2ab) )	 // pals ? /*/
+/*	ROM_LOAD( "b67-10", 0x00000, 0xcd5, CRC(312f9e2a) )*/
+/*	ROM_LOAD( "b67-11", 0x00000, 0xada, CRC(f863b864) )*/
+/*	ROM_LOAD( "b67-12", 0x00000, 0xcd5, CRC(653d86bb) )*/
 ROM_END
 
 ROM_START( othundu )

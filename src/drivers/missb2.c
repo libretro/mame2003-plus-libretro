@@ -59,7 +59,7 @@ VIDEO_UPDATE( missb2 )
 	if (!bublbobl_video_enable) return;
 
 	/* background map register */
-	//usrintf_showmessage("%02x",(*bg_vram) & 0x1f);
+	/*usrintf_showmessage("%02x",(*bg_vram) & 0x1f);*/
 	for(bg_offs = ((*bg_vram) << 4);bg_offs<(((*bg_vram)<< 4)|0xf);bg_offs++)
 	{
 		drawgfx(bitmap,Machine->gfx[1],
@@ -177,8 +177,8 @@ static MEMORY_READ_START( missb2_readmem )
 	{ 0xf800, 0xf9ff, MRA_RAM },
 	{ 0xfc00, 0xfcff, bublbobl_sharedram2_r },
 
-	{ 0xfe00, 0xfe03, MRA_RAM }, // ?
-	{ 0xfe80, 0xfe83, MRA_RAM }, // ?
+	{ 0xfe00, 0xfe03, MRA_RAM }, /* ?*/
+	{ 0xfe80, 0xfe83, MRA_RAM }, /* ?*/
 
 	{ 0xff00, 0xff00, input_port_0_r },
 	{ 0xff01, 0xff01, input_port_1_r },
@@ -200,22 +200,22 @@ static MEMORY_WRITE_START( missb2_writemem )
 	{ 0xfc00, 0xfcff, bublbobl_sharedram2_w, &bublbobl_sharedram2 },
 	{ 0xfd00, 0xfdff, MWA_RAM }, /* ? */
 
-	{ 0xfe00, 0xfe03, MWA_RAM }, // ?
-	{ 0xfe80, 0xfe83, MWA_RAM }, // ?
+	{ 0xfe00, 0xfe03, MWA_RAM }, /* ?*/
+	{ 0xfe80, 0xfe83, MWA_RAM }, /* ?*/
 
-	{ 0xff94, 0xff94, MWA_NOP }, // ?
+	{ 0xff94, 0xff94, MWA_NOP }, /* ?*/
 MEMORY_END
 
-//READ_HANDLER ( missb_random )
-//{
-//	return rand();
-//}
+/*READ_HANDLER ( missb_random )*/
+/*{*/
+/*	return rand();*/
+/*}*/
 
 static MEMORY_READ_START( missb2_readmem2 )
 	{ 0x0000, 0x7fff, MRA_ROM },
 
 	{ 0x9000, 0xafff, MRA_BANK2 }, /* ROM data for the background palette ram*/
-	{ 0xb000, 0xb1ff, MRA_ROM }, // ? banked ?
+	{ 0xb000, 0xb1ff, MRA_ROM }, /* ? banked ?*/
 
 	{ 0xc800, 0xcfff, MRA_RAM }, /* main? */
 	{ 0xe000, 0xf7ff, bublbobl_sharedram1_r },
@@ -395,7 +395,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 	{ -1 }	/* end of array */
 };
 
-// ?? not sure for this
+/* ?? not sure for this*/
 #define MAIN_XTAL 24000000
 
 /* handler called by the 2203 emulator when the internal timers cause an IRQ */
@@ -464,8 +464,8 @@ static MACHINE_DRIVER_START( missb2 )
 	MDRV_VIDEO_UPDATE(missb2)
 
 	/* sound hardware */
-	MDRV_SOUND_ADD(YM2203, ym2203_interface) // ?
-	MDRV_SOUND_ADD(YM3526, ym3526_interface) // ?
+	MDRV_SOUND_ADD(YM2203, ym2203_interface) /* ?*/
+	MDRV_SOUND_ADD(YM3526, ym3526_interface) /* ?*/
 	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
 MACHINE_DRIVER_END
 

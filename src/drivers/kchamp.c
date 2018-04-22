@@ -204,8 +204,8 @@ static READ_HANDLER( sound_reset_r ) {
 static WRITE_HANDLER( kc_sound_control_w ) {
 	if ( offset == 0 )
 		sound_nmi_enable = ( ( data >> 7 ) & 1 );
-//	else
-//		DAC_set_volume(0,( data == 1 ) ? 255 : 0,0);
+/*	else*/
+/*		DAC_set_volume(0,( data == 1 ) ? 255 : 0,0);*/
 }
 
 static PORT_READ_START( kc_readport )
@@ -416,7 +416,7 @@ static struct AY8910interface ay8910_interface =
 {
 	2, /* 2 chips */
 	1500000,			/* 12 MHz / 8 = 1.5 MHz */
-	{ 30, 30 },			// Modified by T.Nogi 1999/11/08
+	{ 30, 30 },			/* Modified by T.Nogi 1999/11/08*/
 	{ 0 },
 	{ 0 },
 	{ 0 },

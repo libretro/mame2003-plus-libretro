@@ -237,8 +237,8 @@ static struct GfxLayout layout_16x16x4 =
 
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4a, 0x0000, 0x40 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x4,  0x0000, 0x40 }, // [1] Tiles
+	{ REGION_GFX1, 0, &layout_16x16x4a, 0x0000, 0x40 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x4,  0x0000, 0x40 }, /* [1] Tiles*/
 	{ -1 }
 };
 
@@ -288,9 +288,9 @@ static void get_fg_tile_info(int tile_index)
 	  3		----------------  unused
 
 */
-//static int scrol=0;
-//static int scrol2=0;
-//static int scrol3=0;
+/*static int scrol=0;*/
+/*static int scrol2=0;*/
+/*static int scrol3=0;*/
 
 /* todo fix x co-ord */
 static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
@@ -431,7 +431,7 @@ static MACHINE_DRIVER_START( crospang )
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(64*8, 64*8)
 	MDRV_VISIBLE_AREA(0, 40*8-1, 0*8, 30*8-1)
-//	MDRV_VISIBLE_AREA(0,64*8-1, 0, 64*8-1)
+/*	MDRV_VISIBLE_AREA(0,64*8-1, 0, 64*8-1)*/
 
 
 	MDRV_PALETTE_LENGTH(0x800)
@@ -454,7 +454,7 @@ ROM_START( crospang )
 	ROM_LOAD( "s1.bin", 0x00000, 0x10000, CRC(d61a224c) SHA1(5cd1b2d136ad58ab550c7ba135558d6c8a4cd8f6) )/* rom s1 */
 
 	ROM_REGION( 0x20000, REGION_SOUND1, 0 ) /* samples? */
-	ROM_LOAD( "s2.bin", 0x00000, 0x20000, CRC(9f9ecd22) SHA1(631ffe14018ba39658c435b8ecb23b19a14569ee) ) /* rom s2 */  // sample rom contains oksan?
+	ROM_LOAD( "s2.bin", 0x00000, 0x20000, CRC(9f9ecd22) SHA1(631ffe14018ba39658c435b8ecb23b19a14569ee) ) /* rom s2 */  /* sample rom contains oksan?*/
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 ) /* sprites */
 	ROM_LOAD( "rom6.bin", 0x000000, 0x80000, CRC(9c633082) SHA1(18b8591b695ee429c9c9855d8cbba6249a4bd809) )

@@ -111,7 +111,7 @@ WRITE_HANDLER( tankbatt_interrupt_enable_w )
 	}
 	/* hack - turn off the engine noise if the normal game nmi's are disabled */
 	if (data) sample_stop (2);
-//	interrupt_enable_w (offset, !data);
+/*	interrupt_enable_w (offset, !data);*/
 }
 
 WRITE_HANDLER( tankbatt_demo_interrupt_enable_w )
@@ -122,7 +122,7 @@ WRITE_HANDLER( tankbatt_demo_interrupt_enable_w )
 		cpu_set_irq_line(0, 0, CLEAR_LINE);
 		cpu_set_nmi_line(0, CLEAR_LINE);
 	}
-//	interrupt_enable_w (offset, data);
+/*	interrupt_enable_w (offset, data);*/
 }
 
 WRITE_HANDLER( tankbatt_sh_expl_w )

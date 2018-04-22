@@ -46,7 +46,7 @@ static READ_HANDLER( keyboard_r )
 {
 	int res = 0x3f,i;
 
-//	logerror("%04x: keyboard_r\n",activecpu_get_pc());
+/*	logerror("%04x: keyboard_r\n",activecpu_get_pc());*/
 
 	for (i = 0;i < 12;i++)
 	{
@@ -70,7 +70,7 @@ static READ_HANDLER( keyboard_r )
 
 static WRITE_HANDLER( keyboard_select_w )
 {
-//	logerror("%04x: keyboard_select %d = %02x\n",activecpu_get_pc(),offset,data);
+/*	logerror("%04x: keyboard_select %d = %02x\n",activecpu_get_pc(),offset,data);*/
 
 	switch (offset)
 	{
@@ -106,16 +106,16 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xcfff, MWA_RAM },
-	{ 0xd000, 0xdfff, MWA_RAM, &nvram, &nvram_size },	// cleared and initialized on startup if bit 6 if port 00 is 0
-	{ 0xe000, 0xe01f, MWA_RAM, &spriteram },	// shared with tilemap ram
-	{ 0xe800, 0xe81f, MWA_RAM, &spriteram_2 },	// shared with tilemap ram
-	{ 0xf000, 0xf01f, MWA_RAM, &spriteram_3 },	// shared with tilemap ram
+	{ 0xd000, 0xdfff, MWA_RAM, &nvram, &nvram_size },	/* cleared and initialized on startup if bit 6 if port 00 is 0*/
+	{ 0xe000, 0xe01f, MWA_RAM, &spriteram },	/* shared with tilemap ram*/
+	{ 0xe800, 0xe81f, MWA_RAM, &spriteram_2 },	/* shared with tilemap ram*/
+	{ 0xf000, 0xf01f, MWA_RAM, &spriteram_3 },	/* shared with tilemap ram*/
 	{ 0xe000, 0xf7ff, mjkjidai_videoram_w, &mjkjidai_videoram },
 MEMORY_END
 
 static PORT_READ_START( readport )
 	{ 0x00, 0x00, keyboard_r },
-	{ 0x01, 0x01, IORP_NOP },	// ???
+	{ 0x01, 0x01, IORP_NOP },	/* ???*/
 	{ 0x02, 0x02, input_port_2_r },
 	{ 0x11, 0x11, input_port_0_r },
 	{ 0x12, 0x12, input_port_1_r },
@@ -123,7 +123,7 @@ MEMORY_END
 
 static PORT_WRITE_START( writeport )
 	{ 0x01, 0x02, keyboard_select_w },
-	{ 0x10, 0x10, mjkjidai_ctrl_w },	// rom bank, coin counter, flip screen etc
+	{ 0x10, 0x10, mjkjidai_ctrl_w },	/* rom bank, coin counter, flip screen etc*/
 	{ 0x20, 0x20, SN76496_0_w },
 	{ 0x30, 0x30, SN76496_1_w },
 	{ 0x40, 0x40, adpcm_w },
@@ -187,7 +187,7 @@ INPUT_PORTS_START( mjkjidai )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE )	// service mode
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE )	/* service mode*/
 	PORT_DIPNAME( 0x20, 0x20, "Statistics" )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -195,7 +195,7 @@ INPUT_PORTS_START( mjkjidai )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
 
 	PORT_START
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_TILT )	// reinitialize NVRAM and reset the game
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_TILT )	/* reinitialize NVRAM and reset the game*/
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 )
 
 	/* player 2 inputs (same as player 1) */

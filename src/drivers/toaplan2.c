@@ -519,8 +519,8 @@ static void toaplan2_irq(int irq_line)
 #if T2_VIDEO_CONTROL
 	int vpos = cpu_getscanline();
 	if (vpos == 240) cpu_set_irq_line(0, irq_line, HOLD_LINE);
-	vblank_irq = 0; //Remove
-//	logerror("IRQ: scanline=%04x iloop=%04x beampos=%04x\n",vpos,cpu_getiloops(),cpu_gethorzbeampos());
+	vblank_irq = 0; /*Remove*/
+/*	logerror("IRQ: scanline=%04x iloop=%04x beampos=%04x\n",vpos,cpu_getiloops(),cpu_gethorzbeampos());*/
 #else
 	if (cpu_getiloops() == 0) current_scanline = 255;
 
@@ -567,10 +567,10 @@ static READ16_HANDLER( video_count_r )
 	else
 		video_status |= 0xff;
 
-	current_scanline = prev_scanline = vpos; //Remove
+	current_scanline = prev_scanline = vpos; /*Remove*/
 	logerror("VC: scanline=%04x iloop=%04x beampos=%04x VBL=%04x\n",vpos,cpu_getiloops(),hpos,cpu_getvblank());
 #else
-//	logerror("Was VS=%04x  Vbl=%02x  VS=%04x - ",video_status,vblank_irq,prev_scanline );
+/*	logerror("Was VS=%04x  Vbl=%02x  VS=%04x - ",video_status,vblank_irq,prev_scanline );*/
 
 	video_status = 0xff00;						/* Set signals inactive */
 	if ((current_scanline & 0x100) == 0) {
@@ -590,7 +590,7 @@ static READ16_HANDLER( video_count_r )
 	}
 	prev_scanline = current_scanline;
 
-//	logerror("Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),cpu_gethorzbeampos() );
+/*	logerror("Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),cpu_gethorzbeampos() );*/
 #endif
 
 	return video_status;
@@ -775,21 +775,21 @@ static WRITE16_HANDLER( ghox_mcu_w )
 
 		if (data == 0xd3)
 		{
-		toaplan2_shared_ram16[0x56 / 2] = 0x003a;	//	move.w  d1,d5
+		toaplan2_shared_ram16[0x56 / 2] = 0x003a;	/*	move.w  d1,d5*/
 		toaplan2_shared_ram16[0x58 / 2] = 0x0001;
-		toaplan2_shared_ram16[0x5a / 2] = 0x0008;	//	bclr.b  #0,d5
+		toaplan2_shared_ram16[0x5a / 2] = 0x0008;	/*	bclr.b  #0,d5*/
 		toaplan2_shared_ram16[0x5c / 2] = 0x0085;
 		toaplan2_shared_ram16[0x5e / 2] = 0x0000;
 		toaplan2_shared_ram16[0x60 / 2] = 0x0000;
-		toaplan2_shared_ram16[0x62 / 2] = 0x00cb;	//	muls.w  #3,d5
+		toaplan2_shared_ram16[0x62 / 2] = 0x00cb;	/*	muls.w  #3,d5*/
 		toaplan2_shared_ram16[0x64 / 2] = 0x00fc;
 		toaplan2_shared_ram16[0x66 / 2] = 0x0000;
 		toaplan2_shared_ram16[0x68 / 2] = 0x0003;
-		toaplan2_shared_ram16[0x6a / 2] = 0x0090;	//	sub.w   d5,d0
+		toaplan2_shared_ram16[0x6a / 2] = 0x0090;	/*	sub.w   d5,d0*/
 		toaplan2_shared_ram16[0x6c / 2] = 0x0045;
-		toaplan2_shared_ram16[0x6e / 2] = 0x00e5;	//	lsl.b   #2,d1
+		toaplan2_shared_ram16[0x6e / 2] = 0x00e5;	/*	lsl.b   #2,d1*/
 		toaplan2_shared_ram16[0x70 / 2] = 0x0009;
-		toaplan2_shared_ram16[0x72 / 2] = 0x004e;	//	rts
+		toaplan2_shared_ram16[0x72 / 2] = 0x004e;	/*	rts*/
 		toaplan2_shared_ram16[0x74 / 2] = 0x0075;
 		}
 	}
@@ -1153,15 +1153,15 @@ struct EEPROM_interface eeprom_interface_93C66 =
 	/* Pin 6 of the 93C66 is connected to Gnd!
 	   So it's configured for 512 bytes */
 
-	9,			// address bits
-	8,			// data bits
-	"*110",		// read			110 aaaaaaaaa
-	"*101",		// write		101 aaaaaaaaa dddddddd
-	"*111",		// erase		111 aaaaaaaaa
-	"*10000xxxxxxx",// lock			100x 00xxxx
-	"*10011xxxxxxx",// unlock		100x 11xxxx
-//	"*10001xxxx",	// write all	1 00 01xxxx dddddddd
-//	"*10010xxxx"	// erase all	1 00 10xxxx
+	9,			/* address bits*/
+	8,			/* data bits*/
+	"*110",		/* read			110 aaaaaaaaa*/
+	"*101",		/* write		101 aaaaaaaaa dddddddd*/
+	"*111",		/* erase		111 aaaaaaaaa*/
+	"*10000xxxxxxx",/* lock			100x 00xxxx*/
+	"*10011xxxxxxx",/* unlock		100x 11xxxx*/
+/*	"*10001xxxx",	*/ /* write all	1 00 01xxxx dddddddd*/
+/*	"*10010xxxx"	*/ /* erase all	1 00 10xxxx*/
 };
 
 
@@ -1206,13 +1206,13 @@ static WRITE16_HANDLER( bbakraid_nvram_w )
 
 	if ( ACCESSING_LSB )
 	{
-		// chip select
+		/* chip select*/
 		EEPROM_set_cs_line((data & 0x01) ? CLEAR_LINE : ASSERT_LINE );
 
-		// latch the bit
+		/* latch the bit*/
 		EEPROM_write_bit( (data & 0x04) >> 2 );
 
-		// clock line asserted: write latch or select next bit to read
+		/* clock line asserted: write latch or select next bit to read*/
 		EEPROM_set_clock_line((data & 0x08) ? ASSERT_LINE : CLEAR_LINE );
 	}
 	raizing_Z80_busreq = data & 0x10;	/* see bbakraid_nvram_r above */
@@ -1222,12 +1222,12 @@ static WRITE16_HANDLER( bbakraid_nvram_w )
 /****** Battle Bakraid 68K handlers ******/
 static READ16_HANDLER ( raizing_sndcomms_r )
 {
-//	logerror("68K (PC:%06x) reading %04x from $50001%01x\n",activecpu_get_pc(),(raizing_cpu_reply[offset] & 0xff),(offset*2));
+/*	logerror("68K (PC:%06x) reading %04x from $50001%01x\n",activecpu_get_pc(),(raizing_cpu_reply[offset] & 0xff),(offset*2));*/
 	return (raizing_cpu_reply[offset] & 0xff);
 }
 static WRITE16_HANDLER ( raizing_sndcomms_w )
 {
-//	logerror("68K (PC:%06x) writing %04x to $50001%01x\n",activecpu_get_pc(),data,((offset*2)+4));
+/*	logerror("68K (PC:%06x) writing %04x to $50001%01x\n",activecpu_get_pc(),data,((offset*2)+4));*/
 	COMBINE_DATA(&raizing_cpu_comm16[offset]);
 
 	cpu_set_nmi_line(1, ASSERT_LINE);
@@ -1251,26 +1251,26 @@ static READ_HANDLER ( raizing_request_r )
 }
 static WRITE_HANDLER ( raizing_command_ack_w )
 {
-//	logerror("Z80 (PC:%04x) writing %02x to $40\n",activecpu_get_pc(),data);
+/*	logerror("Z80 (PC:%04x) writing %02x to $40\n",activecpu_get_pc(),data);*/
 	raizing_cpu_reply[0] = data;
 }
 static WRITE_HANDLER ( raizing_request_ack_w )
 {
-//	logerror("Z80 (PC:%04x) writing %02x to $42\n",activecpu_get_pc(),data);
+/*	logerror("Z80 (PC:%04x) writing %02x to $42\n",activecpu_get_pc(),data);*/
 	raizing_cpu_reply[1] = data;
 }
 
 
 static WRITE_HANDLER ( raizing_clear_nmi_w )
 {
-//	logerror("Clear NMI on the Z80 (Z80 PC:%06x writing %04x)\n",activecpu_get_pc(),data);
+/*	logerror("Clear NMI on the Z80 (Z80 PC:%06x writing %04x)\n",activecpu_get_pc(),data);*/
 	cpu_set_nmi_line(1, CLEAR_LINE);
 	cpu_yield();
 }
 
 static WRITE16_HANDLER ( bbakraid_trigger_z80_irq )
 {
-//	logerror("Triggering IRQ on the Z80 (PC:%06x)\n",activecpu_get_pc());
+/*	logerror("Triggering IRQ on the Z80 (PC:%06x)\n",activecpu_get_pc());*/
 	cpu_set_irq_line(1, 0, HOLD_LINE);
 	cpu_yield();
 }
@@ -1327,8 +1327,8 @@ static MEMORY_READ16_START( ghox_readmem )
 	{ 0x180006, 0x180007, input_port_4_word_r },	/* Dip Switch A */
 	{ 0x180008, 0x180009, input_port_5_word_r },	/* Dip Switch B */
 	{ 0x180010, 0x180011, input_port_3_word_r },	/* Coin/System inputs */
-//	{ 0x18000c, 0x18000d, input_port_1_word_r },	/* Player 1 controls (real) */
-//	{ 0x18000e, 0x18000f, input_port_2_word_r },	/* Player 2 controls (real) */
+/*	{ 0x18000c, 0x18000d, input_port_1_word_r },	 // Player 1 controls (real) /*/
+/*	{ 0x18000e, 0x18000f, input_port_2_word_r },	 // Player 2 controls (real) /*/
 	{ 0x18000c, 0x18000d, ghox_p1_v_analog_r },		/* Player 1 controls */
 	{ 0x18000e, 0x18000f, ghox_p2_v_analog_r },		/* Player 2 controls */
 	{ 0x180500, 0x180fff, ghox_shared_ram_r },
@@ -1377,7 +1377,7 @@ MEMORY_END
 static MEMORY_WRITE16_START( dogyuun_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x100000, 0x103fff, MWA16_RAM },
-	{ 0x200008, 0x200009, OKIM6295_data_0_lsb_w },	/// Really ?
+	{ 0x200008, 0x200009, OKIM6295_data_0_lsb_w },	/*/ Really ?*/
 	{ 0x20001c, 0x20001d, toaplan2_coin_word_w },
 #if Zx80
 	{ 0x21e000, 0x21fbff, shared_ram_w, &toaplan2_shared_ram16 },	/* $21F000 */
@@ -1420,7 +1420,7 @@ static MEMORY_WRITE16_START( kbash_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x100000, 0x103fff, MWA16_RAM },
 	{ 0x200000, 0x200003, kbash_sub_cpu_w },		/* sound number to play */
-//	{ 0x200002, 0x200003, kbash_sub_cpu_w2 },		/* ??? */
+/*	{ 0x200002, 0x200003, kbash_sub_cpu_w2 },		 // ??? /*/
 	{ 0x20801c, 0x20801d, toaplan2_coin_word_w },
 	{ 0x300000, 0x300001, toaplan2_0_voffs_w },
 	{ 0x300004, 0x300007, toaplan2_0_videoram16_w },
@@ -1557,7 +1557,7 @@ static MEMORY_WRITE16_START( pipibibi_writemem )
 	{ 0x083800, 0x087fff, MWA16_RAM },				/* SpriteRAM (unused) */
 	{ 0x0c0000, 0x0c0fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
 	{ 0x120000, 0x120fff, MWA16_RAM },				/* Copy of SpriteRAM ? */
-//	{ 0x13f000, 0x13f001, MWA16_NOP },				/* ??? */
+/*	{ 0x13f000, 0x13f001, MWA16_NOP },				 // ??? /*/
 	{ 0x180000, 0x182fff, pipibibi_videoram16_w },	/* TileRAM */
 	{ 0x188000, 0x18800f, pipibibi_scroll_w },
 	{ 0x190010, 0x190011, pipibibi_z80_task_w },	/* Z80 task to perform */
@@ -1578,11 +1578,11 @@ static MEMORY_READ16_START( fixeight_readmem )
 #else
 	{ 0x28e000, 0x28efff, shared_ram_r },
 	{ 0x28f000, 0x28f001, Zx80_status_port_r },		/* Zx80 status port */
-//	{ 0x28f002, 0x28f003, MRA16_RAM },				/* part of shared ram */
-//	{ 0x28f004, 0x28f005, input_port_5_word_r },	/* Dip Switch A - Wrong !!! */
-//	{ 0x28f006, 0x28f007, input_port_6_word_r },	/* Dip Switch B - Wrong !!! */
-//	{ 0x28f008, 0x28f009, input_port_7_word_r },	/* Territory Jumper block - Wrong !!! */
-//	{ 0x28f002, 0x28fbff, MRA16_RAM },				/* part of shared ram */
+/*	{ 0x28f002, 0x28f003, MRA16_RAM },				 // part of shared ram /*/
+/*	{ 0x28f004, 0x28f005, input_port_5_word_r },	 // Dip Switch A - Wrong !!! /*/
+/*	{ 0x28f006, 0x28f007, input_port_6_word_r },	 // Dip Switch B - Wrong !!! /*/
+/*	{ 0x28f008, 0x28f009, input_port_7_word_r },	 // Territory Jumper block - Wrong !!! /*/
+/*	{ 0x28f002, 0x28fbff, MRA16_RAM },				 // part of shared ram /*/
 	{ 0x28fc00, 0x28ffff, Zx80_sharedram_r },		/* 16-bit on 68000 side, 8-bit on Zx80 side */
 #endif
 	{ 0x300004, 0x300007, toaplan2_0_videoram16_r },
@@ -1606,9 +1606,9 @@ static MEMORY_WRITE16_START( fixeight_writemem )
 #else
 	{ 0x28e000, 0x28efff, shared_ram_w, &toaplan2_shared_ram16 },
 	{ 0x28f000, 0x28f001, Zx80_command_port_w },	/* Zx80 command port */
-//	{ 0x28f002, 0x28f003, MWA16_RAM },				/* part of shared ram */
-//	{ 0x28f004, 0x28f009, MWA16_NOP },				/* part of shared ram */
-//	{ 0x28f002, 0x28fbff, MWA16_RAM },				/* part of shared ram */
+/*	{ 0x28f002, 0x28f003, MWA16_RAM },				 // part of shared ram /*/
+/*	{ 0x28f004, 0x28f009, MWA16_NOP },				 // part of shared ram /*/
+/*	{ 0x28f002, 0x28fbff, MWA16_RAM },				 // part of shared ram /*/
 	{ 0x28fc00, 0x28ffff, Zx80_sharedram_w, &Zx80_shared_ram },	/* 16-bit on 68000 side, 8-bit on Zx80 side */
 #endif
 	{ 0x300000, 0x300001, toaplan2_0_voffs_w },		/* VideoRAM selector/offset */
@@ -1660,7 +1660,7 @@ MEMORY_END
 static MEMORY_READ16_START( vfive_readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 	{ 0x100000, 0x103fff, MRA16_RAM },
-//	{ 0x200000, 0x20ffff, MRA16_ROM },				/* Sound ROM is here ??? */
+/*	{ 0x200000, 0x20ffff, MRA16_ROM },				 // Sound ROM is here ??? /*/
 	{ 0x200010, 0x200011, input_port_1_word_r },	/* Player 1 controls */
 	{ 0x200014, 0x200015, input_port_2_word_r },	/* Player 2 controls */
 	{ 0x200018, 0x200019, input_port_3_word_r },	/* Coin/System inputs */
@@ -1684,7 +1684,7 @@ MEMORY_END
 static MEMORY_WRITE16_START( vfive_writemem )
 	{ 0x000000, 0x07ffff, MWA16_ROM },
 	{ 0x100000, 0x103fff, MWA16_RAM },
-//	{ 0x200000, 0x20ffff, MWA16_ROM },				/* Sound ROM is here ??? */
+/*	{ 0x200000, 0x20ffff, MWA16_ROM },				 // Sound ROM is here ??? /*/
 	{ 0x20001c, 0x20001d, toaplan2_coin_word_w },	/* Coin count/lock */
 #if Zx80
 	{ 0x21e000, 0x21fbff, shared_ram_w, &toaplan2_shared_ram16 },	/* $21F000 */
@@ -1853,7 +1853,7 @@ static MEMORY_WRITE16_START( shippumd_writemem )
 	{ 0x000000, 0x0fffff, MWA16_ROM },
 	{ 0x100000, 0x10ffff, MWA16_RAM },
 	{ 0x218000, 0x21bfff, raizing_shared_ram_w },
-//	{ 0x21c008, 0x21c009, MWA16_NOP },				/* ??? */
+/*	{ 0x21c008, 0x21c009, MWA16_NOP },				 // ??? /*/
 	{ 0x21c01c, 0x21c01d, toaplan2_coin_word_w },
 	{ 0x300000, 0x300001, toaplan2_0_voffs_w },
 	{ 0x300004, 0x300007, toaplan2_0_videoram16_w },
@@ -2112,7 +2112,7 @@ MEMORY_END
 #if Zx80
 static MEMORY_READ_START( Zx80_readmem )
 	{ 0x00000, 0x03fff, MRA_ROM },
-//	{ 0x00000, 0x007ff, MRA_RAM },			/* External shared RAM (Banked) */
+/*	{ 0x00000, 0x007ff, MRA_RAM },			 // External shared RAM (Banked) /*/
 	{ 0x04000, 0x04000, YM2151_status_port_0_r },
 	{ 0x04002, 0x04002, OKIM6295_status_0_r },
 	{ 0x04008, 0x04008, input_port_1_r },
@@ -2124,7 +2124,7 @@ MEMORY_END
 
 static MEMORY_WRITE_START( Zx80_writemem )
 	{ 0x00000, 0x03fff, MWA_ROM, },
-//	{ 0x00000, 0x007ff, MWA_RAM, },			/* External shared RAM (Banked) */
+/*	{ 0x00000, 0x007ff, MWA_RAM, },			 // External shared RAM (Banked) /*/
 	{ 0x04000, 0x04000, YM2151_register_port_0_w },
 	{ 0x04001, 0x04001, YM2151_data_port_0_w },
 	{ 0x04002, 0x04002, OKIM6295_data_0_w },
@@ -2291,7 +2291,7 @@ INPUT_PORTS_START( tekipaki )
 
 	DSWA_8
 	EUROPEAN_COINAGE_8
-//	NONEUROPEAN_COINAGE_8
+/*	NONEUROPEAN_COINAGE_8*/
 
 	PORT_START		/* (5) DSWB */
 	DIFFICULTY_8
@@ -2341,7 +2341,7 @@ INPUT_PORTS_START( ghox )
 
 	DSWA_8
 	EUROPEAN_COINAGE_8
-//	NONEUROPEAN_COINAGE_8
+/*	NONEUROPEAN_COINAGE_8*/
 
 	PORT_START		/* (5) DSWB */
 	DIFFICULTY_8
@@ -2413,7 +2413,7 @@ INPUT_PORTS_START( dogyuun )
 	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
 	EUROPEAN_COINAGE_16
-//	NONEUROPEAN_COINAGE_16
+/*	NONEUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -2477,7 +2477,7 @@ INPUT_PORTS_START( kbash )
 	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
 	EUROPEAN_COINAGE_16
-//	NONEUROPEAN_COINAGE_16
+/*	NONEUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -2538,7 +2538,7 @@ INPUT_PORTS_START( kbash2 )
 	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
 	EUROPEAN_COINAGE_16
-//	NONEUROPEAN_COINAGE_16
+/*	NONEUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -2597,7 +2597,7 @@ INPUT_PORTS_START( truxton2 )
 	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
 	EUROPEAN_COINAGE_16
-//	NONEUROPEAN_COINAGE_16
+/*	NONEUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -2644,7 +2644,7 @@ INPUT_PORTS_START( pipibibs )
 
 	DSWA_8
 	EUROPEAN_COINAGE_8
-//	NONEUROPEAN_COINAGE_8
+/*	NONEUROPEAN_COINAGE_8*/
 
 	PORT_START		/* (5) DSWB */
 	DIFFICULTY_8
@@ -2689,7 +2689,7 @@ INPUT_PORTS_START( whoopee )
 	TOAPLAN2_SYSTEM_INPUTS
 
 	DSWA_8
-//	EUROPEAN_COINAGE_8
+/*	EUROPEAN_COINAGE_8*/
 	NONEUROPEAN_COINAGE_8
 
 	PORT_START		/* (5) DSWB */
@@ -2725,8 +2725,8 @@ INPUT_PORTS_END
 
 INPUT_PORTS_START( pipibibi )
 	PORT_START		/* (0) VBlank */
-//	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_VBLANK )		/* This video HW */
-//	PORT_BIT( 0xfffe, IP_ACTIVE_HIGH, IPT_UNKNOWN )		/* doesnt wait for VBlank */
+/*	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_VBLANK )		 // This video HW /*/
+/*	PORT_BIT( 0xfffe, IP_ACTIVE_HIGH, IPT_UNKNOWN )		 // doesnt wait for VBlank /*/
 
 	TOAPLAN2_PLAYER_INPUT( IPF_PLAYER1, IPT_UNKNOWN, IPT_UNKNOWN )
 
@@ -2739,14 +2739,14 @@ INPUT_PORTS_START( pipibibi )
 	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x01, DEF_STR( On ) )
 	/* This video HW doesn't support flip screen */
-//	PORT_DIPNAME( 0x02,	0x00, DEF_STR( Flip_Screen ) )
-//	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(	0x02, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x02,	0x00, DEF_STR( Flip_Screen ) )*/
+/*	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(	0x02, DEF_STR( On ) )*/
 	PORT_SERVICE( 0x04,	IP_ACTIVE_HIGH )		/* Service Mode */
 	PORT_DIPNAME( 0x08,	0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(	0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-//	EUROPEAN_COINAGE_8
+/*	EUROPEAN_COINAGE_8*/
 	NONEUROPEAN_COINAGE_8
 
 	PORT_START		/* (5) DSWB */
@@ -2773,7 +2773,7 @@ INPUT_PORTS_START( pipibibi )
 	PORT_DIPSETTING(	0x04, "USA" )
 	PORT_DIPSETTING(	0x01, "Hong Kong (Honest Trading Co.)" )
 	PORT_DIPSETTING(	0x06, "Spain & Portugal (APM Electronics SA)" )
-//	PORT_DIPSETTING(	0x03, "World" )
+/*	PORT_DIPSETTING(	0x03, "World" )*/
 	PORT_DIPNAME( 0x08,	0x00, "Nudity" )
 	PORT_DIPSETTING(	0x08, "Low" )
 	PORT_DIPSETTING(	0x00, "High, but censored" )
@@ -2825,7 +2825,7 @@ INPUT_PORTS_START( fixeight )
 	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
 	EUROPEAN_COINAGE_16
-//	NONEUROPEAN_COINAGE_16
+/*	NONEUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -2897,7 +2897,7 @@ PORT_START		/* (0) VBlank */
 	PORT_DIPNAME( 0x0008,	0x0000, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
-//	EUROPEAN_COINAGE_16
+/*	EUROPEAN_COINAGE_16*/
 	NONEUROPEAN_COINAGE_16
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
@@ -2907,7 +2907,7 @@ PORT_START		/* (0) VBlank */
 	PORT_DIPSETTING(		0x0004, "300k and every 300k" )
 	PORT_DIPSETTING(		0x0008, "300k only" )
 	PORT_DIPSETTING(		0x0000, "500k and every 500k" )
-//	PORT_DIPSETTING(		0x000c, DEF_STR( None ) )
+/*	PORT_DIPSETTING(		0x000c, DEF_STR( None ) )*/
 	LIVES_16
 	PORT_DIPNAME( 0x0040,   0x0000, "Invulnerability" )
 	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
@@ -2940,7 +2940,7 @@ INPUT_PORTS_START( grindstm )
 	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
 	EUROPEAN_COINAGE_16
-//	NONEUROPEAN_COINAGE_16
+/*	NONEUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -3049,7 +3049,7 @@ INPUT_PORTS_START( batsugun )
 	PORT_DIPSETTING(		0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
 	EUROPEAN_COINAGE_16
-//	NONEUROPEAN_COINAGE_16
+/*	NONEUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -3072,7 +3072,7 @@ INPUT_PORTS_START( batsugun )
 	PORT_DIPSETTING(		0x0009, "Europe" )
 	PORT_DIPSETTING(		0x000b, "USA" )
 	PORT_DIPSETTING(		0x000e, "Japan" )
-//	PORT_DIPSETTING(		0x000f, "Japan" )
+/*	PORT_DIPSETTING(		0x000f, "Japan" )*/
 	PORT_DIPSETTING(		0x0001, "Korea" )
 	PORT_DIPSETTING(		0x0003, "Hong Kong" )
 	PORT_DIPSETTING(		0x0005, "Taiwan" )
@@ -3080,7 +3080,7 @@ INPUT_PORTS_START( batsugun )
 	PORT_DIPSETTING(		0x0008, "Europe (Taito Corp License)" )
 	PORT_DIPSETTING(		0x000a, "USA (Taito Corp License)" )
 	PORT_DIPSETTING(		0x000c, "Japan (Taito Corp License)" )
-//	PORT_DIPSETTING(		0x000d, "Japan (Taito Corp License)" )
+/*	PORT_DIPSETTING(		0x000d, "Japan (Taito Corp License)" )*/
 	PORT_DIPSETTING(		0x0000, "Korea (Unite Trading License)" )
 	PORT_DIPSETTING(		0x0002, "Hong Kong (Taito Corp License)" )
 	PORT_DIPSETTING(		0x0004, "Taiwan (Taito Corp License)" )
@@ -3117,7 +3117,7 @@ INPUT_PORTS_START( snowbro2 )
 	NONEUROPEAN_COINAGE_16
 	/*  The following are listed in service mode for European territory,
 		but are not actually used in game play. */
-//	EUROPEAN_COINAGE_16
+/*	EUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (7) DSWB */
@@ -3283,7 +3283,7 @@ INPUT_PORTS_START( kingdmgp )
 	NONEUROPEAN_COINAGE_16
 	/*  When Territory is set to Europe, the Coin A and B have
 		different values */
-//	EUROPEAN_COINAGE_16
+/*	EUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -3307,7 +3307,7 @@ INPUT_PORTS_START( kingdmgp )
 	PORT_DIPNAME( 0x000e,	0x0004, "Territory" )
 	PORT_DIPSETTING(		0x0004, "Europe" )
 	PORT_DIPSETTING(		0x0002, "USA" )
-//	PORT_DIPSETTING(		0x0000, "Japan" )
+/*	PORT_DIPSETTING(		0x0000, "Japan" )*/
 	PORT_DIPSETTING(		0x0006, "South East Asia" )
 	PORT_DIPSETTING(		0x0008, "China" )
 	PORT_DIPSETTING(		0x000a, "Korea" )
@@ -3341,7 +3341,7 @@ INPUT_PORTS_START( shippumd )
 	NONEUROPEAN_COINAGE_16
 	/*  When Territory is set to Europe, the Coin A and B have
 		different values */
-//	EUROPEAN_COINAGE_16
+/*	EUROPEAN_COINAGE_16*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -3398,18 +3398,18 @@ INPUT_PORTS_START( battleg )
 	PORT_DIPSETTING(		0x0020, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(		0x0040, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(		0x0060, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )*/
 	/*  When Coin_A is set to Free_Play, Coin_A becomes Coin_A and Coin_B,
 		and Coin_B becomes the following dips */
-//	PORT_DIPNAME( 0x0020,	0x0000, "Joystick Mode" )
-//	PORT_DIPSETTING(		0x0000, "90 degrees ACW" )
-//	PORT_DIPSETTING(		0x0020, "Normal" )
-//	PORT_DIPNAME( 0x0040,	0x0000, "Effect" )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0040, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x0080,	0x0000, "Music" )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0080, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x0020,	0x0000, "Joystick Mode" )*/
+/*	PORT_DIPSETTING(		0x0000, "90 degrees ACW" )*/
+/*	PORT_DIPSETTING(		0x0020, "Normal" )*/
+/*	PORT_DIPNAME( 0x0040,	0x0000, "Effect" )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0040, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x0080,	0x0000, "Music" )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0080, DEF_STR( On ) )*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -3428,11 +3428,11 @@ INPUT_PORTS_START( battleg )
 	PORT_DIPSETTING(		0x0040, "5" )
 	PORT_DIPSETTING(		0x0050, "6" )
 	PORT_BITX( 0,			0x0060, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", 0, 0 )
-//	PORT_BITX( 0,			0x0070, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Invulnerability", 0, 0 )
+/*	PORT_BITX( 0,			0x0070, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Invulnerability", 0, 0 )*/
 	PORT_DIPNAME( 0x0080,	0x0000, DEF_STR( Bonus_Life ) )
 	/* Bonus_Life for Non European territories */
-//	PORT_DIPSETTING(		0x0000, "Every 1000k" )
-//	PORT_DIPSETTING(		0x0080, "1000k and 2000k" )
+/*	PORT_DIPSETTING(		0x0000, "Every 1000k" )*/
+/*	PORT_DIPSETTING(		0x0080, "1000k and 2000k" )*/
 	/* Bonus_Life values for European territories */
 	PORT_DIPSETTING(		0x0080, "Every 2000k" )
 	PORT_DIPSETTING(		0x0000, "None" )
@@ -3448,8 +3448,8 @@ INPUT_PORTS_START( battleg )
 	PORT_DIPNAME( 0x0003,	0x0001, "Territory" )
 	PORT_DIPSETTING(		0x0001, "Denmark (German Tuning license)" )
 	/* These Settings End Up Reporting ROM-0 as BAD */
-//	PORT_DIPSETTING(		0x0002, "USA (Fabtek license)" )
-//	PORT_DIPSETTING(		0x0000, "Japan" )
+/*	PORT_DIPSETTING(		0x0002, "USA (Fabtek license)" )*/
+/*	PORT_DIPSETTING(		0x0000, "Japan" )*/
 	PORT_DIPSETTING(		0x0003, "China" )
 	PORT_BIT( 0xfff0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
@@ -3487,18 +3487,18 @@ INPUT_PORTS_START( battlega )
 	PORT_DIPSETTING(		0x0020, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(		0x0040, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(		0x0060, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )*/
 	/*  When Coin_A is set to Free_Play, Coin_A becomes Coin_A and Coin_B,
 		and Coin_B becomes the following dips */
-//	PORT_DIPNAME( 0x0020,	0x0000, "Joystick Mode" )
-//	PORT_DIPSETTING(		0x0000, "90 degrees ACW" )
-//	PORT_DIPSETTING(		0x0020, "Normal" )
-//	PORT_DIPNAME( 0x0040,	0x0000, "Effect" )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0040, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x0080,	0x0000, "Music" )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0080, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x0020,	0x0000, "Joystick Mode" )*/
+/*	PORT_DIPSETTING(		0x0000, "90 degrees ACW" )*/
+/*	PORT_DIPSETTING(		0x0020, "Normal" )*/
+/*	PORT_DIPNAME( 0x0040,	0x0000, "Effect" )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0040, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x0080,	0x0000, "Music" )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0080, DEF_STR( On ) )*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -3517,11 +3517,11 @@ INPUT_PORTS_START( battlega )
 	PORT_DIPSETTING(		0x0040, "5" )
 	PORT_DIPSETTING(		0x0050, "6" )
 	PORT_BITX( 0,			0x0060, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", 0, 0 )
-//	PORT_BITX( 0,			0x0070, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Invulnerability", 0, 0 )
+/*	PORT_BITX( 0,			0x0070, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Invulnerability", 0, 0 )*/
 	PORT_DIPNAME( 0x0080,	0x0000, DEF_STR( Bonus_Life ) )
 	/* Bonus_Life for Non European territories */
-//	PORT_DIPSETTING(		0x0000, "Every 1000k" )
-//	PORT_DIPSETTING(		0x0080, "1000k and 2000k" )
+/*	PORT_DIPSETTING(		0x0000, "Every 1000k" )*/
+/*	PORT_DIPSETTING(		0x0080, "1000k and 2000k" )*/
 	/* Bonus_Life values for European territories */
 	PORT_DIPSETTING(		0x0080, "Every 2000k" )
 	PORT_DIPSETTING(		0x0000, "None" )
@@ -3575,18 +3575,18 @@ INPUT_PORTS_START( battlegb )
 	PORT_DIPSETTING(		0x0020, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(		0x0040, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(		0x0060, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )*/
 	/*  When Coin_A is set to Free_Play, Coin_A becomes Coin_A and Coin_B,
 		and Coin_B becomes the following dips */
-//	PORT_DIPNAME( 0x0020,	0x0000, "Joystick Mode" )
-//	PORT_DIPSETTING(		0x0000, "90 degrees ACW" )
-//	PORT_DIPSETTING(		0x0020, "Normal" )
-//	PORT_DIPNAME( 0x0040,	0x0000, "Effect" )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0040, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x0080,	0x0000, "Music" )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0080, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x0020,	0x0000, "Joystick Mode" )*/
+/*	PORT_DIPSETTING(		0x0000, "90 degrees ACW" )*/
+/*	PORT_DIPSETTING(		0x0020, "Normal" )*/
+/*	PORT_DIPNAME( 0x0040,	0x0000, "Effect" )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0040, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x0080,	0x0000, "Music" )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0080, DEF_STR( On ) )*/
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START		/* (5) DSWB */
@@ -3605,11 +3605,11 @@ INPUT_PORTS_START( battlegb )
 	PORT_DIPSETTING(		0x0040, "5" )
 	PORT_DIPSETTING(		0x0050, "6" )
 	PORT_BITX( 0,			0x0060, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", 0, 0 )
-//	PORT_BITX( 0,			0x0070, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Invulnerability", 0, 0 )
+/*	PORT_BITX( 0,			0x0070, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Invulnerability", 0, 0 )*/
 	PORT_DIPNAME( 0x0080,	0x0000, DEF_STR( Bonus_Life ) )
 	/* Bonus_Life for Non European territories */
-//	PORT_DIPSETTING(		0x0000, "Every 1000k" )
-//	PORT_DIPSETTING(		0x0080, "1000k and 2000k" )
+/*	PORT_DIPSETTING(		0x0000, "Every 1000k" )*/
+/*	PORT_DIPSETTING(		0x0080, "1000k and 2000k" )*/
 	/* Bonus_Life values for European territories */
 	PORT_DIPSETTING(		0x0080, "Every 2000k" )
 	PORT_DIPSETTING(		0x0000, "None" )
@@ -3625,8 +3625,8 @@ INPUT_PORTS_START( battlegb )
 	PORT_DIPNAME( 0x0003,	0x0001, "Territory" )
 	PORT_DIPSETTING(		0x0001, "Austria (German Tuning license)" )
 	/* These Settings End Up Reporting ROM-0 as BAD */
-//	PORT_DIPSETTING(		0x0002, "USA (Fabtek license)" )
-//	PORT_DIPSETTING(		0x0000, "Japan" )
+/*	PORT_DIPSETTING(		0x0002, "USA (Fabtek license)" )*/
+/*	PORT_DIPSETTING(		0x0000, "Japan" )*/
 	PORT_DIPSETTING(		0x0003, "Hong Kong" )
 	PORT_BIT( 0xfff0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
@@ -3678,15 +3678,15 @@ INPUT_PORTS_START( batrider )
 	PORT_DIPSETTING(		0x1000, DEF_STR( On ) )
 	/*  These Dips are showed only when Coin_A is set to Free_Play.
 		They are the last 3 Unused dips. Seems to be debug options */
-//	PORT_DIPNAME( 0x2000,	0x0000, "Guest Player" )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x2000, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x4000,	0x0000, "Player Select" )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x4000, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x8000,	0x0000, "Special Course" )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x8000, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x2000,	0x0000, "Guest Player" )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x2000, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x4000,	0x0000, "Player Select" )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x4000, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x8000,	0x0000, "Special Course" )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x8000, DEF_STR( On ) )*/
 	PORT_DIPNAME( 0x2000,	0x0000, DEF_STR( Unused ) )
 	PORT_DIPSETTING(		0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(		0x2000, DEF_STR( On ) )
@@ -3703,9 +3703,9 @@ INPUT_PORTS_START( batrider )
 	PORT_DIPSETTING(		0x0000, "1" )
 	PORT_DIPSETTING(		0x0002, "2" )
 	/* When Coin_A is set to Free_Play, dip 0x0002 becomes: */
-//	PORT_DIPNAME( 0x0002,	0x0000, "Joystick Mode" )
-//	PORT_DIPSETTING(		0x0000, "Normal" )
-//	PORT_DIPSETTING(		0x0002, "90 degrees ACW" )
+/*	PORT_DIPNAME( 0x0002,	0x0000, "Joystick Mode" )*/
+/*	PORT_DIPSETTING(		0x0000, "Normal" )*/
+/*	PORT_DIPSETTING(		0x0002, "90 degrees ACW" )*/
 	PORT_DIPNAME( 0x001c,	0x0000, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(		0x0018, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(		0x0014, DEF_STR( 3C_1C ) )
@@ -3723,17 +3723,17 @@ INPUT_PORTS_START( batrider )
 	PORT_DIPSETTING(		0x0020, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(		0x0040, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(		0x0060, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )*/
 	/* Coin_B becomes the following dips, when Coin_A is set to Free_Play */
-//	PORT_DIPNAME( 0x0020,	0x0000, "Hit Score" )
-//	PORT_DIPSETTING(		0x0020, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x0040,	0x0000, "Sound Effect" )
-//	PORT_DIPSETTING(		0x0040, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x0080,	0x0000, "Music" )
-//	PORT_DIPSETTING(		0x0080, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x0020,	0x0000, "Hit Score" )*/
+/*	PORT_DIPSETTING(		0x0020, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x0040,	0x0000, "Sound Effect" )*/
+/*	PORT_DIPSETTING(		0x0040, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x0080,	0x0000, "Music" )*/
+/*	PORT_DIPSETTING(		0x0080, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )*/
 	PORT_DIPNAME( 0x0300,	0x0000, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(		0x0100, "Easy" )
 	PORT_DIPSETTING(		0x0000, "Medium" )
@@ -3817,9 +3817,9 @@ INPUT_PORTS_START( bbakraid )
 	PORT_DIPSETTING(		0x0000, "1" )
 	PORT_DIPSETTING(		0x0002, "2" )
 	/* When Coin_A is set to Free_Play, dip 0x0002 becomes: */
-//	PORT_DIPNAME( 0x0002,	0x0000, "Joystick Mode" )
-//	PORT_DIPSETTING(		0x0000, "Normal" )
-//	PORT_DIPSETTING(		0x0002, "90 degrees ACW" )
+/*	PORT_DIPNAME( 0x0002,	0x0000, "Joystick Mode" )*/
+/*	PORT_DIPSETTING(		0x0000, "Normal" )*/
+/*	PORT_DIPSETTING(		0x0002, "90 degrees ACW" )*/
 	PORT_DIPNAME( 0x001c,	0x0000, DEF_STR( Coin_A ) )
 	PORT_DIPSETTING(		0x0018, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(		0x0014, DEF_STR( 3C_1C ) )
@@ -3837,18 +3837,18 @@ INPUT_PORTS_START( bbakraid )
 	PORT_DIPSETTING(		0x0020, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(		0x0040, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(		0x0060, DEF_STR( 1C_4C ) )
-//	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(		0x00e0, DEF_STR( 1C_1C ) )*/
 	/* Coin_B becomes the following dips, when Coin_A is set to Free_Play */
 	/* Coin_B slot also behaves in freeplay mode when Coin_A is in freeplay */
-//	PORT_DIPNAME( 0x0020,	0x0000, "Hit Score" )
-//	PORT_DIPSETTING(		0x0020, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x0040,	0x0000, "Sound Effect" )
-//	PORT_DIPSETTING(		0x0040, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
-//	PORT_DIPNAME( 0x0080,	0x0000, "Music" )
-//	PORT_DIPSETTING(		0x0080, DEF_STR( Off ) )
-//	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x0020,	0x0000, "Hit Score" )*/
+/*	PORT_DIPSETTING(		0x0020, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x0040,	0x0000, "Sound Effect" )*/
+/*	PORT_DIPSETTING(		0x0040, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )*/
+/*	PORT_DIPNAME( 0x0080,	0x0000, "Music" )*/
+/*	PORT_DIPSETTING(		0x0080, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(		0x0000, DEF_STR( On ) )*/
 	PORT_DIPNAME( 0x0300,	0x0000, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(		0x0100, "Easy" )
 	PORT_DIPSETTING(		0x0000, "Medium" )
@@ -3985,8 +3985,8 @@ static struct GfxDecodeInfo truxton2_gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0,       &tilelayout            , 0, 128 },
 	{ REGION_GFX1, 0,       &spritelayout          , 0,  64 },
-//	{ REGION_CPU1, 0x40000, &truxton2_tx_tilelayout, 0, 128 },	/* Truxton 2 */
-//	{ REGION_CPU1, 0x68000, &truxton2_tx_tilelayout, 0, 128 },	/* Fix Eight */
+/*	{ REGION_CPU1, 0x40000, &truxton2_tx_tilelayout, 0, 128 },	 // Truxton 2 /*/
+/*	{ REGION_CPU1, 0x68000, &truxton2_tx_tilelayout, 0, 128 },	 // Fix Eight /*/
 	{ 0, 0, &truxton2_tx_tilelayout,  0, 128 },
 	{ -1 } /* end of array */
 };
@@ -4414,7 +4414,7 @@ static MACHINE_DRIVER_START( fixeight )
 	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_INIT(toaplan2)
-///	MDRV_NVRAM_HANDLER(fixeight)		/* See 37B6 code */
+/*/	MDRV_NVRAM_HANDLER(fixeight)		 // See 37B6 code /*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_UPDATE_BEFORE_VBLANK)
@@ -4779,7 +4779,7 @@ ROM_START( dogyuun )
 #if Zx80
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )			/* Secondary CPU code */
 	/* Secondary CPU is a Toaplan marked chip ??? */
-//	ROM_LOAD( "tp022.mcu", 0x00000, 0x08000, NO_DUMP )
+/*	ROM_LOAD( "tp022.mcu", 0x00000, 0x08000, NO_DUMP )*/
 #endif
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -4904,7 +4904,7 @@ ROM_START( fixeight )
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )			/* Secondary CPU code */
 	/* Secondary CPU is a Toaplan marked chip, (TS-001-Turbo  TOA PLAN) */
 	/* Its a Z?80 of some sort - 94 pin chip. */
-//	ROM_LOAD( "tp-026.mcu", 0x0000, 0x8000, NO_DUMP )
+/*	ROM_LOAD( "tp-026.mcu", 0x0000, 0x8000, NO_DUMP )*/
 #endif
 
 	ROM_REGION( 0x400000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -4947,7 +4947,7 @@ ROM_START( grindstm )
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )			/* Sound CPU code */
 	/* Secondary CPU is a Toaplan marked chip, (TS-007-Spy  TOA PLAN) */
 	/* Its a Z?80 of some sort - 94 pin chip. */
-//	ROM_LOAD( "tp027.mcu", 0x8000, 0x8000, NO_DUMP )
+/*	ROM_LOAD( "tp027.mcu", 0x8000, 0x8000, NO_DUMP )*/
 #endif
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -4963,7 +4963,7 @@ ROM_START( grindsta )
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )			/* Sound CPU code */
 	/* Secondary CPU is a Toaplan marked chip, (TS-007-Spy  TOA PLAN) */
 	/* Its a Z?80 of some sort - 94 pin chip. */
-//	ROM_LOAD( "tp027.mcu", 0x8000, 0x8000, NO_DUMP )
+/*	ROM_LOAD( "tp027.mcu", 0x8000, 0x8000, NO_DUMP )*/
 #endif
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -4979,7 +4979,7 @@ ROM_START( vfive )
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )			/* Sound CPU code */
 	/* Secondary CPU is a Toaplan marked chip, (TS-007-Spy  TOA PLAN) */
 	/* Its a Z?80 of some sort - 94 pin chip. */
-//	ROM_LOAD( "tp027.mcu", 0x8000, 0x8000, NO_DUMP )
+/*	ROM_LOAD( "tp027.mcu", 0x8000, 0x8000, NO_DUMP )*/
 #endif
 
 	ROM_REGION( 0x200000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -4995,7 +4995,7 @@ ROM_START( batsugun )
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )			/* Sound CPU code */
 	/* Secondary CPU is a Toaplan marked chip, (TS-007-Spy  TOA PLAN) */
 	/* Its a Z?80 of some sort - 94 pin chip. */
-//	ROM_LOAD( "tp030.mcu", 0x8000, 0x8000, NO_DUMP )
+/*	ROM_LOAD( "tp030.mcu", 0x8000, 0x8000, NO_DUMP )*/
 #endif
 
 	ROM_REGION( 0x400000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -5020,7 +5020,7 @@ ROM_START( batugnsp )
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )			/* Sound CPU code */
 	/* Secondary CPU is a Toaplan marked chip, (TS-007-Spy  TOA PLAN) */
 	/* Its a Z?80 of some sort - 94 pin chip. */
-//	ROM_LOAD( "tp030.mcu", 0x8000, 0x8000, NO_DUMP )
+/*	ROM_LOAD( "tp030.mcu", 0x8000, 0x8000, NO_DUMP )*/
 #endif
 
 	ROM_REGION( 0x400000, REGION_GFX1, ROMREGION_DISPOSE )
@@ -5337,12 +5337,12 @@ GAMEX( 1993, batsugun, 0,        batsugun, batsugun, T2_Zx80,  ROT270, "Toaplan"
 GAMEX( 1993, batugnsp, batsugun, batsugun, batsugun, T2_Zx80,  ROT270, "Toaplan", "Batsugun (Special Ver.)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME ( 1994, snowbro2, 0,        snowbro2, snowbro2, T2_noZ80, ROT0,   "[Toaplan] Hanafram", "Snow Bros. 2 - With New Elves / Otenki Paradise" )
 GAME ( 1993, mahoudai, 0,        mahoudai, mahoudai, T2_Z80,   ROT270, "Raizing (Able license)", "Mahou Daisakusen (Japan)" )
-GAME ( 1993, sstriker, mahoudai, mahoudai, sstriker, T2_Z80,   ROT270, "Raizing", "Sorcer Striker (World)" ) // from korean board
+GAME ( 1993, sstriker, mahoudai, mahoudai, sstriker, T2_Z80,   ROT270, "Raizing", "Sorcer Striker (World)" ) /* from korean board*/
 GAME ( 1994, shippumd, 0,        shippumd, shippumd, T2_Z80,   ROT270, "Raizing / Eighting", "Shippu Mahou Daisakusen (Japan)" )
-GAME ( 1994, kingdmgp, shippumd, shippumd, kingdmgp, T2_Z80,   ROT270, "Raizing / Eighting", "Kingdom Grandprix (World)" ) // from korean board, missing letters on credits screen but this is correct
+GAME ( 1994, kingdmgp, shippumd, shippumd, kingdmgp, T2_Z80,   ROT270, "Raizing / Eighting", "Kingdom Grandprix (World)" ) /* from korean board, missing letters on credits screen but this is correct*/
 GAME ( 1996, battleg,  0,        battleg,  battleg,  battleg,  ROT270, "Raizing / Eighting", "Battle Garegga - Type 2 (Denmark / China) (Tue Apr 2 1996)" )
 GAME ( 1996, battlega, battleg,  battleg,  battlega, battleg,  ROT270, "Raizing / Eighting", "Battle Garegga (Europe / USA / Japan / Asia) (Sat Feb 3 1996)" )
-GAME ( 1996, battlegb, battleg,  battleg,  battlegb, battleg,  ROT270, "Raizing / Eighting", "Battle Garegga (Austria / Hong Kong) (Sat Mar 2 1996)" ) // displays New Version when set to HK
+GAME ( 1996, battlegb, battleg,  battleg,  battlegb, battleg,  ROT270, "Raizing / Eighting", "Battle Garegga (Austria / Hong Kong) (Sat Mar 2 1996)" ) /* displays New Version when set to HK*/
 GAME ( 1998, batrider, 0,        batrider, batrider, battleg,  ROT270, "Raizing / Eighting", "Armed Police Batrider (Japan, version B)" )
 GAME ( 1998, batridra, batrider, batrider, batrider, battleg,  ROT270, "Raizing / Eighting", "Armed Police Batrider (Japan, version A)" )
 GAME ( 1998, batridrk, batrider, batrider, batrider, battleg,  ROT270, "Raizing / Eighting", "Armed Police Batrider (Korea, version B)" )

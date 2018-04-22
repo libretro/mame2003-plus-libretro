@@ -31,7 +31,7 @@ Memo:
 #include "vidhrdw/generic.h"
 
 
-#define	SIGNED_DAC	0		// 0:unsigned DAC, 1:signed DAC
+#define	SIGNED_DAC	0		/* 0:unsigned DAC, 1:signed DAC*/
 
 
 VIDEO_UPDATE( niyanpai );
@@ -218,21 +218,21 @@ static void tmpz84c011_init(void)
 {
 	int i;
 
-	// initialize TMPZ84C011 PIO
+	/* initialize TMPZ84C011 PIO*/
 	for (i = 0; i < 5; i++)
 	{
 		pio_dir[i] = pio_latch[i] = 0;
 		tmpz84c011_pio_w(i, 0);
 	}
 
-	// initialize the CTC
+	/* initialize the CTC*/
 	ctc_intf.baseclock[0] = Machine->drv->cpu[1].cpu_clock;
 	z80ctc_init(&ctc_intf);
 }
 
 static MACHINE_INIT( niyanpai )
 {
-	//
+	/**/
 }
 
 static void initialize_driver(void)
@@ -240,19 +240,19 @@ static void initialize_driver(void)
 	unsigned char *MAINROM = memory_region(REGION_CPU1);
 	unsigned char *SNDROM = memory_region(REGION_CPU2);
 
-	// main program patch (USR0 -> IRQ LEVEL1)
+	/* main program patch (USR0 -> IRQ LEVEL1)*/
 	MAINROM[(25 * 4) + 0] = MAINROM[(64 * 4) + 0];
 	MAINROM[(25 * 4) + 1] = MAINROM[(64 * 4) + 1];
 	MAINROM[(25 * 4) + 2] = MAINROM[(64 * 4) + 2];
 	MAINROM[(25 * 4) + 3] = MAINROM[(64 * 4) + 3];
 
-	// sound program patch
-	SNDROM[0x0213] = 0x00;			// DI -> NOP
+	/* sound program patch*/
+	SNDROM[0x0213] = 0x00;			/* DI -> NOP*/
 
-	// initialize TMPZ84C011 PIO and CTC
+	/* initialize TMPZ84C011 PIO and CTC*/
 	tmpz84c011_init();
 
-	// initialize sound rom bank
+	/* initialize sound rom bank*/
 	niyanpai_soundbank_w(0);
 }
 
@@ -293,7 +293,7 @@ static MEMORY_READ16_START( niyanpai_readmem )
 	{ 0x040000, 0x040fff, MRA16_RAM },
 
 	{ 0x0a0000, 0x0a08ff, niyanpai_palette_r },
-	{ 0x0a0900, 0x0a11ff, MRA16_RAM },		// palette work ram?
+	{ 0x0a0900, 0x0a11ff, MRA16_RAM },		/* palette work ram?*/
 
 	{ 0x0bf800, 0x0bffff, MRA16_RAM },
 
@@ -320,15 +320,15 @@ static MEMORY_WRITE16_START( niyanpai_writemem )
 	{ 0x040000, 0x040fff, MWA16_RAM, (data16_t **)&generic_nvram, &generic_nvram_size },
 
 	{ 0x0a0000, 0x0a08ff, niyanpai_palette_w },
-	{ 0x0a0900, 0x0a11ff, MWA16_RAM },		// palette work ram?
+	{ 0x0a0900, 0x0a11ff, MWA16_RAM },		/* palette work ram?*/
 
 	{ 0x0bf800, 0x0bffff, MWA16_RAM },
 
 	{ 0x200000, 0x200001, niyanpai_sound_w },
 
-	{ 0x200200, 0x200201, MWA16_NOP },		// unknown
-	{ 0x240000, 0x240009, MWA16_NOP },		// unknown
-	{ 0x240200, 0x2403ff, MWA16_NOP },		// unknown
+	{ 0x200200, 0x200201, MWA16_NOP },		/* unknown*/
+	{ 0x240000, 0x240009, MWA16_NOP },		/* unknown*/
+	{ 0x240200, 0x2403ff, MWA16_NOP },		/* unknown*/
 
 	{ 0x240400, 0x240401, niyanpai_gfxflag_0_w },
 	{ 0x240402, 0x240405, niyanpai_scrollx_0_w },
@@ -453,15 +453,15 @@ INPUT_PORTS_START( niyanpai )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* (2) PORT 0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )		// COIN1
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )		// COIN2
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START3 )		// CREDIT CLEAR
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START2 )		// START2
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE2 )		// ANALYZER
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )		// START1
-//	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE3 )		// MEMORY RESET
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )		// ?
- 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )			// TEST
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )		/* COIN1*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )		/* COIN2*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START3 )		/* CREDIT CLEAR*/
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START2 )		/* START2*/
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE2 )		/* ANALYZER*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )		/* START1*/
+/*	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE3 )		*/ /* MEMORY RESET*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )		/* ?*/
+ 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )			/* TEST*/
 
 	PORT_START	/* (3) PLAYER-1 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )

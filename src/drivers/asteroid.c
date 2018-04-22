@@ -446,7 +446,7 @@ INPUT_PORTS_START( asterock )
 	PORT_DIPSETTING (	0xc0, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING (	0x80, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING (	0x40, DEF_STR( 1C_2C ) )
-//	PORT_DIPSETTING (	0x00, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING (	0x00, DEF_STR( 1C_1C ) )*/
 /*	Settings for Special Coin Mode
 	PORT_DIPSETTING (	0xc0, "Coin A 2/1 Coin B 2/1 Coin C 1/1" )
 	PORT_DIPSETTING (	0x80, "Coin A 1/1 Coin B 1/1 Coin C 1/2" )

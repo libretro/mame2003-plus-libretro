@@ -221,7 +221,7 @@ Credits (in alphabetical order)
 #include "snk.h"
 
 /*********************************************************************/
-// Variables and Interrupt Handlers Common to All SNK Triple Z80 Games
+/* Variables and Interrupt Handlers Common to All SNK Triple Z80 Games*/
 
 int snk_gamegroup = 0;
 int snk_sound_busy_bit = 0;
@@ -230,7 +230,7 @@ int direction = 0;
 int directionb = 0;
 int directionset = 0;
 
-// see IRQ notes in drivers\marvins.c
+/* see IRQ notes in drivers\marvins.c*/
 static void irq_trigger_callback(int cpu) { cpu_set_irq_line(cpu, 0, HOLD_LINE); }
 
 INTERRUPT_GEN( snk_irq_AB )
@@ -245,7 +245,7 @@ INTERRUPT_GEN( snk_irq_BA )
 	timer_set(TIME_IN_USEC(snk_irq_delay), 0, irq_trigger_callback);
 }
 
-// NMI handshakes between CPUs are determined to be much simpler
+/* NMI handshakes between CPUs are determined to be much simpler*/
 READ_HANDLER ( snk_cpuA_nmi_trigger_r ) { cpu_set_nmi_line(0, ASSERT_LINE); return 0; }
 WRITE_HANDLER( snk_cpuA_nmi_ack_w ) { cpu_set_nmi_line(0, CLEAR_LINE); }
 
@@ -297,7 +297,7 @@ static int snk_rot8( int which ){
 	return (value&0xf) | dial_8[joypos16>>1];
 }
 
-// BritneysPAIRS
+/* BritneysPAIRS*/
 static int snk_rot8_ikarijpb( int which ){
 	const int dial_8[8]   = { 0xf0,0x30,0x10,0x50,0x40,0xc0,0x80,0xa0 };
 	int value = readinputport(which+1);
@@ -449,7 +449,7 @@ static WRITE_HANDLER( snk_sound_register_w ){
 }
 
 static READ_HANDLER( snk_sound_register_r ){
-	return snk_sound_register;// | 0x2; /* hack; lets chopper1 play music */
+	return snk_sound_register;/* | 0x2;  // hack; lets chopper1 play music /*/
 }
 
 void snk_sound_callback0_w( int state ){ /* ? */
@@ -608,19 +608,19 @@ static WRITE_HANDLER( shared_ram2_w ){
 
 static READ_HANDLER( cpuA_io_r ){
 	switch( offset ){
-		case 0x000: return snk_input_port_r( 0 );	// coin input, player start
-		case 0x100: return snk_input_port_r( 1 );	// joy1
-		case 0x180: return snk_input_port_r( 2 );	// joy2
-		case 0x200: return snk_input_port_r( 3 );	// joy3
-		case 0x280: return snk_input_port_r( 4 );	// joy4
-		case 0x300: return snk_input_port_r( 5 );	// aim1
-		case 0x380: return snk_input_port_r( 6 );	// aim2
-		case 0x400: return snk_input_port_r( 7 );	// aim3
-		case 0x480: return snk_input_port_r( 8 );	// aim4
-		case 0x500: return snk_input_port_r( 9 );	// unused by tdfever
-		case 0x580: return snk_input_port_r( 10 );	// dsw
-		case 0x600: return snk_input_port_r( 11 );	// dsw
-		case 0x080: return snk_input_port_r( 12 );	// player start (types C and D in 'ftsoccer')
+		case 0x000: return snk_input_port_r( 0 );	/* coin input, player start*/
+		case 0x100: return snk_input_port_r( 1 );	/* joy1*/
+		case 0x180: return snk_input_port_r( 2 );	/* joy2*/
+		case 0x200: return snk_input_port_r( 3 );	/* joy3*/
+		case 0x280: return snk_input_port_r( 4 );	/* joy4*/
+		case 0x300: return snk_input_port_r( 5 );	/* aim1*/
+		case 0x380: return snk_input_port_r( 6 );	/* aim2*/
+		case 0x400: return snk_input_port_r( 7 );	/* aim3*/
+		case 0x480: return snk_input_port_r( 8 );	/* aim4*/
+		case 0x500: return snk_input_port_r( 9 );	/* unused by tdfever*/
+		case 0x580: return snk_input_port_r( 10 );	/* dsw*/
+		case 0x600: return snk_input_port_r( 11 );	/* dsw*/
+		case 0x080: return snk_input_port_r( 12 );	/* player start (types C and D in 'ftsoccer')*/
 
 		case 0x700: return(snk_cpuB_nmi_trigger_r(0));
 
@@ -1193,7 +1193,7 @@ static MACHINE_DRIVER_START( bermudat )
 	MDRV_CPU_MEMORY(readmem_cpuA,writemem_cpuA)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
-	// 5MHz gives CPUB higher priority or ROM test will fail if the first NMI is triggered too early by CPUA
+	/* 5MHz gives CPUB higher priority or ROM test will fail if the first NMI is triggered too early by CPUA*/
 	MDRV_CPU_ADD(Z80, 5000000)
 	MDRV_CPU_MEMORY(readmem_cpuB,writemem_cpuB)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
@@ -1307,7 +1307,7 @@ static MACHINE_DRIVER_START( tdfever )
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_MEMORY(readmem_cpuB,writemem_cpuB)
-//	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+/*	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)*/
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -1344,7 +1344,7 @@ static MACHINE_DRIVER_START( tdfever2 )
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_MEMORY(readmem_cpuB,writemem_cpuB)
-//	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+/*	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)*/
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -1548,12 +1548,12 @@ ROM_START( fitegol2 )
 	ROM_LOAD( "mn45.256", 0x4000, 0x8000, CRC(a4fa09d5) SHA1(ae7f0cb47de06006ae71252c4201a93a01a26887) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for cpuB code */
-	ROM_LOAD( "gu6",    0x0000, 0x4000, CRC(2b9978c5) SHA1(5490e9f796697318650fc5f70c0e64d6785ad7fc) )	// NP8.256
-	ROM_LOAD( "gu5",    0x4000, 0x8000, CRC(ea3d138c) SHA1(af0a0bfe2d266179946948cf42fe697505798a4f) )	// MN8.256
+	ROM_LOAD( "gu6",    0x0000, 0x4000, CRC(2b9978c5) SHA1(5490e9f796697318650fc5f70c0e64d6785ad7fc) )	/* NP8.256*/
+	ROM_LOAD( "gu5",    0x4000, 0x8000, CRC(ea3d138c) SHA1(af0a0bfe2d266179946948cf42fe697505798a4f) )	/* MN8.256*/
 
 	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* 64k for sound code */
-	ROM_LOAD( "gu3",    0x0000, 0x4000, CRC(811b87d7) SHA1(fb387f42085d6e0e5a88729ca0e50656411ce037) )	// FG67.256
-	ROM_LOAD( "gu4",    0x4000, 0x8000, CRC(2d998e2b) SHA1(a471cfbb4dabc90fcc29c562620b9965eaff6861) )	// K67.256
+	ROM_LOAD( "gu3",    0x0000, 0x4000, CRC(811b87d7) SHA1(fb387f42085d6e0e5a88729ca0e50656411ce037) )	/* FG67.256*/
+	ROM_LOAD( "gu4",    0x4000, 0x8000, CRC(2d998e2b) SHA1(a471cfbb4dabc90fcc29c562620b9965eaff6861) )	/* K67.256*/
 
 	ROM_REGION( 0x0c00, REGION_PROMS, 0 )
 	ROM_LOAD( "82s137.2c",  0x00000, 0x00400, CRC(6e4c7836) SHA1(3ab3c498939fac992e2bf1c33983ee821a9b6a18) )
@@ -1561,15 +1561,15 @@ ROM_START( fitegol2 )
 	ROM_LOAD( "82s137.1c",  0x00800, 0x00400, CRC(27ba9ff9) SHA1(f021d10460f40de4447560df5ac47fa53bb57ff9) )
 
 	ROM_REGION( 0x4000, REGION_GFX1, ROMREGION_DISPOSE ) /* characters */
-	ROM_LOAD( "gu8",   0x0000, 0x4000, CRC(f1628dcf) SHA1(efea343d3a9dd45ef74947c297e166e34afbb680) )		// D2.128
+	ROM_LOAD( "gu8",   0x0000, 0x4000, CRC(f1628dcf) SHA1(efea343d3a9dd45ef74947c297e166e34afbb680) )		/* D2.128*/
 
 	ROM_REGION( 0x8000, REGION_GFX2, ROMREGION_DISPOSE ) /* tiles */
-	ROM_LOAD( "gu7",  0x0000, 0x8000, CRC(4655f94e) SHA1(08526206d8e929bb01d61fff8de2ee99fd287c17) )		// BC2.256
+	ROM_LOAD( "gu7",  0x0000, 0x8000, CRC(4655f94e) SHA1(08526206d8e929bb01d61fff8de2ee99fd287c17) )		/* BC2.256*/
 
 	ROM_REGION( 0x18000, REGION_GFX3, ROMREGION_DISPOSE ) /* sprites */
-	ROM_LOAD( "gu9",   0x00000, 0x8000, CRC(d4957ec5) SHA1(8ead7866ba5ac66ead6b707aa868bcae30c486e1) )	// P2.256
-	ROM_LOAD( "gu10",  0x08000, 0x8000, CRC(b3acdac2) SHA1(7377480d5e1b5ab2c49f5fee2927623ce8240e19) )	// R2.256
-	ROM_LOAD( "gu11",  0x10000, 0x8000, CRC(b99cf73b) SHA1(23989fc3914e77d364807a9eb96a4ddf75ad7cf1) )	// S2.256
+	ROM_LOAD( "gu9",   0x00000, 0x8000, CRC(d4957ec5) SHA1(8ead7866ba5ac66ead6b707aa868bcae30c486e1) )	/* P2.256*/
+	ROM_LOAD( "gu10",  0x08000, 0x8000, CRC(b3acdac2) SHA1(7377480d5e1b5ab2c49f5fee2927623ce8240e19) )	/* R2.256*/
+	ROM_LOAD( "gu11",  0x10000, 0x8000, CRC(b99cf73b) SHA1(23989fc3914e77d364807a9eb96a4ddf75ad7cf1) )	/* S2.256*/
 ROM_END
 
 ROM_START( countryc )
@@ -2001,9 +2001,9 @@ ROM_START( gwarb )
 	ROM_LOAD( "g03",  0x00000, 0x10000, CRC(eb544ab9) SHA1(433af63feb4c4ef0e3bd383f2f9bc19e436fb103) )
 
 	ROM_REGION( 0x0c00, REGION_PROMS, 0 )
-	ROM_LOAD( "guprom.3", 0x000, 0x400, CRC(090236a3) SHA1(40d066e34291492c6baf8c120657e3d547274b59) ) /* red */ // up03_k1.rom
-	ROM_LOAD( "guprom.2", 0x400, 0x400, CRC(9147de69) SHA1(e4b3b546e429c195e82f97322e2a295882e38a58) ) /* green */ // up03_l1.rom
-	ROM_LOAD( "guprom.1", 0x800, 0x400, CRC(7f9c839e) SHA1(2fa60fa335f76891d961c9bd0066fa7f82f76779) ) /* blue */ // up03_k2.rom
+	ROM_LOAD( "guprom.3", 0x000, 0x400, CRC(090236a3) SHA1(40d066e34291492c6baf8c120657e3d547274b59) ) /* red */ /* up03_k1.rom*/
+	ROM_LOAD( "guprom.2", 0x400, 0x400, CRC(9147de69) SHA1(e4b3b546e429c195e82f97322e2a295882e38a58) ) /* green */ /* up03_l1.rom*/
+	ROM_LOAD( "guprom.1", 0x800, 0x400, CRC(7f9c839e) SHA1(2fa60fa335f76891d961c9bd0066fa7f82f76779) ) /* blue */ /* up03_k2.rom*/
 
 	ROM_REGION( 0x8000, REGION_GFX1, ROMREGION_DISPOSE ) /* characters */
 	ROM_LOAD( "g05",  0x0000, 0x08000, CRC(80f73e2e) SHA1(820824fb10f7dfec6247b46dde8ff7124bde3734) )
@@ -2526,7 +2526,7 @@ ROM_START( ftsoccer )
 	ROM_LOAD( "ft-014.bin",  0x00000, 0x10000, CRC(38c38b40) SHA1(c4580add0946720441f5ef751d0d4a944cd92ad5) )
 	ROM_LOAD( "ft-015.bin",  0x10000, 0x10000, CRC(a614834f) SHA1(d73930e4bd780915e1b0d7f3fe7cbeaad19c233f) )
 
-//	ROM_REGION( 0x40000, REGION_GFX3, ROMREGION_DISPOSE ) /* 16x16 sprites */
+/*	ROM_REGION( 0x40000, REGION_GFX3, ROMREGION_DISPOSE )  // 16x16 sprites /*/
 
 	ROM_REGION( 0x80000, REGION_GFX3, ROMREGION_DISPOSE ) /* 32x32 sprites */
 	ROM_LOAD( "ft-005.bin",  0x10000, 0x10000, CRC(def2f1d8) SHA1(b72e4dec3306d8afe461ac812b2de67ee85f9dd9) )
@@ -4161,7 +4161,7 @@ static DRIVER_INIT( choppera ){
 static DRIVER_INIT( bermudat ){
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
-	// Patch "Turbo Error"
+	/* Patch "Turbo Error"*/
 	RAM[0x127e] = 0xc9;
 	RAM[0x118d] = 0x00;
 	RAM[0x118e] = 0x00;

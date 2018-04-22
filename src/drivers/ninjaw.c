@@ -237,7 +237,7 @@ WRITE_HANDLER( ninjaw_pancontrol )
 {
   offset = offset&3;
   ninjaw_pandata[offset] = (float)data * (100.f / 255.0f);
-  //usrintf_showmessage(" pan %02x %02x %02x %02x", ninjaw_pandata[0], ninjaw_pandata[1], ninjaw_pandata[2], ninjaw_pandata[3] );
+  /*usrintf_showmessage(" pan %02x %02x %02x %02x", ninjaw_pandata[0], ninjaw_pandata[1], ninjaw_pandata[2], ninjaw_pandata[3] );*/
   if( offset < 2 ){
     mixer_set_stereo_volume( 3, ninjaw_pandata[0], ninjaw_pandata[1] );
   }
@@ -290,8 +290,8 @@ static MEMORY_WRITE16_START( ninjaw_writemem )
 	{ 0x360000, 0x360007, TC0110PCR_step1_word_2_w },	/* palette (3rd screen) */
 MEMORY_END
 
-// NB there could be conflicts between which cpu writes what to the
-// palette, as our interleaving won't match the original board.
+/* NB there could be conflicts between which cpu writes what to the*/
+/* palette, as our interleaving won't match the original board.*/
 
 static MEMORY_READ16_START( ninjaw_cpub_readmem )
 	{ 0x000000, 0x05ffff, MRA16_ROM },
@@ -802,10 +802,10 @@ ROM_START( ninjaw )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x100000 )	/* SCR (screens 2+) */
 
 /* The actual board duplicates the SCR gfx roms for 2nd/3rd TC0100SCN */
-//	ROM_LOAD( "b31-01.26", 0x00000, 0x80000, CRC(8e8237a7) SHA1(3e181a153d9b4b7f6a620614ea9022285583a5b5) )	/* SCR (screen 2) */
-//	ROM_LOAD( "b31-02.27", 0x80000, 0x80000, CRC(4c3b4e33) SHA1(f99b379be1af085bf102d4d7cf35803e002fe80b) )
-//	ROM_LOAD( "b31-01.28", 0x00000, 0x80000, CRC(8e8237a7) SHA1(3e181a153d9b4b7f6a620614ea9022285583a5b5) )	/* SCR (screen 3) */
-//	ROM_LOAD( "b31-02.29", 0x80000, 0x80000, CRC(4c3b4e33) SHA1(f99b379be1af085bf102d4d7cf35803e002fe80b) )
+/*	ROM_LOAD( "b31-01.26", 0x00000, 0x80000, CRC(8e8237a7) SHA1(3e181a153d9b4b7f6a620614ea9022285583a5b5) )	 // SCR (screen 2) /*/
+/*	ROM_LOAD( "b31-02.27", 0x80000, 0x80000, CRC(4c3b4e33) SHA1(f99b379be1af085bf102d4d7cf35803e002fe80b) )*/
+/*	ROM_LOAD( "b31-01.28", 0x00000, 0x80000, CRC(8e8237a7) SHA1(3e181a153d9b4b7f6a620614ea9022285583a5b5) )	 // SCR (screen 3) /*/
+/*	ROM_LOAD( "b31-02.29", 0x80000, 0x80000, CRC(4c3b4e33) SHA1(f99b379be1af085bf102d4d7cf35803e002fe80b) )*/
 
 	ROM_REGION( 0x180000, REGION_SOUND1, 0 )	/* ADPCM samples */
 	ROM_LOAD( "b31-09.18", 0x000000, 0x80000, CRC(60a73382) SHA1(0ddeb86fcd4d19a58e62bf8564f996d17e36e5c5) )
@@ -858,10 +858,10 @@ ROM_START( ninjawj )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x100000 )	/* SCR (screens 2+) */
 
 /* The actual board duplicates the SCR gfx roms for 2nd/3rd TC0100SCN */
-//	ROM_LOAD( "b31-01.26", 0x00000, 0x80000, CRC(8e8237a7) SHA1(3e181a153d9b4b7f6a620614ea9022285583a5b5) )	/* SCR (screen 2) */
-//	ROM_LOAD( "b31-02.27", 0x80000, 0x80000, CRC(4c3b4e33) SHA1(f99b379be1af085bf102d4d7cf35803e002fe80b) )
-//	ROM_LOAD( "b31-01.28", 0x00000, 0x80000, CRC(8e8237a7) SHA1(3e181a153d9b4b7f6a620614ea9022285583a5b5) )	/* SCR (screen 3) */
-//	ROM_LOAD( "b31-02.29", 0x80000, 0x80000, CRC(4c3b4e33) SHA1(f99b379be1af085bf102d4d7cf35803e002fe80b) )
+/*	ROM_LOAD( "b31-01.26", 0x00000, 0x80000, CRC(8e8237a7) SHA1(3e181a153d9b4b7f6a620614ea9022285583a5b5) )	 // SCR (screen 2) /*/
+/*	ROM_LOAD( "b31-02.27", 0x80000, 0x80000, CRC(4c3b4e33) SHA1(f99b379be1af085bf102d4d7cf35803e002fe80b) )*/
+/*	ROM_LOAD( "b31-01.28", 0x00000, 0x80000, CRC(8e8237a7) SHA1(3e181a153d9b4b7f6a620614ea9022285583a5b5) )	 // SCR (screen 3) /*/
+/*	ROM_LOAD( "b31-02.29", 0x80000, 0x80000, CRC(4c3b4e33) SHA1(f99b379be1af085bf102d4d7cf35803e002fe80b) )*/
 
 	ROM_REGION( 0x180000, REGION_SOUND1, 0 )	/* ADPCM samples */
 	ROM_LOAD( "b31-09.18", 0x000000, 0x80000, CRC(60a73382) SHA1(0ddeb86fcd4d19a58e62bf8564f996d17e36e5c5) )

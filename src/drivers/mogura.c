@@ -103,7 +103,7 @@ static WRITE_HANDLER(dac_w)
 
 
 static PORT_WRITE_START( writeport )
-	{ 0x00, 0x00, MWA_NOP }, // ??
+	{ 0x00, 0x00, MWA_NOP }, /* ??*/
 	{ 0x14, 0x14, dac_w },	/* 4 bit DAC x 2. MSB = left, LSB = right */
 PORT_END
 
@@ -120,9 +120,9 @@ WRITE_HANDLER ( mogura_gfxram_w )
 
 static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
-	{ 0xc000, 0xdfff, MRA_RAM }, // main ram
-	{ 0xe000, 0xefff, MRA_RAM }, // ram based characters
-	{ 0xf000, 0xffff, MRA_RAM }, // tilemap
+	{ 0xc000, 0xdfff, MRA_RAM }, /* main ram*/
+	{ 0xe000, 0xefff, MRA_RAM }, /* ram based characters*/
+	{ 0xf000, 0xffff, MRA_RAM }, /* tilemap*/
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
@@ -221,7 +221,7 @@ static MACHINE_DRIVER_START( mogura )
 	MDRV_CPU_PORTS(readport,writeport)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
 
-	MDRV_FRAMES_PER_SECOND(60) // ?
+	MDRV_FRAMES_PER_SECOND(60) /* ?*/
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	MDRV_GFXDECODE(gfxdecodeinfo)

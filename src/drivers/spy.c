@@ -49,12 +49,12 @@ static READ_HANDLER( spy_bankedram1_r )
 	{
 		if (pmcbank)
 		{
-			//logerror("%04x read pmcram %04x\n",activecpu_get_pc(),offset);
+			/*logerror("%04x read pmcram %04x\n",activecpu_get_pc(),offset);*/
 			return pmcram[offset];
 		}
 		else
 		{
-			//logerror("%04x read pmc internal ram %04x\n",activecpu_get_pc(),offset);
+			/*logerror("%04x read pmc internal ram %04x\n",activecpu_get_pc(),offset);*/
 			return 0;
 		}
 	}
@@ -72,11 +72,11 @@ static WRITE_HANDLER( spy_bankedram1_w )
 	{
 		if (pmcbank)
 		{
-			//logerror("%04x pmcram %04x = %02x\n",activecpu_get_pc(),offset,data);
+			/*logerror("%04x pmcram %04x = %02x\n",activecpu_get_pc(),offset,data);*/
 			pmcram[offset] = data;
 		}
-		//else
-			//logerror("%04x pmc internal ram %04x = %02x\n",activecpu_get_pc(),offset,data);
+		/*else*/
+			/*logerror("%04x pmc internal ram %04x = %02x\n",activecpu_get_pc(),offset,data);*/
 	}
 	else
 		ram[offset] = data;
@@ -164,7 +164,7 @@ if ((data & 1) == 0) usrintf_showmessage("bankswitch RAM bank 0");
 	cpu_setbank(1,&rom[offs]);
 }
 
-//AT
+/*AT*/
 void spy_collision(void)
 {
 #define MAX_SPRITES 64
@@ -204,7 +204,7 @@ void spy_collision(void)
 */
 				if (w2==0x58 && d2==0x04 && h2==0x10 && y2==0x30) h2 = y2;
 
-				// what other sprites fall into:
+				/* what other sprites fall into:*/
 				if ( (abs(x1-x2)<w1+w2) && (abs(z1-z2)<d1+d2) && (abs(y1-y2)<h1+h2) )
 				{
 					pmcram[0xf] = 0;
@@ -225,7 +225,7 @@ void spy_collision(void)
 		loopend = (pmcram[0]<<8) + pmcram[1];
 		nearplane = (pmcram[2]<<8) + pmcram[3];
 
-		// fail safe
+		/* fail safe*/
 		if (loopend > MAX_SPRITES) loopend = MAX_SPRITES;
 		if (!nearplane) nearplane = DEF_NEAR_PLANE;
 
@@ -239,10 +239,10 @@ void spy_collision(void)
 			pmcram[i+1] = op2 & 0xff;
 		}
 
-		memset(pmcram+loopend, 0, 0x800-loopend); // clean up for next frame
+		memset(pmcram+loopend, 0, 0x800-loopend); /* clean up for next frame*/
 	}
 }
-//ZT
+/*ZT*/
 
 static WRITE_HANDLER( spy_3f90_w )
 {
@@ -303,12 +303,12 @@ static WRITE_HANDLER( spy_3f90_w )
 	/* bit 7 = PMC-BK */
 	pmcbank = (data & 0x80) >> 7;
 
-//logerror("%04x: 3f90_w %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: 3f90_w %02x\n",activecpu_get_pc(),data);*/
 	/* bit 6 = PMC-START */
 	if ((data & 0x40) && !(old & 0x40))
 	{
 		/* we should handle collision here */
-//AT
+/*AT*/
 /*
 int i;
 
@@ -321,7 +321,7 @@ for (i = 0;i < 0xfe;i++)
 }
 */
 		spy_collision();
-//ZT
+/*ZT*/
 		cpu_set_irq_line(0,M6809_FIRQ_LINE,HOLD_LINE);
 	}
 
@@ -450,7 +450,7 @@ INPUT_PORTS_START( spy )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//  PORT_DIPSETTING(    0x00, "Invalid" )
+/*  PORT_DIPSETTING(    0x00, "Invalid" )*/
 
 	PORT_START
 	PORT_DIPNAME( 0x03, 0x02, DEF_STR( Lives ) )

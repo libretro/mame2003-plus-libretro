@@ -1,45 +1,45 @@
-//	MOLE ATTACK    YACHIYO  1982
-//	known clones: "Holy Moly"
-//
-//	emulated by Jason Nelson, Phil Stroffolino
-//	known issues:
-//		some dips not mapped
-//		protection isn't fully understood, but game seems to be
-//		ok.
-//
-//	buttons are laid out as follows:
-//	7	8	9
-//	4	5	6
-//	1	2	3
-//
-// Working RAM notes:
-// 0x2e0					number of credits
-// 0x2F1					coin up trigger
-// 0x2F2					round counter
-// 0x2F3					flag value
-// 0x2FD					hammer aim for attract mode
-// 0x2E1-E2					high score
-// 0x2ED-EE					score
-// 0x301-309				presence and height of mole in each hole, from bottom left
-// 0x30a
-// 0x32E-336				if a hammer is above a mole. (Not the same as collision)
-// 0x337					dip switch related
-// 0x338					dip switch related
-// 0x340				    hammer control: manual=0; auto=1
-// 0x34C					round point 10s.
-// 0x34D				    which bonus round pattern to use for moles.
-// 0x349					button pressed (0..8 / 0xff)
-// 0x350					number of players
-// 0x351					irq-related
-// 0x361
-// 0x362
-// 0x363
-// 0x364
-// 0x366					mirrors tile bank
-// 0x36B					controls which player is playing. (1 == player 2);
-// 0x3DC					affects mole popup
-// 0x3E5					round point/passing point control?
-// 0x3E7					round point/passing point control?
+/*	MOLE ATTACK    YACHIYO  1982*/
+/*	known clones: "Holy Moly"*/
+/**/
+/*	emulated by Jason Nelson, Phil Stroffolino*/
+/*	known issues:*/
+/*		some dips not mapped*/
+/*		protection isn't fully understood, but game seems to be*/
+/*		ok.*/
+/**/
+/*	buttons are laid out as follows:*/
+/*	7	8	9*/
+/*	4	5	6*/
+/*	1	2	3*/
+/**/
+/* Working RAM notes:*/
+/* 0x2e0					number of credits*/
+/* 0x2F1					coin up trigger*/
+/* 0x2F2					round counter*/
+/* 0x2F3					flag value*/
+/* 0x2FD					hammer aim for attract mode*/
+/* 0x2E1-E2					high score*/
+/* 0x2ED-EE					score*/
+/* 0x301-309				presence and height of mole in each hole, from bottom left*/
+/* 0x30a*/
+/* 0x32E-336				if a hammer is above a mole. (Not the same as collision)*/
+/* 0x337					dip switch related*/
+/* 0x338					dip switch related*/
+/* 0x340				    hammer control: manual=0; auto=1*/
+/* 0x34C					round point 10s.*/
+/* 0x34D				    which bonus round pattern to use for moles.*/
+/* 0x349					button pressed (0..8 / 0xff)*/
+/* 0x350					number of players*/
+/* 0x351					irq-related*/
+/* 0x361*/
+/* 0x362*/
+/* 0x363*/
+/* 0x364*/
+/* 0x366					mirrors tile bank*/
+/* 0x36B					controls which player is playing. (1 == player 2);*/
+/* 0x3DC					affects mole popup*/
+/* 0x3E5					round point/passing point control?*/
+/* 0x3E7					round point/passing point control?*/
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
@@ -108,7 +108,7 @@ READ_HANDLER( mole_prot_r ){
 		if( activecpu_get_pc() == 0x53d7 ){
 			return 0x06; /* bonus round */
 		}
-		else { // pc == 0x515b, 0x5162
+		else { /* pc == 0x515b, 0x5162*/
 			return 0xc6; /* game start */
 		}
 	case 0x86: return 0x91; /* game over */
@@ -190,7 +190,7 @@ ROM_START( mole ) /* ALL ROMS ARE 2732 */
 ROM_END
 
 INPUT_PORTS_START( mole )
-	PORT_START // 0x8d00
+	PORT_START /* 0x8d00*/
 	PORT_DIPNAME( 0x01, 0x00, "Round Points" )
 	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x01, DEF_STR( On ) )
@@ -214,7 +214,7 @@ INPUT_PORTS_START( mole )
 	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x80, DEF_STR( On ) )
 
-	PORT_START // 0x8d40
+	PORT_START /* 0x8d40*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON3 )
@@ -224,7 +224,7 @@ INPUT_PORTS_START( mole )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON7 )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON8 )
 
-	PORT_START // 0x8d80
+	PORT_START /* 0x8d80*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON9 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_COCKTAIL )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_COCKTAIL )
@@ -236,7 +236,7 @@ INPUT_PORTS_START( mole )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_COIN1 )
 
-	PORT_START // 0x8dc0
+	PORT_START /* 0x8dc0*/
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON8 | IPF_COCKTAIL )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON7 | IPF_COCKTAIL )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON4 | IPF_COCKTAIL )

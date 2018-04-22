@@ -56,7 +56,7 @@ PORT_END
 static PORT_WRITE_START ( writeport )
     { 0xBE, 0xBE, TMS9928A_vram_w },
     { 0xBF, 0xBF, TMS9928A_register_w },
-    { 0xDF, 0xDF, MWA_NOP },  //? 8255 ?
+    { 0xDF, 0xDF, MWA_NOP },  /*? 8255 ?*/
     { 0x7f, 0x7F, SN76496_0_w },
 PORT_END
 

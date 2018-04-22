@@ -72,34 +72,34 @@ WRITE_HANDLER( amspdwy_sound_w )
 }
 
 static MEMORY_READ_START( amspdwy_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM				},	// ROM
-//	{ 0x8000, 0x801f, MRA_RAM				},	// Palette
-	{ 0x9000, 0x93ff, videoram_r			},	// Layer
-	{ 0x9400, 0x97ff, videoram_r			},	// Mirror?
-	{ 0x9800, 0x9bff, colorram_r			},	// Layer
-	{ 0x9c00, 0x9fff, MRA_RAM				},	// Unused?
-	{ 0xa000, 0xa000, input_port_0_r		},	// DSW 1
-	{ 0xa400, 0xa400, input_port_1_r		},	// DSW 2
-	{ 0xa800, 0xa800, amspdwy_wheel_0_r		},	// Player 1
-	{ 0xac00, 0xac00, amspdwy_wheel_1_r		},	// Player 2
-	{ 0xb400, 0xb400, amspdwy_sound_r		},	// YM2151 Status + Buttons
-	{ 0xc000, 0xc0ff, MRA_RAM				},	// Sprites
-	{ 0xe000, 0xe7ff, MRA_RAM				},	// Work RAM
+	{ 0x0000, 0x7fff, MRA_ROM				},	/* ROM*/
+/*	{ 0x8000, 0x801f, MRA_RAM				},	*/ /* Palette*/
+	{ 0x9000, 0x93ff, videoram_r			},	/* Layer*/
+	{ 0x9400, 0x97ff, videoram_r			},	/* Mirror?*/
+	{ 0x9800, 0x9bff, colorram_r			},	/* Layer*/
+	{ 0x9c00, 0x9fff, MRA_RAM				},	/* Unused?*/
+	{ 0xa000, 0xa000, input_port_0_r		},	/* DSW 1*/
+	{ 0xa400, 0xa400, input_port_1_r		},	/* DSW 2*/
+	{ 0xa800, 0xa800, amspdwy_wheel_0_r		},	/* Player 1*/
+	{ 0xac00, 0xac00, amspdwy_wheel_1_r		},	/* Player 2*/
+	{ 0xb400, 0xb400, amspdwy_sound_r		},	/* YM2151 Status + Buttons*/
+	{ 0xc000, 0xc0ff, MRA_RAM				},	/* Sprites*/
+	{ 0xe000, 0xe7ff, MRA_RAM				},	/* Work RAM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( amspdwy_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM							},	// ROM
-	{ 0x8000, 0x801f, amspdwy_paletteram_w, &paletteram	},	// Palette
-	{ 0x9000, 0x93ff, amspdwy_videoram_w, &videoram		},	// Layer
-	{ 0x9400, 0x97ff, amspdwy_videoram_w				},	// Mirror?
-	{ 0x9800, 0x9bff, amspdwy_colorram_w, &colorram		},	// Layer
-	{ 0x9c00, 0x9fff, MWA_RAM							},	// Unused?
-//	{ 0xa000, 0xa000, MWA_NOP							},	// ?
-	{ 0xa400, 0xa400, amspdwy_flipscreen_w				},	// Toggle Flip Screen?
-	{ 0xb000, 0xb000, MWA_NOP							},	// ? Exiting IRQ
-	{ 0xb400, 0xb400, amspdwy_sound_w					},	// To Sound CPU
-	{ 0xc000, 0xc0ff, MWA_RAM, &spriteram, &spriteram_size	},	// Sprites
-	{ 0xe000, 0xe7ff, MWA_RAM							},	// Work RAM
+	{ 0x0000, 0x7fff, MWA_ROM							},	/* ROM*/
+	{ 0x8000, 0x801f, amspdwy_paletteram_w, &paletteram	},	/* Palette*/
+	{ 0x9000, 0x93ff, amspdwy_videoram_w, &videoram		},	/* Layer*/
+	{ 0x9400, 0x97ff, amspdwy_videoram_w				},	/* Mirror?*/
+	{ 0x9800, 0x9bff, amspdwy_colorram_w, &colorram		},	/* Layer*/
+	{ 0x9c00, 0x9fff, MWA_RAM							},	/* Unused?*/
+/*	{ 0xa000, 0xa000, MWA_NOP							},	*/ /* ?*/
+	{ 0xa400, 0xa400, amspdwy_flipscreen_w				},	/* Toggle Flip Screen?*/
+	{ 0xb000, 0xb000, MWA_NOP							},	/* ? Exiting IRQ*/
+	{ 0xb400, 0xb400, amspdwy_sound_w					},	/* To Sound CPU*/
+	{ 0xc000, 0xc0ff, MWA_RAM, &spriteram, &spriteram_size	},	/* Sprites*/
+	{ 0xe000, 0xe7ff, MWA_RAM							},	/* Work RAM*/
 MEMORY_END
 
 
@@ -124,18 +124,18 @@ PORT_END
 ***************************************************************************/
 
 static MEMORY_READ_START( amspdwy_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM					},	// ROM
-	{ 0x9000, 0x9000, soundlatch_r				},	// From Main CPU
-	{ 0xc000, 0xdfff, MRA_RAM					},	// Work RAM
-	{ 0xffff, 0xffff, MRA_NOP					},	// ??? IY = FFFF at the start ?
+	{ 0x0000, 0x7fff, MRA_ROM					},	/* ROM*/
+	{ 0x9000, 0x9000, soundlatch_r				},	/* From Main CPU*/
+	{ 0xc000, 0xdfff, MRA_RAM					},	/* Work RAM*/
+	{ 0xffff, 0xffff, MRA_NOP					},	/* ??? IY = FFFF at the start ?*/
 MEMORY_END
 
 static MEMORY_WRITE_START( amspdwy_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM					},	// ROM
-//	{ 0x8000, 0x8000, MWA_NOP					},	// ? Written with 0 at the start
-	{ 0xa000, 0xa000, YM2151_register_port_0_w	},	// YM2151
-	{ 0xa001, 0xa001, YM2151_data_port_0_w		},	//
-	{ 0xc000, 0xdfff, MWA_RAM					},	// Work RAM
+	{ 0x0000, 0x7fff, MWA_ROM					},	/* ROM*/
+/*	{ 0x8000, 0x8000, MWA_NOP					},	*/ /* ? Written with 0 at the start*/
+	{ 0xa000, 0xa000, YM2151_register_port_0_w	},	/* YM2151*/
+	{ 0xa001, 0xa001, YM2151_data_port_0_w		},	/**/
+	{ 0xc000, 0xdfff, MWA_RAM					},	/* Work RAM*/
 MEMORY_END
 
 
@@ -151,7 +151,7 @@ MEMORY_END
 
 INPUT_PORTS_START( amspdwy )
 
-	PORT_START	// IN0 - DSW 1
+	PORT_START	/* IN0 - DSW 1*/
 	PORT_DIPNAME( 0x01, 0x00, "Character Test" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
@@ -167,10 +167,10 @@ INPUT_PORTS_START( amspdwy )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
 	PORT_BIT(     0xe0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
-	PORT_START	// IN1 - DSW 2
+	PORT_START	/* IN1 - DSW 2*/
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0x02, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(    0x02, DEF_STR( 1C_1C ) )*/
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Difficulty ) )
@@ -183,24 +183,24 @@ INPUT_PORTS_START( amspdwy )
 	PORT_DIPSETTING(    0x00, "60 sec" )
 	PORT_BIT(     0xe0, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
-	PORT_START	// IN2 - Player 1 Wheel + Coins
-	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_SPECIAL )	// wheel
-	PORT_BIT_IMPULSE( 0x80, IP_ACTIVE_HIGH, IPT_COIN1, 2 )	// 2-3f
+	PORT_START	/* IN2 - Player 1 Wheel + Coins*/
+	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* wheel*/
+	PORT_BIT_IMPULSE( 0x80, IP_ACTIVE_HIGH, IPT_COIN1, 2 )	/* 2-3f*/
 
-	PORT_START	// IN3 - Player 2 Wheel + Coins
+	PORT_START	/* IN3 - Player 2 Wheel + Coins*/
 	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_SPECIAL )
 	PORT_BIT_IMPULSE( 0x80, IP_ACTIVE_HIGH, IPT_COIN2, 2 )
 
-	PORT_START	// IN4 - Player 1&2 Pedals + YM2151 Sound Status
+	PORT_START	/* IN4 - Player 1&2 Pedals + YM2151 Sound Status*/
 	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_SPECIAL )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
 	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL )
 
-	PORT_START	// IN5 - Player 1 Analog Fake Port
+	PORT_START	/* IN5 - Player 1 Analog Fake Port*/
 	PORT_ANALOG( 0xffff, 0x0000, IPT_DIAL | IPF_PLAYER1, 15, 20, 0, 0 )
 
-	PORT_START	// IN6 - Player 2 Analog Fake Port
+	PORT_START	/* IN6 - Player 2 Analog Fake Port*/
 	PORT_ANALOG( 0xffff, 0x0000, IPT_DIAL | IPF_PLAYER2, 15, 20, 0, 0 )
 
 INPUT_PORTS_END
@@ -229,7 +229,7 @@ static struct GfxLayout layout_8x8x2 =
 
 static struct GfxDecodeInfo amspdwy_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x2,   0, 8 }, // [0] Layer & Sprites
+	{ REGION_GFX1, 0, &layout_8x8x2,   0, 8 }, /* [0] Layer & Sprites*/
 	{ -1 }
 };
 

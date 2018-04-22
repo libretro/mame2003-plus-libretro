@@ -176,10 +176,10 @@ static MEMORY_READ_START( readmem )
 	{ 0x1000, 0x17ff, MRA_RAM },
 	{ 0x1800, 0x1fff, MRA_RAM },
 	{ 0x2000, 0x2061, MRA_RAM },
-	{ 0x3000, 0x3000, input_port_0_r }, //player 1 + start buttons
-	{ 0x3001, 0x3001, input_port_1_r }, //player 2 + vblank
-	{ 0x3002, 0x3002, input_port_2_r }, //dip-switches
-	{ 0x3003, 0x3003, input_port_3_r }, //coins
+	{ 0x3000, 0x3000, input_port_0_r }, /*player 1 + start buttons*/
+	{ 0x3001, 0x3001, input_port_1_r }, /*player 2 + vblank*/
+	{ 0x3002, 0x3002, input_port_2_r }, /*dip-switches*/
+	{ 0x3003, 0x3003, input_port_3_r }, /*coins*/
 	{ 0x3800, 0x3800, YM2203_status_port_0_r },
 	{ 0x4000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xffff, MRA_ROM },
@@ -253,7 +253,7 @@ INPUT_PORTS_START( compgolf )
 	PORT_DIPNAME( 0x01,   0x01, "4-0" )
 	PORT_DIPSETTING(	  0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(	  0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02,   0x02, "Freeze" )//this is more likely a switch...
+	PORT_DIPNAME( 0x02,   0x02, "Freeze" )/*this is more likely a switch...*/
 	PORT_DIPSETTING(      0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04,   0x04, "4-2" )
@@ -363,7 +363,7 @@ ROM_START( compgolf )
 	ROM_CONTINUE(             0x04000, 0x4000 )
 	ROM_LOAD( "cv05.bin",     0x08000, 0x8000, CRC(3cef62c9) SHA1(c4827b45faf7aa4c80ddd3c57f1ed6ba76b5c49b) )
 
-	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )	// Sprites
+	ROM_REGION( 0x18000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites*/
 	ROM_LOAD( "cv00.bin",     0x00000, 0x8000, CRC(aa3d3b99) SHA1(eb968e40bcc7e7dd1acc0bbe885fd3f7d70d4bb5) )
 	ROM_LOAD( "cv01.bin",     0x08000, 0x8000, CRC(f68c2ff6) SHA1(dda9159fb59d3855025b98c272722b031617c89a) )
 	ROM_LOAD( "cv02.bin",     0x10000, 0x8000, CRC(979cdb5a) SHA1(25c1f3e6ddf50168c7e1a967bfa2753bea6106ec) )

@@ -114,7 +114,7 @@ static NVRAM_HANDLER( xexex )
 }
 
 
-#if 0 // (for reference; do not remove)
+#if 0 /* (for reference; do not remove)*/
 
 /* the interface with the 053247 is weird. The chip can address only 0x1000 bytes */
 /* of RAM, but they put 0x8000 there. The CPU can access them all. Address lines */
@@ -153,7 +153,7 @@ static void xexex_objdma(int limiter)
 
 	counter = frame;
 	frame = cpu_getcurrentframe();
-	if (limiter && counter == frame) return; // make sure we only do DMA transfer once per frame
+	if (limiter && counter == frame) return; /* make sure we only do DMA transfer once per frame*/
 
 	K053247_export_config(&dst, (struct GfxElement**)&src, (void**)&src, &counter, &counter);
 	src = spriteram16;
@@ -253,7 +253,7 @@ static WRITE16_HANDLER( sound_cmd1_w )
 {
 	if(ACCESSING_LSB)
 	{
-		// anyone knows why 0x1a keeps lurking the sound queue in the world version???
+		/* anyone knows why 0x1a keeps lurking the sound queue in the world version???*/
 		if (xexex_strip0x1a)
 			if (soundlatch2_r(0)==1 && data==0x1a) return;
 
@@ -308,11 +308,11 @@ static void dmaend_callback(int data)
 {
 	if (cur_control2 & 0x0040)
 	{
-		// foul-proof (CPU0 could be deactivated while we wait)
+		/* foul-proof (CPU0 could be deactivated while we wait)*/
 		if (suspension_active) { suspension_active = 0; cpu_trigger(resume_trigger); }
 
-		// IRQ 5 is the "object DMA end interrupt" and shouldn't be triggered
-		// if object data isn't ready for DMA within the frame.
+		/* IRQ 5 is the "object DMA end interrupt" and shouldn't be triggered*/
+		/* if object data isn't ready for DMA within the frame.*/
 		cpu_set_irq_line(0, 5, HOLD_LINE);
 	}
 }
@@ -324,7 +324,7 @@ static INTERRUPT_GEN( xexex_interrupt )
 	switch (cpu_getiloops())
 	{
 		case 0:
-			// IRQ 6 is for test mode only
+			/* IRQ 6 is for test mode only*/
 			if (cur_control2 & 0x0020)
 				cpu_set_irq_line(0, 6, HOLD_LINE);
 		break;
@@ -332,15 +332,15 @@ static INTERRUPT_GEN( xexex_interrupt )
 		case 1:
 			if (K053246_is_IRQ_enabled())
 			{
-				// OBJDMA starts at the beginning of V-blank
+				/* OBJDMA starts at the beginning of V-blank*/
 				xexex_objdma(0);
 
-				// schedule DMA end interrupt
+				/* schedule DMA end interrupt*/
 				timer_adjust(dmadelay_timer, TIME_IN_USEC(XE_DMADELAY), 0, 0);
 			}
 
-			// IRQ 4 is the V-blank interrupt. It controls color, sound and
-			// vital game logics that shouldn't be interfered by frame-drop.
+			/* IRQ 4 is the V-blank interrupt. It controls color, sound and*/
+			/* vital game logics that shouldn't be interfered by frame-drop.*/
 			if (cur_control2 & 0x0800)
 				cpu_set_irq_line(0, 4, HOLD_LINE);
 		break;
@@ -351,13 +351,13 @@ static INTERRUPT_GEN( xexex_interrupt )
 static MEMORY_READ16_START( readmem )
 	{ 0x000000, 0x07ffff, MRA16_ROM },
 #if XE_SKIPIDLE
-	{ 0x080014, 0x080015, xexex_waitskip_r },		// helps sound CPU by giving back control as early as possible
+	{ 0x080014, 0x080015, xexex_waitskip_r },		/* helps sound CPU by giving back control as early as possible*/
 #endif
 	{ 0x080000, 0x08ffff, MRA16_RAM },
-	{ 0x090000, 0x097fff, MRA16_RAM },				// K053247 sprite RAM
-	{ 0x098000, 0x09ffff, spriteram16_mirror_r },	// K053247 sprite RAM mirror read
-	{ 0x0c4000, 0x0c4001, K053246_word_r },			// Passthrough to sprite roms
-	{ 0x0c6000, 0x0c7fff, K053250_0_ram_r },		// K053250 "road" RAM
+	{ 0x090000, 0x097fff, MRA16_RAM },				/* K053247 sprite RAM*/
+	{ 0x098000, 0x09ffff, spriteram16_mirror_r },	/* K053247 sprite RAM mirror read*/
+	{ 0x0c4000, 0x0c4001, K053246_word_r },			/* Passthrough to sprite roms*/
+	{ 0x0c6000, 0x0c7fff, K053250_0_ram_r },		/* K053250 "road" RAM*/
 	{ 0x0c8000, 0x0c800f, K053250_0_r },
 	{ 0x0d6014, 0x0d6015, sound_status_r },
 	{ 0x0d6000, 0x0d601f, MRA16_RAM },
@@ -369,7 +369,7 @@ static MEMORY_READ16_START( readmem )
 	{ 0x100000, 0x17ffff, MRA16_ROM },
 	{ 0x180000, 0x181fff, K056832_ram_word_r },
 	{ 0x182000, 0x183fff, K056832_ram_word_r },
-	{ 0x190000, 0x191fff, K056832_rom_word_r },		// Passthrough to tile roms
+	{ 0x190000, 0x191fff, K056832_rom_word_r },		/* Passthrough to tile roms*/
 	{ 0x1a0000, 0x1a1fff, K053250_0_rom_r },
 	{ 0x1b0000, 0x1b1fff, MRA16_RAM },
 #if XE_DEBUG
@@ -383,27 +383,27 @@ static MEMORY_READ16_START( readmem )
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem )
-	{ 0x000000, 0x07ffff, MWA16_ROM },					// main ROM
-	{ 0x080000, 0x08ffff, MWA16_RAM, &xexex_workram },	// work RAM
-	{ 0x090000, 0x097fff, MWA16_RAM, &spriteram16 },	// K053247 sprite RAM
-	{ 0x098000, 0x09ffff, spriteram16_mirror_w },		// K053247 sprite RAM mirror write
-	{ 0x0c0000, 0x0c003f, K056832_word_w },				// VACSET (K054157)
-	{ 0x0c2000, 0x0c2007, K053246_word_w },				// OBJSET1
-	{ 0x0c6000, 0x0c7fff, K053250_0_ram_w },			// K053250 "road" RAM
-	{ 0x0c8000, 0x0c800f, K053250_0_w },				// background effects generator
-	{ 0x0ca000, 0x0ca01f, K054338_word_w },				// CLTC
-	{ 0x0cc000, 0x0cc01f, K053251_lsb_w },				// priority encoder
-	{ 0x0d0000, 0x0d001f, K053252_word_w },				// CCU
+	{ 0x000000, 0x07ffff, MWA16_ROM },					/* main ROM*/
+	{ 0x080000, 0x08ffff, MWA16_RAM, &xexex_workram },	/* work RAM*/
+	{ 0x090000, 0x097fff, MWA16_RAM, &spriteram16 },	/* K053247 sprite RAM*/
+	{ 0x098000, 0x09ffff, spriteram16_mirror_w },		/* K053247 sprite RAM mirror write*/
+	{ 0x0c0000, 0x0c003f, K056832_word_w },				/* VACSET (K054157)*/
+	{ 0x0c2000, 0x0c2007, K053246_word_w },				/* OBJSET1*/
+	{ 0x0c6000, 0x0c7fff, K053250_0_ram_w },			/* K053250 "road" RAM*/
+	{ 0x0c8000, 0x0c800f, K053250_0_w },				/* background effects generator*/
+	{ 0x0ca000, 0x0ca01f, K054338_word_w },				/* CLTC*/
+	{ 0x0cc000, 0x0cc01f, K053251_lsb_w },				/* priority encoder*/
+	{ 0x0d0000, 0x0d001f, K053252_word_w },				/* CCU*/
 	{ 0x0d4000, 0x0d4001, sound_irq_w },
 	{ 0x0d600c, 0x0d600d, sound_cmd1_w },
 	{ 0x0d600e, 0x0d600f, sound_cmd2_w },
-	{ 0x0d6000, 0x0d601f, MWA16_RAM },					// sound regs fall through
-	{ 0x0d8000, 0x0d8007, K056832_b_word_w },			// VSCCS regs
+	{ 0x0d6000, 0x0d601f, MWA16_RAM },					/* sound regs fall through*/
+	{ 0x0d8000, 0x0d8007, K056832_b_word_w },			/* VSCCS regs*/
 	{ 0x0de000, 0x0de001, control2_w },
 	{ 0x100000, 0x17ffff, MWA16_ROM },
-	{ 0x180000, 0x181fff, K056832_ram_word_w }, 		// tilemap RAM
-	{ 0x182000, 0x183fff, K056832_ram_word_w }, 		// tilemap RAM mirror
-	{ 0x190000, 0x191fff, MWA16_ROM },					// tile ROM
+	{ 0x180000, 0x181fff, K056832_ram_word_w }, 		/* tilemap RAM*/
+	{ 0x182000, 0x183fff, K056832_ram_word_w }, 		/* tilemap RAM mirror*/
+	{ 0x190000, 0x191fff, MWA16_ROM },					/* tile ROM*/
 	{ 0x1b0000, 0x1b1fff, paletteram16_xrgb_word_w, &paletteram16 },
 MEMORY_END
 
@@ -470,7 +470,7 @@ INPUT_PORTS_END
 static struct YM2151interface ym2151_interface =
 {
 	1,
-	4000000,	// 4Mhz (based on AMUSE)
+	4000000,	/* 4Mhz (based on AMUSE)*/
 	{ YM3012_VOL(50,MIXER_PAN_CENTER,50,MIXER_PAN_CENTER) },
 	{ 0 }
 };
@@ -487,12 +487,12 @@ static struct K054539interface k054539_interface =
 static MACHINE_DRIVER_START( xexex )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000, 16000000)	// 16MHz (32MHz xtal)
+	MDRV_CPU_ADD(M68000, 16000000)	/* 16MHz (32MHz xtal)*/
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(xexex_interrupt,2)
 
-	// 8MHz (PCB shows one 32MHz/18.432MHz xtal, reference: www.system16.com)
-	// more likely 32MHz since 18.432MHz yields 4.608MHz(too slow) or 9.216MHz(too fast) with integer divisors
+	/* 8MHz (PCB shows one 32MHz/18.432MHz xtal, reference: www.system16.com)*/
+	/* more likely 32MHz since 18.432MHz yields 4.608MHz(too slow) or 9.216MHz(too fast) with integer divisors*/
 	MDRV_CPU_ADD(Z80, 8000000)
 
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -543,7 +543,7 @@ ROM_START( xexex )
 	ROM_LOAD( "xex_b10.rom", 0x200000, 0x100000, CRC(ee31db8d) SHA1(c41874fb8b401ea9cdd327ee6239b5925418cf7b) )
 	ROM_LOAD( "xex_b09.rom", 0x300000, 0x100000, CRC(88f072ef) SHA1(7ecc04dbcc29b715117e970cc96e11137a21b83a) )
 
-	ROM_REGION( 0x100000, REGION_GFX3, 0 ) // NOTE: region must be 2xROM size for unpacking
+	ROM_REGION( 0x100000, REGION_GFX3, 0 ) /* NOTE: region must be 2xROM size for unpacking*/
 	ROM_LOAD( "xex_b08.rom", 0x000000, 0x080000, CRC(ca816b7b) SHA1(769ce3700e41200c34adec98598c0fe371fe1e6d) )
 
 	ROM_REGION( 0x300000, REGION_SOUND1, 0 )
@@ -572,7 +572,7 @@ ROM_START( xexexj )
 	ROM_LOAD( "xex_b10.rom", 0x200000, 0x100000, CRC(ee31db8d) SHA1(c41874fb8b401ea9cdd327ee6239b5925418cf7b) )
 	ROM_LOAD( "xex_b09.rom", 0x300000, 0x100000, CRC(88f072ef) SHA1(7ecc04dbcc29b715117e970cc96e11137a21b83a) )
 
-	ROM_REGION( 0x100000, REGION_GFX3, 0 ) // NOTE: region must be 2xROM size for unpacking
+	ROM_REGION( 0x100000, REGION_GFX3, 0 ) /* NOTE: region must be 2xROM size for unpacking*/
 	ROM_LOAD( "xex_b08.rom", 0x000000, 0x080000, CRC(ca816b7b) SHA1(769ce3700e41200c34adec98598c0fe371fe1e6d) )
 
 	ROM_REGION( 0x300000, REGION_SOUND1, 0 )
@@ -590,9 +590,9 @@ static DRIVER_INIT( xexex )
 {
 	if (!strcmp(Machine->gamedrv->name, "xexex"))
 	{
-		// Invulnerability
-//		*(data16_t *)(memory_region(REGION_CPU1) + 0x648d4) = 0x4a79;
-//		*(data16_t *)(memory_region(REGION_CPU1) + 0x00008) = 0x5500;
+		/* Invulnerability*/
+/*		*(data16_t *)(memory_region(REGION_CPU1) + 0x648d4) = 0x4a79;*/
+/*		*(data16_t *)(memory_region(REGION_CPU1) + 0x00008) = 0x5500;*/
 		xexex_strip0x1a = 1;
 	}
 

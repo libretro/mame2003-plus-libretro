@@ -99,7 +99,7 @@ ROM_START( aburner )
 ROM_END
 
 /*****************************************************************************/
-// After Burner II
+/* After Burner II*/
 ROM_START( aburner2 )
 	ROM_REGION( 0x40000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "11107.58",  0x00000, 0x20000, CRC(6d87bab7) SHA1(ab34fe78f1f216037b3e3dca3e61f1b31c05cedf) )
@@ -188,7 +188,7 @@ ROM_START( loffire )
 ROM_END
 
 /*****************************************************************************/
-// Thunder Blade
+/* Thunder Blade*/
 ROM_START( thndrbld )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "thnbld.58", 0x000000, 0x20000, CRC(e057dd5a) SHA1(4c032db4752dfb44dba3def5ee5377fffd94b79c) )
@@ -215,7 +215,7 @@ ROM_START( thndrbld )
 	ROM_LOAD16_BYTE( "11326.epr", 0x140001, 0x20000, CRC(29198403) SHA1(3ecf315a0e6b3ed5005f8bdcb2e2a884c8b176c7) )
 	ROM_LOAD16_BYTE( "11327.epr", 0x140000, 0x20000, CRC(deae90f1) SHA1(c73c23bab949041242302cec13d653dcc71bb944) )
 	ROM_LOAD16_BYTE( "11320.epr", 0x180001, 0x20000, CRC(a95c76b8) SHA1(cda62f3c25b9414a523c2fc5d109031ed560069e) )
-//	ROM_LOAD16_BYTE( "11321.epr", 0x180000, 0x20000, CRC(8e738f58) SHA1(9f2dceebf01e582cf60f072ae411000d8503894b) )
+/*	ROM_LOAD16_BYTE( "11321.epr", 0x180000, 0x20000, CRC(8e738f58) SHA1(9f2dceebf01e582cf60f072ae411000d8503894b) )*/
 	ROM_LOAD16_BYTE( "thnbld.98", 0x180000, 0x10000, CRC(eb4b9e57) SHA1(fb06ff2075725f0e2d80b451a2bce79e293218d1) )
 	ROM_LOAD16_BYTE( "11322.epr", 0x1c0001, 0x20000, CRC(10364d74) SHA1(393b19a972b5d8817ffd438f13ded73cd58ebe56) )
 	ROM_LOAD16_BYTE( "11323.epr", 0x1c0000, 0x20000, CRC(27e40735) SHA1(284ddb88efe741fb78199ea619c9b230ee689803) )
@@ -238,11 +238,11 @@ ROM_START( thndrbld )
 	ROM_LOAD( "11313.epr",	 0x00000, 0x10000, CRC(6a56c4c3) SHA1(c1b8023cb2ba4e96be052031c24b6ae424225c71) )
 ROM_END
 
-// Thunder Blade Japan
+/* Thunder Blade Japan*/
 ROM_START( thndrbdj )
 	ROM_REGION( 0x80000, REGION_CPU1, 0 ) /* 68000 code */
-	ROM_LOAD16_BYTE( "11304.epr", 0x00000, 0x20000, CRC(a90630ef) SHA1(8f29e020119b2243b1c95e15546af1773327ae85) ) // patched
-	ROM_LOAD16_BYTE( "11306.epr", 0x40000, 0x20000, CRC(4b95f2b4) SHA1(9e0ff898a2af05c35db3551e52c7485748698c28) ) // patched
+	ROM_LOAD16_BYTE( "11304.epr", 0x00000, 0x20000, CRC(a90630ef) SHA1(8f29e020119b2243b1c95e15546af1773327ae85) ) /* patched*/
+	ROM_LOAD16_BYTE( "11306.epr", 0x40000, 0x20000, CRC(4b95f2b4) SHA1(9e0ff898a2af05c35db3551e52c7485748698c28) ) /* patched*/
 	ROM_LOAD16_BYTE( "11305.epr", 0x00001, 0x20000, CRC(9ba3ef61) SHA1(f75748b37ce35b0ef881804f73417643068dfbb2) )
 	ROM_LOAD16_BYTE( "11307.epr", 0x40001, 0x20000, CRC(2d6833e4) SHA1(b39a744370014237121f0010d18897e63f7058cf) )
 
@@ -371,12 +371,12 @@ INPUT_PORTS_START( aburner2 )
 	PORT_DIPSETTING(    0x07, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x09, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(    0x05, "6 Coins 4 Credits" ) //DEF_STR( 6C_4C ) )
+	PORT_DIPSETTING(    0x05, "6 Coins 4 Credits" ) /*DEF_STR( 6C_4C ) )*/
 	PORT_DIPSETTING(    0x04, DEF_STR( 4C_3C ) )
 	PORT_DIPSETTING(    0x0f, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 4C_5C ) )
-	PORT_DIPSETTING(    0x03, "5 Coins 6 Credits" ) //DEF_STR( 5C_6C ) )
-	//PORT_DIPSETTING(    0x01, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x03, "5 Coins 6 Credits" ) /*DEF_STR( 5C_6C ) )*/
+	/*PORT_DIPSETTING(    0x01, DEF_STR( 2C_3C ) )*/
 	PORT_DIPSETTING(    0x06, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x0e, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x0d, DEF_STR( 1C_3C ) )
@@ -389,15 +389,15 @@ INPUT_PORTS_START( aburner2 )
 	PORT_DIPSETTING(    0x70, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(    0x50, "6 Coins 4 Credits" ) //DEF_STR( 6C_4C ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( 4C_3C ) ) // 1.33
-	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) ) // 1
-	PORT_DIPSETTING(    0x20, DEF_STR( 4C_5C ) ) // .8
-	PORT_DIPSETTING(    0x30, "5 Coins 6 Credits" ) // 8.3 DEF_STR( 5C_6C ) )
-	//PORT_DIPSETTING(    0x10, DEF_STR( 2C_3C ) ) // .66
-	PORT_DIPSETTING(    0x60, DEF_STR( 2C_3C ) ) // .66
-	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_2C ) ) // .5
-	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_3C ) ) // .33
+	PORT_DIPSETTING(    0x50, "6 Coins 4 Credits" ) /*DEF_STR( 6C_4C ) )*/
+	PORT_DIPSETTING(    0x40, DEF_STR( 4C_3C ) ) /* 1.33*/
+	PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) ) /* 1*/
+	PORT_DIPSETTING(    0x20, DEF_STR( 4C_5C ) ) /* .8*/
+	PORT_DIPSETTING(    0x30, "5 Coins 6 Credits" ) /* 8.3 DEF_STR( 5C_6C ) )*/
+	/*PORT_DIPSETTING(    0x10, DEF_STR( 2C_3C ) ) */ /* .66*/
+	PORT_DIPSETTING(    0x60, DEF_STR( 2C_3C ) ) /* .66*/
+	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_2C ) ) /* .5*/
+	PORT_DIPSETTING(    0xd0, DEF_STR( 1C_3C ) ) /* .33*/
 	PORT_DIPSETTING(    0x00, "Free Play (if Coin A too) or 1/1" )
 	/* note that Free Play doesn't seem to work! */
 
@@ -632,7 +632,7 @@ static WRITE16_HANDLER( math1_product_w ){
 	COMBINE_DATA( &math1_context.product[offset&3]);
 }
 static WRITE16_HANDLER( math1_quotient_w ){
-//	if( offset == 6 ) offset = 2; // tblade
+/*	if( offset == 6 ) offset = 2; */ /* tblade*/
 	COMBINE_DATA( &math1_context.quotient[offset&3]);
 }
 static WRITE16_HANDLER( math1_compare_w ){

@@ -279,7 +279,7 @@ static WRITE16_HANDLER( daisenpu_input_w )
 			coin_counter_w(1,data & 0x02);
 			coin_lockout_w(0,~data & 0x04);
 			coin_lockout_w(1,~data & 0x08);
-//logerror("taitox coin control %04x to offset %04x\n",data,offset);
+/*logerror("taitox coin control %04x to offset %04x\n",data,offset);*/
 			break;
 
 		default:
@@ -297,7 +297,7 @@ static WRITE16_HANDLER( kyustrkr_input_w )
 			coin_counter_w(1,data & 0x02);
 			coin_lockout_w(0,data & 0x04);
 			coin_lockout_w(1,data & 0x08);
-//logerror("taitox coin control %04x to offset %04x\n",data,offset);
+/*logerror("taitox coin control %04x to offset %04x\n",data,offset);*/
 			break;
 
 		default:
@@ -344,8 +344,8 @@ static MEMORY_WRITE16_START( superman_writemem )
 	{ 0x800002, 0x800003, taitosound_comm16_lsb_w },
 	{ 0x900000, 0x900fff, cchip1_word_w },
 	{ 0xb00000, 0xb00fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xd00000, 0xd007ff, MWA16_RAM, &spriteram16	},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	// Sprites Code + X + Attr
+	{ 0xd00000, 0xd007ff, MWA16_RAM, &spriteram16	},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	/* Sprites Code + X + Attr*/
 	{ 0xf00000, 0xf03fff, MWA16_RAM },			/* Main RAM */
 MEMORY_END
 
@@ -363,14 +363,14 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( daisenpu_writemem )
 	{ 0x000000, 0x03ffff, MWA16_ROM },
-//	{ 0x400000, 0x400001, MWA16_NOP },	/* written each frame at $2ac, values change */
-//	{ 0x600000, 0x600001, MWA16_NOP },	/* written each frame at $2a2, values change */
+/*	{ 0x400000, 0x400001, MWA16_NOP },	 // written each frame at $2ac, values change /*/
+/*	{ 0x600000, 0x600001, MWA16_NOP },	 // written each frame at $2a2, values change /*/
 	{ 0x800000, 0x800001, taitosound_port16_lsb_w },
 	{ 0x800002, 0x800003, taitosound_comm16_lsb_w },
 	{ 0x900000, 0x90000f, daisenpu_input_w },
 	{ 0xb00000, 0xb00fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xd00000, 0xd007ff, MWA16_RAM, &spriteram16	},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	// Sprites Code + X + Attr
+	{ 0xd00000, 0xd007ff, MWA16_RAM, &spriteram16	},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	/* Sprites Code + X + Attr*/
 	{ 0xf00000, 0xf03fff, MWA16_RAM },			/* Main RAM */
 MEMORY_END
 
@@ -394,8 +394,8 @@ static MEMORY_WRITE16_START( gigandes_writemem )
 	{ 0x800002, 0x800003, taitosound_comm16_lsb_w },
 	{ 0x900000, 0x90000f, daisenpu_input_w },
 	{ 0xb00000, 0xb00fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xd00000, 0xd007ff, MWA16_RAM, &spriteram16	},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	// Sprites Code + X + Attr
+	{ 0xd00000, 0xd007ff, MWA16_RAM, &spriteram16	},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	/* Sprites Code + X + Attr*/
 	{ 0xf00000, 0xf03fff, MWA16_RAM },			/* Main RAM */
 MEMORY_END
 
@@ -419,8 +419,8 @@ static MEMORY_WRITE16_START( ballbros_writemem )
 	{ 0x800002, 0x800003, taitosound_comm16_lsb_w },
 	{ 0x900000, 0x90000f, daisenpu_input_w },
 	{ 0xb00000, 0xb00fff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
-	{ 0xd00000, 0xd007ff, MWA16_RAM, &spriteram16	},	// Sprites Y
-	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	// Sprites Code + X + Attr
+	{ 0xd00000, 0xd007ff, MWA16_RAM, &spriteram16	},	/* Sprites Y*/
+	{ 0xe00000, 0xe03fff, MWA16_RAM, &spriteram16_2	},	/* Sprites Code + X + Attr*/
 	{ 0xf00000, 0xf03fff, MWA16_RAM },			/* Main RAM */
 MEMORY_END
 
@@ -583,9 +583,9 @@ INPUT_PORTS_START( superman )
 
 	PORT_START /* DSW C / DSW D */
 	TAITO_DIFFICULTY_8
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) ) //It seems that there are no Bonus_Life dip
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )     //You get always bonus at 50k, 150k, 300k,
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )      //450k and 600k, no matter the values of bit 2 and 3
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) ) /*It seems that there are no Bonus_Life dip*/
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )     /*You get always bonus at 50k, 150k, 300k,*/
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )      /*450k and 600k, no matter the values of bit 2 and 3*/
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -930,7 +930,7 @@ INPUT_PORTS_START( kyustrkr )
 	PORT_DIPSETTING(    0x40, "Medium" )
 	PORT_DIPSETTING(    0x20, "Hard" )
 	PORT_DIPSETTING(    0x00, "Hardest" )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )	// Free play in test mode, does not work
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )	/* Free play in test mode, does not work*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 

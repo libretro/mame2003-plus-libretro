@@ -105,7 +105,7 @@ static MEMORY_WRITE_START( sound_writemem )
 	{ 0x8002, 0x8002, SN76496_0_w },	/* trigger read of latch */
 	{ 0x8004, 0x8004, SN76496_1_w },	/* trigger read of latch */
 	{ 0x8079, 0x8079, MWA_NOP },	/* ??? */
-//	{ 0xa003, 0xa003, MWA_RAM },
+/*	{ 0xa003, 0xa003, MWA_RAM },*/
 MEMORY_END
 
 

@@ -140,7 +140,7 @@ INPUT_PORTS_START( nitedrvr )
 	PORT_START		/* fake port, gets mapped to Night Driver ports */
 	PORT_DIPNAME( 0x30, 0x10, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(	0x30, DEF_STR( 2C_1C ) )
-	//PORT_DIPSETTING(	0x20, DEF_STR( 1C_1C ) ) /* not a typo */
+	/*PORT_DIPSETTING(	0x20, DEF_STR( 1C_1C ) )  // not a typo /*/
 	PORT_DIPSETTING(	0x10, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( 1C_2C ) )
 	PORT_DIPNAME( 0xC0, 0x80, "Playing Time" )

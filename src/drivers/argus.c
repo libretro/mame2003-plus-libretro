@@ -298,11 +298,11 @@ static WRITE_HANDLER( butasan_pagedram_w )
 static MEMORY_READ_START( argus_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xbfff, MRA_BANK1 },
-	{ 0xc000, 0xc000, input_port_0_r },			// Coin
-	{ 0xc001, 0xc001, input_port_1_r },			// Player 1
-	{ 0xc002, 0xc002, input_port_2_r },			// Player 2
-	{ 0xc003, 0xc003, input_port_3_r },			// DSW 1
-	{ 0xc004, 0xc004, input_port_4_r },			// DSW 2
+	{ 0xc000, 0xc000, input_port_0_r },			/* Coin*/
+	{ 0xc001, 0xc001, input_port_1_r },			/* Player 1*/
+	{ 0xc002, 0xc002, input_port_2_r },			/* Player 2*/
+	{ 0xc003, 0xc003, input_port_3_r },			/* DSW 1*/
+	{ 0xc004, 0xc004, input_port_4_r },			/* DSW 2*/
 	{ 0xc400, 0xcfff, argus_paletteram_r, },
 	{ 0xd000, 0xd7ff, argus_txram_r },
 	{ 0xd800, 0xdfff, argus_bg1ram_r },
@@ -333,11 +333,11 @@ MEMORY_END
 static MEMORY_READ_START( valtric_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xbfff, MRA_BANK1 },
-	{ 0xc000, 0xc000, input_port_0_r },			// Coin
-	{ 0xc001, 0xc001, input_port_1_r },			// Player 1
-	{ 0xc002, 0xc002, input_port_2_r },			// Player 2
-	{ 0xc003, 0xc003, input_port_3_r },			// DSW 1
-	{ 0xc004, 0xc004, input_port_4_r },			// DSW 2
+	{ 0xc000, 0xc000, input_port_0_r },			/* Coin*/
+	{ 0xc001, 0xc001, input_port_1_r },			/* Player 1*/
+	{ 0xc002, 0xc002, input_port_2_r },			/* Player 2*/
+	{ 0xc003, 0xc003, input_port_3_r },			/* DSW 1*/
+	{ 0xc004, 0xc004, input_port_4_r },			/* DSW 2*/
 	{ 0xc400, 0xcfff, argus_paletteram_r, },
 	{ 0xd000, 0xd7ff, argus_txram_r },
 	{ 0xd800, 0xdfff, argus_bg1ram_r },
@@ -366,11 +366,11 @@ MEMORY_END
 static MEMORY_READ_START( butasan_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0xbfff, MRA_BANK1 },
-	{ 0xc000, 0xc000, input_port_0_r },			// Coin
-	{ 0xc001, 0xc001, input_port_1_r },			// Player 1
-	{ 0xc002, 0xc002, input_port_2_r },			// Player 2
-	{ 0xc003, 0xc003, input_port_3_r },			// DSW 1
-	{ 0xc004, 0xc004, input_port_4_r },			// DSW 2
+	{ 0xc000, 0xc000, input_port_0_r },			/* Coin*/
+	{ 0xc001, 0xc001, input_port_1_r },			/* Player 1*/
+	{ 0xc002, 0xc002, input_port_2_r },			/* Player 2*/
+	{ 0xc003, 0xc003, input_port_3_r },			/* DSW 1*/
+	{ 0xc004, 0xc004, input_port_4_r },			/* DSW 2*/
 	{ 0xc400, 0xc7ff, butasan_bg1ram_r },
 	{ 0xc800, 0xcfff, argus_paletteram_r },
 	{ 0xd000, 0xdfff, butasan_pagedram_r },

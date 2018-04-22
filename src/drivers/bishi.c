@@ -65,43 +65,43 @@ static WRITE16_HANDLER( bishi_sound_w )
 		YMZ280B_register_0_w(offset, data>>8);
 }
 
-static READ16_HANDLER( dipsw_r )	// dips
+static READ16_HANDLER( dipsw_r )	/* dips*/
 {
 	return input_port_1_r(0) | (input_port_5_r(0)<<8);
 }
 
-static READ16_HANDLER( player1_r ) 	// players 1 and 3
+static READ16_HANDLER( player1_r ) 	/* players 1 and 3*/
 {
 	return 0xff | (input_port_2_r(0)<<8);
 }
 
-static READ16_HANDLER( player2_r )	// players 2 and 4
+static READ16_HANDLER( player2_r )	/* players 2 and 4*/
 {
 	return input_port_3_r(0) | (input_port_4_r(0)<<8);
 }
 
 static MEMORY_READ16_START( readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },
-	{ 0x400000, 0x407fff, MRA16_RAM },		// work RAM
+	{ 0x400000, 0x407fff, MRA16_RAM },		/* work RAM*/
 	{ 0x800000, 0x800001, control_r },
 	{ 0x800004, 0x800005, dipsw_r },
 	{ 0x800006, 0x800007, player1_r },
 	{ 0x800008, 0x800009, player2_r },
 	{ 0x880000, 0x880003, bishi_sound_r },
-	{ 0xa00000, 0xa01fff, K056832_ram_word_r },	// VRAM
+	{ 0xa00000, 0xa01fff, K056832_ram_word_r },	/* VRAM*/
 	{ 0xb00000, 0xb03fff, MRA16_RAM },
-	{ 0xb04000, 0xb047ff, bishi_mirror_r },		// bug in the ram/rom test?
+	{ 0xb04000, 0xb047ff, bishi_mirror_r },		/* bug in the ram/rom test?*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem )
 	{ 0x000000, 0x0fffff, MWA16_ROM },
 	{ 0x400000, 0x407fff, MWA16_RAM },
 	{ 0x800000, 0x800001, control_w },
-	{ 0x820000, 0x820001, MWA16_NOP },		// lamps (see lamp test in service menu)
+	{ 0x820000, 0x820001, MWA16_NOP },		/* lamps (see lamp test in service menu)*/
 	{ 0x830000, 0x83003f, K056832_word_w },
-	{ 0x840000, 0x840007, K056832_b_word_w },	// VSCCS
-	{ 0x850000, 0x85001f, K054338_word_w },		// CLTC
-	{ 0x870000, 0x8700ff, K055555_word_w },		// PCU2
+	{ 0x840000, 0x840007, K056832_b_word_w },	/* VSCCS*/
+	{ 0x850000, 0x85001f, K054338_word_w },		/* CLTC*/
+	{ 0x870000, 0x8700ff, K055555_word_w },		/* PCU2*/
 	{ 0x880000, 0x880003, bishi_sound_w },
 	{ 0xa00000, 0xa01fff, K056832_ram_word_w },	/* Graphic planes */
 	{ 0xb00000, 0xb03fff, paletteram16_xbgr_word_w, &paletteram16 },
@@ -118,7 +118,7 @@ INPUT_PORTS_START( bishi )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE3 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE4 )
 
-	PORT_START	// dips bank 1
+	PORT_START	/* dips bank 1*/
 	PORT_DIPNAME( 0x07, 0x04, DEF_STR( Difficulty ) )
 	PORT_DIPSETTING(    0x07, "Easiest" )
 	PORT_DIPSETTING(    0x06, "Very Easy" )
@@ -173,7 +173,7 @@ INPUT_PORTS_START( bishi )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
-	PORT_START	// dips bank 2
+	PORT_START	/* dips bank 2*/
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x05, DEF_STR( 3C_1C ) )
@@ -253,7 +253,7 @@ static MACHINE_DRIVER_START( bishi )
 	MDRV_SOUND_ADD(YMZ280B, ymz280b_intf)
 MACHINE_DRIVER_END
 
-// ROM definitions
+/* ROM definitions*/
 
 ROM_START( bishi )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )
@@ -264,9 +264,9 @@ ROM_START( bishi )
 	ROM_LOAD16_BYTE( "575_ja.a07", 0x000000, 0x080000, CRC(37bbf387) SHA1(dcf7b151b865d251f3122611b6339dd84eb1f990) )
 	ROM_LOAD16_BYTE( "575_ja.a08", 0x000001, 0x080000, CRC(47ecd559) SHA1(7baac23557d40cccc21b93f181606563924244b0) )
 	ROM_LOAD16_BYTE( "575_ja.a09", 0x100000, 0x080000, CRC(c1db6e68) SHA1(e951661e3b39a83db21aed484764e032adcf3c2a) )
-	ROM_LOAD16_BYTE( "575_ja.a10", 0x100001, 0x080000, BAD_DUMP CRC(c8b145d6) SHA1(15cb3e4bebb999f1791fafa7a2ce3875a56991ff) )  // both halves identical (bad?)
+	ROM_LOAD16_BYTE( "575_ja.a10", 0x100001, 0x080000, BAD_DUMP CRC(c8b145d6) SHA1(15cb3e4bebb999f1791fafa7a2ce3875a56991ff) )  /* both halves identical (bad?)*/
 
-	// dummy region (game has no sprites, but we want to use the GX mixer)
+	/* dummy region (game has no sprites, but we want to use the GX mixer)*/
 	ROM_REGION( 0x80000, REGION_GFX2, 0 )
 
 	ROM_REGION( 0x200000, REGION_SOUND1, 0 )

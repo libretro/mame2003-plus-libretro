@@ -208,7 +208,7 @@ MEMORY_END
  *************************************/
 
 static PORT_READ_START( readport )
-//{0x3f, 0x3f, MRA_NOP }, /* Pig Newton - read from 1D87 */
+/*{0x3f, 0x3f, MRA_NOP },  // Pig Newton - read from 1D87 /*/
 	{ 0x0e, 0x0e, monsterb_audio_8255_r },
 	{ 0x81, 0x81, input_port_8_r },     /* only used by Sindbad Mystery */
 	{ 0xf8, 0xfc, segar_ports_r },
@@ -221,7 +221,7 @@ PORT_END
 
 
 static PORT_WRITE_START( sindbadm_writeport )
-//      { 0x00, 0x00, ???_w }, /* toggles on and off immediately (0x01, 0x00) */
+/*      { 0x00, 0x00, ???_w },  // toggles on and off immediately (0x01, 0x00) /*/
 	{ 0x41, 0x41, sindbadm_back_port_w },
 	{ 0x43, 0x43, segar_video_port_w }, /* bit0=cocktail flip, bit1=write to color RAM, bit2=always on? */
 	{ 0x80, 0x80, sindbadm_soundport_w },    /* sound commands */
@@ -464,8 +464,8 @@ INPUT_PORTS_START( astrob2 )
 	PORT_DIPNAME( 0xc0, 0x80, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0x80, "3" )
-  //PORT_DIPSETTING(    0x40, "3" )
-  //PORT_DIPSETTING(    0xc0, "3" )
+  /*PORT_DIPSETTING(    0x40, "3" )*/
+  /*PORT_DIPSETTING(    0xc0, "3" )*/
 
 	COINAGE
 INPUT_PORTS_END

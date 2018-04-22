@@ -171,12 +171,12 @@ z80ctc_0_w(offset,data);
 
 static PORT_READ_START( readport )
 	{ 0x00, 0x03, pip_r },
-//	{ 0x80, 0x83, z80ctc_0_r },
+/*	{ 0x80, 0x83, z80ctc_0_r },*/
 PORT_END
 
 static PORT_WRITE_START( writeport )
 	{ 0x00, 0x03, pip_w },
-//	{ 0x80, 0x83, z80ctc_0_w },
+/*	{ 0x80, 0x83, z80ctc_0_w },*/
 PORT_END
 
 

@@ -46,9 +46,9 @@ void handle_coins(int coin)
 	int coinage_table[4][2] = {{2,3},{2,1},{1,2},{1,1}};
 	int tmp = 0;
 
-//	usrintf_showmessage("Coin %d",coin);
+/*	usrintf_showmessage("Coin %d",coin);*/
 
-	if (coin & 1)	// Coin 2 !
+	if (coin & 1)	/* Coin 2 !*/
 	{
 		tmp = (readinputport(2) & 0xc0) >> 6;
 		coins++;
@@ -61,7 +61,7 @@ void handle_coins(int coin)
 		coin_counter_w(1,1); coin_counter_w(1,0); /* Count slot B */
 	}
 
-	if (coin & 2)	// Coin 1 !
+	if (coin & 2)	/* Coin 1 !*/
 	{
 		tmp = (readinputport(2) & 0x30) >> 4;
 		coins++;
@@ -133,15 +133,15 @@ READ_HANDLER ( xyonix_io_r )
 		}
 	}
 
-//	logerror ("xyonix_port_e0_r - PC = %04x - port = %02x\n", regPC, e0_data);
-//	usrintf_showmessage("%02x",e0_data);
+/*	logerror ("xyonix_port_e0_r - PC = %04x - port = %02x\n", regPC, e0_data);*/
+/*	usrintf_showmessage("%02x",e0_data);*/
 
 	return 0xff;
 }
 
 WRITE_HANDLER ( xyonix_io_w )
 {
-//	logerror ("xyonix_port_e0_w %02x - PC = %04x\n", data, activecpu_get_pc());
+/*	logerror ("xyonix_port_e0_w %02x - PC = %04x\n", data, activecpu_get_pc());*/
 	e0_data = data;
 }
 
@@ -168,9 +168,9 @@ static PORT_WRITE_START( port_writemem )
 	{ 0x20, 0x20, SN76496_0_w },
 	{ 0x21, 0x21, SN76496_1_w },
 	{ 0xe0, 0xe0, xyonix_io_w },
-	{ 0x40, 0x40, IOWP_NOP },	// NMI ack?
+	{ 0x40, 0x40, IOWP_NOP },	/* NMI ack?*/
 	{ 0x50, 0x50, xyonix_irqack_w },
-	{ 0x60, 0x61, IOWP_NOP },	// crtc6845
+	{ 0x60, 0x61, IOWP_NOP },	/* crtc6845*/
 MEMORY_END
 
 /* Inputs Ports **************************************************************/
@@ -201,7 +201,7 @@ INPUT_PORTS_START( xyonix )
 	PORT_DIPSETTING(    0x03, "Easy" )
 	PORT_DIPSETTING(    0x02, "Normal" )
 	PORT_DIPSETTING(    0x01, "Hard" )
-	PORT_DIPSETTING(    0x00, "Hardest" )			// "Very Hard"
+	PORT_DIPSETTING(    0x00, "Hardest" )			/* "Very Hard"*/
 	PORT_DIPNAME( 0x04, 0x00, "Allow Continue" )
 	PORT_DIPSETTING(    0x04, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )

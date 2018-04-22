@@ -98,10 +98,10 @@ static READ_HANDLER( mightguy_dsw_r )
 
 	switch (offset)
 	{
-		case 0 :				// DSW1
+		case 0 :				/* DSW1*/
 			data = (readinputport(3) & 0x7f) | ((readinputport(5) & 0x04) << 5);
 			break;
-		case 1 :				// DSW2
+		case 1 :				/* DSW2*/
 			data = (readinputport(4) & 0x3f) | ((readinputport(5) & 0x03) << 6);
 			break;
 		}
@@ -317,7 +317,7 @@ INPUT_PORTS_START( mightguy )
 	PORT_DIPSETTING(	0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL )	// "Start Area" - see fake Dip Switch
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL )	/* "Start Area" - see fake Dip Switch*/
 
 	PORT_START	/* DSW2 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) )
@@ -335,7 +335,7 @@ INPUT_PORTS_START( mightguy )
 	PORT_DIPSETTING(	0x20, "Normal" )
 	PORT_DIPSETTING(	0x10, "Hard" )
 	PORT_BITX( 0,       0x00, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Invincibility", IP_KEY_NONE, IP_JOY_NONE )
-	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_SPECIAL )	// "Start Area" - see fake Dip Switch
+	PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_SPECIAL )	/* "Start Area" - see fake Dip Switch*/
 
 	PORT_START	/* FAKE Dip Switch */
 	PORT_DIPNAME( 0x07, 0x07, "Starting Area" )
@@ -603,9 +603,9 @@ static DRIVER_INIT( mightguy )
 	/* This is a hack to fix the game code to get a fully working
 	   "Starting Area" fake Dip Switch */
 	data8_t *RAM = (data8_t *)memory_region(REGION_CPU1);
-	RAM[0x00e4] = 0x07;	// rlca
-	RAM[0x00e5] = 0x07;	// rlca
-	RAM[0x00e6] = 0x07;	// rlca
+	RAM[0x00e4] = 0x07;	/* rlca*/
+	RAM[0x00e5] = 0x07;	/* rlca*/
+	RAM[0x00e6] = 0x07;	/* rlca*/
 	/* To avoid checksum error */
 	RAM[0x027f] = 0x00;
 	RAM[0x0280] = 0x00;

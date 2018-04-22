@@ -182,8 +182,8 @@ static WRITE_HANDLER( braze_a15_w )
 
 	if (banks != (data & 1)) {
 		banks = data & 1;
-		memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x06000); // ?
-		memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x08000); // ?
+		memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x06000); /* ?*/
+		memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000 + (0x8000 * banks), 0x08000); /* ?*/
 	}
 }
 
@@ -283,7 +283,7 @@ static READ_HANDLER( dkong_sh_tune_r )
 
 MACHINE_INIT( strtheat );
 READ_HANDLER( strtheat_decrypt_rom );
-//WRITE_HANDLER( strtheat_writeport );
+/*WRITE_HANDLER( strtheat_writeport );*/
 
 
 #include <math.h>
@@ -392,7 +392,7 @@ static MEMORY_WRITE_START( dkong_writemem )
 	{ 0x7800, 0x7803, MWA_RAM },	/* ???? */
 	{ 0x7808, 0x7808, MWA_RAM },	/* ???? */
 	{ 0x7c00, 0x7c00, dkong_sh_tuneselect_w },
-//	{ 0x7c80, 0x7c80,  },
+/*	{ 0x7c80, 0x7c80,  },*/
 	{ 0x7d00, 0x7d02, dkong_sh1_w },	/* walk/jump/boom sample trigger */
 	{ 0x7d03, 0x7d03, dkong_sh_sound3_w },
 	{ 0x7d04, 0x7d04, dkong_sh_sound4_w },
@@ -416,7 +416,7 @@ static MEMORY_WRITE_START( dkong2_writemem )
 	{ 0x7800, 0x7803, MWA_RAM },	/* ???? */
 	{ 0x7808, 0x7808, MWA_RAM },	/* ???? */
 	{ 0x7c00, 0x7c00, dkong_sh_tuneselect_w },
-//	{ 0x7c80, 0x7c80,  },
+/*	{ 0x7c80, 0x7c80,  },*/
 	{ 0x7d00, 0x7d02, dkong_sh1_w },	/* walk/jump/boom sample trigger */
 	{ 0x7d03, 0x7d03, dkong_sh_sound3_w },
 	{ 0x7d04, 0x7d04, dkong_sh_sound4_w },
@@ -437,7 +437,7 @@ static MEMORY_READ_START( hunchbkd_readmem )
 	{ 0x1400, 0x1400, input_port_0_r },		/* IN0 */
 	{ 0x1480, 0x1480, input_port_1_r },		/* IN1 */
 	{ 0x1500, 0x1500, input_port_2_r },		/* IN2/DSW2 */
-//	{ 0x1507, 0x1507, herbiedk_iack_r },  	/* Clear Int */
+/*	{ 0x1507, 0x1507, herbiedk_iack_r },  	 // Clear Int /*/
 	{ 0x1580, 0x1580, input_port_3_r },		/* DSW1 */
 	{ 0x1600, 0x1bff, MRA_RAM },			/* video RAM */
 	{ 0x1c00, 0x1fff, MRA_RAM },
@@ -490,7 +490,7 @@ static MEMORY_WRITE_START( strtheat_writemem )
 	{ 0x7800, 0x7803, MWA_RAM },	/* ???? */
 	{ 0x7808, 0x7808, MWA_RAM },	/* ???? */
 	{ 0x7c00, 0x7c00, dkong_sh_tuneselect_w },
-//	{ 0x7c80, 0x7c80,  },
+/*	{ 0x7c80, 0x7c80,  },*/
 	{ 0x7d00, 0x7d02, dkong_sh1_w },	/* walk/jump/boom sample trigger */
 	{ 0x7d03, 0x7d03, dkong_sh_sound3_w },
 	{ 0x7d04, 0x7d04, dkong_sh_sound4_w },
@@ -544,8 +544,8 @@ READ_HANDLER( spclforc_port0_r )
 {
 	switch (activecpu_get_pc())
 	{
-		case 0x00a3: // spclforc
-		case 0x007b: // spcfrcii
+		case 0x00a3: /* spclforc*/
+		case 0x007b: /* spcfrcii*/
 			return 1;
 	}
 
@@ -781,9 +781,9 @@ INPUT_PORTS_START( dkong )
 
 	PORT_START      /* IN2 */
 	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-//	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Service_Mode ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Service_Mode ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x01, DEF_STR( On ) )*/
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_START2 )
@@ -840,9 +840,9 @@ INPUT_PORTS_START( dkong2 )
 
 	PORT_START      /* IN2 */
 	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-//	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Service_Mode ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Service_Mode ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x01, DEF_STR( On ) )*/
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_START2 )
@@ -1242,7 +1242,7 @@ INPUT_PORTS_START( herodk )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x02, "5" )
-	PORT_DIPNAME( 0x0c, 0x00, "Difficulty?" )		// Stored at 0x1c99
+	PORT_DIPNAME( 0x0c, 0x00, "Difficulty?" )		/* Stored at 0x1c99*/
 	PORT_DIPSETTING(    0x00, "0" )
 	PORT_DIPSETTING(    0x04, "1" )
 	PORT_DIPSETTING(    0x08, "2" )
@@ -1468,9 +1468,9 @@ INPUT_PORTS_START( strtheat )
 
 	PORT_START      /* IN2 */
 	PORT_BITX(0x01, IP_ACTIVE_HIGH, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
-//	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Service_Mode ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-//	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+/*	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Service_Mode ) )*/
+/*	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )*/
+/*	PORT_DIPSETTING(    0x01, DEF_STR( On ) )*/
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_START2 )
@@ -1999,9 +1999,9 @@ ROM_END
 
 ROM_START( dkongo )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )	/* 64k for code */
-	ROM_LOAD( "c_5f_b.bin",   0x0000, 0x1000, CRC(424f2b11) SHA1(e4f096f2bbd37281f42a5f8e083738f55c07f3dd) )	// tkg3c.5f
-	ROM_LOAD( "c_5ct_g.bin",  0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )	// tkg3c.5g
-	ROM_LOAD( "c_5h_b.bin",   0x2000, 0x1000, CRC(1d28895d) SHA1(63792cab215fc2a7b0e8ee61d8115045571e9d42) )	// tkg3c.5h
+	ROM_LOAD( "c_5f_b.bin",   0x0000, 0x1000, CRC(424f2b11) SHA1(e4f096f2bbd37281f42a5f8e083738f55c07f3dd) )	/* tkg3c.5f*/
+	ROM_LOAD( "c_5ct_g.bin",  0x1000, 0x1000, CRC(5ec461ec) SHA1(acb11a8fbdbb3ab46068385fe465f681e3c824bd) )	/* tkg3c.5g*/
+	ROM_LOAD( "c_5h_b.bin",   0x2000, 0x1000, CRC(1d28895d) SHA1(63792cab215fc2a7b0e8ee61d8115045571e9d42) )	/* tkg3c.5h*/
 	ROM_LOAD( "tkg3c.5k",     0x3000, 0x1000, CRC(553b89bb) SHA1(61611df9e2748fdcd31821038dcc0e16dc933873) )
 	/* space for diagnostic ROM */
 
@@ -2349,19 +2349,19 @@ ROM_START( pestplce )
 	ROM_LOAD( "pest.4",       0x0000, 0x1000, CRC(715da5f8) SHA1(f708c3fd374da65cbd9fe2e191152f5d865414a0) )
 
 	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
-	// this has FIXED BITS (xxxxxxxxxx1xxxxx)
+	/* this has FIXED BITS (xxxxxxxxxx1xxxxx)*/
 	ROM_LOAD( "pest.o",       0x0000, 0x1000, BAD_DUMP CRC(22874444) SHA1(23d4744c99d48ae9f5e1ef8a214ff279a1fa0a3e) )
 	ROM_LOAD( "pest.k",       0x1000, 0x1000, CRC(2acacedf) SHA1(f91863f46aeb8986226b0b0854bac00217d6e7cf) )
-	ROM_RELOAD(				  0x0000, 0x1000 ) // for now we overwrite the bad rom
+	ROM_RELOAD(				  0x0000, 0x1000 ) /* for now we overwrite the bad rom*/
 
-	// all have FIRST AND SECOND HALF IDENTICAL
+	/* all have FIRST AND SECOND HALF IDENTICAL*/
 	ROM_REGION( 0x4000, REGION_GFX2, ROMREGION_DISPOSE )
 	ROM_LOAD( "pest.a",       0x0000, 0x1000, CRC(22d89c23) SHA1(c5dbf97c8d7ef7acff8395ae083ce29c0c203160) )
 	ROM_LOAD( "pest.b",       0x1000, 0x1000, CRC(543b15ae) SHA1(486152fa86aa5b01f1364ff95462f71ce2a93f92) )
 	ROM_LOAD( "pest.c",       0x2000, 0x1000, CRC(ebf68c21) SHA1(9a734f13e2b89c72a71bce77dd0d5ed54f2c6ae5) )
 	ROM_LOAD( "pest.d",       0x3000, 0x1000, CRC(3c6781ac) SHA1(61c53d9d27e0c78a3a152ea45b7e686850e8a5e1) )
 
-	// are these the same as dkongjr ?
+	/* are these the same as dkongjr ?*/
 	ROM_REGION( 0x0300, REGION_PROMS, 0 )
 	ROM_LOAD( "pest-2e.bpr",  0x0000, 0x0100, NO_DUMP/*BAD_DUMP CRC(463dc7ad) SHA1(b2c9f22facc8885be2d953b056eb8dcddd4f34cb)*/ )	/* palette low 4 bits (inverted) */
 	ROM_LOAD( "pest-2f.bpr",  0x0100, 0x0100, NO_DUMP/*BAD_DUMP CRC(47ba0042) SHA1(dbec3f4b8013628c5b8f83162e5f8b1f82f6ee5f)*/ )	/* palette high 4 bits (inverted) */
@@ -2769,10 +2769,10 @@ ROM_START( shootgal )
 	ROM_LOAD( "sg-01-0",     0x0000, 0x0800, CRC(f055a624) SHA1(5dfe89d7271092e665cdd5cd59d15a2b70f92f43) )
 
 	ROM_REGION( 0x8000, REGION_CPU4, 0 )
-	ROM_LOAD( "sg-01snd",    0x0000, 0x1000, CRC(644a0728) SHA1(e249fd57bc49572a2246aaf7c68a547f319f51bc) ) //sg-01-snd
-	ROM_LOAD( "sg-01spk",    0x1000, 0x0800, CRC(aacaf730) SHA1(cd562093ab8931d165cb0877e332474fce131c67) ) //sg-01-spk
+	ROM_LOAD( "sg-01snd",    0x0000, 0x1000, CRC(644a0728) SHA1(e249fd57bc49572a2246aaf7c68a547f319f51bc) ) /*sg-01-snd*/
+	ROM_LOAD( "sg-01spk",    0x1000, 0x0800, CRC(aacaf730) SHA1(cd562093ab8931d165cb0877e332474fce131c67) ) /*sg-01-spk*/
 
-	ROM_REGION( 0x2000, REGION_USER1, 0 ) // gun proms?
+	ROM_REGION( 0x2000, REGION_USER1, 0 ) /* gun proms?*/
 	ROM_LOAD( "sg-1",        0x0000, 0x0200, CRC(fda82517) SHA1(b36bac69b6f8218b280aae59133ea0d22d7a99f6) )
 	ROM_LOAD( "sg-2",        0x0200, 0x091d, CRC(6e065613) SHA1(26d048af5c302f921de8e2c1bc7c7bf48dc21b5a) )
 
@@ -2786,7 +2786,7 @@ ROM_START( shootgal )
 	ROM_LOAD( "sg-01-7e",    0x1000, 0x0800, CRC(65d11685) SHA1(4e4b0b60ca4c16e26d842e142002887456d98ea4) )
 	ROM_LOAD( "sg-01-7f",    0x1800, 0x0800, CRC(44fe71a2) SHA1(ff4442a5601ac2ed63c57e22977299b5b5499c93) )
 
-	ROM_REGION( 0x0600, REGION_PROMS, 0 ) //ok?
+	ROM_REGION( 0x0600, REGION_PROMS, 0 ) /*ok?*/
 	ROM_LOAD( "sg-01-2e",    0x0000, 0x0200, CRC(34fb23ea) SHA1(6bd6de791c9e0a5f9c833c287663e9755e01c573) )
 	ROM_LOAD( "sg-01-2f",    0x0100, 0x0200, CRC(c29b880a) SHA1(950017a0298f91e41db9865ed8ce388f4095f6cf) )
 	ROM_LOAD( "sg-01-2n",    0x0200, 0x0200, CRC(e08ed788) SHA1(6982f6bcc70dbf4c75ff538a5df70da11bc89bb4) )
@@ -2833,7 +2833,7 @@ static DRIVER_INIT( dkong2 )
 
 	banks = 0;
 	memcpy (memory_region(REGION_CPU1) + 0x0000, memory_region(REGION_USER1) + 0x10000, 0x06000); 
-	memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000, 0x08000); // ?
+	memcpy (memory_region(REGION_CPU1) + 0x8000, memory_region(REGION_USER1) + 0x10000, 0x08000); /* ?*/
 
 	install_mem_write_handler(0, 0xe000, 0xe000,  braze_a15_w);
 	install_mem_write_handler(0, 0xc800, 0xc800,  braze_eeprom_w);

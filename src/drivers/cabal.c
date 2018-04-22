@@ -160,7 +160,7 @@ static MEMORY_WRITE16_START( writemem_cpu )
 	{ 0xc0040, 0xc0041, MWA16_NOP }, /* ??? */
 	{ 0xc0080, 0xc0081, cabal_flipscreen_w },
 	{ 0xe0000, 0xe07ff, paletteram16_xxxxBBBBGGGGRRRR_word_w, &paletteram16 },
-	{ 0xe8008, 0xe8009, cabal_sound_irq_trigger_word_w },	// fix coin insertion
+	{ 0xe8008, 0xe8009, cabal_sound_irq_trigger_word_w },	/* fix coin insertion*/
 	{ 0xe8000, 0xe800d, seibu_main_word_w },
 MEMORY_END
 
@@ -882,7 +882,7 @@ static DRIVER_INIT( cabal )
 
 
 GAME( 1988, cabal,   0,     cabal,   cabal,    cabal,   ROT0, "Tad Corporation", "Cabal (World, Joystick version)" )
-GAME( 1989, cabala,  cabal, cabal,   cabal,    cabal,   ROT0, "Tad Corporation (Alpha Trading license)", "Cabal (Alpha Trading)" ) // korea?
+GAME( 1989, cabala,  cabal, cabal,   cabal,    cabal,   ROT0, "Tad Corporation (Alpha Trading license)", "Cabal (Alpha Trading)" ) /* korea?*/
 GAME( 1988, cabalus, cabal, cabal,   cabalt,   cabal,   ROT0, "Tad (Fabtek license)", "Cabal (US set 1, Trackball version)" )
 GAME( 1988, cabalus2,cabal, cabal,   cabalt,   cabal,   ROT0, "Tad (Fabtek license)", "Cabal (US set 2, Trackball version)" )
 GAMEX(1988, cabalbl, cabal, cabalbl, cabalbl,  0,       ROT0, "bootleg", "Cabal (bootleg of Joystick version)", GAME_IMPERFECT_SOUND )

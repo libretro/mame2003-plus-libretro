@@ -130,23 +130,23 @@ MEMORY_END
 /*******************************************************/
 
 static WRITE_HANDLER( mrflea_main_w ){
-	mrflea_status |= 0x01; // pending command to main CPU
+	mrflea_status |= 0x01; /* pending command to main CPU*/
 	mrflea_main = data;
 }
 
 static WRITE_HANDLER( mrflea_io_w ){
-	mrflea_status |= 0x08; // pending command to IO CPU
+	mrflea_status |= 0x08; /* pending command to IO CPU*/
 	mrflea_io = data;
 	cpu_set_irq_line( 1, 0, HOLD_LINE );
 }
 
 static READ_HANDLER( mrflea_main_r ){
-	mrflea_status &= ~0x01; // main CPU command read
+	mrflea_status &= ~0x01; /* main CPU command read*/
 	return mrflea_main;
 }
 
 static READ_HANDLER( mrflea_io_r ){
-	mrflea_status &= ~0x08; // IO CPU command read
+	mrflea_status &= ~0x08; /* IO CPU command read*/
 	return mrflea_io;
 }
 

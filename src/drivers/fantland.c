@@ -45,8 +45,8 @@ static data8_t fantland_nmi_enable;
 static WRITE_HANDLER( fantland_nmi_enable_w )
 {
 	fantland_nmi_enable = data;
-//	if ((fantland_nmi_enable != 0) && (fantland_nmi_enable != 8))
-//		logerror("CPU #0 : nmi_enable = %02x - PC = %04X\n", data, activecpu_get_pc());
+/*	if ((fantland_nmi_enable != 0) && (fantland_nmi_enable != 8))*/
+/*		logerror("CPU #0 : nmi_enable = %02x - PC = %04X\n", data, activecpu_get_pc());*/
 }
 
 static WRITE_HANDLER( fantland_soundlatch_w )
@@ -62,13 +62,13 @@ static WRITE_HANDLER( fantland_soundlatch_w )
 static MEMORY_READ_START( fantland_readmem )
 	{ 0x00000, 0x07fff, MRA_RAM			},
 	{ 0x08000, 0x7ffff, MRA_ROM			},
-	{ 0xa2000, 0xa21ff, MRA_RAM			},	// not actually read
+	{ 0xa2000, 0xa21ff, MRA_RAM			},	/* not actually read*/
 	{ 0xa3000, 0xa3000, input_port_0_r	},
 	{ 0xa3001, 0xa3001, input_port_1_r	},
 	{ 0xa3002, 0xa3002, input_port_2_r	},
 	{ 0xa3003, 0xa3003, input_port_3_r	},
-	{ 0xa4000, 0xa67ff, MRA_RAM			},	// not actually read
-	{ 0xc0000, 0xc03ff, MRA_RAM			},	// ""
+	{ 0xa4000, 0xa67ff, MRA_RAM			},	/* not actually read*/
+	{ 0xc0000, 0xc03ff, MRA_RAM			},	/* ""*/
 	{ 0xe0000, 0xfffff, MRA_ROM			},
 MEMORY_END
 
@@ -91,13 +91,13 @@ MEMORY_END
 static MEMORY_READ_START( galaxygn_readmem )
 	{ 0x00000, 0x07fff, MRA_RAM			},
 	{ 0x10000, 0x2ffff, MRA_ROM			},
-	{ 0x52000, 0x521ff, MRA_RAM			},	// not actually read
+	{ 0x52000, 0x521ff, MRA_RAM			},	/* not actually read*/
 	{ 0x53000, 0x53000, input_port_0_r	},
 	{ 0x53001, 0x53001, input_port_1_r	},
 	{ 0x53002, 0x53002, input_port_2_r	},
 	{ 0x53003, 0x53003, input_port_3_r	},
-	{ 0x54000, 0x567ff, MRA_RAM			},	// not actually read
-	{ 0x60000, 0x603ff, MRA_RAM			},	// ""
+	{ 0x54000, 0x567ff, MRA_RAM			},	/* not actually read*/
+	{ 0x60000, 0x603ff, MRA_RAM			},	/* ""*/
 	{ 0x60000, 0x7ffff, MRA_ROM			},
 	{ 0xf0000, 0xfffff, MRA_ROM			},
 MEMORY_END
@@ -169,7 +169,7 @@ INPUT_PORTS_START( fantland )
 	PORT_START	/* IN1 - a3001 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2			)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2			)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP		| IPF_PLAYER2 )	// used in test mode only
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP		| IPF_PLAYER2 )	/* used in test mode only*/
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN	| IPF_PLAYER2 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT	| IPF_PLAYER2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT	| IPF_PLAYER2 )
@@ -217,10 +217,10 @@ INPUT_PORTS_START( fantland )
 	PORT_DIPSETTING(    0x20, "1600k" )
 	PORT_DIPSETTING(    0x10, "2400k" )
 	PORT_DIPSETTING(    0x00, "3200k" )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )	//unused?
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )	/*unused?*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )	//unused?
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )	/*unused?*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -260,10 +260,10 @@ INPUT_PORTS_START( galaxygn )
 	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x00, "Invulnerability" )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) ) 	// Demo Sounds? doesn't work
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) ) 	/* Demo Sounds? doesn't work*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )	// Allow Continue? doesn't work
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )	/* Allow Continue? doesn't work*/
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Difficulty ) )
@@ -291,10 +291,10 @@ INPUT_PORTS_START( galaxygn )
 	PORT_DIPSETTING(    0x20, "20k" )
 	PORT_DIPSETTING(    0x10, "30k" )
 	PORT_DIPSETTING(    0x00, "40k" )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )	//unused?
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )	/*unused?*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )	//unused?
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )	/*unused?*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
@@ -319,7 +319,7 @@ static struct GfxLayout layout16x16x6 =
 
 static struct GfxDecodeInfo fantland_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout16x16x6, 0, 4 }, // [0] Sprites
+	{ REGION_GFX1, 0, &layout16x16x6, 0, 4 }, /* [0] Sprites*/
 	{ -1 }
 };
 
@@ -348,7 +348,7 @@ static INTERRUPT_GEN( fantland_sound_irq )
 static struct YM2151interface fantland_ym2151_interface =
 {
 	1,
-	3000000,	// ?
+	3000000,	/* ?*/
 	{ YM3012_VOL(35,MIXER_PAN_CENTER,25,MIXER_PAN_CENTER) },
 	{ 0 }
 };
@@ -361,23 +361,23 @@ static struct DACinterface fantland_dac_interface =
 
 static MACHINE_DRIVER_START( fantland )
 	/* basic machine hardware */
-	MDRV_CPU_ADD(I86, 8000000)        // ?
+	MDRV_CPU_ADD(I86, 8000000)        /* ?*/
 	MDRV_CPU_MEMORY(fantland_readmem, fantland_writemem)
 	MDRV_CPU_VBLANK_INT(fantland_irq,1)
 
-	MDRV_CPU_ADD(I86, 8000000)        // ?
+	MDRV_CPU_ADD(I86, 8000000)        /* ?*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(fantland_sound_readmem, fantland_sound_writemem)
 	MDRV_CPU_PORTS(fantland_sound_readport,fantland_sound_writeport)
 	MDRV_CPU_PERIODIC_INT(fantland_sound_irq,8000)
-	// NMI when soundlatch is written
+	/* NMI when soundlatch is written*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_INIT(fantland)
 
-	MDRV_INTERLEAVE(8000/60)	// sound irq must feed the DAC at 8kHz
+	MDRV_INTERLEAVE(8000/60)	/* sound irq must feed the DAC at 8kHz*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -402,22 +402,22 @@ static void galaxygn_sound_irq(int line)
 static struct YM2151interface galaxygn_ym2151_interface =
 {
 	1,
-	3000000,	// ?
+	3000000,	/* ?*/
 	{ YM3012_VOL(100,MIXER_PAN_CENTER,100,MIXER_PAN_CENTER) },
 	{ galaxygn_sound_irq }
 };
 
 static MACHINE_DRIVER_START( galaxygn )
 	/* basic machine hardware */
-	MDRV_CPU_ADD(I86, 8000000)        // ?
+	MDRV_CPU_ADD(I86, 8000000)        /* ?*/
 	MDRV_CPU_MEMORY(galaxygn_readmem, galaxygn_writemem)
 	MDRV_CPU_VBLANK_INT(fantland_irq,1)
 
-	MDRV_CPU_ADD(I86, 8000000)        // ?
+	MDRV_CPU_ADD(I86, 8000000)        /* ?*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(fantland_sound_readmem, fantland_sound_writemem)
 	MDRV_CPU_PORTS(fantland_sound_readport,fantland_sound_writeport)
-	// IRQ by YM2151, NMI when soundlatch is written
+	/* IRQ by YM2151, NMI when soundlatch is written*/
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -467,19 +467,19 @@ Fantasy.05, 06, 07 was read as if it was a 27c040
 ***************************************************************************/
 
 ROM_START( fantland )
-	ROM_REGION( 0x100000, REGION_CPU1, 0 )					// Main CPU
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )					/* Main CPU*/
 	ROMX_LOAD( "fantasyl.ev2", 0x00000, 0x20000, CRC(f5bdca0e) SHA1(d05cf6f68d4d1a3dcc0171f7cf220c4920bd47bb) , ROM_SKIP(1) )
 	ROMX_LOAD( "fantasyl.od2", 0x00001, 0x20000, CRC(9db35023) SHA1(81e2accd67dcf8563a68b2c4e35526f23a40150c) , ROM_SKIP(1) )
 	ROM_COPY( REGION_CPU1,     0x00000, 0x40000, 0x40000 )
 	ROMX_LOAD( "fantasyl.ev1", 0xe0000, 0x10000, CRC(70e0ee30) SHA1(5253213da56b3f97e2811f2b10927d0e542447f0) , ROM_SKIP(1) )
 	ROMX_LOAD( "fantasyl.od1", 0xe0001, 0x10000, CRC(577b4bd7) SHA1(1f08202d99c3e39e0dd1ed4947b928b695a5b411) , ROM_SKIP(1) )
 
-	ROM_REGION( 0x100000, REGION_CPU2, 0 )					// Sound CPU
-	ROM_LOAD16_WORD( "fantasyl.s2", 0x80000, 0x20000, CRC(f23837d8) SHA1(4048784f759781e50ae445ea61f1ca908e8e6ac1) )	// samples (8 bit unsigned)
+	ROM_REGION( 0x100000, REGION_CPU2, 0 )					/* Sound CPU*/
+	ROM_LOAD16_WORD( "fantasyl.s2", 0x80000, 0x20000, CRC(f23837d8) SHA1(4048784f759781e50ae445ea61f1ca908e8e6ac1) )	/* samples (8 bit unsigned)*/
 	ROM_LOAD16_WORD( "fantasyl.s1", 0xc0000, 0x20000, CRC(1a324a69) SHA1(06f6877af6cd19bfaac8a4ea8057ef8faee276f5) )
 	ROM_COPY( REGION_CPU2,          0xc0000, 0xe0000, 0x20000 )
 
-	ROM_REGION( 0x480000, REGION_GFX1, ROMREGION_DISPOSE )	// Sprites
+	ROM_REGION( 0x480000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites*/
 	ROMX_LOAD( "fantasyl.m00", 0x000000, 0x80000, CRC(82d819ff) SHA1(2b5b0759de8260eaa84ddded9dc2d12a6e0f5ec9) , ROM_GROUPWORD | ROM_SKIP(1) )
 	ROMX_LOAD( "fantasyl.m01", 0x0c0000, 0x80000, CRC(70a94139) SHA1(689fbfa267d60821cde13d5dc2dfe1dea67b434a) , ROM_GROUPWORD | ROM_SKIP(1) )
 	ROMX_LOAD( "fantasyl.05",  0x000002, 0x80000, CRC(62b9a00b) SHA1(ecd18e5e7a5e3535956fb693d2f7e35d2bb7ede9) , ROM_SKIP(2) )
@@ -499,20 +499,20 @@ ROM_END
 ***************************************************************************/
 
 ROM_START( galaxygn )
-	ROM_REGION( 0x100000, REGION_CPU1, 0 )					// Main CPU
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )					/* Main CPU*/
 	ROM_LOAD( "gg03.bin", 0x10000, 0x10000, CRC(9e469189) SHA1(07e5d36ca9665bdd13e3bb4241d34b9042371b79) )
 	ROM_LOAD( "gg02.bin", 0x20000, 0x10000, CRC(b87a438f) SHA1(96c39cc4d51a2fc0779f148971220117967173c0) )
 	ROM_LOAD( "gg01.bin", 0x60000, 0x10000, CRC(ad0e5b29) SHA1(f9a7ebce9f47a009af213e4e10811bb1c26f891a) )
 	ROM_COPY( REGION_CPU1, 0x60000, 0x70000, 0x10000 )
 	ROM_COPY( REGION_CPU1, 0x60000, 0xf0000, 0x10000 )
 
-	ROM_REGION( 0x100000, REGION_CPU2, 0 )					// Sound CPU
+	ROM_REGION( 0x100000, REGION_CPU2, 0 )					/* Sound CPU*/
 	ROM_LOAD( "gg20.bin", 0xc0000, 0x10000, CRC(f5c65a85) SHA1(a094fa9531ea4e68ec0a448568e7d4b2307c8185) )
 	ROM_COPY( REGION_CPU2, 0xc0000, 0xd0000, 0x10000 )
 	ROM_COPY( REGION_CPU2, 0xc0000, 0xe0000, 0x10000 )
 	ROM_COPY( REGION_CPU2, 0xc0000, 0xf0000, 0x10000 )
 
-	ROM_REGION( 0x1b0000, REGION_GFX1, ROMREGION_DISPOSE )	// Sprites
+	ROM_REGION( 0x1b0000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites*/
 	ROMX_LOAD( "gg54.bin", 0x000000, 0x10000, CRC(b3621119) SHA1(66ade772077e57f872ef1c8f45e244f4006023f0) , ROM_SKIP(2) )
 	ROMX_LOAD( "gg38.bin", 0x000001, 0x10000, CRC(52b70f3e) SHA1(65f11d5700337d6d9b6325ff70c86d076e1bdc26) , ROM_SKIP(2) )
 	ROMX_LOAD( "gg22.bin", 0x000002, 0x10000, CRC(ea49fee4) SHA1(29ae3e5dfade421a5e97efe5be1cb17862fdcea1) , ROM_SKIP(2) )

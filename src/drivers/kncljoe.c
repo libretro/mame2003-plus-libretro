@@ -113,7 +113,7 @@ INPUT_PORTS_START( kncljoe )
 	PORT_BITX(    0x20, 0x20, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Infinite Energy", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Free_Play ) )	// Not working due to code at 0x296f
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Free_Play ) )	/* Not working due to code at 0x296f*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
@@ -133,7 +133,7 @@ INPUT_PORTS_START( kncljoe )
 	PORT_DIPSETTING(    0x10, "20k and every 40k" )
 	PORT_DIPSETTING(    0x08, "30k and every 60k" )
 	PORT_DIPSETTING(    0x00, "40k and every 80k" )
-	PORT_DIPNAME( 0x60, 0x60, "Difficulty?" )			// Stored at 0xf018
+	PORT_DIPNAME( 0x60, 0x60, "Difficulty?" )			/* Stored at 0xf018*/
 	PORT_DIPSETTING(    0x60, "Easy" )
 	PORT_DIPSETTING(    0x40, "Medium" )
 	PORT_DIPSETTING(    0x20, "Hard" )
@@ -182,7 +182,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static MACHINE_DRIVER_START( kncljoe )
 
 	/* basic machine hardware */
-//	MDRV_CPU_ADD(Z80, 4000000) /* 4 MHz */
+/*	MDRV_CPU_ADD(Z80, 4000000)  // 4 MHz /*/
 	MDRV_CPU_ADD(Z80, 5500000) /* 4 MHz is too low. The game loop never finishes a frame in time. */
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)

@@ -61,7 +61,7 @@ static MEMORY_READ_START( readmem )
 	{ 0x4000, 0x5fff, MRA_RAM },
 	{ 0xa000, 0xa000, input_port_0_r },
 	{ 0xa001, 0xa001, input_port_1_r },	/* IN1 */
-	{ 0xa003, 0xa003, tomahawk_protection_r },   // Only on Tomahawk
+	{ 0xa003, 0xa003, tomahawk_protection_r },   /* Only on Tomahawk*/
 	{ 0xd000, 0xffff, MRA_ROM },
 MEMORY_END
 
@@ -81,7 +81,7 @@ static MEMORY_WRITE_START( tomahawk_writemem )
 	{ 0x8003, 0x8003, MWA_RAM, &astrof_color },
 	{ 0x8004, 0x8004, astrof_video_control1_w },
 	{ 0x8005, 0x8005, tomahawk_video_control2_w },
-	{ 0x8006, 0x8006, MWA_NOP },                        // Sound triggers
+	{ 0x8006, 0x8006, MWA_NOP },                        /* Sound triggers*/
 	{ 0x8007, 0x8007, MWA_RAM, &tomahawk_protection },
 MEMORY_END
 

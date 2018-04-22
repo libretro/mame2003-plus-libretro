@@ -36,7 +36,7 @@ WRITE_HANDLER( tankbust_xscroll_w );
 WRITE_HANDLER( tankbust_yscroll_w );
 
 
-//port A of ay8910#0
+/*port A of ay8910#0*/
 static int latch;
 
 static void soundlatch_callback (int data)
@@ -54,7 +54,7 @@ static READ_HANDLER( tankbust_soundlatch_r )
 	return latch;
 }
 
-//port B of ay8910#0
+/*port B of ay8910#0*/
 static unsigned int timer1=0;
 static READ_HANDLER( tankbust_soundtimer_r )
 {
@@ -67,7 +67,7 @@ static READ_HANDLER( tankbust_soundtimer_r )
 
 static void soundirqline_callback (int param)
 {
-//logerror("sound_irq_line write = %2x (after CPUs synced) \n",param);
+/*logerror("sound_irq_line write = %2x (after CPUs synced) \n",param);*/
 
 		if ((param&1) == 0)
 			cpu_set_irq_line(1, 0, HOLD_LINE);
@@ -135,26 +135,26 @@ PALETTE_INIT( tankbust )
 	{
 		int bit0,bit1,bit2,r,g,b;
 
-//7 6   5 4 3   2 1 0
-//bb    r r r   g g g - bad (for sure - no green for tank)
-//bb    g g g   r r r - bad (for sure - no yellow, no red)
-//gg    r r r   b b b - bad
-//gg    b b b   r r r - bad
-//rr    b b b   g g g - bad
+/*7 6   5 4 3   2 1 0*/
+/*bb    r r r   g g g - bad (for sure - no green for tank)*/
+/*bb    g g g   r r r - bad (for sure - no yellow, no red)*/
+/*gg    r r r   b b b - bad*/
+/*gg    b b b   r r r - bad*/
+/*rr    b b b   g g g - bad*/
 
-//rr    g g g   b b b - very close (green,yellow,red present)
+/*rr    g g g   b b b - very close (green,yellow,red present)*/
 
-//rr    r g g   g b b - bad
-//rr    r g g   b b b - bad
-//rr    g g g   b b r - bad
+/*rr    r g g   g b b - bad*/
+/*rr    r g g   b b b - bad*/
+/*rr    g g g   b b r - bad*/
 
-//rr    g g b   b x x - bad (x: unused)
-//rr    g g x   x b b - bad but still close
-//rr    g g r   g b b - bad but still close
-//rr    g g g   r b b - bad but still close
+/*rr    g g b   b x x - bad (x: unused)*/
+/*rr    g g x   x b b - bad but still close*/
+/*rr    g g r   g b b - bad but still close*/
+/*rr    g g g   r b b - bad but still close*/
 
 
-#if 1 //close one
+#if 1 /*close one*/
 		/* blue component */
 		bit0 = (color_prom[i] >> 0) & 0x01;
 		bit1 = (color_prom[i] >> 1) & 0x01;
@@ -200,7 +200,7 @@ static MEMORY_READ_START( readmem )
 
 	{ 0xf000, 0xf7ff, MRA_RAM },
 
-//{ 0xf800, 0xffff, read_from_unmapped_memory },	/* a bug in game code ? */
+/*{ 0xf800, 0xffff, read_from_unmapped_memory },	 // a bug in game code ? /*/
 
 	{ 0xe800, 0xe800, input_port_0_r },
 	{ 0xe801, 0xe801, input_port_1_r },
@@ -257,7 +257,7 @@ static MEMORY_WRITE_START( writemem2 )
 	{ 0x8000, 0x87ff, MWA_RAM },
 
 	{ 0x2000, 0x3fff, MWA_NOP },	/* garbage, written in initialization loop */
-//0x4000 and 0x4040-0x4045 seem to be used (referenced in the code)
+/*0x4000 and 0x4040-0x4045 seem to be used (referenced in the code)*/
 	{ 0x4000, 0x7fff, MWA_NOP },	/* garbage, written in initialization loop */
 MEMORY_END
 
@@ -385,13 +385,13 @@ static MACHINE_DRIVER_START( tankbust )
 
 	MDRV_INTERLEAVE(100)
 
-//MDRV_MACHINE_INIT( ... )
+/*MDRV_MACHINE_INIT( ... )*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES( VIDEO_TYPE_RASTER )
 	MDRV_SCREEN_SIZE   ( 64*8, 32*8 )
 	MDRV_VISIBLE_AREA  ( 16*8, 56*8-1, 1*8, 31*8-1 )
-//	MDRV_VISIBLE_AREA  (  0*8, 64*8-1, 1*8, 31*8-1 )
+/*	MDRV_VISIBLE_AREA  (  0*8, 64*8-1, 1*8, 31*8-1 )*/
 	MDRV_GFXDECODE( gfxdecodeinfo )
 
 	MDRV_PALETTE_LENGTH( 128 )
@@ -423,8 +423,8 @@ ROM_START( tankbust )
 	ROM_LOAD( "a-s6-8.bin",		0x16000, 0x2000, CRC(f8801238) SHA1(fd3abe18542660a8c31dc316012a99d48c9bb5aa) )	/* banked at 0x6000-0x9fff */
 	ROM_CONTINUE(                   0x14000, 0x2000)
 
-//	ROM_LOAD( "a-s5_7.bin",		0x10000, 0x4000, CRC(dd4800ca) SHA1(73a6caa029c27fb45217f9372d9541c6fe206f08) )	/* banked at 0x6000-0x9fff */
-//	ROM_LOAD( "a-s6-8.bin",		0x14000, 0x4000, CRC(f8801238) SHA1(fd3abe18542660a8c31dc316012a99d48c9bb5aa) )	/* banked at 0x6000-0x9fff */
+/*	ROM_LOAD( "a-s5_7.bin",		0x10000, 0x4000, CRC(dd4800ca) SHA1(73a6caa029c27fb45217f9372d9541c6fe206f08) )	 // banked at 0x6000-0x9fff /*/
+/*	ROM_LOAD( "a-s6-8.bin",		0x14000, 0x4000, CRC(f8801238) SHA1(fd3abe18542660a8c31dc316012a99d48c9bb5aa) )	 // banked at 0x6000-0x9fff /*/
 
 	ROM_LOAD( "a-s8-10.bin",	0x18000, 0x4000, CRC(9e826faa) SHA1(6a252428c69133d3e9d7a9938140d5ae37fb0c7d) )	/* banked at 0xa000-0xbfff */
 
@@ -446,10 +446,10 @@ ROM_START( tankbust )
 	ROM_LOAD( "b-r3-14.bin",	0x0000, 0x2000, CRC(4310a815) SHA1(bf58a7a8d3f82fcaa0c46d9ebb13cac1231b80ad) )	/* text tilemap characters 8x8 */
 
 	ROM_REGION( 0x0080, REGION_PROMS, 0 )
-	ROM_LOAD( "tb-prom.1s8",	0x0000, 0x0020, CRC(dfaa086c) SHA1(f534aedddd18addd0833a3a28a4297689c4a46ac) ) //sprites
-	ROM_LOAD( "tb-prom.2r8",	0x0020, 0x0020, CRC(ec50d674) SHA1(64c8961eca33b23e14b7383eb7e64fcac8772ee7) ) //background
-	ROM_LOAD( "tb-prom.3p8",	0x0040, 0x0020, CRC(3e70eafd) SHA1(b200350a3f6c166228706734419dd3ef1207eeef) ) //background palette 2 ??
-	ROM_LOAD( "tb-prom.4k8",	0x0060, 0x0020, CRC(624f40d2) SHA1(8421f1d774afc72e0817d41edae74a2837021a5f) ) //text
+	ROM_LOAD( "tb-prom.1s8",	0x0000, 0x0020, CRC(dfaa086c) SHA1(f534aedddd18addd0833a3a28a4297689c4a46ac) ) /*sprites*/
+	ROM_LOAD( "tb-prom.2r8",	0x0020, 0x0020, CRC(ec50d674) SHA1(64c8961eca33b23e14b7383eb7e64fcac8772ee7) ) /*background*/
+	ROM_LOAD( "tb-prom.3p8",	0x0040, 0x0020, CRC(3e70eafd) SHA1(b200350a3f6c166228706734419dd3ef1207eeef) ) /*background palette 2 ??*/
+	ROM_LOAD( "tb-prom.4k8",	0x0060, 0x0020, CRC(624f40d2) SHA1(8421f1d774afc72e0817d41edae74a2837021a5f) ) /*text*/
 ROM_END
 
 

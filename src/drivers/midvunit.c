@@ -72,7 +72,7 @@ static MACHINE_INIT( midvplus )
 	dcs_reset_w(1);
 	dcs_reset_w(0);
 
-//	cpu_setbank(1, ram_base);
+/*	cpu_setbank(1, ram_base);*/
 	memcpy(ram_base, memory_region(REGION_USER1), 0x20000*4);
 
 	timer[0] = timer_alloc(NULL);
@@ -260,7 +260,7 @@ READ32_HANDLER( tms32031_control_r )
 		/* timer is clocked at 100ns */
 		int which = (offset >> 4) & 1;
 		INT32 result = timer_timeelapsed(timer[which]) * timer_rate;
-//		logerror("%06X:tms32031_control_r(%02X) = %08X\n", activecpu_get_pc(), offset, result);
+/*		logerror("%06X:tms32031_control_r(%02X) = %08X\n", activecpu_get_pc(), offset, result);*/
 		return result;
 	}
 
@@ -284,7 +284,7 @@ WRITE32_HANDLER( tms32031_control_w )
 	else if (offset == 0x20 || offset == 0x30)
 	{
 		int which = (offset >> 4) & 1;
-//	logerror("%06X:tms32031_control_w(%02X) = %08X\n", activecpu_get_pc(), offset, data);
+/*	logerror("%06X:tms32031_control_w(%02X) = %08X\n", activecpu_get_pc(), offset, data);*/
 		if (data & 0x40)
 			timer_adjust(timer[which], TIME_NEVER, 0, TIME_NEVER);
 
@@ -460,7 +460,7 @@ static WRITE32_HANDLER( midvplus_misc_w )
 static void midvplus_xf1_w(UINT8 val)
 {
 	static int lastval;
-//	printf("xf1_w = %d\n", val);
+/*	printf("xf1_w = %d\n", val);*/
 
 	if (lastval && !val)
 		memcpy(ram_base, fastram_base, 0x20000*4);
@@ -489,13 +489,13 @@ static MEMORY_READ32_START( vunit_readmem )
 	{ ADDR_RANGE(0x980040, 0x980040), midvunit_page_control_r },
 	{ ADDR_RANGE(0x980080, 0x980080), MRA32_NOP },
 	{ ADDR_RANGE(0x980082, 0x980083), midvunit_dma_trigger_r },
-	{ ADDR_RANGE(0x990000, 0x990000), MRA32_NOP },	// link PAL (low 4 bits must == 4)
+	{ ADDR_RANGE(0x990000, 0x990000), MRA32_NOP },	/* link PAL (low 4 bits must == 4)*/
 	{ ADDR_RANGE(0x991030, 0x991030), port1_r },
-//	{ ADDR_RANGE(0x991050, 0x991050), MRA32_RAM },	// seems to be another port
+/*	{ ADDR_RANGE(0x991050, 0x991050), MRA32_RAM },	*/ /* seems to be another port*/
 	{ ADDR_RANGE(0x991060, 0x991060), port0_r },
 	{ ADDR_RANGE(0x992000, 0x992000), port2_r },
 	{ ADDR_RANGE(0x993000, 0x993000), midvunit_adc_r },
-	{ ADDR_RANGE(0x997000, 0x997000), MRA32_NOP },	// communications
+	{ ADDR_RANGE(0x997000, 0x997000), MRA32_NOP },	/* communications*/
 	{ ADDR_RANGE(0x9c0000, 0x9c1fff), midvunit_cmos_r },
 	{ ADDR_RANGE(0x9e0000, 0x9e7fff), MRA32_RAM },
 	{ ADDR_RANGE(0xa00000, 0xbfffff), midvunit_textureram_r },
@@ -515,9 +515,9 @@ static MEMORY_WRITE32_START( vunit_writemem )
 	{ ADDR_RANGE(0x980080, 0x980080), MWA32_NOP },
 	{ ADDR_RANGE(0x993000, 0x993000), midvunit_adc_w },
 	{ ADDR_RANGE(0x994000, 0x994000), midvunit_control_w },
-	{ ADDR_RANGE(0x995000, 0x995000), MWA32_NOP },	// force feedback?
+	{ ADDR_RANGE(0x995000, 0x995000), MWA32_NOP },	/* force feedback?*/
 	{ ADDR_RANGE(0x995020, 0x995020), midvunit_cmos_protect_w },
-	{ ADDR_RANGE(0x997000, 0x997000), MWA32_NOP },	// link communications
+	{ ADDR_RANGE(0x997000, 0x997000), MWA32_NOP },	/* link communications*/
 	{ ADDR_RANGE(0x9a0000, 0x9a0000), midvunit_sound_w },
 	{ ADDR_RANGE(0x9c0000, 0x9c1fff), midvunit_cmos_w, (data32_t **)&generic_nvram, &generic_nvram_size },
 	{ ADDR_RANGE(0x9e0000, 0x9e7fff), midvunit_paletteram_w, &paletteram32 },

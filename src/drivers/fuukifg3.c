@@ -93,7 +93,7 @@ FG-3J ROM-J 507KA0301P04       Rev:1.3
 static int fuuki32_raster_enable = 1; /* Enabled by default */
 static data8_t fuuki32_shared_ram[16];
 
-// Described in src/vidhrdw/fuuki32.c
+/* Described in src/vidhrdw/fuuki32.c*/
 extern data32_t *fuuki32_vram_0, *fuuki32_vram_1;
 extern data32_t *fuuki32_vram_2, *fuuki32_vram_3;
 extern data32_t *fuuki32_vregs, *fuuki32_priority, *fuuki32_tilebank;
@@ -110,7 +110,7 @@ VIDEO_START( fuuki32 );
 VIDEO_UPDATE( fuuki32 );
 VIDEO_EOF( fuuki32 );
 
-//data32_t *fuuki32_shared_ram;
+/*data32_t *fuuki32_shared_ram;*/
 
 static WRITE32_HANDLER( paletteram32_xRRRRRGGGGGBBBBB_dword_w )
 {
@@ -160,8 +160,8 @@ static WRITE32_HANDLER( fuuki32_sound_command_w )
 	if (!(mem_mask & 0x00ff0000))
 	{
 		soundlatch_w(0,(data>>16) & 0xff);
-//		cpu_set_nmi_line(1,PULSE_LINE);
-		cpu_spinuntil_time(TIME_IN_USEC(50));	// Allow the other CPU to reply
+/*		cpu_set_nmi_line(1,PULSE_LINE);*/
+		cpu_spinuntil_time(TIME_IN_USEC(50));	/* Allow the other CPU to reply*/
 	}
 }
 
@@ -205,56 +205,56 @@ static WRITE32_HANDLER( snd_020_w )
 
 static MEMORY_READ32_START( fuuki32_readmem )
 	{ 0x000000, 0x1fffff, MRA32_ROM },
-	{ 0x400000, 0x40ffff, MRA32_RAM }, // Work RAM
-	{ 0x410000, 0x41ffff, MRA32_RAM }, // Work RAM (used by asurabus)
-	{ 0x500000, 0x501fff, MRA32_RAM }, // Tilemap 1
-	{ 0x502000, 0x503fff, MRA32_RAM }, // Tilemap 2
-	{ 0x504000, 0x505fff, MRA32_RAM }, // Tilemap bg
-	{ 0x506000, 0x507fff, MRA32_RAM }, // Tilemap bg2
-	{ 0x508000, 0x517fff, MRA32_RAM }, // More tilemap, or linescroll? Seems to be empty all of the time
-	{ 0x600000, 0x601fff, MRA32_RAM }, // Sprites
+	{ 0x400000, 0x40ffff, MRA32_RAM }, /* Work RAM*/
+	{ 0x410000, 0x41ffff, MRA32_RAM }, /* Work RAM (used by asurabus)*/
+	{ 0x500000, 0x501fff, MRA32_RAM }, /* Tilemap 1*/
+	{ 0x502000, 0x503fff, MRA32_RAM }, /* Tilemap 2*/
+	{ 0x504000, 0x505fff, MRA32_RAM }, /* Tilemap bg*/
+	{ 0x506000, 0x507fff, MRA32_RAM }, /* Tilemap bg2*/
+	{ 0x508000, 0x517fff, MRA32_RAM }, /* More tilemap, or linescroll? Seems to be empty all of the time*/
+	{ 0x600000, 0x601fff, MRA32_RAM }, /* Sprites*/
 
-	{ 0x700000, 0x703fff, MRA32_RAM }, // Palette
+	{ 0x700000, 0x703fff, MRA32_RAM }, /* Palette*/
 
-	{ 0x800000, 0x800003, io32_0_r }, // Coin
-	{ 0x810000, 0x810003, io32_1_r }, // Player Inputs
-	{ 0x880000, 0x880003, io32_2_r }, // Service + DIPS
-	{ 0x890000, 0x890003, io32_3_r }, // More DIPS
+	{ 0x800000, 0x800003, io32_0_r }, /* Coin*/
+	{ 0x810000, 0x810003, io32_1_r }, /* Player Inputs*/
+	{ 0x880000, 0x880003, io32_2_r }, /* Service + DIPS*/
+	{ 0x890000, 0x890003, io32_3_r }, /* More DIPS*/
 
-	{ 0x8c0000, 0x8c001f, MRA32_RAM },// Video Registers
+	{ 0x8c0000, 0x8c001f, MRA32_RAM },/* Video Registers*/
 
-/**/{ 0x8d0000, 0x8d0003, MRA32_RAM }, // Flipscreen Related
-/**/{ 0x8e0000, 0x8e0003, MRA32_RAM }, // Controls layer order
+/**/{ 0x8d0000, 0x8d0003, MRA32_RAM }, /* Flipscreen Related*/
+/**/{ 0x8e0000, 0x8e0003, MRA32_RAM }, /* Controls layer order*/
 
-	{ 0x903fe0, 0x903fff, snd_020_r }, // Shared with Z80
-//	{ 0x903fe0, 0x903fe3, fuuki32_sound_command_r }, // Shared with Z80
-//	{ 0x903fe4, 0x903fff, MRA32_RAM }, // ??
+	{ 0x903fe0, 0x903fff, snd_020_r }, /* Shared with Z80*/
+/*	{ 0x903fe0, 0x903fe3, fuuki32_sound_command_r }, */ /* Shared with Z80*/
+/*	{ 0x903fe4, 0x903fff, MRA32_RAM }, */ /* ??*/
 MEMORY_END
 
 static MEMORY_WRITE32_START( fuuki32_writemem )
 	{ 0x000000, 0x1fffff, MWA32_ROM },
-	{ 0x400000, 0x40ffff, MWA32_RAM }, // Work RAM
-	{ 0x410000, 0x41ffff, MWA32_RAM }, // Work RAM
-	{ 0x500000, 0x501fff, fuuki32_vram_0_w, &fuuki32_vram_0 }, // Tilemap 1
-	{ 0x502000, 0x503fff, fuuki32_vram_1_w, &fuuki32_vram_1 }, // Tilemap 2
-	{ 0x504000, 0x505fff, fuuki32_vram_2_w, &fuuki32_vram_2 }, // Tilemap bg
-	{ 0x506000, 0x507fff, fuuki32_vram_3_w, &fuuki32_vram_3 }, // Tilemap bg2
-	{ 0x508000, 0x517fff, MWA32_RAM }, // More tilemap, or linescroll? Seems to be empty all of the time
+	{ 0x400000, 0x40ffff, MWA32_RAM }, /* Work RAM*/
+	{ 0x410000, 0x41ffff, MWA32_RAM }, /* Work RAM*/
+	{ 0x500000, 0x501fff, fuuki32_vram_0_w, &fuuki32_vram_0 }, /* Tilemap 1*/
+	{ 0x502000, 0x503fff, fuuki32_vram_1_w, &fuuki32_vram_1 }, /* Tilemap 2*/
+	{ 0x504000, 0x505fff, fuuki32_vram_2_w, &fuuki32_vram_2 }, /* Tilemap bg*/
+	{ 0x506000, 0x507fff, fuuki32_vram_3_w, &fuuki32_vram_3 }, /* Tilemap bg2*/
+	{ 0x508000, 0x517fff, MWA32_RAM }, /* More tilemap, or linescroll? Seems to be empty all of the time*/
 
-	{ 0x600000, 0x601fff, MWA32_RAM, &spriteram32, &spriteram_size	},	// Sprites
-	{ 0x700000, 0x703fff, paletteram32_xRRRRRGGGGGBBBBB_dword_w, &paletteram32 }, // Palette
+	{ 0x600000, 0x601fff, MWA32_RAM, &spriteram32, &spriteram_size	},	/* Sprites*/
+	{ 0x700000, 0x703fff, paletteram32_xRRRRRGGGGGBBBBB_dword_w, &paletteram32 }, /* Palette*/
 
-	{ 0x800000, 0x800003, MWA32_NOP }, // Clear buffered inputs
-	{ 0x810000, 0x810003, MWA32_NOP }, // Clear buffered inputs
+	{ 0x800000, 0x800003, MWA32_NOP }, /* Clear buffered inputs*/
+	{ 0x810000, 0x810003, MWA32_NOP }, /* Clear buffered inputs*/
 
-	{ 0x8c0000, 0x8c001f, MWA32_RAM, &fuuki32_vregs },	// Video Registers
+	{ 0x8c0000, 0x8c001f, MWA32_RAM, &fuuki32_vregs },	/* Video Registers*/
 
-	{ 0x8d0000, 0x8d0003, MWA32_RAM }, // Flipscreen Related
-	{ 0x8e0000, 0x8e0003, MWA32_RAM, &fuuki32_priority }, // Controls layer order
+	{ 0x8d0000, 0x8d0003, MWA32_RAM }, /* Flipscreen Related*/
+	{ 0x8e0000, 0x8e0003, MWA32_RAM, &fuuki32_priority }, /* Controls layer order*/
 
-	{ 0x903fe0, 0x903fff, snd_020_w }, // z80 comms
-//	{ 0x903fe0, 0x903fe3, fuuki32_sound_command_w }, // Shared with Z80
-//	{ 0x903fe4, 0x903fff, MWA32_RAM }, // Shared with Z80
+	{ 0x903fe0, 0x903fff, snd_020_w }, /* z80 comms*/
+/*	{ 0x903fe0, 0x903fe3, fuuki32_sound_command_w }, */ /* Shared with Z80*/
+/*	{ 0x903fe4, 0x903fff, MWA32_RAM }, */ /* Shared with Z80*/
 
 	{ 0xa00000, 0xa00003, MWA32_RAM, &fuuki32_tilebank },
 MEMORY_END
@@ -283,17 +283,17 @@ static WRITE_HANDLER( snd_z80_w )
 }
 
 static MEMORY_READ_START( fuuki32_sound_readmem )
-	{ 0x0000, 0x5fff, MRA_ROM		},	// ROM
-	{ 0x6000, 0x6fff, MRA_RAM		},	// RAM
+	{ 0x0000, 0x5fff, MRA_ROM		},	/* ROM*/
+	{ 0x6000, 0x6fff, MRA_RAM		},	/* RAM*/
 	{ 0x7ff0, 0x7fff, snd_z80_r  },
-	{ 0x8000, 0xffff, MRA_BANK1		},	// ROM
+	{ 0x8000, 0xffff, MRA_BANK1		},	/* ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( fuuki32_sound_writemem )
-	{ 0x0000, 0x5fff, MWA_ROM		},	// ROM
-	{ 0x6000, 0x6fff, MWA_RAM		},	// RAM
+	{ 0x0000, 0x5fff, MWA_ROM		},	/* ROM*/
+	{ 0x6000, 0x6fff, MWA_RAM		},	/* RAM*/
 	{ 0x7ff0, 0x7fff, snd_z80_w  },
-	{ 0x8000, 0xffff, MWA_ROM		},	// ROM
+	{ 0x8000, 0xffff, MWA_ROM		},	/* ROM*/
 MEMORY_END
 
 static PORT_READ_START( fuuki32_sound_readport )
@@ -321,7 +321,7 @@ PORT_END
 ***************************************************************************/
 
 INPUT_PORTS_START( asurabld )
-	PORT_START	// IN0 - $800000.w/$800002.w
+	PORT_START	/* IN0 - $800000.w/$800002.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_COIN2    )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -333,7 +333,7 @@ INPUT_PORTS_START( asurabld )
 	PORT_BIT(  0x0100, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT(  0xfe00, IP_ACTIVE_LOW, IPT_UNKNOWN  )
 
-	PORT_START	// IN1 - $810000.w/$810002.w
+	PORT_START	/* IN1 - $810000.w/$810002.w*/
 	PORT_BIT(  0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT(  0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT(  0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
@@ -351,15 +351,15 @@ INPUT_PORTS_START( asurabld )
 	PORT_BIT(  0x4000, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 	PORT_BIT(  0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN                      )
 
-	PORT_START	// IN2 - $880000.w/$880002.w
+	PORT_START	/* IN2 - $880000.w/$880002.w*/
 	PORT_SERVICE( 0x0001, 0x0001 )
-	PORT_DIPNAME( 0x0002, 0x0002, "Blood Colour" ) // Any other censorship? (Tested in 3 locations)
+	PORT_DIPNAME( 0x0002, 0x0002, "Blood Colour" ) /* Any other censorship? (Tested in 3 locations)*/
 	PORT_DIPSETTING(      0x0002, "Red" )
 	PORT_DIPSETTING(      0x0000, "Green" )
-	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unknown ) ) // Tested @ 0917AC
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unknown ) ) /* Tested @ 0917AC*/
 	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Unknown ) ) // Tested @ 0917AC
+	PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Unknown ) ) /* Tested @ 0917AC*/
 	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x0030, 0x0030, "Timer" )
@@ -372,11 +372,11 @@ INPUT_PORTS_START( asurabld )
 	PORT_DIPSETTING(      0x0000, "Joint" )
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// IN3 - $890000.w/$890002.w
+	PORT_START	/* IN3 - $890000.w/$890002.w*/
 	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Flip_Screen ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x000e, 0x0000, "Computer Level" ) // See @ 0917CC
+	PORT_DIPNAME( 0x000e, 0x0000, "Computer Level" ) /* See @ 0917CC*/
 	PORT_DIPSETTING(      0x0000, "0" )
 	PORT_DIPSETTING(      0x0008, "1" )
 	PORT_DIPSETTING(      0x0004, "2" )
@@ -403,7 +403,7 @@ INPUT_PORTS_START( asurabld )
 	PORT_DIPSETTING(      0xd000, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0xe000, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0xf000, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) ) // Set both for Free Play
+	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) ) /* Set both for Free Play*/
 	PORT_DIPNAME( 0x0f00, 0x0f00, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(      0x0800, DEF_STR( 8C_1C ) )
 	PORT_DIPSETTING(      0x0900, DEF_STR( 7C_1C ) )
@@ -413,7 +413,7 @@ INPUT_PORTS_START( asurabld )
 	PORT_DIPSETTING(      0x0d00, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(      0x0e00, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(      0x0f00, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) ) // Set both for Free Play
+	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) ) /* Set both for Free Play*/
 
 INPUT_PORTS_END
 
@@ -466,11 +466,11 @@ static struct GfxLayout layout_16x16x8 =
 
 static struct GfxDecodeInfo fuuki32_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4, 0x400*2, 0x40 }, // [0] Sprites
-	{ REGION_GFX2, 0, &layout_16x16x8, 0x400*0, 0x40 }, // [1] Layer 1
-	{ REGION_GFX3, 0, &layout_16x16x8, 0x400*1, 0x40 }, // [2] Layer 2
-	{ REGION_GFX4, 0, &layout_8x8x4,   0x400*3, 0x40 }, // [3] BG Layer
-	{ REGION_GFX4, 0, &layout_8x8x4,   0x400*3, 0x40 }, // [4] BG Layer 2 (GFX4!)
+	{ REGION_GFX1, 0, &layout_16x16x4, 0x400*2, 0x40 }, /* [0] Sprites*/
+	{ REGION_GFX2, 0, &layout_16x16x8, 0x400*0, 0x40 }, /* [1] Layer 1*/
+	{ REGION_GFX3, 0, &layout_16x16x8, 0x400*1, 0x40 }, /* [2] Layer 2*/
+	{ REGION_GFX4, 0, &layout_8x8x4,   0x400*3, 0x40 }, /* [3] BG Layer*/
+	{ REGION_GFX4, 0, &layout_8x8x4,   0x400*3, 0x40 }, /* [4] BG Layer 2 (GFX4!)*/
 	{ -1 }
 };
 
@@ -483,7 +483,7 @@ static struct GfxDecodeInfo fuuki32_gfxdecodeinfo[] =
 
 ***************************************************************************/
 
-#define INTERRUPTS_NUM	(256-1) // Give much better results than 256..
+#define INTERRUPTS_NUM	(256-1) /* Give much better results than 256..*/
 static INTERRUPT_GEN( fuuki32_interrupt )
 {
 	if ( cpu_getiloops() == 1 )
@@ -491,7 +491,7 @@ static INTERRUPT_GEN( fuuki32_interrupt )
 
 	if ( cpu_getiloops() == 0 )
 	{
-		cpu_set_irq_line(0, 3, PULSE_LINE);	// VBlank IRQ
+		cpu_set_irq_line(0, 3, PULSE_LINE);	/* VBlank IRQ*/
 
 		if (keyboard_pressed_memory(KEYCODE_F1))
 		{
@@ -502,7 +502,7 @@ static INTERRUPT_GEN( fuuki32_interrupt )
 
 	if ( ((fuuki32_vregs[0x1c/4]>>16) & 0xff) == (INTERRUPTS_NUM-1 - cpu_getiloops()) )
 	{
-		cpu_set_irq_line(0, 5, PULSE_LINE);	// Raster Line IRQ
+		cpu_set_irq_line(0, 5, PULSE_LINE);	/* Raster Line IRQ*/
 		if(fuuki32_raster_enable) force_partial_update(cpu_getscanline());
 	}
 }
@@ -545,7 +545,7 @@ static MACHINE_DRIVER_START( fuuki32 )
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER) // | VIDEO_BUFFERS_SPRITERAM ) // Buffered by 2 frames
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER) /* | VIDEO_BUFFERS_SPRITERAM ) */ /* Buffered by 2 frames*/
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(0, 40*8-1, 0, 30*8-1)
 	MDRV_GFXDECODE(fuuki32_gfxdecodeinfo)
@@ -598,10 +598,10 @@ ROM_START( asurabld )
 	ROM_LOAD( "bg2022.u25", 0x0000000, 0x400000, CRC(ee312cd3) SHA1(2ef9d51928d80375daf8e6b204bb66a8b9cbaee7) )
 	ROM_LOAD( "bg2123.u24", 0x0400000, 0x400000, CRC(4acfc469) SHA1(a98d06b967ebb3fa3b4c8aa3d7a05063ec981fb2) )
 
-	ROM_REGION( 0x200000, REGION_GFX4, ROMREGION_DISPOSE ) // background tiles
+	ROM_REGION( 0x200000, REGION_GFX4, ROMREGION_DISPOSE ) /* background tiles*/
 	ROM_LOAD( "map.u5", 0x00000, 0x200000, CRC(e681155e) SHA1(458845b9c86df72685d92d0d4052aacc2fa7d1bd) )
 
-	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) // OPL4 samples
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* OPL4 samples*/
 	ROM_LOAD( "pcm.u6", 0x00000, 0x400000, CRC(ac72225a) SHA1(8d16399ed34ac5bd69dbf43b2de2b0db9ac1c610) )
 ROM_END
 
@@ -640,10 +640,10 @@ ROM_START( asurabus )
 	ROM_LOAD( "bg2022.u25", 0x0000000, 0x400000, CRC(f46eda52) SHA1(46530016b32a164bd76c4f53e7b53b2beb28db06) )
 	ROM_LOAD( "bg2123.u24", 0x0400000, 0x400000, CRC(c4ebb86b) SHA1(a7093e6e02b64566d277cbbd5fa90cd430e7c8a0) )
 
-	ROM_REGION( 0x200000, REGION_GFX4, ROMREGION_DISPOSE ) // background tiles
+	ROM_REGION( 0x200000, REGION_GFX4, ROMREGION_DISPOSE ) /* background tiles*/
 	ROM_LOAD( "map.u5", 0x00000, 0x200000, CRC(bd179dc5) SHA1(ce3fcac573b14fd5365eb5dcec3257e439d2c129) )
 
-	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) // OPL4 samples
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* OPL4 samples*/
 	ROM_LOAD( "opm.u6", 0x00000, 0x400000, CRC(31b05be4) SHA1(d0f4f387f84a74591224b0f42b7f5c538a3dc498) )
 ROM_END
 

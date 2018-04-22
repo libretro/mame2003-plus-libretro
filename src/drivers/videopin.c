@@ -94,14 +94,14 @@ static READ_HANDLER( videopin_misc_r )
 {
 	double plunger = calc_plunger_pos();
 
-	// The plunger of the ball shooter has a black piece of
-	// plastic (flag) attached to it. When the plunger flag passes
-	// between the first section of the optical coupler, the MPU
-	// receives a non-maskable interrupt. When the flag passes
-	// between the second section of the optical coupler, the MPU
-	// calculates the time between the PLUNGER1 and PLUNGER2
-	// signals received. This results in the MPU displaying the
-	// ball being shot onto the playfield at a certain speed.
+	/* The plunger of the ball shooter has a black piece of*/
+	/* plastic (flag) attached to it. When the plunger flag passes*/
+	/* between the first section of the optical coupler, the MPU*/
+	/* receives a non-maskable interrupt. When the flag passes*/
+	/* between the second section of the optical coupler, the MPU*/
+	/* calculates the time between the PLUNGER1 and PLUNGER2*/
+	/* signals received. This results in the MPU displaying the*/
+	/* ball being shot onto the playfield at a certain speed.*/
 
 	UINT8 val = readinputport(2);
 

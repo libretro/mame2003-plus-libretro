@@ -20,7 +20,7 @@
 #include "machine/eeprom.h"
 #include "machine/random.h"
 
-#define OSC_A	(32215900)	// System 32 master crystal is 32215900 Hz
+#define OSC_A	(32215900)	/* System 32 master crystal is 32215900 Hz*/
 #define Z80_CLOCK (OSC_A/4)
 #define MAX_COLOURS (16384)
 
@@ -28,7 +28,7 @@ int multi32;
 
 static unsigned char irq_status;
 static data16_t *system32_shared_ram;
-extern data16_t *system32_mixerregs[2];  // mixer registers
+extern data16_t *system32_mixerregs[2];  /* mixer registers*/
 
 static data16_t *sys32_protram;
 static data16_t *system32_workram;
@@ -130,7 +130,7 @@ static READ16_HANDLER(sys32_read_ff)
 
 static READ16_HANDLER(sys32_read_random)
 {
-	return mame_rand(); // new random.c random number code, see clouds in ga2
+	return mame_rand(); /* new random.c random number code, see clouds in ga2*/
 }
 
 extern int sys32_brightness[2][3];
@@ -165,7 +165,7 @@ void multi32_set_colour (int offset, int monitor)
 		g = (g << 4) | (g2 << 3);
 		b = (b << 4) | (b2 << 3);
 
-		// there might be better ways of doing this ... but for now its functional ;-)
+		/* there might be better ways of doing this ... but for now its functional ;-)*/
 		r_bright = sys32_brightness[monitor][0]; r_bright &= 0x3f;
 		g_bright = sys32_brightness[monitor][1]; g_bright &= 0x3f;
 		b_bright = sys32_brightness[monitor][2]; b_bright &= 0x3f;
@@ -184,7 +184,7 @@ static WRITE16_HANDLER( multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w )
 	int r2,g2,b2;
 
 	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&scrambled_paletteram16[0][offset]); // it expects to read back the same values?
+		COMBINE_DATA(&scrambled_paletteram16[0][offset]); /* it expects to read back the same values?*/
 
 		/* rearrange the data to normal format ... */
 
@@ -209,14 +209,14 @@ static WRITE16_HANDLER( multi32_paletteram16_xBGRBBBBGGGGRRRR_word_w )
 	if (offset<MAX_COLOURS) {
 		COMBINE_DATA(&paletteram16[offset]);
 
-	// some games use 8-bit writes to some palette regions
-	// (especially for the text layer palettes)
+	/* some games use 8-bit writes to some palette regions*/
+	/* (especially for the text layer palettes)*/
 
 		multi32_set_colour(offset, 0);
 	}
 }
 
-// --------------------------------------- Monitor B ---------------------------------
+/* --------------------------------------- Monitor B ---------------------------------*/
 
 static WRITE16_HANDLER( multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w )
 {
@@ -224,7 +224,7 @@ static WRITE16_HANDLER( multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w
 	int r2,g2,b2;
 
 	if (offset<MAX_COLOURS) {
-		COMBINE_DATA(&scrambled_paletteram16[1][offset]); // it expects to read back the same values?
+		COMBINE_DATA(&scrambled_paletteram16[1][offset]); /* it expects to read back the same values?*/
 
 		/* rearrange the data to normal format ... */
 
@@ -250,8 +250,8 @@ static WRITE16_HANDLER( multi32_paletteram16_xBGRBBBBGGGGRRRR_word_b_w )
 	if (offset<MAX_COLOURS) {
 		COMBINE_DATA(&paletteram16_b[offset]);
 
-		// some games use 8-bit writes to some palette regions
-		// (especially for the text layer palettes)
+		/* some games use 8-bit writes to some palette regions*/
+		/* (especially for the text layer palettes)*/
 
 		multi32_set_colour(offset, 1);
 	}
@@ -313,7 +313,7 @@ static READ16_HANDLER( multi32_io_r )
 	case 0x02:
 		return 0xffff;
 	case 0x03:
-		// f1lap
+		/* f1lap*/
 		return 0xffff;
 	case 0x04:
 		return readinputport(0x03);
@@ -322,10 +322,10 @@ static READ16_HANDLER( multi32_io_r )
 	case 0x06:
 		return 0xffff;
 	case 0x07:
-		// scross
+		/* scross*/
 		return sys32_tilebank_external;
 	case 0x0e:
-		// f1lap
+		/* f1lap*/
 		return 0xffff;
 	default:
 		logerror("Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
@@ -356,20 +356,20 @@ static WRITE16_HANDLER( multi32_io_w )
 		}
 		break;
 	case 0x04:
-		// f1lap
+		/* f1lap*/
 		break;
 	case 0x06:
-		// jp_v60_write_cab / titlef
+		/* jp_v60_write_cab / titlef*/
 		break;
 	case 0x07:
-		// Multi32: tilebank per layer
+		/* Multi32: tilebank per layer*/
 		COMBINE_DATA(&sys32_tilebank_external);
 		break;
 	case 0x0e:
 		COMBINE_DATA(&sys32_displayenable);
 		break;
 	case 0x0f:
-		// orunners unknown
+		/* orunners unknown*/
 		break;
 	default:
 		logerror("Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
@@ -409,11 +409,11 @@ static WRITE16_HANDLER( multi32_io_2_w )
 
 	switch(offset) {
 	case 0x00:
-		// Used by the hardware to switch the analog input ports to set B
+		/* Used by the hardware to switch the analog input ports to set B*/
 		analogSwitch=data;
 		break;
 	case 0x0a:
-		// orunners unknown
+		/* orunners unknown*/
 		break;
 	default:
 		logerror("Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
@@ -425,27 +425,27 @@ static READ16_HANDLER( multi32_io_B_r )
 {
 	switch(offset) {
 	case 0:
-		// orunners (mask ff00)
-		return readinputport(0X0c); // orunners Monitor B Shift Up, Shift Down buttons
+		/* orunners (mask ff00)*/
+		return readinputport(0X0c); /* orunners Monitor B Shift Up, Shift Down buttons*/
 	case 1:
-		// orunners (mask ff00)
-		return readinputport(0X0d); // orunners Monitor B DJ Music, Music Up, Music Down buttons
+		/* orunners (mask ff00)*/
+		return readinputport(0X0d); /* orunners Monitor B DJ Music, Music Up, Music Down buttons*/
 	case 2:
 		return 0x00;
 	case 3:
-		// orunners (mask ff00)
+		/* orunners (mask ff00)*/
 		return 0x00;
 	case 4:
-		// harddunk (mask ff00) will not exit test mode if not 0xff
-		return readinputport(0X0e); // orunners Monitor B Service, Test, Coin and Start buttons
+		/* harddunk (mask ff00) will not exit test mode if not 0xff*/
+		return readinputport(0X0e); /* orunners Monitor B Service, Test, Coin and Start buttons*/
 	case 5:
-		// orunners (mask ff00) locks up
+		/* orunners (mask ff00) locks up*/
 		return (EEPROM_read_bit() << 7) | readinputport(0x00);
 	case 7:
-		// orunners (mask ff00)
+		/* orunners (mask ff00)*/
 		return 0xffff;
 	case 14:
-		// harddunk (mask ff00)
+		/* harddunk (mask ff00)*/
 		return 0xffff;
 	default:
 		logerror("Port B %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
@@ -459,10 +459,10 @@ static WRITE16_HANDLER( multi32_io_B_w )
 	switch(offset) {
 
 	case 0x03:
-		// titlef value=00
+		/* titlef value=00*/
 		break;
 	case 0x06:
-		// orunners value=00, 08, 34
+		/* orunners value=00, 08, 34*/
 		break;
 	case 0x07:
 		if(ACCESSING_LSB) {
@@ -472,10 +472,10 @@ static WRITE16_HANDLER( multi32_io_B_w )
 		}
 		break;
 	case 0x0e:
-		// orunners value=86 (displayenable?)
+		/* orunners value=86 (displayenable?)*/
 		break;
 	case 0x0f:
-		// orunners value=c8
+		/* orunners value=c8*/
 		break;
 
 	default:
@@ -486,20 +486,20 @@ static WRITE16_HANDLER( multi32_io_B_w )
 
 static MEMORY_READ16_START( multi32_readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
-	{ 0x200000, 0x23ffff, MRA16_RAM }, // work RAM
-	{ 0x300000, 0x31ffff, sys32_videoram_r }, // Tile Ram
-	{ 0x400000, 0x41ffff, MRA16_RAM }, // sprite RAM
-	{ 0x500000, 0x50000d, MRA16_RAM },	// Unknown
-//	{ 0x500002, 0x500003, jp_v60_read_cab },
+	{ 0x200000, 0x23ffff, MRA16_RAM }, /* work RAM*/
+	{ 0x300000, 0x31ffff, sys32_videoram_r }, /* Tile Ram*/
+	{ 0x400000, 0x41ffff, MRA16_RAM }, /* sprite RAM*/
+	{ 0x500000, 0x50000d, MRA16_RAM },	/* Unknown*/
+/*	{ 0x500002, 0x500003, jp_v60_read_cab },*/
 
-	{ 0x600000, 0x6100ff, MRA16_RAM }, // Palette + mixer registers (Monitor A)
-	{ 0x680000, 0x69004f, MRA16_RAM }, // Palette + mixer registers (Monitor B)
+	{ 0x600000, 0x6100ff, MRA16_RAM }, /* Palette + mixer registers (Monitor A)*/
+	{ 0x680000, 0x69004f, MRA16_RAM }, /* Palette + mixer registers (Monitor B)*/
 
-	{ 0x700000, 0x701fff, MRA16_RAM },	// shared RAM
-	{ 0x800000, 0x80000f, MRA16_RAM },	// Unknown
-	{ 0x80007e, 0x80007f, MRA16_RAM },	// Unknown f1lap
-	{ 0x801000, 0x801003, MRA16_RAM },	// Unknown
-	{ 0xa00000, 0xa00001, MRA16_RAM }, // Unknown dbzvrvs
+	{ 0x700000, 0x701fff, MRA16_RAM },	/* shared RAM*/
+	{ 0x800000, 0x80000f, MRA16_RAM },	/* Unknown*/
+	{ 0x80007e, 0x80007f, MRA16_RAM },	/* Unknown f1lap*/
+	{ 0x801000, 0x801003, MRA16_RAM },	/* Unknown*/
+	{ 0xa00000, 0xa00001, MRA16_RAM }, /* Unknown dbzvrvs*/
 
 	{ 0xc00000, 0xc0003f, multi32_io_r },
 	{ 0xc00050, 0xc0005f, multi32_io_analog_r },
@@ -507,46 +507,46 @@ static MEMORY_READ16_START( multi32_readmem )
 	{ 0xc80000, 0xc8007f, multi32_io_B_r },
 
 	{ 0xd80000, 0xd80001, sys32_read_random },
-	{ 0xd80002, 0xd80003, MRA16_RAM }, // Unknown harddunk
-	{ 0xe00000, 0xe0000f, MRA16_RAM },   // Unknown
-	{ 0xe80000, 0xe80003, MRA16_RAM }, // Unknown
-	{ 0xf00000, 0xffffff, MRA16_BANK1 }, // High rom mirror
+	{ 0xd80002, 0xd80003, MRA16_RAM }, /* Unknown harddunk*/
+	{ 0xe00000, 0xe0000f, MRA16_RAM },   /* Unknown*/
+	{ 0xe80000, 0xe80003, MRA16_RAM }, /* Unknown*/
+	{ 0xf00000, 0xffffff, MRA16_BANK1 }, /* High rom mirror*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( multi32_writemem )
 	{ 0x000000, 0x1fffff, MWA16_ROM },
 	{ 0x200000, 0x23ffff, MWA16_RAM, &system32_workram },
 	{ 0x300000, 0x31ffff, sys32_videoram_w },
-	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, // Sprites
-	{ 0x500000, 0x50000d, MWA16_RAM },	// Unknown
+	{ 0x400000, 0x41ffff, sys32_spriteram_w, &sys32_spriteram16 }, /* Sprites*/
+	{ 0x500000, 0x50000d, MWA16_RAM },	/* Unknown*/
 
-	{ 0x600000, 0x607fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &scrambled_paletteram16[0] },	// magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?
-	{ 0x608000, 0x60ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, // Palettes
-	{ 0x610000, 0x6100ff, MWA16_RAM, &system32_mixerregs[0] }, // mixer chip registers
+	{ 0x600000, 0x607fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_w, &scrambled_paletteram16[0] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
+	{ 0x608000, 0x60ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_w, &paletteram16 }, /* Palettes*/
+	{ 0x610000, 0x6100ff, MWA16_RAM, &system32_mixerregs[0] }, /* mixer chip registers*/
 
-	{ 0x680000, 0x687fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w, &scrambled_paletteram16[1] },	// magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?
-	{ 0x688000, 0x68ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_b_w, &paletteram16_b }, // Monitor B palette
-	{ 0x690000, 0x69004f, MWA16_RAM, &system32_mixerregs[1] }, // monitor B mixer registers
+	{ 0x680000, 0x687fff, multi32_paletteram16_xBBBBBGGGGGRRRRR_scrambled_word_b_w, &scrambled_paletteram16[1] },	/* magic data-line-scrambled mirror of palette RAM * we need to shuffle data written then?*/
+	{ 0x688000, 0x68ffff, multi32_paletteram16_xBGRBBBBGGGGRRRR_word_b_w, &paletteram16_b }, /* Monitor B palette*/
+	{ 0x690000, 0x69004f, MWA16_RAM, &system32_mixerregs[1] }, /* monitor B mixer registers*/
 
-	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, // Shared ram with the z80
-	{ 0x800000, 0x80000f, MWA16_RAM },	// Unknown
-	{ 0x80007e, 0x80007f, MWA16_RAM },	// Unknown f1lap
-	{ 0x801000, 0x801003, MWA16_RAM },	// Unknown
-	{ 0x81002a, 0x81002b, MWA16_RAM },	// Unknown dbzvrvs
-	{ 0x810100, 0x810101, MWA16_RAM },	// Unknown dbzvrvs
-	{ 0xa00000, 0xa00fff, MWA16_RAM, &sys32_protram },	// protection RAM
+	{ 0x700000, 0x701fff, MWA16_RAM, &system32_shared_ram }, /* Shared ram with the z80*/
+	{ 0x800000, 0x80000f, MWA16_RAM },	/* Unknown*/
+	{ 0x80007e, 0x80007f, MWA16_RAM },	/* Unknown f1lap*/
+	{ 0x801000, 0x801003, MWA16_RAM },	/* Unknown*/
+	{ 0x81002a, 0x81002b, MWA16_RAM },	/* Unknown dbzvrvs*/
+	{ 0x810100, 0x810101, MWA16_RAM },	/* Unknown dbzvrvs*/
+	{ 0xa00000, 0xa00fff, MWA16_RAM, &sys32_protram },	/* protection RAM*/
 
 	{ 0xc00000, 0xc0003f, multi32_io_w },
 	{ 0xc00050, 0xc0005f, multi32_io_analog_w },
 	{ 0xc00060, 0xc0007f, multi32_io_2_w },
 	{ 0xc80000, 0xc8007f, multi32_io_B_w },
 
-	{ 0xd00000, 0xd00005, MWA16_RAM }, // Unknown
+	{ 0xd00000, 0xd00005, MWA16_RAM }, /* Unknown*/
 	{ 0xd00006, 0xd00007, irq_ack_w },
-	{ 0xd00008, 0xd0000b, MWA16_RAM }, // Unknown
-	{ 0xd80000, 0xd80003, MWA16_RAM }, // Unknown titlef / harddunk
-	{ 0xe00000, 0xe0000f, MWA16_RAM },   // Unknown
-	{ 0xe80000, 0xe80003, MWA16_RAM }, // Unknown
+	{ 0xd00008, 0xd0000b, MWA16_RAM }, /* Unknown*/
+	{ 0xd80000, 0xd80003, MWA16_RAM }, /* Unknown titlef / harddunk*/
+	{ 0xe00000, 0xe0000f, MWA16_RAM },   /* Unknown*/
+	{ 0xe80000, 0xe80003, MWA16_RAM }, /* Unknown*/
 	{ 0xf00000, 0xffffff, MWA16_ROM },
 MEMORY_END
 
@@ -675,28 +675,28 @@ struct YM2612interface mul32_ym3438_interface =
 
 static struct MultiPCM_interface mul32_multipcm_interface =
 {
-	1,		// 1 chip
-	{ Z80_CLOCK },	// clock
-	{ MULTIPCM_MODE_MULTI32 },	// banking mode
-	{ (512*1024) },	// bank size
-	{ REGION_SOUND1 },	// sample region
+	1,		/* 1 chip*/
+	{ Z80_CLOCK },	/* clock*/
+	{ MULTIPCM_MODE_MULTI32 },	/* banking mode*/
+	{ (512*1024) },	/* bank size*/
+	{ REGION_SOUND1 },	/* sample region*/
 	{ YM3012_VOL(100, MIXER_PAN_CENTER, 100, MIXER_PAN_CENTER) }
 };
 
 static struct MultiPCM_interface scross_multipcm_interface =
 {
-	1,		// 1 chip
-	{ Z80_CLOCK },	// clock
-	{ MULTIPCM_MODE_STADCROSS },	// banking mode
-	{ (512*1024) },	// bank size
-	{ REGION_SOUND1 },	// sample region
+	1,		/* 1 chip*/
+	{ Z80_CLOCK },	/* clock*/
+	{ MULTIPCM_MODE_STADCROSS },	/* banking mode*/
+	{ (512*1024) },	/* bank size*/
+	{ REGION_SOUND1 },	/* sample region*/
 	{ YM3012_VOL(100, MIXER_PAN_CENTER, 100, MIXER_PAN_CENTER) }
 };
 
 static MACHINE_DRIVER_START( base )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(V60, 20000000/10) // Reality is 20mhz but V60/V70 timings are unknown
+	MDRV_CPU_ADD(V60, 20000000/10) /* Reality is 20mhz but V60/V70 timings are unknown*/
 	MDRV_CPU_MEMORY(multi32_readmem,multi32_writemem)
 	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
 
@@ -711,7 +711,7 @@ static MACHINE_DRIVER_START( base )
 	MDRV_NVRAM_HANDLER(system32)
 
 	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_AFTER_VBLANK | VIDEO_RGB_DIRECT | VIDEO_HAS_SHADOWS ) // RGB_DIRECT will be needed for alpha
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_UPDATE_AFTER_VBLANK | VIDEO_RGB_DIRECT | VIDEO_HAS_SHADOWS ) /* RGB_DIRECT will be needed for alpha*/
 	MDRV_SCREEN_SIZE(52*8*2, 28*8*2)
 	MDRV_VISIBLE_AREA(0*8, 52*8*2-1, 0*8, 28*8*2-1)
 
@@ -768,11 +768,11 @@ static DRIVER_INIT(harddunk)
 
 
 INPUT_PORTS_START( orunners )
-	PORT_START	// port 0
+	PORT_START	/* port 0*/
 	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data */
 
-	PORT_START	// port 1
+	PORT_START	/* port 1*/
 	PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1, "P1 Shift Up", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2, "P1 Shift Down", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -782,7 +782,7 @@ INPUT_PORTS_START( orunners )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 2
+	PORT_START	/* port 2*/
 	PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3, "P1 DJ Music", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4, "P1 Music Up", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x04, IP_ACTIVE_LOW, IPT_BUTTON5, "P1 Music Down", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
@@ -792,7 +792,7 @@ INPUT_PORTS_START( orunners )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 3
+	PORT_START	/* port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -802,31 +802,31 @@ INPUT_PORTS_START( orunners )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 4
+	PORT_START	/* port 4*/
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER1, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port 5
+	PORT_START	/* port 5*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 6
+	PORT_START	/* port 6*/
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER1, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port 7
+	PORT_START	/* port 7*/
 	PORT_BIT( 0x00, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START	// port 8
+	PORT_START	/* port 8*/
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL2 | IPF_PLAYER1, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port 9
+	PORT_START	/* port 9*/
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER2, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port A
+	PORT_START	/* port A*/
 	PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_CENTER | IPF_PLAYER2, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port B
+	PORT_START	/* port B*/
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL2 | IPF_PLAYER2, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port C
+	PORT_START	/* port C*/
 	PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2, "P2 Shift Up", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2, "P2 Shift Down", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -836,7 +836,7 @@ INPUT_PORTS_START( orunners )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port D
+	PORT_START	/* port D*/
 	PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2, "P2 DJ Music", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2, "P2 Music Up", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x04, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2, "P2 Music Down", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
@@ -846,7 +846,7 @@ INPUT_PORTS_START( orunners )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port E
+	PORT_START	/* port E*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -856,7 +856,7 @@ INPUT_PORTS_START( orunners )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port F
+	PORT_START	/* port F*/
 	PORT_DIPNAME( 0x03, 0x01, "Monitors" )
 	PORT_DIPSETTING(    0x01, "A only" )
 	PORT_DIPSETTING(    0x03, "A and B" )
@@ -864,11 +864,11 @@ INPUT_PORTS_START( orunners )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( titlef )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data */
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER1)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER1)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER1)
@@ -878,7 +878,7 @@ INPUT_PORTS_START( titlef )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_RIGHT | IPF_PLAYER1)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_LEFT  | IPF_PLAYER1)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER1)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER1)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER1)
@@ -888,7 +888,7 @@ INPUT_PORTS_START( titlef )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER1)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -898,16 +898,16 @@ INPUT_PORTS_START( titlef )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00060 - port 4
-	PORT_START	// 0xc00062 - port 5
-	PORT_START	// 0xc00064 - port 6
-	PORT_START	// port 7
-	PORT_START	// port 8
-	PORT_START	// port 9
-	PORT_START	// port A
-	PORT_START	// port B
+	PORT_START	/* 0xc00060 - port 4*/
+	PORT_START	/* 0xc00062 - port 5*/
+	PORT_START	/* 0xc00064 - port 6*/
+	PORT_START	/* port 7*/
+	PORT_START	/* port 8*/
+	PORT_START	/* port 9*/
+	PORT_START	/* port A*/
+	PORT_START	/* port B*/
 
-	PORT_START	// port C
+	PORT_START	/* port C*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER2)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER2)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER2)
@@ -917,7 +917,7 @@ INPUT_PORTS_START( titlef )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_RIGHT | IPF_PLAYER2)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKLEFT_LEFT  | IPF_PLAYER2)
 
-	PORT_START	// port D
+	PORT_START	/* port D*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER2)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER2)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN        | IPF_PLAYER2)
@@ -927,7 +927,7 @@ INPUT_PORTS_START( titlef )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER2)
 
-	PORT_START	// port E
+	PORT_START	/* port E*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_SERVICE, "Test1", KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -937,7 +937,7 @@ INPUT_PORTS_START( titlef )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port F
+	PORT_START	/* port F*/
 	PORT_DIPNAME( 0x03, 0x01, "Monitors" )
 	PORT_DIPSETTING(    0x01, "A only" )
 	PORT_DIPSETTING(    0x03, "A and B" )
@@ -945,17 +945,17 @@ INPUT_PORTS_START( titlef )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( harddunk )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data */
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	SYSTEM32_PLAYER_INPUTS(1, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 	SYSTEM32_PLAYER_INPUTS(2, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_SERVICE, "Test2", KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -965,13 +965,13 @@ INPUT_PORTS_START( harddunk )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 4
+	PORT_START	/* port 4*/
 	SYSTEM32_PLAYER_INPUTS(3, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// port 5
+	PORT_START	/* port 5*/
 	SYSTEM32_PLAYER_INPUTS(6, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// port 6
+	PORT_START	/* port 6*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START6 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -981,19 +981,19 @@ INPUT_PORTS_START( harddunk )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 7
-	PORT_START	// port 8
-	PORT_START	// port 9
-	PORT_START	// port A
-	PORT_START	// port B
+	PORT_START	/* port 7*/
+	PORT_START	/* port 8*/
+	PORT_START	/* port 9*/
+	PORT_START	/* port A*/
+	PORT_START	/* port B*/
 
-	PORT_START	// port C
+	PORT_START	/* port C*/
 	SYSTEM32_PLAYER_INPUTS(4, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// port D
+	PORT_START	/* port D*/
 	SYSTEM32_PLAYER_INPUTS(5, BUTTON1, BUTTON2, BUTTON3, BUTTON4)
 
-	PORT_START	// port E
+	PORT_START	/* port E*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_SERVICE, "Test1", KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1003,7 +1003,7 @@ INPUT_PORTS_START( harddunk )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port F
+	PORT_START	/* port F*/
 	PORT_DIPNAME( 0x03, 0x01, "Monitors" )
 	PORT_DIPSETTING(    0x01, "A only" )
 	PORT_DIPSETTING(    0x03, "A and B" )
@@ -1011,11 +1011,11 @@ INPUT_PORTS_START( harddunk )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( scross )
-	PORT_START	// 0xc0000a - port 0
+	PORT_START	/* 0xc0000a - port 0*/
 	PORT_BIT( 0x7f, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* EEPROM data */
 
-	PORT_START	// 0xc00000 - port 1
+	PORT_START	/* 0xc00000 - port 1*/
 	PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2, "P1 Attack", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON3, "P1 Wheelie", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x04, IP_ACTIVE_LOW, IPT_BUTTON4, "P1 Brake", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
@@ -1025,9 +1025,9 @@ INPUT_PORTS_START( scross )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 0xc00002 - port 2
+	PORT_START	/* 0xc00002 - port 2*/
 
-	PORT_START	// 0xc00008 - port 3
+	PORT_START	/* 0xc00008 - port 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1037,26 +1037,26 @@ INPUT_PORTS_START( scross )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port 4
+	PORT_START	/* port 4*/
 	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_CENTER | IPF_REVERSE | IPF_PLAYER1, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port 5
+	PORT_START	/* port 5*/
 
-	PORT_START	// port 6
+	PORT_START	/* port 6*/
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER1, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port 7
-	PORT_START	// port 8
+	PORT_START	/* port 7*/
+	PORT_START	/* port 8*/
 	PORT_ANALOG( 0xff, 0x7f, IPT_AD_STICK_X | IPF_CENTER | IPF_REVERSE | IPF_PLAYER2, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port 9
+	PORT_START	/* port 9*/
 
-	PORT_START	// port A
+	PORT_START	/* port A*/
 	PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER2, 30, 10, 0x00, 0xff)
 
-	PORT_START	// port B
+	PORT_START	/* port B*/
 
-	PORT_START	// port C
+	PORT_START	/* port C*/
 	PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2, "P2 Attack", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON3 | IPF_PLAYER2, "P2 Wheelie", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
 	PORT_BITX( 0x04, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2, "P2 Brake", IP_KEY_DEFAULT, IP_JOY_DEFAULT )
@@ -1066,9 +1066,9 @@ INPUT_PORTS_START( scross )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port D
+	PORT_START	/* port D*/
 
-	PORT_START	// port E
+	PORT_START	/* port E*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 )
 	PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1078,7 +1078,7 @@ INPUT_PORTS_START( scross )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// port F
+	PORT_START	/* port F*/
 	PORT_DIPNAME( 0x03, 0x01, "Monitors" )
 	PORT_DIPSETTING(    0x01, "A only" )
 	PORT_DIPSETTING(    0x03, "A and B" )
@@ -1262,7 +1262,7 @@ ROM_START( titlef )
 	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* FG tiles */
 ROM_END
 
-// boot, and are playable, some gfx problems
+/* boot, and are playable, some gfx problems*/
 GAMEX( 1992, orunners,     0,        multi32, orunners, orunners, ROT0, "Sega", "Outrunners (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1994, harddunk,     0,        multi32, harddunk, harddunk, ROT0, "Sega", "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1994, harddunj,     harddunk, multi32, harddunk, harddunk, ROT0, "Sega", "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )

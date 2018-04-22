@@ -84,10 +84,10 @@ READ_HANDLER( io_0x03_r )
 }
 
 static PORT_READ_START( readport )
-	{ 0x00, 0x00, input_port_0_r },		// Input 1
-	{ 0x01, 0x01, input_port_1_r },		// Input 2
-	{ 0x02, 0x02, input_port_2_r },		// DipSw 1
-	{ 0x03, 0x03, io_0x03_r },		// Unknown
+	{ 0x00, 0x00, input_port_0_r },		/* Input 1*/
+	{ 0x01, 0x01, input_port_1_r },		/* Input 2*/
+	{ 0x02, 0x02, input_port_2_r },		/* DipSw 1*/
+	{ 0x03, 0x03, io_0x03_r },		/* Unknown*/
 PORT_END
 
 static PORT_WRITE_START( writeport )
@@ -106,7 +106,7 @@ INPUT_PORTS_START( mrjong )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_START2 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )		// ????
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )		/* ????*/
 
 	PORT_START	/* IN1 */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_4WAY | IPF_PLAYER1 )

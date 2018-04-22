@@ -155,22 +155,22 @@ static READ16_HANDLER( inufuku_eeprom_r )
 	unsigned short eeprom;
 	unsigned short inputport;
 
-	soundflag = pending_command ? 0x0000 : 0x0080;	// bit7
-	eeprom = (EEPROM_read_bit() & 1) << 6;			// bit6
-	inputport = readinputport(4) & 0xff3f;			// bit5-0
+	soundflag = pending_command ? 0x0000 : 0x0080;	/* bit7*/
+	eeprom = (EEPROM_read_bit() & 1) << 6;			/* bit6*/
+	inputport = readinputport(4) & 0xff3f;			/* bit5-0*/
 
 	return (soundflag | eeprom | inputport);
 }
 
 static WRITE16_HANDLER( inufuku_eeprom_w )
 {
-	// latch the bit
+	/* latch the bit*/
 	EEPROM_write_bit(data & 0x0800);
 
-	// reset line asserted: reset.
+	/* reset line asserted: reset.*/
 	EEPROM_set_cs_line((data & 0x2000) ? CLEAR_LINE : ASSERT_LINE);
 
-	// clock line asserted: write latch or select next bit to read
+	/* clock line asserted: write latch or select next bit to read*/
 	EEPROM_set_clock_line((data & 0x1000) ? ASSERT_LINE : CLEAR_LINE);
 }
 
@@ -182,45 +182,45 @@ static WRITE16_HANDLER( inufuku_eeprom_w )
 ******************************************************************************/
 
 static MEMORY_READ16_START( inufuku_readmem )
-	{ 0x000000, 0x0fffff, MRA16_ROM },				// main rom
+	{ 0x000000, 0x0fffff, MRA16_ROM },				/* main rom*/
 
 	{ 0x180000, 0x180001, input_port_0_word_r },
 	{ 0x180002, 0x180003, input_port_1_word_r },
 	{ 0x180004, 0x180005, input_port_2_word_r },
 	{ 0x180006, 0x180007, input_port_3_word_r },
-	{ 0x180008, 0x180009, inufuku_eeprom_r },		// eeprom + input_port_4_word_r
+	{ 0x180008, 0x180009, inufuku_eeprom_r },		/* eeprom + input_port_4_word_r*/
 	{ 0x18000a, 0x18000b, input_port_5_word_r },
 
-	{ 0x300000, 0x301fff, MRA16_RAM },				// palette ram
-	{ 0x400000, 0x401fff, inufuku_bg_videoram_r },	// bg ram
-	{ 0x402000, 0x403fff, inufuku_text_videoram_r },// text ram
-	{ 0x580000, 0x580fff, MRA16_RAM },				// sprite table + sprite attribute
-	{ 0x600000, 0x61ffff, MRA16_RAM },				// cell table
+	{ 0x300000, 0x301fff, MRA16_RAM },				/* palette ram*/
+	{ 0x400000, 0x401fff, inufuku_bg_videoram_r },	/* bg ram*/
+	{ 0x402000, 0x403fff, inufuku_text_videoram_r },/* text ram*/
+	{ 0x580000, 0x580fff, MRA16_RAM },				/* sprite table + sprite attribute*/
+	{ 0x600000, 0x61ffff, MRA16_RAM },				/* cell table*/
 
-	{ 0x800000, 0xbfffff, MRA16_ROM },				// data rom
-	{ 0xfd0000, 0xfdffff, MRA16_RAM },				// work ram
+	{ 0x800000, 0xbfffff, MRA16_ROM },				/* data rom*/
+	{ 0xfd0000, 0xfdffff, MRA16_RAM },				/* work ram*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( inufuku_writemem )
-	{ 0x000000, 0x0fffff, MWA16_ROM },				// main rom
+	{ 0x000000, 0x0fffff, MWA16_ROM },				/* main rom*/
 
-	{ 0x100000, 0x100007, MWA16_NOP },				// ?
-	{ 0x200000, 0x200001, inufuku_eeprom_w },		// eeprom
-	{ 0x280000, 0x280001, inufuku_soundcommand_w },	// sound command
+	{ 0x100000, 0x100007, MWA16_NOP },				/* ?*/
+	{ 0x200000, 0x200001, inufuku_eeprom_w },		/* eeprom*/
+	{ 0x280000, 0x280001, inufuku_soundcommand_w },	/* sound command*/
 
-	{ 0x300000, 0x301fff, paletteram16_xGGGGGBBBBBRRRRR_word_w, &paletteram16 },		// palette ram
-	{ 0x380000, 0x3801ff, MWA16_RAM, &inufuku_bg_rasterram },							// bg raster ram
-	{ 0x400000, 0x401fff, inufuku_bg_videoram_w, &inufuku_bg_videoram },				// bg ram
-	{ 0x402000, 0x403fff, inufuku_text_videoram_w, &inufuku_text_videoram },			// text ram
-	{ 0x580000, 0x580fff, MWA16_RAM, &inufuku_spriteram1, &inufuku_spriteram1_size },	// sprite table + sprite attribute
-	{ 0x600000, 0x61ffff, MWA16_RAM, &inufuku_spriteram2 },								// cell table
+	{ 0x300000, 0x301fff, paletteram16_xGGGGGBBBBBRRRRR_word_w, &paletteram16 },		/* palette ram*/
+	{ 0x380000, 0x3801ff, MWA16_RAM, &inufuku_bg_rasterram },							/* bg raster ram*/
+	{ 0x400000, 0x401fff, inufuku_bg_videoram_w, &inufuku_bg_videoram },				/* bg ram*/
+	{ 0x402000, 0x403fff, inufuku_text_videoram_w, &inufuku_text_videoram },			/* text ram*/
+	{ 0x580000, 0x580fff, MWA16_RAM, &inufuku_spriteram1, &inufuku_spriteram1_size },	/* sprite table + sprite attribute*/
+	{ 0x600000, 0x61ffff, MWA16_RAM, &inufuku_spriteram2 },								/* cell table*/
 
-	{ 0x780000, 0x780013, inufuku_palettereg_w },	// bg & text palettebank register
-	{ 0x7a0000, 0x7a0023, inufuku_scrollreg_w },	// bg & text scroll register
-	{ 0x7e0000, 0x7e0001, MWA16_NOP },				// ?
+	{ 0x780000, 0x780013, inufuku_palettereg_w },	/* bg & text palettebank register*/
+	{ 0x7a0000, 0x7a0023, inufuku_scrollreg_w },	/* bg & text scroll register*/
+	{ 0x7e0000, 0x7e0001, MWA16_NOP },				/* ?*/
 
-	{ 0x800000, 0xbfffff, MWA16_ROM },				// data rom
-	{ 0xfd0000, 0xfdffff, MWA16_RAM },				// work ram
+	{ 0x800000, 0xbfffff, MWA16_ROM },				/* data rom*/
+	{ 0xfd0000, 0xfdffff, MWA16_RAM },				/* work ram*/
 MEMORY_END
 
 
@@ -266,7 +266,7 @@ PORT_END
 ******************************************************************************/
 
 INPUT_PORTS_START( inufuku )
-	PORT_START	// 0
+	PORT_START	/* 0*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
@@ -276,7 +276,7 @@ INPUT_PORTS_START( inufuku )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4        | IPF_PLAYER1 )
 
-	PORT_START	// 1
+	PORT_START	/* 1*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
@@ -286,7 +286,7 @@ INPUT_PORTS_START( inufuku )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4        | IPF_PLAYER2 )
 
-	PORT_START	// 2
+	PORT_START	/* 2*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1 )
@@ -296,7 +296,7 @@ INPUT_PORTS_START( inufuku )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// 3
+	PORT_START	/* 3*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER4 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER4 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER4 )
@@ -306,7 +306,7 @@ INPUT_PORTS_START( inufuku )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3        | IPF_PLAYER4 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4        | IPF_PLAYER4 )
 
-	PORT_START	// 4
+	PORT_START	/* 4*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN4 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START3 )
@@ -316,9 +316,9 @@ INPUT_PORTS_START( inufuku )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	// pending sound command
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* pending sound command*/
 
-	PORT_START	// 5
+	PORT_START	/* 5*/
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER3 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER3 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER3 )
@@ -362,9 +362,9 @@ static struct GfxLayout spritelayout =
 
 static struct GfxDecodeInfo inufuku_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &tilelayout,    0, 256*16 },	// bg
-	{ REGION_GFX2, 0, &tilelayout,    0, 256*16 },	// text
-	{ REGION_GFX3, 0, &spritelayout,  0, 256*16 },	// sprite
+	{ REGION_GFX1, 0, &tilelayout,    0, 256*16 },	/* bg*/
+	{ REGION_GFX2, 0, &tilelayout,    0, 256*16 },	/* text*/
+	{ REGION_GFX3, 0, &spritelayout,  0, 256*16 },	/* sprite*/
 	{ -1 } /* end of array */
 };
 
@@ -442,27 +442,27 @@ MACHINE_DRIVER_END
 ******************************************************************************/
 
 ROM_START( inufuku )
-	ROM_REGION( 0x1000000, REGION_CPU1, 0 )	// main cpu + data
+	ROM_REGION( 0x1000000, REGION_CPU1, 0 )	/* main cpu + data*/
 	ROM_LOAD16_WORD_SWAP( "u147.bin",     0x0000000, 0x080000, CRC(ab72398c) SHA1(f5dc266ffa936ea6528b46a34113f5e2f8141d71) )
 	ROM_LOAD16_WORD_SWAP( "u146.bin",     0x0080000, 0x080000, CRC(e05e9bd4) SHA1(af0fdf31c2bdf851bf15c9de725dcbbb58464d54) )
 	ROM_LOAD16_WORD_SWAP( "lhmn5l28.148", 0x0800000, 0x400000, CRC(802d17e7) SHA1(43b26efea65fd051c094d19784cb977ced39a1a0) )
 
-	ROM_REGION( 0x0030000, REGION_CPU2, 0 )	// sound cpu
+	ROM_REGION( 0x0030000, REGION_CPU2, 0 )	/* sound cpu*/
 	ROM_LOAD( "u107.bin", 0x0000000, 0x020000, CRC(1744ef90) SHA1(e019f4ca83e21aa25710cc0ca40ffe765c7486c9) )
 	ROM_RELOAD( 0x010000, 0x020000 )
 
-	ROM_REGION( 0x0400000, REGION_GFX1, ROMREGION_DISPOSE )	// bg
+	ROM_REGION( 0x0400000, REGION_GFX1, ROMREGION_DISPOSE )	/* bg*/
 	ROM_LOAD16_WORD_SWAP( "lhmn5ku8.u40", 0x0000000, 0x400000, CRC(8cbca80a) SHA1(063e9be97f5a1f021f8326f2994b51f9af5e1eaf) )
 
-	ROM_REGION( 0x0400000, REGION_GFX2, ROMREGION_DISPOSE )	// text
+	ROM_REGION( 0x0400000, REGION_GFX2, ROMREGION_DISPOSE )	/* text*/
 	ROM_LOAD16_WORD_SWAP( "lhmn5ku7.u8",  0x0000000, 0x400000, CRC(a6c0f07f) SHA1(971803d1933d8296767d8766ea9f04dcd6ab065c) )
 
-	ROM_REGION( 0x0c00000, REGION_GFX3, ROMREGION_DISPOSE )	// sprite
+	ROM_REGION( 0x0c00000, REGION_GFX3, ROMREGION_DISPOSE )	/* sprite*/
 	ROM_LOAD16_WORD_SWAP( "lhmn5kub.u34", 0x0000000, 0x400000, CRC(7753a7b6) SHA1(a2e8747ce83ea5a57e2fe62f2452de355d7f48b6) )
 	ROM_LOAD16_WORD_SWAP( "lhmn5kua.u36", 0x0400000, 0x400000, CRC(1ac4402a) SHA1(c15acc6fce4fe0b54e92d14c31a1bd78acf2c8fc) )
 	ROM_LOAD16_WORD_SWAP( "lhmn5ku9.u38", 0x0800000, 0x400000, CRC(e4e9b1b6) SHA1(4d4ad85fbe6a442d4f8cafad748bcae4af6245b7) )
 
-	ROM_REGION( 0x0400000, REGION_SOUND1, 0 )	// adpcm data
+	ROM_REGION( 0x0400000, REGION_SOUND1, 0 )	/* adpcm data*/
 	ROM_LOAD( "lhmn5ku6.u53", 0x0000000, 0x400000, CRC(b320c5c9) SHA1(7c99da2d85597a3c008ed61a3aa5f47ad36186ec) )
 ROM_END
 

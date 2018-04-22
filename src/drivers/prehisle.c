@@ -72,7 +72,7 @@ MEMORY_END
 static MEMORY_WRITE_START( prehisle_sound_writemem )
 	{ 0x0000, 0xefff, MWA_ROM },
 	{ 0xf000, 0xf7ff, MWA_RAM },
-	{ 0xf800, 0xf800, MWA_NOP },	// ???
+	{ 0xf800, 0xf800, MWA_NOP },	/* ???*/
 MEMORY_END
 
 static PORT_READ_START( prehisle_sound_readport )

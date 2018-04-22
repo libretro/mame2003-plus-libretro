@@ -182,8 +182,8 @@ static MEMORY_READ16_START( readmem )
 	{ 0x000000, 0x1fffff, MRA16_ROM },
 	{ 0x200000, 0x20ffff, MRA16_RAM },
 	{ 0x300000, 0x30ffff, MRA16_RAM },
-//	{ 0x400000, 0x40ffff, MRA16_RAM },
-	{ 0x400002, 0x400003, jchan_prot_r }, // maybe
+/*	{ 0x400000, 0x40ffff, MRA16_RAM },*/
+	{ 0x400002, 0x400003, jchan_prot_r }, /* maybe*/
 	{ 0x500000, 0x503fff, MRA16_RAM },
 	{ 0x700000, 0x7007ff, MRA16_RAM },
 	{ 0x700800, 0x701fff, MRA16_RAM },
@@ -194,13 +194,13 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0x000000, 0x1fffff, MWA16_ROM },
 	{ 0x200000, 0x20ffff, MWA16_RAM },
 	{ 0x300000, 0x30ffff, MWA16_RAM },
-//	{ 0x400000, 0x40ffff, MWA16_RAM },
-	{ 0x403ffe, 0x403fff, jchan_prot_w }, // maybe
+/*	{ 0x400000, 0x40ffff, MWA16_RAM },*/
+	{ 0x403ffe, 0x403fff, jchan_prot_w }, /* maybe*/
 	{ 0x500000, 0x503fff, MWA16_RAM },
 	{ 0x700000, 0x7007ff, MWA16_RAM },
 	{ 0x700800, 0x701fff, MWA16_RAM },
 	{ 0x708000, 0x70ffff, MWA16_RAM },
-	{ 0xF80000, 0xF80001, MWA16_RAM }, // ???
+	{ 0xF80000, 0xF80001, MWA16_RAM }, /* ???*/
 MEMORY_END
 
 
@@ -326,7 +326,7 @@ INPUT_PORTS_END
 static MACHINE_DRIVER_START( jchan )
 	MDRV_CPU_ADD(M68000, 12000000)
 	MDRV_CPU_MEMORY(readmem,writemem)
-	MDRV_CPU_VBLANK_INT(irq1_line_hold,1) // ?
+	MDRV_CPU_VBLANK_INT(irq1_line_hold,1) /* ?*/
 
 
 	MDRV_FRAMES_PER_SECOND(60)
@@ -355,8 +355,8 @@ ROM_START( jchan )
 	ROM_LOAD16_BYTE( "jm10x3.u70", 0x100000, 0x080000, CRC(ee08fee1) SHA1(5514bd8c625bc7cf8dd5da2f76b760716609b925) )
 
 	ROM_REGION( 0x200000, REGION_CPU2, 0 ) /* 68000 Code */
-	ROM_LOAD16_BYTE( "jsp1x3.u86", 0x000001, 0x080000, CRC(d15d2b8e) SHA1(e253f2d64fee6627f68833b441f41ea6bbb3ab07) ) // 1xxxxxxxxxxxxxxxxxx = 0xFF
-	ROM_LOAD16_BYTE( "jsp0x3.u87", 0x000000, 0x080000, CRC(ebec50b1) SHA1(57d7bd728349c2b9d662bcf20a3be92902cb3ffb) ) // 1xxxxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD16_BYTE( "jsp1x3.u86", 0x000001, 0x080000, CRC(d15d2b8e) SHA1(e253f2d64fee6627f68833b441f41ea6bbb3ab07) ) /* 1xxxxxxxxxxxxxxxxxx = 0xFF*/
+	ROM_LOAD16_BYTE( "jsp0x3.u87", 0x000000, 0x080000, CRC(ebec50b1) SHA1(57d7bd728349c2b9d662bcf20a3be92902cb3ffb) ) /* 1xxxxxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0xc00000, REGION_GFX1, ROMREGION_DISPOSE ) /* SPA GFX? */
 	ROM_LOAD( "jc-100.00", 0x000000, 0x200000, CRC(c38c5f84) SHA1(ce072c28ce02a0f79b7f5b5a2c16e5121ef6fc27) )
@@ -364,12 +364,12 @@ ROM_START( jchan )
 	ROM_LOAD( "jc-102.00", 0x400000, 0x200000, CRC(e08f1dee) SHA1(ca3efc531f65a1cb40d17aa933e0eb506459c836) )
 	ROM_LOAD( "jc-103.00", 0x600000, 0x200000, CRC(ce0c81d8) SHA1(b94b699317b123a0498f6da6d6e348d669e6860e) )
 	ROM_LOAD( "jc-104.00", 0x800000, 0x200000, CRC(6b2a2e93) SHA1(e34010e39043b67493bcb23a04828ab7cda8ba4d) )
-	ROM_LOAD( "jc-105.00", 0xa00000, 0x200000, CRC(73cad1f0) SHA1(5dbe4e318948e4f74bfc2d0d59455d43ba030c0d) ) // 11xxxxxxxxxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "jc-105.00", 0xa00000, 0x200000, CRC(73cad1f0) SHA1(5dbe4e318948e4f74bfc2d0d59455d43ba030c0d) ) /* 11xxxxxxxxxxxxxxxxxxx = 0xFF*/
 
 	ROM_REGION( 0x600000, REGION_GFX2, ROMREGION_DISPOSE ) /* SPB GFX? */
 	ROM_LOAD( "jc-106.00", 0x000000, 0x200000, CRC(bc65661b) SHA1(da28b8fcd7c7a0de427a54be2cf41a1d6a295164) )
 	ROM_LOAD( "jc-107.00", 0x200000, 0x200000, CRC(92a86e8b) SHA1(c37eddbc9d84239deb543504e27b5bdaf2528f79) )
-	ROM_LOAD( "jc-108.00", 0x400000, 0x200000, CRC(67dd1131) SHA1(96f334378ae0267bdb3dc528635d8d03564bd859) ) // other region ? (label is spa)
+	ROM_LOAD( "jc-108.00", 0x400000, 0x200000, CRC(67dd1131) SHA1(96f334378ae0267bdb3dc528635d8d03564bd859) ) /* other region ? (label is spa)*/
 
 	ROM_REGION( 0x100000, REGION_GFX3, ROMREGION_DISPOSE ) /* BG GFX? */
 	ROM_LOAD( "jc-200.00", 0x000000, 0x100000, CRC(1f30c24e) SHA1(0c413fc67c3ec020e6786e7157d82aa242c8d2ad) )

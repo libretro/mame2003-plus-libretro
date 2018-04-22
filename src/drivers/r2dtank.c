@@ -46,7 +46,7 @@ Should be very similar to Sigma's Spiders hardware.
 static int dipsw_bank;
 static WRITE_HANDLER( dipsw_bank_w )
 {
-//	printf("bank = %x\n",data);
+/*	printf("bank = %x\n",data);*/
 	dipsw_bank = data;
 }
 
@@ -63,46 +63,46 @@ static READ_HANDLER( dipsw_r )
 {
 	switch( dipsw_bank )
 	{
-	case 0xff: // @ $154
+	case 0xff: /* @ $154*/
 		return readinputport(1);
 
-	case 0xfe: // @ $155
+	case 0xfe: /* @ $155*/
 		return readinputport(2);
 
-	case 0xfd: // @ $156
+	case 0xfd: /* @ $156*/
 		return readinputport(3);
 
-//	case 0xfc:
+/*	case 0xfc:*/
 
-//	case 0xfb: 
+/*	case 0xfb: */
 
-//	case 0xfa: // insert a coin
+/*	case 0xfa: */ /* insert a coin*/
 
-	case 0xf8: // finish level
+	case 0xf8: /* finish level*/
 		return 0;
 		
-	case 0xf9: // game starts
+	case 0xf9: /* game starts*/
 		return 0;
 
-//	case 0xf3:
+/*	case 0xf3:*/
 
-//	case 0xf0:
+/*	case 0xf0:*/
 
-//	case 0xf1:
+/*	case 0xf1:*/
 		
-//	case 0xec:
+/*	case 0xec:*/
 
-//	case 0xeb:
+/*	case 0xeb:*/
 
-//	case 0xea:
+/*	case 0xea:*/
 
-	case 0xe9: // game over
+	case 0xe9: /* game over*/
 		return 0;
 
-//	case 0xe8: // lose a life?
+/*	case 0xe8: */ /* lose a life?*/
 		
 	default:
-//		logerror("Unknown dipsw_r bank = %x\n",dipsw_bank);
+/*		logerror("Unknown dipsw_r bank = %x\n",dipsw_bank);*/
 		return 0xff;
 	}
 }
@@ -121,7 +121,7 @@ static MEMORY_READ_START( readmem )
 	{ 0x0000, 0x7fff, MRA_RAM },
 	{ 0x8000, 0x8003, pia_0_r },
 	{ 0x8004, 0x8004, dipsw_r },
-//	{ 0x8004, 0x8007, pia_1_r },
+/*	{ 0x8004, 0x8007, pia_1_r },*/
 	{ 0xc000, 0xc007, MRA_RAM },
 	{ 0xc800, 0xffff, MRA_ROM },
 MEMORY_END
@@ -129,7 +129,7 @@ MEMORY_END
 static MEMORY_WRITE_START( writemem )
 	{ 0x0000, 0x7fff, MWA_RAM },	
 	{ 0x8000, 0x8003, r2dtank_pia_0_w },
-//	{ 0x8004, 0x8007, r2dtank_pia_1_w },
+/*	{ 0x8004, 0x8007, r2dtank_pia_1_w },*/
 	{ 0x8004, 0x8004, dipsw_bank_w },
 	{ 0xb000, 0xb000, crtc6845_address_w }, 
 	{ 0xb001, 0xb001, crtc6845_register_w },
@@ -139,8 +139,8 @@ MEMORY_END
 
 static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x00ff, MRA_RAM },
-	{ 0xd000, 0xd000, MRA_RAM }, // AY8910_read_port_0_r ?
-	{ 0xf000, 0xf000, MRA_RAM }, // soundlatch_r ?
+	{ 0xd000, 0xd000, MRA_RAM }, /* AY8910_read_port_0_r ?*/
+	{ 0xf000, 0xf000, MRA_RAM }, /* soundlatch_r ?*/
 	{ 0xf800, 0xffff, MRA_ROM },
 MEMORY_END
 
@@ -259,14 +259,14 @@ PALETTE_INIT( r2dtank )
 {
 	/* colours derived from tim's screenshots */
 
-	palette_set_color(0x0,0,0,0);		// background
-	palette_set_color(0x1,0,255,0); 	// credits
-	palette_set_color(0x2,0,0,251); 	// presented by sigma
-	palette_set_color(0x3,0,214,255); 	// per points etc.
-	palette_set_color(0x4,255,0,0); 	// r2dtank logo
-	palette_set_color(0x5,255,255,128); // unused?
-	palette_set_color(0x6,255,0,255); 	// pink tank
-	palette_set_color(0x7,236,141,181); // sigma (c)
+	palette_set_color(0x0,0,0,0);		/* background*/
+	palette_set_color(0x1,0,255,0); 	/* credits*/
+	palette_set_color(0x2,0,0,251); 	/* presented by sigma*/
+	palette_set_color(0x3,0,214,255); 	/* per points etc.*/
+	palette_set_color(0x4,255,0,0); 	/* r2dtank logo*/
+	palette_set_color(0x5,255,255,128); /* unused?*/
+	palette_set_color(0x6,255,0,255); 	/* pink tank*/
+	palette_set_color(0x7,236,141,181); /* sigma (c)*/
 
 }
 

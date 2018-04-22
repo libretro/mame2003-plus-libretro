@@ -316,7 +316,7 @@ static READ16_HANDLER( wecleman_protection_r )
 	data1 = wecleman_protection_ram[1];
 	blend &= 0x3ff;
 
-	// a precalculated table will take an astronomical 4096^2(colors) x 1024(steps) x 2(word) bytes
+	/* a precalculated table will take an astronomical 4096^2(colors) x 1024(steps) x 2(word) bytes*/
 	r0 = data0;  g0 = data0;  b0 = data0;
 	r0 &= 0xf;   g0 &= 0xf0;  b0 &= 0xf00;
 	r1 = data1;  g1 = data1;  b1 = data1;
@@ -370,22 +370,22 @@ static WRITE16_HANDLER( irqctrl_w )
 {
 	if (ACCESSING_LSB)
 	{
-		// logerror("CPU #0 - PC = %06X - $140005 <- %02X (old value: %02X)\n",activecpu_get_pc(), data&0xFF, old_data&0xFF);
+		/* logerror("CPU #0 - PC = %06X - $140005 <- %02X (old value: %02X)\n",activecpu_get_pc(), data&0xFF, old_data&0xFF);*/
 
-		// Bit 0 : SUBINT
-		if ( (wecleman_irqctrl & 1) && (!(data & 1)) )	// 1->0 transition
+		/* Bit 0 : SUBINT*/
+		if ( (wecleman_irqctrl & 1) && (!(data & 1)) )	/* 1->0 transition*/
 			cpu_set_irq_line(1,4,HOLD_LINE);
 
-		// Bit 1 : NSUBRST
+		/* Bit 1 : NSUBRST*/
 		if (data & 2)   cpu_set_reset_line(1, CLEAR_LINE  );
 		else                    cpu_set_reset_line(1, ASSERT_LINE );
 
-		// Bit 2 : SOUND-ON
-		// Bit 3 : SOUNDRST
-		// Bit 4 : SCR-HCNT
-		// Bit 5 : SCR-VCNT
-		// Bit 6 : TV-KILL
-		wecleman_irqctrl = data;	// latch the value
+		/* Bit 2 : SOUND-ON*/
+		/* Bit 3 : SOUNDRST*/
+		/* Bit 4 : SCR-HCNT*/
+		/* Bit 5 : SCR-VCNT*/
+		/* Bit 6 : TV-KILL*/
+		wecleman_irqctrl = data;	/* latch the value*/
 	}
 }
 
@@ -402,18 +402,18 @@ static WRITE16_HANDLER( irqctrl_w )
 */
 static WRITE16_HANDLER( selected_ip_w )
 {
-	if (ACCESSING_LSB) wecleman_selected_ip = data & 0xff;	// latch the value
+	if (ACCESSING_LSB) wecleman_selected_ip = data & 0xff;	/* latch the value*/
 }
 
 /* $140021.b - Return the previously selected input port's value */
 static READ16_HANDLER( selected_ip_r )
 {
 	switch ( (wecleman_selected_ip >> 5) & 3 )
-	{												// From WEC Le Mans Schems:
-		case 0:  return input_port_4_r(offset);		// Accel - Schems: Accelevr
-		case 1:  return ~0;							// ????? - Schems: Not Used
-		case 2:  return input_port_5_r(offset);		// Wheel - Schems: Handlevr
-		case 3:  return ~0;							// Table - Schems: Turnvr
+	{												/* From WEC Le Mans Schems:*/
+		case 0:  return input_port_4_r(offset);		/* Accel - Schems: Accelevr*/
+		case 1:  return ~0;							/* ????? - Schems: Not Used*/
+		case 2:  return input_port_5_r(offset);		/* Wheel - Schems: Handlevr*/
+		case 3:  return ~0;							/* Table - Schems: Turnvr*/
 
 		default: return ~0;
 	}
@@ -467,8 +467,8 @@ static WRITE16_HANDLER( blitter_w )
 
 		/* 80002.w = ?? always 0 - ? increment per horizontal line ? */
 		/* no proof at all, it's always 0 */
-		//int srcdisp = blitter_regs[0x2/2] & 0xFF00;
-		//int destdisp = blitter_regs[0x2/2] & 0x00FF;
+		/*int srcdisp = blitter_regs[0x2/2] & 0xFF00;*/
+		/*int destdisp = blitter_regs[0x2/2] & 0x00FF;*/
 
 		/* 80004.l = source data address */
 		int src  = ( blitter_regs[0x4/2] << 16 ) + blitter_regs[0x6/2];
@@ -534,40 +534,40 @@ static WRITE16_HANDLER( blitter_w )
 static WRITE16_HANDLER( wecleman_soundlatch_w );
 
 static MEMORY_READ16_START( wecleman_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM             },	// ROM
-	{ 0x040000, 0x043fff, MRA16_RAM             },	// RAM
-	{ 0x060006, 0x060007, wecleman_protection_r },	// MCU read
-	{ 0x080000, 0x080011, MRA16_RAM             },	// Blitter (reading is for debug)
-	{ 0x100000, 0x103fff, MRA16_RAM             },	// Background Layers
-	{ 0x108000, 0x108fff, MRA16_RAM             },	// Text Layer
-	{ 0x110000, 0x110fff, MRA16_RAM             },	// Palette
-	{ 0x124000, 0x127fff, sharedram_r           },	// Shared with sub CPU
-	{ 0x130000, 0x130fff, MRA16_RAM             },	// Sprites
-	// Input Ports:
-	{ 0x140010, 0x140011, input_port_0_word_r },	// Coins + brake + gear
-	{ 0x140012, 0x140013, input_port_1_word_r },	// ??
-	{ 0x140014, 0x140015, input_port_2_word_r },	// DSW
-	{ 0x140016, 0x140017, input_port_3_word_r },	// DSW
-	{ 0x140020, 0x140021, selected_ip_r       },	// Accelerator or Wheel or ..
+	{ 0x000000, 0x03ffff, MRA16_ROM             },	/* ROM*/
+	{ 0x040000, 0x043fff, MRA16_RAM             },	/* RAM*/
+	{ 0x060006, 0x060007, wecleman_protection_r },	/* MCU read*/
+	{ 0x080000, 0x080011, MRA16_RAM             },	/* Blitter (reading is for debug)*/
+	{ 0x100000, 0x103fff, MRA16_RAM             },	/* Background Layers*/
+	{ 0x108000, 0x108fff, MRA16_RAM             },	/* Text Layer*/
+	{ 0x110000, 0x110fff, MRA16_RAM             },	/* Palette*/
+	{ 0x124000, 0x127fff, sharedram_r           },	/* Shared with sub CPU*/
+	{ 0x130000, 0x130fff, MRA16_RAM             },	/* Sprites*/
+	/* Input Ports:*/
+	{ 0x140010, 0x140011, input_port_0_word_r },	/* Coins + brake + gear*/
+	{ 0x140012, 0x140013, input_port_1_word_r },	/* ??*/
+	{ 0x140014, 0x140015, input_port_2_word_r },	/* DSW*/
+	{ 0x140016, 0x140017, input_port_3_word_r },	/* DSW*/
+	{ 0x140020, 0x140021, selected_ip_r       },	/* Accelerator or Wheel or ..*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( wecleman_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM                             },	// ROM (03c000-03ffff used as RAM sometimes!)
-	{ 0x040494, 0x040495, wecleman_videostatus_w, &wecleman_videostatus },	// cloud blending control (HACK)
-	{ 0x040000, 0x043fff, MWA16_RAM                             },	// RAM
+	{ 0x000000, 0x03ffff, MWA16_ROM                             },	/* ROM (03c000-03ffff used as RAM sometimes!)*/
+	{ 0x040494, 0x040495, wecleman_videostatus_w, &wecleman_videostatus },	/* cloud blending control (HACK)*/
+	{ 0x040000, 0x043fff, MWA16_RAM                             },	/* RAM*/
 	{ 0x060000, 0x060005, wecleman_protection_w, &wecleman_protection_ram },
-	{ 0x080000, 0x080011, blitter_w,          &blitter_regs     },	// Blitter
-	{ 0x100000, 0x103fff, wecleman_pageram_w, &wecleman_pageram },	// Background Layers
-	{ 0x108000, 0x108fff, wecleman_txtram_w,  &wecleman_txtram  },	// Text Layer
+	{ 0x080000, 0x080011, blitter_w,          &blitter_regs     },	/* Blitter*/
+	{ 0x100000, 0x103fff, wecleman_pageram_w, &wecleman_pageram },	/* Background Layers*/
+	{ 0x108000, 0x108fff, wecleman_txtram_w,  &wecleman_txtram  },	/* Text Layer*/
 	{ 0x110000, 0x110fff, wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w, &paletteram16 },
-	{ 0x124000, 0x127fff, sharedram_w,        &sharedram        },	// Shared with main CPU
-	{ 0x130000, 0x130fff, MWA16_RAM,          &spriteram16,     },	// Sprites
-	{ 0x140000, 0x140001, wecleman_soundlatch_w                 },	// To sound CPU
-	{ 0x140002, 0x140003, selected_ip_w                         },	// Selects accelerator / wheel / ..
-	{ 0x140004, 0x140005, irqctrl_w                             },	// Main CPU controls the other CPUs
-	{ 0x140006, 0x140007, MWA16_NOP                             },	// Watchdog reset
-	{ 0x140020, 0x140021, MWA16_RAM                             },	// Paired with writes to $140003
-	{ 0x140030, 0x140031, MWA16_NOP },	// toggles between 0 & 1 on hitting bumps and crashes (vibration?)
+	{ 0x124000, 0x127fff, sharedram_w,        &sharedram        },	/* Shared with main CPU*/
+	{ 0x130000, 0x130fff, MWA16_RAM,          &spriteram16,     },	/* Sprites*/
+	{ 0x140000, 0x140001, wecleman_soundlatch_w                 },	/* To sound CPU*/
+	{ 0x140002, 0x140003, selected_ip_w                         },	/* Selects accelerator / wheel / ..*/
+	{ 0x140004, 0x140005, irqctrl_w                             },	/* Main CPU controls the other CPUs*/
+	{ 0x140006, 0x140007, MWA16_NOP                             },	/* Watchdog reset*/
+	{ 0x140020, 0x140021, MWA16_RAM                             },	/* Paired with writes to $140003*/
+	{ 0x140030, 0x140031, MWA16_NOP },	/* toggles between 0 & 1 on hitting bumps and crashes (vibration?)*/
 MEMORY_END
 
 
@@ -608,41 +608,41 @@ static WRITE16_HANDLER( hotchase_K051316_ctrl_1_w )
 WRITE16_HANDLER( hotchase_soundlatch_w );
 
 static MEMORY_READ16_START( hotchase_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM                         },	// ROM
-	{ 0x040000, 0x063fff, MRA16_RAM                         },	// RAM (weird size!?)
-	{ 0x080000, 0x080011, MRA16_RAM                         },	// Blitter
-	{ 0x100000, 0x100fff, hotchase_K051316_0_r              },	// Background
-	{ 0x102000, 0x102fff, hotchase_K051316_1_r              },	// Foreground
-	{ 0x110000, 0x111fff, MRA16_RAM                         },	// Palette (only the first 2048 colors used)
-	{ 0x120000, 0x123fff, sharedram_r                       },	// Shared with sub CPU
-	{ 0x130000, 0x130fff, MRA16_RAM                         },	// Sprites
-	// Input Ports:
-	{ 0x140006, 0x140007, MRA16_NOP                         },	// Watchdog reset
-	{ 0x140010, 0x140011, input_port_0_word_r               },	// Coins + brake + gear
-	{ 0x140012, 0x140013, input_port_1_word_r               },	// ?? bit 4 from sound cpu
-	{ 0x140014, 0x140015, input_port_2_word_r               },	// DSW 2
-	{ 0x140016, 0x140017, input_port_3_word_r               },	// DSW 1
-	{ 0x140020, 0x140021, selected_ip_r                     },	// Accelerator or Wheel
-	{ 0x140022, 0x140023, MRA16_NOP                         },	// ??
+	{ 0x000000, 0x03ffff, MRA16_ROM                         },	/* ROM*/
+	{ 0x040000, 0x063fff, MRA16_RAM                         },	/* RAM (weird size!?)*/
+	{ 0x080000, 0x080011, MRA16_RAM                         },	/* Blitter*/
+	{ 0x100000, 0x100fff, hotchase_K051316_0_r              },	/* Background*/
+	{ 0x102000, 0x102fff, hotchase_K051316_1_r              },	/* Foreground*/
+	{ 0x110000, 0x111fff, MRA16_RAM                         },	/* Palette (only the first 2048 colors used)*/
+	{ 0x120000, 0x123fff, sharedram_r                       },	/* Shared with sub CPU*/
+	{ 0x130000, 0x130fff, MRA16_RAM                         },	/* Sprites*/
+	/* Input Ports:*/
+	{ 0x140006, 0x140007, MRA16_NOP                         },	/* Watchdog reset*/
+	{ 0x140010, 0x140011, input_port_0_word_r               },	/* Coins + brake + gear*/
+	{ 0x140012, 0x140013, input_port_1_word_r               },	/* ?? bit 4 from sound cpu*/
+	{ 0x140014, 0x140015, input_port_2_word_r               },	/* DSW 2*/
+	{ 0x140016, 0x140017, input_port_3_word_r               },	/* DSW 1*/
+	{ 0x140020, 0x140021, selected_ip_r                     },	/* Accelerator or Wheel*/
+	{ 0x140022, 0x140023, MRA16_NOP                         },	/* ??*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( hotchase_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM                 },	// ROM
-	{ 0x040000, 0x063fff, MWA16_RAM                 },	// RAM (weird size!?)
-	{ 0x080000, 0x080011, blitter_w, &blitter_regs  },	// Blitter
-	{ 0x100000, 0x100fff, hotchase_K051316_0_w      },	// Background
-	{ 0x101000, 0x10101f, hotchase_K051316_ctrl_0_w },	// Background Ctrl
-	{ 0x102000, 0x102fff, hotchase_K051316_1_w      },	// Foreground
-	{ 0x103000, 0x10301f, hotchase_K051316_ctrl_1_w },	// Foreground Ctrl
+	{ 0x000000, 0x03ffff, MWA16_ROM                 },	/* ROM*/
+	{ 0x040000, 0x063fff, MWA16_RAM                 },	/* RAM (weird size!?)*/
+	{ 0x080000, 0x080011, blitter_w, &blitter_regs  },	/* Blitter*/
+	{ 0x100000, 0x100fff, hotchase_K051316_0_w      },	/* Background*/
+	{ 0x101000, 0x10101f, hotchase_K051316_ctrl_0_w },	/* Background Ctrl*/
+	{ 0x102000, 0x102fff, hotchase_K051316_1_w      },	/* Foreground*/
+	{ 0x103000, 0x10301f, hotchase_K051316_ctrl_1_w },	/* Foreground Ctrl*/
 	{ 0x110000, 0x111fff, hotchase_paletteram16_SBGRBBBBGGGGRRRR_word_w, &paletteram16 },
-	{ 0x120000, 0x123fff, sharedram_w, &sharedram   },	// Shared with sub CPU
-	{ 0x130000, 0x130fff, MWA16_RAM, &spriteram16   },	// Sprites
-	// Input Ports:
-	{ 0x140000, 0x140001, hotchase_soundlatch_w     },	// To sound CPU
-	{ 0x140002, 0x140003, selected_ip_w             },	// Selects accelerator / wheel /
-	{ 0x140004, 0x140005, irqctrl_w                 },	// Main CPU controls the other CPUs
-	{ 0x140020, 0x140021, MWA16_NOP                 },	// Paired with writes to $140003
-	{ 0x140030, 0x140031, MWA16_NOP                 },	// signal to cabinet vibration motors?
+	{ 0x120000, 0x123fff, sharedram_w, &sharedram   },	/* Shared with sub CPU*/
+	{ 0x130000, 0x130fff, MWA16_RAM, &spriteram16   },	/* Sprites*/
+	/* Input Ports:*/
+	{ 0x140000, 0x140001, hotchase_soundlatch_w     },	/* To sound CPU*/
+	{ 0x140002, 0x140003, selected_ip_w             },	/* Selects accelerator / wheel /*/
+	{ 0x140004, 0x140005, irqctrl_w                 },	/* Main CPU controls the other CPUs*/
+	{ 0x140020, 0x140021, MWA16_NOP                 },	/* Paired with writes to $140003*/
+	{ 0x140030, 0x140031, MWA16_NOP                 },	/* signal to cabinet vibration motors?*/
 MEMORY_END
 
 
@@ -651,15 +651,15 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( wecleman_sub_readmem )
-	{ 0x000000, 0x00ffff, MRA16_ROM    },	// ROM
-	{ 0x060000, 0x060fff, MRA16_RAM    },	// Road
-	{ 0x070000, 0x073fff, &sharedram_r },	// RAM (Shared with main CPU)
+	{ 0x000000, 0x00ffff, MRA16_ROM    },	/* ROM*/
+	{ 0x060000, 0x060fff, MRA16_RAM    },	/* Road*/
+	{ 0x070000, 0x073fff, &sharedram_r },	/* RAM (Shared with main CPU)*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( wecleman_sub_writemem )
-	{ 0x000000, 0x00ffff, MWA16_ROM    },	// ROM
-	{ 0x060000, 0x060fff, MWA16_RAM, &wecleman_roadram, &wecleman_roadram_size },	// Road
-	{ 0x070000, 0x073fff, sharedram_w  },	// RAM (Shared with main CPU)
+	{ 0x000000, 0x00ffff, MWA16_ROM    },	/* ROM*/
+	{ 0x060000, 0x060fff, MWA16_RAM, &wecleman_roadram, &wecleman_roadram_size },	/* Road*/
+	{ 0x070000, 0x073fff, sharedram_w  },	/* RAM (Shared with main CPU)*/
 MEMORY_END
 
 
@@ -668,17 +668,17 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( hotchase_sub_readmem )
-	{ 0x000000, 0x01ffff, MRA16_ROM    },	// ROM
-	{ 0x020000, 0x020fff, MRA16_RAM    },	// Road
-	{ 0x060000, 0x060fff, MRA16_RAM    },	// RAM
-	{ 0x040000, 0x043fff, &sharedram_r },	// Shared with main CPU
+	{ 0x000000, 0x01ffff, MRA16_ROM    },	/* ROM*/
+	{ 0x020000, 0x020fff, MRA16_RAM    },	/* Road*/
+	{ 0x060000, 0x060fff, MRA16_RAM    },	/* RAM*/
+	{ 0x040000, 0x043fff, &sharedram_r },	/* Shared with main CPU*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( hotchase_sub_writemem )
-	{ 0x000000, 0x01ffff, MWA16_ROM    },	// ROM
-	{ 0x020000, 0x020fff, MWA16_RAM, &wecleman_roadram, &wecleman_roadram_size },	// Road
-	{ 0x060000, 0x060fff, MWA16_RAM    },	// RAM
-	{ 0x040000, 0x043fff, sharedram_w  },	// Shared with main CPU
+	{ 0x000000, 0x01ffff, MWA16_ROM    },	/* ROM*/
+	{ 0x020000, 0x020fff, MWA16_RAM, &wecleman_roadram, &wecleman_roadram_size },	/* Road*/
+	{ 0x060000, 0x060fff, MWA16_RAM    },	/* RAM*/
+	{ 0x040000, 0x043fff, sharedram_w  },	/* Shared with main CPU*/
 MEMORY_END
 
 
@@ -725,28 +725,28 @@ WRITE_HANDLER( multiply_w )
 
 WRITE_HANDLER( wecleman_K00723216_bank_w )
 {
-	K007232_set_bank( 0, 0, ~data&1 );	//* (wecleman062gre)
+	K007232_set_bank( 0, 0, ~data&1 );	/** (wecleman062gre)*/
 }
 
 static MEMORY_READ_START( wecleman_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM                },	// ROM
-	{ 0x8000, 0x83ff, MRA_RAM                },	// RAM
-	{ 0x9000, 0x9000, multiply_r             },	// Protection
-	{ 0xa000, 0xa000, soundlatch_r           },	// From main CPU
-	{ 0xb000, 0xb00d, K007232_read_port_0_r  },	// K007232 (Reading offset 5/b triggers the sample)
-	{ 0xc001, 0xc001, YM2151_status_port_0_r },	// YM2151
+	{ 0x0000, 0x7fff, MRA_ROM                },	/* ROM*/
+	{ 0x8000, 0x83ff, MRA_RAM                },	/* RAM*/
+	{ 0x9000, 0x9000, multiply_r             },	/* Protection*/
+	{ 0xa000, 0xa000, soundlatch_r           },	/* From main CPU*/
+	{ 0xb000, 0xb00d, K007232_read_port_0_r  },	/* K007232 (Reading offset 5/b triggers the sample)*/
+	{ 0xc001, 0xc001, YM2151_status_port_0_r },	/* YM2151*/
 MEMORY_END
 
 static MEMORY_WRITE_START( wecleman_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM                   },	// ROM
-	{ 0x8000, 0x83ff, MWA_RAM                   },	// RAM
-	{ 0x8500, 0x8500, MWA_NOP                   },	// incresed with speed (global volume)?
-	{ 0x9000, 0x9001, multiply_w                },	// Protection
-	{ 0x9006, 0x9006, MWA_NOP                   },	// ?
-	{ 0xb000, 0xb00d, K007232_write_port_0_w    },	// K007232
-	{ 0xc000, 0xc000, YM2151_register_port_0_w  },	// YM2151
+	{ 0x0000, 0x7fff, MWA_ROM                   },	/* ROM*/
+	{ 0x8000, 0x83ff, MWA_RAM                   },	/* RAM*/
+	{ 0x8500, 0x8500, MWA_NOP                   },	/* incresed with speed (global volume)?*/
+	{ 0x9000, 0x9001, multiply_w                },	/* Protection*/
+	{ 0x9006, 0x9006, MWA_NOP                   },	/* ?*/
+	{ 0xb000, 0xb00d, K007232_write_port_0_w    },	/* K007232*/
+	{ 0xc000, 0xc000, YM2151_register_port_0_w  },	/* YM2151*/
 	{ 0xc001, 0xc001, YM2151_data_port_0_w      },
-	{ 0xf000, 0xf000, wecleman_K00723216_bank_w },	// Samples banking
+	{ 0xf000, 0xf000, wecleman_K00723216_bank_w },	/* Samples banking*/
 MEMORY_END
 
 
@@ -803,8 +803,8 @@ WRITE_HANDLER( hotchase_sound_control_w )
 			int bank1_a = (data >> 2) & 1;
 			int bank0_b = (data >> 3) & 1;
 			int bank1_b = (data >> 4) & 1;
-			// bit 6: chip 2 - ch0 ?
-			// bit 7: chip 2 - ch1 ?
+			/* bit 6: chip 2 - ch0 ?*/
+			/* bit 7: chip 2 - ch1 ?*/
 
 			K007232_set_bank( 0, bank0_a, bank0_b );
 			K007232_set_bank( 1, bank1_a, bank1_b );
@@ -840,23 +840,23 @@ HOTCHASE_K007232_RW(1)
 HOTCHASE_K007232_RW(2)
 
 static MEMORY_READ_START( hotchase_sound_readmem )
-	{ 0x0000, 0x07ff, MRA_RAM              },	// RAM
-	{ 0x1000, 0x100d, hotchase_K007232_0_r },	// 3 x  K007232
+	{ 0x0000, 0x07ff, MRA_RAM              },	/* RAM*/
+	{ 0x1000, 0x100d, hotchase_K007232_0_r },	/* 3 x  K007232*/
 	{ 0x2000, 0x200d, hotchase_K007232_1_r },
 	{ 0x3000, 0x300d, hotchase_K007232_2_r },
-	{ 0x6000, 0x6000, soundlatch_r         },	// From main CPU (Read on IRQ)
-	{ 0x8000, 0xffff, MRA_ROM              },	// ROM
+	{ 0x6000, 0x6000, soundlatch_r         },	/* From main CPU (Read on IRQ)*/
+	{ 0x8000, 0xffff, MRA_ROM              },	/* ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( hotchase_sound_writemem )
-	{ 0x0000, 0x07ff, MWA_RAM                  },	// RAM
-	{ 0x1000, 0x100d, hotchase_K007232_0_w     },	// 3 x K007232
+	{ 0x0000, 0x07ff, MWA_RAM                  },	/* RAM*/
+	{ 0x1000, 0x100d, hotchase_K007232_0_w     },	/* 3 x K007232*/
 	{ 0x2000, 0x200d, hotchase_K007232_1_w     },
 	{ 0x3000, 0x300d, hotchase_K007232_2_w     },
-	{ 0x4000, 0x4007, hotchase_sound_control_w },	// Sound volume, banking, etc.
-	{ 0x5000, 0x5000, MWA_NOP                  },	// ? (written with 0 on IRQ, 1 on FIRQ)
-	{ 0x7000, 0x7000, MWA_NOP                  },	// Command acknowledge ?
-	{ 0x8000, 0xffff, MWA_ROM                  },	// ROM
+	{ 0x4000, 0x4007, hotchase_sound_control_w },	/* Sound volume, banking, etc.*/
+	{ 0x5000, 0x5000, MWA_NOP                  },	/* ? (written with 0 on IRQ, 1 on FIRQ)*/
+	{ 0x7000, 0x7000, MWA_NOP                  },	/* Command acknowledge ?*/
+	{ 0x8000, 0xffff, MWA_ROM                  },	/* ROM*/
 MEMORY_END
 
 
@@ -876,10 +876,10 @@ INPUT_PORTS_START( wecleman )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )
 	
 	PORT_START	/* IN1 - Motor? - $140013.b */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 )	// right sw
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )	// left sw
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE4 )	// thermo
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL )	// from sound cpu ?
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* right sw*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* left sw*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* thermo*/
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* from sound cpu ?*/
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START	/* IN2 - DSW A (Coinage) - $140015.b */
@@ -921,17 +921,17 @@ INPUT_PORTS_START( wecleman )
 	PORT_DIPNAME( 0x01, 0x01, "Speed Unit" )
 	PORT_DIPSETTING(    0x01, "km/h" )
 	PORT_DIPSETTING(    0x00, "mph" )
-	PORT_DIPNAME( 0x02, 0x02, "Unknown B-1" )	// single
+	PORT_DIPNAME( 0x02, 0x02, "Unknown B-1" )	/* single*/
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04, 0x04, "Unknown B-2" )
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x18, 0x18, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x18, "Easy" )		// 66 seconds at the start
-	PORT_DIPSETTING(    0x10, "Normal" )	// 64
-	PORT_DIPSETTING(    0x08, "Hard" )		// 62
-	PORT_DIPSETTING(    0x00, "Hardest" )	// 60
+	PORT_DIPSETTING(    0x18, "Easy" )		/* 66 seconds at the start*/
+	PORT_DIPSETTING(    0x10, "Normal" )	/* 64*/
+	PORT_DIPSETTING(    0x08, "Hard" )		/* 62*/
+	PORT_DIPSETTING(    0x00, "Hardest" )	/* 60*/
 	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -966,17 +966,17 @@ INPUT_PORTS_START( hotchase )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START	/* IN1 - Motor? - $140013.b */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 )	// right sw
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )	// left sw
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE4 )	// thermo
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL )	// from sound cpu ?
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE2 )	/* right sw*/
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE3 )	/* left sw*/
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE4 )	/* thermo*/
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL )	/* from sound cpu ?*/
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START	/* IN2 - DSW 2 (options) - $140015.b */
-	PORT_DIPNAME( 0x01, 0x01, "Unknown 2-0" )	// single
+	PORT_DIPNAME( 0x01, 0x01, "Unknown 2-0" )	/* single*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, "Unknown 2-1" )	// single (wheel related)
+	PORT_DIPNAME( 0x02, 0x02, "Unknown 2-1" )	/* single (wheel related)*/
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x04, 0x04, "Unknown 2-2" )
@@ -987,14 +987,14 @@ INPUT_PORTS_START( hotchase )
 	PORT_DIPSETTING(    0x10, "4" )
 	PORT_DIPSETTING(    0x08, "8" )
 	PORT_DIPSETTING(    0x00, "c" )
-	PORT_DIPNAME( 0x20, 0x20, "Unknown 2-5" )	// single
+	PORT_DIPNAME( 0x20, 0x20, "Unknown 2-5" )	/* single*/
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	/* wheel <-> brake ; accel -> start */
-	PORT_DIPNAME( 0x40, 0x40, "Unknown 2-6" )	// single (wheel<->brake)
+	PORT_DIPNAME( 0x40, 0x40, "Unknown 2-6" )	/* single (wheel<->brake)*/
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Unknown 2-7" )	// single
+	PORT_DIPNAME( 0x80, 0x80, "Unknown 2-7" )	/* single*/
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -1078,9 +1078,9 @@ static struct GfxLayout wecleman_road_layout =
 
 static struct GfxDecodeInfo wecleman_gfxdecodeinfo[] =
 {
-	// REGION_GFX1 holds sprite, which are not decoded here
-	{ REGION_GFX2, 0, &wecleman_bg_layout,   0, 2048/8 },	// [0] bg + fg + txt
-	{ REGION_GFX3, 0, &wecleman_road_layout, 0, 2048/8 },	// [1] road
+	/* REGION_GFX1 holds sprite, which are not decoded here*/
+	{ REGION_GFX2, 0, &wecleman_bg_layout,   0, 2048/8 },	/* [0] bg + fg + txt*/
+	{ REGION_GFX3, 0, &wecleman_road_layout, 0, 2048/8 },	/* [1] road*/
 	{ -1 }
 };
 
@@ -1107,9 +1107,9 @@ static struct GfxLayout hotchase_road_layout =
 
 static struct GfxDecodeInfo hotchase_gfxdecodeinfo[] =
 {
-	// REGION_GFX1 holds sprite, which are not decoded here
-	// REGION_GFX2 and 3 are for the 051316
-	{ REGION_GFX4, 0, &hotchase_road_layout, 0x70*16, 16 },	// road
+	/* REGION_GFX1 holds sprite, which are not decoded here*/
+	/* REGION_GFX2 and 3 are for the 051316*/
+	{ REGION_GFX4, 0, &hotchase_road_layout, 0x70*16, 16 },	/* road*/
 	{ -1 }
 };
 
@@ -1268,7 +1268,7 @@ ROM_START( wecleman )
 	ROM_LOAD( "602a16.10c", 0x1e0000, 0x20000, CRC(b08770b3) SHA1(41871e9261d08fd372b7deb72d939973fb694b54) )
 
 	ROM_REGION( 0x18000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "602a31.26g", 0x000000, 0x08000, CRC(01fa40dd) SHA1(2b8aa97f5116f39ae6a8e46f109853d70e370884) )	// layers
+	ROM_LOAD( "602a31.26g", 0x000000, 0x08000, CRC(01fa40dd) SHA1(2b8aa97f5116f39ae6a8e46f109853d70e370884) )	/* layers*/
 	ROM_LOAD( "602a30.24g", 0x008000, 0x08000, CRC(be5c4138) SHA1(7aee2ee17ef3e37399a60d9b019cfa733acbf07b) )
 	ROM_LOAD( "602a29.23g", 0x010000, 0x08000, CRC(f1a8d33e) SHA1(ed6531f2fd4ad6835a879e9a5600387d8cad6d17) )
 
@@ -1287,7 +1287,7 @@ ROM_END
 
 void wecleman_unpack_sprites(void)
 {
-	const int region       = REGION_GFX1;	// sprites
+	const int region       = REGION_GFX1;	/* sprites*/
 
 	const unsigned int len = memory_region_length(region);
 	unsigned char *src     = memory_region(region) + len / 2 - 1;
@@ -1325,8 +1325,8 @@ DRIVER_INIT( wecleman )
 {
 	int i;
 	unsigned char *RAM;
-//	data16_t *RAM1 = (data16_t *) memory_region(REGION_CPU1);	/* Main CPU patches */
-//	RAM1[0x08c2/2] = 0x601e;	// faster self test
+/*	data16_t *RAM1 = (data16_t *) memory_region(REGION_CPU1);	 // Main CPU patches /*/
+/*	RAM1[0x08c2/2] = 0x601e;	*/ /* faster self test*/
 
 	/* Decode GFX Roms - Compensate for the address lines scrambling */
 
@@ -1420,7 +1420,7 @@ void hotchase_sprite_decode( int num16_banks, int bank_size )
 	unsigned char *base, *temp;
 	int i;
 
-	base = memory_region(REGION_GFX1);	// sprites
+	base = memory_region(REGION_GFX1);	/* sprites*/
 	temp = malloc( bank_size );
 	if( !temp ) return;
 
@@ -1466,8 +1466,8 @@ void hotchase_sprite_decode( int num16_banks, int bank_size )
 /* Unpack sprites data and do some patching */
 DRIVER_INIT( hotchase )
 {
-//	data16_t *RAM1 = (data16_t) memory_region(REGION_CPU1);	/* Main CPU patches */
-//	RAM[0x1140/2] = 0x0015; RAM[0x195c/2] = 0x601A;	// faster self test
+/*	data16_t *RAM1 = (data16_t) memory_region(REGION_CPU1);	 // Main CPU patches /*/
+/*	RAM[0x1140/2] = 0x0015; RAM[0x195c/2] = 0x601A;	*/ /* faster self test*/
 
 	unsigned char *RAM;
 
@@ -1477,7 +1477,7 @@ DRIVER_INIT( hotchase )
 	RAM = memory_region(REGION_GFX1);
 
 	/* Now we can unpack each nibble of the sprites into a pixel (one byte) */
-	hotchase_sprite_decode(3,0x80000*2);	// num banks, bank len
+	hotchase_sprite_decode(3,0x80000*2);	/* num banks, bank len*/
 
 	/* Let's copy the second half of the fg layer gfx (charset) over the first */
 	RAM = memory_region(REGION_GFX3);

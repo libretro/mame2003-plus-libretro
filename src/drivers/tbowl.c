@@ -102,15 +102,15 @@ static MEMORY_READ_START( readmem_6206B )
 	{ 0xe000, 0xefff, MRA_RAM },
 	{ 0xf000, 0xf7ff, MRA_BANK1 }, /* Banked ROM */
 	{ 0xf800, 0xfbff, shared_r }, /* RAM 2 */
-	{ 0xfc00, 0xfc00, input_port_0_r }, // Player 1 inputs
-	{ 0xfc01, 0xfc01, input_port_1_r }, // Player 2 inputs
-	{ 0xfc02, 0xfc02, input_port_2_r }, // Player 3 inputs
-	{ 0xfc03, 0xfc03, input_port_3_r }, // Player 4 inputs
-//	{ 0xfc06, 0xfc06, dummy_r }, // Read During NMI
-	{ 0xfc07, 0xfc07, input_port_4_r }, // System inputs
-	{ 0xfc08, 0xfc08, input_port_5_r }, // DSW1
-	{ 0xfc09, 0xfc09, input_port_6_r }, // DSW2
-	{ 0xfc0a, 0xfc0a, input_port_7_r }, // DSW3
+	{ 0xfc00, 0xfc00, input_port_0_r }, /* Player 1 inputs*/
+	{ 0xfc01, 0xfc01, input_port_1_r }, /* Player 2 inputs*/
+	{ 0xfc02, 0xfc02, input_port_2_r }, /* Player 3 inputs*/
+	{ 0xfc03, 0xfc03, input_port_3_r }, /* Player 4 inputs*/
+/*	{ 0xfc06, 0xfc06, dummy_r }, */ /* Read During NMI*/
+	{ 0xfc07, 0xfc07, input_port_4_r }, /* System inputs*/
+	{ 0xfc08, 0xfc08, input_port_5_r }, /* DSW1*/
+	{ 0xfc09, 0xfc09, input_port_6_r }, /* DSW2*/
+	{ 0xfc0a, 0xfc0a, input_port_7_r }, /* DSW3*/
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem_6206B )
@@ -119,16 +119,16 @@ static MEMORY_WRITE_START( writemem_6206B )
 	{ 0xa000, 0xbfff, tbowl_bg2videoram_w, &tbowl_bg2videoram },
 	{ 0xc000, 0xdfff, tbowl_bgvideoram_w, &tbowl_bgvideoram },
 	{ 0xe000, 0xefff, tbowl_txvideoram_w, &tbowl_txvideoram },
-//	{ 0xf000, 0xf000, unknown_write },* written during start-up, not again */
+/*	{ 0xf000, 0xf000, unknown_write }, // written during start-up, not again */
 	{ 0xf000, 0xf7ff, MWA_ROM },
 	{ 0xf800, 0xfbff, shared_w, &shared_ram }, /* check */
 	{ 0xfc00, 0xfc00, tbowlb_bankswitch_w },
-//	{ 0xfc01, 0xfc01, unknown_write }, /* written during start-up, not again */
-//	{ 0xfc02, 0xfc02, unknown_write }, /* written during start-up, not again */
+/*	{ 0xfc01, 0xfc01, unknown_write },  // written during start-up, not again /*/
+/*	{ 0xfc02, 0xfc02, unknown_write },  // written during start-up, not again /*/
 	{ 0xfc0d, 0xfc0d, tbowl_sound_command_w }, /* not sure, used quite a bit */
-//	{ 0xfc05, 0xfc05, unknown_write }, /* no idea */
-//	{ 0xfc08, 0xfc08, unknown_write }, /* hardly uesd .. */
-//	{ 0xfc0a, 0xfc0a, unknown_write }, /* hardly uesd .. */
+/*	{ 0xfc05, 0xfc05, unknown_write },  // no idea /*/
+/*	{ 0xfc08, 0xfc08, unknown_write },  // hardly uesd .. /*/
+/*	{ 0xfc0a, 0xfc0a, unknown_write },  // hardly uesd .. /*/
 	{ 0xfc10, 0xfc10, tbowl_bg2xscroll_lo },
 	{ 0xfc11, 0xfc11, tbowl_bg2xscroll_hi },
 	{ 0xfc12, 0xfc12, tbowl_bg2yscroll_lo },
@@ -158,7 +158,7 @@ static MEMORY_WRITE_START( writemem_6206C )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xd7ff, MWA_RAM },
 	{ 0xd800, 0xdfff, MWA_RAM, &tbowl_spriteram },
-	{ 0xe000, 0xefff, paletteram_xxxxBBBBRRRRGGGG_swap_w, &paletteram }, // 2x palettes, one for each monitor?
+	{ 0xe000, 0xefff, paletteram_xxxxBBBBRRRRGGGG_swap_w, &paletteram }, /* 2x palettes, one for each monitor?*/
 	{ 0xf000, 0xf7ff, MWA_ROM },
 	{ 0xf800, 0xfbff, shared_w },
 	{ 0xfc00, 0xfc00, tbowlc_bankswitch_w },
@@ -184,14 +184,14 @@ static MEMORY_WRITE_START( writemem_6206A )
 	{ 0xd001, 0xd001, YM3812_write_port_0_w },
 	{ 0xd800, 0xd800, YM3812_control_port_1_w },
 	{ 0xd801, 0xd801, YM3812_write_port_1_w },
-//	{ 0xe000, 0xe000, unknown_write },
-//	{ 0xe001, 0xe001, unknown_write },
-//	{ 0xe002, 0xe002, unknown_write },
-//	{ 0xe003, 0xe003, unknown_write },
-//	{ 0xe004, 0xe004, unknown_write },
-//	{ 0xe005, 0xe005, unknown_write },
-//	{ 0xe006, 0xe006, unknown_write },
-//	{ 0xe007, 0xe007, unknown_write },
+/*	{ 0xe000, 0xe000, unknown_write },*/
+/*	{ 0xe001, 0xe001, unknown_write },*/
+/*	{ 0xe002, 0xe002, unknown_write },*/
+/*	{ 0xe003, 0xe003, unknown_write },*/
+/*	{ 0xe004, 0xe004, unknown_write },*/
+/*	{ 0xe005, 0xe005, unknown_write },*/
+/*	{ 0xe006, 0xe006, unknown_write },*/
+/*	{ 0xe007, 0xe007, unknown_write },*/
 /* rest of sound is probably similar to tecmo.c */
 MEMORY_END
 
@@ -317,15 +317,15 @@ INPUT_PORTS_START( tbowl )
 	PORT_DIPSETTING (   0xe0, "0:35" )
 	PORT_DIPSETTING (   0xe8, "0:30" )
 	PORT_DIPSETTING (   0xf0, "0:25" )
-//	PORT_DIPSETTING (   0xf8, "1:00" )
+/*	PORT_DIPSETTING (   0xf8, "1:00" )*/
 
 	PORT_START	/* DSW2 (0xfc09 -> 0xffb5) */
-	PORT_DIPNAME( 0x03, 0x03, "Difficulty (unused ?)" )	// To be checked again
+	PORT_DIPNAME( 0x03, 0x03, "Difficulty (unused ?)" )	/* To be checked again*/
 	PORT_DIPSETTING (   0x00, "0x00" )
 	PORT_DIPSETTING (   0x01, "0x01" )
 	PORT_DIPSETTING (   0x02, "0x02" )
 	PORT_DIPSETTING (   0x03, "0x03" )
-	PORT_DIPNAME( 0x0c, 0x0c, "Extra Time (Players)" )	// For multiple "credits"
+	PORT_DIPNAME( 0x0c, 0x0c, "Extra Time (Players)" )	/* For multiple "credits"*/
 	PORT_DIPSETTING (   0x00, "0:30" )
 	PORT_DIPSETTING (   0x04, "0:20" )
 	PORT_DIPSETTING (   0x08, "0:10" )
@@ -335,10 +335,10 @@ INPUT_PORTS_START( tbowl )
 	PORT_DIPSETTING (   0x10, "51/60" )
 	PORT_DIPSETTING (   0x30, "47/60" )
 	PORT_DIPSETTING (   0x20, "42/60" )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )	// Check code at 0x0393
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )	/* Check code at 0x0393*/
 	PORT_DIPSETTING (   0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING (   0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Hi-Score Reset" )		// Only if P1 buttons 1 and 2 are pressed during P.O.S.T. !
+	PORT_DIPNAME( 0x80, 0x80, "Hi-Score Reset" )		/* Only if P1 buttons 1 and 2 are pressed during P.O.S.T. !*/
 	PORT_DIPSETTING (   0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING (   0x80, DEF_STR( On ) )
 
@@ -348,7 +348,7 @@ INPUT_PORTS_START( tbowl )
 	PORT_DIPSETTING (   0x01, "5:00" )
 	PORT_DIPSETTING (   0x03, "4:00" )
 	PORT_DIPSETTING (   0x02, "3:00" )
-	PORT_DIPNAME( 0x0c, 0x0c, "Unknown (in 0x8126.w)" )	// Check code at 0x6e16
+	PORT_DIPNAME( 0x0c, 0x0c, "Unknown (in 0x8126.w)" )	/* Check code at 0x6e16*/
 	PORT_DIPSETTING (   0x00, "0x00 = 0x54f3" )
 	PORT_DIPSETTING (   0x04, "0x04 = 0x54e1" )
 	PORT_DIPSETTING (   0x08, "0x08 = 0x54cf" )
@@ -423,15 +423,15 @@ INPUT_PORTS_START( tbowlj )
 	PORT_DIPSETTING (   0xe0, "0:35" )
 	PORT_DIPSETTING (   0xe8, "0:30" )
 	PORT_DIPSETTING (   0xf0, "0:25" )
-//	PORT_DIPSETTING (   0xf8, "1:00" )
+/*	PORT_DIPSETTING (   0xf8, "1:00" )*/
 
 	PORT_START	/* DSW2 (0xfc09 -> 0xffb5) */
-	PORT_DIPNAME( 0x03, 0x03, "Difficulty (unused ?)" )	// To be checked again
+	PORT_DIPNAME( 0x03, 0x03, "Difficulty (unused ?)" )	/* To be checked again*/
 	PORT_DIPSETTING (   0x00, "0x00" )
 	PORT_DIPSETTING (   0x01, "0x01" )
 	PORT_DIPSETTING (   0x02, "0x02" )
 	PORT_DIPSETTING (   0x03, "0x03" )
-	PORT_DIPNAME( 0x0c, 0x0c, "Extra Time (Players)" )	// For multiple "credits"
+	PORT_DIPNAME( 0x0c, 0x0c, "Extra Time (Players)" )	/* For multiple "credits"*/
 	PORT_DIPSETTING (   0x00, "0:30" )
 	PORT_DIPSETTING (   0x04, "0:20" )
 	PORT_DIPSETTING (   0x08, "0:10" )
@@ -441,10 +441,10 @@ INPUT_PORTS_START( tbowlj )
 	PORT_DIPSETTING (   0x10, "51/60" )
 	PORT_DIPSETTING (   0x30, "47/60" )
 	PORT_DIPSETTING (   0x20, "42/60" )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )	// Check code at 0x0393
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )	/* Check code at 0x0393*/
 	PORT_DIPSETTING (   0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING (   0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Hi-Score Reset" )		// Only if P1 buttons 1 and 2 are pressed during P.O.S.T. !
+	PORT_DIPNAME( 0x80, 0x80, "Hi-Score Reset" )		/* Only if P1 buttons 1 and 2 are pressed during P.O.S.T. !*/
 	PORT_DIPSETTING (   0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING (   0x80, DEF_STR( On ) )
 
@@ -454,7 +454,7 @@ INPUT_PORTS_START( tbowlj )
 	PORT_DIPSETTING (   0x01, "5:00" )
 	PORT_DIPSETTING (   0x02, "4:00" )
 	PORT_DIPSETTING (   0x03, "3:00" )
-	PORT_DIPNAME( 0x0c, 0x0c, "Unknown (in 0x8126.w)" )	// Check code at 0x6e37
+	PORT_DIPNAME( 0x0c, 0x0c, "Unknown (in 0x8126.w)" )	/* Check code at 0x6e37*/
 	PORT_DIPSETTING (   0x00, "0x00 = 0x5414" )
 	PORT_DIPSETTING (   0x04, "0x04 = 0x5402" )
 	PORT_DIPSETTING (   0x08, "0x08 = 0x54f0" )

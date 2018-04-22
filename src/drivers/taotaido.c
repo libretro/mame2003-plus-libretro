@@ -98,43 +98,43 @@ static WRITE16_HANDLER( sound_command_w )
 }
 static MEMORY_READ16_START( taotaido_readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },
-	{ 0x800000, 0x803fff, MRA16_RAM },			// bg ram?
-	{ 0xa00000, 0xa01fff, MRA16_RAM },			// sprite ram
-	{ 0xc00000, 0xc0ffff, MRA16_RAM },			// sprite tile look up
-	{ 0xfe0000, 0xfeffff, MRA16_RAM },			// main ram
-	{ 0xffc000, 0xffcfff, MRA16_RAM },			// palette ram
-	{ 0xffe000, 0xffe3ff, MRA16_RAM },			// rowscroll / rowselect / scroll ram
+	{ 0x800000, 0x803fff, MRA16_RAM },			/* bg ram?*/
+	{ 0xa00000, 0xa01fff, MRA16_RAM },			/* sprite ram*/
+	{ 0xc00000, 0xc0ffff, MRA16_RAM },			/* sprite tile look up*/
+	{ 0xfe0000, 0xfeffff, MRA16_RAM },			/* main ram*/
+	{ 0xffc000, 0xffcfff, MRA16_RAM },			/* palette ram*/
+	{ 0xffe000, 0xffe3ff, MRA16_RAM },			/* rowscroll / rowselect / scroll ram*/
 
-	{ 0xffff80, 0xffff81, input_port_0_word_r },	// player 1 inputs
-	{ 0xffff82, 0xffff83, input_port_1_word_r },	// player 2 inputs
-	{ 0xffff84, 0xffff85, input_port_2_word_r },	// system inputs
-	{ 0xffff86, 0xffff87, input_port_3_word_r },	// DSWA
-	{ 0xffff88, 0xffff89, input_port_4_word_r },	// DSWB
-	{ 0xffff8a, 0xffff8b, input_port_5_word_r },	// DSWC
-	{ 0xffff8c, 0xffff8d, MRA16_RAM },			// unknown
-	{ 0xffff8e, 0xffff8f, input_port_6_word_r },	// jumpers
+	{ 0xffff80, 0xffff81, input_port_0_word_r },	/* player 1 inputs*/
+	{ 0xffff82, 0xffff83, input_port_1_word_r },	/* player 2 inputs*/
+	{ 0xffff84, 0xffff85, input_port_2_word_r },	/* system inputs*/
+	{ 0xffff86, 0xffff87, input_port_3_word_r },	/* DSWA*/
+	{ 0xffff88, 0xffff89, input_port_4_word_r },	/* DSWB*/
+	{ 0xffff8a, 0xffff8b, input_port_5_word_r },	/* DSWC*/
+	{ 0xffff8c, 0xffff8d, MRA16_RAM },			/* unknown*/
+	{ 0xffff8e, 0xffff8f, input_port_6_word_r },	/* jumpers*/
 #if TAOTAIDO_SHOW_ALL_INPUTS
-	{ 0xffffa0, 0xffffa1, input_port_7_word_r },	// player 3 inputs (unused)
-	{ 0xffffa2, 0xffffa3, input_port_8_word_r },	// player 4 inputs (unused)
+	{ 0xffffa0, 0xffffa1, input_port_7_word_r },	/* player 3 inputs (unused)*/
+	{ 0xffffa2, 0xffffa3, input_port_8_word_r },	/* player 4 inputs (unused)*/
 #endif
 
-	{ 0xffffe0, 0xffffe1, pending_command_r },	// guess - seems to be needed for all the sounds to work
+	{ 0xffffe0, 0xffffe1, pending_command_r },	/* guess - seems to be needed for all the sounds to work*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( taotaido_writemem )
 	{ 0x000000, 0x0fffff, MWA16_ROM },
-	{ 0x800000, 0x803fff, taotaido_bgvideoram_w, &taotaido_bgram },	// bg ram?
-	{ 0xa00000, 0xa01fff, MWA16_RAM, &taotaido_spriteram },		// sprite ram
-	{ 0xc00000, 0xc0ffff, MWA16_RAM, &taotaido_spriteram2 },		// sprite tile lookup ram
-	{ 0xfe0000, 0xfeffff, MWA16_RAM },						// main ram
-	{ 0xffc000, 0xffcfff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },	// palette ram
-	{ 0xffe000, 0xffe3ff, MWA16_RAM, &taotaido_scrollram },		// rowscroll / rowselect / scroll ram
+	{ 0x800000, 0x803fff, taotaido_bgvideoram_w, &taotaido_bgram },	/* bg ram?*/
+	{ 0xa00000, 0xa01fff, MWA16_RAM, &taotaido_spriteram },		/* sprite ram*/
+	{ 0xc00000, 0xc0ffff, MWA16_RAM, &taotaido_spriteram2 },		/* sprite tile lookup ram*/
+	{ 0xfe0000, 0xfeffff, MWA16_RAM },						/* main ram*/
+	{ 0xffc000, 0xffcfff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },	/* palette ram*/
+	{ 0xffe000, 0xffe3ff, MWA16_RAM, &taotaido_scrollram },		/* rowscroll / rowselect / scroll ram*/
 
 	{ 0xffff00, 0xffff0f, taotaido_tileregs_w },
-	{ 0xffff10, 0xffff11, MWA16_NOP },						// unknown
-	{ 0xffff20, 0xffff21, MWA16_NOP },						// unknown - flip screen related
+	{ 0xffff10, 0xffff11, MWA16_NOP },						/* unknown*/
+	{ 0xffff20, 0xffff21, MWA16_NOP },						/* unknown - flip screen related*/
 	{ 0xffff40, 0xffff47, taotaido_sprite_character_bank_select_w },
-	{ 0xffffc0, 0xffffc1, sound_command_w },					// seems right
+	{ 0xffffc0, 0xffffc1, sound_command_w },					/* seems right*/
 MEMORY_END
 
 /* sound cpu - same as aerofgt */
@@ -187,8 +187,8 @@ INPUT_PORTS_START( taotaido )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	// "Punch"
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	// "Kick"
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )	/* "Punch"*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )	/* "Kick"*/
 #if TAOTAIDO_SHOW_ALL_INPUTS
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
 #else
@@ -201,8 +201,8 @@ INPUT_PORTS_START( taotaido )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	// "Punch"
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	// "Kick"
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )	/* "Punch"*/
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )	/* "Kick"*/
 #if TAOTAIDO_SHOW_ALL_INPUTS
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
 #else
@@ -212,17 +212,17 @@ INPUT_PORTS_START( taotaido )
 
 	PORT_START	/* System inputs (0xffff85.b) */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )	// see notes
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )	/* see notes*/
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START2 )
 #if TAOTAIDO_SHOW_ALL_INPUTS
 	PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_SERVICE, "Test", KEYCODE_F1, IP_JOY_NONE )
 #else
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE )	// "Test" in "test mode"
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE )	/* "Test" in "test mode"*/
 #endif
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_TILT )		// not working ?
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1 )	// see notes - SERVICE in "test mode"
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )	// VBLANK ? The game freezes when ON
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_TILT )		/* not working ?*/
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SERVICE1 )	/* see notes - SERVICE in "test mode"*/
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* VBLANK ? The game freezes when ON*/
 
 	PORT_START	/* DSW A (0xffff87.b -> !0xfe2f6c.w or !0xfe30d0) */
 	PORT_DIPNAME( 0x01, 0x01, "Coin Slot" )
@@ -251,7 +251,7 @@ INPUT_PORTS_START( taotaido )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* DSW B (0xffff89.b -> !0xfe73c2.w or !0xfe751c.w) */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )	// check code at 0x0963e2 or 0x845e2
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )	/* check code at 0x0963e2 or 0x845e2*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unused ) )
@@ -274,10 +274,10 @@ INPUT_PORTS_START( taotaido )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START	/* DSW C (0xffff8b.b -> !0xfe2f94.w or !0xfe30f8.w) */
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )	// doesn't seem to be demo sounds
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )	/* doesn't seem to be demo sounds*/
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, "Buy In" )			// see notes
+	PORT_DIPNAME( 0x02, 0x02, "Buy In" )			/* see notes*/
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )
@@ -301,14 +301,14 @@ INPUT_PORTS_START( taotaido )
 
 	PORT_START	/* Jumpers (0xffff8f.b) */
 	PORT_DIPNAME( 0x0f, 0x08, "Country" )
-	PORT_DIPSETTING(    0x00, "US" )				// also (c) Mc O'River Inc
+	PORT_DIPSETTING(    0x00, "US" )				/* also (c) Mc O'River Inc*/
 	PORT_DIPSETTING(    0x01, "Japan" )
 	PORT_DIPSETTING(    0x02, "Hong-Kong/Taiwan" )
-//	PORT_DIPSETTING(    0x03, "Japan" )
+/*	PORT_DIPSETTING(    0x03, "Japan" )*/
 	PORT_DIPSETTING(    0x04, "Korea" )
-//	PORT_DIPSETTING(    0x05, "Japan" )
-//	PORT_DIPSETTING(    0x06, "Japan" )
-//	PORT_DIPSETTING(    0x07, "Japan" )
+/*	PORT_DIPSETTING(    0x05, "Japan" )*/
+/*	PORT_DIPSETTING(    0x06, "Japan" )*/
+/*	PORT_DIPSETTING(    0x07, "Japan" )*/
 	PORT_DIPSETTING(    0x08, "World" )
 	/* 0x09 to 0x0f : "Japan" */
 
@@ -382,7 +382,7 @@ static MACHINE_DRIVER_START( taotaido )
 	MDRV_CPU_MEMORY(taotaido_readmem,taotaido_writemem)
 	MDRV_CPU_VBLANK_INT(irq1_line_hold,1)
 
-	MDRV_CPU_ADD(Z80,20000000/4) // ??
+	MDRV_CPU_ADD(Z80,20000000/4) /* ??*/
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
 	MDRV_CPU_PORTS(taotaido_sound_readport,taotaido_sound_writeport)

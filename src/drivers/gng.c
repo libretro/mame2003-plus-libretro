@@ -80,7 +80,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x3b0a, 0x3b0b, gng_bgscrolly_w },
 	{ 0x3c00, 0x3c00, MWA_NOP },   /* watchdog? */
 	{ 0x3d00, 0x3d00, gng_flipscreen_w },
-//	{ 0x3d01, 0x3d01, reset sound cpu?
+/*	{ 0x3d01, 0x3d01, reset sound cpu?*/
 	{ 0x3d02, 0x3d03, gng_coin_counter_w },
 	{ 0x3e00, 0x3e00, gng_bankswitch_w },
 	{ 0x4000, 0xffff, MWA_ROM },

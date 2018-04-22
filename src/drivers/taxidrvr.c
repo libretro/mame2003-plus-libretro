@@ -51,7 +51,7 @@ static WRITE_HANDLER( p0c_w )
 
 	flip_screen_set(data & 8);
 
-//	usrintf_showmessage("%02x",data&0x0f);
+/*	usrintf_showmessage("%02x",data&0x0f);*/
 }
 
 static READ_HANDLER( p1b_r )
@@ -145,7 +145,7 @@ static MEMORY_WRITE_START( writemem1 )
 	{ 0xf480, 0xf483, ppi8255_2_w },	/* "sprite1" placement */
 	{ 0xf500, 0xf503, ppi8255_3_w },	/* "sprite2" placement */
 	{ 0xf580, 0xf583, ppi8255_4_w },	/* "sprite3" placement */
-//	{ 0xf780, 0xf781, MWA_RAM },		/* more scroll registers? */
+/*	{ 0xf780, 0xf781, MWA_RAM },		 // more scroll registers? /*/
 	{ 0xf782, 0xf787, MWA_RAM, &taxidrvr_scroll },	/* bg scroll (three copies always identical) */
 	{ 0xf800, 0xffff, MWA_RAM },
 MEMORY_END

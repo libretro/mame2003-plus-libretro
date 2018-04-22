@@ -789,10 +789,10 @@ INPUT_PORTS_START( phantoma )
 	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_3C ) )
 	/* Mode 2 */
-//	PORT_DIPSETTING(    0x00, "2F/1 C 5F Coin/3 Cs" )
-//	PORT_DIPSETTING(    0x01, "1F/1 C 5F Coin/6 Cs" )
-//	PORT_DIPSETTING(    0x02, "1F/2 C 5F Coin/12 Cs" )
-//	PORT_DIPSETTING(    0x03, "1F/3 C 5F Coin/18 Cs" )
+/*	PORT_DIPSETTING(    0x00, "2F/1 C 5F Coin/3 Cs" )*/
+/*	PORT_DIPSETTING(    0x01, "1F/1 C 5F Coin/6 Cs" )*/
+/*	PORT_DIPSETTING(    0x02, "1F/2 C 5F Coin/12 Cs" )*/
+/*	PORT_DIPSETTING(    0x03, "1F/3 C 5F Coin/18 Cs" )*/
 	PORT_DIPNAME( 0x04, 0x00, "Top Score Award" )
 	PORT_DIPSETTING(    0x00, "Credit" )
 	PORT_DIPSETTING(    0x04, "Extended Play" )
@@ -1457,8 +1457,8 @@ ROM_START( fax )
 	ROM_LOAD( "fxd-5a.64",  0x38000, 0x2000, CRC(67285bc6) SHA1(f929c916fb19dbc91fc3a75dfed6375b63cb2043) )
 	ROM_LOAD( "fxd-6a.64",  0x3A000, 0x2000, CRC(ba67b7b2) SHA1(12265f678b1e4dfc3b36a964f78b0103112753ee) )
 	/* The last two ROM sockets were apparently never populated */
-//	ROM_LOAD( "fxd-7a.64",  0x3C000, 0x2000, NO_DUMP )
-//	ROM_LOAD( "fxd-8a.64",  0x3E000, 0x2000, NO_DUMP )
+/*	ROM_LOAD( "fxd-7a.64",  0x3C000, 0x2000, NO_DUMP )*/
+/*	ROM_LOAD( "fxd-8a.64",  0x3E000, 0x2000, NO_DUMP )*/
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* 64k for audio */
 	ROM_LOAD( "fxa2-5a.16",   0x6800, 0x0800, CRC(7c525aec) SHA1(f3afd3bfc0ba4265106e6ca217d113d23ad66016) )

@@ -481,7 +481,7 @@ static MACHINE_DRIVER_START( exterm )
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION((1000000 * (263 - 240)) / (60 * 263))
-	MDRV_INTERLEAVE(1675)	// anything lower will have drop outs on the drums
+	MDRV_INTERLEAVE(1675)	/* anything lower will have drop outs on the drums*/
 
 	MDRV_MACHINE_INIT(exterm)
 	MDRV_NVRAM_HANDLER(generic_0fill)

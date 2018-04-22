@@ -236,7 +236,7 @@ int kageki_init_samples(const struct MachineSound *msound)
 		scan = &src[start];
 		size = 0;
 
-		// check sample length
+		/* check sample length*/
 		while (1)
 		{
 			if (*scan++ == 0x00)
@@ -254,14 +254,14 @@ int kageki_init_samples(const struct MachineSound *msound)
 		samples->sample[i]->resolution = 8;	/* 8 bit */
 		samples->sample[i]->length = size;
 
-		// signed 8-bit sample to unsigned 8-bit sample convert
+		/* signed 8-bit sample to unsigned 8-bit sample convert*/
 		dest = (unsigned char *)samples->sample[i]->data;
 		scan = &src[start];
 		for (n = 0; n < size; n++)
 		{
 			*dest++ = ((*scan++) ^ 0x80);
 		}
-	//	logerror("samples num:%02X ofs:%04X lng:%04X\n", i, start, size);
+	/*	logerror("samples num:%02X ofs:%04X lng:%04X\n", i, start, size);*/
 	}
 
 	return 0;
@@ -273,26 +273,26 @@ static READ_HANDLER( kageki_csport_r )
 {
 	int	dsw, dsw1, dsw2;
 
-	dsw1 = readinputport(0); 		// DSW1
-	dsw2 = readinputport(1); 		// DSW2
+	dsw1 = readinputport(0); 		/* DSW1*/
+	dsw2 = readinputport(1); 		/* DSW2*/
 
 	switch (kageki_csport_sel)
 	{
-		case	0x00:			// DSW2 5,1 / DSW1 5,1
+		case	0x00:			/* DSW2 5,1 / DSW1 5,1*/
 			dsw = (((dsw2 & 0x10) >> 1) | ((dsw2 & 0x01) << 2) | ((dsw1 & 0x10) >> 3) | ((dsw1 & 0x01) >> 0));
 			break;
-		case	0x01:			// DSW2 7,3 / DSW1 7,3
+		case	0x01:			/* DSW2 7,3 / DSW1 7,3*/
 			dsw = (((dsw2 & 0x40) >> 3) | ((dsw2 & 0x04) >> 0) | ((dsw1 & 0x40) >> 5) | ((dsw1 & 0x04) >> 2));
 			break;
-		case	0x02:			// DSW2 6,2 / DSW1 6,2
+		case	0x02:			/* DSW2 6,2 / DSW1 6,2*/
 			dsw = (((dsw2 & 0x20) >> 2) | ((dsw2 & 0x02) << 1) | ((dsw1 & 0x20) >> 4) | ((dsw1 & 0x02) >> 1));
 			break;
-		case	0x03:			// DSW2 8,4 / DSW1 8,4
+		case	0x03:			/* DSW2 8,4 / DSW1 8,4*/
 			dsw = (((dsw2 & 0x80) >> 4) | ((dsw2 & 0x08) >> 1) | ((dsw1 & 0x80) >> 6) | ((dsw1 & 0x08) >> 3));
 			break;
 		default:
 			dsw = 0x00;
-		//	logerror("kageki_csport_sel error !! (0x%08X)\n", kageki_csport_sel);
+		/*	logerror("kageki_csport_sel error !! (0x%08X)\n", kageki_csport_sel);*/
 	}
 
 	return (dsw & 0xff);
@@ -304,20 +304,20 @@ static WRITE_HANDLER( kageki_csport_w )
 
 	if (data > 0x3f)
 	{
-		// read dipsw port
+		/* read dipsw port*/
 		kageki_csport_sel = (data & 0x03);
 	} else {
 		if (data > MAX_SAMPLES)
 		{
-			// stop samples
+			/* stop samples*/
 			sample_stop(0);
 			sprintf(mess, "VOICE:%02X STOP", data);
 		} else {
-			// play samples
+			/* play samples*/
 			sample_start(0, data, 0);
 			sprintf(mess, "VOICE:%02X PLAY", data);
 		}
-	//	usrintf_showmessage(mess);
+	/*	usrintf_showmessage(mess);*/
 	}
 }
 

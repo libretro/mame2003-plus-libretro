@@ -101,10 +101,10 @@ static MEMORY_READ16_START( readmem )
 	{ 0x100000, 0x10ffff, MRA16_RAM },
 	{ 0x200000, 0x20000f, calendar_r },
 	{ 0x300004, 0x300007, othldrby_videoram_r },
-	{ 0x30000c, 0x30000d, pip },	// vblank?
+	{ 0x30000c, 0x30000d, pip },	/* vblank?*/
 	{ 0x400000, 0x400fff, paletteram16_word_r },
 	{ 0x600000, 0x600001, OKIM6295_status_0_lsb_r },
-	{ 0x700000, 0x700001, pap },	// scanline???
+	{ 0x700000, 0x700001, pap },	/* scanline???*/
 	{ 0x700004, 0x700005, input_port_0_word_r },
 	{ 0x700008, 0x700009, input_port_1_word_r },
 	{ 0x70000c, 0x70000d, input_port_2_word_r },

@@ -9,11 +9,11 @@
 #include "fastfred.h"
 
 
-// This routine is a big hack, but the only way I can get the game working
-// without knowing anything about the way the protection chip works.
-// These values were derived based on disassembly of the code. Usually, it
-// was pretty obvious what the values should be. Of course, this will have
-// to change if a different ROM set ever surfaces.
+/* This routine is a big hack, but the only way I can get the game working*/
+/* without knowing anything about the way the protection chip works.*/
+/* These values were derived based on disassembly of the code. Usually, it*/
+/* was pretty obvious what the values should be. Of course, this will have*/
+/* to change if a different ROM set ever surfaces.*/
 static READ_HANDLER( fastfred_custom_io_r )
 {
     switch (activecpu_get_pc())
@@ -69,12 +69,12 @@ static MEMORY_WRITE_START( fastfred_writemem )
 	{ 0x0000, 0xbfff, MWA_ROM },
 	{ 0xc000, 0xc7ff, MWA_RAM },
 	{ 0xd000, 0xd3ff, fastfred_videoram_w, &fastfred_videoram },
-	{ 0xd400, 0xd7ff, fastfred_videoram_w },  // Mirrored for above
+	{ 0xd400, 0xd7ff, fastfred_videoram_w },  /* Mirrored for above*/
 	{ 0xd800, 0xd83f, fastfred_attributes_w, &fastfred_attributesram },
 	{ 0xd840, 0xd85f, MWA_RAM, &fastfred_spriteram, &fastfred_spriteram_size },
-	{ 0xd860, 0xdbff, MWA_RAM }, // Unused, but initialized
+	{ 0xd860, 0xdbff, MWA_RAM }, /* Unused, but initialized*/
 	{ 0xe000, 0xe000, fastfred_background_color_w },
-	{ 0xf000, 0xf000, MWA_NOP }, // Unused, but initialized
+	{ 0xf000, 0xf000, MWA_NOP }, /* Unused, but initialized*/
 	{ 0xf001, 0xf001, interrupt_enable_w },
 	{ 0xf002, 0xf002, fastfred_colorbank1_w },
 	{ 0xf003, 0xf003, fastfred_colorbank2_w },
@@ -97,7 +97,7 @@ static MEMORY_READ_START( jumpcoas_readmem )
 	{ 0xe801, 0xe801, input_port_1_r },
 	{ 0xe802, 0xe802, input_port_2_r },
 	{ 0xe803, 0xe803, input_port_3_r },
-	//{ 0xf800, 0xf800, watchdog_reset_r },  // Why doesn't this work???
+	/*{ 0xf800, 0xf800, watchdog_reset_r },  */ /* Why doesn't this work???*/
 	{ 0xf800, 0xf800, MRA_NOP },
 MEMORY_END
 
@@ -111,7 +111,7 @@ static MEMORY_WRITE_START( jumpcoas_writemem )
 	{ 0xd800, 0xdbff, fastfred_videoram_w, &fastfred_videoram },
 	{ 0xdc00, 0xdfff, fastfred_videoram_w },	/* mirror address, used in the name entry screen */
 	{ 0xe000, 0xe000, fastfred_background_color_w },
-	{ 0xf000, 0xf000, MWA_NOP }, // Unused, but initialized
+	{ 0xf000, 0xf000, MWA_NOP }, /* Unused, but initialized*/
 	{ 0xf001, 0xf001, interrupt_enable_w },
 	{ 0xf002, 0xf002, fastfred_colorbank1_w },
 	{ 0xf003, 0xf003, fastfred_colorbank2_w },
@@ -148,15 +148,15 @@ static MEMORY_WRITE_START( imago_writemem )
 	{ 0xd000, 0xd3ff, fastfred_videoram_w, &fastfred_videoram },
 	{ 0xd800, 0xd83f, fastfred_attributes_w, &fastfred_attributesram },
 	{ 0xd840, 0xd85f, MWA_RAM, &fastfred_spriteram, &fastfred_spriteram_size },
-	{ 0xd860, 0xd8ff, MWA_RAM }, // Unused, but initialized
-	{ 0xf000, 0xf000, MWA_NOP }, // writes 1 when level starts, 0 when game over
+	{ 0xd860, 0xd8ff, MWA_RAM }, /* Unused, but initialized*/
+	{ 0xf000, 0xf000, MWA_NOP }, /* writes 1 when level starts, 0 when game over*/
 	{ 0xf001, 0xf001, interrupt_enable_w },
 	{ 0xf002, 0xf002, fastfred_colorbank1_w },
 	{ 0xf003, 0xf003, fastfred_colorbank2_w },
-	{ 0xf004, 0xf004, MWA_NOP }, // initialized with 0 then when written always 1
+	{ 0xf004, 0xf004, MWA_NOP }, /* initialized with 0 then when written always 1*/
 	{ 0xf005, 0xf005, imago_charbank_w },
-	{ 0xf006, 0xf006, MWA_NOP }, // always 0
-	{ 0xf007, 0xf007, MWA_NOP }, // always 0
+	{ 0xf006, 0xf006, MWA_NOP }, /* always 0*/
+	{ 0xf007, 0xf007, MWA_NOP }, /* always 0*/
 	{ 0xf800, 0xf800, soundlatch_w },
 MEMORY_END
 
@@ -164,7 +164,7 @@ static MEMORY_READ_START( sound_readmem )
 	{ 0x0000, 0x1fff, MRA_ROM },
 	{ 0x2000, 0x23ff, MRA_RAM },
 	{ 0x3000, 0x3000, soundlatch_r },
-	{ 0x7000, 0x7000, MRA_NOP }, // only for Imago, read but not used
+	{ 0x7000, 0x7000, MRA_NOP }, /* only for Imago, read but not used*/
 MEMORY_END
 
 
@@ -172,7 +172,7 @@ static MEMORY_WRITE_START( sound_writemem )
 	{ 0x0000, 0x1fff, MWA_ROM },
 	{ 0x2000, 0x23ff, MWA_RAM },
 	{ 0x3000, 0x3000, interrupt_enable_w },
-	{ 0x4000, 0x4000, MWA_RAM },  // Reset PSG's
+	{ 0x4000, 0x4000, MWA_RAM },  /* Reset PSG's*/
 	{ 0x5000, 0x5000, AY8910_control_port_0_w },
 	{ 0x5001, 0x5001, AY8910_write_port_0_w },
 	{ 0x6000, 0x6000, AY8910_control_port_1_w },
@@ -566,7 +566,7 @@ static MACHINE_DRIVER_START( fastfred )
 	MDRV_CPU_VBLANK_INT(nmi_line_pulse,4)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(0)//CLOCK/16/60,
+	MDRV_VBLANK_DURATION(0)/*CLOCK/16/60,*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -828,8 +828,8 @@ ROM_START( imago )
 	ROM_LOAD( "blue",  0x0200, 0x0100, NO_DUMP )
 
 	ROM_REGION( 0x2000, REGION_USER1, 0 )	
-	ROM_LOAD( "1",      0x0000, 0x1000, CRC(b0a1fb54) SHA1(fbc746748947a7aa35a428dc862ff4ad53516d38) ) //contains the same 2 bytes
-	ROM_LOAD( "15",     0x1000, 0x1000, CRC(85fcc195) SHA1(a76f24201c037d1e6f909fb0ea4ad59b1d6ddd57) ) //unknown
+	ROM_LOAD( "1",      0x0000, 0x1000, CRC(b0a1fb54) SHA1(fbc746748947a7aa35a428dc862ff4ad53516d38) ) /*contains the same 2 bytes*/
+	ROM_LOAD( "15",     0x1000, 0x1000, CRC(85fcc195) SHA1(a76f24201c037d1e6f909fb0ea4ad59b1d6ddd57) ) /*unknown*/
 ROM_END
 
 extern int fastfred_hardware_type;

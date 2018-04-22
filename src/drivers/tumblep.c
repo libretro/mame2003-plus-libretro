@@ -217,7 +217,7 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( tumblepop_writemem )
 #if TUMBLEP_HACK
-	{ 0x000000, 0x07ffff, MWA16_RAM },	// To write levels modifications
+	{ 0x000000, 0x07ffff, MWA16_RAM },	/* To write levels modifications*/
 #else
 	{ 0x000000, 0x07ffff, MWA16_ROM },
 #endif
@@ -247,7 +247,7 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( tumblepopb_writemem )
 #if TUMBLEP_HACK
-	{ 0x000000, 0x07ffff, MWA16_RAM },	// To write levels modifications
+	{ 0x000000, 0x07ffff, MWA16_RAM },	/* To write levels modifications*/
 #else
 	{ 0x000000, 0x07ffff, MWA16_ROM },
 #endif
@@ -269,7 +269,7 @@ MEMORY_END
 static MEMORY_READ16_START( fncywld_readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },
 	{ 0x100000, 0x100001, YM2151_status_port_0_lsb_r },
-	{ 0x100002, 0x100003, MRA16_NOP }, // ym?
+	{ 0x100002, 0x100003, MRA16_NOP }, /* ym?*/
 	{ 0x100004, 0x100005, OKIM6295_status_0_lsb_r },
 	{ 0x140000, 0x140fff, MRA16_RAM },
 	{ 0x160000, 0x1607ff, MRA16_RAM },
@@ -277,12 +277,12 @@ static MEMORY_READ16_START( fncywld_readmem )
 	{ 0x320000, 0x321fff, MRA16_RAM },
 	{ 0x322000, 0x323fff, MRA16_RAM },
 	{ 0x1a0000, 0x1a07ff, MRA16_RAM },
-	{ 0xff0000, 0xffffff, MRA16_RAM }, // RAM
+	{ 0xff0000, 0xffffff, MRA16_RAM }, /* RAM*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( fncywld_writemem )
 #if FNCYWLD_HACK
-	{ 0x000000, 0x0fffff, MWA16_RAM },	// To write levels modifications
+	{ 0x000000, 0x0fffff, MWA16_RAM },	/* To write levels modifications*/
 #else
 	{ 0x000000, 0x0fffff, MWA16_ROM },
 #endif
@@ -301,7 +301,7 @@ static MEMORY_WRITE16_START( fncywld_writemem )
 	{ 0x340400, 0x34047f, MWA16_NOP }, /* Unused col scroll */
 	{ 0x342000, 0x3421ff, MWA16_NOP },
 	{ 0x342400, 0x34247f, MWA16_NOP },
-	{ 0xff0000, 0xffffff, MWA16_RAM }, // RAM
+	{ 0xff0000, 0xffffff, MWA16_RAM }, /* RAM*/
 MEMORY_END
 
 
@@ -326,11 +326,11 @@ static MEMORY_WRITE16_START( htchctch_writemem )
 	{ 0x300000, 0x30000f, tumblep_control_0_w },
 	{ 0x320000, 0x320fff, tumblep_pf1_data_w, &tumblep_pf1_data },
 	{ 0x322000, 0x322fff, tumblep_pf2_data_w, &tumblep_pf2_data },
-//	{ 0x340000, 0x3401ff, MWA16_NOP }, /* Unused row scroll */
-	{ 0x341000, 0x342fff, MWA16_RAM }, // extra ram?
-//	{ 0x340400, 0x34047f, MWA16_NOP }, /* Unused col scroll */
-//	{ 0x342000, 0x3421ff, MWA16_NOP },
-//	{ 0x342400, 0x34247f, MWA16_NOP },
+/*	{ 0x340000, 0x3401ff, MWA16_NOP },  // Unused row scroll /*/
+	{ 0x341000, 0x342fff, MWA16_RAM }, /* extra ram?*/
+/*	{ 0x340400, 0x34047f, MWA16_NOP },  // Unused col scroll /*/
+/*	{ 0x342000, 0x3421ff, MWA16_NOP },*/
+/*	{ 0x342400, 0x34247f, MWA16_NOP },*/
 MEMORY_END
 
 /******************************************************************************/
@@ -387,7 +387,7 @@ static MEMORY_WRITE_START( semicom_sound_writemem )
 	{ 0xf000, 0xf000, YM2151_register_port_0_w },
 	{ 0xf001, 0xf001, YM2151_data_port_0_w },
 	{ 0xf002, 0xf002, OKIM6295_data_0_w },
-//	{ 0xf006, 0xf006,  }, ???
+/*	{ 0xf006, 0xf006,  }, ???*/
 MEMORY_END
 
 /******************************************************************************/
@@ -463,14 +463,14 @@ INPUT_PORTS_START( tumblep )
 #if TUMBLEP_HACK
 	PORT_DIPNAME( 0x08, 0x08, "Remove Monsters" )
 #else
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )		// See notes
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )		/* See notes*/
 #endif
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 #if TUMBLEP_HACK
 	PORT_DIPNAME( 0x04, 0x04, "Edit Levels" )
 #else
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )		// See notes
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )		/* See notes*/
 #endif
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -518,7 +518,7 @@ INPUT_PORTS_START( fncywld )
 	PORT_DIPSETTING(    0x20, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x60, DEF_STR( 2C_1C ) )
-//	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )		// duplicated setting
+/*	PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) )		*/ /* duplicated setting*/
 	PORT_DIPSETTING(    0xe0, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_3C ) )
@@ -526,10 +526,10 @@ INPUT_PORTS_START( fncywld )
 	PORT_DIPNAME( 0x10, 0x10, "Allow Continue" )
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Demo_Sounds ) )	// to be confirmed
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Demo_Sounds ) )	/* to be confirmed*/
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, "Language" )			// only seems to the title screen
+	PORT_DIPNAME( 0x04, 0x04, "Language" )			/* only seems to the title screen*/
 	PORT_DIPSETTING(    0x04, "English" )
 	PORT_DIPSETTING(    0x00, "Korean" )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )
@@ -545,7 +545,7 @@ INPUT_PORTS_START( fncywld )
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0xc0, "3" )
 	PORT_DIPSETTING(    0x40, "4" )
-	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Difficulty ) )	// to be confirmed
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Difficulty ) )	/* to be confirmed*/
 	PORT_DIPSETTING(    0x30, "Easy" )
 	PORT_DIPSETTING(    0x20, "Normal" )
 	PORT_DIPSETTING(    0x10, "Hard" )
@@ -553,14 +553,14 @@ INPUT_PORTS_START( fncywld )
 #if FNCYWLD_HACK
 	PORT_DIPNAME( 0x08, 0x08, "Remove Monsters" )
 #else
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )		// See notes
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )		/* See notes*/
 #endif
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 #if FNCYWLD_HACK
 	PORT_DIPNAME( 0x04, 0x04, "Edit Levels" )
 #else
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )		// See notes
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) )		/* See notes*/
 #endif
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -913,7 +913,7 @@ ROM_START( tumblep )
 	ROM_LOAD( "hl02-.f16",    0x00000, 0x10000, CRC(a5cab888) SHA1(622f6adb01e31b8f3adbaed2b9900b54c5922c57) )
 
 	ROM_REGION( 0x080000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "map-02.rom",   0x00000, 0x80000, CRC(dfceaa26) SHA1(83e391ff39efda71e5fa368ac68ba7d6134bac21) )	// encrypted
+	ROM_LOAD( "map-02.rom",   0x00000, 0x80000, CRC(dfceaa26) SHA1(83e391ff39efda71e5fa368ac68ba7d6134bac21) )	/* encrypted*/
 
 	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE )
 	ROM_LOAD( "map-01.rom",   0x00000, 0x80000, CRC(e81ffa09) SHA1(01ada9557ead91eb76cf00db118d6c432104a398) )
@@ -932,7 +932,7 @@ ROM_START( tumblepj )
 	ROM_LOAD( "hl02-.f16",    0x00000, 0x10000, CRC(a5cab888) SHA1(622f6adb01e31b8f3adbaed2b9900b54c5922c57) )
 
 	ROM_REGION( 0x080000, REGION_GFX1, ROMREGION_DISPOSE )
-	ROM_LOAD( "map-02.rom",   0x00000, 0x80000, CRC(dfceaa26) SHA1(83e391ff39efda71e5fa368ac68ba7d6134bac21) )	// encrypted
+	ROM_LOAD( "map-02.rom",   0x00000, 0x80000, CRC(dfceaa26) SHA1(83e391ff39efda71e5fa368ac68ba7d6134bac21) )	/* encrypted*/
 
 	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE )
 	ROM_LOAD( "map-01.rom",   0x00000, 0x80000, CRC(e81ffa09) SHA1(01ada9557ead91eb76cf00db118d6c432104a398) )
@@ -982,7 +982,7 @@ ROM_START( jumpkids )
 	ROM_LOAD16_BYTE( "24.16c", 0x00001, 0x40000, CRC(5795d98b) SHA1(d1435f0b79a4fa45770c56b91f078c1885fbd048) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 Code */
-	ROM_LOAD( "23.3c", 0x00000, 0x10000, BAD_DUMP CRC(d7dbbd8c) SHA1(3fbbd0c205ddc8aa8c14cc8f482dbe27d4a909c4)  ) // bad
+	ROM_LOAD( "23.3c", 0x00000, 0x10000, BAD_DUMP CRC(d7dbbd8c) SHA1(3fbbd0c205ddc8aa8c14cc8f482dbe27d4a909c4)  ) /* bad*/
 
 	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE ) /* GFX */
 	ROM_LOAD16_BYTE( "30.15j", 0x00000, 0x40000, CRC(44b9a089) SHA1(b6f99b0b597d540b375616dad4354fc9dbb75a21) )
@@ -990,7 +990,7 @@ ROM_START( jumpkids )
 
 	ROM_REGION( 0x100000, REGION_GFX2, ROMREGION_DISPOSE ) /* GFX */
 	ROM_LOAD16_BYTE( "25.1g",  0x00000, 0x40000, CRC(176ae857) SHA1(e3178d2a15452a36eb94caf5e5ff3a561783a5f4) )
-	ROM_LOAD16_BYTE( "28.1l",  0x00001, 0x40000, BAD_DUMP CRC(dc35c5a0) SHA1(854429261151c58b94542e9ca51b0807e8bc1f5f)  ) // bad
+	ROM_LOAD16_BYTE( "28.1l",  0x00001, 0x40000, BAD_DUMP CRC(dc35c5a0) SHA1(854429261151c58b94542e9ca51b0807e8bc1f5f)  ) /* bad*/
 	ROM_LOAD16_BYTE( "26.2g",  0x80000, 0x40000, CRC(e8b34980) SHA1(edbf5517c6c9c9c3344d11eabb4a58da87386725) )
 	ROM_LOAD16_BYTE( "27.1j",  0x80001, 0x40000, CRC(3918dda3) SHA1(9409b5a5dc4c44c1ddcb77278541d012b5d8e052) )
 
@@ -1095,20 +1095,20 @@ ROM_START( bcstry )
 
 	/* order / region of these not verified but each rom is probably 4 plane of 4bpp gfx .. */
 	ROM_REGION( 0x200000, REGION_GFX1, 0 ) /* Sprites */
-	ROM_LOAD16_BYTE( "bcstry_u.109", 0x000001, 0x80000, CRC(eb04d37a) SHA1(818dc7aafac577920d94c65e47d965dc0474d92c) ) // c
-	ROM_LOAD16_BYTE( "bcstry_u.110", 0x000000, 0x80000, CRC(1bfe65c3) SHA1(27dec16b271866ff336d8b25d352977ca80c35bf) ) // c
-	ROM_LOAD16_BYTE( "bcstry_u.111", 0x100001, 0x80000, CRC(c8bf3a3c) SHA1(604fc57c4d3a581016aa2516236c568488d23c77) ) // c
-	ROM_LOAD16_BYTE( "bcstry_u.113", 0x100000, 0x80000, CRC(746ecdd7) SHA1(afb6dbc0fb94e7ce96a9b219f5f7cd3721d1c1c4) ) // c
+	ROM_LOAD16_BYTE( "bcstry_u.109", 0x000001, 0x80000, CRC(eb04d37a) SHA1(818dc7aafac577920d94c65e47d965dc0474d92c) ) /* c*/
+	ROM_LOAD16_BYTE( "bcstry_u.110", 0x000000, 0x80000, CRC(1bfe65c3) SHA1(27dec16b271866ff336d8b25d352977ca80c35bf) ) /* c*/
+	ROM_LOAD16_BYTE( "bcstry_u.111", 0x100001, 0x80000, CRC(c8bf3a3c) SHA1(604fc57c4d3a581016aa2516236c568488d23c77) ) /* c*/
+	ROM_LOAD16_BYTE( "bcstry_u.113", 0x100000, 0x80000, CRC(746ecdd7) SHA1(afb6dbc0fb94e7ce96a9b219f5f7cd3721d1c1c4) ) /* c*/
 
 	ROM_REGION( 0x400000, REGION_GFX2, ROMREGION_DISPOSE ) /* GFX */
-	ROM_LOAD16_BYTE( "bcstry_u.100", 0x000001, 0x80000, CRC(8c11cbed) SHA1(e04e53af4fe732bf9d20a9ae5c2a90b576ee0b83) ) // b
-	ROM_LOAD16_BYTE( "bcstry_u.104", 0x000000, 0x80000, CRC(377c0c71) SHA1(77efa9530b1c311d93c84dd8452701414f740269) ) // b
-	ROM_LOAD16_BYTE( "bcstry_u.106", 0x200001, 0x80000, CRC(5219bcbf) SHA1(4b88eab7ffc2dc1de451ae4ee52f1536e179ea13) ) // b
-	ROM_LOAD16_BYTE( "bcstry_u.108", 0x200000, 0x80000, CRC(442307ed) SHA1(71b7f19af64d9961f0f9205b86b4b0ebc13fddda) ) // b
-	ROM_LOAD16_BYTE( "bcstry_u.99",  0x100001, 0x80000, CRC(cdb1af87) SHA1(df1fbda5c7ce4fbd64d6db9eb80946e06119f096) ) // a
-	ROM_LOAD16_BYTE( "bcstry_u.102", 0x100000, 0x80000, CRC(71b40ece) SHA1(1a13dfd7615a6f61851897ebcb10fa69bc8ae525) ) // a
-	ROM_LOAD16_BYTE( "bcstry_u.105", 0x300001, 0x80000, CRC(8166b596) SHA1(cbf6f5cec5f6991bb1d4ec0ea03cd617ff38fc3b) ) // a
-	ROM_LOAD16_BYTE( "bcstry_u.107", 0x300000, 0x80000, CRC(ab3c923a) SHA1(aaca1d2ed7b53e0933e0bd94a19458dd1598f204) ) // a
+	ROM_LOAD16_BYTE( "bcstry_u.100", 0x000001, 0x80000, CRC(8c11cbed) SHA1(e04e53af4fe732bf9d20a9ae5c2a90b576ee0b83) ) /* b*/
+	ROM_LOAD16_BYTE( "bcstry_u.104", 0x000000, 0x80000, CRC(377c0c71) SHA1(77efa9530b1c311d93c84dd8452701414f740269) ) /* b*/
+	ROM_LOAD16_BYTE( "bcstry_u.106", 0x200001, 0x80000, CRC(5219bcbf) SHA1(4b88eab7ffc2dc1de451ae4ee52f1536e179ea13) ) /* b*/
+	ROM_LOAD16_BYTE( "bcstry_u.108", 0x200000, 0x80000, CRC(442307ed) SHA1(71b7f19af64d9961f0f9205b86b4b0ebc13fddda) ) /* b*/
+	ROM_LOAD16_BYTE( "bcstry_u.99",  0x100001, 0x80000, CRC(cdb1af87) SHA1(df1fbda5c7ce4fbd64d6db9eb80946e06119f096) ) /* a*/
+	ROM_LOAD16_BYTE( "bcstry_u.102", 0x100000, 0x80000, CRC(71b40ece) SHA1(1a13dfd7615a6f61851897ebcb10fa69bc8ae525) ) /* a*/
+	ROM_LOAD16_BYTE( "bcstry_u.105", 0x300001, 0x80000, CRC(8166b596) SHA1(cbf6f5cec5f6991bb1d4ec0ea03cd617ff38fc3b) ) /* a*/
+	ROM_LOAD16_BYTE( "bcstry_u.107", 0x300000, 0x80000, CRC(ab3c923a) SHA1(aaca1d2ed7b53e0933e0bd94a19458dd1598f204) ) /* a*/
 
 ROM_END
 
@@ -1119,7 +1119,7 @@ void tumblep_patch_code(UINT16 offset)
 	/* A hack which enables all Dip Switches effects */
 	data16_t *RAM = (data16_t *)memory_region(REGION_CPU1);
 	RAM[(offset + 0)/2] = 0x0240;
-	RAM[(offset + 2)/2] = 0xffff;	// andi.w  #$f3ff, D0
+	RAM[(offset + 2)/2] = 0xffff;	/* andi.w  #$f3ff, D0*/
 }
 
 
@@ -1187,19 +1187,19 @@ static DRIVER_INIT( fncywld )
 static DRIVER_INIT( htchctch )
 {
 
-//	data16_t *HCROM = (data16_t*)memory_region(REGION_CPU1);
+/*	data16_t *HCROM = (data16_t*)memory_region(REGION_CPU1);*/
 	data16_t *PROTDATA = (data16_t*)memory_region(REGION_USER1);
 	int i;
 	/* simulate RAM initialization done by the protection MCU */
 	/* verified on real hardware */
-//	static data16_t htchctch_mcu68k[] =
-//	{
-//		/* moved to protdata.bin file .. */
-//	};
+/*	static data16_t htchctch_mcu68k[] =*/
+/*	{*/
+/*		 // moved to protdata.bin file .. /*/
+/*	};*/
 
 
-//	for (i = 0;i < sizeof(htchctch_mcu68k)/sizeof(htchctch_mcu68k[0]);i++)
-//		tumblep_mainram[0x000/2 + i] = htchctch_mcu68k[i];
+/*	for (i = 0;i < sizeof(htchctch_mcu68k)/sizeof(htchctch_mcu68k[0]);i++)*/
+/*		tumblep_mainram[0x000/2 + i] = htchctch_mcu68k[i];*/
 
 	for (i = 0;i < 0x200/2;i++)
 		tumblep_mainram[0x000/2 + i] = PROTDATA[i];
@@ -1286,7 +1286,7 @@ static DRIVER_INIT( htchctch )
 	/* put the address we to read to in A2 */
 	HCROM[0x1e10c/2] = 0x45f9;
 	HCROM[0x1e10e/2] = 0x0012;
-//	HCROM[0x1e110/2] = 0x2000;
+/*	HCROM[0x1e110/2] = 0x2000;*/
 	HCROM[0x1e110/2] = 0x2000+0x60+0x60+0x60+0x60+0x60;
 
 	/* put the number of rows into D3 */
@@ -1300,15 +1300,15 @@ static DRIVER_INIT( htchctch )
 	HCROM[0x1e11c/2] = 0x0008;
 
 
-	// move content of a2 to d4 (byte)
+	/* move content of a2 to d4 (byte)*/
 	HCROM[0x1e11e/2] = 0x1812;
 
-	HCROM[0x1e120/2] = 0xe84c; // shift d4 right by 4
+	HCROM[0x1e120/2] = 0xe84c; /* shift d4 right by 4*/
 
-	HCROM[0x1e122/2] = 0x0244; // mask with 0x000f
-	HCROM[0x1e124/2] = 0x000f; //
+	HCROM[0x1e122/2] = 0x0244; /* mask with 0x000f*/
+	HCROM[0x1e124/2] = 0x000f; /**/
 
-	HCROM[0x1e126/2] = 0x3004; // d4 -> d0
+	HCROM[0x1e126/2] = 0x3004; /* d4 -> d0*/
 
 	/* jump to character draw to draw first bit */
 	HCROM[0x1e128/2] = 0x4eb9;
@@ -1321,13 +1321,13 @@ static DRIVER_INIT( htchctch )
 	HCROM[0x1e132/2] = 0x0002;
 
 
-	// move content of a2 to d4 (byte)
+	/* move content of a2 to d4 (byte)*/
 	HCROM[0x1e134/2] = 0x1812;
 
-	HCROM[0x1e136/2] = 0x0244; // mask with 0x000f
-	HCROM[0x1e138/2] = 0x000f; //
+	HCROM[0x1e136/2] = 0x0244; /* mask with 0x000f*/
+	HCROM[0x1e138/2] = 0x000f; /**/
 
-	HCROM[0x1e13a/2] = 0x3004; // d4 -> d0
+	HCROM[0x1e13a/2] = 0x3004; /* d4 -> d0*/
 
 	/* jump to character draw to draw second bit */
 	HCROM[0x1e13c/2] = 0x4eb9;
@@ -1344,7 +1344,7 @@ static DRIVER_INIT( htchctch )
 	HCROM[0x1e14a/2] = 0x0000;
 	HCROM[0x1e14c/2] = 0x0001;
 
-// brr
+/* brr*/
 	/* decrease counter d2 */
 	HCROM[0x1e14e/2] = 0x5382;
 
@@ -1372,7 +1372,7 @@ static DRIVER_INIT( htchctch )
 	/* if its not 0 then branch back */
 	HCROM[0x1e166/2] = 0x66b0;
 
-	HCROM[0x1e168/2] = 0x4e75; // rts
+	HCROM[0x1e168/2] = 0x4e75; /* rts*/
 
 	/* DRAW CHARACTER SUBROUTINE, note, this won't restore a1,d1, don't other places! */
 
@@ -1393,7 +1393,7 @@ static DRIVER_INIT( htchctch )
 	HCROM[0x1e20e/2] = 0xf000;
 
 	/* write d1 -> a1 for TOP half */
-	HCROM[0x1e210/2] = 0x32c1; // not ideal .. we don't need to increase a1
+	HCROM[0x1e210/2] = 0x32c1; /* not ideal .. we don't need to increase a1*/
 
 	/* move address into A0->A1 for use by this subroutine */
 	HCROM[0x1e212/2] = 0x2248;
@@ -1416,12 +1416,12 @@ static DRIVER_INIT( htchctch )
 	HCROM[0x1e224/2] = 0xf000;
 
 	/* write d1 -> a1 for BOTTOM half */
-	HCROM[0x1e226/2] = 0x32c1; // not ideal .. we don't need to increase a1
+	HCROM[0x1e226/2] = 0x32c1; /* not ideal .. we don't need to increase a1*/
 
 
 	HCROM[0x1e228/2] = 0x4e75;
 
-	install_mem_write16_handler (0, 0x140000, 0x1407ff, MWA16_NOP ); // kill palette writes as the interrupt code we don't have controls them
+	install_mem_write16_handler (0, 0x140000, 0x1407ff, MWA16_NOP ); /* kill palette writes as the interrupt code we don't have controls them*/
 
 
 	{
@@ -1445,6 +1445,6 @@ GAME( 1991, tumblepj, tumblep, tumblep,   tumblep,  tumblep,  ROT0, "Data East C
 GAMEX(1991, tumblepb, tumblep, tumblepb,  tumblep,  tumblepb, ROT0, "bootleg", "Tumble Pop (bootleg set 1)", GAME_IMPERFECT_SOUND )
 GAMEX(1991, tumblep2, tumblep, tumblepb,  tumblep,  tumblepb, ROT0, "bootleg", "Tumble Pop (bootleg set 2)", GAME_IMPERFECT_SOUND )
 GAMEX(1993, jumpkids, 0,       jumpkids,  tumblep,  jumpkids, ROT0, "Comad", "Jump Kids", GAME_NO_SOUND )
-GAME (1996, fncywld,  0,       fncywld,   fncywld,  fncywld,  ROT0, "Unico", "Fancy World - Earth of Crisis" ) // game says 1996, testmode 1995?
+GAME (1996, fncywld,  0,       fncywld,   fncywld,  fncywld,  ROT0, "Unico", "Fancy World - Earth of Crisis" ) /* game says 1996, testmode 1995?*/
 GAME (1995, htchctch, 0,       htchctch,  htchctch, htchctch, ROT0, "SemiCom", "Hatch Catch" )
 GAMEX(1997, bcstry,   0,       htchctch,  htchctch, htchctch, ROT0, "SemiCom", "BC Story", GAME_NOT_WORKING)

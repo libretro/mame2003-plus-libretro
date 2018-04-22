@@ -699,20 +699,20 @@ static MEMORY_WRITE32_START( drivedge_writemem )
 	{ 0x000000, 0x03ffff, MWA32_RAM, (data32_t **)&main_ram, &main_ram_size },
 	{ 0x040000, 0x07ffff, MWA32_BANK2 },
 	{ 0x084000, 0x084003, sound_data32_w },
-//	{ 0x100000, 0x10000f, ???_w },	= 4 longwords (TMS control?)
+/*	{ 0x100000, 0x10000f, ???_w },	= 4 longwords (TMS control?)*/
 	{ 0x180000, 0x180003, drivedge_color0_w },
 	{ 0x1a0000, 0x1bffff, itech020_paletteram_w, &paletteram32 },
-//	{ 0x1c0000, 0x1c0001, ???_w },	= 0x64
+/*	{ 0x1c0000, 0x1c0001, ???_w },	= 0x64*/
 	{ 0x1e0000, 0x1e00ff, itech020_video_w, (data32_t **)&itech32_video },
-//	{ 0x1e4000, 0x1e4003, ???_w },	= 0x1ffff
-	{ 0x280000, 0x280fff, MWA32_RAM },	// initialized to zero
-	{ 0x300000, 0x300fff, MWA32_RAM },	// initialized to zero
-	{ 0x380000, 0x380003, MWA32_NOP },	// watchdog
+/*	{ 0x1e4000, 0x1e4003, ???_w },	= 0x1ffff*/
+	{ 0x280000, 0x280fff, MWA32_RAM },	/* initialized to zero*/
+	{ 0x300000, 0x300fff, MWA32_RAM },	/* initialized to zero*/
+	{ 0x380000, 0x380003, MWA32_NOP },	/* watchdog*/
 	{ 0x600000, 0x607fff, MWA32_ROM, (data32_t **)&main_rom },
 MEMORY_END
 
-// 0x10000c/0/4/8 = $8000/$0/$0/$ffff1e
-// 0x100008/c     = $ffffff/$8000
+/* 0x10000c/0/4/8 = $8000/$0/$0/$ffff1e*/
+/* 0x100008/c     = $ffffff/$8000*/
 
 
 /*------ 68EC020-based memory layout ------*/
@@ -1114,7 +1114,7 @@ INPUT_PORTS_START( wcbowln ) /* WCB version 1.66 supports cocktail mode */
 	PORT_DIPNAME( 0x0010, 0x0000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0010, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0020, 0x0000, DEF_STR( Cabinet ) )	// v1.66 Rom sets support Cocktail mode (verified)
+	PORT_DIPNAME( 0x0020, 0x0000, DEF_STR( Cabinet ) )	/* v1.66 Rom sets support Cocktail mode (verified)*/
 	PORT_DIPSETTING(      0x0000, DEF_STR( Upright ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( Cocktail ) )
 	PORT_DIPNAME( 0x0040, 0x0000, "Freeze Screen" )
@@ -2360,7 +2360,7 @@ static DRIVER_INIT( wcbowl )
 static DRIVER_INIT( drivedge )
 {
 	init_program_rom();
-//	init_sound_speedup(0x2011, 0x8ebf);
+/*	init_sound_speedup(0x2011, 0x8ebf);*/
 	itech32_vram_height = 1024;
 	itech32_planes = 1;
 	is_drivedge = 1;

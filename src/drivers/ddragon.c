@@ -157,7 +157,7 @@ static WRITE_HANDLER( toffy_bankswitch_w )
 	ddragon_scrolly_hi = ( ( data & 0x02 ) << 7 );
 	ddragon_scrollx_hi = ( ( data & 0x01 ) << 8 );
 
-//	flip_screen_set(~data & 0x04);
+/*	flip_screen_set(~data & 0x04);*/
 
 	/* bit 3 unknown */
 
@@ -174,7 +174,7 @@ static WRITE_HANDLER( darktowr_bankswitch_w )
 	ddragon_scrolly_hi = ( ( data & 0x02 ) << 7 );
 	ddragon_scrollx_hi = ( ( data & 0x01 ) << 8 );
 
-//	flip_screen_set(~data & 0x04);
+/*	flip_screen_set(~data & 0x04);*/
 
 	/* bit 3 unknown */
 
@@ -184,8 +184,8 @@ static WRITE_HANDLER( darktowr_bankswitch_w )
 		cpu_set_irq_line( 1, sprite_irq, (sprite_irq == IRQ_LINE_NMI) ? PULSE_LINE : HOLD_LINE );
 
 	darktowr_bank=(data & 0xe0) >> 5;
-//	cpu_setbank( 1,&RAM[ 0x10000 + ( 0x4000 * ( ( data & 0xe0) >> 5 ) ) ] );
-//	logerror("Bank %05x %02x %02x\n",activecpu_get_pc(),darktowr_bank,data);
+/*	cpu_setbank( 1,&RAM[ 0x10000 + ( 0x4000 * ( ( data & 0xe0) >> 5 ) ) ] );*/
+/*	logerror("Bank %05x %02x %02x\n",activecpu_get_pc(),darktowr_bank,data);*/
 }
 
 static READ_HANDLER( darktowr_bank_r )
@@ -1066,7 +1066,7 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( toffy )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M6809,3579545) // 12 MHz / 2 or 3.579545 ?
+	MDRV_CPU_ADD(M6809,3579545) /* 12 MHz / 2 or 3.579545 ?*/
 	MDRV_CPU_MEMORY(readmem,toffy_writemem)
 	MDRV_CPU_VBLANK_INT(ddragon_interrupt,272)
 
@@ -1363,18 +1363,18 @@ ROM_START( stoffy )
 	ROM_RELOAD( 0x10000, 0x10000 )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Sound CPU? */
-	ROM_LOAD( "u142.1", 0x00000, 0x10000, CRC(541bd7f0) SHA1(3f0097f5877eae50651f94d46d7dd9127037eb6e) ) // same as 'toffy'
+	ROM_LOAD( "u142.1", 0x00000, 0x10000, CRC(541bd7f0) SHA1(3f0097f5877eae50651f94d46d7dd9127037eb6e) ) /* same as 'toffy'*/
 
 	ROM_REGION( 0x10000, REGION_GFX1, 0 ) /* GFX? */
 	ROM_LOAD( "u35.7", 0x00000, 0x10000, CRC(83735d25) SHA1(d82c046db0112d7d2877339652b2111f12513a4f) )
 
 	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* GFX */
-	ROM_LOAD( "u78.4", 0x00000, 0x10000, CRC(9743a74d) SHA1(876696c5e88e58e6e44671c33a4c140be02a941e) ) // 0
-	ROM_LOAD( "u77.3", 0x10000, 0x10000, CRC(f267109a) SHA1(679d2147c79636796dda850345c04ad8a9daa6af) ) // 0
+	ROM_LOAD( "u78.4", 0x00000, 0x10000, CRC(9743a74d) SHA1(876696c5e88e58e6e44671c33a4c140be02a941e) ) /* 0*/
+	ROM_LOAD( "u77.3", 0x10000, 0x10000, CRC(f267109a) SHA1(679d2147c79636796dda850345c04ad8a9daa6af) ) /* 0*/
 
 	ROM_REGION( 0x20000, REGION_GFX2, 0 ) /* GFX */
-	ROM_LOAD( "u80.5", 0x00000, 0x10000, CRC(ff190865) SHA1(245e69651d0161fcb416bba8f743602b4ee83139) ) // 1 | should be u80.6 ?
-	ROM_LOAD( "u79.5", 0x10000, 0x10000, CRC(333d5b8a) SHA1(d3573db87e2318c144ee9ace6c975a70fc96f4c4) ) // 1
+	ROM_LOAD( "u80.5", 0x00000, 0x10000, CRC(ff190865) SHA1(245e69651d0161fcb416bba8f743602b4ee83139) ) /* 1 | should be u80.6 ?*/
+	ROM_LOAD( "u79.5", 0x10000, 0x10000, CRC(333d5b8a) SHA1(d3573db87e2318c144ee9ace6c975a70fc96f4c4) ) /* 1*/
 ROM_END
 
 ROM_START( ddungeon )
@@ -1396,12 +1396,12 @@ ROM_START( ddungeon )
 	ROM_LOAD( "dd6.bin", 0x00000, 0x08000, CRC(057588ca) SHA1(d4a5dd3ea8cf455b54657473d4d52ab5e838ae15) )
 
 	ROM_REGION( 0x20000, REGION_GFX2, 0 ) /* GFX */
-	ROM_LOAD( "dd-7r.bin", 0x00000, 0x08000, CRC(50d6ab5d) SHA1(4c9cbd72d38b631ea2ca231045ef3f3e11cc7c07) ) // 1
-	ROM_LOAD( "dd-7k.bin", 0x10000, 0x08000, CRC(43264ad8) SHA1(74f031d6179390bc4fa99f4929a6886db8c2b510) ) // 1
+	ROM_LOAD( "dd-7r.bin", 0x00000, 0x08000, CRC(50d6ab5d) SHA1(4c9cbd72d38b631ea2ca231045ef3f3e11cc7c07) ) /* 1*/
+	ROM_LOAD( "dd-7k.bin", 0x10000, 0x08000, CRC(43264ad8) SHA1(74f031d6179390bc4fa99f4929a6886db8c2b510) ) /* 1*/
 
 	ROM_REGION( 0x20000, REGION_GFX3, 0 ) /* GFX */
-	ROM_LOAD( "dd-6b.bin", 0x00000, 0x08000, CRC(3deacae9) SHA1(6663f054ed3eed50c5cacfa5d22d465dfb179964) ) // 0
-	ROM_LOAD( "dd-7c.bin", 0x10000, 0x08000, CRC(5a2f31eb) SHA1(1b85533443e148adb2a9c2c09c43cbf2c35c86bc) ) // 0
+	ROM_LOAD( "dd-6b.bin", 0x00000, 0x08000, CRC(3deacae9) SHA1(6663f054ed3eed50c5cacfa5d22d465dfb179964) ) /* 0*/
+	ROM_LOAD( "dd-7c.bin", 0x10000, 0x08000, CRC(5a2f31eb) SHA1(1b85533443e148adb2a9c2c09c43cbf2c35c86bc) ) /* 0*/
 
 	ROM_REGION( 0x20000, REGION_SOUND1, 0 ) /* adpcm samples */
 	ROM_LOAD( "21j-6",        0x00000, 0x10000, CRC(34755de3) SHA1(57c06d6ce9497901072fa50a92b6ed0d2d4d6528) )

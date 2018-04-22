@@ -215,11 +215,11 @@ static MACHINE_DRIVER_START( superqix )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, 6000000)	/* 6 MHz ? */
-//			10000000,	/* 10 MHz ? */
+/*			10000000,	 // 10 MHz ? /*/
 	MDRV_CPU_FLAGS(CPU_16BIT_PORT)
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_PORTS(readport,writeport)
-//	MDRV_CPU_VBLANK_INT(nmi_line_pulse,3)	/* ??? */
+/*	MDRV_CPU_VBLANK_INT(nmi_line_pulse,3)	 // ??? /*/
 	MDRV_CPU_VBLANK_INT(sqix_interrupt,6)	/* ??? */
 
 	MDRV_FRAMES_PER_SECOND(60)
@@ -263,7 +263,7 @@ ROM_START( superqix )
 	ROM_LOAD( "sq05.1",       0x00000, 0x10000, CRC(df326540) SHA1(1fe025edcd38202e24c4e1005f478b6a88533453) )
 
 	ROM_REGION( 0x1000, REGION_USER1, 0 )	/* Unknown (protection related?) */
-	ROM_LOAD( "sq07.108",     0x00000, 0x1000, CRC(071a598c) SHA1(2726705c3b82f5703e856261cdec5e86d7e1994e) )	// FIXED BITS (xxxx1xxx)
+	ROM_LOAD( "sq07.108",     0x00000, 0x1000, CRC(071a598c) SHA1(2726705c3b82f5703e856261cdec5e86d7e1994e) )	/* FIXED BITS (xxxx1xxx)*/
 ROM_END
 
 ROM_START( sqixbl )

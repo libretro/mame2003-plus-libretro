@@ -92,7 +92,7 @@ static WRITE32_HANDLER( paletteram32_w )
 }
 
 
-//---------
+/*---------*/
 
 static void sndram_set_bank(void)
 {
@@ -143,7 +143,7 @@ static WRITE32_HANDLER( sndram_w )
 }
 
 
-//---------
+/*---------*/
 
 static READ16_HANDLER( dual539_16_r )
 {
@@ -186,19 +186,19 @@ static WRITE32_HANDLER( dual539_w )
 }
 
 
-//---------
+/*---------*/
 
 static READ32_HANDLER( obj_ctrl_r )
 {
-	// read obj_regs[0x0c/4]: unknown
-	// read obj_regs[0x24/4]: unknown
+	/* read obj_regs[0x0c/4]: unknown*/
+	/* read obj_regs[0x24/4]: unknown*/
 
 	return obj_regs[offset];
 }
 
 static WRITE32_HANDLER( obj_ctrl_w )
 {
-	// write obj_regs[0x28/4]: bank for rom readthrough
+	/* write obj_regs[0x28/4]: bank for rom readthrough*/
 
 	COMBINE_DATA(&obj_regs[offset]);
 }
@@ -221,7 +221,7 @@ static READ32_HANDLER( obj_rom_r )
 }
 
 
-//---------
+/*---------*/
 
 static WRITE32_HANDLER( v_ctrl_w )
 {
@@ -258,7 +258,7 @@ static READ32_HANDLER( v_rom_r )
 }
 
 
-//---------
+/*---------*/
 
 static READ32_HANDLER( inp1_r )
 {
@@ -296,7 +296,7 @@ static WRITE32_HANDLER( scratch_w )
 }
 
 
-//---------
+/*---------*/
 
 #define IDE_STD_OFFSET	(0x1f0/2)
 #define IDE_ALT_OFFSET	(0x3f6/2)
@@ -333,9 +333,9 @@ static WRITE32_HANDLER( ide_alt_w )
 }
 
 
-//---------
+/*---------*/
 
-// light/coin blocker control
+/* light/coin blocker control*/
 
 /*
  beatmania/hiphopmania
@@ -429,21 +429,21 @@ static WRITE32_HANDLER( light_ctrl_1_w )
 		switch (game_type)
 		{
 		case BEATMANIA:
-			artwork_show("right-red-hlt",  !(data & 0x08000000));	// Right red HIGHLIGHT
-			artwork_show("left-red-hlt",   !(data & 0x04000000));	// Left red HIGHLIGHT
-			artwork_show("left-blue-hlt",  !(data & 0x02000000));	// Left blue HIGHLIGHT
-			artwork_show("right-blue-hlt", !(data & 0x00200000));	// Right blue HIGHLIGHT
+			artwork_show("right-red-hlt",  !(data & 0x08000000));	/* Right red HIGHLIGHT*/
+			artwork_show("left-red-hlt",   !(data & 0x04000000));	/* Left red HIGHLIGHT*/
+			artwork_show("left-blue-hlt",  !(data & 0x02000000));	/* Left blue HIGHLIGHT*/
+			artwork_show("right-blue-hlt", !(data & 0x00200000));	/* Right blue HIGHLIGHT*/
 			break;
 		case POPNMUSIC:
-			set_led_status(0, data & 0x00080000);			// Button 4
-			set_led_status(1, data & 0x00100000);			// Button 5
-			set_led_status(2, data & 0x00400000);			// Button 6
+			set_led_status(0, data & 0x00080000);			/* Button 4*/
+			set_led_status(1, data & 0x00100000);			/* Button 5*/
+			set_led_status(2, data & 0x00400000);			/* Button 6*/
 			break;
 		case POPNSTAGE:
-			artwork_show("right-rg-hlt",   data & 0x00010000);	// Left R&G HIGHLIGHT
-			artwork_show("right-yb-hlt",   data & 0x00020000);	// Left Y&B HIGHLIGHT
-			artwork_show("left-rg-hlt",    data & 0x00040000);	// Right R&G HIGHLIGHT
-			artwork_show("left-yb-hlt",    data & 0x00080000);	// Right Y&B HIGHLIGHT
+			artwork_show("right-rg-hlt",   data & 0x00010000);	/* Left R&G HIGHLIGHT*/
+			artwork_show("right-yb-hlt",   data & 0x00020000);	/* Left Y&B HIGHLIGHT*/
+			artwork_show("left-rg-hlt",    data & 0x00040000);	/* Right R&G HIGHLIGHT*/
+			artwork_show("left-yb-hlt",    data & 0x00080000);	/* Right Y&B HIGHLIGHT*/
 			break;
 		}
 	}
@@ -456,45 +456,45 @@ static WRITE32_HANDLER( light_ctrl_2_w )
 		switch (game_type)
 		{
 		case BEATMANIA:
-			artwork_show("left-ssr",       data & 0x08000000);	// SSR
-			artwork_show("right-ssr",      data & 0x08000000);	// SSR
-			set_led_status(0, data & 0x00010000);			// 1P START
-			set_led_status(1, data & 0x00020000);			// 2P START
-			set_led_status(2, data & 0x00040000);			// EFFECT
+			artwork_show("left-ssr",       data & 0x08000000);	/* SSR*/
+			artwork_show("right-ssr",      data & 0x08000000);	/* SSR*/
+			set_led_status(0, data & 0x00010000);			/* 1P START*/
+			set_led_status(1, data & 0x00020000);			/* 2P START*/
+			set_led_status(2, data & 0x00040000);			/* EFFECT*/
 			break;
 		case POPNMUSIC:
-			artwork_show("left-blue-hlt",  data & 0x00010000);	// Left blue HIGHLIGHT
-			artwork_show("left-red-hlt",   data & 0x00020000);	// Left red HIGHLIGHT
-			artwork_show("right-blue-hlt", data & 0x00040000);	// Right blue HIGHLIGHT
-			artwork_show("right-red-hlt",  data & 0x00080000);	// Right red HIGHLIGHT
+			artwork_show("left-blue-hlt",  data & 0x00010000);	/* Left blue HIGHLIGHT*/
+			artwork_show("left-red-hlt",   data & 0x00020000);	/* Left red HIGHLIGHT*/
+			artwork_show("right-blue-hlt", data & 0x00040000);	/* Right blue HIGHLIGHT*/
+			artwork_show("right-red-hlt",  data & 0x00080000);	/* Right red HIGHLIGHT*/
 			break;
 		case POPNSTAGE:
-			set_led_status(0, data & 0x04000000);			// Left selection
-			set_led_status(1, data & 0x08000000);			// Middle selection
-			set_led_status(2, data & 0x10000000);			// Right selection
+			set_led_status(0, data & 0x04000000);			/* Left selection*/
+			set_led_status(1, data & 0x08000000);			/* Middle selection*/
+			set_led_status(2, data & 0x10000000);			/* Right selection*/
 			break;
 		}
 	}
 }
 
 
-//---------
+/*---------*/
 
-// unknown ports :-(
+/* unknown ports :-(*/
 
 static WRITE32_HANDLER( unknown590000_w )
 {
-	//logerror("%08X: unknown 590000 write %08X: %08X & %08X\n", activecpu_get_previouspc(), offset, data, ~mem_mask);
+	/*logerror("%08X: unknown 590000 write %08X: %08X & %08X\n", activecpu_get_previouspc(), offset, data, ~mem_mask);*/
 }
 
 static WRITE32_HANDLER( unknown802000_w )
 {
-	//logerror("%08X: unknown 802000 write %08X: %08X & %08X\n", activecpu_get_previouspc(), offset, data, ~mem_mask);
+	/*logerror("%08X: unknown 802000 write %08X: %08X & %08X\n", activecpu_get_previouspc(), offset, data, ~mem_mask);*/
 }
 
 static WRITE32_HANDLER( unknownc02000_w )
 {
-	//logerror("%08X: unknown c02000 write %08X: %08X & %08X\n", activecpu_get_previouspc(), offset, data, ~mem_mask);
+	/*logerror("%08X: unknown c02000 write %08X: %08X & %08X\n", activecpu_get_previouspc(), offset, data, ~mem_mask);*/
 }
 
 
@@ -515,7 +515,7 @@ static INTERRUPT_GEN( vb_interrupt )
 		return;
 	}
 
-	//logerror("V-Blank interrupt\n");
+	/*logerror("V-Blank interrupt\n");*/
 	cpu_set_irq_line(0, MC68000_IRQ_4, HOLD_LINE);
 }
 
@@ -524,12 +524,12 @@ static void ide_interrupt(int state)
 {
 	if (state != CLEAR_LINE)
 	{
-		//logerror("IDE interrupt asserted\n");
+		/*logerror("IDE interrupt asserted\n");*/
 		cpu_set_irq_line(0, MC68000_IRQ_1, HOLD_LINE);
 	}
 	else
 	{
-		//logerror("IDE interrupt cleared\n");
+		/*logerror("IDE interrupt cleared\n");*/
 		cpu_set_irq_line(0, MC68000_IRQ_1, CLEAR_LINE);
 	}
 }
@@ -544,51 +544,51 @@ static void ide_interrupt(int state)
  *************************************/
 
 static MEMORY_READ32_START( readmem )
-	{ 0x000000, 0x0fffff, MRA32_ROM },		// PRG ROM
-	{ 0x400000, 0x40ffff, MRA32_RAM },		// WORK RAM
-	{ 0x480000, 0x48443f, paletteram32_r },		// COLOR RAM (tilemap)
-	{ 0x500000, 0x57ffff, sndram_r },		// SOUND RAM
-	{ 0x580000, 0x58003f, K056832_long_r },		// VIDEO REG (tilemap)
-	{ 0x5b0000, 0x5b04ff, dual539_r },		// SOUND regs
-	{ 0x5c0000, 0x5c0003, inp1_r },			// input port
-	{ 0x5c8000, 0x5c8003, inp2_r },			// input port
-	{ 0x5e0000, 0x5e0003, scratch_r },		// scratch input port
-	{ 0x600000, 0x601fff, v_rom_r },		// VIDEO ROM readthrough (for POST)
-	{ 0x801000, 0x8017ff, MRA32_RAM },		// OBJECT RAM
-	{ 0x803000, 0x80309f, obj_ctrl_r },		// OBJECT REGS
-	{ 0x803800, 0x803fff, obj_rom_r },		// OBJECT ROM readthrough (for POST)
-	{ 0xc00000, 0xc01fff, K056832_ram_long_r },	// VIDEO RAM (tilemap) (beatmania)
-	{ 0xd00000, 0xd0000f, ide_std_r },		// IDE control regs (hiphopmania)
-	{ 0xd4000c, 0xd4000f, ide_alt_r },		// IDE status control reg (hiphopmania)
-	{ 0xe00000, 0xe01fff, K056832_ram_long_r },	// VIDEO RAM (tilemap) (hiphopmania)
-	{ 0xf00000, 0xf0000f, ide_std_r },		// IDE control regs (beatmania)
-	{ 0xf4000c, 0xf4000f, ide_alt_r },		// IDE status control reg (beatmania)
+	{ 0x000000, 0x0fffff, MRA32_ROM },		/* PRG ROM*/
+	{ 0x400000, 0x40ffff, MRA32_RAM },		/* WORK RAM*/
+	{ 0x480000, 0x48443f, paletteram32_r },		/* COLOR RAM (tilemap)*/
+	{ 0x500000, 0x57ffff, sndram_r },		/* SOUND RAM*/
+	{ 0x580000, 0x58003f, K056832_long_r },		/* VIDEO REG (tilemap)*/
+	{ 0x5b0000, 0x5b04ff, dual539_r },		/* SOUND regs*/
+	{ 0x5c0000, 0x5c0003, inp1_r },			/* input port*/
+	{ 0x5c8000, 0x5c8003, inp2_r },			/* input port*/
+	{ 0x5e0000, 0x5e0003, scratch_r },		/* scratch input port*/
+	{ 0x600000, 0x601fff, v_rom_r },		/* VIDEO ROM readthrough (for POST)*/
+	{ 0x801000, 0x8017ff, MRA32_RAM },		/* OBJECT RAM*/
+	{ 0x803000, 0x80309f, obj_ctrl_r },		/* OBJECT REGS*/
+	{ 0x803800, 0x803fff, obj_rom_r },		/* OBJECT ROM readthrough (for POST)*/
+	{ 0xc00000, 0xc01fff, K056832_ram_long_r },	/* VIDEO RAM (tilemap) (beatmania)*/
+	{ 0xd00000, 0xd0000f, ide_std_r },		/* IDE control regs (hiphopmania)*/
+	{ 0xd4000c, 0xd4000f, ide_alt_r },		/* IDE status control reg (hiphopmania)*/
+	{ 0xe00000, 0xe01fff, K056832_ram_long_r },	/* VIDEO RAM (tilemap) (hiphopmania)*/
+	{ 0xf00000, 0xf0000f, ide_std_r },		/* IDE control regs (beatmania)*/
+	{ 0xf4000c, 0xf4000f, ide_alt_r },		/* IDE status control reg (beatmania)*/
 MEMORY_END
 
 static MEMORY_WRITE32_START( writemem )
-	{ 0x000000, 0x0fffff, MWA32_ROM },		// PRG ROM
-	{ 0x400000, 0x40ffff, MWA32_RAM },		// WORK RAM
-	{ 0x480000, 0x48443f, paletteram32_w, &paletteram32 },	// COLOR RAM
-	{ 0x500000, 0x57ffff, sndram_w },		// SOUND RAM
-	{ 0x580000, 0x58003f, K056832_long_w },		// VIDEO REG (tilemap)
-	{ 0x590000, 0x590007, unknown590000_w },	// ??
-	{ 0x5a0000, 0x5a005f, K055555_long_w },		// 055555: priority encoder
-	{ 0x5b0000, 0x5b04ff, dual539_w },		// SOUND regs
-	{ 0x5d0000, 0x5d0003, light_ctrl_1_w },		// light/coin blocker control 1
-	{ 0x5d2000, 0x5d2003, light_ctrl_2_w },		// light/coin blocker control 2
-	{ 0x5d4000, 0x5d4003, v_ctrl_w },		// VIDEO control
-	{ 0x5d6000, 0x5d6003, sndram_bank_w },		// SOUND RAM bank
-	{ 0x5e0000, 0x5e0003, scratch_w },		// scratch input port
-	{ 0x801000, 0x8017ff, MWA32_RAM, &djmain_obj_ram },	// OBJECT RAM
-	{ 0x802000, 0x802fff, unknown802000_w },	// ??
-	{ 0x803000, 0x80309f, obj_ctrl_w },		// OBJECT REGS
-	{ 0xc00000, 0xc01fff, K056832_ram_long_w },	// VIDEO RAM (tilemap) (beatmania)
-	{ 0xc02000, 0xc02047, unknownc02000_w },	// ??
-	{ 0xd00000, 0xd0000f, ide_std_w },		// IDE control regs (hiphopmania)
-	{ 0xd4000c, 0xd4000f, ide_alt_w },		// IDE status control reg (hiphopmania)
-	{ 0xe00000, 0xe01fff, K056832_ram_long_w },	// VIDEO RAM (tilemap) (hiphopmania)
-	{ 0xf00000, 0xf0000f, ide_std_w },		// IDE control regs (beatmania)
-	{ 0xf4000c, 0xf4000f, ide_alt_w },		// IDE status control reg (beatmania)
+	{ 0x000000, 0x0fffff, MWA32_ROM },		/* PRG ROM*/
+	{ 0x400000, 0x40ffff, MWA32_RAM },		/* WORK RAM*/
+	{ 0x480000, 0x48443f, paletteram32_w, &paletteram32 },	/* COLOR RAM*/
+	{ 0x500000, 0x57ffff, sndram_w },		/* SOUND RAM*/
+	{ 0x580000, 0x58003f, K056832_long_w },		/* VIDEO REG (tilemap)*/
+	{ 0x590000, 0x590007, unknown590000_w },	/* ??*/
+	{ 0x5a0000, 0x5a005f, K055555_long_w },		/* 055555: priority encoder*/
+	{ 0x5b0000, 0x5b04ff, dual539_w },		/* SOUND regs*/
+	{ 0x5d0000, 0x5d0003, light_ctrl_1_w },		/* light/coin blocker control 1*/
+	{ 0x5d2000, 0x5d2003, light_ctrl_2_w },		/* light/coin blocker control 2*/
+	{ 0x5d4000, 0x5d4003, v_ctrl_w },		/* VIDEO control*/
+	{ 0x5d6000, 0x5d6003, sndram_bank_w },		/* SOUND RAM bank*/
+	{ 0x5e0000, 0x5e0003, scratch_w },		/* scratch input port*/
+	{ 0x801000, 0x8017ff, MWA32_RAM, &djmain_obj_ram },	/* OBJECT RAM*/
+	{ 0x802000, 0x802fff, unknown802000_w },	/* ??*/
+	{ 0x803000, 0x80309f, obj_ctrl_w },		/* OBJECT REGS*/
+	{ 0xc00000, 0xc01fff, K056832_ram_long_w },	/* VIDEO RAM (tilemap) (beatmania)*/
+	{ 0xc02000, 0xc02047, unknownc02000_w },	/* ??*/
+	{ 0xd00000, 0xd0000f, ide_std_w },		/* IDE control regs (hiphopmania)*/
+	{ 0xd4000c, 0xd4000f, ide_alt_w },		/* IDE status control reg (hiphopmania)*/
+	{ 0xe00000, 0xe01fff, K056832_ram_long_w },	/* VIDEO RAM (tilemap) (hiphopmania)*/
+	{ 0xf00000, 0xf0000f, ide_std_w },		/* IDE control regs (beatmania)*/
+	{ 0xf4000c, 0xf4000f, ide_alt_w },		/* IDE status control reg (beatmania)*/
 MEMORY_END
 
 
@@ -980,8 +980,8 @@ static MACHINE_INIT( djmain )
 static MACHINE_DRIVER_START( djmain )
 
 	/* basic machine hardware */
-	// popn3 works 9.6 MHz or slower in some songs */
-	//MDRV_CPU_ADD(M68EC020, 18432000/2)	/*  9.216 MHz!? */
+	/* popn3 works 9.6 MHz or slower in some songs */
+	/*MDRV_CPU_ADD(M68EC020, 18432000/2)	 //  9.216 MHz!? /*/
 	MDRV_CPU_ADD(M68EC020, 32000000/4)	/*  8.000 MHz!? */
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(vb_interrupt, 1)
@@ -1031,7 +1031,7 @@ ROM_START( bm1stmix )
 	ROM_LOAD16_BYTE( "753jaa10.27d", 0x100001, 0x80000, CRC(391F4BFD) SHA1(791c9889ea3ce639bbfb87934a1cad9aa3c9ccde) )
 
 	DISK_REGION( REGION_DISKS )			/* IDE HARD DRIVE */
-	// There is an alternate image: MD5(260c9b72f4a03055e3abad61c6225324)
+	/* There is an alternate image: MD5(260c9b72f4a03055e3abad61c6225324)*/
 	DISK_IMAGE( "753jaa11.chd", 0, MD5(d56ec7b9877d1f26d7fc1cabed404947) SHA1(71d200d1bd3f1f3a01f4daa78dc9abcca8b8a1fb) )	/* ver 1.00 JA */
 ROM_END
 

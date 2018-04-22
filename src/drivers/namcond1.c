@@ -26,9 +26,9 @@
 
 static MEMORY_READ16_START( readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },
-	{ 0x400000, 0x40ffff, namcond1_shared_ram_r },  // shared ram
+	{ 0x400000, 0x40ffff, namcond1_shared_ram_r },  /* shared ram*/
 	{ 0x800000, 0x80000f, ygv608_r },
-	{ 0xA00000, 0xA03FFF, MRA16_RAM },              // EEPROM
+	{ 0xA00000, 0xA03FFF, MRA16_RAM },              /* EEPROM*/
 #ifdef MAME_DEBUG
 	{ 0xB00000, 0xB00001, debug_trigger },
 #endif
@@ -37,7 +37,7 @@ MEMORY_END
 
 static MEMORY_WRITE16_START( writemem )
 	{ 0x000000, 0x0fffff, MWA16_NOP },
-	{ 0x400000, 0x40ffff, namcond1_shared_ram_w, &namcond1_shared_ram },        // shared ram?
+	{ 0x400000, 0x40ffff, namcond1_shared_ram_w, &namcond1_shared_ram },        /* shared ram?*/
 	{ 0x800000, 0x80000f, ygv608_w },
 	{ 0xA00000, 0xA03FFF, MWA16_RAM, &namcond1_eeprom },
 	{ 0xc3ff00, 0xc3ff0f, namcond1_cuskey_w },
@@ -192,8 +192,8 @@ static MACHINE_DRIVER_START( namcond1 )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN)
-	MDRV_SCREEN_SIZE(288, 224)   // maximum display resolution (512x512 in theory)
-	MDRV_VISIBLE_AREA(0, 287, 0, 223)   // default visible area
+	MDRV_SCREEN_SIZE(288, 224)   /* maximum display resolution (512x512 in theory)*/
+	MDRV_VISIBLE_AREA(0, 287, 0, 223)   /* default visible area*/
 	MDRV_GFXDECODE(gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(256)
 
@@ -289,7 +289,7 @@ static void namcond1_patch( int *addr )
     int             i;
 
     for( i=0; addr[i]; i++ )
-      // insert a NOP instruction
+      /* insert a NOP instruction*/
       WRITE_WORD( &ROM[addr[i]], 0x4e71 );
 }
 

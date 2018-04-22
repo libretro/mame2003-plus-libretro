@@ -551,7 +551,7 @@ static MEMORY_WRITE_START( milliped_writemem )
 	{ 0x2500, 0x2502, coin_count_w },
 	{ 0x2503, 0x2504, led_w },
 	{ 0x2505, 0x2505, input_select_w },
-//	{ 0x2506, 0x2507, MWA_NOP }, /* ? */
+/*	{ 0x2506, 0x2507, MWA_NOP },  // ? /*/
 	{ 0x2600, 0x2600, irq_ack_w },
 	{ 0x2680, 0x2680, watchdog_reset_w },
 	{ 0x2700, 0x2700, atari_vg_earom_ctrl_w },

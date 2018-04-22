@@ -73,38 +73,38 @@ static WRITE_HANDLER ( aeroboto_1a2_w )
 }
 
 static MEMORY_READ_START( readmem )
-	{ 0x0000, 0x07ff, MRA_RAM }, // main RAM
-	{ 0x0800, 0x08ff, MRA_RAM }, // tile color buffer; copied to 0x2000
-	{ 0x1000, 0x17ff, MRA_RAM }, // tile RAM
-	{ 0x1800, 0x183f, MRA_RAM }, // horizontal scroll regs
-	{ 0x2000, 0x20ff, MRA_RAM }, // tile color RAM
-	{ 0x2800, 0x28ff, MRA_RAM }, // sprite RAM
-	{ 0x2973, 0x2973, aeroboto_2973_r }, // protection read
+	{ 0x0000, 0x07ff, MRA_RAM }, /* main RAM*/
+	{ 0x0800, 0x08ff, MRA_RAM }, /* tile color buffer; copied to 0x2000*/
+	{ 0x1000, 0x17ff, MRA_RAM }, /* tile RAM*/
+	{ 0x1800, 0x183f, MRA_RAM }, /* horizontal scroll regs*/
+	{ 0x2000, 0x20ff, MRA_RAM }, /* tile color RAM*/
+	{ 0x2800, 0x28ff, MRA_RAM }, /* sprite RAM*/
+	{ 0x2973, 0x2973, aeroboto_2973_r }, /* protection read*/
 	{ 0x3000, 0x3000, aeroboto_in0_r },
 	{ 0x3001, 0x3001, input_port_2_r },
 	{ 0x3002, 0x3002, input_port_3_r },
-	{ 0x3004, 0x3004, aeroboto_201_r }, // protection read
-	{ 0x3800, 0x3800, MRA_NOP }, // watchdog or IRQ ack
-	{ 0x4000, 0xffff, MRA_ROM }, // main ROM
+	{ 0x3004, 0x3004, aeroboto_201_r }, /* protection read*/
+	{ 0x3800, 0x3800, MRA_NOP }, /* watchdog or IRQ ack*/
+	{ 0x4000, 0xffff, MRA_ROM }, /* main ROM*/
 MEMORY_END
 
 static MEMORY_WRITE_START( writemem )
-	{ 0x01a2, 0x01a2, aeroboto_1a2_w }, // affects IRQ line (more protection?)
+	{ 0x01a2, 0x01a2, aeroboto_1a2_w }, /* affects IRQ line (more protection?)*/
 	{ 0x0000, 0x07ff, MWA_RAM, &aeroboto_mainram },
 	{ 0x0800, 0x08ff, MWA_RAM },
-	{ 0x0900, 0x09ff, MWA_RAM }, // a backup of default tile colors
+	{ 0x0900, 0x09ff, MWA_RAM }, /* a backup of default tile colors*/
 	{ 0x1000, 0x17ff, aeroboto_videoram_w, &aeroboto_videoram },
 	{ 0x1800, 0x183f, MWA_RAM, &aeroboto_hscroll },
 	{ 0x2000, 0x20ff, aeroboto_tilecolor_w, &aeroboto_tilecolor },
-	{ 0x1840, 0x27ff, MWA_NOP }, // cleared during custom LSI test
+	{ 0x1840, 0x27ff, MWA_NOP }, /* cleared during custom LSI test*/
 	{ 0x2800, 0x28ff, MWA_RAM, &spriteram, &spriteram_size },
-	{ 0x2900, 0x2fff, MWA_NOP }, // cleared along with sprite RAM
+	{ 0x2900, 0x2fff, MWA_NOP }, /* cleared along with sprite RAM*/
 	{ 0x3000, 0x3000, aeroboto_3000_w },
 	{ 0x3001, 0x3001, soundlatch_w },
 	{ 0x3002, 0x3002, soundlatch2_w },
 	{ 0x3003, 0x3003, MWA_RAM, &aeroboto_vscroll },
 	{ 0x3004, 0x3004, MWA_RAM, &aeroboto_starx },
-	{ 0x3005, 0x3005, MWA_RAM, &aeroboto_stary }, // usable but probably wrong
+	{ 0x3005, 0x3005, MWA_RAM, &aeroboto_stary }, /* usable but probably wrong*/
 	{ 0x3006, 0x3006, MWA_RAM, &aeroboto_bgcolor },
 	{ 0x4000, 0xffff, MWA_ROM },
 MEMORY_END
@@ -239,7 +239,7 @@ static struct GfxLayout spritelayout =
 static struct GfxDecodeInfo gfxdecodeinfo[] =
 {
 	{ REGION_GFX1, 0, &charlayout,     0,  64 },     /* chars */
-//	{ REGION_GFX2, 0, &starlayout,     0, 128 },     /* sky */
+/*	{ REGION_GFX2, 0, &starlayout,     0, 128 },      // sky /*/
 	{ REGION_GFX3, 0, &spritelayout,   0,   8 },
 	{ -1 } /* end of array */
 };
@@ -260,7 +260,7 @@ static struct AY8910interface ay8910_interface =
 static MACHINE_DRIVER_START( formatz )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M6809, 1250000) // 1.25MHz
+	MDRV_CPU_ADD(M6809, 1250000) /* 1.25MHz*/
 	MDRV_CPU_MEMORY(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(aeroboto_interrupt,1)
 
@@ -308,7 +308,7 @@ ROM_START( formatz )
 	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "format_z.5",   0x0000, 0x2000, CRC(ba50be57) SHA1(aa37b644e8c1944b4c0ba81164d5a52be8ab491f) )  /* characters */
 
-	ROM_REGION( 0x2000, REGION_GFX2, 0 ) // starfield data
+	ROM_REGION( 0x2000, REGION_GFX2, 0 ) /* starfield data*/
 	ROM_LOAD( "format_z.4",   0x0000, 0x2000, CRC(910375a0) SHA1(1044e0f45ce34c15986d9ab520c0e7d08fd46dde) )  /* characters */
 
 	ROM_REGION( 0x3000, REGION_GFX3, ROMREGION_DISPOSE )
@@ -334,7 +334,7 @@ ROM_START( aeroboto )
 	ROM_REGION( 0x2000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "aeroboto.5",   0x0000, 0x2000, CRC(32fc00f9) SHA1(fd912fe2ab0101057c15c846f0cc4259cd94b035) )  /* characters */
 
-	ROM_REGION( 0x2000, REGION_GFX2, 0 ) // starfield data
+	ROM_REGION( 0x2000, REGION_GFX2, 0 ) /* starfield data*/
 	ROM_LOAD( "format_z.4",   0x0000, 0x2000, CRC(910375a0) SHA1(1044e0f45ce34c15986d9ab520c0e7d08fd46dde) )  /* characters */
 
 	ROM_REGION( 0x3000, REGION_GFX3, ROMREGION_DISPOSE )

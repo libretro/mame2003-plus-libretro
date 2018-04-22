@@ -45,21 +45,21 @@ VIDEO_UPDATE( skyfox );
 ***************************************************************************/
 
 static MEMORY_READ_START( skyfox_readmem )
-	{ 0x0000, 0xbfff, MRA_ROM				},	// ROM
-	{ 0xc000, 0xdfff, MRA_RAM				},	// RAM
-	{ 0xe000, 0xe000, input_port_0_r		},	// Input Ports
-	{ 0xe001, 0xe001, input_port_1_r		},	//
-	{ 0xe002, 0xe002, input_port_2_r		},	//
-	{ 0xf001, 0xf001, input_port_3_r		},	//
-//	{ 0xff00, 0xff07, skyfox_vregs_r		},	// fake to read the vregs
+	{ 0x0000, 0xbfff, MRA_ROM				},	/* ROM*/
+	{ 0xc000, 0xdfff, MRA_RAM				},	/* RAM*/
+	{ 0xe000, 0xe000, input_port_0_r		},	/* Input Ports*/
+	{ 0xe001, 0xe001, input_port_1_r		},	/**/
+	{ 0xe002, 0xe002, input_port_2_r		},	/**/
+	{ 0xf001, 0xf001, input_port_3_r		},	/**/
+/*	{ 0xff00, 0xff07, skyfox_vregs_r		},	*/ /* fake to read the vregs*/
 MEMORY_END
 
 static MEMORY_WRITE_START( skyfox_writemem )
-	{ 0x0000, 0xbfff, MWA_ROM								},	// ROM
-	{ 0xc000, 0xcfff, MWA_RAM								},	// RAM
-	{ 0xd000, 0xd3ff, MWA_RAM, &spriteram, &spriteram_size	},	// Sprites
-	{ 0xd400, 0xdfff, MWA_RAM								},	// RAM?
-	{ 0xe008, 0xe00f, skyfox_vregs_w						},	// Video Regs
+	{ 0x0000, 0xbfff, MWA_ROM								},	/* ROM*/
+	{ 0xc000, 0xcfff, MWA_RAM								},	/* RAM*/
+	{ 0xd000, 0xd3ff, MWA_RAM, &spriteram, &spriteram_size	},	/* Sprites*/
+	{ 0xd400, 0xdfff, MWA_RAM								},	/* RAM?*/
+	{ 0xe008, 0xe00f, skyfox_vregs_w						},	/* Video Regs*/
 MEMORY_END
 
 
@@ -82,22 +82,22 @@ MEMORY_END
 
 
 static MEMORY_READ_START( skyfox_sound_readmem )
-	{ 0x0000, 0x7fff, MRA_ROM				},	// ROM
-	{ 0x8000, 0x87ff, MRA_RAM				},	// RAM
-	{ 0xa001, 0xa001, YM2203_read_port_0_r 	},	// YM2203 #1
-//	{ 0xc001, 0xc001, YM2203_read_port_1_r 	},	// YM2203 #2
-	{ 0xb000, 0xb000, soundlatch_r			},	// From Main CPU
+	{ 0x0000, 0x7fff, MRA_ROM				},	/* ROM*/
+	{ 0x8000, 0x87ff, MRA_RAM				},	/* RAM*/
+	{ 0xa001, 0xa001, YM2203_read_port_0_r 	},	/* YM2203 #1*/
+/*	{ 0xc001, 0xc001, YM2203_read_port_1_r 	},	*/ /* YM2203 #2*/
+	{ 0xb000, 0xb000, soundlatch_r			},	/* From Main CPU*/
 MEMORY_END
 
 static MEMORY_WRITE_START( skyfox_sound_writemem )
-	{ 0x0000, 0x7fff, MWA_ROM					},	// ROM
-	{ 0x8000, 0x87ff, MWA_RAM					},	// RAM
-//	{ 0x9000, 0x9001, MWA_NOP					},	// ??
-	{ 0xa000, 0xa000, YM2203_control_port_0_w 	},	// YM2203 #1
-	{ 0xa001, 0xa001, YM2203_write_port_0_w 	},	//
-//	{ 0xb000, 0xb001, MWA_NOP					},	// ??
-	{ 0xc000, 0xc000, YM2203_control_port_1_w 	},	// YM2203 #2
-	{ 0xc001, 0xc001, YM2203_write_port_1_w 	},	//
+	{ 0x0000, 0x7fff, MWA_ROM					},	/* ROM*/
+	{ 0x8000, 0x87ff, MWA_RAM					},	/* RAM*/
+/*	{ 0x9000, 0x9001, MWA_NOP					},	*/ /* ??*/
+	{ 0xa000, 0xa000, YM2203_control_port_0_w 	},	/* YM2203 #1*/
+	{ 0xa001, 0xa001, YM2203_write_port_0_w 	},	/**/
+/*	{ 0xb000, 0xb001, MWA_NOP					},	*/ /* ??*/
+	{ 0xc000, 0xc000, YM2203_control_port_1_w 	},	/* YM2203 #2*/
+	{ 0xc001, 0xc001, YM2203_write_port_1_w 	},	/**/
 MEMORY_END
 
 
@@ -113,7 +113,7 @@ MEMORY_END
 
 INPUT_PORTS_START( skyfox )
 
-	PORT_START	// IN0 - Player 1
+	PORT_START	/* IN0 - Player 1*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  )
 	PORT_BIT(  0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
@@ -124,8 +124,8 @@ INPUT_PORTS_START( skyfox )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_START2         )
 
 
-	PORT_START	// IN1 - DSW
-	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )		// rest unused?
+	PORT_START	/* IN1 - DSW*/
+	PORT_DIPNAME( 0x01, 0x01, "Unknown 1-0" )		/* rest unused?*/
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x02, 0x02, "Unknown 1-1" )
@@ -150,11 +150,11 @@ INPUT_PORTS_START( skyfox )
 	PORT_DIPSETTING(    0x80, DEF_STR( Cocktail ) )
 
 
-	PORT_START	// IN2 - Coins + DSW + Vblank
+	PORT_START	/* IN2 - Coins + DSW + Vblank*/
 	PORT_BIT(  0x01, IP_ACTIVE_LOW, IPT_VBLANK  )
 	PORT_BIT(  0x02, IP_ACTIVE_LOW, IPT_COIN1   )
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Coinage ) )
-	PORT_DIPSETTING(    0x00, "1 Coin/1 Credit  2C/1C" )	// coin A & B
+	PORT_DIPSETTING(    0x00, "1 Coin/1 Credit  2C/1C" )	/* coin A & B*/
 	PORT_DIPSETTING(    0x04, "1 Coin/2 Credits 3C/1C" )
 	PORT_DIPSETTING(    0x08, "1 Coin/3 Credits 4C/1C" )
 	PORT_DIPSETTING(    0x0c, "1 Coin/4 Credits 5C/1C" )
@@ -164,15 +164,15 @@ INPUT_PORTS_START( skyfox )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 
-	PORT_START	// IN3 - DSW
+	PORT_START	/* IN3 - DSW*/
 	PORT_DIPNAME( 0x07, 0x02, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "1" )
 	PORT_DIPSETTING(    0x01, "2" )
 	PORT_DIPSETTING(    0x02, "3" )
 	PORT_DIPSETTING(    0x03, "4" )
 	PORT_DIPSETTING(    0x04, "5" )
-//	PORT_DIPSETTING(    0x05, "5" )
-//	PORT_DIPSETTING(    0x06, "5" )
+/*	PORT_DIPSETTING(    0x05, "5" )*/
+/*	PORT_DIPSETTING(    0x06, "5" )*/
 	PORT_BITX( 0x07, 0x07, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_BIT(  0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -180,7 +180,7 @@ INPUT_PORTS_START( skyfox )
 	PORT_BIT(  0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT(  0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START	// IN4 - Fake input port, polled every VBLANK to generate an NMI upon coin insertion
+	PORT_START	/* IN4 - Fake input port, polled every VBLANK to generate an NMI upon coin insertion*/
 	PORT_BIT_IMPULSE(  0x01, IP_ACTIVE_LOW, IPT_COIN1, 1 )
 	PORT_BIT_IMPULSE(  0x02, IP_ACTIVE_LOW, IPT_COIN2, 1 )
 
@@ -219,7 +219,7 @@ static struct GfxLayout layout_8x8x8 =
 
 static struct GfxDecodeInfo skyfox_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_8x8x8,   0, 1 }, // [0] Sprites
+	{ REGION_GFX1, 0, &layout_8x8x8,   0, 1 }, /* [0] Sprites*/
 	{ -1 }
 };
 
@@ -247,7 +247,7 @@ static struct GfxDecodeInfo skyfox_gfxdecodeinfo[] =
 static INTERRUPT_GEN( skyfox_interrupt )
 {
 	/* Scroll the bg */
-	skyfox_bg_pos += (skyfox_bg_ctrl >> 1) & 0x7;	// maybe..
+	skyfox_bg_pos += (skyfox_bg_ctrl >> 1) & 0x7;	/* maybe..*/
 
 	/* Check coin 1 & 2 */
 	if ((readinputport(4) & 3) != 3) cpu_set_irq_line(0, IRQ_LINE_NMI, PULSE_LINE);
@@ -277,12 +277,12 @@ static MACHINE_DRIVER_START( skyfox )
 	MDRV_CPU_MEMORY(skyfox_sound_readmem,skyfox_sound_writemem)
 
 	MDRV_FRAMES_PER_SECOND(60)
-	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	// we're using IPT_VBLANK
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)	/* we're using IPT_VBLANK*/
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(512, 256)
-	MDRV_VISIBLE_AREA(0+0x60, 320-1+0x60, 0+16, 256-1-16)	// from $30*2 to $CC*2+8
+	MDRV_VISIBLE_AREA(0+0x60, 320-1+0x60, 0+16, 256-1-16)	/* from $30*2 to $CC*2+8*/
 	MDRV_GFXDECODE(skyfox_gfxdecodeinfo)
 	MDRV_PALETTE_LENGTH(256+256)	/* 256 static colors (+256 for the background??) */
 
@@ -369,7 +369,7 @@ Sound processor - Z80  1.748MHz
 ROM_START( skyfox )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )		/* Main Z80 Code */
 	ROM_LOAD( "skyfox1.bin", 0x00000, 0x8000, CRC(b4d4bb6f) SHA1(ed1cf6d91ca7170cb7d1c80b586c11164430fd49) )
-	ROM_LOAD( "skyfox2.bin", 0x08000, 0x8000, CRC(e15e0263) SHA1(005934327834aed46b17161aef82117ee508e9c4) )	// identical halves
+	ROM_LOAD( "skyfox2.bin", 0x08000, 0x8000, CRC(e15e0263) SHA1(005934327834aed46b17161aef82117ee508e9c4) )	/* identical halves*/
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )		/* Sound Z80 Code */
 	ROM_LOAD( "skyfox9.bin", 0x00000, 0x8000, CRC(0b283bf5) SHA1(5b14d0beea689ee7e9174017e5a127435df4fbe3) )
@@ -386,34 +386,34 @@ ROM_START( skyfox )
 	ROM_LOAD( "skyfox10.bin", 0x0000, 0x8000, CRC(19f58f9c) SHA1(6887216243b47152129448cbb4c7d52309feed03) )
 
 	ROM_REGION( 0x300, REGION_PROMS, 0 )	/* Color Proms */
-	ROM_LOAD( "sfoxrprm.bin", 0x000, 0x100, CRC(79913c7f) SHA1(e64e6a3eb55f37984cb2597c8ffba6bc3bad49c7) )	// R
-	ROM_LOAD( "sfoxgprm.bin", 0x100, 0x100, CRC(fb73d434) SHA1(4a9bd61fbdce9441753c5921f95ead5c4655957e) )	// G
-	ROM_LOAD( "sfoxbprm.bin", 0x200, 0x100, CRC(60d2ab41) SHA1(e58a54f2aaee5c07136d5437e513d61fb18fbd9f) )	// B
+	ROM_LOAD( "sfoxrprm.bin", 0x000, 0x100, CRC(79913c7f) SHA1(e64e6a3eb55f37984cb2597c8ffba6bc3bad49c7) )	/* R*/
+	ROM_LOAD( "sfoxgprm.bin", 0x100, 0x100, CRC(fb73d434) SHA1(4a9bd61fbdce9441753c5921f95ead5c4655957e) )	/* G*/
+	ROM_LOAD( "sfoxbprm.bin", 0x200, 0x100, CRC(60d2ab41) SHA1(e58a54f2aaee5c07136d5437e513d61fb18fbd9f) )	/* B*/
 ROM_END
 
 ROM_START( exerizrb )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )		/* Main Z80 Code */
 	ROM_LOAD( "1-a",         0x00000, 0x8000, CRC(5df72a5d) SHA1(ca35ac06f3702fd650a584da2f442fbc61c00fce) )
-	ROM_LOAD( "skyfox2.bin", 0x08000, 0x8000, CRC(e15e0263) SHA1(005934327834aed46b17161aef82117ee508e9c4) )	// 1-b
+	ROM_LOAD( "skyfox2.bin", 0x08000, 0x8000, CRC(e15e0263) SHA1(005934327834aed46b17161aef82117ee508e9c4) )	/* 1-b*/
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )		/* Sound Z80 Code */
-	ROM_LOAD( "skyfox9.bin", 0x00000, 0x8000, CRC(0b283bf5) SHA1(5b14d0beea689ee7e9174017e5a127435df4fbe3) )	// 1-i
+	ROM_LOAD( "skyfox9.bin", 0x00000, 0x8000, CRC(0b283bf5) SHA1(5b14d0beea689ee7e9174017e5a127435df4fbe3) )	/* 1-i*/
 
 	ROM_REGION( 0x60000, REGION_GFX1, ROMREGION_DISPOSE )	/* Sprites */
 	ROM_LOAD( "1-c",         0x00000, 0x10000, CRC(450e9381) SHA1(f99b2ca73f1e4ba91b8066bb6d28d33b66a3ee81) )
-	ROM_LOAD( "skyfox4.bin", 0x10000, 0x10000, CRC(358053bb) SHA1(589e3270eda0d44e73fbc7ac06e782f332920b39) )	// 1-d
+	ROM_LOAD( "skyfox4.bin", 0x10000, 0x10000, CRC(358053bb) SHA1(589e3270eda0d44e73fbc7ac06e782f332920b39) )	/* 1-d*/
 	ROM_LOAD( "1-e",         0x20000, 0x10000, CRC(50a38c60) SHA1(a4b8d530914d6c85b15940a7821b4365068de668) )
-	ROM_LOAD( "skyfox6.bin", 0x30000, 0x10000, CRC(cc37e15d) SHA1(80806df6185f7b8c2d3ab98420ca514df3e63c8d) )	// 1-f
+	ROM_LOAD( "skyfox6.bin", 0x30000, 0x10000, CRC(cc37e15d) SHA1(80806df6185f7b8c2d3ab98420ca514df3e63c8d) )	/* 1-f*/
 	ROM_LOAD( "1-g",         0x40000, 0x10000, CRC(c9bbfe5c) SHA1(ce3f7d32baa8bb0bfc110877b5b5f4648ee959ac) )
-	ROM_LOAD( "skyfox8.bin", 0x50000, 0x10000, CRC(0e3edc49) SHA1(3d1c59ecaabe1c9517203b7e814db41d5cff0cd4) )	// 1-h
+	ROM_LOAD( "skyfox8.bin", 0x50000, 0x10000, CRC(0e3edc49) SHA1(3d1c59ecaabe1c9517203b7e814db41d5cff0cd4) )	/* 1-h*/
 
 	ROM_REGION( 0x08000, REGION_GFX2, 0 )	/* Background - do not dispose */
-	ROM_LOAD( "skyfox10.bin", 0x0000, 0x8000, CRC(19f58f9c) SHA1(6887216243b47152129448cbb4c7d52309feed03) )	// 1-j
+	ROM_LOAD( "skyfox10.bin", 0x0000, 0x8000, CRC(19f58f9c) SHA1(6887216243b47152129448cbb4c7d52309feed03) )	/* 1-j*/
 
 	ROM_REGION( 0x300, REGION_PROMS, 0 )	/* Color Proms */
-	ROM_LOAD( "sfoxrprm.bin", 0x000, 0x100, CRC(79913c7f) SHA1(e64e6a3eb55f37984cb2597c8ffba6bc3bad49c7) )	// 2-bpr
-	ROM_LOAD( "sfoxgprm.bin", 0x100, 0x100, CRC(fb73d434) SHA1(4a9bd61fbdce9441753c5921f95ead5c4655957e) )	// 3-bpr
-	ROM_LOAD( "sfoxbprm.bin", 0x200, 0x100, CRC(60d2ab41) SHA1(e58a54f2aaee5c07136d5437e513d61fb18fbd9f) )	// 1-bpr
+	ROM_LOAD( "sfoxrprm.bin", 0x000, 0x100, CRC(79913c7f) SHA1(e64e6a3eb55f37984cb2597c8ffba6bc3bad49c7) )	/* 2-bpr*/
+	ROM_LOAD( "sfoxgprm.bin", 0x100, 0x100, CRC(fb73d434) SHA1(4a9bd61fbdce9441753c5921f95ead5c4655957e) )	/* 3-bpr*/
+	ROM_LOAD( "sfoxbprm.bin", 0x200, 0x100, CRC(60d2ab41) SHA1(e58a54f2aaee5c07136d5437e513d61fb18fbd9f) )	/* 1-bpr*/
 ROM_END
 
 

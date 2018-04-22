@@ -235,7 +235,7 @@ static MACHINE_DRIVER_START( kickgoal )
 	MDRV_VIDEO_UPDATE(kickgoal)
 
 	/* sound hardware */
-//	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+/*	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)*/
 MACHINE_DRIVER_END
 
 /* Rom Loading ***************************************************************/
@@ -255,7 +255,7 @@ ROM_START( kickgoal )
 	ROM_LOAD( "ic36",   0x180000, 0x80000, CRC(b6a86860) SHA1(73ab43830d5e62154bc8953615cdb397c7a742aa) )
 
 	ROM_REGION( 0x080000, REGION_SOUND1, 0 )	/* OKIM6295 samples */
-	ROM_LOAD( "ic13",   0x00000, 0x080000, CRC(c6cb56e9) SHA1(835773b3f0647d3c553180bcf10e57ad44d68353) ) // BAD ADDRESS LINES (mask=010000)
+	ROM_LOAD( "ic13",   0x00000, 0x080000, CRC(c6cb56e9) SHA1(835773b3f0647d3c553180bcf10e57ad44d68353) ) /* BAD ADDRESS LINES (mask=010000)*/
 ROM_END
 
 /* GAME drivers **************************************************************/

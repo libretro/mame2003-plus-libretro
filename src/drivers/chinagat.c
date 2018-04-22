@@ -195,12 +195,12 @@ static WRITE_HANDLER( saiyugb1_adpcm_control_w )
 		{
 			if ((saiyugb1_i8748_P2 & 0xc) == 0)	/* Latch MSB Address */
 			{
-///				logerror("Latching MSB\n");
+/*/				logerror("Latching MSB\n");*/
 				saiyugb1_adpcm_addr = (saiyugb1_adpcm_addr & 0x3807f) | (saiyugb1_i8748_P1 << 7);
 			}
 			if ((saiyugb1_i8748_P2 & 0xc) == 4)	/* Latch LSB Address */
 			{
-///				logerror("Latching LSB\n");
+/*/				logerror("Latching LSB\n");*/
 				saiyugb1_adpcm_addr = (saiyugb1_adpcm_addr & 0x3ff80) | (saiyugb1_i8748_P1 >> 1);
 				saiyugb1_pcm_shift = (saiyugb1_i8748_P1 & 1) * 4;
 			}
@@ -212,7 +212,7 @@ static WRITE_HANDLER( saiyugb1_adpcm_control_w )
 
 		saiyugb1_pcm_nibble = (saiyugb1_pcm_nibble >> saiyugb1_pcm_shift) & 0x0f;
 
-///		logerror("Writing %02x to m5205. $ROM=%08x  P1=%02x  P2=%02x  Prev_P2=%02x  Nibble=%08x\n",saiyugb1_pcm_nibble,saiyugb1_adpcm_addr,saiyugb1_i8748_P1,data,saiyugb1_i8748_P2,saiyugb1_pcm_shift);
+/*/		logerror("Writing %02x to m5205. $ROM=%08x  P1=%02x  P2=%02x  Prev_P2=%02x  Nibble=%08x\n",saiyugb1_pcm_nibble,saiyugb1_adpcm_addr,saiyugb1_i8748_P1,data,saiyugb1_i8748_P2,saiyugb1_pcm_shift);*/
 
 		if ( ((saiyugb1_i8748_P2 & 0xc) >= 8) && ((data & 0xc) == 4) )
 		{
@@ -279,9 +279,9 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x3400, 0x357f, paletteram_xxxxBBBBGGGGRRRR_split2_w, &paletteram_2 },
 	{ 0x3800, 0x397f, MWA_BANK3, &spriteram, &spriteram_size },
 	{ 0x3e00, 0x3e00, chinagat_cpu_sound_cmd_w },
-//	{ 0x3e01, 0x3e01, MWA_NOP },
-//	{ 0x3e02, 0x3e02, MWA_NOP },
-//	{ 0x3e03, 0x3e03, MWA_NOP },
+/*	{ 0x3e01, 0x3e01, MWA_NOP },*/
+/*	{ 0x3e02, 0x3e02, MWA_NOP },*/
+/*	{ 0x3e03, 0x3e03, MWA_NOP },*/
 	{ 0x3e04, 0x3e04, chinagat_sub_IRQ_w },
 	{ 0x3e06, 0x3e06, MWA_RAM, &ddragon_scrolly_lo },
 	{ 0x3e07, 0x3e07, MWA_RAM, &ddragon_scrollx_lo },
@@ -292,8 +292,8 @@ MEMORY_END
 
 static MEMORY_READ_START( sub_readmem )
 	{ 0x0000, 0x1fff, MRA_BANK2 },
-//	{ 0x2a2b, 0x2a2b, MRA_NOP }, /* What lives here? */
-//	{ 0x2a30, 0x2a30, MRA_NOP }, /* What lives here? */
+/*	{ 0x2a2b, 0x2a2b, MRA_NOP },  // What lives here? /*/
+/*	{ 0x2a30, 0x2a30, MRA_NOP },  // What lives here? /*/
 	{ 0x4000, 0x7fff, MRA_BANK4 },
 	{ 0x8000, 0xffff, MRA_ROM },
 MEMORY_END
@@ -325,31 +325,31 @@ static MEMORY_READ_START( ym2203c_sound_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0x87ff, MRA_RAM },
 	{ 0x8800, 0x8800, YM2203_status_port_0_r },
-//	{ 0x8802, 0x8802, OKIM6295_status_0_r },
+/*	{ 0x8802, 0x8802, OKIM6295_status_0_r },*/
 	{ 0x8804, 0x8804, YM2203_status_port_1_r },
-//	{ 0x8801, 0x8801, YM2151_status_port_0_r },
-//	{ 0x9800, 0x9800, OKIM6295_status_0_r },
+/*	{ 0x8801, 0x8801, YM2151_status_port_0_r },*/
+/*	{ 0x9800, 0x9800, OKIM6295_status_0_r },*/
 	{ 0xA000, 0xA000, soundlatch_r },
 MEMORY_END
 
 static MEMORY_WRITE_START( ym2203c_sound_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x87ff, MWA_RAM },
-// 8804 and/or 8805 make a gong sound when the coin goes in
-// but only on the title screen....
+/* 8804 and/or 8805 make a gong sound when the coin goes in*/
+/* but only on the title screen....*/
 
 	{ 0x8800, 0x8800, YM2203_control_port_0_w },
 	{ 0x8801, 0x8801, YM2203_write_port_0_w },
-//	{ 0x8802, 0x8802, OKIM6295_data_0_w },
-//	{ 0x8803, 0x8803, OKIM6295_data_0_w },
+/*	{ 0x8802, 0x8802, OKIM6295_data_0_w },*/
+/*	{ 0x8803, 0x8803, OKIM6295_data_0_w },*/
 	{ 0x8804, 0x8804, YM2203_control_port_1_w },
 	{ 0x8805, 0x8805, YM2203_write_port_1_w },
-//	{ 0x8804, 0x8804, MWA_RAM },
-//	{ 0x8805, 0x8805, MWA_RAM },
+/*	{ 0x8804, 0x8804, MWA_RAM },*/
+/*	{ 0x8805, 0x8805, MWA_RAM },*/
 
-//	{ 0x8800, 0x8800, YM2151_register_port_0_w },
-//	{ 0x8801, 0x8801, YM2151_data_port_0_w },
-//	{ 0x9800, 0x9800, OKIM6295_data_0_w },
+/*	{ 0x8800, 0x8800, YM2151_register_port_0_w },*/
+/*	{ 0x8801, 0x8801, YM2151_data_port_0_w },*/
+/*	{ 0x9800, 0x9800, OKIM6295_data_0_w },*/
 MEMORY_END
 
 static MEMORY_READ_START( saiyugb1_sound_readmem )
@@ -818,8 +818,8 @@ ROM_START( saiyugb2 )
 	ROM_REGION( 0x10000, REGION_CPU3, 0 )	/* Music CPU, 64KB */
 	ROM_LOAD( "sai-alt1.bin", 0x00000, 0x8000, CRC(8d397a8d) SHA1(52599521c3dbcecc1ae56bb80dc855e76d700134) )
 
-//	ROM_REGION( 0x800, REGION_CPU4, 0 )		/* ADPCM CPU, 1KB */
-//	ROM_LOAD( "sgr-8749.bin", 0x000, 0x800, CRC(9237e8c5) ) /* same as above but padded with 00 for different mcu */
+/*	ROM_REGION( 0x800, REGION_CPU4, 0 )		 // ADPCM CPU, 1KB /*/
+/*	ROM_LOAD( "sgr-8749.bin", 0x000, 0x800, CRC(9237e8c5) )  // same as above but padded with 00 for different mcu /*/
 
 	ROM_REGION(0x20000, REGION_GFX1, ROMREGION_DISPOSE )	/* Text */
 	ROM_LOAD( "23j6-0.18", 0x00000, 0x20000, CRC(86d33df0) SHA1(3419959c28703c5177de9c11b61e1dba9e76aca5) )	/* 0,1,2,3 */

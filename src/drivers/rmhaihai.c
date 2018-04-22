@@ -87,10 +87,10 @@ logerror("%04x: keyboard_r\n",activecpu_get_pc());
 	switch(activecpu_get_pc())
 	{
 		/* read keyboard */
-		case 0x0aba:	// rmhaihai, rmhaisei
-		case 0x0b2a:	// rmhaihib
-		case 0x0ab4:	// rmhaijin
-		case 0x0aea:	// themj
+		case 0x0aba:	/* rmhaihai, rmhaisei*/
+		case 0x0b2a:	/* rmhaihib*/
+		case 0x0ab4:	/* rmhaijin*/
+		case 0x0aea:	/* themj*/
 		{
 			int i;
 
@@ -98,16 +98,16 @@ logerror("%04x: keyboard_r\n",activecpu_get_pc());
 			{
 				if (readinputport(2 + i/16) & (1<<(i&15))) return i+1;
 			}
-			if (readinputport(3) & 0x8000) return 0x80;	// coin
+			if (readinputport(3) & 0x8000) return 0x80;	/* coin*/
 			return 0;
 		}
-		case 0x5c7b:	// rmhaihai, rmhaisei, rmhaijin
-		case 0x5950:	// rmhaihib
-		case 0x5bf3:	// themj, but the test is NOPed out!
+		case 0x5c7b:	/* rmhaihai, rmhaisei, rmhaijin*/
+		case 0x5950:	/* rmhaihib*/
+		case 0x5bf3:	/* themj, but the test is NOPed out!*/
 			return 0xcc;	/* keyboard_cmd = 0xcb */
 
 
-		case 0x13a:	// additional checks done by rmhaijin
+		case 0x13a:	/* additional checks done by rmhaijin*/
 			if (keyboard_cmd == 0x3b) return 0xdd;
 			if (keyboard_cmd == 0x85) return 0xdc;
 			if (keyboard_cmd == 0xf2) return 0xd6;
@@ -115,8 +115,8 @@ logerror("%04x: keyboard_r\n",activecpu_get_pc());
 			if (keyboard_cmd == 0xd0) return 0x08;
 			return 0;
 
-		case 0x140:	// additional checks done by rmhaisei
-		case 0x155:	// additional checks done by themj, but they are patched out!
+		case 0x140:	/* additional checks done by rmhaisei*/
+		case 0x155:	/* additional checks done by themj, but they are patched out!*/
 			if (keyboard_cmd == 0x11) return 0x57;
 			if (keyboard_cmd == 0x3e) return 0xda;
 			if (keyboard_cmd == 0x48) return 0x74;
@@ -151,12 +151,12 @@ static WRITE_HANDLER( ctrl_w )
 {
 	flip_screen_set(data & 0x01);
 
-	// (data & 0x02) is switched on and off in service mode
+	/* (data & 0x02) is switched on and off in service mode*/
 
 	coin_lockout_w(0, ~data & 0x04);
 	coin_counter_w(0, data & 0x08);
 
-	// (data & 0x10) is medal in service mode
+	/* (data & 0x10) is medal in service mode*/
 
 	gfxbank = (data & 0x40) >> 6;	/* rmhaisei only */
 }
@@ -199,8 +199,8 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xa000, 0xa7ff, MWA_RAM },
 	{ 0xa800, 0xafff, rmhaihai_colorram_w, &colorram },
 	{ 0xb000, 0xb7ff, rmhaihai_videoram_w, &videoram },
-	{ 0xb83c, 0xb83c, MWA_NOP },	// ??
-	{ 0xbc00, 0xbc00, MWA_NOP },	// ??
+	{ 0xb83c, 0xb83c, MWA_NOP },	/* ??*/
+	{ 0xbc00, 0xbc00, MWA_NOP },	/* ??*/
 	{ 0xc000, 0xdfff, MWA_ROM },
 	{ 0xe000, 0xffff, MWA_ROM },	/* rmhaisei only */
 MEMORY_END
@@ -208,34 +208,34 @@ MEMORY_END
 static PORT_READ_START( readport )
 	{ 0x0000, 0x7fff, samples_r },
 	{ 0x8000, 0x8000, keyboard_r },
-	{ 0x8001, 0x8001, IORP_NOP },	// ??
+	{ 0x8001, 0x8001, IORP_NOP },	/* ??*/
 	{ 0x8020, 0x8020, AY8910_read_port_0_r },
 MEMORY_END
 
 static PORT_WRITE_START( writeport )
-	{ 0x8000, 0x8000, IOWP_NOP },	// ??
+	{ 0x8000, 0x8000, IOWP_NOP },	/* ??*/
 	{ 0x8001, 0x8001, keyboard_w },
 	{ 0x8020, 0x8020, AY8910_control_port_0_w },
 	{ 0x8021, 0x8021, AY8910_write_port_0_w },
 	{ 0x8040, 0x8040, adpcm_w },
 	{ 0x8060, 0x8060, ctrl_w },
-	{ 0x8080, 0x8080, IOWP_NOP },	// ??
-	{ 0xbc04, 0xbc04, IOWP_NOP },	// ??
-	{ 0xbc0c, 0xbc0c, IOWP_NOP },	// ??
+	{ 0x8080, 0x8080, IOWP_NOP },	/* ??*/
+	{ 0xbc04, 0xbc04, IOWP_NOP },	/* ??*/
+	{ 0xbc0c, 0xbc0c, IOWP_NOP },	/* ??*/
 MEMORY_END
 
 
 static PORT_WRITE_START( themj_writeport )
-	{ 0x8000, 0x8000, IOWP_NOP },	// ??
+	{ 0x8000, 0x8000, IOWP_NOP },	/* ??*/
 	{ 0x8001, 0x8001, keyboard_w },
 	{ 0x8020, 0x8020, AY8910_control_port_0_w },
 	{ 0x8021, 0x8021, AY8910_write_port_0_w },
 	{ 0x8040, 0x8040, adpcm_w },
 	{ 0x8060, 0x8060, ctrl_w },
-	{ 0x8080, 0x8080, IOWP_NOP },	// ??
+	{ 0x8080, 0x8080, IOWP_NOP },	/* ??*/
 	{ 0x80a0, 0x80a0, themj_rombank_w },
-	{ 0xbc04, 0xbc04, IOWP_NOP },	// ??
-	{ 0xbc0c, 0xbc0c, IOWP_NOP },	// ??
+	{ 0xbc04, 0xbc04, IOWP_NOP },	/* ??*/
+	{ 0xbc0c, 0xbc0c, IOWP_NOP },	/* ??*/
 MEMORY_END
 
 INPUT_PORTS_START( rmhaihai )
@@ -276,7 +276,7 @@ INPUT_PORTS_START( rmhaihai )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// fake, handled by keyboard_r()
+	PORT_START	/* fake, handled by keyboard_r()*/
 	PORT_BITX(0x0001, IP_ACTIVE_HIGH, 0, "P1 Small",  KEYCODE_BACKSPACE, JOYCODE_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_HIGH, 0, "P1 Double", KEYCODE_RSHIFT,    JOYCODE_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_HIGH, 0, "P1 Big",    KEYCODE_ENTER,     JOYCODE_NONE )
@@ -294,7 +294,7 @@ INPUT_PORTS_START( rmhaihai )
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BITX(0x8000, IP_ACTIVE_HIGH, 0, "P1 H",      KEYCODE_H,     JOYCODE_NONE )
 
-	PORT_START	// fake, handled by keyboard_r()
+	PORT_START	/* fake, handled by keyboard_r()*/
 	PORT_BITX(0x0001, IP_ACTIVE_HIGH, 0, "P1 Pon",   KEYCODE_LALT,     JOYCODE_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_HIGH, 0, "P1 D",     KEYCODE_D,        JOYCODE_NONE )
 	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_START1 )
@@ -312,7 +312,7 @@ INPUT_PORTS_START( rmhaihai )
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT_IMPULSE( 0x8000, IP_ACTIVE_HIGH, IPT_COIN1, 1 )
 
-	PORT_START	// fake, handled by keyboard_r()
+	PORT_START	/* fake, handled by keyboard_r()*/
 	PORT_BITX(0x0001, IP_ACTIVE_HIGH, 0, "P2 Small",  KEYCODE_BACKSPACE, JOYCODE_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_HIGH, 0, "P2 Double", KEYCODE_RSHIFT,    JOYCODE_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_HIGH, 0, "P2 Big",    KEYCODE_ENTER,     JOYCODE_NONE )
@@ -330,7 +330,7 @@ INPUT_PORTS_START( rmhaihai )
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BITX(0x8000, IP_ACTIVE_HIGH, 0, "P2 H",      KEYCODE_H,     JOYCODE_NONE )
 
-	PORT_START	// fake, handled by keyboard_r()
+	PORT_START	/* fake, handled by keyboard_r()*/
 	PORT_BITX(0x0001, IP_ACTIVE_HIGH, 0, "P2 Pon",   KEYCODE_LALT,     JOYCODE_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_HIGH, 0, "P2 D",     KEYCODE_D,        JOYCODE_NONE )
 	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_START2 )
@@ -399,7 +399,7 @@ INPUT_PORTS_START( rmhaihib )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	PORT_START	// fake, handled by keyboard_r()
+	PORT_START	/* fake, handled by keyboard_r()*/
 	PORT_BITX(0x0001, IP_ACTIVE_HIGH, 0, "P1 Small",  KEYCODE_BACKSPACE, JOYCODE_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_HIGH, 0, "P1 Double", KEYCODE_RSHIFT,    JOYCODE_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_HIGH, 0, "P1 Big",    KEYCODE_ENTER,     JOYCODE_NONE )
@@ -417,7 +417,7 @@ INPUT_PORTS_START( rmhaihib )
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BITX(0x8000, IP_ACTIVE_HIGH, 0, "P1 H",      KEYCODE_H,     JOYCODE_NONE )
 
-	PORT_START	// fake, handled by keyboard_r()
+	PORT_START	/* fake, handled by keyboard_r()*/
 	PORT_BITX(0x0001, IP_ACTIVE_HIGH, 0, "P1 Pon",   KEYCODE_LALT,     JOYCODE_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_HIGH, 0, "P1 D",     KEYCODE_D,        JOYCODE_NONE )
 	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_START1 )
@@ -435,7 +435,7 @@ INPUT_PORTS_START( rmhaihib )
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT_IMPULSE( 0x8000, IP_ACTIVE_HIGH, IPT_COIN1, 1 )
 
-	PORT_START	// fake, handled by keyboard_r()
+	PORT_START	/* fake, handled by keyboard_r()*/
 	PORT_BITX(0x0001, IP_ACTIVE_HIGH, 0, "P2 Small",  KEYCODE_BACKSPACE, JOYCODE_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_HIGH, 0, "P2 Double", KEYCODE_RSHIFT,    JOYCODE_NONE )
 	PORT_BITX(0x0004, IP_ACTIVE_HIGH, 0, "P2 Big",    KEYCODE_ENTER,     JOYCODE_NONE )
@@ -453,7 +453,7 @@ INPUT_PORTS_START( rmhaihib )
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BITX(0x8000, IP_ACTIVE_HIGH, 0, "P2 H",      KEYCODE_H,     JOYCODE_NONE )
 
-	PORT_START	// fake, handled by keyboard_r()
+	PORT_START	/* fake, handled by keyboard_r()*/
 	PORT_BITX(0x0001, IP_ACTIVE_HIGH, 0, "P2 Pon",   KEYCODE_LALT,     JOYCODE_NONE )
 	PORT_BITX(0x0002, IP_ACTIVE_HIGH, 0, "P2 D",     KEYCODE_D,        JOYCODE_NONE )
 	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_START2 )
@@ -471,12 +471,12 @@ INPUT_PORTS_START( rmhaihib )
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT_IMPULSE( 0x8000, IP_ACTIVE_HIGH, IPT_COIN2, 1 )
 
-//	PORT_START // 11
-//	PORT_BITX(    0x01, IP_ACTIVE_LOW, 0, "Pay Out", KEYCODE_3, JOYCODE_NONE )
-//	PORT_BIT(     0x02, IP_ACTIVE_LOW, IPT_SERVICE4 ) /* RAM clear */
-//	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )
-//	PORT_BIT(     0x08, IP_ACTIVE_LOW, IPT_SERVICE2 ) /* Analyzer */
-//	PORT_BIT(     0xF0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+/*	PORT_START */ /* 11*/
+/*	PORT_BITX(    0x01, IP_ACTIVE_LOW, 0, "Pay Out", KEYCODE_3, JOYCODE_NONE )*/
+/*	PORT_BIT(     0x02, IP_ACTIVE_LOW, IPT_SERVICE4 )  // RAM clear /*/
+/*	PORT_SERVICE( 0x04, IP_ACTIVE_LOW )*/
+/*	PORT_BIT(     0x08, IP_ACTIVE_LOW, IPT_SERVICE2 )  // Analyzer /*/
+/*	PORT_BIT(     0xF0, IP_ACTIVE_LOW, IPT_UNKNOWN )*/
 INPUT_PORTS_END
 
 

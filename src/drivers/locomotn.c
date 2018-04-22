@@ -103,11 +103,11 @@ static MEMORY_WRITE_START( writemem )
 	{ 0xa170, 0xa170, MWA_NOP },	/* ????? */
 	{ 0xa180, 0xa180, timeplt_sh_irqtrigger_w },
 	{ 0xa181, 0xa181, interrupt_enable_w },
-//	{ 0xa182, 0xa182, MWA_NOP },	sound mute
+/*	{ 0xa182, 0xa182, MWA_NOP },	sound mute*/
 	{ 0xa183, 0xa183, rallyx_flipscreen_w },
 	{ 0xa184, 0xa184, coin_1_w },
 	{ 0xa186, 0xa186, coin_2_w },
-//	{ 0xa187, 0xa187, MWA_NOP },	stars enable
+/*	{ 0xa187, 0xa187, MWA_NOP },	stars enable*/
 	{ 0x8014, 0x801f, MWA_RAM, &spriteram, &spriteram_size },	/* these are here just to initialize */
 	{ 0x8814, 0x881f, MWA_RAM, &spriteram_2 },	/* the pointers. */
 	{ 0x8034, 0x803f, MWA_RAM, &rallyx_radarx, &rallyx_radarram_size },	/* ditto */
@@ -129,11 +129,11 @@ static MEMORY_WRITE_START( jungler_writemem )
 	{ 0xa170, 0xa170, MWA_NOP },	/* ????? */
 	{ 0xa180, 0xa180, timeplt_sh_irqtrigger_w },
 	{ 0xa181, 0xa181, interrupt_enable_w },
-//	{ 0xa182, 0xa182, MWA_NOP },	sound mute
+/*	{ 0xa182, 0xa182, MWA_NOP },	sound mute*/
 	{ 0xa183, 0xa183, rallyx_flipscreen_w },
 	{ 0xa184, 0xa184, coin_1_w },
 	{ 0xa186, 0xa186, coin_2_w },
-//	{ 0xa187, 0xa187, MWA_NOP },	stars enable
+/*	{ 0xa187, 0xa187, MWA_NOP },	stars enable*/
 	{ 0x8014, 0x801f, MWA_RAM, &spriteram, &spriteram_size },	/* these are here just to initialize */
 	{ 0x8814, 0x881f, MWA_RAM, &spriteram_2 },	/* the pointers. */
 	{ 0x8034, 0x803f, MWA_RAM, &rallyx_radarx, &rallyx_radarram_size },	/* ditto */
@@ -155,11 +155,11 @@ static MEMORY_WRITE_START( commsega_writemem )
 	{ 0xa170, 0xa170, MWA_NOP },	/* ????? */
 	{ 0xa180, 0xa180, timeplt_sh_irqtrigger_w },
 	{ 0xa181, 0xa181, interrupt_enable_w },
-//	{ 0xa182, 0xa182, MWA_NOP },	sound mute
+/*	{ 0xa182, 0xa182, MWA_NOP },	sound mute*/
 	{ 0xa183, 0xa183, rallyx_flipscreen_w },
 	{ 0xa184, 0xa184, coin_1_w },
 	{ 0xa186, 0xa186, coin_2_w },
-//	{ 0xa187, 0xa187, MWA_NOP },	stars enable
+/*	{ 0xa187, 0xa187, MWA_NOP },	stars enable*/
 	{ 0x8000, 0x801f, MWA_RAM, &spriteram, &spriteram_size },	/* these are here just to initialize */
 	{ 0x8800, 0x881f, MWA_RAM, &spriteram_2 },	/* the pointers. */
 	{ 0x8020, 0x803f, MWA_RAM, &rallyx_radarx, &rallyx_radarram_size },	/* ditto */
@@ -217,7 +217,7 @@ INPUT_PORTS_START( jungler )
 	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) )
 	PORT_BITX(    0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_CHEAT, "Debug Mode", IP_KEY_NONE, IP_JOY_NONE )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )				// Gives 255 lives
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )				/* Gives 255 lives*/
 INPUT_PORTS_END
 
 
@@ -326,7 +326,7 @@ INPUT_PORTS_START( tactcian )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x00, "10k, 80k then every 100k" )
 	PORT_DIPSETTING(    0x01, "20k, 80k then every 100k" )
-	PORT_DIPNAME( 0x06, 0x00, DEF_STR( Coinage ) )			// Mode 1
+	PORT_DIPNAME( 0x06, 0x00, DEF_STR( Coinage ) )			/* Mode 1*/
 	PORT_DIPSETTING(    0x06, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
@@ -414,7 +414,7 @@ INPUT_PORTS_START( commsega )
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )			// "Infinite Lives" - See notes
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )			/* "Infinite Lives" - See notes*/
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unused ) )
@@ -433,20 +433,20 @@ INPUT_PORTS_START( commsega )
 	PORT_DIPSETTING(    0x01, "5" )
 	PORT_DIPSETTING(    0x00, "6" )
 	PORT_DIPNAME( 0x1c, 0x1c, DEF_STR( Coin_A ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( 4C_1C ) )			// Bonus Life : 50000 points
-	PORT_DIPSETTING(    0x14, DEF_STR( 3C_1C ) )			// Bonus Life : 50000 points
-	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) )			// Bonus Life : 30000 points
-	PORT_DIPSETTING(    0x1c, DEF_STR( 1C_1C ) )			// Bonus Life : 30000 points
-	PORT_DIPSETTING(    0x04, DEF_STR( 2C_3C ) )			// Bonus Life : 50000 points
-	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_2C ) )			// Bonus Life : 30000 points
-	PORT_DIPSETTING(    0x08, DEF_STR( 1C_3C ) )			// Bonus Life : 30000 points
-	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )		// Bonus Life : 50000 points
+	PORT_DIPSETTING(    0x10, DEF_STR( 4C_1C ) )			/* Bonus Life : 50000 points*/
+	PORT_DIPSETTING(    0x14, DEF_STR( 3C_1C ) )			/* Bonus Life : 50000 points*/
+	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) )			/* Bonus Life : 30000 points*/
+	PORT_DIPSETTING(    0x1c, DEF_STR( 1C_1C ) )			/* Bonus Life : 30000 points*/
+	PORT_DIPSETTING(    0x04, DEF_STR( 2C_3C ) )			/* Bonus Life : 50000 points*/
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_2C ) )			/* Bonus Life : 30000 points*/
+	PORT_DIPSETTING(    0x08, DEF_STR( 1C_3C ) )			/* Bonus Life : 30000 points*/
+	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )		/* Bonus Life : 50000 points*/
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Difficulty ) )		// Check code at 0x1fc5
-	PORT_DIPSETTING(    0x40, "Easy" )					// 16 flying enemies to kill
-	PORT_DIPSETTING(    0x00, "Hard" )					// 24 flying enemies to kill
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Difficulty ) )		/* Check code at 0x1fc5*/
+	PORT_DIPSETTING(    0x40, "Easy" )					/* 16 flying enemies to kill*/
+	PORT_DIPSETTING(    0x00, "Hard" )					/* 24 flying enemies to kill*/
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Cocktail ) )
@@ -639,13 +639,13 @@ ROM_START( tactcian )
 	ROM_LOAD( "tacticia.c2",  0x1000, 0x1000, CRC(e8c59c4f) SHA1(e4881f2e2e08bb8af37cc679c4e2367528ac4804) )
 
 	ROM_REGION( 0x0100, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "tact6301.004", 0x0000, 0x0100, CRC(88b0b511) SHA1(785eded1ba761cdb59db579eb8a786516ff58152) ) /* dots */	// tac.a7
+	ROM_LOAD( "tact6301.004", 0x0000, 0x0100, CRC(88b0b511) SHA1(785eded1ba761cdb59db579eb8a786516ff58152) ) /* dots */	/* tac.a7*/
 
 	ROM_REGION( 0x0160, REGION_PROMS, 0 )
 	ROM_LOAD( "tact6331.002", 0x0000, 0x0020, CRC(b7ef83b7) SHA1(5ffab25c2dc5be0856a43a93711d39c4aec6660b) ) /* palette */
-	ROM_LOAD( "tact6301.003", 0x0020, 0x0100, CRC(a92796f2) SHA1(0faab2dc0f868f4023a34ecfcf972d1c86a224a0) ) /* loookup table */	// tac.b4
+	ROM_LOAD( "tact6301.003", 0x0020, 0x0100, CRC(a92796f2) SHA1(0faab2dc0f868f4023a34ecfcf972d1c86a224a0) ) /* loookup table */	/* tac.b4*/
 	ROM_LOAD( "tact6331.001", 0x0120, 0x0020, CRC(8f574815) SHA1(4f84162db9d58b64742c67dc689eb665b9862fb3) ) /* video layout (not used) */
-//	ROM_LOAD( "10a.bpr",      0x0140, 0x0020, CRC(b8861096) SHA1(26fad384ed7a1a1e0ba719b5578e2dbb09334a25) ) /* video timing (not used) */
+/*	ROM_LOAD( "10a.bpr",      0x0140, 0x0020, CRC(b8861096) SHA1(26fad384ed7a1a1e0ba719b5578e2dbb09334a25) )  // video timing (not used) /*/
 ROM_END
 
 ROM_START( tactcan2 )
@@ -667,13 +667,13 @@ ROM_START( tactcan2 )
 	ROM_LOAD( "c2",           0x1000, 0x1000, CRC(8e8861e8) SHA1(38728418b09df06356c1e45a26cf438b93517ce5) )
 
 	ROM_REGION( 0x0100, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "tact6301.004", 0x0000, 0x0100, CRC(88b0b511) SHA1(785eded1ba761cdb59db579eb8a786516ff58152) ) /* dots */	// tac.a7
+	ROM_LOAD( "tact6301.004", 0x0000, 0x0100, CRC(88b0b511) SHA1(785eded1ba761cdb59db579eb8a786516ff58152) ) /* dots */	/* tac.a7*/
 
 	ROM_REGION( 0x0160, REGION_PROMS, 0 )
 	ROM_LOAD( "tact6331.002", 0x0000, 0x0020, CRC(b7ef83b7) SHA1(5ffab25c2dc5be0856a43a93711d39c4aec6660b) ) /* palette */
-	ROM_LOAD( "tact6301.003", 0x0020, 0x0100, CRC(a92796f2) SHA1(0faab2dc0f868f4023a34ecfcf972d1c86a224a0) ) /* loookup table */	// tac.b4
+	ROM_LOAD( "tact6301.003", 0x0020, 0x0100, CRC(a92796f2) SHA1(0faab2dc0f868f4023a34ecfcf972d1c86a224a0) ) /* loookup table */	/* tac.b4*/
 	ROM_LOAD( "tact6331.001", 0x0120, 0x0020, CRC(8f574815) SHA1(4f84162db9d58b64742c67dc689eb665b9862fb3) ) /* video layout (not used) */
-//	ROM_LOAD( "10a.bpr",      0x0140, 0x0020, CRC(b8861096) SHA1(26fad384ed7a1a1e0ba719b5578e2dbb09334a25) ) /* video timing (not used) */
+/*	ROM_LOAD( "10a.bpr",      0x0140, 0x0020, CRC(b8861096) SHA1(26fad384ed7a1a1e0ba719b5578e2dbb09334a25) )  // video timing (not used) /*/
 ROM_END
 
 ROM_START( locomotn )

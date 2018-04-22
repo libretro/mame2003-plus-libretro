@@ -139,7 +139,7 @@ static MEMORY_WRITE_START( liberatb_writemem )
 	{ 0x4000, 0x47ff, liberate_videoram_w, &videoram },
 	{ 0x4800, 0x4fff, MWA_RAM, &spriteram },
 	{ 0x6200, 0x67ff, MWA_RAM, &scratchram },
-//	{ 0xf000, 0xf00f, deco16_io_w },
+/*	{ 0xf000, 0xf00f, deco16_io_w },*/
 	{ 0x8000, 0xffff, MWA_ROM },
 MEMORY_END
 
@@ -670,7 +670,7 @@ static MACHINE_DRIVER_START( liberatb )
 	MDRV_CPU_ADD(M6502, 2000000)
 	MDRV_CPU_MEMORY(liberatb_readmem,liberatb_writemem)
 	MDRV_CPU_PORTS(deco16_readport,deco16_writeport)
-	MDRV_CPU_VBLANK_INT(deco16_interrupt,1) //todo
+	MDRV_CPU_VBLANK_INT(deco16_interrupt,1) /*todo*/
 
 	MDRV_CPU_ADD(M6502, 1500000)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
@@ -704,7 +704,7 @@ ROM_START( prosoccr )
 	ROM_LOAD( "am08.9e",  0xa000, 0x2000, CRC(73d45d0d) SHA1(07736286087478af404bd9c6b279d631a01cf4e2) )
 	ROM_LOAD( "am09.10e", 0xc000, 0x2000, CRC(a7ee0b3a) SHA1(87e487f863bd90c5b979c2d3c4317869ba1d71d9) )
 	ROM_LOAD( "am10.11e", 0xe000, 0x2000, CRC(5571bdb8) SHA1(a3740650453c9e4f78dcc7826eb112d0d9f65b22) )
-//low reload??
+/*low reload??*/
 	ROM_REGION( 0x10000 * 2, REGION_CPU2, 0 )
 	ROM_LOAD( "am06.10a", 0xe000, 0x2000, CRC(37a0c74f) SHA1(5757b9eaf5b1129ee2d03b0ab6c3b15c120cf43c) )
 

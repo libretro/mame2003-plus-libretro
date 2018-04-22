@@ -54,7 +54,7 @@ VIDEO_UPDATE( carjmbre );
 static MEMORY_READ_START( carjmbre_readmem )
 	{ 0x0000, 0x7fff, MRA_ROM },
 	{ 0x8000, 0x87ff, MRA_RAM },
-	{ 0x8800, 0x8800, MRA_NOP },			//?? possibly watchdog
+	{ 0x8800, 0x8800, MRA_NOP },			/*?? possibly watchdog*/
 	{ 0x9000, 0x97ff, videoram_r },
 	{ 0xa000, 0xa000, input_port_0_r },
 	{ 0xa800, 0xa800, input_port_1_r },
@@ -65,19 +65,19 @@ static MEMORY_WRITE_START( carjmbre_writemem )
 	{ 0x0000, 0x7fff, MWA_ROM },
 	{ 0x8000, 0x87ff, MWA_RAM },
 	{ 0x8803, 0x8803, interrupt_enable_w },
-	{ 0x8805, 0x8806, carjmbre_bgcolor_w },	//guess
+	{ 0x8805, 0x8806, carjmbre_bgcolor_w },	/*guess*/
 	{ 0x8807, 0x8807, carjmbre_flipscreen_w },
-	{ 0x8fc1, 0x8fc1, MWA_NOP },			//overrun during initial screen clear
-	{ 0x8fe1, 0x8fe1, MWA_NOP },			//overrun during initial screen clear
+	{ 0x8fc1, 0x8fc1, MWA_NOP },			/*overrun during initial screen clear*/
+	{ 0x8fe1, 0x8fe1, MWA_NOP },			/*overrun during initial screen clear*/
 	{ 0x9000, 0x97ff, carjmbre_videoram_w, &videoram },
 	{ 0x9800, 0x985f, spriteram_w, &spriteram, &spriteram_size },
-	{ 0x9880, 0x98df, MWA_RAM },			//spriteram mirror
+	{ 0x9880, 0x98df, MWA_RAM },			/*spriteram mirror*/
 	{ 0xb800, 0xb800, soundlatch_w },
 MEMORY_END
 
 static MEMORY_READ_START( carjmbre_sound_readmem )
 	{ 0x0000, 0x0fff, MRA_ROM },
-	{ 0x1000, 0x10ff, MRA_NOP },			//look to be stray reads from 10/12/14/16/18xx
+	{ 0x1000, 0x10ff, MRA_NOP },			/*look to be stray reads from 10/12/14/16/18xx*/
 	{ 0x1200, 0x12ff, MRA_NOP },
 	{ 0x1400, 0x14ff, MRA_NOP },
 	{ 0x1600, 0x16ff, MRA_NOP },
@@ -92,23 +92,23 @@ MEMORY_END
 
 static PORT_READ_START( carjmbre_sound_readport )
 	{ 0x00, 0x00, soundlatch_r },
-	{ 0x24, 0x24, IORP_NOP },				//??
+	{ 0x24, 0x24, IORP_NOP },				/*??*/
 PORT_END
 
 static PORT_WRITE_START( carjmbre_sound_writeport )
-	{ 0x10, 0x10, IOWP_NOP },				//?? written on init/0xff sound command reset
+	{ 0x10, 0x10, IOWP_NOP },				/*?? written on init/0xff sound command reset*/
 	{ 0x20, 0x20, AY8910_control_port_0_w },
 	{ 0x21, 0x21, AY8910_write_port_0_w },
-	{ 0x22, 0x22, IOWP_NOP },				//?? written before and after 0x21 with same value
+	{ 0x22, 0x22, IOWP_NOP },				/*?? written before and after 0x21 with same value*/
 	{ 0x30, 0x30, AY8910_control_port_1_w },
 	{ 0x31, 0x31, AY8910_write_port_1_w },
-	{ 0x32, 0x32, IOWP_NOP },				//?? written before and after 0x31 with same value
+	{ 0x32, 0x32, IOWP_NOP },				/*?? written before and after 0x31 with same value*/
 PORT_END
 
 INPUT_PORTS_START( carjmbre )
 	PORT_START	/* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )		//coin error if held high for 1s
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )		//or if many coins inserted quickly
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )		/*coin error if held high for 1s*/
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )		/*or if many coins inserted quickly*/
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_4WAY )

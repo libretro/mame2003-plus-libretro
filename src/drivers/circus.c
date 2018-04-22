@@ -41,8 +41,8 @@ extern VIDEO_START( circus );
 extern VIDEO_UPDATE( crash );
 extern VIDEO_UPDATE( circus );
 extern VIDEO_UPDATE( robotbwl );
-extern VIDEO_UPDATE( ripcord ); //AT
-extern VIDEO_EOF( ripcord ); //AT
+extern VIDEO_UPDATE( ripcord ); /*AT*/
+extern VIDEO_EOF( ripcord ); /*AT*/
 
 extern INTERRUPT_GEN( crash_interrupt );
 extern struct Samplesinterface circus_samples_interface;
@@ -73,8 +73,8 @@ static MEMORY_READ_START( readmem )
 	{ 0x8000, 0x8000, MRA_RAM },
 	{ 0xa000, 0xa000, input_port_0_r },
 	{ 0xc000, 0xc000, input_port_1_r }, /* DSW */
-	{ 0xd000, 0xd000, input_port_2_r }, //AT
-	//{ 0xd000, 0xd000, ripcord_IN2_r },
+	{ 0xd000, 0xd000, input_port_2_r }, /*AT*/
+	/*{ 0xd000, 0xd000, ripcord_IN2_r },*/
 	{ 0xf000, 0xffff, MRA_ROM },
 MEMORY_END
 
@@ -103,7 +103,7 @@ INPUT_PORTS_START( circus )
 	PORT_DIPSETTING(    0x02, "7" )
 	PORT_DIPSETTING(    0x03, "9" )
 	PORT_DIPNAME( 0x0c, 0x04, DEF_STR( Coinage ) )
-//  PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
+/*  PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(    0x0c, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_2C ) )
@@ -148,7 +148,7 @@ INPUT_PORTS_START( robotbwl )
 	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_2C ) )
-//  PORT_DIPSETTING(    0x18, DEF_STR( 1C_2C ) )
+/*  PORT_DIPSETTING(    0x18, DEF_STR( 1C_2C ) )*/
 	PORT_DIPNAME( 0x60, 0x00, "Bowl Timer" )
 	PORT_DIPSETTING(    0x00, "3 seconds" )
 	PORT_DIPSETTING(    0x20, "5 seconds" )
@@ -176,7 +176,7 @@ INPUT_PORTS_START( crash )
 	PORT_DIPSETTING(    0x02, "4" )
 	PORT_DIPSETTING(    0x03, "5" )
 	PORT_DIPNAME( 0x0C, 0x04, DEF_STR( Coinage ) )
-//	PORT_DIPSETTING(    0x0c, DEF_STR( 2C_1C ) )
+/*	PORT_DIPSETTING(    0x0c, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_2C ) )
@@ -206,7 +206,7 @@ INPUT_PORTS_START( ripcord )
 	PORT_DIPSETTING(    0x02, "7" )
 	PORT_DIPSETTING(    0x03, "9" )
 	PORT_DIPNAME( 0x0c, 0x04, DEF_STR( Coinage ) )
-//	PORT_DIPSETTING(    0x0c, DEF_STR( 2C_1C ) )
+/*	PORT_DIPSETTING(    0x0c, DEF_STR( 2C_1C ) )*/
 	PORT_DIPSETTING(    0x08, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_2C ) )
@@ -216,8 +216,8 @@ INPUT_PORTS_START( ripcord )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_VBLANK )
 
 	PORT_START      /* IN2 - paddle */
-	//PORT_ANALOG( 0xff, 115, IPT_PADDLE, 30, 10, 64, 167 )
-	PORT_ANALOG( 0xff, 115, IPT_PADDLE|IPF_REVERSE, 30, 10, 64, 167 ) //AT
+	/*PORT_ANALOG( 0xff, 115, IPT_PADDLE, 30, 10, 64, 167 )*/
+	PORT_ANALOG( 0xff, 115, IPT_PADDLE|IPF_REVERSE, 30, 10, 64, 167 ) /*AT*/
 INPUT_PORTS_END
 
 
@@ -370,7 +370,7 @@ static MACHINE_DRIVER_START( ripcord )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M6502, 705562)        /* 11.289MHz / 16 */
 	MDRV_CPU_MEMORY(readmem,writemem)
-	//MDRV_CPU_VBLANK_INT(ripcord_interrupt,1) //AT
+	/*MDRV_CPU_VBLANK_INT(ripcord_interrupt,1) */ /*AT*/
 
 	MDRV_FRAMES_PER_SECOND(57)
 	MDRV_VBLANK_DURATION(3500)  /* frames per second, vblank duration (complete guess) */

@@ -27,7 +27,7 @@ extern data16_t *snowboar_protection;
 extern data32_t  snowboard_latch;
 
 /* comment this line to display 2 monitors for the dual monitor games */
-//#define ONE_MONITOR
+/*#define ONE_MONITOR*/
 
 /* from machine/gaelco2.c */
 DRIVER_INIT( alighunt );

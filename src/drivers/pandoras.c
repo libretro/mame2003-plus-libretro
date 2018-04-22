@@ -166,7 +166,7 @@ static MEMORY_READ_START( pandoras_readmem_b )
 	{ 0x1a02, 0x1a02, input_port_5_r },			/* 2P inputs */
 	{ 0x1a03, 0x1a03, input_port_2_r },			/* DIPSW #3 */
 	{ 0x1c00, 0x1c00, input_port_1_r },			/* DISPW #2 */
-//	{ 0x1e00, 0x1e00, MRA_NOP },				/* ??? seems to be important */
+/*	{ 0x1e00, 0x1e00, MRA_NOP },				 // ??? seems to be important /*/
 	{ 0xc000, 0xc7ff, pandoras_sharedram2_r },	/* Shared RAM with the CPU A */
 	{ 0xe000, 0xffff, MRA_ROM },				/* ROM */
 MEMORY_END
@@ -257,7 +257,7 @@ INPUT_PORTS_START( pandoras )
 	PORT_DIPSETTING(    0xb0, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 	PORT_DIPSETTING(    0x90, DEF_STR( 1C_7C ) )
-//	PORT_DIPSETTING(    0x00, "Invalid" )
+/*	PORT_DIPSETTING(    0x00, "Invalid" )*/
 
 	PORT_START	/* DSW #2 */
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
@@ -394,7 +394,7 @@ static struct AY8910interface ay8910_interface =
 	1,			/* 1 chip */
 	14318000/8,
 	{ 40 },
-	{ pandoras_portA_r },	// not used
+	{ pandoras_portA_r },	/* not used*/
 	{ pandoras_portB_r },
 	{ 0 },
 	{ 0 }

@@ -222,13 +222,13 @@ static int razmataz_dial_r(int num)
 
 	if (delta < 0x80)
 	{
-		// right
+		/* right*/
 		pos[num] -= delta;
 		res = (pos[num] << 1) | 1;
 	}
 	else
 	{
-		// left
+		/* left*/
 		pos[num] += delta;
 		res = (pos[num] << 1);
 	}
@@ -286,7 +286,7 @@ static MEMORY_WRITE_START( writemem )
 	{ 0x8000, 0x83ff, zaxxon_videoram_w, &videoram },
 	{ 0xa000, 0xa0ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xc000, 0xc001, zaxxon_coin_lockout_w },
-	{ 0xc002, 0xc002, MWA_NOP },	// service coin lockout
+	{ 0xc002, 0xc002, MWA_NOP },	/* service coin lockout*/
 	{ 0xc003, 0xc004, zaxxon_coin_counter_w },
 	{ 0xc006, 0xc006, zaxxon_flipscreen_w },
 	{ 0xff3c, 0xff3f, zaxxon_sound_w },
@@ -311,8 +311,8 @@ static MEMORY_READ_START( razmataz_readmem )
 	{ 0xc008, 0xc008, razmataz_dial_1_r },
 	{ 0xc00c, 0xc00c, input_port_7_r },
 	{ 0xc100, 0xc100, input_port_2_r },
-	{ 0xc80a, 0xc80a, razmataz_unknown1_r },	// needed, otherwise the game hangs
-	{ 0xff3c, 0xff3c, razmataz_unknown2_r },	// timer? if 0, "duck season" ends
+	{ 0xc80a, 0xc80a, razmataz_unknown1_r },	/* needed, otherwise the game hangs*/
+	{ 0xff3c, 0xff3c, razmataz_unknown2_r },	/* timer? if 0, "duck season" ends*/
 MEMORY_END
 
 static MEMORY_WRITE_START( razmataz_writemem )
@@ -321,7 +321,7 @@ static MEMORY_WRITE_START( razmataz_writemem )
 	{ 0x8000, 0x83ff, zaxxon_videoram_w, &videoram },
 	{ 0xa000, 0xa0ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xc000, 0xc001, zaxxon_coin_lockout_w },
-	{ 0xc002, 0xc002, MWA_NOP },	// service coin lockout
+	{ 0xc002, 0xc002, MWA_NOP },	/* service coin lockout*/
 	{ 0xc003, 0xc004, zaxxon_coin_counter_w },
 	{ 0xc006, 0xc006, razmataz_flipscreen_w },
 	{ 0xe0f0, 0xe0f0, interrupt_enable_w },
@@ -331,7 +331,7 @@ static MEMORY_WRITE_START( razmataz_writemem )
 	{ 0xe0fa, 0xe0fa, MWA_RAM, &zaxxon_background_color_bank },
 	{ 0xe0fb, 0xe0fb, MWA_RAM, &zaxxon_background_enable },
 	{ 0xe0fc, 0xe0ff, MWA_NOP },
-	{ 0xff3c, 0xff3c, MWA_NOP },	// sound
+	{ 0xff3c, 0xff3c, MWA_NOP },	/* sound*/
 MEMORY_END
 
 static MEMORY_READ_START( ixion_readmem )
@@ -344,7 +344,7 @@ static MEMORY_READ_START( ixion_readmem )
 	{ 0xc002, 0xc002, input_port_3_r },
 	{ 0xc003, 0xc003, input_port_4_r },
 	{ 0xc100, 0xc100, input_port_2_r },
-	{ 0xff3c, 0xff3c, razmataz_unknown2_r },	// no idea .. timer? in razmataz
+	{ 0xff3c, 0xff3c, razmataz_unknown2_r },	/* no idea .. timer? in razmataz*/
 MEMORY_END
 
 static MEMORY_READ_START( congo_readmem )
@@ -365,7 +365,7 @@ static MEMORY_WRITE_START( congo_writemem )
 	{ 0xa000, 0xa3ff, zaxxon_videoram_w, &videoram },
 	{ 0xa400, 0xa7ff, congo_colorram_w, &colorram },
 	{ 0xc018, 0xc019, zaxxon_coin_lockout_w },
-	{ 0xc01a, 0xc01a, MWA_NOP },	// service coin lockout
+	{ 0xc01a, 0xc01a, MWA_NOP },	/* service coin lockout*/
 	{ 0xc01b, 0xc01c, zaxxon_coin_counter_w },
 	{ 0xc01d, 0xc01d, MWA_RAM, &zaxxon_background_enable },
 	{ 0xc01e, 0xc01e, zaxxon_flipscreen_w },
@@ -400,7 +400,7 @@ static MEMORY_WRITE_START( futspy_writemem )
 	{ 0x8400, 0x8fff, MWA_RAM },
 	{ 0xa000, 0xa0ff, MWA_RAM, &spriteram, &spriteram_size },
 	{ 0xc000, 0xc001, zaxxon_coin_lockout_w },
-	{ 0xc002, 0xc002, MWA_NOP },	// service coin lockout
+	{ 0xc002, 0xc002, MWA_NOP },	/* service coin lockout*/
 	{ 0xc003, 0xc003, zaxxon_coin_counter_w },
 	{ 0xc006, 0xc006, razmataz_flipscreen_w },
 	{ 0xe03c, 0xe03f, zaxxon_sound_w },
@@ -1150,9 +1150,9 @@ static struct SN76496interface congo_sn76496_interface =
 
 static INTERRUPT_GEN( zaxxon_interrupt )
 {
-	// Get F2 key press status
+	/* Get F2 key press status*/
 	if (readinputport(5) & 0x01)
-		nmi_line_pulse();		// trigger self test
+		nmi_line_pulse();		/* trigger self test*/
 	else
 		irq0_line_hold();
 }
@@ -1177,8 +1177,8 @@ MACHINE_INIT( futspy )
 /* Machine Drivers */
 
 static MACHINE_DRIVER_START( root )
-	// basic machine hardware
-	MDRV_CPU_ADD_TAG("main", Z80, 48660000/16)	// 3.04125 MHz
+	/* basic machine hardware*/
+	MDRV_CPU_ADD_TAG("main", Z80, 48660000/16)	/* 3.04125 MHz*/
 	MDRV_CPU_MEMORY(readmem, writemem)
 	MDRV_CPU_VBLANK_INT(zaxxon_interrupt, 1)
 
@@ -1187,7 +1187,7 @@ static MACHINE_DRIVER_START( root )
 
 	MDRV_MACHINE_INIT(zaxxon)
 
-	// video hardware
+	/* video hardware*/
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_SIZE(32*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)

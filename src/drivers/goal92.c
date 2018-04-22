@@ -64,7 +64,7 @@ static MEMORY_WRITE16_START( goal92_writemem )
 	{ 0x100000, 0x1007ff, MWA16_RAM },
 	{ 0x100800, 0x100fff, goal92_background_w, &goal92_back_data },
 	{ 0x101000, 0x1017ff, goal92_foreground_w, &goal92_fore_data },
-	{ 0x101800, 0x101fff, MWA16_RAM }, // it contains middle layer tiles for clouds, not sure if they should be displayed or not
+	{ 0x101800, 0x101fff, MWA16_RAM }, /* it contains middle layer tiles for clouds, not sure if they should be displayed or not*/
 	{ 0x102000, 0x102fff, goal92_text_w, &goal92_textram },
 	{ 0x103000, 0x103fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
 	{ 0x104000, 0x13ffff, MWA16_RAM },
@@ -186,10 +186,10 @@ INPUT_PORTS_START( goal92 )
 	PORT_START
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x00fc, IP_ACTIVE_LOW,  IPT_UNKNOWN ) // unused?
+	PORT_BIT( 0x00fc, IP_ACTIVE_LOW,  IPT_UNKNOWN ) /* unused?*/
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW,  IPT_START3 )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW,  IPT_START4 )
-	PORT_BIT( 0xfc00, IP_ACTIVE_LOW,  IPT_UNKNOWN ) // unused?
+	PORT_BIT( 0xfc00, IP_ACTIVE_LOW,  IPT_UNKNOWN ) /* unused?*/
 
 	PORT_START
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Difficulty ) )
@@ -277,28 +277,28 @@ static struct GfxLayout layout_16x16x4_2 =
 
 static struct GfxDecodeInfo goal92_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4,		   0*16, 8*16 }, // Sprites
-	{ REGION_GFX2, 0, &layout_8x8x4,		  48*16,   16 }, // Text Layer
-	{ REGION_GFX2, 0, &layout_16x16x4,		   0*16,   16 }, // BG Layer
-	{ REGION_GFX2, 0, &layout_16x16x4,		  16*16,   16 }, // Mid Layer
-	{ REGION_GFX2, 0, &layout_16x16x4,		  32*16,   16 }, // FG Layer
+	{ REGION_GFX1, 0, &layout_16x16x4,		   0*16, 8*16 }, /* Sprites*/
+	{ REGION_GFX2, 0, &layout_8x8x4,		  48*16,   16 }, /* Text Layer*/
+	{ REGION_GFX2, 0, &layout_16x16x4,		   0*16,   16 }, /* BG Layer*/
+	{ REGION_GFX2, 0, &layout_16x16x4,		  16*16,   16 }, /* Mid Layer*/
+	{ REGION_GFX2, 0, &layout_16x16x4,		  32*16,   16 }, /* FG Layer*/
 	{ -1 } /* end of array */
 };
 
 static struct GfxDecodeInfo cupsocbl_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0, &layout_16x16x4_2,	   0*16, 8*16 }, // Sprites
-	{ REGION_GFX2, 0, &layout_8x8x4,	      48*16,   16 }, // Text Layer
-	{ REGION_GFX3, 0, &layout_16x16x4,	       0*16,   16 }, // BG Layer
-	{ REGION_GFX4, 0, &layout_16x16x4,	      16*16,   16 }, // Mid Layer
-	{ REGION_GFX4, 0, &layout_16x16x4,  	  32*16,   16 }, // FG Layer
+	{ REGION_GFX1, 0, &layout_16x16x4_2,	   0*16, 8*16 }, /* Sprites*/
+	{ REGION_GFX2, 0, &layout_8x8x4,	      48*16,   16 }, /* Text Layer*/
+	{ REGION_GFX3, 0, &layout_16x16x4,	       0*16,   16 }, /* BG Layer*/
+	{ REGION_GFX4, 0, &layout_16x16x4,	      16*16,   16 }, /* Mid Layer*/
+	{ REGION_GFX4, 0, &layout_16x16x4,  	  32*16,   16 }, /* FG Layer*/
 	{ -1 } /* end of array */
 };
 
 static MACHINE_DRIVER_START( goal92 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(M68000,16000000) // clock should be 12 MHz, but it causes problems for an unknown reason
+	MDRV_CPU_ADD(M68000,16000000) /* clock should be 12 MHz, but it causes problems for an unknown reason*/
 	MDRV_CPU_MEMORY(goal92_readmem,goal92_writemem)
 	MDRV_CPU_VBLANK_INT(irq6_line_hold,1) /* VBL */
 
@@ -456,24 +456,24 @@ ROM_START( cupsocbl )
 	ROM_LOAD( "sc_07.bin", 0x000000, 0x80000, CRC(dcb29d01) SHA1(72b4234622605f0ab03f21fdb6a61c6dac36000d) )
 	ROM_LOAD( "sc_06.bin", 0x080000, 0x80000, CRC(2dc70e05) SHA1(f1d0beb8428a7e1d7c7818e6719abdc543b2fa80) )
 
-	ROM_REGION( 0x020000, REGION_GFX2, ROMREGION_DISPOSE ) // text layer ?
+	ROM_REGION( 0x020000, REGION_GFX2, ROMREGION_DISPOSE ) /* text layer ?*/
 	ROM_LOAD( "sc_13.bin",    0x000000, 0x010000, CRC(229bddd8) SHA1(0924bf29db9c5a970546f154e7752697fdce6a58) )
 	ROM_LOAD( "sc_12.bin",    0x010000, 0x010000, CRC(dabfa826) SHA1(0db587c846755491b169ef7751ba8e7cdc2607e6) )
 
-	ROM_REGION( 0x200000, REGION_GFX3, ROMREGION_DISPOSE ) // background ?
+	ROM_REGION( 0x200000, REGION_GFX3, ROMREGION_DISPOSE ) /* background ?*/
 	ROM_LOAD( "sc_08.bin",    0x000000, 0x080000, CRC(637120f3) SHA1(b4b2ad192e46ff80d4cb440d7fb6dac215a353ed) )
 	ROM_LOAD( "sc_09.bin",    0x080000, 0x080000, CRC(695b6342) SHA1(dfccb43789021ba2568b9284ae61e64f7f89b152) )
 	ROM_LOAD( "sc_10.bin",    0x100000, 0x080000, CRC(27e172b8) SHA1(ed86db2f42c8061607d46f2407b0130aaf692a02) )
 	ROM_LOAD( "sc_11.bin",    0x180000, 0x080000, CRC(0cd5ca5e) SHA1(a59665e543e9383355de2576e6693348ec356591) )
 
-	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE ) // foreground ?
+	ROM_REGION( 0x100000, REGION_GFX4, ROMREGION_DISPOSE ) /* foreground ?*/
 	ROM_LOAD( "sc_14.bin",    0x000000, 0x080000, CRC(566086c2) SHA1(b7d09ce978f99ecc0d1975b31330ed49317701d5) )
 	ROM_LOAD( "sc_15.bin",    0x080000, 0x080000, CRC(8fd87e65) SHA1(acc9fd0289fa9ab60bec16d3e642039380e5180a) )
 
 	ROM_REGION( 0x020000, REGION_SOUND1, 0 )	/* ADPCM samples */
 	ROM_LOAD( "sc_02.bin",    0x000000, 0x020000, CRC(a70d4f03) SHA1(c2482e624c8a828a94206a36d10c1021ad8ca1d0) )
 
-	ROM_REGION( 0x080000, REGION_USER1, 0 ) // sound related ?
+	ROM_REGION( 0x080000, REGION_USER1, 0 ) /* sound related ?*/
 	ROM_LOAD( "sc_03.bin",    0x000000, 0x080000, CRC(6e254d12) SHA1(857779dbd276b688201a8ea3afd5817e38acad2e) )
 ROM_END
 

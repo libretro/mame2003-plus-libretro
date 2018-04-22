@@ -32,14 +32,14 @@ static INTERRUPT_GEN( lasso_interrupt )
 	static int old;
 	int new;
 
-	// VBlank
+	/* VBlank*/
 	if (cpu_getiloops() == 0)
 	{
 		cpu_set_irq_line(0, 0, HOLD_LINE);
 		return;
 	}
 
-	// Coins
+	/* Coins*/
 	new = ~readinputport(3) & 0x30;
 
 	if ( ((new & 0x10) && !(old & 0x10)) ||
@@ -115,7 +115,7 @@ static MEMORY_WRITE_START( lasso_writemem )
 	{ 0x1800, 0x1800, sound_command_w },
 	{ 0x1801, 0x1801, lasso_backcolor_w	},
 	{ 0x1802, 0x1802, lasso_video_control_w },
-	{ 0x1806, 0x1806, MWA_NOP },	// games uses 'lsr' to read port
+	{ 0x1806, 0x1806, MWA_NOP },	/* games uses 'lsr' to read port*/
 	{ 0x8000, 0xffff, MWA_ROM },
 MEMORY_END
 
@@ -133,7 +133,7 @@ static MEMORY_WRITE_START( chameleo_writemem )
 	{ 0x0000, 0x03ff, MWA_RAM },
 	{ 0x0400, 0x07ff, lasso_videoram_w, &lasso_videoram },
 	{ 0x0800, 0x0bff, lasso_colorram_w, &lasso_colorram },
-	{ 0x0c00, 0x0fff, MWA_RAM },	//
+	{ 0x0c00, 0x0fff, MWA_RAM },	/**/
 	{ 0x1000, 0x107f, MWA_RAM, &lasso_spriteram, &lasso_spriteram_size },
 	{ 0x1080, 0x10ff, MWA_RAM },
 	{ 0x1800, 0x1800, sound_command_w },
@@ -298,14 +298,14 @@ INPUT_PORTS_START( lasso )
 	PORT_DIPSETTING(	0x08, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(	0x04, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(	0x0c, DEF_STR( 1C_6C ) )
-//	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x30, "3" )
 	PORT_DIPSETTING(    0x10, "4" )
 	PORT_DIPSETTING(    0x20, "5" )
-//	PORT_DIPSETTING(    0x00, "3" )
+/*	PORT_DIPSETTING(    0x00, "3" )*/
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(	0x40, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )
@@ -363,13 +363,13 @@ INPUT_PORTS_START( chameleo )
 	PORT_DIPSETTING(	0x08, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(	0x04, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(	0x0c, DEF_STR( 1C_6C ) )
-//	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x30, "5" )
-//	PORT_DIPSETTING(    0x10, "5" )
+/*	PORT_DIPSETTING(    0x10, "5" )*/
 	PORT_BITX(0,        0x20, IPT_DIPSWITCH_SETTING | IPF_CHEAT, "Infinite", IP_JOY_NONE, IP_KEY_NONE )
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(	0x40, DEF_STR( 2C_1C ) )
@@ -428,9 +428,9 @@ INPUT_PORTS_START( wwjgtin )
 	PORT_DIPSETTING(	0x08, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(	0x04, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(	0x0c, DEF_STR( 1C_6C ) )
-//	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )	/* probably unused */
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -494,9 +494,9 @@ INPUT_PORTS_START( pinbo )
 	PORT_DIPSETTING(	0x08, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(	0x04, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(	0x0c, DEF_STR( 1C_6C ) )
-//	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x10, "4" )
@@ -559,9 +559,9 @@ INPUT_PORTS_START( pinbos )
 	PORT_DIPSETTING(	0x08, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(	0x04, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(	0x0c, DEF_STR( 1C_6C ) )
-//	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )
-//	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )
+/*	PORT_DIPSETTING(	0x06, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x00, DEF_STR( 1C_1C ) )*/
+/*	PORT_DIPSETTING(	0x0a, DEF_STR( 1C_1C ) )*/
 	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x00, "3" )
 	PORT_DIPSETTING(    0x10, "4" )
@@ -762,10 +762,10 @@ static MACHINE_DRIVER_START( wwjgtin )
 	MDRV_CPU_REMOVE("blitter")
 
 	/* video hardware */
-	MDRV_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)	// Smaller visible area?
-	MDRV_GFXDECODE(wwjgtin_gfxdecodeinfo)	// Has 1 additional layer
+	MDRV_VISIBLE_AREA(1*8, 31*8-1, 2*8, 30*8-1)	/* Smaller visible area?*/
+	MDRV_GFXDECODE(wwjgtin_gfxdecodeinfo)	/* Has 1 additional layer*/
 	MDRV_PALETTE_LENGTH(0x40+1)
-	MDRV_COLORTABLE_LENGTH(4*16 + 16*16)	// Reserve 1 color for black
+	MDRV_COLORTABLE_LENGTH(4*16 + 16*16)	/* Reserve 1 color for black*/
 
 	MDRV_PALETTE_INIT(wwjgtin)
 	MDRV_VIDEO_START(wwjgtin)
@@ -892,12 +892,12 @@ ROM_START( wwjgtin )
 	ROM_CONTINUE(       0x7800, 0x0800             )
 
 	ROM_REGION( 0x4000, REGION_GFX2, ROMREGION_DISPOSE )
-	ROM_LOAD( "ic47.3", 0x0000, 0x2000, CRC(40594c59) SHA1(94533be8e267d9aa5bcdd52b45f6974436d3fed5) )	// 1xxxxxxxxxxxx = 0xFF
+	ROM_LOAD( "ic47.3", 0x0000, 0x2000, CRC(40594c59) SHA1(94533be8e267d9aa5bcdd52b45f6974436d3fed5) )	/* 1xxxxxxxxxxxx = 0xFF*/
 	ROM_LOAD( "ic46.4", 0x2000, 0x2000, CRC(d1921348) SHA1(8b5506ff80a31ce721aed515cad1b4a7e52e47a2) )
 
 	ROM_REGION( 0x4000, REGION_USER1, 0 )				/* tilemap */
 	ROM_LOAD( "ic48.2", 0x0000, 0x2000, CRC(a4a7df77) SHA1(476aab702346a402169ab404a8b06589e4932d37) )
-	ROM_LOAD( "ic49.1", 0x2000, 0x2000, CRC(e480fbba) SHA1(197c86747ef8477040169f90eb6e04d928aedbe5) )	// FIXED BITS (1111xxxx)
+	ROM_LOAD( "ic49.1", 0x2000, 0x2000, CRC(e480fbba) SHA1(197c86747ef8477040169f90eb6e04d928aedbe5) )	/* FIXED BITS (1111xxxx)*/
 
 	ROM_REGION( 0x40, REGION_PROMS, ROMREGION_DISPOSE )
 	ROM_LOAD( "2.bpr",  0x0000, 0x0020, CRC(79adda5d) SHA1(e54de3eb02f744d49f524cd81e1cf993338916e3) )

@@ -143,9 +143,9 @@ static WRITE16_HANDLER( sound_irq_w )
 	cpu_set_irq_line(1, 0, HOLD_LINE);
 }
 
-// Check the routine at 7f30 in the ead version.
-// You're not supposed to laugh.
-// This emulation is grossly overkill but hey, I'm having fun.
+/* Check the routine at 7f30 in the ead version.*/
+/* You're not supposed to laugh.*/
+/* This emulation is grossly overkill but hey, I'm having fun.*/
 
 static data16_t prot[2];
 
@@ -192,25 +192,25 @@ static WRITE16_HANDLER( protection_w )
 
 static MEMORY_READ16_START( readmem )
 	{ 0x000000, 0x0fffff, MRA16_ROM },
-	{ 0x100000, 0x107fff, MRA16_RAM },			// Main RAM.
-	{ 0x180000, 0x1807ff, K053245_word_r },		// Sprites
+	{ 0x100000, 0x107fff, MRA16_RAM },			/* Main RAM.*/
+	{ 0x180000, 0x1807ff, K053245_word_r },		/* Sprites*/
 	{ 0x180800, 0x180fff, MRA16_RAM },
 	{ 0x200000, 0x20000f, K053244_word_r },
 	{ 0x280000, 0x280fff, MRA16_RAM },
 	{ 0x300000, 0x30001f, K053244_lsb_r },
 	{ 0x380000, 0x380001, input_port_0_word_r },
 	{ 0x380002, 0x380003, control1_r },
-	{ 0x380200, 0x380203, asterix_sound_r },	// 053260
-	{ 0x380600, 0x380601, MRA16_NOP },			// Watchdog
-	{ 0x400000, 0x400fff, K054157_ram_half_word_r },	// Graphic planes
-	{ 0x420000, 0x421fff, K054157_rom_word_r },		// Passthrough to tile roms
+	{ 0x380200, 0x380203, asterix_sound_r },	/* 053260*/
+	{ 0x380600, 0x380601, MRA16_NOP },			/* Watchdog*/
+	{ 0x400000, 0x400fff, K054157_ram_half_word_r },	/* Graphic planes*/
+	{ 0x420000, 0x421fff, K054157_rom_word_r },		/* Passthrough to tile roms*/
 MEMORY_END
 
 static MEMORY_WRITE16_START( writemem )
 	{ 0x000000, 0x0fffff, MWA16_ROM },
 	{ 0x100000, 0x107fff, MWA16_RAM },
 	{ 0x180000, 0x1807ff, K053245_word_w },
-	{ 0x180800, 0x180fff, MWA16_RAM },	// extra RAM, or mirror for the above?
+	{ 0x180800, 0x180fff, MWA16_RAM },	/* extra RAM, or mirror for the above?*/
 	{ 0x200000, 0x20000f, K053244_word_w },
 	{ 0x280000, 0x280fff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },
 	{ 0x300000, 0x30001f, K053244_lsb_w },
@@ -219,7 +219,7 @@ static MEMORY_WRITE16_START( writemem )
 	{ 0x380300, 0x380301, sound_irq_w },
 	{ 0x380400, 0x380401, asterix_spritebank_w },
 	{ 0x380500, 0x38051f, K053251_lsb_w },
-	{ 0x380600, 0x380601, MWA16_NOP },			// Watchdog
+	{ 0x380600, 0x380601, MWA16_NOP },			/* Watchdog*/
 	{ 0x380700, 0x380707, K054157_b_word_w },
 	{ 0x380800, 0x380803, protection_w },
 	{ 0x400000, 0x400fff, K054157_ram_half_word_w },
@@ -268,8 +268,8 @@ INPUT_PORTS_START( asterix )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW,  IPT_BUTTON2 | IPF_PLAYER2 )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_UNUSED )  // EEPROM data
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW,  IPT_UNUSED )  // EEPROM ready (always 1)
+	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_UNUSED )  /* EEPROM data*/
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW,  IPT_UNUSED )  /* EEPROM ready (always 1)*/
 	PORT_BITX(0x0400, IP_ACTIVE_LOW,  IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0xf800, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 INPUT_PORTS_END
