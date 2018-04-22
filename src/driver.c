@@ -5644,6 +5644,9 @@ Other Sun games
 		
 	/* The Lost Castle In Darkmist */
 	DRIVER ( darkmist ) /* (c) 1986 Seibu Kaihatsu (Taito license) */
+		
+	/* Varia Metal */	
+	DRIVER( vmetal )    /* (c) 1995 Excellent Systems */
 
 
 #endif	/* DRIVER_RECURSIVE */
