@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <libretro.h>
 #include <file/file_path.h>
+#include <compat/posix_string.h>
 #include "osd_cpu.h"
 #include "inptport.h"
 
