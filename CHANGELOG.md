@@ -98,7 +98,8 @@
 
 ## Games fixed and now working
 
-* 1000 Miglia : Great 1000 Miles Rally
+* Great 1000 Miles Rally
+* Alcon
 * Arch Rivals
 * Avenging Spirit
 * Bakuretsu Breaker
@@ -127,6 +128,7 @@
 * Run And Gun (NVRAM) markwkidd
 * Sarge
 * Satan's Hollow
+* Slap Fight (Official Version)
 * Snowboard Championship
 * Solar Fox
 * Spy Hunter
