@@ -4,10 +4,11 @@
 
 ***************************************************************************/
 
-#include "chd.h"
+#include <formats/libchdr/chd.h>
+#include <retro_inline.h>
 #include <utils/md5.h>
-#include "sha1.h"
-#include "zlib.h"
+#include <utils/sha1.h>
+#include <zlib.h>
 #include <time.h>
 
 

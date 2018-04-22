@@ -7,7 +7,7 @@
 #ifndef CHD_H
 #define CHD_H
 
-#include "driver.h"
+#include <formats/libchdr/coretypes.h>
 
 
 /***************************************************************************

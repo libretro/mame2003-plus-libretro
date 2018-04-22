@@ -8,7 +8,7 @@ INCFLAGS := \
 INCFLAGS += \
     -I$(CORE_DIR)/mame2003 \
     -I$(LIBRETRO_COMM_DIR)/include \
-    -I$(LIBRETRO_COMM_DIR)/zlib/includes \
+    -I$(LIBRETRO_COMM_DIR)/zlib 
 
 ifneq (,$(findstring msvc2003,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
@@ -25,7 +25,6 @@ SOURCES_C := \
 
 SOURCES_C += \
 	$(CORE_DIR)/artwork.c \
-	$(CORE_DIR)/chd.c \
 	$(CORE_DIR)/common.c \
 	$(CORE_DIR)/config.c \
 	$(CORE_DIR)/cpuexec.c \
@@ -47,7 +46,6 @@ SOURCES_C += \
 	$(CORE_DIR)/palette.c \
 	$(CORE_DIR)/png.c \
 	$(CORE_DIR)/profiler.c \
-	$(CORE_DIR)/sha1.c \
 	$(CORE_DIR)/sndintrf.c \
 	$(CORE_DIR)/state.c \
 	$(CORE_DIR)/tilemap.c \
@@ -2617,9 +2615,11 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/compat/fopen_utf8.c \
 	$(LIBRETRO_COMM_DIR)/encodings/encoding_utf.c \
 	$(LIBRETRO_COMM_DIR)/file/file_path.c \
+	$(LIBRETRO_COMM_DIR)/formats/libchdr/chd.c \
 	$(LIBRETRO_COMM_DIR)/streams/file_stream.c \
 	$(LIBRETRO_COMM_DIR)/string/stdstring.c \
 	$(LIBRETRO_COMM_DIR)/utils/md5.c \
+	$(LIBRETRO_COMM_DIR)/utils/sha1.c \
 	$(LIBRETRO_COMM_DIR)/vfs/vfs_implementation.c \
 	$(LIBRETRO_COMM_DIR)/zlib/adler32.c \
 	$(LIBRETRO_COMM_DIR)/zlib/compress.c \

@@ -7,9 +7,8 @@
 #ifndef HARDDISK_H
 #define HARDDISK_H
 
+#include <formats/libchdr/chd.h>
 #include "driver.h"
-#include "chd.h"
-
 
 struct hard_disk_file;
 

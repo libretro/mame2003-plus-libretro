@@ -23,8 +23,7 @@
  * MA 02111-1307, USA.
  */
 
-#include "sha1.h"
-//#include "macros.h"
+#include <utils/sha1.h>
 
 #include <assert.h>
 #include <stdlib.h>

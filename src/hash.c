@@ -131,7 +131,7 @@
 #include <zlib.h>
 #include "hash.h"
 #include <utils/md5.h>
-#include "sha1.h"
+#include <utils/sha1.h>
 #include "osd_cpu.h"
 #include "mame.h"
 #include "common.h"
