@@ -1,6 +1,6 @@
 
 #include "driver.h"
-//#include <stdio.h>
+/*#include <stdio.h>*/
 
 #include "machine/8254pit.h"
 

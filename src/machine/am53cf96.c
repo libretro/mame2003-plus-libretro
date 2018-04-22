@@ -23,26 +23,26 @@ int lba, blocks;
 struct hard_disk_file *disk;
 static struct AM53CF96interface *intf;
 
-// 53CF96 register set
+/* 53CF96 register set*/
 enum
 {
-	REG_XFERCNTLOW = 0,	// read = current xfer count lo byte, write = set xfer count lo byte
-	REG_XFERCNTMID,		// read = current xfer count mid byte, write = set xfer count mid byte
-	REG_FIFO,		// read/write = FIFO
-	REG_COMMAND,		// read/write = command
+	REG_XFERCNTLOW = 0,	/* read = current xfer count lo byte, write = set xfer count lo byte*/
+	REG_XFERCNTMID,		/* read = current xfer count mid byte, write = set xfer count mid byte*/
+	REG_FIFO,		/* read/write = FIFO*/
+	REG_COMMAND,		/* read/write = command*/
 
-	REG_STATUS,		// read = status, write = destination SCSI ID (4)
-	REG_IRQSTATE,		// read = IRQ status, write = timeout	      (5)
-	REG_INTSTATE,		// read = internal state, write = sync xfer period (6)
-	REG_FIFOSTATE,		// read = FIFO status, write = sync offset
-	REG_CTRL1,		// read/write = control 1
-	REG_CLOCKFCTR,		// clock factor (write only)
-	REG_TESTMODE,		// test mode (write only)
-	REG_CTRL2,		// read/write = control 2
-	REG_CTRL3,		// read/write = control 3
-	REG_CTRL4,		// read/write = control 4
-	REG_XFERCNTHI,		// read = current xfer count hi byte, write = set xfer count hi byte
-	REG_DATAALIGN,		// data alignment (write only)
+	REG_STATUS,		/* read = status, write = destination SCSI ID (4)*/
+	REG_IRQSTATE,		/* read = IRQ status, write = timeout	      (5)*/
+	REG_INTSTATE,		/* read = internal state, write = sync xfer period (6)*/
+	REG_FIFOSTATE,		/* read = FIFO status, write = sync offset*/
+	REG_CTRL1,		/* read/write = control 1*/
+	REG_CLOCKFCTR,		/* clock factor (write only)*/
+	REG_TESTMODE,		/* test mode (write only)*/
+	REG_CTRL2,		/* read/write = control 2*/
+	REG_CTRL3,		/* read/write = control 3*/
+	REG_CTRL4,		/* read/write = control 4*/
+	REG_XFERCNTHI,		/* read = current xfer count hi byte, write = set xfer count hi byte*/
+	REG_DATAALIGN,		/* data alignment (write only)*/
 };
 
 READ32_HANDLER( am53cf96_r )
@@ -73,11 +73,11 @@ READ32_HANDLER( am53cf96_r )
 
 	rv = scsi_regs[reg]<<shift;
 
-//	logerror("53cf96: read reg %d = %x (PC=%x)\n", reg, rv>>shift, activecpu_get_pc());
+/*	logerror("53cf96: read reg %d = %x (PC=%x)\n", reg, rv>>shift, activecpu_get_pc());*/
 
 	if (reg == REG_IRQSTATE)
 	{
-		scsi_regs[REG_STATUS] &= ~0x80;	// clear IRQ flag
+		scsi_regs[REG_STATUS] &= ~0x80;	/* clear IRQ flag*/
 	}
 
 	return rv;
@@ -99,14 +99,14 @@ WRITE32_HANDLER( am53cf96_w )
 	}
 	val &= 0xff;
 
-//	logerror("53cf96: w %x to reg %d (ofs %02x data %08x mask %08x PC=%x)\n", val, reg, offset, data, mem_mask, activecpu_get_pc());
+/*	logerror("53cf96: w %x to reg %d (ofs %02x data %08x mask %08x PC=%x)\n", val, reg, offset, data, mem_mask, activecpu_get_pc());*/
 
 	if (reg == REG_XFERCNTLOW || reg == REG_XFERCNTMID || reg == REG_XFERCNTHI)
 	{
-		scsi_regs[REG_STATUS] &= ~0x10;	// clear CTZ bit
+		scsi_regs[REG_STATUS] &= ~0x10;	/* clear CTZ bit*/
 	}
 
-	// FIFO
+	/* FIFO*/
 	if (reg == REG_FIFO)
 	{
 		fifo[fptr++] = val;
@@ -116,30 +116,30 @@ WRITE32_HANDLER( am53cf96_w )
 		}
 	}
 
-	// command
+	/* command*/
 	if (reg == REG_COMMAND)
 	{
 		dma = (val & 0x80) ? 1 : 0;
 		fptr = 0;
 		switch (val & 0x7f)
 		{
-			case 0:	// NOP
-				scsi_regs[REG_IRQSTATE] = 8;	// indicate success
+			case 0:	/* NOP*/
+				scsi_regs[REG_IRQSTATE] = 8;	/* indicate success*/
 				xfer_state = 0;
 				break;
-			case 3:	// reset SCSI bus
-				scsi_regs[REG_IRQSTATE] = 8;	// indicate success
-				scsi_regs[REG_INTSTATE] = 4;	// command sent OK
-				scsi_regs[REG_STATUS] |= 0x80;	// indicate IRQ
+			case 3:	/* reset SCSI bus*/
+				scsi_regs[REG_IRQSTATE] = 8;	/* indicate success*/
+				scsi_regs[REG_INTSTATE] = 4;	/* command sent OK*/
+				scsi_regs[REG_STATUS] |= 0x80;	/* indicate IRQ*/
 				xfer_state = 0;
 				intf->irq_callback();
 				break;
-			case 0x42:    	// select with ATN steps
-				scsi_regs[REG_IRQSTATE] = 8;	// indicate success
-				scsi_regs[REG_STATUS] |= 0x80;	// indicate IRQ
+			case 0x42:    	/* select with ATN steps*/
+				scsi_regs[REG_IRQSTATE] = 8;	/* indicate success*/
+				scsi_regs[REG_STATUS] |= 0x80;	/* indicate IRQ*/
 				intf->irq_callback();
 				last_cmd = fifo[1];
-//				logerror("53cf96: executing SCSI command %x\n", last_cmd);
+/*				logerror("53cf96: executing SCSI command %x\n", last_cmd);*/
 				if (last_cmd == 0)
 				{
 					scsi_regs[REG_INTSTATE] = 6;
@@ -149,7 +149,7 @@ WRITE32_HANDLER( am53cf96_w )
 					scsi_regs[REG_INTSTATE] = 4;
 				}
 
-				if (last_cmd == 0x28)	// READ (10-byte varient)
+				if (last_cmd == 0x28)	/* READ (10-byte varient)*/
 				{
 					lba = fifo[3]<<24 | fifo[4]<<16 | fifo[5]<<8 | fifo[6];
 					blocks = fifo[8]<<8 | fifo[9];
@@ -158,9 +158,9 @@ WRITE32_HANDLER( am53cf96_w )
 				}
 				switch (last_cmd)
 				{
-					case 0:		// TEST UNIT READY
-					case 3: 	// REQUEST SENSE
-					case 0x28: 	// READ (10 byte)
+					case 0:		/* TEST UNIT READY*/
+					case 3: 	/* REQUEST SENSE*/
+					case 0x28: 	/* READ (10 byte)*/
 						break;
 					default:
 						logerror("53cf96: unknown SCSI command %x!\n", last_cmd);
@@ -168,21 +168,21 @@ WRITE32_HANDLER( am53cf96_w )
 				}
 				xfer_state = 0;
 				break;
-			case 0x44:	// enable selection/reselection
+			case 0x44:	/* enable selection/reselection*/
 				xfer_state = 0;
 				break;
-			case 0x10:	// information transfer (must not change xfer_state)
-			case 0x11:	// second phase of information transfer
-			case 0x12:	// message accepted
-				scsi_regs[REG_IRQSTATE] = 8;	// indicate success
-				scsi_regs[REG_INTSTATE] = 6;	// command sent OK
-				scsi_regs[REG_STATUS] |= 0x80;	// indicate IRQ
+			case 0x10:	/* information transfer (must not change xfer_state)*/
+			case 0x11:	/* second phase of information transfer*/
+			case 0x12:	/* message accepted*/
+				scsi_regs[REG_IRQSTATE] = 8;	/* indicate success*/
+				scsi_regs[REG_INTSTATE] = 6;	/* command sent OK*/
+				scsi_regs[REG_STATUS] |= 0x80;	/* indicate IRQ*/
 				intf->irq_callback();
 				break;
 		}
 	}
 
-	// only update the register mirror if it's not a write-only reg
+	/* only update the register mirror if it's not a write-only reg*/
 	if (reg != REG_STATUS && reg != REG_INTSTATE && reg != REG_IRQSTATE && reg != REG_FIFOSTATE)
 	{	
 		scsi_regs[reg] = val;
@@ -193,12 +193,12 @@ void am53cf96_init( struct AM53CF96interface *interface )
 {
 	const struct hard_disk_info *hdinfo;
 
-	// save interface pointer for later
+	/* save interface pointer for later*/
 	intf = interface;
 
 	memset(scsi_regs, 0, sizeof(scsi_regs));
 
-	// try to open the disk
+	/* try to open the disk*/
 	if (interface->device == AM53CF96_DEVICE_HDD)
 	{
 		disk = hard_disk_open(get_disk_handle(0));
@@ -233,24 +233,24 @@ void am53cf96_init( struct AM53CF96interface *interface )
 	state_save_register_int("53cf96", 0, "blocks to read", &blocks);
 }
 
-// retrieve data from the SCSI controller
+/* retrieve data from the SCSI controller*/
 void am53cf96_read_data(int bytes, data8_t *pData)
 {
 	int i;
 
-	scsi_regs[REG_STATUS] |= 0x10;	// indicate DMA finished
+	scsi_regs[REG_STATUS] |= 0x10;	/* indicate DMA finished*/
 
 	switch (last_cmd)
 	{
-		case 0x03:	// REQUEST SENSE
-			pData[0] = 0x80;	// valid sense
+		case 0x03:	/* REQUEST SENSE*/
+			pData[0] = 0x80;	/* valid sense*/
 			for (i = 1; i < 12; i++)
 			{
 				pData[i] = 0;
 			}
 			break;
 
-		case 0x28:	// READ (10 byte)
+		case 0x28:	/* READ (10 byte)*/
 			if ((disk) && (blocks))
 			{
 				while (bytes > 0)

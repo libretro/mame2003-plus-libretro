@@ -90,15 +90,15 @@ static int EEPROM_command_match(const char *buf, const char *cmd, int len)
 
 struct EEPROM_interface eeprom_interface_93C46 =
 {
-	6,				// address bits	6
-	16,				// data bits	16
-	"*110",			// read			1 10 aaaaaa
-	"*101",			// write		1 01 aaaaaa dddddddddddddddd
-	"*111",			// erase		1 11 aaaaaa
-	"*10000xxxx",	// lock			1 00 00xxxx
-	"*10011xxxx",	// unlock		1 00 11xxxx
-//	"*10001xxxx"	// write all	1 00 01xxxx dddddddddddddddd
-//	"*10010xxxx"	// erase all	1 00 10xxxx
+	6,				/* address bits	6*/
+	16,				/* data bits	16*/
+	"*110",			/* read			1 10 aaaaaa*/
+	"*101",			/* write		1 01 aaaaaa dddddddddddddddd*/
+	"*111",			/* erase		1 11 aaaaaa*/
+	"*10000xxxx",	/* lock			1 00 00xxxx*/
+	"*10011xxxx",	/* unlock		1 00 11xxxx*/
+/*	"*10001xxxx"	*/ /* write all	1 00 01xxxx dddddddddddddddd*/
+/*	"*10010xxxx"	*/ /* erase all	1 00 10xxxx*/
 };
 
 

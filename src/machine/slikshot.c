@@ -498,7 +498,7 @@ WRITE_HANDLER( slikshot_z80_control_w )
 	/* reset the Z80 on bit 4 changing */
 	if (delta & 0x10)
 	{
-//		logerror("%15f: Reset Z80: %02x  PC=%04x\n", timer_get_time(), data & 0x10, cpunum_get_reg(2, Z80_PC));
+/*		logerror("%15f: Reset Z80: %02x  PC=%04x\n", timer_get_time(), data & 0x10, cpunum_get_reg(2, Z80_PC));*/
 
 		/* this is a big kludge: only allow a reset if the Z80 is stopped */
 		/* at its endpoint; otherwise, we never get a result from the Z80 */
@@ -523,7 +523,7 @@ WRITE_HANDLER( slikshot_z80_control_w )
 	/* won't work with it configured as such */
 	if (delta & data & 0x20)
 	{
-//		logerror("%15f: Clock edge high\n", timer_get_time());
+/*		logerror("%15f: Clock edge high\n", timer_get_time());*/
 	}
 }
 
@@ -562,7 +562,7 @@ void slikshot_extra_draw(struct mame_bitmap *bitmap, const struct rectangle *cli
 	if (newshoot && !lastshoot)
 	{
 		compute_sensors();
-//		usrintf_showmessage("V=%02x,%02x  X=%02x", curvx, curvy, curx);
+/*		usrintf_showmessage("V=%02x,%02x  X=%02x", curvx, curvy, curx);*/
 	}
 	lastshoot = newshoot;
 

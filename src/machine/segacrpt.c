@@ -1093,8 +1093,8 @@ void astrofl_decode(void)
 		{ 4,2,0,6 },
 		{ 2,4,0,6 },
 		{ 4,0,2,6 }
-//		{ 2,0,4,6 }
-//		{ 0,2,4,6 }
+/*		{ 2,0,4,6 }*/
+/*		{ 0,2,4,6 }*/
 	};
 	int A;
 	unsigned char *rom = memory_region(REGION_CPU1);

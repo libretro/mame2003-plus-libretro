@@ -33,7 +33,7 @@ static UINT16 copd2_offs = 0;
 
 static void copd2_set_tableoffset(UINT16 data)
 {
-	//logerror("mcu_offs %04x\n", data);
+	/*logerror("mcu_offs %04x\n", data);*/
 	copd2_offs = data;
 	if (copd2_offs>0xff)
 	{
@@ -106,7 +106,7 @@ static void copd2_set_tableoffset(UINT16 data)
 static void copd2_set_tabledata(UINT16 data)
 {
 	copd2_table[copd2_offs] = data;
-	//logerror("mcu_data %04x\n", data);
+	/*logerror("mcu_data %04x\n", data);*/
 #if 0
     {
         FILE *fp;
@@ -323,13 +323,13 @@ static UINT8 cop_calculate_collsion_detection(void)
 	cop_hit_val_x = (cop_collision_info[0].x - cop_collision_info[1].x) >> 16;
 	cop_hit_val_y = (cop_collision_info[0].y - cop_collision_info[1].y) >> 16;
 	cop_hit_val_z = 1;
-	cop_hit_val_unk = res; // TODO: there's also bit 2 and 3 triggered in the tests, no known meaning
+	cop_hit_val_unk = res; /* TODO: there's also bit 2 and 3 triggered in the tests, no known meaning*/
 
 
-	//popmessage("%d %d %04x %04x %04x %04x",cop_hit_val_x,cop_hit_val_y,cop_collision_info[0].hitbox_x,cop_collision_info[0].hitbox_y,cop_collision_info[1].hitbox_x,cop_collision_info[1].hitbox_y);
+	/*popmessage("%d %d %04x %04x %04x %04x",cop_hit_val_x,cop_hit_val_y,cop_collision_info[0].hitbox_x,cop_collision_info[0].hitbox_y,cop_collision_info[1].hitbox_x,cop_collision_info[1].hitbox_y);*/
 
-	//if(res == 0)
-	//popmessage("0:%08x %08x %08x 1:%08x %08x %08x\n",cop_collision_info[0].x,cop_collision_info[0].y,cop_collision_info[0].hitbox,cop_collision_info[1].x,cop_collision_info[1].y,cop_collision_info[1].hitbox);
+	/*if(res == 0)*/
+	/*popmessage("0:%08x %08x %08x 1:%08x %08x %08x\n",cop_collision_info[0].x,cop_collision_info[0].y,cop_collision_info[0].hitbox,cop_collision_info[1].x,cop_collision_info[1].y,cop_collision_info[1].hitbox);*/
 
 	return res;
 }
@@ -417,7 +417,7 @@ static WRITE16_HANDLER( generic_cop_w )
 		case (0x000/2):
 		case (0x002/2):
 			cop_sprite_dma_param = (cop_mcu_ram[0x000/2]) | (cop_mcu_ram[0x002/2] << 16);
-			//popmessage("%08x",cop_sprite_dma_param & 0xffffffc0);
+			/*popmessage("%08x",cop_sprite_dma_param & 0xffffffc0);*/
 			break;
 
 		case (0x00c/2): { cop_sprite_dma_size = cop_mcu_ram[offset]; break; }
@@ -516,29 +516,29 @@ static WRITE16_HANDLER( generic_cop_w )
 
 		case (0x078/2): /* DMA source address */
 		{
-			cop_dma_src[cop_dma_trigger] = data; // << 6 to get actual address
-			//seibu_cop_log("%06x: COPX set layer clear address to %04x (actual %08x)\n", cpu_get_pc(space->cpu), data, data<<6);
+			cop_dma_src[cop_dma_trigger] = data; /* << 6 to get actual address*/
+			/*seibu_cop_log("%06x: COPX set layer clear address to %04x (actual %08x)\n", cpu_get_pc(space->cpu), data, data<<6);*/
 			break;
 		}
 
 		case (0x07a/2): /* DMA length */
 		{
 			cop_dma_size[cop_dma_trigger] = data;
-			//seibu_cop_log("%06x: COPX set layer clear length to %04x (actual %08x)\n", cpu_get_pc(space->cpu), data, data<<5);
+			/*seibu_cop_log("%06x: COPX set layer clear length to %04x (actual %08x)\n", cpu_get_pc(space->cpu), data, data<<5);*/
 			break;
 		}
 
 		case (0x07c/2): /* DMA destination */
 		{
 			cop_dma_dst[cop_dma_trigger] = data;
-			//seibu_cop_log("%06x: COPX set layer clear value to %04x (actual %08x)\n", cpu_get_pc(space->cpu), data, data<<6);
+			/*seibu_cop_log("%06x: COPX set layer clear value to %04x (actual %08x)\n", cpu_get_pc(space->cpu), data, data<<6);*/
 			break;
 		}
 
 		case (0x07e/2): /* DMA parameter */
 		{
 			cop_dma_trigger = data;
-			//seibu_cop_log("%06x: COPX set layer clear trigger? to %04x\n", cpu_get_pc(space->cpu), data);
+			/*seibu_cop_log("%06x: COPX set layer clear trigger? to %04x\n", cpu_get_pc(space->cpu), data);*/
 			if (data>=0x1ff)
 			{
 				seibu_cop_log("invalid DMA trigger!, >0x1ff\n");
@@ -631,7 +631,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				#endif
 			}
 
-			//printf("%04x %04x %04x\n",cop_mcu_ram[offset],u1,u2);
+			/*printf("%04x %04x %04x\n",cop_mcu_ram[offset],u1,u2);*/
 
 			/*
             Macro notes:
@@ -747,7 +747,7 @@ static WRITE16_HANDLER( generic_cop_w )
 						cop_angle += 0x80;
 				}
 
-				//printf("%d %d %f %04x\n",dx,dy,atan(double(dy)/double(dx)) * 128 / M_PI,cop_angle);
+				/*printf("%d %d %f %04x\n",dx,dy,atan(double(dy)/double(dx)) * 128 / M_PI,cop_angle);*/
 
 				if(cop_mcu_ram[offset] & 0x80)
 					cpu_writemem24bew_word(cop_register[0]+(0x34^2), cop_angle);
@@ -755,7 +755,7 @@ static WRITE16_HANDLER( generic_cop_w )
 			}
 
 			/* Pythagorean theorem, hypotenuse direction - 130e / 138e */
-			//(heatbrl)  | 5 | bf7f | 138e | 984 aa4 d82 aa2 39b b9a b9a b9a
+			/*(heatbrl)  | 5 | bf7f | 138e | 984 aa4 d82 aa2 39b b9a b9a b9a*/
 			if(COP_CMD(0x984,0xaa4,0xd82,0xaa2,0x39b,0xb9a,0xb9a,0xb9a,5,0xbf7f))
 			{
 				int dy = cpu_readmem32bedw_dword(cop_register[1]+4) - cpu_readmem32bedw_dword(cop_register[0]+4);
@@ -780,7 +780,7 @@ static WRITE16_HANDLER( generic_cop_w )
 			}
 
 			/* Pythagorean theorem, hypotenuse length - 0x3bb0 */
-			//(grainbow) | 4 | 007f | 3bb0 | f9c b9c b9c b9c b9c b9c b9c 99c
+			/*(grainbow) | 4 | 007f | 3bb0 | f9c b9c b9c b9c b9c b9c b9c 99c*/
 			/*
              40000-7ffff:
                v1 = (x / 32768)*64
@@ -851,7 +851,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				return;
 			}
 
-			//(heatbrl)  | 9 | ffff | b080 | b40 bc0 bc2
+			/*(heatbrl)  | 9 | ffff | b080 | b40 bc0 bc2*/
 			if(COP_CMD(0xb40,0xbc0,0xbc2,0x000,0x000,0x000,0x000,0x000,u1,u2))
 			{
 				cop_collision_info[0].hitbox = cpu_readmem24bew_word(cop_register[2]);
@@ -872,7 +872,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				return;
 			}
 
-			//(heatbrl)  | 6 | ffff | b880 | b60 be0 be2
+			/*(heatbrl)  | 6 | ffff | b880 | b60 be0 be2*/
 			if(COP_CMD(0xb60,0xbe0,0xbe2,0x000,0x000,0x000,0x000,0x000,u1,u2))
 			{
 				cop_collision_info[1].hitbox = cpu_readmem24bew_word(cop_register[3]);
@@ -885,7 +885,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				return;
 			}
 
-			// grainbow 0d | a | fff3 | 6980 | b80 ba0
+			/* grainbow 0d | a | fff3 | 6980 | b80 ba0*/
 			if(COP_CMD(0xb80,0xba0,0x000,0x000,0x000,0x000,0x000,0x000,10,0xfff3))
 			{
 				UINT8 offs;
@@ -898,8 +898,8 @@ static WRITE16_HANDLER( generic_cop_w )
 				abs_y = cpu_readmem24bew_word(cop_register[0] + 4) - cop_sprite_dma_abs_y;
 				rel_xy = cpu_readmem24bew_word(cop_sprite_dma_src + 4 + offs);
 
-				//if(rel_xy & 0x0706)
-				//  printf("sprite rel_xy = %04x\n",rel_xy);
+				/*if(rel_xy & 0x0706)*/
+				/*  printf("sprite rel_xy = %04x\n",rel_xy);*/
 
 				if(rel_xy & 1)
 					cpu_writemem24bew_word(cop_register[4] + offs + 4,0xc0 + abs_x - (rel_xy & 0xf8));
@@ -910,7 +910,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				return;
 			}
 
-			// grainbow 18 | a | ff00 | c480 | 080 882
+			/* grainbow 18 | a | ff00 | c480 | 080 882*/
 			if(COP_CMD(0x080,0x882,0x000,0x000,0x000,0x000,0x000,0x000,10,0xff00))
 			{
 				UINT8 offs;
@@ -918,11 +918,11 @@ static WRITE16_HANDLER( generic_cop_w )
 				offs = (offset & 3) * 4;
 
 				cpu_writemem24bew_word(cop_register[4] + offs + 0,cpu_readmem24bew_word(cop_sprite_dma_src + offs) + (cop_sprite_dma_param & 0x3f));
-				//cpu_writemem24bew_word(cop_register[4] + offs + 2,cpu_readmem24bew_word(cop_sprite_dma_src+2 + offs));
+				/*cpu_writemem24bew_word(cop_register[4] + offs + 2,cpu_readmem24bew_word(cop_sprite_dma_src+2 + offs));*/
 				return;
 			}
 
-			// cupsoc 1b | 5 | 7ff7 | dde5 | f80 aa2 984 0c2
+			/* cupsoc 1b | 5 | 7ff7 | dde5 | f80 aa2 984 0c2*/
 			/* radar x/y positions */
 			/* FIXME: x/ys are offsetted */
 			/* FIXME: uses 0x10044a for something */
@@ -930,7 +930,7 @@ static WRITE16_HANDLER( generic_cop_w )
 			{
 				UINT8 offs;
 				int div;
-//              INT16 offs_val;
+/*              INT16 offs_val;*/
 
 				/* TODO: [4-7] could be mirrors of [0-3] (this is the only command so far that uses 4-7 actually)*/
 				/* 0 + [4] */
@@ -938,13 +938,13 @@ static WRITE16_HANDLER( generic_cop_w )
 				/* 8 + [4] */
 				/* 4 + [6] */
 
-				//printf("%08x %08x %08x %08x %08x %08x %08x\n",cop_register[0],cop_register[1],cop_register[2],cop_register[3],cop_register[4],cop_register[5],cop_register[6]);
+				/*printf("%08x %08x %08x %08x %08x %08x %08x\n",cop_register[0],cop_register[1],cop_register[2],cop_register[3],cop_register[4],cop_register[5],cop_register[6]);*/
 
 				offs = (offset & 3) * 4;
 
 				div = cpu_readmem24bew_word(cop_register[4] + offs) + 1;
-//              offs_val = cpu_readmem24bew_word(cop_register[3] + offs);
-				//420 / 180 = 500 : 400 = 30 / 50 = 98 / 18
+/*              offs_val = cpu_readmem24bew_word(cop_register[3] + offs);*/
+				/*420 / 180 = 500 : 400 = 30 / 50 = 98 / 18*/
 
 				if(div == 0) { div = 1; }
 
@@ -952,7 +952,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				return;
 			}
 
-			//(cupsoc)   | 8 | f3e7 | 6200 | 3a0 3a6 380 aa0 2a6
+			/*(cupsoc)   | 8 | f3e7 | 6200 | 3a0 3a6 380 aa0 2a6*/
 			if(COP_CMD(0x3a0,0x3a6,0x380,0xaa0,0x2a6,0x000,0x000,0x000,8,0xf3e7))
 			{
 				INT8 cur_angle;
@@ -964,7 +964,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				/* 0xc [1] */
 
 				cur_angle = cpu_readmem24bew(cop_register[1] + (0xc ^ 3));
-				cpu_writemem24bew(cop_register[1] + (0^3),cpu_readmem24bew(cop_register[1] + (0^3)) & 0xfb); //correct?
+				cpu_writemem24bew(cop_register[1] + (0^3),cpu_readmem24bew(cop_register[1] + (0^3)) & 0xfb); /*correct?*/
 
 				if(cur_angle >= cop_angle_compare)
 				{
@@ -989,7 +989,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				return;
 			}
 
-			//(grainbow) | 8 | f3e7 | 6200 | 380 39a 380 a80 29a
+			/*(grainbow) | 8 | f3e7 | 6200 | 380 39a 380 a80 29a*/
 			/* search direction, used on SD Gundam homing weapon */
 			/* FIXME: still doesn't work ... */
 			if(COP_CMD(0x380,0x39a,0x380,0xa80,0x29a,0x000,0x000,0x000,8,0xf3e7))
@@ -997,7 +997,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				INT8 cur_angle;
 
 				cur_angle = cpu_readmem24bew(cop_register[0] + (0x34 ^ 3));
-				//cpu_writemem24bew(cop_register[0] + (0^3),cpu_readmem24bew(cop_register[0] + (0^3)) & 0xfb); //correct?
+				/*cpu_writemem24bew(cop_register[0] + (0^3),cpu_readmem24bew(cop_register[0] + (0^3)) & 0xfb); */ /*correct?*/
 
 				if(cur_angle >= cop_angle_compare)
 				{
@@ -1006,7 +1006,7 @@ static WRITE16_HANDLER( generic_cop_w )
 					if(cur_angle <= cop_angle_compare)
 					{
 						cur_angle = cop_angle_compare;
-						//cpu_writemem24bew(cop_register[0] + (0^3),cpu_readmem24bew(cop_register[0] + (0^3)) | 2);
+						/*cpu_writemem24bew(cop_register[0] + (0^3),cpu_readmem24bew(cop_register[0] + (0^3)) | 2);*/
 					}
 				}
 				else if(cur_angle <= cop_angle_compare)
@@ -1016,7 +1016,7 @@ static WRITE16_HANDLER( generic_cop_w )
 					if(cur_angle >= cop_angle_compare)
 					{
 						cur_angle = cop_angle_compare;
-						//cpu_writemem24bew(cop_register[0] + (0^3),cpu_readmem24bew(cop_register[0] + (0^3)) | 2);
+						/*cpu_writemem24bew(cop_register[0] + (0^3),cpu_readmem24bew(cop_register[0] + (0^3)) | 2);*/
 					}
 				}
 
@@ -1031,7 +1031,7 @@ static WRITE16_HANDLER( generic_cop_w )
 		/* DMA go register */
 		case (0x2fc/2):
 		{
-			//seibu_cop_log("%06x: COPX execute current layer clear??? %04x\n", space->device().safe_pc(), data);
+			/*seibu_cop_log("%06x: COPX execute current layer clear??? %04x\n", space->device().safe_pc(), data);*/
 
 			if (cop_dma_trigger >= 0x80 && cop_dma_trigger <= 0x87)
 			{
@@ -1051,8 +1051,8 @@ static WRITE16_HANDLER( generic_cop_w )
                   presumably bad RAM table or bad algorithm
                 */
 
-				//if(dma_trigger != 0x87)
-				//printf("SRC: %08x %08x DST:%08x SIZE:%08x TRIGGER: %08x %02x %02x\n",cop_dma_src[cop_dma_trigger] << 6,cop_dma_fade_table * 0x400,cop_dma_dst[cop_dma_trigger] << 6,cop_dma_size[cop_dma_trigger] << 5,cop_dma_trigger,pal_brightness_val,pal_brightness_mode);
+				/*if(dma_trigger != 0x87)*/
+				/*printf("SRC: %08x %08x DST:%08x SIZE:%08x TRIGGER: %08x %02x %02x\n",cop_dma_src[cop_dma_trigger] << 6,cop_dma_fade_table * 0x400,cop_dma_dst[cop_dma_trigger] << 6,cop_dma_size[cop_dma_trigger] << 5,cop_dma_trigger,pal_brightness_val,pal_brightness_mode);*/
 
 				src = (cop_dma_src[cop_dma_trigger] << 6);
 				dst = (cop_dma_dst[cop_dma_trigger] << 6);
@@ -1082,7 +1082,7 @@ static WRITE16_HANDLER( generic_cop_w )
 						r = fade_table(r|(pal_brightness_val ^ 0x1f));
 						pal_val |= ((r + rt) & 0x1f);
 					}
-					else if(pal_brightness_mode == 4) //Denjin Makai
+					else if(pal_brightness_mode == 4) /*Denjin Makai*/
 					{
 						bt =(cpu_readmem24bew_word(src + (cop_dma_fade_table * 0x400)) & 0x7c00) >> 10;
 						b = (cpu_readmem24bew_word(src) & 0x7c00) >> 10;
@@ -1093,7 +1093,7 @@ static WRITE16_HANDLER( generic_cop_w )
 
 						if(pal_brightness_val == 0x10)
 							pal_val = bt << 10 | gt << 5 | rt << 0;
-						else if (pal_brightness_val == 0xffff) // level transitions
+						else if (pal_brightness_val == 0xffff) /* level transitions*/
 				            pal_val = bt << 10 | gt << 5 | rt << 0;
 						else
 						{
@@ -1146,13 +1146,13 @@ static WRITE16_HANDLER( generic_cop_w )
 			{
 				UINT32 length, address;
 				int i;
-				if(cop_dma_dst[cop_dma_trigger] != 0x0000) // Invalid?
+				if(cop_dma_dst[cop_dma_trigger] != 0x0000) /* Invalid?*/
 					return;
 
 				address = (cop_dma_src[cop_dma_trigger] << 6);
 				length = (cop_dma_size[cop_dma_trigger]+1) << 5;
 
-				//printf("%08x %08x\n",address,length);
+				/*printf("%08x %08x\n",address,length);*/
 
 				for (i=address;i<address+length;i+=4)
 				{
@@ -1168,8 +1168,8 @@ static WRITE16_HANDLER( generic_cop_w )
 				UINT32 length, address;
 				int i;
 
-				//if(cop_dma_dst[cop_dma_trigger] != 0x0000) // Invalid?
-				//  return;
+				/*if(cop_dma_dst[cop_dma_trigger] != 0x0000) */ /* Invalid?*/
+				/*  return;*/
 
 				address = (cop_dma_src[cop_dma_trigger] << 6);
 				length = ((cop_dma_size[cop_dma_trigger]+1) << 4);
@@ -1220,7 +1220,7 @@ static WRITE16_HANDLER( generic_cop_w )
 						vali = cpu_readmem24bew_word(addri);
 						valj = cpu_readmem24bew_word(addrj);
 
-						//printf("%08x %08x %04x %04x\n",addri,addrj,vali,valj);
+						/*printf("%08x %08x %04x %04x\n",addri,addrj,vali,valj);*/
 
 						switch(cop_sort_param)
 						{
@@ -1240,7 +1240,7 @@ static WRITE16_HANDLER( generic_cop_w )
 					}
 				}
 			}
-			//else
+			/*else*/
 
 			break;
 		}
@@ -1276,7 +1276,7 @@ WRITE16_HANDLER( denjinmk_mcu_w )
 {
 	COMBINE_DATA(&cop_mcu_ram[offset]);
 	
-	if(offset == 0x280/2) //irq ack / sprite buffering?
+	if(offset == 0x280/2) /*irq ack / sprite buffering?*/
 		return;
 
 

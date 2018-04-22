@@ -37,13 +37,13 @@
 
 #include "driver.h"
 
-// CAVEATS:
-// 0x80 and 0x82 pre- opcodes can easily be confused. They perform exactly the same
-// function when operating on memory, but when working with registers one affects
-// byte registers and the other word registers. Gunforce, Blade Master and
-// Lethal Thunder had this error.
+/* CAVEATS:*/
+/* 0x80 and 0x82 pre- opcodes can easily be confused. They perform exactly the same*/
+/* function when operating on memory, but when working with registers one affects*/
+/* byte registers and the other word registers. Gunforce, Blade Master and*/
+/* Lethal Thunder had this error.*/
 
-//double check 0x00 0x22 0x28 0x4a 0x34 in these tables
+/*double check 0x00 0x22 0x28 0x4a 0x34 in these tables*/
 
 #define xxxx 0xf1/* Unknown */
 
@@ -65,21 +65,21 @@ const unsigned char gunforce_decryption_table[256] = {
 	xxxx,0xf9,xxxx,0x2f,0x85,xxxx,0xeb,0xa2, xxxx,0xe2,0x11,xxxx,0x4b,0x7e,xxxx,0x78, /* E0 */
 	xxxx,xxxx,0x09,0xa1,0x03,xxxx,0x23,0xc1, 0x8e,0xe9,0xd1,0x7c,xxxx,xxxx,0xc7,0x06, /* F0 */
 };
-// 0x13 (0x29) guess
-// 0x18 (0xa9) guess
-// 0x50 (0x28) guess
-// 0x63 (0xc0) guess
-// 0x7e (0x18) opcode is right but arguments could be swapped
-// 0xcc (0x00) guess
-// 0xea (0x11) guess
-// 0x51 (0x77) guess (kengo)
-// 0x96 (0x0e) complete guess (kengo), maybe wrong but I don't see what it could be
+/* 0x13 (0x29) guess*/
+/* 0x18 (0xa9) guess*/
+/* 0x50 (0x28) guess*/
+/* 0x63 (0xc0) guess*/
+/* 0x7e (0x18) opcode is right but arguments could be swapped*/
+/* 0xcc (0x00) guess*/
+/* 0xea (0x11) guess*/
+/* 0x51 (0x77) guess (kengo)*/
+/* 0x96 (0x0e) complete guess (kengo), maybe wrong but I don't see what it could be*/
 
 
-//double check 22 (boot bomb at 2a000)
-//47a7 (46e0 in boot) - hmm
+/*double check 22 (boot bomb at 2a000)*/
+/*47a7 (46e0 in boot) - hmm*/
 
-// 0x00 is NOT 0x20 (no context in bomberman)
+/* 0x00 is NOT 0x20 (no context in bomberman)*/
 
 const unsigned char bomberman_decryption_table[256] = {
 	xxxx,xxxx,0x79,xxxx,0x9d,0x48,xxxx,xxxx, xxxx,xxxx,0x2e,xxxx,xxxx,0xa5,0x72,xxxx, /* 00 */
@@ -104,17 +104,17 @@ const unsigned char bomberman_decryption_table[256] = {
 const unsigned char lethalth_decryption_table[256] = {
 	0x7f,0x26,0x5d,xxxx,0xba,xxxx,0x1e,0x5e, 0xb8,xxxx,0xbc,0xe8,0x01,xxxx,0x4a,0x25, /* 00 */
 	xxxx,0xbd,xxxx,0x22,0x10,xxxx,0x02,0x57, 0x70,xxxx,0x7c,xxxx,0xe7,0x52,xxxx,0xa9, /* 10 */
-//						^^^^				 ^^^^
+/*						^^^^				 ^^^^*/
 	xxxx,xxxx,0xc6,0x06,0xa0,0xfe,0xcf,0x8e, 0x43,0x8f,0x2d,xxxx,0xd4,0x85,0x75,0xa2, /* 20 */
-//                                                ^^^^
+/*                                                ^^^^*/
 	0x3d,xxxx,xxxx,0x38,0x7c,0x89,0xd1,0x80, 0x3b,0x72,0x07,xxxx,0x42,0x37,0x0a,0x18, /* 30 */
-//                                                                    ^^^^
+/*                                                                    ^^^^*/
 	0x88,0xb4,0x98,0x8b,0xb9,0x9c,0xad,0x0e, 0x2b,xxxx,0xbf,xxxx,0x55,xxxx,0x56,0xb0, /* 40 */
-//                                     ^^^^
+/*                                     ^^^^*/
 	0x93,0x91,xxxx,0xeb,xxxx,0x50,0x41,0x29, 0x47,xxxx,xxxx,0x60,xxxx,0xab,xxxx,xxxx, /* 50 */
 	0xc3,0xe2,0xd0,0xb2,0x11,0x79,xxxx,0x08, xxxx,0xfb,xxxx,0x2c,0x23,xxxx,0x28,0x0d, /* 60 */
 	xxxx,xxxx,xxxx,0x83,0x3c,xxxx,0x1b,0x34, 0x5b,xxxx,0x40,xxxx,xxxx,0x04,0xfc,0x09, /* 70 */
-//																				^^^^
+/*																				^^^^*/
 	0xb1,0xf3,0x8a,xxxx,xxxx,0x87,xxxx,xxxx, xxxx,xxxx,xxxx,xxxx,0xbe,0x84,0x1f,0xe6, /* 80 */
 	0xff,xxxx,0x12,xxxx,0xb5,0x36,xxxx,0xb3, xxxx,xxxx,xxxx,0xd2,0x4e,xxxx,xxxx,xxxx, /* 90 */
 	0xa5,xxxx,xxxx,0xc7,xxxx,0x27,0x0b,xxxx, 0x20,xxxx,xxxx,xxxx,xxxx,xxxx,0x61,0x7f, /* A0 */
@@ -123,28 +123,28 @@ const unsigned char lethalth_decryption_table[256] = {
 	0x81,0xfa,0x9d,0xe9,0x2e,0xa1,0xc1,0x33, xxxx,0x78,xxxx,0x0c,xxxx,0x24,0xaa,0xac, /* D0 */
 	xxxx,0xb6,xxxx,0xea,xxxx,0x73,0xe5,0x58, 0x00,0xf7,xxxx,0x74,xxxx,0x7e,xxxx,0xa3, /* E0 */
 	xxxx,0x5a,0xf6,0x32,0x46,0x2a,xxxx,xxxx, 0x53,0x4b,0x90,xxxx,0x51,0x68,0x99,0x13, /* F0 */
-//  							   			                                    ^^^^
+/*  							   			                                    ^^^^*/
 };
-// 0x2c (0xd4) complete guess
-// 0x2d (0x85) complete guess
-// 0xc4 (0x92) guess
-// 0xbb (0xfd) guess
-// 0x46 (0xad) guess
-// 0x6e (0x28) guess
-// 0x76 (0x1b) guess
-// 0x8d (0x84) guess
-// 0xa6 (0x0b) guess
-// 0xa8 (0x20) guess
-// 0xbd (0x39) guess
-// 0xc3 (0x48) guess
-// and our collection of conditional branches:
-// 0xbf (0x7d) >= (monitor test)
-// 0x34 (0x7c) < or <= (seems more like <) | these two are used toghether
-// 0xaf (0x7f) > or >= (seems more like >) |
-// 0xed (0x7e) <= or < (seems more like <=)
-// 0x00 (0x7f) > ? | these two are used toghether
-// 0x1a (0x7c) < ? | (rowscroll on pink screen on startup)
-// 0xc5 (0x7a) completely in the dark (game start after car seelction)
+/* 0x2c (0xd4) complete guess*/
+/* 0x2d (0x85) complete guess*/
+/* 0xc4 (0x92) guess*/
+/* 0xbb (0xfd) guess*/
+/* 0x46 (0xad) guess*/
+/* 0x6e (0x28) guess*/
+/* 0x76 (0x1b) guess*/
+/* 0x8d (0x84) guess*/
+/* 0xa6 (0x0b) guess*/
+/* 0xa8 (0x20) guess*/
+/* 0xbd (0x39) guess*/
+/* 0xc3 (0x48) guess*/
+/* and our collection of conditional branches:*/
+/* 0xbf (0x7d) >= (monitor test)*/
+/* 0x34 (0x7c) < or <= (seems more like <) | these two are used toghether*/
+/* 0xaf (0x7f) > or >= (seems more like >) |*/
+/* 0xed (0x7e) <= or < (seems more like <=)*/
+/* 0x00 (0x7f) > ? | these two are used toghether*/
+/* 0x1a (0x7c) < ? | (rowscroll on pink screen on startup)*/
+/* 0xc5 (0x7a) completely in the dark (game start after car seelction)*/
 
 
 const unsigned char dynablaster_decryption_table[256] = {
@@ -165,20 +165,20 @@ const unsigned char dynablaster_decryption_table[256] = {
 	0x75,xxxx,0xb7,xxxx,0x23,xxxx, xxxx/*0xe2*/,0x8f, xxxx,xxxx,0x2c,xxxx,0x77,0x7e,xxxx,0x0f, /* e0 */
 	0x0c,0xa0,0xbd,xxxx,xxxx,0x2d,0x29,0xea, xxxx,0x3b,0x73,xxxx,0xfb,0x20,xxxx,0x5a /* f0 */
 };
-//double check 0x00/0xa0 AND.
-//double check 0x8c (0x7d jg)
-//double check 0xfd (0x20 AND) - 9d2 in code
-//double check 0xd1 (0x41 INC cw) used in uccops and dynablaster (LOOKS GOOD)
+/*double check 0x00/0xa0 AND.*/
+/*double check 0x8c (0x7d jg)*/
+/*double check 0xfd (0x20 AND) - 9d2 in code*/
+/*double check 0xd1 (0x41 INC cw) used in uccops and dynablaster (LOOKS GOOD)*/
 
-//AND fd (0x20)
-//0x37 (91) guess from dynablaster title screen
+/*AND fd (0x20)*/
+/*0x37 (91) guess from dynablaster title screen*/
 
-// BM - 0x61 NOT 82, but instead 0x80 verified in both Atomic Punk and UCCops
-// 0x22 is 0x18 (SBB) verified from Gunforce
-// 0x5b seems confirmed (previous commented out as 0x36)
-// NS I expected 0x32 to be 0x1b (SBB) like in gunforce, but startup tests fail in bbmanw.
-//    therefore it seems to be 0x2b (SUB)
-// NS010718  0xa0 was 0x00 (ADDB), verified to be 0x22 (ANDB)
+/* BM - 0x61 NOT 82, but instead 0x80 verified in both Atomic Punk and UCCops*/
+/* 0x22 is 0x18 (SBB) verified from Gunforce*/
+/* 0x5b seems confirmed (previous commented out as 0x36)*/
+/* NS I expected 0x32 to be 0x1b (SBB) like in gunforce, but startup tests fail in bbmanw.*/
+/*    therefore it seems to be 0x2b (SUB)*/
+/* NS010718  0xa0 was 0x00 (ADDB), verified to be 0x22 (ANDB)*/
 
 
 const unsigned char mysticri_decryption_table[256] = {
@@ -199,8 +199,8 @@ const unsigned char mysticri_decryption_table[256] = {
 	0xeb,xxxx,xxxx,0x33,xxxx,0xfa,xxxx,xxxx, 0xd2,xxxx,0x24,xxxx,0x74,0x41,0xb8,xxxx, /* E0 */
 	xxxx,xxxx,0xd0,0x07,xxxx,xxxx,xxxx,xxxx, xxxx,0x46,xxxx,0xea,0xfe,0x78,xxxx,xxxx, /* F0 */
 };
-// 0xd5 (0x18) opcode is right but arguments could be swapped
-// 0x4e (0x2b) not sure, could be 0x1b
+/* 0xd5 (0x18) opcode is right but arguments could be swapped*/
+/* 0x4e (0x2b) not sure, could be 0x1b*/
 
 
 const unsigned char majtitl2_decryption_table[256] = {
@@ -221,8 +221,8 @@ const unsigned char majtitl2_decryption_table[256] = {
 	0x23,xxxx,0xf3,xxxx,xxxx,xxxx,xxxx,xxxx, xxxx,0xd2,0x8b,0xba,xxxx,xxxx,xxxx,0x5b, /* E0 */
 	xxxx,xxxx,0x9c,xxxx,xxxx,xxxx,xxxx,0xfc, 0xbc,0xa2,0x2a,xxxx,xxxx,0x8e,0xbb,xxxx, /* F0 */
 };
-// 0x7c (0x18) opcode is right but arguments could be swapped
-// 0x70 (0x2b) not sure, could be 0x1b
+/* 0x7c (0x18) opcode is right but arguments could be swapped*/
+/* 0x70 (0x2b) not sure, could be 0x1b*/
 
 
 const unsigned char hook_decryption_table[256] = {
@@ -243,16 +243,16 @@ const unsigned char hook_decryption_table[256] = {
 	0x8b,xxxx,0xf3,0xea,0x04,0x2c,0xb5,xxxx, 0x0a,xxxx,0x51,xxxx,xxxx,0x3a,xxxx,0x9c, /* E0 */
 	xxxx,xxxx,0x78,xxxx,0xba,xxxx,xxxx,xxxx, xxxx,xxxx,xxxx,xxxx,0xd0,0x56,xxxx,xxxx, /* F0 */
 };
-// 0x87 (0x18) opcode is right but arguments could be swapped
-// 0xbb (0x2b) not sure, could be 0x1b
+/* 0x87 (0x18) opcode is right but arguments could be swapped*/
+/* 0xbb (0x2b) not sure, could be 0x1b*/
 
 
 const unsigned char rtypeleo_decryption_table[256] = {
 	0x5d,xxxx,0xc6,xxxx,xxxx,xxxx,0x2a,0x3a, xxxx,xxxx,xxxx,0x86,xxxx,0x22,xxxx,0xf3, /* 00 */
 	xxxx,xxxx,xxxx,xxxx,xxxx,0x38,0x01,0x42, 0x04,xxxx,xxxx,0x1f,xxxx,xxxx,xxxx,0x58, /* 10 */
-//								  ^^^^
+/*								  ^^^^*/
 	0x57,0x2e,xxxx,xxxx,0x53,xxxx,0xb9,xxxx, xxxx,xxxx,xxxx,xxxx,0x20,0x55,xxxx,0x3d, /* 20 */
-//																				^^^^
+/*																				^^^^*/
 	0xa0,xxxx,xxxx,0x0c,0x03,xxxx,0x83,xxxx, xxxx,xxxx,0x8a,xxxx,xxxx,0xaa,xxxx,xxxx, /* 30 */
 	xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx, xxxx,0x41,0x0a,0x26,0x8b,0x56,0x5e,xxxx, /* 40 */
 	xxxx,0x74,xxxx,xxxx,xxxx,xxxx,0x06,xxxx, xxxx,0x89,0x5b,0xc7,0x43,xxxx,xxxx,xxxx, /* 50 */
@@ -266,11 +266,11 @@ const unsigned char rtypeleo_decryption_table[256] = {
 	xxxx,xxxx,xxxx,xxxx,0x81,xxxx,0x79,xxxx, xxxx,0x24,0x23,xxxx,xxxx,0xb0,0x07,0xff, /* D0 */
 	xxxx,0xba,0xf6,0x51,xxxx,xxxx,xxxx,0xfe, xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,0xe9,xxxx, /* E0 */
 	xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,0xe8,0xd2, xxxx,0x18,xxxx,xxxx,xxxx,0xd1,xxxx,xxxx, /* F0 */
-//																	  ^^^^
+/*																	  ^^^^*/
 };
-// 0xf9 (0x18) opcode is right but arguments could be swapped
-// 0x80 (0x2b) not sure, could be 0x1b
-// 0x16 (0x01) guess (wrong?)
+/* 0xf9 (0x18) opcode is right but arguments could be swapped*/
+/* 0x80 (0x2b) not sure, could be 0x1b*/
+/* 0x16 (0x01) guess (wrong?)*/
 
 
 const unsigned char inthunt_decryption_table[256] = {
@@ -291,56 +291,56 @@ const unsigned char inthunt_decryption_table[256] = {
 	0xfe,xxxx,xxxx,0x22,0x20,0x72,0xf6,0x80, 0x02,0x2e,xxxx,0x74,0x0f,xxxx,xxxx,xxxx, /* E0 */
 	xxxx,xxxx,xxxx,xxxx,0xbc,0x41,xxxx,0xfb, 0x73,xxxx,xxxx,xxxx,0x23,0xd2,xxxx,xxxx, /* F0 */
 };
-// 0x77 (0x18) opcode is right but arguments could be swapped
-// 0xb8 (0x2b) not sure, could be 0x1b
+/* 0x77 (0x18) opcode is right but arguments could be swapped*/
+/* 0xb8 (0x2b) not sure, could be 0x1b*/
 
 
 const unsigned char gussun_decryption_table[256] = {
 	0x70,xxxx,xxxx,0x36,xxxx,0x52,0xb1,0x5b, 0x68,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx, /* 00 */
-//  ????                                     ^^^^ ????
+/*  ????                                     ^^^^ ????*/
 	xxxx,xxxx,0x75,xxxx,xxxx,0x83,0x32,0xe9, xxxx,0x82,xxxx,xxxx,xxxx,xxxx,0xac,xxxx, /* 10 */
-//                                ^^^^            ^^^^                     ^^^^
+/*                                ^^^^            ^^^^                     ^^^^*/
 	0x5d,0xa4,xxxx,0x51,0x21,xxxx,xxxx,xxxx ,0xf8,xxxx,0x91,xxxx,xxxx,xxxx,0x03,0x5f, /* 20 */
-//                      ????                 ^^^^      ^^^^ ????
+/*                      ????                 ^^^^      ^^^^ ????*/
 	0x26,xxxx,xxxx,0x8b,xxxx,0x02,xxxx,xxxx, 0x8e,0xab,xxxx,xxxx,0xbc,0x90,0xb3,xxxx, /* 30 */
-//                      ????
+/*                      ????*/
 	xxxx,xxxx,0xc6,xxxx,xxxx,0x3a,xxxx,xxxx, xxxx,0x74,xxxx,xxxx,0x33,xxxx,xxxx,xxxx, /* 40 */
 	xxxx,0x53,xxxx,0xc0,0xc3,0x41,0xfc,0xe7, xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,0xba,xxxx, /* 50 */
-//                 ^^^^      ^^^^
+/*                 ^^^^      ^^^^*/
 	0xb0,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,0x07, 0xb9,xxxx,xxxx,0x46,0xf9,xxxx,xxxx,xxxx, /* 60 */
-//																 ^^^^
+/*																 ^^^^*/
 	xxxx,0xea,0x72,0x73,0xad,0xd1,0x3b,0x5e, 0xe5,0x57,xxxx,0x0d,xxxx,xxxx,xxxx,0x3c, /* 70 */
-//                      ^^^^
+/*                      ^^^^*/
 	xxxx,0x86,xxxx,xxxx,xxxx,0x25,0x2d,xxxx, 0x9a,0xeb,0x04,0x0b,xxxx,0xb8,0x81,xxxx, /* 80 */
-//													   ^^^^
+/*													   ^^^^*/
 	xxxx,xxxx,0x9d,xxxx,0xbb,xxxx,xxxx,0xcb, 0xa8,0xcf,xxxx,xxxx,0x43,0x56,xxxx,xxxx, /* 90 */
-//            ^^^^                     ^^^^       ^^^^
+/*            ^^^^                     ^^^^       ^^^^*/
 	xxxx,0xa3,xxxx,xxxx,xxxx,xxxx,0xfa,xxxx, xxxx,0x81,0xe6,xxxx,0x80,xxxx,xxxx,xxxx, /* a0 */
 	xxxx,xxxx,xxxx,xxxx,0x7d,0x3d,0x3e,xxxx, xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,xxxx, /* b0 */
-//                      ^^^^
+/*                      ^^^^*/
 	xxxx,0xff,0x47,xxxx,0x55,0x1e,xxxx,0x59, 0x93,xxxx,xxxx,xxxx,0x88,0xc1,xxxx,0xb2, /* c0 */
-//            ^^^^                           ^^^^                     ^^^^
+/*            ^^^^                           ^^^^                     ^^^^*/
 	xxxx,0x2e,0x06,0xc7,0x05,xxxx,0x8a,0x5a, 0x58,0xbe,xxxx,xxxx,xxxx,0x1f,0x23,xxxx, /* d0 */
-//       ^^^^
+/*       ^^^^*/
 	0xe8,xxxx,0x89,0xa1,0xd0,xxxx,xxxx,0xe2, 0x38,0xfe,0x50,0x9c,xxxx,xxxx,xxxx,xxxx, /* e0 */
-//                                                          ^^^^
+/*                                                          ^^^^*/
 	xxxx,xxxx,0xf3,xxxx,xxxx,0x0f,xxxx,xxxx, xxxx,xxxx,0xf7,xxxx,0x39,xxxx,0xbf,xxxx, /* f0 */
-//  ????
+/*  ????*/
 };
-//above - c8 (inc aw) guess from stos code
-//c5 (push ds) guess (pop ds soon after) right?
-//0xa9 (not 0x82 PRE) guess from 237df
-//cd total guess (wrong but 3 bytes)
+/*above - c8 (inc aw) guess from stos code*/
+/*c5 (push ds) guess (pop ds soon after) right?*/
+/*0xa9 (not 0x82 PRE) guess from 237df*/
+/*cd total guess (wrong but 3 bytes)*/
 
-//AS notes:
-//0x1e is lodsb not lds,noted from 2344f
-//0x16 is xor r8,r8 not xor r16,r16
-//0xc8 not inc aw but xch bw,aw
-//0xcd is 0xc1 not 0xbd(palette at startup)
-//0x97 guess,but seems right(228c1),known to *not* be ret %Iw.
-//0x00 wrong(for sure it needs a one byte operand due to push es called at one point...)
-//0x19 guess (0x82 PRE)
-//0xc2 guess,it could be dec iy...
+/*AS notes:*/
+/*0x1e is lodsb not lds,noted from 2344f*/
+/*0x16 is xor r8,r8 not xor r16,r16*/
+/*0xc8 not inc aw but xch bw,aw*/
+/*0xcd is 0xc1 not 0xbd(palette at startup)*/
+/*0x97 guess,but seems right(228c1),known to *not* be ret %Iw.*/
+/*0x00 wrong(for sure it needs a one byte operand due to push es called at one point...)*/
+/*0x19 guess (0x82 PRE)*/
+/*0xc2 guess,it could be dec iy...*/
 /*
 e0100 palette sub-routine:
 12485: 23             push es
@@ -528,8 +528,8 @@ const unsigned char leagueman_decryption_table[256] = {
 	xxxx,xxxx,xxxx,0x8b,xxxx,xxxx,0x33,xxxx, xxxx,xxxx,xxxx,xxxx,0xfa,0x42,xxxx,xxxx, /* E0 */
 	xxxx,xxxx,xxxx,0xea,xxxx,0x52,xxxx,0x5d, xxxx,xxxx,xxxx,xxxx,0xbc,xxxx,xxxx,xxxx, /* F0 */
 };
-// 0x25 (0x4b) guess
-// 0x10 (0x01) guess (wrong?)
+/* 0x25 (0x4b) guess*/
+/* 0x10 (0x01) guess (wrong?)*/
 
 
 const unsigned char psoldier_decryption_table[256] = {
@@ -550,8 +550,8 @@ const unsigned char psoldier_decryption_table[256] = {
 	0x3c,0xf6,xxxx,xxxx,xxxx,0x18,xxxx,xxxx, 0xb8,xxxx,xxxx,xxxx,0x2a,0x5d,0x5b,xxxx, /* E0 */
 	xxxx,0x43,0x32,xxxx,xxxx,xxxx,0xeb,xxxx, xxxx,xxxx,xxxx,xxxx,0x83,0x89,xxxx,xxxx, /* F0 */
 };
-// 0x9e (0x4b) guess
-// 0x1a (0x01) guess (wrong?)
+/* 0x9e (0x4b) guess*/
+/* 0x1a (0x01) guess (wrong?)*/
 
 
 const unsigned char dsoccr94_decryption_table[256] = {
@@ -590,13 +590,13 @@ const unsigned char firebarr_decryption_table[256] = {
 	xxxx,xxxx,xxxx,xxxx,0x81,xxxx,0x79,xxxx,xxxx,0x24,0x23,xxxx,xxxx,0xb0,0x07,0xff, /* D0 */
 	xxxx,0xba,0xf6,0x51,xxxx,xxxx,xxxx,0xfe,xxxx,0x92,xxxx,xxxx,xxxx,xxxx,0xe9,xxxx, /* E0 */
 	xxxx,xxxx,xxxx,xxxx,xxxx,xxxx,0xe8,0xd2,xxxx,0x18,xxxx,xxxx,xxxx,0xd1,xxxx,xxxx, /* F0 */
-//                                                                    ^^^^
+/*                                                                    ^^^^*/
 };
 
 
-// 0x95 (0x18) opcode is right but arguments could be swapped
-// 0x2a (0x2b) not sure, could be 0x1b
-// 0x60 (0x01) guess (wrong?)
+/* 0x95 (0x18) opcode is right but arguments could be swapped*/
+/* 0x2a (0x2b) not sure, could be 0x1b*/
+/* 0x60 (0x01) guess (wrong?)*/
 
 
 const unsigned char shisen2_decryption_table[256] = {

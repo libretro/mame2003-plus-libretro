@@ -47,7 +47,7 @@ void system24temp_sys16_io_set_callbacks(UINT8 (*io_r)(int port),
 
 READ16_HANDLER ( system24temp_sys16_io_r )
 {
-	//	logerror("IO read %02x (%d:%x)\n", offset, cpu_getactivecpu(), activecpu_get_pc());
+	/*	logerror("IO read %02x (%d:%x)\n", offset, cpu_getactivecpu(), activecpu_get_pc());*/
 	if(offset < 8)
 		return system24temp_sys16_io_io_r ? system24temp_sys16_io_io_r(offset) : 0xff;
 	else if (offset < 0x20) {

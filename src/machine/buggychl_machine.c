@@ -18,13 +18,13 @@ static unsigned char portA_in,portA_out,ddrA;
 
 READ_HANDLER( buggychl_68705_portA_r )
 {
-//logerror("%04x: 68705 port A read %02x\n",activecpu_get_pc(),portA_in);
+/*logerror("%04x: 68705 port A read %02x\n",activecpu_get_pc(),portA_in);*/
 	return (portA_out & ddrA) | (portA_in & ~ddrA);
 }
 
 WRITE_HANDLER( buggychl_68705_portA_w )
 {
-//logerror("%04x: 68705 port A write %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: 68705 port A write %02x\n",activecpu_get_pc(),data);*/
 	portA_out = data;
 }
 
@@ -140,7 +140,7 @@ READ_HANDLER( buggychl_mcu_status_r )
 
 	/* bit 0 = when 1, mcu is ready to receive data from main cpu */
 	/* bit 1 = when 1, mcu has sent data to the main cpu */
-//logerror("%04x: mcu_status_r\n",activecpu_get_pc());
+/*logerror("%04x: mcu_status_r\n",activecpu_get_pc());*/
 	if (!main_sent) res |= 0x01;
 	if (mcu_sent) res |= 0x02;
 

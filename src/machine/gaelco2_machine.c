@@ -173,8 +173,8 @@ static struct EEPROM_interface gaelco2_eeprom_interface =
 	"*111",			/* erase command */
 	"*10000xxxxxx",	/* lock command */
 	"*10011xxxxxx", /* unlock command */
-//	"*10001xxxxxx", /* write all */
-//	"*10010xxxxxx", /* erase all */
+/*	"*10001xxxxxx",  // write all /*/
+/*	"*10010xxxxxx",  // erase all /*/
 };
 
 NVRAM_HANDLER( gaelco2 )

@@ -73,7 +73,7 @@ void TTL74153_update(int which)
 	for (section = 0; section < 2; section++)
 	{
 		if (chips[which].enable[section])
-			chips[which].output[section] = 0;	// row 1 in truth table
+			chips[which].output[section] = 0;	/* row 1 in truth table*/
 		else
 			chips[which].output[section] = chips[which].input_lines[section][sel];
 	}

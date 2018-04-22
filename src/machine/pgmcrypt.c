@@ -266,8 +266,8 @@ void pgm_pstar_decrypt(void)
 void pgm_dw3_decrypt(void)
 {
 
-//	int i;
-//	unsigned short *src=(unsigned short *) (OP_ROM+0x100000);
+/*	int i;*/
+/*	unsigned short *src=(unsigned short *) (OP_ROM+0x100000);*/
 
 	int i;
 	data16_t *src = (data16_t *) (memory_region(REGION_CPU1)+0x100000);
@@ -298,8 +298,8 @@ void pgm_dw3_decrypt(void)
 void pgm_killbld_decrypt(void)
 {
 
-//	int i;
-//	unsigned short *src=(unsigned short *) (OP_ROM+0x100000);
+/*	int i;*/
+/*	unsigned short *src=(unsigned short *) (OP_ROM+0x100000);*/
 
 	int i;
 	data16_t *src = (data16_t *) (memory_region(REGION_CPU1)+0x100000);

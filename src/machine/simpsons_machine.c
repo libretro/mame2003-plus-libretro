@@ -54,7 +54,7 @@ READ_HANDLER( simpsons_eeprom_r )
 
 	res = (EEPROM_read_bit() << 4);
 
-	res |= 0x20;//konami_eeprom_ack() << 5; /* add the ack */
+	res |= 0x20;/*konami_eeprom_ack() << 5;  // add the ack /*/
 
 	res |= readinputport( 5 ) & 1; /* test switch */
 

@@ -243,7 +243,7 @@ READ_HANDLER( irobot_status_r )
 	if (!irmb_running) d |= 0x20;
 	if (irvg_running) d |= 0x40;
 
-	//        d = (irmb_running * 0x20) | (irvg_running * 0x40);
+	/*        d = (irmb_running * 0x20) | (irvg_running * 0x40);*/
 	if (irvg_vblank) d = d | 0x80;
 #if IR_TIMING
 	/* flags are cleared by callbacks */

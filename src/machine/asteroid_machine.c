@@ -65,8 +65,8 @@ READ_HANDLER( asteroib_IN0_r )
 
 	res=readinputport(0);
 
-//	if (activecpu_gettotalcycles() & 0x100)
-//		res |= 0x02;
+/*	if (activecpu_gettotalcycles() & 0x100)*/
+/*		res |= 0x02;*/
 	if (!avgdvg_done())
 		res |= 0x80;
 

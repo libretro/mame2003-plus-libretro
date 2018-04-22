@@ -28,9 +28,9 @@ MACHINE_INIT( namcond1 )
     /*int             i;*/
 
 #if 0
-    // debug trigger patch
-    // insert a "move.b $B0000000,D2" into the code
-    debug_trigger_addr = 0x152d4; // after ygv_init
+    /* debug trigger patch*/
+    /* insert a "move.b $B0000000,D2" into the code*/
+    debug_trigger_addr = 0x152d4; /* after ygv_init*/
     ROM[debug_trigger_addr++] = 0x39;
     ROM[debug_trigger_addr++] = 0x14;
     ROM[debug_trigger_addr++] = 0xB0;
@@ -40,14 +40,14 @@ MACHINE_INIT( namcond1 )
 #endif
 #endif
 
-    // initialise MCU states
+    /* initialise MCU states*/
     namcond1_h8_irq5_enabled = 0;
     coin_state = 0;
     coin_count[0] = coin_count[1] =
     coin_count[2] = coin_count[3] = 0;
 }
 
-// instance of the shared ram pointer
+/* instance of the shared ram pointer*/
 data16_t *namcond1_shared_ram;
 
 READ16_HANDLER( namcond1_shared_ram_r )
@@ -58,55 +58,55 @@ READ16_HANDLER( namcond1_shared_ram_r )
 	UINT8 poll_coins;
     UINT8   current, pressed;
 
-    // the H8 IRQ5 does polling of inputs and writes to shared RAM
+    /* the H8 IRQ5 does polling of inputs and writes to shared RAM*/
     if( !namcond1_h8_irq5_enabled )
         return( namcond1_shared_ram[offset] );
 
     switch( offset )
     {
-        case (0>>1) : // sub mailbox - sub busy
-            data = 0;    // sub not busy
+        case (0>>1) : /* sub mailbox - sub busy*/
+            data = 0;    /* sub not busy*/
             break;
 
-        case (2>>1) : // test switch
-            // high bit is set/cleared by MCU
+        case (2>>1) : /* test switch*/
+            /* high bit is set/cleared by MCU*/
             data = ( 1 << 15 ) | readinputport( 2 );
             break;
 
-        case (4>>1) : // plyr1
+        case (4>>1) : /* plyr1*/
             current = readinputport( 0 );
             pressed = plyr1 & ( plyr1 ^ current );
             plyr1 = current;
             data = ( ~current << 8 ) | pressed;
             break;
 
-        case (6>>1) : // plyr2
+        case (6>>1) : /* plyr2*/
             current = readinputport( 1 );
             pressed = plyr2 & ( plyr2 ^ current );
             plyr2 = current;
             data = ( ~current << 8 ) | pressed;
             break;
 
-	    case (0x18>>1) : // coin #1
+	    case (0x18>>1) : /* coin #1*/
 		    data = (coin_count[0]<<8) | coin_count[1];
             break;
 
-        case (0x1a>>1) : // coin #2
+        case (0x1a>>1) : /* coin #2*/
 		    data = (coin_count[2]<<8) | coin_count[3];
             break;
 
-        case (0x51>>1) : // player 1 latched
+        case (0x51>>1) : /* player 1 latched*/
             plyr1 = input_port_1_r( 0 );
             data = plyr1;
             break;
 
-        case (0x52>>1) : // player 2 latched
+        case (0x52>>1) : /* player 2 latched*/
             plyr2 = input_port_1_r( 0 );
             data =  plyr2 << 8;
             break;
 
-        case (0x580>>1) : // sub-cpu signal
-            data = 0;    // sub finished
+        case (0x580>>1) : /* sub-cpu signal*/
+            data = 0;    /* sub finished*/
             break;
 
         default :
@@ -114,7 +114,7 @@ READ16_HANDLER( namcond1_shared_ram_r )
             break;
     }
 
-    // Is this the best place to so this? maybe not...
+    /* Is this the best place to so this? maybe not...*/
 	poll_coins = readinputport( 3 );
 	if( ( poll_coins & 0x8 ) & ~( coin_state & 0x8 ) ) coin_count[0]++;
 	if( ( poll_coins & 0x4 ) & ~( coin_state & 0x4 ) ) coin_count[1]++;
@@ -125,13 +125,13 @@ READ16_HANDLER( namcond1_shared_ram_r )
     return( data );
 }
 
-// $c3ff00-$c3ffff
+/* $c3ff00-$c3ffff*/
 READ16_HANDLER( namcond1_cuskey_r )
 {
     switch( offset )
     {
-        // this address returns a jump vector inside ISR2
-        // - if zero then the ISR returns without jumping
+        /* this address returns a jump vector inside ISR2*/
+        /* - if zero then the ISR returns without jumping*/
         case (0x2e>>1):
             return( 0x0000 );
         case (0x30>>1):
@@ -164,20 +164,20 @@ WRITE16_HANDLER( namcond1_shared_ram_w )
 WRITE16_HANDLER( namcond1_cuskey_w )
 {
 
-//	if (offset != 0x07) logerror ("namco_cus_w %04x, %04x\n",offset,data);
+/*	if (offset != 0x07) logerror ("namco_cus_w %04x, %04x\n",offset,data);*/
 
-//	if (offset == 0x06) usrintf_showmessage ("namco_cus_w %04x, %04x",offset,data);
+/*	if (offset == 0x06) usrintf_showmessage ("namco_cus_w %04x, %04x",offset,data);*/
 
     switch( offset )
     {
         case (0x0a>>1):
-            // this is a kludge until we emulate the h8
+            /* this is a kludge until we emulate the h8*/
             namcond1_h8_irq5_enabled = ( data != 0x0000 );
             break;
 
 		case (0x0c>>1):
-			namcond1_gfxbank = (data & 0x0002) >>1; // i think
-			// should mark tilemaps dirty but i think they already are
+			namcond1_gfxbank = (data & 0x0002) >>1; /* i think*/
+			/* should mark tilemaps dirty but i think they already are*/
 			break;
 
         default :

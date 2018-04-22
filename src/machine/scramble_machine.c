@@ -1451,7 +1451,7 @@ INTERRUPT_GEN( hunchbks_vh_interrupt )
 
 INTERRUPT_GEN( gmgalax_vh_interrupt )
 {
-	// reset the cpu if the selected game changed
+	/* reset the cpu if the selected game changed*/
 	int new_game = input_port_6_r(0) & 0x01;
 
 	if (gmgalax_selected_game != new_game)

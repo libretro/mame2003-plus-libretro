@@ -71,7 +71,7 @@ void TTL74148_update(int which)
 {
 	if (chips[which].enable_input)
 	{
-		// row 1 in truth table
+		/* row 1 in truth table*/
 		chips[which].output = 0x07;
 		chips[which].output_valid = 1;
 		chips[which].enable_output = 1;

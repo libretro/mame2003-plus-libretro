@@ -80,8 +80,8 @@ int dsd_555_astbl_step(struct node_description *node)
 		cv = node->input[5] == NODE_NC ? (node->input[1] * 2.0) / 3.0 : node->input[5];
 
 		/* Calculate future capacitor voltage.
-		 * ref@ http:/*www.nalanda.nitc.ac.in/resources/ee/ebooks/eckts/DC/DC_16.html*/
-		 * ref@ http:/*www.physics.rutgers.edu/ugrad/205/capacitance.html*/
+		 * ref@ http://www.nalanda.nitc.ac.in/resources/ee/ebooks/eckts/DC/DC_16.html
+		 * ref@ http://www.physics.rutgers.edu/ugrad/205/capacitance.html
 		 * The formulas from the ref pages have been modified to reflect that we are steping the change.
 		 * t = time of sample (1/sample frequency)
 		 * VC = Voltage across capacitor

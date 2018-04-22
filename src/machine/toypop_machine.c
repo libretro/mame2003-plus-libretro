@@ -12,7 +12,7 @@
 
 unsigned char *toypop_sound_sharedram, *toypop_m68000_sharedram, *toypop_customio;
 static unsigned char interrupt_enable_mainCPU, interrupt_enable_sound, interrupt_enable_68k;
-// variables used by the coinage of Libble Rabble
+/* variables used by the coinage of Libble Rabble*/
 static int credits, coinsA, coinsB;
 static int coinageA[8][2] = {{1,1},{2,1},{1,3},{3,1},{1,2},{2,3},{1,6},{3,2}};
 static int coinageB[4][2] = {{1,1},{1,7},{1,5},{2,1}};
@@ -164,9 +164,9 @@ READ_HANDLER( liblrabl_customio_r )
 		}
 	else if (mode == 1)
 		switch (offset) {
-			case 0:		// Coin slots
+			case 0:		/* Coin slots*/
 				val = readinputport(3) & 0x0f;
-				// bit 0 is a trigger for the coin 1 slot
+				/* bit 0 is a trigger for the coin 1 slot*/
 				if ((val & 1) && !(lastcoin & 1)) {
 					tmp = (readinputport(1) & 0xe0) >> 5;
 					coinsA++;
@@ -175,7 +175,7 @@ READ_HANDLER( liblrabl_customio_r )
 						coinsA = 0;
 					}
 				}
-				// bit 1 is a trigger for the coin 2 slot
+				/* bit 1 is a trigger for the coin 2 slot*/
 				if ((val & 2) && !(lastcoin & 2)) {
 					tmp = (readinputport(0) & 0x18) >> 3;
 					coinsB++;
@@ -185,28 +185,28 @@ READ_HANDLER( liblrabl_customio_r )
 					}
 				}
 				return lastcoin = val;
-			case 1:		// Start buttons
+			case 1:		/* Start buttons*/
 				val = readinputport(3) >> 4;
-				// bit 0 is a trigger for the 1 player start
+				/* bit 0 is a trigger for the 1 player start*/
 				if ((val & 1) && !(laststart & 1))
 					credits--;
-				// bit 1 is a trigger for the 2 player start
+				/* bit 1 is a trigger for the 2 player start*/
 				if ((val & 2) && !(laststart & 2)) {
 					if (credits >= 2)
 						credits -= 2;
 					else
-						val &= ~2;	// otherwise you can start with no credits
+						val &= ~2;	/* otherwise you can start with no credits*/
 				}
 				return laststart = val;
-			case 2:		// High BCD of credits
+			case 2:		/* High BCD of credits*/
 				return credits / 10;
-			case 3:		// Low BCD of credits
+			case 3:		/* Low BCD of credits*/
 				return credits % 10;
-//			case 5:		// read, but unknown
-//				return readinputport(2) >> 4;
-			case 4:		// Right joystick
+/*			case 5:		*/ /* read, but unknown*/
+/*				return readinputport(2) >> 4;*/
+			case 4:		/* Right joystick*/
 				return readinputport(4) >> 4;
-			case 6:		// Player 2 right joystick in cocktail mode
+			case 6:		/* Player 2 right joystick in cocktail mode*/
 				return readinputport(5) >> 4;
 			case 16:
 				return readinputport(1) >> 4;
@@ -216,9 +216,9 @@ READ_HANDLER( liblrabl_customio_r )
 				return readinputport(0) >> 4;
 			case 19:
 				return readinputport(1) & 0x0f;
-			case 34:	// Left joystick
+			case 34:	/* Left joystick*/
 				return readinputport(4) & 0x0f;
-			case 36:	// Player 2 left joystick in cocktail mode
+			case 36:	/* Player 2 left joystick in cocktail mode*/
 				return readinputport(5) & 0x0f;
 			case 39:
 				return readinputport(2) & 0x0f;

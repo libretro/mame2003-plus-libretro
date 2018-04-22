@@ -9,7 +9,7 @@ High Voltage      (c) 1985 Alpha Denshi Co.
 drivers by Acho A. Tang
 
 *******************************************************************************/
-// Directives
+/* Directives*/
 
 #include "driver.h"
 #include "cpu/i8085/i8085.h"
@@ -17,9 +17,9 @@ drivers by Acho A. Tang
 
 #define MCU_RTNMSB 0x80
 
-#if 0 // ** cut-and-pasted to driver module **
+#if 0 /* ** cut-and-pasted to driver module ***/
 
-// Common Hardware Start
+/* Common Hardware Start*/
 #define EQUITES_ADD_SOUNDBOARD7 \
 	MDRV_CPU_ADD(8085A, 5000000) \
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU) \
@@ -46,39 +46,39 @@ extern struct AY8910interface equites_8910intf;
 extern struct DACinterface equites_dacintf;
 
 static MEMORY_READ_START( equites_s_readmem )
-	{ 0x0000, 0xbfff, MRA_ROM }, // sound program
+	{ 0x0000, 0xbfff, MRA_ROM }, /* sound program*/
 	{ 0xc000, 0xc000, soundlatch_r },
-	{ 0xe000, 0xe0ff, MRA_RAM }, // stack and variables
+	{ 0xe000, 0xe0ff, MRA_RAM }, /* stack and variables*/
 MEMORY_END
 
 static MEMORY_WRITE_START( equites_s_writemem )
-	{ 0x0000, 0xbfff, MWA_ROM }, // sound program
+	{ 0x0000, 0xbfff, MWA_ROM }, /* sound program*/
 	{ 0xc080, 0xc08d, equites_5232_w },
 	{ 0xc0a0, 0xc0a0, equites_8910data_w },
 	{ 0xc0a1, 0xc0a1, equites_8910control_w },
-	{ 0xc0b0, 0xc0b0, MWA_NOP }, // INTR: sync with main melody
-	{ 0xc0c0, 0xc0c0, MWA_NOP }, // INTR: sync with specific beats
+	{ 0xc0b0, 0xc0b0, MWA_NOP }, /* INTR: sync with main melody*/
+	{ 0xc0c0, 0xc0c0, MWA_NOP }, /* INTR: sync with specific beats*/
 	{ 0xc0d0, 0xc0d0, equites_dac0_w },
 	{ 0xc0e0, 0xc0e0, equites_dac1_w },
-	{ 0xc0f8, 0xc0fe, MWA_NOP }, // soundboard I/O, ignored
+	{ 0xc0f8, 0xc0fe, MWA_NOP }, /* soundboard I/O, ignored*/
 	{ 0xc0ff, 0xc0ff, soundlatch_clear_w },
-	{ 0xe000, 0xe0ff, MWA_RAM }, // stack and variables
+	{ 0xe000, 0xe0ff, MWA_RAM }, /* stack and variables*/
 MEMORY_END
 
 static PORT_WRITE_START( equites_s_writeport )
-	{ 0x00e0, 0x00e5, MWA_NOP }, // soundboard I/O, ignored
+	{ 0x00e0, 0x00e5, MWA_NOP }, /* soundboard I/O, ignored*/
 PORT_END
-// Common Hardware End
+/* Common Hardware End*/
 
 #endif
 
 /******************************************************************************/
-// Imports
+/* Imports*/
 
 extern data16_t *equites_workram;
 
 /******************************************************************************/
-// Locals
+/* Locals*/
 
 static UINT16 e_ent_addr[8][4] =
 {
@@ -128,9 +128,9 @@ static UINT16 h_respawn_addr[2][4] =
 
 static UINT16 s_respawn_addr[3][6] =
 {
-	{0x0b6a, 0x0b52, 0x29da, 0x0846, 0x1610, 0x0c84}, // game over seq
-	{0x347e, 0x0e10, 0x0c2c, 0x0c2c, 0x0c2c, 0x0c2c}, // depth seq
-	{0x0c2e, 0x1fbe, 0x166a, 0x0c84, 0x0c2c, 0x0c2c}, // level change seq
+	{0x0b6a, 0x0b52, 0x29da, 0x0846, 0x1610, 0x0c84}, /* game over seq*/
+	{0x347e, 0x0e10, 0x0c2c, 0x0c2c, 0x0c2c, 0x0c2c}, /* depth seq*/
+	{0x0c2e, 0x1fbe, 0x166a, 0x0c84, 0x0c2c, 0x0c2c}, /* level change seq*/
 };
 
 static UINT16 s_lvdata_addr[6] = {0xccc2, 0xd04a, 0xd408, 0xd796, 0xdaa8, 0xdbd6};
@@ -156,12 +156,12 @@ static struct MRULELIST
 } *mrulemap;
 
 /******************************************************************************/
-// Exports
+/* Exports*/
 
 data16_t *equites_8404ram;
 
 /******************************************************************************/
-// Local Functions
+/* Local Functions*/
 
 static void equites_synth_callback (int param)
 {
@@ -171,21 +171,21 @@ static void equites_synth_callback (int param)
 	cpu_set_irq_line(1, I8085_RST75_LINE, HOLD_LINE);
 }
 
-// Optimized Mersenne Twister - courtesy of Shawn J. Cokus, University of Washington
+/* Optimized Mersenne Twister - courtesy of Shawn J. Cokus, University of Washington*/
 
 typedef unsigned long uint32;
 
-#define N              (624)                 // length of state vector
-#define M              (397)                 // a period parameter
-#define K              (0x9908B0DFU)         // a magic constant
-#define hiBit(u)       ((u) & 0x80000000U)   // mask all but highest   bit of u
-#define loBit(u)       ((u) & 0x00000001U)   // mask all but lowest    bit of u
-#define loBits(u)      ((u) & 0x7FFFFFFFU)   // mask     the highest   bit of u
-#define mixBits(u, v)  (hiBit(u)|loBits(v))  // move hi bit of u to hi bit of v
+#define N              (624)                 /* length of state vector*/
+#define M              (397)                 /* a period parameter*/
+#define K              (0x9908B0DFU)         /* a magic constant*/
+#define hiBit(u)       ((u) & 0x80000000U)   /* mask all but highest   bit of u*/
+#define loBit(u)       ((u) & 0x00000001U)   /* mask all but lowest    bit of u*/
+#define loBits(u)      ((u) & 0x7FFFFFFFU)   /* mask     the highest   bit of u*/
+#define mixBits(u, v)  (hiBit(u)|loBits(v))  /* move hi bit of u to hi bit of v*/
 
-static uint32   state[N+1];     // state vector + 1 extra to not violate ANSI C
-static uint32   *next;          // next random value is computed from here
-static int      left = -1;      // can *next++ this many times before reloading
+static uint32   state[N+1];     /* state vector + 1 extra to not violate ANSI C*/
+static uint32   *next;          /* next random value is computed from here*/
+static int      left = -1;      /* can *next++ this many times before reloading*/
 
 static void seedMT(uint32 seed)
 {
@@ -234,7 +234,7 @@ static INLINE uint32 randomMT(void)
 }
 
 /******************************************************************************/
-// Export Functions
+/* Export Functions*/
 
 void equites_8404init(void)
 {
@@ -243,10 +243,10 @@ void equites_8404init(void)
 	byte_ptr = auto_malloc(0x8000);
 	memset(byte_ptr, 0, 0x8000);
 
-	mrulemap = (struct MRULELIST *)byte_ptr; // pointer table to rule lists
-	mrulepool = (struct MRULE *)(byte_ptr + 0x4000); // rules pool
+	mrulemap = (struct MRULELIST *)byte_ptr; /* pointer table to rule lists*/
+	mrulepool = (struct MRULE *)(byte_ptr + 0x4000); /* rules pool*/
 
-	timer_pulse(TIME_IN_HZ(106.0), 0, equites_synth_callback); // hand tuned
+	timer_pulse(TIME_IN_HZ(106.0), 0, equites_synth_callback); /* hand tuned*/
 
 	seedMT(mame_rand());
 }
@@ -277,7 +277,7 @@ void equites_8404rule(unsigned pc, int offset, int data)
 }
 
 /******************************************************************************/
-// Export Handlers
+/* Export Handlers*/
 
 READ16_HANDLER(equites_8404_r)
 {
@@ -288,7 +288,7 @@ READ16_HANDLER(equites_8404_r)
 	{
 		pc = activecpu_get_pc();
 
-		//logerror("%04x: 8404 reads offset %04x\n", pc, offset<<1);
+		/*logerror("%04x: 8404 reads offset %04x\n", pc, offset<<1);*/
 
 		ruleptr = mrulemap[offset].head;
 		while (ruleptr)
@@ -379,7 +379,7 @@ READ16_HANDLER(equites_8404_r)
 
 WRITE_HANDLER(equites_5232_w)
 {
-	if (offset < 0x08 && data) data |= 0x80; // gets around a current 5232 emulation restriction
+	if (offset < 0x08 && data) data |= 0x80; /* gets around a current 5232 emulation restriction*/
 	MSM5232_0_w(offset, data);
 }
 
@@ -395,12 +395,12 @@ WRITE_HANDLER(equites_8910data_w)
 
 static WRITE_HANDLER(equites_8910porta_w)
 {
-	// sync with one or more MSM5232 channels. MIDI out?
+	/* sync with one or more MSM5232 channels. MIDI out?*/
 }
 
 static WRITE_HANDLER(equites_8910portb_w)
 {
-	// sync with one or more MSM5232 channels. MIDI out?
+	/* sync with one or more MSM5232 channels. MIDI out?*/
 }
 
 WRITE_HANDLER(equites_dac0_w)
@@ -414,20 +414,20 @@ WRITE_HANDLER(equites_dac1_w)
 }
 
 /******************************************************************************/
-// Alpha "Soundboard 7" Chip Definitions
+/* Alpha "Soundboard 7" Chip Definitions*/
 
 struct MSM5232interface equites_5232intf =
 {
 	1,
-	2500000, // 2.5MHz
-	{ { 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6 } }, // needs verification
+	2500000, /* 2.5MHz*/
+	{ { 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6, 0.39e-6 } }, /* needs verification*/
 	{ 75 }
 };
 
 struct AY8910interface equites_8910intf =
 {
 	1,
-	6144444/4, // OSC: 6.144MHz
+	6144444/4, /* OSC: 6.144MHz*/
 	{ 50 },
 	{ 0 },
 	{ 0 },

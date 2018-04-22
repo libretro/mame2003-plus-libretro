@@ -149,7 +149,7 @@ INTERRUPT_GEN( getstar_interrupt )
 
 WRITE_HANDLER( getstar_port_04_w )
 {
-//	cpu_halt(0,0);
+/*	cpu_halt(0,0);*/
 }
 
 
@@ -168,7 +168,7 @@ READ_HANDLER( tigerh_68705_portA_r )
 
 WRITE_HANDLER( tigerh_68705_portA_w )
 {
-	portA_out = data;//?
+	portA_out = data;/*?*/
 	from_mcu = portA_out;
 	mcu_sent = 1;
 }

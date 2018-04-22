@@ -166,13 +166,13 @@ logerror("%04x: custom IO 1 offset %02x data %02x\n",activecpu_get_pc(),offset,d
 			{
 				switch(customio_1[0])
 				{
-					case 0x20:	 //		Mid Bang
+					case 0x20:	 /*		Mid Bang*/
 						sample_start (0, 0, 0);
 						break;
-					case 0x10:	 //		Big Bang
+					case 0x10:	 /*		Big Bang*/
 						sample_start (1, 1, 0);
 						break;
-					case 0x50:	 //		Shot
+					case 0x50:	 /*		Shot*/
 						sample_start (2, 2, 0);
 						break;
 				}
@@ -504,19 +504,19 @@ logerror("%04x: custom IO 2 offset %02x data %02x\n",activecpu_get_pc(),offset,d
 			{
 				switch(customio_2[0])
 				{
-					case 1: // Blast Off
+					case 1: /* Blast Off*/
 						bosco_sample_play(0x0020 * 2, 0x08D7 * 2);
 						break;
-					case 2: // Alert, Alert
+					case 2: /* Alert, Alert*/
 						bosco_sample_play(0x8F7 * 2, 0x0906 * 2);
 						break;
-					case 3: // Battle Station
+					case 3: /* Battle Station*/
 						bosco_sample_play(0x11FD * 2, 0x07DD * 2);
 						break;
-					case 4: // Spy Ship Sighted
+					case 4: /* Spy Ship Sighted*/
 						bosco_sample_play(0x19DA * 2, 0x07DE * 2);
 						break;
-					case 5: // Condition Red
+					case 5: /* Condition Red*/
 						bosco_sample_play(0x21B8 * 2, 0x079F * 2);
 						break;
 				}

@@ -21,10 +21,10 @@ WRITE_HANDLER( atarifb_out1_w )
 {
 	CTRLD = data;
 
-	discrete_sound_w(0,  data & 0x01);		// Whistle
-	discrete_sound_w(2,  data & 0x02);		// Hit
-	discrete_sound_w(3, (data & 0x10) ? 0 : 1);	// Attract
-	discrete_sound_w(4,  data & 0x04);		// Noise Enable / Kicker
+	discrete_sound_w(0,  data & 0x01);		/* Whistle*/
+	discrete_sound_w(2,  data & 0x02);		/* Hit*/
+	discrete_sound_w(3, (data & 0x10) ? 0 : 1);	/* Attract*/
+	discrete_sound_w(4,  data & 0x04);		/* Noise Enable / Kicker*/
 
 	if (GAME_IS_SOCCER)
 	{
@@ -32,10 +32,10 @@ WRITE_HANDLER( atarifb_out1_w )
 		/* bit 1 = hit */
 		/* bit 2 = kicker */
 		/* bit 3 = unused */
-		/* bit 4 = 2/4 Player LED */	// Say what?
+		/* bit 4 = 2/4 Player LED */	/* Say what?*/
 		/* bit 5-6 = trackball CTRL bits */
 		/* bit 7 = Rule LED */
-//		set_led_status(0,data & 0x10);	// !!!!!!!!!! Is this correct????
+/*		set_led_status(0,data & 0x10);	*/ /* !!!!!!!!!! Is this correct????*/
 		set_led_status(1,data & 0x80);
 	}
 
@@ -62,7 +62,7 @@ WRITE_HANDLER( atarifb_out1_w )
 
 WRITE_HANDLER( atarifb_out2_w )
 {
-	discrete_sound_w(1, data & 0x0f);	// Crowd
+	discrete_sound_w(1, data & 0x0f);	/* Crowd*/
 
 	coin_counter_w (0, data & 0x10);
 
@@ -107,7 +107,7 @@ WRITE_HANDLER( atarifb_out3_w )
 		case 0x03:
 			break;
 	}
-//	logerror("out3_w, %02x:%02x\n", loop, data);
+/*	logerror("out3_w, %02x:%02x\n", loop, data);*/
 }
 
 

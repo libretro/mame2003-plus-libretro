@@ -33,15 +33,15 @@ struct psg_control
 /* C221-C222 */	UINT16 note_timer;
 /* C223-C224 */	UINT16 note_length;
 /* C225      */	UINT8  volume_timer;
-/* C227-C228 */	UINT16 current;		// current position in control table
-/* C229-C22A */	UINT16 return_address[16];	// return address when control table calls a subtable
+/* C227-C228 */	UINT16 current;		/* current position in control table*/
+/* C229-C22A */	UINT16 return_address[16];	/* return address when control table calls a subtable*/
 				int return_address_depth;
-/* C22B-C22C */	UINT16 loop_start;	// first instruction of loop
-/* C22D      */	UINT8  loop_times;	// number of times to loop
+/* C22B-C22C */	UINT16 loop_start;	/* first instruction of loop*/
+/* C22D      */	UINT8  loop_times;	/* number of times to loop*/
 /* C22E      */	UINT8  volume_shape;
 /* C22F      */	UINT8  volume_position;
-/* C230      */	UINT8  octave;	// base octave
-/* C231      */	UINT8  note;	// note to play
+/* C230      */	UINT8  octave;	/* base octave*/
+/* C231      */	UINT8  note;	/* note to play*/
 /* C233      */	UINT8  note_period_hi_bits;
 };
 
@@ -49,15 +49,15 @@ struct fm_control
 {
 UINT8 note;
 /* C020      */	UINT8  flags;
-/* C021      */	UINT8  slot;	// for ym2203 keyon command
-/* C022-C039 */	UINT8  voice_params[0x18];	// parameters for the YM2203 to configure sound shape
+/* C021      */	UINT8  slot;	/* for ym2203 keyon command*/
+/* C022-C039 */	UINT8  voice_params[0x18];	/* parameters for the YM2203 to configure sound shape*/
 /* C03A-C03B */	UINT16 f_number;
 /* C03C      */	UINT8  self_feedback;
 /* C03D      */	UINT8  note_duration_table_select;
-/* C03E-C03F */	UINT16 current;	// current position in control table
-/* C040-C041 */	UINT16 loop_start;	// first instruction of loop
-/* C042      */	UINT8  loop_times;	// number of times to loop
-/* C043-C044 */	UINT16 return_address[16];	// return address when control table calls a subtable
+/* C03E-C03F */	UINT16 current;	/* current position in control table*/
+/* C040-C041 */	UINT16 loop_start;	/* first instruction of loop*/
+/* C042      */	UINT8  loop_times;	/* number of times to loop*/
+/* C043-C044 */	UINT16 return_address[16];	/* return address when control table calls a subtable*/
 				int    return_address_depth;
 /* C045      */	UINT8  octave;
 /* C046-C047 */	UINT16 timer1;
@@ -69,17 +69,17 @@ UINT8 note;
 /* C051-C052 */	UINT16 modulation_table;
 /* C053-C054 */	UINT16 modulation_table_position;
 /* C055-C056 */	UINT16 note_period;
-/* C057-C05A */	UINT8  voice_volume[4];	// parameters for the YM2203 to configure sound shape
+/* C057-C05A */	UINT8  voice_volume[4];	/* parameters for the YM2203 to configure sound shape*/
 /* C05C      */ UINT8  must_update_voice_params;
 };
 
 struct effects_control
 {
 /* C1A0      */	UINT8  flags;
-/* C1BE-C1BF */	UINT16 current;	// current position in control table
-/* C1C0-C1C1 */	UINT16 loop_start;	// first instruction of loop
-/* C1C2      */	UINT8  loop_times;	// number of times to loop
-/* C1C3-C1C4 */	UINT16 return_address[16];	// return address when control table calls a subtable
+/* C1BE-C1BF */	UINT16 current;	/* current position in control table*/
+/* C1C0-C1C1 */	UINT16 loop_start;	/* first instruction of loop*/
+/* C1C2      */	UINT8  loop_times;	/* number of times to loop*/
+/* C1C3-C1C4 */	UINT16 return_address[16];	/* return address when control table calls a subtable*/
 				int    return_address_depth;
 /* C1C6-C1C7 */	UINT16 timer;
 /* C1CA-C1CB */	UINT16 timer_duration;
@@ -87,13 +87,13 @@ struct effects_control
 
 static struct
 {
-	const UINT8 *rom;	// NMK004 data ROM
-	UINT8 from_main;	// command from main CPU
-	UINT8 to_main;		// answer to main CPU
+	const UINT8 *rom;	/* NMK004 data ROM*/
+	UINT8 from_main;	/* command from main CPU*/
+	UINT8 to_main;		/* answer to main CPU*/
 	int protection_check;
 
-	/* C001      */	UINT8 last_command;		// last command received
-	/* C016      */	UINT8 oki_playing;		// bitmap of active Oki channels
+	/* C001      */	UINT8 last_command;		/* last command received*/
+	/* C016      */	UINT8 oki_playing;		/* bitmap of active Oki channels*/
 	/* C020-C19F */	struct fm_control fm_control[FM_CHANNELS];
 	/* C220-C2DF */	struct psg_control psg_control[PSG_CHANNELS];
 	/* C1A0-C21F */	struct effects_control effects_control[EFFECTS_CHANNELS];
@@ -140,7 +140,7 @@ static void oki_play_sample(int sample_no)
 
 	if ((byte1 & 0x7f) == 0)
 	{
-		// stop all channels
+		/* stop all channels*/
 		if (chip) {
 			OKIM6295_data_1_w(0, 0x78);
 		} else {
@@ -158,7 +158,7 @@ static void oki_play_sample(int sample_no)
 
 		NMK004_state.oki_playing |= 1 << (ch + 4*chip);
 
-		// stop channel
+		/* stop channel*/
 		if (chip) {
 			OKIM6295_data_1_w(0, (0x08 << ch));
 		} else {
@@ -202,7 +202,7 @@ static void effects_update(int channel)
 {
 	struct effects_control *effects = &NMK004_state.effects_control[channel];
 
-	// advance the timers
+	/* advance the timers*/
 	if (effects->timer)
 		effects->timer--;
 
@@ -222,53 +222,53 @@ static void effects_update(int channel)
 
 			do
 			{
-//logerror("channel %d address %04x token %02x\n",channel,effects->current,read8(effects->current));
+/*logerror("channel %d address %04x token %02x\n",channel,effects->current,read8(effects->current));*/
 				token = read8(effects->current++);
 
 				if (token == 0x0ef || (token & 0xf0) == 0xf0)
 				{
 					switch (token)
 					{
-						case 0xef:	// play sample
+						case 0xef:	/* play sample*/
 							oki_play_sample(read8(effects->current++));
 							break;
 
-						case 0xf6:	// jump
+						case 0xf6:	/* jump*/
 							effects->current = read16(effects->current);
 							break;
 
-						case 0xf7:	// begin repeat loop
+						case 0xf7:	/* begin repeat loop*/
 							effects->loop_times = read8(effects->current++);
 							effects->loop_start = effects->current;
 							break;
 
-						case 0xf8:	// end repeat loop
+						case 0xf8:	/* end repeat loop*/
 							if (--effects->loop_times > 0)
 								effects->current = effects->loop_start;
 							break;
 
-						case 0xf9:	// call subtable
+						case 0xf9:	/* call subtable*/
 							effects->return_address[effects->return_address_depth++] = effects->current + 2;
 							effects->current = read16(effects->current);
 							break;
 
-						case 0xfa:	// return from subtable
+						case 0xfa:	/* return from subtable*/
 							effects->current = effects->return_address[--effects->return_address_depth];
 							break;
 
-						case 0xfc:	// ??? (hachamf command 04)
+						case 0xfc:	/* ??? (hachamf command 04)*/
 							break;
 
-						case 0xfd:	// ??? (hachamf command 04)
+						case 0xfd:	/* ??? (hachamf command 04)*/
 							break;
 
-						case 0xff:	// end
-							effects->flags = 0;	// disable channel
+						case 0xff:	/* end*/
+							effects->flags = 0;	/* disable channel*/
 							return;
 
 						default:
 							break;
-							//fatalerror("effects channel %d unsupported token %02x",channel,token);
+							/*fatalerror("effects channel %d unsupported token %02x",channel,token);*/
 					}
 				}
 			} while (token == 0xef || (token & 0xf0) == 0xf0);
@@ -279,13 +279,13 @@ static void effects_update(int channel)
 			{
 				if (read8(effects->current++) != 0x0c)
 				{
-					// this shouldn't happen on the effects channels (but it happens e.g. hachamf command 04)
+					/* this shouldn't happen on the effects channels (but it happens e.g. hachamf command 04)*/
 
 					logerror("effects channel %d invalid token %02x\n",channel,read8(effects->current));
 				}
 			}
 
-			// optional note length (otherwise use the same length as the previous one)
+			/* optional note length (otherwise use the same length as the previous one)*/
 			if (read8(effects->current) & 0x80)
 			{
 				UINT16 table_start = read16(NOTE_LENGTH_TABLE_1);
@@ -310,7 +310,7 @@ static void fm_update(int channel)
 {
 	struct fm_control *fm = &NMK004_state.fm_control[channel];
 
-	// advance the timers
+	/* advance the timers*/
 	if (fm->timer1)
 		fm->timer1--;
 
@@ -336,7 +336,7 @@ static void fm_update(int channel)
 
 			do
 			{
-//logerror("channel %d address %04x token %02x\n",channel,fm->current,read8(fm->current));
+/*logerror("channel %d address %04x token %02x\n",channel,fm->current,read8(fm->current));*/
 				token = read8(fm->current++);
 
 				if (token == 0x0ef || (token & 0xf0) == 0xf0)
@@ -345,84 +345,84 @@ static void fm_update(int channel)
 
 					switch (token)
 					{
-//                      case 0xef:  // play sample
-//                          oki_play_sample(read8(fm->current++));
-//                          break;
+/*                      case 0xef:  */ /* play sample*/
+/*                          oki_play_sample(read8(fm->current++));*/
+/*                          break;*/
 
-						case 0xf0:	// slot (for keyon ym2203 command)
+						case 0xf0:	/* slot (for keyon ym2203 command)*/
 							fm->flags |= FM_FLAG_MUST_SEND_CONFIGURATION;
 							fm->slot = read8(fm->current++);
 							if (channel < 3 || !(NMK004_state.fm_control[channel-3].flags & FM_FLAG_ACTIVE))
 							{
-								YM2203_control_port_0_w(0, 0x28);	// keyon/off
+								YM2203_control_port_0_w(0, 0x28);	/* keyon/off*/
 								YM2203_write_port_0_w(0, channel % 3);
 							}
 							break;
 
-						case 0xf1:	// sound shape
+						case 0xf1:	/* sound shape*/
 							fm->flags |= FM_FLAG_MUST_SEND_CONFIGURATION;
 							for (i = 0x00; i < 0x04; i++)
 								fm->voice_params[i] = read8(fm->current++);
 							break;
 
-						case 0xf2:	// sound shape
+						case 0xf2:	/* sound shape*/
 							fm->flags |= FM_FLAG_MUST_SEND_CONFIGURATION;
 							for (i = 0; i < 4; i++)
 								fm->voice_volume[i] = read8(fm->current++);
 							break;
 
-						case 0xf3:	// sound shape
+						case 0xf3:	/* sound shape*/
 							fm->flags |= FM_FLAG_MUST_SEND_CONFIGURATION;
 							for (i = 0x08; i < 0x18; i++)
 								fm->voice_params[i] = read8(fm->current++);
 							break;
 
-						case 0xf4:	// set self-feedback
+						case 0xf4:	/* set self-feedback*/
 							fm->flags |= FM_FLAG_MUST_SEND_CONFIGURATION;
 							fm->self_feedback = read8(fm->current++);
 							break;
 
-						case 0xf5:	// select note duration table
+						case 0xf5:	/* select note duration table*/
 							fm->note_duration_table_select = read8(fm->current++);
 							break;
 
-						case 0xf6:	// jump
+						case 0xf6:	/* jump*/
 							fm->current = read16(fm->current);
 							break;
 
-						case 0xf7:	// begin repeat loop
+						case 0xf7:	/* begin repeat loop*/
 							fm->loop_times = read8(fm->current++);
 							fm->loop_start = fm->current;
 							break;
 
-						case 0xf8:	// end repeat loop
+						case 0xf8:	/* end repeat loop*/
 							if (--fm->loop_times > 0)
 								fm->current = fm->loop_start;
 							break;
 
-						case 0xf9:	// call subtable
+						case 0xf9:	/* call subtable*/
 							fm->return_address[fm->return_address_depth++] = fm->current + 2;
 							fm->current = read16(fm->current);
 							break;
 
-						case 0xfa:	// return from subtable
+						case 0xfa:	/* return from subtable*/
 							fm->current = fm->return_address[--fm->return_address_depth];
 							break;
 
-						case 0xfb:	// set octave
+						case 0xfb:	/* set octave*/
 							fm->octave = read8(fm->current++);
 							break;
 
-						case 0xfc:	// ???
+						case 0xfc:	/* ???*/
 							fm->flags |=  FM_FLAG_UNKNOWN2;
 							fm->flags |=  FM_FLAG_UNKNOWN3;
 							break;
 
-						case 0xfd:	// ???
+						case 0xfd:	/* ???*/
 							fm->flags &= ~FM_FLAG_UNKNOWN2;
 							break;
 
-						case 0xfe:	// set note modulation
+						case 0xfe:	/* set note modulation*/
 							fm->modulation_table_number = read8(fm->current++);
 							if (fm->modulation_table_number == 0)
 							{
@@ -439,8 +439,8 @@ static void fm_update(int channel)
 							}
 							break;
 
-						case 0xff:	// end
-							fm->flags = FM_FLAG_MUST_SEND_CONFIGURATION;	// disable channel
+						case 0xff:	/* end*/
+							fm->flags = FM_FLAG_MUST_SEND_CONFIGURATION;	/* disable channel*/
 							for (i = 0x04; i < 0x08; i++)
 								fm->voice_params[i] = 0x7f;
 							for (i = 0x14; i < 0x18; i++)
@@ -449,7 +449,7 @@ static void fm_update(int channel)
 
 						default:
 							break;
-							//fatalerror("fm channel %d unsupported token %02x",channel,token);
+							/*fatalerror("fm channel %d unsupported token %02x",channel,token);*/
 					}
 				}
 			} while (token == 0xef || (token & 0xf0) == 0xf0);
@@ -476,7 +476,7 @@ fm->note = note;
 				}
 			}
 
-			// optional note length (otherwise use the same length as the previous one)
+			/* optional note length (otherwise use the same length as the previous one)*/
 			if (read8(fm->current) & 0x80)
 			{
 				UINT16 table_start;
@@ -534,19 +534,19 @@ fm->note = note;
 
 			fm->modulation_table_position++;
 			a = read8(fm->modulation_table_position++);
-			if (a & 0x80)	// sign extend
+			if (a & 0x80)	/* sign extend*/
 				a |= 0xff00;
 			a *= 4;
 
 			fm->f_number = fm->note_period + a;
 
-			fm->modulation_timer = read8(fm->modulation_table_position++);	// modulation_timer is UINT16 but this is just 8-bit
+			fm->modulation_timer = read8(fm->modulation_table_position++);	/* modulation_timer is UINT16 but this is just 8-bit*/
 
-			if (read8(fm->modulation_table_position) == 0x80)	// end of table - repeat
+			if (read8(fm->modulation_table_position) == 0x80)	/* end of table - repeat*/
 			{
 				fm->modulation_table_position = fm->modulation_table + 2;
 			}
-			else if (read8(fm->modulation_table_position) == 0x88)	// end of table - stop
+			else if (read8(fm->modulation_table_position) == 0x88)	/* end of table - stop*/
 			{
 				fm->flags &= ~FM_FLAG_MODULATE_NOTE;
 			}
@@ -626,24 +626,24 @@ static void fm_voices_update(void)
 
 		if (fm1->flags & FM_FLAG_ACTIVE)
 		{
-			YM2203_control_port_0_w(0, 0xb0 + channel);	// self-feedback
+			YM2203_control_port_0_w(0, 0xb0 + channel);	/* self-feedback*/
 			YM2203_write_port_0_w(0, fm1->self_feedback);
 
-			YM2203_control_port_0_w(0, 0xa4 + channel);	// F-number
+			YM2203_control_port_0_w(0, 0xa4 + channel);	/* F-number*/
 			YM2203_write_port_0_w(0, fm1->f_number >> 8);
 
-			YM2203_control_port_0_w(0, 0xa0 + channel);	// F-number
+			YM2203_control_port_0_w(0, 0xa0 + channel);	/* F-number*/
 			YM2203_write_port_0_w(0, fm1->f_number & 0xff);
 		}
 		else
 		{
-			YM2203_control_port_0_w(0, 0xb0 + channel);	// self-feedback
+			YM2203_control_port_0_w(0, 0xb0 + channel);	/* self-feedback*/
 			YM2203_write_port_0_w(0, fm2->self_feedback);
 
-			YM2203_control_port_0_w(0, 0xa4 + channel);	// F-number
+			YM2203_control_port_0_w(0, 0xa4 + channel);	/* F-number*/
 			YM2203_write_port_0_w(0, fm2->f_number >> 8);
 
-			YM2203_control_port_0_w(0, 0xa0 + channel);	// F-number
+			YM2203_control_port_0_w(0, 0xa0 + channel);	/* F-number*/
 			YM2203_write_port_0_w(0, fm2->f_number & 0xff);
 		}
 
@@ -653,7 +653,7 @@ static void fm_voices_update(void)
 		{
 			fm1->flags &= ~FM_FLAG_MUST_SEND_KEYON;
 
-			YM2203_control_port_0_w(0, 0x28);	// keyon/off
+			YM2203_control_port_0_w(0, 0x28);	/* keyon/off*/
 			YM2203_write_port_0_w(0, fm1->slot | channel);
 		}
 
@@ -663,7 +663,7 @@ static void fm_voices_update(void)
 
 			if (!(fm1->flags & FM_FLAG_ACTIVE))
 			{
-				YM2203_control_port_0_w(0, 0x28);	// keyon/off
+				YM2203_control_port_0_w(0, 0x28);	/* keyon/off*/
 				YM2203_write_port_0_w(0, fm2->slot | channel);
 			}
 		}
@@ -682,7 +682,7 @@ static void psg_update(int channel)
 {
 	struct psg_control *psg = &NMK004_state.psg_control[channel];
 
-	// advance the timers
+	/* advance the timers*/
 	if (psg->note_timer)
 		psg->note_timer--;
 
@@ -701,11 +701,11 @@ static void psg_update(int channel)
 			psg->flags &= ~PSG_FLAG_NOTE_IS_NOISE;
 			psg->flags &= ~PSG_FLAG_NOISE_NOT_ENABLED;
 
-			// enable noise, disable tone on this channel
+			/* enable noise, disable tone on this channel*/
 			YM2203_control_port_0_w(0, 0x07);
 			enable = YM2203_read_port_0_r(0);
-			enable |=  (0x01 << channel);	// disable tone
-			enable &= ~(0x08 << channel);	// enable noise
+			enable |=  (0x01 << channel);	/* disable tone*/
+			enable &= ~(0x08 << channel);	/* enable noise*/
 			YM2203_write_port_0_w(0, enable);
 		}
 
@@ -731,64 +731,64 @@ static void psg_update(int channel)
 
 					switch (token)
 					{
-						case 0xf0:	// noise
+						case 0xf0:	/* noise*/
 							psg->flags |= PSG_FLAG_NOTE_IS_NOISE;
 							break;
 
-						case 0xf1:	// note
+						case 0xf1:	/* note*/
 							psg->flags &= ~PSG_FLAG_NOTE_IS_NOISE;
 							psg->flags &= ~PSG_FLAG_NOISE_NOT_ENABLED;
 
-							// enable noise, disable tone on this channel
+							/* enable noise, disable tone on this channel*/
 							YM2203_control_port_0_w(0, 0x07);
 							enable = YM2203_read_port_0_r( 0);
-							enable |=  (0x01 << channel);	// disable tone
-							enable &= ~(0x08 << channel);	// enable noise
+							enable |=  (0x01 << channel);	/* disable tone*/
+							enable &= ~(0x08 << channel);	/* enable noise*/
 							YM2203_write_port_0_w(0, enable);
 							break;
 
-						case 0xf2:	// set volume shape
+						case 0xf2:	/* set volume shape*/
 						case 0xf3:
 						case 0xf4:
 						case 0xf5:
 							psg->volume_shape = read8(psg->current++);
 							break;
 
-						case 0xf6:	// jump
+						case 0xf6:	/* jump*/
 							psg->current = read16(psg->current);
 							break;
 
-						case 0xf7:	// begin repeat loop
+						case 0xf7:	/* begin repeat loop*/
 							psg->loop_times = read8(psg->current++);
 							psg->loop_start = psg->current;
 							break;
 
-						case 0xf8:	// end repeat loop
+						case 0xf8:	/* end repeat loop*/
 							if (--psg->loop_times > 0)
 								psg->current = psg->loop_start;
 							break;
 
-						case 0xf9:	// call subtable
+						case 0xf9:	/* call subtable*/
 							psg->return_address[psg->return_address_depth++] = psg->current + 2;
 							psg->current = read16(psg->current);
 							break;
 
-						case 0xfa:	// return from subtable
+						case 0xfa:	/* return from subtable*/
 							psg->current = psg->return_address[--psg->return_address_depth];
 							break;
 
-						case 0xfb:	// set octave
+						case 0xfb:	/* set octave*/
 						case 0xfc:
 						case 0xfd:
 						case 0xfe:
 							psg->octave = read8(psg->current++);
 							break;
 
-						case 0xff:	// end
-							psg->flags = 0;	// disable channel
+						case 0xff:	/* end*/
+							psg->flags = 0;	/* disable channel*/
 							psg->volume_shape = 0;
 
-							// mute channel
+							/* mute channel*/
 							YM2203_control_port_0_w(0, 8 + channel);
 							YM2203_write_port_0_w(0, 0);
 							return;
@@ -796,14 +796,14 @@ static void psg_update(int channel)
 				}
 			} while ((token & 0xf0) == 0xf0);
 
-			// token is the note to play
+			/* token is the note to play*/
 			psg->note = token;
 			if ((psg->note & 0x0f) > NOTE_PAUSE)
 			{
-			//	fatalerror("PSG channel %d invalid note %02x",channel,psg->note);
+			/*	fatalerror("PSG channel %d invalid note %02x",channel,psg->note);*/
 			}
 
-			// optional note length (otherwise use the same length as the previous one)
+			/* optional note length (otherwise use the same length as the previous one)*/
 			if (read8(psg->current) & 0x80)
 			{
 				UINT16 table_start = read16(NOTE_LENGTH_TABLE_1);
@@ -845,15 +845,15 @@ static void psg_update(int channel)
 
 						psg->flags |= PSG_FLAG_NOISE_NOT_ENABLED;
 
-						// disable noise, enable tone on this channel
+						/* disable noise, enable tone on this channel*/
 						YM2203_control_port_0_w(0, 0x07);
 						enable = YM2203_read_port_0_r( 0);
-						enable &= ~(0x01 << channel);	// enable tone
-						enable |=  (0x08 << channel);	// disable noise
+						enable &= ~(0x01 << channel);	/* enable tone*/
+						enable |=  (0x08 << channel);	/* disable noise*/
 						YM2203_write_port_0_w(0, enable);
 					}
 
-					YM2203_control_port_0_w(0, 0x06);	// noise period
+					YM2203_control_port_0_w(0, 0x06);	/* noise period*/
 					YM2203_write_port_0_w(0, psg->note);
 					psg->note_period_hi_bits = psg->note;
 				}
@@ -878,7 +878,7 @@ static void psg_update(int channel)
 			if (psg->flags & PSG_FLAG_NOTE_IS_PAUSE)
 				volume = 0;
 
-			// set volume
+			/* set volume*/
 			YM2203_control_port_0_w(0, 8 + channel);
 			YM2203_write_port_0_w(0, volume & 0x0f);
 		}
@@ -908,7 +908,7 @@ static void get_command(void)
 
 	if (NMK004_state.protection_check < sizeof(to_main))
 	{
-		// startup handshake
+		/* startup handshake*/
 		if (cmd == from_main[NMK004_state.protection_check])
 		{
 			logerror("advance handshake to %02x\n",to_main[NMK004_state.protection_check]);
@@ -917,7 +917,7 @@ static void get_command(void)
 	}
 	else
 	{
-		// send command back to main CPU to acknowledge reception
+		/* send command back to main CPU to acknowledge reception*/
 		NMK004_state.to_main = cmd;
 	}
 
@@ -941,9 +941,9 @@ static void get_command(void)
 				table_start = read16(cmd_table);
 				cmd_table += 2;
 
-				if (channel == 0xef) break;	// bioship bug?
+				if (channel == 0xef) break;	/* bioship bug?*/
 
-//logerror("%04x: channel %d table %04x\n",cmd_table-3,channel,table_start);
+/*logerror("%04x: channel %d table %04x\n",cmd_table-3,channel,table_start);*/
 				if (channel < FM_CHANNELS)
 				{
 					NMK004_state.fm_control[channel].current = table_start;
@@ -964,7 +964,7 @@ static void get_command(void)
 						channel -= PSG_CHANNELS;
 						if (channel >= EFFECTS_CHANNELS)
 						{
-				//			fatalerror("too many effects channels");
+				/*			fatalerror("too many effects channels");*/
 						}
 						NMK004_state.effects_control[channel].current = table_start;
 						NMK004_state.effects_control[channel].return_address_depth = 0;
@@ -1001,20 +1001,20 @@ void NMK004_irq(int irq)
 	{
 		int status = YM2203_status_port_0_r(0);
 
-		if (status & 1)	// timer A expired
+		if (status & 1)	/* timer A expired*/
 		{
 			oki_update_state();
 			get_command();
 			update_music();
 
-			// restart timer
+			/* restart timer*/
 			YM2203_control_port_0_w(0, 0x27);
 			YM2203_write_port_0_w(0, 0x15);
 		}
 	}
 }
 
-void NMK004_init(void) // iq_132
+void NMK004_init(void) /* iq_132*/
 {
 	NMK004_sound_init_hack = 0;
 }
@@ -1057,9 +1057,9 @@ WRITE16_HANDLER( NMK004_w )
 		real_nmk004_init();
 	}
 
-	if (ACCESSING_LSB) //ACCESSING_BITS_0_7)
+	if (ACCESSING_LSB) /*ACCESSING_BITS_0_7)*/
 	{
-//logerror("%06x: NMK004_w %02x\n",cpu_get_pc(space->cpu),data);
+/*logerror("%06x: NMK004_w %02x\n",cpu_get_pc(space->cpu),data);*/
 		NMK004_state.from_main = data & 0xff;
 	}
 }
@@ -1070,11 +1070,11 @@ READ16_HANDLER( NMK004_r )
 		real_nmk004_init();
 	}
 
-//static int last;
+/*static int last;*/
 	res = NMK004_state.to_main;
 
-//if (res != last) logerror("%06x: NMK004_r %02x\n",cpu_get_pc(space->cpu),res);
-//last = res;
+/*if (res != last) logerror("%06x: NMK004_r %02x\n",cpu_get_pc(space->cpu),res);*/
+/*last = res;*/
 
 	return res;
 }

@@ -685,7 +685,7 @@ static void decrypt(UINT32 *src, UINT32 *dst, int length)
 
 		dword = src[addr];
 
-		// note that each of the following lines affects exactly two bits
+		/* note that each of the following lines affects exactly two bits*/
 
 		if (a & 0x00004) dword ^= 0x04400000;
 		if (a & 0x00008) dword ^= 0x40000004;
@@ -765,17 +765,17 @@ static UINT16 decrypt2(UINT16 data, int address, int select_xor)
 	int j, xorval;
 	const UINT8 *bs;
 
-	// calculate bitswap to use
+	/* calculate bitswap to use*/
 	j = ((address ^ select_xor) & 0xf0) >> 4;
 	if (address & 0x20000) j ^= 4;
 	bs = bitswaps[j];
 
-	// calculate xor to use
+	/* calculate xor to use*/
 	j = (address ^ select_xor) & 0x0f;
-	if (address & 0x40000) j ^= 2;	// boogwing
+	if (address & 0x40000) j ^= 2;	/* boogwing*/
 	xorval = xors[j];
 
-	// decrypt
+	/* decrypt*/
 	return xorval ^ BITSWAP16(data,
 				bs[0],bs[1],bs[2],bs[3],bs[4],bs[5],bs[6],bs[7],
 				bs[8],bs[9],bs[10],bs[11],bs[12],bs[13],bs[14],bs[15]);
@@ -798,7 +798,7 @@ void deco102_decrypt_cpu(int address_xor, int data_select_xor, int opcode_select
 		{
 			int src;
 
-			// calculate address of encrypted word in ROM
+			/* calculate address of encrypted word in ROM*/
 			src = i & 0xf0000;
 			if (i & 0x0001) src ^= 0xbe0b;
 			if (i & 0x0002) src ^= 0x5699;
@@ -849,7 +849,7 @@ void deco74_decrypt(int region)
 
 void deco56_remap_gfx(int region)
 {
-	// Apply address remap, but not XOR/shift
+	/* Apply address remap, but not XOR/shift*/
 	deco_decrypt(region,deco56_xor_table,deco56_address_table,deco56_swap_table, 1);
 }
 

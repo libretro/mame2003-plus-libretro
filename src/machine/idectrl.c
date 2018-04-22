@@ -771,7 +771,7 @@ static void write_buffer_to_dma(struct ide_state *ide)
 	int bytesleft = IDE_DISK_SECTOR_SIZE;
 	UINT8 *data = ide->buffer;
 
-//	LOG(("Writing sector to %08X\n", ide->dma_address));
+/*	LOG(("Writing sector to %08X\n", ide->dma_address));*/
 
 	/* loop until we've consumed all bytes */
 	while (bytesleft--)
@@ -803,7 +803,7 @@ static void write_buffer_to_dma(struct ide_state *ide)
 			if (ide->dma_bytes_left == 0)
 				ide->dma_bytes_left = 0x10000;
 
-//			LOG(("New DMA descriptor: address = %08X  bytes = %04X  last = %d\n", ide->dma_address, ide->dma_bytes_left, ide->dma_last_buffer));
+/*			LOG(("New DMA descriptor: address = %08X  bytes = %04X  last = %d\n", ide->dma_address, ide->dma_bytes_left, ide->dma_last_buffer));*/
 		}
 
 		/* write the next byte */
@@ -957,7 +957,7 @@ static void read_buffer_from_dma(struct ide_state *ide)
 	int bytesleft = IDE_DISK_SECTOR_SIZE;
 	UINT8 *data = ide->buffer;
 
-//	LOG(("Reading sector from %08X\n", ide->dma_address));
+/*	LOG(("Reading sector from %08X\n", ide->dma_address));*/
 
 	/* loop until we've consumed all bytes */
 	while (bytesleft--)
@@ -989,7 +989,7 @@ static void read_buffer_from_dma(struct ide_state *ide)
 			if (ide->dma_bytes_left == 0)
 				ide->dma_bytes_left = 0x10000;
 
-//			LOG(("New DMA descriptor: address = %08X  bytes = %04X  last = %d\n", ide->dma_address, ide->dma_bytes_left, ide->dma_last_buffer));
+/*			LOG(("New DMA descriptor: address = %08X  bytes = %04X  last = %d\n", ide->dma_address, ide->dma_bytes_left, ide->dma_last_buffer));*/
 		}
 
 		/* read the next byte */
@@ -1429,7 +1429,7 @@ static void ide_controller_write(struct ide_state *ide, offs_t offset, int size,
 									printf("\n");
 
 								printf("0x%02x, 0x%02x, ", ide->buffer[i], ide->buffer[i + 1]);
-								//printf("0x%02x%02x, ", ide->buffer[i], ide->buffer[i + 1]);
+								/*printf("0x%02x%02x, ", ide->buffer[i], ide->buffer[i + 1]);*/
 							}
 							printf("\n");
 						}
@@ -1478,8 +1478,8 @@ static void ide_controller_write(struct ide_state *ide, offs_t offset, int size,
 		case IDE_ADDR_HEAD_NUMBER:
 			ide->cur_head = data & 0x0f;
 			ide->cur_head_reg = data;
-			// drive index = data & 0x10
-			// LBA mode = data & 0x40
+			/* drive index = data & 0x10*/
+			/* LBA mode = data & 0x40*/
 			break;
 
 		/* command */
@@ -1492,7 +1492,7 @@ static void ide_controller_write(struct ide_state *ide, offs_t offset, int size,
 			ide->adapter_control = data;
 
 			/* handle controller reset */
-			//if (data == 0x04)
+			/*if (data == 0x04)*/
 			if (data & 0x04)
 			{
 				ide->status |= IDE_STATUS_BUSY;

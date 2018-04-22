@@ -13,8 +13,8 @@
 
 data16_t *tmp68301_regs;
 
-static UINT8 tmp68301_IE[3];		// 3 External Interrupt Lines
-static void *tmp68301_timer[3];		// 3 Timers
+static UINT8 tmp68301_IE[3];		/* 3 External Interrupt Lines*/
+static void *tmp68301_timer[3];		/* 3 Timers*/
 
 static int tmp68301_irq_vector[8];
 
@@ -23,40 +23,40 @@ void tmp68301_update_timer( int i );
 int tmp68301_irq_callback(int int_level)
 {
 	int vector = tmp68301_irq_vector[int_level];
-//	logerror("CPU #0 PC %06X: irq callback returns %04X for level %x\n",activecpu_get_pc(),vector,int_level);
+/*	logerror("CPU #0 PC %06X: irq callback returns %04X for level %x\n",activecpu_get_pc(),vector,int_level);*/
 	return vector;
 }
 
 void tmp68301_timer_callback(int i)
 {
 	data16_t TCR	=	tmp68301_regs[(0x200 + i * 0x20)/2];
-	data16_t IMR	=	tmp68301_regs[0x94/2];		// Interrupt Mask Register (IMR)
-	data16_t ICR	=	tmp68301_regs[0x8e/2+i];	// Interrupt Controller Register (ICR7..9)
-	data16_t IVNR	=	tmp68301_regs[0x9a/2];		// Interrupt Vector Number Register (IVNR)
+	data16_t IMR	=	tmp68301_regs[0x94/2];		/* Interrupt Mask Register (IMR)*/
+	data16_t ICR	=	tmp68301_regs[0x8e/2+i];	/* Interrupt Controller Register (ICR7..9)*/
+	data16_t IVNR	=	tmp68301_regs[0x9a/2];		/* Interrupt Vector Number Register (IVNR)*/
 
-//	logerror("CPU #0 PC %06X: callback timer %04X, j = %d\n",activecpu_get_pc(),i,tcount);
+/*	logerror("CPU #0 PC %06X: callback timer %04X, j = %d\n",activecpu_get_pc(),i,tcount);*/
 
-	if	(	(TCR & 0x0004) &&	// INT
+	if	(	(TCR & 0x0004) &&	/* INT*/
 			!(IMR & (0x100<<i))
 		)
 	{
 		int level = ICR & 0x0007;
 
-		// Interrupt Vector Number Register (IVNR)
+		/* Interrupt Vector Number Register (IVNR)*/
 		tmp68301_irq_vector[level]	=	IVNR & 0x00e0;
 		tmp68301_irq_vector[level]	+=	4+i;
 
 		cpu_set_irq_line(0,level,HOLD_LINE);
 	}
 
-	if (TCR & 0x0080)	// N/1
+	if (TCR & 0x0080)	/* N/1*/
 	{
-		// Repeat
+		/* Repeat*/
 		tmp68301_update_timer(i);
 	}
 	else
 	{
-		// One Shot
+		/* One Shot*/
 	}
 }
 
@@ -71,8 +71,8 @@ void tmp68301_update_timer( int i )
 
 	timer_adjust(tmp68301_timer[i],TIME_NEVER,i,0);
 
-	// timers 1&2 only
-	switch( (TCR & 0x0030)>>4 )						// MR2..1
+	/* timers 1&2 only*/
+	switch( (TCR & 0x0030)>>4 )						/* MR2..1*/
 	{
 	case 1:
 		max = MAX1;
@@ -82,12 +82,12 @@ void tmp68301_update_timer( int i )
 		break;
 	}
 
-	switch ( (TCR & 0xc000)>>14 )					// CK2..1
+	switch ( (TCR & 0xc000)>>14 )					/* CK2..1*/
 	{
-	case 0:	// System clock (CLK)
+	case 0:	/* System clock (CLK)*/
 		if (max)
 		{
-			int scale = (TCR & 0x3c00)>>10;			// P4..1
+			int scale = (TCR & 0x3c00)>>10;			/* P4..1*/
 			if (scale > 8) scale = 8;
 			duration = Machine->drv->cpu[0].cpu_clock;
 			duration /= 1 << scale;
@@ -96,9 +96,9 @@ void tmp68301_update_timer( int i )
 		break;
 	}
 
-//	logerror("CPU #0 PC %06X: TMP68301 Timer %d, duration %lf, max %04X\n",activecpu_get_pc(),i,duration,max);
+/*	logerror("CPU #0 PC %06X: TMP68301 Timer %d, duration %lf, max %04X\n",activecpu_get_pc(),i,duration,max);*/
 
-	if (!(TCR & 0x0002))				// CS
+	if (!(TCR & 0x0002))				/* CS*/
 	{
 		if (duration)
 			timer_adjust(tmp68301_timer[i],TIME_IN_HZ(duration),i,0);
@@ -126,8 +126,8 @@ static void update_irq_state(void)
 
 	/* Take care of external interrupts */
 
-	data16_t IMR	=	tmp68301_regs[0x94/2];		// Interrupt Mask Register (IMR)
-	data16_t IVNR	=	tmp68301_regs[0x9a/2];		// Interrupt Vector Number Register (IVNR)
+	data16_t IMR	=	tmp68301_regs[0x94/2];		/* Interrupt Mask Register (IMR)*/
+	data16_t IVNR	=	tmp68301_regs[0x9a/2];		/* Interrupt Vector Number Register (IVNR)*/
 
 	for (i = 0; i < 3; i++)
 	{
@@ -135,16 +135,16 @@ static void update_irq_state(void)
 				!(IMR & (1<<i))
 			)
 		{
-			data16_t ICR	=	tmp68301_regs[0x80/2+i];	// Interrupt Controller Register (ICR0..2)
+			data16_t ICR	=	tmp68301_regs[0x80/2+i];	/* Interrupt Controller Register (ICR0..2)*/
 
-			// Interrupt Controller Register (ICR0..2)
+			/* Interrupt Controller Register (ICR0..2)*/
 			int level = ICR & 0x0007;
 
-			// Interrupt Vector Number Register (IVNR)
+			/* Interrupt Vector Number Register (IVNR)*/
 			tmp68301_irq_vector[level]	=	IVNR & 0x00e0;
 			tmp68301_irq_vector[level]	+=	i;
 
-			tmp68301_IE[i] = 0;		// Interrupts are edge triggerred
+			tmp68301_IE[i] = 0;		/* Interrupts are edge triggerred*/
 
 			cpu_set_irq_line(0,level,HOLD_LINE);
 		}
@@ -157,11 +157,11 @@ WRITE16_HANDLER( tmp68301_regs_w )
 
 	if (!ACCESSING_LSB)	return;
 
-//	logerror("CPU #0 PC %06X: TMP68301 Reg %04X<-%04X & %04X\n",activecpu_get_pc(),offset*2,data,mem_mask^0xffff);
+/*	logerror("CPU #0 PC %06X: TMP68301 Reg %04X<-%04X & %04X\n",activecpu_get_pc(),offset*2,data,mem_mask^0xffff);*/
 
 	switch( offset * 2 )
 	{
-		// Timers
+		/* Timers*/
 		case 0x200:
 		case 0x220:
 		case 0x240:

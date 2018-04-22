@@ -544,8 +544,8 @@ READ_HANDLER( snes_r_io )
 #else
 			return readinputport(9);
 #endif	/* MAME_DEBUG */
-//		case 0x4101: //PC: a104 - a10e - a12a	//only nss_actr
-//		case 0x420c: //PC: 9c7d - 8fab			//only nss_ssoc
+/*		case 0x4101: /*PC: a104 - a10e - a12a	*/ //only nss_actr*/
+/*		case 0x420c: /*PC: 9c7d - 8fab			*/ //only nss_ssoc*/
 		default:
 			printf("offset = %x pc = %x\n",offset,activecpu_get_pc());
 	}
@@ -1102,7 +1102,7 @@ DRIVER_INIT( snes )
 	cart.sram_max = 0x40000;
 
 	/* Find the number of blocks in this ROM */
-	//totalblocks = ((mame_fsize(file) - offset) >> (cart.mode == MODE_20 ? 15 : 16));
+	/*totalblocks = ((mame_fsize(file) - offset) >> (cart.mode == MODE_20 ? 15 : 16));*/
 	totalblocks = (memory_region_length(REGION_USER3) / 0x8000) - 1;
 
 	/* FIXME: Insert crc check here */
@@ -1121,7 +1121,7 @@ DRIVER_INIT( snes )
 		i = 0;
 		while( i < 96 && readblocks <= totalblocks )
 		{
-			//mame_fread( file, &snes_ram[(i++ * 0x10000) + 0x8000], 0x8000);
+			/*mame_fread( file, &snes_ram[(i++ * 0x10000) + 0x8000], 0x8000);*/
 			memcpy(&snes_ram[(i * 0x10000) + 0x8000], &rom[i * 0x8000], 0x8000);
 			i++;
 			readblocks++;

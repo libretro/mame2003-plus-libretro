@@ -91,7 +91,7 @@ int nb1413m3_sndrom_r(int offset)
 {
 	int rombank;
 
-//usrintf_showmessage("%02x %02x",nb1413m3_sndrombank1,nb1413m3_sndrombank2);
+/*usrintf_showmessage("%02x %02x",nb1413m3_sndrombank1,nb1413m3_sndrombank2);*/
 	switch (nb1413m3_type)
 	{
 		case	NB1413M3_IEMOTO:
@@ -106,19 +106,19 @@ int nb1413m3_sndrom_r(int offset)
 		case	NB1413M3_HYHOO2:
 			rombank = (nb1413m3_sndrombank1 & 0x01);
 			break;
-		case	NB1413M3_APPAREL:	// no samples
-		case	NB1413M3_SECOLOVE:	// 0-1
-		case	NB1413M3_CITYLOVE:	// 0-1
-		case	NB1413M3_HOUSEMNQ:	// 0-1
-		case	NB1413M3_HOUSEMN2:	// 0-1
-		case	NB1413M3_ORANGEC:	// 0-1
-		case	NB1413M3_KAGUYA:	// 0-3
-		case	NB1413M3_BIJOKKOY:	// 0-7
-		case	NB1413M3_BIJOKKOG:	// 0-7
-		case	NB1413M3_OTONANO:	// 0-7
-		case	NB1413M3_MJCAMERA:	// 0 + 4-5 for protection
-		case	NB1413M3_IDHIMITU:	// 0 + 4-5 for protection
-		case	NB1413M3_KANATUEN:	// 0 + 6 for protection
+		case	NB1413M3_APPAREL:	/* no samples*/
+		case	NB1413M3_SECOLOVE:	/* 0-1*/
+		case	NB1413M3_CITYLOVE:	/* 0-1*/
+		case	NB1413M3_HOUSEMNQ:	/* 0-1*/
+		case	NB1413M3_HOUSEMN2:	/* 0-1*/
+		case	NB1413M3_ORANGEC:	/* 0-1*/
+		case	NB1413M3_KAGUYA:	/* 0-3*/
+		case	NB1413M3_BIJOKKOY:	/* 0-7*/
+		case	NB1413M3_BIJOKKOG:	/* 0-7*/
+		case	NB1413M3_OTONANO:	/* 0-7*/
+		case	NB1413M3_MJCAMERA:	/* 0 + 4-5 for protection*/
+		case	NB1413M3_IDHIMITU:	/* 0 + 4-5 for protection*/
+		case	NB1413M3_KANATUEN:	/* 0 + 6 for protection*/
 			rombank = nb1413m3_sndrombank1;
 			break;
 		case	NB1413M3_TAIWANMB:
@@ -167,7 +167,7 @@ int nb1413m3_sndrom_r(int offset)
 
 WRITE_HANDLER( nb1413m3_sndrombank1_w )
 {
-	// if (data & 0x02) coin counter ?
+	/* if (data & 0x02) coin counter ?*/
 	nb1413m3_nmi_enable = ((data & 0x20) >> 5);
 	nb1413m3_sndrombank1 = (((data & 0xc0) >> 5) | ((data & 0x10) >> 4));
 }
@@ -344,8 +344,8 @@ READ_HANDLER( nb1413m3_inputport3_r )
 		case	NB1413M3_SCANDALM:
 		case	NB1413M3_BANANADR:
 		case	NB1413M3_FINALBNY:
-case	NB1413M3_KORINAI:	// verify
-case	NB1413M3_PAIRSTEN:	// verify
+case	NB1413M3_KORINAI:	/* verify*/
+case	NB1413M3_PAIRSTEN:	/* verify*/
 			return ((nb1413m3_outcoin_flag & 0x01) << 1);
 			break;
 		case	NB1413M3_MAIKO:
@@ -469,8 +469,8 @@ WRITE_HANDLER( nb1413m3_outcoin_w )
 		case	NB1413M3_BANANADR:
 		case	NB1413M3_HANAOJI:
 		case	NB1413M3_FINALBNY:
-case	NB1413M3_KORINAI:	// verify
-case	NB1413M3_PAIRSTEN:	// verify
+case	NB1413M3_KORINAI:	/* verify*/
+case	NB1413M3_PAIRSTEN:	/* verify*/
 			if (data & 0x04) nb1413m3_outcoin_flag ^= 1;
 			else nb1413m3_outcoin_flag = 1;
 			break;
@@ -479,7 +479,7 @@ case	NB1413M3_PAIRSTEN:	// verify
 	}
 
 #if NB1413M3_DEBUG
-	set_led_status(2, (nb1413m3_outcoin_flag ^ 1));		// out coin
+	set_led_status(2, (nb1413m3_outcoin_flag ^ 1));		/* out coin*/
 #endif
 }
 

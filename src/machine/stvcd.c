@@ -32,93 +32,93 @@ UINT8	CD_index;
 
 UINT32 fn;
 
-INT32	CD_com;				// last command being processed
-INT32	CD_com_play;			// last play command
-UINT8	CD_stat;				// drive status
-UINT8	CD_flag;				// 0x00 = CD-DA or <SEEK> or <SCAN> 0x80 = CD-ROM
+INT32	CD_com;				/* last command being processed*/
+INT32	CD_com_play;			/* last play command*/
+UINT8	CD_stat;				/* drive status*/
+UINT8	CD_flag;				/* 0x00 = CD-DA or <SEEK> or <SCAN> 0x80 = CD-ROM*/
 
 
-UINT32	CD_last_part;			// last buffer partition accessed
-filt_t	CD_filt[CDB_SEL_NUM];		// filters
+UINT32	CD_last_part;			/* last buffer partition accessed*/
+filt_t	CD_filt[CDB_SEL_NUM];		/* filters*/
 
-UINT32	CD_play_fad;			// play start address
-UINT32	CD_play_range;			// play range
-UINT32	CD_seek_target;			// seek target address
-UINT8	CD_scan_dir;			// scan direction
-UINT32	CD_search_pn;			// search result, partition number
-UINT32	CD_search_sp;			// search result, sector position
-UINT32	CD_search_fad;			// search result, fad
+UINT32	CD_play_fad;			/* play start address*/
+UINT32	CD_play_range;			/* play range*/
+UINT32	CD_seek_target;			/* seek target address*/
+UINT8	CD_scan_dir;			/* scan direction*/
+UINT32	CD_search_pn;			/* search result, partition number*/
+UINT32	CD_search_sp;			/* search result, sector position*/
+UINT32	CD_search_fad;			/* search result, fad*/
 UINT32	CD_file_scope_first;
 UINT32	CD_file_scope_last;
 
 
-UINT32	CD_data_pn;			// data transfer partition number
-UINT32	CD_data_sp;			// data transfer sector position
-UINT32	CD_data_sn;			// data transfer sector number
-UINT32	CD_data_count;			// data transfer current byte count
-UINT32	CD_data_delete;			// data must be deleted upon read
-UINT32	CD_data_size;			// data transfer size in bytes
+UINT32	CD_data_pn;			/* data transfer partition number*/
+UINT32	CD_data_sp;			/* data transfer sector position*/
+UINT32	CD_data_sn;			/* data transfer sector number*/
+UINT32	CD_data_count;			/* data transfer current byte count*/
+UINT32	CD_data_delete;			/* data must be deleted upon read*/
+UINT32	CD_data_size;			/* data transfer size in bytes*/
 
-char * 	CD_info_ptr;			// info transfer buffer pointer
-UINT32	CD_info_count;			// info transfer byte count
-UINT32	CD_info_size;			// info transfer total byte count
+char * 	CD_info_ptr;			/* info transfer buffer pointer*/
+UINT32	CD_info_count;			/* info transfer byte count*/
+UINT32	CD_info_size;			/* info transfer total byte count*/
 
-UINT32	CD_trans_type;			// 0 = DATA, 1 = INFO   //maybe signed int
+UINT32	CD_trans_type;			/* 0 = DATA, 1 = INFO   */ /*maybe signed int*/
 
-UINT32	CD_actual_size;			// used by "calcactualsize" and "getactualsize"
+UINT32	CD_actual_size;			/* used by "calcactualsize" and "getactualsize"*/
 
-////////////////////////////////////////////////////////////////
+/*/*//////////////////////////////////////////////////////////*/ //*/
 
-sect_t	CD_sect[CDB_SECT_NUM];	// sector buffer
-part_t	CD_part[CDB_SEL_NUM];	// buffer partitions
-filt_t	CD_filt[CDB_SEL_NUM];	// filters
-UINT32	CD_free_space;		// free space in sector units
+sect_t	CD_sect[CDB_SECT_NUM];	/* sector buffer*/
+part_t	CD_part[CDB_SEL_NUM];	/* buffer partitions*/
+filt_t	CD_filt[CDB_SEL_NUM];	/* filters*/
+UINT32	CD_free_space;		/* free space in sector units*/
 
-UINT8	CD_filt_num;		// cdrom drive connector
-UINT8	CD_mpeg_filt_num;	// mpeg connector
+UINT8	CD_filt_num;		/* cdrom drive connector*/
+UINT8	CD_mpeg_filt_num;	/* mpeg connector*/
 
-////////////////////////////////////////////////////////////////
-
-
-UINT32	CD_cur_fad;			// current pickup position info
-UINT32	CD_cur_track;			//
-UINT32	CD_cur_ctrl;			//
-UINT32	CD_cur_idx;			//
-UINT32	CD_cur_fid;			//
+/*/*//////////////////////////////////////////////////////////*/ //*/
 
 
+UINT32	CD_cur_fad;			/* current pickup position info*/
+UINT32	CD_cur_track;			/**/
+UINT32	CD_cur_ctrl;			/**/
+UINT32	CD_cur_idx;			/**/
+UINT32	CD_cur_fid;			/**/
 
-char	cdb_sat_file_info[254 * 12];	// current file info
-char cdb_sat_subq[5 * 2];		// current subcode q
-char cdb_sat_subrw[12 * 2];		// current subcode r~w
-char CD_sat_subq[5 * 2];			// current subcode q
-char CD_sat_subrw[12 * 2];		// current subcode r~w
-toc_t	CD_toc;			// disc toc
-file_t	CD_file[CDB_FID_NUM];	// file table (directory table)
-UINT32	CD_file_num;		// total file infos stored
-char	CD_sat_toc[408];	// current cdrom toc
+
+
+char	cdb_sat_file_info[254 * 12];	/* current file info*/
+char cdb_sat_subq[5 * 2];		/* current subcode q*/
+char cdb_sat_subrw[12 * 2];		/* current subcode r~w*/
+char CD_sat_subq[5 * 2];			/* current subcode q*/
+char CD_sat_subrw[12 * 2];		/* current subcode r~w*/
+toc_t	CD_toc;			/* disc toc*/
+file_t	CD_file[CDB_FID_NUM];	/* file table (directory table)*/
+UINT32	CD_file_num;		/* total file infos stored*/
+char	CD_sat_toc[408];	/* current cdrom toc*/
 
 
 UINT8	CD_init_flag;
-UINT8	CD_flag;			// 0x00 = CD-DA or <SEEK> or <SCAN> 0x80 = CD-ROM
-UINT32	CD_repeat;			// repeat frequency
-UINT32	CD_standby;			// standby wait
-UINT32	CD_repeat_max;			// max repeat frequency
+UINT8	CD_flag;			/* 0x00 = CD-DA or <SEEK> or <SCAN> 0x80 = CD-ROM*/
+UINT32	CD_repeat;			/* repeat frequency*/
+UINT32	CD_standby;			/* standby wait*/
+UINT32	CD_repeat_max;			/* max repeat frequency*/
 UINT8	CD_ecc;
-UINT32	CD_drive_speed;			// 0 = noop, 1 = 1x, 2 = 2x
+UINT32	CD_drive_speed;			/* 0 = noop, 1 = 1x, 2 = 2x*/
 
 
-UINT8			cdda_buff[8192];		// CD-DA buffer for SCSP communication
+UINT8			cdda_buff[8192];		/* CD-DA buffer for SCSP communication*/
 UINT32		cdda_pos;
 
 
 
 
-////////////////////////////////////////////////////////////////
+/*/*//////////////////////////////////////////////////////////*/ //*/
 
-#define ISO_BUFF_SIZE	(2352 * 16)	// cache size
+#define ISO_BUFF_SIZE	(2352 * 16)	/* cache size*/
 
-////////////////////////////////////////////////////////////////
+/*/*//////////////////////////////////////////////////////////*/ //*/
 
  char	* iso_buff = NULL;
 static FILE	* iso_file = NULL;
@@ -145,14 +145,14 @@ INT32 fsize(FILE * f){
 
 static struct {
 
-	INT32	size;			// negative value means not present
-	UINT32	ctrl;			// control
-	UINT32	idx;			// index
-	UINT32	type;			// iso : sector size
-	UINT32	off;			// bin : offset info iso_file
-	UINT32	fad;			// position on the disc
-	UINT32	len;			// length (in sectors)
-	char	path[256];		// file path
+	INT32	size;			/* negative value means not present*/
+	UINT32	ctrl;			/* control*/
+	UINT32	idx;			/* index*/
+	UINT32	type;			/* iso : sector size*/
+	UINT32	off;			/* bin : offset info iso_file*/
+	UINT32	fad;			/* position on the disc*/
+	UINT32	len;			/* length (in sectors)*/
+	char	path[256];		/* file path*/
 
 }		iso_track[100],
 		iso_leadout;
@@ -161,18 +161,18 @@ static UINT32	iso_track_first;
 static UINT32	iso_track_last;
 static UINT32	iso_track_num;
 
-static INT32	iso_size;		// < 0 means not present
-static UINT32	iso_type;		// 0 = ISO 1 = BIN
+static INT32	iso_size;		/* < 0 means not present*/
+static UINT32	iso_type;		/* 0 = ISO 1 = BIN*/
 
-////////////////////////////////////////////////////////////////
-// CD Block Interface
+/*/*//////////////////////////////////////////////////////////*/ //*/
+/* CD Block Interface*/
 
 
 
  void cdb_inject_file_info(UINT32 fid, UINT8 * dst){
 
-	// converts standard cdb file info in saturn format
-	// and 'injects' it in the supplied destination. ;)
+	/* converts standard cdb file info in saturn format*/
+	/* and 'injects' it in the supplied destination. ;)*/
 
 	dst[0x0] = CD_file[fid].fad >> 24;
 	dst[0x1] = CD_file[fid].fad >> 16;
@@ -192,7 +192,7 @@ static UINT32	iso_type;		// 0 = ISO 1 = BIN
 
 UINT32 cdb_find_track(UINT32 fad){
 
-	// finds the track that contains the specified fad
+	/* finds the track that contains the specified fad*/
 
 	int i;
 
@@ -211,7 +211,7 @@ UINT32 cdb_find_track(UINT32 fad){
 
  UINT32 cdb_find_file(UINT32 fad){
 
-	// finds the file that contains the specified fad
+	/* finds the file that contains the specified fad*/
 
 	int i;
 
@@ -220,13 +220,13 @@ UINT32 cdb_find_track(UINT32 fad){
 		   ((CD_file[i].fad + (CD_file[i].size + 2047) / 2048) > fad))
 			return(i+2);
 
-	return(0); // no file found (audio track) - not an error!
+	return(0); /* no file found (audio track) - not an error!*/
 }
 
  UINT32 cdb_find_dest(UINT32 fnstv, UINT32 * pn){
 
-	// finds the sector data contained in *pn destination
-	// according to the filters it must pass through.
+	/* finds the sector data contained in *pn destination*/
+	/* according to the filters it must pass through.*/
 
 	filt_t * f;
 	UINT32 cond;
@@ -263,16 +263,16 @@ UINT32 cdb_find_track(UINT32 fad){
 
 		if(f->mode & CDB_FILTMODE_FID){
 
-			if(f->fid) // only if fid is valid
+			if(f->fid) /* only if fid is valid*/
 				if(CD_cur_fid != f->fid) cond = 1;
 		}
 
 		if(cond == 0){
 
-			// all checks passed, data is okay
+			/* all checks passed, data is okay*/
 
-			if(f->true_cond == 0xff) // disconnected
-				return(1); // discard data
+			if(f->true_cond == 0xff) /* disconnected*/
+				return(1); /* discard data*/
 
 			*pn = (UINT32)f->true_cond;
 			return(0);
@@ -290,9 +290,9 @@ UINT32 cdb_make_room(UINT32 pn){
 
 	int i;
 
-	// finds the first available free sector and
-	// allocates it for use by the curent CDROM play
-	// operation.
+	/* finds the first available free sector and*/
+	/* allocates it for use by the curent CDROM play*/
+	/* operation.*/
 
 	for(i = 0; i < 200; i++){
 
@@ -307,7 +307,7 @@ UINT32 cdb_make_room(UINT32 pn){
 		}
 	}
 
-	// should never happen, BFUL prevents it
+	/* should never happen, BFUL prevents it*/
 
 	logerror("ERROR: cdb_make_room found no free sector\n");
 	exit(1);
@@ -348,7 +348,7 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 
 	if(iso_type == 0){
 
-		// ISO
+		/* ISO*/
 
 		UINT32 tn;
 		FILE * f;
@@ -366,7 +366,7 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 		logerror( "reading fad:%x off:%x tn:%i from %s\n",
 		fad, fad - iso_track[tn-1].fad, tn, iso_track[tn-1].path);
 
-		fseek(f, (fad - iso_track[tn-1].fad) * 2048, SEEK_SET); // 2352
+		fseek(f, (fad - iso_track[tn-1].fad) * 2048, SEEK_SET); /* 2352*/
 		if(fread(buff, 1, 2352, f) != 2352){
 			logerror("ERROR: couldn't read from iso (fad = %06x)\n", fad);
 			exit(1);
@@ -376,7 +376,7 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 
 		if(iso_track[tn-1].type != 0){
 
-			// if CDDA or FORM 2 CDROM
+			/* if CDDA or FORM 2 CDROM*/
 
 			logerror(" [2352] : %i\n", (fad - 150) * 2352);
 
@@ -389,7 +389,7 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 
 		}else{
 
-			// CDROM
+			/* CDROM*/
 
 			logerror(" [2048] : %i\n", (fad - 150) * 2048);
 
@@ -402,7 +402,7 @@ UINT32 iso_read_sector(UINT32 mode, UINT32 fad, UINT8 * dst){
 		}
 	}
 
-	// BIN
+	/* BIN*/
 
 	return(0);
 }
@@ -411,7 +411,7 @@ void iso_seek_sector(UINT32 fad){
 
 }
 
-////////////////////////////////////////////////////////////////
+/*/*//////////////////////////////////////////////////////////*/ //*/
 
 UINT32 iso_get_track_info(UINT32 tn, UINT32 * ctrl, UINT32 * idx, UINT32 * fad){
 
@@ -435,7 +435,7 @@ void iso_get_leadout_info(UINT32 * ctrl, UINT32 * idx, UINT32 * fad){
 UINT32 iso_get_first_track(void){	return(iso_track_first); }
 UINT32 iso_get_last_track(void){		return(iso_track_last); }
 
-////////////////////////////////////////////////////////////////
+/*/*//////////////////////////////////////////////////////////*/ //*/
 
 UINT32 iso_get_status(void){
 
@@ -443,35 +443,35 @@ UINT32 iso_get_status(void){
 
 	stat = 0;
 
-//	if(iso_media_present) stat |= CDSTAT_MEDIA_PRESENT;
+/*	if(iso_media_present) stat |= CDSTAT_MEDIA_PRESENT;*/
 
-//	stat |= CDSTAT_CAN_RAW_AUDIO;
+/*	stat |= CDSTAT_CAN_RAW_AUDIO;*/
 
 	return(stat);
 }
 
-////////////////////////////////////////////////////////////////
-// Local Procedures
+/*//////////////////////////////////////////////////////////*/
+/* Local Procedures*/
 
 static void iso_build_disc_bin(void){
 
-//	logerror("loading BIN: %s\n", config.cdrom_image);
+/*	logerror("loading BIN: %s\n", config.cdrom_image);*/
 	exit(1);
 }
 
 static void iso_build_disc_iso(void){
 
-	//char b[2048];
+	/*char b[2048];*/
 	char s[256], t[256];
 	FILE * f;
 	int i, j;
 	UINT32 fad;
 
-//	char fmt[][12] = {
-//		"%02d.iso", "-%02d.iso", "_%02d.iso", " %02d.iso",
-//		"%02d.wav", "-%02d.wav", "_%02d.wav", " %02d.wav",
-//		"%02d.mp3", "-%02d.mp3", "_%02d.mp3", " %02d.mp3",
-//	};
+/*	char fmt[][12] = {*/
+/*		"%02d.iso", "-%02d.iso", "_%02d.iso", " %02d.iso",*/
+/*		"%02d.wav", "-%02d.wav", "_%02d.wav", " %02d.wav",*/
+/*		"%02d.mp3", "-%02d.mp3", "_%02d.mp3", " %02d.mp3",*/
+/*	};*/
 
 	char fmt[3][12] = {
 		"%02d.iso",
@@ -508,7 +508,7 @@ static void iso_build_disc_iso(void){
 
 				if(j == 0){
 
-					// ISO file
+					/* ISO file*/
 
 					if(i == 1){
 /*
@@ -549,10 +549,10 @@ static void iso_build_disc_iso(void){
 */
 					}else{
 
-						// non-first track
-						// assume ISO 2352-bytes data track
+						/* non-first track*/
+						/* assume ISO 2352-bytes data track*/
 
-						iso_track[i-1].type = 1; // 2352-bytes
+						iso_track[i-1].type = 1; /* 2352-bytes*/
 					}
 
 					iso_track[i-1].size	= fsize(f);
@@ -565,32 +565,32 @@ static void iso_build_disc_iso(void){
 				}else
 				if(j == 1){
 
-					// WAV file
+					/* WAV file*/
 
 					iso_track[i-1].size	= fsize(f);
 					iso_track[i-1].ctrl	= 1;
 					iso_track[i-1].idx	= 1;
-					iso_track[i-1].type	= 1; // WAV, 2352-bytes
+					iso_track[i-1].type	= 1; /* WAV, 2352-bytes*/
 					iso_track[i-1].off	= 0;
 					iso_track[i-1].fad	= fad;
 					iso_track[i-1].len	= (fsize(f) + 2047) / 2048;
 
 				}else{
 
-					// MP3 file
+					/* MP3 file*/
 
 					if(!iso_mp3_init){
-						// mp3_init();
+						/* mp3_init();*/
 						iso_mp3_init = 1;
 					}
 
-					iso_track[i-1].size	= fsize(f); // fixme
+					iso_track[i-1].size	= fsize(f); /* fixme*/
 					iso_track[i-1].ctrl	= 1;
 					iso_track[i-1].idx	= 1;
-					iso_track[i-1].type	= 2; // MP3
+					iso_track[i-1].type	= 2; /* MP3*/
 					iso_track[i-1].off	= 0;
 					iso_track[i-1].fad	= fad;
-					iso_track[i-1].len	= (fsize(f) + 2047) / 2048; // fixme
+					iso_track[i-1].len	= (fsize(f) + 2047) / 2048; /* fixme*/
 				}
 
 				strcpy(iso_track[i-1].path, t);
@@ -602,14 +602,14 @@ static void iso_build_disc_iso(void){
 		}
 	}
 
-	iso_leadout.fad = iso_track[iso_track_last-1].fad+iso_track[iso_track_last-1].len + 150; // 2 sec after the last track
+	iso_leadout.fad = iso_track[iso_track_last-1].fad+iso_track[iso_track_last-1].len + 150; /* 2 sec after the last track*/
 
 	iso_track_num = (iso_track_last - (iso_track_first - 1));
 
 	iso_type = 0;
 }
 
-////////////////////////////////////////////////////////////////
+/*/*//////////////////////////////////////////////////////////*/ //*/
 
 void iso_shutdown(void){
 
@@ -639,7 +639,7 @@ void iso_reset(void){
 		strcpy(iso_track[i].path, "NULL");
 	}
 
-	iso_build_disc_iso();	// supposed ISO image
+	iso_build_disc_iso();	/* supposed ISO image*/
 }
 
 void iso_init(void){
@@ -728,8 +728,8 @@ void cdb_build_toc(void){
 
 	CD_sat_toc[0x18c]		= (CD_toc.first.ctrl) | CD_toc.first.idx;
 	CD_sat_toc[0x18d]		= CD_toc.first.num;
-	CD_sat_toc[0x18e]		= 0x00;	// psec ?
-	CD_sat_toc[0x18f]		= 0x00;	// pfra ?
+	CD_sat_toc[0x18e]		= 0x00;	/* psec ?*/
+	CD_sat_toc[0x18f]		= 0x00;	/* pfra ?*/
 
 	logerror("track#%02i: %02i:%02i:%02i (addr: %i)\n",
 	CD_toc.first.num, CD_toc.first.min, CD_toc.first.sec, CD_toc.first.fra, CD_toc.first.fad);
@@ -743,8 +743,8 @@ void cdb_build_toc(void){
 
 	CD_sat_toc[0x190]		= (CD_toc.last.ctrl) | CD_toc.last.idx;
 	CD_sat_toc[0x191]		= CD_toc.last.num;
-	CD_sat_toc[0x192]		= 0x00;	// psec ?
-	CD_sat_toc[0x193]		= 0x00;	// pfra ?
+	CD_sat_toc[0x192]		= 0x00;	/* psec ?*/
+	CD_sat_toc[0x193]		= 0x00;	/* pfra ?*/
 
 	logerror("track#%02i: %02i:%02i:%02i (addr: %i)\n",
 	CD_toc.last.num, CD_toc.last.min, CD_toc.last.sec, CD_toc.last.fra, CD_toc.last.fad);
@@ -796,7 +796,7 @@ static UINT8 buff[4096];
 		size = buff[off+0x00];
 
 		if(size == 0){
-			// check for subdirs
+			/* check for subdirs*/
 			break;
 		}
 
@@ -811,7 +811,7 @@ static UINT8 buff[4096];
 			CD_file[i].name[j] = buff[off+0x21+j];
 		CD_file[i].name[j] = '\0';
 
-		CD_file[i].fad += 150; // LSN to FAD
+		CD_file[i].fad += 150; /* LSN to FAD*/
 
 		logerror(	"ANY 2 #%08i : (fad=%i off=%i, size=%02X) fad=%06X size=%06X attr=%02X %s\n",
 			i, fad, off, size,
@@ -827,7 +827,7 @@ static UINT8 buff[4096];
 		i++;
 	}
 
-	CD_file_num = (i < 2) ? 2 : i; // to prevent stupid ISO bugs
+	CD_file_num = (i < 2) ? 2 : i; /* to prevent stupid ISO bugs*/
 	logerror("trovati %d file\n",CD_file_num);
 }
 
@@ -840,19 +840,19 @@ void CD_com_update(UINT32 count){
 
 		logerror("---- periodic update ----\n");
 
-		// prevents update to change anything before
-		// the init string is read by the host
-		//if(CD_cr_first) return ();
+		/* prevents update to change anything before*/
+		/* the init string is read by the host*/
+		/*if(CD_cr_first) return ();*/
 
-		// prevents update from overwriting cr registers
-		// while a command is being written
-		//if(CD_cr_writing) return ();
+		/* prevents update from overwriting cr registers*/
+		/* while a command is being written*/
+		/*if(CD_cr_writing) return ();*/
 
 		if(CD_status == CDB_STAT_PAUSE){
 
 			if(CD_free_space && (CD_hirq & HIRQ_BFUL)){
 
-				// PEND ?
+				/* PEND ?*/
 
 				logerror("BFUL -> PLAY\n");
 
@@ -865,19 +865,19 @@ void CD_com_update(UINT32 count){
 
 			if(CD_toc.track[CD_cur_track-1].ctrl & 0x40){
 
-				// CDROM
+				/* CDROM*/
 
 				UINT32 pn;
 
 				if(cdb_find_dest(CD_filt_num, &pn) == 0){
 
-					// dest partition found, else data is discarded
+					/* dest partition found, else data is discarded*/
 
 					UINT32 sn;
 
 					sn = cdb_make_room(pn);
 
-					CD_part[pn].sect[sn]->size	= cdb_get_sect_size; // 2048, 2352
+					CD_part[pn].sect[sn]->size	= cdb_get_sect_size; /* 2048, 2352*/
 					CD_part[pn].sect[sn]->fad	= CD_cur_fad;
 					CD_part[pn].sect[sn]->fid	= CD_cur_fid;
 					CD_part[pn].sect[sn]->chan	= 0;
@@ -893,23 +893,23 @@ void CD_com_update(UINT32 count){
 
 						#if 0
 
-						// couldn't read synch, header, subheader
-						// and EDC/ECC data. generate it! (FORM2 MODE1)
+						/* couldn't read synch, header, subheader*/
+						/* and EDC/ECC data. generate it! (FORM2 MODE1)*/
 
-						// synch data (12 bytes)
+						/* synch data (12 bytes)*/
 						memset(&CD_part[pn].sect[sn]->data[1], 0xff, 10);
 						CD_part[pn].sect[sn]->data[0] = 0x00;
 						CD_part[pn].sect[sn]->data[11] = 0x00;
 
-						// header (4 bytes)
-						CD_part[pn].sect[sn]->data[12] = FAD_TO_MIN(CD_cur_fad);	// min
-						CD_part[pn].sect[sn]->data[13] = FAD_TO_SEC(CD_cur_fad);	// sec
-						CD_part[pn].sect[sn]->data[14] = FAD_TO_FRA(CD_cur_fad);	// fra
-						CD_part[pn].sect[sn]->data[15] = 0;				// mode
+						/* header (4 bytes)*/
+						CD_part[pn].sect[sn]->data[12] = FAD_TO_MIN(CD_cur_fad);	/* min*/
+						CD_part[pn].sect[sn]->data[13] = FAD_TO_SEC(CD_cur_fad);	/* sec*/
+						CD_part[pn].sect[sn]->data[14] = FAD_TO_FRA(CD_cur_fad);	/* fra*/
+						CD_part[pn].sect[sn]->data[15] = 0;				/* mode*/
 
-						// subheader (8 bytes)
+						/* subheader (8 bytes)*/
 
-						// EDC/ECC
+						/* EDC/ECC*/
 						memset(&CD_part[pn].sect[sn]->data[2048+16+8], 0xff, 280);
 
 						#endif
@@ -917,13 +917,13 @@ void CD_com_update(UINT32 count){
 
 					if(CD_free_space <= 0){
 
-						// buffer full
+						/* buffer full*/
 
 						logerror("BFUL!\n");
 
 						CD_hirq |= HIRQ_BFUL;
-					//	CD_hirq |= HIRQ_PEND; // not sure
-						CD_hirq |= HIRQ_DRDY; // not sure
+					/*	CD_hirq |= HIRQ_PEND; */ /* not sure*/
+						CD_hirq |= HIRQ_DRDY; /* not sure*/
 
 						CD_status = CDB_STAT_PAUSE;
 					}
@@ -933,85 +933,85 @@ void CD_com_update(UINT32 count){
 
 			}else{
 
-				// CDDA
+				/* CDDA*/
 
 				logerror("PLAY CDDA  : fad=%06x [%06x~%06x] track=%i ctrl=%i idx=%i\n",
 				CD_cur_fad, CD_play_fad, CD_play_fad+CD_play_range,
 				CD_cur_track, CD_cur_ctrl, CD_cur_idx);
 
-				CD_flag = 0; // playing CDDA
+				CD_flag = 0; /* playing CDDA*/
 
-				// set 1x drive speed
+				/* set 1x drive speed*/
 
-				//CD_update_timings(1);
+				/*CD_update_timings(1);*/
 
-				// fill the CD-DA buffer
+				/* fill the CD-DA buffer*/
 
 				if(iso_read_sector(1, CD_cur_fad, &cdda_buff[cdda_pos & (8192 - 1)]) == 0){
 
-					// not all the 2352 data could be read
-					// CD-DA cannot be played
+					/* not all the 2352 data could be read*/
+					/* CD-DA cannot be played*/
 
 					memset(cdda_buff, 0x00, 8192);
 
 				}else{
 
-					// the CD-DA data resides in cdda_buff[]
+					/* the CD-DA data resides in cdda_buff[]*/
 				}
 
 				cdda_pos += 2352;
 
-				// update subcode info for *next* sector
+				/* update subcode info for *next* sector*/
 
 				{
 
-				// generate subcode q
+				/* generate subcode q*/
 
 				UINT32 pfad, qfad;
 
 				pfad = (CD_cur_fad + 1) - CD_toc.first.fad;
 				qfad = (CD_cur_fad + 1);
 
-				CD_sat_subq[0] = CD_toc.track[CD_cur_track-1].ctrl | 1;	// ctrl, adr
-				CD_sat_subq[1] = CD_cur_track;					// tno
-				CD_sat_subq[2] = 1;							// idx
-				CD_sat_subq[3] = pfad >> 16;						// pfad
-				CD_sat_subq[4] = pfad >> 8;						// pfad
-				CD_sat_subq[5] = pfad;							// pfad
-				CD_sat_subq[6] = 0x00;							// -
-				CD_sat_subq[7] = qfad >> 16;						// qfad
-				CD_sat_subq[8] = qfad >> 8;						// qfad
-				CD_sat_subq[9] = qfad;							// qfad
+				CD_sat_subq[0] = CD_toc.track[CD_cur_track-1].ctrl | 1;	/* ctrl, adr*/
+				CD_sat_subq[1] = CD_cur_track;					/* tno*/
+				CD_sat_subq[2] = 1;							/* idx*/
+				CD_sat_subq[3] = pfad >> 16;						/* pfad*/
+				CD_sat_subq[4] = pfad >> 8;						/* pfad*/
+				CD_sat_subq[5] = pfad;							/* pfad*/
+				CD_sat_subq[6] = 0x00;							/* -*/
+				CD_sat_subq[7] = qfad >> 16;						/* qfad*/
+				CD_sat_subq[8] = qfad >> 8;						/* qfad*/
+				CD_sat_subq[9] = qfad;							/* qfad*/
 
-				// generate subcode rw
+				/* generate subcode rw*/
 
-				memset(CD_sat_subrw, 0x00, 24);					// eeer ... ;)
+				memset(CD_sat_subrw, 0x00, 24);					/* eeer ... ;)*/
 
 				}
 			}
 
-			CD_cur_fad++;	// points to *next* sector
+			CD_cur_fad++;	/* points to *next* sector*/
 
 			CD_cur_track	= iso_find_track(CD_cur_fad);
 			CD_cur_ctrl	= CD_toc.track[CD_cur_track-1].ctrl;
 			CD_cur_idx		= CD_toc.track[CD_cur_track-1].idx;
-			//CD_cur_fid		= iso_find_file(CD_cur_fad);
+			/*CD_cur_fid		= iso_find_file(CD_cur_fad);*/
 
 			if((CD_cur_fad < CD_play_fad) ||
 			   (CD_cur_fad >= (CD_play_fad + CD_play_range))){
 
-				if(((CD_flag & 0x80) == 0) &&		// CD-DA
-				   (CD_repeat_max != 0xff) &&		// no ignore errors
-				   ((CD_repeat_max == 0xfe) ||		// infinite repeat
-				    (CD_repeat < CD_repeat_max))){	// didn't finish number of repeats
+				if(((CD_flag & 0x80) == 0) &&		/* CD-DA*/
+				   (CD_repeat_max != 0xff) &&		/* no ignore errors*/
+				   ((CD_repeat_max == 0xfe) ||		/* infinite repeat*/
+				    (CD_repeat < CD_repeat_max))){	/* didn't finish number of repeats*/
 
-					// setup repeat
+					/* setup repeat*/
 
 					logerror("REPEAT (%i / %i)\n", CD_repeat, CD_repeat_max);
 
 				}else{
 
-					// play ended
+					/* play ended*/
 
 					logerror("PLAY ended\n");
 
@@ -1023,45 +1023,45 @@ void CD_com_update(UINT32 count){
 
 					CD_flag = 0;
 
-					// return to default speed (not correct, but can do it)
-					// should be done on next pickup-movement command instead
+					/* return to default speed (not correct, but can do it)*/
+					/* should be done on next pickup-movement command instead*/
 
-					//CD_update_timings(CD_drive_speed);
+					/*CD_update_timings(CD_drive_speed);*/
 				}
 			}
 
 			CD_hirq |= HIRQ_SCDQ;
-			CD_hirq |= HIRQ_CSCT; // shouldn't be here!
+			CD_hirq |= HIRQ_CSCT; /* shouldn't be here!*/
 
 		}else
 		if(CD_status == CDB_STAT_SCAN){
 
 			CD_flag = 0;
 
-			if((CD_scan_dir == 0) && // scanning forward
-			   (CD_toc.track[CD_cur_track-1].ctrl & 0x40) == 0){ // CDDA
+			if((CD_scan_dir == 0) && /* scanning forward*/
+			   (CD_toc.track[CD_cur_track-1].ctrl & 0x40) == 0){ /* CDDA*/
 
-				// play CDDA
+				/* play CDDA*/
 
 				logerror("SCAN - PLAY CDDA\n");
 
-				// set 1x drive speed
+				/* set 1x drive speed*/
 
-				//CD_update_timings(1);
+				/*CD_update_timings(1);*/
 			}
 
-			// update fad
+			/* update fad*/
 
 
 
 			logerror("ERROR: scanning\n");
-			//exit(1);
+			/*exit(1);*/
 		}
 
 		CD_hirq |= HIRQ_SCDQ;
 
 		CDB_SEND_REPORT();
-		CR1 |= CDB_STAT_PERI << 8; // periodic response
+		CR1 |= CDB_STAT_PERI << 8; /* periodic response*/
 	}
 	logerror("CD block update\n");
 }

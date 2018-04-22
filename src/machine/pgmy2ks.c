@@ -1,21 +1,21 @@
-// Photoy2k sprite offset "decryption"
-//
-// ASIC28 gets a sprite number and an encrypted sprite offset and returns
-// a decrypted sprite offset.  Only bits 1, 3, 8 and 13 (0x210a) change.
-//
-// The encrypted sprite offset comes from the rom.  There are 10-bytes
-// structures at address:
-//   224eb4 + nb*10        for sprites 0..1f3f
-//   23773e + (nb_1f40)*10 for sprites 1f40..3bff
-//
-// struct is:
-//   +0 u32 encrypted sprite offset
-//   +4 u8  width
-//   +5 u8  height
-//   +6 u32 always 0
-//
-// Following table gives the decrypted sprite offset given the sprite number.
-// The actual decryption algorithm is unknown.
+/* Photoy2k sprite offset "decryption"*/
+/**/
+/* ASIC28 gets a sprite number and an encrypted sprite offset and returns*/
+/* a decrypted sprite offset.  Only bits 1, 3, 8 and 13 (0x210a) change.*/
+/**/
+/* The encrypted sprite offset comes from the rom.  There are 10-bytes*/
+/* structures at address:*/
+/*   224eb4 + nb*10        for sprites 0..1f3f*/
+/*   23773e + (nb_1f40)*10 for sprites 1f40..3bff*/
+/**/
+/* struct is:*/
+/*   +0 u32 encrypted sprite offset*/
+/*   +4 u8  width*/
+/*   +5 u8  height*/
+/*   +6 u32 always 0*/
+/**/
+/* Following table gives the decrypted sprite offset given the sprite number.*/
+/* The actual decryption algorithm is unknown.*/
 
 
 unsigned int pgmy2ks[0x3c00] = {

@@ -50,7 +50,7 @@ struct pia6821
 	UINT8 irq_b1;
 	UINT8 irq_b2;
 	UINT8 irq_b_state;
-	UINT8 in_set; // which input ports are set
+	UINT8 in_set; /* which input ports are set*/
 };
 
 
@@ -204,9 +204,9 @@ void pia_config(int which, int addressing, const struct pia6821_interface *intf)
 	if (!intf) return;
 	pia[which].intf = intf;
 	pia[which].addr = addressing;
-	// set default read values.
-	// Ports A,CA1,CA2 default to 1
-	// Ports B,CB1,CB2 are three-state and undefined (set to 0)
+	/* set default read values.*/
+	/* Ports A,CA1,CA2 default to 1*/
+	/* Ports B,CB1,CB2 are three-state and undefined (set to 0)*/
 	pia[which].in_a = pia[which].in_ca1 = pia[which].in_ca2 = 0xff;
 	if ((intf->in_a_func) && ((FPTR)(intf->in_a_func) <= 0x100))
 		{ pia[which].in_a = ((FPTR)(intf->in_a_func) - 1); pia[which].in_set |= PIA_IN_SET_A; }
@@ -316,9 +316,9 @@ int pia_read(int which, int offset)
 				else if ((p->ddr_a ^ 0xff) && !(p->in_set & PIA_IN_SET_A)) {
 					logerror("PIA%d: Warning! no port A read handler. Assuming pins %02x not connected\n",
 					         which, p->ddr_a ^ 0xff);
-					p->in_set |= PIA_IN_SET_A; // disable logging
+					p->in_set |= PIA_IN_SET_A; /* disable logging*/
 				}
-#endif // MAME_DEBUG
+#endif /* MAME_DEBUG*/
 
 				/* combine input and output values */
 				val = (p->out_a & p->ddr_a) + (p->in_a & ~p->ddr_a);
@@ -367,9 +367,9 @@ int pia_read(int which, int offset)
 				else if ((p->ddr_b ^ 0xff) && !(p->in_set & PIA_IN_SET_B)) {
 					logerror("PIA%d: Error! no port B read handler. Three-state pins %02x are undefined\n",
 					         which, p->ddr_b ^ 0xff);
-					p->in_set |= PIA_IN_SET_B; // disable logging
+					p->in_set |= PIA_IN_SET_B; /* disable logging*/
 				}
-#endif // MAME_DEBUG
+#endif /* MAME_DEBUG*/
 
 				/* combine input and output values */
 				val = (p->out_b & p->ddr_b) + (p->in_b & ~p->ddr_b);
@@ -398,17 +398,17 @@ int pia_read(int which, int offset)
 #ifdef MAME_DEBUG
 			else if (!(p->in_set & PIA_IN_SET_CA1)) {
 				logerror("PIA%d: Warning! no CA1 read handler. Assuming pin not connected\n",which);
-				p->in_set |= PIA_IN_SET_CA1; // disable logging
+				p->in_set |= PIA_IN_SET_CA1; /* disable logging*/
 			}
-#endif // MAME_DEBUG
+#endif /* MAME_DEBUG*/
 			if ((FPTR)(p->intf->in_ca2_func) > 0x100)
 				pia_set_input_ca2(which, p->intf->in_ca2_func(0));
 #ifdef MAME_DEBUG
 			else if (C2_INPUT(p->ctl_a) && !(p->in_set & PIA_IN_SET_CA2)) {
 				logerror("PIA%d: Warning! no CA2 read handler. Assuming pin not connected\n",which);
-				p->in_set |= PIA_IN_SET_CA2; // disable logging
+				p->in_set |= PIA_IN_SET_CA2; /* disable logging*/
 			}
-#endif // MAME_DEBUG
+#endif /* MAME_DEBUG*/
 
 			/* read control register */
 			val = p->ctl_a;
@@ -429,17 +429,17 @@ int pia_read(int which, int offset)
 #ifdef MAME_DEBUG
 			else if (!(p->in_set & PIA_IN_SET_CB1)) {
 				logerror("PIA%d: Error! no CB1 read handler. Three-state pin is undefined\n",which);
-				p->in_set |= PIA_IN_SET_CB1; // disable logging
+				p->in_set |= PIA_IN_SET_CB1; /* disable logging*/
 			}
-#endif // MAME_DEBUG
+#endif /* MAME_DEBUG*/
 			if ((FPTR)(p->intf->in_cb2_func) > 0x100)
 				pia_set_input_cb2(which, p->intf->in_cb2_func(0));
 #ifdef MAME_DEBUG
 			else if (C2_INPUT(p->ctl_b) && !(p->in_set & PIA_IN_SET_CB2)) {
 				logerror("PIA%d: Error! no CB2 read handler. Three-state pin is undefined\n",which);
-				p->in_set |= PIA_IN_SET_CB2; // disable logging
+				p->in_set |= PIA_IN_SET_CB2; /* disable logging*/
 			}
-#endif // MAME_DEBUG
+#endif /* MAME_DEBUG*/
 
 			/* read control register */
 			val = p->ctl_b;
@@ -558,7 +558,7 @@ void pia_write(int which, int offset, int data)
 
 			/* CA2 is configured as output and in set/reset mode */
 			/* 10/22/98 - MAB/FMP - any C2_OUTPUT should affect CA2 */
-//			if (C2_OUTPUT(data) && C2_SET_MODE(data))
+/*			if (C2_OUTPUT(data) && C2_SET_MODE(data))*/
 			if (C2_OUTPUT(data))
 			{
 				/* determine the new value */
@@ -590,7 +590,7 @@ void pia_write(int which, int offset, int data)
 
 			/* CB2 is configured as output and in set/reset mode */
 			/* 10/22/98 - MAB/FMP - any C2_OUTPUT should affect CB2 */
-//			if (C2_OUTPUT(data) && C2_SET_MODE(data))
+/*			if (C2_OUTPUT(data) && C2_SET_MODE(data))*/
 			if (C2_OUTPUT(data))
 			{
 				/* determine the new value */

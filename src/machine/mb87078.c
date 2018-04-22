@@ -49,9 +49,9 @@ static int MB87078_gain_percent[66]={
 
 static int calc_gain_index(int data0, int data1)
 {
-//data 0: GD0-GD5
-//data 1: 1  2  4  8  16
-//        c1 c2 EN C0 C32
+/*data 0: GD0-GD5*/
+/*data 1: 1  2  4  8  16*/
+/*        c1 c2 EN C0 C32*/
 
 	if (!(data1&4))
 	{
@@ -109,8 +109,8 @@ void MB87078_start(int which, const struct MB87078interface *intf)
 
 void MB87078_stop(void)
 {
-	//int i;
-	//for (i = 0; i < MAX_MB87078; i++){	};
+	/*int i;*/
+	/*for (i = 0; i < MAX_MB87078; i++){	};*/
 }
 
 
@@ -149,7 +149,7 @@ void MB87078_data_w(int which, int data, int dsel)
 	else
 	{/*dcs1,dsc2,en,c0,c32,X*/
 		c->channel_latch = data & 3;
-		c->latch[4+c->channel_latch] = data & 0x1f; //always zero bit 5
+		c->latch[4+c->channel_latch] = data & 0x1f; /*always zero bit 5*/
 	}
 	gain_recalc(which);
 }

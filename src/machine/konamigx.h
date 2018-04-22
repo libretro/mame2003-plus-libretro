@@ -15,7 +15,7 @@ WRITE16_HANDLER( tms57002_data_word_w );
 
 
 
-// 2nd-Tier GX/MW Hardware Functions
+/* 2nd-Tier GX/MW Hardware Functions*/
 void K053247GP_set_SpriteOffset(int offsx, int offsy);
 
 void K053936GP_set_offset(int chip, int xoffs, int yoffs);
@@ -26,18 +26,18 @@ void K053936GP_1_zoom_draw(struct mame_bitmap *bitmap, const struct rectangle *c
 
 
 
-// 1st-Tier GX/MW Variables and Functions
+/* 1st-Tier GX/MW Variables and Functions*/
 extern int konamigx_cfgport;
 extern data8_t  konamigx_wrport1_0, konamigx_wrport1_1;
 extern data16_t konamigx_wrport2;
 
 
-// Tile and Sprite Mixcode Decoders
+/* Tile and Sprite Mixcode Decoders*/
 int K055555GX_decode_vmixcolor(int layer, int *color);
 int K055555GX_decode_osmixcolor(int layer, int *color);
 
 
-// Sprite Callbacks
+/* Sprite Callbacks*/
 
 /* callbacks should return color codes in this format:
 	fedcba9876543210fedcba9876543210
@@ -60,7 +60,7 @@ void konamigx_salmndr2_sprite_callback(int *code, int *color, int *priority);
 void konamigx_le2_sprite_callback(int *code, int *color, int *priority);
 
 
-// Centralized Sprites and Layer Blitter
+/* Centralized Sprites and Layer Blitter*/
 
 /* Mixer Flags
 	fedcba9876543210fedcba9876543210
@@ -70,19 +70,19 @@ void konamigx_le2_sprite_callback(int *code, int *color, int *priority);
 	---x---------------------------- (disable shadows)
 	--x----------------------------- (disable z-buffering)
 */
-#define GXMIX_BLEND_AUTO	0			// emulate all blend effects
-#define GXMIX_BLEND_NONE	1			// disable all blend effects
-#define GXMIX_BLEND_FAST	2			// simulate translucency
-#define GXMIX_BLEND_FORCE	3			// force mix code on selected layer(s)
-#define GXMIX_NOLINESCROLL	0x1000		// disable linescroll on selected layer(s)
-#define GXMIX_NOSHADOW		0x10000000	// disable all shadows (shadow pens will be skipped)
-#define GXMIX_NOZBUF		0x20000000	// disable z-buffering (shadow pens will be drawn as solid)
+#define GXMIX_BLEND_AUTO	0			/* emulate all blend effects*/
+#define GXMIX_BLEND_NONE	1			/* disable all blend effects*/
+#define GXMIX_BLEND_FAST	2			/* simulate translucency*/
+#define GXMIX_BLEND_FORCE	3			/* force mix code on selected layer(s)*/
+#define GXMIX_NOLINESCROLL	0x1000		/* disable linescroll on selected layer(s)*/
+#define GXMIX_NOSHADOW		0x10000000	/* disable all shadows (shadow pens will be skipped)*/
+#define GXMIX_NOZBUF		0x20000000	/* disable z-buffering (shadow pens will be drawn as solid)*/
 
-// Sub Layer Flags
-#define GXSUB_K053250	0x10	// chip type: 0=K053936 ROZ+, 1=K053250 LVC
-#define GXSUB_4BPP 		0x04	//  16 colors
-#define GXSUB_5BPP 		0x05	//  32 colors
-#define GXSUB_8BPP 		0x08	// 256 colors
+/* Sub Layer Flags*/
+#define GXSUB_K053250	0x10	/* chip type: 0=K053936 ROZ+, 1=K053250 LVC*/
+#define GXSUB_4BPP 		0x04	/*  16 colors*/
+#define GXSUB_5BPP 		0x05	/*  32 colors*/
+#define GXSUB_8BPP 		0x08	/* 256 colors*/
 
 void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect,
 					struct tilemap *sub1, int sub1flags,
@@ -96,7 +96,7 @@ void konamigx_mixer_primode(int mode);
 void konamigx_objdma(void);
 
 
-// K055550/K053990/ESC protection devices handlers
+/* K055550/K053990/ESC protection devices handlers*/
 READ16_HANDLER ( K055550_word_r );
 WRITE16_HANDLER( K055550_word_w );
 WRITE16_HANDLER( K053990_martchmp_word_w );

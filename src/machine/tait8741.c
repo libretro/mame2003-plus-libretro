@@ -36,7 +36,7 @@ typedef struct TAITO8741_status{
 }I8741;
 
 static const struct TAITO8741interface *intf;
-//static I8741 *taito8741;
+/*static I8741 *taito8741;*/
 static I8741 taito8741[MAX_TAITO8741];
 
 /* for host data , write */
@@ -152,7 +152,7 @@ static void taito8741_update(int num)
 					/* buffering transmit data */
 					if( st->txpoint < 8 )
 					{
-//if (st->txpoint == 0 && num==1 && data&0x80) logerror("Coin Put\n");
+/*if (st->txpoint == 0 && num==1 && data&0x80) logerror("Coin Put\n");*/
 						st->txd[st->txpoint++] = data;
 					}
 					break;
@@ -183,7 +183,7 @@ static void taito8741_update(int num)
 			case 0x05: /* read receive buffer 4 */
 			case 0x06: /* read receive buffer 5 */
 			case 0x07: /* read receive buffer 6 */
-//if (data == 2 && num==0 && st->rxd[data-1]&0x80) logerror("Coin Get\n");
+/*if (data == 2 && num==0 && st->rxd[data-1]&0x80) logerror("Coin Get\n");*/
 				taito8741_hostdata_w(st,st->rxd[data-1]);
 				break;
 			case 0x08:	/* latch received serial data */
@@ -197,10 +197,10 @@ static void taito8741_update(int num)
 				}
 				break;
 			case 0x0a:	/* 8741-0 : set serial comminucation mode 'MASTER' */
-				//st->mode = TAITO8741_MASTER;
+				/*st->mode = TAITO8741_MASTER;*/
 				break;
 			case 0x0b:	/* 8741-1 : set serial comminucation mode 'SLAVE'  */
-				//st->mode = TAITO8741_SLAVE;
+				/*st->mode = TAITO8741_SLAVE;*/
 				break;
 			case 0x1f:  /* 8741-2,3 : ?? set parallelport mode ?? */
 			case 0x3f:  /* 8741-2,3 : ?? set parallelport mode ?? */
@@ -244,8 +244,8 @@ int TAITO8741_start(const struct TAITO8741interface *taito8741intf)
 
 	intf = taito8741intf;
 
-	//taito8741 = (I8741 *)malloc(intf->num*sizeof(I8741));
-	//if( taito8741 == 0 ) return 1;
+	/*taito8741 = (I8741 *)malloc(intf->num*sizeof(I8741));*/
+	/*if( taito8741 == 0 ) return 1;*/
 
 	for(i=0;i<intf->num;i++)
 	{

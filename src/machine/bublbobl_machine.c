@@ -49,7 +49,7 @@ WRITE_HANDLER( bublbobl_bankswitch_w )
 	cpu_set_reset_line(1, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 
 	/* bit 5 resets mcu */
-	if (memory_region_length(REGION_CPU3) == 0x10000) { // do we have an mcu?
+	if (memory_region_length(REGION_CPU3) == 0x10000) { /* do we have an mcu?*/
 		cpu_set_reset_line(3, (data & 0x20) ? CLEAR_LINE : ASSERT_LINE);
 	}
 
@@ -143,13 +143,13 @@ static unsigned char portA_in,portA_out,ddrA;
 
 READ_HANDLER( bublbobl_68705_portA_r )
 {
-//logerror("%04x: 68705 port A read %02x\n",activecpu_get_pc(),portA_in);
+/*logerror("%04x: 68705 port A read %02x\n",activecpu_get_pc(),portA_in);*/
 	return (portA_out & ddrA) | (portA_in & ~ddrA);
 }
 
 WRITE_HANDLER( bublbobl_68705_portA_w )
 {
-//logerror("%04x: 68705 port A write %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: 68705 port A write %02x\n",activecpu_get_pc(),data);*/
 	portA_out = data;
 }
 
@@ -190,7 +190,7 @@ static int address,latch;
 
 WRITE_HANDLER( bublbobl_68705_portB_w )
 {
-//logerror("%04x: 68705 port B write %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: 68705 port B write %02x\n",activecpu_get_pc(),data);*/
 
 	if ((ddrB & 0x01) && (~data & 0x01) && (portB_out & 0x01))
 	{
@@ -199,7 +199,7 @@ WRITE_HANDLER( bublbobl_68705_portB_w )
 	if ((ddrB & 0x02) && (data & 0x02) && (~portB_out & 0x02)) /* positive edge trigger */
 	{
 		address = (address & 0xff00) | portA_out;
-//logerror("%04x: 68705 address %02x\n",activecpu_get_pc(),portA_out);
+/*logerror("%04x: 68705 address %02x\n",activecpu_get_pc(),portA_out);*/
 	}
 	if ((ddrB & 0x04) && (data & 0x04) && (~portB_out & 0x04)) /* positive edge trigger */
 	{
@@ -211,12 +211,12 @@ WRITE_HANDLER( bublbobl_68705_portB_w )
 		{
 			if ((address & 0x0800) == 0x0000)
 			{
-//logerror("%04x: 68705 read input port %02x\n",activecpu_get_pc(),address);
+/*logerror("%04x: 68705 read input port %02x\n",activecpu_get_pc(),address);*/
 				latch = readinputport((address & 3) + 1);
 			}
 			else if ((address & 0x0c00) == 0x0c00)
 			{
-//logerror("%04x: 68705 read %02x from address %04x\n",activecpu_get_pc(),bublbobl_sharedram2[address],address);
+/*logerror("%04x: 68705 read %02x from address %04x\n",activecpu_get_pc(),bublbobl_sharedram2[address],address);*/
 				latch = bublbobl_sharedram2[address & 0x03ff];
 			}
 			else
@@ -226,7 +226,7 @@ logerror("%04x: 68705 unknown read address %04x\n",activecpu_get_pc(),address);
 		{
 			if ((address & 0x0c00) == 0x0c00)
 			{
-//logerror("%04x: 68705 write %02x to address %04x\n",activecpu_get_pc(),portA_out,address);
+/*logerror("%04x: 68705 write %02x to address %04x\n",activecpu_get_pc(),portA_out,address);*/
 				bublbobl_sharedram2[address & 0x03ff] = portA_out;
 			}
 			else

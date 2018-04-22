@@ -60,7 +60,7 @@ static void mcu_update_seed(data8_t data)
 	}
 
 	mcu_seed += 0x19;
-	//logerror("New seed: 0x%02x\n", mcu_seed);
+	/*logerror("New seed: 0x%02x\n", mcu_seed);*/
 }
 
 
@@ -70,14 +70,14 @@ static void mcu_update_seed(data8_t data)
 
 READ_HANDLER( chaknpop_mcu_portA_r )
 {
-	//logerror("%04x: MCU portA read\n", activecpu_get_pc());
+	/*logerror("%04x: MCU portA read\n", activecpu_get_pc());*/
 	return mcu_result;
 }
 
 
 READ_HANDLER( chaknpop_mcu_portB_r )
 {
-	//logerror("%04x: MCU portB read\n", activecpu_get_pc());
+	/*logerror("%04x: MCU portB read\n", activecpu_get_pc());*/
 
 	if (--mcu_wait)
 		return 0x00;
@@ -87,7 +87,7 @@ READ_HANDLER( chaknpop_mcu_portB_r )
 
 READ_HANDLER( chaknpop_mcu_portC_r )
 {
-	//logerror("%04x: MCU portC read\n", activecpu_get_pc());
+	/*logerror("%04x: MCU portC read\n", activecpu_get_pc());*/
 	return 0x00;
 }
 
@@ -142,12 +142,12 @@ WRITE_HANDLER( chaknpop_mcu_portA_w )
 
 WRITE_HANDLER( chaknpop_mcu_portB_w )
 {
-	//logerror("%04x: MCU portB write 0x%02x\n", activecpu_get_pc(), data);
+	/*logerror("%04x: MCU portB write 0x%02x\n", activecpu_get_pc(), data);*/
 }
 
 WRITE_HANDLER( chaknpop_mcu_portC_w )
 {
-	//logerror("%04x: MCU portC write 0x%02x\n", activecpu_get_pc(), data);
+	/*logerror("%04x: MCU portC write 0x%02x\n", activecpu_get_pc(), data);*/
 }
 
 

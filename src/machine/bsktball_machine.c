@@ -175,13 +175,13 @@ Sound handlers
 ***************************************************************************/
 WRITE_HANDLER( bsktball_bounce_w )
 {
-	discrete_sound_w(1, data & 0x0f);	// Crowd
-	discrete_sound_w(2, (data & 0x10) ? 1 : 0);	// Bounce
+	discrete_sound_w(1, data & 0x0f);	/* Crowd*/
+	discrete_sound_w(2, (data & 0x10) ? 1 : 0);	/* Bounce*/
 }
 
 WRITE_HANDLER( bsktball_note_w )
 {
-	discrete_sound_w(0, (~data) & 0xff);	// Note
+	discrete_sound_w(0, (~data) & 0xff);	/* Note*/
 }
 
 WRITE_HANDLER( bsktball_noise_reset_w )

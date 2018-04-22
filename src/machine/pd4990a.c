@@ -213,7 +213,7 @@ static void pd4990a_readbit(void)
 			outputbit=(pd4990a.year >> (bitno-0x28)) & 0x01;
 			break;
 		case 0x30: case 0x31: case 0x32: case 0x33:
-			//unknown
+			/*unknown*/
 			break;
 	}
 }
@@ -230,9 +230,9 @@ static void pd4990a_resetbitstream(void)
 
 static void pd4990a_writebit(unsigned char bit)
 {
-	if(bitno<=31)	//low part
+	if(bitno<=31)	/*low part*/
 		shiftlo|=bit<<bitno;
-	else	//high part
+	else	/*high part*/
 		shifthi|=bit<<(bitno-32);
 }
 
@@ -251,8 +251,8 @@ static void pd4990a_nextbit(void)
 
 static unsigned char pd4990a_getcommand(void)
 {
-	//Warning: problems if the 4 bits are in different
-	//parts, It's very strange that this case could happen.
+	/*Warning: problems if the 4 bits are in different*/
+	/*parts, It's very strange that this case could happen.*/
 	if(bitno<=31)
 		return shiftlo>>(bitno-4);
 	else
@@ -274,24 +274,24 @@ static void pd4990a_process_command(void)
 {
 	switch(pd4990a_getcommand())
 	{
-		case 0x1:	//load output register
+		case 0x1:	/*load output register*/
 			bitno=0;
 			if(reading)
-				pd4990a_readbit();	//prepare first bit
+				pd4990a_readbit();	/*prepare first bit*/
 			shiftlo=0;
 			shifthi=0;
 			break;
 		case 0x2:
-			writting=0;	//store register to current date
+			writting=0;	/*store register to current date*/
 			pd4990a_update_date();
 			break;
-		case 0x3:	//start reading
+		case 0x3:	/*start reading*/
 			reading=1;
 			break;
-		case 0x7:	//switch testbit every frame
+		case 0x7:	/*switch testbit every frame*/
 			maxwaits=1;
 			break;
-		case 0x8:	//switch testbit every half-second
+		case 0x8:	/*switch testbit every half-second*/
 			maxwaits=30;
 			break;
 	}
@@ -301,17 +301,17 @@ static void pd4990a_process_command(void)
 void pd4990a_serial_control(unsigned char data)
 {
 	static int clock_line=0;
-	static int command_line=0;	//??
+	static int command_line=0;	/*??*/
 
-	//Check for command end
-	if(command_line && !(data&END_BIT)) //end of command
+	/*Check for command end*/
+	if(command_line && !(data&END_BIT)) /*end of command*/
 	{
 		pd4990a_process_command();
 		pd4990a_resetbitstream();
 	}
 	command_line=data&END_BIT;
 
-	if(clock_line && !(data&CLOCK_BIT))	//clock lower edge
+	if(clock_line && !(data&CLOCK_BIT))	/*clock lower edge*/
 	{
 		pd4990a_writebit(data&DATA_BIT);
 		pd4990a_nextbit();

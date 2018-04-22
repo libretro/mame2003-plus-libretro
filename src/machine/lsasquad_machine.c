@@ -39,28 +39,28 @@ WRITE_HANDLER( lsasquad_sound_command_w )
 {
 	sound_pending |= 0x01;
 	sound_cmd = data;
-//logerror("%04x: sound cmd %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: sound cmd %02x\n",activecpu_get_pc(),data);*/
 	timer_set(TIME_NOW,data,nmi_callback);
 }
 
 READ_HANDLER( lsasquad_sh_sound_command_r )
 {
 	sound_pending &= ~0x01;
-//logerror("%04x: read sound cmd %02x\n",activecpu_get_pc(),sound_cmd);
+/*logerror("%04x: read sound cmd %02x\n",activecpu_get_pc(),sound_cmd);*/
 	return sound_cmd;
 }
 
 WRITE_HANDLER( lsasquad_sh_result_w )
 {
 	sound_pending |= 0x02;
-//logerror("%04x: sound res %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: sound res %02x\n",activecpu_get_pc(),data);*/
 	sound_result = data;
 }
 
 READ_HANDLER( lsasquad_sound_result_r )
 {
 	sound_pending &= ~0x02;
-//logerror("%04x: read sound res %02x\n",activecpu_get_pc(),sound_result);
+/*logerror("%04x: read sound res %02x\n",activecpu_get_pc(),sound_result);*/
 	return sound_result;
 }
 
@@ -88,13 +88,13 @@ static unsigned char portA_in,portA_out,ddrA;
 
 READ_HANDLER( lsasquad_68705_portA_r )
 {
-//logerror("%04x: 68705 port A read %02x\n",activecpu_get_pc(),portA_in);
+/*logerror("%04x: 68705 port A read %02x\n",activecpu_get_pc(),portA_in);*/
 	return (portA_out & ddrA) | (portA_in & ~ddrA);
 }
 
 WRITE_HANDLER( lsasquad_68705_portA_w )
 {
-//logerror("%04x: 68705 port A write %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: 68705 port A write %02x\n",activecpu_get_pc(),data);*/
 	portA_out = data;
 }
 
@@ -123,18 +123,18 @@ READ_HANDLER( lsasquad_68705_portB_r )
 
 WRITE_HANDLER( lsasquad_68705_portB_w )
 {
-//logerror("%04x: 68705 port B write %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: 68705 port B write %02x\n",activecpu_get_pc(),data);*/
 
 	if ((ddrB & 0x02) && (~data & 0x02) && (portB_out & 0x02))
 	{
 		portA_in = from_main;
 		if (main_sent) cpu_set_irq_line(2,0,CLEAR_LINE);
 		main_sent = 0;
-//logerror("read command %02x from main cpu\n",portA_in);
+/*logerror("read command %02x from main cpu\n",portA_in);*/
 	}
 	if ((ddrB & 0x04) && (data & 0x04) && (~portB_out & 0x04))
 	{
-//logerror("send command %02x to main cpu\n",portA_out);
+/*logerror("send command %02x to main cpu\n",portA_out);*/
 		from_mcu = portA_out;
 		mcu_sent = 1;
 	}
@@ -149,7 +149,7 @@ WRITE_HANDLER( lsasquad_68705_ddrB_w )
 
 WRITE_HANDLER( lsasquad_mcu_w )
 {
-//logerror("%04x: mcu_w %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: mcu_w %02x\n",activecpu_get_pc(),data);*/
 	from_main = data;
 	main_sent = 1;
 	cpu_set_irq_line(2,0,ASSERT_LINE);
@@ -157,7 +157,7 @@ WRITE_HANDLER( lsasquad_mcu_w )
 
 READ_HANDLER( lsasquad_mcu_r )
 {
-//logerror("%04x: mcu_r %02x\n",activecpu_get_pc(),from_mcu);
+/*logerror("%04x: mcu_r %02x\n",activecpu_get_pc(),from_mcu);*/
 	mcu_sent = 0;
 	return from_mcu;
 }
@@ -168,7 +168,7 @@ READ_HANDLER( lsasquad_mcu_status_r )
 
 	/* bit 0 = when 1, mcu is ready to receive data from main cpu */
 	/* bit 1 = when 0, mcu has sent data to the main cpu */
-//logerror("%04x: mcu_status_r\n",activecpu_get_pc());
+/*logerror("%04x: mcu_status_r\n",activecpu_get_pc());*/
 	if (!main_sent) res |= 0x01;
 	if (!mcu_sent) res |= 0x02;
 

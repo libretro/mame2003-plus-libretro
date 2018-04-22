@@ -108,12 +108,12 @@ WRITE16_HANDLER( deco16_104_prot_w ) /* Wizard Fire */
 		return;
 	}
 
-//	if (offset != (0x150 >> 1) && offset != (0x0 >> 1) && offset != (0x110 >> 1) && offset != (0x280 >> 1)
-//		&& offset != (0x290 >> 1) && offset != (0x2b0 >> 1) && offset != (0x370 >> 1) && offset != (0x3c0 >> 1)
-//		&& offset != (0x370 >> 1) && offset != (0x3c0 >> 1) && offset != (0x430 >> 1) && offset != (0x460 >> 1)
-//		&& offset != (0x5a0 >> 1) && offset != (0x5b0 >> 1) && offset != (0x6e0 >> 1) && offset != (0x7d0 >> 1)
-//		)
-//		logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);
+/*	if (offset != (0x150 >> 1) && offset != (0x0 >> 1) && offset != (0x110 >> 1) && offset != (0x280 >> 1)*/
+/*		&& offset != (0x290 >> 1) && offset != (0x2b0 >> 1) && offset != (0x370 >> 1) && offset != (0x3c0 >> 1)*/
+/*		&& offset != (0x370 >> 1) && offset != (0x3c0 >> 1) && offset != (0x430 >> 1) && offset != (0x460 >> 1)*/
+/*		&& offset != (0x5a0 >> 1) && offset != (0x5b0 >> 1) && offset != (0x6e0 >> 1) && offset != (0x7d0 >> 1)*/
+/*		)*/
+/*		logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);*/
 
 	COMBINE_DATA(&deco16_prot_ram[offset]);
 }
@@ -200,7 +200,7 @@ READ16_HANDLER( deco16_104_prot_r ) /* Wizard Fire */
 			return ((deco16_prot_ram[0x5b0/2]&0x000f)<<8) | ((deco16_prot_ram[0x5b0/2]&0x00f0)<<8) | ((deco16_prot_ram[0x5b0/2]&0x0f00)>>4) | ((deco16_prot_ram[0x5b0/2]&0xf000)>>12);
 
 		case 0x444:
-			return deco16_prot_ram[0x604/2]; //rohga
+			return deco16_prot_ram[0x604/2]; /*rohga*/
 
 		case 0x5ac:
 			return ((deco16_prot_ram[0x6e0/2]&0xfff0)>>4) | ((deco16_prot_ram[0x6e0/2]&0x0007)<<13) | ((deco16_prot_ram[0x6e0/2]&0x0008)<<9);
@@ -212,7 +212,7 @@ READ16_HANDLER( deco16_104_prot_r ) /* Wizard Fire */
 			return ((deco16_prot_ram[0x460/2]&0x0007)<<13) | ((deco16_prot_ram[0x460/2]&0x0008)<<9);
 	}
 
-//	logerror("Deco Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+/*	logerror("Deco Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 	return 0;
 }
 
@@ -228,19 +228,19 @@ WRITE16_HANDLER( deco16_60_prot_w ) /* Edward Randy */
 
 	COMBINE_DATA(&deco16_prot_ram[offset]);
 
-// 0 4 2c 32 34 36 3c 3e 40 54 56 58 6a 76 80 84 88 8a 8c 8e 90 92 94 96 9e a0 a2 a4 a6 a8 aa ac ae b0
+/* 0 4 2c 32 34 36 3c 3e 40 54 56 58 6a 76 80 84 88 8a 8c 8e 90 92 94 96 9e a0 a2 a4 a6 a8 aa ac ae b0*/
 
-//if (offset!=0x32 && offset!=0x36/2 && offset!=0x9e/2 && offset!=0x76/2
-//	&& offset!=4/2 && offset!=0x2c/2 && offset!=0x3c/2 && offset!=0x3e/2
-//	&& offset!=0x80/2 && offset!=0x84/2 &&offset!=0x88/2 && offset!=0x8c/2 && offset!=0x90/2 && offset!=0x94/2
-//	&& offset!=0xa0/2 &&offset!=0xa2/2 && offset!=0xa4/2 && offset!=0xa6/2 && offset!=0xa8/2
-//	&& offset!=0xaa/2 && offset!=0xac/2 && offset!=0xae/2 && offset!=0xb0/2
-//	&& (offset<0xd0/2 || offset>0xe0/2)
-//	&& (offset<4 || offset>17)
-//	&& offset!=0x40/2 && offset!=0x54/2 && offset!=0x56/2 && offset!=0x58/2 && offset!=0x6a/2 && offset!=0x2c/2
-//	&& offset!=0 && offset!=0x34 && offset!=0x8a && offset!=0x8e && offset!=0x92 && offset!=0x96
-//	)
-//logerror("Protection PC %06x: warning - write %04x to %04x\n",cpu_get_pc(space->cpu),data,offset<<1);
+/*if (offset!=0x32 && offset!=0x36/2 && offset!=0x9e/2 && offset!=0x76/2*/
+/*	&& offset!=4/2 && offset!=0x2c/2 && offset!=0x3c/2 && offset!=0x3e/2*/
+/*	&& offset!=0x80/2 && offset!=0x84/2 &&offset!=0x88/2 && offset!=0x8c/2 && offset!=0x90/2 && offset!=0x94/2*/
+/*	&& offset!=0xa0/2 &&offset!=0xa2/2 && offset!=0xa4/2 && offset!=0xa6/2 && offset!=0xa8/2*/
+/*	&& offset!=0xaa/2 && offset!=0xac/2 && offset!=0xae/2 && offset!=0xb0/2*/
+/*	&& (offset<0xd0/2 || offset>0xe0/2)*/
+/*	&& (offset<4 || offset>17)*/
+/*	&& offset!=0x40/2 && offset!=0x54/2 && offset!=0x56/2 && offset!=0x58/2 && offset!=0x6a/2 && offset!=0x2c/2*/
+/*	&& offset!=0 && offset!=0x34 && offset!=0x8a && offset!=0x8e && offset!=0x92 && offset!=0x96*/
+/*	)*/
+/*logerror("Protection PC %06x: warning - write %04x to %04x\n",cpu_get_pc(space->cpu),data,offset<<1);*/
 
 }
 
@@ -400,7 +400,7 @@ READ16_HANDLER( deco16_60_prot_r ) /* Edward Randy */
 			return ((deco16_prot_ram[0x32/2]&0x00f0)<<8) | ((deco16_prot_ram[0x32/2]&0x000e)<<7) | ((deco16_prot_ram[0x32/2]&0x0001)<<11);
 	}
 
-//	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset*2);
+/*	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset*2);*/
 	return 0;
 }
 
@@ -435,17 +435,17 @@ WRITE16_HANDLER( deco16_66_prot_w ) /* Mutant Fighter */
 	else
 		mutantf_port_e8_hack=0x2401;
 
-//  2 4 c e 18 1e 22 2c 2e 34 36 38 3a 42 48 58 6a 72 7a 82 88 92 a2 a4 aa b0 b6 b8 dc e4 e8 f4 fa 1c8 308 7e8 40e
+/*  2 4 c e 18 1e 22 2c 2e 34 36 38 3a 42 48 58 6a 72 7a 82 88 92 a2 a4 aa b0 b6 b8 dc e4 e8 f4 fa 1c8 308 7e8 40e*/
 	offset=offset<<1;
-//	if (offset!=0x02 && offset!=0xc && offset!=0xe && offset!=0x18 && offset!=0x2c && offset!=0x2e && offset!=0x34
-//		&& offset!=0x42 && offset!=0x58 && offset!=0x6a && offset!=0x72 && offset!=0x7a && offset!=0xb8
-//		&& offset!=0xdc && offset!=0xe8 && offset!=0xf4 && offset!=0x1c8 && offset!=0x7e8
-//		&& offset!=0xe && offset!=0x48 && offset!=0xaa && offset!=0xb0 && offset!=0x36
-//		&& offset!=0xa4 && offset!=0x4 && offset!=0x82 && offset!=0x88 && offset!=0x22
-//		&& offset!=0xb6 && offset!=0xfa && offset!=0xe4 && offset!=0x3a && offset!=0x1e
-//		&& offset!=0x38 && offset!=0x92 && offset!=0xa2 && offset!=0x308 && offset!=0x40e
-//	)
-//	logerror("Protection PC %06x: warning - write %04x to %04x\n",cpu_get_pc(space->cpu),data,offset);
+/*	if (offset!=0x02 && offset!=0xc && offset!=0xe && offset!=0x18 && offset!=0x2c && offset!=0x2e && offset!=0x34*/
+/*		&& offset!=0x42 && offset!=0x58 && offset!=0x6a && offset!=0x72 && offset!=0x7a && offset!=0xb8*/
+/*		&& offset!=0xdc && offset!=0xe8 && offset!=0xf4 && offset!=0x1c8 && offset!=0x7e8*/
+/*		&& offset!=0xe && offset!=0x48 && offset!=0xaa && offset!=0xb0 && offset!=0x36*/
+/*		&& offset!=0xa4 && offset!=0x4 && offset!=0x82 && offset!=0x88 && offset!=0x22*/
+/*		&& offset!=0xb6 && offset!=0xfa && offset!=0xe4 && offset!=0x3a && offset!=0x1e*/
+/*		&& offset!=0x38 && offset!=0x92 && offset!=0xa2 && offset!=0x308 && offset!=0x40e*/
+/*	)*/
+/*	logerror("Protection PC %06x: warning - write %04x to %04x\n",cpu_get_pc(space->cpu),data,offset);*/
 }
 
 READ16_HANDLER( deco16_66_prot_r ) /* Mutant Fighter */
@@ -543,7 +543,7 @@ READ16_HANDLER( deco16_66_prot_r ) /* Mutant Fighter */
 			{
 				int ret=mutantf_port_0e_hack;
 				mutantf_port_0e_hack=0x800;
-				//logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+				/*logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 				return ret;
 			}
 
@@ -551,7 +551,7 @@ READ16_HANDLER( deco16_66_prot_r ) /* Mutant Fighter */
 			{
 				int ret=mutantf_port_6a_hack;
 				mutantf_port_6a_hack=0x2866;
-				//logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+				/*logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 				return ret;
 			}
 
@@ -559,20 +559,20 @@ READ16_HANDLER( deco16_66_prot_r ) /* Mutant Fighter */
 			{
 				int ret=mutantf_port_e8_hack;
 				mutantf_port_e8_hack=0x2401;
-				//logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+				/*logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 				return ret;
 			}
 
 		case 0xaa: /* ??? */
-			//logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+			/*logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 			return 0xc080;
 
 		case 0x42: /* Strange, but consistent */
-			//logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+			/*logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 			return deco16_prot_ram[0x2c/2]^0x5302;
 
 		case 0x48: /* Correct for test data, but I wonder if the 0x1800 is from an address, not a constant */
-			//logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+			/*logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 			return (0x1800) & (~deco16_prot_ram[0x36/2]);
 
 		case 0x52:
@@ -589,7 +589,7 @@ READ16_HANDLER( deco16_66_prot_r ) /* Mutant Fighter */
 	usrintf_showmessage("Deco66:  Read unmapped port %04x\n",offset*2);
 #endif
 
-//	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+/*	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 	return 0;
 }
 
@@ -650,7 +650,7 @@ READ16_HANDLER( deco16_104_cninja_prot_r )
 			return readinputport(0);
 	}
 
-//	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset);
+/*	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset);*/
 	return 0;
 }
 
@@ -700,17 +700,17 @@ READ16_HANDLER( deco16_146_funkyjet_prot_r )
 		case 0x3a8 >> 1: /* See 93e4/9376 */
 			return deco16_prot_ram[0x500>>1];
 
-		// The top byte of 0x50c is used as a bitmask of completed levels,
-		// checked at end of each (0x0100 = level 1 completed,
-		// 0x3000 = levels 5 & 6 completed, 0x3f00 = levels 1-6 completed, etc)
+		/* The top byte of 0x50c is used as a bitmask of completed levels,*/
+		/* checked at end of each (0x0100 = level 1 completed,*/
+		/* 0x3000 = levels 5 & 6 completed, 0x3f00 = levels 1-6 completed, etc)*/
 		case 0x56c >> 1:
 			return deco16_prot_ram[0x50c>>1];
 
-		// The game compares $ffc0 to check for all 6 basic levels
-		// being completed.  (which is 0x3f00 inverted and shifted)
-		// If wrong value is returned here the level select screen is
-		// incorrectly shown and leads to a crash as that screen
-		// cannot cope with all levels being already completed.
+		/* The game compares $ffc0 to check for all 6 basic levels*/
+		/* being completed.  (which is 0x3f00 inverted and shifted)*/
+		/* If wrong value is returned here the level select screen is*/
+		/* incorrectly shown and leads to a crash as that screen*/
+		/* cannot cope with all levels being already completed.*/
 		case 0x3e8 >> 1:
 			return (deco16_prot_ram[0x50c>>1] >> 8) ^ 0xffff;
 
@@ -725,7 +725,7 @@ READ16_HANDLER( deco16_146_funkyjet_prot_r )
 			return deco16_prot_ram[0x700>>1];
 
 		case 0x7d4 >> 1: /* !? On the bootleg these address checks are NOP'd, so a BEQ is never taken */
-			return 0x10; //deco16_prot_ram[0x7da>>1];
+			return 0x10; /*deco16_prot_ram[0x7da>>1];*/
 
 		case 0x27c >>1: /* From bootleg code at 0x400 */
 			return ((deco16_prot_ram[0x70e>>1]>>4)&0x0fff) | ((deco16_prot_ram[0x70e>>1]&0x0001)<<15) | ((deco16_prot_ram[0x70e>>1]&0x000e)<<11);
@@ -745,8 +745,8 @@ READ16_HANDLER( deco16_146_funkyjet_prot_r )
 			return (readinputport(3) + (readinputport(4) << 8));
 	}
 
-	//if (cpu_get_pc(space->cpu)!=0xc0ea)
-	//	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x (ctrl %04x)\n", cpu_get_pc(space->cpu), offset<<1, input_port_read(space->machine, "INPUTS"));
+	/*if (cpu_get_pc(space->cpu)!=0xc0ea)*/
+	/*	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x (ctrl %04x)\n", cpu_get_pc(space->cpu), offset<<1, input_port_read(space->machine, "INPUTS"));*/
 
 	return 0;
 }
@@ -787,7 +787,7 @@ WRITE16_HANDLER( deco16_104_rohga_prot_w )
 		return;
 	}
 
-	// These are set regardless of bank
+	/* These are set regardless of bank*/
 	if (offset==0x42/2)
 		COMBINE_DATA(&deco16_xor);
 	if (offset==0xee/2)
@@ -795,14 +795,14 @@ WRITE16_HANDLER( deco16_104_rohga_prot_w )
 
 	offset=offset*2;
 
-	//logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);
+	/*logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);*/
 	if (offset==0xee || offset==0x42 || offset==0xa8)
 		return;
 
-//  logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);
+/*  logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);*/
 
 #if 1
-// 66 7c 7e 28 58 4a 9e
+/* 66 7c 7e 28 58 4a 9e*/
 	if (offset==0x66 || offset==0x7c || offset==0x7e || offset==0x28 || offset==0x58 || offset==0x4a)
 		return;
 	if (offset==0x9e || offset==0x7c || offset==0x7e || offset==0x28 || offset==0x58 || offset==0x4a)
@@ -815,17 +815,17 @@ WRITE16_HANDLER( deco16_104_rohga_prot_w )
 	if (offset>=0xc0 && offset<0xd0)
 		return;
 
-//  if (offset==0x3c)
-//      logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);
-// Actually read:
-//  22 24 26 2c 2e 30 32 3c 40 44 46 48 60 62 66 6a 6e 76 7e 80 82 84 86 88 8a 8c 90 94 96 98 9a 9c a0 c0 c4 c6 c8 cc ce d6 dc de
+/*  if (offset==0x3c)*/
+/*      logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);*/
+/* Actually read:*/
+/*  22 24 26 2c 2e 30 32 3c 40 44 46 48 60 62 66 6a 6e 76 7e 80 82 84 86 88 8a 8c 90 94 96 98 9a 9c a0 c0 c4 c6 c8 cc ce d6 dc de*/
 
-// check 74 b0 b4 d4
+/* check 74 b0 b4 d4*/
 
-//  24 2a 2c 2e 30 3c 44 48 66 6a 74 a0 b0 b4 d4 d6
-//  32 60 7e
-//  22 26 a4 a6
-//  62 6e d0 dc de d2 d8 da 46
+/*  24 2a 2c 2e 30 3c 44 48 66 6a 74 a0 b0 b4 d4 d6*/
+/*  32 60 7e*/
+/*  22 26 a4 a6*/
+/*  62 6e d0 dc de d2 d8 da 46*/
 	if (offset==0x24 || offset==0x2a || offset==0x2c || offset==0x2e || offset==0x30 || offset==0x3c)
 		return;
 	if (offset==0x44 || offset==0x48 || offset==0x66 || offset==0x6a || offset==0x74 || offset==0xa0)
@@ -844,15 +844,15 @@ WRITE16_HANDLER( deco16_104_rohga_prot_w )
 		return;
 #endif
 
-	//logerror("CONTROL PC %06x: warning - write unmapped protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);
+	/*logerror("CONTROL PC %06x: warning - write unmapped protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);*/
 }
 
 READ16_HANDLER( deco16_104_rohga_prot_r )
 {
 	const UINT16* prot_ram=decoprot_buffer_ram_selected ? decoprot_buffer_ram : deco16_prot_ram;
 
-//  if (offset!=0x88/2 && offset!=0x44c/2 && offset!=0x36c/2 && offset!=0x292/2)
-//      logerror("Protection PC %06x: warning - read prot address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+/*  if (offset!=0x88/2 && offset!=0x44c/2 && offset!=0x36c/2 && offset!=0x292/2)*/
+/*      logerror("Protection PC %06x: warning - read prot address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 
 	switch (offset) {
 		case 0x88/2: /* Player 1 & 2 input ports */
@@ -963,7 +963,7 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 		case 0x6e/2:
 			return ((((DECO_PORT(0x96)&0xf000)>>8) | ((DECO_PORT(0x96)&0x0f0f)<<0) | ((DECO_PORT(0x96)&0x00f0)<<8)) ^ deco16_xor);
 		case 0x3a2/2:
-			return ((((DECO_PORT(0x94)&0xf000)>>8) | ((DECO_PORT(0x94)&0x0f00)>>8) | ((DECO_PORT(0x94)&0x00f0)<<8) | ((DECO_PORT(0x94)&0x000e)<<7) | ((DECO_PORT(0x94)&0x0001)<<11)) ^ deco16_xor);// & (~deco16_mask);
+			return ((((DECO_PORT(0x94)&0xf000)>>8) | ((DECO_PORT(0x94)&0x0f00)>>8) | ((DECO_PORT(0x94)&0x00f0)<<8) | ((DECO_PORT(0x94)&0x000e)<<7) | ((DECO_PORT(0x94)&0x0001)<<11)) ^ deco16_xor);/* & (~deco16_mask);*/
 		case 0x4a6/2:
 			return ((DECO_PORT(0x8c)&0xff00)>>0) | ((DECO_PORT(0x8c)&0x00f0)>>4) | ((DECO_PORT(0x8c)&0x000f)<<4);
 		case 0x7b0/2:
@@ -1025,15 +1025,15 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 			return ((((DECO_PORT(0x44)&0xf000)>>12) | ((DECO_PORT(0x44)&0x0fff)<<4)) ^ deco16_xor) & (~deco16_mask);
 
 		case 0x32a/2:
-			return ((((DECO_PORT(0xc0)&0x0ff0)<<4) | ((DECO_PORT(0xc0)&0x000e)<<3) | ((DECO_PORT(0xc0)&0x0001)<<7))) & (~deco16_mask);// ^ deco16_xor;
+			return ((((DECO_PORT(0xc0)&0x0ff0)<<4) | ((DECO_PORT(0xc0)&0x000e)<<3) | ((DECO_PORT(0xc0)&0x0001)<<7))) & (~deco16_mask);/* ^ deco16_xor;*/
 		case 0x8/2:
-			return ((((DECO_PORT(0x94)&0xfff0)<<0) | ((DECO_PORT(0x94)&0x000e)>>1) | ((DECO_PORT(0x94)&0x0001)<<3))) & (~deco16_mask);// ^ deco16_xor;
+			return ((((DECO_PORT(0x94)&0xfff0)<<0) | ((DECO_PORT(0x94)&0x000e)>>1) | ((DECO_PORT(0x94)&0x0001)<<3))) & (~deco16_mask);/* ^ deco16_xor;*/
 		case 0x456/2:
-			return (((DECO_PORT(0x26)&0xfff0)<<0) | ((DECO_PORT(0x26)&0x0007)<<1) | ((DECO_PORT(0x26)&0x0008)>>3));// ^ deco16_xor;
+			return (((DECO_PORT(0x26)&0xfff0)<<0) | ((DECO_PORT(0x26)&0x0007)<<1) | ((DECO_PORT(0x26)&0x0008)>>3));/* ^ deco16_xor;*/
 		case 0x190/2:
-			return ((((DECO_PORT(0x44)&0xf000)<<0) | ((DECO_PORT(0x44)&0x00ff)<<4))) & (~deco16_mask);// ^ deco16_xor;
+			return ((((DECO_PORT(0x44)&0xf000)<<0) | ((DECO_PORT(0x44)&0x00ff)<<4))) & (~deco16_mask);/* ^ deco16_xor;*/
 		case 0x3f2/2:
-			return ((((DECO_PORT(0x48)&0x000f)<<12) | ((DECO_PORT(0x48)&0x00f0)<<4))) & (~deco16_mask);// ^ deco16_xor;
+			return ((((DECO_PORT(0x48)&0x000f)<<12) | ((DECO_PORT(0x48)&0x00f0)<<4))) & (~deco16_mask);/* ^ deco16_xor;*/
 		case 0x2be/2:
 			return ((DECO_PORT(0x40)&0x00ff)<<8);
 
@@ -1042,9 +1042,9 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 		case 0x2a2/2:
 			return ((((DECO_PORT(0x44)&0xff00)>>8) | ((DECO_PORT(0x44)&0x00f0)<<8) | ((DECO_PORT(0x44)&0x000e)<<7) | ((DECO_PORT(0x44)&0x0001)<<11)) ^ deco16_xor) & (~deco16_mask);
 		case 0x748/2:
-			return (((DECO_PORT(0x44)&0xfff0)<<0) | ((DECO_PORT(0x44)&0x000e)>>1) | ((DECO_PORT(0x44)&0x0001)<<3));// & (~deco16_mask);
+			return (((DECO_PORT(0x44)&0xfff0)<<0) | ((DECO_PORT(0x44)&0x000e)>>1) | ((DECO_PORT(0x44)&0x0001)<<3));/* & (~deco16_mask);*/
 		case 0x686/2:
-			return (((DECO_PORT(0x46)&0xf000)>>4) | ((DECO_PORT(0x46)&0x0f00)>>8) | ((DECO_PORT(0x46)&0x00f0)<<8) | ((DECO_PORT(0x46)&0x000f)<<4));// & (~deco16_mask);
+			return (((DECO_PORT(0x46)&0xf000)>>4) | ((DECO_PORT(0x46)&0x0f00)>>8) | ((DECO_PORT(0x46)&0x00f0)<<8) | ((DECO_PORT(0x46)&0x000f)<<4));/* & (~deco16_mask);*/
 		case 0x4c4/2:
 			return ((DECO_PORT(0x3c)&0x000f)<<12) & (~deco16_mask);
 		case 0x538/2:
@@ -1052,17 +1052,17 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 		case 0x63a/2:
 			return ((DECO_PORT(0x3c)&0x000f)<<12);
 		case 0x348/2:
-			return ((((DECO_PORT(0x44)&0xf000)>>12) | ((DECO_PORT(0x44)&0x0ff0)<<4) | ((DECO_PORT(0x44)&0x000e)<<3) | ((DECO_PORT(0x44)&0x0001)<<7))) ^ deco16_xor;// & (~deco16_mask);
+			return ((((DECO_PORT(0x44)&0xf000)>>12) | ((DECO_PORT(0x44)&0x0ff0)<<4) | ((DECO_PORT(0x44)&0x000e)<<3) | ((DECO_PORT(0x44)&0x0001)<<7))) ^ deco16_xor;/* & (~deco16_mask);*/
 		case 0x200/2:
-			return (((DECO_PORT(0xa0)&0xfff0)>>4) | ((DECO_PORT(0xa0)&0x0007)<<13) | ((DECO_PORT(0xa0)&0x0008)<<9));// & (~deco16_mask);
+			return (((DECO_PORT(0xa0)&0xfff0)>>4) | ((DECO_PORT(0xa0)&0x0007)<<13) | ((DECO_PORT(0xa0)&0x0008)<<9));/* & (~deco16_mask);*/
 		case 0x254/2:
-			return ((((DECO_PORT(0x7e)&0x0ff0)<<4) | ((DECO_PORT(0x7e)&0x000c)<<2) | ((DECO_PORT(0x7e)&0x0003)<<6))) ^ deco16_xor;// & (~deco16_mask);
+			return ((((DECO_PORT(0x7e)&0x0ff0)<<4) | ((DECO_PORT(0x7e)&0x000c)<<2) | ((DECO_PORT(0x7e)&0x0003)<<6))) ^ deco16_xor;/* & (~deco16_mask);*/
 		case 0x182/2:
 			return ((DECO_PORT(0x46)&0xf000)<<0) | ((DECO_PORT(0x46)&0x0f00)>>8) | ((DECO_PORT(0x46)&0x00f0)>>0) | ((DECO_PORT(0x46)&0x000f)<<8);
 		case 0x58/2:
 			return DECO_PORT(0x46);
 		case 0x48e/2:
-			return ((((DECO_PORT(0x46)&0xf000)>>12) | ((DECO_PORT(0x46)&0x0f00)>>4) | ((DECO_PORT(0x46)&0x00f0)<<4) | ((DECO_PORT(0x46)&0x000f)<<12)));// /*^ deco16_xor*/) & (~deco16_mask);
+			return ((((DECO_PORT(0x46)&0xf000)>>12) | ((DECO_PORT(0x46)&0x0f00)>>4) | ((DECO_PORT(0x46)&0x00f0)<<4) | ((DECO_PORT(0x46)&0x000f)<<12)));/* ^ deco16_xor) & (~deco16_mask); */
 
 		case 0x4ba/2:
 			return (((DECO_PORT(0x24)&0xf000)>>12) | ((DECO_PORT(0x24)&0x0ff0)<<4) | ((DECO_PORT(0x24)&0x000c)<<2) | ((DECO_PORT(0x24)&0x0003)<<6)) & (~deco16_mask);
@@ -1071,18 +1071,18 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 		case 0x1f0/2:
 			return ((((DECO_PORT(0xa2)&0xf000)>>12) | ((DECO_PORT(0xa2)&0x0f00)>>4) | ((DECO_PORT(0xa2)&0x00ff)<<8)) ^ deco16_xor) & (~deco16_mask);
 		case 0x24e/2:
-			return ((((DECO_PORT(0x46)&0xf000)>>8) | ((DECO_PORT(0x46)&0x0f00)>>0) | ((DECO_PORT(0x46)&0x00f0)>>4) | ((DECO_PORT(0x46)&0x000f)<<12)) ^ deco16_xor);// & (~deco16_mask);
+			return ((((DECO_PORT(0x46)&0xf000)>>8) | ((DECO_PORT(0x46)&0x0f00)>>0) | ((DECO_PORT(0x46)&0x00f0)>>4) | ((DECO_PORT(0x46)&0x000f)<<12)) ^ deco16_xor);/* & (~deco16_mask);*/
 		case 0x594/2:
-			return ((((DECO_PORT(0x40)&0x00f0)<<8) | ((DECO_PORT(0x40)&0x000c)<<6) | ((DECO_PORT(0x40)&0x0003)<<10)) ^ deco16_xor);// & (~deco16_mask);
+			return ((((DECO_PORT(0x40)&0x00f0)<<8) | ((DECO_PORT(0x40)&0x000c)<<6) | ((DECO_PORT(0x40)&0x0003)<<10)) ^ deco16_xor);/* & (~deco16_mask);*/
 
 		case 0x7e2/2:
-			return ((((DECO_PORT(0x96)&0xf000)<<0) | ((DECO_PORT(0x96)&0x00f0)<<4) | ((DECO_PORT(0x96)&0x000f)<<4))) ^ deco16_xor;// | ((DECO_PORT(0x96)&0x0001)<<7));// ^ deco16_xor);// & (~deco16_mask);
+			return ((((DECO_PORT(0x96)&0xf000)<<0) | ((DECO_PORT(0x96)&0x00f0)<<4) | ((DECO_PORT(0x96)&0x000f)<<4))) ^ deco16_xor;/* | ((DECO_PORT(0x96)&0x0001)<<7));/* ^ deco16_xor);*/ // & (~deco16_mask);*/
 		case 0x18c/2:
-			return (((DECO_PORT(0x22)&0xfff0)>>4) | ((DECO_PORT(0x22)&0x000e)<<11) | ((DECO_PORT(0x22)&0x0001)<<15));// ^ deco16_xor);// & (~deco16_mask);
+			return (((DECO_PORT(0x22)&0xfff0)>>4) | ((DECO_PORT(0x22)&0x000e)<<11) | ((DECO_PORT(0x22)&0x0001)<<15));/* ^ deco16_xor);*/ /* & (~deco16_mask);*/
 		case 0x1fa/2:
-			return ((((DECO_PORT(0x26)&0xf000)>>8) | ((DECO_PORT(0x26)&0x0f00)<<0) | ((DECO_PORT(0x26)&0x00f0)>>4) | ((DECO_PORT(0x26)&0x000f)<<12))) ^ deco16_xor;// & (~deco16_mask);
+			return ((((DECO_PORT(0x26)&0xf000)>>8) | ((DECO_PORT(0x26)&0x0f00)<<0) | ((DECO_PORT(0x26)&0x00f0)>>4) | ((DECO_PORT(0x26)&0x000f)<<12))) ^ deco16_xor;/* & (~deco16_mask);*/
 		case 0x70e/2:
-			return ((((DECO_PORT(0x26)&0x0ff0)<<4) | ((DECO_PORT(0x26)&0x000c)<<2) | ((DECO_PORT(0x26)&0x0003)<<6))) ^ deco16_xor;// & (~deco16_mask);
+			return ((((DECO_PORT(0x26)&0x0ff0)<<4) | ((DECO_PORT(0x26)&0x000c)<<2) | ((DECO_PORT(0x26)&0x0003)<<6))) ^ deco16_xor;/* & (~deco16_mask);*/
 		case 0x33a/2:
 			return DECO_PORT(0x60) & (~deco16_mask);
 		case 0x1e2/2:
@@ -1091,7 +1091,7 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 			return DECO_PORT(0x6e)<<4;
 
 		case 0x2ae/2:
-			return ((DECO_PORT(0x9c)&0xf000)<<0) | ((DECO_PORT(0x9c)&0x0ff0)>>4) | ((DECO_PORT(0x9c)&0x000f)<<8);// & (~deco16_mask);
+			return ((DECO_PORT(0x9c)&0xf000)<<0) | ((DECO_PORT(0x9c)&0x0ff0)>>4) | ((DECO_PORT(0x9c)&0x000f)<<8);/* & (~deco16_mask);*/
 		case 0x96/2:
 			return ((((DECO_PORT(0x22)&0xff00)>>8) | ((DECO_PORT(0x22)&0x00f0)<<8) | ((DECO_PORT(0x22)&0x000e)<<7) | ((DECO_PORT(0x22)&0x0001)<<11)) ^ deco16_xor) & (~deco16_mask);
 
@@ -1100,7 +1100,7 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 
 		case 0x6c4/2: /* Reads from here flip buffers */
 			decoprot_buffer_ram_selected^=1;
-			// Flip occurs AFTER this data has been calculated
+			/* Flip occurs AFTER this data has been calculated*/
 			return ((DECO_PORT(0x66)&0xf0f0) | ((DECO_PORT(0x66)&0x000f)<<8)) & (~deco16_mask);
 		case 0x700/2: /* Reads from here flip buffers */
 			decoprot_buffer_ram_selected^=1;
@@ -1119,7 +1119,7 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 			return ((DECO_PORT(0x66)&0x000f)<<12);
 		case 0x1e8/2:
 			decoprot_buffer_ram_selected^=1;
-			return 0; // todo
+			return 0; /* todo*/
 
 		case 0x49c/2:
 			return (((DECO_PORT(0x6c)&0x00f0)<<8) ^ deco16_xor) & (~deco16_mask);
@@ -1197,7 +1197,7 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 			return DECO_PORT(0x58);
 	}
 
-//	logerror("Protection PC %06x: warning - read unmapped protection address %04x\n",cpu_get_pc(space->cpu),offset<<1);
+/*	logerror("Protection PC %06x: warning - read unmapped protection address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 
 	return 0;
 }
@@ -1227,13 +1227,13 @@ static WRITE16_HANDLER( deco16_146_core_prot_w )
 	else
 		COMBINE_DATA(&decoprot_buffer_ram[offset>>1]);
 
-//  if (offset!=0x5e0 && offset!=0x340 && offset!=0 && offset!=0x3d0 && offset!=0x280)
-//      logerror("%08x:  Write protection port %04x, data %04x (%08x)\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+/*  if (offset!=0x5e0 && offset!=0x340 && offset!=0 && offset!=0x3d0 && offset!=0x280)*/
+/*      logerror("%08x:  Write protection port %04x, data %04x (%08x)\n", cpu_get_pc(space->cpu), offset, data, mem_mask);*/
 }
 
 static READ16_HANDLER( deco16_146_core_prot_r )
 {
-//  const UINT16* prot_ram=decoprot_buffer_ram;
+/*  const UINT16* prot_ram=decoprot_buffer_ram;*/
 	UINT16 val;
 	const UINT16* prot_ram=decoprot_buffer_ram_selected ? decoprot_buffer_ram2 : decoprot_buffer_ram;
 
@@ -1523,7 +1523,7 @@ static READ16_HANDLER( deco16_146_core_prot_r )
 		val=((val&0x0fff)<<4);
 		return val;
 
-	// 1c0 swap address
+	/* 1c0 swap address*/
 	case 0x1c0:
 		decoprot_buffer_ram_selected^=1;
 		return 0;
@@ -1622,7 +1622,7 @@ static READ16_HANDLER( deco16_146_core_prot_r )
 		return val & (~deco16_mask);
 	}
 
-	//logerror("Protection PC %06x: warning - read fully unmapped protection address %04x\n", cpu_get_pc(space->cpu), offset);
+	/*logerror("Protection PC %06x: warning - read fully unmapped protection address %04x\n", cpu_get_pc(space->cpu), offset);*/
 
 	return 0;
 }
@@ -1655,7 +1655,7 @@ READ32_HANDLER( deco32_fghthist_prot_r)
 	/* Handle 'one shots' - writing data to an address, then immediately reading it back */
 	if (decoprot_last_write==addr)
 	{
-		//logerror("Hit one shot for %04x (return %04x)\n", addr, decoprot_last_write_val);
+		/*logerror("Hit one shot for %04x (return %04x)\n", addr, decoprot_last_write_val);*/
 		decoprot_last_write=-1;
 		return (decoprot_last_write_val<<16)|0xffff;
 	}
@@ -1665,43 +1665,43 @@ READ32_HANDLER( deco32_fghthist_prot_r)
 
 #if 0
 	if (addr!=0x7b6 && addr!=0x1c && addr!=0x1e0 && addr!=0x1d4
-		&& addr!=0x2c4 && addr!=0x7a4 && addr!=0x30 // confirmed
-		&& addr!=0x49a && addr!=0x49c && addr!=0x584 // confirmed
-		&& addr!=0x162 // confirmed
-		&& addr!=0x1a0 && addr!=0x7f6 && addr!=0x18 // confirmed
-		&& addr!=0x422 && addr!=0x794 // confirmed
-		&& addr!=0xc0 && addr!=0x280 && addr!=0x1c0 && addr!=0xe2 // confirmed
-		&& addr!=0x6c0  // not confirmed butnot read
-		&& addr!=0x1ae && addr!=0x1d6 && addr!=0x4f8 && addr!=0x614 // cnofirmed
-		&& addr!=0x5ae && addr!=0x50a && addr!=0x476 && addr!=0x328 && addr!=0x3e && addr!=0x558 // dbl check these later
-		&& addr!=0x444 && addr!=0x46a // confirmed
-		&& cpu_get_pc(space->cpu)!=0x16448 // hmm
+		&& addr!=0x2c4 && addr!=0x7a4 && addr!=0x30 /* confirmed*/
+		&& addr!=0x49a && addr!=0x49c && addr!=0x584 /* confirmed*/
+		&& addr!=0x162 /* confirmed*/
+		&& addr!=0x1a0 && addr!=0x7f6 && addr!=0x18 /* confirmed*/
+		&& addr!=0x422 && addr!=0x794 /* confirmed*/
+		&& addr!=0xc0 && addr!=0x280 && addr!=0x1c0 && addr!=0xe2 /* confirmed*/
+		&& addr!=0x6c0  /* not confirmed butnot read*/
+		&& addr!=0x1ae && addr!=0x1d6 && addr!=0x4f8 && addr!=0x614 /* cnofirmed*/
+		&& addr!=0x5ae && addr!=0x50a && addr!=0x476 && addr!=0x328 && addr!=0x3e && addr!=0x558 /* dbl check these later*/
+		&& addr!=0x444 && addr!=0x46a /* confirmed*/
+		&& cpu_get_pc(space->cpu)!=0x16448 /* hmm*/
  		&& addr!=0x67a
-		&& addr!=0x6c2 && addr!=0xac && addr!=0x416 && addr!=0x2c2 // confirmed
+		&& addr!=0x6c2 && addr!=0xac && addr!=0x416 && addr!=0x2c2 /* confirmed*/
 		&& addr!=0x3d8
-		&& addr!=0x250 && addr!=0x306 && addr!=0x608 && addr!=0x52e // confirmed
+		&& addr!=0x250 && addr!=0x306 && addr!=0x608 && addr!=0x52e /* confirmed*/
 		&& addr!=0x21e && addr!=0x7b0 && addr!=0x7da
-		&& addr!=0xfe && addr!=0x504 && addr!=0x450  && addr!=0x276 // confirmed
-		&& addr!=0x76 && addr!=0x714 && addr!=0x642 && addr!=0x7e8 && addr!=0x244 // confirmed
+		&& addr!=0xfe && addr!=0x504 && addr!=0x450  && addr!=0x276 /* confirmed*/
+		&& addr!=0x76 && addr!=0x714 && addr!=0x642 && addr!=0x7e8 && addr!=0x244 /* confirmed*/
 		&& addr!=0x2ea && addr!=0x254
-		&& addr!=0x540 && addr!=0x5c2 // confirmed
-		&& addr!=0x15c // confirmed
+		&& addr!=0x540 && addr!=0x5c2 /* confirmed*/
+		&& addr!=0x15c /* confirmed*/
 		&& addr!=0x80 && addr!=0xb2
 		&& addr!=0x2c
 
-		&& addr!=0x2e0  && addr!=0x350  && addr!=0x244  && addr!=0x2c4  && addr!=0xac  && addr!=0x416 // not handled at all
+		&& addr!=0x2e0  && addr!=0x350  && addr!=0x244  && addr!=0x2c4  && addr!=0xac  && addr!=0x416 /* not handled at all*/
 
-		// These addresses are read but the value is never used, and there are no side effects from reading
-		// these addresses - seems to purely be some code obfustication
+		/* These addresses are read but the value is never used, and there are no side effects from reading*/
+		/* these addresses - seems to purely be some code obfustication*/
 		&& addr!=0x400 && addr!=0x640 && addr!= 0x4c0 && addr!= 0x660 && addr!=0x4e0 && addr!=0x6e0 && addr!=0x448 && addr!=0x648 && addr!=0x4c8 && addr!=0x6c8 && addr!=0x468 && addr!=0x668 && addr!=0x4e8 && addr!=0x6e8 && addr!=0x442 && addr!=0x4c2 && addr!=0x462 && addr!=0x662
 		&& addr!=0x4e2 && addr!=0x6e2 && addr!=0x44a && addr!=0x64a && addr!=0x4ca && addr!=0x6ca && addr!=0x66a && addr!=0x4ea && addr!=0x6ea
 		&& addr!=0x440 && addr!=0x460
 		)
 	{
-	//	logerror("Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);
-	//	popmessage("Read protection port %04x", addr);
+	/*	logerror("Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);*/
+	/*	popmessage("Read protection port %04x", addr);*/
 	}
-	//  logerror("Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);
+	/*  logerror("Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);*/
 #endif
 	return (val<<16)|0xffff;
 }
@@ -1729,7 +1729,7 @@ READ16_HANDLER( dietgo_104_prot_r )
 	case 0x506: return readinputport(2);
 	}
 
-	//logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", cpu_get_pc(space->cpu), offset<<1);
+	/*logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", cpu_get_pc(space->cpu), offset<<1);*/
 
 	return 0;
 }
@@ -1742,7 +1742,7 @@ WRITE16_HANDLER( dietgo_104_prot_w )
 		cpu_set_irq_line(1,0,HOLD_LINE);
 		return;
 	}
-//	logerror("Protection PC %06x: warning - write unmapped memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);
+/*	logerror("Protection PC %06x: warning - write unmapped memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);*/
 }
 
 /**********************************************************************************/
@@ -1752,7 +1752,7 @@ READ16_HANDLER( deco16_104_pktgaldx_prot_r )
 	const UINT16* prot_ram=deco16_prot_ram;
 	switch (offset * 2)
 	{
-	case 0x5b2: return input_port_0_word_r(0, 0);    // probably not right -- IQ_132  // is correct now -- gamezfan
+	case 0x5b2: return input_port_0_word_r(0, 0);    /* probably not right -- IQ_132  */ /* is correct now -- gamezfan*/
 	case 0x44c: return input_port_1_word_r(0, 0);
 	case 0x042: return input_port_2_word_r(0, 0);                                      
 
@@ -1761,7 +1761,7 @@ READ16_HANDLER( deco16_104_pktgaldx_prot_r )
 	case 0x51a: return DECO_PORT(2);
 	}
 
-//	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset<<1);
+/*	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset<<1);*/
 
 	return 0;
 }
@@ -1769,7 +1769,7 @@ READ16_HANDLER( deco16_104_pktgaldx_prot_r )
 WRITE16_HANDLER( deco16_104_pktgaldx_prot_w )
 {
 	COMBINE_DATA(&deco16_prot_ram[offset]);
-//  logerror("Protection PC %06x: warning - write unmapped memory address %04x %04x\n",cpu_get_pc(space->cpu),offset<<1,data);
+/*  logerror("Protection PC %06x: warning - write unmapped memory address %04x %04x\n",cpu_get_pc(space->cpu),offset<<1,data);*/
 }
 
 /**********************************************************************************/

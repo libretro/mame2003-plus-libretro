@@ -11,7 +11,7 @@
 #include "vidhrdw/generic.h"
 #include "cpu/z80/z80.h"
 
-// this prototype will move to the driver
+/* this prototype will move to the driver*/
 WRITE_HANDLER( stfight_bank_w );
 
 
@@ -47,7 +47,7 @@ DRIVER_INIT( empcity )
 	{
 		unsigned char src = rom[A];
 
-		// decode opcode
+		/* decode opcode*/
 		rom[A+diff] =
 				( src & 0xA6 ) |
 				( ( ( ( src << 2 ) ^ src ) << 3 ) & 0x40 ) |
@@ -55,7 +55,7 @@ DRIVER_INIT( empcity )
 				( ~( ( ( src << 1 ) ^ A ) << 2 ) & 0x08 ) |
 				( ( ( src ^ ( src >> 3 ) ) >> 1 ) & 0x01 );
 
-		// decode operand
+		/* decode operand*/
 		rom[A] =
 				( src & 0xA6 ) |
 				( ~( ( src ^ ( src << 1 ) ) << 5 ) & 0x40 ) |
@@ -84,12 +84,12 @@ DRIVER_INIT( stfight )
 
 MACHINE_INIT( stfight )
 {
-    // initialise rom bank
+    /* initialise rom bank*/
     stfight_bank_w( 0, 0 );
 }
 
-// It's entirely possible that this bank is never switched out
-// - in fact I don't even know how/where it's switched in!
+/* It's entirely possible that this bank is never switched out*/
+/* - in fact I don't even know how/where it's switched in!*/
 WRITE_HANDLER( stfight_bank_w )
 {
 	unsigned char   *ROM2 = memory_region(REGION_CPU1) + 0x10000;
@@ -99,7 +99,7 @@ WRITE_HANDLER( stfight_bank_w )
 
 INTERRUPT_GEN( stfight_vb_interrupt )
 {
-    // Do a RST10
+    /* Do a RST10*/
     cpu_set_irq_line_and_vector(0,0,HOLD_LINE,0xd7);
 }
 
@@ -109,7 +109,7 @@ INTERRUPT_GEN( stfight_vb_interrupt )
 
 INTERRUPT_GEN( stfight_interrupt_1 )
 {
-    // Do a RST08
+    /* Do a RST08*/
     cpu_set_irq_line_and_vector(0,0,HOLD_LINE,0xcf);
 }
 
@@ -117,7 +117,7 @@ INTERRUPT_GEN( stfight_interrupt_1 )
  *      Hardware handlers
  */
 
-// Perhaps define dipswitches as active low?
+/* Perhaps define dipswitches as active low?*/
 READ_HANDLER( stfight_dsw_r )
 {
     return( ~readinputport( 3+offset ) );
@@ -133,7 +133,7 @@ READ_HANDLER( stfight_coin_r )
     int coin_mech_data;
     int i;
 
-    // Was the coin mech queried by software?
+    /* Was the coin mech queried by software?*/
     if( stfight_coin_mech_query_active )
     {
         stfight_coin_mech_query_active = 0;
@@ -163,7 +163,7 @@ READ_HANDLER( stfight_coin_r )
 
 WRITE_HANDLER( stfight_coin_w )
 {
-    // interrogate coin mech
+    /* interrogate coin mech*/
     stfight_coin_mech_query_active = 1;
     stfight_coin_mech_query = data;
 }
@@ -174,12 +174,12 @@ WRITE_HANDLER( stfight_coin_w )
 
 static int sampleLimits[] =
 {
-    0x0000,     // machine gun fire?
-    0x1000,     // player getting shot
-    0x2C00,     // player shooting
-    0x3C00,     // girl screaming
-    0x5400,     // girl getting shot
-    0x7200      // (end of samples)
+    0x0000,     /* machine gun fire?*/
+    0x1000,     /* player getting shot*/
+    0x2C00,     /* player shooting*/
+    0x3C00,     /* girl screaming*/
+    0x5400,     /* girl getting shot*/
+    0x7200      /* (end of samples)*/
 };
 static int adpcm_data_offs;
 static int adpcm_data_end;
@@ -190,7 +190,7 @@ void stfight_adpcm_int( int data )
 	unsigned char *SAMPLES = memory_region(REGION_SOUND1);
 	int adpcm_data = SAMPLES[adpcm_data_offs & 0x7fff];
 
-    // finished playing sample?
+    /* finished playing sample?*/
     if( adpcm_data_offs == adpcm_data_end )
     {
         MSM5205_reset_w( 0, 1 );
@@ -231,7 +231,7 @@ static unsigned char fm_data;
 
 WRITE_HANDLER( stfight_fm_w )
 {
-    // the sound cpu ignores any fm data without bit 7 set
+    /* the sound cpu ignores any fm data without bit 7 set*/
     fm_data = 0x80 | data;
 }
 
@@ -239,7 +239,7 @@ READ_HANDLER( stfight_fm_r )
 {
     int data = fm_data;
 
-    // clear the latch?!?
+    /* clear the latch?!?*/
     fm_data &= 0x7f;
 
     return( data );

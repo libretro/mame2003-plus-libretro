@@ -73,7 +73,7 @@ static int key_id;
 static int key_id_query;
 
 static READ_HANDLER( rev1_key_r ) {
-	//logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);
+	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
@@ -84,7 +84,7 @@ static READ_HANDLER( rev1_key_r ) {
 
 static WRITE_HANDLER( rev1_key_w ) {
 	static unsigned short divider, divide_32 = 0;
-	//logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
@@ -150,7 +150,7 @@ static WRITE_HANDLER( rev1_key_w ) {
 
 static READ_HANDLER( rev2_key_r )
 {
-	//logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);
+	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
@@ -161,7 +161,7 @@ static READ_HANDLER( rev2_key_r )
 
 static WRITE_HANDLER( rev2_key_w )
 {
-	//logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
@@ -233,7 +233,7 @@ static WRITE_HANDLER( rev2_key_w )
 *******************************************************************************/
 
 static READ_HANDLER( dangseed_key_r ) {
-	//logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);
+	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
@@ -244,7 +244,7 @@ static READ_HANDLER( dangseed_key_r ) {
 
 static WRITE_HANDLER( dangseed_key_w ) {
 	int i;
-	//logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
@@ -276,7 +276,7 @@ static WRITE_HANDLER( dangseed_key_w ) {
 
 static READ_HANDLER( dspirit_key_r )
 {
-	//logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);
+	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
@@ -288,7 +288,7 @@ static READ_HANDLER( dspirit_key_r )
 static WRITE_HANDLER( dspirit_key_w )
 {
 	static unsigned short divisor;
-	//logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
@@ -456,7 +456,7 @@ static WRITE_HANDLER( blazer_key_w )
 *******************************************************************************/
 
 static READ_HANDLER( ws_key_r ) {
-	//logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);
+	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
@@ -467,7 +467,7 @@ static READ_HANDLER( ws_key_r ) {
 
 static WRITE_HANDLER( ws_key_w ) {
 	static unsigned short divider;
-	//logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
 		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
@@ -516,21 +516,21 @@ static WRITE_HANDLER( ws_key_w ) {
 
 #ifdef USE_MTRANDOM
 
-// Courtesy of Shawn J. Cokus, University of Washington
+/* Courtesy of Shawn J. Cokus, University of Washington*/
 
 typedef unsigned long uint32;
 
-#define N              (624)                 // length of state vector
-#define M              (397)                 // a period parameter
-#define K              (0x9908B0DFU)         // a magic constant
-#define hiBit(u)       ((u) & 0x80000000U)   // mask all but highest   bit of u
-#define loBit(u)       ((u) & 0x00000001U)   // mask all but lowest    bit of u
-#define loBits(u)      ((u) & 0x7FFFFFFFU)   // mask     the highest   bit of u
-#define mixBits(u, v)  (hiBit(u)|loBits(v))  // move hi bit of u to hi bit of v
+#define N              (624)                 /* length of state vector*/
+#define M              (397)                 /* a period parameter*/
+#define K              (0x9908B0DFU)         /* a magic constant*/
+#define hiBit(u)       ((u) & 0x80000000U)   /* mask all but highest   bit of u*/
+#define loBit(u)       ((u) & 0x00000001U)   /* mask all but lowest    bit of u*/
+#define loBits(u)      ((u) & 0x7FFFFFFFU)   /* mask     the highest   bit of u*/
+#define mixBits(u, v)  (hiBit(u)|loBits(v))  /* move hi bit of u to hi bit of v*/
 
-static uint32   state[N+1];     // state vector + 1 extra to not violate ANSI C
-static uint32   *next;          // next random value is computed from here
-static int      left = -1;      // can *next++ this many times before reloading
+static uint32   state[N+1];     /* state vector + 1 extra to not violate ANSI C*/
+static uint32   *next;          /* next random value is computed from here*/
+static int      left = -1;      /* can *next++ this many times before reloading*/
 
 static void seedMT(uint32 seed)
 {
@@ -584,7 +584,7 @@ static READ_HANDLER( splatter_key_r ) {
 
 	unsigned long data;
 
-	//logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);
+	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 
 	switch( ( offset >> 4 ) & 0x07 ) {
 		case 0x00:
@@ -625,7 +625,7 @@ static READ_HANDLER( splatter_key_r ) {
 }
 
 static WRITE_HANDLER( splatter_key_w ) {
-	//logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	/* ignored */
 }
 
@@ -662,8 +662,8 @@ static WRITE_HANDLER( soundram_w )
 	/* shared ram */
 	namco_wavedata[offset] = data;
 
-	//if(offset>=0x1000)
-	//  logerror("CPU #%d PC %04x: write shared ram %04x=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+	/*if(offset>=0x1000)*/
+	/*  logerror("CPU #%d PC %04x: write shared ram %04x=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 }
 
 /* ROM handlers */
@@ -725,7 +725,7 @@ void namcos1_bankswitch(int cpu, offs_t offset, data8_t data)
 		}
 
 		/* renew pc base */
-	//change_pc16(activecpu_get_pc());
+	/*change_pc16(activecpu_get_pc());*/
 	} else {
 		chip &= 0x00ff;
 		chip |= ( data & 0xff ) << 8;
@@ -739,7 +739,7 @@ WRITE_HANDLER( namcos1_bankswitch_w ) {
 /* Sub cpu set start bank port */
 WRITE_HANDLER( namcos1_subcpu_bank_w )
 {
-	//logerror("cpu1 bank selected %02x=%02x\n",offset,data);
+	/*logerror("cpu1 bank selected %02x=%02x\n",offset,data);*/
 	namcos1_cpu1_banklatch = (namcos1_cpu1_banklatch&0x300)|data;
 	/* Prepare code for Cpu 1 */
 	namcos1_bankswitch( 1, 0x0e00, namcos1_cpu1_banklatch>>8  );
@@ -758,7 +758,7 @@ static int mcu_patch_data;
 
 WRITE_HANDLER( namcos1_cpu_control_w )
 {
-	//logerror("reset control pc=%04x %02x\n",activecpu_get_pc(),data);
+	/*logerror("reset control pc=%04x %02x\n",activecpu_get_pc(),data);*/
 	if( (data&1)^namcos1_reset)
 	{
 		namcos1_reset = data&1;
@@ -853,7 +853,7 @@ WRITE_HANDLER( namcos1_mcu_bankswitch_w )
 
 WRITE_HANDLER( namcos1_mcu_patch_w )
 {
-	//logerror("mcu C000 write pc=%04x data=%02x\n",activecpu_get_pc(),data);
+	/*logerror("mcu C000 write pc=%04x data=%02x\n",activecpu_get_pc(),data);*/
 	if(mcu_patch_data == 0xa6) return;
 	mcu_patch_data = data;
 	cpu_bankbase[19][offset] = data;
@@ -1185,7 +1185,7 @@ static READ_HANDLER( berabohm_buttons_r )
 			if (res & 0x80)
 			{
 				if (counter[berabohm_input_counter-1] >= 0)
-//                  res = 0x40 | counter[berabohm_input_counter-1]; I can't get max power with this...
+/*                  res = 0x40 | counter[berabohm_input_counter-1]; I can't get max power with this...*/
 					res = 0x40 | (counter[berabohm_input_counter-1]>>1);
 				else
 				{
@@ -1263,7 +1263,7 @@ DRIVER_INIT( bakutotu )
 	namcos1_driver_init(&bakutotu_specific);
 	namcos1_game_id = 0x0155;
 
-	// resolves CPU deadlocks caused by sloppy coding(see driver\namcos1.c)
+	/* resolves CPU deadlocks caused by sloppy coding(see driver\namcos1.c)*/
 	{
 		data8_t target[8] = {0x34,0x37,0x35,0x37,0x96,0x00,0x2e,0xed};
 		data8_t *rombase, *srcptr, *endptr, *scanptr;
@@ -1432,8 +1432,8 @@ DRIVER_INIT( pistoldm )
 		normal_slice,           /* CPU slice normal */
 	};
 	namcos1_driver_init(&pistoldm_specific);
-	//key[0x17] = ;
-	//key[0x07] = ;
+	/*key[0x17] = ;*/
+	/*key[0x07] = ;*/
 	key[0x43] = 0x35;
 	namcos1_game_id = 0x0309;
 }
@@ -1450,8 +1450,8 @@ DRIVER_INIT( soukobdx )
 		normal_slice,           /* CPU slice normal */
 	};
 	namcos1_driver_init(&soukobdx_specific);
-	//key[0x27] = ;
-	//key[0x07] = ;
+	/*key[0x27] = ;*/
+	/*key[0x07] = ;*/
 	key[0x43] = 0x37;
 	namcos1_game_id = 0x0311;
 }
@@ -1484,8 +1484,8 @@ DRIVER_INIT( tankfrce )
 		normal_slice,           /* CPU slice normal */
 	};
 	namcos1_driver_init(&tankfrce_specific);
-	//key[0x57] = ;
-	//key[0x17] = ;
+	/*key[0x57] = ;*/
+	/*key[0x17] = ;*/
 	key[0x2b] = 0xb9;
 	key[0x50] = 0xb9;
 	namcos1_game_id = 0x0185;

@@ -584,8 +584,8 @@ WRITE_HANDLER( battles_CPU4_4000_w )
 {
 	logerror("CPU3 %04x: 40%02x Write = %02x\n",activecpu_get_pc(),offset,data);
 
-	set_led_status(0,data & 0x02);	// Start 1
-	set_led_status(1,data & 0x01);	// Start 2
+	set_led_status(0,data & 0x02);	/* Start 1*/
+	set_led_status(1,data & 0x01);	/* Start 2*/
 
 }
 

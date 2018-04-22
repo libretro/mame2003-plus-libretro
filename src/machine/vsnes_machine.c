@@ -504,11 +504,11 @@ static READ_HANDLER( vsgshoe_security_r )
 DRIVER_INIT( vsgshoe )
 {
 
-	//Game
+	/*Game*/
 	memcpy (&memory_region( REGION_CPU1 )[0x08000], &memory_region( REGION_CPU1 )[0x10000], 0x2000);
 
-	//Title Screen
-	//memcpy (&memory_region( REGION_CPU1 )[0x08000], &memory_region( REGION_CPU1 )[0x12000], 0x2000);
+	/*Title Screen*/
+	/*memcpy (&memory_region( REGION_CPU1 )[0x08000], &memory_region( REGION_CPU1 )[0x12000], 0x2000);*/
 
 	memcpy (&memory_region( REGION_CPU1 )[0x0a000], &memory_region( REGION_CPU1 )[0x14000], 0x6000);
 
@@ -1209,9 +1209,9 @@ static READ_HANDLER( jajamaru_security_r )
 
 DRIVER_INIT( jajamaru )
 {
-	//It executes an illegal opcode: 0x04 at 0x9e67 and 0x9e1c
-	//At 0x9e5d and 0x9e12 there is a conditional jump to it
-	//Maybe it should be a DOP (double NOP)
+	/*It executes an illegal opcode: 0x04 at 0x9e67 and 0x9e1c*/
+	/*At 0x9e5d and 0x9e12 there is a conditional jump to it*/
+	/*Maybe it should be a DOP (double NOP)*/
 
 	/* Protection */
 	install_mem_read_handler( 0, 0x2002, 0x2002, jajamaru_security_r );

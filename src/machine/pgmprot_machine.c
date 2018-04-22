@@ -15,9 +15,9 @@ static unsigned short pstar_e7,pstar_b1,pstar_ce;
 static unsigned short pstar_ram[3];
 
 static int Pstar_ba[0x1E]={
-	0x02,0x00,0x00,0x01,0x00,0x03,0x00,0x00, //0
-	0x02,0x00,0x06,0x00,0x22,0x04,0x00,0x03, //8
-	0x00,0x00,0x06,0x00,0x20,0x07,0x00,0x03, //10
+	0x02,0x00,0x00,0x01,0x00,0x03,0x00,0x00, /*0*/
+	0x02,0x00,0x06,0x00,0x22,0x04,0x00,0x03, /*8*/
+	0x00,0x00,0x06,0x00,0x20,0x07,0x00,0x03, /*10*/
 	0x00,0x21,0x01,0x00,0x00,0x63
 };
 
@@ -114,9 +114,9 @@ static int Pstar_80[0x1a3]={
 
 READ16_HANDLER (PSTARS_protram_r)
 {
-	if (offset == 4)		//region
+	if (offset == 4)		/*region*/
 		return readinputport(4);
-	else if (offset >= 0x10)  //timer
+	else if (offset >= 0x10)  /*timer*/
 	{
 	  logerror("PSTARS ACCESS COUNTER %6X\n",pstar_ram[offset-0x10]);
 		return pstar_ram[offset-0x10]--;
@@ -133,7 +133,7 @@ READ16_HANDLER (PSTARS_r16)
 		realkey=PSTARSKEY>>8;
 		realkey|=PSTARSKEY;
 		d^=realkey;
-//      logerror("PSTARS A27 R  %6X\n",PSTARS_VAL);
+/*      logerror("PSTARS A27 R  %6X\n",PSTARS_VAL);*/
 		return d;
 	}
 	else if(offset==1)
@@ -211,18 +211,18 @@ WRITE16_HANDLER (PSTARS_w16)
 					}
 					break;
 
-				case 0xc1: //TODO:TIMER  0,1,2,FIX TO 0 should be OK?
+				case 0xc1: /*TODO:TIMER  0,1,2,FIX TO 0 should be OK?*/
 					{
 						PSTARS_VAL=0;
 					}
 					break;
-				case 0xce: //TODO:TIMER  0,1,2
+				case 0xce: /*TODO:TIMER  0,1,2*/
 					{
 						pstar_ce=PSTARSINT[0];
 						PSTARS_VAL=0x890000;
 					}
 					break;
-				case 0xcf: //TODO:TIMER  0,1,2
+				case 0xcf: /*TODO:TIMER  0,1,2*/
 					{
 						pstar_ram[pstar_ce]=PSTARSINT[0];
 						PSTARS_VAL=0x890000;
@@ -246,7 +246,7 @@ WRITE16_HANDLER (PSTARS_w16)
 						PSTARS_VAL=0x890000;
 					}
 					break;
-				case 0xf8: //@73C
+				case 0xf8: /*@73C*/
 	   			{
 	    			PSTARS_VAL=PSTARS_REGS[PSTARSINT[0]&0xf]&0xffffff;
 	   			}
@@ -314,7 +314,7 @@ static UINT32 bt(UINT32 v, int bit)
 
 static void asic3_compute_hold(void)
 {
-	// The mode is dependant on the region
+	/* The mode is dependant on the region*/
 	static int modes[4] = { 1, 1, 3, 2 };
 	int mode = modes[readinputport(4) & 3];
 
@@ -429,19 +429,19 @@ static unsigned short ASIC28KEY;
 static unsigned short ASIC28REGS[10];
 static unsigned short ASICPARAMS[256];
 static unsigned short ASIC28RCNT=0;
-static unsigned int B0TABLE[16]={2,0,1,4,3}; //maps char portraits to tables
+static unsigned int B0TABLE[16]={2,0,1,4,3}; /*maps char portraits to tables*/
 
-// photo2yk bonus stage
+/* photo2yk bonus stage*/
 unsigned int AETABLE[16]={0x00,0x0a,0x14,
 		0x01,0x0b,0x15,
 		0x02,0x0c,0x16};
 
-//Not sure if BATABLE is complete
+/*Not sure if BATABLE is complete*/
 static unsigned int BATABLE[0x40]=
-	{0x00,0x29,0x2c,0x35,0x3a,0x41,0x4a,0x4e,  //0x00
-     0x57,0x5e,0x77,0x79,0x7a,0x7b,0x7c,0x7d, //0x08
-     0x7e,0x7f,0x80,0x81,0x82,0x85,0x86,0x87, //0x10
-     0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x90,  //0x18
+	{0x00,0x29,0x2c,0x35,0x3a,0x41,0x4a,0x4e,  /*0x00*/
+     0x57,0x5e,0x77,0x79,0x7a,0x7b,0x7c,0x7d, /*0x08*/
+     0x7e,0x7f,0x80,0x81,0x82,0x85,0x86,0x87, /*0x10*/
+     0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x90,  /*0x18*/
      0x95,0x96,0x97,0x98,0x99,0x9a,0x9b,0x9c,
      0x9e,0xa3,0xd4,0xa9,0xaf,0xb5,0xbb,0xc1};
 
@@ -452,18 +452,18 @@ READ16_HANDLER (sango_protram_r)
 {
 
 
-	// at offset == 4 is region (supplied by device)
-	// 0 = china
-	// 1 = taiwan
-	// 2 = japan
-	// 3 = korea
-	// 4 = hong kong
-	// 5 = world
+	/* at offset == 4 is region (supplied by device)*/
+	/* 0 = china*/
+	/* 1 = taiwan*/
+	/* 2 = japan*/
+	/* 3 = korea*/
+	/* 4 = hong kong*/
+	/* 5 = world*/
 
 	if (offset == 4)	return readinputport(4);
 
-	// otherwise it doesn't seem to use the ram for anything important, we return 0 to avoid test mode corruption
-	// kovplus reads from offset 000e a lot ... why?
+	/* otherwise it doesn't seem to use the ram for anything important, we return 0 to avoid test mode corruption*/
+	/* kovplus reads from offset 000e a lot ... why?*/
 #ifdef MAME_DEBUG
 	usrintf_showmessage ("protection ram r %04x",offset);
 #endif
@@ -520,22 +520,22 @@ static unsigned int photoy2k_spritenum(void)
 }
 
 READ16_HANDLER (ASIC28_r16)
-//unsigned short ASIC28_r16(unsigned int addr)
+/*unsigned short ASIC28_r16(unsigned int addr)*/
 {
 	unsigned int val=(ASIC28REGS[1]<<16)|(ASIC28REGS[0]);
 
-//logerror("Asic28 Read PC = %06x Command = %02x ??\n",activecpu_get_pc(), ASIC28REGS[1]);
+/*logerror("Asic28 Read PC = %06x Command = %02x ??\n",activecpu_get_pc(), ASIC28REGS[1]);*/
 
 	switch(ASIC28REGS[1]&0xff)
 	{
 
-		case 0x20: // PhotoY2k spritenum conversion 4/4
+		case 0x20: /* PhotoY2k spritenum conversion 4/4*/
 			if(!ASIC28RCNT)
 				logerror("ASIC28: PhotoY2K spr4 %04x %06x (%06x)\n", val & 0xffff, photoy2k_trf[2], activecpu_get_pc());
 			val = photoy2k_soff >> 16;
 			break;
 
-		case 0x21: // PhotoY2k spritenum conversion 3/4
+		case 0x21: /* PhotoY2k spritenum conversion 3/4*/
 			if(!ASIC28RCNT) {
 				extern unsigned int pgmy2ks[];
 				photoy2k_trf[2] = val & 0xffff;
@@ -549,7 +549,7 @@ READ16_HANDLER (ASIC28_r16)
 			val = photoy2k_soff & 0xffff;
 			break;
 
-		case 0x22: // PhotoY2k spritenum conversion 2/4
+		case 0x22: /* PhotoY2k spritenum conversion 2/4*/
 			if(!ASIC28RCNT) {
 				photoy2k_trf[1] = val & 0xffff;
 				logerror("ASIC28: PhotoY2K spr2 %04x %06x (%06x)\n", val & 0xffff, photoy2k_trf[0], activecpu_get_pc());
@@ -557,7 +557,7 @@ READ16_HANDLER (ASIC28_r16)
 			val = photoy2k_trf[0] | 0x880000;
 			break;
 
-		case 0x23: // PhotoY2k spritenum conversion 1/4
+		case 0x23: /* PhotoY2k spritenum conversion 1/4*/
 			if(!ASIC28RCNT) {
 				photoy2k_trf[0] = val & 0xffff;
 				logerror("ASIC28: PhotoY2K spr1 %04x (%06x)\n", val & 0xffff, activecpu_get_pc());
@@ -565,7 +565,7 @@ READ16_HANDLER (ASIC28_r16)
 			val = 0x880000;
 			break;
 
-		case 0x30: // PhotoY2k next element
+		case 0x30: /* PhotoY2k next element*/
 			if(!ASIC28RCNT)
 				photoy2k_seqpos++;
 			val = photoy2k_spritenum();
@@ -573,7 +573,7 @@ READ16_HANDLER (ASIC28_r16)
 				logerror("ASIC28: PhotoY2K seq_next  %05x -> %06x (%06x)\n", photoy2k_seqpos, val, activecpu_get_pc());
 			break;
 
-		case 0x32: // PhotoY2k start of sequence
+		case 0x32: /* PhotoY2k start of sequence*/
 			if(!ASIC28RCNT)
 				photoy2k_seqpos = (val & 0xffff) << 4;
 			val = photoy2k_spritenum();
@@ -585,11 +585,11 @@ READ16_HANDLER (ASIC28_r16)
 			val=0x880000;
 			break;
 
-		case 0x9d:	// spr palette
+		case 0x9d:	/* spr palette*/
 			val=0xa00000+((ASIC28REGS[0]&0x1f)<<6);
 			break;
 
-		case 0xae:  //Photo Y2k Bonus stage
+		case 0xae:  /*Photo Y2k Bonus stage*/
 			val=AETABLE[ASIC28REGS[0]&0xf];
 			break;
 
@@ -601,9 +601,9 @@ READ16_HANDLER (ASIC28_r16)
 			{
 				int v2=ASIC28REGS[0]&0x0f;
 				int v1=(ASIC28REGS[0]&0x0f00)>>8;
-//				unsigned short tmp=E0REGS[v2];
-				//E0REGS[v2]=E0REGS[v1];
-				//E0REGS[v1]=tmp;
+/*				unsigned short tmp=E0REGS[v2];*/
+				/*E0REGS[v2]=E0REGS[v1];*/
+				/*E0REGS[v1]=tmp;*/
 				if(ASIC28REGS[0]==0x102)
 					E0REGS[1]=E0REGS[0];
 				else
@@ -617,7 +617,7 @@ READ16_HANDLER (ASIC28_r16)
 			val=BATABLE[ASIC28REGS[0]&0x3f];
 			if(ASIC28REGS[0]>0x2f)
 			{
-//				PutMessage("Unmapped BA com, report ElSemi",60);
+/*				PutMessage("Unmapped BA com, report ElSemi",60);*/
 				usrintf_showmessage	("Unmapped BA com %02x, contact ElSemi / MameDev", ASIC28REGS[0]);
 			}
 			break;
@@ -626,7 +626,7 @@ READ16_HANDLER (ASIC28_r16)
 			val=0x880000;
 			break;
 
-		case 0xc3:	//TXT tile position Uses C0 to select column
+		case 0xc3:	/*TXT tile position Uses C0 to select column*/
 			{
 				val=0x904000+(ASICPARAMS[0xc0]+ASICPARAMS[0xc3]*64)*4;
 			}
@@ -636,34 +636,34 @@ READ16_HANDLER (ASIC28_r16)
 			val=0x880000;
 			break;
 
-		case 0xcc: //BG
+		case 0xcc: /*BG*/
    			{
    	 		int y=ASICPARAMS[0xcc];
-    		if(y&0x400)    //y is signed (probably x too and it also applies to TXT, but I've never seen it used)
+    		if(y&0x400)    /*y is signed (probably x too and it also applies to TXT, but I've never seen it used)*/
      			y=-(0x400-(y&0x3ff));
     		val=0x900000+(((ASICPARAMS[0xcb]+(y)*64)*4)/*&0x1fff*/);
    			}
    			break;
 
-		case 0xd0:	//txt palette
+		case 0xd0:	/*txt palette*/
 			val=0xa01000+(ASIC28REGS[0]<<5);
 			break;
 
-		case 0xd6:	//???? check it
+		case 0xd6:	/*???? check it*/
 			{
 				int v2=ASIC28REGS[0]&0xf;
-//				int v1=(ASIC28REGS[0]&0xf0)>>4;
+/*				int v1=(ASIC28REGS[0]&0xf0)>>4;*/
 				E0REGS[0]=E0REGS[v2];
-				//E0REGS[v2]=0;
+				/*E0REGS[v2]=0;*/
 				val=0x880000;
 			}
 			break;
 
-		case 0xdc:	//bg palette
+		case 0xdc:	/*bg palette*/
 			val=0xa00800+(ASIC28REGS[0]<<6);
 			break;
 
-		case 0xe0:	//spr palette
+		case 0xe0:	/*spr palette*/
 			val=0xa00000+((ASIC28REGS[0]&0x1f)<<6);
 			break;
 
@@ -685,13 +685,13 @@ READ16_HANDLER (ASIC28_r16)
 			val=E0REGS[ASIC28REGS[0]&0xf]&0xffffff;
 			break;
 
-		case 0xfc:	//Adjust damage level to char experience level
+		case 0xfc:	/*Adjust damage level to char experience level*/
 			{
 			val=(ASICPARAMS[0xfc]*ASICPARAMS[0xfe])>>6;
 			break;
 			}
 
-		case 0xfe:	//todo
+		case 0xfe:	/*todo*/
 			val=0x880000;
 			break;
 
@@ -702,7 +702,7 @@ READ16_HANDLER (ASIC28_r16)
 			}
 	}
 
-//	if(addr==0x500000)
+/*	if(addr==0x500000)*/
 	if(offset==0)
 	{
 		unsigned short d=val&0xffff;
@@ -712,7 +712,7 @@ READ16_HANDLER (ASIC28_r16)
 		d^=realkey;
 		return d;
 	}
-//	else if(addr==0x500002)
+/*	else if(addr==0x500002)*/
 	else if(offset==1)
 	{
 		unsigned short d=val>>16;
@@ -732,9 +732,9 @@ READ16_HANDLER (ASIC28_r16)
 }
 
 WRITE16_HANDLER (ASIC28_w16)
-//void ASIC28_w16(unsigned int addr,unsigned short data)
+/*void ASIC28_w16(unsigned int addr,unsigned short data)*/
 {
-//	if(addr==0x500000)
+/*	if(addr==0x500000)*/
 	if(offset==0)
 	{
 		unsigned short realkey;
@@ -744,7 +744,7 @@ WRITE16_HANDLER (ASIC28_w16)
 		ASIC28REGS[0]=data;
 		return;
 	}
-//	if(addr==0x500002)
+/*	if(addr==0x500002)*/
 	if(offset==1)
 	{
 		unsigned short realkey;
@@ -755,7 +755,7 @@ WRITE16_HANDLER (ASIC28_w16)
 		realkey|=ASIC28KEY;
 		data^=realkey;
 		ASIC28REGS[1]=data;
-//		ErrorLogMessage("ASIC28 CMD %X  PARAM %X",ASIC28REGS[1],ASIC28REGS[0]);
+/*		ErrorLogMessage("ASIC28 CMD %X  PARAM %X",ASIC28REGS[1],ASIC28REGS[0]);*/
 		logerror("ASIC28 CMD %04x  PARAM %04x\n",ASIC28REGS[1],ASIC28REGS[0]);
 
 		ASICPARAMS[ASIC28REGS[1]&0xff]=ASIC28REGS[0];
@@ -778,13 +778,13 @@ WRITE16_HANDLER (ASIC28_w16)
 /* Dragon World 2 */
 
 #define DW2BITSWAP(s,d,bs,bd)  d=((d&(~(1<<bd)))|(((s>>bs)&1)<<bd))
-//Use this handler for reading from 0xd80000-0xd80002
+/*Use this handler for reading from 0xd80000-0xd80002*/
 READ16_HANDLER (dw2_d80000_r )
 {
-//addr&=0xff;
-// if(dw2reg<0x20) //NOT SURE!!
+/*addr&=0xff;*/
+/* if(dw2reg<0x20) */ /*NOT SURE!!*/
 	{
-		//The value at 0x80EECE is computed in the routine at 0x107c18
+		/*The value at 0x80EECE is computed in the routine at 0x107c18*/
 		data16_t d=pgm_mainram[0xEECE/2];
 		data16_t d2=0;
 		d=(d>>8)|(d<<8);
@@ -796,8 +796,8 @@ READ16_HANDLER (dw2_d80000_r )
 		DW2BITSWAP(d,d2,1 ,5);
 		DW2BITSWAP(d,d2,10,6);
 		DW2BITSWAP(d,d2,13,7);
-		// ... missing bitswaps here (8-15) there is not enough data to know them
-		// the code only checks the lowest 8 bytes
+		/* ... missing bitswaps here (8-15) there is not enough data to know them*/
+		/* the code only checks the lowest 8 bytes*/
 		return d2;
 	}
 }

@@ -56,24 +56,24 @@ WRITE_HANDLER( tms57002_control_w )
 
 	switch(data)
 	{
-		case 0xf8: // Program write
-		case 0xf0: // Table write
+		case 0xf8: /* Program write*/
+		case 0xf0: /* Table write*/
 			tms57002.curpos = 0;
 			tms57002.bytepos = 3;
 			tms57002.tmp = 0;
 		break;
-		case 0xf4: // Entry write
+		case 0xf4: /* Entry write*/
 			tms57002.curpos = -1;
 			tms57002.bytepos = 3;
 			tms57002.tmp = 0;
 		break;
-		case 0xfc: // Checksum (?) Status (?)
+		case 0xfc: /* Checksum (?) Status (?)*/
 			tms57002.bytepos = 3;
 			tms57002.tmp = 0;
 		break;
-		case 0xff: // Standby
+		case 0xff: /* Standby*/
 		break;
-		case 0xfe: // Irq
+		case 0xfe: /* Irq*/
 			/* (place ack of timer IRQ here) */
 		break;
 		default:
@@ -175,7 +175,7 @@ WRITE16_HANDLER( tms57002_data_word_w )
 /*                                                                         */
 /***************************************************************************/
 
-// Hardcoded constants and custom z-buffer
+/* Hardcoded constants and custom z-buffer*/
 #define GX_BMPPW (512+32)
 
 #if GX_DEBUG
@@ -193,7 +193,7 @@ WRITE16_HANDLER( tms57002_data_word_w )
 static UINT8 *gx_objzbuf, *gx_shdzbuf;
 
 
-// Localized K053936/ROZ+
+/* Localized K053936/ROZ+*/
 #define K053936_MAX_CHIPS 2
 
 static struct rectangle K053936_cliprect[K053936_MAX_CHIPS] = {{0,0,0,0},{0,0,0,0}};
@@ -268,7 +268,7 @@ static INLINE void K053936GP_copyroz32clip( struct mame_bitmap *dst_bitmap, stru
 	incxy = _incxy; incxx = _incxx; incyy = _incyy; incyx = _incyx;
 	starty = _starty; startx = _startx;
 
-	if (src_cliprect && clip) // set source clip range to some extreme values when disabled
+	if (src_cliprect && clip) /* set source clip range to some extreme values when disabled*/
 	{
 		src_minx = src_cliprect->min_x;
 		src_maxx = src_cliprect->max_x;
@@ -277,7 +277,7 @@ static INLINE void K053936GP_copyroz32clip( struct mame_bitmap *dst_bitmap, stru
 	}
 	else { src_minx = src_miny = -0x10000; src_maxx = src_maxy = 0x10000; }
 
-	if (dst_cliprect) // set target clip range
+	if (dst_cliprect) /* set target clip range*/
 	{
 		sx = dst_cliprect->min_x;
 		tx = dst_cliprect->max_x - sx + 1;
@@ -289,7 +289,7 @@ static INLINE void K053936GP_copyroz32clip( struct mame_bitmap *dst_bitmap, stru
 	}
 	else { sx = sy = 0; tx = dst_bitmap->width; ty = dst_bitmap->height; }
 
-	// adjust entry points and other loop constants
+	/* adjust entry points and other loop constants*/
 	dst_pitch = dst_bitmap->rowpixels;
 	dst_base = (UINT32*)dst_bitmap->base + sy * dst_pitch + sx + tx;
 	ecx = tx = -tx;
@@ -354,7 +354,7 @@ static INLINE void K053936GP_copyroz32clip( struct mame_bitmap *dst_bitmap, stru
 			eax = cy;      ebx = cx;
 			eax >>= 16;    ebx >>= 16;
 			eax &= 0x1fff; ebx &= 0x1fff;
-			eax = (eax<<5) + (eax<<13); //eax *= src_pitch;
+			eax = (eax<<5) + (eax<<13); /*eax *= src_pitch;*/
 			cy += incxy;   cx += incxx;
 			if (ebx < src_minx || ebx > src_maxx || eax < src_miny || eax > src_maxy) continue;
 
@@ -379,7 +379,7 @@ static INLINE void K053936GP_copyroz32clip( struct mame_bitmap *dst_bitmap, stru
 			eax = cy;      ebx = cx;
 			eax >>= 16;    ebx >>= 16;
 			eax &= 0x1fff; ebx &= 0x1fff;
-			eax = (eax<<5) + (eax<<13); //eax *= src_pitch;
+			eax = (eax<<5) + (eax<<13); /*eax *= src_pitch;*/
 			cy += incxy;   cx += incxx;
 			if (ebx < src_minx || ebx > src_maxx || eax < src_miny || eax > src_maxy) continue;
 
@@ -397,7 +397,7 @@ static INLINE void K053936GP_copyroz32clip( struct mame_bitmap *dst_bitmap, stru
 	} while (--ty);
 }
 
-// adpoted from generic K053936_zoom_draw()
+/* adpoted from generic K053936_zoom_draw()*/
 static void K053936GP_zoom_draw(int chip, data16_t *ctrl, data16_t *linectrl,
 		struct mame_bitmap *bitmap, const struct rectangle *cliprect, struct tilemap *tilemap,
 		int tilebpp, int blend)
@@ -506,7 +506,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 #define FPHALF (1<<(FP-1))
 #define FPENT  0
 
-	// inner loop
+	/* inner loop*/
 	UINT8  *src_ptr;
 	int src_x;
 	register int eax, ebx, edx, ecx;
@@ -520,12 +520,12 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	UINT32 *dst_ptr;
 	const UINT8  *esi, *edi;
 
-	// outter loop
+	/* outter loop*/
 	int src_fby, src_fdy, src_fbx;
 	UINT8 *src_base;
 	int dst_w, dst_h;
 
-	// one-time
+	/* one-time*/
 	int nozoom, granularity;
 	int src_fw, src_fh;
 	int dst_minx, dst_maxx, dst_miny, dst_maxy;
@@ -533,10 +533,10 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	int src_pitch, dst_pitch;
 
 
-	// cull illegal and transparent objects
+	/* cull illegal and transparent objects*/
 	if (!scalex || !scaley) return;
 
-	// find shadow pens and cull invisible shadows
+	/* find shadow pens and cull invisible shadows*/
 	granularity = shdpen = gfx->color_granularity;
 	shdpen--;
 
@@ -547,7 +547,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	else
 		if (drawmode >= 4) return;
 
-	// alpha blend necessary?
+	/* alpha blend necessary?*/
 	if (drawmode & 2)
 	{
 		if (alpha <= 0) return;
@@ -557,7 +557,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	esi = alpha_cache.alphas;
 	edi = alpha_cache.alphad;
 
-	// fill internal data structure with default values
+	/* fill internal data structure with default values*/
 	ozbuf_ptr  = gx_objzbuf;
 	szbuf_ptr  = gx_shdzbuf;
 
@@ -578,7 +578,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	dst_x     = sx;
 	dst_y     = sy;
 
-	// cull off-screen objects
+	/* cull off-screen objects*/
 	if (dst_x > dst_maxx || dst_y > dst_maxy) return;
 	if ((nozoom = (scalex == 0x10000 && scaley == 0x10000)))
 	{
@@ -601,7 +601,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	dst_lasty = dst_y + dst_h - 1;
 	if (dst_lasty < dst_miny) return;
 
-	// clip destination
+	/* clip destination*/
 	dst_skipx = 0;
 	eax = dst_minx;  if ((eax -= dst_x) > 0) { dst_skipx = eax;  dst_w -= eax;  dst_x = dst_minx; }
 	eax = dst_lastx; if ((eax -= dst_maxx) > 0) dst_w -= eax;
@@ -609,7 +609,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	eax = dst_miny;  if ((eax -= dst_y) > 0) { dst_skipy = eax;  dst_h -= eax;  dst_y = dst_miny; }
 	eax = dst_lasty; if ((eax -= dst_maxy) > 0) dst_h -= eax;
 
-	// calculate zoom factors and clip source
+	/* calculate zoom factors and clip source*/
 	if (nozoom)
 	{
 		if (!flipx) src_fbx = 0; else { src_fbx = src_fw - 1; src_fdx = -src_fdx; }
@@ -623,7 +623,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	src_fbx += dst_skipx * src_fdx;
 	src_fby += dst_skipy * src_fdy;
 
-	// adjust insertion points and pre-entry constants
+	/* adjust insertion points and pre-entry constants*/
 	eax = (dst_y - dst_miny) * GX_ZBUFW + (dst_x - dst_minx) + dst_w;
 	db0 = z8 = (UINT8)zcode;
 	db1 = p8 = (UINT8)pri;
@@ -638,7 +638,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	src_fdy = src_fdx * dst_w + src_pitch;
 	ecx = dst_w;
 
-	if (zcode < 0) // no shadow and z-buffering
+	if (zcode < 0) /* no shadow and z-buffering*/
 	{
 		do {
 			do {
@@ -655,7 +655,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 0) // all pens solid
+	else if (drawmode == 0) /* all pens solid*/
 	{
 		do {
 			do {
@@ -675,7 +675,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 1) // solid pens only
+	else if (drawmode == 1) /* solid pens only*/
 	{
 		do {
 			do {
@@ -695,7 +695,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 2) // all pens solid with alpha blending
+	else if (drawmode == 2) /* all pens solid with alpha blending*/
 	{
 		do {
 			do {
@@ -715,7 +715,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 3) // solid pens only with alpha blending
+	else if (drawmode == 3) /* solid pens only with alpha blending*/
 	{
 		do {
 			do {
@@ -735,7 +735,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 4) // shadow pens only
+	else if (drawmode == 4) /* shadow pens only*/
 	{
 		do {
 			do {
@@ -768,7 +768,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 	src_x >>= FP;    src_ptr += ecx;
 	ecx = dst_w;
 
-	if (zcode < 0) // no shadow and z-buffering
+	if (zcode < 0) /* no shadow and z-buffering*/
 	{
 		do {
 			do {
@@ -791,7 +791,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 0) // all pens solid
+	else if (drawmode == 0) /* all pens solid*/
 	{
 		do {
 			do {
@@ -817,7 +817,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 1) // solid pens only
+	else if (drawmode == 1) /* solid pens only*/
 	{
 		do {
 			do {
@@ -843,7 +843,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 2) // all pens solid with alpha blending
+	else if (drawmode == 2) /* all pens solid with alpha blending*/
 	{
 		do {
 			do {
@@ -869,7 +869,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 3) // solid pens only with alpha blending
+	else if (drawmode == 3) /* solid pens only with alpha blending*/
 	{
 		do {
 			do {
@@ -895,7 +895,7 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 		}
 		while (--dst_h);
 	}
-	else if (drawmode == 4) // shadow pens only
+	else if (drawmode == 4) /* shadow pens only*/
 	{
 		do {
 			do {
@@ -938,11 +938,11 @@ static INLINE void zdrawgfxzoom32GP( struct mame_bitmap *bitmap, const struct Gf
 /*                                                                         */
 /***************************************************************************/
 
-// global system ports access
+/* global system ports access*/
 data8_t  konamigx_wrport1_0, konamigx_wrport1_1;
 data16_t konamigx_wrport2;
 
-// frequently used registers
+/* frequently used registers*/
 static int K053246_objset1;
 static int K053247_vrcbk[4];
 static int K053247_coreg, K053247_coregshift, K053247_opset;
@@ -953,7 +953,7 @@ static int vinmix, vmixon, osinmix, osmixon;
 
 static void konamigx_precache_registers(void)
 {
-	// (see sprite color coding scheme on p.46 & 47)
+	/* (see sprite color coding scheme on p.46 & 47)*/
 	static int coregmasks[5] = {0xf,0xe,0xc,0x8,0x0};
 	static int coregshifts[5]= {4,5,6,7,8};
 	int i;
@@ -967,7 +967,7 @@ static void konamigx_precache_registers(void)
 	K053247_vrcbk[2] = (i & 0x000f) << 14;
 	K053247_vrcbk[3] = (i & 0x0f00) << 6;
 
-	// COREG == OBJSET2+1C == bit8-11 of OPSET ??? (see p.50 last table, needs p.49 to confirm)
+	/* COREG == OBJSET2+1C == bit8-11 of OPSET ??? (see p.50 last table, needs p.49 to confirm)*/
 	K053247_opset = K053247_read_register(0xc/2);
 
 	i = K053247_opset & 7; if (i > 4) i = 4;
@@ -992,7 +992,7 @@ static void konamigx_precache_registers(void)
 	osmixon  = K055555_read_register(K55_OSBLEND_ON);
 }
 
-static INLINE int K053247GX_combine_c18(int attrib) // (see p.46)
+static INLINE int K053247GX_combine_c18(int attrib) /* (see p.46)*/
 {
 	int c18;
 
@@ -1004,7 +1004,7 @@ static INLINE int K053247GX_combine_c18(int attrib) // (see p.46)
 	return(c18);
 }
 
-static INLINE int K055555GX_decode_objcolor(int c18) // (see p.59 7.2.2)
+static INLINE int K055555GX_decode_objcolor(int c18) /* (see p.59 7.2.2)*/
 {
 	int ocb, opon;
 
@@ -1016,7 +1016,7 @@ static INLINE int K055555GX_decode_objcolor(int c18) // (see p.59 7.2.2)
 	return((ocb | c18) >> K053247_coregshift);
 }
 
-static INLINE int K055555GX_decode_inpri(int c18) // (see p.59 7.2.2)
+static INLINE int K055555GX_decode_inpri(int c18) /* (see p.59 7.2.2)*/
 {
 	int op = opri;
 
@@ -1091,7 +1091,7 @@ void konamigx_le2_sprite_callback(int *code, int *color, int *priority)
 	*priority = pri | op;
 }
 
-int K055555GX_decode_vmixcolor(int layer, int *color) // (see p.62 7.2.6 and p.27 3.3)
+int K055555GX_decode_vmixcolor(int layer, int *color) /* (see p.62 7.2.6 and p.27 3.3)*/
 {
 	int vcb, shift, pal, vmx, von, pl45, emx;
 
@@ -1110,13 +1110,13 @@ int K055555GX_decode_vmixcolor(int layer, int *color) // (see p.62 7.2.6 and p.2
 	emx   |=  vmx;
 	pal   |=  vcb;
 
-	if (von == 3) emx = -1; // invalidate external mix code if all bits are from internal
+	if (von == 3) emx = -1; /* invalidate external mix code if all bits are from internal*/
 	*color =  pal;
 
 	return(emx);
 }
 
-int K055555GX_decode_osmixcolor(int layer, int *color) // (see p.63, p.49-50 and p.27 3.3)
+int K055555GX_decode_osmixcolor(int layer, int *color) /* (see p.63, p.49-50 and p.27 3.3)*/
 {
 	int scb, shift, pal, osmx, oson, pl45, emx;
 
@@ -1127,7 +1127,7 @@ int K055555GX_decode_osmixcolor(int layer, int *color) // (see p.63, p.49-50 and
 
 	if (layer)
 	{
-		// layer 1-3 are external tile layers
+		/* layer 1-3 are external tile layers*/
 		scb    =  vcblk[layer+3]<<6;
 		emx    =  pl45 = pal>>4 & 3;
 		pal   &=  0xf;
@@ -1139,13 +1139,13 @@ int K055555GX_decode_osmixcolor(int layer, int *color) // (see p.63, p.49-50 and
 		emx   |=  osmx;
 		pal   |=  scb;
 
-		if (oson == 3) emx = -1; // invalidate external mix code if all bits are from internal
+		if (oson == 3) emx = -1; /* invalidate external mix code if all bits are from internal*/
 		*color =  pal;
 	}
 	else
 	{
-		// layer 0 is the sprite layer with different attributes decode; detail on p.49 (missing)
-		emx   = 0; // K053247_read_register(??)>>? & 3;
+		/* layer 0 is the sprite layer with different attributes decode; detail on p.49 (missing)*/
+		emx   = 0; /* K053247_read_register(??)>>? & 3;*/
 		osmx &= oson;
 		emx  &=~oson;
 		emx  |= osmx;
@@ -1212,7 +1212,7 @@ static struct GX_OBJ { int order, offs, code, color; } *gx_objpool;
 static data16_t *gx_spriteram;
 static int gx_objdma, gx_primode;
 
-// mirrored K053247 and K054338 settings
+/* mirrored K053247 and K054338 settings*/
 static data16_t *K053247_ram;
 static struct GfxElement *K053247_gfx;
 static void (*K053247_callback)(int *code,int *color,int *priority);
@@ -1283,39 +1283,39 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 	int order, offs, code, color, zcode, pri, spri, spri_min, shdprisel, shadow, alpha, drawmode;
 
 
-	// abort if object database failed to initialize
+	/* abort if object database failed to initialize*/
 	if (!(objpool = gx_objpool)) return;
 
-	// clear screen with backcolor and update flicker pulse
+	/* clear screen with backcolor and update flicker pulse*/
 	K054338_fill_backcolor(bitmap, konamigx_wrport1_0 & 0x20);
 	parity ^= 1;
 
-	// abort if video has been disabled
+	/* abort if video has been disabled*/
 	if (!(disp = K055555_read_register(K55_INPUT_ENABLES))) return;
 	cltc_shdpri = K054338_read_register(K338_REG_CONTROL);
 	if (!(cltc_shdpri & K338_CTL_KILL)) return;
 
-	// demote shadows by one layer when this bit is set??? (see p.73 8.6)
+	/* demote shadows by one layer when this bit is set??? (see p.73 8.6)*/
 	cltc_shdpri &= K338_CTL_SHDPRI;
 
-	// wipe z-buffer
+	/* wipe z-buffer*/
 	if (mixerflags & GXMIX_NOZBUF)
 		mixerflags |= GXMIX_NOSHADOW;
 	else
 		gx_wipezbuf(mixerflags & GXMIX_NOSHADOW);
 
-	// cache global parameters
+	/* cache global parameters*/
 	konamigx_precache_registers();
 
-	// init OBJSET1 parameters (see p.47 6.2)
+	/* init OBJSET1 parameters (see p.47 6.2)*/
 	flipscreenx = K053246_objset1 & 1;
 	flipscreeny = K053246_objset1 & 2;
 
-	// get "display window" offsets
+	/* get "display window" offsets*/
 	offx = (K053246_read_register(0)<<8 | K053246_read_register(1)) & 0x3ff;
 	offy = (K053246_read_register(2)<<8 | K053246_read_register(3)) & 0x3ff;
 
-	// init OBJSET2 and mixer parameters (see p.51 and chapter 7)
+	/* init OBJSET2 and mixer parameters (see p.51 and chapter 7)*/
 	layerid[0] = 0; layerid[1] = 1; layerid[2] = 2; layerid[3] = 3; layerid[4] = 4; layerid[5] = 5;
 
 	if (K053247_opset & 0x40)
@@ -1331,7 +1331,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 		ywraplim  = 1024 - 512;
 	}
 
-	// invert layer priority when this flag is set (not used by any GX game?)
+	/* invert layer priority when this flag is set (not used by any GX game?)*/
 	prflp = K055555_read_register(K55_CONTROL) & K55_CTL_FLIPPRI;
 
 	layerpri[0] = K055555_read_register(K55_PRIINP_0);
@@ -1342,7 +1342,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 
 	if (gx_primode == -1)
 	{
-		// Lethal Enforcer hack (requires pixel color comparison)
+		/* Lethal Enforcer hack (requires pixel color comparison)*/
 		layerpri[2] = K055555_read_register(K55_PRIINP_3) + 0x20;
 		shdprisel = 0x3f;
 	}
@@ -1352,7 +1352,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 		shdprisel = K055555_read_register(K55_SHD_PRI_SEL);
 	}
 
-	// SHDPRISEL filters shadows by different priority comparison methods (UNIMPLEMENTED, see detail on p.66)
+	/* SHDPRISEL filters shadows by different priority comparison methods (UNIMPLEMENTED, see detail on p.66)*/
 	if (!(shdprisel & 0x03)) shadowon[0] = 0;
 	if (!(shdprisel & 0x0c)) shadowon[1] = 0;
 	if (!(shdprisel & 0x30)) shadowon[2] = 0;
@@ -1366,7 +1366,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 
 	if (!(mixerflags & GXMIX_NOSHADOW))
 	{
-		// only enable shadows beyond a +/-7 RGB threshold
+		/* only enable shadows beyond a +/-7 RGB threshold*/
 		for (j=0,i=0; i<3; j+=3,i++)
 		{
 			k = K054338_shdRGB[j  ]; if (k < -7 || k > 7) { shadowon[i] = 1; continue; }
@@ -1374,15 +1374,15 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 			k = K054338_shdRGB[j+2]; if (k < -7 || k > 7) { shadowon[i] = 1; }
 		}
 
-		// SHDON specifies layers on which shadows can be projected (see detail on p.65 7.2.8)
+		/* SHDON specifies layers on which shadows can be projected (see detail on p.65 7.2.8)*/
 		temp = K055555_read_register(K55_SHD_ON);
-		for (i=0; i<4; i++) if (!(temp>>i & 1) && spri_min < layerpri[i]) spri_min = layerpri[i]; // HACK
+		for (i=0; i<4; i++) if (!(temp>>i & 1) && spri_min < layerpri[i]) spri_min = layerpri[i]; /* HACK*/
 
-		// update shadows status
+		/* update shadows status*/
 		K054338_update_all_shadows();
 	}
 
-	// pre-sort layers
+	/* pre-sort layers*/
 	for (j=0; j<5; j++)
 	{
 		temp1 = layerpri[j];
@@ -1397,7 +1397,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 		}
 	}
 
-	// build object database and create indices
+	/* build object database and create indices*/
 	objptr = objpool;
 	nobj = 0;
 
@@ -1447,7 +1447,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 
 		zcode = gx_spriteram[offs] & 0xff;
 
-		// invert z-order when opset_pri is set (see p.51 OPSET PRI)
+		/* invert z-order when opset_pri is set (see p.51 OPSET PRI)*/
 		if (K053247_opset & 0x10) zcode = 0xff - zcode;
 
 		code  = gx_spriteram[offs+1];
@@ -1468,66 +1468,66 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 
 		if (color & K055555_FULLSHADOW)
 		{
-			shadow = 3; // use default intensity and color
-			spri = pri; // retain host priority
-			temp3 = 1; // add shadow
-			temp4 = 5; // draw full shadow
+			shadow = 3; /* use default intensity and color*/
+			spri = pri; /* retain host priority*/
+			temp3 = 1; /* add shadow*/
+			temp4 = 5; /* draw full shadow*/
 		}
 		else
 		{
-			if ((shadow = k>>10 & 3)) // object has shadow?
+			if ((shadow = k>>10 & 3)) /* object has shadow?*/
 			{
 				if (shadow != 1 || K053246_objset1 & 0x20)
 				{
 					shadow--;
-					temp1 = 1; // add solid
-					temp2 = 1; // draw partial solid
+					temp1 = 1; /* add solid*/
+					temp2 = 1; /* draw partial solid*/
 					if (shadowon[shadow])
 					{
-						temp3 = 1; // add shadow
-						temp4 = 4; // draw partial shadow
+						temp3 = 1; /* add shadow*/
+						temp4 = 4; /* draw partial shadow*/
 					}
 				}
 				else
 				{
-					// drop the entire sprite to shadow if its shadow code is 1 and SD0EN is off (see p.48)
+					/* drop the entire sprite to shadow if its shadow code is 1 and SD0EN is off (see p.48)*/
 					shadow = 0;
 					if (!shadowon[0]) continue;
-					temp3 = 1; // add shadow
-					temp4 = 5; // draw full shadow
+					temp3 = 1; /* add shadow*/
+					temp4 = 5; /* draw full shadow*/
 				}
 			}
 			else
 			{
-				temp1 = 1; // add solid
-				temp2 = 0; // draw full solid
+				temp1 = 1; /* add solid*/
+				temp2 = 0; /* draw full solid*/
 			}
 
 			if (temp1)
 			{
-				// tag sprite for alpha blending
+				/* tag sprite for alpha blending*/
 				if (color>>K055555_MIXSHIFT & 3) temp2 |= 2;
 			}
 
 			if (temp3)
 			{
-				// determine shadow priority
-				spri = (K053247_opset & 0x20) ? pri : shdpri[shadow]; // (see p.51 OPSET SDSEL)
+				/* determine shadow priority*/
+				spri = (K053247_opset & 0x20) ? pri : shdpri[shadow]; /* (see p.51 OPSET SDSEL)*/
 			}
 		}
 
 		switch (gx_primode & 0xf)
 		{
-			// Dadandarn zcode suppression
+			/* Dadandarn zcode suppression*/
 			case  1:
 				zcode = 0;
 			break;
 
-			// Daisukiss bad shadow filter
+			/* Daisukiss bad shadow filter*/
 			case  4:
 				if (k & 0x3000 || k == 0x0800) continue;
 
-			// Tokkae shadow masking (INACCURATE)
+			/* Tokkae shadow masking (INACCURATE)*/
 			case  5:
 				if (spri < spri_min) spri = spri_min;
 			break;
@@ -1544,7 +1544,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 		*/
 		if (temp1)
 		{
-			// add objects with solid or alpha pens
+			/* add objects with solid or alpha pens*/
 			order = pri<<24 | zcode<<16 | offs<<(8-3) | temp2<<4;
 			objptr->order = order;
 			objptr->offs  = offs;
@@ -1558,7 +1558,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 
 		if (temp3 && !(color & K055555_SKIPSHADOW) && !(mixerflags & GXMIX_NOSHADOW))
 		{
-			// add objects with shadows if enabled
+			/* add objects with shadows if enabled*/
 			order = spri<<24 | zcode<<16 | offs<<(8-3) | temp4<<4 | shadow;
 			objptr->order = order;
 			objptr->offs  = offs;
@@ -1571,7 +1571,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 		}
 	}
 
-	// sort objects in decending order (SLOW)
+	/* sort objects in decending order (SLOW)*/
 	k = nobj;
 	l = nobj - 1;
 
@@ -1587,7 +1587,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 		}
 	}
 
-	// traverse draw list
+	/* traverse draw list*/
 	screenwidth = Machine->drv->screen_width;
 
 	for (count=0; count<nobj; count++)
@@ -1721,7 +1721,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 			pri = order>>24 & 0xff;
 		}
 		else
-			zcode = -1; // negative zcode values turn off z-buffering
+			zcode = -1; /* negative zcode values turn off z-buffering*/
 
 		xa = ya = 0;
 		if (code & 0x01) xa += 1;
@@ -1734,7 +1734,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 
 		temp4 = gx_spriteram[offs];
 
-		// mask off the upper 6 bits of coordinate and zoom registers
+		/* mask off the upper 6 bits of coordinate and zoom registers*/
 		oy = gx_spriteram[offs+2] & 0x3ff;
 		ox = gx_spriteram[offs+3] & 0x3ff;
 
@@ -1756,14 +1756,14 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 
 		temp = gx_spriteram[offs+6];
 		mirrorx = temp & 0x4000;
-		if (mirrorx) flipx = 0; // only applies to x mirror, proven
+		if (mirrorx) flipx = 0; /* only applies to x mirror, proven*/
 		mirrory = temp & 0x8000;
 
-		// for Escape Kids (GX975)
-		if ( K053246_objset1 & 8 ) // Check only "Bit #3 is '1'?"
+		/* for Escape Kids (GX975)*/
+		if ( K053246_objset1 & 8 ) /* Check only "Bit #3 is '1'?"*/
 		{
-			zoomx = zoomx>>1; // Fix sprite width to HALF size
-			ox = (ox>>1) + 1; // Fix sprite draw position
+			zoomx = zoomx>>1; /* Fix sprite width to HALF size*/
+			ox = (ox>>1) + 1; /* Fix sprite draw position*/
 
 			if (flipscreenx) ox += screenwidth;
 		}
@@ -1771,7 +1771,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 		if (flipscreenx) { ox = -ox; if (!mirrorx) flipx = !flipx; }
 		if (flipscreeny) { oy = -oy; if (!mirrory) flipy = !flipy; }
 
-		// apply wrapping and global offsets
+		/* apply wrapping and global offsets*/
 		temp = wrapsize-1;
 		ox = ( ox - offx) & temp;
 		oy = (-oy - offy) & temp;
@@ -1788,7 +1788,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 		ox -= (zoomx * k) >> 13;
 		oy -= (zoomy * l) >> 13;
 
-		// substitutes: i=x, j=y, k=w, l=h, temp=code, temp1=fx, temp2=fy, temp3=sx, temp4=sy;
+		/* substitutes: i=x, j=y, k=w, l=h, temp=code, temp1=fx, temp2=fy, temp3=sx, temp4=sy;*/
 		for (j=0; j<l; j++)
 		{
 			temp4 = oy + ((zoomy * j + (1<<11)) >> 12);
@@ -1863,7 +1863,7 @@ void konamigx_mixer(struct mame_bitmap *bitmap, const struct rectangle *cliprect
 /*                                                                         */
 /***************************************************************************/
 
-// K055550/K053990 protection chips, perform simple memset() and other game logic operations
+/* K055550/K053990 protection chips, perform simple memset() and other game logic operations*/
 static UINT16 prot_data[0x20];
 
 READ16_HANDLER( K055550_word_r )
@@ -1884,8 +1884,8 @@ WRITE16_HANDLER( K055550_word_w )
 		data >>= 8;
 		switch (data)
 		{
-			case 0x97: // memset() (Dadandarn at 0x639dc)
-			case 0x9f: // memset() (Violent Storm at 0x989c)
+			case 0x97: /* memset() (Dadandarn at 0x639dc)*/
+			case 0x9f: /* memset() (Violent Storm at 0x989c)*/
 				adr   = (prot_data[7] << 16) | prot_data[8];
 				bsize = (prot_data[10] << 16) | prot_data[11];
 				count = (prot_data[0] & 0xff) + 1;
@@ -1895,32 +1895,32 @@ WRITE16_HANDLER( K055550_word_w )
 					cpu_writemem24bew_word(i, prot_data[0x1a/2]);
 			break;
 
-			// WARNING: The following cases are speculation based with questionable accuracy!(AAT)
+			/* WARNING: The following cases are speculation based with questionable accuracy!(AAT)*/
 
-			case 0x87: // unknown memory write (Violent Storm at 0x00b6ea)
-				// Violent Storm writes the following data to the 55550 in mode 0x87.
-				// All values are hardcoded and the write happens each frame during
-				// gameplay. It refers to a 32x8-word list at 0x210e00 and seems to
-				// be tied with another 13x128-byte table at 0x205080.
-				// Both tables appear "check-only" and have little effect on gameplay.
-				count =(prot_data[0] & 0xff) + 1;          // unknown ( byte 0x00)
-				i     = prot_data[1] >> 16;                // unknown ( byte 0x1f)
-				adr   = prot_data[7]<<16 | prot_data[8];   // address (dword 0x210e00)
-				lim   = prot_data[9];                      // unknown ( word 0x0010)
-				src   = prot_data[10]<<16 | prot_data[11]; // unknown (dword zero)
-				tgt   = prot_data[12]<<16 | prot_data[13]; // unknown (dword zero)
+			case 0x87: /* unknown memory write (Violent Storm at 0x00b6ea)*/
+				/* Violent Storm writes the following data to the 55550 in mode 0x87.*/
+				/* All values are hardcoded and the write happens each frame during*/
+				/* gameplay. It refers to a 32x8-word list at 0x210e00 and seems to*/
+				/* be tied with another 13x128-byte table at 0x205080.*/
+				/* Both tables appear "check-only" and have little effect on gameplay.*/
+				count =(prot_data[0] & 0xff) + 1;          /* unknown ( byte 0x00)*/
+				i     = prot_data[1] >> 16;                /* unknown ( byte 0x1f)*/
+				adr   = prot_data[7]<<16 | prot_data[8];   /* address (dword 0x210e00)*/
+				lim   = prot_data[9];                      /* unknown ( word 0x0010)*/
+				src   = prot_data[10]<<16 | prot_data[11]; /* unknown (dword zero)*/
+				tgt   = prot_data[12]<<16 | prot_data[13]; /* unknown (dword zero)*/
 			break;
 
-			case 0xa0: // update collision detection table (Violent Storm at 0x018b42)
-				count = prot_data[0] & 0xff;             // number of objects - 1
-				skip  = prot_data[1]>>(8-1);             // words to skip in each entry to reach the "hit list"
-				adr   = prot_data[2]<<16 | prot_data[3]; // where the table is located
-				bsize = prot_data[5]<<16 | prot_data[6]; // object entry size in bytes
+			case 0xa0: /* update collision detection table (Violent Storm at 0x018b42)*/
+				count = prot_data[0] & 0xff;             /* number of objects - 1*/
+				skip  = prot_data[1]>>(8-1);             /* words to skip in each entry to reach the "hit list"*/
+				adr   = prot_data[2]<<16 | prot_data[3]; /* where the table is located*/
+				bsize = prot_data[5]<<16 | prot_data[6]; /* object entry size in bytes*/
 
 				srcend = adr + bsize * count;
 				tgtend = srcend + bsize;
 
-				// let's hope GCC will inline the mem24bew calls
+				/* let's hope GCC will inline the mem24bew calls*/
 				for (src=adr; src<srcend; src+=bsize)
 				{
 					cx1 = (short)cpu_readmem24bew_word(src);
@@ -1945,29 +1945,29 @@ WRITE16_HANDLER( K055550_word_w )
 						c2 = (short)cpu_readmem24bew_word(tgt);
 						s2 = (short)cpu_readmem24bew_word(tgt + 2);
 						w2 = (short)cpu_readmem24bew_word(tgt + 4);
-						if (abs((cx1+sx1)-(c2+s2))>=wx1+w2) continue; // X rejection
+						if (abs((cx1+sx1)-(c2+s2))>=wx1+w2) continue; /* X rejection*/
 
 						c2 = (short)cpu_readmem24bew_word(tgt + 6);
 						s2 = (short)cpu_readmem24bew_word(tgt + 8);
 						w2 = (short)cpu_readmem24bew_word(tgt +10);
-						if (abs((cy1+sy1)-(c2+s2))>=wy1+w2) continue; // Y rejection
+						if (abs((cy1+sy1)-(c2+s2))>=wy1+w2) continue; /* Y rejection*/
 
 						c2 = (short)cpu_readmem24bew_word(tgt +12);
 						s2 = (short)cpu_readmem24bew_word(tgt +14);
 						w2 = (short)cpu_readmem24bew_word(tgt +16);
-						if (abs((cz1+sz1)-(c2+s2))>=wz1+w2) continue; // Z rejection
+						if (abs((cz1+sz1)-(c2+s2))>=wz1+w2) continue; /* Z rejection*/
 
-						cpu_writemem24bew(i, 0x80); // collision confirmed
+						cpu_writemem24bew(i, 0x80); /* collision confirmed*/
 					}
 				}
 			break;
 
-			case 0xc0: // calculate object "homes-in" vector (Violent Storm at 0x03da9e)
+			case 0xc0: /* calculate object "homes-in" vector (Violent Storm at 0x03da9e)*/
 				dx = (short)prot_data[0xc];
 				dy = (short)prot_data[0xd];
 
-				// it's not necessary to use lookup tables because Violent Storm
-				// only calls the service once per enemy per frame.
+				/* it's not necessary to use lookup tables because Violent Storm*/
+				/* only calls the service once per enemy per frame.*/
 				if (dx)
 				{
 					if (dy)
@@ -1984,13 +1984,13 @@ WRITE16_HANDLER( K055550_word_w )
 				else
 					if (dy < 0) i = 0x80;
 				else
-					i = mame_rand() & 0xff; // vector direction indeterminate
+					i = mame_rand() & 0xff; /* vector direction indeterminate*/
 
 				prot_data[0x10] = i;
 			break;
 
 			default:
-//              logerror("%06x: unknown K055550 command %02x\n", activecpu_get_pc(), data);
+/*              logerror("%06x: unknown K055550 command %02x\n", activecpu_get_pc(), data);*/
 			break;
 		}
 	}
@@ -2012,9 +2012,9 @@ WRITE16_HANDLER( K053990_martchmp_word_w )
 
 		switch (mode)
 		{
-			case 0xffff: // word copy
+			case 0xffff: /* word copy*/
 				element_size = 2;
-			case 0xff00: // byte copy
+			case 0xff00: /* byte copy*/
 				src_addr  = prot_data[0x0];
 				src_addr |= prot_data[0x1]<<16 & 0xff0000;
 				dst_addr  = prot_data[0x2];
@@ -2043,7 +2043,7 @@ WRITE16_HANDLER( K053990_martchmp_word_w )
 				}
 			break;
 
-			case 0x00ff: // sprite list modifier
+			case 0x00ff: /* sprite list modifier*/
 				src_addr  = prot_data[0x0];
 				src_addr |= prot_data[0x1]<<16 & 0xff0000;
 				src_skip  = prot_data[0x1]>>8;
@@ -2081,10 +2081,10 @@ WRITE16_HANDLER( K053990_martchmp_word_w )
 	}
 }
 
-void konamigx_esc_alert(UINT32 *srcbase, int srcoffs, int count, int mode) // (WARNING: assumed big endianess)
+void konamigx_esc_alert(UINT32 *srcbase, int srcoffs, int count, int mode) /* (WARNING: assumed big endianess)*/
 {
 
-// hand-filled but should be close
+/* hand-filled but should be close*/
 static UINT8 ztable[7][8] =
 {
 	{5,4,3,2,1,7,6,0},
@@ -2189,9 +2189,9 @@ if((data1=obj[0])&0x80000000)\
   if (!(--j)) return;        \
 }
 
-		// These suspecious looking flags might tell the ESC chip what zcode/priority combos to use.
-		// At the beginning of each sprite chunk there're at least three pointers to the main ROM but
-		// I can't make out anything meaningful.
+		/* These suspecious looking flags might tell the ESC chip what zcode/priority combos to use.*/
+		/* At the beginning of each sprite chunk there're at least three pointers to the main ROM but*/
+		/* I can't make out anything meaningful.*/
 		magicid = srcbase[0x71f0/4];
 
 		hmask = vmask = 0x3ff;
@@ -2203,7 +2203,7 @@ if((data1=obj[0])&0x80000000)\
 				case 0x11010010: i = 5; vmask = 0x1ff; break;
 				case 0x01111018: i = 4; break;
 				case 0x10010011: i = 3;
-					if ((srcbase[0x1c75]&0xff)==32) K055555_write_reg(K55_BLEND_ENABLES,36); // (TEMPORARY)
+					if ((srcbase[0x1c75]&0xff)==32) K055555_write_reg(K55_BLEND_ENABLES,36); /* (TEMPORARY)*/
 				break;
 				case 0x11010811: i = 2; break;
 				case 0x10000010: i = 1; break;
@@ -2222,7 +2222,7 @@ if((data1=obj[0])&0x80000000)\
 		dst = K053247_ram;
 		j = 256;
 
-		// decode Vic-Viper
+		/* decode Vic-Viper*/
 		if (srcbase[0x049c/4] & 0xffff0000)
 		{
 			hoffs = srcbase[0x0502/4] & 0xffff;
@@ -2237,7 +2237,7 @@ if((data1=obj[0])&0x80000000)\
 			EXTRACT_ODD
 		}
 
-		// decode Lord British (the designer must be a Richard Garriot fan too:)
+		/* decode Lord British (the designer must be a Richard Garriot fan too:)*/
 		if (srcbase[0x0848/4] & 0x0000ffff)
 		{
 			hoffs = srcbase[0x08b0/4]>>16;
@@ -2252,12 +2252,12 @@ if((data1=obj[0])&0x80000000)\
 			EXTRACT_EVEN
 		}
 
-		// decode common sprites
+		/* decode common sprites*/
 		src = srcbase + srcoffs;
 		srcend = src + count * 0x30;
 		do
 		{
-			if (!src[0] || !(i = src[7] & 0xf)) continue; // reject retired or zero-element groups
+			if (!src[0] || !(i = src[7] & 0xf)) continue; /* reject retired or zero-element groups*/
 			i <<= 2;
 			hoffs = src[5]>>16;
 			voffs = src[6]>>16;
@@ -2274,7 +2274,7 @@ if((data1=obj[0])&0x80000000)\
 		}
 		while ((src+=0x30)<srcend);
 
-		// clear residual data
+		/* clear residual data*/
 		if (j) do { *dst = 0; dst += 8; } while (--j);
 	}
 

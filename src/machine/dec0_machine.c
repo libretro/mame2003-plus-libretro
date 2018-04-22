@@ -28,7 +28,7 @@ READ16_HANDLER( dec0_controls_r )
 			return (readinputport(3) + (readinputport(4) << 8));
 
 		case 8: /* Intel 8751 mc, Bad Dudes & Heavy Barrel only */
-			//logerror("CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
+			/*logerror("CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);*/
 			return i8751_return;
 	}
 
@@ -253,7 +253,7 @@ static int hippodrm_msb,hippodrm_lsb;
 
 READ_HANDLER( hippodrm_prot_r )
 {
-//logerror("6280 PC %06x - Read %06x\n",cpu_getpc(),offset+0x1d0000);
+/*logerror("6280 PC %06x - Read %06x\n",cpu_getpc(),offset+0x1d0000);*/
 	if (hippodrm_lsb==0x45) return 0x4e;
 	if (hippodrm_lsb==0x92) return 0x15;
 	return 0;
@@ -265,7 +265,7 @@ WRITE_HANDLER( hippodrm_prot_w )
 		case 4:	hippodrm_msb=data; break;
 		case 5:	hippodrm_lsb=data; break;
 	}
-//logerror("6280 PC %06x - Wrote %06x to %04x\n",cpu_getpc(),data,offset+0x1d0000);
+/*logerror("6280 PC %06x - Wrote %06x to %04x\n",cpu_getpc(),data,offset+0x1d0000);*/
 }
 
 READ_HANDLER( hippodrm_shared_r )
@@ -331,7 +331,7 @@ static void hbarrel_i8751_write(int data)
 			break;
 		case 0x06:	/* Controls appearance & placement of special weapons */
 			i8751_return=weapons_table[level][data&0x1f];
-			//logerror("CPU #0 PC %06x: warning - write %02x to i8751, returning %04x\n",activecpu_get_pc(),data,i8751_return);
+			/*logerror("CPU #0 PC %06x: warning - write %02x to i8751, returning %04x\n",activecpu_get_pc(),data,i8751_return);*/
 			break;
 		case 0xb:	/* Initialise the variables? */
 			i8751_return=0;
@@ -358,7 +358,7 @@ static void hbarrel_i8751_write(int data)
 		/* We have to use a state as the microcontroller remembers previous commands */
 	}
 
-//logerror("CPU #0 PC %06x: warning - write %02x to i8751\n",activecpu_get_pc(),data);
+/*logerror("CPU #0 PC %06x: warning - write %02x to i8751\n",activecpu_get_pc(),data);*/
 }
 
 static void baddudes_i8751_write(int data)
@@ -448,7 +448,7 @@ static void birdtry_i8751_write(int data)
 		case 0x534: i8751_return = hgt; 	break; /*Shot height*/
 
 		/*At the ending screen(???)*/
-		//case 0x3b4: i8751_return = 0;		  break;
+		/*case 0x3b4: i8751_return = 0;		  break;*/
 
 		/*These are activated after a shot (???)*/
 		case 0x6ca: i8751_return = 0xff;      break;
@@ -513,14 +513,14 @@ static WRITE16_HANDLER( sprite_mirror_w )
 
 static READ16_HANDLER( robocop_68000_share_r )
 {
-//logerror("%08x: Share read %04x\n",activecpu_get_pc(),offset);
+/*logerror("%08x: Share read %04x\n",activecpu_get_pc(),offset);*/
 
 	return robocop_shared_ram[offset];
 }
 
 static WRITE16_HANDLER( robocop_68000_share_w )
 {
-//	logerror("%08x: Share write %04x %04x\n",activecpu_get_pc(),offset,data);
+/*	logerror("%08x: Share write %04x %04x\n",activecpu_get_pc(),offset,data);*/
 
 	robocop_shared_ram[offset]=data&0xff;
 

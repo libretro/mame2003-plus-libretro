@@ -51,7 +51,7 @@ WRITE_HANDLER( grchamp_control0_w ){
 	/* bit 7 = RADAR ON (S26) */
 	grchamp_videoreg0 = data;
 	grchamp_cpu_irq_enable[0] = data & 1;	/* bit 0 */
-//	osd_led_w( 0, ( ~data >> 4 ) & 1 ); 	/* bit 4 */
+/*	osd_led_w( 0, ( ~data >> 4 ) & 1 ); 	 // bit 4 /*/
 }
 
 WRITE_HANDLER( grchamp_coinled_w ){
@@ -60,8 +60,8 @@ WRITE_HANDLER( grchamp_coinled_w ){
 	/* bit 4 = Coin Lockout */
 	/* bit 5 = Game Over lamp */
 	/* bit 6/7 = unused */
-//	coin_lockout_global_w( 0, ( data >> 4 ) & 1 );	/* bit 4 */
-//	osd_led_w( 1, ( ~data >> 5 ) & 1 ); 			/* bit 5 */
+/*	coin_lockout_global_w( 0, ( data >> 4 ) & 1 );	 // bit 4 /*/
+/*	osd_led_w( 1, ( ~data >> 5 ) & 1 ); 			 // bit 5 /*/
 }
 
 WRITE_HANDLER( grchamp_sound_w ){

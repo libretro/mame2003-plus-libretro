@@ -25,7 +25,7 @@
 #include "driver.h"
 #include "6522via.h"
 
-//#define TRACE_VIA
+/*#define TRACE_VIA*/
 
 /******************* internal VIA data structure *******************/
 
@@ -210,8 +210,8 @@ logerror("6522VIA chip %d: IFR = %02X.  PC: %08X\n", which, v->ifr, activecpu_ge
 	{
 		if (v->intf->irq_func)
 			(*v->intf->irq_func)(CLEAR_LINE);
-//		else
-//			logerror("6522VIA chip %d: Interrupt is cleared but there is no callback function.  PC: %08X\n", which, activecpu_get_pc());
+/*		else*/
+/*			logerror("6522VIA chip %d: Interrupt is cleared but there is no callback function.  PC: %08X\n", which, activecpu_get_pc());*/
 	}
 }
 
@@ -591,7 +591,7 @@ void via_write(int which, int offset, int data)
     	{
 			v->ddr_b = data;
 
-			//if (v->ddr_b)
+			/*if (v->ddr_b)*/
 			{
 				UINT8 write_data = v->out_b & v->ddr_b;
 
@@ -609,7 +609,7 @@ void via_write(int which, int offset, int data)
     	{
 			v->ddr_a = data;
 
-			//if (v->ddr_a)
+			/*if (v->ddr_a)*/
 			{
 				UINT8 write_data = v->out_a & v->ddr_a;
 
@@ -641,7 +641,7 @@ void via_write(int which, int offset, int data)
 		{
 			v->out_b &= 0x7f;
 
-			//if (v->ddr_b)
+			/*if (v->ddr_b)*/
 			{
 				UINT8 write_data = v->out_b & v->ddr_b;
 
@@ -738,7 +738,7 @@ logerror("6522VIA chip %d: PCR = %02X.  PC: %08X\n", which, data, activecpu_get_
 			else
 				v->out_b |= 0x80;
 
-			//if (v->ddr_b)
+			/*if (v->ddr_b)*/
 			{
 				UINT8 write_data = v->out_b & v->ddr_b;
 
@@ -776,8 +776,8 @@ logerror("6522VIA chip %d: PCR = %02X.  PC: %08X\n", which, data, activecpu_get_
 				v->ifr &= ~INT_ANY;
 				if (v->intf->irq_func)
 					(*v->intf->irq_func)(CLEAR_LINE);
-//				else
-//					logerror("6522VIA chip %d: Interrupt is cleared but there is no callback function.  PC: %08X\n", which, activecpu_get_pc());
+/*				else*/
+/*					logerror("6522VIA chip %d: Interrupt is cleared but there is no callback function.  PC: %08X\n", which, activecpu_get_pc());*/
 			}
 		}
 		else

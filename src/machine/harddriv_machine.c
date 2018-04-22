@@ -506,7 +506,7 @@ WRITE16_HANDLER( hd68k_wr0_write )
 
 WRITE16_HANDLER( hd68k_wr1_write )
 {
-	if (offset == 0) { //	logerror("Shifter Interface Latch = %02X\n", data);
+	if (offset == 0) { /*	logerror("Shifter Interface Latch = %02X\n", data);*/
 	} else { 				logerror("/WR1(%04X)=%02X\n", offset, data);
 	}
 }
@@ -514,7 +514,7 @@ WRITE16_HANDLER( hd68k_wr1_write )
 
 WRITE16_HANDLER( hd68k_wr2_write )
 {
-	if (offset == 0) { //	logerror("Steering Wheel Latch = %02X\n", data);
+	if (offset == 0) { /*	logerror("Steering Wheel Latch = %02X\n", data);*/
 	} else { 				logerror("/WR2(%04X)=%02X\n", offset, data);
 	}
 }

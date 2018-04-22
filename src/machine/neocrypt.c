@@ -173,7 +173,7 @@ const unsigned char kof99_address_8_15_xor1[256] =
 	0x3a, 0x8d, 0x32, 0x5d, 0x68, 0xb9, 0x9f, 0x75, 0x19, 0x3f, 0xac, 0x37, 0x4f, 0xe7, 0x93, 0x89,
 	0x7e, 0x4a, 0x3b, 0xea, 0x74, 0x72, 0x43, 0xbd, 0x24, 0xef, 0xb6, 0xff, 0x64, 0x58, 0x84, 0x8b,
 	0xa7, 0xbb, 0xb2, 0xe1, 0x26, 0x2b, 0x50, 0xca, 0x21, 0xf9, 0x98, 0xa1, 0xe2, 0x42, 0x82, 0x48,
-//	                                                            ^^^^  ^^^^  ^^^^  ^^^^
+/*	                                                            ^^^^  ^^^^  ^^^^  ^^^^*/
 };
 
 const unsigned char kof99_address_8_15_xor2[256] =
@@ -488,14 +488,14 @@ static void neogeo_gfx_decrypt(int extra_xor)
 
 	rom = memory_region(REGION_GFX3);
 
-	// Data xor
+	/* Data xor*/
 	for (rpos = 0;rpos < rom_size/4;rpos++)
 	{
 		decrypt(buf+4*rpos+0, buf+4*rpos+3, rom[4*rpos+0], rom[4*rpos+3], type0_t03, type0_t12, type1_t03, rpos, (rpos>>8) & 1);
 		decrypt(buf+4*rpos+1, buf+4*rpos+2, rom[4*rpos+1], rom[4*rpos+2], type0_t12, type0_t03, type1_t12, rpos, ((rpos>>16) ^ address_16_23_xor2[(rpos>>8) & 0xff]) & 1);
 	}
 
-	// Address xor
+	/* Address xor*/
 	for (rpos = 0;rpos < rom_size/4;rpos++)
 	{
 		int baser;

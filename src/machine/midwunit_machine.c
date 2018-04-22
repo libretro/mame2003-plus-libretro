@@ -155,12 +155,12 @@ WRITE16_HANDLER( midxunit_io_w )
 	{
 		case 2:
 			/* watchdog reset */
-//			watchdog_reset_w(0,0);
+/*			watchdog_reset_w(0,0);*/
 			break;
 
 		default:
 			logerror("%08X:I/O write to %d = %04X\n", activecpu_get_pc(), offset, data);
-//			logerror("%08X:Unknown I/O write to %d = %04X\n", activecpu_get_pc(), offset, data);
+/*			logerror("%08X:Unknown I/O write to %d = %04X\n", activecpu_get_pc(), offset, data);*/
 			break;
 	}
 	iodata[offset] = newword;
