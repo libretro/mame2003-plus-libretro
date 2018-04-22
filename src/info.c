@@ -825,7 +825,7 @@ void print_mame_xml(void)
 {
        	
     int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   	
-    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, pathcount, "mame2003.xml", "w+b");	
+    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, pathcount, APPNAME".xml", "w+b");	
     	
     if (xml_dat != NULL)	
     {	
