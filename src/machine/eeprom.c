@@ -19,6 +19,17 @@ static int latch,reset_line,clock_line,sending;
 static int locked;
 static int reset_delay;
 
+static const unsigned char bubblem_bootstrap_nvram[] = {
+   84, 65, 73, 84, 79,  3, 48, 49, 49, 48,224,  1, 17, 18, 48,  0,  0,  0,
+    2,  4,255,247, 34, 18,  0,  0,  0,  0,  0,  0,108,231,255,255,255,255,
+  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+  255,255,
+};
+
 /*
 	EEPROM_command_match:
 
@@ -98,7 +109,23 @@ void nvram_handler_93C46(mame_file *file,int read_or_write)
 	else
 	{
 		EEPROM_init(&eeprom_interface_93C46);
-		if (file)	EEPROM_load(file);
+		if (file)
+            EEPROM_load(file);
+        else if(strcasecmp(Machine->gamedrv->name, "bubblem") == 0)
+        {
+			log_cb(RETRO_LOG_INFO, "[MAME 2003] Generating bootstrap nvram for bubblem");
+			/* 
+				I couldn't get rungun to accept nvram loaded directly from a byte array in memory.
+				Therefore for now bubblem is handled the same way for expedience 
+				since I am not trying the other way. --markwkidd
+			*/            
+			file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 1);
+			mame_fwrite(file, bubblem_bootstrap_nvram, sizeof(bubblem_bootstrap_nvram));          
+			mame_fclose(file);
+
+			file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
+			EEPROM_load(file);
+		}
 	}
 }
 

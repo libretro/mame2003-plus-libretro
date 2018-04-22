@@ -474,7 +474,7 @@ $(info creating bin2c working folder and compiling bin2c executable tool...)
 	DUMMY_RESULT:=$(shell mkdir -p ./precompile)
 	DUMMY_RESULT:=$(shell gcc -o ./precompile/bin2c tools/bin2c/bin2c.c)
 # compile hiscore.dat into a fresh header file for embedding
-	DUMMY_RESULT:=$(shell ./precompile/bin2c ./metadata/hiscore.dat ./precompile/hiscore_dat.h hiscoredat)
+	DUMMY_RESULT:=$(shell ./precompile/bin2c -o ./precompile/hiscore_dat.h -n hiscoredat ./metadata/hiscore.dat )
     DUMMY_RESULT:=$(shell rm ./precompile/bin2c*)
 else
 $(info BUILD_BIN2C==0 - use the precompiled hiscore_dat.h from the github repo)

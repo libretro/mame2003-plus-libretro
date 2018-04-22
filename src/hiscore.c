@@ -290,7 +290,7 @@ void hs_open (const char *name)
       int hiscoredat_index = 0;
       log_cb(RETRO_LOG_INFO, "[MAME 2003] Searching for %s hiscore memory map in internal .dat.\n", name);
 
-      while(bin2c_fgets(hiscoredat, buffer, MAX_CONFIG_LINE_SIZE, &hiscoredat_index))
+      while(bin2c_fgets(hiscoredat_bytes, buffer, MAX_CONFIG_LINE_SIZE, &hiscoredat_index))
       {
          if (mode==FIND_NAME)
          {

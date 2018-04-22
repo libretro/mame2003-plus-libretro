@@ -111,9 +111,6 @@ emit(const char *name)
 {
   int col = COLUMNS;
 
-  printf("static const char ");
-  emit_name(name);
-  printf("_source[] = \"%s\";\n\n", name);
   printf("static const unsigned char ");
   emit_name(name);
   printf("_bytes[] = {");
