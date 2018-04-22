@@ -234,7 +234,7 @@ int dst_filter2_init(struct node_description *node)
 struct dss_rcdisc_context
 {
         int state;
-        double t;           // time
+        double t;           /* time*/
         double step;
 	double exponent0;
 	double exponent1;

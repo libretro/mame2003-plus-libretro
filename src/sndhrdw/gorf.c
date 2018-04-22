@@ -109,7 +109,7 @@ const char *gorf_sample_names[] =
  "warrior.wav","warriors.wav","will.wav",
  "you.wav","you.wav","you.wav","you.wav","your.wav","your.wav","yourself.wav",
  "s.wav","for.wav","for.wav","will.wav","gorph.wav",
-// Missing Samples
+/* Missing Samples*/
  "coin.wav", "attack.wav","bite.wav","conquer.wav","devour.wav","dust.wav",
  "galaxy.wav","got.wav","power.wav","try.wav","supreme.wav","all.wav",
  "hail.wav","emperor.wav",

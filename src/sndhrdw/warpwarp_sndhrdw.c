@@ -62,7 +62,7 @@ WRITE_HANDLER( warpwarp_sound_w )
 		 * ...but this is not very realistic for the game sound :(
 		 * maybe there _is_ a discharge through the diode D17?
 		 */
-//		timer_adjust(sound_volume_timer, TIME_IN_HZ(32768/7.0290), 0, TIME_IN_HZ(32768/7.0290));
+/*		timer_adjust(sound_volume_timer, TIME_IN_HZ(32768/7.0290), 0, TIME_IN_HZ(32768/7.0290));*/
 		timer_adjust(sound_volume_timer, TIME_IN_HZ(32768/1.917), 0, TIME_IN_HZ(32768/1.917));
     }
 }
@@ -97,7 +97,7 @@ WRITE_HANDLER( warpwarp_music2_w )
 		 * 0.639 * 15k * 10uF -> 9.585s
 		 * ...I'm sure this is off by one number of magnitude :/
 		 */
-//		timer_adjust(music_volume_timer, TIME_IN_HZ(32768/9.585), 0, TIME_IN_HZ(32768/9.585));
+/*		timer_adjust(music_volume_timer, TIME_IN_HZ(32768/9.585), 0, TIME_IN_HZ(32768/9.585));*/
 		timer_adjust(music_volume_timer, TIME_IN_HZ(32768/0.9585), 0, TIME_IN_HZ(32768/0.9585));
 	}
 	else
@@ -107,7 +107,7 @@ WRITE_HANDLER( warpwarp_music2_w )
 		 * discharge C95(?) (10uF) through R14 (47k)
 		 * 0.639 * 47k * 10uF -> 30.033s
 		 */
-//		timer_adjust(music_volume_timer, TIME_IN_HZ(32768/30.033), 0, TIME_IN_HZ(32768/30.033));
+/*		timer_adjust(music_volume_timer, TIME_IN_HZ(32768/30.033), 0, TIME_IN_HZ(32768/30.033));*/
 		timer_adjust(music_volume_timer, TIME_IN_HZ(32768/3.0033), 0, TIME_IN_HZ(32768/3.0033));
 	}
 

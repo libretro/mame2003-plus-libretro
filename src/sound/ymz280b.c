@@ -553,7 +553,7 @@ static void ymz280b_update(int num, INT16 **buffer, int length)
 }
 
 
-//ks s
+/*ks s*/
 static int chip_num;
 static void YMZ280B_state_save_update_step(void)
 {
@@ -568,7 +568,7 @@ static void YMZ280B_state_save_update_step(void)
 		}
 	}
 }
-//ks e
+/*ks e*/
 /**********************************************************************************************
 
      YMZ280B_sh_start -- start emulation of the YMZ280B
@@ -617,7 +617,7 @@ int YMZ280B_sh_start(const struct MachineSound *msound)
 	if (!accumulator || !scratch)
 		return 1;
 
-//ks s
+/*ks s*/
 	/* state save */
 	for (i = 0; i < intf->num; i++)
 	{
@@ -656,7 +656,7 @@ int YMZ280B_sh_start(const struct MachineSound *msound)
 	}
 	state_save_register_func_postload(YMZ280B_state_save_update_step);
 	chip_num = intf->num;
-//ks e
+/*ks e*/
 
 #if MAKE_WAVS
 	ymz280b[0].wavresample = wav_open("resamp.wav", Machine->sample_rate, 2);
@@ -739,12 +739,12 @@ static void write_to_register(struct YMZ280BChip *chip, int data)
 					voice->loop_count = 0;
 				}
 				if (voice->keyon && !(data & 0x80) && !voice->looping)
-//ks start
+/*ks start*/
 				{
 					voice->playing = 0;
-//					chip->status_register &= ~(1 << ((chip->current_register >> 2) & 7));
+/*					chip->status_register &= ~(1 << ((chip->current_register >> 2) & 7));*/
 				}
-//ks end
+/*ks end*/
 				voice->keyon = (data & 0x80) >> 7;
 				update_step(chip, voice);
 				break;
@@ -826,7 +826,7 @@ static void write_to_register(struct YMZ280BChip *chip, int data)
 			case 0xff:		/* IRQ enable, test, etc */
 				chip->irq_enable = (data & 0x10) >> 4;
 				update_irq_state(chip);
-//ks start
+/*ks start*/
 				if (chip->keyon_enable && !(data & 0x80))
 					for (i = 0; i < 8; i++)
 						chip->voice[i].playing = 0;
@@ -835,7 +835,7 @@ static void write_to_register(struct YMZ280BChip *chip, int data)
 						if (chip->voice[i].keyon && chip->voice[i].looping)
 							chip->voice[i].playing = 1;
 				chip->keyon_enable = (data & 0x80) >> 7;
-//ks end
+/*ks end*/
 				break;
 
 			default:

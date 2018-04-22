@@ -57,7 +57,7 @@ void sample_set_freq(int channel,int freq)
 	mixer_set_sample_frequency(channel + firstchannel,freq);
 }
 
-// Set sample volume by speaker.
+/* Set sample volume by speaker.*/
 void sample_set_stereo_volume(int channel,int volume_left, int volume_right)
 {
 	if (Machine->sample_rate == 0) return;

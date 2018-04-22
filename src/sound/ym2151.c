@@ -618,7 +618,7 @@ static void init_chip_tables(YM2151 *chip)
 		Hz = 1000;
 #if 0
 /* Hz is close, but not perfect */
-		//Hz = scaler * 3.4375 * pow (2, (i + 4 * 64 ) / 768.0 );
+		/*Hz = scaler * 3.4375 * pow (2, (i + 4 * 64 ) / 768.0 );*/
 		/* calculate phase increment */
 		phaseinc = (Hz*SIN_LEN) / (double)chip->sampfreq;
 #endif

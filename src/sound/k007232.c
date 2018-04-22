@@ -201,9 +201,9 @@ static void KDAC_A_make_fncode( void ){
 
 #else
   for( i = 0; i < 0x200; i++ ){
-    //fncode[i] = (0x200 * 55) / (0x200 - i);
+    /*fncode[i] = (0x200 * 55) / (0x200 - i);*/
     fncode[i] = ((0x200 * 55.2) / (0x200 - i)) / (440.00 / 2);
-    //    logerror("2 : fncode[%04x] = %.2f\n", i, fncode[i] );
+    /*    logerror("2 : fncode[%04x] = %.2f\n", i, fncode[i] );*/
   }
 
 #endif
@@ -227,7 +227,7 @@ static void KDAC_A_update(int chip, INT16 **buffer, int buffer_len)
 	{
 	  int volA,volB,j,out;
 	  unsigned int addr, old_addr;
-	  //int cen;
+	  /*int cen;*/
 
 	  /**** PCM setup ****/
 	  addr = kpcm[chip].start[i] + ((kpcm[chip].addr[i]>>BASE_SHIFT)&0x000fffff);

@@ -147,13 +147,13 @@ void YM2608_sh_reset(void)
 /************************************************/
 READ_HANDLER( YM2608_status_port_0_A_r )
 {
-//logerror("PC %04x: 2608 S0A=%02X\n",activecpu_get_pc(),YM2608Read(0,0));
+/*logerror("PC %04x: 2608 S0A=%02X\n",activecpu_get_pc(),YM2608Read(0,0));*/
 	return YM2608Read(0,0);
 }
 
 READ_HANDLER( YM2608_status_port_0_B_r )
 {
-//logerror("PC %04x: 2608 S0B=%02X\n",activecpu_get_pc(),YM2608Read(0,2));
+/*logerror("PC %04x: 2608 S0B=%02X\n",activecpu_get_pc(),YM2608Read(0,2));*/
 	return YM2608Read(0,2);
 }
 

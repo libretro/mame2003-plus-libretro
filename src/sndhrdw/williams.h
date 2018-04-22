@@ -20,9 +20,9 @@ void williams_narc_init(int cpunum);
 void williams_narc_data_w(int data);
 void williams_narc_reset_w(int state);
 
-bool	mk_playing_mortal_kombat; // For Mortal Kombat music hack. For Midway Y-Unit versions.
-bool	mk_playing_mortal_kombat_t; // For Mortal Kombat music hack. For Midway T-Unit versions.
-bool	nba_jam_playing; // For NBA Jam music samples. For Midway T-Unit versions.
+bool	mk_playing_mortal_kombat; /* For Mortal Kombat music hack. For Midway Y-Unit versions.*/
+bool	mk_playing_mortal_kombat_t; /* For Mortal Kombat music hack. For Midway T-Unit versions.*/
+bool	nba_jam_playing; /* For NBA Jam music samples. For Midway T-Unit versions.*/
 bool	nba_jam_title_screen;
 bool	nba_jam_select_screen;
 bool	nba_jam_intermission;

@@ -53,18 +53,18 @@ static int baserate;
 static void *pRom;
 static UINT8 REG[0x200];
 
-static INT16 pcmtbl[8];		//2000.06.26 CAB
+static INT16 pcmtbl[8];		/*2000.06.26 CAB*/
 
 typedef struct
 {
 	long	ptoffset;
 	long	pos;
 	long	key;
-	//--work
+	/*--work*/
 	long	lastdt;
 	long	prevdt;
 	long	dltdt;
-	//--reg
+	/*--reg*/
 	long	rvol;
 	long	lvol;
 	long	frequency;
@@ -115,31 +115,31 @@ static long find_sample( long adrs, long bank)
 	switch (banking_type)
 	{
 		case C140_TYPE_SYSTEM2:
-			// System 2 banking
+			/* System 2 banking*/
 			newadr = ((adrs&0x200000)>>2)|(adrs&0x7ffff);
 			break;
 
 		case C140_TYPE_SYSTEM21_A:
-			// System 21 type A (simple) banking.
-			// similar to System 2's.
+			/* System 21 type A (simple) banking.*/
+			/* similar to System 2's.*/
 			newadr = ((adrs&0x300000)>>1)+(adrs&0x7ffff);
 			break;
 
 		case C140_TYPE_SYSTEM21_B:
-			// System 21 type B (chip select) banking
+			/* System 21 type B (chip select) banking*/
 
-			// get base address of sample inside the bank
+			/* get base address of sample inside the bank*/
 			newadr = ((adrs&0x100000)>>2) + (adrs&0x3ffff); 
 
-			// now add the starting bank offsets based on the 2 
-			// chip select bits.
-			// 0x40000 picks individual 512k ROMs
+			/* now add the starting bank offsets based on the 2 */
+			/* chip select bits.*/
+			/* 0x40000 picks individual 512k ROMs*/
 			if (adrs & 0x40000)
 			{
 				newadr += 0x80000;
 			}
 			
-			// and 0x200000 which group of chips...
+			/* and 0x200000 which group of chips...*/
 			if (adrs & 0x200000)
 			{
 				newadr += 0x100000;
@@ -214,7 +214,7 @@ static void update_stereo(int ch, INT16 **buffer, int length)
 	memset(mixer_buffer_left, 0, length * sizeof(INT16));
 	memset(mixer_buffer_right, 0, length * sizeof(INT16));
 
-	//--- audio update
+	/*--- audio update*/
 	for( i=0;i<MAX_VOICE;i++ )
 	{
 		VOICE *v = &voi[i];
@@ -231,7 +231,7 @@ static void update_stereo(int ch, INT16 **buffer, int length)
 			delta=(long)((float)frequency * pbase);
 
 			/* Calculate left/right channel volumes */
-			lvol=(vreg->volume_left*32)/MAX_VOICE; //32ch -> 24ch
+			lvol=(vreg->volume_left*32)/MAX_VOICE; /*32ch -> 24ch*/
 			rvol=(vreg->volume_right*32)/MAX_VOICE;
 
 			/* Set mixer buffer base pointers */
@@ -256,7 +256,7 @@ static void update_stereo(int ch, INT16 **buffer, int length)
 			/* Switch on data type */
 			if(v->mode&8)
 			{
-				//compressed PCM (maybe correct...)
+				/*compressed PCM (maybe correct...)*/
 				/* Loop for enough to fill sample buffer as requested */
 				for(j=0;j<length;j++)
 				{
@@ -264,7 +264,7 @@ static void update_stereo(int ch, INT16 **buffer, int length)
 					cnt = (offset>>16)&0x7fff;
 					offset &= 0xffff;
 					pos+=cnt;
-					//for(;cnt>0;cnt--)
+					/*for(;cnt>0;cnt--)*/
 					{
 						/* Check for the end of the sample */
 						if(pos >= sz)
@@ -284,8 +284,8 @@ static void update_stereo(int ch, INT16 **buffer, int length)
 						/* Read the chosen sample byte */
 						dt=pSampleData[pos];
 
-						/* decompress to 13bit range */		//2000.06.26 CAB
-						sdt=dt>>3;				//signed
+						/* decompress to 13bit range */		/*2000.06.26 CAB*/
+						sdt=dt>>3;				/*signed*/
 						if(sdt<0)	sdt = (sdt<<(dt&7)) - pcmtbl[dt&7];
 						else		sdt = (sdt<<(dt&7)) + pcmtbl[dt&7];
 
@@ -383,13 +383,13 @@ int C140_sh_start( const struct MachineSound *msound )
 
 	pRom=memory_region(intf->region);
 
-	/* make decompress pcm table */		//2000.06.26 CAB
+	/* make decompress pcm table */		/*2000.06.26 CAB*/
 	{
 		int i;
 		INT32 segbase=0;
 		for(i=0;i<8;i++)
 		{
-			pcmtbl[i]=segbase;	//segment base value
+			pcmtbl[i]=segbase;	/*segment base value*/
 			segbase += 16<<i;
 		}
 	}

@@ -154,7 +154,7 @@ static void setirq_callback(int param)
 			break;
 
 		case CPU_ASSERT:
-			irqstate |= 2;	// also used by t5182_sharedram_semaphore_main_r
+			irqstate |= 2;	/* also used by t5182_sharedram_semaphore_main_r*/
 			break;
 
 		case CPU_CLEAR:
@@ -251,49 +251,49 @@ const struct YM2151interface t5182_ym2151_interface =
 };
 
 
-	// 4000-407F    RAM shared with main CPU
-	// 4000 output queue length
-	// 4001-4020 output queue
-	// answers:
-	//  80XX finished playing sound XX
-	//  A0XX short contact on coin slot XX (coin error)
-	//  A1XX inserted coin in slot XX
-	// 4021 input queue length
-	// 4022-4041 input queue
-	// commands:
-	//  80XX play sound XX
-	//  81XX stop sound XX
-	//  82XX stop all voices associated with timer A/B/both where XX = 01/02/03
-	//  84XX play sound XX if it isn't already playing
-	//  90XX reset
-	//  A0XX
-	// rest unused
+	/* 4000-407F    RAM shared with main CPU*/
+	/* 4000 output queue length*/
+	/* 4001-4020 output queue*/
+	/* answers:*/
+	/*  80XX finished playing sound XX*/
+	/*  A0XX short contact on coin slot XX (coin error)*/
+	/*  A1XX inserted coin in slot XX*/
+	/* 4021 input queue length*/
+	/* 4022-4041 input queue*/
+	/* commands:*/
+	/*  80XX play sound XX*/
+	/*  81XX stop sound XX*/
+	/*  82XX stop all voices associated with timer A/B/both where XX = 01/02/03*/
+	/*  84XX play sound XX if it isn't already playing*/
+	/*  90XX reset*/
+	/*  A0XX*/
+	/* rest unused*/
 
 MEMORY_READ_START( t5182_readmem )
-    { 0x0000, 0x1fff, MRA_ROM },// internal ROM
-	{ 0x2000, 0x27ff, MRA_RAM },// internal RAM
+    { 0x0000, 0x1fff, MRA_ROM },/* internal ROM*/
+	{ 0x2000, 0x27ff, MRA_RAM },/* internal RAM*/
 	{ 0x4000, 0x40ff, MRA_RAM },
-	{ 0x8000, 0xffff, MRA_ROM },// external ROM
+	{ 0x8000, 0xffff, MRA_ROM },/* external ROM*/
 MEMORY_END
 
 MEMORY_WRITE_START( t5182_writemem )
-    { 0x0000, 0x1fff, MWA_ROM },// internal ROM
-	{ 0x2000, 0x27ff, MWA_RAM },// internal RAM
+    { 0x0000, 0x1fff, MWA_ROM },/* internal ROM*/
+	{ 0x2000, 0x27ff, MWA_RAM },/* internal RAM*/
 	{ 0x4000, 0x40ff, MWA_RAM, &t5182_sharedram },
-	{ 0x8000, 0xffff, MWA_ROM },// external ROM
+	{ 0x8000, 0xffff, MWA_ROM },/* external ROM*/
 MEMORY_END
 
 
-	// 00  W YM2151 address
-	// 01 RW YM2151 data
-	// 10  W semaphore for shared RAM: set as in use
-	// 11  W semaphore for shared RAM: set as not in use
-	// 12  W clear IRQ from YM2151
-	// 13  W clear IRQ from main CPU
-	// 20 R  flags bit 0 = main CPU is accessing shared RAM????  bit 1 = main CPU generated IRQ
-	// 30 R  coin inputs (bits 0 and 1, active high)
-	// 40  W external ROM banking? (the only 0 bit enables a ROM)
-	// 50  W test mode status flags (bit 0 = ROM test fail, bit 1 = RAM test fail, bit 2 = YM2151 IRQ not received)
+	/* 00  W YM2151 address*/
+	/* 01 RW YM2151 data*/
+	/* 10  W semaphore for shared RAM: set as in use*/
+	/* 11  W semaphore for shared RAM: set as not in use*/
+	/* 12  W clear IRQ from YM2151*/
+	/* 13  W clear IRQ from main CPU*/
+	/* 20 R  flags bit 0 = main CPU is accessing shared RAM????  bit 1 = main CPU generated IRQ*/
+	/* 30 R  coin inputs (bits 0 and 1, active high)*/
+	/* 40  W external ROM banking? (the only 0 bit enables a ROM)*/
+	/* 50  W test mode status flags (bit 0 = ROM test fail, bit 1 = RAM test fail, bit 2 = YM2151 IRQ not received)*/
 PORT_READ_START( t5182_readport )
     { 0x01, 0x01, YM2151_status_port_0_r },
 	{ 0x20, 0x20, t5182_sharedram_semaphore_main_r },

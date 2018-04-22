@@ -65,7 +65,7 @@
 #define SUPPRESS_INAUDIBLE	1
 
 /* Four channels with a range of 0..32767 and volume 0..15 */
-//#define POKEY_DEFAULT_GAIN (32767/15/4)
+/*#define POKEY_DEFAULT_GAIN (32767/15/4)*/
 
 /*
  * But we raise the gain and risk clipping, the old Pokey did

@@ -38,10 +38,10 @@ Registers per channel:
 #include "wavwrite.h"
 
 
-//#define LOG_SOUND 1
-//#define LOG_READ_WRITES 1
-//#define LOG_WAVE	1
-//#define ALT_MIX
+/*#define LOG_SOUND 1*/
+/*#define LOG_READ_WRITES 1*/
+/*#define LOG_WAVE	1*/
+/*#define ALT_MIX*/
 
 #define GAELCO_NUM_CHANNELS 	0x07
 #define VOLUME_LEVELS 			0x10

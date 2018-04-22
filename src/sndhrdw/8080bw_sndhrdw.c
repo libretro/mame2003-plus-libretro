@@ -658,7 +658,7 @@ DISCRETE_SOUND_START(polaris_sound_interface)
 	DISCRETE_RAMP(NODE_70, POLARIS_SX7_EN, POLARIS_SX6_EN, (3240.0-410.0)/1.2, 3240.0, 410.0, 0)
 	DISCRETE_GAIN(NODE_71, POLARIS_NOISE_HI_FILT, 0.1)
 	DISCRETE_MULTIPLY(NODE_72, 1, NODE_70, NODE_71)
-//	DISCRETE_MULTIPLY(NODE_72, 1, POLARIS_NOISE_LO, (3240.0-410.0)/10.0/2.0)
+/*	DISCRETE_MULTIPLY(NODE_72, 1, POLARIS_NOISE_LO, (3240.0-410.0)/10.0/2.0)*/
 	DISCRETE_ADDER2(NODE_73, 1, NODE_70, NODE_72)	/* Add in 10% hi freq shift to final plane freq. */
 	DISCRETE_TRIANGLEWAVE(POLARIS_PLANESND, POLARIS_SX7_EN, NODE_73, NODE_74, 0, 0)
 
@@ -844,12 +844,12 @@ static int sheriff_t0,sheriff_t1,sheriff_p1,sheriff_p2;
 static WRITE_HANDLER( sheriff_sh_port4_w )
 {
 static int last = -1;
-	// 0 - P2.7 - GAME
-	// 1 - P2.5 - EXCEL
-	// 2 - P2.6 - IMAN BRK
-	// 3 - P2.3 - GMAN BRK
-	// 4 - P2.4 - GMAN TRIG
-	// 5 - P2.1 - BRD APR
+	/* 0 - P2.7 - GAME*/
+	/* 1 - P2.5 - EXCEL*/
+	/* 2 - P2.6 - IMAN BRK*/
+	/* 3 - P2.3 - GMAN BRK*/
+	/* 4 - P2.4 - GMAN TRIG*/
+	/* 5 - P2.1 - BRD APR*/
 if ((last & 0x10) != (data & 0x10))
 {
 logerror("***Gun: %02X %04X\n", data & 0x14, activecpu_get_pc());
@@ -875,12 +875,12 @@ last = data;
 
 static WRITE_HANDLER( sheriff_sh_port5_w )
 {
-	// 0 - P2.8  - IMAN S0
-	// 1 - P2.9  - IMAN S1
-	// 2 - P2.10 - IMAN S2
-	// 3 - P2.11 - IMAN S3
-	// 4 - P2.2  - ARROW
-	// 5 - P2.12 - BRD BRK
+	/* 0 - P2.8  - IMAN S0*/
+	/* 1 - P2.9  - IMAN S1*/
+	/* 2 - P2.10 - IMAN S2*/
+	/* 3 - P2.11 - IMAN S3*/
+	/* 4 - P2.2  - ARROW*/
+	/* 5 - P2.12 - BRD BRK*/
 
 	sheriff_t1 = (data >> 5) & 1;
 
@@ -1015,17 +1015,17 @@ MACHINE_INIT( helifire )
 	timer_adjust(capacitor_timer, TIME_IN_HZ(samplerate), 0, TIME_IN_HZ(samplerate));
 }
 
-static int helifire_t0, helifire_t1;//, helifire_p1, helifire_p2;
+static int helifire_t0, helifire_t1;/*, helifire_p1, helifire_p2;*/
 static int helifire_snd_latch;
 
 static WRITE_HANDLER( helifire_sh_port4_w )
 {
-	// 0 - P2.7 -      ->D0
-	// 1 - NC
-	// 2 - P2.6 -      ->INT
-	// 3 - P2.3 -      ->T0
-	// 4 - P2.4 -      ->T1
-	// 5 - P2.1 - GAME ->D3
+	/* 0 - P2.7 -      ->D0*/
+	/* 1 - NC*/
+	/* 2 - P2.6 -      ->INT*/
+	/* 3 - P2.3 -      ->T0*/
+	/* 4 - P2.4 -      ->T1*/
+	/* 5 - P2.1 - GAME ->D3*/
 
 	data ^= 0xff; /* negated on page 2 just before going to P2 */
 
@@ -1043,12 +1043,12 @@ logerror("port04 write: %02x &4=%1x\n", data, data&4);
 
 static WRITE_HANDLER( helifire_sh_port5_w )
 {
-	// 0 - P2.8  -     ->D1 (or D2 ?)
-	// 1 - P2.9  -     ->D2 (or D1 ?)
-	// 2 - P2.10 - 
-	// 3 - P2.11 - 
-	// 4 - P2.2  - 
-	// 5 - P2.12 -     ->PB4
+	/* 0 - P2.8  -     ->D1 (or D2 ?)*/
+	/* 1 - P2.9  -     ->D2 (or D1 ?)*/
+	/* 2 - P2.10 - */
+	/* 3 - P2.11 - */
+	/* 4 - P2.2  - */
+	/* 5 - P2.12 -     ->PB4*/
 
 	data ^= 0xff; /* negated on page 2 just before going to P2 */
 

@@ -7,7 +7,7 @@
 #include "driver.h"
 #include "ym2413.h"
 
-//#define YM2413ISA
+/*#define YM2413ISA*/
 #ifdef YM2413ISA
 	#include <pc.h>
 #endif
@@ -124,8 +124,8 @@ void YM2413_sh_reset (void)
 #ifdef YM2413ISA
 WRITE_HANDLER( YM2413_register_port_0_w ) {
 int i,a;
-	outportb(0x308,data); // ym2413_write (0, 0, data);
-	//add delay
+	outportb(0x308,data); /* ym2413_write (0, 0, data);*/
+	/*add delay*/
 	for (i=0; i<0x20; i++)
 		a = inportb(0x80);
 
@@ -140,8 +140,8 @@ WRITE_HANDLER( YM2413_register_port_3_w ) { YM2413Write (3, 0, data); } /* 4th c
 #ifdef YM2413ISA
 WRITE_HANDLER( YM2413_data_port_0_w ) {
 int i,a;
-	outportb(0x309,data);// YM2413Write (0, 1, data);
-	//add delay
+	outportb(0x309,data);/* YM2413Write (0, 1, data);*/
+	/*add delay*/
 	for (i=0; i<0x40; i++)
 		a = inportb(0x80);
  } /* 1st chip */

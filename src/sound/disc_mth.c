@@ -46,7 +46,7 @@ struct dst_oneshot_context
 struct dst_ladder_context
 {
         int state;
-        double t;           // time
+        double t;           /* time*/
         double step;
 		double exponent;
 		double total_resistance;
@@ -102,7 +102,7 @@ int dst_adder_step(struct node_description *node)
 double dst_transform_pop(double *stack,int *pointer)
 {
 	double value;
-	//decrement THEN read
+	/*decrement THEN read*/
 	if(*pointer>0) (*pointer)--;
 	value=stack[*pointer];
 	return value;
@@ -110,7 +110,7 @@ double dst_transform_pop(double *stack,int *pointer)
 
 double dst_transform_push(double *stack,int *pointer,double value)
 {
-	//Strore THEN increment
+	/*Strore THEN increment*/
 	if(*pointer<MAX_TRANS_STACK) stack[(*pointer)++]=value;
 	return value;
 }
@@ -320,7 +320,7 @@ int dst_ramp_step(struct node_description *node)
 	else
 	{
 		context->last_en = 0;
-		// Disabled so clamp to output
+		/* Disabled so clamp to output*/
 		node->output=node->input[5];
 	}
 	return 0;
@@ -393,8 +393,8 @@ int dst_oneshot_step(struct node_description *node)
 			node->output=node->input[3];
 			if(node->input[1] && node->input[2])
 			{
-				// Dont start the countdown if we're still triggering
-				// and we've got a reset signal as well
+				/* Dont start the countdown if we're still triggering*/
+				/* and we've got a reset signal as well*/
 			}
 			else
 			{

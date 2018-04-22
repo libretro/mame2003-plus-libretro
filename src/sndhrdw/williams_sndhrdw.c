@@ -428,8 +428,8 @@ static void locate_audio_hotspot(UINT8 *base, UINT16 start)
 			base[i + 8] == 0xaf && base[i + 9] == 0x4c &&			/* AF 4C       STX   $000C,U */
 			base[i +10] == 0x1c && base[i +11] == 0xaf)				/* 1C AF       ANDCC #$00AF  */
 		{
-//			counter.hotspot_start = i;
-//			counter.hotspot_stop = i + 12;
+/*			counter.hotspot_start = i;*/
+/*			counter.hotspot_stop = i + 12;*/
 			logerror("Found hotspot @ %04X", i);
 			return;
 		}
@@ -607,7 +607,7 @@ void williams_adpcm_data_w(int data)
 		
 		int sa_left = 0;
 		int sa_right = 1;
-		bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.		
+		bool sa_loop = 1; /* --> 1 == loop, 0 == do not loop.		*/
 
 		switch (data) {
 			case 0x8C:
@@ -617,7 +617,7 @@ void williams_adpcm_data_w(int data)
 			case 0x0:
 				m_nba_start_counter++;
 
-				// Need to reset the intermission offset for game over.
+				/* Need to reset the intermission offset for game over.*/
 				if(m_nba_last_offset == 0x23 || m_nba_last_offset == 0x29)
 					nba_jam_intermission = false;
 					
@@ -634,8 +634,8 @@ void williams_adpcm_data_w(int data)
 						nba_jam_intermission = false;
 						nba_jam_playing_title_music = true;
 						
-						sa_left = 0; // Left channel.
-						sa_right = 1; // Right channel.
+						sa_left = 0; /* Left channel.*/
+						sa_right = 1; /* Right channel.*/
 					}
 					else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 						nba_jam_do_nothing = true;
@@ -650,7 +650,7 @@ void williams_adpcm_data_w(int data)
 				}
 				break;
 			
-			// Rev 2 calls this on title screen start. Rev 3 does not. Rev 3 does a extra 0 byte call, while Rev 2 does the FF byte instead.
+			/* Rev 2 calls this on title screen start. Rev 3 does not. Rev 3 does a extra 0 byte call, while Rev 2 does the FF byte instead.*/
 			case 0xFF:
 				nba_jam_intermission = false;
 			
@@ -669,8 +669,8 @@ void williams_adpcm_data_w(int data)
 						nba_jam_intermission = false;
 						nba_jam_playing_title_music = true;
 						
-						sa_left = 0; // Left channel.
-						sa_right = 1; // Right channel.
+						sa_left = 0; /* Left channel.*/
+						sa_right = 1; /* Right channel.*/
 					}
 					else if(nba_jam_title_screen == true && nba_jam_playing_title_music == true && nba_jam_intermission == false)
 						nba_jam_do_nothing = true;
@@ -679,7 +679,7 @@ void williams_adpcm_data_w(int data)
 				}
 				break;
 			
-			// Doesn't seem to do anything? Appears after title screen demo game. Showing high scores. Replay the NBA Jam title music?
+			/* Doesn't seem to do anything? Appears after title screen demo game. Showing high scores. Replay the NBA Jam title music?*/
 			case 0x7E:
 				nba_jam_intermission = false;
 				if(nba_jam_title_screen == true && nba_jam_playing_title_music == false && nba_jam_in_game == false) {
@@ -690,7 +690,7 @@ void williams_adpcm_data_w(int data)
 				}
 				break;				
 							
-			// Team select.
+			/* Team select.*/
 			case 0x1:
 				sa_play_sample = true;
 				nba_jam_title_screen = false;
@@ -703,7 +703,7 @@ void williams_adpcm_data_w(int data)
 				sa_right = 3;
 				break;
 
-			// 1st quarter.
+			/* 1st quarter.*/
 			case 0x2:
 				sa_play_sample = true;
 				nba_jam_select_screen = false;
@@ -715,7 +715,7 @@ void williams_adpcm_data_w(int data)
 				sa_right = 5;
 				break;
 
-			// 2nd quarter.
+			/* 2nd quarter.*/
 			case 0x6:
 				sa_play_sample = true;
 				nba_jam_select_screen = false;
@@ -727,7 +727,7 @@ void williams_adpcm_data_w(int data)
 				sa_right = 7;
 				break;				
 
-			// Half time report.
+			/* Half time report.*/
 			case 0x4:
 				sa_play_sample = true;
 				nba_jam_select_screen = false;
@@ -740,7 +740,7 @@ void williams_adpcm_data_w(int data)
 				sa_right = 11;
 				break;
 
-			// 3rd quarter.
+			/* 3rd quarter.*/
 			case 0x7:
 				sa_play_sample = true;
 				nba_jam_select_screen = false;
@@ -752,7 +752,7 @@ void williams_adpcm_data_w(int data)
 				sa_right = 5;
 				break;
 
-			// 4th quarter.
+			/* 4th quarter.*/
 			case 0x8:
 				sa_play_sample = true;
 				nba_jam_select_screen = false;
@@ -764,7 +764,7 @@ void williams_adpcm_data_w(int data)
 				sa_right = 7;
 				break;
 
-			// Game over and back to title screen. This plays the team select music. We will do nothing and reflag the title screen music to start playback soon after.
+			/* Game over and back to title screen. This plays the team select music. We will do nothing and reflag the title screen music to start playback soon after.*/
 			case 0x9:						
 				nba_jam_select_screen = false;
 				nba_jam_title_screen = false;
@@ -774,7 +774,7 @@ void williams_adpcm_data_w(int data)
 				nba_jam_do_nothing = true;
 				break;
 			
-			// Game stats after playing a full game.
+			/* Game stats after playing a full game.*/
 			case 0x3:
 				sa_play_sample = true;
 				nba_jam_select_screen = false;
@@ -787,7 +787,7 @@ void williams_adpcm_data_w(int data)
 				sa_right = 13;
 				break;
 			
-			// Intermission.
+			/* Intermission.*/
 			case 0xA:
 				sa_play_sample = true;
 				nba_jam_select_screen = false;
@@ -800,7 +800,7 @@ void williams_adpcm_data_w(int data)
 				sa_right = 9;
 				break;
 
-			// Overtime.
+			/* Overtime.*/
 			case 0xB:
 				sa_play_sample = true;
 				nba_jam_select_screen = false;
@@ -812,17 +812,17 @@ void williams_adpcm_data_w(int data)
 				sa_right = 7;
 				break;
 			
-			// NBA Jam halftime report.
+			/* NBA Jam halftime report.*/
 			case 0x71:
 					nba_jam_do_nothing = true;
 				break;
 
-			// Altitude with a attitude.
+			/* Altitude with a attitude.*/
 			case 0xCC:
 					nba_jam_do_nothing = true;
 				break;
 							
-			// Welcome to NBA Jam.
+			/* Welcome to NBA Jam.*/
 			case 0xCB:
 				if(nba_jam_select_screen == true)
 					nba_jam_do_nothing = true;
@@ -833,11 +833,11 @@ void williams_adpcm_data_w(int data)
 			default:
 				soundlatch_w(0, data & 0xff);
 
-				// Time to stop the NBA Jam music samples.
+				/* Time to stop the NBA Jam music samples.*/
 				if(data == 0x0 && nba_jam_title_screen == false) {
 					a = 0;
 					
-					// Lets stop the NBA Jam sample music as we are starting up a new sample to play.
+					/* Lets stop the NBA Jam sample music as we are starting up a new sample to play.*/
 					for(a = 0; a <= 13; a++) {
 						sample_stop(a);
 					}
@@ -849,7 +849,7 @@ void williams_adpcm_data_w(int data)
 		if(sa_play_sample == true) {
 			a = 0;
 
-			// Lets stop the NBA Jam sample music as we are starting up a new sample to play.
+			/* Lets stop the NBA Jam sample music as we are starting up a new sample to play.*/
 			for(a = 0; a <= 13; a++) {
 				sample_stop(a);
 			}
@@ -857,18 +857,18 @@ void williams_adpcm_data_w(int data)
 			sample_start(0, sa_left, sa_loop);
 			sample_start(1, sa_right, sa_loop);
 			
-			// Determine how we should mix these samples together.
-			if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+			/* Determine how we should mix these samples together.*/
+			if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers.*/
 				sample_set_stereo_volume(1, 100, 100);
 			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { /* Left channel only. Lets make it play in both speakers.*/
 				sample_set_stereo_volume(0, 100, 100);
 			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { /* Both left and right channels. Lets make them play in there respective speakers.*/
 				sample_set_stereo_volume(0, 100, 0);
 				sample_set_stereo_volume(1, 0, 100);
 			}
-			else if(sample_playing(0) == 0 && sample_playing(1) == 0 && nba_jam_do_nothing == false) { // No sample playing, revert to the default sound.
+			else if(sample_playing(0) == 0 && sample_playing(1) == 0 && nba_jam_do_nothing == false) { /* No sample playing, revert to the default sound.*/
 				sa_play_original = false;
 				soundlatch_w(0, data & 0xff);
 			}
@@ -877,17 +877,17 @@ void williams_adpcm_data_w(int data)
 				soundlatch_w(0, data & 0xff);
 		}
 		else if(nba_jam_do_nothing == true) {
-			// --> Do nothing.
+			/* --> Do nothing.*/
 		}
 		else if(nba_jam_stop_samples == true) {
 			a = 0;
 
-			// Lets stop the NBA Jam sample music as we are starting up a new sample to play.
+			/* Lets stop the NBA Jam sample music as we are starting up a new sample to play.*/
 			for(a = 0; a <= 13; a++) {
 				sample_stop(a);
 			}
 
-			// Now play the default sound.
+			/* Now play the default sound.*/
 			soundlatch_w(0, data & 0xff);
 		}
 		else if(nba_jam_play_default == true)
@@ -904,21 +904,21 @@ void williams_adpcm_data_w(int data)
 		
 		int sa_left = 0;
 		int sa_right = 1;
-		bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.
+		bool sa_loop = 1; /* --> 1 == loop, 0 == do not loop.*/
 
-		// If we are playing the T-Unit version of Mortal Kombat.
+		/* If we are playing the T-Unit version of Mortal Kombat.*/
 		if(mk_playing_mortal_kombat_t == true) {
 			switch (data) {
-				// Intro title screen diddy
+				/* Intro title screen diddy*/
 				case 0x13:
 					sa_play_sample = true;
 					sa_loop = 0;
 					
-					sa_left = 0; // Left channel.
-					sa_right = 1; // Right channel/
+					sa_left = 0; /* Left channel.*/
+					sa_right = 1; /* Right channel/*/
 					break;
 
-				// Second player joining diddy
+				/* Second player joining diddy*/
 				case 0x18:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -927,14 +927,14 @@ void williams_adpcm_data_w(int data)
 					sa_right = 1;
 					break;				
 
-				// Character selection screen.
+				/* Character selection screen.*/
 				case 0x1:
 					sa_play_sample = true;
 					sa_left = 2;
 					sa_right = 3;			
 					break;
 
-				// Scrolling character map
+				/* Scrolling character map*/
 				case 0x12:
 					sa_play_sample = true;
 					
@@ -942,12 +942,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 5;
 					break;
 
-				// Scrolling character map end
+				/* Scrolling character map end*/
 				case 0x1E:
 					mk_do_nothing = true;
 					break;
 
-				// Continue music
+				/* Continue music*/
 				case 0x6:
 					sa_play_sample = true;
 					
@@ -955,7 +955,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 7;
 					break;
 
-				// Game over music
+				/* Game over music*/
 				case 0x2:
 					sa_play_sample = true;
 					
@@ -963,7 +963,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 21;
 					break;
 
-				// Test your might music.
+				/* Test your might music.*/
 				case 0x19:
 					sa_play_sample = true;
 					
@@ -971,7 +971,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 17;
 					break;
 
-				// Test your end (fail).
+				/* Test your end (fail).*/
 				case 0x1A:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -980,7 +980,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 19;
 					break;
 
-				// Fatality music
+				/* Fatality music*/
 				case 0xEE:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -989,12 +989,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 9;
 					break;
 
-				// Fatality music echo loop
+				/* Fatality music echo loop*/
 				case 0xDE:
 					mk_do_nothing = true;
 					break;
 							
-				// Courtyard music
+				/* Courtyard music*/
 				case 0x3:
 					sa_play_sample = true;
 					
@@ -1002,7 +1002,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 11;
 					break;
 
-				// Courtyard end music
+				/* Courtyard end music*/
 				case 0x5:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1011,7 +1011,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 13;
 					break;
 
-				// Courtyard finish him music
+				/* Courtyard finish him music*/
 				case 0x4:
 					sa_play_sample = true;
 					
@@ -1019,7 +1019,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 15;
 					break;
 
-				// Warrior Shrine music
+				/* Warrior Shrine music*/
 				case 0xA:
 					sa_play_sample = true;
 					
@@ -1027,7 +1027,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 23;
 					break;
 
-				// Warrior Shrine end music
+				/* Warrior Shrine end music*/
 				case 0xC:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1036,7 +1036,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 25;
 					break;
 
-				// Warrior Shrine finish him music
+				/* Warrior Shrine finish him music*/
 				case 0xB:
 					sa_play_sample = true;
 					
@@ -1044,7 +1044,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 27;
 					break;
 
-				// The Pit music
+				/* The Pit music*/
 				case 0xD:
 					sa_play_sample = true;
 					
@@ -1052,7 +1052,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 29;
 					break;
 
-				// The Pit end music
+				/* The Pit end music*/
 				case 0xF:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1061,7 +1061,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 31;
 					break;
 
-				// The Pit finish him music
+				/* The Pit finish him music*/
 				case 0xE:
 					sa_play_sample = true;
 					
@@ -1069,7 +1069,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 33;
 					break;
 
-				// Throne Room music
+				/* Throne Room music*/
 				case 0x1B:
 					sa_play_sample = true;
 					
@@ -1077,7 +1077,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 35;
 					break;
 
-				// Throne Room end music
+				/* Throne Room end music*/
 				case 0x1D:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1086,7 +1086,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 37;
 					break;
 
-				// Throne Room finish him music
+				/* Throne Room finish him music*/
 				case 0x1C:
 					sa_play_sample = true;
 					
@@ -1094,7 +1094,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 39;
 					break;
 
-				// Goro's Lair music
+				/* Goro's Lair music*/
 				case 0x14:
 					sa_play_sample = true;
 					
@@ -1102,7 +1102,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 41;
 					break;
 
-				// Goro's Lair end music
+				/* Goro's Lair end music*/
 				case 0x17:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1111,7 +1111,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 43;
 					break;
 
-				// Goro's Lair finish him music
+				/* Goro's Lair finish him music*/
 				case 0x16:
 					sa_play_sample = true;
 					
@@ -1119,7 +1119,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 45;
 					break;
 
-				// Endurance switch characters chime
+				/* Endurance switch characters chime*/
 				case 0x10:
 					sa_play_sample = true;
 					
@@ -1127,7 +1127,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 47;
 					break;
 
-				// Victory music
+				/* Victory music*/
 				case 0x1F:
 					sa_play_sample = true;
 					
@@ -1135,7 +1135,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 49;
 					break;
 
-				// Palace gates music
+				/* Palace gates music*/
 				case 0x7:
 					sa_play_sample = true;
 					
@@ -1143,7 +1143,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 51;
 					break;
 
-				// Palace Gates end music
+				/* Palace Gates end music*/
 				case 0x9:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1152,7 +1152,7 @@ void williams_adpcm_data_w(int data)
 					sa_right = 53;
 					break;
 
-				// Palace Gates finish him music
+				/* Palace Gates finish him music*/
 				case 0x8:
 					sa_play_sample = true;
 					sa_left = 54;
@@ -1162,11 +1162,11 @@ void williams_adpcm_data_w(int data)
 				default:
 					soundlatch_w(0, data & 0xff);
 
-					// Time to stop the Mortal Kombat music samples.
+					/* Time to stop the Mortal Kombat music samples.*/
 					if(data == 0x0) {
 						a = 0;
 						
-						// Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.
+						/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
 						for(a = 0; a <= 55; a++) {
 							sample_stop(a);
 						}
@@ -1177,28 +1177,28 @@ void williams_adpcm_data_w(int data)
 		}
 		else {
 			switch (data) {
-				// Intro title screen diddy
+				/* Intro title screen diddy*/
 				case 0xFD13:
-					// --> Do nothing.
+					/* --> Do nothing.*/
 					mk_do_nothing = true;
 					break;
 
-				// Intro title screen diddy
+				/* Intro title screen diddy*/
 				case 0xFF13:
 					sa_play_sample = true;
 					sa_loop = 0;
 					
-					sa_left = 0; // Left channel.
-					sa_right = 1; // Right channel/
+					sa_left = 0; /* Left channel.*/
+					sa_right = 1; /* Right channel/*/
 					break;
 
-				// Second player joining diddy
+				/* Second player joining diddy*/
 				case 0xFD18:
-					// --> Do nothing.
+					/* --> Do nothing.*/
 					mk_do_nothing = true;
 					break;
 
-				// Second player joining diddy
+				/* Second player joining diddy*/
 				case 0xFF18:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1207,24 +1207,24 @@ void williams_adpcm_data_w(int data)
 					sa_right = 1;
 					break;				
 
-				// Character selection screen.
+				/* Character selection screen.*/
 				case 0xFD01:
-					mk_do_nothing = true; // --> Do nothing.
+					mk_do_nothing = true; /* --> Do nothing.*/
 					break;
 					
-				// Character selection screen.
+				/* Character selection screen.*/
 				case 0xFF01:
 					sa_play_sample = true;
 					sa_left = 2;
 					sa_right = 3;			
 					break;
 
-				// Scrolling character map
+				/* Scrolling character map*/
 				case 0xFD12:
 					mk_do_nothing = true;	
 					break;
 
-				// Scrolling character map
+				/* Scrolling character map*/
 				case 0xFF12:
 					sa_play_sample = true;
 					
@@ -1232,22 +1232,22 @@ void williams_adpcm_data_w(int data)
 					sa_right = 5;
 					break;
 
-				// Scrolling character map end
+				/* Scrolling character map end*/
 				case 0xFD1E:
 					mk_do_nothing = true;
 					break;
 
-				// Scrolling character map end
+				/* Scrolling character map end*/
 				case 0xFF1E:
 					mk_do_nothing = true;
 					break;
 
-				// Continue music
+				/* Continue music*/
 				case 0xFD06:
 					mk_do_nothing = true;	
 					break;
 
-				// Continue music
+				/* Continue music*/
 				case 0xFF06:
 					sa_play_sample = true;
 					
@@ -1255,12 +1255,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 7;
 					break;
 
-				// Game over music
+				/* Game over music*/
 				case 0xFD02:
 					mk_do_nothing = true;	
 					break;
 
-				// Game over music
+				/* Game over music*/
 				case 0xFF02:
 					sa_play_sample = true;
 					
@@ -1268,12 +1268,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 21;
 					break;
 					
-				// Test your might music.
+				/* Test your might music.*/
 				case 0xFD19:
 					mk_do_nothing = true;
 					break;
 
-				// Test your might music.
+				/* Test your might music.*/
 				case 0xFF19:
 					sa_play_sample = true;
 					
@@ -1281,12 +1281,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 17;
 					break;
 
-				// Test your end (fail).
+				/* Test your end (fail).*/
 				case 0xFD1A:
 					mk_do_nothing = true;
 					break;
 
-				// Test your end (fail).
+				/* Test your end (fail).*/
 				case 0xFF1A:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1295,12 +1295,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 19;
 					break;
 				
-				// Fatality music
+				/* Fatality music*/
 				case 0xFDEE:
 					mk_do_nothing = true;	
 					break;
 
-				// Fatality music
+				/* Fatality music*/
 				case 0xFFEE:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1309,22 +1309,22 @@ void williams_adpcm_data_w(int data)
 					sa_right = 9;
 					break;
 
-				// Fatality music echo loop
+				/* Fatality music echo loop*/
 				case 0xFDDE:
 					mk_do_nothing = true;
 					break;
 
-				// Fatality music echo loop
+				/* Fatality music echo loop*/
 				case 0xFFDE:
 					mk_do_nothing = true;
 					break;
 									
-				// Courtyard music
+				/* Courtyard music*/
 				case 0xFD03:
 					mk_do_nothing = true;	
 					break;
 
-				// Courtyard music
+				/* Courtyard music*/
 				case 0xFF03:
 					sa_play_sample = true;
 					
@@ -1332,12 +1332,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 11;
 					break;
 
-				// Courtyard end music
+				/* Courtyard end music*/
 				case 0xFD05:
 					mk_do_nothing = true;
 					break;
 
-				// Courtyard end music
+				/* Courtyard end music*/
 				case 0xFF05:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1346,12 +1346,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 13;
 					break;
 
-				// Courtyard finish him music
+				/* Courtyard finish him music*/
 				case 0xFD04:
 					mk_do_nothing = true;	
 					break;
 
-				// Courtyard finish him music
+				/* Courtyard finish him music*/
 				case 0xFF04:
 					sa_play_sample = true;
 					
@@ -1359,12 +1359,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 15;
 					break;
 
-				// Warrior Shrine music
+				/* Warrior Shrine music*/
 				case 0xFD0A:
 					mk_do_nothing = true;	
 					break;
 
-				// Warrior Shrine music
+				/* Warrior Shrine music*/
 				case 0xFF0A:
 					sa_play_sample = true;
 					
@@ -1372,12 +1372,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 23;
 					break;
 
-				// Warrior Shrine end music
+				/* Warrior Shrine end music*/
 				case 0xFD0C:
 					mk_do_nothing = true;
 					break;
 
-				// Warrior Shrine end music
+				/* Warrior Shrine end music*/
 				case 0xFF0C:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1386,12 +1386,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 25;
 					break;
 
-				// Warrior Shrine finish him music
+				/* Warrior Shrine finish him music*/
 				case 0xFD0B:
 					mk_do_nothing = true;	
 					break;
 
-				// Warrior Shrine finish him music
+				/* Warrior Shrine finish him music*/
 				case 0xFF0B:
 					sa_play_sample = true;
 					
@@ -1399,12 +1399,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 27;
 					break;
 
-				// The Pit music
+				/* The Pit music*/
 				case 0xFD0D:
 					mk_do_nothing = true;	
 					break;
 
-				// The Pit music
+				/* The Pit music*/
 				case 0xFF0D:
 					sa_play_sample = true;
 					
@@ -1412,12 +1412,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 29;
 					break;
 
-				// The Pit end music
+				/* The Pit end music*/
 				case 0xFD0F:
 					mk_do_nothing = true;
 					break;
 
-				// The Pit end music
+				/* The Pit end music*/
 				case 0xFF0F:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1426,12 +1426,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 31;
 					break;
 
-				// The Pit finish him music
+				/* The Pit finish him music*/
 				case 0xFD0E:
 					mk_do_nothing = true;	
 					break;
 
-				// The Pit finish him music
+				/* The Pit finish him music*/
 				case 0xFF0E:
 					sa_play_sample = true;
 					
@@ -1439,12 +1439,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 33;
 					break;
 
-				// Throne Room music
+				/* Throne Room music*/
 				case 0xFD1B:
 					mk_do_nothing = true;	
 					break;
 
-				// Throne Room music
+				/* Throne Room music*/
 				case 0xFF1B:
 					sa_play_sample = true;
 					
@@ -1452,12 +1452,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 35;
 					break;
 
-				// Throne Room end music
+				/* Throne Room end music*/
 				case 0xFD1D:
 					mk_do_nothing = true;
 					break;
 
-				// Throne Room end music
+				/* Throne Room end music*/
 				case 0xFF1D:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1466,12 +1466,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 37;
 					break;
 
-				// Throne Room finish him music
+				/* Throne Room finish him music*/
 				case 0xFD1C:
 					mk_do_nothing = true;	
 					break;
 
-				// Throne Room finish him music
+				/* Throne Room finish him music*/
 				case 0xFF1C:
 					sa_play_sample = true;
 					
@@ -1479,12 +1479,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 39;
 					break;
 
-				// Goro's Lair music
+				/* Goro's Lair music*/
 				case 0xFD14:
 					mk_do_nothing = true;	
 					break;
 
-				// Goro's Lair music
+				/* Goro's Lair music*/
 				case 0xFF14:
 					sa_play_sample = true;
 					
@@ -1492,12 +1492,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 41;
 					break;
 
-				// Goro's Lair end music
+				/* Goro's Lair end music*/
 				case 0xFD17:
 					mk_do_nothing = true;
 					break;
 
-				// Goro's Lair end music
+				/* Goro's Lair end music*/
 				case 0xFF17:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1506,12 +1506,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 43;
 					break;
 
-				// Goro's Lair finish him music
+				/* Goro's Lair finish him music*/
 				case 0xFD16:
 					mk_do_nothing = true;	
 					break;
 
-				// Goro's Lair finish him music
+				/* Goro's Lair finish him music*/
 				case 0xFF16:
 					sa_play_sample = true;
 					
@@ -1519,12 +1519,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 45;
 					break;
 		
-				// Endurance switch characters chime
+				/* Endurance switch characters chime*/
 				case 0xFD10:
 					mk_do_nothing = true;	
 					break;
 
-				// Endurance switch characters chime
+				/* Endurance switch characters chime*/
 				case 0xFF10:
 					sa_play_sample = true;
 					
@@ -1532,12 +1532,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 47;
 					break;
 					
-				// Victory music
+				/* Victory music*/
 				case 0xFD1F:
 					mk_do_nothing = true;	
 					break;
 
-				// Victory music
+				/* Victory music*/
 				case 0xFF1F:
 					sa_play_sample = true;
 					
@@ -1545,12 +1545,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 49;
 					break;
 
-				// Palace gates music
+				/* Palace gates music*/
 				case 0xFD07:
 					mk_do_nothing = true;	
 					break;
 
-				// Palace gates music
+				/* Palace gates music*/
 				case 0xFF07:
 					sa_play_sample = true;
 					
@@ -1558,12 +1558,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 51;
 					break;
 
-				// Palace Gates end music
+				/* Palace Gates end music*/
 				case 0xFD09:
 					mk_do_nothing = true;
 					break;
 
-				// Palace Gates end music
+				/* Palace Gates end music*/
 				case 0xFF09:
 					sa_play_sample = true;
 					sa_loop = 0;
@@ -1572,12 +1572,12 @@ void williams_adpcm_data_w(int data)
 					sa_right = 53;
 					break;
 
-				// Palace Gates finish him music
+				/* Palace Gates finish him music*/
 				case 0xFD08:
 					mk_do_nothing = true;	
 					break;
 
-				// Palace Gates finish him music
+				/* Palace Gates finish him music*/
 				case 0xFF08:
 					sa_play_sample = true;
 					sa_left = 54;
@@ -1587,11 +1587,11 @@ void williams_adpcm_data_w(int data)
 				default:
 					soundlatch_w(0, data & 0xff);
 
-					// Time to stop the Mortal Kombat music samples.
+					/* Time to stop the Mortal Kombat music samples.*/
 					if(data == 0xFD00 || data == 0xFF00) {
 						a = 0;
 
-						// Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.
+						/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
 						for(a = 0; a <= 55; a++) {
 							sample_stop(a);
 						}
@@ -1604,7 +1604,7 @@ void williams_adpcm_data_w(int data)
 		if(sa_play_sample == true) {
 			a = 0;
 
-			// Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.
+			/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
 			for(a = 0; a <= 55; a++) {
 				sample_stop(a);
 			}
@@ -1612,18 +1612,18 @@ void williams_adpcm_data_w(int data)
 			sample_start(0, sa_left, sa_loop);
 			sample_start(1, sa_right, sa_loop);
 			
-			// Determine how we should mix these samples together.
-			if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+			/* Determine how we should mix these samples together.*/
+			if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers.*/
 				sample_set_stereo_volume(1, 100, 100);
 			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { /* Left channel only. Lets make it play in both speakers.*/
 				sample_set_stereo_volume(0, 100, 100);
 			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { /* Both left and right channels. Lets make them play in there respective speakers.*/
 				sample_set_stereo_volume(0, 100, 0);
 				sample_set_stereo_volume(1, 0, 100);
 			}
-			else if(sample_playing(0) == 0 && sample_playing(1) == 0 && mk_do_nothing == false) { // No sample playing, revert to the default sound.
+			else if(sample_playing(0) == 0 && sample_playing(1) == 0 && mk_do_nothing == false) { /* No sample playing, revert to the default sound.*/
 				sa_play_original = false;
 				soundlatch_w(0, data & 0xff);
 			}
@@ -1634,12 +1634,12 @@ void williams_adpcm_data_w(int data)
 		else if(mk_stop_samples == true) {
 			a = 0;
 
-			// Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.
+			/* Lets stop the Mortal Kombat sample music as we are starting up a new sample to play.*/
 			for(a = 0; a <= 55; a++) {
 				sample_stop(a);
 			}
 
-			// Now play the default sound.
+			/* Now play the default sound.*/
 			soundlatch_w(0, data & 0xff);
 		}
 	}

@@ -98,7 +98,7 @@ static void redbaron_sound_update(int param, INT16 *buffer, int length)
                 /* discharge C32 (0.1u) through R26 (33k) + R27 (15k)
 				 * 0.68 * C32 * (R26 + R27) = 3264us
 				 */
-//				#define C32_DISCHARGE_TIME (int)(32767 / 0.003264);
+/*				#define C32_DISCHARGE_TIME (int)(32767 / 0.003264);*/
 				/* I think this is to short. Is C32 really 1u? */
 				#define C32_DISCHARGE_TIME (int)(32767 / 0.03264);
 				shot_amp_counter -= C32_DISCHARGE_TIME;

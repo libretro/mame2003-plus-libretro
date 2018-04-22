@@ -542,10 +542,10 @@ WRITE_HANDLER( polepos_sound_w )
 		/* take the maximum volume and that seems to do the trick */
 		/* volume[0] = left speaker ?, volume[1] = right speaker ? */
 		voice->volume[0] = voice->volume[1] = 0;
-		// front speaker ?
+		/* front speaker ?*/
 		voice->volume[1] |= namco_soundregs[ch * 4 + 0x0a] & 0x0f;
 		voice->volume[0] |= namco_soundregs[ch * 4 + 0x0a] >> 4;
-		// rear speaker ?
+		/* rear speaker ?*/
 		voice->volume[1] |= namco_soundregs[ch * 4 + 0x0b] & 0x0f;
 		voice->volume[0] |= namco_soundregs[ch * 4 + 0x0b] >> 4;
 		voice->volume[1] |= namco_soundregs[ch * 4 + 0x2b] >> 4;

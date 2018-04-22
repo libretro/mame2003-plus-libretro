@@ -24,40 +24,40 @@ static const char *sample_names[] =
 {
 	"*berzerk", /* universal samples directory */
 	"",
-	"01.wav", // "kill"
-	"02.wav", // "attack"
-	"03.wav", // "charge"
-	"04.wav", // "got"
-	"05.wav", // "to"
-	"06.wav", // "get"
+	"01.wav", /* "kill"*/
+	"02.wav", /* "attack"*/
+	"03.wav", /* "charge"*/
+	"04.wav", /* "got"*/
+	"05.wav", /* "to"*/
+	"06.wav", /* "get"*/
 	"",
-	"08.wav", // "alert"
-	"09.wav", // "detected"
-	"10.wav", // "the"
-	"11.wav", // "in"
-	"12.wav", // "it"
+	"08.wav", /* "alert"*/
+	"09.wav", /* "detected"*/
+	"10.wav", /* "the"*/
+	"11.wav", /* "in"*/
+	"12.wav", /* "it"*/
 	"",
 	"",
-	"15.wav", // "humanoid"
-	"16.wav", // "coins"
-	"17.wav", // "pocket"
-	"18.wav", // "intruder"
+	"15.wav", /* "humanoid"*/
+	"16.wav", /* "coins"*/
+	"17.wav", /* "pocket"*/
+	"18.wav", /* "intruder"*/
 	"",
-	"20.wav", // "escape"
-	"21.wav", // "destroy"
-	"22.wav", // "must"
-	"23.wav", // "not"
-	"24.wav", // "chicken"
-	"25.wav", // "fight"
-	"26.wav", // "like"
-	"27.wav", // "a"
-	"28.wav", // "robot"
+	"20.wav", /* "escape"*/
+	"21.wav", /* "destroy"*/
+	"22.wav", /* "must"*/
+	"23.wav", /* "not"*/
+	"24.wav", /* "chicken"*/
+	"25.wav", /* "fight"*/
+	"26.wav", /* "like"*/
+	"27.wav", /* "a"*/
+	"28.wav", /* "robot"*/
 	"",
-	"30.wav", // player fire
-	"31.wav", // baddie fire
-	"32.wav", // kill baddie
-	"33.wav", // kill human (real)
-	"34.wav", // kill human (cheat)
+	"30.wav", /* player fire*/
+	"31.wav", /* baddie fire*/
+	"32.wav", /* kill baddie*/
+	"33.wav", /* kill human (real)*/
+	"34.wav", /* kill human (cheat)*/
 	0	/* end of array */
 };
 
@@ -67,7 +67,7 @@ static const char *sample_names[] =
 /* Note: We have the ability to replace the real death sound (33) and the
  * real voices with sample (34) as no good death sample could be obtained.
  */
-//#define FAKE_DEATH_SOUND
+/*#define FAKE_DEATH_SOUND*/
 
 
 /* volume and channel controls */

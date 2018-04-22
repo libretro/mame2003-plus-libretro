@@ -180,7 +180,7 @@ void _AYWriteReg(int n, int r, int v)
 		          ___
 		1 0 1 1  \
 
-		1 1 0 0  ////
+		1 1 0 0  /*//*/
 		          ___
 		1 1 0 1  /
 
@@ -722,9 +722,9 @@ static int AY8910_init(const char *chip_name,int chip,
 	int vol[3];
 
 
-// causes crashes with YM2610 games - overflow?
-//	if (options.use_filter)
-//		sample_rate = clock/8;
+/* causes crashes with YM2610 games - overflow?*/
+/*	if (options.use_filter)*/
+/*		sample_rate = clock/8;*/
 
 	memset(PSG,0,sizeof(struct AY8910));
 	PSG->SampleRate = sample_rate;

@@ -11,30 +11,30 @@
 #include "cpu/z80/z80.h"
 #include "sound/ics2115.h"
 
-// a:401ae90.000 l:1c23c.0 e:1e1d8.0  09  tone
-// a:4023c40.000 l:25d60.0 e:266cb.0  08  tone
-// a:4028fc0.000 l:28fc0.0 e:2b6ef.0  01  violon, noisy
-// a:4034020.000 l:34560.0 e:36001.0  19  percussion
-// a:4034218.1e8 l:34560.0 e:36001.0  19  percussion
-// a:4037f10.000 l:37f3e.0 e:39cb7.0  08  tone
-// a:4044f10.000 l:463ea.0 e:46476.0  09  tone
-// a:40490d0.000 l:760e9.0 e:910d8.0  19  percussion moche
-// a:4051bd0.000 l:51bd0.0 e:528df.0  01  percussion
-// a:40621f0.000 l:621f0.0 e:62aef.0  01  percussion faible
-// a:4063430.000 l:63c78.0 e:63d25.0  08  tone
-// a:40668a0.000 l:668a0.0 e:670ec.0  01  percussion
-// a:4067940.000 l:67940.0 e:68140.0  01  percussion
-// a:40aff36.000 l:aff36.0 e:b194d.0  20  Selection menu
-// a:40b5f26.000 l:b5f26.0 e:b63a5.0  20  Move up/down
-// a:4102772.000 l:02772.0 e:03a31.0  20  Voice test (fucked?)
+/* a:401ae90.000 l:1c23c.0 e:1e1d8.0  09  tone*/
+/* a:4023c40.000 l:25d60.0 e:266cb.0  08  tone*/
+/* a:4028fc0.000 l:28fc0.0 e:2b6ef.0  01  violon, noisy*/
+/* a:4034020.000 l:34560.0 e:36001.0  19  percussion*/
+/* a:4034218.1e8 l:34560.0 e:36001.0  19  percussion*/
+/* a:4037f10.000 l:37f3e.0 e:39cb7.0  08  tone*/
+/* a:4044f10.000 l:463ea.0 e:46476.0  09  tone*/
+/* a:40490d0.000 l:760e9.0 e:910d8.0  19  percussion moche*/
+/* a:4051bd0.000 l:51bd0.0 e:528df.0  01  percussion*/
+/* a:40621f0.000 l:621f0.0 e:62aef.0  01  percussion faible*/
+/* a:4063430.000 l:63c78.0 e:63d25.0  08  tone*/
+/* a:40668a0.000 l:668a0.0 e:670ec.0  01  percussion*/
+/* a:4067940.000 l:67940.0 e:68140.0  01  percussion*/
+/* a:40aff36.000 l:aff36.0 e:b194d.0  20  Selection menu*/
+/* a:40b5f26.000 l:b5f26.0 e:b63a5.0  20  Move up/down*/
+/* a:4102772.000 l:02772.0 e:03a31.0  20  Voice test (fucked?)*/
 
-// conf:
-//   10b6: 00
-//   11ee: 20
-//   1867: a0
-//   188b: 00
-//   20ba: 01 08 09
-//   2299: 01 09 19
+/* conf:*/
+/*   10b6: 00*/
+/*   11ee: 20*/
+/*   1867: a0*/
+/*   188b: 00*/
+/*   20ba: 01 08 09*/
+/*   2299: 01 09 19*/
 
 enum { V_ON = 1, V_DONE = 2 };
 
@@ -189,7 +189,7 @@ static void recalc_timer(int timer)
 static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 {
 	switch(reg) {
-	case 0x00: // [osc] Oscillator Configuration
+	case 0x00: /* [osc] Oscillator Configuration*/
 		if(msb) {
 			ics2115.voice[ics2115.osc].conf = data;
 			logerror("ICS2115: %2d: conf = %02x (%04x)\n", ics2115.osc,
@@ -197,8 +197,8 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x01: // [osc] Wavesample frequency
-		// freq = fc*33075/1024 in 32 voices mode, fc*44100/1024 in 24 voices mode
+	case 0x01: /* [osc] Wavesample frequency*/
+		/* freq = fc*33075/1024 in 32 voices mode, fc*44100/1024 in 24 voices mode*/
 		if(msb)
 			ics2115.voice[ics2115.osc].fc = (ics2115.voice[ics2115.osc].fc & 0xff)|(data << 8);
 		else
@@ -207,7 +207,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 				 ics2115.voice[ics2115.osc].fc, ics2115.voice[ics2115.osc].fc*33075/1024, caller_get_pc());
 		break;
 
-	case 0x02: // [osc] Wavesample loop start address 19-4
+	case 0x02: /* [osc] Wavesample loop start address 19-4*/
 		if(msb)
 			ics2115.voice[ics2115.osc].strth = (ics2115.voice[ics2115.osc].strth & 0xff)|(data << 8);
 		else
@@ -216,7 +216,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 				 ics2115.voice[ics2115.osc].strth, caller_get_pc());
 		break;
 
-	case 0x03: // [osc] Wavesample loop start address 3-0.3-0
+	case 0x03: /* [osc] Wavesample loop start address 3-0.3-0*/
 		if(msb) {
 			ics2115.voice[ics2115.osc].strtl = data;
 			logerror("ICS2115: %2d: strtl = %02x (%04x)\n", ics2115.osc,
@@ -224,7 +224,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x04: // [osc] Wavesample loop end address 19-4
+	case 0x04: /* [osc] Wavesample loop end address 19-4*/
 		if(msb)
 			ics2115.voice[ics2115.osc].endh = (ics2115.voice[ics2115.osc].endh & 0xff)|(data << 8);
 		else
@@ -233,7 +233,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 				 ics2115.voice[ics2115.osc].endh, caller_get_pc());
 		break;
 
-	case 0x05: // [osc] Wavesample loop end address 3-0.3-0
+	case 0x05: /* [osc] Wavesample loop end address 3-0.3-0*/
 		if(msb) {
 			ics2115.voice[ics2115.osc].endl = data;
 			logerror("ICS2115: %2d: endl = %02x (%04x)\n", ics2115.osc,
@@ -241,7 +241,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x07: // [osc] Volume Start
+	case 0x07: /* [osc] Volume Start*/
 		if(msb) {
 			ics2115.voice[ics2115.osc].vstart = data;
 			logerror("ICS2115: %2d: vstart = %02x (%04x)\n", ics2115.osc,
@@ -249,7 +249,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x08: // [osc] Volume End
+	case 0x08: /* [osc] Volume End*/
 		if(msb) {
 			ics2115.voice[ics2115.osc].vend = data;
 			logerror("ICS2115: %2d: vend = %02x (%04x)\n", ics2115.osc,
@@ -257,7 +257,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x09: // [osc] Volume accumulator
+	case 0x09: /* [osc] Volume accumulator*/
 		if(msb)
 			ics2115.voice[ics2115.osc].volacc = (ics2115.voice[ics2115.osc].volacc & 0xff)|(data << 8);
 		else
@@ -266,7 +266,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 				 ics2115.voice[ics2115.osc].volacc, caller_get_pc());
 		break;
 
-	case 0x0a: // [osc] Wavesample address 19-4
+	case 0x0a: /* [osc] Wavesample address 19-4*/
 		if(msb)
 			ics2115.voice[ics2115.osc].addrh = (ics2115.voice[ics2115.osc].addrh & 0xff)|(data << 8);
 		else
@@ -275,7 +275,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 				 ics2115.voice[ics2115.osc].addrh, caller_get_pc());
 		break;
 
-	case 0x0b: // [osc] Wavesample address 3-0.8-0
+	case 0x0b: /* [osc] Wavesample address 3-0.8-0*/
 		if(msb)
 			ics2115.voice[ics2115.osc].addrl = (ics2115.voice[ics2115.osc].addrl & 0xff)|(data << 8);
 		else
@@ -285,7 +285,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		break;
 
 
-	case 0x0c: // [osc] Pan
+	case 0x0c: /* [osc] Pan*/
 		if(msb) {
 			ics2115.voice[ics2115.osc].pan = data;
 			logerror("ICS2115: %2d: pan = %02x (%04x)\n", ics2115.osc,
@@ -293,7 +293,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x0d: // [osc] Volume Enveloppe Control
+	case 0x0d: /* [osc] Volume Enveloppe Control*/
 		if(msb) {
 			ics2115.voice[ics2115.osc].vctl = data;
 			logerror("ICS2115: %2d: vctl = %02x (%04x)\n", ics2115.osc,
@@ -301,7 +301,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x10: // [osc] Oscillator Control
+	case 0x10: /* [osc] Oscillator Control*/
 		if(msb) {
 			ics2115.voice[ics2115.osc].ctl = data;
 			logerror("ICS2115: %2d: ctl = %02x (%04x)\n", ics2115.osc,
@@ -311,7 +311,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x11: // [osc] Wavesample static address 27-20
+	case 0x11: /* [osc] Wavesample static address 27-20*/
 		if(msb) {
 			ics2115.voice[ics2115.osc].saddr = data;
 			logerror("ICS2115: %2d: saddr = %02x (%04x)\n", ics2115.osc,
@@ -319,7 +319,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x40: // Timer 1 Preset
+	case 0x40: /* Timer 1 Preset*/
 		if(!msb) {
 			ics2115.timer[0].preset = data;
 			logerror("ICS2115: t1preset = %d (%04x)\n", ics2115.timer[0].preset, caller_get_pc());
@@ -327,7 +327,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x41: // Timer 2 Preset
+	case 0x41: /* Timer 2 Preset*/
 		if(!msb) {
 			ics2115.timer[1].preset = data;
 			logerror("ICS2115: t2preset = %d (%04x)\n", ics2115.timer[1].preset, caller_get_pc());
@@ -335,7 +335,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x42: // Timer 1 Prescaler
+	case 0x42: /* Timer 1 Prescaler*/
 		if(!msb) {
 			ics2115.timer[0].scale = data;
 			logerror("ICS2115: t1scale = %d (%04x)\n", ics2115.timer[0].scale, caller_get_pc());
@@ -343,7 +343,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x43: // Timer 2 Prescaler
+	case 0x43: /* Timer 2 Prescaler*/
 		if(!msb) {
 			ics2115.timer[1].scale = data;
 			logerror("ICS2115: t2scale = %d (%04x)\n", ics2115.timer[1].scale, caller_get_pc());
@@ -351,7 +351,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x4a: // IRQ Enable
+	case 0x4a: /* IRQ Enable*/
 		if(!msb) {
 			ics2115.irq_en = data;
 			logerror("ICS2115: irq_en = %02x (%04x)\n", ics2115.irq_en, caller_get_pc());
@@ -359,7 +359,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x4f: // Oscillator Address being Programmed
+	case 0x4f: /* Oscillator Address being Programmed*/
 		if(!msb) {
 			ics2115.osc = data & 31;
 			logerror("ICS2115: oscnumber = %d (%04x)\n", ics2115.osc, caller_get_pc());
@@ -374,14 +374,14 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 static UINT16 ics2115_reg_r(UINT8 reg)
 {
 	switch(reg) {
-	case 0x0d: // [osc] Volume Enveloppe Control
+	case 0x0d: /* [osc] Volume Enveloppe Control*/
 		logerror("ICS2115: %2d: read vctl (%04x)\n", ics2115.osc, caller_get_pc());
-		//		res = ics2115.voice[ics2115.osc].vctl << 8;
-		// may expect |8 on voice irq with &40 == 0
-		// may expect |8 on reg 0 on voice irq with &80 == 0
+		/*		res = ics2115.voice[ics2115.osc].vctl << 8;*/
+		/* may expect |8 on voice irq with &40 == 0*/
+		/* may expect |8 on reg 0 on voice irq with &80 == 0*/
 		return 0x100;
 
-	case 0x0f:{// [osc] Interrupt source/oscillator
+	case 0x0f:{/* [osc] Interrupt source/oscillator*/
 		int osc;
 		UINT8 res = 0xff;
 		for(osc = 0; osc < 32; osc++)
@@ -389,38 +389,38 @@ static UINT16 ics2115_reg_r(UINT8 reg)
 				ics2115.voice[osc].state &= ~V_DONE;
 				logerror("ICS2115: KEYOFF %2d\n", osc);
 				recalc_irq();
-				res = 0x40 | osc; // 0x40 ? 0x80 ?
+				res = 0x40 | osc; /* 0x40 ? 0x80 ?*/
 				break;
 			}
 		logerror("ICS2115: read irqv %02x (%04x)\n", res, caller_get_pc());
 		return res << 8;
 	}
 		
-	case 0x40: // Timer 0 clear irq
-		//		logerror("ICS2115: clear timer 0 (%04x)\n", caller_get_pc());
+	case 0x40: /* Timer 0 clear irq*/
+		/*		logerror("ICS2115: clear timer 0 (%04x)\n", caller_get_pc());*/
 		ics2115.irq_pend &= ~(1<<0);
 		recalc_irq();
 		return ics2115.timer[0].preset;
 
-	case 0x41: // Timer 1 clear irq
+	case 0x41: /* Timer 1 clear irq*/
 		logerror("ICS2115: clear timer 1 (%04x)\n", caller_get_pc());
 		ics2115.irq_pend &= ~(1<<1);
 		recalc_irq();
 		return ics2115.timer[1].preset;
 
-	case 0x43: // Timer status
-		//		logerror("ICS2115: read timer status %02x (%04x)\n", ics2115.irq_pend & 3, caller_get_pc());
+	case 0x43: /* Timer status*/
+		/*		logerror("ICS2115: read timer status %02x (%04x)\n", ics2115.irq_pend & 3, caller_get_pc());*/
 		return ics2115.irq_pend & 3;
 
-	case 0x4a: // IRQ Pending
+	case 0x4a: /* IRQ Pending*/
 		logerror("ICS2115: read irq_pend %02x (%04x)\n", ics2115.irq_pend, caller_get_pc());
 		return ics2115.irq_pend;
 
-	case 0x4b: // Address of Interrupting Oscillator
+	case 0x4b: /* Address of Interrupting Oscillator*/
 		logerror("ICS2115: %2d: read intoscaddr (%04x)\n", ics2115.osc, caller_get_pc());
 		return 0x80;
 
-	case 0x4c: // Chip revision
+	case 0x4c: /* Chip revision*/
 		logerror("ICS2115: read revision (%04x)\n", caller_get_pc());
 		return 0x01;
 
@@ -475,14 +475,14 @@ READ_HANDLER( ics2115_r )
 			int i;
 			res |= 0x80;
 			if(ics2115.irq_en & ics2115.irq_pend & 3)
-				res |= 1; // Timer irq
+				res |= 1; /* Timer irq*/
 			for(i=0; i<32; i++)
 				if(ics2115.voice[i].state & V_DONE) {
 					res |= 2;
 					break;
 				}
 		}
-		//		logerror("ICS2115: read status %02x (%04x)\n", res, caller_get_pc());
+		/*		logerror("ICS2115: read status %02x (%04x)\n", res, caller_get_pc());*/
 		
 		return res;
 	}
@@ -509,7 +509,7 @@ WRITE_HANDLER( ics2115_w )
 		ics2115_reg_w(ics2115.reg, data, 1);
 		break;
 	}
-	//	logerror("ICS2115: wi %d, %02x (%04x)\n", offset, data, caller_get_pc());
+	/*	logerror("ICS2115: wi %d, %02x (%04x)\n", offset, data, caller_get_pc());*/
 }
 
 void ics2115_reset(void)

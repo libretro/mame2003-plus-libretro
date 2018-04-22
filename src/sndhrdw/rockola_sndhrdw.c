@@ -50,7 +50,7 @@ const char *sasuke_sample_names[] =
 {
 	"*sasuke",
 
-	// SN76477 and discrete
+	/* SN76477 and discrete*/
 	"hit.wav",
 	"boss_start.wav",
 	"shot.wav",
@@ -63,11 +63,11 @@ const char *vanguard_sample_names[] =
 {
 	"*vanguard",
 
-	// SN76477 and discrete
+	/* SN76477 and discrete*/
 	"fire.wav",
 	"explsion.wav",
 
-	// HD38880 speech
+	/* HD38880 speech*/
 	"vg_voi-0.wav",
 	"vg_voi-1.wav",
 	"vg_voi-2.wav",
@@ -92,7 +92,7 @@ const char *fantasy_sample_names[] =
 {
 	"*fantasy",
 
-	// HD38880 speech
+	/* HD38880 speech*/
 	"ft_voi-0.wav",
 	"ft_voi-1.wav",
 	"ft_voi-2.wav",
@@ -185,7 +185,7 @@ static void sasuke_build_waveform(int mask)
 
 	mask &= 7;
 
-	//logerror("0: wave form = %d\n", mask);
+	/*logerror("0: wave form = %d\n", mask);*/
 	bit0 = bit1 = bit3 = 0;
 	bit2 = 1;
 
@@ -211,7 +211,7 @@ static void sasuke_build_waveform(int mask)
 		if (i & 8)
 			data += bit3;
 
-		//logerror(" %3d\n", data);
+		/*logerror(" %3d\n", data);*/
 		tone_channels[0].form[i] = data - base;
 	}
 
@@ -227,7 +227,7 @@ static void satansat_build_waveform(int mask)
 
 	mask &= 7;
 
-	//logerror("1: wave form = %d\n", mask);
+	/*logerror("1: wave form = %d\n", mask);*/
 	bit0 = bit1 = bit2 = 1;
 	bit3 = 0;
 
@@ -249,7 +249,7 @@ static void satansat_build_waveform(int mask)
 		if (i & 8)
 			data += bit3;
 
-		//logerror(" %3d\n", data);
+		/*logerror(" %3d\n", data);*/
 		tone_channels[1].form[i] = data - base;
 	}
 
@@ -265,10 +265,10 @@ static void build_waveform(int channel, int mask)
 
 	mask &= 15;
 
-	//logerror("%d: wave form = %d\n", channel, mask);
+	/*logerror("%d: wave form = %d\n", channel, mask);*/
 	bit0 = bit1 = bit2 = bit3 = 0;
 
-	// bit 3
+	/* bit 3*/
 	if (mask & (1 | 2))
 		bit3 = 8;
 	else if (mask & 4)
@@ -276,13 +276,13 @@ static void build_waveform(int channel, int mask)
 	else if (mask & 8)
 		bit3 = 2;
 
-	// bit 2
+	/* bit 2*/
 	if (mask & 4)
 		bit2 = 8;
 	else if (mask & (2 | 8))
 		bit2 = 4;
 
-	// bit 1
+	/* bit 1*/
 	if (mask & 8)
 		bit1 = 8;
 	else if (mask & 4)
@@ -290,7 +290,7 @@ static void build_waveform(int channel, int mask)
 	else if (mask & 2)
 		bit1 = 2;
 
-	// bit 0
+	/* bit 0*/
 	bit0 = bit1 / 2;
 
 	if (bit0 + bit1 + bit2 + bit3 < 16)
@@ -323,7 +323,7 @@ static void build_waveform(int channel, int mask)
 			if (i & 8)
 				data += bit3;
 
-			//logerror(" %3d\n", data);
+			/*logerror(" %3d\n", data);*/
 			tone_channels[channel].form[i] = data - base;
 		}
 	}
@@ -358,10 +358,10 @@ void rockola_set_music_clock(double clock_time)
 
 int rockola_sh_start(const struct MachineSound *msound)
 {
-	// adjusted
+	/* adjusted*/
 	rockola_set_music_freq(43000);
 
-	// 38.99 Hz update (according to schematic)
+	/* 38.99 Hz update (according to schematic)*/
 	rockola_set_music_clock(M_LN2 * (RES_K(18) * 2 + RES_K(1)) * CAP_U(1));
 
 	tone_stream = stream_init(sound_name(msound), TONE_VOLUME, SAMPLE_RATE, 0, rockola_tone_update);
@@ -823,7 +823,7 @@ static void rockola_speech_w(data8_t data, data16_t *table, int start)
 				break;
 
 			case 0:
-				// ignore it
+				/* ignore it*/
 				break;
 
 			default:

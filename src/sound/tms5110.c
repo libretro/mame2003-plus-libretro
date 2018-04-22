@@ -467,7 +467,7 @@ void tms5110_PDC_set(int data)
 				speaking_now = 1;
 				/*speak_delay_frames = 10;*/
 
-				//should FIFO be cleared now ?????
+				/*should FIFO be cleared now ?????*/
 
 				break;
 

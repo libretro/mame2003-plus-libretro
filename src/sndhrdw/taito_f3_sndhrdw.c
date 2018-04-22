@@ -61,8 +61,8 @@ WRITE16_HANDLER( f3_volume_w )
 	if (offset==1) channel[latch]=data>>8;
 
 	if(Machine->sample_rate) {
-//		if (channel[7]!=last_l) mixer_set_volume(0, (int)((float)channel[7]*1.58)); /* Left master volume */
-//		if (channel[6]!=last_r) mixer_set_volume(1, (int)((float)channel[6]*1.58)); /* Right master volume */
+/*		if (channel[7]!=last_l) mixer_set_volume(0, (int)((float)channel[7]*1.58));*/ /* Left master volume */
+/*		if (channel[6]!=last_r) mixer_set_volume(1, (int)((float)channel[6]*1.58));*/ /* Right master volume */
 		last_l=channel[7];
 		last_r=channel[6];
 	}
@@ -168,8 +168,8 @@ WRITE16_HANDLER(f3_68681_w)
 
 READ16_HANDLER(es5510_dsp_r)
 {
-//	logerror("%06x: DSP read offset %04x (data is %04x)\n",activecpu_get_pc(),offset,es5510_dsp_ram[offset]);
-//	if (es_tmp) return es5510_dsp_ram[offset];
+/*	logerror("%06x: DSP read offset %04x (data is %04x)\n",activecpu_get_pc(),offset,es5510_dsp_ram[offset]);*/
+/*	if (es_tmp) return es5510_dsp_ram[offset];*/
 /*
 	switch (offset) {
 		case 0x00: return (es5510_gpr_latch>>16)&0xff;
@@ -178,13 +178,13 @@ READ16_HANDLER(es5510_dsp_r)
 		case 0x03: return 0;
 	}
 */
-//	offset<<=1;
+/*	offset<<=1;*/
 
-//if (offset<7 && es5510_dsp_ram[0]!=0xff) return rand()%0xffff;
+/*if (offset<7 && es5510_dsp_ram[0]!=0xff) return rand()%0xffff;*/
 
 	if (offset==0x12) return 0;
 
-//	if (offset>4)
+/*	if (offset>4)*/
 	if (offset==0x16) return 0x27;
 
 	return es5510_dsp_ram[offset];
@@ -194,8 +194,8 @@ WRITE16_HANDLER(es5510_dsp_w)
 {
 	UINT8 *snd_mem = (UINT8 *)memory_region(REGION_SOUND1);
 
-//	if (offset>4 && offset!=0x80  && offset!=0xa0  && offset!=0xc0  && offset!=0xe0)
-//		logerror("%06x: DSP write offset %04x %04x\n",activecpu_get_pc(),offset,data);
+/*	if (offset>4 && offset!=0x80  && offset!=0xa0  && offset!=0xc0  && offset!=0xe0)*/
+/*		logerror("%06x: DSP write offset %04x %04x\n",activecpu_get_pc(),offset,data);*/
 
 	COMBINE_DATA(&es5510_dsp_ram[offset]);
 
@@ -206,7 +206,7 @@ WRITE16_HANDLER(es5510_dsp_w)
 		case 0x03: break;
 
 		case 0x80: /* Read select - GPR + INSTR */
-	//		logerror("ES5510:  Read GPR/INSTR %06x (%06x)\n",data,es5510_gpr[data]);
+	/*		logerror("ES5510:  Read GPR/INSTR %06x (%06x)\n",data,es5510_gpr[data]);*/
 
 			/* Check if a GPR is selected */
 			if (data<0xc0) {
@@ -216,17 +216,17 @@ WRITE16_HANDLER(es5510_dsp_w)
 			break;
 
 		case 0xa0: /* Write select - GPR */
-	//		logerror("ES5510:  Write GPR %06x %06x (0x%04x:=0x%06x\n",data,es5510_gpr_latch,data,snd_mem[es5510_gpr_latch>>8]);
+	/*		logerror("ES5510:  Write GPR %06x %06x (0x%04x:=0x%06x\n",data,es5510_gpr_latch,data,snd_mem[es5510_gpr_latch>>8]);*/
 			if (data<0xc0)
 				es5510_gpr[data]=snd_mem[es5510_gpr_latch>>8];
 			break;
 
 		case 0xc0: /* Write select - INSTR */
-	//		logerror("ES5510:  Write INSTR %06x %06x\n",data,es5510_gpr_latch);
+	/*		logerror("ES5510:  Write INSTR %06x %06x\n",data,es5510_gpr_latch);*/
 			break;
 
 		case 0xe0: /* Write select - GPR + INSTR */
-	//		logerror("ES5510:  Write GPR/INSTR %06x %06x\n",data,es5510_gpr_latch);
+	/*		logerror("ES5510:  Write GPR/INSTR %06x %06x\n",data,es5510_gpr_latch);*/
 			break;
 	}
 }

@@ -87,7 +87,7 @@ static struct {
 	} chip[MAX_K054539];
 } K054539_chips;
 
-//*
+/***/
 static double K054539_gain[MAX_K054539][8] =
 {
 	{1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0},
@@ -105,7 +105,7 @@ void K054539_set_gain(int chip, int channel, double gain)
 {
 	if (gain >= 0) K054539_gain[chip][channel] = gain;
 }
-//*
+/***/
 
 static int K054539_regupdate(int chip)
 {
@@ -169,7 +169,7 @@ static void K054539_update(int chip, INT16 **buffer, int length)
 			base1 = K054539_chips.chip[chip].regs + 0x20*ch;
 			base2 = K054539_chips.chip[chip].regs + 0x200 + 0x2*ch;
 			chan = K054539_chips.chip[chip].channels + ch;
-//*
+/***/
 			delta = K054539_chips.freq_ratio * (base1[0x00] | (base1[0x01] << 8) | (base1[0x02] << 16));
 
 			vol = base1[0x03];
@@ -178,7 +178,7 @@ static void K054539_update(int chip, INT16 **buffer, int length)
 			if (bval > 255) bval = 255;
 
 			pan = base1[0x05];
-// DJ Main: 81-87 right, 88 middle, 89-8f left
+/* DJ Main: 81-87 right, 88 middle, 89-8f left*/
 if (pan >= 0x81 && pan <= 0x8f)
 pan -= 0x81;
 else
@@ -201,7 +201,7 @@ else
 	actually be 1/freq_ratio because the target is an offset to the reverb buffer not sample source.
 */
 			rdelta = (base1[6] | (base1[7] << 8)) >> 3;
-//			rdelta = (reverb_pos + (int)((rdelta - 0x2000) * K054539_chips.freq_ratio)) & 0x3fff;
+/*			rdelta = (reverb_pos + (int)((rdelta - 0x2000) * K054539_chips.freq_ratio)) & 0x3fff;*/
 			rdelta = (int)((double)rdelta / K054539_chips.freq_ratio + reverb_pos) & 0x3fff;
 			revb = rbase + rdelta;
 
@@ -209,7 +209,7 @@ else
 
 			bufl = buffer[0];
 			bufr = buffer[1];
-//*
+/***/
 
 			if(base2[0] & 0x20) {
 				delta = -delta;
@@ -239,7 +239,7 @@ else
 			} while(0)
 
 			switch(base2[0] & 0xc) {
-			case 0x0: { // 8bit pcm
+			case 0x0: { /* 8bit pcm*/
 				for(i=0; i<length; i++) {
 					cur_pfrac += delta;
 					while(cur_pfrac & ~0xffff) {
@@ -265,7 +265,7 @@ else
 			end_channel_0:
 				break;
 			}
-			case 0x4: { // 16bit pcm lsb first
+			case 0x4: { /* 16bit pcm lsb first*/
 				pdelta <<= 1;
 
 				for(i=0; i<length; i++) {
@@ -293,7 +293,7 @@ else
 			end_channel_4:
 				break;
 			}
-			case 0x8: { // 4bit dpcm
+			case 0x8: { /* 4bit dpcm*/
 				cur_pos <<= 1;
 				cur_pfrac <<= 1;
 				if(cur_pfrac & 0x10000) {
@@ -363,7 +363,7 @@ else
 		rev_max--;
 	}
 
-	//* drivers should be given the option to disable reverb when things go terribly wrong
+	/** drivers should be given the option to disable reverb when things go terribly wrong*/
 	if(!(K054539_flags & K054539_DISABLE_REVERB))
 	{
 		for(i=0; i<length; i++) {
@@ -374,7 +374,7 @@ else
 	}
 
 	if(rbuffer+length > rev_top) {
-		i = rev_top-rbuffer; // delta
+		i = rev_top-rbuffer; /* delta*/
 		memset(rbuffer, 0, i*2);
 		memset(rbase, 0, (length-i)*2);
 	} else
@@ -454,10 +454,10 @@ static void K054539_init_chip(int chip, const struct MachineSound *msound)
 	int i, panleft, panright;
 
 	memset(K054539_chips.chip[chip].regs, 0, sizeof(K054539_chips.chip[chip].regs));
-	memset(K054539_posreg_latch, 0, sizeof(K054539_posreg_latch)); //*
-	K054539_flags |= K054539_UPDATE_AT_KEYON; //* make it default until proven otherwise
+	memset(K054539_posreg_latch, 0, sizeof(K054539_posreg_latch)); /***/
+	K054539_flags |= K054539_UPDATE_AT_KEYON; /** make it default until proven otherwise*/
 
-	// Real size of 0x4000, the addon is to simplify the reverb buffer computations
+	/* Real size of 0x4000, the addon is to simplify the reverb buffer computations*/
 	K054539_chips.chip[chip].ram = malloc(0x4000*2+48000/55*2);
 	K054539_chips.chip[chip].reverb_pos = 0;
 	K054539_chips.chip[chip].cur_ptr = 0;
@@ -473,9 +473,9 @@ static void K054539_init_chip(int chip, const struct MachineSound *msound)
 		}
 
 	if(K054539_chips.intf->irq[chip])
-		// One or more of the registers must be the timer period
-		// And anyway, this particular frequency is probably wrong
-		// 480 hz is TRUSTED by gokuparo disco stage - the looping sample doesn't line up otherwise
+		/* One or more of the registers must be the timer period*/
+		/* And anyway, this particular frequency is probably wrong*/
+		/* 480 hz is TRUSTED by gokuparo disco stage - the looping sample doesn't line up otherwise*/
 		timer_pulse(TIME_IN_HZ(480), 0, K054539_irq);
 
 	sprintf(buf[0], "%s.%d L", sound_name(msound), chip);
@@ -483,7 +483,7 @@ static void K054539_init_chip(int chip, const struct MachineSound *msound)
 	bufp[0] = buf[0];
 	bufp[1] = buf[1];
 
-	if (K054539_flags & K054539_REVERSE_STEREO) //*
+	if (K054539_flags & K054539_REVERSE_STEREO) /***/
 	{
 		panleft  = MIXER_PAN_RIGHT;
 		panright = MIXER_PAN_LEFT;
@@ -509,7 +509,7 @@ static void K054539_stop_chip(int chip)
 	free(K054539_chips.chip[chip].ram);
 }
 
-static void K054539_w(int chip, offs_t offset, data8_t data) //*
+static void K054539_w(int chip, offs_t offset, data8_t data) /***/
 {
 #if 0
 	int voice, reg;
@@ -548,7 +548,7 @@ static void K054539_w(int chip, offs_t offset, data8_t data) //*
 
 		if (offs >= 0 && offs <= 2)
 		{
-			// latch writes to the position index registers
+			/* latch writes to the position index registers*/
 			K054539_posreg_latch[chip][ch][offs] = data;
 			return;
 		}
@@ -572,7 +572,7 @@ static void K054539_w(int chip, offs_t offset, data8_t data) //*
 						posptr = &K054539_posreg_latch[chip][ch][0];
 						regptr = regbase + (ch<<5) + 0xc;
 
-						// update the chip at key-on
+						/* update the chip at key-on*/
 						regptr[0] = posptr[0];
 						regptr[1] = posptr[1];
 						regptr[2] = posptr[2];
@@ -688,15 +688,15 @@ int K054539_sh_start(const struct MachineSound *msound)
 		"one size fits all" function to the voltab the current invert exponential
 		appraoch seems most appropriate.
 	*/
-	// Factor the 1/4 for the number of channels in the volume (1/8 is too harsh, 1/2 gives clipping)
-	// vol=0 -> no attenuation, vol=0x40 -> -36dB
+	/* Factor the 1/4 for the number of channels in the volume (1/8 is too harsh, 1/2 gives clipping)*/
+	/* vol=0 -> no attenuation, vol=0x40 -> -36dB*/
 	for(i=0; i<256; i++)
 		K054539_chips.voltab[i] = pow(10.0, (-36.0 * (double)i / (double)0x40) / 20.0) / 4.0;
 
-	// Pan table for the left channel
-	// Right channel is identical with inverted index
-	// Formula is such that pan[i]**2+pan[0xe-i]**2 = 1 (constant output power)
-	// and pan[0xe] = 1 (full panning)
+	/* Pan table for the left channel*/
+	/* Right channel is identical with inverted index*/
+	/* Formula is such that pan[i]**2+pan[0xe-i]**2 = 1 (constant output power)*/
+	/* and pan[0xe] = 1 (full panning)*/
 	for(i=0; i<0xf; i++)
 		K054539_chips.pantab[i] = sqrt(i) / sqrt(0xe);
 

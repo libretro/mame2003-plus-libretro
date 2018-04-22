@@ -47,7 +47,7 @@ static int RPANTABLE[0x10000];
 static int TimPris[3];
 static int TimCnt[3];
 
-// DMA stuff
+/* DMA stuff*/
 static UINT32 scsp_dmea;
 static UINT16 scsp_drga;
 #define	scsp_dgate		scsp_regs[0x416/2] & 0x4000
@@ -63,7 +63,7 @@ static void dma_scsp(void); 		/*SCSP DMA transfer function*/
 
 #define EG_SHIFT	8
 
-// include the LFO handling code
+/* include the LFO handling code*/
 #include "scsplfo.c"
 
 /*
@@ -71,7 +71,7 @@ static void dma_scsp(void); 		/*SCSP DMA transfer function*/
 	that can generate FM and PCM (from ROM/RAM) sound
 */
 
-//SLOT PARAMETERS
+/*SLOT PARAMETERS*/
 #define KEYONEX(slot)		((slot->udata.data[0x0]>>0x0)&0x1000)
 #define KEYONB(slot)		((slot->udata.data[0x0]>>0x0)&0x0800)
 #define SBCTL(slot)		((slot->udata.data[0x0]>>0x9)&0x0003)
@@ -129,16 +129,16 @@ static double BaseTimes2[32]={7000,6500,6222.95,4978.37,4148.66,3556.01,3111.47,
 typedef enum {ATTACK,DECAY1,DECAY2,RELEASE} _STATE;
 struct _EG
 {
-	int volume;	//
+	int volume;	/**/
 	_STATE state;
 	int step;
-	//step vals
-	int AR;		//Attack
-	int D1R;	//Decay1
-	int D2R;	//Decay2
-	int RR;		//Release
+	/*step vals*/
+	int AR;		/*Attack*/
+	int D1R;	/*Decay1*/
+	int D2R;	/*Decay2*/
+	int RR;		/*Release*/
 
-	int DL;		//Decay level
+	int DL;		/*Decay level*/
 	data8_t EGHOLD;
 	data8_t LPLINK;
 };
@@ -147,16 +147,16 @@ struct _SLOT
 {
 	union
 	{
-		data16_t data[0x10];	//only 0x1a bytes used
+		data16_t data[0x10];	/*only 0x1a bytes used*/
 		data8_t datab[0x20];
 	} udata;
-	data8_t active;	//this slot is currently playing
-	data8_t *base;		//samples base address
-	data32_t cur_addr;	//current play address (24.8)
-	data32_t step;		//pitch step (24.8)
-	struct _EG EG;			//Envelope
-	struct _LFO PLFO;		//Phase LFO
-	struct _LFO ALFO;		//Amplitude LFO
+	data8_t active;	/*this slot is currently playing*/
+	data8_t *base;		/*samples base address*/
+	data32_t cur_addr;	/*current play address (24.8)*/
+	data32_t step;		/*pitch step (24.8)*/
+	struct _EG EG;			/*Envelope*/
+	struct _LFO PLFO;		/*Phase LFO*/
+	struct _LFO ALFO;		/*Amplitude LFO*/
 	int slot;
 };
 
@@ -294,7 +294,7 @@ static int EG_Update(struct _SLOT *slot)
 			if(slot->EG.volume>=(0x3ff<<EG_SHIFT))
 			{
 				slot->EG.state=DECAY1;
-				if(slot->EG.D1R>=(1024<<EG_SHIFT)) //Skip DECAY1, go directly to DECAY2
+				if(slot->EG.D1R>=(1024<<EG_SHIFT)) /*Skip DECAY1, go directly to DECAY2*/
 					slot->EG.state=DECAY2;
 				slot->EG.volume=0x3ff<<EG_SHIFT;
 			}
@@ -378,7 +378,7 @@ static void SCSP_Init(int n, struct SCSPinterface *intf)
 	MidiR=MidiW=0;
 	MidiOutR=MidiOutW=0;
 
-	// get SCSP RAM
+	/* get SCSP RAM*/
 	for (i = 0; i < n; i++)
 	{
 		SCSP = &SCSPs[i];
@@ -456,7 +456,7 @@ static void SCSP_Init(int n, struct SCSPinterface *intf)
 
 	for(i=0;i<62;++i)
 	{
-		double t=BaseTimes2[i/2]/AR2DR;	//In ms
+		double t=BaseTimes2[i/2]/AR2DR;	/*In ms*/
 		double step=(1023*1000.0)/((float) 44100*t);
 		double scale=(double) (1<<EG_SHIFT);
 		ARTABLE[i]=(int) (step*scale);
@@ -478,7 +478,7 @@ static void SCSP_Init(int n, struct SCSPinterface *intf)
 	memset(buffertmpl,0,44100*sizeof(signed int));
 	memset(buffertmpr,0,44100*sizeof(signed int));
 
-	// no "pend"
+	/* no "pend"*/
 	SCSP[0].udata.data[0x20/2] = 0;
 	SCSP[1].udata.data[0x20/2] = 0;
 	TimCnt[0] = 0xffff;
@@ -568,7 +568,7 @@ static void SCSP_UpdateReg(int reg)
 				TimCnt[2]=(SCSP->udata.data[0x1C/2]&0xff)<<8;
 			}
 			break;
-		case 0x22:	//SCIRE
+		case 0x22:	/*SCIRE*/
 		case 0x23:
 
 			if(SCSP->Master)
@@ -969,10 +969,10 @@ int SCSP_sh_start(const struct MachineSound *msound)
 
 	intf = msound->sound_interface;
 
-	// init the emulation
+	/* init the emulation*/
 	SCSP_Init(MAX_SCSP, intf);
 
-	// set up the IRQ callbacks
+	/* set up the IRQ callbacks*/
 	for (i = 0; i < intf->num; i++)
 	{
 		SCSPs[i].Int68kCB = intf->irq_callback[i];
@@ -1017,7 +1017,7 @@ WRITE16_HANDLER( SCSP_0_w )
 
 	scsp_regs = (UINT16 *)SCSP->udata.datab;
 
-	// check DMA
+	/* check DMA*/
 	switch(offset*2)
 	{
 		case 0x412:
@@ -1045,7 +1045,7 @@ WRITE16_HANDLER( SCSP_0_w )
 		if(scsp_dexe)
 		{
 			dma_scsp();
-			scsp_regs[0x416/2]^=0x1000;//disable starting bit
+			scsp_regs[0x416/2]^=0x1000;/*disable starting bit*/
 		}
 		break;
 	}

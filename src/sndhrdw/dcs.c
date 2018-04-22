@@ -1333,23 +1333,23 @@ static void dcs_speedup_common(void)
 				ay1 = i0[1];
 
 				temp = ay0 - ax0;
-				//if (temp < -32768) temp = -32768;
-				//else if (temp > 32767) temp = 32767;
+				/*if (temp < -32768) temp = -32768;*/
+				/*else if (temp > 32767) temp = 32767;*/
 				*i0++ = temp;
 
 				temp = ax0 + ay0;
-				//if (temp < -32768) temp = -32768;
-				//else if (temp > 32767) temp = 32767;
+				/*if (temp < -32768) temp = -32768;*/
+				/*else if (temp > 32767) temp = 32767;*/
 				*i2++ = temp;
 
 				temp = ay1 - mr1;
-				//if (temp < -32768) temp = -32768;
-				//else if (temp > 32767) temp = 32767;
+				/*if (temp < -32768) temp = -32768;*/
+				/*else if (temp > 32767) temp = 32767;*/
 				*i0++ = temp;
 
 				temp = ay1 + mr1;
-				//if (temp < -32768) temp = -32768;
-				//else if (temp > 32767) temp = 32767;
+				/*if (temp < -32768) temp = -32768;*/
+				/*else if (temp > 32767) temp = 32767;*/
 				*i2++ = temp;
 			}
 			i2 += mem63e;

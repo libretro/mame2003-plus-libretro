@@ -257,17 +257,17 @@ int dss_squarewfix_step(struct node_description *node)
 		context->flip_flop = context->flip_flop ? 0 : 1;
 		context->tLeft += context->flip_flop ? context->tOn : context->tOff;
 	}
-//discrete_log("Step out - tLeft:%f FF:%d",context->tLeft,context->flip_flop);
+/*discrete_log("Step out - tLeft:%f FF:%d",context->tLeft,context->flip_flop);*/
 
 	if(node->input[0])
 	{
-//discrete_log("Step in - F:%f D:%f tOff:%f tOn:%f tSample:%f tLeft:%f FF:%d",node->input1,node->input3,tOff,tOn,context->sampleStep,context->tLeft,context->flip_flop);
-//		context->tLeft += context->sampleStep;
-//		while (context->tLeft >= (context->flip_flop ? context->tOn : context->tOff))
-//		{
-//			context->tLeft -= context->flip_flop ? context->tOn : context->tOff;
-//			context->flip_flop = context->flip_flop ? 0 : 1;
-//		}
+/*discrete_log("Step in - F:%f D:%f tOff:%f tOn:%f tSample:%f tLeft:%f FF:%d",node->input1,node->input3,tOff,tOn,context->sampleStep,context->tLeft,context->flip_flop);*/
+/*		context->tLeft += context->sampleStep;*/
+/*		while (context->tLeft >= (context->flip_flop ? context->tOn : context->tOff))*/
+/*		{*/
+/*			context->tLeft -= context->flip_flop ? context->tOn : context->tOff;*/
+/*			context->flip_flop = context->flip_flop ? 0 : 1;*/
+/*		}*/
 
 		/* Add gain and DC Bias component */
 
@@ -302,11 +302,11 @@ int dss_squarewfix_reset(struct node_description *node)
 	context->tOff -= context->tOn;
 
 discrete_log("RESET in - F:%f D:%f P:%f == tOff:%f tOn:%f tLeft:%f",node->input[1],node->input[3],node->input[5],context->tOff,context->tOn,context->tLeft);
-//	while (context->tLeft >= context->flip_flop ? context->tOn : context->tOff)
-//	{
-//		context->tLeft -= context->flip_flop ? context->tOn : context->tOff;
-//		context->flip_flop = context->flip_flop ? 0 : 1;
-//	}
+/*	while (context->tLeft >= context->flip_flop ? context->tOn : context->tOff)*/
+/*	{*/
+/*		context->tLeft -= context->flip_flop ? context->tOn : context->tOff;*/
+/*		context->flip_flop = context->flip_flop ? 0 : 1;*/
+/*	}*/
 
 
 	context->tLeft = -context->tLeft;
@@ -902,7 +902,7 @@ int dss_adsrenv_step(struct node_description *node)
 
 int dss_adsrenv_reset(struct node_description *node)
 {
-//	struct dss_adsr_context *context=(struct dss_adsr_context*)node->context;
+/*	struct dss_adsr_context *context=(struct dss_adsr_context*)node->context;*/
 	dss_adsrenv_step(node);
 	return 0;
 }

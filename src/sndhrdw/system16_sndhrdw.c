@@ -1,4 +1,4 @@
-// system 16 - 7751 emulation, based on monster bash code.
+/* system 16 - 7751 emulation, based on monster bash code.*/
 #include "driver.h"
 #include "cpu/i8039/i8039.h"
 
@@ -28,7 +28,7 @@ static void trigger_7751_sound(int data)
 	cpu_set_irq_line(2, 0, PULSE_LINE);
 }
 
-// I'm sure this must be wrong, but it seems to work for quartet music.
+/* I'm sure this must be wrong, but it seems to work for quartet music.*/
 WRITE_HANDLER( sys16_7751_audio_8255_w )
 {
 	logerror("7751: %4x %4x\n",data,data^0xff);
@@ -43,7 +43,7 @@ WRITE_HANDLER( sys16_7751_audio_8255_w )
 
 READ_HANDLER( sys16_7751_audio_8255_r )
 {
-	// Only PC4 is hooked up
+	/* Only PC4 is hooked up*/
 	/* 0x00 = BUSY, 0x10 = NOT BUSY */
 	return (port_8255_c47 & 0x10);
 }
@@ -59,14 +59,14 @@ READ_HANDLER( sys16_7751_sh_rom_r )
 /* read from T1 */
 READ_HANDLER( sys16_7751_sh_t1_r )
 {
-	// Labelled as "TEST", connected to ground
+	/* Labelled as "TEST", connected to ground*/
 	return 0;
 }
 
 /* read from P2 */
 READ_HANDLER( sys16_7751_sh_command_r )
 {
-	// 8255's PC0-2 connects to 7751's S0-2 (P24-P26 on an 8048)
+	/* 8255's PC0-2 connects to 7751's S0-2 (P24-P26 on an 8048)*/
 	return ((port_8255_c03 & 0x07) << 4) | port_7751_p27;
 }
 

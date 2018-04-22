@@ -125,7 +125,7 @@ static void flower_update_mono(int ch, INT16 *buffer, int length)
 
 						if (voice->oneshotplaying)
 						{
-//							*mix++ += ((w[offs] - 0x80) * v) / 16;
+/*							*mix++ += ((w[offs] - 0x80) * v) / 16;*/
 *mix++ += sound_rom2[v*256 + w[offs]] - 0x80;
 						}
 					}
@@ -134,7 +134,7 @@ static void flower_update_mono(int ch, INT16 *buffer, int length)
 				{
 					offs = (c >> 15) & 0x1ff;
 
-//					*mix++ += ((w[offs] - 0x80) * v) / 16;
+/*					*mix++ += ((w[offs] - 0x80) * v) / 16;*/
 *mix++ += sound_rom2[v*256 + w[offs]] - 0x80;
 				}
 			}
@@ -219,9 +219,9 @@ WRITE_HANDLER( flower_sound1_w )
 		voice->frequency = voice->frequency * 16 + ((flower_soundregs1[1 + base]) & 0x0f);
 
 		voice->volume = (flower_soundregs1[7 + base] >> 4) | ((flower_soundregs2[7 + base] & 0x03) << 4);
-// the following would fix the hanging notes...
-//if ((flower_soundregs2[7 + base] & 0x01) == 0)
-//	voice->volume = 0;
+/* the following would fix the hanging notes...*/
+/*if ((flower_soundregs2[7 + base] & 0x01) == 0)*/
+/*	voice->volume = 0;*/
 
 		if (flower_soundregs1[4 + base] & 0x10)
 		{
@@ -284,7 +284,7 @@ usrintf_showmessage("%02x%02x %02x%02x %02x%02x %02x%02x %02x%02x %02x%02x %02x%
 		start = flower_soundregs2[5 + base] & 0x0f;
 		start = start * 16 + ((flower_soundregs2[4 + base]) & 0x0f);
 
-		voice->wave = &sound_rom1[(start << 9) & 0x7fff];	// ???
+		voice->wave = &sound_rom1[(start << 9) & 0x7fff];	/* ???*/
 		voice->oneshot = 0;
 		voice->oneshotplaying = 0;
 	}

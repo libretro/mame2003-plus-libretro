@@ -124,9 +124,9 @@ void seibu_sound_decrypt(int cpu_region,int length)
 
 static int start, end, start1, end1;
 
-// "decrypt" is a bit flowery here, as it's probably just line-swapping to
-// simplify PCB layout/routing rather than intentional protection, but it
-// still fits, especially since the Z80s for all these games are truly encrypted.
+/* "decrypt" is a bit flowery here, as it's probably just line-swapping to*/
+/* simplify PCB layout/routing rather than intentional protection, but it*/
+/* still fits, especially since the Z80s for all these games are truly encrypted.*/
 
 void seibu_adpcm_decrypt(int region)
 {
@@ -153,7 +153,7 @@ WRITE_HANDLER( seibu_adpcm_adr_1_w )
 
 WRITE_HANDLER( seibu_adpcm_ctl_1_w )
 {
-	// sequence is 00 02 01 each time.
+	/* sequence is 00 02 01 each time.*/
 	switch (data)
 	{
 		case 0:
@@ -182,7 +182,7 @@ WRITE_HANDLER( seibu_adpcm_adr_2_w )
 
 WRITE_HANDLER( seibu_adpcm_ctl_2_w )
 {
-	// sequence is 00 02 01 each time.
+	/* sequence is 00 02 01 each time.*/
 	switch (data)
 	{
 		case 0:
@@ -248,7 +248,7 @@ static void update_irq_lines(int param)
 WRITE_HANDLER( seibu_irq_clear_w )
 {
 	/* Denjin Makai and SD Gundam doesn't like this, it's tied to the rst18 ack ONLY so it could be related to it. */
-//	update_irq_lines(VECTOR_INIT);
+/*	update_irq_lines(VECTOR_INIT);*/
 }
 
 WRITE_HANDLER( seibu_rst10_ack_w )
@@ -340,7 +340,7 @@ WRITE_HANDLER( seibu_pending_w )
 
 READ16_HANDLER( seibu_main_word_r )
 {
-	//logerror("%06x: seibu_main_word_r(%x)\n",activecpu_get_pc(),offset);
+	/*logerror("%06x: seibu_main_word_r(%x)\n",activecpu_get_pc(),offset);*/
 	switch (offset)
 	{
 		case 2:
@@ -349,14 +349,14 @@ READ16_HANDLER( seibu_main_word_r )
 		case 5:
 			return main2sub_pending ? 1 : 0;
 		default:
-			//logerror("%06x: seibu_main_word_r(%x)\n",activecpu_get_pc(),offset);
+			/*logerror("%06x: seibu_main_word_r(%x)\n",activecpu_get_pc(),offset);*/
 			return 0xffff;
 	}
 }
 
 WRITE16_HANDLER( seibu_main_word_w )
 {
-	//logerror("%06x: seibu_main_word_w(%x,%02x)\n",activecpu_get_pc(),offset,data);
+	/*logerror("%06x: seibu_main_word_w(%x,%02x)\n",activecpu_get_pc(),offset,data);*/
 	if (ACCESSING_LSB)
 	{
 		switch (offset)
@@ -374,7 +374,7 @@ WRITE16_HANDLER( seibu_main_word_w )
 				main2sub_pending = 1;
 				break;
 			default:
-				//logerror("%06x: seibu_main_word_w(%x,%02x)\n",activecpu_get_pc(),offset,data);
+				/*logerror("%06x: seibu_main_word_w(%x,%02x)\n",activecpu_get_pc(),offset,data);*/
 				break;
 		}
 	}
@@ -395,7 +395,7 @@ WRITE16_HANDLER( seibu_main_mustb_w )
 	main2sub[0] = data&0xff;
 	main2sub[1] = data>>8;
 
-//	logerror("seibu_main_mustb_w: %x -> %x %x\n", data, main2sub[0], main2sub[1]);
+/*	logerror("seibu_main_mustb_w: %x -> %x %x\n", data, main2sub[0], main2sub[1]);*/
 
 	update_irq_lines(RST18_ASSERT);
 }

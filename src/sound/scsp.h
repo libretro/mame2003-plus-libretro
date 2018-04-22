@@ -19,13 +19,13 @@ struct SCSPinterface
 int SCSP_sh_start(const struct MachineSound *msound);
 void SCSP_sh_stop(void);
 
-// SCSP register access
+/* SCSP register access*/
 READ16_HANDLER( SCSP_0_r );
 WRITE16_HANDLER( SCSP_0_w );
 READ16_HANDLER( SCSP_1_r );
 WRITE16_HANDLER( SCSP_1_w );
 
-// MIDI I/O access (used for comms on Model 2/3)
+/* MIDI I/O access (used for comms on Model 2/3)*/
 WRITE16_HANDLER( SCSP_MidiIn );
 READ16_HANDLER( SCSP_MidiOutR );
 

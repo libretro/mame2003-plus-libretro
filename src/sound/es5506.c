@@ -22,7 +22,7 @@
 ***********************************************************************************************/
 
 #define BACKEND_INTERPOLATE		1
-//#define LOG_COMMANDS			0
+/*#define LOG_COMMANDS			0*/
 #define RAINE_CHECK				0
 #define MAKE_WAVS				0
 
@@ -150,7 +150,7 @@ static INT16 *ulaw_lookup;
 static UINT16 *volume_lookup;
 static UINT32 accum_mask;
 
-//static FILE *eslog;
+/*static FILE *eslog;*/
 
 
 
@@ -761,7 +761,7 @@ static void generate_samples(struct ES5506Chip *chip, INT32 *left, INT32 *right,
 		/* generate from the appropriate source */
 		if (!base)
 		{
-			//logerror("NULL region base %d\n",voice->control >> 14);
+			/*logerror("NULL region base %d\n",voice->control >> 14);*/
 			generate_dummy(voice, base, left, right, samples);
 		}
 		else if (voice->control & 0x2000)
@@ -772,7 +772,7 @@ static void generate_samples(struct ES5506Chip *chip, INT32 *left, INT32 *right,
 		/* does this voice have it's IRQ bit raised? */
 		if (voice->control&CONTROL_IRQ) 
 		{
-//logerror("IRQ raised on voice %d!!\n",v);
+/*logerror("IRQ raised on voice %d!!\n",v);*/
 			/* only update voice vector if existing IRQ is acked by host */
 			if (chip->irqv&0x80)
 			{
@@ -2042,7 +2042,7 @@ static void es5505_reg_write(struct ES5506Chip *chip, offs_t offset, data16_t da
 {
 	struct ES5506Voice *voice = &chip->voice[chip->current_page & 0x1f];
 
-//	logerror("%04x:ES5505 write %02x/%02x = %04x & %04x\n", activecpu_get_previouspc(), chip->current_page, offset, data, mem_mask ^ 0xffff);
+/*	logerror("%04x:ES5505 write %02x/%02x = %04x & %04x\n", activecpu_get_previouspc(), chip->current_page, offset, data, mem_mask ^ 0xffff);*/
 
 	/* force an update */
 	stream_update(chip->stream, 0);
@@ -2185,7 +2185,7 @@ static INLINE UINT16 es5505_reg_read_high(struct ES5506Chip *chip, struct ES5506
 			/* accumulator */
 			if ((voice->control & CONTROL_STOPMASK) && chip->region_base[voice->control >> 14]) {
 				voice->o1n1 = chip->region_base[voice->control >> 14][voice->exbank + (voice->accum >> 11)];
-				//logerror("%02x %08x ==> %08x\n",voice->o1n1,voice->control >> 14,voice->exbank + (voice->accum >> 11));
+				/*logerror("%02x %08x ==> %08x\n",voice->o1n1,voice->control >> 14,voice->exbank + (voice->accum >> 11));*/
 			}
 				result = voice->o1n1;
 			break;

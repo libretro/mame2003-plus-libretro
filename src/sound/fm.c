@@ -1812,7 +1812,7 @@ static void OPNWriteReg(FM_OPN *OPN, int r, int v)
 		          ___
 		1 0 1 1  \
 
-		1 1 0 0  ////
+		1 1 0 0  // //
 		          ___
 		1 1 0 1  /
 

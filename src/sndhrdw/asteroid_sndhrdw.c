@@ -116,11 +116,11 @@ DISCRETE_SOUND_START(asteroid_sound_interface)
 	/* The sound can be tweaked with the gain and   */
 	/* adder constants in the 2 lines below         */
 	/************************************************/
-	// SAUCER_SEL = 1 - larger saucer
-	DISCRETE_MULTADD(NODE_40, 1, ASTEROID_SAUCER_SEL, -2.5, 8.25)	// Saucer Warble rate (5.75 or 8.25Hz)
-	DISCRETE_TRIANGLEWAVE(NODE_41, 1, NODE_40, 920.0, 920.0/2, 0)	// (amount of warble)
+	/* SAUCER_SEL = 1 - larger saucer*/
+	DISCRETE_MULTADD(NODE_40, 1, ASTEROID_SAUCER_SEL, -2.5, 8.25)	/* Saucer Warble rate (5.75 or 8.25Hz)*/
+	DISCRETE_TRIANGLEWAVE(NODE_41, 1, NODE_40, 920.0, 920.0/2, 0)	/* (amount of warble)*/
 
-	DISCRETE_TRANSFORM4(NODE_42, 1, ASTEROID_SAUCER_SEL, -250, NODE_41, 750, "01*2+3+")	// Large saucer is 250hz lower
+	DISCRETE_TRANSFORM4(NODE_42, 1, ASTEROID_SAUCER_SEL, -250, NODE_41, 750, "01*2+3+")	/* Large saucer is 250hz lower*/
 
 	DISCRETE_TRIANGLEWAVE(NODE_43, ASTEROID_SAUCER_SND_EN, NODE_42, 76.1, 0, 0)
 	DISCRETE_RCFILTER(ASTEROID_SAUCER_SND, 1, NODE_43, 1, 1.0e-5)
@@ -199,7 +199,7 @@ DISCRETE_SOUND_START(asteroid_sound_interface)
 	DISCRETE_ADDER4(NODE_91, 1, ASTEROID_THRUST_SND, ASTEROID_EXPLODE_SND, ASTEROID_LIFE_SND, NODE_90)
 	DISCRETE_GAIN(NODE_92, NODE_91, 65534.0 / (131.6+76.1+49.5+53.0+1000.0+600.0))
 
-	DISCRETE_OUTPUT(NODE_92, 100)		// Take the output from the mixer
+	DISCRETE_OUTPUT(NODE_92, 100)		/* Take the output from the mixer*/
 DISCRETE_SOUND_END
 
 
@@ -263,13 +263,13 @@ DISCRETE_SOUND_START(astdelux_sound_interface)
 	DISCRETE_ADDER2(NODE_90, 1, ASTEROID_THRUST_SND, ASTEROID_EXPLODE_SND)
 	DISCRETE_GAIN(NODE_91, NODE_90, 65534.0/(1000+600))
 
-	DISCRETE_OUTPUT(NODE_91, 100)	// Take the output from the mixer
+	DISCRETE_OUTPUT(NODE_91, 100)	/* Take the output from the mixer*/
 DISCRETE_SOUND_END
 
 
 WRITE_HANDLER( asteroid_explode_w )
 {
-	discrete_sound_w(0x20,(data&0x3c)>>2);				// Volume
+	discrete_sound_w(0x20,(data&0x3c)>>2);				/* Volume*/
 	/* We will modify the pitch data to send the divider value. */
 	switch ((data&0xc0))
 	{
@@ -291,9 +291,9 @@ WRITE_HANDLER( asteroid_explode_w )
 
 WRITE_HANDLER( asteroid_thump_w )
 {
-	discrete_sound_w(0x10,data&0x10);		//Thump enable
-	discrete_sound_w(0x11,(data&0x0f)^0x0f);	//Thump frequency
-	discrete_sound_w(0x12,data&0x0f);		//Thump duty
+	discrete_sound_w(0x10,data&0x10);		/*Thump enable*/
+	discrete_sound_w(0x11,(data&0x0f)^0x0f);	/*Thump frequency*/
+	discrete_sound_w(0x12,data&0x0f);		/*Thump duty*/
 }
 
 WRITE_HANDLER( asteroid_sounds_w )
@@ -304,7 +304,7 @@ WRITE_HANDLER( asteroid_sounds_w )
 WRITE_HANDLER( astdelux_sounds_w )
 {
 	/* Only ever activates the thrusters in Astdelux */
-//	discrete_sound_w(0x03,(data&0x80)?0:1);
+/*	discrete_sound_w(0x03,(data&0x80)?0:1);*/
 	discrete_sound_w(0x03,(data&0x80)?1:0);
 }
 

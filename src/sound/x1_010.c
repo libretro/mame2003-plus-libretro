@@ -63,35 +63,35 @@ Hardcoded Values:
 #define	LOG_REGISTER_WRITE	0
 #define	LOG_REGISTER_READ	0
 
-#define FREQ_BASE_BITS		  8					// Frequency fixed decimal shift bits
-#define ENV_BASE_BITS		 16					// wave form envelope fixed decimal shift bits
-#define	VOL_BASE	(2*32*256/30)					// Volume base
+#define FREQ_BASE_BITS		  8					/* Frequency fixed decimal shift bits*/
+#define ENV_BASE_BITS		 16					/* wave form envelope fixed decimal shift bits*/
+#define	VOL_BASE	(2*32*256/30)					/* Volume base*/
 
 /* this structure defines the parameters for a channel */
 typedef struct {
 	unsigned char	status;
-	unsigned char	volume;						//        volume / wave form no.
-	unsigned char	frequency;					//     frequency / pitch lo
-	unsigned char	pitch_hi;					//      reserved / pitch hi
-	unsigned char	start;						// start address / envelope time
-	unsigned char	end;						//   end address / envelope no.
+	unsigned char	volume;						/*        volume / wave form no.*/
+	unsigned char	frequency;					/*     frequency / pitch lo*/
+	unsigned char	pitch_hi;					/*      reserved / pitch hi*/
+	unsigned char	start;						/* start address / envelope time*/
+	unsigned char	end;						/*   end address / envelope no.*/
 	unsigned char	reserve[2];
 } X1_010_CHANNEL;
 
 /* Variables only used here */
-static int	rate;								// Output sampling rate (Hz)
-static int	stream;								// Stream handle
-static int	address;							// address eor data
-static int	sound_enable = 0;					// sound output enable/disable
-static UINT8	x1_010_reg[0x2000];				// X1-010 Register & wave form area
-static UINT8	HI_WORD_BUF[0x2000];			// X1-010 16bit access ram check avoidance work
+static int	rate;								/* Output sampling rate (Hz)*/
+static int	stream;								/* Stream handle*/
+static int	address;							/* address eor data*/
+static int	sound_enable = 0;					/* sound output enable/disable*/
+static UINT8	x1_010_reg[0x2000];				/* X1-010 Register & wave form area*/
+static UINT8	HI_WORD_BUF[0x2000];			/* X1-010 16bit access ram check avoidance work*/
 static UINT32	smp_offset[SETA_NUM_CHANNELS];
 static UINT32	env_offset[SETA_NUM_CHANNELS];
 
 static UINT32 base_clock;
 
 /* mixer tables and internal buffers */
-//static short	*mixer_buffer = NULL;
+/*static short	*mixer_buffer = NULL;*/
 
 
 /*--------------------------------------------------------------
@@ -105,25 +105,25 @@ void seta_sh_update( int param, INT16 **buffer, int length )
 	register UINT8	*env;
 	register UINT32	smp_offs, smp_step, env_offs, env_step, delta;
 
-	// mixer buffer zero clear
+	/* mixer buffer zero clear*/
 	memset( buffer[0], 0, length*sizeof(short) );
 	memset( buffer[1], 0, length*sizeof(short) );
 
-//	if( sound_enable == 0 ) return;
+/*	if( sound_enable == 0 ) return;*/
 
 	for( ch = 0; ch < SETA_NUM_CHANNELS; ch++ ) {
 		reg = (X1_010_CHANNEL *)&(x1_010_reg[ch*sizeof(X1_010_CHANNEL)]);
-		if( (reg->status&1) != 0 ) {							// Key On
+		if( (reg->status&1) != 0 ) {							/* Key On*/
 			INT16 *bufL = buffer[0];
 			INT16 *bufR = buffer[1];
-			if( (reg->status&2) == 0 ) {						// PCM sampling
+			if( (reg->status&2) == 0 ) {						/* PCM sampling*/
 				start    = (INT8 *)(reg->start      *0x1000+memory_region(REGION_SOUND1));
 				end      = (INT8 *)((0x100-reg->end)*0x1000+memory_region(REGION_SOUND1));
 				volL     = ((reg->volume>>4)&0xf)*VOL_BASE;
 				volR     = ((reg->volume>>0)&0xf)*VOL_BASE;
 				smp_offs = smp_offset[ch];
 				freq     = reg->frequency&0x1f;
-				// Meta Fox does not write the frequency register. Ever
+				/* Meta Fox does not write the frequency register. Ever*/
 				if( freq == 0 ) freq = 4;
 				smp_step = (UINT32)((float)base_clock/8192.0
 							*freq*(1<<FREQ_BASE_BITS)/(float)rate);
@@ -135,9 +135,9 @@ void seta_sh_update( int param, INT16 **buffer, int length )
 #endif
 				for( i = 0; i < length; i++ ) {
 					delta = smp_offs>>FREQ_BASE_BITS;
-					// sample ended?
+					/* sample ended?*/
 					if( start+delta >= end ) {
-						reg->status &= 0xfe;					// Key off
+						reg->status &= 0xfe;					/* Key off*/
 						break;
 					}
 					data = *(start+delta);
@@ -146,7 +146,7 @@ void seta_sh_update( int param, INT16 **buffer, int length )
 					smp_offs += smp_step;
 				}
 				smp_offset[ch] = smp_offs;
-			} else {											// Wave form
+			} else {											/* Wave form*/
 				start    = (INT8 *)&(x1_010_reg[reg->volume*128+0x1000]);
 				smp_offs = smp_offset[ch];
 				freq     = (reg->pitch_hi<<8)+reg->frequency;
@@ -165,9 +165,9 @@ void seta_sh_update( int param, INT16 **buffer, int length )
 				for( i = 0; i < length; i++ ) {
 					int vol;
 					delta = env_offs>>ENV_BASE_BITS;
-	 				// Envelope one shot mode
+	 				/* Envelope one shot mode*/
 					if( (reg->status&4) != 0 && delta >= 0x80 ) {
-						reg->status &= 0xfe;					// Key off
+						reg->status &= 0xfe;					/* Key off*/
 						break;
 					}
 					vol = *(env+(delta&0x7f));

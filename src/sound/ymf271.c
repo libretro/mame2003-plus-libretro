@@ -18,7 +18,7 @@
 
 #define VERBOSE		(1)
 
-#define CLOCK (44100 * 384)	// = 16.9344 MHz
+#define CLOCK (44100 * 384)	/* = 16.9344 MHz*/
 
 #define log2(n) (log((float) n)/log((float) 2))
 
@@ -81,13 +81,13 @@ typedef struct
 	void (*irq_callback)(int);
 } YMF271Chip;
 
-// slot mapping assists
+/* slot mapping assists*/
 static int fm_tab[] = { 0, 1, 2, -1, 3, 4, 5, -1, 6, 7, 8, -1, 9, 10, 11, -1 };
 static int pcm_tab[] = { 0, 4, 8, -1, 12, 16, 20, -1, 24, 28, 32, -1, 36, 40, 44, -1 };
 
 static YMF271Chip YMF271[MAX_YMF271];
 
-static INT32 volume[256*4];			// precalculated attenuation values with some marging for enveloppe and pan levels
+static INT32 volume[256*4];			/* precalculated attenuation values with some marging for enveloppe and pan levels*/
 
 static void ymf271_pcm_update(int num, INT16 **outputs, int length)
 {
@@ -107,7 +107,7 @@ static void ymf271_pcm_update(int num, INT16 **outputs, int length)
 	{
 		slot = &chip->slots[j];
 		mixp = &mix[0];
-		// PCM
+		/* PCM*/
 		if (slot->active && slot->waveform == 7)
 		{
 			for (i = 0; i < length; i++)
@@ -130,7 +130,7 @@ static void ymf271_pcm_update(int num, INT16 **outputs, int length)
 				slot->stepptr += slot->step;
 				if ((slot->stepptr>>16) > slot->endaddr)
 				{
-					// kill non-frac
+					/* kill non-frac*/
 					slot->stepptr &= 0xffff;
 					slot->stepptr |= (slot->loopaddr<<16);
 				}
@@ -164,19 +164,19 @@ static void ymf271_write_fm(YMF271Chip *chip, int grp, int adr, int data)
 			{
 				slot->active = 1;
 
-				// key on
+				/* key on*/
 				slot->step = 0;
 				slot->stepptr = 0;
-//				logerror("start %x end %x loop %x\n", slot->startaddr, slot->endaddr, slot->loopaddr);
+/*				logerror("start %x end %x loop %x\n", slot->startaddr, slot->endaddr, slot->loopaddr);*/
 				if (slot->waveform != 7)
 				{
-//					logerror("UNSUPPORTED FM! on slot %d\n", slotnum);
+/*					logerror("UNSUPPORTED FM! on slot %d\n", slotnum);*/
 				}
 				else
 				{
 					int step, oct; 
 
-//					logerror("oct %d fns %x fs %x srcnote %x srcb %x TL %x\n", slot->block, slot->fns, slot->fs, slot->srcnote, slot->srcb, slot->tl);
+/*					logerror("oct %d fns %x fs %x srcnote %x srcb %x TL %x\n", slot->block, slot->fns, slot->fs, slot->srcnote, slot->srcb, slot->tl);*/
 
 					oct = slot->block;
 					if (oct & 8)
@@ -187,7 +187,7 @@ static void ymf271_write_fm(YMF271Chip *chip, int grp, int adr, int data)
 					step = ((slot->fns/2) | 1024) << (oct + 7);
 					slot->step = (UINT32) ((((INT64)step)*(44100/4)) / Machine->sample_rate);
 
-//					logerror("step %x\n", slot->step);
+/*					logerror("step %x\n", slot->step);*/
 				}
 			}
 			else
@@ -394,25 +394,25 @@ static void ymf271_write_timer(int chipnum, int data)
 
 			case 0x13:
 				if (data & 1)
-				{	// timer A load
+				{	/* timer A load*/
 					chip->timerAVal = chip->timerA;
 				}
 				if (data & 2)
-				{	// timer B load
+				{	/* timer B load*/
 					chip->timerBVal = chip->timerB;
 				}
 				if (data & 4)
 				{
-					// timer A IRQ enable
+					/* timer A IRQ enable*/
 					chip->enable |= 4;
 				}
 				if (data & 8)
 				{
-					// timer B IRQ enable
+					/* timer B IRQ enable*/
 					chip->enable |= 8;
 				}
 				if (data & 0x10)
-				{	// timer A reset
+				{	/* timer A reset*/
 					chip->irqstate &= ~1;
 					chip->status &= ~1;
 
@@ -423,7 +423,7 @@ static void ymf271_write_timer(int chipnum, int data)
 					timer_adjust(chip->timA, TIME_IN_SEC(period), chipnum, TIME_IN_SEC(period));
 				}
 				if (data & 0x20)
-				{	// timer B reset
+				{	/* timer B reset*/
 					chip->irqstate &= ~2;
 					chip->status &= ~2;
 
@@ -529,7 +529,7 @@ int YMF271_sh_start( const struct MachineSound *msound )
 		stream_init_multi(2, name, vol, Machine->sample_rate, i, ymf271_pcm_update);
 	}
 
-	// Volume table, 1 = -0.375dB, 8 = -3dB, 256 = -96dB
+	/* Volume table, 1 = -0.375dB, 8 = -3dB, 256 = -96dB*/
 	for(i = 0; i < 256; i++)
 		volume[i] = 65536*pow(2.0, (-0.375/6)*i);
 	for(i = 256; i < 256*4; i++)

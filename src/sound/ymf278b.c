@@ -91,8 +91,8 @@ typedef struct
 } YMF278BChip;
 
 static YMF278BChip YMF278B[MAX_YMF278B];
-static INT32 volume[256*4];			// precalculated attenuation values with some marging for enveloppe and pan levels
-static int pan_left[16], pan_right[16];	// pan volume offsets
+static INT32 volume[256*4];			/* precalculated attenuation values with some marging for enveloppe and pan levels*/
+static int pan_left[16], pan_right[16];	/* pan volume offsets*/
 static INT32 mix_level[8];
 
 static int ymf278b_compute_rate(YMF278BSlot *slot, int val)
@@ -143,7 +143,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 {
 	if(slot->env_step == 0)
 	{
-		// Attack
+		/* Attack*/
 		slot->env_vol = (256U << 23) - 1;
 		slot->env_vol_lim = 256U<<23;
 #ifdef VERBOSE
@@ -153,7 +153,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 	}
 	if(slot->env_step == 1)
 	{
-		// Decay 1
+		/* Decay 1*/
 		slot->env_vol = 0;
 		slot->env_step++;
 		if(slot->DL)
@@ -172,7 +172,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 	}
 	if(slot->env_step == 2)
 	{
-		// Decay 2
+		/* Decay 2*/
 		int rate = ymf278b_compute_rate(slot, slot->D2R);
 #ifdef VERBOSE
 		logerror("YMF278B: Decay step 2, val = %d, rate = %d, delay = %g, current vol = %d\n", slot->D2R, rate, ymf278_compute_decay_rate(rate)*1000.0*clock_ratio/Machine->sample_rate, slot->env_vol >> 23);
@@ -187,7 +187,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 	}
 	if(slot->env_step == 3)
 	{
-		// Decay 2 reached -96dB
+		/* Decay 2 reached -96dB*/
 #ifdef VERBOSE
 		logerror("YMF278B: Voice cleared because of decay 2\n");
 #endif
@@ -199,7 +199,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 	}
 	if(slot->env_step == 4)
 	{
-		// Release
+		/* Release*/
 		int rate = ymf278b_compute_rate(slot, slot->RR);
 #ifdef VERBOSE
 		logerror("YMF278B: Release, val = %d, rate = %d, delay = %g\n", slot->RR, rate, ymf278_compute_decay_rate(rate)*1000.0*clock_ratio/Machine->sample_rate);
@@ -214,7 +214,7 @@ static void ymf278b_envelope_next(YMF278BSlot *slot, float clock_ratio)
 	}
 	if(slot->env_step == 5)
 	{
-		// Release reached -96dB
+		/* Release reached -96dB*/
 #ifdef VERBOSE
 		logerror("YMF278B: Release ends\n");
 #endif
@@ -252,18 +252,18 @@ static void ymf278b_pcm_update(int num, INT16 **outputs, int length)
 			{
 				switch (slot->bits)
 				{
-					case 8: 	// 8 bit
+					case 8: 	/* 8 bit*/
 						sample = rombase[slot->startaddr + (slot->stepptr>>16)]<<8;
 						break;
 
-					case 12:  	// 12 bit
+					case 12:  	/* 12 bit*/
 						if (slot->stepptr & 1)
 							sample = rombase[slot->startaddr + (slot->stepptr>>17)*3 + 2]<<8 | ((rombase[slot->startaddr + (slot->stepptr>>17)*3 + 1] << 4) & 0xf0);
 						else
 							sample = rombase[slot->startaddr + (slot->stepptr>>17)*3]<<8 | (rombase[slot->startaddr + (slot->stepptr>>17)*3 + 1] & 0xf0);
 						break;
 
-					case 16:  	// 16 bit
+					case 16:  	/* 16 bit*/
 						sample = rombase[slot->startaddr + ((slot->stepptr>>16)*2)]<<8;
 						sample |= rombase[slot->startaddr + ((slot->stepptr>>16)*2) + 1];
 						break;
@@ -272,12 +272,12 @@ static void ymf278b_pcm_update(int num, INT16 **outputs, int length)
 				*mixp++ += (sample * volume[slot->TL+pan_left [slot->pan]+(slot->env_vol>>23)])>>17;
 				*mixp++ += (sample * volume[slot->TL+pan_right[slot->pan]+(slot->env_vol>>23)])>>17;
 
-				// update frequency
+				/* update frequency*/
 				slot->stepptr += slot->step;
 				if(slot->stepptr >= slot->endaddr)
 				{
 					slot->stepptr = slot->stepptr - slot->endaddr + slot->loopaddr;
-					// If the step is bigger than the loop, finish the sample forcibly
+					/* If the step is bigger than the loop, finish the sample forcibly*/
 					if(slot->stepptr >= slot->endaddr)
 					{
 						slot->env_vol = 256U<<23;
@@ -289,7 +289,7 @@ static void ymf278b_pcm_update(int num, INT16 **outputs, int length)
 					}
 				}
 
-				// update envelope
+				/* update envelope*/
 				slot->env_vol += slot->env_vol_step;
 				if(((INT32)(slot->env_vol - slot->env_vol_lim)) >= 0)
 			 		ymf278b_envelope_next(slot, YMF278B[num].clock_ratio);
@@ -409,7 +409,7 @@ static void ymf278b_C_w(int num, UINT8 reg, UINT8 data)
 
 	if (!Machine->sample_rate) return;
 
-	// Handle slot registers specifically
+	/* Handle slot registers specifically*/
 	if (reg >= 0x08 && reg <= 0xf7)
 	{
 		YMF278BSlot *slot = NULL;
@@ -542,10 +542,10 @@ static void ymf278b_C_w(int num, UINT8 reg, UINT8 data)
 	}
 	else
 	{
-		// All non-slot registers
+		/* All non-slot registers*/
 		switch (reg)
 		{
-			case 0x00:    	// TEST
+			case 0x00:    	/* TEST*/
 			case 0x01:
 				break;
 
@@ -569,8 +569,8 @@ static void ymf278b_C_w(int num, UINT8 reg, UINT8 data)
 				chip->memadr |= data;
 				break;
 
-			case 0x06:  // memory data (ignored, we don't support RAM)
-			case 0x07:	// unused
+			case 0x06:  /* memory data (ignored, we don't support RAM)*/
+			case 0x07:	/* unused*/
 				break;
 
 			case 0xf8:
@@ -591,7 +591,7 @@ static UINT8 ymf278b_status_port_r(int num)
 	return YMF278B[num].current_irq | (YMF278B[num].irq_line == ASSERT_LINE ? 0x80 : 0x00);
 }
 
-// Not implemented yet
+/* Not implemented yet*/
 static UINT8 ymf278b_data_port_r(int num)
 {
 	return 0;
@@ -660,20 +660,20 @@ int YMF278B_sh_start( const struct MachineSound *msound )
 		stream_init_multi(2, name, vol, Machine->sample_rate, i, ymf278b_pcm_update);
 	}
 
-	// Volume table, 1 = -0.375dB, 8 = -3dB, 256 = -96dB
+	/* Volume table, 1 = -0.375dB, 8 = -3dB, 256 = -96dB*/
 	for(i = 0; i < 256; i++)
 		volume[i] = 65536*pow(2.0, (-0.375/6)*i);
 	for(i = 256; i < 256*4; i++)
 		volume[i] = 0;
 
-	// Pan values, units are -3dB, i.e. 8.
+	/* Pan values, units are -3dB, i.e. 8.*/
 	for(i = 0; i < 16; i++)
 	{
 		pan_left[i] = i < 7 ? i*8 : i < 9 ? 256 : 0;
 		pan_right[i] = i < 8 ? 0 : i < 10 ? 256 : (16-i)*8;
 	}
 
-	// Mixing levels, units are -3dB, and add some marging to avoid clipping
+	/* Mixing levels, units are -3dB, and add some marging to avoid clipping*/
 	for(i=0; i<7; i++)
 		mix_level[i] = volume[8*i+8];
 	mix_level[7] = 0;

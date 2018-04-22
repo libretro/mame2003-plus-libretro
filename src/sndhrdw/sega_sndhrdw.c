@@ -223,7 +223,7 @@ WRITE_HANDLER( tacscan_sh_w )
 		case stingerThrust:
 			voice = kVoiceStinger;
 			sound = 7;
-                        loop = 0; //leave off sound gets stuck on
+                        loop = 0; /*leave off sound gets stuck on*/
 			break;
 		case stingerLaser:
 			voice = kVoiceStinger;

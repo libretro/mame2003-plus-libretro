@@ -70,7 +70,7 @@ UINT8 fakeapu_port[4] = { 0xaa, 0xbb, 0x00, 0x00 };
 static void snes_spc_timer( int t )
 {
 	timers[t].counter++;
-	if( timers[t].counter >= spc_ram[0xfa + t] ) // minus =
+	if( timers[t].counter >= spc_ram[0xfa + t] ) /* minus =*/
 	{
 		timers[t].counter = 0;
 		spc_ram[0xfd + t]++;

@@ -85,10 +85,10 @@ static UINT8 sound_data[24];
 				sample_start(4, 2, 0);
 			else if (data != 0xef && sound_data[offset] == 0xef)
 				sample_stop(4);
-//			if (!(data & 0x01) && (sound_data[offset] & 0x01))
-//				sample_start(5, 2, 0);
-//			else if ((data & 0x01) && !(sound_data[offset] & 0x01))
-//				sample_stop(5);
+/*			if (!(data & 0x01) && (sound_data[offset] & 0x01))*/
+/*				sample_start(5, 2, 0);*/
+/*			else if ((data & 0x01) && !(sound_data[offset] & 0x01))*/
+/*				sample_stop(5);*/
 			break;
 			
 		case 0x0c:
@@ -113,18 +113,18 @@ static UINT8 sound_data[24];
 			break;
 			
 		case 0x0b+0x08:
-//			tone_volume = (data | sound_data[0x0c+0x08]) ? 0xff : 0x00;
+/*			tone_volume = (data | sound_data[0x0c+0x08]) ? 0xff : 0x00;*/
 			break;
 			
 		case 0x0c+0x08:
-//			tone_volume = (data | sound_data[0x0b+0x08]) ? 0xff : 0x00;
+/*			tone_volume = (data | sound_data[0x0b+0x08]) ? 0xff : 0x00;*/
 			break;
 			
 		case 0x0d+0x08:
-//			if (data)
-//				tone_step = freq_to_step * (double)(data * 11);
-//			else
-//				tone_step = 0;
+/*			if (data)*/
+/*				tone_step = freq_to_step * (double)(data * 11);*/
+/*			else*/
+/*				tone_step = 0;*/
 			break;
 	}
 	sound_data[offset] = data;

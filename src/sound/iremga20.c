@@ -22,15 +22,15 @@ Revisions:
 #include "iremga20.h"
 #include "state.h"
 
-//AT
+/*AT*/
 #define MAX_VOL 256
 #define NUM_STEPS 8
 #define NUM_OCTAVES 8
 
-// International standard: 435, U.S.standard: 440
+/* International standard: 435, U.S.standard: 440*/
 #define A4 435/2
 
-// starts from "A#" in the fourth octave(tentative)
+/* starts from "A#" in the fourth octave(tentative)*/
 #define BASE_KEY 14*4+1
 
 #define MIX_CH(CH) \
@@ -47,7 +47,7 @@ Revisions:
 		play[CH] = ebx; \
 		edx += eax; \
 	}
-//ZT
+/*ZT*/
 
 static struct IremGA20_chip_def
 {
@@ -72,7 +72,7 @@ static struct IremGA20_channel_def
 	unsigned long play;
 } IremGA20_channel[4];
 
-//AT
+/*AT*/
 static float *sr_table;
 static int *sr_xlat;
 
@@ -122,13 +122,13 @@ void IremGA20_update( int param, INT16 **buffer, int length )
 		IremGA20_channel[ecx].play = play[ecx];
 	}
 }
-//ZT
+/*ZT*/
 
 WRITE_HANDLER( IremGA20_w )
 {
 	int channel;
 
-	//logerror("GA20:  Offset %02x, data %04x\n",offset,data);
+	/*logerror("GA20:  Offset %02x, data %04x\n",offset,data);*/
 
 	if (!Machine->sample_rate)
 		return;
@@ -157,15 +157,15 @@ WRITE_HANDLER( IremGA20_w )
 		IremGA20_channel[channel].end = ((IremGA20_channel[channel].end)&0x00ff0) | (data<<12);
 	break;
 
-	case 8: //AT: frequencies are snapped to half-note boundaries
+	case 8: /*AT: frequencies are snapped to half-note boundaries*/
 		IremGA20_channel[channel].rate = sr_table[sr_xlat[data>>3]] / Machine->sample_rate;
 	break;
 
-	case 0xa: //AT: gain control
+	case 0xa: /*AT: gain control*/
 		IremGA20_channel[channel].volume = (data * MAX_VOL) / (data + 10);
 	break;
 
-	case 0xc: //AT: this is always written 2(enabling both channels?)
+	case 0xc: /*AT: this is always written 2(enabling both channels?)*/
 		IremGA20_channel[channel].play = data;
 		IremGA20_channel[channel].pos = IremGA20_channel[channel].start << 8;
 	break;
@@ -199,12 +199,12 @@ int IremGA20_sh_start(const struct MachineSound *msound)
 {
 	const char *names[2];
 	char ch_names[2][40];
-//AT
+/*AT*/
 	float fx;
 	float *root_table, *fptr;
 	int *iptr, i, j, k;
 	int key_progress[14]={0,1,2,2,3,4,5,6,7,7,8,9,10,11};
-//ZT
+/*ZT*/
 
 	if (!Machine->sample_rate) return 0;
 
@@ -214,7 +214,7 @@ int IremGA20_sh_start(const struct MachineSound *msound)
 	IremGA20_chip.rom = memory_region(IremGA20_chip.intf->region);
 	IremGA20_chip.rom_size = memory_region_length(IremGA20_chip.intf->region);
 
-//AT
+/*AT*/
 	sr_table = auto_malloc(sizeof(float)*NUM_STEPS*NUM_OCTAVES*12);
 	root_table = auto_malloc(sizeof(float)*NUM_STEPS*12);
 	sr_xlat = auto_malloc(sizeof(int)*256);
@@ -238,10 +238,10 @@ int IremGA20_sh_start(const struct MachineSound *msound)
 		*iptr++ = (j * 12 + key_progress[k]) * NUM_STEPS;
 	}
 
-	// change sinage of PCM samples in advance
+	/* change sinage of PCM samples in advance*/
 	for (i=0; i<IremGA20_chip.rom_size; i++)
 		IremGA20_chip.rom[i] -= 0x80;
-//ZT
+/*ZT*/
 
 	IremGA20_reset();
 

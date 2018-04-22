@@ -20,10 +20,10 @@ struct _LFO
 
 #define LFIX(v)	((unsigned int) ((float) (1<<LFO_SHIFT)*(v)))
 
-//Convert DB to multiply amplitude
+/*Convert DB to multiply amplitude*/
 #define DB(v) 	LFIX(pow(10.0,v/20.0))
 
-//Convert cents to step increment
+/*Convert cents to step increment*/
 #define CENTS(v) LFIX(pow(2.0,v/1200.0))
 
 static int PLFO_TRI[256],PLFO_SQR[256],PLFO_SAW[256],PLFO_NOI[256];
@@ -41,8 +41,8 @@ void LFO_Init(void)
     for(i=0;i<256;++i)
     {
 		int a,p;
-//		float TL;
-		//Saw
+/*		float TL;*/
+		/*Saw*/
 		a=255-i;
 		if(i<128)
 			p=i;
@@ -51,7 +51,7 @@ void LFO_Init(void)
 		ALFO_SAW[i]=a;
 		PLFO_SAW[i]=p;
 	
-		//Square
+		/*Square*/
 		if(i<128)
 		{
 			a=255;
@@ -65,7 +65,7 @@ void LFO_Init(void)
 		ALFO_SQR[i]=a;
 		PLFO_SQR[i]=p;
 	
-		//Tri
+		/*Tri*/
 		if(i<128)
 			a=255-(i*2);
 		else
@@ -81,8 +81,8 @@ void LFO_Init(void)
 		ALFO_TRI[i]=a;
 		PLFO_TRI[i]=p;
 	
-		//noise
-		//a=lfo_noise[i];
+		/*noise*/
+		/*a=lfo_noise[i];*/
 		a=rand()&0xff;
 		p=128-a;
 		ALFO_NOI[i]=a;

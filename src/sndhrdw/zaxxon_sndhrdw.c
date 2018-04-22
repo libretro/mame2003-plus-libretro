@@ -180,7 +180,7 @@ WRITE_HANDLER( zaxxon_sound_w )
 			}
 		}
 	case 3:
-		// control byte
+		/* control byte*/
 		break;
 	}
 }

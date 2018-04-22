@@ -1320,7 +1320,7 @@ enum {
 		DST_ONESHOT,                             /* One-shot pulse generator */
 		DST_SAMPHOLD,                            /* Sample & hold transform */
 		DST_LADDER,                              /* Resistor ladder emulation */
-//		DST_DELAY,                               /* Phase shift/Delay line */
+/*		DST_DELAY,                               // Phase shift/Delay line */
 	/* Logic */
 		DST_LOGIC_INV,
 		DST_LOGIC_AND,
@@ -1335,7 +1335,7 @@ enum {
 		DSD_SQUAREW566,                          /* Square Wave generator, NE566 based */
 		DSD_TRIANGLEW566,                        /* Triangle wave generator, NE566 based */
 	/* Custom */
-//		DST_CUSTOM,                              /* whatever you want someday */
+/*		DST_CUSTOM,                              // whatever you want someday */
     /* Output Node */
 		DSO_OUTPUT                               /* The final output node */
 };

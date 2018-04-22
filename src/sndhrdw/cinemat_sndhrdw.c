@@ -70,13 +70,13 @@ MACHINE_INIT( cinemat_sound )
     current_pitch = 0x20000;
     last_frame = 0;
 
-// Pitch the Drone sound will start off at
+/* Pitch the Drone sound will start off at*/
 
 }
 
 static void cinemat_shift(UINT8 sound_val, UINT8 bits_changed, UINT8 A1, UINT8 CLK)
 {
-	// See if we're latching a shift
+	/* See if we're latching a shift*/
 
     if ((bits_changed & CLK) && (0 == (sound_val & CLK)))
 	{
@@ -116,7 +116,7 @@ struct Samplesinterface sundance_samples_interface =
 void sundance_sound_w(UINT8 sound_val, UINT8 bits_changed)
 {
 	
-if (bits_changed & 0x01) //Bong
+if (bits_changed & 0x01) /*Bong*/
 	{
 		if (sound_val & 0x01)
 		{
@@ -186,34 +186,34 @@ void starcas_sound_w(UINT8 sound_val, UINT8 bits_changed)
 
     cinemat_shift (sound_val, bits_changed, 0x80, 0x10);
 
-	// Now see if it's time to act upon the shifted data
+	/* Now see if it's time to act upon the shifted data*/
 
 	if ((bits_changed & 0x01) && (0 == (sound_val & 0x01)))
 	{
-		// Yep. Falling edge! Find out what has changed.
+		/* Yep. Falling edge! Find out what has changed.*/
 
 		shift_diff = current_shift ^ last_shift;
 
 		if ((shift_diff & 1) && (0 == (current_shift & 1)))
-			sample_start(2, 2, 0);	// Castle fire
+			sample_start(2, 2, 0);	/* Castle fire*/
 
 		if ((shift_diff & 2) && (0 == (current_shift & 2)))
-			sample_start(5, 5, 0);	// Shield hit
+			sample_start(5, 5, 0);	/* Shield hit*/
 
 		if (shift_diff & 0x04)
 		{
 			if (current_shift & 0x04)
-				sample_start(6, 6, 1);	// Star sound
+				sample_start(6, 6, 1);	/* Star sound*/
 			else
-				sample_stop(6);	// Stop it!
+				sample_stop(6);	/* Stop it!*/
 		}
 
 		if (shift_diff & 0x08)
 		{
 			if (current_shift & 0x08)
-				sample_stop(7);	// Stop it!
+				sample_stop(7);	/* Stop it!*/
 			else
-				sample_start(7, 7, 1);	// Thrust sound
+				sample_start(7, 7, 1);	/* Thrust sound*/
 		}
 
 		if (shift_diff & 0x10)
@@ -221,22 +221,22 @@ void starcas_sound_w(UINT8 sound_val, UINT8 bits_changed)
 			if (current_shift & 0x10)
 				sample_stop(4);
 			else
-				sample_start(4, 4, 1);	// Drone
+				sample_start(4, 4, 1);	/* Drone*/
 		}
 
-		// Latch the drone pitch
+		/* Latch the drone pitch*/
 
         target_pitch = (current_shift & 0x60) >> 3;
         target_pitch |= ((current_shift & 0x40) >> 5);
         target_pitch |= ((current_shift & 0x80) >> 7);
 
-        // target_pitch = (current_shift & 0x60) >> 3;
-        // is the the target drone pitch to rise and stop at.
+        /* target_pitch = (current_shift & 0x60) >> 3;*/
+        /* is the the target drone pitch to rise and stop at.*/
 
         target_pitch = 0x10000 + (target_pitch << 12);
 
-        // 0x10000 is lowest value the pitch will drop to
-        // Star Castle drone sound
+        /* 0x10000 is lowest value the pitch will drop to*/
+        /* Star Castle drone sound*/
 
         if (cpu_getcurrentframe() > last_frame)
         {
@@ -252,13 +252,13 @@ void starcas_sound_w(UINT8 sound_val, UINT8 bits_changed)
 	}
 
 	if ((bits_changed & 0x08) && (0 == (sound_val & 0x08)))
-		sample_start(3, 3, 0);			// Player fire
+		sample_start(3, 3, 0);			/* Player fire*/
 
 	if ((bits_changed & 0x04) && (0 == (sound_val & 0x04)))
-		sample_start(1, 1, 0);			// Soft explosion
+		sample_start(1, 1, 0);			/* Soft explosion*/
 
 	if ((bits_changed & 0x02) && (0 == (sound_val & 0x02)))
-		sample_start(0, 0, 0);			// Loud explosion
+		sample_start(0, 0, 0);			/* Loud explosion*/
 
 }
 
@@ -292,19 +292,19 @@ void warrior_sound_w(UINT8 sound_val, UINT8 bits_changed)
 
 	if ((bits_changed & 0x10) && (0 == (sound_val & 0x10)))
 	{
-		sample_start(0, 0, 0);			// appear
+		sample_start(0, 0, 0);			/* appear*/
 	}
 
 	if ((bits_changed & 0x08) && (0 == (sound_val & 0x08)))
-		sample_start(3, 3, 0);			// fall
+		sample_start(3, 3, 0);			/* fall*/
 
 	if ((bits_changed & 0x04) && (0 == (sound_val & 0x04)))
-		sample_start(4, 4, 0);			// explosion (kill)
+		sample_start(4, 4, 0);			/* explosion (kill)*/
 
 	if (bits_changed & 0x02)
 	{
 		if ((sound_val & 0x02) == 0)
-			sample_start(2, 2, 1);			// hi level
+			sample_start(2, 2, 1);			/* hi level*/
 		else
 			sample_stop(2);
 	}
@@ -312,7 +312,7 @@ void warrior_sound_w(UINT8 sound_val, UINT8 bits_changed)
 	if (bits_changed & 0x01)
 	{
 		if ((sound_val & 0x01) == 0)
-			sample_start(1, 1, 1);			// normal level
+			sample_start(1, 1, 1);			/* normal level*/
 		else
 			sample_stop(1);
 	}
@@ -325,7 +325,7 @@ void warrior_sound_w(UINT8 sound_val, UINT8 bits_changed)
  *
  *************************************/
 
-static const char *armora_sample_names[] =   //Added retrocade samples 10-27-03 Tim C.
+static const char *armora_sample_names[] =   /*Added retrocade samples 10-27-03 Tim C.*/
 {
 	"*armora",
 	"tankfire.wav",
@@ -352,51 +352,51 @@ void armora_sound_w(UINT8 sound_val, UINT8 bits_changed)
 
     cinemat_shift (sound_val, bits_changed, 0x80, 0x10);
 
-	// Now see if it's time to act upon the shifted data
+	/* Now see if it's time to act upon the shifted data*/
 
 	if ((bits_changed & 0x01) && (0 == (sound_val & 0x01)))
 	{
-		// Yep. Falling edge! Find out what has changed.
+		/* Yep. Falling edge! Find out what has changed.*/
 
 		shift_diff = current_shift ^ last_shift;
 
 		if ((shift_diff & 1) && (0 == (current_shift & 1)))
-			sample_start(0, 0, 0);	// Tank fire
+			sample_start(0, 0, 0);	/* Tank fire*/
 
 		if ((shift_diff & 2) && (0 == (current_shift & 2)))
-			sample_start(1, 1, 0);	// Hi explosion
+			sample_start(1, 1, 0);	/* Hi explosion*/
 
 		if ((shift_diff & 4) && (0 == (current_shift & 4)))
-			sample_start(2, 2, 0);	// Jeep fire
+			sample_start(2, 2, 0);	/* Jeep fire*/
 
 		if ((shift_diff & 8) && (0 == (current_shift & 8)))
-			sample_start(3, 3, 0);	// Lo explosion
+			sample_start(3, 3, 0);	/* Lo explosion*/
 
         /* High nibble unknown */
 		last_shift = current_shift;
 	}
 
-    if (bits_changed & 0x2)   // Fixed incorrect inverted triggering 10-27-03 Tim C.
-    {                         //Still not totally correct. Should be 2 speeds
+    if (bits_changed & 0x2)   /* Fixed incorrect inverted triggering 10-27-03 Tim C.*/
+    {                         /*Still not totally correct. Should be 2 speeds*/
         if (sound_val & 0x2)
            sample_stop(4); 
         else
-           sample_start(4, 4, 1);	// Tank +            
+           sample_start(4, 4, 1);	/* Tank +            */
 
     }
-    if (bits_changed & 0x4)  // Fixed incorrect inverted triggering 10-27-03 Tim C.
+    if (bits_changed & 0x4)  /* Fixed incorrect inverted triggering 10-27-03 Tim C.*/
     {
         if (sound_val & 0x4)
           sample_stop(5);            
         else
-          sample_start(5, 5, 1);	       // Beep +   
+          sample_start(5, 5, 1);	       /* Beep +   */
     }
-    if (bits_changed & 0x8)  // Fixed incorrect inverted triggering 10-27-03 Tim C.
+    if (bits_changed & 0x8)  /* Fixed incorrect inverted triggering 10-27-03 Tim C.*/
     {
         if (sound_val & 0x8)
            sample_stop(6);
         else
-           sample_start(6, 6, 1);	// Chopper +  
+           sample_start(6, 6, 1);	/* Chopper +  */
     }
 }
 
@@ -440,16 +440,16 @@ void ripoff_sound_w(UINT8 sound_val, UINT8 bits_changed)
 
     cinemat_shift (sound_val, bits_changed, 0x01, 0x02);
 
-	// Now see if it's time to act upon the shifted data
+	/* Now see if it's time to act upon the shifted data*/
 
 	if ((bits_changed & 0x04) && (0 == (sound_val & 0x04)))
 	{
-		// Yep. Falling edge! Find out what has changed.
+		/* Yep. Falling edge! Find out what has changed.*/
 
 		shift_diff = current_shift ^ last_shift;
 
         current_bg_sound = ((current_shift & 0x1) << 2) | (current_shift & 0x2) | ((current_shift & 0x4) >> 2);
-        if (current_bg_sound != last_bg_sound) // use another background sound ?
+        if (current_bg_sound != last_bg_sound) /* use another background sound ?*/
         {
             shift_diff |= 0x08;
             sample_stop(4);
@@ -461,31 +461,31 @@ void ripoff_sound_w(UINT8 sound_val, UINT8 bits_changed)
 			if (current_shift & 0x08)
 				sample_stop(5);
 			else
-                sample_start(5, 5+last_bg_sound, 1);	// Background
+                sample_start(5, 5+last_bg_sound, 1);	/* Background*/
 		}
 
 		if ((shift_diff & 0x10) && (0 == (current_shift & 0x10)))
-			sample_start(2, 2, 0);	// Beep
+			sample_start(2, 2, 0);	/* Beep*/
 
 		if (shift_diff & 0x20)
 		{
 			if (current_shift & 0x20)
-				sample_stop(1);	// Stop it!
+				sample_stop(1);	/* Stop it!*/
 			else
-				sample_start(1, 1, 1);	// Motor
+				sample_start(1, 1, 1);	/* Motor*/
 		}
 
 		last_shift = current_shift;
 	}
 
 	if ((bits_changed & 0x08) && (0 == (sound_val & 0x08)))
-		sample_start(4, 4, 0);			// Torpedo
+		sample_start(4, 4, 0);			/* Torpedo*/
 
 	if ((bits_changed & 0x10) && (0 == (sound_val & 0x10)))
-		sample_start(0, 0, 0);			// Laser
+		sample_start(0, 0, 0);			/* Laser*/
 
 	if ((bits_changed & 0x80) && (0 == (sound_val & 0x80)))
-		sample_start(3, 3, 0);			// Explosion
+		sample_start(3, 3, 0);			/* Explosion*/
 
 }
 
@@ -537,16 +537,16 @@ void solarq_sound_w(UINT8 sound_val, UINT8 bits_changed)
             switch (current_shift & 0xffff)
             {
             case 0xceb3:
-                sample_start(7, 7, 0);	// Hyperspace
+                sample_start(7, 7, 0);	/* Hyperspace*/
                 break;
             case 0x13f3:
-                sample_start(7, 8, 0);	// Extra
+                sample_start(7, 8, 0);	/* Extra*/
                 break;
             case 0xfdf3:
-                sample_start(7, 9, 0);	// Phase
+                sample_start(7, 9, 0);	/* Phase*/
                 break;
             case 0x7bf3:
-                sample_start(7, 10, 0);	// Enemy fire
+                sample_start(7, 10, 0);	/* Enemy fire*/
                 break;
             default:
                 logerror("Unknown sound starting with: %x\n", current_shift & 0xffff);
@@ -557,21 +557,21 @@ void solarq_sound_w(UINT8 sound_val, UINT8 bits_changed)
 		last_shift16 = current_shift;
     }
 
-	// Now see if it's time to act upon the shifted data
+	/* Now see if it's time to act upon the shifted data*/
 
 	if ((bits_changed & 0x02) && (0 == (sound_val & 0x02)))
 	{
-		// Yep. Falling edge! Find out what has changed.
+		/* Yep. Falling edge! Find out what has changed.*/
 
 		shift_diff = current_shift ^ last_shift;
 
 		if ((shift_diff & 0x01) && (0 == (current_shift & 0x01)))
-			sample_start(0, 0, 0);	// loud expl.
+			sample_start(0, 0, 0);	/* loud expl.*/
 
 		if ((shift_diff & 0x02) && (0 == (current_shift & 0x02)))
-			sample_start(1, 1, 0);	// soft expl.
+			sample_start(1, 1, 0);	/* soft expl.*/
 
-		if (shift_diff & 0x04) // thrust
+		if (shift_diff & 0x04) /* thrust*/
 		{
 			if (current_shift & 0x04)
 				target_volume = 0;
@@ -597,21 +597,21 @@ void solarq_sound_w(UINT8 sound_val, UINT8 bits_changed)
         }
 
 		if ((shift_diff & 0x08) && (0 == (current_shift & 0x08)))
-			sample_start(3, 3, 0);	// Fire
+			sample_start(3, 3, 0);	/* Fire*/
 
 		if ((shift_diff & 0x10) && (0 == (current_shift & 0x10)))
-			sample_start(4, 4, 0);	// Capture
+			sample_start(4, 4, 0);	/* Capture*/
 
 		if (shift_diff & 0x20)
 		{
 			if (current_shift & 0x20)
-				sample_start(6, 6, 1);	// Nuke +
+				sample_start(6, 6, 1);	/* Nuke +*/
 			else
 				sample_stop(6);
 		}
 
 		if ((shift_diff & 0x40) && (0 == (current_shift & 0x40)))
-			sample_start(5, 5, 0);	// Photon
+			sample_start(5, 5, 0);	/* Photon*/
 
 		last_shift = current_shift;
 	}
@@ -648,7 +648,7 @@ struct Samplesinterface spacewar_samples_interface =
 void spacewar_sound_w(UINT8 sound_val, UINT8 bits_changed)
 {
 
-	// Explosion
+	/* Explosion*/
 
 	if (bits_changed & 0x01)
 	{
@@ -660,7 +660,7 @@ void spacewar_sound_w(UINT8 sound_val, UINT8 bits_changed)
                 sample_start(0, 6, 0);
 		}
 	}
-	// Fire sound
+	/* Fire sound*/
 
 	if ((sound_val & 0x02) && (bits_changed & 0x02))
 	{
@@ -670,7 +670,7 @@ void spacewar_sound_w(UINT8 sound_val, UINT8 bits_changed)
            sample_start(1, 7, 0);
 	}
 
-	// Player 1 thrust
+	/* Player 1 thrust*/
 
 	if (bits_changed & 0x04)
 	{
@@ -680,7 +680,7 @@ void spacewar_sound_w(UINT8 sound_val, UINT8 bits_changed)
 			sample_start(3, 3, 1);
 	}
 
-	// Player 2 thrust
+	/* Player 2 thrust*/
 
 	if (bits_changed & 0x08)
 	{
@@ -690,11 +690,11 @@ void spacewar_sound_w(UINT8 sound_val, UINT8 bits_changed)
 			sample_start(4, 4, 1);
 	}
 
-	// Sound board shutoff (or enable)
+	/* Sound board shutoff (or enable)*/
 
 	if (bits_changed & 0x10)
 	{
-		// This is a toggle bit. If sound is enabled, shut everything off.
+		/* This is a toggle bit. If sound is enabled, shut everything off.*/
 
 		if (sound_val & 0x10)
 		{
@@ -706,10 +706,10 @@ void spacewar_sound_w(UINT8 sound_val, UINT8 bits_changed)
 					sample_stop(i);
 			}
 
-			sample_start(2, 5, 0);	// Pop when board is shut off
+			sample_start(2, 5, 0);	/* Pop when board is shut off*/
 		}
 		else
-			sample_start(2, 2, 1);	// Otherwise play idle sound
+			sample_start(2, 2, 1);	/* Otherwise play idle sound*/
 	}
 }
 
@@ -744,7 +744,7 @@ void demon_sound_w(UINT8 sound_val, UINT8 bits_changed)
 	{
 		sound_latch[sound_latch_wp] |= (sound_val & 0x07);
 
-		//logerror("Writing Sound Latch %04X = %02X\n", pc, sound_latch[sound_latch_wp]);
+		/*logerror("Writing Sound Latch %04X = %02X\n", pc, sound_latch[sound_latch_wp]);*/
 
 		sound_latch_wp++;
 		if (sound_latch_wp == QUEUE_ENTRY_COUNT)  sound_latch_wp = 0;
@@ -762,7 +762,7 @@ static READ_HANDLER( demon_sound_r )
 	sound_latch_rp++;
 	if (sound_latch_rp == QUEUE_ENTRY_COUNT)  sound_latch_rp = 0;
 
-	//logerror("Reading Sound Latch %04X = %02X\n", activecpu_get_pc(), ret);
+	/*logerror("Reading Sound Latch %04X = %02X\n", activecpu_get_pc(), ret);*/
 
 	return ret;
 }

@@ -100,7 +100,7 @@
  - 0x00 vs. 0xff, sample on/off vs. drq on/off ?
 
  *************************************************************/
-//* : debug-note tags(AT)
+/** : debug-note tags(AT)*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -163,7 +163,7 @@ const static int UPD7759_state[16] = { -1, -1, 0, 0, 1, 2, 2, 3, -1, -1, 0, 0, 1
 
 static void UPD7759_standalone_load_data(int chip);
 
-//  Generate the sound
+/*  Generate the sound*/
 static void UPD7759_update(int chip, INT16 *buffer, int length)
 {
 	int sample, state, nibble, count;
@@ -277,7 +277,7 @@ static void UPD7759_slave_tick(int chip)
 }
 
 
-//  Start emulation of several ADPCM output streams
+/*  Start emulation of several ADPCM output streams*/
 int UPD7759_sh_start(const struct MachineSound *msound)
 {
 	int chip;
@@ -296,8 +296,8 @@ int UPD7759_sh_start(const struct MachineSound *msound)
 
 		ch->rom          = memory_region(intf->region[chip]);
 		ch->cur_rombank  = ch->rom;
-		ch->reset        = 0; //* active low, should be zero because we're initializing
-		ch->start        = 0; //* active high, initial state should be low - not started
+		ch->reset        = 0; /** active low, should be zero because we're initializing*/
+		ch->start        = 0; /** active high, initial state should be low - not started*/
 		ch->port         = 0;
 		ch->playing      = 0;
 		ch->drq          = 0;
@@ -319,7 +319,7 @@ int UPD7759_sh_start(const struct MachineSound *msound)
 
 		ch->channel = stream_init(name, intf->volume[chip], Machine->sample_rate, chip, UPD7759_update);
 
-		UPD7759_reset_w(chip, 0); //* more comprehensive init
+		UPD7759_reset_w(chip, 0); /** more comprehensive init*/
 	}
 	return 0;
 }
@@ -477,7 +477,7 @@ void UPD7759_reset_w(int chip, UINT8 data)
 		ch->waiting      = 0;
 		ch->wait_samples = 0;
 				
-		timer_adjust(ch->timer, TIME_NEVER, 0, 0); //* more comprehensive reset
+		timer_adjust(ch->timer, TIME_NEVER, 0, 0); /** more comprehensive reset*/
 	}
 }
 
@@ -497,7 +497,7 @@ void UPD7759_start_w(int chip, UINT8 data)
 	old_start = ch->start;
 	ch->start = data;
 
-	// Start sample on rising edge, but ignore if already playing
+	/* Start sample on rising edge, but ignore if already playing*/
 	if(!old_start && data && !ch->playing && UPD7759_chips.intf->mode == UPD7759_STANDALONE_MODE) {
 		UINT8 scount;
 

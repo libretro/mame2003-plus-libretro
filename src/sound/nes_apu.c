@@ -39,7 +39,7 @@
 /* UNCOMMENT THIS LINE TO ACTIVATE THE EVENT QUEUE. */
 /* IT SPEEDS UP THE EMULATION BUT COSTS SOME EXTRA MEMORY. */
 /* IT IS CURRENTLY DISABLED BECAUSE THE DPOCM DOESN'T WORK RIGHT WITH IT. */
-//#define USE_QUEUE
+/*#define USE_QUEUE*/
 
 #include "nes_defs.h"
 
@@ -429,10 +429,10 @@ static int8 apu_dpcm(dpcm_t *chan)
          }
 
          if (chan->cur_byte & (1 << bit_pos))
-//            chan->regs[1]++;
+/*            chan->regs[1]++;*/
             chan->vol++;
          else
-//            chan->regs[1]--;
+/*            chan->regs[1]--;*/
             chan->vol--;
       }
    }
@@ -566,19 +566,19 @@ static INLINE void apu_regwrite(int chip,int address, uint8 value)
       break;
 
    case APU_WRE1: /* 7-bit DAC */
-      //cur->dpcm.regs[1] = value - 0x40;
+      /*cur->dpcm.regs[1] = value - 0x40;*/
       cur->dpcm.regs[1] = value & 0x7F;
       cur->dpcm.vol = (cur->dpcm.regs[1]-64);
       break;
 
    case APU_WRE2:
       cur->dpcm.regs[2] = value;
-      //apu_dpcmreset(cur->dpcm);
+      /*apu_dpcmreset(cur->dpcm);*/
       break;
 
    case APU_WRE3:
       cur->dpcm.regs[3] = value;
-      //apu_dpcmreset(cur->dpcm);
+      /*apu_dpcmreset(cur->dpcm);*/
       break;
 
    case APU_SMASK:

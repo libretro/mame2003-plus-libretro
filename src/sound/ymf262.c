@@ -182,8 +182,8 @@ typedef struct{
 	UINT8	waveform_number;
 	unsigned int wavetable;
 
-//unsigned char reserved[128-84];//speedup: pump up the struct size to power of 2
-unsigned char reserved[128-100];//speedup: pump up the struct size to power of 2
+/*unsigned char reserved[128-84];*/ /*speedup: pump up the struct size to power of 2*/
+unsigned char reserved[128-100];/*speedup: pump up the struct size to power of 2*/
 
 } OPL3_SLOT;
 
@@ -207,7 +207,7 @@ typedef struct{
 	*/
 	UINT8	extended;	/* set to 1 if this channel forms up a 4op channel with another channel(only used by first of pair of channels, ie 0,1,2 and 9,10,11) */
 
-unsigned char reserved[512-272];//speedup:pump up the struct size to power of 2
+unsigned char reserved[512-272];/*speedup:pump up the struct size to power of 2*/
 
 } OPL3_CH;
 
@@ -662,7 +662,7 @@ static INLINE void advance(OPL3 *chip)
 	OPL3_SLOT *op;
 	int i;
 
-//profiler_mark(PROFILER_USER3);
+/*profiler_mark(PROFILER_USER3);*/
 	chip->eg_timer += chip->eg_timer_add;
 
 	while (chip->eg_timer >= chip->eg_timer_overflow)
@@ -680,7 +680,7 @@ static INLINE void advance(OPL3 *chip)
 			switch(op->state)
 			{
 			case EG_ATT:	/* attack phase */
-//				if ( !(chip->eg_cnt & ((1<<op->eg_sh_ar)-1) ) )
+/*				if ( !(chip->eg_cnt & ((1<<op->eg_sh_ar)-1) ) )*/
 				if ( !(chip->eg_cnt & op->eg_m_ar) )
 				{
 					op->volume += (~op->volume *
@@ -697,7 +697,7 @@ static INLINE void advance(OPL3 *chip)
 			break;
 
 			case EG_DEC:	/* decay phase */
-//				if ( !(chip->eg_cnt & ((1<<op->eg_sh_dr)-1) ) )
+/*				if ( !(chip->eg_cnt & ((1<<op->eg_sh_dr)-1) ) )*/
 				if ( !(chip->eg_cnt & op->eg_m_dr) )
 				{
 					op->volume += eg_inc[op->eg_sel_dr + ((chip->eg_cnt>>op->eg_sh_dr)&7)];
@@ -721,7 +721,7 @@ static INLINE void advance(OPL3 *chip)
 				else				/* percussive mode */
 				{
 					/* during sustain phase chip adds Release Rate (in percussive mode) */
-//					if ( !(chip->eg_cnt & ((1<<op->eg_sh_rr)-1) ) )
+/*					if ( !(chip->eg_cnt & ((1<<op->eg_sh_rr)-1) ) )*/
 					if ( !(chip->eg_cnt & op->eg_m_rr) )
 					{
 						op->volume += eg_inc[op->eg_sel_rr + ((chip->eg_cnt>>op->eg_sh_rr)&7)];
@@ -734,7 +734,7 @@ static INLINE void advance(OPL3 *chip)
 			break;
 
 			case EG_REL:	/* release phase */
-//				if ( !(chip->eg_cnt & ((1<<op->eg_sh_rr)-1) ) )
+/*				if ( !(chip->eg_cnt & ((1<<op->eg_sh_rr)-1) ) )*/
 				if ( !(chip->eg_cnt & op->eg_m_rr) )
 				{
 					op->volume += eg_inc[op->eg_sel_rr + ((chip->eg_cnt>>op->eg_sh_rr)&7)];
@@ -754,9 +754,9 @@ static INLINE void advance(OPL3 *chip)
 #endif
 		}
 	}
-//profiler_mark(PROFILER_END);
+/*profiler_mark(PROFILER_END);*/
 
-//profiler_mark(PROFILER_USER4);
+/*profiler_mark(PROFILER_USER4);*/
 	for (i=0; i<9*2*2; i++)
 	{
 		CH  = &chip->P_CH[i/2];
@@ -788,7 +788,7 @@ static INLINE void advance(OPL3 *chip)
 			op->Cnt += op->Incr;
 		}
 	}
-//profiler_mark(PROFILER_END);
+/*profiler_mark(PROFILER_END);*/
 
 	/*	The Noise Generator of the YM3812 is 23-bit shift register.
 	*	Period is equal to 2^23-2 samples.
@@ -877,7 +877,7 @@ static INLINE void chan_calc( OPL3_CH *CH )
 		SLOT->op1_out[1] = op_calc1(SLOT->Cnt, env, (out<<SLOT->FB), SLOT->wavetable );
 	}
 	*SLOT->connect += SLOT->op1_out[1];
-//logerror("out0=%5i vol0=%4i ", SLOT->op1_out[1], env );
+/*logerror("out0=%5i vol0=%4i ", SLOT->op1_out[1], env );*/
 
 	/* SLOT 2 */
 	SLOT++;
@@ -885,7 +885,7 @@ static INLINE void chan_calc( OPL3_CH *CH )
 	if( env < ENV_QUIET )
 		*SLOT->connect += op_calc(SLOT->Cnt, env, phase_modulation, SLOT->wavetable);
 
-//logerror("out1=%5i vol1=%4i\n", op_calc(SLOT->Cnt, env, phase_modulation, SLOT->wavetable), env );
+/*logerror("out1=%5i vol1=%4i\n", op_calc(SLOT->Cnt, env, phase_modulation, SLOT->wavetable), env );*/
 
 }
 
@@ -973,7 +973,7 @@ static INLINE void chan_calc_rhythm( OPL3_CH *CH, unsigned int noise )
 
 	if (!SLOT->CON)
 		phase_modulation = SLOT->op1_out[0];
-	//else ignore output of operator 1
+	/*else ignore output of operator 1*/
 
 	SLOT->op1_out[1] = 0;
 	if( env < ENV_QUIET )
@@ -991,16 +991,16 @@ static INLINE void chan_calc_rhythm( OPL3_CH *CH, unsigned int noise )
 
 
 	/* Phase generation is based on: */
-	// HH  (13) channel 7->slot 1 combined with channel 8->slot 2 (same combination as TOP CYMBAL but different output phases)
-	// SD  (16) channel 7->slot 1
-	// TOM (14) channel 8->slot 1
-	// TOP (17) channel 7->slot 1 combined with channel 8->slot 2 (same combination as HIGH HAT but different output phases)
+	/* HH  (13) channel 7->slot 1 combined with channel 8->slot 2 (same combination as TOP CYMBAL but different output phases)*/
+	/* SD  (16) channel 7->slot 1*/
+	/* TOM (14) channel 8->slot 1*/
+	/* TOP (17) channel 7->slot 1 combined with channel 8->slot 2 (same combination as HIGH HAT but different output phases)*/
 
 	/* Envelope generation based on: */
-	// HH  channel 7->slot1
-	// SD  channel 7->slot2
-	// TOM channel 8->slot1
-	// TOP channel 8->slot2
+	/* HH  channel 7->slot1*/
+	/* SD  channel 7->slot2*/
+	/* TOM channel 8->slot1*/
+	/* TOP channel 8->slot2*/
 
 
 	/* The following formulas can be well optimized.
@@ -1257,13 +1257,13 @@ static int init_tables(void)
 
 		sin_tab[7*SIN_LEN+i] = x;
 
-		//logerror("YMF262.C: sin1[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[1*SIN_LEN+i], tl_tab[sin_tab[1*SIN_LEN+i]] );
-		//logerror("YMF262.C: sin2[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[2*SIN_LEN+i], tl_tab[sin_tab[2*SIN_LEN+i]] );
-		//logerror("YMF262.C: sin3[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[3*SIN_LEN+i], tl_tab[sin_tab[3*SIN_LEN+i]] );
-		//logerror("YMF262.C: sin4[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[4*SIN_LEN+i], tl_tab[sin_tab[4*SIN_LEN+i]] );
-		//logerror("YMF262.C: sin5[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[5*SIN_LEN+i], tl_tab[sin_tab[5*SIN_LEN+i]] );
-		//logerror("YMF262.C: sin6[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[6*SIN_LEN+i], tl_tab[sin_tab[6*SIN_LEN+i]] );
-		//logerror("YMF262.C: sin7[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[7*SIN_LEN+i], tl_tab[sin_tab[7*SIN_LEN+i]] );
+		/*logerror("YMF262.C: sin1[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[1*SIN_LEN+i], tl_tab[sin_tab[1*SIN_LEN+i]] );*/
+		/*logerror("YMF262.C: sin2[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[2*SIN_LEN+i], tl_tab[sin_tab[2*SIN_LEN+i]] );*/
+		/*logerror("YMF262.C: sin3[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[3*SIN_LEN+i], tl_tab[sin_tab[3*SIN_LEN+i]] );*/
+		/*logerror("YMF262.C: sin4[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[4*SIN_LEN+i], tl_tab[sin_tab[4*SIN_LEN+i]] );*/
+		/*logerror("YMF262.C: sin5[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[5*SIN_LEN+i], tl_tab[sin_tab[5*SIN_LEN+i]] );*/
+		/*logerror("YMF262.C: sin6[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[6*SIN_LEN+i], tl_tab[sin_tab[6*SIN_LEN+i]] );*/
+		/*logerror("YMF262.C: sin7[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[7*SIN_LEN+i], tl_tab[sin_tab[7*SIN_LEN+i]] );*/
 	}
 	/*logerror("YMF262.C: ENV_QUIET= %08x (dec*8=%i)\n", ENV_QUIET, ENV_QUIET*8 );*/
 
@@ -1426,14 +1426,14 @@ static INLINE void set_mul(OPL3 *chip,int slot,int v)
 		int chan_no = slot/2;
 
 		/* in OPL3 mode */
-		//DO THIS:
-		//if this is one of the slots of 1st channel forming up a 4-op channel
-		//do normal operation
-		//else normal 2 operator function
-		//OR THIS:
-		//if this is one of the slots of 2nd channel forming up a 4-op channel
-		//update it using channel data of 1st channel of a pair
-		//else normal 2 operator function
+		/*DO THIS:*/
+		/*if this is one of the slots of 1st channel forming up a 4-op channel*/
+		/*do normal operation*/
+		/*else normal 2 operator function*/
+		/*OR THIS:*/
+		/*if this is one of the slots of 2nd channel forming up a 4-op channel*/
+		/*update it using channel data of 1st channel of a pair*/
+		/*else normal 2 operator function*/
 		switch(chan_no)
 		{
 		case 0: case 1: case 2:
@@ -1491,14 +1491,14 @@ static INLINE void set_ksl_tl(OPL3 *chip,int slot,int v)
 		int chan_no = slot/2;
 
 		/* in OPL3 mode */
-		//DO THIS:
-		//if this is one of the slots of 1st channel forming up a 4-op channel
-		//do normal operation
-		//else normal 2 operator function
-		//OR THIS:
-		//if this is one of the slots of 2nd channel forming up a 4-op channel
-		//update it using channel data of 1st channel of a pair
-		//else normal 2 operator function
+		/*DO THIS:*/
+		/*if this is one of the slots of 1st channel forming up a 4-op channel*/
+		/*do normal operation*/
+		/*else normal 2 operator function*/
+		/*OR THIS:*/
+		/*if this is one of the slots of 2nd channel forming up a 4-op channel*/
+		/*update it using channel data of 1st channel of a pair*/
+		/*else normal 2 operator function*/
 		switch(chan_no)
 		{
 		case 0: case 1: case 2:
@@ -1837,21 +1837,21 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 				int chan_no = (r&0x0f) + ch_offset;
 
 				/* in OPL3 mode */
-				//DO THIS:
-				//if this is 1st channel forming up a 4-op channel
-				//ALSO keyon/off slots of 2nd channel forming up 4-op channel
-				//else normal 2 operator function keyon/off
-				//OR THIS:
-				//if this is 2nd channel forming up 4-op channel just do nothing
-				//else normal 2 operator function keyon/off
+				/*DO THIS:*/
+				/*if this is 1st channel forming up a 4-op channel*/
+				/*ALSO keyon/off slots of 2nd channel forming up 4-op channel*/
+				/*else normal 2 operator function keyon/off*/
+				/*OR THIS:*/
+				/*if this is 2nd channel forming up 4-op channel just do nothing*/
+				/*else normal 2 operator function keyon/off*/
 				switch(chan_no)
 				{
 				case 0: case 1: case 2:
 				case 9: case 10: case 11:
 					if (CH->extended)
 					{
-						//if this is 1st channel forming up a 4-op channel
-						//ALSO keyon/off slots of 2nd channel forming up 4-op channel
+						/*if this is 1st channel forming up a 4-op channel*/
+						/*ALSO keyon/off slots of 2nd channel forming up 4-op channel*/
 						if(v&0x20)
 						{
 							FM_KEYON (&CH->SLOT[SLOT1], 1);
@@ -1869,7 +1869,7 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 					}
 					else
 					{
-						//else normal 2 operator function keyon/off
+						/*else normal 2 operator function keyon/off*/
 						if(v&0x20)
 						{
 							FM_KEYON (&CH->SLOT[SLOT1], 1);
@@ -1887,11 +1887,11 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 				case 12: case 13: case 14:
 					if ((CH-3)->extended)
 					{
-						//if this is 2nd channel forming up 4-op channel just do nothing
+						/*if this is 2nd channel forming up 4-op channel just do nothing*/
 					}
 					else
 					{
-						//else normal 2 operator function keyon/off
+						/*else normal 2 operator function keyon/off*/
 						if(v&0x20)
 						{
 							FM_KEYON (&CH->SLOT[SLOT1], 1);
@@ -1958,21 +1958,21 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 			{
 				int chan_no = (r&0x0f) + ch_offset;
 				/* in OPL3 mode */
-				//DO THIS:
-				//if this is 1st channel forming up a 4-op channel
-				//ALSO update slots of 2nd channel forming up 4-op channel
-				//else normal 2 operator function keyon/off
-				//OR THIS:
-				//if this is 2nd channel forming up 4-op channel just do nothing
-				//else normal 2 operator function keyon/off
+				/*DO THIS:*/
+				/*if this is 1st channel forming up a 4-op channel*/
+				/*ALSO update slots of 2nd channel forming up 4-op channel*/
+				/*else normal 2 operator function keyon/off*/
+				/*OR THIS:*/
+				/*if this is 2nd channel forming up 4-op channel just do nothing*/
+				/*else normal 2 operator function keyon/off*/
 				switch(chan_no)
 				{
 				case 0: case 1: case 2:
 				case 9: case 10: case 11:
 					if (CH->extended)
 					{
-						//if this is 1st channel forming up a 4-op channel
-						//ALSO update slots of 2nd channel forming up 4-op channel
+						/*if this is 1st channel forming up a 4-op channel*/
+						/*ALSO update slots of 2nd channel forming up 4-op channel*/
 
 						/* refresh Total Level in FOUR SLOTs of this channel and channel+3 using data from THIS channel */
 						CH->SLOT[SLOT1].TLL = CH->SLOT[SLOT1].TL + (CH->ksl_base>>CH->SLOT[SLOT1].ksl);
@@ -1988,7 +1988,7 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 					}
 					else
 					{
-						//else normal 2 operator function
+						/*else normal 2 operator function*/
 						/* refresh Total Level in both SLOTs of this channel */
 						CH->SLOT[SLOT1].TLL = CH->SLOT[SLOT1].TL + (CH->ksl_base>>CH->SLOT[SLOT1].ksl);
 						CH->SLOT[SLOT2].TLL = CH->SLOT[SLOT2].TL + (CH->ksl_base>>CH->SLOT[SLOT2].ksl);
@@ -2003,11 +2003,11 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 				case 12: case 13: case 14:
 					if ((CH-3)->extended)
 					{
-						//if this is 2nd channel forming up 4-op channel just do nothing
+						/*if this is 2nd channel forming up 4-op channel just do nothing*/
 					}
 					else
 					{
-						//else normal 2 operator function
+						/*else normal 2 operator function*/
 						/* refresh Total Level in both SLOTs of this channel */
 						CH->SLOT[SLOT1].TLL = CH->SLOT[SLOT1].TL + (CH->ksl_base>>CH->SLOT[SLOT1].ksl);
 						CH->SLOT[SLOT2].TLL = CH->SLOT[SLOT2].TL + (CH->ksl_base>>CH->SLOT[SLOT2].ksl);
@@ -2296,13 +2296,13 @@ static void OPL3ResetChip(OPL3 *chip)
 	OPL3WriteReg(chip,0x04,0); /* IRQ mask clear */
 
 
-//FIX IT  registers 101, 104 and 105
+/*FIX IT  registers 101, 104 and 105*/
 
 
-//FIX IT (dont change CH.D, CH.C, CH.B and CH.A in C0-C8 registers)
+/*FIX IT (dont change CH.D, CH.C, CH.B and CH.A in C0-C8 registers)*/
 	for(c = 0xff ; c >= 0x20 ; c-- )
 		OPL3WriteReg(chip,c,0);
-//FIX IT (dont change CH.D, CH.C, CH.B and CH.A in C0-C8 registers)
+/*FIX IT (dont change CH.D, CH.C, CH.B and CH.A in C0-C8 registers)*/
 	for(c = 0x1ff ; c >= 0x120 ; c-- )
 		OPL3WriteReg(chip,c,0);
 
@@ -2577,7 +2577,7 @@ void YMF262UpdateOne(int which, INT16 **buffers, int length)
 		/* clear channel outputs */
 		memset(chanout, 0, sizeof(signed int) * 18);
 
-//profiler_mark(PROFILER_USER1);
+/*profiler_mark(PROFILER_USER1);*/
 
 #if 1
 	/* register set #1 */
@@ -2640,11 +2640,11 @@ void YMF262UpdateOne(int which, INT16 **buffers, int length)
 		chan_calc(&chip->P_CH[16]);
 		chan_calc(&chip->P_CH[17]);
 #endif
-//profiler_mark(PROFILER_END);
+/*profiler_mark(PROFILER_END);*/
 
 
 
-//profiler_mark(PROFILER_USER2);
+/*profiler_mark(PROFILER_USER2);*/
 		/* accumulator register set #1 */
 		a =  chanout[0] & chip->pan[0];
 		b =  chanout[0] & chip->pan[1];
@@ -2748,7 +2748,7 @@ void YMF262UpdateOne(int which, INT16 **buffers, int length)
 		ch_b[i] = b;
 		ch_c[i] = c;
 		ch_d[i] = d;
-//profiler_mark(PROFILER_END);
+/*profiler_mark(PROFILER_END);*/
 
 		advance(chip);
 	}

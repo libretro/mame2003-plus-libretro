@@ -222,7 +222,7 @@ enum
 static struct sa spaceod_sa[TOTAL_SOUNDS] =
 {
 		/* Port 0x0E: */
-//      {  0, sossound,   1, 1, 1 },    /* Line  0 - background noise */
+/*      {  0, sossound,   1, 1, 1 },*/    /* Line  0 - background noise */
 		{ -1 },                                                 /* Line  0 - background noise */
 		{ -1 },                                                 /* Line  1 - unused */
 		{  1, soeexplode, 0, 0, 1 },    /* Line  2 - Short Explosion */
@@ -324,7 +324,7 @@ WRITE_HANDLER( monsterb_audio_8255_w )
 	/* Port C controls a NEC7751, which is an 8048 CPU with onboard ROM */
 	else if (offset == 2)
 	{
-		// D0-D2 = P24-P26, D3 = INT
+		/* D0-D2 = P24-P26, D3 = INT*/
 		port_8255_c03 = data & 0x0F;
 		if ((data & 0x08) == 0)
 			cpu_set_irq_line(1, 0, ASSERT_LINE);
@@ -342,7 +342,7 @@ WRITE_HANDLER( monsterb_audio_8255_w )
 
 READ_HANDLER( monsterb_audio_8255_r )
 {
-	// Only PC4 is hooked up
+	/* Only PC4 is hooked up*/
 	/* 0x00 = BUSY, 0x10 = NOT BUSY */
 	return (port_8255_c47 & 0x10);
 }
@@ -358,14 +358,14 @@ READ_HANDLER( monsterb_sh_rom_r )
 /* read from T1 */
 READ_HANDLER( monsterb_sh_t1_r )
 {
-	// Labelled as "TEST", connected to ground
+	/* Labelled as "TEST", connected to ground*/
 	return 0;
 }
 
 /* read from P2 */
 READ_HANDLER( monsterb_sh_command_r )
 {
-	// 8255's PC0-2 connects to 7751's S0-2 (P24-P26 on an 8048)
+	/* 8255's PC0-2 connects to 7751's S0-2 (P24-P26 on an 8048)*/
 	return ((port_8255_c03 & 0x07) << 4) | port_7751_p27;
 }
 
@@ -378,8 +378,8 @@ WRITE_HANDLER( monsterb_sh_dac_w )
 /* write to P2 */
 WRITE_HANDLER( monsterb_sh_busy_w )
 {
-	// 8255's PC0-2 connects to 7751's S0-2 (P24-P26 on an 8048)
-	// 8255's PC4 connects to 7751's BSY OUT (P27 on an 8048)
+	/* 8255's PC0-2 connects to 7751's S0-2 (P24-P26 on an 8048)*/
+	/* 8255's PC4 connects to 7751's BSY OUT (P27 on an 8048)*/
 	port_8255_c03 = (data & 0x70) >> 4;
 	port_8255_c47 = (data & 0x80) >> 3;
 	port_7751_p27 = data & 0x80;

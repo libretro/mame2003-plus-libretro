@@ -1096,7 +1096,7 @@ int mixer_samples_this_frame(void)
 /***************************************************************************
 	mixer_need_samples_this_frame
 ***************************************************************************/
-#define EXTRA_SAMPLES 1    // safety margin for sampling rate conversion
+#define EXTRA_SAMPLES 1    /* safety margin for sampling rate conversion*/
 int mixer_need_samples_this_frame(int channel,int freq)
 {
 	return (samples_this_frame - mixer_channel[channel].samples_available)

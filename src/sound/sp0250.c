@@ -40,7 +40,7 @@ static struct {
 	} filter[6];
 } sp0250;
 
-// Internal ROM to the chip, cf. manual
+/* Internal ROM to the chip, cf. manual*/
 
 static UINT16 coefs[128] = {
 	  0,   9,  17,  25,  33,  41,  49,  57,  65,  73,  81,  89,  97, 105, 113, 121,
@@ -53,7 +53,7 @@ static UINT16 coefs[128] = {
 	496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511
 };
 
-// To be checked, somehow
+/* To be checked, somehow*/
 
 static UINT16 sp0250_ga(UINT8 v)
 {
@@ -100,9 +100,9 @@ static void sp0250_timer_tick(int param)
 			sp0250.rcount = 0;
 			stream_update(sp0250.stream, 0);
 
-			// The synchronisation between the update callback and the
-			// timer tick is crap.  Specifically, the timer tick goes
-			// a little faster.  So compensate.
+			/* The synchronisation between the update callback and the*/
+			/* timer tick is crap.  Specifically, the timer tick goes*/
+			/* a little faster.  So compensate.*/
 
 			sp0250.pcount = sp0250.pcounto;
 			sp0250.rcount = sp0250.rcounto;
@@ -133,7 +133,7 @@ static void sp0250_update(int num, INT16 *output, int length)
 			else
 				z0 = 0;
 		else {
-			// Borrowing the ay noise generation LFSR
+			/* Borrowing the ay noise generation LFSR*/
 
 			if(sp0250.RNG & 1) {
 				z0 = sp0250.amp;
@@ -149,7 +149,7 @@ static void sp0250_update(int num, INT16 *output, int length)
 			sp0250.filter[f].z1 = z0;
 		}
 
-		// Physical resolution is only 7 bits, but heh
+		/* Physical resolution is only 7 bits, but heh*/
 		output[i] = z0;
 
 		sp0250.pcounto++;

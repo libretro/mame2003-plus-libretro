@@ -2,7 +2,7 @@
 #define ADPCM_H
 
 #define MAX_ADPCM		16
-#define MAX_OKIM6295	(MAX_ADPCM/4)	// 4 voices per chip
+#define MAX_OKIM6295	(MAX_ADPCM/4)	/* 4 voices per chip*/
 
 
 /* a generic ADPCM interface, for unknown chips */

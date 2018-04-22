@@ -552,7 +552,7 @@ WRITE_HANDLER( galaxian_lfo_freq_w )
 	r1 = 1e12;
 	/* R19? 330k to gnd */
 	r2 = 330000;
-	//r1 = 15000;
+	/*r1 = 15000;*/
 	/* R21 100K */
 	Re = 100000;
 	/* register calculation */

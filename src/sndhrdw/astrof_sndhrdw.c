@@ -57,7 +57,7 @@ struct Samplesinterface tomahawk_samples_interface =
 {
 	1,	/* 1 channel for now */
 	25,	/* volume */
-	0,//tomahawk_sample_names
+	0,/*tomahawk_sample_names*/
 };
 
 

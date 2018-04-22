@@ -170,13 +170,13 @@ READ16_HANDLER( hdsnd68k_320port_r )
 
 READ16_HANDLER( hdsnd68k_status_r )
 {
-//FFFF 3000	R	READSTAT	Read Status
-//			  D15 = 'Main Flag'
-//			  D14 = 'Sound Flag'
-//			  D13 = Test Switch
-//			  D12 = 5220 Ready Flag (0=Ready)
+/*FFFF 3000	R	READSTAT	Read Status*/
+/*			  D15 = 'Main Flag'*/
+/*			  D14 = 'Sound Flag'*/
+/*			  D13 = Test Switch*/
+/*			  D12 = 5220 Ready Flag (0=Ready)*/
 	logerror("%06X:hdsnd68k_status_r(%04X)\n", activecpu_get_previouspc(), offset);
-	return (mainflag << 15) | (soundflag << 14) | 0x2000 | 0;//((readinputport(0) & 0x0020) << 8) | 0;
+	return (mainflag << 15) | (soundflag << 14) | 0x2000 | 0;/*((readinputport(0) & 0x0020) << 8) | 0;*/
 }
 
 

@@ -27,7 +27,7 @@
 #define FB_WNOISE 0x14002	/* (16bits) bit16 = bit0(out) ^ bit2 ^ bit15 */
 
 /* noise feedback for periodic noise mode */
-//#define FB_PNOISE 0x10000 /* 16bit rorate */
+/*#define FB_PNOISE 0x10000 // 16bit rorate */
 #define FB_PNOISE 0x08000   /* JH 981127 - fixes Do Run Run */
 
 /*

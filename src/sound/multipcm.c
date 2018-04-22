@@ -40,13 +40,13 @@
 
 static int ctbl[] =
 {
-	0, 1, 2, 3, 4, 5, 6 , -1,	// voice number mapping
+	0, 1, 2, 3, 4, 5, 6 , -1,	/* voice number mapping*/
 	7, 8, 9, 10,11,12,13, -1,
 	14,15,16,17,18,19,20, -1,
 	21,22,23,24,25,26,27, -1,
 };
 
-static int decaytbl[16] =	// decay times
+static int decaytbl[16] =	/* decay times*/
 {
      0,   300,   800,  1400,
   2100,  3000,  4000,  5200,
@@ -54,10 +54,10 @@ static int decaytbl[16] =	// decay times
  14500, 17500, 21000, 25000
 };
 
-static long voltbl[128];	// pre-calculated volume table
-static long pantbl[16];		// pre-calculated panning table
+static long voltbl[128];	/* pre-calculated volume table*/
+static long pantbl[16];		/* pre-calculated panning table*/
 
-// sample info struct
+/* sample info struct*/
 typedef struct PCM_t
 {
 	INT32	st;
@@ -66,30 +66,30 @@ typedef struct PCM_t
 	UINT8	env[4];
 } PCMInfoT;
 
-// voice structure
+/* voice structure*/
 typedef struct Voice_t
 {
-	INT8    active;		// active flag
-	INT8	loop;	        // loop flag
-	INT32   end;		// length of sample
-	INT32	loopst;		// loop start offset
-	int     pan;		// panning
-	INT32 	vol;		// volume
-	INT8    *pSamp;		// pointer to start of sample data
+	INT8    active;		/* active flag*/
+	INT8	loop;	        /* loop flag*/
+	INT32   end;		/* length of sample*/
+	INT32	loopst;		/* loop start offset*/
+	int     pan;		/* panning*/
+	INT32 	vol;		/* volume*/
+	INT8    *pSamp;		/* pointer to start of sample data*/
 
-	INT32	ptdelta;	// pitch step
-	INT32	ptoffset;	// fixed point offset
-	INT32	ptsum;		// fixed point sum
-  	int 	relamt;		// release amount
-  	int 	relcount;	// release counter
-	INT8	relstage;	// release stage
+	INT32	ptdelta;	/* pitch step*/
+	INT32	ptoffset;	/* fixed point offset*/
+	INT32	ptsum;		/* fixed point sum*/
+  	int 	relamt;		/* release amount*/
+  	int 	relcount;	/* release counter*/
+	INT8	relstage;	/* release stage*/
 } VoiceT;
 
-// chip structure
+/* chip structure*/
 typedef struct MultiPCM_t
 {
-	unsigned char registers[28][8];	// 8 registers per voice?
-	int type;			// chip type: 0=model1, 1=multi32
+	unsigned char registers[28][8];	/* 8 registers per voice?*/
+	int type;			/* chip type: 0=model1, 1=multi32*/
 	int bankL, bankR;
 	long banksize;
 
@@ -98,7 +98,7 @@ typedef struct MultiPCM_t
 	signed char *romptr;
 	double freq_ratio;
 
-	long dlttbl[0x1001];		// pre-calculated pitch table
+	long dlttbl[0x1001];		/* pre-calculated pitch table*/
 
 	PCMInfoT samples[512];
 
@@ -110,7 +110,7 @@ static void MultiPCM_postload(void)
 {
 	int i, j, inum;
 
-	// recalculate all the proper voice pointers
+	/* recalculate all the proper voice pointers*/
 	for (i = 0; i < 2; i++)
 	{
 		for (j = 0; j < 28; j++)
@@ -144,9 +144,9 @@ static void MultiPCM_update(int chip, INT16 **buffer, int length )
 	{
 		vptr = &mpcm[chip].Voices[j];
 
-		// is voice playing?
+		/* is voice playing?*/
 		if ((vptr->active) || (vptr->relstage))
-		{	// only calculate volume once per voice per update cycle
+		{	/* only calculate volume once per voice per update cycle*/
 			rvol = pantbl[vptr->pan];
 			lvol = pantbl[15-vptr->pan];
 
@@ -155,7 +155,7 @@ static void MultiPCM_update(int chip, INT16 **buffer, int length )
 
 			decTemp = 1.0f;
 
-			// copy our "working set" into locals
+			/* copy our "working set" into locals*/
 			ptsum = vptr->ptsum;
 			ptoffset = vptr->ptoffset;
 			ptdelta = vptr->ptdelta;
@@ -207,7 +207,7 @@ static void MultiPCM_update(int chip, INT16 **buffer, int length )
 				datap[1][i] += ((pSamp[ptoffset] * rvol)>>2);
 			}
 
-			// copy back the working values we need to keep
+			/* copy back the working values we need to keep*/
 			vptr->ptsum = ptsum;
 			vptr->ptoffset = ptoffset;
 			vptr->relcount = relcount;
@@ -227,7 +227,7 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 	int vol[2];
 	struct MultiPCM_interface *intf = msound->sound_interface;
 
-	// make volume table
+	/* make volume table*/
 	double	max=255.0;
 	double	db=(48.0/128);
 
@@ -238,7 +238,7 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 	}
 	voltbl[127]=0;
 
-	// make pan table
+	/* make pan table*/
 	for(i=0; i<16; i++)
 	{
 		pantbl[i]=(long)( (255/sqrt(15)) * sqrt(i));
@@ -278,13 +278,13 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 		vol[1]=intf->mixing_level[chip] & 0xffff;
 		stream_init_multi(2, name, vol, Machine->sample_rate, chip, MultiPCM_update);
 
-		// make pitch delta table (1 octave)
+		/* make pitch delta table (1 octave)*/
 		for(i=0; i<0x1001; i++)
 		{
 			mpcm[chip].dlttbl[i] = (long)(mpcm[chip].freq_ratio * unity * (1.0 + ((double)i / 4096.0)));
 		}
 
-		// precalculate the PCM data for a small speedup
+		/* precalculate the PCM data for a small speedup*/
 		phdr = (unsigned char *)mpcm[chip].romptr;
 		for(i = 0; i < 511; i++)
 		{
@@ -292,7 +292,7 @@ int MultiPCM_sh_start(const struct MachineSound *msound)
 			nowadrs = (phdr[idx + 0]<<16) + (phdr[idx + 1]<<8) + (phdr[idx + 2]);
 
 			if((nowadrs == 0)||(nowadrs==0xffffff))
-			{	// invalid entry
+			{	/* invalid entry*/
 				mpcm[chip].samples[i].st=0;
 				mpcm[chip].samples[i].size=0;
 			}
@@ -373,10 +373,10 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 
 	switch (offset)
 	{
-		case 0:	      	// data / status
+		case 0:	      	/* data / status*/
 			if ((cptr->curvoice > 27) || (cptr->curvoice < 0))
 			{
-				//logerror("MPCM: unknown write to voice > 28\n");
+				/*logerror("MPCM: unknown write to voice > 28\n");*/
 				return;
 			}
 
@@ -387,7 +387,7 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 
 			switch (cptr->curreg)
 			{
-			 	case 0:	// panning
+			 	case 0:	/* panning*/
 					ppp = (cptr->registers[vnum][0]>>4)&0xf;
 					if (ppp >= 8)
 					{
@@ -396,13 +396,13 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 					vptr->pan = ppp + 8;
 					break;
 
-				case 1:	// sample
+				case 1:	/* sample*/
 					break;
 
-				case 2:	// pitch LSB
-				// MUST fall through to update pitch also!
-				case 3: // pitch MSB
-					// compute frequency divisor
+				case 2:	/* pitch LSB*/
+				/* MUST fall through to update pitch also!*/
+				case 3: /* pitch MSB*/
+					/* compute frequency divisor*/
 					pitch = (cptr->registers[vnum][3]<<8) + cptr->registers[vnum][2];
 					pt_abs = (double)abs(pitch);
 					pt_oct = pt_abs>>12;
@@ -418,21 +418,21 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 					}
 					break;
 
-				case 4:	// key on/off
+				case 4:	/* key on/off*/
 					if (data & 0x80)
 					{
 						inum = cptr->registers[vnum][1];
 
-						// calc decay amount
+						/* calc decay amount*/
 						vptr->relamt = decaytbl[(0x0f - cptr->samples[inum].env[2])];
 
-						// compute start and end pointers
+						/* compute start and end pointers*/
 						st = cptr->samples[inum].st;
 
-						// perform banking
+						/* perform banking*/
 						if (st >= 0x100000)
 						{
-							if (cptr->type == 1)	// multiPCM
+							if (cptr->type == 1)	/* multiPCM*/
 							{
 /*								logerror("MPCM: key on chip %d voice %d\n", chip, vnum);
 								logerror("regs %02x %02x %02x %02x %02x %02x %02x %02x\n", cptr->registers[vnum][0],
@@ -449,7 +449,7 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 									st = (st & 0xfffff) + cptr->banksize * cptr->bankR;
 								}
 							}
-							else	// model 1
+							else	/* model 1*/
 							{
 								st = (st & 0xfffff) + cptr->banksize * cptr->bankL;
 							}
@@ -466,7 +466,7 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 					}
 					else
 					{
-//						logerror("MPCM: key off chip %d voice %d\n", chip, vnum);
+/*						logerror("MPCM: key off chip %d voice %d\n", chip, vnum);*/
 						vptr->active = 0;
 						vptr->relcount = 0;
 						if ((vptr->loop) && (vptr->pSamp))
@@ -476,27 +476,27 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 					}
 				 	break;
 
-				case 5:	// volume/loop
+				case 5:	/* volume/loop*/
 					vptr->vol = voltbl[(cptr->registers[vnum][5]>>1)&0x7f];
 					vptr->loop = (cptr->registers[vnum][5]&0x1) || !vptr->loopst;
 					break;
 
-				case 6: // ??? LFO? reverb?
+				case 6: /* ??? LFO? reverb?*/
 				case 7:
-//					logerror("write %x to reg %d, voice %d\n", data, cptr->curreg, vnum);
+/*					logerror("write %x to reg %d, voice %d\n", data, cptr->curreg, vnum);*/
 					break;
 
 				default:
-//					logerror("write %x to reg %d, voice %d\n", data, cptr->curreg, vnum);
+/*					logerror("write %x to reg %d, voice %d\n", data, cptr->curreg, vnum);*/
 					break;
 			}
 			break;
 
-		case 1:		// voice select
+		case 1:		/* voice select*/
 			cptr->curvoice = ctbl[data&0x1f];
 			break;
 
-		case 2:		// register select
+		case 2:		/* register select*/
 			cptr->curreg = data;
 			if (cptr->curreg > 7)
 				cptr->curreg = 7;
@@ -513,11 +513,11 @@ static unsigned char MultiPCM_reg_r(int chip, int offset)
 	switch (offset)
 	{
 	case 0:
-		retval = 0;	// always return READY
+		retval = 0;	/* always return READY*/
 		break;
 
 	default:
-		//logerror("read from unknown MPCM register %ld\n", offset);
+		/*logerror("read from unknown MPCM register %ld\n", offset);*/
 		break;
 	}
 
@@ -548,11 +548,11 @@ WRITE_HANDLER( MultiPCM_reg_1_w )
 
 WRITE_HANDLER( MultiPCM_bank_0_w )
 {
-	if (mpcm[0].type == MULTIPCM_MODE_STADCROSS)	// multi32 with mono bankswitching GAL
+	if (mpcm[0].type == MULTIPCM_MODE_STADCROSS)	/* multi32 with mono bankswitching GAL*/
 	{
 		mpcm[0].bankL = mpcm[0].bankR = (data&0x7);
 	}
-	else if (mpcm[0].type == MULTIPCM_MODE_MULTI32)	// multi32
+	else if (mpcm[0].type == MULTIPCM_MODE_MULTI32)	/* multi32*/
 	{
 		mpcm[0].bankL = (data>>3)&0x7;
 		mpcm[0].bankR = data & 0x7;
@@ -565,11 +565,11 @@ WRITE_HANDLER( MultiPCM_bank_0_w )
 
 WRITE_HANDLER( MultiPCM_bank_1_w )
 {
-	if (mpcm[1].type == MULTIPCM_MODE_STADCROSS)	// multi32 with mono bankswitching GAL
+	if (mpcm[1].type == MULTIPCM_MODE_STADCROSS)	/* multi32 with mono bankswitching GAL*/
 	{
 		mpcm[1].bankL = mpcm[1].bankR = (data&0x7);
 	}
-	else if (mpcm[1].type == MULTIPCM_MODE_MULTI32)	// multi32
+	else if (mpcm[1].type == MULTIPCM_MODE_MULTI32)	/* multi32*/
 	{
 		mpcm[1].bankL = (data>>3)&0x7;
 		mpcm[1].bankR = data & 0x7;
