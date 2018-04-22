@@ -2605,6 +2605,8 @@ else
 SOUNDDEFS += -DHAS_ICS2115=0
 endif
 
+SOURCES_C += $(LIBRETRO_COMM_DIR)/formats/libchdr/chd.c
+
 ifeq ($(STATIC_LINKING),1)
 else
 SOURCES_C += \
@@ -2615,7 +2617,6 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/compat/fopen_utf8.c \
 	$(LIBRETRO_COMM_DIR)/encodings/encoding_utf.c \
 	$(LIBRETRO_COMM_DIR)/file/file_path.c \
-	$(LIBRETRO_COMM_DIR)/formats/libchdr/chd.c \
 	$(LIBRETRO_COMM_DIR)/streams/file_stream.c \
 	$(LIBRETRO_COMM_DIR)/string/stdstring.c \
 	$(LIBRETRO_COMM_DIR)/utils/md5.c \
