@@ -4,7 +4,6 @@ SPLIT_UP_LINK=0
 CORE_DIR := src
 TARGET_NAME := mame2003-plus
 BUILD_BIN2C ?= 0
-BUILD_C89 ?= 0
 
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
@@ -77,25 +76,13 @@ ifeq ($(platform), unix)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
 
-   CFLAGS += $(fpic)
-ifeq ($(BUILD_C89),1)
-   CFLAGS += -std=c89
-   $(info BUILD_C89==1 -- compiling with -std=c89)
-else
-   $(info BUILD_C89==0 -- not compiling with -std=c89)   
-endif
+   CFLAGS += $(fpic) -std=c89
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 else ifeq ($(platform), linux-portable)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC -nostdlib
 
-   CFLAGS += $(fpic)
-ifeq ($(BUILD_C89),1)
-   CFLAGS += -std=c89
-   $(info BUILD_C89==1 -- compiling with -std=c89)
-else
-   $(info BUILD_C89==0 -- not compiling with -std=c89)   
-endif
+   CFLAGS += $(fpic) -std=c89
 	LIBS =
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 else ifeq ($(platform), osx)
@@ -147,7 +134,7 @@ else ifeq ($(platform), ctr)
 else ifeq ($(platform), rpi2)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
-   CFLAGS += $(fpic)
+   CFLAGS += $(fpic) -std=c89
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
    PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
@@ -157,7 +144,7 @@ else ifeq ($(platform), rpi2)
 else ifeq ($(platform), rpi3)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
-   CFLAGS += $(fpic)
+   CFLAGS += $(fpic) -std=c89
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
    PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
@@ -167,7 +154,7 @@ else ifeq ($(platform), rpi3)
 else ifeq ($(platform), android-armv7)
    TARGET = $(TARGET_NAME)_libretro_android.so
 
-   CFLAGS += -fPIC 
+   CFLAGS += -fPIC -std=c89
    PLATCFLAGS += -march=armv7-a -mfloat-abi=softfp
    LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
 
@@ -177,7 +164,7 @@ else ifeq ($(platform), android-armv7)
 else ifeq ($(platform), qnx)
    TARGET = $(TARGET_NAME)_libretro_$(platform).so
 
-   CFLAGS += -fPIC 
+   CFLAGS += -fPIC
    PLATCFLAGS += -march=armv7-a
    LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
 
@@ -188,7 +175,6 @@ else ifeq ($(platform), qnx)
 else ifeq ($(platform), wii)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
-    
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    PLATCFLAGS += -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__
@@ -198,7 +184,6 @@ else ifeq ($(platform), wii)
 else ifeq ($(platform), wiiu)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
-    
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    PLATCFLAGS += -DGEKKO -DWIIU -mwup -mcpu=750 -meabi -mhard-float -D__ppc__ -D__POWERPC__
@@ -216,7 +201,6 @@ else ifeq ($(platform), switch)
 else ifeq ($(platform), ps3)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
-    
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
@@ -233,14 +217,12 @@ else ifeq ($(platform), sncps3)
 else ifeq ($(platform), psl1ght)
    TARGET = $(TARGET_NAME)_libretro_$(platform).a
    BIGENDIAN = 1
-    
    CC = $(PS3DEV)/ppu/bin/ppu-gcc$
    AR = $(PS3DEV)/ppu/bin/ppu-ar$
    PLATCFLAGS += -D__CELLOS_LV2__ -D__ppc__ -D__POWERPC__
    STATIC_LINKING = 1
 else ifeq ($(platform), psp1)
 	TARGET = $(TARGET_NAME)_libretro_$(platform).a
-
 	CC = psp-gcc$(EXE_EXT)
 	AR = psp-ar$(EXE_EXT)
 	PLATCFLAGS += -DPSP
@@ -268,7 +250,7 @@ else ifeq ($(platform), vita)
 else ifneq (,$(findstring armv,$(platform)))
    TARGET = $(TARGET_NAME)_libretro.so
 
-   CFLAGS += -fPIC
+   CFLAGS += -fPIC -std=c89
    LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
 
 # GCW0
@@ -394,13 +376,7 @@ else
    TARGET := $(TARGET_NAME)_libretro.dll
    CC = gcc
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
-   CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__
-ifeq ($(BUILD_C89),1)
-   CFLAGS += -std=c89
-   $(info BUILD_C89==1 -- compiling with -std=c89)
-else
-   $(info BUILD_C89==0 -- not compiling with -std=c89)   
-endif
+   CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -std=c89
 endif
 
 ifeq ($(BIGENDIAN), 1)
