@@ -221,6 +221,19 @@ WRITE_HANDLER( slapfight_port_09_w );
 /* MCU */
 READ_HANDLER( getstar_e803_r );
 
+READ_HANDLER ( slapfight_68705_portA_r );
+WRITE_HANDLER( slapfight_68705_portA_w );
+READ_HANDLER ( slapfight_68705_portB_r );
+WRITE_HANDLER( slapfight_68705_portB_w );
+READ_HANDLER ( slapfight_68705_portC_r );
+WRITE_HANDLER( slapfight_68705_portC_w );
+WRITE_HANDLER( slapfight_68705_ddrA_w );
+WRITE_HANDLER( slapfight_68705_ddrB_w );
+WRITE_HANDLER( slapfight_68705_ddrC_w );
+WRITE_HANDLER( slapfight_mcu_w );
+READ_HANDLER ( slapfight_mcu_r );
+READ_HANDLER ( slapfight_mcu_status_r );
+
 READ_HANDLER ( tigerh_68705_portA_r );
 WRITE_HANDLER( tigerh_68705_portA_w );
 READ_HANDLER ( tigerh_68705_portB_r );
@@ -365,6 +378,28 @@ static PORT_WRITE_START( writeport )
 	{ 0x09, 0x09, slapfight_port_09_w },	/* select bank 1 */
 PORT_END
 
+static PORT_READ_START( slapfight_readport )
+/*	{ 0x00, 0x00, slapfight_port_00_r }, */	/* status register */
+PORT_END
+
+static MEMORY_READ_START( slapfight_m68705_readmem )
+    { 0x0000, 0x0000, slapfight_68705_portA_r },
+	{ 0x0001, 0x0001, slapfight_68705_portB_r },
+	{ 0x0002, 0x0002, slapfight_68705_portC_r },
+	{ 0x0010, 0x007f, MRA_RAM },
+	{ 0x0080, 0x07ff, MRA_ROM },
+MEMORY_END
+
+static MEMORY_WRITE_START( slapfight_m68705_writemem )
+    { 0x0000, 0x0000, slapfight_68705_portA_w },
+	{ 0x0001, 0x0001, slapfight_68705_portB_w },
+	{ 0x0002, 0x0002, slapfight_68705_portC_w },
+	{ 0x0004, 0x0004, slapfight_68705_ddrA_w },
+	{ 0x0005, 0x0005, slapfight_68705_ddrB_w },
+	{ 0x0006, 0x0006, slapfight_68705_ddrC_w },
+	{ 0x0010, 0x007f, MWA_RAM },
+	{ 0x0080, 0x07ff, MWA_ROM },
+MEMORY_END
 
 static MEMORY_READ_START( perfrman_sound_readmem )
 	{ 0x0000, 0x1fff, MRA_ROM },
@@ -905,7 +940,44 @@ static MACHINE_DRIVER_START( tigerh )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(AY8910, ay8910_interface)
+MACHINE_DRIVER_END
 
+
+static MACHINE_DRIVER_START( slapfight )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, 6000000)
+	MDRV_CPU_MEMORY(readmem,writemem)
+	MDRV_CPU_PORTS(slapfight_readport,writeport)
+	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+
+	MDRV_CPU_ADD(Z80, 6000000)
+	MDRV_CPU_MEMORY(sound_readmem,sound_writemem)
+	MDRV_CPU_VBLANK_INT(getstar_interrupt, 3)
+	
+	MDRV_CPU_ADD(M68705, 4000000/2)
+	MDRV_CPU_MEMORY(slapfight_m68705_readmem, slapfight_m68705_writemem)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(10)	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
+
+	MDRV_MACHINE_INIT(slapfight)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_BUFFERS_SPRITERAM)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_VISIBLE_AREA(1*8, 36*8-1, 2*8, 32*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(256)
+
+	MDRV_PALETTE_INIT(RRRR_GGGG_BBBB)
+	MDRV_VIDEO_START(slapfight)
+	MDRV_VIDEO_EOF(perfrman)
+	MDRV_VIDEO_UPDATE(slapfight)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(AY8910, ay8910_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( slapfigh )
@@ -951,6 +1023,7 @@ static MACHINE_DRIVER_START( slapbtuk )
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(readmem,slapbtuk_writemem)
 MACHINE_DRIVER_END
+
 
 
 ROM_START( perfrman )
@@ -1186,8 +1259,8 @@ ROM_START( slapfigh )
 	ROM_LOAD( "sf_r05.bin",   0x0000,  0x2000, CRC(87f4705a) SHA1(a90d5644ce268f3321047a4f96df96ac294d2f1b) )
 
 	ROM_REGION( 0x0800, REGION_CPU3, 0 )	/* 2k for the microcontroller */
-	ROM_LOAD( "68705.bin",    0x0000,  0x0800, NO_DUMP )
-
+	ROM_LOAD( "a77_13.bin",    0x0000,  0x0800, CRC(a70c81d9) SHA1(f155ffd25a946b0459216a8f80ded16e6e2f9258) )
+	
 	ROM_REGION( 0x04000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "sf_r11.bin",   0x00000, 0x2000, CRC(2ac7b943) SHA1(d0c3560bb1f0c2647aeff807cb4b09450237b955) )  /* Chars */
 	ROM_LOAD( "sf_r10.bin",   0x02000, 0x2000, CRC(33cadc93) SHA1(59ffc206c62a651d2ac0ef52f519dd56edf2c021) )
@@ -1280,7 +1353,7 @@ ROM_START( alcon )
 	ROM_LOAD( "sf_r05.bin",   0x0000,  0x2000, CRC(87f4705a) SHA1(a90d5644ce268f3321047a4f96df96ac294d2f1b) )
 
 	ROM_REGION( 0x0800, REGION_CPU3, 0 )	/* 2k for the microcontroller */
-	ROM_LOAD( "68705.bin",    0x0000,  0x0800, NO_DUMP )
+    ROM_LOAD( "a77_13.bin",    0x0000,  0x0800, CRC(a70c81d9) SHA1(f155ffd25a946b0459216a8f80ded16e6e2f9258) )
 
 	ROM_REGION( 0x04000, REGION_GFX1, ROMREGION_DISPOSE )
 	ROM_LOAD( "04",           0x00000, 0x2000, CRC(31003483) SHA1(7014ceb6313ac5a3d2dcb735643dfd8bfabaa185) )  /* Chars */
@@ -1410,20 +1483,26 @@ static DRIVER_INIT( tigerh )
 
 }
 
-
+static DRIVER_INIT( slapfigh )
+ {
+	install_mem_read_handler(0, 0xe803, 0xe803,  slapfight_mcu_r );
+	install_mem_write_handler(0, 0xe803, 0xe803,  slapfight_mcu_w );
+	install_port_read_handler(0,  0x00, 0x00, slapfight_mcu_status_r );
+ }
 
 /*   ( YEAR  NAME      PARENT    MACHINE   INPUT     INIT    MONITOR COMPANY    FULLNAME     FLAGS ) */
-GAME ( 1985, perfrman, 0,        perfrman, perfrman, 0,      ROT270, "[Toaplan] Data East Corporation","Performan (Japan)" )
-GAME ( 1985, perfrmau, perfrman, perfrman, perfrman, 0,      ROT270, "[Toaplan] Data East USA",        "Performan (US)" )
-GAMEX( 1985, tigerh,   0,        tigerh,   tigerh,   tigerh, ROT270, "Taito America Corp.", "Tiger Heli (US)", GAME_NO_COCKTAIL )
-GAMEX( 1985, tigerh2,  tigerh,   tigerh,   tigerh,   tigerh, ROT270, "Taito Corp.",         "Tiger Heli (Japan set 1)", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
-GAMEX( 1985, tigerhj,  tigerh,   tigerh,   tigerh,   tigerh, ROT270, "Taito Corp.",         "Tiger Heli (Japan set 2)", GAME_NO_COCKTAIL )
-GAME ( 1985, tigerhb1, tigerh,	 tigerhb,  tigerh,   0,      ROT270, "bootleg",             "Tiger Heli (bootleg set 1)" )
-GAMEX( 1985, tigerhb2, tigerh, 	 tigerhb,  tigerh,   0,      ROT270, "bootleg",             "Tiger Heli (bootleg set 2)", GAME_NO_COCKTAIL )
-GAMEX( 1986, slapfigh, 0,        slapfigh, slapfigh, 0,      ROT270, "Taito",    "Slap Fight", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
-GAMEX( 1986, slapbtjp, slapfigh, slapfigh, slapfigh, 0,      ROT270, "bootleg",  "Slap Fight (Japan bootleg)", GAME_NO_COCKTAIL )
-GAMEX( 1986, slapbtuk, slapfigh, slapbtuk, slapfigh, 0,      ROT270, "bootleg",  "Slap Fight (English bootleg)", GAME_NO_COCKTAIL )
-GAMEX( 1986, alcon,    slapfigh, slapfigh, slapfigh, 0,      ROT270, "<unknown>","Alcon", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
-GAMEX( 1986, getstar,  0,        slapfigh, getstar,  0,      ROT0,   "Taito",  "Guardian", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
-GAMEX( 1986, getstarj, getstar,  slapfigh, getstar,  0,      ROT0,   "Taito",  "Get Star (Japan)", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
-GAMEX( 1986, getstarb, getstar,  slapfigh, getstar,  0,      ROT0,   "bootleg","Get Star (bootleg)", GAME_NO_COCKTAIL )
+GAME ( 1985, perfrman, 0,        perfrman, perfrman, 0,        ROT270, "[Toaplan] Data East Corporation","Performan (Japan)" )
+GAME ( 1985, perfrmau, perfrman, perfrman, perfrman, 0,        ROT270, "[Toaplan] Data East USA",        "Performan (US)" )
+GAMEX( 1985, tigerh,   0,        tigerh,   tigerh,   tigerh,   ROT270, "Taito America Corp.",            "Tiger Heli (US)", GAME_NO_COCKTAIL )
+GAMEX( 1985, tigerh2,  tigerh,   tigerh,   tigerh,   tigerh,   ROT270, "Taito Corp.",                    "Tiger Heli (Japan set 1)", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
+GAMEX( 1985, tigerhj,  tigerh,   tigerh,   tigerh,   tigerh,   ROT270, "Taito Corp.",                    "Tiger Heli (Japan set 2)", GAME_NO_COCKTAIL )
+GAME ( 1985, tigerhb1, tigerh,	 tigerhb,  tigerh,   0,        ROT270, "bootleg",                        "Tiger Heli (bootleg set 1)" )
+GAMEX( 1985, tigerhb2, tigerh, 	 tigerhb,  tigerh,   0,        ROT270, "bootleg",                        "Tiger Heli (bootleg set 2)", GAME_NO_COCKTAIL )
+GAMEX( 1986, slapfigh, 0,        slapfight,slapfigh, slapfigh, ROT270, "Taito",                          "Slap Fight", GAME_NO_COCKTAIL )
+GAMEX( 1986, slapbtjp, slapfigh, slapfigh, slapfigh, 0,        ROT270, "bootleg",                        "Slap Fight (Japan bootleg)", GAME_NO_COCKTAIL )
+GAMEX( 1986, slapbtuk, slapfigh, slapbtuk, slapfigh, 0,        ROT270, "bootleg",                        "Slap Fight (English bootleg)", GAME_NO_COCKTAIL )
+GAMEX( 1986, alcon,    slapfigh, slapfight,slapfigh, slapfigh, ROT270, "Taito America Corp",             "Alcon", GAME_NO_COCKTAIL )
+GAMEX( 1986, getstar,  0,        slapfigh, getstar,  0,        ROT0,   "Taito",                          "Guardian", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
+GAMEX( 1986, getstarj, getstar,  slapfigh, getstar,  0,        ROT0,   "Taito",                          "Get Star (Japan)", GAME_NOT_WORKING | GAME_NO_COCKTAIL )
+GAMEX( 1986, getstarb, getstar,  slapfigh, getstar,  0,        ROT0,   "bootleg",                        "Get Star (bootleg)", GAME_NO_COCKTAIL )
+
