@@ -544,9 +544,9 @@ WRITE16_HANDLER( megasys1_vregs_D_w )
 		case 0x2008/2+1 :	megasys1_scrolly[1] = new_data;	break;
 		case 0x2008/2+2 :	MEGASYS1_VREG_FLAG(1)		break;
 
-//		case 0x2100/2+0 :	megasys1_scrollx[2] = new_data;	break;
-//		case 0x2100/2+1 :	megasys1_scrolly[2] = new_data;	break;
-//		case 0x2100/2+2 :	MEGASYS1_VREG_FLAG(2)		break;
+/*		case 0x2100/2+0 :	megasys1_scrollx[2] = new_data;	break;*/
+/*		case 0x2100/2+1 :	megasys1_scrolly[2] = new_data;	break;*/
+/*		case 0x2100/2+2 :	MEGASYS1_VREG_FLAG(2)		break;*/
 
 		case 0x2108/2   :	megasys1_sprite_bank	=	new_data;		break;
 		case 0x2200/2   :	megasys1_sprite_flag	=	new_data;		break;
@@ -604,7 +604,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 				data16_t *spritedata = &spriteram16[ (objectdata[ 0 ] & 0x7f) * 0x10/2];
 
 				attr = spritedata[ 8/2 ];
-				if (((attr & 0xc0)>>6) != sprite)	continue;	// flipping
+				if (((attr & 0xc0)>>6) != sprite)	continue;	/* flipping*/
 
 				/* apply the position displacements */
 				sx = ( spritedata[0x0A/2] + objectdata[0x02/2] ) % 512;
@@ -737,7 +737,7 @@ static struct priority priorities[] =
 		{ 0x04132,0xfffff,0xfffff,0x01423,0xfffff,0xfffff,0xfffff,0xfffff,
 		  0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff,0xfffff }
 	},
-	{	0	}	// end of list: use the prom's data
+	{	0	}	/* end of list: use the prom's data*/
 };
 
 
@@ -810,38 +810,38 @@ PALETTE_INIT( megasys1 )
 
 	/* Otherwise, perform the conversion from the prom itself */
 
-	for (pri_code = 0; pri_code < 0x10 ; pri_code++)	// 16 priority codes
+	for (pri_code = 0; pri_code < 0x10 ; pri_code++)	/* 16 priority codes*/
 	{
-		int layers_order[2];	// 2 layers orders (split sprites on/off)
+		int layers_order[2];	/* 2 layers orders (split sprites on/off)*/
 
 		for (offset = 0; offset < 2; offset ++)
 		{
-			int enable_mask = 0xf;	// start with every layer enabled
+			int enable_mask = 0xf;	/* start with every layer enabled*/
 
 			layers_order[offset] = 0xfffff;
 
 			do
 			{
-				int top = color_prom[pri_code * 0x20 + offset + enable_mask * 2] & 3;	// this must be the top layer
+				int top = color_prom[pri_code * 0x20 + offset + enable_mask * 2] & 3;	/* this must be the top layer*/
 				int top_mask = 1 << top;
 
-				int	result = 0;		// result of the feasibility check for this layer
+				int	result = 0;		/* result of the feasibility check for this layer*/
 
-				for (i = 0; i < 0x10 ; i++)	// every combination of opaque and transparent pens
+				for (i = 0; i < 0x10 ; i++)	/* every combination of opaque and transparent pens*/
 				{
-					int opacity	=	i & enable_mask;	// only consider active layers
+					int opacity	=	i & enable_mask;	/* only consider active layers*/
 					int layer	=	color_prom[pri_code * 0x20 + offset + opacity * 2];
 
 					if (opacity)
 					{
 						if (opacity & top_mask)
 						{
-							if (layer != top )	result |= 1; 	// error: opaque pens aren't always opaque!
+							if (layer != top )	result |= 1; 	/* error: opaque pens aren't always opaque!*/
 						}
 						else
 						{
-							if (layer == top)	result |= 2;	// transparent pen is opaque
-							else				result |= 4;	// transparent pen is transparent
+							if (layer == top)	result |= 2;	/* transparent pen is opaque*/
+							else				result |= 4;	/* transparent pen is transparent*/
 						}
 					}
 				}
@@ -868,28 +868,28 @@ PALETTE_INIT( megasys1 )
 					break;
 				}
 
-				if (result == 2)	enable_mask = 0; // totally opaque top layer
+				if (result == 2)	enable_mask = 0; /* totally opaque top layer*/
 
 			}	while (enable_mask);
 
-        }	// offset
+        }	/* offset*/
 
 		/* merge the two layers orders */
 
 		order = 0xfffff;
 
-		for (i = 5; i > 0 ; )	// 5 layers to write
+		for (i = 5; i > 0 ; )	/* 5 layers to write*/
 		{
 			int layer;
 			int layer0 = layers_order[0] & 0x0f;
 			int layer1 = layers_order[1] & 0x0f;
 
-			if (layer0 != 3)	// 0,1,2 or f
+			if (layer0 != 3)	/* 0,1,2 or f*/
 			{
 				if (layer1 == 3)
 				{
 					layer = 4;
-					layers_order[0] <<= 4;	// layer1 won't change next loop
+					layers_order[0] <<= 4;	/* layer1 won't change next loop*/
 				}
 				else
 				{
@@ -904,34 +904,34 @@ PALETTE_INIT( megasys1 )
 
 				}
 			}
-			else	// layer0 = 3;
+			else	/* layer0 = 3;*/
 			{
 				if (layer1 == 3)
 				{
-					layer = 0x43;			// 4 must always be present
+					layer = 0x43;			/* 4 must always be present*/
 					order <<= 4;
-					i --;					// 2 layers written at once
+					i --;					/* 2 layers written at once*/
 				}
 				else
 				{
 					layer = 3;
-					layers_order[1] <<= 4;	// layer1 won't change next loop
+					layers_order[1] <<= 4;	/* layer1 won't change next loop*/
 				}
 			}
 
 			/* reverse the order now */
 			order = (order << 4 ) | layer;
 
-			i --;		// layer written
+			i --;		/* layer written*/
 
 			layers_order[0] >>= 4;
 			layers_order[1] >>= 4;
 
-		}	// merging
+		}	/* merging*/
 
-		megasys1_layers_order[pri_code] = order & 0xfffff;	// at last!
+		megasys1_layers_order[pri_code] = order & 0xfffff;	/* at last!*/
 
-	}	// pri_code
+	}	/* pri_code*/
 
 
 
@@ -985,7 +985,7 @@ VIDEO_UPDATE( megasys1 )
 			reallyactive |= 1 << ((pri >> (4*i)) & 0x0f);
 
 		active_layers = megasys1_active_layers & reallyactive;
-		active_layers |= 1 << ((pri & 0xf0000) >> 16);	// bottom layer can't be disabled
+		active_layers |= 1 << ((pri & 0xf0000) >> 16);	/* bottom layer can't be disabled*/
 	}
 
 	tilemap_set_flip( ALL_TILEMAPS, (megasys1_screen_flag & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0 );

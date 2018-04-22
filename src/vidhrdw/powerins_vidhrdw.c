@@ -67,7 +67,7 @@ WRITE16_HANDLER( powerins_tilebank_w )
 	{
 		if (data != tile_bank)
 		{
-			tile_bank = data;		// Tiles Bank (VRAM 0)
+			tile_bank = data;		/* Tiles Bank (VRAM 0)*/
 			tilemap_mark_all_tiles_dirty(tilemap_0);
 		}
 	}
@@ -296,7 +296,7 @@ static void powerins_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 		int	color	=	source[ 0xe/2 ];
 
 		int	flipx	=	size & 0x1000;
-		int	flipy	=	0;	// ??
+		int	flipy	=	0;	/* ??*/
 
 		int	dimx	=	((size >> 0) & 0xf ) + 1;
 		int	dimy	=	((size >> 4) & 0xf ) + 1;
@@ -359,7 +359,7 @@ VIDEO_UPDATE( powerins )
 	tilemap_set_scrollx( tilemap_0, 0, scrollx - 0x20);
 	tilemap_set_scrolly( tilemap_0, 0, scrolly );
 
-	tilemap_set_scrollx( tilemap_1, 0, -0x20);	// fixed offset
+	tilemap_set_scrollx( tilemap_1, 0, -0x20);	/* fixed offset*/
 	tilemap_set_scrolly( tilemap_1, 0,  0x00);
 
 #ifdef MAME_DEBUG
@@ -369,7 +369,7 @@ if (keyboard_pressed(KEYCODE_Z))
 
 	if (keyboard_pressed(KEYCODE_Q))	msk |= 1;
 	if (keyboard_pressed(KEYCODE_W))	msk |= 2;
-//	if (keyboard_pressed(KEYCODE_E))	msk |= 4;
+/*	if (keyboard_pressed(KEYCODE_E))	msk |= 4;*/
 	if (keyboard_pressed(KEYCODE_A))	msk |= 8;
 	if (msk != 0) layers_ctrl &= msk;
 }

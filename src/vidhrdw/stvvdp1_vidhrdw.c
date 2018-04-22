@@ -62,12 +62,12 @@ X1 register         |Y1 register               |
 
 READ32_HANDLER( stv_vdp1_regs_r )
 {
-//	static int x;
+/*	static int x;*/
 
-//	x ^= 0x00020000;
+/*	x ^= 0x00020000;*/
 
 	logerror ("cpu #%d (PC=%08X) VDP1: Read from Registers, Offset %04x\n",cpu_getactivecpu(), activecpu_get_pc(), offset);
-//	if (offset == 0x04) return x;
+/*	if (offset == 0x04) return x;*/
 
 	return stv_vdp1_regs[offset];
 }
@@ -105,10 +105,10 @@ WRITE32_HANDLER ( stv_vdp1_vram_w )
 
 	COMBINE_DATA (&stv_vdp1_vram[offset]);
 
-//	if (((offset * 4) > 0xdf) && ((offset * 4) < 0x140))
-//	{
-//		logerror("cpu #%d (PC=%08X): VRAM dword write to %08X = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*4, data, mem_mask ^ 0xffffffff);
-//	}
+/*	if (((offset * 4) > 0xdf) && ((offset * 4) < 0x140))*/
+/*	{*/
+/*		logerror("cpu #%d (PC=%08X): VRAM dword write to %08X = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*4, data, mem_mask ^ 0xffffffff);*/
+/*	}*/
 
 	data = stv_vdp1_vram[offset];
 	/* put in gfx region for easy decoding */
@@ -216,8 +216,8 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 
 	switch (stv2_current_sprite.CMDPMOD&0x0038)
 	{
-		case 0x0000: // mode 0 16 colour bank mode (4bits) (hanagumi blocks)
-			// most of the shienryu sprites use this mode
+		case 0x0000: /* mode 0 16 colour bank mode (4bits) (hanagumi blocks)*/
+			/* most of the shienryu sprites use this mode*/
 			pix = gfxdata[patterndata+offsetcnt/2];
 			pix = offsetcnt&1 ? (pix & 0x0f):((pix & 0xf0)>>4) ;
 			pix = pix+((stv2_current_sprite.CMDCOLR&0x0ff0));
@@ -231,8 +231,8 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			}
 
 			break;
-		case 0x0008: // mode 1 16 colour lookup table mode (4bits)
-			// shienryu explosisons (and some enemies) use this mode
+		case 0x0008: /* mode 1 16 colour lookup table mode (4bits)*/
+			/* shienryu explosisons (and some enemies) use this mode*/
 			pix2 = gfxdata[patterndata+offsetcnt/2];
 			pix2 = offsetcnt&1 ?  (pix2 & 0x0f):((pix2 & 0xf0)>>4);
 			pix = pix2&1 ?
@@ -256,7 +256,7 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			}
 			else
 			{
-				pix=pix2; // this is messy .. but just ensures that pen 0 isn't drawn
+				pix=pix2; /* this is messy .. but just ensures that pen 0 isn't drawn*/
 			}
 			if (shienryu_sprite_kludge)
 			{
@@ -267,31 +267,31 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 
 
 			break;
-		case 0x0010: // mode 2 64 colour bank mode (8bits) (character select portraits on hanagumi)
+		case 0x0010: /* mode 2 64 colour bank mode (8bits) (character select portraits on hanagumi)*/
 			pix = gfxdata[patterndata+offsetcnt];
 			mode = 2;
 			pix = pix+(stv2_current_sprite.CMDCOLR&0x0fc0);
 			transmask = 0x3f;
 			break;
-		case 0x0018: // mode 3 128 colour bank mode (8bits) (little characters on hanagumi use this mode)
+		case 0x0018: /* mode 3 128 colour bank mode (8bits) (little characters on hanagumi use this mode)*/
 			pix = gfxdata[patterndata+offsetcnt];
 			pix = pix+(stv2_current_sprite.CMDCOLR&0x0f80);
 			transmask = 0x7f;
 			mode = 3;
-		//	pix = rand();
+		/*	pix = rand();*/
 			break;
-		case 0x0020: // mode 4 256 colour bank mode (8bits) (hanagumi title)
+		case 0x0020: /* mode 4 256 colour bank mode (8bits) (hanagumi title)*/
 			pix = gfxdata[patterndata+offsetcnt];
 			pix = pix+(stv2_current_sprite.CMDCOLR&0x0f00);
 			transmask = 0xff;
 			mode = 4;
 			break;
-		case 0x0028: // mode 5 32,768 colour RGB mode (16bits)
+		case 0x0028: /* mode 5 32,768 colour RGB mode (16bits)*/
 			pix = gfxdata[patterndata+offsetcnt*2+1] | (gfxdata[patterndata+offsetcnt*2]<<8) ;
 			mode = 5;
 			transmask = 0x7fff;
 			break;
-		default: // other settings illegal
+		default: /* other settings illegal*/
 			pix = rand();
 			mode = 0;
 			transmask = 0xff;
@@ -311,7 +311,7 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 	}
 
 
-	if (mode != 5) // mode 0-4 are 'normal'
+	if (mode != 5) /* mode 0-4 are 'normal'*/
 	{
 		if (pix & transmask)
 		{
@@ -322,7 +322,7 @@ static INLINE void drawpixel(UINT16 *dest, int patterndata, int offsetcnt)
 			*dest = col;
 		}
 	}
-	else // mode 5 is rgb mode
+	else /* mode 5 is rgb mode*/
 	{
 		int col;
 		if (pix & 0x8000)
@@ -675,14 +675,14 @@ void stv_vpd1_draw_distorded_sprite(struct mame_bitmap *bitmap, const struct rec
 	q[3].x = x2s(stv2_current_sprite.CMDXD);
 	q[3].y = y2s(stv2_current_sprite.CMDYD);
 
-	if(direction & 1) { // xflip
+	if(direction & 1) { /* xflip*/
 		q[0].u = q[3].u = xsize-1;
 		q[1].u = q[2].u = 0;
 	} else {
 		q[0].u = q[3].u = 0;
 		q[1].u = q[2].u = xsize-1;
 	}
-	if(direction & 2) { // yflip
+	if(direction & 2) { /* yflip*/
 		q[0].v = q[1].v = ysize-1;
 		q[2].v = q[3].v = 0;
 	} else {
@@ -723,51 +723,51 @@ void stv_vpd1_draw_scaled_sprite(struct mame_bitmap *bitmap, const struct rectan
 	screen_width = stv2_current_sprite.CMDXB;
 	screen_height = stv2_current_sprite.CMDYB;
 
-	x2 = stv2_current_sprite.CMDXC; // second co-ordinate set x
-	y2 = stv2_current_sprite.CMDYC; // second co-ordinate set y
+	x2 = stv2_current_sprite.CMDXC; /* second co-ordinate set x*/
+	y2 = stv2_current_sprite.CMDYC; /* second co-ordinate set y*/
 
 	switch (zoompoint)
 	{
-		case 0x0: // specified co-ordinates
+		case 0x0: /* specified co-ordinates*/
 			break;
-		case 0x5: // up left
+		case 0x5: /* up left*/
 			break;
-		case 0x6: // up center
+		case 0x6: /* up center*/
 			x -= screen_width/2 ;
 			break;
-		case 0x7: // up right
+		case 0x7: /* up right*/
 			x -= screen_width;
 			break;
 
-		case 0x9: // center left
+		case 0x9: /* center left*/
 			y -= screen_height/2 ;
 			break;
-		case 0xa: // center center
+		case 0xa: /* center center*/
 			y -= screen_height/2 ;
 			x -= screen_width/2 ;
 
 			break;
 
-		case 0xb: // center right
+		case 0xb: /* center right*/
 			y -= screen_height/2 ;
 			x -= screen_width;
 			break;
 
-		case 0xd: // center left
+		case 0xd: /* center left*/
 			y -= screen_height;
 			break;
 
-		case 0xe: // center center
+		case 0xe: /* center center*/
 			y -= screen_height;
 			x -= screen_width/2 ;
 			break;
 
-		case 0xf: // center right
+		case 0xf: /* center right*/
 			y -= screen_height;
 			x -= screen_width;
 			break;
 
-		default: // illegal
+		default: /* illegal*/
 			break;
 
 	}
@@ -801,14 +801,14 @@ void stv_vpd1_draw_scaled_sprite(struct mame_bitmap *bitmap, const struct rectan
 	}
 
 
-	if(direction & 1) { // xflip
+	if(direction & 1) { /* xflip*/
 		q[0].u = q[3].u = xsize-1;
 		q[1].u = q[2].u = 0;
 	} else {
 		q[0].u = q[3].u = 0;
 		q[1].u = q[2].u = xsize-1;
 	}
-	if(direction & 2) { // yflip
+	if(direction & 2) { /* yflip*/
 		q[0].v = q[1].v = ysize-1;
 		q[2].v = q[3].v = 0;
 	} else {
@@ -851,7 +851,7 @@ void stv_vpd1_draw_normal_sprite(struct mame_bitmap *bitmap, const struct rectan
 	for (ycnt = 0; ycnt != ysize; ycnt++) {
 
 
-		if (direction & 0x2) // 'yflip' (reverse direction)
+		if (direction & 0x2) /* 'yflip' (reverse direction)*/
 		{
 			drawypos = y+((ysize-1)-ycnt);
 		}
@@ -866,7 +866,7 @@ void stv_vpd1_draw_normal_sprite(struct mame_bitmap *bitmap, const struct rectan
 
 			for (xcnt = 0; xcnt != xsize; xcnt ++)
 			{
-				if (direction & 0x1) // 'xflip' (reverse direction)
+				if (direction & 0x1) /* 'xflip' (reverse direction)*/
 				{
 					drawxpos = x+((xsize-1)-xcnt);
 				}
@@ -881,13 +881,13 @@ void stv_vpd1_draw_normal_sprite(struct mame_bitmap *bitmap, const struct rectan
 					offsetcnt = ycnt*xsize+xcnt;
 
 					drawpixel(destline+drawxpos, patterndata, offsetcnt);
-				} // drawxpos
+				} /* drawxpos*/
 
-			} // xcnt
+			} /* xcnt*/
 
-		} // if drawypos
+		} /* if drawypos*/
 
-	} // ycny
+	} /* ycny*/
 }
 
 void stv_vdp1_process_list(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
@@ -906,24 +906,24 @@ void stv_vdp1_process_list(struct mame_bitmap *bitmap, const struct rectangle *c
 	/*Set CEF bit to 0*/
 	SET_CEF_FROM_1_TO_0;
 
-	while (spritecount<10000) // if its drawn this many sprites something is probably wrong or sega were crazy ;-)
+	while (spritecount<10000) /* if its drawn this many sprites something is probably wrong or sega were crazy ;-)*/
 	{
 		int draw_this_sprite;
 
 		draw_this_sprite = 1;
 
-	//	if (position >= ((0x80000/0x20)/4)) // safety check
-	//	{
-	//		if (vdp1_sprite_log) logerror ("Sprite List Position Too High!\n");
-	//		position = 0;
-	//	}
+	/*	if (position >= ((0x80000/0x20)/4)) // safety check*/
+	/*	{*/
+	/*		if (vdp1_sprite_log) logerror ("Sprite List Position Too High!\n");*/
+	/*		position = 0;*/
+	/*	}*/
 
 		stv2_current_sprite.CMDCTRL = (stv_vdp1_vram[position * (0x20/4)+0] & 0xffff0000) >> 16;
 
 		if (stv2_current_sprite.CMDCTRL == 0x8000)
 		{
 			if (vdp1_sprite_log) logerror ("List Terminator (0x8000) Encountered, Sprite List Process END\n");
-			goto end; // end of list
+			goto end; /* end of list*/
 		}
 
 		stv2_current_sprite.CMDLINK = (stv_vdp1_vram[position * (0x20/4)+0] & 0x0000ffff) >> 0;
@@ -940,20 +940,20 @@ void stv_vdp1_process_list(struct mame_bitmap *bitmap, const struct rectangle *c
 		stv2_current_sprite.CMDXD   = (stv_vdp1_vram[position * (0x20/4)+6] & 0xffff0000) >> 16;
 		stv2_current_sprite.CMDYD   = (stv_vdp1_vram[position * (0x20/4)+6] & 0x0000ffff) >> 0;
 		stv2_current_sprite.CMDGRDA = (stv_vdp1_vram[position * (0x20/4)+7] & 0xffff0000) >> 16;
-//		stv2_current_sprite.UNUSED  = (stv_vdp1_vram[position * (0x20/4)+7] & 0x0000ffff) >> 0;
+/*		stv2_current_sprite.UNUSED  = (stv_vdp1_vram[position * (0x20/4)+7] & 0x0000ffff) >> 0;*/
 
 		/* proecess jump / skip commands, set position for next sprite */
 		switch (stv2_current_sprite.CMDCTRL & 0x7000)
 		{
-			case 0x0000: // jump next
+			case 0x0000: /* jump next*/
 				if (vdp1_sprite_log) logerror ("Sprite List Process + Next (Normal)\n");
 				position++;
 				break;
-			case 0x1000: // jump assign
+			case 0x1000: /* jump assign*/
 				if (vdp1_sprite_log) logerror ("Sprite List Process + Jump Old %06x New %06x\n", position, (stv2_current_sprite.CMDLINK>>2));
 				position= (stv2_current_sprite.CMDLINK>>2);
 				break;
-			case 0x2000: // jump call
+			case 0x2000: /* jump call*/
 				if (vdp1_nest == -1)
 				{
 					if (vdp1_sprite_log) logerror ("Sprite List Process + Call Old %06x New %06x\n",position, (stv2_current_sprite.CMDLINK>>2));
@@ -977,7 +977,7 @@ void stv_vdp1_process_list(struct mame_bitmap *bitmap, const struct rectangle *c
 				{
 					if (vdp1_sprite_log) logerror ("Attempted return from no subroutine, aborting\n");
 					position++;
-					goto end; // end of list
+					goto end; /* end of list*/
 				}
 				break;
 			case 0x4000:
@@ -1018,7 +1018,7 @@ void stv_vdp1_process_list(struct mame_bitmap *bitmap, const struct rectangle *c
 				{
 					if (vdp1_sprite_log) logerror ("Attempted return from no subroutine, aborting\n");
 					position++;
-					goto end; // end of list
+					goto end; /* end of list*/
 				}
 				break;
 		}
@@ -1094,28 +1094,28 @@ void stv_vdp1_process_list(struct mame_bitmap *bitmap, const struct rectangle *c
 	SET_CEF_FROM_0_TO_1;
 
 	/* not here! this is done every frame drawn even if the cpu isn't running eg in the debugger */
-//	if(!(stv_scu[40] & 0x2000)) /*Sprite draw end irq*/
-//		cpu_set_irq_line_and_vector(0, 2, HOLD_LINE , 0x4d);
+/*	if(!(stv_scu[40] & 0x2000)) //Sprite draw end irq*/
+/*		cpu_set_irq_line_and_vector(0, 2, HOLD_LINE , 0x4d);*/
 
 	if (vdp1_sprite_log) logerror ("End of list processing!\n");
 }
 
 void video_update_vdp1(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
-//	int enable;
-//	if (keyboard_pressed (KEYCODE_R)) vdp1_sprite_log = 1;
-//	if (keyboard_pressed (KEYCODE_T)) vdp1_sprite_log = 0;
+/*	int enable;*/
+/*	if (keyboard_pressed (KEYCODE_R)) vdp1_sprite_log = 1;*/
+/*	if (keyboard_pressed (KEYCODE_T)) vdp1_sprite_log = 0;*/
 
-//	if (keyboard_pressed (KEYCODE_Y)) vdp1_sprite_log = 0;
-//	{
-//		FILE *fp;
-//
-//		fp=fopen("vdp1_ram.dmp", "w+b");
-//		if (fp)
-//		{
-//			fwrite(stv_vdp1, 0x00100000, 1, fp);
-//			fclose(fp);
-//		}
-//	}
+/*	if (keyboard_pressed (KEYCODE_Y)) vdp1_sprite_log = 0;*/
+/*	{*/
+/*		FILE *fp;*/
+/**/
+/*		fp=fopen("vdp1_ram.dmp", "w+b");*/
+/*		if (fp)*/
+/*		{*/
+/*			fwrite(stv_vdp1, 0x00100000, 1, fp);*/
+/*			fclose(fp);*/
+/*		}*/
+/*	}*/
 	stv_vdp1_process_list(bitmap,cliprect);
 }

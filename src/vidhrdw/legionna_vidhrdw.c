@@ -10,7 +10,7 @@
 data16_t *legionna_back_data,*legionna_fore_data,*legionna_mid_data,*legionna_scrollram16,*legionna_textram;
 
 static struct tilemap *background_layer,*foreground_layer,*midground_layer,*text_layer;
-//static int legionna_enable;
+/*static int legionna_enable;*/
 
 /******************************************************************************/
 
@@ -116,7 +116,7 @@ static void get_fore_tile_info(int tile_index)	/* this is giving bad tiles... */
 	int tile=legionna_fore_data[tile_index];
 	int color=(tile>>12)&0xf;
 
-	// legionnaire tile numbers / gfx set wrong, see screen after coin insertion
+	/* legionnaire tile numbers / gfx set wrong, see screen after coin insertion*/
 	tile &= 0xfff;
 
 	SET_TILE_INFO(4,tile,color,0)
@@ -301,7 +301,7 @@ VIDEO_UPDATE( legionna )
 	tilemap_set_scrollx( foreground_layer, 0, legionna_scrollram16[4] );
 	tilemap_set_scrolly( foreground_layer, 0, legionna_scrollram16[5] );
 
-//	if ((legionna_enable&1)!=1)
+/*	if ((legionna_enable&1)!=1)*/
 
 	fillbitmap(bitmap,get_black_pen(),cliprect);	/* wrong color? */
 
@@ -357,8 +357,8 @@ VIDEO_UPDATE( sdgndmrb )
 	tilemap_set_scrolly( midground_layer,  0, legionna_scrollram16[3] );
 	tilemap_set_scrollx( foreground_layer, 0, legionna_scrollram16[4] );
 	tilemap_set_scrolly( foreground_layer, 0, legionna_scrollram16[5] );
-//	tilemap_set_scrollx( text_layer, 0, 128 /* legionna_scrollram16[6] */);
-//	tilemap_set_scrolly( text_layer, 0, 0 /* legionna_scrollram16[7] */ );
+/*	tilemap_set_scrollx( text_layer,       0, 128                     ); // set to 128 instead of legionna_scrollram16[6] */
+/*	tilemap_set_scrolly( text_layer,       0, 0                       ); // set to 0 instead of legionna_scrollram16[7] */
 
 	fillbitmap(bitmap,get_black_pen(),cliprect);
 

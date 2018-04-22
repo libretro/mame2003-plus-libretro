@@ -88,12 +88,12 @@ static void draw_sprites(struct mame_bitmap *bitmap,int priority)
 
 		attr = spriteram16[offs];
 		if ((attr & 0x0004) && ((attr & 0x0040) == 0 || (cpu_getcurrentframe() & 1))
-//				&& ((attr & 0x0030) >> 4) == priority)
+/*				&& ((attr & 0x0030) >> 4) == priority)*/
 				&& ((attr & 0x0020) >> 5) == priority)
 		{
 			code = spriteram16[offs+1];
 			color = spriteram16[offs+2];
-			size = 1 << (color & 0x0003); // 1,2,4,8
+			size = 1 << (color & 0x0003); /* 1,2,4,8*/
 			color = (color & 0x00f0) >> 4;
 			sx = spriteram16[offs+4] + screenscroll;
 			sy = spriteram16[offs+3];

@@ -128,7 +128,7 @@ WRITE_HANDLER( msisaac_bg2_textbank_w )
 		bg2_textbank = data;
 		tilemap_mark_all_tiles_dirty( background2 );
 
-		//check if we are correct on this one
+		/*check if we are correct on this one*/
 		if ((data!=8) && (data!=0))
 		{
 			logerror("bg2 control=%2x\n",data);
@@ -189,7 +189,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 
 		if (attributes&4)
 		{
-			//color = rand()&15;
+			/*color = rand()&15;*/
 			gfx = Machine->gfx[3];
 		}
 

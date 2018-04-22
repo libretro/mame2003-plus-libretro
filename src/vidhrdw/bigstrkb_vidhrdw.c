@@ -132,7 +132,7 @@ VIDEO_START(bigstrkb)
 		return 1;
 
 	tilemap_set_transparent_pen(bsb_tilemap,15);
-//	tilemap_set_transparent_pen(bsb_tilemap2,15);
+/*	tilemap_set_transparent_pen(bsb_tilemap2,15);*/
 	tilemap_set_transparent_pen(bsb_tilemap3,15);
 
  	return 0;
@@ -140,7 +140,7 @@ VIDEO_START(bigstrkb)
 
 VIDEO_UPDATE(bigstrkb)
 {
-//	fillbitmap(bitmap,get_black_pen(),cliprect);
+/*	fillbitmap(bitmap,get_black_pen(),cliprect);*/
 
 	tilemap_set_scrollx(bsb_tilemap2,0, bsb_vidreg1[0]+(256-14));
 	tilemap_set_scrolly(bsb_tilemap2,0, bsb_vidreg2[0]);
@@ -154,5 +154,5 @@ VIDEO_UPDATE(bigstrkb)
 	bigstrkb_drawsprites(bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,bsb_tilemap,0,0);
 
-//	usrintf_showmessage	("Regs %08x %08x %08x %08x",bsb_vidreg2[0],bsb_vidreg2[1],bsb_vidreg2[2],bsb_vidreg2[3]);
+/*	usrintf_showmessage	("Regs %08x %08x %08x %08x",bsb_vidreg2[0],bsb_vidreg2[1],bsb_vidreg2[2],bsb_vidreg2[3]);*/
 }

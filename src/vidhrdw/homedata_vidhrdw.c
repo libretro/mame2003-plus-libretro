@@ -74,7 +74,7 @@ static void mrokumei_handleblit( int rom_base )
 	BaseAddr= (DestParam&0x1000);
 	DestAddr= (DestParam&0x0fff);
 
-//	logerror( "[blit bank %02x src %04x dst %04x]\n",blitter_bank,SourceAddr,DestParam);
+/*	logerror( "[blit bank %02x src %04x dst %04x]\n",blitter_bank,SourceAddr,DestParam);*/
 
 	if( homedata_visible_page == 0 )
 	{
@@ -106,11 +106,11 @@ static void mrokumei_handleblit( int rom_base )
 			{
 				switch( opcode&0xc0 )
 				{
-				case 0x40: // Raw Run
+				case 0x40: /* Raw Run*/
 					data  = pBlitData[SourceAddr++];
 					break;
 
-				case 0x00: // RLE incrementing
+				case 0x00: /* RLE incrementing*/
 					data++;
 					break;
 				}
@@ -163,7 +163,7 @@ static void reikaids_handleblit( int rom_base )
 	DestAddr= (DestParam&0x3fff);
 	flipx	= (DestParam&0x8000);
 
-//	logerror( "[blit %02x %04x %04x]\n",blitter_bank,SourceAddr,DestParam);
+/*	logerror( "[blit %02x %04x %04x]\n",blitter_bank,SourceAddr,DestParam);*/
 
 	if( homedata_visible_page == 0 )
 	{
@@ -196,11 +196,11 @@ static void reikaids_handleblit( int rom_base )
 			{
 				switch( opcode&0xc0 )
 				{
-				case 0x00: // Raw Run
+				case 0x00: /* Raw Run*/
 					data  = pBlitData[SourceAddr++];
 					break;
 
-				case 0x40: // RLE incrementing
+				case 0x40: /* RLE incrementing*/
 					data++;
 					break;
 				}
@@ -260,7 +260,7 @@ static void pteacher_handleblit( int rom_base )
 	BaseAddr= (DestParam&0x4000);
 	DestAddr= (DestParam&0x3fff);
 
-//	logerror( "[blit %02x %04x %04x]->%d\n",blitter_bank,SourceAddr,DestParam,homedata_visible_page);
+/*	logerror( "[blit %02x %04x %04x]->%d\n",blitter_bank,SourceAddr,DestParam,homedata_visible_page);*/
 
 	if( homedata_visible_page == 0 )
 	{
@@ -292,11 +292,11 @@ static void pteacher_handleblit( int rom_base )
 			{
 				switch( opcode&0xc0 )
 				{
-				case 0x00: // Raw Run
+				case 0x00: /* Raw Run*/
 					data  = pBlitData[SourceAddr++];
 					break;
 
-				case 0x40: // RLE incrementing
+				case 0x40: /* RLE incrementing*/
 					data++;
 					break;
 				}
@@ -626,7 +626,7 @@ WRITE_HANDLER( pteacher_videoram_w )
 WRITE_HANDLER( reikaids_gfx_bank_w )
 {
 
-//logerror( "%04x: [setbank %02x]\n",activecpu_get_pc(),data);
+/*logerror( "%04x: [setbank %02x]\n",activecpu_get_pc(),data);*/
 
 	if (reikaids_gfx_bank[reikaids_which] != data)
 	{
@@ -639,7 +639,7 @@ WRITE_HANDLER( reikaids_gfx_bank_w )
 
 WRITE_HANDLER( pteacher_gfx_bank_w )
 {
-//	logerror( "%04x: gfxbank:=%02x\n", activecpu_get_pc(), data );
+/*	logerror( "%04x: gfxbank:=%02x\n", activecpu_get_pc(), data );*/
 	if (pteacher_gfx_bank != data)
 	{
 		pteacher_gfx_bank = data;
@@ -649,7 +649,7 @@ WRITE_HANDLER( pteacher_gfx_bank_w )
 
 WRITE_HANDLER( homedata_blitter_param_w )
 {
-//logerror("%04x: blitter_param_w %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: blitter_param_w %02x\n",activecpu_get_pc(),data);*/
 	blitter_param[blitter_param_count] = data;
 	blitter_param_count++;
 	blitter_param_count&=3;
@@ -737,10 +737,10 @@ VIDEO_UPDATE( mrokumei )
 
 	switch (homedata_vreg[0x3])
 	{
-		case 0xb7: width = 54; break;	// mjclinic
-		case 0xae: width = 52; break;	// mrokumei
-		case 0x9f: width = 49; break;	// hourouki, mhgaiden, mjhokite
-		case 0x96: width = 49; break;	// mjclinic
+		case 0xb7: width = 54; break;	/* mjclinic*/
+		case 0xae: width = 52; break;	/* mrokumei*/
+		case 0x9f: width = 49; break;	/* hourouki, mhgaiden, mjhokite*/
+		case 0x96: width = 49; break;	/* mjclinic*/
 		default:
 			if (homedata_vreg[0x3])
 				usrintf_showmessage("unknown video control %02x %02x %02x %02x",
@@ -804,8 +804,8 @@ VIDEO_UPDATE( reikaids )
 		{ 0,1,3,2 },
 		{ 3,0,1,2 },
 		{ 1,0,3,2 },
-		{ 2,3,1,0 },	// (bg color should be taken from 1)
-		{ 3,1,2,0 }	// (bg color should be taken from 1)
+		{ 2,3,1,0 },	/* (bg color should be taken from 1)*/
+		{ 3,1,2,0 }	/* (bg color should be taken from 1)*/
 	},
 	{
 		{2,3,0,1},

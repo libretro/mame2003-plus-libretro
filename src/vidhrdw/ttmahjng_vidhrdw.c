@@ -217,7 +217,7 @@ VIDEO_UPDATE( ttmahjng )
 	{
 		int offs;
 
-		// redraw bitmaps
+		/* redraw bitmaps*/
 		for (offs = 0; offs < ttmahjng_videoram_size; offs++)
 		{
 			ttmahjng_videoram1_w(offs, ttmahjng_videoram1[offs]);

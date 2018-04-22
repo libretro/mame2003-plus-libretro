@@ -606,10 +606,10 @@ void RENDERFUNC(void)
 									rm = gm = bm = c_local >> 24;
 									break;
 								case 4:		/* tc_mselect mux == LOD */
-									rm = gm = bm = 0x80;//texel >> 24;
+									rm = gm = bm = 0x80;/*texel >> 24;*/
 									break;
 								case 5:		/* tc_mselect mux == LOD frac */
-									rm = gm = bm = 0x80;//texel >> 24;
+									rm = gm = bm = 0x80;/*texel >> 24;*/
 									break;
 							}
 
@@ -670,10 +670,10 @@ void RENDERFUNC(void)
 									am = c_local >> 24;
 									break;
 								case 4:		/* tca_mselect mux == LOD */
-									am = 0x80;//texel >> 24;
+									am = 0x80;/*texel >> 24;*/
 									break;
 								case 5:		/* tca_mselect mux == LOD frac */
-									am = 0x80;//texel >> 24;
+									am = 0x80;/*texel >> 24;*/
 									break;
 							}
 
@@ -962,10 +962,10 @@ void RENDERFUNC(void)
 								rm = gm = bm = c_local >> 24;
 								break;
 							case 4:		/* tc_mselect mux == LOD */
-								rm = gm = bm = 0x80;//texel >> 24;
+								rm = gm = bm = 0x80;/*texel >> 24;*/
 								break;
 							case 5:		/* tc_mselect mux == LOD frac */
-								rm = gm = bm = 0x80;//texel >> 24;
+								rm = gm = bm = 0x80;/*texel >> 24;*/
 								break;
 						}
 
@@ -1355,50 +1355,50 @@ void RENDERFUNC(void)
 						int dr = (dpix >> 8) & 0xf8;
 						int dg = (dpix >> 3) & 0xfc;
 						int db = (dpix << 3) & 0xf8;
-// fix me -- we don't support alpha layer on the dest
+/* fix me -- we don't support alpha layer on the dest*/
 						int da = 0xff;
 						int sr = r;
 						int sg = g;
 						int sb = b;
 						int sa = a;
 						
-// fix me -- add dither subtraction here
-//						if (FBZMODE_BITS(19,1))
+/* fix me -- add dither subtraction here*/
+/*						if (FBZMODE_BITS(19,1))*/
 						
 						/* compute source portion */
 						switch (ALPHAMODE_BITS(8,4))
 						{
-							case 0:		// AZERO
+							case 0:		/* AZERO*/
 								r = g = b = 0;
 								break;
-							case 1:		// ASRC_ALPHA
+							case 1:		/* ASRC_ALPHA*/
 								r = (sr * (sa + 1)) >> 8;
 								g = (sg * (sa + 1)) >> 8;
 								b = (sb * (sa + 1)) >> 8;
 								break;
-							case 2:		// A_COLOR
+							case 2:		/* A_COLOR*/
 								r = (sr * (dr + 1)) >> 8;
 								g = (sg * (dg + 1)) >> 8;
 								b = (sb * (db + 1)) >> 8;
 								break;
-							case 3:		// ADST_ALPHA
+							case 3:		/* ADST_ALPHA*/
 								r = (sr * (da + 1)) >> 8;
 								g = (sg * (da + 1)) >> 8;
 								b = (sb * (da + 1)) >> 8;
 								break;
-							case 4:		// AONE
+							case 4:		/* AONE*/
 								break;
-							case 5:		// AOMSRC_ALPHA
+							case 5:		/* AOMSRC_ALPHA*/
 								r = (sr * (0x100 - sa)) >> 8;
 								g = (sg * (0x100 - sa)) >> 8;
 								b = (sb * (0x100 - sa)) >> 8;
 								break;
-							case 6:		// AOM_COLOR
+							case 6:		/* AOM_COLOR*/
 								r = (sr * (0x100 - dr)) >> 8;
 								g = (sg * (0x100 - dg)) >> 8;
 								b = (sb * (0x100 - db)) >> 8;
 								break;
-							case 7:		// AOMDST_ALPHA
+							case 7:		/* AOMDST_ALPHA*/
 								r = (sr * (0x100 - da)) >> 8;
 								g = (sg * (0x100 - da)) >> 8;
 								b = (sb * (0x100 - da)) >> 8;
@@ -1408,39 +1408,39 @@ void RENDERFUNC(void)
 						/* add in dest portion */
 						switch (ALPHAMODE_BITS(12,4))
 						{
-							case 0:		// AZERO
+							case 0:		/* AZERO*/
 								break;
-							case 1:		// ASRC_ALPHA
+							case 1:		/* ASRC_ALPHA*/
 								r += (dr * (sa + 1)) >> 8;
 								g += (dg * (sa + 1)) >> 8;
 								b += (db * (sa + 1)) >> 8;
 								break;
-							case 2:		// A_COLOR
+							case 2:		/* A_COLOR*/
 								r += (dr * (sr + 1)) >> 8;
 								g += (dg * (sg + 1)) >> 8;
 								b += (db * (sb + 1)) >> 8;
 								break;
-							case 3:		// ADST_ALPHA
+							case 3:		/* ADST_ALPHA*/
 								r += (dr * (da + 1)) >> 8;
 								g += (dg * (da + 1)) >> 8;
 								b += (db * (da + 1)) >> 8;
 								break;
-							case 4:		// AONE
+							case 4:		/* AONE*/
 								r += dr;
 								g += dg;
 								b += db;
 								break;
-							case 5:		// AOMSRC_ALPHA
+							case 5:		/* AOMSRC_ALPHA*/
 								r += (dr * (0x100 - sa)) >> 8;
 								g += (dg * (0x100 - sa)) >> 8;
 								b += (db * (0x100 - sa)) >> 8;
 								break;
-							case 6:		// AOM_COLOR
+							case 6:		/* AOM_COLOR*/
 								r += (dr * (0x100 - sr)) >> 8;
 								g += (dg * (0x100 - sg)) >> 8;
 								b += (db * (0x100 - sb)) >> 8;
 								break;
-							case 7:		// AOMDST_ALPHA
+							case 7:		/* AOMDST_ALPHA*/
 								r += (dr * (0x100 - da)) >> 8;
 								g += (dg * (0x100 - da)) >> 8;
 								b += (db * (0x100 - da)) >> 8;
@@ -1623,137 +1623,137 @@ void generate_load_texel(struct drccore *drc, UINT8 tmu)
 	_push_r32(REG_EDX);
 
 	/* compute LOD for this texel (EDX=lod) */
-	_mov_r32_m32abs(REG_EDX, &trex_lodmin[tmu]);							// mov		edx,[trex_lodmin]
+	_mov_r32_m32abs(REG_EDX, &trex_lodmin[tmu]);							/* mov		edx,[trex_lodmin]*/
 	
 	/* compute texture base from LOD (EAX=texbase) */
-	_mov_r32_m32abs(REG_EAX, &voodoo_regs[0x100 + tmu*0x100 + texBaseAddr]);// mov		eax,[texBaseAddr]
-	_mov_r32_r32(REG_EBX, REG_EDX);											// mov		ebx,edx
-	_shr_r32_imm(REG_EBX, 2);												// shr		ebx,2
+	_mov_r32_m32abs(REG_EAX, &voodoo_regs[0x100 + tmu*0x100 + texBaseAddr]);/* mov		eax,[texBaseAddr]*/
+	_mov_r32_r32(REG_EBX, REG_EDX);											/* mov		ebx,edx*/
+	_shr_r32_imm(REG_EBX, 2);												/* shr		ebx,2*/
 	if (!((TEXTUREMODE_BITS(11,1))
-		_add_r32_m32isd(REG_EAX, REG_EBX, 4, &trex_lod_offset[tmu][0]);		// add		eax,[trex_lod_offset + ebx*4]
+		_add_r32_m32isd(REG_EAX, REG_EBX, 4, &trex_lod_offset[tmu][0]);		/* add		eax,[trex_lod_offset + ebx*4]*/
 	else
 	{
-		_mov_r32_m32isd(REG_ECX, REG_ECX, 4, &trex_lod_offset[tmu][0]);		// mov		ecx,[trex_lod_offset + ebx*4]
-		_lea_r32_m32bisd(REG_EAX, REG_EAX, REG_ECX, 2, 0);					// lea		eax,[eax+ecx*2]
+		_mov_r32_m32isd(REG_ECX, REG_ECX, 4, &trex_lod_offset[tmu][0]);		/* mov		ecx,[trex_lod_offset + ebx*4]*/
+		_lea_r32_m32bisd(REG_EAX, REG_EAX, REG_ECX, 2, 0);					/* lea		eax,[eax+ecx*2]*/
 	}
 	
 	/* compute LOD shift (ECX=lodshift) */
-	_mov_r32_m32bd(REG_ECX, REG_EBX, &trex_lod_width_shift[tmu][0]);		// mov		ecx,[trex_lod_width_shift + ebx]
-	_ror_r32_imm(REG_ECX, 16);												// ror		ecx,16
-	_or_r32_r32(REG_ECX, REG_EBX);											// or		ecx,ebx
+	_mov_r32_m32bd(REG_ECX, REG_EBX, &trex_lod_width_shift[tmu][0]);		/* mov		ecx,[trex_lod_width_shift + ebx]*/
+	_ror_r32_imm(REG_ECX, 16);												/* ror		ecx,16*/
+	_or_r32_r32(REG_ECX, REG_EBX);											/* or		ecx,ebx*/
 	
 	/* choose filter based on magnification/minification if different */
-	_mov_m32abs_r32(&lodsave, REG_EDX);										// mov		[lodsave],edx
-//	if (TEXTUREMODE_BITS(2,1) != TEXTUREMODE_BITS(1,1))
-//	{
-//		_cmp_r32_m32abs(REG_EDX, &trex_lodmin[tmu]);						// cmp		edx,[trex_lodmin]
-//		if (TEXTUREMODE_BITS(1,1))
-//			_jcc_near_link(COND_E, &link_dobilinear);						// je		dobilinear
-//		else
-//			_jcc_near_link(COND_E, &link_dobilinear);						// jne		dobilinear
-//	}
+	_mov_m32abs_r32(&lodsave, REG_EDX);										/* mov		[lodsave],edx*/
+/*	if (TEXTUREMODE_BITS(2,1) != TEXTUREMODE_BITS(1,1))*/
+/*	{*/
+/*		_cmp_r32_m32abs(REG_EDX, &trex_lodmin[tmu]);						// cmp		edx,[trex_lodmin]*/
+/*		if (TEXTUREMODE_BITS(1,1))*/
+/*			_jcc_near_link(COND_E, &link_dobilinear);						// je		dobilinear*/
+/*		else*/
+/*			_jcc_near_link(COND_E, &link_dobilinear);						// jne		dobilinear*/
+/*	}*/
 
 	/* ------------- load texel in c_local (XMM2) --------------- */
 
 	/* point-sampled filter if it's a possibility */
-//	if (TEXTUREMODE_BITS(1,2) != 3)
+/*	if (TEXTUREMODE_BITS(1,2) != 3)*/
 	{
 		/* shift off the fractional bits */
-		_movapd_r128_r128(REG_XMM0, REG_XMM2);								// movapd	xmm0,xmm2
-		_psrad_r128_imm(REG_XMM0, 8);										// psrad	xmm0,8
+		_movapd_r128_r128(REG_XMM0, REG_XMM2);								/* movapd	xmm0,xmm2*/
+		_psrad_r128_imm(REG_XMM0, 8);										/* psrad	xmm0,8*/
 		
 		/* pre-mask any coordinates that will be wrapping */
-		_pand_r128_m32abs(REG_XMM0, &clampstmask);							// pand		xmm0,clampstmask
+		_pand_r128_m32abs(REG_XMM0, &clampstmask);							/* pand		xmm0,clampstmask*/
 		
 		/* pack and clamp down into unsigned bytes */
-		_packssdw_r128_r128(REG_XMM0, REG_XMM0);							// packssdw	xmm0,xmm0
-		_packuswb_r128_r128(REG_XMM0, REG_XMM0);							// packuswb	xmm0,xmm0
+		_packssdw_r128_r128(REG_XMM0, REG_XMM0);							/* packssdw	xmm0,xmm0*/
+		_packuswb_r128_r128(REG_XMM0, REG_XMM0);							/* packuswb	xmm0,xmm0*/
 		
 		/* load S,T into DL,DH */
-		_movd_r32_r128(REG_EDX, REG_XMM0);									// movd		edx,xmm0
+		_movd_r32_r128(REG_EDX, REG_XMM0);									/* movd		edx,xmm0*/
 		if (tmu == 1)
-			_shr_r32_imm(REG_EDX, 16);										// shr		edx,16
+			_shr_r32_imm(REG_EDX, 16);										/* shr		edx,16*/
 		
 		/* shift S,T right by (lod >> 2) and shift T left by lodshift */
-		_movzx_r32_r8(REG_EBX, REG_DH);										// movzx	ebx,dh		;ebx=T
-		_movzx_r32_r8(REG_EDX, REG_DL);										// movzx	edx,dl		;edx=S
-		_shr_r32_cl(REG_EBX);												// shr		ebx,cl
-		_shr_r32_cl(REG_EDX);												// shr		edx,cl
-		_ror_r32_imm(REG_ECX);												// ror		ecx,16
-		_shl_r32_cl(REG_EBX);												// shl		ebx,cl
+		_movzx_r32_r8(REG_EBX, REG_DH);										/* movzx	ebx,dh		;ebx=T*/
+		_movzx_r32_r8(REG_EDX, REG_DL);										/* movzx	edx,dl		;edx=S*/
+		_shr_r32_cl(REG_EBX);												/* shr		ebx,cl*/
+		_shr_r32_cl(REG_EDX);												/* shr		edx,cl*/
+		_ror_r32_imm(REG_ECX);												/* ror		ecx,16*/
+		_shl_r32_cl(REG_EBX);												/* shl		ebx,cl*/
 		
 		/* assemble them together and fetch the base of the final lookup table */
-		_add_r32_r32(REG_EBX, REG_EDX);										// add		ebx,edx
-		_mov_r32_m32abs(REG_EDX, tmu ? &lookup1 : &lookup0);				// mov		edx,[lookup]
+		_add_r32_r32(REG_EBX, REG_EDX);										/* add		ebx,edx*/
+		_mov_r32_m32abs(REG_EDX, tmu ? &lookup1 : &lookup0);				/* mov		edx,[lookup]*/
 		
 		/* fetch raw texel data */
 		if (!TEXTUREMODE0_BITS(11,1))
-			_movzx_r32_m8bisd(REG_EAX, REG_EAX, REG_EBX, 1, 0);				// movzx	eax,byte [eax+ebx]
+			_movzx_r32_m8bisd(REG_EAX, REG_EAX, REG_EBX, 1, 0);				/* movzx	eax,byte [eax+ebx]*/
 		else
-			_movzx_r32_m16bisd(REG_EAX, REG_EAX, REG_EBX, 2, 0);			// movzx	eax,byte [eax+ebx*2]
+			_movzx_r32_m16bisd(REG_EAX, REG_EAX, REG_EBX, 2, 0);			/* movzx	eax,byte [eax+ebx*2]*/
 		
 		/* look up into ARGB values */
-		_movss_r128_m32bisd(REG_XMM2, REG_EDX, REG_EAX, 4, 0);				// movss	xmm2,[edx+eax*4]
+		_movss_r128_m32bisd(REG_XMM2, REG_EDX, REG_EAX, 4, 0);				/* movss	xmm2,[edx+eax*4]*/
 		
 		/* unpack into words */
-		_pxor_r128_r128(REG_XMM1, REG_XMM1);								// pxor		xmm1,xmm1
-		_punpcklbw_r128_r128(REG_XMM2, REG_XMM1);							// punpcklbw xmm2,xmm1
+		_pxor_r128_r128(REG_XMM1, REG_XMM1);								/* pxor		xmm1,xmm1*/
+		_punpcklbw_r128_r128(REG_XMM2, REG_XMM1);							/* punpcklbw xmm2,xmm1*/
 	}
 	
 	/* zero/other selection */
 	if (!TEXTUREMODE1_BITS(12,1))				/* tc_zero_other */
-		_movapd_r128_r128(REG_XMM0, REG_XMM3);								// movapd	xmm0,xmm3
+		_movapd_r128_r128(REG_XMM0, REG_XMM3);								/* movapd	xmm0,xmm3*/
 	else
-		_pxor_r128_r128(REG_XMM0, REG_XMM0);								// pxor		xmm0,xmm0
+		_pxor_r128_r128(REG_XMM0, REG_XMM0);								/* pxor		xmm0,xmm0*/
 
 	/* subtract local color */
 	if (TEXTUREMODE1_BITS(13,1))				/* tc_sub_clocal */
-		_psubw_r128_r128(REG_XMM0, REG_XMM2);								// psubw	xmm0,xmm2
+		_psubw_r128_r128(REG_XMM0, REG_XMM2);								/* psubw	xmm0,xmm2*/
 
 	/* scale RGB */
 	if (TEXTUREMODE1_BITS(14,3) != 0)			/* tc_mselect mux */
 	{
 		if (TEXTUREMODE1_BITS(14,3) == 1)		/* tc_mselect mux == c_local */
-			_movapd_r128_r128(REG_XMM1, REG_XMM2);							// movapd	xmm1,xmm2
+			_movapd_r128_r128(REG_XMM1, REG_XMM2);							/* movapd	xmm1,xmm2*/
 		if (TEXTUREMODE1_BITS(14,3) == 2)		/* tc_mselect mux == a_other */
-			_pshuflw(REG_XMM1, REG_XMM3, 0xff);								// pshuflw	xmm1,xmm3,0xff
+			_pshuflw(REG_XMM1, REG_XMM3, 0xff);								/* pshuflw	xmm1,xmm3,0xff*/
 		if (TEXTUREMODE1_BITS(14,3) == 3)		/* tc_mselect mux == a_local */
-			_pshuflw(REG_XMM1, REG_XMM2, 0xff);								// pshuflw	xmm1,xmm2,0xff
+			_pshuflw(REG_XMM1, REG_XMM2, 0xff);								/* pshuflw	xmm1,xmm2,0xff*/
 		if (TEXTUREMODE1_BITS(14,3) == 4)		/* tc_mselect mux == LOD */
-			_movsd_r128_m64abs(REG_XMM1, &dummyscale);						// movsd	xmm1,[dummyscale]
+			_movsd_r128_m64abs(REG_XMM1, &dummyscale);						/* movsd	xmm1,[dummyscale]*/
 		if (TEXTUREMODE1_BITS(14,3) == 5)		/* tc_mselect mux == LOD frac */
-			_movsd_r128_m64abs(REG_XMM1, &dummyscale);						// movsd	xmm1,[dummyscale]
+			_movsd_r128_m64abs(REG_XMM1, &dummyscale);						/* movsd	xmm1,[dummyscale]*/
 			
 		if (!TEXTUREMODE1_BITS(17,1))			/* tc_reverse_blend */
-			_pxor_r128_r128(REG_XMM1, &_ff_ff_ff_ff);						// pxor		xmm1,[_ff_ff_ff_ff]
-		_padd_r128_r128(REG_XMM1, &one_one_one_one);						// padd		xmm1,[_01_01_01_01]
-		_psraw_r128_imm(REG_XMM1, 2);										// psraw	xmm1,2
-		_pmullw_r128_r128(REG_XMM0, REG_XMM1);								// pmullw	xmm0,xmm1
-		_psraw_r128_imm(REG_XMM0, 6);										// psraw	xmm0,6
+			_pxor_r128_r128(REG_XMM1, &_ff_ff_ff_ff);						/* pxor		xmm1,[_ff_ff_ff_ff]*/
+		_padd_r128_r128(REG_XMM1, &one_one_one_one);						/* padd		xmm1,[_01_01_01_01]*/
+		_psraw_r128_imm(REG_XMM1, 2);										/* psraw	xmm1,2*/
+		_pmullw_r128_r128(REG_XMM0, REG_XMM1);								/* pmullw	xmm0,xmm1*/
+		_psraw_r128_imm(REG_XMM0, 6);										/* psraw	xmm0,6*/
 	}
 
 	/* add local color */
 	if (TEXTUREMODE1_BITS(13,1))				/* tc_add_clocal */
-		_paddw_r128_r128(REG_XMM0, REG_XMM2);								// paddw	xmm0,xmm2
+		_paddw_r128_r128(REG_XMM0, REG_XMM2);								/* paddw	xmm0,xmm2*/
 
 	/* add local alpha */
 	else if (TEXTUREMODE1_BITS(19,1))			/* tc_add_alocal */
 	{
-		_pshuflw(REG_XMM1, REG_XMM2, 0xff);									// pshuflw	xmm1,xmm2,0xff
-		_paddw_r128_r128(REG_XMM0, REG_XMM1);								// paddw	xmm0,xmm1
+		_pshuflw(REG_XMM1, REG_XMM2, 0xff);									/* pshuflw	xmm1,xmm2,0xff*/
+		_paddw_r128_r128(REG_XMM0, REG_XMM1);								/* paddw	xmm0,xmm1*/
 	}
 	
 	/* zero/other selection */
 	if (!TEXTUREMODE1_BITS(21,1))				/* tca_zero_other */
-		_pextrw_r32_r128(REG_EAX, REG_XMM3, 3);								// pextrw	eax,xmm3,3
+		_pextrw_r32_r128(REG_EAX, REG_XMM3, 3);								/* pextrw	eax,xmm3,3*/
 	else
-		_xor_r32_r32(REG_EAX, REG_EAX);										// xor		eax,eax
+		_xor_r32_r32(REG_EAX, REG_EAX);										/* xor		eax,eax*/
 	
 	/* subtract local alpha */
 	if (TEXTUREMODE1_BITS(22,1))				/* tca_sub_clocal */
 	{
-		_pextrw_r32_r128(REG_EBX, REG_XMM2, 3);								// pextrw	eax,xmm2,3
-		_sub_r32_r32(REG_EAX, REG_EBX);										// sub		eax,ebx
+		_pextrw_r32_r128(REG_EBX, REG_XMM2, 3);								/* pextrw	eax,xmm2,3*/
+		_sub_r32_r32(REG_EAX, REG_EBX);										/* sub		eax,ebx*/
 	}
 
 	/* scale alpha */
@@ -1762,44 +1762,44 @@ void generate_load_texel(struct drccore *drc, UINT8 tmu)
 		INT32 am = 0;
 		
 		if (TEXTUREMODE1_BITS(23,3) == 1)		/* tca_mselect mux == c_local */
-			_pextrw_r32_r128(REG_EBX, REG_XMM2, 3);							// pextrw	eax,xmm2,3
+			_pextrw_r32_r128(REG_EBX, REG_XMM2, 3);							/* pextrw	eax,xmm2,3*/
 		if (TEXTUREMODE1_BITS(23,3) == 2)		/* tca_mselect mux == a_other */
-			_pextrw_r32_r128(REG_EBX, REG_XMM3, 3);							// pextrw	eax,xmm3,3
+			_pextrw_r32_r128(REG_EBX, REG_XMM3, 3);							/* pextrw	eax,xmm3,3*/
 		if (TEXTUREMODE1_BITS(23,3) == 3)		/* tca_mselect mux == a_local */
-			_pextrw_r32_r128(REG_EBX, REG_XMM2, 3);							// pextrw	eax,xmm2,3
+			_pextrw_r32_r128(REG_EBX, REG_XMM2, 3);							/* pextrw	eax,xmm2,3*/
 		if (TEXTUREMODE1_BITS(23,3) == 4)		/* tca_mselect mux == LOD */
 			_mov_r32_imm(REG_EBX, 0x80);
 		if (TEXTUREMODE1_BITS(23,3) == 5)		/* tca_mselect mux == LOD frac */
 			_mov_r32_imm(REG_EBX, 0x80);
 
 		if (!TEXTUREMODE1_BITS(26,1))			/* tca_reverse_blend */
-			_xor_r32_imm(REG_EBX, 0xff);									// xor		ebx,0xff
-		_add_r32_imm(REG_EBX, 1);											// add		ebx,1
-		_imul_r32_r32(REG_EAX, REG_EBX);									// imul		eax,ebx
-		_sar_r32_imm(REG_EAX, 8);											// sar		eax,8
+			_xor_r32_imm(REG_EBX, 0xff);									/* xor		ebx,0xff*/
+		_add_r32_imm(REG_EBX, 1);											/* add		ebx,1*/
+		_imul_r32_r32(REG_EAX, REG_EBX);									/* imul		eax,ebx*/
+		_sar_r32_imm(REG_EAX, 8);											/* sar		eax,8*/
 	}
 
 	/* add local color */
 	if (TEXTUREMODE1_BITS(27,1) ||
 		TEXTUREMODE1_BITS(28,1))				/* tca_add_clocal/tca_add_alocal */
 	{
-		_pextrw_r32_r128(REG_EBX, REG_XMM2, 3);								// pextrw	eax,xmm2,3
-		_sub_r32_r32(REG_EAX, REG_EBX);										// sub		eax,ebx
+		_pextrw_r32_r128(REG_EBX, REG_XMM2, 3);								/* pextrw	eax,xmm2,3*/
+		_sub_r32_r32(REG_EAX, REG_EBX);										/* sub		eax,ebx*/
 	}
 	
 	/* insert */
-	_pinsrw_r128_r32(REG_XMM0, REG_EAX, 3);									// pinsrw	xmm0,eax,3
+	_pinsrw_r128_r32(REG_XMM0, REG_EAX, 3);									/* pinsrw	xmm0,eax,3*/
 	
 	/* clamp down to unsigned bytes and then unclamp back into words in XMM3 */
 	/* note that chroma key code relies on us leaving XMM0 with the packed version */
-	_packuswb_r128_r128(REG_XMM0, REG_XMM0);								// packuswb	xmm0,xmm0
-	_movapd_r128_r128(REG_XMM3, REG_XMM0);									// movapd	xmm3,xmm0
-	_pxor_r128_r128(REG_XMM1, REG_XMM1);									// pxor		xmm1,xmm1
-	_punpcklbw_r128_r128(REG_XMM3, REG_XMM1);								// punpcklbw xmm3,xmm1
+	_packuswb_r128_r128(REG_XMM0, REG_XMM0);								/* packuswb	xmm0,xmm0*/
+	_movapd_r128_r128(REG_XMM3, REG_XMM0);									/* movapd	xmm3,xmm0*/
+	_pxor_r128_r128(REG_XMM1, REG_XMM1);									/* pxor		xmm1,xmm1*/
+	_punpcklbw_r128_r128(REG_XMM3, REG_XMM1);								/* punpcklbw xmm3,xmm1*/
 	
 	/* invert as necessary */
 	if (TEXTUREMODE1_BITS(20,1) || TEXTUREMODE1_BITS(29,1))
-		_pxor_r128_m128abs(REG_XMM3, &invertmask[tmu]);						// pxor		xmm3,[invertmask]
+		_pxor_r128_m128abs(REG_XMM3, &invertmask[tmu]);						/* pxor		xmm3,[invertmask]*/
 
 	/* restore EDX */
 	_pop_r32(REG_EDX);
@@ -1840,60 +1840,60 @@ void generate_load_texel(struct drccore *drc, UINT8 tmu)
 		if (FBZMODE_BITS(4,1))
 		{
 			if (FBZMODE_BITS(5,3) == 0)
-				_jmp_near_link(&link_depthskip);							// jmp		depthskip
+				_jmp_near_link(&link_depthskip);							/* jmp		depthskip*/
 			
 			if (!FBZMODE_BITS(20,1))
 			{
 				if (!FBZMODE_BITS(3,1))
 				{
-					_mov_r32_r32(REG_EAX, REG_CURZ);						// mov		eax,curz
-					_shr_r32_imm(REG_EAX, 12);								// shr		eax,12
+					_mov_r32_r32(REG_EAX, REG_CURZ);						/* mov		eax,curz*/
+					_shr_r32_imm(REG_EAX, 12);								/* shr		eax,12*/
 				}
 				else
 				{
-					_rcpss_r128_r128(REG_XMM0, REG_XMM4);					// rcpss	xmm0,xmm4
-					_movd_r32_r128(REG_EAX, REG_XMM0);						// movd		eax,xmm0
-					_cvtss2si_r32_r128(REG_EBX, REG_XMM0);					// cvtss2si	ebx,xmm0
-					_sub_r32_imm(REG_EAX, 127 << 23);						// sub		eax,127 << 23
-					_sub_r32_imm(REG_EBX, 1);								// sub		ebx,1
-					_shr_r32_imm(REG_EAX, 11);								// shr		eax,11
-					_cmp_r32_imm(REG_EBX, 65535);							// cmp		ebx,65535
-					_jcc_short_link(COND_B, &link_temp1);					// jb		skip
-					_mov_r32_imm(REG_EAX, 0);								// mov		eax,0
-					_jcc_short_link(COND_L, &link_temp2);					// jl		skip
-					_mov_r32_imm(REG_EAX, 0xffff);							// mov		eax,0xffff
-					_resolve_link(&link_temp1);								// skip:
+					_rcpss_r128_r128(REG_XMM0, REG_XMM4);					/* rcpss	xmm0,xmm4*/
+					_movd_r32_r128(REG_EAX, REG_XMM0);						/* movd		eax,xmm0*/
+					_cvtss2si_r32_r128(REG_EBX, REG_XMM0);					/* cvtss2si	ebx,xmm0*/
+					_sub_r32_imm(REG_EAX, 127 << 23);						/* sub		eax,127 << 23*/
+					_sub_r32_imm(REG_EBX, 1);								/* sub		ebx,1*/
+					_shr_r32_imm(REG_EAX, 11);								/* shr		eax,11*/
+					_cmp_r32_imm(REG_EBX, 65535);							/* cmp		ebx,65535*/
+					_jcc_short_link(COND_B, &link_temp1);					/* jb		skip*/
+					_mov_r32_imm(REG_EAX, 0);								/* mov		eax,0*/
+					_jcc_short_link(COND_L, &link_temp2);					/* jl		skip*/
+					_mov_r32_imm(REG_EAX, 0xffff);							/* mov		eax,0xffff*/
+					_resolve_link(&link_temp1);								/* skip:*/
 					_resolve_link(&link_temp2);
 				}
 			}
 			else
-				_mov_r16_m16abs(REG_AX, &voodoo_regs[zaColor]);				// mov		ax,[zaColor]
+				_mov_r16_m16abs(REG_AX, &voodoo_regs[zaColor]);				/* mov		ax,[zaColor]*/
 
-			_mov_m16abs_r16(&depthval, REG_AX);								// mov		[depthval],ax
+			_mov_m16abs_r16(&depthval, REG_AX);								/* mov		[depthval],ax*/
 			if (FBZMODE_BITS(5,3) != 7)
 			{
 				if (FBZMODE_BITS(16,1))
-					_add_r16_m16abs(REG_AX, &voodoo_regs[zaColor]);			// add		ax,[zaColor]
-				_cmp_r16_m16bisd(REG_AX, REG_ESI, REG_EBP, 2, 0);			// cmp		ax,[esi+ebp*2]
+					_add_r16_m16abs(REG_AX, &voodoo_regs[zaColor]);			/* add		ax,[zaColor]*/
+				_cmp_r16_m16bisd(REG_AX, REG_ESI, REG_EBP, 2, 0);			/* cmp		ax,[esi+ebp*2]*/
 				switch (FBZMODE_BITS(5,3))
 				{
 					case 1:
-						_jmp_near_link(COND_AE, &link_depthskip);			// jae		depthskip
+						_jmp_near_link(COND_AE, &link_depthskip);			/* jae		depthskip*/
 						break;
 					case 2:
-						_jmp_near_link(COND_NE, &link_depthskip);			// jne		depthskip
+						_jmp_near_link(COND_NE, &link_depthskip);			/* jne		depthskip*/
 						break;
 					case 3:
-						_jmp_near_link(COND_A, &link_depthskip);			// ja		depthskip
+						_jmp_near_link(COND_A, &link_depthskip);			/* ja		depthskip*/
 						break;
 					case 4:
-						_jmp_near_link(COND_BE, &link_depthskip);			// jbe		depthskip
+						_jmp_near_link(COND_BE, &link_depthskip);			/* jbe		depthskip*/
 						break;
 					case 5:
-						_jmp_near_link(COND_E, &link_depthskip);			// je		depthskip
+						_jmp_near_link(COND_E, &link_depthskip);			/* je		depthskip*/
 						break;
 					case 6:
-						_jmp_near_link(COND_B, &link_depthskip);			// jb		depthskip
+						_jmp_near_link(COND_B, &link_depthskip);			/* jb		depthskip*/
 						break;
 				}
 			}
@@ -1903,28 +1903,28 @@ void generate_load_texel(struct drccore *drc, UINT8 tmu)
 		if (FBZCOLORPATH_BITS(0,2) == 1 || FBZCOLORPATH_BITS(2,2) == 1)
 		{
 			/* perspective correct both TMUs up front in XMM2 */
-			_rcpps_r128_r128(REG_XMM2, REG_XMM5);							// rcpss	xmm2,xmm5
-			_mulps_r128_r128(REG_XMM2, REG_XMM6);							// mulps	xmm2,xmm6
-			_cvttps2dq_r128_r128(REG_XMM2, REG_XMM2);						// cvttps2dq xmm2,xmm2
+			_rcpps_r128_r128(REG_XMM2, REG_XMM5);							/* rcpss	xmm2,xmm5*/
+			_mulps_r128_r128(REG_XMM2, REG_XMM6);							/* mulps	xmm2,xmm6*/
+			_cvttps2dq_r128_r128(REG_XMM2, REG_XMM2);						/* cvttps2dq xmm2,xmm2*/
 
 			/* start with a 0 c_other value */
-			_pxor_r128_r128(REG_XMM3, REG_XMM3);							// pxor		xmm3,xmm3
+			_pxor_r128_r128(REG_XMM3, REG_XMM3);							/* pxor		xmm3,xmm3*/
 			
 			/* if we use two TMUs, load texel from TMU1 in place of c_other */
 			if (NEEDS_TEX1 && tmus > 1)
-				generate_load_texel(1);										// <load texel into xmm3>
+				generate_load_texel(1);										/* <load texel into xmm3>*/
 			
 			/* now load texel from TMU0 */
-			generate_load_texel(0);											// <load texel into xmm3>
+			generate_load_texel(0);											/* <load texel into xmm3>*/
 
 			/* handle chroma key */
 			if (FBZMODE_BITS(1,1))
 			{
 				/* note: relies on texture code leaving packed value in XMM0 */
-				_movd_r32_r128(REG_EAX, REG_XMM0);							// movd		eax,xmm0
-				_xor_r32_m32abs(REG_EAX, &voodoo_regs[chromaKey]);			// xor		eax,[chromaKey]
-				_and_r32_imm(REG_EAX, 0xffffff);							// and		eax,0xffffff
-				_jcc_near_link(COND_Z, &link_chromaskip);					// jz		chromaskip
+				_movd_r32_r128(REG_EAX, REG_XMM0);							/* movd		eax,xmm0*/
+				_xor_r32_m32abs(REG_EAX, &voodoo_regs[chromaKey]);			/* xor		eax,[chromaKey]*/
+				_and_r32_imm(REG_EAX, 0xffffff);							/* and		eax,0xffffff*/
+				_jcc_near_link(COND_Z, &link_chromaskip);					/* jz		chromaskip*/
 			}
 		}
 				
@@ -1933,47 +1933,47 @@ void generate_load_texel(struct drccore *drc, UINT8 tmu)
 		{
 			if (!FBZCOLORPATH_BITS(4,1))			/* cc_localselect mux == iterated RGB */
 			{
-				_movapd_r128_r128(REG_XMM2, REG_XMM7);						// movapd	xmm2,xmm7
-				_psrld_r128_imm(REG_XMM2, 16);								// psrld	xmm2,16
-				_packssdw_r128_r128(REG_XMM2, REG_XMM2);					// packssdw	xmm2,xmm2
-				_pand_r128_m128abs(REG_XMM2, &_ff_ff_ff_ff);				// pand		xmm2,[_ff_ff_ff_ff]
+				_movapd_r128_r128(REG_XMM2, REG_XMM7);						/* movapd	xmm2,xmm7*/
+				_psrld_r128_imm(REG_XMM2, 16);								/* psrld	xmm2,16*/
+				_packssdw_r128_r128(REG_XMM2, REG_XMM2);					/* packssdw	xmm2,xmm2*/
+				_pand_r128_m128abs(REG_XMM2, &_ff_ff_ff_ff);				/* pand		xmm2,[_ff_ff_ff_ff]*/
 			}
 			else									/* cc_localselect mux == color0 RGB */
 			{
-				_movss_r128_m32abs(REG_XMM2, &voodoo_regs[color0]);			// movss	xmm2,[color0]
-				_pxor_r128_r128(REG_XMM1, REG_XMM1);						// pxor		xmm1,xmm1
-				_punpcklbw_r128_r128(REG_XMM2, REG_XMM1);					// punpcklbw xmm2,xmm1
+				_movss_r128_m32abs(REG_XMM2, &voodoo_regs[color0]);			/* movss	xmm2,[color0]*/
+				_pxor_r128_r128(REG_XMM1, REG_XMM1);						/* pxor		xmm1,xmm1*/
+				_punpcklbw_r128_r128(REG_XMM2, REG_XMM1);					/* punpcklbw xmm2,xmm1*/
 			}
 		}
 		else
 		{
 			struct linkdata link_color0select, link_iteratedselect;
-			_pextrw_r32_r128(REG_EAX, REG_XMM3, 3);							// pextrw	eax,xmm3,3
-			_and_r32_imm(REG_EAX, 0x0080);									// and		eax,0x80
-			_jcc_short_link(COND_NZ, &link_color0select);					// jnz		color0select
-			_movapd_r128_r128(REG_XMM2, REG_XMM7);							// movapd	xmm2,xmm7
-				_psrld_r128_imm(REG_XMM2, 16);								// psrld	xmm2,16
-				_packssdw_r128_r128(REG_XMM2, REG_XMM2);					// packssdw	xmm2,xmm2
-			_pand_r128_m128abs(REG_XMM2, &_ff_ff_ff_ff);					// pand		xmm2,[_ff_ff_ff_ff]
-			_jmp_short_link(&link_iteratedselect);							// jmp		iteratedselect
-			_resolve_link(&link_color0select);								// color0select:
-			_movss_r128_m32abs(REG_XMM2, &voodoo_regs[color0]);				// movss	xmm2,[color0]
-			_pxor_r128_r128(REG_XMM1, REG_XMM1);							// pxor		xmm1,xmm1
-			_punpcklbw_r128_r128(REG_XMM2, REG_XMM1);						// punpcklbw xmm2,xmm1
-			_resolve_link(&link_iteratedselect);							// iteratedselect:
+			_pextrw_r32_r128(REG_EAX, REG_XMM3, 3);							/* pextrw	eax,xmm3,3*/
+			_and_r32_imm(REG_EAX, 0x0080);									/* and		eax,0x80*/
+			_jcc_short_link(COND_NZ, &link_color0select);					/* jnz		color0select*/
+			_movapd_r128_r128(REG_XMM2, REG_XMM7);							/* movapd	xmm2,xmm7*/
+				_psrld_r128_imm(REG_XMM2, 16);								/* psrld	xmm2,16*/
+				_packssdw_r128_r128(REG_XMM2, REG_XMM2);					/* packssdw	xmm2,xmm2*/
+			_pand_r128_m128abs(REG_XMM2, &_ff_ff_ff_ff);					/* pand		xmm2,[_ff_ff_ff_ff]*/
+			_jmp_short_link(&link_iteratedselect);							/* jmp		iteratedselect*/
+			_resolve_link(&link_color0select);								/* color0select:*/
+			_movss_r128_m32abs(REG_XMM2, &voodoo_regs[color0]);				/* movss	xmm2,[color0]*/
+			_pxor_r128_r128(REG_XMM1, REG_XMM1);							/* pxor		xmm1,xmm1*/
+			_punpcklbw_r128_r128(REG_XMM2, REG_XMM1);						/* punpcklbw xmm2,xmm1*/
+			_resolve_link(&link_iteratedselect);							/* iteratedselect:*/
 		}
 		
 		/* compute a_local */
 		if (FBZCOLORPATH_BITS(5,2) == 0)		/* cca_localselect mux == iterated alpha */
-			_pextrw_r32_r128(REG_EAX, REG_XMM7, 7);							// pextrw	eax,xmm7,7
+			_pextrw_r32_r128(REG_EAX, REG_XMM7, 7);							/* pextrw	eax,xmm7,7*/
 		else if (FBZCOLORPATH_BITS(5,2) == 1)	/* cca_localselect mux == color0 alpha */
-			_movzx_r32_m8abs(REG_EAX, ((UINT8 *)&voodoo_regs[color0])[3]);	// movzx	eax,[color0][3]
+			_movzx_r32_m8abs(REG_EAX, ((UINT8 *)&voodoo_regs[color0])[3]);	/* movzx	eax,[color0][3]*/
 		else if (FBZCOLORPATH_BITS(5,2) == 2)	/* cca_localselect mux == iterated Z */
 		{
-			_mov_r32_r32(REG_EAX, REG_EDX);									// mov		eax,edx
-			_shr_r32_imm(REG_EAX, 20);										// shr		eax,20
+			_mov_r32_r32(REG_EAX, REG_EDX);									/* mov		eax,edx*/
+			_shr_r32_imm(REG_EAX, 20);										/* shr		eax,20*/
 		}
-		_pinsrw_r128_r32(REG_XMM2, REG_EAX, 3);								// pinsrw	xmm2,eax,3
+		_pinsrw_r128_r32(REG_XMM2, REG_EAX, 3);								/* pinsrw	xmm2,eax,3*/
 
 
 

@@ -137,7 +137,7 @@ VIDEO_START( ssv )
 {
 	Machine->gfx[0]->color_granularity = 64; /* 256 colour sprites with palette selectable on 64 colour boundaries */
 
-	alpha_set_level(0x80);	// until proper shadows are implemented
+	alpha_set_level(0x80);	/* until proper shadows are implemented*/
 
 	return 0;
 }
@@ -145,7 +145,7 @@ VIDEO_START( ssv )
 /* Scroll values + CRT controller registers */
 data16_t *ssv_scroll;
 
-int ssv_special;	// kludge for hypreac2
+int ssv_special;	/* kludge for hypreac2*/
 
 int ssv_tile_code[16];
 
@@ -465,10 +465,10 @@ static void ssv_draw_row(struct mame_bitmap *bitmap, int sx, int sy, int scroll)
 	int y, y1, sy1, flipy, ynum, ystart, yend, yinc;
 	data16_t *s3;
 
-	xnum	=		0x20;		// width in tiles (screen-wide)
-	ynum	=		0x8;		// height in tiles (always 64 pixels?)
+	xnum	=		0x20;		/* width in tiles (screen-wide)*/
+	ynum	=		0x8;		/* height in tiles (always 64 pixels?)*/
 
-	scroll	&=		0x7;		// scroll register index
+	scroll	&=		0x7;		/* scroll register index*/
 
 	/* Sign extend the position */
 	sx = 0;
@@ -497,10 +497,10 @@ static void ssv_draw_row(struct mame_bitmap *bitmap, int sx, int sy, int scroll)
 
 	/* Get the scroll data */
 
-	x		=	ssv_scroll[ scroll * 4 + 0 ];	// x scroll
-	y		=	ssv_scroll[ scroll * 4 + 1 ];	// y scroll
-//				ssv_scroll[ scroll * 4 + 2 ];	// ? 0, 05ff, 057f
-	mode	=	ssv_scroll[ scroll * 4 + 3 ];	// shadow, depth etc.
+	x		=	ssv_scroll[ scroll * 4 + 0 ];	/* x scroll*/
+	y		=	ssv_scroll[ scroll * 4 + 1 ];	/* y scroll*/
+/*				ssv_scroll[ scroll * 4 + 2 ];	// ? 0, 05ff, 057f*/
+	mode	=	ssv_scroll[ scroll * 4 + 3 ];	/* shadow, depth etc.*/
 
 	/* How is the background layer disabled ? */
 	if ((mode & 0x0700) == 0)	return;
@@ -538,8 +538,8 @@ static void ssv_draw_row(struct mame_bitmap *bitmap, int sx, int sy, int scroll)
 									((x & ((size -1) & ~0xf)) << 2)	+
 									((y & ((0x200-1) & ~0xf)) >> 3)		];
 
-			code	=	s3[0];	// code high bits
-			attr	=	s3[1];	// code low  bits + color
+			code	=	s3[0];	/* code high bits*/
+			attr	=	s3[1];	/* code low  bits + color*/
 
 			/* Code's high bits are scrambled */
 			code	+=	ssv_tile_code[(attr & 0x3c00)>>10];
@@ -661,15 +661,15 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 			{
 				int scroll;
 
-				scroll	=		s2[ 0 ];	// scroll index
-//								s2[ 1 ];	// always 0
-//								s2[ 2 ];	// ignore x offset?
-//								s2[ 3 ];	// ignore y offset?
+				scroll	=		s2[ 0 ];	/* scroll index*/
+/*								s2[ 1 ];	// always 0*/
+/*								s2[ 2 ];	// ignore x offset?*/
+/*								s2[ 3 ];	// ignore y offset?*/
 
-				// Kludge for srmp4
+				/* Kludge for srmp4*/
 				if (ssv_scroll[0x7a/2] == 0x4940)	sy+=0x60;
 
-				if (ssv_special !=3) // dynagears draws rows over sprites?! (but needs rows for hi-score table..)
+				if (ssv_special !=3) /* dynagears draws rows over sprites?! (but needs rows for hi-score table..)*/
 					ssv_draw_row(bitmap, sx, sy, scroll);
 			}
 /* 	"normal" sprite
@@ -685,8 +685,8 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 				int shadow, gfx, transparency;
 				if (s2 >= end2)	break;
 
-				code	=	s2[0];	// code high bits
-				attr	=	s2[1];	// code low  bits + color
+				code	=	s2[0];	/* code high bits*/
+				attr	=	s2[1];	/* code low  bits + color*/
 
 				/* Code's high bits are scrambled */
 				code	+=	ssv_tile_code[(attr & 0x3c00)>>10];
@@ -699,8 +699,8 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 				shadow	=	(depth & 0x8000);
 
 				/* Single-sprite tile size */
-				xnum = 1 << (xnum >> 10);	// 1, 2, 4 or 8 tiles
-				ynum = 1 << (ynum >> 10);	// 1, 2, 4 tiles (8 means tilemap sprite?)
+				xnum = 1 << (xnum >> 10);	/* 1, 2, 4 or 8 tiles*/
+				ynum = 1 << (ynum >> 10);	/* 1, 2, 4 tiles (8 means tilemap sprite?)*/
 
 				if (flipx)	{ xstart = xnum-1;  xend = -1;    xinc = -1; }
 				else		{ xstart = 0;       xend = xnum;  xinc = +1; }
@@ -717,11 +717,11 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 				sy	=	(sy & 0x1ff) - (sy & 0x200);
 
 				/* Tweak it (game specific) */
-				if (ssv_special == 2) sy = 232 - sy; // vasara, wheres the register for this?
+				if (ssv_special == 2) sy = 232 - sy; /* vasara, wheres the register for this?*/
 
 				sx	=	ssv_sprites_offsx + sx;
-				if (ssv_scroll[0x74/2] & 0x8000)	// srmp7, twineag2, ultrax
-					sy	=	ssv_sprites_offsy + sy;	// ?
+				if (ssv_scroll[0x74/2] & 0x8000)	/* srmp7, twineag2, ultrax*/
+					sy	=	ssv_sprites_offsy + sy;	/* ?*/
 				else
 					sy	=	ssv_sprites_offsy - sy - (ynum-1) * 8;
 
@@ -784,9 +784,9 @@ VIDEO_UPDATE( ssv )
 
 	if (ssv_special !=3)
 	{
-		ssv_draw_layer(bitmap,0);		// "background layer"
-		ssv_draw_sprites(bitmap);	// sprites list
-	} // dynagears is weird, whats really going on?
+		ssv_draw_layer(bitmap,0);		/* "background layer"*/
+		ssv_draw_sprites(bitmap);	/* sprites list*/
+	} /* dynagears is weird, whats really going on?*/
 	else
 	{
 		ssv_draw_layer(bitmap,0);

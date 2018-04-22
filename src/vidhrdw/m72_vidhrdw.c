@@ -243,9 +243,9 @@ VIDEO_START( poundfor )
 /* Major Title has a larger background RAM, and rowscroll */
 VIDEO_START( majtitle )
 {
-// The tilemap can be 256x64, but seems to be used at 128x64 (scroll wraparound).
-// The layout ramains 256x64, the right half is just not displayed.
-//	bg_tilemap = tilemap_create(rtype2_get_bg_tile_info,tilemap_scan_rows,TILEMAP_SPLIT,8,8,256,64);
+/* The tilemap can be 256x64, but seems to be used at 128x64 (scroll wraparound).*/
+/* The layout ramains 256x64, the right half is just not displayed.*/
+/*	bg_tilemap = tilemap_create(rtype2_get_bg_tile_info,tilemap_scan_rows,TILEMAP_SPLIT,8,8,256,64);*/
 	bg_tilemap = tilemap_create(rtype2_get_bg_tile_info,majtitle_scan_rows,TILEMAP_SPLIT,8,8,128,64);
 	fg_tilemap = tilemap_create(rtype2_get_fg_tile_info,tilemap_scan_rows,TILEMAP_SPLIT,8,8,64,64);
 
@@ -594,7 +594,7 @@ static void majtitle_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 		flipx = spriteram_2[offs+5] & 0x08;
 		flipy = spriteram_2[offs+5] & 0x04;
 
-		w = 1;// << ((spriteram_2[offs+5] & 0xc0) >> 6);
+		w = 1;/* << ((spriteram_2[offs+5] & 0xc0) >> 6);*/
 		h = 1 << ((spriteram_2[offs+5] & 0x30) >> 4);
 		sy -= 16 * h;
 

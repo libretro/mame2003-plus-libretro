@@ -140,8 +140,8 @@ Note:	if MAME_DEBUG is defined, pressing Z with:
 
 /* Variables only used here */
 
-static struct tilemap *tilemap_0, *tilemap_1;	// Layer 0
-static struct tilemap *tilemap_2, *tilemap_3;	// Layer 1
+static struct tilemap *tilemap_0, *tilemap_1;	/* Layer 0*/
+static struct tilemap *tilemap_2, *tilemap_3;	/* Layer 1*/
 static int tilemaps_flip;
 
 /* Variables used elsewhere */
@@ -152,7 +152,7 @@ data16_t *seta_vram_0, *seta_vctrl_0;
 data16_t *seta_vram_2, *seta_vram_3, *seta_vctrl_2;
 data16_t *seta_vregs;
 
-data16_t *seta_workram; // Used for zombraid crosshair hack
+data16_t *seta_workram; /* Used for zombraid crosshair hack*/
 
 static int twineagl_tilebank[4];
 static int	seta_samples_bank;
@@ -169,48 +169,48 @@ struct x_offset
 static struct x_offset game_offsets[] =
 {
 	/* only sprites */
-	{ "tndrcade", { -1,  0 } },				// correct (wall at beginning of game)
-	{ "tndrcadj", { -1,  0 } },				// correct (wall at beginning of game)
-	{ "wits",     {  0,  0 } },				// unknown
-	{ "thunderl", {  0,  0 } },				// unknown
-	{ "blockcar", {  0,  0 } },				// unknown
-	{ "umanclub", {  0,  0 } },				// unknown
-	{ "atehate",  {  0,  0 } },				// correct (test grid)
-	{ "kiwame",   {  0,-16 } },				// correct (test grid)
-	{ "krzybowl", {  0,  0 } },				// correct (test grid)
+	{ "tndrcade", { -1,  0 } },				/* correct (wall at beginning of game)*/
+	{ "tndrcadj", { -1,  0 } },				/* correct (wall at beginning of game)*/
+	{ "wits",     {  0,  0 } },				/* unknown*/
+	{ "thunderl", {  0,  0 } },				/* unknown*/
+	{ "blockcar", {  0,  0 } },				/* unknown*/
+	{ "umanclub", {  0,  0 } },				/* unknown*/
+	{ "atehate",  {  0,  0 } },				/* correct (test grid)*/
+	{ "kiwame",   {  0,-16 } },				/* correct (test grid)*/
+	{ "krzybowl", {  0,  0 } },				/* correct (test grid)*/
 
 	/* 1 layer */
-	{ "twineagl", {  0,  0 }, {  0, -3 } },	// unknown
-	{ "downtown", {  1,  0 }, { -1,  0 } },	// sprites correct (test grid), tilemap unknown but at least -1 non-flipped to fix glitches later in the game
-	{ "usclssic", {  1,  2 }, {  0, -1 } },	// correct (test grid and bg)
-	{ "calibr50", { -1,  2 }, { -3, -2 } },	// correct (test grid and roof in animation at beginning of game)
-	{ "arbalest", {  0,  1 }, { -2, -1 } },	// correct (test grid and landing pad at beginning of game)
-	{ "metafox",  {  0,  0 }, { 16,-19 } },	// sprites unknown, tilemap correct (test grid)
-	{ "drgnunit", {  2,  2 }, { -2, -2 } },	// correct (test grid and I/O test)
-	{ "stg",      {  0,  0 }, { -2, -2 } },	// sprites correct? (panel), tilemap correct (test grid)
-	{ "qzkklogy", {  1,  1 }, { -1, -1 } },	// correct (timer, test grid)
-	{ "qzkklgy2", {  0,  0 }, { -1, -3 } },	// sprites unknown, tilemaps correct (test grid)
+	{ "twineagl", {  0,  0 }, {  0, -3 } },	/* unknown*/
+	{ "downtown", {  1,  0 }, { -1,  0 } },	/* sprites correct (test grid), tilemap unknown but at least -1 non-flipped to fix glitches later in the game*/
+	{ "usclssic", {  1,  2 }, {  0, -1 } },	/* correct (test grid and bg)*/
+	{ "calibr50", { -1,  2 }, { -3, -2 } },	/* correct (test grid and roof in animation at beginning of game)*/
+	{ "arbalest", {  0,  1 }, { -2, -1 } },	/* correct (test grid and landing pad at beginning of game)*/
+	{ "metafox",  {  0,  0 }, { 16,-19 } },	/* sprites unknown, tilemap correct (test grid)*/
+	{ "drgnunit", {  2,  2 }, { -2, -2 } },	/* correct (test grid and I/O test)*/
+	{ "stg",      {  0,  0 }, { -2, -2 } },	/* sprites correct? (panel), tilemap correct (test grid)*/
+	{ "qzkklogy", {  1,  1 }, { -1, -1 } },	/* correct (timer, test grid)*/
+	{ "qzkklgy2", {  0,  0 }, { -1, -3 } },	/* sprites unknown, tilemaps correct (test grid)*/
 
 	/* 2 layers */
-	{ "rezon",    {  0,  0 }, { -2, -2 } },	// correct (test grid)
-	{ "blandia",  {  0,  8 }, { -2,  6 } },	// correct (test grid, startup bg)
-	{ "blandiap", {  0,  8 }, { -2,  6 } },	// correct (test grid, startup bg)
-	{ "zingzip",  {  0,  0 }, { -1, -2 } },	// sprites unknown, tilemaps correct (test grid)
-	{ "eightfrc", {  3,  4 }, {  0,  0 } },	// unknown
-	{ "daioh",    {  1,  1 }, { -1, -1 } },	// correct? (launch window and test grid are right, but planet is wrong)
-	{ "msgundam", {  0,  0 }, { -2, -2 } },	// correct (test grid, banpresto logo)
-	{ "msgunda1", {  0,  0 }, { -2, -2 } },	// correct (test grid, banpresto logo)
-	{ "oisipuzl", {  0,  0 }, { -1, -1 } },	// correct (test mode) flip screen not supported?
-	{ "triplfun", {  0,  0 }, { -1, -1 } },	// correct (test mode) flip screen not supported?
-	{ "wrofaero", {  0,  0 }, {  0,  0 } },	// unknown
-	{ "jjsquawk", {  1,  1 }, { -1, -1 } },	// correct (test mode)
-	{ "kamenrid", {  0,  0 }, { -2, -2 } },	// correct (map, banpresto logo)
-	{ "extdwnhl", {  0,  0 }, { -2, -2 } },	// correct (test grid, background images)
-	{ "sokonuke", {  0,  0 }, { -2, -2 } },	// correct (game selection, test grid)
-	{ "gundhara", {  0,  0 }, {  0,  0 } },	// unknown, flip screen not supported?
-	{ "zombraid", {  0,  0 }, { -2, -2 } },	// correct for normal, flip screen not working yet
-	{ "madshark", {  0,  0 }, {  0,  0 } },	// unknown (wrong when flipped, but along y)
-	{ "utoukond", {  0,  0 }, { -2,  0 } }, // unknown (wrong when flipped, but along y)
+	{ "rezon",    {  0,  0 }, { -2, -2 } },	/* correct (test grid)*/
+	{ "blandia",  {  0,  8 }, { -2,  6 } },	/* correct (test grid, startup bg)*/
+	{ "blandiap", {  0,  8 }, { -2,  6 } },	/* correct (test grid, startup bg)*/
+	{ "zingzip",  {  0,  0 }, { -1, -2 } },	/* sprites unknown, tilemaps correct (test grid)*/
+	{ "eightfrc", {  3,  4 }, {  0,  0 } },	/* unknown*/
+	{ "daioh",    {  1,  1 }, { -1, -1 } },	/* correct? (launch window and test grid are right, but planet is wrong)*/
+	{ "msgundam", {  0,  0 }, { -2, -2 } },	/* correct (test grid, banpresto logo)*/
+	{ "msgunda1", {  0,  0 }, { -2, -2 } },	/* correct (test grid, banpresto logo)*/
+	{ "oisipuzl", {  0,  0 }, { -1, -1 } },	/* correct (test mode) flip screen not supported?*/
+	{ "triplfun", {  0,  0 }, { -1, -1 } },	/* correct (test mode) flip screen not supported?*/
+	{ "wrofaero", {  0,  0 }, {  0,  0 } },	/* unknown*/
+	{ "jjsquawk", {  1,  1 }, { -1, -1 } },	/* correct (test mode)*/
+	{ "kamenrid", {  0,  0 }, { -2, -2 } },	/* correct (map, banpresto logo)*/
+	{ "extdwnhl", {  0,  0 }, { -2, -2 } },	/* correct (test grid, background images)*/
+	{ "sokonuke", {  0,  0 }, { -2, -2 } },	/* correct (game selection, test grid)*/
+	{ "gundhara", {  0,  0 }, {  0,  0 } },	/* unknown, flip screen not supported?*/
+	{ "zombraid", {  0,  0 }, { -2, -2 } },	/* correct for normal, flip screen not working yet*/
+	{ "madshark", {  0,  0 }, {  0,  0 } },	/* unknown (wrong when flipped, but along y)*/
+	{ "utoukond", {  0,  0 }, { -2,  0 } }, /* unknown (wrong when flipped, but along y)*/
 	{ NULL }
 };
 
@@ -291,7 +291,7 @@ WRITE16_HANDLER( seta_vregs_w )
 			break;
 
 
-		case 4/2:	// ?
+		case 4/2:	/* ?*/
 			break;
 	}
 }
@@ -433,7 +433,7 @@ VIDEO_START( seta_2_layers )
 		tilemap_set_transparent_pen(tilemap_3,0);
 
 		find_offsets();
-		seta_samples_bank = -1;	// set the samples bank to an out of range value at start-up
+		seta_samples_bank = -1;	/* set the samples bank to an out of range value at start-up*/
 
 		return 0;
 	}
@@ -467,7 +467,7 @@ VIDEO_START( seta_1_layer )
 		tilemap_set_transparent_pen(tilemap_1,0);
 
 		find_offsets();
-		seta_samples_bank = -1;	// set the samples bank to an out of range value at start-up
+		seta_samples_bank = -1;	/* set the samples bank to an out of range value at start-up*/
 
 		return 0;
 	}
@@ -499,7 +499,7 @@ VIDEO_START( twineagl_1_layer )
 		tilemap_set_transparent_pen(tilemap_1,0);
 
 		find_offsets();
-		seta_samples_bank = -1;	// set the samples bank to an out of range value at start-up
+		seta_samples_bank = -1;	/* set the samples bank to an out of range value at start-up*/
 
 		return 0;
 	}
@@ -515,7 +515,7 @@ VIDEO_START( seta_no_layers )
 	tilemap_2 = 0;
 	tilemap_3 = 0;
 	find_offsets();
-	seta_samples_bank = -1;	// set the samples bank to an out of range value at start-up
+	seta_samples_bank = -1;	/* set the samples bank to an out of range value at start-up*/
 	return 0;
 }
 
@@ -645,8 +645,8 @@ static void seta_draw_sprites_map(struct mame_bitmap *bitmap,const struct rectan
 	int col0;		/* Kludge, needed for krzybowl and kiwame */
 	switch (ctrl & 0x0f)
 	{
-		case 0x01:	col0	=	0x4;	break;	// krzybowl
-		case 0x06:	col0	=	0x8;	break;	// kiwame
+		case 0x01:	col0	=	0x4;	break;	/* krzybowl*/
+		case 0x06:	col0	=	0x8;	break;	/* kiwame*/
 
 		default:	col0	=	0x0;
 	}
@@ -893,7 +893,7 @@ if (keyboard_pressed(KEYCODE_Z))
 
 	fillbitmap(bitmap,Machine->pens[0],cliprect);
 
-	if (order & 1)	// swap the layers?
+	if (order & 1)	/* swap the layers?*/
 	{
 		if (tilemap_2)
 		{
@@ -901,7 +901,7 @@ if (keyboard_pressed(KEYCODE_Z))
 			if (layers_ctrl & 2)	tilemap_draw(bitmap,cliprect, tilemap_3, TILEMAP_IGNORE_TRANSPARENCY, 0);
 		}
 
-		if (order & 2)	// layer-sprite priority?
+		if (order & 2)	/* layer-sprite priority?*/
 		{
 			if (layers_ctrl & 8)	seta_draw_sprites(bitmap,cliprect);
 			if (layers_ctrl & 1)	tilemap_draw(bitmap,cliprect, tilemap_0,  0, 0);
@@ -919,7 +919,7 @@ if (keyboard_pressed(KEYCODE_Z))
 		if (layers_ctrl & 1)	tilemap_draw(bitmap,cliprect, tilemap_0,  TILEMAP_IGNORE_TRANSPARENCY, 0);
 		if (layers_ctrl & 1)	tilemap_draw(bitmap,cliprect, tilemap_1,  TILEMAP_IGNORE_TRANSPARENCY, 0);
 
-		if (order & 2)	// layer-sprite priority?
+		if (order & 2)	/* layer-sprite priority?*/
 		{
 			if (layers_ctrl & 8)	seta_draw_sprites(bitmap,cliprect);
 

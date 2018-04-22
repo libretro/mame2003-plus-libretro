@@ -260,7 +260,7 @@ static void dynamski_draw_background( struct mame_bitmap *bitmap, const struct r
 				Machine->gfx[0],
 				tile,
 				attr & 0x0f,
-				0,0,//xflip,yflip,
+				0,0,/*xflip,yflip,*/
 				sx,sy,
 				cliprect,
 				transparency,3 );

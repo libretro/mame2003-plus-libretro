@@ -116,7 +116,7 @@ WRITE_HANDLER( redclash_star_reset_w ) { }
 static void get_fg_tile_info(int tile_index)
 {
 	int code = videoram[tile_index];
-	int color = (videoram[tile_index] & 0x70) >> 4; // ??
+	int color = (videoram[tile_index] & 0x70) >> 4; /* ??*/
 
 	SET_TILE_INFO(0, code, color, 0)
 }
@@ -205,7 +205,7 @@ static void redclash_draw_sprites( struct mame_bitmap *bitmap )
 
 					case 1:	/* 8x8 */
 						drawgfx(bitmap,Machine->gfx[1],
-								spriteram[offs + i + 1],// + 4 * (spriteram[offs + i + 2] & 0x10),
+								spriteram[offs + i + 1],/* + 4 * (spriteram[offs + i + 2] & 0x10),*/
 								color,
 								0,0,
 								sx,sy - 16,
@@ -227,7 +227,7 @@ static void redclash_draw_bullets( struct mame_bitmap *bitmap )
 
 	for (offs = 0; offs < 0x20; offs++)
 	{
-//		sx = videoram[offs];
+/*		sx = videoram[offs];*/
 		int sx = 8 * offs + (videoram[offs] & 0x07);	/* ?? */
 		int sy = 0xff - videoram[offs + 0x20];
 

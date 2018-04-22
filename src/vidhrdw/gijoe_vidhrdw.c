@@ -82,7 +82,7 @@ VIDEO_UPDATE( gijoe )
 	int vrc_mode, vrc_new, colorbase_new, primode, dirty, i;
 	int mask = 0;
 
-	// update tile offsets
+	/* update tile offsets*/
 	K056832_read_AVAC(&vrc_mode, &vrc_new);
 
 	if (vrc_mode)
@@ -98,7 +98,7 @@ VIDEO_UPDATE( gijoe )
 	else
 		AVAC_bits[3] = AVAC_bits[2] = AVAC_bits[1] = AVAC_bits[0] = 0xf000;
 
-	// update color info and refresh tilemaps
+	/* update color info and refresh tilemaps*/
 	sprite_colorbase = K053251_get_palette_index(K053251_CI0);
 
 	for (i=0; i<4; i++)
@@ -122,7 +122,7 @@ VIDEO_UPDATE( gijoe )
 	{
 		K056832_set_LayerOffset(0,  2, 0);
 		K056832_set_LayerOffset(1,  4, 0);
-		K056832_set_LayerOffset(2,  6, 0); // 7?
+		K056832_set_LayerOffset(2,  6, 0); /* 7?*/
 		K056832_set_LayerOffset(3,  8, 0);
 	}
 	else
@@ -130,14 +130,14 @@ VIDEO_UPDATE( gijoe )
 		K056832_set_LayerOffset(0,  0, 0);
 		K056832_set_LayerOffset(1,  8, 0);
 		K056832_set_LayerOffset(2, 14, 0);
-		K056832_set_LayerOffset(3, 16, 0); // smaller?
+		K056832_set_LayerOffset(3, 16, 0); /* smaller?*/
 	}
 
-	// seems to switch the K053251 between different priority modes, detail unknown
+	/* seems to switch the K053251 between different priority modes, detail unknown*/
 	primode = K053251_get_priority(K053251_CI1);
 
 	layer[0] = 0;
-	layer_pri[0] = 0; // not sure
+	layer_pri[0] = 0; /* not sure*/
 	layer[1] = 1;
 	layer_pri[1] = K053251_get_priority(K053251_CI2);
 	layer[2] = 2;

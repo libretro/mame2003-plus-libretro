@@ -15,7 +15,7 @@ Notes:
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-static int sprite_flip, pow_charbase=0; //*
+static int sprite_flip, pow_charbase=0; /***/
 static struct tilemap *fix_tilemap;
 
 /***************************************************************************
@@ -29,7 +29,7 @@ static void get_pow_tile_info(int tile_index)
 	int tile=videoram16[2*tile_index]&0xff;
 	int color=videoram16[2*tile_index+1];
 
-	tile += pow_charbase; //AT: (powj36rc2gre)
+	tile += pow_charbase; /*AT: (powj36rc2gre)*/
 	color&=0xf;
 
 	SET_TILE_INFO(
@@ -228,7 +228,7 @@ VIDEO_UPDATE( pow )
 	draw_sprites(bitmap,cliprect,1,0x800);
 	draw_sprites(bitmap,cliprect,2,0x000);
 	draw_sprites(bitmap,cliprect,2,0x800);
-	draw_sprites(bitmap,cliprect,0,0x000); //AT: (pow37b5yel)
+	draw_sprites(bitmap,cliprect,0,0x000); /*AT: (pow37b5yel)*/
 	draw_sprites(bitmap,cliprect,0,0x800);
 
 	tilemap_draw(bitmap,cliprect,fix_tilemap,0,0);

@@ -184,7 +184,7 @@ static void blmbycar_draw_sprites(struct mame_bitmap *bitmap, const struct recta
 {
 	data16_t *source, *finish;
 
-	source = spriteram16 + 0x6/2;				// !
+	source = spriteram16 + 0x6/2;				/* !*/
 	finish = spriteram16 + spriteram_size/2 - 8/2;
 
 	/* Find "the end of sprites" marker */
@@ -206,10 +206,10 @@ static void blmbycar_draw_sprites(struct mame_bitmap *bitmap, const struct recta
 
 		int	flipx		=	attr & 0x4000;
 		int	flipy		=	attr & 0x8000;
-		int	pri			=	(~attr >> 3) & 0x1;		// Priority (1 = Low)
-		int pri_mask	=	~((1 << (pri+1)) - 1);	// Above the first "pri" levels
+		int	pri			=	(~attr >> 3) & 0x1;		/* Priority (1 = Low)*/
+		int pri_mask	=	~((1 << (pri+1)) - 1);	/* Above the first "pri" levels*/
 
-		if (x & 0x4000)	continue;	// ? To get rid of the "shadow" blocks
+		if (x & 0x4000)	continue;	/* ? To get rid of the "shadow" blocks*/
 
 		x	=	(x & 0x1ff) - 0x10;
 		y	=	0xf0 - ((y & 0xff)  - (y & 0x100));
@@ -250,7 +250,7 @@ if (keyboard_pressed(KEYCODE_Z))
 
 	if (keyboard_pressed(KEYCODE_Q))	msk |= 1;
 	if (keyboard_pressed(KEYCODE_W))	msk |= 2;
-//	if (keyboard_pressed(KEYCODE_E))	msk |= 4;
+/*	if (keyboard_pressed(KEYCODE_E))	msk |= 4;*/
 	if (keyboard_pressed(KEYCODE_A))	msk |= 8;
 	if (msk != 0) layers_ctrl &= msk;
 }

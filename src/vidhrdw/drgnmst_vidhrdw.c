@@ -1,6 +1,6 @@
-// remaining gfx glitches
+/* remaining gfx glitches*/
 
-// layer priority register not fully understood
+/* layer priority register not fully understood*/
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
@@ -143,7 +143,7 @@ VIDEO_START(drgnmst)
 	drgnmst_bg_tilemap = tilemap_create(get_drgnmst_bg_tile_info,drgnmst_bg_tilemap_scan_cols,TILEMAP_TRANSPARENT,      32, 32, 64,64);
 	tilemap_set_transparent_pen(drgnmst_bg_tilemap,15);
 
-	// do the other tilemaps have rowscroll too? probably not ..
+	/* do the other tilemaps have rowscroll too? probably not ..*/
 	tilemap_set_scroll_rows(drgnmst_md_tilemap,1024);
 
 	return 0;
@@ -153,42 +153,42 @@ VIDEO_UPDATE(drgnmst)
 {
 	int y;
 
-	tilemap_set_scrollx(drgnmst_bg_tilemap,0, drgnmst_vidregs[10]-18); // verify
-	tilemap_set_scrolly(drgnmst_bg_tilemap,0, drgnmst_vidregs[11]); // verify
+	tilemap_set_scrollx(drgnmst_bg_tilemap,0, drgnmst_vidregs[10]-18); /* verify*/
+	tilemap_set_scrolly(drgnmst_bg_tilemap,0, drgnmst_vidregs[11]); /* verify*/
 
-//	tilemap_set_scrollx(drgnmst_md_tilemap,0, drgnmst_vidregs[8]-16); // rowscrolled
-	tilemap_set_scrolly(drgnmst_md_tilemap,0, drgnmst_vidregs[9]); // verify
+/*	tilemap_set_scrollx(drgnmst_md_tilemap,0, drgnmst_vidregs[8]-16); // rowscrolled*/
+	tilemap_set_scrolly(drgnmst_md_tilemap,0, drgnmst_vidregs[9]); /* verify*/
 
-	tilemap_set_scrollx(drgnmst_fg_tilemap,0, drgnmst_vidregs[6]-18); // verify (test mode colour test needs it)
-	tilemap_set_scrolly(drgnmst_fg_tilemap,0, drgnmst_vidregs[7]); // verify
+	tilemap_set_scrollx(drgnmst_fg_tilemap,0, drgnmst_vidregs[6]-18); /* verify (test mode colour test needs it)*/
+	tilemap_set_scrolly(drgnmst_fg_tilemap,0, drgnmst_vidregs[7]); /* verify*/
 
 	for (y = 0; y < 1024; y++)
 		tilemap_set_scrollx(drgnmst_md_tilemap,y, drgnmst_vidregs[8]-16+drgnmst_rowscrollram[y]);
 
-	// todo: figure out which bits relate to the order
+	/* todo: figure out which bits relate to the order*/
 	switch (drgnmst_vidregs2[0])
 	{
-		case 0x2451: // fg unsure
-		case 0x2d9a: // fg unsure
-		case 0x2440: // all ok
-		case 0x245a: // fg unsure, title screen
+		case 0x2451: /* fg unsure*/
+		case 0x2d9a: /* fg unsure*/
+		case 0x2440: /* all ok*/
+		case 0x245a: /* fg unsure, title screen*/
 			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
 			break;
-		case 0x23c0: // all ok
+		case 0x23c0: /* all ok*/
 			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
 			break;
-		case 0x38da: // fg unsure
-		case 0x215a: // fg unsure
-		case 0x2140: // all ok
+		case 0x38da: /* fg unsure*/
+		case 0x215a: /* fg unsure*/
+		case 0x2140: /* all ok*/
 			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,0,0);
 			break;
-		case 0x2d80: // all ok
+		case 0x2d80: /* all ok*/
 			tilemap_draw(bitmap,cliprect,drgnmst_md_tilemap,TILEMAP_IGNORE_TRANSPARENCY,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_bg_tilemap,0,0);
 			tilemap_draw(bitmap,cliprect,drgnmst_fg_tilemap,0,0);
@@ -203,7 +203,7 @@ VIDEO_UPDATE(drgnmst)
 
 	drgnmst_draw_sprites(bitmap,cliprect);
 
-//	usrintf_showmessage	("x %04x x %04x x %04x x %04x x %04x", drgnmst_vidregs2[0], drgnmst_vidregs[12], drgnmst_vidregs[13], drgnmst_vidregs[14], drgnmst_vidregs[15]);
-//	usrintf_showmessage	("x %04x x %04x y %04x y %04x z %04x z %04x",drgnmst_vidregs[0],drgnmst_vidregs[1],drgnmst_vidregs[2],drgnmst_vidregs[3],drgnmst_vidregs[4],drgnmst_vidregs[5]);
+/*	usrintf_showmessage	("x %04x x %04x x %04x x %04x x %04x", drgnmst_vidregs2[0], drgnmst_vidregs[12], drgnmst_vidregs[13], drgnmst_vidregs[14], drgnmst_vidregs[15]);*/
+/*	usrintf_showmessage	("x %04x x %04x y %04x y %04x z %04x z %04x",drgnmst_vidregs[0],drgnmst_vidregs[1],drgnmst_vidregs[2],drgnmst_vidregs[3],drgnmst_vidregs[4],drgnmst_vidregs[5]);*/
 
 }

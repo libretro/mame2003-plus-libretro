@@ -72,8 +72,8 @@ static void tigeroad_draw_sprites( struct mame_bitmap *bitmap, int priority )
 	UINT16 *source = &buffered_spriteram16[spriteram_size/2] - 4;
 	UINT16 *finish = buffered_spriteram16;
 
-	// TODO: The Track Map should probably be drawn on top of the background tilemap...
-	//       Also convert the below into a for loop!
+	/* TODO: The Track Map should probably be drawn on top of the background tilemap...*/
+	/*       Also convert the below into a for loop!*/
 
 	while (source >= finish)
 	{
@@ -169,7 +169,7 @@ VIDEO_UPDATE( tigeroad )
 	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, TILEMAP_BACK, 0);
 	tigeroad_draw_sprites(bitmap, 0);
 	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, TILEMAP_FRONT, 1);
-	//tigeroad_draw_sprites(bitmap, 1); draw priority sprites?
+	/*tigeroad_draw_sprites(bitmap, 1); draw priority sprites?*/
 	tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, 0, 2);
 }
 

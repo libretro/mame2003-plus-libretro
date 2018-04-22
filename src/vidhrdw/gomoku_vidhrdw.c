@@ -136,17 +136,17 @@ VIDEO_START( gomoku )
 	/* make background bitmap */
 	fillbitmap(gomoku_bg_bitmap, 0x20, 0);
 
-	// 盤外、碁盤
+	/* 盤外、碁盤*/
 	for (y = 0; y < 256; y++)
 	{
 		for (x = 0; x < 256; x++)
 		{
 			bgdata = GOMOKU_BG_D[ GOMOKU_BG_X[x] + (GOMOKU_BG_Y[y] << 4) ];
 
-			color = 0x20;				// 黒(枠外)
+			color = 0x20;				/* 黒(枠外)*/
 
-			if (bgdata & 0x01) color = 0x21;	// 茶(盤)
-			if (bgdata & 0x02) color = 0x20;	// 黒(枠線)
+			if (bgdata & 0x01) color = 0x21;	/* 茶(盤)*/
+			if (bgdata & 0x02) color = 0x20;	/* 黒(枠線)*/
 
 			plot_pixel(gomoku_bg_bitmap, (255 - x + 7), (255 - y - 1), color);
 		}
@@ -176,7 +176,7 @@ VIDEO_UPDATE( gomoku )
 		/* copy bg bitmap */
 		copybitmap(bitmap, gomoku_bg_bitmap, 0, 0, 0, 0, cliprect, TRANSPARENCY_NONE, 0);
 
-		// 石
+		/* 石*/
 		for (y = 0; y < 256; y++)
 		{
 			for (x = 0; x < 256; x++)
@@ -191,11 +191,11 @@ VIDEO_UPDATE( gomoku )
 					{
 						if (bgram & 0x01)
 						{
-							color = 0x2f;	// 明るい黒(石)
+							color = 0x2f;	/* 明るい黒(石)*/
 						}
 						else if (bgram & 0x02)
 						{
-							color = 0x22;	// 白(石)
+							color = 0x22;	/* 白(石)*/
 						}
 						else continue;
 					}
@@ -206,7 +206,7 @@ VIDEO_UPDATE( gomoku )
 			}
 		}
 
-		// カーソル
+		/* カーソル*/
 		for (y = 0; y < 256; y++)
 		{
 			for (x = 0; x < 256; x++)
@@ -221,11 +221,11 @@ VIDEO_UPDATE( gomoku )
 					{
 						if (bgram & 0x04)
 						{
-							color = 0x2f;	// 明るい黒(カーソル)
+							color = 0x2f;	/* 明るい黒(カーソル)*/
 						}
 						else if (bgram & 0x08)
 						{
-							color = 0x22;	// 白(カーソル)
+							color = 0x22;	/* 白(カーソル)*/
 						}
 						else continue;
 					}
@@ -247,7 +247,7 @@ VIDEO_UPDATE( gomoku )
 #if 0
 	{
 		char buf[80];
-	//	int x, y;
+	/*	int x, y;*/
 		static int key_ins = 0;
 		static int dispsw = 0;
 
@@ -265,9 +265,9 @@ VIDEO_UPDATE( gomoku )
 				for (x = 0; x < 16; x++)
 				{
 					sprintf(buf, "%02X", gomoku_bgram[((y * 16) + x)] & 0xff);
-				//	sprintf(buf, "%02X", spriteram[((y * 16) + x)] & 0xff);
-				//	sprintf(buf, "%02X", videoram[((y * 16) + x)] & 0xff);
-				//	sprintf(buf, "%02X", colorram[((y * 16) + x)] & 0xff);
+				/*	sprintf(buf, "%02X", spriteram[((y * 16) + x)] & 0xff);*/
+				/*	sprintf(buf, "%02X", videoram[((y * 16) + x)] & 0xff);*/
+				/*	sprintf(buf, "%02X", colorram[((y * 16) + x)] & 0xff);*/
 					ui_text(Machine->scrbitmap, buf, (16 + (x * 14)), (24 + (y * 8)));
 				}
 			}
@@ -279,13 +279,13 @@ VIDEO_UPDATE( gomoku )
 	{
 		unsigned char *RAM = memory_region(REGION_CPU1);
 		char buf[80];
-	//	int x, y;
+	/*	int x, y;*/
 
 		for (y = 0; y < 4; y++)
 		{
 			for (x = 0; x < 8; x++)
 			{
-				// 0x6000 - 0x601f
+				/* 0x6000 - 0x601f*/
 				sprintf(buf, "%02X", RAM[0x6000 + ((y * 8) + x)] & 0xff);
 				ui_text(Machine->scrbitmap, buf, (0 + (x * 14)), (0 + (y * 8)));
 			}
@@ -294,7 +294,7 @@ VIDEO_UPDATE( gomoku )
 		{
 			for (x = 0; x < 8; x++)
 			{
-				// 0x6800 - 0x681f
+				/* 0x6800 - 0x681f*/
 				sprintf(buf, "%02X", RAM[0x6800 + ((y * 8) + x)] & 0xff);
 				ui_text(Machine->scrbitmap, buf, (0 + (x * 14)), (40 + (y * 8)));
 			}

@@ -77,8 +77,8 @@ static void pbillrd_draw_sprites( struct mame_bitmap *bitmap, const struct recta
 		int ypos = spriteram[offs + 2];
 		int code = spriteram[offs + 0];
 
-		int flipx = 0;//spriteram[offs + 0] & 0x80;	//?? unused ?
-		int flipy = 0;//spriteram[offs + 0] & 0x40;
+		int flipx = 0;/*spriteram[offs + 0] & 0x80;	//?? unused ?*/
+		int flipy = 0;/*spriteram[offs + 0] & 0x40;*/
 		int color = spriteram[offs + 1] & 0x0f;
 
 		if (flip_screen_x)
@@ -113,7 +113,7 @@ static void freekick_draw_sprites( struct mame_bitmap *bitmap, const struct rect
 		int ypos = spriteram[offs + 0];
 		int code = spriteram[offs + 1]+ ((spriteram[offs + 2] & 0x20) << 3);
 
-		int flipx = spriteram[offs + 2] & 0x80;	//?? unused ?
+		int flipx = spriteram[offs + 2] & 0x80;	/*?? unused ?*/
 		int flipy = spriteram[offs + 2] & 0x40;
 		int color = spriteram[offs + 2] & 0x1f;
 

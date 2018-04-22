@@ -239,7 +239,7 @@ static void psikyosh_drawbglayerscroll( int layer, struct mame_bitmap *bitmap, c
 
 	scrollbank = BG_TYPE(layer); /* Scroll bank appears to be same as layer type */
 
-//	bank = BG_TYPE(layer) - 0x02; /* This is an assumption which seems to hold true so far, although the bank seems to be selectable per-line */
+/*	bank = BG_TYPE(layer) - 0x02; // This is an assumption which seems to hold true so far, although the bank seems to be selectable per-line */
 
 	/* Take the following details from the info for the first row, the same for every row in all cases so far */
 	bank    = (psikyosh_bgram[(scrollbank*0x800)/4 + 0x400/4 - 0x4000/4] & 0x000000ff) >> 0;
@@ -248,7 +248,7 @@ static void psikyosh_drawbglayerscroll( int layer, struct mame_bitmap *bitmap, c
 
 	/* Just to get things moving :) */
 	scrollx =(psikyosh_bgram[(scrollbank*0x800)/4 - 0x4000/4] & 0x000001ff) >> 0;
-	scrolly = 0; // ColumnZoom is combined with ColumnScroll values :(
+	scrolly = 0; /* ColumnZoom is combined with ColumnScroll values :(*/
 
 	gfx = BG_DEPTH_8BPP(layer) ? Machine->gfx[1] : Machine->gfx[0];
 	size = BG_LARGE(layer) ? 32 : 16;
@@ -288,7 +288,7 @@ static void psikyosh_drawbglayerscroll( int layer, struct mame_bitmap *bitmap, c
 				tileno = (psikyosh_bgram[(bank*0x800)/4 + offs - 0x4000/4] & 0x0007ffff); /* seems to take into account spriteram, hence -0x4000 */
 				colour = (psikyosh_bgram[(bank*0x800)/4 + offs - 0x4000/4] & 0xff000000) >> 24;
 
-//				drawgfx(zoom_bitmap,gfx,tileno,colour,0,0,(16*sx)&0x1ff,((16*sy)&(width-1)),NULL,TRANSPARENCY_PEN,0);
+/*				drawgfx(zoom_bitmap,gfx,tileno,colour,0,0,(16*sx)&0x1ff,((16*sy)&(width-1)),NULL,TRANSPARENCY_PEN,0);*/
 
 				drawgfx(bitmap,gfx,tileno,colour,0,0,(16*sx+scrollx)&0x1ff,((16*sy+scrolly)&(width-1)),cliprect,trans,0); /* normal */
 				if(scrollx)
@@ -303,8 +303,8 @@ static void psikyosh_drawbglayerscroll( int layer, struct mame_bitmap *bitmap, c
 		}
 		/* Only ever seems to use one linescroll value, ok for now */
 		/* Disabled for now, as they doesn't even support alpha :( */
-//		copyscrollbitmap(bitmap,zoom_bitmap,1,bg_scrollx,512,bg_scrolly,cliprect,TRANSPARENCY_PEN,0);
-//		copyscrollbitmap(bitmap,zoom_bitmap,256,bg_scrollx,0,bg_scrolly,cliprect,TRANSPARENCY_PEN,0);
+/*		copyscrollbitmap(bitmap,zoom_bitmap,1,bg_scrollx,512,bg_scrolly,cliprect,TRANSPARENCY_PEN,0);*/
+/*		copyscrollbitmap(bitmap,zoom_bitmap,256,bg_scrollx,0,bg_scrolly,cliprect,TRANSPARENCY_PEN,0);*/
 	}
 }
 
@@ -968,7 +968,7 @@ static void psikyosh_drawsprites( struct mame_bitmap *bitmap, const struct recta
 		listdat = list[BYTE_XOR_BE(listcntr)];
 		sprnum = (listdat & 0x03ff) * 4;
 
-		pri  = (src[sprnum+1] & 0x00003000) >> 12; // & 0x00007000/0x00003000 ?
+		pri  = (src[sprnum+1] & 0x00003000) >> 12; /* & 0x00007000/0x00003000 ?*/
 		pri = SPRITE_PRI(pri);
 
 		if(pri == req_pri)
@@ -1143,7 +1143,7 @@ VIDEO_UPDATE( psikyosh ) /* Note the z-buffer on each sprite to get correct prio
 		psikyosh_prelineblend(bitmap, cliprect);
 
 		for (i=0; i<=7; i++) {
-		psikyosh_drawsprites(bitmap, cliprect, i); // When same priority bg's have higher pri
+		psikyosh_drawsprites(bitmap, cliprect, i); /* When same priority bg's have higher pri*/
 		psikyosh_drawbackground(bitmap, cliprect, i);
 			if((psikyosh_vidregs[2]&0xf) == i) psikyosh_postlineblend(bitmap, cliprect);
 		}

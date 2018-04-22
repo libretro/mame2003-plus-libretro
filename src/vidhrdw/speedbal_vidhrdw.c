@@ -234,7 +234,7 @@ void speedbal_draw_foreground1 (struct mame_bitmap *bitmap)
 
 	for (offset = 0;offset < speedbal_foreground_videoram_size ;offset+=2)
 	{
-//	    if (ch_dirtybuffer[offset])
+/*	    if (ch_dirtybuffer[offset])*/
 		{
 			caracter = speedbal_foreground_videoram[offset];
 			code     = speedbal_foreground_videoram[offset+1];
@@ -267,12 +267,12 @@ void speedbal_draw_foreground1 (struct mame_bitmap *bitmap)
 
 VIDEO_UPDATE( speedbal )
 {
-	// first background
+	/* first background*/
 	speedbal_draw_background (bitmap);
 
-	// second characters (general)
+	/* second characters (general)*/
 	speedbal_draw_foreground1 (bitmap);
 
-	// thirth sprites
+	/* thirth sprites*/
 	speedbal_draw_sprites (bitmap);
 }

@@ -251,7 +251,7 @@ static void stv_vdp2_dynamic_res_change(void);
 
 	#define STV_VDP2_BGON ((stv_vdp2_regs[0x020/4] >> 16)&0x0000ffff)
 
-	// NxOn - Layer Enable Register
+	/* NxOn - Layer Enable Register*/
 	#define STV_VDP2_xxON ((STV_VDP2_BGON & 0x001f) >> 0) /* to see if anything is enabled */
 
 	#define STV_VDP2_N0ON ((STV_VDP2_BGON & 0x0001) >> 0) /* N0On = NBG0 Enable */
@@ -261,7 +261,7 @@ static void stv_vdp2_dynamic_res_change(void);
 	#define STV_VDP2_R0ON ((STV_VDP2_BGON & 0x0010) >> 4) /* R0On = RBG0 Enable */
 	#define STV_VDP2_R1ON ((STV_VDP2_BGON & 0x0020) >> 5) /* R1On = RBG1 Enable */
 
-	// NxTPON - Transparency Pen Enable Registers
+	/* NxTPON - Transparency Pen Enable Registers*/
 	#define STV_VDP2_N0TPON ((STV_VDP2_BGON & 0x0100) >> 8) /* 	N0TPON = NBG0 Draw Transparent Pen (as solid) /or/ RBG1 Draw Transparent Pen */
 	#define STV_VDP2_N1TPON ((STV_VDP2_BGON & 0x0200) >> 9) /* 	N1TPON = NBG1 Draw Transparent Pen (as solid) /or/ EXBG Draw Transparent Pen */
 	#define STV_VDP2_N2TPON ((STV_VDP2_BGON & 0x0400) >> 10)/*  N2TPON = NBG2 Draw Transparent Pen (as solid) */
@@ -1099,7 +1099,7 @@ static void stv_vdp2_dynamic_res_change(void);
 	#define STV_VDP2_BKCLMD ((STV_VDP2_BKTA_UL & 0x80000000) >> 31)
 	#define STV_VDP2_BKTA   ((STV_VDP2_BKTA_UL & 0x0003ffff) >> 0)
 	/*MSB of this register is used when the extra RAM cart is used,ignore it for now.*/
-	//	#define STV_VDP2_BKTA   ((STV_VDP2_BKTA_UL & 0x0007ffff) >> 0)
+	/*	#define STV_VDP2_BKTA   ((STV_VDP2_BKTA_UL & 0x0007ffff) >> 0)*/
 
 /* 1800b0 - Rotation Parameter Mode
  bit-> /----15----|----14----|----13----|----12----|----11----|----10----|----09----|----08----\
@@ -1550,8 +1550,8 @@ static struct stv_vdp2_tilemap_capabilities
 
 static void stv_vdp2_draw_basic_bitmap(struct mame_bitmap *bitmap, const struct rectangle *cliprect)
 {
-//	logerror ("bitmap enable %02x size %08x depth %08x\n",	stv2_current_tilemap.layer_name, stv2_current_tilemap.bitmap_size, stv2_current_tilemap.colour_depth);
-//	usrintf_showmessage ("bitmap enable %02x size %08x depth %08x number %02x",	stv2_current_tilemap.layer_name, stv2_current_tilemap.bitmap_size, stv2_current_tilemap.colour_depth,stv2_current_tilemap.bitmap_palette_number);
+/*	logerror ("bitmap enable %02x size %08x depth %08x\n",	stv2_current_tilemap.layer_name, stv2_current_tilemap.bitmap_size, stv2_current_tilemap.colour_depth);*/
+/*	usrintf_showmessage ("bitmap enable %02x size %08x depth %08x number %02x",	stv2_current_tilemap.layer_name, stv2_current_tilemap.bitmap_size, stv2_current_tilemap.colour_depth,stv2_current_tilemap.bitmap_palette_number);*/
 
 	int xsize = 0;
 	int ysize = 0;
@@ -1572,12 +1572,12 @@ static void stv_vdp2_draw_basic_bitmap(struct mame_bitmap *bitmap, const struct 
 
 	gfxdata+=(stv2_current_tilemap.bitmap_map * 0x20000);
 	stv2_current_tilemap.bitmap_palette_number+=stv2_current_tilemap.colour_ram_address_offset;
-	stv2_current_tilemap.bitmap_palette_number&=7;//safety check
+	stv2_current_tilemap.bitmap_palette_number&=7;/*safety check*/
 
 	switch(stv2_current_tilemap.colour_depth)
 	{
 		/*Palette Format*/
-		case 0://elandore uses this on the fight,size is wrong.
+		case 0:/*elandore uses this on the fight,size is wrong.*/
 		{
 			for (ycnt = 0; ycnt <ysize;ycnt++)
 			{
@@ -1775,8 +1775,8 @@ static void stv_vdp2_draw_basic_tilemap(struct mame_bitmap *bitmap, const struct
 
 	/* Calculate the Number of tiles for x / y directions of each page (actually these will be the same */
 	/* (2-stv2_current_tilemap.tile_size) << 5) */
-	pgtiles_x = ((2-stv2_current_tilemap.tile_size) << 5); // 64 (8x8 mode) or 32 (16x16 mode)
-	pgtiles_y = ((2-stv2_current_tilemap.tile_size) << 5); // 64 (8x8 mode) or 32 (16x16 mode)
+	pgtiles_x = ((2-stv2_current_tilemap.tile_size) << 5); /* 64 (8x8 mode) or 32 (16x16 mode)*/
+	pgtiles_y = ((2-stv2_current_tilemap.tile_size) << 5); /* 64 (8x8 mode) or 32 (16x16 mode)*/
 
 	/* Calculate the Page Size in BYTES */
 	/* 64 * 64 * (1 * 2) = 0x2000 bytes
@@ -1806,21 +1806,21 @@ static void stv_vdp2_draw_basic_tilemap(struct mame_bitmap *bitmap, const struct
 	/* Work out the Plane Size in tiles and Plane Dimensions (pixels) */
 	switch (stv2_current_tilemap.plane_size & 3)
 	{
-		case 0: // 1 page * 1 page
+		case 0: /* 1 page * 1 page*/
 			pltiles_x  = pgtiles_x;
 			plpixels_x = pgpixels_x;
 			pltiles_y  = pgtiles_y;
 			plpixels_y = pgpixels_y;
 			break;
 
-		case 1: // 2 pages * 1 page
+		case 1: /* 2 pages * 1 page*/
 			pltiles_x  = pgtiles_x * 2;
 			plpixels_x = pgpixels_x * 2;
 			pltiles_y  = pgtiles_y;
 			plpixels_y = pgpixels_y;
 			break;
 
-		case 3: // 2 pages * 2 pages
+		case 3: /* 2 pages * 2 pages*/
 			pltiles_x  = pgtiles_x * 2;
 			plpixels_x = pgpixels_x * 2;
 			pltiles_y  = pgtiles_y * 2;
@@ -1828,7 +1828,7 @@ static void stv_vdp2_draw_basic_tilemap(struct mame_bitmap *bitmap, const struct
 			break;
 
 		default:
-			// illegal
+			/* illegal*/
 			pltiles_x  = pgtiles_x;
 			plpixels_x = pgpixels_x;
 			pltiles_y  = pgtiles_y * 2;
@@ -1916,7 +1916,7 @@ static void stv_vdp2_draw_basic_tilemap(struct mame_bitmap *bitmap, const struct
 
 		base[i] &= 0x7ffff; /* shienryu needs this for the text layer, is there a problem elsewhere or is it just right without the ram cart */
 
-		base[i] = base[i] / 4; // convert bytes to DWORDS
+		base[i] = base[i] / 4; /* convert bytes to DWORDS*/
 	}
 
 	/* other bits */
@@ -1928,10 +1928,10 @@ static void stv_vdp2_draw_basic_tilemap(struct mame_bitmap *bitmap, const struct
 	plsize_dwords = plsize_bytes /4;
 	mpsize_dwords = mpsize_bytes /4;
 
-//	if (stv2_current_tilemap.layer_name==3) usrintf_showmessage ("well this is a bit  %08x", stv2_current_tilemap.map_offset[0]);
-//	if (stv2_current_tilemap.layer_name==3) usrintf_showmessage ("well this is a bit  %08x %08x %08x %08x", stv2_current_tilemap.plane_size, pgtiles_x, pltiles_x, mptiles_x);
+/*	if (stv2_current_tilemap.layer_name==3) usrintf_showmessage ("well this is a bit  %08x", stv2_current_tilemap.map_offset[0]);*/
+/*	if (stv2_current_tilemap.layer_name==3) usrintf_showmessage ("well this is a bit  %08x %08x %08x %08x", stv2_current_tilemap.plane_size, pgtiles_x, pltiles_x, mptiles_x);*/
 
-	if (!stv2_current_tilemap.enabled) return; // stop right now if its disabled ...
+	if (!stv2_current_tilemap.enabled) return; /* stop right now if its disabled ...*/
 
 	/* most things we need (or don't need) to work out are now worked out */
 
@@ -2008,14 +2008,14 @@ static void stv_vdp2_draw_basic_tilemap(struct mame_bitmap *bitmap, const struct
 				data = stv_vdp2_vram[newbase + offs];
 				tilecode = (data & 0x00007fff);
 				pal   = (data &    0x007f0000)>>16;
-	//			specialc = (data & 0x10000000)>>28;;
+	/*			specialc = (data & 0x10000000)>>28;;*/
 				flipyx   = (data & 0xc0000000)>>30;
 			}
 /* WE'VE GOT THE TILE INFO ... */
 
 /* DECODE ANY TILES WE NEED TO DECODE */
 
-			pal += stv2_current_tilemap.colour_ram_address_offset<< 4; // bios uses this ..
+			pal += stv2_current_tilemap.colour_ram_address_offset<< 4; /* bios uses this ..*/
 
 			if (stv2_current_tilemap.colour_depth != 0)
 			{
@@ -2175,7 +2175,7 @@ static void stv_vdp2_check_tilemap(struct mame_bitmap *bitmap, const struct rect
 	/* the idea is here we check the tilemap capabilities / whats enabled and call an appropriate tilemap drawing routine, or
 	  at the very list throw up a few errors if the tilemaps want to do something we don't support yet */
 
-	if (stv2_current_tilemap.bitmap_enable) // this layer is a bitmap
+	if (stv2_current_tilemap.bitmap_enable) /* this layer is a bitmap*/
 	{
 		stv_vdp2_draw_basic_bitmap(bitmap, cliprect);
 	}
@@ -2204,7 +2204,7 @@ static void stv_vdp2_draw_NBG0(struct mame_bitmap *bitmap, const struct rectangl
 	*/
 	stv2_current_tilemap.enabled = STV_VDP2_N0ON;
 
-//	if (!stv2_current_tilemap.enabled) return; // stop right now if its disabled ...
+/*	if (!stv2_current_tilemap.enabled) return; // stop right now if its disabled ...*/
 
 	stv2_current_tilemap.trans_enabled = STV_VDP2_N0TPON;
 	stv2_current_tilemap.colour_depth = STV_VDP2_N0CHCN;
@@ -2258,7 +2258,7 @@ static void stv_vdp2_draw_NBG1(struct mame_bitmap *bitmap, const struct rectangl
 	*/
 	stv2_current_tilemap.enabled = STV_VDP2_N1ON;
 
-//	if (!stv2_current_tilemap.enabled) return; // stop right now if its disabled ...
+/*	if (!stv2_current_tilemap.enabled) return; // stop right now if its disabled ...*/
 
 	stv2_current_tilemap.trans_enabled = STV_VDP2_N1TPON;
 	stv2_current_tilemap.colour_depth = STV_VDP2_N1CHCN;
@@ -2319,7 +2319,7 @@ static void stv_vdp2_draw_NBG2(struct mame_bitmap *bitmap, const struct rectangl
 	if (STV_VDP2_N0CHCN == 0x03) stv2_current_tilemap.enabled = 0;
 	if (STV_VDP2_N0CHCN == 0x04) stv2_current_tilemap.enabled = 0;
 
-//	if (!stv2_current_tilemap.enabled) return; // stop right now if its disabled ...
+/*	if (!stv2_current_tilemap.enabled) return; // stop right now if its disabled ...*/
 
 	stv2_current_tilemap.trans_enabled = STV_VDP2_N2TPON;
 	stv2_current_tilemap.trans_enabled = STV_VDP2_N2TPON;
@@ -2379,7 +2379,7 @@ static void stv_vdp2_draw_NBG3(struct mame_bitmap *bitmap, const struct rectangl
 
 	stv2_current_tilemap.enabled = STV_VDP2_N3ON;
 
-//	if (!stv2_current_tilemap.enabled) return; // stop right now if its disabled ...
+/*	if (!stv2_current_tilemap.enabled) return; // stop right now if its disabled ...*/
 
 	stv2_current_tilemap.trans_enabled = STV_VDP2_N3TPON;
 	stv2_current_tilemap.trans_enabled = STV_VDP2_N3TPON;
@@ -2429,7 +2429,7 @@ static void stv_vdp2_draw_back(struct mame_bitmap *bitmap, const struct rectangl
 	else
 	{
 		#ifdef MAME_DEBUG
-		//usrintf_showmessage("Back screen enabled %08x",STV_VDP2_BKTA);
+		/*usrintf_showmessage("Back screen enabled %08x",STV_VDP2_BKTA);*/
 		#endif
 		gfxdata+=(STV_VDP2_BKTA);
 
@@ -2482,7 +2482,7 @@ WRITE32_HANDLER ( stv_vdp2_cram_w )
 	int r,g,b;
 	COMBINE_DATA(&stv_vdp2_cram[offset]);
 
-//	usrintf_showmessage("%01x",STV_VDP2_CRMD);
+/*	usrintf_showmessage("%01x",STV_VDP2_CRMD);*/
 
 	switch( STV_VDP2_CRMD )
 	{
@@ -2554,7 +2554,7 @@ WRITE32_HANDLER ( stv_vdp2_regs_w )
 extern int stv_vblank;
 READ32_HANDLER ( stv_vdp2_regs_r )
 {
-//	if (offset!=1) logerror ("VDP2: Read from Registers, Offset %04x\n",offset);
+/*	if (offset!=1) logerror ("VDP2: Read from Registers, Offset %04x\n",offset);*/
 
 	switch(offset)
 	{
@@ -2576,7 +2576,7 @@ READ32_HANDLER ( stv_vdp2_regs_r )
 int stv_vdp2_start ( void )
 {
 	stv_vdp2_regs = auto_malloc ( 0x040000 );
-	stv_vdp2_vram = auto_malloc ( 0x100000 ); // actually we only need half of it since we don't emulate extra 4mbit ram cart.
+	stv_vdp2_vram = auto_malloc ( 0x100000 ); /* actually we only need half of it since we don't emulate extra 4mbit ram cart.*/
 	stv_vdp2_cram = auto_malloc ( 0x080000 );
 	stv_vdp2_vram_dirty_8x8x4 = auto_malloc ( 0x100000 );
 	stv_vdp2_vram_dirty_8x8x8 = auto_malloc ( 0x100000 );
@@ -2585,8 +2585,8 @@ int stv_vdp2_start ( void )
 	memset(stv_vdp2_vram, 0, 0x100000);
 	memset(stv_vdp2_cram, 0, 0x080000);
 
-//	Machine->gfx[0]->color_granularity=4;
-//	Machine->gfx[1]->color_granularity=4;
+/*	Machine->gfx[0]->color_granularity=4;*/
+/*	Machine->gfx[1]->color_granularity=4;*/
 
 	return 0;
 }
@@ -2641,9 +2641,9 @@ VIDEO_UPDATE( stv_vdp2 )
 {
 	static UINT8 pri;
 
-//#ifndef MAME_DEBUG
+/*#ifndef MAME_DEBUG*/
 	stv_vdp2_dynamic_res_change();
-//#endif
+/*#endif*/
 
 	stv_vdp2_draw_back(bitmap,cliprect);
 
@@ -2950,7 +2950,7 @@ VDP2 Registers Table
  *that the corrispetive bit isn't used by the driver ATM.   */
 static READ32_HANDLER ( stv_vdp2_regs_r32 )
 {
-//	if (offset!=1) logerror ("VDP2: Read from Registers, Offset %04x\n",offset);
+/*	if (offset!=1) logerror ("VDP2: Read from Registers, Offset %04x\n",offset);*/
 	switch(offset)
 	{
 		case 1:

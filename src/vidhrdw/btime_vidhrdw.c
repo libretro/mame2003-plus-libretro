@@ -267,7 +267,7 @@ WRITE_HANDLER( bnj_background_w )
 
 WRITE_HANDLER( bnj_scroll1_w )
 {
-    // Dirty screen if background is being turned off
+    /* Dirty screen if background is being turned off*/
     if (bnj_scroll1 && !data)
     {
 		set_vh_global_attribute(NULL,0);
@@ -283,11 +283,11 @@ WRITE_HANDLER( bnj_scroll2_w )
 
 WRITE_HANDLER( zoar_video_control_w )
 {
-    // Zoar video control
-    //
-    // Bit 0-2 = Unknown (always 0). Marked as MCOL on schematics
-    // Bit 3-4 = Palette
-    // Bit 7   = Flip Screen
+    /* Zoar video control*/
+    /**/
+    /* Bit 0-2 = Unknown (always 0). Marked as MCOL on schematics*/
+    /* Bit 3-4 = Palette*/
+    /* Bit 7   = Flip Screen*/
 
 	set_vh_global_attribute(&btime_palette, (data & 0x30) >> 3);
 	flip_screen_set(data & 0x80);
@@ -295,10 +295,10 @@ WRITE_HANDLER( zoar_video_control_w )
 
 WRITE_HANDLER( btime_video_control_w )
 {
-    // Btime video control
-    //
-    // Bit 0   = Flip screen
-    // Bit 1-7 = Unknown
+    /* Btime video control*/
+    /**/
+    /* Bit 0   = Flip screen*/
+    /* Bit 1-7 = Unknown*/
 
 	flip_screen_set(data & 0x01);
 }
@@ -321,8 +321,8 @@ WRITE_HANDLER( bnj_video_control_w )
 
 WRITE_HANDLER( lnc_video_control_w )
 {
-    // I have a feeling that this only works by coincidence. I couldn't
-    // figure out how NMI's are disabled by the sound processor
+    /* I have a feeling that this only works by coincidence. I couldn't*/
+    /* figure out how NMI's are disabled by the sound processor*/
     lnc_sound_interrupt_enabled = data & 0x08;
 
     bnj_video_control_w(offset, data & 0x01);
@@ -431,7 +431,7 @@ static void drawsprites(struct mame_bitmap *bitmap, int color,
 
         sy += (flip_screen ? -256 : 256);
 
-        // Wrap around
+        /* Wrap around*/
         drawgfx(bitmap,Machine->gfx[1],
                 sprite_ram[offs + interleave],
                 color,
@@ -448,12 +448,12 @@ static void drawbackground(struct mame_bitmap *bitmap, unsigned char* tilemap)
 
     int scroll = -(bnj_scroll2 | ((bnj_scroll1 & 0x03) << 8));
 
-    // One extra iteration for wrap around
+    /* One extra iteration for wrap around*/
     for (i = 0; i < 5; i++, scroll += 256)
     {
         int tileoffset = tilemap[i & 3] * 0x100;
 
-        // Skip if this title is completely off the screen
+        /* Skip if this title is completely off the screen*/
         if (scroll > 256)  break;
         if (scroll < -256) continue;
 
@@ -537,7 +537,7 @@ VIDEO_UPDATE( btime )
     {
         int i, start;
 
-        // Generate tile map
+        /* Generate tile map*/
         static unsigned char btime_tilemap[4];
 
         if (flip_screen)

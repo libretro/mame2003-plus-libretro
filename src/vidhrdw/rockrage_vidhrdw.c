@@ -76,7 +76,7 @@ VIDEO_START( rockrage )
 	if (K007420_vh_start(1,sprite_callback))
 		return 1;
 
-	K007420_set_banklimit(0x3ff); // bladestl and battlnts may also need this
+	K007420_set_banklimit(0x3ff); /* bladestl and battlnts may also need this*/
 
 	return 0;
 }

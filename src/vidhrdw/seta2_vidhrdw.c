@@ -128,20 +128,20 @@ WRITE16_HANDLER( seta2_vregs_w )
 	COMBINE_DATA(&seta2_vregs[offset]);
 	switch( offset*2 )
 	{
-	case 0x1c:	// FLIP SCREEN (myangel)	<- this is actually zoom
+	case 0x1c:	/* FLIP SCREEN (myangel)	<- this is actually zoom*/
 		flip_screen_set( data & 1 );
 		if (data & ~1)	logerror("CPU #0 PC %06X: flip screen unknown bits %04X\n",activecpu_get_pc(),data);
 		break;
-	case 0x2a:	// FLIP X (pzlbowl)
+	case 0x2a:	/* FLIP X (pzlbowl)*/
 		flip_screen_x_set( data & 1 );
 		if (data & ~1)	logerror("CPU #0 PC %06X: flipx unknown bits %04X\n",activecpu_get_pc(),data);
 		break;
-	case 0x2c:	// FLIP Y (pzlbowl)
+	case 0x2c:	/* FLIP Y (pzlbowl)*/
 		flip_screen_y_set( data & 1 );
 		if (data & ~1)	logerror("CPU #0 PC %06X: flipy unknown bits %04X\n",activecpu_get_pc(),data);
 		break;
 
-	case 0x30:	// BLANK SCREEN (pzlbowl, myangel)
+	case 0x30:	/* BLANK SCREEN (pzlbowl, myangel)*/
 		if (data & ~1)	logerror("CPU #0 PC %06X: blank unknown bits %04X\n",activecpu_get_pc(),data);
 		break;
 
@@ -192,21 +192,21 @@ static void seta2_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle
 			default:
 				usrintf_showmessage("unknown gfxset %x",(num & 0x0700)>>8);
 				gfx = rand()&3; break;
-			case 0x0700: 	// 8bpp tiles (76543210)
+			case 0x0700: 	/* 8bpp tiles (76543210)*/
 				gfx = 3; break;
-			case 0x0600:	// 6bpp tiles (--543210) (myangel sliding blocks test)
+			case 0x0600:	/* 6bpp tiles (--543210) (myangel sliding blocks test)*/
 				gfx = 2; break;
-			case 0x0500:	// 4bpp tiles (3210----)
+			case 0x0500:	/* 4bpp tiles (3210----)*/
 				gfx = 1; break;
-			case 0x0400:	// 4bpp tiles (----3210)
+			case 0x0400:	/* 4bpp tiles (----3210)*/
 				gfx = 0; break;
-//			case 0x0300:
-//				unknown
-			case 0x0200:	// 3bpp tiles?  (-----210) (myangel "Graduate Tests")
+/*			case 0x0300:*/
+/*				unknown*/
+			case 0x0200:	/* 3bpp tiles?  (-----210) (myangel "Graduate Tests")*/
 				gfx = 4; break;
-			case 0x0100:	// 2bpp tiles??? (--10----) (myangel2 question bubble, myangel endgame)
+			case 0x0100:	/* 2bpp tiles??? (--10----) (myangel2 question bubble, myangel endgame)*/
 				gfx = 5; break;
-			case 0x0000:	// no idea!
+			case 0x0000:	/* no idea!*/
 				gfx = 0; break;
 		}
 
@@ -217,7 +217,7 @@ static void seta2_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle
 		{
 			if (s2 >= end)	break;
 
-// "tilemap" sprite
+/* "tilemap" sprite*/
 
 			if (sprite & 0x8000)
 			{
@@ -300,7 +300,7 @@ static void seta2_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle
 				}
 			}
 			else
-// "normal" sprite
+/* "normal" sprite*/
 			{
 				int sx    = s2[0];
 				int sy    = s2[1];
@@ -324,7 +324,7 @@ static void seta2_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle
 				sy &= 0x1ff;
 				sy -= yoffset;
 
-				code &= ~((sizex+1) * (sizey+1) - 1);	// see myangel, myangel2 and grdians
+				code &= ~((sizex+1) * (sizey+1) - 1);	/* see myangel, myangel2 and grdians*/
 
 				for (y = 0; y <= sizey; y++)
 				{
@@ -380,7 +380,7 @@ VIDEO_UPDATE( seta2 )
 	/* Black or pens[0]? */
 	fillbitmap(bitmap,Machine->pens[0],cliprect);
 
-	if (seta2_vregs[0x30/2] & 1)	return;		// BLANK SCREEN
+	if (seta2_vregs[0x30/2] & 1)	return;		/* BLANK SCREEN*/
 
 	seta2_draw_sprites(bitmap,cliprect);
 }

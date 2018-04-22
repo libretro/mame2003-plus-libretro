@@ -205,10 +205,10 @@ void gsword_draw_sprites(struct mame_bitmap *bitmap)
 			flipx = gsword_spriteattrib_ram[offs] & 0x02;
 			flipy = gsword_spriteattrib_ram[offs] & 0x01;
 
-			// Adjust sprites that should be far far right!
+			/* Adjust sprites that should be far far right!*/
 			if (sx<0) sx+=256;
 
-			// Adjuste for 32x32 tiles(#128-256)
+			/* Adjuste for 32x32 tiles(#128-256)*/
 			if (tile > 127)
 			{
 				spritebank = 1;

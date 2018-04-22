@@ -87,7 +87,7 @@ static void ninjaw_draw_sprites(struct mame_bitmap *bitmap,const struct rectangl
 		if (!tilenum) continue;
 
 		data = spriteram16[offs+0];
-//		x = (data - 8) & 0x3ff;
+/*		x = (data - 8) & 0x3ff;*/
 		x = (data - 32) & 0x3ff;	/* aligns sprites on rock outcrops and sewer hole */
 
 		data = spriteram16[offs+1];
@@ -97,13 +97,13 @@ static void ninjaw_draw_sprites(struct mame_bitmap *bitmap,const struct rectangl
 		data = spriteram16[offs+3];
 		flipx    = (data & 0x1);
 		flipy    = (data & 0x2) >> 1;
-		priority = (data & 0x4) >> 2; // 1 = low
+		priority = (data & 0x4) >> 2; /* 1 = low*/
 		if (priority != primask) continue;
 		invis    = (data & 0x8) >> 3;
 		color    = (data & 0x7f00) >> 8;
 
-//	Ninjaw: this stops your player flickering black and cutting into tank sprites
-//		if (invis && (priority==1)) continue;
+/*	Ninjaw: this stops your player flickering black and cutting into tank sprites*/
+/*		if (invis && (priority==1)) continue;*/
 
 #ifdef MAME_DEBUG
 		if (data & 0x80f0)   unknown |= (data &0x80f0);
@@ -156,7 +156,7 @@ VIDEO_UPDATE( ninjaw )
 	layer[2] = 2;
 
 	/* chip 0 does tilemaps on the left, chip 1 center, chip 2 the right */
-	// draw bottom layer
+	/* draw bottom layer*/
 	nodraw  = TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[0],TILEMAP_IGNORE_TRANSPARENCY,0);	/* left */
 	nodraw |= TC0100SCN_tilemap_draw(bitmap,cliprect,1,layer[0],TILEMAP_IGNORE_TRANSPARENCY,0);	/* center */
 	nodraw |= TC0100SCN_tilemap_draw(bitmap,cliprect,2,layer[0],TILEMAP_IGNORE_TRANSPARENCY,0);	/* right */
@@ -165,16 +165,16 @@ VIDEO_UPDATE( ninjaw )
 	if (nodraw) fillbitmap(bitmap, get_black_pen(), cliprect);
 
 	/* Sprites can be under/over the layer below text layer */
-	ninjaw_draw_sprites(bitmap,cliprect,1,8); // draw sprites with priority 1 which are under the mid layer
+	ninjaw_draw_sprites(bitmap,cliprect,1,8); /* draw sprites with priority 1 which are under the mid layer*/
 
-	// draw middle layer
+	/* draw middle layer*/
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[1],0,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,1,layer[1],0,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,2,layer[1],0,0);
 
-	ninjaw_draw_sprites(bitmap,cliprect,0,8); // draw sprites with priority 0 which are over the mid layer
+	ninjaw_draw_sprites(bitmap,cliprect,0,8); /* draw sprites with priority 0 which are over the mid layer*/
 
-	// draw top(text) layer
+	/* draw top(text) layer*/
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[2],0,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,1,layer[2],0,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,2,layer[2],0,0);

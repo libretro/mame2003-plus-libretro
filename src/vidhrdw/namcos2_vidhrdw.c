@@ -528,7 +528,7 @@ DrawSpritesMetalHawk( struct mame_bitmap *bitmap, const struct rectangle *clipre
 				(sprn>=0x3BC && sprn<=0x3BF)||
 				(sprn>=0x688 && sprn<=0x68B)||
 				(sprn>=0x6D8 && sprn<=0x6D9)||
-				(sprn>=0x6EA && sprn<=0x6EB); // very stupid...
+				(sprn>=0x6EA && sprn<=0x6EB); /* very stupid...*/
 
 			int color = (attrs>>4)&0xf;
 			int sx = (xpos&0x03ff)-0x50+0x07;
@@ -538,12 +538,12 @@ DrawSpritesMetalHawk( struct mame_bitmap *bitmap, const struct rectangle *clipre
 			int scalex = (sizex<<16)/(bSmallSprite?0x10:0x20);
 			int scaley = (sizey<<16)/(bSmallSprite?0x10:0x20);
 
-			// 90 degrees use a turned character
+			/* 90 degrees use a turned character*/
 			if( (flags&0x01) ) {
 				sprn |= 0x800;
 			}
 
-			// little zoom fix...
+			/* little zoom fix...*/
 			if( !bSmallSprite ) {
 				if( sizex < 0x20 ) {
 					sx -= (0x20-sizex)/0x8;

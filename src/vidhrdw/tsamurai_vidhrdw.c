@@ -183,7 +183,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 		/* 240-source[0] seems nice,but some dangling sprites appear on the left      */
 		/* side in Mission 660.Setting it to 242 fixes it,but will break other games. */
 		/* So I'm using this specific check. -kal 11 jul 2002 */
-//		if(sprite_type == 1) sy=sy+2;
+/*		if(sprite_type == 1) sy=sy+2;*/
 
 		if( flip_screen )
 		{

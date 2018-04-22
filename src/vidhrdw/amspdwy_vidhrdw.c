@@ -23,7 +23,7 @@ WRITE_HANDLER( amspdwy_paletteram_w )
 {
 	data ^= 0xff;
 	paletteram_BBGGGRRR_w(offset,data);
-//	paletteram_RRRGGGBB_w(offset,data);
+/*	paletteram_RRRGGGBB_w(offset,data);*/
 }
 
 WRITE_HANDLER( amspdwy_flipscreen_w )
@@ -134,7 +134,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 		}
 
 		drawgfx(bitmap,Machine->gfx[0],
-//				code + ((attr & 0x18)<<5),
+/*				code + ((attr & 0x18)<<5),*/
 				code + ((attr & 0x08)<<5),
 				attr,
 				flipx, flipy,

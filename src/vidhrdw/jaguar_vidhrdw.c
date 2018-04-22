@@ -150,12 +150,12 @@
 #define LOG_UNHANDLED_BLITS	0
 
 
-// interrupts to main CPU:
-//	0 = video (on the VI scanline)
-//	1 = GPU (write from GPU coprocessor)
-//	2 = object (stop object interrupt in display list)
-//	3 = timer (from the PIT)
-//	4 = jerry
+/* interrupts to main CPU:*/
+/*	0 = video (on the VI scanline)*/
+/*	1 = GPU (write from GPU coprocessor)*/
+/*	2 = object (stop object interrupt in display list)*/
+/*	3 = timer (from the PIT)*/
+/*	4 = jerry*/
 
 
 /* GPU registers */

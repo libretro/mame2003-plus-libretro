@@ -9,7 +9,7 @@
 #include "driver.h"
 #include "vidhrdw/generic.h"
 
-// Real stuff
+/* Real stuff*/
 unsigned char *stfight_text_char_ram;
 unsigned char *stfight_text_attr_ram;
 unsigned char *stfight_vh_latch_ram;
@@ -263,11 +263,11 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 		sy = stfight_sprite_ram[offs+2];
 		sx = stfight_sprite_ram[offs+3];
 
-		// non-active sprites have zero y coordinate value
+		/* non-active sprites have zero y coordinate value*/
 		if( sy > 0 )
 		{
-			// sprites which wrap onto/off the screen have
-			// a sign extension bit in the sprite attribute
+			/* sprites which wrap onto/off the screen have*/
+			/* a sign extension bit in the sprite attribute*/
 			if( sx >= 0xf0 )
 			{
 				if (attr & 0x80)

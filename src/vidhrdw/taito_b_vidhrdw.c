@@ -311,8 +311,8 @@ WRITE16_HANDLER( hitice_pixelram_w )
     /* bit 15 of pixel_scroll[0] is probably flip screen */
 
     /* I always draw flipped because the driver doesn't support flip screen yet */
-    //plot_pixel(pixel_bitmap,1023-2*sx,  511-sy,Machine->pens[b_fg_color_base * 16 + (data & 0xff)]);
-    //plot_pixel(pixel_bitmap,1023-2*sx-1,511-sy,Machine->pens[b_fg_color_base * 16 + (data & 0xff)]);
+    /*plot_pixel(pixel_bitmap,1023-2*sx,  511-sy,Machine->pens[b_fg_color_base * 16 + (data & 0xff)]);*/
+    /*plot_pixel(pixel_bitmap,1023-2*sx-1,511-sy,Machine->pens[b_fg_color_base * 16 + (data & 0xff)]);*/
     plot_pixel(pixel_bitmap,2*sx,  sy,Machine->pens[b_fg_color_base * 16 + (data & 0xff)]);
     plot_pixel(pixel_bitmap,2*sx+1,sy,Machine->pens[b_fg_color_base * 16 + (data & 0xff)]);
   }
@@ -644,8 +644,8 @@ VIDEO_UPDATE( taitob )
 
   if (pixel_bitmap)  /* hitice only */
   {
-    int scrollx = -2*pixel_scroll[0]; //+320;
-    int scrolly = -pixel_scroll[1]; //+240;
+    int scrollx = -2*pixel_scroll[0]; /*+320;*/
+    int scrolly = -pixel_scroll[1]; /*+240;*/
     /* bit 15 of pixel_scroll[0] is probably flip screen */
 
     if (pixel_init)

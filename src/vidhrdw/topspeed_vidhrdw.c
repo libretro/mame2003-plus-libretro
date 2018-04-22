@@ -63,7 +63,7 @@ void topspeed_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cl
 		zoomx = (spriteram16[offs+1]& 0x7f);
 		zoomy = (spriteram16[offs] & 0xfe00) >> 9;
 		priority = (data & 0x8000) >> 15;
-//		unknown = (data & 0x2000) >> 13;
+/*		unknown = (data & 0x2000) >> 13;*/
 
 		if (y == 0x180) continue;	/* dead sprite */
 

@@ -59,8 +59,8 @@ static void get_dbz2_bg2_tile_info(int tile_index)
 
 	tileno = dbz2_bg2_videoram[tile_index*2+1] & 0x7fff;
 
-//	tileno = (tileno & 0x3f1f) | (tileno & 0x40) | ((tileno & 0x80) >> 2) | ((tileno & 0x20) << 2) | ((tileno & 0x4000) << 1); // not right? some bg's are still bad
-	colour = (dbz2_bg2_videoram[tile_index*2] & 0x000f);  // more bits?
+/*	tileno = (tileno & 0x3f1f) | (tileno & 0x40) | ((tileno & 0x80) >> 2) | ((tileno & 0x20) << 2) | ((tileno & 0x4000) << 1); // not right? some bg's are still bad*/
+	colour = (dbz2_bg2_videoram[tile_index*2] & 0x000f);  /* more bits?*/
 
 	flipx = (dbz2_bg2_videoram[tile_index*2] & 0x0080) >> 7;
 
@@ -81,8 +81,8 @@ static void get_dbz2_bg_tile_info(int tile_index)
 
 	tileno = dbz2_bg_videoram[tile_index*2+1] & 0x7fff;
 
-//	tileno = (tileno & 0x3f1f) | (tileno & 0x40) | ((tileno & 0x80) >> 2) | ((tileno & 0x20) << 2) | ((tileno & 0x4000) << 1); // not right? some bg's are still bad
-	colour = (dbz2_bg_videoram[tile_index*2] & 0x000f);  // more bits?
+/*	tileno = (tileno & 0x3f1f) | (tileno & 0x40) | ((tileno & 0x80) >> 2) | ((tileno & 0x20) << 2) | ((tileno & 0x4000) << 1); // not right? some bg's are still bad*/
+	colour = (dbz2_bg_videoram[tile_index*2] & 0x000f);  /* more bits?*/
 
 	flipx = (dbz2_bg_videoram[tile_index*2] & 0x0080) >> 7;
 

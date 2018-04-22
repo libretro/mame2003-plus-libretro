@@ -199,7 +199,7 @@ static void slapshot_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 			continue;
 		}
 
-//usrintf_showmessage("%04x",area);
+/*usrintf_showmessage("%04x",area);*/
 
 		/* check for extra scroll offset */
 		if ((spriteram_buffered[(offs+4)/2] & 0xf000) == 0xa000)
@@ -250,17 +250,17 @@ static void slapshot_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 			color = spritedata & 0xff;
 
 
-// DG: the bigsprite == 0 check fixes "tied-up" little sprites in Thunderfox
-// which (mostly?) have spritecont = 0x20 when they are not continuations
-// of anything.
+/* DG: the bigsprite == 0 check fixes "tied-up" little sprites in Thunderfox*/
+/* which (mostly?) have spritecont = 0x20 when they are not continuations*/
+/* of anything.*/
 		if (big_sprite == 0 || (spritecont & 0xf0) == 0)
 		{
 			x = spriteram_buffered[(offs+4)/2];
 
-// DG: some absolute x values deduced here are 1 too high (scenes when you get
-// home run in Koshien, and may also relate to BG layer woods and stuff as you
-// journey in MjnQuest). You will see they are 1 pixel too far to the right.
-// Where is this extra pixel offset coming from??
+/* DG: some absolute x values deduced here are 1 too high (scenes when you get*/
+/* home run in Koshien, and may also relate to BG layer woods and stuff as you*/
+/* journey in MjnQuest). You will see they are 1 pixel too far to the right.*/
+/* Where is this extra pixel offset coming from??*/
 
 			if (x & 0x8000)   /* absolute (koshien) */
 			{

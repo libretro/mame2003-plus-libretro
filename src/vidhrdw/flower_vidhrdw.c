@@ -51,7 +51,7 @@ static void flower_drawsprites( struct mame_bitmap *bitmap, const struct rectang
 		int	sx = source[4]-55;
 		int code = source[1] & 0x3f;
 
-		int flipy = source[1] & 0x80; // wrong? sunflower needs it, ship afterwards breaks with it
+		int flipy = source[1] & 0x80; /* wrong? sunflower needs it, ship afterwards breaks with it*/
 		int flipx = source[1] & 0x40;
 
 		int size = source[3];
@@ -90,7 +90,7 @@ static void flower_drawsprites( struct mame_bitmap *bitmap, const struct rectang
 static void get_bg0_tile_info(int tile_index)
 {
 	int code = (flower_sharedram[0x3000+tile_index]);
-//	int attr = (flower_sharedram[0x3100+tile_index]);
+/*	int attr = (flower_sharedram[0x3100+tile_index]);*/
 
 	SET_TILE_INFO(
 			2,
@@ -102,7 +102,7 @@ static void get_bg0_tile_info(int tile_index)
 static void get_bg1_tile_info(int tile_index)
 {
 	int code = (flower_sharedram[0x3800+tile_index]);
-//	int attr = (flower_sharedram[0x3900+tile_index]);
+/*	int attr = (flower_sharedram[0x3900+tile_index]);*/
 
 	SET_TILE_INFO(
 			2,
@@ -146,12 +146,12 @@ WRITE_HANDLER( flower_sharedram_w )
 {
 	flower_sharedram[offset]=data;
 
-	if ((offset >= 0x3000) && (offset <= 0x31ff)) // bg0 layer
+	if ((offset >= 0x3000) && (offset <= 0x31ff)) /* bg0 layer*/
 	{
 		tilemap_mark_tile_dirty(flower_bg0_tilemap,offset&0x1ff);
 	}
 
-	if ((offset >= 0x3800) && (offset <= 0x39ff)) // bg1 layer
+	if ((offset >= 0x3800) && (offset <= 0x39ff)) /* bg1 layer*/
 	{
 		tilemap_mark_tile_dirty(flower_bg1_tilemap,offset&0x1ff);
 	}

@@ -89,7 +89,7 @@ VIDEO_UPDATE( bottom9 )
 
 	/* note: FIX layer is not used */
 	fillbitmap(bitmap,Machine->pens[layer_colorbase[1]],cliprect);
-//	if (bottom9_video_enable)
+/*	if (bottom9_video_enable)*/
 	{
 		K051960_sprites_draw(bitmap,cliprect,1,1);
 		K051316_zoom_draw_0(bitmap,cliprect,0,0);

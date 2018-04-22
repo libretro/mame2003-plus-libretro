@@ -279,11 +279,11 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 
 		if (fastfred_hardware_type == 3)
 		{
-			// Imago
+			/* Imago*/
 
-			//fastfred_spriteram[offs + 2] & 0xf8 get only set at startup
+			/*fastfred_spriteram[offs + 2] & 0xf8 get only set at startup*/
 
-			//the code is greater than 0x3f only at startup
+			/*the code is greater than 0x3f only at startup*/
 			code  = (fastfred_spriteram[offs + 1]) & 0x3f;
 
 			/* To Do: find the correct bank for sprites */
@@ -293,21 +293,21 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 		}
 		else if (fastfred_hardware_type == 2)
 		{
-			// Boggy 84
+			/* Boggy 84*/
 			code  =  fastfred_spriteram[offs + 1] & 0x7f;
 			flipx =  0;
 			flipy =  fastfred_spriteram[offs + 1] & 0x80;
 		}
 		else if (fastfred_hardware_type == 1)
 		{
-			// Fly-Boy/Fast Freddie/Red Robin
+			/* Fly-Boy/Fast Freddie/Red Robin*/
 			code  =  fastfred_spriteram[offs + 1] & 0x7f;
 			flipx =  0;
 			flipy = ~fastfred_spriteram[offs + 1] & 0x80;
 		}
 		else
 		{
-			// Jump Coaster
+			/* Jump Coaster*/
 			code  = (fastfred_spriteram[offs + 1] & 0x3f) | 0x40;
 			flipx = ~fastfred_spriteram[offs + 1] & 0x40;
 			flipy =  fastfred_spriteram[offs + 1] & 0x80;

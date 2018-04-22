@@ -14,19 +14,19 @@ extern UINT8 tunhunt_control;
 /* Video Hardware Addresses */
 
 /* Square Generator (13 bytes each) */
-#define LINEV	0x1403	// LINES VERTICAL START
-#define LINEVS	0x1483	// LINES VERT STOP
-#define LINEH	0x1083	// LINES HORIZ START
-#define LINEC	0x1283	// LINE COLOR, 4 BITS D0-D3
-#define LINESH	0x1203	// LINES SLOPE 4 BITS D0-D3 (signed)
+#define LINEV	0x1403	/* LINES VERTICAL START*/
+#define LINEVS	0x1483	/* LINES VERT STOP*/
+#define LINEH	0x1083	/* LINES HORIZ START*/
+#define LINEC	0x1283	/* LINE COLOR, 4 BITS D0-D3*/
+#define LINESH	0x1203	/* LINES SLOPE 4 BITS D0-D3 (signed)*/
 /* LINESH was used for rotation effects in an older version of the game */
 
 /* Shell Object0 */
-#define SHEL0H	0x1800	// SHELL H POSITON (NORMAL SCREEN)
-#define SHL0V	0x1400	// SHELL V START(NORMAL SCREEN)
-#define SHL0VS	0x1480	// SHELL V STOP (NORMAL SCREEN)
-#define SHL0ST	0x1200	// SHELL VSTRETCH (LIKE MST OBJ STRECTH)
-#define SHL0PC	0x1280	// SHELL PICTURE CODE (D3-D0)
+#define SHEL0H	0x1800	/* SHELL H POSITON (NORMAL SCREEN)*/
+#define SHL0V	0x1400	/* SHELL V START(NORMAL SCREEN)*/
+#define SHL0VS	0x1480	/* SHELL V STOP (NORMAL SCREEN)*/
+#define SHL0ST	0x1200	/* SHELL VSTRETCH (LIKE MST OBJ STRECTH)*/
+#define SHL0PC	0x1280	/* SHELL PICTURE CODE (D3-D0)*/
 
 /* Shell Object1 (see above) */
 #define SHEL1H	0x1A00
@@ -36,14 +36,14 @@ extern UINT8 tunhunt_control;
 #define SHL1PC	0x1281
 
 /* Motion Object RAM */
-#define MOBJV	0x1C00	// V POSITION (SCREEN ON SIDE)
-#define MOBVS	0x1482	// V STOP OF MOTION OBJECT (NORMAL SCREEN)
-#define MOBJH	0x1402	// H POSITON (SCREEN ON SIDE) (VSTART - NORMAL SCREEN)
-#define MOBST	0x1082	// STARTING LINE FOR RAM SCAN ON MOBJ
-#define VSTRLO	0x1202	// VERT (SCREEN ON SIDE) STRETCH MOJ OBJ
-#define MOTT	0x2C00	// MOTION OBJECT RAM (00-0F NOT USED, BYT CLEARED)
-#define MOBSC0	0x1080	// SCAN ROM START FOR MOBJ (unused?)
-#define MOBSC1	0x1081	// (unused?)
+#define MOBJV	0x1C00	/* V POSITION (SCREEN ON SIDE)*/
+#define MOBVS	0x1482	/* V STOP OF MOTION OBJECT (NORMAL SCREEN)*/
+#define MOBJH	0x1402	/* H POSITON (SCREEN ON SIDE) (VSTART - NORMAL SCREEN)*/
+#define MOBST	0x1082	/* STARTING LINE FOR RAM SCAN ON MOBJ*/
+#define VSTRLO	0x1202	/* VERT (SCREEN ON SIDE) STRETCH MOJ OBJ*/
+#define MOTT	0x2C00	/* MOTION OBJECT RAM (00-0F NOT USED, BYT CLEARED)*/
+#define MOBSC0	0x1080	/* SCAN ROM START FOR MOBJ (unused?)*/
+#define MOBSC1	0x1081	/* (unused?)*/
 
 static struct tilemap *fg_tilemap;
 
@@ -138,7 +138,7 @@ PALETTE_INIT( tunhunt )
 	 * In any event, the following pens are associated with the shell graphics:
 	 */
 	colortable[0x8] = 0;
-	colortable[0x9] = 4;//1;
+	colortable[0x9] = 4;/*1;*/
 	colortable[0xa] = 2;
 	colortable[0xb] = 4;
 }
@@ -158,7 +158,7 @@ Color Array Ram Assignments:
 */
 static void update_palette( void )
 {
-//	const unsigned char *color_prom = memory_region( REGION_PROMS );
+/*	const unsigned char *color_prom = memory_region( REGION_PROMS );*/
 /*
 	The actual contents of the color proms (unused by this driver)
 	are as follows:
@@ -227,7 +227,7 @@ static void draw_motion_object( struct mame_bitmap *bitmap )
  *			always 0x00?
  */
 	const UINT8 *pMem = memory_region( REGION_CPU1 );
-//	int skip = pMem[MOBST];
+/*	int skip = pMem[MOBST];*/
 	int x0 = 255-pMem[MOBJV];
 	int y0 = 255-pMem[MOBJH];
 	int scalex,scaley;
@@ -319,7 +319,7 @@ static void draw_box( struct mame_bitmap *bitmap )
 	UINT8 *pMem;
 	int color;
 	int pen;
-//	struct rectangle bbox;
+/*	struct rectangle bbox;*/
 	int z;
 	int x0,y0,y1;
 	pMem = memory_region( REGION_CPU1 );

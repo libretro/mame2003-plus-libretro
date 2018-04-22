@@ -337,10 +337,10 @@ VIDEO_UPDATE( magmax )
 
 					/*priority: background over sprites*/
 					/* not possible on the surface*/
-					//if ((map_v_scr_100) && ((graph_data & 0x0c)==0x0c))
-					//{
-					//	plot_pixel(tmpbitmap,h,v,pens[graph_color + graph_data] );
-					//}
+					/*if ((map_v_scr_100) && ((graph_data & 0x0c)==0x0c))*/
+					/*{*/
+					/*	plot_pixel(tmpbitmap,h,v,pens[graph_color + graph_data] );*/
+					/*}*/
 				}
 				for (h = 0x80; h < 0x100; h++)
 				{
@@ -371,10 +371,10 @@ VIDEO_UPDATE( magmax )
 
 					/*priority: background over sprites*/
 					/* not possible on the surface*/
-					//if ((map_v_scr_100) && ((graph_data & 0x0c)==0x0c))
-					//{
-					//	plot_pixel(tmpbitmap,h,v,pens[graph_color + graph_data] );
-					//}
+					/*if ((map_v_scr_100) && ((graph_data & 0x0c)==0x0c))*/
+					/*{*/
+					/*	plot_pixel(tmpbitmap,h,v,pens[graph_color + graph_data] );*/
+					/*}*/
 				}
 			}
 			else
@@ -508,7 +508,7 @@ VIDEO_UPDATE( magmax )
 	/* draw the foreground characters */
 	for (offs = 32*32-1; offs >= 0; offs -= 1)
 	{
-		//int page = (magmax_vreg>>3) & 0x1;
+		/*int page = (magmax_vreg>>3) & 0x1;*/
 		int code;
 
 		code = videoram16[offs /*+ page*/] & 0xff;

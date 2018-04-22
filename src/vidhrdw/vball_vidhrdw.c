@@ -177,7 +177,7 @@ VIDEO_UPDATE( vb )
 	/*To get linescrolling to work properly, we must ignore the 1st two scroll values, no idea why! -SJE */
 	for (i = 2;i < 32;i++) {
 		tilemap_set_scrollx(bg_tilemap,i,scrollx[i-2]);
-		//logerror("scrollx[%d] = %d\n",i,scrollx[i]);
+		/*logerror("scrollx[%d] = %d\n",i,scrollx[i]);*/
 	}
 	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
 	draw_sprites(bitmap,cliprect);
@@ -194,6 +194,6 @@ INTERRUPT_GEN( vball_interrupt )
 		cpu_set_irq_line(0, M6502_IRQ_LINE, HOLD_LINE);
 	else if (line == 13)
 		cpu_set_irq_line(0, IRQ_LINE_NMI, PULSE_LINE);
-	//save the scroll x register value
+	/*save the scroll x register value*/
 	if(line<32) scrollx[31-line] = (vb_scrollx_hi + vb_scrollx_lo+4);
 }

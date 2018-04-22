@@ -181,7 +181,7 @@ static void yunsun16_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 		x	+=	sprites_scrolldx;
 		y	+=	sprites_scrolldy;
 
-		if (flip_screen)	// not used?
+		if (flip_screen)	/* not used?*/
 		{
 			flipx = !flipx;		x = max_x - x - 16;
 			flipy = !flipy;		y = max_y - y - 16;
@@ -215,7 +215,7 @@ VIDEO_UPDATE( yunsun16 )
 	tilemap_set_scrollx(tilemap_1, 0, yunsun16_scroll_1[ 0 ]);
 	tilemap_set_scrolly(tilemap_1, 0, yunsun16_scroll_1[ 1 ]);
 
-//	usrintf_showmessage("%04X", *yunsun16_priority);
+/*	usrintf_showmessage("%04X", *yunsun16_priority);*/
 
 	fillbitmap(priority_bitmap,0,cliprect);
 

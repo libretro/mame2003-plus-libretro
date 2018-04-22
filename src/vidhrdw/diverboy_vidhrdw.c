@@ -48,6 +48,6 @@ static void diverboy_drawsprites( struct mame_bitmap *bitmap, const struct recta
 
 VIDEO_UPDATE(diverboy)
 {
-//	fillbitmap(bitmap,get_black_pen(),cliprect);
+/*	fillbitmap(bitmap,get_black_pen(),cliprect);*/
 	diverboy_drawsprites(bitmap,cliprect);
 }

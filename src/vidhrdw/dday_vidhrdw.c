@@ -315,7 +315,7 @@ WRITE_HANDLER( dday_sl_control_w )
 
 WRITE_HANDLER( dday_control_w )
 {
-	//if (data & 0xac)  logerror("Control = %02X\n", data & 0xac);
+	/*if (data & 0xac)  logerror("Control = %02X\n", data & 0xac);*/
 
 	/* bit 0 is coin counter 1 */
 	coin_counter_w(0, data & 0x01);

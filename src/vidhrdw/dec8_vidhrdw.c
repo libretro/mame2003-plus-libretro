@@ -713,7 +713,7 @@ VIDEO_UPDATE( srdarwin )
 	tilemap_set_scrollx( dec8_pf0_tilemap,0, (scroll2[0]<<8)+scroll2[1] );
 
 	tilemap_draw(bitmap,cliprect,dec8_pf0_tilemap,TILEMAP_BACK,0);
-	srdarwin_drawsprites(bitmap,cliprect,0); //* (srdarwin37b5gre)
+	srdarwin_drawsprites(bitmap,cliprect,0); /** (srdarwin37b5gre)*/
 	tilemap_draw(bitmap,cliprect,dec8_pf0_tilemap,TILEMAP_FRONT,0);
 	srdarwin_drawsprites(bitmap,cliprect,1);
 	tilemap_draw(bitmap,cliprect,dec8_fix_tilemap,0,0);
@@ -733,7 +733,7 @@ static void get_srdarwin_fix_tile_info( int tile_index )
 			0)
 }
 
-//AT: improved priority and fixed stage 4+ crashes caused by bank overflow
+/*AT: improved priority and fixed stage 4+ crashes caused by bank overflow*/
 static void get_srdarwin_tile_info(int tile_index)
 {
 	int tile=dec8_pf0_data[2*tile_index+1]+(dec8_pf0_data[2*tile_index]<<8);
@@ -760,10 +760,10 @@ VIDEO_START( srdarwin )
 		return 1;
 
 	tilemap_set_transparent_pen(dec8_fix_tilemap,0);
-	tilemap_set_transmask(dec8_pf0_tilemap,0,0xffff,0x0000); //* draw as background only
+	tilemap_set_transmask(dec8_pf0_tilemap,0,0xffff,0x0000); /** draw as background only*/
 	tilemap_set_transmask(dec8_pf0_tilemap,1,0x00ff,0xff00); /* Bottom 8 pens */
 	tilemap_set_transmask(dec8_pf0_tilemap,2,0x00ff,0xff00); /* Bottom 8 pens */
-	tilemap_set_transmask(dec8_pf0_tilemap,3,0x0000,0xffff); //* draw as foreground only
+	tilemap_set_transmask(dec8_pf0_tilemap,3,0x0000,0xffff); /** draw as foreground only*/
 
 	return 0;
 }

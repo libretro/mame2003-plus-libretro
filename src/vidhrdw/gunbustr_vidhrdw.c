@@ -124,8 +124,8 @@ static void gunbustr_draw_sprites_16x16(struct mame_bitmap *bitmap,const struct 
 		x -= x_offs;
 
 		bad_chunks = 0;
-		dimension = ((dblsize*2) + 2);	// 2 or 4
-		total_chunks = ((dblsize*3) + 1) << 2;	// 4 or 16
+		dimension = ((dblsize*2) + 2);	/* 2 or 4*/
+		total_chunks = ((dblsize*3) + 1) << 2;	/* 4 or 16*/
 		map_offset = tilenum << 2;
 
 		{

@@ -813,7 +813,7 @@ static void drivfrcg_get_tile_info(int tile_index)
 	UINT8 bank = galaxian_attributesram[(x << 1) | 1] & 0x30;
 
 	code |= (bank << 4);
-//	color |= ((galaxian_attributesram[(x << 1) | 1] & 0x40) >> 2);
+/*	color |= ((galaxian_attributesram[(x << 1) | 1] & 0x40) >> 2);*/
 
 	SET_TILE_INFO(0,code,color,0)
 }

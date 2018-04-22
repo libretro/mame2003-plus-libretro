@@ -53,7 +53,7 @@ WRITE16_HANDLER( twin16_videoram2_w )
 }
 
 WRITE16_HANDLER( twin16_paletteram_word_w )
-{ // identical to tmnt_paletteram_w
+{ /* identical to tmnt_paletteram_w*/
 	int r, g, b;
 
 	COMBINE_DATA(paletteram16 + offset);
@@ -268,7 +268,7 @@ static void draw_sprites( struct mame_bitmap *bitmap)
 				flipx = !flipx;
 			}
 
-			//if( sprite_which==count || !keyboard_pressed( KEYCODE_B ) )
+			/*if( sprite_which==count || !keyboard_pressed( KEYCODE_B ) )*/
 			draw_sprite( bitmap, pen_data, pal_data, xpos, ypos, width, height, flipx, flipy, (attributes&0x4000) );
 		}
 
@@ -283,7 +283,7 @@ static void draw_layer( struct mame_bitmap *bitmap, int opaque ){
 	int i, y1, y2, yd;
 	int bank_table[4];
 	int dx, dy, palette;
-	int tile_flipx = 0; // video_register&TWIN16_TILE_FLIPX;
+	int tile_flipx = 0; /* video_register&TWIN16_TILE_FLIPX;*/
 	int tile_flipy = video_register&TWIN16_TILE_FLIPY;
 
 	if( ((video_register&TWIN16_PLANE_ORDER)?1:0) != opaque ){

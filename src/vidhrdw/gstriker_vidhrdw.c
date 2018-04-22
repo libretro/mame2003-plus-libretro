@@ -350,11 +350,11 @@ static void CG10103_draw_sprite(struct mame_bitmap* screen, const struct rectang
 	int xstep, ystep;
 	int xfact, yfact;
 
-	// Check if we want to draw this sprite now
+	/* Check if we want to draw this sprite now*/
 	if (pri != drawpri)
 		return;
 
-	// Convert in fixed point to handle the scaling
+	/* Convert in fixed point to handle the scaling*/
 	xpos <<= 16;
 	ypos <<= 16;
 
@@ -362,14 +362,14 @@ static void CG10103_draw_sprite(struct mame_bitmap* screen, const struct rectang
 	ynum++;
 	xstep = ystep = 16;
 
-	// Linear scale, surely wrong
+	/* Linear scale, surely wrong*/
 	xfact = 0x10000 - ((0x8000 * xzoom) / 15);
 	yfact = 0x10000 - ((0x8000 * yzoom) / 15);
 
 	xstep *= xfact;
 	ystep *= yfact;
 
-	// Handle flipping
+	/* Handle flipping*/
 	if (flipy)
 	{
 		ypos += (ynum-1) * ystep;
@@ -382,22 +382,22 @@ static void CG10103_draw_sprite(struct mame_bitmap* screen, const struct rectang
 		xstep = -xstep;
 	}
 
-	// @@@ Add here optional connection to the VS9210 for extra level of tile number indirection
+	/* @@@ Add here optional connection to the VS9210 for extra level of tile number indirection*/
 #if 0
 	if (CG10103_cur_chip->connected_vs9210)
 	{
-		// ...
+		/* ...*/
 	}
 #endif
 
-	// Draw the block
+	/* Draw the block*/
 	for (y=0;y<ynum;y++)
 	{
 		int xp = xpos;
 
 		for (x=0;x<xnum;x++)
 		{
-			// Hack to handle horizontal wrapping
+			/* Hack to handle horizontal wrapping*/
 			drawgfxzoom(screen, Machine->gfx[CG10103_cur_chip->gfx_region], tile, color+CG10103_cur_chip->pal_base, flipx, flipy, xp>>16, ypos>>16, cliprect, TRANSPARENCY_PEN, 0x0, xfact, yfact);
 			drawgfxzoom(screen, Machine->gfx[CG10103_cur_chip->gfx_region], tile, color+CG10103_cur_chip->pal_base, flipx, flipy, (xp>>16) - 0x200, ypos>>16, cliprect, TRANSPARENCY_PEN, 0x0, xfact, yfact);
 			xp += xstep;
@@ -418,22 +418,22 @@ static void CG10103_draw(int numchip, struct mame_bitmap* screen, const struct r
 
 	splist = CG10103_cur_chip->vram;
 
-	// Parse the sorting list
+	/* Parse the sorting list*/
 	for (i=0;i<0x400;i++)
 	{
 		UINT16 cmd = *splist++;
 
-		// End of list
+		/* End of list*/
 		if (cmd & 0x4000)
 			break;
 
-		// Normal sprite here
+		/* Normal sprite here*/
 		if (cmd & 0x100)
 		{
-			// Extract sprite index
+			/* Extract sprite index*/
 			int num = cmd & 0xFF;
 
-			// Draw the sprite
+			/* Draw the sprite*/
 			CG10103_draw_sprite(screen, cliprect, CG10103_cur_chip->vram + 0x400 + num*4, priority);
 		}
 	}
@@ -448,8 +448,8 @@ void CG10103_init(int numchips)
 
 	for (i=0;i<numchips;i++)
 	{
-		// No initalization required, as for now. I'll keep the init function in case we later
-		//  need something
+		/* No initalization required, as for now. I'll keep the init function in case we later*/
+		/*  need something*/
 	}
 }
 
@@ -470,7 +470,7 @@ void CG10103_set_gfx_region(int numchip, int gfx_region)
 
 WRITE16_HANDLER( gsx_videoram3_w )
 {
-	// This memory appears to be empty in gstriker
+	/* This memory appears to be empty in gstriker*/
 	gs_videoram3[offset] = data;
 }
 
@@ -479,8 +479,8 @@ VIDEO_UPDATE(gstriker)
 {
 	fillbitmap(bitmap,get_black_pen(),cliprect);
 
-	// Sandwitched screen/sprite0/score/sprite1. Surely wrong, probably
-	//  needs sprite orthogonality
+	/* Sandwitched screen/sprite0/score/sprite1. Surely wrong, probably*/
+	/*  needs sprite orthogonality*/
 	MB60553_draw(0, bitmap,cliprect, 0);
 
 	CG10103_draw(0, bitmap, cliprect, 0);
@@ -499,21 +499,21 @@ VIDEO_UPDATE(gstriker)
 
 VIDEO_START(gstriker)
 {
-	// Palette bases are hardcoded, but should be probably extracted from the mixer registers
+	/* Palette bases are hardcoded, but should be probably extracted from the mixer registers*/
 
-	// Initalize the chip for the score plane
+	/* Initalize the chip for the score plane*/
 	VS920A_init(1);
 	VS920A_set_gfx_region(0, 0);
 	VS920A_set_pal_base(0, 0x30);
 	tilemap_set_transparent_pen(VS920A_get_tilemap(0),  0xf);
 
-	// Initalize the chip for the screen plane
+	/* Initalize the chip for the screen plane*/
 	MB60553_init(1);
 	MB60553_set_gfx_region(0, 1);
 	MB60553_set_pal_base(0, 0);
 	tilemap_set_transparent_pen(MB60553_get_tilemap(0), 0xf);
 
-	// Initialize the sprite generator
+	/* Initialize the sprite generator*/
 	CG10103_init(1);
 	CG10103_set_gfx_region(0, 2);
 	CG10103_set_pal_base(0, 0x10);

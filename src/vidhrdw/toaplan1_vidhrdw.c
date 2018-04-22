@@ -550,7 +550,7 @@ WRITE16_HANDLER( toaplan1_fcu_flipscreen_w )
 	}
 }
 
-READ16_HANDLER( toaplan1_spriteram_offs_r ) /// this aint really needed ?
+READ16_HANDLER( toaplan1_spriteram_offs_r ) /*/ this aint really needed ?*/
 {
 	return spriteram_offs;
 }
@@ -622,7 +622,7 @@ WRITE16_HANDLER( toaplan1_spritesizeram16_w )
 	}
 #endif
 
-	spriteram_offs++;	/// really ? shouldn't happen on the sizeram
+	spriteram_offs++;	/*/ really ? shouldn't happen on the sizeram*/
 }
 
 
@@ -895,7 +895,7 @@ void toaplan1_log_vram(void)
 			tattr[3] = pf3_tilevram16[tile_voffs];
 			tchar[4] = pf4_tilevram16[tile_voffs + 1];
 			tattr[4] = pf4_tilevram16[tile_voffs];
-//			logerror("PF3 offs:%04x   Tile:%04x  Attr:%04x\n", tile_voffs, tchar, tattr);
+/*			logerror("PF3 offs:%04x   Tile:%04x  Attr:%04x\n", tile_voffs, tchar, tattr);*/
 			logerror("$(%04x)  Attr-Tile PF1:%04x-%04x  PF2:%04x-%04x  PF3:%04x-%04x  PF4:%04x-%04x\n", tile_voffs,
 									tattr[1], tchar[1],  tattr[2], tchar[2],
 									tattr[3], tchar[3],  tattr[4], tchar[4]);
@@ -920,7 +920,7 @@ void toaplan1_log_vram(void)
 	}
 	if ( keyboard_pressed(KEYCODE_B) )
 	{
-//		while (keyboard_pressed(KEYCODE_B)) ;
+/*		while (keyboard_pressed(KEYCODE_B)) ;*/
 		scrollx_offs1 += 0x1; scrollx_offs2 += 0x1; scrollx_offs3 += 0x1; scrollx_offs4 += 0x1;
 		logerror("Scrollx_offs now = %08x\n",scrollx_offs4);
 		tilemap_set_scrollx(pf1_tilemap,0,(pf1_scrollx >> 7) - (tiles_offsetx - scrollx_offs1));
@@ -930,7 +930,7 @@ void toaplan1_log_vram(void)
 	}
 	if ( keyboard_pressed(KEYCODE_V) )
 	{
-//		while (keyboard_pressed(KEYCODE_V)) ;
+/*		while (keyboard_pressed(KEYCODE_V)) ;*/
 		scrollx_offs1 -= 0x1; scrollx_offs2 -= 0x1; scrollx_offs3 -= 0x1; scrollx_offs4 -= 0x1;
 		logerror("Scrollx_offs now = %08x\n",scrollx_offs4);
 		tilemap_set_scrollx(pf1_tilemap,0,(pf1_scrollx >> 7) - (tiles_offsetx - scrollx_offs1));
@@ -940,7 +940,7 @@ void toaplan1_log_vram(void)
 	}
 	if ( keyboard_pressed(KEYCODE_C) )
 	{
-//		while (keyboard_pressed(KEYCODE_C)) ;
+/*		while (keyboard_pressed(KEYCODE_C)) ;*/
 		scrolly_offs += 0x1;
 		logerror("Scrolly_offs now = %08x\n",scrolly_offs);
 		tilemap_set_scrolly(pf1_tilemap,0,(pf1_scrolly >> 7) - (tiles_offsety - scrolly_offs));
@@ -950,7 +950,7 @@ void toaplan1_log_vram(void)
 	}
 	if ( keyboard_pressed(KEYCODE_X) )
 	{
-//		while (keyboard_pressed(KEYCODE_X)) ;
+/*		while (keyboard_pressed(KEYCODE_X)) ;*/
 		scrolly_offs -= 0x1;
 		logerror("Scrolly_offs now = %08x\n",scrolly_offs);
 		tilemap_set_scrolly(pf1_tilemap,0,(pf1_scrolly >> 7) - (tiles_offsety - scrolly_offs));

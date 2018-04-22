@@ -41,11 +41,11 @@ READ16_HANDLER( prehisle_control16_r )
 {
 	switch (offset)
 	{
-	case 0x08: return readinputport(1);						// Player 2
-	case 0x10: return readinputport(2);						// Coins, Tilt, Service
-	case 0x20: return readinputport(0) ^ invert_controls;	// Player 1
-	case 0x21: return readinputport(3);						// DIPs
-	case 0x22: return readinputport(4);						// DIPs + VBLANK
+	case 0x08: return readinputport(1);						/* Player 2*/
+	case 0x10: return readinputport(2);						/* Coins, Tilt, Service*/
+	case 0x20: return readinputport(0) ^ invert_controls;	/* Player 1*/
+	case 0x21: return readinputport(3);						/* DIPs*/
+	case 0x22: return readinputport(4);						/* DIPs + VBLANK*/
 	default: return 0;
 	}
 }
@@ -139,7 +139,7 @@ static void prehisle_draw_sprites( struct mame_bitmap *bitmap, const struct rect
 		int sx = spriteram16[offs + 1];
 		int sy = spriteram16[offs];
 
-		if (sx & 0x200) sx = -(0xff - (sx & 0xff));	// wraparound
+		if (sx & 0x200) sx = -(0xff - (sx & 0xff));	/* wraparound*/
 
 		if (flip_screen)
 		{

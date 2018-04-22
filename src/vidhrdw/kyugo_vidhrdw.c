@@ -116,7 +116,7 @@ WRITE_HANDLER( kyugo_bgattribram_w )
 
 READ_HANDLER( kyugo_spriteram_2_r )
 {
-	// only the lower nibble is connected
+	/* only the lower nibble is connected*/
 	return kyugo_spriteram_2[offset] | 0xf0;
 }
 

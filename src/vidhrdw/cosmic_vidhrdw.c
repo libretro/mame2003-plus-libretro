@@ -370,7 +370,7 @@ static void cosmica_draw_starfield(struct mame_bitmap *bitmap)
 
 			if ((x1 & 0x1f) == 0)
 			{
-				// flip-flop at IC11 is clocked
+				/* flip-flop at IC11 is clocked*/
 				map = PROM[(x1 >> 5) | (y >> 1 << 3)];
 			}
 
@@ -547,9 +547,9 @@ static void nomnlnd_draw_background(struct mame_bitmap *bitmap)
 					plane1 >>= 7;
 					plane2 >>= 7;
 
-					color = (plane1 & plane2)       |	// R
-					        (plane2 		)  << 1 |	// G
-					        (plane1 & !plane2) << 2; 	// B
+					color = (plane1 & plane2)       |	/* R*/
+					        (plane2 		)  << 1 |	/* G*/
+					        (plane1 & !plane2) << 2; 	/* B*/
 				}
 			}
 			else
@@ -565,9 +565,9 @@ static void nomnlnd_draw_background(struct mame_bitmap *bitmap)
 					plane1 >>= 7;
 					plane2 >>= 7;
 
-					color = ( plane1 & plane2)      |	// R
-					        ( plane1 | plane2) << 1 |	// G
-					        (!plane1 & hd)     << 2; 	// B - see above
+					color = ( plane1 & plane2)      |	/* R*/
+					        ( plane1 | plane2) << 1 |	/* G*/
+					        (!plane1 & hd)     << 2; 	/* B - see above*/
 				}
 			}
 
@@ -588,7 +588,7 @@ static void nomnlnd_draw_background(struct mame_bitmap *bitmap)
 		}
 
 
-		// this is obviously wrong
+		/* this is obviously wrong*/
 		if (vb_)
 		{
 			water++;

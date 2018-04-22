@@ -323,7 +323,7 @@ static int decode_sprite(int gfx_index, struct GfxLayout *layout, const void *da
 	return 0;
 }
 
-// fix sprite order
+/* fix sprite order*/
 static int decode_sprite16(int region)
 {
 	static struct GfxLayout spr16_layout =
@@ -377,7 +377,7 @@ static int decode_sprite16(int region)
 	return 0;
 }
 
-// fix sprite order
+/* fix sprite order*/
 static int decode_sprite32(int region)
 {
 	static struct GfxLayout spr32_layout =
@@ -563,14 +563,14 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 			{
 				if (!need_mask)
 				{
-					// backup previous bitmap
+					/* backup previous bitmap*/
 					copybitmap(temp_bitmap, bitmap, 0, 0, 0, 0, cliprect, TRANSPARENCY_NONE, 0);
 				}
 
 				need_mask = 1;
 			}
 
-			// round off
+			/* round off*/
 			scalex += 0x800;
 			scaley += 0x800;
 
@@ -601,7 +601,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 				{
 					int color = read_pixel(temp_bitmap, x, y);
 
-					// restore pixel
+					/* restore pixel*/
 					plot_pixel(bitmap, x, y, color);
 				}
 	}
@@ -614,18 +614,18 @@ VIDEO_UPDATE( tceptor )
 	int pri;
 	int bg_center = 144 - ((((bg1_scroll_x + bg2_scroll_x ) & 0x1ff) - 288) / 2);
 
-	// left background
+	/* left background*/
 	rect = *cliprect;
 	rect.max_x = bg_center;
 	tilemap_set_scrollx(bg1_tilemap, 0, bg1_scroll_x + 12);
-	tilemap_set_scrolly(bg1_tilemap, 0, bg1_scroll_y + 20); //32?
+	tilemap_set_scrolly(bg1_tilemap, 0, bg1_scroll_y + 20); /*32?*/
 	tilemap_draw(bitmap, &rect, bg1_tilemap, 0, 0);
 
-	// right background
+	/* right background*/
 	rect.min_x = bg_center;
 	rect.max_x = cliprect->max_x;
 	tilemap_set_scrollx(bg2_tilemap, 0, bg2_scroll_x + 20);
-	tilemap_set_scrolly(bg2_tilemap, 0, bg2_scroll_y + 20); // 32?
+	tilemap_set_scrolly(bg2_tilemap, 0, bg2_scroll_y + 20); /* 32?*/
 	tilemap_draw(bitmap, &rect, bg2_tilemap, 0, 0);
 
 	for (pri = 0; pri < 8; pri++)

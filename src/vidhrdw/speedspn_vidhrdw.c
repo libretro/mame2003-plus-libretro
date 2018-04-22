@@ -47,14 +47,14 @@ READ_HANDLER( speedspn_vidram_r )
 
 WRITE_HANDLER(speedspn_banked_vidram_change)
 {
-//	logerror("VidRam Bank: %04x\n", data);
+/*	logerror("VidRam Bank: %04x\n", data);*/
 	speedspn_bank_vidram = data & 1;
 	speedspn_bank_vidram *= 0x1000;
 }
 
 WRITE_HANDLER(speedspn_global_display_w)
 {
-//	logerror("Global display: %u\n", data);
+/*	logerror("Global display: %u\n", data);*/
 	speedspn_display_disable = data & 1;
 }
 
@@ -107,7 +107,7 @@ VIDEO_UPDATE(speedspn)
 		fclose(f);
 	}
 #endif
-	tilemap_set_scrollx(speedspn_tilemap,0, 0x100); // verify
+	tilemap_set_scrollx(speedspn_tilemap,0, 0x100); /* verify*/
 	tilemap_draw(bitmap,cliprect,speedspn_tilemap,0,0);
 	speedspn_drawsprites(bitmap,cliprect);
 }

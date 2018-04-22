@@ -322,13 +322,13 @@ static void pstadium_gfxdraw(void)
 
 			if (pstadium_flipx)
 			{
-				// flip
+				/* flip*/
 				color1 = (color & 0xf0) >> 4;
 				color2 = (color & 0x0f) >> 0;
 			}
 			else
 			{
-				// normal
+				/* normal*/
 				color1 = (color & 0x0f) >> 0;
 				color2 = (color & 0xf0) >> 4;
 			}

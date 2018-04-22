@@ -21,7 +21,7 @@ static void get_tile_info(int tile_index)
 	int attr = videoram[tile_index*2+1];
 	int tile_number = code + ((attr & 0xc0) << 2) + 0x400 + 0x800 * char_bank;
 	int flags = ((attr & 0x08) ? TILE_FLIPX : 0) | ((attr & 0x10) ? TILE_FLIPY : 0);
-//	tile_info.priority = (attr & 0x20) >> 5;
+/*	tile_info.priority = (attr & 0x20) >> 5;*/
 	SET_TILE_INFO(
 			0,
 			tile_number,
@@ -33,7 +33,7 @@ static void get_tile_info(int tile_index)
 VIDEO_START( flstory )
 {
     tilemap = tilemap_create( get_tile_info,tilemap_scan_rows,TILEMAP_SPLIT,8,8,32,32 );
-//	tilemap_set_transparent_pen( tilemap,15 );
+/*	tilemap_set_transparent_pen( tilemap,15 );*/
 	tilemap_set_transmask(tilemap,0,0x3fff,0xc000);
 	tilemap_set_scroll_cols(tilemap,32);
 
@@ -76,7 +76,7 @@ WRITE_HANDLER( flstory_gfxctrl_w )
 
 	flip_screen_set(flipscreen);
 
-//usrintf_showmessage("%04x: gfxctrl = %02x\n",activecpu_get_pc(),data);
+/*usrintf_showmessage("%04x: gfxctrl = %02x\n",activecpu_get_pc(),data);*/
 
 }
 

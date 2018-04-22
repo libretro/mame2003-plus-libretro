@@ -596,7 +596,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 
 VIDEO_UPDATE( omegaf )
 {
-	fillbitmap(bitmap,Machine->pens[15],cliprect);	// ??
+	fillbitmap(bitmap,Machine->pens[15],cliprect);	/* ??*/
 
 	if (bg0_enabled)	tilemap_draw(bitmap,cliprect, bg0_tilemap, 0, 0);
 	if (bg1_enabled)	tilemap_draw(bitmap,cliprect, bg1_tilemap, 0, 0);

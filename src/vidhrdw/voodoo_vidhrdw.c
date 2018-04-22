@@ -13,7 +13,7 @@
 
 
 /* math trickery */
-#if !defined(_WIN32) || defined(__LIBRETRO__) // HACK: No controlfp 
+#if !defined(_WIN32) || defined(__LIBRETRO__) /* HACK: No controlfp */
 #define SETUP_FPU()
 #define RESTORE_FPU()
 #define TRUNC_TO_INT(f) (float) (floor(f))
@@ -1457,8 +1457,8 @@ static int compute_expected_depth(void)
 			if (command & 0x10000) count++;			/* W1 */
 			if (command & 0x20000) count += 2;		/* S1/T1 */
 			count *= (command >> 6) & 15;			/* numverts */
-//			if (command & 0xfc00000)				/* smode != 0 */
-//				count++;
+/*			if (command & 0xfc00000)				// smode != 0 */
+/*				count++;*/
 			return 1 + count + (command >> 29);
 		
 		/* packet type 4 */
@@ -2198,7 +2198,7 @@ WRITE32_HANDLER( voodoo_regs_w )
 			break;
 	
 		case swapbufferCMD:
-//printf("%08X:swapbuffer %02X\n", activecpu_get_pc(), data);
+/*printf("%08X:swapbuffer %02X\n", activecpu_get_pc(), data);*/
 			/* immediate? */
 			if (!(data & 1))
 				swap_buffers();
@@ -2704,8 +2704,8 @@ READ32_HANDLER( voodoo_regs_r )
 		
 		case vRetrace:
 			result = cpu_getscanline();
-//			if (LOG_REGISTERS)
-//				logerror("%06X:voodoo vRetrace read = %08X\n", activecpu_get_pc(), result);
+/*			if (LOG_REGISTERS)*/
+/*				logerror("%06X:voodoo vRetrace read = %08X\n", activecpu_get_pc(), result);*/
 			break;
 		
 		/* reserved area in the TMU read by the Vegas startup sequence */
@@ -2741,7 +2741,7 @@ static void lfbwrite_0(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = data;
 	if (ACCESSING_MSW32)
 		buffer[y * FRAMEBUF_WIDTH + x + 1] = data >> 16;
-//	logerror("%06X:LFB write mode 0 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+/*	logerror("%06X:LFB write mode 0 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_1(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2755,7 +2755,7 @@ static void lfbwrite_1(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffe0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		buffer[y * FRAMEBUF_WIDTH + x + 1] = ((data >> 15) & 0xffe0) | ((data >> 16) & 0x001f);
-//	logerror("%06X:LFB write mode 1 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+/*	logerror("%06X:LFB write mode 1 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_2(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2769,7 +2769,7 @@ static void lfbwrite_2(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffe0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		buffer[y * FRAMEBUF_WIDTH + x + 1] = ((data >> 15) & 0xffe0) | ((data >> 16) & 0x001f);
-//	logerror("%06X:LFB write mode 2 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+/*	logerror("%06X:LFB write mode 2 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_3(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2785,7 +2785,7 @@ static void lfbwrite_4(offs_t offset, data32_t data, data32_t mem_mask)
 	if (lfb_flipy)
 		y = inverted_yorigin - y;
 	buffer[y * FRAMEBUF_WIDTH + x] = (((data >> 19) & 0x1f) << 11) | (((data >> 10) & 0x3f) << 5) | (((data >> 3) & 0x1f) << 0);
-//	logerror("%06X:LFB write mode 4 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+/*	logerror("%06X:LFB write mode 4 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_5(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2796,7 +2796,7 @@ static void lfbwrite_5(offs_t offset, data32_t data, data32_t mem_mask)
 	if (lfb_flipy)
 		y = inverted_yorigin - y;
 	buffer[y * FRAMEBUF_WIDTH + x] = (((data >> 19) & 0x1f) << 11) | (((data >> 10) & 0x3f) << 5) | (((data >> 3) & 0x1f) << 0);
-//	logerror("%06X:LFB write mode 5 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+/*	logerror("%06X:LFB write mode 5 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_6(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2840,7 +2840,7 @@ static void lfbwrite_c(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = data;
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = data >> 16;
-//	logerror("%06X:LFB write mode c @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+/*	logerror("%06X:LFB write mode c @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_d(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2854,7 +2854,7 @@ static void lfbwrite_d(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffc0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = data >> 16;
-//	logerror("%06X:LFB write mode d @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+/*	logerror("%06X:LFB write mode d @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_e(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2868,7 +2868,7 @@ static void lfbwrite_e(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffc0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = data >> 16;
-//	logerror("%06X:LFB write mode e @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+/*	logerror("%06X:LFB write mode e @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_f(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2881,7 +2881,7 @@ static void lfbwrite_f(offs_t offset, data32_t data, data32_t mem_mask)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffe0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x + 1] = ((data >> 15) & 0xffe0) | ((data >> 16) & 0x001f);
-//	logerror("%06X:LFB write mode f @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+/*	logerror("%06X:LFB write mode f @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void (*lfbwrite[16])(offs_t offset, data32_t data, data32_t mem_mask) =
@@ -2957,8 +2957,8 @@ WRITE32_HANDLER( voodoo_textureram_w )
 		return;
 	}
 	
-//	if (lod < trex_lodmin[trex] || lod > trex_lodmax[trex])
-//		return;
+/*	if (lod < trex_lodmin[trex] || lod > trex_lodmax[trex])*/
+/*		return;*/
 
 	/* swizzle the data */
 	if (voodoo_regs[trex_base + tLOD] & 0x02000000)

@@ -154,7 +154,7 @@ VIDEO_UPDATE( stlforce )
 	draw_sprites(bitmap, cliprect);
 	tilemap_draw(bitmap,cliprect,stlforce_tx_tilemap,0,0);
 
-//usrintf_showmessage	("Regs %04x, %04x, %04x, %04x, %04", stlforce_vidattrram[0tlforce_tx_scrollram], stlforce_vidattrram[4],stlforce_vidattrram[5],stlforce_vidattrram[6],stlforce_vidattrram[7] );
+/*usrintf_showmessage	("Regs %04x, %04x, %04x, %04x, %04", stlforce_vidattrram[0tlforce_tx_scrollram], stlforce_vidattrram[4],stlforce_vidattrram[5],stlforce_vidattrram[6],stlforce_vidattrram[7] );*/
 }
 
 VIDEO_START( stlforce )

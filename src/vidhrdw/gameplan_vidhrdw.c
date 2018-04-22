@@ -86,8 +86,8 @@ WRITE_HANDLER( gameplan_sound_w )
 
 		if (cb2 == 0)
 		{
-//	enabling this causes a hang in Challenger when entering high score name
-//			cpu_set_reset_line(1,PULSE_LINE);
+/*	enabling this causes a hang in Challenger when entering high score name*/
+/*			cpu_set_reset_line(1,PULSE_LINE);*/
 			return;
 		}
 
@@ -98,7 +98,7 @@ WRITE_HANDLER( gameplan_sound_w )
 		/* shortly after requesting a sound, the game board checks
 		   whether the sound board has ackknowledged receipt of the
 		   command - yield now to allow it to send the ACK */
-//		cpu_yield();	enabling this causes a hang in Challenger when entering high score name
+/*		cpu_yield();	enabling this causes a hang in Challenger when entering high score name*/
 	}
 	else if (offset == 0x0c)	/* PCR */
 	{

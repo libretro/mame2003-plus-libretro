@@ -209,7 +209,7 @@ VIDEO_START( ashnojoe )
 VIDEO_UPDATE( ashnojoe )
 {
 
-//	ashnojoe_tilemap_reg[0] & 0x10 // ?? on coin insertion
+/*	ashnojoe_tilemap_reg[0] & 0x10 // ?? on coin insertion*/
 
 	flip_screen_set(ashnojoe_tilemap_reg[0] & 1);
 

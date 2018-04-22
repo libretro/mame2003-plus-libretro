@@ -55,7 +55,7 @@ WRITE_HANDLER( leprechn_graphics_command_w )
 
 static void clear_screen_done_callback(int param)
 {
-	// Indicate that the we are done
+	/* Indicate that the we are done*/
 	via_0_ca1_w(0, 0);
 }
 
@@ -74,7 +74,7 @@ WRITE_HANDLER( leprechn_videoram_w )
 
     switch (graphics_command)
     {
-    case 0x00:	// Move and plot
+    case 0x00:	/* Move and plot*/
 
         color = data & 0x0f;
 
@@ -98,17 +98,17 @@ WRITE_HANDLER( leprechn_videoram_w )
 
 		break;
 
-    case 0x08:  // X position write
+    case 0x08:  /* X position write*/
         x = data;
         break;
 
-    case 0x10:  // Y position write
+    case 0x10:  /* Y position write*/
         y = data;
         break;
 
-    case 0x18:  // Clear bitmap
+    case 0x18:  /* Clear bitmap*/
 
-		// Indicate that the we are busy
+		/* Indicate that the we are busy*/
 		via_0_ca1_w(0, 1);
 
         memset(videoram, data, videoram_size);
@@ -121,15 +121,15 @@ WRITE_HANDLER( leprechn_videoram_w )
 			}
 		}
 
-		// Set a timer for an arbitrarily short period.
-		// The real time it takes to clear to screen is not
-		// significant for the software.
+		/* Set a timer for an arbitrarily short period.*/
+		/* The real time it takes to clear to screen is not*/
+		/* significant for the software.*/
 		timer_set(TIME_NOW, 0, clear_screen_done_callback);
 
         break;
 
 	default:
-	    // Doesn't seem to happen.
+	    /* Doesn't seem to happen.*/
 	    logerror("Unknown Graphics Command #%2X at %04X\n", graphics_command, activecpu_get_pc());
     }
 }

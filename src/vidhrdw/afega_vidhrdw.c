@@ -221,8 +221,8 @@ static void afega_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle
 		sy		=		spriteram16[offs + 0xc/2];
 		color	=		spriteram16[offs + 0xe/2];
 
-		flipx	=		attr & 0x000;	// ?
-		flipy	=		attr & 0x000;	// ?
+		flipx	=		attr & 0x000;	/* ?*/
+		flipy	=		attr & 0x000;	/* ?*/
 
 		xnum		=		((dim >> 0) & 0xf) + 1;
 		ynum		=		((dim >> 4) & 0xf) + 1;

@@ -127,7 +127,7 @@ static void bootleg_drawsprites(struct mame_bitmap *bitmap,const struct rectangl
 		colour=(spriteram[offs+5]>>1)&0xf;
 
 		fx=spriteram[offs+5]&1;
-		fy=0;//spriteram[offs+5]&2;
+		fy=0;/*spriteram[offs+5]&2;*/
 
 		drawgfx(bitmap,Machine->gfx[1],
 				sprite&0x1fff,
@@ -173,10 +173,10 @@ VIDEO_UPDATE( m90 )
 
 	if (m90_video_control_data[0xa]&0x10) pf1_enable=0; else pf1_enable=1;
 	if (m90_video_control_data[0xc]&0x10) pf2_enable=0; else pf2_enable=1;
-//	tilemap_set_enable(pf1_layer,pf1_enable);
-//	tilemap_set_enable(pf2_layer,pf2_enable);
-//	tilemap_set_enable(pf1_wide_layer,pf1_enable);
-//	tilemap_set_enable(pf2_wide_layer,pf2_enable);
+/*	tilemap_set_enable(pf1_layer,pf1_enable);*/
+/*	tilemap_set_enable(pf2_layer,pf2_enable);*/
+/*	tilemap_set_enable(pf1_wide_layer,pf1_enable);*/
+/*	tilemap_set_enable(pf2_wide_layer,pf2_enable);*/
 
 	/* Dirty tilemaps if VRAM base changes */
 	if (pf1_base!=last_pf1)

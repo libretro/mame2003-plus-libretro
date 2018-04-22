@@ -49,11 +49,11 @@ static void mbmj8688_gfxdraw(int gfxtype);
  */
 enum
 {
-	GFXTYPE_8BIT,			// direct mode:  8-bit; lookup table:  8-bit
-	GFXTYPE_HYBRID_12BIT,	// direct mode: 12-bit; lookup table:  8-bit
-	GFXTYPE_HYBRID_16BIT,	// direct mode: 16-bit; lookup table: 12-bit
-	GFXTYPE_PURE_16BIT,		// direct mode: 16-bit; lookup table: 16-bit
-	GFXTYPE_PURE_12BIT		// direct mode:    n/a; lookup table: 12-bit
+	GFXTYPE_8BIT,			/* direct mode:  8-bit; lookup table:  8-bit*/
+	GFXTYPE_HYBRID_12BIT,	/* direct mode: 12-bit; lookup table:  8-bit*/
+	GFXTYPE_HYBRID_16BIT,	/* direct mode: 16-bit; lookup table: 12-bit*/
+	GFXTYPE_PURE_16BIT,		/* direct mode: 16-bit; lookup table: 16-bit*/
+	GFXTYPE_PURE_12BIT		/* direct mode:    n/a; lookup table: 12-bit*/
 };
 
 
@@ -71,7 +71,7 @@ PALETTE_INIT( mbmj8688_8bit )
 	{
 		int bit0, bit1, bit2, r, g, b;
 
-		// xxxxxxxx_bbgggrrr
+		/* xxxxxxxx_bbgggrrr*/
 		/* red component */
 		bit0 = ((i >> 0) & 0x01);
 		bit1 = ((i >> 1) & 0x01);
@@ -101,7 +101,7 @@ PALETTE_INIT( mbmj8688_12bit )
 	{
 		int r, g, b;
 
-		// high and low bytes swapped for convenience
+		/* high and low bytes swapped for convenience*/
 		r = ((i & 0x07) << 1) | (((i >> 8) & 0x01) >> 0);
 		g = ((i & 0x38) >> 2) | (((i >> 8) & 0x02) >> 1);
 		b = ((i & 0xc0) >> 4) | (((i >> 8) & 0x0c) >> 2);
@@ -123,9 +123,9 @@ PALETTE_INIT( mbmj8688_16bit )
 	{
 		int r, g, b;
 
-		r = (((i & 0x0700) >>  5) | ((i & 0x0007) >>  0));	// R 6bit
-		g = (((i & 0x3800) >>  9) | ((i & 0x0018) >>  3));	// G 5bit
-		b = (((i & 0xc000) >> 11) | ((i & 0x00e0) >>  5));	// B 5bit
+		r = (((i & 0x0700) >>  5) | ((i & 0x0007) >>  0));	/* R 6bit*/
+		g = (((i & 0x3800) >>  9) | ((i & 0x0018) >>  3));	/* G 5bit*/
+		b = (((i & 0xc000) >> 11) | ((i & 0x00e0) >>  5));	/* B 5bit*/
 
 		r = ((r << 2) | (r >> 4));
 		g = ((g << 3) | (g >> 2));
@@ -373,7 +373,7 @@ static void mbmj8688_gfxdraw(int gfxtype)
 			{
 				if (mjsikaku_gfxflag3 & 0x40)
 				{
-					// direct mode
+					/* direct mode*/
 
 					if (mjsikaku_gfxflag3 & 0x80)
 					{
@@ -397,23 +397,23 @@ static void mbmj8688_gfxdraw(int gfxtype)
 				else
 				{
 					/* 16-bit palette with 4-to-12 bit lookup (!) */
-					// lookup table mode
+					/* lookup table mode*/
 
-					// unknown flag (seiha, seiham)
-				//	if (mjsikaku_gfxflag3 & 0x80) return;
+					/* unknown flag (seiha, seiham)*/
+				/*	if (mjsikaku_gfxflag3 & 0x80) return;*/
 
-					// unknown (seiha, seiham, iemoto, ojousan)
+					/* unknown (seiha, seiham, iemoto, ojousan)*/
 					if (!(mjsikaku_gfxflag2 & 0x20)) return;
 
 					if (blitter_direction_x)
 					{
-						// flip
+						/* flip*/
 						color1 = (color & 0x0f) >> 0;
 						color2 = (color & 0xf0) >> 4;
 					}
 					else
 					{
-						// normal
+						/* normal*/
 						color1 = (color & 0xf0) >> 4;
 						color2 = (color & 0x0f) >> 0;
 					}
@@ -444,13 +444,13 @@ static void mbmj8688_gfxdraw(int gfxtype)
 
 				if (blitter_direction_x)
 				{
-					// flip
+					/* flip*/
 					color1 = (color & 0x0f) >> 0;
 					color2 = (color & 0xf0) >> 4;
 				}
 				else
 				{
-					// normal
+					/* normal*/
 					color1 = (color & 0xf0) >> 4;
 					color2 = (color & 0x0f) >> 0;
 				}
@@ -480,12 +480,12 @@ static void mbmj8688_gfxdraw(int gfxtype)
 
 					if (mjsikaku_gfxflag2 & 0x10)
 					{
-						// 4096 colors low mode (2nd draw upper)
+						/* 4096 colors low mode (2nd draw upper)*/
 						color = nbmj8688_color_lookup[((color & 0xf0) >> 4)];
 					}
 					else
 					{
-						// 4096 colors low mode (1st draw lower)
+						/* 4096 colors low mode (1st draw lower)*/
 						color = nbmj8688_color_lookup[((color & 0x0f) >> 0)];
 					}
 
@@ -500,23 +500,23 @@ static void mbmj8688_gfxdraw(int gfxtype)
 				{
 					if (mjsikaku_gfxflag2 & 0x04)
 					{
-						// direct mode
+						/* direct mode*/
 
 						color1 = color2 = color;
 					}
 					else
 					{
-						// lookup table mode
+						/* lookup table mode*/
 
 						if (blitter_direction_x)
 						{
-							// flip
+							/* flip*/
 							color1 = (color & 0x0f) >> 0;
 							color2 = (color & 0xf0) >> 4;
 						}
 						else
 						{
-							// normal
+							/* normal*/
 							color1 = (color & 0xf0) >> 4;
 							color2 = (color & 0x0f) >> 0;
 						}
@@ -563,7 +563,7 @@ static int common_video_start(void)
 	if ((nbmj8688_color_lookup = auto_malloc(0x20 * sizeof(data8_t))) == 0) return 1;
 	memset(mjsikaku_videoram, 0, (512 * 256 * sizeof(data16_t)));
 
-	mjsikaku_scrolly = 0;	// reset because crystalg/crystal2 don't write to this register
+	mjsikaku_scrolly = 0;	/* reset because crystalg/crystal2 don't write to this register*/
 
 	return 0;
 }
@@ -625,13 +625,13 @@ static void nbmj8688_HD61830B_data_w(int chip,int offset,int data)
 {
 	switch (HD61830B_instr[chip])
 	{
-		case 0x0a:	// set cursor address (low order)
+		case 0x0a:	/* set cursor address (low order)*/
 			HD61830B_addr[chip] = (HD61830B_addr[chip] & 0xff00) | data;
 			break;
-		case 0x0b:	// set cursor address (high order)
+		case 0x0b:	/* set cursor address (high order)*/
 			HD61830B_addr[chip] = (HD61830B_addr[chip] & 0x00ff) | (data << 8);
 			break;
-		case 0x0c:	// write display data
+		case 0x0c:	/* write display data*/
 			HD61830B_ram[chip][HD61830B_addr[chip]++] = data;
 			break;
 		default:
@@ -702,7 +702,7 @@ VIDEO_UPDATE( mbmj8688 )
 		if (mjsikaku_flipscreen) scrolly =   mjsikaku_scrolly;
 		else                     scrolly = (-mjsikaku_scrolly) & 0xff;
 
-		if (cliprect->min_y > 64)	// kludge to compensate for LCD on top of screen
+		if (cliprect->min_y > 64)	/* kludge to compensate for LCD on top of screen*/
 			scrolly += 64;
 		copybitmap(bitmap, mjsikaku_tmpbitmap, 0, 0, 0, scrolly,       cliprect, TRANSPARENCY_NONE, 0);
 		copybitmap(bitmap, mjsikaku_tmpbitmap, 0, 0, 0, scrolly - 256, cliprect, TRANSPARENCY_NONE, 0);

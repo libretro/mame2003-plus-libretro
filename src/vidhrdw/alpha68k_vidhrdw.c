@@ -86,7 +86,7 @@ VIDEO_START( alpha68k )
 }
 
 /******************************************************************************/
-//AT
+/*AT*/
 /*
 static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int j, int pos)
 {
@@ -116,7 +116,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 		my = -my & 0x1ff;
 		mx = ((mx + 0x100) & 0x1ff) - 0x100;
 		if (j==0 && s==0x7c0) my++;
-//ZT
+/*ZT*/
 		if (flipscreen) {
 			mx=240-mx;
 			my=240-my;
@@ -163,7 +163,7 @@ VIDEO_UPDATE( alpha68k_II )
 	tilemap_set_flip(ALL_TILEMAPS,flipscreen ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 
 	fillbitmap(bitmap,Machine->pens[2047],cliprect);
-//AT
+/*AT*/
 /*
 	draw_sprites(bitmap,cliprect,1,0x000);
 	draw_sprites(bitmap,cliprect,1,0x400);
@@ -176,7 +176,7 @@ VIDEO_UPDATE( alpha68k_II )
 	draw_sprites(bitmap,cliprect,1,0x0000,0x0800);
 	draw_sprites(bitmap,cliprect,2,0x0000,0x0800);
 	draw_sprites(bitmap,cliprect,0,0x0000,0x07c0);
-//ZT
+/*ZT*/
 	tilemap_draw(bitmap,cliprect,fix_tilemap,0,0);
 }
 
@@ -255,7 +255,7 @@ static void draw_sprites_V(struct mame_bitmap *bitmap, const struct rectangle *c
 
 	for (offs = s; offs < e; offs += 0x40 )
 	{
-//AT
+/*AT*/
 /*
 		mx = spriteram16[offs+2+(2*j)]<<1;
 		my = spriteram16[offs+3+(2*j)];
@@ -273,7 +273,7 @@ static void draw_sprites_V(struct mame_bitmap *bitmap, const struct rectangle *c
 		my = -my & 0x1ff;
 		mx = ((mx + 0x100) & 0x1ff) - 0x100;
 		if (j==0 && s==0x7c0) my++;
-//ZT
+/*ZT*/
 		if (flipscreen) {
 			mx=240-mx;
 			my=240-my;
@@ -325,7 +325,7 @@ VIDEO_UPDATE( alpha68k_V )
 	{
 		draw_sprites_V(bitmap,cliprect,0,0x07c0,0x0800,0,0x8000,0x7fff);
 		draw_sprites_V(bitmap,cliprect,1,0x0000,0x0800,0,0x8000,0x7fff);
-		//AT: *KLUDGE* fixes priest priority in level 1(could be a game bug)
+		/*AT: *KLUDGE* fixes priest priority in level 1(could be a game bug)*/
 		if (spriteram16[0x1bde]==0x24 && (spriteram16[0x1bdf]>>8)==0x3b) {
 			draw_sprites_V(bitmap,cliprect,2,0x03c0,0x0800,0,0x8000,0x7fff);
 			draw_sprites_V(bitmap,cliprect,2,0x0000,0x03c0,0,0x8000,0x7fff);
@@ -365,7 +365,7 @@ VIDEO_UPDATE( alpha68k_V_sb )
 }
 
 /******************************************************************************/
-//AT
+/*AT*/
 /*
 static void draw_sprites2(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int c,int d)
 {
@@ -427,7 +427,7 @@ static void draw_sprites2(struct mame_bitmap *bitmap, const struct rectangle *cl
 
 VIDEO_UPDATE( alpha68k_I )
 {
-	int yshift = (microcontroller_id == 0x890a) ? 1 : 0; // The Next Space is 1 pixel off
+	int yshift = (microcontroller_id == 0x890a) ? 1 : 0; /* The Next Space is 1 pixel off*/
 
 	fillbitmap(bitmap,Machine->pens[0],cliprect);
 
@@ -436,12 +436,12 @@ VIDEO_UPDATE( alpha68k_I )
 	draw_sprites2(bitmap,cliprect,3,0x0c00,yshift);
 	draw_sprites2(bitmap,cliprect,1,0x0400,yshift);
 }
-//ZT
+/*ZT*/
 /******************************************************************************/
 
 PALETTE_INIT( kyros )
 {
-//AT: reconstructed Super Stingry CLUT(bad ic5.5)
+/*AT: reconstructed Super Stingry CLUT(bad ic5.5)*/
 	const UINT8 temp_clut[256] = {
 		0x00,0x01,0x00,0x02,0x03,0xAE,0xAB,0x0C,0x00,0xA1,0xA0,0xA2,0xA3,0xA7,0xA6,0x0F,
 		0x00,0x11,0x12,0x13,0x04,0x5D,0x5B,0x44,0x00,0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F,
@@ -459,7 +459,7 @@ PALETTE_INIT( kyros )
 		0x00,0x0C,0x04,0x06,0x08,0x0A,0x02,0x09,0x00,0x0C,0x04,0x06,0x08,0x0A,0x02,0x09,
 		0x00,0x02,0x04,0x06,0x5C,0x0C,0x5A,0x25,0x00,0x91,0x92,0x93,0x94,0x95,0x96,0x97,
 		0x00,0x00,0x02,0x06,0x08,0x0B,0x0C,0x04,0x00,0x00,0x02,0x06,0x08,0x0B,0x0C,0x0A };
-//ZT
+/*ZT*/
 	int i,bit0,bit1,bit2,bit3,r,g,b;
 
 	for (i = 0;i < 256;i++)
@@ -487,11 +487,11 @@ PALETTE_INIT( kyros )
 	}
 
 	color_prom += 0x200;
-//AT: fill Super Stingray CLUT(bad ic5.5)
+/*AT: fill Super Stingray CLUT(bad ic5.5)*/
 	if (!strcmp(Machine->gamedrv->name, "sstingry")) {
 		for (i=0; i<256; i++) colortable[i] = temp_clut[i];
 		return; }
-//ZT
+/*ZT*/
 	for (i = 0;i < 256;i++)
 	{
 		*colortable++ = ((color_prom[0] & 0x0f) << 4) | (color_prom[0x100] & 0x0f);
@@ -535,7 +535,7 @@ PALETTE_INIT( paddlem )
 static void kyros_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int c,int d)
 {
 	int offs,mx,my,color,tile,i,bank,fy;
-//AT
+/*AT*/
 /*
 	for (offs = 0x0000; offs < 0x400; offs += 0x20 )
 	{
@@ -581,7 +581,7 @@ static void kyros_draw_sprites(struct mame_bitmap *bitmap, const struct rectangl
 							cliprect, TRANSPARENCY_PEN, 0);
 				}
 			}
-//ZT
+/*ZT*/
 			my=(my+8)&0xff;
 		}
 	}
@@ -589,8 +589,8 @@ static void kyros_draw_sprites(struct mame_bitmap *bitmap, const struct rectangl
 
 VIDEO_UPDATE( kyros )
 {
-	//fillbitmap(bitmap,Machine->pens[0],cliprect);
-	fillbitmap(bitmap,*videoram16&0xff,cliprect); //AT
+	/*fillbitmap(bitmap,Machine->pens[0],cliprect);*/
+	fillbitmap(bitmap,*videoram16&0xff,cliprect); /*AT*/
 
 	kyros_draw_sprites(bitmap,cliprect,2,0x0800);
 	kyros_draw_sprites(bitmap,cliprect,3,0x0c00);
@@ -601,7 +601,7 @@ VIDEO_UPDATE( kyros )
 
 static void sstingry_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int c,int d)
 {
-//AT
+/*AT*/
 /*
 	int offs,mx,my,color,tile,i,bank,fx,fy;
 
@@ -613,7 +613,7 @@ static void sstingry_draw_sprites(struct mame_bitmap *bitmap, const struct recta
 
 		for (i=0; i<0x20; i++) {
 			tile=spriteram16[offs+d+i];
-			color=0; //bit 0x4000
+			color=0; // bit 0x4000
 			fy=tile&0x1000;
 			fx=0;
 			tile=(tile&0xfff);
@@ -641,13 +641,13 @@ static void sstingry_draw_sprites(struct mame_bitmap *bitmap, const struct recta
 			if (data!=0x40)
 			{
 				fy = data & 0x1000;
-				color = (data>>7 & 0x18) | (data>>13 & 7); // can't verify(PROMs missing)                        bank = tile>>10 & 3;
+				color = (data>>7 & 0x18) | (data>>13 & 7); /* can't verify(PROMs missing)                        bank = tile>>10 & 3;*/
 				tile = data & 0x3ff;
 				bank = data>>10 & 3;
 				drawgfx(bitmap, Machine->gfx[bank], tile, color, 0, fy, mx, my,
 						cliprect, TRANSPARENCY_PEN, 0);
 			}
-//ZT
+/*ZT*/
 			my=(my+8)&0xff;
 		}
 	}
@@ -655,8 +655,8 @@ static void sstingry_draw_sprites(struct mame_bitmap *bitmap, const struct recta
 
 VIDEO_UPDATE( sstingry )
 {
-	//fillbitmap(bitmap,Machine->pens[0],cliprect);
-	fillbitmap(bitmap,*videoram16&0xff,cliprect); //AT
+	/*fillbitmap(bitmap,Machine->pens[0],cliprect);*/
+	fillbitmap(bitmap,*videoram16&0xff,cliprect); /*AT*/
 
 	sstingry_draw_sprites(bitmap,cliprect,2,0x0800);
 	sstingry_draw_sprites(bitmap,cliprect,3,0x0c00);

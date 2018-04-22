@@ -3,7 +3,7 @@
 
 UINT8 *kopunch_videoram2;
 
-static INT8 scroll[2]; // REMOVE
+static INT8 scroll[2]; /* REMOVE*/
 static int gfxbank, gfxflip;
 
 static struct tilemap *bg_tilemap, *fg_tilemap;
@@ -58,13 +58,13 @@ WRITE_HANDLER( kopunch_videoram2_w )
 
 WRITE_HANDLER( kopunch_scroll_x_w )
 {
-	scroll[0] = data; // REMOVE
+	scroll[0] = data; /* REMOVE*/
 	tilemap_set_scrollx(fg_tilemap, 0, data);
 }
 
 WRITE_HANDLER( kopunch_scroll_y_w )
 {
-	scroll[1] = data; // REMOVE
+	scroll[1] = data; /* REMOVE*/
 	tilemap_set_scrolly(fg_tilemap, 0, data);
 }
 
@@ -76,7 +76,7 @@ WRITE_HANDLER( kopunch_gfxbank_w )
 		tilemap_mark_all_tiles_dirty(fg_tilemap);
 	}
 
-	gfxflip = data & 0x08; // REMOVE
+	gfxflip = data & 0x08; /* REMOVE*/
 
 	tilemap_set_flip(fg_tilemap, (data & 0x08) ? TILEMAP_FLIPY : 0);
 }
@@ -119,7 +119,7 @@ VIDEO_UPDATE( kopunch )
 	int offs;
 
 	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
-	//tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, 0, 0);
+	/*tilemap_draw(bitmap, &Machine->visible_area, fg_tilemap, 0, 0);*/
 
 	for (offs = 1023;offs >= 0;offs--)
 	{

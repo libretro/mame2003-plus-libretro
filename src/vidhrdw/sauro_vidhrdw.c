@@ -128,12 +128,12 @@ static void sauro_draw_sprites( struct mame_bitmap *bitmap )
 		sy = 236 - sy;
 		color = (spriteram[offs+3] >> 4) & 0x0f;
 
-		// I'm not really sure how this bit works
+		/* I'm not really sure how this bit works*/
 		if (spriteram[offs+3] & 0x08)
 		{
 			if (sx > 0xc0)
 			{
-				// Sign extend
+				/* Sign extend*/
 				sx = (signed int)(signed char)sx;
 			}
 		}
@@ -147,7 +147,7 @@ static void sauro_draw_sprites( struct mame_bitmap *bitmap )
 		if (flip_screen)
 		{
 			flipx = !flipx;
-			sx = (235 - sx) & 0xff;  // The &0xff is not 100% percent correct
+			sx = (235 - sx) & 0xff;  /* The &0xff is not 100% percent correct*/
 			sy = 240 - sy;
 		}
 

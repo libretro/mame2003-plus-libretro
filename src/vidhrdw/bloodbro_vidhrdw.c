@@ -254,10 +254,10 @@ VIDEO_UPDATE( bloodbro )
 
 VIDEO_UPDATE( weststry )
 {
-//	tilemap_set_scrollx(bg_tilemap,0,bloodbro_scroll[0x10]);	/* ? */
-//	tilemap_set_scrolly(bg_tilemap,0,bloodbro_scroll[0x11]);	/* ? */
-//	tilemap_set_scrollx(fg_tilemap,0,bloodbro_scroll[0x12]);
-//	tilemap_set_scrolly(fg_tilemap,0,bloodbro_scroll[0x13]);
+/*	tilemap_set_scrollx(bg_tilemap,0,bloodbro_scroll[0x10]);	// ? */
+/*	tilemap_set_scrolly(bg_tilemap,0,bloodbro_scroll[0x11]);	// ? */
+/*	tilemap_set_scrollx(fg_tilemap,0,bloodbro_scroll[0x12]);*/
+/*	tilemap_set_scrolly(fg_tilemap,0,bloodbro_scroll[0x13]);*/
 
 	fillbitmap(priority_bitmap,0,cliprect);
 

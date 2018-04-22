@@ -66,10 +66,10 @@ VIDEO_START( nycaptor )
   nycaptor_spriteram = auto_malloc (160);
   tilemap = tilemap_create( get_tile_info,tilemap_scan_rows,TILEMAP_SPLIT,8,8,32,32 );
 
-  tilemap_set_transmask(tilemap,0,0xf800,0x7ff); //split 0
-  tilemap_set_transmask(tilemap,1,0xfe00,0x01ff);//split 1
-  tilemap_set_transmask(tilemap,2,0xfffc,0x0003);//split 2
-  tilemap_set_transmask(tilemap,3,0xfff0,0x000f);//split 3
+  tilemap_set_transmask(tilemap,0,0xf800,0x7ff); /*split 0*/
+  tilemap_set_transmask(tilemap,1,0xfe00,0x01ff);/*split 1*/
+  tilemap_set_transmask(tilemap,2,0xfffc,0x0003);/*split 2*/
+  tilemap_set_transmask(tilemap,3,0xfff0,0x000f);/*split 3*/
 
 	paletteram = auto_malloc(0x200);
 	paletteram_2 = auto_malloc(0x200);
@@ -144,7 +144,7 @@ void nycaptor_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *c
 		int offs = (pr & 0x1f) * 4;
 		{
 			int code,sx,sy,flipx,flipy,pal,priori;
-			code = nycaptor_spriteram[offs+2] + ((nycaptor_spriteram[offs+1] & 0x10) << 4);//1 bit wolny = 0x20
+			code = nycaptor_spriteram[offs+2] + ((nycaptor_spriteram[offs+1] & 0x10) << 4);/*1 bit wolny = 0x20*/
 			pal=nycaptor_spriteram[offs+1] & 0x0f;
 			sx = nycaptor_spriteram[offs+3];
 			sy = 240-nycaptor_spriteram[offs+0];

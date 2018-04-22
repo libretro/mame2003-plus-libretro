@@ -130,27 +130,27 @@ static void common_videoram_w(int offset, int data, int color)
 
 WRITE_HANDLER( astrof_videoram_w )
 {
-	// Astro Fighter's palette is set in astrof_video_control2_w, D0 is unused
+	/* Astro Fighter's palette is set in astrof_video_control2_w, D0 is unused*/
 	common_videoram_w(offset, data, *astrof_color & 0x0e);
 }
 
 WRITE_HANDLER( tomahawk_videoram_w )
 {
-	// Tomahawk's palette is set per byte
+	/* Tomahawk's palette is set per byte*/
 	common_videoram_w(offset, data, (*astrof_color & 0x0e) | ((*astrof_color & 0x01) << 4));
 }
 
 
 WRITE_HANDLER( astrof_video_control1_w )
 {
-	// Video control register 1
-	//
-	// Bit 0     = Flip screen
-	// Bit 1     = Shown in schematics as what appears to be a screen clear
-	//             bit, but it's always zero in Astro Fighter
-	// Bit 2     = Not hooked up in the schematics, but at one point the game
-	//			   sets it to 1.
-	// Bit 3-7   = Not hooked up
+	/* Video control register 1*/
+	/**/
+	/* Bit 0     = Flip screen*/
+	/* Bit 1     = Shown in schematics as what appears to be a screen clear*/
+	/*             bit, but it's always zero in Astro Fighter*/
+	/* Bit 2     = Not hooked up in the schematics, but at one point the game*/
+	/*			   sets it to 1.*/
+	/* Bit 3-7   = Not hooked up*/
 
 	if (input_port_2_r(0) & 0x02) /* Cocktail mode */
 	{
@@ -159,14 +159,14 @@ WRITE_HANDLER( astrof_video_control1_w )
 }
 
 
-// Video control register 2
-//
-// Bit 0     = Hooked up to a connector called OUT0, don't know what it does
-// Bit 1     = Hooked up to a connector called OUT1, don't know what it does
-// Bit 2     = Palette select in Astro Fighter, unused in Tomahawk
-// Bit 3     = Turns on RED color gun regardless of what the value is
-// 			   in the color PROM
-// Bit 4-7   = Not hooked up
+/* Video control register 2*/
+/**/
+/* Bit 0     = Hooked up to a connector called OUT0, don't know what it does*/
+/* Bit 1     = Hooked up to a connector called OUT1, don't know what it does*/
+/* Bit 2     = Palette select in Astro Fighter, unused in Tomahawk*/
+/* Bit 3     = Turns on RED color gun regardless of what the value is*/
+/* 			   in the color PROM*/
+/* Bit 4-7   = Not hooked up*/
 
 WRITE_HANDLER( astrof_video_control2_w )
 {

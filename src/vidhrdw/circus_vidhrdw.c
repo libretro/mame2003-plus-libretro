@@ -63,7 +63,7 @@ WRITE_HANDLER( circus_clown_y_w )
 WRITE_HANDLER( circus_clown_z_w )
 {
 	clown_z = (data & 0x0f);
-*(memory_region(REGION_CPU1)+0x8000)=data; logerror("Z:%02x\n",data); //DEBUG
+*(memory_region(REGION_CPU1)+0x8000)=data; logerror("Z:%02x\n",data); /*DEBUG*/
 	/* Bits 4-6 enable/disable trigger different events */
 	/* descriptions are based on Circus schematics      */
 
@@ -101,7 +101,7 @@ WRITE_HANDLER( circus_clown_z_w )
 
 	/* Bit 7 enables amplifier (1 = on) */
 
-//  logerror("clown Z = %02x\n",data);
+/*  logerror("clown Z = %02x\n",data);*/
 }
 
 static void get_bg_tile_info(int tile_index)
@@ -315,7 +315,7 @@ static void ripcord_draw_skydiver( struct mame_bitmap *bitmap )
 	dst_pixend = (sx + dst_width) & 0xff;
 	dst_lineend = dst_lineptr + dst_pitch * dst_height;
 
-	// draw sky diver and check collision on a pixel basis
+	/* draw sky diver and check collision on a pixel basis*/
 	collision = 0;
 	do
 	{
@@ -340,10 +340,10 @@ static void ripcord_draw_skydiver( struct mame_bitmap *bitmap )
 
 	} while((dst_lineptr += dst_pitch) != dst_lineend);
 
-	// report collision only when the character is not blank and within display area
+	/* report collision only when the character is not blank and within display area*/
 	if (collision && code!=0xf && clown_x>0 && clown_x<240 && clown_y>-12 && clown_y<240)
 	{
-		cpu_set_irq_line(0, 0, ASSERT_LINE); // interrupt accuracy is critical in Ripcord
+		cpu_set_irq_line(0, 0, ASSERT_LINE); /* interrupt accuracy is critical in Ripcord*/
 		cpu_set_irq_line(0, 0, CLEAR_LINE);
 	}
 }

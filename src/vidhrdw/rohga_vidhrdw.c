@@ -86,7 +86,7 @@ static void rohga_drawsprites(struct mame_bitmap *bitmap, const data16_t *sprite
 		case 0x8000: pri=0xf0|0xcc; break;
 		case 0xc000: pri=0xf0|0xcc; break; /* Perhaps 0xf0|0xcc|0xaa (Sprite under bottom layer) */
 		}
-//todo - test above..
+/*todo - test above..*/
 		y = spriteptr[offs];
 		flash=y&0x1000;
 		if (flash && (cpu_getcurrentframe() & 1)) continue;
@@ -291,13 +291,13 @@ Sprites 2:
 
 		colour = (spriteptr[offs+2] >>0) & 0x1f;
 
-		// PRIORITIES - TODO
+		/* PRIORITIES - TODO*/
 		if (gfxbank==3) {
 			/* Sprite chip 1 */
 			switch (spriteptr[offs+2]&0xe0) {
-//			case 0xc0: colour=rand()%0xff; tilemap_pri=256; break; //todo
-			case 0xc0: tilemap_pri=8; break; //? under other sprites
-			case 0x80: tilemap_pri=32; break; //? under other sprites
+/*			case 0xc0: colour=rand()%0xff; tilemap_pri=256; break; //todo*/
+			case 0xc0: tilemap_pri=8; break; /*? under other sprites*/
+			case 0x80: tilemap_pri=32; break; /*? under other sprites*/
 			case 0x20: tilemap_pri=32; break; /* Over pf2 and under other sprite chip */
 			case 0x40: tilemap_pri=8; break; /* Under pf2 and under other sprite chip */
 			case 0xa0: tilemap_pri=32; break;
@@ -360,10 +360,10 @@ sprite 2:
 			/* Sprite chip 2 (with alpha blending) */
 
 			/* Sprite above playfield 2, but still below other sprite chip */
-//			if (spriteptr[offs+2]&0x80)
+/*			if (spriteptr[offs+2]&0x80)*/
 				tilemap_pri=64; 
-//			else
-//				tilemap_pri=8; 
+/*			else*/
+/*				tilemap_pri=8; */
 
 			if (deco16_priority)
 				tilemap_pri=8;
@@ -425,7 +425,7 @@ sprite 2:
 VIDEO_UPDATE( rohga )
 {
 	/* Update playfields */
-//	flip_screen_set( deco16_pf12_control[0]&0x80 );
+/*	flip_screen_set( deco16_pf12_control[0]&0x80 );*/
 	deco16_pf12_update(deco16_pf1_rowscroll,deco16_pf2_rowscroll);
 	deco16_pf34_update(deco16_pf3_rowscroll,deco16_pf4_rowscroll);
 
@@ -443,7 +443,7 @@ VIDEO_UPDATE( rohga )
 	rohga_drawsprites(bitmap,spriteram16);
 	deco16_tilemap_1_draw(bitmap,cliprect,0,0);
 
-//	deco16_print_debug_info();
+/*	deco16_print_debug_info();*/
 }
 
 VIDEO_UPDATE( wizdfire )

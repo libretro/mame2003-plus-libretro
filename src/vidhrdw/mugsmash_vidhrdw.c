@@ -125,18 +125,18 @@ WRITE16_HANDLER( mugsmash_videoram2_w )
 WRITE16_HANDLER (mugsmash_reg_w)
 {
 	mugsmash_regs1[offset] = data;
-//	usrintf_showmessage	("Regs %04x, %04x, %04x, %04x", mugsmash_regs1[0], mugsmash_regs1[1],mugsmash_regs1[2], mugsmash_regs1[3]);
+/*	usrintf_showmessage	("Regs %04x, %04x, %04x, %04x", mugsmash_regs1[0], mugsmash_regs1[1],mugsmash_regs1[2], mugsmash_regs1[3]);*/
 
 	switch (offset)
 	{
 	case 0:
-		tilemap_set_scrollx(mugsmash_tilemap2,0, mugsmash_regs1[2]+4); // verify
+		tilemap_set_scrollx(mugsmash_tilemap2,0, mugsmash_regs1[2]+4); /* verify*/
 		break;
 	case 1:
 		tilemap_set_scrolly(mugsmash_tilemap2,0, mugsmash_regs1[3]+4);
 		break;
 	case 2:
-		tilemap_set_scrollx(mugsmash_tilemap1,0, mugsmash_regs1[0]+4); // verify
+		tilemap_set_scrollx(mugsmash_tilemap1,0, mugsmash_regs1[0]+4); /* verify*/
 		break;
 	case 3:
 		tilemap_set_scrolly(mugsmash_tilemap1,0, mugsmash_regs1[1]+4);

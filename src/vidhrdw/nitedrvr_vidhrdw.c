@@ -24,8 +24,8 @@ WRITE_HANDLER( nitedrvr_hvc_w )
 {
 	nitedrvr_hvc[offset & 0x3f] = data;
 
-//	if ((offset & 0x30) == 0x30)
-//		;		/* Watchdog called here */
+/*	if ((offset & 0x30) == 0x30)*/
+/*		;		// Watchdog called here */
 }
 
 static void get_bg_tile_info(int tile_index)
@@ -111,5 +111,5 @@ VIDEO_UPDATE( nitedrvr )
 {
 	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
 	nitedrvr_draw_road(bitmap);
-	//nitedrvr_draw_hacks(bitmap);
+	/*nitedrvr_draw_hacks(bitmap);*/
 }

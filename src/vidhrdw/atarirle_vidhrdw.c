@@ -380,7 +380,7 @@ void atarirle_control_w(int map, UINT8 bits)
 	int scanline = cpu_getscanline();
 	int oldbits = mo->control_bits;
 
-//logerror("atarirle_control_w(%d)\n", bits);
+/*logerror("atarirle_control_w(%d)\n", bits);*/
 
 	/* do nothing if nothing changed */
 	if (oldbits == bits)
@@ -400,7 +400,7 @@ void atarirle_control_w(int map, UINT8 bits)
 		if (scanline < cliprect.max_y)
 			cliprect.max_y = scanline;
 
-//logerror("  partial erase %d-%d (frame %d)\n", cliprect.min_y, cliprect.max_y, (oldbits & ATARIRLE_CONTROL_FRAME) >> 2);
+/*logerror("  partial erase %d-%d (frame %d)\n", cliprect.min_y, cliprect.max_y, (oldbits & ATARIRLE_CONTROL_FRAME) >> 2);*/
 
 		/* erase the bitmap */
 		fillbitmap(mo->vram[0][(oldbits & ATARIRLE_CONTROL_FRAME) >> 2], 0, &cliprect);
@@ -446,7 +446,7 @@ VIDEO_EOF( atarirle )
 {
 	int i;
 
-//logerror("video_eof_atarirle\n");
+/*logerror("video_eof_atarirle\n");*/
 
 	/* loop over all RLE handlers */
 	for (i = 0; i < ATARIRLE_MAX; i++)
@@ -462,7 +462,7 @@ VIDEO_EOF( atarirle )
 			if (mo->partial_scanline + 1 > cliprect.min_y)
 				cliprect.min_y = mo->partial_scanline + 1;
 
-//logerror("  partial erase %d-%d (frame %d)\n", cliprect.min_y, cliprect.max_y, (mo->control_bits & ATARIRLE_CONTROL_FRAME) >> 2);
+/*logerror("  partial erase %d-%d (frame %d)\n", cliprect.min_y, cliprect.max_y, (mo->control_bits & ATARIRLE_CONTROL_FRAME) >> 2);*/
 
 			/* erase the bitmap */
 			fillbitmap(mo->vram[0][(mo->control_bits & ATARIRLE_CONTROL_FRAME) >> 2], 0, &cliprect);
@@ -523,7 +523,7 @@ WRITE32_HANDLER( atarirle_0_spriteram32_w )
 struct mame_bitmap *atarirle_get_vram(int map, int idx)
 {
 	struct atarirle_data *mo = &atarirle[map];
-//logerror("atarirle_get_vram (frame %d)\n", (mo->control_bits & ATARIRLE_CONTROL_FRAME) >> 2);
+/*logerror("atarirle_get_vram (frame %d)\n", (mo->control_bits & ATARIRLE_CONTROL_FRAME) >> 2);*/
 	return mo->vram[idx][(mo->control_bits & ATARIRLE_CONTROL_FRAME) >> 2];
 }
 
@@ -539,8 +539,8 @@ static int build_rle_tables(void)
 	int i;
 
 	/* if we've already done it, don't bother */
-//	if (rle_table[0])
-//		return 0;
+/*	if (rle_table[0])*/
+/*		return 0;*/
 
 	/* allocate all 5 tables */
 	base = auto_malloc(0x500 * sizeof(UINT16));
@@ -608,7 +608,7 @@ int count_objects(const data16_t *base, int length)
 	for (i = 0; i < lowest_address; i += 4)
 	{
 		int offset = ((base[i + 2] & 0xff) << 16) | base[i + 3];
-//logerror("count_objects: i=%d offset=%08X\n", i, offset);
+/*logerror("count_objects: i=%d offset=%08X\n", i, offset);*/
 		if (offset > i && offset < lowest_address)
 			lowest_address = offset;
 	}
@@ -920,11 +920,11 @@ void draw_rle(struct atarirle_data *mo, struct mame_bitmap *bitmap, int code, in
 	if (hflip)
 		scaled_xoffs = ((xscale * info->width) >> 12) - scaled_xoffs;
 
-//if (clip->min_y == Machine->visible_area.min_y)
-//logerror("   Sprite: c=%04X l=%04X h=%d X=%4d (o=%4d w=%3d) Y=%4d (o=%4d h=%d) s=%04X\n",
-//	code, color, hflip,
-//	x, -scaled_xoffs, (xscale * info->width) >> 12,
-//	y, -scaled_yoffs, (yscale * info->height) >> 12, xscale);
+/*if (clip->min_y == Machine->visible_area.min_y)*/
+/*logerror("   Sprite: c=%04X l=%04X h=%d X=%4d (o=%4d w=%3d) Y=%4d (o=%4d h=%d) s=%04X\n",*/
+/*	code, color, hflip,*/
+/*	x, -scaled_xoffs, (xscale * info->width) >> 12,*/
+/*	y, -scaled_yoffs, (yscale * info->height) >> 12, xscale);*/
 
 	/* adjust for the x and y offsets */
 	x -= scaled_xoffs;

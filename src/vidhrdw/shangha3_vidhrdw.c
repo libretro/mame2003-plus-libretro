@@ -151,8 +151,8 @@ WRITE16_HANDLER( shangha3_blitter_go_w )
 		{
 			struct rectangle myclip;
 
-//if (shangha3_ram[offs+11] || shangha3_ram[offs+12])
-//logerror("offs %04x: sx %04x sy %04x zoom %04x %04x %04x %04x fx %d fy %d\n",offs,sx,sy,zoomx,shangha3_ram[offs+11]),shangha3_ram[offs+12],zoomy,flipx,flipy);
+/*if (shangha3_ram[offs+11] || shangha3_ram[offs+12])*/
+/*logerror("offs %04x: sx %04x sy %04x zoom %04x %04x %04x %04x fx %d fy %d\n",offs,sx,sy,zoomx,shangha3_ram[offs+11]),shangha3_ram[offs+12],zoomy,flipx,flipy);*/
 
 			myclip.min_x = sx;
 			myclip.max_x = sx + sizex;

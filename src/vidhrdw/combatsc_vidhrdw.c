@@ -169,7 +169,7 @@ static void get_tile_info0_bootleg(int tile_index)
 	if (attributes & 0x20) bank += 4;
 
 	pal = (bank == 0 || bank >= 0x1c || (attributes & 0x40)) ? 1 : 3;
-	color = pal*16;// + (attributes & 0x0f);
+	color = pal*16;/* + (attributes & 0x0f);*/
 	number = combasc_page[0][tile_index + 0x400] + 256*bank;
 
 	SET_TILE_INFO(
@@ -193,7 +193,7 @@ static void get_tile_info1_bootleg(int tile_index)
 	if (attributes & 0x20) bank += 4;
 
 	pal = (bank == 0 || bank >= 0x1c || (attributes & 0x40)) ? 5 : 7;
-	color = pal*16;// + (attributes & 0x0f);
+	color = pal*16;/* + (attributes & 0x0f);*/
 	number = combasc_page[1][tile_index + 0x400] + 256*bank;
 
 	SET_TILE_INFO(
@@ -205,9 +205,9 @@ static void get_tile_info1_bootleg(int tile_index)
 
 static void get_text_info_bootleg(int tile_index)
 {
-//	unsigned char attributes = combasc_page[0][tile_index + 0x800];
+/*	unsigned char attributes = combasc_page[0][tile_index + 0x800];*/
 	int number = combasc_page[0][tile_index + 0xc00];
-	int color = 16;// + (attributes & 0x0f);
+	int color = 16;/* + (attributes & 0x0f);*/
 
 	SET_TILE_INFO(
 			1,
@@ -629,9 +629,9 @@ static void bootleg_draw_sprites( struct mame_bitmap *bitmap, const struct recta
 			color = (circuit*4)*16 + (color >> 4);
 
 			/*	hacks to select alternate palettes */
-//			if(combasc_vreg == 0x40 && (attributes & 0x40)) color += 1*16;
-//			if(combasc_vreg == 0x23 && (attributes & 0x02)) color += 1*16;
-//			if(combasc_vreg == 0x66 ) color += 2*16;
+/*			if(combasc_vreg == 0x40 && (attributes & 0x40)) color += 1*16;*/
+/*			if(combasc_vreg == 0x23 && (attributes & 0x02)) color += 1*16;*/
+/*			if(combasc_vreg == 0x66 ) color += 2*16;*/
 
 			drawgfx( bitmap, gfx,
 				number, color,

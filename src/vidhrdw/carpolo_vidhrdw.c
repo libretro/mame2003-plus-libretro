@@ -76,7 +76,7 @@ static struct mame_bitmap *sprite_border_collision_bitmap;
 PALETTE_INIT( carpolo )
 {
 	/* thanks to Jarek Burczynski for analyzing the circuit */
-//	const static float MAX_VOLTAGE = 6.9620;
+/*	const static float MAX_VOLTAGE = 6.9620;*/
 	const static float MIN_VOLTAGE = 1.7434;
 	const static float MAX_VOLTAGE = 5.5266;
 
@@ -85,8 +85,8 @@ PALETTE_INIT( carpolo )
 
 	const static float g_voltage[] = { 1.7434, 2.1693, 2.5823, 3.0585,
 									   3.4811, 4.0707, 4.7415, 5.4251 };
-//	const static float g_voltage[] = { 4.7871, 5.0613, 5.3079, 5.6114,
-//									   5.7940, 6.1608, 6.5436, 6.9620 };
+/*	const static float g_voltage[] = { 4.7871, 5.0613, 5.3079, 5.6114,*/
+/*									   5.7940, 6.1608, 6.5436, 6.9620 };*/
 
 	const static float b_voltage[] = { 1.9176, 2.8757, 3.9825, 5.5266 };
 
@@ -106,24 +106,24 @@ PALETTE_INIT( carpolo )
 		bit0 = (*color_prom >> 7) & 0x01;
 		bit1 = (*color_prom >> 6) & 0x01;
 		bit2 = (*color_prom >> 5) & 0x01;
-		//r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+		/*r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;*/
 		r = ((r_voltage[*color_prom >> 5         ] - MIN_VOLTAGE) / (MAX_VOLTAGE - MIN_VOLTAGE)) * 255.;
 		/* green component */
 		bit0 = (*color_prom >> 4) & 0x01;
 		bit1 = (*color_prom >> 3) & 0x01;
 		bit2 = (*color_prom >> 2) & 0x01;
-		//g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
+		/*g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;*/
 		g = ((g_voltage[(*color_prom >> 2) & 0x07] - MIN_VOLTAGE) / (MAX_VOLTAGE - MIN_VOLTAGE)) * 255.;
 		/* blue component */
 		bit0 = (*color_prom >> 1) & 0x01;
 		bit1 = (*color_prom >> 0) & 0x01;
-		//b = 0x4f * bit0 + 0xa8 * bit1;
+		/*b = 0x4f * bit0 + 0xa8 * bit1;*/
 		b = ((b_voltage[*color_prom & 0x03       ] - MIN_VOLTAGE) / (MAX_VOLTAGE - MIN_VOLTAGE)) * 255.;
 
 
 		palette_set_color(i,r,g,b);
 
-		// score color is same as net color
+		/* score color is same as net color*/
 		if (i == NET_COLOR)
 		{
 			palette_set_color(SCORE_COLOR,r,g,b);
@@ -395,7 +395,7 @@ static int check_sprite_sprite_collision(int x1, int y1, int code1, int flipy1,
 	y2 = 240 - y2;
 
 
-	// check if the two sprites are within collision range
+	/* check if the two sprites are within collision range*/
 	if ((abs(x1 - x2) < SPRITE_WIDTH) && (abs(y1 - y2) < SPRITE_HEIGHT))
 	{
 		int x,y;
@@ -452,7 +452,7 @@ static int check_sprite_left_goal_collision(int x1, int y1, int code1, int flipy
 	y1 = 240 - y1;
 
 
-	// check if the sprites is within the range of the goal
+	/* check if the sprites is within the range of the goal*/
 	if (((y1 + 16) > GOAL_Y) && (y1 < (GOAL_Y + GOAL_HEIGHT)) &&
 	    ((x1 + 16) > LEFT_GOAL_X) && (x1 < (LEFT_GOAL_X + GOAL_WIDTH)))
 	{
@@ -518,7 +518,7 @@ static int check_sprite_right_goal_collision(int x1, int y1, int code1, int flip
 	y1 = 240 - y1;
 
 
-	// check if the sprites is within the range of the goal
+	/* check if the sprites is within the range of the goal*/
 	if (((y1 + 16) > GOAL_Y) && (y1 < (GOAL_Y + GOAL_HEIGHT)) &&
 	    ((x1 + 16) > RIGHT_GOAL_X) && (x1 < (RIGHT_GOAL_X + GOAL_WIDTH)))
 	{
@@ -631,7 +631,7 @@ VIDEO_EOF( carpolo )
 	int car1_flipy, car2_flipy, car3_flipy, car4_flipy, ball_flipy;
 
 
-	// check car-car collision first
+	/* check car-car collision first*/
 
 	car1_x = carpolo_spriteram[0x00];
 	car1_y = carpolo_spriteram[0x01];
@@ -654,7 +654,7 @@ VIDEO_EOF( carpolo )
 	remap_sprite_code(1, carpolo_spriteram[0x0e] & 0x0f, &ball_code, &ball_flipy);
 
 
-	// cars 1 and 2
+	/* cars 1 and 2*/
 	if (check_sprite_sprite_collision(car1_x, car1_y, car1_code, car1_flipy,
 									  car2_x, car2_y, car2_code, car2_flipy,
 									  &col_x, &col_y))
@@ -662,7 +662,7 @@ VIDEO_EOF( carpolo )
 		carpolo_generate_car_car_interrupt(0, 1);
 	}
 
-	// cars 1 and 3
+	/* cars 1 and 3*/
 	else if (check_sprite_sprite_collision(car1_x, car1_y, car1_code, car1_flipy,
 										   car3_x, car3_y, car3_code, car3_flipy,
 										   &col_x, &col_y))
@@ -670,7 +670,7 @@ VIDEO_EOF( carpolo )
 		carpolo_generate_car_car_interrupt(0, 2);
 	}
 
-	// cars 1 and 4
+	/* cars 1 and 4*/
 	else if (check_sprite_sprite_collision(car1_x, car1_y, car1_code, car1_flipy,
 										   car4_x, car4_y, car4_code, car4_flipy,
 										   &col_x, &col_y))
@@ -678,7 +678,7 @@ VIDEO_EOF( carpolo )
 		carpolo_generate_car_car_interrupt(0, 3);
 	}
 
-	// cars 2 and 3
+	/* cars 2 and 3*/
 	else if (check_sprite_sprite_collision(car2_x, car2_y, car2_code, car2_flipy,
 										   car3_x, car3_y, car3_code, car3_flipy,
 										   &col_x, &col_y))
@@ -686,7 +686,7 @@ VIDEO_EOF( carpolo )
 		carpolo_generate_car_car_interrupt(1, 2);
 	}
 
-	// cars 2 and 4
+	/* cars 2 and 4*/
 	else if (check_sprite_sprite_collision(car2_x, car2_y, car2_code, car2_flipy,
 										   car4_x, car4_y, car4_code, car4_flipy,
 										   &col_x, &col_y))
@@ -694,7 +694,7 @@ VIDEO_EOF( carpolo )
 		carpolo_generate_car_car_interrupt(1, 3);
 	}
 
-	// cars 3 and 4
+	/* cars 3 and 4*/
 	else if (check_sprite_sprite_collision(car3_x, car3_y, car3_code, car3_flipy,
 										   car4_x, car4_y, car4_code, car4_flipy,
 										   &col_x, &col_y))
@@ -704,7 +704,7 @@ VIDEO_EOF( carpolo )
 
 
 
-	// check car-ball collision
+	/* check car-ball collision*/
 	if (check_sprite_sprite_collision(car1_x, car1_y, car1_code, car1_flipy,
 									  ball_x, ball_y, ball_code, ball_flipy,
 									  &col_x, &col_y))
@@ -731,7 +731,7 @@ VIDEO_EOF( carpolo )
 	}
 
 
-	// check car-goal collision
+	/* check car-goal collision*/
 	if (check_sprite_left_goal_collision(car1_x, car1_y, car1_code, car1_flipy, 1))
 	{
 		carpolo_generate_car_goal_interrupt(0, 0);
@@ -766,7 +766,7 @@ VIDEO_EOF( carpolo )
 	}
 
 
-	// check ball collision with static screen elements
+	/* check ball collision with static screen elements*/
 	{
 	int col;
 
@@ -789,7 +789,7 @@ VIDEO_EOF( carpolo )
 	}
 
 
-	// check car-border collision
+	/* check car-border collision*/
 	{
 	int col;
 

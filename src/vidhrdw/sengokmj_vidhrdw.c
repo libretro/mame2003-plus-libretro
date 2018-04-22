@@ -126,9 +126,9 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 		x = 128 + (spriteram[offs+4])+(spriteram[offs+5]<<8);
 
 		if (x&0x8000) x=0-(0x200-(x&0x1ff));
-		//else x&=0x1ff;
+		/*else x&=0x1ff;*/
 		if (y&0x8000) y=0-(0x200-(y&0x1ff));
-		//else y&=0x1ff;
+		/*else y&=0x1ff;*/
 
 		color = (spriteram[offs+0]&0x3f);
 		fx = spriteram[offs+0]&0x40;

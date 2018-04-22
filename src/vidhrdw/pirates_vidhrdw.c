@@ -88,7 +88,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 		int xpos, ypos, flipx, flipy, code, color;
 
 		xpos = source[1] - 32;
-		ypos = source[-1];	// indeed...
+		ypos = source[-1];	/* indeed...*/
 
 		if (ypos & 0x8000) break;	/* end-of-list marker */
 

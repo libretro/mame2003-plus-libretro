@@ -181,7 +181,7 @@ static void perfrman_draw_sprites( struct mame_bitmap *bitmap, const struct rect
 				buffered_spriteram[offs],
 				((buffered_spriteram[offs+2] >> 1) & 3)
 					+ ((buffered_spriteram[offs+2] << 2) & 4)
-//					+ ((buffered_spriteram[offs+2] >> 2) & 8)
+/*					+ ((buffered_spriteram[offs+2] >> 2) & 8)*/
 				,
 				flipscreen, flipscreen,
 				sx, sy,

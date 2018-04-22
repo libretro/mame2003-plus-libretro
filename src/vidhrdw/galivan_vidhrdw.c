@@ -389,8 +389,8 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 			flipy = !flipy;
 		}
 
-//		code = spriteram[offs+1] + ((attr & 0x02) << 7);
-		code = spriteram[offs+1] + ((attr & 0x06) << 7);	// for ninjemak, not sure ?
+/*		code = spriteram[offs+1] + ((attr & 0x02) << 7);*/
+		code = spriteram[offs+1] + ((attr & 0x06) << 7);	/* for ninjemak, not sure ?*/
 
 		drawgfx(bitmap,Machine->gfx[2],
 				code,

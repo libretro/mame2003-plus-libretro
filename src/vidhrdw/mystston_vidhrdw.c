@@ -39,7 +39,7 @@ PALETTE_INIT( mystston )
 	{
 		int bit0, bit1, bit2, r, g, b;
 
-		// red component
+		/* red component*/
 
 		bit0 = (*color_prom >> 0) & 0x01;
 		bit1 = (*color_prom >> 1) & 0x01;
@@ -47,7 +47,7 @@ PALETTE_INIT( mystston )
 
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		// green component
+		/* green component*/
 
 		bit0 = (*color_prom >> 3) & 0x01;
 		bit1 = (*color_prom >> 4) & 0x01;
@@ -55,7 +55,7 @@ PALETTE_INIT( mystston )
 
 		g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		// blue component
+		/* blue component*/
 
 		bit0 = 0;
 		bit1 = (*color_prom >> 6) & 0x01;
@@ -63,7 +63,7 @@ PALETTE_INIT( mystston )
 
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(i + 24, r, g, b);	// first 24 colors are from RAM
+		palette_set_color(i + 24, r, g, b);	/* first 24 colors are from RAM*/
 
 		color_prom++;
 	}
@@ -94,21 +94,21 @@ WRITE_HANDLER( mystston_scroll_w )
 
 WRITE_HANDLER( mystston_control_w )
 {
-	// bits 0 and 1 are foreground text color
+	/* bits 0 and 1 are foreground text color*/
 	if (mystston_fgcolor != ((data & 0x01) << 1) + ((data & 0x02) >> 1))
 	{
 		mystston_fgcolor = ((data & 0x01) << 1) + ((data & 0x02) >> 1);
 		tilemap_mark_all_tiles_dirty(fg_tilemap);
 	}
 
-	// bit 2 is background page select
+	/* bit 2 is background page select*/
 	mystston_bgpage = (data & 0x04) ? 1:0;
 
-	// bits 4 and 5 are coin counters in flipped order
+	/* bits 4 and 5 are coin counters in flipped order*/
 	coin_counter_w(0, data & 0x20);
 	coin_counter_w(1, data & 0x10);
 
-	// bit 7 is screen flip
+	/* bit 7 is screen flip*/
 	flip_screen_set((data & 0x80) ^ ((readinputport(3) & 0x20) ? 0x80:0));
 }
 

@@ -6,7 +6,7 @@ Zaviga   (c) 1984 Data East Corporation
 drivers by Acho A. Tang
 
 *****************************************************************************/
-// Directives
+/* Directives*/
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
@@ -16,8 +16,8 @@ drivers by Acho A. Tang
 #define BW_NTILES_L2 7
 #define BW_NTILES (1<<BW_NTILES_L2)
 
-//****************************************************************************
-// Local Vars
+/******************************************************************************/
+/* Local Vars*/
 
 static struct tilemap *scrollmap[2], *charmap, *fgmap, *bgmap;
 static struct GfxElement *fgfx, *bgfx;
@@ -25,8 +25,8 @@ static data8_t *srbase[4], *fgdata, *bgdata;
 static int *srxlat;
 static unsigned sreg[8], palatch=0, srbank=0, mapmask=0, mapflip=0;
 
-//****************************************************************************
-// Local Functions
+/******************************************************************************/
+/* Local Functions*/
 
 static void fill_srxlat(int *xlat)
 {
@@ -46,8 +46,8 @@ static void fill_srxlat(int *xlat)
 	}
 }
 
-//****************************************************************************
-// Exports
+/******************************************************************************/
+/* Exports*/
 
 struct GfxLayout bwing_tilelayout =
 {
@@ -97,10 +97,10 @@ WRITE_HANDLER( bwing_scrollreg_w )
 
 	switch (offset)
 	{
-		case 6: palatch = data; break; // one of the palette components is latched through I/O(yike)
+		case 6: palatch = data; break; /* one of the palette components is latched through I/O(yike)*/
 
 		case 7:
-			// tile graphics are decoded in RAM on the fly and tile codes are banked + interleaved(ouch)
+			/* tile graphics are decoded in RAM on the fly and tile codes are banked + interleaved(ouch)*/
 			mapmask = data;
 			srbank = data >> 6;
 
@@ -161,8 +161,8 @@ WRITE_HANDLER( bwing_paletteram_w )
 	#endif
 }
 
-//****************************************************************************
-// Initializations
+/******************************************************************************/
+/* Initializations*/
 
 #define BW_SET_TILE_INFO(GFX, CODE, COLOR) { \
 	tile_info.tile_number = (CODE); \
@@ -228,8 +228,8 @@ VIDEO_START( bwing )
 	return(0);
 }
 
-//****************************************************************************
-// Realtime
+/******************************************************************************/
+/* Realtime*/
 
 static void bwing_drawsprites(struct mame_bitmap *bmp, const struct rectangle *clip, data8_t *ram, int pri)
 {
@@ -245,10 +245,10 @@ static void bwing_drawsprites(struct mame_bitmap *bmp, const struct rectangle *c
 		fx = attrib & 0x04;
 		fy = ~attrib & 0x02;
 
-		// normal/cocktail
+		/* normal/cocktail*/
 		if (mapmask & 0x20) { fx = !fx; fy = !fy; x = 240 - x; y = 240 - y; }
 
-		// single/double
+		/* single/double*/
 		if (!(attrib & 0x10))
 			drawgfx(bmp, gfx, code, color, fx, fy, x, y, clip, TRANSPARENCY_PEN, 0);
 		else
@@ -266,7 +266,7 @@ VIDEO_UPDATE( bwing )
 	else
 		{ mapflip = TILEMAP_FLIPY; shiftx = 8; }
 
-	// draw background
+	/* draw background*/
 	if (!(mapmask & 1))
 	{
 		tilemap_set_flip(bgmap, mapflip);
@@ -279,10 +279,10 @@ VIDEO_UPDATE( bwing )
 	else
 		fillbitmap(bitmap, get_black_pen(), cliprect);
 
-	// draw low priority sprites
+	/* draw low priority sprites*/
 	bwing_drawsprites(bitmap, cliprect, buffered_spriteram, 0);
 
-	// draw foreground
+	/* draw foreground*/
 	if (!(mapmask & 2))
 	{
 		tilemap_set_flip(fgmap, mapflip);
@@ -293,15 +293,15 @@ VIDEO_UPDATE( bwing )
 		tilemap_draw(bitmap, cliprect, fgmap, 0, 0);
 	}
 
-	// draw high priority sprites
+	/* draw high priority sprites*/
 	bwing_drawsprites(bitmap, cliprect, buffered_spriteram, 1);
 
-	// draw text layer
-//	if (mapmask & 4)
+	/* draw text layer*/
+/*	if (mapmask & 4)*/
 	{
 		tilemap_set_flip(charmap, mapflip);
 		tilemap_draw(bitmap, cliprect, charmap, 0, 0);
 	}
 }
 
-//****************************************************************************
+/******************************************************************************/

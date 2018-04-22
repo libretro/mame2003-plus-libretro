@@ -24,7 +24,7 @@ WRITE16_HANDLER( zerozone_tilemap_w )
 
 WRITE16_HANDLER(zerozone_tilebank_w)
 {
-//	usrintf_showmessage	("Data %04x",data);
+/*	usrintf_showmessage	("Data %04x",data);*/
 	zerozone_tilebank = data & 0x3;
 	tilemap_mark_all_tiles_dirty(zerozone_tilemap);
 }
@@ -42,8 +42,8 @@ static void get_zerozone_tile_info(int tile_index)
 
 VIDEO_START( zerozone )
 {
-	// i'm not 100% sure it should be opaque, pink title screen looks strange in las vegas girls
-	// but if its transparent other things look incorrect
+	/* i'm not 100% sure it should be opaque, pink title screen looks strange in las vegas girls*/
+	/* but if its transparent other things look incorrect*/
 	zerozone_tilemap = tilemap_create(get_zerozone_tile_info,tilemap_scan_cols,TILEMAP_OPAQUE,      8, 8, 64,32);
 
 	return 0;

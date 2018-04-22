@@ -44,9 +44,9 @@
 
 static void fantland_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
-	data8_t	*ram	=	spriteram,		// spriteram start
-			*end	=	ram + 0x2000,	// spriteram end
-			*ram2	=	ram + 0x2000;	// table of indexes into the table of offsets
+	data8_t	*ram	=	spriteram,		/* spriteram start*/
+			*end	=	ram + 0x2000,	/* spriteram end*/
+			*ram2	=	ram + 0x2000;	/* table of indexes into the table of offsets*/
 
 	for ( ; ram < end; ram += 8,ram2 ++)
 	{

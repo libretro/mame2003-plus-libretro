@@ -8,7 +8,7 @@
 #include "vidhrdw/generic.h"
 #include "exerion.h"
 
-//#define DEBUG_SPRITES
+/*#define DEBUG_SPRITES*/
 
 #define BACKGROUND_X_START		32
 #define BACKGROUND_X_START_FLIP	72

@@ -23,9 +23,9 @@ PALETTE_INIT( dribling )
 
 	for (i = 0; i < 256; i++)
 	{
-		int r = (~prom[i] >> 0) & 1;	// 220
-		int g = (~prom[i] >> 1) & 3;	// 820 + 560 (332 max)
-		int b = (~prom[i] >> 3) & 1;	// 220
+		int r = (~prom[i] >> 0) & 1;	/* 220*/
+		int g = (~prom[i] >> 1) & 3;	/* 820 + 560 (332 max)*/
+		int b = (~prom[i] >> 3) & 1;	/* 220*/
 
 		r *= 0xff;
 		g *= 0x55;

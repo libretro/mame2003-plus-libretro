@@ -423,7 +423,7 @@ static void tdfever_draw_bg( struct mame_bitmap *bitmap, int xscroll, int yscrol
 			sx = x << 4;
 			sy = y << 4;
 
-			// intercept overflown tile indices
+			/* intercept overflown tile indices*/
 			if(tile_number >= gfx->total_elements)
 				plot_box(tmpbitmap, sx, sy, gfx->width, gfx->height, get_black_pen());
 			else
@@ -504,7 +504,7 @@ static void tdfever_draw_sp( struct mame_bitmap *bitmap, int xscroll, int yscrol
 			default:
 				tile_number |= attributes<<3 & 0x300;
 				color = attributes & 0x0f;
-				if (snk_gamegroup == 7) // ftsoccer
+				if (snk_gamegroup == 7) /* ftsoccer*/
 					palette_set_shadow_mode(((attributes & 0x6f) == 0x60) ? 1 : 0);
 		}
 
@@ -551,14 +551,14 @@ VIDEO_UPDATE( tdfever )
 	int sp_scroll_x = -ram[0xc9c0] + ((sp_attributes & 0x40) ? 0:256);
 	int sp_scroll_y = -ram[0xc980] + ((sp_attributes & 0x80) ? 256:0);
 
-	if(snk_gamegroup == 3 || snk_gamegroup == 5) // tdfever, tdfeverj
+	if(snk_gamegroup == 3 || snk_gamegroup == 5) /* tdfever, tdfeverj*/
 	{
 			bg_scroll_x += 143;
 			bg_scroll_y += -32;
 			sp_scroll_x += 135;
 			sp_scroll_y += -65;
 	}
-	else if(snk_gamegroup == 7) // ftsoccer
+	else if(snk_gamegroup == 7) /* ftsoccer*/
 	{
 			bg_scroll_x += 16;
 			bg_scroll_y += 0;
@@ -567,7 +567,7 @@ VIDEO_UPDATE( tdfever )
 	}
 	tdfever_draw_bg( bitmap, bg_scroll_x, bg_scroll_y );
 
-	if (snk_gamegroup == 5) // tdfeverj
+	if (snk_gamegroup == 5) /* tdfeverj*/
 	{
 		gfx_drawmode_table[13] = DRAWMODE_SHADOW;
 		gfx_drawmode_table[14] = DRAWMODE_SOURCE;
@@ -586,7 +586,7 @@ VIDEO_UPDATE( gwar )
 	int gwar_sp_baseaddr, gwar_tx_baseaddr;
 	unsigned char bg_attribute;
 
-	if(snk_gamegroup == 4) // gwara
+	if(snk_gamegroup == 4) /* gwara*/
 	{
 		gwar_sp_baseaddr = 0xf000;
 		gwar_tx_baseaddr = 0xc800;
@@ -618,7 +618,7 @@ VIDEO_UPDATE( gwar )
 		int sp32_x = -ram[gwar_sp_baseaddr+0x9c0] - 9;
 		int sp32_y = -ram[gwar_sp_baseaddr+0x980] - 31;
 
-		if(snk_gamegroup == 2) // gwar, gwarj, gwarb, choppera
+		if(snk_gamegroup == 2) /* gwar, gwarj, gwarb, choppera*/
 		{
 			sp16_y += (bg_attribute & 0x10) ? 256:0;
 			sp16_x += (bg_attribute & 0x40) ? 256:0;
@@ -634,7 +634,7 @@ VIDEO_UPDATE( gwar )
 			sp32_y += (spp_attribute & 0x08) ? 256:0;
 		}
 
-		if(sp_attribute & 0xf8) // improves priority
+		if(sp_attribute & 0xf8) /* improves priority*/
 		{
 			tdfever_draw_sp( bitmap, sp16_x, sp16_y, 2 );
 			tdfever_draw_sp( bitmap, sp32_x, sp32_y, 1 );

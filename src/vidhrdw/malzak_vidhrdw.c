@@ -82,7 +82,7 @@ VIDEO_UPDATE( malzak )
 
 	fillbitmap(bitmap,0,0);
 
-	// SAA 5050 - Teletext character generator
+	/* SAA 5050 - Teletext character generator*/
 	for (sy = 0; sy < 24; sy++)
 	{
 		/* Set start of line state */
@@ -140,7 +140,7 @@ VIDEO_UPDATE( malzak )
 					saa5050_state.saa5050_backcol = SAA5050_BLACK;
 					break;
 				case 0x1d:
-//					saa5050_state.saa5050_backcol = saa5050_state.saa5050_prvcol;
+/*					saa5050_state.saa5050_backcol = saa5050_state.saa5050_prvcol;*/
 					break;
 				case 0x1e:
 					saa5050_state.saa5050_flags |= SAA5050_HOLDGR;
@@ -196,7 +196,7 @@ VIDEO_UPDATE( malzak )
 	if(frame_count > 50)
 		frame_count = 0;
 
-	// playfield - not sure exactly how this works...
+	/* playfield - not sure exactly how this works...*/
 	for(x = 0;x < 16;x++)
 		for(y = 0; y < 16;y++)
 		{
@@ -212,10 +212,10 @@ VIDEO_UPDATE( malzak )
 			sx, sy, &Machine->visible_area, TRANSPARENCY_COLOR, 0);
 		}
 
-	// S2636 - Sprites / Collision detection (x2)
+	/* S2636 - Sprites / Collision detection (x2)*/
 
 	s2636_x_offset = -16;
-//	s2636_y_offset = -8;
+/*	s2636_y_offset = -8;*/
 
 	Update_Bitmap(bitmap,s2636_1_ram,s2636_1_dirty,1,collision_bitmap);
 	Update_Bitmap(bitmap,s2636_2_ram,s2636_2_dirty,2,collision_bitmap);
@@ -225,8 +225,8 @@ WRITE_HANDLER( playfield_w )
 {
 	int tile = ((temp_x / 16) * 16) + (offset / 16);
 
-//	field[tile].x = temp_x / 16;
-//	field[tile].y = temp_y;
+/*	field[tile].x = temp_x / 16;*/
+/*	field[tile].y = temp_y;*/
 	field[tile].code = (data & 0x1f);
 
 }

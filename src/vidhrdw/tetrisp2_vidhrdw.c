@@ -215,7 +215,7 @@ VIDEO_START( rockntread )
 {
 	tilemap_bg = tilemap_create(	get_tile_info_bg,tilemap_scan_rows,
 								TILEMAP_TRANSPARENT,
-								16, 16, 256, 16);	// rockn ms(main),1,2,3,4
+								16, 16, 256, 16);	/* rockn ms(main),1,2,3,4*/
 
 	tilemap_fg = tilemap_create(	get_tile_info_fg,tilemap_scan_rows,
 								TILEMAP_TRANSPARENT,

@@ -135,7 +135,7 @@ static void othunder_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct r
 		zoomx = (data & 0x7f);
 
 		data = spriteram16[offs+3];
-		tilenum = data & 0x1fff;	// $80000 spritemap rom maps up to $2000 64x64 sprites
+		tilenum = data & 0x1fff;	/* $80000 spritemap rom maps up to $2000 64x64 sprites*/
 		flipy = (data & 0x8000) >> 15;
 
 		if (!tilenum) continue;
@@ -305,8 +305,8 @@ VIDEO_UPDATE( othunder )
 			if (screeny > 0xf0) screeny = 0xf0;
 		}
 
-		// fudge y to show in centre of scope/hit sprite, note that screenx, screeny
-		// were confirmed to match those stored by the game at $82732, $82734
+		/* fudge y to show in centre of scope/hit sprite, note that screenx, screeny*/
+		/* were confirmed to match those stored by the game at $82732, $82734*/
 		screeny += 2;
 
 		/* player 1 */
@@ -348,8 +348,8 @@ VIDEO_UPDATE( othunder )
 			if (screeny > 0xf0) screeny = 0xf0;
 		}
 
-		// fudge y to show in centre of scope/hit sprite, note that screenx, screeny
-		// were confirmed to match those stored by the game at $82736, $82738
+		/* fudge y to show in centre of scope/hit sprite, note that screenx, screeny*/
+		/* were confirmed to match those stored by the game at $82736, $82738*/
 		screeny += 2;
 
 		/* player 2 */

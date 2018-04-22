@@ -83,7 +83,7 @@ PALETTE_INIT( astrocde )
 		if (i == 0)
 			BY = 0;
 		else
-//			BY = C*cos(i*2.0*3.14159/32.0);
+/*			BY = C*cos(i*2.0*3.14159/32.0);*/
 			BY = 1.15*cos(i*2.0*3.14159/32.0);
 
 
@@ -255,7 +255,7 @@ WRITE_HANDLER( astrocde_colour_split_w )
 
 WRITE_HANDLER( astrocde_mode_w )
 {
-//	astrocade_mode = data & 0x01;
+/*	astrocade_mode = data & 0x01;*/
 }
 
 
@@ -299,7 +299,7 @@ WRITE_HANDLER( wow_videoram_w )
 WRITE_HANDLER( astrocde_magic_expand_color_w )
 {
 #ifdef MAME_DEBUG
-//	logerror("%04x: magic_expand_color = %02x\n",activecpu_get_pc(),data);
+/*	logerror("%04x: magic_expand_color = %02x\n",activecpu_get_pc(),data);*/
 #endif
 
 	magic_expand_color = data;
@@ -309,7 +309,7 @@ WRITE_HANDLER( astrocde_magic_expand_color_w )
 WRITE_HANDLER( astrocde_magic_control_w )
 {
 #ifdef MAME_DEBUG
-//	logerror("%04x: magic_control = %02x\n",activecpu_get_pc(),data);
+/*	logerror("%04x: magic_control = %02x\n",activecpu_get_pc(),data);*/
 #endif
 
 	magic_control = data;
@@ -455,8 +455,8 @@ WRITE_HANDLER( astrocde_pattern_board_w )
 		int i,j;
 
 #ifdef MAME_DEBUG
-//		logerror("%04x: blit src %04x mode %02x skip %d dest %04x length %d loops %d\n",
-//			activecpu_get_pc(),src,mode,skip,dest,length,loops);
+/*		logerror("%04x: blit src %04x mode %02x skip %d dest %04x length %d loops %d\n",*/
+/*			activecpu_get_pc(),src,mode,skip,dest,length,loops);*/
 #endif
 
 		/* Kludge: have to steal some cycles from the Z80 otherwise text

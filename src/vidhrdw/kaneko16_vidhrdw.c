@@ -174,7 +174,7 @@ VIDEO_START( kaneko16_1xVIEW2 )
 		tilemap_set_transparent_pen(kaneko16_tmap_0, 0);
 		tilemap_set_transparent_pen(kaneko16_tmap_1, 0);
 
-		tilemap_set_scroll_rows(kaneko16_tmap_0, 0x200);	// Line Scroll
+		tilemap_set_scroll_rows(kaneko16_tmap_0, 0x200);	/* Line Scroll*/
 		tilemap_set_scroll_rows(kaneko16_tmap_1, 0x200);
 
 		return 0;
@@ -219,7 +219,7 @@ VIDEO_START( kaneko16_2xVIEW2 )
 		tilemap_set_transparent_pen(kaneko16_tmap_2, 0);
 		tilemap_set_transparent_pen(kaneko16_tmap_3, 0);
 
-		tilemap_set_scroll_rows(kaneko16_tmap_2, 0x200);	// Line Scroll
+		tilemap_set_scroll_rows(kaneko16_tmap_2, 0x200);	/* Line Scroll*/
 		tilemap_set_scroll_rows(kaneko16_tmap_3, 0x200);
 
 		return 0;
@@ -279,7 +279,7 @@ VIDEO_START( wingforce_1xVIEW2 )
 		tilemap_set_transparent_pen(kaneko16_tmap_0, 0);
 		tilemap_set_transparent_pen(kaneko16_tmap_1, 0);
 
-		tilemap_set_scroll_rows(kaneko16_tmap_0, 0x200);	// Line Scroll
+		tilemap_set_scroll_rows(kaneko16_tmap_0, 0x200);	/* Line Scroll*/
 		tilemap_set_scroll_rows(kaneko16_tmap_1, 0x200);
 
 		return 0;
@@ -326,9 +326,9 @@ VIDEO_START( berlwall )
 	8aba/2 = 455d = 10001 01010 11101 = $11 $0a $1d
 */
 
-	for (sx = 0 ; sx < 32 ; sx++)	// horizontal screens
-	 for (x = 0 ; x < 256 ; x++)	// horizontal pixels
-	  for (y = 0 ; y < 256 ; y++)	// vertical pixels
+	for (sx = 0 ; sx < 32 ; sx++)	/* horizontal screens*/
+	 for (x = 0 ; x < 256 ; x++)	/* horizontal pixels*/
+	  for (y = 0 ; y < 256 ; y++)	/* vertical pixels*/
 	  {
 			int addr  = sx * (256 * 256) + x + y * 256;
 			int data = RAM[addr * 2 + 0] * 256 + RAM[addr * 2 + 1];
@@ -453,7 +453,7 @@ int kaneko16_parse_sprite_type012(int i, struct tempsprite *s)
 	s->priority		=		(attr & 0x00c0) >> 6;
 	s->flipy		=		(attr & 0x0100);
 	s->flipx		=		(attr & 0x0200);
-	s->code			+=		(s->y & 1) << 16;	// bloodwar
+	s->code			+=		(s->y & 1) << 16;	/* bloodwar*/
 	}
 	else
 	{
@@ -499,9 +499,9 @@ int kaneko16_parse_sprite_type3(int i, struct tempsprite *s)
 	s->flipy		=		s->code & 0x4000;
 	s->flipx		=		s->code & 0x8000;
 
-	s->priority		=		3;	// ?
-	s->xoffs		=		0;	// ?
-	s->yoffs		=		0;	// ?
+	s->priority		=		3;	/* ?*/
+	s->xoffs		=		0;	/* ?*/
+	s->yoffs		=		0;	/* ?*/
 
 	s->x			|=		(attr & 0x01) ? 0xff00 : 0;
 	s->y			|=		(attr & 0x02) ? 0xff00 : 0;
@@ -554,13 +554,13 @@ void kaneko16_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *c
 			default:	flags = -1;
 		}
 
-		if (flags == -1)	// End of Sprites
+		if (flags == -1)	/* End of Sprites*/
 			break;
 
 		if (flags & USE_LATCHED_CODE)
-			s->code = ++code;	// Use the latched code + 1 ..
+			s->code = ++code;	/* Use the latched code + 1 ..*/
 		else
-			code = s->code;		// .. or latch this value
+			code = s->code;		/* .. or latch this value*/
 
 		if (flags & USE_LATCHED_COLOR)
 		{
@@ -589,7 +589,7 @@ void kaneko16_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *c
 			}
 		}
 
-		// brap boys explicitly doesn't want the flip to be latched, maybe there is a different bit to enable that behavior?
+		/* brap boys explicitly doesn't want the flip to be latched, maybe there is a different bit to enable that behavior?*/
 		if (kaneko16_sprite_fliptype==1)
 		{
 			flipx		=	s->flipx;
@@ -601,7 +601,7 @@ void kaneko16_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *c
 			s->x += x;
 			s->y += y;
 		}
-		// Always latch the latest result
+		/* Always latch the latest result*/
 		x	=	s->x;
 		y	=	s->y;
 
@@ -751,7 +751,7 @@ WRITE16_HANDLER( kaneko16_sprites_regs_w )
 			break;
 	}
 
-//	logerror("CPU #0 PC %06X : Warning, sprites reg %04X <- %04X\n",activecpu_get_pc(),offset*2,data);
+/*	logerror("CPU #0 PC %06X : Warning, sprites reg %04X <- %04X\n",activecpu_get_pc(),offset*2,data);*/
 }
 
 
@@ -932,18 +932,18 @@ if ( keyboard_pressed(KEYCODE_Z) ||
      keyboard_pressed(KEYCODE_V) || keyboard_pressed(KEYCODE_B) )
 {	int msk = 0, val = 0;
 
-	if (keyboard_pressed(KEYCODE_X))	val = 1;	// priority 0 only
-	if (keyboard_pressed(KEYCODE_C))	val = 2;	// ""       1
-	if (keyboard_pressed(KEYCODE_V))	val = 4;	// ""       2
-	if (keyboard_pressed(KEYCODE_B))	val = 8;	// ""       3
+	if (keyboard_pressed(KEYCODE_X))	val = 1;	/* priority 0 only*/
+	if (keyboard_pressed(KEYCODE_C))	val = 2;	/* ""       1*/
+	if (keyboard_pressed(KEYCODE_V))	val = 4;	/* ""       2*/
+	if (keyboard_pressed(KEYCODE_B))	val = 8;	/* ""       3*/
 
-	if (keyboard_pressed(KEYCODE_Z))	val = 1|2|4|8;	// All of the above priorities
+	if (keyboard_pressed(KEYCODE_Z))	val = 1|2|4|8;	/* All of the above priorities*/
 
-	if (keyboard_pressed(KEYCODE_Q))	msk |= val << 0;	// for tmap 0
-	if (keyboard_pressed(KEYCODE_W))	msk |= val << 4;	// ""       1
-	if (keyboard_pressed(KEYCODE_E))	msk |= val << 8;	// ""       2
-	if (keyboard_pressed(KEYCODE_R))	msk |= val << 12;	// ""       3
-	if (keyboard_pressed(KEYCODE_A))	msk |= val << 16;	// for sprites
+	if (keyboard_pressed(KEYCODE_Q))	msk |= val << 0;	/* for tmap 0*/
+	if (keyboard_pressed(KEYCODE_W))	msk |= val << 4;	/* ""       1*/
+	if (keyboard_pressed(KEYCODE_E))	msk |= val << 8;	/* ""       2*/
+	if (keyboard_pressed(KEYCODE_R))	msk |= val << 12;	/* ""       3*/
+	if (keyboard_pressed(KEYCODE_A))	msk |= val << 16;	/* for sprites*/
 	if (msk != 0) layers_ctrl &= msk;
 
 #if 0
@@ -969,7 +969,7 @@ if ( keyboard_pressed(KEYCODE_Z) ||
 	if (kaneko16_bg15_bitmap)
 	{
 		int select	=	kaneko16_bg15_select[ 0 ];
-//		int reg		=	kaneko16_bg15_reg[ 0 ];
+/*		int reg		=	kaneko16_bg15_reg[ 0 ];*/
 		int flip	=	select & 0x20;
 		int sx, sy;
 

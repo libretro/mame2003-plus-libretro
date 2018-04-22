@@ -113,7 +113,7 @@ static void mcatadv_drawsprites ( struct mame_bitmap *bitmap, const struct recta
 		if (x & 0x200) x-=0x400;
 		if (y & 0x200) y-=0x400;
 
-#if 0 // For Flipscreen/Cocktail
+#if 0 /* For Flipscreen/Cocktail*/
 		if(mcatadv_vidregs[0]&0x8000)
 		{
 			flipx = !flipx;
@@ -124,7 +124,7 @@ static void mcatadv_drawsprites ( struct mame_bitmap *bitmap, const struct recta
 		}
 #endif
 
-		if (source[3] != source[0]) // 'hack' don't draw sprites while its testing the ram!
+		if (source[3] != source[0]) /* 'hack' don't draw sprites while its testing the ram!*/
 		{
 			if(!flipx) { xstart = 0;        xend = width;  xinc = 1; }
 			else       { xstart = width-1;  xend = -1;     xinc = -1; }

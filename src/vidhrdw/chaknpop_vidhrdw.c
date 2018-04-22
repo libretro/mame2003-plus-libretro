@@ -276,13 +276,13 @@ static void chaknpop_draw_bitmap(struct mame_bitmap *bitmap)
 			pen_t color = 0;
 
 			if (vram1[offs] & i)
-				color |= 0x200;	// green lower cage
+				color |= 0x200;	/* green lower cage*/
 			if (vram2[offs] & i)
 				color |= 0x080;
 			if (vram3[offs] & i)
-				color |= 0x100;	// green upper cage
+				color |= 0x100;	/* green upper cage*/
 			if (vram4[offs] & i)
-				color |= 0x040;	// tx mask
+				color |= 0x040;	/* tx mask*/
 
 			if (color)
 			{

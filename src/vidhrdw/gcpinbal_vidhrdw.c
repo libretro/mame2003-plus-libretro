@@ -8,8 +8,8 @@ static struct tilemap *gcpinbal_tilemap[3];
 data16_t *gcpinbal_tilemapram;
 data16_t *gcpinbal_ioc_ram;
 
-//data16_t *gcpinbal_ctrlram;
-//static UINT16 gcpinbal_ctrl_reg;
+/*data16_t *gcpinbal_ctrlram;*/
+/*static UINT16 gcpinbal_ctrl_reg;*/
 
 static UINT16 gcpinbal_scrollx[3],gcpinbal_scrolly[3];
 
@@ -57,7 +57,7 @@ static void get_fg_tile_info(int tile_index)
 }
 
 #if 0
-static void dirty_tilemaps(void)	// will be used for save states
+static void dirty_tilemaps(void)	/* will be used for save states*/
 {
 	tilemap_mark_all_tiles_dirty(gcpinbal_tilemap[0]);
 	tilemap_mark_all_tiles_dirty(gcpinbal_tilemap[1]);
@@ -359,7 +359,7 @@ VIDEO_UPDATE( gcpinbal )
 
 #if 0
 	{
-//		char buf[80];
+/*		char buf[80];*/
 		sprintf(buf,"bg0_gfx: %04x bg1_gfx: %04x ",bg0_gfxset,bg1_gfxset);
 		usrintf_showmessage(buf);
 	}

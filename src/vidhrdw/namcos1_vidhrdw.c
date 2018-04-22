@@ -18,7 +18,7 @@
 #define MAIN_COMPLETE 0x10
 #define SUB_COMPLETE 0x20
 
-//#define TRY_PDRAWGFX 1
+/*#define TRY_PDRAWGFX 1*/
 WRITE_HANDLER( namcos1_main_update_w );
 WRITE_HANDLER( namcos1_sub_update_w );
 
@@ -290,7 +290,7 @@ WRITE_HANDLER( namcos1_videocontrol_w )
 	/* 0800-0fef sprite ram */
 	else if (offset < 0xff0) switch (namcos1_game_id)
 	{
-		case 0x0182: // only Rompers use it but this behavior may not be unique
+		case 0x0182: /* only Rompers use it but this behavior may not be unique*/
 			if ((offset & 0x0f) == 7 && abs(olddata - data) == 0xff)
 				namcos1_controlram[offset-1] |= 1;
 		break;
@@ -412,7 +412,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 		if (flipy) sy -= 32-height-top;
 		else sy -= top;
 
-		// Doesn't work. Can pdrawgfx handle more than 4 layers?
+		/* Doesn't work. Can pdrawgfx handle more than 4 layers?*/
 		pdrawgfx(bitmap, gfx,
 				code,
 				color,
@@ -549,14 +549,14 @@ static void namcos1_draw_screen(struct mame_bitmap *bitmap, const struct rectang
 #ifdef TRY_PDRAWGFX
 		i = 1 << priority;
 #endif
-		// scroll maps are refreshed when f600 is called
+		/* scroll maps are refreshed when f600 is called*/
 		if (namcos1_playfield_control[16] == priority) tilemap_draw(bitmap,cliprect,tilemap[0],0,i);
 		if (namcos1_playfield_control[17] == priority) tilemap_draw(bitmap,cliprect,tilemap[1],0,i);
 		if (namcos1_playfield_control[18] == priority) tilemap_draw(bitmap,cliprect,tilemap[2],0,i);
 		if (namcos1_playfield_control[19] == priority) tilemap_draw(bitmap,cliprect,tilemap[3],0,i);
 
-		// text maps should be refreshed independently regardless of interrupt status but due to
-		// priority constraints they be drawn here
+		/* text maps should be refreshed independently regardless of interrupt status but due to*/
+		/* priority constraints they be drawn here*/
 		if (namcos1_playfield_control[20] == priority) tilemap_draw(bitmap,cliprect,tilemap[4],0,i);
 		if (namcos1_playfield_control[21] == priority) tilemap_draw(bitmap,cliprect,tilemap[5],0,i);
 
@@ -618,43 +618,43 @@ VIDEO_START( namcos1 )
 	idle_counter = 0;
 	idle_threshold = Machine->drv->frames_per_second / 2;
 
-	switch (namcos1_game_id) // custom settings
+	switch (namcos1_game_id) /* custom settings*/
 	{
-/* use default
-		case 0x0487: // Youkai Douchuuki
-		case 0x0152: // Marchen Maze
-		case 0x0154: // World Stadium
-		case 0x0184: // World Stadium 89
-		case 0x0310: // World Stadium 90
-		case 0x0143: // World Court
-		case 0x0181: // Splatter House
-		case 0x1288: // Face Off
-		case 0xff90: // Puzzle Club
-		break;
-*/
-		case 0x0588: // Berabohm
-		case 0x0787: // Blazer
-		case 0x0311: // Soukoban DX
+/* use default */
+		/*case 0x0487:*/ /* Youkai Douchuuki*/
+		/*case 0x0152:*/ /* Marchen Maze*/
+		/*case 0x0154:*/ /* World Stadium*/
+		/*case 0x0184:*/ /* World Stadium 89*/
+		/*case 0x0310:*/ /* World Stadium 90*/
+		/*case 0x0143:*/ /* World Court*/
+		/*case 0x0181:*/ /* Splatter House*/
+		/*case 0x1288:*/ /* Face Off*/
+		/*case 0xff90:*/ /* Puzzle Club*/
+		/*break;
+
+		case 0x0588: /* Berabohm*/
+		case 0x0787: /* Blazer*/
+		case 0x0311: /* Soukoban DX*/
 			update_status |= UPDATE_TIED;
 		break;
 
-		case 0x0151: // Pacmania
-		case 0x0155: // Bakutotu
-		case 0x0153: // Galaga88
-		case 0x0987: // Quester
-		case 0x0183: // Blast Off
-		case 0x0308: // Dangerous Seed
-		case 0x0309: // Pistol Daimyo
-		case 0x0185: // Tank Force
+		case 0x0151: /* Pacmania*/
+		case 0x0155: /* Bakutotu*/
+		case 0x0153: /* Galaga88*/
+		case 0x0987: /* Quester*/
+		case 0x0183: /* Blast Off*/
+		case 0x0308: /* Dangerous Seed*/
+		case 0x0309: /* Pistol Daimyo*/
+		case 0x0185: /* Tank Force*/
 			update_status |= UPDATE_SUBLEAD;
 			update_status &= ~USE_SP_BUFFER;
 		break;
 
-		case 0x0136: // Dragon Spirit
+		case 0x0136: /* Dragon Spirit*/
 			priority_xlat[2] = 4;
 		break;
 
-		case 0x0182: // Rompers
+		case 0x0182: /* Rompers*/
 			priority_xlat[3] = 2;
 		break;
 	}
@@ -683,7 +683,7 @@ VIDEO_START( namcos1 )
 	else
 		sp_updatebuffer = sp_backbuffer = &namcos1_controlram[0x800];
 
-#ifdef TRY_PDRAWGFX // there's not much information on priority masks and I'm not sure if this is right
+#ifdef TRY_PDRAWGFX /* there's not much information on priority masks and I'm not sure if this is right*/
 	for (i=0; i<8; i++) priority_xlat[i] = ~( ( 1 << (i+1) ) - 1 );
 #endif
 
@@ -698,7 +698,7 @@ WRITE_HANDLER( namcos1_main_update_w )
 	update_status |= MAIN_COMPLETE;
 
 	if (update_status & UPDATE_TIED && update_status & USE_SP_BUFFER)
-		memcpy(sp_backbuffer, &namcos1_controlram[0x800], 0x7f0); // take a snapshot of current sprite RAM
+		memcpy(sp_backbuffer, &namcos1_controlram[0x800], 0x7f0); /* take a snapshot of current sprite RAM*/
 
 	namcos1_draw_screen(Machine->scrbitmap, &Machine->visible_area);
 }
@@ -708,7 +708,7 @@ WRITE_HANDLER( namcos1_sub_update_w )
 	if (update_status & SUB_COMPLETE) return;
 	update_status |= SUB_COMPLETE;
 
-	memcpy(sp_backbuffer, &namcos1_controlram[0x800], 0x7f0); // take a snapshot of current sprite RAM
+	memcpy(sp_backbuffer, &namcos1_controlram[0x800], 0x7f0); /* take a snapshot of current sprite RAM*/
 }
 
 VIDEO_UPDATE( namcos1 )
@@ -722,10 +722,10 @@ VIDEO_UPDATE( namcos1 )
 	}
 	else
 	{
-		// draw screen unconditionally if video goes idle for too long(required unless priority bitmap is used)
+		/* draw screen unconditionally if video goes idle for too long(required unless priority bitmap is used)*/
 		if (update_status & USE_SP_BUFFER) memcpy(sp_backbuffer, &namcos1_controlram[0x800], 0x7f0);
 		namcos1_draw_screen(bitmap, cliprect);
 	}
 
-	temp = sp_backbuffer; sp_backbuffer = sp_updatebuffer; sp_updatebuffer = temp; // mature backbuffer
+	temp = sp_backbuffer; sp_backbuffer = sp_updatebuffer; sp_updatebuffer = temp; /* mature backbuffer*/
 }

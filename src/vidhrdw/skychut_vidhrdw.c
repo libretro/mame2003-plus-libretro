@@ -29,7 +29,7 @@ WRITE_HANDLER( skychut_colorram_w )
 
 WRITE_HANDLER( skychut_ctrl_w )
 {
-//usrintf_showmessage("%02x",data);
+/*usrintf_showmessage("%02x",data);*/
 
 	/* I have NO IDEA if this is correct or not */
 	bottomline = ~data & 0x20;
@@ -157,7 +157,7 @@ VIDEO_UPDATE( iremm15 )
 			iremm15_drawgfx(tmpbitmap,
 							videoram[offs],
 							Machine->pens[colorram[offs] & 7],
-							Machine->pens[7], // space beam not color 0
+							Machine->pens[7], /* space beam not color 0*/
 							8*sx,8*sy);
 		}
 	}

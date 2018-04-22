@@ -134,9 +134,9 @@ static void suna16_draw_sprites(struct mame_bitmap *bitmap)
 
 		int bank	=	(x >> 12) & 0xf;
 
-		srcpg	=	((y & 0xf000) >> 12) + ((x & 0x0200) >> 5); // src page
-		srcx	=	((y   >> 8) & 0xf) * 2; 					// src col
-		srcy	=	((dim >> 0) & 0xf) * 2; 					// src row
+		srcpg	=	((y & 0xf000) >> 12) + ((x & 0x0200) >> 5); /* src page*/
+		srcx	=	((y   >> 8) & 0xf) * 2; 					/* src col*/
+		srcy	=	((dim >> 0) & 0xf) * 2; 					/* src row*/
 
 		switch ( (dim >> 4) & 0xc )
 		{

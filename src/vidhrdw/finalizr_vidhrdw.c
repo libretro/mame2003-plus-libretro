@@ -167,7 +167,7 @@ VIDEO_UPDATE( finalizr )
 			code = sr[offs] + ((sr[offs+1] & 0x0f) << 8);
 			color = ((sr[offs+1] & 0xf0)>>4);
 
-//			(sr[offs+4] & 0x02) is used, meaning unknown
+/*			(sr[offs+4] & 0x02) is used, meaning unknown*/
 
 			switch (sr[offs+4] & 0x1c)
 			{

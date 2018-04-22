@@ -233,11 +233,11 @@ READ_HANDLER( victory_video_control_r )
 			return result;
 
 		case 4:		/* 5STAT */
-			// D7 = BUSY (9A1) -- microcode
-			// D6 = 5FCIRQ (3B1)
-			// D5 = 5VIRQ
-			// D4 = 5BCIRQ (3B1)
-			// D3 = SL256
+			/* D7 = BUSY (9A1) -- microcode*/
+			/* D6 = 5FCIRQ (3B1)*/
+			/* D5 = 5VIRQ*/
+			/* D4 = 5BCIRQ (3B1)*/
+			/* D3 = SL256*/
 			if (micro.timer_active && timer_timeelapsed(micro.timer) < micro.endtime)
 				result |= 0x80;
 			result |= (~fgcoll & 1) << 6;
@@ -352,13 +352,13 @@ WRITE_HANDLER( victory_video_control_w )
 			break;
 
 		case 10:	/* CONTROL */
-			// D7 = HLMBK
-			// D6 = VLMBK
-			// D5 = BIRQEA
-			// D4 = SEL5060
-			// D3 = SINVERT
-			// D2 = BIR12
-			// D1 = SELOVER
+			/* D7 = HLMBK*/
+			/* D6 = VLMBK*/
+			/* D5 = BIRQEA*/
+			/* D4 = SEL5060*/
+			/* D3 = SINVERT*/
+			/* D2 = BIR12*/
+			/* D1 = SELOVER*/
 			if (LOG_MICROCODE) logerror("%04X:CONTROL write = %02X\n", activecpu_get_previouspc(), data);
 			video_control = data;
 			break;

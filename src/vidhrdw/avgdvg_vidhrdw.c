@@ -41,7 +41,7 @@
 #include "vector.h"
 
 
-//#define VG_DEBUG
+/*#define VG_DEBUG*/
 #ifdef VG_DEBUG
 #define VGLOG(x) logerror x
 #else

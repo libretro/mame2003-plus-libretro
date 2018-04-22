@@ -417,7 +417,7 @@ if (((spriteram16[i + 4]!=0xf800) && (spriteram16[i + 4]!=0xfff6))
 			zoomy = (spriteram16[i + 3] &0x1ff) + 1;
 
 			y -=4;
-	// distant sprites were some 16 pixels too far down //
+	/* distant sprites were some 16 pixels too far down //*/
 			y -=((0x40-zoomy)/4);
 
 	/****** end zoom kludge *******/
@@ -445,11 +445,11 @@ if (((spriteram16[i + 4]!=0xf800) && (spriteram16[i + 4]!=0xfff6))
 					/* not known what controls priority */
 					priority = (wgp_spritemap[(map_index + (i << 1) + 1)] &0x70) >> 4;
 
-					flipx=0;	// no flip xy?
+					flipx=0;	/* no flip xy?*/
 					flipy=0;
 
-					k = xlookup[i];	// assumes no xflip
-					j = ylookup[i];	// assumes no yflip
+					k = xlookup[i];	/* assumes no xflip*/
+					j = ylookup[i];	/* assumes no yflip*/
 
 					curx = x + ((k*zoomx)/2);
 					cury = y + ((j*zoomy)/2);
@@ -477,11 +477,11 @@ if (((spriteram16[i + 4]!=0xf800) && (spriteram16[i + 4]!=0xfff6))
 					/* not known what controls priority */
 					priority = (wgp_spritemap[(map_index + (i << 1) + 1)] &0x70) >> 4;
 
-					flipx=0;	// no flip xy?
+					flipx=0;	/* no flip xy?*/
 					flipy=0;
 
-					k = xlookup[i];	// assumes no xflip
-					j = ylookup[i];	// assumes no yflip
+					k = xlookup[i];	/* assumes no xflip*/
+					j = ylookup[i];	/* assumes no yflip*/
 
 					curx = x + ((k*zoomx)/4);
 					cury = y + ((j*zoomy)/4);

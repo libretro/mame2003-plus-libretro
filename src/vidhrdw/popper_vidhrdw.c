@@ -126,7 +126,7 @@ static void get_popper_p0_tile_info(int tile_index)
 	unsigned int flags = 0;
 	tile_number += popper_gfx_bank << 8;
 
-	//pen 0 only in front if colour set as well
+	/*pen 0 only in front if colour set as well*/
 	if (attr&0x70) flags=TILE_SPLIT((attr & 0x80)>>7);
 
 	SET_TILE_INFO(
@@ -156,7 +156,7 @@ static void get_popper_ol_p0_tile_info(int tile_index)
 	unsigned int flags = 0;
 	tile_number += popper_gfx_bank << 8;
 
-	//pen 0 only in front if colour set as well
+	/*pen 0 only in front if colour set as well*/
 	if (attr&0x70) flags=TILE_SPLIT((attr & 0x80)>>7);
 
 	SET_TILE_INFO(
@@ -188,7 +188,7 @@ VIDEO_START( popper )
 	tilemap_clip = Machine->visible_area;
 
 	state_save_register_int ("video", 0, "flipscreen", &popper_flipscreen);
-//	state_save_register_int ("video", 0, "e002",       &popper_e002);
+/*	state_save_register_int ("video", 0, "e002",       &popper_e002);*/
 	state_save_register_int ("video", 0, "gfx_bank",   &popper_gfx_bank);
 
 	return 0;
@@ -200,18 +200,18 @@ static void popper_draw_sprites(struct mame_bitmap *bitmap,const struct rectangl
 
 	for (offs = 0; offs < popper_spriteram_size-4; offs += 4)
 	{
-		//if y position is in the current strip
+		/*if y position is in the current strip*/
 		if(popper_spriteram[offs+1] && (((popper_spriteram[offs]+(popper_flipscreen?2:0))&0xf0) == (0x0f-offs/0x80)<<4))
 		{
-			//offs     y pos
-			//offs+1   sprite number
-			//offs+2
-			//76543210
-			//x------- flipy
-			//-x------ flipx
-			//--xx---- unused
-			//----xxxx colour
-			//offs+3   x pos
+			/*offs     y pos*/
+			/*offs+1   sprite number*/
+			/*offs+2*/
+			/*76543210*/
+			/*x------- flipy*/
+			/*-x------ flipx*/
+			/*--xx---- unused*/
+			/*----xxxx colour*/
+			/*offs+3   x pos*/
 
 			sx = popper_spriteram[offs+3];
 			sy = 240-popper_spriteram[offs];
@@ -241,11 +241,11 @@ VIDEO_UPDATE( popper )
 	struct rectangle finalclip = tilemap_clip;
 	sect_rect(&finalclip, cliprect);
 
-	//attribram
-	//76543210
-	//x------- draw over sprites
-	//-xxx---- colour for pen 0 (from second prom?)
-	//----xxxx colour for pens 1,2,3
+	/*attribram*/
+	/*76543210*/
+	/*x------- draw over sprites*/
+	/*-xxx---- colour for pen 0 (from second prom?)*/
+	/*----xxxx colour for pens 1,2,3*/
 
 	tilemap_draw( bitmap,cliprect,popper_p123_tilemap,     TILEMAP_BACK,0 );
 	tilemap_draw( bitmap,cliprect,popper_p0_tilemap,       TILEMAP_BACK,0 );

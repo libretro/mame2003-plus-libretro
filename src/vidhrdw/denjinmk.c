@@ -23,9 +23,9 @@ UINT8 grainbow_pri_n;
 /*xxx- --- ---- ---- banking*/
 void denjinmk_setgfxbank(UINT16 data)
 {
-	fore_gfx_bank = (data &0x2000) >> 1;//???
+	fore_gfx_bank = (data &0x2000) >> 1;/*???*/
 	back_gfx_bank = (data &0x4000) >> 2;
-	mid_gfx_bank  = (data &0x8000) >> 3;//???
+	mid_gfx_bank  = (data &0x8000) >> 3;/*???*/
 	
 	tilemap_mark_all_tiles_dirty (background_layer);
 	tilemap_mark_all_tiles_dirty (foreground_layer);
@@ -108,7 +108,7 @@ static void get_fore_tile_info(int tile_index)	/* this is giving bad tiles... */
 	int tile=denjinmk_fore_data[tile_index];
 	int color=(tile>>12)&0xf;
 
-	// denjinmk tile numbers / gfx set wrong, see screen after coin insertion
+	/* denjinmk tile numbers / gfx set wrong, see screen after coin insertion*/
 	tile &= 0xfff;
 
 	SET_TILE_INFO(4,tile,color,0);
@@ -161,7 +161,7 @@ VIDEO_START( denjinmk )
 	tilemap_set_transparent_pen(background_layer,15);
 	tilemap_set_transparent_pen(midground_layer,15);
 	tilemap_set_transparent_pen(foreground_layer,15);
-	tilemap_set_transparent_pen(text_layer,7); //?
+	tilemap_set_transparent_pen(text_layer,7); /*?*/
 	
 	
 	return 0;
@@ -214,27 +214,27 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 
 			if(data & 0x0040)
 			{
-				cur_pri |= 0x4; // definitely seems to be needed by grainbow
+				cur_pri |= 0x4; /* definitely seems to be needed by grainbow*/
 			}
 
-			//
-			// -4 behind bg? (mask sprites)
-			// -32 behind mid
-			// -256 behind tx
-			// 0    above all
+			/**/
+			/* -4 behind bg? (mask sprites)*/
+			/* -32 behind mid*/
+			/* -256 behind tx*/
+			/* 0    above all*/
 
-			// is the low bit REALLY priority?
+			/* is the low bit REALLY priority?*/
 
 			switch (cur_pri)
 			{
-				case 0:	pri_mask = -256; break; // gumdam swamp monster l2
-				case 1:	pri_mask = -256; break; // cupsoc
-				case 2:	pri_mask = -4; break; // masking effect for gundam l2 monster
-				case 3: pri_mask = -4; break; // cupsoc (not sure what..)
-				case 4: pri_mask = -32; break; // gundam level 2/3 player
-				//case 5: pri_mask = 0; break;
-				case 6: pri_mask = 0; break; // insert coin in gundam
-				//case 7: pri_mask = 0; break;
+				case 0:	pri_mask = -256; break; /* gumdam swamp monster l2*/
+				case 1:	pri_mask = -256; break; /* cupsoc*/
+				case 2:	pri_mask = -4; break; /* masking effect for gundam l2 monster*/
+				case 3: pri_mask = -4; break; /* cupsoc (not sure what..)*/
+				case 4: pri_mask = -32; break; /* gundam level 2/3 player*/
+				/*case 5: pri_mask = 0; break;*/
+				case 6: pri_mask = 0; break; /* insert coin in gundam*/
+				/*case 7: pri_mask = 0; break;*/
 
 				default: printf("unhandled pri %d\n",cur_pri); pri_mask=0;
 			}
@@ -246,10 +246,10 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 
 			switch (cur_pri)
 			{
-				case 0:	pri_mask = 0xfffc; break; //?
-				case 1:	pri_mask = 0xfffc; break; //?
-				case 2:	pri_mask = 0xfffc; break; // player sprites in denjinmkire
-				case 3: pri_mask = 0xfffe; break; // stuff that goes behind the playfield (barriers on train level in denjinmkire)
+				case 0:	pri_mask = 0xfffc; break; /*?*/
+				case 1:	pri_mask = 0xfffc; break; /*?*/
+				case 2:	pri_mask = 0xfffc; break; /* player sprites in denjinmkire*/
+				case 3: pri_mask = 0xfffe; break; /* stuff that goes behind the playfield (barriers on train level in denjinmkire)*/
 			}
 
 		}
@@ -262,11 +262,11 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 		{
 			if(data & 0x0040)
 			{
-				sprite |= 0x4000;//tile banking,used in Denjin Makai
+				sprite |= 0x4000;/*tile banking,used in Denjin Makai*/
 			}
 			if(spriteram16[offs+3] & 0x8000)
 			{
-				sprite |= 0x8000;//tile banking?,used in Denjin Makai
+				sprite |= 0x8000;/*tile banking?,used in Denjin Makai*/
 			}
 		}
 
@@ -365,8 +365,8 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 
 VIDEO_UPDATE( denjinmk )
 {
-//  tilemap_set_scrollx( text_layer, 0, 0 );
-//  tilemap_set_scrolly( text_layer, 0, 112 );
+/*  tilemap_set_scrollx( text_layer, 0, 0 );*/
+/*  tilemap_set_scrolly( text_layer, 0, 112 );*/
 	/* Setup the tilemaps */
 	
 	tilemap_set_scrollx( background_layer, 0, denjinmk_scrollram16[0] );
@@ -379,7 +379,7 @@ VIDEO_UPDATE( denjinmk )
 	tilemap_set_scrolly( text_layer, 0,  0/*denjinmk_scrollram16[7]*/ );
 
 	fillbitmap(priority_bitmap,0,cliprect);
-	// matches PCB recording for Denjin Makai, settable thru CRTC?
+	/* matches PCB recording for Denjin Makai, settable thru CRTC?*/
 	fillbitmap(bitmap,0xff,cliprect);
 
 	if (!(denjinmk_layer_disable&0x0001)) tilemap_draw(bitmap,cliprect,background_layer,0,0);
@@ -388,5 +388,5 @@ VIDEO_UPDATE( denjinmk )
 	if (!(denjinmk_layer_disable&0x0008)) tilemap_draw(bitmap,cliprect,text_layer,0,2);
 
 	draw_sprites(bitmap,cliprect);
-//	return 0;
+/*	return 0;*/
 }

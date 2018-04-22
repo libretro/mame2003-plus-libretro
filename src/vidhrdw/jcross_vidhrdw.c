@@ -27,20 +27,20 @@ static void stuff_palette( int source_index, int dest_index, int num_colors )
 		int bit0=0,bit1,bit2,bit3;
 		int red, green, blue;
 
-		bit0 = (color_prom[0x800] >> 2) & 0x01; // ?
+		bit0 = (color_prom[0x800] >> 2) & 0x01; /* ?*/
 		bit1 = (color_prom[0x000] >> 1) & 0x01;
 		bit2 = (color_prom[0x000] >> 2) & 0x01;
 		bit3 = (color_prom[0x000] >> 3) & 0x01;
 		red = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		bit0 = (color_prom[0x800] >> 1) & 0x01; // ?
+		bit0 = (color_prom[0x800] >> 1) & 0x01; /* ?*/
 		bit1 = (color_prom[0x400] >> 2) & 0x01;
 		bit2 = (color_prom[0x400] >> 3) & 0x01;
 		bit3 = (color_prom[0x000] >> 0) & 0x01;
 		green = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		bit0 = (color_prom[0x800] >> 0) & 0x01; // ?
-		bit1 = (color_prom[0x800] >> 3) & 0x01; // ?
+		bit0 = (color_prom[0x800] >> 0) & 0x01; /* ?*/
+		bit1 = (color_prom[0x800] >> 3) & 0x01; /* ?*/
 		bit2 = (color_prom[0x400] >> 0) & 0x01;
 		bit3 = (color_prom[0x400] >> 1) & 0x01;
 		blue = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;

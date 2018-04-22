@@ -342,7 +342,7 @@ if (flipscreen) sx += 32;
 
 		if (flipscreen)
 		{
-			scrollx = (bosco_scrollx +32);//- 3*displacement) + 32;
+			scrollx = (bosco_scrollx +32);/*- 3*displacement) + 32;*/
 			scrolly = (bosco_scrolly + 16) - 32;
 		}
 		else

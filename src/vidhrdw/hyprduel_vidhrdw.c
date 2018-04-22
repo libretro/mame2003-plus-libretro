@@ -128,8 +128,8 @@ static UINT8 *empty_tiles;
 
 #define WIN_NX		(0x40)
 #define WIN_NY		(0x20)
-//#define WIN_NX		(0x40+1)
-//#define WIN_NY		(0x20+1)
+/*#define WIN_NX		(0x40+1)*/
+/*#define WIN_NY		(0x20+1)*/
 
 
 /* 8x8x4 tiles only */
@@ -552,7 +552,7 @@ static void draw_layers(struct mame_bitmap *bitmap, const struct rectangle *clip
 	clip.max_x = 319;
 
 	/* Draw all the layers with priority == pri */
-	for (layer = 2; layer >= 0; layer--)	// tilemap[2] below?
+	for (layer = 2; layer >= 0; layer--)	/* tilemap[2] below?*/
 	{
 		if ( pri == ((layers_pri >> (layer*2)) & 3) )
 		{

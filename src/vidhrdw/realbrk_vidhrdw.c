@@ -50,8 +50,8 @@ WRITE16_HANDLER( realbrk_flipscreen_w )
 
 ***************************************************************************/
 
-static struct tilemap	*tilemap_0,*tilemap_1,	// Backgrounds
-						*tilemap_2;				// Text
+static struct tilemap	*tilemap_0,*tilemap_1,	/* Backgrounds*/
+						*tilemap_2;				/* Text*/
 
 
 /***************************************************************************
@@ -367,5 +367,5 @@ if ( keyboard_pressed(KEYCODE_Z) )
 
 	if (layers_ctrl & 4)	tilemap_draw(bitmap,cliprect,tilemap_2,0,0);
 
-//	usrintf_showmessage("%04x",realbrk_vregs[0x8/2]);
+/*	usrintf_showmessage("%04x",realbrk_vregs[0x8/2]);*/
 }

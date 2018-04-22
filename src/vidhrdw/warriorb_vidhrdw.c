@@ -91,7 +91,7 @@ static void warriorb_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 
 		data2 = spriteram16[offs+2];
 		/* 8,4 also seen in msbyte */
-		priority = (data2 & 0x0100) >> 8; // 1 = low
+		priority = (data2 & 0x0100) >> 8; /* 1 = low*/
 		if (priority != primask) continue;
 		color    = (data2 & 0x7f);
 
@@ -151,7 +151,7 @@ VIDEO_UPDATE( warriorb )
 	layer[2] = 2;
 
 	/* chip 0 does tilemaps on the left, chip 1 does the ones on the right */
-	// draw bottom layer
+	/* draw bottom layer*/
 	nodraw  = TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[0],TILEMAP_IGNORE_TRANSPARENCY,0);	/* left */
 	nodraw |= TC0100SCN_tilemap_draw(bitmap,cliprect,1,layer[0],TILEMAP_IGNORE_TRANSPARENCY,0);	/* right */
 
@@ -159,15 +159,15 @@ VIDEO_UPDATE( warriorb )
 	if (nodraw) fillbitmap(bitmap, get_black_pen(), cliprect);
 
 	/* Sprites can be under/over the layer below text layer */
-	warriorb_draw_sprites(bitmap,cliprect,1,8); // draw sprites with priority 1 which are under the mid layer
+	warriorb_draw_sprites(bitmap,cliprect,1,8); /* draw sprites with priority 1 which are under the mid layer*/
 
-	// draw middle layer
+	/* draw middle layer*/
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[1],0,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,1,layer[1],0,0);
 
-	warriorb_draw_sprites(bitmap,cliprect,0,8); // draw sprites with priority 0 which are over the mid layer
+	warriorb_draw_sprites(bitmap,cliprect,0,8); /* draw sprites with priority 0 which are over the mid layer*/
 
-	// draw top(text) layer
+	/* draw top(text) layer*/
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[2],0,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,1,layer[2],0,0);
 }

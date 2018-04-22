@@ -70,8 +70,8 @@ data8_t suna8_unknown;
 
 /* Functions defined in vidhrdw: */
 
-WRITE_HANDLER( suna8_spriteram_w );			// for debug
-WRITE_HANDLER( suna8_banked_spriteram_w );	// for debug
+WRITE_HANDLER( suna8_spriteram_w );			/* for debug*/
+WRITE_HANDLER( suna8_banked_spriteram_w );	/* for debug*/
 
 VIDEO_START( suna8 );
 VIDEO_UPDATE( suna8 );
@@ -201,7 +201,7 @@ VIDEO_START( suna8_textdim12 )	{ return suna8_vh_start_common(12); }
 void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle *cliprect)
 {
 	int i;
-	int mx = 0;	// multisprite x counter
+	int mx = 0;	/* multisprite x counter*/
 
 	int max_x	=	Machine->drv->screen_width	- 8;
 	int max_y	=	Machine->drv->screen_height - 8;
@@ -265,7 +265,7 @@ void suna8_draw_normal_sprites(struct mame_bitmap *bitmap,const struct rectangle
 				flipx = 0;
 				flipy = bank & 0x10;
 				srcy  = (((bank & 0x80)>>4) + (bank & 0x04) + ((~bank >> 4)&2)) * 2;
-				gfxbank = bank & 0x3;	// ??? brickzn: 06,a6,a2,b2->6. starfigh: 01->01,4->0
+				gfxbank = bank & 0x3;	/* ??? brickzn: 06,a6,a2,b2->6. starfigh: 01->01,4->0*/
 				srcpg = (code >> 4) & 7;
 				break;
 			case 0x00:

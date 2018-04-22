@@ -122,7 +122,7 @@ static void groundfx_draw_sprites_16x16(struct mame_bitmap *bitmap,const struct 
 		zoomy =    (data & 0x0001fc00) >> 10;
 		y =        (data & 0x000003ff);
 
-//		color |= (0x100 + (priority << 6));		/* priority bits select color bank */
+/*		color |= (0x100 + (priority << 6));		// priority bits select color bank */
 		color /= 2;		/* as sprites are 5bpp */
 		flipy = !flipy;
 		y = (-y &0x3ff);
@@ -142,8 +142,8 @@ static void groundfx_draw_sprites_16x16(struct mame_bitmap *bitmap,const struct 
 		x -= x_offs;
 
 		bad_chunks = 0;
-		dimension = ((dblsize*2) + 2);	// 2 or 4
-		total_chunks = ((dblsize*3) + 1) << 2;	// 4 or 16
+		dimension = ((dblsize*2) + 2);	/* 2 or 4*/
+		total_chunks = ((dblsize*3) + 1) << 2;	/* 4 or 16*/
 		map_offset = tilenum << 2;
 
 		{
@@ -273,7 +273,7 @@ VIDEO_UPDATE( groundfx )
 		TC0480SCP_tilemap_draw(bitmap,cliprect,layer[1],0,2);
 		TC0480SCP_tilemap_draw(bitmap,cliprect,layer[2],0,4);
 		TC0480SCP_tilemap_draw(bitmap,cliprect,layer[3],0,8);
-//		TC0100SCN_tilemap_draw(bitmap,cliprect,0,pivlayer[2],0,0);
+/*		TC0100SCN_tilemap_draw(bitmap,cliprect,0,pivlayer[2],0,0);*/
 		if (TC0480SCP_long_r(0x20/4,0)!=0x240866) /* Stupid hack for start of race */
 			TC0480SCP_tilemap_draw(bitmap,&hack_cliprect,layer[0],0,0);
 		groundfx_draw_sprites_16x16(bitmap,cliprect,1,44,-574);

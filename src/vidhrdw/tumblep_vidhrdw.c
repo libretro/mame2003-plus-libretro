@@ -114,7 +114,7 @@ static void jumpkids_drawsprites(struct mame_bitmap *bitmap,const struct rectang
 		y = 240 - y;
         x = 304 - x;
 
-	//	sprite &= ~multi; /* Todo:  I bet TumblePop bootleg doesn't do this either */
+	/*	sprite &= ~multi; // Todo:  I bet TumblePop bootleg doesn't do this either */
 		if (fy)
 			inc = -1;
 		else
@@ -176,7 +176,7 @@ static void fncywld_drawsprites(struct mame_bitmap *bitmap,const struct rectangl
 		y = 240 - y;
         x = 304 - x;
 
-	//	sprite &= ~multi; /* Todo:  I bet TumblePop bootleg doesn't do this either */
+	/*	sprite &= ~multi; // Todo:  I bet TumblePop bootleg doesn't do this either */
 		if (fy)
 			inc = -1;
 		else

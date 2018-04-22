@@ -358,7 +358,7 @@ WRITE16_HANDLER( nmk_scroll_3_w )
 
 	COMBINE_DATA(&gunnail_scrollram[offset]);
 
-//	usrintf_showmessage( "scroll %04x, %04x", gunnail_scrollram[0], gunnail_scrollram[0x100]);
+/*	usrintf_showmessage( "scroll %04x, %04x", gunnail_scrollram[0], gunnail_scrollram[0x100]);*/
 
 	tilemap_set_scrollx(bg_tilemap,0,gunnail_scrollram[0]-videoshift);
 	tilemap_set_scrolly(bg_tilemap,0,gunnail_scrollram[0x100]);
@@ -429,7 +429,7 @@ WRITE16_HANDLER( gunnail_scrolly_w )
 
 extern int is_blkheart;
 
-// manybloc uses extra flip bits on the sprites, but these break other games
+/* manybloc uses extra flip bits on the sprites, but these break other games*/
 
 static void nmk16_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int priority)
 {

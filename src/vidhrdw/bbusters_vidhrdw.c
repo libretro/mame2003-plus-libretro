@@ -287,7 +287,7 @@ VIDEO_UPDATE( bbuster )
 	tilemap_set_scrolly( pf2_tilemap,0, bbuster_pf2_scroll_data[1] );
 
 	tilemap_draw(bitmap,cliprect,pf2_tilemap,0,0);
-//	draw_sprites(bitmap,buffered_spriteram16_2,2,0x8,0x8);
+/*	draw_sprites(bitmap,buffered_spriteram16_2,2,0x8,0x8);*/
 	tilemap_draw(bitmap,cliprect,pf1_tilemap,0,0);
 	draw_sprites(bitmap,buffered_spriteram16_2,2,0,0);
 	draw_sprites(bitmap,buffered_spriteram16,1,0,0);

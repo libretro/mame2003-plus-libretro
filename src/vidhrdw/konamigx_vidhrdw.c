@@ -50,7 +50,7 @@ static void get_gx_psac1a_tile_info(int tile_index)
 
 	tileno = map[1]<<8 | map[0];
 
-//	if (tileno) printf("1a map: %x\n", tileno);
+/*	if (tileno) printf("1a map: %x\n", tileno);*/
 
 	colour = (psac_colorbase << 4);
 
@@ -68,7 +68,7 @@ static void get_gx_psac1b_tile_info(int tile_index)
 
 	tileno = map[5]<<8 | map[4];
 
-//	if (tileno) printf("1b map: %x\n", tileno);
+/*	if (tileno) printf("1b map: %x\n", tileno);*/
 
 	colour = (psac_colorbase << 4);
 
@@ -156,11 +156,11 @@ static int _gxcommoninitnosprites(void)
 	gx_invertlayersBC = 0;
 	gx_tilemode = 0;
 
-	// Documented relative offsets of non-flipped games are (-2, 0, 2, 3),(0, 0, 0, 0).
-	// (+ve values move layers to the right and -ve values move layers to the left)
-	// In most cases only a constant is needed to add to the X offsets to yield correct
-	// displacement. This should be done by the CCU but the CRT timings have not been
-	// figured out.
+	/* Documented relative offsets of non-flipped games are (-2, 0, 2, 3),(0, 0, 0, 0).*/
+	/* (+ve values move layers to the right and -ve values move layers to the left)*/
+	/* In most cases only a constant is needed to add to the X offsets to yield correct*/
+	/* displacement. This should be done by the CCU but the CRT timings have not been*/
+	/* figured out.*/
 	K056832_set_LayerOffset(0, -2, 0);
 	K056832_set_LayerOffset(1,  0, 0);
 	K056832_set_LayerOffset(2,  2, 0);
@@ -171,7 +171,7 @@ static int _gxcommoninitnosprites(void)
 
 static int _gxcommoninit(void)
 {
-	// (+ve values move objects to the right and -ve values move objects to the left)
+	/* (+ve values move objects to the right and -ve values move objects to the left)*/
 	if (K055673_vh_start(REGION_GFX2, K055673_LAYOUT_GX, -26, -23, konamigx_type2_sprite_callback))
 	{
 		return 1;
@@ -284,7 +284,7 @@ VIDEO_START(le2)
 	if (_gxcommoninitnosprites()) return 1;
 
 	gx_invertlayersBC = 1;
-	konamigx_mixer_primode(-1); // swapped layer B and C priorities?
+	konamigx_mixer_primode(-1); /* swapped layer B and C priorities?*/
 
 	return 0;
 }
@@ -438,7 +438,7 @@ VIDEO_UPDATE(konamigx)
 
 	if (gx_tilemode == 0)
 	{
-		// driver approximates tile update in mode 0 for speed
+		/* driver approximates tile update in mode 0 for speed*/
 		unchained = K056832_get_LayerAssociation();
 		for (i=0; i<4; i++)
 		{
@@ -456,10 +456,10 @@ VIDEO_UPDATE(konamigx)
 	}
 	else
 	{
-		// K056832 does all the tracking in mode 1 for accuracy (Twinbee needs this)
+		/* K056832 does all the tracking in mode 1 for accuracy (Twinbee needs this)*/
 	}
 
-	// sub2 is PSAC colorbase on GX
+	/* sub2 is PSAC colorbase on GX*/
 	if (gx_rozenable)
 	{
 		last_psac_colorbase = psac_colorbase;
@@ -479,29 +479,29 @@ VIDEO_UPDATE(konamigx)
 
 	if (konamigx_cfgport >= 0)
 	{
-		// background detail tuning
+		/* background detail tuning*/
 		switch (readinputport(konamigx_cfgport))
 		{
-			// Low : disable linescroll and all blend effects
+			/* Low : disable linescroll and all blend effects*/
 			case 0 : blendmode = 0x0000f555; break;
 
-			// Med : only disable linescroll which is the most costly
+			/* Med : only disable linescroll which is the most costly*/
 			case 1 : blendmode = 0x0000f000; break;
 
-			// High: enable all effects
+			/* High: enable all effects*/
 			default: blendmode = 0;
 		}
 
-		// character detail tuning
+		/* character detail tuning*/
 		switch (readinputport(konamigx_cfgport+1))
 		{
-			// Low : disable shadows and turn off depth buffers
+			/* Low : disable shadows and turn off depth buffers*/
 			case 0 : blendmode |= GXMIX_NOSHADOW + GXMIX_NOZBUF; break;
 
-			// Med : only disable shadows
+			/* Med : only disable shadows*/
 			case 1 : blendmode |= GXMIX_NOSHADOW; break;
 
-			// High: enable all shadows and depth buffers
+			/* High: enable all shadows and depth buffers*/
 			default: blendmode |= 0;
 		}
 	}
@@ -550,7 +550,7 @@ WRITE32_HANDLER( konamigx_palette2_w )
 	palette_set_color(offset,r,g,b);
 }
 
-// main monitor for type 3
+/* main monitor for type 3*/
 WRITE32_HANDLER( konamigx_555_palette_w )
 {
 	COMBINE_DATA(&paletteram32[offset]);
@@ -562,7 +562,7 @@ WRITE32_HANDLER( konamigx_555_palette_w )
 		paletteram16_xRRRRRGGGGGBBBBB_word_w(offset*2+1, data, mem_mask);
 }
 
-// sub monitor for type 3
+/* sub monitor for type 3*/
 WRITE32_HANDLER( konamigx_555_palette2_w )
 {
 	COMBINE_DATA(&gx_subpaletteram32[offset]);
@@ -590,7 +590,7 @@ WRITE32_HANDLER( konamigx_tilebank_w )
 		gx_tilebanks[offset*4+3] = data&0xff;
 }
 
-// type 1 RAM-based PSAC tilemap
+/* type 1 RAM-based PSAC tilemap*/
 WRITE32_HANDLER(konamigx_t1_psacmap_w)
 {
 	COMBINE_DATA(&gx_psacram[offset]);
@@ -598,7 +598,7 @@ WRITE32_HANDLER(konamigx_t1_psacmap_w)
 	tilemap_mark_tile_dirty(gx_psac_tilemap2, offset/2);
 }
 
-// type 4 RAM-based PSAC tilemap
+/* type 4 RAM-based PSAC tilemap*/
 WRITE32_HANDLER( konamigx_t4_psacmap_w )
 {
 	COMBINE_DATA(&gx_psacram[offset]);

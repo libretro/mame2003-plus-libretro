@@ -184,8 +184,8 @@ static UINT8 *empty_tiles;
 
 #define WIN_NX		(0x40)
 #define WIN_NY		(0x20)
-//#define WIN_NX		(0x40+1)
-//#define WIN_NY		(0x20+1)
+/*#define WIN_NX		(0x40+1)*/
+/*#define WIN_NY		(0x20+1)*/
 
 
 /* 8x8x4 tiles only */
@@ -736,7 +736,7 @@ void metro_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *clip
 ***************************************************************************/
 
 void metro_tilemap_draw	(struct mame_bitmap *bitmap, const struct rectangle *cliprect, struct tilemap *tmap, UINT32 flags, UINT32 priority,
-						 int sx, int sy, int wx, int wy)	// scroll & window values
+						 int sx, int sy, int wx, int wy)	/* scroll & window values*/
 {
 #if 1
 		tilemap_set_scrollx(tmap, 0, sx - wx + (wx & 7));
@@ -746,11 +746,11 @@ void metro_tilemap_draw	(struct mame_bitmap *bitmap, const struct rectangle *cli
 	int x,y,i;
 
 	/* sub tile placement */
-//	sx		=	sx - (wx & ~7) + (wx & 7);
+/*	sx		=	sx - (wx & ~7) + (wx & 7);*/
 	sx		=	sx - wx;
 	sx		=	( (sx & 0x7fff) - (sx & 0x8000) ) % ((WIN_NX-1)*8);
 
-//	sy		=	sy - (wy & ~7) + (wy & 7);
+/*	sy		=	sy - (wy & ~7) + (wy & 7);*/
 	sy		=	sy - wy;
 	sy		=	( (sy & 0x7fff) - (sy & 0x8000) ) % ((WIN_NY-1)*8);
 
@@ -801,7 +801,7 @@ static void draw_layers(struct mame_bitmap *bitmap, const struct rectangle *clip
 	int layer;
 
 	/* Draw all the layers with priority == pri */
-	for (layer = 2; layer >= 0; layer--)	// tilemap[2] below?
+	for (layer = 2; layer >= 0; layer--)	/* tilemap[2] below?*/
 	{
 		if ( pri == ((layers_pri >> (layer*2)) & 3) )
 		{
@@ -809,7 +809,7 @@ static void draw_layers(struct mame_bitmap *bitmap, const struct rectangle *clip
 			data16_t sy = metro_scroll[layer * 2 + 0];	data16_t sx = metro_scroll[layer * 2 + 1];
 			data16_t wy = metro_window[layer * 2 + 0];	data16_t wx = metro_window[layer * 2 + 1];
 
-			if (layers_ctrl & (1<<layer))	// for debug
+			if (layers_ctrl & (1<<layer))	/* for debug*/
 			{
 				/* Only *one* of tilemap_16x16 & tilemap is enabled at any given time! */
 				metro_tilemap_draw(bitmap,cliprect,tilemap[layer], 0, 0, sx, sy, wx, wy);

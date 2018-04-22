@@ -19,15 +19,15 @@ static struct {
 } thief_coprocessor;
 
 enum {
-	IMAGE_ADDR_LO,		//0xe000
-	IMAGE_ADDR_HI,		//0xe001
-	SCREEN_XPOS,		//0xe002
-	SCREEN_YPOS,		//0xe003
-	BLIT_WIDTH,			//0xe004
-	BLIT_HEIGHT,		//0xe005
-	GFX_PORT,			//0xe006
-	BARL_PORT,			//0xe007
-	BLIT_ATTRIBUTES		//0xe008
+	IMAGE_ADDR_LO,		/*0xe000*/
+	IMAGE_ADDR_HI,		/*0xe001*/
+	SCREEN_XPOS,		/*0xe002*/
+	SCREEN_YPOS,		/*0xe003*/
+	BLIT_WIDTH,			/*0xe004*/
+	BLIT_HEIGHT,		/*0xe005*/
+	GFX_PORT,			/*0xe006*/
+	BARL_PORT,			/*0xe007*/
+	BLIT_ATTRIBUTES		/*0xe008*/
 };
 
 /***************************************************************************/
@@ -295,10 +295,10 @@ READ_HANDLER( thief_coprocessor_r ){
 			/* return bitmask for addressed pixel */
 			int dx = thief_coprocessor.param[SCREEN_XPOS]&0x7;
 			if( thief_coprocessor.param[BLIT_ATTRIBUTES]&0x01 ){
-				return 0x01<<dx; // flipx
+				return 0x01<<dx; /* flipx*/
 			}
 			else {
-				return 0x80>>dx; // no flip
+				return 0x80>>dx; /* no flip*/
 			}
 		}
 		break;

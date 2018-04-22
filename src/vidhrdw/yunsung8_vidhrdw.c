@@ -70,7 +70,7 @@ READ_HANDLER( yunsung8_videoram_r )
 
 WRITE_HANDLER( yunsung8_videoram_w )
 {
-	if (offset < 0x0800)		// c000-c7ff	Banked Palette RAM
+	if (offset < 0x0800)		/* c000-c7ff	Banked Palette RAM*/
 	{
 		int bank = yunsung8_videobank & 2;
 		unsigned char *RAM;
@@ -94,8 +94,8 @@ WRITE_HANDLER( yunsung8_videoram_w )
 		int tile;
 		int bank = yunsung8_videobank & 1;
 
-		if (offset < 0x1000)	tile = (offset-0x0800);		// c800-cfff: Banked Color RAM
-		else				 	tile = (offset-0x1000)/2;	// d000-dfff: Banked Tiles RAM
+		if (offset < 0x1000)	tile = (offset-0x0800);		/* c800-cfff: Banked Color RAM*/
+		else				 	tile = (offset-0x1000)/2;	/* d000-dfff: Banked Tiles RAM*/
 
 		if (bank)	{	yunsung8_videoram_0[offset] = data;
 						tilemap_mark_tile_dirty(tilemap_0, tile);	}

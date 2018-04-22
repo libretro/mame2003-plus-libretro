@@ -395,7 +395,7 @@ VIDEO_UPDATE( wc90 )
 	tilemap_set_scrollx(tx_tilemap,0,wc90_scroll0xlo[0] + 256 * wc90_scroll0xhi[0]);
 	tilemap_set_scrolly(tx_tilemap,0,wc90_scroll0ylo[0] + 256 * wc90_scroll0yhi[0]);
 
-//	draw_sprites( bitmap,cliprect, 3 );
+/*	draw_sprites( bitmap,cliprect, 3 );*/
 	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
 	draw_sprites( bitmap,cliprect, 2 );
 	tilemap_draw(bitmap,cliprect,fg_tilemap,0,0);

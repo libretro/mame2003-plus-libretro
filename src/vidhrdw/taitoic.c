@@ -1367,7 +1367,7 @@ static void topspeed_custom_draw(struct mame_bitmap *bitmap,const struct rectang
 		sx =       PC080SN_bgscrollx[chip][layer] + 16 - PC080SN_xoffs;
 		y_index =  PC080SN_bgscrolly[chip][layer] + min_y - PC080SN_yoffs;
 	}
-	else	// never used
+	else	/* never used*/
 	{
 		sx = 0;
 		y_index = 0;
@@ -1498,12 +1498,12 @@ int PC090OJ_vh_start(int gfxnum,int x_offset,int y_offset,int use_buffer)
 	state_save_register_UINT16("PC090OJb", 0, "memory", PC090OJ_ram_buffered, PC090OJ_RAM_SIZE/2);
 	state_save_register_UINT16("PC090OJc", 0, "register", &PC090OJ_ctrl, 1);
 
-//	state_save_register_func_postload(PC090OJ_restore);
+/*	state_save_register_func_postload(PC090OJ_restore);*/
 
 	return 0;
 }
 
-READ16_HANDLER( PC090OJ_word_0_r )	// in case we find a game using 2...
+READ16_HANDLER( PC090OJ_word_0_r )	/* in case we find a game using 2...*/
 {
 	return PC090OJ_ram[offset];
 }
@@ -1527,7 +1527,7 @@ static void PC090OJ_word_w(offs_t offset,data16_t data,UINT32 mem_mask)
 	}
 }
 
-WRITE16_HANDLER( PC090OJ_word_0_w )	// in case we find a game using 2...
+WRITE16_HANDLER( PC090OJ_word_0_w )	/* in case we find a game using 2...*/
 {
 	PC090OJ_word_w(offset,data,mem_mask);
 }
@@ -1724,13 +1724,13 @@ static struct GfxLayout TC0080VCO_charlayout =
 	8, 8,	/* 8x8 pixels */
 	256,	/* 256 chars */
 
-// can't be 4bpp as it becomes opaque in Ainferno...
-//	4,		/* 4 bits per pixel */
-//#ifdef MSB_FIRST
-//	{ 0x10000*8, 0x10000*8 + 8, 0, 8 },
-//#else
-//	{ 0x10000*8 + 8, 0x10000*8, 8, 0 },
-//#endif
+/* can't be 4bpp as it becomes opaque in Ainferno...*/
+/*	4,		// 4 bits per pixel */
+/*#ifdef MSB_FIRST*/
+/*	{ 0x10000*8, 0x10000*8 + 8, 0, 8 },*/
+/*#else*/
+/*	{ 0x10000*8 + 8, 0x10000*8, 8, 0 },*/
+/*#endif*/
 
 	3,		/* 3 bits per pixel */
 #ifdef MSB_FIRST
@@ -1850,7 +1850,7 @@ int TC0080VCO_vh_start(int gfxnum,int has_fg0,int bg_xoffs,int bg_yoffs,int bg_f
 
 		/* set the color information */
 		Machine->gfx[gfx_index]->colortable = Machine->remapped_colortable;
-		Machine->gfx[gfx_index]->total_colors = 64;	// is this correct ?
+		Machine->gfx[gfx_index]->total_colors = 64;	/* is this correct ?*/
 		TC0080VCO_tx_gfx = gfx_index;
 
 		tilemap_set_scrolldx(TC0080VCO_tilemap[2],0,0);
@@ -1859,7 +1859,7 @@ int TC0080VCO_vh_start(int gfxnum,int has_fg0,int bg_xoffs,int bg_yoffs,int bg_f
 		tilemap_set_transparent_pen( TC0080VCO_tilemap[2],0 );
 	}
 
-	state_save_register_func_postload(TC0080VCO_dirty_tilemaps);	// unnecessary ?
+	state_save_register_func_postload(TC0080VCO_dirty_tilemaps);	/* unnecessary ?*/
 	state_save_register_func_postload(TC0080VCO_restore_scroll);
 
 	/* bg0 tilemap scrollable per pixel row */
@@ -2179,18 +2179,18 @@ static void TC0080VCO_bg0_tilemap_draw(struct mame_bitmap *bitmap,const struct r
 			}
 /***********/
 
-//			while (x_index<x_max)
-//			{
-//				*dst16++ = src16[(x_index >> 16) &width_mask];
-//				x_index += x_step;
-//			}
-//
-//				if ((rot &ORIENTATION_FLIP_X)!=0)
-//					pdraw_scanline16(bitmap,512-(screen_width/2),y,screen_width,
-//						scanline,0,0,rot,priority);
-//				else
-//					pdraw_scanline16(bitmap,0,y,screen_width,
-//						scanline,0,0,rot,priority);
+/*			while (x_index<x_max)*/
+/*			{*/
+/*				*dst16++ = src16[(x_index >> 16) &width_mask];*/
+/*				x_index += x_step;*/
+/*			}*/
+/**/
+/*				if ((rot &ORIENTATION_FLIP_X)!=0)*/
+/*					pdraw_scanline16(bitmap,512-(screen_width/2),y,screen_width,*/
+/*						scanline,0,0,rot,priority);*/
+/*				else*/
+/*					pdraw_scanline16(bitmap,0,y,screen_width,*/
+/*						scanline,0,0,rot,priority);*/
 
 /*** NEW ***/
 			if (flags & TILEMAP_IGNORE_TRANSPARENCY)
@@ -2726,7 +2726,7 @@ int TC0100SCN_vh_start(int chips,int gfxnum,int x_offset,int y_offset,int flip_x
 
 		state_save_register_func_postload(TC0100SCN_layer_ptr[i]);
 		state_save_register_func_postload(TC0100SCN_dirty_c[i]);
-		state_save_register_func_postload(TC0100SCN_dirty_t[i]);	// unnecessary ?
+		state_save_register_func_postload(TC0100SCN_dirty_t[i]);	/* unnecessary ?*/
 		state_save_register_func_postload(TC0100SCN_restore_scrl[i]);
 
 		/* find first empty slot to decode gfx */
@@ -2823,8 +2823,8 @@ int TC0100SCN_vh_start(int chips,int gfxnum,int x_offset,int y_offset,int flip_x
 	if (Machine->gfx[gfxnum]->color_granularity == 0x40)	/* Undrfire */
 		TC0100SCN_tx_col_mult = 4;
 
-//logerror("TC0100SCN bg gfx granularity %04x: multiplier %04x\n",
-//Machine->gfx[gfxnum]->color_granularity,TC0100SCN_tx_col_mult);
+/*logerror("TC0100SCN bg gfx granularity %04x: multiplier %04x\n",*/
+/*Machine->gfx[gfxnum]->color_granularity,TC0100SCN_tx_col_mult);*/
 
 	TC0100SCN_set_colbanks(0,0,0);	/* standard values, only Wgp changes them */
 
@@ -3418,37 +3418,37 @@ void TC0480SCP_set_layer_ptrs(void)
 {
 	if (!TC0480SCP_dblwidth)
 	{
-		TC0480SCP_bg_ram[0]	  = TC0480SCP_ram + 0x0000; //0000
-		TC0480SCP_bg_ram[1]	  = TC0480SCP_ram + 0x0800; //1000
-		TC0480SCP_bg_ram[2]	  = TC0480SCP_ram + 0x1000; //2000
-		TC0480SCP_bg_ram[3]	  = TC0480SCP_ram + 0x1800; //3000
-		TC0480SCP_bgscroll_ram[0] = TC0480SCP_ram + 0x2000; //4000
-		TC0480SCP_bgscroll_ram[1] = TC0480SCP_ram + 0x2200; //4400
-		TC0480SCP_bgscroll_ram[2] = TC0480SCP_ram + 0x2400; //4800
-		TC0480SCP_bgscroll_ram[3] = TC0480SCP_ram + 0x2600; //4c00
-		TC0480SCP_rowzoom_ram[2]  = TC0480SCP_ram + 0x3000; //6000
-		TC0480SCP_rowzoom_ram[3]  = TC0480SCP_ram + 0x3200; //6400
-		TC0480SCP_bgcolumn_ram[2] = TC0480SCP_ram + 0x3400; //6800
-		TC0480SCP_bgcolumn_ram[3] = TC0480SCP_ram + 0x3600; //6c00
-		TC0480SCP_tx_ram		  = TC0480SCP_ram + 0x6000; //c000
-		TC0480SCP_char_ram	  = TC0480SCP_ram + 0x7000; //e000
+		TC0480SCP_bg_ram[0]	  = TC0480SCP_ram + 0x0000; /*0000*/
+		TC0480SCP_bg_ram[1]	  = TC0480SCP_ram + 0x0800; /*1000*/
+		TC0480SCP_bg_ram[2]	  = TC0480SCP_ram + 0x1000; /*2000*/
+		TC0480SCP_bg_ram[3]	  = TC0480SCP_ram + 0x1800; /*3000*/
+		TC0480SCP_bgscroll_ram[0] = TC0480SCP_ram + 0x2000; /*4000*/
+		TC0480SCP_bgscroll_ram[1] = TC0480SCP_ram + 0x2200; /*4400*/
+		TC0480SCP_bgscroll_ram[2] = TC0480SCP_ram + 0x2400; /*4800*/
+		TC0480SCP_bgscroll_ram[3] = TC0480SCP_ram + 0x2600; /*4c00*/
+		TC0480SCP_rowzoom_ram[2]  = TC0480SCP_ram + 0x3000; /*6000*/
+		TC0480SCP_rowzoom_ram[3]  = TC0480SCP_ram + 0x3200; /*6400*/
+		TC0480SCP_bgcolumn_ram[2] = TC0480SCP_ram + 0x3400; /*6800*/
+		TC0480SCP_bgcolumn_ram[3] = TC0480SCP_ram + 0x3600; /*6c00*/
+		TC0480SCP_tx_ram		  = TC0480SCP_ram + 0x6000; /*c000*/
+		TC0480SCP_char_ram	  = TC0480SCP_ram + 0x7000; /*e000*/
 	}
 	else
 	{
-		TC0480SCP_bg_ram[0]	  = TC0480SCP_ram + 0x0000; //0000
-		TC0480SCP_bg_ram[1]	  = TC0480SCP_ram + 0x1000; //2000
-		TC0480SCP_bg_ram[2]	  = TC0480SCP_ram + 0x2000; //4000
-		TC0480SCP_bg_ram[3]	  = TC0480SCP_ram + 0x3000; //6000
-		TC0480SCP_bgscroll_ram[0] = TC0480SCP_ram + 0x4000; //8000
-		TC0480SCP_bgscroll_ram[1] = TC0480SCP_ram + 0x4200; //8400
-		TC0480SCP_bgscroll_ram[2] = TC0480SCP_ram + 0x4400; //8800
-		TC0480SCP_bgscroll_ram[3] = TC0480SCP_ram + 0x4600; //8c00
-		TC0480SCP_rowzoom_ram[2]  = TC0480SCP_ram + 0x5000; //a000
-		TC0480SCP_rowzoom_ram[3]  = TC0480SCP_ram + 0x5200; //a400
-		TC0480SCP_bgcolumn_ram[2] = TC0480SCP_ram + 0x5400; //a800
-		TC0480SCP_bgcolumn_ram[3] = TC0480SCP_ram + 0x5600; //ac00
-		TC0480SCP_tx_ram		  = TC0480SCP_ram + 0x6000; //c000
-		TC0480SCP_char_ram	  = TC0480SCP_ram + 0x7000; //e000
+		TC0480SCP_bg_ram[0]	  = TC0480SCP_ram + 0x0000; /*0000*/
+		TC0480SCP_bg_ram[1]	  = TC0480SCP_ram + 0x1000; /*2000*/
+		TC0480SCP_bg_ram[2]	  = TC0480SCP_ram + 0x2000; /*4000*/
+		TC0480SCP_bg_ram[3]	  = TC0480SCP_ram + 0x3000; /*6000*/
+		TC0480SCP_bgscroll_ram[0] = TC0480SCP_ram + 0x4000; /*8000*/
+		TC0480SCP_bgscroll_ram[1] = TC0480SCP_ram + 0x4200; /*8400*/
+		TC0480SCP_bgscroll_ram[2] = TC0480SCP_ram + 0x4400; /*8800*/
+		TC0480SCP_bgscroll_ram[3] = TC0480SCP_ram + 0x4600; /*8c00*/
+		TC0480SCP_rowzoom_ram[2]  = TC0480SCP_ram + 0x5000; /*a000*/
+		TC0480SCP_rowzoom_ram[3]  = TC0480SCP_ram + 0x5200; /*a400*/
+		TC0480SCP_bgcolumn_ram[2] = TC0480SCP_ram + 0x5400; /*a800*/
+		TC0480SCP_bgcolumn_ram[3] = TC0480SCP_ram + 0x5600; /*ac00*/
+		TC0480SCP_tx_ram		  = TC0480SCP_ram + 0x6000; /*c000*/
+		TC0480SCP_char_ram	  = TC0480SCP_ram + 0x7000; /*e000*/
 	}
 }
 
@@ -3577,7 +3577,7 @@ int TC0480SCP_vh_start(int gfxnum,int pixels,int x_offset,int y_offset,int text_
 		state_save_register_int   ("TC0480SCPc", 0, "registers", &TC0480SCP_dblwidth);
 		state_save_register_func_postload(TC0480SCP_set_layer_ptrs);
 		state_save_register_func_postload(TC0480SCP_dirty_chars);
-		state_save_register_func_postload(TC0480SCP_dirty_tilemaps);	// unnecessary ?
+		state_save_register_func_postload(TC0480SCP_dirty_tilemaps);	/* unnecessary ?*/
 		state_save_register_func_postload(TC0480SCP_restore_scroll);
 
 		/* find first empty slot to decode gfx */
@@ -4016,7 +4016,7 @@ static void TC0480SCP_bg01_draw(struct mame_bitmap *bitmap,const struct rectangl
 		int rot=Machine->orientation;
 		int machine_flip = 0;	/* for  ROT 180 ? */
 
-		UINT16 screen_width = 512; //cliprect->max_x - cliprect->min_x + 1;
+		UINT16 screen_width = 512; /*cliprect->max_x - cliprect->min_x + 1;*/
 		UINT16 min_y = cliprect->min_y;
 		UINT16 max_y = cliprect->max_y;
 
@@ -4168,7 +4168,7 @@ static void TC0480SCP_bg23_draw(struct mame_bitmap *bitmap,const struct rectangl
 	int flipscreen = TC0480SCP_pri_reg & 0x40;
 	int machine_flip = 0;	/* for  ROT 180 ? */
 
-	UINT16 screen_width = 512; //cliprect->max_x - cliprect->min_x + 1;
+	UINT16 screen_width = 512; /*cliprect->max_x - cliprect->min_x + 1;*/
 	UINT16 min_y = cliprect->min_y;
 	UINT16 max_y = cliprect->max_y;
 
@@ -4883,18 +4883,18 @@ void TC0150ROD_draw(struct mame_bitmap *bitmap,const struct rectangle *cliprect,
 
 		road_center = 0x5ff - ((-xoffset + x_offs) &0x7ff);
 
-// ChaseHQ glitches on right when road rejoins:
-// de7, de8 causes problems => 5e7/e8
-// 5ff - (a7 - 5e7)
-// 5ff - 2c0 = 33f / 340 which is not quite > screenwidth + 1024/2: so we subtract 2 more, fixed
+/* ChaseHQ glitches on right when road rejoins:*/
+/* de7, de8 causes problems => 5e7/e8*/
+/* 5ff - (a7 - 5e7)*/
+/* 5ff - 2c0 = 33f / 340 which is not quite > screenwidth + 1024/2: so we subtract 2 more, fixed*/
 
 
-// ChaseHQ glitches on right when road rejoins:
-// 0a6 and lower => 0x5ff 5fe etc.
-// 35c => 575 right road edge wraps back onto other side of screen
-// 5ff-54a     thru    5ff-331
-// b6          thru    2ce
-// 2a6 thru 0 thru 5a7 ??
+/* ChaseHQ glitches on right when road rejoins:*/
+/* 0a6 and lower => 0x5ff 5fe etc.*/
+/* 35c => 575 right road edge wraps back onto other side of screen*/
+/* 5ff-54a     thru    5ff-331*/
+/* b6          thru    2ce*/
+/* 2a6 thru 0 thru 5a7 ??*/
 
 		left_edge = road_center - (roadb_clipl &0x3ff);		/* start pixel for left edge */
 		right_edge = road_center + 1 + (roadb_clipr &0x3ff);	/* start pixel for right edge */
@@ -5005,7 +5005,7 @@ void TC0150ROD_draw(struct mame_bitmap *bitmap,const struct rectangle *cliprect,
 
 				roadb = roadb_line + screen_width - 1 - left_edge;
 
-				if (draw_top_road_line)		// rename to draw_roadb_line !?
+				if (draw_top_road_line)		/* rename to draw_roadb_line !?*/
 				{
 					for (i=left_edge; i>=0; i--)
 					{
@@ -5143,7 +5143,7 @@ void TC0150ROD_draw(struct mame_bitmap *bitmap,const struct rectangle *cliprect,
 	while (y <= max_y);
 
 #if 0
-	if (twin_road)	// I don't know what this means, actually...
+	if (twin_road)	/* I don't know what this means, actually...*/
 	{
 		char buf2[80];
 		sprintf(buf2,"Road twinned for %04x lines",twin_road);
@@ -5563,8 +5563,8 @@ WRITE_HANDLER( TC0220IOC_w )
 			coin_counter_w(0,data & 0x04);
 			coin_counter_w(1,data & 0x08);
 
-//if (data &0xf0)
-//logerror("PC %06x: warning - write %02x to TC0220IOC address %02x\n",activecpu_get_pc(),data,offset);
+/*if (data &0xf0)*/
+/*logerror("PC %06x: warning - write %02x to TC0220IOC address %02x\n",activecpu_get_pc(),data,offset);*/
 
 			break;
 

@@ -40,9 +40,9 @@ static void get_tile_info( const data8_t *source, int tile_index )
 	if( attr & 0x20 ) flags |= TILE_FLIPY;
 
 	attr &= 0x07;
-	if(attr == 1) tilenum+=0x200; // 001
-	if(attr == 3) tilenum+=0x300; // 011
-	if(attr == 5) tilenum+=0x100; // 101
+	if(attr == 1) tilenum+=0x200; /* 001*/
+	if(attr == 3) tilenum+=0x300; /* 011*/
+	if(attr == 5) tilenum+=0x100; /* 101*/
 
 	SET_TILE_INFO( 0, tilenum, color, flags )
 }
@@ -98,7 +98,7 @@ static void draw_sprites( struct mame_bitmap *bitmap )
 		sx &= 0x1ff;
 
 		sy = (512-64)-sy;
-		//sy += portrait_scrollx_hi;
+		/*sy += portrait_scrollx_hi;*/
 
 		drawgfx(bitmap,Machine->gfx[0],
 			tilenum,color,

@@ -807,7 +807,7 @@ void deco16_pf34_update(const data16_t *rowscroll_1_ptr, const data16_t *rowscro
 	if (deco16_bank_callback_3) {
 		bank1=deco16_bank_callback_3(deco16_pf34_control[7]&0xff);
 		if (bank1!=deco16_pf3_bank) {
-			//if (pf3_tilemap_8x8) tilemap_mark_all_tiles_dirty(pf3_tilemap_8x8);
+			/*if (pf3_tilemap_8x8) tilemap_mark_all_tiles_dirty(pf3_tilemap_8x8);*/
 			if (pf3_tilemap_16x16) tilemap_mark_all_tiles_dirty(pf3_tilemap_16x16);
 		}
 
@@ -817,7 +817,7 @@ void deco16_pf34_update(const data16_t *rowscroll_1_ptr, const data16_t *rowscro
 	if (deco16_bank_callback_4) {
 		bank2=deco16_bank_callback_4(deco16_pf34_control[7]>>8);
 		if (bank2!=deco16_pf4_bank) {
-			//if (pf4_tilemap_8x8) tilemap_mark_all_tiles_dirty(pf4_tilemap_8x8);
+			/*if (pf4_tilemap_8x8) tilemap_mark_all_tiles_dirty(pf4_tilemap_8x8);*/
 			if (pf4_tilemap_16x16) tilemap_mark_all_tiles_dirty(pf4_tilemap_16x16);
 		}
 
@@ -961,7 +961,7 @@ void deco16_tilemap_4_draw(struct mame_bitmap *bitmap, const struct rectangle *c
 
 /*****************************************************************************************/
 
-// Combines the output of two 4BPP tilemaps into an 8BPP tilemap
+/* Combines the output of two 4BPP tilemaps into an 8BPP tilemap*/
 void deco16_tilemap_34_combine_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int flags, UINT32 priority)
 {
 	custom_tilemap_draw(bitmap,0,pf3_tilemap_16x16,0,pf4_tilemap_16x16,pf3_rowscroll_ptr,deco16_pf34_control[1], deco16_pf34_control[2], deco16_pf34_control[5]&0xff, deco16_pf34_control[6]&0xff, 0xf, 4, 0xff, flags, priority);
@@ -1005,7 +1005,7 @@ static void custom_tilemap_draw(
 	if (!src_bitmap0)
 		return;
 
-	// Playfield disable
+	/* Playfield disable*/
 	if (!(control0&0x80))
 		return;
 

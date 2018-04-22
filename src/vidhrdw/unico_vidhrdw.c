@@ -244,7 +244,7 @@ static void unico_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle
 		int	attr		=	spriteram16[ offs + 3 ];
 
 		int	flipx		=	attr & 0x020;
-		int	flipy		=	attr & 0x040;	// not sure
+		int	flipy		=	attr & 0x040;	/* not sure*/
 
 		int dimx		=	((attr >> 8) & 0xf) + 1;
 
@@ -253,11 +253,11 @@ static void unico_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle
 
 		switch( priority )
 		{
-			case 0:		pri_mask = 0xfe;	break;	// below all
-			case 1:		pri_mask = 0xf0;	break;	// above layer 0
-			case 2:		pri_mask = 0xfc;	break;	// above layer 1
+			case 0:		pri_mask = 0xfe;	break;	/* below all*/
+			case 1:		pri_mask = 0xf0;	break;	/* above layer 0*/
+			case 2:		pri_mask = 0xfc;	break;	/* above layer 1*/
 			default:
-			case 3:		pri_mask = 0x00;			// above all
+			case 3:		pri_mask = 0x00;			/* above all*/
 		}
 
 		sx	+=	sprites_scrolldx;
@@ -297,7 +297,7 @@ static void unico_draw_sprites32(struct mame_bitmap *bitmap,const struct rectang
 		int	attr		=	spriteram32[ offs + 1 ] & 0xffff;
 
 		int	flipx		=	attr & 0x020;
-		int	flipy		=	attr & 0x040;	// not sure
+		int	flipy		=	attr & 0x040;	/* not sure*/
 
 		int dimx		=	((attr >> 8) & 0xf) + 1;
 
@@ -306,11 +306,11 @@ static void unico_draw_sprites32(struct mame_bitmap *bitmap,const struct rectang
 
 		switch( priority )
 		{
-			case 0:		pri_mask = 0xfe;	break;	// below all
-			case 1:		pri_mask = 0xf0;	break;	// above layer 0
-			case 2:		pri_mask = 0xfc;	break;	// above layer 1
+			case 0:		pri_mask = 0xfe;	break;	/* below all*/
+			case 1:		pri_mask = 0xf0;	break;	/* above layer 0*/
+			case 2:		pri_mask = 0xfc;	break;	/* above layer 1*/
 			default:
-			case 3:		pri_mask = 0x00;			// above all
+			case 3:		pri_mask = 0x00;			/* above all*/
 		}
 
 		sx	+=	sprites_scrolldx;

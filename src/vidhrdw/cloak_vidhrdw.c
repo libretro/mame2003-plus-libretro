@@ -52,7 +52,7 @@ WRITE_HANDLER( cloak_paletteram_w )
 	g = (~color & 0x038) >> 3;
 	b = (~color & 0x007);
 
-	// the following is WRONG! fix it
+	/* the following is WRONG! fix it*/
 
 	bit0 = (r >> 0) & 0x01;
 	bit1 = (r >> 1) & 0x01;

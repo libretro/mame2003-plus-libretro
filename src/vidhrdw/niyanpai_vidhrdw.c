@@ -132,9 +132,9 @@ void niyanpai_gfxflag_w(int vram, int offset, int data)
 	niyanpai_flipx[vram] = (data & 0x01) ? 1 : 0;
 	niyanpai_flipy[vram] = (data & 0x02) ? 1 : 0;
 	niyanpai_highcolor[vram] = (data & 0x04) ? 1 : 0;
-//	if (data & 0x08) usrintf_showmessage("Unknown GFX Flag!! (0x08)");
+/*	if (data & 0x08) usrintf_showmessage("Unknown GFX Flag!! (0x08)");*/
 	niyanpai_transparency[vram] = (data & 0x10) ? 1 : 0;
-//	if (data & 0x20) usrintf_showmessage("Unknown GFX Flag!! (0x20)");
+/*	if (data & 0x20) usrintf_showmessage("Unknown GFX Flag!! (0x20)");*/
 	niyanpai_flipscreen[vram] = (data & 0x40) ? 0 : 1;
 	niyanpai_dispflag[vram] = (data & 0x80) ? 1 : 0;
 
@@ -333,13 +333,13 @@ static void niyanpai_gfxdraw(int vram)
 
 			if (niyanpai_flipx[vram])
 			{
-				// flip
+				/* flip*/
 				color1 = (color & 0xf0) >> 4;
 				color2 = (color & 0x0f) >> 0;
 			}
 			else
 			{
-				// normal
+				/* normal*/
 				color1 = (color & 0x0f) >> 0;
 				color2 = (color & 0xf0) >> 4;
 			}

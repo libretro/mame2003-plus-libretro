@@ -59,7 +59,7 @@ VIDEO_START( djboy )
 }
 
 static void 
-draw_sprites( struct mame_bitmap *bitmap,const struct rectangle *cliprect ) // pandora_draw
+draw_sprites( struct mame_bitmap *bitmap,const struct rectangle *cliprect ) /* pandora_draw*/
 {
 
 	int sx=0, sy=0, x=0, y=0, offs;
@@ -158,7 +158,7 @@ VIDEO_UPDATE( djboy )
 	 * ---x---- flipscreen?
 	 * ----xxxx ROM bank
 	 */
-	flipscreen = 0; //djboy_vidreg & 0x10;
+	flipscreen = 0; /*djboy_vidreg & 0x10;*/
     
 	scroll = djboy_scrollx | ((djboy_videoreg&0xc0)<<2);
 	tilemap_set_scrollx( background, 0, scroll-0x391 );

@@ -194,8 +194,8 @@ BlitPolyObject( struct mame_bitmap *bitmap, int code, double M[4][4] )
 				vi[2] = pPointData[subAddr++]&0xff;
 				vi[3] = pPointData[subAddr++]&0xff;
 				color = pPointData[subAddr++]&0x1ff;
-				//color = 0x8000 - 0x400 + color;
-				//color = 0x6000 - 0x400 + color;
+				/*color = 0x8000 - 0x400 + color;*/
+				/*color = 0x6000 - 0x400 + color;*/
 				color = 0x4000 - 0x400 + color;
 				DrawQuad( bitmap,vertex,vi,color );
 			}
@@ -227,7 +227,7 @@ static int
 DrawPolyObject0( struct mame_bitmap *bitmap, const INT16 *pDSPRAM, const INT16 *pCamera )
 {
 	INT16 code = 1 + pDSPRAM[1];
-	//INT16 window = pDSPRAM[2];
+	/*INT16 window = pDSPRAM[2];*/
 	double M[4][4];
 
 	matrix3d_Identity( M );
@@ -241,7 +241,7 @@ static int
 DrawPolyObject1( struct mame_bitmap *bitmap, const INT16 *pDSPRAM, const INT16 *pCamera )
 {
 	INT16 code = 1 + pDSPRAM[1];
-	//INT16 window = pDSPRAM[2];
+	/*INT16 window = pDSPRAM[2];*/
 	double M[4][4];
 
 	matrix3d_Identity( M );

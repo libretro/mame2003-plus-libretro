@@ -207,7 +207,7 @@ WRITE_HANDLER( m107_control_w )
 			break;
 
 		case 0x1e:
-			m107_raster_irq_position=(m107_control[0x1e])-128; //gamezfan 
+			m107_raster_irq_position=(m107_control[0x1e])-128; /*gamezfan */
 			break;
 	}
 }
@@ -406,10 +406,10 @@ static void m107_update_scroll_positions(void)
 	tilemap_set_scrolly( pf3_layer,0, (m107_control[9]<<8)+m107_control[8] );
 	tilemap_set_scrolly( pf4_layer,0, (m107_control[13]<<8)+m107_control[12] );
 
-//	pf4_layer->scrolled=1;
-//	pf3_layer->scrolled=1;
-//	pf2_layer->scrolled=1;
-//	pf1_layer->scrolled=1;
+/*	pf4_layer->scrolled=1;*/
+/*	pf3_layer->scrolled=1;*/
+/*	pf2_layer->scrolled=1;*/
+/*	pf1_layer->scrolled=1;*/
 }
 
 /*****************************************************************************/
@@ -460,7 +460,7 @@ void m107_vh_raster_partial_refresh(struct mame_bitmap *bitmap,int start_line,in
 WRITE_HANDLER( m107_spritebuffer_w )
 {
 	if (offset==0) {
-//		logerror("%04x: buffered spriteram\n",activecpu_get_pc());
+/*		logerror("%04x: buffered spriteram\n",activecpu_get_pc());*/
 		memcpy(m107_spriteram,spriteram,0x1000);
 	}
 }

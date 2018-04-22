@@ -94,33 +94,33 @@ VIDEO_UPDATE( carjmbre )
 {
 	int offs,troffs,sx,sy,flipx,flipy;
 
-	//colorram
-	//76543210
-	//x------- graphic bank
-	//-xxx---- unused
-	//----x--- ?? probably colour, only used for ramp and pond
-	//-----xxx colour
+	/*colorram*/
+	/*76543210*/
+	/*x------- graphic bank*/
+	/*-xxx---- unused*/
+	/*----x--- ?? probably colour, only used for ramp and pond*/
+	/*-----xxx colour*/
 
 	tilemap_draw( bitmap,cliprect,carjmbre_tilemap,0,0 );
 
-	//spriteram[offs]
-	//+0       y pos
-	//+1       sprite number
-	//+2
-	//76543210
-	//x------- flipy
-	//-x------ flipx
-	//--xx---- unused
-	//----x--- ?? probably colour
-	//-----xxx colour
-	//+3       x pos
+	/*spriteram[offs]*/
+	/*+0       y pos*/
+	/*+1       sprite number*/
+	/*+2*/
+	/*76543210*/
+	/*x------- flipy*/
+	/*-x------ flipx*/
+	/*--xx---- unused*/
+	/*----x--- ?? probably colour*/
+	/*-----xxx colour*/
+	/*+3       x pos*/
 	for (offs = spriteram_size-4; offs >= 0; offs-=4)
 	{
-		//before copying the sprites to spriteram the game reorders the first
-		//sprite to last, sprite ordering is incorrect if this isn't undone
+		/*before copying the sprites to spriteram the game reorders the first*/
+		/*sprite to last, sprite ordering is incorrect if this isn't undone*/
 		troffs=(offs-4+spriteram_size)%spriteram_size;
 
-		//unused sprites are marked with ypos <= 0x02 (or >= 0xfd if screen flipped)
+		/*unused sprites are marked with ypos <= 0x02 (or >= 0xfd if screen flipped)*/
 		if (spriteram[troffs] > 0x02 && spriteram[troffs] < 0xfd)
 		{
 			{

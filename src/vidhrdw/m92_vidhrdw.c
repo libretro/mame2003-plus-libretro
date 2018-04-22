@@ -108,7 +108,7 @@ WRITE_HANDLER( m92_spritecontrol_w )
 		*/
 		timer_set (TIME_IN_NSEC(37 * 0x400), 0, spritebuffer_callback);
 	}
-//	logerror("%04x: m92_spritecontrol_w %08x %08x\n",activecpu_get_pc(),offset,data);
+/*	logerror("%04x: m92_spritecontrol_w %08x %08x\n",activecpu_get_pc(),offset,data);*/
 }
 
 WRITE_HANDLER( m92_videocontrol_w )
@@ -132,7 +132,7 @@ WRITE_HANDLER( m92_videocontrol_w )
 		if ((data & 0x2) == 0x2 && m92_game_kludge!=3) m92_palette_bank = 1;
 		else                     m92_palette_bank = 0;
 	}
-//	logerror("%04x: m92_videocontrol_w %d = %02x\n",activecpu_get_pc(),offset,data);
+/*	logerror("%04x: m92_videocontrol_w %d = %02x\n",activecpu_get_pc(),offset,data);*/
 }
 
 READ_HANDLER( m92_paletteram_r )
@@ -392,12 +392,12 @@ WRITE_HANDLER( m92_master_control_w )
 			break;
 		case 6:
 		case 7:
-//			if (flip_screen)
-//				m92_raster_irq_position=256-(((pf4_control[7]<<8) | pf4_control[6])-128);
-//			else
+/*			if (flip_screen)*/
+/*				m92_raster_irq_position=256-(((pf4_control[7]<<8) | pf4_control[6])-128);*/
+/*			else*/
 				m92_raster_irq_position=((pf4_control[7]<<8) | pf4_control[6])-128;
-//			if (offset==7)
-//				logerror("%06x: Raster %d %d\n",activecpu_get_pc(),offset, m92_raster_irq_position);
+/*			if (offset==7)*/
+/*				logerror("%06x: Raster %d %d\n",activecpu_get_pc(),offset, m92_raster_irq_position);*/
 			break;
 	}
 }
@@ -718,8 +718,8 @@ void m92_vh_raster_partial_refresh(struct mame_bitmap *bitmap,int start_line,int
 {
 	struct rectangle clip;
 
-	clip.min_x = 0;//Machine->visible_area.min_x;
-	clip.max_x = 511;//Machine->visible_area.max_x;
+	clip.min_x = 0;/*Machine->visible_area.min_x;*/
+	clip.max_x = 511;/*Machine->visible_area.max_x;*/
 	clip.min_y = start_line+128;
 	clip.max_y = end_line+128;
 	if (clip.min_y < Machine->visible_area.min_y)

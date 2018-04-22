@@ -164,7 +164,7 @@ VIDEO_UPDATE( megazone )
 		}
 		else
 		{
-			scrollx = -*megazone_scrolly+4*8; // leave space for credit&score overlay
+			scrollx = -*megazone_scrolly+4*8; /* leave space for credit&score overlay*/
 			scrolly = -*megazone_scrollx;
 		}
 
@@ -181,9 +181,9 @@ VIDEO_UPDATE( megazone )
 
 
 			sx = spriteram[offs + 3];
-			if (flipscreen) sx-=11; else sx+=4*8;   	  // Sprite y-position correction depending on screen flip
+			if (flipscreen) sx-=11; else sx+=4*8;   	  /* Sprite y-position correction depending on screen flip*/
 			sy = 255-((spriteram[offs + 1]+16)&0xff);
-			if (flipscreen) sy+=2; 			  	  // Sprite x-position correction depending on screen flip
+			if (flipscreen) sy+=2; 			  	  /* Sprite x-position correction depending on screen flip*/
 
 			flipx = ~spriteram[offs+0] & 0x40;
 			flipy = spriteram[offs+0] & 0x80;

@@ -318,7 +318,7 @@ VIDEO_UPDATE( vigilant )
 		draw_background(bitmap);
 		draw_foreground(bitmap,0,0);
 		draw_sprites(bitmap,&bottomvisiblearea);
-		draw_foreground(bitmap,1,0); // priority tiles
+		draw_foreground(bitmap,1,0); /* priority tiles*/
 	}
 }
 

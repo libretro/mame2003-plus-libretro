@@ -182,10 +182,10 @@ WRITE_HANDLER( kncljoe_control_w )
 			}
 		break;
 		case 1:
-			// ???
+			/* ???*/
 		break;
 		case 2:
-			// ???
+			/* ???*/
 		break;
 	}
 }

@@ -9,7 +9,7 @@ High Voltage      (c) 1985 Alpha Denshi Co.
 drivers by Acho A. Tang
 
 *******************************************************************************/
-// Directives
+/* Directives*/
 
 #include "driver.h"
 #include "vidhrdw/generic.h"
@@ -20,12 +20,12 @@ drivers by Acho A. Tang
 #define FP_HALF ((1<<(FP_PRECISION-1))-1)
 
 /******************************************************************************/
-// Imports
+/* Imports*/
 
 extern int equites_id, equites_flip;
 
 /******************************************************************************/
-// Locals
+/* Locals*/
 
 static struct tilemap *charmap0, *charmap1, *activecharmap, *inactivecharmap;
 static data16_t *defcharram, *charram0, *charram1, *activecharram, *inactivecharram;
@@ -37,12 +37,12 @@ static struct rectangle halfclip;
 static struct PRESTEP_TYPE { unsigned sy, fdx; } *prestep;
 
 /******************************************************************************/
-// Exports
+/* Exports*/
 
 data16_t *splndrbt_scrollx, *splndrbt_scrolly;
 
 /******************************************************************************/
-// Initializations
+/* Initializations*/
 
 static void video_init_common(void)
 {
@@ -51,14 +51,14 @@ static void video_init_common(void)
 
 	colortable = Machine->remapped_colortable;
 
-	// set defaults
+	/* set defaults*/
 	maskwidth = 8;
 	maskheight = Machine->visible_area.max_y - Machine->visible_area.min_y + 1;
 	maskcolor = get_black_pen();
 	scrollx = scrolly = 0;
 	for (i=0; i<4; i++) bgcolor[i] = 0;
 
-	// set uniques
+	/* set uniques*/
 	switch (equites_id)
 	{
 		case 0x8401:
@@ -75,7 +75,7 @@ static void video_init_common(void)
 	}
 }
 
-// Equites Hardware
+/* Equites Hardware*/
 PALETTE_INIT( equites )
 {
 	UINT8 *clut_ptr;
@@ -124,7 +124,7 @@ VIDEO_START( equites )
 	return (0);
 }
 
-// Splendor Blast Hardware
+/* Splendor Blast Hardware*/
 PALETTE_INIT( splndrbt )
 {
 	UINT8 *prom_ptr;
@@ -222,7 +222,7 @@ static void splndrbt_prestep(
 	{
 		ps[i].sy = (unsigned)Dsum;
 		Dsum += (DA * D0) / ((DB * i + DC) * D1);
-		//logerror("dst_y=%3u src_y=%3u\n", i, ps[i].sy);
+		/*logerror("dst_y=%3u src_y=%3u\n", i, ps[i].sy);*/
 	}
 }
 
@@ -275,9 +275,9 @@ MACHINE_INIT( splndrbt )
 }
 
 /******************************************************************************/
-// Realtime Functions
+/* Realtime Functions*/
 
-// Equites Hardware
+/* Equites Hardware*/
 static void equites_update_clut(void)
 {
 	pen_t *colortable;
@@ -396,7 +396,7 @@ VIDEO_UPDATE( equites )
 	tilemap_draw(bitmap, cliprect, charmap0, 0, 0);
 }
 
-// Splendor Blast Hardware
+/* Splendor Blast Hardware*/
 static void splndrbt_update_clut(void)
 {
 	pen_t *colortable;
@@ -583,9 +583,9 @@ VIDEO_UPDATE( splndrbt )
 }
 
 /******************************************************************************/
-// Memory Handlers
+/* Memory Handlers*/
 
-// Equites Hardware
+/* Equites Hardware*/
 READ16_HANDLER(equites_spriteram_r)
 {
 	if (*spriteram16 == 0x5555) return (0);
@@ -627,7 +627,7 @@ WRITE16_HANDLER(equites_scrollreg_w)
 	if (ACCESSING_MSB) scrollx = data >> 8;
 }
 
-// Splendor Blast Hardware
+/* Splendor Blast Hardware*/
 WRITE16_HANDLER(splndrbt_selchar0_w)
 {
 	activecharram = charram0;

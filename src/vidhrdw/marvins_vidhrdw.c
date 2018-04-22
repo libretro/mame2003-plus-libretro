@@ -41,20 +41,20 @@ static void stuff_palette( int source_index, int dest_index, int num_colors )
 		int bit0=0,bit1,bit2,bit3;
 		int red, green, blue;
 
-		bit0 = (color_prom[0x800] >> 2) & 0x01; // ?
+		bit0 = (color_prom[0x800] >> 2) & 0x01; /* ?*/
 		bit1 = (color_prom[0x000] >> 1) & 0x01;
 		bit2 = (color_prom[0x000] >> 2) & 0x01;
 		bit3 = (color_prom[0x000] >> 3) & 0x01;
 		red = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		bit0 = (color_prom[0x800] >> 1) & 0x01; // ?
+		bit0 = (color_prom[0x800] >> 1) & 0x01; /* ?*/
 		bit1 = (color_prom[0x400] >> 2) & 0x01;
 		bit2 = (color_prom[0x400] >> 3) & 0x01;
 		bit3 = (color_prom[0x000] >> 0) & 0x01;
 		green = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		bit0 = (color_prom[0x800] >> 0) & 0x01; // ?
-		bit1 = (color_prom[0x800] >> 3) & 0x01; // ?
+		bit0 = (color_prom[0x800] >> 0) & 0x01; /* ?*/
+		bit1 = (color_prom[0x800] >> 3) & 0x01; /* ?*/
 		bit2 = (color_prom[0x400] >> 0) & 0x01;
 		bit3 = (color_prom[0x400] >> 1) & 0x01;
 		blue = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
@@ -188,7 +188,7 @@ VIDEO_START( marvins )
 
 	{
 		tilemap_clip = Machine->visible_area;
-		if (snk_gamegroup != 1) // not Mad Crasher
+		if (snk_gamegroup != 1) /* not Mad Crasher*/
 		{
 			tilemap_clip.max_x-=16;
 			tilemap_clip.min_x+=16;
@@ -200,7 +200,7 @@ VIDEO_START( marvins )
 
 		switch (snk_gamegroup)
 		{
-			case 0:	// Marvin's Maze
+			case 0:	/* Marvin's Maze*/
 				tilemap_set_scrolldx( bg_tilemap, 271, 287 );
 				tilemap_set_scrolldy( bg_tilemap, 0, -40 );
 
@@ -221,7 +221,7 @@ VIDEO_START( marvins )
 
 				Note that while the new settings are more accurate they cannot handle flipscreen.
 			*/
-			case 1:	// Mad Crasher
+			case 1:	/* Mad Crasher*/
 				tilemap_set_scrolldx( bg_tilemap,256,  0 );
 				tilemap_set_scrolldy( bg_tilemap, 12,  0 );
 
@@ -229,7 +229,7 @@ VIDEO_START( marvins )
 				tilemap_set_scrolldy( fg_tilemap,  6,  0 );
 			break;
 
-			case 2:	// VanguardII
+			case 2:	/* VanguardII*/
 				tilemap_set_scrolldx( bg_tilemap,  7,  0 );
 				tilemap_set_scrolldy( bg_tilemap,-20,  0 );
 
@@ -403,7 +403,7 @@ VIDEO_UPDATE( madcrash )
 **
 ***************************************************************************/
 
-	int madcrash_vreg = (snk_gamegroup == 1) ? 0x00 : 0xf1; // Mad Crasher=0x00, VanguardII=0xf1
+	int madcrash_vreg = (snk_gamegroup == 1) ? 0x00 : 0xf1; /* Mad Crasher=0x00, VanguardII=0xf1*/
 
 	unsigned char *mem = memory_region(REGION_CPU1)+madcrash_vreg;
 	unsigned char sprite_partition = mem[0xfa00];

@@ -127,7 +127,7 @@ PRI = Priority, CP = Colour Palette, VF = VFlip, HF = HFlip, PT0-9 = Tile # in V
 	int tileno = vdp_vram[(vdp_scrollabase+tile_index*2+1)&0xffff];
 	int attr   = vdp_vram[(vdp_scrollabase+tile_index*2)&0xffff];
 	int colour = ((attr & 0x60) >> 5)+ segac2_bg_palbase + segac2_palbank;
-//	int priority = (attr & 0x80);
+/*	int priority = (attr & 0x80);*/
 	int flipyx = (attr & 0x18) >> 3;
 
 	tileno = tileno + ((attr & 7) << 8) ;
@@ -152,7 +152,7 @@ PRI = Priority, CP = Colour Palette, VF = VFlip, HF = HFlip, PT0-9 = Tile # in V
 	int tileno = vdp_vram[(vdp_scrollbbase+tile_index*2+1)&0xffff];
 	int attr   = vdp_vram[(vdp_scrollbbase+tile_index*2)&0xffff];
 	int colour = ((attr & 0x60) >> 5) + segac2_bg_palbase + segac2_palbank;
-//	int priority = (attr & 0x80);
+/*	int priority = (attr & 0x80);*/
 	int flipyx = (attr & 0x18) >> 3;
 
 	tileno = tileno + ((attr & 7) << 8);
@@ -311,7 +311,7 @@ VIDEO_START( puckpkmn )
 	if (video_start_segac2())
 		return 1;
 
-	segac2_sp_palbase = 0x000;	// same palettes for sprites and bg
+	segac2_sp_palbase = 0x000;	/* same palettes for sprites and bg*/
 	display_enable = 1;
 
 	scanbase = 0;
@@ -328,7 +328,7 @@ VIDEO_START( megatech )
 	if (video_start_segac2())
 		return 1;
 
-	segac2_sp_palbase = 0x000;	// same palettes for sprites and bg
+	segac2_sp_palbase = 0x000;	/* same palettes for sprites and bg*/
 	display_enable = 1;
 
 
@@ -346,7 +346,7 @@ VIDEO_START( megaplay )
 	if (video_start_segac2())
 		return 1;
 
-	segac2_sp_palbase = 0x000;	// same palettes for sprites and bg
+	segac2_sp_palbase = 0x000;	/* same palettes for sprites and bg*/
 	display_enable = 1;
 
 	scanbase = 0;

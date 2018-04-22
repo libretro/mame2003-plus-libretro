@@ -267,7 +267,7 @@ static void madmotor_drawsprites(struct mame_bitmap *bitmap,const struct rectang
 
 			offs += 4;
 			if (offs >= spriteram_size/2 ||
-					spriteram16[offs] & 0x8000)	// seems the expected behaviour on the title screen
+					spriteram16[offs] & 0x8000)	/* seems the expected behaviour on the title screen*/
 				 break;
 		}
 	}

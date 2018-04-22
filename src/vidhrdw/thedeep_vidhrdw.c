@@ -61,7 +61,7 @@ static void get_tile_info_0( int tile_index )
 			1,
 			code + (color << 8),
 			(color & 0xf0) >> 4,
-			TILE_FLIPX	)	// why?
+			TILE_FLIPX	)	/* why?*/
 }
 
 static void get_tile_info_1( int tile_index )
@@ -129,7 +129,7 @@ VIDEO_START( thedeep )
 	tilemap_set_transparent_pen( tilemap_0,  0 );
 	tilemap_set_transparent_pen( tilemap_1,  0 );
 
-	tilemap_set_scroll_cols(tilemap_0, 0x20);	// column scroll for the background
+	tilemap_set_scroll_cols(tilemap_0, 0x20);	/* column scroll for the background*/
 
 	return 0;
 }
@@ -184,7 +184,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 
 		color	=	 s[5];
 
-		flipx	=	attr & 0x00;	// ?
+		flipx	=	attr & 0x00;	/* ?*/
 		flipy	=	attr & 0x40;
 
 		nx = 1 << ((attr & 0x06) >> 1);

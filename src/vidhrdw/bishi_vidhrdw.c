@@ -16,17 +16,17 @@ static int layer_colorbase[4], layerpri[4];
 
 static void bishi_tile_callback(int layer, int *code, int *color)
 {
-//	*code -= '0';
-//	*color = layer_colorbase[layer] | (*color>>2 & 0x0f);
-//	K055555GX_decode_vmixcolor(layer, color);
-//	if (*color) printf("plane %x col %x [55 %x %x]\n", layer, *color, layer_colorbase[layer], K055555_get_palette_index(layer));
+/*	*code -= '0';*/
+/*	*color = layer_colorbase[layer] | (*color>>2 & 0x0f);*/
+/*	K055555GX_decode_vmixcolor(layer, color);*/
+/*	if (*color) printf("plane %x col %x [55 %x %x]\n", layer, *color, layer_colorbase[layer], K055555_get_palette_index(layer));*/
 
 	*color = layer_colorbase[layer] + ((*color & 0xf0));
 }
 
 VIDEO_START(bishi)
 {
-	if (Machine->color_depth != 32) return 1; // ensure correct bpp to avoid crashing in-game
+	if (Machine->color_depth != 32) return 1; /* ensure correct bpp to avoid crashing in-game*/
 
 	K055555_vh_start();
 	K054338_vh_start();
@@ -40,9 +40,9 @@ VIDEO_START(bishi)
 	K056832_set_LayerOffset(2,  4, 0);
 	K056832_set_LayerOffset(3,  6, 0);
 
-	// the 55555 is set to "0x10, 0x11, 0x12, 0x13", but these values are almost correct...
+	/* the 55555 is set to "0x10, 0x11, 0x12, 0x13", but these values are almost correct...*/
 	layer_colorbase[0] = 0x00;
-	layer_colorbase[1] = 0x40;	// this one is wrong
+	layer_colorbase[1] = 0x40;	/* this one is wrong*/
 	layer_colorbase[2] = 0x80;
 	layer_colorbase[3] = 0xc0;
 	return 0;

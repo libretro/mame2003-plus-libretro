@@ -368,19 +368,19 @@ WRITE_HANDLER( stactics_scroll_ram_w )
         temp = (offset&0x700)>>8;
         switch(temp)
         {
-            case 4:  // Page D
+            case 4:  /* Page D*/
             {
                 if (data&0x01)
                     d_offset = offset&0xff;
                 break;
             }
-            case 5:  // Page E
+            case 5:  /* Page E*/
             {
                 if (data&0x01)
                     e_offset = offset&0xff;
                 break;
             }
-            case 6:  // Page F
+            case 6:  /* Page F*/
             {
                 if (data&0x01)
                     f_offset = offset&0xff;

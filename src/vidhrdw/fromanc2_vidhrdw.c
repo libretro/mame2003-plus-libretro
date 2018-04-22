@@ -104,7 +104,7 @@ WRITE16_HANDLER( fromanc2_paletteram_0_w )
 
 	COMBINE_DATA(&fromanc2_paletteram[0][offset]);
 
-	// GGGG_GRRR_RRBB_BBBx
+	/* GGGG_GRRR_RRBB_BBBx*/
 	r = (data >>  6) & 0x1f;
 	g = (data >> 11) & 0x1f;
 	b = (data >>  1) & 0x1f;
@@ -124,7 +124,7 @@ WRITE16_HANDLER( fromanc2_paletteram_1_w )
 
 	COMBINE_DATA(&fromanc2_paletteram[1][offset]);
 
-	// GGGG_GRRR_RRBB_BBBx
+	/* GGGG_GRRR_RRBB_BBBx*/
 	r = (data >>  6) & 0x1f;
 	g = (data >> 11) & 0x1f;
 	b = (data >>  1) & 0x1f;
@@ -155,7 +155,7 @@ WRITE16_HANDLER( fromancr_paletteram_0_w )
 
 	COMBINE_DATA(&fromanc2_paletteram[0][offset]);
 
-	// xGGG_GGRR_RRRB_BBBB
+	/* xGGG_GGRR_RRRB_BBBB*/
 	r = (data >>  5) & 0x1f;
 	g = (data >> 10) & 0x1f;
 	b = (data >>  0) & 0x1f;
@@ -175,7 +175,7 @@ WRITE16_HANDLER( fromancr_paletteram_1_w )
 
 	COMBINE_DATA(&fromanc2_paletteram[1][offset]);
 
-	// xGGG_GGRR_RRRB_BBBB
+	/* xGGG_GGRR_RRRB_BBBB*/
 	r = (data >>  5) & 0x1f;
 	g = (data >> 10) & 0x1f;
 	b = (data >>  0) & 0x1f;
@@ -206,7 +206,7 @@ WRITE16_HANDLER( fromanc4_paletteram_0_w )
 
 	COMBINE_DATA(&fromanc2_paletteram[0][offset]);
 
-	// xRRR_RRGG_GGGB_BBBB
+	/* xRRR_RRGG_GGGB_BBBB*/
 	r = (data >> 10) & 0x1f;
 	g = (data >>  5) & 0x1f;
 	b = (data >>  0) & 0x1f;
@@ -226,7 +226,7 @@ WRITE16_HANDLER( fromanc4_paletteram_1_w )
 
 	COMBINE_DATA(&fromanc2_paletteram[1][offset]);
 
-	// xRRR_RRGG_GGGB_BBBB
+	/* xRRR_RRGG_GGGB_BBBB*/
 	r = (data >> 10) & 0x1f;
 	g = (data >>  5) & 0x1f;
 	b = (data >>  0) & 0x1f;
@@ -260,7 +260,7 @@ WRITE16_HANDLER( fromanc2_gfxreg_0_w )
 		case 0x01:	fromanc2_scrolly[0][0] = -(data - 0x000); break;
 		case 0x02:	fromanc2_scrollx[0][1] = -(data - 0x004); break;
 		case 0x03:	fromanc2_scrolly[0][1] = -(data - 0x000); break;
-		// offset 0x04 - 0x11 unknown
+		/* offset 0x04 - 0x11 unknown*/
 		default:	break;
 	}
 }
@@ -272,7 +272,7 @@ WRITE16_HANDLER( fromanc2_gfxreg_1_w )
 		case 0x01:	fromanc2_scrolly[1][0] = -(data - 0x1ef); break;
 		case 0x02:	fromanc2_scrollx[1][1] = -(data - 0x1c2); break;
 		case 0x03:	fromanc2_scrolly[1][1] = -(data - 0x1ef); break;
-		// offset 0x04 - 0x11 unknown
+		/* offset 0x04 - 0x11 unknown*/
 		default:	break;
 	}
 }
@@ -284,7 +284,7 @@ WRITE16_HANDLER( fromanc2_gfxreg_2_w )
 		case 0x01:	fromanc2_scrolly[0][2] = -(data - 0x1ef); break;
 		case 0x02:	fromanc2_scrollx[0][3] = -(data - 0x1c3); break;
 		case 0x03:	fromanc2_scrolly[0][3] = -(data - 0x1ef); break;
-		// offset 0x04 - 0x11 unknown
+		/* offset 0x04 - 0x11 unknown*/
 		default:	break;
 	}
 }
@@ -296,7 +296,7 @@ WRITE16_HANDLER( fromanc2_gfxreg_3_w )
 		case 0x01:	fromanc2_scrolly[1][2] = -(data - 0x1ef); break;
 		case 0x02:	fromanc2_scrollx[1][3] = -(data - 0x1c3); break;
 		case 0x03:	fromanc2_scrolly[1][3] = -(data - 0x1ef); break;
-		// offset 0x04 - 0x11 unknown
+		/* offset 0x04 - 0x11 unknown*/
 		default:	break;
 	}
 }
@@ -345,7 +345,7 @@ WRITE16_HANDLER( fromancr_gfxreg_0_w )
 		case 0x01:	fromanc2_scrolly[0][0] = -(data - 0x1ef); break;
 		case 0x02:	fromanc2_scrollx[1][0] = -(data - 0x1c3); break;
 		case 0x03:	fromanc2_scrolly[1][0] = -(data - 0x1ef); break;
-		// offset 0x04 - 0x11 unknown
+		/* offset 0x04 - 0x11 unknown*/
 		default:	break;
 	}
 }
@@ -357,17 +357,17 @@ WRITE16_HANDLER( fromancr_gfxreg_1_w )
 		case 0x01:	fromanc2_scrolly[0][1] = -(data - 0x000); break;
 		case 0x02:	fromanc2_scrollx[1][1] = -(data - 0x004); break;
 		case 0x03:	fromanc2_scrolly[1][1] = -(data - 0x000); break;
-		// offset 0x04 - 0x11 unknown
+		/* offset 0x04 - 0x11 unknown*/
 		default:	break;
 	}
 }
 
 void fromancr_gfxbank_w(int data)
 {
-	fromanc2_gfxbank[0][0] = (data & 0x0010) >>  4;	// BG (1P)
-	fromanc2_gfxbank[0][1] = (data & 0xf000) >> 12;	// FG (1P)
-	fromanc2_gfxbank[1][0] = (data & 0x0008) >>  3;	// BG (2P)
-	fromanc2_gfxbank[1][1] = (data & 0x0f00) >>  8;	// FG (2P)
+	fromanc2_gfxbank[0][0] = (data & 0x0010) >>  4;	/* BG (1P)*/
+	fromanc2_gfxbank[0][1] = (data & 0xf000) >> 12;	/* FG (1P)*/
+	fromanc2_gfxbank[1][0] = (data & 0x0008) >>  3;	/* BG (2P)*/
+	fromanc2_gfxbank[1][1] = (data & 0x0f00) >>  8;	/* FG (2P)*/
 	tilemap_mark_all_tiles_dirty(fromanc2_tilemap[0][0]);
 	tilemap_mark_all_tiles_dirty(fromanc2_tilemap[0][1]);
 	tilemap_mark_all_tiles_dirty(fromanc2_tilemap[1][0]);
@@ -399,7 +399,7 @@ WRITE16_HANDLER( fromanc4_gfxreg_0_w )
 					tilemap_mark_all_tiles_dirty(fromanc2_tilemap[0][2]);
 					tilemap_mark_all_tiles_dirty(fromanc2_tilemap[1][2]);
 					break;
-		// offset 0x04, 0x06 - 0x11 unknown
+		/* offset 0x04, 0x06 - 0x11 unknown*/
 		default:	break;
 	}
 }
@@ -416,7 +416,7 @@ WRITE16_HANDLER( fromanc4_gfxreg_1_w )
 					tilemap_mark_all_tiles_dirty(fromanc2_tilemap[0][1]);
 					tilemap_mark_all_tiles_dirty(fromanc2_tilemap[1][1]);
 					break;
-		// offset 0x04, 0x06 - 0x11 unknown
+		/* offset 0x04, 0x06 - 0x11 unknown*/
 		default:	break;
 	}
 }
@@ -433,7 +433,7 @@ WRITE16_HANDLER( fromanc4_gfxreg_2_w )
 					tilemap_mark_all_tiles_dirty(fromanc2_tilemap[0][0]);
 					tilemap_mark_all_tiles_dirty(fromanc2_tilemap[1][0]);
 					break;
-		// offset 0x04, 0x06 - 0x11 unknown
+		/* offset 0x04, 0x06 - 0x11 unknown*/
 		default:	break;
 	}
 }

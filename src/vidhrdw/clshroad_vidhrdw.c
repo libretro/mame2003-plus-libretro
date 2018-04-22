@@ -133,7 +133,7 @@ static void get_tile_info_0a( int tile_index )
 	data8_t code;
 	tile_index = (tile_index & 0x1f) + (tile_index & ~0x1f)*2;
 	code	=	clshroad_vram_0[ tile_index * 2 + 0x40 ];
-//	color	=	clshroad_vram_0[ tile_index * 2 + 0x41 ];
+/*	color	=	clshroad_vram_0[ tile_index * 2 + 0x41 ];*/
 	SET_TILE_INFO(
 			1,
 			code,
@@ -146,7 +146,7 @@ static void get_tile_info_0b( int tile_index )
 	data8_t code;
 	tile_index = (tile_index & 0x1f) + (tile_index & ~0x1f)*2;
 	code	=	clshroad_vram_0[ tile_index * 2 + 0x00 ];
-//	color	=	clshroad_vram_0[ tile_index * 2 + 0x01 ];
+/*	color	=	clshroad_vram_0[ tile_index * 2 + 0x01 ];*/
 	SET_TILE_INFO(
 			1,
 			code,
@@ -187,17 +187,17 @@ Offset:
 /* logical (col,row) -> memory offset */
 static UINT32 tilemap_scan_rows_extra( UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows )
 {
-	// The leftmost columns come from the bottom rows
+	/* The leftmost columns come from the bottom rows*/
 	if (col <= 0x01)	return row + (col + 0x1e) * 0x20;
-	// The rightmost columns come from the top rows
+	/* The rightmost columns come from the top rows*/
 	if (col >= 0x22)	return row + (col - 0x22) * 0x20;
 
-	// These are not visible, but *must* be mapped to other tiles than
-	// those used by the leftmost and rightmost columns (tilemap "bug"?)
+	/* These are not visible, but *must* be mapped to other tiles than*/
+	/* those used by the leftmost and rightmost columns (tilemap "bug"?)*/
 	if (row <= 0x01)	return 0;
 	if (row >= 0x1e)	return 0;
 
-	// "normal" layout for the rest.
+	/* "normal" layout for the rest.*/
 	return (col-2) + row * 0x20;
 }
 
@@ -364,13 +364,13 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 VIDEO_UPDATE( clshroad )
 {
 	int scrollx  = clshroad_vregs[ 0 ] + (clshroad_vregs[ 1 ] << 8);
-//	int priority = clshroad_vregs[ 2 ];
+/*	int priority = clshroad_vregs[ 2 ];*/
 
 	/* Only horizontal scrolling (these 2 layers use the same value) */
 	tilemap_set_scrollx(tilemap_0a, 0, scrollx);
 	tilemap_set_scrollx(tilemap_0b, 0, scrollx);
 
-	tilemap_draw(bitmap,cliprect,tilemap_0a,0,0);	// Opaque
+	tilemap_draw(bitmap,cliprect,tilemap_0a,0,0);	/* Opaque*/
 	tilemap_draw(bitmap,cliprect,tilemap_0b,0,0);
 	draw_sprites(bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,tilemap_1,0,0);

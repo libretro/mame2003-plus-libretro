@@ -110,10 +110,10 @@ VIDEO_START( fuuki16 )
 	if ( !tilemap_0 || !tilemap_1 || !tilemap_2 || !tilemap_3 )
 		return 1;
 
-	tilemap_set_transparent_pen(tilemap_0,0x0f);	// 4 bits
-	tilemap_set_transparent_pen(tilemap_1,0xff);	// 8 bits
-	tilemap_set_transparent_pen(tilemap_2,0x0f);	// 4 bits
-	tilemap_set_transparent_pen(tilemap_3,0x0f);	// 4 bits
+	tilemap_set_transparent_pen(tilemap_0,0x0f);	/* 4 bits*/
+	tilemap_set_transparent_pen(tilemap_1,0xff);	/* 8 bits*/
+	tilemap_set_transparent_pen(tilemap_2,0x0f);	/* 4 bits*/
+	tilemap_set_transparent_pen(tilemap_3,0x0f);	/* 4 bits*/
 
 	Machine->gfx[2]->color_granularity=16; /* 256 colour tiles with palette selectable on 16 colour boundaries */
 
@@ -180,11 +180,11 @@ static void fuuki16_draw_sprites(struct mame_bitmap *bitmap, const struct rectan
 
 		switch( (attr >> 6) & 3 )
 		{
-			case 3:		pri_mask = 0xf0|0xcc|0xaa;	break;	// behind all layers
-			case 2:		pri_mask = 0xf0|0xcc;		break;	// behind fg + middle layer
-			case 1:		pri_mask = 0xf0;			break;	// behind fg layer
+			case 3:		pri_mask = 0xf0|0xcc|0xaa;	break;	/* behind all layers*/
+			case 2:		pri_mask = 0xf0|0xcc;		break;	/* behind fg + middle layer*/
+			case 1:		pri_mask = 0xf0;			break;	/* behind fg layer*/
 			case 0:
-			default:	pri_mask = 0;						// above all
+			default:	pri_mask = 0;						/* above all*/
 		}
 
 		sx = (sx & 0x1ff) - (sx & 0x200);
@@ -219,7 +219,7 @@ static void fuuki16_draw_sprites(struct mame_bitmap *bitmap, const struct rectan
 									flipx, flipy,
 									sx + (x * xzoom) / 8, sy + (y * yzoom) / 8,
 									cliprect,TRANSPARENCY_PEN,15,
-									(0x10000/0x10/8) * (xzoom + 8),(0x10000/0x10/8) * (yzoom + 8),	// nearest greater integer value to avoid holes
+									(0x10000/0x10/8) * (xzoom + 8),(0x10000/0x10/8) * (yzoom + 8),	/* nearest greater integer value to avoid holes*/
 									pri_mask	);
 			}
 		}
@@ -343,7 +343,7 @@ VIDEO_UPDATE( fuuki16 )
 	/* The backmost tilemap decides the background color(s) but sprites can
 	   go below the opaque pixels of that tilemap. We thus need to mark the
 	   transparent pixels of this layer with a different priority value */
-//	fuuki16_draw_layer(bitmap,cliprect, tm_back,  TILEMAP_IGNORE_TRANSPARENCY, 0);
+/*	fuuki16_draw_layer(bitmap,cliprect, tm_back,  TILEMAP_IGNORE_TRANSPARENCY, 0);*/
 
 	/* Actually, bg colour is simply the last pen i.e. 0x1fff -pjp */
 	fillbitmap(bitmap,(0x800*4)-1,cliprect);
@@ -353,7 +353,7 @@ VIDEO_UPDATE( fuuki16 )
 	fuuki16_draw_layer(bitmap,cliprect, tm_middle, 0, 2);
 	fuuki16_draw_layer(bitmap,cliprect, tm_front,  0, 4);
 
-	// don't do the rasters on the sprites . its very slow and the hw might not anyway.
+	/* don't do the rasters on the sprites . its very slow and the hw might not anyway.*/
 	if (cliprect->max_y == Machine->visible_area.max_y)
 		fuuki16_draw_sprites(bitmap,&Machine->visible_area);
 }

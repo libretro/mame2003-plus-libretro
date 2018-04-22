@@ -148,7 +148,7 @@ VIDEO_START( djmain )
 	K055555_vh_start();
 
 	K056832_set_LayerOffset(0, -92, -27);
-	// K056832_set_LayerOffset(1, -87, -27);
+	/* K056832_set_LayerOffset(1, -87, -27);*/
 	K056832_set_LayerOffset(1, -88, -27);
 
 	return 0;

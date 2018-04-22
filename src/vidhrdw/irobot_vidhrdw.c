@@ -273,8 +273,8 @@ void irobot_run_video(void)
 	        	if (sx >= ir_xmin && sx < ir_xmax && sy >= ir_ymin && sy < ir_ymax)
 					draw_pixel(sx,sy,color);
 				spnt+=2;
-			}//while object
-		}//if point
+			}/*while object*/
+		}/*if point*/
 
 		/* Line */
 		if (shp == 0xC)
@@ -292,8 +292,8 @@ void irobot_run_video(void)
 				ex = sx + word1 * (ey - sy + 1);
 				draw_line(ROUND_TO_PIXEL(sx),sy,ROUND_TO_PIXEL(ex),ey,color);
 				spnt+=4;
-			}//while object
-		}//if line
+			}/*while object*/
+		}/*if line*/
 
 		/* Polygon */
 		if (shp == 0x4)
@@ -314,13 +314,13 @@ void irobot_run_video(void)
 				ey = ROUND_TO_PIXEL(ey);
 				spnt+=2;
 
-			//	sx += word1;
+			/*	sx += word1;*/
 
 				word2 = (INT16)combase16[spnt2];
 				ey2 = ROUND_TO_PIXEL(combase16[spnt2+1]);
 				spnt2+=2;
 
-			//	sx2 += word2;
+			/*	sx2 += word2;*/
 
 				while(1)
 				{
@@ -359,10 +359,10 @@ void irobot_run_video(void)
 					else
 						sx2 += word2;
 
-				} //while polygon
-			}//if at least 2 sides
-		} //if polygon
-	} //while object
+				} /*while polygon*/
+			}/*if at least 2 sides*/
+		} /*if polygon*/
+	} /*while object*/
 }
 
 

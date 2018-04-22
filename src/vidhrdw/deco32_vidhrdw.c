@@ -134,7 +134,7 @@ static void updateAceRam(void)
 	UINT8 fadepsr=deco32_ace_ram[0x23];
 	UINT8 fadepsg=deco32_ace_ram[0x24];
 	UINT8 fadepsb=deco32_ace_ram[0x25];
-//  UINT8 mode=deco32_ace_ram[0x26];
+/*  UINT8 mode=deco32_ace_ram[0x26];*/
 
 	deco32_ace_ram_dirty=0;
 
@@ -232,7 +232,7 @@ static void captaven_drawsprites(struct mame_bitmap *bitmap, const data32_t *spr
 		sprite = spritedata[offs+3] & 0xffff;
 
 		if (sy==0x00000108 && !sprite)
-			continue; //fix!!!!!
+			continue; /*fix!!!!!*/
 
 		if (spritedata[offs+2]&0x20)
 			prival=0;
@@ -342,13 +342,13 @@ static void fghthist_draw_sprites(struct mame_bitmap *bitmap, const data32_t *sp
 					x,y + mult * multi,
 					&Machine->visible_area,TRANSPARENCY_PEN,0,pri,1<<gfxbank,1);
 
-			//deco16_pdrawgfx(
-			//		bitmap,cliprect,machine->gfx[gfxbank],
-			//		sprite - multi * inc,
-			//		colour,
-			//		fx,fy,
-			//		x,y + mult * multi,
-			//		0,pri,1<<gfxbank, 1, alpha);
+			/*deco16_pdrawgfx(*/
+			/*		bitmap,cliprect,machine->gfx[gfxbank],*/
+			/*		sprite - multi * inc,*/
+			/*		colour,*/
+			/*		fx,fy,*/
+			/*		x,y + mult * multi,*/
+			/*		0,pri,1<<gfxbank, 1, alpha);*/
 
 			multi--;
 		}
@@ -358,8 +358,8 @@ static void fghthist_draw_sprites(struct mame_bitmap *bitmap, const data32_t *sp
 static void deco32_draw_sprite(struct mame_bitmap *dest,const struct rectangle *clip,const struct GfxElement *gfx,
 		UINT32 code,UINT32 priority,int flipx,int flipy,int sx,int sy)
 {
-//	priority = (priority >> 8) & 0x1f;
-//	const pen_t *pal = &gfx->colortable[gfx->color_granularity * (priority % gfx->total_colors)];
+/*	priority = (priority >> 8) & 0x1f;*/
+/*	const pen_t *pal = &gfx->colortable[gfx->color_granularity * (priority % gfx->total_colors)];*/
 	const UINT8 *code_base = gfx->gfxdata + (((code % gfx->total_elements) * gfx->height) * gfx->line_modulo);
 	int ox,oy,cx,cy;
 	int x_index,y_index,x,y;
@@ -383,7 +383,7 @@ static void deco32_draw_sprite(struct mame_bitmap *dest,const struct rectangle *
 	for( y=0; y<16-cy; y++ )
 	{
 		const UINT8 *source = code_base + y_index * gfx->line_modulo;
-		//UINT16 *destb = BITMAP_ADDR16(dest, sy, 0);
+		/*UINT16 *destb = BITMAP_ADDR16(dest, sy, 0);*/
 		UINT16 *destb = (UINT16 *)dest->line[sy];
 
 		if (flipx) { source+=15-(sx-ox); x_index=-1; } else { x_index=1; source+=(sx-ox); }
@@ -409,11 +409,11 @@ static void nslasher_draw_sprites(struct mame_bitmap *bitmap, const data32_t *sp
 {
 	int offs;
 
-	// Draw sprites back to front saving priority & alpha data per pixel for later mixing
+	/* Draw sprites back to front saving priority & alpha data per pixel for later mixing*/
 	for (offs = 0; offs<0x400; offs+=4)
 	{
 		int x,y,sprite,colour,multi,fx,fy,inc,flash,mult; /*,pri=0,spri=0;*/
-		//int trans;
+		/*int trans;*/
 
 		sprite = spritedata[offs+1] & 0xffff;
 
@@ -421,10 +421,10 @@ static void nslasher_draw_sprites(struct mame_bitmap *bitmap, const data32_t *sp
 		flash=y&0x1000;
 		if (flash && (cpu_getcurrentframe() & 1)) continue;
 
-		//trans=TRANSPARENCY_PEN;
+		/*trans=TRANSPARENCY_PEN;*/
 		x = spritedata[offs+2];
 
-		// Prepare colour, priority and alpha info
+		/* Prepare colour, priority and alpha info*/
 		colour = (x>>9) & 0x7f;
 		if (y&0x8000)
 			colour|=0x80;
@@ -523,7 +523,7 @@ static void tattass_drawsprites(struct mame_bitmap *bitmap, const data32_t *spri
 			inc = 1;
 		}
 
-		mult=+16;//todo
+		mult=+16;/*todo*/
 
 		if (fx) fx=0; else fx=1;
 		if (fy) fy=0; else fy=1;
@@ -580,8 +580,8 @@ static INLINE void dragngun_drawgfxzoom( struct mame_bitmap *dest_bmp,const stru
 			const pen_t *pal = &gfx->colortable[gfx->color_granularity * (color % gfx->total_colors)]; /* ASG 980209 */
 			int source_base = (code % gfx->total_elements) * gfx->height;
 
-//			int sprite_screen_height = (scaley*gfx->height+0x8000)>>16;
-//			int sprite_screen_width = (scalex*gfx->width+0x8000)>>16;
+/*			int sprite_screen_height = (scaley*gfx->height+0x8000)>>16;*/
+/*			int sprite_screen_width = (scalex*gfx->width+0x8000)>>16;*/
 
 			if (sprite_screen_width && sprite_screen_height)
 			{
@@ -812,9 +812,9 @@ static void dragngun_drawsprites(struct mame_bitmap *bitmap, const data32_t *spr
 			continue;
 
 		if (spritedata[offs+0]&0x400)
-			layout_ram = dragngun_sprite_layout_1_ram + ((spritedata[offs+0]&0x1ff)*4); //CHECK!
+			layout_ram = dragngun_sprite_layout_1_ram + ((spritedata[offs+0]&0x1ff)*4); /*CHECK!*/
 		else
-			layout_ram = dragngun_sprite_layout_0_ram + ((spritedata[offs+0]&0x1ff)*4); //1ff in drag gun code??
+			layout_ram = dragngun_sprite_layout_0_ram + ((spritedata[offs+0]&0x1ff)*4); /*1ff in drag gun code??*/
 		h = (layout_ram[1]>>0)&0xf;
 		w = (layout_ram[1]>>4)&0xf;
 		if (!h || !w)
@@ -839,7 +839,7 @@ static void dragngun_drawsprites(struct mame_bitmap *bitmap, const data32_t *spr
 		fx = spritedata[offs+4]&0x8000;
 		fy = spritedata[offs+5]&0x8000;
 
-//		if (spritedata[offs+0]&0x400)
+/*		if (spritedata[offs+0]&0x400)*/
 		if (layout_ram[0]&0x2000)
 			lookup_ram = dragngun_sprite_lookup_1_ram + (layout_ram[0]&0x1fff);
 		else
@@ -1059,7 +1059,7 @@ VIDEO_START( captaven )
 	return 0;
 }
 
-VIDEO_START( fghthist ) //unused
+VIDEO_START( fghthist ) /*unused*/
 {
 	pf1_tilemap = tilemap_create(get_pf1_tile_info, tilemap_scan_rows,TILEMAP_TRANSPARENT, 8, 8,64,32);
 	pf2_tilemap = tilemap_create(get_pf2_tile_info, deco16_scan_rows,TILEMAP_TRANSPARENT,16,16,64,32);
@@ -1181,7 +1181,7 @@ VIDEO_START( nslasher )
 	deco32_pf2_colourbank=16;
 	deco32_pf4_colourbank=16;
 
-	has_ace_ram=1; // iq_132
+	has_ace_ram=1; /* iq_132*/
 
 	return 0;
 }
@@ -1272,7 +1272,7 @@ static void combined_tilemap_draw(struct mame_bitmap *bitmap)
 	const data16_t width_mask=0x3ff;
 	const data16_t height_mask=0x1ff;
 	const data16_t y_src=deco32_pf34_control[2];
-//	const data32_t *rows=deco32_pf3_rowscroll;
+/*	const data32_t *rows=deco32_pf3_rowscroll;*/
 
 	const data16_t *bitmap0_y;
 	const data16_t *bitmap1_y;
@@ -1309,7 +1309,7 @@ static void deco32_setup_scroll(struct tilemap *pf_tilemap, data16_t height, dat
 	/* Colscroll - not fully supported yet! */
 	if (control1&0x20 && coldata) {
 		sy+=coldata[0];
-		//usrintf_showmessage("%08x",coldata[0]);
+		/*usrintf_showmessage("%08x",coldata[0]);*/
 	}
 
 	/* Rowscroll enable */
@@ -1360,8 +1360,8 @@ VIDEO_UPDATE( captaven )
 	deco32_setup_scroll(pf3_tilemap, 512,(deco32_pf34_control[5]>>0)&0xff,(deco32_pf34_control[6]>>0)&0xff,deco32_pf34_control[4],deco32_pf34_control[3],deco32_pf3_rowscroll,deco32_pf3_rowscroll+0x200);
 
 	/* PF1 & PF2 only have enough roms for 1 bank */
-	deco32_pf1_bank=0;//(deco32_pf12_control[7]>> 4)&0xf;
-	deco32_pf2_bank=0;//(deco32_pf12_control[7]>>12)&0xf;
+	deco32_pf1_bank=0;/*(deco32_pf12_control[7]>> 4)&0xf;*/
+	deco32_pf2_bank=0;/*(deco32_pf12_control[7]>>12)&0xf;*/
 	deco32_pf3_bank=(deco32_pf34_control[7]>> 4)&0xf;
 
 	if (deco32_pf34_control[7]&0x0020) deco32_pf3_bank=0x4000; else deco32_pf3_bank=0;
@@ -1520,10 +1520,10 @@ VIDEO_UPDATE( tattass )
 	deco32_setup_scroll(pf4_tilemap, 512,(deco32_pf34_control[5]>>8)&0xff,(deco32_pf34_control[6]>>8)&0xff,deco32_pf34_control[4],deco32_pf34_control[3],deco32_pf4_rowscroll,deco32_pf4_rowscroll+0x200);
 
 	/* Enable registers - pf3/4 enable is not set on the 'fire' stage - hardware bug?  Maybe enable isn't hooked up */
-//	tilemap_set_enable(pf1_tilemap, deco32_pf12_control[5]&0x0080);
-//	tilemap_set_enable(pf2_tilemap, deco32_pf12_control[5]&0x8000);
-//	tilemap_set_enable(pf3_tilemap, deco32_pf34_control[5]&0x0080);
-//	tilemap_set_enable(pf4_tilemap, deco32_pf34_control[5]&0x8000);
+/*	tilemap_set_enable(pf1_tilemap, deco32_pf12_control[5]&0x0080);*/
+/*	tilemap_set_enable(pf2_tilemap, deco32_pf12_control[5]&0x8000);*/
+/*	tilemap_set_enable(pf3_tilemap, deco32_pf34_control[5]&0x0080);*/
+/*	tilemap_set_enable(pf4_tilemap, deco32_pf34_control[5]&0x8000);*/
 
 	deco16_clear_sprite_priority_bitmap();
 	fillbitmap(priority_bitmap,0,cliprect);
@@ -1562,7 +1562,7 @@ VIDEO_UPDATE( fghthist )
 		tilemap_mark_all_tiles_dirty(pf4_tilemap);
 
 	deco32_pf2_bank=((deco32_pf12_control[7]>>12)&0x3)<<12;
-	deco32_pf3_bank=((deco32_pf34_control[7]>> 5)&0x3)<<12;  //WRONG WRONG WRONG  check masks
+	deco32_pf3_bank=((deco32_pf34_control[7]>> 5)&0x3)<<12;  /*WRONG WRONG WRONG  check masks*/
 	deco32_pf4_bank=((deco32_pf34_control[7]>>12)&0x3)<<12;
 	deco32_pf1_flip=(deco32_pf12_control[6]>>0)&0x3;
 	deco32_pf2_flip=(deco32_pf12_control[6]>>8)&0x3;
@@ -1584,7 +1584,7 @@ VIDEO_UPDATE( fghthist )
 	/* Draw screen */
 	deco16_clear_sprite_priority_bitmap();
 	fillbitmap(priority_bitmap,0,cliprect);
-	fillbitmap(bitmap,Machine->pens[0x000],cliprect); // Palette index not confirmed
+	fillbitmap(bitmap,Machine->pens[0x000],cliprect); /* Palette index not confirmed*/
 	tilemap_draw(bitmap,cliprect,pf4_tilemap,0,0);
 	if(deco32_pri&1)
 	{
@@ -1599,7 +1599,7 @@ VIDEO_UPDATE( fghthist )
 	fghthist_draw_sprites(bitmap,buffered_spriteram32,3,0, 0xf);
 	tilemap_draw(bitmap,cliprect,pf1_tilemap,0,0);
 
-//	print_debug_info();
+/*	print_debug_info();*/
 }
 
 
@@ -1612,18 +1612,18 @@ VIDEO_UPDATE( fghthist )
 static void mixDualAlphaSprites( struct mame_bitmap *bitmap, const struct rectangle *clip, const struct GfxElement *gfx0, const struct GfxElement *gfx1, int mixAlphaTilemap)
 {
 	const pen_t *pens = Machine->pens;
-	const pen_t *pal0 = &pens[1024]; // gfx0->color_base -> 3
-	const pen_t *pal1 = &pens[1536]; // gfx1->color_base -> 4
-	const pen_t *pal2 = &pens[(deco32_pri&1) ? 0 : 512]; // Machine->gfx[(deco32_pri&1) ? 1 : 2]->color_base -> 0 - 512
+	const pen_t *pal0 = &pens[1024]; /* gfx0->color_base -> 3*/
+	const pen_t *pal1 = &pens[1536]; /* gfx1->color_base -> 4*/
+	const pen_t *pal2 = &pens[(deco32_pri&1) ? 0 : 512]; /* Machine->gfx[(deco32_pri&1) ? 1 : 2]->color_base -> 0 - 512*/
 	int x,y;
 
 	/* Mix sprites into main bitmap, based on priority & alpha */
 	for (y=8; y<248; y++) {
-		UINT8* tilemapPri=priority_bitmap->line[y]; //BITMAP_ADDR8(machine->priority_bitmap, y, 0);
-		UINT16* sprite0=(UINT16*)sprite0_mix_bitmap->line[y]; //BITMAP_ADDR16(sprite0_mix_bitmap, y, 0);
-		UINT16* sprite1=(UINT16*)sprite1_mix_bitmap->line[y]; //BITMAP_ADDR16(sprite1_mix_bitmap, y, 0);
-		UINT32* destLine=(UINT32 *)bitmap->line[y];//BITMAP_ADDR32(bitmap, y, 0);
-		UINT16* alphaTilemap=(UINT16*)tilemap_alpha_bitmap->line[y]; //BITMAP_ADDR16(tilemap_alpha_bitmap, y, 0);
+		UINT8* tilemapPri=priority_bitmap->line[y]; /*BITMAP_ADDR8(machine->priority_bitmap, y, 0);*/
+		UINT16* sprite0=(UINT16*)sprite0_mix_bitmap->line[y]; /*BITMAP_ADDR16(sprite0_mix_bitmap, y, 0);*/
+		UINT16* sprite1=(UINT16*)sprite1_mix_bitmap->line[y]; /*BITMAP_ADDR16(sprite1_mix_bitmap, y, 0);*/
+		UINT32* destLine=(UINT32 *)bitmap->line[y];/*BITMAP_ADDR32(bitmap, y, 0);*/
+		UINT16* alphaTilemap=(UINT16*)tilemap_alpha_bitmap->line[y]; /*BITMAP_ADDR16(tilemap_alpha_bitmap, y, 0);*/
 
 		for (x=0; x<320; x++) {
 			UINT16 priColAlphaPal0=sprite0[x];
@@ -1634,7 +1634,7 @@ static void mixDualAlphaSprites( struct mame_bitmap *bitmap, const struct rectan
 			UINT16 col1=((priColAlphaPal1&0x0f00)>>8) % gfx1->total_colors;
 			UINT16 alpha1=priColAlphaPal1&0x8000;
 
-			// Apply sprite bitmap 0 according to priority rules
+			/* Apply sprite bitmap 0 according to priority rules*/
 			if ((priColAlphaPal0&0xff)!=0)
 			{
 				/*
@@ -1645,26 +1645,26 @@ static void mixDualAlphaSprites( struct mame_bitmap *bitmap, const struct rectan
                     2 = Sprite under top two playfields
                     3 = Sprite under all playfields
                 */
-				if ((pri0&0x3)==0 || (pri0&0x3)==1 || ((pri0&0x3)==2 && mixAlphaTilemap)) // Spri0 on top of everything, or under alpha playfield
+				if ((pri0&0x3)==0 || (pri0&0x3)==1 || ((pri0&0x3)==2 && mixAlphaTilemap)) /* Spri0 on top of everything, or under alpha playfield*/
 				{
 					destLine[x]=pal0[(priColAlphaPal0&0xff) + (gfx0->color_granularity * col0)];
 				}
-				else if ((pri0&0x3)==2) // Spri0 under top playfield
+				else if ((pri0&0x3)==2) /* Spri0 under top playfield*/
 				{
 					if (tilemapPri[x]<4)
 						destLine[x]=pal0[(priColAlphaPal0&0xff) + (gfx0->color_granularity * col0)];
 				}
-				else // Spri0 under top & middle playfields
+				else /* Spri0 under top & middle playfields*/
 				{
 					if (tilemapPri[x]<2)
 						destLine[x]=pal0[(priColAlphaPal0&0xff) + (gfx0->color_granularity * col0)];
 				}
 			}
 
-			// Apply sprite bitmap 1 according to priority rules
+			/* Apply sprite bitmap 1 according to priority rules*/
 			if ((priColAlphaPal1&0xff)!=0)
 			{
-				// Apply alpha for this pixel based on Ace setting
+				/* Apply alpha for this pixel based on Ace setting*/
 				if (alpha1)
 				{
 					/*
@@ -1677,9 +1677,9 @@ static void mixDualAlphaSprites( struct mame_bitmap *bitmap, const struct rectan
                     */
 
 					/* Alpha values are tied to ACE ram... */
-					//int alpha=((deco32_ace_ram[0x0 + (((priColAlphaPal1&0xf0)>>4)/2)]) * 8)-1;
-					//if (alpha<0)
-					//  alpha=0;
+					/*int alpha=((deco32_ace_ram[0x0 + (((priColAlphaPal1&0xf0)>>4)/2)]) * 8)-1;*/
+					/*if (alpha<0)*/
+					/*  alpha=0;*/
 
 					/* I don't really understand how object ACE ram is really hooked up,
                         the only obvious place in Night Slashers is the stagecoach in level 2 */
@@ -1691,9 +1691,9 @@ static void mixDualAlphaSprites( struct mame_bitmap *bitmap, const struct rectan
 					}
 					else if (pri1==1 && ((priColAlphaPal0&0xff)==0 || ((pri0&0x3)!=0 && (pri0&0x3)!=1 && (pri0&0x3)!=2)))
 						destLine[x]=alpha_blend_r32(destLine[x], pal1[(priColAlphaPal1&0xff) + (gfx1->color_granularity * col1)], 0x80);
-					else if (pri1==2)// TOdo
+					else if (pri1==2)/* TOdo*/
 						destLine[x]=alpha_blend_r32(destLine[x], pal1[(priColAlphaPal1&0xff) + (gfx1->color_granularity * col1)], 0x80);
-					else if (pri1==3)// TOdo
+					else if (pri1==3)/* TOdo*/
 						destLine[x]=alpha_blend_r32(destLine[x], pal1[(priColAlphaPal1&0xff) + (gfx1->color_granularity * col1)], 0x80);
 				}
 				else
@@ -1705,11 +1705,11 @@ static void mixDualAlphaSprites( struct mame_bitmap *bitmap, const struct rectan
                     */
 					if (pri1==0 && ((priColAlphaPal0&0xff)==0 || ((pri0&0x3)!=0)))
 						destLine[x]=pal1[(priColAlphaPal1&0xff) + (gfx1->color_granularity * col1)];
-					else if (pri1==1) // todo
+					else if (pri1==1) /* todo*/
 						destLine[x]=pal1[(priColAlphaPal1&0xff) + (gfx1->color_granularity * col1)];
-					else if (pri1==2) // todo
+					else if (pri1==2) /* todo*/
 						destLine[x]=pal1[(priColAlphaPal1&0xff) + (gfx1->color_granularity * col1)];
-					else if (pri1==3) // todo
+					else if (pri1==3) /* todo*/
 						destLine[x]=pal1[(priColAlphaPal1&0xff) + (gfx1->color_granularity * col1)];
 				}
 			}

@@ -33,12 +33,12 @@ PALETTE_INIT( sprcros2 )
 		palette_set_color(i,r,g,b);
 	}
 
-	//cluts
+	/*cluts*/
 	for (i = 0;i < 0x100; i++)
 	{
-		colortable[i]=color_prom[i+0x20]+(color_prom[i+0x120]<<4);		//bg
-		colortable[i+0x100]=color_prom[i+0x220];						//sprites
-		colortable[i+0x200]=color_prom[i+0x320];						//fg
+		colortable[i]=color_prom[i+0x20]+(color_prom[i+0x120]<<4);		/*bg*/
+		colortable[i+0x100]=color_prom[i+0x220];						/*sprites*/
+		colortable[i+0x200]=color_prom[i+0x320];						/*fg*/
 	}
 }
 
@@ -78,11 +78,11 @@ static void get_sprcros2_bgtile_info(int tile_index)
 	unsigned int tile_number = sprcros2_bgvideoram[tile_index];
 	unsigned char attr = sprcros2_bgvideoram[tile_index+0x400];
 
-	//attr
-	//76543210
-	//xxxx---- colour
-	//----x--- flipx
-	//-----xxx tile bank
+	/*attr*/
+	/*76543210*/
+	/*xxxx---- colour*/
+	/*----x--- flipx*/
+	/*-----xxx tile bank*/
 
 	tile_number += (attr&0x07)<<8;
 
@@ -98,10 +98,10 @@ static void get_sprcros2_fgtile_info(int tile_index)
 	unsigned int tile_number = sprcros2_fgvideoram[tile_index];
 	unsigned char attr = sprcros2_fgvideoram[tile_index+0x400];
 
-	//attr
-	//76543210
-	//xxxxxx-- colour
-	//------xx tile bank
+	/*attr*/
+	/*76543210*/
+	/*xxxxxx-- colour*/
+	/*------xx tile bank*/
 
 	tile_number += (attr&0x03)<<8;
 
@@ -134,19 +134,19 @@ static void sprcros2_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 		if(sprcros2_spriteram[offs])
 		{
 
-			//offs
-			//76543210
-			//x------- unused
-			//-xxxxxxx sprite number
-			//offs+1
-			//76543210
-			//xx------ unused
-			//--xxx--- colour (6/7 unused and blank in prom)
-			//-----x-- unused
-			//------x- flipx
-			//-------x unused
-			//offs+2   y pos
-			//offs+3   x pos
+			/*offs*/
+			/*76543210*/
+			/*x------- unused*/
+			/*-xxxxxxx sprite number*/
+			/*offs+1*/
+			/*76543210*/
+			/*xx------ unused*/
+			/*--xxx--- colour (6/7 unused and blank in prom)*/
+			/*-----x-- unused*/
+			/*------x- flipx*/
+			/*-------x unused*/
+			/*offs+2   y pos*/
+			/*offs+3   x pos*/
 
 			sx = ((sprcros2_spriteram[offs+3]+0x10)%0x100)-0x10;
 			sy = 225-(((sprcros2_spriteram[offs+2]+0x10)%0x100)-0x10);

@@ -47,7 +47,7 @@
 #include "matrix3d.h"
 #include <math.h>
 
-//#define MAME_DEBUG
+/*#define MAME_DEBUG*/
 
 static int mbDumpScene; /* used for debugging */
 
@@ -399,7 +399,7 @@ UpdatePaletteS( void ) /* for Super System22 - apply gamma correction and prelim
 	int green = nthbyte( namcos22_gamma, 0x17 );
 	int blue  = nthbyte( namcos22_gamma, 0x18 );
 	int fade  = nthbyte( namcos22_gamma, 0x19 );
-//	int flags = nthbyte( namcos22_gamma, 0x1a );
+/*	int flags = nthbyte( namcos22_gamma, 0x1a );*/
 
 	tilemap_set_palette_offset( tilemap, nthbyte(namcos22_gamma,0x1b)*256 );
 
@@ -600,7 +600,7 @@ LoadMatrix( const INT32 *pSource, double M[4][4] )
  * +0x78 30	6630, 0001
  * +0x7c 31	7f02
  */
-//static double mWindowZoom;
+/*static double mWindowZoom;*/
 static namcos22_camera mCamera;
 static struct Matrix mWindowTransform;
 
@@ -637,7 +637,7 @@ SetupWindow( const INT32 *pWindow, int which )
 		if( mCamera.clip.max_y < 320 ) mCamera.clip.max_y = 320;
 
 		{
-//			double pi = atan (1.0) * 4.0;
+/*			double pi = atan (1.0) * 4.0;*/
 	        double fov = pWindow[0x38/4];
 
 	        if( namcos22_gametype == NAMCOS22_PROP_CYCLE )
@@ -820,7 +820,7 @@ BlitQuadHelper(
 static void
 BlitQuads( struct mame_bitmap *pBitmap, INT32 addr, double m[4][4], INT32 base )
 {
-//	INT32 start = addr;
+/*	INT32 start = addr;*/
 	INT32 size = GetPolyData(addr++);
 	INT32 finish = addr + (size&0xff);
 	INT32 flags;
@@ -889,7 +889,7 @@ BlitQuads( struct mame_bitmap *pBitmap, INT32 addr, double m[4][4], INT32 base )
 			break;
 
 		default:
-			//printf( "unexpected point data %08x at %08x.%08x\n", size, base, start );
+			/*printf( "unexpected point data %08x at %08x.%08x\n", size, base, start );*/
 			break;
 		}
 

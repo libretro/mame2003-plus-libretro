@@ -98,7 +98,7 @@ static void get_tile_info_1( int tile_index )
 	SET_TILE_INFO(
 			1,
 			(code & 0x1fff) + 0x2000*tilemap_1_bank,
-			((code >> 13) & 7) + 0x40, // So we only have to decode the gfx once.
+			((code >> 13) & 7) + 0x40, /* So we only have to decode the gfx once.*/
 			0)
 }
 
@@ -227,28 +227,28 @@ VIDEO_START( psikyo )
 		tilemap_1_size0 && tilemap_1_size1 && tilemap_1_size2 && tilemap_1_size3 &&
 		spritebuf1 && spritebuf2)
 	{
-		tilemap_set_scroll_rows(tilemap_0_size0,0x80*16);	// line scrolling
+		tilemap_set_scroll_rows(tilemap_0_size0,0x80*16);	/* line scrolling*/
 		tilemap_set_scroll_cols(tilemap_0_size0,1);
 
-		tilemap_set_scroll_rows(tilemap_0_size1,0x40*16);	// line scrolling
+		tilemap_set_scroll_rows(tilemap_0_size1,0x40*16);	/* line scrolling*/
 		tilemap_set_scroll_cols(tilemap_0_size1,1);
 
-		tilemap_set_scroll_rows(tilemap_0_size2,0x20*16);	// line scrolling
+		tilemap_set_scroll_rows(tilemap_0_size2,0x20*16);	/* line scrolling*/
 		tilemap_set_scroll_cols(tilemap_0_size2,1);
 
-		tilemap_set_scroll_rows(tilemap_0_size3,0x10*16);	// line scrolling
+		tilemap_set_scroll_rows(tilemap_0_size3,0x10*16);	/* line scrolling*/
 		tilemap_set_scroll_cols(tilemap_0_size3,1);
 
-		tilemap_set_scroll_rows(tilemap_1_size0,0x80*16);	// line scrolling
+		tilemap_set_scroll_rows(tilemap_1_size0,0x80*16);	/* line scrolling*/
 		tilemap_set_scroll_cols(tilemap_1_size0,1);
 
-		tilemap_set_scroll_rows(tilemap_1_size1,0x40*16);	// line scrolling
+		tilemap_set_scroll_rows(tilemap_1_size1,0x40*16);	/* line scrolling*/
 		tilemap_set_scroll_cols(tilemap_1_size1,1);
 
-		tilemap_set_scroll_rows(tilemap_1_size2,0x20*16);	// line scrolling
+		tilemap_set_scroll_rows(tilemap_1_size2,0x20*16);	/* line scrolling*/
 		tilemap_set_scroll_cols(tilemap_1_size2,1);
 
-		tilemap_set_scroll_rows(tilemap_1_size3,0x10*16);	// line scrolling
+		tilemap_set_scroll_rows(tilemap_1_size3,0x10*16);	/* line scrolling*/
 		tilemap_set_scroll_cols(tilemap_1_size3,1);
 
 		return 0;
@@ -308,7 +308,7 @@ static void psikyo_draw_sprites(struct mame_bitmap *bitmap, const struct rectang
 
 	data16_t *spritelist	=	(data16_t *)(spritebuf2 + 0x1800/4);
 
-	unsigned char *TILES	=	memory_region(REGION_USER1);	// Sprites LUT
+	unsigned char *TILES	=	memory_region(REGION_USER1);	/* Sprites LUT*/
 	int TILES_LEN			=	memory_region_length(REGION_USER1);
 
 	int width	=	Machine->drv->screen_width;
@@ -318,14 +318,14 @@ static void psikyo_draw_sprites(struct mame_bitmap *bitmap, const struct rectang
 	if ( spritelist[ BYTE_XOR_BE((0x800-2)/2) ] & 1 )	return;
 
 	/* Look for "end of sprites" marker in the sprites list */
-	for ( offs = 0/2 ; offs < (0x800-2)/2 ; offs += 2/2 )	// skip last "sprite"
+	for ( offs = 0/2 ; offs < (0x800-2)/2 ; offs += 2/2 )	/* skip last "sprite"*/
 	{
 		data16_t sprite = spritelist[ BYTE_XOR_BE(offs) ];
 		if (sprite == 0xffff)	break;
 	}
 	offs -= 2/2;
 
-	//	fprintf(stderr, "\n");
+	/*	fprintf(stderr, "\n");*/
 	for ( ; offs >= 0/2 ; offs -= 2/2 )
 	{
 		data32_t *source;
@@ -396,7 +396,7 @@ static void psikyo_draw_sprites(struct mame_bitmap *bitmap, const struct rectang
 							flipx, flipy,
 							x + dx * 16, y + dy * 16,
 							cliprect,TRANSPARENCY_PEN,trans_pen,
-							(attr & 0xc0) ? 2 : 0);	// layer 0&1 have pri 0&1
+							(attr & 0xc0) ? 2 : 0);	/* layer 0&1 have pri 0&1*/
 				else
 					pdrawgfxzoom(bitmap,Machine->gfx[0],
 								TILES[addr+1] * 256 + TILES[addr],
@@ -405,7 +405,7 @@ static void psikyo_draw_sprites(struct mame_bitmap *bitmap, const struct rectang
 								x + (dx * zoomx) / 2, y + (dy * zoomy) / 2,
 								cliprect,TRANSPARENCY_PEN,trans_pen,
 								zoomx << 11,zoomy << 11,
-								(attr & 0xc0) ? 2 : 0);	// layer 0&1 have pri 0&1
+								(attr & 0xc0) ? 2 : 0);	/* layer 0&1 have pri 0&1*/
 
 				code++;
 			}
@@ -444,7 +444,7 @@ VIDEO_UPDATE( psikyo )
 
 	struct tilemap *tmptilemap0, *tmptilemap1;
 
-	flip_screen_set(~readinputport(2) & 1);	// hardwired to a DSW bit
+	flip_screen_set(~readinputport(2) & 1);	/* hardwired to a DSW bit*/
 
 	/* Layers enable (not quite right) */
 
@@ -527,19 +527,19 @@ VIDEO_UPDATE( psikyo )
 
 	tilemap_set_scrolly(tmptilemap1, 0, layer1_scrolly );
 
-	for (i=0; i<256; i++)	// 256 screen lines
+	for (i=0; i<256; i++)	/* 256 screen lines*/
 	{
 		tilemap_set_scrollx(
 			tmptilemap0,
 			(i+layer0_scrolly) % tilemap_width(tm0size),
 			layer0_scrollx + ((layer0_ctrl & 0x0100) ? ((data16_t *)psikyo_vregs)[BYTE_XOR_BE(0x000/2 + i)] : 0) );
-//			layer0_scrollx + ((data16_t *)psikyo_vregs)[BYTE_XOR_BE(0x000/2 + i)] );
+/*			layer0_scrollx + ((data16_t *)psikyo_vregs)[BYTE_XOR_BE(0x000/2 + i)] );*/
 
 		tilemap_set_scrollx(
 			tmptilemap1,
 			(i+layer1_scrolly) % tilemap_width(tm1size),
 			layer1_scrollx + ((layer1_ctrl & 0x0100) ? ((data16_t *)psikyo_vregs)[BYTE_XOR_BE(0x200/2 + i)] : 0) );
-//			layer1_scrollx + ((data16_t *)psikyo_vregs)[BYTE_XOR_BE(0x200/2 + i)] );
+/*			layer1_scrollx + ((data16_t *)psikyo_vregs)[BYTE_XOR_BE(0x200/2 + i)] );*/
 	}
 
 	tilemap_set_transparent_pen(tilemap_0_size0,(layer0_ctrl & 8 ?0:15));

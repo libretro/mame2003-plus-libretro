@@ -474,7 +474,7 @@ static void draw_sprites(struct mame_bitmap *bitmap, const struct rectangle *cli
 
 		sy += (flip_screen ? -256 : 256);
 
-		// Wrap around
+		/* Wrap around*/
 		drawgfx(bitmap,Machine->gfx[1],
 				sprite_ram[offs + interleave],
 				color,

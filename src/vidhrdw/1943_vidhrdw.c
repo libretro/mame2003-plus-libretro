@@ -149,7 +149,7 @@ WRITE_HANDLER( c1943_c804_w )
 	if (flipscreen != (data & 0x40))
 	{
 		flipscreen = data & 0x40;
-//		memset(dirtybuffer,1,c1942_backgroundram_size);
+/*		memset(dirtybuffer,1,c1942_backgroundram_size);*/
 	}
 
 	/* bit 7 enables characters */

@@ -143,8 +143,8 @@ WRITE16_HANDLER( taotaido_tileregs_w )
 {
 	switch (offset)
 	{
-		case 0: // would normally be x scroll?
-		case 1: // would normally be y scroll?
+		case 0: /* would normally be x scroll?*/
+		case 1: /* would normally be y scroll?*/
 		case 2:
 		case 3:
 			logerror ("unhanded tilemap register write offset %02x data %04x \n",offset,data);
@@ -210,8 +210,8 @@ VIDEO_START(taotaido)
 
 VIDEO_UPDATE(taotaido)
 {
-//	tilemap_set_scrollx(bg_tilemap,0,(taotaido_scrollram[0x380/2]>>4)); // the values put here end up being wrong every other frame
-//	tilemap_set_scrolly(bg_tilemap,0,(taotaido_scrollram[0x382/2]>>4)); // the values put here end up being wrong every other frame
+/*	tilemap_set_scrollx(bg_tilemap,0,(taotaido_scrollram[0x380/2]>>4)); // the values put here end up being wrong every other frame*/
+/*	tilemap_set_scrolly(bg_tilemap,0,(taotaido_scrollram[0x382/2]>>4)); // the values put here end up being wrong every other frame*/
 
 	/* not amazingly efficient however it should be functional for row select and linescroll */
 	int line;

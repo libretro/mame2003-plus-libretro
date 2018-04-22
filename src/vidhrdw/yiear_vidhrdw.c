@@ -100,7 +100,7 @@ static void get_bg_tile_info(int tile_index)
 	int offs = tile_index * 2;
 	int attr = videoram[offs];
 	int code = videoram[offs + 1] | ((attr & 0x10) << 4);
-//	int color = (attr & 0xf0) >> 4;
+/*	int color = (attr & 0xf0) >> 4;*/
 	int flags = ((attr & 0x80) ? TILE_FLIPX : 0) | ((attr & 0x40) ? TILE_FLIPY : 0);
 
 	SET_TILE_INFO(0, code, 0, flags)

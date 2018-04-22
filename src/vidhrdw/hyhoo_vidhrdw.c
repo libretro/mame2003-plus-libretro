@@ -46,7 +46,7 @@ PALETTE_INIT( hyhoo )
 	{
 		int r, g, b;
 
-		// bbbbbggg_ggrrrrrr
+		/* bbbbbggg_ggrrrrrr*/
 		r = ((i >>  0) & 0x3f);
 		g = ((i >>  6) & 0x1f);
 		b = ((i >> 11) & 0x1f);
@@ -250,14 +250,14 @@ void hyhoo_gfxdraw(void)
 
 			if (hyhoo_gfxflag2 & 0x04)
 			{
-				// 65536 colors mode
+				/* 65536 colors mode*/
 
 				if (hyhoo_gfxflag2 & 0x20)
 				{
-					// 65536 colors (lower)
+					/* 65536 colors (lower)*/
 
-					// src xxxxxxxx_bbbggrrr
-					// dst xxbbbxxx_ggxxxrrr
+					/* src xxxxxxxx_bbbggrrr*/
+					/* dst xxbbbxxx_ggxxxrrr*/
 					r = (((color & 0x07) >> 0) & 0x07);
 					g = (((color & 0x18) >> 3) & 0x03);
 					b = (((color & 0xe0) >> 5) & 0x07);
@@ -271,12 +271,12 @@ void hyhoo_gfxdraw(void)
 				}
 				else
 				{
-					// 65536 colors (higher)
+					/* 65536 colors (higher)*/
 
-					tflag1 = tflag2 = 1;	// dummy
+					tflag1 = tflag2 = 1;	/* dummy*/
 
-					// src xxxxxxxx_bbgggrrr
-					// dst bbxxxggg_xxrrrxxx
+					/* src xxxxxxxx_bbgggrrr*/
+					/* dst bbxxxggg_xxrrrxxx*/
 					r = (((color & 0x07) >> 0) & 0x07);
 					g = (((color & 0x38) >> 3) & 0x07);
 					b = (((color & 0xc0) >> 6) & 0x03);
@@ -290,17 +290,17 @@ void hyhoo_gfxdraw(void)
 			}
 			else
 			{
-				// Palettized picture mode
+				/* Palettized picture mode*/
 
 				if (hyhoo_flipx)
 				{
-					// flip
+					/* flip*/
 					color1 = (color & 0xf0) >> 4;
 					color2 = (color & 0x0f) >> 0;
 				}
 				else
 				{
-					// normal
+					/* normal*/
 					color1 = (color & 0x0f) >> 0;
 					color2 = (color & 0xf0) >> 4;
 				}
@@ -308,8 +308,8 @@ void hyhoo_gfxdraw(void)
 				tflag1 = (hyhoo_palette[color1] != 0xff) ? 1 : 0;
 				tflag2 = (hyhoo_palette[color2] != 0xff) ? 1 : 0;
 
-				// src xxxxxxxx_bbgggrrr
-				// dst bbxxxggg_xxrrrxxx
+				/* src xxxxxxxx_bbgggrrr*/
+				/* dst bbxxxggg_xxrrrxxx*/
 
 				r = (hyhoo_palette[color1] & 0x07) >> 0;
 				g = (hyhoo_palette[color1] & 0x38) >> 3;
@@ -317,8 +317,8 @@ void hyhoo_gfxdraw(void)
 
 				drawcolor1 = ((b << (11 + 3)) | (g << (6 + 2)) | (r << (0 + 3)));
 
-				// src xxxxxxxx_bbgggrrr
-				// dst bbxxxggg_xxrrrxxx
+				/* src xxxxxxxx_bbgggrrr*/
+				/* dst bbxxxggg_xxrrrxxx*/
 
 				r = (hyhoo_palette[color2] & 0x07) >> 0;
 				g = (hyhoo_palette[color2] & 0x38) >> 3;

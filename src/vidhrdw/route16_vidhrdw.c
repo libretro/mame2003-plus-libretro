@@ -147,10 +147,10 @@ WRITE_HANDLER( route16_sharedram_w )
 {
 	route16_sharedram[offset] = data;
 
-	// 4313-4319 are used in Route 16 as triggers to wake the other CPU
+	/* 4313-4319 are used in Route 16 as triggers to wake the other CPU*/
 	if (offset >= 0x0313 && offset <= 0x0319 && data == 0xff && route16_hardware)
 	{
-		// Let the other CPU run
+		/* Let the other CPU run*/
 		cpu_yield();
 	}
 }
@@ -290,7 +290,7 @@ VIDEO_UPDATE( route16 )
 	{
 		int offs;
 
-		// redraw bitmaps
+		/* redraw bitmaps*/
 		for (offs = 0; offs < route16_videoram_size; offs++)
 		{
 			route16_videoram1_w(offs, route16_videoram1[offs]);

@@ -203,7 +203,7 @@ data32_t *f3_pf_data,*f3_pivot_ram;
 extern int f3_game;
 #if DEBUG_F3
 static int sprite_pri_word;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 static int scroll_dirty,skip_this_frame;
 
 /* Game specific data, some of this can be
@@ -223,27 +223,27 @@ const struct F3config *f3_game_config;
 static const struct F3config f3_config_table[] =
 {
 	/* Name    Extend  X Offset, Y Offset  Flip Pivot Sprite Lag */  /* Uses 5000, uses control bits,works with line X zoom */
-/**/{ RINGRAGE,  0,      0,        -30,         0,          2    }, //no,no,no
-	{ ARABIANM,  0,      0,        -30,         0,          2    }, //ff00 in 5000, no,yes
-/**/{ RIDINGF,   1,      0,        -30,         0,          1    }, //yes,yes,yes
-	{ GSEEKER,   0,      1,        -30,         0,          1    }, //yes,yes,yes
-	{ TRSTAR,    1,      0,          0,         0,          0    }, //
-	{ GUNLOCK,   1,      1,        -30,         0,          2    }, //yes,yes,partial
+/**/{ RINGRAGE,  0,      0,        -30,         0,          2    }, /*no,no,no*/
+	{ ARABIANM,  0,      0,        -30,         0,          2    }, /*ff00 in 5000, no,yes*/
+/**/{ RIDINGF,   1,      0,        -30,         0,          1    }, /*yes,yes,yes*/
+	{ GSEEKER,   0,      1,        -30,         0,          1    }, /*yes,yes,yes*/
+	{ TRSTAR,    1,      0,          0,         0,          0    }, /**/
+	{ GUNLOCK,   1,      1,        -30,         0,          2    }, /*yes,yes,partial*/
 /**/{ TWINQIX,   1,      0,        -30,         1,          1    },
 	{ SCFINALS,  0,      0,        -30,         1,          1/**/},
-	{ LIGHTBR,   1,      0,        -30,         0,          2    }, //yes,?,no
+	{ LIGHTBR,   1,      0,        -30,         0,          2    }, /*yes,?,no*/
 	{ KAISERKN,  0,      0,        -30,         1,          2    },
 	{ DARIUSG,   0,      0,        -23,         0,          2    },
-	{ BUBSYMPH,  1,      0,        -30,         0,          1/**/}, //yes,yes,?
-	{ SPCINVDX,  1,      0,        -30,         1,          1/**/}, //yes,yes,?
+	{ BUBSYMPH,  1,      0,        -30,         0,          1/**/}, /*yes,yes,?*/
+	{ SPCINVDX,  1,      0,        -30,         1,          1/**/}, /*yes,yes,?*/
 	{ QTHEATER,  1,      0,          0,         0,          1/**/},
 	{ HTHERO95,  0,      0,        -30,         1,          1/**/},
 	{ SPCINV95,  0,      0,        -30,         0,          1/**/},
-	{ EACTION2,  1,      0,        -23,         0,          2    }, //no,yes,?
+	{ EACTION2,  1,      0,        -23,         0,          2    }, /*no,yes,?*/
 	{ QUIZHUHU,  1,      0,        -23,         0,          1/**/},
-	{ PBOBBLE2,  0,      0,          0,         1,          1/**/}, //no,no,?
+	{ PBOBBLE2,  0,      0,          0,         1,          1/**/}, /*no,no,?*/
 	{ GEKIRIDO,  0,      0,        -23,         0,          1    },
-	{ KTIGER2,   0,      0,        -23,         0,          0    },//no,yes,partial
+	{ KTIGER2,   0,      0,        -23,         0,          0    },/*no,yes,partial*/
 	{ BUBBLEM,   1,      0,        -30,         0,          1/**/},
 	{ CLEOPATR,  0,      0,        -30,         0,          1/**/},
 	{ PBOBBLE3,  0,      0,          0,         0,          1/**/},
@@ -273,7 +273,7 @@ static char deb_buf[10][80];
 static int deb_enable=0;
 static int deb_tileflag=0;
 static int deb_tile_code=0;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 static const struct tempsprite *sprite_end;
 static void get_sprite_info(const data32_t *spriteram32_ptr);
@@ -455,7 +455,7 @@ static void print_debug_info(int t0, int t1, int t2, int t3, int c0, int c1, int
 
 	Machine->orientation = trueorientation;
 }
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 /******************************************************************************/
 
@@ -465,7 +465,7 @@ static INLINE void get_tile_info(int tile_index, data32_t *gfx_base)
 	UINT8 abtype=(tile>>(16+9))&0x1f;
 
 #if DEBUG_F3
-//if((tile&0xffff)>Machine->gfx[1]->total_elements) printf("tile code:%04x\n",tile&0xffff);
+/*if((tile&0xffff)>Machine->gfx[1]->total_elements) printf("tile code:%04x\n",tile&0xffff);*/
 	if(deb_tileflag)
 	{
 		int c=tile&0xffff;
@@ -479,7 +479,7 @@ static INLINE void get_tile_info(int tile_index, data32_t *gfx_base)
 		tile_info.priority = abtype&1;		/* alpha blending type? */
 	}
 	else
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 	{
 		SET_TILE_INFO(
 				1,
@@ -602,7 +602,7 @@ VIDEO_STOP( f3 )
 		}
 	}
 #undef FWRITE32
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 }
 
 VIDEO_START( f3 )
@@ -724,7 +724,7 @@ VIDEO_START( f3 )
 		int c;
 #if DEBUG_F3
 		int deb_count_opa=0,deb_count_tra=0,deb_tra_code=-1;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 		for (c = 0;c < sprite_gfx->total_elements;c++)
 		{
@@ -745,12 +745,12 @@ VIDEO_START( f3 )
 #if DEBUG_F3
 			if     (chk_trans_or_opa==2){deb_count_tra++;deb_tra_code=c;}
 			else if(chk_trans_or_opa==1) deb_count_opa++;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 		}
 #if DEBUG_F3
 		printf("tile_opaque_sp: t=%d o=%d total=%d tra_code=%d\n",deb_count_tra,deb_count_opa,
 		sprite_gfx->total_elements,deb_tra_code);
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 	}
 
 
@@ -759,7 +759,7 @@ VIDEO_START( f3 )
 		int c;
 #if DEBUG_F3
 		int deb_count_opa=0,deb_count_tra=0,deb_tra_code=-1;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 		for (c = 0;c < pf_gfx->total_elements;c++)
 		{
@@ -779,12 +779,12 @@ VIDEO_START( f3 )
 #if DEBUG_F3
 			if     (chk_trans_or_opa==2){deb_count_tra++;deb_tra_code=c;}
 			else if(chk_trans_or_opa==1) deb_count_opa++;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 		}
 #if DEBUG_F3
 		printf("tile_opaque_pf: t=%d o=%d total=%d tra_code=%d\n",deb_count_tra,deb_count_opa,
 		pf_gfx->total_elements,deb_tra_code);
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 	}
 
 	return 0;
@@ -866,16 +866,16 @@ WRITE32_HANDLER( f3_lineram_w )
 
 	COMBINE_DATA(&f3_line_ram[offset]);
 
-//	if ((offset&0xfe00)==0x2800)
-//		scroll_dirty=1;
+/*	if ((offset&0xfe00)==0x2800)*/
+/*		scroll_dirty=1;*/
 
-//	if (offset>=0x6000/4 && offset<0x7000/4)
-//	if (offset==0x18c0)
-//		logerror("%08x:  Write 6000 %08x, %08x\n",activecpu_get_pc(),offset,data);
-//	if (offset>=0xa000/4 && offset<0xb000/4)
-//		logerror("%08x:  Write a000 %08x, %08x\n",activecpu_get_pc(),offset,data);
-//	if (offset>=0xb000/4 && offset<0xc000/4)
-//		logerror("%08x:  Write b000 %08x, %08x\n",activecpu_get_pc(),offset,data);
+/*	if (offset>=0x6000/4 && offset<0x7000/4)*/
+/*	if (offset==0x18c0)*/
+/*		logerror("%08x:  Write 6000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
+/*	if (offset>=0xa000/4 && offset<0xb000/4)*/
+/*		logerror("%08x:  Write a000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
+/*	if (offset>=0xb000/4 && offset<0xc000/4)*/
+/*		logerror("%08x:  Write b000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
 
 }
 
@@ -936,7 +936,7 @@ static int deb_alpha_level_b=0;
 static int deb_alp_mode=0;
 static int deb_loop=0;
 static int deb_alpha_cnt=0;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 static UINT8 add_sat[256][256];
 
@@ -992,19 +992,19 @@ static int (**dpix_sp[9])(UINT32 s_pix);
 
 static INLINE void f3_alpha_set_level(void)
 {
-//	SET_ALPHA_LEVEL(alpha_s_1_1, f3_alpha_level_2ad)
+/*	SET_ALPHA_LEVEL(alpha_s_1_1, f3_alpha_level_2ad)*/
 	SET_ALPHA_LEVEL(alpha_s_1_1, 255-f3_alpha_level_2as)
-//	SET_ALPHA_LEVEL(alpha_s_1_2, f3_alpha_level_2bd)
+/*	SET_ALPHA_LEVEL(alpha_s_1_2, f3_alpha_level_2bd)*/
 	SET_ALPHA_LEVEL(alpha_s_1_2, 255-f3_alpha_level_2bs)
 	SET_ALPHA_LEVEL(alpha_s_1_4, f3_alpha_level_3ad)
-//	SET_ALPHA_LEVEL(alpha_s_1_5, f3_alpha_level_3ad*f3_alpha_level_2ad/255)
+/*	SET_ALPHA_LEVEL(alpha_s_1_5, f3_alpha_level_3ad*f3_alpha_level_2ad/255)*/
 	SET_ALPHA_LEVEL(alpha_s_1_5, f3_alpha_level_3ad*(255-f3_alpha_level_2as)/255)
-//	SET_ALPHA_LEVEL(alpha_s_1_6, f3_alpha_level_3ad*f3_alpha_level_2bd/255)
+/*	SET_ALPHA_LEVEL(alpha_s_1_6, f3_alpha_level_3ad*f3_alpha_level_2bd/255)*/
 	SET_ALPHA_LEVEL(alpha_s_1_6, f3_alpha_level_3ad*(255-f3_alpha_level_2bs)/255)
 	SET_ALPHA_LEVEL(alpha_s_1_8, f3_alpha_level_3bd)
-//	SET_ALPHA_LEVEL(alpha_s_1_9, f3_alpha_level_3bd*f3_alpha_level_2ad/255)
+/*	SET_ALPHA_LEVEL(alpha_s_1_9, f3_alpha_level_3bd*f3_alpha_level_2ad/255)*/
 	SET_ALPHA_LEVEL(alpha_s_1_9, f3_alpha_level_3bd*(255-f3_alpha_level_2as)/255)
-//	SET_ALPHA_LEVEL(alpha_s_1_a, f3_alpha_level_3bd*f3_alpha_level_2bd/255)
+/*	SET_ALPHA_LEVEL(alpha_s_1_a, f3_alpha_level_3bd*f3_alpha_level_2bd/255)*/
 	SET_ALPHA_LEVEL(alpha_s_1_a, f3_alpha_level_3bd*(255-f3_alpha_level_2bs)/255)
 
 	SET_ALPHA_LEVEL(alpha_s_2a_0, f3_alpha_level_2as)
@@ -1530,7 +1530,7 @@ static INLINE void f3_drawscanlines(
 	tr_3b =(f3_alpha_level_3bs==0 && f3_alpha_level_3bd==255) ? -1 : 1;
 
 
-//	if (bitmap->depth == 32)
+/*	if (bitmap->depth == 32)*/
 	{
 		UINT32 *dsti0,*dsti;
 		dsti0 = (UINT32 *)bitmap->line[ty] + x;
@@ -1663,7 +1663,7 @@ static INLINE void clear_scanlines(struct mame_bitmap *bitmap,int x,int xsize,IN
 		yadv = -yadv;
 	}
 
-//	if (bitmap->depth == 32)
+/*	if (bitmap->depth == 32)*/
 	{
 		UINT32 *dsti0,*dsti;
 		dsti0 = (UINT32 *)bitmap->line[ty] + x;
@@ -1795,7 +1795,7 @@ static void get_line_ram_info(struct tilemap *tilemap,int sx,int sy,int pos,data
 	UINT32 _x_offset[256];
 	int y_index_fx;
 
-	sx+=(46<<16);//+scroll_kludge_x;
+	sx+=(46<<16);/*+scroll_kludge_x;*/
 	if (flipscreen)
 	{
 		line_base=0xa1fe + (pos*0x200);
@@ -1873,14 +1873,14 @@ static void get_line_ram_info(struct tilemap *tilemap,int sx,int sy,int pos,data
 		if(y_zoom && line_enable && (colscroll!=0 || x_zoom!=y_zoom)) y_zoom=0x10000;
 
 
-//		if (line_enable)
+/*		if (line_enable)*/
 		{
 			if (!pri || (!flipscreen && y<24) || (flipscreen && y>231) ||
 				(pri&0xc000)==0xc000 || !(pri&0x2000)/**/)
  				line_enable=0;
-			else if(pri&0x4000)	//alpha1
+			else if(pri&0x4000)	/*alpha1*/
 				line_enable=2;
-			else if(pri&0x8000)	//alpha2
+			else if(pri&0x8000)	/*alpha2*/
 				line_enable=3;
 			else
 				line_enable=1;
@@ -1997,7 +1997,7 @@ static void f3_tilemap_draw(struct mame_bitmap *bitmap,
 		if (keyboard_pressed(KEYCODE_D)) sprite_pri_usage &= ~(1<<1);
 		if (keyboard_pressed(KEYCODE_F)) sprite_pri_usage &= ~(1<<0);
 	}
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 	if (flipscreen)
 	{
@@ -2010,13 +2010,13 @@ static void f3_tilemap_draw(struct mame_bitmap *bitmap,
 		ys=24;
 		ye=256;
 	}
-//	ys=0;
-//	ye=256;
+/*	ys=0;*/
+/*	ye=256;*/
 
 #if DEBUG_F3
 deb_loop=0;
 deb_alpha_cnt=0;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 	y_start=ys;
 	y_end=ye;
@@ -2099,7 +2099,7 @@ deb_alpha_cnt=0;
 
 #if DEBUG_F3
 deb_loop++;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 
 		/* alpha blend */
@@ -2309,7 +2309,7 @@ deb_loop++;
 				int pri_sl1=p0&0x0f;
 				int pri_sl2=(p0&0xf0)>>4;
 
-				if (f3_game == ARKRETRN && (p0&0xf00)==0x300)			//???
+				if (f3_game == ARKRETRN && (p0&0xf00)==0x300)			/*???*/
 					pri_sl1=pri_sl2<pri_sl1 ? pri_sl2 : pri_sl1;
 
 				layer_tmp[i]=i + (pri_sl1<<2);
@@ -2317,7 +2317,7 @@ deb_loop++;
 				if(!alpha_mode[i]
 #if DEBUG_F3
 					|| !enable[i]
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 					/*|| !(pri[i]&0x2000)*/)
 				{
 					layer_tmp[i]|=0x40;
@@ -2381,7 +2381,7 @@ deb_loop++;
 						DARIUSG (ZONE V' BOSS) ---> playfield
 				*/
 
-				if (f3_game == BUBSYMPH ) sp++;		//BUBSYMPH (title)
+				if (f3_game == BUBSYMPH ) sp++;		/*BUBSYMPH (title)*/
 
 					 if(		  sp>l0) sprite[0]|=sflg;
 				else if(sp<=l0 && sp>l1) sprite[1]|=sflg;
@@ -2412,7 +2412,7 @@ deb_loop++;
 			{
 #if DEBUG_F3
 				if(!alpha_mode[pos]) usrintf_showmessage("layer priority error");
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 				if(alpha) dpix_lp[i]=dpix_n[1];
 				else	  dpix_lp[i]=dpix_n[0];
 			}
@@ -2428,7 +2428,7 @@ deb_loop++;
 														sprite[2],
 														sprite[3],
 														sprite[4]);
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 		f3_drawscanlines(bitmap,46,320,draw_line_num,line_t,sprite,rot,count_skip_layer);
 		if(y_start<0) break;
@@ -2465,8 +2465,8 @@ static void f3_update_pivot_layer(void)
 	}
 
 	/* Clip top scanlines according to line ram - Bubble Memories makes use of this */
-	pivot_clip.min_x=0;//Machine->visible_area.min_x;
-	pivot_clip.max_x=512;//Machine->visible_area.max_x;
+	pivot_clip.min_x=0;/*Machine->visible_area.min_x;*/
+	pivot_clip.max_x=512;/*Machine->visible_area.max_x;*/
 	pivot_clip.min_y=Machine->visible_area.min_y;
 	pivot_clip.max_y=Machine->visible_area.max_y;
 	if (flipscreen)
@@ -2613,7 +2613,7 @@ static INLINE void f3_drawgfx( struct mame_bitmap *dest_bmp,const struct GfxElem
 	if( gfx && gfx->colortable )
 	{
 		const pen_t *pal = &gfx->colortable[gfx->color_granularity * (color % gfx->total_colors)]; /* ASG 980209 */
-//		int palBase = &gfx->colortable[gfx->color_granularity * (color % gfx->total_colors)] - Machine->remapped_colortable;
+/*		int palBase = &gfx->colortable[gfx->color_granularity * (color % gfx->total_colors)] - Machine->remapped_colortable;*/
 		int source_base = (code % gfx->total_elements) * 16;
 
 		{
@@ -2676,7 +2676,7 @@ static INLINE void f3_drawgfx( struct mame_bitmap *dest_bmp,const struct GfxElem
 
 			if( ex>sx && ey>sy)
 			{ /* skip if inner loop doesn't draw anything */
-//				if (dest_bmp->depth == 32)
+/*				if (dest_bmp->depth == 32)*/
 				{
 					int y=ey-sy;
 					int x=(ex-sx-1)|(tile_opaque_sp[code]<<4);
@@ -2778,7 +2778,7 @@ static INLINE void f3_drawgfxzoom( struct mame_bitmap *dest_bmp,const struct Gfx
 	if( gfx && gfx->colortable )
 	{
 		const pen_t *pal = &gfx->colortable[gfx->color_granularity * (color % gfx->total_colors)]; /* ASG 980209 */
-//		int palBase = &gfx->colortable[gfx->color_granularity * (color % gfx->total_colors)] - Machine->remapped_colortable;
+/*		int palBase = &gfx->colortable[gfx->color_granularity * (color % gfx->total_colors)] - Machine->remapped_colortable;*/
 		int source_base = (code % gfx->total_elements) * 16;
 
 		{
@@ -2841,7 +2841,7 @@ static INLINE void f3_drawgfxzoom( struct mame_bitmap *dest_bmp,const struct Gfx
 
 			if( ex>sx )
 			{ /* skip if inner loop doesn't draw anything */
-//				if (dest_bmp->depth == 32)
+/*				if (dest_bmp->depth == 32)*/
 				{
 					int y;
 					for( y=sy; y<ey; y++ )
@@ -3188,7 +3188,7 @@ VIDEO_UPDATE( f3 )
 	int tile;
 #if DEBUG_F3
 	static int deb_sc_x=0,deb_sc_y=0;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 	struct mame_bitmap *priority_bitmap_bak;
 
 	skip_this_frame=0;
@@ -3203,7 +3203,7 @@ VIDEO_UPDATE( f3 )
 			}
 	vram_changed=0;
 
-//	if (scroll_dirty)
+/*	if (scroll_dirty)*/
 	{
 		sy_fix[0]=((f3_control_0[2]&0xffff0000)>> 7)+(scroll_kludge_y<<16);
 		sy_fix[1]=((f3_control_0[2]&0x0000ffff)<< 9)+((scroll_kludge_y+pf23_y_kludge)<<16);
@@ -3228,7 +3228,7 @@ VIDEO_UPDATE( f3 )
 		sx_fix[1]+=deb_sc_x;
 		sx_fix[2]+=deb_sc_x;
 		sx_fix[3]+=deb_sc_x;
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 		if (flipscreen)
 		{
@@ -3242,7 +3242,7 @@ VIDEO_UPDATE( f3 )
 			sx_fix[3]=-0x1a00000-sx_fix[3];
 		}
 	}
-//	scroll_dirty=1;// 0
+/*	scroll_dirty=1;// 0*/
 
 	/* Update pivot layer */
 	f3_update_pivot_layer();
@@ -3251,14 +3251,14 @@ VIDEO_UPDATE( f3 )
 	fillbitmap(pri_alp_bitmap,0,cliprect);
 #if DEBUG_F3
 if (deb_enable) fillbitmap(bitmap,255,cliprect);
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 	/* Pixel layer */
 	tempclip = pixel_layer_clip;
 	sect_rect(&tempclip,cliprect);
 #if DEBUG_F3
 if (!deb_enable || !keyboard_pressed(KEYCODE_N))
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 {
 	priority_bitmap_bak=priority_bitmap;
 	priority_bitmap=pri_alp_bitmap;
@@ -3275,7 +3275,7 @@ if (!deb_enable || !keyboard_pressed(KEYCODE_N))
 
 #if DEBUG_F3
 if (!deb_enable || !keyboard_pressed(KEYCODE_B))
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 {
 	f3_drawsprites(bitmap,cliprect);
 }
@@ -3290,7 +3290,7 @@ if (deb_enable && keyboard_pressed(KEYCODE_G))
 	tilemap_mark_all_tiles_dirty( pf3_tilemap );
 	tilemap_mark_all_tiles_dirty( pf4_tilemap );
 }
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 	/* Playfield */
 	get_line_ram_info(pf1_tilemap,sx_fix[0],sy_fix[0],0,f3_pf_data_1);
@@ -3304,14 +3304,14 @@ if (deb_enable && keyboard_pressed(KEYCODE_G))
 	/* vram layer */
 #if DEBUG_F3
 if (!deb_enable || !keyboard_pressed(KEYCODE_M))
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 	f3_draw_vram_layer(bitmap,cliprect);
 
 
 #if DEBUG_F3
 	if (0 && keyboard_pressed(KEYCODE_O))
 		print_debug_info(0,0,0,0,0,0,0,0);
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 
 
 	if (!keyboard_pressed(KEYCODE_LSHIFT) && keyboard_pressed_memory(KEYCODE_F1))
@@ -3467,7 +3467,7 @@ if (!deb_enable || !keyboard_pressed(KEYCODE_M))
 
 					int a=(f3_line_ram[(0x6000+1*256*2+cz_line*2)/4]>>sft)&0xffff;
 					int b=(a>>8)&0xf;
-//					int c=(a>>4)&0xf;
+/*					int c=(a>>4)&0xf;*/
 					int d=(a>>0)&0xf;
 					a>>=12;
 
@@ -3504,5 +3504,5 @@ if (!deb_enable || !keyboard_pressed(KEYCODE_M))
 			memset(deb_buf, 0x00, sizeof(deb_buf));
 		}
 	}
-#endif	//DEBUG_F3
+#endif	/*DEBUG_F3*/
 }

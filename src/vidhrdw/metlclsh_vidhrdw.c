@@ -90,12 +90,12 @@ WRITE_HANDLER( metlclsh_bgram_w )
 	if (metlclsh_write_mask)
 	{
 		/* unknown area - the following is almost surely wrong */
-// 405b (e401 = e c a 8 6 4 2 0) writes d400++
-// 4085 (e401 = e c a 8 6 4 2 0) writes d400++
-// 4085 (e401 = e a 6 2) writes d000++
-// 405b (e401 = e a 6 2) writes d000++
+/* 405b (e401 = e c a 8 6 4 2 0) writes d400++*/
+/* 4085 (e401 = e c a 8 6 4 2 0) writes d400++*/
+/* 4085 (e401 = e a 6 2) writes d000++*/
+/* 405b (e401 = e a 6 2) writes d000++*/
 
-//		metlclsh_otherram[offset] |= (data & metlclsh_write_mask);
+/*		metlclsh_otherram[offset] |= (data & metlclsh_write_mask);*/
 		metlclsh_otherram[offset] = (metlclsh_otherram[offset] & ~metlclsh_write_mask) | (data & metlclsh_write_mask);
 	}
 	else
@@ -148,7 +148,7 @@ WRITE_HANDLER( metlclsh_fgram_w )
 
 VIDEO_START( metlclsh )
 {
-	metlclsh_otherram = auto_malloc(0x800);	// banked ram
+	metlclsh_otherram = auto_malloc(0x800);	/* banked ram*/
 
 	bg_tilemap = tilemap_create(get_bg_tile_info,metlclsh_bgtilemap_scan,TILEMAP_TRANSPARENT,16,16,32,16);
 	fg_tilemap = tilemap_create(get_fg_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,32,32);
@@ -193,12 +193,12 @@ static void metlclsh_draw_sprites(struct mame_bitmap *bitmap,const struct rectan
 		int attr,code,color,sx,sy,flipx,flipy,wrapy,sizey;
 
 		attr	=	spriteram[offs];
-		if (!(attr & 0x01))	continue;	// enable
+		if (!(attr & 0x01))	continue;	/* enable*/
 
 		flipy	=	(attr & 0x02);
 		flipx	=	(attr & 0x04);
 		color	=	(attr & 0x08) >> 3;
-		sizey	=	(attr & 0x10);	// double height
+		sizey	=	(attr & 0x10);	/* double height*/
 		code	=	((attr & 0x60) << 3) + spriteram[offs+1];
 
 		sx	=	240 - spriteram[offs+3];
@@ -250,17 +250,17 @@ VIDEO_UPDATE( metlclsh )
 {
 	fillbitmap(bitmap,Machine->pens[0x10],cliprect);
 
-	tilemap_draw(bitmap,cliprect,fg_tilemap,1,0);	// low priority tiles of foreground
-	if (metlclsh_scrollx[0] & 0x08)					// background (if enabled)
+	tilemap_draw(bitmap,cliprect,fg_tilemap,1,0);	/* low priority tiles of foreground*/
+	if (metlclsh_scrollx[0] & 0x08)					/* background (if enabled)*/
 	{
 		/* The background seems to be always flipped along x */
 		tilemap_set_flip(bg_tilemap, (flip_screen ? (TILEMAP_FLIPX|TILEMAP_FLIPY) : 0) ^ TILEMAP_FLIPX);
 		tilemap_set_scrollx(bg_tilemap, 0,metlclsh_scrollx[1] + ((metlclsh_scrollx[0]&0x02)<<7) );
 		tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
 	}
-	metlclsh_draw_sprites(bitmap,cliprect);			// sprites
-	tilemap_draw(bitmap,cliprect,fg_tilemap,2,0);	// high priority tiles of foreground
+	metlclsh_draw_sprites(bitmap,cliprect);			/* sprites*/
+	tilemap_draw(bitmap,cliprect,fg_tilemap,2,0);	/* high priority tiles of foreground*/
 
-//	usrintf_showmessage("%02X",metlclsh_scrollx[0]);
+/*	usrintf_showmessage("%02X",metlclsh_scrollx[0]);*/
 }
 

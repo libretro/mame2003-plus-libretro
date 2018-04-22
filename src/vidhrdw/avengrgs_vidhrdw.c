@@ -17,11 +17,11 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 	int xmult,ymult,xoffs,yoffs;
 	data8_t *rom = memory_region(REGION_GFX4) + 0x20000, *index_ptr8;
 
-//	for (offs = 0; offs<0x3000/4; offs+=8)
+/*	for (offs = 0; offs<0x3000/4; offs+=8)*/
 	for (offs = (0x3000/4)-8; offs>=0; offs-=8)
 	{
 		if ((spriteram32[offs+0]&0x8000)==0)
-			continue; //check
+			continue; /*check*/
 
 		y = spriteram32[offs+2]&0x7ff;
 		x = spriteram32[offs+3]&0x7ff; /* Bit 0100 0000 sometimes set?? sh2 bug? */
@@ -41,11 +41,11 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 			w=(index_ptr8[3]>>0)&0xf;
 			sprite = (index_ptr8[7]<<8)|index_ptr8[6];
 			bank = index_ptr8[4]&3;
-			//unused byte 5
+			/*unused byte 5*/
 			yoffs=index_ptr8[0]&0xff;
 			xoffs=index_ptr8[2]&0xff;
 			if (index_ptr8[4]&0x40)  {
-				sprite&=0x1fff; //TODO - wrong
+				sprite&=0x1fff; /*TODO - wrong*/
 				bank=0;
 			}
 		} else {
@@ -56,21 +56,21 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 			sprite = index_ptr[3]&0xffff;
 			bank = index_ptr[2]&3;
 			if (index_ptr[2]&0x40) {
-				sprite&=0x1fff;  //TODO - wrong
+				sprite&=0x1fff;  /*TODO - wrong*/
 				bank=0;
 			}
-//	color=rand()%0x7f;
+/*	color=rand()%0x7f;*/
 			yoffs=index_ptr[0]&0xff;
 			xoffs=index_ptr[1]&0xff;
 		}
 		if (bank==3) color=rand()%0x7f;
 		if (bank==3) bank=1; /* Mirror, no roms for bank 3 */
 
-//if (xoffs&0x80)
-//xoffs=- (0x80 - (xoffs&0x7f));
+/*if (xoffs&0x80)*/
+/*xoffs=- (0x80 - (xoffs&0x7f));*/
 
-		if (fx) x+=xoffs; else x-=xoffs; //check for signed offsets...
-		if (fy) y+=yoffs-16; else y-=yoffs; //check for signed offsets...
+		if (fx) x+=xoffs; else x-=xoffs; /*check for signed offsets...*/
+		if (fy) y+=yoffs-16; else y-=yoffs; /*check for signed offsets...*/
 
 		color|=0x80;
 
@@ -108,18 +108,18 @@ VIDEO_UPDATE( avengrgs )
 	data32_t *vram_ptr=avengrgs_ram1 + (0x1dc00/4);
 
 #if 0
-//	data8_t *rom = memory_region(REGION_GFX4);
+/*	data8_t *rom = memory_region(REGION_GFX4);*/
 
-//	static int bank=0;
-//	static int base=0x40000;
-//	int o=0;
+/*	static int bank=0;*/
+/*	static int base=0x40000;*/
+/*	int o=0;*/
 
-//	if (keyboard_pressed_memory(KEYCODE_X))
-//		base+=0x200;
-//	if (keyboard_pressed_memory(KEYCODE_Z))
-//		base-=0x200;
+/*	if (keyboard_pressed_memory(KEYCODE_X))*/
+/*		base+=0x200;*/
+/*	if (keyboard_pressed_memory(KEYCODE_Z))*/
+/*		base-=0x200;*/
 
-// 22a65c0 == linescroll
+/* 22a65c0 == linescroll*/
 
 	usrintf_showmessage("%08x",base);
 

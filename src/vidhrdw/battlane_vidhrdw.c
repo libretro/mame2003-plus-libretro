@@ -69,7 +69,7 @@ WRITE_HANDLER( battlane_tileram_w )
 	if (battlane_tileram[offset] != data)
 	{
 	    battlane_tileram[offset] = data;
-		//tilemap_mark_tile_dirty(bg_tilemap, offset);
+		/*tilemap_mark_tile_dirty(bg_tilemap, offset);*/
 	}
 }
 
@@ -253,7 +253,7 @@ static void battlane_draw_fg_bitmap( struct mame_bitmap *bitmap )
 
 VIDEO_UPDATE( battlane )
 {
-	tilemap_mark_all_tiles_dirty(bg_tilemap); // HACK
+	tilemap_mark_all_tiles_dirty(bg_tilemap); /* HACK*/
 
 	tilemap_draw(bitmap, &Machine->visible_area, bg_tilemap, 0, 0);
 	battlane_draw_sprites(bitmap);

@@ -68,7 +68,7 @@ if (offs >= mexico86_objectram_size+0x1c0) continue;
 		else
 		{
 			sx = mexico86_objectram[offs + 2];
-//          if (gfx_attr & 0x40) sx -= 256;
+/*          if (gfx_attr & 0x40) sx -= 256;*/
 		}
 		sy = 256 - height*8 - (mexico86_objectram[offs + 0]);
 
@@ -84,7 +84,7 @@ if (offs >= mexico86_objectram_size+0x1c0) continue;
 				color = ((mexico86_videoram[goffs + 1] & 0x38) >> 3) + ((gfx_attr & 0x02) << 2);
 				flipx = mexico86_videoram[goffs + 1] & 0x40;
 				flipy = 0;
-//              x = sx + xc * 8;
+/*              x = sx + xc * 8;*/
 				x = (sx + xc * 8) & 0xff;
 				y = (sy + yc * 8) & 0xff;
 
@@ -98,8 +98,8 @@ if (offs >= mexico86_objectram_size+0x1c0) continue;
 		}
 	}
 }
-//AT
-#if 0 // old code
+/*AT*/
+#if 0 /* old code*/
 VIDEO_UPDATE( kikikai )
 {
 	int offs;
@@ -148,7 +148,7 @@ if (offs >= mexico86_objectram_size+0x1c0) continue;
 		else
 		{
 			sx = mexico86_objectram[offs + 2];
-//          if (gfx_attr & 0x40) sx -= 256;
+/*          if (gfx_attr & 0x40) sx -= 256;*/
 		}
 		sy = 256 - height*8 - (mexico86_objectram[offs + 0]);
 
@@ -163,7 +163,7 @@ if (offs >= mexico86_objectram_size+0x1c0) continue;
 				color = (mexico86_videoram[goffs + 1] & 0xe0) >> 5;
 				flipx = 0;
 				flipy = 0;
-//              x = sx + xc * 8;
+/*              x = sx + xc * 8;*/
 				x = (sx + xc * 8) & 0xff;
 				y = (sy + yc * 8) & 0xff;
 
@@ -243,4 +243,4 @@ VIDEO_UPDATE( kikikai )
 		}
 	}
 }
-//ZT
+/*ZT*/

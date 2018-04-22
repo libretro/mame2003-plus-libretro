@@ -96,8 +96,8 @@ WRITE_HANDLER( mscoutm_palette_w )
 
 	mscoutm_palette[offset] = data;
 
-	offs_h = (offset / 0x0300);	// 0x000, 0x300, 0x600, 0x900
-	offs_l = (offset & 0x00ff);	// 0x000 - 0x0ff
+	offs_h = (offset / 0x0300);	/* 0x000, 0x300, 0x600, 0x900*/
+	offs_l = (offset & 0x00ff);	/* 0x000 - 0x0ff*/
 
 	r = mscoutm_palette[(0x000 + (offs_h * 0x300) + offs_l)];
 	g = mscoutm_palette[(0x100 + (offs_h * 0x300) + offs_l)];
@@ -189,9 +189,9 @@ void sailorws_gfxflag_w(int vram, int offset, int data)
 	sailorws_flipx[vram] = (data & 0x01) ? 1 : 0;
 	sailorws_flipy[vram] = (data & 0x02) ? 1 : 0;
 	sailorws_highcolor[vram] = (data & 0x04) ? 1 : 0;
-//	if (data & 0x08) usrintf_showmessage("Unknown GFX Flag!! (0x08)");
+/*	if (data & 0x08) usrintf_showmessage("Unknown GFX Flag!! (0x08)");*/
 	sailorws_transparency[vram] = (data & 0x10) ? 1 : 0;
-//	if (data & 0x20) usrintf_showmessage("Unknown GFX Flag!! (0x20)");
+/*	if (data & 0x20) usrintf_showmessage("Unknown GFX Flag!! (0x20)");*/
 	sailorws_flipscreen[vram] = (data & 0x40) ? 0 : 1;
 	sailorws_dispflag[vram] = (data & 0x80) ? 1 : 0;
 
@@ -381,13 +381,13 @@ static void sailorws_gfxdraw(int vram)
 
 			if (sailorws_flipx[vram])
 			{
-				// flip
+				/* flip*/
 				color1 = (color & 0xf0) >> 4;
 				color2 = (color & 0x0f) >> 0;
 			}
 			else
 			{
-				// normal
+				/* normal*/
 				color1 = (color & 0x0f) >> 0;
 				color2 = (color & 0xf0) >> 4;
 			}
@@ -461,7 +461,7 @@ static void mscoutm_gfxdraw(int vram)
 
 	if (sailorws_highcolor[vram])
 	{
-		// NB22090 high color mode
+		/* NB22090 high color mode*/
 		sailorws_sizex[vram] = (GFX[((sailorws_radr[vram] + 0) & 0x00ffffff)] & 0xff);
 		sailorws_sizey[vram] = (GFX[((sailorws_radr[vram] + 1) & 0x00ffffff)] & 0xff);
 	}
@@ -530,24 +530,24 @@ static void mscoutm_gfxdraw(int vram)
 
 			if (sailorws_flipx[vram])
 			{
-				// flip
+				/* flip*/
 				color1 = (color & 0xf0) >> 4;
 				color2 = (color & 0x0f) >> 0;
 			}
 			else
 			{
-				// normal
+				/* normal*/
 				color1 = (color & 0x0f) >> 0;
 				color2 = (color & 0xf0) >> 4;
 			}
 
 			if (sailorws_highcolor[vram])
 			{
-				// high color mode
+				/* high color mode*/
 
 				if (sailorws_gfxflag2 & 0xc0)
 				{
-					// high color mode 1st draw
+					/* high color mode 1st draw*/
 
 					drawcolor1 = ((color1 & 0x0f) << 0);
 					drawcolor2 = ((color2 & 0x0f) << 0);
@@ -566,7 +566,7 @@ static void mscoutm_gfxdraw(int vram)
 				}
 				else
 				{
-					// high color mode 2nd draw
+					/* high color mode 2nd draw*/
 
 					drawcolor1 = ((color1 & 0x0f) << 4);
 					drawcolor2 = ((color2 & 0x0f) << 4);
@@ -591,7 +591,7 @@ static void mscoutm_gfxdraw(int vram)
 			}
 			else
 			{
-				// normal color mode
+				/* normal color mode*/
 
 				if (!vram)
 				{
@@ -650,7 +650,7 @@ static void mscoutm_gfxdraw(int vram)
 
 	if (sailorws_highcolor[vram])
 	{
-		// NB22090 high color mode
+		/* NB22090 high color mode*/
 		sailorws_radr[vram] = gfxaddr;
 	}
 }

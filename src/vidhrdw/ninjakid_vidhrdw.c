@@ -7,7 +7,7 @@ static int flipscreen;
 static UINT8 ninjakun_xscroll,ninjakun_yscroll;
 
 UINT8 ninjakun_io_8000_ctrl[4];
-// static UINT8 old_scroll;
+/* static UINT8 old_scroll;*/
 
 /*******************************************************************************
  Tilemap Callbacks
@@ -89,7 +89,7 @@ READ_HANDLER( ninjakun_io_8000_r ){
 		return ninjakun_io_8000_ctrl[3];
 	}
 
-//	logerror("PC=%04x; RAM[0x800%d]\n",activecpu_get_pc(),offset);
+/*	logerror("PC=%04x; RAM[0x800%d]\n",activecpu_get_pc(),offset);*/
 	return 0xFF;
 }
 
@@ -206,7 +206,7 @@ VIDEO_START( ninjakid ){
 
 	state_save_register_UINT8 ("NK_Video", 0, "ninjakun_io_8000_ctrl", ninjakun_io_8000_ctrl, 4);
 	state_save_register_int   ("NK_Video", 0, "flipscreen", &flipscreen);
-//	state_save_register_UINT8 ("NK_Video", 0, "old_scroll", &old_scroll, 1);
+/*	state_save_register_UINT8 ("NK_Video", 0, "old_scroll", &old_scroll, 1);*/
 
 	return 0;
 }

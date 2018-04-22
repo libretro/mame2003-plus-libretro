@@ -352,7 +352,7 @@ PALETTE_INIT( tubep )
 				bits_b[6 + c] = (shade>>c) & 1;
 			}
 
-			//j &= 0x7; /* only red; debug */
+			/*j &= 0x7;*/ /* only red; debug */
 
 			/* red component */
 			if ((j >> 0) & 0x01)	/* if LS368 @E9  is disabled */
@@ -412,8 +412,8 @@ PALETTE_INIT( tubep )
 			for (c=0; c<2*6; c++)	out += weights_b[c] * bits_b[c];
 			b = (int)(out + 0.5);
 
-			//logerror("Calculate [%x:%x] (active resistors:r=%i g=%i b=%i) = ", i, shade, active_r, active_g, active_b);
-			//logerror("r:%3i g:%3i b:%3i\n",r,g,b );
+			/*logerror("Calculate [%x:%x] (active resistors:r=%i g=%i b=%i) = ", i, shade, active_r, active_g, active_b);*/
+			/*logerror("r:%3i g:%3i b:%3i\n",r,g,b );*/
 
 			palette_set_color(32+i*0x40+sh, r,g,b);
 		}
@@ -669,9 +669,9 @@ VIDEO_UPDATE( tubep )
 			dirtybuff[offs/2] = 0;
 
 			sx = (offs/2) % 32;
-			//if (flipscreen[0]) sx = 31 - sx;
+			/*if (flipscreen[0]) sx = 31 - sx;*/
 			sy = (offs/2) / 32;
-			//if (flipscreen[1]) sy = 31 - sy;
+			/*if (flipscreen[1]) sy = 31 - sy;*/
 
 			drawgfx(tmpbitmap,Machine->gfx[0],
 					tubep_textram[offs],
@@ -684,7 +684,7 @@ VIDEO_UPDATE( tubep )
 
 	/* draw background ram */
 	{
-		pen_t *pens = &Machine->pens[ 32 ]; //change it later
+		pen_t *pens = &Machine->pens[ 32 ]; /*change it later*/
 
 		UINT32 h,v;
 		unsigned char * romBxx = memory_region(REGION_USER1) + 0x2000*background_romsel;
@@ -790,9 +790,9 @@ VIDEO_UPDATE( rjammer )
 			dirtybuff[offs/2] = 0;
 
 			sx = (offs/2) % 32;
-			//if (flipscreen[0]) sx = 31 - sx;
+			/*if (flipscreen[0]) sx = 31 - sx;*/
 			sy = (offs/2) / 32;
-			//if (flipscreen[1]) sy = 31 - sy;
+			/*if (flipscreen[1]) sy = 31 - sy;*/
 
 			drawgfx(tmpbitmap,Machine->gfx[0],
 					tubep_textram[offs],

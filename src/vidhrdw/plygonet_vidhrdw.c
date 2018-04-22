@@ -60,12 +60,12 @@ VIDEO_START(polygonet_vh_start)
 {
 	static struct GfxLayout charlayout =
 	{
-		8, 8,		// 8x8
-		4096,		// # of tiles
-		4,	   	// 4bpp
-		{ 0, 1, 2, 3 },	// plane offsets
-		{ 0*4, 1*4, 2*4, 3*4, 4*4, 5*4, 6*4, 7*4 },		// X offsets
-		{ 0*8*4, 1*8*4, 2*8*4, 3*8*4, 4*8*4, 5*8*4, 6*8*4, 7*8*4 },	// Y offsets
+		8, 8,		/* 8x8*/
+		4096,		/* # of tiles*/
+		4,	   	/* 4bpp*/
+		{ 0, 1, 2, 3 },	/* plane offsets*/
+		{ 0*4, 1*4, 2*4, 3*4, 4*4, 5*4, 6*4, 7*4 },		/* X offsets*/
+		{ 0*8*4, 1*8*4, 2*8*4, 3*8*4, 4*8*4, 5*8*4, 6*8*4, 7*8*4 },	/* Y offsets*/
 		8*8*4
 	};
 
@@ -77,7 +77,7 @@ VIDEO_START(polygonet_vh_start)
 	if (ttl_gfx_index == MAX_GFX_ELEMENTS)
 		return 1;
 
-	// decode the ttl layer's gfx
+	/* decode the ttl layer's gfx*/
 	Machine->gfx[ttl_gfx_index] = decodegfx(memory_region(REGION_GFX1), &charlayout);
 
 	if (Machine->drv->color_table_len)
@@ -91,7 +91,7 @@ VIDEO_START(polygonet_vh_start)
 	        Machine->gfx[ttl_gfx_index]->total_colors = Machine->drv->total_colors / 16;
 	}
 
-	// create the tilemap
+	/* create the tilemap*/
 	ttl_tilemap = tilemap_create(ttl_get_tile_info, ttl_scan, TILEMAP_TRANSPARENT, 8, 8, 64, 32);
 
 	tilemap_set_transparent_pen(ttl_tilemap, 0);

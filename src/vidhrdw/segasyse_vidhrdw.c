@@ -36,7 +36,7 @@ UINT8 segae_vdp_vrambank[CHIPS];		/* Current VRAM Bank number (from writes to Po
 
 UINT8 *cache_bitmap;					/* 8bpp bitmap with raw pen values */
 
-static int segasyse_palettebase; // needed for megatech for now..
+static int segasyse_palettebase; /* needed for megatech for now..*/
 
 /*- in (drivers/segasyse.c) -*/
 

@@ -61,7 +61,7 @@ WRITE_HANDLER( mjkjidai_ctrl_w )
 {
 	data8_t *rom = memory_region(REGION_CPU1);
 
-//	logerror("%04x: port c0 = %02x\n",activecpu_get_pc(),data);
+/*	logerror("%04x: port c0 = %02x\n",activecpu_get_pc(),data);*/
 
 	/* bit 0 = NMI enable */
 	interrupt_enable_w(0,data & 1);
@@ -110,7 +110,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 
 		code >>= 2;
 
-		sx += (spriteram_2[offs] & 0x20) >> 5;	// not sure about this
+		sx += (spriteram_2[offs] & 0x20) >> 5;	/* not sure about this*/
 
 		if (flip_screen)
 		{

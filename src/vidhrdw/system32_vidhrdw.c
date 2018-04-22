@@ -20,7 +20,7 @@ any remaining glitches
 #include "driver.h"
 #define MAX_COLOURS (16384)
 
-// Debugging flags and kludges
+/* Debugging flags and kludges*/
 extern int system32_temp_kludge;
 int priloop;
 
@@ -28,7 +28,7 @@ extern int multi32;
 
 extern data16_t *sys32_spriteram16;
 data8_t  *sys32_spriteram8; /* I maintain this to make drawing ram based sprites easier */
-extern data16_t *system32_mixerregs[2];		// mixer registers
+extern data16_t *system32_mixerregs[2];		/* mixer registers*/
 data16_t *sys32_videoram;
 data32_t *multi32_videoram;
 data8_t sys32_ramtile_dirty[0x1000];
@@ -74,7 +74,7 @@ static int sys32sprite_rom_width;
 static int sys32sprite_rom_bank_low;
 static int sys32sprite_unknown_1;
 static int sys32sprite_unknown_2;
-//static int sys32sprite_solid;
+/*static int sys32sprite_solid;*/
 static int sys32sprite_screen_height;
 static int sys32sprite_unknown_3;
 static int sys32sprite_rom_bank_high;
@@ -86,7 +86,7 @@ static int sys32sprite_ypos;
 static int sys32sprite_xpos;
 static int sys32sprite_rom_offset;
 static int sys32sprite_palette;
-static int sys32sprite_monitor_select; // multi32
+static int sys32sprite_monitor_select; /* multi32*/
 static int sys32sprite_priority;
 
 static data16_t *sys32sprite_table;
@@ -110,14 +110,14 @@ currently zooming isn't supported etc.
 */
 #if NEW_DRAWSPRITE
 
-//* AT050703 new drawsprite (unproven, general testing required)
+/** AT050703 new drawsprite (unproven, general testing required)*/
 static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *cliprect )
 {
 #define FP     20
 #define FPONE  (1<<FP)
 #define FPHALF (1<<(FP-1))
 
-// FP entry vaule(FPENT) should normally be 0.5(FPHALF) but it causes sprite gaps occationally.
+/* FP entry vaule(FPENT) should normally be 0.5(FPHALF) but it causes sprite gaps occationally.*/
 #define FPENT  0
 
 	static UINT32 idp_cache8[256];
@@ -125,20 +125,20 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	static data16_t *idp_base, *idb_old=0;
 	static int idi_old=-1;
 
-	// one-time
+	/* one-time*/
 	int src_fw, src_fh;
 	int dst_minx, dst_maxx, dst_miny, dst_maxy;
-	int dst_skipx, dst_skipy, dst_x, dst_y, dst_lastx, dst_lasty; // Buy Warren Spector's Deus Ex2. It's cool.
+	int dst_skipx, dst_skipy, dst_x, dst_y, dst_lastx, dst_lasty; /* Buy Warren Spector's Deus Ex2. It's cool.*/
 	int flipx, flipy;
 
-	// inner loop
+	/* inner loop*/
 	UINT8 *src_ptr;
 	register int edx, eax, ecx;
 	int src_fx, src_fdx, transparent_pen;
 	UINT32 *pal_base;
 	UINT32 *dst_ptr;
 
-	// outter loop
+	/* outter loop*/
 	int src_fby, src_fdy;
 	int dst_pitch;
 	int src_pitch, src_fbx;
@@ -146,7 +146,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	int dst_w, dst_h;
 
 
-	// fill internal data structure with default values
+	/* fill internal data structure with default values*/
 	src_base  = memory_region(REGION_GFX2);
 	src_pitch = sys32sprite_rom_width;
 	src_fw    = sys32sprite_rom_width;
@@ -170,7 +170,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	flipy     = sys32sprite_yflip;
 	transparent_pen   = 0;
 
-	// cull zero dimension and off-screen objects
+	/* cull zero dimension and off-screen objects*/
 	if (!src_fw || !src_fh || !dst_w || !dst_h) return;
 	if (dst_x > dst_maxx || dst_y > dst_maxy) return;
 	dst_lastx = dst_x + dst_w - 1;
@@ -178,13 +178,13 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	dst_lasty = dst_y + dst_h - 1;
 	if (dst_lasty < dst_miny) return;
 
-	// calculate zoom factors
+	/* calculate zoom factors*/
 	src_fw <<= FP;
 	src_fh <<= FP;
 	src_fdx = src_fw / dst_w;
 	src_fdy = src_fh / dst_h;
 
-	// clip destination
+	/* clip destination*/
 	dst_skipx = 0;
 	eax = dst_minx;  if ((eax -= dst_x) > 0) { dst_skipx = eax;  dst_w -= eax;  dst_x = dst_minx; }
 	eax = dst_lastx; if ((eax -= dst_maxx) > 0) dst_w -= eax;
@@ -192,7 +192,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	eax = dst_miny;  if ((eax -= dst_y) > 0) { dst_skipy = eax;  dst_h -= eax;  dst_y = dst_miny; }
 	eax = dst_lasty; if ((eax -= dst_maxy) > 0) dst_h -= eax;
 
-	// clip source (precision loss from MUL after DIV is intentional to maintain pixel consistency)
+	/* clip source (precision loss from MUL after DIV is intentional to maintain pixel consistency)*/
 	if (flipx)
 	{
 		src_fbx = src_fw - FPENT - 1;
@@ -209,12 +209,12 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	src_fby += dst_skipy * src_fdy;
 
 
-	// modify oddities
-	// if the gfx data is coming from RAM instead of ROM change the pointer
+	/* modify oddities*/
+	/* if the gfx data is coming from RAM instead of ROM change the pointer*/
 	if (sys32sprite_rambasedgfx)
 	{
 		src_base = sys32_spriteram8;
-		sys32sprite_rom_offset &= 0x1ffff; // right mask?
+		sys32sprite_rom_offset &= 0x1ffff; /* right mask?*/
 	}
 
 	if (sys32sprite_monitor_select)
@@ -235,7 +235,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	{
 		if (sys32sprite_indirect_palette)
 		{
-			// update indirect palette cache if necessary
+			/* update indirect palette cache if necessary*/
 			if (!sys32sprite_8bpp)
 			{
 				if (idb_old != idp_base || sys32mon_old4 != sys32sprite_monitor_select)
@@ -246,7 +246,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 					for (ecx=0; ecx<0x10; ecx+=2)
 					{
 						eax = idp_base[ecx];   edx = idp_base[ecx+1];
-						eax &= 0x0fff;         edx &= 0x0fff; // no apparent side-effect observed
+						eax &= 0x0fff;         edx &= 0x0fff; /* no apparent side-effect observed*/
 						eax = pal_base[eax];   edx = pal_base[edx];
 						idp_cache4[ecx] = eax; idp_cache4[ecx+1] = edx;
 					}
@@ -273,10 +273,10 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 			pal_base += sys32sprite_palette<<4;
 	}
 	else
-		sys32sprite_indirect_palette = 0; // make sure full-shadows and IDP's are mutually exclusive
+		sys32sprite_indirect_palette = 0; /* make sure full-shadows and IDP's are mutually exclusive*/
 
 
-	// adjust insertion points and pre-entry constants
+	/* adjust insertion points and pre-entry constants*/
 	src_base += sys32sprite_rom_offset;
 	dst_ptr += dst_y * dst_pitch + dst_x + dst_w;
 	dst_w = -dst_w;
@@ -293,7 +293,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 
 	if (!sys32sprite_8bpp)
 	{
-		// 4bpp
+		/* 4bpp*/
 		edx >>= FP+1;
 
 		if (sys32sprite_indirect_palette)
@@ -383,7 +383,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 	}
 	else
 	{
-		// 8bpp
+		/* 8bpp*/
 		edx >>= FP;
 		src_fx += src_fdx;
 
@@ -474,7 +474,7 @@ static INLINE void system32_draw_sprite ( struct mame_bitmap *bitmap, const stru
 
 #else
 
-// old drawsprite (working and proven)
+/* old drawsprite (working and proven)*/
 void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *cliprect ) {
 	data8_t *sprite_gfxdata = memory_region ( REGION_GFX2 );
 	UINT32 xsrc,ysrc;
@@ -498,12 +498,12 @@ void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *
 		xdst = 0;
 
 		if (!sys32sprite_yflip) {
-			drawypos = sys32sprite_ypos+ydst; // no flip
-			if (drawypos > cliprect->max_y) ysrc = sys32sprite_rom_height<<16; // quit drawing if we've gone off the right
+			drawypos = sys32sprite_ypos+ydst; /* no flip*/
+			if (drawypos > cliprect->max_y) ysrc = sys32sprite_rom_height<<16; /* quit drawing if we've gone off the right*/
 		}
 		else {
-			drawypos = sys32sprite_ypos+((sys32sprite_screen_height-1)-ydst); // y flip
-			if (drawypos < cliprect->min_y) ysrc = sys32sprite_rom_height<<16; // quit drawing if we've gone off the left on a flipped sprite
+			drawypos = sys32sprite_ypos+((sys32sprite_screen_height-1)-ydst); /* y flip*/
+			if (drawypos < cliprect->min_y) ysrc = sys32sprite_rom_height<<16; /* quit drawing if we've gone off the left on a flipped sprite*/
 		}
 
 		if ((drawypos >= cliprect->min_y) && (drawypos <= cliprect->max_y)) {
@@ -514,12 +514,12 @@ void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *
 				int drawxpos;
 
 				if (!sys32sprite_xflip) {
-					drawxpos = sys32sprite_xpos+xdst; // no flip
-					if (drawxpos > cliprect->max_x) xsrc = sys32sprite_rom_width<<16; // quit drawing if we've gone off the right
+					drawxpos = sys32sprite_xpos+xdst; /* no flip*/
+					if (drawxpos > cliprect->max_x) xsrc = sys32sprite_rom_width<<16; /* quit drawing if we've gone off the right*/
 				}
 				else {
-					drawxpos = sys32sprite_xpos+((sys32sprite_screen_width-1)-xdst); // x flip
-					if (drawxpos < cliprect->min_x) xsrc = sys32sprite_rom_width<<16; // quit drawing if we've gone off the left on a flipped sprite
+					drawxpos = sys32sprite_xpos+((sys32sprite_screen_width-1)-xdst); /* x flip*/
+					if (drawxpos < cliprect->min_x) xsrc = sys32sprite_rom_width<<16; /* quit drawing if we've gone off the left on a flipped sprite*/
 				}
 
 				if ((drawxpos >= cliprect->min_x) && (drawxpos <= cliprect->max_x)) {
@@ -528,7 +528,7 @@ void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *
 					int r,g,b;
 
 					if (sys32sprite_monitor_select) drawxpos+=system32_screen_mode?52*8:40*8;
-					if (!sys32sprite_8bpp) { // 4bpp
+					if (!sys32sprite_8bpp) { /* 4bpp*/
 						gfxdata = (sprite_gfxdata[sys32sprite_rom_offset+((xsrc>>16)/2)+(ysrc>>16)*(sys32sprite_rom_width/2)]);
 
 						if (xsrc & 0x10000) gfxdata = gfxdata & 0x0f;
@@ -540,10 +540,10 @@ void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *
 							case 0x00:
 								break;
 
-							case 0x0f: // Transparent
+							case 0x0f: /* Transparent*/
 								break;
 
-							case 0x0e: // Shadow
+							case 0x0e: /* Shadow*/
 								data=destline[drawxpos];
 
 								r = ((data >> 16) & 0xff)*0.5;
@@ -581,7 +581,7 @@ void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *
 							}
 						}
 					}
-					else { // 8bpp
+					else { /* 8bpp*/
 						gfxdata = (sprite_gfxdata[sys32sprite_rom_offset+(xsrc>>16)+(ysrc>>16)*(sys32sprite_rom_width)]);
 
 						if ( (!sys32sprite_draw_colour_f) && (gfxdata == 0xff) ) gfxdata = 0;
@@ -590,9 +590,9 @@ void system32_draw_sprite ( struct mame_bitmap *bitmap, const struct rectangle *
 							switch (gfxdata) {
 							case 0x00:
 								break;
-							case 0xe0: // Transparent
+							case 0xe0: /* Transparent*/
 								break;
-							case 0xf0: // Shadow
+							case 0xf0: /* Shadow*/
 								data=destline[drawxpos];
 
 								r = ((data >> 16) & 0xff)*0.5;
@@ -692,7 +692,7 @@ drawing functions
 
 */
 
-//* AT050703: minor clean-up's
+/** AT050703: minor clean-up's*/
 static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const struct rectangle *cliprect ) {
 	/* get attributes */
 	int mixerinput, sprite_palette_mask, sprite_priority_levels, sys32sprite_priority_lookup;
@@ -780,7 +780,7 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 	}
 
 	sys32sprite_priority = system32_mixerregs[sys32sprite_monitor_select][sys32sprite_priority_lookup&sprite_priority_levels]&0xf;
-	if (sys32sprite_is_shadow && ((!strcmp(Machine->gamedrv->name,"f1en")) || (!strcmp(Machine->gamedrv->name,"f1lap")))) sys32sprite_is_shadow=0;  // f1en turns this flag on the car sprites?
+	if (sys32sprite_is_shadow && ((!strcmp(Machine->gamedrv->name,"f1en")) || (!strcmp(Machine->gamedrv->name,"f1lap")))) sys32sprite_is_shadow=0;  /* f1en turns this flag on the car sprites?*/
 
 	if (sys32sprite_use_yoffset) sys32sprite_ypos += jump_y;
 	if (sys32sprite_use_xoffset) sys32sprite_xpos += jump_x;
@@ -789,26 +789,26 @@ static INLINE void system32_get_sprite_info ( struct mame_bitmap *bitmap, const 
 
 	/* adjust sprite positions based on alignment, pretty much straight from modeler */
 	switch (sys32sprite_xalign) {
-	case 0: // centerX
+	case 0: /* centerX*/
 	case 3:
-		sys32sprite_xpos -= (sys32sprite_screen_width-1) / 2; // this is trusted again spiderman truck door
+		sys32sprite_xpos -= (sys32sprite_screen_width-1) / 2; /* this is trusted again spiderman truck door*/
 		break;
-	case 1: // rightX
+	case 1: /* rightX*/
 		sys32sprite_xpos -= sys32sprite_screen_width - 1;
 		break;
-	case 2: // leftX
+	case 2: /* leftX*/
 		break;
 	}
 
 	switch (sys32sprite_yalign) {
-	case 0: // centerY
+	case 0: /* centerY*/
 	case 3:
-		sys32sprite_ypos -= (sys32sprite_screen_height-1) / 2; // this is trusted against alien3 energy bars
+		sys32sprite_ypos -= (sys32sprite_screen_height-1) / 2; /* this is trusted against alien3 energy bars*/
 		break;
-	case 1: // bottomY
+	case 1: /* bottomY*/
 		sys32sprite_ypos -= sys32sprite_screen_height - 1;
 		break;
-	case 2: // topY
+	case 2: /* topY*/
 		break;
 	}
 
@@ -890,11 +890,11 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 
 		switch (command) {
 		case 0x3: /* end of sprite list */
-			//				logerror ("SPRITELIST: terminated at sprite %06x\n", spritenum*16);
+			/*				logerror ("SPRITELIST: terminated at sprite %06x\n", spritenum*16);*/
 			spritenum = 60000; /* just set a high sprite number so we stop processing */
 			break;
 		case 0x2: /* jump to position in sprite list*/
-			//				logerror ("SPRITELIST: jump at sprite %06x to %06x extra data 0 %04x 1 %04x, 2 %04x 3 %04x 4 %04x 5 %04x 6 %04x 7 %04x\n", spritenum*16, (spritedata_source[0] & 0x1fff)*16, spritedata_source[0] & 0x2000, spritedata_source[1], spritedata_source[2], spritedata_source[3] , spritedata_source[4] , spritedata_source[5] ,spritedata_source[6] , spritedata_source[7] );
+			/*				logerror ("SPRITELIST: jump at sprite %06x to %06x extra data 0 %04x 1 %04x, 2 %04x 3 %04x 4 %04x 5 %04x 6 %04x 7 %04x\n", spritenum*16, (spritedata_source[0] & 0x1fff)*16, spritedata_source[0] & 0x2000, spritedata_source[1], spritedata_source[2], spritedata_source[3] , spritedata_source[4] , spritedata_source[5] ,spritedata_source[6] , spritedata_source[7] );*/
 			spritenum = spritedata_source[0] & 0x1fff;
 			if (spritedata_source[0] & 0x2000) {
 				jump_y = spritedata_source[1];
@@ -902,7 +902,7 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 			}
 			break;
 		case 0x1: /* set clipping registers */
-			//				logerror ("SPRITELIST: set clip regs at %06x extra data 0 %04x 1 %04x 2 %04x 3 %04x 4 %04x 5 %04x 6 %04x 7 %04x\n", spritenum*16, spritedata_source[0], spritedata_source[1],spritedata_source[2],spritedata_source[3],spritedata_source[4],spritedata_source[5],spritedata_source[6],spritedata_source[7]  );
+			/*				logerror ("SPRITELIST: set clip regs at %06x extra data 0 %04x 1 %04x 2 %04x 3 %04x 4 %04x 5 %04x 6 %04x 7 %04x\n", spritenum*16, spritedata_source[0], spritedata_source[1],spritedata_source[2],spritedata_source[3],spritedata_source[4],spritedata_source[5],spritedata_source[6],spritedata_source[7]  );*/
 			{
 
 				if (spritedata_source[0] & 0x3000) /* alien 3 needs something like this ... */
@@ -927,7 +927,7 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 			spritenum ++;
 			break;
 		case 0x0: /* draw sprite */
-			//				logerror ("SPRITELIST: draw sprite at %06x\n", spritenum*16 );
+			/*				logerror ("SPRITELIST: draw sprite at %06x\n", spritenum*16 );*/
 			system32_get_sprite_info (bitmap, &clip);
 			spritenum ++;
 			break;
@@ -936,7 +936,7 @@ void system32_process_spritelist ( struct mame_bitmap *bitmap, const struct rect
 		processed++;
 		if (processed > 0x20000/16) /* its dead ;-) */
 		{
-			//			logerror ("SPRITELIST: terminated due to infinite loop\n");
+			/*			logerror ("SPRITELIST: terminated due to infinite loop\n");*/
 			spritenum = 16384;
 		};
 	}
@@ -1054,7 +1054,7 @@ which is mapped at 0xc0000e
 
 */
 
-//* AT050703: minor code shufflings
+/** AT050703: minor code shufflings*/
 void system32_draw_text_layer ( struct mame_bitmap *bitmap, const struct rectangle *cliprect ) /* using this for now to save me tilemap system related headaches */
 {
 	int x,y;
@@ -1116,7 +1116,7 @@ void system32_draw_text_layer ( struct mame_bitmap *bitmap, const struct rectang
 			if (monitor_select & 1)
 				drawgfx(bitmap,gfx,code,pal,0,flip,(x<<3),drawypos,cliprect,TRANSPARENCY_PEN,0);
 
-			// Multi32: Draw the same text on Monitor B
+			/* Multi32: Draw the same text on Monitor B*/
 			if (monitor_select & 2)
 				drawgfx(bitmap,gfx,code,pal,0,flip,(x<<3)+monitor_offset,drawypos,cliprect,TRANSPARENCY_PEN,0);
 		}
@@ -1219,7 +1219,7 @@ static void get_system32_tile_info ( int tile_index, int layer ) {
 		if (sys32_tilebank_external&1) tileno |= 0x4000;
 	}
 
-	// Multi32: use palette_b for monitor 2
+	/* Multi32: use palette_b for monitor 2*/
 	SET_TILE_INFO(0,tileno,sys32_palettebank[layer]+s32palette+(monitor*MAX_COLOURS/0x10),TILE_FLIPYX(yxflip))
 }
 
@@ -1248,7 +1248,7 @@ VIDEO_START( system32 ) {
 	system32_layer_tilemap[3] = tilemap_create(get_system32_layer3_tile_info,sys32_bg_map,TILEMAP_TRANSPARENT, 16, 16,64,32);
 	tilemap_set_transparent_pen(system32_layer_tilemap[3],0);
 
-	sys32_spriteram8 = auto_malloc ( 0x20000 ); // for ram sprites
+	sys32_spriteram8 = auto_malloc ( 0x20000 ); /* for ram sprites*/
 	sys32_videoram = auto_malloc ( 0x20000 );
 
 	for (i=0; i <= multi32; i++) {
@@ -1287,7 +1287,7 @@ void system32_draw_bg_layer ( struct mame_bitmap *bitmap, const struct rectangle
 
 	if ((system32_mixerregs[monitor][(0x32+2*layer)/2] & 0x1010) == 0x1010) {
 		trans = TILEMAP_ALPHA;
-		alphaamount = 255-((((system32_mixerregs[monitor][0x4e/2])>>8) & 7) <<5); //umm this is almost certainly wrong
+		alphaamount = 255-((((system32_mixerregs[monitor][0x4e/2])>>8) & 7) <<5); /*umm this is almost certainly wrong*/
 		alpha_set_level(alphaamount);
 	}
 
@@ -1316,12 +1316,12 @@ void system32_draw_bg_layer ( struct mame_bitmap *bitmap, const struct rectangle
 		rowselect = (sys32_videoram[0x01FF04/2] & 0x0008)>>3;
 	}
 
-	// Switch to Machine->visible_area.max_x later
+	/* Switch to Machine->visible_area.max_x later*/
 	monitor_res=system32_screen_mode?52*8:40*8;
 
 	if (multi32) {
-		//			clip.min_x = Machine->visible_area.min_x;
-		//			clip.max_x = Machine->visible_area.max_x;
+		/*			clip.min_x = Machine->visible_area.min_x;*/
+		/*			clip.max_x = Machine->visible_area.max_x;*/
 		clip.min_x = (layer%2)*monitor_res;
 		clip.max_x = (layer%2+1)*monitor_res;
 		clip.min_y = 0;
@@ -1369,7 +1369,7 @@ void system32_draw_bg_layer ( struct mame_bitmap *bitmap, const struct rectangle
 					clip.max_x = 320-1;
 				}
 			}
-			// Multi32: Shift layer 3's rowscroll left one screen so that it lines up
+			/* Multi32: Shift layer 3's rowscroll left one screen so that it lines up*/
 			tilemap_set_scrollx(system32_layer_tilemap[layer],0, (xscroll & 0x3ff));
 			tilemap_set_scrolly(system32_layer_tilemap[layer],0, (yscroll & 0x1ff));
 			tilemap_set_scrolldx(system32_layer_tilemap[layer], (sys32_videoram[(0x01FF30+layer*4)/2]&0x00ff)+monitor*monitor_res, -(sys32_videoram[(0x01FF30+layer*4)/2]&0x00ff)-monitor*monitor_res);
@@ -1378,7 +1378,7 @@ void system32_draw_bg_layer ( struct mame_bitmap *bitmap, const struct rectangle
 		}
 	}
 	else {
-		// Multi32: Shift layer 3's rowscroll left one screen so that it lines up
+		/* Multi32: Shift layer 3's rowscroll left one screen so that it lines up*/
 		tilemap_set_scrollx(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF12+8*layer)/2]) & 0x3ff));
 		tilemap_set_scrolly(system32_layer_tilemap[layer],0,((sys32_videoram[(0x01FF16+8*layer)/2]) & 0x1ff));
 		tilemap_set_scrolldx(system32_layer_tilemap[layer], (sys32_videoram[(0x01FF30+layer*4)/2]&0x00ff)+monitor*monitor_res, -(sys32_videoram[(0x01FF30+layer*4)/2]&0x00ff)-monitor*monitor_res);
@@ -1403,15 +1403,15 @@ VIDEO_UPDATE( system32 ) {
 	int priority3 = (system32_mixerregs[multi32][0x28/2] & 0x000f);
 	int sys32_palette_dirty[2] = {0, 0};
 
-	// -------------------------------------- experimental wip code --------------------------------
+	/* -------------------------------------- experimental wip code --------------------------------*/
 	int tm,ii;
 
 	#if NEW_DRAWSPRITE
-		//* force IDP recache
+		/** force IDP recache*/
 		sys32mon_old8 = sys32mon_old4 = -1;
 	#endif
 
-	// if the windows number used by a tilemap use change then that window of the tilemap needs to be considered dirty
+	/* if the windows number used by a tilemap use change then that window of the tilemap needs to be considered dirty*/
 	for (tm = 0; tm < 4; tm++) {
 		system32_windows[tm][0] = (sys32_videoram[(0x01FF40+4*tm)/2] & 0x007f);
 		system32_windows[tm][1] = (sys32_videoram[(0x01FF40+4*tm)/2] & 0x7f00)>>8;
@@ -1431,7 +1431,7 @@ VIDEO_UPDATE( system32 ) {
 			for (ii = 0x600 ; ii < 0x800 ; ii++) tilemap_mark_tile_dirty(system32_layer_tilemap[tm],ii);
 		}
 
-		// if the actual windows are dirty we also need to mark them dirty in the tilemap
+		/* if the actual windows are dirty we also need to mark them dirty in the tilemap*/
 		if (system32_dirty_window [ system32_windows[tm][0] ]) {
 			for (ii = 0x000 ; ii < 0x200 ; ii++) tilemap_mark_tile_dirty(system32_layer_tilemap[tm],ii);
 		}
@@ -1451,11 +1451,11 @@ VIDEO_UPDATE( system32 ) {
 		system32_old_windows[tm][3] = system32_windows[tm][3];
 	}
 
-	// we can clean the dirty window markers now
+	/* we can clean the dirty window markers now*/
 	for (ii = 0; ii < 0x100; ii++)
 		system32_dirty_window[ii] = 0;
 
-	// if the internal tilebank changed everything is dirty
+	/* if the internal tilebank changed everything is dirty*/
 	sys32_tilebank_internal = sys32_videoram[0x01FF00/2] & 0x0400;
 	if (sys32_tilebank_internal != sys32_old_tilebank_internal) {
 		tilemap_mark_all_tiles_dirty(system32_layer_tilemap[0]);
@@ -1465,7 +1465,7 @@ VIDEO_UPDATE( system32 ) {
 	}
 	sys32_old_tilebank_internal = sys32_tilebank_internal;
 
-	// if the external tilebank changed everything is dirty
+	/* if the external tilebank changed everything is dirty*/
 
 	if  ( (sys32_tilebank_external) != sys32_old_tilebank_external ) {
 		tilemap_mark_all_tiles_dirty(system32_layer_tilemap[0]);
@@ -1475,7 +1475,7 @@ VIDEO_UPDATE( system32 ) {
 	}
 	sys32_old_tilebank_external = sys32_tilebank_external;
 
-	// if the palette shift /bank registers changed the tilemap is dirty, not sure these are regs 100% correct some odd colours in sonic / jpark
+	/* if the palette shift /bank registers changed the tilemap is dirty, not sure these are regs 100% correct some odd colours in sonic / jpark*/
 	for (tm = 0; tm < 4; tm++) {
 		int monitor=multi32?tm%2:0;
 		sys32_paletteshift[tm] = (system32_mixerregs[monitor][(0x22+tm*2)/2] & 0x0f00)>>8;
@@ -1490,7 +1490,7 @@ VIDEO_UPDATE( system32 ) {
 			sys32_old_palettebank[tm] = sys32_palettebank[tm];
 		}
 	}
-	//---------------------------------------- end wip code -----------------------------------------------
+	/*---------------------------------------- end wip code -----------------------------------------------*/
 
 	/* palette dirty check */
 
@@ -1515,9 +1515,9 @@ VIDEO_UPDATE( system32 ) {
 		}
 	}
 
-	// end palette dirty
+	/* end palette dirty*/
 
-	system32_screen_mode = sys32_videoram[0x01FF00/2] & 0xc000;  // this should be 0x8000 according to modeler but then brival is broken?  this way alien3 and arabfgt try to change when they shouldn't .. wrong register?
+	system32_screen_mode = sys32_videoram[0x01FF00/2] & 0xc000;  /* this should be 0x8000 according to modeler but then brival is broken?  this way alien3 and arabfgt try to change when they shouldn't .. wrong register?*/
 
 	if (multi32) {
 		monitor_setting=readinputport(0xf);
@@ -1548,7 +1548,7 @@ VIDEO_UPDATE( system32 ) {
 
 	fillbitmap(bitmap, 0, 0);
 
-	// Priority loop.  Draw layers 1 and 3 on Multi32's Monitor B
+	/* Priority loop.  Draw layers 1 and 3 on Multi32's Monitor B*/
 	if (sys32_displayenable & 0x0002) {
 		for (priloop=0; priloop < 0x10; priloop++) {
 			if (priloop == priority0 && (!multi32 || (multi32 && (readinputport(0xf)&1)))) {

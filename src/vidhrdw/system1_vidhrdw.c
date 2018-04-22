@@ -26,7 +26,7 @@ static unsigned char *bg_dirtybuffer;
 static int scrollx_row[32];
 static struct mame_bitmap *tmp_bitmap;
 
-//static int system1_pixel_mode = 0
+/*static int system1_pixel_mode = 0*/
 static int system1_background_memory,system1_video_mode=0;
 
 static const unsigned char *system1_color_prom;
@@ -665,7 +665,7 @@ VIDEO_UPDATE( choplifter )
 
 
 #ifdef MAME_DEBUG
-	if (keyboard_pressed(KEYCODE_SPACE))		// goto next level
+	if (keyboard_pressed(KEYCODE_SPACE))		/* goto next level*/
 	{
 		memory_region(REGION_CPU1)[0xC085]=33;
 	}

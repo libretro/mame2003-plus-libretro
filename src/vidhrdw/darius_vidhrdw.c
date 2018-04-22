@@ -120,7 +120,7 @@ void darius_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 			flipy = ((data & 0x8000) >> 15);
 
 			data = spriteram16[offs+3];
-			priority = (data &0x80) >> 7;  // 0 = low
+			priority = (data &0x80) >> 7;  /* 0 = low*/
 			if (priority != primask) continue;
 			color = (data & 0x7f);
 
@@ -153,16 +153,16 @@ VIDEO_UPDATE( darius )
 {
 	PC080SN_tilemap_update();
 
-	// draw bottom layer(always active)
+	/* draw bottom layer(always active)*/
  	PC080SN_tilemap_draw(bitmap,cliprect,0,0,TILEMAP_IGNORE_TRANSPARENCY,0);
 
 	/* Sprites can be under/over the layer below text layer */
-	darius_draw_sprites(bitmap,cliprect,0,-8); // draw sprites with priority 0 which are under the mid layer
+	darius_draw_sprites(bitmap,cliprect,0,-8); /* draw sprites with priority 0 which are under the mid layer*/
 
-	// draw middle layer
+	/* draw middle layer*/
 	PC080SN_tilemap_draw(bitmap,cliprect,0,1,0,0);
 
-	darius_draw_sprites(bitmap,cliprect,1,-8); // draw sprites with priority 1 which are over the mid layer
+	darius_draw_sprites(bitmap,cliprect,1,-8); /* draw sprites with priority 1 which are over the mid layer*/
 
 	/* top(text) layer is in fixed position */
 	tilemap_set_scrollx(fg_tilemap,0,0);

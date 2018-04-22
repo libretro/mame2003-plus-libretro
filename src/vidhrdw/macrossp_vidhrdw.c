@@ -184,7 +184,7 @@ VIDEO_START(macrossp)
 static void macrossp_drawsprites( struct mame_bitmap *bitmap, const struct rectangle *cliprect, int priority )
 {
 	const struct GfxElement *gfx = Machine->gfx[0];
-//	data32_t *source = macrossp_spriteram;
+/*	data32_t *source = macrossp_spriteram;*/
 	data32_t *source = spriteram_old2; /* buffers by two frames */
 	data32_t *finish = source + spriteram_size/4;
 
@@ -400,17 +400,17 @@ VIDEO_UPDATE(macrossp)
 
 #if 0
 usrintf_showmessage	("scra - %08x %08x %08x\nscrb - %08x %08x %08x\nscrc - %08x %08x %08x",
-macrossp_scra_videoregs[0]&0xffff33ff, // yyyyxxxx
-macrossp_scra_videoregs[1], // ??? more scrolling?
-macrossp_scra_videoregs[2], // 08 - 0b
+macrossp_scra_videoregs[0]&0xffff33ff, /* yyyyxxxx*/
+macrossp_scra_videoregs[1], /* ??? more scrolling?*/
+macrossp_scra_videoregs[2], /* 08 - 0b*/
 
-macrossp_scrb_videoregs[0]&0xffff33ff, // 00 - 03
-macrossp_scrb_videoregs[1], // 04 - 07
-macrossp_scrb_videoregs[2], // 08 - 0b
+macrossp_scrb_videoregs[0]&0xffff33ff, /* 00 - 03*/
+macrossp_scrb_videoregs[1], /* 04 - 07*/
+macrossp_scrb_videoregs[2], /* 08 - 0b*/
 
-macrossp_scrc_videoregs[0]&0xffff33ff, // 00 - 03
-macrossp_scrc_videoregs[1], // 04 - 07
-macrossp_scrc_videoregs[2]);// 08 - 0b
+macrossp_scrc_videoregs[0]&0xffff33ff, /* 00 - 03*/
+macrossp_scrc_videoregs[1], /* 04 - 07*/
+macrossp_scrc_videoregs[2]);/* 08 - 0b*/
 #endif
 }
 

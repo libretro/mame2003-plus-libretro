@@ -313,7 +313,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 
 			if (flipx && !wide) sx-=16;
 			if (!tall) sy+=16;
-//			if (flipy && !tall) sy+=16;
+/*			if (flipy && !tall) sy+=16;*/
 
 			sx += sprite_xoffs;
 			sy -= sprite_yoffs;

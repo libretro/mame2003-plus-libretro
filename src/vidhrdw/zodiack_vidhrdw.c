@@ -212,8 +212,8 @@ static void zodiack_draw_sprites( struct mame_bitmap *bitmap )
 			spriteram[offs + 2] & 0x07,
 			flipx, flipy,
 			sx, sy,
-			//flip_screen[0] ? &spritevisibleareaflipx : &spritevisiblearea,TRANSPARENCY_PEN,0);
-			//&spritevisiblearea,TRANSPARENCY_PEN,0);
+			/*flip_screen[0] ? &spritevisibleareaflipx : &spritevisiblearea,TRANSPARENCY_PEN,0);*/
+			/*&spritevisiblearea,TRANSPARENCY_PEN,0);*/
 			&Machine->visible_area, TRANSPARENCY_PEN, 0);
 	}
 }

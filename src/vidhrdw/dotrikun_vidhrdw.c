@@ -24,12 +24,12 @@ WRITE_HANDLER( dotrikun_color_w )
 	r = ((data & 0x08) ? 0xff : 0x00);
 	g = ((data & 0x10) ? 0xff : 0x00);
 	b = ((data & 0x20) ? 0xff : 0x00);
-	palette_set_color(0, r, g, b);		// BG color
+	palette_set_color(0, r, g, b);		/* BG color*/
 
 	r = ((data & 0x01) ? 0xff : 0x00);
 	g = ((data & 0x02) ? 0xff : 0x00);
 	b = ((data & 0x04) ? 0xff : 0x00);
-	palette_set_color(1, r, g, b);		// DOT color
+	palette_set_color(1, r, g, b);		/* DOT color*/
 }
 
 

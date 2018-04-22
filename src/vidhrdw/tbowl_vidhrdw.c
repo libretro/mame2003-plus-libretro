@@ -154,7 +154,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 		if (tbowl_spriteram[offs+0] & 0x80)	/* enable */
 		{
 			int code,color,sizex,sizey,flipx,flipy,xpos,ypos;
-			int x,y;//,priority,priority_mask;
+			int x,y;/*,priority,priority_mask;*/
 
 			code = (tbowl_spriteram[offs+2])+(tbowl_spriteram[offs+1]<<8);
 			color = (tbowl_spriteram[offs+3])&0x1f;

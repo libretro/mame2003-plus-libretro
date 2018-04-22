@@ -288,7 +288,7 @@ static void get_bg0_tile_info(int tile_index)
 			color,
 			0)
 	tile_info.priority = (attrib & 0x0f00) >> 8;
-///	if ((attrib & 0x0f00) == 0) tile_info.flags |= TILE_IGNORE_TRANSPARENCY;
+/*/	if ((attrib & 0x0f00) == 0) tile_info.flags |= TILE_IGNORE_TRANSPARENCY;*/
 }
 
 static void get_top1_tile_info(int tile_index)
@@ -676,7 +676,7 @@ WRITE16_HANDLER( toaplan2_txvideoram16_offs_w )
 		}
 		COMBINE_DATA(&toaplan2_txvideoram16_offs[offset]);
 	}
-//	logerror("Writing %04x to text offs RAM offset %04x\n",data,offset);
+/*	logerror("Writing %04x to text offs RAM offset %04x\n",data,offset);*/
 }
 
 READ16_HANDLER( toaplan2_txscrollram16_r )
@@ -691,7 +691,7 @@ WRITE16_HANDLER( toaplan2_txscrollram16_w )
 
 	tilemap_set_scrollx(tx_tilemap, offset, data_tx);
 
-//	logerror("Writing %04x to text scroll RAM offset %04x\n",data,offset);
+/*	logerror("Writing %04x to text scroll RAM offset %04x\n",data,offset);*/
 	COMBINE_DATA(&toaplan2_txscrollram16[offset]);
 }
 

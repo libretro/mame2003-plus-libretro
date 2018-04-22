@@ -15,7 +15,7 @@ static void sslam_drawsprites( struct mame_bitmap *bitmap, const struct rectangl
 	data16_t *source = sslam_spriteram;
 	data16_t *finish = source + 0x20000/2;
 
-	source += 3; // strange
+	source += 3; /* strange*/
 
 	while( source<finish )
 	{

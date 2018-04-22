@@ -89,7 +89,7 @@ WRITE_HANDLER( hexion_bankswitch_w )
 if (data & 0x30)
 	usrintf_showmessage("bankswitch %02x",data&0xf0);
 
-//logerror("%04x: bankswitch_w %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: bankswitch_w %02x\n",activecpu_get_pc(),data);*/
 }
 
 READ_HANDLER( hexion_bankedram_r )
@@ -108,7 +108,7 @@ READ_HANDLER( hexion_bankedram_r )
 	}
 	else
 	{
-//logerror("%04x: bankedram_r offset %04x, bankctrl = %02x\n",activecpu_get_pc(),offset,bankctrl);
+/*logerror("%04x: bankedram_r offset %04x, bankctrl = %02x\n",activecpu_get_pc(),offset,bankctrl);*/
 		return 0;
 	}
 }
@@ -117,14 +117,14 @@ WRITE_HANDLER( hexion_bankedram_w )
 {
 	if (bankctrl == 3 && offset == 0 && (data & 0xfe) == 0)
 	{
-//logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",activecpu_get_pc(),offset,data,bankctrl);
+/*logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",activecpu_get_pc(),offset,data,bankctrl);*/
 		rambank = data & 1;
 	}
 	else if (bankctrl == 0)
 	{
 		if (pmcbank)
 		{
-//logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",activecpu_get_pc(),offset,data,bankctrl);
+/*logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",activecpu_get_pc(),offset,data,bankctrl);*/
 			if (vram[rambank][offset] != data)
 			{
 				vram[rambank][offset] = data;
@@ -138,7 +138,7 @@ WRITE_HANDLER( hexion_bankedram_w )
 	{
 		if (pmcbank)
 		{
-//logerror("%04x: unkram_w offset %04x, data %02x, bankctrl = %02x\n",activecpu_get_pc(),offset,data,bankctrl);
+/*logerror("%04x: unkram_w offset %04x, data %02x, bankctrl = %02x\n",activecpu_get_pc(),offset,data,bankctrl);*/
 			unkram[offset] = data;
 		}
 		else
@@ -150,13 +150,13 @@ logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",activecpu
 
 WRITE_HANDLER( hexion_bankctrl_w )
 {
-//logerror("%04x: bankctrl_w %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: bankctrl_w %02x\n",activecpu_get_pc(),data);*/
 	bankctrl = data;
 }
 
 WRITE_HANDLER( hexion_gfxrom_select_w )
 {
-//logerror("%04x: gfxrom_select_w %02x\n",activecpu_get_pc(),data);
+/*logerror("%04x: gfxrom_select_w %02x\n",activecpu_get_pc(),data);*/
 	gfxrom_select = data;
 }
 

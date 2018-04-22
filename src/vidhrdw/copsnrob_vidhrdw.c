@@ -141,13 +141,13 @@ VIDEO_UPDATE( copsnrob )
 
         val = copsnrob_bulletsram[x];
 
-        // Check for the most common case
+        /* Check for the most common case*/
         if (!(val & 0x0f)) continue;
 
         mask1 = 0x01;
         mask2 = 0x10;
 
-        // Check each bullet
+        /* Check each bullet*/
         for (bullet = 0; bullet < 4; bullet++)
         {
             if (val & mask1)

@@ -321,7 +321,7 @@ static INLINE void vram_w(data16_t *VRAM, struct tilemap *TILEMAP, UNUSEDARG off
 	if ((VRAM[offset] & ~mem_mask)==(data & ~mem_mask)) return;
 	COMBINE_DATA(&VRAM[offset]);
 	offset /= 2;
-	if			 ( offset < 0x1000/4 )	// 16x16 tilemap
+	if			 ( offset < 0x1000/4 )	/* 16x16 tilemap*/
 	{
 		offset = (offset % (512/16))*2 + (offset / (512/16))*(512/8)*2;
 		tilemap_mark_tile_dirty(TILEMAP, offset + 0);
@@ -329,7 +329,7 @@ static INLINE void vram_w(data16_t *VRAM, struct tilemap *TILEMAP, UNUSEDARG off
 		tilemap_mark_tile_dirty(TILEMAP, offset + 0 + 512/8);
 		tilemap_mark_tile_dirty(TILEMAP, offset + 1 + 512/8);
 	}
-	else if		( offset >= 0x4000/4 )		// 8x8 tilemap
+	else if		( offset >= 0x4000/4 )		/* 8x8 tilemap*/
 		tilemap_mark_tile_dirty(TILEMAP,offset - 0x4000/4);
 }
 
@@ -445,7 +445,7 @@ int cave_vh_start( int num )
 	cave_row_effect_offs_n = -1;
 	cave_row_effect_offs_f = 1;
 
-//	background_color =	 Machine->drv->gfxdecodeinfo[0].color_codes_start;
+/*	background_color =	 Machine->drv->gfxdecodeinfo[0].color_codes_start;*/
 	background_color =	 Machine->drv->gfxdecodeinfo[0].color_codes_start +
 						(Machine->drv->gfxdecodeinfo[0].total_color_codes-1) *
 						 Machine->gfx[0]->color_granularity;
@@ -628,7 +628,7 @@ static void get_sprite_info_cave(void)
 		sprite->priority		=	(attr & 0x0030) >> 4;
 		sprite->flags			=	SPRITE_VISIBLE_CAVE;
 		sprite->line_offset		=	sprite->tile_width;
-		sprite->pal_data		=	base_pal + (attr & 0x3f00);	// first 0x4000 colors
+		sprite->pal_data		=	base_pal + (attr & 0x3f00);	/* first 0x4000 colors*/
 
 		if (glob_flipx)	{ x = max_x - x - sprite->total_width;	flipx = !flipx; }
 		if (glob_flipy)	{ y = max_y - y - sprite->total_height;	flipy = !flipy; }
@@ -703,7 +703,7 @@ static void get_sprite_info_donpachi(void)
 		else
 		{
 			sprite->priority		=	(attr & 0x0030) >> 4;
-			sprite->pal_data		=	base_pal + (attr & 0x3f00);	// first 0x4000 colors
+			sprite->pal_data		=	base_pal + (attr & 0x3f00);	/* first 0x4000 colors*/
 		}
 
 		sprite->flags			=	SPRITE_VISIBLE_CAVE;
@@ -736,12 +736,12 @@ static int sprite_init_cave(void)
 	blit.baseaddr = bitmap->line[0];
 	blit.line_offset = ((UINT8 *)bitmap->line[1])-((UINT8 *)bitmap->line[0]);
 
-	if (cave_spritetype == 0 || cave_spritetype == 2)	// most of the games
+	if (cave_spritetype == 0 || cave_spritetype == 2)	/* most of the games*/
 	{
 		get_sprite_info = get_sprite_info_cave;
 		cave_spritetype2 = CAVE_SPRITETYPE_ZOOM;
 	}
-	else						// donpachi ddonpach
+	else						/* donpachi ddonpach*/
 	{
 		get_sprite_info = get_sprite_info_donpachi;
 		cave_spritetype2 = 0;
@@ -1319,7 +1319,7 @@ static INLINE void cave_tilemap_draw(
 	sx = VCTRL[0] - cave_videoregs[0] + (flipx ? (offs_x +2) : -offs_x);
 	sy = VCTRL[1] - cave_videoregs[1] + (flipy ? (offs_y +2) : -offs_y);
 
-	if (VCTRL[1] & 0x4000)	// row-select
+	if (VCTRL[1] & 0x4000)	/* row-select*/
 	{
 		struct rectangle clip;
 		int startline, endline, vramdata0, vramdata1;
@@ -1349,7 +1349,7 @@ static INLINE void cave_tilemap_draw(
 
 			tilemap_set_scrolly(TILEMAP, 0, vramdata0 - startline);
 
-			if (VCTRL[0] & 0x4000)	// row-scroll, row-select
+			if (VCTRL[0] & 0x4000)	/* row-scroll, row-select*/
 			{
 				int line;
 
@@ -1367,7 +1367,7 @@ static INLINE void cave_tilemap_draw(
 											(vramdata0-startline+line) & 511,
 											sx + VRAM[(0x1000+(((sy+offs_row+line)*4)&0x7ff))/2] );
 			}
-			else					// no row-scroll, row-select
+			else					/* no row-scroll, row-select*/
 			{
 				tilemap_set_scroll_rows(TILEMAP, 1);
 				tilemap_set_scrollx(TILEMAP, 0, sx );
@@ -1389,7 +1389,7 @@ static INLINE void cave_tilemap_draw(
 			startline = endline;
 		}
 	}
-	else if (VCTRL[0] & 0x4000)	// row-scroll, no row-select
+	else if (VCTRL[0] & 0x4000)	/* row-scroll, no row-select*/
 	{
 		int line;
 		tilemap_set_scroll_rows(TILEMAP,512);
@@ -1456,18 +1456,18 @@ VIDEO_UPDATE( cave )
 	{
 		int msk = 0, val = 0;
 
-		if (keyboard_pressed(KEYCODE_X))	val = 1;	// priority 0 only
-		if (keyboard_pressed(KEYCODE_C))	val = 2;	// ""       1
-		if (keyboard_pressed(KEYCODE_V))	val = 4;	// ""       2
-		if (keyboard_pressed(KEYCODE_B))	val = 8;	// ""       3
+		if (keyboard_pressed(KEYCODE_X))	val = 1;	/* priority 0 only*/
+		if (keyboard_pressed(KEYCODE_C))	val = 2;	/* ""       1*/
+		if (keyboard_pressed(KEYCODE_V))	val = 4;	/* ""       2*/
+		if (keyboard_pressed(KEYCODE_B))	val = 8;	/* ""       3*/
 
-		if (keyboard_pressed(KEYCODE_Z))	val = 1|2|4|8;	// All of the above priorities
+		if (keyboard_pressed(KEYCODE_Z))	val = 1|2|4|8;	/* All of the above priorities*/
 
-		if (keyboard_pressed(KEYCODE_Q))	msk |= val <<  0;	// for layer 0
-		if (keyboard_pressed(KEYCODE_W))	msk |= val <<  4;	// for layer 1
-		if (keyboard_pressed(KEYCODE_E))	msk |= val <<  8;	// for layer 2
-		if (keyboard_pressed(KEYCODE_R))	msk |= val << 12;	// for layer 3
-		if (keyboard_pressed(KEYCODE_A))	msk |= val << 16;	// for sprites
+		if (keyboard_pressed(KEYCODE_Q))	msk |= val <<  0;	/* for layer 0*/
+		if (keyboard_pressed(KEYCODE_W))	msk |= val <<  4;	/* for layer 1*/
+		if (keyboard_pressed(KEYCODE_E))	msk |= val <<  8;	/* for layer 2*/
+		if (keyboard_pressed(KEYCODE_R))	msk |= val << 12;	/* for layer 3*/
+		if (keyboard_pressed(KEYCODE_A))	msk |= val << 16;	/* for sprites*/
 		if (msk != 0) layers_ctrl &= msk;
 
 #if 1
@@ -1521,11 +1521,11 @@ VIDEO_UPDATE( cave )
 		Tiles with the same priority *and* the same priority of their layer
 		are ordered by layer (0 back, 2 front)
 	*/
-	for (pri=0;pri<=3;pri++)	// tile / sprite priority
+	for (pri=0;pri<=3;pri++)	/* tile / sprite priority*/
 	{
 			if (layers_ctrl&(1<<(pri+16)))	(*cave_sprite_draw)( pri );
 
-		for (pri2=0;pri2<=3;pri2++)	// priority of the whole layer
+		for (pri2=0;pri2<=3;pri2++)	/* priority of the whole layer*/
 		{
 			if (layers_ctrl&(1<<(pri+ 0)))	cave_tilemap_0_draw(bitmap, cliprect, pri, 0, pri2);
 			if (layers_ctrl&(1<<(pri+ 4)))	cave_tilemap_1_draw(bitmap, cliprect, pri, 0, pri2);

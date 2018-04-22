@@ -356,7 +356,7 @@ static void draw_background( const int num, UINT8 *line_priority )
 		page2 = ppu_page[page][address];
 		index2 = nes_vram[ ( page2 >> 6 ) | tile_page ] + ( page2 & 0x3f );
 
-		//27/12/2002
+		/*27/12/2002*/
 		if( ppu_latch )
 		{
 			(*ppu_latch)(( tile_page << 10 ) | ( page2 << 4 ));
@@ -471,7 +471,7 @@ static void draw_sprites( const int num, UINT8 *line_priority )
 
 		index1 = chips[num].nes_vram[page] + ( tile & 0x3f );
 
-		//27/12/2002
+		/*27/12/2002*/
 		if ( ppu_latch )
 			(*ppu_latch)(( sprite_page << 10 ) | ( (tile & 0xff) << 4 ));
 
@@ -893,7 +893,7 @@ int ppu2c03b_r( int num, int offset )
 		case PPU_DATA:
 			ret = chips[num].videoram_data_latch;
 
-			//27/12/2002
+			/*27/12/2002*/
 			if ( ppu_latch )
 				(*ppu_latch)( chips[num].videoram_addr & 0x3fff );
 
@@ -1023,7 +1023,7 @@ void ppu2c03b_w( int num, int offset, int data )
 			{
 				int tempAddr = chips[num].videoram_addr & 0x3fff;
 
-				//27/12/2002
+				/*27/12/2002*/
 				if ( ppu_latch )
 					(*ppu_latch)( tempAddr );
 

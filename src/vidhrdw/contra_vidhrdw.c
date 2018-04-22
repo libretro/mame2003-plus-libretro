@@ -8,7 +8,7 @@
 #include "vidhrdw/konamiic.h"
 #include "vidhrdw/generic.h"
 
-//static int spriteram_offset;
+/*static int spriteram_offset;*/
 static unsigned char *private_spriteram_2,*private_spriteram;
 
 unsigned char *contra_fg_vram,*contra_fg_cram;

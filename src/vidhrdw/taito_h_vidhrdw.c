@@ -423,8 +423,8 @@ static void dleague_draw_sprites(struct mame_bitmap *bitmap, const struct rectan
 
 static void taitoh_log_vram(void)
 {
-	// null function: the necessary pointers are now internal to taitoic.c
-	// Recreate it there if wanted (add prototype to taitoic.h)
+	/* null function: the necessary pointers are now internal to taitoic.c*/
+	/* Recreate it there if wanted (add prototype to taitoic.h)*/
 }
 
 #endif

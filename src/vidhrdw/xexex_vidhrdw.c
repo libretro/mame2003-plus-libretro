@@ -16,8 +16,8 @@ static void xexex_sprite_callback(int *code, int *color, int *priority_mask)
 {
 	int pri, c = *color;
 
-	// Xexex doesn't seem to use bit8 and 9 as effect selectors so this should be safe.
-	// (pdrawgfx() still needs change to fix Elaine's end-game graphics)
+	/* Xexex doesn't seem to use bit8 and 9 as effect selectors so this should be safe.*/
+	/* (pdrawgfx() still needs change to fix Elaine's end-game graphics)*/
 	pri = (c & 0x3e0) >> 4;
 
 	if (pri <= layerpri[3])                       *priority_mask = 0; else
@@ -38,7 +38,7 @@ VIDEO_START( xexex )
 {
 	int region = REGION_GFX3;
 
-	if (Machine->color_depth != 32) return 1; // ensure correct bpp to avoid crashing in-game
+	if (Machine->color_depth != 32) return 1; /* ensure correct bpp to avoid crashing in-game*/
 
 	cur_alpha = 0;
 
@@ -49,7 +49,7 @@ VIDEO_START( xexex )
 	if (K056832_vh_start(REGION_GFX1, K056832_BPP_4, 1, NULL, xexex_tile_callback)) return 1;
 	if (K053247_vh_start(REGION_GFX2, -48, 32, NORMAL_PLANE_ORDER, xexex_sprite_callback)) return 1;
 
-	// Xexex has relative plane offsets of -2,2,4,6 vs. -2,0,2,3 in MW and GX.
+	/* Xexex has relative plane offsets of -2,2,4,6 vs. -2,0,2,3 in MW and GX.*/
 	K056832_set_LayerOffset(0, -2, 16);
 	K056832_set_LayerOffset(1,  2, 16);
 	K056832_set_LayerOffset(2,  4, 16);

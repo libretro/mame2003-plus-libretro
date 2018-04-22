@@ -77,10 +77,10 @@ static void get_fix_tile_info( int tile_index )
 	tile=videoram[tile_index+0x400]+((videoram[tile_index]&0x7)<<8);
 	color=(videoram[tile_index]&0x70)>>4;
 
-//if (tile&0x300) tile-=0x000;
-//else if(tile&0x200) tile-=0x100;
-//else if (tile&0x100) tile-=0x100;
-//else tile+=0x200;
+/*if (tile&0x300) tile-=0x000;*/
+/*else if(tile&0x200) tile-=0x100;*/
+/*else if (tile&0x100) tile-=0x100;*/
+/*else tile+=0x200;*/
 
 	SET_TILE_INFO(0,tile,color,0)
 }
@@ -214,17 +214,17 @@ static void liberate_drawsprites(struct mame_bitmap *bitmap)
 
 		code = spriteram[offs+1] + ( ( spriteram[offs+0] & 0x60 ) << 3 );
 		sx = (240 - spriteram[offs+3]);
-	//if (sx < -7) sx += 256;
+	/*if (sx < -7) sx += 256;*/
 
 		sy = 240-spriteram[offs+2];
-		color = 0;//(spriteram[offs+1] & 0x03);// + ((spriteram[offs+1] & 0x08) >> 1);
+		color = 0;/*(spriteram[offs+1] & 0x03);// + ((spriteram[offs+1] & 0x08) >> 1);*/
 
-//		if (pri==0 && color!=0) continue;
-//		if (pri==1 && color==0) continue;
+/*		if (pri==0 && color!=0) continue;*/
+/*		if (pri==1 && color==0) continue;*/
 
 		fx = spriteram[offs+0] & 0x04;
-		fy = spriteram[offs+0] & 0x08;//2;//8;
-//if (fy) fy=0; else fy=1;
+		fy = spriteram[offs+0] & 0x08;/*2;//8;*/
+/*if (fy) fy=0; else fy=1;*/
 		multi = spriteram[offs+0] & 0x10;
 
 
@@ -260,7 +260,7 @@ static void prosport_drawsprites(struct mame_bitmap *bitmap)
 
 	for (offs = 0x000;offs < 0x800;offs += 4)
 	{
-	//	if ((spriteram[offs+0]&1)!=1) continue;
+	/*	if ((spriteram[offs+0]&1)!=1) continue;*/
 
 		code = spriteram[offs+1] + ((spriteram[offs+0]&0x3)<<8);
 		code2=code+1;
@@ -270,16 +270,16 @@ static void prosport_drawsprites(struct mame_bitmap *bitmap)
 		sy=spriteram[offs+2];
 		if (multi) sy+=16;
 		sx = (240 - spriteram[offs+3]);
-//		sy = (240-spriteram[offs+2]);//-16;
+/*		sy = (240-spriteram[offs+2]);//-16;*/
 		sy = 240-sy;
 
-		color = 1;//(spriteram[offs+0]&0x4)>>2;
+		color = 1;/*(spriteram[offs+0]&0x4)>>2;*/
 
 		fx = 0;
 		fy = spriteram[offs+0] & 0x04;
-		multi = 0;// spriteram[offs+0] & 0x10;
+		multi = 0;/* spriteram[offs+0] & 0x10;*/
 
-//		if (multi) sy-=16;
+/*		if (multi) sy-=16;*/
 		if (fy && multi) { code2=code; code++; }
 
 		if (flip_screen) {
@@ -326,7 +326,7 @@ static void boomrang_drawsprites(struct mame_bitmap *bitmap, int pri)
 		sy=spriteram[offs+2];
 		if (multi) sy+=16;
 		sx = (240 - spriteram[offs+3]);
-//		sy = (240-spriteram[offs+2]);//-16;
+/*		sy = (240-spriteram[offs+2]);//-16;*/
 		sy = 240-sy;
 
 		color = (spriteram[offs+0]&0x4)>>2;
@@ -335,7 +335,7 @@ static void boomrang_drawsprites(struct mame_bitmap *bitmap, int pri)
 		fy = spriteram[offs+0] & 0x02;
 		multi = spriteram[offs+0] & 0x10;
 
-//		if (multi) sy-=16;
+/*		if (multi) sy-=16;*/
 		if (fy && multi) { code2=code; code++; }
 
 		if (flip_screen) {
@@ -395,7 +395,7 @@ VIDEO_UPDATE( prosport )
 
 		if (!tile) continue;
 
-		color=1;//(videoram[offs]&0x70)>>4;
+		color=1;/*(videoram[offs]&0x70)>>4;*/
 		my = (offs) % 32;
 		mx = (offs) / 32;
 

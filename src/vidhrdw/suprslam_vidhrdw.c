@@ -59,7 +59,7 @@ static void suprslam_drawsprites( struct mame_bitmap *bitmap, const struct recta
 
 			int col = (source2[sprnum+2] & 0x3f00) >> 8;
 			int flipx = (source2[sprnum+2] & 0x4000) >> 14;
-//			int flipy = (source2[sprnum+2] & 0x8000) >> 15;
+/*			int flipy = (source2[sprnum+2] & 0x8000) >> 15;*/
 
 			int word_offset = source2[sprnum+3] & 0x7fff;
 			int xcnt, ycnt;

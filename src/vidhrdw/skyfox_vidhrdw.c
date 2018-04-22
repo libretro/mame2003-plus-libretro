@@ -54,7 +54,7 @@ int skyfox_bg_pos, skyfox_bg_ctrl;
 
 ***************************************************************************/
 
-READ_HANDLER( skyfox_vregs_r )	// for debug
+READ_HANDLER( skyfox_vregs_r )	/* for debug*/
 {
 	return vreg[offset];
 }
@@ -185,7 +185,7 @@ void skyfox_draw_sprites(struct mame_bitmap *bitmap)
 		int flipx	=		code & 0x2;
 		int flipy	=		code & 0x4;
 
-		x = x * 2 + (code & 1);	// add the least significant bit
+		x = x * 2 + (code & 1);	/* add the least significant bit*/
 
 		high_code = ((code >> 4) & 0x7f0) +
 					((code & 0x8000) >> shift);
@@ -205,7 +205,7 @@ void skyfox_draw_sprites(struct mame_bitmap *bitmap)
 				x + (DX),y + (DY), \
 				&Machine->visible_area,TRANSPARENCY_PEN, 0xff); \
 
-		if (skyfox_bg_ctrl & 1)	// flipscreen
+		if (skyfox_bg_ctrl & 1)	/* flipscreen*/
 		{
 			x = width  - x - (n-1)*8;
 			y = height - y - (n-1)*8;
@@ -261,7 +261,7 @@ void skyfox_draw_background(struct mame_bitmap *bitmap)
 		x		=	RAM[offs+1]*2 + (i&1) + pos + ((i & 8)?512:0);
 		y		=	((i/8)/2)*8 + (i%8);
 
-		if (skyfox_bg_ctrl & 1)	// flipscreen
+		if (skyfox_bg_ctrl & 1)	/* flipscreen*/
 		{
 			x = 512 * 2 - (x%(512*2));
 			y = 256     - (y%256);
@@ -287,7 +287,7 @@ void skyfox_draw_background(struct mame_bitmap *bitmap)
 
 VIDEO_UPDATE( skyfox )
 {
-	fillbitmap(bitmap,Machine->pens[255],&Machine->visible_area);	// the bg is black
+	fillbitmap(bitmap,Machine->pens[255],&Machine->visible_area);	/* the bg is black*/
 	skyfox_draw_background(bitmap);
 	skyfox_draw_sprites(bitmap);
 }

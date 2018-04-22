@@ -26,7 +26,7 @@
 #include "vidhrdw/generic.h"
 #include "includes/dynax.h"
 
-// Log Blitter
+/* Log Blitter*/
 #define VERBOSE 0
 
 
@@ -76,16 +76,16 @@ static int dynax_layer_enable;
 static int extra_scroll_x,extra_scroll_y;
 static int flipscreen;
 
-#define LAYOUT_HANAMAI	0	// 4 layers, interleaved
-#define LAYOUT_HNORIDUR	1	// same as hanamai but some bits are inverted and layer order is reversed
-#define LAYOUT_DRGPUNCH	2	// 3 couples of layers, interleaved
-#define LAYOUT_MJDIALQ2	3	// 2 layers
+#define LAYOUT_HANAMAI	0	/* 4 layers, interleaved*/
+#define LAYOUT_HNORIDUR	1	/* same as hanamai but some bits are inverted and layer order is reversed*/
+#define LAYOUT_DRGPUNCH	2	/* 3 couples of layers, interleaved*/
+#define LAYOUT_MJDIALQ2	3	/* 2 layers*/
 
 static int layer_layout;
 
-static int trigger_irq;	// some games trigger IRQ at blitter end, some don't
+static int trigger_irq;	/* some games trigger IRQ at blitter end, some don't*/
 
-// 4 layers, 2 images per layer (interleaved on screen)
+/* 4 layers, 2 images per layer (interleaved on screen)*/
 static UINT8 *dynax_pixmap[4][2];
 
 
@@ -250,12 +250,12 @@ WRITE_HANDLER( dynax_flipscreen_w )
 /* Plot a pixel (in the pixmaps specified by dynax_blit_dest) */
 static INLINE void sprtmtch_plot_pixel(int x, int y, int pen, int flags)
 {
-	x &= 0xff;	// confirmed by some mjdialq2 gfx and especially by mjfriday, which
-				// uses the front layer to mask out the right side of the screen as
-				// it draws stuff on the left, when it shows the girls scrolling
-				// horizontally after you win.
-	y &= 0xff;	// seems confirmed by mjdialq2 last picture of gal 6, but it breaks
-				// mjdialq2 title screen so there's something we are missing.
+	x &= 0xff;	/* confirmed by some mjdialq2 gfx and especially by mjfriday, which*/
+				/* uses the front layer to mask out the right side of the screen as*/
+				/* it draws stuff on the left, when it shows the girls scrolling*/
+				/* horizontally after you win.*/
+	y &= 0xff;	/* seems confirmed by mjdialq2 last picture of gal 6, but it breaks*/
+				/* mjdialq2 title screen so there's something we are missing.*/
 
 	/* "Flip Screen" just means complement the coordinates to 255 */
 	if (flipscreen)	{	x ^= 0xff;	y ^= 0xff;	}
@@ -267,7 +267,7 @@ static INLINE void sprtmtch_plot_pixel(int x, int y, int pen, int flags)
 	   supplied one instead */
 	if (flags & 0x02)	{ pen = (dynax_blit_pen >> 4) & 0xf;	}
 
-	if (dynax_blit_dest & 0x10)	pen |= dynax_blit_pen<<1;	// e.g. yarunara
+	if (dynax_blit_dest & 0x10)	pen |= dynax_blit_pen<<1;	/* e.g. yarunara*/
 
 	if (	(x >= 0) && (x <= 0xff) &&
 			(y >= 0) && (y <= 0xff)	)
@@ -395,7 +395,7 @@ usrintf_showmessage("GFXROM OVER %08x",i);
 
 		switch (cmd)
 		{
-		case 0xf:	// Increment Y
+		case 0xf:	/* Increment Y*/
 			/* Rotate: rotation = SWAPXY + FLIPY */
 			if (flags & 0x08)
 				y--;
@@ -404,10 +404,10 @@ usrintf_showmessage("GFXROM OVER %08x",i);
 			x = sx;
 			break;
 
-		case 0xe:	// unused ? was "change dest mask" in the "rev1" blitter
+		case 0xe:	/* unused ? was "change dest mask" in the "rev1" blitter*/
 			usrintf_showmessage("Blitter unknown command %06X: %02X\n", i-1, cmd);
 
-		case 0xd:	// Skip X pixels
+		case 0xd:	/* Skip X pixels*/
 			if (i >= size_src)
 			{
 usrintf_showmessage("GFXROM OVER %08x",i);
@@ -416,7 +416,7 @@ usrintf_showmessage("GFXROM OVER %08x",i);
 			x = sx + SRC[i++];
 			/* fall through into next case */
 
-		case 0xc:	// Draw N pixels
+		case 0xc:	/* Draw N pixels*/
 			if (i >= size_src)
 			{
 usrintf_showmessage("GFXROM OVER %08x",i);
@@ -435,12 +435,12 @@ usrintf_showmessage("GFXROM OVER %08x",i);
 		case 0x4:
 		case 0x3:
 		case 0x2:
-		case 0x1:	// Draw N pixels
+		case 0x1:	/* Draw N pixels*/
 			while (cmd--)
 				sprtmtch_plot_pixel(x++, y, pen, flags);
 			break;
 
-		case 0x0:	// Stop
+		case 0x0:	/* Stop*/
 			return i;
 		}
 	}
@@ -477,11 +477,11 @@ static void dynax_blitter_start(int flags)
 
 WRITE_HANDLER( dynax_blit_scroll_w )
 {
-//logerror("%04x blit_scroll_w data = %02x addr = %06x\n",activecpu_get_pc(),data,blit_src);
-	// 0x800000 also used!
+/*logerror("%04x blit_scroll_w data = %02x addr = %06x\n",activecpu_get_pc(),data,blit_src);*/
+	/* 0x800000 also used!*/
 	if (blit_src & 0x800000)
 	{
-		dynax_blit_scroll_high = data;	// ?
+		dynax_blit_scroll_high = data;	/* ?*/
 #if VERBOSE
 			logerror("SH=%02X ",data);
 #endif
@@ -530,7 +530,7 @@ WRITE_HANDLER( dynax_blitter_rev2_w )
 ***************************************************************************/
 
 int *priority_table;
-//                           0       1       2       3       4       5       6       7
+/*                           0       1       2       3       4       5       6       7*/
 int priority_hnoridur[8] = { 0x0231, 0x2103, 0x3102, 0x2031, 0x3021, 0x1302, 0x2310, 0x1023 };
 int priority_mcnpshnt[8] = { 0x3210, 0x2103, 0x3102, 0x2031, 0x3021, 0x1302, 0x2310, 0x1023 };
 
@@ -797,10 +797,10 @@ static int debug_mask(void)
 	int msk = 0;
 	if (keyboard_pressed(KEYCODE_Z))
 	{
-		if (keyboard_pressed(KEYCODE_Q))	msk |= 1;	// layer 0
-		if (keyboard_pressed(KEYCODE_W))	msk |= 2;	// layer 1
-		if (keyboard_pressed(KEYCODE_E))	msk |= 4;	// layer 2
-		if (keyboard_pressed(KEYCODE_R))	msk |= 8;	// layer 3
+		if (keyboard_pressed(KEYCODE_Q))	msk |= 1;	/* layer 0*/
+		if (keyboard_pressed(KEYCODE_W))	msk |= 2;	/* layer 1*/
+		if (keyboard_pressed(KEYCODE_E))	msk |= 4;	/* layer 2*/
+		if (keyboard_pressed(KEYCODE_R))	msk |= 8;	/* layer 3*/
 		if (msk != 0)	return msk;
 	}
 #endif
@@ -879,7 +879,7 @@ VIDEO_UPDATE( hnoridur )
 	if (layers_ctrl & (1 << lay[2]))	hanamai_copylayer( bitmap, cliprect, lay[2] );
 	if (layers_ctrl & (1 << lay[3]))	hanamai_copylayer( bitmap, cliprect, lay[3] );
 
-//	usrintf_showmessage("(%04x %02x %02x)(%x %02x-%02x e %02x-%02x f%d)",dynax_blit_palettes,dynax_blit_palbank,hanamai_priority,dynax_blit_scroll_high,dynax_blit_scroll_x, dynax_blit_scroll_y,extra_scroll_x,extra_scroll_y,flipscreen);
+/*	usrintf_showmessage("(%04x %02x %02x)(%x %02x-%02x e %02x-%02x f%d)",dynax_blit_palettes,dynax_blit_palbank,hanamai_priority,dynax_blit_scroll_high,dynax_blit_scroll_x, dynax_blit_scroll_y,extra_scroll_x,extra_scroll_y,flipscreen);*/
 }
 
 

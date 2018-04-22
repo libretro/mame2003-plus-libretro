@@ -123,13 +123,13 @@ int xoffs, yoffs;
 	if (flipscreen)	{	xoffs = -0x06a;		yoffs = -0x1ff;}
 	else			{	xoffs = -0x094;		yoffs = -0x100;}
 
-	switch (offset)		// offset 0 <-> port 4
+	switch (offset)		/* offset 0 <-> port 4*/
 	{
-		case 0x00:	fg_scrolly =  data;	break;	// low 8 bits
+		case 0x00:	fg_scrolly =  data;	break;	/* low 8 bits*/
 		case 0x02:	fg_scrollx =  data;	break;
 		case 0x04:	bg_scrolly =  data;	break;
 		case 0x06:	bg_scrollx =  data;	break;
-		case 0x08:	highbits   = ~data;	break;	// complemented high bits
+		case 0x08:	highbits   = ~data;	break;	/* complemented high bits*/
 
 		default:	logerror("CPU #2 - port %02X written with %02X - PC = %04X\n", offset, data, activecpu_get_pc());
 	}

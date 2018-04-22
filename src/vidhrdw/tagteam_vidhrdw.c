@@ -129,7 +129,7 @@ WRITE_HANDLER( tagteam_flipscreen_w )
 static void get_bg_tile_info(int tile_index)
 {
 	int code = videoram[tile_index] + 256 * colorram[tile_index];
-	int color = palettebank * 2; // GUESS
+	int color = palettebank * 2; /* GUESS*/
 
 	SET_TILE_INFO(0, code, color, 0)
 }
@@ -153,7 +153,7 @@ static void tagteam_draw_sprites( struct mame_bitmap *bitmap )
 	{
 		int spritebank = (videoram[offs] & 0x30) << 4;
 		int code = videoram[offs + 1] + 256 * spritebank;
-		int color = 1 + 2 * palettebank; // GUESS
+		int color = 1 + 2 * palettebank; /* GUESS*/
 		int flipx = videoram[offs] & 0x04;
 		int flipy = videoram[offs] & 0x02;
 		int sx = 240 - videoram[offs + 3];

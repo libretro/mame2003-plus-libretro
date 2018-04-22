@@ -42,7 +42,7 @@ VIDEO_START(moo)
 {
 	int offsx, offsy;
 
-	if (Machine->color_depth != 32) return 1; // ensure correct bpp to avoid crashing in-game
+	if (Machine->color_depth != 32) return 1; /* ensure correct bpp to avoid crashing in-game*/
 
 	alpha_enabled = 0;
 
@@ -53,7 +53,7 @@ VIDEO_START(moo)
 
 	if (!strcmp(Machine->gamedrv->name, "bucky") || !strcmp(Machine->gamedrv->name, "buckyua"))
 	{
-		// Bucky doesn't chain tilemaps
+		/* Bucky doesn't chain tilemaps*/
 		K056832_set_LayerAssociation(0);
 
 		K056832_set_LayerOffset(0, -2, 0);
@@ -66,7 +66,7 @@ VIDEO_START(moo)
 	}
 	else
 	{
-		// other than the intro showing one blank line alignment is good through the game
+		/* other than the intro showing one blank line alignment is good through the game*/
 		K056832_set_LayerOffset(0, -2+1, 0);
 		K056832_set_LayerOffset(1,  2+1, 0);
 		K056832_set_LayerOffset(2,  4+1, 0);
@@ -154,9 +154,9 @@ VIDEO_UPDATE(moo)
 
 	K056832_tilemap_draw(bitmap, cliprect, layers[1], 0, 2);
 
-	// Enabling alpha improves fog and fading in Moo but causes other things to disappear.
-	// There is probably a control bit somewhere to turn off alpha blending.
-	alpha_enabled = K054338_read_register(K338_REG_CONTROL) & K338_CTL_MIXPRI; // DUMMY
+	/* Enabling alpha improves fog and fading in Moo but causes other things to disappear.*/
+	/* There is probably a control bit somewhere to turn off alpha blending.*/
+	alpha_enabled = K054338_read_register(K338_REG_CONTROL) & K338_CTL_MIXPRI; /* DUMMY*/
 
 	alpha = (alpha_enabled) ? K054338_set_alpha_level(1) : 255;
 

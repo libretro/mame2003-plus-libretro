@@ -256,7 +256,7 @@ static void srmp3_draw_sprites(struct mame_bitmap *bitmap)
 	int max_y	=	Machine -> drv -> screen_height;
 
 	int ctrl	=	spriteram[ 0x600/2 ];
-//	int ctrl2	=	spriteram[ 0x602/2 ];
+/*	int ctrl2	=	spriteram[ 0x602/2 ];*/
 
 	int flip	=	ctrl & 0x40;
 

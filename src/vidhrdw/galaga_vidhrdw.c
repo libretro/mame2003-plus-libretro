@@ -23,7 +23,7 @@ struct star
 };
 static struct star stars[MAX_STARS];
 static int total_stars;
-static int galaga_gfxbank; // used by catsbee
+static int galaga_gfxbank; /* used by catsbee*/
 
 WRITE_HANDLER ( gatsbee_bank_w )
 {

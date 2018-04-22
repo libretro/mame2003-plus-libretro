@@ -44,7 +44,7 @@ data16_t *f2_sprite_extension;
 size_t f2_spriteext_size;
 
 static UINT16 spritebank[8];
-//static UINT16 spritebank_eof[8];
+/*static UINT16 spritebank_eof[8];*/
 static UINT16 spritebank_buffered[8];
 static UINT16 koshien_spritebank;
 
@@ -345,8 +345,8 @@ WRITE16_HANDLER( taitof2_spritebank_w )
 		spritebank_buffered[j] = i;
 		spritebank_buffered[j+1] = (i + 0x400);
 
-//logerror("bank %d, set to: %04x\n", j, i);
-//logerror("bank %d, paired so: %04x\n", j + 1, i + 0x400);
+/*logerror("bank %d, set to: %04x\n", j, i);*/
+/*logerror("bank %d, paired so: %04x\n", j + 1, i + 0x400);*/
 
 	}
 	else   /* last 4 are individual banks */
@@ -354,7 +354,7 @@ WRITE16_HANDLER( taitof2_spritebank_w )
 		i = data << 10;
 		spritebank_buffered[offset] = i;
 
-//logerror("bank %d, new value: %04x\n", offset, i);
+/*logerror("bank %d, new value: %04x\n", offset, i);*/
 	}
 
 }
@@ -473,7 +473,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 	color = 0;
 
 	f2_x_offset = f2_hide_pixels;   /* Get rid of 0-3 unwanted pixels on edge of screen. */
-	if (sprites_flipscreen) f2_x_offset = -f2_flip_hide_pixels;		// was -f2_x_offset
+	if (sprites_flipscreen) f2_x_offset = -f2_flip_hide_pixels;		/* was -f2_x_offset*/
 
 	/* safety check to avoid getting stuck in bank 2 for games using only one bank */
 	if (area == 0x8000 &&
@@ -494,7 +494,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 
 			/* Get rid of 0-3 unwanted pixels on edge of screen. */
 			f2_x_offset = f2_hide_pixels;
-			if (sprites_flipscreen) f2_x_offset = -f2_flip_hide_pixels;		// was -f2_x_offset
+			if (sprites_flipscreen) f2_x_offset = -f2_flip_hide_pixels;		/* was -f2_x_offset*/
 
 			if (f2_game == FOOTCHMP)
 				area = 0x8000 * (spriteram_buffered[(offs+6)/2] & 0x0001);
@@ -503,7 +503,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 			continue;
 		}
 
-//usrintf_showmessage("%04x",area);
+/*usrintf_showmessage("%04x",area);*/
 
 		/* check for extra scroll offset */
 		if ((spriteram_buffered[(offs+4)/2] & 0xf000) == 0xa000)
@@ -554,17 +554,17 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 			color = spritedata & 0xff;
 
 
-// The bigsprite == 0 check fixes "tied-up" little sprites in Thunderfox
-// which (mostly?) have spritecont = 0x20 when they are not continuations
-// of anything.
+/* The bigsprite == 0 check fixes "tied-up" little sprites in Thunderfox*/
+/* which (mostly?) have spritecont = 0x20 when they are not continuations*/
+/* of anything.*/
 		if (big_sprite == 0 || (spritecont & 0xf0) == 0)
 		{
 			x = spriteram_buffered[(offs+4)/2];
 
-// Some absolute x values deduced here are 1 too high (scenes when you get
-// home run in Koshien, and may also relate to BG layer woods and stuff as you
-// journey in MjnQuest). You will see they are 1 pixel too far to the right.
-// Where is this extra pixel offset coming from??
+/* Some absolute x values deduced here are 1 too high (scenes when you get*/
+/* home run in Koshien, and may also relate to BG layer woods and stuff as you*/
+/* journey in MjnQuest). You will see they are 1 pixel too far to the right.*/
+/* Where is this extra pixel offset coming from??*/
 
 			if (x & 0x8000)   /* absolute (koshien) */
 			{
@@ -619,16 +619,16 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 				   of our sprite chunk. So it is difference in x and y
 				   coords of our chunk and diagonally adjoining one. */
 
-// These calcs caused black lines between flames in Gunfront attract...
-//				x = xlatch + x_no * (0x100 - zoomx) / 16;
-//				y = ylatch + y_no * (0x100 - zoomy) / 16;
-//				zx = xlatch + (x_no+1) * (0x100 - zoomx) / 16 - x;
-//				zy = ylatch + (y_no+1) * (0x100 - zoomy) / 16 - y;
+/* These calcs caused black lines between flames in Gunfront attract...*/
+/*				x = xlatch + x_no * (0x100 - zoomx) / 16;*/
+/*				y = ylatch + y_no * (0x100 - zoomy) / 16;*/
+/*				zx = xlatch + (x_no+1) * (0x100 - zoomx) / 16 - x;*/
+/*				zy = ylatch + (y_no+1) * (0x100 - zoomy) / 16 - y;*/
 
-				x = xlatch + (x_no * (0x100 - zoomx)+12) / 16;    //ks
-				y = ylatch + (y_no * (0x100 - zoomy)+12) / 16;    //ks
-				zx = xlatch + ((x_no+1) * (0x100 - zoomx)+12) / 16 - x;  //ks
-				zy = ylatch + ((y_no+1) * (0x100 - zoomy)+12) / 16 - y;  //ks
+				x = xlatch + (x_no * (0x100 - zoomx)+12) / 16;    /*ks*/
+				y = ylatch + (y_no * (0x100 - zoomy)+12) / 16;    /*ks*/
+				zx = xlatch + ((x_no+1) * (0x100 - zoomx)+12) / 16 - x;  /*ks*/
+				zy = ylatch + ((y_no+1) * (0x100 - zoomy)+12) / 16 - y;  /*ks*/
 			}
 		}
 		else
@@ -892,9 +892,9 @@ VIDEO_EOF( taitof2_partial_buffer_delayed_qzchikyu )
 		spriteram_buffered[i]   = spriteram16[i];
 		spriteram_buffered[i+1] = spriteram16[i+1];
 		spriteram_buffered[i+4] = spriteram16[i+4];
-		spriteram_buffered[i+5] = spriteram16[i+5];	// not needed?
-		spriteram_buffered[i+6] = spriteram16[i+6];	// not needed?
-		spriteram_buffered[i+7] = spriteram16[i+7];	// not needed?
+		spriteram_buffered[i+5] = spriteram16[i+5];	/* not needed?*/
+		spriteram_buffered[i+6] = spriteram16[i+6];	/* not needed?*/
+		spriteram_buffered[i+7] = spriteram16[i+7];	/* not needed?*/
 	}
 	memcpy(spriteram_delayed,spriteram16,spriteram_size);
 }

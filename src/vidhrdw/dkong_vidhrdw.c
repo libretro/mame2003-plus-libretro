@@ -222,7 +222,7 @@ WRITE_HANDLER( radarscp_grid_color_w )
 	r = ((~data >> 0) & 0x01) * 0xff;
 	g = ((~data >> 1) & 0x01) * 0xff;
 	b = ((~data >> 2) & 0x01) * 0xff;
-//	palette_set_color(257,r,g,b);
+/*	palette_set_color(257,r,g,b);*/
 	palette_set_color(257,0x00,0x00,0xff);
 }
 

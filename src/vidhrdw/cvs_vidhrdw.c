@@ -196,13 +196,13 @@ WRITE_HANDLER( cvs_videoram_w )
 {
 	if(!s2650_get_flag())
     {
-    	// Colour Map
+    	/* Colour Map*/
 
         colorram_w(offset,data);
     }
     else
     {
-    	// Data
+    	/* Data*/
 
         videoram_w(offset,data);
     }
@@ -212,13 +212,13 @@ READ_HANDLER( cvs_videoram_r )
 {
 	if(!s2650_get_flag())
     {
-    	// Colour Map
+    	/* Colour Map*/
 
         return colorram[offset];
     }
     else
     {
-    	// Data
+    	/* Data*/
 
         return videoram[offset];
     }
@@ -228,13 +228,13 @@ WRITE_HANDLER( cvs_bullet_w )
 {
 	if(!s2650_get_flag())
     {
-    	// Bullet Ram
+    	/* Bullet Ram*/
 
         bullet_ram[offset] = data;
     }
     else
     {
-    	// Pallette Ram - Inverted ?
+    	/* Pallette Ram - Inverted ?*/
 
 		paletteram_BBBGGGRR_w((offset & 0x0f),(data ^ 0xff));
     }
@@ -244,13 +244,13 @@ READ_HANDLER( cvs_bullet_r )
 {
 	if(!s2650_get_flag())
     {
-    	// Bullet Ram
+    	/* Bullet Ram*/
 
         return bullet_ram[offset];
     }
     else
     {
-    	// Pallette Ram
+    	/* Pallette Ram*/
 
         return (paletteram[offset] ^ 0xff);
     }
@@ -260,13 +260,13 @@ WRITE_HANDLER( cvs_2636_1_w )
 {
 	if(!s2650_get_flag())
     {
-    	// First 2636
+    	/* First 2636*/
 
         s2636_w(s2636_1_ram,offset,data,s2636_1_dirty);
     }
     else
     {
-    	// Character Ram 1
+    	/* Character Ram 1*/
 
         if(character_1_ram[character_page + offset] != data)
         {
@@ -280,13 +280,13 @@ READ_HANDLER( cvs_2636_1_r )
 {
 	if(!s2650_get_flag())
     {
-    	// First 2636
+    	/* First 2636*/
 
         return s2636_1_ram[offset];
     }
     else
     {
-    	// Character Ram 1
+    	/* Character Ram 1*/
 
         return character_1_ram[character_page + offset];
     }
@@ -296,13 +296,13 @@ WRITE_HANDLER( cvs_2636_2_w )
 {
 	if(!s2650_get_flag())
     {
-    	// Second 2636
+    	/* Second 2636*/
 
         s2636_w(s2636_2_ram,offset,data,s2636_2_dirty);
     }
     else
     {
-    	// Character Ram 2
+    	/* Character Ram 2*/
 
         if(character_2_ram[character_page + offset] != data)
         {
@@ -316,13 +316,13 @@ READ_HANDLER( cvs_2636_2_r )
 {
 	if(!s2650_get_flag())
     {
-    	// Second 2636
+    	/* Second 2636*/
 
         return s2636_2_ram[offset];
     }
     else
     {
-    	// Character Ram 2
+    	/* Character Ram 2*/
 
         return character_2_ram[character_page + offset];
     }
@@ -332,13 +332,13 @@ WRITE_HANDLER( cvs_2636_3_w )
 {
 	if(!s2650_get_flag())
     {
-    	// Third 2636
+    	/* Third 2636*/
 
         s2636_w(s2636_3_ram,offset,data,s2636_3_dirty);
     }
     else
     {
-    	// Character Ram 3
+    	/* Character Ram 3*/
 
         if(character_3_ram[character_page + offset] != data)
         {
@@ -352,13 +352,13 @@ READ_HANDLER( cvs_2636_3_r )
 {
 	if(!s2650_get_flag())
     {
-    	// Third 2636
+    	/* Third 2636*/
 
         return s2636_3_ram[offset];
     }
     else
     {
-    	// Character Ram 3
+    	/* Character Ram 3*/
 
         return character_3_ram[character_page + offset];
     }

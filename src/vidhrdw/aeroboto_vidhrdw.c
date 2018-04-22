@@ -2,10 +2,10 @@
 #include "vidhrdw/generic.h"
 
 
-// how the starfield ROM is interpreted: 0=256x256x1 linear bitmap, 1=8x8x1x1024 tilemap
+/* how the starfield ROM is interpreted: 0=256x256x1 linear bitmap, 1=8x8x1x1024 tilemap*/
 #define STARS_LAYOUT 1
 
-// scroll speed of the stars: 1=normal, 2=half, 3=one-third...etc.(possitive integers only)
+/* scroll speed of the stars: 1=normal, 2=half, 3=one-third...etc.(possitive integers only)*/
 #define SCROLL_SPEED 1
 
 
@@ -32,7 +32,7 @@ static void get_tile_info(int tile_index)
 			aeroboto_tilecolor[code],
 			(aeroboto_tilecolor[code] >= 0x33) ? 0 : TILE_IGNORE_TRANSPARENCY)
 }
-// transparency should only affect tiles with color 0x33 or higher
+/* transparency should only affect tiles with color 0x33 or higher*/
 
 
 /***************************************************************************
@@ -162,7 +162,7 @@ VIDEO_UPDATE( aeroboto )
 
 	sky_color = star_color = *aeroboto_bgcolor << 2;
 
-	// the star field is supposed to be seen through tile pen 0 when active
+	/* the star field is supposed to be seen through tile pen 0 when active*/
 	if (!aeroboto_starsoff)
 	{
 		if (star_color < 0xd0) { star_color = 0xd0; sky_color = 0; }
@@ -170,7 +170,7 @@ VIDEO_UPDATE( aeroboto )
 
 		fillbitmap(bitmap, sky_color, cliprect);
 
-		// actual scroll speed is unknown but it can be adjusted by changing the SCROLL_SPEED constant
+		/* actual scroll speed is unknown but it can be adjusted by changing the SCROLL_SPEED constant*/
 		sx += (char)(*aeroboto_starx - ox);
 		ox = *aeroboto_starx;
 		x = sx / SCROLL_SPEED;
@@ -206,13 +206,13 @@ VIDEO_UPDATE( aeroboto )
 	for (y = 0;y < 64; y++)
 		tilemap_set_scrollx(bg_tilemap,y,aeroboto_hscroll[y]);
 
-	// the playfield is part of a splitscreen and should not overlap with status display
+	/* the playfield is part of a splitscreen and should not overlap with status display*/
 	tilemap_set_scrolly(bg_tilemap,0,*aeroboto_vscroll);
 	tilemap_draw(bitmap,&splitrect2,bg_tilemap,0,0);
 
 	draw_sprites(bitmap,cliprect);
 
-	// the status display behaves more closely to a 40-line splitscreen than an overlay
+	/* the status display behaves more closely to a 40-line splitscreen than an overlay*/
 	tilemap_set_scrolly(bg_tilemap,0,0);
 	tilemap_draw(bitmap,&splitrect1,bg_tilemap,0,0);
 }

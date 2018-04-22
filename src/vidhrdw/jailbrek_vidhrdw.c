@@ -92,7 +92,7 @@ static void jailbrek_draw_sprites( struct mame_bitmap *bitmap, const struct rect
 
 	for (i = 0; i < spriteram_size; i += 4)
 	{
-		int attr = spriteram[i + 1];	// attributes = ?tyxcccc
+		int attr = spriteram[i + 1];	/* attributes = ?tyxcccc*/
 		int code = spriteram[i] + ((attr & 0x40) << 2);
 		int color = attr & 0x0f;
 		int flipx = attr & 0x10;
@@ -117,8 +117,8 @@ VIDEO_UPDATE( jailbrek )
 {
 	int i;
 
-	// added support for vertical scrolling (credits).  23/1/2002  -BR
-	// bit 2 appears to be horizontal/vertical scroll control
+	/* added support for vertical scrolling (credits).  23/1/2002  -BR*/
+	/* bit 2 appears to be horizontal/vertical scroll control*/
 	if (jailbrek_scroll_dir[0] & 0x04)
 	{
 		tilemap_set_scroll_cols(bg_tilemap, 32);

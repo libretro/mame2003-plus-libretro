@@ -182,7 +182,7 @@ VIDEO_UPDATE( exzisus )
 		}
 		else	/* tilemaps (each sprite is a 16x256 column) */
 		{
-			gfx_offs = ((gfx_num & 0x3f) << 7) + 0x0400;	///
+			gfx_offs = ((gfx_num & 0x3f) << 7) + 0x0400;	/*/*/
 			height = 32;
 
 			if (gfx_num & 0x40)			/* Next column */

@@ -24,14 +24,14 @@ WRITE16_HANDLER( ddragon3_scroll16_w )
 {
 	switch (offset)
 	{
-		case 0:	COMBINE_DATA(&ddragon3_fg_scrollx);	break;	// Scroll X, BG1
-		case 1: COMBINE_DATA(&ddragon3_fg_scrolly);	break;	// Scroll Y, BG1
-		case 2: COMBINE_DATA(&ddragon3_bg_scrollx);	break;	// Scroll X, BG0
-		case 3: COMBINE_DATA(&ddragon3_bg_scrolly);	break;	// Scroll Y, BG0
-		case 4:										break;	// Unknown write
-		case 5: flip_screen_set(data & 0x01);		break;	// Flip Screen
+		case 0:	COMBINE_DATA(&ddragon3_fg_scrollx);	break;	/* Scroll X, BG1*/
+		case 1: COMBINE_DATA(&ddragon3_fg_scrolly);	break;	/* Scroll Y, BG1*/
+		case 2: COMBINE_DATA(&ddragon3_bg_scrollx);	break;	/* Scroll X, BG0*/
+		case 3: COMBINE_DATA(&ddragon3_bg_scrolly);	break;	/* Scroll Y, BG0*/
+		case 4:										break;	/* Unknown write*/
+		case 5: flip_screen_set(data & 0x01);		break;	/* Flip Screen*/
 		case 6: 
-			COMBINE_DATA(&ddragon3_bg_tilebase);			// BG Tile Base
+			COMBINE_DATA(&ddragon3_bg_tilebase);			/* BG Tile Base*/
 			ddragon3_bg_tilebase &= 0x1ff;
 			tilemap_mark_all_tiles_dirty(bg_tilemap);
 			break;

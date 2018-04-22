@@ -62,7 +62,7 @@ Note:	if MAME_DEBUG is defined, pressing Z or X with:
 static int cischeat_ip_select;
 
 #ifdef MAME_DEBUG
-static int debugsprites;	// For debug purposes
+static int debugsprites;	/* For debug purposes*/
 #endif
 
 /* Variables that driver has access to: */
@@ -196,8 +196,8 @@ static int read_shift(void)
 	static int ret = 1; /* start with low shift */
 	switch ( (readinputport(0) >> 2) & 3 )
 	{
-		case 1 : ret = 1;	break;	// low  shift: button 3
-		case 2 : ret = 0;	break;	// high shift: button 4
+		case 1 : ret = 1;	break;	/* low  shift: button 3*/
+		case 2 : ret = 0;	break;	/* high shift: button 4*/
 	}
 	return ret;
 }
@@ -214,7 +214,7 @@ static int read_shift(void)
 
 static int read_accelerator(void)
 {
-	if (readinputport(0) & 1)	return 0x00;	// pedal pressed
+	if (readinputport(0) & 1)	return 0x00;	/* pedal pressed*/
 	else						return 0xff;
 }
 
@@ -227,26 +227,26 @@ READ16_HANDLER( bigrun_vregs_r )
 {
 	switch (offset)
 	{
-		case 0x0000/2 : return readinputport(1);	// Coins
+		case 0x0000/2 : return readinputport(1);	/* Coins*/
 		case 0x0002/2 : return readinputport(2) +
-						(read_shift()<<1);			// Buttons
-		case 0x0004/2 : return readinputport(3);	// Motor Limit Switches
-		case 0x0006/2 : return readinputport(4);	// DSW 1 & 2
+						(read_shift()<<1);			/* Buttons*/
+		case 0x0004/2 : return readinputport(3);	/* Motor Limit Switches*/
+		case 0x0006/2 : return readinputport(4);	/* DSW 1 & 2*/
 
-		case 0x0008/2 :	return soundlatch2_word_r(0,0);	// From sound cpu
+		case 0x0008/2 :	return soundlatch2_word_r(0,0);	/* From sound cpu*/
 
 		case 0x0010/2 :
 			switch (cischeat_ip_select & 0x3)
 			{
-				case 0 : return readinputport(6);		// Driving Wheel
-				case 1 : return 0xffff;					// Cockpit: Up / Down Position
-				case 2 : return 0xffff;					// Cockpit: Left / Right Position?
-				case 3 : return ~read_accelerator();	// Accelerator (Pedal)
+				case 0 : return readinputport(6);		/* Driving Wheel*/
+				case 1 : return 0xffff;					/* Cockpit: Up / Down Position*/
+				case 2 : return 0xffff;					/* Cockpit: Left / Right Position?*/
+				case 3 : return ~read_accelerator();	/* Accelerator (Pedal)*/
 				default: return 0xffff;
 			}
 
 
-		case 0x2200/2 : return readinputport(5);	// DSW 3 (4 bits)
+		case 0x2200/2 : return readinputport(5);	/* DSW 3 (4 bits)*/
 
 		default:	SHOW_READ_ERROR("vreg %04X read!",offset*2);
 					return megasys1_vregs[offset];
@@ -260,35 +260,35 @@ WRITE16_HANDLER( bigrun_vregs_w )
 
 	switch (offset)
 	{
- 		case 0x0000/2   :	// leds
+ 		case 0x0000/2   :	/* leds*/
 			if (ACCESSING_LSB)
 			{
 	 			coin_counter_w(0,new_data & 0x01);
 	 			coin_counter_w(1,new_data & 0x02);
-	 			set_led_status(0,new_data & 0x10);	// start button
-				set_led_status(1,new_data & 0x20);	// ?
+	 			set_led_status(0,new_data & 0x10);	/* start button*/
+				set_led_status(1,new_data & 0x20);	/* ?*/
 			}
 			break;
 
-		case 0x0002/2   :	// ?? 91/1/91/1 ...
+		case 0x0002/2   :	/* ?? 91/1/91/1 ...*/
 			break;
 
- 		case 0x0004/2   :	// motor (seat?)
+ 		case 0x0004/2   :	/* motor (seat?)*/
 			if (ACCESSING_LSB)
 				set_led_status(2, (new_data != old_data) ? 1 : 0);
  			break;
 
- 		case 0x0006/2   :	// motor (wheel?)
+ 		case 0x0006/2   :	/* motor (wheel?)*/
 			break;
 
-		case 0x000a/2   :	// to sound cpu
+		case 0x000a/2   :	/* to sound cpu*/
 			soundlatch_word_w(0,new_data,0);
 			break;
 
-		case 0x000c/2   :	break;	// ??
+		case 0x000c/2   :	break;	/* ??*/
 
 		case 0x0010/2   : cischeat_ip_select = new_data;	break;
-		case 0x0012/2   : cischeat_ip_select = new_data+1;	break; // value above + 1
+		case 0x0012/2   : cischeat_ip_select = new_data+1;	break; /* value above + 1*/
 
 		case 0x2000/2+0 : MEGASYS1_VREG_SCROLL(0,x)		break;
 		case 0x2000/2+1 : MEGASYS1_VREG_SCROLL(0,y)		break;
@@ -302,8 +302,8 @@ WRITE16_HANDLER( bigrun_vregs_w )
 		case 0x2100/2+1 : MEGASYS1_VREG_SCROLL(2,y)		break;
 		case 0x2100/2+2 : MEGASYS1_VREG_FLAG(2)			break;
 
-		case 0x2108/2   : break;	// ? written with 0 only
-		case 0x2208/2   : break;	// watchdog reset
+		case 0x2108/2   : break;	/* ? written with 0 only*/
+		case 0x2208/2   : break;	/* watchdog reset*/
 
 		/* Not sure about this one.. */
 		case 0x2308/2   :	cpu_set_reset_line(1, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
@@ -324,23 +324,23 @@ READ16_HANDLER( cischeat_vregs_r )
 {
 	switch (offset)
 	{
-		case 0x0000/2 : return readinputport(1);	// Coins
+		case 0x0000/2 : return readinputport(1);	/* Coins*/
 		case 0x0002/2 : return readinputport(2) +
-						(read_shift()<<1);			// Buttons
-		case 0x0004/2 : return readinputport(3);	// Motor Limit Switches
-		case 0x0006/2 : return readinputport(4);	// DSW 1 & 2
+						(read_shift()<<1);			/* Buttons*/
+		case 0x0004/2 : return readinputport(3);	/* Motor Limit Switches*/
+		case 0x0006/2 : return readinputport(4);	/* DSW 1 & 2*/
 
 		case 0x0010/2 :
 			switch (cischeat_ip_select & 0x3)
 			{
-				case 0 : return readinputport(6);	// Driving Wheel
-				case 1 : return ~0;					// Cockpit: Up / Down Position?
-				case 2 : return ~0;					// Cockpit: Left / Right Position?
+				case 0 : return readinputport(6);	/* Driving Wheel*/
+				case 1 : return ~0;					/* Cockpit: Up / Down Position?*/
+				case 2 : return ~0;					/* Cockpit: Left / Right Position?*/
 				default: return ~0;
 			}
 
-		case 0x2200/2 : return readinputport(5);	// DSW 3 (4 bits)
-		case 0x2300/2 : return soundlatch2_r(0);	// From sound cpu
+		case 0x2200/2 : return readinputport(5);	/* DSW 3 (4 bits)*/
+		case 0x2300/2 : return soundlatch2_r(0);	/* From sound cpu*/
 
 		default:	SHOW_READ_ERROR("vreg %04X read!",offset*2);
 					return megasys1_vregs[offset];
@@ -354,29 +354,29 @@ WRITE16_HANDLER( cischeat_vregs_w )
 
 	switch (offset)
 	{
- 		case 0x0000/2   :	// leds
+ 		case 0x0000/2   :	/* leds*/
 			if (ACCESSING_LSB)
 			{
 	 			coin_counter_w(0,new_data & 0x01);
 	 			coin_counter_w(1,new_data & 0x02);
-	 			set_led_status(0,new_data & 0x10);	// start button
-				set_led_status(1,new_data & 0x20);	// ?
+	 			set_led_status(0,new_data & 0x10);	/* start button*/
+				set_led_status(1,new_data & 0x20);	/* ?*/
 			}
 			break;
 
-		case 0x0002/2   :	// ?? 91/1/91/1 ...
+		case 0x0002/2   :	/* ?? 91/1/91/1 ...*/
 			break;
 
- 		case 0x0004/2   :	// motor (seat?)
+ 		case 0x0004/2   :	/* motor (seat?)*/
 			if (ACCESSING_LSB)
 				set_led_status(2, (new_data != old_data) ? 1 : 0);
  			break;
 
- 		case 0x0006/2   :	// motor (wheel?)
+ 		case 0x0006/2   :	/* motor (wheel?)*/
 			break;
 
 		case 0x0010/2   : cischeat_ip_select = new_data;	break;
-		case 0x0012/2   : break; // value above + 1
+		case 0x0012/2   : break; /* value above + 1*/
 
 		case 0x2000/2+0 : MEGASYS1_VREG_SCROLL(0,x)		break;
 		case 0x2000/2+1 : MEGASYS1_VREG_SCROLL(0,y)		break;
@@ -390,8 +390,8 @@ WRITE16_HANDLER( cischeat_vregs_w )
 		case 0x2100/2+1 : MEGASYS1_VREG_SCROLL(2,y)		break;
 		case 0x2100/2+2 : MEGASYS1_VREG_FLAG(2)			break;
 
-		case 0x2108/2   : break;	// ? written with 0 only
-		case 0x2208/2   : break;	// watchdog reset
+		case 0x2108/2   : break;	/* ? written with 0 only*/
+		case 0x2208/2   : break;	/* watchdog reset*/
 
 		case 0x2300/2   :	/* Sound CPU: reads latch during int 4, and stores command */
 							soundlatch_word_w(0,new_data,0);
@@ -418,23 +418,23 @@ READ16_HANDLER( f1gpstar_vregs_r )
 {
 	switch (offset)
 	{
-		case 0x0000/2 :	// DSW 1&2: coinage changes with Country
+		case 0x0000/2 :	/* DSW 1&2: coinage changes with Country*/
 		{
 			int val = readinputport(1);
-			if (val & 0x0200)	return readinputport(6) | val; 	// JP, US
-			else				return readinputport(7) | val; 	// UK, FR
+			if (val & 0x0200)	return readinputport(6) | val; 	/* JP, US*/
+			else				return readinputport(7) | val; 	/* UK, FR*/
 		}
 
-//		case 0x0002/2 :	return 0xFFFF;
+/*		case 0x0002/2 :	return 0xFFFF;*/
 		case 0x0004/2 :	return readinputport(2) +
-						       (read_shift()<<5);	// Buttons
+						       (read_shift()<<5);	/* Buttons*/
 
-		case 0x0006/2 :	return readinputport(3);	// ? Read at boot only
-		case 0x0008/2 :	return soundlatch2_r(0);	// From sound cpu
+		case 0x0006/2 :	return readinputport(3);	/* ? Read at boot only*/
+		case 0x0008/2 :	return soundlatch2_r(0);	/* From sound cpu*/
 
-		case 0x000c/2 :	return readinputport(4);	// DSW 3
+		case 0x000c/2 :	return readinputport(4);	/* DSW 3*/
 
-		case 0x0010/2 :	// Accel + Driving Wheel
+		case 0x0010/2 :	/* Accel + Driving Wheel*/
 			return (read_accelerator()&0xff) + ((readinputport(5)&0xff)<<8);
 
 		default:		SHOW_READ_ERROR("vreg %04X read!",offset*2);
@@ -460,7 +460,7 @@ READ16_HANDLER( f1gpstr2_vregs_r )
 
 WRITE16_HANDLER( f1gpstar_vregs_w )
 {
-//	data16_t old_data = megasys1_vregs[offset];
+/*	data16_t old_data = megasys1_vregs[offset];*/
 	data16_t new_data = COMBINE_DATA(&megasys1_vregs[offset]);
 
 	switch (offset)
@@ -470,16 +470,16 @@ CPU #0 PC 00234A : Warning, vreg 0000 <- 0000
 CPU #0 PC 002350 : Warning, vreg 0002 <- 0000
 CPU #0 PC 00235C : Warning, vreg 0006 <- 0000
 */
-		// "shudder" motors, leds
+		/* "shudder" motors, leds*/
 		case 0x0004/2   :
 		case 0x0014/2   :
 			if (ACCESSING_LSB)
 			{
 	 			coin_counter_w(0,new_data & 0x01);
 	 			coin_counter_w(1,new_data & 0x02);
-				set_led_status(0,new_data & 0x04);	// start button
-				set_led_status(1,new_data & 0x20);	// ?
-				// wheel | seat motor
+				set_led_status(0,new_data & 0x04);	/* start button*/
+				set_led_status(1,new_data & 0x20);	/* ?*/
+				/* wheel | seat motor*/
 				set_led_status(2, ((new_data >> 3) | (new_data >> 4)) & 1 );
 			}
 			break;
@@ -502,8 +502,8 @@ CPU #0 PC 00235C : Warning, vreg 0006 <- 0000
 		case 0x2100/2+1 : MEGASYS1_VREG_SCROLL(2,y)		break;
 		case 0x2100/2+2 : MEGASYS1_VREG_FLAG(2)			break;
 
-		case 0x2108/2   : break;	// ? written with 0 only
-		case 0x2208/2   : break;	// watchdog reset
+		case 0x2108/2   : break;	/* ? written with 0 only*/
+		case 0x2208/2   : break;	/* watchdog reset*/
 
 		/* Not sure about this one. Values: $10 then 0, $7 then 0 */
 		case 0x2308/2   :	cpu_set_reset_line(1, (new_data & 1) ? ASSERT_LINE : CLEAR_LINE );
@@ -517,7 +517,7 @@ CPU #0 PC 00235C : Warning, vreg 0006 <- 0000
 
 WRITE16_HANDLER( f1gpstr2_vregs_w )
 {
-//	data16_t old_data = megasys1_vregs[offset];
+/*	data16_t old_data = megasys1_vregs[offset];*/
 	data16_t new_data = COMBINE_DATA(&megasys1_vregs[offset]);
 
 	if ((offset >= 0x1000/2) && (offset < 0x2000/2))
@@ -544,7 +544,7 @@ WRITE16_HANDLER( f1gpstr2_vregs_w )
 
 WRITE16_HANDLER( scudhamm_vregs_w )
 {
-//	int old_data = megasys1_vregs[offset];
+/*	int old_data = megasys1_vregs[offset];*/
 	int new_data = COMBINE_DATA(&megasys1_vregs[offset]);
 
 	switch (offset)
@@ -553,10 +553,10 @@ WRITE16_HANDLER( scudhamm_vregs_w )
 		case 0x000/2+1 : MEGASYS1_VREG_SCROLL(0,y)		break;
 		case 0x000/2+2 : MEGASYS1_VREG_FLAG(0)			break;
 
-// 		UNUSED LAYER
-//		case 0x008/2+0 : MEGASYS1_VREG_SCROLL(1,x)		break;
-//		case 0x008/2+1 : MEGASYS1_VREG_SCROLL(1,y)		break;
-//		case 0x008/2+2 : MEGASYS1_VREG_FLAG(1)			break;
+/* 		UNUSED LAYER*/
+/*		case 0x008/2+0 : MEGASYS1_VREG_SCROLL(1,x)		break;*/
+/*		case 0x008/2+1 : MEGASYS1_VREG_SCROLL(1,y)		break;*/
+/*		case 0x008/2+2 : MEGASYS1_VREG_FLAG(1)			break;*/
 
 		case 0x100/2+0 : MEGASYS1_VREG_SCROLL(2,x)		break;
 		case 0x100/2+1 : MEGASYS1_VREG_SCROLL(2,y)		break;
@@ -711,7 +711,7 @@ void f1gpstar_draw_road(struct mame_bitmap *bitmap, const struct rectangle *clip
 	int min_y = rect.min_y;
 	int max_y = rect.max_y;
 
-	int max_x = rect.max_x << 16;	// use fixed point values (16.16), for accuracy
+	int max_x = rect.max_x << 16;	/* use fixed point values (16.16), for accuracy*/
 
 	if (priority1 < priority2)	{	min_priority = priority1;	max_priority = priority2; }
 	else						{	min_priority = priority2;	max_priority = priority1; }
@@ -1006,8 +1006,8 @@ static void bigrun_draw_sprites(struct mame_bitmap *bitmap , const struct rectan
 		sy		=	source[ 3 ];
 		flipx	=	sx & 0x1000;
 		flipy	=	sy & 0x1000;
-//		sx		=	(sx & 0x1ff) - (sx & 0x200);
-//		sy		=	(sy & 0x1ff) - (sy & 0x200);
+/*		sx		=	(sx & 0x1ff) - (sx & 0x200);*/
+/*		sy		=	(sy & 0x1ff) - (sy & 0x200);*/
 		sx		=	(sx & 0x0ff) - (sx & 0x100);
 		sy		=	(sy & 0x0ff) - (sy & 0x100);
 
@@ -1031,7 +1031,7 @@ static void bigrun_draw_sprites(struct mame_bitmap *bitmap , const struct rectan
 
 		if ( ( (xdim / 0x10000) == 0 ) || ( (ydim / 0x10000) == 0) )	continue;
 
-//		sy -= (ydim * ynum);
+/*		sy -= (ydim * ynum);*/
 
 		code	=	source[ 6 ];
 		attr	=	source[ 7 ];
@@ -1218,7 +1218,7 @@ VIDEO_UPDATE( cischeat )
 
 	flag = 0;
 	cischeat_tmap_DRAW(0)
-//	else fillbitmap(bitmap,Machine->pens[0],cliprect);
+/*	else fillbitmap(bitmap,Machine->pens[0],cliprect);*/
 	cischeat_tmap_DRAW(1)
 
 	if (megasys1_active_layers & 0x08)	cischeat_draw_sprites(bitmap,cliprect,15,3);
@@ -1275,7 +1275,7 @@ VIDEO_UPDATE( f1gpstar )
 
 	flag = 0;
 	cischeat_tmap_DRAW(0)
-//	else fillbitmap(bitmap,Machine->pens[0],cliprect);
+/*	else fillbitmap(bitmap,Machine->pens[0],cliprect);*/
 	cischeat_tmap_DRAW(1)
 
 	/* road 1!! 0!! */					/* bitmap, road, min_priority, max_priority, transparency */
@@ -1340,15 +1340,15 @@ if ( keyboard_pressed(KEYCODE_Z) || keyboard_pressed(KEYCODE_X) )
 #endif
 
 	cischeat_tmap_SET_SCROLL(0)
-//	cischeat_tmap_SET_SCROLL(1)
+/*	cischeat_tmap_SET_SCROLL(1)*/
 	cischeat_tmap_SET_SCROLL(2)
 
 	fillbitmap(bitmap,Machine->pens[0],cliprect);
 
 	flag = 0;
 	cischeat_tmap_DRAW(0)
-//	else fillbitmap(bitmap,Machine->pens[0],cliprect);
-//	cischeat_tmap_DRAW(1)
+/*	else fillbitmap(bitmap,Machine->pens[0],cliprect);*/
+/*	cischeat_tmap_DRAW(1)*/
 	if (megasys1_active_layers & 0x08)	cischeat_draw_sprites(bitmap,cliprect,0,15);
 	cischeat_tmap_DRAW(2)
 

@@ -50,7 +50,7 @@ WRITE16_HANDLER (sshangha_video_w)
 {
 	/* 0x4: Special video mode, other bits unknown */
 	sshangha_video_control=data;
-//	usrintf_showmessage("%04x",data);
+/*	usrintf_showmessage("%04x",data);*/
 }
 
 /******************************************************************************/

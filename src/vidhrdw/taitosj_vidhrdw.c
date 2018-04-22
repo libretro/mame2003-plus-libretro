@@ -702,7 +702,7 @@ static void kikstart_drawplayfield(int n, struct mame_bitmap *bitmap)
 	{
 		int i,scrolly,scrollx[32*8];
 
-		for (i = 1;i < 32*8;i++)// 1-255 !
+		for (i = 1;i < 32*8;i++)/* 1-255 !*/
 		{
 			if(flipscreen[1])
 			{
@@ -723,7 +723,7 @@ static void kikstart_drawplayfield(int n, struct mame_bitmap *bitmap)
 				}
 			}
 		}
-		scrolly=taitosj_scroll[2*n+1];//always 0 ?
+		scrolly=taitosj_scroll[2*n+1];/*always 0 ?*/
 		copyscrollbitmap(bitmap,taitosj_tmpbitmap[n],32*8,scrollx,1,&scrolly,&Machine->visible_area,TRANSPARENCY_COLOR,0);
 		/* store parts covered with sprites for sprites/playfields collision detection */
 		for (i=0x00; i<0x20; i++)
@@ -747,9 +747,9 @@ static void drawplane(int n,struct mame_bitmap *bitmap)
 	case 2:
 	case 3:
 		if(!strcmp(Machine->gamedrv->name,"kikstart"))
-			kikstart_drawplayfield(n-1,bitmap);//line scroll
+			kikstart_drawplayfield(n-1,bitmap);/*line scroll*/
 		else
-			drawplayfield(n-1,bitmap);//tile scroll
+			drawplayfield(n-1,bitmap);/*tile scroll*/
 		break;
 	}
 }

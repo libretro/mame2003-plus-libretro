@@ -725,13 +725,13 @@ static VIDEO_UPDATE( helifire )
 			logerror("257 = offs=%4i mvoff+y=%4i y=%4i\n", helifire_mv2_offset, helifire_mv2_offset + y, y );
 		}
 #endif
-//		if (y == helifire_mv2_offset) /* when MV_RST *//* the RNG is reset every MV_RST which is every 257 physical lines */
-//		{
-//			//helifire_star_rng = 0;
-//			logerror("mv2 = offs=%4i mvoff+y=%4i y=%4i\n", helifire_mv2_offset, helifire_mv2_offset + y, y );
-//		}
+/*		if (y == helifire_mv2_offset) // when MV_RST // the RNG is reset every MV_RST which is every 257 physical lines */
+/*		{*/
+/*			helifire_star_rng = 0;*/
+/*			logerror("mv2 = offs=%4i mvoff+y=%4i y=%4i\n", helifire_mv2_offset, helifire_mv2_offset + y, y );*/
+/*		}*/
 
-		//if (((helifire_mv2_offset + y)&7) == 4) /* when MV2 goes high */
+		/*if (((helifire_mv2_offset + y)&7) == 4) // when MV2 goes high */
 		if ((MVx_count&7) == 4) /* when MV2 goes high */
 		{
 			helifire_star_latch = (helifire_star_rng & 0x0f)<<3;	/* latched value is being compared to H0, H1, H2, H3 (where H0 is physical H3) */
@@ -769,12 +769,12 @@ static VIDEO_UPDATE( helifire )
 			- one at the very next line in a pixels range of 0-127
 		*/
 
-		//if (((helifire_mv2_offset + y)&7) == 4) /* when MV2 goes high */
+		/*if (((helifire_mv2_offset + y)&7) == 4) // when MV2 goes high */
 		if ((MVx_count&7) == 4) /* when MV2 goes high */
 		{
 			scanline[ 128 + helifire_star_latch ] = scanline[ 128 + helifire_star_latch ] + 256; /* background with the star */
 		}
-		//if (((helifire_mv2_offset + y)&7) == 5) /* when MV2 goes high - the very next line */
+		/*if (((helifire_mv2_offset + y)&7) == 5) // when MV2 goes high - the very next line */
 		if ((MVx_count&7) == 5) /* when MV2 goes high */
 		{
 			scanline[ helifire_star_latch ] = scanline[ helifire_star_latch ] + 256; /* background with the star */

@@ -48,9 +48,9 @@ static void spaceint_refresh(int offset)
 {
 	int n = ((offset >> 5) & 0xf0) | colorram[offset];
 
-	//
-	//	This is almost certainly wrong.
-	//
+	/**/
+	/*	This is almost certainly wrong.*/
+	/**/
 
 	int col = memory_region(REGION_PROMS)[n];
 

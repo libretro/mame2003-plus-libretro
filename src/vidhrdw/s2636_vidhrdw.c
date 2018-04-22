@@ -117,7 +117,7 @@ static int SpriteCheck(int first,int second,unsigned char *workram,int Graphics_
 	int Checksum=0;
 	int x,y;
 
-    // Does not check shadow sprites yet
+    /* Does not check shadow sprites yet*/
 
     if((workram[SpriteOffset[first] + 10] != 0xff) && (workram[SpriteOffset[second] + 10] != 0xff))
     {

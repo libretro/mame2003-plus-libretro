@@ -94,7 +94,7 @@ static void ssbl_tile_callback(int layer,int bank,int *code,int *color)
 	{
 		*code |= ((*color & 0x03) << 8) | ((*color & 0x10) << 6) | ((*color & 0x0c) << 9)
 				| (bank << 13);
-//		printf("L%d: bank %d code %x color %x\n", layer, bank, *code, *color);
+/*		printf("L%d: bank %d code %x color %x\n", layer, bank, *code, *color);*/
 	}
 
 	*color = layer_colorbase[layer] + ((*color & 0xe0) >> 5);
@@ -788,23 +788,23 @@ VIDEO_UPDATE( tmnt2 )
 			reset properly.
 		*/
 
-		// find the text layer's palette range
+		/* find the text layer's palette range*/
 		cb = layer_colorbase[sorted_layer[2]] << 4;
 		ce = cb + 128;
 
-		// dim all colors before it
+		/* dim all colors before it*/
 		for (i=0; i<cb; i++)
 			palette_set_brightness(i,brt);
 
-		// reset all colors in range
+		/* reset all colors in range*/
 		for (i=cb; i<ce; i++)
 			palette_set_brightness(i,1.0);
 
-		// dim all colors after it
+		/* dim all colors after it*/
 		for (i=ce; i<2048; i++)
 			palette_set_brightness(i,brt);
 
-		// toggle shadow/highlight
+		/* toggle shadow/highlight*/
 		if (~dim_c & 0x10)
 			palette_set_shadow_mode(1);
 		else

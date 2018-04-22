@@ -16,27 +16,27 @@ UINT8 *segar_mem_bcolortable;
 
 typedef struct
 {
-	unsigned char dirtychar[256];		// graphics defined in RAM, mark when changed
+	unsigned char dirtychar[256];		/* graphics defined in RAM, mark when changed*/
 
-	unsigned char colorRAM[0x40];		// stored in a 93419 (vid board)
-	unsigned char bcolorRAM[0x40];		// stored in a 93419 (background board)
-	unsigned char color_write_enable;	// write-enable the 93419 (vid board)
-	unsigned char flip;					// cocktail flip mode (vid board)
-	unsigned char bflip;				// cocktail flip mode (background board)
+	unsigned char colorRAM[0x40];		/* stored in a 93419 (vid board)*/
+	unsigned char bcolorRAM[0x40];		/* stored in a 93419 (background board)*/
+	unsigned char color_write_enable;	/* write-enable the 93419 (vid board)*/
+	unsigned char flip;					/* cocktail flip mode (vid board)*/
+	unsigned char bflip;				/* cocktail flip mode (background board)*/
 
-	unsigned char refresh;				// refresh the screen
-	unsigned char brefresh;				// refresh the background
-	unsigned char char_refresh;			// refresh the character graphics
+	unsigned char refresh;				/* refresh the screen*/
+	unsigned char brefresh;				/* refresh the background*/
+	unsigned char char_refresh;			/* refresh the character graphics*/
 
-	unsigned char has_bcolorRAM;		// do we have background color RAM?
-	unsigned char background_enable;	// draw the background?
+	unsigned char has_bcolorRAM;		/* do we have background color RAM?*/
+	unsigned char background_enable;	/* draw the background?*/
 	unsigned int back_scene;
 	unsigned int back_charset;
 
-	// used for Pig Newton
+	/* used for Pig Newton*/
 	unsigned int bcolor_offset;
 
-	// used for Space Odyssey
+	/* used for Space Odyssey*/
 	unsigned char backfill;
 	unsigned char fill_background;
 	unsigned int backshift;
@@ -157,7 +157,7 @@ WRITE_HANDLER( segar_colortable_w )
 		else
 			Machine->gfx[0]->colortable[offset] = Machine->pens[offset+1];
 
-		// refresh the screen if the color switched to or from black
+		/* refresh the screen if the color switched to or from black*/
 		if (sv.colorRAM[offset] != data)
 		{
 			if ((sv.colorRAM[offset] == 0) || (data == 0))
@@ -194,7 +194,7 @@ WRITE_HANDLER( segar_bcolortable_w )
 		palette_set_color(offset+0x40+1,r,g,b);
 	}
 
-	// Needed to pass the self-tests
+	/* Needed to pass the self-tests*/
 	segar_mem_bcolortable[offset] = data;
 }
 
@@ -211,7 +211,7 @@ VIDEO_START( segar )
 	if (video_start_generic()!=0)
 		return 1;
 
-	// Init our vid struct, everything defaults to 0
+	/* Init our vid struct, everything defaults to 0*/
 	memset(&sv, 0, sizeof(SEGAR_VID_STRUCT));
 
 	return 0;
@@ -417,7 +417,7 @@ VIDEO_UPDATE( spaceod )
 	if (get_vh_global_attribute_changed())
 		sv.refresh = 1;
 
-	// scenes 0,1 are horiz.  scenes 2,3 are vert.
+	/* scenes 0,1 are horiz.  scenes 2,3 are vert.*/
 	vert_scene = !(sv.back_scene & 0x02);
 
 	sprite_transparency=TRANSPARENCY_PEN;
@@ -782,7 +782,7 @@ VIDEO_UPDATE( sindbadm )
 					sy = 27*8 - sy;
 				}
 
-				// NOTE: Pig Newton has 16 backgrounds, Sinbad Mystery has 32
+				/* NOTE: Pig Newton has 16 backgrounds, Sinbad Mystery has 32*/
 				back_scene = (sv.back_scene & 0x1C) << 10;
 
 				backoffs = (offs & 0x01F) + ((offs & 0x3E0) << 2) + ((sv.back_scene & 0x03) << 5);

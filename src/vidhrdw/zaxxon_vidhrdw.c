@@ -215,7 +215,7 @@ static void zaxxon_get_fg_tile_info(int tile_index)
 	int sx = tile_index % 32;
 	int code = videoram[tile_index];
 	int color = (color_codes[sx + 32 * (sy / 4)] & 0x0f) + 16 * (*zaxxon_char_color_bank & 1);
-	// not sure about the color code calculation - char_color_bank is used only in test mode
+	/* not sure about the color code calculation - char_color_bank is used only in test mode*/
 
 	SET_TILE_INFO(0, code, color, 0)
 }

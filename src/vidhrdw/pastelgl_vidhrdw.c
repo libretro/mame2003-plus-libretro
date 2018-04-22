@@ -114,8 +114,8 @@ void pastelgl_dispflag_w(int data)
 	pastelgl_flipx = (data & 0x01) ? 1 : 0;
 	pastelgl_flipy = (data & 0x02) ? 1 : 0;
 	pastelgl_flipscreen = (data & 0x04) ? 0 : 1;
-	pastelgl_dispflag = (data & 0x08) ? 0 : 1;		// unused ?
-//	if (data & 0xf0) usrintf_showmessage("Unknown GFXFLAG!! (%02X)", (data & 0xf0));
+	pastelgl_dispflag = (data & 0x08) ? 0 : 1;		/* unused ?*/
+/*	if (data & 0xf0) usrintf_showmessage("Unknown GFXFLAG!! (%02X)", (data & 0xf0));*/
 
 	if (nb1413m3_type == NB1413M3_PASTELGL)
 	{
@@ -242,12 +242,12 @@ void pastelgl_gfxdraw(void)
 
 			if (!readflag)
 			{
-				// 1st, 3rd, 5th, ... read
+				/* 1st, 3rd, 5th, ... read*/
 				color = (color & 0x0f);
 			}
 			else
 			{
-				// 2nd, 4th, 6th, ... read
+				/* 2nd, 4th, 6th, ... read*/
 				color = (color & 0xf0) >> 4;
 				gfxaddr++;
 			}

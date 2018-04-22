@@ -175,7 +175,7 @@ static void tinvader_draw_sprites( struct mame_bitmap *bitmap )
 
     CollisionBackground = 0;	/* Read from 0x1e80 bit 7 */
 
-	// for collision detection checking
+	/* for collision detection checking*/
 	copybitmap(tmpbitmap,bitmap,0,0,0,0,&Machine->visible_area,TRANSPARENCY_NONE,0);
 
     for(offs=0;offs<0x50;offs+=0x10)
@@ -238,12 +238,12 @@ static void tinvader_draw_sprites( struct mame_bitmap *bitmap )
 
     /* Sprite->Sprite collision detection */
     CollisionSprite = 0;
-//  if(SpriteCollision(0,1)) CollisionSprite |= 0x20;	/* Not Used */
+/*  if(SpriteCollision(0,1)) CollisionSprite |= 0x20;	// Not Used */
     if(SpriteCollision(0,2)) CollisionSprite |= 0x10;
     if(SpriteCollision(0,4)) CollisionSprite |= 0x08;
     if(SpriteCollision(1,2)) CollisionSprite |= 0x04;
     if(SpriteCollision(1,4)) CollisionSprite |= 0x02;
-//  if(SpriteCollision(2,4)) CollisionSprite |= 0x01;	/* Not Used */
+/*  if(SpriteCollision(2,4)) CollisionSprite |= 0x01;	// Not Used */
 }
 
 VIDEO_UPDATE( tinvader )

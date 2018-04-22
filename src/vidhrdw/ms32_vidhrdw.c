@@ -27,7 +27,7 @@ data32_t *ms32_spram;
 data32_t *ms32_txram;
 data32_t *ms32_mainram;
 
-// kirarast, tp2m32, and 47pie2 require the sprites in a different order
+/* kirarast, tp2m32, and 47pie2 require the sprites in a different order*/
 int ms32_reverse_sprite_order;
 
 /********** Tilemaps **********/
@@ -90,7 +90,7 @@ VIDEO_START( ms32 )
 	if (!strcmp(Machine->gamedrv->name,"47pie2"))	ms32_reverse_sprite_order = 0;
 	if (!strcmp(Machine->gamedrv->name,"47pie2o"))	ms32_reverse_sprite_order = 0;
 
-	// tp2m32 doesn't set the brightness registers so we need sensible defaults
+	/* tp2m32 doesn't set the brightness registers so we need sensible defaults*/
 	brt[0] = brt[1] = 0xffff;
 
 	return 0;
@@ -139,12 +139,12 @@ WRITE32_HANDLER( ms32_brightness_w )
 			brt_g = 0x100 - ((brt[0] & 0x00ff) >> 0);
 			brt_b = 0x100 - ((brt[1] & 0x00ff) >> 0);
 
-			for (i = 0;i < 0x3000;i++)	// colors 0x3000-0x3fff are not used
+			for (i = 0;i < 0x3000;i++)	/* colors 0x3000-0x3fff are not used*/
 				update_color(i);
 		}
 	}
 
-//usrintf_showmessage("%04x %04x %04x %04x",brt[0],brt[1],brt[2],brt[3]);
+/*usrintf_showmessage("%04x %04x %04x %04x",brt[0],brt[1],brt[2],brt[3]);*/
 }
 
 WRITE32_HANDLER( ms32_palram_w )
@@ -232,7 +232,7 @@ WRITE32_HANDLER( ms32_gfxctrl_w )
 
 		/* bit 3 used by several games, unknown */
 
-//usrintf_showmessage("%08x",data);
+/*usrintf_showmessage("%08x",data);*/
 	}
 }
 
@@ -336,7 +336,7 @@ static void ms32_draw_sprites(struct mame_bitmap *bitmap, const struct rectangle
 		yzoom = 0x1000000/yzoom;
 		xzoom = 0x1000000/xzoom;
 
-		trans = TRANSPARENCY_PEN; // there are surely also shadows (see gametngk) but how they're enabled we don't know
+		trans = TRANSPARENCY_PEN; /* there are surely also shadows (see gametngk) but how they're enabled we don't know*/
 
 		if (flipscreen)
 		{
@@ -410,8 +410,8 @@ static void draw_roz(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 
 			my_clip.min_y = my_clip.max_y = y;
 
-			offsx += (ms32_roz_ctrl[0x38/4] & 1) * 0x400;	// ??? gratia, hayaosi1...
-			offsy += (ms32_roz_ctrl[0x3c/4] & 1) * 0x400;	// ??? gratia, hayaosi1...
+			offsx += (ms32_roz_ctrl[0x38/4] & 1) * 0x400;	/* ??? gratia, hayaosi1...*/
+			offsy += (ms32_roz_ctrl[0x3c/4] & 1) * 0x400;	/* ??? gratia, hayaosi1...*/
 
 			/* extend sign */
 			if (start2x & 0x20000) start2x |= ~0x3ffff;
@@ -424,7 +424,7 @@ static void draw_roz(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 			tilemap_draw_roz(bitmap, &my_clip, ms32_roz_tilemap,
 					(start2x+startx+offsx)<<16, (start2y+starty+offsy)<<16,
 					incxx<<8, incxy<<8, 0, 0,
-					1, // Wrap
+					1, /* Wrap*/
 					0, priority);
 
 			y++;
@@ -441,8 +441,8 @@ static void draw_roz(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 		int offsx  = ms32_roz_ctrl[0x30/4];
 		int offsy  = ms32_roz_ctrl[0x34/4];
 
-		offsx += (ms32_roz_ctrl[0x38/4] & 1) * 0x400;	// ??? gratia, hayaosi1...
-		offsy += (ms32_roz_ctrl[0x3c/4] & 1) * 0x400;	// ??? gratia, hayaosi1...
+		offsx += (ms32_roz_ctrl[0x38/4] & 1) * 0x400;	/* ??? gratia, hayaosi1...*/
+		offsy += (ms32_roz_ctrl[0x3c/4] & 1) * 0x400;	/* ??? gratia, hayaosi1...*/
 
 		/* extend sign */
 		if (startx & 0x20000) startx |= ~0x3ffff;
@@ -455,7 +455,7 @@ static void draw_roz(struct mame_bitmap *bitmap, const struct rectangle *cliprec
 		tilemap_draw_roz(bitmap, cliprect, ms32_roz_tilemap,
 				(startx+offsx)<<16, (starty+offsy)<<16,
 				incxx<<8, incxy<<8, incyx<<8, incyy<<8,
-				1, // Wrap
+				1, /* Wrap*/
 				0, priority);
 	}
 }

@@ -44,11 +44,11 @@ static void get_bg_tile_info(int tile_index)
 
 
 #if 0
-	if (attr&0x08)	//priority bg/sprites (1 = this bg tile on top of sprites)
+	if (attr&0x08)	/*priority bg/sprites (1 = this bg tile on top of sprites)*/
 	{
 		color = ((int)rand()) & 0x0f;
 	}
-	if (attr&0x80)  //al the roofs of all buildings have this bit set. What's this ???
+	if (attr&0x80)  /*al the roofs of all buildings have this bit set. What's this ???*/
 	{
 		color = ((int)rand()) & 0x0f;
 	}
@@ -159,7 +159,7 @@ WRITE_HANDLER( tankbust_xscroll_w )
 		if (x>=0x100) x-=0x200;
 		tilemap_set_scrollx(bg_tilemap, 0, x );
 	}
-//usrintf_showmessage("x=%02x %02x", xscroll[0], xscroll[1]);
+/*usrintf_showmessage("x=%02x %02x", xscroll[0], xscroll[1]);*/
 }
 
 static UINT8 yscroll[2];
@@ -175,7 +175,7 @@ WRITE_HANDLER( tankbust_yscroll_w )
 		if (y>=0x80) y-=0x100;
 		tilemap_set_scrolly(bg_tilemap, 0, y );
 	}
-//usrintf_showmessage("y=%02x %02x", yscroll[0], yscroll[1]);
+/*usrintf_showmessage("y=%02x %02x", yscroll[0], yscroll[1]);*/
 }
 
 /***************************************************************************
@@ -216,13 +216,13 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 
 		color = 0;
 
-		//0x02 - dont know (most of the time this bit is set in tank sprite and others but not all and not always)
-		//0x04 - not used
-		//0x08 - not used
-		//0x10 - not used
-		//0x20 - not used
-		//0x40 - not used
-		//0x80 - not used
+		/*0x02 - dont know (most of the time this bit is set in tank sprite and others but not all and not always)*/
+		/*0x04 - not used*/
+		/*0x08 - not used*/
+		/*0x10 - not used*/
+		/*0x20 - not used*/
+		/*0x40 - not used*/
+		/*0x80 - not used*/
 #if 0
 		if ((spriteram[offs+2] & 0x02))
 		{
@@ -230,7 +230,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
 		}
 #endif
 
-		if ((spriteram[offs+1]!=4))	//otherwise - ghost sprites
+		if ((spriteram[offs+1]!=4))	/*otherwise - ghost sprites*/
 		{
 
 			drawgfx(bitmap,Machine->gfx[0],

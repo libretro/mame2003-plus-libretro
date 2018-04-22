@@ -200,8 +200,8 @@ static void contcirc_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct r
 		data = spriteram16[offs+2];
 		priority = (data & 0x8000) >> 15;
 		flipx = (data & 0x4000) >> 14;
-		flipy = (data & 0x2000) >> 13;	// ???
-		x = data & 0x1ff;   // correct mask?
+		flipy = (data & 0x2000) >> 13;	/* ???*/
+		x = data & 0x1ff;   /* correct mask?*/
 
 		data = spriteram16[offs+3];
 		color = (data & 0xff00) >> 8;
@@ -560,9 +560,9 @@ static void sci_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct rectan
 
 	/* SCI alternates between two areas of its spriteram */
 
-	// This gave back to front frames causing bad flicker... but
-	// reversing it now only gives us sprite updates on alternate
-	// frames. So we probably have to partly buffer spriteram?
+	/* This gave back to front frames causing bad flicker... but*/
+	/* reversing it now only gives us sprite updates on alternate*/
+	/* frames. So we probably have to partly buffer spriteram?*/
 
 	start_offs = (sci_spriteframe &1) * 0x800;
 	start_offs = 0x800 - start_offs;
@@ -669,14 +669,14 @@ static void aquajack_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct r
 		data = spriteram16[offs+1];
 		priority = (data & 0x8000) >> 15;
 		flipx = (data & 0x4000) >> 14;
-		x = data & 0x1ff;   // correct mask?
+		x = data & 0x1ff;   /* correct mask?*/
 
 		data = spriteram16[offs+2];
 		color = (data & 0xff00) >> 8;
 		zoomx = (data & 0x3f);
 
 		data = spriteram16[offs+3];
-		flipy = (data & 0x8000) >> 15;	// ???
+		flipy = (data & 0x8000) >> 15;	/* ???*/
 		tilenum = data & 0x1fff;	/* $80000 spritemap rom maps up to $2000 64x64 sprites */
 
 		if (!tilenum) continue;
@@ -761,14 +761,14 @@ static void spacegun_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct r
 		data = spriteram16[offs+1];
 		priority = (data & 0x8000) >> 15;
 		flipx = (data & 0x4000) >> 14;
-		x = data & 0x1ff;   // correct mask?
+		x = data & 0x1ff;   /* correct mask?*/
 
 		data = spriteram16[offs+2];
 		color = (data & 0xff00) >> 8;
 		zoomx = (data & 0x7f);
 
 		data = spriteram16[offs+3];
-		flipy = (data & 0x8000) >> 15;	// ???
+		flipy = (data & 0x8000) >> 15;	/* ???*/
 		tilenum = data & 0x1fff;	/* $80000 spritemap rom maps up to $2000 64x64 sprites */
 
 		if (!tilenum) continue;
@@ -853,10 +853,10 @@ VIDEO_UPDATE( contcirc )
 
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[0],TILEMAP_IGNORE_TRANSPARENCY,0);
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[1],0,1);
-	TC0150ROD_draw(bitmap,cliprect,-3,0xc0,1,0,2);	// -6
+	TC0150ROD_draw(bitmap,cliprect,-3,0xc0,1,0,2);	/* -6*/
 	TC0100SCN_tilemap_draw(bitmap,cliprect,0,layer[2],0,4);
 
-	contcirc_draw_sprites_16x8(bitmap,cliprect,5);	// 7
+	contcirc_draw_sprites_16x8(bitmap,cliprect,5);	/* 7*/
 }
 
 

@@ -127,7 +127,7 @@ WRITE_HANDLER( pacland_bankswitch_w )
 	bankaddress = 0x10000 + ((data & 0x07) << 13);
 	cpu_setbank(1,&RAM[bankaddress]);
 
-//	pbc = data & 0x20;
+/*	pbc = data & 0x20;*/
 
 	if (palette_bank != ((data & 0x18) >> 3))
 	{
