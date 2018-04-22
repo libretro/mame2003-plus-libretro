@@ -21,6 +21,16 @@ static int slapfight_status_state;
 extern unsigned char *getstar_e803;
 
 static unsigned char mcu_val;
+extern unsigned char *slapfight_scrollx_lo,*slapfight_scrollx_hi,*slapfight_scrolly;
+
+static unsigned char from_main,from_mcu;
+static int mcu_sent = 0,main_sent = 0;
+static unsigned char portA_in,portA_out,ddrA;
+static unsigned char portB_in,portB_out,ddrB;
+static unsigned char portC_in,portC_out,ddrC;
+
+
+
 
 /* Perform basic machine initialisation */
 MACHINE_INIT( slapfight )
@@ -113,6 +123,105 @@ READ_HANDLER( slapfight_port_00_r )
 	return slapfight_status;
 }
 
+READ_HANDLER( slapfight_68705_portA_r )
+{
+	return (portA_out & ddrA) | (portA_in & ~ddrA);
+}
+
+WRITE_HANDLER( slapfight_68705_portA_w )
+{
+	portA_out = data;
+}
+
+WRITE_HANDLER( slapfight_68705_ddrA_w )
+{
+	ddrA = data;
+}
+
+READ_HANDLER( slapfight_68705_portB_r )
+{
+	return (portB_out & ddrB) | (portB_in & ~ddrB);
+}
+
+WRITE_HANDLER( slapfight_68705_portB_w )
+{
+	if ((ddrB & 0x02) && (~data & 0x02) && (portB_out & 0x02))
+	{
+		portA_in = from_main;
+
+		if (main_sent)
+			cpu_set_irq_line(2,0,CLEAR_LINE);
+
+		main_sent = 0;
+	}
+	if ((ddrB & 0x04) && (data & 0x04) && (~portB_out & 0x04))
+	{
+		from_mcu = portA_out;
+		mcu_sent = 1;
+	}
+	if ((ddrB & 0x08) && (~data & 0x08) && (portB_out & 0x08))
+	{
+		*slapfight_scrollx_lo = portA_out;
+	}
+	if ((ddrB & 0x10) && (~data & 0x10) && (portB_out & 0x10))
+	{
+		*slapfight_scrollx_hi = portA_out;
+	}
+
+	portB_out = data;
+}
+
+WRITE_HANDLER( slapfight_68705_ddrB_w )
+{
+	ddrB = data;
+}
+
+READ_HANDLER( slapfight_68705_portC_r )
+{
+	portC_in = 0;
+
+	if (main_sent)
+		portC_in |= 0x01;
+	if (!mcu_sent)
+		portC_in |= 0x02;
+
+	return (portC_out & ddrC) | (portC_in & ~ddrC);
+}
+
+WRITE_HANDLER( slapfight_68705_portC_w )
+{
+	portC_out = data;
+}
+
+WRITE_HANDLER( slapfight_68705_ddrC_w )
+{
+	ddrC = data;
+}
+
+WRITE_HANDLER( slapfight_mcu_w )
+{
+	from_main = data;
+	main_sent = 1;
+    cpu_set_irq_line(2,0,ASSERT_LINE);
+}
+
+READ_HANDLER( slapfight_mcu_r )
+{
+	mcu_sent = 0;
+	return from_mcu;
+}
+
+READ_HANDLER( slapfight_mcu_status_r )
+{
+	int res = 0;
+
+	if (!main_sent)
+		res |= 0x02;
+	if (!mcu_sent)
+		res |= 0x04;
+
+	return res;
+}
 
 
 /*
@@ -152,14 +261,6 @@ WRITE_HANDLER( getstar_port_04_w )
 /*	cpu_halt(0,0);*/
 }
 
-
-/* Tiger Heli MCU */
-
-static unsigned char from_main,from_mcu;
-static int mcu_sent = 0,main_sent = 0;
-static unsigned char portA_in,portA_out,ddrA;
-static unsigned char portB_in,portB_out,ddrB;
-static unsigned char portC_in,portC_out,ddrC;
 
 READ_HANDLER( tigerh_68705_portA_r )
 {
