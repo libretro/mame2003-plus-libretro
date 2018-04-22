@@ -15,8 +15,6 @@
 #include "state.h"
 
 
-
-
 static int driverIndex; /* Index of mame game loaded */
 extern struct osd_create_params videoConfig;
 
@@ -50,88 +48,14 @@ retro_set_led_state_t led_state_cb = NULL;
 
 int16_t XsoundBuffer[2048];
 
-
-/******************************************************************************
-
-Sound
-
-******************************************************************************/
-
-int osd_start_audio_stream(int stereo)
-{
-	 Machine->sample_rate = Machine->drv->frames_per_second * 1000;
-	delta_samples = 0.0f;
-	usestereo = stereo ? 1 : 0;
-
-	/* determine the number of samples per frame */
-	samples_per_frame = Machine->sample_rate / Machine->drv->frames_per_second;
-
-	if (Machine->sample_rate == 0) return 0;
-
-	samples_buffer = (short *) calloc(samples_per_frame, 2 + usestereo * 2);
-	if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame, 4);
-	
-	return samples_per_frame;
-}
-
-
-int osd_update_audio_stream(INT16 *buffer)
-{
-	int i,j;
-
-	if ( Machine->sample_rate !=0 && buffer )
-	{
-   		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
-		if (usestereo)
-			audio_batch_cb(samples_buffer, samples_per_frame);
-		else
-		{
-			for (i = 0, j = 0; i < samples_per_frame; i++)
-        		{
-				conversion_buffer[j++] = samples_buffer[i];
-				conversion_buffer[j++] = samples_buffer[i];
-		        }
-         		audio_batch_cb(conversion_buffer,samples_per_frame);
-		}	
-   		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samples_per_frame;
-		if (delta_samples >= 1.0f)
-		{
-			int integer_delta = (int)delta_samples;
-			samples_per_frame += integer_delta;
-			delta_samples -= integer_delta;
-		}
-	}
-	return samples_per_frame;
-}
-
-
-void osd_stop_audio_stream(void)
-{
-}
-
-/******************************************************************************
-
-Miscellaneous
-
-******************************************************************************/
-
 void mame_frame(void);
 void mame_done(void);
 
-unsigned retro_get_region (void) {return RETRO_REGION_NTSC;}
-void *retro_get_memory_data(unsigned type) {return 0;}
-size_t retro_get_memory_size(unsigned type) {return 0;}
-bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info){return false;}
-void retro_cheat_reset(void){}
-void retro_cheat_set(unsigned unused, bool unused1, const char* unused2){}
-void retro_set_controller_port_device(unsigned in_port, unsigned device){}
-void retro_set_video_refresh(retro_video_refresh_t cb) { video_cb = cb; }
-void retro_set_audio_sample(retro_audio_sample_t cb) { }
-void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
-void retro_set_input_poll(retro_input_poll_t cb) { poll_cb = cb; }
-void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
+/******************************************************************************
 
+    implementation of key libretro functions
 
+******************************************************************************/
 
 void retro_set_environment(retro_environment_t cb)
 {
@@ -778,3 +702,80 @@ bool retro_unserialize(const void * data, size_t size)
 
 	return false;
 }
+
+/******************************************************************************
+
+Sound
+
+******************************************************************************/
+
+int osd_start_audio_stream(int stereo)
+{
+	 Machine->sample_rate = Machine->drv->frames_per_second * 1000;
+	delta_samples = 0.0f;
+	usestereo = stereo ? 1 : 0;
+
+	/* determine the number of samples per frame */
+	samples_per_frame = Machine->sample_rate / Machine->drv->frames_per_second;
+
+	if (Machine->sample_rate == 0) return 0;
+
+	samples_buffer = (short *) calloc(samples_per_frame, 2 + usestereo * 2);
+	if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame, 4);
+	
+	return samples_per_frame;
+}
+
+
+int osd_update_audio_stream(INT16 *buffer)
+{
+	int i,j;
+
+	if ( Machine->sample_rate !=0 && buffer )
+	{
+   		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
+		if (usestereo)
+			audio_batch_cb(samples_buffer, samples_per_frame);
+		else
+		{
+			for (i = 0, j = 0; i < samples_per_frame; i++)
+        		{
+				conversion_buffer[j++] = samples_buffer[i];
+				conversion_buffer[j++] = samples_buffer[i];
+		        }
+         		audio_batch_cb(conversion_buffer,samples_per_frame);
+		}	
+   		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samples_per_frame;
+		if (delta_samples >= 1.0f)
+		{
+			int integer_delta = (int)delta_samples;
+			samples_per_frame += integer_delta;
+			delta_samples -= integer_delta;
+		}
+	}
+	return samples_per_frame;
+}
+
+
+void osd_stop_audio_stream(void)
+{
+}
+
+/******************************************************************************
+
+Miscellaneous
+
+******************************************************************************/
+
+unsigned retro_get_region (void) {return RETRO_REGION_NTSC;}
+void *retro_get_memory_data(unsigned type) {return 0;}
+size_t retro_get_memory_size(unsigned type) {return 0;}
+bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info){return false;}
+void retro_cheat_reset(void){}
+void retro_cheat_set(unsigned unused, bool unused1, const char* unused2){}
+void retro_set_controller_port_device(unsigned in_port, unsigned device){}
+void retro_set_video_refresh(retro_video_refresh_t cb) { video_cb = cb; }
+void retro_set_audio_sample(retro_audio_sample_t cb) { }
+void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
+void retro_set_input_poll(retro_input_poll_t cb) { poll_cb = cb; }
+void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
