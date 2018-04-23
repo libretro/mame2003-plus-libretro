@@ -89,6 +89,7 @@
 * The Lost Castle In Darkmist
 * Thunder Hoop
 * Title Fight
+* Varia Metal
 * Vasara 2
 * Wing Force
 * Wonderboy In Monsterland (English Virtual Console Version)
@@ -211,7 +212,7 @@
 * Improved sprite drawing for Gun Force 2
 * Added the ICS2115 soundcore for the PGM games
 * Updated the PGM driver to MAME105 more games are now playable
-* Hooked Up Toshiba T5182 sound in Mustache Boy
+* Hooked Up Toshiba T5182 sound in Mustache Boy and The Lost Castle In Darkmist
 * Tweaked Tecmo Bowl so it will boot using only a single screen
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 * Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
