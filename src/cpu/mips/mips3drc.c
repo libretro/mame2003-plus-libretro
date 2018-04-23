@@ -2509,7 +2509,7 @@ if ((nextop >> 26) == 0x2a &&
 				return RECOMPILE_SUCCESSFUL | RECOMPILE_MAY_CAUSE_EXCEPTION | RECOMPILE_END_OF_STRING;
 			}
 
-/*		case 0x34:	/* LLD */		logerror("mips3 Unhandled op: LLD\n");									break;*/
+/*		case 0x34:	// LLD		logerror("mips3 Unhandled op: LLD\n");									break; */
 
 		case 0x35:	/* LDC1 */
 			_mov_m32abs_r32(&mips3_icount, REG_EBP);								/* mov	[mips3_icount],ebp*/
@@ -2609,7 +2609,7 @@ if ((nextop >> 26) == 0x2a &&
 			_mov_r32_m32abs(REG_EBP, &mips3_icount);								/* mov	ebp,[mips3_icount]*/
 			return RECOMPILE_SUCCESSFUL_CP(1,4);
 
-/*		case 0x38:	/* SC */		logerror("mips3 Unhandled op: SC\n");									break;*/
+/*		case 0x38:	// SC 	logerror("mips3 Unhandled op: SC\n");									break;*/
 
 		case 0x39:	/* SWC1 */
 			_mov_m32abs_r32(&mips3_icount, REG_EBP);								/* mov	[mips3_icount],ebp*/
@@ -2647,8 +2647,8 @@ if ((nextop >> 26) == 0x2a &&
 			_mov_r32_m32abs(REG_EBP, &mips3_icount);								/* mov	ebp,[mips3_icount]*/
 			return RECOMPILE_SUCCESSFUL_CP(1,4);
 
-/*		case 0x3b:	/* SWC3 */		invalid_instruction(op);												break;*/
-/*		case 0x3c:	/* SCD */		logerror("mips3 Unhandled op: SCD\n");									break;*/
+/*		case 0x3b:	// SWC3		invalid_instruction(op);												break;*/
+/*		case 0x3c:	// SCD		logerror("mips3 Unhandled op: SCD\n");									break;*/
 
 		case 0x3d:	/* SDC1 */
 			_mov_m32abs_r32(&mips3_icount, REG_EBP);								/* mov	[mips3_icount],ebp*/
@@ -2752,7 +2752,7 @@ if ((nextop >> 26) == 0x2a &&
 			_mov_r32_m32abs(REG_EBP, &mips3_icount);								/* mov	ebp,[mips3_icount]*/
 			return RECOMPILE_SUCCESSFUL_CP(1,4);
 				
-/*		default:	/* ??? */		invalid_instruction(op);												break;*/
+/*		default:	*/ /*invalid_instruction(op);												break;*/
 	}
 	return RECOMPILE_UNIMPLEMENTED;
 }
