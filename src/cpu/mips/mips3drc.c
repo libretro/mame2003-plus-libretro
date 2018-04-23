@@ -2232,30 +2232,30 @@ if ((nextop >> 26) == 0x2e &&
 			return RECOMPILE_SUCCESSFUL_CP(1,4);
 
 		case 0x2b:	/* SW */
-/*			_mov_r32_m32abs(REG_EAX, &mips3.r[RSREG]);								/* mov	eax,[rsreg]*/
+/*			_mov_r32_m32abs(REG_EAX, &mips3.r[RSREG]);								// mov	eax,[rsreg]
 			if (SIMMVAL != 0)
-				_add_r32_imm(REG_EAX, SIMMVAL);										/* add	eax,SIMMVAL*/
-			_mov_r32_r32(REG_EBX, REG_EAX);											/* mov	ebx,eax*/
-			_shr_r32_imm(REG_EBX, 16);												/* shr	ebx,16*/
-			_mov_r32_m32isd(REG_EBX, REG_EBX, 4, ram_write_table);					/* mov	ebx,[ebx*4 + ram_write_table]*/
-			_cmp_r32_imm(REG_EBX, 0);												/* cmp	ebx,0*/
-			_jcc_short_link(COND_NE, &link1);										/* jne	fast*/
+				_add_r32_imm(REG_EAX, SIMMVAL);										//add	eax,SIMMVAL
+			_mov_r32_r32(REG_EBX, REG_EAX);											// mov	ebx,eax
+			_shr_r32_imm(REG_EBX, 16);												// shr	ebx,16
+			_mov_r32_m32isd(REG_EBX, REG_EBX, 4, ram_write_table);					// mov	ebx,[ebx*4 + ram_write_table]
+			_cmp_r32_imm(REG_EBX, 0);												// cmp	ebx,0
+			_jcc_short_link(COND_NE, &link1);										// jne	fast
 			if (RTREG != 0)
-				_push_m32abs(&mips3.r[RTREG]);										/* push	dword [rtreg]*/
+				_push_m32abs(&mips3.r[RTREG]);										//push	dword [rtreg]
 			else
-				_push_imm(0);														/* push	0*/
-			_push_r32(REG_EAX);														/* push	eax*/
-			drc_append_save_call_restore(drc, (void *)mips3.memory.writelong, 8);	/* call	writelong*/
-			_jmp_short_link(&link2);												/* jmp	done*/
-			_resolve_link(&link1);													/* fast:*/
+				_push_imm(0);														//push	0
+			_push_r32(REG_EAX);														// push	eax
+			drc_append_save_call_restore(drc, (void *)mips3.memory.writelong, 8);	// call	writelong
+			_jmp_short_link(&link2);												// jmp	done
+			_resolve_link(&link1);													// fast:
 			if (RTREG != 0)
 			{
-				_mov_r32_m32abs(REG_ECX, &mips3.r[RTREG]);							/* mov  ecx,[rtreg]*/
-				_mov_m32bisd_r32(REG_EBX, REG_EAX, 1, 0, REG_ECX);					/* mov	[ebx+eax],ecx*/
+				_mov_r32_m32abs(REG_ECX, &mips3.r[RTREG]);							// mov  ecx,[rtreg]
+				_mov_m32bisd_r32(REG_EBX, REG_EAX, 1, 0, REG_ECX);					// mov	[ebx+eax],ecx
 			}
 			else
-				_mov_m32bisd_imm(REG_EBX, REG_EAX, 1, 0, 0);						/* mov	[ebx+eax],0*/
-			_resolve_link(&link2);													/* fast:*/
+				_mov_m32bisd_imm(REG_EBX, REG_EAX, 1, 0, 0);						// mov	[ebx+eax],0
+			_resolve_link(&link2);													// fast:
 */
 
 			_mov_m32abs_r32(&mips3_icount, REG_EBP);								/* mov	[mips3_icount],ebp*/
