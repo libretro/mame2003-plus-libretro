@@ -2608,6 +2608,7 @@ endif
 
 SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/formats/libchdr/chd.c \
+	$(LIBRETRO_COMM_DIR)/formats/libchdr/libchdr_sha1.c \
 	$(LIBRETRO_COMM_DIR)/utils/sha1.c
 
 ifeq ($(STATIC_LINKING),1)
