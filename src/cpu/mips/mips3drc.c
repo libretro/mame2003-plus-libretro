@@ -2461,8 +2461,11 @@ if ((nextop >> 26) == 0x2a &&
 
 		case 0x2f:	/* CACHE */
 			return RECOMPILE_SUCCESSFUL_CP(1,4);
+#if 0
 
-/*		case 0x30:	/* LL */		logerror("mips3 Unhandled op: LL\n");									break;*/
+			case 0x30:	/* LL */		logerror("mips3 Unhandled op: LL\n");									break;
+
+#endif
 
 		case 0x31:	/* LWC1 */
 			_mov_m32abs_r32(&mips3_icount, REG_EBP);								/* mov	[mips3_icount],ebp*/
