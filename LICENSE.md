@@ -67,7 +67,7 @@ If you make a derivative work, you are not allowed to call it MAME. You must use
 
 -------------------------
 
-## Acknowledgments
+## MAME 0.78 Acknowledgments
 First of all, thanks to Allard van der Bas (avdbas@wi.leidenuniv.nl) for starting the Arcade Emulation Programming Repository at http://valhalla.ph.tn.tudelft.nl/emul8
 
 Without the Repository, I would never have even tried to write an emulator. Unfortunately, the original Repository is now closed, but its spirit lives on in MAME.

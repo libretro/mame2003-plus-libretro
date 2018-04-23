@@ -208,7 +208,7 @@
 * Updated the NMK16 driver for many sound and graphical improvements
 * Fixed a reset problem after level 3 in Night Slashers (ARM CPU)
 * Enabled breakable backgrounds in 64th street code via BritneysPAIRS
-* improved sprite drawing for Gun Force 2
+* Improved sprite drawing for Gun Force 2
 * Added the ICS2115 soundcore for the PGM games
 * Updated the PGM driver to MAME105 more games are now playable
 * Hooked Up Toshiba T5182 sound in Mustache Boy
@@ -216,8 +216,7 @@
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 * Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
-* Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.106. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color issue affecting backdrop.
-
+* Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color when backdrops are first loaded.
 
 ------------------------------------
 
