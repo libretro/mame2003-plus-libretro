@@ -6,9 +6,9 @@
  * For example, if the source file is dl.lua, the generated file
  * contains:
  *
- * static const char dl_lua_source[] = "dl.lua";
+ * const char dl_lua_source[] = "dl.lua";
  *
- * static const unsigned char dl_lua_bytes[] = {
+ * const unsigned char dl_lua_bytes[] = {
  * ...
  * };
  *
@@ -51,15 +51,15 @@
 #define COLUMNS 18
 
 #ifdef PACKAGE_NAME
-static const char package[] = PACKAGE_NAME;
+const char package[] = PACKAGE_NAME;
 #else
-static const char *package = NULL;
+const char *package = NULL;
 #endif
 
 #ifdef VERSION
-static const char version[] = VERSION;
+const char version[] = VERSION;
 #else
-static const char version[] = "version unknown";
+const char version[] = "version unknown";
 #endif
 
 static void
@@ -111,7 +111,7 @@ emit(const char *name)
 {
   int col = COLUMNS;
 
-  printf("static const unsigned char ");
+  printf("const unsigned char ");
   emit_name(name);
   printf("_bytes[] = {");
   for (;;) {
