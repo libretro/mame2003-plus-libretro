@@ -2217,7 +2217,6 @@ int showcopyright(struct mame_bitmap *bitmap)
 	strcat (pause_buffer, ui_getstring(UI_copyright3));
 
 	setup_selected = -1;
-  setup_via_menu = 0;
 	
 	/* Prep pause action */
     pause_action = pause_action_showcopyright;
@@ -2971,7 +2970,6 @@ static void setup_menu_init(void)
 		menu_item[menu_total] = ui_getstring (UI_memorycard); menu_action[menu_total++] = UI_MEMCARD;
 	}
 
-	menu_item[menu_total] = ui_getstring (UI_resetgame); menu_action[menu_total++] = UI_RESET;
 #if !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
     /* don't offer to generate_xml_dat on consoles where it can't be used */
     menu_item[menu_total] = ui_getstring (UI_generate_xml_dat); menu_action[menu_total++] = UI_GENERATE_XML_DAT;
@@ -3173,6 +3171,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
     {
       setup_selected = -1;
       setup_via_menu = 1;
+	    setup_menu_init();      
     }
   }
 	if (setup_selected != 0)
@@ -3181,6 +3180,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
     {
        setup_selected = 0;
        setup_via_menu = 0;
+	     setup_menu_init();       
        schedule_full_refresh();
     }     
     else
