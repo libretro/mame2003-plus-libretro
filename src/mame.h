@@ -164,59 +164,61 @@ struct RunningMachine
 /* or on the commandline. */
 struct GameOptions
 {
-	mame_file *	record;			    /* handle to file to record input to */
-	mame_file *	playback;		    /* handle to file to playback input from */
-	mame_file *	language_file;	    /* handle to file for localization */
+  mame_file *	record;			       /* handle to file to record input to */
+  mame_file *	playback;		       /* handle to file to playback input from */
+  mame_file *	language_file;	   /* handle to file for localization */
 
-    char *  libretro_content_path;
-    char *  libretro_system_path;
-    char *  libretro_save_path;
-    
-	int		 mame_debug;		    /* 1 to enable debugging */
-	int 	 skip_disclaimer;	    /* 1 to skip the disclaimer screen at startup */
-	int 	 skip_gameinfo;		    /* 1 to skip the game info screen at startup */
-    int      skip_warnings;         /* 1 to skip the game warning screen at startup */
-    
-    unsigned dial_share_xy;
-    unsigned mouse_device;
-    unsigned rstick_to_btns;
-    unsigned tate_mode;
+  char *  libretro_content_path;
+  char *  libretro_system_path;
+  char *  libretro_save_path;
 
-    int      crosshair_enable;
-    unsigned activate_dcs_speedhack;
+  int		   mame_debug;		       /* 1 to enable debugging */
+  int 	   skip_disclaimer;	     /* 1 to skip the disclaimer screen at startup */
+  int 	   skip_gameinfo;		     /* 1 to skip the game info screen at startup */
+  int      skip_warnings;        /* 1 to skip the game warning screen at startup */
+  int      display_setup;        /* 1 to display the MAME setup menu until reset to 0 */
 
-	int		 samplerate;		    /* sound sample playback rate, in KHz */
-	int		 use_samples;	        /* 1 to enable external .wav samples */
-    unsigned use_external_hiscore;  /* 1 to load hiscore.dat from the libretro system folder structure rather than the compiled core */
+  unsigned dial_share_xy;
+  unsigned mouse_device;
+  unsigned primary_input;        /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
+  unsigned rstick_to_btns;
+  unsigned tate_mode;
 
-	float	 brightness;		    /* brightness of the display */
-	float	 pause_bright;		    /* additional brightness when in pause */
-	float	 gamma;			        /* gamma correction of the display */
-    int      frameskip;
-	int		 color_depth;	        /* valid: 15, 16, or 32. any other value means auto */
-	int		 ui_orientation;	    /* orientation of the UI relative to the video */
-        
-	int		 vector_width;	               /* requested width for vector games; 0 means default (640) */
-	int		 vector_height;	               /* requested height for vector games; 0 means default (480) */
-	int		 beam;			               /* vector beam width */
-	int	     vector_flicker;	            /* vector beam flicker effect control */
-	float	 vector_intensity_correction;   
-	int		 translucency;	                /* 1 to enable translucency on vectors */
-	int 	 antialias;		                /* 1 to enable antialiasing on vectors */
-    unsigned vector_resolution_multiplier;
-    
-	int		 use_artwork;	        /* bitfield indicating which artwork pieces to use */
-	int		 artwork_res;	        /* 1 for 1x game scaling, 2 for 2x */
-	int		 artwork_crop;	        /* 1 to crop artwork to the game screen */
+  int      crosshair_enable;
+  unsigned activate_dcs_speedhack;
 
-	char	 savegame;		        /* character representing a savegame to load */
-	int      crc_only;              /* specify if only CRC should be used as checksum */
-    unsigned skip_rom_verify;       
-	char *	 bios;			        /* specify system bios (if used), 0 is default */
+  int		   samplerate;		       /* sound sample playback rate, in KHz */
+  int		   use_samples;	         /* 1 to enable external .wav samples */
+  unsigned use_external_hiscore; /* 1 to load hiscore.dat from the libretro system folder rather than the bin2c precompile */
 
-	int		 debug_width;	        /* requested width of debugger bitmap */
-	int		 debug_height;	        /* requested height of debugger bitmap */
-	int		 debug_depth;	        /* requested depth of debugger bitmap */
+  float	   brightness;		       /* brightness of the display */
+  float	   pause_bright;		     /* additional brightness when in pause */
+  float	   gamma;			           /* gamma correction of the display */
+  int      frameskip;
+  int		   color_depth;	         /* valid: 15, 16, or 32. any other value means auto */
+  int		   ui_orientation;	     /* orientation of the UI relative to the video */
+      
+  int		   vector_width;	       /* requested width for vector games; 0 means default (640) */
+  int		   vector_height;	       /* requested height for vector games; 0 means default (480) */
+  int		   beam;			           /* vector beam width */
+  int	     vector_flicker;	     /* vector beam flicker effect control */
+  float	   vector_intensity_correction;   
+  int		   translucency;	       /* 1 to enable translucency on vectors */
+  int 	   antialias;		         /* 1 to enable antialiasing on vectors */
+  unsigned vector_resolution_multiplier;
+
+  int		   use_artwork;	         /* bitfield indicating which artwork pieces to use */
+  int		   artwork_res;	         /* 1 for 1x game scaling, 2 for 2x */
+  int		   artwork_crop;	       /* 1 to crop artwork to the game screen */
+
+  char	   savegame;		         /* character representing a savegame to load */
+  int      crc_only;             /* specify if only CRC should be used as checksum */
+  unsigned skip_rom_verify;       
+  char *	 bios;			           /* specify system bios (if used), 0 is default */
+
+  int		   debug_width;	         /* requested width of debugger bitmap */
+  int		   debug_height;	       /* requested height of debugger bitmap */
+  int		   debug_depth;	         /* requested depth of debugger bitmap */
 
 };
 

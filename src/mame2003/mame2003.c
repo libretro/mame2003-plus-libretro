@@ -51,353 +51,383 @@ int16_t XsoundBuffer[2048];
 void mame_frame(void);
 void mame_done(void);
 
+
 /******************************************************************************
 
-    implementation of key libretro functions
+  implementation of key libretro functions
 
 ******************************************************************************/
 
 void retro_set_environment(retro_environment_t cb)
 {
-   static const struct retro_variable vars[] = {
-      { APPNAME"-frameskip", "Frameskip; 0|1|2|3|4|5" },
-      { APPNAME"-enable-backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
+  static const struct retro_variable vars[] = {
+    { APPNAME"-frameskip", "Frameskip; 0|1|2|3|4|5" },
+    { APPNAME"-primary-input", "Primary input device; retropad|keyboard|simultaneous" },
 #if defined(__IOS__)
-      { APPNAME"-mouse_device", "Mouse Device; pointer|mouse|disabled" },
+    { APPNAME"-mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else
-      { APPNAME"-mouse_device", "Mouse Device; mouse|pointer|disabled" },
+    { APPNAME"-mouse_device", "Mouse Device; mouse|pointer|disabled" },
 #endif
-      { APPNAME"-bios-region", "Specify alternate BIOS region; default|asia|japan|japan-a|japan-b|europe|europe-a|taiwan|us|us-a" },
-      { APPNAME"-crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
-      { APPNAME"-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
-      { APPNAME"-rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
-      { APPNAME"-tate_mode", "TATE Mode; disabled|enabled" },
-      { APPNAME"-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },      
-      { APPNAME"-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },
-      { APPNAME"-vector-translucency", "Vector translucency; enabled|disabled" },
-      { APPNAME"-vector-beam-width", "EXPERIMENTAL: Vector beam width; 1|2|3|4|5" },
-      { APPNAME"-vector-flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
-      { APPNAME"-vector-intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
-      { APPNAME"-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" }, 
-      { APPNAME"-external_hiscore", "Use external hiscore.dat; disabled|enabled" },            
-      { APPNAME"-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },      
-      { APPNAME"-dcs-speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
-      { APPNAME"-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
-      { APPNAME"-skip_warnings", "Skip Warnings; disabled|enabled" },
-      { NULL, NULL },
-   };
-   environ_cb = cb;
+    { APPNAME"-crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
+    { APPNAME"-display_setup", "Display MAME menu; disabled|enabled" },       
+    { APPNAME"-enable-backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
+    { APPNAME"-bios-region", "Specify alternate BIOS region; default|asia|japan|japan-a|japan-b|europe|europe-a|taiwan|us|us-a" },
+    { APPNAME"-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
+    { APPNAME"-rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
+    { APPNAME"-tate_mode", "TATE Mode; disabled|enabled" },
+    { APPNAME"-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },
+    { APPNAME"-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },
+    { APPNAME"-vector-translucency", "Vector translucency; enabled|disabled" },
+    { APPNAME"-vector-beam-width", "EXPERIMENTAL: Vector beam width; 1|2|3|4|5" },
+    { APPNAME"-vector-flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
+    { APPNAME"-vector-intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
+    { APPNAME"-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" },
+    { APPNAME"-external_hiscore", "Use external hiscore.dat; disabled|enabled" },
+    { APPNAME"-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
+    { APPNAME"-dcs-speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
+    { APPNAME"-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
+    { APPNAME"-skip_warnings", "Skip Warnings; disabled|enabled" },
+    { NULL, NULL },
+  };
+  environ_cb = cb;
 
-   cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
+  cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
 }
 
 unsigned retro_api_version(void)
 {
-   return RETRO_API_VERSION;
+  return RETRO_API_VERSION;
 }
 
 void retro_get_system_info(struct retro_system_info *info)
 {
-   info->library_name = "MAME 2003-plus";
+  info->library_name = "MAME 2003-plus";
 #ifndef GIT_VERSION
 #define GIT_VERSION ""
 #endif
-   info->library_version = "0.78" GIT_VERSION;
-   info->valid_extensions = "zip";
-   info->need_fullpath = true;   
-   info->block_extract = true;
+  info->library_version = "0.78" GIT_VERSION;
+  info->valid_extensions = "zip";
+  info->need_fullpath = true;
+  info->block_extract = true;
 }
 
 static void update_variables(void)
 {
-   struct retro_led_interface ledintf;
-   struct retro_variable var;
+  struct retro_led_interface ledintf;
+  struct retro_variable var;
 
-   var.value = NULL;
-   
-   var.key = APPNAME"-frameskip";
-   options.frameskip = 0; /* default if none set by frontend */
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      options.frameskip = atoi(var.value);
-   }
+  var.value = NULL;
+
+  var.key = APPNAME"-frameskip";
+  options.frameskip = 0; /* default if none set by frontend */
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    options.frameskip = atoi(var.value);
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-primary-input";
+  options.primary_input = RETRO_DEVICE_JOYPAD;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "retropad") == 0)
+      options.primary_input = RETRO_DEVICE_JOYPAD;
+    else if(strcmp(var.value, "keyboard") == 0)
+      options.primary_input = RETRO_DEVICE_KEYBOARD;
+    else
+      options.primary_input = 0; /* retropad and keyboard simultaneously. "classic mame2003 input mode" */
+  }
   
-   var.value = NULL;
-   
-   var.key = APPNAME"-enable-backdrop";
-   options.use_artwork = ARTWORK_USE_NONE;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.use_artwork = ARTWORK_USE_BACKDROPS;
-      else
-         options.use_artwork = ARTWORK_USE_NONE;
-   }
+  var.value = NULL;
 
-   var.value = NULL;
-   
-   var.key = APPNAME"-mouse_device";
-   options.mouse_device = 0;   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) || var.value)
-   {
-      if(strcmp(var.value, "pointer") == 0)
-         options.mouse_device = RETRO_DEVICE_POINTER;
-      else if(strcmp(var.value, "mouse") == 0)
-         options.mouse_device = RETRO_DEVICE_MOUSE;
-      else
-         options.mouse_device = 0;
-   }
+  var.key = APPNAME"-mouse_device";
+  options.mouse_device = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "pointer") == 0)
+      options.mouse_device = RETRO_DEVICE_POINTER;
+    else if(strcmp(var.value, "mouse") == 0)
+      options.mouse_device = RETRO_DEVICE_MOUSE;
+    else
+      options.mouse_device = 0;
+  }
 
-   var.value = NULL;
-   
-   var.key = APPNAME"-crosshair_enabled";
-   options.crosshair_enable = 0;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.crosshair_enable = 1;
-      else
-         options.crosshair_enable = 0;
-   }
-   var.value = NULL;
+  var.value = NULL;
 
-   /* TODO: Add brightness core option. Below is the boundary code from the old MAME osd to help */
-   /*
+  var.key = APPNAME"-crosshair_enabled";
+  options.crosshair_enable = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.crosshair_enable = 1;
+    else
+      options.crosshair_enable = 0;
+  }
+  
+  var.value = NULL;
 
-	    double brightness;
-        increment = 0.05;
-		if (brightness < 0.1) brightness = 0.1;
-		if (brightness > 1.0) brightness = 1.0;
-		palette_set_global_brightness(brightness);
+  var.key = APPNAME"-display_setup";
+  options.display_setup = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.display_setup = 1;
+    else
+      options.display_setup = 0;
+  }
 
-	sprintf(buf,"%s %3d%%", "brightness", (int)(brightness * 100));
-    */
+  /* TODO: Add brightness core option. Below is the boundary code from the old MAME osd to help */
+  /*
 
-   /* TODO: Add gamma core option. Below is the increment & boundary code from the old MAME osd to help */
-   /*
+    double brightness;
+    increment = 0.05;
+    if (brightness < 0.1) brightness = 0.1;
+    if (brightness > 1.0) brightness = 1.0;
+    palette_set_global_brightness(brightness);
 
-        double gamma_correction;
-        increment = 0.05;
-		if (gamma_correction < 0.5) gamma_correction = 0.5;
-		if (gamma_correction > 2.0) gamma_correction = 2.0;
+  sprintf(buf,"%s %3d%%", "brightness", (int)(brightness * 100));
+  */
 
-        sprintf(buf,"%s %1.2f", "gamma", gamma_correction);
-    */
+  /* TODO: Add gamma core option. Below is the increment & boundary code from the old MAME osd to help */
+  /*
 
-    /* TODO: Add overclock option. Below is the code from the old MAME osd to help process the core option.*/
-    /*
+    double gamma_correction;
+    increment = 0.05;
+    if (gamma_correction < 0.5) gamma_correction = 0.5;
+    if (gamma_correction > 2.0) gamma_correction = 2.0;
 
-	double overclock;
-	int cpu, doallcpus = 0, oc;
+    sprintf(buf,"%s %1.2f", "gamma", gamma_correction);
+  */
 
-	if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
-		doallcpus = 1;
-	if (!code_pressed(KEYCODE_LCONTROL) && !code_pressed(KEYCODE_RCONTROL))
-		increment *= 5;
-	if( increment )
-	{
-		overclock = timer_get_overclock(arg);
-		overclock += 0.01 * increment;
-		if (overclock < 0.01) overclock = 0.01;
-		if (overclock > 2.0) overclock = 2.0;
-		if( doallcpus )
-			for( cpu = 0; cpu < cpu_gettotalcpu(); cpu++ )
-				timer_set_overclock(cpu, overclock);
-		else
-			timer_set_overclock(arg, overclock);
-	}
+  /* TODO: Add overclock option. Below is the code from the old MAME osd to help process the core option.*/
+  /*
 
-	oc = 100 * timer_get_overclock(arg) + 0.5;
+  double overclock;
+  int cpu, doallcpus = 0, oc;
 
-	if( doallcpus )
-		sprintf(buf,"%s %s %3d%%", ui_getstring (UI_allcpus), ui_getstring (UI_overclock), oc);
-	else
-		sprintf(buf,"%s %s%d %3d%%", ui_getstring (UI_overclock), ui_getstring (UI_cpu), arg, oc);
-	displayosd(bitmap,buf,oc/2,100/2);
+  if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
+    doallcpus = 1;
+  if (!code_pressed(KEYCODE_LCONTROL) && !code_pressed(KEYCODE_RCONTROL))
+    increment *= 5;
+  if( increment )
+  {
+    overclock = timer_get_overclock(arg);
+    overclock += 0.01 * increment;
+    if (overclock < 0.01) overclock = 0.01;
+    if (overclock > 2.0) overclock = 2.0;
+    if( doallcpus )
+      for( cpu = 0; cpu < cpu_gettotalcpu(); cpu++ )
+        timer_set_overclock(cpu, overclock);
+    else
+      timer_set_overclock(arg, overclock);
+  }
+
+  oc = 100 * timer_get_overclock(arg) + 0.5;
+
+  if( doallcpus )
+    sprintf(buf,"%s %s %3d%%", ui_getstring (UI_allcpus), ui_getstring (UI_overclock), oc);
+  else
+    sprintf(buf,"%s %s%d %3d%%", ui_getstring (UI_overclock), ui_getstring (UI_cpu), arg, oc);
+  displayosd(bitmap,buf,oc/2,100/2);
 */
-   
-   var.key = APPNAME"-bios-region";
-   options.bios = NULL;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "default") == 0)
-         options.bios = NULL;
-      else
-         options.bios = strdup(var.value);
-   }
-   
-   var.value = NULL;
-   
-   var.key = APPNAME"-dialsharexy";
-   options.dial_share_xy = 0;   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.dial_share_xy = 1;
-      else
-         options.dial_share_xy = 0;
-   }
-   var.value = NULL;
-   
-   var.key = APPNAME"-rstick_to_btns";  
-   options.rstick_to_btns = 0;   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.rstick_to_btns = 1;
-      else
-         options.rstick_to_btns = 0;
-   }
 
-   var.value = NULL;
-   
-   var.key = APPNAME"-tate_mode";
-   options.tate_mode = 0;   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.tate_mode = 1;
-      else
-         options.tate_mode = 0;
-   }
+  var.value = NULL;
 
-   var.value = NULL;
-   
-    var.key = APPNAME"-vector-resolution-multiplier";
-    options.vector_resolution_multiplier = 1;
-    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-    {
-      options.vector_resolution_multiplier = atoi(var.value);
-    }
- 
-   var.value = NULL;
-   
-   var.key = APPNAME"-vector-antialias";
-   options.antialias = 0;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.antialias = 1; /* integer: 1 to enable antialiasing on vectors - does not work as of 2018/04/17*/
-      else
-         options.antialias = 0;
-   }
-  
-   var.value = NULL;
-   
-   var.key = APPNAME"-vector-translucency";
-   options.translucency = 1;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.translucency = 1; /* integer: 1 to enable translucency on vectors */
-      else 
-         options.translucency = 0;          
-   }
-  
-   var.value = NULL;
-   
-   var.key = APPNAME"-vector-beam-width";
-   options.beam = 1;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      options.beam = atoi(var.value); /* integer: vector beam width */
-   }
- 
-   var.value = NULL;
-   
-   var.key = APPNAME"-vector-flicker"; 
-   options.vector_flicker = 20;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      options.vector_flicker = (int)(2.55 * atof(var.value)); /* why 2.55? must be an old mame family recipe */
-   }   
+  var.key = APPNAME"-enable-backdrop";
+  options.use_artwork = ARTWORK_USE_NONE;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.use_artwork = ARTWORK_USE_BACKDROPS;
+    else
+      options.use_artwork = ARTWORK_USE_NONE;
+  }
 
-   var.value = NULL;
+  var.value = NULL;
 
-   var.key = APPNAME"-vector-intensity";   
-   options.vector_intensity_correction = 1.5f;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      options.vector_intensity_correction = atof(var.value); /* float: vector beam intensity */
-   }
+  var.key = APPNAME"-bios-region";
+  options.bios = NULL;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "default") == 0)
+      options.bios = NULL;
+    else
+      options.bios = strdup(var.value);
+  }
 
-   var.value = NULL;
-   
-   var.key = APPNAME"-skip-rom-verify";
-   options.skip_rom_verify = 0;     
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 1)
-         options.skip_rom_verify = 1;
-      else
-         options.skip_rom_verify = 0;
-   }
+  var.value = NULL;
 
-   var.value = NULL;
-   
-   var.key = APPNAME"-skip_disclaimer";
-   options.skip_disclaimer = 0;   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.skip_disclaimer = 1;
-      else
-         options.skip_disclaimer = 0;
-   }
+  var.key = APPNAME"-dialsharexy";
+  options.dial_share_xy = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.dial_share_xy = 1;
+    else
+      options.dial_share_xy = 0;
+  }
+  var.value = NULL;
 
-   var.value = NULL;
+  var.key = APPNAME"-rstick_to_btns";
+  options.rstick_to_btns = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.rstick_to_btns = 1;
+    else
+      options.rstick_to_btns = 0;
+  }
 
-   var.key = APPNAME"-skip_warnings";
-   options.skip_warnings = 0;   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.skip_warnings = 1;
-      else
-         options.skip_warnings = 0;
-   }
+  var.value = NULL;
 
-   var.value = NULL;
-   
-   var.key = APPNAME"-external_hiscore";
-   options.use_external_hiscore = 0;  
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.use_external_hiscore = 1;
-      else
-         options.use_external_hiscore = 0;
-   }
+  var.key = APPNAME"-tate_mode";
+  options.tate_mode = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.tate_mode = 1;
+    else
+      options.tate_mode = 0;
+  }
 
-   
-   var.value = NULL;
-   
-   var.key = APPNAME"-sample_rate";
-   options.samplerate = 48000;
-   
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      options.samplerate = atoi(var.value);
-   }
+  var.value = NULL;
 
-   var.value = NULL;
-   
-   var.key = APPNAME"-dcs-speedhack";
-   options.activate_dcs_speedhack = 1;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      if(strcmp(var.value, "enabled") == 0)
-         options.activate_dcs_speedhack = 1;
-      else
-         options.activate_dcs_speedhack = 0;
-   }
-   
-   ledintf.set_led_state = NULL;
-       
-   environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
-   led_state_cb = ledintf.set_led_state;
+  var.key = APPNAME"-vector-resolution-multiplier";
+  options.vector_resolution_multiplier = 1;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    options.vector_resolution_multiplier = atoi(var.value);
+  }
 
-    options.use_samples = 1;
+  var.value = NULL;
+
+  var.key = APPNAME"-vector-antialias";
+  options.antialias = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.antialias = 1; /* integer: 1 to enable antialiasing on vectors - does not work as of 2018/04/17*/
+    else
+      options.antialias = 0;
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-vector-translucency";
+  options.translucency = 1;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.translucency = 1; /* integer: 1 to enable translucency on vectors */
+    else
+      options.translucency = 0;
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-vector-beam-width";
+  options.beam = 1;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    options.beam = atoi(var.value); /* integer: vector beam width */
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-vector-flicker";
+  options.vector_flicker = 20;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    options.vector_flicker = (int)(2.55 * atof(var.value)); /* why 2.55? must be an old mame family recipe */
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-vector-intensity";
+  options.vector_intensity_correction = 1.5f;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    options.vector_intensity_correction = atof(var.value); /* float: vector beam intensity */
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-skip-rom-verify";
+  options.skip_rom_verify = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 1)
+      options.skip_rom_verify = 1;
+    else
+      options.skip_rom_verify = 0;
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-skip_disclaimer";
+  options.skip_disclaimer = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.skip_disclaimer = 1;
+    else
+      options.skip_disclaimer = 0;
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-skip_warnings";
+  options.skip_warnings = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.skip_warnings = 1;
+    else
+      options.skip_warnings = 0;
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-external_hiscore";
+  options.use_external_hiscore = 0;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.use_external_hiscore = 1;
+    else
+      options.use_external_hiscore = 0;
+  }
+
+
+  var.value = NULL;
+
+  var.key = APPNAME"-sample_rate";
+  options.samplerate = 48000;
+
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    options.samplerate = atoi(var.value);
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"-dcs-speedhack";
+  options.activate_dcs_speedhack = 1;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.activate_dcs_speedhack = 1;
+    else
+      options.activate_dcs_speedhack = 0;
+  }
+
+  ledintf.set_led_state = NULL;
+
+  environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
+  led_state_cb = ledintf.set_led_state;
+
+  options.use_samples = 1;
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -569,9 +599,9 @@ void retro_run (void)
    }
 
    mame_frame();
-   
 
 }
+
 
 
 bool retro_load_game(const struct retro_game_info *game)
@@ -854,3 +884,266 @@ void retro_set_audio_sample(retro_audio_sample_t cb) { }
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
 void retro_set_input_poll(retro_input_poll_t cb) { poll_cb = cb; }
 void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
+
+
+/******************************************************************************
+
+	Keymapping
+
+******************************************************************************/
+
+#define EMIT_RETRO_PAD(INDEX) \
+    {"RetroPad" #INDEX " Left", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT, JOYCODE_##INDEX##_LEFT}, \
+    {"RetroPad" #INDEX " Right", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_RIGHT, JOYCODE_##INDEX##_RIGHT}, \
+    {"RetroPad" #INDEX " Up", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_UP, JOYCODE_##INDEX##_UP}, \
+    {"RetroPad" #INDEX " Down", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_DOWN, JOYCODE_##INDEX##_DOWN}, \
+    {"RetroPad" #INDEX " B", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B, JOYCODE_##INDEX##_BUTTON1}, \
+    {"RetroPad" #INDEX " Y", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_Y, JOYCODE_##INDEX##_BUTTON2}, \
+    {"RetroPad" #INDEX " X", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_X, JOYCODE_##INDEX##_BUTTON3}, \
+    {"RetroPad" #INDEX " A", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_A, JOYCODE_##INDEX##_BUTTON4}, \
+    {"RetroPad" #INDEX " L", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L, JOYCODE_##INDEX##_BUTTON5}, \
+    {"RetroPad" #INDEX " R", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R, JOYCODE_##INDEX##_BUTTON6}, \
+    {"RetroPad" #INDEX " L2", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L2, JOYCODE_##INDEX##_BUTTON7}, \
+    {"RetroPad" #INDEX " R2", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R2, JOYCODE_##INDEX##_BUTTON8}, \
+    {"RetroPad" #INDEX " L3", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L3, JOYCODE_##INDEX##_BUTTON9}, \
+    {"RetroPad" #INDEX " R3", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R3, JOYCODE_##INDEX##_BUTTON10}, \
+    {"RetroPad" #INDEX " Start", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_START, JOYCODE_##INDEX##_START}, \
+    {"RetroPad" #INDEX " Select", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_##INDEX##_SELECT}, \
+    {"RetroMouse" #INDEX " Left Click", ((INDEX - 1) * 18) + 16, JOYCODE_MOUSE_##INDEX##_BUTTON1}, \
+    {"RetroMouse" #INDEX " Right Click", ((INDEX - 1) * 18) + 17, JOYCODE_MOUSE_##INDEX##_BUTTON2}
+
+struct JoystickInfo jsItems[] =
+{
+    EMIT_RETRO_PAD(1),
+    EMIT_RETRO_PAD(2),
+    EMIT_RETRO_PAD(3),
+    EMIT_RETRO_PAD(4),
+    {0, 0, 0}
+};
+
+/******************************************************************************
+
+	Joystick & Mouse/Trackball
+
+******************************************************************************/
+
+int retroJsState[72];
+int16_t mouse_x[4];
+int16_t mouse_y[4];
+int16_t analogjoy[4][4];
+
+const struct JoystickInfo *osd_get_joy_list(void)
+{
+  return jsItems;
+}
+
+int osd_is_joy_pressed(int joycode)
+{
+  if(options.primary_input == RETRO_DEVICE_KEYBOARD)
+    return 0;
+  return (joycode >= 0) ? retroJsState[joycode] : 0;
+}
+
+int osd_is_joystick_axis_code(int joycode)
+{
+    return 0;
+}
+
+void osd_lightgun_read(int player, int *deltax, int *deltay)
+{
+
+}
+
+void osd_trak_read(int player, int *deltax, int *deltay)
+{
+    *deltax = mouse_x[player];
+    *deltay = mouse_y[player];
+}
+
+int convert_analog_scale(int input)
+{
+    static int libretro_analog_range = LIBRETRO_ANALOG_MAX - LIBRETRO_ANALOG_MIN;
+    static int analog_range = ANALOG_MAX - ANALOG_MIN;
+
+    return (input - LIBRETRO_ANALOG_MIN)*analog_range / libretro_analog_range + ANALOG_MIN;
+}
+
+void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
+{
+    int i;
+    for (i = 0; i < MAX_ANALOG_AXES; i ++)
+    {
+        if (analogjoy[player][i])
+            analog_axis[i] = convert_analog_scale(analogjoy[player][i]);
+    }
+
+    analogjoy_input[0] = IPT_AD_STICK_X;
+    analogjoy_input[1] = IPT_AD_STICK_Y;
+}
+
+void osd_customize_inputport_defaults(struct ipd *defaults)
+{
+#if 0
+   unsigned int i = 0;
+
+   for( ; defaults[i].type != IPT_END; ++i)
+   {
+      struct ipd *entry = &defaults[i];
+
+      switch(entry->type)
+      {
+         case (IPT_BUTTON1 | IPF_PLAYER1):
+            fprintf(stderr, "IPT_BUTTON1 | IPF_PLAYER1.\n");
+            break;
+         default:
+            fprintf(stderr, "Label not known.\n");
+      }
+   }
+#endif
+}
+
+/* These calibration functions should never actually be used (as long as needs_calibration returns 0 anyway).*/
+int osd_joystick_needs_calibration(void) { return 0; }
+void osd_joystick_start_calibration(void){ }
+const char *osd_joystick_calibrate_next(void) { return 0; }
+void osd_joystick_calibrate(void) { }
+void osd_joystick_end_calibration(void) { }
+
+
+/******************************************************************************
+
+	Keyboard
+
+******************************************************************************/
+
+extern const struct KeyboardInfo retroKeys[];
+int retroKeyState[512];
+
+const struct KeyboardInfo *osd_get_key_list(void)
+{
+  return retroKeys;
+}
+
+int osd_is_key_pressed(int keycode)
+{
+  if(options.primary_input == RETRO_DEVICE_JOYPAD)
+    return 0;
+  return (keycode < 512 && keycode >= 0) ? retroKeyState[keycode] : 0;
+}
+
+
+int osd_readkey_unicode(int flush)
+{
+  /* TODO*/
+  return 0;
+}
+
+/******************************************************************************
+
+	Keymapping
+
+******************************************************************************/
+
+/* Unassigned keycodes*/
+/*	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN, KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE,*/
+
+/* The format for each systems key constants is RETROK_$(TAG) and KEYCODE_$(TAG)*/
+/* EMIT1(TAG): The tag value is the same between libretro and MAME*/
+/* EMIT2(RTAG, MTAG): The tag value is different between the two*/
+/* EXITX(TAG): MAME has no equivalent key.*/
+
+#define EMIT2(RETRO, KEY) {(char*)#RETRO, RETROK_##RETRO, KEYCODE_##KEY}
+#define EMIT1(KEY) {(char*)#KEY, RETROK_##KEY, KEYCODE_##KEY}
+#define EMITX(KEY) {(char*)#KEY, RETROK_##KEY, KEYCODE_OTHER}
+
+const struct KeyboardInfo retroKeys[] =
+{
+    EMIT1(BACKSPACE),
+    EMIT1(TAB),
+    EMITX(CLEAR),
+    
+    EMIT1(BACKSPACE),
+    EMIT1(TAB),
+    EMITX(CLEAR),
+    EMIT2(RETURN, ENTER),
+    EMITX(PAUSE),
+    EMIT2(ESCAPE, ESC),
+    EMIT1(SPACE),
+    EMITX(EXCLAIM),
+    EMIT2(QUOTEDBL, TILDE),
+    EMITX(HASH),
+    EMITX(DOLLAR),
+    EMITX(AMPERSAND),
+    EMIT1(QUOTE),
+    EMITX(LEFTPAREN),
+    EMITX(RIGHTPAREN),
+    EMIT1(ASTERISK),
+    EMIT2(PLUS, EQUALS),
+    EMIT1(COMMA),
+    EMIT1(MINUS),
+    EMITX(PERIOD),
+    EMIT1(SLASH),
+    
+    EMIT1(0), EMIT1(1), EMIT1(2), EMIT1(3), EMIT1(4), EMIT1(5), EMIT1(6), EMIT1(7), EMIT1(8), EMIT1(9),
+    
+    EMIT1(COLON),
+    EMITX(SEMICOLON),
+    EMITX(LESS),
+    EMITX(EQUALS),
+    EMITX(GREATER),
+    EMITX(QUESTION),
+    EMITX(AT),
+    EMITX(LEFTBRACKET),
+    EMIT1(BACKSLASH),
+    EMITX(RIGHTBRACKET),
+    EMITX(CARET),
+    EMITX(UNDERSCORE),
+    EMITX(BACKQUOTE),
+    
+    EMIT2(a, A), EMIT2(b, B), EMIT2(c, C), EMIT2(d, D), EMIT2(e, E), EMIT2(f, F),
+    EMIT2(g, G), EMIT2(h, H), EMIT2(i, I), EMIT2(j, J), EMIT2(k, K), EMIT2(l, L),
+    EMIT2(m, M), EMIT2(n, N), EMIT2(o, O), EMIT2(p, P), EMIT2(q, Q), EMIT2(r, R),
+    EMIT2(s, S), EMIT2(t, T), EMIT2(u, U), EMIT2(v, V), EMIT2(w, W), EMIT2(x, X),
+    EMIT2(y, Y), EMIT2(z, Z),
+    
+    EMIT2(DELETE, DEL),
+
+    EMIT2(KP0, 0_PAD), EMIT2(KP1, 1_PAD), EMIT2(KP2, 2_PAD), EMIT2(KP3, 3_PAD),
+    EMIT2(KP4, 4_PAD), EMIT2(KP5, 5_PAD), EMIT2(KP6, 6_PAD), EMIT2(KP7, 7_PAD),
+    EMIT2(KP8, 8_PAD), EMIT2(KP9, 9_PAD),
+    
+    EMITX(KP_PERIOD),
+    EMIT2(KP_DIVIDE, SLASH_PAD),
+    EMITX(KP_MULTIPLY),
+    EMIT2(KP_MINUS, MINUS_PAD),
+    EMIT2(KP_PLUS, PLUS_PAD),
+    EMIT2(KP_ENTER, ENTER_PAD),
+    EMITX(KP_EQUALS),
+
+    EMIT1(UP), EMIT1(DOWN), EMIT1(RIGHT), EMIT1(LEFT),
+    EMIT1(INSERT), EMIT1(HOME), EMIT1(END), EMIT2(PAGEUP, PGUP), EMIT2(PAGEDOWN, PGDN),
+
+    EMIT1(F1), EMIT1(F2), EMIT1(F3), EMIT1(F4), EMIT1(F5), EMIT1(F6),
+    EMIT1(F7), EMIT1(F8), EMIT1(F9), EMIT1(F10), EMIT1(F11), EMIT1(F12),
+    EMITX(F13), EMITX(F14), EMITX(F15),
+
+    EMIT1(NUMLOCK),
+    EMIT1(CAPSLOCK),
+    EMIT2(SCROLLOCK, SCRLOCK),
+    EMIT1(RSHIFT), EMIT1(LSHIFT), EMIT2(RCTRL, RCONTROL), EMIT2(LCTRL, LCONTROL), EMIT1(RALT), EMIT1(LALT),
+    EMITX(RMETA), EMITX(LMETA), EMITX(LSUPER), EMITX(RSUPER),
+    
+    EMITX(MODE),
+    EMITX(COMPOSE),
+
+    EMITX(HELP),
+    EMIT2(PRINT, PRTSCR),
+    EMITX(SYSREQ),
+    EMITX(BREAK),
+    EMIT1(MENU),
+    EMITX(POWER),
+    EMITX(EURO),
+    EMITX(UNDO),
+
+    {0, 0, 0}
+};

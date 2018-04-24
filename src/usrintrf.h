@@ -47,7 +47,6 @@ int handle_user_interface(struct mame_bitmap *bitmap);
 
 void generate_xml_dat(void);
 
-int onscrd_active(void);
 int setup_active(void);
 
 #if defined(__sgi) && ! defined(MESS)

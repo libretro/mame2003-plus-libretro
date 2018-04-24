@@ -18,8 +18,6 @@ COREDEFINES += -D__LIBRETRO__ -DPI=3.1415927 -DM_PI=3.1415927
 
 SOURCES_C := \
 	$(CORE_DIR)/mame2003/mame2003.c \
-	$(CORE_DIR)/mame2003/keyboard.c \
-	$(CORE_DIR)/mame2003/joystick.c \
 	$(CORE_DIR)/mame2003/video.c
 
 

@@ -74,8 +74,7 @@ static int uirotwidth, uirotheight;
 int uirotcharwidth, uirotcharheight;
 
 static int setup_selected;
-static int osd_selected;
-static int jukebox_selected;
+static int setup_via_menu;
 
 UINT8 ui_dirty;
 
@@ -2218,6 +2217,7 @@ int showcopyright(struct mame_bitmap *bitmap)
 	strcat (pause_buffer, ui_getstring(UI_copyright3));
 
 	setup_selected = -1;
+  setup_via_menu = 0;
 	
 	/* Prep pause action */
     pause_action = pause_action_showcopyright;
@@ -2976,7 +2976,11 @@ static void setup_menu_init(void)
     /* don't offer to generate_xml_dat on consoles where it can't be used */
     menu_item[menu_total] = ui_getstring (UI_generate_xml_dat); menu_action[menu_total++] = UI_GENERATE_XML_DAT;
 #endif
-	menu_item[menu_total] = ui_getstring (UI_returntogame); menu_action[menu_total++] = UI_EXIT;
+  if(!options.display_setup) 
+  {
+    menu_item[menu_total] = ui_getstring (UI_returntogame);
+    menu_action[menu_total++] = UI_EXIT;
+  }
 	menu_item[menu_total] = 0; /* terminate array */
 }
 
@@ -3070,9 +3074,9 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 				machine_reset();
 				break;
             
-            case UI_GENERATE_XML_DAT:
-                print_mame_xml();
-                break;
+      case UI_GENERATE_XML_DAT:
+          print_mame_xml();
+          break;
 
 			case UI_EXIT:
 				menu_lastselected = 0;
@@ -3159,35 +3163,37 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	/* This call is for the cheat, it must be called once a frame */
 	DoCheat(bitmap);
    
-	if (setup_selected == 0 && input_ui_pressed(IPT_UI_CONFIGURE))
-	{
-		setup_selected = -1;
-		if (osd_selected != 0)
-		{
-			osd_selected = 0;	/* disable on screen display */
-			schedule_full_refresh();
-		}
-	}
-	if (setup_selected != 0) setup_selected = setup_menu(bitmap, setup_selected);
+	if (setup_selected == 0)
+  {
+    if(input_ui_pressed(IPT_UI_CONFIGURE))
+    {
+      setup_selected = -1;
+    }
+    else if(options.display_setup)
+    {
+      setup_selected = -1;
+      setup_via_menu = 1;
+    }
+  }
+	if (setup_selected != 0)
+  {
+    if(setup_via_menu && !options.display_setup)
+    {
+       setup_selected = 0;
+       setup_via_menu = 0;
+       schedule_full_refresh();
+    }     
+    else
+      setup_selected = setup_menu(bitmap, setup_selected);
+  }
 
 #ifdef MAME_DEBUG
 	if (!mame_debug)
 #endif
-		if (osd_selected == 0 && input_ui_pressed(IPT_UI_ON_SCREEN_DISPLAY))
-		{
-			osd_selected = -1;
-			if (setup_selected != 0)
-			{
-				setup_selected = 0; /* disable setup menu */
-				schedule_full_refresh();
-			}
-		}
-	/*if (osd_selected != 0) osd_selected = on_screen_display(bitmap, osd_selected);*/
-
 
 	/* if the user pressed F3, reset the emulation */
-	if (input_ui_pressed(IPT_UI_RESET_MACHINE))
-		machine_reset();
+	/*if (input_ui_pressed(IPT_UI_RESET_MACHINE))
+		machine_reset();*/
 
 	/* show popup message if any */
 	if (messagecounter > 0)
@@ -3221,15 +3227,6 @@ void init_user_interface(void)
 	setup_menu_init();
 	setup_selected = 0;
 
-	/*onscrd_init();*/
-	osd_selected = 0;
-
-	jukebox_selected = -1;
-}
-
-int onscrd_active(void)
-{
-	return osd_selected;
 }
 
 int setup_active(void)
