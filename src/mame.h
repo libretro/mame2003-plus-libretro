@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
+#include <compat/posix_string.h>
 
 #include "fileio.h"
 #include "mame2003.h"

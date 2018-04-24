@@ -63,7 +63,7 @@ void retro_set_environment(retro_environment_t cb)
 {
   static const struct retro_variable vars[] = {
     { APPNAME"-frameskip", "Frameskip; 0|1|2|3|4|5" },
-    { APPNAME"-input_interface", "Input interface; retropad|legacy|simultaneous" }, /* legacy aka disable retropad inputs */
+    { APPNAME"-input_interface", "Input interface; retropad|legacy|simultaneous" }, /* legacy: aka 'disable retropad inputs' */
 #if defined(__IOS__)
     { APPNAME"-mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else

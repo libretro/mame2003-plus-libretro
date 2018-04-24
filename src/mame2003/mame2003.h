@@ -130,22 +130,6 @@ int osd_skip_this_frame(void);
 void osd_update_video_and_audio(struct mame_display *display);
 
 
-/*
-  Provides a hook to allow the OSD system to override processing of a
-  snapshot.  This function will either return a new bitmap, for which the
-  caller is responsible for freeing.
-*/
-struct mame_bitmap *osd_override_snapshot(struct mame_bitmap *bitmap, struct rectangle *bounds);
-
-/*
-  Returns a pointer to the text to display when the FPS display is toggled.
-  This normally includes information about the frameskip, FPS, and percentage
-  of full game speed.
-*/
-const char *osd_get_fps_text(const struct performance_info *performance);
-
-
-
 /******************************************************************************
 
 	Sound

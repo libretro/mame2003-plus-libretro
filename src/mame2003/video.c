@@ -199,7 +199,3 @@ void osd_update_video_and_audio(struct mame_display *display)
    RETRO_PERFORMANCE_STOP(perf_cb, update_video_and_audio);
 }
 
-struct mame_bitmap *osd_override_snapshot(struct mame_bitmap *bitmap, struct rectangle *bounds)
-{
-   return NULL;
-}

@@ -36,7 +36,6 @@ void ui_text(struct mame_bitmap *bitmap,const char *buf,int x,int y);
 void ui_drawbox(struct mame_bitmap *bitmap,int leftx,int topy,int width,int height);
 void ui_displaymessagewindow(struct mame_bitmap *bitmap,const char *text);
 void ui_displaymenu(struct mame_bitmap *bitmap,const char **items,const char **subitems,char *flag,int selected,int arrowize_subitem);
-void ui_display_fps(struct mame_bitmap *bitmap);
 int showcopyright(struct mame_bitmap *bitmap);
 int showgamewarnings(struct mame_bitmap *bitmap);
 int showgameinfo(struct mame_bitmap *bitmap);
