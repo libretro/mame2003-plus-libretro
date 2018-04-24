@@ -62,32 +62,33 @@ void mame_done(void);
 void retro_set_environment(retro_environment_t cb)
 {
   static const struct retro_variable vars[] = {
-    { APPNAME"-frameskip", "Frameskip; 0|1|2|3|4|5" },
-    { APPNAME"-input_interface", "Input interface; retropad|legacy|simultaneous" }, /* legacy: aka 'disable retropad inputs' */
+    { APPNAME"_frameskip", "Frameskip; 0|1|2|3|4|5" },
+    { APPNAME"_input_interface", "Input interface; retropad|legacy|simultaneous" }, /* legacy: aka 'disable retropad inputs' */
 #if defined(__IOS__)
-    { APPNAME"-mouse_device", "Mouse Device; pointer|mouse|disabled" },
+    { APPNAME"_mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else
-    { APPNAME"-mouse_device", "Mouse Device; mouse|pointer|disabled" },
+    { APPNAME"_mouse_device", "Mouse Device; mouse|pointer|disabled" },
 #endif
-    { APPNAME"-crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
-    { APPNAME"-display_setup", "Display MAME menu; disabled|enabled" },       
-    { APPNAME"-enable-backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
-    { APPNAME"-bios-region", "Specify alternate BIOS region; default|asia|japan|japan-a|japan-b|europe|europe-a|taiwan|us|us-a" },
-    { APPNAME"-dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
-    { APPNAME"-rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
-    { APPNAME"-tate_mode", "TATE Mode; disabled|enabled" },
-    { APPNAME"-vector-resolution-multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },
-    { APPNAME"-vector-antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },
-    { APPNAME"-vector-translucency", "Vector translucency; enabled|disabled" },
-    { APPNAME"-vector-beam-width", "EXPERIMENTAL: Vector beam width; 1|2|3|4|5" },
-    { APPNAME"-vector-flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
-    { APPNAME"-vector-intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
-    { APPNAME"-skip-rom-verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" },
-    { APPNAME"-external_hiscore", "Use external hiscore.dat; disabled|enabled" },
-    { APPNAME"-sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
-    { APPNAME"-dcs-speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
-    { APPNAME"-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
-    { APPNAME"-skip_warnings", "Skip Warnings; disabled|enabled" },
+    { APPNAME"_crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
+    { APPNAME"_display_setup", "Display MAME menu; disabled|enabled" },
+    { APPNAME"_brightness", "Brightness; 5|1|2|3|4|6|7|8|9|10" },    
+    { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
+    { APPNAME"_bios_region", "Specify alternate BIOS region; default|asia|japan|japan_a|japan_b|europe|europe_a|taiwan|us|us_a" },
+    { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
+    { APPNAME"_rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
+    { APPNAME"_tate_mode", "TATE Mode; disabled|enabled" },
+    { APPNAME"_vector_resolution_multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },
+    { APPNAME"_vector_antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },
+    { APPNAME"_vector_translucency", "Vector translucency; enabled|disabled" },
+    { APPNAME"_vector_beam_width", "EXPERIMENTAL: Vector beam width; 1|2|3|4|5" },
+    { APPNAME"_vector_flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
+    { APPNAME"_vector_intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
+    { APPNAME"_skip_rom_verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" },
+    { APPNAME"_external_hiscore", "Use external hiscore.dat; disabled|enabled" },
+    { APPNAME"_sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
+    { APPNAME"_dcs_speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
+    { APPNAME"_skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
+    { APPNAME"_skip_warnings", "Skip Warnings; disabled|enabled" },
     { NULL, NULL },
   };
   environ_cb = cb;
@@ -119,7 +120,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-frameskip";
+  var.key = APPNAME"_frameskip";
   options.frameskip = 0; /* default if none set by frontend */
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -128,7 +129,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-input_interface";
+  var.key = APPNAME"_input_interface";
   options.input_interface = RETRO_DEVICE_JOYPAD;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -142,7 +143,7 @@ static void update_variables(void)
   
   var.value = NULL;
 
-  var.key = APPNAME"-mouse_device";
+  var.key = APPNAME"_mouse_device";
   options.mouse_device = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -156,7 +157,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-crosshair_enabled";
+  var.key = APPNAME"_crosshair_enabled";
   options.crosshair_enable = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -168,7 +169,7 @@ static void update_variables(void)
   
   var.value = NULL;
 
-  var.key = APPNAME"-display_setup";
+  var.key = APPNAME"_display_setup";
   options.display_setup = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -178,17 +179,15 @@ static void update_variables(void)
       options.display_setup = 0;
   }
 
-  /* TODO: Add brightness core option. Below is the boundary code from the old MAME osd to help */
-  /*
+  var.value = NULL;
 
-    double brightness;
-    increment = 0.05;
-    if (brightness < 0.1) brightness = 0.1;
-    if (brightness > 1.0) brightness = 1.0;
-    palette_set_global_brightness(brightness);
-
-  sprintf(buf,"%s %3d%%", "brightness", (int)(brightness * 100));
-  */
+  var.key = APPNAME"_brightness";
+  options.brightness = 0.5f; /* default if none set by frontend */
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    options.brightness = atof(var.value) / 10;
+    palette_set_global_brightness(options.brightness);    
+  }
 
   /* TODO: Add gamma core option. Below is the increment & boundary code from the old MAME osd to help */
   /*
@@ -235,7 +234,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-enable-backdrop";
+  var.key = APPNAME"_enable_backdrop";
   options.use_artwork = ARTWORK_USE_NONE;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -247,7 +246,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-bios-region";
+  var.key = APPNAME"_bios_region";
   options.bios = NULL;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -259,7 +258,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-dialsharexy";
+  var.key = APPNAME"_dialsharexy";
   options.dial_share_xy = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -270,7 +269,7 @@ static void update_variables(void)
   }
   var.value = NULL;
 
-  var.key = APPNAME"-rstick_to_btns";
+  var.key = APPNAME"_rstick_to_btns";
   options.rstick_to_btns = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -282,7 +281,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-tate_mode";
+  var.key = APPNAME"_tate_mode";
   options.tate_mode = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -294,7 +293,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-vector-resolution-multiplier";
+  var.key = APPNAME"_vector_resolution_multiplier";
   options.vector_resolution_multiplier = 1;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -303,19 +302,19 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-vector-antialias";
+  var.key = APPNAME"_vector_antialias";
   options.antialias = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
     if(strcmp(var.value, "enabled") == 0)
-      options.antialias = 1; /* integer: 1 to enable antialiasing on vectors - does not work as of 2018/04/17*/
+      options.antialias = 1; /* integer: 1 to enable antialiasing on vectors _ does not work as of 2018/04/17*/
     else
       options.antialias = 0;
   }
 
   var.value = NULL;
 
-  var.key = APPNAME"-vector-translucency";
+  var.key = APPNAME"_vector_translucency";
   options.translucency = 1;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -327,7 +326,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-vector-beam-width";
+  var.key = APPNAME"_vector_beam_width";
   options.beam = 1;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -336,7 +335,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-vector-flicker";
+  var.key = APPNAME"_vector_flicker";
   options.vector_flicker = 20;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -345,7 +344,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-vector-intensity";
+  var.key = APPNAME"_vector_intensity";
   options.vector_intensity_correction = 1.5f;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -354,7 +353,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-skip-rom-verify";
+  var.key = APPNAME"_skip_rom_verify";
   options.skip_rom_verify = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -366,7 +365,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-skip_disclaimer";
+  var.key = APPNAME"_skip_disclaimer";
   options.skip_disclaimer = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -378,7 +377,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-skip_warnings";
+  var.key = APPNAME"_skip_warnings";
   options.skip_warnings = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -390,7 +389,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-external_hiscore";
+  var.key = APPNAME"_external_hiscore";
   options.use_external_hiscore = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
@@ -403,7 +402,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-sample_rate";
+  var.key = APPNAME"_sample_rate";
   options.samplerate = 48000;
 
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
@@ -413,7 +412,7 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-dcs-speedhack";
+  var.key = APPNAME"_dcs_speedhack";
   options.activate_dcs_speedhack = 1;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
