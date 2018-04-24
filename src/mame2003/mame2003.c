@@ -63,7 +63,7 @@ void retro_set_environment(retro_environment_t cb)
 {
   static const struct retro_variable vars[] = {
     { APPNAME"-frameskip", "Frameskip; 0|1|2|3|4|5" },
-    { APPNAME"-primary-input", "Primary input device; retropad|keyboard|simultaneous" },
+    { APPNAME"-input_interface", "Input interface; retropad|legacy|simultaneous" }, /* legacy aka disable retropad inputs */
 #if defined(__IOS__)
     { APPNAME"-mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else
@@ -128,16 +128,16 @@ static void update_variables(void)
 
   var.value = NULL;
 
-  var.key = APPNAME"-primary-input";
-  options.primary_input = RETRO_DEVICE_JOYPAD;
+  var.key = APPNAME"-input_interface";
+  options.input_interface = RETRO_DEVICE_JOYPAD;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
     if(strcmp(var.value, "retropad") == 0)
-      options.primary_input = RETRO_DEVICE_JOYPAD;
-    else if(strcmp(var.value, "keyboard") == 0)
-      options.primary_input = RETRO_DEVICE_KEYBOARD;
+      options.input_interface = RETRO_DEVICE_JOYPAD;
+    else if(strcmp(var.value, "legacy") == 0)
+      options.input_interface = RETRO_DEVICE_KEYBOARD;
     else
-      options.primary_input = 0; /* retropad and keyboard simultaneously. "classic mame2003 input mode" */
+      options.input_interface = 0; /* retropad and keyboard simultaneously. "classic mame2003 input mode" */
   }
   
   var.value = NULL;
@@ -947,7 +947,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
 
 int osd_is_joy_pressed(int joycode)
 {
-  if(options.primary_input == RETRO_DEVICE_KEYBOARD)
+  if(options.input_interface == RETRO_DEVICE_KEYBOARD)
     return 0;
   return (joycode >= 0) ? retroJsState[joycode] : 0;
 }
@@ -1034,7 +1034,7 @@ const struct KeyboardInfo *osd_get_key_list(void)
 
 int osd_is_key_pressed(int keycode)
 {
-  if(options.primary_input == RETRO_DEVICE_JOYPAD)
+  if(options.input_interface == RETRO_DEVICE_JOYPAD)
     return 0;
   return (keycode < 512 && keycode >= 0) ? retroKeyState[keycode] : 0;
 }

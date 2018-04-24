@@ -3217,10 +3217,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 
 void init_user_interface(void)
 {
-	extern int snapno;	/* in common.c */
-
-	snapno = 0; /* reset snapshot counter */
-
 	/* clear the input memory */
 	while (code_read_async() != CODE_NONE) {};
 

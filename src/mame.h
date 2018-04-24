@@ -180,7 +180,7 @@ struct GameOptions
 
   unsigned dial_share_xy;
   unsigned mouse_device;
-  unsigned primary_input;        /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
+  unsigned input_interface;        /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
   unsigned rstick_to_btns;
   unsigned tate_mode;
 

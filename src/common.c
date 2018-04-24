@@ -53,8 +53,6 @@ unsigned int coins[COIN_COUNTERS];
 unsigned int lastcoin[COIN_COUNTERS];
 unsigned int coinlockedout[COIN_COUNTERS];
 
-int snapno;
-
 /* malloc tracking */
 static struct malloc_info malloc_list[MAX_MALLOCS];
 static int malloc_list_index = 0;
