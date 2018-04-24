@@ -7,6 +7,7 @@
 *********************************************************************/    
 
 #include <stdint.h>
+#include <string/stdstring.h>
 #include <libretro.h>
 #include <file/file_path.h>
 
@@ -646,7 +647,14 @@ bool retro_load_game(const struct retro_game_info *game)
     /* Find game index */
     
     /* Get all chars after the last slash */
-    path = strdup(game->path ? game->path : ".");
+    if(!string_is_empty(game->path))
+    {
+      path = strdup(game->path);
+    }
+    else
+    {
+      path = strdup(".");
+    }
     last = find_last_slash(path);
     memset(driverName, 0, PATH_MAX_LENGTH);
     strncpy(driverName, last ? last + 1 : path, PATH_MAX_LENGTH - 1);
