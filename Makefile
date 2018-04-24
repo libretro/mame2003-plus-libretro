@@ -5,6 +5,12 @@ CORE_DIR := src
 TARGET_NAME := mame2003_plus
 BUILD_BIN2C ?= 0
 
+ifneq ($(SANITIZER),)
+   CFLAGS   := -fsanitize=$(SANITIZER) $(CFLAGS)
+   CXXFLAGS := -fsanitize=$(SANITIZER) $(CXXFLAGS)
+   LDFLAGS  := -fsanitize=$(SANITIZER) $(LDFLAGS)
+endif
+
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
 	CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
@@ -411,7 +417,7 @@ else
 endif
 
 ifeq (,$(findstring msvc,$(platform)))
-   CFLAGS += -fomit-frame-pointer -fstrict-aliasing
+   CFLAGS += -D_XOPEN_SOURCE=500 -fomit-frame-pointer -fstrict-aliasing
 endif
 
 # include the various .mak files
