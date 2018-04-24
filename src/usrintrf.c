@@ -74,7 +74,7 @@ static int uirotwidth, uirotheight;
 int uirotcharwidth, uirotcharheight;
 
 static int setup_selected;
-static int setup_via_menu;
+static int setup_via_menu = 0;
 
 UINT8 ui_dirty;
 
