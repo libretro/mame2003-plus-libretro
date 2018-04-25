@@ -71,7 +71,7 @@ void retro_set_environment(retro_environment_t cb)
 #endif
     { APPNAME"_crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
     { APPNAME"_display_setup", "Display MAME menu; disabled|enabled" },
-    { APPNAME"_brightness", "Brightness; 5|1|2|3|4|6|7|8|9|10" },    
+/*    { APPNAME"_brightness", "Brightness; 5|1|2|3|4|6|7|8|9|10" },    */
     { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
     { APPNAME"_bios_region", "Specify alternate BIOS region; default|asia|japan|japan_a|japan_b|europe|europe_a|taiwan|us|us_a" },
     { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
@@ -179,16 +179,17 @@ static void update_variables(void)
       options.display_setup = 0;
   }
 
+/*
   var.value = NULL;
 
   var.key = APPNAME"_brightness";
-  options.brightness = 0.5f; /* default if none set by frontend */
-  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  options.brightness = 0.5f; *//* default if none set by frontend */
+/*  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
     options.brightness = atof(var.value) / 10;
     palette_set_global_brightness(options.brightness);    
   }
-
+*/
   /* TODO: Add gamma core option. Below is the increment & boundary code from the old MAME osd to help */
   /*
 
