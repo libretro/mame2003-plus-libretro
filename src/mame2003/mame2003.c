@@ -63,7 +63,7 @@ void retro_set_environment(retro_environment_t cb)
 {
   static const struct retro_variable vars[] = {
     { APPNAME"_frameskip", "Frameskip; 0|1|2|3|4|5" },
-    { APPNAME"_input_interface", "Input interface; retropad|legacy|simultaneous" }, /* legacy: aka 'disable retropad inputs' */
+    { APPNAME"_input_interface", "Input interface; retropad|mame_keyboard|simultaneous" },
 #if defined(__IOS__)
     { APPNAME"_mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else
@@ -135,7 +135,7 @@ static void update_variables(void)
   {
     if(strcmp(var.value, "retropad") == 0)
       options.input_interface = RETRO_DEVICE_JOYPAD;
-    else if(strcmp(var.value, "legacy") == 0)
+    else if(strcmp(var.value, "mame_keyboard") == 0)
       options.input_interface = RETRO_DEVICE_KEYBOARD;
     else
       options.input_interface = 0; /* retropad and keyboard simultaneously. "classic mame2003 input mode" */
