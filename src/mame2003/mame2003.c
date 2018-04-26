@@ -64,6 +64,7 @@ void retro_set_environment(retro_environment_t cb)
   static const struct retro_variable vars[] = {
     { APPNAME"_frameskip", "Frameskip; 0|1|2|3|4|5" },
     { APPNAME"_input_interface", "Input interface; retropad|mame_keyboard|simultaneous" },
+    { APPNAME"_retropad_layout", "RetroPad Layout; modern|mame_classic|snes" },
 #if defined(__IOS__)
     { APPNAME"_mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else
@@ -139,6 +140,15 @@ static void update_variables(void)
       options.input_interface = RETRO_DEVICE_KEYBOARD;
     else
       options.input_interface = 0; /* retropad and keyboard simultaneously. "classic mame2003 input mode" */
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"_retropad_layout";
+  options.retropad_layout = "modern";
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    options.retropad_layout = var.value;
   }
   
   var.value = NULL;
@@ -400,7 +410,6 @@ static void update_variables(void)
       options.use_external_hiscore = 0;
   }
 
-
   var.value = NULL;
 
   var.key = APPNAME"_sample_rate";
@@ -610,31 +619,107 @@ bool retro_load_game(const struct retro_game_info *game)
     int orientation;
     unsigned rotateMode;
     static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
+
+    /* this should be updated whenever the options.retropad_layout changes
+     * so should be in another place?
+     * maybe better to be a method we call in here and also on option change?
+     * 
+     * Assuming the standard RetroPad layout:
+     * 
+     *   [L2]                                 [R2]
+     *   [L]                                   [R]
+     *
+     *     [^]                               [X]
+     *
+     * [<]     [>]    [start] [selct]    [Y]     [A]
+     *
+     *     [v]                               [B]
+     *
+     *
+     * or standard RetroPad fight stick layout:
+     *
+     *   [start] [selct]
+     *                                         [X]  [R]  [L]
+     *     [^]                            [Y]  
+     *                                      
+     * [<]     [>]                             [A]  [R2] [L2]
+     *                                    [B]
+     *     [v]
+     *
+     *
+     * 
+     * key: [MAME button/Street Fighter II move]
+     *
+     * options.retropad_layout = modern
+     * ========================
+     * Uses the fight stick & pad layout popularised by Street Figher IV.
+     * Needs an 8+ button controller by default.
+     *
+     * [8/-]                                     [6/HK]  |
+     * [7/-]                                     [3/HP]  |
+     *                                                   |        [2/MP]  [3/HP]  [7/-]
+     *     [^]                               [2/MP]      |  [1/LP]   
+     *                                                   |
+     * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
+     *                                                   |  [4/LK]
+     *     [v]                               [4/LK]      |
+     *                                                   |
+     *
+     * retropad_layout = snes
+     * ========================
+     * Uses the layout popularised by SNES Street Figher II.
+     * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
+     *
+     * [7/-]                                      [8/-]  |
+     * [3/HP]                                    [6/HK]  |
+     *                                                   |        [2/MP]  [6/HK]  [3/HP]
+     *     [^]                               [2/MP]      |  [1/LP]   
+     *                                                   |
+     * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
+     *                                                   |  [4/LK]
+     *     [v]                               [4/LK]      |
+     *                                                   |
+     *
+     * options.retropad_layout = mame_classic
+     * ========================
+     * Uses current MAME's default Xbox 360 controller layout.
+     * Not sensible for 6 button fighters, but may suit other games.
+     *
+     * [7/-]                                     [8/-]   |
+     * [5/MK]                                    [6/HK]  |
+     *                                                   |        [4/WK]  [6/HK]  [5/MK]
+     *     [^]                               [4/WK]      |  [3/HP]   
+     *                                                   |
+     * [<]     [>]    [start] [selct]    [3/HP]  [2/MP]  |        [2/MP]  [8/-]   [7/-]
+     *                                                   |  [1/LP]
+     *     [v]                               [1/LP]      |
+     *                                                   |
+     */
     #define describe_buttons(INDEX) \
     { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
     { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
     { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
     { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "Button 1" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      "Button 3" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Button 4" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "Button 2" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "Button 5" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "Button 6" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     "Button 9" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     "Button 10" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 7" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 8" },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      (options.retropad_layout = "mame_classic" ? "Button 1" : "Button 4") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      (options.retropad_layout = "mame_classic" ? "Button 3" : "Button 1") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      (options.retropad_layout = "mame_classic" ? "Button 4" : "Button 2") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      (options.retropad_layout = "mame_classic" ? "Button 2" : "Button 5") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      (options.retropad_layout = "mame_classic" ? "Button 5" : (options.retropad_layout ="modern" ? "Button 7" : "Button 3")) },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      (options.retropad_layout = "modern"       ? "Button 3" : "Button 6") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     (options.retropad_layout = "modern"       ? "Button 8" : "Button 7") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     (options.retropad_layout = "modern"       ? "Button 6" : "Button 8") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
     { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
     { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
 
     struct retro_input_descriptor desc[] = {
-        describe_buttons(0)
-        describe_buttons(1)
-        describe_buttons(2)
-        describe_buttons(3)
-        { 0, 0, 0, 0, NULL }
-        };
+      describe_buttons(0)
+      describe_buttons(1)
+      describe_buttons(2)
+      describe_buttons(3)
+      { 0, 0, 0, 0, NULL }
+    };
 
     char driverName[PATH_MAX_LENGTH];
     char *path, *last;
@@ -900,33 +985,65 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 ******************************************************************************/
 
+#define EMIT_RETRO_PAD_DIRECTIONS(INDEX) \
+  {"RetroPad"   #INDEX " Left",        ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT,   JOYCODE_##INDEX##_LEFT}, \
+  {"RetroPad"   #INDEX " Right",       ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_RIGHT,  JOYCODE_##INDEX##_RIGHT}, \
+  {"RetroPad"   #INDEX " Up",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_UP,     JOYCODE_##INDEX##_UP}, \
+  {"RetroPad"   #INDEX " Down",        ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_DOWN,   JOYCODE_##INDEX##_DOWN},
+
 #define EMIT_RETRO_PAD(INDEX) \
-    {"RetroPad" #INDEX " Left", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT, JOYCODE_##INDEX##_LEFT}, \
-    {"RetroPad" #INDEX " Right", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_RIGHT, JOYCODE_##INDEX##_RIGHT}, \
-    {"RetroPad" #INDEX " Up", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_UP, JOYCODE_##INDEX##_UP}, \
-    {"RetroPad" #INDEX " Down", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_DOWN, JOYCODE_##INDEX##_DOWN}, \
-    {"RetroPad" #INDEX " B", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B, JOYCODE_##INDEX##_BUTTON1}, \
-    {"RetroPad" #INDEX " Y", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_Y, JOYCODE_##INDEX##_BUTTON3}, \
-    {"RetroPad" #INDEX " X", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_X, JOYCODE_##INDEX##_BUTTON4}, \
-    {"RetroPad" #INDEX " A", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_A, JOYCODE_##INDEX##_BUTTON2}, \
-    {"RetroPad" #INDEX " L", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L, JOYCODE_##INDEX##_BUTTON5}, \
-    {"RetroPad" #INDEX " R", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R, JOYCODE_##INDEX##_BUTTON6}, \
-    {"RetroPad" #INDEX " L2", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L2, JOYCODE_##INDEX##_BUTTON9}, \
-    {"RetroPad" #INDEX " R2", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R2, JOYCODE_##INDEX##_BUTTON10}, \
-    {"RetroPad" #INDEX " L3", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L3, JOYCODE_##INDEX##_BUTTON7}, \
-    {"RetroPad" #INDEX " R3", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R3, JOYCODE_##INDEX##_BUTTON8}, \
-    {"RetroPad" #INDEX " Start", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_START, JOYCODE_##INDEX##_START}, \
-    {"RetroPad" #INDEX " Select", ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_##INDEX##_SELECT}, \
-    {"RetroMouse" #INDEX " Left Click", ((INDEX - 1) * 18) + 16, JOYCODE_MOUSE_##INDEX##_BUTTON1}, \
-    {"RetroMouse" #INDEX " Right Click", ((INDEX - 1) * 18) + 17, JOYCODE_MOUSE_##INDEX##_BUTTON2}
+  {"RetroPad"   #INDEX " B",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B,      JOYCODE_##INDEX##_BUTTON1}, \
+  {"RetroPad"   #INDEX " Y",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_Y,      JOYCODE_##INDEX##_BUTTON3}, \
+  {"RetroPad"   #INDEX " X",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_X,      JOYCODE_##INDEX##_BUTTON4}, \
+  {"RetroPad"   #INDEX " A",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_A,      JOYCODE_##INDEX##_BUTTON2}, \
+  {"RetroPad"   #INDEX " L",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L,      JOYCODE_##INDEX##_BUTTON5}, \
+  {"RetroPad"   #INDEX " R",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R,      JOYCODE_##INDEX##_BUTTON6}, \
+  {"RetroPad"   #INDEX " L2",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L2,     JOYCODE_##INDEX##_BUTTON7}, \
+  {"RetroPad"   #INDEX " R2",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R2,     JOYCODE_##INDEX##_BUTTON8}, \
+  {"RetroPad"   #INDEX " L3",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L3,     JOYCODE_##INDEX##_BUTTON9}, \
+  {"RetroPad"   #INDEX " R3",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R3,     JOYCODE_##INDEX##_BUTTON10}, \
+  {"RetroPad"   #INDEX " Start",       ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_START,  JOYCODE_##INDEX##_START}, \
+  {"RetroPad"   #INDEX " Select",      ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_##INDEX##_SELECT},
+
+#define EMIT_RETRO_PAD_MODERN(INDEX) \
+  {"RetroPad"   #INDEX " B",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B,      JOYCODE_##INDEX##_BUTTON4}, \
+  {"RetroPad"   #INDEX " Y",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_Y,      JOYCODE_##INDEX##_BUTTON1}, \
+  {"RetroPad"   #INDEX " X",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_X,      JOYCODE_##INDEX##_BUTTON2}, \
+  {"RetroPad"   #INDEX " A",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_A,      JOYCODE_##INDEX##_BUTTON5}, \
+  {"RetroPad"   #INDEX " L",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L,      JOYCODE_##INDEX##_BUTTON7}, \
+  {"RetroPad"   #INDEX " R",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R,      JOYCODE_##INDEX##_BUTTON3}, \
+  {"RetroPad"   #INDEX " L2",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L2,     JOYCODE_##INDEX##_BUTTON8}, \
+  {"RetroPad"   #INDEX " R2",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R2,     JOYCODE_##INDEX##_BUTTON6}, \
+  {"RetroPad"   #INDEX " L3",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L3,     JOYCODE_##INDEX##_BUTTON9}, \
+  {"RetroPad"   #INDEX " R3",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R3,     JOYCODE_##INDEX##_BUTTON10}, \
+  {"RetroPad"   #INDEX " Start",       ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_START,  JOYCODE_##INDEX##_START}, \
+  {"RetroPad"   #INDEX " Select",      ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_##INDEX##_SELECT},
+
+#define EMIT_RETRO_PAD_SNES(INDEX) \
+  {"RetroPad"   #INDEX " B",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B,      JOYCODE_##INDEX##_BUTTON4}, \
+  {"RetroPad"   #INDEX " Y",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_Y,      JOYCODE_##INDEX##_BUTTON1}, \
+  {"RetroPad"   #INDEX " X",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_X,      JOYCODE_##INDEX##_BUTTON2}, \
+  {"RetroPad"   #INDEX " A",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_A,      JOYCODE_##INDEX##_BUTTON5}, \
+  {"RetroPad"   #INDEX " L",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L,      JOYCODE_##INDEX##_BUTTON3}, \
+  {"RetroPad"   #INDEX " R",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R,      JOYCODE_##INDEX##_BUTTON6}, \
+  {"RetroPad"   #INDEX " L2",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L2,     JOYCODE_##INDEX##_BUTTON7}, \
+  {"RetroPad"   #INDEX " R2",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R2,     JOYCODE_##INDEX##_BUTTON8}, \
+  {"RetroPad"   #INDEX " L3",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L3,     JOYCODE_##INDEX##_BUTTON9}, \
+  {"RetroPad"   #INDEX " R3",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R3,     JOYCODE_##INDEX##_BUTTON10}, \
+  {"RetroPad"   #INDEX " Start",       ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_START,  JOYCODE_##INDEX##_START}, \
+  {"RetroPad"   #INDEX " Select",      ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_##INDEX##_SELECT},
+
+#define EMIT_RETRO_PAD_MOUSE(INDEX) \
+  {"RetroMouse" #INDEX " Left Click",  ((INDEX - 1) * 18) + 16,                            JOYCODE_MOUSE_##INDEX##_BUTTON1}, \
+  {"RetroMouse" #INDEX " Right Click", ((INDEX - 1) * 18) + 17,                            JOYCODE_MOUSE_##INDEX##_BUTTON2}
 
 struct JoystickInfo jsItems[] =
 {
-    EMIT_RETRO_PAD(1),
-    EMIT_RETRO_PAD(2),
-    EMIT_RETRO_PAD(3),
-    EMIT_RETRO_PAD(4),
-    {0, 0, 0}
+  EMIT_RETRO_PAD_DIRECTIONS(1),(options.retropad_layout = "modern" : EMIT_RETRO_PAD_MODERN(1) ? (options.retropad_layout = "snes" : EMIT_RETRO_PAD_SNES(1) ? EMIT_RETRO_PAD(1))),EMIT_RETRO_PAD_MOUSE(1),
+  EMIT_RETRO_PAD_DIRECTIONS(2),(options.retropad_layout = "modern" : EMIT_RETRO_PAD_MODERN(2) ? (options.retropad_layout = "snes" : EMIT_RETRO_PAD_SNES(2) ? EMIT_RETRO_PAD(2))),EMIT_RETRO_PAD_MOUSE(2),
+  EMIT_RETRO_PAD_DIRECTIONS(3),(options.retropad_layout = "modern" : EMIT_RETRO_PAD_MODERN(3) ? (options.retropad_layout = "snes" : EMIT_RETRO_PAD_SNES(3) ? EMIT_RETRO_PAD(3))),EMIT_RETRO_PAD_MOUSE(3),
+  EMIT_RETRO_PAD_DIRECTIONS(4),(options.retropad_layout = "modern" : EMIT_RETRO_PAD_MODERN(4) ? (options.retropad_layout = "snes" : EMIT_RETRO_PAD_SNES(4) ? EMIT_RETRO_PAD(4))),EMIT_RETRO_PAD_MOUSE(4),
+  {0, 0, 0}
 };
 
 /******************************************************************************
