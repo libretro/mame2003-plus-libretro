@@ -75,6 +75,7 @@ int uirotcharwidth, uirotcharheight;
 
 static int setup_selected;
 static int setup_via_menu = 0;
+static int retropad_menu_flag = 0;
 
 UINT8 ui_dirty;
 
@@ -2904,8 +2905,11 @@ static void setup_menu_init(void)
 {
 	menu_total = 0;
 
-	menu_item[menu_total] = ui_getstring (UI_inputgeneral); menu_action[menu_total++] = UI_DEFCODE;
-	menu_item[menu_total] = ui_getstring (UI_inputspecific); menu_action[menu_total++] = UI_CODE;
+  if(options.input_interface == RETRO_DEVICE_KEYBOARD)
+  {
+	  menu_item[menu_total] = ui_getstring (UI_inputgeneral); menu_action[menu_total++] = UI_DEFCODE;
+    menu_item[menu_total] = ui_getstring (UI_inputspecific); menu_action[menu_total++] = UI_CODE;
+  }
 
 	/* Determine if there are any dip switches */
 	{
@@ -3158,8 +3162,7 @@ void CLIB_DECL usrintf_showmessage_secs(int seconds, const char *text,...)
 int handle_user_interface(struct mame_bitmap *bitmap)
 {
 
-	/* This call is for the cheat, it must be called once a frame */
-	DoCheat(bitmap);
+	DoCheat(bitmap);	/* This must be called once a frame */
    
 	if (setup_selected == 0)
   {
@@ -3174,17 +3177,27 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	    setup_menu_init();      
     }
   }
-	if (setup_selected != 0)
+
+	if (setup_selected && setup_via_menu && !options.display_setup)
   {
-    if(setup_via_menu && !options.display_setup)
+    setup_selected = 0;
+    setup_via_menu = 0;
+    setup_menu_init();       
+    schedule_full_refresh();
+  }   
+  else if(setup_selected)
+  {  
+    if (retropad_menu_flag == 0 && options.input_interface != RETRO_DEVICE_KEYBOARD)
     {
-       setup_selected = 0;
-       setup_via_menu = 0;
-	     setup_menu_init();       
-       schedule_full_refresh();
-    }     
-    else
-      setup_selected = setup_menu(bitmap, setup_selected);
+        retropad_menu_flag = 1;
+        setup_menu_init();
+    }
+    else if (retropad_menu_flag == 1 && options.input_interface == RETRO_DEVICE_KEYBOARD)
+    {
+      retropad_menu_flag = 0;
+      setup_menu_init();
+    }
+    setup_selected = setup_menu(bitmap, setup_selected);
   }
 
 #ifdef MAME_DEBUG
