@@ -3187,12 +3187,12 @@ int handle_user_interface(struct mame_bitmap *bitmap)
   }   
   else if(setup_selected)
   {  
-    if (retropad_menu_flag == 0 && options.input_interface != RETRO_DEVICE_KEYBOARD)
+    if (retropad_menu_flag == 0 && options.input_interface == RETRO_DEVICE_JOYPAD)
     {
         retropad_menu_flag = 1;
         setup_menu_init();
     }
-    else if (retropad_menu_flag == 1 && options.input_interface == RETRO_DEVICE_KEYBOARD)
+    else if (retropad_menu_flag == 1 && options.input_interface != RETRO_DEVICE_JOYPAD)
     {
       retropad_menu_flag = 0;
       setup_menu_init();
