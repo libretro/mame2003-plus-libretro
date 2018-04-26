@@ -5142,8 +5142,16 @@ Other Sun games
 
 	/* ESD games */
 	/* http://www.esdgame.co.kr/english/ */
-	DRIVER( multchmp )	/* (c) 1998 (Korea) */
-	DRIVER( hedpanic )	/* (c) 2000 ESD */
+	DRIVER( multchmp )	/* (c) 1998 ESD (World) */
+	DRIVER( multchmpk )	/* (c) 1998 ESD (Korea) */
+	DRIVER( hedpanic )	/* (c) 2000 ESD (ver. 0117) */
+	DRIVER( hedpanicf )	/* (c) 2000 ESD (ver. 0315) */
+	DRIVER( hedpanico )	/* (c) 1999 ESD (ver. 0615) */
+	DRIVER( mchampdx )	/* (c) 2000 ESD (ver. 0106) */
+	DRIVER( mchampdxa )	/* (c) 1999 ESD (ver. 1126) */
+	DRIVER( deluxe5 )	/* (c) 2000 ESD (ver. 0107) */
+	DRIVER( tangtang )	/* (c) 2000 ESD (ver. 0526) */
+	DRIVER( swatpolc )	/* (c) 2001 ESD */
 
 	/* Dyna Electronics / Dynax / Nakanihon games */
 	DRIVER( royalmah )	/* (c) 1982 Falcon */
