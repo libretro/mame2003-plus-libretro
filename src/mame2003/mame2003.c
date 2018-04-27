@@ -16,41 +16,34 @@
 #include "state.h"
 
 
-static int driverIndex; /* Index of mame game loaded */
-extern struct osd_create_params videoConfig;
-
-static float delta_samples;
-int samples_per_frame = 0;
-short *samples_buffer;
-short *conversion_buffer;
-int usestereo = 1;
+static int     driverIndex; /* Index of mame game loaded */
+static float   delta_samples;
+int            samples_per_frame = 0;
+short*         samples_buffer;
+short*         conversion_buffer;
+int            usestereo = 1;
+int16_t        prev_pointer_x;
+int16_t        prev_pointer_y;
+unsigned       retroColorMode;
+unsigned long  lastled = 0;
+int16_t        XsoundBuffer[2048];
 
 extern const struct KeyboardInfo retroKeys[];
-extern int retroKeyState[512];
-extern int retroJsState[72];
-extern int16_t mouse_x[4];
-extern int16_t mouse_y[4];
-int16_t prev_pointer_x;
-int16_t prev_pointer_y;
-extern int16_t analogjoy[4][4];
+extern int          retroKeyState[512];
+extern int          retroJsState[72];
+extern int16_t      mouse_x[4];
+extern int16_t      mouse_y[4];
+extern struct       osd_create_params videoConfig;
+extern int16_t      analogjoy[4][4];
 
-struct retro_perf_callback perf_cb;
-unsigned retroColorMode;
-
-retro_environment_t environ_cb = NULL;
-retro_log_printf_t log_cb = NULL;
-retro_video_refresh_t video_cb = NULL;
-static retro_input_poll_t poll_cb = NULL;
-static retro_input_state_t input_cb = NULL;
-static retro_audio_sample_batch_t audio_batch_cb = NULL;
-
-unsigned long lastled = 0;
-retro_set_led_state_t led_state_cb = NULL;
-
-int16_t XsoundBuffer[2048];
-
-void mame_frame(void);
-void mame_done(void);
+struct                             retro_perf_callback perf_cb;
+retro_environment_t                environ_cb                    = NULL;
+retro_log_printf_t                 log_cb                        = NULL;
+retro_video_refresh_t              video_cb                      = NULL;
+static retro_input_poll_t          poll_cb                       = NULL;
+static retro_input_state_t         input_cb                      = NULL;
+static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
+retro_set_led_state_t              led_state_cb                  = NULL;
 
 
 /******************************************************************************
@@ -645,8 +638,6 @@ bool retro_load_game(const struct retro_game_info *game)
     environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 
     /* Find game index */
-    
-    /* Get all chars after the last slash */
     if(!string_is_empty(game->path))
     {
       path = strdup(game->path);
@@ -706,7 +697,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
 void retro_unload_game(void)
 {
-    mame_done();
+    /*mame_done();*/
     
     /*free(fallbackDir);
     systemDir = 0;*/

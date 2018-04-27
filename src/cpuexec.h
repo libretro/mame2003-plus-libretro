@@ -93,7 +93,7 @@ void cpu_exit(void);
 /* Force a reset after the current timeslice */
 void machine_reset(void);
 
-
+void mame_frame(void);
 
 /*************************************
  *
