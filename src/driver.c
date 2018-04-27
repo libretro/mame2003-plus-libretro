@@ -56,6 +56,8 @@ const struct GameDriver *drivers[] =
 	0	/* end of array */
 };
 
+const int total_drivers = sizeof(drivers)/sizeof(drivers[0]);
+
 /* step 3: define the test_drivers[] array */
 #undef DRIVER
 #undef TESTDRIVER

@@ -654,11 +654,20 @@ bool retro_load_game(const struct retro_game_info *game)
     path_remove_extension(driverName);
 
     /* Search list */
-    for (driverIndex = 0; /*driverIndex < total_drivers*/ 1; driverIndex++)
+    for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
+    {
        if(strcmp(driverName, drivers[driverIndex]->name) == 0)
-          break;
+       {
+          log_cb(RETRO_LOG_INFO, "[MAME 2003] Total MAME drivers: %i. Matched game driver: [%s].\n", total_drivers, drivers[driverIndex]->name);
+          break;          
+       }
+    }
 
-    log_cb(RETRO_LOG_INFO, "Found game: %s [%s].\n", driverName, drivers[driverIndex]->name);
+    if(driverIndex == total_drivers)
+    {
+        log_cb(RETRO_LOG_ERROR, "[MAME 2003] Total MAME drivers: %i. MAME driver not found for selected game!\n", total_drivers);
+        return false;
+    }
 
     options.libretro_content_path = strdup(game->path);
     path_basedir(options.libretro_content_path);
