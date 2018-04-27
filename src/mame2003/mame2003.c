@@ -64,7 +64,7 @@ void retro_set_environment(retro_environment_t cb)
   static const struct retro_variable vars[] = {
     { APPNAME"_frameskip", "Frameskip; 0|1|2|3|4|5" },
     { APPNAME"_input_interface", "Input interface; retropad|mame_keyboard|simultaneous" },
-    { APPNAME"_retropad_layout", "RetroPad Layout; modern|snes|MAME classic" },
+    { APPNAME"_retropad_layout", "RetroPad Layout; modern|SNES|MAME classic" },
 #if defined(__IOS__)
     { APPNAME"_mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else
@@ -150,7 +150,7 @@ static void update_variables(void)
   {
     if(strcmp(var.value, "modern") == 0)
       options.retropad_layout = RETROPAD_MODERN;
-    else if(strcmp(var.value, "snes") == 0)
+    else if(strcmp(var.value, "SNES") == 0)
       options.retropad_layout = RETROPAD_SNES;
     else
       options.retropad_layout = RETROPAD_MAME;

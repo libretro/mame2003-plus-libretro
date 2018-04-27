@@ -390,7 +390,7 @@ ifeq ($(BIGENDIAN), 1)
 endif
 
 # use -fsigned-char on ARM to solve potential problems with code written/tested on x86
-# eg on mame2003-plus audio on rtype leo is wrong without it.
+# eg on mame2003_plus audio on rtype leo is wrong without it.
 ifeq ($(ARM), 1)
    PLATCFLAGS += -fsigned-char
 endif
