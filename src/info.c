@@ -14,9 +14,11 @@
 
 extern retro_log_printf_t log_cb; 
 
+int old_style = 0;
+
 
 /* Print a free format string */
-static void print_free_string(int OUTPUT_XML, FILE* out, const char* s)
+static void print_free_string(FILE* out, const char* s)
 {
     if (s)
     {
@@ -39,7 +41,7 @@ static void print_free_string(int OUTPUT_XML, FILE* out, const char* s)
     }
 }
 
-static void print_game_switch(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_switch(FILE* out, const struct GameDriver* game)
 {
 	const struct InputPortTiny* input = game->input_ports;
 
@@ -50,14 +52,14 @@ static void print_game_switch(int OUTPUT_XML, FILE* out, const struct GameDriver
 			int def = input->default_value;
 
 			fprintf(out, "\t\t<dipswitch name=\"");
-			print_free_string(OUTPUT_XML, out, input->name);
+			print_free_string(out, input->name);
 			fprintf(out, "%s", "\">\n");
 			++input;
 
 			while ((input->type & ~IPF_MASK)==IPT_DIPSWITCH_SETTING)
 			{
 				fprintf(out, "\t\t\t<dipvalue name=\"");
-				print_free_string(OUTPUT_XML, out, input->name);
+				print_free_string(out, input->name);
 				fprintf(out, "%s", "\"");
 				if (def == input->default_value)
 				{
@@ -76,7 +78,7 @@ static void print_game_switch(int OUTPUT_XML, FILE* out, const struct GameDriver
 	}
 }
 
-static void print_game_input(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_input(FILE* out, const struct GameDriver* game)
 {
 	const struct InputPortTiny* input = game->input_ports;
 	int nplayer = 0;
@@ -244,7 +246,7 @@ static void print_game_input(int OUTPUT_XML, FILE* out, const struct GameDriver*
 	fprintf(out, "/>\n");
 }
 
-static void print_game_bios(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_bios(FILE* out, const struct GameDriver* game)
 {
 	const struct SystemBios *thisbios;
 
@@ -271,7 +273,7 @@ static void print_game_bios(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	}
 }
 
-static void print_game_rom(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_rom(FILE* out, const struct GameDriver* game)
 {
 	const struct RomModule *region, *rom, *chunk;
 	const struct RomModule *pregion, *prom, *fprom=NULL;
@@ -422,7 +424,7 @@ static void print_game_rom(int OUTPUT_XML, FILE* out, const struct GameDriver* g
    
 }
 
-static void print_game_sampleof(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_sampleof(FILE* out, const struct GameDriver* game)
 {
 #if (HAS_SAMPLES)
 	struct InternalMachineDriver drv;
@@ -449,7 +451,7 @@ static void print_game_sampleof(int OUTPUT_XML, FILE* out, const struct GameDriv
 #endif
 }
 
-static void print_game_sample(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_sample(FILE* out, const struct GameDriver* game)
 {
 #if (HAS_SAMPLES)
 	struct InternalMachineDriver drv;
@@ -485,7 +487,7 @@ static void print_game_sample(int OUTPUT_XML, FILE* out, const struct GameDriver
 #endif
 }
 
-static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_micro(FILE* out, const struct GameDriver* game)
 {
 	struct InternalMachineDriver driver;
 	const struct MachineCPU* cpu;
@@ -507,7 +509,7 @@ static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver*
 				fprintf(out, " type=\"cpu\"");
 
 			fprintf(out, " name=\"");
-			print_free_string(OUTPUT_XML, out, cputype_name(cpu[j].cpu_type));
+			print_free_string(out, cputype_name(cpu[j].cpu_type));
 			fprintf(out, "%s", "\"");
 
 			fprintf(out, " clock=\"%d\"/>\n", cpu[j].cpu_clock);
@@ -526,7 +528,7 @@ static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver*
 			for(l=0;l<num;++l)
 			{
 				fprintf(out, "\t\t<chip type=\"audio\" name=\"");
-				print_free_string(OUTPUT_XML, out, sound_name(&sound[j]));
+				print_free_string(out, sound_name(&sound[j]));
 				fprintf(out, "%s", "\"");
 				if (sound_clock(&sound[j]))
 					fprintf(out, " clock=\"%d\"", sound_clock(&sound[j]));
@@ -536,7 +538,7 @@ static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver*
 	}
 }
 
-static void print_game_video(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_video(FILE* out, const struct GameDriver* game)
 {
 	struct InternalMachineDriver driver;
 
@@ -595,7 +597,7 @@ static void print_game_video(int OUTPUT_XML, FILE* out, const struct GameDriver*
 	fprintf(out, " aspectx=\"%d\" aspecty=\"%d\" refresh=\"%f\"/>\n", ax, ay, driver.frames_per_second);
 }
 
-static void print_game_sound(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_sound(FILE* out, const struct GameDriver* game)
 {
 	struct InternalMachineDriver driver;
 	const struct MachineCPU* cpu;
@@ -642,19 +644,19 @@ static void print_game_sound(int OUTPUT_XML, FILE* out, const struct GameDriver*
 
 #define HISTORY_BUFFER_MAX 16384
 
-static void print_game_history(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_history(FILE* out, const struct GameDriver* game)
 {
 	char buffer[HISTORY_BUFFER_MAX];
 
 	if (load_driver_history(game,buffer,HISTORY_BUFFER_MAX)==0)
 	{
 		fprintf(out, "\t\t<history>");
-		print_free_string(OUTPUT_XML, out, buffer);
+		print_free_string(out, buffer);
 		fprintf(out, "</history>\n");
 	}
 }
 
-static void print_game_driver(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_driver(FILE* out, const struct GameDriver* game)
 {
 	struct InternalMachineDriver driver;
 
@@ -687,13 +689,16 @@ static void print_game_driver(int OUTPUT_XML, FILE* out, const struct GameDriver
 }
 
 /* Print the MAME info record for a game */
-static void print_game_info(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_game_info(FILE* out, const struct GameDriver* game)
 {
 	extern struct GameDriver driver_0;
 
 	fprintf(out, "\t<" XML_TOP);
 
-	fprintf(out, " name=\"%s\"", game->description ); /* use GameDrv "description" field as the filename */
+	if(old_style)
+    fprintf(out, " name=\"%s\"", game->name ); /* use GameDrv "name" field as the filename */
+  else
+    fprintf(out, " name=\"%s\"", game->description ); /* use GameDrv "description" field as the filename */
 
 	if (game->clone_of && !(game->clone_of->flags & NOT_A_DRIVER))
 		fprintf(out, " cloneof=\"%s\"", game->clone_of->name);
@@ -701,12 +706,12 @@ static void print_game_info(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	if (game->clone_of && game->clone_of != &driver_0)
 		fprintf(out, " romof=\"%s\"", game->clone_of->name);
 
-	print_game_sampleof(OUTPUT_XML, out, game);
+	print_game_sampleof(out, game);
 
 	fprintf(out, "%s", ">\n");
 
 	fprintf(out, "\t\t<description>");
-	print_free_string(OUTPUT_XML, out, game->description);
+	print_free_string(out, game->description);
 	fprintf(out, "</description>\n");
 	if (game->year && strspn(game->year,"0123456789")==strlen(game->year))
 		fprintf(out, "\t\t<driver>%s</driver>\n", game->name );
@@ -718,33 +723,33 @@ static void print_game_info(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 	if (game->manufacturer)
 	{
 		fprintf(out, "\t\t<manufacturer>");
-		print_free_string(OUTPUT_XML, out, game->manufacturer);
+		print_free_string(out, game->manufacturer);
 		fprintf(out, "</manufacturer>\n");
 	}
 
-	print_game_history(OUTPUT_XML, out, game);
-	print_game_bios(OUTPUT_XML, out, game);
-	print_game_rom(OUTPUT_XML, out, game);
-	print_game_sample(OUTPUT_XML, out, game);
-	print_game_micro(OUTPUT_XML, out, game);
-	print_game_video(OUTPUT_XML, out, game);
-	print_game_sound(OUTPUT_XML, out, game);
-	print_game_input(OUTPUT_XML, out, game);
-	print_game_switch(OUTPUT_XML, out, game);
-	print_game_driver(OUTPUT_XML, out, game);
+	print_game_history(out, game);
+	print_game_bios(out, game);
+	print_game_rom(out, game);
+	print_game_sample(out, game);
+	print_game_micro(out, game);
+	print_game_video(out, game);
+	print_game_sound(out, game);
+	print_game_input(out, game);
+	print_game_switch(out, game);
+	print_game_driver(out, game);
 
 	fprintf(out, "\t</" XML_TOP ">\n");
 }
 
 /* Print the resource info */
-static void print_resource_info(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
+static void print_resource_info(FILE* out, const struct GameDriver* game)
 {
 	fprintf(out, "\t<" XML_TOP " runnable=\"no\" name=\"%s\">\n", game->name);
 
 	if (game->description)
 	{
 		fprintf(out, "\t\t<description>");
-		print_free_string(OUTPUT_XML, out, game->description);
+		print_free_string(out, game->description);
 		fprintf(out, "</description>\n");
 	}
 
@@ -755,65 +760,40 @@ static void print_resource_info(int OUTPUT_XML, FILE* out, const struct GameDriv
 	if (game->manufacturer)
 	{
 		fprintf(out, "\t\t<manufacturer>");
-		print_free_string(OUTPUT_XML, out, game->manufacturer);
+		print_free_string(out, game->manufacturer);
 		fprintf(out, "</manufacturer>\n");
 	}
 
-	print_game_bios(OUTPUT_XML, out, game);
-	print_game_rom(OUTPUT_XML, out, game);
-	print_game_sample(OUTPUT_XML, out, game);
+	print_game_bios(out, game);
+	print_game_rom(out, game);
+	print_game_sample(out, game);
 
 	fprintf(out, "\t</" XML_TOP ">\n");
 }
 
 /* Import the driver object and print it as a resource */
-#define PRINT_RESOURCE(format, s) \
+#define PRINT_RESOURCE(s) \
 	{ \
 		extern struct GameDriver driver_##s; \
-		print_resource_info(format, out, &driver_##s); \
+		print_resource_info(xml_dat, &driver_##s); \
 	}
 
 
-static void print_mame_data(int OUTPUT_XML, FILE* out, const struct GameDriver* games[])
-{
-	int j;
-
-	/* print games */
-	for(j=0;games[j];++j)
-		print_game_info(OUTPUT_XML, out, games[j]);
-
-	/* print the resources (only if linked) */
-	PRINT_RESOURCE(OUTPUT_XML, neogeo);
-	PRINT_RESOURCE(OUTPUT_XML, cvs);
-	PRINT_RESOURCE(OUTPUT_XML, decocass);
-	PRINT_RESOURCE(OUTPUT_XML, playch10);
-	PRINT_RESOURCE(OUTPUT_XML, pgm);
-	PRINT_RESOURCE(OUTPUT_XML, skns);
-	PRINT_RESOURCE(OUTPUT_XML, stvbios);
-	PRINT_RESOURCE(OUTPUT_XML, konamigx);
-	PRINT_RESOURCE(OUTPUT_XML, nss);
-	PRINT_RESOURCE(OUTPUT_XML, megatech);
-	PRINT_RESOURCE(OUTPUT_XML, megaplay);
-	PRINT_RESOURCE(OUTPUT_XML, cpzn1);
-	PRINT_RESOURCE(OUTPUT_XML, cpzn2);
-	PRINT_RESOURCE(OUTPUT_XML, tps);
-	PRINT_RESOURCE(OUTPUT_XML, taitofx1);
-	PRINT_RESOURCE(OUTPUT_XML, acpsx);
-}
-
 /* Print the MAME database in XML format */
-void print_mame_xml(void)
+void print_mame_xml(int old_style_flag)
 {
-       	
+    int driver_index = 0;
     int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   	
     FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, pathcount, APPNAME".xml", "w+b");	
+    
+    old_style = old_style_flag;
     	
     if (xml_dat != NULL)	
     {	
 	    log_cb(RETRO_LOG_INFO, "Generating mame2003.xml\n");	
     } else {	
-        log_cb(RETRO_LOG_WARN, "Unable to open mame2003.xml for writing.\n");
-         return;
+      log_cb(RETRO_LOG_WARN, "Unable to open mame2003.xml for writing.\n");
+      return;
     }    
 	fprintf(xml_dat,
 		"<?xml version=\"1.0\"?>\n"
@@ -891,8 +871,28 @@ void print_mame_xml(void)
 		"<" XML_ROOT ">\n"
 	);
 
-	print_mame_data(1, xml_dat, drivers);
+	/* print games */
+	for(driver_index = 0;drivers[driver_index];++driver_index)
+		print_game_info(xml_dat, drivers[driver_index]);
 
+	/* print the resources (only if linked) */
+	PRINT_RESOURCE(neogeo);
+	PRINT_RESOURCE(cvs);
+	PRINT_RESOURCE(decocass);
+	PRINT_RESOURCE(playch10);
+	PRINT_RESOURCE(pgm);
+	PRINT_RESOURCE(skns);
+	PRINT_RESOURCE(stvbios);
+	PRINT_RESOURCE(konamigx);
+	PRINT_RESOURCE(nss);
+	PRINT_RESOURCE(megatech);
+	PRINT_RESOURCE(megaplay);
+	PRINT_RESOURCE(cpzn1);
+	PRINT_RESOURCE(cpzn2);
+	PRINT_RESOURCE(tps);
+	PRINT_RESOURCE(taitofx1);
+	PRINT_RESOURCE(acpsx);
+  
 	fprintf(xml_dat, "</" XML_ROOT ">\n");
     fclose(xml_dat);
 }

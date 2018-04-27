@@ -5,11 +5,7 @@
 *************************************************************************/
 
 #ifndef ENABLE_SPEEDUP_HACKS
-#ifndef MESS
 #define ENABLE_SPEEDUP_HACKS 1
-#else
-#define ENABLE_SPEEDUP_HACKS 0
-#endif /* MESS */
 #endif
 
 
