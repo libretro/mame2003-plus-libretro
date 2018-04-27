@@ -603,7 +603,7 @@ static DRIVER_INIT( sshooter )
  *
  *************************************/
 
-GAME( 1996, policetr, 0,        policetr, policetr, policetr, ROT0, "P&P Marketing", "Police Trainer (Rev 1.3)" )
-GAME( 1996, policeto, policetr, policetr, policetr, policetr, ROT0, "P&P Marketing", "Police Trainer (Rev 1.1)" )
-GAME( 1996, plctr13b, policetr, sshooter, policetr, policetr, ROT0, "P&P Marketing", "Police Trainer (Rev 1.3B)" )
-GAME( 1998, sshooter, 0,        sshooter, policetr, sshooter, ROT0, "P&P Marketing", "Sharpshooter (Rev 1.7)" )
+GAME( 1996, policetr, 0,        policetr, policetr, policetr, ROT0, "PandP Marketing", "Police Trainer (Rev 1.3)" )
+GAME( 1996, policeto, policetr, policetr, policetr, policetr, ROT0, "PandP Marketing", "Police Trainer (Rev 1.1)" )
+GAME( 1996, plctr13b, policetr, sshooter, policetr, policetr, ROT0, "PandP Marketing", "Police Trainer (Rev 1.3B)" )
+GAME( 1998, sshooter, 0,        sshooter, policetr, sshooter, ROT0, "PandP Marketing", "Sharpshooter (Rev 1.7)" )

@@ -542,6 +542,6 @@ ROM_END
 
 GAME( 1982, superpac, 0,        superpac, superpac, 0, ROT90, "Namco", "Super Pac-Man" )
 GAME( 1982, superpcm, superpac, superpac, superpac, 0, ROT90, "[Namco] (Bally Midway license)", "Super Pac-Man (Midway)" )
-GAME( 1983, pacnpal,  0,        superpac, pacnpal,  0, ROT90, "Namco", "Pac & Pal" )
-GAME( 1983, pacnpal2, pacnpal,  superpac, pacnpal,  0, ROT90, "Namco", "Pac & Pal (older)" )
-GAMEX(1983, pacnchmp, pacnpal,  superpac, pacnpal,  0, ROT90, "Namco", "Pac-Man & Chomp Chomp", GAME_IMPERFECT_COLORS )
+GAME( 1983, pacnpal,  0,        superpac, pacnpal,  0, ROT90, "Namco", "Pac and Pal" )
+GAME( 1983, pacnpal2, pacnpal,  superpac, pacnpal,  0, ROT90, "Namco", "Pac and Pal (older)" )
+GAMEX(1983, pacnchmp, pacnpal,  superpac, pacnpal,  0, ROT90, "Namco", "Pac-Man and Chomp Chomp", GAME_IMPERFECT_COLORS )

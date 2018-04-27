@@ -2220,7 +2220,7 @@ GAME ( 1991, rimrockn, 0,        rimrockn,  rimrockn, rimrockn, ROT0,   "Strata/
 GAME ( 1991, rimrck20, rimrockn, rimrockn,  rimrockn, rimrockn, ROT0,   "Strata/Incredible Technologies", "Rim Rockin' Basketball (V2.0)" )
 GAME ( 1991, rimrck16, rimrockn, rimrockn,  rimrockn, rimrockn, ROT0,   "Strata/Incredible Technologies", "Rim Rockin' Basketball (V1.6)" )
 GAME ( 1991, rimrck12, rimrockn, rimrockn,  rimrockn, rimrockn, ROT0,   "Strata/Incredible Technologies", "Rim Rockin' Basketball (V1.2)" )
-GAME ( 1991, ninclown, 0,        ninclown,  ninclown, viasound, ROT0,   "Strata/Incredible Technologies", "Ninja Clowns (08/27/91)" )
+GAME ( 1991, ninclown, 0,        ninclown,  ninclown, viasound, ROT0,   "Strata/Incredible Technologies", "Ninja Clowns (08-27-91)" )
 GAME ( 1992, gtg2,     0,        gtg2,      gtg2,     viasound, ROT0,   "Strata/Incredible Technologies", "Golden Tee Golf II (Trackball, V2.2)" )
 GAME ( 1989, gtg2t,    gtg2,     tmshi2203, gtg2t,    0,        ROT0,   "Strata/Incredible Technologies", "Golden Tee Golf II (Trackball, V1.1)" )
 GAME ( 1991, gtg2j,    gtg2,     tmslo2203, gtg,      0,        ROT0,   "Strata/Incredible Technologies", "Golden Tee Golf II (Joystick, V1.0)" )

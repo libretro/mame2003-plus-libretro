@@ -576,4 +576,4 @@ DRIVER_INIT( groundfx )
 }
 
 
-GAME( 1992, groundfx, 0, groundfx, groundfx, groundfx, ROT0, "Taito Corporation", "Ground Effects / Super Ground Effects (Japan)" )
+GAME( 1992, groundfx, 0, groundfx, groundfx, groundfx, ROT0, "Taito Corporation", "Ground Effects - Super Ground Effects (Japan)" )

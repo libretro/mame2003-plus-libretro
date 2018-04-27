@@ -695,6 +695,6 @@ ROM_END
 
 
 
-GAME( 1986, empcity,  0,       stfight, stfight, empcity, ROT0, "Seibu Kaihatsu", "Empire City: 1931 (bootleg?)" )
-GAME( 1986, empcityj, empcity, stfight, stfight, stfight, ROT0, "[Seibu Kaihatsu] (Taito license)", "Empire City: 1931 (Japan)" )
+GAME( 1986, empcity,  0,       stfight, stfight, empcity, ROT0, "Seibu Kaihatsu", "Empire City - 1931 (bootleg[Q])" )
+GAME( 1986, empcityj, empcity, stfight, stfight, stfight, ROT0, "[Seibu Kaihatsu] (Taito license)", "Empire City - 1931 (Japan)" )
 GAME( 1986, stfight,  empcity, stfight, stfight, stfight, ROT0, "Seibu Kaihatsu", "Street Fight (Germany)" )

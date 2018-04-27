@@ -1287,5 +1287,5 @@ GAME( 1986, bublbobr, bublbobl, bublbobl, bublbobl, bublbobl, ROT0,  "Taito Amer
 GAME( 1986, bubbobr1, bublbobl, bublbobl, bublbobl, bublbobl, ROT0,  "Taito America Corporation (Romstar license)", "Bubble Bobble (US)" )
 GAME( 1986, boblbobl, bublbobl, boblbobl, boblbobl, boblbobl, ROT0,  "bootleg", "Bobble Bobble" )
 GAME( 1986, sboblbob, bublbobl, boblbobl, sboblbob, bublbobl, ROT0,  "bootleg", "Super Bobble Bobble" )
-GAMEX(1986, tokio,    0,        tokio,    tokio,    tokio,    ROT90, "Taito",   "Tokio / Scramble Formation", GAME_NOT_WORKING )
-GAME( 1986, tokiob,   tokio,    tokio,    tokio,    tokio,    ROT90, "bootleg", "Tokio / Scramble Formation (bootleg)" )
+GAMEX(1986, tokio,    0,        tokio,    tokio,    tokio,    ROT90, "Taito",   "Tokio - Scramble Formation", GAME_NOT_WORKING )
+GAME( 1986, tokiob,   tokio,    tokio,    tokio,    tokio,    ROT90, "bootleg", "Tokio - Scramble Formation (bootleg)" )

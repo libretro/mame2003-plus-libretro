@@ -795,8 +795,8 @@ static DRIVER_INIT( mastkin )
 }
 
 
-GAME( 1983, trackfld, 0,        trackfld, trackfld, trackfld, ROT0, "Konami", "Track & Field" )
-GAME( 1983, trackflc, trackfld, trackfld, trackfld, trackfld, ROT0, "Konami (Centuri license)", "Track & Field (Centuri)" )
+GAME( 1983, trackfld, 0,        trackfld, trackfld, trackfld, ROT0, "Konami", "Track and Field" )
+GAME( 1983, trackflc, trackfld, trackfld, trackfld, trackfld, ROT0, "Konami (Centuri license)", "Track and Field (Centuri)" )
 GAME( 1983, hyprolym, trackfld, trackfld, trackfld, trackfld, ROT0, "Konami", "Hyper Olympic" )
 GAME( 1983, hyprolyb, trackfld, hyprolyb, trackfld, trackfld, ROT0, "bootleg", "Hyper Olympic (bootleg)" )
 GAMEX(1985, whizquiz, 0,        trackfld, trackfld, mastkin,  ROT0, "Zilec-Zenitone", "Whiz Quiz", GAME_NOT_WORKING )

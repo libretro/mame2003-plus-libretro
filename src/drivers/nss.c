@@ -403,16 +403,16 @@ ROM_START( nss_sten )
 	ROM_LOAD( "st.ic3", 0x0000, 0x8000, CRC(8880596e) SHA1(ec6d68fc2f51f7d94f496cd72cf898db65324542) )
 ROM_END
 
-GAMEX( 199?, nss,       0,		  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: BIOS", NOT_A_DRIVER )
-GAMEX( 1992, nss_actr,  nss,	  snes,	     snes,    snes,		ROT0, "Enix",						"Nintendo Super System: Act Raiser", GAME_NO_SOUND | GAME_NOT_WORKING ) /* time broken*/
-GAMEX( 1992, nss_adam,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: The Addams Family", GAME_NO_SOUND | GAME_NOT_WORKING ) /* crashes mame*/
-GAMEX( 1992, nss_aten,  nss,	  snes,	     snes,    snes,		ROT0, "Absolute Entertainment Inc.","Nintendo Super System: David Crane's Amazing Tennis", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS ) /* gfx problems with net*/
-GAMEX( 1992, nss_con3,  nss,	  snes,	     snes,    snes,		ROT0, "Konami",						"Nintendo Super System: Contra 3: The Alien Wars", GAME_NO_SOUND )
-GAMEX( 1992, nss_lwep,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: Lethal Weapon", GAME_NO_SOUND )
-GAMEX( 1992, nss_ncaa,  nss,	  snes,	     snes,    snes,		ROT0, "Sculptured Software Inc.",	"Nintendo Super System: NCAA Basketball", GAME_NO_SOUND | GAME_NOT_WORKING ) /* severe gfx problems, no inputs*/
-GAMEX( 1992, nss_rob3,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System: Robocop 3", GAME_NO_SOUND | GAME_NOT_WORKING ) /* invisible enemy? gameplay prob?*/
-GAMEX( 1992, nss_skin,  nss,	  snes,	     snes,    snes,		ROT0, "Irem",						"Nintendo Super System: Skins Game", GAME_NO_SOUND | GAME_NOT_WORKING ) /* uses some gfx modes not implemented*/
-GAMEX( 1992, nss_ssoc,  nss,	  snes,	     snes,    snes,		ROT0, "Human Inc.",					"Nintendo Super System: Super Soccer", GAME_NO_SOUND | GAME_NOT_WORKING ) /* lots of gfx problems*/
-GAMEX( 199?, nss_smw,   nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: Super Mario World", GAME_NO_SOUND | GAME_NOT_WORKING ) /* bad rom*/
-GAMEX( 199?, nss_fzer,  nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: F-Zero", GAME_NO_SOUND | GAME_NOT_WORKING ) /* bad rom*/
-GAMEX( 199?, nss_sten,  nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System: Super Tennis", GAME_NO_SOUND | GAME_NOT_WORKING ) /* bad rom*/
+GAMEX( 199?, nss,       0,		  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System - BIOS", NOT_A_DRIVER )
+GAMEX( 1992, nss_actr,  nss,	  snes,	     snes,    snes,		ROT0, "Enix",						"Nintendo Super System - Act Raiser", GAME_NO_SOUND | GAME_NOT_WORKING ) /* time broken*/
+GAMEX( 1992, nss_adam,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System - The Addams Family", GAME_NO_SOUND | GAME_NOT_WORKING ) /* crashes mame*/
+GAMEX( 1992, nss_aten,  nss,	  snes,	     snes,    snes,		ROT0, "Absolute Entertainment Inc.","Nintendo Super System - David Crane's Amazing Tennis", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS ) /* gfx problems with net*/
+GAMEX( 1992, nss_con3,  nss,	  snes,	     snes,    snes,		ROT0, "Konami",						"Nintendo Super System - Contra 3 - The Alien Wars", GAME_NO_SOUND )
+GAMEX( 1992, nss_lwep,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System - Lethal Weapon", GAME_NO_SOUND )
+GAMEX( 1992, nss_ncaa,  nss,	  snes,	     snes,    snes,		ROT0, "Sculptured Software Inc.",	"Nintendo Super System - NCAA Basketball", GAME_NO_SOUND | GAME_NOT_WORKING ) /* severe gfx problems, no inputs*/
+GAMEX( 1992, nss_rob3,  nss,	  snes,	     snes,    snes,		ROT0, "Ocean",						"Nintendo Super System - Robocop 3", GAME_NO_SOUND | GAME_NOT_WORKING ) /* invisible enemy? gameplay prob?*/
+GAMEX( 1992, nss_skin,  nss,	  snes,	     snes,    snes,		ROT0, "Irem",						"Nintendo Super System - Skins Game", GAME_NO_SOUND | GAME_NOT_WORKING ) /* uses some gfx modes not implemented*/
+GAMEX( 1992, nss_ssoc,  nss,	  snes,	     snes,    snes,		ROT0, "Human Inc.",					"Nintendo Super System - Super Soccer", GAME_NO_SOUND | GAME_NOT_WORKING ) /* lots of gfx problems*/
+GAMEX( 199?, nss_smw,   nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System - Super Mario World", GAME_NO_SOUND | GAME_NOT_WORKING ) /* bad rom*/
+GAMEX( 199?, nss_fzer,  nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System - F-Zero", GAME_NO_SOUND | GAME_NOT_WORKING ) /* bad rom*/
+GAMEX( 199?, nss_sten,  nss,	  snes,	     snes,    snes,		ROT0, "Nintendo",					"Nintendo Super System - Super Tennis", GAME_NO_SOUND | GAME_NOT_WORKING ) /* bad rom*/

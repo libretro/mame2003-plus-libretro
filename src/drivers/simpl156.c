@@ -1338,8 +1338,8 @@ static DRIVER_INIT (candance)
 }
 
 /* Data East games running on the DE-0409-1 or DE-0491-1 PCB */
-GAME( 1994, joemacr,  0,        joemacr,     simpl156, joemacr,  ROT0,  "Data East Corporation", "Joe & Mac Returns (World, Version 1.1)" ) /* bootleg board with genuine DECO parts */
-GAME( 1994, joemacra, joemacr,  joemacr,     simpl156, joemacr,  ROT0,  "Data East Corporation", "Joe & Mac Returns (World, Version 1.0)" )
+GAME( 1994, joemacr,  0,        joemacr,     simpl156, joemacr,  ROT0,  "Data East Corporation", "Joe and Mac Returns (World, Version 1.1)" ) /* bootleg board with genuine DECO parts */
+GAME( 1994, joemacra, joemacr,  joemacr,     simpl156, joemacr,  ROT0,  "Data East Corporation", "Joe and Mac Returns (World, Version 1.0)" )
 GAME( 1995, chainrec, 0,        chainrec,    simpl156, chainrec, ROT0,  "Data East Corporation", "Chain Reaction (World, Version 2.2)" )
 GAME( 1995, magdrop,  chainrec, magdrop,     simpl156, chainrec, ROT0,  "Data East Corporation", "Magical Drop (Japan, Version 1.1)" )
 GAME( 1995, magdropp, chainrec, magdropp,    simpl156, chainrec, ROT0,  "Data East Corporation", "Magical Drop Plus 1 (Japan, Version 2.1)" )

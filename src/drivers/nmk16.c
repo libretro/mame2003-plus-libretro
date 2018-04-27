@@ -4772,9 +4772,9 @@ GAMEX( 1991, tdragon,  0,       tdragon,  tdragon,  tdragon,  ROT270, "NMK (Tecm
 
 GAMEX( 1991, hachamf,  0,       hachamf,  hachamf,  hachamf,  ROT0,   "NMK",				            "Hacha Mecha Fighter", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND ) /* Playable but there are Still Protection Problems*/
 GAMEX( 1991, hachamfb, hachamf, hachamfb, hachamfb, hachamfb, ROT0,   "bootleg",                        "Hacha Mecha Fighter (unprotected)", GAME_IMPERFECT_SOUND ) /* appears to be a Thunder Dragon conversion, could be bootleg?*/
-GAMEX( 1992, macross,  0,       macross,  macross,  nmk,      ROT270, "Banpresto",			            "Super Spacefortress Macross / Chou-Jikuu Yousai Macross", GAME_IMPERFECT_SOUND )
+GAMEX( 1992, macross,  0,       macross,  macross,  nmk,      ROT270, "Banpresto",			            "Super Spacefortress Macross - Chou-Jikuu Yousai Macross", GAME_IMPERFECT_SOUND )
 GAMEX( 1993, gunnail,  0,       gunnail,  gunnail,  nmk,      ROT270, "NMK / Tecmo",			        "GunNail", GAME_IMPERFECT_SOUND )
-GAMEX( 1993, macross2, 0,       macross2, macross2, 0,        ROT0,   "Banpresto",			            "Super Spacefortress Macross II / Chou-Jikuu Yousai Macross II", GAME_NO_COCKTAIL )
+GAMEX( 1993, macross2, 0,       macross2, macross2, 0,        ROT0,   "Banpresto",			            "Super Spacefortress Macross II - Chou-Jikuu Yousai Macross II", GAME_NO_COCKTAIL )
 GAMEX( 1993, tdragon2, 0,       tdragon2, tdragon2, 0,        ROT270, "NMK",				            "Thunder Dragon 2 (9th Nov. 1993)", GAME_NO_COCKTAIL )
 GAMEX( 1993, bigbang,  tdragon2,tdragon2, tdragon2, 0,        ROT270, "NMK",				            "Big Bang (9th Nov. 1993)", GAME_NO_COCKTAIL )
 GAMEX( 1994, raphero,  0,       raphero,  tdragon2, 0,        ROT270, "Media Trading Corp",             "Rapid Hero", GAME_NO_SOUND ) /* 23rd July 1993 in test mode, (c)1994 on title screen*/

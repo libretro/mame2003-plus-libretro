@@ -574,4 +574,4 @@ ROM_END
 ***************************************************************************/
 
 GAMEX( 1995, cannball, 0, yunsung8, cannball, 0, ROT0, "Yun Sung / Soft Vision", "Cannon Ball",  GAME_IMPERFECT_SOUND )
-GAMEX( 1995, magix,    0, yunsung8, magix,    0, ROT0, "Yun Sung",               "Magix / Rock", GAME_IMPERFECT_SOUND ) /* Title: DSW*/
+GAMEX( 1995, magix,    0, yunsung8, magix,    0, ROT0, "Yun Sung",               "Magix - Rock", GAME_IMPERFECT_SOUND ) /* Title: DSW*/

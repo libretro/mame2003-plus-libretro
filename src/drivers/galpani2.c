@@ -653,4 +653,4 @@ CPU #0 PC 02F918 : OKI 0 (380)000000-000000
 045(8 banks):	0x40000 *: -
 */
 
-GAMEX( 1993, galpani2, 0, galpani2, galpani2, 0, ROT90, "Kaneko", "Gals Panic II (Japan?)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAMEX( 1993, galpani2, 0, galpani2, galpani2, 0, ROT90, "Kaneko", "Gals Panic II (Japan[Q])", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )

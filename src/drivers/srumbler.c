@@ -452,4 +452,4 @@ ROM_END
 
 GAME( 1986, srumbler, 0,        srumbler, srumbler, 0, ROT270, "Capcom", "The Speed Rumbler (set 1)" )
 GAME( 1986, srumblr2, srumbler, srumbler, srumbler, 0, ROT270, "Capcom", "The Speed Rumbler (set 2)" )
-GAME( 1986, rushcrsh, srumbler, srumbler, srumbler, 0, ROT270, "Capcom", "Rush & Crash (Japan)" )
+GAME( 1986, rushcrsh, srumbler, srumbler, srumbler, 0, ROT270, "Capcom", "Rush and Crash (Japan)" )
