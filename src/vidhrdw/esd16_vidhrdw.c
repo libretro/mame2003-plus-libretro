@@ -41,13 +41,15 @@ Note:	if MAME_DEBUG is defined, pressing Z with:
 data16_t *esd16_vram_0, *esd16_scroll_0;
 data16_t *esd16_vram_1, *esd16_scroll_1;
 
-//extern data16_t *head_unknown1;
+/*extern data16_t *head_unknown1;*/
 extern data16_t *head_layersize;
 static int esd16_tilemap0_color = 0;
 
-//extern data16_t *head_unknown3;
-//extern data16_t *head_unknown4;
-//extern data16_t *head_unknown5;
+/*
+extern data16_t *head_unknown3;
+extern data16_t *head_unknown4;
+extern data16_t *head_unknown5;
+*/
 
 /* Functions defined in vidhrdw: */
 
@@ -240,9 +242,9 @@ static void esd16_draw_sprites(struct mame_bitmap *bitmap, const struct rectangl
 		if (flash && (cpu_getcurrentframe() & 1)) continue;
 
 		if(sx & 0x8000)
-			pri_mask = 0xfe; // under "tilemap 1"
+			pri_mask = 0xfe; /* under "tilemap 1" */
 		else
-			pri_mask = 0; // above everything
+			pri_mask = 0; /* above everything */
 
 		sx	=	sx & 0x1ff;
 		if (sx >= 0x180)	sx -= 0x200;
@@ -251,7 +253,7 @@ static void esd16_draw_sprites(struct mame_bitmap *bitmap, const struct rectangl
 		sy	-=	dimy*16;
 
 		if (flip_screen)
-		{	flipx = !flipx;		sx = max_x - sx -    1 * 16 + 2;	// small offset
+		{	flipx = !flipx;		sx = max_x - sx -    1 * 16 + 2;	/* small offset */
 			flipy = !flipy;		sy = max_y - sy - dimy * 16;	}
 
 		if (flipy)	{	starty = sy+(dimy-1)*16;	endy = sy-16;		incy = -16;	}
@@ -285,7 +287,7 @@ static void hedpanic_draw_sprites(struct mame_bitmap *bitmap, const struct recta
 		int	sy		=	spriteram16[ offs + 0 ];
 		int	code	=	spriteram16[ offs + 1 ];
 		int	sx		=	spriteram16[ offs + 2 ];
-//      int attr    =   spriteram16[ offs + 3 ];
+/*      int attr    =   spriteram16[ offs + 3 ]; */
 
 		int dimy	=	1 << ((sy >> 9) & 3);
 
@@ -300,9 +302,9 @@ static void hedpanic_draw_sprites(struct mame_bitmap *bitmap, const struct recta
 		if (flash && (cpu_getcurrentframe() & 1)) continue;
 
 		if(sx & 0x8000)
-			pri_mask = 0xfffe; // under "tilemap 1"
+			pri_mask = 0xfffe; /* under "tilemap 1" */
 		else
-			pri_mask = 0; // above everything
+			pri_mask = 0; /* above everything */
 
 		sx	=	sx & 0x1ff;
 		if (sx >= 0x180)	sx -= 0x200;
@@ -314,7 +316,7 @@ static void hedpanic_draw_sprites(struct mame_bitmap *bitmap, const struct recta
 		sy = 0x1ff-sy;
 
 		if (flip_screen)
-		{	flipx = !flipx;		sx = max_x - sx -    1 * 16 + 2;	// small offset
+		{	flipx = !flipx;		sx = max_x - sx -    1 * 16 + 2;	/* small offset */
 			flipy = !flipy;		sy = max_y - sy - dimy * 16;	}
 
 		if (flipy)	{	starty = sy+(dimy-1)*16;	endy = sy-16;		incy = -16;	}
