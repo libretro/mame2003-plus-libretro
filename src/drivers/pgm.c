@@ -1239,9 +1239,9 @@ static WRITE16_HANDLER( killbld_prot_w )
 					static UINT32 Regs[0x10];
 					if((p2&0xFFFF)==0x9)	/*Set value*/
 					{
-						int reg=(p2>>16)&0xFFFF;
-						if(reg&0x200)
-							Regs[reg&0xFF]=p1;
+						int reg2=(p2>>16)&0xFFFF;
+						if(reg2&0x200)
+							Regs[reg2&0xFF]=p1;
 					}
 					if((p2&0xFFFF)==0x6)	/*Add value*/
 					{
@@ -1252,15 +1252,15 @@ static WRITE16_HANDLER( killbld_prot_w )
 					}
 					if((p2&0xFFFF)==0x1)	/*Add Imm?*/
 					{
-						int reg=(p2>>16)&0xFF;
+						int reg2=(p2>>16)&0xFF;
 						int imm=(p1>>0)&0xFFFF;
-						Regs[reg]+=imm;
+						Regs[reg2]+=imm;
 					}
 					if((p2&0xFFFF)==0xa)	/*Get value*/
 					{
-						int reg=(p1>>16)&0xFF;
-						killbld_sharedprotram[0x29c/2] = (Regs[reg]>>16)&0xffff;
-						killbld_sharedprotram[0x29e/2] = Regs[reg]&0xffff;
+						int reg2=(p1>>16)&0xFF;
+						killbld_sharedprotram[0x29c/2] = (Regs[reg2]>>16)&0xffff;
+						killbld_sharedprotram[0x29e/2] = Regs[reg2]&0xffff;
 					}
 				}
 				if(cmd==0x4f)	/*memcpy with encryption / scrambling*/
