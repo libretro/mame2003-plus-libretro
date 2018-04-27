@@ -693,7 +693,7 @@ static void print_game_info(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 
 	fprintf(out, "\t<" XML_TOP);
 
-	fprintf(out, " name=\"%s\"", game->name );
+	fprintf(out, " name=\"%s\"", game->description ); /* use GameDrv "description" field as the filename */
 
 	if (game->clone_of && !(game->clone_of->flags & NOT_A_DRIVER))
 		fprintf(out, " cloneof=\"%s\"", game->clone_of->name);
@@ -705,12 +705,11 @@ static void print_game_info(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 
 	fprintf(out, "%s", ">\n");
 
-	if (game->description)
-	{
-		fprintf(out, "\t\t<description>");
-		print_free_string(OUTPUT_XML, out, game->description);
-		fprintf(out, "</description>\n");
-	}
+	fprintf(out, "\t\t<description>");
+	print_free_string(OUTPUT_XML, out, game->description);
+	fprintf(out, "</description>\n");
+	if (game->year && strspn(game->year,"0123456789")==strlen(game->year))
+		fprintf(out, "\t\t<driver>%s</driver>\n", game->name );
 
 	/* print the year only if is a number */
 	if (game->year && strspn(game->year,"0123456789")==strlen(game->year))
