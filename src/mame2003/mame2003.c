@@ -641,7 +641,7 @@ bool retro_load_game(const struct retro_game_info *game)
     /* Search list */
     for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
     {
-       if(strcmp(driver_lookup, drivers[driverIndex]->name) == 0)
+       if(strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0 || strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0)
        {
           log_cb(RETRO_LOG_INFO, "[MAME 2003] Total MAME drivers: %i. Matched game driver: [%s].\n", total_drivers, drivers[driverIndex]->name);
           break;          

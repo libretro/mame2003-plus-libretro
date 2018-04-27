@@ -286,28 +286,28 @@ int run_game(int game)
 	/* here's the meat of it all */
 	bailing = 0;
   
-    begin_resource_tracking();
+  begin_resource_tracking();
 
-    /* finish setting up our local machine */
-    if (init_machine())
-        bail_and_print("Unable to initialize machine emulation");
-    else
-    {
-        /* then run it */
-        if (run_machine())
-            bail_and_print("Unable to start machine emulation");
-        else
-        {
-            game_loaded = 1;
-            return 0;
-        }
+  /* finish setting up our local machine */
+  if (init_machine())
+      bail_and_print("Unable to initialize machine emulation");
+  else
+  {
+      /* then run it */
+      if (run_machine())
+          bail_and_print("Unable to start machine emulation");
+      else
+      {
+          game_loaded = 1;
+          return 0;
+      }
 
-        /* shutdown the local machine */
-        shutdown_machine();
-    }
+      /* shutdown the local machine */
+      shutdown_machine();
+  }
 
-    /* stop tracking resources and exit the OSD layer */
-    end_resource_tracking();
+  /* stop tracking resources and exit the OSD layer */
+  end_resource_tracking();
     
 	return err;
 }

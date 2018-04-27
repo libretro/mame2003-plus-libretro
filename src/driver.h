@@ -393,24 +393,23 @@ struct InternalMachineDriver
 
 struct GameDriver
 {
-	const char *source_file;	/* set this to __FILE__ */
-	const struct GameDriver *clone_of;	/* if this is a clone, point to */
-										/* the main version of the game */
-	const char *name;
-	const struct SystemBios *bios;	/* if this system has alternate bios roms use this */
-									/* structure to list names and ROM_BIOSFLAGS. */
-	const char *description;
-	const char *year;
-	const char *manufacturer;
-	void (*drv)(struct InternalMachineDriver *);
-	const struct InputPortTiny *input_ports;
-	void (*driver_init)(void);	/* optional function to be called during initialization */
-								/* This is called ONCE, unlike Machine->init_machine */
-								/* which is called every time the game is reset. */
+  const char   *source_file;          /* set this to __FILE__ */
+  const struct GameDriver *clone_of;	/* if this is a clone, point to */
+                                      /* the main version of the game */
+  const char *name;
+  const struct SystemBios *bios;      /* if this system has alternate bios roms use this */
+                                      /* structure to list names and ROM_BIOSFLAGS. */
+  const char *description;
+  const char *year;
+  const char *manufacturer;
+  void (*drv)(struct InternalMachineDriver *);
+  const struct InputPortTiny *input_ports;
+  void (*driver_init)(void);          /* optional function to be called during initialization */
+                                      /* This is called ONCE, unlike Machine->init_machine */
+                                      /* which is called every time the game is reset. */
+  const struct RomModule *rom;
 
-	const struct RomModule *rom;
-
-	UINT32 flags;	/* orientation and other flags; see defines below */
+  UINT32 flags;	/* orientation and other flags; see defines below */
 };
 
 
