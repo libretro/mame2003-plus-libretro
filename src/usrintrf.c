@@ -2905,7 +2905,7 @@ static void setup_menu_init(void)
 {
 	menu_total = 0;
 
-  if(options.input_interface == RETRO_DEVICE_KEYBOARD)
+  if(1/*options.input_interface == RETRO_DEVICE_KEYBOARD*/)
   {
 	  menu_item[menu_total] = ui_getstring (UI_inputgeneral); menu_action[menu_total++] = UI_DEFCODE;
     menu_item[menu_total] = ui_getstring (UI_inputspecific); menu_action[menu_total++] = UI_CODE;
