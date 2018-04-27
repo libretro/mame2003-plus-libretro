@@ -18,13 +18,12 @@
 #include <strings.h>
 #endif
 #include "fileio.h"
-#include "mame2003.h"
+#include "log.h"
 #include "drawgfx.h"
 #include "palette.h"
 
 
 extern int gbPriorityBitmapIsDirty;
-extern retro_log_printf_t log_cb;
 extern retro_environment_t environ_cb;
 
 /***************************************************************************
@@ -39,7 +38,6 @@ extern retro_environment_t environ_cb;
 #define MAX_MEMORY_REGIONS 32
 
 #define APPNAME					"mame2003-plus"
-
 
 /***************************************************************************
 

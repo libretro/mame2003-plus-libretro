@@ -7,8 +7,8 @@
 #include "mame.h"
 #include "usrintrf.h"
 #include "driver.h"
+#include "log.h"
 
-extern retro_log_printf_t log_cb;
 extern retro_environment_t environ_cb;
 extern retro_video_refresh_t video_cb;
 extern retro_set_led_state_t led_state_cb;
@@ -34,7 +34,7 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
       environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode);
 
       if (log_cb)
-         log_cb(RETRO_LOG_INFO, "game bpp: [%d], system bpp: [16], color format [RGB565] : SUPPORTED, enabling it.\n", Machine->color_depth);
+         log_cb(RETRO_LOG_INFO, LOGPRE "game bpp: [%d], system bpp: [16], color format [RGB565] : SUPPORTED, enabling it.\n", Machine->color_depth);
    }
    else
    {
@@ -43,7 +43,7 @@ int osd_create_display(const struct osd_create_params *params, UINT32 *rgb_compo
       environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &retroColorMode);
 
       if (log_cb)
-         log_cb(RETRO_LOG_INFO, "game bpp: [%d], system bpp: [32], color format [XRGB8888] : SUPPORTED, enabling it.\n", Machine->color_depth);
+         log_cb(RETRO_LOG_INFO, LOGPRE "game bpp: [%d], system bpp: [32], color format [XRGB8888] : SUPPORTED, enabling it.\n", Machine->color_depth);
    }
 
    if(Machine->color_depth == 15)

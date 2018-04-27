@@ -6,6 +6,7 @@
 
 #include "driver.h"
 #include "hiscore.h"
+#include "log.h"
 #include "../precompile/hiscore_dat.h"
 
 #define MAX_CONFIG_LINE_SIZE 48

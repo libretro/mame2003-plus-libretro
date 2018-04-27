@@ -7,13 +7,10 @@
 #include "datafile.h"
 #include "fileio.h"
 #include "libretro.h"
-#include "mame2003.h"
+#include "log.h"
 
 #define XML_ROOT "mame"
 #define XML_TOP "game"
-
-extern retro_log_printf_t log_cb; 
-
 
 /* Print a free format string */
 static void print_free_string(int OUTPUT_XML, FILE* out, const char* s)
@@ -811,9 +808,9 @@ void print_mame_xml(void)
     	
     if (xml_dat != NULL)	
     {	
-	    log_cb(RETRO_LOG_INFO, "Generating mame2003.xml\n");	
+	    log_cb(RETRO_LOG_INFO, LOGPRE "Generating mame2003.xml\n");	
     } else {	
-        log_cb(RETRO_LOG_WARN, "Unable to open mame2003.xml for writing.\n");
+        log_cb(RETRO_LOG_WARN, LOGPRE "Unable to open mame2003.xml for writing.\n");
          return;
     }    
 	fprintf(xml_dat,

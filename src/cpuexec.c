@@ -12,13 +12,12 @@
 #include "state.h"
 #include "mamedbg.h"
 #include "cpuexec.h"
-#include "mame2003.h"
+#include "log.h"
+
 
 #if (HAS_M68000 || HAS_M68010 || HAS_M68020 || HAS_M68EC020)
 #include "cpu/m68000/m68000.h"
 #endif
-
-extern retro_log_printf_t log_cb; 
 
 /*************************************
  *
@@ -30,7 +29,7 @@ extern retro_log_printf_t log_cb;
 	int activecpu = cpu_getactivecpu();						\
 	if (activecpu < 0)										\
 	{														\
-		log_cb(RETRO_LOG_ERROR, #name "() called with no active cpu!\n");	\
+		log_cb(RETRO_LOG_ERROR, LOGPRE #name "() called with no active cpu!\n");	\
 		return retval;										\
 	}
 
@@ -38,7 +37,7 @@ extern retro_log_printf_t log_cb;
 	int activecpu = cpu_getactivecpu();						\
 	if (activecpu < 0)										\
 	{														\
-		log_cb(RETRO_LOG_ERROR, #name "() called with no active cpu!\n");	\
+		log_cb(RETRO_LOG_ERROR, LOGPRE #name "() called with no active cpu!\n");	\
 		return;												\
 	}
 
@@ -54,7 +53,7 @@ extern retro_log_printf_t log_cb;
 	int activecpu = cpu_getexecutingcpu();					\
 	if (activecpu < 0)										\
 	{														\
-		log_cb(RETRO_LOG_ERROR, #name "() called with no executing cpu!\n");\
+		log_cb(RETRO_LOG_ERROR, LOGPRE #name "() called with no executing cpu!\n");\
 		return retval;										\
 	}
 
@@ -62,7 +61,7 @@ extern retro_log_printf_t log_cb;
 	int activecpu = cpu_getexecutingcpu();					\
 	if (activecpu < 0)										\
 	{														\
-		log_cb(RETRO_LOG_ERROR, #name "() called with no executing cpu!\n");\
+		log_cb(RETRO_LOG_ERROR, LOGPRE #name "() called with no executing cpu!\n");\
 		return;												\
 	}
 
