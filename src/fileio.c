@@ -13,6 +13,7 @@
 #include "driver.h"
 #include "unzip.h"
 #include "fileio.h"
+#include "log.h"
 
 
 /***************************************************************************
@@ -235,7 +236,7 @@ int osd_get_path_info(int pathtype, int pathindex, const char *filename)
    osd_get_path(pathtype, currDir);
    snprintf(buffer, PATH_MAX_LENGTH, "%s%s%s", currDir, path_default_slash(), filename);
 
-   /*log_cb(RETRO_LOG_INFO, "osd_get_path_info (buffer = [%s]), (directory: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, pathtype, filename);*/
+   /*log_cb(RETRO_LOG_INFO, LOGPRE "osd_get_path_info (buffer = [%s]), (directory: [%s]), (path type: [%d]), (filename: [%s]) \n", buffer, currDir, pathtype, filename);*/
 
    if (path_is_directory(buffer))
       return PATH_IS_DIRECTORY;

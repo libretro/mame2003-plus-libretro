@@ -13,7 +13,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "libretro.h"
+#include "log.h"
 
 
 /***************************************************************************
@@ -69,8 +69,6 @@ static struct chd_file *disk_handle[4];
 
 /* system BIOS */
 static int system_bios;
-
-extern retro_log_printf_t log_cb;
 
 
 /***************************************************************************
@@ -255,7 +253,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	if ((samples = auto_malloc(sizeof(struct GameSamples) + (i-1)*sizeof(struct GameSample))) == 0)
 		return 0;
 
-    log_cb(RETRO_LOG_INFO, "Searching for %i individual audio sample files in %s.zip\n", samples->total, basename);
+    log_cb(RETRO_LOG_INFO, LOGPRE "Searching for %i individual audio sample files in %s.zip\n", samples->total, basename);
 
 	samples->total = i;
 	for (i = 0;i < samples->total;i++)
@@ -273,11 +271,11 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
                 {
 					f = mame_fopen(samplenames[0]+1,samplenames[i+skipfirst],FILETYPE_SAMPLE,0);
                     if (f != 0)
-                        log_cb(RETRO_LOG_INFO, "Loaded %s.wav from %s.zip\n", samplenames[i+skipfirst], samplenames[0]+1);
+                        log_cb(RETRO_LOG_INFO,  LOGPRE "Loaded %s.wav from %s.zip\n", samplenames[i+skipfirst], samplenames[0]+1);
 
                 } 
             } else
-                log_cb(RETRO_LOG_INFO, "Loaded %s.wav from %s.zip\n", samplenames[i+skipfirst], basename);
+                log_cb(RETRO_LOG_INFO,  LOGPRE "Loaded %s.wav from %s.zip\n", samplenames[i+skipfirst], basename);
 
             if (f != 0)
 			{
@@ -520,7 +518,7 @@ struct mame_bitmap *bitmap_alloc_core(int width,int height,int depth,int use_aut
 	/* verify it's a depth we can handle */
 	if (depth != 8 && depth != 15 && depth != 16 && depth != 32)
 	{
-		log_cb(RETRO_LOG_ERROR, "osd_alloc_bitmap() unknown depth %d\n",depth);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "osd_alloc_bitmap() unknown depth %d\n",depth);
 		return NULL;
 	}
 
@@ -1093,16 +1091,16 @@ static int display_rom_load_results(struct rom_load_data *romdata)
     extern int bailing;
     bailing = 1;
     strcat(romdata->errorbuf, "Required files are missing, the game cannot be run.\n");
-    log_cb(RETRO_LOG_ERROR, "%s", romdata->errorbuf);
+    log_cb(RETRO_LOG_ERROR, LOGPRE "%s", romdata->errorbuf);
   }
   else if (romdata->warnings)
   {
     strcat(romdata->errorbuf, "The game might not run correctly.\n");
-    log_cb(RETRO_LOG_WARN, "%s", romdata->errorbuf);
+    log_cb(RETRO_LOG_WARN, LOGPRE "%s", romdata->errorbuf);
   }
   else
   {
-    log_cb(RETRO_LOG_INFO, "Succesfully loaded ROMs.\n");
+    log_cb(RETRO_LOG_INFO, LOGPRE "Succesfully loaded ROMs.\n");
   }
 
 	/* clean up any regions */

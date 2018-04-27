@@ -14,6 +14,7 @@
 #include "mame.h"
 #include "driver.h"
 #include "state.h"
+#include "log.h"
 
 
 static int     driverIndex; /* Index of mame game loaded */
@@ -36,9 +37,10 @@ extern int16_t      mouse_y[4];
 extern struct       osd_create_params videoConfig;
 extern int16_t      analogjoy[4][4];
 
+retro_log_printf_t                 log_cb;
+
 struct                             retro_perf_callback perf_cb;
 retro_environment_t                environ_cb                    = NULL;
-retro_log_printf_t                 log_cb                        = NULL;
 retro_video_refresh_t              video_cb                      = NULL;
 static retro_input_poll_t          poll_cb                       = NULL;
 static retro_input_state_t         input_cb                      = NULL;
@@ -635,22 +637,21 @@ bool retro_load_game(const struct retro_game_info *game)
 
     environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 
-    driver_lookup = strdup(path_basename(game->path));
-    path_remove_extension(driver_lookup);
+    driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
 
     /* Search list */
     for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
     {
        if(strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0 || strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0)
        {
-          log_cb(RETRO_LOG_INFO, "[MAME 2003] Total MAME drivers: %i. Matched game driver: [%s].\n", total_drivers, drivers[driverIndex]->name);
+          log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: [%s].\n", total_drivers, drivers[driverIndex]->name);
           break;          
        }
     }
 
     if(driverIndex == total_drivers)
     {
-        log_cb(RETRO_LOG_ERROR, "[MAME 2003] Total MAME drivers: %i. MAME driver not found for selected game!\n", total_drivers);
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!\n", total_drivers);
         return false;
     }
 
@@ -662,7 +663,7 @@ bool retro_load_game(const struct retro_game_info *game)
     environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&options.libretro_system_path);
     if (options.libretro_system_path == NULL || options.libretro_system_path[0] == '\0')
     {
-        log_cb(RETRO_LOG_INFO, "[MAME 2003] libretro system path not set by frontend, using content path\n");
+        log_cb(RETRO_LOG_INFO, LOGPRE "libretro system path not set by frontend, using content path\n");
         options.libretro_system_path = options.libretro_content_path;
     }
     
@@ -671,7 +672,7 @@ bool retro_load_game(const struct retro_game_info *game)
     environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&options.libretro_save_path);
     if (options.libretro_save_path == NULL || options.libretro_save_path[0] == '\0')
     {
-        log_cb(RETRO_LOG_INFO, "[MAME 2003] libretro save path not set by frontent, using content path\n");
+        log_cb(RETRO_LOG_INFO,  LOGPRE "libretro save path not set by frontent, using content path\n");
         options.libretro_save_path = options.libretro_content_path;
     }
     
