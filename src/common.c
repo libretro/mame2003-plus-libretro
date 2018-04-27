@@ -520,7 +520,7 @@ struct mame_bitmap *bitmap_alloc_core(int width,int height,int depth,int use_aut
 	/* verify it's a depth we can handle */
 	if (depth != 8 && depth != 15 && depth != 16 && depth != 32)
 	{
-		logerror("osd_alloc_bitmap() unknown depth %d\n",depth);
+		log_cb(RETRO_LOG_ERROR, "osd_alloc_bitmap() unknown depth %d\n",depth);
 		return NULL;
 	}
 
@@ -1092,13 +1092,17 @@ static int display_rom_load_results(struct rom_load_data *romdata)
   {
     extern int bailing;
     bailing = 1;
-    strcat(romdata->errorbuf, "ERROR: required files are missing, the game cannot be run.\n");
+    strcat(romdata->errorbuf, "Required files are missing, the game cannot be run.\n");
     log_cb(RETRO_LOG_ERROR, "%s", romdata->errorbuf);
   }
   else if (romdata->warnings)
   {
-    strcat(romdata->errorbuf, "WARNING: the game might not run correctly.\n");
+    strcat(romdata->errorbuf, "The game might not run correctly.\n");
     log_cb(RETRO_LOG_WARN, "%s", romdata->errorbuf);
+  }
+  else
+  {
+    log_cb(RETRO_LOG_INFO, "Succesfully loaded ROMs.\n");
   }
 
 	/* clean up any regions */
