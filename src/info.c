@@ -49,19 +49,14 @@ static void print_game_switch(int OUTPUT_XML, FILE* out, const struct GameDriver
 		{
 			int def = input->default_value;
 
-			fprintf(out, "\t\t<dipswitch");
-
-			fprintf(out, " name=\"");
+			fprintf(out, "\t\t<dipswitch name=\"");
 			print_free_string(OUTPUT_XML, out, input->name);
-			fprintf(out, "%s", "\"");
+			fprintf(out, "%s", "\">\n");
 			++input;
-
-			fprintf(out, "%s", ">\n");
 
 			while ((input->type & ~IPF_MASK)==IPT_DIPSWITCH_SETTING)
 			{
-				fprintf(out, "\t\t\t<dipvalue");
-				fprintf(out, "%s", " name=\"");
+				fprintf(out, "\t\t\t<dipvalue name=\"");
 				print_free_string(OUTPUT_XML, out, input->name);
 				fprintf(out, "%s", "\"");
 				if (def == input->default_value)
@@ -515,8 +510,7 @@ static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver*
 			print_free_string(OUTPUT_XML, out, cputype_name(cpu[j].cpu_type));
 			fprintf(out, "%s", "\"");
 
-			fprintf(out, " clock=\"%d\"", cpu[j].cpu_clock);
-			fprintf(out, "/>\n");
+			fprintf(out, " clock=\"%d\"/>\n", cpu[j].cpu_clock);
 		}
 	}
 
@@ -531,9 +525,7 @@ static void print_game_micro(int OUTPUT_XML, FILE* out, const struct GameDriver*
 
 			for(l=0;l<num;++l)
 			{
-				fprintf(out, "\t\t<chip");
-				fprintf(out, " type=\"audio\"");
-				fprintf(out, " name=\"");
+				fprintf(out, "\t\t<chip type=\"audio\" name=\"");
 				print_free_string(OUTPUT_XML, out, sound_name(&sound[j]));
 				fprintf(out, "%s", "\"");
 				if (sound_clock(&sound[j]))
@@ -597,15 +589,10 @@ static void print_game_video(int OUTPUT_XML, FILE* out, const struct GameDriver*
 	fprintf(out, " orientation=\"%s\"", orientation ? "vertical" : "horizontal" );
 	if (showxy)
 	{
-		fprintf(out, " width=\"%d\"", dx);
-		fprintf(out, " height=\"%d\"", dy);
+		fprintf(out, " width=\"%d\" height=\"%d\"", dx, dy);
 	}
 
-	fprintf(out, " aspectx=\"%d\"", ax);
-	fprintf(out, " aspecty=\"%d\"", ay);
-
-	fprintf(out, " refresh=\"%f\"", driver.frames_per_second);
-	fprintf(out, "/>\n");
+	fprintf(out, " aspectx=\"%d\" aspecty=\"%d\" refresh=\"%f\"/>\n", ax, ay, driver.frames_per_second);
 }
 
 static void print_game_sound(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
@@ -695,9 +682,8 @@ static void print_game_driver(int OUTPUT_XML, FILE* out, const struct GameDriver
 	else
 		fprintf(out, " sound=\"good\"");
 
-	fprintf(out, " palettesize=\"%d\"", driver.total_colors);
+	fprintf(out, " palettesize=\"%d\"/>\n", driver.total_colors);
 
-	fprintf(out, "/>\n");
 }
 
 /* Print the MAME info record for a game */
@@ -754,11 +740,7 @@ static void print_game_info(int OUTPUT_XML, FILE* out, const struct GameDriver* 
 /* Print the resource info */
 static void print_resource_info(int OUTPUT_XML, FILE* out, const struct GameDriver* game)
 {
-	fprintf(out, "\t<" XML_TOP " runnable=\"no\"");
-
-	fprintf(out, " name=\"%s\"", game->name);
-
-	fprintf(out, "%s", ">\n");
+	fprintf(out, "\t<" XML_TOP " runnable=\"no\" name=\"%s\">\n", game->name);
 
 	if (game->description)
 	{
@@ -913,10 +895,4 @@ void print_mame_xml(void)
 
 	fprintf(xml_dat, "</" XML_ROOT ">\n");
     fclose(xml_dat);
-}
-
-/* Print the MAME database in INFO format */
-void print_mame_info(FILE* out)
-{
-	print_mame_data(0, out, drivers);
 }
