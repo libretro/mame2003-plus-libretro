@@ -18,6 +18,7 @@
 * Battle Shark (Japan, Joystick)
 * Bonk's Adventure
 * Boogie Wings
+* Bubble Bobble (prototype on tokio hardware)
 * Cabal (Joystick with 3 buttons version)
 * Cannon Dancer
 * Chain Reaction
@@ -27,6 +28,7 @@
 * Crossed Swords 2
 * Crystal Castles (Joystick Version)
 * Cute Fighters
+* Deluxe 5
 * Denjin Makai 
 * Diet Go Go
 * DJ Boy
@@ -57,6 +59,7 @@
 * Metal Slug 4
 * Midnight Resistance (joystick hack bootleg)
 * Mighty Warriors
+* Multi Champ Deluxe
 * Night Slashers
 * Oriental Legend Special
 * Osman
@@ -80,6 +83,8 @@
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
 * Super Rider
+* SWAT Police
+* Tang Tang
 * Teeter Torture
 * The Great Ragtime Show
 * The Killing Blade
@@ -200,12 +205,13 @@
 * Added dsp handling for Driftout 94 and Twin Eagle 2 both games now playable
 * Fixed incorrect game logic in Monster Slider game now playable
 * Small graphical improvements for Biomechanical Toy and Maniac Square
-* Backported iq_132's Kaneko16 driver B.Rap Boys and Shogun Warriors wont work though
+* Backported iq_132's Kaneko16 driver making all of these games playable in this core
 * Updated the Deco Protection Rohga Armor Force now playable
 * Fixed possible crash in Funky Jet by updating Deco Protection
 * Fixed sound and music in Rohga Armor Force
 * Fixed 1000 Miglia : Great 1000 Miles Rally gtmr.zip
-* Added M6801 MCU dump to Bubble Bobble game now 100% Emulated
+* Added M6801 MCU dump for Bubble Bobble game is now 100% Emulated
+* added M68705 MCU dump for Alcon and Slap Fight official versions of both games are now playable
 * Updated the NMK16 driver for many sound and graphical improvements
 * Fixed a reset problem after level 3 in Night Slashers (ARM CPU)
 * Enabled breakable backgrounds in 64th street code via BritneysPAIRS
