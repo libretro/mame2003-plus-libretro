@@ -328,14 +328,14 @@ static int init_machine(void)
 	/* load the localization file */
 	if (uistring_init(options.language_file) != 0)
 	{
-		logerror("uistring_init failed\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "uistring_init failed\n");
 		goto cant_load_language_file;
 	}
 
 	/* initialize the input system */
 	if (code_init() != 0)
 	{
-		logerror("code_init failed\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "code_init failed\n");
 		goto cant_init_input;
 	}
 
@@ -346,7 +346,7 @@ static int init_machine(void)
 		Machine->input_ports = input_port_allocate(gamedrv->input_ports);
 		if (!Machine->input_ports)
 		{
-			logerror("could not allocate Machine->input_ports\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "could not allocate Machine->input_ports\n");
 			goto cant_allocate_input_ports;
 		}
 
@@ -354,7 +354,7 @@ static int init_machine(void)
 		Machine->input_ports_default = input_port_allocate(gamedrv->input_ports);
 		if (!Machine->input_ports_default)
 		{
-			logerror("could not allocate Machine->input_ports_default\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "could not allocate Machine->input_ports_default\n");
 			goto cant_allocate_input_ports_default;
 		}
 	}
@@ -365,7 +365,7 @@ static int init_machine(void)
 	/* load the ROMs if we have some */
 	if (gamedrv->rom && rom_load(gamedrv->rom) != 0)
 	{
-		logerror("readroms failed\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "readroms failed\n");
 		goto cant_load_roms;
 	}
 
@@ -386,7 +386,7 @@ static int init_machine(void)
 	/* initialize the memory system for this game */
 	if (!memory_init())
 	{
-		logerror("memory_init failed\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "memory_init failed\n");
 		goto cant_init_memory;
 	}
 
@@ -971,7 +971,7 @@ static int init_buffered_spriteram(void)
 	/* make sure we have a valid size */
 	if (spriteram_size == 0)
 	{
-		logerror("vh_open():  Video buffers spriteram but spriteram_size is 0\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "vh_open():  Video buffers spriteram but spriteram_size is 0\n");
 		return 0;
 	}
 
@@ -1315,7 +1315,7 @@ struct MachineCPU *machine_add_cpu(struct InternalMachineDriver *machine, const 
 			return &machine->cpu[cpunum];
 		}
 
-	logerror("Out of CPU's!\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Out of CPU's!\n");
 	return NULL;
 }
 
@@ -1334,7 +1334,7 @@ struct MachineCPU *machine_find_cpu(struct InternalMachineDriver *machine, const
 		if (machine->cpu[cpunum].tag && strcmp(machine->cpu[cpunum].tag, tag) == 0)
 			return &machine->cpu[cpunum];
 
-	logerror("Can't find CPU '%s'!\n", tag);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Can't find CPU '%s'!\n", tag);
 	return NULL;
 }
 
@@ -1357,7 +1357,7 @@ void machine_remove_cpu(struct InternalMachineDriver *machine, const char *tag)
 			return;
 		}
 
-	logerror("Can't find CPU '%s'!\n", tag);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Can't find CPU '%s'!\n", tag);
 }
 
 
@@ -1380,7 +1380,7 @@ struct MachineSound *machine_add_sound(struct InternalMachineDriver *machine, co
 			return &machine->sound[soundnum];
 		}
 
-	logerror("Out of sounds!\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Out of sounds!\n");
 	return NULL;
 
 }
@@ -1400,7 +1400,7 @@ struct MachineSound *machine_find_sound(struct InternalMachineDriver *machine, c
 		if (machine->sound[soundnum].tag && strcmp(machine->sound[soundnum].tag, tag) == 0)
 			return &machine->sound[soundnum];
 
-	logerror("Can't find sound '%s'!\n", tag);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Can't find sound '%s'!\n", tag);
 	return NULL;
 }
 
@@ -1423,7 +1423,7 @@ void machine_remove_sound(struct InternalMachineDriver *machine, const char *tag
 			return;
 		}
 
-	logerror("Can't find sound '%s'!\n", tag);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Can't find sound '%s'!\n", tag);
 }
 
 
