@@ -162,6 +162,9 @@ struct RunningMachine
 #define ARTWORK_USE_BACKDROPS	0x01
 #define ARTWORK_USE_OVERLAYS	0x02
 #define ARTWORK_USE_BEZELS		0x04
+#define RETROPAD_MAME			0
+#define RETROPAD_MODERN			1
+#define RETROPAD_SNES			2
 
 
 /* The host platform should fill these fields with the preferences specified in the GUI */
@@ -185,6 +188,7 @@ struct GameOptions
   unsigned dial_share_xy;
   unsigned mouse_device;
   unsigned input_interface;        /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
+  unsigned retropad_layout;        /* can be set to RETROPAD_MODERN, RETROPAD_SNES, or RETROPAD_MAME */
   unsigned rstick_to_btns;
   unsigned tate_mode;
 
