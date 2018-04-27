@@ -45,6 +45,31 @@ static retro_input_state_t         input_cb                      = NULL;
 static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
 retro_set_led_state_t              led_state_cb                  = NULL;
 
+#define DESCRIBE_BUTTONS(INDEX) \
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "Button 1" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      "Button 2" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Button 3" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "Button 4" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "Button 5" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "Button 6" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     "Button 7" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     "Button 8" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
+
+struct retro_input_descriptor desc[] = {
+    DESCRIBE_BUTTONS(0)
+    DESCRIBE_BUTTONS(1)
+    DESCRIBE_BUTTONS(2)
+    DESCRIBE_BUTTONS(3)
+    { 0, 0, 0, 0, NULL }
+    };
 
 /******************************************************************************
 
@@ -600,63 +625,23 @@ void retro_run (void)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
-    int orientation;
-    unsigned rotateMode;
+    char            *driver_lookup;
+    int             orientation;
+    unsigned        rotateMode;
     static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
-    #define describe_buttons(INDEX) \
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "Button 1" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      "Button 2" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Button 3" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "Button 4" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "Button 5" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "Button 6" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     "Button 7" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     "Button 8" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
-    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
-
-    struct retro_input_descriptor desc[] = {
-        describe_buttons(0)
-        describe_buttons(1)
-        describe_buttons(2)
-        describe_buttons(3)
-        { 0, 0, 0, 0, NULL }
-        };
-
-    char driverName[PATH_MAX_LENGTH];
-    char *path, *last;
 
     if (!game)
       return false;
 
     environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 
-    /* Find game index */
-    if(!string_is_empty(game->path))
-    {
-      path = strdup(game->path);
-    }
-    else
-    {
-      path = strdup(".");
-    }
-    last = find_last_slash(path);
-    memset(driverName, 0, PATH_MAX_LENGTH);
-    strncpy(driverName, last ? last + 1 : path, PATH_MAX_LENGTH - 1);
-    free(path);
-    
-    path_remove_extension(driverName);
+    driver_lookup = strdup(path_basename(game->path));
+    path_remove_extension(driver_lookup);
 
     /* Search list */
     for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
     {
-       if(strcmp(driverName, drivers[driverIndex]->name) == 0)
+       if(strcmp(driver_lookup, drivers[driverIndex]->name) == 0)
        {
           log_cb(RETRO_LOG_INFO, "[MAME 2003] Total MAME drivers: %i. Matched game driver: [%s].\n", total_drivers, drivers[driverIndex]->name);
           break;          
@@ -700,6 +685,8 @@ bool retro_load_game(const struct retro_game_info *game)
     
     environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
     options.ui_orientation = uiModes[rotateMode];
+    
+    free(driver_lookup);
 
     return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
 }
