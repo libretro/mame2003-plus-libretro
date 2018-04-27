@@ -1388,6 +1388,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( tokio )		/* A71 1986 */
 	DRIVER( tokiob )	/* bootleg */
 	DRIVER( bublbobl )	/* A78 (c) 1986 Taito Corporation */
+	DRIVER( bublbob1 )	/* A78 (c) 1986 Taito Corporation */
 	DRIVER( bublbobr )	/* A78 (c) 1986 Taito America Corporation + Romstar license */
 	DRIVER( bubbobr1 )	/* A78 (c) 1986 Taito America Corporation + Romstar license */
 	DRIVER( boblbobl )	/* bootleg */
