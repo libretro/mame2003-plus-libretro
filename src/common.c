@@ -1087,24 +1087,19 @@ static int display_rom_load_results(struct rom_load_data *romdata)
 {
 	int region;
 
-	/* only display if we have warnings or errors */
-	if (romdata->warnings || romdata->errors)
-	{
-		extern int bailing;
-
-		/* display either an error message or a warning message */
-		if (romdata->errors)
-		{
-			strcat(romdata->errorbuf, "ERROR: required files are missing, the game cannot be run.\n");
-			bailing = 1;
-		}
-		else
-			strcat(romdata->errorbuf, "WARNING: the game might not run correctly.\n");
-
-		/* display the result */
-		printf("%s", romdata->errorbuf);
-
-	}
+  /* display either an error message or a warning message */
+  if (romdata->errors)
+  {
+    extern int bailing;
+    bailing = 1;
+    strcat(romdata->errorbuf, "ERROR: required files are missing, the game cannot be run.\n");
+    log_cb(RETRO_LOG_ERROR, "%s", romdata->errorbuf);
+  }
+  else if (romdata->warnings)
+  {
+    strcat(romdata->errorbuf, "WARNING: the game might not run correctly.\n");
+    log_cb(RETRO_LOG_WARN, "%s", romdata->errorbuf);
+  }
 
 	/* clean up any regions */
 	if (romdata->errors)
