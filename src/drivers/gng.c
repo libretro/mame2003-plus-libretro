@@ -698,8 +698,8 @@ static DRIVER_INIT( diamond )
 
 
 
-GAME( 1985, gng,	  0,   gng, gng,	  0,	   ROT0, "Capcom", "Ghosts'n Goblins (World? set 1)" )
-GAME( 1985, gnga,	  gng, gng, gng,	  0,	   ROT0, "Capcom", "Ghosts'n Goblins (World? set 2)" )
+GAME( 1985, gng,	  0,   gng, gng,	  0,	   ROT0, "Capcom", "Ghosts'n Goblins (World[Q] set 1)" )
+GAME( 1985, gnga,	  gng, gng, gng,	  0,	   ROT0, "Capcom", "Ghosts'n Goblins (World[Q] set 2)" )
 GAME( 1985, gngt,	  gng, gng, gng,	  0,	   ROT0, "Capcom (Taito America license)", "Ghosts'n Goblins (US)" )
 GAME( 1985, makaimur, gng, gng, makaimur, 0,	   ROT0, "Capcom", "Makai-Mura (Japan)" )
 GAME( 1985, makaimuc, gng, gng, makaimur, 0,	   ROT0, "Capcom", "Makai-Mura (Japan Revision C)" )

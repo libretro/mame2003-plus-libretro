@@ -1145,8 +1145,8 @@ ROM_END
 
 GAMEX( 1990, galpanic, 0,        galpanic, galpanic, 0, ROT90, "Kaneko", "Gals Panic (set 1)", GAME_NO_COCKTAIL )
 GAMEX( 1990, galpanib, galpanic, galpanib, galpanib, 0, ROT90, "Kaneko", "Gals Panic (set 2)", GAME_NO_COCKTAIL )
-GAMEX( 1994, fantasia, 0,        comad,    fantasia, 0, ROT90, "Comad & New Japan System", "Fantasia", GAME_NO_COCKTAIL )
-GAMEX( 1995, newfant,  0,        comad,    fantasia, 0, ROT90, "Comad & New Japan System", "New Fantasia", GAME_NO_COCKTAIL )
+GAMEX( 1994, fantasia, 0,        comad,    fantasia, 0, ROT90, "Comad and New Japan System", "Fantasia", GAME_NO_COCKTAIL )
+GAMEX( 1995, newfant,  0,        comad,    fantasia, 0, ROT90, "Comad and New Japan System", "New Fantasia", GAME_NO_COCKTAIL )
 GAMEX( 1995, fantsy95, 0,        comad,    fantasia, 0, ROT90, "Hi-max Technology Inc.", "Fantasy '95", GAME_NO_COCKTAIL )
 GAMEX( 1996, missw96,  0,        comad,    missw96,  0, ROT0,  "Comad", "Miss World '96 Nude", GAME_NO_COCKTAIL )
 GAMEX( 1997, fantsia2, 0,        fantsia2, missw96,  0, ROT0,  "Comad", "Fantasia II", GAME_NO_COCKTAIL )

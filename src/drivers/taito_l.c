@@ -2810,7 +2810,7 @@ GAME( 1989, champwrj, champwr,  champwr,  champwrj, 0,        ROT0,   "Taito Cor
 GAME( 1988, kurikint, 0,        kurikint, kurikint, 0,        ROT0,   "Taito Corporation Japan", "Kuri Kinton (World)" )
 GAME( 1988, kurikinu, kurikint, kurikint, kurikinj, 0,        ROT0,   "Taito America Corporation", "Kuri Kinton (US)" )
 GAME( 1988, kurikinj, kurikint, kurikint, kurikinj, 0,        ROT0,   "Taito Corporation", "Kuri Kinton (Japan)" )
-GAME( 1988, kurikina, kurikint, kurikina, kurikina, 0,        ROT0,   "Taito Corporation Japan", "Kuri Kinton (World, prototype?)" )
+GAME( 1988, kurikina, kurikint, kurikina, kurikina, 0,        ROT0,   "Taito Corporation Japan", "Kuri Kinton (World, prototype[Q])" )
 GAME( 1989, plotting, 0,        plotting, plotting, plotting, ROT0,   "Taito Corporation Japan", "Plotting (World)" )
 GAME( 1989, puzznic,  0,        puzznic,  puzznic,  0,        ROT0,   "Taito Corporation", "Puzznic (Japan)" )
 GAME( 1990, horshoes, 0,        horshoes, horshoes, 0,        ROT270, "Taito America Corporation", "American Horseshoes (US)" )

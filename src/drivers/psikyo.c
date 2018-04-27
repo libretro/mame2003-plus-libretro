@@ -2109,4 +2109,4 @@ GAME ( 1994, btlkroad, 0,        gunbird,  btlkroad, gunbird,  ROT0,   "Psikyo",
 GAME ( 1995, s1945,    0,        s1945,    s1945,    s1945,    ROT270, "Psikyo", "Strikers 1945" )
 GAME ( 1995, s1945j,   s1945,    s1945,    s1945j,   s1945j,   ROT270, "Psikyo", "Strikers 1945 (Japan)" )
 GAME ( 1995, s1945jn,  s1945,    gunbird,  s1945j,   s1945jn,  ROT270, "Psikyo", "Strikers 1945 (Japan, unprotected)" )
-GAME ( 1996, tengai,   0,        s1945,    tengai,   tengai,   ROT0,   "Psikyo", "Tengai / Sengoku Blade: Sengoku Ace Episode II" )
+GAME ( 1996, tengai,   0,        s1945,    tengai,   tengai,   ROT0,   "Psikyo", "Tengai - Sengoku Blade - Sengoku Ace Episode II" )

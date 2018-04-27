@@ -1610,7 +1610,7 @@ DRIVER_INIT( gundamex )
 }
 
 GAME(  1994, gundamex, 0, gundamex, gundamex, gundamex, ROT0, "Banpresto",           "Mobile Suit Gundam EX Revue" )
-GAMEX( 1995, grdians,  0, grdians,  grdians,  0,  		ROT0, "Banpresto",           "Guardians / Denjin Makai II",                  GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )	/* Displays (c) Winky Soft at game's end.*/
+GAMEX( 1995, grdians,  0, grdians,  grdians,  0,  		ROT0, "Banpresto",           "Guardians - Denjin Makai II",                  GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )	/* Displays (c) Winky Soft at game's end.*/
 GAMEX( 1996, mj4simai, 0, mj4simai, mj4simai, 0,        ROT0, "Maboroshi Ware",      "Wakakusamonogatari Mahjong Yonshimai (Japan)", GAME_NO_COCKTAIL )
 GAMEX( 1996, myangel,  0, myangel,  myangel,  0,        ROT0, "Namco",               "Kosodate Quiz My Angel (Japan)",               GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1997, myangel2, 0, myangel2, myangel2, 0,        ROT0, "Namco",               "Kosodate Quiz My Angel 2 (Japan)",             GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )

@@ -2517,7 +2517,7 @@ static DRIVER_INIT( joust2 )
 GAME( 1980, defender, 0,        defender, defender, defender, ROT0,   "Williams", "Defender (Red label)" )
 GAME( 1980, defendg,  defender, defender, defender, defender, ROT0,   "Williams", "Defender (Green label)" )
 GAME( 1980, defendw,  defender, defender, defender, defender, ROT0,   "Williams", "Defender (White label)" )
-GAMEX(1980, defndjeu, defender, defender, defender, defndjeu, ROT0,   "Jeutel", "Defender ? (bootleg)", GAME_NOT_WORKING )
+GAMEX(1980, defndjeu, defender, defender, defender, defndjeu, ROT0,   "Jeutel", "Defender [Q] (bootleg)", GAME_NOT_WORKING )
 GAME( 1980, defcmnd,  defender, defender, defender, defender, ROT0,   "bootleg", "Defense Command (set 1)" )
 GAME( 1981, defence,  defender, defender, defender, defender, ROT0,   "Outer Limits", "Defence Command" )
 
@@ -2531,11 +2531,11 @@ GAME( 1981, colony7a, colony7,  defender, colony7,  colony7,  ROT270, "Taito", "
 GAME( 1981, stargate, 0,        williams, stargate, stargate, ROT0,   "Williams", "Stargate" )
 
 GAME( 1982, robotron, 0,        williams, robotron, robotron, ROT0,   "Williams", "Robotron (Solid Blue label)" )
-GAME( 1982, robotryo, robotron, williams, robotron, robotron, ROT0,   "Williams", "Robotron (Yellow/Orange label)" )
+GAME( 1982, robotryo, robotron, williams, robotron, robotron, ROT0,   "Williams", "Robotron (Yellow-Orange label)" )
 
-GAME( 1982, joust,    0,        williams, joust,    joust,    ROT0,   "Williams", "Joust (White/Green label)" )
+GAME( 1982, joust,    0,        williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Green label)" )
 GAME( 1982, joustr,   joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (Solid Red label)" )
-GAME( 1982, joustwr,  joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (White/Red label)" )
+GAME( 1982, joustwr,  joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Red label)" )
 
 GAME( 1982, bubbles,  0,        williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles" )
 GAME( 1982, bubblesr, bubbles,  williams, bubbles,  bubbles,  ROT0,   "Williams", "Bubbles (Solid Red label)" )

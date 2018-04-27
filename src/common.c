@@ -520,7 +520,7 @@ struct mame_bitmap *bitmap_alloc_core(int width,int height,int depth,int use_aut
 	/* verify it's a depth we can handle */
 	if (depth != 8 && depth != 15 && depth != 16 && depth != 32)
 	{
-		logerror("osd_alloc_bitmap() unknown depth %d\n",depth);
+		log_cb(RETRO_LOG_ERROR, "osd_alloc_bitmap() unknown depth %d\n",depth);
 		return NULL;
 	}
 
@@ -1087,24 +1087,23 @@ static int display_rom_load_results(struct rom_load_data *romdata)
 {
 	int region;
 
-	/* only display if we have warnings or errors */
-	if (romdata->warnings || romdata->errors)
-	{
-		extern int bailing;
-
-		/* display either an error message or a warning message */
-		if (romdata->errors)
-		{
-			strcat(romdata->errorbuf, "ERROR: required files are missing, the game cannot be run.\n");
-			bailing = 1;
-		}
-		else
-			strcat(romdata->errorbuf, "WARNING: the game might not run correctly.\n");
-
-		/* display the result */
-		printf("%s", romdata->errorbuf);
-
-	}
+  /* display either an error message or a warning message */
+  if (romdata->errors)
+  {
+    extern int bailing;
+    bailing = 1;
+    strcat(romdata->errorbuf, "Required files are missing, the game cannot be run.\n");
+    log_cb(RETRO_LOG_ERROR, "%s", romdata->errorbuf);
+  }
+  else if (romdata->warnings)
+  {
+    strcat(romdata->errorbuf, "The game might not run correctly.\n");
+    log_cb(RETRO_LOG_WARN, "%s", romdata->errorbuf);
+  }
+  else
+  {
+    log_cb(RETRO_LOG_INFO, "Succesfully loaded ROMs.\n");
+  }
 
 	/* clean up any regions */
 	if (romdata->errors)
@@ -1185,8 +1184,11 @@ static int open_rom_file(struct rom_load_data *romdata, const struct RomModule *
 	   attempts any kind of load by checksum supported by the archives. */
 	romdata->file = NULL;
 	for (drv = Machine->gamedrv; !romdata->file && drv; drv = drv->clone_of)
-		if (drv->name && *drv->name)
-			romdata->file = mame_fopen_rom(drv->name, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
+		if (drv->name && *drv->name) {
+      romdata->file = mame_fopen_rom(drv->description, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
+			if(!romdata->file)
+        romdata->file = mame_fopen_rom(drv->name, ROM_GETNAME(romp), ROM_GETHASHDATA(romp));
+    }
 
 	/* return the result */
 	return (romdata->file != NULL);

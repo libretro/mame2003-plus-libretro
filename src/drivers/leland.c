@@ -2518,7 +2518,7 @@ static DRIVER_INIT( pigout )
 GAME( 1985, cerberus, 0,       leland,  cerberus, cerberus, ROT0,   "Cinematronics", "Cerberus" )
 GAME( 1985, mayhem,   0,       leland,  mayhem,   mayhem,   ROT0,   "Cinematronics", "Mayhem 2002" )
 GAME( 1985, powrplay, 0,       leland,  mayhem,   powrplay, ROT0,   "Cinematronics", "Power Play" )
-GAME( 1985, wseries,  0,       leland,  wseries,  wseries,  ROT0,   "Cinematronics", "World Series: The Season" )
+GAME( 1985, wseries,  0,       leland,  wseries,  wseries,  ROT0,   "Cinematronics", "World Series - The Season" )
 GAME( 1986, alleymas, 0,       leland,  alleymas, alleymas, ROT270, "Cinematronics", "Alley Master" )
 
 /* odd master banks, small slave banks */

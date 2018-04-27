@@ -914,7 +914,7 @@ static DRIVER_INIT( liberate )
 
 GAMEX(1983, prosoccr, 0,        prosoccr,  liberate, prosport, ROT270, "Data East Corporation", "Pro Soccer", GAME_NOT_WORKING )
 GAMEX(1983, prosport, 0,        prosport,  liberate, prosport, ROT270, "Data East Corporation", "Prosport", GAME_NOT_WORKING )
-GAME( 1983, boomrang, 0,        boomrang,  boomrang, prosport, ROT270, "Data East Corporation", "Boomer Rang'r / Genesis" )
+GAME( 1983, boomrang, 0,        boomrang,  boomrang, prosport, ROT270, "Data East Corporation", "Boomer Rang'r - Genesis" )
 GAME( 1984, kamikcab, 0,        boomrang,  kamikcab, prosport, ROT270, "Data East Corporation", "Kamikaze Cabbie" )
 GAME( 1984, liberate, 0,        liberate,  liberate, liberate, ROT270, "Data East Corporation", "Liberation" )
 GAMEX(1984, liberatb, liberate, liberatb,  liberate, prosport, ROT270, "bootleg",               "Liberation (bootleg)", GAME_NOT_WORKING )

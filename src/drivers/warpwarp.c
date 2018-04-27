@@ -521,6 +521,6 @@ ROM_END
 
 GAME( 1979, bombbee,  0,        bombbee,  bombbee,  0, ROT90, "Namco", "Bomb Bee" )
 GAME( 1979, cutieq,   0,        bombbee,  cutieq,   0, ROT90, "Namco", "Cutie Q" )
-GAME( 1981, warpwarp, 0,        warpwarp, warpwarp, 0, ROT90, "Namco", "Warp & Warp" )
+GAME( 1981, warpwarp, 0,        warpwarp, warpwarp, 0, ROT90, "Namco", "Warp and Warp" )
 GAME( 1981, warpwarr, warpwarp, warpwarp, warpwarr, 0, ROT90, "[Namco] (Rock-ola license)", "Warp Warp (Rock-ola set 1)" )
 GAME( 1981, warpwar2, warpwarp, warpwarp, warpwarr, 0, ROT90, "[Namco] (Rock-ola license)", "Warp Warp (Rock-ola set 2)" )

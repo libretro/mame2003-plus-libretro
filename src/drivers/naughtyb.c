@@ -537,4 +537,4 @@ GAMEX( 1982, naughtya, naughtyb, naughtyb, naughtyb, 0,        ROT90, "bootleg",
 GAMEX( 1982, naughtyc, naughtyb, naughtyb, naughtyb, 0,        ROT90, "Jaleco (Cinematronics license)", "Naughty Boy (Cinematronics)", GAME_NO_COCKTAIL )
 GAMEX( 1982, popflame, 0,		 popflame, naughtyb, popflame, ROT90, "Jaleco", "Pop Flamer (protected)", GAME_NO_COCKTAIL )
 GAMEX( 1982, popflama, popflame, popflame, naughtyb, 0,        ROT90, "Jaleco", "Pop Flamer (not protected)", GAME_NO_COCKTAIL )
-GAMEX( 1982, popflamb, popflame, popflame, naughtyb, 0,        ROT90, "Jaleco", "Pop Flamer (hack?)", GAME_NO_COCKTAIL )
+GAMEX( 1982, popflamb, popflame, popflame, naughtyb, 0,        ROT90, "Jaleco", "Pop Flamer (hack[Q])", GAME_NO_COCKTAIL )

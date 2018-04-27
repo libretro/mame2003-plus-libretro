@@ -1239,9 +1239,9 @@ static WRITE16_HANDLER( killbld_prot_w )
 					static UINT32 Regs[0x10];
 					if((p2&0xFFFF)==0x9)	/*Set value*/
 					{
-						int reg=(p2>>16)&0xFFFF;
-						if(reg&0x200)
-							Regs[reg&0xFF]=p1;
+						int reg2=(p2>>16)&0xFFFF;
+						if(reg2&0x200)
+							Regs[reg2&0xFF]=p1;
 					}
 					if((p2&0xFFFF)==0x6)	/*Add value*/
 					{
@@ -1252,15 +1252,15 @@ static WRITE16_HANDLER( killbld_prot_w )
 					}
 					if((p2&0xFFFF)==0x1)	/*Add Imm?*/
 					{
-						int reg=(p2>>16)&0xFF;
+						int reg2=(p2>>16)&0xFF;
 						int imm=(p1>>0)&0xFFFF;
-						Regs[reg]+=imm;
+						Regs[reg2]+=imm;
 					}
 					if((p2&0xFFFF)==0xa)	/*Get value*/
 					{
-						int reg=(p1>>16)&0xFF;
-						killbld_sharedprotram[0x29c/2] = (Regs[reg]>>16)&0xffff;
-						killbld_sharedprotram[0x29e/2] = Regs[reg]&0xffff;
+						int reg2=(p1>>16)&0xFF;
+						killbld_sharedprotram[0x29c/2] = (Regs[reg2]>>16)&0xffff;
+						killbld_sharedprotram[0x29e/2] = Regs[reg2]&0xffff;
 					}
 				}
 				if(cmd==0x4f)	/*memcpy with encryption / scrambling*/
@@ -1950,18 +1950,18 @@ ROM_END
 
 GAMEX( 1997, pgm,      0,          pgm,     pgm,      0,          ROT0, "IGS", "PGM (Polygame Master) System BIOS", NOT_A_DRIVER )
 
-GAMEX( 1997, orlegend, pgm,        pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 126)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1997, orlegnde, orlegend,   pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 112)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1997, orlegndc, orlegend,   pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 112, Chinese Board)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, orlegend, pgm,        pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 126)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, orlegnde, orlegend,   pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, orlegndc, orlegend,   pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112, Chinese Board)", GAME_IMPERFECT_GRAPHICS )
 
-GAMEX( 1998, olds,     pgm,        pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend Special / Xi You Shi E Zhuan Super (ver. 101, Korean Board)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1998, olds103t, olds,       pgm,     pgm,      olds,       ROT0, "IGS", "Oriental Legend Special / Xi You Shi E Zhuan Super (ver. 103, China, Tencent) (unprotected)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, olds,     pgm,        pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, olds103t, olds,       pgm,     pgm,      olds,       ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 103, China, Tencent) (unprotected)", GAME_IMPERFECT_GRAPHICS )
 
 GAMEX( 1997, dragwld2, pgm,        pgm,     pgm,      dragwld2,   ROT0, "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_GRAPHICS )
 
-GAMEX( 1999, kov,      pgm,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour / Sangoku Senki (ver. 117)", GAME_IMPERFECT_GRAPHICS ) /* ver # provided by protection? */
-GAMEX( 1999, kov115,   kov,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour / Sangoku Senki (ver. 115)", GAME_IMPERFECT_GRAPHICS ) /* ver # provided by protection? */
-GAMEX( 1999, kovplus,  kov,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour Plus / Sangoku Senki Plus (ver. 119)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, kov,      pgm,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 117)", GAME_IMPERFECT_GRAPHICS ) /* ver # provided by protection? */
+GAMEX( 1999, kov115,   kov,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 115)", GAME_IMPERFECT_GRAPHICS ) /* ver # provided by protection? */
+GAMEX( 1999, kovplus,  kov,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour Plus - Sangoku Senki Plus (ver. 119)", GAME_IMPERFECT_GRAPHICS )
 
 GAMEX( 1999, photoy2k, pgm,        pgm,     photoy2k, djlzz,      ROT0, "IGS", "Photo Y2K", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1999, puzlstar, pgm,        pgm,     sango,    pstar,      ROT0, "IGS", "Puzzle Star", GAME_IMPERFECT_GRAPHICS )
@@ -1969,5 +1969,5 @@ GAMEX( 1999, puzlstar, pgm,        pgm,     sango,    pstar,      ROT0, "IGS", "
 GAMEX( 1998, killbld,  pgm,        killbld, killbld,  killbld,    ROT0, "IGS", "The Killing Blade (ver. 109, Chinese Board)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
 
 /* not working */
-GAMEX( 1999, kovsh,    kov,        pgm,     sango,    kovsh,      ROT0, "IGS", "Knights of Valour Superheroes / Sangoku Senki Superheroes (ver. 322)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAMEX( 1999, kovsh,    kov,        pgm,     sango,    kovsh,      ROT0, "IGS", "Knights of Valour Superheroes - Sangoku Senki Superheroes (ver. 322)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 

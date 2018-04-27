@@ -56,6 +56,8 @@ const struct GameDriver *drivers[] =
 	0	/* end of array */
 };
 
+const int total_drivers = sizeof(drivers)/sizeof(drivers[0]);
+
 /* step 3: define the test_drivers[] array */
 #undef DRIVER
 #undef TESTDRIVER
@@ -1386,6 +1388,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( tokio )		/* A71 1986 */
 	DRIVER( tokiob )	/* bootleg */
 	DRIVER( bublbobl )	/* A78 (c) 1986 Taito Corporation */
+	DRIVER( bublbob1 )	/* A78 (c) 1986 Taito Corporation */
 	DRIVER( bublbobr )	/* A78 (c) 1986 Taito America Corporation + Romstar license */
 	DRIVER( bubbobr1 )	/* A78 (c) 1986 Taito America Corporation + Romstar license */
 	DRIVER( boblbobl )	/* bootleg */
@@ -5142,8 +5145,16 @@ Other Sun games
 
 	/* ESD games */
 	/* http://www.esdgame.co.kr/english/ */
-	DRIVER( multchmp )	/* (c) 1998 (Korea) */
-	DRIVER( hedpanic )	/* (c) 2000 ESD */
+	DRIVER( multchmp )	/* (c) 1998 ESD (World) */
+	DRIVER( multchmpk )	/* (c) 1998 ESD (Korea) */
+	DRIVER( hedpanic )	/* (c) 2000 ESD (ver. 0117) */
+	DRIVER( hedpanicf )	/* (c) 2000 ESD (ver. 0315) */
+	DRIVER( hedpanico )	/* (c) 1999 ESD (ver. 0615) */
+	DRIVER( mchampdx )	/* (c) 2000 ESD (ver. 0106) */
+	DRIVER( mchampdxa )	/* (c) 1999 ESD (ver. 1126) */
+	DRIVER( deluxe5 )	/* (c) 2000 ESD (ver. 0107) */
+	DRIVER( tangtang )	/* (c) 2000 ESD (ver. 0526) */
+	DRIVER( swatpolc )	/* (c) 2001 ESD */
 
 	/* Dyna Electronics / Dynax / Nakanihon games */
 	DRIVER( royalmah )	/* (c) 1982 Falcon */

@@ -357,5 +357,5 @@ ROM_START( pitnrun )
 	ROM_LOAD( "clr.3",  0x0040, 0x0020, CRC(25e70e5e) SHA1(fdb9c69e9568a725dd0e3ac25835270fb4f49280) )
 ROM_END
 
-GAMEX( 1984, pitnrun, 0, pitnrun, pitnrun, 0, ROT90, "Taito Corporation", "Pit & Run", GAME_IMPERFECT_SOUND )
+GAMEX( 1984, pitnrun, 0, pitnrun, pitnrun, 0, ROT90, "Taito Corporation", "Pit and Run", GAME_IMPERFECT_SOUND )
 

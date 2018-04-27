@@ -1169,7 +1169,7 @@ GAME( 1988, shadoww,  0,        shadoww, shadoww,  shadoww,  ROT0, "Tecmo", "Sha
 GAME( 1988, shadowwa, shadoww,  shadoww, shadoww,  shadoww,  ROT0, "Tecmo", "Shadow Warriors (World set 2)" )
 GAME( 1988, gaiden,   shadoww,  shadoww, shadoww,  shadoww,  ROT0, "Tecmo", "Ninja Gaiden (US)" )
 GAME( 1989, ryukendn, shadoww,  shadoww, shadoww,  shadoww,  ROT0, "Tecmo", "Ninja Ryukenden (Japan)" )
-GAME( 1989, wildfang, 0,        shadoww, wildfang, wildfang, ROT0, "Tecmo", "Wild Fang / Tecmo Knight" )
+GAME( 1989, wildfang, 0,        shadoww, wildfang, wildfang, ROT0, "Tecmo", "Wild Fang - Tecmo Knight" )
 GAME( 1989, tknight,  wildfang, shadoww, tknight,  wildfang, ROT0, "Tecmo", "Tecmo Knight" )
 GAMEX(1991, stratof,  0,        raiga,	 raiga,    raiga,    ROT0, "Tecmo", "Raiga - Strato Fighter (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEX(1991, raiga,    stratof,  raiga,	 raiga,    raiga,    ROT0, "Tecmo", "Raiga - Strato Fighter (Japan)", GAME_IMPERFECT_GRAPHICS )

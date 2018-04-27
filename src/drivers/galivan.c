@@ -897,10 +897,10 @@ ROM_END
 
 
 
-GAME( 1985, galivan,  0,        galivan,  galivan,  0, ROT270, "Nichibutsu", "Galivan - Cosmo Police (12/16/1985)" )
-GAME( 1985, galivan2, galivan,  galivan,  galivan,  0, ROT270, "Nichibutsu", "Galivan - Cosmo Police (12/11/1985)" )
-GAME( 1986, dangar,   0,        galivan,  dangar,   0, ROT270, "Nichibutsu", "Dangar - Ufo Robo (12/1/1986)" )
-GAME( 1986, dangar2,  dangar,   galivan,  dangar2,  0, ROT270, "Nichibutsu", "Dangar - Ufo Robo (9/26/1986)" )
+GAME( 1985, galivan,  0,        galivan,  galivan,  0, ROT270, "Nichibutsu", "Galivan - Cosmo Police (12-16-1985)" )
+GAME( 1985, galivan2, galivan,  galivan,  galivan,  0, ROT270, "Nichibutsu", "Galivan - Cosmo Police (12-11-1985)" )
+GAME( 1986, dangar,   0,        galivan,  dangar,   0, ROT270, "Nichibutsu", "Dangar - Ufo Robo (12-1-1986)" )
+GAME( 1986, dangar2,  dangar,   galivan,  dangar2,  0, ROT270, "Nichibutsu", "Dangar - Ufo Robo (9-26-1986)" )
 GAME( 1986, dangarb,  dangar,   galivan,  dangarb,  0, ROT270, "bootleg", "Dangar - Ufo Robo (bootleg)" )
 GAME( 1986, ninjemak, 0,        ninjemak, ninjemak, 0, ROT270, "Nichibutsu", "Ninja Emaki (US)" )
 GAME( 1986, youma,    ninjemak, ninjemak, ninjemak, 0, ROT270, "Nichibutsu", "Youma Ninpou Chou (Japan)" )

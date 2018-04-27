@@ -2514,7 +2514,7 @@ GAMEX( 1995, raveracw, 0,        namcos22,  raveracw, raveracw, ROT0, "Namco", "
 GAMEX( 1993, ridgeraj, 0,        namcos22,  ridgera,  ridgeraj, ROT0, "Namco", "Ridge Racer (Rev. RR1, Japan)"             , GAME_NO_SOUND|GAME_NOT_WORKING ) /* ? */
 GAMEX( 1994, ridger2j, 0,        namcos22,  ridgera,  ridger2j, ROT0, "Namco", "Ridge Racer 2 (Rev. RRS1, Japan)"          , GAME_NO_SOUND|GAME_NOT_WORKING ) /* ? */
 GAMEX( 1994, acedrvrw, 0,        namcos22,  victlap,  acedrvr,  ROT0, "Namco", "Ace Driver (Rev. AD2, World)"              , GAME_NO_SOUND|GAME_NOT_WORKING ) /* almost */
-GAMEX( 1996, victlapw, 0,        namcos22,  victlap,  victlap,  ROT0, "Namco", "Ace Driver: Victory Lap (Rev. ADV2, World)", GAME_NO_SOUND|GAME_NOT_WORKING ) /* almost */
+GAMEX( 1996, victlapw, 0,        namcos22,  victlap,  victlap,  ROT0, "Namco", "Ace Driver - Victory Lap (Rev. ADV2, World)", GAME_NO_SOUND|GAME_NOT_WORKING ) /* almost */
 
 /* Super System22 games */
 GAMEX( 1995, airco22b, 0,        namcos22s, victlap,  airco22,  ROT0, "Namco", "Air Combat 22 (Rev. ACS1 Ver.B)"           , GAME_NO_SOUND|GAME_NOT_WORKING ) /* almost */

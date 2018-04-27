@@ -313,7 +313,7 @@ ROM_START( greenber )
 	ROM_LOAD( "gb9", 0x3000, 0x0400, CRC(c27b9ba3) SHA1(a2f4f0c4b61eb03bba13ae5d25dc01009a4f86ee) ) /* ok ?*/
 ROM_END
 
-GAMEX( 1979, andromed, 0, skychut,    skychut,   0, ROT270, "Irem", "Andromeda (Japan?)", GAME_NO_COCKTAIL | GAME_NO_SOUND | GAME_IMPERFECT_COLORS | GAME_NOT_WORKING )
+GAMEX( 1979, andromed, 0, skychut,    skychut,   0, ROT270, "Irem", "Andromeda (Japan[Q])", GAME_NO_COCKTAIL | GAME_NO_SOUND | GAME_IMPERFECT_COLORS | GAME_NOT_WORKING )
 GAMEX( 1979?,ipminvad, 0, skychut,    skychut,   0, ROT270, "Irem", "IPM Invader", GAME_NO_COCKTAIL | GAME_NO_SOUND | GAME_IMPERFECT_COLORS )
 GAMEX( 1980, skychut,  0, skychut,    skychut,   0, ROT270, "Irem", "Sky Chuter", GAME_NO_COCKTAIL | GAME_NO_SOUND | GAME_IMPERFECT_COLORS )
 GAMEX( 1979, spacbeam, 0, greenberet, spacebeam, 0, ROT270, "Irem", "Space Beam", GAME_NO_COCKTAIL | GAME_NO_SOUND | GAME_IMPERFECT_COLORS )

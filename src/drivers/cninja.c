@@ -1739,7 +1739,7 @@ GAME( 1990, edrandyj, edrandy, edrandy,  edrandy, 0,        ROT0, "Data East Cor
 GAME( 1991, cninja,   0,       cninja,   cninja,  cninja,   ROT0, "Data East Corporation", "Caveman Ninja (World revision 3)" )
 GAME( 1991, cninja0,  cninja,  cninja,   cninja,  cninja,   ROT0, "Data East Corporation", "Caveman Ninja (World revision 0)" )
 GAME( 1991, cninjau,  cninja,  cninja,   cninjau, cninja,   ROT0, "Data East Corporation", "Caveman Ninja (US)" )
-GAME( 1991, joemac,   cninja,  cninja,   cninja,  cninja,   ROT0, "Data East Corporation", "Tatakae Genshizin Joe & Mac (Japan)" )
+GAME( 1991, joemac,   cninja,  cninja,   cninja,  cninja,   ROT0, "Data East Corporation", "Tatakae Genshizin Joe and Mac (Japan)" )
 GAME( 1991, stoneage, cninja,  stoneage, cninja,  stoneage, ROT0, "bootleg", "Stoneage" )
 GAME( 1991, robocop2, 0,       robocop2, robocop2,0,        ROT0, "Data East Corporation", "Robocop 2 (World)" )
 GAME( 1991, robocp2u, robocop2,robocop2, robocop2,0,        ROT0, "Data East Corporation", "Robocop 2 (US)" )

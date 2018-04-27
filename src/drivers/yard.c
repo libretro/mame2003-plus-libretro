@@ -433,5 +433,5 @@ ROM_END
 
 
 GAME( 1983, yard,    0,    yard, yard,   0, ROT0, "Irem", "10 Yard Fight (Japan)" )
-GAME( 1984, vsyard,  yard, yard, vsyard, 0, ROT0, "Irem", "10 Yard Fight (Vs. version World, 11/05/84)" )
+GAME( 1984, vsyard,  yard, yard, vsyard, 0, ROT0, "Irem", "10 Yard Fight (Vs. version World, 11-05-84)" )
 GAME( 1984, vsyard2, yard, yard, vsyard, 0, ROT0, "Irem", "10 Yard Fight (Vs. version Japan, set 2)" )

@@ -565,7 +565,7 @@ static MACHINE_DRIVER_START( tbowl )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_DUAL_MONITOR)
-	MDRV_ASPECT_RATIO(4,3)
+	MDRV_ASPECT_RATIO(8,3)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo)
@@ -734,5 +734,5 @@ ROM_START( tbowlj )
 	ROM_LOAD( "6206a.3",	0x10000, 0x10000, CRC(3aa24744) SHA1(06de3f9a2431777218cc67f59230fddbfa01cf2d) )
 ROM_END
 
-GAMEX( 1987, tbowl,    0,        tbowl,    tbowl,    0, ROT0,  "Tecmo", "Tecmo Bowl (World?)", GAME_IMPERFECT_SOUND )
+GAMEX( 1987, tbowl,    0,        tbowl,    tbowl,    0, ROT0,  "Tecmo", "Tecmo Bowl (World[Q])", GAME_IMPERFECT_SOUND )
 GAMEX( 1987, tbowlj,   tbowl,    tbowl,    tbowlj,   0, ROT0,  "Tecmo", "Tecmo Bowl (Japan)", GAME_IMPERFECT_SOUND )

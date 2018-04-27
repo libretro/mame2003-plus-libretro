@@ -7268,7 +7268,7 @@ GAMEX(1992, sandscrp, 0,        sandscrp, sandscrp, 0,          ROT90, "Face",  
 GAME( 1994, gtmr,     0,        gtmr,     gtmr,     kaneko16,   ROT0,  "Kaneko", "Great 1000 Miles Rally" )
 GAME( 1994, gtmre,    gtmr,     gtmr,     gtmr,     kaneko16,   ROT0,  "Kaneko", "Great 1000 Miles Rally (Evolution Model)" )
 GAME( 1994, gtmrusa,  gtmr,     gtmr,     gtmr,     kaneko16,   ROT0,  "Kaneko", "Great 1000 Miles Rally (USA)" )
-GAME( 1995, gtmr2,    0,        gtmr2,    gtmr2,    kaneko16,   ROT0,  "Kaneko", "Mille Miglia 2: Great 1000 Miles Rally" )
+GAME( 1995, gtmr2,    0,        gtmr2,    gtmr2,    kaneko16,   ROT0,  "Kaneko", "Mille Miglia 2 - Great 1000 Miles Rally" )
 
 /* New-working games */
 

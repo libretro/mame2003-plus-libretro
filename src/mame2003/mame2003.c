@@ -16,42 +16,60 @@
 #include "state.h"
 
 
-static int driverIndex; /* Index of mame game loaded */
-extern struct osd_create_params videoConfig;
-
-static float delta_samples;
-int samples_per_frame = 0;
-short *samples_buffer;
-short *conversion_buffer;
-int usestereo = 1;
+static int     driverIndex; /* Index of mame game loaded */
+static float   delta_samples;
+int            samples_per_frame = 0;
+short*         samples_buffer;
+short*         conversion_buffer;
+int            usestereo = 1;
+int16_t        prev_pointer_x;
+int16_t        prev_pointer_y;
+unsigned       retroColorMode;
+unsigned long  lastled = 0;
+int16_t        XsoundBuffer[2048];
 
 extern const struct KeyboardInfo retroKeys[];
-extern int retroKeyState[512];
-extern int retroJsState[72];
-extern int16_t mouse_x[4];
-extern int16_t mouse_y[4];
-int16_t prev_pointer_x;
-int16_t prev_pointer_y;
-extern int16_t analogjoy[4][4];
+extern int          retroKeyState[512];
+extern int          retroJsState[72];
+extern int16_t      mouse_x[4];
+extern int16_t      mouse_y[4];
+extern struct       osd_create_params videoConfig;
+extern int16_t      analogjoy[4][4];
 
-struct retro_perf_callback perf_cb;
-unsigned retroColorMode;
+struct                             retro_perf_callback perf_cb;
+retro_environment_t                environ_cb                    = NULL;
+retro_log_printf_t                 log_cb                        = NULL;
+retro_video_refresh_t              video_cb                      = NULL;
+static retro_input_poll_t          poll_cb                       = NULL;
+static retro_input_state_t         input_cb                      = NULL;
+static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
+retro_set_led_state_t              led_state_cb                  = NULL;
 
-retro_environment_t environ_cb = NULL;
-retro_log_printf_t log_cb = NULL;
-retro_video_refresh_t video_cb = NULL;
-static retro_input_poll_t poll_cb = NULL;
-static retro_input_state_t input_cb = NULL;
-static retro_audio_sample_batch_t audio_batch_cb = NULL;
+#define DESCRIBE_BUTTONS(INDEX) \
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      "Button 1" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      "Button 2" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      "Button 3" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      "Button 4" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      "Button 5" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      "Button 6" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     "Button 7" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     "Button 8" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
 
-unsigned long lastled = 0;
-retro_set_led_state_t led_state_cb = NULL;
-
-int16_t XsoundBuffer[2048];
-
-void mame_frame(void);
-void mame_done(void);
-
+struct retro_input_descriptor desc[] = {
+    DESCRIBE_BUTTONS(0)
+    DESCRIBE_BUTTONS(1)
+    DESCRIBE_BUTTONS(2)
+    DESCRIBE_BUTTONS(3)
+    { 0, 0, 0, 0, NULL }
+    };
 
 /******************************************************************************
 
@@ -621,8 +639,9 @@ void retro_run (void)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
-    int orientation;
-    unsigned rotateMode;
+    char            *driver_lookup;
+    int             orientation;
+    unsigned        rotateMode;
     static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
 
     /* this should be updated whenever the options.retropad_layout changes
@@ -734,32 +753,26 @@ bool retro_load_game(const struct retro_game_info *game)
 
     environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 
-    /* Find game index */
-    
-    /* Get all chars after the last slash */
-    if(!string_is_empty(game->path))
-    {
-      path = strdup(game->path);
-    }
-    else
-    {
-      path = strdup(".");
-    }
-    last = find_last_slash(path);
-    memset(driverName, 0, PATH_MAX_LENGTH);
-    strncpy(driverName, last ? last + 1 : path, PATH_MAX_LENGTH - 1);
-    free(path);
-    
-    path_remove_extension(driverName);
+    driver_lookup = strdup(path_basename(game->path));
+    path_remove_extension(driver_lookup);
 
     /* Search list */
-    for (driverIndex = 0; drivers[driverIndex]; driverIndex++) /* could go out of bounds here? */
-       if(strcmp(driverName, drivers[driverIndex]->name) == 0)
-          break;
+    for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
+    {
+       if(strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0 || strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0)
+       {
+          log_cb(RETRO_LOG_INFO, "[MAME 2003] Total MAME drivers: %i. Matched game driver: [%s].\n", total_drivers, drivers[driverIndex]->name);
+          break;          
+       }
+    }
 
-    log_cb(RETRO_LOG_INFO, "Found game: %s [%s].\n", driverName, drivers[driverIndex]->name);
+    if(driverIndex == total_drivers)
+    {
+        log_cb(RETRO_LOG_ERROR, "[MAME 2003] Total MAME drivers: %i. MAME driver not found for selected game!\n", total_drivers);
+        return false;
+    }
 
-    options.libretro_content_path = strdup(game->path);        
+    options.libretro_content_path = strdup(game->path);
     path_basedir(options.libretro_content_path);
 
     /* Get system directory from frontend */
@@ -790,13 +803,15 @@ bool retro_load_game(const struct retro_game_info *game)
     
     environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
     options.ui_orientation = uiModes[rotateMode];
+    
+    free(driver_lookup);
 
     return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
 }
 
 void retro_unload_game(void)
 {
-    mame_done();
+    /*mame_done();*/
     
     /*free(fallbackDir);
     systemDir = 0;*/

@@ -1102,7 +1102,7 @@ static DRIVER_INIT( wiz )
 
 
 GAMEX(1983, stinger,  0,       stinger, stinger,  stinger, ROT90,  "Seibu Denshi", "Stinger", GAME_IMPERFECT_SOUND )
-GAMEX(1983, stinger2, stinger, stinger, stinger2, stinger, ROT90,  "Seibu Denshi", "Stinger (prototype?)", GAME_IMPERFECT_SOUND )
+GAMEX(1983, stinger2, stinger, stinger, stinger2, stinger, ROT90,  "Seibu Denshi", "Stinger (prototype[Q])", GAME_IMPERFECT_SOUND )
 GAMEX(1984, scion,    0,       scion,   scion,    0,       ROT0,   "Seibu Denshi", "Scion", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_COLORS )
 GAMEX(1984, scionc,   scion,   scion,   scion,    0,       ROT0,   "Seibu Denshi (Cinematronics license)", "Scion (Cinematronics)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_COLORS )
 GAME( 1984, kungfut,  0,       kungfut, kungfut,  0,       ROT0,   "Seibu Kaihatsu Inc.", "Kung-Fu Taikun" )

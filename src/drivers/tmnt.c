@@ -4073,7 +4073,7 @@ GAME( 1990, punkshtj, punkshot, punkshot, punksht2, gfx,      ROT0,  "Konami", "
 GAME( 1990, lgtnfght, 0,        lgtnfght, lgtnfght, gfx,      ROT90, "Konami", "Lightning Fighters (US)" )
 GAME( 1990, trigon,   lgtnfght, lgtnfght, lgtnfght, gfx,      ROT90, "Konami", "Trigon (Japan)" )
 
-GAME( 1991, blswhstl, 0,        detatwin, detatwin, gfx,      ROT90, "Konami", "Bells & Whistles (Version L)" )		/* version L*/
+GAME( 1991, blswhstl, 0,        detatwin, detatwin, gfx,      ROT90, "Konami", "Bells and Whistles (Version L)" )		/* version L*/
 GAME( 1991, detatwin, blswhstl, detatwin, detatwin, gfx,      ROT90, "Konami", "Detana!! Twin Bee (Japan ver. J)" )	/* version J*/
 
 GAMEX(1991, glfgreat, 0,        glfgreat, glfgreat, glfgreat, ROT0,  "Konami", "Golfing Greats", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

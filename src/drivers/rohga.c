@@ -940,7 +940,7 @@ static DRIVER_INIT( nitrobal )
 	deco74_decrypt(REGION_GFX3);
 }
 
-GAME(1991, rohga,    0,       rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Rohga Armour Force (Asia/Europe v3.0)" )
+GAME(1991, rohga,    0,       rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Rohga Armour Force (Asia-Europe v3.0)" )
 GAME(1991, rohgah,   rohga,   rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Rohga Armour Force (Hong Kong v3.0)" )
 GAME(1991, rohgau,   rohga,   rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Rohga Armour Force (US v1.0)" )
 GAME(1992, wizdfire, 0,       wizdfire, wizdfire, wizdfire, ROT0,   "Data East Corporation", "Wizard Fire (US v1.1)" )

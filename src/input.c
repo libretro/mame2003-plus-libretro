@@ -259,26 +259,28 @@ static const char* internal_code_name(InputCode code)
 /* Update the code table */
 static void internal_code_update(void)
 {
-	const struct KeyboardInfo *keyinfo;
-	const struct JoystickInfo *joyinfo;
+  const struct KeyboardInfo *keyinfo;
+  const struct JoystickInfo *joyinfo;
 
-	/* add only oscode because all standard codes are already present */
+  /* add only oscode because all standard codes are already present */
 
-	keyinfo = osd_get_key_list();
-	while (keyinfo->name)
-	{
-		if (keyinfo->standardcode == CODE_OTHER)
-			if (internal_oscode_find(keyinfo->code,CODE_TYPE_KEYBOARD) == CODE_NONE)
-				internal_oscode_add(keyinfo->code,CODE_TYPE_KEYBOARD);
-		++keyinfo;
-	}
+  keyinfo = osd_get_key_list();
+  while (keyinfo->name)
+  {
+    if (keyinfo->standardcode == CODE_OTHER)
+      if (internal_oscode_find(keyinfo->code,CODE_TYPE_KEYBOARD) == CODE_NONE)
+        internal_oscode_add(keyinfo->code,CODE_TYPE_KEYBOARD);
 
-	joyinfo = osd_get_joy_list();
-	while (joyinfo->name)
-	{
-		if (joyinfo->standardcode == CODE_OTHER)
-                        if (internal_oscode_find(joyinfo->code,CODE_TYPE_JOYSTICK)==CODE_NONE)
-				internal_oscode_add(joyinfo->code,CODE_TYPE_JOYSTICK);
+    ++keyinfo;
+  }
+
+  joyinfo = osd_get_joy_list();
+  while (joyinfo->name)
+  {
+    if (joyinfo->standardcode == CODE_OTHER)
+      if (internal_oscode_find(joyinfo->code,CODE_TYPE_JOYSTICK)==CODE_NONE)
+        internal_oscode_add(joyinfo->code,CODE_TYPE_JOYSTICK);
+
 		++joyinfo;
 	}
 }

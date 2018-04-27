@@ -512,7 +512,7 @@ ROM_END
  *
  *************************************/
 
-GAME( 1983, cloak,   0,     cloak, cloak, 0, ROT0, "Atari", "Cloak & Dagger (rev 5)" )
-GAME( 1983, cloaksp, cloak, cloak, cloak, 0, ROT0, "Atari", "Cloak & Dagger (Spanish)" )
-GAME( 1983, cloakfr, cloak, cloak, cloak, 0, ROT0, "Atari", "Cloak & Dagger (French)" )
-GAME( 1983, cloakgr, cloak, cloak, cloak, 0, ROT0, "Atari", "Cloak & Dagger (German)" )
+GAME( 1983, cloak,   0,     cloak, cloak, 0, ROT0, "Atari", "Cloak and Dagger (rev 5)" )
+GAME( 1983, cloaksp, cloak, cloak, cloak, 0, ROT0, "Atari", "Cloak and Dagger (Spanish)" )
+GAME( 1983, cloakfr, cloak, cloak, cloak, 0, ROT0, "Atari", "Cloak and Dagger (French)" )
+GAME( 1983, cloakgr, cloak, cloak, cloak, 0, ROT0, "Atari", "Cloak and Dagger (German)" )

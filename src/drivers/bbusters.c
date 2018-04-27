@@ -893,7 +893,7 @@ DRIVER_INIT( mechatt )
 /******************************************************************************/
 
 #if !MECHATT_HACK
-GAME( 1989, bbusters, 0, bbusters, bbusters, bbusters, ROT0,  "SNK", "Beast Busters (World ?)" )
+GAME( 1989, bbusters, 0, bbusters, bbusters, bbusters, ROT0,  "SNK", "Beast Busters (World [Q])" )
 #else
 GAME( 1989, bbusters, 0, bbusters, bbusters, bbusters, ROT0,  "SNK", "Beast Busters" )
 #endif
