@@ -654,13 +654,13 @@ bool retro_load_game(const struct retro_game_info *game)
     path_remove_extension(driverName);
 
     /* Search list */
-    for (driverIndex = 0; drivers[driverIndex]; driverIndex++) /* could go out of bounds here? */
+    for (driverIndex = 0; /*driverIndex < total_drivers*/ 1; driverIndex++)
        if(strcmp(driverName, drivers[driverIndex]->name) == 0)
           break;
 
     log_cb(RETRO_LOG_INFO, "Found game: %s [%s].\n", driverName, drivers[driverIndex]->name);
 
-    options.libretro_content_path = strdup(game->path);        
+    options.libretro_content_path = strdup(game->path);
     path_basedir(options.libretro_content_path);
 
     /* Get system directory from frontend */
