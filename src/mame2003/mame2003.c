@@ -637,8 +637,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
     environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 
-    driver_lookup = strdup(path_basename(game->path));
-    path_remove_extension(driver_lookup);
+    driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
 
     /* Search list */
     for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
