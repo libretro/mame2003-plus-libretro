@@ -848,10 +848,8 @@ static data32_t *process_branch(data32_t *objdata, int vc, int logit)
 	UINT32 link = (lower >> 24) | ((upper & 0x7ff) << 8);
 	int taken = 0;
 
-#ifndef MESS
 	if ((ypos & 1) && ypos != 0x7ff)
 		fprintf(stderr, "        branch cc=%d ypos=%X link=%06X - \n", cc, ypos, link << 3);
-#endif
 
 	switch (cc)
 	{

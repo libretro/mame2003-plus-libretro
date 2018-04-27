@@ -48,7 +48,7 @@ void generate_xml_dat(void);
 
 int setup_active(void);
 
-#if defined(__sgi) && ! defined(MESS)
+#if defined(__sgi)
 int is_game_paused(void);
 #endif
 
