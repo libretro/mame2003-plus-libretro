@@ -173,7 +173,7 @@
  ***************************************************************/
 #define AUG 													\
  t1=RDOPARG(); t2=RDOPARG(); t3=RDOPARG(); \
- logerror("m65ce02 at pc:%.4x reserved op aug %.2x %.2x %.2x\n", \
+ retro_log_cb(RETRO_LOG_ERROR, LOGPRE "m65ce02 at pc:%.4x reserved op aug %.2x %.2x %.2x\n", \
   t1,t2,t3);
 
 /* 65ce02 ******************************************************
@@ -407,8 +407,8 @@
 		P=(P&F_E)|F_B|(temp&~F_E); \
 		if( m6502.irq_state != CLEAR_LINE && !(P & F_I) )		\
 		{														\
-			LOG(("M65ce02#%d PLP sets after_cli\n",             \
-				cpu_getactivecpu()));							\
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "M65ce02#%d PLP sets after_cli\n",             \
+				cpu_getactivecpu());							\
 			m6502.after_cli = 1;								\
 		}														\
 	}															\
@@ -431,8 +431,8 @@
 	PULL(PCH);													\
 	if( m65ce02.irq_state != CLEAR_LINE && !(P & F_I) ) 		\
 	{															\
-		LOG(("M65ce02#%d RTI sets after_cli\n",                 \
-			cpu_getactivecpu()));								\
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "M65ce02#%d RTI sets after_cli\n",                 \
+			cpu_getactivecpu());								\
 		m6502.after_cli = 1;									\
 	}															\
 	CHANGE_PC

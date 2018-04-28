@@ -41,15 +41,6 @@
 #include "mamedbg.h"
 #include "konami.h"
 
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
-
 static UINT8 konami_reg_layout[] = {
 	KONAMI_PC, KONAMI_S, KONAMI_CC, KONAMI_A, KONAMI_B, KONAMI_X, -1,
 	KONAMI_Y, KONAMI_U, KONAMI_DP, KONAMI_NMI_STATE, KONAMI_IRQ_STATE, KONAMI_FIRQ_STATE, 0
@@ -335,7 +326,7 @@ CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N
 	case 3: val = Y;	break; 			\
 	case 4: val = S; 	break; /* ? */	\
 	case 5: val = U;	break;			\
-	default: val = 0xff; logerror("Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
+	default: val = 0xff; log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
 }
 
 #define SETREG(val,reg) 				\
@@ -346,7 +337,7 @@ CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N
 	case 3: Y = val;	break;			\
 	case 4: S = val;	break; /* ? */	\
 	case 5: U = val; 	break;			\
-	default: logerror("Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
+	default: log_cb(RETRO_LOG_ERROR, "Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
 }
 
 /* opcode timings */
@@ -513,7 +504,7 @@ void konami_set_irq_line(int irqline, int state)
 	{
 		if (konami.nmi_state == state) return;
 		konami.nmi_state = state;
-		LOG(("KONAMI#%d set_nmi_line %d\n", cpu_getactivecpu(), state));
+		log_cb(RETRO_LOG_DEBUG, "KONAMI#%d set_nmi_line %d\n", cpu_getactivecpu(), state);
 		if( state == CLEAR_LINE ) return;
 
 		/* if the stack was not yet initialized */
@@ -545,7 +536,7 @@ void konami_set_irq_line(int irqline, int state)
 	}
 	else if (irqline < 2)
 	{
-	    LOG(("KONAMI#%d set_irq_line %d, %d\n", cpu_getactivecpu(), irqline, state));
+	    log_cb(RETRO_LOG_DEBUG, "KONAMI#%d set_irq_line %d, %d\n", cpu_getactivecpu(), irqline, state);
 		konami.irq_state[irqline] = state;
 		if (state == CLEAR_LINE) return;
 		CHECK_IRQ_LINES;

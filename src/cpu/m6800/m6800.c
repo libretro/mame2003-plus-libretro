@@ -61,14 +61,6 @@ TODO:
 #include "m6800.h"
 
 
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
 #if 0
 /* CPU subtypes, needed for extra insn after TAP/CLI/SEI */
 enum {
@@ -489,8 +481,8 @@ static INLINE void WM16( UINT32 Addr, PAIR *p )
 
 /* IRQ enter */
 static void ENTER_INTERRUPT(const char *message,UINT16 irq_vector)
-{
-	LOG((message, cpu_getactivecpu()));
+{ 
+	log_cb(RETRO_LOG_DEBUG, message, cpu_getactivecpu());
 	if( m6800.wai_state & (M6800_WAI|M6800_SLP) )
 	{
 		if( m6800.wai_state & M6800_WAI )
@@ -693,7 +685,7 @@ void m6800_set_irq_line(int irqline, int state)
 	if (irqline == IRQ_LINE_NMI)
 	{
 		if (m6800.nmi_state == state) return;
-		LOG(("M6800#%d set_nmi_line %d \n", cpu_getactivecpu(), state));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "M6800#%d set_nmi_line %d \n", cpu_getactivecpu(), state);
 		m6800.nmi_state = state;
 		if (state == CLEAR_LINE) return;
 
@@ -705,7 +697,7 @@ void m6800_set_irq_line(int irqline, int state)
 		int eddge;
 
 		if (m6800.irq_state[irqline] == state) return;
-		LOG(("M6800#%d set_irq_line %d,%d\n", cpu_getactivecpu(), irqline, state));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "M6800#%d set_irq_line %d,%d\n", cpu_getactivecpu(), irqline, state);
 		m6800.irq_state[irqline] = state;
 
 		switch(irqline)
@@ -2374,11 +2366,11 @@ READ_HANDLER( m6803_internal_registers_r )
 		case 0x05:
 		case 0x06:
 		case 0x07:
-			logerror("CPU #%d PC %04x: warning - read from unsupported internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - read from unsupported internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
 			return 0;
 		case 0x08:
 			m6800.pending_tcsr = 0;
-/*logerror("CPU #%d PC %04x: warning - read TCSR register\n",cpu_getactivecpu(),activecpu_get_pc());*/
+/*log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - read TCSR register\n",cpu_getactivecpu(),activecpu_get_pc());*/
 			return m6800.tcsr;
 		case 0x09:
 			if(!(m6800.pending_tcsr&TCSR_TOF))
@@ -2417,10 +2409,10 @@ READ_HANDLER( m6803_internal_registers_r )
 		case 0x11:
 		case 0x12:
 		case 0x13:
-			logerror("CPU #%d PC %04x: warning - read from unsupported internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - read from unsupported internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
 			return 0;
 		case 0x14:
-			logerror("CPU #%d PC %04x: read RAM control register\n",cpu_getactivecpu(),activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: read RAM control register\n",cpu_getactivecpu(),activecpu_get_pc());
 			return m6800.ram_ctrl;
 		case 0x15:
 		case 0x16:
@@ -2434,7 +2426,7 @@ READ_HANDLER( m6803_internal_registers_r )
 		case 0x1e:
 		case 0x1f:
 		default:
-			logerror("CPU #%d PC %04x: warning - read from reserved internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - read from reserved internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
 			return 0;
 	}
 }
@@ -2467,7 +2459,7 @@ WRITE_HANDLER( m6803_internal_registers_w )
 						| (cpu_readport16(M6803_PORT2) & (m6800.port2_ddr ^ 0xff)));
 
 				if (m6800.port2_ddr & 2)
-					logerror("CPU #%d PC %04x: warning - port 2 bit 1 set as output (OLVL) - not supported\n",cpu_getactivecpu(),activecpu_get_pc());
+					log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - port 2 bit 1 set as output (OLVL) - not supported\n",cpu_getactivecpu(),activecpu_get_pc());
 			}
 			break;
 		case 0x02:
@@ -2491,7 +2483,7 @@ WRITE_HANDLER( m6803_internal_registers_w )
 		case 0x05:
 		case 0x06:
 		case 0x07:
-			logerror("CPU #%d PC %04x: warning - write %02x to unsupported internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - write %02x to unsupported internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
 			break;
 		case 0x08:
 			m6800.tcsr = data;
@@ -2499,7 +2491,7 @@ WRITE_HANDLER( m6803_internal_registers_w )
 			MODIFIED_tcsr;
 			if( !(CC & 0x10) )
 				CHECK_IRQ2;
-/*logerror("CPU #%d PC %04x: TCSR = %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data);*/
+/*log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: TCSR = %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data);*/
 			break;
 		case 0x09:
 			latch09 = data & 0xff;	/* 6301 only */
@@ -2528,17 +2520,17 @@ WRITE_HANDLER( m6803_internal_registers_w )
 			break;
 		case 0x0d:
 		case 0x0e:
-			logerror("CPU #%d PC %04x: warning - write %02x to read only internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - write %02x to read only internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
 			break;
 		case 0x0f:
 		case 0x10:
 		case 0x11:
 		case 0x12:
 		case 0x13:
-			logerror("CPU #%d PC %04x: warning - write %02x to unsupported internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - write %02x to unsupported internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
 			break;
 		case 0x14:
-			logerror("CPU #%d PC %04x: write %02x to RAM control register\n",cpu_getactivecpu(),activecpu_get_pc(),data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: write %02x to RAM control register\n",cpu_getactivecpu(),activecpu_get_pc(),data);
 			m6800.ram_ctrl = data;
 			break;
 		case 0x15:
@@ -2553,7 +2545,7 @@ WRITE_HANDLER( m6803_internal_registers_w )
 		case 0x1e:
 		case 0x1f:
 		default:
-			logerror("CPU #%d PC %04x: warning - write %02x to reserved internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - write %02x to reserved internal register %02x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
 			break;
 	}
 }

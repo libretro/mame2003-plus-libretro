@@ -39,14 +39,7 @@
 #include "driver.h"
 #include "avgdvg.h"
 #include "vector.h"
-
-
-/*#define VG_DEBUG*/
-#ifdef VG_DEBUG
-#define VGLOG(x) logerror x
-#else
-#define VGLOG(x)
-#endif
+#include "log.h"
 
 
 /*************************************
@@ -255,12 +248,12 @@ static int dvg_generate_vector_list(void)
 			secondwd = vector_word(pc++);
 
 		/* debugging */
-		VGLOG(("%4x: %4x ", pc, firstwd));
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%4x: %4x ", pc, firstwd);
 		if (opcode <= DLABS)
 		{
 			(void)dvg_mnem;
-			VGLOG(("%s ", dvg_mnem[opcode]));
-			VGLOG(("%4x  ", secondwd));
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%s ", dvg_mnem[opcode]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%4x  ", secondwd);
 		}
 
 		/* switch off the opcode */
@@ -268,7 +261,7 @@ static int dvg_generate_vector_list(void)
 		{
 			/* 0 is an invalid opcode */
 			case 0:
-	 			VGLOG(("Error: DVG opcode 0!  Addr %4x Instr %4x %4x\n", pc-2, firstwd, secondwd));
+	 			log_cb(RETRO_LOG_ERROR, LOGPRE "Error: DVG opcode 0!  Addr %4x Instr %4x %4x\n", pc-2, firstwd, secondwd);
 #ifdef VG_DEBUG
 				done = 1;
 				break;
@@ -295,7 +288,7 @@ static int dvg_generate_vector_list(void)
 
 				/* determine the brightness */
 				z = secondwd >> 12;
-				VGLOG(("(%d,%d) z: %d scal: %d", x, y, z, opcode));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "(%d,%d) z: %d scal: %d", x, y, z, opcode);
 
 				/* compute the effective brightness */
 				z = effective_z(z, z);
@@ -340,7 +333,7 @@ static int dvg_generate_vector_list(void)
 	  			temp = (scale + temp) & 0x0f;
 				if (temp > 9)
 					temp = -1;
-				VGLOG(("(%d,%d) z: %d scal: %d", x, y, z, temp));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "(%d,%d) z: %d scal: %d", x, y, z, temp);
 
 				/* compute the deltas */
 				deltax = (x << 16) >> (9 - temp);
@@ -368,7 +361,7 @@ static int dvg_generate_vector_list(void)
 	  			/* set the current X,Y */
 				currentx = (x - xmin) << 16;
 				currenty = (ymax - y) << 16;
-				VGLOG(("(%d,%d) scal: %d", x, y, secondwd >> 12));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "(%d,%d) scal: %d", x, y, secondwd >> 12);
 				break;
 
 			/* DRTSL: return from subroutine */
@@ -389,7 +382,7 @@ static int dvg_generate_vector_list(void)
 
 				/* debugging */
 				if (firstwd & 0x1fff)
-					VGLOG(("(%d?)", firstwd & 0x1fff));
+					log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", firstwd & 0x1fff);
 				break;
 
 			/* DHALT: all done! */
@@ -398,13 +391,13 @@ static int dvg_generate_vector_list(void)
 
 				/* debugging */
 				if (firstwd & 0x1fff)
-      				VGLOG(("(%d?)", firstwd & 0x0fff));
+      				log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", firstwd & 0x0fff);
 				break;
 
 			/* DJMPL: jump to a new program location */
 			case DJMPL:
 				a = firstwd & 0x0fff;
-				VGLOG(("%4x", a));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%4x", a);
 				pc = a;
 
 				if (!pc)
@@ -414,7 +407,7 @@ static int dvg_generate_vector_list(void)
 			/* DJSRL: jump to a new program location as subroutine */
 			case DJSRL:
 				a = firstwd & 0x0fff;
-				VGLOG(("%4x", a));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%4x", a);
 
 				/* push the next PC on the stack */
 				stack[sp] = pc;
@@ -438,7 +431,7 @@ static int dvg_generate_vector_list(void)
 				logerror("Unknown DVG opcode found\n");
 				done = 1;
 		}
-   		VGLOG(("\n"));
+   		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 	}
 
 	/* return the total length of everything drawn */
@@ -606,12 +599,12 @@ static int avg_generate_vector_list(void)
 
 		/* debugging */
 		(void)avg_mnem;
-		VGLOG(("%4x: %4x ", pc, firstwd));
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%4x: %4x ", pc, firstwd);
 		if (opcode == VCTR)
-			VGLOG(("%4x  ", secondwd));
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%4x  ", secondwd);
 		else
-			VGLOG(("      "));
-		VGLOG(("%s ", avg_mnem[opcode]));
+			log_cb(RETRO_LOG_ERROR, LOGPRE "      ");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%s ", avg_mnem[opcode]);
 
 		/* switch off the opcode */
 		switch (opcode)
@@ -653,7 +646,7 @@ static int avg_generate_vector_list(void)
 					avg_add_point_callback(currentx, currenty, sparkle_callback, z);
 				else
 					avg_add_point(currentx, currenty, colorram[color], z);
-				VGLOG(("VCTR x:%d y:%d z:%d statz:%d", x, y, z, statz));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "VCTR x:%d y:%d z:%d statz:%d", x, y, z, statz);
 				break;
 
 			/* SVEC: draw a short vector */
@@ -686,7 +679,7 @@ static int avg_generate_vector_list(void)
 					avg_add_point_callback(currentx, currenty, sparkle_callback, z);
 				else
 					avg_add_point(currentx, currenty, colorram[color], z);
-				VGLOG(("SVEC x:%d y:%d z:%d statz:%d", x, y, z, statz));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "SVEC x:%d y:%d z:%d statz:%d", x, y, z, statz);
 				break;
 
 			/* STAT: control colors, clipping, sparkling, and flipping */
@@ -727,9 +720,9 @@ static int avg_generate_vector_list(void)
 				}
 
 				/* debugging */
-				VGLOG(("STAT: statz: %d color: %d", statz, color));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "STAT: statz: %d color: %d", statz, color);
 				if (xflip || sparkle)
-					VGLOG(("xflip: %02x  sparkle: %02x\n", xflip, sparkle));
+					log_cb(RETRO_LOG_ERROR, LOGPRE "xflip: %02x  sparkle: %02x\n", xflip, sparkle);
 				break;
 
 			/* SCAL: set the scale factor */
@@ -756,12 +749,12 @@ static int avg_generate_vector_list(void)
 					}
 
 				/* debugging */
-				VGLOG(("bin: %d, lin: ", b));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "bin: %d, lin: ", b);
 				if (l > 0x80)
-					VGLOG(("(%d?)", l));
+					log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", l);
 				else
-					VGLOG(("%d", l));
-				VGLOG((" scale: %f", (scale/(float)(1<<16))));
+					log_cb(RETRO_LOG_ERROR, LOGPRE "%d", l);
+				log_cb(RETRO_LOG_ERROR, LOGPRE " scale: %f", (scale/(float)(1<<16)));
 				break;
 
 			/* CNTR: center the beam */
@@ -769,7 +762,7 @@ static int avg_generate_vector_list(void)
 
 				/* delay stored in low 8 bits; normally is 0x40 */
 				d = firstwd & 0xff;
-				if (d != 0x40) VGLOG(("%d", d));
+				if (d != 0x40) log_cb(RETRO_LOG_ERROR, LOGPRE "%d", d);
 
 				/* move back to the middle */
 				currentx = xcenter;
@@ -795,7 +788,7 @@ static int avg_generate_vector_list(void)
 
 				/* debugging */
 				if (firstwd & 0x1fff)
-					VGLOG(("(%d?)", firstwd & 0x1fff));
+					log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", firstwd & 0x1fff);
 				break;
 
 			/* HALT: all done! */
@@ -804,13 +797,13 @@ static int avg_generate_vector_list(void)
 
 				/* debugging */
 				if (firstwd & 0x1fff)
-					VGLOG(("(%d?)", firstwd & 0x1fff));
+					log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", firstwd & 0x1fff);
 				break;
 
 			/* JMPL: jump to a new program location */
 			case JMPL:
 				a = firstwd & 0x1fff;
-				VGLOG(("%4x", a));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%4x", a);
 
 				/* if a = 0x0000, treat as HALT */
 				if (a == 0x0000)
@@ -822,7 +815,7 @@ static int avg_generate_vector_list(void)
 			/* JSRL: jump to a new program location as subroutine */
 			case JSRL:
 				a = firstwd & 0x1fff;
-				VGLOG(("%4x", a));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%4x", a);
 
 				/* if a = 0x0000, treat as HALT */
 				if (a == 0x0000)
@@ -851,7 +844,7 @@ static int avg_generate_vector_list(void)
 			default:
 				logerror("internal error\n");
 		}
-		VGLOG(("\n"));
+		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 	}
 
 	/* return the total length of everything drawn */

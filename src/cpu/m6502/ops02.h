@@ -567,7 +567,7 @@ extern	UINT8	*RAM;
 	if ( P & F_I ) {											\
 		PULL(P);												\
 		if ((m6502.irq_state != CLEAR_LINE) && !(P & F_I)) {	\
-			LOG(("M6502#%d PLP sets after_cli\n",cpu_getactivecpu())); \
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "M6502#%d PLP sets after_cli\n",cpu_getactivecpu()); \
 			m6502.after_cli = 1;								\
 		}														\
 	} else {													\
@@ -607,7 +607,7 @@ extern	UINT8	*RAM;
 	P |= F_T | F_B; 											\
 	if( (m6502.irq_state != CLEAR_LINE) && !(P & F_I) ) 		\
 	{															\
-		LOG(("M6502#%d RTI sets after_cli\n",cpu_getactivecpu())); \
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "M6502#%d RTI sets after_cli\n",cpu_getactivecpu()); \
 		m6502.after_cli = 1;									\
 	}															\
 	CHANGE_PC

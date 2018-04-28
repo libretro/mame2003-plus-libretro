@@ -311,7 +311,7 @@ void cpu_setOPbasez180(int pc)
  * RETN
  ***************************************************************/
 #define RETN	{												\
-	LOG(("Z180 #%d RETN IFF1:%d IFF2:%d\n", cpu_getactivecpu(), _IFF1, _IFF2)); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z180 #%d RETN IFF1:%d IFF2:%d\n", cpu_getactivecpu(), _IFF1, _IFF2); \
 	POP(PC);													\
 	z180_change_pc(_PCD);										\
 	if( _IFF1 == 0 && _IFF2 == 1 )								\
@@ -320,20 +320,20 @@ void cpu_setOPbasez180(int pc)
 		if( Z180.irq_state[0] != CLEAR_LINE ||					\
 			Z180.request_irq >= 0 ) 							\
 		{														\
-			LOG(("Z180 #%d RETN takes INT0\n",                  \
-				cpu_getactivecpu()));							\
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z180 #%d RETN takes INT0\n",                  \
+				cpu_getactivecpu());							\
 			take_interrupt(Z180_INT0);							\
 		}														\
 		else if( Z180.irq_state[1] != CLEAR_LINE )				\
 		{														\
-			LOG(("Z180 #%d RETN takes INT1\n",                  \
-				cpu_getactivecpu()));							\
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z180 #%d RETN takes INT1\n",                  \
+				cpu_getactivecpu());							\
 			take_interrupt(Z180_INT1);							\
 		}														\
 		else if( Z180.irq_state[2] != CLEAR_LINE )				\
 		{														\
-			LOG(("Z180 #%d RETN takes INT2\n",                  \
-				cpu_getactivecpu()));							\
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z180 #%d RETN takes INT2\n",                  \
+				cpu_getactivecpu());							\
 			take_interrupt(Z180_INT2);							\
 		}														\
 	}															\
@@ -351,8 +351,8 @@ void cpu_setOPbasez180(int pc)
 /*	_IFF1 = _IFF2;	*/											\
 	if( device >= 0 )											\
 	{															\
-		LOG(("Z180 #%d RETI device %d: $%02x\n",                \
-			cpu_getactivecpu(), device, Z180.irq[device].irq_param)); \
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Z180 #%d RETI device %d: $%02x\n",                \
+			cpu_getactivecpu(), device, Z180.irq[device].irq_param); \
 		Z180.irq[device].interrupt_reti(Z180.irq[device].irq_param); \
 	}															\
 }
@@ -1165,8 +1165,8 @@ static INLINE UINT8 SET(UINT8 bit, UINT8 value)
 		_R++;													\
 		while( cpu_readop(_PCD) == 0xfb ) /* more EIs? */		\
 		{														\
-			LOG(("Z180 #%d multiple EI opcodes at %04X\n",      \
-				cpu_getactivecpu(), _PC));						\
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z180 #%d multiple EI opcodes at %04X\n",      \
+				cpu_getactivecpu(), _PC);						\
 			CC(op,0xfb);										\
 			_PPC =_PCD; 										\
 			CALL_MAME_DEBUG;									\
@@ -1179,7 +1179,7 @@ static INLINE UINT8 SET(UINT8 bit, UINT8 value)
 			after_EI = 1;	/* avoid cycle skip hacks */		\
 			EXEC(op,ROP()); 									\
 			after_EI = 0;										\
-			LOG(("Z180 #%d EI takes INT0\n", cpu_getactivecpu())); \
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z180 #%d EI takes INT0\n", cpu_getactivecpu()); \
 			take_interrupt(Z180_INT0);							\
 		}														\
 		else if( Z180.irq_state[1] != CLEAR_LINE )				\
@@ -1187,7 +1187,7 @@ static INLINE UINT8 SET(UINT8 bit, UINT8 value)
 			after_EI = 1;	/* avoid cycle skip hacks */		\
 			EXEC(op,ROP()); 									\
 			after_EI = 0;										\
-			LOG(("Z180 #%d EI takes INT1\n", cpu_getactivecpu())); \
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z180 #%d EI takes INT1\n", cpu_getactivecpu()); \
 			take_interrupt(Z180_INT1);							\
 		}														\
 		else if( Z180.irq_state[2] != CLEAR_LINE )				\
@@ -1195,7 +1195,7 @@ static INLINE UINT8 SET(UINT8 bit, UINT8 value)
 			after_EI = 1;	/* avoid cycle skip hacks */		\
 			EXEC(op,ROP()); 									\
 			after_EI = 0;										\
-			LOG(("Z180 #%d EI takes INT2\n", cpu_getactivecpu())); \
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z180 #%d EI takes INT2\n", cpu_getactivecpu()); \
 			take_interrupt(Z180_INT2);							\
 		} else EXEC(op,ROP());									\
 	} else _IFF2 = 1;											\

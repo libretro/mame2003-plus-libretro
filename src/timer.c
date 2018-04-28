@@ -38,15 +38,6 @@
 #define MAX_TIMERS 256
 
 
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
-
 
 /*-------------------------------------------------
 	internal timer structure
@@ -311,7 +302,7 @@ void timer_adjust_global_time(double delta)
 		timer->expire -= delta;
 	}
 
-	LOG(("timer_adjust_global_time: delta=%.9f head->expire=%.9f\n", delta, timer_head->expire));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "timer_adjust_global_time: delta=%.9f head->expire=%.9f\n", delta, timer_head->expire);
 
 	/* now process any timers that are overdue */
 	while (timer_head->expire < TIME_IN_NSEC(1))
@@ -331,7 +322,7 @@ void timer_adjust_global_time(double delta)
 		/* call the callback */
 		if (was_enabled && timer->callback)
 		{
-			LOG(("Timer %08X fired (expire=%.9f)\n", (UINT32)timer, timer->expire));
+			log_cb(RETRO_LOG_DEBUG, "Timer %08X fired (expire=%.9f)\n", (UINT32)timer, timer->expire);
 			profiler_mark(PROFILER_TIMER_CALLBACK);
 			(*timer->callback)(timer->callback_param);
 			profiler_mark(PROFILER_END);
@@ -423,7 +414,7 @@ void timer_adjust(mame_timer *which, double duration, int param, double period)
 	timer_list_insert(which);
 
 	/* if this was inserted as the head, abort the current timeslice and resync */
-LOG(("timer_adjust %08X to expire @ %.9f\n", (UINT32)which, which->expire));
+  log_cb(RETRO_LOG_DEBUG, "timer_adjust %08X to expire @ %.9f\n", (UINT32)which, which->expire);
 	if (which == timer_head && cpu_getexecutingcpu() >= 0)
 		activecpu_abort_timeslice();
 }
@@ -493,7 +484,7 @@ void timer_remove(mame_timer *which)
 	/* error if this is an inactive timer */
 	if (which->tag == -1)
 	{
-		logerror("timer_remove: removed an inactive timer!\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "timer_remove: removed an inactive timer!\n");
 		return;
 	}
 

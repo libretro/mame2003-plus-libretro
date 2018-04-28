@@ -57,14 +57,6 @@ addresses take place.
 #define M6509_IRQ_VEC	M6502_IRQ_VEC
 #define M6509_NMI_VEC	M6502_NMI_VEC
 
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
 #ifdef RUNTIME_LOADER
 struct cpu_interface
 m6509_interface=
@@ -266,7 +258,7 @@ static INLINE void m6509_take_irq(void)
 		P |= F_I;		/* knock out D and set I flag */
 		PCL = RDMEM(EAD);
 		PCH = RDMEM(EAD+1);
-		LOG(("M6509#%d takes IRQ ($%04x)\n", cpu_getactivecpu(), PCD));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "M6509#%d takes IRQ ($%04x)\n", cpu_getactivecpu(), PCD);
 		/* call back the cpuintrf to let it clear the line */
 		if (m6509.irq_callback) (*m6509.irq_callback)(0);
 		change_pc20(PCD);
@@ -297,16 +289,16 @@ int m6509_execute(int cycles)
 		/* check if the I flag was just reset (interrupts enabled) */
 		if( m6509.after_cli )
 		{
-			LOG(("M6509#%d after_cli was >0", cpu_getactivecpu()));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "M6509#%d after_cli was >0", cpu_getactivecpu());
 			m6509.after_cli = 0;
 			if (m6509.irq_state != CLEAR_LINE)
 			{
-				LOG((": irq line is asserted: set pending IRQ\n"));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE ": irq line is asserted: set pending IRQ\n");
 				m6509.pending_irq = 1;
 			}
 			else
 			{
-				LOG((": irq line is clear\n"));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE ": irq line is clear\n");
 			}
 		}
 		else
@@ -326,7 +318,7 @@ void m6509_set_irq_line(int irqline, int state)
 		m6509.nmi_state = state;
 		if( state != CLEAR_LINE )
 		{
-			LOG(( "M6509#%d set_nmi_line(ASSERT)\n", cpu_getactivecpu()));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "M6509#%d set_nmi_line(ASSERT)\n", cpu_getactivecpu());
 			EAD = M6509_NMI_VEC;
 			EAWH = PBWH;
 			m6509_ICount -= 7;
@@ -336,7 +328,7 @@ void m6509_set_irq_line(int irqline, int state)
 			P |= F_I;		/* knock out D and set I flag */
 			PCL = RDMEM(EAD);
 			PCH = RDMEM(EAD+1);
-			LOG(("M6509#%d takes NMI ($%04x)\n", cpu_getactivecpu(), PCD));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "M6509#%d takes NMI ($%04x)\n", cpu_getactivecpu(), PCD);
 			change_pc20(PCD);
 		}
 	}
@@ -346,7 +338,7 @@ void m6509_set_irq_line(int irqline, int state)
 		{
 			if( m6509.so_state && !state )
 			{
-				LOG(( "M6509#%d set overflow\n", cpu_getactivecpu()));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "M6509#%d set overflow\n", cpu_getactivecpu());
 				P|=F_V;
 			}
 			m6509.so_state=state;
@@ -355,7 +347,7 @@ void m6509_set_irq_line(int irqline, int state)
 		m6509.irq_state = state;
 		if( state != CLEAR_LINE )
 		{
-			LOG(( "M6509#%d set_irq_line(ASSERT)\n", cpu_getactivecpu()));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "M6509#%d set_irq_line(ASSERT)\n", cpu_getactivecpu());
 			m6509.pending_irq = 1;
 		}
 	}

@@ -89,22 +89,7 @@
 #include "state.h"
 #include "mamedbg.h"
 #include "hd6309.h"
-
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
-#ifndef true
-#define true 1
-#endif
-
-#ifndef false
-#define false 0
-#endif
+#include <boolean.h>
 
 /*#define BIG_SWITCH*/
 
@@ -648,7 +633,7 @@ void hd6309_set_irq_line(int irqline, int state)
 	{
 		if (hd6309.nmi_state == state) return;
 		hd6309.nmi_state = state;
-		LOG(("HD6309#%d set_irq_line (NMI) %d (PC=%4.4X)\n", cpu_getactivecpu(), state, pPC));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "HD6309#%d set_irq_line (NMI) %d (PC=%4.4X)\n", cpu_getactivecpu(), state, pPC);
 		if( state == CLEAR_LINE ) return;
 
 		/* if the stack was not yet initialized */
@@ -687,7 +672,7 @@ void hd6309_set_irq_line(int irqline, int state)
 	}
 	else if (irqline < 2)
 	{
-		LOG(("HD6309#%d set_irq_line %d, %d (PC=%4.4X)\n", cpu_getactivecpu(), irqline, state, pPC));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "HD6309#%d set_irq_line %d, %d (PC=%4.4X)\n", cpu_getactivecpu(), irqline, state, pPC);
 		hd6309.irq_state[irqline] = state;
 		if (state == CLEAR_LINE) return;
 		CHECK_IRQ_LINES();
