@@ -248,12 +248,12 @@ static int dvg_generate_vector_list(void)
 			secondwd = vector_word(pc++);
 
 		/* debugging */
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%4x: %4x ", pc, firstwd);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x: %4x ", pc, firstwd);
 		if (opcode <= DLABS)
 		{
 			(void)dvg_mnem;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%s ", dvg_mnem[opcode]);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%4x  ", secondwd);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%s ", dvg_mnem[opcode]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x  ", secondwd);
 		}
 
 		/* switch off the opcode */
@@ -261,7 +261,7 @@ static int dvg_generate_vector_list(void)
 		{
 			/* 0 is an invalid opcode */
 			case 0:
-	 			log_cb(RETRO_LOG_ERROR, LOGPRE "Error: DVG opcode 0!  Addr %4x Instr %4x %4x\n", pc-2, firstwd, secondwd);
+	 			log_cb(RETRO_LOG_DEBUG, LOGPRE "Error: DVG opcode 0!  Addr %4x Instr %4x %4x\n", pc-2, firstwd, secondwd);
 #ifdef VG_DEBUG
 				done = 1;
 				break;
@@ -288,7 +288,7 @@ static int dvg_generate_vector_list(void)
 
 				/* determine the brightness */
 				z = secondwd >> 12;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "(%d,%d) z: %d scal: %d", x, y, z, opcode);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "(%d,%d) z: %d scal: %d", x, y, z, opcode);
 
 				/* compute the effective brightness */
 				z = effective_z(z, z);
@@ -333,7 +333,7 @@ static int dvg_generate_vector_list(void)
 	  			temp = (scale + temp) & 0x0f;
 				if (temp > 9)
 					temp = -1;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "(%d,%d) z: %d scal: %d", x, y, z, temp);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "(%d,%d) z: %d scal: %d", x, y, z, temp);
 
 				/* compute the deltas */
 				deltax = (x << 16) >> (9 - temp);
@@ -361,7 +361,7 @@ static int dvg_generate_vector_list(void)
 	  			/* set the current X,Y */
 				currentx = (x - xmin) << 16;
 				currenty = (ymax - y) << 16;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "(%d,%d) scal: %d", x, y, secondwd >> 12);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "(%d,%d) scal: %d", x, y, secondwd >> 12);
 				break;
 
 			/* DRTSL: return from subroutine */
@@ -370,7 +370,7 @@ static int dvg_generate_vector_list(void)
 				/* handle stack underflow */
 				if (sp == 0)
 	    		{
-					logerror("\n*** Vector generator stack underflow! ***\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "\n*** Vector generator stack underflow! ***\n");
 					done = 1;
 					sp = MAXSTACK - 1;
 				}
@@ -382,7 +382,7 @@ static int dvg_generate_vector_list(void)
 
 				/* debugging */
 				if (firstwd & 0x1fff)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", firstwd & 0x1fff);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "(%d?)", firstwd & 0x1fff);
 				break;
 
 			/* DHALT: all done! */
@@ -391,13 +391,13 @@ static int dvg_generate_vector_list(void)
 
 				/* debugging */
 				if (firstwd & 0x1fff)
-      				log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", firstwd & 0x0fff);
+      				log_cb(RETRO_LOG_DEBUG, LOGPRE "(%d?)", firstwd & 0x0fff);
 				break;
 
 			/* DJMPL: jump to a new program location */
 			case DJMPL:
 				a = firstwd & 0x0fff;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%4x", a);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x", a);
 				pc = a;
 
 				if (!pc)
@@ -407,7 +407,7 @@ static int dvg_generate_vector_list(void)
 			/* DJSRL: jump to a new program location as subroutine */
 			case DJSRL:
 				a = firstwd & 0x0fff;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%4x", a);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x", a);
 
 				/* push the next PC on the stack */
 				stack[sp] = pc;
@@ -415,7 +415,7 @@ static int dvg_generate_vector_list(void)
 				/* check for stack overflows */
 				if (sp == (MAXSTACK - 1))
 	    		{
-					logerror("\n*** Vector generator stack overflow! ***\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "\n*** Vector generator stack overflow! ***\n");
 					done = 1;
 					sp = 0;
 				}
@@ -428,10 +428,10 @@ static int dvg_generate_vector_list(void)
 
 			/* anything else gets caught here */
 			default:
-				logerror("Unknown DVG opcode found\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown DVG opcode found\n");
 				done = 1;
 		}
-   		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+   		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 	}
 
 	/* return the total length of everything drawn */
@@ -571,7 +571,7 @@ static int avg_generate_vector_list(void)
 	/* check for zeroed vector RAM */
 	if (vector_word(pc) == 0 && vector_word(pc + 1) == 0)
 	{
-		logerror("VGO with zeroed vector memory\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "VGO with zeroed vector memory\n");
 		return total_length;
 	}
 
@@ -599,12 +599,12 @@ static int avg_generate_vector_list(void)
 
 		/* debugging */
 		(void)avg_mnem;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%4x: %4x ", pc, firstwd);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x: %4x ", pc, firstwd);
 		if (opcode == VCTR)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%4x  ", secondwd);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x  ", secondwd);
 		else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "      ");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%s ", avg_mnem[opcode]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "      ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%s ", avg_mnem[opcode]);
 
 		/* switch off the opcode */
 		switch (opcode)
@@ -646,7 +646,7 @@ static int avg_generate_vector_list(void)
 					avg_add_point_callback(currentx, currenty, sparkle_callback, z);
 				else
 					avg_add_point(currentx, currenty, colorram[color], z);
-				log_cb(RETRO_LOG_ERROR, LOGPRE "VCTR x:%d y:%d z:%d statz:%d", x, y, z, statz);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "VCTR x:%d y:%d z:%d statz:%d", x, y, z, statz);
 				break;
 
 			/* SVEC: draw a short vector */
@@ -679,7 +679,7 @@ static int avg_generate_vector_list(void)
 					avg_add_point_callback(currentx, currenty, sparkle_callback, z);
 				else
 					avg_add_point(currentx, currenty, colorram[color], z);
-				log_cb(RETRO_LOG_ERROR, LOGPRE "SVEC x:%d y:%d z:%d statz:%d", x, y, z, statz);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "SVEC x:%d y:%d z:%d statz:%d", x, y, z, statz);
 				break;
 
 			/* STAT: control colors, clipping, sparkling, and flipping */
@@ -720,9 +720,9 @@ static int avg_generate_vector_list(void)
 				}
 
 				/* debugging */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "STAT: statz: %d color: %d", statz, color);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "STAT: statz: %d color: %d", statz, color);
 				if (xflip || sparkle)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "xflip: %02x  sparkle: %02x\n", xflip, sparkle);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "xflip: %02x  sparkle: %02x\n", xflip, sparkle);
 				break;
 
 			/* SCAL: set the scale factor */
@@ -736,7 +736,7 @@ static int avg_generate_vector_list(void)
 					if (firstwd & 0x0800)
 					{
 						int newymin = ymin;
-						logerror("CLIP %d\n", firstwd & 0x0800);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "CLIP %d\n", firstwd & 0x0800);
 
 						/* toggle the current state */
 						ywindow = !ywindow;
@@ -749,12 +749,12 @@ static int avg_generate_vector_list(void)
 					}
 
 				/* debugging */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "bin: %d, lin: ", b);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "bin: %d, lin: ", b);
 				if (l > 0x80)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", l);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "(%d?)", l);
 				else
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%d", l);
-				log_cb(RETRO_LOG_ERROR, LOGPRE " scale: %f", (scale/(float)(1<<16)));
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%d", l);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE " scale: %f", (scale/(float)(1<<16)));
 				break;
 
 			/* CNTR: center the beam */
@@ -762,7 +762,7 @@ static int avg_generate_vector_list(void)
 
 				/* delay stored in low 8 bits; normally is 0x40 */
 				d = firstwd & 0xff;
-				if (d != 0x40) log_cb(RETRO_LOG_ERROR, LOGPRE "%d", d);
+				if (d != 0x40) log_cb(RETRO_LOG_DEBUG, LOGPRE "%d", d);
 
 				/* move back to the middle */
 				currentx = xcenter;
@@ -776,7 +776,7 @@ static int avg_generate_vector_list(void)
 				/* handle stack underflow */
 				if (sp == 0)
 				{
-					logerror("\n*** Vector generator stack underflow! ***\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "\n*** Vector generator stack underflow! ***\n");
 					done = 1;
 					sp = MAXSTACK - 1;
 				}
@@ -788,7 +788,7 @@ static int avg_generate_vector_list(void)
 
 				/* debugging */
 				if (firstwd & 0x1fff)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", firstwd & 0x1fff);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "(%d?)", firstwd & 0x1fff);
 				break;
 
 			/* HALT: all done! */
@@ -797,13 +797,13 @@ static int avg_generate_vector_list(void)
 
 				/* debugging */
 				if (firstwd & 0x1fff)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "(%d?)", firstwd & 0x1fff);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "(%d?)", firstwd & 0x1fff);
 				break;
 
 			/* JMPL: jump to a new program location */
 			case JMPL:
 				a = firstwd & 0x1fff;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%4x", a);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x", a);
 
 				/* if a = 0x0000, treat as HALT */
 				if (a == 0x0000)
@@ -815,7 +815,7 @@ static int avg_generate_vector_list(void)
 			/* JSRL: jump to a new program location as subroutine */
 			case JSRL:
 				a = firstwd & 0x1fff;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%4x", a);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%4x", a);
 
 				/* if a = 0x0000, treat as HALT */
 				if (a == 0x0000)
@@ -828,7 +828,7 @@ static int avg_generate_vector_list(void)
 					/* check for stack overflows */
 					if (sp == (MAXSTACK - 1))
 					{
-						logerror("\n*** Vector generator stack overflow! ***\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "\n*** Vector generator stack overflow! ***\n");
 						done = 1;
 						sp = 0;
 					}
@@ -842,9 +842,9 @@ static int avg_generate_vector_list(void)
 
 			/* anything else gets caught here */
 			default:
-				logerror("internal error\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "internal error\n");
 		}
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 	}
 
 	/* return the total length of everything drawn */
@@ -946,7 +946,7 @@ int avgdvg_init(int vector_type)
 	/* 0 vector RAM size is invalid */
 	if (vectorram_size == 0)
 	{
-		logerror("Error: vectorram_size not initialized\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error: vectorram_size not initialized\n");
 		return 1;
 	}
 
@@ -960,7 +960,7 @@ int avgdvg_init(int vector_type)
 	vector_engine = vector_type;
 	if (vector_engine < AVGDVG_MIN || vector_engine > AVGDVG_MAX)
 	{
-		logerror("Error: unknown Atari Vector Game Type\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error: unknown Atari Vector Game Type\n");
 		return 1;
 	}
 
