@@ -2,7 +2,7 @@ DEBUG=0
 DEBUGGER=0
 SPLIT_UP_LINK=0
 CORE_DIR := src
-TARGET_NAME := mame2003-plus
+TARGET_NAME := mame2003_plus
 BUILD_BIN2C ?= 0
 
 ifneq ($(SANITIZER),)
