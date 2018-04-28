@@ -665,7 +665,7 @@ static WRITE32_HANDLER( msm6242_w )
 
 	if(offset>=4)
 	{
-		printf("Timer 0 outbound\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Timer 0 outbound\n");
 		return;
 	}
 }

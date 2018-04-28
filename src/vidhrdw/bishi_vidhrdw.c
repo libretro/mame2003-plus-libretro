@@ -19,7 +19,7 @@ static void bishi_tile_callback(int layer, int *code, int *color)
 /*	*code -= '0';*/
 /*	*color = layer_colorbase[layer] | (*color>>2 & 0x0f);*/
 /*	K055555GX_decode_vmixcolor(layer, color);*/
-/*	if (*color) printf("plane %x col %x [55 %x %x]\n", layer, *color, layer_colorbase[layer], K055555_get_palette_index(layer));*/
+/*	if (*color) log_cb(RETRO_LOG_ERROR, LOGPRE "plane %x col %x [55 %x %x]\n", layer, *color, layer_colorbase[layer], K055555_get_palette_index(layer));*/
 
 	*color = layer_colorbase[layer] + ((*color & 0xf0));
 }

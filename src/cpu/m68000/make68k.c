@@ -8132,17 +8132,17 @@ int main(int argc, char **argv)
 {
 	int dwLoop;
 
-	printf("\nMake68K - V%s - Copyright 1998, Mike Coates (mame@btinternet.com)\n", VERSION);
-	printf("                            1999, & Darren Olafson (deo@mail.island.net)\n");
-	printf("                            2000\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "\nMake68K - V%s - Copyright 1998, Mike Coates (mame@btinternet.com)\n", VERSION);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "                            1999, & Darren Olafson (deo@mail.island.net)\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "                            2000\n");
 
 	if (argc != 4 && argc != 5)
 	{
-		printf("Usage: %s outfile jumptable-outfile type [ppro]\n", argv[0]);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Usage: %s outfile jumptable-outfile type [ppro]\n", argv[0]);
 		exit(1);
 	}
 
-	printf("Building 680%s              2001\n\n",argv[3]);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Building 680%s              2001\n\n",argv[3]);
 
 	for (dwLoop=0;dwLoop<65536;)  OpcodeArray[dwLoop++] = -2;
 
@@ -8172,14 +8172,14 @@ int main(int argc, char **argv)
 	if(argc > 4 && !strcmp(argv[4], "ppro"))
 	{
 		  ppro = 1;
-		  printf("Generating ppro opcodes\n");
+		  log_cb(RETRO_LOG_ERROR, LOGPRE "Generating ppro opcodes\n");
 	}
 
 	EmitCode();
 
 	fclose(fp);
 
-	printf("\n%d Unique Opcodes\n",Opcount);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "\n%d Unique Opcodes\n",Opcount);
 
 	/* output Jump table to separate file */
 	fp = fopen(argv[2], "w");

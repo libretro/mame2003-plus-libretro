@@ -50,7 +50,7 @@ static void get_gx_psac1a_tile_info(int tile_index)
 
 	tileno = map[1]<<8 | map[0];
 
-/*	if (tileno) printf("1a map: %x\n", tileno);*/
+/*	if (tileno) log_cb(RETRO_LOG_ERROR, LOGPRE "1a map: %x\n", tileno);*/
 
 	colour = (psac_colorbase << 4);
 
@@ -68,7 +68,7 @@ static void get_gx_psac1b_tile_info(int tile_index)
 
 	tileno = map[5]<<8 | map[4];
 
-/*	if (tileno) printf("1b map: %x\n", tileno);*/
+/*	if (tileno) log_cb(RETRO_LOG_ERROR, LOGPRE "1b map: %x\n", tileno);*/
 
 	colour = (psac_colorbase << 4);
 

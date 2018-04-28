@@ -38,7 +38,7 @@ extern int deco16_pf1_colour_bank,deco16_pf2_colour_bank,deco16_pf3_colour_bank,
 
 static int backfire_bank_callback(int bank)
 {
-/*  printf("bank callback %04x\n",bank); */ /* bit 1 gets set too?*/
+/*  log_cb(RETRO_LOG_ERROR, LOGPRE "bank callback %04x\n",bank); */ /* bit 1 gets set too?*/
 
 	bank = bank >> 4;
 
@@ -661,7 +661,7 @@ static void descramble_sound( void )
 
 static READ32_HANDLER( backfire_speedup_r )
 {
-/*  printf( "%08x\n",activecpu_get_pc());*/
+/*  log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x\n",activecpu_get_pc());*/
 
 	if (activecpu_get_pc()==0xce44)  cpu_spinuntil_time(TIME_IN_USEC(400)); /* backfire*/
 	if (activecpu_get_pc()==0xcee4)  cpu_spinuntil_time(TIME_IN_USEC(400)); /* backfira*/

@@ -579,7 +579,7 @@ static void mips3drc_recompile(struct drccore *drc)
 	int remaining = MAX_INSTRUCTIONS;
 	UINT32 pc = mips3.pc;
 	
-/*	printf("recompile_callback @ PC=%08X\n", mips3.pc);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "recompile_callback @ PC=%08X\n", mips3.pc);*/
 /*
 	if (!ram_read_table)
 	{
@@ -694,7 +694,7 @@ static UINT32 compile_one(struct drccore *drc, UINT32 pc)
 	/* handle the results */		
 	if (!(result & RECOMPILE_SUCCESSFUL))
 	{
-		printf("Unimplemented op %08X (%02X,%02X)\n", *opptr, *opptr >> 26, *opptr & 0x3f);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Unimplemented op %08X (%02X,%02X)\n", *opptr, *opptr >> 26, *opptr & 0x3f);
 		mips3_exit();
 		exit(1);
 	}

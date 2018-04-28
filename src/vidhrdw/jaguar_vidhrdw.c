@@ -554,12 +554,12 @@ blitter_stats[i][3]++;
 blitter_pixels[i] += (blitter_regs[B_COUNT] & 0xffff) * (blitter_regs[B_COUNT] >> 16);
 if (++reps % 100 == 99)
 {
-	printf("---\nBlitter stats:\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "---\nBlitter stats:\n");
 	for (i = 0; i < blitter_count; i++)
 		printf("  CMD=%08X A1=%08X A2=%08X %6d times, %08X%08X pixels\n",
 				blitter_stats[i][0], blitter_stats[i][1], blitter_stats[i][2],
 				blitter_stats[i][3], (UINT32)(blitter_pixels[i] >> 32), (UINT32)(blitter_pixels[i]));
-	printf("---\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "---\n");
 }
 }
 #endif

@@ -238,8 +238,8 @@ void run_mbox(void)
 		IP6_0  = PROM_MAS[MPA];
 
 #if (MATHDEBUG)
-		printf("\n(MPA:%x), Strobe: %x, IP7: %d, IP6_0:%x\n",MPA, IP15_8, IP7, IP6_0);
-		printf("(BIC: %x), A: %x, B: %x, C: %x, ACC: %x\n",BIC,A,B,C,ACC);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "\n(MPA:%x), Strobe: %x, IP7: %d, IP6_0:%x\n",MPA, IP15_8, IP7, IP6_0);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "(BIC: %x), A: %x, B: %x, C: %x, ACC: %x\n",BIC,A,B,C,ACC);
 #endif
 
 		/* construct the current RAM address */

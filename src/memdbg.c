@@ -71,7 +71,7 @@ memdbg_Debug( void )
 	BeginCriticalSection();
 
 	pMemPtr = mpFirstAllocation;
-	printf( "\nmemdbg allocations:\n" );
+	log_cb(RETRO_LOG_ERROR, LOGPRE  "\nmemdbg allocations:\n" );
 	while( pMemPtr )
 	{
 		printf( "%p\tsize: %d\t file %s line %d\n",
@@ -97,14 +97,14 @@ memdbg_Alloc( size_t numBytes, const char *pModule, int line )
 	pData = NULL; /* default */
 	if( !numBytes )
 	{
-		printf( "WARNING: attempt to memdbg_Alloc zero bytes!\n" );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "WARNING: attempt to memdbg_Alloc zero bytes!\n" );
 	}
 	else
 	{
 		MemPtr *pMemPtr = malloc(sizeof(MemPtr)+numBytes+sizeof(mGuardData));
 		if( !pMemPtr )
 		{
-			printf( "memdbg_Alloc failure: insufficient memory!\n" );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "memdbg_Alloc failure: insufficient memory!\n" );
 		}
 		else
 		{
@@ -131,7 +131,7 @@ memdbg_Free( void *pData )
 
 	if( !pData )
 	{
-		printf( "WARNING: attempt to memdbg_Free a NULL pointer!\n" );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "WARNING: attempt to memdbg_Free a NULL pointer!\n" );
 	}
 	else
 	{

@@ -5399,7 +5399,7 @@ READ16_HANDLER( K054157_rom_word_8000_r )
 
 /*	usrintf_showmessage("%04x: addr %06x",activecpu_get_pc(),addr);*/
 
-/*	printf("rd @ %x (bank %x, final %x)\n", offset*2, K054157_cur_rombank, addr);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "rd @ %x (bank %x, final %x)\n", offset*2, K054157_cur_rombank, addr);*/
 
 	return K054157_rombase[addr+1] | (K054157_rombase[addr] << 8);
 }
@@ -6089,7 +6089,7 @@ READ16_HANDLER( K056832_rom_word_r )
 	ofs8 += (K056832_CurGfxBank*10*1024);
 
 /*	if (!offset)*/
-/*		printf("CurGfxBank = %x\n", K056832_CurGfxBank);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CurGfxBank = %x\n", K056832_CurGfxBank);*/
 
 	if (!K056832_rombase)
 	{

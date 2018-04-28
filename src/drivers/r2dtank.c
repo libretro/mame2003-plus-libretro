@@ -46,7 +46,7 @@ Should be very similar to Sigma's Spiders hardware.
 static int dipsw_bank;
 static WRITE_HANDLER( dipsw_bank_w )
 {
-/*	printf("bank = %x\n",data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "bank = %x\n",data);*/
 	dipsw_bank = data;
 }
 

@@ -206,7 +206,7 @@ int main( int argc, char *argv[] )
 			fclose( f );
 			return 3;
 		}
-		printf( "_start = $%08x\n\n", m_psxexe_header.pc0 );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "_start = $%08x\n\n", m_psxexe_header.pc0 );
 		if( offset == 0 )
 		{
 			offset = m_psxexe_header.t_addr;
@@ -244,18 +244,18 @@ int main( int argc, char *argv[] )
 	{
 		i = DasmMIPS( buf, pc + offset );
 
-		printf( "%08x: ", pc + offset );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: ", pc + offset );
 		for( j = 0; j < i ;j++ )
 		{
-			printf( "%02x ", filebuf[ ( pc & ~3 ) + order[ pc & 3 ] ] );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x ", filebuf[ ( pc & ~3 ) + order[ pc & 3 ] ] );
 			pc++;
 		}
 		while( j < 10 )
 		{
-			printf( "   " );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "   " );
 			j++;
 		}
-		printf( "%s\n", buf );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "%s\n", buf );
 	}
 	free (filebuf);
 	return 0;

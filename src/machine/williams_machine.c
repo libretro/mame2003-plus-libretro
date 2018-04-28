@@ -903,17 +903,17 @@ static WRITE_HANDLER( tshoot_lamp_w )
 #if 0
 	/* gun coil */
 	if (data & 0x10)
-		printf("[gun coil] ");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "[gun coil] ");
 	else
-		printf("           ");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "           ");
 
 	/* feather coil */
 	if (data & 0x20)
-		printf("[feather coil] ");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "[feather coil] ");
 	else
-		printf("               ");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "               ");
 
-	printf("\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 #endif
 }
 

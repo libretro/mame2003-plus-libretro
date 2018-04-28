@@ -832,7 +832,7 @@ WRITE32_HANDLER( midway_ioasic_w )
 	
 		case IOASIC_DEBUGOUT:
 			if (PRINTF_DEBUG)
-				printf("%c", data & 0xff);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%c", data & 0xff);
 			break;
 			
 		case IOASIC_SOUNDCTL:

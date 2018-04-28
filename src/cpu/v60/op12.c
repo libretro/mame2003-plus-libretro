@@ -1788,7 +1788,7 @@ UINT32 opSHAB(void)
 		SetSZPF_Byte(appb);
 	}
 
-/*	printf("SHAB: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appb, _CY, _Z, _OV, _S);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "SHAB: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appb, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2BYTE();
 	F12END();
@@ -1842,7 +1842,7 @@ UINT32 opSHAH(void)
 		SetSZPF_Word(apph);
 	}
 
-/*	printf("SHAH: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, apph, _CY, _Z, _OV, _S);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "SHAH: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, apph, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2HALF();
 	F12END();
@@ -1896,7 +1896,7 @@ UINT32 opSHAW(void)
 		SetSZPF_Long(appw);
 	}
 
-/*	printf("SHAW: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, appw, _CY, _Z, _OV, _S);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "SHAW: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, appw, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2WORD();
 	F12END();
@@ -1956,7 +1956,7 @@ UINT32 opSHLB(void) /* TRUSTED */
 		}
 	}
 
-/*	printf("SHLB: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appb, _CY, _Z, _OV, _S);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "SHLB: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appb, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2BYTE();
 	F12END();
@@ -1973,7 +1973,7 @@ UINT32 opSHLH(void) /* TRUSTED */
 	F12LOADOP2HALF();
 
 	count=(INT8)(f12Op1&0xFF);
-/*	printf("apph: %x count: %d  ", apph, count);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "apph: %x count: %d  ", apph, count);*/
 	if (count>0)
 	{
 		/* left shift flags:*/
@@ -2016,7 +2016,7 @@ UINT32 opSHLH(void) /* TRUSTED */
 		}
 	}
 
-/*	printf("SHLH: %x _CY: %d _Z: %d _OV: %d _S: %d\n", apph, _CY, _Z, _OV, _S);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "SHLH: %x _CY: %d _Z: %d _OV: %d _S: %d\n", apph, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2HALF();
 	F12END();
@@ -2075,7 +2075,7 @@ UINT32 opSHLW(void) /* TRUSTED */
 		}
 	}
 
-/*	printf("SHLW: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appw, _CY, _Z, _OV, _S);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "SHLW: %x _CY: %d _Z: %d _OV: %d _S: %d\n", appw, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2WORD();
 	F12END();

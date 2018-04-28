@@ -1472,7 +1472,7 @@ static int compute_expected_depth(void)
 			return 2 + ((command >> 3) & 0x7ffff);
 		
 		default:
-			printf("UNKNOWN PACKET TYPE %d\n", command & 7);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "UNKNOWN PACKET TYPE %d\n", command & 7);
 			return 1;
 	}
 	return 1;
@@ -2953,7 +2953,7 @@ WRITE32_HANDLER( voodoo_textureram_w )
 	if (trex >= tmus)
 	{
 		if (trex != 3)
-			printf("TMU %d write\n", trex);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "TMU %d write\n", trex);
 		return;
 	}
 	

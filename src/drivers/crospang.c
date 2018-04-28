@@ -373,37 +373,37 @@ VIDEO_UPDATE(crospang)
 	if(keyboard_pressed(KEYCODE_X))
 	{
 		scrol++;
-		printf("scrol = %d\n",scrol);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "scrol = %d\n",scrol);
 	}
 
 	if(keyboard_pressed(KEYCODE_C))
 	{
 		scrol--;
-		printf("scrol = %d\n",scrol);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "scrol = %d\n",scrol);
 	}
 
 	if(keyboard_pressed(KEYCODE_V))
 	{
 		scrol2++;
-		printf("scrol2 = %d\n",scrol2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "scrol2 = %d\n",scrol2);
 	}
 
 	if(keyboard_pressed(KEYCODE_B))
 	{
 		scrol2--;
-		printf("scrol2 = %d\n",scrol2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "scrol2 = %d\n",scrol2);
 	}
 
 	if(keyboard_pressed(KEYCODE_Q))
 	{
 		scrol3++;
-		printf("scrol2 = %d\n",scrol3);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "scrol2 = %d\n",scrol3);
 	}
 
 	if(keyboard_pressed(KEYCODE_W))
 	{
 		scrol3--;
-		printf("scrol3 = %d\n",scrol3);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "scrol3 = %d\n",scrol3);
 	}
 */
 	tilemap_draw(bitmap,cliprect,bg_layer,0,0);

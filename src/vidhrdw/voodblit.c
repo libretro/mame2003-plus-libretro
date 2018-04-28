@@ -116,7 +116,7 @@ void RENDERFUNC(void)
 
 	/* check for unhandled stuff */
 	if ((voodoo_regs[tLOD] >> 24) & 1)
-		printf("tmultibaseaddr\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "tmultibaseaddr\n");
 	
 	/* sort the verticies */
 	vmin = &tri_va;

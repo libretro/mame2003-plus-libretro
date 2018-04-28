@@ -465,7 +465,7 @@ static INLINE void get_tile_info(int tile_index, data32_t *gfx_base)
 	UINT8 abtype=(tile>>(16+9))&0x1f;
 
 #if DEBUG_F3
-/*if((tile&0xffff)>Machine->gfx[1]->total_elements) printf("tile code:%04x\n",tile&0xffff);*/
+/*if((tile&0xffff)>Machine->gfx[1]->total_elements) log_cb(RETRO_LOG_ERROR, LOGPRE "tile code:%04x\n",tile&0xffff);*/
 	if(deb_tileflag)
 	{
 		int c=tile&0xffff;

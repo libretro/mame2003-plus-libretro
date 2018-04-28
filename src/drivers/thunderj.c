@@ -177,7 +177,7 @@ READ16_HANDLER( thunderj_video_control_r )
 	/* Use these lines to detect when things go south:
 
 	if (cpu_readmem24bew_word(0x163482) > 0xfff)
-		printf("You're screwed!");*/
+		log_cb(RETRO_LOG_ERROR, LOGPRE "You're screwed!");*/
 
 	return atarivc_r(offset,0);
 }

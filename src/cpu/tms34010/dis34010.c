@@ -101,9 +101,9 @@ int main (int argc,char *argv[])
 		i=(Dasm34010 (buf,pc<<3))>>3;
 
 		printf ("%08X: ",(pc+offset) << 3);
-		for (j=0;j<i ;++j) printf("%02X ",filebuf[pc+j]);
-		for (   ;j<10;++j) printf("   ");
-		printf(buf);
+		for (j=0;j<i ;++j) log_cb(RETRO_LOG_ERROR, LOGPRE "%02X ",filebuf[pc+j]);
+		for (   ;j<10;++j) log_cb(RETRO_LOG_ERROR, LOGPRE "   ");
+		log_cb(RETRO_LOG_ERROR, LOGPRE buf);
 		printf ("\n");
 		pc+=i;
 	}

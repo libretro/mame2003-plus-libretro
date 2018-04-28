@@ -2971,7 +2971,7 @@ ROM_END
 
 static WRITE16_HANDLER( trap_w )
 {
-/*	printf("Write %x to magic (mask=%x) at PC=%x\n", data, mem_mask, activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Write %x to magic (mask=%x) at PC=%x\n", data, mem_mask, activecpu_get_pc());*/
 }
 
 static DRIVER_INIT ( s32 )

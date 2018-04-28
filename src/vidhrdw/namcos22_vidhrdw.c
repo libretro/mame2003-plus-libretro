@@ -558,7 +558,7 @@ LoadMatrix( const INT32 *pSource, double M[4][4] )
 			return pSource;
 
 		default:
-			printf( "bad LoadMatrix(0x%08x)!!\n", opcode );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "bad LoadMatrix(0x%08x)!!\n", opcode );
 			return NULL;
 		}
 	}
@@ -936,7 +936,7 @@ READ32_HANDLER( namcos22_dspram_r )
 {
 	if( keyboard_pressed(KEYCODE_SPACE) )
 	{
-		printf( "pointram_r(%08x)\n", offset*4 );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "pointram_r(%08x)\n", offset*4 );
 		logerror( "%08x pointram_r(%08x)\n", activecpu_get_pc(), offset*4 );
 	}
 	return namcos22_polygonram[offset];
@@ -946,7 +946,7 @@ WRITE32_HANDLER( namcos22_dspram_w )
 {
 	if( keyboard_pressed(KEYCODE_SPACE)  )
 	{
-		printf( "pointram_w(%08x,%08x)\n", offset*4, data );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "pointram_w(%08x,%08x)\n", offset*4, data );
 		logerror( "%08x pointram_w(%08x,%08x)\n", activecpu_get_pc(), offset*4, data );
 	}
 	COMBINE_DATA( &namcos22_polygonram[offset] );
@@ -1187,7 +1187,7 @@ DrawPolygons( struct mame_bitmap *bitmap )
 				iTarget  = *pSource++; iTarget  &= (MAX_CAMERA-1);
 				if( iSource0>=MAX_CAMERA || iSource1>=MAX_CAMERA || iTarget>=MAX_CAMERA )
 				{
-					printf("illegal compose\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "illegal compose\n");
 					return;
 				}
 				assert( iSource0<0x80 && iSource1<0x80 && iTarget<0x80 );
@@ -1253,7 +1253,7 @@ DrawPolygons( struct mame_bitmap *bitmap )
 						break;
 
 					default:
-						printf( "0x8010: unknown attr[%04x]\n", code );
+						log_cb(RETRO_LOG_ERROR, LOGPRE  "0x8010: unknown attr[%04x]\n", code );
 						break;
 					}
 				} while( code != 0xffff );
@@ -1278,11 +1278,11 @@ DrawPolygons( struct mame_bitmap *bitmap )
 				return;
 
 			default:
-				printf( "unknown opcode: %04x\n", code );
-				printf( "[premature eof = %04x]\n",code );
+				log_cb(RETRO_LOG_ERROR, LOGPRE  "unknown opcode: %04x\n", code );
+				log_cb(RETRO_LOG_ERROR, LOGPRE  "[premature eof = %04x]\n",code );
 				for( i=0; i<32; i++ )
 				{
-					printf( " %08x", *pSource++ );
+					log_cb(RETRO_LOG_ERROR, LOGPRE  " %08x", *pSource++ );
 				}
 				return;
 			}

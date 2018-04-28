@@ -1239,8 +1239,8 @@ int main(int argc, char **argv)
 	int table_body_read = 0;
 	int ophandler_body_read = 0;
 
-	printf("\n\t\tMusashi v%s 68000, 68010, 68EC020, 68020 emulator\n", g_version);
-	printf("\t\tCopyright 1998-2000 Karl Stenerud (karl@mame.net)\n\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "\n\t\tMusashi v%s 68000, 68010, 68EC020, 68020 emulator\n", g_version);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "\t\tCopyright 1998-2000 Karl Stenerud (karl@mame.net)\n\n");
 
 	/* Check if output path and source for the input file are given */
     if(argc > 1)
@@ -1417,7 +1417,7 @@ int main(int argc, char **argv)
 	fclose(g_ops_nz_file);
 	fclose(g_input_file);
 
-	printf("Generated %d opcode handlers from %d primitives\n", g_num_functions, g_num_primitives);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Generated %d opcode handlers from %d primitives\n", g_num_functions, g_num_primitives);
 
 	return 0;
 }

@@ -797,7 +797,7 @@ static READ32_HANDLER( sound020_r )
 		rv |= LSW<<8;
 	}
 
-/*	printf("Read 68k @ %x (PC=%x)\n", reg, activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Read 68k @ %x (PC=%x)\n", reg, activecpu_get_pc());*/
 
 	/* we clearly have some problem because some games require these hacks*/
 	/* perhaps 68000/68020 timing is skewed?*/

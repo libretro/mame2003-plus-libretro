@@ -547,7 +547,7 @@ READ_HANDLER( snes_r_io )
 /*		case 0x4101: // PC: a104 - a10e - a12a	*/ /*only nss_actr*/
 /*		case 0x420c: // PC: 9c7d - 8fab			*/ /*only nss_ssoc*/
 		default:
-			printf("offset = %x pc = %x\n",offset,activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "offset = %x pc = %x\n",offset,activecpu_get_pc());
 	}
 
 	/* Unsupported reads return 0xff */
@@ -603,7 +603,7 @@ WRITE_HANDLER( snes_w_io )
 					snes_ppu.oam.size[0] = 1;
 					snes_ppu.oam.size[1] = 2;
 #ifdef SNES_DBG_REG_W
-					printf( "Object size unsupported: %d\n", (data & 0xe0) >> 5 );
+					log_cb(RETRO_LOG_ERROR, LOGPRE  "Object size unsupported: %d\n", (data & 0xe0) >> 5 );
 #endif
 			}
 			break;
@@ -713,9 +713,9 @@ WRITE_HANDLER( snes_w_io )
 				}
 #ifdef SNES_DBG_REG_W
 				if( (data & 0x80) != (snes_ram[VMAIN] & 0x80) )
-					printf( "VRAM access: %s(%d)\n", (data & 0x80) >> 7?"Word":"Byte", (data & 0x80) >> 7 );
+					log_cb(RETRO_LOG_ERROR, LOGPRE  "VRAM access: %s(%d)\n", (data & 0x80) >> 7?"Word":"Byte", (data & 0x80) >> 7 );
 				if( (data & 0xc) && (data & 0xc) != (snes_ram[VMAIN] & 0xc) )
-					printf( "Full graphic specified: %d, incr: %d\n", (data & 0xc) >> 2, vram_fg_incr );
+					log_cb(RETRO_LOG_ERROR, LOGPRE  "Full graphic specified: %d, incr: %d\n", (data & 0xc) >> 2, vram_fg_incr );
 #endif
 			}
 			break;
@@ -866,7 +866,7 @@ WRITE_HANDLER( snes_w_io )
 			/* FIXME: We don't support direct select for modes 3 & 4 or subscreen window stuff */
 #ifdef SNES_DBG_REG_W
 			if( (data & 0x2) != (snes_ram[CGWSEL] & 0x2) )
-				printf( "Add/Sub Layer: %s\n", ((data & 0x2) >> 1) ? "Subscreen" : "Fixed colour" );
+				log_cb(RETRO_LOG_ERROR, LOGPRE  "Add/Sub Layer: %s\n", ((data & 0x2) >> 1) ? "Subscreen" : "Fixed colour" );
 #endif
 			break;
 		case CGADSUB:	/* Addition/Subtraction designation for each screen */
@@ -909,7 +909,7 @@ WRITE_HANDLER( snes_w_io )
 			snes_ppu.beam.last_visible_line = (data & 0x4) ? 240 : 225;
 #ifdef SNES_DBG_REG_W
 			if( (data & 0x8) != (snes_ram[SETINI] & 0x8) )
-				printf( "Pseudo 512 mode: %s\n", (data & 0x8) ? "on" : "off" );
+				log_cb(RETRO_LOG_ERROR, LOGPRE  "Pseudo 512 mode: %s\n", (data & 0x8) ? "on" : "off" );
 #endif
 			break;
 		case APU00:		/* Audio port register */
@@ -998,7 +998,7 @@ WRITE_HANDLER( snes_w_io )
 			cpunum_set_clockscale( 0, (data & 0x1) ? 1.335820896 : 1.0 );
 #ifdef SNES_DBG_REG_W
 			if( (data & 0x1) != (snes_ram[MEMSEL] & 0x1) )
-				printf( "CPU speed: %f Mhz\n", (data & 0x1) ? 3.58 : 2.68 );
+				log_cb(RETRO_LOG_ERROR, LOGPRE  "CPU speed: %f Mhz\n", (data & 0x1) ? 3.58 : 2.68 );
 #endif
 			break;
 	/* Following are read-only */
@@ -1276,7 +1276,7 @@ void snes_hdma()
 			bbus = 0x2100 + snes_ram[SNES_DMA_BASE + dma + 1];
 
 #ifdef SNES_DBG_HDMA
-			printf( "HDMA-Ch: %d(%s) abus: %X bbus: %X type: %d(%X %X)\n", i, snes_ram[SNES_DMA_BASE + dma] & 0x40 ? "Indirect" : "Absolute", abus, bbus, snes_ram[SNES_DMA_BASE + dma] & 0x7, snes_ram[SNES_DMA_BASE + dma + 8],snes_ram[SNES_DMA_BASE + dma + 9] );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "HDMA-Ch: %d(%s) abus: %X bbus: %X type: %d(%X %X)\n", i, snes_ram[SNES_DMA_BASE + dma] & 0x40 ? "Indirect" : "Absolute", abus, bbus, snes_ram[SNES_DMA_BASE + dma] & 0x7, snes_ram[SNES_DMA_BASE + dma + 8],snes_ram[SNES_DMA_BASE + dma + 9] );
 #endif
 
 			switch( snes_ram[SNES_DMA_BASE + dma] & 0x7 )
@@ -1311,7 +1311,7 @@ void snes_hdma()
 				} break;
 				default:
 #ifdef MAME_DEBUG
-					printf( "  HDMA of unsupported type: %d\n", snes_ram[SNES_DMA_BASE + dma] & 0x7 );
+					log_cb(RETRO_LOG_ERROR, LOGPRE  "  HDMA of unsupported type: %d\n", snes_ram[SNES_DMA_BASE + dma] & 0x7 );
 #endif
 					break;
 			}
@@ -1383,7 +1383,7 @@ void snes_gdma( UINT8 channels )
 				length = 0x10000;	/* 0x0000 really means 0x10000 */
 
 #ifdef SNES_DBG_GDMA
-			printf( "GDMA-Ch %d: len: %X, abus: %X, bbus: %X, incr: %d, dir: %s, type: %d\n", i, length, abus, bbus, increment, snes_ram[SNES_DMA_BASE + dma] & 0x80 ? "PPU->CPU" : "CPU->PPU", snes_ram[SNES_DMA_BASE + dma] & 0x7 );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "GDMA-Ch %d: len: %X, abus: %X, bbus: %X, incr: %d, dir: %s, type: %d\n", i, length, abus, bbus, increment, snes_ram[SNES_DMA_BASE + dma] & 0x80 ? "PPU->CPU" : "CPU->PPU", snes_ram[SNES_DMA_BASE + dma] & 0x7 );
 #endif
 
 			switch( snes_ram[SNES_DMA_BASE + dma] & 0x7 )
@@ -1484,7 +1484,7 @@ void snes_gdma( UINT8 channels )
 				} break;
 				default:
 #ifdef MAME_DEBUG
-					printf( "  GDMA of unsupported type: %d\n", snes_ram[SNES_DMA_BASE + dma] & 0x7 );
+					log_cb(RETRO_LOG_ERROR, LOGPRE  "  GDMA of unsupported type: %d\n", snes_ram[SNES_DMA_BASE + dma] & 0x7 );
 #endif
 					break;
 			}

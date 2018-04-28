@@ -452,7 +452,7 @@ data8_t *install_mem_read_handler(int cpunum, offs_t start, offs_t end, mem_read
 	/* sanity check */
 	if (cpudata[cpunum].mem.dbits != 8)
 	{
-		printf("fatal: install_mem_read_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_mem_read_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
 		exit(1);
 	}
 
@@ -476,7 +476,7 @@ data16_t *install_mem_read16_handler(int cpunum, offs_t start, offs_t end, mem_r
 	/* sanity check */
 	if (cpudata[cpunum].mem.dbits != 16)
 	{
-		printf("fatal: install_mem_read16_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_mem_read16_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
 		exit(1);
 	}
 
@@ -500,7 +500,7 @@ data32_t *install_mem_read32_handler(int cpunum, offs_t start, offs_t end, mem_r
 	/* sanity check */
 	if (cpudata[cpunum].mem.dbits != 32)
 	{
-		printf("fatal: install_mem_read32_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_mem_read32_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
 		exit(1);
 	}
 
@@ -524,7 +524,7 @@ data8_t *install_mem_write_handler(int cpunum, offs_t start, offs_t end, mem_wri
 	/* sanity check */
 	if (cpudata[cpunum].mem.dbits != 8)
 	{
-		printf("fatal: install_mem_write_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_mem_write_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
 		exit(1);
 	}
 
@@ -548,7 +548,7 @@ data16_t *install_mem_write16_handler(int cpunum, offs_t start, offs_t end, mem_
 	/* sanity check */
 	if (cpudata[cpunum].mem.dbits != 16)
 	{
-		printf("fatal: install_mem_write16_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_mem_write16_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
 		exit(1);
 	}
 
@@ -572,7 +572,7 @@ data32_t *install_mem_write32_handler(int cpunum, offs_t start, offs_t end, mem_
 	/* sanity check */
 	if (cpudata[cpunum].mem.dbits != 32)
 	{
-		printf("fatal: install_mem_write32_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_mem_write32_handler called on %d-bit cpu\n",cpudata[cpunum].mem.dbits);
 		exit(1);
 	}
 
@@ -596,7 +596,7 @@ void install_port_read_handler(int cpunum, offs_t start, offs_t end, port_read_h
 	/* sanity check */
 	if (cpudata[cpunum].port.dbits != 8)
 	{
-		printf("fatal: install_port_read_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_port_read_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
 		exit(1);
 	}
 
@@ -619,7 +619,7 @@ void install_port_read16_handler(int cpunum, offs_t start, offs_t end, port_read
 	/* sanity check */
 	if (cpudata[cpunum].port.dbits != 16)
 	{
-		printf("fatal: install_port_read16_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_port_read16_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
 		exit(1);
 	}
 
@@ -642,7 +642,7 @@ void install_port_read32_handler(int cpunum, offs_t start, offs_t end, port_read
 	/* sanity check */
 	if (cpudata[cpunum].port.dbits != 32)
 	{
-		printf("fatal: install_port_read32_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_port_read32_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
 		exit(1);
 	}
 
@@ -665,7 +665,7 @@ void install_port_write_handler(int cpunum, offs_t start, offs_t end, port_write
 	/* sanity check */
 	if (cpudata[cpunum].port.dbits != 8)
 	{
-		printf("fatal: install_port_write_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_port_write_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
 		exit(1);
 	}
 
@@ -688,7 +688,7 @@ void install_port_write16_handler(int cpunum, offs_t start, offs_t end, port_wri
 	/* sanity check */
 	if (cpudata[cpunum].port.dbits != 16)
 	{
-		printf("fatal: install_port_write16_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_port_write16_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
 		exit(1);
 	}
 
@@ -711,7 +711,7 @@ void install_port_write32_handler(int cpunum, offs_t start, offs_t end, port_wri
 	/* sanity check */
 	if (cpudata[cpunum].port.dbits != 32)
 	{
-		printf("fatal: install_port_write32_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "fatal: install_port_write32_handler called on %d-bit cpu\n",cpudata[cpunum].port.dbits);
 		exit(1);
 	}
 
@@ -2971,19 +2971,19 @@ static void verify_masks(void)
 									if (size != 1)
 									{
 										if (!track_entry((void *)mra, (void *)mra->handler))
-											printf("%s: %s cpu %d readmem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
+											log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
 									}
 								}
 								size--;
 								if ((mra->start & size) != 0)
 								{
 									if (!track_entry((void *)mra, (void *)mra->handler))
-										printf("%s: %s cpu %d readmem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
+										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
 								}
 								if ((mra->end & size) != size)
 								{
 									if (!track_entry((void *)mra, (void *)mra->handler))
-										printf("%s: %s cpu %d readmem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
+										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
 								}
 							}
 
@@ -2998,19 +2998,19 @@ static void verify_masks(void)
 									if (size != 1)
 									{
 										if (!track_entry((void *)mwa, (void *)mwa->handler))
-											printf("%s: %s cpu %d writemem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
+											log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
 									}
 								}
 								size--;
 								if ((mwa->start & size) != 0)
 								{
 									if (!track_entry((void *)mwa, (void *)mwa->handler))
-										printf("%s: %s cpu %d writemem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
+										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
 								}
 								if ((mwa->end & size) != size)
 								{
 									if (!track_entry((void *)mwa, (void *)mwa->handler))
-										printf("%s: %s cpu %d writemem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
+										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
 								}
 							}
 
@@ -3025,19 +3025,19 @@ static void verify_masks(void)
 									if (size != 1)
 									{
 										if (!track_entry((void *)iora, (void *)iora->handler))
-											printf("%s: %s cpu %d readmem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
+											log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
 									}
 								}
 								size--;
 								if ((iora->start & size) != 0)
 								{
 									if (!track_entry((void *)iora, (void *)iora->handler))
-										printf("%s: %s cpu %d readmem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
+										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
 								}
 								if ((iora->end & size) != size)
 								{
 									if (!track_entry((void *)iora, (void *)iora->handler))
-										printf("%s: %s cpu %d readmem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
+										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
 								}
 							}
 
@@ -3052,26 +3052,26 @@ static void verify_masks(void)
 									if (size != 1)
 									{
 										if (!track_entry((void *)iowa, (void *)iowa->handler))
-											printf("%s: %s cpu %d writemem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
+											log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
 									}
 								}
 								size--;
 								if ((iowa->start & size) != 0)
 								{
 									if (!track_entry((void *)iowa, (void *)iowa->handler))
-										printf("%s: %s cpu %d writemem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
+										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
 								}
 								if ((iowa->end & size) != size)
 								{
 									if (!track_entry((void *)iowa, (void *)iowa->handler))
-										printf("%s: %s cpu %d writemem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
+										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
 								}
 							}
 				}
 			}
 		}
 	}
-	printf("Total busted entries = %d\n", track_count);
-	printf("Busted entries that are static = %d\n", static_count);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Total busted entries = %d\n", track_count);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Busted entries that are static = %d\n", static_count);
 }
 #endif

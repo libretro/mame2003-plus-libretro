@@ -1190,7 +1190,7 @@ static int calc3_decompress_table(int tabnum, UINT8* dstram, int dstoffset)
 
 	if (tabnum > numregions)
 	{
-		printf("CALC3 error, requested table > num tables!\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CALC3 error, requested table > num tables!\n");
 		return 0;
 	}
 

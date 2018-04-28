@@ -160,7 +160,7 @@ static WRITE16_HANDLER( cps1_sound_command_w )
 	/* Debug.*/
 	/*
 	if (data != 0xff) {
-		printf("%X\n", data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%X\n", data);
 	}
 	*/
 	

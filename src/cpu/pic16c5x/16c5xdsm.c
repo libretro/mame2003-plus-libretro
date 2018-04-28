@@ -212,7 +212,7 @@ unsigned Dasm16C5x(char *str, unsigned pc)
 
 	while (bit >= 0)
 	{
-		/* printf("{%c/%d}",*cp,bit); */
+		/* log_cb(RETRO_LOG_ERROR, LOGPRE "{%c/%d}",*cp,bit); */
 		switch(*cp)
 		{
 			case 'a': a <<=1; a |= ((code & (1<<bit)) ? 1 : 0); bit--; break;
@@ -222,7 +222,7 @@ unsigned Dasm16C5x(char *str, unsigned pc)
 			case 'k': k <<=1; k |= ((code & (1<<bit)) ? 1 : 0); bit--; break;
 			case ' ': break;
 			case '1': case '0':  bit--; break;
-			case '\0': printf("premature end of parse string, opcode %x, bit = %d\n",code,bit); exit(1);
+			case '\0': log_cb(RETRO_LOG_ERROR, LOGPRE "premature end of parse string, opcode %x, bit = %d\n",code,bit); exit(1);
 		}
 		cp++;
 	}
@@ -243,7 +243,7 @@ unsigned Dasm16C5x(char *str, unsigned pc)
 				case 'F': sprintf(num,"%s",regfile[f]); break;
 				case 'K': sprintf(num,"%02Xh",k); break;
 				default:
-					printf("illegal escape character in format '%s'\n",Op[op].fmt);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "illegal escape character in format '%s'\n",Op[op].fmt);
 					exit(1);
 			}
 			q = num; while (*q) *str++ = *q++;

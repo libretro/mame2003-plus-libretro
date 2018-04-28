@@ -130,7 +130,7 @@ WRITE_HANDLER( blockade_coin_latch_w )
     if (data & 0x80)
     {
     #ifdef BLOCKADE_LOG
-        printf("Reset Coin Latch\n");
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Reset Coin Latch\n");
     #endif
         if (just_been_reset)
         {
@@ -144,13 +144,13 @@ WRITE_HANDLER( blockade_coin_latch_w )
     if (data & 0x20)
     {
     #ifdef BLOCKADE_LOG
-        printf("Pin 19 High\n");
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Pin 19 High\n");
     #endif
     }
     else
     {
     #ifdef BLOCKADE_LOG
-        printf("Pin 19 Low\n");
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Pin 19 Low\n");
     #endif
     }
 
@@ -160,7 +160,7 @@ WRITE_HANDLER( blockade_coin_latch_w )
 WRITE_HANDLER( blockade_sound_freq_w )
 {
 #ifdef BLOCKADE_LOG
-    printf("Sound Freq Write: %d\n",data);
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Sound Freq Write: %d\n",data);
 #endif
     return;
 }
@@ -168,7 +168,7 @@ WRITE_HANDLER( blockade_sound_freq_w )
 WRITE_HANDLER( blockade_env_on_w )
 {
 #ifdef BLOCKADE_LOG
-    printf("Boom Start\n");
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Boom Start\n");
 #endif
     sample_start(0,0,0);
     return;
@@ -177,7 +177,7 @@ WRITE_HANDLER( blockade_env_on_w )
 WRITE_HANDLER( blockade_env_off_w )
 {
 #ifdef BLOCKADE_LOG
-    printf("Boom End\n");
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Boom End\n");
 #endif
     return;
 }

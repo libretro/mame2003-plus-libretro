@@ -145,9 +145,9 @@ static INLINE void timer_list_insert(mame_timer *timer)
 		for (t = timer_head; t; t = t->next, tnum++)
 		{
 			if (t == timer)
-				printf("This timer is already inserted in the list!\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "This timer is already inserted in the list!\n");
 			if (tnum == MAX_TIMERS-1)
-				printf("Timer list is full!\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Timer list is full!\n");
 		}
 	}
 	#endif

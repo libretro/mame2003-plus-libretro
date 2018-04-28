@@ -153,8 +153,8 @@ static FILE *sample[9];
 /*
 	C24 = external capacity
 
-    printf("Time constant T=R*C =%f sec.\n",R51*C24);
-    printf("Cap fully charged after 5T=%f sec (sample=%f). Level=%f\n",(R51*C24)*5,(R51*C24)*5*sample_rate , VMAX*0.99326 );
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Time constant T=R*C =%f sec.\n",R51*C24);
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Cap fully charged after 5T=%f sec (sample=%f). Level=%f\n",(R51*C24)*5,(R51*C24)*5*sample_rate , VMAX*0.99326 );
     printf("Cap charged after 5T=%f sec (sample=%f). Level=%20.16f\n",(R51*C24)*5,(R51*C24)*5*sample_rate ,
            VMAX*(1.0-pow(2.718,-0.0748/(R51*C24))) );
 */

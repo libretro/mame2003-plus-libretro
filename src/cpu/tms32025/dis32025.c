@@ -30,19 +30,19 @@ int main(int argc,char *argv[])
 
 	if(argc<2)
 	{
-		printf("\n");
-		printf("TMS32025 Disassembler 1.1 by Tony La Porta (C)2001-2002+\n\n");
-		printf("Usage: dis32025 <input-file> [ <start-addr> [ <num-of-addr> ] ]\n");
-		printf("                <input-file>  source file data must be MSB first\n");
-		printf("                <start-addr>  starting address to disassemble from (decimal)\n");
-		printf("                <num-of-addr> number of addresses to disassemble (decimal)\n");
-		printf("                              Preceed values with 0x if HEX values preffered\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32025 Disassembler 1.1 by Tony La Porta (C)2001-2002+\n\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Usage: dis32025 <input-file> [ <start-addr> [ <num-of-addr> ] ]\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "                <input-file>  source file data must be MSB first\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "                <start-addr>  starting address to disassemble from (decimal)\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "                <num-of-addr> number of addresses to disassemble (decimal)\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "                              Preceed values with 0x if HEX values preffered\n");
 		exit(1);
 	}
 
 	if(!(F=fopen(argv[1],"rb")))
 	{
-		printf("\n%s: Can't open file %s\n",argv[0],argv[1]);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "\n%s: Can't open file %s\n",argv[0],argv[1]);
 		exit(2);
 	}
 	argv++; argc--;
@@ -63,20 +63,20 @@ int main(int argc,char *argv[])
 	length *= 2;
 
 	if ((length > (filelength - (offset*2))) || (length == 0)) length = filelength - (offset*2);
-	printf("Length=%04Xh(words)  Offset=$%04Xh  filelength=%04Xh(words) %04Xh(bytes)\n",length/2,offset,filelength/2,filelength);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Length=%04Xh(words)  Offset=$%04Xh  filelength=%04Xh(words) %04Xh(bytes)\n",length/2,offset,filelength/2,filelength);
 	length_to_dump = length;
-	printf("Starting from %d, dumping %d opcodes (word size)\n",offset,length/2);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Starting from %d, dumping %d opcodes (word size)\n",offset,length/2);
 	Buffer = calloc((filelength+1),sizeof(char));
 	if (Buffer==NULL)
 	{
-		printf("Out of Memory !!!");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Out of Memory !!!");
 		fclose(F);
 		exit(3);
 	}
 	String_Output = calloc(80,sizeof(char));
 	if (String_Output==NULL)
 	{
-		printf("Out of Memory !!!");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Out of Memory !!!");
 		free(Buffer);
 		fclose(F);
 		exit(4);
@@ -84,7 +84,7 @@ int main(int argc,char *argv[])
 
 	if (fseek(F,0,SEEK_SET) != 0)
 	{
-		printf("Error seeking to beginning of file\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error seeking to beginning of file\n");
 		free(String_Output);
 		free(Buffer);
 		fclose(F);
@@ -99,7 +99,7 @@ int main(int argc,char *argv[])
 		{
 			int ii;
 			disasm_words = Dasm32025(String_Output,Counter);
-			printf("$%04lX: ",Counter);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "$%04lX: ",Counter);
 			for (ii = 0; ii < disasm_words; ii++)
 			{
 				if (((Counter*2) + ii) > filelength)	/* Past end of length to dump ? */
@@ -108,21 +108,21 @@ int main(int argc,char *argv[])
 				}
 				else
 				{
-					printf("%02.2x%02.2x ",Buffer[(Counter*2)],Buffer[(Counter*2) + 1]);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "%02.2x%02.2x ",Buffer[(Counter*2)],Buffer[(Counter*2) + 1]);
 				}
 				Counter++ ;
 			}
 			for (; ii < 4; ii++)
 			{
-				printf("   ");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "   ");
 			}
-			printf("\t%s\n",String_Output);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "\t%s\n",String_Output);
 		}
 	}
 	else
 	{
-		printf("ERROR length to dump was %d ", length_to_dump/2);
-		printf(", but bytes read from file were %d\n", bytes_read/2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR length to dump was %d ", length_to_dump/2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE ", but bytes read from file were %d\n", bytes_read/2);
 		free(String_Output);
 		free(Buffer);
 		fclose(F);

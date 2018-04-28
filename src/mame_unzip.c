@@ -24,7 +24,7 @@ int	gUnzipQuiet = 0;		/* flag controls error messages */
 void errormsg(const char* extmsg, const char* usermsg, const char* zipname) {
 	/* Output to the user with no internal detail */
 	if (!gUnzipQuiet)
-		printf("Error in zipfile %s\n%s\n", zipname, usermsg);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in zipfile %s\n%s\n", zipname, usermsg);
 	/* Output to log file with all informations */
 	logerror("Error in zipfile %s: %s\n", zipname, extmsg);
 }
@@ -784,7 +784,7 @@ int /* error */ load_zipped_file (int pathtype, int pathindex, const char* zipfi
 			*buf = (unsigned char*)malloc( *length );
 			if (!*buf) {
 				if (!gUnzipQuiet)
-					printf("load_zipped_file(): Unable to allocate %d bytes of RAM\n",*length);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "load_zipped_file(): Unable to allocate %d bytes of RAM\n",*length);
 				cache_closezip(zip);
 				return -1;
 			}

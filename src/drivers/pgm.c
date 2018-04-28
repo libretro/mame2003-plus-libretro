@@ -1316,7 +1316,7 @@ static WRITE16_HANDLER( killbld_prot_w )
 							dat = PROTROM[src+x];
 
 							if (RAMDUMP[dst+x] != dat)
-								printf("Mismatch! %04x %04x\n", RAMDUMP[dst+x], dat);
+								log_cb(RETRO_LOG_ERROR, LOGPRE "Mismatch! %04x %04x\n", RAMDUMP[dst+x], dat);
 
 							killbld_sharedprotram[dst+x] = dat;
 						}
@@ -1339,14 +1339,14 @@ static WRITE16_HANDLER( killbld_prot_w )
 
 
 							if (RAMDUMP[dst+x] != dat)
-								printf("Mismatch! Mode 6 %04x %04x\n", RAMDUMP[dst+x], dat);
+								log_cb(RETRO_LOG_ERROR, LOGPRE "Mismatch! Mode 6 %04x %04x\n", RAMDUMP[dst+x], dat);
 
 							killbld_sharedprotram[dst+x] = dat;
 						}
 					}
 					else
 					{
-						printf("unknown copy mode!\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "unknown copy mode!\n");
 					}
 					/* hack.. it jumps here but there isn't valid code even when we do
                        use what was in ram.. probably some more protection as the game
