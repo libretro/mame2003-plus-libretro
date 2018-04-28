@@ -106,6 +106,108 @@ void retro_get_system_info(struct retro_system_info *info)
   info->block_extract = true;
 }
 
+void retro_describe_buttons(void)
+{
+  /* Assuming the standard RetroPad layout:
+   *
+   *   [L2]                                 [R2]
+   *   [L]                                   [R]
+   *
+   *     [^]                               [X]
+   *
+   * [<]     [>]    [start] [selct]    [Y]     [A]
+   *
+   *     [v]                               [B]
+   *
+   *
+   * or standard RetroPad fight stick layout:
+   *
+   *   [start] [selct]
+   *                                         [X]  [R]  [L]
+   *     [^]                            [Y]
+   *
+   * [<]     [>]                             [A]  [R2] [L2]
+   *                                    [B]
+   *     [v]
+   *
+   *
+   *
+   * key: [MAME button/Street Fighter II move]
+   *
+   * options.retropad_layout == RETROPAD_MODERN
+   * ========================
+   * Uses the fight stick & pad layout popularised by Street Figher IV.
+   * Needs an 8+ button controller by default.
+   *
+   * [8/-]                                     [6/HK]  |
+   * [7/-]                                     [3/HP]  |
+   *                                                   |        [2/MP]  [3/HP]  [7/-]
+   *     [^]                               [2/MP]      |  [1/LP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
+   *                                                   |  [4/LK]
+   *     [v]                               [4/LK]      |
+   *                                                   |
+   *
+   * retropad_layout == RETROPAD_SNES
+   * ========================
+   * Uses the layout popularised by SNES Street Figher II.
+   * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
+   *
+   * [7/-]                                      [8/-]  |
+   * [3/HP]                                    [6/HK]  |
+   *                                                   |        [2/MP]  [6/HK]  [3/HP]
+   *     [^]                               [2/MP]      |  [1/LP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
+   *                                                   |  [4/LK]
+   *     [v]                               [4/LK]      |
+   *                                                   |
+   *
+   * options.retropad_layout == RETROPAD_MAME
+   * ========================
+   * Uses current MAME's default Xbox 360 controller layout.
+   * Not sensible for 6 button fighters, but may suit other games.
+   *
+   * [7/-]                                     [8/-]   |
+   * [5/MK]                                    [6/HK]  |
+   *                                                   |        [4/WK]  [6/HK]  [5/MK]
+   *     [^]                               [4/WK]      |  [3/HP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [3/HP]  [2/MP]  |        [2/MP]  [8/-]   [7/-]
+   *                                                   |  [1/LP]
+   *     [v]                               [1/LP]      |
+   *                                                   |
+   */
+#define describe_buttons(INDEX) \
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      (options.retropad_layout == RETROPAD_MAME ? "Button 1" : "Button 4") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      (options.retropad_layout == RETROPAD_MAME ? "Button 3" : "Button 1") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      (options.retropad_layout == RETROPAD_MAME ? "Button 4" : "Button 2") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      (options.retropad_layout == RETROPAD_MAME ? "Button 2" : "Button 5") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      (options.retropad_layout == RETROPAD_MAME ? "Button 5" : (options.retropad_layout == RETROPAD_MODERN ? "Button 7" : "Button 3")) },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      (options.retropad_layout == RETROPAD_MODERN ? "Button 3" : "Button 6") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 8" : "Button 7") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 6" : "Button 8") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
+  
+  struct retro_input_descriptor desc[] = {
+    describe_buttons(0)
+    describe_buttons(1)
+    describe_buttons(2)
+    describe_buttons(3)
+    { 0, 0, 0, 0, NULL }
+  };
+  
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+}
+
 static void update_variables(void)
 {
   struct retro_led_interface ledintf;
@@ -146,7 +248,9 @@ static void update_variables(void)
       options.retropad_layout = RETROPAD_SNES;
     else
       options.retropad_layout = RETROPAD_MAME;
+    retro_describe_buttons();
   }
+
   
   var.value = NULL;
 
@@ -607,108 +711,6 @@ void retro_run (void)
 
    mame_frame();
 
-}
-
-void retro_describe_buttons(void)
-{
-  /* Assuming the standard RetroPad layout:
-   * 
-   *   [L2]                                 [R2]
-   *   [L]                                   [R]
-   *
-   *     [^]                               [X]
-   *
-   * [<]     [>]    [start] [selct]    [Y]     [A]
-   *
-   *     [v]                               [B]
-   *
-   *
-   * or standard RetroPad fight stick layout:
-   *
-   *   [start] [selct]
-   *                                         [X]  [R]  [L]
-   *     [^]                            [Y]  
-   *                                      
-   * [<]     [>]                             [A]  [R2] [L2]
-   *                                    [B]
-   *     [v]
-   *
-   *
-   * 
-   * key: [MAME button/Street Fighter II move]
-   *
-   * options.retropad_layout == RETROPAD_MODERN
-   * ========================
-   * Uses the fight stick & pad layout popularised by Street Figher IV.
-   * Needs an 8+ button controller by default.
-   *
-   * [8/-]                                     [6/HK]  |
-   * [7/-]                                     [3/HP]  |
-   *                                                   |        [2/MP]  [3/HP]  [7/-]
-   *     [^]                               [2/MP]      |  [1/LP]   
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
-   *
-   * retropad_layout == RETROPAD_SNES
-   * ========================
-   * Uses the layout popularised by SNES Street Figher II.
-   * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
-   *
-   * [7/-]                                      [8/-]  |
-   * [3/HP]                                    [6/HK]  |
-   *                                                   |        [2/MP]  [6/HK]  [3/HP]
-   *     [^]                               [2/MP]      |  [1/LP]   
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
-   *
-   * options.retropad_layout == RETROPAD_MAME
-   * ========================
-   * Uses current MAME's default Xbox 360 controller layout.
-   * Not sensible for 6 button fighters, but may suit other games.
-   *
-   * [7/-]                                     [8/-]   |
-   * [5/MK]                                    [6/HK]  |
-   *                                                   |        [4/WK]  [6/HK]  [5/MK]
-   *     [^]                               [4/WK]      |  [3/HP]   
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [3/HP]  [2/MP]  |        [2/MP]  [8/-]   [7/-]
-   *                                                   |  [1/LP]
-   *     [v]                               [1/LP]      |
-   *                                                   |
-   */
-  #define describe_buttons(INDEX) \
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      (options.retropad_layout == RETROPAD_MAME ? "Button 1" : "Button 4") },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      (options.retropad_layout == RETROPAD_MAME ? "Button 3" : "Button 1") },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      (options.retropad_layout == RETROPAD_MAME ? "Button 4" : "Button 2") },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      (options.retropad_layout == RETROPAD_MAME ? "Button 2" : "Button 5") },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      (options.retropad_layout == RETROPAD_MAME ? "Button 5" : (options.retropad_layout == RETROPAD_MODERN ? "Button 7" : "Button 3")) },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      (options.retropad_layout == RETROPAD_MODERN ? "Button 3" : "Button 6") },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 8" : "Button 7") },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 6" : "Button 8") },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
-  { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
-
-  struct retro_input_descriptor desc[] = {
-    describe_buttons(0)
-    describe_buttons(1)
-    describe_buttons(2)
-    describe_buttons(3)
-    { 0, 0, 0, 0, NULL }
-  };
-
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
 bool retro_load_game(const struct retro_game_info *game)
