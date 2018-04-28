@@ -293,7 +293,7 @@ static READ_HANDLER( rongrong_gfxrom_r )
 	if (address >= size)
 	{
 		address %= size;
-		logerror("CPU#0 PC %06X: Error, Blitter address %06X out of range\n", activecpu_get_pc(), address);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 PC %06X: Error, Blitter address %06X out of range\n", activecpu_get_pc(), address);
 	}
 
 	dynax_blit_address++;
@@ -577,7 +577,7 @@ usrintf_showmessage("unknown blitter command %02x",data);
 			break;
 
 		default:
-logerror("%06x: Blitter %d reg %02x = %02x\n", activecpu_get_pc(), blitter, dynax_blit_reg[blitter], data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: Blitter %d reg %02x = %02x\n", activecpu_get_pc(), blitter, dynax_blit_reg[blitter], data);
 			break;
 		}
 	}

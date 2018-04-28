@@ -90,7 +90,7 @@ static WRITE_HANDLER( pandoras_int_control_w ){
 					break;
 
 		default:
-			logerror("%04x: (irq_ctrl) write %02x to %02x\n",activecpu_get_pc(), data, offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: (irq_ctrl) write %02x to %02x\n",activecpu_get_pc(), data, offset);
 	}
 }
 

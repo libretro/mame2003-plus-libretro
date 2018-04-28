@@ -1517,7 +1517,7 @@ void galaxian_init_stars(void)
 
 	if (total_stars != STAR_COUNT)
 	{
-		logerror("total_stars = %d, STAR_COUNT = %d\n",total_stars,STAR_COUNT);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "total_stars = %d, STAR_COUNT = %d\n",total_stars,STAR_COUNT);
 		exit(1);
 	}
 }

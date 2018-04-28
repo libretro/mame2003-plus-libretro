@@ -216,7 +216,7 @@ MACHINE_INIT( tnexspce )
 
 WRITE16_HANDLER( tnexspce_unknown_w )
 {
-	logerror("tnexspce_unknown_w : PC = %04x - offset = %04x - data = %04x\n",activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "tnexspce_unknown_w : PC = %04x - offset = %04x - data = %04x\n",activecpu_get_pc(),offset,data);
 	if (offset==0x0000 && ACCESSING_LSB)
 	{
 		alpha68k_flipscreen_w(data & 1);
@@ -225,7 +225,7 @@ WRITE16_HANDLER( tnexspce_unknown_w )
 
 static WRITE16_HANDLER( alpha_microcontroller_w )
 {
-	logerror("%04x:  Alpha write trigger at %04x (%04x)\n",activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x:  Alpha write trigger at %04x (%04x)\n",activecpu_get_pc(),offset,data);
 	/* 0x44 = coin clear signal to microcontroller? */
 	if (offset==0x2d && ACCESSING_LSB)
 		alpha68k_flipscreen_w(data & 1);
@@ -398,7 +398,7 @@ static READ16_HANDLER( kyros_alpha_trigger_r )
 			break;
 	}
 
-	logerror("%04x:  Alpha read trigger at %04x\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x:  Alpha read trigger at %04x\n",activecpu_get_pc(),offset);
 
 	return 0; /* Values returned don't matter */
 }
@@ -486,7 +486,7 @@ static READ16_HANDLER( alpha_II_trigger_r )
 			break;
 	}
 
-	logerror("%04x:  Alpha read trigger at %04x\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x:  Alpha read trigger at %04x\n",activecpu_get_pc(),offset);
 
 	return 0; /* Values returned don't matter */
 }
@@ -632,7 +632,7 @@ static READ16_HANDLER( alpha_V_trigger_r )
 			break;
 	}
 
-	logerror("%04x:  Alpha read trigger at %04x\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x:  Alpha read trigger at %04x\n",activecpu_get_pc(),offset);
 
 	return 0; /* Values returned don't matter */
 }
@@ -1891,7 +1891,7 @@ static struct YM2203interface sstingry_ym2203_interface =
 
 static void YM3812_irq(int param)
 {
-	logerror("irq\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "irq\n");
 
 	cpu_set_irq_line(1, 0, (param) ? HOLD_LINE : CLEAR_LINE);
 }

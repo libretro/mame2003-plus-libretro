@@ -194,9 +194,9 @@ static void FUNCNAME(UINT32 command, UINT32 a1flags, UINT32 a2flags)
 	if (!a1_base_mem || !a2_base_mem)
 	{
 #if LOG_BAD_BLITS
-		logerror("%08X:Blit!\n", activecpu_get_previouspc());
-		logerror("  a1_base  = %08X\n", a1_base);
-		logerror("  a2_base  = %08X\n", a2_base);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Blit!\n", activecpu_get_previouspc());
+		log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_base  = %08X\n", a1_base);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_base  = %08X\n", a2_base);
 #endif
 		return;
 	}
@@ -273,37 +273,37 @@ static void FUNCNAME(UINT32 command, UINT32 a1flags, UINT32 a2flags)
 	adest_ymask			= (COMMAND & 0x00000800) ? a2_ymask : a1_ymask;
 
 #if LOG_BLITS
-	logerror("%08X:Blit!\n", activecpu_get_previouspc());
-	logerror("  a1_base  = %08X\n", a1_base);
-	logerror("  a1_pitch = %d\n", a1_pitch);
-	logerror("  a1_psize = %d\n", 1 << ((A1FIXED >> 3) & 7));
-	logerror("  a1_width = %d\n", a1_width);
-	logerror("  a1_xadd  = %f (phrase=%d)\n", (float)a1_xadd / 65536.0, a1_phrase_mode);
-	logerror("  a1_yadd  = %f\n", (float)a1_yadd / 65536.0);
-	logerror("  a1_xstep = %f\n", (float)a1_xstep / 65536.0);
-	logerror("  a1_ystep = %f\n", (float)a1_ystep / 65536.0);
-	logerror("  a1_x     = %f\n", (float)a1_x / 65536.0);
-	logerror("  a1_y     = %f\n", (float)a1_y / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Blit!\n", activecpu_get_previouspc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_base  = %08X\n", a1_base);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_pitch = %d\n", a1_pitch);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_psize = %d\n", 1 << ((A1FIXED >> 3) & 7));
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_width = %d\n", a1_width);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_xadd  = %f (phrase=%d)\n", (float)a1_xadd / 65536.0, a1_phrase_mode);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_yadd  = %f\n", (float)a1_yadd / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_xstep = %f\n", (float)a1_xstep / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_ystep = %f\n", (float)a1_ystep / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_x     = %f\n", (float)a1_x / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a1_y     = %f\n", (float)a1_y / 65536.0);
 
-	logerror("  a2_base  = %08X\n", a2_base);
-	logerror("  a2_pitch = %d\n", a2_pitch);
-	logerror("  a2_psize = %d\n", 1 << ((A2FIXED >> 3) & 7));
-	logerror("  a2_width = %d\n", a2_width);
-	logerror("  a2_xadd  = %f (phrase=%d)\n", (float)a2_xadd / 65536.0, a2_phrase_mode);
-	logerror("  a2_yadd  = %f\n", (float)a2_yadd / 65536.0);
-	logerror("  a2_xstep = %f\n", (float)a2_xstep / 65536.0);
-	logerror("  a2_ystep = %f\n", (float)a2_ystep / 65536.0);
-	logerror("  a2_x     = %f\n", (float)a2_x / 65536.0);
-	logerror("  a2_y     = %f\n", (float)a2_y / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_base  = %08X\n", a2_base);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_pitch = %d\n", a2_pitch);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_psize = %d\n", 1 << ((A2FIXED >> 3) & 7));
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_width = %d\n", a2_width);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_xadd  = %f (phrase=%d)\n", (float)a2_xadd / 65536.0, a2_phrase_mode);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_yadd  = %f\n", (float)a2_yadd / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_xstep = %f\n", (float)a2_xstep / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_ystep = %f\n", (float)a2_ystep / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_x     = %f\n", (float)a2_x / 65536.0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  a2_y     = %f\n", (float)a2_y / 65536.0);
 
-	logerror("  count    = %d x %d\n", inner_count, outer_count);
-	logerror("  command  = %08X\n", COMMAND);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  count    = %d x %d\n", inner_count, outer_count);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "  command  = %08X\n", COMMAND);
 #endif
 
 #if LOG_UNHANDLED_BLITS
 	/* check for unhandled command bits */
 	if (COMMAND & 0x24003000)
-		logerror("Blitter unhandled: these command bits: %08X\n", COMMAND & 0x24003000);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Blitter unhandled: these command bits: %08X\n", COMMAND & 0x24003000);
 #endif /* LOG_UNHANDLED_BLITS */
 
 	/* top of the outer loop */

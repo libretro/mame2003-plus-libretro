@@ -242,7 +242,7 @@ static READ16_HANDLER( control_3_r )
 
 static WRITE16_HANDLER( gun_select_w )
 {
-	logerror("%08x: gun r\n",activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: gun r\n",activecpu_get_pc());
 
 	gun_select=5 + (data&0xff);
 }

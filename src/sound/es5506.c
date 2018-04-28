@@ -2042,7 +2042,7 @@ static void es5505_reg_write(struct ES5506Chip *chip, offs_t offset, data16_t da
 {
 	struct ES5506Voice *voice = &chip->voice[chip->current_page & 0x1f];
 
-/*	logerror("%04x:ES5505 write %02x/%02x = %04x & %04x\n", activecpu_get_previouspc(), chip->current_page, offset, data, mem_mask ^ 0xffff);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x:ES5505 write %02x/%02x = %04x & %04x\n", activecpu_get_previouspc(), chip->current_page, offset, data, mem_mask ^ 0xffff);*/
 
 	/* force an update */
 	stream_update(chip->stream, 0);

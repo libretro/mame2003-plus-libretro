@@ -42,7 +42,7 @@ static READ_HANDLER( fastfred_custom_io_r )
     case 0x7b58: return 0x20;
     }
 
-    logerror("Uncaught custom I/O read %04X at %04X\n", 0xc800+offset, activecpu_get_pc());
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Uncaught custom I/O read %04X at %04X\n", 0xc800+offset, activecpu_get_pc());
     return 0x00;
 }
 

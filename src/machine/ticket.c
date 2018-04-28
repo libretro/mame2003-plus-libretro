@@ -72,7 +72,7 @@ READ_HANDLER( ticket_dispenser_r )
 READ_HANDLER( ticket_dispenser_0_r )
 {
 #ifdef DEBUG_TICKET
-	logerror("PC: %04X  Ticket Status Read = %02X\n", activecpu_get_pc(), status);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "PC: %04X  Ticket Status Read = %02X\n", activecpu_get_pc(), status);
 #endif
 	return dispenser[0].status;
 }
@@ -80,7 +80,7 @@ READ_HANDLER( ticket_dispenser_0_r )
 READ_HANDLER( ticket_dispenser_1_r )
 {
 #ifdef DEBUG_TICKET
-	logerror("PC: %04X  Ticket Status Read = %02X\n", activecpu_get_pc(), status);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "PC: %04X  Ticket Status Read = %02X\n", activecpu_get_pc(), status);
 #endif
 	return dispenser[1].status;
 }
@@ -101,7 +101,7 @@ WRITE_HANDLER( ticket_dispenser_0_w )
 		if (!dispenser[0].power)
 		{
 #ifdef DEBUG_TICKET
-			logerror("PC: %04X  Ticket Power On\n", activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC: %04X  Ticket Power On\n", activecpu_get_pc());
 #endif
 			timer_adjust(dispenser[0].timer, TIME_IN_MSEC(time_msec), 0, 0);
 			dispenser[0].power = 1;
@@ -114,7 +114,7 @@ WRITE_HANDLER( ticket_dispenser_0_w )
 		if (dispenser[0].power)
 		{
 #ifdef DEBUG_TICKET
-			logerror("PC: %04X  Ticket Power Off\n", activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC: %04X  Ticket Power Off\n", activecpu_get_pc());
 #endif
 			timer_adjust(dispenser[0].timer, TIME_NEVER, 0, 0);
 			set_led_status(2,0);
@@ -131,7 +131,7 @@ WRITE_HANDLER( ticket_dispenser_1_w )
 		if (!dispenser[1].power)
 		{
 #ifdef DEBUG_TICKET
-			logerror("PC: %04X  Ticket Power On\n", activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC: %04X  Ticket Power On\n", activecpu_get_pc());
 #endif
 			timer_adjust(dispenser[1].timer, TIME_IN_MSEC(time_msec), 1, 0);
 			dispenser[1].power = 1;
@@ -144,7 +144,7 @@ WRITE_HANDLER( ticket_dispenser_1_w )
 		if (dispenser[1].power)
 		{
 #ifdef DEBUG_TICKET
-			logerror("PC: %04X  Ticket Power Off\n", activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC: %04X  Ticket Power Off\n", activecpu_get_pc());
 #endif
 			timer_adjust(dispenser[1].timer, TIME_NEVER, 1, 0);
 			set_led_status(2,0);
@@ -168,7 +168,7 @@ static void ticket_dispenser_toggle(int which)
 	{
 		dispenser[which].status ^= active_bit;
 #ifdef DEBUG_TICKET
-		logerror("Ticket Status Changed to %02X\n", status);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Ticket Status Changed to %02X\n", status);
 #endif
 		timer_adjust(dispenser[which].timer, TIME_IN_MSEC(time_msec), which, 0);
 	}
@@ -179,7 +179,7 @@ static void ticket_dispenser_toggle(int which)
 		dispensed_tickets++;
 
 #ifdef DEBUG_TICKET
-		logerror("Ticket Dispensed\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Ticket Dispensed\n");
 #endif
 	}
 	else

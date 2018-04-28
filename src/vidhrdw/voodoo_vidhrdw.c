@@ -657,7 +657,7 @@ usrintf_showmessage("Swaps = %d", swaps);
 }
 #endif
 
-	logerror("---- swapbuffers\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "---- swapbuffers\n");
 
 	if (pending_fastfill)
 	{
@@ -683,7 +683,7 @@ static void vblank_callback(int scanline)
 {
 	vblank_count++;
 	
-	logerror("---- vblank\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "---- vblank\n");
 
 	/* any pending swapbuffers */
 	if (swaps_pending && vblank_count > vblanks_before_swap)
@@ -954,7 +954,7 @@ VIDEO_UPDATE( voodoo )
 	}
 #endif
 
-	logerror("--- video update (%d-%d) ---\n", cliprect->min_y, cliprect->max_y);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "--- video update (%d-%d) ---\n", cliprect->min_y, cliprect->max_y);
 
 #if (DISPLAY_DEPTHBUF)
 	if (keyboard_pressed(KEYCODE_D))
@@ -1072,7 +1072,7 @@ static void fastfill(void)
 	if (fbz_depth_write)
 	{
 		UINT16 color = voodoo_regs[zaColor];
-		logerror("FASTFILL depth = %04X\n", color);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "FASTFILL depth = %04X\n", color);
 
 		/* loop over y */
 		for (y = sy; y < ey; y++)
@@ -1144,7 +1144,7 @@ static void draw_triangle(void)
 	voodoo_regs[fbiTrianglesOut] = (voodoo_regs[fbiTrianglesOut] + 1) & 0xffffff;
 	
 	if (LOG_COMMANDS)
-		logerror("%06X:FLOAT TRIANGLE command\n", activecpu_get_pc());
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:FLOAT TRIANGLE command\n", activecpu_get_pc());
 
 	SETUP_FPU();
 	temp = voodoo_regs[fbzColorPath] & FBZCOLORPATH_MASK;
@@ -1494,30 +1494,30 @@ static UINT32 execute_cmdfifo(void)
 			switch ((command >> 3) & 7)
 			{
 				case 0:		/* NOP */
-					if (LOG_CMDFIFO) logerror("  NOP\n");
+					if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  NOP\n");
 					break;
 				
 				case 1:		/* JSR */
-					if (LOG_CMDFIFO) logerror("  JSR $%06X\n", target);
+					if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  JSR $%06X\n", target);
 					voodoo_regs[cmdFifoAMin] = voodoo_regs[cmdFifoAMax] = target - 4;
 					return target;
 				
 				case 2:		/* RET */
-					if (LOG_CMDFIFO) logerror("  RET $%06X\n", target);
+					if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  RET $%06X\n", target);
 					break;
 				
 				case 3:		/* JMP LOCAL FRAME BUFFER */
-					if (LOG_CMDFIFO) logerror("  JMP LOCAL FRAMEBUF $%06X\n", target);
+					if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  JMP LOCAL FRAMEBUF $%06X\n", target);
 					voodoo_regs[cmdFifoAMin] = voodoo_regs[cmdFifoAMax] = target - 4;
 					return target;
 				
 				case 4:		/* JMP AGP */
-					if (LOG_CMDFIFO) logerror("  JMP AGP $%06X\n", target);
+					if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  JMP AGP $%06X\n", target);
 					voodoo_regs[cmdFifoAMin] = voodoo_regs[cmdFifoAMax] = target - 4;
 					return target;
 				
 				default:
-					logerror("  INVALID JUMP COMMAND\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "  INVALID JUMP COMMAND\n");
 					break;
 			}
 			break;
@@ -1528,14 +1528,14 @@ static UINT32 execute_cmdfifo(void)
 			inc = (command >> 15) & 1;
 			target = (command >> 3) & 0xfff;
 			
-			if (LOG_CMDFIFO) logerror("  PACKET TYPE 1: count=%d inc=%d reg=%04X\n", count, inc, target);
+			if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  PACKET TYPE 1: count=%d inc=%d reg=%04X\n", count, inc, target);
 			for (i = 0; i < count; i++, target += inc)
 				voodoo_regs_w(target, *src++, 0);
 			break;
 		
 		/* packet type 2 */
 		case 2:
-			if (LOG_CMDFIFO) logerror("  PACKET TYPE 2: mask=%X\n", (command >> 3) & 0x1ffffff);
+			if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  PACKET TYPE 2: mask=%X\n", (command >> 3) & 0x1ffffff);
 			for (i = 3; i <= 31; i++)
 				if (command & (1 << i))
 					voodoo_regs_w(bltSrcBaseAddr + (i - 3), *src++, 0);
@@ -1545,7 +1545,7 @@ static UINT32 execute_cmdfifo(void)
 		case 3:
 			count = (command >> 6) & 15;
 			code = (command >> 3) & 7;
-			if (LOG_CMDFIFO) logerror("  PACKET TYPE 3: count=%d code=%d mask=%03X\n", count, code, (command >> 10) & 0xfff);
+			if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  PACKET TYPE 3: count=%d code=%d mask=%03X\n", count, code, (command >> 10) & 0xfff);
 			
 			voodoo_regs[sSetupMode] = ((command >> 10) & 0xfff) | ((command >> 6) & 0xf0000);
 			for (i = 0; i < count; i++)
@@ -1621,7 +1621,7 @@ static UINT32 execute_cmdfifo(void)
 		case 4:
 			target = (command >> 3) & 0xfff;
 
-			if (LOG_CMDFIFO) logerror("  PACKET TYPE 4: mask=%X reg=%04X pad=%d\n", (command >> 15) & 0x3fff, target, command >> 29);
+			if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  PACKET TYPE 4: mask=%X reg=%04X pad=%d\n", (command >> 15) & 0x3fff, target, command >> 29);
 			for (i = 15; i <= 28; i++)
 				if (command & (1 << i))
 					voodoo_regs_w(target + (i - 15), *src++, 0);
@@ -1635,13 +1635,13 @@ static UINT32 execute_cmdfifo(void)
 
 			if ((command >> 30) == 2)
 			{
-				if (LOG_CMDFIFO) logerror("  PACKET TYPE 5: LFB count=%d dest=%08X bd2=%X bdN=%X\n", count, target, (command >> 26) & 15, (command >> 22) & 15);
+				if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  PACKET TYPE 5: LFB count=%d dest=%08X bd2=%X bdN=%X\n", count, target, (command >> 26) & 15, (command >> 22) & 15);
 				for (i = 0; i < count; i++)
 					voodoo_framebuf_w(target++, *src++, 0);
 			}
 			else if ((command >> 30) == 3)
 			{
-				if (LOG_CMDFIFO) logerror("  PACKET TYPE 5: textureRAM count=%d dest=%08X bd2=%X bdN=%X\n", count, target, (command >> 26) & 15, (command >> 22) & 15);
+				if (LOG_CMDFIFO) log_cb(RETRO_LOG_ERROR, LOGPRE "  PACKET TYPE 5: textureRAM count=%d dest=%08X bd2=%X bdN=%X\n", count, target, (command >> 26) & 15, (command >> 22) & 15);
 				for (i = 0; i < count; i++)
 					voodoo_textureram_w(target++, *src++, 0);
 			}
@@ -1726,9 +1726,9 @@ WRITE32_HANDLER( voodoo2_regs_w )
 		if (LOG_CMDFIFO_VERBOSE) 
 		{
 			if ((cmdfifo[voodoo_regs[cmdFifoRdPtr]/4] & 7) == 3)
-				logerror("CMDFIFO(%06X)=%f  (min=%06X max=%06X d=%d h=%d)\n", addr, *(float *)&data, voodoo_regs[cmdFifoAMin], voodoo_regs[cmdFifoAMax], voodoo_regs[cmdFifoDepth], voodoo_regs[cmdFifoHoles]);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CMDFIFO(%06X)=%f  (min=%06X max=%06X d=%d h=%d)\n", addr, *(float *)&data, voodoo_regs[cmdFifoAMin], voodoo_regs[cmdFifoAMax], voodoo_regs[cmdFifoDepth], voodoo_regs[cmdFifoHoles]);
 			else if ((cmdfifo[voodoo_regs[cmdFifoRdPtr]/4] & 7) != 5)
-				logerror("CMDFIFO(%06X)=%08X  (min=%06X max=%06X d=%d h=%d)\n", addr, data, voodoo_regs[cmdFifoAMin], voodoo_regs[cmdFifoAMax], voodoo_regs[cmdFifoDepth], voodoo_regs[cmdFifoHoles]);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CMDFIFO(%06X)=%08X  (min=%06X max=%06X d=%d h=%d)\n", addr, data, voodoo_regs[cmdFifoAMin], voodoo_regs[cmdFifoAMax], voodoo_regs[cmdFifoDepth], voodoo_regs[cmdFifoHoles]);
 		}
 
 		/* if we have data, process it */
@@ -1738,7 +1738,7 @@ WRITE32_HANDLER( voodoo2_regs_w )
 			if (old_depth == 0)
 			{
 				cmdfifo_expected = compute_expected_depth();
-				if (LOG_CMDFIFO_VERBOSE) logerror("PACKET TYPE %d, expecting %d words\n", cmdfifo[voodoo_regs[cmdFifoRdPtr]/4] & 7, cmdfifo_expected);
+				if (LOG_CMDFIFO_VERBOSE) log_cb(RETRO_LOG_ERROR, LOGPRE "PACKET TYPE %d, expecting %d words\n", cmdfifo[voodoo_regs[cmdFifoRdPtr]/4] & 7, cmdfifo_expected);
 			}
 			
 			/* if we got everything, execute */
@@ -1776,9 +1776,9 @@ WRITE32_HANDLER( voodoo_regs_w )
 	if (LOG_REGISTERS)
 	{
 		if (offset < fvertexAx || offset > fdWdY)
-			logerror("%06X:voodoo %s(%d) write = %08X\n", activecpu_get_pc(), (offset < 0x384/4) ? voodoo_reg_name[offset] : "oob", chips, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:voodoo %s(%d) write = %08X\n", activecpu_get_pc(), (offset < 0x384/4) ? voodoo_reg_name[offset] : "oob", chips, data);
 		else
-			logerror("%06X:voodoo %s(%d) write = %f\n", activecpu_get_pc(), (offset < 0x384/4) ? voodoo_reg_name[offset] : "oob", chips, *(float *)&data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:voodoo %s(%d) write = %f\n", activecpu_get_pc(), (offset < 0x384/4) ? voodoo_reg_name[offset] : "oob", chips, *(float *)&data);
 	}
 	
 	switch (offset)
@@ -2181,12 +2181,12 @@ WRITE32_HANDLER( voodoo_regs_w )
 	
 		case nopCMD:
 			if (LOG_COMMANDS)
-				logerror("%06X:NOP command\n", activecpu_get_pc());
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:NOP command\n", activecpu_get_pc());
 			break;
 	
 		case fastfillCMD:
 			if (LOG_COMMANDS)
-				logerror("%06X:FASTFILL command\n", activecpu_get_pc());
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:FASTFILL command\n", activecpu_get_pc());
 			if (blocked_on_swap)
 			{
 				pending_fastfill = 1;
@@ -2212,7 +2212,7 @@ WRITE32_HANDLER( voodoo_regs_w )
 			}
 		
 			if (LOG_COMMANDS)
-				logerror("%06X:SWAPBUFFER command = %08X\n", activecpu_get_pc(), data);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:SWAPBUFFER command = %08X\n", activecpu_get_pc(), data);
 			break;
 	
 		case fbiInit4:
@@ -2281,13 +2281,13 @@ WRITE32_HANDLER( voodoo_regs_w )
 			{
 				dac_read = ramdac_r((data >> 8) & 7);
 				if (LOG_REGISTERS)
-					logerror("-- dacData read reg %d; result = %02X\n", (data >> 8) & 7, dac_read);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "-- dacData read reg %d; result = %02X\n", (data >> 8) & 7, dac_read);
 			}
 			else
 			{
 				ramdac_w((data >> 8) & 7, data);
 				if (LOG_REGISTERS)
-					logerror("-- dacData write reg %d = %02X\n", (data >> 8) & 7, data & 0xff);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "-- dacData write reg %d = %02X\n", (data >> 8) & 7, data & 0xff);
 			}
 			break;
 		
@@ -2389,7 +2389,7 @@ WRITE32_HANDLER( voodoo_regs_w )
 				trex_lod_offset[0] = &lod_offset_table[(data >> 21) & 3][0];
 				trex_lod_width_shift[0] = &lod_width_shift[(data >> 20) & 7][0];
 				if (LOG_REGISTERS)
-					logerror("%06X:trex[0] -- lodmin=%02X lodmax=%02X size=%dx%d\n", activecpu_get_pc(), trex_lodmin[0], trex_lodmax[0], trex_width[0], trex_height[0]);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:trex[0] -- lodmin=%02X lodmax=%02X size=%dx%d\n", activecpu_get_pc(), trex_lodmin[0], trex_lodmax[0], trex_width[0], trex_height[0]);
 			}
 			if (chips & 4)
 			{
@@ -2403,7 +2403,7 @@ WRITE32_HANDLER( voodoo_regs_w )
 				trex_lod_offset[1] = &lod_offset_table[(data >> 21) & 3][0];
 				trex_lod_width_shift[1] = &lod_width_shift[(data >> 20) & 7][0];
 				if (LOG_REGISTERS)
-					logerror("%06X:trex[1] -- lodmin=%02X lodmax=%02X size=%dx%d\n", activecpu_get_pc(), trex_lodmin[1], trex_lodmax[1], trex_width[1], trex_height[1]);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:trex[1] -- lodmin=%02X lodmax=%02X size=%dx%d\n", activecpu_get_pc(), trex_lodmin[1], trex_lodmax[1], trex_width[1], trex_height[1]);
 			}
 			if (chips & 8)
 			{
@@ -2417,7 +2417,7 @@ WRITE32_HANDLER( voodoo_regs_w )
 				trex_lod_offset[2] = &lod_offset_table[(data >> 21) & 3][0];
 				trex_lod_width_shift[2] = &lod_width_shift[(data >> 20) & 7][0];
 				if (LOG_REGISTERS)
-					logerror("%06X:trex[2] -- lodmin=%02X lodmax=%02X size=%dx%d\n",activecpu_get_pc(),  trex_lodmin[2], trex_lodmax[2], trex_width[2], trex_height[2]);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:trex[2] -- lodmin=%02X lodmax=%02X size=%dx%d\n",activecpu_get_pc(),  trex_lodmin[2], trex_lodmax[2], trex_width[2], trex_height[2]);
 			}
 			break;
 		
@@ -2684,10 +2684,10 @@ READ32_HANDLER( voodoo_regs_r )
 				else
 				{
 					if (status_lastpc_count)
-						logerror("%06X:voodoo status read = %08X (x%d)\n", activecpu_get_pc(), result, status_lastpc_count);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:voodoo status read = %08X (x%d)\n", activecpu_get_pc(), result, status_lastpc_count);
 					status_lastpc_count = 0;
 					status_lastpc = pc;
-					logerror("%06X:voodoo status read = %08X\n", activecpu_get_pc(), result);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:voodoo status read = %08X\n", activecpu_get_pc(), result);
 				}
 			}
 			break;
@@ -2699,13 +2699,13 @@ READ32_HANDLER( voodoo_regs_r )
 				result = dac_read;
 
 			if (LOG_REGISTERS)
-				logerror("%06X:voodoo fbiInit2 read = %08X\n", activecpu_get_pc(), result);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:voodoo fbiInit2 read = %08X\n", activecpu_get_pc(), result);
 			break;
 		
 		case vRetrace:
 			result = cpu_getscanline();
 /*			if (LOG_REGISTERS)*/
-/*				logerror("%06X:voodoo vRetrace read = %08X\n", activecpu_get_pc(), result);*/
+/*				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:voodoo vRetrace read = %08X\n", activecpu_get_pc(), result);*/
 			break;
 		
 		/* reserved area in the TMU read by the Vegas startup sequence */
@@ -2716,7 +2716,7 @@ READ32_HANDLER( voodoo_regs_r )
 
 		default:
 			if (LOG_REGISTERS)
-				logerror("%06X:voodoo %s read = %08X\n", activecpu_get_pc(), (offset < 0x340/4) ? voodoo_reg_name[offset] : "oob", result);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:voodoo %s read = %08X\n", activecpu_get_pc(), (offset < 0x340/4) ? voodoo_reg_name[offset] : "oob", result);
 			break;
 	}
 	return result;
@@ -2741,7 +2741,7 @@ static void lfbwrite_0(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = data;
 	if (ACCESSING_MSW32)
 		buffer[y * FRAMEBUF_WIDTH + x + 1] = data >> 16;
-/*	logerror("%06X:LFB write mode 0 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:LFB write mode 0 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_1(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2755,7 +2755,7 @@ static void lfbwrite_1(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffe0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		buffer[y * FRAMEBUF_WIDTH + x + 1] = ((data >> 15) & 0xffe0) | ((data >> 16) & 0x001f);
-/*	logerror("%06X:LFB write mode 1 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:LFB write mode 1 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_2(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2769,12 +2769,12 @@ static void lfbwrite_2(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffe0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		buffer[y * FRAMEBUF_WIDTH + x + 1] = ((data >> 15) & 0xffe0) | ((data >> 16) & 0x001f);
-/*	logerror("%06X:LFB write mode 2 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:LFB write mode 2 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_3(offs_t offset, data32_t data, data32_t mem_mask)
 {
-	logerror("%06X:Unimplementd LFB write mode 3 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unimplementd LFB write mode 3 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
 }
 
 static void lfbwrite_4(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2785,7 +2785,7 @@ static void lfbwrite_4(offs_t offset, data32_t data, data32_t mem_mask)
 	if (lfb_flipy)
 		y = inverted_yorigin - y;
 	buffer[y * FRAMEBUF_WIDTH + x] = (((data >> 19) & 0x1f) << 11) | (((data >> 10) & 0x3f) << 5) | (((data >> 3) & 0x1f) << 0);
-/*	logerror("%06X:LFB write mode 4 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:LFB write mode 4 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_5(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2796,37 +2796,37 @@ static void lfbwrite_5(offs_t offset, data32_t data, data32_t mem_mask)
 	if (lfb_flipy)
 		y = inverted_yorigin - y;
 	buffer[y * FRAMEBUF_WIDTH + x] = (((data >> 19) & 0x1f) << 11) | (((data >> 10) & 0x3f) << 5) | (((data >> 3) & 0x1f) << 0);
-/*	logerror("%06X:LFB write mode 5 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:LFB write mode 5 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_6(offs_t offset, data32_t data, data32_t mem_mask)
 {
-	logerror("%06X:Unimplementd LFB write mode 6 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unimplementd LFB write mode 6 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
 }
 
 static void lfbwrite_7(offs_t offset, data32_t data, data32_t mem_mask)
 {
-	logerror("%06X:Unimplementd LFB write mode 7 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unimplementd LFB write mode 7 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
 }
 
 static void lfbwrite_8(offs_t offset, data32_t data, data32_t mem_mask)
 {
-	logerror("%06X:Unimplementd LFB write mode 8 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unimplementd LFB write mode 8 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
 }
 
 static void lfbwrite_9(offs_t offset, data32_t data, data32_t mem_mask)
 {
-	logerror("%06X:Unimplementd LFB write mode 9 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unimplementd LFB write mode 9 @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
 }
 
 static void lfbwrite_a(offs_t offset, data32_t data, data32_t mem_mask)
 {
-	logerror("%06X:Unimplementd LFB write mode a @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unimplementd LFB write mode a @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
 }
 
 static void lfbwrite_b(offs_t offset, data32_t data, data32_t mem_mask)
 {
-	logerror("%06X:Unimplementd LFB write mode b @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unimplementd LFB write mode b @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);
 }
 
 static void lfbwrite_c(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2840,7 +2840,7 @@ static void lfbwrite_c(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = data;
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = data >> 16;
-/*	logerror("%06X:LFB write mode c @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:LFB write mode c @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_d(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2854,7 +2854,7 @@ static void lfbwrite_d(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffc0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = data >> 16;
-/*	logerror("%06X:LFB write mode d @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:LFB write mode d @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_e(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2868,7 +2868,7 @@ static void lfbwrite_e(offs_t offset, data32_t data, data32_t mem_mask)
 		buffer[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffc0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = data >> 16;
-/*	logerror("%06X:LFB write mode e @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:LFB write mode e @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void lfbwrite_f(offs_t offset, data32_t data, data32_t mem_mask)
@@ -2881,7 +2881,7 @@ static void lfbwrite_f(offs_t offset, data32_t data, data32_t mem_mask)
 		depthbuf[y * FRAMEBUF_WIDTH + x] = ((data << 1) & 0xffe0) | (data & 0x001f);
 	if (ACCESSING_MSW32)
 		depthbuf[y * FRAMEBUF_WIDTH + x + 1] = ((data >> 15) & 0xffe0) | ((data >> 16) & 0x001f);
-/*	logerror("%06X:LFB write mode f @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:LFB write mode f @ %08X = %08X & %08X\n", activecpu_get_pc(), offset, data, ~mem_mask);*/
 }
 
 static void (*lfbwrite[16])(offs_t offset, data32_t data, data32_t mem_mask) =
@@ -2927,7 +2927,7 @@ READ32_HANDLER( voodoo_framebuf_r )
 		y = inverted_yorigin - y;
 	result = buffer[y * FRAMEBUF_WIDTH + x] | (buffer[y * FRAMEBUF_WIDTH + x + 1] << 16);
 
-	logerror("%06X:voodoo_framebuf_r[%06X] = %08X & %08X\n", activecpu_get_pc(), offset, result, ~mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:voodoo_framebuf_r[%06X] = %08X & %08X\n", activecpu_get_pc(), offset, result, ~mem_mask);
 	return result;
 } 
 
@@ -2967,7 +2967,7 @@ WRITE32_HANDLER( voodoo_textureram_w )
 		data = (data >> 16) | (data << 16);
 
 if (s == 0 && t == 0)	
-	logerror("%06X:voodoo_textureram_w[%d,%06X,%d,%02X,%02X]", activecpu_get_pc(), trex, tbaseaddr & texram_mask, lod >> 2, s, t);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:voodoo_textureram_w[%d,%06X,%d,%02X,%02X]", activecpu_get_pc(), trex, tbaseaddr & texram_mask, lod >> 2, s, t);
 	while (lod != 0)
 	{
 		lod -= 4;
@@ -2995,7 +2995,7 @@ if (s == 0 && t == 0)
 		else
 			tbaseaddr += t * twidth + (s & 0xfc);
 if (s == 0 && t == 0)	
-	logerror(" -> %06X = %08X\n", tbaseaddr, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE " -> %06X = %08X\n", tbaseaddr, data);
 		dest[BYTE4_XOR_LE(tbaseaddr + 0)] = (data >> 0) & 0xff;
 		dest[BYTE4_XOR_LE(tbaseaddr + 1)] = (data >> 8) & 0xff;
 		dest[BYTE4_XOR_LE(tbaseaddr + 2)] = (data >> 16) & 0xff;
@@ -3007,7 +3007,7 @@ if (s == 0 && t == 0)
 		tbaseaddr /= 2;
 		tbaseaddr += t * twidth + s;
 if (s == 0 && t == 0)	
-	logerror(" -> %06X = %08X\n", tbaseaddr*2, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE " -> %06X = %08X\n", tbaseaddr*2, data);
 		dest[BYTE_XOR_LE(tbaseaddr + 0)] = (data >> 0) & 0xffff;
 		dest[BYTE_XOR_LE(tbaseaddr + 1)] = (data >> 16) & 0xffff;
 	}

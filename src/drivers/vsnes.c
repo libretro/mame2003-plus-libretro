@@ -233,7 +233,7 @@ static WRITE_HANDLER( vsnes_coin_counter_w )
 	if( data & 0xfe ) /*"bnglngby" and "cluclu"*/
 	{
 		/*do something?*/
-		logerror("vsnes_coin_counter_w: pc = 0x%04x - data = 0x%02x\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "vsnes_coin_counter_w: pc = 0x%04x - data = 0x%02x\n", activecpu_get_pc(), data);
 	}
 }
 
@@ -249,7 +249,7 @@ static WRITE_HANDLER( vsnes_coin_counter_1_w )
 	if( data & 0xfe ) /*vsbball service mode*/
 	{
 		/*do something?*/
-		logerror("vsnes_coin_counter_1_w: pc = 0x%04x - data = 0x%02x\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "vsnes_coin_counter_1_w: pc = 0x%04x - data = 0x%02x\n", activecpu_get_pc(), data);
 	}
 
 }

@@ -105,7 +105,7 @@ UINT32 bam1Autoincrement(void)
 		v60.reg[modVal&0x1F]+=4;
 		break;
 	default:
-		logerror("CPU - BAM1 - 7\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - BAM1 - 7\n");
 		abort();
 	}
 	return 1;
@@ -144,7 +144,7 @@ UINT32 bam1Autodecrement(void)
 		v60.reg[modVal&0x1F]-=4;
 		break;
 	default:
-		logerror("CPU - BAM1 - 7\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - BAM1 - 7\n");
 		abort();
 	}
 	amOut=MemRead32(v60.reg[modVal&0x1F]);
@@ -1090,67 +1090,67 @@ UINT32 am1ImmediateQuick(void)
 
 UINT32 am1Error1(void)
 {
-	logerror("CPU - AM1 - 1 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM1 - 1 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 bam1Error1(void)
 {
-	logerror("CPU - BAM1 - 1 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - BAM1 - 1 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 am1Error2(void)
 {
-	logerror("CPU - AM1 - 2 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM1 - 2 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 bam1Error2(void)
 {
-	logerror("CPU - BAM1 - 2 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - BAM1 - 2 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 am1Error3(void)
 {
-	logerror("CPU - AM1 - 3 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM1 - 3 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 bam1Error3(void)
 {
-	logerror("CPU - BAM1 - 3 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - BAM1 - 3 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 am1Error4(void)
 {
-	logerror("CPU - AM1 - 4 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM1 - 4 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 bam1Error4(void)
 {
-	logerror("CPU - BAM1 - 4 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - BAM1 - 4 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 am1Error5(void)
 {
-	logerror("CPU - AM1 - 5 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM1 - 5 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 bam1Error5(void)
 {
-	logerror("CPU - BAM1 - 5 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - BAM1 - 5 (PC=%06x)\n", PC);
 	abort();
 }
 
 UINT32 bam1Error6(void)
 {
-	logerror("CPU - BAM1 - 6 (PC=%06x)\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - BAM1 - 6 (PC=%06x)\n", PC);
 	abort();
 }
 

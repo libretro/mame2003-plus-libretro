@@ -156,7 +156,7 @@ VIDEO_START( atarig42 )
 
 WRITE16_HANDLER( atarig42_mo_control_w )
 {
-	logerror("MOCONT = %d (scan = %d)\n", data, cpu_getscanline());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "MOCONT = %d (scan = %d)\n", data, cpu_getscanline());
 
 	/* set the control value */
 	COMBINE_DATA(&current_control);
@@ -168,7 +168,7 @@ void atarig42_scanline_update(int scanline)
 	data16_t *base = &atarigen_alpha[(scanline / 8) * 64 + 48];
 	int i;
 
-	if (scanline == 0) logerror("-------\n");
+	if (scanline == 0) log_cb(RETRO_LOG_ERROR, LOGPRE "-------\n");
 
 	/* keep in range */
 	if (base >= &atarigen_alpha[0x800])

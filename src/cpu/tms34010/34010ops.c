@@ -2021,19 +2021,19 @@ static void blmove(void)
 	/* src is aligned, dst is not */
 	else if (!(src & 0x0f))
 	{
-		logerror("020:BLMOVE with aligned src and unaligned dst\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "020:BLMOVE with aligned src and unaligned dst\n");
 	}
 
 	/* dst is aligned, src is not */
 	else if (!(dst & 0x0f))
 	{
-		logerror("020:BLMOVE with unaligned src and aligned dst\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "020:BLMOVE with unaligned src and aligned dst\n");
 	}
 
 	/* neither are aligned */
 	else
 	{
-		logerror("020:BLMOVE with completely unaligned src and dst\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "020:BLMOVE with completely unaligned src and dst\n");
 	}
 #endif
 

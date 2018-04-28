@@ -132,7 +132,7 @@ WRITE_HANDLER( hexion_bankedram_w )
 			}
 		}
 		else
-			logerror("%04x pmc internal ram %04x = %02x\n",activecpu_get_pc(),offset,data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x pmc internal ram %04x = %02x\n",activecpu_get_pc(),offset,data);
 	}
 	else if (bankctrl == 2 && offset < 0x800)
 	{
@@ -142,10 +142,10 @@ WRITE_HANDLER( hexion_bankedram_w )
 			unkram[offset] = data;
 		}
 		else
-			logerror("%04x pmc internal ram %04x = %02x\n",activecpu_get_pc(),offset,data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x pmc internal ram %04x = %02x\n",activecpu_get_pc(),offset,data);
 	}
 	else
-logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",activecpu_get_pc(),offset,data,bankctrl);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",activecpu_get_pc(),offset,data,bankctrl);
 }
 
 WRITE_HANDLER( hexion_bankctrl_w )

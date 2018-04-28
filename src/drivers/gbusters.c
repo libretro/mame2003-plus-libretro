@@ -80,7 +80,7 @@ static WRITE_HANDLER( gbusters_coin_counter_w )
 	if (data & 0xf8)
 	{
 		char baf[40];
-		logerror("%04x: (ccount) write %02x\n",activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: (ccount) write %02x\n",activecpu_get_pc(), data);
 		sprintf(baf,"ccnt = %02x", data);
 /*		usrintf_showmessage(baf);*/
 	}
@@ -88,7 +88,7 @@ static WRITE_HANDLER( gbusters_coin_counter_w )
 
 static WRITE_HANDLER( gbusters_unknown_w )
 {
-	logerror("%04x: write %02x to 0x1f9c\n",activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: write %02x to 0x1f9c\n",activecpu_get_pc(), data);
 
 {
 char baf[40];

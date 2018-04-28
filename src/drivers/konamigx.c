@@ -425,7 +425,7 @@ static WRITE32_HANDLER( esc_w )
 				fwrite(esc_program, 4096, 1, f);
 				fclose(f);
 
-				logerror("Dumping ESC program\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Dumping ESC program\n");
 			}
 */
 			break;
@@ -439,7 +439,7 @@ static WRITE32_HANDLER( esc_w )
 			}
 			break;
 		default:
-/*			logerror("Unknown ESC opcode %d\n", opcode);*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown ESC opcode %d\n", opcode);*/
 			break;
 		}
 		cpu_writemem24bedw(data+9, ESTATE_END);
@@ -456,7 +456,7 @@ static WRITE32_HANDLER( esc_w )
 		   there is not normal command parsing here. */
 		if (opcode == ESC_INIT_CONSTANT)
 		{
-/*			logerror("Got ESC_INIT_CONSTANT, 'booting' ESC\n");*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "Got ESC_INIT_CONSTANT, 'booting' ESC\n");*/
 			return;
 		}
 
@@ -539,7 +539,7 @@ static WRITE32_HANDLER( eeprom_w )
 		*/
 
 		konamigx_wrport1_1 = (data>>16)&0xff;
-/*		logerror("write %x to IRQ register (PC=%x)\n", konamigx_wrport1_1, activecpu_get_pc());*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "write %x to IRQ register (PC=%x)\n", konamigx_wrport1_1, activecpu_get_pc());*/
 
 		/* gx_syncen is to ensure each IRQ is trigger at least once after being enabled*/
 		if (konamigx_wrport1_1 & 0x80) gx_syncen |= konamigx_wrport1_1 & 0x1f;
@@ -622,7 +622,7 @@ static READ32_HANDLER( ccu_r )
 	}
 	else
 	{
-/*		logerror("Read unhandled CCU register %x\n", offset);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "Read unhandled CCU register %x\n", offset);*/
 	}
 
 	return 0;
@@ -1112,7 +1112,7 @@ static WRITE32_HANDLER( type4_prot_w )
 				}
 				else
 				{
-					logerror("GXT4: unknown protection command %x (PC=%x)\n", last_prot_op, activecpu_get_pc());
+					log_cb(RETRO_LOG_ERROR, LOGPRE "GXT4: unknown protection command %x (PC=%x)\n", last_prot_op, activecpu_get_pc());
 				}
 
 				if (konamigx_wrport1_1 & 0x10)
@@ -1372,7 +1372,7 @@ static READ16_HANDLER( sndcomm68k_r )
 
 static WRITE16_HANDLER( sndcomm68k_w )
 {
-/*	logerror("68K: write %x to %x\n", data, offset);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "68K: write %x to %x\n", data, offset);*/
 	sndto020[offset] = data;
 }
 

@@ -669,7 +669,7 @@ static int vdp_data_r(void)
 			break;
 
 		default:		/* Illegal read attempt */
-			logerror("%06x: VDP illegal read type %02x\n", activecpu_get_previouspc(), vdp_code);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: VDP illegal read type %02x\n", activecpu_get_previouspc(), vdp_code);
 			read = 0x00;
 			break;
 	}
@@ -731,7 +731,7 @@ static void vdp_data_w(int data)
 			break;
 
 		default:		/* Illegal write attempt */
-			logerror("PC:%06x: VDP illegal write type %02x data %04x\n", activecpu_get_previouspc(), vdp_code, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%06x: VDP illegal write type %02x data %04x\n", activecpu_get_previouspc(), vdp_code, data);
 			break;
 	}
 

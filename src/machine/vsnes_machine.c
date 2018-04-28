@@ -932,7 +932,7 @@ static WRITE_HANDLER( mapper4_w )
 			break;
 
 		default:
-			logerror("mapper4_w uncaught: %04x value: %02x\n", offset + 0x8000, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "mapper4_w uncaught: %04x value: %02x\n", offset + 0x8000, data);
 			break;
 	}
 }

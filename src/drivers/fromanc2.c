@@ -195,7 +195,7 @@ static READ16_HANDLER( fromanc2_keymatrix_r )
 		case 0x04:	ret = readinputport(3); break;
 		case 0x08:	ret = readinputport(4); break;
 		default:	ret = 0xffff;
-					logerror("PC:%08X unknown %02X\n", activecpu_get_pc(), fromanc2_portselect);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%08X unknown %02X\n", activecpu_get_pc(), fromanc2_portselect);
 					break;
 	}
 

@@ -255,7 +255,7 @@ static int leland_vram_port_r(int offset, int num)
     state->addr = addr;
 
 	if (LOG_COMM && addr >= 0xf000)
-		logerror("%04X:%s comm read %04X = %02X\n", activecpu_get_previouspc(), num ? "slave" : "master", addr, ret);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:%s comm read %04X = %02X\n", activecpu_get_previouspc(), num ? "slave" : "master", addr, ret);
 
     return ret;
 }
@@ -286,7 +286,7 @@ static void leland_vram_port_w(int offset, int data, int num)
 	}
 
 	if (LOG_COMM && addr >= 0xf000)
-		logerror("%04X:%s comm write %04X = %02X\n", activecpu_get_previouspc(), num ? "slave" : "master", addr, data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:%s comm write %04X = %02X\n", activecpu_get_previouspc(), num ? "slave" : "master", addr, data);
 
 	/* based on the low 3 bits of the offset, update the destination */
     switch (offset & 7)

@@ -100,7 +100,7 @@ WRITE16_HANDLER( twin16_video_register_w )
 	case 6: COMBINE_DATA( &scrolly[2] ); break;
 
 	default:
-		logerror("unknown video_register write:%d", data );
+		log_cb(RETRO_LOG_ERROR, LOGPRE "unknown video_register write:%d", data );
 		break;
 	}
 }

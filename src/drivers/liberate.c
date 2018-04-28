@@ -48,10 +48,10 @@ static READ_HANDLER( deco16_bank_r )
 	/* Else the handler falls through to read the usual address */
 	if (offset<0x800) return videoram[offset];
 	if (offset<0x1000) return spriteram[offset-0x800];
-	if (offset<0x2200) { logerror("%04x: Unmapped bank read %04x\n",activecpu_get_pc(),offset); return 0; }
+	if (offset<0x2200) { log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: Unmapped bank read %04x\n",activecpu_get_pc(),offset); return 0; }
 	if (offset<0x2800) return scratchram[offset-0x2200];
 
-	logerror("%04x: Unmapped bank read %04x\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: Unmapped bank read %04x\n",activecpu_get_pc(),offset);
 	return 0;
 }
 
@@ -71,7 +71,7 @@ static READ_HANDLER( deco16_io_r )
 		if (offset==3) return readinputport(4); /* Dip 1 */
 		if (offset==4) return readinputport(5); /* Dip 2 */
 
-		logerror("%04x:  Read input %d\n",activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x:  Read input %d\n",activecpu_get_pc(),offset);
 		return 0xff;
 	}
 	return ROM[0x8000+offset];

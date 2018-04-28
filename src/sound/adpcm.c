@@ -346,7 +346,7 @@ int ADPCM_sh_start(const struct MachineSound *msound)
 		#ifdef MAME_DEBUG
 		if (num_voices > MAX_ADPCM)
 		{
-			logerror("ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
 			exit(-1);
 		}
 		#endif
@@ -373,7 +373,7 @@ int ADPCM_sh_start(const struct MachineSound *msound)
 		#ifdef MAME_DEBUG
 		if (num_voices > MAX_ADPCM)
 		{
-			logerror("ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
 			exit(-1);
 		}
 		#endif
@@ -449,7 +449,7 @@ void ADPCM_play(int num, int offset, int length)
 	/* range check the numbers */
 	if ((num+msm_voices) >= num_voices)
 	{
-		logerror("error: ADPCM_trigger() called with channel = %d, but only %d channels allocated\n", num, num_voices);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: ADPCM_trigger() called with channel = %d, but only %d channels allocated\n", num, num_voices);
 		return;
 	}
 
@@ -486,7 +486,7 @@ void ADPCM_stop(int num)
 	/* range check the numbers */
 	if ((num+msm_voices) >= num_voices)
 	{
-		logerror("error: ADPCM_stop() called with channel = %d, but only %d channels allocated\n", num, num_voices);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: ADPCM_stop() called with channel = %d, but only %d channels allocated\n", num, num_voices);
 		return;
 	}
 
@@ -516,7 +516,7 @@ void ADPCM_setvol(int num, int vol)
 	/* range check the numbers */
 	if ((num+msm_voices) >= num_voices)
 	{
-		logerror("error: ADPCM_setvol() called with channel = %d, but only %d channels allocated\n", num, num_voices);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: ADPCM_setvol() called with channel = %d, but only %d channels allocated\n", num, num_voices);
 		return;
 	}
 
@@ -544,7 +544,7 @@ int ADPCM_playing(int num)
 	/* range check the numbers */
 	if ((num+msm_voices) >= num_voices)
 	{
-		logerror("error: ADPCM_playing() called with channel = %d, but only %d channels allocated\n", num, num_voices);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: ADPCM_playing() called with channel = %d, but only %d channels allocated\n", num, num_voices);
 		return 0;
 	}
 
@@ -625,7 +625,7 @@ int OKIM6295_sh_start(const struct MachineSound *msound)
 	#ifdef MAME_DEBUG
 	if (num_voices > 0)
 	{
-		logerror("ERROR: MSM6295s must appear in MDRV_ADD_SOUND list before ADPCMs\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: MSM6295s must appear in MDRV_ADD_SOUND list before ADPCMs\n");
 		exit(-1);
 	}
 	#endif
@@ -636,7 +636,7 @@ int OKIM6295_sh_start(const struct MachineSound *msound)
 	#ifdef MAME_DEBUG
 	if (num_voices > MAX_ADPCM)
 	{
-		logerror("ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
 		exit(-1);
 	}
 	#endif
@@ -759,7 +759,7 @@ static int OKIM6295_status_r(int num)
 	/* range check the numbers */
 	if (num >= num_voices / OKIM6295_VOICES)
 	{
-		logerror("error: OKIM6295_status_r() called with chip = %d, but only %d chips allocated\n",num, num_voices / OKIM6295_VOICES);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: OKIM6295_status_r() called with chip = %d, but only %d chips allocated\n",num, num_voices / OKIM6295_VOICES);
 		return 0xff;
 	}
 
@@ -793,7 +793,7 @@ static void OKIM6295_data_w(int num, int data)
 	/* range check the numbers */
 	if (num >= num_voices / OKIM6295_VOICES)
 	{
-		logerror("error: OKIM6295_data_w() called with chip = %d, but only %d chips allocated\n", num, num_voices / OKIM6295_VOICES);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: OKIM6295_data_w() called with chip = %d, but only %d chips allocated\n", num, num_voices / OKIM6295_VOICES);
 		return;
 	}
 
@@ -837,13 +837,13 @@ static void OKIM6295_data_w(int num, int data)
 					}
 					else
 					{
-						logerror("OKIM6295:%d requested to play sample %02x on non-stopped voice\n",num,okim6295_command[num]);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "OKIM6295:%d requested to play sample %02x on non-stopped voice\n",num,okim6295_command[num]);
 					}
 				}
 				/* invalid samples go here */
 				else
 				{
-					logerror("OKIM6295:%d requested to play invalid sample %02x\n",num,okim6295_command[num]);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "OKIM6295:%d requested to play invalid sample %02x\n",num,okim6295_command[num]);
 					voice->playing = 0;
 				}
 			}

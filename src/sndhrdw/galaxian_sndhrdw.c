@@ -1,8 +1,6 @@
 #include "driver.h"
 #include <math.h>
 
-#define VERBOSE 0
-
 #define NEW_LFO 0
 #define NEW_SHOOT 1
 
@@ -31,12 +29,6 @@
 /* see comments in galaxian_sh_update() */
 #define MINFREQ (139-139/3)
 #define MAXFREQ (139+139/3)
-
-#if VERBOSE
-#define LOG(x) logerror x
-#else
-#define LOG(x)
-#endif
 
 static void *lfotimer = 0;
 static int freq = MAXFREQ;
@@ -380,7 +372,7 @@ static int galaxian_sh_start(const struct MachineSound *msound)
 			AMP(70), AMP(50), AMP(25), AMP( 0)
 		};
 		shootwave[i] = charge_discharge[j];
-		LOG(("shoot[%5d] $%04x (sweep: %3d, j:%d)\n", i, shootwave[i] & 0xffff, sweep, j));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "shoot[%5d] $%04x (sweep: %3d, j:%d)\n", i, shootwave[i] & 0xffff, sweep, j);
 		/*
 		 * The current sweep and a 2200/10000 fraction (R45 and R48)
 		 * of the noise are frequency modulating the NE555 chip.
@@ -460,7 +452,7 @@ static int galaxian_sh_start(const struct MachineSound *msound)
 		else
 			r1b += 1.0/10000;
 		tonewave[3][i] = V(1.0/r0b, 1.0/r1b);
-		LOG(("tone[%2d]: $%02x $%02x $%02x $%02x\n", i, tonewave[0][i], tonewave[1][i], tonewave[2][i], tonewave[3][i]));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "tone[%2d]: $%02x $%02x $%02x $%02x\n", i, tonewave[0][i], tonewave[1][i], tonewave[2][i], tonewave[3][i]);
 	}
 
 	pitch = 0xff;
@@ -571,7 +563,7 @@ WRITE_HANDLER( galaxian_lfo_freq_w )
 #undef Cap
 #undef Vbe
 #undef Vcc
-	logerror("lfo timer bits:%d%d%d%d r1:%d, r2:%d, re: %d, td: %9.2fsec\n", lfobit[0], lfobit[1], lfobit[2], lfobit[3], (int)r1, (int)r2, (int)Re, td);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "lfo timer bits:%d%d%d%d r1:%d, r2:%d, re: %d, td: %9.2fsec\n", lfobit[0], lfobit[1], lfobit[2], lfobit[3], (int)r1, (int)r2, (int)Re, td);
 	timer_adjust(lfotimer, TIME_IN_SEC(td / (MAXFREQ-MINFREQ)), 0, TIME_IN_SEC(td / (MAXFREQ-MINFREQ)));
 #else
 	static int lfobit[4];
@@ -629,7 +621,7 @@ WRITE_HANDLER( galaxian_lfo_freq_w )
 	/* I used an arbitrary value for max. Ra of 2M */
 	rx = rx + 2000000.0 * r0 / (r0+r1);
 
-	LOG(("lfotimer bits:%d%d%d%d r0:%d, r1:%d, rx: %d, time: %9.2fus\n", lfobit[3], lfobit[2], lfobit[1], lfobit[0], (int)r0, (int)r1, (int)rx, 0.639 * rx));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "lfotimer bits:%d%d%d%d r0:%d, r1:%d, rx: %d, time: %9.2fus\n", lfobit[3], lfobit[2], lfobit[1], lfobit[0], (int)r0, (int)r1, (int)rx, 0.639 * rx);
 	timer_adjust(lfotimer, TIME_IN_USEC(0.639 * rx / (MAXFREQ-MINFREQ)), 0, TIME_IN_USEC(0.639 * rx / (MAXFREQ-MINFREQ)));
 #endif
 }

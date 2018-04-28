@@ -442,7 +442,7 @@ static void scanline_interrupt(int param)
 	timer_adjust(scanline_timer, cpu_getscanlinetime(VIDEO_INTSCANLINE), 0, 0);
 
 	/* set the interrupt bit in the status reg */
-	logerror("-------------- (DISPLAY INT @ %d) ----------------\n", cpu_getscanline());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "-------------- (DISPLAY INT @ %d) ----------------\n", cpu_getscanline());
 	VIDEO_INTSTATE |= VIDEOINT_SCANLINE;
 
 	/* update the interrupt state */

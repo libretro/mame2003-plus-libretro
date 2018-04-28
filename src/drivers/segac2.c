@@ -354,7 +354,7 @@ static MACHINE_INIT( genesis )
 	cpu_set_halt_line(1, ASSERT_LINE);
 
 	z80running = 0;
-	logerror("Machine init\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Machine init\n");
 
 	timer_set(cpu_getscanlinetime(0) + cpu_getscanlineperiod() * (320. / 342.), 0, vdp_reload_counter);
 
@@ -564,7 +564,7 @@ static WRITE16_HANDLER( ribbit_palette_w )
 {
 	int newoffs = (offset & 0x60f) | (swizzle_table[swizzle_table_index][(offset >> 4) & 0x1f] << 4);
 	if (LOG_PALETTE)
-		if (offset % 16 == 0) logerror("%06X:palette_w @ %03X(%03X) = %04X [swizzle_table=%d]\n", activecpu_get_previouspc(), newoffs, offset, data, swizzle_table_index);
+		if (offset % 16 == 0) log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:palette_w @ %03X(%03X) = %04X [swizzle_table=%d]\n", activecpu_get_previouspc(), newoffs, offset, data, swizzle_table_index);
 	palette_w(newoffs, data, mem_mask);
 }
 
@@ -678,11 +678,11 @@ static WRITE16_HANDLER( iochip_w )
 		case 0x0f:
 			/* ???? */
 			if (data != 0x88)
-				if (LOG_IOCHIP) logerror("%06x:I/O write @ %02x = %02x\n", activecpu_get_previouspc(), offset, data & 0xff);
+				if (LOG_IOCHIP) log_cb(RETRO_LOG_ERROR, LOGPRE "%06x:I/O write @ %02x = %02x\n", activecpu_get_previouspc(), offset, data & 0xff);
 			break;
 
 		default:
-			if (LOG_IOCHIP) logerror("%06x:I/O write @ %02x = %02x\n", activecpu_get_previouspc(), offset, data & 0xff);
+			if (LOG_IOCHIP) log_cb(RETRO_LOG_ERROR, LOGPRE "%06x:I/O write @ %02x = %02x\n", activecpu_get_previouspc(), offset, data & 0xff);
 			break;
 	}
 }
@@ -711,7 +711,7 @@ static WRITE16_HANDLER( control_w )
 
 	/* log anything suspicious */
 	if (LOG_IOCHIP)
-		if (data != 6 && data != 7) logerror("%06x:control_w suspicious value = %02X (%d)\n", activecpu_get_previouspc(), data, cpu_getscanline());
+		if (data != 6 && data != 7) log_cb(RETRO_LOG_ERROR, LOGPRE "%06x:control_w suspicious value = %02X (%d)\n", activecpu_get_previouspc(), data, cpu_getscanline());
 }
 
 
@@ -732,7 +732,7 @@ static WRITE16_HANDLER( control_w )
 /* protection chip reads */
 static READ16_HANDLER( prot_r )
 {
-	if (LOG_PROTECTION) logerror("%06X:protection r=%02X\n", activecpu_get_previouspc(), prot_table ? prot_read_buf : 0xff);
+	if (LOG_PROTECTION) log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:protection r=%02X\n", activecpu_get_previouspc(), prot_table ? prot_read_buf : 0xff);
 	return prot_read_buf | 0xf0;
 }
 
@@ -757,7 +757,7 @@ static WRITE16_HANDLER( prot_w )
 	/* determine the value to return, should a read occur */
 	if (prot_table)
 		prot_read_buf = (prot_table[table_index >> 3] << (4 * (table_index & 7))) >> 28;
-	if (LOG_PROTECTION) logerror("%06X:protection w=%02X, new result=%02X\n", activecpu_get_previouspc(), data & 0x0f, prot_read_buf);
+	if (LOG_PROTECTION) log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:protection w=%02X, new result=%02X\n", activecpu_get_previouspc(), data & 0x0f, prot_read_buf);
 
 	/* if the palette changed, force an update */
 	if (new_sp_palbase != segac2_sp_palbase || new_bg_palbase != segac2_bg_palbase)
@@ -765,7 +765,7 @@ static WRITE16_HANDLER( prot_w )
 		force_partial_update((cpu_getscanline()) + 1 + scanbase);
 		segac2_sp_palbase = new_sp_palbase;
 		segac2_bg_palbase = new_bg_palbase;
-		if (LOG_PALETTE) logerror("Set palbank: %d/%d (scan=%d)\n", segac2_bg_palbase, segac2_sp_palbase, cpu_getscanline());
+		if (LOG_PALETTE) log_cb(RETRO_LOG_ERROR, LOGPRE "Set palbank: %d/%d (scan=%d)\n", segac2_bg_palbase, segac2_sp_palbase, cpu_getscanline());
 	}
 }
 
@@ -779,7 +779,7 @@ static READ16_HANDLER( puyopuy2_prot_r )
 	int table_index = (prot_write_buf & 0xf0) | ((prot_write_buf >> 8) & 0x0f);
 	if (prot_table)
 		prot_read_buf = (prot_table[table_index >> 3] << (4 * (table_index & 7))) >> 28;
-	if (LOG_PROTECTION) logerror("%06X:protection r=%02X\n", activecpu_get_previouspc(), prot_table ? prot_read_buf : 0xff);
+	if (LOG_PROTECTION) log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:protection r=%02X\n", activecpu_get_previouspc(), prot_table ? prot_read_buf : 0xff);
 	return prot_read_buf | 0xf0;
 }
 
@@ -980,14 +980,14 @@ READ16_HANDLER(genesis_ctrl_r)
 {
 /*	int returnval; */
 
-/*  logerror("genesis_ctrl_r %x\n", offset); */
+/*  log_cb(RETRO_LOG_ERROR, LOGPRE "genesis_ctrl_r %x\n", offset); */
 	switch (offset)
 	{
 	case 0:							/* DRAM mode is write only */
 		return 0xffff;
 		break;
 	case 0x80:						/* return Z80 CPU Function Stop Accessible or not */
-		/* logerror("Returning z80 state\n"); */
+		/* log_cb(RETRO_LOG_ERROR, LOGPRE "Returning z80 state\n"); */
 		return (z80running ? 0x0100 : 0x0);
 		break;
 	case 0x100:						/* Z80 CPU Reset - write only */
@@ -1003,7 +1003,7 @@ WRITE16_HANDLER(genesis_ctrl_w)
 {
 	data &= ~mem_mask;
 
-/*	logerror("genesis_ctrl_w %x, %x\n", offset, data); */
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "genesis_ctrl_w %x, %x\n", offset, data); */
 
 	switch (offset)
 	{
@@ -1015,7 +1015,7 @@ WRITE16_HANDLER(genesis_ctrl_w)
 		{
 			z80running = 0;
 			cpu_set_halt_line(1, ASSERT_LINE);	/* halt Z80 */
-			/* logerror("z80 stopped by 68k BusReq\n"); */
+			/* log_cb(RETRO_LOG_ERROR, LOGPRE "z80 stopped by 68k BusReq\n"); */
 		}
 		else
 		{
@@ -1023,7 +1023,7 @@ WRITE16_HANDLER(genesis_ctrl_w)
 			cpu_setbank(1, &genesis_z80_ram[0]);
 
 			cpu_set_halt_line(1, CLEAR_LINE);
-			/* logerror("z80 started, BusReq ends\n"); */
+			/* log_cb(RETRO_LOG_ERROR, LOGPRE "z80 started, BusReq ends\n"); */
 		}
 		return;
 		break;
@@ -1034,13 +1034,13 @@ WRITE16_HANDLER(genesis_ctrl_w)
 			cpu_set_reset_line(1, PULSE_LINE);
 
 			cpu_set_halt_line(1, ASSERT_LINE);
-			/* logerror("z80 reset, ram is %p\n", &genesis_z80_ram[0]); */
+			/* log_cb(RETRO_LOG_ERROR, LOGPRE "z80 reset, ram is %p\n", &genesis_z80_ram[0]); */
 			z80running = 0;
 			return;
 		}
 		else
 		{
-			/* logerror("z80 out of reset\n"); */
+			/* log_cb(RETRO_LOG_ERROR, LOGPRE "z80 out of reset\n"); */
 		}
 		return;
 
@@ -1057,7 +1057,7 @@ static READ16_HANDLER ( genesis_68k_to_z80_r )
 	if ((offset >= 0x0000) && (offset <= 0x3fff))
 	{
 		offset &=0x1fff;
-/*		logerror("soundram_r returning %x\n",(gen_z80_shared[offset] << 8) + gen_z80_shared[offset+1]);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "soundram_r returning %x\n",(gen_z80_shared[offset] << 8) + gen_z80_shared[offset+1]);*/
 		return (genesis_z80_ram[offset] << 8) + genesis_z80_ram[offset+1];
 	}
 
@@ -1390,16 +1390,16 @@ MEMORY_END
 static WRITE_HANDLER ( genesis_bank_select_w ) /* note value will be meaningless unless all bits are correctly set in */
 {
 	if (offset !=0 ) return;
-/*	if (!z80running) logerror("undead Z80 latch write!\n");*/
+/*	if (!z80running) log_cb(RETRO_LOG_ERROR, LOGPRE "undead Z80 latch write!\n");*/
 	if (z80_latch_bitcount == 0) z80_68000_latch = 0;
 
 	z80_68000_latch = z80_68000_latch | ((( ((unsigned char)data) & 0x01) << (15+z80_latch_bitcount)));
- 	logerror("value %x written to latch\n", data);
+ 	log_cb(RETRO_LOG_ERROR, LOGPRE "value %x written to latch\n", data);
 	z80_latch_bitcount++;
 	if (z80_latch_bitcount == 9)
 	{
 		z80_latch_bitcount = 0;
-		logerror("latch set, value %x\n", z80_68000_latch);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "latch set, value %x\n", z80_68000_latch);
 	}
 }
 
@@ -1483,11 +1483,11 @@ static READ_HANDLER ( genesis_z80_bank_r )
 {
 	int address = (z80_68000_latch) + (offset & 0x7fff);
 
-	if (!z80running) logerror("undead Z80->68000 read!\n");
+	if (!z80running) log_cb(RETRO_LOG_ERROR, LOGPRE "undead Z80->68000 read!\n");
 
-	if (z80_latch_bitcount != 0) logerror("reading whilst latch being set!\n");
+	if (z80_latch_bitcount != 0) log_cb(RETRO_LOG_ERROR, LOGPRE "reading whilst latch being set!\n");
 
-	logerror("z80 read from address %x\n", address);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "z80 read from address %x\n", address);
 
 	/* Read the data out of the 68k ROM */
 	if (address < 0x400000) return memory_region(REGION_CPU1)[BYTE_XOR(address)];
@@ -1499,8 +1499,8 @@ static READ_HANDLER ( genesis_z80_bank_r )
 
 static WRITE16_HANDLER ( genesis_z80_ram_w )
 {
-	if (z80running) logerror("Z80 written whilst running!\n");
-	logerror("68000->z80 sound write, %x to %x\n", data, offset);
+	if (z80running) log_cb(RETRO_LOG_ERROR, LOGPRE "Z80 written whilst running!\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "68000->z80 sound write, %x to %x\n", data, offset);
 
 	if (ACCESSING_LSB) genesis_z80_ram[(offset<<1)+1] = data & 0xff;
 	if (ACCESSING_MSB) genesis_z80_ram[offset<<1] = (data >> 8) & 0xff;
@@ -1567,7 +1567,7 @@ static WRITE_HANDLER( megaplay_bios_banksel_w )
 {
 	bios_bank = data;
 	bios_mode = MP_ROM;
-	logerror("BIOS: ROM bank %i selected [0x%02x]\n",bios_bank >> 6, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "BIOS: ROM bank %i selected [0x%02x]\n",bios_bank >> 6, data);
 }
 
 static READ_HANDLER( megaplay_bios_gamesel_r )
@@ -1578,7 +1578,7 @@ static READ_HANDLER( megaplay_bios_gamesel_r )
 static WRITE_HANDLER( megaplay_bios_gamesel_w )
 {
 	bios_6403 = data;
-	logerror("BIOS: 0x6403 write: 0x%02x\n",data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "BIOS: 0x6403 write: 0x%02x\n",data);
 	bios_mode = data & 0x10;
 }
 
@@ -1620,7 +1620,7 @@ static WRITE_HANDLER ( bank_w )
 	if(game_banksel == 0x142) /* Genesis I/O*/
 		genesis_io_w((offset/2) & 0x1f, data, 0xffff);
 	else
-		logerror("Write to bank region %i\n",game_banksel);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Write to bank region %i\n",game_banksel);
 }
 
 
@@ -1632,19 +1632,19 @@ static READ_HANDLER( megaplay_bios_6402_r )
 static WRITE_HANDLER( megaplay_bios_6402_w )
 {
 	bios_6402 = data;
-	logerror("BIOS: 0x6402 write: 0x%02x\n",data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "BIOS: 0x6402 write: 0x%02x\n",data);
 }
 
 static READ_HANDLER( megaplay_bios_6404_r )
 {
-	logerror("BIOS: 0x6404 read: returned 0x%02x\n",bios_6404 | (bios_6403 & 0x10) >> 4);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "BIOS: 0x6404 read: returned 0x%02x\n",bios_6404 | (bios_6403 & 0x10) >> 4);
 	return bios_6404 | (bios_6403 & 0x10) >> 4;
 }
 
 static WRITE_HANDLER( megaplay_bios_6404_w )
 {
 	bios_6404 = data;
-	logerror("BIOS: 0x6404 write: 0x%02x\n",data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "BIOS: 0x6404 write: 0x%02x\n",data);
 }
 
 static WRITE_HANDLER( megaplay_bios_width_w )
@@ -1661,7 +1661,7 @@ static READ_HANDLER( megaplay_bios_6600_r )
 static WRITE_HANDLER( megaplay_bios_6600_w )
 {
 	bios_6600 = data;
-	logerror("BIOS: 0x6600 write: 0x%02x\n",data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "BIOS: 0x6600 write: 0x%02x\n",data);
 }
 
 static WRITE_HANDLER( megaplay_game_w )
@@ -1676,7 +1676,7 @@ static WRITE_HANDLER( megaplay_game_w )
 		bios_mode = MP_GAME;
 		readpos = 1;
 		usrintf_showmessage("Game bank selected: 0x%03x",game_banksel);
-		logerror("BIOS: 68K address space bank selected: 0x%03x\n",game_banksel);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "BIOS: 68K address space bank selected: 0x%03x\n",game_banksel);
 	}
 }
 

@@ -132,7 +132,7 @@ static READ16_HANDLER( mweeprom_r )
 		return res;
 	}
 
-/*	logerror("msb access to eeprom port\n");*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "msb access to eeprom port\n");*/
 
 	return 0;
 }
@@ -152,7 +152,7 @@ static READ16_HANDLER( vseeprom_r )
 		return res;
 	}
 
-/*	logerror("msb access to eeprom port\n");*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "msb access to eeprom port\n");*/
 
 	return 0;
 }
@@ -167,7 +167,7 @@ static WRITE16_HANDLER( mweeprom_w )
 		return;
 	}
 
-/*	logerror("unknown LSB write %x to eeprom\n", data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "unknown LSB write %x to eeprom\n", data);*/
 
 }
 
@@ -346,7 +346,7 @@ static WRITE16_HANDLER( irq_ack_w )
 	{
 		mw_irq_control = data&0xff;
 
-/*		if ((data &0xf0) != 0xd0) logerror("Unknown write to IRQ reg: %x\n", data);*/
+/*		if ((data &0xf0) != 0xd0) log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown write to IRQ reg: %x\n", data);*/
 
 	}
 }
@@ -628,11 +628,11 @@ static WRITE16_HANDLER( mccontrol_w )
 
 		K053246_set_OBJCHA_line((data&0x04) ? ASSERT_LINE : CLEAR_LINE);
 
-/*		if (data & 0xf8) logerror("Unk write %x to mccontrol\n", data);*/
+/*		if (data & 0xf8) log_cb(RETRO_LOG_ERROR, LOGPRE "Unk write %x to mccontrol\n", data);*/
 
 	}
 
-/*	else logerror("write %x to LSB of mccontrol\n", data);*/
+/*	else log_cb(RETRO_LOG_ERROR, LOGPRE "write %x to LSB of mccontrol\n", data);*/
 
 }
 

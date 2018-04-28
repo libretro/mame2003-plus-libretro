@@ -57,7 +57,7 @@ static void cchasm_refresh (void)
             break;
         case JUMP:
             pc = data - 0xb00;
-            logerror("JUMP to %x\n", data);
+            log_cb(RETRO_LOG_ERROR, LOGPRE "JUMP to %x\n", data);
             break;
         case COLOR:
             color = VECTOR_COLOR444(data ^ 0xfff);
@@ -94,7 +94,7 @@ static void cchasm_refresh (void)
                 move = 1;
             break;
         default:
-            logerror("Unknown refresh proc opcode %x with data %x at pc = %x\n", opcode, data, pc-2);
+            log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown refresh proc opcode %x with data %x at pc = %x\n", opcode, data, pc-2);
             done = 1;
             break;
 		}

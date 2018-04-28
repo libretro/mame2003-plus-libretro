@@ -104,14 +104,6 @@
 /* speed up delay loops, bail out of tight loops */
 #define BUSY_LOOP_HACKS 	1
 
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
 typedef struct
 {
 	int irq_vector;
@@ -301,27 +293,27 @@ static INLINE void sh2_exception(const char *message, int irqline)
 		if (sh2.internal_irq_level == irqline)
 		{
 			vector = sh2.internal_irq_vector;
-			LOG(("SH-2 #%d exception #%d (internal vector: $%x) after [%s]\n", cpu_getactivecpu(), irqline, vector, message));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH-2 #%d exception #%d (internal vector: $%x) after [%s]\n", cpu_getactivecpu(), irqline, vector, message);
 		}
 		else
 		{
 			if(sh2.m[0x38] & 0x00010000)
 			{
 				vector = sh2.irq_callback(irqline);
-				LOG(("SH-2 #%d exception #%d (external vector: $%x) after [%s]\n", cpu_getactivecpu(), irqline, vector, message));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "SH-2 #%d exception #%d (external vector: $%x) after [%s]\n", cpu_getactivecpu(), irqline, vector, message);
 			}
 			else
 			{
 				sh2.irq_callback(irqline);
 				vector = 64 + irqline/2;
-				LOG(("SH-2 #%d exception #%d (autovector: $%x) after [%s]\n", cpu_getactivecpu(), irqline, vector, message));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "SH-2 #%d exception #%d (autovector: $%x) after [%s]\n", cpu_getactivecpu(), irqline, vector, message);
 			}
 		}
 	}
 	else
 	{
 		vector = 11;
-		LOG(("SH-2 #%d nmi exception (autovector: $%x) after [%s]\n", cpu_getactivecpu(), vector, message));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "SH-2 #%d nmi exception (autovector: $%x) after [%s]\n", cpu_getactivecpu(), vector, message);
 	}
 
 	sh2.r[15] -= 4;
@@ -2453,7 +2445,7 @@ static void sh2_timer_activate(void)
 			sh2.frc_base = cpunum_gettotalcycles(sh2.cpu_number);
 			timer_adjust(sh2.timer, TIME_IN_CYCLES(max_delta, sh2.cpu_number), sh2.cpu_number, 0);
 		} else {
-			logerror("SH2.%d: Timer event in %d cycles of external clock", sh2.cpu_number, max_delta);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "SH2.%d: Timer event in %d cycles of external clock", sh2.cpu_number, max_delta);
 		}
 	}
 }
@@ -2532,7 +2524,7 @@ static void sh2_dmac_callback(int dma)
 	dma &= 1;
 
 	cpuintrf_push_context(cpunum);
-	LOG(("SH2.%d: DMA %d complete\n", cpunum, dma));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2.%d: DMA %d complete\n", cpunum, dma);
 	sh2.m[0x63+4*dma] |= 2;
 	sh2.dma_timer_active[dma] = 0;
 	sh2_recalc_irq();
@@ -2552,7 +2544,7 @@ static void sh2_dmac_check(int dma)
 			size = (sh2.m[0x63+4*dma] >> 10) & 3;
 			if(incd == 3 || incs == 3)
 			{
-				logerror("SH2: DMA: bad increment values (%d, %d, %d, %04x)\n", incd, incs, size, sh2.m[0x63+4*dma]);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "SH2: DMA: bad increment values (%d, %d, %d, %04x)\n", incd, incs, size, sh2.m[0x63+4*dma]);
 				return;
 			}
 			src   = sh2.m[0x60+4*dma];
@@ -2561,7 +2553,7 @@ static void sh2_dmac_check(int dma)
 			if(!count)
 				count = 0x1000000;
 
-			LOG(("SH2: DMA %d start %x, %x, %x, %04x, %d, %d, %d\n", dma, src, dst, count, sh2.m[0x63+4*dma], incs, incd, size));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2: DMA %d start %x, %x, %x, %04x, %d, %d, %d\n", dma, src, dst, count, sh2.m[0x63+4*dma], incs, incd, size);
 
 			sh2.dma_timer_active[dma] = 1;
 			timer_adjust(sh2.dma_timer[dma], TIME_IN_CYCLES(2*count+1, sh2.cpu_number), (sh2.cpu_number<<1)|dma, 0);
@@ -2641,7 +2633,7 @@ static void sh2_dmac_check(int dma)
 	{
 		if(sh2.dma_timer_active[dma])
 		{
-			logerror("SH2: DMA %d cancelled in-flight", dma);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "SH2: DMA %d cancelled in-flight", dma);
 			timer_adjust(sh2.dma_timer[dma], TIME_NEVER, 0, 0);
 			sh2.dma_timer_active[dma] = 0;
 		}
@@ -2654,7 +2646,7 @@ WRITE32_HANDLER( sh2_internal_w )
 	COMBINE_DATA(sh2.m+offset);
 
 	/*	if(offset != 0x20)*/
-	/*		logerror("sh2_internal_w:  Write %08x (%x), %08x @ %08x\n", 0xfffffe00+offset*4, offset, data, mem_mask);*/
+	/*		log_cb(RETRO_LOG_ERROR, LOGPRE "sh2_internal_w:  Write %08x (%x), %08x @ %08x\n", 0xfffffe00+offset*4, offset, data, mem_mask);*/
 
 	switch( offset )
 	{
@@ -2662,7 +2654,7 @@ WRITE32_HANDLER( sh2_internal_w )
 	case 0x04: /* TIER, FTCSR, FRC*/
 		if((mem_mask & 0x00ffffff) != 0xffffff)
 			sh2_timer_resync();
-		logerror("SH2.%d: TIER write %04x @ %04x\n", sh2.cpu_number, data >> 16, mem_mask>>16);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "SH2.%d: TIER write %04x @ %04x\n", sh2.cpu_number, data >> 16, mem_mask>>16);
 		sh2.m[4] = (sh2.m[4] & ~(ICF|OCFA|OCFB|OVF)) | (old & sh2.m[4] & (ICF|OCFA|OCFB|OVF));
 		COMBINE_DATA(&sh2.frc);
 		if((mem_mask & 0x00ffffff) != 0xffffff)
@@ -2670,7 +2662,7 @@ WRITE32_HANDLER( sh2_internal_w )
 		sh2_recalc_irq();
 		break;
 	case 0x05: /* OCRx, TCR, TOCR*/
-		logerror("SH2.%d: TCR write %08x @ %08x\n", sh2.cpu_number, data, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "SH2.%d: TCR write %08x @ %08x\n", sh2.cpu_number, data, mem_mask);
 		sh2_timer_resync();
 		if(sh2.m[5] & 0x10)
 			sh2.ocrb = (sh2.ocrb & (mem_mask >> 16)) | ((data & ~mem_mask) >> 16);
@@ -2714,7 +2706,7 @@ WRITE32_HANDLER( sh2_internal_w )
 		{
 			INT32 a = sh2.m[0x41];
 			INT32 b = sh2.m[0x40];
-			LOG(("SH2 #%d div+mod %d/%d\n", cpu_getactivecpu(), a, b));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2 #%d div+mod %d/%d\n", cpu_getactivecpu(), a, b);
 			if (b)
 			{
 				sh2.m[0x45] = a / b;
@@ -2742,7 +2734,7 @@ WRITE32_HANDLER( sh2_internal_w )
 		{
 			INT64 a = sh2.m[0x45] | ((UINT64)(sh2.m[0x44]) << 32);
 			INT64 b = sh2.m[0x40];
-			LOG(("SH2 #%d div+mod %lld/%lld\n", cpu_getactivecpu(), a, b));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH2 #%d div+mod %lld/%lld\n", cpu_getactivecpu(), a, b);
 			if (b)
 			{
 				INT64 q = a / b;
@@ -2811,14 +2803,14 @@ WRITE32_HANDLER( sh2_internal_w )
 		break;
 
 	default:
-		logerror("sh2_internal_w:  Unmapped write %08x, %08x @ %08x\n", 0xfffffe00+offset*4, data, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "sh2_internal_w:  Unmapped write %08x, %08x @ %08x\n", 0xfffffe00+offset*4, data, mem_mask);
 		break;
 	}
 }
 
 READ32_HANDLER( sh2_internal_r )
 {
-	/*	logerror("sh2_internal_r:  Read %08x (%x) @ %08x\n", 0xfffffe00+offset*4, offset, mem_mask);*/
+	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "sh2_internal_r:  Read %08x (%x) @ %08x\n", 0xfffffe00+offset*4, offset, mem_mask);*/
 	switch( offset )
 	{
 	case 0x04: /* TIER, FTCSR, FRC*/
@@ -2881,7 +2873,7 @@ void sh2_set_frt_input(int cpunum, int state)
 	sh2_timer_resync();
 	sh2.icr = sh2.frc;
 	sh2.m[4] |= ICF;
-	logerror("SH2.%d: ICF activated (%x)\n", sh2.cpu_number, sh2.pc & AM);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "SH2.%d: ICF activated (%x)\n", sh2.cpu_number, sh2.pc & AM);
 	sh2_recalc_irq();
 	cpuintrf_pop_context();
 }
@@ -2973,10 +2965,10 @@ void sh2_set_irq_line(int irqline, int state)
 		sh2.nmi_line_state = state;
 
 		if( state == CLEAR_LINE )
-			LOG(("SH-2 #%d cleared nmi\n", cpu_getactivecpu()));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH-2 #%d cleared nmi\n", cpu_getactivecpu());
 		else
         {
-			LOG(("SH-2 #%d assert nmi\n", cpu_getactivecpu()));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH-2 #%d assert nmi\n", cpu_getactivecpu());
 			sh2_exception("sh2_set_irq_line/nmi", 16);
         }
 	}
@@ -2988,12 +2980,12 @@ void sh2_set_irq_line(int irqline, int state)
 
 		if( state == CLEAR_LINE )
 		{
-			LOG(("SH-2 #%d cleared irq #%d\n", cpu_getactivecpu(), irqline));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH-2 #%d cleared irq #%d\n", cpu_getactivecpu(), irqline);
 			sh2.pending_irq &= ~(1 << irqline);
 		}
 		else
 		{
-			LOG(("SH-2 #%d assert irq #%d\n", cpu_getactivecpu(), irqline));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SH-2 #%d assert irq #%d\n", cpu_getactivecpu(), irqline);
 			sh2.pending_irq |= 1 << irqline;
 			if(sh2.delay)
 				sh2.test_irq = 1;
@@ -3090,7 +3082,7 @@ void sh2_init(void)
 	sh2.m = malloc(0x200);
 	if (!sh2.m)
 	{
-		logerror("SH2 failed to malloc FREGS\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "SH2 failed to malloc FREGS\n");
 		/*raise( SIGABRT );*/
 	}
 

@@ -83,7 +83,7 @@ static int keyboard_cmd;
 
 static READ_HANDLER( keyboard_r )
 {
-logerror("%04x: keyboard_r\n",activecpu_get_pc());
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: keyboard_r\n",activecpu_get_pc());
 	switch(activecpu_get_pc())
 	{
 		/* read keyboard */
@@ -131,7 +131,7 @@ logerror("%04x: keyboard_r\n",activecpu_get_pc());
 
 static WRITE_HANDLER( keyboard_w )
 {
-logerror("%04x: keyboard_w %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: keyboard_w %02x\n",activecpu_get_pc(),data);
 	keyboard_cmd = data;
 }
 
@@ -165,7 +165,7 @@ static WRITE_HANDLER( themj_rombank_w )
 {
 	data8_t *rom = memory_region(REGION_CPU1) + 0x10000;
 	int bank = data & 0x03;
-logerror("banksw %d\n",bank);
+log_cb(RETRO_LOG_ERROR, LOGPRE "banksw %d\n",bank);
 	cpu_setbank(1, rom + bank*0x4000);
 	cpu_setbank(2, rom + bank*0x4000 + 0x2000);
 }

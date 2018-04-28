@@ -137,11 +137,11 @@ READ_HANDLER( wow_speech_r )
 	Phoneme = data & 0x3F;
 	Intonation = data >> 6;
 
-/*	logerror("Data : %d Speech : %s at intonation %d\n",Phoneme, PhonemeTable[Phoneme],Intonation);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Data : %d Speech : %s at intonation %d\n",Phoneme, PhonemeTable[Phoneme],Intonation);*/
 
 	if(Phoneme==63) {
    		sample_stop(wowChannel);
-/*				logerror("Clearing sample %s\n",totalword);*/
+/*				log_cb(RETRO_LOG_ERROR, LOGPRE "Clearing sample %s\n",totalword);*/
 				totalword[0] = 0;				   /* Clear the total word stack */
 				return data;
 	}
@@ -153,7 +153,7 @@ READ_HANDLER( wow_speech_r )
 	if (strlen(totalword) == 0) {
 	   strcpy(totalword,PhonemeTable[Phoneme]);	                   /* Copy over the first phoneme */
 	   if (plural != 0) {
-/*		  logerror("found a possible plural at %d\n",plural-1);*/
+/*		  log_cb(RETRO_LOG_ERROR, LOGPRE "found a possible plural at %d\n",plural-1);*/
 		  if (!strcmp("S",totalword)) {		   /* Plural check */
 			 sample_start(wowChannel, num_samples-2, 0);	   /* play the sample at position of word */
 			 sample_set_freq(wowChannel, wowBaseFrequency);    /* play at correct rate */
@@ -167,7 +167,7 @@ READ_HANDLER( wow_speech_r )
 	} else
 	   strcat(totalword,PhonemeTable[Phoneme]);	                   /* Copy over the first phoneme */
 
-/*	logerror("Total word = %s\n",totalword);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Total word = %s\n",totalword);*/
 
 	for (i=0; wowWordTable[i]; i++) {
 	   if (!strcmp(wowWordTable[i],totalword)) {		   /* Scan the word (sample) table for the complete word */
@@ -175,13 +175,13 @@ READ_HANDLER( wow_speech_r )
 		  if ((!strcmp("GDTO1RFYA2N",totalword)) || (!strcmp("RO1U1BAH1T",totalword)) || (!strcmp("KO1UH3I3E1N",totalword))) {		   /* May be plural */
 			 plural=i+1;
 			 strcpy(oldword,totalword);
-/*	     logerror("Storing sample position %d and copying string %s\n",plural,oldword);*/
+/*	     log_cb(RETRO_LOG_ERROR, LOGPRE "Storing sample position %d and copying string %s\n",plural,oldword);*/
 		  } else {
 			 plural=0;
 		  }
 		  sample_start(wowChannel, i, 0);	                   /* play the sample at position of word */
 		  sample_set_freq(wowChannel, wowBaseFrequency);         /* play at correct rate */
-/*		  logerror("Playing sample %d\n",i);*/
+/*		  log_cb(RETRO_LOG_ERROR, LOGPRE "Playing sample %d\n",i);*/
 		  totalword[0] = 0;				   /* Clear the total word stack */
 		  return data;
 	   }
@@ -193,7 +193,7 @@ READ_HANDLER( wow_speech_r )
 
 int wow_status_r(void)
 {
-/*	logerror("asked for samples status %d\n",wowChannel);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "asked for samples status %d\n",wowChannel);*/
 	return !sample_playing(wowChannel);
 }
 

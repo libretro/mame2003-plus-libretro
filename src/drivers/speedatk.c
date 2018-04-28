@@ -132,7 +132,7 @@ static READ_HANDLER( key_matrix_r )
 				default:	return 0x00;
 			}
 		}
-		default: logerror("Input reads with mux_data = %x\n",mux_data);
+		default: log_cb(RETRO_LOG_ERROR, LOGPRE "Input reads with mux_data = %x\n",mux_data);
 	}
 
 	return 0x00;

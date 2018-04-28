@@ -106,7 +106,7 @@ WRITE_HANDLER( missile_w )
 		return;
 	}
 
-	logerror("possible unmapped write, offset: %04x, data: %02x\n", offset, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "possible unmapped write, offset: %04x, data: %02x\n", offset, data);
 }
 
 
@@ -141,6 +141,6 @@ READ_HANDLER( missile_r )
 	if ((offset >= 0x4000) && (offset <= 0x400f))
 		return (pokey1_r (offset & 0x0f));
 
-	logerror("possible unmapped read, offset: %04x\n", offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "possible unmapped read, offset: %04x\n", offset);
 	return 0;
 }

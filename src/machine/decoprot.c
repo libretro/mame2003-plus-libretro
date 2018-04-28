@@ -113,7 +113,7 @@ WRITE16_HANDLER( deco16_104_prot_w ) /* Wizard Fire */
 /*		&& offset != (0x370 >> 1) && offset != (0x3c0 >> 1) && offset != (0x430 >> 1) && offset != (0x460 >> 1)*/
 /*		&& offset != (0x5a0 >> 1) && offset != (0x5b0 >> 1) && offset != (0x6e0 >> 1) && offset != (0x7d0 >> 1)*/
 /*		)*/
-/*		logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CONTROL PC %06x: warning - write protection memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);*/
 
 	COMBINE_DATA(&deco16_prot_ram[offset]);
 }
@@ -212,7 +212,7 @@ READ16_HANDLER( deco16_104_prot_r ) /* Wizard Fire */
 			return ((deco16_prot_ram[0x460/2]&0x0007)<<13) | ((deco16_prot_ram[0x460/2]&0x0008)<<9);
 	}
 
-/*	logerror("Deco Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Deco Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 	return 0;
 }
 
@@ -400,7 +400,7 @@ READ16_HANDLER( deco16_60_prot_r ) /* Edward Randy */
 			return ((deco16_prot_ram[0x32/2]&0x00f0)<<8) | ((deco16_prot_ram[0x32/2]&0x000e)<<7) | ((deco16_prot_ram[0x32/2]&0x0001)<<11);
 	}
 
-/*	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset*2);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset*2);*/
 	return 0;
 }
 
@@ -445,7 +445,7 @@ WRITE16_HANDLER( deco16_66_prot_w ) /* Mutant Fighter */
 /*		&& offset!=0xb6 && offset!=0xfa && offset!=0xe4 && offset!=0x3a && offset!=0x1e*/
 /*		&& offset!=0x38 && offset!=0x92 && offset!=0xa2 && offset!=0x308 && offset!=0x40e*/
 /*	)*/
-/*	logerror("Protection PC %06x: warning - write %04x to %04x\n",cpu_get_pc(space->cpu),data,offset);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - write %04x to %04x\n",cpu_get_pc(space->cpu),data,offset);*/
 }
 
 READ16_HANDLER( deco16_66_prot_r ) /* Mutant Fighter */
@@ -589,7 +589,7 @@ READ16_HANDLER( deco16_66_prot_r ) /* Mutant Fighter */
 	usrintf_showmessage("Deco66:  Read unmapped port %04x\n",offset*2);
 #endif
 
-/*	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 	return 0;
 }
 
@@ -650,7 +650,7 @@ READ16_HANDLER( deco16_104_cninja_prot_r )
 			return readinputport(0);
 	}
 
-/*	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset);*/
 	return 0;
 }
 
@@ -746,7 +746,7 @@ READ16_HANDLER( deco16_146_funkyjet_prot_r )
 	}
 
 	/*if (cpu_get_pc(space->cpu)!=0xc0ea)*/
-	/*	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x (ctrl %04x)\n", cpu_get_pc(space->cpu), offset<<1, input_port_read(space->machine, "INPUTS"));*/
+	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped control address %06x (ctrl %04x)\n", cpu_get_pc(space->cpu), offset<<1, input_port_read(space->machine, "INPUTS"));*/
 
 	return 0;
 }
@@ -799,7 +799,7 @@ WRITE16_HANDLER( deco16_104_rohga_prot_w )
 	if (offset==0xee || offset==0x42 || offset==0xa8)
 		return;
 
-/*  logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);*/
+/*  log_cb(RETRO_LOG_ERROR, LOGPRE "CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);*/
 
 #if 1
 /* 66 7c 7e 28 58 4a 9e*/
@@ -816,7 +816,7 @@ WRITE16_HANDLER( deco16_104_rohga_prot_w )
 		return;
 
 /*  if (offset==0x3c)*/
-/*      logerror("CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);*/
+/*      log_cb(RETRO_LOG_ERROR, LOGPRE "CONTROL PC %06x: warning - write protection memory address %04x %04x\n",cpu_get_pc(space->cpu),offset,data);*/
 /* Actually read:*/
 /*  22 24 26 2c 2e 30 32 3c 40 44 46 48 60 62 66 6a 6e 76 7e 80 82 84 86 88 8a 8c 90 94 96 98 9a 9c a0 c0 c4 c6 c8 cc ce d6 dc de*/
 
@@ -852,7 +852,7 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 	const UINT16* prot_ram=decoprot_buffer_ram_selected ? decoprot_buffer_ram : deco16_prot_ram;
 
 /*  if (offset!=0x88/2 && offset!=0x44c/2 && offset!=0x36c/2 && offset!=0x292/2)*/
-/*      logerror("Protection PC %06x: warning - read prot address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
+/*      log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read prot address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 
 	switch (offset) {
 		case 0x88/2: /* Player 1 & 2 input ports */
@@ -1197,7 +1197,7 @@ READ16_HANDLER( deco16_104_rohga_prot_r )
 			return DECO_PORT(0x58);
 	}
 
-/*	logerror("Protection PC %06x: warning - read unmapped protection address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped protection address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 
 	return 0;
 }
@@ -1228,7 +1228,7 @@ static WRITE16_HANDLER( deco16_146_core_prot_w )
 		COMBINE_DATA(&decoprot_buffer_ram[offset>>1]);
 
 /*  if (offset!=0x5e0 && offset!=0x340 && offset!=0 && offset!=0x3d0 && offset!=0x280)*/
-/*      logerror("%08x:  Write protection port %04x, data %04x (%08x)\n", cpu_get_pc(space->cpu), offset, data, mem_mask);*/
+/*      log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Write protection port %04x, data %04x (%08x)\n", cpu_get_pc(space->cpu), offset, data, mem_mask);*/
 }
 
 static READ16_HANDLER( deco16_146_core_prot_r )
@@ -1698,10 +1698,10 @@ READ32_HANDLER( deco32_fghthist_prot_r)
 		&& addr!=0x440 && addr!=0x460
 		)
 	{
-	/*	logerror("Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);*/
+	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);*/
 	/*	popmessage("Read protection port %04x", addr);*/
 	}
-	/*  logerror("Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);*/
+	/*  log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);*/
 #endif
 	return (val<<16)|0xffff;
 }
@@ -1742,7 +1742,7 @@ WRITE16_HANDLER( dietgo_104_prot_w )
 		cpu_set_irq_line(1,0,HOLD_LINE);
 		return;
 	}
-/*	logerror("Protection PC %06x: warning - write unmapped memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - write unmapped memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);*/
 }
 
 /**********************************************************************************/
@@ -1761,7 +1761,7 @@ READ16_HANDLER( deco16_104_pktgaldx_prot_r )
 	case 0x51a: return DECO_PORT(2);
 	}
 
-/*	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset<<1);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset<<1);*/
 
 	return 0;
 }
@@ -1769,7 +1769,7 @@ READ16_HANDLER( deco16_104_pktgaldx_prot_r )
 WRITE16_HANDLER( deco16_104_pktgaldx_prot_w )
 {
 	COMBINE_DATA(&deco16_prot_ram[offset]);
-/*  logerror("Protection PC %06x: warning - write unmapped memory address %04x %04x\n",cpu_get_pc(space->cpu),offset<<1,data);*/
+/*  log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - write unmapped memory address %04x %04x\n",cpu_get_pc(space->cpu),offset<<1,data);*/
 }
 
 /**********************************************************************************/

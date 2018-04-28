@@ -77,7 +77,7 @@ static WRITE_HANDLER( sound_w )
 	/* bit 7 goes directly to the sound amplifier */
 	DAC_data_w(0,((data & 0x80) >> 7) * 255);
 
-/*	logerror("%04x: sound_w %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: sound_w %02x\n",activecpu_get_pc(),data);*/
 /*	usrintf_showmessage("%02x",data);*/
 }
 
@@ -103,7 +103,7 @@ static READ_HANDLER( catchall )
 	int pc = activecpu_get_pc();
 
 	if (pc != 0x3c74 && pc != 0x0364 && pc != 0x036d)	/* weed out spurious blit reads */
-		logerror("%04x: unmapped memory read from %04x\n",pc,offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: unmapped memory read from %04x\n",pc,offset);
 
 	return 0xff;
 }

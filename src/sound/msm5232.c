@@ -180,7 +180,7 @@ static void msm5232_init_tables( int which )
 
 	scale = ((double)chip->clock) / (double)chip->rate;
 	chip->noise_step = ((1<<STEP_SH)/128.0) * scale; /* step of the rng reg in 16.16 format */
-	/* logerror("noise step=%8x\n", chip->noise_step); */
+	/* log_cb(RETRO_LOG_ERROR, LOGPRE "noise step=%8x\n", chip->noise_step); */
 
 #if 0
 {
@@ -193,7 +193,7 @@ static void msm5232_init_tables( int which )
 		double clockscale = (double)chip->clock / 2119040.0;
 		double time = (ATBL[i] / 1000.0) / clockscale;	/* attack time in seconds */
 		chip->ar_tbl[i] = (float)0.50 * ( (1.0/time) / (double)chip->rate );
-		/* logerror("ATBL[%i] = %20.16f time = %f s\n",i, chip->ar_tbl[i], time); */
+		/* log_cb(RETRO_LOG_ERROR, LOGPRE "ATBL[%i] = %20.16f time = %f s\n",i, chip->ar_tbl[i], time); */
 	}
 
 	for (i=0; i<16; i++)
@@ -201,7 +201,7 @@ static void msm5232_init_tables( int which )
 		double clockscale = (double)chip->clock / 2119040.0;
 		double time = (DTBL[i] / 1000.0) / clockscale;	/* decay time in seconds */
 		chip->dr_tbl[i] = (float)0.50 * ( (1.0/time) / (double)chip->rate );
-		/* logerror("DTBL[%i] = %20.16f time = %f s\n",i, chip->dr_tbl[i], time); */
+		/* log_cb(RETRO_LOG_ERROR, LOGPRE "DTBL[%i] = %20.16f time = %f s\n",i, chip->dr_tbl[i], time); */
 	}
 }
 #endif
@@ -344,7 +344,7 @@ static void msm5232_write(int which, int ofst, int data)
 		{
 			if(data >= 0xd8)
 			{
-				/*if ((data&0x7f) != 0x5f) logerror("MSM5232: WRONG PITCH CODE = %2x\n",data&0x7f);*/
+				/*if ((data&0x7f) != 0x5f) log_cb(RETRO_LOG_ERROR, LOGPRE "MSM5232: WRONG PITCH CODE = %2x\n",data&0x7f);*/
 				chip->voi[ch].mode = 1;		/* noise mode */
 				chip->voi[ch].eg_sect = 0;	/* Key On */
 			}
@@ -416,7 +416,7 @@ static void msm5232_write(int which, int ofst, int data)
 		case 0x0c:	/* group1 control */
 
 			/*if (chip->control1 != data)
-				logerror("msm5232: control1 ctrl=%x OE=%x\n", data&0xf0, data&0x0f);*/
+				log_cb(RETRO_LOG_ERROR, LOGPRE "msm5232: control1 ctrl=%x OE=%x\n", data&0xf0, data&0x0f);*/
 
 			/*if (data & 0x10)
 				usrintf_showmessage("msm5232: control1 ctrl=%2x\n", data);*/
@@ -436,7 +436,7 @@ static void msm5232_write(int which, int ofst, int data)
 		case 0x0d:	/* group2 control */
 
 			/*if (chip->control2 != data)
-				logerror("msm5232: control2 ctrl=%x OE=%x\n", data&0xf0, data&0x0f);*/
+				log_cb(RETRO_LOG_ERROR, LOGPRE "msm5232: control2 ctrl=%x OE=%x\n", data&0xf0, data&0x0f);*/
 
 			/*if (data & 0x10)
 				usrintf_showmessage("msm5232: control2 ctrl=%2x\n", data);*/

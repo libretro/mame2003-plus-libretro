@@ -80,6 +80,6 @@ WRITE_HANDLER( ebases_trackball_select_w )
 READ_HANDLER( ebases_trackball_r )
 {
 	int ret = readinputport(3 + ebases_trackball_select);
-	logerror("Port %d = %d\n", ebases_trackball_select, ret);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Port %d = %d\n", ebases_trackball_select, ret);
 	return ret;
 }

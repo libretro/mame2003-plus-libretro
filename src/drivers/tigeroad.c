@@ -150,7 +150,7 @@ static void f1dream_protection_w(void)
 
 static WRITE16_HANDLER( f1dream_control_w )
 {
-	logerror("protection write, PC: %04x  FFE1 Value:%01x\n",activecpu_get_pc(), ram16[0x3fe0/2]);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "protection write, PC: %04x  FFE1 Value:%01x\n",activecpu_get_pc(), ram16[0x3fe0/2]);
 	f1dream_protection_w();
 }
 

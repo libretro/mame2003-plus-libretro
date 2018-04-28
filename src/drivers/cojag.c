@@ -151,7 +151,7 @@ static READ32_HANDLER( misc_control_r )
 
 static WRITE32_HANDLER( misc_control_w )
 {
-	logerror("%08X:misc_control_w(%02X)\n", activecpu_get_previouspc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:misc_control_w(%02X)\n", activecpu_get_previouspc(), data);
 
 	/*	D7    = board reset (low)
 		D6    = audio must & reset (high)
@@ -248,7 +248,7 @@ static READ32_HANDLER( status_r )
 
 static WRITE32_HANDLER( latch_w )
 {
-	logerror("%08X:latch_w(%X)\n", activecpu_get_previouspc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:latch_w(%X)\n", activecpu_get_previouspc(), data);
 }
 
 
@@ -284,7 +284,7 @@ static WRITE32_HANDLER( eeprom_data_w )
 			((UINT32 *)generic_nvram)[offset] = data & 0xff000000;
 	}
 /*	else*/
-/*		logerror("%08X:error writing to disabled EEPROM\n", activecpu_get_previouspc());*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:error writing to disabled EEPROM\n", activecpu_get_previouspc());*/
 	eeprom_enable = 0;
 }
 
@@ -333,7 +333,7 @@ static WRITE32_HANDLER( gpu_jump_w )
 {
 	/* update the data in memory */
 	COMBINE_DATA(gpu_jump_address);
-	logerror("%08X:GPU jump address = %08X\n", activecpu_get_previouspc(), *gpu_jump_address);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:GPU jump address = %08X\n", activecpu_get_previouspc(), *gpu_jump_address);
 
 	/* if the GPU is suspended, release it now */
 	jaguar_gpu_resume();

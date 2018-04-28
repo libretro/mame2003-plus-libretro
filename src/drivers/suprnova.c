@@ -722,11 +722,11 @@ static WRITE32_HANDLER( skns_io_w )
 		}
 		else
 		{
-			logerror("Unk IO Write memmask:%08x offset:%08x data:%08x\n", mem_mask, offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Unk IO Write memmask:%08x offset:%08x data:%08x\n", mem_mask, offset, data);
 		}
 	break;
 	default:
-		logerror("Unk IO Write memmask:%08x offset:%08x data:%08x\n", mem_mask, offset, data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Unk IO Write memmask:%08x offset:%08x data:%08x\n", mem_mask, offset, data);
 	break;
 	}
 }

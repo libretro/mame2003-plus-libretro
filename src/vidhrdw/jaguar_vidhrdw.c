@@ -463,7 +463,7 @@ void jaguar_set_palette(UINT16 vmode)
 
 		/* others */
 		default:
-			logerror("Can't handle mode %X\n", vmode);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Can't handle mode %X\n", vmode);
 			break;
 	}
 }
@@ -577,7 +577,7 @@ READ32_HANDLER( jaguar_blitter_r )
 			return 0x00000001;
 
 		default:
-			logerror("%08X:Blitter read register @ F022%02X\n", activecpu_get_previouspc(), offset * 4);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Blitter read register @ F022%02X\n", activecpu_get_previouspc(), offset * 4);
 			return 0;
 	}
 }
@@ -590,7 +590,7 @@ WRITE32_HANDLER( jaguar_blitter_w )
 		blitter_run();
 
 #if LOG_BLITTER_WRITE
-	logerror("%08X:Blitter write register @ F022%02X = %08X\n", activecpu_get_previouspc(), offset * 4, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Blitter write register @ F022%02X = %08X\n", activecpu_get_previouspc(), offset * 4, data);
 #endif
 }
 
@@ -605,7 +605,7 @@ WRITE32_HANDLER( jaguar_blitter_w )
 READ16_HANDLER( jaguar_tom_regs_r )
 {
 	if (offset != INT1 && offset != INT2 && offset != HC && offset != VC)
-		logerror("%08X:TOM read register @ F00%03X\n", activecpu_get_previouspc(), offset * 2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:TOM read register @ F00%03X\n", activecpu_get_previouspc(), offset * 2);
 
 	switch (offset)
 	{
@@ -650,7 +650,7 @@ WRITE16_HANDLER( jaguar_tom_regs_w )
 	}
 
 	if (offset != INT2 && offset != VI)
-		logerror("%08X:TOM write register @ F00%03X = %04X\n", activecpu_get_previouspc(), offset * 2, data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:TOM write register @ F00%03X = %04X\n", activecpu_get_previouspc(), offset * 2, data);
 }
 
 

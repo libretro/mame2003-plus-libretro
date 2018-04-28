@@ -311,9 +311,9 @@ static void blit(int offset)
 
 #if HALLEYS_DEBUG
 if (0) {
-	logerror("%04x:[%04x]", activecpu_get_pc(), offset);
-	for (ecx=0; ecx<16; ecx++) logerror(" %02x", param[ecx]);
-	logerror("\n"); }
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x:[%04x]", activecpu_get_pc(), offset);
+	for (ecx=0; ecx<16; ecx++) log_cb(RETRO_LOG_ERROR, LOGPRE " %02x", param[ecx]);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "\n"); }
 #endif
 
 

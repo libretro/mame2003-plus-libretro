@@ -167,10 +167,10 @@ static int gsword_coins_in(void)
 	/* emulate 8741 coin slot */
 	if (readinputport(4)&0xc0)
 	{
-		logerror("Coin In\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Coin In\n");
 		return 0x80;
 	}
-	logerror("NO Coin\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "NO Coin\n");
 	return 0x00;
 }
 #endif
@@ -186,7 +186,7 @@ static READ_HANDLER( gsword_8741_2_r )
 	case 0x04: /* Player 2 Controller */
 		return readinputport(3);
 	default:
-		logerror("8741-2 unknown read %d PC=%04x\n",offset,activecpu_get_pc());
+		log_cb(RETRO_LOG_ERROR, LOGPRE "8741-2 unknown read %d PC=%04x\n",offset,activecpu_get_pc());
 	}
 	/* unknown */
 	return 0;
@@ -204,7 +204,7 @@ static READ_HANDLER( gsword_8741_3_r )
 		return readinputport(3);
 	}
 	/* unknown */
-	logerror("8741-3 unknown read %d PC=%04x\n",offset,activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "8741-3 unknown read %d PC=%04x\n",offset,activecpu_get_pc());
 	return 0;
 }
 
@@ -256,7 +256,7 @@ static WRITE_HANDLER( gsword_nmi_set_w )
 		break;
 	}
 	/* bit1= nmi disable , for ram check */
-	logerror("NMI controll %02x\n",data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "NMI controll %02x\n",data);
 }
 
 static WRITE_HANDLER( gsword_AY8910_control_port_0_w )

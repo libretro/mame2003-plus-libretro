@@ -722,13 +722,13 @@ static VIDEO_UPDATE( helifire )
 		{
 			helifire_star_rng = 0;
 			MVx_count = 0;
-			logerror("257 = offs=%4i mvoff+y=%4i y=%4i\n", helifire_mv2_offset, helifire_mv2_offset + y, y );
+			log_cb(RETRO_LOG_ERROR, LOGPRE "257 = offs=%4i mvoff+y=%4i y=%4i\n", helifire_mv2_offset, helifire_mv2_offset + y, y );
 		}
 #endif
 /*		if (y == helifire_mv2_offset) // when MV_RST // the RNG is reset every MV_RST which is every 257 physical lines */
 /*		{*/
 /*			helifire_star_rng = 0;*/
-/*			logerror("mv2 = offs=%4i mvoff+y=%4i y=%4i\n", helifire_mv2_offset, helifire_mv2_offset + y, y );*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "mv2 = offs=%4i mvoff+y=%4i y=%4i\n", helifire_mv2_offset, helifire_mv2_offset + y, y );*/
 /*		}*/
 
 		/*if (((helifire_mv2_offset + y)&7) == 4) // when MV2 goes high */

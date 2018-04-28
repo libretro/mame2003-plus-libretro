@@ -70,7 +70,7 @@ static int rt_decode_sample(const struct MachineSound *msound)
 	else
 		rt_decode_mode = 0;
 
-	logerror("pcm decode mode:%d\n", rt_decode_mode );
+	log_cb(RETRO_LOG_ERROR, LOGPRE "pcm decode mode:%d\n", rt_decode_mode );
 	if (rt_decode_mode != 0) {
 		decode_mode = 6;
 	} else {
@@ -82,7 +82,7 @@ static int rt_decode_sample(const struct MachineSound *msound)
 		src = memory_region(REGION_SOUND1)+ ( j * 0x10000 );
 		rt_totalsamples[j] = ( ( src[0] << 8 ) + src[1] ) / 2;
 		n += rt_totalsamples[j];
-		logerror("rt_totalsamples[%d]:%d\n", j, rt_totalsamples[j] );
+		log_cb(RETRO_LOG_ERROR, LOGPRE "rt_totalsamples[%d]:%d\n", j, rt_totalsamples[j] );
 	}
 
 	/* calculate the amount of headers needed */
@@ -203,7 +203,7 @@ static WRITE_HANDLER( namco_voice1_play_w ) {
 /* select voice sample (Modified and Added by Takahiro Nogi. 1999/09/26) */
 static void namco_voice_select( int offset, int data, int ch ) {
 
-	logerror("Voice %d mode: %d select: %02x\n", ch, rt_decode_mode, data );
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Voice %d mode: %d select: %02x\n", ch, rt_decode_mode, data );
 
 	if ( data == 0 )
 		sample_stop( ch );

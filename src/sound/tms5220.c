@@ -249,11 +249,11 @@ void tms5220_data_write(int data)
 		if (speak_external)
 			buffer_empty = 0;
 
-        if (DEBUG_5220) logerror("Added byte to FIFO (size=%2d)\n", fifo_count);
+        if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "Added byte to FIFO (size=%2d)\n", fifo_count);
     }
     else
     {
-        if (DEBUG_5220) logerror("Ran out of room in the FIFO!\n");
+        if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "Ran out of room in the FIFO!\n");
     }
 
     /* update the buffer low state */
@@ -301,7 +301,7 @@ int tms5220_status_read(void)
 		/* clear the interrupt pin */
 		set_interrupt_state(0);
 
-		if (DEBUG_5220) logerror("Status read: TS=%d BL=%d BE=%d\n", talk_status, buffer_low, buffer_empty);
+		if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "Status read: TS=%d BL=%d BE=%d\n", talk_status, buffer_low, buffer_empty);
 
 		return (talk_status << 7) | (buffer_low << 6) | (buffer_empty << 5);
 	}
@@ -656,7 +656,7 @@ static void process_command(void)
 			break;
 
 		case 0x30 : /* read and branch */
-			if (DEBUG_5220) logerror("read and branch command received\n");
+			if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "read and branch command received\n");
 			RDB_flag = FALSE;
 			if (read_and_branch_callback)
 				(*read_and_branch_callback)();
@@ -810,7 +810,7 @@ static int parse_frame(int the_first_frame)
 	/* if the index is 0 or 15, we're done */
 	if (indx == 0 || indx == 15)
 	{
-		if (DEBUG_5220) logerror("  (4-bit energy=%d frame)\n",new_energy);
+		if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "  (4-bit energy=%d frame)\n",new_energy);
 
 		/* clear fifo if stop frame encountered */
 		if (indx == 15)
@@ -847,7 +847,7 @@ static int parse_frame(int the_first_frame)
         for (i = 0; i < 10; i++)
             new_k[i] = old_k[i];
 
-        if (DEBUG_5220) logerror("  (11-bit energy=%d pitch=%d rep=%d frame)\n", new_energy, new_pitch, rep_flag);
+        if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "  (11-bit energy=%d pitch=%d rep=%d frame)\n", new_energy, new_pitch, rep_flag);
         goto done;
     }
 
@@ -869,7 +869,7 @@ static int parse_frame(int the_first_frame)
 		else
 			new_k[3] = k4table[extract_bits(4)];
 
-        if (DEBUG_5220) logerror("  (29-bit energy=%d pitch=%d rep=%d 4K frame)\n", new_energy, new_pitch, rep_flag);
+        if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "  (29-bit energy=%d pitch=%d rep=%d 4K frame)\n", new_energy, new_pitch, rep_flag);
         goto done;
     }
 
@@ -895,15 +895,15 @@ static int parse_frame(int the_first_frame)
     new_k[8] = k9table[extract_bits(3)];
     new_k[9] = k10table[extract_bits(3)];
 
-    if (DEBUG_5220) logerror("  (50-bit energy=%d pitch=%d rep=%d 10K frame)\n", new_energy, new_pitch, rep_flag);
+    if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "  (50-bit energy=%d pitch=%d rep=%d 10K frame)\n", new_energy, new_pitch, rep_flag);
 
 done:
 	if (DEBUG_5220)
 	{
 		if (speak_external)
-			logerror("Parsed a frame successfully in FIFO - %d bits remaining\n", bits);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Parsed a frame successfully in FIFO - %d bits remaining\n", bits);
 		else
-			logerror("Parsed a frame successfully in ROM\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Parsed a frame successfully in ROM\n");
 	}
 
 	if (the_first_frame)
@@ -921,7 +921,7 @@ done:
 
 ranout:
 
-    if (DEBUG_5220) logerror("Ran out of bits on a parse!\n");
+    if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "Ran out of bits on a parse!\n");
 
     /* this is an error condition; mark the buffer empty and turn off speaking */
     buffer_empty = 1;
@@ -953,7 +953,7 @@ static void check_buffer_low(void)
             set_interrupt_state(1);
         buffer_low = 1;
 
-        if (DEBUG_5220) logerror("Buffer low set\n");
+        if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "Buffer low set\n");
     }
 
     /* did we just become full? */
@@ -961,7 +961,7 @@ static void check_buffer_low(void)
     {
         buffer_low = 0;
 
-        if (DEBUG_5220) logerror("Buffer low cleared\n");
+        if (DEBUG_5220) log_cb(RETRO_LOG_ERROR, LOGPRE "Buffer low cleared\n");
     }
 }
 

@@ -93,7 +93,7 @@ static WRITE_HANDLER( yamyam_protection_w )
 {
 	unsigned char *RAM = memory_region(REGION_CPU1);
 
-logerror("e000 = %02x\n",RAM[0xe000]);
+log_cb(RETRO_LOG_ERROR, LOGPRE "e000 = %02x\n",RAM[0xe000]);
 	RAM[0xe000] = data;
 	if (data == 0x03) RAM[0xe001] = 0x03;
 	if (data == 0x04) RAM[0xe001] = 0x04;

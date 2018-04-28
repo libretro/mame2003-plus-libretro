@@ -1866,7 +1866,7 @@ void update_analog_port(int port)
 		default:
 			/* Use some defaults to prevent crash */
 			axis = X_AXIS; is_stick = 0; is_gun=0; check_bounds = 0;
-			logerror("Oops, polling non analog device in update_analog_port()????\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Oops, polling non analog device in update_analog_port()????\n");
 	}
 
 
@@ -2230,7 +2230,7 @@ profiler_mark(PROFILER_INPUT);
 	/* make sure the InputPort definition is correct */
 	if (in->type != IPT_PORT)
 	{
-		logerror("Error in InputPort definition: expecting PORT_START\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in InputPort definition: expecting PORT_START\n");
 		return;
 	}
 	else
@@ -2277,7 +2277,7 @@ profiler_mark(PROFILER_INPUT);
 					input_vblank[port] ^= in->mask;
 					input_port_value[port] ^= in->mask;
 if (Machine->drv->vblank_duration == 0)
-	logerror("Warning: you are using IPT_VBLANK with vblank_duration = 0. You need to increase vblank_duration for IPT_VBLANK to work.\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: you are using IPT_VBLANK with vblank_duration = 0. You need to increase vblank_duration for IPT_VBLANK to work.\n");
 				}
 				/* If it's an analog control, handle it appropriately */
 				else if (((in->type & ~IPF_MASK) > IPT_ANALOG_START)
@@ -2322,7 +2322,7 @@ if (Machine->drv->vblank_duration == 0)
 						if (in->type & IPF_IMPULSE)
 						{
 if (IP_GET_IMPULSE(in) == 0)
-	logerror("error in input port definition: IPF_IMPULSE with length = 0\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "error in input port definition: IPF_IMPULSE with length = 0\n");
 							if (waspressed[ib] == 0)
 								impulsecount[ib] = IP_GET_IMPULSE(in);
 								/* the input bit will be toggled later */
@@ -2789,7 +2789,7 @@ void init_analog_seq()
 	/* make sure the InputPort definition is correct */
 	if (in->type != IPT_PORT)
 	{
-		logerror("Error in InputPort definition: expecting PORT_START\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in InputPort definition: expecting PORT_START\n");
 		return;
 	}
 	else

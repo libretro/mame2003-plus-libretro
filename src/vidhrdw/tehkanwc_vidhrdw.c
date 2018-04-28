@@ -170,7 +170,7 @@ static void gridiron_drawled(struct mame_bitmap *bitmap,UINT8 led,int player)
 					0,16,
 					&Machine->visible_area,TRANSPARENCY_NONE,0);
 	}
-else logerror("unknown LED %02x for player %d\n",led,player);
+else log_cb(RETRO_LOG_ERROR, LOGPRE "unknown LED %02x for player %d\n",led,player);
 }
 
 static void tehkanwc_draw_sprites( struct mame_bitmap *bitmap )

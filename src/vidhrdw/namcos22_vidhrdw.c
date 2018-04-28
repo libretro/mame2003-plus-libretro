@@ -896,12 +896,12 @@ BlitQuads( struct mame_bitmap *pBitmap, INT32 addr, double m[4][4], INT32 base )
 		if( mbDumpScene )
 		{
 			int q;
-			logerror( "  %06x", size );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "  %06x", size );
 			for( q=0; q<size; q++ )
 			{
-				logerror( " %06x", GetPolyData(addr+q)&0xffffff );
+				log_cb(RETRO_LOG_ERROR, LOGPRE  " %06x", GetPolyData(addr+q)&0xffffff );
 			}
-			logerror( "\n" );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
 		}
 
 		addr += size;
@@ -937,7 +937,7 @@ READ32_HANDLER( namcos22_dspram_r )
 	if( keyboard_pressed(KEYCODE_SPACE) )
 	{
 		log_cb(RETRO_LOG_ERROR, LOGPRE  "pointram_r(%08x)\n", offset*4 );
-		logerror( "%08x pointram_r(%08x)\n", activecpu_get_pc(), offset*4 );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x pointram_r(%08x)\n", activecpu_get_pc(), offset*4 );
 	}
 	return namcos22_polygonram[offset];
 }
@@ -947,7 +947,7 @@ WRITE32_HANDLER( namcos22_dspram_w )
 	if( keyboard_pressed(KEYCODE_SPACE)  )
 	{
 		log_cb(RETRO_LOG_ERROR, LOGPRE  "pointram_w(%08x,%08x)\n", offset*4, data );
-		logerror( "%08x pointram_w(%08x,%08x)\n", activecpu_get_pc(), offset*4, data );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x pointram_w(%08x,%08x)\n", activecpu_get_pc(), offset*4, data );
 	}
 	COMBINE_DATA( &namcos22_polygonram[offset] );
 }
@@ -1036,7 +1036,7 @@ DrawPolygons( struct mame_bitmap *bitmap )
 
 	if( keyboard_pressed(KEYCODE_SPACE)  )
 	{
-		logerror( "DrawPolygons\n" );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "DrawPolygons\n" );
 	}
 
 	/*************************************************************************/
@@ -1096,21 +1096,21 @@ DrawPolygons( struct mame_bitmap *bitmap )
 		{
 			if( (i&0x1f)==0 )
 			{
-				logerror( "\n%d:\t",i/32 );
+				log_cb(RETRO_LOG_ERROR, LOGPRE  "\n%d:\t",i/32 );
 			}
-			logerror( " %08x", pWindow[i] );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  " %08x", pWindow[i] );
 		}
-		logerror( "\n" );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
 	}
 	pDebug = pSource;
 	for(;;)
 	{
 		if( mbDumpScene )
 		{
-			logerror( "\n" );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
 			while( pDebug<pSource )
 			{
-				logerror( "%08x ", *pDebug++ );
+				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x ", *pDebug++ );
 			}
 		}
 		code = *pSource++;
@@ -1135,12 +1135,12 @@ DrawPolygons( struct mame_bitmap *bitmap )
 			{
 				if( mbDumpScene )
 				{
-					logerror( "\n#%03x: ", iObject );
+					log_cb(RETRO_LOG_ERROR, LOGPRE  "\n#%03x: ", iObject );
 					while( pDebug<pSource )
 					{
-						logerror( "%08x ", *pDebug++ );
+						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x ", *pDebug++ );
 					}
-					logerror("\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 				}
 				BlitPolyObject( bitmap, code, M );
 			}
@@ -1211,12 +1211,12 @@ DrawPolygons( struct mame_bitmap *bitmap )
 				{
 					if( mbDumpScene )
 					{
-						logerror( "\n#%03x: ", iObject );
+						log_cb(RETRO_LOG_ERROR, LOGPRE  "\n#%03x: ", iObject );
 						while( pDebug<pSource )
 						{
-							logerror( "%08x ", *pDebug++ );
+							log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x ", *pDebug++ );
 						}
-						logerror("\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 					}
 					BlitPolyObject( bitmap, code, M );
 				}
@@ -1267,13 +1267,13 @@ DrawPolygons( struct mame_bitmap *bitmap )
 				if( mbDumpScene )
 				{
 					int namcos22_i;
-					logerror( "[eof %08x]\n", code );
+					log_cb(RETRO_LOG_ERROR, LOGPRE  "[eof %08x]\n", code );
 					for( namcos22_i=0; namcos22_i<32; namcos22_i++ )
 					{
-						logerror( " %08x", *pSource++ );
+						log_cb(RETRO_LOG_ERROR, LOGPRE  " %08x", *pSource++ );
 					}
 					while( keyboard_pressed( KEYCODE_U ) ){}
-					logerror( "\n\n" );
+					log_cb(RETRO_LOG_ERROR, LOGPRE  "\n\n" );
 				}
 				return;
 
@@ -1436,8 +1436,8 @@ VIDEO_START( namcos22s )
 							mpPolyH = mpPolyM + mPtRomSize;
 							for( i=0; i<0x4000/*mPtRomSize*/; i++ )
 							{
-								if( (i&0x7)==0 ) logerror( "\n%06x:", i );
-								logerror( " %06x", GetPolyData(i)&0xffffff );
+								if( (i&0x7)==0 ) log_cb(RETRO_LOG_ERROR, LOGPRE  "\n%06x:", i );
+								log_cb(RETRO_LOG_ERROR, LOGPRE  " %06x", GetPolyData(i)&0xffffff );
 							}
 							return 0; /* no error */
 						}

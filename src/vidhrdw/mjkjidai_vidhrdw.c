@@ -61,7 +61,7 @@ WRITE_HANDLER( mjkjidai_ctrl_w )
 {
 	data8_t *rom = memory_region(REGION_CPU1);
 
-/*	logerror("%04x: port c0 = %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: port c0 = %02x\n",activecpu_get_pc(),data);*/
 
 	/* bit 0 = NMI enable */
 	interrupt_enable_w(0,data & 1);

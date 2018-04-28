@@ -214,7 +214,7 @@ static void cem3394_update(int ch, INT16 *buffer, int length)
 	if (int_volume != 0)
 	{
 		if (chip->wave_select == 0 && !ext_volume)
-			logerror("%f V didn't cut it\n", chip->values[CEM3394_WAVE_SELECT]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%f V didn't cut it\n", chip->values[CEM3394_WAVE_SELECT]);
 
 		/* handle the pulse component; it maxes out at 0x1932, which is 27% smaller than */
 		/* the sawtooth (since the value is constant, this is the best place to have an */

@@ -1273,7 +1273,7 @@ READ16_HANDLER( mirror_ram_r )
 WRITE16_HANDLER( mirror_ram_w )
 {
 	COMBINE_DATA(&mirror_ram[offset]);
-/*	logerror("PC %06X - Mirror RAM Written: %04X <- %04X\n", activecpu_get_pc(), offset*2, data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Mirror RAM Written: %04X <- %04X\n", activecpu_get_pc(), offset*2, data);*/
 }
 
 
@@ -1522,7 +1522,7 @@ READ16_HANDLER ( calibr50_ip_r )
 		case 0x16/2:	return (dir2>>8);			/* upper 4 bits of p2 rotation*/
 		case 0x18/2:	return 0xffff;				/* ? (value's read but not used)*/
 		default:
-			logerror("PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
 			return 0;
 	}
 }
@@ -2206,7 +2206,7 @@ static READ16_HANDLER( krzybowl_input_r )
 		case 0xc/2:	return dir2y & 0xff;
 		case 0xe/2:	return dir2y >> 8;
 		default:
-			logerror("PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
 			return 0;
 	}
 }
@@ -2430,7 +2430,7 @@ READ16_HANDLER( kiwame_input_r )
 		case 0x08/2:	return 0xffff;
 
 		default:
-			logerror("PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
 			return 0x0000;
 	}
 }
@@ -2466,12 +2466,12 @@ MEMORY_END
 
 static READ16_HANDLER( thunderl_protection_r )
 {
-/*	logerror("PC %06X - Protection Read\n", activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Protection Read\n", activecpu_get_pc());*/
 	return 0x00dd;
 }
 static WRITE16_HANDLER( thunderl_protection_w )
 {
-/*	logerror("PC %06X - Protection Written: %04X <- %04X\n", activecpu_get_pc(), offset*2, data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Protection Written: %04X <- %04X\n", activecpu_get_pc(), offset*2, data);*/
 }
 
 /* Similar to downtown etc. */
@@ -8089,12 +8089,12 @@ READ16_HANDLER( twineagl_debug_r )
 static data8_t xram[8];
 READ16_HANDLER( twineagl_200100_r )
 {
-logerror("%04x: twineagl_200100_r %d\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: twineagl_200100_r %d\n",activecpu_get_pc(),offset);
 	return xram[offset];
 }
 WRITE16_HANDLER( twineagl_200100_w )
 {
-logerror("%04x: twineagl_200100_w %d = %02x\n",activecpu_get_pc(),offset,data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: twineagl_200100_w %d = %02x\n",activecpu_get_pc(),offset,data);
 	if (ACCESSING_LSB)
 		xram[offset] = data & 0xff;
 }

@@ -475,7 +475,7 @@ static READ32_HANDLER( custom_key_r )
 		break; /* no protection? */
 	}
 
-	logerror( "custom_key_r(%d); pc=%08x\n", offset, activecpu_get_pc() );
+	log_cb(RETRO_LOG_ERROR, LOGPRE  "custom_key_r(%d); pc=%08x\n", offset, activecpu_get_pc() );
 	return 0;
 }
 

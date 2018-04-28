@@ -263,7 +263,7 @@ WRITE_HANDLER( galivan_gfxbank_w )
 		cpu_setbank(1,&RAM[0x10000 + 0x2000 * bank]);
 	}
 
-/*	logerror("Address: %04X - port 40 = %02x\n",activecpu_get_pc(),data); */
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Address: %04X - port 40 = %02x\n",activecpu_get_pc(),data); */
 }
 
 WRITE_HANDLER( ninjemak_gfxbank_w )
@@ -284,7 +284,7 @@ WRITE_HANDLER( ninjemak_gfxbank_w )
 
 		int offs;
 
-logerror("%04x: write %02x to port 80\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: write %02x to port 80\n",activecpu_get_pc(),data);
 
 		for (offs = 0; offs < videoram_size; offs++)
 		{

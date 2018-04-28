@@ -579,7 +579,7 @@ static WRITE16_HANDLER(brival_protboard_w)
 		default:
 			if (offset >= 0xa00/2 && offset < 0xc00/2)
 				return;
-			logerror("brival_protboard_w: UNKNOWN WRITE: offset %x value %x\n", offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "brival_protboard_w: UNKNOWN WRITE: offset %x value %x\n", offset, data);
 			return;
 			break;
 	}
@@ -653,7 +653,7 @@ static READ16_HANDLER( system32_io_analog_r )
 	switch(offset)
 	{
 	default:
-		logerror("system32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "system32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
 		return 0xffff;
 		break;
 	}
@@ -701,7 +701,7 @@ static READ16_HANDLER( system32_io_r )
 		/* f1lap*/
 		return 0xffff;
 	default:
-		logerror("Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -744,7 +744,7 @@ static WRITE16_HANDLER( system32_io_w )
 		/* orunners unknown*/
 		break;
 	default:
-		logerror("Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -766,7 +766,7 @@ static READ16_HANDLER( system32_io_2_r )
 	case 0x02:
 		return readinputport(0x06);
 	default:
-		logerror("Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -788,7 +788,7 @@ static WRITE16_HANDLER( system32_io_2_w )
 		/* orunners unknown*/
 		break;
 	default:
-		logerror("Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -1139,7 +1139,7 @@ static WRITE16_HANDLER( sonic_track_reset_w )
 			last[5] = readinputport(12);
 			break;
 		default:
-			logerror("track_w : warning - read unmapped address %06x - PC = %06x\n",0xc00040 + (offset << 1),activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "track_w : warning - read unmapped address %06x - PC = %06x\n",0xc00040 + (offset << 1),activecpu_get_pc());
 			break;
 	}
 }
@@ -1169,7 +1169,7 @@ static READ16_HANDLER( sonic_track_r )
 			delta = (int)readinputport(12) - (int)last[5];
 			break;
 		default:
-			logerror("track_r : warning - read unmapped address %06x - PC = %06x\n",0xc00040 + (offset << 1),activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "track_r : warning - read unmapped address %06x - PC = %06x\n",0xc00040 + (offset << 1),activecpu_get_pc());
 			break;
 	}
 
@@ -3165,7 +3165,7 @@ static READ16_HANDLER( arescue_dsp_r )
 				break;
 
 			default:
-				logerror("Unhandled DSP cmd %04x (%04x).\n", arescue_dsp_io[0], arescue_dsp_io[1] );
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Unhandled DSP cmd %04x (%04x).\n", arescue_dsp_io[0], arescue_dsp_io[1] );
 				break;
 		}
 	}

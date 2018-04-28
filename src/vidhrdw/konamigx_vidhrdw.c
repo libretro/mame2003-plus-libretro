@@ -101,9 +101,7 @@ static void konamigx_alpha_tile_callback(int layer, int *code, int *color)
 		/* save mixcode and mark tile alpha (unimplemented) */
 		*code = 0;
 
-		#if VERBOSE
-			usrintf_showmessage("skipped alpha tile(layer=%d mix=%d)", layer, mixcode);
-		#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "skipped alpha tile(layer=%d mix=%d)", layer, mixcode);
 	}
 }
 

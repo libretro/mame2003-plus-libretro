@@ -238,7 +238,7 @@ static WRITE_HANDLER( snddata_w )
 		AY8910_write_port_1_w(0,offset);
 	else /* if ((p2 & 0xf0) != 0x70)*/
 		/* the port address is the data, while the data seems to be control bits */
-		logerror("%04x: snddata_w ctrl = %02x, p1 = %02x, p2 = %02x, data = %02x\n",activecpu_get_pc(),data,p1,p2,offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: snddata_w ctrl = %02x, p1 = %02x, p2 = %02x, data = %02x\n",activecpu_get_pc(),data,p1,p2,offset);
 }
 
 static WRITE_HANDLER( p1_w )

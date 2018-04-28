@@ -577,7 +577,7 @@ MACHINE_DRIVER_END
 /********* internal interfaces ***********/
 static WRITE_HANDLER( squawkntalk_porta1_w )
 {
-	logerror("Write to AY-8912\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Write to AY-8912\n");
 }
 
 static WRITE_HANDLER( squawkntalk_porta2_w )

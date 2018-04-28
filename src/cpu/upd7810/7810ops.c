@@ -9,12 +9,12 @@
 
 static void illegal(void)
 {
-	logerror("uPD7810 #%d: illegal opcode %02x at PC:%04x\n", cpu_getactivecpu(), OP, PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "uPD7810 #%d: illegal opcode %02x at PC:%04x\n", cpu_getactivecpu(), OP, PC);
 }
 
 static void illegal2(void)
 {
-	logerror("uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, OP2, PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, OP2, PC);
 }
 
 /* prefix 48 */
@@ -8626,7 +8626,7 @@ static void SKN_bit(void)
 			val = RP( UPD7807_PORTT );
 			break;
 		default:
-			logerror("uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
 			val = 0;
 			break;
 	}
@@ -8680,7 +8680,7 @@ static void SETB(void)
 /*			PT is input only*/
 /*			break;*/
 		default:
-			logerror("uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
 			break;
 	}
 }
@@ -8730,7 +8730,7 @@ static void CLR(void)
 /*			PT is input only*/
 /*			break;*/
 		default:
-			logerror("uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
 			break;
 	}
 }
@@ -8779,7 +8779,7 @@ static void SK_bit(void)
 			val = RP( UPD7807_PORTT );
 			break;
 		default:
-			logerror("uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "uPD7810 #%d: illegal opcode %02x %02x at PC:%04x\n", cpu_getactivecpu(), OP, imm, PC);
 			val = 0;
 			break;
 	}

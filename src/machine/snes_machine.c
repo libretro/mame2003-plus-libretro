@@ -201,9 +201,9 @@ WRITE_HANDLER( snes_w_bank1 )
 	else if( address >= 0x2000 && address <= 0x5fff )	/* I/O */
 		snes_w_io( address, data );
 	else if( address >= 0x6000 && address <= 0x7fff )	/* Reserved */
-		logerror( "Attempt to write to reserved address: %X\n", offset );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "Attempt to write to reserved address: %X\n", offset );
 	else
-		logerror( "Attempt to write to ROM address: %X\n", offset );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "Attempt to write to ROM address: %X\n", offset );
 }
 
 /* 0x300000 - 0x3fffff */
@@ -218,12 +218,12 @@ WRITE_HANDLER( snes_w_bank2 )
 	else if( address >= 0x6000 && address <= 0x7fff )
 	{
 		if( cart.mode == SNES_MODE_20 )			/* Reserved */
-			logerror( "Attempt to write to reserved address: %X\n", offset );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "Attempt to write to reserved address: %X\n", offset );
 		else /* MODE_21 */
 			snes_ram[0x300000 + offset] = data;  /* sram */
 	}
 	else
-		logerror( "Attempt to write to ROM address: %X\n", offset );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "Attempt to write to ROM address: %X\n", offset );
 }
 
 /* 0x800000 - 0xffffff */
@@ -243,7 +243,7 @@ WRITE_HANDLER( snes_w_bank4 )
 		else if( offset >= 0x300000 && offset <= 0x3fffff )
 			snes_w_bank2( offset - 0x300000, data );
 		else
-			logerror( "Attempt to write to ROM address: %X\n", offset );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "Attempt to write to ROM address: %X\n", offset );
 	}
 }
 
@@ -1020,7 +1020,7 @@ WRITE_HANDLER( snes_w_io )
 		case JOY4L:
 		case JOY4H:
 #ifdef MAME_DEBUG
-			logerror( "Write to read-only register: %X value: %X", offset, data );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "Write to read-only register: %X value: %X", offset, data );
 #endif /* MAME_DEBUG */
 			return;
 	/* Below is all DMA related */

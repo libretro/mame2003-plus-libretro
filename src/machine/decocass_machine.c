@@ -513,23 +513,23 @@ static void decocass_fno(offs_t offset, data8_t data)
 		{
 			switch (data)
 			{
-			case 0x25: logerror("8041 FNO 25: write_block\n"); break;
-			case 0x26: logerror("8041 FNO 26: rewind_block\n"); break;
-			case 0x27: logerror("8041 FNO 27: read_block_a\n"); break;
-			case 0x28: logerror("8041 FNO 28: read_block_b\n"); break;
-			case 0x29: logerror("8041 FNO 29: tape_rewind_fast\n"); break;
-			case 0x2a: logerror("8041 FNO 2a: tape_forward\n"); break;
-			case 0x2b: logerror("8041 FNO 2b: tape_rewind\n"); break;
-			case 0x2c: logerror("8041 FNO 2c: force_abort\n"); break;
-			case 0x2d: logerror("8041 FNO 2d: tape_erase\n"); break;
-			case 0x2e: logerror("8041 FNO 2e: search_tape_mark\n"); break;
-			case 0x2f: logerror("8041 FNO 2f: search_eot\n"); break;
-			case 0x30: logerror("8041 FNO 30: advance_block\n"); break;
-			case 0x31: logerror("8041 FNO 31: write_tape_mark\n"); break;
-			case 0x32: logerror("8041 FNO 32: reset_error\n"); break;
-			case 0x33: logerror("8041 FNO 33: flag_status_report\n"); break;
-			case 0x34: logerror("8041 FNO 34: report_status_to_main\n"); break;
-			default:   logerror("8041 FNO %02x: invalid\n", data);
+			case 0x25: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 25: write_block\n"); break;
+			case 0x26: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 26: rewind_block\n"); break;
+			case 0x27: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 27: read_block_a\n"); break;
+			case 0x28: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 28: read_block_b\n"); break;
+			case 0x29: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 29: tape_rewind_fast\n"); break;
+			case 0x2a: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 2a: tape_forward\n"); break;
+			case 0x2b: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 2b: tape_rewind\n"); break;
+			case 0x2c: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 2c: force_abort\n"); break;
+			case 0x2d: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 2d: tape_erase\n"); break;
+			case 0x2e: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 2e: search_tape_mark\n"); break;
+			case 0x2f: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 2f: search_eot\n"); break;
+			case 0x30: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 30: advance_block\n"); break;
+			case 0x31: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 31: write_tape_mark\n"); break;
+			case 0x32: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 32: reset_error\n"); break;
+			case 0x33: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 33: flag_status_report\n"); break;
+			case 0x34: log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO 34: report_status_to_main\n"); break;
+			default:   log_cb(RETRO_LOG_ERROR, LOGPRE "8041 FNO %02x: invalid\n", data);
 			}
 		}
 }

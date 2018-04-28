@@ -102,7 +102,7 @@ static READ_HANDLER( dipsw_r )
 /*	case 0xe8: */ /* lose a life?*/
 		
 	default:
-/*		logerror("Unknown dipsw_r bank = %x\n",dipsw_bank);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown dipsw_r bank = %x\n",dipsw_bank);*/
 		return 0xff;
 	}
 }

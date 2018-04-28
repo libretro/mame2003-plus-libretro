@@ -301,7 +301,7 @@ void cojag_sound_reset(void)
 READ16_HANDLER( jaguar_jerry_regs_r )
 {
 	if (offset != JINTCTRL && offset != JINTCTRL+2)
-		logerror("%08X:jerry read register @ F10%03X\n", activecpu_get_previouspc(), offset * 2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:jerry read register @ F10%03X\n", activecpu_get_previouspc(), offset * 2);
 
 	switch (offset)
 	{
@@ -326,7 +326,7 @@ WRITE16_HANDLER( jaguar_jerry_regs_w )
 	}
 
 	if (offset != JINTCTRL && offset != JINTCTRL+2 && offset != ASICTRL)
-		logerror("%08X:jerry write register @ F10%03X = %04X\n", activecpu_get_previouspc(), offset * 2, data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:jerry write register @ F10%03X = %04X\n", activecpu_get_previouspc(), offset * 2, data);
 }
 
 
@@ -430,7 +430,7 @@ static void serial_callback(int param)
 
 READ32_HANDLER( jaguar_serial_r )
 {
-	logerror("%08X:jaguar_serial_r(%X)\n", activecpu_get_previouspc(), offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:jaguar_serial_r(%X)\n", activecpu_get_previouspc(), offset);
 	return 0;
 }
 
@@ -457,7 +457,7 @@ WRITE32_HANDLER( jaguar_serial_w )
 		/* control register -- only very specific modes supported */
 		case 5:
 			if ((data & 0x3f) != 0x15)
-				logerror("Unexpected write to SMODE = %X\n", data);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected write to SMODE = %X\n", data);
 			if ((data & 0x3f) == 0x15)
 			{
 				double rate = TIME_IN_HZ(26000000 / (32 * 2 * (serial_frequency + 1)));
@@ -466,7 +466,7 @@ WRITE32_HANDLER( jaguar_serial_w )
 			break;
 
 		default:
-			logerror("%08X:jaguar_serial_w(%X,%X)\n", activecpu_get_previouspc(), offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:jaguar_serial_w(%X,%X)\n", activecpu_get_previouspc(), offset, data);
 			break;
 	}
 }

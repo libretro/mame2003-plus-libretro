@@ -777,7 +777,7 @@ static void vendetta_banking( int lines )
 
 	if ( lines >= 0x1c )
 	{
-		logerror("PC = %04x : Unknown bank selected %02x\n", activecpu_get_pc(), lines );
+		log_cb(RETRO_LOG_ERROR, LOGPRE "PC = %04x : Unknown bank selected %02x\n", activecpu_get_pc(), lines );
 	}
 	else
 		cpu_setbank( 1, &RAM[ 0x10000 + ( lines * 0x2000 ) ] );

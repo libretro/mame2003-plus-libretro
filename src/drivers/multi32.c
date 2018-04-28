@@ -278,7 +278,7 @@ static READ16_HANDLER( multi32_io_analog_r )
 	switch(offset)
 	{
 	default:
-		logerror("multi32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "multi32_io_analog [%d:%06x]: read %02x (mask %x)\n", cpu_getactivecpu(), activecpu_get_pc(), offset, mem_mask);
 		return 0xffff;
 		break;
 	}
@@ -328,7 +328,7 @@ static READ16_HANDLER( multi32_io_r )
 		/* f1lap*/
 		return 0xffff;
 	default:
-		logerror("Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A1 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -372,7 +372,7 @@ static WRITE16_HANDLER( multi32_io_w )
 		/* orunners unknown*/
 		break;
 	default:
-		logerror("Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A1 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -394,7 +394,7 @@ static READ16_HANDLER( multi32_io_2_r )
 	case 0x02:
 		return readinputport(0x06);
 	default:
-		logerror("Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A2 %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -416,7 +416,7 @@ static WRITE16_HANDLER( multi32_io_2_w )
 		/* orunners unknown*/
 		break;
 	default:
-		logerror("Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port A2 %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }
@@ -448,7 +448,7 @@ static READ16_HANDLER( multi32_io_B_r )
 		/* harddunk (mask ff00)*/
 		return 0xffff;
 	default:
-		logerror("Port B %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port B %d [%d:%06x]: read (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), mem_mask);
 		return 0xffff;
 	}
 }
@@ -479,7 +479,7 @@ static WRITE16_HANDLER( multi32_io_B_w )
 		break;
 
 	default:
-		logerror("Port B %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Port B %d [%d:%06x]: write %02x (mask %x)\n", offset, cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask);
 		break;
 	}
 }

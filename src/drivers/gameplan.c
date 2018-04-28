@@ -26,7 +26,7 @@ static int gameplan_current_port;
 static WRITE_HANDLER( gameplan_port_select_w )
 {
 #ifdef VERY_VERBOSE
-	logerror("VIA 2: PC %04x: %x -> reg%X\n",activecpu_get_pc(), data, offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "VIA 2: PC %04x: %x -> reg%X\n",activecpu_get_pc(), data, offset);
 #endif /* VERY_VERBOSE */
 
 	switch (offset)
@@ -43,25 +43,25 @@ static WRITE_HANDLER( gameplan_port_select_w )
 
 				default:
 #ifdef VERBOSE
-					logerror("  VIA 2: strange port request byte: %02x\n", data);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "  VIA 2: strange port request byte: %02x\n", data);
 #endif
 					return;
 			}
 
 #ifdef VERBOSE
-			logerror("  VIA 2: selected port %d\n", gameplan_current_port);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "  VIA 2: selected port %d\n", gameplan_current_port);
 #endif
 			break;
 
 		case 0x02:
 #ifdef VERBOSE
-			logerror("  VIA 2: wrote %02x to Data Direction Register B\n", data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "  VIA 2: wrote %02x to Data Direction Register B\n", data);
 #endif
 			break;
 
 		case 0x03:
 #ifdef VERBOSE
-			logerror("  VIA 2: wrote %02x to Data Direction Register A\n", data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "  VIA 2: wrote %02x to Data Direction Register A\n", data);
 #endif
 			break;
 
@@ -69,11 +69,11 @@ static WRITE_HANDLER( gameplan_port_select_w )
 			if (data == 0xec || data == 0xcc)
 			{
 #ifdef VERBOSE
-				logerror("  VIA 2: initialised Peripheral Control Register to 0x%02x for VIA 2\n",data);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "  VIA 2: initialised Peripheral Control Register to 0x%02x for VIA 2\n",data);
 #endif
 			}
 			else
-				logerror("  VIA 2: unusual Peripheral Control Register value 0x%02x for VIA 2\n",data);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "  VIA 2: unusual Peripheral Control Register value 0x%02x for VIA 2\n",data);
 			break;
 
 		default:

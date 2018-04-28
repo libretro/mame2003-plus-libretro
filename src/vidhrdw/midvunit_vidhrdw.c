@@ -1025,7 +1025,7 @@ static void process_dma_queue(void)
 WRITE32_HANDLER( midvunit_dma_queue_w )
 {
 if (LOG_DMA && keyboard_pressed(KEYCODE_L))
-	logerror("%06X:queue(%X) = %08X\n", activecpu_get_pc(), dma_data_index, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:queue(%X) = %08X\n", activecpu_get_pc(), dma_data_index, data);
 	if (dma_data_index < 16)
 		dma_data[dma_data_index++] = data;
 }
@@ -1043,7 +1043,7 @@ READ32_HANDLER( midvunit_dma_trigger_r )
 	if (offset)
 	{
 if (LOG_DMA && keyboard_pressed(KEYCODE_L))
-	logerror("%06X:trigger\n", activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:trigger\n", activecpu_get_pc());
 		process_dma_queue();
 		dma_data_index = 0;
 	}
@@ -1064,7 +1064,7 @@ WRITE32_HANDLER( midvunit_page_control_w )
 	if ((page_control ^ data) & 1)
 	{
 if (LOG_DMA && keyboard_pressed(KEYCODE_L))
-	logerror("##########################################################\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "##########################################################\n");
 #if KEEP_STATISTICS
 		usrintf_showmessage("Polys:%d  Render:%d%%  FPS:%d",
 				polycount, pixelcount / (512*4), lastfps);

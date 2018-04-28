@@ -71,7 +71,7 @@ static WRITE16_HANDLER( coinctrl_w )
 		coin_counter_w(1,data & 0x0200);
 	}
 	if (data & 0xfcff)
-		logerror("Writing %04x to unknown coin control bits\n",data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Writing %04x to unknown coin control bits\n",data);
 }
 
 
@@ -157,11 +157,11 @@ static READ_HANDLER( playmark_snd_command_r )
 
 	if ((playmark_oki_control & 0x38) == 0x30) {
 		data = playmark_snd_command;
-		logerror("PortB reading %02x from the 68K\n",data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "PortB reading %02x from the 68K\n",data);
 	}
 	else if ((playmark_oki_control & 0x38) == 0x28) {
 		data = (OKIM6295_status_0_r(0) & 0x0f);
-/*		logerror("PortB reading %02x from the OKI status port\n",data);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "PortB reading %02x from the OKI status port\n",data);*/
 	}
 
 	return data;
@@ -203,7 +203,7 @@ static WRITE_HANDLER( playmark_snd_control_w )
 
 	if ((data & 0x38) == 0x18)
 	{
-/*		logerror("Writing %02x to OKI1, PortC=%02x, Code=%02x\n",playmark_oki_command,playmark_oki_control,playmark_snd_command);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "Writing %02x to OKI1, PortC=%02x, Code=%02x\n",playmark_oki_command,playmark_oki_control,playmark_snd_command);*/
 		OKIM6295_data_0_w(0, playmark_oki_command);
 	}
 }

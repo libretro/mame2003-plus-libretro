@@ -13,7 +13,7 @@ static int mrflea_gfx_bank;
 WRITE_HANDLER( mrflea_gfx_bank_w ){
 	mrflea_gfx_bank = data;
 	if( data & ~0x14 ){
-		logerror( "unknown gfx bank: 0x%02x\n", data );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "unknown gfx bank: 0x%02x\n", data );
 	}
 }
 

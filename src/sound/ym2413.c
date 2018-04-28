@@ -1169,10 +1169,10 @@ static int init_tables(void)
 			tl_tab[ x*2+1 + i*2*TL_RES_LEN ] = -tl_tab[ x*2+0 + i*2*TL_RES_LEN ];
 		}
 	#if 0
-			logerror("tl %04i", x*2);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "tl %04i", x*2);
 			for (i=0; i<11; i++)
-				logerror(", [%02i] %5i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ] );
-			logerror("\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE ", [%02i] %5i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ] );
+			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 	#endif
 	}
 	/*logerror("ym2413.c: TL_TAB_LEN = %i elements (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));*/
@@ -1215,10 +1215,10 @@ static int init_tables(void)
 		/*logerror("ym2413.c: sin1[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[1*SIN_LEN+i], tl_tab[sin_tab[1*SIN_LEN+i]] );*/
 	}
 #if 0
-	logerror("YM2413.C: ENV_QUIET= %08x (*32=%08x)\n", ENV_QUIET, ENV_QUIET*32 );
+	log_cb(RETRO_LOG_ERROR, LOGPRE "YM2413.C: ENV_QUIET= %08x (*32=%08x)\n", ENV_QUIET, ENV_QUIET*32 );
 	for (i=0; i<ENV_QUIET; i++)
 	{
-		logerror("tl_tb[%4x(%4i)]=%8x\n", i<<5, i, tl_tab[i<<5] );
+		log_cb(RETRO_LOG_ERROR, LOGPRE "tl_tb[%4x(%4i)]=%8x\n", i<<5, i, tl_tab[i<<5] );
 	}
 #endif
 #ifdef SAVE_SAMPLE
@@ -1246,7 +1246,7 @@ static void OPLL_initalize(YM2413 *chip)
 #if 0
 	chip->rate = (double)chip->clock / 72.0;
 	chip->freqbase  = 1.0;
-	logerror("freqbase=%f\n", chip->freqbase);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "freqbase=%f\n", chip->freqbase);
 #endif
 
 
@@ -1266,17 +1266,17 @@ static void OPLL_initalize(YM2413 *chip)
 #if 0
 	for( i=0 ; i < 16 ; i++ )
 	{
-		logerror("ym2413.c: sl_tab[%i] = %08x\n", i, sl_tab[i] );
+		log_cb(RETRO_LOG_ERROR, LOGPRE "ym2413.c: sl_tab[%i] = %08x\n", i, sl_tab[i] );
 	}
 	for( i=0 ; i < 8 ; i++ )
 	{
 		int j;
-		logerror("ym2413.c: ksl_tab[oct=%2i] =",i);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "ym2413.c: ksl_tab[oct=%2i] =",i);
 		for (j=0; j<16; j++)
 		{
-			logerror("%08x ", ksl_tab[i*16+j] );
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x ", ksl_tab[i*16+j] );
 		}
-		logerror("\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 	}
 #endif
 
@@ -1604,7 +1604,7 @@ static void OPLLWriteReg(YM2413 *chip, int r, int v)
 				if ((chip->rhythm&0x20)==0)
 				/*rhythm off to on*/
 				{
-					logerror("YM2413: Rhythm mode enable\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "YM2413: Rhythm mode enable\n");
 
 	/* Load instrument settings for channel seven(chan=6 since we're zero based). (Bass drum) */
 					chan = 6;
@@ -1666,7 +1666,7 @@ static void OPLLWriteReg(YM2413 *chip, int r, int v)
 				if ((chip->rhythm&0x20)==1)
 				/*rhythm on to off*/
 				{
-					logerror("YM2413: Rhythm mode disable\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "YM2413: Rhythm mode disable\n");
 	/* Load instrument settings for channel seven(chan=6 since we're zero based).*/
 					chan = 6;
 					inst = &chip->inst_tab[chip->instvol_r[chan]>>4][0];
@@ -1740,7 +1740,7 @@ static void OPLLWriteReg(YM2413 *chip, int r, int v)
 
 
 			if (CH->sus!=(v&0x20))
-				logerror("chan=%i sus=%2x\n",chan,v&0x20);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "chan=%i sus=%2x\n",chan,v&0x20);
 
 			CH->sus = v & 0x20;
 		}
@@ -1812,9 +1812,9 @@ static void OPLLWriteReg(YM2413 *chip, int r, int v)
 			load_instrument(chip, chan, slot, inst);
 
 		#if 0
-			logerror("YM2413: chan#%02i inst=%02i:  (r=%2x, v=%2x)\n",chan,v>>4,r,v);
-			logerror("  0:%2x  1:%2x\n",inst[0],inst[1]);	logerror("  2:%2x  3:%2x\n",inst[2],inst[3]);
-			logerror("  4:%2x  5:%2x\n",inst[4],inst[5]);	logerror("  6:%2x  7:%2x\n",inst[6],inst[7]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "YM2413: chan#%02i inst=%02i:  (r=%2x, v=%2x)\n",chan,v>>4,r,v);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "  0:%2x  1:%2x\n",inst[0],inst[1]);	logerror("  2:%2x  3:%2x\n",inst[2],inst[3]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "  4:%2x  5:%2x\n",inst[4],inst[5]);	logerror("  6:%2x  7:%2x\n",inst[6],inst[7]);
 		#endif
 		}
 	}
@@ -1856,7 +1856,7 @@ static int OPLL_LockTable(void)
 	if (cymfile)
 		timer_pulse ( TIME_IN_HZ(110), 0, cymfile_callback); /*110 Hz pulse timer*/
 	else
-		logerror("Could not create file 2413_.cym\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Could not create file 2413_.cym\n");
 #endif
 
 	return 0;

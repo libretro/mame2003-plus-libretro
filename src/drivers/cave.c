@@ -218,7 +218,7 @@ static READ16_HANDLER( soundlatch_ack_r )
 		return data;
 	}
 	else
-	{	logerror("CPU #1 - PC %04X: Sound Buffer 2 Underflow Error\n",activecpu_get_pc());
+	{	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: Sound Buffer 2 Underflow Error\n",activecpu_get_pc());
 		return 0xff;	}
 }
 
@@ -230,7 +230,7 @@ static WRITE_HANDLER( soundlatch_ack_w )
 	if (soundbuf.len<32)
 		soundbuf.len++;
 	else
-		logerror("CPU #1 - PC %04X: Sound Buffer 2 Overflow Error\n",activecpu_get_pc());
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: Sound Buffer 2 Overflow Error\n",activecpu_get_pc());
 }
 
 
@@ -288,7 +288,7 @@ READ16_HANDLER( guwange_input1_r )
 WRITE16_HANDLER( cave_eeprom_msb_w )
 {
 	if (data & ~0xfe00)
-		logerror("CPU #0 PC: %06X - Unknown EEPROM bit written %04X\n",activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC: %06X - Unknown EEPROM bit written %04X\n",activecpu_get_pc(),data);
 
 	if ( ACCESSING_MSB )  /* even address*/
 	{
@@ -332,7 +332,7 @@ WRITE16_HANDLER( hotdogst_eeprom_msb_w )
 WRITE16_HANDLER( cave_eeprom_lsb_w )
 {
 	if (data & ~0x00ef)
-		logerror("CPU #0 PC: %06X - Unknown EEPROM bit written %04X\n",activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC: %06X - Unknown EEPROM bit written %04X\n",activecpu_get_pc(),data);
 
 	if ( ACCESSING_LSB )  /* odd address*/
 	{
@@ -367,7 +367,7 @@ WRITE16_HANDLER( gaia_coin_lsb_w )
 WRITE16_HANDLER( metmqstr_eeprom_msb_w )
 {
 	if (data & ~0xff00)
-		logerror("CPU #0 PC: %06X - Unknown EEPROM bit written %04X\n",activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC: %06X - Unknown EEPROM bit written %04X\n",activecpu_get_pc(),data);
 
 	if ( ACCESSING_MSB )  /* even address*/
 	{
@@ -1055,7 +1055,7 @@ WRITE_HANDLER( hotdogst_rombank_w )
 {
 	data8_t *RAM = memory_region(REGION_CPU2);
 	int bank = data & 0x0f;
-	if ( data & ~0x0f )	logerror("CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
+	if ( data & ~0x0f )	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
 	if (bank > 1)	bank+=2;
 	cpu_setbank(2, &RAM[ 0x4000 * bank ]);
 }
@@ -1107,7 +1107,7 @@ WRITE_HANDLER( mazinger_rombank_w )
 {
 	data8_t *RAM = memory_region(REGION_CPU2);
 	int bank = data & 0x07;
-	if ( data & ~0x07 )	logerror("CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
+	if ( data & ~0x07 )	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
 	if (bank > 1)	bank+=2;
 	cpu_setbank(2, &RAM[ 0x4000 * bank ]);
 }
@@ -1149,7 +1149,7 @@ WRITE_HANDLER( metmqstr_rombank_w )
 {
 	data8_t *ROM = memory_region(REGION_CPU2);
 	int bank = data & 0xf;
-	if ( bank != data )	logerror("CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
+	if ( bank != data )	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
 	if (bank >= 2)	bank += 2;
 	cpu_setbank(1, &ROM[ 0x4000 * bank ]);
 }
@@ -1231,7 +1231,7 @@ static WRITE_HANDLER( pwrinst2_okibank_w )
 	if (bankaddr >= size)
 	{
 		bankaddr %= size;
-logerror("CPU #1 - PC %06X: chip %d bank %X<-%02X\n",activecpu_get_pc(),chip,banknum,data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %06X: chip %d bank %X<-%02X\n",activecpu_get_pc(),chip,banknum,data);
 	}
 
 	/* copy the samples */
@@ -1249,7 +1249,7 @@ WRITE_HANDLER( pwrinst2_rombank_w )
 {
 	data8_t *ROM = memory_region(REGION_CPU2);
 	int bank = data & 0x07;
-	if ( data & ~0x07 )	logerror("CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
+	if ( data & ~0x07 )	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
 	if (bank > 2)	bank+=1;
 	cpu_setbank(1, &ROM[ 0x4000 * bank ]);
 }
@@ -1305,7 +1305,7 @@ WRITE_HANDLER( sailormn_rombank_w )
 {
 	data8_t *RAM = memory_region(REGION_CPU2);
 	int bank = data & 0x1f;
-	if ( data & ~0x1f )	logerror("CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
+	if ( data & ~0x1f )	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: Bank %02X\n",activecpu_get_pc(),data);
 	if (bank > 1)	bank+=2;
 	cpu_setbank(1, &RAM[ 0x4000 * bank ]);
 }

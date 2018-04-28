@@ -158,7 +158,7 @@ static void get_tile_info_A_8( int offset )
 
 		if( j >= Machine->drv->gfxdecodeinfo[set].gfxlayout->total )
 		{
-			logerror( "A_8X8: tilemap=%d\n", j );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "A_8X8: tilemap=%d\n", j );
 			j = 0;
 		}
 		if ((ygv608.regs.s.r12 & r12_apf) != 0)
@@ -247,7 +247,7 @@ static void get_tile_info_B_8( int offset )
 
 		if( j >= Machine->drv->gfxdecodeinfo[set].gfxlayout->total )
 		{
-			logerror( "B_8X8: tilemap=%d\n", j );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "B_8X8: tilemap=%d\n", j );
 			j = 0;
 		}
 		if ((ygv608.regs.s.r12 & r12_bpf) != 0)
@@ -328,7 +328,7 @@ static void get_tile_info_A_16( int offset )
     j += ( ygv608.base_addr[0][base] << 8 );
 
     if( j >= Machine->drv->gfxdecodeinfo[set].gfxlayout->total ) {
-	logerror( "A_16X16: tilemap=%d\n", j );
+	log_cb(RETRO_LOG_ERROR, LOGPRE  "A_16X16: tilemap=%d\n", j );
       j = 0;
     }
 
@@ -411,7 +411,7 @@ static void get_tile_info_B_16( int offset )
     j += ( ygv608.base_addr[1][base] << 8 );
 
     if( j >= Machine->drv->gfxdecodeinfo[set].gfxlayout->total ) {
-	logerror( "B_16X16: tilemap=%d\n", j );
+	log_cb(RETRO_LOG_ERROR, LOGPRE  "B_16X16: tilemap=%d\n", j );
       j = 0;
     }
 
@@ -510,7 +510,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
       if (spf != 0)
 	    color = ( code >> ( (spf - 1) * 2 ) ) & 0x0f;
       if( code >= Machine->drv->gfxdecodeinfo[GFX_8X8_4BIT].gfxlayout->total ) {
-	    logerror( "SZ_8X8: sprite=%d\n", code );
+	    log_cb(RETRO_LOG_ERROR, LOGPRE  "SZ_8X8: sprite=%d\n", code );
 	    code = 0;
       }
       drawgfx( bitmap, Machine->gfx[GFX_8X8_4BIT],
@@ -543,7 +543,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
       if (spf != 0)
 	    color = ( code >> (spf * 2) ) & 0x0f;
       if( code >= Machine->drv->gfxdecodeinfo[GFX_16X16_4BIT].gfxlayout->total ) {
-	    logerror( "SZ_8X8: sprite=%d\n", code );
+	    log_cb(RETRO_LOG_ERROR, LOGPRE  "SZ_8X8: sprite=%d\n", code );
 	    code = 0;
       }
       drawgfx( bitmap, Machine->gfx[GFX_16X16_4BIT],
@@ -576,7 +576,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
       if (spf != 0)
 	color = ( code >> ( (spf + 1) * 2 ) ) & 0x0f;
       if( code >= Machine->drv->gfxdecodeinfo[GFX_32X32_4BIT].gfxlayout->total ) {
-	  logerror( "SZ_32X32: sprite=%d\n", code );
+	  log_cb(RETRO_LOG_ERROR, LOGPRE  "SZ_32X32: sprite=%d\n", code );
 	code = 0;
       }
       drawgfx( bitmap, Machine->gfx[GFX_32X32_4BIT],
@@ -609,7 +609,7 @@ static void draw_sprites( struct mame_bitmap *bitmap, const struct rectangle *cl
       if (spf != 0)
 	    color = ( code >> ( (spf + 1) * 2 ) ) & 0x0f;
       if( code >= Machine->drv->gfxdecodeinfo[GFX_64X64_4BIT].gfxlayout->total ) {
-	    logerror( "SZ_64X64: sprite=%d\n", code );
+	    log_cb(RETRO_LOG_ERROR, LOGPRE  "SZ_64X64: sprite=%d\n", code );
 	    code = 0;
       }
       drawgfx( bitmap, Machine->gfx[GFX_64X64_4BIT],
@@ -1035,7 +1035,7 @@ READ16_HANDLER( ygv608_r )
 				if (regNum == 50)
 				{
 					regNum = 0;
-	   				logerror( "warning: rn=50 after read increment\n" );
+	   				log_cb(RETRO_LOG_ERROR, LOGPRE  "warning: rn=50 after read increment\n" );
 				}
 				ygv608.ports.s.p5 &= ~p5_rn;
 				ygv608.ports.s.p5 |= regNum;
@@ -1052,7 +1052,7 @@ READ16_HANDLER( ygv608_r )
 			return( (data16_t)(ygv608.ports.b[offset]) << 8 );
 
 		default :
-			logerror( "unknown ygv608 register (%d)\n", offset );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "unknown ygv608 register (%d)\n", offset );
 			break;
 	}
 
@@ -1187,7 +1187,7 @@ WRITE16_HANDLER( ygv608_w )
 		{
 			UINT8 regNum = (ygv608.ports.s.p5) & p5_rn;
 #if 0
-			logerror( "R#%d = $%02X\n", regNum, data );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "R#%d = $%02X\n", regNum, data );
 #endif
 			SetPreShortcuts (regNum, data);
 			ygv608.regs.b[regNum] = data;
@@ -1198,7 +1198,7 @@ WRITE16_HANDLER( ygv608_w )
 				if (regNum == 50)
 				{
 					regNum = 0;
-	    			logerror( "warning: rn=50 after write increment\n" );
+	    			log_cb(RETRO_LOG_ERROR, LOGPRE  "warning: rn=50 after write increment\n" );
 				}
 				ygv608.ports.s.p5 &= ~p5_rn;
 				ygv608.ports.s.p5 |= regNum;
@@ -1224,7 +1224,7 @@ WRITE16_HANDLER( ygv608_w )
 			break;
 
 		default:
-			logerror( "unknown ygv608 register (%d)\n", offset );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "unknown ygv608 register (%d)\n", offset );
 			break;
 	}
 }
@@ -1275,7 +1275,7 @@ void HandleRomTransfers( void )
 	      (int)ygv608.regs.s.tb5 ) << 5;
   int bytes = (int)ygv608.regs.s.tn4 << 4;
 
-    logerror( "Transferring data from rom...\n" );
+    log_cb(RETRO_LOG_ERROR, LOGPRE  "Transferring data from rom...\n" );
 
   /* pattern name table */
   if( ygv608.ports.s.tn ) {
@@ -1324,11 +1324,11 @@ void nvsram( offs_t offset, data16_t data )
   if( 1 ) {
     static char ascii[16];
     if( i%16 == 0 )
-      logerror( "%04X: ", offset );
-    logerror( "%02X ", data );
+      log_cb(RETRO_LOG_ERROR, LOGPRE  "%04X: ", offset );
+    log_cb(RETRO_LOG_ERROR, LOGPRE  "%02X ", data );
     ascii[i%16] = ( isprint( data ) ? data : '.' );
     if( i%16 == 15 )
-      logerror( "| %-16.16s\n", ascii );
+      log_cb(RETRO_LOG_ERROR, LOGPRE  "| %-16.16s\n", ascii );
   }
 
   i++;
@@ -1405,7 +1405,7 @@ void SetPostShortcuts( int reg )
 
 		case 6:
 #if 0
-			logerror( "SBA = $%08X\n", (int)ygv608.regs.s.sba << 13 );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "SBA = $%08X\n", (int)ygv608.regs.s.sba << 13 );
 #endif
 			break;
 
@@ -1457,7 +1457,7 @@ void SetPostShortcuts( int reg )
     }
 
     /*if( ygv608.regs.s.slh != SLH_SCREEN )*/
-    /*    logerror( "SLH = %1X\n", ygv608.regs.s.slh );*/
+    /*    log_cb(RETRO_LOG_ERROR, LOGPRE  "SLH = %1X\n", ygv608.regs.s.slh );*/
     break;
 
   case 11 :
@@ -1534,15 +1534,15 @@ void dump_block( char *name, unsigned char *block, int len )
 {
   int i;
 
-  logerror( "unsigned char %s[] = {\n", name );
+  log_cb(RETRO_LOG_ERROR, LOGPRE  "unsigned char %s[] = {\n", name );
   for( i=0; i<len; i++ ) {
     if( i%8 == 0 )
-      logerror( " " );
-    logerror( "0x%02X, ", block[i] );
+      log_cb(RETRO_LOG_ERROR, LOGPRE  " " );
+    log_cb(RETRO_LOG_ERROR, LOGPRE  "0x%02X, ", block[i] );
     if( i%8 == 7 )
-      logerror( "\n" );
+      log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
   }
-  logerror( "};\n" );
+  log_cb(RETRO_LOG_ERROR, LOGPRE  "};\n" );
 }
 
 READ16_HANDLER( debug_trigger )
@@ -1582,38 +1582,38 @@ READ16_HANDLER( debug_trigger )
    *  Dump pattern name table ram
    */
 #if 1
-  logerror( "Pattern Name Table\n" );
+  log_cb(RETRO_LOG_ERROR, LOGPRE  "Pattern Name Table\n" );
   for( i=0; i<4096; i++ ) {
     if( i % 16 == 0 )
-      logerror( "$%04X : ", i );
-    logerror( "%02X ", ygv608.pattern_name_table[i] );
+      log_cb(RETRO_LOG_ERROR, LOGPRE  "$%04X : ", i );
+    log_cb(RETRO_LOG_ERROR, LOGPRE  "%02X ", ygv608.pattern_name_table[i] );
     if( isprint( ygv608.pattern_name_table[i] ) )
       ascii[i%16] = ygv608.pattern_name_table[i];
     else
       ascii[i%16] = '.';
     if( i % 16 == 15 )
-      logerror( " | %-16.16s\n", ascii );
+      log_cb(RETRO_LOG_ERROR, LOGPRE  " | %-16.16s\n", ascii );
   }
-  logerror( "\n" );
+  log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
 #endif
 
   /*
    *  Dump scroll table ram
    */
 
-  logerror( "Scroll Table\n" );
+  log_cb(RETRO_LOG_ERROR, LOGPRE  "Scroll Table\n" );
   for( i=0; i<512; i++ ) {
     if( i % 16 == 0 )
-      logerror( "$%04X : ", i );
-    logerror( "%02X ", ygv608.scroll_data_table[0][i] );
+      log_cb(RETRO_LOG_ERROR, LOGPRE  "$%04X : ", i );
+    log_cb(RETRO_LOG_ERROR, LOGPRE  "%02X ", ygv608.scroll_data_table[0][i] );
     if( isprint( ygv608.scroll_data_table[0][i] ) )
       ascii[i%16] = ygv608.scroll_data_table[0][i];
     else
       ascii[i%16] = '.';
     if( i % 16 == 15 )
-      logerror( " | %-16.16s\n", ascii );
+      log_cb(RETRO_LOG_ERROR, LOGPRE  " | %-16.16s\n", ascii );
   }
-  logerror( "\n" );
+  log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
 
 #endif
 
@@ -1624,7 +1624,7 @@ void ShowYGV608Registers( void )
 {
   int p, b;
 
-  logerror( "YGV608 Registers\n" );
+  log_cb(RETRO_LOG_ERROR, LOGPRE  "YGV608 Registers\n" );
   logerror(
        "\tR#00: $%02X : PNYA(%d),B/A(%c),PNY(%d)\n",
 	   ygv608.regs.b[0],
@@ -1742,11 +1742,11 @@ void ShowYGV608Registers( void )
 	   "ShortCuts:\n" );
 
   for( p=0; p<2; p++ ) {
-    logerror( "\t" );
+    log_cb(RETRO_LOG_ERROR, LOGPRE  "\t" );
     for( b=0; b<8; b++ ) {
-      logerror( "%02X ", ygv608.base_addr[p][b] );
+      log_cb(RETRO_LOG_ERROR, LOGPRE  "%02X ", ygv608.base_addr[p][b] );
     }
-    logerror( "\n" );
+    log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
   }
 }
 

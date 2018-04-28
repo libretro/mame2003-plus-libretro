@@ -55,7 +55,7 @@ static READ16_HANDLER( daireika_mcu_r )
 	res = resp[respcount++];
 	if (respcount >= sizeof(resp)/sizeof(resp[0])) respcount = 0;
 
-logerror("%04x: mcu_r %02x\n",activecpu_get_pc(),res);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_r %02x\n",activecpu_get_pc(),res);
 
 	return res;
 }

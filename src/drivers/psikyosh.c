@@ -243,7 +243,7 @@ static WRITE32_HANDLER( psh_eeprom_w )
 		return;
 	}
 
-	logerror("Unk EEPROM write %x mask %x\n", data, mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Unk EEPROM write %x mask %x\n", data, mem_mask);
 }
 
 static READ32_HANDLER( psh_eeprom_r )
@@ -253,7 +253,7 @@ static READ32_HANDLER( psh_eeprom_r )
 		return ((EEPROM_read_bit() << 28) | (readinputport(4) << 24)); /* EEPROM | Region */
 	}
 
-	logerror("Unk EEPROM read mask %x\n", mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Unk EEPROM read mask %x\n", mem_mask);
 
 	return 0;
 }

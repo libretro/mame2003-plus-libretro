@@ -2090,19 +2090,19 @@ static int open_and_read_png(const char *gamename, const char *filename, struct 
 	/* verify we can handle this PNG */
 	if (png->bit_depth > 8)
 	{
-		logerror("Unsupported bit depth %d (8 bit max)\n", png->bit_depth);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Unsupported bit depth %d (8 bit max)\n", png->bit_depth);
 		free(png->image);
 		return 0;
 	}
 	if (png->interlace_method != 0)
 	{
-		logerror("Interlace unsupported\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Interlace unsupported\n");
 		free(png->image);
 		return 0;
 	}
 	if (png->color_type != 0 && png->color_type != 3 && png->color_type != 2 && png->color_type != 6)
 	{
-		logerror("Unsupported color type %d\n", png->color_type);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Unsupported color type %d\n", png->color_type);
 		free(png->image);
 		return 0;
 	}
@@ -2131,7 +2131,7 @@ static int load_bitmap(const char *gamename, struct artwork_piece *piece)
 	/* open and read the main png file */
 	if (!open_and_read_png(gamename, piece->filename, &png))
 	{
-		logerror("Can't load PNG file: %s\n", piece->filename);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Can't load PNG file: %s\n", piece->filename);
 		return 0;
 	}
 
@@ -2218,14 +2218,14 @@ static int load_alpha_bitmap(const char *gamename, struct artwork_piece *piece, 
 	/* open and read the alpha png file */
 	if (!open_and_read_png(gamename, piece->alpha_filename, &png))
 	{
-		logerror("Can't load PNG file: %s\n", piece->alpha_filename);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Can't load PNG file: %s\n", piece->alpha_filename);
 		return 0;
 	}
 
 	/* must be the same size */
 	if (png.height != original->height || png.width != original->width)
 	{
-		logerror("Alpha PNG must match original's dimensions: %s\n", piece->alpha_filename);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Alpha PNG must match original's dimensions: %s\n", piece->alpha_filename);
 		return 0;
 	}
 
@@ -2721,28 +2721,28 @@ static int validate_pieces(void)
 		/* make sure we have a filename */
 		if ((!piece->filename || strlen(piece->filename) == 0) && !piece->rawbitmap)
 		{
-			logerror("Artwork piece '%s' has no file!\n", piece->tag);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Artwork piece '%s' has no file!\n", piece->tag);
 			return 0;
 		}
 
 		/* make sure we have a layer */
 		if (piece->layer == LAYER_UNKNOWN)
 		{
-			logerror("Artwork piece '%s' has no layer!\n", piece->tag);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Artwork piece '%s' has no layer!\n", piece->tag);
 			return 0;
 		}
 
 		/* make sure we have a position */
 		if (piece->left == 0 && piece->right == 0)
 		{
-			logerror("Artwork piece '%s' has no position!\n", piece->tag);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Artwork piece '%s' has no position!\n", piece->tag);
 			return 0;
 		}
 
 		/* make sure the position is valid */
 		if (piece->left >= piece->right || piece->top >= piece->bottom)
 		{
-			logerror("Artwork piece '%s' has invalid position data!\n", piece->tag);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Artwork piece '%s' has invalid position data!\n", piece->tag);
 			return 0;
 		}
 	}
@@ -3076,7 +3076,7 @@ static int parse_art_file(mame_file *file)
 		}
 
 		/* what the heck is it? */
-		logerror("Invalid line in .ART file:\n%s\n", buffer);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Invalid line in .ART file:\n%s\n", buffer);
 	}
 
 	/* validate the artwork */

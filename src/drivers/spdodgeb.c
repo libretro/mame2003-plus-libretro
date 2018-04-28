@@ -227,7 +227,7 @@ static void mcu63705_update_inputs(void)
 
 static READ_HANDLER( mcu63701_r )
 {
-/*	logerror("CPU #0 PC %04x: read from port %02x of 63701 data address 3801\n",activecpu_get_pc(),offset);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %04x: read from port %02x of 63701 data address 3801\n",activecpu_get_pc(),offset);*/
 
 	if (mcu63701_command == 0) return 0x6a;
 	else switch (offset)
@@ -243,7 +243,7 @@ static READ_HANDLER( mcu63701_r )
 
 static WRITE_HANDLER( mcu63701_w )
 {
-/*	logerror("CPU #0 PC %04x: write %02x to 63701 control address 3800\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %04x: write %02x to 63701 control address 3800\n",activecpu_get_pc(),data);*/
 	mcu63701_command = data;
 	mcu63705_update_inputs();
 }

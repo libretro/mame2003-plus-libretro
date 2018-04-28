@@ -648,7 +648,7 @@ void *auto_malloc(size_t size)
 		/* make sure we have space */
 		if (malloc_list_index >= MAX_MALLOCS)
 		{
-			fprintf(stderr, "Out of malloc tracking slots!\n");
+			log_cb(RETRO_LOG_ERROR, stderr, "Out of malloc tracking slots!\n");
 			return result;
 		}
 
@@ -854,14 +854,14 @@ void CLIB_DECL debugload(const char *string, ...)
 	if (f)
 	{
 		va_start(arg, string);
-		vfprintf(f, string, arg);
+		vflog_cb(RETRO_LOG_ERROR, LOGPRE f, string, arg);
 		va_end(arg);
 		fclose(f);
 	}
 #elif defined(DEBUG_LOG)
    va_list arg;
    va_start(arg, string);
-   vfprintf(stderr, string, arg);
+   vflog_cb(RETRO_LOG_ERROR, LOGPRE stderr, string, arg);
    va_end(arg);
 #endif
 }
@@ -886,7 +886,7 @@ int determine_bios_rom(const struct SystemBios *bios)
 		while(!BIOSENTRY_ISEND(bios))
 		{
 			char bios_number[3];
-			sprintf(bios_number, "%d", bios->value);
+			log_cb(RETRO_LOG_ERROR, bios_number, "%d", bios->value);
 
 			if(!strcmp(bios_number, options.bios))
 				bios_no = bios->value;
@@ -958,21 +958,21 @@ static void handle_missing_file(struct rom_load_data *romdata, const struct RomM
 	/* optional files are okay */
 	if (ROM_ISOPTIONAL(romp))
 	{
-		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "OPTIONAL %-12s NOT FOUND\n", ROM_GETNAME(romp));
+		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "OPTIONAL %-12s NOT FOUND\n", ROM_GETNAME(romp));
 		romdata->warnings++;
 	}
 
 	/* no good dumps are okay */
 	else if (ROM_NOGOODDUMP(romp))
 	{
-		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NOT FOUND (NO GOOD DUMP KNOWN)\n", ROM_GETNAME(romp));
+		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NOT FOUND (NO GOOD DUMP KNOWN)\n", ROM_GETNAME(romp));
 		romdata->warnings++;
 	}
 
 	/* anything else is bad */
 	else
 	{
-		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NOT FOUND\n", ROM_GETNAME(romp));
+		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NOT FOUND\n", ROM_GETNAME(romp));
 		romdata->errors++;
 	}
 }
@@ -993,13 +993,13 @@ static void dump_wrong_and_correct_checksums(struct rom_load_data* romdata, cons
 	found_functions = hash_data_used_functions(hash) & hash_data_used_functions(acthash);
 
 	hash_data_print(hash, found_functions, chksum);
-	sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "    EXPECTED: %s\n", chksum);
+	log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "    EXPECTED: %s\n", chksum);
 
 	/* We dump informations only of the functions for which MAME provided
 		a correct checksum. Other functions we might have calculated are
 		useless here */
 	hash_data_print(acthash, found_functions, chksum);
-	sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "       FOUND: %s\n", chksum);
+	log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "       FOUND: %s\n", chksum);
 
 	/* For debugging purposes, we check if the checksums available in the
 	   driver are correctly specified or not. This can be done by checking
@@ -1047,21 +1047,21 @@ static void verify_length_and_hash(struct rom_load_data *romdata, const char *na
 	/* verify length */
 	if (explength != actlength)
 	{
-		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s WRONG LENGTH (expected: %08x found: %08x)\n", name, explength, actlength);
+		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s WRONG LENGTH (expected: %08x found: %08x)\n", name, explength, actlength);
 		romdata->warnings++;
 	}
 
 	/* If there is no good dump known, write it */
 	if (hash_data_has_info(hash, HASH_INFO_NO_DUMP))
 	{
-			sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NO GOOD DUMP KNOWN\n", name);
+			log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NO GOOD DUMP KNOWN\n", name);
 		romdata->warnings++;
 	}
 	/* verify checksums */
 	else if (!hash_data_is_equal(hash, acthash, 0))
 	{
 		/* otherwise, it's just bad */
-		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s WRONG CHECKSUMS:\n", name);
+		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s WRONG CHECKSUMS:\n", name);
 
 		dump_wrong_and_correct_checksums(romdata, hash, acthash);
 
@@ -1070,7 +1070,7 @@ static void verify_length_and_hash(struct rom_load_data *romdata, const char *na
 	/* If it matches, but it is actually a bad dump, write it */
 	else if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
 	{
-		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s ROM NEEDS REDUMP\n",name);
+		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s ROM NEEDS REDUMP\n",name);
 		romdata->warnings++;
 	}
 }
@@ -1234,21 +1234,21 @@ static int read_rom_data(struct rom_load_data *romdata, const struct RomModule *
 	/* make sure the length was an even multiple of the group size */
 	if (numbytes % groupsize != 0)
 	{
-		printf("Error in RomModule definition: %s length not an even multiple of group size\n", ROM_GETNAME(romp));
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: %s length not an even multiple of group size\n", ROM_GETNAME(romp));
 		return -1;
 	}
 
 	/* make sure we only fill within the region space */
 	if (ROM_GETOFFSET(romp) + numgroups * groupsize + (numgroups - 1) * skip > romdata->regionlength)
 	{
-		printf("Error in RomModule definition: %s out of memory region space\n", ROM_GETNAME(romp));
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: %s out of memory region space\n", ROM_GETNAME(romp));
 		return -1;
 	}
 
 	/* make sure the length was valid */
 	if (numbytes == 0)
 	{
-		printf("Error in RomModule definition: %s has an invalid length\n", ROM_GETNAME(romp));
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: %s has an invalid length\n", ROM_GETNAME(romp));
 		return -1;
 	}
 
@@ -1343,14 +1343,14 @@ static int fill_rom_data(struct rom_load_data *romdata, const struct RomModule *
 	/* make sure we fill within the region space */
 	if (ROM_GETOFFSET(romp) + numbytes > romdata->regionlength)
 	{
-		printf("Error in RomModule definition: FILL out of memory region space\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: FILL out of memory region space\n");
 		return 0;
 	}
 
 	/* make sure the length was valid */
 	if (numbytes == 0)
 	{
-		printf("Error in RomModule definition: FILL has an invalid length\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: FILL has an invalid length\n");
 		return 0;
 	}
 
@@ -1375,14 +1375,14 @@ static int copy_rom_data(struct rom_load_data *romdata, const struct RomModule *
 	/* make sure we copy within the region space */
 	if (ROM_GETOFFSET(romp) + numbytes > romdata->regionlength)
 	{
-		printf("Error in RomModule definition: COPY out of target memory region space\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: COPY out of target memory region space\n");
 		return 0;
 	}
 
 	/* make sure the length was valid */
 	if (numbytes == 0)
 	{
-		printf("Error in RomModule definition: COPY has an invalid length\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: COPY has an invalid length\n");
 		return 0;
 	}
 
@@ -1390,14 +1390,14 @@ static int copy_rom_data(struct rom_load_data *romdata, const struct RomModule *
 	srcbase = memory_region(srcregion);
 	if (!srcbase)
 	{
-		printf("Error in RomModule definition: COPY from an invalid region\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: COPY from an invalid region\n");
 		return 0;
 	}
 
 	/* make sure we find within the region space */
 	if (srcoffs + numbytes > memory_region_length(srcregion))
 	{
-		printf("Error in RomModule definition: COPY out of source memory region space\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: COPY out of source memory region space\n");
 		return 0;
 	}
 
@@ -1422,14 +1422,14 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 		/* if this is a continue entry, it's invalid */
 		if (ROMENTRY_ISCONTINUE(romp))
 		{
-			printf("Error in RomModule definition: ROM_CONTINUE not preceded by ROM_LOAD\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: ROM_CONTINUE not preceded by ROM_LOAD\n");
 			goto fatalerror;
 		}
 
 		/* if this is a reload entry, it's invalid */
 		if (ROMENTRY_ISRELOAD(romp))
 		{
-			printf("Error in RomModule definition: ROM_RELOAD not preceded by ROM_LOAD\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Error in RomModule definition: ROM_RELOAD not preceded by ROM_LOAD\n");
 			goto fatalerror;
 		}
 
@@ -1559,9 +1559,9 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 			if (!source)
 			{
 				if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
-					sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s UNSUPPORTED CHD VERSION\n", filename);
+					log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s UNSUPPORTED CHD VERSION\n", filename);
 				else
-					sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NOT FOUND\n", filename);
+					log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NOT FOUND\n", filename);
 				romdata->errors++;
 				romp++;
 				continue;
@@ -1576,7 +1576,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 			/* verify the MD5 */
 			if (!hash_data_is_equal(ROM_GETHASHDATA(romp), acthash, 0))
 			{
-				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s WRONG CHECKSUMS:\n", filename);
+				log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s WRONG CHECKSUMS:\n", filename);
 				dump_wrong_and_correct_checksums(romdata, ROM_GETHASHDATA(romp), acthash);
 				romdata->warnings++;
 			}
@@ -1603,9 +1603,9 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 					if (err != CHDERR_NONE)
 					{
 						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
-							sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s UNSUPPORTED CHD VERSION\n", filename);
+							log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s UNSUPPORTED CHD VERSION\n", filename);
 						else
-							sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s: CAN'T CREATE DIFF FILE\n", filename);
+							log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s: CAN'T CREATE DIFF FILE\n", filename);
 						romdata->errors++;
 						romp++;
 						continue;
@@ -1617,9 +1617,9 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 					if (!diff)
 					{
 						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
-							sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s UNSUPPORTED CHD VERSION\n", filename);
+							log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s UNSUPPORTED CHD VERSION\n", filename);
 						else
-							sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s: CAN'T OPEN DIFF FILE\n", filename);
+							log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s: CAN'T OPEN DIFF FILE\n", filename);
 						romdata->errors++;
 						romp++;
 						continue;
@@ -1673,7 +1673,7 @@ int rom_load(const struct RomModule *romp)
 		/* the first entry must be a region */
 		if (!ROMENTRY_ISREGION(region))
 		{
-			printf("Error: missing ROM_REGION header\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Error: missing ROM_REGION header\n");
 			return 1;
 		}
 
@@ -1684,7 +1684,7 @@ int rom_load(const struct RomModule *romp)
 		/* allocate memory for the region */
 		if (new_memory_region(regiontype, ROMREGION_GETLENGTH(region), ROMREGION_GETFLAGS(region)))
 		{
-			printf("Error: unable to allocate memory for region %d\n", regiontype);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Error: unable to allocate memory for region %d\n", regiontype);
 			return 1;
 		}
 
@@ -1768,24 +1768,24 @@ void printromlist(const struct RomModule *romp,const char *basename)
 					length += ROM_GETLENGTH(chunk);
 			}
 
-			printf("%-12s ", name);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%-12s ", name);
 			if (length >= 0)
-				printf("%7d",length);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%7d",length);
 				else
-				printf("       ");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "       ");
 
 			if (!hash_data_has_info(hash, HASH_INFO_NO_DUMP))
 			{
 				if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
-					printf(" BAD");
+					log_cb(RETRO_LOG_ERROR, LOGPRE " BAD");
 
 				hash_data_print(hash, 0, buf);
-				printf(" %s", buf);
+				log_cb(RETRO_LOG_ERROR, LOGPRE " %s", buf);
 			}
 			else
-				printf(" NO GOOD DUMP KNOWN");
+				log_cb(RETRO_LOG_ERROR, LOGPRE " NO GOOD DUMP KNOWN");
 
-			printf("\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 		}
 	}
 }

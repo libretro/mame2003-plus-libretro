@@ -196,7 +196,7 @@ static void gunbustr_draw_sprites_16x16(struct mame_bitmap *bitmap,const struct 
 		}
 
 		if (bad_chunks)
-logerror("Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
+log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
 	}
 
 	/* this happens only if primsks != NULL */

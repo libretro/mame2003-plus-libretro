@@ -69,13 +69,13 @@ static void generate_gr_screen(
 						}
 					}
 					*gr++ = color_data[bit];
-/*					logerror( "%01x", color_data[bit] );*/
+/*					log_cb(RETRO_LOG_ERROR, LOGPRE  "%01x", color_data[bit] );*/
 					last_bit=bit;
 					buf[0] <<= 1; buf[0x4000] <<= 1;
 				}
 				buf++;
 			}
-/*			logerror( "\n" );*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );*/
 
 			if( grr!=NULL ){ /* need mirrored RHS*/
 				const UINT8 *temp = gr-1-skip;
@@ -95,7 +95,7 @@ static void generate_gr_screen(
 			while ( (1<<i) < sys16_gr_bitmap_width ) i++;
 			sys16_gr_bitmap_width=i; /* power of 2*/
 		}
-/*		logerror( "width = %d\n", sys16_gr_bitmap_width );*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE  "width = %d\n", sys16_gr_bitmap_width );*/
 		free( buf0 );
 	}
 }

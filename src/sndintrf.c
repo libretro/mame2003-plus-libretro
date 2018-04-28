@@ -21,7 +21,7 @@ static void soundlatch_callback(int param)
 {
 #if 0
 	if (read_debug == 0 && latch != param)
-		logerror("Warning: sound latch written before being read. Previous: %02x, new: %02x\n",latch,param);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: sound latch written before being read. Previous: %02x, new: %02x\n",latch,param);
 #endif
 	latch = param;
 	/*read_debug = 0;*/
@@ -67,7 +67,7 @@ static void soundlatch2_callback(int param)
 {
 #if 0
 	if (read_debug2 == 0 && latch2 != param)
-		logerror("Warning: sound latch 2 written before being read. Previous: %02x, new: %02x\n",latch2,param);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: sound latch 2 written before being read. Previous: %02x, new: %02x\n",latch2,param);
 #endif
 	latch2 = param;
 	/*read_debug2 = 0;*/
@@ -113,7 +113,7 @@ static void soundlatch3_callback(int param)
 {
 #if 0
 	if (read_debug3 == 0 && latch3 != param)
-		logerror("Warning: sound latch 3 written before being read. Previous: %02x, new: %02x\n",latch3,param);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: sound latch 3 written before being read. Previous: %02x, new: %02x\n",latch3,param);
 #endif
 	latch3 = param;
 	/*read_debug3 = 0;*/
@@ -159,7 +159,7 @@ static void soundlatch4_callback(int param)
 {
 #if 0
 	if (read_debug4 == 0 && latch4 != param)
-		logerror("Warning: sound latch 4 written before being read. Previous: %02x, new: %02x\n",latch2,param);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: sound latch 4 written before being read. Previous: %02x, new: %02x\n",latch2,param);
 #endif
 	latch4 = param;
 	/*read_debug4 = 0;*/
@@ -1181,9 +1181,9 @@ int sound_start(void)
 		if (sndintf[i].sound_num != i)
 		{
             int j;
-logerror("Sound #%d wrong ID %d: check enum SOUND_... in src/sndintrf.h!\n",i,sndintf[i].sound_num);
+log_cb(RETRO_LOG_ERROR, LOGPRE "Sound #%d wrong ID %d: check enum SOUND_... in src/sndintrf.h!\n",i,sndintf[i].sound_num);
 			for (j = 0; j < i; j++)
-				logerror("ID %2d: %s\n", j, sndintf[j].name);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "ID %2d: %s\n", j, sndintf[j].name);
             return 1;
 		}
 	}

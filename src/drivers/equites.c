@@ -309,7 +309,7 @@ static WRITE16_HANDLER(log16_w)
 	int pc = activecpu_get_pc();
 
 	usrintf_showmessage("%04x: %04x(w)\n", pc, data);
-	logerror("%04x: %04x(w)\n", pc, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: %04x(w)\n", pc, data);
 }
 #endif
 /******************************************************************************/

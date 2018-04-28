@@ -228,7 +228,7 @@ VIDEO_UPDATE( vastar )
 		break;
 
 	default:
-		logerror("Unimplemented priority %X\n", *vastar_sprite_priority);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Unimplemented priority %X\n", *vastar_sprite_priority);
 		break;
 	}
 }

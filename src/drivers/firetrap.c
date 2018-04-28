@@ -188,7 +188,7 @@ static WRITE_HANDLER( firetrap_8751_w )
 		i8751_return=3;
 	else {
 		i8751_return=0xff;
-		logerror("%04x: Unknown i8751 command %02x!\n",activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: Unknown i8751 command %02x!\n",activecpu_get_pc(),data);
 	}
 
 	/* Signal main cpu task is complete */

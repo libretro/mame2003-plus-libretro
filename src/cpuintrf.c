@@ -162,21 +162,6 @@
 #endif
 
 
-/*************************************
- *
- *	Debug logging
- *
- *************************************/
-
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
-
 
 /*************************************
  *

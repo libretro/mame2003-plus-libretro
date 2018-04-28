@@ -42,7 +42,7 @@ VIDEO_EOF( blktiger );
 static READ_HANDLER( blktiger_protection_r )
 {
 	int data = activecpu_get_reg(Z80_DE) >> 8;
-	logerror("protection read, PC: %04x Result:%02x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "protection read, PC: %04x Result:%02x\n",activecpu_get_pc(),data);
 	return data;
 }
 

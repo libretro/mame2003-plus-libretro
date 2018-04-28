@@ -73,7 +73,7 @@ READ32_HANDLER( am53cf96_r )
 
 	rv = scsi_regs[reg]<<shift;
 
-/*	logerror("53cf96: read reg %d = %x (PC=%x)\n", reg, rv>>shift, activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: read reg %d = %x (PC=%x)\n", reg, rv>>shift, activecpu_get_pc());*/
 
 	if (reg == REG_IRQSTATE)
 	{
@@ -99,7 +99,7 @@ WRITE32_HANDLER( am53cf96_w )
 	}
 	val &= 0xff;
 
-/*	logerror("53cf96: w %x to reg %d (ofs %02x data %08x mask %08x PC=%x)\n", val, reg, offset, data, mem_mask, activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: w %x to reg %d (ofs %02x data %08x mask %08x PC=%x)\n", val, reg, offset, data, mem_mask, activecpu_get_pc());*/
 
 	if (reg == REG_XFERCNTLOW || reg == REG_XFERCNTMID || reg == REG_XFERCNTHI)
 	{
@@ -139,7 +139,7 @@ WRITE32_HANDLER( am53cf96_w )
 				scsi_regs[REG_STATUS] |= 0x80;	/* indicate IRQ*/
 				intf->irq_callback();
 				last_cmd = fifo[1];
-/*				logerror("53cf96: executing SCSI command %x\n", last_cmd);*/
+/*				log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: executing SCSI command %x\n", last_cmd);*/
 				if (last_cmd == 0)
 				{
 					scsi_regs[REG_INTSTATE] = 6;
@@ -154,7 +154,7 @@ WRITE32_HANDLER( am53cf96_w )
 					lba = fifo[3]<<24 | fifo[4]<<16 | fifo[5]<<8 | fifo[6];
 					blocks = fifo[8]<<8 | fifo[9];
 
-					logerror("53cf96: READ at LBA %x for %x blocks\n", lba, blocks);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: READ at LBA %x for %x blocks\n", lba, blocks);
 				}
 				switch (last_cmd)
 				{
@@ -163,7 +163,7 @@ WRITE32_HANDLER( am53cf96_w )
 					case 0x28: 	/* READ (10 byte)*/
 						break;
 					default:
-						logerror("53cf96: unknown SCSI command %x!\n", last_cmd);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: unknown SCSI command %x!\n", last_cmd);
 						break;
 				}
 				xfer_state = 0;
@@ -204,24 +204,24 @@ void am53cf96_init( struct AM53CF96interface *interface )
 		disk = hard_disk_open(get_disk_handle(0));
 		if (!disk)
 		{
-			logerror("53cf96: no disk found!\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: no disk found!\n");
 		}
 		else
 		{
 			hdinfo = hard_disk_get_info(disk);
 			if (hdinfo->sectorbytes != 512)
 			{
-				logerror("53cf96: Error!  invalid sector size %d\n", hdinfo->sectorbytes);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: Error!  invalid sector size %d\n", hdinfo->sectorbytes);
 			}		
 		}
 	}
 	else if (interface->device == AM53CF96_DEVICE_CDROM)
 	{
-		logerror("53cf96: CDROM not yet supported!\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: CDROM not yet supported!\n");
 	}
 	else
 	{
-		logerror("53cf96: unknown device type!\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: unknown device type!\n");
 	}
 
 	state_save_register_UINT8("53cf96", 0, "registers", scsi_regs, 32);
@@ -257,7 +257,7 @@ void am53cf96_read_data(int bytes, data8_t *pData)
 				{
 					if (!hard_disk_read(disk, lba, 1, pData))
 					{
-						logerror("53cf96: HD read error!\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "53cf96: HD read error!\n");
 					}
 					lba++;
 					blocks--;

@@ -1093,7 +1093,7 @@ void imacn_rn_rn(void)
 	UINT32 r1 = jaguar.r[(jaguar.op >> 5) & 31];
 	UINT32 r2 = jaguar.r[jaguar.op & 31];
 	jaguar.accum += (INT64)((INT16)r1 * (INT16)r2);
-	logerror("Unexpected IMACN instruction!\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected IMACN instruction!\n");
 }
 
 void imult_rn_rn(void)
@@ -1631,7 +1631,7 @@ data32_t jaguargpu_ctrl_r(int cpunum, offs_t offset)
 	data32_t result;
 
 #if LOG_GPU_IO
-	logerror("%08X/%d:GPU read register @ F021%02X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X/%d:GPU read register @ F021%02X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4);
 #endif
 
 	/* switch to the target context */
@@ -1649,7 +1649,7 @@ void jaguargpu_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 
 #if LOG_GPU_IO
 	if (offset != G_HIDATA)
-		logerror("%08X/%d:GPU write register @ F021%02X = %08X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4, data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X/%d:GPU write register @ F021%02X = %08X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4, data);
 #endif
 
 	/* switch to the target context */
@@ -1688,7 +1688,7 @@ void jaguargpu_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 		case G_END:
 			jaguar.ctrl[offset] = newval;
 			if ((newval & 7) != 7)
-				logerror("GPU to set to little-endian!\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "GPU to set to little-endian!\n");
 			break;
 
 		case G_PC:
@@ -1718,7 +1718,7 @@ void jaguargpu_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 			}
 			if (newval & 0x18)
 			{
-				logerror("GPU single stepping was enabled!\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "GPU single stepping was enabled!\n");
 			}
 			break;
 
@@ -1744,7 +1744,7 @@ data32_t jaguardsp_ctrl_r(int cpunum, offs_t offset)
 
 #if LOG_DSP_IO
 	if (offset != D_FLAGS)
-		logerror("%08X/%d:DSP read register @ F1A1%02X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X/%d:DSP read register @ F1A1%02X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4);
 #endif
 
 	/* switch to the target context */
@@ -1762,7 +1762,7 @@ void jaguardsp_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 
 #if LOG_DSP_IO
 	if (offset != D_FLAGS)
-		logerror("%08X/%d:DSP write register @ F1A1%02X = %08X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4, data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X/%d:DSP write register @ F1A1%02X = %08X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4, data);
 #endif
 
 	/* switch to the target context */
@@ -1802,7 +1802,7 @@ void jaguardsp_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 		case D_END:
 			jaguar.ctrl[offset] = newval;
 			if ((newval & 7) != 7)
-				logerror("DSP to set to little-endian!\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "DSP to set to little-endian!\n");
 			break;
 
 		case D_PC:
@@ -1832,7 +1832,7 @@ void jaguardsp_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 			}
 			if (newval & 0x18)
 			{
-				logerror("DSP single stepping was enabled!\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "DSP single stepping was enabled!\n");
 			}
 			break;
 

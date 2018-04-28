@@ -945,7 +945,7 @@ void draw_rle(struct atarirle_data *mo, struct mame_bitmap *bitmap, int code, in
 
 	/* other cases */
 	else
-		logerror("Unsupported bitmap depth = %d\n", bitmap->depth);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Unsupported bitmap depth = %d\n", bitmap->depth);
 }
 
 

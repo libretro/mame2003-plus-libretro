@@ -101,7 +101,7 @@ WRITE_HANDLER( dragrace_misc_w )
 		dragrace_misc_flags |= mask;
 	else
 		dragrace_misc_flags &= (~mask);
-	logerror("Set   %#6x, Mask=%#10x, Flag=%#10x, Data=%x\n", 0x0900+offset, mask, dragrace_misc_flags, data & 0x01);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Set   %#6x, Mask=%#10x, Flag=%#10x, Data=%x\n", 0x0900+offset, mask, dragrace_misc_flags, data & 0x01);
 	dragrace_update_misc_flags();
 	}
 
@@ -110,7 +110,7 @@ WRITE_HANDLER( dragrace_misc_clear_w )
 	/* Clear 8 bits */
 	UINT32 mask = 0xff << (((offset >> 3) & 0x03) * 8);
 	dragrace_misc_flags &= (~mask);
-	logerror("Clear %#6x, Mask=%#10x, Flag=%#10x, Data=%x\n", 0x0920+offset, mask, dragrace_misc_flags, data & 0x01);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Clear %#6x, Mask=%#10x, Flag=%#10x, Data=%x\n", 0x0920+offset, mask, dragrace_misc_flags, data & 0x01);
 	dragrace_update_misc_flags();
 }
 

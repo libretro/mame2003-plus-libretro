@@ -272,21 +272,21 @@ static READ_HANDLER( random_num_r )
 static WRITE_HANDLER( led_0_w )
 {
 	set_led_status(0, data & 1);
-	logerror("LED 0 %s\n", (data & 1) ? "on" : "off");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "LED 0 %s\n", (data & 1) ? "on" : "off");
 }
 
 
 static WRITE_HANDLER( led_1_w )
 {
 	set_led_status(1, data & 1);
-	logerror("LED 1 %s\n", (data & 1) ? "on" : "off");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "LED 1 %s\n", (data & 1) ? "on" : "off");
 }
 
 
 static WRITE_HANDLER( gridlee_coin_counter_w )
 {
 	coin_counter_w(0, data & 1);
-	logerror("coin counter %s\n", (data & 1) ? "on" : "off");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "coin counter %s\n", (data & 1) ? "on" : "off");
 }
 
 

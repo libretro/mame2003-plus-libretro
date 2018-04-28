@@ -18,7 +18,7 @@ static void illegal( void )
 static INLINE void illegal( void )
 #endif
 {
-	logerror("M6809: illegal opcode at %04x\n",PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "M6809: illegal opcode at %04x\n",PC);
 }
 
 #ifdef macintosh

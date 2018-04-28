@@ -135,15 +135,15 @@ PALETTE_INIT( cvs )
 
 WRITE_HANDLER( cvs_video_fx_w )
 {
-	logerror("%4x : Data Port = %2x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%4x : Data Port = %2x\n",activecpu_get_pc(),data);
 
     /* Unimplemented */
 
-    if(data & 2)   logerror("       SHADE BRIGHTER TO RIGHT\n");
-    if(data & 4)   logerror("       SCREEN ROTATE\n");
-    if(data & 8)   logerror("       SHADE BRIGHTER TO LEFT\n");
-    if(data & 64)  logerror("       SHADE BRIGHTER TO BOTTOM\n");
-    if(data & 128) logerror("       SHADE BRIGHTER TO TOP\n");
+    if(data & 2)   log_cb(RETRO_LOG_ERROR, LOGPRE "       SHADE BRIGHTER TO RIGHT\n");
+    if(data & 4)   log_cb(RETRO_LOG_ERROR, LOGPRE "       SCREEN ROTATE\n");
+    if(data & 8)   log_cb(RETRO_LOG_ERROR, LOGPRE "       SHADE BRIGHTER TO LEFT\n");
+    if(data & 64)  log_cb(RETRO_LOG_ERROR, LOGPRE "       SHADE BRIGHTER TO BOTTOM\n");
+    if(data & 128) log_cb(RETRO_LOG_ERROR, LOGPRE "       SHADE BRIGHTER TO TOP\n");
 
     /* Implemented */
 

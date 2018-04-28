@@ -206,7 +206,7 @@ int seta_sh_start( const struct MachineSound *msound )
 	}
 #if LOG_SOUND
 	/* Print some more debug info */
-	logerror("masterclock = %d rate = %d\n", master_clock, rate );
+	log_cb(RETRO_LOG_ERROR, LOGPRE "masterclock = %d rate = %d\n", master_clock, rate );
 #endif
 	/* get stream channels */
 	mixed_vol = intf->volume;
@@ -262,7 +262,7 @@ WRITE_HANDLER( seta_sound_w )
 	 	env_offset[channel] = 0;
 	}
 #if	LOG_REGISTER_WRITE
-	logerror("PC: %06X : offset %6X : data %2X\n", activecpu_get_pc(), offset, data );
+	log_cb(RETRO_LOG_ERROR, LOGPRE "PC: %06X : offset %6X : data %2X\n", activecpu_get_pc(), offset, data );
 #endif
 	x1_010_reg[offset] = data;
 }
@@ -279,7 +279,7 @@ READ16_HANDLER( seta_sound_word_r )
 	ret = HI_WORD_BUF[offset]<<8;
 	ret += (seta_sound_r( offset )&0xff);
 #if LOG_REGISTER_READ
-	logerror( "Read X1-010 PC:%06X Offset:%04X Data:%04X\n", activecpu_get_pc(), offset, ret );
+	log_cb(RETRO_LOG_ERROR, LOGPRE  "Read X1-010 PC:%06X Offset:%04X Data:%04X\n", activecpu_get_pc(), offset, ret );
 #endif
 	return ret;
 }
@@ -289,6 +289,6 @@ WRITE16_HANDLER( seta_sound_word_w )
 	HI_WORD_BUF[offset] = (data>>8)&0xff;
 	seta_sound_w( offset, data&0xff );
 #if	LOG_REGISTER_WRITE
-	logerror( "Write X1-010 PC:%06X Offset:%04X Data:%04X\n", activecpu_get_pc(), offset, data );
+	log_cb(RETRO_LOG_ERROR, LOGPRE  "Write X1-010 PC:%06X Offset:%04X Data:%04X\n", activecpu_get_pc(), offset, data );
 #endif
 }

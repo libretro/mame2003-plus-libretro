@@ -259,7 +259,7 @@ static WRITE16_HANDLER( vmetal_es8712_w )
 	*/
 
 	COMBINE_DATA(&vmetal_es8712[offset]);
-	logerror("Writing %04x to ES8712 port %02x\n",data,offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Writing %04x to ES8712 port %02x\n",data,offset);
 
 	if ((offset == 0) && (ACCESSING_MSB))
 	{
@@ -300,7 +300,7 @@ static WRITE16_HANDLER( vmetal_es8712_w )
 			default:		break;
 		}
 
-		logerror("Start=%08x  End=%08x  Length=%08x\n",vmetal_es8712_start,vmetal_es8712_end,vmetal_es8712_end - vmetal_es8712_start);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Start=%08x  End=%08x  Length=%08x\n",vmetal_es8712_start,vmetal_es8712_end,vmetal_es8712_end - vmetal_es8712_start);
 
 		if (vmetal_es8712_start < vmetal_es8712_end)
 		{

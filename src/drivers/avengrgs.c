@@ -76,12 +76,12 @@ static READ32_HANDLER( avengrs_control_r )
 
 static READ32_HANDLER(test2_r)
 {
-/*	logerror("%08x:  Test2_r %d\n",activecpu_get_pc(),offset);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Test2_r %d\n",activecpu_get_pc(),offset);*/
 	return 0xffffffff;
 }
 static READ32_HANDLER(test3_r)
 {
-/*	logerror("%08x:  Test3_r %d\n",activecpu_get_pc(),offset);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Test3_r %d\n",activecpu_get_pc(),offset);*/
 	return 0xffffffff;
 }
 
@@ -99,7 +99,7 @@ static WRITE32_HANDLER( avengrs_eprom_w )
 		/*volume control todo*/
 	}
 	else
-		logerror("%08x:  eprom_w %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  eprom_w %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
 }
 
 static WRITE32_HANDLER( avengrs_palette_w )
@@ -121,7 +121,7 @@ static READ32_HANDLER( avengrs_sound_r )
 	if (mem_mask==0x00ffffff) {
 		return YMZ280B_status_0_r(0)<<24;
 	} else {
-		logerror("%08x:  non-byte read from sound mask %08x\n",activecpu_get_pc(),mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  non-byte read from sound mask %08x\n",activecpu_get_pc(),mem_mask);
 	}
 
 	return 0;
@@ -135,7 +135,7 @@ static WRITE32_HANDLER( avengrs_sound_w )
 		else
 			YMZ280B_register_0_w(0,data>>24);
 	} else {
-		logerror("%08x:  non-byte written to sound %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  non-byte written to sound %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
 	}
 }
 
@@ -254,7 +254,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 static void sound_irq_gen(int state)
 {
-	logerror("sound irq\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "sound irq\n");
 }
 
 static struct YMZ280Binterface ymz280b_intf =
@@ -338,7 +338,7 @@ ROM_END
 static READ32_HANDLER( avengrgs_speedup_r )
 {
 	data32_t a=avengrgs_ram[0x89a0/4];
-/*	logerror("Read %08x\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Read %08x\n",activecpu_get_pc());*/
 	if (activecpu_get_pc()==0x3236 && (a&1)) cpu_spinuntil_int();
 
 	return a;

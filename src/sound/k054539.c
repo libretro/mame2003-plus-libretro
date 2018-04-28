@@ -178,11 +178,14 @@ static void K054539_update(int chip, INT16 **buffer, int length)
 			if (bval > 255) bval = 255;
 
 			pan = base1[0x05];
-/* DJ Main: 81-87 right, 88 middle, 89-8f left*/
-if (pan >= 0x81 && pan <= 0x8f)
-pan -= 0x81;
-else
-			if (pan >= 0x11 && pan <= 0x1f) pan -= 0x11; else pan = 0x18 - 0x11;
+      /* DJ Main: 81-87 right, 88 middle, 89-8f left*/
+      if (pan >= 0x81 && pan <= 0x8f)
+        pan -= 0x81;
+      else
+        if (pan >= 0x11 && pan <= 0x1f)
+          pan -= 0x11; 
+        else
+          pan = 0x18 - 0x11;
 
 			gain = K054539_gain[chip][ch];
 
@@ -338,10 +341,8 @@ else
 				break;
 			}
 			default:
-#if VERBOSE
-				logerror("Unknown sample type %x for channel %d\n", base2[0] & 0xc, ch);
-#endif
-				break;
+  			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown sample type %x for channel %d\n", base2[0] & 0xc, ch);
+			break;
 			}
 			chan->pos = cur_pos;
 			chan->pfrac = cur_pfrac;
@@ -612,8 +613,8 @@ static void K054539_w(int chip, offs_t offset, data8_t data) /***/
 		break;
 
 		default:
-#if VERBOSE
-			if(regbase[offset] != data) {
+#if 0
+    if(regbase[offset] != data) {
 				if((offset & 0xff00) == 0) {
 					chanoff = offset & 0x1f;
 					if(chanoff < 4 || chanoff == 5 ||
@@ -623,9 +624,9 @@ static void K054539_w(int chip, offs_t offset, data8_t data) /***/
 				}
 				if(1 || ((offset >= 0x200) && (offset <= 0x210)))
 					break;
-				logerror("K054539 %03x = %02x\n", offset, data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "K054539 %03x = %02x\n", offset, data);
 			}
-#endif
+#endif      
 		break;
 	}
 
@@ -659,9 +660,7 @@ static data8_t K054539_r(int chip, offs_t offset)
 	case 0x22c:
 		break;
 	default:
-#if VERBOSE
-		logerror("K054539 read %03x\n", offset);
-#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "K054539 read %03x\n", offset);
 		break;
 	}
 	return K054539_chips.chip[chip].regs[offset];

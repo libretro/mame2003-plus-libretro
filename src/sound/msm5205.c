@@ -230,12 +230,12 @@ void MSM5205_vclk_w (int num, int vclk)
 	/* range check the numbers */
 	if (num >= msm5205_intf->num)
 	{
-		logerror("error: MSM5205_vclk_w() called with chip = %d, but only %d chips allocated\n", num, msm5205_intf->num);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: MSM5205_vclk_w() called with chip = %d, but only %d chips allocated\n", num, msm5205_intf->num);
 		return;
 	}
 	if( msm5205[num].prescaler != 0 )
 	{
-		logerror("error: MSM5205_vclk_w() called with chip = %d, but VCLK selected master mode\n", num);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: MSM5205_vclk_w() called with chip = %d, but VCLK selected master mode\n", num);
 	}
 	else
 	{
@@ -256,7 +256,7 @@ void MSM5205_reset_w (int num, int reset)
 	/* range check the numbers */
 	if (num >= msm5205_intf->num)
 	{
-		logerror("error: MSM5205_reset_w() called with chip = %d, but only %d chips allocated\n", num, msm5205_intf->num);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: MSM5205_reset_w() called with chip = %d, but only %d chips allocated\n", num, msm5205_intf->num);
 		return;
 	}
 	msm5205[num].reset = reset;

@@ -35,7 +35,7 @@ static WRITE_HANDLER( paradise_rombank_w )
 	int bank_n = memory_region_length(REGION_CPU1)/0x4000 - 1;
 	if (bank >= bank_n)
 	{
-		logerror("PC %04X - invalid rom bank %x\n",activecpu_get_pc(),bank);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04X - invalid rom bank %x\n",activecpu_get_pc(),bank);
 		bank %= bank_n;
 	}
 
@@ -45,7 +45,7 @@ static WRITE_HANDLER( paradise_rombank_w )
 
 static WRITE_HANDLER( paradise_okibank_w )
 {
-	if (data & ~0x02)	logerror("CPU #0 - PC %04X: unknown oki bank bits %02X\n",activecpu_get_pc(),data);
+	if (data & ~0x02)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 - PC %04X: unknown oki bank bits %02X\n",activecpu_get_pc(),data);
 	OKIM6295_set_bank_base(1, (data & 0x02) ? 0x40000 : 0);
 }
 

@@ -76,7 +76,7 @@ static READ_HANDLER( rev1_key_r ) {
 	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
 		return 0;
 	}
 	return key[offset];
@@ -87,7 +87,7 @@ static WRITE_HANDLER( rev1_key_w ) {
 	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
 		return;
 	}
 
@@ -153,7 +153,7 @@ static READ_HANDLER( rev2_key_r )
 	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
 		return 0;
 	}
 	return key[offset];
@@ -164,7 +164,7 @@ static WRITE_HANDLER( rev2_key_w )
 	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
 		return;
 	}
 	key[offset] = data;
@@ -236,7 +236,7 @@ static READ_HANDLER( dangseed_key_r ) {
 	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
 		return 0;
 	}
 	return key[offset];
@@ -247,7 +247,7 @@ static WRITE_HANDLER( dangseed_key_w ) {
 	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
 		return;
 	}
 
@@ -279,7 +279,7 @@ static READ_HANDLER( dspirit_key_r )
 	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
 		return 0;
 	}
 	return key[offset];
@@ -291,7 +291,7 @@ static WRITE_HANDLER( dspirit_key_w )
 	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
 		return;
 	}
 	key[offset] = data;
@@ -376,10 +376,10 @@ static WRITE_HANDLER( dspirit_key_w )
 
 static READ_HANDLER( blazer_key_r )
 {
-	logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
 		return 0;
 	}
 	return key[offset];
@@ -388,10 +388,10 @@ static READ_HANDLER( blazer_key_r )
 static WRITE_HANDLER( blazer_key_w )
 {
 	static unsigned short divisor;
-	logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
 		return;
 	}
 	key[offset] = data;
@@ -459,7 +459,7 @@ static READ_HANDLER( ws_key_r ) {
 	/*logerror("CPU #%d PC %08x: keychip read %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,key[offset]);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip read %04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset);
 		return 0;
 	}
 	return key[offset];
@@ -470,7 +470,7 @@ static WRITE_HANDLER( ws_key_w ) {
 	/*logerror("CPU #%d PC %08x: keychip write %04X=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 	if(offset >= NAMCOS1_MAX_KEY)
 	{
-		logerror("CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %08x: unmapped keychip write %04x=%04x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);
 		return;
 	}
 
@@ -663,23 +663,23 @@ static WRITE_HANDLER( soundram_w )
 	namco_wavedata[offset] = data;
 
 	/*if(offset>=0x1000)*/
-	/*  logerror("CPU #%d PC %04x: write shared ram %04x=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
+	/*  log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: write shared ram %04x=%02x\n",cpu_getactivecpu(),activecpu_get_pc(),offset,data);*/
 }
 
 /* ROM handlers */
 
 static WRITE_HANDLER( rom_w ) {
-	logerror("CPU #%d PC %04x: warning - write %02x to rom address %04x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - write %02x to rom address %04x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
 }
 
 /* error handlers */
 static READ_HANDLER( unknown_r ) {
-	logerror("CPU #%d PC %04x: warning - read from unknown chip\n",cpu_getactivecpu(),activecpu_get_pc() );
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - read from unknown chip\n",cpu_getactivecpu(),activecpu_get_pc() );
 	return 0;
 }
 
 static WRITE_HANDLER( unknown_w ) {
-	logerror("CPU #%d PC %04x: warning - wrote to unknown chip\n",cpu_getactivecpu(),activecpu_get_pc() );
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x: warning - wrote to unknown chip\n",cpu_getactivecpu(),activecpu_get_pc() );
 }
 
 /* Main bankswitching routine */
@@ -721,7 +721,7 @@ void namcos1_bankswitch(int cpu, offs_t offset, data8_t data)
 		/* unmapped bank warning */
 		if( handler_r == unknown_r)
 		{
-			logerror("CPU #%d PC %04x:warning unknown chip selected bank %x=$%04x\n", cpu , activecpu_get_pc(), bank , chip );
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC %04x:warning unknown chip selected bank %x=$%04x\n", cpu , activecpu_get_pc(), bank , chip );
 		}
 
 		/* renew pc base */
@@ -833,7 +833,7 @@ WRITE_HANDLER( namcos1_mcu_bankswitch_w )
 	addr += (data&3)*0x8000;
 	if( addr >= memory_region_length(REGION_CPU4))
 	{
-		logerror("unmapped mcu bank selected pc=%04x bank=%02x\n",activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "unmapped mcu bank selected pc=%04x bank=%02x\n",activecpu_get_pc(),data);
 		addr = 0x4000;
 	}
 	cpu_setbank( 20, memory_region(REGION_CPU4)+addr );
@@ -1024,7 +1024,7 @@ static void namcos1_driver_init(const struct namcos1_specific *specific )
 				{
 					sound_spinlock_pc   = addr+3;
 					sound_spinlock_ram  = install_mem_read_handler(2,flag_ptr,flag_ptr,namcos1_sound_spinlock_r);
-					logerror("Set sound cpu spinlock : pc=%04x , addr = %04x\n",sound_spinlock_pc,flag_ptr);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "Set sound cpu spinlock : pc=%04x , addr = %04x\n",sound_spinlock_pc,flag_ptr);
 					break;
 				}
 			}

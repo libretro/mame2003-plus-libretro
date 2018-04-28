@@ -106,7 +106,7 @@ READ32_HANDLER( sngkace_input_r )
 					if (Machine->sample_rate == 0)	ret = 0;
 					return (((readinputport(1) & ~bit) | ret) << 16) | readinputport(3);
 		}
-		default:	logerror("PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
+		default:	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
 					return 0;
 	}
 }
@@ -124,7 +124,7 @@ READ32_HANDLER( gunbird_input_r )
 					return (readinputport(0) << 16) | (readinputport(1) & ~bit) | ret;
 		}
 		case 0x1:	return (readinputport(2) << 16) | readinputport(3);
-		default:	logerror("PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
+		default:	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
 					return 0;
 	}
 }
@@ -222,7 +222,7 @@ WRITE32_HANDLER( s1945_mcu_w )
 			s1945_mcu_index = s1945_mcu_inlatch;
 			break;
 		case 0x013:
-/*			logerror("MCU: Table read index %02x\n", s1945_mcu_index);*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "MCU: Table read index %02x\n", s1945_mcu_index);*/
 			s1945_mcu_latching = 1;
 			s1945_mcu_latch1 = s1945_mcu_table[s1945_mcu_index];
 			break;
@@ -244,12 +244,12 @@ WRITE32_HANDLER( s1945_mcu_w )
 			s1945_mcu_latching |= 4;
 			break;
 		default:
-/*			logerror("MCU: function %02x, direction %02x, latch1 %02x, latch2 %02x (%x)\n", data, s1945_mcu_direction, s1945_mcu_latch1, s1945_mcu_latch2, activecpu_get_pc());*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "MCU: function %02x, direction %02x, latch1 %02x, latch2 %02x (%x)\n", data, s1945_mcu_direction, s1945_mcu_latch1, s1945_mcu_latch2, activecpu_get_pc());*/
 			break;
 		}
 		break;
 	default:
-/*		logerror("MCU.w %x, %02x (%x)\n", offset, data, activecpu_get_pc());*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "MCU.w %x, %02x (%x)\n", offset, data, activecpu_get_pc());*/
 		;
 	}
 }
@@ -288,7 +288,7 @@ READ32_HANDLER( s1945_input_r )
 		}
 		case 0x1:	return (((readinputport(2) << 16) | readinputport(3)) & 0xffff000f) | s1945_mcu_r(offset-1, mem_mask);
 		case 0x2:	return s1945_mcu_r(offset-1, mem_mask);
-		default:	logerror("PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
+		default:	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Read input %02X !\n", activecpu_get_pc(), offset*2);
 					return 0;
 	}
 }

@@ -231,7 +231,7 @@ static WRITE_HANDLER( marinedt_pf_w )
 	marinedt_pf = data;
 
 /*if(data&0xf0)*/
-/*	logerror("pf:%02x %d\n",marinedt_pf);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "pf:%02x %d\n",marinedt_pf);*/
 /*logerror("pd:%02x %d\n",marinedt_pd, cpu_getcurrentframe());*/
 
 }

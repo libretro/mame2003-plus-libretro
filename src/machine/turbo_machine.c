@@ -166,7 +166,7 @@ static WRITE_HANDLER( turbo_sound_B_w )
 		if (!sample_playing(7))
 			sample_start(7, 8, 0);
 		else
-			logerror("ambu didnt start\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "ambu didnt start\n");
 	}
 	else
 		sample_stop(7);
@@ -463,7 +463,7 @@ READ_HANDLER( turbo_8279_r )
 		return readinputport(1);  /* DSW 1 */
 	else
 	{
-		logerror("read 0xfc%02x\n", offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "read 0xfc%02x\n", offset);
 		return 0x10;
 	}
 }

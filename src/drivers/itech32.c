@@ -124,7 +124,7 @@ static INTERRUPT_GEN( generate_int1 )
 {
 	/* signal the NMI */
 	itech32_update_interrupts(1, -1, -1);
-	if (FULL_LOGGING) logerror("------------ VBLANK (%d) --------------", cpu_getscanline());
+	if (FULL_LOGGING) log_cb(RETRO_LOG_ERROR, LOGPRE "------------ VBLANK (%d) --------------", cpu_getscanline());
 }
 
 
@@ -313,7 +313,7 @@ static READ32_HANDLER( itech020_prot_result_r )
 
 static WRITE_HANDLER( sound_bank_w )
 {
-	logerror("sound bank = %02x", data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "sound bank = %02x", data);
 	cpu_setbank(1, &memory_region(REGION_CPU2)[0x10000 + data * 0x4000]);
 }
 
@@ -330,7 +330,7 @@ static void delayed_sound_data_w(int data)
 	sound_data = data;
 	sound_int_state = 1;
 	cpu_set_irq_line(1, M6809_IRQ_LINE, ASSERT_LINE);
-	logerror("sound_data_w() = %02x", sound_data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "sound_data_w() = %02x", sound_data);
 }
 
 
@@ -350,7 +350,7 @@ static WRITE32_HANDLER( sound_data32_w )
 
 static READ_HANDLER( sound_data_r )
 {
-	logerror("sound_data_r() = %02x", sound_data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "sound_data_r() = %02x", sound_data);
 	cpu_set_irq_line(1, M6809_IRQ_LINE, CLEAR_LINE);
 	sound_int_state = 0;
 	return sound_data;
@@ -372,7 +372,7 @@ static READ_HANDLER( sound_data_buffer_r )
 
 static WRITE_HANDLER( pia_portb_out )
 {
-	logerror("PIA port B write = %02x", data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "PIA port B write = %02x", data);
 
 	/* bit 4 controls the ticket dispenser */
 	/* bit 5 controls the coin counter */
@@ -384,7 +384,7 @@ static WRITE_HANDLER( pia_portb_out )
 
 static WRITE_HANDLER( sound_output_w )
 {
-	logerror("sound output write = %02x", data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "sound output write = %02x", data);
 
 	coin_counter_w(0, (~data & 0x20) >> 5);
 }
@@ -443,7 +443,7 @@ static WRITE_HANDLER( via6522_w )
 			break;
 
 		default:	/* log everything else */
-			if (FULL_LOGGING) logerror("VIA write(%02x) = %02x", offset, data);
+			if (FULL_LOGGING) log_cb(RETRO_LOG_ERROR, LOGPRE "VIA write(%02x) = %02x", offset, data);
 			break;
 	}
 
@@ -468,7 +468,7 @@ static READ_HANDLER( via6522_r )
 			break;
 	}
 
-	if (FULL_LOGGING) logerror("VIA read(%02x) = %02x", offset, result);
+	if (FULL_LOGGING) log_cb(RETRO_LOG_ERROR, LOGPRE "VIA read(%02x) = %02x", offset, result);
 	return result;
 }
 

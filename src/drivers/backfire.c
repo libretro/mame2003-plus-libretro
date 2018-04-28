@@ -255,14 +255,14 @@ static READ32_HANDLER(backfire_eeprom_r)
 
 static READ32_HANDLER(backfire_control2_r)
 {
-/*  logerror("%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
+/*  log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
 	return (EEPROM_read_bit()<<24) | readinputport(1) | (readinputport(1)<<16);
 }
 
 #ifdef UNUSED_FUNCTION
 static READ32_HANDLER(backfire_control3_r)
 {
-/*  logerror("%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
+/*  log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:Read eprom %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
 	return (EEPROM_read_bit()<<24) | readinputport(2) | (readinputport(2)<<16);
 }
 #endif
@@ -270,7 +270,7 @@ static READ32_HANDLER(backfire_control3_r)
 
 static WRITE32_HANDLER(backfire_eeprom_w)
 {
-	logerror("%08x:write eprom %08x (%08x) %08x\n",activecpu_get_pc(),offset<<1,mem_mask,data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:write eprom %08x (%08x) %08x\n",activecpu_get_pc(),offset<<1,mem_mask,data);
 	if (ACCESSING_LSB32) {
 		EEPROM_set_clock_line((data & 0x2) ? ASSERT_LINE : CLEAR_LINE);
 		EEPROM_write_bit(data & 0x1);
@@ -498,7 +498,7 @@ static struct GfxDecodeInfo gfxdecodeinfo_backfire[] =
 
 static void sound_irq_gen(int state)
 {
-	logerror("sound irq\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "sound irq\n");
 }
 
 

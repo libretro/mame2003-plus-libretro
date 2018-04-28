@@ -486,11 +486,11 @@ void drc_dasm(FILE *f, unsigned pc, void *begin, void *end)
 	activecpu_dasm(buffer, pc);
 	if (addr == addr_end)
 	{
-		logerror("%08x: %s\t(NOP)\n", pc, buffer);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: %s\t(NOP)\n", pc, buffer);
 	}
 	else
 	{
-		logerror("%08x: %s\t(%08x-%08x)\n", pc, buffer, addr, addr_end - 1);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: %s\t(%08x-%08x)\n", pc, buffer, addr, addr_end - 1);
 
 		saved_op_rom		= OP_ROM;
 		saved_op_ram		= OP_RAM;
@@ -504,7 +504,7 @@ void drc_dasm(FILE *f, unsigned pc, void *begin, void *end)
 		{
 			offset = DasmI386(buffer, addr);
 			sprintf(buffer2, "\t%08x: %s\n", addr, buffer);
-			logerror("%s", buffer2);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%s", buffer2);
 			if (f)
 				fputs(buffer2, f);
 			addr += offset;
@@ -593,6 +593,6 @@ static void append_out_of_cycles(struct drccore *drc)
 static void log_dispatch(struct drccore *drc)
 {
 	if (keyboard_pressed(KEYCODE_D))
-		logerror("Disp:%08X\n", *drc->pcptr);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Disp:%08X\n", *drc->pcptr);
 }
 #endif

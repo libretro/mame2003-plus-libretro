@@ -87,8 +87,6 @@
 
 /*int survival_prot = 0; */
 
-#define VERBOSE 0
-
 #include "driver.h"
 #include "state.h"
 #include "osd_cpu.h"

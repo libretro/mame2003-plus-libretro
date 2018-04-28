@@ -275,12 +275,12 @@ static WRITE16_HANDLER ( z80_ram_w )
 		z80_mainram[offset*2+1] = data;
 
 	if(pc != 0xf12 && pc != 0xde2 && pc != 0x100c50 && pc != 0x100b20)
-		logerror("Z80: write %04x, %04x @ %04x (%06x)\n", offset*2, data, mem_mask, activecpu_get_pc());
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Z80: write %04x, %04x @ %04x (%06x)\n", offset*2, data, mem_mask, activecpu_get_pc());
 }
 
 static WRITE16_HANDLER ( z80_reset_w )
 {
-	logerror("Z80: reset %04x @ %04x (%06x)\n", data, mem_mask, activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80: reset %04x @ %04x (%06x)\n", data, mem_mask, activecpu_get_pc());
 
 	if(data == 0x5050) {
 		ics2115_reset();
@@ -304,13 +304,13 @@ static WRITE16_HANDLER ( z80_reset_w )
 
 static WRITE16_HANDLER ( z80_ctrl_w )
 {
-	logerror("Z80: ctrl %04x @ %04x (%06x)\n", data, mem_mask, activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80: ctrl %04x @ %04x (%06x)\n", data, mem_mask, activecpu_get_pc());
 }
 
 static WRITE16_HANDLER ( m68k_l1_w )
 {
 	if(ACCESSING_LSB) {
-		logerror("SL 1 m68.w %02x (%06x) IRQ\n", data & 0xff, activecpu_get_pc());
+		log_cb(RETRO_LOG_ERROR, LOGPRE "SL 1 m68.w %02x (%06x) IRQ\n", data & 0xff, activecpu_get_pc());
 		soundlatch_w(0, data);
 		cpu_set_irq_line(1, IRQ_LINE_NMI, PULSE_LINE );
 	}
@@ -318,7 +318,7 @@ static WRITE16_HANDLER ( m68k_l1_w )
 
 static WRITE_HANDLER( z80_l3_w )
 {
-	logerror("SL 3 z80.w %02x (%04x)\n", data, activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "SL 3 z80.w %02x (%04x)\n", data, activecpu_get_pc());
 	soundlatch3_w(0, data);
 }
 
@@ -1222,7 +1222,7 @@ static WRITE16_HANDLER( killbld_prot_w )
 		kb_cmd=data;
 	else /*offset==2*/
 	{
-		logerror("%06X: ASIC25 W CMD %X  VAL %X",activecpu_get_pc(),kb_cmd,data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X: ASIC25 W CMD %X  VAL %X",activecpu_get_pc(),kb_cmd,data);
 		if(kb_cmd==0)
 			reg=data;
 		else if(kb_cmd==2)
@@ -1391,7 +1391,7 @@ static READ16_HANDLER( killbld_prot_r )
 
 		}
 	}
-	logerror("%06X: ASIC25 R CMD %X  VAL %X",activecpu_get_pc(),kb_cmd,res);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X: ASIC25 R CMD %X  VAL %X",activecpu_get_pc(),kb_cmd,res);
 	return res;
 }
 

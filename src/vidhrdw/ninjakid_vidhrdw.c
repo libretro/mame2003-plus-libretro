@@ -89,7 +89,7 @@ READ_HANDLER( ninjakun_io_8000_r ){
 		return ninjakun_io_8000_ctrl[3];
 	}
 
-/*	logerror("PC=%04x; RAM[0x800%d]\n",activecpu_get_pc(),offset);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC=%04x; RAM[0x800%d]\n",activecpu_get_pc(),offset);*/
 	return 0xFF;
 }
 

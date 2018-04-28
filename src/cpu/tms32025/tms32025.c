@@ -433,7 +433,7 @@ static void opcodes_DX(void) { }
 
 static void illegal(void)
 {
-		logerror("TMS32025:  PC = %04x,  Illegal opcode = %04x\n", (R.PC-1), R.opcode.w.l);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32025:  PC = %04x,  Illegal opcode = %04x\n", (R.PC-1), R.opcode.w.l);
 }
 
 static void abst(void)
@@ -1731,7 +1731,7 @@ static int process_IRQs(void)
 		PUSH_STACK(R.PC);
 
 		if ((R.IFR & 0x01) && (IMR & 0x01)) {		/* IRQ line 0 */
-			logerror("TMS32025:  Active INT0\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32025:  Active INT0\n");
 			R.PC = 0x0002;
 			(*R.irq_callback)(0);
 			R.idle = 0;
@@ -1740,7 +1740,7 @@ static int process_IRQs(void)
 			return R.tms32025_irq_cycles;
 		}
 		if ((R.IFR & 0x02) && (IMR & 0x02)) {		/* IRQ line 1 */
-			logerror("TMS32025:  Active INT1\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32025:  Active INT1\n");
 			R.PC = 0x0004;
 			(*R.irq_callback)(1);
 			R.idle = 0;
@@ -1749,7 +1749,7 @@ static int process_IRQs(void)
 			return R.tms32025_irq_cycles;
 		}
 		if ((R.IFR & 0x04) && (IMR & 0x04)) {		/* IRQ line 2 */
-			logerror("TMS32025:  Active INT2\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32025:  Active INT2\n");
 			R.PC = 0x0006;
 			(*R.irq_callback)(2);
 			R.idle = 0;
@@ -1758,7 +1758,7 @@ static int process_IRQs(void)
 			return R.tms32025_irq_cycles;
 		}
 		if ((R.IFR & 0x08) && (IMR & 0x08)) {		/* Timer IRQ (internal) */
-/*			logerror("TMS32025:  Active TINT (Timer)\n");*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32025:  Active TINT (Timer)\n");*/
 			R.PC = 0x0018;
 			R.idle = 0;
 			R.IFR &= (~0x08);
@@ -1766,7 +1766,7 @@ static int process_IRQs(void)
 			return R.tms32025_irq_cycles;
 		}
 		if ((R.IFR & 0x10) && (IMR & 0x10)) {		/* Serial port receive IRQ (internal) */
-			logerror("TMS32025:  Active RINT (Serial recieve)\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32025:  Active RINT (Serial recieve)\n");
 			R.PC = 0x001A;
 			R.idle = 0;
 			R.IFR &= (~0x10);
@@ -1774,7 +1774,7 @@ static int process_IRQs(void)
 			return R.tms32025_irq_cycles;
 		}
 		if ((R.IFR & 0x20) && (IMR & 0x20)) {		/* Serial port transmit IRQ (internal) */
-			logerror("TMS32025:  Active XINT (Serial transmit)\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32025:  Active XINT (Serial transmit)\n");
 			R.PC = 0x001C;
 			R.idle = 0;
 			R.IFR &= (~0x20);

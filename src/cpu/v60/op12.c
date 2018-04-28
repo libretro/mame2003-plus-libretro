@@ -461,7 +461,7 @@ UINT32 opCHLVL(void)
 
 	if (f12Op1>3)
 	{
-		logerror("Illegal data field on opCHLVL, PC=%x\n", PC);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Illegal data field on opCHLVL, PC=%x\n", PC);
 		abort();
 	}
 
@@ -748,7 +748,7 @@ UINT32 opLDPR(void)
 	}
 	else
 	{
-		logerror("Invalid operand on LDPR PC=%x\n", PC);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Invalid operand on LDPR PC=%x\n", PC);
 		abort();
 	}
 	F12END();
@@ -2088,7 +2088,7 @@ UINT32 opSTPR(void)
 		modWriteValW = v60.reg[f12Op1 + 36];
 	else
 	{
-		logerror("Invalid operand on STPR PC=%x\n", PC);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Invalid operand on STPR PC=%x\n", PC);
 		abort();
 	}
 	F12WriteSecondOperand(2);

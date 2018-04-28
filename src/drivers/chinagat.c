@@ -185,7 +185,7 @@ static WRITE_HANDLER( saiyugb1_adpcm_control_w )
 
 	if (data & 0x80)	/* Reset m5205 and disable ADPCM ROM outputs */
 	{
-		logerror("ADPCM output disabled\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "ADPCM output disabled\n");
 		saiyugb1_pcm_nibble = 0x0f;
 		MSM5205_reset_w(0,1);
 	}
@@ -195,12 +195,12 @@ static WRITE_HANDLER( saiyugb1_adpcm_control_w )
 		{
 			if ((saiyugb1_i8748_P2 & 0xc) == 0)	/* Latch MSB Address */
 			{
-/*/				logerror("Latching MSB\n");*/
+/*/				log_cb(RETRO_LOG_ERROR, LOGPRE "Latching MSB\n");*/
 				saiyugb1_adpcm_addr = (saiyugb1_adpcm_addr & 0x3807f) | (saiyugb1_i8748_P1 << 7);
 			}
 			if ((saiyugb1_i8748_P2 & 0xc) == 4)	/* Latch LSB Address */
 			{
-/*/				logerror("Latching LSB\n");*/
+/*/				log_cb(RETRO_LOG_ERROR, LOGPRE "Latching LSB\n");*/
 				saiyugb1_adpcm_addr = (saiyugb1_adpcm_addr & 0x3ff80) | (saiyugb1_i8748_P1 >> 1);
 				saiyugb1_pcm_shift = (saiyugb1_i8748_P1 & 1) * 4;
 			}
@@ -212,14 +212,14 @@ static WRITE_HANDLER( saiyugb1_adpcm_control_w )
 
 		saiyugb1_pcm_nibble = (saiyugb1_pcm_nibble >> saiyugb1_pcm_shift) & 0x0f;
 
-/*/		logerror("Writing %02x to m5205. $ROM=%08x  P1=%02x  P2=%02x  Prev_P2=%02x  Nibble=%08x\n",saiyugb1_pcm_nibble,saiyugb1_adpcm_addr,saiyugb1_i8748_P1,data,saiyugb1_i8748_P2,saiyugb1_pcm_shift);*/
+/*/		log_cb(RETRO_LOG_ERROR, LOGPRE "Writing %02x to m5205. $ROM=%08x  P1=%02x  P2=%02x  Prev_P2=%02x  Nibble=%08x\n",saiyugb1_pcm_nibble,saiyugb1_adpcm_addr,saiyugb1_i8748_P1,data,saiyugb1_i8748_P2,saiyugb1_pcm_shift);*/
 
 		if ( ((saiyugb1_i8748_P2 & 0xc) >= 8) && ((data & 0xc) == 4) )
 		{
 			MSM5205_data_w (0, saiyugb1_pcm_nibble);
-			logerror("Writing %02x to m5205\n",saiyugb1_pcm_nibble);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Writing %02x to m5205\n",saiyugb1_pcm_nibble);
 		}
-		logerror("$ROM=%08x  P1=%02x  P2=%02x  Prev_P2=%02x  Nibble=%1x  PCM_data=%02x\n",saiyugb1_adpcm_addr,saiyugb1_i8748_P1,data,saiyugb1_i8748_P2,saiyugb1_pcm_shift,saiyugb1_pcm_nibble);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "$ROM=%08x  P1=%02x  P2=%02x  Prev_P2=%02x  Nibble=%1x  PCM_data=%02x\n",saiyugb1_adpcm_addr,saiyugb1_i8748_P1,data,saiyugb1_i8748_P2,saiyugb1_pcm_shift,saiyugb1_pcm_nibble);
 	}
 	saiyugb1_i8748_P2 = data;
 }

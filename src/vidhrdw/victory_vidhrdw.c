@@ -128,7 +128,7 @@ INTERRUPT_GEN( victory_vblank_interrupt )
 {
 	vblank_irq = 1;
 	victory_update_irq();
-	logerror("------------- VBLANK ----------------\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "------------- VBLANK ----------------\n");
 }
 
 
@@ -204,7 +204,7 @@ READ_HANDLER( victory_video_control_r )
 	{
 		case 0:		/* 5XFIQ */
 			result = fgcollx;
-			if (LOG_COLLISION) logerror("%04X:5XFIQ read = %02X\n", activecpu_get_previouspc(), result);
+			if (LOG_COLLISION) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:5XFIQ read = %02X\n", activecpu_get_previouspc(), result);
 			return result;
 
 		case 1:		/* 5CLFIQ */
@@ -214,12 +214,12 @@ READ_HANDLER( victory_video_control_r )
 				fgcoll = 0;
 				victory_update_irq();
 			}
-			if (LOG_COLLISION) logerror("%04X:5CLFIQ read = %02X\n", activecpu_get_previouspc(), result);
+			if (LOG_COLLISION) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:5CLFIQ read = %02X\n", activecpu_get_previouspc(), result);
 			return result;
 
 		case 2:		/* 5BACKX */
 			result = bgcollx & 0xfc;
-			if (LOG_COLLISION) logerror("%04X:5BACKX read = %02X\n", activecpu_get_previouspc(), result);
+			if (LOG_COLLISION) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:5BACKX read = %02X\n", activecpu_get_previouspc(), result);
 			return result;
 
 		case 3:		/* 5BACKY */
@@ -229,7 +229,7 @@ READ_HANDLER( victory_video_control_r )
 				bgcoll = 0;
 				victory_update_irq();
 			}
-			if (LOG_COLLISION) logerror("%04X:5BACKY read = %02X\n", activecpu_get_previouspc(), result);
+			if (LOG_COLLISION) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:5BACKY read = %02X\n", activecpu_get_previouspc(), result);
 			return result;
 
 		case 4:		/* 5STAT */
@@ -244,11 +244,11 @@ READ_HANDLER( victory_video_control_r )
 			result |= (~vblank_irq & 1) << 5;
 			result |= (~bgcoll & 1) << 4;
 			result |= (cpu_getscanline() & 0x100) >> 5;
-			if (LOG_COLLISION) logerror("%04X:5STAT read = %02X\n", activecpu_get_previouspc(), result);
+			if (LOG_COLLISION) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:5STAT read = %02X\n", activecpu_get_previouspc(), result);
 			return result;
 
 		default:
-			logerror("%04X:victory_video_control_r(%02X)\n", activecpu_get_previouspc(), offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:victory_video_control_r(%02X)\n", activecpu_get_previouspc(), offset);
 			break;
 	}
 	return 0;
@@ -267,87 +267,87 @@ WRITE_HANDLER( victory_video_control_w )
 	switch (offset)
 	{
 		case 0:		/* LOAD IL */
-			if (LOG_MICROCODE) logerror("%04X:IL=%02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:IL=%02X\n", activecpu_get_previouspc(), data);
 			micro.i = (micro.i & 0xff00) | (data & 0x00ff);
 			break;
 
 		case 1:		/* LOAD IH */
-			if (LOG_MICROCODE) logerror("%04X:IH=%02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:IH=%02X\n", activecpu_get_previouspc(), data);
 			micro.i = (micro.i & 0x00ff) | ((data << 8) & 0xff00);
 			if (micro.cmdlo == 5)
 			{
-				if (LOG_MICROCODE) logerror("  Command 5 triggered by write to IH\n");
+				if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "  Command 5 triggered by write to IH\n");
 				command5();
 			}
 			break;
 
 		case 2:		/* LOAD CMD */
-			if (LOG_MICROCODE) logerror("%04X:CMD=%02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:CMD=%02X\n", activecpu_get_previouspc(), data);
 			micro.cmd = data;
 			micro.cmdlo = data & 7;
 			if (micro.cmdlo == 0)
-				logerror("  Command 0 triggered\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "  Command 0 triggered\n");
 			else if (micro.cmdlo == 1)
-				logerror("  Command 1 triggered\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "  Command 1 triggered\n");
 			else if (micro.cmdlo == 6)
 			{
-				if (LOG_MICROCODE) logerror("  Command 6 triggered\n");
+				if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "  Command 6 triggered\n");
 				command6();
 			}
 			break;
 
 		case 3:		/* LOAD G */
-			if (LOG_MICROCODE) logerror("%04X:G=%02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:G=%02X\n", activecpu_get_previouspc(), data);
 			micro.g = data;
 			break;
 
 		case 4:		/* LOAD X */
-			if (LOG_MICROCODE) logerror("%04X:X=%02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:X=%02X\n", activecpu_get_previouspc(), data);
 			micro.xp = data;
 			if (micro.cmdlo == 3)
 			{
-				if (LOG_MICROCODE) logerror(" Command 3 triggered by write to X\n");
+				if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE " Command 3 triggered by write to X\n");
 				command3();
 			}
 			break;
 
 		case 5:		/* LOAD Y */
-			if (LOG_MICROCODE) logerror("%04X:Y=%02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Y=%02X\n", activecpu_get_previouspc(), data);
 			micro.yp = data;
 			if (micro.cmdlo == 4)
 			{
-				if (LOG_MICROCODE) logerror("  Command 4 triggered by write to Y\n");
+				if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "  Command 4 triggered by write to Y\n");
 				command4();
 			}
 			break;
 
 		case 6:		/* LOAD R */
-			if (LOG_MICROCODE) logerror("%04X:R=%02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:R=%02X\n", activecpu_get_previouspc(), data);
 			micro.r = data;
 			break;
 
 		case 7:		/* LOAD B */
-			if (LOG_MICROCODE) logerror("%04X:B=%02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:B=%02X\n", activecpu_get_previouspc(), data);
 			micro.b = data;
 			if (micro.cmdlo == 2)
 			{
-				if (LOG_MICROCODE) logerror("  Command 2 triggered by write to B\n");
+				if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "  Command 2 triggered by write to B\n");
 				command2();
 			}
 			else if (micro.cmdlo == 7)
 			{
-				if (LOG_MICROCODE) logerror("  Command 7 triggered by write to B\n");
+				if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "  Command 7 triggered by write to B\n");
 				command7();
 			}
 			break;
 
 		case 8:		/* SCROLLX */
-			if (LOG_MICROCODE) logerror("%04X:SCROLLX write = %02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:SCROLLX write = %02X\n", activecpu_get_previouspc(), data);
 			scrollx = data;
 			break;
 
 		case 9:		/* SCROLLY */
-			if (LOG_MICROCODE) logerror("%04X:SCROLLY write = %02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:SCROLLY write = %02X\n", activecpu_get_previouspc(), data);
 			scrolly = data;
 			break;
 
@@ -359,18 +359,18 @@ WRITE_HANDLER( victory_video_control_w )
 			/* D3 = SINVERT*/
 			/* D2 = BIR12*/
 			/* D1 = SELOVER*/
-			if (LOG_MICROCODE) logerror("%04X:CONTROL write = %02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:CONTROL write = %02X\n", activecpu_get_previouspc(), data);
 			video_control = data;
 			break;
 
 		case 11:	/* CLRVIRQ */
-			if (LOG_MICROCODE) logerror("%04X:CLRVIRQ write = %02X\n", activecpu_get_previouspc(), data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:CLRVIRQ write = %02X\n", activecpu_get_previouspc(), data);
 			vblank_irq = 0;
 			victory_update_irq();
 			break;
 
 		default:
-			if (LOG_MICROCODE) logerror("%04X:victory_video_control_w(%02X) = %02X\n", activecpu_get_previouspc(), offset, data);
+			if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:victory_video_control_w(%02X) = %02X\n", activecpu_get_previouspc(), offset, data);
 			break;
 	}
 }
@@ -762,7 +762,7 @@ static int command4(void)
 */
 	int keep_going = 0;
 
-	if (LOG_MICROCODE) logerror("================= EXECUTE BEGIN\n");
+	if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "================= EXECUTE BEGIN\n");
 
 	count_states(4);
 
@@ -775,7 +775,7 @@ static int command4(void)
 		micro.r = gram[0x2001 + micro.pc];
 		micro.xp = rram[0x2001 + micro.pc];
 		micro.yp = bram[0x2001 + micro.pc];
-		if (LOG_MICROCODE) logerror("PC=%03X  CMD=%02X I=%04X R=%02X X=%02X Y=%02X\n", micro.pc, micro.cmd, micro.i, micro.r, micro.xp, micro.yp);
+		if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "PC=%03X  CMD=%02X I=%04X R=%02X X=%02X Y=%02X\n", micro.pc, micro.cmd, micro.i, micro.r, micro.xp, micro.yp);
 		micro.pc = (micro.pc + 2) & 0x1ff;
 
 		switch (micro.cmdlo)
@@ -791,7 +791,7 @@ static int command4(void)
 		}
 	} while (keep_going);
 
-	if (LOG_MICROCODE) logerror("================= EXECUTE END\n");
+	if (LOG_MICROCODE) log_cb(RETRO_LOG_ERROR, LOGPRE "================= EXECUTE END\n");
 
 	return micro.cmd & 0x80;
 }

@@ -651,7 +651,7 @@ void dcs_reset_w(int state)
 	if (state)
 	{
 #if 0
-		logerror("%08x: DCS reset = %d\n", activecpu_get_pc(), state);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: DCS reset = %d\n", activecpu_get_pc(), state);
 #endif
 
 		/* just run through the init code again */
@@ -701,11 +701,11 @@ void dcs_data_w(int data)
 			case 0:
 				if (data == 0x55d0 || data == 0x55d1)
 				{
-					logerror("DCS Transfer command %04X\n", data);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "DCS Transfer command %04X\n", data);
 					transfer_state++;
 				}
 				else
-					logerror("Command: %04X\n", data);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "Command: %04X\n", data);
 				break;
 				
 			case 1:
@@ -717,7 +717,7 @@ void dcs_data_w(int data)
 				transfer_start |= data;
 				transfer_state++;
 				transfer_dest = (data16_t *)(memory_region(REGION_CPU1 + dcs_cpunum) + ADSP2100_SIZE + 0x8000 + transfer_start*2);
-				logerror("Start address = %08X\n", transfer_start);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Start address = %08X\n", transfer_start);
 				break;
 
 			case 3:
@@ -728,7 +728,7 @@ void dcs_data_w(int data)
 			case 4:
 				transfer_stop |= data;
 				transfer_state++;
-				logerror("Stop address = %08X\n", transfer_stop);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Stop address = %08X\n", transfer_stop);
 				transfer_writes_left = transfer_stop - transfer_start + 1;
 				transfer_sum = 0;
 				break;
@@ -737,7 +737,7 @@ void dcs_data_w(int data)
 				transfer_sum += data;
 				if (--transfer_writes_left == 0)
 				{
-					logerror("Transfer done, sum = %04X\n", transfer_sum);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "Transfer done, sum = %04X\n", transfer_sum);
 					transfer_state = 0;
 				}
 				break;
@@ -745,7 +745,7 @@ void dcs_data_w(int data)
 #endif
 
 #ifdef LOG_DCS_IO
-		logerror("%08X:dcs_data_w(%04X)\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:dcs_data_w(%04X)\n", activecpu_get_pc(), data);
 #endif
 
 	cpu_boost_interleave(TIME_IN_USEC(0.5), TIME_IN_USEC(5));
@@ -772,7 +772,7 @@ static READ16_HANDLER( input_latch_r )
 	if (dcs.auto_ack)
 		input_latch_ack_w(0,0,0);
 #ifdef LOG_DCS_IO
-		logerror("%08X:input_latch_r(%04X)\n", activecpu_get_pc(), dcs.input_data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:input_latch_r(%04X)\n", activecpu_get_pc(), dcs.input_data);
 #endif
 	return dcs.input_data;
 }
@@ -795,7 +795,7 @@ static void latch_delayed_w(int data)
 static WRITE16_HANDLER( output_latch_w )
 {
 #ifdef LOG_DCS_IO
-		logerror("%08X:output_latch_w(%04X) (empty=%d)\n", activecpu_get_pc(), data, IS_OUTPUT_EMPTY());
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:output_latch_w(%04X) (empty=%d)\n", activecpu_get_pc(), data, IS_OUTPUT_EMPTY());
 #endif
 	timer_set(TIME_NOW, data, latch_delayed_w);
 }
@@ -822,7 +822,7 @@ int dcs_data_r(void)
 		delayed_ack_w(0);
 
 #ifdef LOG_DCS_IO
-		logerror("%08X:dcs_data_r(%04X)\n", activecpu_get_pc(), dcs.output_data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:dcs_data_r(%04X)\n", activecpu_get_pc(), dcs.output_data);
 #endif
 	return dcs.output_data;
 }
@@ -836,7 +836,7 @@ int dcs_data_r(void)
 static void output_control_delayed_w(int data)
 {
 #ifdef LOG_DCS_IO
-		logerror("output_control = %04X\n", data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "output_control = %04X\n", data);
 #endif
 	dcs.output_control = data;
 	dcs.output_control_cycles = 0;
@@ -846,7 +846,7 @@ static void output_control_delayed_w(int data)
 static WRITE16_HANDLER( output_control_w )
 {
 #ifdef LOG_DCS_IO
-		logerror("%04X:output_control = %04X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:output_control = %04X\n", activecpu_get_pc(), data);
 #endif
 	timer_set(TIME_NOW, data, output_control_delayed_w);
 }
@@ -895,7 +895,7 @@ static void dcs_dac_update(int num, INT16 *buffer, int length)
 
 #ifdef LOG_BUFFER_FILLING
 		if (i < length)
-			logerror("DCS ran out of input data\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "DCS ran out of input data\n");
 #endif
 
 		/* fill the rest with the last sample */
@@ -910,7 +910,7 @@ static void dcs_dac_update(int num, INT16 *buffer, int length)
 		}
 
 #ifdef LOG_BUFFER_FILLING
-      logerror("DCS dac update: bytes in buffer = %d\n", dcs.buffer_in - (current >> 16));
+      log_cb(RETRO_LOG_ERROR, LOGPRE "DCS dac update: bytes in buffer = %d\n", dcs.buffer_in - (current >> 16));
 #endif
 
 		/* update the final values */
@@ -949,7 +949,7 @@ static void dcs2_dac_update(int num, INT16 **buffer, int length)
 
 #ifdef LOG_BUFFER_FILLING
 		if (i < length)
-			logerror("DCS ran out of input data\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "DCS ran out of input data\n");
 #endif
 
 		/* fill the rest with the last sample */
@@ -967,7 +967,7 @@ static void dcs2_dac_update(int num, INT16 **buffer, int length)
 		}
 
 #ifdef LOG_BUFFER_FILLING
-      logerror("DCS dac update: bytes in buffer = %d\n", dcs.buffer_in - (current >> 16));
+      log_cb(RETRO_LOG_ERROR, LOGPRE "DCS dac update: bytes in buffer = %d\n", dcs.buffer_in - (current >> 16));
 #endif
 
 		/* update the final values */
@@ -1041,9 +1041,9 @@ static WRITE16_HANDLER( dcs_control_w )
 		case S1_CONTROL_REG:
 #if 0
 			if (((data >> 4) & 3) == 2)
-				logerror("Oh no!, the data is compresed with u-law encoding\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Oh no!, the data is compresed with u-law encoding\n");
 			if (((data >> 4) & 3) == 3)
-				logerror("Oh no!, the data is compresed with A-law encoding\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Oh no!, the data is compresed with A-law encoding\n");
 #endif
 			break;
 	}
@@ -1183,7 +1183,7 @@ static void sound_tx_callback(int port, INT32 data)
 		}
 #if 0
 		else
-			logerror( "ADSP SPORT1: trying to transmit and autobuffer not enabled!\n" );
+			log_cb(RETRO_LOG_ERROR, LOGPRE  "ADSP SPORT1: trying to transmit and autobuffer not enabled!\n" );
 #endif
 	}
 

@@ -149,7 +149,7 @@ WRITE_HANDLER( balsente_palette_select_w )
 		palettebank_vis = data & 3;
 	}
 
-	logerror("balsente_palette_select_w(%d) scanline=%d\n", data & 3, cpu_getscanline());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "balsente_palette_select_w(%d) scanline=%d\n", data & 3, cpu_getscanline());
 }
 
 

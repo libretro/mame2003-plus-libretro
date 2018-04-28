@@ -100,7 +100,7 @@ static READ32_HANDLER( polygonet_eeprom_r )
 		return (readinputport(0)<<24);
 	}
 
-	logerror("unk access to eeprom port (mask %x)\n", mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "unk access to eeprom port (mask %x)\n", mem_mask);
 	return 0;
 }
 
@@ -115,7 +115,7 @@ static WRITE32_HANDLER( polygonet_eeprom_w )
 		return;
 	}
 
-	logerror("unknown write %x (mask %x) to eeprom\n", data, mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "unknown write %x (mask %x) to eeprom\n", data, mem_mask);
 }
 
 /* TTL tile readback for ROM test */
@@ -191,7 +191,7 @@ static READ32_HANDLER( dsp_r )
 		0, 1, 0, 1, 1,
 	};
 
-	logerror("dsp state %d at PC=%x\n", dsp_state, activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "dsp state %d at PC=%x\n", dsp_state, activecpu_get_pc());
 
 	return dsp_states[dsp_state]<<24;
 }
@@ -203,7 +203,7 @@ static WRITE32_HANDLER( dsp_2_w )
 		if (data>>24 == 5)
 		{
 			dsp_state = 2;
-			logerror("entering state 2\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "entering state 2\n");
 		}
 	}
 }
@@ -216,7 +216,7 @@ static WRITE32_HANDLER( dsp_w )
 		if (data>>24 == 8)
 		{
 			dsp_state = 0;
-			logerror("entering state 0: uploaded program wakeup\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "entering state 0: uploaded program wakeup\n");
 		}
 	}
 	else
@@ -229,7 +229,7 @@ static WRITE32_HANDLER( dsp_w )
 			unsigned short write;
 
 			dsp_state = 1;
-			logerror("entering state 1: shared RAM test #1\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "entering state 1: shared RAM test #1\n");
 
 			write = 0xfff0;
 			for (i = 0; i < 0x2000/2; i++)
@@ -250,7 +250,7 @@ static WRITE32_HANDLER( dsp_w )
 			unsigned short write, track;
 
 			dsp_state = 1;
-			logerror("entering state 3: shared RAM test #2\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "entering state 3: shared RAM test #2\n");
 
 			track = 0xfff0;
 			for (i = 0; i < 0x2000/2; i++)
@@ -268,7 +268,7 @@ static WRITE32_HANDLER( dsp_w )
 
 		if (data>>8 == 0x99)
 		{
-			logerror("entering state 4: DSP board RAM test\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "entering state 4: DSP board RAM test\n");
 			dsp_state = 4;
 		}
 	}

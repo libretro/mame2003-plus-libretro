@@ -351,7 +351,7 @@ static INLINE void generate_exception(int exception, int backup)
 	useful for tracking interrupts
 
 	if ((CAUSE & 0x7f) == 0)
-		logerror("Took interrupt -- Cause = %08X, PC =  %08X\n", (UINT32)CAUSE, mips3.pc);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Took interrupt -- Cause = %08X, PC =  %08X\n", (UINT32)CAUSE, mips3.pc);
 */
 
 	/* swap to the new space */
@@ -710,7 +710,7 @@ static INLINE void handle_cop0(UINT32 op)
 				case 0x06:	/* TLBWR */	logtlbentry();										break;
 				case 0x08:	/* TLBP */														break;
 				case 0x10:	/* RFE */	invalid_instruction(op);							break;
-				case 0x18:	/* ERET */	logerror("ERET\n"); mips3.pc = mips3.cpr[0][COP0_EPC]; SR &= ~SR_EXL; check_irqs();	break;
+				case 0x18:	/* ERET */	log_cb(RETRO_LOG_ERROR, LOGPRE "ERET\n"); mips3.pc = mips3.cpr[0][COP0_EPC]; SR &= ~SR_EXL; check_irqs();	break;
 				default:	invalid_instruction(op);										break;
 			}
 			break;
@@ -1482,19 +1482,19 @@ int mips3_execute(int cycles)
 			case 0x2d:	/* SDR */		(*mips3.sdr)(op);														break;
 			case 0x2e:	/* SWR */		(*mips3.swr)(op);														break;
 			case 0x2f:	/* CACHE */		/* effective no-op */													break;
-			case 0x30:	/* LL */		logerror("mips3 Unhandled op: LL\n");									break;
+			case 0x30:	/* LL */		log_cb(RETRO_LOG_ERROR, LOGPRE "mips3 Unhandled op: LL\n");									break;
 			case 0x31:	/* LWC1 */		set_cop1_reg(RTREG, RLONG(SIMMVAL+RSVAL32));							break;
 			case 0x32:	/* LWC2 */		set_cop2_reg(RTREG, RLONG(SIMMVAL+RSVAL32));							break;
 			case 0x33:	/* PREF */		/* effective no-op */													break;
-			case 0x34:	/* LLD */		logerror("mips3 Unhandled op: LLD\n");									break;
+			case 0x34:	/* LLD */		log_cb(RETRO_LOG_ERROR, LOGPRE "mips3 Unhandled op: LLD\n");									break;
 			case 0x35:	/* LDC1 */		set_cop1_reg(RTREG, RDOUBLE(SIMMVAL+RSVAL32));							break;
 			case 0x36:	/* LDC2 */		set_cop2_reg(RTREG, RDOUBLE(SIMMVAL+RSVAL32));							break;
 			case 0x37:	/* LD */		temp64 = RDOUBLE(SIMMVAL+RSVAL32); if (RTREG) RTVAL64 = temp64;			break;
-			case 0x38:	/* SC */		logerror("mips3 Unhandled op: SC\n");									break;
+			case 0x38:	/* SC */		log_cb(RETRO_LOG_ERROR, LOGPRE "mips3 Unhandled op: SC\n");									break;
 			case 0x39:	/* SWC1 */		WLONG(SIMMVAL+RSVAL32, get_cop1_reg(RTREG));							break;
 			case 0x3a:	/* SWC2 */		WLONG(SIMMVAL+RSVAL32, get_cop2_reg(RTREG));							break;
 			case 0x3b:	/* SWC3 */		invalid_instruction(op);												break;
-			case 0x3c:	/* SCD */		logerror("mips3 Unhandled op: SCD\n");									break;
+			case 0x3c:	/* SCD */		log_cb(RETRO_LOG_ERROR, LOGPRE "mips3 Unhandled op: SCD\n");									break;
 			case 0x3d:	/* SDC1 */		WDOUBLE(SIMMVAL+RSVAL32, get_cop1_reg(RTREG));							break;
 			case 0x3e:	/* SDC2 */		WDOUBLE(SIMMVAL+RSVAL32, get_cop2_reg(RTREG));							break;
 			case 0x3f:	/* SD */		WDOUBLE(SIMMVAL+RSVAL32, RTVAL64);										break;

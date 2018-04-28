@@ -230,7 +230,7 @@ static WRITE32_HANDLER( mo_command_w )
 
 static WRITE32_HANDLER( led_w )
 {
-/*	logerror("LED = %08X & %08X\n", data, ~mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "LED = %08X & %08X\n", data, ~mem_mask);*/
 }
 
 
@@ -293,7 +293,7 @@ static void tmek_update_mode(offs_t offset)
 static void tmek_protection_w(offs_t offset, UINT16 data)
 {
 #if LOG_PROTECTION
-	logerror("%06X:Protection W@%06X = %04X\n", activecpu_get_previouspc(), offset, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Protection W@%06X = %04X\n", activecpu_get_previouspc(), offset, data);
 #endif
 
 	/* track accesses */
@@ -310,7 +310,7 @@ static void tmek_protection_w(offs_t offset, UINT16 data)
 static void tmek_protection_r(offs_t offset, data16_t *data)
 {
 #if LOG_PROTECTION
-	logerror("%06X:Protection R@%06X\n", activecpu_get_previouspc(), offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Protection R@%06X\n", activecpu_get_previouspc(), offset);
 #endif
 
 	/* track accesses */
@@ -353,21 +353,21 @@ static void primage_update_mode(offs_t offset)
 		/* this is from the code at $20f90 */
 		if (protaddr[1] == 0xdcc7c4 && protaddr[2] == 0xdcc7c4 && protaddr[3] == 0xdc4010)
 		{
-/*			logerror("prot:Entering mode 1\n");*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "prot:Entering mode 1\n");*/
 			protmode = 1;
 		}
 
 		/* this is from the code at $27592 */
 		if (protaddr[0] == 0xdcc7ca && protaddr[1] == 0xdcc7ca && protaddr[2] == 0xdcc7c6 && protaddr[3] == 0xdc4022)
 		{
-/*			logerror("prot:Entering mode 2\n");*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "prot:Entering mode 2\n");*/
 			protmode = 2;
 		}
 
 		/* this is from the code at $3d8dc */
 		if (protaddr[0] == 0xdcc7c0 && protaddr[1] == 0xdcc7c0 && protaddr[2] == 0xdc80f2 && protaddr[3] == 0xdc7af2)
 		{
-/*			logerror("prot:Entering mode 3\n");*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "prot:Entering mode 3\n");*/
 			protmode = 3;
 		}
 	}
@@ -384,13 +384,13 @@ static void primrage_protection_w(offs_t offset, data16_t data)
 	{
 		/* protection code from 20f90 - 21000 */
 		case 0x20fba:
-			if (offset % 16 == 0) logerror("\n   ");
-			logerror("W@%06X(%04X) ", offset, data);
+			if (offset % 16 == 0) log_cb(RETRO_LOG_ERROR, LOGPRE "\n   ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "W@%06X(%04X) ", offset, data);
 			break;
 
 		/* protection code from 27592 - 27664 */
 		case 0x275f6:
-			logerror("W@%06X(%04X) ", offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "W@%06X(%04X) ", offset, data);
 			break;
 
 		/* protection code from 3d8dc - 3d95a */
@@ -398,21 +398,21 @@ static void primrage_protection_w(offs_t offset, data16_t data)
 		case 0x3d932:
 		case 0x3d938:
 		case 0x3d93e:
-			logerror("W@%06X(%04X) ", offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "W@%06X(%04X) ", offset, data);
 			break;
 		case 0x3d944:
-			logerror("W@%06X(%04X) - done\n", offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "W@%06X(%04X) - done\n", offset, data);
 			break;
 
 		/* protection code from 437fa - 43860 */
 		case 0x43830:
 		case 0x43838:
-			logerror("W@%06X(%04X) ", offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "W@%06X(%04X) ", offset, data);
 			break;
 
 		/* catch anything else */
 		default:
-			logerror("%06X:Unknown protection W@%06X = %04X\n", activecpu_get_previouspc(), offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unknown protection W@%06X = %04X\n", activecpu_get_previouspc(), offset, data);
 			break;
 	}
 }
@@ -430,7 +430,7 @@ static void primrage_protection_w(offs_t offset, data16_t data)
 	if (protmode == 2)
 	{
 		int temp = (offset - 0xdc7800) / 2;
-/*		logerror("prot:mode 2 param = %04X\n", temp);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "prot:mode 2 param = %04X\n", temp);*/
 		protresult = temp * 0x6915 + 0x6915;
 	}
 
@@ -438,7 +438,7 @@ static void primrage_protection_w(offs_t offset, data16_t data)
 	{
 		if (offset == 0xdc4700)
 		{
-/*			logerror("prot:Clearing mode 3\n");*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "prot:Clearing mode 3\n");*/
 			protmode = 0;
 		}
 	}
@@ -459,14 +459,14 @@ static void primrage_protection_r(offs_t offset, data16_t *data)
 	{
 		/* protection code from 20f90 - 21000 */
 		case 0x20f90:
-			logerror("Known Protection @ 20F90: R@%06X ", offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Known Protection @ 20F90: R@%06X ", offset);
 			break;
 		case 0x20f98:
 		case 0x20fa0:
-			logerror("R@%06X ", offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "R@%06X ", offset);
 			break;
 		case 0x20fcc:
-			logerror("R@%06X - done\n", offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "R@%06X - done\n", offset);
 			break;
 
 		/* protection code from 27592 - 27664 */
@@ -476,47 +476,47 @@ static void primrage_protection_r(offs_t offset, data16_t *data)
 			a6 = activecpu_get_reg(M68K_A6);
 			p1 = (cpu_readmem24bedw_word(a6+8) << 16) | cpu_readmem24bedw_word(a6+10);
 			p2 = (cpu_readmem24bedw_word(a6+12) << 16) | cpu_readmem24bedw_word(a6+14);
-			logerror("Known Protection @ 275BC(%08X, %08X): R@%06X ", p1, p2, offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Known Protection @ 275BC(%08X, %08X): R@%06X ", p1, p2, offset);
 			break;
 		case 0x275d2:
 		case 0x275d8:
 		case 0x275de:
 		case 0x2761e:
 		case 0x2762e:
-			logerror("R@%06X ", offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "R@%06X ", offset);
 			break;
 		case 0x2763e:
-			logerror("R@%06X - done\n", offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "R@%06X - done\n", offset);
 			break;
 
 		/* protection code from 3d8dc - 3d95a */
 		case 0x3d8f4:
 			a6 = activecpu_get_reg(M68K_A6);
 			p1 = (cpu_readmem24bedw_word(a6+12) << 16) | cpu_readmem24bedw_word(a6+14);
-			logerror("Known Protection @ 3D8F4(%08X): R@%06X ", p1, offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Known Protection @ 3D8F4(%08X): R@%06X ", p1, offset);
 			break;
 		case 0x3d8fa:
 		case 0x3d90e:
-			logerror("R@%06X ", offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "R@%06X ", offset);
 			break;
 
 		/* protection code from 437fa - 43860 */
 		case 0x43814:
 			a6 = activecpu_get_reg(M68K_A6);
 			p1 = cpu_readmem24bedw(a6+15);
-			logerror("Known Protection @ 43814(%08X): R@%06X ", p1, offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Known Protection @ 43814(%08X): R@%06X ", p1, offset);
 			break;
 		case 0x4381c:
 		case 0x43840:
-			logerror("R@%06X ", offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "R@%06X ", offset);
 			break;
 		case 0x43848:
-			logerror("R@%06X - done\n", offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "R@%06X - done\n", offset);
 			break;
 
 		/* catch anything else */
 		default:
-			logerror("%06X:Unknown protection R@%06X\n", activecpu_get_previouspc(), offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unknown protection R@%06X\n", activecpu_get_previouspc(), offset);
 			break;
 	}
 }
@@ -539,7 +539,7 @@ static void primrage_protection_r(offs_t offset, data16_t *data)
 			{
 				*data = protresult;
 				protmode = 0;
-/*				logerror("prot:Clearing mode 2\n");*/
+/*				log_cb(RETRO_LOG_ERROR, LOGPRE "prot:Clearing mode 2\n");*/
 			}
 			break;
 
@@ -547,7 +547,7 @@ static void primrage_protection_r(offs_t offset, data16_t *data)
 			if (protmode == 1)
 			{
 				protmode = 0;
-/*				logerror("prot:Clearing mode 1\n");*/
+/*				log_cb(RETRO_LOG_ERROR, LOGPRE "prot:Clearing mode 1\n");*/
 			}
 			break;
 	}
@@ -1123,14 +1123,14 @@ static WRITE32_HANDLER( tmek_pf_w )
 	/* protected version */
 	if (pc == 0x2EB3C || pc == 0x2EB48)
 	{
-		logerror("%06X:PFW@%06X = %08X & %08X (src=%06X)\n", activecpu_get_pc(), 0xd72000 + offset*4, data, ~mem_mask, activecpu_get_reg(M68K_A4) - 2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PFW@%06X = %08X & %08X (src=%06X)\n", activecpu_get_pc(), 0xd72000 + offset*4, data, ~mem_mask, activecpu_get_reg(M68K_A4) - 2);
 		/* skip these writes to make more stuff visible */
 		return;
 	}
 
 	/* unprotected version */
 	if (pc == 0x25834 || pc == 0x25860)
-		logerror("%06X:PFW@%06X = %08X & %08X (src=%06X)\n", activecpu_get_pc(), 0xd72000 + offset*4, data, ~mem_mask, activecpu_get_reg(M68K_A3) - 2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PFW@%06X = %08X & %08X (src=%06X)\n", activecpu_get_pc(), 0xd72000 + offset*4, data, ~mem_mask, activecpu_get_reg(M68K_A3) - 2);
 
 	atarigen_playfield32_w(offset, data, mem_mask);
 }

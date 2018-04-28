@@ -185,7 +185,7 @@ static WRITE_HANDLER( darktowr_bankswitch_w )
 
 	darktowr_bank=(data & 0xe0) >> 5;
 /*	cpu_setbank( 1,&RAM[ 0x10000 + ( 0x4000 * ( ( data & 0xe0) >> 5 ) ) ] );*/
-/*	logerror("Bank %05x %02x %02x\n",activecpu_get_pc(),darktowr_bank,data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Bank %05x %02x %02x\n",activecpu_get_pc(),darktowr_bank,data);*/
 }
 
 static READ_HANDLER( darktowr_bank_r )
@@ -194,12 +194,12 @@ static READ_HANDLER( darktowr_bank_r )
 
 	/* MCU is mapped into main cpu memory as a bank */
 	if (darktowr_bank==4) {
-		logerror("BankRead %05x %08x\n",activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "BankRead %05x %08x\n",activecpu_get_pc(),offset);
 		if (offset==0x1401 || offset==1) {
 			return darktowr_mcu_ports[0];
 		}
 
-		logerror("Unmapped mcu bank read %04x\n",offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Unmapped mcu bank read %04x\n",offset);
 		return 0xff;
 	}
 
@@ -209,20 +209,20 @@ static READ_HANDLER( darktowr_bank_r )
 static WRITE_HANDLER( darktowr_bank_w )
 {
 	if (darktowr_bank==4) {
-		logerror("BankWrite %05x %08x %08x\n",activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "BankWrite %05x %08x %08x\n",activecpu_get_pc(),offset,data);
 
 		if (offset==0x1400 || offset==0) {
 			int bitSwappedData=BITSWAP8(data,0,1,2,3,4,5,6,7);
 
 			darktowr_mcu_ports[1]=bitSwappedData;
 
-			logerror("MCU PORT 1 -> %04x (from %04x)\n",bitSwappedData,data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "MCU PORT 1 -> %04x (from %04x)\n",bitSwappedData,data);
 			return;
 		}
 		return;
 	}
 
-	logerror("ROM write! %04x %02x\n",offset,data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "ROM write! %04x %02x\n",offset,data);
 }
 
 static READ_HANDLER( darktowr_mcu_r )
@@ -232,7 +232,7 @@ static READ_HANDLER( darktowr_mcu_r )
 
 static WRITE_HANDLER( darktowr_mcu_w )
 {
-	logerror("McuWrite %05x %08x %08x\n",activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "McuWrite %05x %08x %08x\n",activecpu_get_pc(),offset,data);
 	darktowr_mcu_ports[offset]=data;
 }
 
@@ -262,7 +262,7 @@ static WRITE_HANDLER( ddragon_interrupt_w )
 
 static READ_HANDLER( ddragon_hd63701_internal_registers_r )
 {
-	logerror("%04x: read %d\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: read %d\n",activecpu_get_pc(),offset);
 	return 0;
 }
 

@@ -303,6 +303,6 @@ READ16_HANDLER(snowboar_protection_r)
 
 	snowboard_latch = (snowboard_latch << 16) | data;
 
-	logerror("%06x: protection write %04x to %04x\n", activecpu_get_pc(), data, offset*2);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: protection write %04x to %04x\n", activecpu_get_pc(), data, offset*2);
 
 }

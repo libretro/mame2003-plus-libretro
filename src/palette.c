@@ -162,7 +162,7 @@ int palette_start(void)
 	if ((Machine->drv->video_attributes & VIDEO_RGB_DIRECT) &&
 			Machine->drv->color_table_len)
 	{
-		logerror("Error: VIDEO_RGB_DIRECT requires color_table_len to be 0.\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error: VIDEO_RGB_DIRECT requires color_table_len to be 0.\n");
 		return 1;
 	}
 
@@ -177,7 +177,7 @@ int palette_start(void)
 	/* make sure we still fit in 16 bits */
 	if (total_colors > 65536)
 	{
-		logerror("Error: palette has more than 65536 colors.\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Error: palette has more than 65536 colors.\n");
 		return 1;
 	}
 
@@ -398,9 +398,7 @@ static void internal_set_shadow_preset(int mode, double factor, int dr, int dg, 
 			} /* end of factor*/
 		} /* end of colormode*/
 
-		#if VERBOSE
-			usrintf_showmessage("shadow %d recalc factor:%1.2f style:%d", mode, factor, style);
-		#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "shadow %d recalc factor:%1.2f style:%d", mode, factor, style);
 	}
 	else /* color shadows or highlights(style 0)*/
 	{
@@ -417,9 +415,7 @@ static void internal_set_shadow_preset(int mode, double factor, int dr, int dg, 
 		oldRGB[mode][0] = dr; oldRGB[mode][1] = dg; oldRGB[mode][2] = db;
 		oldfactor[mode] = -1;
 
-		#if VERBOSE
-			usrintf_showmessage("shadow %d recalc %d %d %d %02x", mode, dr, dg, db, noclip);
-		#endif
+	  log_cb(RETRO_LOG_DEBUG, LOGPRE "shadow %d recalc %d %d %d %02x", mode, dr, dg, db, noclip);
 
 		dr <<= 10; dg <<= 5;
 		d32 = (colormode == DIRECT_32BIT);
@@ -1026,7 +1022,7 @@ void palette_set_color(pen_t pen, UINT8 r, UINT8 g, UINT8 b)
 	/* make sure we're in range */
 	if (pen >= total_colors)
 	{
-		logerror("error: palette_set_color() called with color %d, but only %d allocated.\n", pen, total_colors);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: palette_set_color() called with color %d, but only %d allocated.\n", pen, total_colors);
 		return;
 	}
 

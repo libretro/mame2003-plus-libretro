@@ -67,12 +67,12 @@ static READ_HANDLER( thunderx_bankedram_r )
 	{
 		if (pmcbank)
 		{
-/*			logerror("%04x read pmcram %04x\n",activecpu_get_pc(),offset);*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x read pmcram %04x\n",activecpu_get_pc(),offset);*/
 			return pmcram[offset];
 		}
 		else
 		{
-			logerror("%04x read pmc internal ram %04x\n",activecpu_get_pc(),offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x read pmc internal ram %04x\n",activecpu_get_pc(),offset);
 			return 0;
 		}
 	}
@@ -89,11 +89,11 @@ static WRITE_HANDLER( thunderx_bankedram_w )
 /*			if (offset == 0x200)	debug_signal_breakpoint(1);*/
 		if (pmcbank)
 		{
-			logerror("%04x pmcram %04x = %02x\n",activecpu_get_pc(),offset,data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x pmcram %04x = %02x\n",activecpu_get_pc(),offset,data);
 			pmcram[offset] = data;
 		}
 		else
-			logerror("%04x pmc internal ram %04x = %02x\n",activecpu_get_pc(),offset,data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x pmc internal ram %04x = %02x\n",activecpu_get_pc(),offset,data);
 	}
 	else
 		paletteram_xBBBBBGGGGGRRRRR_swap_w(offset,data);
@@ -290,7 +290,7 @@ static void calculate_collisions( void )
 
 static WRITE_HANDLER( thunderx_1f98_w )
 {
-/* logerror("%04x: 1f98_w %02x\n",activecpu_get_pc(),data);*/
+/* log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 1f98_w %02x\n",activecpu_get_pc(),data);*/
 
 	/* bit 0 = enable char ROM reading through the video RAM */
 	K052109_set_RMRD_line((data & 0x01) ? ASSERT_LINE : CLEAR_LINE);
@@ -949,7 +949,7 @@ static void thunderx_banking( int lines )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	int offs;
 
-/*	logerror("thunderx %04x: bank select %02x\n", activecpu_get_pc(), lines );*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "thunderx %04x: bank select %02x\n", activecpu_get_pc(), lines );*/
 
 	offs = 0x10000 + (((lines & 0x0f) ^ 0x08) * 0x2000);
 	if (offs >= 0x28000) offs -= 0x20000;

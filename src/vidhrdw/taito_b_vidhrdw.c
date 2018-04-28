@@ -369,7 +369,7 @@ static void taitob_draw_sprites (struct mame_bitmap *bitmap,const struct rectang
 #if 0
 /*check the unknown bits*/
     if (color & 0x3fc0){
-      logerror("sprite color (taitob)=%4x ofs=%4x\n",color,offs);
+      log_cb(RETRO_LOG_ERROR, LOGPRE "sprite color (taitob)=%4x ofs=%4x\n",color,offs);
       color = rand()&0x3f;
     }
 #endif

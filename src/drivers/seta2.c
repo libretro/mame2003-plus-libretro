@@ -186,7 +186,7 @@ WRITE16_HANDLER( seta2_sound_bank_w )
 		int banks = (memory_region_length( REGION_SOUND1 ) - 0x100000) / 0x20000;
 		if (data >= banks)
 		{
-			logerror("CPU #0 PC %06X: invalid sound bank %04X\n",activecpu_get_pc(),data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: invalid sound bank %04X\n",activecpu_get_pc(),data);
 			data %= banks;
 		}
 		memcpy(ROM + offset * 0x20000, ROM + 0x100000 + data * 0x20000, 0x20000);
@@ -288,7 +288,7 @@ static READ16_HANDLER( mj4simai_p1_r )
 		case 0x04: return readinputport(5);
 		case 0x08: return readinputport(6);
 		case 0x10: return readinputport(7);
-		default:   logerror("p1_r with keyboard_row = %02x\n",keyboard_row); return 0xffff;
+		default:   log_cb(RETRO_LOG_ERROR, LOGPRE "p1_r with keyboard_row = %02x\n",keyboard_row); return 0xffff;
 	}
 }
 

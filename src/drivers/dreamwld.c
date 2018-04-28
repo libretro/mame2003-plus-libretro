@@ -364,7 +364,7 @@ static WRITE32_HANDLER( dreamwld_6295_0_bank_w )
 	}
 	else
 	{
-	/*	logerror("OKI0: unk bank write %x mem_mask %8x\n", data, mem_mask);*/
+	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "OKI0: unk bank write %x mem_mask %8x\n", data, mem_mask);*/
 	}
 }
 
@@ -376,7 +376,7 @@ static WRITE32_HANDLER( dreamwld_6295_1_bank_w )
 	}
 	else
 	{
-	/*	logerror("OKI1: unk bank write %x mem_mask %8x\n", data, mem_mask);*/
+	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "OKI1: unk bank write %x mem_mask %8x\n", data, mem_mask);*/
 	}
 }
 

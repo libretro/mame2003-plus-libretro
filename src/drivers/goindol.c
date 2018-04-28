@@ -70,7 +70,7 @@ static UINT8 *ram;
 
 static WRITE_HANDLER( prot_fc44_w )
 {
-logerror("%04x: prot_fc44_w(%02x)\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_fc44_w(%02x)\n",activecpu_get_pc(),data);
 	ram[0x0419] = 0x5b;
 	ram[0x041a] = 0x3f;
 	ram[0x041b] = 0x6d;
@@ -78,19 +78,19 @@ logerror("%04x: prot_fc44_w(%02x)\n",activecpu_get_pc(),data);
 
 static WRITE_HANDLER( prot_fd99_w )
 {
-logerror("%04x: prot_fd99_w(%02x)\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_fd99_w(%02x)\n",activecpu_get_pc(),data);
 	ram[0x0421] = 0x3f;
 }
 
 static WRITE_HANDLER( prot_fc66_w )
 {
-logerror("%04x: prot_fc66_w(%02x)\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_fc66_w(%02x)\n",activecpu_get_pc(),data);
 	ram[0x0423] = 0x06;
 }
 
 static WRITE_HANDLER( prot_fcb0_w )
 {
-logerror("%04x: prot_fcb0_w(%02x)\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_fcb0_w(%02x)\n",activecpu_get_pc(),data);
 	ram[0x0425] = 0x06;
 }
 

@@ -91,7 +91,7 @@ static WRITE_HANDLER( switch_input_select_w )
 
 static WRITE_HANDLER( unknown_w )
 {
-	logerror("%04X:unknown_w = %02X\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:unknown_w = %02X\n", activecpu_get_pc(), data);
 }
 
 

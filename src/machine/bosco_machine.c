@@ -157,7 +157,7 @@ WRITE_HANDLER( bosco_customio_data_1_w )
 {
 	customio_1[offset] = data;
 
-logerror("%04x: custom IO 1 offset %02x data %02x\n",activecpu_get_pc(),offset,data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: custom IO 1 offset %02x data %02x\n",activecpu_get_pc(),offset,data);
 
 	switch (customio_command_1)
 	{
@@ -266,7 +266,7 @@ logerror("%04x: custom IO 1 offset %02x data %02x\n",activecpu_get_pc(),offset,d
 						Score += 140;
 						break;
 					default:
-						logerror("unknown score: %02x\n",customio_1[0]);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "unknown score: %02x\n",customio_1[0]);
 					break;
 				}
 			}
@@ -441,7 +441,7 @@ void bosco_nmi_generate_1 (int param)
 WRITE_HANDLER( bosco_customio_1_w )
 {
 	if (data != 0x10)
-		logerror("%04x: custom IO 1 command %02x\n",activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: custom IO 1 command %02x\n",activecpu_get_pc(),data);
 
 	customio_command_1 = data;
 
@@ -496,7 +496,7 @@ WRITE_HANDLER( bosco_customio_data_2_w )
 {
 	customio_2[offset] = data;
 
-logerror("%04x: custom IO 2 offset %02x data %02x\n",activecpu_get_pc(),offset,data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: custom IO 2 offset %02x data %02x\n",activecpu_get_pc(),offset,data);
 	switch (customio_command_2)
 	{
 		case 0x82:
@@ -555,7 +555,7 @@ void bosco_nmi_generate_2 (int param)
 WRITE_HANDLER( bosco_customio_2_w )
 {
 	if (data != 0x10)
-		logerror("%04x: custom IO 2 command %02x\n",activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: custom IO 2 command %02x\n",activecpu_get_pc(),data);
 
 	customio_command_2 = data;
 

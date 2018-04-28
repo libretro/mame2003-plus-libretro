@@ -257,7 +257,7 @@ static WRITE16_HANDLER( shareram2_w )
 
 static READ16_HANDLER( dspram16_r )
 {
-	/* logerror( "polyram[%08x] == %04x; pc==0x%08x\n",
+	/* log_cb(RETRO_LOG_ERROR, LOGPRE  "polyram[%08x] == %04x; pc==0x%08x\n",
 		offset*2, namcos21_dspram16[offset], activecpu_get_pc() ); */
 	return namcos21_dspram16[offset];
 }
@@ -265,7 +265,7 @@ static READ16_HANDLER( dspram16_r )
 static WRITE16_HANDLER( dspram16_w )
 {
 	COMBINE_DATA( &namcos21_dspram16[offset] );
-	/* logerror( "polyram[%08x] := %04x\n", offset*2, namcos21_dspram16[offset] ); */
+	/* log_cb(RETRO_LOG_ERROR, LOGPRE  "polyram[%08x] := %04x\n", offset*2, namcos21_dspram16[offset] ); */
 }
 
 static READ16_HANDLER( dsp_status_r )

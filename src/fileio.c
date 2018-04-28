@@ -17,19 +17,6 @@
 
 
 /***************************************************************************
-	DEBUGGING
-***************************************************************************/
-
-/* enable lots of logging */
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
-
-
-/***************************************************************************
 	CONSTANTS
 ***************************************************************************/
 
@@ -97,7 +84,7 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 		case FILETYPE_LANGUAGE:
 			if (openforwrite)
 			{
-				logerror("mame_fopen: type %02x write not supported\n", filetype);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "mame_fopen: type %02x write not supported\n", filetype);
 				return NULL;
 			}
 			break;
@@ -165,7 +152,7 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 
 		/* anything else */
 		default:
-			logerror("mame_fopen(): unknown filetype %02x\n", filetype);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "mame_fopen(): unknown filetype %02x\n", filetype);
 			return NULL;
 	}
 	return NULL;
@@ -339,19 +326,19 @@ int mame_faccess(const char *filename, int filetype)
 
 		/* first check the raw filename, in case we're looking for a directory */
 		sprintf(name, "%s", filename);
-		LOG(("mame_faccess: trying %s\n", name));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "mame_faccess: trying %s\n", name);
 		if (osd_get_path_info(filetype, pathindex, name) != PATH_NOT_FOUND)
 			return 1;
 
 		/* try again with a .zip extension */
 		sprintf(name, "%s.zip", filename);
-		LOG(("mame_faccess: trying %s\n", name));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "mame_faccess: trying %s\n", name);
 		if (osd_get_path_info(filetype, pathindex, name) != PATH_NOT_FOUND)
 			return 1;
 
 		/* does such a directory (or file) exist? */
 		sprintf(name, "%s", modified_filename);
-		LOG(("mame_faccess: trying %s\n", name));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "mame_faccess: trying %s\n", name);
 		if (osd_get_path_info(filetype, pathindex, name) != PATH_NOT_FOUND)
 			return 1;
 	}
@@ -902,7 +889,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 	mame_file file, *newfile;
 	char tempname[256];
 
-	LOG(("generic_fopen(%d, %s, %s, %s, %X)\n", pathc, gamename, filename, extension, flags));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "generic_fopen(%d, %s, %s, %s, %X)\n", pathtype, gamename, filename, extension, flags);
 
 	/* reset the file handle */
 	memset(&file, 0, sizeof(file));
@@ -934,7 +921,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 
 		/* first look for path/gamename as a directory */
 		compose_path(name, gamename, NULL, NULL);
-		LOG(("Trying %s\n", name));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Trying %s\n", name);
 
 
 		/* if the directory exists, proceed */
@@ -974,7 +961,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 		{
 			/* first look for path/gamename.zip */
 			compose_path(name, gamename, NULL, "zip");
-			LOG(("Trying %s file\n", name));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Trying %s file\n", name);
 
 			/* if the ZIP file exists, proceed */
 			if (osd_get_path_info(pathtype, pathindex, name) == PATH_IS_FILE)
@@ -1043,7 +1030,7 @@ static mame_file *generic_fopen(int pathtype, const char *gamename, const char *
 					{
 						unsigned functions;
 
-						LOG(("Using (mame_fopen) zip file for %s\n", filename));
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "Using (mame_fopen) zip file for %s\n", filename);
 						file.length = ziplength;
 						file.type = ZIPPED_FILE;
 

@@ -50,7 +50,7 @@ int tms5110_sh_start(const struct MachineSound *msound)
 
     if (intf->M0_callback==NULL)
     {
-	logerror("\n file: 5110intf.c, tms5110_sh_start(), line 53:\n  Missing _mandatory_ 'M0_callback' function pointer in the TMS5110 interface\n  This function is used by TMS5110 to call for a single bits\n  needed to generate the speech\n  Aborting startup...\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "\n file: 5110intf.c, tms5110_sh_start(), line 53:\n  Missing _mandatory_ 'M0_callback' function pointer in the TMS5110 interface\n  This function is used by TMS5110 to call for a single bits\n  needed to generate the speech\n  Aborting startup...\n");
 	return 1;
     }
     tms5110_set_M0_callback( intf->M0_callback );

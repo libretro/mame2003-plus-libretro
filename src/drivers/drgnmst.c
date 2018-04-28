@@ -144,13 +144,13 @@ static WRITE_HANDLER( drgnmst_snd_control_w )
 	switch(drgnmst_oki_control & 0x1f)
 	{
 		case 0x11:
-/*					logerror("Writing %02x to OKI1",drgnmst_oki_command);*/
-/*					logerror(", PortC=%02x, Code=%02x, Bank0=%01x, Bank1=%01x\n",drgnmst_oki_control,drgnmst_snd_command,drgnmst_oki0_bank,drgnmst_oki1_bank);*/
+/*					log_cb(RETRO_LOG_ERROR, LOGPRE "Writing %02x to OKI1",drgnmst_oki_command);*/
+/*					log_cb(RETRO_LOG_ERROR, LOGPRE ", PortC=%02x, Code=%02x, Bank0=%01x, Bank1=%01x\n",drgnmst_oki_control,drgnmst_snd_command,drgnmst_oki0_bank,drgnmst_oki1_bank);*/
 					OKIM6295_data_1_w(0, drgnmst_oki_command);
 					break;
 		case 0x15:
-/*					logerror("Writing %02x to OKI0",drgnmst_oki_command);*/
-/*					logerror(", PortC=%02x, Code=%02x, Bank0=%01x, Bank1=%01x\n",drgnmst_oki_control,drgnmst_snd_command,drgnmst_oki0_bank,drgnmst_oki1_bank);*/
+/*					log_cb(RETRO_LOG_ERROR, LOGPRE "Writing %02x to OKI0",drgnmst_oki_command);*/
+/*					log_cb(RETRO_LOG_ERROR, LOGPRE ", PortC=%02x, Code=%02x, Bank0=%01x, Bank1=%01x\n",drgnmst_oki_control,drgnmst_snd_command,drgnmst_oki0_bank,drgnmst_oki1_bank);*/
 					OKIM6295_data_0_w(0, drgnmst_oki_command);
 					break;
 		default:	break;

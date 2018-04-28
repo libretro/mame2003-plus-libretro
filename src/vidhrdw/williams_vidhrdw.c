@@ -613,11 +613,11 @@ WRITE_HANDLER( williams_blitter_w )
 	if (count > 256) count = 256;
 
 	/* Log blits */
-	logerror("---------- Blit %02X--------------PC: %04X\n",data,activecpu_get_pc());
-	logerror("Source : %02X %02X\n",williams_blitterram[2],williams_blitterram[3]);
-	logerror("Dest   : %02X %02X\n",williams_blitterram[4],williams_blitterram[5]);
-	logerror("W H    : %02X %02X (%d,%d)\n",williams_blitterram[6],williams_blitterram[7],williams_blitterram[6]^4,williams_blitterram[7]^4);
-	logerror("Mask   : %02X\n",williams_blitterram[1]);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "---------- Blit %02X--------------PC: %04X\n",data,activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Source : %02X %02X\n",williams_blitterram[2],williams_blitterram[3]);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Dest   : %02X %02X\n",williams_blitterram[4],williams_blitterram[5]);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "W H    : %02X %02X (%d,%d)\n",williams_blitterram[6],williams_blitterram[7],williams_blitterram[6]^4,williams_blitterram[7]^4);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Mask   : %02X\n",williams_blitterram[1]);
 }
 
 

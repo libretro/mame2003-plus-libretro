@@ -243,7 +243,7 @@ WRITE_HANDLER( berzerk_sound_control_a_w )
 				sample_start(1,30,0);
 				break;
 			case 70 : /* baddie laser */
-logerror("Trying death sound");
+log_cb(RETRO_LOG_ERROR, LOGPRE "Trying death sound");
 				switch(deathsound)
 				{
 				case 1 :
@@ -289,7 +289,7 @@ logerror("Trying death sound");
 
 WRITE_HANDLER( berzerk_sound_control_b_w )
 {
-	logerror("B Data value %d and offset %d at %d\n", data, offset, lastfreq);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "B Data value %d and offset %d at %d\n", data, offset, lastfreq);
 }
 
 static void berzerk_sh_update(void)

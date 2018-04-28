@@ -18,7 +18,7 @@ static void illegal( void )
 static INLINE void illegal( void )
 #endif
 {
-	logerror("KONAMI: illegal opcode at %04x\n",PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "KONAMI: illegal opcode at %04x\n",PC);
 }
 
 #ifdef macintosh
@@ -4423,7 +4423,7 @@ static INLINE void opcode2( void )
         konami_ICount-=7;
 		break;
 	default:
-		logerror("KONAMI: Unknown/Invalid postbyte at PC = %04x\n", PC -1 );
+		log_cb(RETRO_LOG_ERROR, LOGPRE "KONAMI: Unknown/Invalid postbyte at PC = %04x\n", PC -1 );
         EAD = 0;
 	}
 	(*konami_indexed[konami.ireg])();

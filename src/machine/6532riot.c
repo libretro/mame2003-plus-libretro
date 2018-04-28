@@ -46,7 +46,7 @@ static UINT8 r6532_read_portA(int n)
 		return r6532_combineA(n, r6532[n]->intf.portA_r(0));
 	}
 
-	logerror("Read from unhandled 6532 #%d port A\n", n);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Read from unhandled 6532 #%d port A\n", n);
 
 	return 0;
 }
@@ -59,7 +59,7 @@ static UINT8 r6532_read_portB(int n)
 		return r6532_combineB(n, r6532[n]->intf.portB_r(2));
 	}
 
-	logerror("Read from unhandled 6532 #%d port B\n", n);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Read from unhandled 6532 #%d port B\n", n);
 
 	return 0;
 }
@@ -115,7 +115,7 @@ static void r6532_write(int n, offs_t offset, UINT8 data)
 		}
 		else
 		{
-			logerror("Write to unimplemented 6532 #%d edge detect control\n", n);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Write to unimplemented 6532 #%d edge detect control\n", n);
 		}
 	}
 	else

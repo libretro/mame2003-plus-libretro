@@ -65,13 +65,13 @@ static data16_t bionicc_inp[3];
 
 WRITE16_HANDLER( hacked_controls_w )
 {
-logerror("%06x: hacked_controls_w %04x %02x\n",activecpu_get_pc(),offset,data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: hacked_controls_w %04x %02x\n",activecpu_get_pc(),offset,data);
 	COMBINE_DATA(&bionicc_inp[offset]);
 }
 
 static READ16_HANDLER( hacked_controls_r )
 {
-logerror("%06x: hacked_controls_r %04x %04x\n",activecpu_get_pc(),offset,bionicc_inp[offset]);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: hacked_controls_r %04x %04x\n",activecpu_get_pc(),offset,bionicc_inp[offset]);
 	return bionicc_inp[offset];
 }
 

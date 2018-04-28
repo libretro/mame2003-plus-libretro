@@ -167,16 +167,16 @@ static void ymf271_write_fm(YMF271Chip *chip, int grp, int adr, int data)
 				/* key on*/
 				slot->step = 0;
 				slot->stepptr = 0;
-/*				logerror("start %x end %x loop %x\n", slot->startaddr, slot->endaddr, slot->loopaddr);*/
+/*				log_cb(RETRO_LOG_ERROR, LOGPRE "start %x end %x loop %x\n", slot->startaddr, slot->endaddr, slot->loopaddr);*/
 				if (slot->waveform != 7)
 				{
-/*					logerror("UNSUPPORTED FM! on slot %d\n", slotnum);*/
+/*					log_cb(RETRO_LOG_ERROR, LOGPRE "UNSUPPORTED FM! on slot %d\n", slotnum);*/
 				}
 				else
 				{
 					int step, oct; 
 
-/*					logerror("oct %d fns %x fs %x srcnote %x srcb %x TL %x\n", slot->block, slot->fns, slot->fs, slot->srcnote, slot->srcb, slot->tl);*/
+/*					log_cb(RETRO_LOG_ERROR, LOGPRE "oct %d fns %x fs %x srcnote %x srcb %x TL %x\n", slot->block, slot->fns, slot->fs, slot->srcnote, slot->srcb, slot->tl);*/
 
 					oct = slot->block;
 					if (oct & 8)
@@ -187,7 +187,7 @@ static void ymf271_write_fm(YMF271Chip *chip, int grp, int adr, int data)
 					step = ((slot->fns/2) | 1024) << (oct + 7);
 					slot->step = (UINT32) ((((INT64)step)*(44100/4)) / Machine->sample_rate);
 
-/*					logerror("step %x\n", slot->step);*/
+/*					log_cb(RETRO_LOG_ERROR, LOGPRE "step %x\n", slot->step);*/
 				}
 			}
 			else

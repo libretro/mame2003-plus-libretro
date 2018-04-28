@@ -20,7 +20,7 @@ WRITE_HANDLER( sichuan2_bankswitch_w )
 	int bank;
 	UINT8 *RAM = memory_region(REGION_CPU1);
 
-	if (data & 0xc0) logerror("bank switch %02x\n",data);
+	if (data & 0xc0) log_cb(RETRO_LOG_ERROR, LOGPRE "bank switch %02x\n",data);
 
 	/* bits 0-2 select ROM bank */
 	bankaddress = 0x10000 + (data & 0x07) * 0x4000;

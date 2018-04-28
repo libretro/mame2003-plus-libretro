@@ -16,14 +16,14 @@ HNZVC
 /*INLINE void illegal( void )*/
 static void illegal( void )
 {
-	logerror("M6808: illegal opcode: address %04X, op %02X\n",PC,(int) M_RDOP_ARG(PC)&0xFF);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "M6808: illegal opcode: address %04X, op %02X\n",PC,(int) M_RDOP_ARG(PC)&0xFF);
 }
 
 /* HD63701 only */
 /*INLINE void trap( void )*/
 static void trap( void )
 {
-	logerror("M6808: illegal opcode: address %04X, op %02X\n",PC,(int) M_RDOP_ARG(PC)&0xFF);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "M6808: illegal opcode: address %04X, op %02X\n",PC,(int) M_RDOP_ARG(PC)&0xFF);
 	TAKE_TRAP;
 }
 

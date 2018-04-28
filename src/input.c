@@ -290,9 +290,9 @@ void code_close(void)
 {
 #if 0
 	int i;
-	logerror("List of OS dependant input codes:\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "List of OS dependant input codes:\n");
 	for(i=__code_max;i<code_mac;++i)
-		logerror("\tcode %d, oscode %d, %s, %s\n",i,code_map[i].oscode,code_map[i].type == CODE_TYPE_KEYBOARD ? "keyboard" : "joystick", internal_code_name(i));
+		log_cb(RETRO_LOG_ERROR, LOGPRE "\tcode %d, oscode %d, %s, %s\n",i,code_map[i].oscode,code_map[i].type == CODE_TYPE_KEYBOARD ? "keyboard" : "joystick", internal_code_name(i));
 #endif
 
 	code_mac = 0;

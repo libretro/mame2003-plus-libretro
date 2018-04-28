@@ -69,11 +69,11 @@ WRITE_HANDLER( lkage_68705_portB_w )
 		portA_in = from_main;
 		if (main_sent) cpu_set_irq_line(2,0,CLEAR_LINE);
 		main_sent = 0;
-logerror("read command %02x from main cpu\n",portA_in);
+log_cb(RETRO_LOG_ERROR, LOGPRE "read command %02x from main cpu\n",portA_in);
 	}
 	if ((ddrB & 0x04) && (data & 0x04) && (~portB_out & 0x04))
 	{
-logerror("send command %02x to main cpu\n",portA_out);
+log_cb(RETRO_LOG_ERROR, LOGPRE "send command %02x to main cpu\n",portA_out);
 		from_mcu = portA_out;
 		mcu_sent = 1;
 	}
@@ -100,7 +100,7 @@ READ_HANDLER( lkage_68705_portC_r )
 
 WRITE_HANDLER( lkage_68705_portC_w )
 {
-logerror("%04x: 68705 port C write %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 68705 port C write %02x\n",activecpu_get_pc(),data);
 	portC_out = data;
 }
 
@@ -112,7 +112,7 @@ WRITE_HANDLER( lkage_68705_ddrC_w )
 
 WRITE_HANDLER( lkage_mcu_w )
 {
-logerror("%04x: mcu_w %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_w %02x\n",activecpu_get_pc(),data);
 	from_main = data;
 	main_sent = 1;
 	cpu_set_irq_line(2,0,ASSERT_LINE);
@@ -120,7 +120,7 @@ logerror("%04x: mcu_w %02x\n",activecpu_get_pc(),data);
 
 READ_HANDLER( lkage_mcu_r )
 {
-logerror("%04x: mcu_r %02x\n",activecpu_get_pc(),from_mcu);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_r %02x\n",activecpu_get_pc(),from_mcu);
 	mcu_sent = 0;
 	return from_mcu;
 }

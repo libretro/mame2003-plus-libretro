@@ -82,7 +82,7 @@ WRITE_HANDLER( segar_w )
 	}
 	else
 	{
-		logerror("unmapped write at %04X:%02X\n",off,data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "unmapped write at %04X:%02X\n",off,data);
 	}
 }
 

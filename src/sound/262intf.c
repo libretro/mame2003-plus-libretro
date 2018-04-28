@@ -74,7 +74,7 @@ int YMF262_sh_start(const struct MachineSound *msound)
 			mixed_vol >>= 16;
 			name[i] = buf[i];
 			sprintf(buf[i],"%s #%d ch%c",sound_name(msound),chip,'A'+i);
-			logerror("%s #%d ch%c",sound_name(msound),chip,'A'+i);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%s #%d ch%c",sound_name(msound),chip,'A'+i);
 		}
 		stream_262[chip] = stream_init_multi(4,name,vol,rate,chip,YMF262UpdateOne);
 

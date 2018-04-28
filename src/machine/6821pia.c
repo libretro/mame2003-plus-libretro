@@ -13,14 +13,6 @@
 #include "6821pia.h"
 #include "state.h"
 
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
 
 /******************* internal PIA data structure *******************/
 
@@ -343,14 +335,14 @@ int pia_read(int which, int offset)
 					}
 				}
 
-				LOG(("%04x: PIA%d read port A = %02X\n", activecpu_get_previouspc(),  which, val));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d read port A = %02X\n", activecpu_get_previouspc(),  which, val);
 			}
 
 			/* read DDR register */
 			else
 			{
 				val = p->ddr_a;
-				LOG(("%04x: PIA%d read DDR A = %02X\n", activecpu_get_previouspc(), which, val));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d read DDR A = %02X\n", activecpu_get_previouspc(), which, val);
 			}
 			break;
 
@@ -378,14 +370,14 @@ int pia_read(int which, int offset)
 				p->irq_b1 = p->irq_b2 = 0;
 				update_6821_interrupts(p);
 
-				LOG(("%04x: PIA%d read port B = %02X\n", activecpu_get_previouspc(), which, val));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d read port B = %02X\n", activecpu_get_previouspc(), which, val);
 			}
 
 			/* read DDR register */
 			else
 			{
 				val = p->ddr_b;
-				LOG(("%04x: PIA%d read DDR B = %02X\n", activecpu_get_previouspc(), which, val));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d read DDR B = %02X\n", activecpu_get_previouspc(), which, val);
 			}
 			break;
 
@@ -397,7 +389,7 @@ int pia_read(int which, int offset)
 				pia_set_input_ca1(which, p->intf->in_ca1_func(0));
 #ifdef MAME_DEBUG
 			else if (!(p->in_set & PIA_IN_SET_CA1)) {
-				logerror("PIA%d: Warning! no CA1 read handler. Assuming pin not connected\n",which);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "PIA%d: Warning! no CA1 read handler. Assuming pin not connected\n",which);
 				p->in_set |= PIA_IN_SET_CA1; /* disable logging*/
 			}
 #endif /* MAME_DEBUG*/
@@ -405,7 +397,7 @@ int pia_read(int which, int offset)
 				pia_set_input_ca2(which, p->intf->in_ca2_func(0));
 #ifdef MAME_DEBUG
 			else if (C2_INPUT(p->ctl_a) && !(p->in_set & PIA_IN_SET_CA2)) {
-				logerror("PIA%d: Warning! no CA2 read handler. Assuming pin not connected\n",which);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "PIA%d: Warning! no CA2 read handler. Assuming pin not connected\n",which);
 				p->in_set |= PIA_IN_SET_CA2; /* disable logging*/
 			}
 #endif /* MAME_DEBUG*/
@@ -417,7 +409,7 @@ int pia_read(int which, int offset)
 			if (p->irq_a1) val |= PIA_IRQ1;
 			if (p->irq_a2 && C2_INPUT(p->ctl_a)) val |= PIA_IRQ2;
 
-			LOG(("%04x: PIA%d read control A = %02X\n", activecpu_get_previouspc(), which, val));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d read control A = %02X\n", activecpu_get_previouspc(), which, val);
 			break;
 
 		/******************* port B control read *******************/
@@ -428,7 +420,7 @@ int pia_read(int which, int offset)
 				pia_set_input_cb1(which, p->intf->in_cb1_func(0));
 #ifdef MAME_DEBUG
 			else if (!(p->in_set & PIA_IN_SET_CB1)) {
-				logerror("PIA%d: Error! no CB1 read handler. Three-state pin is undefined\n",which);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "PIA%d: Error! no CB1 read handler. Three-state pin is undefined\n",which);
 				p->in_set |= PIA_IN_SET_CB1; /* disable logging*/
 			}
 #endif /* MAME_DEBUG*/
@@ -436,7 +428,7 @@ int pia_read(int which, int offset)
 				pia_set_input_cb2(which, p->intf->in_cb2_func(0));
 #ifdef MAME_DEBUG
 			else if (C2_INPUT(p->ctl_b) && !(p->in_set & PIA_IN_SET_CB2)) {
-				logerror("PIA%d: Error! no CB2 read handler. Three-state pin is undefined\n",which);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "PIA%d: Error! no CB2 read handler. Three-state pin is undefined\n",which);
 				p->in_set |= PIA_IN_SET_CB2; /* disable logging*/
 			}
 #endif /* MAME_DEBUG*/
@@ -448,7 +440,7 @@ int pia_read(int which, int offset)
 			if (p->irq_b1) val |= PIA_IRQ1;
 			if (p->irq_b2 && C2_INPUT(p->ctl_b)) val |= PIA_IRQ2;
 
-			LOG(("%04x: PIA%d read control B = %02X\n", activecpu_get_previouspc(), which, val));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d read control B = %02X\n", activecpu_get_previouspc(), which, val);
 			break;
 	}
 
@@ -474,7 +466,7 @@ void pia_write(int which, int offset, int data)
 			/* write output register */
 			if (OUTPUT_SELECTED(p->ctl_a))
 			{
-				LOG(("%04x: PIA%d port A write = %02X\n", activecpu_get_previouspc(), which, data));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d port A write = %02X\n", activecpu_get_previouspc(), which, data);
 
 				/* update the output value */
 				p->out_a = data;/* & p->ddr_a; */	/* NS990130 - don't mask now, DDR could change later */
@@ -486,7 +478,7 @@ void pia_write(int which, int offset, int data)
 			/* write DDR register */
 			else
 			{
-				LOG(("%04x: PIA%d DDR A write = %02X\n", activecpu_get_previouspc(), which, data));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d DDR A write = %02X\n", activecpu_get_previouspc(), which, data);
 
 				if (p->ddr_a != data)
 				{
@@ -505,7 +497,7 @@ void pia_write(int which, int offset, int data)
 			/* write output register */
 			if (OUTPUT_SELECTED(p->ctl_b))
 			{
-				LOG(("%04x: PIA%d port B write = %02X\n", activecpu_get_previouspc(), which, data));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d port B write = %02X\n", activecpu_get_previouspc(), which, data);
 
 				/* update the output value */
 				p->out_b = data;/* & p->ddr_b */	/* NS990130 - don't mask now, DDR could change later */
@@ -533,7 +525,7 @@ void pia_write(int which, int offset, int data)
 			/* write DDR register */
 			else
 			{
-				LOG(("%04x: PIA%d DDR B write = %02X\n", activecpu_get_previouspc(), which, data));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d DDR B write = %02X\n", activecpu_get_previouspc(), which, data);
 
 				if (p->ddr_b != data)
 				{
@@ -554,7 +546,7 @@ void pia_write(int which, int offset, int data)
 			data &= 0x3f;
 
 
-			LOG(("%04x: PIA%d control A write = %02X\n", activecpu_get_previouspc(), which, data));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d control A write = %02X\n", activecpu_get_previouspc(), which, data);
 
 			/* CA2 is configured as output and in set/reset mode */
 			/* 10/22/98 - MAB/FMP - any C2_OUTPUT should affect CA2 */
@@ -586,7 +578,7 @@ void pia_write(int which, int offset, int data)
 
 			data &= 0x3f;
 
-			LOG(("%04x: PIA%d control B write = %02X\n", activecpu_get_previouspc(), which, data));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: PIA%d control B write = %02X\n", activecpu_get_previouspc(), which, data);
 
 			/* CB2 is configured as output and in set/reset mode */
 			/* 10/22/98 - MAB/FMP - any C2_OUTPUT should affect CB2 */

@@ -36,7 +36,7 @@ READ_HANDLER( cchasm_snd_io_r )
         z80ctc_0_trg2_w (0, 0);
         return soundlatch2_r (offset);
     default:
-        logerror("Read from unmapped internal IO device at 0x%x\n", offset + 0x6000);
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Read from unmapped internal IO device at 0x%x\n", offset + 0x6000);
         return 0;
     }
 }
@@ -76,7 +76,7 @@ WRITE_HANDLER( cchasm_snd_io_w )
         break;
 
     default:
-        logerror("Write %x to unmapped internal IO device at 0x%x\n", data, offset + 0x6000);
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Write %x to unmapped internal IO device at 0x%x\n", data, offset + 0x6000);
     }
 }
 

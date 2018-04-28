@@ -644,9 +644,9 @@ WRITE_HANDLER( williams2_7segment_w )
 		dot = ' ';
 
 	if (n == -1)
-		logerror("[ %c]\n", dot);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "[ %c]\n", dot);
 	else
-		logerror("[%d%c]\n", n, dot);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "[%d%c]\n", n, dot);
 }
 
 
@@ -888,7 +888,7 @@ static READ_HANDLER( tshoot_input_port_0_3_r )
 static WRITE_HANDLER( tshoot_maxvol_w )
 {
 	/* something to do with the sound volume */
-	logerror("tshoot maxvol = %d (pc:%x)\n", data, activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "tshoot maxvol = %d (pc:%x)\n", data, activecpu_get_pc());
 }
 
 

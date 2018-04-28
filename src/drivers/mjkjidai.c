@@ -46,7 +46,7 @@ static READ_HANDLER( keyboard_r )
 {
 	int res = 0x3f,i;
 
-/*	logerror("%04x: keyboard_r\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: keyboard_r\n",activecpu_get_pc());*/
 
 	for (i = 0;i < 12;i++)
 	{
@@ -70,7 +70,7 @@ static READ_HANDLER( keyboard_r )
 
 static WRITE_HANDLER( keyboard_select_w )
 {
-/*	logerror("%04x: keyboard_select %d = %02x\n",activecpu_get_pc(),offset,data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: keyboard_select %d = %02x\n",activecpu_get_pc(),offset,data);*/
 
 	switch (offset)
 	{

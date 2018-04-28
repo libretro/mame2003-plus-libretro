@@ -2567,7 +2567,7 @@ READ32_HANDLER ( stv_vdp2_regs_r )
 		/*H/V Counter Register*/
 								     /*H-Counter                               V-Counter                                         */
 			stv_vdp2_regs[offset] = (((Machine->visible_area.max_x - 1)<<16)&0x3ff)|(((Machine->visible_area.max_y - 1)<<0)&0x3ff);
-			logerror("CPU #%d PC(%08x) = VDP2: H/V counter read : %08x\n",cpu_getactivecpu(),activecpu_get_pc(),stv_vdp2_regs[offset]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #%d PC(%08x) = VDP2: H/V counter read : %08x\n",cpu_getactivecpu(),activecpu_get_pc(),stv_vdp2_regs[offset]);
 		break;
 	}
 	return stv_vdp2_regs[offset];
@@ -2610,7 +2610,7 @@ static void stv_vdp2_dynamic_res_change()
 		case 1: vert = 240; break;
 		case 2: vert = 256; break;
 		case 3:
-			logerror("WARNING: V Res setting (3) not allowed!\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "WARNING: V Res setting (3) not allowed!\n");
 			vert = 256;
 			break;
 	}

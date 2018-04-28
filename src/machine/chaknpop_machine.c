@@ -108,7 +108,7 @@ WRITE_HANDLER( chaknpop_mcu_portA_w )
 
 		mcu_update_seed(mcu_result);
 
-		logerror("%04x: MCU command 0x%02x, result 0x%02x\n", activecpu_get_pc(), mcu_command, mcu_result);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: MCU command 0x%02x, result 0x%02x\n", activecpu_get_pc(), mcu_command, mcu_result);
 	}
 	else if (mcu_command >= 0x28 && mcu_command <= 0x2a)
 	{
@@ -119,7 +119,7 @@ WRITE_HANDLER( chaknpop_mcu_portA_w )
 
 		mcu_update_seed(mcu_result);
 
-		logerror("%04x: MCU command 0x%02x, result 0x%02x\n", activecpu_get_pc(), mcu_command, mcu_result);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: MCU command 0x%02x, result 0x%02x\n", activecpu_get_pc(), mcu_command, mcu_result);
 	}
 	else if (mcu_command < 0x80)
 	{
@@ -129,14 +129,14 @@ WRITE_HANDLER( chaknpop_mcu_portA_w )
 		{
 			mcu_select = mcu_command - 0x40;
 
-			logerror("%04x: MCU select 0x%02x\n", activecpu_get_pc(), mcu_select);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: MCU select 0x%02x\n", activecpu_get_pc(), mcu_select);
 		}
 	}
 	else if (mcu_command == 0x9c|| mcu_command == 0xde)
 	{
 		mcu_update_seed(data);
 
-		logerror("%04x: MCU command 0x%02x\n", activecpu_get_pc(), mcu_command);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: MCU command 0x%02x\n", activecpu_get_pc(), mcu_command);
 	}
 }
 

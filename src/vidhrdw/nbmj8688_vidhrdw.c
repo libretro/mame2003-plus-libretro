@@ -635,7 +635,7 @@ static void nbmj8688_HD61830B_data_w(int chip,int offset,int data)
 			HD61830B_ram[chip][HD61830B_addr[chip]++] = data;
 			break;
 		default:
-logerror("HD61830B unsupported instruction %02x %02x\n",HD61830B_instr[chip],data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "HD61830B unsupported instruction %02x %02x\n",HD61830B_instr[chip],data);
 			break;
 	}
 }

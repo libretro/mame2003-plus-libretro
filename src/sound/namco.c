@@ -351,7 +351,7 @@ int namco_sh_start(const struct MachineSound *msound)
 	/* adjust output clock */
 	sample_rate = namco_clock / OVERSAMPLING_RATE;
 
-	logerror("Namco: freq fractional bits = %d: internal freq = %d, output freq = %d\n", f_fracbits, namco_clock, sample_rate);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Namco: freq fractional bits = %d: internal freq = %d, output freq = %d\n", f_fracbits, namco_clock, sample_rate);
 
 	/* build the waveform table */
 	if (build_decoded_waveform(intf->region))
@@ -653,7 +653,7 @@ WRITE_HANDLER( namcos1_sound_w )
 	/* verify the offset */
 	if (offset > 63)
 	{
-		logerror("NAMCOS1 sound: Attempting to write past the 64 registers segment\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "NAMCOS1 sound: Attempting to write past the 64 registers segment\n");
 		return;
 	}
 

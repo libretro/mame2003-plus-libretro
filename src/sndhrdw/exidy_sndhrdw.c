@@ -499,11 +499,11 @@ WRITE_HANDLER( exidy_shriot_w )
 					if (!(data & 0x01) && (riot_portb_data & 0x01))
 					{
 						riot_porta_data = tms5220_status_r(0);
-						logerror("(%f)%04X:TMS5220 status read = %02X\n", timer_get_time(), activecpu_get_previouspc(), riot_porta_data);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "(%f)%04X:TMS5220 status read = %02X\n", timer_get_time(), activecpu_get_previouspc(), riot_porta_data);
 					}
 					if ((data & 0x02) && !(riot_portb_data & 0x02))
 					{
-						logerror("(%f)%04X:TMS5220 data write = %02X\n", timer_get_time(), activecpu_get_previouspc(), riot_porta_data);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "(%f)%04X:TMS5220 data write = %02X\n", timer_get_time(), activecpu_get_previouspc(), riot_porta_data);
 						tms5220_data_w(0, riot_porta_data);
 					}
 				}
@@ -611,7 +611,7 @@ READ_HANDLER( exidy_shriot_r )
 		}
 	}
 
-	logerror("Undeclared RIOT read: %x  PC:%x\n",offset,activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Undeclared RIOT read: %x  PC:%x\n",offset,activecpu_get_pc());
 	return 0xff;
 }
 
@@ -662,7 +662,7 @@ WRITE_HANDLER( exidy_sh8253_w )
 
 READ_HANDLER( exidy_sh8253_r )
 {
-    logerror("8253(R): %x\n",offset);
+    log_cb(RETRO_LOG_ERROR, LOGPRE "8253(R): %x\n",offset);
 	return 0;
 }
 
@@ -676,7 +676,7 @@ READ_HANDLER( exidy_sh8253_r )
 
 READ_HANDLER( exidy_sh6840_r )
 {
-    logerror("6840R %x\n",offset);
+    log_cb(RETRO_LOG_ERROR, LOGPRE "6840R %x\n",offset);
     return 0;
 }
 

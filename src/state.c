@@ -215,7 +215,7 @@ static ss_entry *ss_register_entry(const char *module, int instance, const char 
 	while((e = *ep) != 0) {
 		int pos = strcmp(e->name, name);
 		if(!pos) {
-			logerror("Duplicate save state registration entry (%s, %d, %s)\n", module, instance, name);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Duplicate save state registration entry (%s, %d, %s)\n", module, instance, name);
 			return NULL;
 		}
 		if(pos>0)
@@ -299,7 +299,7 @@ static void ss_register_func(ss_func **root, void (*func)(void))
 	{
 		if (next->func == func && next->tag == ss_current_tag)
 		{
-			logerror("Duplicate save state function (%d, 0x%x)\n", ss_current_tag, (int)func);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Duplicate save state function (%d, 0x%x)\n", ss_current_tag, (int)func);
 			exit(1);
 		}
 		next = next->next;
@@ -640,7 +640,7 @@ void state_save_dump_registry(void)
 		for(i=0; i<MAX_INSTANCES; i++) {
 			ss_entry *e;
 			for(e = m->instances[i]; e; e=e->next)
-				logerror("%d %s.%d.%s: %s, %x\n", e->tag, m->name, i, e->name, ss_type[e->type], e->size);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%d %s.%d.%s: %s, %x\n", e->tag, m->name, i, e->name, ss_type[e->type], e->size);
 		}
 	}
 #endif

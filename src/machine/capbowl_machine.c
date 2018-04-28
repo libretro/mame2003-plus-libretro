@@ -50,7 +50,7 @@ WRITE_HANDLER( bowlrama_turbo_w )
 			break;
 
 		default:
-			logerror("PC=%04X Write to unsupported Turbo address %02X Data=%02X\n",activecpu_get_pc(),offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC=%04X Write to unsupported Turbo address %02X Data=%02X\n",activecpu_get_pc(),offset, data);
 	}
 
 	currentaddress = ((GRHighByte << 16) | (GRMidByte << 8) | GRLowByte);
@@ -97,7 +97,7 @@ READ_HANDLER( bowlrama_turbo_r )
 		break;
 
 	default:
-		logerror("PC=%04X Read from unsupported Turbo address %02X\n",activecpu_get_pc(),offset);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "PC=%04X Read from unsupported Turbo address %02X\n",activecpu_get_pc(),offset);
 	}
 
 	return ret;

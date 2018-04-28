@@ -113,7 +113,7 @@ static WRITE_HANDLER( misc_w )
 	/* bit 1 = (10) = PC1 */
 	/* bit 0 = (32) = PC0 */
 	input_mux = data & 7;
-	logerror("%04X:misc_w(%02X)\n", activecpu_get_previouspc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:misc_w(%02X)\n", activecpu_get_previouspc(), data);
 }
 
 
@@ -127,14 +127,14 @@ static WRITE_HANDLER( sound_w )
 	/* bit 2 = folla a */
 	/* bit 1 = folla m */
 	/* bit 0 = folla b */
-	logerror("%04X:sound_w(%02X)\n", activecpu_get_previouspc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:sound_w(%02X)\n", activecpu_get_previouspc(), data);
 }
 
 
 static WRITE_HANDLER( pb_w )
 {
 	/* write PB0-7 */
-	logerror("%04X:pb_w(%02X)\n", activecpu_get_previouspc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:pb_w(%02X)\n", activecpu_get_previouspc(), data);
 }
 
 

@@ -468,7 +468,7 @@ static WRITE16_HANDLER( namcona1_mcu_w )
 	COMBINE_DATA( &mcu_ram[offset] );
 	if( offset>=0x400/2 && (offset<0x820/2 || (offset>=0xf30/2 && offset<0xf72/2)) )
 	{
-		logerror( "0x%03x: 0x%04x\n", offset*2, mcu_ram[offset] );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "0x%03x: 0x%04x\n", offset*2, mcu_ram[offset] );
 	}
 	/*
 		400..53d  code for MCU?
@@ -686,7 +686,7 @@ transfer_dword( UINT32 dest, UINT32 source )
 	}
 	else
 	{
-		logerror( "bad blt src %08x\n", source );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "bad blt src %08x\n", source );
 		return -1;
 	}
 	if( dest>=0xf00000 && dest<=0xf02000 )
@@ -711,7 +711,7 @@ transfer_dword( UINT32 dest, UINT32 source )
 	}
 	else
 	{
-		logerror( "bad blt dst %08x\n", dest );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "bad blt dst %08x\n", dest );
 		return -1;
 	}
 	return 0;
@@ -839,7 +839,7 @@ static void namcona1_blit( void )
 	(void)src2;
 	(void)src0;
 
-	logerror( "0x%08x: blt(%08x,%08x,%08x);%04x %04x %04x; %04x %04x %04x; gfx=%04x\n",
+	log_cb(RETRO_LOG_ERROR, LOGPRE  "0x%08x: blt(%08x,%08x,%08x);%04x %04x %04x; %04x %04x %04x; gfx=%04x\n",
 		activecpu_get_pc(),
 		dst_baseaddr,src_baseaddr,num_bytes,
 		src0,src1,src2,

@@ -136,7 +136,7 @@ static WRITE16_HANDLER( latch_w )
 	if (ACCESSING_MSB)
 	{
 		if (data & 0x1000)
-			logerror("Color bank set to 1!\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Color bank set to 1!\n");
 	}
 
 	/* lower byte being modified? */

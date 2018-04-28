@@ -181,16 +181,16 @@ static WRITE_HANDLER( meadows_sound_w )
 		case 0:
 			if (meadows_0c00 == data)
 				break;
-			logerror("meadows_sound_w %d $%02x\n", offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "meadows_sound_w %d $%02x\n", offset, data);
 			meadows_0c00 = data;
             break;
 
 		case 1:
-			logerror("meadows_sound_w %d $%02x\n", offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "meadows_sound_w %d $%02x\n", offset, data);
             break;
 
         case 2:
-			logerror("meadows_sound_w %d $%02x\n", offset, data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "meadows_sound_w %d $%02x\n", offset, data);
             break;
 
 		case 3:
@@ -264,7 +264,7 @@ static WRITE_HANDLER( sound_hardware_w )
 		case 1: /* counter clk 5 MHz / 256 */
 			if (data == meadows_0c01)
 				break;
-			logerror("sound_w ctr1 preset $%x amp %d\n", data & 15, data >> 4);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "sound_w ctr1 preset $%x amp %d\n", data & 15, data >> 4);
 			meadows_0c01 = data;
 			meadows_sh_update();
 			break;
@@ -272,7 +272,7 @@ static WRITE_HANDLER( sound_hardware_w )
 		case 2: /* counter clk 5 MHz / 32 (/ 2 or / 4) */
 			if (data == meadows_0c02)
                 break;
-			logerror("sound_w ctr2 preset $%02x\n", data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "sound_w ctr2 preset $%02x\n", data);
 			meadows_0c02 = data;
 			meadows_sh_update();
             break;
@@ -280,7 +280,7 @@ static WRITE_HANDLER( sound_hardware_w )
 		case 3: /* sound enable */
 			if (data == meadows_0c03)
                 break;
-			logerror("sound_w enable ctr2/2:%d ctr2:%d dac:%d ctr1:%d\n", data&1, (data>>1)&1, (data>>2)&1, (data>>3)&1);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "sound_w enable ctr2/2:%d ctr2:%d dac:%d ctr1:%d\n", data&1, (data>>1)&1, (data>>2)&1, (data>>3)&1);
 			meadows_0c03 = data;
 			meadows_sh_update();
             break;

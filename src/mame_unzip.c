@@ -26,7 +26,7 @@ void errormsg(const char* extmsg, const char* usermsg, const char* zipname) {
 	if (!gUnzipQuiet)
 		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in zipfile %s\n%s\n", zipname, usermsg);
 	/* Output to log file with all informations */
-	logerror("Error in zipfile %s: %s\n", zipname, extmsg);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Error in zipfile %s: %s\n", zipname, extmsg);
 }
 
 /* -------------------------------------------------------------------------
@@ -119,7 +119,7 @@ static int ecd_read(ZIP* zip) {
 			/* double buffer */
 			buf_length = 2*buf_length;
 
-			logerror("Retry reading of zip ecd for %d bytes\n",buf_length);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Retry reading of zip ecd for %d bytes\n",buf_length);
 
 		} else {
 			return -1;
@@ -480,7 +480,7 @@ static int inflate_file(FILE* in_file, unsigned in_size, unsigned char* out_data
 	 */
     if (err != Z_OK)
 	{
-		logerror("inflateInit error: %d\n", err);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "inflateInit error: %d\n", err);
         return -1;
 	}
 
@@ -492,7 +492,7 @@ static int inflate_file(FILE* in_file, unsigned in_size, unsigned char* out_data
 	{
 		if (in_size <= 0)
 		{
-			logerror("inflate error: compressed size too small\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "inflate error: compressed size too small\n");
 			free (in_buffer);
 			return -1;
 		}
@@ -507,7 +507,7 @@ static int inflate_file(FILE* in_file, unsigned in_size, unsigned char* out_data
 			break;
 		if (err != Z_OK)
 		{
-			logerror("inflate error: %d\n", err);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "inflate error: %d\n", err);
 			free (in_buffer);
 			return -1;
 		}
@@ -516,7 +516,7 @@ static int inflate_file(FILE* in_file, unsigned in_size, unsigned char* out_data
     err = inflateEnd(&d_stream);
 	if (err != Z_OK)
 	{
-		logerror("inflateEnd error: %d\n", err);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "inflateEnd error: %d\n", err);
 		free (in_buffer);
 		return -1;
 	}
@@ -525,7 +525,7 @@ static int inflate_file(FILE* in_file, unsigned in_size, unsigned char* out_data
 
 	if ((d_stream.avail_out > 0) || (in_size > 0))
 	{
-		logerror("zip size mismatch. %i\n", in_size);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "zip size mismatch. %i\n", in_size);
 		return -1;
 	}
 
@@ -635,7 +635,7 @@ static ZIP* cache_openzip(int pathtype, int pathindex, const char* zipfile) {
 			unsigned j;
 
 /*
-			logerror("Zip cache HIT  for %s\n", zipfile);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Zip cache HIT  for %s\n", zipfile);
 */
 
 			/* reset the zip directory */
@@ -657,7 +657,7 @@ static ZIP* cache_openzip(int pathtype, int pathindex, const char* zipfile) {
 	/* not found */
 
 /*
-	logerror("Zip cache FAIL for %s\n", zipfile);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Zip cache FAIL for %s\n", zipfile);
 */
 
 	/* open the zip */

@@ -46,7 +46,7 @@ static WRITE_HANDLER( fantland_nmi_enable_w )
 {
 	fantland_nmi_enable = data;
 /*	if ((fantland_nmi_enable != 0) && (fantland_nmi_enable != 8))*/
-/*		logerror("CPU #0 : nmi_enable = %02x - PC = %04X\n", data, activecpu_get_pc());*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 : nmi_enable = %02x - PC = %04X\n", data, activecpu_get_pc());*/
 }
 
 static WRITE_HANDLER( fantland_soundlatch_w )

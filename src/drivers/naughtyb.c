@@ -164,7 +164,7 @@ READ_HANDLER( popflame_protection_r ) /* Not used by bootleg/hack */
 			case 3: return 0x38; /* x011 1xxx, matches 0x07 at $2693, stored in $400D */
 		}
 	}
-	logerror("CPU #0 PC %06x: unmapped protection read\n", activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: unmapped protection read\n", activecpu_get_pc());
 	return 0x00;
 #endif
 }

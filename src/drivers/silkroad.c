@@ -175,7 +175,7 @@ static WRITE32_HANDLER(silk_6295_0_w)
 {
 	if (!(mem_mask & 0x00ff0000))
 	{
-		logerror("OKI0: write %x mem_mask %8x\n", data>>16, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "OKI0: write %x mem_mask %8x\n", data>>16, mem_mask);
 		OKIM6295_data_0_w(0, (data>>16) & 0xff);
 	}
 }
@@ -189,7 +189,7 @@ static WRITE32_HANDLER(silk_6295_1_w)
 {
 	if (!(mem_mask & 0x00ff0000))
 	{
-		logerror("OKI1: write %x mem_mask %8x\n", data>>16, mem_mask);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "OKI1: write %x mem_mask %8x\n", data>>16, mem_mask);
 		OKIM6295_data_1_w(0, (data>>16) & 0xff);
 	}
 }

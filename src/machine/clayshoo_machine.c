@@ -59,7 +59,7 @@ static READ_HANDLER( input_port_r )
 	case 0x08:	ret = readinputport(3); break;
 	case 0x10:
 	case 0x20:	break;	/* these two are not really used */
-	default: logerror("Unexcepted port read: %02X\n", input_port_select);
+	default: log_cb(RETRO_LOG_ERROR, LOGPRE "Unexcepted port read: %02X\n", input_port_select);
 	}
 
 	return ret;

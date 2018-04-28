@@ -332,7 +332,7 @@ static READ16_HANDLER( growl_dsw_r )
               return input_port_4_word_r(0,mem_mask); /* DSW B */
     }
 
-logerror("CPU #0 PC %06x: warning - read unmapped dsw_r offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped dsw_r offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -352,7 +352,7 @@ static READ16_HANDLER( growl_input_r )
 
     }
 
-logerror("CPU #0 PC %06x: warning - read unmapped input_r offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped input_r offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -386,7 +386,7 @@ static READ16_HANDLER( footchmp_input_r )
 			return input_port_6_word_r(0,mem_mask); /* IN4 */
     }
 
-logerror("CPU #0 PC %06x: warning - read unmapped input offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped input offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -420,7 +420,7 @@ static READ16_HANDLER( ninjak_input_r )
 /*			return (coin_word & ~mem_mask);*/
 	}
 
-logerror("CPU #0 PC %06x: warning - read unmapped input offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped input offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -445,7 +445,7 @@ static READ16_HANDLER( cameltry_paddle_r )
 			return res;
 	}
 
-logerror("CPU #0 PC %06x: warning - read unmapped paddle offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped paddle offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0;
 }
@@ -461,7 +461,7 @@ static READ16_HANDLER( driftout_paddle_r )
               return input_port_6_word_r(0,mem_mask); /* Paddle B */
     }
 
-logerror("CPU #0 PC %06x: warning - read unmapped paddle offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped paddle offset %06x\n",activecpu_get_pc(),offset);
 
         return 0xff;
 }
@@ -495,7 +495,7 @@ static READ16_HANDLER( deadconx_input_r )
 			return input_port_6_word_r(0,mem_mask); /* IN4 */
     }
 
-logerror("CPU #0 PC %06x: warning - read unmapped input offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped input offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -515,7 +515,7 @@ static READ16_HANDLER( mjnquest_dsw_r )
         }
     }
 
-    logerror("CPU #0 PC %06x: warning - read unmapped dsw_r offset %06x\n",activecpu_get_pc(),offset);
+    log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped dsw_r offset %06x\n",activecpu_get_pc(),offset);
 
     return 0xff;
 }
@@ -541,7 +541,7 @@ static READ16_HANDLER( mjnquest_input_r )
 
     }
 
-logerror("CPU #0 mjnquest_input %06x: warning - read unknown input %06x\n",activecpu_get_pc(),mjnquest_input);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 mjnquest_input %06x: warning - read unknown input %06x\n",activecpu_get_pc(),mjnquest_input);
 
 	return 0xff;
 }
@@ -562,7 +562,7 @@ static READ16_HANDLER( quizhq_input1_r )
               return input_port_0_word_r(0,mem_mask); /* IN0 */
     }
 
-logerror("CPU #0 PC %06x: warning - read unmapped input_r offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped input_r offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -581,7 +581,7 @@ static READ16_HANDLER( quizhq_input2_r )
               return input_port_2_word_r(0,mem_mask); /* IN2 */
     }
 
-logerror("CPU #0 PC %06x: warning - read unmapped input_r offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped input_r offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -600,7 +600,7 @@ static READ16_HANDLER( yesnoj_input_r )
               return input_port_1_word_r(0,mem_mask); /* IN1 */
     }
 
-logerror("CPU #0 PC %06x: warning - read unmapped input_r offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped input_r offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0x0;
 }
@@ -608,7 +608,7 @@ logerror("CPU #0 PC %06x: warning - read unmapped input_r offset %06x\n",activec
 static READ16_HANDLER( yesnoj_dsw_r )
 {
 #ifdef MAME_DEBUG
-	logerror("CPU #0 PC = %06x: read yesnoj DSW %01x\n",activecpu_get_pc(),yesnoj_dsw);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC = %06x: read yesnoj DSW %01x\n",activecpu_get_pc(),yesnoj_dsw);
 #endif
 
 	yesnoj_dsw = 1 - yesnoj_dsw;   /* game reads same word twice to get DSW A then B so we toggle */
@@ -794,7 +794,7 @@ static WRITE_HANDLER( sound_bankswitch_w )
 	reset_sound_region();
 
 #ifdef MAME_DEBUG
-	if (banknum>2) logerror("CPU #1 switch to ROM bank %06x: should only happen if Z80 prg rom is 128K!\n",banknum);
+	if (banknum>2) log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 switch to ROM bank %06x: should only happen if Z80 prg rom is 128K!\n",banknum);
 #endif
 }
 
@@ -820,7 +820,7 @@ static int driveout_sound_latch = 0;
 static READ_HANDLER( driveout_sound_command_r)
 {
 	cpu_set_irq_line(1,0,CLEAR_LINE);
-/*	logerror("sound IRQ OFF (sound command=%02x)\n",driveout_sound_latch);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "sound IRQ OFF (sound command=%02x)\n",driveout_sound_latch);*/
 	return driveout_sound_latch;
 }
 

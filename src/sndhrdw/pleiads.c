@@ -409,7 +409,7 @@ WRITE_HANDLER( pleiads_sound_control_a_w )
 	if (data == sound_latch_a)
 		return;
 
-	logerror("pleiads_sound_control_b_w $%02x\n", data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "pleiads_sound_control_b_w $%02x\n", data);
 
 	stream_update(channel,0);
 	sound_latch_a = data;
@@ -428,7 +428,7 @@ WRITE_HANDLER( pleiads_sound_control_b_w )
 	if (data == sound_latch_b)
 		return;
 
-	logerror("pleiads_sound_control_b_w $%02x\n", data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "pleiads_sound_control_b_w $%02x\n", data);
 
 	if (pitch == 3)
 		pitch = 2;	/* 2 and 3 are the same */
@@ -445,7 +445,7 @@ WRITE_HANDLER( pleiads_sound_control_c_w )
 	if (data == sound_latch_c)
 		return;
 
-	logerror("pleiads_sound_control_c_w $%02x\n", data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "pleiads_sound_control_c_w $%02x\n", data);
 	stream_update(channel,0);
 	sound_latch_c = data;
 }

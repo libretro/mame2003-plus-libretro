@@ -68,7 +68,7 @@ WRITE16_HANDLER( suna16_flipscreen_w )
 		flip_screen_set( data & 1 );
 		color_bank = data & 4;
 	}
-	if (data & ~5)	logerror("CPU#0 PC %06X - Flip screen unknown bits: %04X\n", activecpu_get_pc(), data);
+	if (data & ~5)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 PC %06X - Flip screen unknown bits: %04X\n", activecpu_get_pc(), data);
 }
 
 

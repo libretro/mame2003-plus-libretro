@@ -17,7 +17,7 @@ UINT32 opBRK(void)
 	PC = GETINTVECT(13);
 	ChangePC(PC);
 */
-	logerror("Skipping BRK opcode! PC=%x", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Skipping BRK opcode! PC=%x", PC);
 
 	return 1;
 }
@@ -43,7 +43,7 @@ UINT32 opBRKV(void)
 UINT32 opCLRTLBA(void)
 {
 	/* @@@ TLB not yet supported*/
-	logerror("Skipping CLRTLBA opcode! PC=%x\n", PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Skipping CLRTLBA opcode! PC=%x\n", PC);
 	return 1;
 }
 
@@ -84,7 +84,7 @@ UINT32 opTRAPFL(void)
 	if ((TKCW & 0x1F0) & ((PSW & 0x1F00) >> 4))
 	{
 		/* @@@ FPU exception*/
-		logerror("Hit TRAPFL! PC=%x\n", PC);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Hit TRAPFL! PC=%x\n", PC);
 		abort();
 	}
 

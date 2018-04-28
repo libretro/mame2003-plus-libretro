@@ -405,7 +405,7 @@ static void compute_sensors(void)
 	inters_to_words(inter1, inter2, inter3, &beams, &word1, &word2, &word3);
 	words_to_sensors(word1, word2, word3, beams, &nextsensor0, &nextsensor1, &nextsensor2, &nextsensor3);
 
-	logerror("%15f: Sensor values: %04x %04x %04x %04x\n", timer_get_time(), nextsensor0, nextsensor1, nextsensor2, nextsensor3);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%15f: Sensor values: %04x %04x %04x %04x\n", timer_get_time(), nextsensor0, nextsensor1, nextsensor2, nextsensor3);
 }
 
 
@@ -498,7 +498,7 @@ WRITE_HANDLER( slikshot_z80_control_w )
 	/* reset the Z80 on bit 4 changing */
 	if (delta & 0x10)
 	{
-/*		logerror("%15f: Reset Z80: %02x  PC=%04x\n", timer_get_time(), data & 0x10, cpunum_get_reg(2, Z80_PC));*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%15f: Reset Z80: %02x  PC=%04x\n", timer_get_time(), data & 0x10, cpunum_get_reg(2, Z80_PC));*/
 
 		/* this is a big kludge: only allow a reset if the Z80 is stopped */
 		/* at its endpoint; otherwise, we never get a result from the Z80 */
@@ -523,7 +523,7 @@ WRITE_HANDLER( slikshot_z80_control_w )
 	/* won't work with it configured as such */
 	if (delta & data & 0x20)
 	{
-/*		logerror("%15f: Clock edge high\n", timer_get_time());*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%15f: Clock edge high\n", timer_get_time());*/
 	}
 }
 

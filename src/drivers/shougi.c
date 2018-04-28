@@ -203,13 +203,13 @@ static UINT8 cpu_sharedram_control_val = 0;
 
 static WRITE_HANDLER ( cpu_sharedram_sub_w )
 {
-	if (cpu_sharedram_control_val!=0) logerror("sub CPU access to shared RAM when access set for main cpu\n");
+	if (cpu_sharedram_control_val!=0) log_cb(RETRO_LOG_ERROR, LOGPRE "sub CPU access to shared RAM when access set for main cpu\n");
 	cpu_sharedram[offset] = data;
 }
 
 static WRITE_HANDLER ( cpu_sharedram_main_w )
 {
-	if (cpu_sharedram_control_val!=1) logerror("main CPU access to shared RAM when access set for sub cpu\n");
+	if (cpu_sharedram_control_val!=1) log_cb(RETRO_LOG_ERROR, LOGPRE "main CPU access to shared RAM when access set for sub cpu\n");
 	cpu_sharedram[offset] = data;
 }
 
@@ -221,13 +221,13 @@ static READ_HANDLER ( cpu_sharedram_r )
 static WRITE_HANDLER ( cpu_shared_ctrl_sub_w )
 {
 	cpu_sharedram_control_val = 0;
-logerror("cpu_sharedram_ctrl=SUB");
+log_cb(RETRO_LOG_ERROR, LOGPRE "cpu_sharedram_ctrl=SUB");
 }
 
 static WRITE_HANDLER ( cpu_shared_ctrl_main_w )
 {
 	cpu_sharedram_control_val = 1;
-logerror("cpu_sharedram_ctrl=MAIN");
+log_cb(RETRO_LOG_ERROR, LOGPRE "cpu_sharedram_ctrl=MAIN");
 }
 
 static WRITE_HANDLER( shougi_watchdog_reset_w )

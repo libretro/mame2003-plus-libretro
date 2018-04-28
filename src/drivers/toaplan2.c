@@ -520,7 +520,7 @@ static void toaplan2_irq(int irq_line)
 	int vpos = cpu_getscanline();
 	if (vpos == 240) cpu_set_irq_line(0, irq_line, HOLD_LINE);
 	vblank_irq = 0; /*Remove*/
-/*	logerror("IRQ: scanline=%04x iloop=%04x beampos=%04x\n",vpos,cpu_getiloops(),cpu_gethorzbeampos());*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IRQ: scanline=%04x iloop=%04x beampos=%04x\n",vpos,cpu_getiloops(),cpu_gethorzbeampos());*/
 #else
 	if (cpu_getiloops() == 0) current_scanline = 255;
 
@@ -568,9 +568,9 @@ static READ16_HANDLER( video_count_r )
 		video_status |= 0xff;
 
 	current_scanline = prev_scanline = vpos; /*Remove*/
-	logerror("VC: scanline=%04x iloop=%04x beampos=%04x VBL=%04x\n",vpos,cpu_getiloops(),hpos,cpu_getvblank());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "VC: scanline=%04x iloop=%04x beampos=%04x VBL=%04x\n",vpos,cpu_getiloops(),hpos,cpu_getvblank());
 #else
-/*	logerror("Was VS=%04x  Vbl=%02x  VS=%04x - ",video_status,vblank_irq,prev_scanline );*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Was VS=%04x  Vbl=%02x  VS=%04x - ",video_status,vblank_irq,prev_scanline );*/
 
 	video_status = 0xff00;						/* Set signals inactive */
 	if ((current_scanline & 0x100) == 0) {
@@ -590,7 +590,7 @@ static READ16_HANDLER( video_count_r )
 	}
 	prev_scanline = current_scanline;
 
-/*	logerror("Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),cpu_gethorzbeampos() );*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Now VC=%04x  Vbl=%02x  VS=%04x  HS=%04x\n",video_status,vblank_irq,cpu_getscanline(),cpu_gethorzbeampos() );*/
 #endif
 
 	return video_status;
@@ -615,7 +615,7 @@ static WRITE_HANDLER( toaplan2_coin_w )
 	}
 	if (data & 0xe0)
 	{
-		logerror("Writing unknown upper bits (%02x) to coin control\n",data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Writing unknown upper bits (%02x) to coin control\n",data);
 	}
 }
 static WRITE16_HANDLER( toaplan2_coin_word_w )
@@ -633,7 +633,7 @@ static WRITE16_HANDLER( toaplan2_coin_word_w )
 	}
 	if (ACCESSING_MSB && (data & 0xff00) )
 	{
-		logerror("Writing unknown upper MSB command (%04x) to coin control\n",data & 0xff00);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Writing unknown upper MSB command (%04x) to coin control\n",data & 0xff00);
 	}
 }
 
@@ -664,7 +664,7 @@ static WRITE16_HANDLER( toaplan2_hd647180_cpu_w )
 		else										/* Teki Paki */
 		{
 			mcu_data = data & 0xff;
-			logerror("PC:%08x Writing command (%04x) to secondary CPU shared port\n",activecpu_get_previouspc(),mcu_data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%08x Writing command (%04x) to secondary CPU shared port\n",activecpu_get_previouspc(),mcu_data);
 		}
 	}
 }
@@ -768,7 +768,7 @@ static WRITE16_HANDLER( ghox_mcu_w )
 		}
 		else
 		{
-			logerror("PC:%08x Writing %08x to HD647180 cpu shared ram status port\n",activecpu_get_previouspc(),mcu_data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%08x Writing %08x to HD647180 cpu shared ram status port\n",activecpu_get_previouspc(),mcu_data);
 		}
 		toaplan2_shared_ram16[0x56 / 2] = 0x004e;	/* Return a RTS instruction */
 		toaplan2_shared_ram16[0x58 / 2] = 0x0075;
@@ -832,7 +832,7 @@ static READ16_HANDLER( kbash_sub_cpu_r )
 
 static WRITE16_HANDLER( kbash_sub_cpu_w )
 {
-	logerror("PC:%08x writing %04x to Zx80 secondary CPU status port %02x\n",activecpu_get_previouspc(),mcu_data,offset/2);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%08x writing %04x to Zx80 secondary CPU status port %02x\n",activecpu_get_previouspc(),mcu_data,offset/2);
 }
 
 static READ16_HANDLER( shared_ram_r )
@@ -858,7 +858,7 @@ static WRITE16_HANDLER( shared_ram_w )
 			case 0xcf8:
 			case 0xff8: toaplan2_shared_ram16[offset + 1] = data; /* Dogyuun */
 						toaplan2_shared_ram16[offset + 2] = data; /* FixEight */
-						logerror("PC:%08x Writing  (%04x) to secondary CPU\n",activecpu_get_previouspc(),data);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%08x Writing  (%04x) to secondary CPU\n",activecpu_get_previouspc(),data);
 						if (data == 0x81) data = 0x0001;
 						break;
 			default:	break;
@@ -903,7 +903,7 @@ static READ16_HANDLER( Zx80_status_port_r )
 	if (mcu_data == 0xffaa) mcu_data = 0x8000ffaa;
 	if (mcu_data == 0xff00) mcu_data = 0xffaa;
 
-	logerror("PC:%08x reading %08x from Zx80 secondary CPU command/status port\n",activecpu_get_previouspc(),mcu_data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%08x reading %08x from Zx80 secondary CPU command/status port\n",activecpu_get_previouspc(),mcu_data);
 	return mcu_data & 0xff;
 }
 
@@ -912,7 +912,7 @@ static WRITE16_HANDLER( Zx80_command_port_w )
 	if (ACCESSING_LSB)
 	{
 		mcu_data = data;
-	logerror("PC:%08x Writing command (%04x) to Zx80 secondary CPU command/status port\n",activecpu_get_previouspc(),mcu_data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "PC:%08x Writing command (%04x) to Zx80 secondary CPU command/status port\n",activecpu_get_previouspc(),mcu_data);
 }
 }
 
@@ -1069,7 +1069,7 @@ static WRITE_HANDLER( batrider_bankswitch_w )
 	if (bank != current_bank)
 	{
 		current_bank = bank;
-		logerror("Z80 cpu set bank #%d\n", bank);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Z80 cpu set bank #%d\n", bank);
 		if (bank > 1)
 			bankaddress = 0x10000 + 0x4000 * (current_bank - 2);
 		else
@@ -1202,7 +1202,7 @@ static READ16_HANDLER( bbakraid_nvram_r )
 static WRITE16_HANDLER( bbakraid_nvram_w )
 {
 	if (data & ~0x001f)
-		logerror("CPU #0 PC:%06X - Unknown EEPROM data being written %04X\n",activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC:%06X - Unknown EEPROM data being written %04X\n",activecpu_get_pc(),data);
 
 	if ( ACCESSING_LSB )
 	{
@@ -1222,12 +1222,12 @@ static WRITE16_HANDLER( bbakraid_nvram_w )
 /****** Battle Bakraid 68K handlers ******/
 static READ16_HANDLER ( raizing_sndcomms_r )
 {
-/*	logerror("68K (PC:%06x) reading %04x from $50001%01x\n",activecpu_get_pc(),(raizing_cpu_reply[offset] & 0xff),(offset*2));*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "68K (PC:%06x) reading %04x from $50001%01x\n",activecpu_get_pc(),(raizing_cpu_reply[offset] & 0xff),(offset*2));*/
 	return (raizing_cpu_reply[offset] & 0xff);
 }
 static WRITE16_HANDLER ( raizing_sndcomms_w )
 {
-/*	logerror("68K (PC:%06x) writing %04x to $50001%01x\n",activecpu_get_pc(),data,((offset*2)+4));*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "68K (PC:%06x) writing %04x to $50001%01x\n",activecpu_get_pc(),data,((offset*2)+4));*/
 	COMBINE_DATA(&raizing_cpu_comm16[offset]);
 
 	cpu_set_nmi_line(1, ASSERT_LINE);
@@ -1239,38 +1239,38 @@ static READ_HANDLER ( raizing_command_r )
 {
 	data8_t *raizing_cpu_comm = (data8_t *)raizing_cpu_comm16;
 
-	logerror("Z80 (PC:%04x) reading %02x from $48\n",activecpu_get_pc(),raizing_cpu_comm[BYTE_XOR_BE(1)]);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80 (PC:%04x) reading %02x from $48\n",activecpu_get_pc(),raizing_cpu_comm[BYTE_XOR_BE(1)]);
 	return raizing_cpu_comm[BYTE_XOR_BE(1)];
 }
 static READ_HANDLER ( raizing_request_r )
 {
 	data8_t *raizing_cpu_comm = (data8_t *)raizing_cpu_comm16;
 
-	logerror("Z80 (PC:%04x) reading %02x from $4A\n",activecpu_get_pc(),raizing_cpu_comm[BYTE_XOR_BE(3)]);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80 (PC:%04x) reading %02x from $4A\n",activecpu_get_pc(),raizing_cpu_comm[BYTE_XOR_BE(3)]);
 	return raizing_cpu_comm[BYTE_XOR_BE(3)];
 }
 static WRITE_HANDLER ( raizing_command_ack_w )
 {
-/*	logerror("Z80 (PC:%04x) writing %02x to $40\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80 (PC:%04x) writing %02x to $40\n",activecpu_get_pc(),data);*/
 	raizing_cpu_reply[0] = data;
 }
 static WRITE_HANDLER ( raizing_request_ack_w )
 {
-/*	logerror("Z80 (PC:%04x) writing %02x to $42\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80 (PC:%04x) writing %02x to $42\n",activecpu_get_pc(),data);*/
 	raizing_cpu_reply[1] = data;
 }
 
 
 static WRITE_HANDLER ( raizing_clear_nmi_w )
 {
-/*	logerror("Clear NMI on the Z80 (Z80 PC:%06x writing %04x)\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Clear NMI on the Z80 (Z80 PC:%06x writing %04x)\n",activecpu_get_pc(),data);*/
 	cpu_set_nmi_line(1, CLEAR_LINE);
 	cpu_yield();
 }
 
 static WRITE16_HANDLER ( bbakraid_trigger_z80_irq )
 {
-/*	logerror("Triggering IRQ on the Z80 (PC:%06x)\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Triggering IRQ on the Z80 (PC:%06x)\n",activecpu_get_pc());*/
 	cpu_set_irq_line(1, 0, HOLD_LINE);
 	cpu_yield();
 }
@@ -1278,7 +1278,7 @@ static WRITE16_HANDLER ( bbakraid_trigger_z80_irq )
 static void bbakraid_irqhandler (int state)
 {
 	/* Not used ???  Connected to a test pin (TP082) */
-	logerror("YMZ280 is generating an interrupt. State=%08x\n",state);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "YMZ280 is generating an interrupt. State=%08x\n",state);
 }
 
 static INTERRUPT_GEN( bbakraid_snd_interrupt )

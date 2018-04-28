@@ -279,7 +279,7 @@ WRITE_HANDLER( fromance_crtc_data_w )
 			break;
 
 		default:
-			logerror("CRTC register %02X = %02X\n", crtc_register, data & 0xff);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CRTC register %02X = %02X\n", crtc_register, data & 0xff);
 			break;
 	}
 }

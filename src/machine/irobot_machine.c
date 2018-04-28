@@ -86,14 +86,14 @@ WRITE_HANDLER( irobot_sharedmem_w )
 
 static void irvg_done_callback (int param)
 {
-	logerror("vg done. ");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "vg done. ");
 	IR_CPU_STATE;
 	irvg_running = 0;
 }
 
 WRITE_HANDLER( irobot_statwr_w )
 {
-	logerror("write %2x ", data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "write %2x ", data);
 	IR_CPU_STATE;
 
 	irobot_combase = comRAM[data >> 7];
@@ -109,9 +109,9 @@ WRITE_HANDLER( irobot_statwr_w )
 		irobot_run_video();
 #if IR_TIMING
 		if (irvg_running == 0)
-			logerror("vg start ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "vg start ");
 		else
-			logerror("vg start [busy!] ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "vg start [busy!] ");
 		IR_CPU_STATE;
 		timer_adjust(irvg_timer, TIME_IN_MSEC(10), 0, 0);
 #endif
@@ -177,7 +177,7 @@ static void scanline_callback(int scanline)
 {
     if (scanline == 0) irvg_vblank=0;
     if (scanline == 224) irvg_vblank=1;
-    logerror("SCANLINE CALLBACK %d\n",scanline);
+    log_cb(RETRO_LOG_ERROR, LOGPRE "SCANLINE CALLBACK %d\n",scanline);
     /* set the IRQ line state based on the 32V line state */
     cpu_set_irq_line(0, M6809_IRQ_LINE, (scanline & 32) ? ASSERT_LINE : CLEAR_LINE);
 
@@ -237,7 +237,7 @@ READ_HANDLER( irobot_status_r )
 {
 	int d=0;
 
-	logerror("status read. ");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "status read. ");
 	IR_CPU_STATE;
 
 	if (!irmb_running) d |= 0x20;
@@ -455,7 +455,7 @@ DRIVER_INIT( irobot )
 
 static void irmb_done_callback (int param)
 {
-    logerror("mb done. ");
+    log_cb(RETRO_LOG_ERROR, LOGPRE "mb done. ");
 	IR_CPU_STATE;
 	irmb_running = 0;
 	cpu_set_irq_line(0, M6809_FIRQ_LINE, ASSERT_LINE);
@@ -845,19 +845,19 @@ default:	case 0x3f:	IXOR(irmb_din(curop), 0);							break;
 	}
 	profiler_mark(PROFILER_END);
 
-	logerror("%d instructions for Mathbox \n", icount);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%d instructions for Mathbox \n", icount);
 
 
 #if IR_TIMING
 	if (irmb_running == 0)
 	{
 		timer_adjust(irmb_timer, TIME_IN_HZ(12000000) * icount, 0, 0);
-		logerror("mb start ");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "mb start ");
 		IR_CPU_STATE;
 	}
 	else
 	{
-		logerror("mb start [busy!] ");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "mb start [busy!] ");
 		IR_CPU_STATE;
 		timer_adjust(irmb_timer, TIME_IN_NSEC(200) * icount, 0, 0);
 	}
@@ -876,10 +876,10 @@ void disassemble_instruction(irmb_ops *op)
 	int lp;
 
 	if (i==0)
-		logerror(" Address  a b func stor: Q :Y, R, S RDCSAESM da m rs\n");
-	logerror("%04X    : ",i);
-	logerror("%X ",op->areg);
-	logerror("%X ",op->breg);
+		log_cb(RETRO_LOG_ERROR, LOGPRE " Address  a b func stor: Q :Y, R, S RDCSAESM da m rs\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04X    : ",i);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%X ",op->areg);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%X ",op->breg);
 
 	lp=(op->func & 0x38)>>3;
 	if ((lp&1)==0)
@@ -887,61 +887,61 @@ void disassemble_instruction(irmb_ops *op)
 	else if((op->flags & FL_DIV) != 0)
 		lp&=6;
 	else
-		logerror("*");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "*");
 
 	switch (lp)
 	{
 		case 0:
-			logerror("ADD  ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "ADD  ");
 			break;
 		case 1:
-			logerror("SUBR ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "SUBR ");
 			break;
 		case 2:
-			logerror("SUB  ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "SUB  ");
 			break;
 		case 3:
-			logerror("OR   ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "OR   ");
 			break;
 		case 4:
-			logerror("AND  ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "AND  ");
 			break;
 		case 5:
-			logerror("AND  ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "AND  ");
 			break;
 		case 6:
-			logerror("XOR  ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "XOR  ");
 			break;
 		case 7:
-			logerror("XNOR ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "XNOR ");
 			break;
 	}
 
 	switch ((op->func & 0x1c0)>>6)
 	{
 		case 0:
-			logerror("  - : Q :F,");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "  - : Q :F,");
 			break;
 		case 1:
-			logerror("  - : - :F,");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "  - : - :F,");
 			break;
 		case 2:
-			logerror("  R%x: - :A,",op->breg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "  R%x: - :A,",op->breg);
 			break;
 		case 3:
-			logerror("  R%x: - :F,",op->breg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "  R%x: - :F,",op->breg);
 			break;
 		case 4:
-			logerror(">>R%x:>>Q:F,",op->breg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE ">>R%x:>>Q:F,",op->breg);
 			break;
 		case 5:
-			logerror(">>R%x: - :F,",op->breg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE ">>R%x: - :F,",op->breg);
 			break;
 		case 6:
-			logerror("<<R%x:<<Q:F,",op->breg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "<<R%x:<<Q:F,",op->breg);
 			break;
 		case 7:
-			logerror("<<R%x: - :F,",op->breg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "<<R%x: - :F,",op->breg);
 			break;
 	}
 
@@ -951,73 +951,73 @@ void disassemble_instruction(irmb_ops *op)
 	else if((op->flags & FL_MULT) == 0)
 		lp&=5;
 	else
-		logerror("*");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "*");
 
 	switch (lp)
 	{
 		case 0:
-			logerror("R%x, Q ",op->areg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "R%x, Q ",op->areg);
 			break;
 		case 1:
-			logerror("R%x,R%x ",op->areg,op->breg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "R%x,R%x ",op->areg,op->breg);
 			break;
 		case 2:
-			logerror("00, Q ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "00, Q ");
 			break;
 		case 3:
-			logerror("00,R%x ",op->breg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "00,R%x ",op->breg);
 			break;
 		case 4:
-			logerror("00,R%x ",op->areg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "00,R%x ",op->areg);
 			break;
 		case 5:
-			logerror(" D,R%x ",op->areg);
+			log_cb(RETRO_LOG_ERROR, LOGPRE " D,R%x ",op->areg);
 			break;
 		case 6:
-			logerror(" D, Q ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE " D, Q ");
 			break;
 		case 7:
-			logerror(" D,00 ");
+			log_cb(RETRO_LOG_ERROR, LOGPRE " D,00 ");
 			break;
 	}
 
 	for (lp=0;lp<8;lp++)
 		if (op->flags & (0x80>>lp))
-			logerror("1");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "1");
 		else
-			logerror("0");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "0");
 
-	logerror(" %02X ",op->diradd);
-	logerror("%X\n",op->ramsel);
+	log_cb(RETRO_LOG_ERROR, LOGPRE " %02X ",op->diradd);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%X\n",op->ramsel);
 	if (op->jtype)
 	{
-		logerror("              ");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "              ");
 		switch (op->jtype)
 		{
 			case 1:
-				logerror("BO ");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "BO ");
 				break;
 			case 2:
-				logerror("BZ ");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "BZ ");
 				break;
 			case 3:
-				logerror("BH ");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "BH ");
 				break;
 			case 4:
-				logerror("BL ");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "BL ");
 				break;
 			case 5:
-				logerror("B  ");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "B  ");
 				break;
 			case 6:
-				logerror("Cl ");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Cl ");
 				break;
 			case 7:
-				logerror("Return\n\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Return\n\n");
 				break;
 		}
-		if (op->jtype != 7) logerror("  %04X    \n",op->nxtadd);
-		if (op->jtype == 5) logerror("\n");
+		if (op->jtype != 7) log_cb(RETRO_LOG_ERROR, LOGPRE "  %04X    \n",op->nxtadd);
+		if (op->jtype == 5) log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 		}
 	}
 }

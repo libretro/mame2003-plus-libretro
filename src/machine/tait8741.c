@@ -86,7 +86,7 @@ void taito8741_serial_tx(int num)
 		/* transfer data */
 		taito8741_serial_rx(sst,st->txd);
 #if __log__
-		logerror("8741-%d Serial data TX to %d\n",num,st->connect);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "8741-%d Serial data TX to %d\n",num,st->connect);
 #endif
 		if( sst->mode==TAITO8741_SLAVE)
 			sst->serial_out = 1;
@@ -152,7 +152,7 @@ static void taito8741_update(int num)
 					/* buffering transmit data */
 					if( st->txpoint < 8 )
 					{
-/*if (st->txpoint == 0 && num==1 && data&0x80) logerror("Coin Put\n");*/
+/*if (st->txpoint == 0 && num==1 && data&0x80) log_cb(RETRO_LOG_ERROR, LOGPRE "Coin Put\n");*/
 						st->txd[st->txpoint++] = data;
 					}
 					break;
@@ -183,7 +183,7 @@ static void taito8741_update(int num)
 			case 0x05: /* read receive buffer 4 */
 			case 0x06: /* read receive buffer 5 */
 			case 0x07: /* read receive buffer 6 */
-/*if (data == 2 && num==0 && st->rxd[data-1]&0x80) logerror("Coin Get\n");*/
+/*if (data == 2 && num==0 && st->rxd[data-1]&0x80) log_cb(RETRO_LOG_ERROR, LOGPRE "Coin Get\n");*/
 				taito8741_hostdata_w(st,st->rxd[data-1]);
 				break;
 			case 0x08:	/* latch received serial data */
@@ -263,7 +263,7 @@ static int I8741_status_r(int num)
 	I8741 *st = &taito8741[num];
 	taito8741_update(num);
 #if __log__
-	logerror("8741-%d ST Read %02x PC=%04x\n",num,st->status,activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "8741-%d ST Read %02x PC=%04x\n",num,st->status,activecpu_get_pc());
 #endif
 	return st->status;
 }
@@ -275,7 +275,7 @@ static int I8741_data_r(int num)
 	int ret = st->toData;
 	st->status &= 0xfe;
 #if __log__
-	logerror("8741-%d DATA Read %02x PC=%04x\n",num,ret,activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "8741-%d DATA Read %02x PC=%04x\n",num,ret,activecpu_get_pc());
 #endif
 	/* update chip */
 	taito8741_update(num);
@@ -294,7 +294,7 @@ static void I8741_data_w(int num, int data)
 {
 	I8741 *st = &taito8741[num];
 #if __log__
-	logerror("8741-%d DATA Write %02x PC=%04x\n",num,data,activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "8741-%d DATA Write %02x PC=%04x\n",num,data,activecpu_get_pc());
 #endif
 	st->fromData = data;
 	st->status |= 0x02;
@@ -307,7 +307,7 @@ static void I8741_command_w(int num, int data)
 {
 	I8741 *st = &taito8741[num];
 #if __log__
-	logerror("8741-%d CMD Write %02x PC=%04x\n",num,data,activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "8741-%d CMD Write %02x PC=%04x\n",num,data,activecpu_get_pc());
 #endif
 	st->fromCmd = data;
 	st->status |= 0x04;

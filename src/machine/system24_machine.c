@@ -47,7 +47,7 @@ void system24temp_sys16_io_set_callbacks(UINT8 (*io_r)(int port),
 
 READ16_HANDLER ( system24temp_sys16_io_r )
 {
-	/*	logerror("IO read %02x (%d:%x)\n", offset, cpu_getactivecpu(), activecpu_get_pc());*/
+	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IO read %02x (%d:%x)\n", offset, cpu_getactivecpu(), activecpu_get_pc());*/
 	if(offset < 8)
 		return system24temp_sys16_io_io_r ? system24temp_sys16_io_io_r(offset) : 0xff;
 	else if (offset < 0x20) {
@@ -65,7 +65,7 @@ READ16_HANDLER ( system24temp_sys16_io_r )
 		case 0xf:
 			return system24temp_sys16_io_dir;
 		default:
-			logerror("IO control read %02x (%d:%x)\n", offset, cpu_getactivecpu(), activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "IO control read %02x (%d:%x)\n", offset, cpu_getactivecpu(), activecpu_get_pc());
 			return 0xff;
 		}
 	} else
@@ -83,7 +83,7 @@ WRITE16_HANDLER( system24temp_sys16_io_w )
 	if(ACCESSING_LSB) {
 		if(offset < 8) {
 			if(!(system24temp_sys16_io_dir & (1 << offset))) {
-				logerror("IO port write on input-only port (%d, [%02x], %02x, %d:%x)\n", offset, system24temp_sys16_io_dir, data & 0xff, cpu_getactivecpu(), activecpu_get_pc());
+				log_cb(RETRO_LOG_ERROR, LOGPRE "IO port write on input-only port (%d, [%02x], %02x, %d:%x)\n", offset, system24temp_sys16_io_dir, data & 0xff, cpu_getactivecpu(), activecpu_get_pc());
 				return;
 			}
 			if(system24temp_sys16_io_io_w)
@@ -99,7 +99,7 @@ WRITE16_HANDLER( system24temp_sys16_io_w )
 				system24temp_sys16_io_dir = data;
 				break;
 			default:
-				logerror("IO control write %02x, %02x (%d:%x)\n", offset, data & 0xff, cpu_getactivecpu(), activecpu_get_pc());
+				log_cb(RETRO_LOG_ERROR, LOGPRE "IO control write %02x, %02x (%d:%x)\n", offset, data & 0xff, cpu_getactivecpu(), activecpu_get_pc());
 			}
 		}
 	}

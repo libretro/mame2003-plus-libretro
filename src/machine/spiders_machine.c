@@ -24,8 +24,8 @@ void spiders_irq2a(int state) { cpu_set_irq_line(0,M6809_IRQ_LINE,state ? ASSERT
 void spiders_irq2b(int state) { cpu_set_irq_line(0,M6809_IRQ_LINE,state ? ASSERT_LINE : CLEAR_LINE); }
 
 /* Sound CPU */
-void spiders_irq3a(int state) { logerror("PIA3 irqA %d\n",state); }
-void spiders_irq3b(int state) { logerror("PIA3 irqB %d\n",state); }
+void spiders_irq3a(int state) { log_cb(RETRO_LOG_ERROR, LOGPRE "PIA3 irqA %d\n",state); }
+void spiders_irq3b(int state) { log_cb(RETRO_LOG_ERROR, LOGPRE "PIA3 irqB %d\n",state); }
 
 static WRITE_HANDLER( soundcmd_w )
 {
@@ -160,7 +160,7 @@ READ_HANDLER( spiders_vrom_r )
 	if(vrom_ctrl_mode)
 	{
 		retval=RAM[vrom_address];
-/*	        logerror("VIDEO : Read data %02x from Port address %04x\n",retval,vrom_address);*/
+/*	        log_cb(RETRO_LOG_ERROR, LOGPRE "VIDEO : Read data %02x from Port address %04x\n",retval,vrom_address);*/
 		vrom_address++;
 	}
 	else
@@ -187,7 +187,7 @@ READ_HANDLER( spiders_vrom_r )
 				break;
 		}
 		retval=0;
-/*	        logerror("VIDEO : Port address set to %04x\n",vrom_address);*/
+/*	        log_cb(RETRO_LOG_ERROR, LOGPRE "VIDEO : Port address set to %04x\n",vrom_address);*/
 	}
 	return retval;
 }

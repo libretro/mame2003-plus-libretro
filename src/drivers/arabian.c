@@ -164,7 +164,7 @@ static READ_HANDLER( custom_cpu_r )
 
 		/* error cases */
 		default:
-			logerror("Input Port %04X read.  PC=%04X\n", offset+0xd7f0, activecpu_get_pc());
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Input Port %04X read.  PC=%04X\n", offset+0xd7f0, activecpu_get_pc());
 			return 0;
 	}
 	return 0;

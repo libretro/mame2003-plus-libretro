@@ -38,7 +38,7 @@ int illegal_pc = 0 ;
 #ifdef MAME_DEBUG
 void m68k_illegal_opcode(void)
 {
-	logerror("Illegal Opcode %4x at %8x\n",illegal_op,illegal_pc);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Illegal Opcode %4x at %8x\n",illegal_op,illegal_pc);
 }
 #endif
 
@@ -503,8 +503,8 @@ int m68000_execute(int cycles)
                     dreg = dreg + M68000_regs.d[mycount];
                 }
 
-           	    logerror("=> %8x %8x ",areg,dreg);
-			    logerror("%6x %4x %d\n",M68000_regs.pc,M68000_regs.sr & 0x271F,m68k_ICount);
+           	    log_cb(RETRO_LOG_ERROR, LOGPRE "=> %8x %8x ",areg,dreg);
+			    log_cb(RETRO_LOG_ERROR, LOGPRE "%6x %4x %d\n",M68000_regs.pc,M68000_regs.sr & 0x271F,m68k_ICount);
             }
             #endif
 
@@ -909,8 +909,8 @@ int m68020_execute(int cycles)
                     dreg = dreg + M68020_regs.d[mycount];
                 }
 
-           	    logerror("=> %8x %8x ",areg,dreg);
-			    logerror("%6x %4x %d\n",M68020_regs.pc,M68020_regs.sr & 0x271F,m68k_ICount);
+           	    log_cb(RETRO_LOG_ERROR, LOGPRE "=> %8x %8x ",areg,dreg);
+			    log_cb(RETRO_LOG_ERROR, LOGPRE "%6x %4x %d\n",M68020_regs.pc,M68020_regs.sr & 0x271F,m68k_ICount);
             }
             #endif
 

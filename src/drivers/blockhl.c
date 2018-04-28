@@ -339,7 +339,7 @@ static void blockhl_banking( int lines )
 
 	/* other bits unknown */
 
-	if ((lines & 0x84) != 0x80) logerror("%04x: setlines %02x\n",activecpu_get_pc(),lines);
+	if ((lines & 0x84) != 0x80) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: setlines %02x\n",activecpu_get_pc(),lines);
 }
 
 static MACHINE_INIT( blockhl )

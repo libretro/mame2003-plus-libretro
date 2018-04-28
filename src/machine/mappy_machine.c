@@ -77,7 +77,7 @@ READ_HANDLER( mappy_customio_1_r )
 	static int credden[] = { 1, 1, 1, 1, 2, 2, 3, 3 };
 	int val, temp, mode = mappy_customio_1[8];
 
-	logerror("I/O read 1: mode %d offset %d\n", mode, offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "I/O read 1: mode %d offset %d\n", mode, offset);
 
 	/* mode 3 is the standard, and returns actual important values */
 	if (mode == 1 || mode == 3)
@@ -158,7 +158,7 @@ READ_HANDLER( mappy_customio_2_r )
 {
 	int mode = mappy_customio_2[8];
 
-	logerror("I/O read 2: mode %d, offset %d\n", mappy_customio_2[8], offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "I/O read 2: mode %d, offset %d\n", mappy_customio_2[8], offset);
 
 	/* mode 4 is the standard, and returns actual important values */
 	if (mode == 4)
@@ -327,7 +327,7 @@ READ_HANDLER( motos_customio_1_r )
 {
 	int val, mode = mappy_customio_1[8];
 
-	logerror("I/O read 1: mode %d offset %d\n", mode, offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "I/O read 1: mode %d offset %d\n", mode, offset);
 
 	/* mode 1 is the standard, and returns actual important values */
 	if (mode == 1)
@@ -385,7 +385,7 @@ READ_HANDLER( motos_customio_2_r )
 {
 	int mode = mappy_customio_2[8];
 
-	logerror("I/O read 2: mode %d, offset %d\n", mode, offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "I/O read 2: mode %d, offset %d\n", mode, offset);
 
 	/* mode 9 is the standard, and returns actual important values */
 	if (mode == 9)
@@ -442,7 +442,7 @@ READ_HANDLER( todruaga_customio_1_r )
 	static int credden[] = { 1, 2, 1, 3 };
 	int val, temp, mode = mappy_customio_1[8];
 
-	logerror("%04x: I/O read 1: mode %d offset %d\n", activecpu_get_pc(), mode, offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: I/O read 1: mode %d offset %d\n", activecpu_get_pc(), mode, offset);
 
 	if (io_chip_1_enabled)
 	{
@@ -512,7 +512,7 @@ READ_HANDLER( todruaga_customio_2_r )
 {
 	int mode = mappy_customio_2[8];
 
-	logerror("%04x: I/O read 2: mode %d, offset %d\n", activecpu_get_pc(), mode, offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: I/O read 2: mode %d, offset %d\n", activecpu_get_pc(), mode, offset);
 
 	if (io_chip_1_enabled)
 	{

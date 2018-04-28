@@ -291,7 +291,7 @@ static UINT32 f2u(float f)
 
 UINT32 opUNHANDLED(void)
 {
-	logerror("Unhandled OpCode found : %02x at %08x\n", OpRead16(PC), PC);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Unhandled OpCode found : %02x at %08x\n", OpRead16(PC), PC);
 	abort();
 }
 

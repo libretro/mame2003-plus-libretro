@@ -115,7 +115,7 @@ D4-D7 = unused?
 
 WRITE_HANDLER( segar_video_port_w )
 {
-	logerror("VPort = %02X\n",data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "VPort = %02X\n",data);
 
 	if ((data & 0x01) != sv.flip)
 	{
@@ -170,7 +170,7 @@ WRITE_HANDLER( segar_colortable_w )
 	}
 	else
 	{
-		logerror("color %02X:%02X (write=%d)\n",offset,data,sv.color_write_enable);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "color %02X:%02X (write=%d)\n",offset,data,sv.color_write_enable);
 		segar_mem_colortable[offset] = data;
 	}
 }
@@ -655,7 +655,7 @@ WRITE_HANDLER( pignewt_back_ports_w )
 {
 	unsigned int tempscene;
 
-	logerror("Port %02X:%02X\n",offset + 0xb8,data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Port %02X:%02X\n",offset + 0xb8,data);
 
 	/* These are all guesses.  There are some bits still being ignored! */
 	switch (offset)

@@ -19,22 +19,6 @@
 
 /*************************************
  *
- *	Debug logging
- *
- *************************************/
-
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
-
-
-/*************************************
- *
  *	Macros to help verify active CPU
  *
  *************************************/
@@ -337,7 +321,7 @@ void cpu_set_irq_line_and_vector(int cpunum, int irqline, int state, int vector)
 	}
 #if 0
 	else
-		logerror("Exceeded pending IRQ event queue on CPU %d!\n", cpunum);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Exceeded pending IRQ event queue on CPU %d!\n", cpunum);
 #endif
 }
 

@@ -18,16 +18,6 @@
 #include "s2650cpu.h"
 
 
-/* define this to have some interrupt information logged */
-#define VERBOSE 0
-
-#if VERBOSE
-#include <stdio.h>
-#define LOG(x) logerror x
-#else
-#define LOG(x)
-#endif
-
 /* define this to expand all EA calculations inline */
 #define INLINE_EA	1
 
@@ -125,7 +115,7 @@ static	UINT8 ccc[0x200] = {
 				if (!(++addr & PMSK)) addr -= PLEN; 			\
 				S.ea = (S.ea + RDMEM(addr)) & AMSK; 			\
 			}													\
-			LOG(("S2650 interrupt to $%04x\n", S.ea));\
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "S2650 interrupt to $%04x\n", S.ea);\
 			S.psu  = (S.psu & ~SP) | ((S.psu + 1) & SP) | II;	\
 			S.ras[S.psu & SP] = S.page + S.iar;					\
 			S.page = S.ea & PAGE;								\

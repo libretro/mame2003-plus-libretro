@@ -13,7 +13,7 @@ WRITE_HANDLER( blockade_videoram_w )
 
 	if (input_port_3_r(0) & 0x80)
 	{
-		logerror("blockade_videoram_w: scanline %d\n", cpu_getscanline());
+		log_cb(RETRO_LOG_ERROR, LOGPRE "blockade_videoram_w: scanline %d\n", cpu_getscanline());
 		cpu_spinuntil_int();
 	}
 }

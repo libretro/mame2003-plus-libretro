@@ -263,7 +263,7 @@ static void contcirc_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct r
 		}
 
 		if (bad_chunks)
-logerror("Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
+log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
 	}
 }
 
@@ -448,7 +448,7 @@ static void chasehq_draw_sprites_16x16(struct mame_bitmap *bitmap,const struct r
 		}
 
 		if (bad_chunks)
-logerror("Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
+log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
 	}
 }
 
@@ -541,7 +541,7 @@ static void bshark_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct rec
 		}
 
 		if (bad_chunks)
-logerror("Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
+log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
 	}
 }
 
@@ -643,7 +643,7 @@ static void sci_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct rectan
 		}
 
 		if (bad_chunks)
-logerror("Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
+log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
 	}
 }
 
@@ -735,7 +735,7 @@ static void aquajack_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct r
 		}
 
 		if (bad_chunks)
-logerror("Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
+log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
 	}
 }
 
@@ -827,7 +827,7 @@ static void spacegun_draw_sprites_16x8(struct mame_bitmap *bitmap,const struct r
 		}
 
 		if (bad_chunks)
-logerror("Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
+log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
 	}
 }
 

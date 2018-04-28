@@ -24,7 +24,7 @@ static void line(void)
 	{
 #if 0
 		if (state.window_checking != 0 && state.window_checking != 3)
-			logerror("LINE XY  %08X - Window Checking Mode %d not supported\n", PC, state.window_checking);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "LINE XY  %08X - Window Checking Mode %d not supported\n", PC, state.window_checking);
 #endif
 
 		P_FLAG = 1;
@@ -89,7 +89,7 @@ static int apply_window(const char *inst_name,int srcbpp, UINT32 *srcaddr, XY *d
 
 #if 0
 		if (state.window_checking == 1 || state.window_checking == 2)
-			logerror("%08x: %s apply_window window mode %d not supported!\n", activecpu_get_pc(), inst_name, state.window_checking);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: %s apply_window window mode %d not supported!\n", activecpu_get_pc(), inst_name, state.window_checking);
 #endif
 
 		if (state.window_checking == 1)
@@ -214,7 +214,7 @@ static void shiftreg_w(offs_t offset,data16_t data)
 		(*state.config->from_shiftreg)((UINT32)(offset << 3) & ~15, &state.shiftreg[0]);
 #if 0
 	else
-		logerror("From ShiftReg function not set. PC = %08X\n", PC);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "From ShiftReg function not set. PC = %08X\n", PC);
 #endif
 }
 
@@ -224,7 +224,7 @@ static data16_t shiftreg_r(offs_t offset)
 		(*state.config->to_shiftreg)((UINT32)(offset << 3) & ~15, &state.shiftreg[0]);
 #if 0
 	else
-		logerror("To ShiftReg function not set. PC = %08X\n", PC);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "To ShiftReg function not set. PC = %08X\n", PC);
 #endif
 	return state.shiftreg[0];
 }

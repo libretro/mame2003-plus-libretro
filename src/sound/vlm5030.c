@@ -251,13 +251,13 @@ static int parse_frame (void)
 		if( cmd & 0x02 )
 		{	/* end of speech */
 
-			/* logerror("VLM5030 %04X end \n",VLM5030_address ); */
+			/* log_cb(RETRO_LOG_ERROR, LOGPRE "VLM5030 %04X end \n",VLM5030_address ); */
 			return 0;
 		}
 		else
 		{	/* silent frame */
 			int nums = ( (cmd>>2)+1 )*2;
-			/* logerror("VLM5030 %04X silent %d frame\n",VLM5030_address,nums ); */
+			/* log_cb(RETRO_LOG_ERROR, LOGPRE "VLM5030 %04X silent %d frame\n",VLM5030_address,nums ); */
 			return nums * FR_SIZE;
 		}
 	}
@@ -279,7 +279,7 @@ static int parse_frame (void)
 	new_k[0] = K1_table[get_bits(42,6)];
 
 	VLM5030_address+=6;
-	logerror("VLM5030 %04X voice \n",VLM5030_address );
+	log_cb(RETRO_LOG_ERROR, LOGPRE "VLM5030 %04X voice \n",VLM5030_address );
 	return FR_SIZE;
 }
 
@@ -408,7 +408,7 @@ phase_stop:
 		if( sample_count <= length)
 		{
 			sample_count = 0;
-			/* logerror("VLM5030 BSY=H\n" ); */
+			/* log_cb(RETRO_LOG_ERROR, LOGPRE "VLM5030 BSY=H\n" ); */
 			/* pin_BSY = 1; */
 			VLM5030_phase = PH_WAIT;
 		}
@@ -421,7 +421,7 @@ phase_stop:
 		if( sample_count <= length)
 		{
 			sample_count = 0;
-			/* logerror("VLM5030 BSY=L\n" ); */
+			/* log_cb(RETRO_LOG_ERROR, LOGPRE "VLM5030 BSY=L\n" ); */
 			pin_BSY = 0;
 			VLM5030_phase = PH_IDLE;
 		}
@@ -602,7 +602,7 @@ if( interp_step != 1)
 #endif
 				}
 				VLM5030_update();
-				/* logerror("VLM5030 %02X start adr=%04X\n",table/2,VLM5030_address ); */
+				/* log_cb(RETRO_LOG_ERROR, LOGPRE "VLM5030 %02X start adr=%04X\n",table/2,VLM5030_address ); */
 				/* reset process status */
 				sample_count = VLM5030_frame_size;
 				interp_count = FR_SIZE;

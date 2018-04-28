@@ -183,7 +183,7 @@ static WRITE16_HANDLER( cpua_ctrl_w )
 
 	parse_control();
 
-	logerror("CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
 }
 
 static WRITE16_HANDLER( darius_watchdog_w )
@@ -224,7 +224,7 @@ static READ16_HANDLER( darius_ioc_r )
 			return input_port_3_word_r(0,mem_mask);	/* DSW */
 	}
 
-logerror("CPU #0 PC %06x: warning - read unmapped ioc offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped ioc offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -259,7 +259,7 @@ static WRITE16_HANDLER( darius_ioc_w )
 			return;
 	}
 
-logerror("CPU #0 PC %06x: warning - write unmapped ioc offset %06x with %04x\n",activecpu_get_pc(),offset,data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write unmapped ioc offset %06x with %04x\n",activecpu_get_pc(),offset,data);
 }
 
 
@@ -339,7 +339,7 @@ static WRITE_HANDLER( sound_bankswitch_w )
 static WRITE_HANDLER( adpcm_command_w )
 {
 	adpcm_command = data;
-	/* logerror("#ADPCM command write =%2x\n",data); */
+	/* log_cb(RETRO_LOG_ERROR, LOGPRE "#ADPCM command write =%2x\n",data); */
 }
 
 #if 0
@@ -543,7 +543,7 @@ static struct MSM5205interface msm5205_interface =
 
 static READ_HANDLER( adpcm_command_read )
 {
-	/* logerror("read port 0: %02x  PC=%4x\n",adpcm_command, activecpu_get_pc() ); */
+	/* log_cb(RETRO_LOG_ERROR, LOGPRE "read port 0: %02x  PC=%4x\n",adpcm_command, activecpu_get_pc() ); */
 	return adpcm_command;
 }
 
@@ -560,13 +560,13 @@ static READ_HANDLER( readport3 )
 static WRITE_HANDLER ( adpcm_nmi_disable )
 {
 	nmi_enable = 0;
-	/* logerror("write port 0: NMI DISABLE  PC=%4x\n", data, activecpu_get_pc() ); */
+	/* log_cb(RETRO_LOG_ERROR, LOGPRE "write port 0: NMI DISABLE  PC=%4x\n", data, activecpu_get_pc() ); */
 }
 
 static WRITE_HANDLER ( adpcm_nmi_enable )
 {
 	nmi_enable = 1;
-	/* logerror("write port 1: NMI ENABLE   PC=%4x\n", activecpu_get_pc() ); */
+	/* log_cb(RETRO_LOG_ERROR, LOGPRE "write port 1: NMI ENABLE   PC=%4x\n", activecpu_get_pc() ); */
 }
 
 static WRITE_HANDLER( adpcm_data_w )

@@ -81,12 +81,6 @@
 #define VERBOSE_POLY	0
 #define VERBOSE_RAND	0
 
-#if VERBOSE
-#define LOG(x) logerror x
-#else
-#define LOG(x)
-#endif
-
 #if VERBOSE_SOUND
 #define LOG_SOUND(x) logerror x
 #else
@@ -665,7 +659,7 @@ int pokey_sh_start(const struct MachineSound *msound)
 
 		if( p->channel == -1 )
 		{
-			logerror("failed to initialize sound channel\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "failed to initialize sound channel\n");
             return 1;
 		}
 	}
@@ -799,7 +793,7 @@ static void pokey_pot_trigger(int param)
     int pot = param & 7;
 	struct POKEYregisters *p = &pokey[chip];
 
-	LOG(("POKEY #%d POT%d triggers after %dus\n", chip, pot, (int)(1000000ul*timer_timeelapsed(p->ptimer[pot]))));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d POT%d triggers after %dus\n", chip, pot, (int)(1000000ul*timer_timeelapsed(p->ptimer[pot])));
 	p->ALLPOT &= ~(1 << pot);	/* set the enabled timer irq status bits */
 }
 
@@ -817,7 +811,7 @@ static void pokey_potgo(int chip)
 	struct POKEYregisters *p = &pokey[chip];
     int pot;
 
-	LOG(("POKEY #%d pokey_potgo\n", chip));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d pokey_potgo\n", chip);
 
     p->ALLPOT = 0xff;
 
@@ -827,7 +821,7 @@ static void pokey_potgo(int chip)
 		if( p->pot_r[pot] )
 		{
 			int r = (*p->pot_r[pot])(pot);
-			LOG(("POKEY #%d pot_r(%d) returned $%02x\n", chip, pot, r));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d pot_r(%d) returned $%02x\n", chip, pot, r);
 			if( r != -1 )
 			{
 				if (r > 228)
@@ -848,7 +842,7 @@ int pokey_register_r(int chip, int offs)
 #ifdef MAME_DEBUG
 	if( chip >= intf.num )
 	{
-		logerror("POKEY #%d is >= number of Pokeys!\n", chip);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "POKEY #%d is >= number of Pokeys!\n", chip);
 		return data;
 	}
 #endif
@@ -868,28 +862,28 @@ int pokey_register_r(int chip, int offs)
 			if( p->ALLPOT & (1 << pot) )
 			{
 				data = (UINT8)(timer_timeelapsed(p->ptimer[pot]) / AD_TIME);
-				LOG(("POKEY #%d read POT%d (interpolated) $%02x\n", chip, pot, data));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d read POT%d (interpolated) $%02x\n", chip, pot, data);
             }
 			else
 			{
 				data = p->POTx[pot];
-				LOG(("POKEY #%d read POT%d (final value)  $%02x\n", chip, pot, data));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d read POT%d (final value)  $%02x\n", chip, pot, data);
 			}
 		}
 		else
-		logerror("PC %04x: warning - read p[chip] #%d POT%d\n", activecpu_get_pc(), chip, pot);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: warning - read p[chip] #%d POT%d\n", activecpu_get_pc(), chip, pot);
 		break;
 
     case ALLPOT_C:
 		if( p->allpot_r )
 		{
 			data = (*p->allpot_r)(offs);
-			LOG(("POKEY #%d ALLPOT callback $%02x\n", chip, data));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d ALLPOT callback $%02x\n", chip, data);
 		}
 		else
 		{
 			data = p->ALLPOT;
-			LOG(("POKEY #%d ALLPOT internal $%02x\n", chip, data));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d ALLPOT internal $%02x\n", chip, data);
 		}
 		break;
 
@@ -936,24 +930,24 @@ int pokey_register_r(int chip, int offs)
 		if( p->serin_r )
 			p->SERIN = (*p->serin_r)(offs);
 		data = p->SERIN;
-		LOG(("POKEY #%d SERIN  $%02x\n", chip, data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d SERIN  $%02x\n", chip, data);
 		break;
 
 	case IRQST_C:
 		/* IRQST is an active low input port; we keep it active high */
 		/* internally to ease the (un-)masking of bits */
 		data = p->IRQST ^ 0xff;
-		LOG(("POKEY #%d IRQST  $%02x\n", chip, data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d IRQST  $%02x\n", chip, data);
 		break;
 
 	case SKSTAT_C:
 		/* SKSTAT is also an active low input port */
 		data = p->SKSTAT ^ 0xff;
-		LOG(("POKEY #%d SKSTAT $%02x\n", chip, data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d SKSTAT $%02x\n", chip, data);
 		break;
 
 	default:
-		LOG(("POKEY #%d register $%02x\n", chip, offs));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d register $%02x\n", chip, offs);
         break;
     }
     return data;
@@ -997,7 +991,7 @@ void pokey_register_w(int chip, int offs, int data)
 #ifdef MAME_DEBUG
 	if( chip >= intf.num )
 	{
-		logerror("POKEY #%d is >= number of Pokeys!\n", chip);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "POKEY #%d is >= number of Pokeys!\n", chip);
 		return;
 	}
 #endif
@@ -1169,17 +1163,17 @@ void pokey_register_w(int chip, int offs, int data)
 
     case SKREST_C:
         /* reset SKSTAT */
-		LOG(("POKEY #%d SKREST $%02x\n", chip, data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d SKREST $%02x\n", chip, data);
 		p->SKSTAT &= ~(SK_FRAME|SK_OVERRUN|SK_KBERR);
         break;
 
     case POTGO_C:
-		LOG(("POKEY #%d POTGO  $%02x\n", chip, data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d POTGO  $%02x\n", chip, data);
 		pokey_potgo(chip);
         break;
 
     case SEROUT_C:
-		LOG(("POKEY #%d SEROUT $%02x\n", chip, data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d SEROUT $%02x\n", chip, data);
 		if (p->serout_w)
 			(*p->serout_w)(offs, data);
 		p->SKSTAT |= SK_SEROUT;
@@ -1194,7 +1188,7 @@ void pokey_register_w(int chip, int offs, int data)
         break;
 
     case IRQEN_C:
-		LOG(("POKEY #%d IRQEN  $%02x\n", chip, data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d IRQEN  $%02x\n", chip, data);
 
         /* acknowledge one or more IRQST bits ? */
 		if( p->IRQST & ~data )
@@ -1220,7 +1214,7 @@ void pokey_register_w(int chip, int offs, int data)
     case SKCTL_C:
 		if( data == p->SKCTL )
             return;
-		LOG(("POKEY #%d SKCTL  $%02x\n", chip, data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d SKCTL  $%02x\n", chip, data);
 		p->SKCTL = data;
         if( !(data & SK_RESET) )
         {

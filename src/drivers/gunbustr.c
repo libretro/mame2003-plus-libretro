@@ -122,7 +122,7 @@ static READ32_HANDLER( gunbustr_input_r )
 			return input_port_2_word_r(0,0) | (coin_word << 16);
 		}
  	}
-logerror("CPU #0 PC %06x: read input %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: read input %06x\n",activecpu_get_pc(),offset);
 
 	return 0x0;
 }

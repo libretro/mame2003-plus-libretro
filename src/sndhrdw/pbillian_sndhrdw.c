@@ -43,6 +43,6 @@ WRITE_HANDLER(data_41a_w)
 		case 0x59:	pb_play_s(0x59,0x5f);break;
 		case 0xdf:  pb_play_s(0x5f,0x62);break; /*code at 0x1eb2*/
 		case 0x62:	pb_play_s(0x62,0x6d);break;
-		default: logerror("[41a] W %x at %x\n",data,activecpu_get_previouspc());
+		default: log_cb(RETRO_LOG_ERROR, LOGPRE "[41a] W %x at %x\n",data,activecpu_get_previouspc());
 	}
 }	

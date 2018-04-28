@@ -200,16 +200,16 @@ static void lfkp(int mask)
 			if (	(RAM[A+ 9] & mask) == (0x36 & mask) &&	/* LD (HL),$xx */
 					(RAM[A+11] & mask) == (0xed & mask) &&
 					(RAM[A+12] & mask) == (0xb0 & mask))	/* LDIR */
-				logerror("%04x: hl de bc (hl),xx ldir\n",A);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: hl de bc (hl),xx ldir\n",A);
 
 			if (	(RAM[A+ 9] & mask) == (0x77 & mask) &&	/* LD (HL),A */
 					(RAM[A+10] & mask) == (0xed & mask) &&
 					(RAM[A+11] & mask) == (0xb0 & mask))	/* LDIR */
-				logerror("%04x: hl de bc (hl),a ldir\n",A);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: hl de bc (hl),a ldir\n",A);
 
 			if (	(RAM[A+ 9] & mask) == (0xed & mask) &&
 					(RAM[A+10] & mask) == (0xb0 & mask))	/* LDIR */
-				logerror("%04x: hl de bc ldir\n",A);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: hl de bc ldir\n",A);
 		}
 
 		/* the following can also be PUSH IX, PUSH IY - need better checking */
@@ -217,18 +217,18 @@ static void lfkp(int mask)
 				(RAM[A+1] & mask) == (0xc5 & mask) &&	/* PUSH BC */
 				(RAM[A+2] & mask) == (0xd5 & mask) &&	/* PUSH DE */
 				(RAM[A+3] & mask) == (0xe5 & mask))		/* PUSH HL */
-			logerror("%04x: push af bc de hl\n",A);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: push af bc de hl\n",A);
 
 		if (	(RAM[A+0] & mask) == (0xe1 & mask) &&	/* POP HL */
 				(RAM[A+1] & mask) == (0xd1 & mask) &&	/* POP DE */
 				(RAM[A+2] & mask) == (0xc1 & mask) &&	/* POP BC */
 				(RAM[A+3] & mask) == (0xf1 & mask))		/* POP AF */
-			logerror("%04x: pop hl de bc af\n",A);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: pop hl de bc af\n",A);
 
 		for (i = 0;i < strlen(text);i++)
 			if ((RAM[A+i] & mask) != (text[i] & mask)) break;
 		if (i == strlen(text))
-			logerror("%04x: INSERT COIN\n",A);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: INSERT COIN\n",A);
 	}
 }
 

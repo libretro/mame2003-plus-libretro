@@ -3217,7 +3217,7 @@ static void PREFIX86(_invalid)(void)
 #else
 	 /* makes the cpu loops forever until user resets it */
 	/*{ extern int debug_key_pressed; debug_key_pressed = 1; } */
-	logerror("illegal instruction %.2x at %.5x\n",PEEKBYTE(I.pc), I.pc);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "illegal instruction %.2x at %.5x\n",PEEKBYTE(I.pc), I.pc);
 	I.pc--;
 	ICOUNT -= 10;
 #endif

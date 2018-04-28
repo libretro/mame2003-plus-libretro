@@ -234,7 +234,7 @@ static READ16_HANDLER( tharrier_mcu_r )
 
 static WRITE16_HANDLER( tharrier_mcu_control_w )
 {
-/*	logerror("%04x: mcu_control_w %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_control_w %02x\n",activecpu_get_pc(),data);*/
 }
 
 

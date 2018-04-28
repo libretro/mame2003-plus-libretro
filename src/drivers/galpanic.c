@@ -195,7 +195,7 @@ static READ16_HANDLER(galpanib_calc_r)
 			return (mame_rand() & 0xffff);
 
 		default:
-			logerror("CPU #0 PC %06x: warning - read unmapped calc address %06x\n",activecpu_get_pc(),offset<<1);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped calc address %06x\n",activecpu_get_pc(),offset<<1);
 	}
 
 	return 0;
@@ -237,7 +237,7 @@ static WRITE16_HANDLER(galpanib_calc_w)
 			hit.mult_b = data;
 			break;
 		default:
-			logerror("CPU #0 PC %06x: warning - write unmapped hit address %06x\n",activecpu_get_pc(),offset<<1);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write unmapped hit address %06x\n",activecpu_get_pc(),offset<<1);
 	}
 }
 

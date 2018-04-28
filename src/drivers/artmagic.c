@@ -117,7 +117,7 @@ static WRITE16_HANDLER( control_w )
 	if (offset == 0)
 		OKIM6295_set_bank_base(0, (((data >> 4) & 1) * 0x40000) % memory_region_length(REGION_SOUND1));
 
-	logerror("%06X:control_w(%d) = %04X\n", activecpu_get_pc(), offset, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:control_w(%d) = %04X\n", activecpu_get_pc(), offset, data);
 }
 
 
@@ -232,7 +232,7 @@ static void ultennis_protection(void)
 			break;
 
 		default:
-			logerror("protection command %02X: unknown\n", prot_input[0]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "protection command %02X: unknown\n", prot_input[0]);
 			prot_input_index = prot_output_index = 0;
 			break;
 	}
@@ -292,7 +292,7 @@ static void cheesech_protection(void)
 			break;
 
 		default:
-			logerror("protection command %02X: unknown\n", prot_input[0]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "protection command %02X: unknown\n", prot_input[0]);
 			prot_input_index = prot_output_index = 0;
 			break;
 	}
@@ -359,7 +359,7 @@ static void stonebal_protection(void)
 			break;
 
 		default:
-			logerror("protection command %02X: unknown\n", prot_input[0]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "protection command %02X: unknown\n", prot_input[0]);
 			prot_input_index = prot_output_index = 0;
 			break;
 	}

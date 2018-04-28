@@ -107,7 +107,7 @@ WRITE_HANDLER( atarifb_out3_w )
 		case 0x03:
 			break;
 	}
-/*	logerror("out3_w, %02x:%02x\n", loop, data);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "out3_w, %02x:%02x\n", loop, data);*/
 }
 
 

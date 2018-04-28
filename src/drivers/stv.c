@@ -215,15 +215,15 @@ void cdb_reset(void){
 
 	iso_reset();
 
-	logerror("ISO_RESET() just executed\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "ISO_RESET() just executed\n");
 
 	cdb_build_toc();
 
-	logerror("BUILD_TOC() just executed\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "BUILD_TOC() just executed\n");
 
 	cdb_build_ftree();
 
-	logerror("BUILD_FTREE() just executed\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "BUILD_FTREE() just executed\n");
 	CD_com		= -1; /* no command being processed*/
 
 	/*CD_hirq		= 0x07d3;*/
@@ -329,7 +329,7 @@ void do_cd_command(void){
 
 		case 0x00:
 				/*get status*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_hirq |= HIRQ_CMOK;
 
@@ -343,7 +343,7 @@ void do_cd_command(void){
 
 		case 0x01:
 				/*get hardware info*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CR1 = (CD_status << 8);
 				CR2 = 0x0201;			/* hardware flag (0x80=hw error 0x02=mpeg present) | version*/
@@ -358,7 +358,7 @@ void do_cd_command(void){
 
 		case 0x02:
 				/*get toc*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CR1 = (CD_status << 8);
 				CR2 = 0xcc;
@@ -377,7 +377,7 @@ void do_cd_command(void){
 				break;
 		case 0x03:
 				/*get session info*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_hirq |= HIRQ_CMOK; /* PEND ?*/
 				/*	cdb_stat = CDB_STAT_PAUSE;*/
@@ -386,7 +386,7 @@ void do_cd_command(void){
 
 				case 0: /* total session information*/
 
-					logerror("get session info (all)\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "get session info (all)\n");
 
 					CR1 = (CD_status << 8);
 					CR2 = 0;
@@ -396,7 +396,7 @@ void do_cd_command(void){
 
 				case 1: /* local session information (exists)*/
 
-					logerror("get session info (first)\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "get session info (first)\n");
 
 					/*	cdb_cr3 = (1 << 8) | (cdb_toc.track[0].fad >> 16);	*/ /* starts with track #1, starting fad*/
 					/*	cdb_cr4 = (cdb_toc.track[0].fad & 0xffff);		*/ /* starting fad*/
@@ -409,7 +409,7 @@ void do_cd_command(void){
 					break;
 
 				default: /* local session information (doesn't exist)*/
-					logerror("get session info (other)\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "get session info (other)\n");
 
 					CR1 = (CD_status << 8);
 					CR2 = 0;
@@ -421,7 +421,7 @@ void do_cd_command(void){
 				break;
 		case 0x04:
 				/*init system  */ /*Based on old source*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				/* note: this is called by the Satun BIOS if DCHG is*/
 				/* not set at reset. probabily manages DCHG flag as well.*/
 
@@ -433,7 +433,7 @@ void do_cd_command(void){
 						case 0:
 					/*	case 2: CD_drive_speed = 2; CD_update_timings(2); break;*/
 					/*	case 1: CD_drive_speed = 1; CD_update_timings(1); break;*/
-						default: logerror("ERROR: invalid drive speed\n");
+						default: log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid drive speed\n");
 					}
 
 					if(CR1 & 0x01){ 				/* software reset*/
@@ -486,12 +486,12 @@ void do_cd_command(void){
 				break;
 		case 0x05:
 				/*open tray*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				/*NOT USED*/
 				break;
 		case 0x06:
 				/*end data transfer*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				switch(CD_trans_type){
 				case -1:	count = 0xffffff; break;			/* no transfer*/
@@ -512,7 +512,7 @@ void do_cd_command(void){
 				break;
 		case 0x10:
 				/*play*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				/* sthief: must be rewritten!*/
 
@@ -527,7 +527,7 @@ void do_cd_command(void){
 					/* resume*/
 					/* bad!*/
 
-					logerror("play : resume , track=%i fad=%i\n", CD_cur_track, CD_cur_fad);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "play : resume , track=%i fad=%i\n", CD_cur_track, CD_cur_fad);
 
 					CD_status = CDB_STAT_PLAY;
 					CD_flag = (CD_cur_ctrl & 0x40) ? CDB_FLAG_CDROM : 0;
@@ -563,7 +563,7 @@ void do_cd_command(void){
 
 						/* play default*/
 
-						logerror("play default\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "play default\n");
 						exit(1);
 
 					}else{
@@ -578,10 +578,10 @@ void do_cd_command(void){
 						idx0 = CR2 & 0xff;
 						idx1 = CR4 & 0xff;
 
-						logerror("play : pm=%02x track=%i idx=%i -> track=%i idx=%i\n", pm, tn0, idx0, tn1, idx1);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "play : pm=%02x track=%i idx=%i -> track=%i idx=%i\n", pm, tn0, idx0, tn1, idx1);
 
 						if(tn1 < tn0 || (tn1 == tn0 && idx1 < idx0)){
-							logerror("ERROR: play track negative range\n");
+							log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: play track negative range\n");
 							exit(1);
 						}
 
@@ -597,7 +597,7 @@ void do_cd_command(void){
 						}
 
 						if(CD_cur_ctrl & 0x40){
-							logerror("ERROR: play data track\n");
+							log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: play data track\n");
 							exit(1);
 						}
 
@@ -658,7 +658,7 @@ void do_cd_command(void){
 
 				}else{
 
-					logerror("ERROR: invalid play command\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid play command\n");
 					exit(1);
 				}
 
@@ -669,12 +669,12 @@ void do_cd_command(void){
 				break;
 		case 0x11:
 				/*seek*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				if((CR1 & 0xff) == 0xff){
 
 					/* pause*/
 
-					logerror("seek : pause\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "seek : pause\n");
 
 					CD_hirq |= HIRQ_CMOK;
 
@@ -688,7 +688,7 @@ void do_cd_command(void){
 
 						/* stop*/
 
-						logerror("seek : stop\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "seek : stop\n");
 
 						CD_hirq |= HIRQ_CMOK;
 
@@ -709,7 +709,7 @@ void do_cd_command(void){
 						CD_flag = 0;
 
 						if(CD_cur_ctrl & 0x40){
-							logerror("ERROR: seek data track\n");
+							log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: seek data track\n");
 							exit(1);
 						}
 
@@ -722,7 +722,7 @@ void do_cd_command(void){
 
 					/* seek fad*/
 
-					logerror("seek / fad\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "seek / fad\n");
 
 					CD_cur_track	= 0;
 					CD_cur_ctrl	= 0;
@@ -735,12 +735,12 @@ void do_cd_command(void){
 					CD_status = CDB_STAT_PAUSE;
 					CD_flag = 0;
 
-					logerror("ERROR: seek / fad\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: seek / fad\n");
 					exit(1);
 
 				}else{
 
-					logerror("ERROR: invalid seek command\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid seek command\n");
 					exit(1);
 				}
 
@@ -748,12 +748,12 @@ void do_cd_command(void){
 				break;
 		case 0x12:
 				/*scan*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				/*NOT USED???*/
 				break;
 		case 0x20:
 				/*get current subcode*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_DRDY;
 
@@ -761,7 +761,7 @@ void do_cd_command(void){
 
 					case 0: /* subcode q*/
 
-						logerror("get current subcode q\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "get current subcode q\n");
 
 						CR1 = ( CD_status << 8);
 						CR2 = 5;
@@ -778,7 +778,7 @@ void do_cd_command(void){
 
 					case 1: /* subcode rw*/
 
-						logerror("get current subcode rw\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "get current subcode rw\n");
 						/*Used???*/
 						/*error("ERROR: get current subcode rw\n");*/
 						/*exit(1);*/
@@ -797,14 +797,14 @@ void do_cd_command(void){
 						return;
 
 					default:
-						logerror("invalid getcurrentsubcode\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "invalid getcurrentsubcode\n");
 						exit(1);
 				}
 
 				break;
 		case 0x30:
 				/*set connection*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
 
@@ -814,7 +814,7 @@ void do_cd_command(void){
 				break;
 		case 0x31:
 				/*get connection*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CR1 = (CD_status << 8);
 				CR2 = 0;
@@ -825,7 +825,7 @@ void do_cd_command(void){
 				break;
 		case 0x32:
 				/*get last buff dest*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CR1 = (CD_status << 8);
 				CR2 = 0;
@@ -836,7 +836,7 @@ void do_cd_command(void){
 				break;
 		case 0x40:
 				/*set filter range*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
@@ -845,7 +845,7 @@ void do_cd_command(void){
 
 				if(fn >= CDB_SEL_NUM){
 
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 				}
 
 				CD_filt[fn].fad	 = ((CR1 & 0xff) << 16) | CR2;
@@ -856,12 +856,12 @@ void do_cd_command(void){
 				break;
 		case 0x41:
 				/*get filter range*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				fn = CR3 >> 8;
 
 				if(fn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 				}
 
 				CR1 = (CD_status << 8) | (CD_filt[fn].fad >> 16);
@@ -874,7 +874,7 @@ void do_cd_command(void){
 				break;
 		case 0x42:
 				/*set filter sh cond*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
@@ -882,7 +882,7 @@ void do_cd_command(void){
 				fn = CR3 >> 8;
 
 				if(fn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 				}
 
 				CD_filt[fn].chan	= CR1 & 0xff;
@@ -896,12 +896,12 @@ void do_cd_command(void){
 				break;
 		case 0x43:
 				/*get filter sh cond*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				fn = CR3 >> 8;
 
 				if(fn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 				}
 
 				CR1 = (CD_status << 8) | CD_filt[fn].chan;
@@ -914,14 +914,14 @@ void do_cd_command(void){
 				break;
 		case 0x44:
 				/*set filter mode*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
 
 				fn = CR3 >> 8;
 
 				if(fn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 				}
 
 				if(CR1 & 0x80){
@@ -944,12 +944,12 @@ void do_cd_command(void){
 				break;
 		case 0x45:
 				/*get filter mode*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				fn = CR3 >> 8;
 
 				if(fn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 				}
 
 				CR1 = (CD_status << 8) | CD_filt[fn].mode;
@@ -961,14 +961,14 @@ void do_cd_command(void){
 				break;
 		case 0x46:
 				/*set filter con*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
 
 				fn = CR3 >> 8;
 
 				if(fn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 				}
 
 				if(CR1 & 0x01){ CD_filt[fn].true_cond = CR2 >> 8; }
@@ -979,12 +979,12 @@ void do_cd_command(void){
 				break;
 		case 0x47:
 				/*get filter conn*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				fn = CR3 >> 8;
 
 				if(fn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 				}
 
 				CR1 = (CD_status << 8);
@@ -997,7 +997,7 @@ void do_cd_command(void){
 				break;
 		case 0x48:
 				/*reset selector*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				/* reset flag:*/
 				/**/
@@ -1057,7 +1057,7 @@ void do_cd_command(void){
 					if(pn != 0xff){
 
 						if(pn >= CDB_SEL_NUM){
-							logerror("ERROR: invalid selector\n");
+							log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 							/*exit(1);*/
 						}
 
@@ -1093,7 +1093,7 @@ void do_cd_command(void){
 				break;
 		case 0x50:
 				/*get block size*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
 
 				CR1 = (CD_status << 8);
@@ -1101,19 +1101,19 @@ void do_cd_command(void){
 				CR3 = 0x18 <<8;		/* fixme*/
 				CR4 = 200;
 
-				logerror("get cd block size : free=%i total=200 partitions=24\n", CD_free_space);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "get cd block size : free=%i total=200 partitions=24\n", CD_free_space);
 
 				break;
 		case 0x51:
 				/*get buffer size*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				pn= CR3 >> 8;;
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
 
 				if(pn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 					exit(1);
 				}
 
@@ -1122,12 +1122,12 @@ void do_cd_command(void){
 				CR3 = 0;
 				CR4 = 0x0001;/*CD_part[pn].size; */ /* sectors*/
 /*HACK*/
-				logerror("get buffer %02i size = %03i sectors\n", pn, CD_part[pn].size);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "get buffer %02i size = %03i sectors\n", pn, CD_part[pn].size);
 
 				break;
 		case 0x52:
 				/*calc actual size*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
 
@@ -1136,12 +1136,12 @@ void do_cd_command(void){
 				sn = CR4;
 
 				if(pn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 					exit(1);
 				}
 
-				if(sp == 0xffff){ logerror("ERROR: SPOS_END on calcactualsize\n"); exit(1); }
-				if(sn == 0xffff){ logerror("ERROR: SNUM_END on calcactualsize\n"); exit(1); }
+				if(sp == 0xffff){ log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: SPOS_END on calcactualsize\n"); exit(1); }
+				if(sn == 0xffff){ log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: SNUM_END on calcactualsize\n"); exit(1); }
 
 				CD_actual_size = 0;
 
@@ -1155,7 +1155,7 @@ void do_cd_command(void){
 				break;
 		case 0x53:
 				/*get actual block size*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
 
@@ -1167,18 +1167,18 @@ void do_cd_command(void){
 				CR3 = 0;
 				CR4 = 0;
 
-				logerror("get actual block size : %i words\n", CD_actual_size);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "get actual block size : %i words\n", CD_actual_size);
 				break;
 		case 0x54:
 				/*get sector info*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 
 				pn = CR3 >> 8;
 				sn = CR2 & 0xff;
 
 				if(pn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 					exit(1);
 				}
 
@@ -1192,7 +1192,7 @@ void do_cd_command(void){
 				break;
 		case 0x55:
 				/*execute fad search*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
 
@@ -1201,13 +1201,13 @@ void do_cd_command(void){
 				fad = ((CR3 & 0xff) << 8) | CR4;
 
 				if(pn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 					exit(1);
 				}
 
 				if(sp >= CD_part[pn].size){
 					/* SECT_SPOS_END or something ...*/
-					logerror("ERROR: invalid sector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid sector\n");
 					exit(1);
 				}
 
@@ -1247,7 +1247,7 @@ void do_cd_command(void){
 				break;
 		case 0x56:
 				/*get fad search res*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_ESEL;
@@ -1260,21 +1260,21 @@ void do_cd_command(void){
 				break;
 		case 0x60:
 				/*set sector length*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 /*
 				switch(CR1 & 0xff){
 				case 0: cdb_get_sect_size = 2048; break;
-				case 1: cdb_get_sect_size = 2336; logerror("ERROR: get len = 2336\n"); exit(1); break;
-				case 2: cdb_get_sect_size = 2340; logerror("ERROR: get len = 2340\n"); exit(1); break;
-				case 3: cdb_get_sect_size = 2352; logerror("ERROR: get len = 2352\n"); exit(1); break;
+				case 1: cdb_get_sect_size = 2336; log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: get len = 2336\n"); exit(1); break;
+				case 2: cdb_get_sect_size = 2340; log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: get len = 2340\n"); exit(1); break;
+				case 3: cdb_get_sect_size = 2352; log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: get len = 2352\n"); exit(1); break;
 				case 0xff: break;
 				}
 
 				switch(CR2 >> 8){
 				case 0: cdb_put_sect_size = 2048; break;
-				case 1: cdb_put_sect_size = 2336; logerror("ERROR: put len = 2336\n"); exit(1); break;
-				case 2: cdb_put_sect_size = 2340; logerror("ERROR: put len = 2340\n"); exit(1); break;
-				case 3: cdb_put_sect_size = 2352; logerror("ERROR: put len = 2352\n"); exit(1); break;
+				case 1: cdb_put_sect_size = 2336; log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: put len = 2336\n"); exit(1); break;
+				case 2: cdb_put_sect_size = 2340; log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: put len = 2340\n"); exit(1); break;
+				case 3: cdb_put_sect_size = 2352; log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: put len = 2352\n"); exit(1); break;
 				case 0xff: break;
 				}
 */
@@ -1282,12 +1282,12 @@ void do_cd_command(void){
 
 				CDB_SEND_REPORT();
 
-/*				logerror("set sector length : get=%i put=%i\n", cdb_get_sect_size, cdb_put_sect_size);*/
+/*				log_cb(RETRO_LOG_ERROR, LOGPRE "set sector length : get=%i put=%i\n", cdb_get_sect_size, cdb_put_sect_size);*/
 
 				break;
 		case 0x61:
 				/*get sector data*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 
 				pn = (CR3 >> 8);
@@ -1295,7 +1295,7 @@ void do_cd_command(void){
 				sn = CR4;
 
 				if(pn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 					exit(1);
 				}
 
@@ -1316,28 +1316,28 @@ void do_cd_command(void){
 				break;
 		case 0x62:
 				/*delete sector data*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				pn = (CR3 >> 8);
 				sp = CR2;
 				sn = CR4;
 
 /*				if(pn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 					exit(1);
 				}
 */
-				if(sp == 0xffff){ logerror("ERROR: delete sector data : sp = SPOS_END\n"); exit(1); }
-				if(sn == 0xffff){ logerror("ERROR: delete sector data : sn = SNUM_END\n"); exit(1); }
+				if(sp == 0xffff){ log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: delete sector data : sp = SPOS_END\n"); exit(1); }
+				if(sn == 0xffff){ log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: delete sector data : sn = SNUM_END\n"); exit(1); }
 
 				if((sp > CD_part[pn].size) ||
 				   (sp+sn > CD_part[pn].size)){
-					logerror("ERROR: invalid delete sector data\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid delete sector data\n");
 /*					exit(1);*/
 				}
 
 				if(sn != 1 && sp != 0){
-					logerror("ERROR: complex delete sector data\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: complex delete sector data\n");
 /*					exit(1);*/
 				}
 
@@ -1353,14 +1353,14 @@ void do_cd_command(void){
 				break;
 		case 0x63:
 				/*get then delete sd*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				pn = (CR3 >> 8);
 				sp = CR2;
 				sn = CR4;
 
 				if(pn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 					exit(1);
 				}
 
@@ -1381,17 +1381,17 @@ void do_cd_command(void){
 				break;
 		case 0x65:
 				/*copy sector data*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				/*NOTUSED???*/
 				break;
 		case 0x66:
 				/*move sector data*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				/*NOUSE???*/
 				break;
 		case 0x67:
 				/*get copy error*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				/* return copy/mode sector error code:*/
 				/* - 0x00 = okay*/
@@ -1409,17 +1409,17 @@ void do_cd_command(void){
 				break;
 		case 0x70:
 				/*change dir*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				/*NOUSE???*/
 				break;
 		case 0x71:
 				/*read dir*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				/*NOUSE*/
 				break;
 		case 0x72:
 				/*get file sys scope*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 
 				CD_hirq |= HIRQ_CMOK | HIRQ_EFLS;
@@ -1434,7 +1434,7 @@ void do_cd_command(void){
 				break;
 		case 0x73:
 				/*get file info*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				/* check if out of scope*/
 
@@ -1447,7 +1447,7 @@ void do_cd_command(void){
 					/* obtain "all-files-in-scope" 's info (queued)*/
 					/* needs file-scope emulation though*/
 
-					logerror("ERROR: getfileinfo all-files-in-scope\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: getfileinfo all-files-in-scope\n");
 					exit(1);
 
 				}else{
@@ -1473,7 +1473,7 @@ void do_cd_command(void){
 				break;
 		case 0x74:
 				/*read file*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				CD_com_play = CD_com;
 
@@ -1482,17 +1482,17 @@ void do_cd_command(void){
 				off = ((CR1 & 0xff) << 16) | CR2;
 
 				if(fn >= CDB_SEL_NUM){
-					logerror("ERROR: invalid selector\n");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid selector\n");
 					exit(1);
 				}
 
 				if(fid >= CD_file_num+1){
-					logerror("ERROR: invalid file id (fid=%i file num=%i)\n", fid, CD_file_num);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: invalid file id (fid=%i file num=%i)\n", fid, CD_file_num);
 					exit(1);
 				}
 
 				if(CD_file[fid].attr & 0x02){
-					logerror("ERROR: file id %i is a directory\n", fid);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: file id %i is a directory\n", fid);
 					exit(1);
 				}
 
@@ -1521,7 +1521,7 @@ void do_cd_command(void){
 				break;
 		case 0x75:
 				/*abort file*/
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 
 				/* stop file info hold*/
 				/* stop file read , destroy file info hold*/
@@ -1540,7 +1540,7 @@ void do_cd_command(void){
 				CDB_SEND_REPORT();
 				break;
 		case 0x93:
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				CD_hirq |= HIRQ_CMOK | HIRQ_MPED;
 
 				CR1 = (CD_status << 8) | 0x01;
@@ -1550,7 +1550,7 @@ void do_cd_command(void){
 				break;
 		case 0xe0:
 				usrintf_showmessage("cpu #%d (PC=%08X) CDBLOCK_COMMAND 0xe0",  cpu_getactivecpu(),activecpu_get_pc());
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				CD_hirq |= HIRQ_CMOK | HIRQ_EFLS | HIRQ_CSCT;
 				/*CDB_SEND_REPORT();*/
 				CR1 = (CD_status <<8);
@@ -1559,7 +1559,7 @@ void do_cd_command(void){
 				CR4 = 0x0000;
 				break;
 		case 0xe1:
-				logerror("CDBLOCK Command 0x%02x\n", (CR1>>8));
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CDBLOCK Command 0x%02x\n", (CR1>>8));
 				CD_hirq |= HIRQ_CMOK;
 
 				CR1 = (CD_status << 8);
@@ -1569,7 +1569,7 @@ void do_cd_command(void){
 				break;
 	}
 
-	logerror("Command executed,register status: CD_hirq %08x CD_mask %08x CR1 %08x, CR2 %08x, CR3 %08x, CR4 %08x\n", CD_hirq,CD_mask,CR1,CR2,CR3,CR4);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Command executed,register status: CD_hirq %08x CD_mask %08x CR1 %08x, CR2 %08x, CR3 %08x, CR4 %08x\n", CD_hirq,CD_mask,CR1,CR2,CR3,CR4);
 }
 
 
@@ -1615,7 +1615,7 @@ static READ32_HANDLER ( cdregister_r ){
 			/*return data...*/
 /*
 			if(CD_info_count >= CD_info_size){
-				logerror("ERROR: dataout overbound\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: dataout overbound\n");
 				exit(1);
 			}
 */
@@ -1629,7 +1629,7 @@ static READ32_HANDLER ( cdregister_r ){
 			return(d<<16|d);
 
 		default:
-			logerror("CD Block Unknown read %08x\n", offset);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CD Block Unknown read %08x\n", offset);
 			return 0xffff0000 | 0xffff;
 	}
 
@@ -1642,7 +1642,7 @@ static READ32_HANDLER ( cdregister_r ){
 static WRITE32_HANDLER ( cdregister_w ){
 
 	offset=offset*4;
-	logerror("write to cd block data=%08x offset=%08x\n",data, offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "write to cd block data=%08x offset=%08x\n",data, offset);
 	switch(offset){
 
 		case 0x90008:
@@ -1667,12 +1667,12 @@ static WRITE32_HANDLER ( cdregister_w ){
 		case 0x90024:
 			CR4=data>>16;
 			CD_cr_writing = 0;
-			logerror("CD_hirq %08x CD_mask %08x CR1 %08x, CR2 %08x, CR3 %08x, CR4 %08x ------ command execution\n",CD_hirq,CD_mask,CR1,CR2,CR3,CR4);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CD_hirq %08x CD_mask %08x CR1 %08x, CR2 %08x, CR3 %08x, CR4 %08x ------ command execution\n",CD_hirq,CD_mask,CR1,CR2,CR3,CR4);
 			/*usrintf_showmessage("cpu #%d (PC=%08X) CDBLOCK_COMMAND",  cpu_getactivecpu(),activecpu_get_pc());*/
 			do_cd_command();
 			break;
 		default:
-			logerror("CD Block Unknown write to %08x data %08x\n", offset,data);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CD Block Unknown write to %08x data %08x\n", offset,data);
 
 	}
 
@@ -1885,9 +1885,9 @@ static void stv_SMPC_w8 (int offset, UINT8 data)
 
 
 /*		if (data & 0x01)*/
-/*			logerror("bit 0 active\n");*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "bit 0 active\n");*/
 /*		if (data & 0x02)*/
-/*			logerror("bit 1 active\n");*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "bit 1 active\n");*/
 /*		if (data & 0x10)*/
 			/*logerror("bit 4 active\n");*/ /*LOT*/
 		PDR1 = (data & 0x60);
@@ -1902,14 +1902,14 @@ static void stv_SMPC_w8 (int offset, UINT8 data)
 		/*usrintf_showmessage("PDR2 = %02x",smpc_ram[0x77]);*/
 		if(!(smpc_ram[0x77] & 0x10))
 		{
-			logerror("SMPC: M68k on\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "SMPC: M68k on\n");
 			cpu_set_reset_line(2, PULSE_LINE);
 			cpu_set_halt_line(2, CLEAR_LINE);
 			en_68k = 1;
 		}
 		else
 		{
-			logerror("SMPC: M68k off\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "SMPC: M68k off\n");
 			cpu_set_halt_line(2, ASSERT_LINE);
 			en_68k = 0;
 		}
@@ -2036,7 +2036,7 @@ static void stv_SMPC_w8 (int offset, UINT8 data)
 			break;
 			/* RTC write*/
 			case 0x16:
-				logerror("SMPC: RTC write\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "SMPC: RTC write\n");
 				smpc_ram[0x2f] = smpc_ram[0x0d];
 				smpc_ram[0x2d] = smpc_ram[0x0b];
 				smpc_ram[0x2b] = smpc_ram[0x09];
@@ -2241,7 +2241,7 @@ static UINT8 port_sel,mux_data;
 READ32_HANDLER ( stv_io_r32 )
 {
 	static int i= -1;
-/*	logerror("(PC=%08X): I/O r %08X & %08X\n", activecpu_get_pc(), offset*4, mem_mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "(PC=%08X): I/O r %08X & %08X\n", activecpu_get_pc(), offset*4, mem_mask);*/
 
 	switch(offset)
 	{
@@ -2487,12 +2487,12 @@ READ32_HANDLER( stv_scu_r32 )
 	/*usrintf_showmessage("%02x",DMA_STATUS);*/
 	if ( offset == 35 )
 	{
-        logerror( "DSP mem read at %08X\n", stv_scu[34]);
+        log_cb(RETRO_LOG_ERROR, LOGPRE  "DSP mem read at %08X\n", stv_scu[34]);
         return dsp_ram_addr_r();
     }
     else
     {
-    	logerror("SCU reg read at %d = %08x\n",offset,stv_scu[offset]);
+    	log_cb(RETRO_LOG_ERROR, LOGPRE "SCU reg read at %d = %08x\n",offset,stv_scu[offset]);
     	return stv_scu[offset];
    	}
 }
@@ -2549,11 +2549,11 @@ WRITE32_HANDLER( stv_scu_w32 )
 		break;
 		case 5:
 		if(INDIRECT_MODE(0))
-			logerror("Indirect Mode DMA lv 0 set\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Indirect Mode DMA lv 0 set\n");
 
 		/*Start factor enable bits,bit 2,bit 1 and bit 0*/
 		if((stv_scu[5] & 7) != 7)
-			logerror("Start factor chosen for lv 0 = %d\n",stv_scu[5] & 7);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Start factor chosen for lv 0 = %d\n",stv_scu[5] & 7);
 		break;
 		/*LV 1 DMA*/
 		case 8:	 scu_src_1  = ((stv_scu[8] &  0x07ffffff) >> 0);  break;
@@ -2592,10 +2592,10 @@ WRITE32_HANDLER( stv_scu_w32 )
 		break;
 		case 13:
 		if(INDIRECT_MODE(1))
-			logerror("Indirect Mode DMA lv 1 set\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Indirect Mode DMA lv 1 set\n");
 
 		if((stv_scu[13] & 7) != 7)
-			logerror("Start factor chosen for lv 1 = %d\n",stv_scu[13] & 7);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Start factor chosen for lv 1 = %d\n",stv_scu[13] & 7);
 		break;
 		/*LV 2 DMA*/
 		case 16: scu_src_2  = ((stv_scu[16] & 0x07ffffff) >> 0);  break;
@@ -2634,31 +2634,31 @@ WRITE32_HANDLER( stv_scu_w32 )
 		break;
 		case 21:
 		if(INDIRECT_MODE(2))
-			logerror("Indirect Mode DMA lv 2 set\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Indirect Mode DMA lv 2 set\n");
 
 		if((stv_scu[21] & 7) != 7)
-			logerror("Start factor chosen for lv 2 = %d\n",stv_scu[21] & 7);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Start factor chosen for lv 2 = %d\n",stv_scu[21] & 7);
 		break;
-		case 31: logerror("Warning: DMA status WRITE! Offset %02x(%d)\n",offset*4,offset); break;
+		case 31: log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: DMA status WRITE! Offset %02x(%d)\n",offset*4,offset); break;
 		/*DSP section*/
 		/*Use functions so it is easier to work out*/
 		case 32:
 		dsp_prg_ctrl(data);
-		logerror("SCU DSP: Program Control Port Access %08x\n",data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "SCU DSP: Program Control Port Access %08x\n",data);
 		break;
 		case 33:
 		dsp_prg_data(data);
-		logerror("SCU DSP: Program RAM Data Port Access %08x\n",data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "SCU DSP: Program RAM Data Port Access %08x\n",data);
 		break;
 		case 34:
 		dsp_ram_addr_ctrl(data);
-		logerror("SCU DSP: Data RAM Address Port Access %08x\n",data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "SCU DSP: Data RAM Address Port Access %08x\n",data);
 		break;
 		case 35:
 		dsp_ram_addr_w(data);
-		logerror("SCU DSP: Data RAM Data Port Access %08x\n",data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "SCU DSP: Data RAM Data Port Access %08x\n",data);
 		break;
-		case 36: logerror("timer 0 compare data = %03x\n",stv_scu[36]);break;
+		case 36: log_cb(RETRO_LOG_ERROR, LOGPRE "timer 0 compare data = %03x\n",stv_scu[36]);break;
 		case 40:
 		/*An interrupt is masked when his specific bit is 1.*/
 		/*Are bit 16-bit 31 for External A-Bus irq mask like the status register?*/
@@ -2690,11 +2690,11 @@ WRITE32_HANDLER( stv_scu_w32 )
 		break;
 		case 41:
 		/*This is r/w by introdon...*/
-		logerror("IRQ status reg set:%08x\n",stv_scu[41]);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "IRQ status reg set:%08x\n",stv_scu[41]);
 		break;
 		case 42: /*A-Bus IRQ ACK*/ break;
 		case 49: /*This sets the SDRAM size*/ break;
-		default: logerror("Warning: unused SCU reg set %d = %08x\n",offset,data);
+		default: log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: unused SCU reg set %d = %08x\n",offset,data);
 	}
 }
 
@@ -2704,7 +2704,7 @@ static void dma_direct_lv0()
 	static UINT32 tmp_src,tmp_dst,tmp_size;
 	logerror("DMA lv 0 transfer START\n"
 			 "Start %08x End %08x Size %04x\n",scu_src_0,scu_dst_0,scu_size_0);
-	logerror("Start Add %04x Destination Add %04x\n",scu_src_add_0,scu_dst_add_0);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Start Add %04x Destination Add %04x\n",scu_src_add_0,scu_dst_add_0);
 
 	SET_D0MV_FROM_0_TO_1;
 
@@ -2727,7 +2727,7 @@ static void dma_direct_lv0()
 	if(!(DRUP(0))) scu_src_0 = tmp_src;
 	if(!(DWUP(0))) scu_dst_0 = tmp_dst;
 
-	logerror("DMA transfer END\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "DMA transfer END\n");
 	if(!(stv_scu[40] & 0x800))/*Lv 0 DMA end irq*/
 		cpu_set_irq_line_and_vector(0, 5, HOLD_LINE , 0x4b);
 
@@ -2739,7 +2739,7 @@ static void dma_direct_lv1()
 	static UINT32 tmp_src,tmp_dst,tmp_size;
 	logerror("DMA lv 1 transfer START\n"
 			 "Start %08x End %08x Size %04x\n",scu_src_1,scu_dst_1,scu_size_1);
-	logerror("Start Add %04x Destination Add %04x\n",scu_src_add_1,scu_dst_add_1);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Start Add %04x Destination Add %04x\n",scu_src_add_1,scu_dst_add_1);
 
 	SET_D1MV_FROM_0_TO_1;
 
@@ -2762,7 +2762,7 @@ static void dma_direct_lv1()
 	if(!(DRUP(1))) scu_src_1 = tmp_src;
 	if(!(DWUP(1))) scu_dst_1 = tmp_dst;
 
-	logerror("DMA transfer END\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "DMA transfer END\n");
 	if(!(stv_scu[40] & 0x400))/*Lv 1 DMA end irq*/
 		cpu_set_irq_line_and_vector(0, 6, HOLD_LINE , 0x4a);
 
@@ -2774,7 +2774,7 @@ static void dma_direct_lv2()
 	static UINT32 tmp_src,tmp_dst,tmp_size;
 	logerror("DMA lv 2 transfer START\n"
 			 "Start %08x End %08x Size %04x\n",scu_src_2,scu_dst_2,scu_size_2);
-	logerror("Start Add %04x Destination Add %04x\n",scu_src_add_2,scu_dst_add_2);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Start Add %04x Destination Add %04x\n",scu_src_add_2,scu_dst_add_2);
 
 	SET_D2MV_FROM_0_TO_1;
 
@@ -2797,7 +2797,7 @@ static void dma_direct_lv2()
 	if(!(DRUP(2))) scu_src_2 = tmp_src;
 	if(!(DWUP(2))) scu_dst_2 = tmp_dst;
 
-	logerror("DMA transfer END\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "DMA transfer END\n");
 	if(!(stv_scu[40] & 0x200))/*Lv 2 DMA end irq*/
 		cpu_set_irq_line_and_vector(0, 6, HOLD_LINE , 0x49);
 
@@ -2827,7 +2827,7 @@ static void dma_indirect_lv0()
 
 		logerror("DMA lv 0 indirect mode transfer START\n"
 			 	 "Start %08x End %08x Size %04x\n",scu_src_0,scu_dst_0,scu_size_0);
-		logerror("Start Add %04x Destination Add %04x\n",scu_src_add_0,scu_dst_add_0);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Start Add %04x Destination Add %04x\n",scu_src_add_0,scu_dst_add_0);
 
 		/*guess,but I believe it's right.*/
 		scu_src_0 &=0x07ffffff;
@@ -2887,7 +2887,7 @@ static void dma_indirect_lv1()
 
 		logerror("DMA lv 1 indirect mode transfer START\n"
 			 	 "Start %08x End %08x Size %04x\n",scu_src_1,scu_dst_1,scu_size_1);
-		logerror("Start Add %04x Destination Add %04x\n",scu_src_add_1,scu_dst_add_1);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Start Add %04x Destination Add %04x\n",scu_src_add_1,scu_dst_add_1);
 
 		/*guess,but I believe it's right.*/
 		scu_src_1 &=0x07ffffff;
@@ -2949,7 +2949,7 @@ static void dma_indirect_lv2()
 
 		logerror("DMA lv 2 indirect mode transfer START\n"
 			 	 "Start %08x End %08x Size %04x\n",scu_src_2,scu_dst_2,scu_size_2);
-		logerror("Start Add %04x Destination Add %04x\n",scu_src_add_2,scu_dst_add_2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Start Add %04x Destination Add %04x\n",scu_src_add_2,scu_dst_add_2);
 
 		/*guess,but I believe it's right.*/
 		scu_src_2 &=0x07ffffff;
@@ -3026,14 +3026,14 @@ static WRITE32_HANDLER( stv_scsp_regs_w32 )
  * Enter into Radiant Silver Gun specific menu for a test...                       */
 static WRITE32_HANDLER( minit_w )
 {
-	logerror("cpu #%d (PC=%08X) MINIT write = %08x\n",cpu_getactivecpu(), activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X) MINIT write = %08x\n",cpu_getactivecpu(), activecpu_get_pc(),data);
 	cpu_boost_interleave(0, TIME_IN_USEC(minit_boost));
 	sh2_set_frt_input(1, PULSE_LINE);
 }
 
 static WRITE32_HANDLER( sinit_w )
 {
-	logerror("cpu #%d (PC=%08X) SINIT write = %08x\n",cpu_getactivecpu(), activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X) SINIT write = %08x\n",cpu_getactivecpu(), activecpu_get_pc(),data);
 	cpu_boost_interleave(0, TIME_IN_USEC(sinit_boost));
 	sh2_set_frt_input(0, PULSE_LINE);
 }
@@ -3505,7 +3505,7 @@ WRITE32_HANDLER ( w60ffc44_write )
 {
 	COMBINE_DATA(&stv_workram_h[0xffc44/4]);
 
-	logerror("cpu #%d (PC=%08X): 60ffc44_write write = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask ^ 0xffffffff);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): 60ffc44_write write = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask ^ 0xffffffff);
 
 }
 
@@ -3513,7 +3513,7 @@ WRITE32_HANDLER ( w60ffc48_write )
 {
 	COMBINE_DATA(&stv_workram_h[0xffc48/4]);
 
-	logerror("cpu #%d (PC=%08X): 60ffc48_write write = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask ^ 0xffffffff);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): 60ffc48_write write = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), data, mem_mask ^ 0xffffffff);
 
 }
 

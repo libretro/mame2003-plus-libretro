@@ -513,7 +513,7 @@ WRITE_HANDLER( hunchbkd_data_w )
 
 READ_HANDLER( hunchbkd_port0_r )
 {
-	logerror("port 0 : pc = %4x\n",activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "port 0 : pc = %4x\n",activecpu_get_pc());
 
 	switch (activecpu_get_pc())
 	{

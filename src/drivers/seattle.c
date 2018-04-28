@@ -154,7 +154,7 @@ static void ioasic_irq(int state)
 
 static void clear_vblank(int param)
 {
-	logerror("Clearing vblank_irq\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Clearing vblank_irq\n");
 	if (vblank_irq)
 		cpu_set_irq_line(0, vblank_irq, CLEAR_LINE);
 	vblank_signalled = 0;
@@ -163,21 +163,21 @@ static void clear_vblank(int param)
 
 static READ32_HANDLER( vblank_signalled_r )
 {
-	logerror("%06X:vblank_signalled_r\n", activecpu_get_pc());
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:vblank_signalled_r\n", activecpu_get_pc());
 	return vblank_signalled ? 0x80 : 0x00;
 }
 
 
 static WRITE32_HANDLER( vblank_enable_w )
 {
-	logerror("%06X:vblank_enable_w = %08X\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:vblank_enable_w = %08X\n", activecpu_get_pc(), data);
 	COMBINE_DATA(vblank_enable);
 }
 
 
 static WRITE32_HANDLER( vblank_config_w )
 {
-	logerror("%06X:vblank_config_w = %08X\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:vblank_config_w = %08X\n", activecpu_get_pc(), data);
 	COMBINE_DATA(vblank_config);
 	if (vblank_irq)
 		cpu_set_irq_line(0, vblank_irq, CLEAR_LINE);
@@ -187,7 +187,7 @@ static WRITE32_HANDLER( vblank_config_w )
 
 static WRITE32_HANDLER( vblank_clear_w )
 {
-	logerror("%06X:vblank_clear_w = %08X\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:vblank_clear_w = %08X\n", activecpu_get_pc(), data);
 	if (vblank_irq)
 		cpu_set_irq_line(0, vblank_irq, CLEAR_LINE);
 	vblank_signalled = 0;
@@ -196,7 +196,7 @@ static WRITE32_HANDLER( vblank_clear_w )
 
 static INTERRUPT_GEN( assert_vblank )
 {
-	logerror("Setting IRQ3\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Setting IRQ3\n");
 	if (*vblank_enable & 0x80)
 	{
 		if (vblank_irq)
@@ -238,7 +238,7 @@ static READ32_HANDLER( cmos_r )
 static void pci_bridge_w(UINT8 reg, UINT8 type, data32_t data)
 {
 	pci_bridge_regs[reg] = data;
-	logerror("%06X:PCI bridge write: reg %d type %d = %08X\n", activecpu_get_pc(), reg, type, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PCI bridge write: reg %d type %d = %08X\n", activecpu_get_pc(), reg, type, data);
 }
 
 
@@ -251,14 +251,14 @@ static void pci_3dfx_w(UINT8 reg, UINT8 type, data32_t data)
 		case 0x04:		/* address register */
 			pci_3dfx_regs[reg] &= 0xff000000;
 			if (data != 0x08000000)
-				logerror("3dfx not mapped where we expect it!\n");
+				log_cb(RETRO_LOG_ERROR, LOGPRE "3dfx not mapped where we expect it!\n");
 			break;
 
 		case 0x10:		/* initEnable register */
 			voodoo_set_init_enable(data);
 			break;
 	}
-	logerror("%06X:PCI 3dfx write: reg %d type %d = %08X\n", activecpu_get_pc(), reg, type, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PCI 3dfx write: reg %d type %d = %08X\n", activecpu_get_pc(), reg, type, data);
 }
 
 
@@ -273,7 +273,7 @@ static data32_t pci_bridge_r(UINT8 reg, UINT8 type)
 {
 	data32_t result = pci_bridge_regs[reg];
 
-	logerror("%06X:PCI bridge read: reg %d type %d = %08X\n", activecpu_get_pc(), reg, type, result);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PCI bridge read: reg %d type %d = %08X\n", activecpu_get_pc(), reg, type, result);
 
 	return result;
 }
@@ -290,7 +290,7 @@ static data32_t pci_3dfx_r(UINT8 reg, UINT8 type)
 			break;
 	}
 
-	logerror("%06X:PCI 3dfx read: reg %d type %d = %08X\n", activecpu_get_pc(), reg, type, result);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PCI 3dfx read: reg %d type %d = %08X\n", activecpu_get_pc(), reg, type, result);
 
 	return result;
 }
@@ -308,13 +308,13 @@ static void update_galileo_irqs(void)
 	if (galileo_regs[0xc18/4] & galileo_regs[0xc1c/4])
 	{
 		if (LOG_GALILEO)
-			logerror("Galileo IRQ asserted\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Galileo IRQ asserted\n");
 		cpu_set_irq_line(0, 0, ASSERT_LINE);
 	}
 	else
 	{
 		if (LOG_GALILEO)
-			logerror("Galileo IRQ cleared\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Galileo IRQ cleared\n");
 		cpu_set_irq_line(0, 0, CLEAR_LINE);
 	}
 }
@@ -323,7 +323,7 @@ static void update_galileo_irqs(void)
 static void timer_callback(int which)
 {
 	if (LOG_GALILEO)
-		logerror("timer %d fired\n", which);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "timer %d fired\n", which);
 
 	/* copy the start value from the registers */
 	timer_count[which] = galileo_regs[0x850/4 + which];
@@ -409,7 +409,7 @@ static void perform_dma(int which);
 
 static void dma_finished_callback(int which)
 {
-/*	logerror("DMA%d finished\n", which);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "DMA%d finished\n", which);*/
 	galileo_regs[0x840/4 + which] &= ~0x4000;
 	galileo_regs[0x840/4 + which] &= ~0x1000;
 
@@ -450,7 +450,7 @@ static void perform_dma(int which)
 	}
 
 	if (LOG_DMA)
-		logerror("Performing DMA%d: src=%08X dst=%08X bytes=%04X sinc=%d dinc=%d\n", which, srcaddr, dstaddr, bytesleft, srcinc, dstinc);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Performing DMA%d: src=%08X dst=%08X bytes=%04X sinc=%d dinc=%d\n", which, srcaddr, dstaddr, bytesleft, srcinc, dstinc);
 
 	/* special case: transfer ram to voodoo */
 	if (bytesleft % 4 == 0 && srcaddr % 4 == 0 && srcaddr < 0x007fffff && dstaddr >= 0x08000000 && dstaddr < 0x09000000)
@@ -638,7 +638,7 @@ static READ32_HANDLER( galileo_r )
 			activecpu_eat_cycles(100);
 
 			if (LOG_TIMERS)
-				logerror("%06X:hires_timer_r = %08X\n", activecpu_get_pc(), result);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:hires_timer_r = %08X\n", activecpu_get_pc(), result);
 			break;
 		}
 
@@ -649,7 +649,7 @@ static READ32_HANDLER( galileo_r )
 
 		case 0xc18/4:		/* interrupt cause */
 			if (LOG_GALILEO)
-				logerror("%06X:Galileo read from offset %03X = %08X\n", activecpu_get_pc(), offset*4, result);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Galileo read from offset %03X = %08X\n", activecpu_get_pc(), offset*4, result);
 			break;
 
 		case 0xcfc/4:		/* configuration data */
@@ -670,7 +670,7 @@ static READ32_HANDLER( galileo_r )
 
 			/* anything else, just log */
 			else
-				logerror("%06X:PCIBus read: bus %d unit %d func %d reg %d type %d = %08X\n", activecpu_get_pc(), bus, unit, func, reg, type, result);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PCIBus read: bus %d unit %d func %d reg %d type %d = %08X\n", activecpu_get_pc(), bus, unit, func, reg, type, result);
 			break;
 		}
 
@@ -678,7 +678,7 @@ static READ32_HANDLER( galileo_r )
 			break;
 
 		default:
-			logerror("%06X:Galileo read from offset %03X = %08X\n", activecpu_get_pc(), offset*4, result);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Galileo read from offset %03X = %08X\n", activecpu_get_pc(), offset*4, result);
 			break;
 	}
 
@@ -728,7 +728,7 @@ static WRITE32_HANDLER( galileo_w )
 			if (!timer_active[which])
 				timer_count[which] = data;
 			if (LOG_TIMERS)
-				logerror("%06X:timer/counter %d count = %08X [start=%08X]\n", activecpu_get_pc(), offset % 4, data, timer_count[which]);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:timer/counter %d count = %08X [start=%08X]\n", activecpu_get_pc(), offset % 4, data, timer_count[which]);
 			break;
 		}
 
@@ -737,7 +737,7 @@ static WRITE32_HANDLER( galileo_w )
 			int which, mask;
 
 			if (LOG_TIMERS)
-				logerror("%06X:timer/counter control = %08X\n", activecpu_get_pc(), data);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:timer/counter control = %08X\n", activecpu_get_pc(), data);
 			for (which = 0, mask = 0x01; which < 4; which++, mask <<= 2)
 			{
 				if (!timer_active[which] && (data & mask))
@@ -751,7 +751,7 @@ static WRITE32_HANDLER( galileo_w )
 					}
 					timer_adjust(timer[which], TIMER_CLOCK * timer_count[which], which, 0);
 					if (LOG_TIMERS)
-						logerror("Adjusted timer to fire in %f secs\n", TIMER_CLOCK * timer_count[which]);
+						log_cb(RETRO_LOG_ERROR, LOGPRE "Adjusted timer to fire in %f secs\n", TIMER_CLOCK * timer_count[which]);
 				}
 				else if (timer_active[which] && !(data & mask))
 				{
@@ -760,7 +760,7 @@ static WRITE32_HANDLER( galileo_w )
 					timer_count[which] = (timer_count[which] > elapsed) ? (timer_count[which] - elapsed) : 0;
 					timer_adjust(timer[which], TIME_NEVER, which, 0);
 					if (LOG_TIMERS)
-						logerror("Disabled timer\n");
+						log_cb(RETRO_LOG_ERROR, LOGPRE "Disabled timer\n");
 				}
 			}
 			break;
@@ -768,7 +768,7 @@ static WRITE32_HANDLER( galileo_w )
 
 		case 0xc18/4:		/* IRQ clear */
 			if (LOG_GALILEO)
-				logerror("%06X:Galileo write to IRQ clear = %08X & %08X\n", offset*4, data, ~mem_mask);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Galileo write to IRQ clear = %08X & %08X\n", offset*4, data, ~mem_mask);
 			galileo_regs[offset] = oldata & data;
 			update_galileo_irqs();
 			break;
@@ -794,12 +794,12 @@ static WRITE32_HANDLER( galileo_w )
 
 			/* anything else, just log */
 			else
-				logerror("%06X:PCIBus write: bus %d unit %d func %d reg %d type %d = %08X\n", activecpu_get_pc(), bus, unit, func, reg, type, data);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PCIBus write: bus %d unit %d func %d reg %d type %d = %08X\n", activecpu_get_pc(), bus, unit, func, reg, type, data);
 			break;
 		}
 
 		default:
-			logerror("%06X:Galileo write to offset %03X = %08X & %08X\n", activecpu_get_pc(), offset*4, data, ~mem_mask);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Galileo write to offset %03X = %08X & %08X\n", activecpu_get_pc(), offset*4, data, ~mem_mask);
 			break;
 	}
 }
@@ -841,7 +841,7 @@ static WRITE32_HANDLER( asic_fifo_w )
 
 static READ32_HANDLER( unknown1_r )
 {
-logerror("%06X:unknown1_r\n", activecpu_get_pc());
+log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:unknown1_r\n", activecpu_get_pc());
 	/* code at 1FC10248 loops until this returns non-zero in bit 6*/
 	return 0x0040;
 }
@@ -863,7 +863,7 @@ static READ32_HANDLER( analog_port_r )
 static WRITE32_HANDLER( analog_port_w )
 {
 	if (data < 8 || data > 15)
-		logerror("%08X:Unexpected analog port select = %08X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Unexpected analog port select = %08X\n", activecpu_get_pc(), data);
 	pending_analog_read = readinputport(4 + (data & 7));
 }
 
@@ -945,7 +945,7 @@ static READ32_HANDLER( carnevil_gun_r )
 
 static WRITE32_HANDLER( carnevil_gun_w )
 {
-	logerror("carnevil_gun_w(%d) = %02X\n", offset, data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "carnevil_gun_w(%d) = %02X\n", offset, data);
 }
 
 

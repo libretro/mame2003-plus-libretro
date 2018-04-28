@@ -323,7 +323,7 @@ INTERRUPT_GEN( mcr68_interrupt )
 	if (!m6840_state[0].timer_active)
 		subtract_from_counter(0, 1);
 
-	logerror("--- VBLANK ---\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "--- VBLANK ---\n");
 
 	/* also set a timer to generate the 493 signal at a specific time before the next VBLANK */
 	/* the timing of this is crucial for Blasted and Tri-Sports, which check the timing of */
@@ -369,7 +369,7 @@ static void mcr68_493_callback(int param)
 	v493_irq_state = 1;
 	update_mcr68_interrupts();
 	timer_set(cpu_getscanlineperiod(), 0, mcr68_493_off_callback);
-	logerror("--- (INT1) ---\n");
+	log_cb(RETRO_LOG_ERROR, LOGPRE "--- (INT1) ---\n");
 }
 
 
@@ -538,7 +538,7 @@ static void subtract_from_counter(int counter, int count)
 				m6840_status_read_since_int &= ~(1 << counter);
 				update_interrupts();
 				msb = (m6840_state[counter].latch >> 8) + 1;
-				LOG(("** Counter %d fired\n", counter));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "** Counter %d fired\n", counter);
 			}
 		}
 
@@ -564,7 +564,7 @@ static void subtract_from_counter(int counter, int count)
 			m6840_status |= 1 << counter;
 			m6840_status_read_since_int &= ~(1 << counter);
 			update_interrupts();
-			LOG(("** Counter %d fired\n", counter));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "** Counter %d fired\n", counter);
 		}
 
 		/* store the result */
@@ -699,13 +699,13 @@ static WRITE_HANDLER( mcr68_6840_w_common )
 		if (diffs & 0x02)
 			reload_count(counter);
 
-		LOG(("%06X:Counter %d control = %02X\n", activecpu_get_previouspc(), counter, data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Counter %d control = %02X\n", activecpu_get_previouspc(), counter, data);
 	}
 
 	/* offsets 2, 4, and 6 are MSB buffer registers */
 	else if ((offset & 1) == 0)
 	{
-		LOG(("%06X:MSB = %02X\n", activecpu_get_previouspc(), data));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:MSB = %02X\n", activecpu_get_previouspc(), data);
 		m6840_msb_buffer = data;
 	}
 
@@ -723,7 +723,7 @@ static WRITE_HANDLER( mcr68_6840_w_common )
 		if (!(m6840_state[counter].control & 0x10))
 			reload_count(counter);
 
-		LOG(("%06X:Counter %d latch = %04X\n", activecpu_get_previouspc(), counter, m6840_state[counter].latch));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Counter %d latch = %04X\n", activecpu_get_previouspc(), counter, m6840_state[counter].latch);
 	}
 }
 
@@ -737,7 +737,7 @@ static READ16_HANDLER( mcr68_6840_r_common )
 	/* offset 1 is the status register */
 	else if (offset == 1)
 	{
-		LOG(("%06X:Status read = %04X\n", activecpu_get_previouspc(), m6840_status));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Status read = %04X\n", activecpu_get_previouspc(), m6840_status);
 		m6840_status_read_since_int |= m6840_status & 0x07;
 		return m6840_status;
 	}
@@ -755,7 +755,7 @@ static READ16_HANDLER( mcr68_6840_r_common )
 
 		m6840_lsb_buffer = result & 0xff;
 
-		LOG(("%06X:Counter %d read = %04X\n", activecpu_get_previouspc(), counter, result));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Counter %d read = %04X\n", activecpu_get_previouspc(), counter, result);
 		return result >> 8;
 	}
 

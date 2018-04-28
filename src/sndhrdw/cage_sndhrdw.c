@@ -333,9 +333,9 @@ static void update_dma_state(void)
 		
 		/* make sure our assumptions are correct */
 		if (tms32031_io_regs[DMA_DEST_ADDR] != 0x808048)
-			logerror("CAGE DMA: unexpected dest address %08X!\n", tms32031_io_regs[DMA_DEST_ADDR]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE DMA: unexpected dest address %08X!\n", tms32031_io_regs[DMA_DEST_ADDR]);
 		if ((tms32031_io_regs[DMA_GLOBAL_CTL] & 0xfef) != 0xe03)
-			logerror("CAGE DMA: unexpected transfer params %08X!\n", tms32031_io_regs[DMA_GLOBAL_CTL]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE DMA: unexpected transfer params %08X!\n", tms32031_io_regs[DMA_GLOBAL_CTL]);
 		
 		/* do the DMA up front */
 		addr = tms32031_io_regs[DMA_SOURCE_ADDR];
@@ -391,7 +391,7 @@ static void update_timer(int which)
 		
 		/* make sure our assumptions are correct */
 		if (tms32031_io_regs[base + TIMER0_GLOBAL_CTL] != 0x2c1)
-			logerror("CAGE TIMER%d: unexpected timer config %08X!\n", which, tms32031_io_regs[base + TIMER0_GLOBAL_CTL]);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE TIMER%d: unexpected timer config %08X!\n", which, tms32031_io_regs[base + TIMER0_GLOBAL_CTL]);
 
 		timer_adjust(timer[which], period, which, TIME_NEVER);
 	}
@@ -455,7 +455,7 @@ static READ32_HANDLER( tms32031_io_r )
 	}
 
 	if (LOG_32031_IOPORTS)
-		logerror("CAGE:%06X:%s read -> %08X\n", activecpu_get_pc(), register_names[offset & 0x7f], result);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE:%06X:%s read -> %08X\n", activecpu_get_pc(), register_names[offset & 0x7f], result);
 	return result;
 }
 
@@ -465,7 +465,7 @@ static WRITE32_HANDLER( tms32031_io_w )
 	COMBINE_DATA(&tms32031_io_regs[offset]);
 
 	if (LOG_32031_IOPORTS)
-		logerror("CAGE:%06X:%s write = %08X\n", activecpu_get_pc(), register_names[offset & 0x7f], tms32031_io_regs[offset]);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE:%06X:%s write = %08X\n", activecpu_get_pc(), register_names[offset & 0x7f], tms32031_io_regs[offset]);
 	
 	switch (offset)
 	{
@@ -548,7 +548,7 @@ static void update_control_lines(void)
 static READ32_HANDLER( cage_from_main_r )
 {
 	if (LOG_COMM)
-		logerror("%06X:CAGE read command = %04X\n", activecpu_get_pc(), cage_from_main);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:CAGE read command = %04X\n", activecpu_get_pc(), cage_from_main);
 	cpu_to_cage_ready = 0;
 	update_control_lines();
 	return cage_from_main;
@@ -558,14 +558,14 @@ static READ32_HANDLER( cage_from_main_r )
 static WRITE32_HANDLER( cage_from_main_ack_w )
 {
 	if (LOG_COMM)
-		logerror("%06X:CAGE ack command = %04X\n", activecpu_get_pc(), cage_from_main);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:CAGE ack command = %04X\n", activecpu_get_pc(), cage_from_main);
 }
 
 
 static WRITE32_HANDLER( cage_to_main_w )
 {
 	if (LOG_COMM)
-		logerror("%06X:Data from CAGE = %04X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Data from CAGE = %04X\n", activecpu_get_pc(), data);
 	soundlatch_word_w(0, data, mem_mask);
 	cage_to_cpu_ready = 1;
 	update_control_lines();
@@ -586,7 +586,7 @@ static READ32_HANDLER( cage_io_status_r )
 UINT16 main_from_cage_r(void)
 {
 	if (LOG_COMM)
-		logerror("%06X:main read data = %04X\n", activecpu_get_pc(), soundlatch_word_r(0, 0));
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:main read data = %04X\n", activecpu_get_pc(), soundlatch_word_r(0, 0));
 	cage_to_cpu_ready = 0;
 	update_control_lines();
 	return soundlatch_word_r(0, 0);
@@ -605,7 +605,7 @@ static void deferred_cage_w(int param)
 void main_to_cage_w(UINT16 data)
 {
 	if (LOG_COMM)
-		logerror("%06X:Command to CAGE = %04X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Command to CAGE = %04X\n", activecpu_get_pc(), data);
 	timer_set(TIME_NOW, data, deferred_cage_w);
 }
 

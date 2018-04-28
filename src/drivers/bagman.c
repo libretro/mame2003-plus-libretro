@@ -89,9 +89,9 @@ static void start_talking (void)
 			(ls259_buf[0]<<2 | ls259_buf[1]<<1 | ls259_buf[2]<<0) ^ 0x7,
 			ls259_buf[4], ls259_buf[5] );
 	if ( (ls259_buf[4] == 0) &&  (ls259_buf[5] == 0) )
-		logerror("BAD SPEECH ROM SELECT (both enabled)\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "BAD SPEECH ROM SELECT (both enabled)\n");
 	if ( (ls259_buf[4] == 1) &&  (ls259_buf[5] == 1) )
-		logerror("BAD SPEECH ROM SELECT (both disabled)\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "BAD SPEECH ROM SELECT (both disabled)\n");
 #endif
 
 	speech_rom_address = 0x0;
@@ -132,9 +132,9 @@ int bagman_speech_rom_read_bit(void)
 
 #if 0
 	if ( (ls259_buf[4] == 0) &&  (ls259_buf[5] == 0) )
-		logerror("readbit: BAD SPEECH ROM SELECT (both enabled)\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "readbit: BAD SPEECH ROM SELECT (both enabled)\n");
 	if ( (ls259_buf[4] == 1) &&  (ls259_buf[5] == 1) )
-		logerror("readbit: BAD SPEECH ROM SELECT (both disabled)\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "readbit: BAD SPEECH ROM SELECT (both disabled)\n");
 #endif
 
 

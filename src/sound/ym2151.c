@@ -536,10 +536,10 @@ static void init_tables(void)
 			tl_tab[ x*2+1 + i*2*TL_RES_LEN ] = -tl_tab[ x*2+0 + i*2*TL_RES_LEN ];
 		}
 	#if 0
-		logerror("tl %04i", x*2);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "tl %04i", x*2);
 		for (i=0; i<13; i++)
-			logerror(", [%02i] %4i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ]);
-		logerror("\n");
+			log_cb(RETRO_LOG_ERROR, LOGPRE ", [%02i] %4i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ]);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 	#endif
 	}
 	/*logerror("TL_TAB_LEN = %i (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));*/
@@ -643,7 +643,7 @@ static void init_chip_tables(YM2151 *chip)
 	#if 0
 			pom = (double)chip->freq[ 768+2*768+i ] / ((double)(1<<FREQ_SH));
 			pom = pom * (double)chip->sampfreq / (double)SIN_LEN;
-			logerror("1freq[%4i][%08x]= real %20.15f Hz  emul %20.15f Hz\n", i, chip->freq[ 768+2*768+i ], Hz, pom);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "1freq[%4i][%08x]= real %20.15f Hz  emul %20.15f Hz\n", i, chip->freq[ 768+2*768+i ], Hz, pom);
 	#endif
 	}
 
@@ -667,7 +667,7 @@ static void init_chip_tables(YM2151 *chip)
 		{
 			pom = (double)chip->freq[i] / ((double)(1<<FREQ_SH));
 			pom = pom * (double)chip->sampfreq / (double)SIN_LEN;
-			logerror("freq[%4i][%08x]= emul %20.15f Hz\n", i, chip->freq[i], pom);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "freq[%4i][%08x]= emul %20.15f Hz\n", i, chip->freq[i], pom);
 		}
 #endif
 
@@ -1206,7 +1206,7 @@ void YM2151WriteReg(int n, int r, int v)
 			break;
 
 		default:
-			logerror("YM2151 Write %02x to undocumented register #%02x\n",v,r);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "YM2151 Write %02x to undocumented register #%02x\n",v,r);
 			break;
 		}
 		break;
@@ -1572,7 +1572,7 @@ int YM2151Init(int num, int clock, int rate)
 	if (cymfile)
 		timer_pulse ( TIME_IN_HZ(110), 0, cymfile_callback); /*110 Hz pulse timer*/
 	else
-		logerror("Could not create file 2151_.cym\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Could not create file 2151_.cym\n");
 #endif
 
 	return 0;

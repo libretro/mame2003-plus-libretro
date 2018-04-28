@@ -235,12 +235,12 @@ static INLINE void M_XCHD(UINT8 addr)
 
 static INLINE void M_ILLEGAL(void)
 {
-	logerror("I8039:  PC = %04x,  Illegal opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
+	log_cb(RETRO_LOG_ERROR, LOGPRE "I8039:  PC = %04x,  Illegal opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
 }
 
 static INLINE void M_UNDEFINED(void)
 {
-	logerror("I8039:  PC = %04x,  Unimplemented opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
+	log_cb(RETRO_LOG_ERROR, LOGPRE "I8039:  PC = %04x,  Unimplemented opcode = %02x\n", R.PC.w.l-1, M_RDMEM(R.PC.w.l-1));
 }
 
 static void illegal(void)	 { M_ILLEGAL(); }
@@ -627,7 +627,7 @@ static int Ext_IRQ(void)
 
 	if (R.xirq_en) {
 		if (R.irq_executing == I8039_NO_INT) {
-/*			logerror("I8039:  EXT INTERRUPT being serviced\n"); */
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "I8039:  EXT INTERRUPT being serviced\n"); */
 			R.irq_executing = I8039_EXTERNAL_INT;
 			push(R.PC.b.l);
 			push((R.PC.b.h & 0x0f) | (R.PSW & 0xf0));
@@ -652,7 +652,7 @@ static int Timer_IRQ(void)
 
 	if (R.tirq_en) {
 		if (R.irq_executing == I8039_NO_INT) {
-/*			logerror("I8039:  TIMER/COUNTER INTERRUPT\n"); */
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "I8039:  TIMER/COUNTER INTERRUPT\n"); */
 			R.irq_executing = I8039_TIMCNT_INT;
 			R.pending_irq &= ~I8039_TIMCNT_INT;
 			push(R.PC.b.l);
@@ -698,7 +698,7 @@ int i8039_execute(int cycles)
 
 		opcode=M_RDOP(R.PC.w.l);
 
-/*		logerror("I8039:  PC = %04x,  opcode = %02x\n", R.PC.w.l, opcode); */
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "I8039:  PC = %04x,  opcode = %02x\n", R.PC.w.l, opcode); */
 
 		R.PC.w.l++;
 		inst_cycles = opcode_main[opcode].cycles;

@@ -181,7 +181,7 @@ static void update_irq_state(void)
 /* For games that supply an *IRQ Vector* on the data bus */
 int metro_irq_callback(int int_level)
 {
-/*	logerror("CPU #0 PC %06X: irq callback returns %04X\n",activecpu_get_pc(),metro_irq_vectors[int_level]);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: irq callback returns %04X\n",activecpu_get_pc(),metro_irq_vectors[int_level]);*/
 	return metro_irq_vectors[int_level]&0xff;
 }
 
@@ -194,7 +194,7 @@ MACHINE_INIT( metro )
 
 WRITE16_HANDLER( metro_irq_cause_w )
 {
-/*if (data & ~0x15)	logerror("CPU #0 PC %06X : unknown bits of irqcause written: %04X\n",activecpu_get_pc(),data);*/
+/*if (data & ~0x15)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : unknown bits of irqcause written: %04X\n",activecpu_get_pc(),data);*/
 
 	if (ACCESSING_LSB)
 	{
@@ -332,7 +332,7 @@ static int metro_io_callback(int ioline, int state)
 			soundlatch_w(0, data >> 1);
 			break;
 		default:
-			logerror("upd7810 ioline %d not handled\n", ioline);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "upd7810 ioline %d not handled\n", ioline);
     }
 	return state;
 }
@@ -343,7 +343,7 @@ WRITE16_HANDLER( metro_soundlatch_w )
 	{
 		soundlatch_w(0,data & 0xff);
 		cpu_set_nmi_line( 1, PULSE_LINE );
-logerror("soundcmd %02x\n", data & 0xff);
+log_cb(RETRO_LOG_ERROR, LOGPRE "soundcmd %02x\n", data & 0xff);
 	}
 }
 
@@ -355,7 +355,7 @@ WRITE16_HANDLER( metro_soundstatus_w )
 	{
 		metro_soundstatus = (~data) & 1;
 	}
-	if (data & ~1)	logerror("CPU #0 PC %06X : unknown bits of soundstatus written: %04X\n",activecpu_get_pc(),data);
+	if (data & ~1)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : unknown bits of soundstatus written: %04X\n",activecpu_get_pc(),data);
 }
 
 
@@ -375,7 +375,7 @@ static WRITE_HANDLER( daitorid_sound_rombank_w )
 	unsigned char *rom = memory_region(REGION_CPU2);
 	int bank = (data >> 4) & 0x07;
 
-	if ( data & ~0x70 ) 	logerror("CPU #1 - PC %04X: unknown bank bits: %02X\n",activecpu_get_pc(),data);
+	if ( data & ~0x70 ) 	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: unknown bank bits: %02X\n",activecpu_get_pc(),data);
 
 	if (bank < 2)	rom = &rom[0x4000 * bank];
 	else			rom = &rom[0x4000 * (bank-2) + 0x10000];
@@ -409,13 +409,13 @@ static WRITE_HANDLER( daitorid_portb_w )
 	  */
 
 if (!BIT(data,0) || !BIT(data,5))
-	logerror("%04x: daitorid_port_b_w %02x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: daitorid_port_b_w %02x\n",activecpu_get_pc(),data);
 
 	if (BIT(portb,7) && !BIT(data,7))	/* clock 1->0 */
 	{
 /*		metro_soundstatus = porta;*/
 		metro_soundstatus = 0;	/* ???*/
-logerror("%04x: to_cpu = %02x\n",activecpu_get_pc(),porta);
+log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: to_cpu = %02x\n",activecpu_get_pc(),porta);
 	}
 
 	if (BIT(portb,6) && !BIT(data,6))	/* clock 1->0 */
@@ -448,13 +448,13 @@ logerror("%04x: to_cpu = %02x\n",activecpu_get_pc(),porta);
 		{
 			/* write */
 			OKIM6295_data_0_w(0,porta);
-logerror("OKIM6295_data_w %02x\n",porta);
+log_cb(RETRO_LOG_ERROR, LOGPRE "OKIM6295_data_w %02x\n",porta);
 		}
 		if (!BIT(data,3))
 		{
 			/* read */
 			porta = OKIM6295_status_0_r(0);
-logerror("OKIM6295_status_r %02x\n",porta);
+log_cb(RETRO_LOG_ERROR, LOGPRE "OKIM6295_status_r %02x\n",porta);
 		}
 	}
 
@@ -516,7 +516,7 @@ WRITE16_HANDLER( metro_soundstatus_w )
 	{
 		metro_soundstatus = (~data) & 1;
 	}
-	if (data & ~1)	logerror("CPU #0 PC %06X : unknown bits of soundstatus written: %04X\n",activecpu_get_pc(),data);
+	if (data & ~1)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : unknown bits of soundstatus written: %04X\n",activecpu_get_pc(),data);
 }
 
 
@@ -621,14 +621,14 @@ WRITE16_HANDLER( metro_coin_lockout_1word_w )
 /*		coin_lockout_w(0, data & 1);*/
 /*		coin_lockout_w(1, data & 2);*/
 	}
-	if (data & ~3)	logerror("CPU #0 PC %06X : unknown bits of coin lockout written: %04X\n",activecpu_get_pc(),data);
+	if (data & ~3)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : unknown bits of coin lockout written: %04X\n",activecpu_get_pc(),data);
 }
 
 
 WRITE16_HANDLER( metro_coin_lockout_4words_w )
 {
 /*	coin_lockout_w( (offset >> 1) & 1, offset & 1 );*/
-	if (data & ~1)	logerror("CPU #0 PC %06X : unknown bits of coin lockout written: %04X\n",activecpu_get_pc(),data);
+	if (data & ~1)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : unknown bits of coin lockout written: %04X\n",activecpu_get_pc(),data);
 }
 
 
@@ -735,7 +735,7 @@ static INLINE void blt_write(const int tmap, const offs_t offs, const data16_t d
 		case 2:	metro_vram_1_w(offs,data,mask);	break;
 		case 3:	metro_vram_2_w(offs,data,mask);	break;
 	}
-/*	logerror("CPU #0 PC %06X : Blitter %X] %04X <- %04X & %04X\n",activecpu_get_pc(),tmap,offs,data,mask);*/
+/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter %X] %04X <- %04X & %04X\n",activecpu_get_pc(),tmap,offs,data,mask);*/
 }
 
 
@@ -760,7 +760,7 @@ WRITE16_HANDLER( metro_blitter_w )
 		int shift			=	(dst_offs & 0x80) ? 0 : 8;
 		data16_t mask		=	(dst_offs & 0x80) ? 0xff00 : 0x00ff;
 
-/*		logerror("CPU #0 PC %06X : Blitter regs %08X, %08X, %08X\n",activecpu_get_pc(),tmap,src_offs,dst_offs);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter regs %08X, %08X, %08X\n",activecpu_get_pc(),tmap,src_offs,dst_offs);*/
 
 		dst_offs >>= 7+1;
 		switch( tmap )
@@ -770,7 +770,7 @@ WRITE16_HANDLER( metro_blitter_w )
 			case 3:
 				break;
 			default:
-				logerror("CPU #0 PC %06X : Blitter unknown destination: %08X\n",activecpu_get_pc(),tmap);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter unknown destination: %08X\n",activecpu_get_pc(),tmap);
 				return;
 		}
 
@@ -780,7 +780,7 @@ WRITE16_HANDLER( metro_blitter_w )
 
 			src_offs %= src_len;
 			b1 = blt_read(src,src_offs);
-/*			logerror("CPU #0 PC %06X : Blitter opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs);*/
+/*			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs);*/
 			src_offs++;
 
 			count = ((~b1) & 0x3f) + 1;
@@ -864,7 +864,7 @@ WRITE16_HANDLER( metro_blitter_w )
 
 
 				default:
-					logerror("CPU #0 PC %06X : Blitter unknown opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs-1);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Blitter unknown opcode %02X at %06X\n",activecpu_get_pc(),b1,src_offs-1);
 					return;
 			}
 
@@ -919,7 +919,7 @@ static READ16_HANDLER( balcube_dsw_r )
 		case 0x17FFE:	return (dsw2 & 0x40) ? 0x40 : 0;
 		case 0x0FFFE:	return (dsw2 & 0x80) ? 0x40 : 0;
 	}
-	logerror("CPU #0 PC %06X : unknown dsw address read: %04X\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : unknown dsw address read: %04X\n",activecpu_get_pc(),offset);
 	return 0xffff;
 }
 

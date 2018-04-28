@@ -174,7 +174,7 @@ WRITE_HANDLER( HuC6270_data_w )
 			case 16:
 			case 17:
 			case 18:
-				logerror("%04x: dma 2 %02x\n",activecpu_get_pc(),data);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: dma 2 %02x\n",activecpu_get_pc(),data);
 				break;
 
 			case 19: /* SATB */
@@ -236,7 +236,7 @@ WRITE_HANDLER( HuC6270_data_w )
 			case 16:
 			case 17:
 			case 18:
-				logerror("%04x: dma 2 %02x\n",activecpu_get_pc(),data);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: dma 2 %02x\n",activecpu_get_pc(),data);
 				break;
 
 			case 19: /* SATB - Sprites */
@@ -245,7 +245,7 @@ WRITE_HANDLER( HuC6270_data_w )
 			}
 			break;
 	}
-	logerror("%04x: unknown write to  VDC_register %02x (%02x) at %02x\n",activecpu_get_pc(),VDC_register,data,offset);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: unknown write to  VDC_register %02x (%02x) at %02x\n",activecpu_get_pc(),VDC_register,data,offset);
 }
 
 /******************************************************************************/

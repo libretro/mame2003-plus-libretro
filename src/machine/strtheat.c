@@ -201,7 +201,7 @@ READ_HANDLER( strtheat_decrypt_rom )
 		case 0x0A:	cpu_setbank (1, &RAM[0x18000]);		break;
 		case 0x0B:	cpu_setbank (1, &RAM[0x1C000]);		break;
 		default:
-			logerror("Invalid counter = %02X\n",counter);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Invalid counter = %02X\n",counter);
 			break;
 	}
 
@@ -231,6 +231,6 @@ MACHINE_INIT( strtheat )
 /*
 WRITE_HANDLER( strtheat_writeport)
 {
-logerror("Port Write: pc = %4x ############## \n",activecpu_get_pc());
+log_cb(RETRO_LOG_ERROR, LOGPRE "Port Write: pc = %4x ############## \n",activecpu_get_pc());
 }
 */

@@ -1,15 +1,5 @@
 #include "driver.h"
 
-
-#define VERBOSE 0
-
-#if VERBOSE
-#define LOG(x)	logerror x
-#else
-#define LOG(x)
-#endif
-
-
 /* interrupt states */
 static UINT8 z80_irq_enabled = 0, z8002_1_nvi_enabled = 0, z8002_2_nvi_enabled = 0;
 
@@ -100,7 +90,7 @@ WRITE16_HANDLER( polepos_z8002_nvi_enable_w )
 			z8002_2_nvi_enabled = data & 1;
 		if ((data & 1) == 0) cpu_set_irq_line(which, 0, CLEAR_LINE);
 	}
-	LOG(("Z8K#%d cpu%d_nvi_enable_w $%02x\n", cpu_getactivecpu(), which, data));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z8K#%d cpu%d_nvi_enable_w $%02x\n", cpu_getactivecpu(), which, data);
 }
 
 INTERRUPT_GEN( polepos_z8002_1_interrupt )
@@ -148,7 +138,7 @@ READ_HANDLER( polepos_adc_r )
 			break;
 
 		default:
-			LOG(("Unknown ADC Input select (%02x)!\n", adc_input));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown ADC Input select (%02x)!\n", adc_input);
 			break;
 	}
 
@@ -189,7 +179,7 @@ READ16_HANDLER( polepos2_ic25_r )
 		ic25_last_result = (INT8)ic25_last_signed * (UINT8)ic25_last_unsigned;
 	}
 
-	logerror("%04X: read IC25 @ %04X = %02X\n", activecpu_get_pc(), offset, result);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "%04X: read IC25 @ %04X = %02X\n", activecpu_get_pc(), offset, result);
 
 	return result | (result << 8);
 }
@@ -226,7 +216,7 @@ READ_HANDLER( polepos_mcu_control_r )
 
 WRITE_HANDLER( polepos_mcu_control_w )
 {
-	LOG(("polepos_mcu_control_w: %d, $%02x\n", offset, data));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "polepos_mcu_control_w: %d, $%02x\n", offset, data);
 
 	if (polepos_mcu.enabled)
 	{
@@ -251,7 +241,7 @@ READ_HANDLER( polepos_mcu_data_r )
 {
 	if (polepos_mcu.enabled)
 	{
-		LOG(("MCU read: PC = %04x, transfer mode = %02x, offset = %02x\n", activecpu_get_pc(), polepos_mcu.transfer_id & 0xff, offset ));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "MCU read: PC = %04x, transfer mode = %02x, offset = %02x\n", activecpu_get_pc(), polepos_mcu.transfer_id & 0xff, offset );
 
 		switch(polepos_mcu.transfer_id)
 		{
@@ -339,7 +329,7 @@ READ_HANDLER( polepos_mcu_data_r )
 				break;
 
 			default:
-				logerror("Unknwon MCU transfer mode: %02x\n", polepos_mcu.transfer_id);
+				log_cb(RETRO_LOG_ERROR, LOGPRE "Unknwon MCU transfer mode: %02x\n", polepos_mcu.transfer_id);
 				break;
 		}
 	}
@@ -351,7 +341,7 @@ WRITE_HANDLER( polepos_mcu_data_w )
 {
 	if (polepos_mcu.enabled)
 	{
-		LOG(("MCU write: PC = %04x, transfer mode = %02x, offset = %02x, data = %02x\n", activecpu_get_pc(), polepos_mcu.transfer_id & 0xff, offset, data ));
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "MCU write: PC = %04x, transfer mode = %02x, offset = %02x, data = %02x\n", activecpu_get_pc(), polepos_mcu.transfer_id & 0xff, offset, data );
 
 		if ( polepos_mcu.transfer_id == 0xa1 ) { /* setup coins/credits, etc ( 8 bytes ) */
 			switch( offset ) {
@@ -395,7 +385,7 @@ WRITE_HANDLER( polepos_mcu_data_w )
 					break;
 
 					default:
-						logerror("Unknown sample triggered (%d)\n", data );
+						log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown sample triggered (%d)\n", data );
 					break;
 				}
 			}

@@ -278,12 +278,12 @@ READ_HANDLER( gottlieb_laserdisc_status_r )
 	{
 		case 0:
 			tmp = current_frame % 100;
-			logerror("LSB frame read: %d\n",tmp);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "LSB frame read: %d\n",tmp);
 			return ((tmp / 10) << 4) | (tmp % 10);
 			break;
 		case 1:
 			tmp = (current_frame / 100) % 100;
-			logerror("MSB frame read: %d\n",tmp);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "MSB frame read: %d\n",tmp);
 			return ((tmp / 10) << 4) | (tmp % 10);
 			break;
 		case 2:
@@ -299,10 +299,10 @@ READ_HANDLER( gottlieb_laserdisc_status_r )
 				if (skipfirstbyte) audioptr++;
 				skipfirstbyte = 0;
 				if (audiobuffer_region) {
-					logerror("audio bufread: %02x\n",audiobuffer_region[audioptr]);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "audio bufread: %02x\n",audiobuffer_region[audioptr]);
 					return audiobuffer_region[audioptr++];
 				} else {
-					logerror("audiobuffer is null !!");
+					log_cb(RETRO_LOG_ERROR, LOGPRE "audiobuffer is null !!");
 					return 0xFF; /* don't know what to do in this case ;-) */
 				}
 			}
@@ -331,7 +331,7 @@ WRITE_HANDLER( gottlieb_laserdisc_command_w )
 
 	if ((data & 0xe0) != 0x20)
 	{
-logerror("error: laserdisc command %02x\n",data);
+log_cb(RETRO_LOG_ERROR, LOGPRE "error: laserdisc command %02x\n",data);
 		return;
 	}
 
@@ -341,7 +341,7 @@ logerror("error: laserdisc command %02x\n",data);
 			((data & 0x02) << 2) |
 			((data & 0x01) << 4);
 
-logerror("laserdisc command %02x -> %02x\n",data,cmd);
+log_cb(RETRO_LOG_ERROR, LOGPRE "laserdisc command %02x -> %02x\n",data,cmd);
 	if (lastcmd == 0x0b && (cmd & 0x10))	/* seek frame # */
 	{
 		current_frame = current_frame * 10 + (cmd & 0x0f);
@@ -387,7 +387,7 @@ INTERRUPT_GEN( gottlieb_interrupt )
 		if (odd_field)		/* the manual says the video frame number is only present in the odd field) */
 		{
 			current_frame++;
-logerror("current frame : %d\n",current_frame);
+log_cb(RETRO_LOG_ERROR, LOGPRE "current frame : %d\n",current_frame);
 
 			if (current_frame%53==0)
 			{

@@ -145,7 +145,7 @@ static WRITE32_HANDLER( ps4_eeprom_w )
 		return;
 	}
 
-	logerror("Unk EEPROM write %x mask %x\n", data, mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Unk EEPROM write %x mask %x\n", data, mem_mask);
 }
 
 static READ32_HANDLER( ps4_eeprom_r )
@@ -155,7 +155,7 @@ static READ32_HANDLER( ps4_eeprom_r )
 		return ((EEPROM_read_bit() << 20)); /* EEPROM */
 	}
 
-	logerror("Unk EEPROM read mask %x\n", mem_mask);
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Unk EEPROM read mask %x\n", mem_mask);
 
 	return 0;
 }
@@ -242,7 +242,7 @@ static WRITE32_HANDLER( ps4_screen1_brt_w )
 	} else {
 		/* I believe this to be seperate rgb brightness due to strings in hotdebut, unused in 4 dumped games */
 		if((data & ~mem_mask) != 0)
-			logerror("Unk Scr 1 rgb? brt write %08x mask %08x\n", data, mem_mask);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Unk Scr 1 rgb? brt write %08x mask %08x\n", data, mem_mask);
 	}
 }
 
@@ -269,7 +269,7 @@ static WRITE32_HANDLER( ps4_screen2_brt_w )
 	} else {
 		/* I believe this to be seperate rgb brightness due to strings in hotdebut, unused in 4 dumped games */
 		if((data & ~mem_mask) != 0)
-			logerror("Unk Scr 2 rgb? brt write %08x mask %08x\n", data, mem_mask);
+			log_cb(RETRO_LOG_ERROR, LOGPRE "Unk Scr 2 rgb? brt write %08x mask %08x\n", data, mem_mask);
 	}
 }
 

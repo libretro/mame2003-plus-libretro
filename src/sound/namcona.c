@@ -169,7 +169,7 @@ PushSequenceAddr( struct sequence *pSequence, int addr )
 	}
 	else
 	{
-		logerror( "sound/namcona.c stack overflow!\n" );
+		log_cb(RETRO_LOG_ERROR, LOGPRE  "sound/namcona.c stack overflow!\n" );
 	}
 } /* PushSequenceAddr */
 

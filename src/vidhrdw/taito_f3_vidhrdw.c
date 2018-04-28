@@ -871,11 +871,11 @@ WRITE32_HANDLER( f3_lineram_w )
 
 /*	if (offset>=0x6000/4 && offset<0x7000/4)*/
 /*	if (offset==0x18c0)*/
-/*		logerror("%08x:  Write 6000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Write 6000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
 /*	if (offset>=0xa000/4 && offset<0xb000/4)*/
-/*		logerror("%08x:  Write a000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Write a000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
 /*	if (offset>=0xb000/4 && offset<0xc000/4)*/
-/*		logerror("%08x:  Write b000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
+/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Write b000 %08x, %08x\n",activecpu_get_pc(),offset,data);*/
 
 }
 

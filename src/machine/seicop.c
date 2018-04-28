@@ -37,7 +37,7 @@ static void copd2_set_tableoffset(UINT16 data)
 	copd2_offs = data;
 	if (copd2_offs>0xff)
 	{
-		logerror("copd2 offs > 0x100\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "copd2 offs > 0x100\n");
 	}
 
 	copd2_table_2[copd2_offs/8] = cop_438;
@@ -139,7 +139,7 @@ static WRITE16_HANDLER( seibu_common_video_regs_w )
 		case (0x026/2): { denjinmk_scrollram16[3] = seibu_vregs[offset]; break; }
 		case (0x028/2): { denjinmk_scrollram16[4] = seibu_vregs[offset]; break; }
 		case (0x02a/2): { denjinmk_scrollram16[5] = seibu_vregs[offset]; break; }
-		default: { logerror("seibu_common_video_regs_w unhandled offset %02x %04x\n",offset*2,data); break; }
+		default: { log_cb(RETRO_LOG_ERROR, LOGPRE "seibu_common_video_regs_w unhandled offset %02x %04x\n",offset*2,data); break; }
 	}
 }
 

@@ -2280,7 +2280,7 @@ static void PutPolyData( unsigned addr, unsigned data )
 	data8_t *pPolyL = memory_region(REGION_GFX4);
 	data8_t *pPolyM = pPolyL + ptRomSize;
 	data8_t *pPolyH = pPolyM + ptRomSize;
-	/* logerror( "%08x: %02x\n", addr, pPolyM[addr]^((data>>8)&0xff) ); */
+	/* log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: %02x\n", addr, pPolyM[addr]^((data>>8)&0xff) ); */
 	pPolyH[addr] = data>>16;
 	pPolyM[addr] = (data>>8)&0xff;
 	pPolyL[addr] = data&0xff;

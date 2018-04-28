@@ -169,19 +169,14 @@ CPUS+=E132XS@
 #include "mamedbg.h"
 #include "e132xs.h"
 
-#define VERBOSE_LEVEL ( 0 )
-
 static INLINE void verboselog( int n_level, const char *s_fmt, ... )
 {
-	if( VERBOSE_LEVEL >= n_level )
-	{
-		va_list v;
-		char buf[ 32768 ];
-		va_start( v, s_fmt );
-		vsprintf( buf, s_fmt, v );
-		va_end( v );
-		logerror( "%s", buf );
-	}
+  va_list v;
+  char buf[ 32768 ];
+  va_start( v, s_fmt );
+  vsprintf( buf, s_fmt, v );
+  va_end( v );
+  log_cb(RETRO_LOG_DEBUG, LOGPRE  "%s", buf );
 }
 
 int e132xs_ICount;

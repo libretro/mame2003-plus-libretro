@@ -580,7 +580,7 @@ static void update_gfx(void)
 					}
 					break;
 				default:
-					logerror("UN-SUPPORTED SPRITE SIZE %-4x\n",size&0x38);
+					log_cb(RETRO_LOG_ERROR, LOGPRE "UN-SUPPORTED SPRITE SIZE %-4x\n",size&0x38);
 				case 0x38:
 					/* sprite 16x16 */
 					char_type=1;

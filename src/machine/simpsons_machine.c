@@ -194,7 +194,7 @@ static void simpsons_banking( int lines )
 		break;
 
 		default:
-			logerror("PC = %04x : Unknown bank selected (%02x)\n", activecpu_get_pc(), lines );
+			log_cb(RETRO_LOG_ERROR, LOGPRE "PC = %04x : Unknown bank selected (%02x)\n", activecpu_get_pc(), lines );
 		break;
 	}
 

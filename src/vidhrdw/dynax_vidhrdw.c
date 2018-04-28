@@ -26,10 +26,6 @@
 #include "vidhrdw/generic.h"
 #include "includes/dynax.h"
 
-/* Log Blitter*/
-#define VERBOSE 0
-
-
 /* 0 B01234 G01234 R01234 */
 PALETTE_INIT( sprtmtch )
 {
@@ -105,18 +101,14 @@ WRITE_HANDLER( dynax_extra_scrolly_w )
 WRITE_HANDLER( dynax_blit_pen_w )
 {
 	dynax_blit_pen = data;
-#if VERBOSE
-	logerror("P=%02X ",data);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "P=%02X ",data);
 }
 
 /* Background Color */
 WRITE_HANDLER( dynax_blit_backpen_w )
 {
 	dynax_blit_backpen = data;
-#if VERBOSE
-	logerror("B=%02X ",data);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "B=%02X ",data);
 }
 
 /* Layers 0&1 Palettes (Low Bits) */
@@ -126,9 +118,7 @@ WRITE_HANDLER( dynax_blit_palette01_w )
 		dynax_blit_palettes = (dynax_blit_palettes & 0x00ff) | ((data&0x0f)<<12) | ((data&0xf0)<<4);
 	else
 		dynax_blit_palettes = (dynax_blit_palettes & 0xff00) | data;
-#if VERBOSE
-	logerror("P1=%02X ",data);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "P1=%02X ",data);
 }
 
 /* Layer 2 Palette (Low Bits) */
@@ -138,18 +128,14 @@ WRITE_HANDLER( dynax_blit_palette2_w )
 		dynax_blit_palettes = (dynax_blit_palettes & 0xff00) | ((data&0x0f)<<4) | ((data&0xf0)>>4);
 	else
 		dynax_blit_palettes = (dynax_blit_palettes & 0x00ff) | (data<<8);
-#if VERBOSE
-	logerror("P2=%02X ",data);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "P2=%02X ",data);
 }
 
 /* Layers Palettes (High Bits) */
 WRITE_HANDLER( dynax_blit_palbank_w )
 {
 	dynax_blit_palbank = data;
-#if VERBOSE
-	logerror("PB=%02X ",data);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PB=%02X ",data);
 }
 
 /* Destination Layers */
@@ -159,27 +145,21 @@ WRITE_HANDLER( dynax_blit_dest_w )
 	if (layer_layout == LAYOUT_HNORIDUR)
 		dynax_blit_dest = BITSWAP8(dynax_blit_dest ^ 0x0f, 7,6,5,4, 0,1,2,3);
 
-#if VERBOSE
-	logerror("D=%02X ",data);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "D=%02X ",data);
 }
 
 /* Which half of the layers to write two (interleaved games only) */
 WRITE_HANDLER( hanamai_layer_half_w )
 {
 	hanamai_layer_half = data & 1;
-#if VERBOSE
-	logerror("H=%02X ",data);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "H=%02X ",data);
 }
 
 /* Write to both halves of the layers (interleaved games only) */
 WRITE_HANDLER( hnoridur_layer_half2_w )
 {
 	hnoridur_layer_half2 = (~data) & 1;
-#if VERBOSE
-	logerror("H2=%02X ",data);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "H2=%02X ",data);
 }
 
 WRITE_HANDLER( mjdialq2_blit_dest_w )
@@ -195,9 +175,7 @@ WRITE_HANDLER( dynax_layer_enable_w )
 {
 	dynax_layer_enable = data;
 
-#if VERBOSE
-	logerror("E=%02X ",data);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "E=%02X ",data);
 }
 
 WRITE_HANDLER( mjdialq2_layer_enable_w )
@@ -213,10 +191,8 @@ WRITE_HANDLER( dynax_flipscreen_w )
 {
 	flipscreen = data & 1;
 	if (data & ~1)
-		logerror("CPU#0 PC %06X: Warning, flip screen <- %02X\n", activecpu_get_pc(), data);
-#if VERBOSE
-	logerror("F=%02X ",data);
-#endif
+		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 PC %06X: Warning, flip screen <- %02X\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "F=%02X ",data);
 }
 
 
@@ -457,9 +433,7 @@ static void dynax_blitter_start(int flags)
 		flags
 	);
 
-#if VERBOSE
-	logerror("SRC=%X BLIT=%02X\n",blit_src,flags);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "SRC=%X BLIT=%02X\n",blit_src,flags);
 
 	blit_src	=	(blit_src	&	~0x3fffff) |
 					(i			&	 0x3fffff) ;
@@ -481,26 +455,21 @@ WRITE_HANDLER( dynax_blit_scroll_w )
 	/* 0x800000 also used!*/
 	if (blit_src & 0x800000)
 	{
-		dynax_blit_scroll_high = data;	/* ?*/
-#if VERBOSE
-			logerror("SH=%02X ",data);
-#endif
+    dynax_blit_scroll_high = data;	/* ?*/
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "SH=%02X ",data);
 	}
 	else
 	{
 		if (blit_src & 0x400000)
 		{
 			dynax_blit_scroll_y = data;
-#if VERBOSE
-			logerror("SY=%02X ",data);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SY=%02X ",data);
+
 		}
 		else
 		{
 			dynax_blit_scroll_x = data;
-#if VERBOSE
-			logerror("SX=%02X ",data);
-#endif
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "SX=%02X ",data);
 		}
 	}
 }
