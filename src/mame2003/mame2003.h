@@ -219,6 +219,99 @@ int osd_is_joy_pressed(int joycode);
 /* added for building joystick seq for analog inputs */
 int osd_is_joystick_axis_code(int joycode);
 
+    /* this should be updated whenever the options.retropad_layout changes
+     * so should be in another place?
+     * maybe better to be a method we call in here and also on option change?
+     * 
+     * Assuming the standard RetroPad layout:
+     * 
+     *   [L2]                                 [R2]
+     *   [L]                                   [R]
+     *
+     *     [^]                               [X]
+     *
+     * [<]     [>]    [start] [selct]    [Y]     [A]
+     *
+     *     [v]                               [B]
+     *
+     *
+     * or standard RetroPad fight stick layout:
+     *
+     *   [start] [selct]
+     *                                         [X]  [R]  [L]
+     *     [^]                            [Y]  
+     *                                      
+     * [<]     [>]                             [A]  [R2] [L2]
+     *                                    [B]
+     *     [v]
+     *
+     *
+     * 
+     * key: [MAME button/Street Fighter II move]
+     *
+     * options.retropad_layout == RETROPAD_MODERN
+     * ========================
+     * Uses the fight stick & pad layout popularised by Street Figher IV.
+     * Needs an 8+ button controller by default.
+     *
+     * [8/-]                                     [6/HK]  |
+     * [7/-]                                     [3/HP]  |
+     *                                                   |        [2/MP]  [3/HP]  [7/-]
+     *     [^]                               [2/MP]      |  [1/LP]   
+     *                                                   |
+     * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
+     *                                                   |  [4/LK]
+     *     [v]                               [4/LK]      |
+     *                                                   |
+     *
+     * retropad_layout == RETROPAD_SNES
+     * ========================
+     * Uses the layout popularised by SNES Street Figher II.
+     * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
+     *
+     * [7/-]                                      [8/-]  |
+     * [3/HP]                                    [6/HK]  |
+     *                                                   |        [2/MP]  [6/HK]  [3/HP]
+     *     [^]                               [2/MP]      |  [1/LP]   
+     *                                                   |
+     * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
+     *                                                   |  [4/LK]
+     *     [v]                               [4/LK]      |
+     *                                                   |
+     *
+     * options.retropad_layout == RETROPAD_MAME
+     * ========================
+     * Uses current MAME's default Xbox 360 controller layout.
+     * Not sensible for 6 button fighters, but may suit other games.
+     *
+     * [7/-]                                     [8/-]   |
+     * [5/MK]                                    [6/HK]  |
+     *                                                   |        [4/WK]  [6/HK]  [5/MK]
+     *     [^]                               [4/WK]      |  [3/HP]   
+     *                                                   |
+     * [<]     [>]    [start] [selct]    [3/HP]  [2/MP]  |        [2/MP]  [8/-]   [7/-]
+     *                                                   |  [1/LP]
+     *     [v]                               [1/LP]      |
+     *                                                   |
+     */
+    #define describe_buttons(INDEX) \
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      (options.retropad_layout == RETROPAD_MAME ? "Button 1" : "Button 4") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      (options.retropad_layout == RETROPAD_MAME ? "Button 3" : "Button 1") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      (options.retropad_layout == RETROPAD_MAME ? "Button 4" : "Button 2") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      (options.retropad_layout == RETROPAD_MAME ? "Button 2" : "Button 5") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      (options.retropad_layout == RETROPAD_MAME ? "Button 5" : (options.retropad_layout == RETROPAD_MODERN ? "Button 7" : "Button 3")) },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      (options.retropad_layout == RETROPAD_MODERN       ? "Button 3" : "Button 6") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     (options.retropad_layout == RETROPAD_MODERN       ? "Button 8" : "Button 7") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     (options.retropad_layout == RETROPAD_MODERN       ? "Button 6" : "Button 8") },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
+    { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
+
 /* Joystick calibration routines BW 19981216 */
 /* Do we need to calibrate the joystick at all? */
 int osd_joystick_needs_calibration(void);
