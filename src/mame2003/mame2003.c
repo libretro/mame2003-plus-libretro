@@ -24,6 +24,7 @@ short*         conversion_buffer;
 int            usestereo = 1;
 int16_t        prev_pointer_x;
 int16_t        prev_pointer_y;
+unsigned       prev_input_mode;
 unsigned       retroColorMode;
 unsigned long  lastled = 0;
 int16_t        XsoundBuffer[2048];
@@ -106,7 +107,7 @@ void retro_get_system_info(struct retro_system_info *info)
   info->block_extract = true;
 }
 
-static void update_variables(void)
+static void update_variables(bool first_time)
 {
   struct retro_led_interface ledintf;
   struct retro_variable var;
@@ -138,7 +139,7 @@ static void update_variables(void)
 
   var.key = APPNAME"_retropad_layout";
   options.retropad_layout = RETROPAD_MAME;
-  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
     if(strcmp(var.value, "modern") == 0)
       options.retropad_layout = RETROPAD_MODERN;
@@ -146,6 +147,19 @@ static void update_variables(void)
       options.retropad_layout = RETROPAD_SNES;
     else
       options.retropad_layout = RETROPAD_MAME;
+  }
+  if(first_time)
+    prev_input_mode = options.retropad_layout;
+  else if(prev_input_mode != options.retropad_layout)
+  {
+    struct retro_input_descriptor desc[] = {
+      describe_buttons(0)
+      describe_buttons(1)
+      describe_buttons(2)
+      describe_buttons(3)
+      { 0, 0, 0, 0, NULL }
+    };
+    environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
   }
   
   var.value = NULL;
@@ -479,7 +493,7 @@ void retro_init (void)
    environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf_cb);
 #endif
 
-   update_variables();
+   update_variables(true);
    check_system_specs();
 }
 
@@ -525,7 +539,7 @@ void retro_run (void)
    poll_cb();
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
-      update_variables();
+      update_variables(false);
 
    /* Keyboard */
    thisInput = retroKeys;
