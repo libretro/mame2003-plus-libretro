@@ -984,7 +984,11 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
   {"RetroPad"   #INDEX " Left",        ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT,   JOYCODE_##INDEX##_LEFT}, \
   {"RetroPad"   #INDEX " Right",       ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_RIGHT,  JOYCODE_##INDEX##_RIGHT}, \
   {"RetroPad"   #INDEX " Up",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_UP,     JOYCODE_##INDEX##_UP}, \
-  {"RetroPad"   #INDEX " Down",        ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_DOWN,   JOYCODE_##INDEX##_DOWN}
+  {"RetroPad"   #INDEX " Down",        ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_DOWN,   JOYCODE_##INDEX##_DOWN}, \
+  {"RetroPad"   #INDEX " B",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B,      JOYCODE_##INDEX##_RIGHT_DOWN}, \
+  {"RetroPad"   #INDEX " Y",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_Y,      JOYCODE_##INDEX##_RIGHT_LEFT}, \
+  {"RetroPad"   #INDEX " X",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_X,      JOYCODE_##INDEX##_RIGHT_UP}, \
+  {"RetroPad"   #INDEX " A",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_A,      JOYCODE_##INDEX##_RIGHT_RIGHT}
 
 #define EMIT_RETRO_PAD(INDEX) \
   {"RetroPad"   #INDEX " B",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B,      JOYCODE_##INDEX##_BUTTON1}, \
