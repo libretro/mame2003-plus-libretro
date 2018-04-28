@@ -578,7 +578,7 @@ static struct YM3812interface esd16_ym3812_intf =
 	{  0 },		/* IRQ Line */
 };
 
-static struct YM3812interface tangtang_esd16_ym3812_intf =
+static struct YM3812interface tangtang_ym3812_intf =
 {
 	1,
 	4000000,	/* ? */
@@ -642,6 +642,14 @@ static MACHINE_DRIVER_START( hedpanic )
 
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( hedpanio )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(hedpanic)
+
+	MDRV_VIDEO_UPDATE(hedpanio)
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( mchampdx )
 
 	/* basic machine hardware */
@@ -649,18 +657,6 @@ static MACHINE_DRIVER_START( mchampdx )
 
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(mchampdx_readmem,mchampdx_writemem)
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START( tangtang )
-
-	/* basic machine hardware */
-	MDRV_IMPORT_FROM(hedpanic)
-
-	MDRV_CPU_MODIFY("main")
-	MDRV_CPU_MEMORY(tangtang_readmem,tangtang_writemem)
-
-	MDRV_GFXDECODE(tangtang_gfxdecodeinfo)
-	MDRV_SOUND_ADD(YM3812, tangtang_esd16_ym3812_intf)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( swatpolc )
@@ -671,14 +667,37 @@ static MACHINE_DRIVER_START( swatpolc )
 	MDRV_GFXDECODE(tangtang_gfxdecodeinfo)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START( hedpanio )
+static MACHINE_DRIVER_START( tangtang )
 
 	/* basic machine hardware */
-	MDRV_IMPORT_FROM(hedpanic)
+	MDRV_CPU_ADD(M68000, 16000000)
+	MDRV_CPU_MEMORY(tangtang_readmem,tangtang_writemem)
+	MDRV_CPU_VBLANK_INT(irq6_line_hold,1)
 
-	MDRV_VIDEO_UPDATE(hedpanio)
+	MDRV_CPU_ADD(Z80, 4000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)	/* ? */
+	MDRV_CPU_MEMORY(multchmp_sound_readmem,multchmp_sound_writemem)
+	MDRV_CPU_PORTS(multchmp_sound_readport,multchmp_sound_writeport)
+	MDRV_CPU_VBLANK_INT(nmi_line_pulse,32)	/* IRQ By Main CPU */
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+	MDRV_NVRAM_HANDLER(93C46)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(0x140, 0x100)
+	MDRV_VISIBLE_AREA(0, 0x140-1, 0+8, 0x100-8-1)
+	MDRV_GFXDECODE(tangtang_gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(0x1000/2)
+
+	MDRV_VIDEO_START(esd16)
+	MDRV_VIDEO_UPDATE(hedpanic)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(YM3812, tangtang_ym3812_intf)
+	MDRV_SOUND_ADD(OKIM6295, esd16_m6295_intf)
 MACHINE_DRIVER_END
-
 
 /***************************************************************************
 
