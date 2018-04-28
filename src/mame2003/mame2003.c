@@ -58,7 +58,7 @@ void retro_set_environment(retro_environment_t cb)
   static const struct retro_variable vars[] = {
     { APPNAME"_frameskip", "Frameskip; 0|1|2|3|4|5" },
     { APPNAME"_input_interface", "Input interface; retropad|mame_keyboard|simultaneous" },
-    { APPNAME"_retropad_layout", "RetroPad Layout; modern|SNES|MAME classic" },
+    { APPNAME"_retropad_layout", "RetroPad Layout (Restart); modern|SNES|MAME classic" },
 #if defined(__IOS__)
     { APPNAME"_mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else
@@ -68,7 +68,7 @@ void retro_set_environment(retro_environment_t cb)
     { APPNAME"_display_setup", "Display MAME menu; disabled|enabled" },
 /*    { APPNAME"_brightness", "Brightness; 5|1|2|3|4|6|7|8|9|10" },    */
     { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
-    { APPNAME"_bios_region", "Specify alternate BIOS region; default|asia|japan|japan_a|japan_b|europe|europe_a|taiwan|us|us_a" },
+    { APPNAME"_bios_region", "Specify alternate BIOS region (Restart); default|asia|japan|japan_a|japan_b|europe|europe_a|taiwan|us|us_a" },
     { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
     { APPNAME"_rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
     { APPNAME"_tate_mode", "TATE Mode; disabled|enabled" },
