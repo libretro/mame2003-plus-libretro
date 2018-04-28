@@ -578,6 +578,14 @@ static struct YM3812interface esd16_ym3812_intf =
 	{  0 },		/* IRQ Line */
 };
 
+static struct YM3812interface tangtang_esd16_ym3812_intf =
+{
+	1,
+	4000000,	/* ? */
+	{ 100 },
+	{  0 },		/* IRQ Line */
+};
+
 static struct OKIM6295interface esd16_m6295_intf =
 {
 	1,
@@ -652,6 +660,7 @@ static MACHINE_DRIVER_START( tangtang )
 	MDRV_CPU_MEMORY(tangtang_readmem,tangtang_writemem)
 
 	MDRV_GFXDECODE(tangtang_gfxdecodeinfo)
+	MDRV_SOUND_ADD(YM3812, tangtang_esd16_ym3812_intf)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( swatpolc )
