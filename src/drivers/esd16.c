@@ -578,6 +578,14 @@ static struct YM3812interface esd16_ym3812_intf =
 	{  0 },		/* IRQ Line */
 };
 
+static struct OKIM6295interface esd16_m6295_intf =
+{
+	1,
+	{ 8000 },	/* ? */
+	{ REGION_SOUND1 },
+	{ 80 }
+};
+
 static struct YM3812interface tangtang_ym3812_intf =
 {
 	1,
@@ -586,12 +594,12 @@ static struct YM3812interface tangtang_ym3812_intf =
 	{  0 },		/* IRQ Line */
 };
 
-static struct OKIM6295interface esd16_m6295_intf =
+static struct OKIM6295interface tangtang_m6295_intf =
 {
 	1,
 	{ 8000 },	/* ? */
 	{ REGION_SOUND1 },
-	{ 80 }
+	{ 60 }
 };
 
 static MACHINE_DRIVER_START( multchmp )
@@ -696,7 +704,7 @@ static MACHINE_DRIVER_START( tangtang )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(YM3812, tangtang_ym3812_intf)
-	MDRV_SOUND_ADD(OKIM6295, esd16_m6295_intf)
+	MDRV_SOUND_ADD(OKIM6295, tangtang_m6295_intf)
 MACHINE_DRIVER_END
 
 /***************************************************************************
