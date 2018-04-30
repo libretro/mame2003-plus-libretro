@@ -10,7 +10,6 @@ Known issues:
 - many registers are suspiciously plucked from working RAM
 - several games have nvram according to the self test, but we aren't yet saving it
 - many games suffer from sys16_refreshenable register not being mapped
-- hangon road isn't displayed(!) emulation bug?
 - road-rendering routines need to be cleaned up or at least better described
 - logical sprite height computation isn't quite right - garbage pixels are drawn
 - screen orientation support for sprite drawing
@@ -848,6 +847,9 @@ VIDEO_START( system16 ){
 		40,28 );
 
 	num_sprites = 128*2; /* only 128 for most games; aburner uses 256 */
+	
+	if(!strcmp(Machine->gamedrv->name, "hangon"))
+		num_sprites = 128;
 
 	if( background && foreground && text_layer ){
 		/* initialize all entries to black - needed for Golden Axe*/
