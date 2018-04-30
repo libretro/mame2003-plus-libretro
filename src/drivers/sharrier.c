@@ -508,9 +508,9 @@ static MACHINE_INIT( hangon ){
 	the ADC is mapped to, so the input selection behavior didn't have to be
 	emulated. Not needed anymore, but left in for reference.
 	
-	sys16_patch_code( 0x83bd, 0x29); /* $E03021 -> $E03029 */
-	sys16_patch_code( 0x8495, 0x2a); /* $E03021 -> $E0302A */
-	sys16_patch_code( 0x84f9, 0x2b); /* $E03021 -> $E0302B */
+	sys16_patch_code( 0x83bd, 0x29);
+	sys16_patch_code( 0x8495, 0x2a);
+	sys16_patch_code( 0x84f9, 0x2b);
 */
 
 	sys16_update_proc = hangon_update_proc;
