@@ -116,6 +116,7 @@
 * Die Hard Arcade (requires a fast system, video and sound issues remain)
 * Discs Of Tron
 * Domino Man
+* Hang-On
 * Journey
 * Kick
 * Kozmik Kroozer
