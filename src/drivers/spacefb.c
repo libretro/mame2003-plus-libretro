@@ -2,7 +2,7 @@
 
 Space Firebird memory map (preliminary)
 
-  Memory Map figured out by Chris Hardy (chrish@kcbbs.gen.nz), Paul Johnson and Andy Clark
+  Memory Map figured out by Chris Hardy, Paul Johnson and Andy Clark
   MAME driver by Chris Hardy
 
   Schematics scanned and provided by James Twine
@@ -12,9 +12,9 @@ Space Firebird memory map (preliminary)
   pcb.
 
 TODO
-	- Add "Red" flash when you die.
 	- Add Starfield. It is NOT a Galaxians starfield
-	-
+	- Need to verify that the red background is correct. Currently every sprite has 8x8 or 4x4 opaque pixels.
+	  This is correct for the sprite over sprite graphics, but maybe incorrect for the background colour and stars
 
 0000-3FFF ROM		Code
 8000-83FF RAM		Sprite RAM
@@ -31,16 +31,7 @@ Port 3 - Dipswitch
 
 OUT:
 Port 0 - RV,VREF and CREF
-Port 1 - Comms to the Sound card (-> 8212)
-    bit 0 = discrete sound
-    bit 1 = INT to 8035
-    bit 2 = T1 input to 8035
-    bit 3 = PB4 input to 8035
-    bit 4 = PB5 input to 8035
-    bit 5 = T0 input to 8035
-    bit 6 = discrete sound
-    bit 7 = discrete sound
-
+Port 1 - Comms to the Sound card (via 8212 latch)
 Port 2 - Video contrast values (used by sound board only)
 Port 3 - Unused
 
@@ -103,21 +94,30 @@ Port 0 - Video
    bit 7 = unused
 
 Port 1
-	8 bits gets "sent" to a 8212 chip
+    bit 0 = discrete sound (Enemy death)
+    bit 1 = INT to 8035
+    bit 2 = T1 input to 8035
+    bit 3 = PB4 input to 8035
+    bit 4 = PB5 input to 8035
+    bit 5 = T0 input to 8035
+    bit 6 = discrete sound (Ship fire)
+    bit 7 = discrete sound (Explosion noise)
 
 Port 2 - Video control
 
 These are passed to the sound board and are used to produce a
 red flash effect when you die.
 
-   bit 0 = CONT R
+   bit 0 = CONT R		Changes contrast of the red/green/blue part of the stars. This is used to make the starfield flicker
    bit 1 = CONT G
    bit 2 = CONT B
-   bit 3 = ALRD
-   bit 4 = ALBU
+   bit 3 = ALRD			Turns background red on
+   bit 4 = ALBU			Turns background blue on
    bit 5 = unused
    bit 6 = unused
-   bit 7 = ALBA
+   bit 7 = ALBA			Turns on Starfield or turns background colour to white
+
+
 
 
 ***************************************************************************/
@@ -160,9 +160,75 @@ static READ_HANDLER( spacefb_sh_t1_r )
 
 static WRITE_HANDLER( spacefb_port_1_w )
 {
+	static int bit0 = 0;
+	static int bit6 = 0;
+	static int bit7 = 0;
+	static int explosion_playing = 0;
+	int bit;
+
 	spacefb_sound_latch = data;
 	cpu_set_irq_line(1, 0, (!(data & 0x02)) ? ASSERT_LINE : CLEAR_LINE);
+
+/* Enemy killed */
+	bit = 1-(data & 1);
+	if ((bit) & (!bit0))
+	{
+		sample_start(0,0,0);
+	}
+	bit0 = bit;
+
+/* Ship fire */
+	bit = 1-((data >> 6) & 1);
+	if ((bit) && (!bit6))
+	{
+		sample_start(1,1,0);
+	}
+	bit6 = bit;
+
+/*
+	Explosion Noise
+
+	Actual sample has a bit of attack at the start, but these doesn't seem to be an easy way
+	to play the attack part, then loop the middle bit until the sample is turned off
+	Fortunately it seems like the recorded sample of the spaceship death is the longest the sample plays for.
+	We loop it just in case it runs out
+*/
+	bit = 1-((data >> 7) & 1);
+	if (bit ^ bit7)
+	{
+		if (bit)
+		{
+			/* Start looping noise */
+			sample_start(2,2,1);
+			explosion_playing = 1;
+		}
+		else
+		{
+			/* play decaying noise */
+			sample_start(2,3,0);
+			explosion_playing = 0;
+		}
+	}
+	bit7 = bit;
+
 }
+
+static const char *spacefb_sample_names[] =
+{
+	"*spacefb",
+	"ekilled.wav",
+	"shipfire.wav",
+	"explode1.wav",
+	"explode2.wav",
+	0	/* end of array */
+};
+
+static struct Samplesinterface spacefb_samples_interface =
+{
+	3,	/* 3 channels */
+	100,	/* volume */
+	spacefb_sample_names
+};
 
 
 static MEMORY_READ_START( readmem )
@@ -353,7 +419,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static struct DACinterface dac_interface =
 {
 	1,
-	{ 100 }
+	{ 25 }
 };
 
 static MACHINE_DRIVER_START( spacefb )
@@ -379,7 +445,7 @@ static MACHINE_DRIVER_START( spacefb )
 	MDRV_SCREEN_SIZE(264, 256)
 	MDRV_VISIBLE_AREA(0, 263, 16, 247)
 	MDRV_GFXDECODE(gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(32)
+	MDRV_PALETTE_LENGTH(32+4)
 	MDRV_COLORTABLE_LENGTH(32)
 
 	MDRV_PALETTE_INIT(spacefb)
@@ -388,6 +454,7 @@ static MACHINE_DRIVER_START( spacefb )
 
 	/* sound hardware */
 	MDRV_SOUND_ADD(DAC, dac_interface)
+	MDRV_SOUND_ADD(SAMPLES, spacefb_samples_interface)
 MACHINE_DRIVER_END
 
 
