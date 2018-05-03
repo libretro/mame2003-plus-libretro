@@ -161,7 +161,6 @@
 * Acrobat Mission
 * Bio-ship Paladin
 * Black Heart
-* Cosmic Alien
 * Fire Shark
 * GunNail
 * Hacha Mecha Fighter
@@ -170,7 +169,6 @@
 * Knights of Valour Plus / Sangoku Senki Plus
 * Mustache Boy
 * Oriental Legend / Xi Yo Gi Shi Re Zuang
-* Sasuke Vs Commander
 * Same Same Same
 * SD Gundam Psycho Salamander no Kyoui
 * Super Spacefortress Macross
@@ -183,19 +181,30 @@
 
 ## Games now with improved sound
 
+* Nibbler
+* Rohga Armor Force
+
+
+## Games now with sound sample support
+
+* Cosmic Alien
+* Sasuke Vs Commander 
+* Space Firebird
+
+
+## Games supporting new and improved samples
+
 * Donkey Kong
 * Donkey Kong JR
 * Fantasy
 * Pioneer Balloon
-* Nibbler
-* Rohga Armor Force
 * Vanguard
 
 
 ## Changes
 
 * Added sound support to Fire Shark and Vimana
-* Added sound support for Cosmic Alien
+* Added sound sample support for Cosmic Alien
 * Added BritneysPAIRS improved sample support to Donkey Kong and Donkey kong JR
 * New and improved sample support for Sasuke, Fantasy, Pioneer Balloon and Vanguard
 * Added sound support for SD Gundam Psycho Salamander no Kyoui
@@ -223,6 +232,7 @@
 * Tweaked Tecmo Bowl so it will boot using only a single screen
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 * Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
+* Added sound sample support for Nintendo's Space Firebird
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color when backdrops are first loaded.
 
