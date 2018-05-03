@@ -11,6 +11,9 @@
 
 
 static int video_control;
+static int colour_control;
+
+extern unsigned char spacefb_sound_latch;
 
 
 /***************************************************************************
@@ -60,6 +63,12 @@ PALETTE_INIT( spacefb )
 		if (i & 3) colortable[i] = i;
 		else colortable[i] = 0;
 	}
+	/* RGB background colour flash.. Only red background is actually used */
+	palette_set_color(32,0x47,0,0);			/* Red */
+	palette_set_color(33,0,0,0x47);			/* Blue */
+	palette_set_color(34,0x47,0,0x47);		/* Red+Blue */
+	palette_set_color(35,0x47,0x47,0x47);	/* White */
+
 }
 
 
@@ -74,6 +83,7 @@ WRITE_HANDLER( spacefb_video_control_w )
 WRITE_HANDLER( spacefb_port_2_w )
 {
 log_cb(RETRO_LOG_ERROR, LOGPRE "Port #2 = %02d\n",data);
+       colour_control = data;
 }
 
 
@@ -89,11 +99,36 @@ VIDEO_UPDATE( spacefb )
 {
 	int offs;
 	int spriteno, col_bit2;
+	int background_colour;
 
+	/*
+		Space Firebird only uses the red background flashing, but since we are documenting the hardware...
 
+	*/
 
 	/* Clear the bitmap */
-	fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
+	background_colour=0;
+	switch(colour_control & 0x18)
+	{
+		case 0x08 : /* ALRD */
+			background_colour = 32;		/* RED */
+			break;
+		case 0x10 : /* ALBU */
+			background_colour = 33;		/* BLUE */
+			break;
+		case 0x18 : /* ALRD+ALBU */
+			background_colour = 34;		/* RED+BLUE */
+			break;
+		default :
+			background_colour = 0;		/* BLACK */
+			break;
+	}
+	if (colour_control & 0x80)		/* ALBA - All white?? Stars on/off?? */
+	{
+		background_colour = 35;			/* WHITE */
+	}
+
+	fillbitmap(bitmap,Machine->pens[background_colour],&Machine->visible_area);
 
 	/* Draw the sprite/chars */
 	spriteno = (video_control & 0x20) ? 0x80 : 0x00;
@@ -155,5 +190,31 @@ VIDEO_UPDATE( spacefb )
 			}
 		}
 	}
+#if 0
+	{
+		int b;
+		for (b=0;b<8;b++)
+		{
+			drawgfx(bitmap,Machine->gfx[0],
+				 /*	255 - b, */
+					255 - ( (colour_control & (1<<(7-b))) ? 6 : 5),
+					1,
+					0,0,
+					32,128+(7-b)*8,
+					&Machine->visible_area,TRANSPARENCY_NONE,0);
 
+		}
+		for (b=0;b<8;b++)
+		{
+			drawgfx(bitmap,Machine->gfx[0],
+				 /*	255 - b, */
+					255 - ( (spacefb_sound_latch & (1<<(7-b))) ? (7-b)+5 : 0),
+					1,
+					0,0,
+					32+8,128+(7-b)*8,
+					&Machine->visible_area,TRANSPARENCY_NONE,0);
+
+		}
+	}
+#endif
 }
