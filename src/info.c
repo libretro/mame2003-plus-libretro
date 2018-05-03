@@ -421,6 +421,10 @@ static void print_game_rom(FILE* out, const struct GameDriver* game)
    
 }
 
+
+/* disable optimization for this section until code is change to be 64 bit friendly */
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
 static void print_game_sampleof(FILE* out, const struct GameDriver* game)
 {
 #if (HAS_SAMPLES)
@@ -483,6 +487,8 @@ static void print_game_sample(FILE* out, const struct GameDriver* game)
 	}
 #endif
 }
+#pragma GCC pop_options
+/*restore gcc flags */
 
 static void print_game_micro(FILE* out, const struct GameDriver* game)
 {
