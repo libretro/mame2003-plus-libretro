@@ -787,7 +787,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
 void retro_unload_game(void)
 {
-    /*mame_done();*/
+    mame_done();
     
     /*free(fallbackDir);
     systemDir = 0;*/
