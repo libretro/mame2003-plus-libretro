@@ -340,6 +340,7 @@ void update_video_and_audio(void);
 /* (this calls draw_screen and update_video_and_audio) */
 int updatescreen(void);
 
+void mame_done(void);
 
 
 /* ----- miscellaneous bits & pieces ----- */
