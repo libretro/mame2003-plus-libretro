@@ -427,7 +427,6 @@ static void print_game_rom(FILE* out, const struct GameDriver* game)
 #pragma GCC optimize ("O0")
 static void print_game_sampleof(FILE* out, const struct GameDriver* game)
 {
-#if (HAS_SAMPLES)
 	struct InternalMachineDriver drv;
 	int i;
 
@@ -444,17 +443,17 @@ static void print_game_sampleof(FILE* out, const struct GameDriver* game)
 			{
 				/* output sampleof only if different from game name */
 				if (strcmp(samplenames[k] + 1, game->name)!=0)
-					fprintf(out, " sampleof=\"%s\"", samplenames[k] + 1);
+        {
+          fprintf(out, " sampleof=\"%s\"", samplenames[k] + 1);         
+        }
 				++k;
 			}
 		}
 	}
-#endif
 }
 
 static void print_game_sample(FILE* out, const struct GameDriver* game)
 {
-#if (HAS_SAMPLES)
 	struct InternalMachineDriver drv;
 	int i;
 
@@ -485,7 +484,6 @@ static void print_game_sample(FILE* out, const struct GameDriver* game)
 			}
 		}
 	}
-#endif
 }
 #pragma GCC pop_options
 /*restore gcc flags */
@@ -665,7 +663,7 @@ static void print_game_driver(FILE* out, const struct GameDriver* game)
 
 	expand_machine_driver(game->drv, &driver);
 
-	fprintf(out, "\t\t<driver");
+	fprintf(out, "\t\t<driver name=\"%s\" ", game->name);
 	if (game->flags & GAME_NOT_WORKING)
 		fprintf(out, " status=\"preliminary\"");
 	else if (game->flags & GAME_UNEMULATED_PROTECTION)
@@ -699,15 +697,22 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 	fprintf(out, "\t<" XML_TOP);
 
 	if(old_style)
+  {
     fprintf(out, " name=\"%s\"", game->name ); /* use GameDrv "name" field as the filename */
+    if (game->clone_of && !(game->clone_of->flags & NOT_A_DRIVER))
+      fprintf(out, " cloneof=\"%s\"", game->clone_of->name);    
+    if (game->clone_of && game->clone_of != &driver_0)
+      fprintf(out, " romof=\"%s\"", game->clone_of->name);
+    }
   else
+  {
     fprintf(out, " name=\"%s\"", game->description ); /* use GameDrv "description" field as the filename */
+    if (game->clone_of && !(game->clone_of->flags & NOT_A_DRIVER))
+      fprintf(out, " cloneof=\"%s\"", game->clone_of->description);    
+    if (game->clone_of && game->clone_of != &driver_0)
+      fprintf(out, " romof=\"%s\"", game->clone_of->description);    
+  }
 
-	if (game->clone_of && !(game->clone_of->flags & NOT_A_DRIVER))
-		fprintf(out, " cloneof=\"%s\"", game->clone_of->name);
-
-	if (game->clone_of && game->clone_of != &driver_0)
-		fprintf(out, " romof=\"%s\"", game->clone_of->name);
 
 	print_game_sampleof(out, game);
 
@@ -716,8 +721,8 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 	fprintf(out, "\t\t<description>");
 	print_free_string(out, game->description);
 	fprintf(out, "</description>\n");
-	if (game->year && strspn(game->year,"0123456789")==strlen(game->year))
-		fprintf(out, "\t\t<driver>%s</driver>\n", game->name );
+  print_game_driver(out, game);
+
 
 	/* print the year only if is a number */
 	if (game->year && strspn(game->year,"0123456789")==strlen(game->year))
@@ -739,7 +744,6 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 	print_game_sound(out, game);
 	print_game_input(out, game);
 	print_game_switch(out, game);
-	print_game_driver(out, game);
 
 	fprintf(out, "\t</" XML_TOP ">\n");
 }

@@ -2977,7 +2977,7 @@ static void setup_menu_init(void)
 #if !defined(WIIU) && !defined(GEKKO) && !defined(__CELLOS_LV2__) && !defined(__SWITCH__) && !defined(PSP) && !defined(VITA) && !defined(__GCW0__) && !defined(__EMSCRIPTEN__) && !defined(_XBOX)
     /* don't offer to generate_xml_dat on consoles where it can't be used */
     menu_item[menu_total] = ui_getstring (UI_generate_old_xml_dat); menu_action[menu_total++] = UI_GENERATE_OLD_XML_DAT;
-    menu_item[menu_total] = ui_getstring (UI_generate_new_xml_dat); menu_action[menu_total++] = UI_GENERATE_NEW_XML_DAT;    
+    menu_item[menu_total] = ui_getstring (UI_generate_new_xml_dat); menu_action[menu_total++] = UI_GENERATE_NEW_XML_DAT;
 #endif
   if(!options.display_setup) 
   {
