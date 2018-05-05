@@ -43,7 +43,7 @@ int png_unfilter(struct png_info *p)
 
 	if((p->image = (UINT8 *)malloc (p->height*p->rowbytes))==NULL)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Out of memory\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "Out of memory\n");
 		free (p->fimage);
 		return 0;
 	}
@@ -89,7 +89,7 @@ int png_unfilter(struct png_info *p)
 					else prediction = pC;
 					break;
 				default:
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown filter type %i\n",filter);
+					log_cb(RETRO_LOG_INFO, LOGPRE "Unknown filter type %i\n",filter);
 					prediction = 0;
 				}
 				*dst = 0xff & (*src + prediction);
@@ -107,13 +107,13 @@ int png_verify_signature (mame_file *fp)
 
 	if (mame_fread (fp, signature, 8) != 8)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unable to read PNG signature (EOF)\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "Unable to read PNG signature (EOF)\n");
 		return 0;
 	}
 
 	if (memcmp(signature, PNG_Signature, 8))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PNG signature mismatch found: %s expected: %s\n",signature,PNG_Signature);
+		log_cb(RETRO_LOG_INFO, LOGPRE "PNG signature mismatch found: %s expected: %s\n",signature,PNG_Signature);
 		return 0;
 	}
 	return 1;
@@ -127,14 +127,14 @@ int png_inflate_image (struct png_info *p)
 
 	if((p->fimage = (UINT8 *)malloc (fbuff_size))==NULL)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Out of memory\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "Out of memory\n");
 		free (p->zimage);
 		return 0;
 	}
 
 	if (uncompress(p->fimage, &fbuff_size, p->zimage, p->zlength) != Z_OK)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Error while inflating image\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "Error while inflating image\n");
 		return 0;
 	}
 
@@ -175,11 +175,11 @@ int png_read_file(mame_file *fp, struct png_info *p)
 	while (chunk_type != PNG_CN_IEND)
 	{
 		if (mame_fread(fp, v, 4) != 4)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected EOF in PNG\n");
+			log_cb(RETRO_LOG_INFO, LOGPRE "Unexpected EOF in PNG\n");
 		chunk_length=convert_from_network_order(v);
 
 		if (mame_fread(fp, str_chunk_type, 4) != 4)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected EOF in PNG file\n");
+			log_cb(RETRO_LOG_INFO, LOGPRE "Unexpected EOF in PNG file\n");
 
 		str_chunk_type[4]=0; /* terminate string */
 
@@ -190,12 +190,12 @@ int png_read_file(mame_file *fp, struct png_info *p)
 		{
 			if ((chunk_data = (UINT8 *)malloc(chunk_length+1))==NULL)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Out of memory\n");
+				log_cb(RETRO_LOG_INFO, LOGPRE "Out of memory\n");
 				return 0;
 			}
 			if (mame_fread (fp, chunk_data, chunk_length) != chunk_length)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected EOF in PNG file\n");
+				log_cb(RETRO_LOG_INFO, LOGPRE "Unexpected EOF in PNG file\n");
 				free(chunk_data);
 				return 0;
 			}
@@ -206,17 +206,17 @@ int png_read_file(mame_file *fp, struct png_info *p)
 			chunk_data = NULL;
 
 		if (mame_fread(fp, v, 4) != 4)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected EOF in PNG\n");
+			log_cb(RETRO_LOG_INFO, LOGPRE "Unexpected EOF in PNG\n");
 		chunk_crc=convert_from_network_order(v);
 
 		if (crc != chunk_crc)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "CRC check failed while reading PNG chunk %s\n",str_chunk_type);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Found: %08X  Expected: %08X\n",crc,chunk_crc);
+			log_cb(RETRO_LOG_INFO, LOGPRE "CRC check failed while reading PNG chunk %s\n",str_chunk_type);
+			log_cb(RETRO_LOG_INFO, LOGPRE "Found: %08X  Expected: %08X\n",crc,chunk_crc);
 			return 0;
 		}
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Reading PNG chunk %s\n", str_chunk_type);
+		log_cb(RETRO_LOG_INFO, LOGPRE "Reading PNG chunk %s\n", str_chunk_type);
 
 		switch (chunk_type)
 		{
@@ -230,9 +230,9 @@ int png_read_file(mame_file *fp, struct png_info *p)
 			p->interlace_method = *(chunk_data+12);
 			free (chunk_data);
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PNG IHDR information:\n");
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Width: %i, Height: %i\n", p->width, p->height);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Bit depth %i, color type: %i\n", p->bit_depth, p->color_type);
+			log_cb(RETRO_LOG_INFO, LOGPRE "PNG IHDR information:\n");
+			log_cb(RETRO_LOG_INFO, LOGPRE "Width: %i, Height: %i\n", p->width, p->height);
+			log_cb(RETRO_LOG_INFO, LOGPRE "Bit depth %i, color type: %i\n", p->bit_depth, p->color_type);
 			logerror("Compression method: %i, filter: %i, interlace: %i\n",
 					p->compression_method, p->filter_method, p->interlace_method);
 			break;
@@ -240,13 +240,13 @@ int png_read_file(mame_file *fp, struct png_info *p)
 		case PNG_CN_PLTE:
 			p->num_palette=chunk_length/3;
 			p->palette=chunk_data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%i palette entries\n", p->num_palette);
+			log_cb(RETRO_LOG_INFO, LOGPRE "%i palette entries\n", p->num_palette);
 			break;
 
 		case PNG_CN_tRNS:
 			p->num_trans=chunk_length;
 			p->trans=chunk_data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%i transparent palette entries\n", p->num_trans);
+			log_cb(RETRO_LOG_INFO, LOGPRE "%i transparent palette entries\n", p->num_trans);
 			break;
 
 		case PNG_CN_IDAT:
@@ -265,8 +265,8 @@ int png_read_file(mame_file *fp, struct png_info *p)
 
 				while(*text++) ;
 				chunk_data[chunk_length]=0;
- 				log_cb(RETRO_LOG_ERROR, LOGPRE "Keyword: %s\n", chunk_data);
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Text: %s\n", text);
+ 				log_cb(RETRO_LOG_INFO, LOGPRE "Keyword: %s\n", chunk_data);
+				log_cb(RETRO_LOG_INFO, LOGPRE "Text: %s\n", text);
 			}
 			free(chunk_data);
 			break;
@@ -283,7 +283,7 @@ int png_read_file(mame_file *fp, struct png_info *p)
 
 		case PNG_CN_gAMA:
 			p->source_gamma	 = convert_from_network_order(chunk_data)/100000.0;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "Source gamma: %f\n",p->source_gamma);
+			log_cb(RETRO_LOG_INFO, LOGPRE  "Source gamma: %f\n",p->source_gamma);
 
 			free(chunk_data);
 			break;
@@ -292,12 +292,12 @@ int png_read_file(mame_file *fp, struct png_info *p)
 			p->xres = convert_from_network_order(chunk_data);
 			p->yres = convert_from_network_order(chunk_data+4);
 			p->resolution_unit = *(chunk_data+8);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Pixel per unit, X axis: %i\n",p->xres);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Pixel per unit, Y axis: %i\n",p->yres);
+			log_cb(RETRO_LOG_INFO, LOGPRE "Pixel per unit, X axis: %i\n",p->xres);
+			log_cb(RETRO_LOG_INFO, LOGPRE "Pixel per unit, Y axis: %i\n",p->yres);
 			if (p->resolution_unit)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Unit is meter\n");
+				log_cb(RETRO_LOG_INFO, LOGPRE "Unit is meter\n");
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Unit is unknown\n");
+				log_cb(RETRO_LOG_INFO, LOGPRE "Unit is unknown\n");
 			free(chunk_data);
 			break;
 
@@ -306,9 +306,9 @@ int png_read_file(mame_file *fp, struct png_info *p)
 
 		default:
 			if (chunk_type & 0x20000000)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Ignoring ancillary chunk %s\n",str_chunk_type);
+				log_cb(RETRO_LOG_INFO, LOGPRE "Ignoring ancillary chunk %s\n",str_chunk_type);
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Ignoring critical chunk %s!\n",str_chunk_type);
+				log_cb(RETRO_LOG_INFO, LOGPRE "Ignoring critical chunk %s!\n",str_chunk_type);
 			if (chunk_data)
 				free(chunk_data);
 			break;
@@ -316,7 +316,7 @@ int png_read_file(mame_file *fp, struct png_info *p)
 	}
 	if ((p->zimage = (UINT8 *)malloc(p->zlength))==NULL)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Out of memory\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "Out of memory\n");
 		return 0;
 	}
 
@@ -356,11 +356,11 @@ int png_read_info(mame_file *fp, struct png_info *p)
 	while (chunk_type != PNG_CN_IEND)
 	{
 		if (mame_fread(fp, v, 4) != 4)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected EOF in PNG\n");
+			log_cb(RETRO_LOG_INFO, LOGPRE "Unexpected EOF in PNG\n");
 		chunk_length=convert_from_network_order(v);
 
 		if (mame_fread(fp, str_chunk_type, 4) != 4)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected EOF in PNG file\n");
+			log_cb(RETRO_LOG_INFO, LOGPRE "Unexpected EOF in PNG file\n");
 
 		str_chunk_type[4]=0; /* terminate string */
 
@@ -371,12 +371,12 @@ int png_read_info(mame_file *fp, struct png_info *p)
 		{
 			if ((chunk_data = (UINT8 *)malloc(chunk_length+1))==NULL)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Out of memory\n");
+				log_cb(RETRO_LOG_INFO, LOGPRE "Out of memory\n");
 				return 0;
 			}
 			if (mame_fread (fp, chunk_data, chunk_length) != chunk_length)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected EOF in PNG file\n");
+				log_cb(RETRO_LOG_INFO, LOGPRE "Unexpected EOF in PNG file\n");
 				free(chunk_data);
 				return 0;
 			}
@@ -387,17 +387,17 @@ int png_read_info(mame_file *fp, struct png_info *p)
 			chunk_data = NULL;
 
 		if (mame_fread(fp, v, 4) != 4)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected EOF in PNG\n");
+			log_cb(RETRO_LOG_INFO, LOGPRE "Unexpected EOF in PNG\n");
 		chunk_crc=convert_from_network_order(v);
 
 		if (crc != chunk_crc)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "CRC check failed while reading PNG chunk %s\n",str_chunk_type);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Found: %08X  Expected: %08X\n",crc,chunk_crc);
+			log_cb(RETRO_LOG_INFO, LOGPRE "CRC check failed while reading PNG chunk %s\n",str_chunk_type);
+			log_cb(RETRO_LOG_INFO, LOGPRE "Found: %08X  Expected: %08X\n",crc,chunk_crc);
 			return 0;
 		}
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Reading PNG chunk %s\n", str_chunk_type);
+		log_cb(RETRO_LOG_INFO, LOGPRE "Reading PNG chunk %s\n", str_chunk_type);
 
 		switch (chunk_type)
 		{
@@ -411,9 +411,9 @@ int png_read_info(mame_file *fp, struct png_info *p)
 			p->interlace_method = *(chunk_data+12);
 			free (chunk_data);
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PNG IHDR information:\n");
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Width: %i, Height: %i\n", p->width, p->height);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Bit depth %i, color type: %i\n", p->bit_depth, p->color_type);
+			log_cb(RETRO_LOG_INFO, LOGPRE "PNG IHDR information:\n");
+			log_cb(RETRO_LOG_INFO, LOGPRE "Width: %i, Height: %i\n", p->width, p->height);
+			log_cb(RETRO_LOG_INFO, LOGPRE "Bit depth %i, color type: %i\n", p->bit_depth, p->color_type);
 			logerror("Compression method: %i, filter: %i, interlace: %i\n",
 					p->compression_method, p->filter_method, p->interlace_method);
 			break;
@@ -437,7 +437,7 @@ int png_read_info(mame_file *fp, struct png_info *p)
 								 p->screen.min_y, p->screen.max_y);
 					}
 					else
-						log_cb(RETRO_LOG_ERROR, LOGPRE "Invalid %s value %s\n", chunk_data, text);
+						log_cb(RETRO_LOG_INFO, LOGPRE "Invalid %s value %s\n", chunk_data, text);
 				}
 			}
 			free(chunk_data);
@@ -462,7 +462,7 @@ int png_expand_buffer_8bit (struct png_info *p)
 	{
 		if ((outbuf = (UINT8 *)malloc(p->width*p->height))==NULL)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Out of memory\n");
+			log_cb(RETRO_LOG_INFO, LOGPRE "Out of memory\n");
 			return 0;
 		}
 
@@ -523,7 +523,7 @@ void png_delete_unused_colors (struct png_info *p)
 		p->image[i]=tab[p->image[i]];
 
 	if (p->num_palette!=pen)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%i unused pen(s) deleted\n", p->num_palette-pen);
+		log_cb(RETRO_LOG_INFO, LOGPRE "%i unused pen(s) deleted\n", p->num_palette-pen);
 
 	p->num_palette = pen;
 	p->num_trans = trns;
