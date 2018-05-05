@@ -722,15 +722,16 @@ bool retro_load_game(const struct retro_game_info *game)
     unsigned        rotateMode;
     static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
 
-    char driverName[PATH_MAX_LENGTH];
-    char *path, *last;
-
     if (!game)
+    {
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist. Exiting!\n");
       return false;
+    }
 
     retro_describe_buttons();
 
     driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content or driver name: [%s].\n", driver_lookup);
 
     /* Search list */
     for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
@@ -744,7 +745,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
     if(driverIndex == total_drivers)
     {
-        log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!\n", total_drivers);
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!c", total_drivers);
         return false;
     }
 
@@ -787,7 +788,7 @@ bool retro_load_game(const struct retro_game_info *game)
 
 void retro_unload_game(void)
 {
-    /*mame_done();*/
+    mame_done();
     
     /*free(fallbackDir);
     systemDir = 0;*/
