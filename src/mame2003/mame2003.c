@@ -723,14 +723,8 @@ bool retro_load_game(const struct retro_game_info *game)
     static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
 
     /* because we set info->need_fullpath = true, the frontend is guaranteed to provide a 
-     * valid pathname in retro_game_info::path.
+     * valid pathname in retro_game_info::path. */
  
-    if (!game)
-    {
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist. Exiting!\n");
-      return false;
-    }
-    */
 
     retro_describe_buttons();
     
@@ -739,19 +733,27 @@ bool retro_load_game(const struct retro_game_info *game)
     driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
     log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
 
+    if (driver_lookup == 0)
+   /*this is need if using command line*/
+    {
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist. Exiting!\n");
+      return false;
+    }
+
+
     /* Search list */
     for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
     {
        if ( (strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0) || ( strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0) )
        {
-          log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: [%s].\n", total_drivers, drivers[driverIndex]->name);
+          log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: [%s].\n", (int) total_drivers, drivers[driverIndex]->name);
           break;          
        }
     }
 
     if(driverIndex == total_drivers)
     {
-        log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!c", total_drivers);
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!", (int) total_drivers);
         return false;
     }
 
