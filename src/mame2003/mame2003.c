@@ -722,10 +722,6 @@ bool retro_load_game(const struct retro_game_info *game)
     unsigned        rotateMode;
     static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
 
-    /* because we set info->need_fullpath = true, the frontend is guaranteed to provide a 
-     * valid pathname in retro_game_info::path. */
- 
-
     retro_describe_buttons();
     
     log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
@@ -734,12 +730,10 @@ bool retro_load_game(const struct retro_game_info *game)
     log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
 
     if (driver_lookup == 0)
-   /*this is need if using command line*/
     {
       log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist. Exiting!\n");
       return false;
     }
-
 
     /* Search list */
     for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
