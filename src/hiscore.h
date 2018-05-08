@@ -9,7 +9,4 @@ void hs_close( void );
 void computer_writemem_byte(int cpu, int addr, int value);
 int computer_readmem_byte(int cpu, int addr);
 
-extern const char hiscoredat[];
-extern const int hiscoredat_length;
-
 #endif /* HISCORE_H */
