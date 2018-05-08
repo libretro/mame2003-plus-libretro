@@ -709,10 +709,6 @@ bool retro_load_game(const struct retro_game_info *game)
     unsigned        rotateMode;
     static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
 
-    /* because we set info->need_fullpath = true, the frontend is guaranteed to provide a 
-     * valid pathname in retro_game_info::path. */
- 
-
     retro_describe_buttons();
     
     log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
@@ -720,10 +716,9 @@ bool retro_load_game(const struct retro_game_info *game)
     driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
     log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
 
-    if (driver_lookup == 0)
-   /*this is need if using command line*/
+    if (string_is_empty(driver_lookup))
     {
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist. Exiting!\n");
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist or lacks a file extension. Exiting!\n");
       return false;
     }
 
