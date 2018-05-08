@@ -79,7 +79,6 @@ void retro_set_environment(retro_environment_t cb)
     { APPNAME"_vector_flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
     { APPNAME"_vector_intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
     { APPNAME"_skip_rom_verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" },
-    { APPNAME"_external_hiscore", "Use external hiscore.dat; disabled|enabled" },
     { APPNAME"_sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
     { APPNAME"_dcs_speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
     { APPNAME"_skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
@@ -499,18 +498,6 @@ static void update_variables(void)
       options.skip_warnings = 1;
     else
       options.skip_warnings = 0;
-  }
-
-  var.value = NULL;
-
-  var.key = APPNAME"_external_hiscore";
-  options.use_external_hiscore = 0;
-  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-  {
-    if(strcmp(var.value, "enabled") == 0)
-      options.use_external_hiscore = 1;
-    else
-      options.use_external_hiscore = 0;
   }
 
   var.value = NULL;
