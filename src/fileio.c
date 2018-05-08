@@ -78,7 +78,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 		case FILETYPE_ROM:
 		case FILETYPE_IMAGE:
 		case FILETYPE_SAMPLE:
-		case FILETYPE_HIGHSCORE_DB:
 		case FILETYPE_ARTWORK:
 		case FILETYPE_HISTORY:
 		case FILETYPE_LANGUAGE:
@@ -124,7 +123,7 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 
 		/* highscore database */
 		case FILETYPE_HIGHSCORE_DB:
-			return generic_fopen(filetype, NULL, filename, 0, FILEFLAG_OPENREAD);
+			return generic_fopen(filetype, NULL, filename, 0, openforwrite ? FILEFLAG_OPENWRITE : FILEFLAG_OPENREAD);
 
 		/* config files */
 		case FILETYPE_CONFIG:
@@ -607,57 +606,6 @@ char *mame_fgets(char *buffer, int length, mame_file *file)
 		*needle++ = character;
 		length--;
 	}
-
-	/* if we put nothing in, return NULL */
-	if (needle == buffer)
-		return NULL;
-
-	/* otherwise, terminate */
-	if (length > 0)
-		*needle++ = 0;
-	return buffer;
-}
-
-/***************************************************************************
-	bin2c_fgets
-***************************************************************************/
-
-char *bin2c_fgets(const char bin2c_array[], char *buffer, int length, int *const index)
-{
-	char *needle = buffer;
-
-	/* loop while we have characters */
-	while (length > 0)
-   {
-      int character;
-      if (*index == sizeof(bin2c_array)) /* end of bin2c file array */
-         break;
-
-      character = bin2c_array[(*index)++];
-
-      /* if it's CR, look for an LF afterwards */
-      if (character == 0x0d)
-      {
-         int next_char = bin2c_array[(*index)++];
-         if (next_char != 0x0a)
-            (*index)--;
-         *needle++ = 0x0d;
-         length--;
-         break; /* end here regardless of remaining length */
-      }
-
-      /* if it's LF, reinterp as a CR for consistency */
-      else if (character == 0x0a)
-      {
-         *needle++ = 0x0d;
-         length--;
-         break;
-      }
-
-      /* otherwise, pop the character in and continue */
-      *needle++ = character;
-      length--;
-   }
 
 	/* if we put nothing in, return NULL */
 	if (needle == buffer)

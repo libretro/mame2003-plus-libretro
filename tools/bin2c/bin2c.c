@@ -6,9 +6,9 @@
  * For example, if the source file is dl.lua, the generated file
  * contains:
  *
- * const char dl_lua_source[] = "dl.lua";
+ * static const char dl_lua_source[] = "dl.lua";
  *
- * const unsigned char dl_lua_bytes[] = {
+ * static const unsigned char dl_lua_bytes[] = {
  * ...
  * };
  *
@@ -51,15 +51,15 @@
 #define COLUMNS 18
 
 #ifdef PACKAGE_NAME
-const char package[] = PACKAGE_NAME;
+static const char package[] = PACKAGE_NAME;
 #else
-const char *package = NULL;
+static const char *package = NULL;
 #endif
 
 #ifdef VERSION
-const char version[] = VERSION;
+static const char version[] = VERSION;
 #else
-const char version[] = "version unknown";
+static const char version[] = "version unknown";
 #endif
 
 static void
@@ -109,15 +109,22 @@ emit_name(const char *name)
 static int
 emit(const char *name)
 {
+  int file_length = 0;
   int col = COLUMNS;
 
-  printf("const unsigned char ");
+  /*printf("static const char ");
+  emit_name(name);
+  printf("_source[] = \"%s\";\n\n", name);*/
+  printf("static const unsigned char ");
   emit_name(name);
   printf("_bytes[] = {");
   for (;;) {
     int ch = getchar();
     if (ch == EOF) {
-      printf("\n};\n");
+      printf("\n};\n\n");
+      printf("static const unsigned int ");
+      emit_name(name);
+      printf("_length = %i;", file_length);      
       return 0;
     }
     if (col >= COLUMNS) {
@@ -125,6 +132,7 @@ emit(const char *name)
       col = 0;
     }
     printf("%3d,", ch);
+    file_length++;
     col++;
   }
 }
