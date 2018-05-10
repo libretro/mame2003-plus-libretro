@@ -1454,13 +1454,13 @@ aof3
  ****/
 
 SYSTEM_BIOS_START( neogeo )
-	SYSTEM_BIOS_ADD( 0, "euro",       "Europe MVS (Ver. 2)" )
-	SYSTEM_BIOS_ADD( 1, "euro-s1",    "Europe MVS (Ver. 1)" )
+	SYSTEM_BIOS_ADD( 0, "europe",       "Europe MVS (Ver. 2)" )
+	SYSTEM_BIOS_ADD( 1, "europe_a",    "Europe MVS (Ver. 1)" )
 	SYSTEM_BIOS_ADD( 2, "us",         "US MVS (Ver. 2?)" )
-	SYSTEM_BIOS_ADD( 3, "us-e",       "US MVS (Ver. 1)" )
+	SYSTEM_BIOS_ADD( 3, "us-a",       "US MVS (Ver. 1)" )
 	SYSTEM_BIOS_ADD( 4, "asia",       "Asia MVS (Ver. 3)" )
 	SYSTEM_BIOS_ADD( 5, "japan",      "Japan MVS (Ver. 3)" )
-	SYSTEM_BIOS_ADD( 6, "japan-s2",   "Japan MVS (Ver. 2)" )
+	SYSTEM_BIOS_ADD( 6, "japan-a",   "Japan MVS (Ver. 2)" )
 	SYSTEM_BIOS_ADD( 7, "uni-bios.10","Unibios MVS (Hack, Ver. 1.0)" )
 	SYSTEM_BIOS_ADD( 8, "uni-bios.11","Unibios MVS (Hack, Ver. 1.1)" )
 	SYSTEM_BIOS_ADD( 9, "debug",      "Debug MVS (Hack?)" )

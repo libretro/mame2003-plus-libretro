@@ -68,7 +68,7 @@ void retro_set_environment(retro_environment_t cb)
     { APPNAME"_display_setup", "Display MAME menu; disabled|enabled" },
 /*    { APPNAME"_brightness", "Brightness; 5|1|2|3|4|6|7|8|9|10" },    */
     { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
-    { APPNAME"_bios_region", "Specify alternate BIOS region (Restart); default|asia|japan|japan_a|japan_b|europe|europe_a|taiwan|us|us_a" },
+    { APPNAME"_bios_region", "Specify alternate BIOS region (Restart); default|asia|asia-aes|debug|europe|europe_a|japan|japan_a|japan_b|taiwan|us|us_a|uni-bios.10|uni-bios.11|uni-bios.13|uni-bios.20" },
     { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
     { APPNAME"_rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
     { APPNAME"_tate_mode", "TATE Mode; disabled|enabled" },
