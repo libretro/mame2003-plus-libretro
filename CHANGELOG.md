@@ -57,6 +57,7 @@
 * Magical Drop
 * Magical Drop Plus 1
 * Metal Slug 4
+* Metal Slug 5
 * Midnight Resistance (joystick hack bootleg)
 * Mighty Warriors
 * Multi Champ Deluxe
