@@ -6100,9 +6100,9 @@ ROM_START( mslug5 ) /* Encrypted Set */
 	ROM_LOAD( "sfix.sfx", 0x000000, 0x20000, CRC(354029fc) SHA1(4ae4bf23b4c2acff875775d4cbff5583893ce2a1) )
 
 	ROM_REGION( 0x40000, REGION_USER4, 0 )
-	/* Encrypted, we load it here for reference and replace with decrypted ROM */
+	/* Encrypted, we load it here for reference and replace with decrypted ROM 
 	ROM_LOAD( "268-m1.bin", 0x00000, 0x80000, CRC(4a5a6e0e) SHA1(df0f660f2465e1db7be5adfcaf5e88ad61a74a42) )
-	/* Decrypted */
+	 Decrypted */
 	NEO_BIOS_SOUND_64K( "268-m1_decrypted.bin",  CRC(3c0655a7) SHA1(ae839d4c2b87a7aa3dd8e5caddc43eb75ee9b732) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
