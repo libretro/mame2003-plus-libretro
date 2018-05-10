@@ -729,6 +729,7 @@ bool retro_load_game(const struct retro_game_info *game)
        if ( (strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0) || ( strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0) )
        {
           log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: [%s].\n", (int) total_drivers, drivers[driverIndex]->name);
+          options.romset_filename_noext = driver_lookup;
           break;          
        }
     }
@@ -770,8 +771,6 @@ bool retro_load_game(const struct retro_game_info *game)
     
     environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
     options.ui_orientation = uiModes[rotateMode];
-    
-    free(driver_lookup);
 
     return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
 }
@@ -779,6 +778,8 @@ bool retro_load_game(const struct retro_game_info *game)
 void retro_unload_game(void)
 {
     mame_done();
+    
+    free(options.romset_filename_noext);
     
     /*free(fallbackDir);
     systemDir = 0;*/

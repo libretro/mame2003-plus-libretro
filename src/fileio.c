@@ -1106,6 +1106,29 @@ int mame_vfprintf(mame_file *f, const char *fmt, va_list va)
 	return mame_fwrite(f, buf, strlen(buf));
 }
 
+/***************************************************************************
+	spawn_bootstrap_nvram
+  creates a new nvram file for the current romset (as specified in
+  options.romset_filename_noext) using bootstrap_nvram as the source.
+***************************************************************************/
+
+mame_file *spawn_bootstrap_nvram(unsigned char const *bootstrap_nvram, unsigned nvram_length)
+{
+  mame_file *nvram_file = NULL;
+
+  log_cb(RETRO_LOG_INFO, LOGPRE "Generating bootstrap nvram for %s\n", options.romset_filename_noext);
+        
+  nvram_file = mame_fopen(options.romset_filename_noext, 0, FILETYPE_NVRAM, 1);
+  mame_fwrite(nvram_file, bootstrap_nvram, nvram_length);          
+  mame_fclose(nvram_file);
+
+  nvram_file = mame_fopen(options.romset_filename_noext, 0, FILETYPE_NVRAM, 0);
+  
+  if(!nvram_file)
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Error generating nvram bootstrap file!\n");
+  
+  return nvram_file;  
+}
 
 
 /***************************************************************************

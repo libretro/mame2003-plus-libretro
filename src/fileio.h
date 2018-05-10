@@ -54,11 +54,6 @@ enum
 
 typedef struct _mame_file mame_file;
 
-struct bin2c_file {
-  const unsigned char *bytes;
-  const unsigned length;
-};
-
 /* Return the number of paths for a given type */
 int osd_get_path_count(int pathtype);
 
@@ -102,6 +97,13 @@ UINT64 mame_ftell(mame_file *file);
 
 int mame_fputs(mame_file *f, const char *s);
 int mame_vfprintf(mame_file *f, const char *fmt, va_list va);
+
+/***************************************************************************
+	spawn_bootstrap_nvram
+  creates a new nvram file for the current romset (as specified in
+  options.romset_filename_noext) using bootstrap_nvram as the source.
+***************************************************************************/
+mame_file *spawn_bootstrap_nvram(unsigned char const *bootstrap_nvram, unsigned nvram_length);
 
 #ifdef __GNUC__
 int CLIB_DECL mame_fprintf(mame_file *f, const char *fmt, ...)

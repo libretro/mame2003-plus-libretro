@@ -110,21 +110,13 @@ void nvram_handler_93C46(mame_file *file,int read_or_write)
 	{
 		EEPROM_init(&eeprom_interface_93C46);
 		if (file)
-            EEPROM_load(file);
-        else if(strcasecmp(Machine->gamedrv->name, "bubblem") == 0)
-        {
-			log_cb(RETRO_LOG_INFO, "[MAME 2003] Generating bootstrap nvram for bubblem");
-			/* 
-				I couldn't get rungun to accept nvram loaded directly from a byte array in memory.
-				Therefore for now bubblem is handled the same way for expedience 
-				since I am not trying the other way. --markwkidd
-			*/            
-			file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 1);
-			mame_fwrite(file, bubblem_bootstrap_nvram, sizeof(bubblem_bootstrap_nvram));          
-			mame_fclose(file);
-
-			file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
-			EEPROM_load(file);
+      EEPROM_load(file);
+    else if(strcasecmp(Machine->gamedrv->name, "bubblem") == 0)
+    {
+      
+			file = spawn_bootstrap_nvram(bubblem_bootstrap_nvram, sizeof(bubblem_bootstrap_nvram));
+      if(file)
+			   EEPROM_load(file);
 		}
 	}
 }
@@ -195,7 +187,7 @@ static void EEPROM_write(int bit)
 		eeprom_clock_count = 0;
 		sending = 1;
 		serial_count = 0;
-log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM read %04x from address %02x\n",eeprom_data_bits,address);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "EEPROM read %04x from address %02x\n",eeprom_data_bits,address);
 	}
 	else if ( (serial_count > intf->address_bits) &&
 	           EEPROM_command_match((char*)serial_buffer,intf->cmd_erase,strlen((char*)serial_buffer)-intf->address_bits) )
@@ -208,7 +200,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM read %04x from address %02x\n",eeprom_dat
 			address <<= 1;
 			if (serial_buffer[i] == '1') address |= 1;
 		}
-log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM erase address %02x\n",address);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "EEPROM erase address %02x\n",address);
 		if (locked == 0)
 		{
 			if (intf->data_bits == 16)
@@ -220,7 +212,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM erase address %02x\n",address);
 				eeprom_data[address] = 0x00;
 		}
 		else
-log_cb(RETRO_LOG_ERROR, LOGPRE "Error: EEPROM is locked\n");
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Error: EEPROM is locked\n");
 		serial_count = 0;
 	}
 	else if ( (serial_count > (intf->address_bits + intf->data_bits)) &&
@@ -240,7 +232,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "Error: EEPROM is locked\n");
 			data <<= 1;
 			if (serial_buffer[i] == '1') data |= 1;
 		}
-log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM write %04x to address %02x\n",data,address);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "EEPROM write %04x to address %02x\n",data,address);
 		if (locked == 0)
 		{
 			if (intf->data_bits == 16)
@@ -252,18 +244,18 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM write %04x to address %02x\n",data,addres
 				eeprom_data[address] = data;
 		}
 		else
-log_cb(RETRO_LOG_ERROR, LOGPRE "Error: EEPROM is locked\n");
+       log_cb(RETRO_LOG_ERROR, LOGPRE "Error: EEPROM is locked\n");
 		serial_count = 0;
 	}
 	else if ( EEPROM_command_match((char*)serial_buffer,intf->cmd_lock,strlen((char*)serial_buffer)) )
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM lock\n");
+     log_cb(RETRO_LOG_DEBUG, LOGPRE "EEPROM lock\n");
 		locked = 1;
 		serial_count = 0;
 	}
 	else if ( EEPROM_command_match((char*)serial_buffer,intf->cmd_unlock,strlen((char*)serial_buffer)) )
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM unlock\n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "EEPROM unlock\n");
 		locked = 0;
 		serial_count = 0;
 	}
@@ -272,7 +264,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM unlock\n");
 static void EEPROM_reset(void)
 {
 	if (serial_count)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM reset, buffer = %s\n",serial_buffer);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "EEPROM reset, buffer = %s\n",serial_buffer);
 
 	serial_count = 0;
 	sending = 0;
@@ -283,7 +275,6 @@ static void EEPROM_reset(void)
 void EEPROM_write_bit(int bit)
 {
   log_cb(RETRO_LOG_DEBUG, LOGPRE "write bit %d\n",bit);
-
 	latch = bit;
 }
 
@@ -335,7 +326,7 @@ void EEPROM_set_clock_line(int state)
 					else
 						eeprom_data_bits = eeprom_data[eeprom_read_address];
 					eeprom_clock_count = 0;
-log_cb(RETRO_LOG_ERROR, LOGPRE "EEPROM read %04x from address %02x\n",eeprom_data_bits,eeprom_read_address);
+          log_cb(RETRO_LOG_DEBUG, LOGPRE "EEPROM read %04x from address %02x\n",eeprom_data_bits,eeprom_read_address);
 				}
 				eeprom_data_bits = (eeprom_data_bits << 1) | 1;
 				eeprom_clock_count++;

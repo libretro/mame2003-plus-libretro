@@ -169,13 +169,14 @@ struct RunningMachine
 /* or on the commandline. */
 struct GameOptions
 {
-  mame_file *	record;			       /* handle to file to record input to */
-  mame_file *	playback;		       /* handle to file to playback input from */
-  mame_file *	language_file;	   /* handle to file for localization */
+  mame_file *record;			       /* handle to file to record input to */
+  mame_file *playback;		       /* handle to file to playback input from */
+  mame_file *language_file;	     /* handle to file for localization */
 
-  char *  libretro_content_path;
-  char *  libretro_system_path;
-  char *  libretro_save_path;
+  char   *romset_filename_noext;
+  char   *libretro_content_path;
+  char   *libretro_system_path;
+  char   *libretro_save_path;
 
   int		   mame_debug;		       /* 1 to enable debugging */
   int 	   skip_disclaimer;	     /* 1 to skip the disclaimer screen at startup */
