@@ -117,13 +117,16 @@
 * Die Hard Arcade (requires a fast system, video and sound issues remain)
 * Discs Of Tron
 * Domino Man
+* Driftout 94
 * Hang-On
+* Ironhorse
 * Journey
+* Juno First
 * Kick
 * Kozmik Kroozer
-* Driftout 94
 * Fire Barrel
 * Funky Jet
+* Green Beret
 * Hacha Mecha Figher
 * Max RPM
 * Monster Slider
@@ -134,6 +137,7 @@
 * Rampage
 * Rogha Armor Force
 * Run And Gun (NVRAM) markwkidd
+* Rush'N Attack
 * Sarge
 * Satan's Hollow
 * Slap Fight (Official Version)
