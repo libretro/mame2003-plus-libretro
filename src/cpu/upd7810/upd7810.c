@@ -1856,7 +1856,9 @@ void upd7810_set_irq_line(int irqline, int state)
 		if (irqline == IRQ_LINE_NMI)
 		{
 			/* no nested NMIs ? */
-//	        if (0 == (IRR & INTNMI))
+#if 0			
+	        if (0 == (IRR & INTNMI))
+#endif			
 			{
 	            IRR |= INTNMI;
 				SP--;
