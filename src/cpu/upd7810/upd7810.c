@@ -1112,7 +1112,9 @@ static void upd7810_sio_input(void)
 			{
 				upd7810.rxs >>= 16 - 8;
 				RXB = upd7810.rxs;
-//				upd7810.rxcnt = 8;
+#if 0
+				upd7810.rxcnt = 8;
+#endif
 			}
 		}
 	}
