@@ -45,6 +45,7 @@
 * Glass (Censored, Unprotected)
 * Guerrilla War (joystick hack bootleg)
 * Gunbarich
+* GunMaster
 * Hacha Mecha Figher (Unprotected)
 * Hook (Japan Version) [SumavisionQ5]
 * Hyper Crash
@@ -60,6 +61,7 @@
 * Metal Slug 5
 * Midnight Resistance (joystick hack bootleg)
 * Mighty Warriors
+* Mouse Shooter GoGo
 * Multi Champ Deluxe
 * Night Slashers
 * Oriental Legend Special
@@ -166,18 +168,30 @@
 * Acrobat Mission
 * Bio-ship Paladin
 * Black Heart
+* Daitoride
+* Dharma Doujou
 * Fire Shark
 * GunNail
 * Hacha Mecha Fighter
 * Koutetsu Yousai Strahl
 * Knights Of Valour / Sangoku Senki
 * Knights of Valour Plus / Sangoku Senki Plus
+* Lady Killer
+* Last Fortress - Toride
 * Mustache Boy
 * Oriental Legend / Xi Yo Gi Shi Re Zuang
+* Pang Poms
+* Poitto!
+* Pururun
+* Puzzli
 * Same Same Same
+* Sankokushi
 * SD Gundam Psycho Salamander no Kyoui
+* Sky Alert
 * Super Spacefortress Macross
+* The Karate Tournament
 * Thunder Dragon
+* Toride II Adauchi Gaiden
 * US AAF Mustang
 * Vandyke
 * Vimana
