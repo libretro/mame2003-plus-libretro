@@ -36,7 +36,12 @@
  *       5D xx (SK bit)
  *
  *****************************************************************************/
-/* PeT around 19 February 2002
+/* Hau around 23 May 2004
+  gta, gti, dgt fixed
+  working reg opcodes fixed
+  sio input fixed
+--
+  PeT around 19 February 2002
   type selection/gamemaster support added
   gamemaster init hack? added
   ORAX added
@@ -817,11 +822,13 @@ static void upd7810_take_irq(void)
 	if ((IRR & INTFSR)	&& 0 == (MKH & 0x02))
 	{
 		vector = 0x0028;
+	    IRR&=~INTFSR;
 	}
 	else
 	if ((IRR & INTFST)	&& 0 == (MKH & 0x04))
 	{
 		vector = 0x0028;
+	    IRR&=~INTFST;
 	}
 	if (vector)
 	{
@@ -1105,7 +1112,7 @@ static void upd7810_sio_input(void)
 			{
 				upd7810.rxs >>= 16 - 8;
 				RXB = upd7810.rxs;
-				upd7810.rxcnt = 8;
+//				upd7810.rxcnt = 8;
 			}
 		}
 	}
@@ -1847,7 +1854,7 @@ void upd7810_set_irq_line(int irqline, int state)
 		if (irqline == IRQ_LINE_NMI)
 		{
 			/* no nested NMIs ? */
-	        if (0 == (IRR & INTNMI))
+//	        if (0 == (IRR & INTNMI))
 			{
 	            IRR |= INTNMI;
 				SP--;
@@ -1857,6 +1864,7 @@ void upd7810_set_irq_line(int irqline, int state)
 				SP--;
 				WM( SP, PCL );
 				IFF = 0;
+				PSW &= ~(SK|L0|L1);
 				PC = 0x0004;
 				change_pc16( PCD );
 			}
