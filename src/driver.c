@@ -5094,6 +5094,8 @@ Other Sun games
 	DRIVER( bangball )	/* (c) 1996 Banpresto / Kunihiko Tashiro+Goodhouse */
 	DRIVER( gakusai )	/* (c) 1997 MakeSoft */
 	DRIVER( gakusai2 )	/* (c) 1998 MakeSoft */
+	DRIVER( gunmast )	/* (c) 1994 Metro  */
+	DRIVER( msgogo )	/* (c) 1995 Metro  */
 	DRIVER( blzntrnd )	/* (c) 1994 Human Amusement */
 	DRIVER( gstrik2 )	/* (c) 1996 Human Amusement */
 	DRIVER( hyprduel )	/* (c) 1993 Technosoft (World) */
