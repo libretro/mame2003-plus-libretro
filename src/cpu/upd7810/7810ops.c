@@ -1334,7 +1334,7 @@ static void ADDNC_L_A(void)
 /* 60 28: 0110 0000 0010 1000 */
 static void GTA_V_A(void)
 {
-	UINT8 tmp = V - A - 1;
+	UINT16 tmp = V - A - 1;
 	ZHC_SUB( tmp, V, 0 );
 	SKIP_NC;
 }
@@ -1342,7 +1342,7 @@ static void GTA_V_A(void)
 /* 60 29: 0110 0000 0010 1001 */
 static void GTA_A_A(void)
 {
-	UINT8 tmp = A - A - 1;
+	UINT16 tmp = A - A - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -1350,7 +1350,7 @@ static void GTA_A_A(void)
 /* 60 2a: 0110 0000 0010 1010 */
 static void GTA_B_A(void)
 {
-	UINT8 tmp = B - A - 1;
+	UINT16 tmp = B - A - 1;
 	ZHC_SUB( tmp, B, 0 );
 	SKIP_NC;
 }
@@ -1358,7 +1358,7 @@ static void GTA_B_A(void)
 /* 60 2b: 0110 0000 0010 1011 */
 static void GTA_C_A(void)
 {
-	UINT8 tmp = C - A - 1;
+	UINT16 tmp = C - A - 1;
 	ZHC_SUB( tmp, C, 0 );
 	SKIP_NC;
 }
@@ -1366,7 +1366,7 @@ static void GTA_C_A(void)
 /* 60 2c: 0110 0000 0010 1100 */
 static void GTA_D_A(void)
 {
-	UINT8 tmp = D - A - 1;
+	UINT16 tmp = D - A - 1;
 	ZHC_SUB( tmp, D, 0 );
 	SKIP_NC;
 }
@@ -1374,7 +1374,7 @@ static void GTA_D_A(void)
 /* 60 2d: 0110 0000 0010 1101 */
 static void GTA_E_A(void)
 {
-	UINT8 tmp = E - A - 1;
+	UINT16 tmp = E - A - 1;
 	ZHC_SUB( tmp, E, 0 );
 	SKIP_NC;
 }
@@ -1382,7 +1382,7 @@ static void GTA_E_A(void)
 /* 60 2e: 0110 0000 0010 1110 */
 static void GTA_H_A(void)
 {
-	UINT8 tmp = H - A - 1;
+	UINT16 tmp = H - A - 1;
 	ZHC_SUB( tmp, H, 0 );
 	SKIP_NC;
 }
@@ -1390,7 +1390,7 @@ static void GTA_H_A(void)
 /* 60 2f: 0110 0000 0010 1111 */
 static void GTA_L_A(void)
 {
-	UINT8 tmp = L - A - 1;
+	UINT16 tmp = L - A - 1;
 	ZHC_SUB( tmp, L, 0 );
 	SKIP_NC;
 }
@@ -2140,7 +2140,7 @@ static void ADDNC_A_L(void)
 /* 60 a8: 0110 0000 1010 1000 */
 static void GTA_A_V(void)
 {
-	UINT8 tmp = A - V - 1;
+	UINT16 tmp = A - V - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -2151,7 +2151,7 @@ static void GTA_A_V(void)
 /* 60 aa: 0110 0000 1010 1010 */
 static void GTA_A_B(void)
 {
-	UINT8 tmp = A - B - 1;
+	UINT16 tmp = A - B - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -2159,7 +2159,7 @@ static void GTA_A_B(void)
 /* 60 ab: 0110 0000 1010 1011 */
 static void GTA_A_C(void)
 {
-	UINT8 tmp = A - C - 1;
+	UINT16 tmp = A - C - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -2167,7 +2167,7 @@ static void GTA_A_C(void)
 /* 60 ac: 0110 0000 1010 1100 */
 static void GTA_A_D(void)
 {
-	UINT8 tmp = A - D - 1;
+	UINT16 tmp = A - D - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -2175,7 +2175,7 @@ static void GTA_A_D(void)
 /* 60 ad: 0110 0000 1010 1101 */
 static void GTA_A_E(void)
 {
-	UINT8 tmp = A - E - 1;
+	UINT16 tmp = A - E - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -2183,7 +2183,7 @@ static void GTA_A_E(void)
 /* 60 ae: 0110 0000 1010 1110 */
 static void GTA_A_H(void)
 {
-	UINT8 tmp = A - H - 1;
+	UINT16 tmp = A - H - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -2191,7 +2191,7 @@ static void GTA_A_H(void)
 /* 60 af: 0110 0000 1010 1111 */
 static void GTA_A_L(void)
 {
-	UINT8 tmp = A - L - 1;
+	UINT16 tmp = A - L - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -3175,7 +3175,8 @@ static void ADINC_MKL_xx(void)
 /* 64 28: 0110 0100 0010 1000 xxxx xxxx */
 static void GTI_PA_xx(void)
 {
-	UINT8 pa = RP( UPD7810_PORTA ), imm, tmp;
+	UINT8 pa = RP( UPD7810_PORTA ), imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = pa - imm - 1;
@@ -3187,7 +3188,8 @@ static void GTI_PA_xx(void)
 /* 64 29: 0110 0100 0010 1001 xxxx xxxx */
 static void GTI_PB_xx(void)
 {
-	UINT8 pb = RP( UPD7810_PORTB ), imm, tmp;
+	UINT8 pb = RP( UPD7810_PORTB ), imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = pb - imm - 1;
@@ -3199,7 +3201,8 @@ static void GTI_PB_xx(void)
 /* 64 2a: 0110 0100 0010 1010 xxxx xxxx */
 static void GTI_PC_xx(void)
 {
-	UINT8 pc = RP( UPD7810_PORTC ), imm, tmp;
+	UINT8 pc = RP( UPD7810_PORTC ), imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = pc - imm - 1;
@@ -3211,7 +3214,8 @@ static void GTI_PC_xx(void)
 /* 64 2b: 0110 0100 0010 1011 xxxx xxxx */
 static void GTI_PD_xx(void)
 {
-	UINT8 pd = RP( UPD7810_PORTD ), imm, tmp;
+	UINT8 pd = RP( UPD7810_PORTD ), imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = pd - imm - 1;
@@ -3223,7 +3227,8 @@ static void GTI_PD_xx(void)
 /* 64 2d: 0110 0100 0010 1101 xxxx xxxx */
 static void GTI_PF_xx(void)
 {
-	UINT8 pf = RP( UPD7810_PORTF ), imm, tmp;
+	UINT8 pf = RP( UPD7810_PORTF ), imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = pf - imm - 1;
@@ -3235,7 +3240,8 @@ static void GTI_PF_xx(void)
 /* 64 2e: 0110 0100 0010 1110 xxxx xxxx */
 static void GTI_MKH_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = MKH - imm - 1;
@@ -3247,7 +3253,8 @@ static void GTI_MKH_xx(void)
 /* 64 2f: 0110 0100 0010 1111 xxxx xxxx */
 static void GTI_MKL_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = MKL - imm - 1;
@@ -4255,7 +4262,8 @@ static void ADINC_TMM_xx(void)
 /* 64 a8: 0110 0100 1010 1000 xxxx xxxx */
 static void GTI_ANM_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = ANM - imm - 1;
@@ -4267,7 +4275,8 @@ static void GTI_ANM_xx(void)
 /* 64 a9: 0110 0100 1010 1001 xxxx xxxx */
 static void GTI_SMH_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = SMH - imm - 1;
@@ -4281,7 +4290,8 @@ static void GTI_EOM_xx(void)
 {
 	/* only bits #1 and #5 can be read */
 	UINT8 eom = EOM & 0x22;
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = eom - imm - 1;
@@ -4293,7 +4303,8 @@ static void GTI_EOM_xx(void)
 /* 64 ad: 0110 0100 1010 1101 xxxx xxxx */
 static void GTI_TMM_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = TMM - imm - 1;
@@ -5327,7 +5338,7 @@ static void ADDNCX_Hm(void)
 /* 70 a9: 0111 0000 1010 1001 */
 static void GTAX_B(void)
 {
-	UINT8 tmp = A - RM( BC ) - 1;
+	UINT16 tmp = A - RM( BC ) - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -5335,7 +5346,7 @@ static void GTAX_B(void)
 /* 70 aa: 0111 0000 1010 1010 */
 static void GTAX_D(void)
 {
-	UINT8 tmp = A - RM( DE ) - 1;
+	UINT16 tmp = A - RM( DE ) - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -5343,7 +5354,7 @@ static void GTAX_D(void)
 /* 70 ab: 0111 0000 1010 1011 */
 static void GTAX_H(void)
 {
-	UINT8 tmp = A - RM( HL ) - 1;
+	UINT16 tmp = A - RM( HL ) - 1;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
 }
@@ -5351,7 +5362,7 @@ static void GTAX_H(void)
 /* 70 ac: 0111 0000 1010 1100 */
 static void GTAX_Dp(void)
 {
-	UINT8 tmp = A - RM( DE ) - 1;
+	UINT16 tmp = A - RM( DE ) - 1;
 	DE++;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
@@ -5360,7 +5371,7 @@ static void GTAX_Dp(void)
 /* 70 ad: 0111 0000 1010 1101 */
 static void GTAX_Hp(void)
 {
-	UINT8 tmp = A - RM( HL ) - 1;
+	UINT16 tmp = A - RM( HL ) - 1;
 	HL++;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
@@ -5369,7 +5380,7 @@ static void GTAX_Hp(void)
 /* 70 ae: 0111 0000 1010 1110 */
 static void GTAX_Dm(void)
 {
-	UINT8 tmp = A - RM( DE ) - 1;
+	UINT16 tmp = A - RM( DE ) - 1;
 	DE--;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
@@ -5378,7 +5389,7 @@ static void GTAX_Dm(void)
 /* 70 af: 0111 0000 1010 1111 */
 static void GTAX_Hm(void)
 {
-	UINT8 tmp = A - RM( HL ) - 1;
+	UINT16 tmp = A - RM( HL ) - 1;
 	HL--;
 	ZHC_SUB( tmp, A, 0 );
 	SKIP_NC;
@@ -6329,7 +6340,8 @@ static void ADINC_L_xx(void)
 /* 74 28: 0111 0100 0010 1000 xxxx xxxx */
 static void GTI_V_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = V - imm - 1;
@@ -6341,7 +6353,8 @@ static void GTI_V_xx(void)
 /* 74 29: 0111 0100 0010 1001 xxxx xxxx */
 static void GTI_A_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = A - imm - 1;
@@ -6353,7 +6366,8 @@ static void GTI_A_xx(void)
 /* 74 2a: 0111 0100 0010 1010 xxxx xxxx */
 static void GTI_B_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = B - imm - 1;
@@ -6365,7 +6379,8 @@ static void GTI_B_xx(void)
 /* 74 2b: 0111 0100 0010 1011 xxxx xxxx */
 static void GTI_C_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = C - imm - 1;
@@ -6377,7 +6392,8 @@ static void GTI_C_xx(void)
 /* 74 2c: 0111 0100 0010 1100 xxxx xxxx */
 static void GTI_D_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = D - imm - 1;
@@ -6389,7 +6405,8 @@ static void GTI_D_xx(void)
 /* 74 2d: 0111 0100 0010 1101 xxxx xxxx */
 static void GTI_E_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = E - imm - 1;
@@ -6401,7 +6418,8 @@ static void GTI_E_xx(void)
 /* 74 2e: 0111 0100 0010 1110 xxxx xxxx */
 static void GTI_H_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = H - imm - 1;
@@ -6413,7 +6431,8 @@ static void GTI_H_xx(void)
 /* 74 2f: 0111 0100 0010 1111 xxxx xxxx */
 static void GTI_L_xx(void)
 {
-	UINT8 tmp, imm;
+	UINT8 imm;
+	UINT16 tmp;
 
 	RDOPARG( imm );
 	tmp = L - imm - 1;
@@ -7309,6 +7328,7 @@ static void ANAW_wa(void)
 	RDOPARG( ea.b.l );
 
 	A &= RM( ea.d );
+	SET_Z(A);
 }
 
 /* 74 8d: 0111 0100 1000 1101 */
@@ -7370,6 +7390,7 @@ static void ORAW_wa(void)
 	RDOPARG( ea.b.l );
 
 	A |= RM( ea.d );
+	SET_Z(A);
 }
 
 /* 74 9d: 0111 0100 1001 1101 */
@@ -7441,7 +7462,7 @@ static void DADDNC_EA_HL(void)
 static void GTAW_wa(void)
 {
 	PAIR ea = upd7810.va;
-	UINT8 tmp;
+	UINT16 tmp;
 
 	RDOPARG( ea.b.l );
 	tmp = A - RM( ea.d ) - 1;
@@ -7452,7 +7473,7 @@ static void GTAW_wa(void)
 /* 74 ad: 0111 0100 1010 1101 */
 static void DGT_EA_BC(void)
 {
-	UINT16 tmp = EA - BC - 1;
+	UINT32 tmp = EA - BC - 1;
 	ZHC_SUB( tmp, EA, 0 );
 	SKIP_NC;
 }
@@ -7460,7 +7481,7 @@ static void DGT_EA_BC(void)
 /* 74 ae: 0111 0100 1010 1110 */
 static void DGT_EA_DE(void)
 {
-	UINT16 tmp = EA - DE - 1;
+	UINT32 tmp = EA - DE - 1;
 	ZHC_SUB( tmp, EA, 0 );
 	SKIP_NC;
 }
@@ -7468,7 +7489,7 @@ static void DGT_EA_DE(void)
 /* 74 af: 0111 0100 1010 1111 */
 static void DGT_EA_HL(void)
 {
-	UINT16 tmp = EA - HL - 1;
+	UINT32 tmp = EA - HL - 1;
 	ZHC_SUB( tmp, EA, 0 );
 	SKIP_NC;
 }
@@ -7629,9 +7650,12 @@ static void DON_EA_HL(void)
 static void ADCW_wa(void)
 {
 	PAIR ea = upd7810.va;
-	RDOPARG( ea.b.l );
+	UINT8 tmp;
 
-	A += RM( ea.d ) + (PSW & CY);
+	RDOPARG( ea.b.l );
+	tmp = A + RM( ea.d ) + (PSW & CY);
+	ZHC_ADD( tmp, A, (PSW & CY) );
+	A = tmp;
 }
 
 /* 74 d5: 0111 0100 1101 0101 */
@@ -7737,9 +7761,12 @@ static void DSUB_EA_HL(void)
 static void NEAW_wa(void)
 {
 	PAIR ea = upd7810.va;
-	RDOPARG( ea.b.l );
+	UINT8 tmp;
 
-	A &= ~RM( ea.d );
+	RDOPARG( ea.b.l );
+	tmp = A - RM( ea.d );
+	ZHC_SUB( tmp, A, 0 );
+	SKIP_NZ;
 }
 
 /* 74 ed: 0111 0100 1110 1101 */
@@ -8112,11 +8139,12 @@ static void LXI_D_w(void)
 static void GTIW_wa_xx(void)
 {
 	PAIR ea = upd7810.va;
-	UINT8 tmp, m, imm;
+	UINT8 m, imm;
+	UINT16 tmp;
 
 	RDOPARG( ea.b.l );
 	RDOPARG( imm );
-	m = RM( ea. d );
+	m = RM( ea.d );
 	tmp = m - imm - 1;
 	ZHC_SUB( tmp, m, 0 );
 	SKIP_NC;
@@ -8237,7 +8265,7 @@ static void LTIW_wa_xx(void)
 	RDOPARG( ea.b.l );
 	RDOPARG( imm );
 	m = RM( ea.d );
-	tmp = m - imm - 1;
+	tmp = m - imm;
 	ZHC_SUB( tmp, m, 0 );
 	SKIP_CY;
 }
@@ -8844,10 +8872,9 @@ static void RETI(void)
 /* 63: 0110 0011 oooo oooo */
 static void STAW_wa(void)
 {
-	PAIR ea;
-	ea.d = 0;
-	RDOPARG(ea.b.l);
-	ea.b.h = V;
+	PAIR ea = upd7810.va;
+
+	RDOPARG( ea.b.l );
 
 	WM( ea.d, A );
 }
@@ -8870,7 +8897,7 @@ static void NEIW_wa_xx(void)
 	RDOPARG( ea.b.l );
 	RDOPARG( imm );
 	m = RM( ea.d );
-	tmp = m - imm - 1;
+	tmp = m - imm;
 	ZHC_SUB( tmp, m, 0 );
 	SKIP_NZ;
 }
@@ -8951,13 +8978,10 @@ static void PRE_70(void)
 /* 71: 0111 0001 oooo oooo xxxx xxxx */
 static void MVIW_wa_xx(void)
 {
-	PAIR ea;
+	PAIR ea = upd7810.va;
 	UINT8 imm;
 
-	ea.d = 0;
-
 	RDOPARG( ea.b.l );
-	ea.b.h = V;
 	RDOPARG( imm );
 
 	WM( ea.d, imm );
