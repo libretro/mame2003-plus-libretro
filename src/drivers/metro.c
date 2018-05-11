@@ -49,7 +49,6 @@ Not dumped yet:
 
 To Do:
 
--	Sound in games with a sound CPU
 -	1 pixel granularity in the window's placement (8 pixels now, see daitorid title)
 -	Coin lockout
 -	Some gfx problems in ladykill, 3kokushi, puzzli, gakusai
@@ -73,7 +72,8 @@ Vsync: 58Hz
 HSync: 15.16kHz
 
 Compared to the real PCB, MAME is too fast, so 60fps needs to be changed to 58fps (i.e 58Hz).
-
+--
+driver modified by Eisuke Watanabe
 ***************************************************************************/
 
 #include "driver.h"
@@ -262,21 +262,28 @@ INTERRUPT_GEN( karatour_interrupt )
 	}
 }
 
+static void *mouja_irq_timer;
+
+static void mouja_irq_callback(int param)
+{
+	requested_int[0] = 1;
+	update_irq_state();
+}
+
+static WRITE16_HANDLER( mouja_irq_timer_ctrl_w )
+{
+	double timer;
+
+	timer = 58.0 + (0xff - (data & 0xff)) / 2.2;					/* 0xff=58Hz, 0x80=116Hz? */
+	timer_adjust(mouja_irq_timer, TIME_NOW, 0, TIME_IN_HZ(timer));
+}
+
 INTERRUPT_GEN( mouja_interrupt )
 {
-	switch ( cpu_getiloops() )
-	{
-		case 0:
-			requested_int[0] = 1;
-			update_irq_state();
-			break;
-
-		default:
-			requested_int[1] = 1;
-			update_irq_state();
-			break;
-	}
+	requested_int[1] = 1;
+	update_irq_state();
 }
+
 
 INTERRUPT_GEN( gakusai_interrupt )
 {
@@ -304,6 +311,24 @@ INTERRUPT_GEN( dokyusei_interrupt )
 	}
 }
 
+static INTERRUPT_GEN( msgogo_interrupt )
+{
+
+    switch (cpu_getiloops())
+    {
+        case 10:
+            requested_int[0] = 1;
+            update_irq_state();
+            break;
+
+        case 224:
+            requested_int[4] = 1;
+            update_irq_state();
+            break;
+    }
+}
+
+
 static void ymf278b_interrupt(int active)
 {
 	cpu_set_irq_line(0, 2, active);
@@ -317,12 +342,12 @@ static void ymf278b_interrupt(int active)
 
 ***************************************************************************/
 
-/* #define TEST_SOUND*/
+static data16_t metro_soundstatus;
+static int porta, portb, busy_sndcpu;
 
-#ifdef TEST_SOUND
 static int metro_io_callback(int ioline, int state)
 {
-	data8_t data;
+	data8_t data = 0;
 
     switch ( ioline )
 	{
@@ -334,66 +359,115 @@ static int metro_io_callback(int ioline, int state)
 		default:
 			log_cb(RETRO_LOG_ERROR, LOGPRE "upd7810 ioline %d not handled\n", ioline);
     }
+
 	return state;
 }
 
-WRITE16_HANDLER( metro_soundlatch_w )
-{
-	if ( ACCESSING_LSB && (Machine->sample_rate != 0) )
-	{
-		soundlatch_w(0,data & 0xff);
-		cpu_set_nmi_line( 1, PULSE_LINE );
-log_cb(RETRO_LOG_ERROR, LOGPRE "soundcmd %02x\n", data & 0xff);
-	}
-}
-
-data16_t metro_soundstatus;
-
-WRITE16_HANDLER( metro_soundstatus_w )
+static WRITE16_HANDLER( metro_soundlatch_w )
 {
 	if (ACCESSING_LSB)
 	{
-		metro_soundstatus = (~data) & 1;
+		soundlatch_w(0,data & 0xff);
+		cpu_set_nmi_line(1, PULSE_LINE);
+		cpu_spinuntil_int();
+		busy_sndcpu = 1;
 	}
-	if (data & ~1)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : unknown bits of soundstatus written: %04X\n",activecpu_get_pc(),data);
 }
 
 
-READ16_HANDLER( metro_soundstatus_r )
+static READ16_HANDLER( metro_soundstatus_r )
 {
-	return metro_soundstatus & 1;
+	return (busy_sndcpu ? 0x00 : 0x01);
+}
+
+static READ16_HANDLER( daitorid_soundstatus_r )
+{
+	return readinputport(0) | (busy_sndcpu ? 0x80 : 0x00);
+}
+
+static WRITE16_HANDLER( metro_soundstatus_w )
+{
+	if (ACCESSING_LSB)
+		metro_soundstatus = data & 0x01;
 }
 
 
-READ16_HANDLER( dharma_soundstatus_r )
+static WRITE_HANDLER( metro_sound_rombank_w )
 {
-	return readinputport(0) | (metro_soundstatus ? 0x80 : 0);
+	int bankaddress;
+	data8_t *ROM = memory_region(REGION_CPU2);
+
+	bankaddress = 0x10000-0x4000 + ((data >> 4) & 0x03) * 0x4000;
+	if (bankaddress < 0x10000) bankaddress = 0x0000;
+
+	cpu_setbank(1, &ROM[bankaddress]);
 }
 
 static WRITE_HANDLER( daitorid_sound_rombank_w )
 {
-	unsigned char *rom = memory_region(REGION_CPU2);
-	int bank = (data >> 4) & 0x07;
+	int bankaddress;
+	data8_t *ROM = memory_region(REGION_CPU2);
 
-	if ( data & ~0x70 ) 	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: unknown bank bits: %02X\n",activecpu_get_pc(),data);
+	bankaddress = 0x10000-0x4000 + ((data >> 4) & 0x07) * 0x4000;
+	if (bankaddress < 0x10000) bankaddress = 0x10000;
 
-	if (bank < 2)	rom = &rom[0x4000 * bank];
-	else			rom = &rom[0x4000 * (bank-2) + 0x10000];
-
-	cpu_setbank(1, rom);
+	cpu_setbank(1, &ROM[bankaddress]);
 }
 
-static int porta,portb;
 
-static READ_HANDLER( daitorid_porta_r )
+static READ_HANDLER( metro_porta_r )
 {
 	return porta;
 }
 
-static WRITE_HANDLER( daitorid_porta_w )
+static WRITE_HANDLER( metro_porta_w )
 {
 	porta = data;
 }
+
+static WRITE_HANDLER( metro_portb_w )
+{
+	/* port B layout:
+	   7 !clock latch for message to main CPU
+       6
+	   5 !clock YM2413 I/O
+	   4 !clock MSM6295 I/O
+	   3
+	   2 !enable write to YM2413/6295
+	   1 select YM2151 register or data port
+	   0
+	*/
+
+	if (BIT(portb,7) && !BIT(data,7))	/* clock 1->0 */
+	{
+		busy_sndcpu = 0;
+		portb = data;
+		return;
+	}
+
+	if (BIT(portb,5) && !BIT(data,5))	/* clock 1->0 */
+	{
+		if (!BIT(data,2))
+		{
+			/* write */
+			if (BIT(data,1))
+				YM2413_data_port_0_w(0,porta);
+			else
+				YM2413_register_port_0_w(0,porta);
+		}
+		portb = data;
+		return;
+	}
+
+	if (BIT(portb,2) && !BIT(data,2))	/* clock 1->0 */
+	{
+		/* write */
+		if (!BIT(data,4))
+			OKIM6295_data_0_w(0,porta);
+	}
+	portb = data;
+}
+
 
 static WRITE_HANDLER( daitorid_portb_w )
 {
@@ -406,16 +480,13 @@ static WRITE_HANDLER( daitorid_portb_w )
 	   2 !enable write to YM2151/6295
 	   1 select YM2151 register or data port
 	   0
-	  */
-
-if (!BIT(data,0) || !BIT(data,5))
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: daitorid_port_b_w %02x\n",activecpu_get_pc(),data);
+	*/
 
 	if (BIT(portb,7) && !BIT(data,7))	/* clock 1->0 */
 	{
-/*		metro_soundstatus = porta;*/
-		metro_soundstatus = 0;	/* ???*/
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: to_cpu = %02x\n",activecpu_get_pc(),porta);
+		busy_sndcpu = 0;
+		portb = data;
+		return;
 	}
 
 	if (BIT(portb,6) && !BIT(data,6))	/* clock 1->0 */
@@ -424,115 +495,142 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: to_cpu = %02x\n",activecpu_get_pc(),porta)
 		{
 			/* write */
 			if (BIT(data,1))
-			{
 				YM2151_data_port_0_w(0,porta);
-			}
 			else
-			{
 				YM2151_register_port_0_w(0,porta);
-			}
 		}
 		if (!BIT(data,3))
 		{
 			/* read */
 			if (BIT(data,1))
-			{
 				porta = YM2151_status_port_0_r(0);
-			}
 		}
+		portb = data;
+		return;
 	}
 
-	if (BIT(portb,4) && !BIT(data,4))	/* clock 1->0 */
+	if (BIT(portb,2) && !BIT(data,2))	/* clock 1->0 */
 	{
-		if (!BIT(data,2))
-		{
-			/* write */
+		/* write */
+		if (!BIT(data,4))
 			OKIM6295_data_0_w(0,porta);
-log_cb(RETRO_LOG_ERROR, LOGPRE "OKIM6295_data_w %02x\n",porta);
-		}
-		if (!BIT(data,3))
-		{
-			/* read */
-			porta = OKIM6295_status_0_r(0);
-log_cb(RETRO_LOG_ERROR, LOGPRE "OKIM6295_status_r %02x\n",porta);
-		}
 	}
-
+	if (BIT(portb,3) && !BIT(data,3))	/* clock 1->0 */
+	{
+		/* read */
+		if (!BIT(data,4))
+			porta = OKIM6295_status_0_r(0);
+	}
 	portb = data;
 }
 
 
-static MEMORY_READ_START( upd7810_readmem )
-	{ 0x0000, 0x3fff, MRA_ROM },	/* External ROM */
-/*	{ 0x4000, 0x7fff, MRA_BANK1 },	 // External ROM (Banked) /*/
-	{ 0x8000, 0x87ff, MRA_RAM },	/* External RAM */
-	{ 0xff00, 0xffff, MRA_RAM },	/* Internal RAM */
-MEMORY_END
+/*******************/
 
-static MEMORY_WRITE_START( upd7810_writemem )
-	{ 0x0000, 0x3fff, MWA_ROM },	/* External ROM */
-	{ 0x4000, 0x7fff, MWA_ROM },	/* External ROM (Banked) */
-	{ 0x8000, 0x87ff, MWA_RAM },	/* External RAM */
-	{ 0xff00, 0xffff, MWA_RAM },	/* Internal RAM */
-MEMORY_END
+static int okim6295_command;
+static int mouja_m6295_rombank;
+static UINT32 volume_table[16];		/* M6295 volume lookup table */
 
-static PORT_READ_START( upd7810_readport )
-	{ UPD7810_PORTA, UPD7810_PORTA, daitorid_porta_r },
-PORT_END
 
-static PORT_WRITE_START( upd7810_writeport )
-	{ UPD7810_PORTA, UPD7810_PORTA, daitorid_porta_w },
-	{ UPD7810_PORTB, UPD7810_PORTB, daitorid_portb_w },
-/*	{ UPD7810_PORTC, UPD7810_PORTC, daitorid_sound_rombank_w },*/
-PORT_END
+static void mouja_m6295_data_w(int data)
+{
+	/* if a command is pending, process the second half */
+	if (okim6295_command != -1)
+	{
+		int temp = data >> 4, i, start, stop;
+		data8_t *ROM = memory_region(REGION_SOUND1);
+
+		/* determine which voice(s) (voice is set by a 1 bit in the upper 4 bits of the second byte) */
+		for (i = 0; i < 4; i++, temp >>= 1)
+		{
+			if (temp & 1)
+			{
+				start = ((ROM[okim6295_command*8+0]<<16) + (ROM[okim6295_command*8+1]<<8) + ROM[okim6295_command*8+2]) & 0x3ffff;
+				stop  = ((ROM[okim6295_command*8+3]<<16) + (ROM[okim6295_command*8+4]<<8) + ROM[okim6295_command*8+5]) & 0x3ffff;
+
+				if ((start >= 0x20000) && mouja_m6295_rombank)
+				{
+					start += (mouja_m6295_rombank - 1) * 0x20000;			/* 0x00000-0x1ffff fixed rom  */
+					stop += (mouja_m6295_rombank - 1) * 0x20000;			/* 0x20000-0x3ffff banked rom */
+				}
+
+				if (start < stop)
+				{
+					if (!ADPCM_playing(i))
+					{
+						ADPCM_setvol(i, volume_table[data & 0x0f]);
+						ADPCM_play(i, start, 2 * (stop - start + 1));
+					}
+				}
+			}
+		}
+
+		/* reset the command */
+		okim6295_command = -1;
+	}
+
+	/* if this is the start of a command, remember the sample number for next time */
+	else if (data & 0x80)
+	{
+		okim6295_command = data & 0x7f;
+	}
+
+	/* otherwise, see if this is a silence command */
+	else
+	{
+		int temp = data >> 3, i;
+
+		/* determine which voice(s) (voice is set by a 1 bit in bits 3-6 of the command */
+		for (i = 0; i < 4; i++, temp >>= 1)
+		{
+			if (temp & 1)
+				ADPCM_stop(i);
+		}
+	}
+}
+
+static WRITE16_HANDLER( mouja_sound_rombank_w )
+{
+	if (ACCESSING_LSB)
+		mouja_m6295_rombank = (data >> 3) & 0x07;			/* M6295 special banked rom system */
+}
+
+static READ16_HANDLER( mouja_m6295_status_lsb_r )
+{
+	int i, result;
+
+	result = 0xf0;	/* naname expects bits 4-7 to be 1 */
+	/* set the bit to 1 if something is playing on a given channel */
+	for (i = 0; i < 4; i++)
+	{
+		if (ADPCM_playing(i))
+			result |= 1 << i;
+	}
+
+	return result;
+}
+
+static WRITE16_HANDLER( mouja_m6295_data_msb_w )
+{
+	if (ACCESSING_MSB)
+		mouja_m6295_data_w(data >> 8);
+}
+
+/*******************/
 
 static void metro_sound_irq_handler(int state)
 {
 	cpu_set_irq_line(1, UPD7810_INTF2, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static struct YM2151interface daitorid_ym2151_interface =
+static struct YM2151interface ym2151_interface =
 {
 	1,
-	2000000,			/* ? */
-	{ YM3012_VOL(50,MIXER_PAN_LEFT,50,MIXER_PAN_RIGHT) },
+	4000000,			/* 4MHz ? */
+	{ YM3012_VOL(80,MIXER_PAN_LEFT,80,MIXER_PAN_RIGHT) },
 	{ metro_sound_irq_handler },	/* irq handler */
 	{ 0 }							/* port_write */
 };
-#else
-WRITE16_HANDLER( metro_soundlatch_w )
-{
-	if ( ACCESSING_LSB && (Machine->sample_rate != 0) )
-	{
-/*		soundlatch_w(0,data & 0xff);*/
-	}
-}
-
-data16_t metro_soundstatus;
-
-WRITE16_HANDLER( metro_soundstatus_w )
-{
-	if (ACCESSING_LSB)
-	{
-		metro_soundstatus = (~data) & 1;
-	}
-	if (data & ~1)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : unknown bits of soundstatus written: %04X\n",activecpu_get_pc(),data);
-}
-
-
-READ16_HANDLER( metro_soundstatus_r )
-{
-/*	return metro_soundstatus & 1;*/
-	return rand() & 1;
-}
-
-
-READ16_HANDLER( dharma_soundstatus_r )
-{
-/*	return readinputport(0) | (metro_soundstatus ? 0x80 : 0);*/
-	return readinputport(0) | (0);
-}
-#endif
 
 
 static READ16_HANDLER( ymf278b_r )
@@ -566,26 +664,54 @@ static WRITE16_HANDLER( ymf278b_w )
 		}
 }
 
+
+static struct OKIM6295interface okim6295_interface =
+{
+	1,
+	{ 1200000/128 },		/* 165=7272Hz? 128=9375Hz? */
+	{ REGION_SOUND1 },
+	{ 10 }
+};
+
+static struct OKIM6295interface okim6295_intf_2151balanced =
+{
+	1,
+	{ 1200000/128 },		/* 165=7272Hz? 128=9375Hz? */
+	{ REGION_SOUND1 },
+	{ 40 }
+};
+
+static struct ADPCMinterface mouja_adpcm_interface =
+{
+	4,						/* 4 channels (M6295) */
+	16000000/1024,			/* 15625Hz */
+	REGION_SOUND1,
+	{ 35,35,35,35 }
+};
+
+
 static struct OKIM6295interface okim6295_intf_8kHz =
 {
 	1,
 	{ 8000 },
 	{ REGION_SOUND1 },
-	{ 100 }
-};
-static struct OKIM6295interface okim6295_intf_12kHz =
-{
-	1,
-	{ 12000 },
-	{ REGION_SOUND1 },
 	{ 50 }
 };
+
 static struct OKIM6295interface okim6295_intf_16kHz =
 {
 	1,
 	{ 16000 },
 	{ REGION_SOUND1 },
-	{ 100 }
+	{ 50 }
+};
+
+
+static struct YM2413interface ym2413_interface =
+{
+	1,
+	3579545,
+	{ YM2413_VOL(100,MIXER_PAN_CENTER,100,MIXER_PAN_CENTER) }		/* Insufficient gain. */
 };
 
 static struct YM2413interface ym2413_intf_8MHz =
@@ -603,6 +729,7 @@ static struct YMF278B_interface ymf278b_interface =
 	{ YM3012_VOL(100, MIXER_PAN_CENTER, 100, MIXER_PAN_CENTER) },
 	{ ymf278b_interrupt }
 };
+
 
 /***************************************************************************
 
@@ -888,6 +1015,57 @@ WRITE16_HANDLER( metro_blitter_w )
  AFAIK)
 */
 
+
+static MEMORY_READ_START( metro_snd_readmem )
+    { 0x0000, 0x3fff, MRA_ROM   },	/* External ROM */
+	{ 0x4000, 0x7fff, MRA_BANK1 },	/* External ROM (Banked) */
+	{ 0x8000, 0x87ff, MRA_RAM   },	/* External RAM */
+	{ 0xff00, 0xffff, MRA_RAM   },	/* Internal RAM */
+MEMORY_END
+
+static MEMORY_WRITE_START( metro_snd_writemem )
+    { 0x0000, 0x3fff, MWA_ROM   },	/* External ROM */
+	{ 0x4000, 0x7fff, MWA_BANK1 },	/* External ROM (Banked) */
+	{ 0x8000, 0x87ff, MWA_RAM   },	/* External RAM */
+	{ 0xff00, 0xffff, MWA_RAM   },	/* Internal RAM */
+MEMORY_END
+
+static PORT_READ_START( metro_snd_readport )
+    { UPD7810_PORTA, UPD7810_PORTA, metro_porta_r },
+PORT_END
+
+static PORT_WRITE_START( metro_snd_writeport )
+    { UPD7810_PORTA, UPD7810_PORTA, metro_porta_w },
+	{ UPD7810_PORTB, UPD7810_PORTB, metro_portb_w },
+	{ UPD7810_PORTC, UPD7810_PORTC, metro_sound_rombank_w },
+PORT_END
+
+/*****************/
+
+static MEMORY_READ_START( daitorid_snd_readmem )
+    { 0x0000, 0x3fff, MRA_ROM   },	/* External ROM */
+	{ 0x4000, 0x7fff, MRA_BANK1 },	/* External ROM (Banked) */
+	{ 0x8000, 0x87ff, MRA_RAM   },	/* External RAM */
+	{ 0xff00, 0xffff, MRA_RAM   },	/* Internal RAM */
+MEMORY_END
+
+static MEMORY_WRITE_START( daitorid_snd_writemem )
+    { 0x0000, 0x3fff, MWA_ROM   },	/* External ROM */
+    { 0x4000, 0x7fff, MWA_BANK1 },	/* External ROM (Banked) */
+	{ 0x8000, 0x87ff, MWA_RAM   },	/* External RAM */
+	{ 0xff00, 0xffff, MWA_RAM   },	/* Internal RAM */
+MEMORY_END
+
+static PORT_READ_START( daitorid_snd_readport )
+    { UPD7810_PORTA, UPD7810_PORTA, metro_porta_r },
+PORT_END
+
+static PORT_WRITE_START( daitorid_snd_writeport )
+    { UPD7810_PORTA, UPD7810_PORTA, metro_porta_w },
+	{ UPD7810_PORTB, UPD7810_PORTB, daitorid_portb_w },
+	{ UPD7810_PORTC, UPD7810_PORTC, daitorid_sound_rombank_w },
+PORT_END
+
 /***************************************************************************
 									Bal Cube
 ***************************************************************************/
@@ -1029,7 +1207,7 @@ static MEMORY_READ16_START( daitorid_readmem )
 	{ 0x474000, 0x474fff, MRA16_RAM				},	/* Sprites*/
 	{ 0x478000, 0x4787ff, MRA16_RAM				},	/* Tiles Set*/
 	{ 0x4788a2, 0x4788a3, metro_irq_cause_r		},	/* IRQ Cause*/
-	{ 0xc00000, 0xc00001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0xc00000, 0xc00001, daitorid_soundstatus_r	},	/* Inputs*/
 	{ 0xc00002, 0xc00003, input_port_1_word_r	},	/**/
 	{ 0xc00004, 0xc00005, input_port_2_word_r	},	/**/
 	{ 0xc00006, 0xc00007, input_port_3_word_r	},	/**/
@@ -1075,7 +1253,7 @@ static MEMORY_READ16_START( dharma_readmem )
 	{ 0x874000, 0x874fff, MRA16_RAM				},	/* Sprites*/
 	{ 0x878000, 0x8787ff, MRA16_RAM				},	/* Tiles Set*/
 	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	/* IRQ Cause*/
-	{ 0xc00000, 0xc00001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0xc00000, 0xc00001, daitorid_soundstatus_r	},	/* Inputs*/
 	{ 0xc00002, 0xc00003, input_port_1_word_r	},	/**/
 	{ 0xc00004, 0xc00005, input_port_2_word_r	},	/**/
 	{ 0xc00006, 0xc00007, input_port_3_word_r	},	/**/
@@ -1191,7 +1369,7 @@ static MEMORY_READ16_START( kokushi_readmem )
 	{ 0x877000, 0x877fff, karatour_vram_2_r		},	/* Layer 2 (Part of)*/
 	{ 0x878000, 0x8787ff, MRA16_RAM				},	/* Tiles Set*/
 	{ 0x8788a2, 0x8788a3, metro_irq_cause_r		},	/* IRQ Cause*/
-	{ 0xc00000, 0xc00001, dharma_soundstatus_r	},	/* From Sound CPU*/
+	{ 0xc00000, 0xc00001, daitorid_soundstatus_r	},	/* From Sound CPU*/
 	{ 0xc00002, 0xc00003, input_port_1_word_r	},	/* Inputs*/
 	{ 0xc00004, 0xc00005, input_port_2_word_r	},	/**/
 MEMORY_END
@@ -1642,7 +1820,7 @@ static MEMORY_READ16_START( poitto_readmem )
 	{ 0xc74000, 0xc74fff, MRA16_RAM				},	/* Sprites*/
 	{ 0xc78000, 0xc787ff, MRA16_RAM				},	/* Tiles Set*/
 	{ 0xc788a2, 0xc788a3, metro_irq_cause_r		},	/* IRQ Cause*/
-	{ 0x800000, 0x800001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0x800000, 0x800001, daitorid_soundstatus_r	},	/* Inputs*/
 	{ 0x800002, 0x800003, input_port_1_word_r	},	/**/
 	{ 0x800004, 0x800005, input_port_2_word_r	},	/**/
 	{ 0x800006, 0x800007, input_port_3_word_r	},	/**/
@@ -1728,7 +1906,7 @@ MEMORY_END
 ***************************************************************************/
 
 static MEMORY_READ16_START( pururun_readmem )
-	{ 0x000000, 0x03ffff, MRA16_ROM				},	/* ROM*/
+	{ 0x000000, 0x07ffff, MRA16_ROM				},	/* ROM*/
 	{ 0x800000, 0x80ffff, MRA16_RAM				},	/* RAM*/
 	{ 0xc00000, 0xc1ffff, MRA16_RAM				},	/* Layer 0*/
 	{ 0xc20000, 0xc3ffff, MRA16_RAM				},	/* Layer 1*/
@@ -1738,14 +1916,14 @@ static MEMORY_READ16_START( pururun_readmem )
 	{ 0xc74000, 0xc74fff, MRA16_RAM				},	/* Sprites*/
 	{ 0xc78000, 0xc787ff, MRA16_RAM				},	/* Tiles Set*/
 	{ 0xc788a2, 0xc788a3, metro_irq_cause_r		},	/* IRQ Cause*/
-	{ 0x400000, 0x400001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0x400000, 0x400001, daitorid_soundstatus_r	},	/* Inputs*/
 	{ 0x400002, 0x400003, input_port_1_word_r	},	/**/
 	{ 0x400004, 0x400005, input_port_2_word_r	},	/**/
 	{ 0x400006, 0x400007, input_port_3_word_r	},	/**/
 MEMORY_END
 
 static MEMORY_WRITE16_START( pururun_writemem )
-	{ 0x000000, 0x03ffff, MWA16_ROM						},	/* ROM*/
+	{ 0x000000, 0x07ffff, MWA16_ROM						},	/* ROM*/
 	{ 0x800000, 0x80ffff, MWA16_RAM						},	/* RAM*/
 	{ 0xc00000, 0xc1ffff, metro_vram_0_w, &metro_vram_0	},	/* Layer 0*/
 	{ 0xc20000, 0xc3ffff, metro_vram_1_w, &metro_vram_1	},	/* Layer 1*/
@@ -1784,7 +1962,7 @@ static MEMORY_READ16_START( toride2g_readmem )
 	{ 0xc74000, 0xc74fff, MRA16_RAM				},	/* Sprites*/
 	{ 0xc78000, 0xc787ff, MRA16_RAM				},	/* Tiles Set*/
 	{ 0xc788a2, 0xc788a3, metro_irq_cause_r		},	/* IRQ Cause*/
-	{ 0x800000, 0x800001, dharma_soundstatus_r	},	/* Inputs*/
+	{ 0x800000, 0x800001, daitorid_soundstatus_r	},	/* Inputs*/
 	{ 0x800002, 0x800003, input_port_1_word_r	},	/**/
 	{ 0x800004, 0x800005, input_port_2_word_r	},	/**/
 	{ 0x800006, 0x800007, input_port_3_word_r	},	/**/
@@ -1980,6 +2158,51 @@ static MEMORY_WRITE16_START( mouja_writemem )
 #endif
 MEMORY_END
 
+/***************************************************************************
+                             Mouse Shooter GoGo
+***************************************************************************/
+
+static MEMORY_READ16_START( msgogo_readmem )
+    { 0xf00000, 0xf0ffff, MRA16_RAM			     },
+	{ 0x000000, 0x07ffff, MRA16_ROM				 },	
+	{ 0x160000, 0x16ffff, metro_bankedrom_r		 },
+	{ 0x200000, 0x200001, input_port_0_word_r	 },
+	{ 0x200002, 0x200003, input_port_1_word_r	 },
+	{ 0x200006, 0x200007, MRA16_NOP				 },	
+	{ 0x100000, 0x11ffff, MRA16_RAM              },
+	{ 0x120000, 0x13ffff, MRA16_RAM              },	
+	{ 0x140000, 0x15ffff, MRA16_RAM              },
+	{ 0x400000, 0x400001, ymf278b_r              },
+	{ 0x300000, 0x31ffff, balcube_dsw_r			 },
+	{ 0x170000, 0x173fff, MRA16_RAM              },
+	{ 0x174000, 0x174fff, MRA16_RAM              },
+	{ 0x178000, 0x1787ff, MRA16_RAM              },	
+	{ 0x1788a2, 0x1788a3, metro_irq_cause_r		 },
+MEMORY_END
+
+static MEMORY_WRITE16_START( msgogo_writemem )
+    { 0x170000, 0x173fff, metro_paletteram_w, &paletteram16	   },
+	{ 0x174000, 0x174fff, MWA16_RAM, &spriteram16, &spriteram_size				},	
+	{ 0x178000, 0x1787ff, MWA16_RAM, &metro_tiletable, &metro_tiletable_size	},
+	{ 0x178840, 0x17884d, metro_blitter_w, &metro_blitter_regs },
+	{ 0x178860, 0x17886b, metro_window_w, &metro_window		   },
+	{ 0x178870, 0x17887b, MWA16_RAM, &metro_scroll		       },
+	{ 0x178880, 0x178881, MWA16_NOP							   },
+	{ 0x178890, 0x178891, MWA16_NOP							   },
+	{ 0x1788a2, 0x1788a3, metro_irq_cause_w                    },
+	{ 0x1788a4, 0x1788a5, MWA16_RAM, &metro_irq_enable	       },
+	{ 0x1788aa, 0x1788ab, MWA16_RAM, &metro_rombank		       },
+	{ 0x1788ac, 0x1788ad, MWA16_RAM, &metro_screenctrl	       },
+	{ 0x179700, 0x179713, MWA16_RAM, &metro_videoregs	       },
+	{ 0x200002, 0x200009, metro_coin_lockout_4words_w          },
+	{ 0x400000, 0x40000b, ymf278b_w                            },
+	{ 0xf00000, 0xf0ffff, MWA16_RAM						       },
+	{ 0x000000, 0x07ffff, MWA16_ROM						       },
+	{ 0x100000, 0x11ffff, metro_vram_0_w, &metro_vram_0        },
+	{ 0x120000, 0x13ffff, metro_vram_1_w, &metro_vram_1        },
+	{ 0x140000, 0x15ffff, metro_vram_2_w, &metro_vram_2        },
+MEMORY_END
+
 
 /***************************************************************************
 
@@ -2131,8 +2354,75 @@ INPUT_PORTS_START( bangball )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	/* IN3 - Strangely mapped in the 0xc00000-0xc1ffff range*/
-	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* used for debug*/
+	
+	PORT_START	/* IN3 - Strangely mapped in the 0x400000-0x41ffff range*/
+	PORT_BIT(  0x00ff, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* unused*/
+INPUT_PORTS_END
+
+/***************************************************************************
+                             Mouse Shooter GoGo
+***************************************************************************/
+
+INPUT_PORTS_START( msgogo )
+
+	PORT_START
+	COINS
+
+	PORT_START
+	JOY_LSB(1, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
+	JOY_MSB(2, BUTTON1, BUTTON2, UNKNOWN, UNKNOWN)
+
+	PORT_START
+	COINAGE_DSW
+	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(      0x0200, "Easy"    )
+	PORT_DIPSETTING(      0x0300, "Normal"  )
+	PORT_DIPSETTING(      0x0100, "Hard"    )
+	PORT_DIPSETTING(      0x0000, "Hardest" )
+	PORT_DIPNAME( 0x0400, 0x0400, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0400, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0800, 0x0800, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0800, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x1000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Lives ) )
+	PORT_DIPSETTING(      0x2000, "2" )
+	PORT_DIPSETTING(      0x0000, "3" )
+	PORT_DIPNAME( 0x4000, 0x4000, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x4000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x8000, 0x0000, "Language" )
+	PORT_DIPSETTING(      0x8000, "Japanese" )
+	PORT_DIPSETTING(      0x0000, "English" )
+
+	PORT_START
+	PORT_DIPNAME( 0x0001, 0x0001, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0001, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0002, 0x0002, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0008, 0x0008, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0008, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0010, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0020, 0x0020, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(      0x0020, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Debug: Offset" )
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0080, 0x0080, "Debug: Menu" )
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
 
 
@@ -3279,7 +3569,47 @@ INPUT_PORTS_START( pururun )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
-	PORT_START	/* IN3 - $400006*/
+	PORT_START	/* IN3 - $400006 */
+	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+INPUT_PORTS_END
+
+
+INPUT_PORTS_START( gunmast )
+	PORT_START
+	COINS
+
+	PORT_START
+	JOY_LSB(1, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
+	JOY_MSB(2, BUTTON1, BUTTON2, BUTTON3, UNKNOWN)
+
+	PORT_START
+	COINAGE_DSW
+
+	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(      0x0300, "Normal" )
+	PORT_DIPSETTING(      0x0200, "Hard" )
+	PORT_DIPSETTING(      0x0100, "Harder" )
+	PORT_DIPSETTING(      0x0000, "Hardest" )
+	PORT_DIPNAME( 0x0400, 0x0400, "Allow_Continue" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( No ) )
+	PORT_DIPSETTING(      0x0400, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x0800, 0x0800, "Allow P2 to Join Game" )
+	PORT_DIPSETTING(      0x0000, DEF_STR( No ) )
+	PORT_DIPSETTING(      0x0800, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x1000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Lives ) )
+	PORT_DIPSETTING(      0x2000, "1" )
+	PORT_DIPSETTING(      0x0000, "2" )
+	PORT_DIPNAME( 0x4000, 0x4000, DEF_STR( Unused ) ) /* Listed as "Unused" */
+	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x8000, 0x8000, DEF_STR( Unused ) ) /* Listed as "Unused" */
+	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+
+	PORT_START
 	PORT_BIT(  0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -3524,6 +3854,12 @@ static struct GfxDecodeInfo gfxdecodeinfo_14300[] =
 
 ***************************************************************************/
 
+UPD7810_CONFIG metro_cpu_config =
+{
+    TYPE_7810,
+    metro_io_callback
+};
+
 static MACHINE_DRIVER_START( balcube )
 
 	/* basic machine hardware */
@@ -3579,32 +3915,14 @@ static MACHINE_DRIVER_START( bangball )
 	MDRV_SOUND_ADD(YMF278B, ymf278b_interface)
 MACHINE_DRIVER_END
 
-
-#ifdef TEST_SOUND
-
-UPD7810_CONFIG metro_cpu_config =
-{
-    TYPE_7810,
-    metro_io_callback
-};
-
-#endif
-
-
-static MACHINE_DRIVER_START( daitorid )
+static MACHINE_DRIVER_START( msgogo )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 16000000)
-	MDRV_CPU_MEMORY(daitorid_readmem,daitorid_writemem)
-	MDRV_CPU_VBLANK_INT(metro_interrupt,10)	/* ? */
+	MDRV_CPU_MEMORY(msgogo_readmem,msgogo_writemem)
+	MDRV_CPU_VBLANK_INT(msgogo_interrupt,262)    /* ? */
 
-#ifdef TEST_SOUND
-	MDRV_CPU_ADD(UPD7810, 12000000)
-	MDRV_CPU_CONFIG(metro_cpu_config)
-	MDRV_CPU_MEMORY(upd7810_readmem,upd7810_writemem)
-	MDRV_CPU_PORTS(upd7810_readport,upd7810_writeport)
-#endif
-
+	
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
@@ -3622,10 +3940,42 @@ static MACHINE_DRIVER_START( daitorid )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-#ifdef TEST_SOUND
-	MDRV_SOUND_ADD(YM2151, daitorid_ym2151_interface)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_intf_8kHz) /* wrong */
-#endif
+	MDRV_SOUND_ADD(YMF278B, ymf278b_interface)
+MACHINE_DRIVER_END
+
+
+static MACHINE_DRIVER_START( daitorid )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 16000000)
+	MDRV_CPU_MEMORY(daitorid_readmem,daitorid_writemem)
+	MDRV_CPU_VBLANK_INT(metro_interrupt,10)	/* ? */
+
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(daitorid_snd_readmem,daitorid_snd_writemem)
+	MDRV_CPU_PORTS(daitorid_snd_readport,daitorid_snd_writeport)
+
+	MDRV_FRAMES_PER_SECOND(58)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(metro)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(320, 224)
+	MDRV_VISIBLE_AREA(0, 320-1, 0, 224-1)
+	MDRV_GFXDECODE(gfxdecodeinfo_14220)
+	MDRV_PALETTE_LENGTH(8192)
+
+	MDRV_VIDEO_START(metro_14220)
+	MDRV_VIDEO_UPDATE(metro)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(YM2151, ym2151_interface)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_intf_2151balanced)
 MACHINE_DRIVER_END
 
 
@@ -3636,7 +3986,11 @@ static MACHINE_DRIVER_START( dharma )
 	MDRV_CPU_MEMORY(dharma_readmem,dharma_writemem)
 	MDRV_CPU_VBLANK_INT(metro_interrupt,10)	/* ? */
 
-	/* Sound CPU is unemulated */
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(metro_snd_readmem,metro_snd_writemem)
+	MDRV_CPU_PORTS(metro_snd_readport,metro_snd_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -3655,7 +4009,8 @@ static MACHINE_DRIVER_START( dharma )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	/* M6295*/
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
 
@@ -3666,7 +4021,11 @@ static MACHINE_DRIVER_START( karatour )
 	MDRV_CPU_MEMORY(karatour_readmem,karatour_writemem)
 	MDRV_CPU_VBLANK_INT(karatour_interrupt,10)	/* ? */
 
-	/* Sound CPU is unemulated */
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(metro_snd_readmem,metro_snd_writemem)
+	MDRV_CPU_PORTS(metro_snd_readport,metro_snd_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -3685,7 +4044,8 @@ static MACHINE_DRIVER_START( karatour )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	/* M6295, YM2413*/
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
 
@@ -3696,7 +4056,11 @@ static MACHINE_DRIVER_START( 3kokushi )
 	MDRV_CPU_MEMORY(kokushi_readmem,kokushi_writemem)
 	MDRV_CPU_VBLANK_INT(karatour_interrupt,10)	/* ? */
 
-	/* Sound CPU is unemulated */
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(metro_snd_readmem,metro_snd_writemem)
+	MDRV_CPU_PORTS(metro_snd_readport,metro_snd_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -3715,7 +4079,8 @@ static MACHINE_DRIVER_START( 3kokushi )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	/* M6295, YM2413*/
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
 
@@ -3726,9 +4091,13 @@ static MACHINE_DRIVER_START( lastfort )
 	MDRV_CPU_MEMORY(lastfort_readmem,lastfort_writemem)
 	MDRV_CPU_VBLANK_INT(metro_interrupt,10)	/* ? */
 
-	/* Sound CPU is unemulated */
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(metro_snd_readmem,metro_snd_writemem)
+	MDRV_CPU_PORTS(metro_snd_readport,metro_snd_writeport)
 
-	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_INIT(metro)
@@ -3745,7 +4114,8 @@ static MACHINE_DRIVER_START( lastfort )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	/* M6295, YM2413*/
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
 
@@ -3888,7 +4258,11 @@ static MACHINE_DRIVER_START( pangpoms )
 	MDRV_CPU_MEMORY(pangpoms_readmem,pangpoms_writemem)
 	MDRV_CPU_VBLANK_INT(metro_interrupt,10)	/* ? */
 
-	/* Sound CPU is unemulated */
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(metro_snd_readmem,metro_snd_writemem)
+	MDRV_CPU_PORTS(metro_snd_readport,metro_snd_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -3907,7 +4281,8 @@ static MACHINE_DRIVER_START( pangpoms )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	/* M6295, YM2413*/
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
 
@@ -3918,7 +4293,11 @@ static MACHINE_DRIVER_START( poitto )
 	MDRV_CPU_MEMORY(poitto_readmem,poitto_writemem)
 	MDRV_CPU_VBLANK_INT(metro_interrupt,10)	/* ? */
 
-	/* Sound CPU is unemulated */
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(metro_snd_readmem,metro_snd_writemem)
+	MDRV_CPU_PORTS(metro_snd_readport,metro_snd_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -3937,7 +4316,8 @@ static MACHINE_DRIVER_START( poitto )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	/* M6295, YM2413*/
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
 
@@ -3948,7 +4328,11 @@ static MACHINE_DRIVER_START( pururun )
 	MDRV_CPU_MEMORY(pururun_readmem,pururun_writemem)
 	MDRV_CPU_VBLANK_INT(metro_interrupt,10)	/* ? */
 
-	/* Sound CPU is unemulated */
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(daitorid_snd_readmem,daitorid_snd_writemem)
+	MDRV_CPU_PORTS(daitorid_snd_readport,daitorid_snd_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -3967,9 +4351,9 @@ static MACHINE_DRIVER_START( pururun )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	/* M6295, YM2151, Y3012*/
+	MDRV_SOUND_ADD(YM2151, ym2151_interface)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_intf_2151balanced)
 MACHINE_DRIVER_END
-
 
 static MACHINE_DRIVER_START( skyalert )
 
@@ -3978,7 +4362,11 @@ static MACHINE_DRIVER_START( skyalert )
 	MDRV_CPU_MEMORY(skyalert_readmem,skyalert_writemem)
 	MDRV_CPU_VBLANK_INT(metro_interrupt,10)	/* ? */
 
-	/* Sound CPU is unemulated */
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(metro_snd_readmem,metro_snd_writemem)
+	MDRV_CPU_PORTS(metro_snd_readport,metro_snd_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -3997,7 +4385,8 @@ static MACHINE_DRIVER_START( skyalert )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	/* M6295, YM2413*/
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
 
@@ -4008,7 +4397,11 @@ static MACHINE_DRIVER_START( toride2g )
 	MDRV_CPU_MEMORY(toride2g_readmem,toride2g_writemem)
 	MDRV_CPU_VBLANK_INT(metro_interrupt,10)	/* ? */
 
-	/* Sound CPU is unemulated */
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(metro_snd_readmem,metro_snd_writemem)
+	MDRV_CPU_PORTS(metro_snd_readport,metro_snd_writeport)
 
 	MDRV_FRAMES_PER_SECOND(60)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
@@ -4027,7 +4420,8 @@ static MACHINE_DRIVER_START( toride2g )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	/* M6295, YM2413*/
+	MDRV_SOUND_ADD(OKIM6295, okim6295_interface)
+	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
 
@@ -4036,9 +4430,9 @@ static MACHINE_DRIVER_START( mouja )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(M68000, 12000000)	/* ??? */
 	MDRV_CPU_MEMORY(mouja_readmem,mouja_writemem)
-	MDRV_CPU_VBLANK_INT(mouja_interrupt,2)	/* ? */
+	MDRV_CPU_VBLANK_INT(mouja_interrupt,1)
 
-	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_FRAMES_PER_SECOND(58)
 	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
 
 	MDRV_MACHINE_INIT(metro)
@@ -4055,8 +4449,8 @@ static MACHINE_DRIVER_START( mouja )
 
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
-	MDRV_SOUND_ADD(OKIM6295, okim6295_intf_12kHz)
-	MDRV_SOUND_ADD(YM2413, ym2413_intf_8MHz)
+	MDRV_SOUND_ADD(ADPCM, mouja_adpcm_interface)		/* M6295 special bankrom system */
+	MDRV_SOUND_ADD(YM2413, ym2413_interface)
 MACHINE_DRIVER_END
 
 
@@ -4125,6 +4519,40 @@ static MACHINE_DRIVER_START( gstrik2 )
 	MDRV_SOUND_ADD(YM2610, blzntrnd_ym2610_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( gunmast )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 12000000)
+	MDRV_CPU_MEMORY(pururun_readmem,pururun_writemem)
+	MDRV_CPU_VBLANK_INT(metro_interrupt,6)	/* ? */
+
+	MDRV_CPU_ADD(UPD7810, 12000000)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
+	MDRV_CPU_CONFIG(metro_cpu_config)
+	MDRV_CPU_MEMORY(daitorid_snd_readmem,daitorid_snd_writemem)
+	MDRV_CPU_PORTS(daitorid_snd_readport,daitorid_snd_writeport)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	MDRV_MACHINE_INIT(metro)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(320, 224)
+	MDRV_VISIBLE_AREA(0, 320-1, 0, 224-1)
+	MDRV_GFXDECODE(gfxdecodeinfo_14100)
+	MDRV_PALETTE_LENGTH(8192)
+
+	MDRV_VIDEO_START(metro_14100)
+	MDRV_VIDEO_UPDATE(metro)
+
+	/* sound hardware */
+	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
+	MDRV_SOUND_ADD(YM2151, ym2151_interface)
+	MDRV_SOUND_ADD(OKIM6295, okim6295_intf_2151balanced)
+MACHINE_DRIVER_END
+
 
 /***************************************************************************
 
@@ -4134,7 +4562,7 @@ MACHINE_DRIVER_END
 
 ***************************************************************************/
 
-static DRIVER_INIT( metro )
+static void metro_common(void)
 {
 	int i;
 
@@ -4168,7 +4596,17 @@ static DRIVER_INIT( metro )
 }
 
 
-DRIVER_INIT( karatour )
+static DRIVER_INIT( metro )
+{
+	metro_common();
+
+	porta = 0x00;
+	portb = 0x00;
+	busy_sndcpu = 0;
+	metro_sound_rombank_w(0, 0x00);
+}
+
+static DRIVER_INIT( karatour )
 {
 	data16_t *RAM = (data16_t *) memory_region( REGION_USER1 );
 int i;
@@ -4177,8 +4615,20 @@ int i;
 	metro_vram_2 = RAM + (0x20000/2) * 2;
 for (i = 0;i < memory_region_length(REGION_USER1)/2;i++)
 	RAM[i] = rand();
+
 	init_metro();
 }
+
+static DRIVER_INIT( daitorid )
+{
+	metro_common();
+
+	porta = 0x00;
+	portb = 0x00;
+	busy_sndcpu = 0;
+	daitorid_sound_rombank_w(0, 0x00);
+}
+
 
 /* Unscramble the GFX ROMs */
 static DRIVER_INIT( balcube )
@@ -4201,30 +4651,45 @@ static DRIVER_INIT( balcube )
 		src  +=  2;
 	}
 
-	init_metro();
+	metro_common();
 	irq_line = 1;
 }
-
 
 static DRIVER_INIT( blzntrnd )
 {
-	init_metro();
+	metro_common();
 	irq_line = 1;
 }
 
-
 static DRIVER_INIT( mouja )
 {
-	init_metro();
+	int step;
+
+	metro_common();
 	irq_line = -1;	/* split interrupt handlers */
+
+	/* generate the OKI6295 volume table */
+	for (step = 0; step < 16; step++)
+	{
+		double out = 256.0;
+		int vol = step;
+
+		/* 3dB per step */
+		while (vol-- > 0)
+			out /= 1.412537545;	/* = 10 ^ (3/20) = 3dB */
+		volume_table[step] = (UINT32)out;
+	}
+
+	mouja_irq_timer = timer_alloc(mouja_irq_callback);
 }
 
 static DRIVER_INIT( gakusai )
 {
-	init_metro();
+	metro_common();
 	irq_line = -1;
 	blitter_bit = 3;
 }
+
 
 /***************************************************************************
 
@@ -4469,8 +4934,9 @@ ROM_START( daitorid )
 	ROM_LOAD16_BYTE( "dt-ja-5.19e", 0x000000, 0x020000, CRC(441efd77) SHA1(18b255f42ba7a180535f0897aaeebe5d2a33df46) )
 	ROM_LOAD16_BYTE( "dt-ja-6.19c", 0x000001, 0x020000, CRC(494f9cc3) SHA1(b88af581fee9e2d94a12a5c1fed0797614bb738e) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "dt-ja-8.3h", 0x000000, 0x020000, CRC(0351ad5b) SHA1(942c1cbb52bf2933aea4209335c1bc4cdd1cc3dd) )
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "dt-ja-8.3h", 0x000000, 0x004000, CRC(0351ad5b) SHA1(942c1cbb52bf2933aea4209335c1bc4cdd1cc3dd) )
+	ROM_CONTINUE(           0x010000, 0x01c000 )
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "dt-ja-2.14h", 0x000000, 0x080000, CRC(56881062) SHA1(150a8f043e61b28c22d0f898aea61853d1accddc) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -4511,8 +4977,9 @@ ROM_START( dharma )
 	ROM_LOAD16_BYTE( "jc-5", 0x000000, 0x020000, CRC(b5d44426) SHA1(d68aaf6b9976ccf5cb665d7ec0afa44e2453094d) )
 	ROM_LOAD16_BYTE( "jc-6", 0x000001, 0x020000, CRC(bc5a202e) SHA1(c2b6d2e44e3605e0525bde4030c5162badad4d4b) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "ja-8", 0x000000, 0x020000, CRC(af7ebc4c) SHA1(6abf0036346da10be56932f9674f8c250a3ea592) )	/* (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)*/
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "ja-8", 0x000000, 0x004000, CRC(af7ebc4c) SHA1(6abf0036346da10be56932f9674f8c250a3ea592) )
+	ROM_CONTINUE(     0x010000, 0x01c000 )
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "jb-2", 0x000000, 0x080000, CRC(2c07c29b) SHA1(26244145139df1ffe2b6ec25a32e5009da6a5aba) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -4566,8 +5033,9 @@ ROM_START( karatour )
 	ROM_LOAD16_BYTE( "kt002.8g",  0x000000, 0x040000, CRC(316a97ec) SHA1(4b099d2fa91822c9c85d647aab3d6779fc400250) )
 	ROM_LOAD16_BYTE( "kt003.10g", 0x000001, 0x040000, CRC(abe1b991) SHA1(9b6327169d66717dd9dd74816bc33eb208c3763c) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "kt001.1i", 0x000000, 0x020000, CRC(1dd2008c) SHA1(488b6f5d15bdbc069ee2cd6d7a0980a228d2f790) )	/* 11xxxxxxxxxxxxxxx = 0xFF*/
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "kt001.1i", 0x000000, 0x004000, CRC(1dd2008c) SHA1(488b6f5d15bdbc069ee2cd6d7a0980a228d2f790) )
+	ROM_CONTINUE(         0x010000, 0x01c000 )
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "ktmask.15f", 0x000000, 0x100000, CRC(f6bf20a5) SHA1(cb4cb249eb1c106fe7ef0ace735c0cc3106f1ab7) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -4616,8 +5084,9 @@ ROM_START( ladykill )
 	ROM_LOAD16_BYTE( "e2.bin",    0x000000, 0x040000, CRC(211a4865) SHA1(4315c0a708383d357d8dd89a1820fe6cf7652adb) )
 	ROM_LOAD16_BYTE( "e3.bin",    0x000001, 0x040000, CRC(581a55ea) SHA1(41bfcaae84e583bf185948ab53ec39c05180a7a4) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "e1.1i",    0x000000, 0x020000, CRC(a4d95cfb) SHA1(2fd8a5cbb0dc289bd5294519dbd5369bfb4c2d4d) )	/* 11xxxxxxxxxxxxxxx = 0xFF*/
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "e1.1i",    0x000000, 0x004000, CRC(a4d95cfb) SHA1(2fd8a5cbb0dc289bd5294519dbd5369bfb4c2d4d) )
+	ROM_CONTINUE(         0x010000, 0x01c000 )
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "ladyj-4.15f", 0x000000, 0x100000, CRC(65e5906c) SHA1(cc3918c2094ca819ec4043055564e1dbff4a4750) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -4637,8 +5106,9 @@ ROM_START( moegonta )
 	ROM_LOAD16_BYTE( "j2.8g",     0x000000, 0x040000, CRC(aa18d130) SHA1(6e0fd3b95d8589665b418bcae4fe64b288289c78) )
 	ROM_LOAD16_BYTE( "j3.10g",    0x000001, 0x040000, CRC(b555e6ab) SHA1(adfc6eafec612c8770b9f832a0a2574c53c3d047) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "e1.1i",    0x000000, 0x020000, CRC(a4d95cfb) SHA1(2fd8a5cbb0dc289bd5294519dbd5369bfb4c2d4d) )	/* 11xxxxxxxxxxxxxxx = 0xFF*/
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "e1.1i",    0x000000, 0x004000, CRC(a4d95cfb) SHA1(2fd8a5cbb0dc289bd5294519dbd5369bfb4c2d4d) )
+	ROM_CONTINUE(         0x010000, 0x01c000 )
 
 	ROM_REGION( 0x400000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "ladyj-4.15f", 0x000000, 0x100000, CRC(65e5906c) SHA1(cc3918c2094ca819ec4043055564e1dbff4a4750) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -4681,8 +5151,9 @@ ROM_START( lastfort )
 	ROM_LOAD16_BYTE( "tr_jc09", 0x000000, 0x020000, CRC(8b98a49a) SHA1(15adca78d54973820d04f8b308dc58d0784eb900) )
 	ROM_LOAD16_BYTE( "tr_jc10", 0x000001, 0x020000, CRC(8d04da04) SHA1(5c7e65a39929e94d1fa99aeb5fed7030b110451f) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "tr_jb12", 0x000000, 0x020000, CRC(8a8f5fef) SHA1(530b4966ec058cd80a2fc5f9e961239ce59d0b89) )	/* (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)*/
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "tr_jb12", 0x000000, 0x004000, CRC(8a8f5fef) SHA1(530b4966ec058cd80a2fc5f9e961239ce59d0b89) )	
+	ROM_CONTINUE(        0x010000, 0x01c000 )
 
 	ROM_REGION( 0x100000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "tr_jc02", 0x000000, 0x020000, CRC(db3c5b79) SHA1(337f4c547a6267f317415cbc78cdac41574b1024) , ROM_SKIP(7))
@@ -4718,8 +5189,9 @@ ROM_START( lastfero )
 	ROM_LOAD16_BYTE( "tre_jc09", 0x000000, 0x020000, CRC(32f43390) SHA1(b5bad9d80f2155f277265fe487a59f0f4ec6575d) )
 	ROM_LOAD16_BYTE( "tre_jc10", 0x000001, 0x020000, CRC(9536369c) SHA1(39291e92c107be35d130ff29533b42581efc308b) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "tr_jb12", 0x000000, 0x020000, CRC(8a8f5fef) SHA1(530b4966ec058cd80a2fc5f9e961239ce59d0b89) )	/* (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)*/
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "tr_jb12", 0x000000, 0x004000, CRC(8a8f5fef) SHA1(530b4966ec058cd80a2fc5f9e961239ce59d0b89) )	
+	ROM_CONTINUE(        0x010000, 0x01c000 )
 
 	ROM_REGION( 0x100000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "tre_jc02", 0x000000, 0x020000, CRC(11cfbc84) SHA1(fb7005be7678564713b5480569f2cdab6c36f029) , ROM_SKIP(7))
@@ -4921,8 +5393,9 @@ ROM_START( pangpoms )
 	ROM_LOAD16_BYTE( "ppoms09.bin", 0x000000, 0x020000, CRC(0c292dbc) SHA1(8b09de2a560e804e0dea514c95b317c2e2b6501d) )
 	ROM_LOAD16_BYTE( "ppoms10.bin", 0x000001, 0x020000, CRC(0bc18853) SHA1(68d50ad50caad34e72d32e7b9fea1d85af74b879) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "ppoms12.bin", 0x000000, 0x020000, CRC(a749357b) SHA1(1555f565c301c5be7c49fc44a004b5c0cb3777c6) )
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "ppoms12.bin", 0x000000, 0x004000, CRC(a749357b) SHA1(1555f565c301c5be7c49fc44a004b5c0cb3777c6) )
+	ROM_CONTINUE(            0x010000, 0x01c000 )
 
 	ROM_REGION( 0x100000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "ppoms02.bin", 0x000000, 0x020000, CRC(88f902f7) SHA1(12ea58d7c000b629ccdceec3dedc2747a63b84be) , ROM_SKIP(7))
@@ -4943,8 +5416,9 @@ ROM_START( pangpomm )
 	ROM_LOAD16_BYTE( "pa.c09", 0x000000, 0x020000, CRC(e01a7a08) SHA1(1890b290dfb1521ab73b2392409aaf44b99d63bb) )
 	ROM_LOAD16_BYTE( "pa.c10", 0x000001, 0x020000, CRC(5e509cee) SHA1(821cfbf5f65cc3091eb8008310266f9f2c838072) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "ppoms12.bin", 0x000000, 0x020000, CRC(a749357b) SHA1(1555f565c301c5be7c49fc44a004b5c0cb3777c6) )
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "ppoms12.bin", 0x000000, 0x004000, CRC(a749357b) SHA1(1555f565c301c5be7c49fc44a004b5c0cb3777c6) )
+	ROM_CONTINUE(            0x010000, 0x01c000 )
 
 	ROM_REGION( 0x100000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "ppoms02.bin", 0x000000, 0x020000, CRC(88f902f7) SHA1(12ea58d7c000b629ccdceec3dedc2747a63b84be) , ROM_SKIP(7))
@@ -4997,8 +5471,9 @@ ROM_START( poitto )
 	ROM_LOAD16_BYTE( "pt-jd05.20e", 0x000000, 0x020000, CRC(6b1be034) SHA1(270c94f6017c5ce77f562bfe17273c79d4455053) )
 	ROM_LOAD16_BYTE( "pt-jd06.20c", 0x000001, 0x020000, CRC(3092d9d4) SHA1(4ff95355fdf94eaa55c0ad46e6ce3b505e3ef790) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "pt-jc08.3i", 0x000000, 0x020000, CRC(f32d386a) SHA1(655c561aec1112d88c1b94725e932059e5d1d5a8) )	/* 1xxxxxxxxxxxxxxxx = 0xFF*/
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "pt-jc08.3i", 0x000000, 0x004000, CRC(f32d386a) SHA1(655c561aec1112d88c1b94725e932059e5d1d5a8) )
+	ROM_CONTINUE(           0x010000, 0x01c000 )
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "pt-2.15i", 0x000000, 0x080000, CRC(05d15d01) SHA1(24405908fb8207228cd3419657e0be49e413f152) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -5038,8 +5513,9 @@ ROM_START( puzzli )
 	ROM_LOAD16_BYTE( "pz.jb5",       0x000000, 0x020000, CRC(33bbbd28) SHA1(41a98cfbdd60a638e4aa08f15f1730a2436106f9) )
 	ROM_LOAD16_BYTE( "pz.jb6",       0x000001, 0x020000, CRC(e0bdea18) SHA1(9941a2cd88d7a3c1a640f837d9f34c39ba643ee5) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "pz.jb8",      0x000000, 0x020000, CRC(c652da32) SHA1(907eba5103373ca6204f9d62c426ccdeef0a3791) )
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "pz.jb8",      0x000000, 0x004000, CRC(c652da32) SHA1(907eba5103373ca6204f9d62c426ccdeef0a3791) )
+	ROM_CONTINUE(            0x010000, 0x01c000 )
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "pz.jb2",       0x000000, 0x080000, CRC(0c0997d4) SHA1(922d8553ef505f65238e5cc77b45861a80022d75) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -5068,8 +5544,9 @@ ROM_START( 3kokushi )
 	ROM_LOAD16_BYTE( "5.bin",        0x000000, 0x040000, CRC(6104ea35) SHA1(efb4a9a98577894fac720028f18cb9877a00239a) )
 	ROM_LOAD16_BYTE( "6.bin",        0x000001, 0x040000, CRC(aac25540) SHA1(811de761bb1b3cc47d811b00f4b5c960c8f061d0) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "8.bin",       0x000000, 0x020000, CRC(f56cca45) SHA1(4739b83b0b3a4235fac10def3d26b0bd190eb12a) )	/* (c)1992 Imagetek (11xxxxxxxxxxxxxxx = 0xFF)*/
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "8.bin",       0x000000, 0x004000, CRC(f56cca45) SHA1(4739b83b0b3a4235fac10def3d26b0bd190eb12a) )	
+	ROM_CONTINUE(            0x010000, 0x01c000 )
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "2.bin",        0x000000, 0x080000, CRC(291f8149) SHA1(82f460517543ef544c21a81e51987fb2f5c6273d) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -5121,8 +5598,9 @@ ROM_START( pururun )
 	ROM_LOAD16_BYTE( "pu9-19-5.20e", 0x000000, 0x020000, CRC(5a466a1b) SHA1(032eeaf66ce1b601385a8e76d2efd9ea6fd34680) )
 	ROM_LOAD16_BYTE( "pu9-19-6.20c", 0x000001, 0x020000, CRC(d155a53c) SHA1(6916a1bad82c624b8757f5124416dac50a8dd7f5) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "pu9-19-8.3i", 0x000000, 0x020000, CRC(edc3830b) SHA1(13ee759d10711218465f6d7155e9c443a82b323c) )
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "pu9-19-8.3i", 0x000000, 0x004000, CRC(edc3830b) SHA1(13ee759d10711218465f6d7155e9c443a82b323c) )
+	ROM_CONTINUE(            0x010000, 0x01c000 )
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "pu9-19-2.14i", 0x000000, 0x080000, CRC(21550b26) SHA1(cb2a2f672cdca84def2fac8d325b7a80a1e9bfc0) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -5153,8 +5631,9 @@ ROM_START( skyalert )
 	ROM_LOAD16_BYTE( "sa_c_09.bin", 0x000000, 0x020000, CRC(6f14d9ae) SHA1(37e134af3d8461280dab971bc3ee9112f25de335) )
 	ROM_LOAD16_BYTE( "sa_c_10.bin", 0x000001, 0x020000, CRC(f10bb216) SHA1(d904030fbb838d906ca69a77cffe286e903b273d) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "sa_b_12.bin", 0x000000, 0x020000, CRC(f358175d) SHA1(781d0f846217aa71e3c6d73c1d63bd87d1fa6b48) )	/* (c)1992 Imagetek (1xxxxxxxxxxxxxxxx = 0xFF)*/
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "sa_b_12.bin", 0x000000, 0x004000, CRC(f358175d) SHA1(781d0f846217aa71e3c6d73c1d63bd87d1fa6b48) )	
+	ROM_CONTINUE(            0x010000, 0x01c000 )
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "sa_a_02.bin", 0x000000, 0x040000, CRC(f4f81d41) SHA1(85e587b4fda71fa5b944b0ac158d36c00e290f5f) , ROM_SKIP(7))
@@ -5207,8 +5686,9 @@ ROM_START( toride2g )
 	ROM_LOAD16_BYTE( "tr2aja-5.20e", 0x000000, 0x040000, CRC(b96a52f6) SHA1(353b5599d50d96b96bdd6352c046ad669cf8da44) )
 	ROM_LOAD16_BYTE( "tr2aja-6.20c", 0x000001, 0x040000, CRC(2918b6b4) SHA1(86ebb884759dc9a8a701784d19845467aa1ce11b) )
 
-	ROM_REGION( 0x020000, REGION_CPU2, 0 )		/* NEC78C10 Code */
-	ROM_LOAD( "tr2aja-8.3i", 0x000000, 0x020000, CRC(fdd29146) SHA1(8e996e1afd33f16d35ebf5a40829feb3e92f781f) )
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "tr2aja-8.3i", 0x000000, 0x004000, CRC(fdd29146) SHA1(8e996e1afd33f16d35ebf5a40829feb3e92f781f) )
+	ROM_CONTINUE(            0x010000, 0x01c000 )
 
 	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
 	ROMX_LOAD( "tr2aja-2.14i", 0x000000, 0x080000, CRC(5c73f629) SHA1(b38b7ee213bcc0dd5e4c339a8f9f2fdd81ede6ad) , ROM_GROUPWORD | ROM_SKIP(6))
@@ -5220,6 +5700,41 @@ ROM_START( toride2g )
 	ROM_LOAD( "tr2aja-7.3g", 0x000000, 0x020000, CRC(630c6193) SHA1(ddb63724e0b0f7264cb02904e49b24b87beb35a9) )
 ROM_END
 
+ROM_START( gunmast )
+	ROM_REGION( 0x080000, REGION_CPU1, 0 )		/* 68000 Code */
+	ROM_LOAD16_BYTE( "gmja-5.20e", 0x000000, 0x040000, CRC(7334b2a3) SHA1(23f0a00b7539329f23eb564bc2823383997f83a9) )
+	ROM_LOAD16_BYTE( "gmja-6.20c", 0x000001, 0x040000, CRC(c38d185e) SHA1(fdbc16a6ffc791778cb7ac2dafd15f4eb72c4cf9) )
+
+	ROM_REGION( 0x02c000, REGION_CPU2, 0 )		/* NEC78C10 Code */
+	ROM_LOAD( "gmja-8.3i", 0x000000, 0x004000, CRC(ab4bcc56) SHA1(9ef91e14d0974f30c874a12370ddd04ee8ab6d5d) )
+	ROM_CONTINUE(          0x010000, 0x01c000 )
+
+	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
+	ROMX_LOAD( "gmja-2.14i", 0x000000, 0x080000, CRC(bc9acd54) SHA1(e6154cc5e8e33b38f56a0055dd0a51aa6adc4f9c) , ROM_GROUPWORD | ROM_SKIP(6))
+	ROMX_LOAD( "gmja-4.18i", 0x000002, 0x080000, CRC(f2d72d90) SHA1(575a01999e4608d1503904ba22310413b680b2b9) , ROM_GROUPWORD | ROM_SKIP(6))
+	ROMX_LOAD( "gmja-1.12i", 0x000004, 0x080000, CRC(336d0a90) SHA1(39ff59ba13e21f2a8488e5dc2d44cf2c50f7c4fb) , ROM_GROUPWORD | ROM_SKIP(6))
+	ROMX_LOAD( "gmja-3.16i", 0x000006, 0x080000, CRC(a6651297) SHA1(cdfb8a176cced552a9e72d39980c7fb005edf4f9) , ROM_GROUPWORD | ROM_SKIP(6))
+
+	ROM_REGION( 0x040000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
+	ROM_LOAD( "gmja-7.3g", 0x000000, 0x040000, CRC(3a342312) SHA1(5c31bc9ec5159e1a0c9a931c7b702a31d3a1af10) )
+ROM_END
+
+ROM_START( msgogo )
+	ROM_REGION( 0x080000, REGION_CPU1, 0 )		/* 68000 Code */
+	ROM_LOAD16_BYTE( "ms_wa-6.6", 0x000000, 0x040000, CRC(986acac8) SHA1(97c24f5b730aa811951db4c7e9c894c0701c58fd) )
+	ROM_LOAD16_BYTE( "ms_wa-5.5", 0x000001, 0x040000, CRC(746d9f99) SHA1(6e3e34dfb67fecc93213fe040465eccd88575822) )
+
+	ROM_REGION( 0x200000, REGION_GFX1, 0 )	/* Gfx + Data (Addressable by CPU & Blitter) */
+	ROMX_LOAD( "ms_wa-2.2", 0x000000, 0x080000, CRC(0d36c2b9) SHA1(3fd6631ad657c73e7e6bfdff9d9caf5ab044bdeb), ROM_GROUPWORD | ROM_SKIP(6))
+	ROMX_LOAD( "ms_wa-4.4", 0x000002, 0x080000, CRC(fd387126) SHA1(a2f82a66b098a97d8f245e3c2f96c31c63642fec), ROM_GROUPWORD | ROM_SKIP(6))
+	ROMX_LOAD( "ms_ja-1.1", 0x000004, 0x080000, CRC(8ec4e81d) SHA1(46947ad2941af154f91e47acee281302a12e3aa5), ROM_GROUPWORD | ROM_SKIP(6))
+	ROMX_LOAD( "ms_wa-3.3", 0x000006, 0x080000, CRC(06cb6807) SHA1(d7303b4047983117cd33e057b1f4b98ed3f7dd32), ROM_GROUPWORD | ROM_SKIP(6))
+
+	ROM_REGION( 0x280000, REGION_SOUND1, ROMREGION_SOUNDONLY )	/* Samples */
+	ROM_LOAD( "yrw801-m",  0x000000, 0x200000, CRC(2a9d8d43) SHA1(32760893ce06dbe3930627755ba065cc3d8ec6ca) )
+	ROM_LOAD( "ms_wa-7.7", 0x200000, 0x080000, CRC(e19941cb) SHA1(93777c9cd22ddd33d9584b6edad33b95c1e28bde) )
+ROM_END
+
 
 /***************************************************************************
 
@@ -5229,28 +5744,30 @@ ROM_END
 
 ***************************************************************************/
 
-GAMEX( 1992, karatour, 0,        karatour, karatour, karatour, ROT0,   "Mitchell",                   "The Karate Tournament",           GAME_NO_SOUND )
-GAMEX( 1992, pangpoms, 0,        pangpoms, pangpoms, metro,    ROT0,   "Metro",                      "Pang Poms",                       GAME_NO_SOUND )
-GAMEX( 1992, pangpomm, pangpoms, pangpoms, pangpoms, metro,    ROT0,   "Metro (Mitchell license)",   "Pang Poms (Mitchell)",            GAME_NO_SOUND )
-GAMEX( 1992, skyalert, 0,        skyalert, skyalert, metro,    ROT270, "Metro",                      "Sky Alert",                       GAME_NO_SOUND )
-GAMEX( 1993?,ladykill, 0,        karatour, ladykill, karatour, ROT90,  "Yanyaka (Mitchell license)", "Lady Killer",                     GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1993?,moegonta, ladykill, karatour, moegonta, karatour, ROT90,  "Yanyaka",                    "Moeyo Gonta!! (Japan)",           GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1993, poitto,   0,        poitto,   poitto,   metro,    ROT0,   "Metro / Able Corp.",         "Poitto!",                         GAME_NO_SOUND )
-GAMEX( 1994, dharma,   0,        dharma,   dharma,   metro,    ROT0,   "Metro",                      "Dharma Doujou",                   GAME_NO_SOUND )
-GAMEX( 1994, lastfort, 0,        lastfort, lastfort, metro,    ROT0,   "Metro",                      "Last Fortress - Toride",          GAME_NO_SOUND )
-GAMEX( 1994, lastfero, lastfort, lastfort, lastfero, metro,    ROT0,   "Metro",                      "Last Fortress - Toride (Erotic)", GAME_NO_SOUND )
-GAMEX( 1994, toride2g, 0,        toride2g, toride2g, metro,    ROT0,   "Metro",                      "Toride II Adauchi Gaiden",        GAME_NO_SOUND )
-GAMEX( 1995, daitorid, 0,        daitorid, daitorid, metro,    ROT0,   "Metro",                      "Daitoride",                       GAME_NO_SOUND )
+GAME ( 1992, karatour, 0,        karatour, karatour, karatour, ROT0,   "Mitchell",                   "The Karate Tournament"                          )
+GAME ( 1992, pangpoms, 0,        pangpoms, pangpoms, metro,    ROT0,   "Metro",                      "Pang Poms"                                      )
+GAME ( 1992, pangpomm, pangpoms, pangpoms, pangpoms, metro,    ROT0,   "Metro (Mitchell license)",   "Pang Poms (Mitchell)"                           )
+GAME ( 1992, skyalert, 0,        skyalert, skyalert, metro,    ROT270, "Metro",                      "Sky Alert"                                      )
+GAMEX( 1993?,ladykill, 0,        karatour, ladykill, karatour, ROT90,  "Yanyaka (Mitchell license)", "Lady Killer",                     GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1993?,moegonta, ladykill, karatour, moegonta, karatour, ROT90,  "Yanyaka",                    "Moeyo Gonta!! (Japan)",           GAME_IMPERFECT_GRAPHICS )
+GAME ( 1993, poitto,   0,        poitto,   poitto,   metro,    ROT0,   "Metro / Able Corp.",         "Poitto!"                                        )
+GAME ( 1994, dharma,   0,        dharma,   dharma,   metro,    ROT0,   "Metro",                      "Dharma Doujou"                                  )
+GAME ( 1994, lastfort, 0,        lastfort, lastfort, metro,    ROT0,   "Metro",                      "Last Fortress - Toride"                         )
+GAME ( 1994, lastfero, lastfort, lastfort, lastfero, metro,    ROT0,   "Metro",                      "Last Fortress - Toride (Erotic)"                )
+GAME ( 1994, toride2g, 0,        toride2g, toride2g, metro,    ROT0,   "Metro",                      "Toride II Adauchi Gaiden"                       )
+GAME ( 1995, daitorid, 0,        daitorid, daitorid, metro,    ROT0,   "Metro",                      "Daitoride"                                      )
 GAME ( 1995, dokyusei, 0,        dokyusei, dokyusei, gakusai,  ROT0,   "Make Software / Elf / Media Trading", "Mahjong Doukyuusei"                    )
 GAME ( 1995, dokyusp,  0,        dokyusp,  gakusai,  gakusai,  ROT0,   "Make Software / Elf / Media Trading", "Mahjong Doukyuusei Special"            )
-GAMEX( 1995, pururun,  0,        pururun,  pururun,  metro,    ROT0,   "Metro / Banpresto",          "Pururun",                         GAME_NO_SOUND )
-GAMEX( 1995, puzzli,   0,        daitorid, puzzli,   metro,    ROT0,   "Metro / Banpresto",          "Puzzli",                          GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1996, 3kokushi, 0,        3kokushi, 3kokushi, karatour, ROT0,   "Mitchell",                   "Sankokushi (Japan)",              GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME ( 1995, pururun,  0,        pururun,  pururun,  metro,    ROT0,   "Metro / Banpresto",          "Pururun"                                        )
+GAMEX( 1995, puzzli,   0,        daitorid, puzzli,   metro,    ROT0,   "Metro / Banpresto",          "Puzzli",                          GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1996, 3kokushi, 0,        3kokushi, 3kokushi, karatour, ROT0,   "Mitchell",                   "Sankokushi (Japan)",              GAME_IMPERFECT_GRAPHICS )
 GAME ( 1996, balcube,  0,        balcube,  balcube,  balcube,  ROT0,   "Metro",                      "Bal Cube"                                       )
 GAME ( 1996, bangball, 0,        bangball, bangball, balcube,  ROT0,   "Banpresto / Kunihiko Tashiro+Goodhouse", "Bang Bang Ball (v1.05)"             )
 GAMEX( 1996, mouja,    0,        mouja,    mouja,    mouja,    ROT0,   "Etona",                      "Mouja (Japan)",                   GAME_NO_COCKTAIL )
 GAMEX( 1997, gakusai,  0,        gakusai,  gakusai,  gakusai,  ROT0,   "MakeSoft",                   "Mahjong Gakuensai (Japan)",       GAME_IMPERFECT_GRAPHICS )
 GAME ( 1998, gakusai2, 0,        gakusai2, gakusai,  gakusai,  ROT0,   "MakeSoft",                   "Mahjong Gakuensai 2 (Japan)"                    )
+GAME ( 1994, gunmast,  0,        gunmast,  gunmast,  daitorid, ROT0,   "Metro",                      "Gun Master"                                     )
+GAME ( 1995, msgogo,   0,        msgogo,   msgogo,   balcube,  ROT0,   "Metro",                      "Mouse Shooter GoGo"                             ) 
 
 GAMEX( 1994, blzntrnd, 0,        blzntrnd, blzntrnd, blzntrnd, ROT0,   "Human Amusement",            "Blazing Tornado",                 GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1996, gstrik2,  0,        gstrik2,  gstrik2,  blzntrnd, ROT0,   "Human Amusement",            "Grand Striker 2 (Japan)",			GAME_IMPERFECT_GRAPHICS ) /* priority between rounds*/
