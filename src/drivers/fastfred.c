@@ -46,6 +46,59 @@ static READ_HANDLER( fastfred_custom_io_r )
     return 0x00;
 }
 
+static READ_HANDLER( flyboy_custom1_io_r )
+{
+
+	switch (activecpu_get_pc())
+	{
+	 case 0x049d: return 0xad;	/* compare */
+	 case 0x04b9:			/* compare with 0x9e ??? When ??? */
+	 case 0x0563: return 0x03;	/* $c085 compare - starts game */
+	 case 0x069b: return 0x69;	/* $c086 compare         */
+	 case 0x076b: return 0xbb;	/* $c087 compare         */
+	 case 0x0852: return 0xd9;	/* $c096 compare         */
+	 case 0x09d5: return 0xa4;	/* $c099 compare         */
+	 case 0x0a83: return 0xa4;	/* $c099 compare         */
+	 case 0x1028:			/* $c08a  bit 0  compare */
+	 case 0x1051:			/* $c08a  bit 3  compare */
+	 case 0x107d:			/* $c08c  bit 5  compare */
+	 case 0x10a7:			/* $c08e  bit 1  compare */
+	 case 0x10d0:			/* $c08d  bit 2  compare */
+	 case 0x10f6:			/* $c090  bit 0  compare */
+	 case 0x3fb6:			/* lddr */
+
+	 return 0x00;
+	}
+
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Uncaught custom I/O read %04X at %04X\n", 0xc085+offset, activecpu_get_pc());
+	return 0x00;
+}
+
+static READ_HANDLER( flyboy_custom2_io_r )
+{
+
+	switch (activecpu_get_pc())
+	{
+	 case 0x0395: return 0xf7;	/* $C900 compare         */
+	 case 0x03f5:			/* $c8fd                 */
+	 case 0x043d:			/* $c8fd                 */
+	 case 0x0471:			/* $c900                 */
+	 case 0x1031: return 0x01;	/* $c8fe  bit 0  compare */
+	 case 0x1068: return 0x04;	/* $c8fe  bit 2  compare */
+	 case 0x1093: return 0x20;	/* $c8fe  bit 5  compare */
+	 case 0x10bd: return 0x80;	/* $c8fb  bit 7  compare */
+	 case 0x103f:			/* $c8fe                 */
+	 case 0x10e4:			/* $c900                 */
+	 case 0x110a:			/* $c900                 */
+	 case 0x3fc8:			/* ld a with c8fc-c900   */
+
+	 return 0x00;
+	}
+
+	log_cb(RETRO_LOG_ERROR, LOGPRE "Uncaught custom I/O read %04X at %04X\n", 0xc8fb+offset, activecpu_get_pc());
+	return 0x00;
+}
+
 static READ_HANDLER( jumpcoas_custom_io_r )
 {
 	if (offset == 0x100)  return 0x63;
@@ -836,6 +889,13 @@ extern int fastfred_hardware_type;
 
 static DRIVER_INIT( flyboy )
 {
+	install_mem_read_handler( 0, 0xc085, 0xc099, flyboy_custom1_io_r);
+	install_mem_read_handler( 0, 0xc8fb, 0xc900, flyboy_custom2_io_r);
+	fastfred_hardware_type = 1;
+}
+
+static DRIVER_INIT( flyboyb )
+{
 	fastfred_hardware_type = 1;
 }
 
@@ -865,10 +925,10 @@ static DRIVER_INIT( imago )
 	fastfred_hardware_type = 3;
 }
 
-GAMEX(1982, flyboy,   0,      fastfred, flyboy,   flyboy,   ROT90, "Kaneko", "Fly-Boy", GAME_NOT_WORKING )	/* protection */
-GAME( 1982, flyboyb,  flyboy, fastfred, flyboy,   flyboy,   ROT90, "Kaneko", "Fly-Boy (bootleg)" )
+GAME( 1982, flyboy,   0,      fastfred, flyboy,   flyboy,   ROT90, "Kaneko", "Fly-Boy" )
+GAME( 1982, flyboyb,  flyboy, fastfred, flyboy,   flyboyb,  ROT90, "Kaneko", "Fly-Boy (bootleg)" )
 GAME( 1982, fastfred, flyboy, fastfred, fastfred, fastfred, ROT90, "Atari", "Fast Freddie" )
 GAME( 1983, jumpcoas, 0,      jumpcoas, jumpcoas, jumpcoas, ROT90, "Kaneko", "Jump Coaster" )
 GAME( 1983, boggy84,  0,      jumpcoas, boggy84,  boggy84,  ROT90, "bootleg", "Boggy '84" )
 GAME( 1986, redrobin, 0,      fastfred, redrobin, flyboy,   ROT90, "Elettronolo", "Red Robin" )
-GAMEX(1983, imago,	  0,	  imago,	imago,	  imago,	ROT90, "Acom", "Imago", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS )
+GAMEX(1983, imago,    0,      imago,	imago,	  imago,    ROT90, "Acom", "Imago", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS )
