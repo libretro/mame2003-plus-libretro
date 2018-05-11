@@ -261,24 +261,17 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 
 	for (i = 0;i < samples->total;i++)
 	{
-        mame_file *f;
+		mame_file *f;
 
-        if (samplenames[i+skipfirst][0])
+		if (samplenames[i+skipfirst][0])
 		{
-            if ((f = mame_fopen(basename,samplenames[i+skipfirst],FILETYPE_SAMPLE,0)) == 0)
-            {
+			if ((f = mame_fopen(basename,samplenames[i+skipfirst],FILETYPE_SAMPLE,0)) == 0)
 				if (skipfirst)
-                {
 					f = mame_fopen(samplenames[0]+1,samplenames[i+skipfirst],FILETYPE_SAMPLE,0);
-                    if (f != 0)
-                        log_cb(RETRO_LOG_INFO,  LOGPRE "Loaded %s.wav from %s.zip\n", samplenames[i+skipfirst], samplenames[0]+1);
-
-                } 
-            } else
-                log_cb(RETRO_LOG_INFO,  LOGPRE "Loaded %s.wav from %s.zip\n", samplenames[i+skipfirst], basename);
-
-            if (f != 0)
+			if (f != 0)
 			{
+				/*just use the unzipped name for now if you want directory and zip printed differently i can add code for that*/
+				log_cb(RETRO_LOG_INFO, LOGPRE "%s->%s\n", samplenames[0]+1,samplenames[i+skipfirst]);
 				samples->sample[i] = read_wav_sample(f);
 				mame_fclose(f);
 			}
