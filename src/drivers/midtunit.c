@@ -97,7 +97,7 @@ static struct Samplesinterface mk_samples_tunit =
 
 const char *const nba_jam_sample_names_tunit[] =
 {
-	"*nbajam.wav",
+	"*nbajam",
 	"main-theme-01.wav",
 	"main-theme-02.wav",
 	"team-select-01.wav",
