@@ -34,7 +34,7 @@
 static UINT8 *slapstic_source;
 static UINT8 *slapstic_base;
 static UINT8 current_bank;
-static UINT8 is_esb;
+UINT8 starwars_is_esb;
 
 
 
@@ -47,7 +47,7 @@ static UINT8 is_esb;
 MACHINE_INIT( starwars )
 {
 	/* ESB-specific */
-	if (is_esb)
+	if (starwars_is_esb)
 	{
 		/* reset the slapstic */
 		slapstic_reset();
@@ -557,7 +557,7 @@ ROM_END
 static DRIVER_INIT( starwars )
 {
 	/* prepare the mathbox */
-	is_esb = 0;
+	starwars_is_esb = 0;
 	swmathbox_init();
 }
 
@@ -580,7 +580,7 @@ static DRIVER_INIT( esb )
 	install_mem_read_handler(0, 0xa000, 0xffff, MRA_BANK2);
 
 	/* prepare the mathbox */
-	is_esb = 1;
+	starwars_is_esb = 1;
 	swmathbox_init();
 }
 

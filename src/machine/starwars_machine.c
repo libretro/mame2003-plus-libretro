@@ -86,12 +86,12 @@ WRITE_HANDLER( starwars_out_w )
 			if (data & 0x80)
 			{
 				cpu_setbank(1, &RAM[0x10000]);
-				cpu_setbank(2, &RAM[0x1c000]);
+			    if (starwars_is_esb) cpu_setbank(2, &RAM[0x1c000]);
 			}
 			else
 			{
 				cpu_setbank(1, &RAM[0x06000]);
-				cpu_setbank(2, &RAM[0x0a000]);
+				if (starwars_is_esb) cpu_setbank(2, &RAM[0x0a000]);
 			}
 			break;
 
@@ -291,7 +291,10 @@ void run_mbox(void)
 		if (IP15_8 & LDC)
 		{
 			C = RAMWORD;
-			ACC=ACC+(  ( (long)((A-B)*C) )>>14  );
+			/* TODO: this next line is accurate to the schematics, but doesn't seem to work right */
+			/* ACC=ACC+(  ( (long)((A-B)*C) )>>14  ); */
+			/* round the result - this fixes bad trench vectors in Star Wars */
+			ACC += ((((long)((A - B) * C)) >> 13) + 1) >> 1;
 		}
 
 		/* 0x40 - LDB */
