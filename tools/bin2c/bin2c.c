@@ -112,17 +112,17 @@ emit(const char *name)
   int file_length = 0;
   int col = COLUMNS;
 
-  /*printf("static const char ");
+  /*printf("const char ");
   emit_name(name);
   printf("_source[] = \"%s\";\n\n", name);*/
-  printf("static const unsigned char ");
+  printf("const unsigned char ");
   emit_name(name);
   printf("_bytes[] = {");
   for (;;) {
     int ch = getchar();
     if (ch == EOF) {
       printf("\n};\n\n");
-      printf("static const unsigned int ");
+      printf("const unsigned int ");
       emit_name(name);
       printf("_length = %i;", file_length);      
       return 0;

@@ -1,6 +1,7 @@
 #include "driver.h"
 #include "eeprom.h"
 #include "state.h"
+#include "bootstrap.h"
 
 #define VERBOSE 0
 
@@ -18,17 +19,6 @@ static int eeprom_clock_count;
 static int latch,reset_line,clock_line,sending;
 static int locked;
 static int reset_delay;
-
-static const unsigned char bubblem_bootstrap_nvram[] = {
-   84, 65, 73, 84, 79,  3, 48, 49, 49, 48,224,  1, 17, 18, 48,  0,  0,  0,
-    2,  4,255,247, 34, 18,  0,  0,  0,  0,  0,  0,108,231,255,255,255,255,
-  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,
-};
 
 /*
 	EEPROM_command_match:
@@ -114,7 +104,7 @@ void nvram_handler_93C46(mame_file *file,int read_or_write)
     else if(strcasecmp(Machine->gamedrv->name, "bubblem") == 0)
     {
       
-			file = spawn_bootstrap_nvram(bubblem_bootstrap_nvram, sizeof(bubblem_bootstrap_nvram));
+			file = spawn_bootstrap_nvram(bubblem_bootstrap_bytes, bubblem_bootstrap_length);
       if(file)
 			   EEPROM_load(file);
 		}

@@ -166,7 +166,7 @@ static void hs_load (void)
 	if (f)
 	{
 		struct mem_range *mem_range = state.mem_range;
-		log_cb(RETRO_LOG_INFO, "[MAME 2003] loading %s.hi hiscore memory file...\n", Machine->gamedrv->name);
+		log_cb(RETRO_LOG_INFO, LOGPRE "loading %s.hi hiscore memory file...\n", Machine->gamedrv->name);
         
 		while (mem_range)
 		{
@@ -193,7 +193,7 @@ static void hs_save (void)
 	if (f)
 	{
 		struct mem_range *mem_range = state.mem_range;
-		log_cb(RETRO_LOG_INFO, "[MAME 2003] saving %s.hi hiscore memory file...\n", Machine->gamedrv->name);
+		log_cb(RETRO_LOG_INFO, LOGPRE "saving %s.hi hiscore memory file...\n", Machine->gamedrv->name);
 		while (mem_range)
 		{
 			UINT8 *data = malloc (mem_range->num_bytes);

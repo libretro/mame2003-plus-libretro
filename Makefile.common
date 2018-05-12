@@ -23,6 +23,7 @@ SOURCES_C := \
 
 SOURCES_C += \
 	$(CORE_DIR)/artwork.c \
+	$(CORE_DIR)/bootstrap.c \
 	$(CORE_DIR)/common.c \
 	$(CORE_DIR)/config.c \
 	$(CORE_DIR)/cpuexec.c \
