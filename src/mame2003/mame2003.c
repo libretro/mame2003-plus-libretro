@@ -587,75 +587,79 @@ void retro_describe_buttons(void)
 
 bool retro_load_game(const struct retro_game_info *game)
 {
-    char            *driver_lookup;
-    int             orientation;
-    unsigned        rotateMode;
-    static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
+  char            *driver_lookup;
+  int             orientation;
+  unsigned        rotateMode;
+  static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
 
-    retro_describe_buttons();
-    
-    log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
+  retro_describe_buttons();
+  
+  log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
+  if(strcasecmp(path_get_extension(game->path), "zip") != 0)
+  {
+     log_cb(RETRO_LOG_ERROR, LOGPRE "game->path does not end in .zip - only zip files are supported. Exiting!");
+  }
 
-    driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
+  driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
+  log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
 
-    if (string_is_empty(driver_lookup))
-    {
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist or lacks a file extension. Exiting!\n");
+  if(string_is_empty(driver_lookup))
+  {
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist. Exiting!\n");
+    return false;
+  }
+
+  /* Search list */
+  for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
+  {
+     if ((strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0) 
+      || (strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0) )
+     {
+        log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: [%s].\n", (int) total_drivers, drivers[driverIndex]->name);
+        options.romset_filename_noext = driver_lookup;
+        break;          
+     }
+  }
+
+  if(driverIndex == total_drivers)
+  {
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!", (int) total_drivers);
       return false;
-    }
+  }
 
+  options.libretro_content_path = strdup(game->path);
+  path_basedir(options.libretro_content_path);
 
-    /* Search list */
-    for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
-    {
-       if ( (strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0) || ( strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0) )
-       {
-          log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: [%s].\n", (int) total_drivers, drivers[driverIndex]->name);
-          options.romset_filename_noext = driver_lookup;
-          break;          
-       }
-    }
+  /* Get system directory from frontend */
+  options.libretro_system_path = NULL;
+  environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&options.libretro_system_path);
+  if (options.libretro_system_path == NULL || options.libretro_system_path[0] == '\0')
+  {
+      log_cb(RETRO_LOG_INFO, LOGPRE "libretro system path not set by frontend, using content path\n");
+      options.libretro_system_path = options.libretro_content_path;
+  }
+  
+  /* Get save directory from frontend */
+  options.libretro_save_path = NULL;
+  environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&options.libretro_save_path);
+  if (options.libretro_save_path == NULL || options.libretro_save_path[0] == '\0')
+  {
+      log_cb(RETRO_LOG_INFO,  LOGPRE "libretro save path not set by frontent, using content path\n");
+      options.libretro_save_path = options.libretro_content_path;
+  }
+  
+  /* Setup Rotation */
+  rotateMode = 0;        
+  orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
+  
+  rotateMode = (orientation == ROT270) ? 1 : rotateMode;
+  rotateMode = (orientation == ROT180) ? 2 : rotateMode;
+  rotateMode = (orientation == ROT90) ? 3 : rotateMode;
+  
+  environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
+  options.ui_orientation = uiModes[rotateMode];
 
-    if(driverIndex == total_drivers)
-    {
-        log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!", (int) total_drivers);
-        return false;
-    }
-
-    options.libretro_content_path = strdup(game->path);
-    path_basedir(options.libretro_content_path);
-
-    /* Get system directory from frontend */
-    options.libretro_system_path = NULL;
-    environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&options.libretro_system_path);
-    if (options.libretro_system_path == NULL || options.libretro_system_path[0] == '\0')
-    {
-        log_cb(RETRO_LOG_INFO, LOGPRE "libretro system path not set by frontend, using content path\n");
-        options.libretro_system_path = options.libretro_content_path;
-    }
-    
-    /* Get save directory from frontend */
-    options.libretro_save_path = NULL;
-    environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&options.libretro_save_path);
-    if (options.libretro_save_path == NULL || options.libretro_save_path[0] == '\0')
-    {
-        log_cb(RETRO_LOG_INFO,  LOGPRE "libretro save path not set by frontent, using content path\n");
-        options.libretro_save_path = options.libretro_content_path;
-    }
-    
-    /* Setup Rotation */
-    rotateMode = 0;        
-    orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
-    
-    rotateMode = (orientation == ROT270) ? 1 : rotateMode;
-    rotateMode = (orientation == ROT180) ? 2 : rotateMode;
-    rotateMode = (orientation == ROT90) ? 3 : rotateMode;
-    
-    environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
-    options.ui_orientation = uiModes[rotateMode];
-
-    return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
+  return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
 }
 
 void retro_reset (void)
