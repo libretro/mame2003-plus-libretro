@@ -42,8 +42,8 @@ const char *const outrun_samples_set_names[] =
 
 static struct Samplesinterface outrun_samples_set =
 {
-	2,	// 2 channels
-	100, // volume
+	2,	/* 2 channels */
+	100, /* volume */
 	outrun_samples_set_names
 };
 
@@ -731,7 +731,7 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 		int o_max_samples = 12;
 		int sa_left = 0;
 		int sa_right = 1;
-		bool sa_loop = 1; // --> 1 == loop, 0 == do not loop.
+		bool sa_loop = 1; /* --> 1 == loop, 0 == do not loop. */
 		bool sa_play_sample = false;
 		bool sa_play_original = false;
 		bool outrun_do_nothing = false;
@@ -781,7 +781,7 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 				}
 				break;
 				
-			// 2. --> Passing Breeze
+			/* 2. --> Passing Breeze */
 			case 0x81:
 				outrun_diddy = false;
 				outrun_title_diddy = false;
@@ -791,7 +791,7 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 				sa_right = 9;				
 				break;
 						
-			// 1. --> Splash wave
+			/* 1. --> Splash wave */
 			case 0x82:
 				outrun_diddy = false;
 				outrun_title_diddy = false;
@@ -801,7 +801,7 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 				sa_right = 11;				
 				break;
 
-			// 3 --> Magical Sound Shower
+			/* 3 --> Magical Sound Shower */
 			case 0x85:
 				outrun_diddy = false;
 				outrun_title_diddy = false;
@@ -811,7 +811,7 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 				sa_right = 7;				
 				break;
 
-			// --> Last Wave
+			/* --> Last Wave */
 			case 0x93:
 				if(outrun_lastwave == false) {
 					outrun_diddy = false;
@@ -839,18 +839,18 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 			sample_start(0, sa_left, sa_loop);
 			sample_start(1, sa_right, sa_loop);
 			
-			// Determine how we should mix these samples together.
-			if(sample_playing(0) == 0 && sample_playing(1) == 1) { // Right channel only. Lets make it play in both speakers.
+			/* Determine how we should mix these samples together.*/
+			if(sample_playing(0) == 0 && sample_playing(1) == 1) { /* Right channel only. Lets make it play in both speakers. */
 				sample_set_stereo_volume(1, 100, 100);
 			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { // Left channel only. Lets make it play in both speakers.
+			else if(sample_playing(0) == 1 && sample_playing(1) == 0) { /* Left channel only. Lets make it play in both speakers. */
 				sample_set_stereo_volume(0, 100, 100);
 			}
-			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { // Both left and right channels. Lets make them play in there respective speakers.
+			else if(sample_playing(0) == 1 && sample_playing(1) == 1) { /* Both left and right channels. Lets make them play in there respective speakers. */
 				sample_set_stereo_volume(0, 100, 0);
 				sample_set_stereo_volume(1, 0, 100);
 			}
-			else if(sample_playing(0) == 0 && sample_playing(1) == 0 && outrun_do_nothing == false) { // No sample playing, revert to the default sound.
+			else if(sample_playing(0) == 0 && sample_playing(1) == 0 && outrun_do_nothing == false) { /* No sample playing, revert to the default sound. */
 				sa_play_original = false;
 				sound_shared_ram[0]=data&0xff;
 			}
@@ -859,7 +859,7 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 				sound_shared_ram[0]=data&0xff;
 		}
 		else if(outrun_do_nothing == true) {
-			// --> Do nothing.
+			/* --> Do nothing.*/
 		}
 		else if(outrun_stop_samples == true) {
 			a = 0;
@@ -868,7 +868,7 @@ static WRITE16_HANDLER( outrun_sound_write_w )
 				sample_stop(a);
 			}
 
-			// Now play the default sound.
+			/* Now play the default sound. */
 			sound_shared_ram[0]=data&0xff;
 		}
 		else if(outrun_play_default == true) {
@@ -1283,7 +1283,7 @@ static MACHINE_DRIVER_START( outrun )
 	MDRV_SOUND_ADD(YM2151, sys16_ym2151_interface)
 	MDRV_SOUND_ADD(SEGAPCM, sys16_segapcm_interface_15k)
 
-	// Lets add our Out Run music sample packs.
+	/* Lets add our Out Run music sample packs. */
 	MDRV_SOUND_ADD(SAMPLES, outrun_samples_set)
 	outrun_playing = true;
 	outrun_start = true;
