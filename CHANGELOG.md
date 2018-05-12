@@ -259,6 +259,7 @@
 * Added sound sample support for Nintendo's Space Firebird
 * Fixed a sprite bug in Ghost's n Goblins
 * Improved the MCU simulation for Renegade
+* Fixed the trench vectors bug in Star Wars by reverting back to older MAME code
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color when backdrops are first loaded.
 
