@@ -99,6 +99,7 @@
 * Title Fight
 * Varia Metal
 * Vasara 2
+* Virtua Bowling
 * Wing Force
 * Wonderboy In Monsterland (English Virtual Console Version)
 * Zintrick
@@ -119,6 +120,7 @@
 * Die Hard Arcade (requires a fast system, video and sound issues remain)
 * Discs Of Tron
 * Domino Man
+* Dragon World
 * Driftout 94
 * Hang-On
 * Ironhorse
@@ -255,6 +257,8 @@
 * Added a default NVRAM file for Run And Gun so it will now boot [markwkidd]
 * Turned off debugging code in the hotspots, giving a huge speed improvement to the Midway V-unit games.
 * Added sound sample support for Nintendo's Space Firebird
+* Fixed a sprite bug in Ghost's n Goblins
+* Improved the MCU simulation for Renegade
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color when backdrops are first loaded.
 
