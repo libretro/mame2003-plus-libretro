@@ -1859,5 +1859,5 @@ ROM_END
 ***************************************************************************/
 
 GAME(1997, drgnwrld, 0,       chindrag, drgnwrld, drgnwrld, ROT0, "IGS", "Dragon World (World, V040O)" )
-GAME(1996, vbowl,    0,       vbowl,    vbowl,    vbowl,    ROT0, "Alta / IGS", "Virtua Bowling (World,V101XCM )" )
+GAME(1996, vbowl,    0,       vbowl,    vbowl,    vbowl,    ROT0, "Alta / IGS", "Virtua Bowling (World, V101XCM )" )
 GAME(1996, vbowlj,   vbowl,   vbowl,    vbowlj,   vbowlj,   ROT0, "Alta / IGS", "Virtua Bowling (Japan, V100JCM)" )
