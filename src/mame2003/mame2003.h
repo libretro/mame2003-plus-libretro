@@ -287,27 +287,6 @@ cycles_t osd_cycles_per_second(void);
 cycles_t osd_profiling_ticks(void);
 
 
-
-/******************************************************************************
-
-	Miscellaneous
-
-******************************************************************************/
-
-#ifdef __GNUC__
-static INLINE void CLIB_DECL logerror(const char *text,...) __attribute__ ((format (printf, 1, 2)));
-#endif
-
-static INLINE void CLIB_DECL logerror(const char *text,...)
-{
-#ifdef DEBUG_LOG
-    va_list args;
-    va_start (args, text);
-    vfprintf (stderr, text, args);
-    va_end (args);
-#endif
-}
-
 #ifdef __cplusplus
 }
 #endif
