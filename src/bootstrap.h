@@ -1,6 +1,6 @@
 /*********************************************************************
 
-	bootstrap.c
+	bootstrap.h
     
     nvram "bootstraps" for games which do not start without service
     mode or other intervention
