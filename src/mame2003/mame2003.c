@@ -47,11 +47,46 @@ static retro_input_state_t         input_cb                      = NULL;
 static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
 retro_set_led_state_t              led_state_cb                  = NULL;
 
+
+/******************************************************************************
+
+  private function prototypes
+
+******************************************************************************/
+static void update_variables(bool first_time);
+static void check_system_specs(void);
+void retro_describe_buttons(void);
+
 /******************************************************************************
 
   implementation of key libretro functions
 
 ******************************************************************************/
+
+void retro_init (void)
+{
+  struct retro_log_callback log;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log))
+    log_cb = log.log;
+  else
+    log_cb = NULL;
+
+#ifdef LOG_PERFORMANCE
+  environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf_cb);
+#endif
+
+  update_variables(true);
+  options.use_samples = 1;
+  check_system_specs();
+}
+
+static void check_system_specs(void)
+{
+   /* TODO - set variably */
+   /* Midway DCS - Mortal Kombat/NBA Jam etc. require level 9 */
+   unsigned level = 10;
+   environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
+}
 
 void retro_set_environment(retro_environment_t cb)
 {
@@ -66,7 +101,7 @@ void retro_set_environment(retro_environment_t cb)
 #endif
     { APPNAME"_crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
     { APPNAME"_display_setup", "Display MAME menu; disabled|enabled" },
-/*    { APPNAME"_brightness", "Brightness; 5|1|2|3|4|6|7|8|9|10" },    */
+    { APPNAME"_brightness", "Brightness; 5|1|2|3|4|6|7|8|9|10" },
     { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
     { APPNAME"_bios_region", "Specify alternate BIOS region (Restart); default|asia|asia-aes|debug|europe|europe_a|japan|japan_a|japan_b|taiwan|us|us_a|uni-bios.10|uni-bios.11|uni-bios.13|uni-bios.20" },
     { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
@@ -90,126 +125,7 @@ void retro_set_environment(retro_environment_t cb)
   cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
 }
 
-unsigned retro_api_version(void)
-{
-  return RETRO_API_VERSION;
-}
-
-void retro_get_system_info(struct retro_system_info *info)
-{
-  info->library_name = "MAME 2003-plus";
-#ifndef GIT_VERSION
-#define GIT_VERSION ""
-#endif
-  info->library_version = "0.78" GIT_VERSION;
-  info->valid_extensions = "zip";
-  info->need_fullpath = true;
-  info->block_extract = true;
-}
-
-void retro_describe_buttons(void)
-{
-  /* Assuming the standard RetroPad layout:
-   *
-   *   [L2]                                 [R2]
-   *   [L]                                   [R]
-   *
-   *     [^]                               [X]
-   *
-   * [<]     [>]    [start] [selct]    [Y]     [A]
-   *
-   *     [v]                               [B]
-   *
-   *
-   * or standard RetroPad fight stick layout:
-   *
-   *   [start] [selct]
-   *                                         [X]  [R]  [L]
-   *     [^]                            [Y]
-   *
-   * [<]     [>]                             [A]  [R2] [L2]
-   *                                    [B]
-   *     [v]
-   *
-   *
-   *
-   * key: [MAME button/Street Fighter II move]
-   *
-   * options.retropad_layout == RETROPAD_MODERN
-   * ========================
-   * Uses the fight stick & pad layout popularised by Street Figher IV.
-   * Needs an 8+ button controller by default.
-   *
-   * [8/-]                                     [6/HK]  |
-   * [7/-]                                     [3/HP]  |
-   *                                                   |        [2/MP]  [3/HP]  [7/-]
-   *     [^]                               [2/MP]      |  [1/LP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
-   *
-   * retropad_layout == RETROPAD_SNES
-   * ========================
-   * Uses the layout popularised by SNES Street Figher II.
-   * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
-   *
-   * [7/-]                                      [8/-]  |
-   * [3/HP]                                    [6/HK]  |
-   *                                                   |        [2/MP]  [6/HK]  [3/HP]
-   *     [^]                               [2/MP]      |  [1/LP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
-   *
-   * options.retropad_layout == RETROPAD_MAME
-   * ========================
-   * Uses current MAME's default Xbox 360 controller layout.
-   * Not sensible for 6 button fighters, but may suit other games.
-   *
-   * [7/-]                                     [8/-]   |
-   * [5/MK]                                    [6/HK]  |
-   *                                                   |        [4/WK]  [6/HK]  [5/MK]
-   *     [^]                               [4/WK]      |  [3/HP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [3/HP]  [2/MP]  |        [2/MP]  [8/-]   [7/-]
-   *                                                   |  [1/LP]
-   *     [v]                               [1/LP]      |
-   *                                                   |
-   */
-#define describe_buttons(INDEX) \
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      (options.retropad_layout == RETROPAD_MAME ? "Button 1" : "Button 4") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      (options.retropad_layout == RETROPAD_MAME ? "Button 3" : "Button 1") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      (options.retropad_layout == RETROPAD_MAME ? "Button 4" : "Button 2") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      (options.retropad_layout == RETROPAD_MAME ? "Button 2" : "Button 5") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      (options.retropad_layout == RETROPAD_MAME ? "Button 5" : (options.retropad_layout == RETROPAD_MODERN ? "Button 7" : "Button 3")) },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      (options.retropad_layout == RETROPAD_MODERN ? "Button 3" : "Button 6") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 8" : "Button 7") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 6" : "Button 8") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
-  
-  struct retro_input_descriptor desc[] = {
-    describe_buttons(0)
-    describe_buttons(1)
-    describe_buttons(2)
-    describe_buttons(3)
-    { 0, 0, 0, 0, NULL }
-  };
-  
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-}
-
-static void update_variables(void)
+static void update_variables(bool first_time)
 {
   struct retro_led_interface ledintf;
   struct retro_variable var;
@@ -291,17 +207,18 @@ static void update_variables(void)
       options.display_setup = 0;
   }
 
-/*
+
   var.value = NULL;
 
   var.key = APPNAME"_brightness";
-  options.brightness = 0.5f; *//* default if none set by frontend */
-/*  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  options.brightness = 1.0f; /* default if none set by frontend */
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
-    options.brightness = atof(var.value) / 10;
-    palette_set_global_brightness(options.brightness);    
+    options.brightness = atof(var.value) / 5;
+    if(!first_time)
+      palette_set_global_brightness(options.brightness);    
   }
-*/
+
   /* TODO: Add gamma core option. Below is the increment & boundary code from the old MAME osd to help */
   /*
 
@@ -523,11 +440,8 @@ static void update_variables(void)
   }
 
   ledintf.set_led_state = NULL;
-
   environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
   led_state_cb = ledintf.set_led_state;
-
-  options.use_samples = 1;
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -552,40 +466,201 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
 }
 
-static void check_system_specs(void)
+unsigned retro_api_version(void)
 {
-   /* TODO - set variably */
-   /* Midway DCS - Mortal Kombat/NBA Jam etc. require level 9 */
-   unsigned level = 10;
-   environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
+  return RETRO_API_VERSION;
 }
 
-void retro_init (void)
+void retro_get_system_info(struct retro_system_info *info)
 {
-   struct retro_log_callback log;
-   if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log))
-      log_cb = log.log;
-   else
-      log_cb = NULL;
-
-#ifdef LOG_PERFORMANCE
-   environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf_cb);
+  info->library_name = "MAME 2003-plus";
+#ifndef GIT_VERSION
+#define GIT_VERSION ""
 #endif
-
-   update_variables();
-   check_system_specs();
+  info->library_version = "0.78" GIT_VERSION;
+  info->valid_extensions = "zip";
+  info->need_fullpath = true;
+  info->block_extract = true;
 }
 
-void retro_deinit(void)
+void retro_describe_buttons(void)
 {
-#ifdef LOG_PERFORMANCE
-   perf_cb.perf_log();
-#endif
+  /* Assuming the standard RetroPad layout:
+   *
+   *   [L2]                                 [R2]
+   *   [L]                                   [R]
+   *
+   *     [^]                               [X]
+   *
+   * [<]     [>]    [start] [selct]    [Y]     [A]
+   *
+   *     [v]                               [B]
+   *
+   *
+   * or standard RetroPad fight stick layout:
+   *
+   *   [start] [selct]
+   *                                         [X]  [R]  [L]
+   *     [^]                            [Y]
+   *
+   * [<]     [>]                             [A]  [R2] [L2]
+   *                                    [B]
+   *     [v]
+   *
+   *
+   *
+   * key: [MAME button/Street Fighter II move]
+   *
+   * options.retropad_layout == RETROPAD_MODERN
+   * ========================
+   * Uses the fight stick & pad layout popularised by Street Figher IV.
+   * Needs an 8+ button controller by default.
+   *
+   * [8/-]                                     [6/HK]  |
+   * [7/-]                                     [3/HP]  |
+   *                                                   |        [2/MP]  [3/HP]  [7/-]
+   *     [^]                               [2/MP]      |  [1/LP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
+   *                                                   |  [4/LK]
+   *     [v]                               [4/LK]      |
+   *                                                   |
+   *
+   * retropad_layout == RETROPAD_SNES
+   * ========================
+   * Uses the layout popularised by SNES Street Figher II.
+   * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
+   *
+   * [7/-]                                      [8/-]  |
+   * [3/HP]                                    [6/HK]  |
+   *                                                   |        [2/MP]  [6/HK]  [3/HP]
+   *     [^]                               [2/MP]      |  [1/LP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
+   *                                                   |  [4/LK]
+   *     [v]                               [4/LK]      |
+   *                                                   |
+   *
+   * options.retropad_layout == RETROPAD_MAME
+   * ========================
+   * Uses current MAME's default Xbox 360 controller layout.
+   * Not sensible for 6 button fighters, but may suit other games.
+   *
+   * [7/-]                                     [8/-]   |
+   * [5/MK]                                    [6/HK]  |
+   *                                                   |        [4/WK]  [6/HK]  [5/MK]
+   *     [^]                               [4/WK]      |  [3/HP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [3/HP]  [2/MP]  |        [2/MP]  [8/-]   [7/-]
+   *                                                   |  [1/LP]
+   *     [v]                               [1/LP]      |
+   *                                                   |
+   */
+#define describe_buttons(INDEX) \
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      (options.retropad_layout == RETROPAD_MAME ? "Button 1" : "Button 4") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      (options.retropad_layout == RETROPAD_MAME ? "Button 3" : "Button 1") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      (options.retropad_layout == RETROPAD_MAME ? "Button 4" : "Button 2") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      (options.retropad_layout == RETROPAD_MAME ? "Button 2" : "Button 5") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      (options.retropad_layout == RETROPAD_MAME ? "Button 5" : (options.retropad_layout == RETROPAD_MODERN ? "Button 7" : "Button 3")) },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      (options.retropad_layout == RETROPAD_MODERN ? "Button 3" : "Button 6") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 8" : "Button 7") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 6" : "Button 8") },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
+  
+  struct retro_input_descriptor desc[] = {
+    describe_buttons(0)
+    describe_buttons(1)
+    describe_buttons(2)
+    describe_buttons(3)
+    { 0, 0, 0, 0, NULL }
+  };
+  
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+}
+
+bool retro_load_game(const struct retro_game_info *game)
+{
+    char            *driver_lookup;
+    int             orientation;
+    unsigned        rotateMode;
+    static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
+
+    retro_describe_buttons();
+    
+    log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
+
+    driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
+
+    if (string_is_empty(driver_lookup))
+    {
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist or lacks a file extension. Exiting!\n");
+      return false;
+    }
+
+
+    /* Search list */
+    for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
+    {
+       if ( (strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0) || ( strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0) )
+       {
+          log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: [%s].\n", (int) total_drivers, drivers[driverIndex]->name);
+          options.romset_filename_noext = driver_lookup;
+          break;          
+       }
+    }
+
+    if(driverIndex == total_drivers)
+    {
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!", (int) total_drivers);
+        return false;
+    }
+
+    options.libretro_content_path = strdup(game->path);
+    path_basedir(options.libretro_content_path);
+
+    /* Get system directory from frontend */
+    options.libretro_system_path = NULL;
+    environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&options.libretro_system_path);
+    if (options.libretro_system_path == NULL || options.libretro_system_path[0] == '\0')
+    {
+        log_cb(RETRO_LOG_INFO, LOGPRE "libretro system path not set by frontend, using content path\n");
+        options.libretro_system_path = options.libretro_content_path;
+    }
+    
+    /* Get save directory from frontend */
+    options.libretro_save_path = NULL;
+    environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&options.libretro_save_path);
+    if (options.libretro_save_path == NULL || options.libretro_save_path[0] == '\0')
+    {
+        log_cb(RETRO_LOG_INFO,  LOGPRE "libretro save path not set by frontent, using content path\n");
+        options.libretro_save_path = options.libretro_content_path;
+    }
+    
+    /* Setup Rotation */
+    rotateMode = 0;        
+    orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
+    
+    rotateMode = (orientation == ROT270) ? 1 : rotateMode;
+    rotateMode = (orientation == ROT180) ? 2 : rotateMode;
+    rotateMode = (orientation == ROT90) ? 3 : rotateMode;
+    
+    environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
+    options.ui_orientation = uiModes[rotateMode];
+
+    return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
 }
 
 void retro_reset (void)
 {
-    machine_reset();
+    machine_reset(); /* use MAME function */
 }
 
 /* get pointer axis vector from coord */
@@ -618,7 +693,7 @@ void retro_run (void)
    poll_cb();
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
-      update_variables();
+      update_variables(false);
 
    /* Keyboard */
    thisInput = retroKeys;
@@ -702,79 +777,6 @@ void retro_run (void)
 
 }
 
-bool retro_load_game(const struct retro_game_info *game)
-{
-    char            *driver_lookup;
-    int             orientation;
-    unsigned        rotateMode;
-    static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
-
-    retro_describe_buttons();
-    
-    log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
-
-    driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
-
-    if (string_is_empty(driver_lookup))
-    {
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist or lacks a file extension. Exiting!\n");
-      return false;
-    }
-
-
-    /* Search list */
-    for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
-    {
-       if ( (strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0) || ( strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0) )
-       {
-          log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: [%s].\n", (int) total_drivers, drivers[driverIndex]->name);
-          options.romset_filename_noext = driver_lookup;
-          break;          
-       }
-    }
-
-    if(driverIndex == total_drivers)
-    {
-        log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!", (int) total_drivers);
-        return false;
-    }
-
-    options.libretro_content_path = strdup(game->path);
-    path_basedir(options.libretro_content_path);
-
-    /* Get system directory from frontend */
-    options.libretro_system_path = NULL;
-    environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY,&options.libretro_system_path);
-    if (options.libretro_system_path == NULL || options.libretro_system_path[0] == '\0')
-    {
-        log_cb(RETRO_LOG_INFO, LOGPRE "libretro system path not set by frontend, using content path\n");
-        options.libretro_system_path = options.libretro_content_path;
-    }
-    
-    /* Get save directory from frontend */
-    options.libretro_save_path = NULL;
-    environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY,&options.libretro_save_path);
-    if (options.libretro_save_path == NULL || options.libretro_save_path[0] == '\0')
-    {
-        log_cb(RETRO_LOG_INFO,  LOGPRE "libretro save path not set by frontent, using content path\n");
-        options.libretro_save_path = options.libretro_content_path;
-    }
-    
-    /* Setup Rotation */
-    rotateMode = 0;        
-    orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
-    
-    rotateMode = (orientation == ROT270) ? 1 : rotateMode;
-    rotateMode = (orientation == ROT180) ? 2 : rotateMode;
-    rotateMode = (orientation == ROT90) ? 3 : rotateMode;
-    
-    environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
-    options.ui_orientation = uiModes[rotateMode];
-
-    return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
-}
-
 void retro_unload_game(void)
 {
     mame_done();
@@ -785,6 +787,14 @@ void retro_unload_game(void)
     systemDir = 0;*/
     /* do we need to be freeing things here? */
 }
+
+void retro_deinit(void)
+{
+#ifdef LOG_PERFORMANCE
+   perf_cb.perf_log();
+#endif
+}
+
 
 size_t retro_serialize_size(void)
 {
