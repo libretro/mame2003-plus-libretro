@@ -199,8 +199,11 @@
 
 
 ## Games now with improved sound
-
+* Final Fight added ost sound track (KMFDManic)
+* Mortal added ost sound track (KMFDManic)
+* nbajam added ost sound track (KMFDManic)
 * Nibbler
+* outrun added ost soundtrack (KMFDManic)
 * Rohga Armor Force
 
 
