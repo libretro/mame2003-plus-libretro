@@ -5212,7 +5212,9 @@ Other Sun games
 	DRIVER( iqblock )	/* (c) 1993 */
 	DRIVER( grndtour )	/* (c) 1993 */
 	DRIVER( cabaret )
-	DRIVER( chindrag )
+	DRIVER( drgnwrld )	/* (c) 1997 */
+	DRIVER( vbowl )	        /* (c) 1996 */
+	DRIVER( vbowlj )	/* (c) 1996 */
 	DRIVER( grtwall )
 	DRIVER( orlegend )	/* (c) 1997 */
 	DRIVER( orlegnde )	/* (c) 1997 */
