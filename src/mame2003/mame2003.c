@@ -48,6 +48,14 @@ static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
 retro_set_led_state_t              led_state_cb                  = NULL;
 
 
+
+int FileExists(const char *filename)
+{
+	FILE *fp = fopen (filename, "r");
+	if (fp!=NULL) fclose (fp);
+	return (fp!=NULL);
+}
+
 /******************************************************************************
 
   private function prototypes
@@ -604,8 +612,9 @@ bool retro_load_game(const struct retro_game_info *game)
   log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
   driver_lookup = strdup(path_basename(game->path));
 
-  if(strcasecmp(path_get_extension(driver_lookup), "zip") != 0)
+  if ( FileExists(game->path)  == 0 )
   {
+
      log_cb(RETRO_LOG_ERROR, LOGPRE "game->path does not end in .zip - only zip files are supported. Exiting!");
      return false;
   }
