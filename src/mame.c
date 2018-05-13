@@ -508,13 +508,29 @@ void pause_action_start_emulator(void)
           if      ( strcasecmp(Machine->gamedrv->name, "bubblem") == 0)
             nvram_file = spawn_bootstrap_nvram(bubblem_bootstrap_bytes, bubblem_bootstrap_length);
 
+          else if ( strcasecmp(Machine->gamedrv->name, "mk2") == 0)
+            nvram_file = spawn_bootstrap_nvram(mk2_bootstrap_bytes, mk2_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "mk2chal") == 0)
+            nvram_file = spawn_bootstrap_nvram(mk2chal_bootstrap_bytes, mk2chal_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "mk2r14") == 0)
+            nvram_file = spawn_bootstrap_nvram(mk2r14_bootstrap_bytes, mk2r14_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "mk2r21") == 0)
+            nvram_file = spawn_bootstrap_nvram(mk2r21_bootstrap_bytes, mk2r21_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "mk2r32") == 0)
+            nvram_file = spawn_bootstrap_nvram(mk2r32_bootstrap_bytes, mk2r32_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "mk2r42") == 0)
+            nvram_file = spawn_bootstrap_nvram(mk2r42_bootstrap_bytes, mk2r42_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "mk2r91") == 0)
+            nvram_file = spawn_bootstrap_nvram(mk2r91_bootstrap_bytes, mk2r91_bootstrap_length);
+
           else if ( strcasecmp(Machine->gamedrv->name, "rungun") == 0)
             nvram_file = spawn_bootstrap_nvram(rungun_bootstrap_bytes, rungun_bootstrap_length);
-
-          else if ( strcasecmp(Machine->gamedrv->name, "zookeep") == 0 
-                 || strcasecmp(Machine->gamedrv->name, "zookeep2") == 0 
-                 || strcasecmp(Machine->gamedrv->name, "zookeep3") == 0 )
-            nvram_file = spawn_bootstrap_nvram(zookeep_bootstrap_bytes, zookeep_bootstrap_length);
 
           else if ( strcasecmp(Machine->gamedrv->name, "qix") == 0 
                  || strcasecmp(Machine->gamedrv->name, "qix2") == 0 
@@ -528,6 +544,11 @@ void pause_action_start_emulator(void)
             nvram_file = spawn_bootstrap_nvram(sinista1_bootstrap_bytes, sinista1_bootstrap_length);
           else if ( strcasecmp(Machine->gamedrv->name, "sinista2") == 0)
             nvram_file = spawn_bootstrap_nvram(sinista2_bootstrap_bytes, sinista2_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "zookeep") == 0 
+                 || strcasecmp(Machine->gamedrv->name, "zookeep2") == 0 
+                 || strcasecmp(Machine->gamedrv->name, "zookeep3") == 0 )
+            nvram_file = spawn_bootstrap_nvram(zookeep_bootstrap_bytes, zookeep_bootstrap_length);
 
         }
 
