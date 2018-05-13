@@ -2608,71 +2608,82 @@ static INLINE offs_t effective_offset(offs_t offset)
 
 static READ_HANDLER( mrh8_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped memory byte read from %08X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped memory byte read from %08X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset));
 	if (activecpu_address_bits() <= SPARSE_THRESH && unmap_value == 0) return cpu_bankbase[STATIC_RAM][offset];
 	return unmap_value;
 }
 static READ16_HANDLER( mrh16_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped memory word read from %08X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*2), mem_mask ^ 0xffff);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped memory word read from %08X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*2), mem_mask ^ 0xffff);
 	if (activecpu_address_bits() <= SPARSE_THRESH && unmap_value == 0) return ((data16_t *)cpu_bankbase[STATIC_RAM])[offset];
 	return unmap_value;
 }
 static READ32_HANDLER( mrh32_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped memory dword read from %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*4), mem_mask ^ 0xffffffff);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped memory dword read from %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*4), mem_mask ^ 0xffffffff);
 	if (activecpu_address_bits() <= SPARSE_THRESH && unmap_value == 0) return ((data32_t *)cpu_bankbase[STATIC_RAM])[offset];
 	return unmap_value;
 }
 
 static WRITE_HANDLER( mwh8_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped memory byte write to %08X = %02X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset), data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped memory byte write to %08X = %02X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset), data);
 	if (activecpu_address_bits() <= SPARSE_THRESH) cpu_bankbase[STATIC_RAM][offset] = data;
 }
 static WRITE16_HANDLER( mwh16_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped memory word write to %08X = %04X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*2), data, mem_mask ^ 0xffff);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped memory word write to %08X = %04X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*2), data, mem_mask ^ 0xffff);
 	if (activecpu_address_bits() <= SPARSE_THRESH) COMBINE_DATA(&((data16_t *)cpu_bankbase[STATIC_RAM])[offset]);
 }
 static WRITE32_HANDLER( mwh32_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped memory dword write to %08X = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*4), data, mem_mask ^ 0xffffffff);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped memory dword write to %08X = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*4), data, mem_mask ^ 0xffffffff);
 	if (activecpu_address_bits() <= SPARSE_THRESH) COMBINE_DATA(&((data32_t *)cpu_bankbase[STATIC_RAM])[offset]);
 }
 
 static READ_HANDLER( prh8_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped port byte read from %08X\n", cpu_getactivecpu(), activecpu_get_pc(), offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped port byte read from %08X\n", cpu_getactivecpu(), activecpu_get_pc(), offset);
 	return unmap_value;
 }
 static READ16_HANDLER( prh16_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped port word read from %08X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*2, mem_mask ^ 0xffff);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped port word read from %08X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*2, mem_mask ^ 0xffff);
 	return unmap_value;
 }
 static READ32_HANDLER( prh32_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped port dword read from %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*4, mem_mask ^ 0xffffffff);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped port dword read from %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*4, mem_mask ^ 0xffffffff);
 	return unmap_value;
 }
 
 static WRITE_HANDLER( pwh8_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped port byte write to %08X = %02X\n", cpu_getactivecpu(), activecpu_get_pc(), offset, data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped port byte write to %08X = %02X\n", cpu_getactivecpu(), activecpu_get_pc(), offset, data);
 }
 static WRITE16_HANDLER( pwh16_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped port word write to %08X = %04X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*2, data, mem_mask ^ 0xffff);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped port word write to %08X = %04X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*2, data, mem_mask ^ 0xffff);
 }
 static WRITE32_HANDLER( pwh32_bad )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): unmapped port dword write to %08X = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*4, data, mem_mask ^ 0xffffffff);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): unmapped port dword write to %08X = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), offset*4, data, mem_mask ^ 0xffffffff);
 }
 
-static WRITE_HANDLER( mwh8_rom )       { log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): byte write to ROM %08X = %02X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset), data); }
-static WRITE16_HANDLER( mwh16_rom )    { log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): word write to %08X = %04X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*2), data, mem_mask ^ 0xffff); }
-static WRITE32_HANDLER( mwh32_rom )    { log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #%d (PC=%08X): dword write to %08X = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*4), data, mem_mask ^ 0xffffffff); }
+static WRITE_HANDLER( mwh8_rom )
+{ 
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): byte write to ROM %08X = %02X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset), data); 
+}
+
+static WRITE16_HANDLER( mwh16_rom )
+{
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): word write to %08X = %04X & %04X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*2), data, mem_mask ^ 0xffff);
+}
+
+static WRITE32_HANDLER( mwh32_rom )
+{
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #%d (PC=%08X): dword write to %08X = %08X & %08X\n", cpu_getactivecpu(), activecpu_get_pc(), effective_offset(offset*4), data, mem_mask ^ 0xffffffff);
+}
 
 static READ_HANDLER( mrh8_nop )        { return 0; }
 static READ16_HANDLER( mrh16_nop )     { return 0; }
@@ -2971,19 +2982,19 @@ static void verify_masks(void)
 									if (size != 1)
 									{
 										if (!track_entry((void *)mra, (void *)mra->handler))
-											log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
+											log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d readmem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
 									}
 								}
 								size--;
 								if ((mra->start & size) != 0)
 								{
 									if (!track_entry((void *)mra, (void *)mra->handler))
-										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
+										log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d readmem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
 								}
 								if ((mra->end & size) != size)
 								{
 									if (!track_entry((void *)mra, (void *)mra->handler))
-										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
+										log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d readmem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mra->start, mra->end);
 								}
 							}
 
@@ -2998,19 +3009,19 @@ static void verify_masks(void)
 									if (size != 1)
 									{
 										if (!track_entry((void *)mwa, (void *)mwa->handler))
-											log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
+											log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d writemem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
 									}
 								}
 								size--;
 								if ((mwa->start & size) != 0)
 								{
 									if (!track_entry((void *)mwa, (void *)mwa->handler))
-										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
+										log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d writemem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
 								}
 								if ((mwa->end & size) != size)
 								{
 									if (!track_entry((void *)mwa, (void *)mwa->handler))
-										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
+										log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d writemem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, mwa->start, mwa->end);
 								}
 							}
 
@@ -3025,19 +3036,19 @@ static void verify_masks(void)
 									if (size != 1)
 									{
 										if (!track_entry((void *)iora, (void *)iora->handler))
-											log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
+											log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d readmem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
 									}
 								}
 								size--;
 								if ((iora->start & size) != 0)
 								{
 									if (!track_entry((void *)iora, (void *)iora->handler))
-										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
+										log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d readmem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
 								}
 								if ((iora->end & size) != size)
 								{
 									if (!track_entry((void *)iora, (void *)iora->handler))
-										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d readmem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
+										log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d readmem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iora->start, iora->end);
 								}
 							}
 
@@ -3052,26 +3063,26 @@ static void verify_masks(void)
 									if (size != 1)
 									{
 										if (!track_entry((void *)iowa, (void *)iowa->handler))
-											log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
+											log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d writemem inval size  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
 									}
 								}
 								size--;
 								if ((iowa->start & size) != 0)
 								{
 									if (!track_entry((void *)iowa, (void *)iowa->handler))
-										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
+										log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d writemem inval start { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
 								}
 								if ((iowa->end & size) != size)
 								{
 									if (!track_entry((void *)iowa, (void *)iowa->handler))
-										log_cb(RETRO_LOG_ERROR, LOGPRE "%s: %s cpu %d writemem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
+										log_cb(RETRO_LOG_DEBUG, LOGPRE "%s: %s cpu %d writemem inval end  { %08X, %08X }\n", drivers[i]->source_file, drivers[i]->name, cpunum, iowa->start, iowa->end);
 								}
 							}
 				}
 			}
 		}
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Total busted entries = %d\n", track_count);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Busted entries that are static = %d\n", static_count);
+	log_cb(RETRO_LOG_INFO, LOGPRE "mame-memory: Total busted entries = %d\n", track_count);
+	log_cb(RETRO_LOG_INFO, LOGPRE "mame-memory: Busted entries that are static = %d\n", static_count);
 }
 #endif
