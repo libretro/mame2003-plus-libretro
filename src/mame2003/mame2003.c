@@ -101,7 +101,8 @@ void retro_set_environment(retro_environment_t cb)
 #endif
     { APPNAME"_crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
     { APPNAME"_display_setup", "Display MAME menu; disabled|enabled" },
-    { APPNAME"_brightness", "Brightness; 5|1|2|3|4|6|7|8|9|10" },
+    { APPNAME"_brightness", "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0" },
+    { APPNAME"_gamma", "Gamma correction; 1.2|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0" },
     { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
     { APPNAME"_bios_region", "Specify alternate BIOS region (Restart); default|asia|asia-aes|debug|europe|europe_a|japan|japan_a|japan_b|taiwan|us|us_a|uni-bios.10|uni-bios.11|uni-bios.13|uni-bios.20" },
     { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
@@ -214,21 +215,21 @@ static void update_variables(bool first_time)
   options.brightness = 1.0f; /* default if none set by frontend */
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
-    options.brightness = atof(var.value) / 5;
+    options.brightness = atof(var.value);
     if(!first_time)
       palette_set_global_brightness(options.brightness);    
   }
 
-  /* TODO: Add gamma core option. Below is the increment & boundary code from the old MAME osd to help */
-  /*
+  var.value = NULL;
 
-    double gamma_correction;
-    increment = 0.05;
-    if (gamma_correction < 0.5) gamma_correction = 0.5;
-    if (gamma_correction > 2.0) gamma_correction = 2.0;
-
-    sprintf(buf,"%s %1.2f", "gamma", gamma_correction);
-  */
+  var.key = APPNAME"_gamma";
+  options.gamma = 1.2f; /* default if none set by frontend */
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    options.gamma = atof(var.value);
+    if(!first_time)
+      palette_set_global_gamma(options.gamma);
+  }
 
   /* TODO: Add overclock option. Below is the code from the old MAME osd to help process the core option.*/
   /*
