@@ -598,7 +598,7 @@ void e132xs_set_entry_point(int which)
 			break;
 
 		default:
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "E1-32XS: Entry Point Error. Target not defined (= %d)\n",which);
+			log_cb(RETRO_LOG_WARN, LOGPRE "E1-32XS: Entry Point Error. Target not defined (= %d)\n",which);
 			break;
 	}
 }
