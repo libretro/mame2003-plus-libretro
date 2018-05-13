@@ -31,13 +31,13 @@ int main(int argc,char *argv[])
 
 	if(argc<2)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32010 Disassembler 1.1 by Tony La Porta (C)1999-2002+\n\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Usage: dis32010 <input-file> [ <start-addr> [ <num-of-addr> ] ]\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "                <input-file>  source file data must be MSB first\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "                <start-addr>  starting address to disassemble from (decimal)\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "                <num-of-addr> number of addresses to disassemble (decimal)\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "                              Preceed values with 0x if HEX values preffered\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "TMS32010 Disassembler 1.1 by Tony La Porta (C)1999-2002+\n\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "Usage: dis32010 <input-file> [ <start-addr> [ <num-of-addr> ] ]\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "                <input-file>  source file data must be MSB first\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "                <start-addr>  starting address to disassemble from (decimal)\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "                <num-of-addr> number of addresses to disassemble (decimal)\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "                              Preceed values with 0x if HEX values preffered\n");
 		exit(1);
 	}
 
@@ -64,9 +64,9 @@ int main(int argc,char *argv[])
 	length *= 2;
 
 	if ((length > (filelength - (offset*2))) || (length == 0)) length = filelength - (offset*2);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Length=%04Xh(words)  Offset=$%04Xh  filelength=%04Xh(words) %04Xh(bytes)\n",length/2,offset,filelength/2,filelength);
+	log_cb(RETRO_LOG_INFO, LOGPRE "Length=%04Xh(words)  Offset=$%04Xh  filelength=%04Xh(words) %04Xh(bytes)\n",length/2,offset,filelength/2,filelength);
 	length_to_dump = length;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Starting from %d, dumping %d opcodes (word size)\n",offset,length/2);
+	log_cb(RETRO_LOG_INFO, LOGPRE "Starting from %d, dumping %d opcodes (word size)\n",offset,length/2);
 	Buffer = calloc((filelength+1),sizeof(char));
 	if (Buffer==NULL)
 	{
@@ -100,7 +100,7 @@ int main(int argc,char *argv[])
 		{
 			int ii;
 			disasm_words = Dasm32010(String_Output,Counter);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "$%04lX: ",Counter);
+			log_cb(RETRO_LOG_INFO, LOGPRE "$%04lX: ",Counter);
 			for (ii = 0; ii < disasm_words; ii++)
 			{
 				if (((Counter*2) + ii) > filelength)	/* Past end of length to dump ? */
@@ -109,15 +109,15 @@ int main(int argc,char *argv[])
 				}
 				else
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%02.2x%02.2x ",Buffer[(Counter*2)],Buffer[(Counter*2) + 1]);
+					log_cb(RETRO_LOG_INFO, LOGPRE "%02.2x%02.2x ",Buffer[(Counter*2)],Buffer[(Counter*2) + 1]);
 				}
 				Counter++ ;
 			}
 			for (; ii < 4; ii++)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "   ");
+				log_cb(RETRO_LOG_INFO, LOGPRE "   ");
 			}
-			log_cb(RETRO_LOG_ERROR, LOGPRE "\t%s\n",String_Output);
+			log_cb(RETRO_LOG_INFO, LOGPRE "\t%s\n",String_Output);
 		}
 	}
 	else

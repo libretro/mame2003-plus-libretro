@@ -795,7 +795,7 @@ void print_mame_xml(int old_style_flag)
     {	
 	    log_cb(RETRO_LOG_INFO, LOGPRE "Generating mame2003.xml\n");	
     } else {	
-      log_cb(RETRO_LOG_WARN, "Unable to open mame2003.xml for writing.\n");
+      log_cb(RETRO_LOG_WARN, LOGPRE "Unable to open mame2003.xml for writing.\n");
       return;
     }
 

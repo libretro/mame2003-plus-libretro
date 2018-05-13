@@ -121,7 +121,6 @@
  	  MOVI G0,[FFFF]FBAC (n=$13) since there's apparently no absolute branch opcode.
  	  What kind of CPU is this that it doesn't have an absolute jump in its branch
  	  instructions and you have to use an immediate MOV to do an abs. jump!?
- 	- Replaced usage of logerror() with smf's verboselog()
 
 *********************************************************************/
 
@@ -168,16 +167,6 @@ CPUS+=E132XS@
 #include "state.h"
 #include "mamedbg.h"
 #include "e132xs.h"
-
-static INLINE void verboselog( int n_level, const char *s_fmt, ... )
-{
-  va_list v;
-  char buf[ 32768 ];
-  va_start( v, s_fmt );
-  vsprintf( buf, s_fmt, v );
-  va_end( v );
-  log_cb(RETRO_LOG_DEBUG, LOGPRE  "%s", buf );
-}
 
 int e132xs_ICount;
 int h_clear;
@@ -609,7 +598,7 @@ void e132xs_set_entry_point(int which)
 			break;
 
 		default:
-			verboselog( 0, "E1-32XS: Entry Point Error. Target not defined (= %d)\n",which);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "E1-32XS: Entry Point Error. Target not defined (= %d)\n",which);
 			break;
 	}
 }
@@ -890,7 +879,7 @@ int e132xs_execute(int cycles)
 
 		OP = READ_OP(PC);
 
-		verboselog( 2, "Executing opcode %04x at PC %08x\n", OP, PC );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Executing opcode %04x at PC %08x\n", OP, PC );
 
 		if(GET_H)
 		{
@@ -1159,7 +1148,7 @@ void e132xs_movd(void)
 
 		if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) )
 		{	/*future expansion*/
-			verboselog( 1, "Denoted PC or SR used in RET instruction @ %x\n", PC );
+			log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC or SR used in RET instruction @ %x\n", PC );
 		}
 		else
 		{
@@ -1258,13 +1247,13 @@ void e132xs_divu(void)
 
 	if( S_CODE == D_CODE && S_CODE == (D_CODE + INC) )
 	{
-		verboselog( 1, "Denoted the same register code in DIVU instruction @ %x\n", PC );
+		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted the same register code in DIVU instruction @ %x\n", PC );
 	}
 	else
 	{
 		if( (S_CODE == PC_CODE && !S_BIT) && (S_CODE == SR_CODE && !S_BIT) )
 		{
-			verboselog( 1, "Denoted PC / SR as source register in DIVU instruction @ %x\n", PC );
+			log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC / SR as source register in DIVU instruction @ %x\n", PC );
 		}
 		else
 		{
@@ -1329,13 +1318,13 @@ void e132xs_divs(void)
 
 	if( S_CODE == D_CODE && S_CODE == (D_CODE + INC) )
 	{
-		verboselog( 1, "Denoted the same register code in DIVS instruction @ %x\n", PC );
+		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted the same register code in DIVS instruction @ %x\n", PC );
 	}
 	else
 	{
 		if( (S_CODE == PC_CODE && !S_BIT) && (S_CODE == SR_CODE && !S_BIT) )
 		{
-			verboselog( 1, "Denoted PC / SR as source register in DIVS instruction @ %x\n", PC );
+			log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC / SR as source register in DIVS instruction @ %x\n", PC );
 		}
 		else
 		{
@@ -2142,7 +2131,7 @@ void e132xs_movi(void)
 
 	val = immediate_value();
 
-	verboselog( 2, "Setting register %02x to value %08x\n", D_CODE, val );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Setting register %02x to value %08x\n", D_CODE, val );
 
 	if( D_BIT )
 	{
@@ -2590,7 +2579,7 @@ void e132xs_shl(void)
 
 void reserved(void)
 {
-	verboselog( 0, "- Reserved opcode executed @ %x, OP = %x\n", OP, PC );
+	log_cb(RETRO_LOG_WARN, LOGPRE "- Reserved opcode executed @ %x, OP = %x\n", OP, PC );
 }
 
 void e132xs_testlz(void)
@@ -2881,7 +2870,7 @@ void e132xs_ldxx2(void)
 
 	if( (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		verboselog( 1, "- In e132xs_ldxx2 must not denote PC or SR. PC = %x\n", PC );
+		log_cb(RETRO_LOG_WARN, LOGPRE "- In e132xs_ldxx2 must not denote PC or SR. PC = %x\n", PC );
 	}
 	else
 	{
@@ -2976,7 +2965,7 @@ void e132xs_ldxx2(void)
 				/* Reserved*/
 				else if( ( dis & 2 ) && !( dis & 1 ) )
 				{
-					verboselog( 0, "- Reserved Load instruction @ %x\n", PC );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "- Reserved Load instruction @ %x\n", PC );
 				}
 				/* LDD.N*/
 				else if( !( dis & 2 ) && ( dis & 1 ) )
@@ -3285,7 +3274,7 @@ void e132xs_stxx2(void)
 
 	if( (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		verboselog( 1, "In e132xs_stxx2 must not denote PC or SR. PC = %x\n", PC );
+		log_cb(RETRO_LOG_WARN, LOGPRE "In e132xs_stxx2 must not denote PC or SR. PC = %x\n", PC );
 	}
 	else
 	{
@@ -3349,7 +3338,7 @@ void e132xs_stxx2(void)
 				/* Reserved*/
 				else if( ( dis & 2 ) && !( dis & 1 ) )
 				{
-					verboselog( 0, "Reserved Store instruction @ %x\n", PC );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Reserved Store instruction @ %x\n", PC );
 				}
 				/* STD.N*/
 				else if( !( dis & 2 ) && ( dis & 1 ) )
@@ -3473,7 +3462,7 @@ void e132xs_mulu(void)
 	/*PC or SR aren't denoted, else result is undefined*/
 	if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) || (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		verboselog( 1, "Denoted PC or SR in MULU instruction @ x\n", PC );
+		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC or SR in MULU instruction @ x\n", PC );
 	}
 	else
 	{
@@ -3523,7 +3512,7 @@ void e132xs_muls(void)
 	/*PC or SR aren't denoted, else result is undefined*/
 	if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) || (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		verboselog( 1, "Denoted PC or SR in MULS instruction @ x\n", PC );
+		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC or SR in MULS instruction @ x\n", PC );
 	}
 	else
 	{
@@ -3569,7 +3558,7 @@ void e132xs_set(void)
 
 	if( D_CODE == PC_CODE && !D_BIT )
 	{
-		verboselog( 0, "Denoted PC in e132xs_set @ %x, it is reserved for future use\n", PC );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Denoted PC in e132xs_set @ %x, it is reserved for future use\n", PC );
 	}
 	else if( D_CODE == SR_CODE && !D_BIT )
 	{
@@ -3600,7 +3589,7 @@ void e132xs_set(void)
 			case 16:
 			case 17:
 			case 19:
-				verboselog( 0, "Used reserved N value (%d) in e132xs_set @ %x\n", n, PC );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Used reserved N value (%d) in e132xs_set @ %x\n", n, PC );
 				break;
 
 			/* SETxx*/
@@ -3906,7 +3895,7 @@ void e132xs_set(void)
 				break;
 
 			default:
-				verboselog( 0, "N value (%d) non defined in e132xs_set @ %x\n", n, PC );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "N value (%d) non defined in e132xs_set @ %x\n", n, PC );
 		}
 
 		e132xs_ICount -= 1;
@@ -3923,7 +3912,7 @@ void e132xs_mul(void)
 	/*PC or SR aren't denoted, else result is undefined*/
 	if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) || (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		verboselog( 1, "Denoted PC or SR in MUL instruction @ x\n", PC );
+		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC or SR in MUL instruction @ x\n", PC );
 	}
 	else
 	{
@@ -4213,7 +4202,7 @@ void e132xs_extend(void)
 			break;
 		}
 		default:
-			verboselog( 0, "Illegal extended opcode (%x) @ %x\n", ext_opcode, PC );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Illegal extended opcode (%x) @ %x\n", ext_opcode, PC );
 			break;
 	}
 
@@ -4542,7 +4531,7 @@ void e132xs_call(void)
 	/*TODO: add -> bit 0 of const must be 0 ?*/
 	const_val = get_const();
 
-	verboselog( 0, "Immediate value for CALL: %04x\n", const_val );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Immediate value for CALL: %04x\n", const_val );
 
 	if( !(S_CODE == SR_CODE && !S_BIT) )
 	{
@@ -4692,7 +4681,7 @@ void e132xs_trap(void)
 		case 1:
 		case 2:
 		case 3:
-			verboselog( 0, "- Trap code not available (%d) @ %x\n", trapno, PC );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "- Trap code not available (%d) @ %x\n", trapno, PC );
 			break;
 	*/
 		case TRAPLE:

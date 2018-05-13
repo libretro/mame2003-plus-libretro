@@ -3,13 +3,11 @@
  *
  *****************************************************************************/
 
-#define DECO16_VERBOSE 0
-
 #undef	OP
 #define OP(nn) static INLINE void deco16_##nn(void)
 
 #define DECO16_BRK												\
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: BRK\n",activecpu_get_pc());					\
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: BRK\n",activecpu_get_pc());					\
 	PCW++;														\
 	PUSH(PCH);													\
 	PUSH(PCL);													\
@@ -88,8 +86,7 @@ OP(23) {
 	m6502_ICount -= 3;
 	RD_IMM;
 
-	if (DECO16_VERBOSE)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: OP23 %02x\n",activecpu_get_pc(),tmp);
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: OP23 %02x\n",activecpu_get_pc(),tmp);
 }
 #define deco16_43 m6502_43 								/* 2 ILL */
 OP(63) {
@@ -98,8 +95,7 @@ OP(63) {
 	m6502_ICount -= 3;
 	RD_IMM;
 
-	if (DECO16_VERBOSE)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: OP63 %02x\n",activecpu_get_pc(),tmp);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: OP63 %02x\n",activecpu_get_pc(),tmp);
 }
 #define deco16_83 m6502_83 								/* 2 ILL */
 OP(a3) {
@@ -108,16 +104,14 @@ OP(a3) {
 	m6502_ICount -= 3;
 	RD_IMM;
 
-	if (DECO16_VERBOSE)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: OPA3 %02x\n",activecpu_get_pc(),tmp);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: OPA3 %02x\n",activecpu_get_pc(),tmp);
 }
 #define deco16_c3 m6502_c3 								/* 2 ILL */
 #define deco16_e3 m6502_e3 								/* 2 ILL */
 
 OP(13) { int tmp; m6502_ICount -= 3; RD_IMM;
 
-	if (DECO16_VERBOSE)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: OP13 %02x\n",activecpu_get_pc(),tmp);
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: OP13 %02x\n",activecpu_get_pc(),tmp);
 
 /*bank select control?*/
 
@@ -191,15 +185,15 @@ OP(67) {
 	int tmp; m6502_ICount -= 2; RD_IMM;
 	m6502.a=cpu_readport16(0);
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: VBL (0x67)\n",activecpu_get_pc());*/
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: VBL (0x67)\n",activecpu_get_pc());
 
 /* really - wait for status?*/
 
-} /*  */
+}
 OP(87) { int tmp; m6502_ICount -= 3; RD_IMM;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: OP87 %02x\n",activecpu_get_pc(),tmp);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: OP87 %02x\n",activecpu_get_pc(),tmp);
 
-	  			} /*  */
+	  			}
 #define deco16_a7 m6502_a7								/* 5 SMB2 ZPG */
 #define deco16_c7 m6502_c7								/* 5 SMB4 ZPG */
 #define deco16_e7 m6502_e7								/* 5 SMB6 ZPG */
@@ -268,14 +262,14 @@ OP(87) { int tmp; m6502_ICount -= 3; RD_IMM;
 #define deco16_fa m65c02_fa								/* 4 PLX */
 
 OP(0b) { int tmp; m6502_ICount -= 3; RD_IMM;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: OP0B %02x\n",activecpu_get_pc(),tmp);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: OP0B %02x\n",activecpu_get_pc(),tmp);
 
 	  			}
 
 #define deco16_2b m6502_2b 								/* 2 ILL */
 
 OP(4b) { int tmp; m6502_ICount -= 3; RD_IMM;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: OP4B %02x\n",activecpu_get_pc(),tmp);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: OP4B %02x\n",activecpu_get_pc(),tmp);
 
 /*	m6502.a=cpu_readport16(0);*/
 
@@ -302,8 +296,7 @@ OP(bb) {
 	m6502_ICount -= 3;
 	RD_IMM;
 
-	if (DECO16_VERBOSE)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: OPBB %02x\n",activecpu_get_pc(),tmp);
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: OPBB %02x\n",activecpu_get_pc(),tmp);
 }
 #define deco16_db m6502_db 								/* 2 ILL */
 #define deco16_fb m6502_fb 								/* 2 ILL */
@@ -367,7 +360,7 @@ OP(bb) {
 #define deco16_4f m6502_4f								/* 5 BBR4 ZPG */
 #define deco16_6f m6502_6f								/* 5 BBR6 ZPG */
 OP(8f) { int tmp; m6502_ICount -= 3; RD_IMM;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: BANK (8F) %02x\n",activecpu_get_pc(),tmp);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: BANK (8F) %02x\n",activecpu_get_pc(),tmp);
 
 	cpu_writeport16(0,tmp);
 
@@ -385,8 +378,7 @@ OP(3f) {
 	m6502_ICount -= 3;
 	RD_IMM;
 
-	if (DECO16_VERBOSE)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: OP3F %02x\n",activecpu_get_pc(),tmp);
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: OP3F %02x\n",activecpu_get_pc(),tmp);
 }
 #define deco16_5f m6502_5f								/* 5 BBR5 ZPG */
 #define deco16_7f m6502_7f								/* 5 BBR7 ZPG */

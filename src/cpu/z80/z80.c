@@ -3917,7 +3917,7 @@ static void take_interrupt(void)
 				/* Clear both interrupt flip flops */
 				_IFF1 = _IFF2 = 0;
 				irq_vector = Z80.irq[Z80.request_irq].interrupt_entry(Z80.irq[Z80.request_irq].irq_param);
-				log_cb(RETRO_LOG_DEBUG, "Z80 #%d daisy chain irq_vector $%02x\n", cpu_getactivecpu(), irq_vector);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d daisy chain irq_vector $%02x\n", cpu_getactivecpu(), irq_vector);
 				Z80.request_irq = -1;
 			} else return;
 		}
@@ -3927,7 +3927,7 @@ static void take_interrupt(void)
 			_IFF1 = _IFF2 = 0;
 			/* call back the cpu interface to retrieve the vector */
 			irq_vector = (*Z80.irq_callback)(0);
-			log_cb(RETRO_LOG_DEBUG, "Z80 #%d single int. irq_vector $%02x\n", cpu_getactivecpu(), irq_vector);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d single int. irq_vector $%02x\n", cpu_getactivecpu(), irq_vector);
 		}
 
 		/* Interrupt mode 2. Call [Z80.I:databyte] */
@@ -3936,7 +3936,7 @@ static void take_interrupt(void)
 			irq_vector = (irq_vector & 0xff) | (_I << 8);
 			PUSH( PC );
 			RM16( irq_vector, &Z80.PC );
-			log_cb(RETRO_LOG_DEBUG, "Z80 #%d IM2 [$%04x] = $%04x\n",cpu_getactivecpu() , irq_vector, _PCD);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d IM2 [$%04x] = $%04x\n",cpu_getactivecpu() , irq_vector, _PCD);
 			/* CALL opcode timing */
 			Z80.extra_cycles += cc[Z80_TABLE_op][0xcd];
 		}
@@ -3944,7 +3944,7 @@ static void take_interrupt(void)
 		/* Interrupt mode 1. RST 38h */
 		if( _IM == 1 )
 		{
-			log_cb(RETRO_LOG_DEBUG, "Z80 #%d IM1 $0038\n",cpu_getactivecpu());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d IM1 $0038\n",cpu_getactivecpu());
 			PUSH( PC );
 			_PCD = 0x0038;
 			/* RST $38 + 'interrupt latency' cycles */
@@ -3955,7 +3955,7 @@ static void take_interrupt(void)
 			/* Interrupt mode 0. We check for CALL and JP instructions, */
 			/* if neither of these were found we assume a 1 byte opcode */
 			/* was placed on the databus								*/
-			log_cb(RETRO_LOG_DEBUG, "Z80 #%d IM0 $%04x\n",cpu_getactivecpu() , irq_vector);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d IM0 $%04x\n",cpu_getactivecpu() , irq_vector);
 			switch (irq_vector & 0xff0000)
 			{
 				case 0xcd0000:	/* call */
@@ -4332,11 +4332,11 @@ void z80_set_irq_line(int irqline, int state)
 	{
 		if( Z80.nmi_state == state ) return;
 
-		log_cb(RETRO_LOG_DEBUG, "Z80 #%d set_irq_line (NMI) %d\n", cpu_getactivecpu(), state);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d set_irq_line (NMI) %d\n", cpu_getactivecpu(), state);
 		Z80.nmi_state = state;
 		if( state == CLEAR_LINE ) return;
 
-		log_cb(RETRO_LOG_DEBUG, "Z80 #%d take NMI\n", cpu_getactivecpu());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d take NMI\n", cpu_getactivecpu());
 		_PPC = -1;			/* there isn't a valid previous program counter */
 		LEAVE_HALT;			/* Check if processor was halted */
 
@@ -4347,7 +4347,7 @@ void z80_set_irq_line(int irqline, int state)
 	}
 	else
 	{
-		log_cb(RETRO_LOG_DEBUG, "Z80 #%d set_irq_line %d\n",cpu_getactivecpu() , state);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d set_irq_line %d\n",cpu_getactivecpu() , state);
 		Z80.irq_state = state;
 		if( state == CLEAR_LINE ) return;
 
@@ -4357,11 +4357,11 @@ void z80_set_irq_line(int irqline, int state)
 			daisychain = (*Z80.irq_callback)(irqline);
 			device = daisychain >> 8;
 			int_state = daisychain & 0xff;
-			log_cb(RETRO_LOG_DEBUG, "Z80 #%d daisy chain $%04x -> device %d, state $%02x",cpu_getactivecpu(), daisychain, device, int_state);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d daisy chain $%04x -> device %d, state $%02x",cpu_getactivecpu(), daisychain, device, int_state);
 
 			if( Z80.int_state[device] != int_state )
 			{
-				log_cb(RETRO_LOG_DEBUG, " change\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE " change\n");
 				/* set new interrupt status */
 				Z80.int_state[device] = int_state;
 				/* check interrupt status */
@@ -4380,12 +4380,12 @@ void z80_set_irq_line(int irqline, int state)
 					if( Z80.int_state[device] & Z80_INT_REQ )
 						Z80.request_irq = device;
 				}
-				log_cb(RETRO_LOG_DEBUG, "Z80 #%d daisy chain service_irq $%02x, request_irq $%02x\n", cpu_getactivecpu(), Z80.service_irq, Z80.request_irq);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d daisy chain service_irq $%02x, request_irq $%02x\n", cpu_getactivecpu(), Z80.service_irq, Z80.request_irq);
 				if( Z80.request_irq < 0 ) return;
 			}
 			else
 			{
-				log_cb(RETRO_LOG_DEBUG, " no change\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE " no change\n");
 				return;
 			}
 		}
@@ -4398,7 +4398,7 @@ void z80_set_irq_line(int irqline, int state)
  ****************************************************************************/
 void z80_set_irq_callback(int (*callback)(int))
 {
-	log_cb(RETRO_LOG_DEBUG, "Z80 #%d set_irq_callback $%08x\n",cpu_getactivecpu() , (int)callback);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d set_irq_callback $%08x\n",cpu_getactivecpu() , (int)callback);
 	Z80.irq_callback = callback;
 }
 

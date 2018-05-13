@@ -212,7 +212,7 @@ unsigned Dasm16C5x(char *str, unsigned pc)
 
 	while (bit >= 0)
 	{
-		/* log_cb(RETRO_LOG_ERROR, LOGPRE "{%c/%d}",*cp,bit); */
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "{%c/%d}",*cp,bit); */
 		switch(*cp)
 		{
 			case 'a': a <<=1; a |= ((code & (1<<bit)) ? 1 : 0); bit--; break;

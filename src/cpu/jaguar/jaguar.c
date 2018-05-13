@@ -17,9 +17,6 @@
 #include "state.h"
 #include "jaguar.h"
 
-#define LOG_GPU_IO		0
-#define LOG_DSP_IO		0
-
 
 /*###################################################################################################
 **	CONSTANTS
@@ -1630,9 +1627,7 @@ data32_t jaguargpu_ctrl_r(int cpunum, offs_t offset)
 {
 	data32_t result;
 
-#if LOG_GPU_IO
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X/%d:GPU read register @ F021%02X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X/%d:GPU read register @ F021%02X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4);
 
 	/* switch to the target context */
 	cpuintrf_push_context(cpunum);
@@ -1647,10 +1642,8 @@ void jaguargpu_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 {
 	UINT32 			oldval, newval;
 
-#if LOG_GPU_IO
 	if (offset != G_HIDATA)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X/%d:GPU write register @ F021%02X = %08X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4, data);
-#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X/%d:GPU write register @ F021%02X = %08X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4, data);
 
 	/* switch to the target context */
 	cpuintrf_push_context(cpunum);
@@ -1742,10 +1735,8 @@ data32_t jaguardsp_ctrl_r(int cpunum, offs_t offset)
 {
 	data32_t result;
 
-#if LOG_DSP_IO
 	if (offset != D_FLAGS)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X/%d:DSP read register @ F1A1%02X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4);
-#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X/%d:DSP read register @ F1A1%02X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4);
 
 	/* switch to the target context */
 	cpuintrf_push_context(cpunum);
@@ -1760,10 +1751,8 @@ void jaguardsp_ctrl_w(int cpunum, offs_t offset, data32_t data, data32_t mem_mas
 {
 	UINT32 			oldval, newval;
 
-#if LOG_DSP_IO
 	if (offset != D_FLAGS)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X/%d:DSP write register @ F1A1%02X = %08X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4, data);
-#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X/%d:DSP write register @ F1A1%02X = %08X\n", activecpu_get_previouspc(), cpu_getactivecpu(), offset * 4, data);
 
 	/* switch to the target context */
 	cpuintrf_push_context(cpunum);

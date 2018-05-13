@@ -2017,25 +2017,23 @@ static void blmove(void)
 			tms34010_ICount -= 2;
 		}
 	}
-#if 0
 	/* src is aligned, dst is not */
 	else if (!(src & 0x0f))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "020:BLMOVE with aligned src and unaligned dst\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "020:BLMOVE with aligned src and unaligned dst\n");
 	}
 
 	/* dst is aligned, src is not */
 	else if (!(dst & 0x0f))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "020:BLMOVE with unaligned src and aligned dst\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "020:BLMOVE with unaligned src and aligned dst\n");
 	}
 
 	/* neither are aligned */
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "020:BLMOVE with completely unaligned src and dst\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "020:BLMOVE with completely unaligned src and dst\n");
 	}
-#endif
 
 	/* update the final results */
 	BREG(BINDEX(0)) = src;

@@ -579,7 +579,7 @@ static void mips3drc_recompile(struct drccore *drc)
 	int remaining = MAX_INSTRUCTIONS;
 	UINT32 pc = mips3.pc;
 	
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "recompile_callback @ PC=%08X\n", mips3.pc);*/
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "recompile_callback @ PC=%08X\n", mips3.pc);
 /*
 	if (!ram_read_table)
 	{

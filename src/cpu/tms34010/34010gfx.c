@@ -22,14 +22,12 @@ static void line(void)
 {
 	if (!P_FLAG)
 	{
-#if 0
 		if (state.window_checking != 0 && state.window_checking != 3)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "LINE XY  %08X - Window Checking Mode %d not supported\n", PC, state.window_checking);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "LINE XY  %08X - Window Checking Mode %d not supported\n", PC, state.window_checking);
 
 		P_FLAG = 1;
 		TEMP = (state.op & 0x80) ? 1 : 0;  /* boundary value depends on the algorithm */
-		/*LOGGFX(("%08X(%3d):LINE (%d,%d)-(%d,%d)\n", PC, cpu_getscanline(), DADDR_X, DADDR_Y, DADDR_X + DYDX_X, DADDR_Y + DYDX_Y));*/
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X(%3d):LINE (%d,%d)-(%d,%d)\n", PC, cpu_getscanline(), DADDR_X, DADDR_Y, DADDR_X + DYDX_X, DADDR_Y + DYDX_Y);
 	}
 
 	if (COUNT > 0)
@@ -87,10 +85,8 @@ static int apply_window(const char *inst_name,int srcbpp, UINT32 *srcaddr, XY *d
 		int ey = sy + *dy - 1;
 		int diff, cycles = 3;
 
-#if 0
 		if (state.window_checking == 1 || state.window_checking == 2)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: %s apply_window window mode %d not supported!\n", activecpu_get_pc(), inst_name, state.window_checking);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: %s apply_window window mode %d not supported!\n", activecpu_get_pc(), inst_name, state.window_checking);
 
 		if (state.window_checking == 1)
 			V_FLAG = 1;
@@ -212,20 +208,16 @@ static void shiftreg_w(offs_t offset,data16_t data)
 {
 	if (state.config->from_shiftreg)
 		(*state.config->from_shiftreg)((UINT32)(offset << 3) & ~15, &state.shiftreg[0]);
-#if 0
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "From ShiftReg function not set. PC = %08X\n", PC);
-#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "From ShiftReg function not set. PC = %08X\n", PC);
 }
 
 static data16_t shiftreg_r(offs_t offset)
 {
 	if (state.config->to_shiftreg)
 		(*state.config->to_shiftreg)((UINT32)(offset << 3) & ~15, &state.shiftreg[0]);
-#if 0
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "To ShiftReg function not set. PC = %08X\n", PC);
-#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "To ShiftReg function not set. PC = %08X\n", PC);
 	return state.shiftreg[0];
 }
 

@@ -405,7 +405,7 @@ unsigned dasm_e132xs(char *buffer, unsigned pc)
 
 	op = READ_OP(pc);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE  "Disassembling opcode %04x at PC %08x\n", op, pc );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE  "Disassembling opcode %04x at PC %08x\n", op, pc );
 
 	op_num = (op & 0xff00) >> 8;
 

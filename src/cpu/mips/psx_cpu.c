@@ -216,20 +216,6 @@ static UINT32 mips_mtc0_writemask[]=
 	0x00000000
 };
 
-#if 0
-void GTELOG(const char *a,...)
-{
-	va_list va;
-	char s_text[ 1024 ];
-	va_start( va, a );
-	vsprintf( s_text, a, va );
-	va_end( va );
-	log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: GTE: %08x %s\n", mipscpu.pc, INS_COFUN( mipscpu.op ), s_text );
-}
-#else
-static INLINE void GTELOG(const char *a, ...) {}
-#endif
-
 static UINT32 getcp2dr( int n_reg );
 static void setcp2dr( int n_reg, UINT32 n_value );
 static UINT32 getcp2cr( int n_reg );
@@ -2272,13 +2258,13 @@ static UINT32 getcp2dr( int n_reg )
 	{
 		ORGB = ( ( IR1 >> 7 ) & 0x1f ) | ( ( IR2 >> 2 ) & 0x3e0 ) | ( ( IR3 << 3 ) & 0x7c00 );
 	}
-	GTELOG( "get CP2DR%u=%08x", n_reg, mipscpu.cp2dr[ n_reg ].d );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "get CP2DR%u=%08x", n_reg, mipscpu.cp2dr[ n_reg ].d );
 	return mipscpu.cp2dr[ n_reg ].d;
 }
 
 static void setcp2dr( int n_reg, UINT32 n_value )
 {
-	GTELOG( "set CP2DR%u=%08x", n_reg, n_value );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "set CP2DR%u=%08x", n_reg, n_value );
 	mipscpu.cp2dr[ n_reg ].d = n_value;
 
 	if( n_reg == 15 )
@@ -2313,13 +2299,13 @@ static void setcp2dr( int n_reg, UINT32 n_value )
 
 static UINT32 getcp2cr( int n_reg )
 {
-	GTELOG( "get CP2CR%u=%08x", n_reg, mipscpu.cp2cr[ n_reg ].d );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "get CP2CR%u=%08x", n_reg, mipscpu.cp2cr[ n_reg ].d );
 	return mipscpu.cp2cr[ n_reg ].d;
 }
 
 static void setcp2cr( int n_reg, UINT32 n_value )
 {
-	GTELOG( "set CP2CR%u=%08x", n_reg, n_value );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "set CP2CR%u=%08x", n_reg, n_value );
 	mipscpu.cp2cr[ n_reg ].d = n_value;
 }
 
@@ -2413,7 +2399,7 @@ static void docop2( int gteop )
 	case 0x01:
 		if( gteop == 0x0180001 )
 		{
-			GTELOG( "RTPS" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "RTPS" );
 			FLAG = 0;
 
 			MAC1 = A1( ( ( (INT64)(INT32)TRX << 12 ) + ( (INT16)R11 * (INT16)VX0 ) + ( (INT16)R12 * (INT16)VY0 ) + ( (INT16)R13 * (INT16)VZ0 ) ) >> 12 );
@@ -2438,7 +2424,7 @@ static void docop2( int gteop )
 	case 0x02:
 		if( gteop == 0x0280030 )
 		{
-			GTELOG( "RTPT" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "RTPT" );
 			FLAG = 0;
 
 			for( n_v = 0; n_v < 3; n_v++ )
@@ -2467,7 +2453,7 @@ static void docop2( int gteop )
 		if( GTE_CT( gteop ) == 0x012 ||
 			GTE_CT( gteop ) == 0x412 )
 		{
-			GTELOG( "MVMVA" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "MVMVA" );
 			n_sf = 12 * GTE_SF( gteop );
 			p_n_mx = p_p_n_mx[ GTE_MX( gteop ) ];
 			n_v = GTE_V( gteop );
@@ -2500,7 +2486,7 @@ static void docop2( int gteop )
 	case 0x07:
 		if( gteop == 0x0780010 )
 		{
-			GTELOG( "DPCS" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "DPCS" );
 			FLAG = 0;
 
 			MAC1 = A1( ( ( (INT64)R << 16 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)RFC - ( R << 4 ), 0 ) ) ) ) >> 12 );
@@ -2527,7 +2513,7 @@ static void docop2( int gteop )
 	case 0x09:
 		if( gteop == 0x0980011 )
 		{
-			GTELOG( "INTPL" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "INTPL" );
 			FLAG = 0;
 
 			MAC1 = A1( ( ( (INT64)(INT16)IR1 << 12 ) + ( (INT64)(INT16)IR0 * ( Lm_B1( (INT32)RFC - (INT16)IR1, 0 ) ) ) ) >> 12 );
@@ -2554,7 +2540,7 @@ static void docop2( int gteop )
 	case 0x0a:
 		if( GTE_CT( gteop ) == 0x428 )
 		{
-			GTELOG( "SQR" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SQR" );
 			n_sf = 12 * GTE_SF( gteop );
 			FLAG = 0;
 
@@ -2570,7 +2556,7 @@ static void docop2( int gteop )
 	case 0x0c:
 		if( gteop == 0x0c8041e )
 		{
-			GTELOG( "NCS" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCS" );
 			FLAG = 0;
 
 			MAC1 = A1( ( ( (INT64)(INT16)L11 * (INT16)VX0 ) + ( (INT16)L12 * (INT16)VY0 ) + ( (INT16)L13 * (INT16)VZ0 ) ) >> 12 );
@@ -2603,7 +2589,7 @@ static void docop2( int gteop )
 	case 0x0d:
 		if( gteop == 0x0d80420 )
 		{
-			GTELOG( "NCT" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCT" );
 			FLAG = 0;
 
 			for( n_v = 0; n_v < 3; n_v++ )
@@ -2639,7 +2625,7 @@ static void docop2( int gteop )
 	case 0x0e:
 		if( gteop == 0x0e80413 )
 		{
-			GTELOG( "NCDS" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCDS" );
 			FLAG = 0;
 
 			MAC1 = A1( ( ( (INT64)(INT16)L11 * (INT16)VX0 ) + ( (INT16)L12 * (INT16)VY0 ) + ( (INT16)L13 * (INT16)VZ0 ) ) >> 12 );
@@ -2678,7 +2664,7 @@ static void docop2( int gteop )
 	case 0x0f:
 		if( gteop == 0x0f8002a )
 		{
-			GTELOG( "DPCT" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "DPCT" );
 			FLAG = 0;
 
 			for( n_pass = 0; n_pass < 3; n_pass++ )
@@ -2706,7 +2692,7 @@ static void docop2( int gteop )
 		}
 		else if( gteop == 0x0f80416 )
 		{
-			GTELOG( "NCDT" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCDT" );
 			FLAG = 0;
 
 			for( n_v = 0; n_v < 3; n_v++ )
@@ -2748,7 +2734,7 @@ static void docop2( int gteop )
 	case 0x10:
 		if( gteop == 0x108041b )
 		{
-			GTELOG( "NCCS" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCCS" );
 			FLAG = 0;
 
 			MAC1 = A1( ( ( (INT64)(INT16)L11 * (INT16)VX0 ) + ( (INT16)L12 * (INT16)VY0 ) + ( (INT16)L13 * (INT16)VZ0 ) ) >> 12 );
@@ -2787,7 +2773,7 @@ static void docop2( int gteop )
 	case 0x11:
 		if( gteop == 0x118043f )
 		{
-			GTELOG( "NCCT" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCCT" );
 			FLAG = 0;
 
 			for( n_v = 0; n_v < 3; n_v++ )
@@ -2829,7 +2815,7 @@ static void docop2( int gteop )
 	case 0x13:
 		if( gteop == 0x138041c )
 		{
-			GTELOG( "CC" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "CC" );
 			FLAG = 0;
 
 			MAC1 = A1( ( ( (INT64)RBK << 12 ) + ( (INT16)LR1 * (INT16)IR1 ) + ( (INT16)LR2 * (INT16)IR2 ) + ( (INT16)LR3 * (INT16)IR3 ) ) >> 12 );
@@ -2862,7 +2848,7 @@ static void docop2( int gteop )
 	case 0x14:
 		if( gteop == 0x1400006 )
 		{
-			GTELOG( "NCLIP" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "NCLIP" );
 			FLAG = 0;
 
 			MAC0 = F( ( (INT64)(INT16)SX0 * (INT16)SY1 ) + ( (INT16)SX1 * (INT16)SY2 ) + ( (INT16)SX2 * (INT16)SY0 ) - ( (INT16)SX0 * (INT16)SY2 ) - ( (INT16)SX1 * (INT16)SY0 ) - ( (INT16)SX2 * (INT16)SY1 ) );
@@ -2872,7 +2858,7 @@ static void docop2( int gteop )
 	case 0x15:
 		if( gteop == 0x158002d )
 		{
-			GTELOG( "AVSZ3" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "AVSZ3" );
 			FLAG = 0;
 
 			MAC0 = F( ( (INT64)(INT16)ZSF3 * SZ1 ) + ( (INT16)ZSF3 * SZ2 ) + ( (INT16)ZSF3 * SZ3 ) );
@@ -2883,7 +2869,7 @@ static void docop2( int gteop )
 	case 0x16:
 		if( gteop == 0x168002e )
 		{
-			GTELOG( "AVSZ4" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "AVSZ4" );
 			FLAG = 0;
 
 			MAC0 = F( ( (INT64)(INT16)ZSF4 * SZ0 ) + ( (INT16)ZSF4 * SZ1 ) + ( (INT16)ZSF4 * SZ2 ) + ( (INT16)ZSF4 * SZ3 ) );
@@ -2894,7 +2880,7 @@ static void docop2( int gteop )
 	case 0x17:
 		if( GTE_CT( gteop ) == 0x00c )
 		{
-			GTELOG( "OP" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "OP" );
 			n_sf = 12 * GTE_SF( gteop );
 			FLAG = 0;
 
@@ -2910,7 +2896,7 @@ static void docop2( int gteop )
 	case 0x19:
 		if( GTE_CT( gteop ) == 0x03d )
 		{
-			GTELOG( "GPF" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "GPF" );
 			n_sf = 12 * GTE_SF( gteop );
 			FLAG = 0;
 
@@ -2938,7 +2924,7 @@ static void docop2( int gteop )
 	case 0x1a:
 		if( GTE_CT( gteop ) == 0x03e )
 		{
-			GTELOG( "GPL" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "GPL" );
 			n_sf = 12 * GTE_SF( gteop );
 			FLAG = 0;
 

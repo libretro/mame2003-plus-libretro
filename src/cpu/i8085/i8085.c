@@ -172,7 +172,7 @@ static void WM(UINT32 a, UINT8 v)
 static	void illegal(void)
 {
 	UINT16 pc = I.PC.w.l - 1;
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "i8085 illegal instruction %04X $%02X\n", pc, cpu_readop(pc));
+	log_cb(RETRO_LOG_ERROR, LOGPRE "i8085 illegal instruction %04X $%02X\n", pc, cpu_readop(pc));
 }
 
 static INLINE void execute_one(int opcode)

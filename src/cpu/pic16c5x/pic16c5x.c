@@ -756,7 +756,7 @@ void pic16C5x_soft_reset(void)
 
 void pic16c5x_config(int data)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Writing %04x to the PIC16C5x config register\n",data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Writing %04x to the PIC16C5x config register\n",data);
 	temp_config = (data & 0xfff);
 }
 

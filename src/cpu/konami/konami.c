@@ -337,7 +337,7 @@ CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N
 	case 3: Y = val;	break;			\
 	case 4: S = val;	break; /* ? */	\
 	case 5: U = val; 	break;			\
-	default: log_cb(RETRO_LOG_ERROR, "Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
+	default: log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
 }
 
 /* opcode timings */
@@ -504,7 +504,7 @@ void konami_set_irq_line(int irqline, int state)
 	{
 		if (konami.nmi_state == state) return;
 		konami.nmi_state = state;
-		log_cb(RETRO_LOG_DEBUG, "KONAMI#%d set_nmi_line %d\n", cpu_getactivecpu(), state);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "KONAMI#%d set_nmi_line %d\n", cpu_getactivecpu(), state);
 		if( state == CLEAR_LINE ) return;
 
 		/* if the stack was not yet initialized */
@@ -536,7 +536,7 @@ void konami_set_irq_line(int irqline, int state)
 	}
 	else if (irqline < 2)
 	{
-	    log_cb(RETRO_LOG_DEBUG, "KONAMI#%d set_irq_line %d, %d\n", cpu_getactivecpu(), irqline, state);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "KONAMI#%d set_irq_line %d, %d\n", cpu_getactivecpu(), irqline, state);
 		konami.irq_state[irqline] = state;
 		if (state == CLEAR_LINE) return;
 		CHECK_IRQ_LINES;

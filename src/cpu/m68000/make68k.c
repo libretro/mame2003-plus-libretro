@@ -8132,9 +8132,9 @@ int main(int argc, char **argv)
 {
 	int dwLoop;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "\nMake68K - V%s - Copyright 1998, Mike Coates (mame@btinternet.com)\n", VERSION);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "                            1999, & Darren Olafson (deo@mail.island.net)\n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE "                            2000\n");
+	log_cb(RETRO_LOG_INFO, LOGPRE "\nMake68K - V%s - Copyright 1998, Mike Coates (mame@btinternet.com)\n", VERSION);
+	log_cb(RETRO_LOG_INFO, LOGPRE "                            1999, & Darren Olafson (deo@mail.island.net)\n");
+	log_cb(RETRO_LOG_INFO, LOGPRE "                            2000\n");
 
 	if (argc != 4 && argc != 5)
 	{
@@ -8142,7 +8142,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Building 680%s              2001\n\n",argv[3]);
+	log_cb(RETRO_LOG_INFO, LOGPRE "Building 680%s              2001\n\n",argv[3]);
 
 	for (dwLoop=0;dwLoop<65536;)  OpcodeArray[dwLoop++] = -2;
 
@@ -8172,14 +8172,14 @@ int main(int argc, char **argv)
 	if(argc > 4 && !strcmp(argv[4], "ppro"))
 	{
 		  ppro = 1;
-		  log_cb(RETRO_LOG_ERROR, LOGPRE "Generating ppro opcodes\n");
+		  log_cb(RETRO_LOG_INFO, LOGPRE "Generating ppro opcodes\n");
 	}
 
 	EmitCode();
 
 	fclose(fp);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "\n%d Unique Opcodes\n",Opcount);
+	log_cb(RETRO_LOG_INFO, LOGPRE "\n%d Unique Opcodes\n",Opcount);
 
 	/* output Jump table to separate file */
 	fp = fopen(argv[2], "w");

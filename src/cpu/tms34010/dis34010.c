@@ -82,14 +82,14 @@ int main (int argc,char *argv[])
 	filebuf=malloc(len+16);
 	if (!filebuf)
 	{
-		printf ("Memory allocation error\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Memory allocation error\n");
 		fclose (f);
 		return 3;
 	}
 	memset (filebuf,0,len+16);
 	if (fread(filebuf,1,len,f)!=len)
 	{
-		printf ("Read error\n");
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Read error\n");
 		fclose (f);
 		free (filebuf);
 		return 4;
@@ -100,11 +100,11 @@ int main (int argc,char *argv[])
 	{
 		i=(Dasm34010 (buf,pc<<3))>>3;
 
-		printf ("%08X: ",(pc+offset) << 3);
-		for (j=0;j<i ;++j) log_cb(RETRO_LOG_ERROR, LOGPRE "%02X ",filebuf[pc+j]);
-		for (   ;j<10;++j) log_cb(RETRO_LOG_ERROR, LOGPRE "   ");
-		log_cb(RETRO_LOG_ERROR, LOGPRE buf);
-		printf ("\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X: ",(pc+offset) << 3);
+		for (j=0;j<i ;++j) log_cb(RETRO_LOG_DEBUG, LOGPRE "%02X ",filebuf[pc+j]);
+		for (   ;j<10;++j) log_cb(RETRO_LOG_DEBUG, LOGPRE "   ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE buf);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 		pc+=i;
 	}
 	free (filebuf);

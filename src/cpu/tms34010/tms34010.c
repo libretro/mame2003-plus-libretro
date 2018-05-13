@@ -26,9 +26,6 @@ extern int debug_key_pressed;
 **	DEBUG STATE & STRUCTURES
 **#################################################################################################*/
 
-#define LOG_CONTROL_REGS	0
-#define LOG_GRAPHICS_OPS	0
-
 static UINT8 tms34010_reg_layout[] =
 {
 	TMS34010_PC, TMS34010_SP, -1,
@@ -560,10 +557,8 @@ static data32_t read_pixel_shiftreg(offs_t offset)
 {
 	if (state.config->to_shiftreg)
 		state.config->to_shiftreg(offset, &state.shiftreg[0]);
-#if 0
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "To ShiftReg function not set. PC = %08X\n", PC);
-#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "To ShiftReg function not set. PC = %08X\n", PC);
 	return state.shiftreg[0];
 }
 
@@ -680,10 +675,8 @@ static void write_pixel_shiftreg(offs_t offset,data32_t data)
 {
 	if (state.config->from_shiftreg)
 		state.config->from_shiftreg(offset, &state.shiftreg[0]);
-#if 0
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "From ShiftReg function not set. PC = %08X\n", PC);
-#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "From ShiftReg function not set. PC = %08X\n", PC);
 }
 
 
@@ -1553,9 +1546,7 @@ static void dpyint_callback(int cpunum)
 {
 	double interval = TIME_IN_HZ(Machine->drv->frames_per_second);
 
-#if 0
-log_cb(RETRO_LOG_ERROR, LOGPRE "-- dpyint(%d) @ %d --\n", cpunum, cpu_getscanline());
-#endif
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "-- dpyint(%d) @ %d --\n", cpunum, cpu_getscanline());
 
 	/* reset timer for next frame before going into the CPU context */
 	timer_adjust(dpyint_timer[cpunum], interval, cpunum, 0);
@@ -1652,9 +1643,7 @@ WRITE16_HANDLER( tms34010_io_register_w )
 			break;
 
 		case REG_PMASK:
-#if 0
-			if (data) log_cb(RETRO_LOG_ERROR, LOGPRE "Plane masking not supported. PC=%08X\n", activecpu_get_pc());
-#endif
+			if (data) log_cb(RETRO_LOG_DEBUG, LOGPRE "Plane masking not supported. PC=%08X\n", activecpu_get_pc());
 			break;
 
 		case REG_DPYCTL:
@@ -1709,9 +1698,9 @@ WRITE16_HANDLER( tms34010_io_register_w )
 				newreg |= data & 0x0008;
 			}
 			IOREG(offset) = newreg;
-#if 0
-log_cb(RETRO_LOG_ERROR, LOGPRE "oldreg=%04X newreg=%04X\n", oldreg, newreg);
-#endif
+
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "oldreg=%04X newreg=%04X\n", oldreg, newreg);
+
 			/* the TMS34010 can set output interrupt? */
 			if (!(oldreg & 0x0080) && (newreg & 0x0080))
 			{
@@ -1756,10 +1745,8 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "oldreg=%04X newreg=%04X\n", oldreg, newreg);
 			break;
 	}
 
-#if 0
-	if (LOG_CONTROL_REGS)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#%d@%08X: %s = %04X (%d)\n", cpunum, activecpu_get_pc(), ioreg_name[offset], IOREG(offset), cpu_getscanline());
-#endif
+  /*log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#%d@%08X: %s = %04X (%d)\n", cpunum, activecpu_get_pc(), ioreg_name[offset], IOREG(offset), cpu_getscanline());*/
+
 }
 
 #if 0
@@ -1796,10 +1783,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 	oldreg = IOREG(offset);
 	IOREG(offset) = data;
 
-#if 0
-	if (LOG_CONTROL_REGS)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#%d@%08X: %s = %04X (%d)\n", cpunum, activecpu_get_pc(), ioreg020_name[offset], IOREG(offset), cpu_getscanline());
-#endif
+  /*log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#%d@%08X: %s = %04X (%d)\n", cpunum, activecpu_get_pc(), ioreg020_name[offset], IOREG(offset), cpu_getscanline());*/
 
 	switch (offset)
 	{
@@ -1980,10 +1964,7 @@ READ16_HANDLER( tms34010_io_register_r )
 	/*int cpunum = cpu_getactivecpu();*/
 	int result, total;
 
-#if 0
-	if (LOG_CONTROL_REGS)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#%d@%08X: read %s\n", cpunum, activecpu_get_pc(), ioreg_name[offset]);
-#endif
+  /*log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#%d@%08X: read %s\n", cpunum, activecpu_get_pc(), ioreg_name[offset]);*/
 
 	switch (offset)
 	{
@@ -2021,10 +2002,7 @@ READ16_HANDLER( tms34020_io_register_r )
 	/*int cpunum = cpu_getactivecpu();*/
 	int result, total;
 
-#if 0
-	if (LOG_CONTROL_REGS)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#%d@%08X: read %s\n", cpunum, activecpu_get_pc(), ioreg_name[offset]);
-#endif
+  /*log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#%d@%08X: read %s\n", cpunum, activecpu_get_pc(), ioreg_name[offset]);*/
 
 	switch (offset)
 	{

@@ -484,46 +484,44 @@ int m68000_execute(int cycles)
 #ifdef MAME_DEBUG
     do
     {
-		if (mame_debug)
+      if (mame_debug)
+      {
+        #ifdef TRACE68K
+
+        int StartCycle = m68k_ICount;
+
+        skiptrace++;
+
+        if (skiptrace > 0)
         {
-			#ifdef TRACE68K
+          int mycount, areg, dreg;
+          areg = dreg = 0;
+          
+          for (mycount=7;mycount>=0;mycount--)
+          {
+            areg = areg + M68000_regs.a[mycount];
+            dreg = dreg + M68000_regs.d[mycount];
+          }
 
-			int StartCycle = m68k_ICount;
-
-            skiptrace++;
-
-            if (skiptrace > 0)
-            {
-			    int mycount, areg, dreg;
-
-                areg = dreg = 0;
-	            for (mycount=7;mycount>=0;mycount--)
-                {
-            	    areg = areg + M68000_regs.a[mycount];
-                    dreg = dreg + M68000_regs.d[mycount];
-                }
-
-           	    log_cb(RETRO_LOG_ERROR, LOGPRE "=> %8x %8x ",areg,dreg);
-			    log_cb(RETRO_LOG_ERROR, LOGPRE "%6x %4x %d\n",M68000_regs.pc,M68000_regs.sr & 0x271F,m68k_ICount);
-            }
-            #endif
-
-#if 0
-	        m68k_memory_intf = a68k_memory_intf;
-#endif
-			MAME_Debug();
-            M68000_RUN();
-
-            #ifdef TRACE68K
-            if ((M68000_regs.IRQ_level & 0x80) || (cpu_getstatus(cpu_getactivecpu()) == 0))
-    			m68k_ICount = 0;
-            else
-				m68k_ICount = StartCycle - 12;
-            #endif
+          log_cb(RETRO_LOG_DEBUG, LOGPRE "=> %8x %8x ",areg,dreg);
+          log_cb(RETRO_LOG_DEBUG, LOGPRE "%6x %4x %d\n",M68000_regs.pc,M68000_regs.sr & 0x271F,m68k_ICount);
         }
-        else
-			M68000_RUN();
+        #endif
 
+        /*m68k_memory_intf = a68k_memory_intf;*/
+
+			  MAME_Debug();
+        M68000_RUN();
+
+        #ifdef TRACE68K
+        if ((M68000_regs.IRQ_level & 0x80) || (cpu_getstatus(cpu_getactivecpu()) == 0))
+          m68k_ICount = 0;
+        else
+          m68k_ICount = StartCycle - 12;
+        #endif
+      }
+      else
+			  M68000_RUN();
     } while (m68k_ICount > 0);
 
 #else
@@ -890,35 +888,34 @@ int m68020_execute(int cycles)
 #ifdef MAME_DEBUG
     do
     {
-		if (mame_debug)
+      if (mame_debug)
+      {
+        #ifdef TRACE68K
+
+        int StartCycle = m68k_ICount;
+
+        skiptrace++;
+
+        if (skiptrace > 0)
         {
-			#ifdef TRACE68K
-
-			int StartCycle = m68k_ICount;
-
-            skiptrace++;
-
-            if (skiptrace > 0)
-            {
 			    int mycount, areg, dreg;
+          areg = dreg = 0;
+          for (mycount=7;mycount>=0;mycount--)
+          {
+            areg = areg + M68020_regs.a[mycount];
+            dreg = dreg + M68020_regs.d[mycount];
+          }
 
-                areg = dreg = 0;
-	            for (mycount=7;mycount>=0;mycount--)
-                {
-            	    areg = areg + M68020_regs.a[mycount];
-                    dreg = dreg + M68020_regs.d[mycount];
-                }
-
-           	    log_cb(RETRO_LOG_ERROR, LOGPRE "=> %8x %8x ",areg,dreg);
-			    log_cb(RETRO_LOG_ERROR, LOGPRE "%6x %4x %d\n",M68020_regs.pc,M68020_regs.sr & 0x271F,m68k_ICount);
-            }
-            #endif
+          log_cb(RETRO_LOG_DEBUG, LOGPRE "=> %8x %8x ",areg,dreg);
+          log_cb(RETRO_LOG_DEBUG, LOGPRE "%6x %4x %d\n",M68020_regs.pc,M68020_regs.sr & 0x271F,m68k_ICount);
+        }
+        #endif
 
 #if 0
 	        m68k_memory_intf = a68k_memory_intf;
 #endif
 			MAME_Debug();
-            M68020_RUN();
+      M68020_RUN();
 
             #ifdef TRACE68K
             if ((M68020_regs.IRQ_level & 0x80) || (cpu_getstatus(cpu_getactivecpu()) == 0))

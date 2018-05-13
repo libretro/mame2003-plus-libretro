@@ -564,7 +564,7 @@ static void v30_interrupt(unsigned int_num, BOOLEAN md_flag)
 	unsigned dest_seg, dest_off;
 
 #if 0
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC=%05x : NEC Interrupt %02d", activecpu_get_pc(), int_num);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC=%05x : NEC Interrupt %02d", activecpu_get_pc(), int_num);
 #endif
 
 	v30_pushf();
@@ -575,7 +575,7 @@ static void v30_interrupt(unsigned int_num, BOOLEAN md_flag)
 	if (int_num == -1)
 	{
 		int_num = (*I.irq_callback) (0);
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE " (indirect ->%02d) ",int_num); */
+		log_cb(RETRO_LOG_DEBUG, LOGPRE " (indirect ->%02d) ",int_num);
 	}
 
 	dest_off = ReadWord(int_num * 4);
@@ -587,7 +587,7 @@ static void v30_interrupt(unsigned int_num, BOOLEAN md_flag)
 	I.base[CS] = SegBase(CS);
 	I.pc = (I.base[CS] + dest_off) & AMASK;
 	change_pc20(I.pc);
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "=%06x\n",activecpu_get_pc()); */
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "=%06x\n",activecpu_get_pc()); */
 }
 
 void v30_trap(void)

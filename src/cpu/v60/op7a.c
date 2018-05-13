@@ -831,7 +831,7 @@ UINT32 opADDDC(void)
 
 	if (f7cLen != 0)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ADDDC %x (pat: %x)\n", f7cOp1, f7cLen);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ADDDC %x (pat: %x)\n", f7cOp1, f7cLen);
 	}
 
 	F7CLOADOP2BYTE(appb);
@@ -870,7 +870,7 @@ UINT32 opSUBDC(void)
 
 	if (f7cLen != 0)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "SUBDC %x (pat: %x)\n", f7cOp1, f7cLen);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "SUBDC %x (pat: %x)\n", f7cOp1, f7cLen);
 	}
 
 	F7CLOADOP2BYTE(appb);
@@ -905,7 +905,7 @@ UINT32 opSUBRDC(void)
 {
 	F7cDecodeOperands(ReadAM, 0, ReadAMAddress, 0);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "SUBRDC %x (pat: %x)\n", f7cOp1, f7cLen);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "SUBRDC %x (pat: %x)\n", f7cOp1, f7cLen);
 
 	F7CEND();
 }
