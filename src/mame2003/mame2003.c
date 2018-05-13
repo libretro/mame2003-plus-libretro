@@ -648,7 +648,11 @@ bool retro_load_game(const struct retro_game_info *game)
       log_cb(RETRO_LOG_INFO,  LOGPRE "libretro save path not set by frontent, using content path\n");
       options.libretro_save_path = options.libretro_content_path;
   }
-  
+
+  log_cb(RETRO_LOG_INFO, LOGPRE "content path: %s\n", options.libretro_content_path);
+  log_cb(RETRO_LOG_INFO, LOGPRE " system path: %s\n", options.libretro_system_path);
+  log_cb(RETRO_LOG_INFO, LOGPRE "   save path: %s\n", options.libretro_save_path);
+
   /* Setup Rotation */
   rotateMode = 0;        
   orientation = drivers[driverIndex]->flags & ORIENTATION_MASK;
