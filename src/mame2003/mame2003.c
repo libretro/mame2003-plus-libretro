@@ -49,13 +49,6 @@ retro_set_led_state_t              led_state_cb                  = NULL;
 
 
 
-int FileExists(const char *filename)
-{
-	FILE *fp = fopen (filename, "r");
-	if (fp!=NULL) fclose (fp);
-	return (fp!=NULL);
-}
-
 /******************************************************************************
 
   private function prototypes
@@ -609,18 +602,16 @@ bool retro_load_game(const struct retro_game_info *game)
     return false;
   }
 
-  log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
-  driver_lookup = strdup(path_basename(game->path));
-
-  if ( FileExists(game->path)  == 0 )
+  log_cb(RETRO_LOG_INFO, LOGPRE "Content path: %s.\n", game->path);    
+  if(!path_is_valid(game->path))
   {
-
-     log_cb(RETRO_LOG_ERROR, LOGPRE "game->path does not end in .zip - only zip files are supported. Exiting!");
-     return false;
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Content path is not valid. Exiting!");
+    return false;
   }
 
-  /* Search list */
+  driver_lookup = strdup(path_basename(game->path));
   path_remove_extension(driver_lookup);
+
   log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
 
   for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
