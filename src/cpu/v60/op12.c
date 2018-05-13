@@ -1842,7 +1842,7 @@ UINT32 opSHAH(void)
 		SetSZPF_Word(apph);
 	}
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "SHAH: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, apph, _CY, _Z, _OV, _S);
+	/*log_cb(RETRO_LOG_DEBUG, LOGPRE "SHAH: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, apph, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2HALF();
 	F12END();
@@ -1896,7 +1896,7 @@ UINT32 opSHAW(void)
 		SetSZPF_Long(appw);
 	}
 
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "SHAW: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, appw, _CY, _Z, _OV, _S);
+	/*log_cb(RETRO_LOG_DEBUG, LOGPRE "SHAW: %x >> %d = %x _CY: %d _Z: %d _OV: %d _S: %d\n", oldval, count, appw, _CY, _Z, _OV, _S);*/
 
 	F12STOREOP2WORD();
 	F12END();
