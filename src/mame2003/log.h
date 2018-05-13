@@ -36,7 +36,7 @@ static INLINE void CLIB_DECL logerror(const char *text,...)
 {
     va_list args;
     va_start (args, text);
-    log_cb(RETRO_LOG_ERROR, text, args);
+    log_cb(RETRO_LOG_DEBUG, text, args);
     va_end (args);
 }
 
