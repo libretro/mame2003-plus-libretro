@@ -594,23 +594,26 @@ bool retro_load_game(const struct retro_game_info *game)
   static const int uiModes[] = {ROT0, ROT90, ROT180, ROT270};
 
   retro_describe_buttons();
-  
-  log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
-  if(strcasecmp(path_get_extension(game->path), "zip") != 0)
-  {
-     log_cb(RETRO_LOG_ERROR, LOGPRE "game->path does not end in .zip - only zip files are supported. Exiting!");
-  }
 
-  driver_lookup = path_remove_extension(strdup(path_basename(game->path)));
-  log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
-
-  if(string_is_empty(driver_lookup))
+  if(string_is_empty(game->path))
   {
-    log_cb(RETRO_LOG_ERROR, LOGPRE "Content does not exist. Exiting!\n");
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Content path is not set. Exiting!\n");
     return false;
   }
 
+  log_cb(RETRO_LOG_INFO, LOGPRE "game->path: [%s].\n", game->path);
+  driver_lookup = strdup(path_basename(game->path));
+
+  if(strcasecmp(path_get_extension(driver_lookup), "zip") != 0)
+  {
+     log_cb(RETRO_LOG_ERROR, LOGPRE "game->path does not end in .zip - only zip files are supported. Exiting!");
+     return false;
+  }
+
   /* Search list */
+  path_remove_extension(driver_lookup);
+  log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
+
   for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
   {
      if ((strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0) 
