@@ -89,18 +89,7 @@ static NVRAM_HANDLER( rungun )
 		}
 		else
     {   
-
-      
-      file = spawn_bootstrap_nvram(rungun_bootstrap_bytes, rungun_bootstrap_length);
-      if(file)
-      {
-        init_eeprom_count = 0;
-        EEPROM_load(file);
-      }
-      else
-      {
-        init_eeprom_count = 10;
-      }
+      init_eeprom_count = 10;
     }
 	}
 }

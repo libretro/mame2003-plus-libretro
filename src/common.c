@@ -469,23 +469,7 @@ void nvram_handler_generic_0fill(mame_file *file, int read_or_write)
 		mame_fwrite(file, generic_nvram, generic_nvram_size);
 	else if (file)
 		mame_fread(file, generic_nvram, generic_nvram_size);
-  else if ( strcasecmp(Machine->gamedrv->name, "zookeep") == 0 
-         || strcasecmp(Machine->gamedrv->name, "zookeep2") == 0 
-         || strcasecmp(Machine->gamedrv->name, "zookeep3") == 0 )
-  {
-			file = spawn_bootstrap_nvram(zookeep_bootstrap_bytes, zookeep_bootstrap_length);
-      if(file)
-			   mame_fread(file, generic_nvram, generic_nvram_size);
-  }
-  else if ( strcasecmp(Machine->gamedrv->name, "qix") == 0 
-         || strcasecmp(Machine->gamedrv->name, "qix2") == 0 
-         || strcasecmp(Machine->gamedrv->name, "qixa") == 0
-         || strcasecmp(Machine->gamedrv->name, "qixb") == 0 )
-  {
-			file = spawn_bootstrap_nvram(qix_bootstrap_bytes, qix_bootstrap_length);
-      if(file)
-			   mame_fread(file, generic_nvram, generic_nvram_size);
-  }	else
+  else
 		memset(generic_nvram, 0, generic_nvram_size);
 }
 

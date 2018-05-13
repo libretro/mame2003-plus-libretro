@@ -115,6 +115,7 @@
 #include "harddisk.h"
 #include "driver.h"
 #include "mame.h"
+#include "bootstrap.h"
 
 /***************************************************************************
 
@@ -502,6 +503,34 @@ void pause_action_start_emulator(void)
     if (Machine->drv->nvram_handler)
     {
         mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
+        if(!nvram_file)
+        {
+          if      ( strcasecmp(Machine->gamedrv->name, "bubblem") == 0)
+            nvram_file = spawn_bootstrap_nvram(bubblem_bootstrap_bytes, bubblem_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "rungun") == 0)
+            nvram_file = spawn_bootstrap_nvram(rungun_bootstrap_bytes, rungun_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "zookeep") == 0 
+                 || strcasecmp(Machine->gamedrv->name, "zookeep2") == 0 
+                 || strcasecmp(Machine->gamedrv->name, "zookeep3") == 0 )
+            nvram_file = spawn_bootstrap_nvram(zookeep_bootstrap_bytes, zookeep_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "qix") == 0 
+                 || strcasecmp(Machine->gamedrv->name, "qix2") == 0 
+                 || strcasecmp(Machine->gamedrv->name, "qixa") == 0
+                 || strcasecmp(Machine->gamedrv->name, "qixb") == 0 )
+            nvram_file = spawn_bootstrap_nvram(qix_bootstrap_bytes, qix_bootstrap_length);
+
+          else if ( strcasecmp(Machine->gamedrv->name, "sinistar") == 0)
+            nvram_file = spawn_bootstrap_nvram(sinistar_bootstrap_bytes, sinistar_bootstrap_length);
+          else if ( strcasecmp(Machine->gamedrv->name, "sinista1") == 0)
+            nvram_file = spawn_bootstrap_nvram(sinista1_bootstrap_bytes, sinista1_bootstrap_length);
+          else if ( strcasecmp(Machine->gamedrv->name, "sinista2") == 0)
+            nvram_file = spawn_bootstrap_nvram(sinista2_bootstrap_bytes, sinista2_bootstrap_length);
+
+        }
+
         (*Machine->drv->nvram_handler)(nvram_file, 0);
         if (nvram_file)
             mame_fclose(nvram_file);

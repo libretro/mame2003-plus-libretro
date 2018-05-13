@@ -101,13 +101,6 @@ void nvram_handler_93C46(mame_file *file,int read_or_write)
 		EEPROM_init(&eeprom_interface_93C46);
 		if (file)
       EEPROM_load(file);
-    else if(strcasecmp(Machine->gamedrv->name, "bubblem") == 0)
-    {
-      
-			file = spawn_bootstrap_nvram(bubblem_bootstrap_bytes, bubblem_bootstrap_length);
-      if(file)
-			   EEPROM_load(file);
-		}
 	}
 }
 
