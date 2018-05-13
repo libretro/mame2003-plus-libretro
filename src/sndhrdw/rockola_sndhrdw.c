@@ -770,7 +770,7 @@ static void rockola_speech_w(data8_t data, data16_t *table, int start)
 			switch (data)
 			{
 			case HD38880_START:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech: START\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: START\n");
 
 				if (hd38880_data_bytes == 5 && !sample_playing(0))
 				{
@@ -788,12 +788,12 @@ static void rockola_speech_w(data8_t data, data16_t *table, int start)
 				break;
 
 			case HD38880_SSTART:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech: SSTART\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: SSTART\n");
 				break;
 
 			case HD38880_STOP:
 				sample_stop(0);
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech: STOP\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: STOP\n");
 				break;
 
 			case HD38880_SYSPD:
@@ -801,7 +801,7 @@ static void rockola_speech_w(data8_t data, data16_t *table, int start)
 				break;
 
 			case HD38880_CONDT:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech: CONDT\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: CONDT\n");
 				break;
 
 			case HD38880_ADSET:
@@ -811,7 +811,7 @@ static void rockola_speech_w(data8_t data, data16_t *table, int start)
 				break;
 
 			case HD38880_READ:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech: READ\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: READ\n");
 				break;
 
 			case HD38880_INT1:
@@ -827,40 +827,40 @@ static void rockola_speech_w(data8_t data, data16_t *table, int start)
 				break;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech: unknown command: 0x%x\n", data);
+				log_cb(RETRO_LOG_WARN, LOGPRE "speech: unknown command: 0x%x\n", data);
 			}
 			break;
 
 		case HD38880_INT1:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "speech: INT1: 0x%x\n", data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: INT1: 0x%x\n", data);
 
 			if (data & 8)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech:   triangular waveform\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech:   triangular waveform\n");
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech:   impulse waveform\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech:   impulse waveform\n");
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "speech:   %sable losing effect of vocal tract\n", data & 4 ? "en" : "dis");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "speech:   %sable losing effect of vocal tract\n", data & 4 ? "en" : "dis");
 
 			if ((data & 2) && (data & 8))
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech:   use external pitch control\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech:   use external pitch control\n");
 
 			hd38880_cmd = 0;
 			break;
 
 		case HD38880_INT2:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "speech: INT2: 0x%x\n", data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: INT2: 0x%x\n", data);
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "speech:   %d bits / frame\n", data & 8 ? 48 : 96);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "speech:   %d ms / frame\n", data & 4 ? 20 : 10);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "speech:   %sable repeat\n", data & 2 ? "en" : "dis");
-			log_cb(RETRO_LOG_ERROR, LOGPRE "speech:   %d operations\n", ((data & 8) == 0) || (data & 1) ? 10 : 8);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "speech:   %d bits / frame\n", data & 8 ? 48 : 96);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "speech:   %d ms / frame\n", data & 4 ? 20 : 10);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "speech:   %sable repeat\n", data & 2 ? "en" : "dis");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "speech:   %d operations\n", ((data & 8) == 0) || (data & 1) ? 10 : 8);
 
 			hd38880_cmd = 0;
 			break;
 
 		case HD38880_SYSPD:
 			hd38880_speed = ((double)(data + 1)) / 10.0;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "speech: SYSPD: %1.1f\n", hd38880_speed);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: SYSPD: %1.1f\n", hd38880_speed);
 			hd38880_cmd = 0;
 			break;
 
@@ -868,7 +868,7 @@ static void rockola_speech_w(data8_t data, data16_t *table, int start)
 			hd38880_addr |= (data << (hd38880_data_bytes++ * 4));
 			if (hd38880_data_bytes == 5)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "speech: ADSET: 0x%05x\n", hd38880_addr);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: ADSET: 0x%05x\n", hd38880_addr);
 				hd38880_cmd = 0;
 			}
 			break;

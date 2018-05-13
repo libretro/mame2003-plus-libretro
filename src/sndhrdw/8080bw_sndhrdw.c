@@ -785,7 +785,7 @@ struct SN76477interface sheriff_sn76477_interface =
 
 static void sheriff_74123_0_output_changed_cb(void)
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "74123 0 triggered\n");
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "74123 0 triggered\n");
 	SN76477_vco_w    (0,  TTL74123_output_r(0));
 	SN76477_mixer_b_w(0, !TTL74123_output_r(0));
 
@@ -794,7 +794,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "74123 0 triggered\n");
 
 static void sheriff_74123_1_output_changed_cb(void)
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "74123 1 triggered\n");
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "74123 1 triggered\n");
 	SN76477_set_vco_voltage(0, !TTL74123_output_comp_r(1) ? 5.0 : 0.0);
 
 	SN76477_enable_w(0, TTL74123_output_comp_r(0) && TTL74123_output_comp_r(1));
@@ -852,8 +852,8 @@ static int last = -1;
 	/* 5 - P2.1 - BRD APR*/
 if ((last & 0x10) != (data & 0x10))
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "***Gun: %02X %04X\n", data & 0x14, activecpu_get_pc());
-last = data;
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "***Gun: %02X %04X\n", data & 0x14, activecpu_get_pc());
+  last = data;
 }
 
 	sheriff_t0 = data & 1;
@@ -1038,7 +1038,7 @@ static WRITE_HANDLER( helifire_sh_port4_w )
 
 	cpu_set_irq_line(1, 0, (data & 0x04) ? ASSERT_LINE : CLEAR_LINE);
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "port04 write: %02x &4=%1x\n", data, data&4);
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "port04 write: %02x &4=%1x\n", data, data&4);
 }
 
 static WRITE_HANDLER( helifire_sh_port5_w )
@@ -1058,7 +1058,7 @@ static WRITE_HANDLER( helifire_sh_port5_w )
 
 	c8080bw_helifire_colors_change_w(data & 0x20); /* 1 - don't change colors, 0 - change font and object colors */
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "port05 write: %02x\n",data);
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "port05 write: %02x\n",data);
 
 }
 

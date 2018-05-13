@@ -336,7 +336,7 @@ WRITE_HANDLER( monsterb_audio_8255_w )
 	else
 	{
 		if (data != 0x80)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "8255 Control Port Write = %02X\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "8255 Control Port Write = %02X\n",data);
 	}
 }
 

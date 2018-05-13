@@ -121,7 +121,7 @@ WRITE_HANDLER( gottlieb_speech_w )
 
 	data ^= 255;
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "Votrax: intonation %d, phoneme %02x %s\n",data >> 6,data & 0x3f,PhonemeTable[data & 0x3f]);
+  log_cb(RETRO_LOG_DEBUG, LOGPRE "Votrax: intonation %d, phoneme %02x %s\n",data >> 6,data & 0x3f,PhonemeTable[data & 0x3f]);
 
 	queue[pos++] = data & 0x3f;
 

@@ -91,7 +91,5 @@ WRITE_HANDLER( invinco_sh_port2_w )
 		PLAY( SND_SHIPHIT, 0 );
 	}
 
-#if 0
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Went LO: %02X  %04X\n", bitsGoneLow, activecpu_get_pc());
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Went LO: %02X  %04X\n", bitsGoneLow, activecpu_get_pc());
 }

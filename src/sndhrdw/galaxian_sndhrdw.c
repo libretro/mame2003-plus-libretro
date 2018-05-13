@@ -563,7 +563,7 @@ WRITE_HANDLER( galaxian_lfo_freq_w )
 #undef Cap
 #undef Vbe
 #undef Vcc
-	log_cb(RETRO_LOG_ERROR, LOGPRE "lfo timer bits:%d%d%d%d r1:%d, r2:%d, re: %d, td: %9.2fsec\n", lfobit[0], lfobit[1], lfobit[2], lfobit[3], (int)r1, (int)r2, (int)Re, td);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "lfo timer bits:%d%d%d%d r1:%d, r2:%d, re: %d, td: %9.2fsec\n", lfobit[0], lfobit[1], lfobit[2], lfobit[3], (int)r1, (int)r2, (int)Re, td);
 	timer_adjust(lfotimer, TIME_IN_SEC(td / (MAXFREQ-MINFREQ)), 0, TIME_IN_SEC(td / (MAXFREQ-MINFREQ)));
 #else
 	static int lfobit[4];

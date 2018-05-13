@@ -106,7 +106,7 @@ WRITE_HANDLER( taitosound_comm_w )
 			break;
 			
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "taitosnd: Master cpu written in mode [%02x] data[%02x]\n",tc0140syt.mainmode, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "taitosnd: Master cpu written in mode [%02x] data[%02x]\n",tc0140syt.mainmode, data);
 	}
 
 }
@@ -143,7 +143,7 @@ READ_HANDLER( taitosound_comm_r )
 			break;
 			
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "tc0140syt : Master cpu read in mode [%02x]\n", tc0140syt.mainmode);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "tc0140syt : Master cpu read in mode [%02x]\n", tc0140syt.mainmode);
 			return 0;
 	}
 }
@@ -156,7 +156,7 @@ WRITE_HANDLER( taitosound_slave_port_w )
 	tc0140syt.submode = data;
 	/*logerror("taitosnd: Slave cpu mode [%02x]\n", data);*/
 	if (data > 6)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "tc0140syt error : Slave cpu unknown mode[%02x]\n", data);
+		log_cb(RETRO_LOG_WARN, LOGPRE "tc0140syt error : Slave cpu unknown mode[%02x]\n", data);
 }
 
 WRITE_HANDLER( taitosound_slave_comm_w )
@@ -203,7 +203,7 @@ WRITE_HANDLER( taitosound_slave_comm_w )
 			break;
 			
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "tc0140syt: Slave cpu written in mode [%02x] data[%02x]\n",tc0140syt.submode, data & 0xff);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "tc0140syt: Slave cpu written in mode [%02x] data[%02x]\n",tc0140syt.submode, data & 0xff);
 	}
 
 	Interrupt_Controller();
@@ -244,7 +244,7 @@ READ_HANDLER( taitosound_slave_comm_r )
 			break;
 			
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "tc0140syt : Slave cpu read in mode [%02x]\n", tc0140syt.submode);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "tc0140syt : Slave cpu read in mode [%02x]\n", tc0140syt.submode);
 			res = 0;
 	}
 

@@ -108,7 +108,7 @@ WRITE_HANDLER( redalert_sound_register_IC2_w )
 WRITE_HANDLER( redalert_AY8910_B_w )
 {
 	/* I'm fairly certain this port triggers analog sounds */
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Port B Trigger: %02X\n",data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B Trigger: %02X\n",data);
 	/* D0 = Formation Aircraft? */
 	/* D1 = Dive bombers? */
 	/* D2 = Helicopters? */

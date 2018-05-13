@@ -395,7 +395,7 @@ WRITE16_HANDLER( seibu_main_mustb_w )
 	main2sub[0] = data&0xff;
 	main2sub[1] = data>>8;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "seibu_main_mustb_w: %x -> %x %x\n", data, main2sub[0], main2sub[1]);*/
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "seibu_main_mustb_w: %x -> %x %x\n", data, main2sub[0], main2sub[1]);
 
 	update_irq_lines(RST18_ASSERT);
 }

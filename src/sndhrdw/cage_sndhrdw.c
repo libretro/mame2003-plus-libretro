@@ -6,7 +6,6 @@
 
 
 #define LOG_COMM			(0)
-#define LOG_32031_IOPORTS	(0)
 #define LOG_WAVE			(0)
 
 
@@ -454,8 +453,7 @@ static READ32_HANDLER( tms32031_io_r )
 			break;
 	}
 
-	if (LOG_32031_IOPORTS)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE:%06X:%s read -> %08X\n", activecpu_get_pc(), register_names[offset & 0x7f], result);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CAGE:%06X:%s read -> %08X\n", activecpu_get_pc(), register_names[offset & 0x7f], result);
 	return result;
 }
 
@@ -464,8 +462,7 @@ static WRITE32_HANDLER( tms32031_io_w )
 {
 	COMBINE_DATA(&tms32031_io_regs[offset]);
 
-	if (LOG_32031_IOPORTS)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE:%06X:%s write = %08X\n", activecpu_get_pc(), register_names[offset & 0x7f], tms32031_io_regs[offset]);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CAGE:%06X:%s write = %08X\n", activecpu_get_pc(), register_names[offset & 0x7f], tms32031_io_regs[offset]);
 	
 	switch (offset)
 	{
@@ -547,8 +544,7 @@ static void update_control_lines(void)
 
 static READ32_HANDLER( cage_from_main_r )
 {
-	if (LOG_COMM)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:CAGE read command = %04X\n", activecpu_get_pc(), cage_from_main);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:CAGE read command = %04X\n", activecpu_get_pc(), cage_from_main);
 	cpu_to_cage_ready = 0;
 	update_control_lines();
 	return cage_from_main;
@@ -557,15 +553,13 @@ static READ32_HANDLER( cage_from_main_r )
 
 static WRITE32_HANDLER( cage_from_main_ack_w )
 {
-	if (LOG_COMM)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:CAGE ack command = %04X\n", activecpu_get_pc(), cage_from_main);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:CAGE ack command = %04X\n", activecpu_get_pc(), cage_from_main);
 }
 
 
 static WRITE32_HANDLER( cage_to_main_w )
 {
-	if (LOG_COMM)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Data from CAGE = %04X\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Data from CAGE = %04X\n", activecpu_get_pc(), data);
 	soundlatch_word_w(0, data, mem_mask);
 	cage_to_cpu_ready = 1;
 	update_control_lines();
@@ -585,8 +579,7 @@ static READ32_HANDLER( cage_io_status_r )
 
 UINT16 main_from_cage_r(void)
 {
-	if (LOG_COMM)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:main read data = %04X\n", activecpu_get_pc(), soundlatch_word_r(0, 0));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:main read data = %04X\n", activecpu_get_pc(), soundlatch_word_r(0, 0));
 	cage_to_cpu_ready = 0;
 	update_control_lines();
 	return soundlatch_word_r(0, 0);
@@ -604,8 +597,7 @@ static void deferred_cage_w(int param)
 
 void main_to_cage_w(UINT16 data)
 {
-	if (LOG_COMM)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Command to CAGE = %04X\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Command to CAGE = %04X\n", activecpu_get_pc(), data);
 	timer_set(TIME_NOW, data, deferred_cage_w);
 }
 
