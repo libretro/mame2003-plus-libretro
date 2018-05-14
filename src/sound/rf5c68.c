@@ -19,7 +19,7 @@ static int emulation_rate;
 static int buffer_len;
 static int stream;
 
-//static unsigned char pcmbuf[0x10000];
+/*static unsigned char pcmbuf[0x10000]; */
 static unsigned char *pcmbuf=NULL;
 
 static struct RF5C68interface *intf;
@@ -137,7 +137,7 @@ static void RF5C68Update( int num, INT16 **buffer, int length )
 						rpcm.addr[i] = rpcm.loop[i] + ((addr - old_addr)<<BASE_SHIFT);
 						addr = (rpcm.addr[i]>>BASE_SHIFT)&0xffff;
 						/**** PCM loop check ****/
-						if( (((unsigned int)pcmbuf[addr])&0x00ff) == (unsigned int)0x00ff )	// this causes looping problems
+						if( (((unsigned int)pcmbuf[addr])&0x00ff) == (unsigned int)0x00ff ) /* this causes looping problems */
 						{
 							rpcm.flag[i] = 0;
 							break;
