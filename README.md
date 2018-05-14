@@ -82,7 +82,7 @@ The first value listed for the core option represents the default. "Restart" ind
 
 * **Frameskip**: `0|1|2|3|4|5`
 * **Input interface**: `retropad|mame_keyboard|simultaneous`
-* **RetroPad Layout** (Restart): `modern|SNES|MAME classic`
+* **RetroPad Layout**: `modern|SNES|MAME classic`
 * **Mouse Device**: `mouse|pointer|disabled` - Switch between mouse (e.g. hardware mouse, trackball, etc), pointer (touchpad, touchscreen, lightgun, etc), or disabled. Defaults to `pointer` in iOS.
 * **Show Lightgun crosshair**: `enabled|disabled`
 * **Display MAME menu** `disabled|enabled`
