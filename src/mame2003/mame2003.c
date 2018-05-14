@@ -94,7 +94,7 @@ void retro_set_environment(retro_environment_t cb)
   static const struct retro_variable vars[] = {
     { APPNAME"_frameskip", "Frameskip; 0|1|2|3|4|5" },
     { APPNAME"_input_interface", "Input interface; retropad|mame_keyboard|simultaneous" },
-    { APPNAME"_retropad_layout", "RetroPad Layout (Restart); modern|SNES|MAME classic" },
+    { APPNAME"_retropad_layout", "RetroPad Layout; modern|SNES|MAME classic" },
 #if defined(__IOS__)
     { APPNAME"_mouse_device", "Mouse Device; pointer|mouse|disabled" },
 #else
