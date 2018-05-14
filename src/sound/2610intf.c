@@ -40,7 +40,7 @@ static void timer_callback_2610(int param)
 	int n=param&0x7f;
 	int c=param>>7;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "2610 TimerOver %d\n",c);*/
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "2610 TimerOver %d\n",c);
 	YM2610TimerOver(n,c);
 }
 

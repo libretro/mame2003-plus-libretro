@@ -343,14 +343,13 @@ int ADPCM_sh_start(const struct MachineSound *msound)
 		/* system has already been initalized by the MSM6295, do a smaller portion */
 		num_voices += intf->num;
 
-		#ifdef MAME_DEBUG
 		if (num_voices > MAX_ADPCM)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
+		#ifdef MAME_DEBUG
 			exit(-1);
-		}
 		#endif
-
+    }
 		for (i = msm_voices; i < num_voices; i++)
 		{
 			/* generate the name and create the stream */
@@ -370,13 +369,13 @@ int ADPCM_sh_start(const struct MachineSound *msound)
 	else
 	{
 		num_voices = intf->num;
-		#ifdef MAME_DEBUG
 		if (num_voices > MAX_ADPCM)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
+		#ifdef MAME_DEBUG
 			exit(-1);
-		}
-		#endif
+		#endif		
+    }
 		compute_tables();
 
 		/* initialize the voices */
@@ -622,13 +621,13 @@ int OKIM6295_sh_start(const struct MachineSound *msound)
 	int i;
 
 	/* to share with "raw" ADPCM voices, we must be initialized first */
-	#ifdef MAME_DEBUG
 	if (num_voices > 0)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: MSM6295s must appear in MDRV_ADD_SOUND list before ADPCMs\n");
-		exit(-1);
-	}
-	#endif
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: MSM6295s must appear in MDRV_ADD_SOUND list before ADPCMs\n");
+		#ifdef MAME_DEBUG
+			exit(-1);
+		#endif
+  }
 
 	/* reset the ADPCM system */
 	num_voices = intf->num * OKIM6295_VOICES;
@@ -636,9 +635,11 @@ int OKIM6295_sh_start(const struct MachineSound *msound)
 	#ifdef MAME_DEBUG
 	if (num_voices > MAX_ADPCM)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
-		exit(-1);
-	}
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: too many ADPCM voices: %d vs. MAX_ADPCM %d\n", num_voices, MAX_ADPCM);
+		#ifdef MAME_DEBUG
+			exit(-1);
+		#endif
+  }
 	#endif
 	compute_tables();
 

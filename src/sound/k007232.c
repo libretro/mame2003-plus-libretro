@@ -194,16 +194,14 @@ static void KDAC_A_make_fncode( void ){
     }
     i++;
   }
-#if 0
   for( i = 0; i < 0x200; i++ )
-    log_cb(RETRO_LOG_ERROR, LOGPRE "fncode[%04x] = %.2f\n", i, fncode[i] );
-#endif
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "fncode[%04x] = %.2f\n", i, fncode[i] );
 
 #else
   for( i = 0; i < 0x200; i++ ){
     /*fncode[i] = (0x200 * 55) / (0x200 - i);*/
     fncode[i] = ((0x200 * 55.2) / (0x200 - i)) / (440.00 / 2);
-    /*    log_cb(RETRO_LOG_ERROR, LOGPRE "2 : fncode[%04x] = %.2f\n", i, fncode[i] );*/
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "2 : fncode[%04x] = %.2f\n", i, fncode[i] );
   }
 
 #endif
@@ -384,11 +382,8 @@ static void K007232_WriteReg( int r, int v, int chip )
     case 0x01:
 				/**** address step ****/
       data = (((((unsigned int)kpcm[chip].wreg[reg_port*0x06 + 0x01])<<8)&0x0100) | (((unsigned int)kpcm[chip].wreg[reg_port*0x06 + 0x00])&0x00ff));
-#if 0
       if( !reg_port && r == 1 )
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x\n" ,data );
-#endif
-
+	      log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x\n" ,data );
       kpcm[chip].step[reg_port] =
 	( (7850.0 / (float)Machine->sample_rate) ) *
 	fncode[data] *

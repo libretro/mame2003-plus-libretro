@@ -220,38 +220,28 @@ void astrocade_sound_w(int num, int offset, int data)
 	switch(offset)
 	{
 		case 0:  /* Master Oscillator */
-#ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Master Osc Write: %02x\n",data);
-#endif
-			master_osc[num] = data+1;
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Master Osc Write: %02x\n",data);
+      master_osc[num] = data+1;
 		break;
 
 		case 1:  /* Tone A Frequency */
-#ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Tone A Write:        %02x\n",data);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Tone A Write:        %02x\n",data);
 			freq_A[num] = data+1;
 		break;
 
 		case 2:  /* Tone B Frequency */
-#ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Tone B Write:           %02x\n",data);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Tone B Write:           %02x\n",data);
 			freq_B[num] = data+1;
 		break;
 
 		case 3:  /* Tone C Frequency */
-#ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Tone C Write:              %02x\n",data);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Tone C Write:              %02x\n",data);
 			freq_C[num] = data+1;
 		break;
 
 		case 4:  /* Vibrato Register */
-#ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Vibrato Depth:                %02x\n",data&0x3f);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Vibrato Speed:                %02x\n",data>>6);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Vibrato Depth:                %02x\n",data&0x3f);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Vibrato Speed:                %02x\n",data>>6);
 			vibrato[num] = data & 0x3f;
 
 			temp_vib = (data>>6) & 0x03;
@@ -265,29 +255,23 @@ void astrocade_sound_w(int num, int offset, int data)
 			vol_C[num] = data & 0x0f;
 			mux[num] = (data>>4) & 0x01;
 			noise_am[num] = (data>>5) & 0x01;
-#ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Tone C Vol:                      %02x\n",vol_C[num]);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Mux Source:                      %02x\n",mux[num]);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Noise Am:                        %02x\n",noise_am[num]);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Tone C Vol:                      %02x\n",vol_C[num]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Mux Source:                      %02x\n",mux[num]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Noise Am:                        %02x\n",noise_am[num]);
 		break;
 
 		case 6:  /* Tone A & B Volume */
 			vol_B[num] = (data>>4) & 0x0f;
 			vol_A[num] = data & 0x0f;
-#ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Tone A Vol:                         %02x\n",vol_A[num]);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Tone B Vol:                         %02x\n",vol_B[num]);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Tone A Vol:                         %02x\n",vol_A[num]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Tone B Vol:                         %02x\n",vol_B[num]);
 		break;
 
 		case 7:  /* Noise Volume Register */
 			vol_noise8[num] = data;
 			vol_noise4[num] = (data>>4) & 0x0f;
-#ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Noise Vol:                             %02x\n",vol_noise8[num]);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Noise Vol (4):                         %02x\n",vol_noise4[num]);
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Noise Vol:                             %02x\n",vol_noise8[num]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Noise Vol (4):                         %02x\n",vol_noise4[num]);
 		break;
 
 		case 8:  /* Sound Block Transfer */

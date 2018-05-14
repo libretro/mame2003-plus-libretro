@@ -1412,20 +1412,15 @@ static void init_timetables( FM_ST *ST , const UINT8 *dttable )
 	int i,d;
 	double rate;
 
-#if 0
-	logerror("FM.C: samplerate=%8i chip clock=%8i  freqbase=%f  \n",
-			 ST->rate, ST->clock, ST->freqbase );
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "FM.C: samplerate=%8i chip clock=%8i  freqbase=%f  \n", ST->rate, ST->clock, ST->freqbase );
 
 	/* DeTune table */
-	for (d = 0;d <= 3;d++){
-		for (i = 0;i <= 31;i++){
+	for (d = 0;d <= 3;d++) {
+		for (i = 0;i <= 31;i++) {
 			rate = ((double)dttable[d*32 + i]) * SIN_LEN  * ST->freqbase  * (1<<FREQ_SH) / ((double)(1<<20));
 			ST->dt_tab[d][i]   = (INT32) rate;
 			ST->dt_tab[d+4][i] = -ST->dt_tab[d][i];
-#if 0
-			log_cb(RETRO_LOG_ERROR, LOGPRE "FM.C: DT [%2i %2i] = %8x  \n", d, i, ST->dt_tab[d][i] );
-#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "FM.C: DT [%2i %2i] = %8x  \n", d, i, ST->dt_tab[d][i] );
 		}
 	}
 
@@ -1487,15 +1482,12 @@ static int init_tables(void)
 			tl_tab[ x*2+0 + i*2*TL_RES_LEN ] =  tl_tab[ x*2+0 ]>>i;
 			tl_tab[ x*2+1 + i*2*TL_RES_LEN ] = -tl_tab[ x*2+0 + i*2*TL_RES_LEN ];
 		}
-	#if 0
-			log_cb(RETRO_LOG_ERROR, LOGPRE "tl %04i", x);
-			for (i=0; i<13; i++)
-				log_cb(RETRO_LOG_ERROR, LOGPRE ", [%02i] %4x", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ]);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
-		}
-	#endif
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "tl %04i", x);
+    for (i=0; i<13; i++)
+      log_cb(RETRO_LOG_DEBUG, LOGPRE ", [%02i] %4x", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ]);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 	}
-	/*logerror("FM.C: TL_TAB_LEN = %i elements (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));*/
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "FM.C: TL_TAB_LEN = %i elements (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));
 
 
 	for (i=0; i<SIN_LEN; i++)
@@ -1553,12 +1545,11 @@ static int init_tables(void)
 				lfo_pm_table[(fnum*32*8) + (i*32) + step   +16] = -value;
 				lfo_pm_table[(fnum*32*8) + (i*32) +(step^7)+24] = -value;
 			}
-#if 0
-			log_cb(RETRO_LOG_ERROR, LOGPRE "LFO depth=%1x FNUM=%04x (<<4=%4x): ", i, fnum, fnum<<4);
+
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "LFO depth=%1x FNUM=%04x (<<4=%4x): ", i, fnum, fnum<<4);
 			for (step=0; step<16; step++) /* dump only positive part of waveforms */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ", lfo_pm_table[(fnum*32*8) + (i*32) + step] );
-			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
-#endif
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ", lfo_pm_table[(fnum*32*8) + (i*32) + step] );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 
 		}
 	}
@@ -3673,7 +3664,7 @@ int YM2608Write(int n, int a,UINT8 v)
 			switch( addr )
 			{
 			case 0x0e:	/* DAC data */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "YM2608: write to DAC data (unimplemented) value=%02x\n",v);
+				log_cb(RETRO_LOG_WARN, LOGPRE "YM2608: write to DAC data (unimplemented) value=%02x\n",v);
 				break;
 			default:
 				/* 0x00-0x0d */
@@ -3724,7 +3715,7 @@ UINT8 YM2608Read(int n,int a)
 		{
 			if(addr == 0x0f)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "YM2608 A/D convertion is accessed but not implemented !\n");
+				log_cb(RETRO_LOG_WARN, LOGPRE "YM2608 A/D convertion is accessed but not implemented !\n");
 				ret = 0x80; /* 2's complement PCM data - result from A/D convertion */
 			}
 		}
@@ -4372,7 +4363,7 @@ int YM2610Write(int n, int a, UINT8 v)
 				break;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "YM2610: write to unknown deltat register %02x val=%02x\n",addr,v);
+				log_cb(RETRO_LOG_WARN, LOGPRE "YM2610: write to unknown deltat register %02x val=%02x\n",addr,v);
 				break;
 			}
 

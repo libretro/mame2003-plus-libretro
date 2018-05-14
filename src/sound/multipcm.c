@@ -434,11 +434,11 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 						{
 							if (cptr->type == 1)	/* multiPCM*/
 							{
-/*								log_cb(RETRO_LOG_ERROR, LOGPRE "MPCM: key on chip %d voice %d\n", chip, vnum);
-								logerror("regs %02x %02x %02x %02x %02x %02x %02x %02x\n", cptr->registers[vnum][0],
+								log_cb(RETRO_LOG_DEBUG, LOGPRE "MPCM: key on chip %d voice %d\n", chip, vnum);
+								log_cb(RETRO_LOG_DEBUG, LOGPRE "regs %02x %02x %02x %02x %02x %02x %02x %02x\n", cptr->registers[vnum][0],
 									cptr->registers[vnum][1],cptr->registers[vnum][2],cptr->registers[vnum][3],
 									cptr->registers[vnum][4],cptr->registers[vnum][5],
-									cptr->registers[vnum][6],cptr->registers[vnum][7]);*/
+									cptr->registers[vnum][6],cptr->registers[vnum][7]);
 
 								if (vptr->pan < 8)
 								{
@@ -466,7 +466,7 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 					}
 					else
 					{
-/*						log_cb(RETRO_LOG_ERROR, LOGPRE "MPCM: key off chip %d voice %d\n", chip, vnum);*/
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "MPCM: key off chip %d voice %d\n", chip, vnum);
 						vptr->active = 0;
 						vptr->relcount = 0;
 						if ((vptr->loop) && (vptr->pSamp))
@@ -483,11 +483,11 @@ static void MultiPCM_reg_w(int chip, int offset, unsigned char data)
 
 				case 6: /* ??? LFO? reverb?*/
 				case 7:
-/*					log_cb(RETRO_LOG_ERROR, LOGPRE "write %x to reg %d, voice %d\n", data, cptr->curreg, vnum);*/
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "write %x to reg %d, voice %d\n", data, cptr->curreg, vnum);
 					break;
 
 				default:
-/*					log_cb(RETRO_LOG_ERROR, LOGPRE "write %x to reg %d, voice %d\n", data, cptr->curreg, vnum);*/
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "write %x to reg %d, voice %d\n", data, cptr->curreg, vnum);
 					break;
 			}
 			break;

@@ -135,9 +135,8 @@ static void gaelco_sh_update(int param, INT16 **buffer, int length)
 						gaelco_sndregs[base_offset + 3]--;
 					}
 				} else {
-#ifdef LOG_SOUND
-	log_cb(RETRO_LOG_ERROR, LOGPRE "(GAE1) Playing unknown sample format in channel: %02d, type: %02x, bank: %02x, end: %08x, Length: %04x\n", ch, type, bank, end_pos, gaelco_sndregs[base_offset + 3]);
-#endif
+          log_cb(RETRO_LOG_DEBUG, LOGPRE "(GAE1) Playing unknown sample format in channel: %02d, type: %02x, bank: %02x, end: %08x, Length: %04x\n", ch, type, bank, end_pos, gaelco_sndregs[base_offset + 3]);
+
 					channel->active = 0;
 				}
 
@@ -187,9 +186,7 @@ static void gaelco_sh_update(int param, INT16 **buffer, int length)
 
 READ16_HANDLER( gaelcosnd_r )
 {
-#ifdef LOG_READ_WRITES
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: (GAE1): read from %04x\n", activecpu_get_pc(), offset);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: (GAE1): read from %04x\n", activecpu_get_pc(), offset);
 
 	return gaelco_sndregs[offset];
 }
@@ -202,9 +199,7 @@ WRITE16_HANDLER( gaelcosnd_w )
 {
 	struct gaelcosnd_channel *channel = &gaelcosnd.channel[offset >> 3];
 
-#ifdef LOG_READ_WRITES
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: (GAE1): write %04x to %04x\n", activecpu_get_pc(), data, offset);
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: (GAE1): write %04x to %04x\n", activecpu_get_pc(), data, offset);
 
 	/* first update the stream to this point in time */
 	stream_update(gaelcosnd.stream, 0);
@@ -219,9 +214,7 @@ WRITE16_HANDLER( gaelcosnd_w )
 					channel->active = 1;
 					channel->chunkNum = 0;
 					channel->loop = 0;
-#ifdef LOG_SOUND
-	log_cb(RETRO_LOG_ERROR, LOGPRE "(GAE1) Playing sample channel: %02d, type: %02x, bank: %02x, end: %08x, Length: %04x\n", offset >> 3, (gaelco_sndregs[offset - 2] >> 4) & 0x0f, gaelco_sndregs[offset - 2] & 0x03, gaelco_sndregs[offset - 1] << 8, data);
-#endif
+          log_cb(RETRO_LOG_DEBUG, LOGPRE "(GAE1) Playing sample channel: %02d, type: %02x, bank: %02x, end: %08x, Length: %04x\n", offset >> 3, (gaelco_sndregs[offset - 2] >> 4) & 0x0f, gaelco_sndregs[offset - 2] & 0x03, gaelco_sndregs[offset - 1] << 8, data);
 				}
 			} else {
 				channel->active = 0;
@@ -231,9 +224,7 @@ WRITE16_HANDLER( gaelcosnd_w )
 
 		case 0x07: /* enable/disable looping */
 			if ((gaelco_sndregs[offset - 1] != 0) && (data != 0)){
-#ifdef LOG_SOUND
-	log_cb(RETRO_LOG_ERROR, LOGPRE "(GAE1) Looping in channel: %02d, type: %02x, bank: %02x, end: %08x, Length: %04x\n", offset >> 3, (gaelco_sndregs[offset - 2] >> 4) & 0x0f, gaelco_sndregs[offset - 2] & 0x03, gaelco_sndregs[offset - 1] << 8, data);
-#endif
+        log_cb(RETRO_LOG_DEBUG, LOGPRE "(GAE1) Looping in channel: %02d, type: %02x, bank: %02x, end: %08x, Length: %04x\n", offset >> 3, (gaelco_sndregs[offset - 2] >> 4) & 0x0f, gaelco_sndregs[offset - 2] & 0x03, gaelco_sndregs[offset - 1] << 8, data);
 				channel->loop = 1;
 			} else {
 				channel->loop = 0;

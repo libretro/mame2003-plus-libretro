@@ -61,7 +61,7 @@ void votrax_w(int data)
     Phoneme = data & 0x3F;
     Intonation = data >> 6;
 
-  	log_cb(RETRO_LOG_ERROR, LOGPRE "Speech : %s at intonation %d\n",VotraxTable[Phoneme],Intonation);
+  	log_cb(RETRO_LOG_DEBUG, LOGPRE "Speech : %s at intonation %d\n",VotraxTable[Phoneme],Intonation);
 
     if(Phoneme==63)
    		mixer_stop_sample(VotraxChannel);

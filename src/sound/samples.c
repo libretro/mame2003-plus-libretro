@@ -15,18 +15,18 @@ void sample_start(int channel,int samplenum,int loop)
 	if (Machine->samples->sample[samplenum] == 0) return;
 	if (channel >= numchannels)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_start() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_start() called with channel = %d, but only %d channels allocated - aborting sample_start()!\n",channel,numchannels);
 		return;
 	}
 	if (samplenum >= Machine->samples->total)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_start() called with samplenum = %d, but only %d samples available\n",samplenum,Machine->samples->total);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_start() called with samplenum = %d, but only %d samples available - aborting sample_start()\n",samplenum,Machine->samples->total);
 		return;
 	}
 
 	if ( Machine->samples->sample[samplenum]->resolution == 8 )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "play 8 bit sample %d, channel %d\n",samplenum,channel);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "play 8 bit sample %d, channel %d\n",samplenum,channel);
 		mixer_play_sample(firstchannel + channel,
 				Machine->samples->sample[samplenum]->data,
 				Machine->samples->sample[samplenum]->length,
@@ -35,7 +35,7 @@ void sample_start(int channel,int samplenum,int loop)
 	}
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "play 16 bit sample %d, channel %d\n",samplenum,channel);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "play 16 bit sample %d, channel %d\n",samplenum,channel);
 		mixer_play_sample_16(firstchannel + channel,
 				(short *) Machine->samples->sample[samplenum]->data,
 				Machine->samples->sample[samplenum]->length,

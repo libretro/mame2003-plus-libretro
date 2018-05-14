@@ -1147,17 +1147,16 @@ static int init_tables(void)
 			tl_tab[ x*2+0 + i*2*TL_RES_LEN ] =  tl_tab[ x*2+0 ]>>i;
 			tl_tab[ x*2+1 + i*2*TL_RES_LEN ] = ~tl_tab[ x*2+0 + i*2*TL_RES_LEN ];  /* this *is* different from OPL2 (verified on real YMF262) */
 		}
-	#if 0
-			log_cb(RETRO_LOG_ERROR, LOGPRE "tl %04i", x*2);
-			for (i=0; i<13; i++)
-				log_cb(RETRO_LOG_ERROR, LOGPRE ", [%02i] %5i", i*2, tl_tab[ x*2 +0 + i*2*TL_RES_LEN ] ); /* positive */
-			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "tl %04i", x*2);
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "tl %04i", x*2);
 			for (i=0; i<13; i++)
-				log_cb(RETRO_LOG_ERROR, LOGPRE ", [%02i] %5i", i*2, tl_tab[ x*2 +1 + i*2*TL_RES_LEN ] ); /* negative */
-			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
-	#endif
+				log_cb(RETRO_LOG_DEBUG, LOGPRE ", [%02i] %5i", i*2, tl_tab[ x*2 +0 + i*2*TL_RES_LEN ] ); /* positive */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
+
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "tl %04i", x*2);
+			for (i=0; i<13; i++)
+				log_cb(RETRO_LOG_DEBUG, LOGPRE ", [%02i] %5i", i*2, tl_tab[ x*2 +1 + i*2*TL_RES_LEN ] ); /* negative */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 	}
 
 	for (i=0; i<SIN_LEN; i++)
@@ -1294,7 +1293,7 @@ static void OPL3_initalize(OPL3 *chip)
 	chip->freqbase  = 1.0;
 #endif
 
-	/* log_cb(RETRO_LOG_ERROR, LOGPRE "YMF262: freqbase=%f\n", chip->freqbase); */
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF262: freqbase=%f\n", chip->freqbase);
 
 	/* Timer base time */
 	chip->TimerBase = 1.0 / ((double)chip->clock / (8.0*36) );
@@ -1310,23 +1309,20 @@ static void OPL3_initalize(OPL3 *chip)
 #endif
 	}
 
-#if 0
 	for( i=0 ; i < 16 ; i++ )
 	{
-		logerror("YMF262.C: sl_tab[%i] = %08x\n",
-			i, sl_tab[i] );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF262.C: sl_tab[%i] = %08x\n", i, sl_tab[i] );
 	}
 	for( i=0 ; i < 8 ; i++ )
 	{
 		int j;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "YMF262.C: ksl_tab[oct=%2i] =",i);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF262.C: ksl_tab[oct=%2i] =",i);
 		for (j=0; j<16; j++)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x ", ksl_tab[i*16+j] );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x ", ksl_tab[i*16+j] );
 		}
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 	}
-#endif
 
 
 	/* Amplitude modulation: 27 output levels (triangle waveform); 1 level takes one of: 192, 256 or 448 samples */

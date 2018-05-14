@@ -267,9 +267,7 @@ static INLINE void check_bounds( int chip, int channel ) {
 
 		ic->channels[channel].size = ic->rom_size - channel_start;
 	}
-#if LOG
-	log_cb(RETRO_LOG_ERROR, LOGPRE "K053260: Sample Start = %06x, Sample End = %06x, Sample rate = %04lx, PPCM = %s\n", channel_start, channel_end, ic->channels[channel].rate, ic->channels[channel].ppcm ? "yes" : "no" );
-#endif
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "K053260: Sample Start = %06x, Sample End = %06x, Sample rate = %04lx, PPCM = %s\n", channel_start, channel_end, ic->channels[channel].rate, ic->channels[channel].ppcm ? "yes" : "no" );
 }
 
 void K053260_write( int chip, offs_t offset, data8_t data )

@@ -535,15 +535,13 @@ static void init_tables(void)
 			tl_tab[ x*2+0 + i*2*TL_RES_LEN ] =  tl_tab[ x*2+0 ]>>i;
 			tl_tab[ x*2+1 + i*2*TL_RES_LEN ] = -tl_tab[ x*2+0 + i*2*TL_RES_LEN ];
 		}
-	#if 0
-		log_cb(RETRO_LOG_ERROR, LOGPRE "tl %04i", x*2);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "tl %04i", x*2);
 		for (i=0; i<13; i++)
-			log_cb(RETRO_LOG_ERROR, LOGPRE ", [%02i] %4i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ]);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
-	#endif
+			log_cb(RETRO_LOG_DEBUG, LOGPRE ", [%02i] %4i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 	}
-	/*logerror("TL_TAB_LEN = %i (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));*/
-	/*logerror("ENV_QUIET= %i\n",ENV_QUIET );*/
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "TL_TAB_LEN = %i (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "ENV_QUIET= %i\n",ENV_QUIET );
 
 
 	for (i=0; i<SIN_LEN; i++)

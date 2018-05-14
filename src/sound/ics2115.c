@@ -112,7 +112,7 @@ static void update(int param, INT16 **buffer, int length)
 			INT32 vol = ics2115.voice[osc].volacc;
 			vol = (((vol & 0xff0)|0x1000)<<(vol>>12))>>12;
 
-			logerror("ICS2115: KEYRUN %02d adr=%08x end=%08x delta=%08x\n",
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: KEYRUN %02d adr=%08x end=%08x delta=%08x\n",
 					 osc, adr, end, delta);
 
 			for(i=0; i<length; i++) {
@@ -127,7 +127,7 @@ static void update(int param, INT16 **buffer, int length)
 				buffer[1][i] += v;
 				adr += delta;
 				if(adr >= end) {
-					log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: KEYDONE %2d\n", osc);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: KEYDONE %2d\n", osc);
 					adr -= (end-loop);
 					ics2115.voice[osc].state &= ~V_ON;
 					ics2115.voice[osc].state |= V_DONE;
@@ -172,9 +172,9 @@ static void recalc_timer(int timer)
 	if(period)
 		period = 1/62.8206;
 	if(period)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: timer %d freq=%gHz\n", timer, 1/period);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: timer %d freq=%gHz\n", timer, 1/period);
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: timer %d off\n", timer);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: timer %d off\n", timer);
 
 	if(ics2115.timer[timer].period != period) {
 		ics2115.timer[timer].period = period;
@@ -322,7 +322,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 	case 0x40: /* Timer 1 Preset*/
 		if(!msb) {
 			ics2115.timer[0].preset = data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: t1preset = %d (%04x)\n", ics2115.timer[0].preset, caller_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: t1preset = %d (%04x)\n", ics2115.timer[0].preset, caller_get_pc());
 			recalc_timer(0);
 		}
 		break;
@@ -330,7 +330,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 	case 0x41: /* Timer 2 Preset*/
 		if(!msb) {
 			ics2115.timer[1].preset = data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: t2preset = %d (%04x)\n", ics2115.timer[1].preset, caller_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: t2preset = %d (%04x)\n", ics2115.timer[1].preset, caller_get_pc());
 			recalc_timer(1);
 		}
 		break;
@@ -338,7 +338,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 	case 0x42: /* Timer 1 Prescaler*/
 		if(!msb) {
 			ics2115.timer[0].scale = data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: t1scale = %d (%04x)\n", ics2115.timer[0].scale, caller_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: t1scale = %d (%04x)\n", ics2115.timer[0].scale, caller_get_pc());
 			recalc_timer(0);
 		}
 		break;
@@ -346,7 +346,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 	case 0x43: /* Timer 2 Prescaler*/
 		if(!msb) {
 			ics2115.timer[1].scale = data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: t2scale = %d (%04x)\n", ics2115.timer[1].scale, caller_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: t2scale = %d (%04x)\n", ics2115.timer[1].scale, caller_get_pc());
 			recalc_timer(1);
 		}
 		break;
@@ -354,7 +354,7 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 	case 0x4a: /* IRQ Enable*/
 		if(!msb) {
 			ics2115.irq_en = data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: irq_en = %02x (%04x)\n", ics2115.irq_en, caller_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: irq_en = %02x (%04x)\n", ics2115.irq_en, caller_get_pc());
 			recalc_irq();
 		}
 		break;
@@ -362,12 +362,12 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 	case 0x4f: /* Oscillator Address being Programmed*/
 		if(!msb) {
 			ics2115.osc = data & 31;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: oscnumber = %d (%04x)\n", ics2115.osc, caller_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: oscnumber = %d (%04x)\n", ics2115.osc, caller_get_pc());
 		}
 		break;
 
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: write %02x, %02x:%d (%04x)\n", reg, data, msb, caller_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: write %02x, %02x:%d (%04x)\n", reg, data, msb, caller_get_pc());
 	}
 }
 
@@ -375,7 +375,7 @@ static UINT16 ics2115_reg_r(UINT8 reg)
 {
 	switch(reg) {
 	case 0x0d: /* [osc] Volume Enveloppe Control*/
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: %2d: read vctl (%04x)\n", ics2115.osc, caller_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: %2d: read vctl (%04x)\n", ics2115.osc, caller_get_pc());
 		/*		res = ics2115.voice[ics2115.osc].vctl << 8;*/
 		/* may expect |8 on voice irq with &40 == 0*/
 		/* may expect |8 on reg 0 on voice irq with &80 == 0*/
@@ -387,45 +387,45 @@ static UINT16 ics2115_reg_r(UINT8 reg)
 		for(osc = 0; osc < 32; osc++)
 			if(ics2115.voice[osc].state & V_DONE) {
 				ics2115.voice[osc].state &= ~V_DONE;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: KEYOFF %2d\n", osc);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: KEYOFF %2d\n", osc);
 				recalc_irq();
 				res = 0x40 | osc; /* 0x40 ? 0x80 ?*/
 				break;
 			}
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: read irqv %02x (%04x)\n", res, caller_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: read irqv %02x (%04x)\n", res, caller_get_pc());
 		return res << 8;
 	}
 		
 	case 0x40: /* Timer 0 clear irq*/
-		/*		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: clear timer 0 (%04x)\n", caller_get_pc());*/
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: clear timer 0 (%04x)\n", caller_get_pc());
 		ics2115.irq_pend &= ~(1<<0);
 		recalc_irq();
 		return ics2115.timer[0].preset;
 
 	case 0x41: /* Timer 1 clear irq*/
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: clear timer 1 (%04x)\n", caller_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: clear timer 1 (%04x)\n", caller_get_pc());
 		ics2115.irq_pend &= ~(1<<1);
 		recalc_irq();
 		return ics2115.timer[1].preset;
 
 	case 0x43: /* Timer status*/
-		/*		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: read timer status %02x (%04x)\n", ics2115.irq_pend & 3, caller_get_pc());*/
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: read timer status %02x (%04x)\n", ics2115.irq_pend & 3, caller_get_pc());
 		return ics2115.irq_pend & 3;
 
 	case 0x4a: /* IRQ Pending*/
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: read irq_pend %02x (%04x)\n", ics2115.irq_pend, caller_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: read irq_pend %02x (%04x)\n", ics2115.irq_pend, caller_get_pc());
 		return ics2115.irq_pend;
 
 	case 0x4b: /* Address of Interrupting Oscillator*/
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: %2d: read intoscaddr (%04x)\n", ics2115.osc, caller_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: %2d: read intoscaddr (%04x)\n", ics2115.osc, caller_get_pc());
 		return 0x80;
 
 	case 0x4c: /* Chip revision*/
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: read revision (%04x)\n", caller_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: read revision (%04x)\n", caller_get_pc());
 		return 0x01;
 
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: read %02x unmapped (%04x)\n", reg, caller_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: read %02x unmapped (%04x)\n", reg, caller_get_pc());
 		return 0;
 	}
 }
@@ -482,7 +482,7 @@ READ_HANDLER( ics2115_r )
 					break;
 				}
 		}
-		/*		log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: read status %02x (%04x)\n", res, caller_get_pc());*/
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: read status %02x (%04x)\n", res, caller_get_pc());
 		
 		return res;
 	}
@@ -509,7 +509,7 @@ WRITE_HANDLER( ics2115_w )
 		ics2115_reg_w(ics2115.reg, data, 1);
 		break;
 	}
-	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "ICS2115: wi %d, %02x (%04x)\n", offset, data, caller_get_pc());*/
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: wi %d, %02x (%04x)\n", offset, data, caller_get_pc());
 }
 
 void ics2115_reset(void)

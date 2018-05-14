@@ -842,7 +842,7 @@ int pokey_register_r(int chip, int offs)
 #ifdef MAME_DEBUG
 	if( chip >= intf.num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "POKEY #%d is >= number of Pokeys!\n", chip);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d is >= number of Pokeys!\n", chip);
 		return data;
 	}
 #endif
@@ -871,7 +871,7 @@ int pokey_register_r(int chip, int offs)
 			}
 		}
 		else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: warning - read p[chip] #%d POT%d\n", activecpu_get_pc(), chip, pot);
+		log_cb(RETRO_LOG_WARN, LOGPRE "PC %04x: warning - read p[chip] #%d POT%d\n", activecpu_get_pc(), chip, pot);
 		break;
 
     case ALLPOT_C:
@@ -991,7 +991,7 @@ void pokey_register_w(int chip, int offs, int data)
 #ifdef MAME_DEBUG
 	if( chip >= intf.num )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "POKEY #%d is >= number of Pokeys!\n", chip);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "POKEY #%d is >= number of Pokeys!\n", chip);
 		return;
 	}
 #endif

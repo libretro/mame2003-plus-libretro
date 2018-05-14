@@ -1160,12 +1160,10 @@ static int init_tables(void)
 			tl_tab[ x*2+0 + i*2*TL_RES_LEN ] =  tl_tab[ x*2+0 ]>>i;
 			tl_tab[ x*2+1 + i*2*TL_RES_LEN ] = -tl_tab[ x*2+0 + i*2*TL_RES_LEN ];
 		}
-	#if 0
-			log_cb(RETRO_LOG_ERROR, LOGPRE "tl %04i", x*2);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "tl %04i", x*2);
 			for (i=0; i<12; i++)
-				log_cb(RETRO_LOG_ERROR, LOGPRE ", [%02i] %5i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ] );
-			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
-	#endif
+				log_cb(RETRO_LOG_DEBUG, LOGPRE ", [%02i] %5i", i*2, tl_tab[ x*2 /*+1*/ + i*2*TL_RES_LEN ] );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 	}
 	/*logerror("FMOPL.C: TL_TAB_LEN = %i elements (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));*/
 
@@ -1221,11 +1219,11 @@ static int init_tables(void)
 		else
 			sin_tab[3*SIN_LEN+i] = sin_tab[i & (SIN_MASK>>2)];
 
-		/*logerror("FMOPL.C: sin1[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[1*SIN_LEN+i], tl_tab[sin_tab[1*SIN_LEN+i]] );
-		log_cb(RETRO_LOG_ERROR, LOGPRE "FMOPL.C: sin2[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[2*SIN_LEN+i], tl_tab[sin_tab[2*SIN_LEN+i]] );
-		log_cb(RETRO_LOG_ERROR, LOGPRE "FMOPL.C: sin3[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[3*SIN_LEN+i], tl_tab[sin_tab[3*SIN_LEN+i]] );*/
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin1[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[1*SIN_LEN+i], tl_tab[sin_tab[1*SIN_LEN+i]] );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin2[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[2*SIN_LEN+i], tl_tab[sin_tab[2*SIN_LEN+i]] );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: sin3[%4i]= %4i (tl_tab value=%5i)\n", i, sin_tab[3*SIN_LEN+i], tl_tab[sin_tab[3*SIN_LEN+i]] );
 	}
-	/*logerror("FMOPL.C: ENV_QUIET= %08x (dec*8=%i)\n", ENV_QUIET, ENV_QUIET*8 );*/
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: ENV_QUIET= %08x (dec*8=%i)\n", ENV_QUIET, ENV_QUIET*8 );
 
 
 #ifdef SAVE_SAMPLE
@@ -1265,13 +1263,11 @@ static void OPL_initalize(FM_OPL *OPL)
 	{
 		/* opn phase increment counter = 20bit */
 		OPL->fn_tab[i] = (UINT32)( (double)i * 64 * OPL->freqbase * (1<<(FREQ_SH-10)) ); /* -10 because chip works with 10.10 fixed point, while we use 16.16 */
-#if 0
-		logerror("FMOPL.C: fn_tab[%4i] = %08x (dec=%8i)\n",
-				 i, OPL->fn_tab[i]>>6, OPL->fn_tab[i]>>6 );
-#endif
-	}
 
-#if 0
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: fn_tab[%4i] = %08x (dec=%8i)\n",
+				 i, OPL->fn_tab[i]>>6, OPL->fn_tab[i]>>6 );
+  }
+
 	for( i=0 ; i < 16 ; i++ )
 	{
 		logerror("FMOPL.C: sl_tab[%i] = %08x\n",
@@ -1280,14 +1276,13 @@ static void OPL_initalize(FM_OPL *OPL)
 	for( i=0 ; i < 8 ; i++ )
 	{
 		int j;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "FMOPL.C: ksl_tab[oct=%2i] =",i);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "FMOPL.C: ksl_tab[oct=%2i] =",i);
 		for (j=0; j<16; j++)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x ", ksl_tab[i*16+j] );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x ", ksl_tab[i*16+j] );
 		}
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 	}
-#endif
 
 
 	/* Amplitude modulation: 27 output levels (triangle waveform); 1 level takes one of: 192, 256 or 448 samples */
@@ -1922,7 +1917,7 @@ static unsigned char OPLRead(FM_OPL *OPL,int a)
 			if(OPL->keyboardhandler_r)
 				return OPL->keyboardhandler_r(OPL->keyboard_param);
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Y8950: read unmapped KEYBOARD port\n");
+				log_cb(RETRO_LOG_WARN, LOGPRE "Y8950: read unmapped KEYBOARD port\n");
 		}
 		return 0;
 
@@ -1943,13 +1938,13 @@ static unsigned char OPLRead(FM_OPL *OPL,int a)
 			if(OPL->porthandler_r)
 				return OPL->porthandler_r(OPL->port_param);
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Y8950:read unmapped I/O port\n");
+				log_cb(RETRO_LOG_WARN, LOGPRE "Y8950:read unmapped I/O port\n");
 		}
 		return 0;
 	case 0x1a: /* PCM-DATA    */
 		if(OPL->type&OPL_TYPE_ADPCM)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Y8950 A/D convertion is accessed but not implemented !\n");
+			log_cb(RETRO_LOG_WARN, LOGPRE "Y8950 A/D convertion is accessed but not implemented!\n");
 			return 0x80; /* 2's complement PCM data - result from A/D convertion */
 		}
 		return 0;

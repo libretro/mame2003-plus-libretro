@@ -493,16 +493,16 @@ int tms36xx_sh_start(const struct MachineSound *msound)
 		if( !tms36xx[i] )
 		{
 			log_cb(RETRO_LOG_ERROR, LOGPRE "%s failed to malloc struct TMS36XX\n", name);
-            return 1;
-        }
+      return 1;
+    }
 		tms = tms36xx[i];
 		memset(tms, 0, sizeof(struct TMS36XX));
 
 		tms->subtype = malloc(strlen(name) + 1);
 		strcpy(tms->subtype, name);
-        tms->channel = stream_init(name, intf->mixing_level[i], Machine->sample_rate, i, tms36xx_sound_update);
+    tms->channel = stream_init(name, intf->mixing_level[i], Machine->sample_rate, i, tms36xx_sound_update);
 
-        if( tms->channel == -1 )
+    if( tms->channel == -1 )
 		{
 			log_cb(RETRO_LOG_ERROR, LOGPRE "%s stream_init failed\n", name);
 			return 1;

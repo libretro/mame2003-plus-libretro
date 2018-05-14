@@ -133,11 +133,11 @@ static void FIFO_data_write(int data)
 		fifo_tail = (fifo_tail + 1) % FIFO_SIZE;
 		fifo_count++;
 
-		if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "Added bit to FIFO (size=%2d)\n", fifo_count);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Added bit to FIFO (size=%2d)\n", fifo_count);
 	}
 	else
 	{
-		if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "Ran out of room in the FIFO!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Ran out of room in the FIFO!\n");
 	}
 }
 
@@ -171,7 +171,7 @@ int i;
 			FIFO_data_write(data);
 		}
 		else
-			if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "-->ERROR: TMS5110 missing M0 callback function\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "-->ERROR: TMS5110 missing M0 callback function\n");
 	}
 }
 
@@ -180,10 +180,10 @@ static void perform_dummy_read(void)
 	if (M0_callback)
 	{
 		int data = (*M0_callback)();
-	        if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "TMS5110 performing dummy read; value read = %1i\n", data&1);
+	        log_cb(RETRO_LOG_DEBUG, LOGPRE "TMS5110 performing dummy read; value read = %1i\n", data&1);
 	}
     	else
-	        if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "-->ERROR: TMS5110 missing M0 callback function\n");
+	        log_cb(RETRO_LOG_DEBUG, LOGPRE "-->ERROR: TMS5110 missing M0 callback function\n");
 }
 
 /**********************************************************************************************
@@ -203,7 +203,7 @@ static void perform_dummy_read(void)
 int tms5110_status_read(void)
 {
 
-    if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "Status read: TS=%d\n", talk_status);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Status read: TS=%d\n", talk_status);
 
     return (talk_status << 0); /*CTL1 = still talking ? */
 }
@@ -302,7 +302,7 @@ void tms5110_process(INT16 *buffer, unsigned int size)
             /* is this a stop frame? */
             else if (current_energy == (energytable[15] >> 6))
             {
-                /*if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "processing frame: stop frame\n");*/
+                log_cb(RETRO_LOG_DEBUG, LOGPRE "processing frame: stop frame\n");
                 current_energy = energytable[0] >> 6;
                 target_energy = current_energy;
                 speaking_now = talk_status = 0;
@@ -532,12 +532,12 @@ static int parse_frame(int removeit)
 	/* if the index is 0 or 15, we're done */
 	if (indx == 0 || indx == 15)
 	{
-		if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "  (4-bit energy=%d frame)\n",new_energy);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "  (4-bit energy=%d frame)\n",new_energy);
 
 		/* clear fifo if stop frame encountered */
 		if (indx == 15)
 		{
-			if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "  (4-bit energy=%d STOP frame)\n",new_energy);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  (4-bit energy=%d STOP frame)\n",new_energy);
 			fifo_head = fifo_tail = fifo_count = 0;
 			removeit = 1;
             speaking_now = talk_status = 0;
@@ -570,7 +570,7 @@ static int parse_frame(int removeit)
         for (i = 0; i < 10; i++)
             new_k[i] = old_k[i];
 
-        if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "  (10-bit energy=%d pitch=%d rep=%d frame)\n", new_energy, new_pitch, rep_flag);
+        log_cb(RETRO_LOG_DEBUG, LOGPRE "  (10-bit energy=%d pitch=%d rep=%d frame)\n", new_energy, new_pitch, rep_flag);
         goto done;
     }
 
@@ -589,7 +589,7 @@ static int parse_frame(int removeit)
         new_k[2] = k3table[extract_bits(4)];
         new_k[3] = k4table[extract_bits(4)];
 
-        if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "  (28-bit energy=%d pitch=%d rep=%d 4K frame)\n", new_energy, new_pitch, rep_flag);
+        log_cb(RETRO_LOG_DEBUG, LOGPRE "  (28-bit energy=%d pitch=%d rep=%d 4K frame)\n", new_energy, new_pitch, rep_flag);
         goto done;
     }
 
@@ -611,11 +611,11 @@ static int parse_frame(int removeit)
     new_k[8] = k9table[extract_bits(3)];
     new_k[9] = k10table[extract_bits(3)];
 
-    if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "  (49-bit energy=%d pitch=%d rep=%d 10K frame)\n", new_energy, new_pitch, rep_flag);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "  (49-bit energy=%d pitch=%d rep=%d 10K frame)\n", new_energy, new_pitch, rep_flag);
 
 done:
 
-    if (DEBUG_5110) log_cb(RETRO_LOG_ERROR, LOGPRE "Parsed a frame successfully - %d bits remaining\n", bits);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Parsed a frame successfully - %d bits remaining\n", bits);
 
 #if 0
     /* if we're not to remove this one, restore the FIFO */
