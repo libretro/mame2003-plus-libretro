@@ -220,11 +220,12 @@ static NVRAM_HANDLER(93C56)
 
  				if (use_factory_eeprom==EEPROM_DRAGNBLZ) /* Dragnblz too */
  					memcpy(eeprom_data+0xf0, dragnblz_eeprom, 0x10);
-				
-									
-			        if (use_factory_eeprom==EEPROM_GNBARICH) /* Might as well do Gnbarich as well, otherwise the highscore is incorrect */
- 					memcpy(eeprom_data+0xf0, gnbarich_eeprom, 0x10);
 
+				if (use_factory_eeprom==EEPROM_TGM2)
+					memcpy (eeprom_data, (data8_t*)memory_region(REGION_USER1), 0x100);
+
+ 				if (use_factory_eeprom==EEPROM_GNBARICH) /* Might as well do Gnbarich as well, otherwise the highscore is incorrect */
+ 					memcpy(eeprom_data+0xf0, gnbarich_eeprom, 0x10);
 
 				EEPROM_set_data(eeprom_data,0x100);
 			}
@@ -476,6 +477,16 @@ static MACHINE_DRIVER_START( psikyo5 )
 
 	MDRV_CPU_MODIFY("main")
 	MDRV_CPU_MEMORY(ps5_readmem,ps5_writemem)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( psikyo5_240 )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(psikyo3v1)
+
+	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MEMORY(ps5_readmem,ps5_writemem)
+
+	MDRV_VISIBLE_AREA(0, 40*8-1, 0, 30*8-1)
 MACHINE_DRIVER_END
 
 #define UNUSED_PORT \
@@ -795,6 +806,71 @@ ROM_START( dragnblz )
 	ROM_LOAD( "snd0.u52", 0x000000, 0x200000, CRC(7fd1b225) SHA1(6aa61021ada51393bbb34fd1aea00b8feccc8197) )
 ROM_END
 
+
+ROM_START( tgm2 )
+	ROM_REGION( 0x100000, REGION_CPU1, 0)
+	ROM_LOAD32_WORD_SWAP( "2.u21",   0x000000, 0x080000, CRC(b19f6c31) SHA1(c58346c575db71262aebc3993743cb031c41e4af) )
+	ROM_LOAD32_WORD_SWAP( "1.u22",   0x000002, 0x080000, CRC(c521bf24) SHA1(0ee5b9f74b6b8bcc01b2270c53f30d99e877ed64) )
+
+	ROM_REGION( 0x3000000, REGION_GFX1, ROMTEST_GFX )	/* Sprites */
+	/* Lower positions not populated */
+	ROM_LOAD32_WORD( "81ts_3l.u6",   0x0c00000, 0x200000, CRC(d77cff9c) SHA1(93ee48c350110ebf9a80cca95c599c90a523147d) )
+	ROM_LOAD32_WORD( "82ts_3h.u14",  0x0c00002, 0x200000, CRC(f012b583) SHA1(907e1c93cbfa6a0285f96c53f5ccb63e313053d7) )
+	ROM_LOAD32_WORD( "83ts_4l.u7",   0x1000000, 0x200000, CRC(078cafc3) SHA1(26e47c8f0aaa461e69e9f40ee61ce4b4cc480776) )
+	ROM_LOAD32_WORD( "84ts_4h.u15",  0x1000002, 0x200000, CRC(1f91446b) SHA1(81b43156c6a0f4e63dcc9e7c1e9dd54bcba38240) )
+	ROM_LOAD32_WORD( "85ts_5l.u8",   0x1400000, 0x200000, CRC(40fbd259) SHA1(6b8cbfc6232e04785fd232158b3f4d56fadb0c7d) )
+	ROM_LOAD32_WORD( "86ts_5h.u16",  0x1400002, 0x200000, CRC(186c935f) SHA1(0cab30c2ec4df3dc35b4c9de63d29bd0bc99afdb) )
+	ROM_LOAD32_WORD( "87ts_6l.u1",   0x1800000, 0x200000, CRC(c17dc48a) SHA1(4399bfc253fb1cd4ef1081d7350c73df3a0f7441) )
+	ROM_LOAD32_WORD( "88ts_6h.u2",   0x1800002, 0x200000, CRC(e4dba5da) SHA1(24db1e19f4df94ba3a22fba59e4fd065921db1c5) )
+	ROM_LOAD32_WORD( "89ts_7l.u19",  0x1c00000, 0x200000, CRC(dab1b2c5) SHA1(114fd7717b97cdfd605ab7e2a354190c41ba4a82) )
+	ROM_LOAD32_WORD( "90ts_7h.u20",  0x1c00002, 0x200000, CRC(aae696b3) SHA1(9ac27365719c1700f647911dc324a0e2aacea172) )
+	ROM_LOAD32_WORD( "91ts_8l.u28",  0x2000000, 0x200000, CRC(e953ace1) SHA1(c6cdfd807a7a84b86378c3585aeb7c0cb066f8a1) )
+	ROM_LOAD32_WORD( "92ts_8h.u29",  0x2000002, 0x200000, CRC(9da3b976) SHA1(ce1e4eb93760749200ede45703412868ca29a5e7) )
+	ROM_LOAD32_WORD( "93ts_9l.u41",  0x2400000, 0x200000, CRC(233087fe) SHA1(c4adb307ce11ef558fd23b299ce7f458de581446) )
+	ROM_LOAD32_WORD( "94ts_9h.u42",  0x2400002, 0x200000, CRC(9da831c7) SHA1(42698697aa85df088745b2d37ec89b01adce700f) )
+	ROM_LOAD32_WORD( "95ts_10l.u58", 0x2800000, 0x200000, CRC(303a5240) SHA1(5816d1922e85bc27a2a13cdd183d9e67c7ddb2e1) )
+	ROM_LOAD32_WORD( "96ts_10h.u59", 0x2800002, 0x200000, CRC(2240ebf6) SHA1(b61f93a18dd9d94fb57d95745d4df2e41a0371ff) )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* Samples */
+	ROM_LOAD( "97ts_snd.u52", 0x000000, 0x400000, CRC(9155eca6) SHA1(f0b4f68462d8a465c39815d3b7fd9818788132ae) )
+
+	ROM_REGION( 0x100, REGION_USER1, 0 ) /* Default Eeprom (contains scores etc.) */
+	/* might need byteswapping to reprogram actual chip */
+	ROM_LOAD( "tgm2.default.nv", 0x000, 0x100, CRC(50e2348c) SHA1(d17d2739c97a1d93a95dcc9f11feb1f6f228729e) )
+ROM_END
+
+ROM_START( tgm2p )
+	ROM_REGION( 0x100000, REGION_CPU1, 0)
+	ROM_LOAD32_WORD_SWAP( "2b.u21",   0x000000, 0x080000, CRC(38bc626c) SHA1(783e8413b11f1fa08d331b09ef4ed63f62b87ead) )
+	ROM_LOAD32_WORD_SWAP( "1b.u22",   0x000002, 0x080000, CRC(7599fb19) SHA1(3f7e81756470c173cc17a7e7dee91437571fd0c3) )
+
+	ROM_REGION( 0x3000000, REGION_GFX1, ROMTEST_GFX )	/* Sprites */
+	/* Lower positions not populated */
+	ROM_LOAD32_WORD( "81ts_3l.u6",   0x0c00000, 0x200000, CRC(d77cff9c) SHA1(93ee48c350110ebf9a80cca95c599c90a523147d) )
+	ROM_LOAD32_WORD( "82ts_3h.u14",  0x0c00002, 0x200000, CRC(f012b583) SHA1(907e1c93cbfa6a0285f96c53f5ccb63e313053d7) )
+	ROM_LOAD32_WORD( "83ts_4l.u7",   0x1000000, 0x200000, CRC(078cafc3) SHA1(26e47c8f0aaa461e69e9f40ee61ce4b4cc480776) )
+	ROM_LOAD32_WORD( "84ts_4h.u15",  0x1000002, 0x200000, CRC(1f91446b) SHA1(81b43156c6a0f4e63dcc9e7c1e9dd54bcba38240) )
+	ROM_LOAD32_WORD( "85ts_5l.u8",   0x1400000, 0x200000, CRC(40fbd259) SHA1(6b8cbfc6232e04785fd232158b3f4d56fadb0c7d) )
+	ROM_LOAD32_WORD( "86ts_5h.u16",  0x1400002, 0x200000, CRC(186c935f) SHA1(0cab30c2ec4df3dc35b4c9de63d29bd0bc99afdb) )
+	ROM_LOAD32_WORD( "87ts_6l.u1",   0x1800000, 0x200000, CRC(c17dc48a) SHA1(4399bfc253fb1cd4ef1081d7350c73df3a0f7441) )
+	ROM_LOAD32_WORD( "88ts_6h.u2",   0x1800002, 0x200000, CRC(e4dba5da) SHA1(24db1e19f4df94ba3a22fba59e4fd065921db1c5) )
+	ROM_LOAD32_WORD( "89ts_7l.u19",  0x1c00000, 0x200000, CRC(dab1b2c5) SHA1(114fd7717b97cdfd605ab7e2a354190c41ba4a82) )
+	ROM_LOAD32_WORD( "90ts_7h.u20",  0x1c00002, 0x200000, CRC(aae696b3) SHA1(9ac27365719c1700f647911dc324a0e2aacea172) )
+	ROM_LOAD32_WORD( "91ts_8l.u28",  0x2000000, 0x200000, CRC(e953ace1) SHA1(c6cdfd807a7a84b86378c3585aeb7c0cb066f8a1) )
+	ROM_LOAD32_WORD( "92ts_8h.u29",  0x2000002, 0x200000, CRC(9da3b976) SHA1(ce1e4eb93760749200ede45703412868ca29a5e7) )
+	ROM_LOAD32_WORD( "93ts_9l.u41",  0x2400000, 0x200000, CRC(233087fe) SHA1(c4adb307ce11ef558fd23b299ce7f458de581446) )
+	ROM_LOAD32_WORD( "94ts_9h.u42",  0x2400002, 0x200000, CRC(9da831c7) SHA1(42698697aa85df088745b2d37ec89b01adce700f) )
+	ROM_LOAD32_WORD( "95ts_10l.u58", 0x2800000, 0x200000, CRC(303a5240) SHA1(5816d1922e85bc27a2a13cdd183d9e67c7ddb2e1) )
+	ROM_LOAD32_WORD( "96ts_10h.u59", 0x2800002, 0x200000, CRC(2240ebf6) SHA1(b61f93a18dd9d94fb57d95745d4df2e41a0371ff) )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* Samples */
+	ROM_LOAD( "97ts_snd.u52", 0x000000, 0x400000, CRC(9155eca6) SHA1(f0b4f68462d8a465c39815d3b7fd9818788132ae) )
+
+	ROM_REGION( 0x100, REGION_USER1, 0 ) /* Default Eeprom (contains scores etc.) */
+	/* might need byteswapping to reprogram actual chip */
+	ROM_LOAD( "tgm2p.default.nv", 0x000, 0x100, CRC(b2328b40) SHA1(e6cda4d6f4e91b9f78d2ca84a5eee6c3bd03fe02) )
+ROM_END
+
 ROM_START( gnbarich )
 	ROM_REGION( 0x100000, REGION_CPU1, 0)
 	ROM_LOAD32_WORD_SWAP( "2-prog_l.u21",   0x000000, 0x080000, CRC(c136cd9c) SHA1(ab66c4f5196a66a97dbb5832336a203421cf40fa) )
@@ -814,6 +890,26 @@ ROM_START( gnbarich )
 	ROM_LOAD( "snd0.u52", 0x000000, 0x200000, CRC(7b10436b) SHA1(c731fcce024e286a677ca10a91761c1ee06094a5) )
 ROM_END
 
+
+static READ32_HANDLER( tgm2_speedup_r )
+{
+	if (activecpu_get_pc()==0x0602895a) cpu_spinuntil_int(); 
+	if (activecpu_get_pc()==0x06028cac) cpu_spinuntil_int();
+	if (activecpu_get_pc()==0x06029272) cpu_spinuntil_int(); 
+	if (activecpu_get_pc()==0x06028ef2) cpu_spinuntil_int();
+
+	return psh_ram[0x06000C/4];
+}
+
+static READ32_HANDLER( tgm2p_speedup_r )
+{
+	if (activecpu_get_pc()==0x0602ae5a) cpu_spinuntil_int(); 
+	if (activecpu_get_pc()==0x0602b1ac) cpu_spinuntil_int();
+	if (activecpu_get_pc()==0x0602b772) cpu_spinuntil_int(); 
+	if (activecpu_get_pc()==0x0602b3f2) cpu_spinuntil_int();
+
+	return psh_ram[0x06000C/4];
+}
 
 /* are these right? should i fake the counter return?
    'speedups / idle skipping isn't needed for 'hotgmck, hgkairak'
@@ -840,12 +936,12 @@ PC  : 0001AE80: BT      $0001AE74
 static READ32_HANDLER( s1945ii_speedup_r )
 {
 /*
-PC  : 0609FC68: MOV.L   @R13,R1  // R13 is 600000C  R1 is counter  (read from r13)
-PC  : 0609FC6A: ADD     #$01,R1  // add 1 to counter
-PC  : 0609FC6C: MOV.L   R1,@R13  // write it back
-PC  : 0609FC6E: MOV.L   @($3C,PC),R3 // 609fdac into r3
-PC  : 0609FC70: MOV.L   @R3,R0  // whats there into r0
-PC  : 0609FC72: TST     R0,R0 // test
+PC  : 0609FC68: MOV.L   @R13,R1   R13 is 600000C  R1 is counter  (read from r13)
+PC  : 0609FC6A: ADD     #$01,R1   add 1 to counter
+PC  : 0609FC6C: MOV.L   R1,@R13   write it back
+PC  : 0609FC6E: MOV.L   @($3C,PC),R3  609fdac into r3
+PC  : 0609FC70: MOV.L   @R3,R0   whats there into r0
+PC  : 0609FC72: TST     R0,R0  test
 PC  : 0609FC74: BT      $0609FC68
 */
 	if (activecpu_get_pc()==0x609FC6A) cpu_spinuntil_int(); /* Title Screens*/
@@ -894,7 +990,7 @@ PC  : 060A10F8: BT      $060A10EC
 static READ32_HANDLER( gunbird2_speedup_r )
 {
 /*
-PC  : 06028972: MOV.L   @R14,R3   // r14 is 604000c on this one
+PC  : 06028972: MOV.L   @R14,R3    r14 is 604000c on this one
 PC  : 06028974: MOV.L   @($D4,PC),R1
 PC  : 06028976: ADD     #$01,R3
 PC  : 06028978: MOV.L   R3,@R14
@@ -944,6 +1040,18 @@ static DRIVER_INIT( gnbarich )
 {
 	install_mem_read32_handler(0, 0x606000c, 0x606000f, gnbarich_speedup_r );
 	use_factory_eeprom = EEPROM_GNBARICH;
+}
+
+static DRIVER_INIT( tgm2 )
+{
+	install_mem_read32_handler(0, 0x606000c, 0x606000f, tgm2_speedup_r );
+	use_factory_eeprom=EEPROM_TGM2;
+}
+
+static DRIVER_INIT( tgm2p )
+{
+	install_mem_read32_handler(0, 0x606000c, 0x606000f, tgm2p_speedup_r );
+	use_factory_eeprom=EEPROM_TGM2;
 }
 
 static DRIVER_INIT( soldivid )
@@ -997,15 +1105,17 @@ static DRIVER_INIT( dragnblz )
 /*     YEAR  NAME      PARENT    MACHINE    INPUT     INIT      MONITOR COMPANY   FULLNAME FLAGS */
 
 /* ps3-v1 */
-GAMEX( 1997, soldivid, 0,        psikyo3v1, soldivid, soldivid, ROT0,   "Psikyo", "Sol Divide - The Sword Of Darkness", GAME_IMPERFECT_SOUND ) /* Music Tempo*/
-GAMEX( 1997, s1945ii,  0,        psikyo3v1, s1945ii,  s1945ii,  ROT270, "Psikyo", "Strikers 1945 II", GAME_IMPERFECT_GRAPHICS ) /* linescroll/zoom*/
-GAME ( 1998, daraku,   0,        psikyo3v1, daraku,   daraku,   ROT0,   "Psikyo", "Daraku Tenshi - The Fallen Angels" )
-GAME ( 1998, sbomberb, 0,        psikyo3v1, sbomberb, sbomberb, ROT270, "Psikyo", "Space Bomber (ver. B)" )
+GAMEX( 1997, soldivid, 0,        psikyo3v1,   soldivid, soldivid, ROT0,   "Psikyo", "Sol Divide - The Sword Of Darkness", GAME_IMPERFECT_SOUND ) /* Music Tempo*/
+GAMEX( 1997, s1945ii,  0,        psikyo3v1,   s1945ii,  s1945ii,  ROT270, "Psikyo", "Strikers 1945 II", GAME_IMPERFECT_GRAPHICS ) /* linescroll/zoom*/
+GAME ( 1998, daraku,   0,        psikyo3v1,   daraku,   daraku,   ROT0,   "Psikyo", "Daraku Tenshi - The Fallen Angels" )
+GAME ( 1998, sbomberb, 0,        psikyo3v1,   sbomberb, sbomberb, ROT270, "Psikyo", "Space Bomber (ver. B)" )
 
 /* ps5 */
-GAME ( 1998, gunbird2, 0,        psikyo5,   gunbird2, gunbird2, ROT270, "Psikyo", "Gunbird 2" )
-GAMEX( 1999, s1945iii, 0,        psikyo5,   s1945iii, s1945iii, ROT270, "Psikyo", "Strikers 1945 III (World) - Strikers 1999 (Japan)", GAME_IMPERFECT_GRAPHICS ) /* linescroll/zoom*/
+GAME ( 1998, gunbird2, 0,        psikyo5,     gunbird2, gunbird2, ROT270, "Psikyo", "Gunbird 2" )
+GAMEX( 1999, s1945iii, 0,        psikyo5,     s1945iii, s1945iii, ROT270, "Psikyo", "Strikers 1945 III (World) - Strikers 1999 (Japan)", GAME_IMPERFECT_GRAPHICS ) /* linescroll/zoom*/
 
 /* ps5v2 */
-GAMEX( 2000, dragnblz, 0,        psikyo5,   dragnblz, dragnblz, ROT270, "Psikyo", "Dragon Blaze", GAME_IMPERFECT_GRAPHICS )
-GAME(  2001, gnbarich, 0,        psikyo5,   gnbarich, gnbarich, ROT270, "Psikyo", "Gunbarich" )
+GAMEX( 2000, dragnblz, 0,        psikyo5,     dragnblz, dragnblz, ROT270, "Psikyo", "Dragon Blaze", GAME_IMPERFECT_GRAPHICS )
+GAME(  2001, gnbarich, 0,        psikyo5,     gnbarich, gnbarich, ROT270, "Psikyo", "Gunbarich" )
+GAME(  2000, tgm2,     0,        psikyo5_240, gnbarich, tgm2,     ROT0,   "Arika",  "Tetris the Absolute The Grand Master 2" )
+GAME(  2000, tgm2p,    tgm2,     psikyo5_240, gnbarich, tgm2p,    ROT0,   "Arika",  "Tetris the Absolute The Grand Master 2 Plus" )
