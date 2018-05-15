@@ -3072,11 +3072,7 @@ static int setup_menu(struct mame_bitmap *bitmap, int selected)
 				sel |= 1 << SEL_BITS;
 				schedule_full_refresh();
 				break;
-
-			case UI_RESET:
-				machine_reset();
-				break;
-            
+           
       case UI_GENERATE_NEW_XML_DAT:
           print_mame_xml(0);
           break;
@@ -3209,10 +3205,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	if (!mame_debug)
 #endif
 
-	/* if the user pressed F3, reset the emulation */
-	/*if (input_ui_pressed(IPT_UI_RESET_MACHINE))
-		machine_reset();*/
-
 	/* show popup message if any */
 	if (messagecounter > 0)
 	{
@@ -3222,8 +3214,7 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 			schedule_full_refresh();
 	}
 
-
-	/* if the user pressed F4, show the character set */
+	/* if the user pressed IPT_UI_SHOW_GFX, show the character set */
 	if (input_ui_pressed(IPT_UI_SHOW_GFX))
 	{
 		showcharset(bitmap);
