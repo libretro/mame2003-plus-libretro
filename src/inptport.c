@@ -403,8 +403,6 @@ const char ipdn_defaultstrings[][MAX_DEFSTR_LEN] =
 struct ipd inputport_defaults[] =
 {
 	{ IPT_UI_CONFIGURE,         "Config Menu",			SEQ_DEF_3(KEYCODE_TAB, CODE_OR, JOYCODE_1_BUTTON8) },
-	{ IPT_UI_ON_SCREEN_DISPLAY, "On Screen Display",	SEQ_DEF_1(KEYCODE_TILDE) },
-	{ IPT_UI_RESET_MACHINE,     "Reset Game",			SEQ_DEF_1(KEYCODE_NONE) },
 	{ IPT_UI_SHOW_GFX,          "Show Gfx",				SEQ_DEF_1(KEYCODE_NONE) },
 	{ IPT_UI_TOGGLE_CHEAT,      "Toggle Cheat",			SEQ_DEF_1(KEYCODE_NONE) },
 	{ IPT_UI_UP,                "UI Up",				SEQ_DEF_3(KEYCODE_UP, CODE_OR, JOYCODE_1_UP) },
