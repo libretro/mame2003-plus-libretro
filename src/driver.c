@@ -4734,6 +4734,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( loderdfa )	/* (c) 2000 */
 	DRIVER( hotdebut )	/* (c) 2000 */
 	DRIVER( gnbarich )	/* (c) 2001 */
+	DRIVER( tgm2 )	        /* (c) 2000 */
+	DRIVER( tgm2p )	        /* (c) 2000 */
 
 	/* Orca games */
 	DRIVER( marineb )	/* (c) 1982 Orca */
