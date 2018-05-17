@@ -21,7 +21,7 @@
 	| HA13001 YM3016                    5814                              |
 	--|                                                                   |
 	  |     4558                                                          |
-	--|                                                 SM1.SM1   LS32    |
+	--|                                                 mame.sm1   LS32    |
 	|                                                                     |
 	|                           LSPC-A0         PRO-C0            LS244   |
 	|                                                                     |
@@ -61,7 +61,7 @@
 	         SP-S2.SP1   TC531024 (DIP40)
 	         000-L0.L0   TC531000 (DIP28)
 	         SFIX.SFIX   D27C1000 (DIP32)
-	         SM1.SM1     MB832001 (DIP32)
+	         mame.sm1     MB832001 (DIP32)
 	------------------------------------------------------
 	GRAPHICAL ISSUES :
 	- Effects created using the Raster Interrupt are probably not 100% correct,
@@ -1501,7 +1501,7 @@ SYSTEM_BIOS_END
 	ROM_REGION16_BE( 0x20000, REGION_USER1, 0 ) \
 	NEOGEO_BIOS \
 	ROM_REGION( 0x90000, REGION_CPU2, 0 ) \
-	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */ \
+	ROM_LOAD( "mame.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */ \
 	ROM_LOAD( name, 		0x00000, 0x80000, sum ) /* so overwrite it with the real thing */ \
 	ROM_RELOAD(             0x10000, 0x80000 ) \
 	ROM_REGION( 0x10000, REGION_GFX4, 0 ) \
@@ -1511,7 +1511,7 @@ SYSTEM_BIOS_END
 	ROM_REGION16_BE( 0x20000, REGION_USER1, 0 ) \
 	NEOGEO_BIOS \
 	ROM_REGION( 0x50000, REGION_CPU2, 0 ) \
-	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */ \
+	ROM_LOAD( "mame.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */ \
 	ROM_LOAD( name, 		0x00000, 0x40000, sum ) /* so overwrite it with the real thing */ \
 	ROM_RELOAD(             0x10000, 0x40000 ) \
 	ROM_REGION( 0x10000, REGION_GFX4, 0 ) \
@@ -1521,7 +1521,7 @@ SYSTEM_BIOS_END
 	ROM_REGION16_BE( 0x20000, REGION_USER1, 0 ) \
 	NEOGEO_BIOS \
 	ROM_REGION( 0x50000, REGION_CPU2, 0 ) \
-	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */ \
+	ROM_LOAD( "mame.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */ \
 	ROM_LOAD( name, 		0x00000, 0x20000, sum ) /* so overwrite it with the real thing */ \
 	ROM_RELOAD(             0x10000, 0x20000 ) \
 	ROM_REGION( 0x10000, REGION_GFX4, 0 ) \
@@ -1531,7 +1531,7 @@ SYSTEM_BIOS_END
 	ROM_REGION16_BE( 0x20000, REGION_USER1, 0 ) \
 	NEOGEO_BIOS \
 	ROM_REGION( 0x50000, REGION_CPU2, 0 ) \
-	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */ \
+	ROM_LOAD( "mame.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */ \
 	ROM_LOAD( name, 		0x00000, 0x10000, sum ) /* so overwrite it with the real thing */ \
 	ROM_RELOAD(             0x10000, 0x10000 ) \
 	ROM_REGION( 0x10000, REGION_GFX4, 0 ) \
@@ -4588,7 +4588,7 @@ ROM_START( irrmaze )
 	/* special BIOS with trackball support */
 	IRRMAZE_BIOS
 	ROM_REGION( 0x50000, REGION_CPU2, 0 )
-	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */
+	ROM_LOAD( "mame.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )  /* we don't use the BIOS anyway... */
 	ROM_LOAD( "236-m1.bin", 0x00000, 0x20000, CRC(880a1abd) SHA1(905afa157aba700e798243b842792e50729b19a0) )  /* so overwrite it with the real thing */
 	ROM_RELOAD(             0x10000, 0x20000 )
 	ROM_REGION( 0x10000, REGION_GFX4, 0 )
@@ -5988,7 +5988,7 @@ ROM_START( svcboot )
 	NEOGEO_BIOS
 	
 	ROM_REGION( 0x50000, REGION_CPU2, 0 )
-	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )
+	ROM_LOAD( "mame.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )
 	ROM_LOAD( "svc-m1.bin", 0x20000, 0x10000, CRC(804328c3) SHA1(f931636c563b0789d4812033a77b47bf663db43f) )
 	ROM_CONTINUE(           0x00000, 0x10000 )
 	ROM_COPY( REGION_CPU2,  0x00000, 0x10000, 0x10000 )
@@ -6131,7 +6131,7 @@ ROM_START( neogeo )
 	NEOGEO_BIOS
 
 	ROM_REGION( 0x50000, REGION_CPU2, 0 )
-	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )
+	ROM_LOAD( "mame.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )
 
 	ROM_REGION( 0x10000, REGION_GFX4, 0 )
 	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
