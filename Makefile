@@ -82,13 +82,13 @@ ifeq ($(platform), unix)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
 
-   CFLAGS += $(fpic) -std=c89
+   CFLAGS += $(fpic) -std=gnu90
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 else ifeq ($(platform), linux-portable)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC -nostdlib
 
-   CFLAGS += $(fpic) -std=c89
+   CFLAGS += $(fpic) -std=gnu90
 	LIBS =
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
 else ifeq ($(platform), osx)
@@ -140,7 +140,7 @@ else ifeq ($(platform), ctr)
 else ifeq ($(platform), rpi2)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
-   CFLAGS += $(fpic) -std=c89
+   CFLAGS += $(fpic) -std=gnu90
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
    PLATCFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
@@ -150,7 +150,7 @@ else ifeq ($(platform), rpi2)
 else ifeq ($(platform), rpi3)
    TARGET = $(TARGET_NAME)_libretro.so
    fpic = -fPIC
-   CFLAGS += $(fpic) -std=c89
+   CFLAGS += $(fpic) -std=gnu90
    LDFLAGS += $(fpic) -shared -Wl,--version-script=link.T
    PLATCFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
    PLATCFLAGS += -fomit-frame-pointer -ffast-math
@@ -160,7 +160,7 @@ else ifeq ($(platform), rpi3)
 else ifeq ($(platform), android-armv7)
    TARGET = $(TARGET_NAME)_libretro_android.so
 
-   CFLAGS += -fPIC -std=c89
+   CFLAGS += -fPIC -std=gnu90
    PLATCFLAGS += -march=armv7-a -mfloat-abi=softfp
    LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
 
@@ -256,7 +256,7 @@ else ifeq ($(platform), vita)
 else ifneq (,$(findstring armv,$(platform)))
    TARGET = $(TARGET_NAME)_libretro.so
 
-   CFLAGS += -fPIC -std=c89
+   CFLAGS += -fPIC -std=gnu90
    LDFLAGS += -fPIC -shared -Wl,--version-script=link.T
 
 # GCW0
@@ -382,7 +382,7 @@ else
    TARGET := $(TARGET_NAME)_libretro.dll
    CC = gcc
    LDFLAGS += -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T
-   CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -std=c89
+   CFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__ -std=gnu90
 endif
 
 ifeq ($(BIGENDIAN), 1)
