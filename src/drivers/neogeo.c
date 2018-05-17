@@ -1505,7 +1505,7 @@ SYSTEM_BIOS_END
 	ROM_LOAD( name, 		0x00000, 0x80000, sum ) /* so overwrite it with the real thing */ \
 	ROM_RELOAD(             0x10000, 0x80000 ) \
 	ROM_REGION( 0x10000, REGION_GFX4, 0 ) \
-	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
+	ROM_LOAD( "mamelo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
 
 #define NEO_BIOS_SOUND_256K(name,sum) \
 	ROM_REGION16_BE( 0x20000, REGION_USER1, 0 ) \
@@ -1515,7 +1515,7 @@ SYSTEM_BIOS_END
 	ROM_LOAD( name, 		0x00000, 0x40000, sum ) /* so overwrite it with the real thing */ \
 	ROM_RELOAD(             0x10000, 0x40000 ) \
 	ROM_REGION( 0x10000, REGION_GFX4, 0 ) \
-	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
+	ROM_LOAD( "mamelo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
 
 #define NEO_BIOS_SOUND_128K(name,sum) \
 	ROM_REGION16_BE( 0x20000, REGION_USER1, 0 ) \
@@ -1525,7 +1525,7 @@ SYSTEM_BIOS_END
 	ROM_LOAD( name, 		0x00000, 0x20000, sum ) /* so overwrite it with the real thing */ \
 	ROM_RELOAD(             0x10000, 0x20000 ) \
 	ROM_REGION( 0x10000, REGION_GFX4, 0 ) \
-	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
+	ROM_LOAD( "mamelo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
 
 #define NEO_BIOS_SOUND_64K(name,sum) \
 	ROM_REGION16_BE( 0x20000, REGION_USER1, 0 ) \
@@ -1535,7 +1535,7 @@ SYSTEM_BIOS_END
 	ROM_LOAD( name, 		0x00000, 0x10000, sum ) /* so overwrite it with the real thing */ \
 	ROM_RELOAD(             0x10000, 0x10000 ) \
 	ROM_REGION( 0x10000, REGION_GFX4, 0 ) \
-	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
+	ROM_LOAD( "mamelo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
 
 #define NO_DELTAT_REGION
 
@@ -4592,7 +4592,7 @@ ROM_START( irrmaze )
 	ROM_LOAD( "236-m1.bin", 0x00000, 0x20000, CRC(880a1abd) SHA1(905afa157aba700e798243b842792e50729b19a0) )  /* so overwrite it with the real thing */
 	ROM_RELOAD(             0x10000, 0x20000 )
 	ROM_REGION( 0x10000, REGION_GFX4, 0 )
-	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
+	ROM_LOAD( "mamelo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
 
 	ROM_REGION( 0x200000, REGION_SOUND1, ROMREGION_SOUNDONLY )
 	ROM_LOAD( "236-v1.bin", 0x000000, 0x200000, CRC(5f89c3b4) SHA1(dc8fd561cf8dfdd41696dcf14ea8d2d0ac4eec4b) )
@@ -5994,7 +5994,7 @@ ROM_START( svcboot )
 	ROM_COPY( REGION_CPU2,  0x00000, 0x10000, 0x10000 )
 	
 	ROM_REGION( 0x10000, REGION_GFX4, 0 )
-	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )
+	ROM_LOAD( "mamelo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )
 
 	ROM_REGION( 0x1000000, REGION_SOUND1, ROMREGION_SOUNDONLY )
 	ROM_LOAD16_WORD_SWAP( "svc-v2.bin", 0x000000, 0x400000, CRC(b5097287) SHA1(3ba3a9b5624879616382ed40337a3d9c50a0f314) )
@@ -6134,7 +6134,7 @@ ROM_START( neogeo )
 	ROM_LOAD( "mame.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )
 
 	ROM_REGION( 0x10000, REGION_GFX4, 0 )
-	ROM_LOAD( "000-lo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
+	ROM_LOAD( "mamelo.lo", 0x00000, 0x10000, CRC(e09e253c) SHA1(2b1c719531dac9bb503f22644e6e4236b91e7cfc) )  /* Y zoom control */
 
 	ROM_REGION( 0x20000, REGION_GFX1, 0 )
 	ROM_FILL(                 0x000000, 0x20000, 0 )
