@@ -389,9 +389,11 @@ ifeq ($(BIGENDIAN), 1)
 	PLATCFLAGS += -DMSB_FIRST
 endif
 
-# use -fsigned-char on ARM to solve potential problems with code written/tested on x86
+# use -fsigned-char on ARM and WiiU to solve potential problems with code written/tested on x86
 # eg on mame2003-plus audio on rtype leo is wrong without it.
 ifeq ($(ARM), 1)
+   PLATCFLAGS += -fsigned-char
+else ifeq ($(platform), wiiu)
    PLATCFLAGS += -fsigned-char
 endif
 
