@@ -630,8 +630,7 @@ static READ16_HANDLER( neo_control_16_r )
 	res =	((current_rastercounter << 7) & 0xff80) |	/* raster counter */
 			(neogeo_frame_counter & 0x0007);			/* frame counter */
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06x: neo_control_16_r (%04x)\n",activecpu_get_pc(),res);
-
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %06x: neo_control_16_r (%04x)\n",activecpu_get_pc(),res);
 	return res;
 }
 

@@ -190,8 +190,7 @@ static READ16_HANDLER( othunder_lightgun_r )
 			return input_port_8_word_r(0,mem_mask);	/* P2Y */
 	}
 
-/*logerror("CPU #0 lightgun_r offset %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),offset);*/
-
+  log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 lightgun_r offset %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),offset);
 	return 0x0;
 }
 

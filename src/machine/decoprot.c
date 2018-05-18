@@ -212,7 +212,7 @@ READ16_HANDLER( deco16_104_prot_r ) /* Wizard Fire */
 			return ((deco16_prot_ram[0x460/2]&0x0007)<<13) | ((deco16_prot_ram[0x460/2]&0x0008)<<9);
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Deco Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
+	/*log_cb(RETRO_LOG_WARN, LOGPRE "Deco Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 	return 0;
 }
 
@@ -400,7 +400,7 @@ READ16_HANDLER( deco16_60_prot_r ) /* Edward Randy */
 			return ((deco16_prot_ram[0x32/2]&0x00f0)<<8) | ((deco16_prot_ram[0x32/2]&0x000e)<<7) | ((deco16_prot_ram[0x32/2]&0x0001)<<11);
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset*2);*/
+  /*log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset*2);*/
 	return 0;
 }
 
@@ -568,11 +568,11 @@ READ16_HANDLER( deco16_66_prot_r ) /* Mutant Fighter */
 			return 0xc080;
 
 		case 0x42: /* Strange, but consistent */
-			/*logerror("Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
+			/*log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - read unknown memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 			return deco16_prot_ram[0x2c/2]^0x5302;
 
 		case 0x48: /* Correct for test data, but I wonder if the 0x1800 is from an address, not a constant */
-			/*logerror("Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
+			/*log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 			return (0x1800) & (~deco16_prot_ram[0x36/2]);
 
 		case 0x52:
@@ -589,7 +589,7 @@ READ16_HANDLER( deco16_66_prot_r ) /* Mutant Fighter */
 	usrintf_showmessage("Deco66:  Read unmapped port %04x\n",offset*2);
 #endif
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
+	/*log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset<<1);*/
 	return 0;
 }
 
@@ -650,7 +650,7 @@ READ16_HANDLER( deco16_104_cninja_prot_r )
 			return readinputport(0);
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset);*/
+	/*log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",cpu_get_pc(space->cpu),offset);*/
 	return 0;
 }
 
@@ -1729,8 +1729,7 @@ READ16_HANDLER( dietgo_104_prot_r )
 	case 0x506: return readinputport(2);
 	}
 
-	/*logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", cpu_get_pc(space->cpu), offset<<1);*/
-
+	/*log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n", cpu_get_pc(space->cpu), offset<<1);*/
 	return 0;
 }
 
@@ -1742,7 +1741,8 @@ WRITE16_HANDLER( dietgo_104_prot_w )
 		cpu_set_irq_line(1,0,HOLD_LINE);
 		return;
 	}
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - write unmapped memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);*/
+
+	/*log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - write unmapped memory address %04x %04x\n", cpu_get_pc(space->cpu), offset << 1, data);*/
 }
 
 /**********************************************************************************/
@@ -1761,15 +1761,14 @@ READ16_HANDLER( deco16_104_pktgaldx_prot_r )
 	case 0x51a: return DECO_PORT(2);
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset<<1);*/
-
+	/*log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset<<1);*/
 	return 0;
 }
 
 WRITE16_HANDLER( deco16_104_pktgaldx_prot_w )
 {
 	COMBINE_DATA(&deco16_prot_ram[offset]);
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - write unmapped memory address %04x %04x\n",cpu_get_pc(space->cpu),offset<<1,data);*/
+  /*log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - write unmapped memory address %04x %04x\n",cpu_get_pc(space->cpu),offset<<1,data);*/
 }
 
 /**********************************************************************************/

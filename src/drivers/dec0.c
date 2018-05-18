@@ -74,7 +74,7 @@ static WRITE16_HANDLER( dec0_control_w )
 			break;
 
 		case 0xa: /* Mix Psel(?). */
- 			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",activecpu_get_pc(),data,0x30c010+(offset<<1));
+ 			log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",activecpu_get_pc(),data,0x30c010+(offset<<1));
 			break;
 
 		case 0xc: /* Cblk - coin blockout.  Seems to be unused by the games */
@@ -82,11 +82,11 @@ static WRITE16_HANDLER( dec0_control_w )
 
 		case 0xe: /* Reset Intel 8751? - not sure, all the games write here at startup */
 			dec0_i8751_reset();
- 			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",activecpu_get_pc(),data,0x30c010+(offset<<1));
+ 			log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",activecpu_get_pc(),data,0x30c010+(offset<<1));
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",activecpu_get_pc(),data,0x30c010+(offset<<1));
+			log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",activecpu_get_pc(),data,0x30c010+(offset<<1));
 			break;
 	}
 }

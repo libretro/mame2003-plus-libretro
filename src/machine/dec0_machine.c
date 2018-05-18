@@ -28,11 +28,10 @@ READ16_HANDLER( dec0_controls_r )
 			return (readinputport(3) + (readinputport(4) << 8));
 
 		case 8: /* Intel 8751 mc, Bad Dudes & Heavy Barrel only */
-			/*logerror("CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);*/
 			return i8751_return;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
+	log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x30c000+offset);
 	return ~0;
 }
 

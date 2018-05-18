@@ -46,17 +46,97 @@ static retro_input_poll_t          poll_cb                       = NULL;
 static retro_input_state_t         input_cb                      = NULL;
 static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
 retro_set_led_state_t              led_state_cb                  = NULL;
+static struct retro_variable       *core_options                 = NULL;
 
+/******************************************************************************
 
+  variables and data structures to handle the core options
+
+******************************************************************************/
+
+#define MAX_OPTION_LENGTH 512
+
+enum CORE_OPTIONS
+{
+  OPT_FRAMESKIP = 0,
+  OPT_INPUT_INTERFACE,
+  OPT_RETROPAD_LAYOUT,
+  OPT_MOUSE_DEVICE,
+  OPT_CROSSHAIR,
+  OPT_MAME_MENU,
+  OPT_BRIGHTNESS,
+  OPT_GAMMA,
+  OPT_BACKDROP,
+  OPT_BIOS_REGION,
+  OPT_SHARE_DIAL,
+  OPT_RSTICK_BUTTONS,
+  OPT_TATE_MODE,
+  OPT_VECTOR_RESOLUTION,
+  OPT_VECTOR_ANTIALIAS,
+  OPT_VECTOR_TRANS,
+  OPT_VECTOR_BEAM,
+  OPT_VECTOR_FLICKER,
+  OPT_VECTOR_INTENSITY,
+  OPT_ROM_VERIFICATION,
+  OPT_SAMPLE_RATE,
+  OPT_DCS_SPEEDHACK,
+  OPT_SKIP_DISCLAIMER,
+  OPT_SKIP_WARNINGS,
+  OPT_DUMMY_ENTRY, /*used by libretro as a delimiter */
+  OPT_TOTAL_OPTION_COUNT
+};
+
+struct retro_var_default {
+  const char *cfg_name;
+  const char *UI_name;
+  const char *default_sequence;
+};
+
+static struct retro_var_default *option_defaults;
 
 /******************************************************************************
 
   private function prototypes
 
 ******************************************************************************/
+
 static void update_variables(bool first_time);
 static void check_system_specs(void);
 void retro_describe_buttons(void);
+
+void encode_current_option(int option_index, char *current_selection)
+{
+  char *token;
+  char *buffer;
+  char *default_mutate;
+    
+  core_options[option_index].key = option_defaults[option_index].cfg_name;
+
+  if (string_is_empty(current_selection))
+  {
+    core_options[option_index].value = option_defaults[option_index].default_sequence;
+    printf("set option to default of %s\n\n", option_defaults[option_index].default_sequence);
+    return;  /* leave at defaults and return */
+  }
+
+  /* at this point we know we need to rearrange the default sequence to put the new current selection in front */
+
+  default_mutate = malloc(MAX_OPTION_LENGTH * sizeof(char));
+  snprintf(default_mutate, MAX_OPTION_LENGTH, "%s", option_defaults[option_index].default_sequence);  
+
+  buffer = malloc(MAX_OPTION_LENGTH * sizeof(char));
+  snprintf(buffer, MAX_OPTION_LENGTH, "%s", current_selection); /* put the current_selection first */
+
+  while ((token = strtok_r(default_mutate, "|", &default_mutate)))
+  {
+    if(strcmp(token, current_selection) == 0)
+      continue; /* if this is location of the current_selection in the defaults, skip it */
+    
+    snprintf(buffer, MAX_OPTION_LENGTH, "%c%s", '|', token);
+  }
+  
+  core_options[option_index].value = buffer;
+}
 
 /******************************************************************************
 
@@ -89,42 +169,129 @@ static void check_system_specs(void)
    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
 
+static void initialize_core_options(void)
+{ 
+  int i;
+  
+  option_defaults[OPT_FRAMESKIP].cfg_name = APPNAME "_frameskip";
+  option_defaults[OPT_FRAMESKIP].UI_name = "Frameskip";
+  option_defaults[OPT_FRAMESKIP].default_sequence = "0|1|2|3|4|5";
+  
+  option_defaults[OPT_INPUT_INTERFACE].cfg_name = APPNAME "_input_interface";
+  option_defaults[OPT_INPUT_INTERFACE].UI_name = "Input interface";
+  option_defaults[OPT_INPUT_INTERFACE].default_sequence = "retropad|mame_keyboard|simultaneous";
+  
+  option_defaults[OPT_RETROPAD_LAYOUT].cfg_name = APPNAME "retropad_layout";
+  option_defaults[OPT_RETROPAD_LAYOUT].UI_name = "RetroPad Layout";
+  option_defaults[OPT_RETROPAD_LAYOUT].default_sequence = "modern|SNES|MAME classic";
+  
+  option_defaults[OPT_MOUSE_DEVICE].cfg_name = APPNAME "_mouse_device";
+  option_defaults[OPT_MOUSE_DEVICE].UI_name = "Mouse Device";
+#if !defined(__IOS__) 
+  option_defaults[OPT_MOUSE_DEVICE].default_sequence = "mouse|pointer|disabled";
+#else
+  option_defaults[OPT_MOUSE_DEVICE].default_sequence = "pointer|mouse|disabled";
+#endif  
+
+  option_defaults[OPT_CROSSHAIR].cfg_name = APPNAME"_crosshair_enabled";
+  option_defaults[OPT_CROSSHAIR].UI_name = "Show Lightgun crosshair";
+  option_defaults[OPT_CROSSHAIR].default_sequence = "enabled|disabled";
+  
+  option_defaults[OPT_MAME_MENU].cfg_name = APPNAME"_display_MAME_Menu";
+  option_defaults[OPT_MAME_MENU].UI_name = "Display MAME menu";
+  option_defaults[OPT_MAME_MENU].default_sequence = "disabled|enabled";
+
+  option_defaults[OPT_BRIGHTNESS].cfg_name = APPNAME"_brightness";
+  option_defaults[OPT_BRIGHTNESS].UI_name = "Brightness";
+  option_defaults[OPT_BRIGHTNESS].default_sequence = "1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0";  
+
+  option_defaults[OPT_GAMMA].cfg_name = APPNAME"_gamma";
+  option_defaults[OPT_GAMMA].UI_name = "Gamma correction";
+  option_defaults[OPT_GAMMA].default_sequence = "1.2|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0";  
+ 
+ option_defaults[OPT_BACKDROP].cfg_name = APPNAME"_enable_backdrop";
+  option_defaults[OPT_BACKDROP].UI_name = "EXPERIMENTAL: Use Backdrop artwork";
+  option_defaults[OPT_BACKDROP].default_sequence = "(Restart); disabled|enabled";  
+
+  option_defaults[OPT_BIOS_REGION].cfg_name = APPNAME"_bios_region";
+  option_defaults[OPT_BIOS_REGION].UI_name = "Specify alternate BIOS region (Restart)";
+  option_defaults[OPT_BIOS_REGION].default_sequence = "default|asia|asia-aes|debug|europe|europe_a|japan|japan_a|japan_b|taiwan|us|us_a|uni-bios.10|uni-bios.11|uni-bios.13|uni-bios.20";  
+
+  option_defaults[OPT_SHARE_DIAL].cfg_name = APPNAME"_dialsharexy";
+  option_defaults[OPT_SHARE_DIAL].UI_name = "Share 2 player dial controls across one X/Y device";
+  option_defaults[OPT_SHARE_DIAL].default_sequence = "disabled|enabled";  
+
+  option_defaults[OPT_RSTICK_BUTTONS].cfg_name = APPNAME"_rstick_to_btns";
+  option_defaults[OPT_RSTICK_BUTTONS].UI_name = "Right Stick to Buttons";
+  option_defaults[OPT_RSTICK_BUTTONS].default_sequence = "enabled|disabled";
+
+  option_defaults[OPT_TATE_MODE].cfg_name = APPNAME"_tate_mode";
+  option_defaults[OPT_TATE_MODE].UI_name = "TATE Mode";
+  option_defaults[OPT_TATE_MODE].default_sequence = "disabled|enabled";
+
+  option_defaults[OPT_VECTOR_RESOLUTION].cfg_name = APPNAME"_vector_resolution_multiplier";
+  option_defaults[OPT_VECTOR_RESOLUTION].UI_name = "EXPERIMENTAL: Vector resolution multiplier (Restart)";
+  option_defaults[OPT_VECTOR_RESOLUTION].default_sequence = "1|2|3|4|5|6";
+
+  option_defaults[OPT_VECTOR_ANTIALIAS].cfg_name = APPNAME"_vector_antialias";
+  option_defaults[OPT_VECTOR_ANTIALIAS].UI_name = "EXPERIMENTAL: Vector antialias";
+  option_defaults[OPT_VECTOR_ANTIALIAS].default_sequence = "disabled|enabled";
+
+  option_defaults[OPT_VECTOR_TRANS].cfg_name = APPNAME"_vector_translucency";
+  option_defaults[OPT_VECTOR_TRANS].UI_name = "Vector translucency";
+  option_defaults[OPT_VECTOR_TRANS].default_sequence = "enabled|disabled";
+
+  option_defaults[OPT_VECTOR_BEAM].cfg_name = APPNAME"_vector_beam_width";
+  option_defaults[OPT_VECTOR_BEAM].UI_name = "EXPERIMENTAL: Vector beam width";
+  option_defaults[OPT_VECTOR_BEAM].default_sequence = "1|2|3|4|5";
+
+  option_defaults[OPT_VECTOR_FLICKER].cfg_name = APPNAME"_vector_flicker";
+  option_defaults[OPT_VECTOR_FLICKER].UI_name = "Vector flicker";
+  option_defaults[OPT_VECTOR_FLICKER].default_sequence = "20|0|10|20|30|40|50|60|70|80|90|100";
+
+  option_defaults[OPT_VECTOR_INTENSITY].cfg_name = APPNAME"_vector_intensity";
+  option_defaults[OPT_VECTOR_INTENSITY].UI_name = "Vector intensity";
+  option_defaults[OPT_VECTOR_INTENSITY].default_sequence = "1.5|0.5|1|2|2.5|3";
+
+  option_defaults[OPT_ROM_VERIFICATION].cfg_name = APPNAME"_skip_rom_verify";
+  option_defaults[OPT_ROM_VERIFICATION].UI_name = "EXPERIMENTAL: Skip ROM verification (Restart)";
+  option_defaults[OPT_ROM_VERIFICATION].default_sequence = "disabled|enabled";
+
+  option_defaults[OPT_SAMPLE_RATE].cfg_name = APPNAME"_sample_rate";
+  option_defaults[OPT_SAMPLE_RATE].UI_name = "Sample Rate (KHz)";
+  option_defaults[OPT_SAMPLE_RATE].default_sequence = "48000|8000|11025|22050|44100";
+
+  option_defaults[OPT_DCS_SPEEDHACK].cfg_name = APPNAME"_dcs_speedhack"; 
+  option_defaults[OPT_DCS_SPEEDHACK].UI_name = "MK2/MK3 DCS Speedhack";
+  option_defaults[OPT_DCS_SPEEDHACK].default_sequence = "enabled|disabled";
+
+  option_defaults[OPT_SKIP_DISCLAIMER].cfg_name = APPNAME"_skip_disclaimer";
+  option_defaults[OPT_SKIP_DISCLAIMER].UI_name = "Skip Disclaimer";
+  option_defaults[OPT_SKIP_DISCLAIMER].default_sequence = "enabled|disabled";
+
+  option_defaults[OPT_SKIP_WARNINGS].cfg_name = APPNAME"_skip_warnings";
+  option_defaults[OPT_SKIP_WARNINGS].UI_name = "Skip Warnings";
+  option_defaults[OPT_SKIP_WARNINGS].default_sequence = "disabled|enabled";
+  
+  for(i = 0; i < OPT_TOTAL_OPTION_COUNT - 1; i++) /* OPT_TOTAL_OPTION_COUNT - 1 so we can handle the dummy entry manually */
+    encode_current_option(i, NULL); /* set all values to default */
+
+  core_options[OPT_DUMMY_ENTRY].key = NULL;
+  core_options[OPT_DUMMY_ENTRY].value = NULL;
+}
+
+
 void retro_set_environment(retro_environment_t cb)
 {
-  static const struct retro_variable vars[] = {
-    { APPNAME"_frameskip", "Frameskip; 0|1|2|3|4|5" },
-    { APPNAME"_input_interface", "Input interface; retropad|mame_keyboard|simultaneous" },
-    { APPNAME"_retropad_layout", "RetroPad Layout; modern|SNES|MAME classic" },
-#if defined(__IOS__)
-    { APPNAME"_mouse_device", "Mouse Device; pointer|mouse|disabled" },
-#else
-    { APPNAME"_mouse_device", "Mouse Device; mouse|pointer|disabled" },
-#endif
-    { APPNAME"_crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
-    { APPNAME"_display_setup", "Display MAME menu; disabled|enabled" },
-    { APPNAME"_brightness", "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0" },
-    { APPNAME"_gamma", "Gamma correction; 1.2|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0" },
-    { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
-    { APPNAME"_bios_region", "Specify alternate BIOS region (Restart); default|asia|asia-aes|debug|europe|europe_a|japan|japan_a|japan_b|taiwan|us|us_a|uni-bios.10|uni-bios.11|uni-bios.13|uni-bios.20" },
-    { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
-    { APPNAME"_rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
-    { APPNAME"_tate_mode", "TATE Mode; disabled|enabled" },
-    { APPNAME"_vector_resolution_multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },
-    { APPNAME"_vector_antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },
-    { APPNAME"_vector_translucency", "Vector translucency; enabled|disabled" },
-    { APPNAME"_vector_beam_width", "EXPERIMENTAL: Vector beam width; 1|2|3|4|5" },
-    { APPNAME"_vector_flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
-    { APPNAME"_vector_intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
-    { APPNAME"_skip_rom_verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" },
-    { APPNAME"_sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
-    { APPNAME"_dcs_speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
-    { APPNAME"_skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
-    { APPNAME"_skip_warnings", "Skip Warnings; disabled|enabled" },
-    { NULL, NULL },
-  };
+  if(core_options == NULL) /* retro_set_environment is being called for the first time */
+  {
+    core_options = malloc(OPT_TOTAL_OPTION_COUNT * sizeof(struct retro_variable));
+    option_defaults = malloc(OPT_TOTAL_OPTION_COUNT * sizeof(struct retro_var_default));
+    initialize_core_options();
+  }
+  
   environ_cb = cb;
-
-  cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
+  cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)core_options);
 }
 
 static void update_variables(bool first_time)
@@ -135,10 +302,11 @@ static void update_variables(bool first_time)
   var.value = NULL;
 
   var.key = APPNAME"_frameskip";
+
   options.frameskip = 0; /* default if none set by frontend */
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
-    options.frameskip = atoi(var.value);
+    options.frameskip = atoi(var.value);    
   }
 
   var.value = NULL;
@@ -794,6 +962,7 @@ void retro_unload_game(void)
     mame_done();
     
     free(options.romset_filename_noext);
+    free(core_options);
     
     /*free(fallbackDir);
     systemDir = 0;*/
