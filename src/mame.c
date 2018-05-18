@@ -577,7 +577,8 @@ void run_machine_core(void)
         }
         else
         {
-            showgamewarnings(artwork_get_ui_bitmap());
+            pause_action = pause_action_start_emulator;          
+            showgamewarnings();
         }
     }
     else

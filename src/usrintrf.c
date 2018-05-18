@@ -24,6 +24,7 @@ static void pause_action_showgamewarnings(void);
 void pause_action_start_emulator(void);
 static struct mame_bitmap *pause_bitmap;
 static char pause_buffer[2048];
+static char warn_buffer[2048];
 static int pause_done;
 
 extern retro_log_printf_t log_cb; 
@@ -236,6 +237,14 @@ static const struct GfxLayout uifontlayout =
 #if 0
 #pragma mark UTILITIES
 #endif
+
+
+/*-------------------------------------------------
+	Private Functions
+-------------------------------------------------*/
+
+static void wordwrap_text_buffer (char *buffer, int maxwidth);
+
 
 /*-------------------------------------------------
 	ui_markdirty - mark a raw rectangle dirty
@@ -2390,63 +2399,55 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 }
 
 
-int showgamewarnings(struct mame_bitmap *bitmap)
+void showgamewarnings(void)
 {
     int i;
-    pause_action = pause_action_start_emulator;
-
-    /* Fill pause_buffer with text */
+    int maxcols = (uirotwidth / uirotcharwidth) - 1;
 
 	if (Machine->gamedrv->flags &
 			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
 			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL ))
 	{
-        pause_action = pause_action_showgamewarnings;
-        pause_bitmap = bitmap;
-        pause_done = 0;
-		
-		strcpy(pause_buffer, ui_getstring (UI_knownproblems));
-		strcat(pause_buffer, "\n\n");
 
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
 		{
-			strcat(pause_buffer, ui_getstring (UI_imperfectcolors));
-			strcat(pause_buffer, "\n");
+			strcat(warn_buffer, ui_getstring (UI_imperfectcolors));
+			strcat(warn_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_WRONG_COLORS)
 		{
-			strcat(pause_buffer, ui_getstring (UI_wrongcolors));
-			strcat(pause_buffer, "\n");
+			strcat(warn_buffer, ui_getstring (UI_wrongcolors));
+			strcat(warn_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_GRAPHICS)
 		{
-			strcat(pause_buffer, ui_getstring (UI_imperfectgraphics));
-			strcat(pause_buffer, "\n");
+			strcat(warn_buffer, ui_getstring (UI_imperfectgraphics));
+			strcat(warn_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_SOUND)
 		{
-			strcat(pause_buffer, ui_getstring (UI_imperfectsound));
-			strcat(pause_buffer, "\n");
+			strcat(warn_buffer, ui_getstring (UI_imperfectsound));
+			strcat(warn_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_NO_SOUND)
 		{
-			strcat(pause_buffer, ui_getstring (UI_nosound));
-			strcat(pause_buffer, "\n");
+			strcat(warn_buffer, ui_getstring (UI_nosound));
+			strcat(warn_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_NO_COCKTAIL)
 		{
-			strcat(pause_buffer, ui_getstring (UI_nococktail));
-			strcat(pause_buffer, "\n");
+			strcat(warn_buffer, ui_getstring (UI_nococktail));
+			strcat(warn_buffer, "\n");
 		}
 		if (Machine->gamedrv->flags & GAME_DOESNT_SERIALIZE)
 		{
-			strcat(pause_buffer, ui_getstring (UI_no_serialization));
-			strcat(pause_buffer, "\n");
+			strcat(warn_buffer, ui_getstring (UI_no_serialization));
+			strcat(warn_buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
@@ -2456,13 +2457,13 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 
 			if (Machine->gamedrv->flags & GAME_NOT_WORKING)
 			{
-				strcpy(pause_buffer, ui_getstring (UI_brokengame));
-				strcat(pause_buffer, "\n");
+				strcpy(warn_buffer, ui_getstring (UI_brokengame));
+				strcat(warn_buffer, "\n");
 			}
 			if (Machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
 			{
-				strcat(pause_buffer, ui_getstring (UI_brokenprotection));
-				strcat(pause_buffer, "\n");
+				strcat(warn_buffer, ui_getstring (UI_brokenprotection));
+				strcat(warn_buffer, "\n");
 			}
 
 			if (Machine->gamedrv->clone_of && !(Machine->gamedrv->clone_of->flags & NOT_A_DRIVER))
@@ -2479,30 +2480,24 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 					{
 						if (foundworking == 0)
 						{
-							strcat(pause_buffer,"\n\n");
-							strcat(pause_buffer, ui_getstring (UI_workingclones));
-							strcat(pause_buffer,"\n\n");
+							strcat(warn_buffer,"\n\n");
+							strcat(warn_buffer, ui_getstring (UI_workingclones));
+							strcat(warn_buffer,"\n\n");
 						}
 						foundworking = 1;
 
-						sprintf(&pause_buffer[strlen(pause_buffer)],"%s\n",drivers[i]->name);
+						sprintf(&warn_buffer[strlen(warn_buffer)],"%s\n",drivers[i]->name);
 					}
 				}
 				i++;
 			}
 		}
-
-		strcat(pause_buffer,"\n\n");
-		strcat(pause_buffer,ui_getstring (UI_typeok));
+    wordwrap_text_buffer(warn_buffer, maxcols);
+    usrintf_showmessage_secs(10, "%s", warn_buffer);
 	}
 
-	/* not needed */
-	/*erase_screen(bitmap);*/
-	/*update_video_and_audio();*/
-
-	return 0;
+	return;
 }
-
 
 #if 0 /* Will hang */
 int showgameinfo(struct mame_bitmap *bitmap)
@@ -3270,14 +3265,6 @@ static void pause_action_showcopyright(void)
     if(show_game_message())
     {
         setup_selected = 0;
-        showgamewarnings(pause_bitmap);
-    }
-}
-
-static void pause_action_showgamewarnings(void)
-{
-    if(show_game_message())
-    {
-        pause_action = pause_action_start_emulator;    
+        showgamewarnings();
     }
 }

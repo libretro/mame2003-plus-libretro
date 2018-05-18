@@ -37,7 +37,7 @@ void ui_drawbox(struct mame_bitmap *bitmap,int leftx,int topy,int width,int heig
 void ui_displaymessagewindow(struct mame_bitmap *bitmap,const char *text);
 void ui_displaymenu(struct mame_bitmap *bitmap,const char **items,const char **subitems,char *flag,int selected,int arrowize_subitem);
 int showcopyright(struct mame_bitmap *bitmap);
-int showgamewarnings(struct mame_bitmap *bitmap);
+void showgamewarnings(void);
 int showgameinfo(struct mame_bitmap *bitmap);
 void set_ui_visarea (int xmin, int ymin, int xmax, int ymax);
 
