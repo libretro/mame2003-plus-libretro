@@ -837,6 +837,7 @@ const struct RomModule *rom_next_chunk(const struct RomModule *romp)
 	debugload - log data to a file
 -------------------------------------------------*/
 
+//should all debugload() calls be changed to log_cb?
 void CLIB_DECL debugload(const char *string, ...)
 {
 #if defined(LOG_LOAD)
@@ -880,7 +881,7 @@ int determine_bios_rom(const struct SystemBios *bios)
 		while(!BIOSENTRY_ISEND(bios))
 		{
 			char bios_number[3];
-			log_cb(RETRO_LOG_ERROR, bios_number, "%d", bios->value);
+			log_cb(RETRO_LOG_ERROR, bios_number, "%d\n", bios->value);
 
 			if(!strcmp(bios_number, options.bios))
 				bios_no = bios->value;
@@ -1597,9 +1598,9 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 					if (err != CHDERR_NONE)
 					{
 						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
-							log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s UNSUPPORTED CHD VERSION\n", filename);
+							log_cb(RETRO_LOG_ERROR,  "%-12s UNSUPPORTED CHD VERSION\n", filename);
 						else
-							log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s: CAN'T CREATE DIFF FILE\n", filename);
+							log_cb(RETRO_LOG_ERROR,  "%-12s: CAN'T CREATE DIFF FILE\n", filename);
 						romdata->errors++;
 						romp++;
 						continue;
@@ -1771,7 +1772,7 @@ void printromlist(const struct RomModule *romp,const char *basename)
 			if (!hash_data_has_info(hash, HASH_INFO_NO_DUMP))
 			{
 				if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
-					log_cb(RETRO_LOG_ERROR, LOGPRE " BAD");
+					log_cb(RETRO_LOG_ERROR, LOGPRE " BAD DUMP");
 
 				hash_data_print(hash, 0, buf);
 				log_cb(RETRO_LOG_ERROR, LOGPRE " %s", buf);
