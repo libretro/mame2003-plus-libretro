@@ -952,21 +952,21 @@ static void handle_missing_file(struct rom_load_data *romdata, const struct RomM
 	/* optional files are okay */
 	if (ROM_ISOPTIONAL(romp))
 	{
-		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "OPTIONAL %-12s NOT FOUND\n", ROM_GETNAME(romp));
+		log_cb(RETRO_LOG_ERROR,  "OPTIONAL %-12s NOT FOUND\n", ROM_GETNAME(romp));
 		romdata->warnings++;
 	}
 
 	/* no good dumps are okay */
 	else if (ROM_NOGOODDUMP(romp))
 	{
-		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NOT FOUND (NO GOOD DUMP KNOWN)\n", ROM_GETNAME(romp));
+		log_cb(RETRO_LOG_ERROR, "%-12s NOT FOUND (NO GOOD DUMP KNOWN)\n", ROM_GETNAME(romp));
 		romdata->warnings++;
 	}
 
 	/* anything else is bad */
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NOT FOUND\n", ROM_GETNAME(romp));
+		log_cb(RETRO_LOG_ERROR,  "%-12s NOT FOUND\n", ROM_GETNAME(romp));
 		romdata->errors++;
 	}
 }
@@ -987,13 +987,13 @@ static void dump_wrong_and_correct_checksums(struct rom_load_data* romdata, cons
 	found_functions = hash_data_used_functions(hash) & hash_data_used_functions(acthash);
 
 	hash_data_print(hash, found_functions, chksum);
-	log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "    EXPECTED: %s\n", chksum);
+	log_cb(RETRO_LOG_ERROR,  "    EXPECTED: %s\n", chksum);
 
 	/* We dump informations only of the functions for which MAME provided
 		a correct checksum. Other functions we might have calculated are
 		useless here */
 	hash_data_print(acthash, found_functions, chksum);
-	log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "       FOUND: %s\n", chksum);
+	log_cb(RETRO_LOG_ERROR,  "       FOUND: %s\n", chksum);
 
 	/* For debugging purposes, we check if the checksums available in the
 	   driver are correctly specified or not. This can be done by checking
@@ -1041,21 +1041,21 @@ static void verify_length_and_hash(struct rom_load_data *romdata, const char *na
 	/* verify length */
 	if (explength != actlength)
 	{
-		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s WRONG LENGTH (expected: %08x found: %08x)\n", name, explength, actlength);
+		log_cb(RETRO_LOG_ERROR,  "%-12s WRONG LENGTH (expected: %08x found: %08x)\n", name, explength, actlength);
 		romdata->warnings++;
 	}
 
 	/* If there is no good dump known, write it */
 	if (hash_data_has_info(hash, HASH_INFO_NO_DUMP))
 	{
-			log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NO GOOD DUMP KNOWN\n", name);
+			log_cb(RETRO_LOG_ERROR,  "%-12s NO GOOD DUMP KNOWN\n", name);
 		romdata->warnings++;
 	}
 	/* verify checksums */
 	else if (!hash_data_is_equal(hash, acthash, 0))
 	{
 		/* otherwise, it's just bad */
-		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s WRONG CHECKSUMS:\n", name);
+		log_cb(RETRO_LOG_ERROR,  "%-12s WRONG CHECKSUMS:\n", name);
 
 		dump_wrong_and_correct_checksums(romdata, hash, acthash);
 
@@ -1064,7 +1064,7 @@ static void verify_length_and_hash(struct rom_load_data *romdata, const char *na
 	/* If it matches, but it is actually a bad dump, write it */
 	else if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
 	{
-		log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s ROM NEEDS REDUMP\n",name);
+		log_cb(RETRO_LOG_ERROR,  "%-12s ROM NEEDS REDUMP\n",name);
 		romdata->warnings++;
 	}
 }
@@ -1553,9 +1553,9 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 			if (!source)
 			{
 				if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
-					log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s UNSUPPORTED CHD VERSION\n", filename);
+					log_cb(RETRO_LOG_ERROR,  "%-12s UNSUPPORTED CHD VERSION\n", filename);
 				else
-					log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s NOT FOUND\n", filename);
+					log_cb(RETRO_LOG_ERROR, "%-12s NOT FOUND\n", filename);
 				romdata->errors++;
 				romp++;
 				continue;
@@ -1570,7 +1570,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 			/* verify the MD5 */
 			if (!hash_data_is_equal(ROM_GETHASHDATA(romp), acthash, 0))
 			{
-				log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s WRONG CHECKSUMS:\n", filename);
+				log_cb(RETRO_LOG_ERROR,  "%-12s WRONG CHECKSUMS:\n", filename);
 				dump_wrong_and_correct_checksums(romdata, ROM_GETHASHDATA(romp), acthash);
 				romdata->warnings++;
 			}
@@ -1611,9 +1611,9 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 					if (!diff)
 					{
 						if (chd_get_last_error() == CHDERR_UNSUPPORTED_VERSION)
-							log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s UNSUPPORTED CHD VERSION\n", filename);
+							log_cb(RETRO_LOG_ERROR, "%-12s UNSUPPORTED CHD VERSION\n", filename);
 						else
-							log_cb(RETRO_LOG_ERROR, &romdata->errorbuf[strlen(romdata->errorbuf)], "%-12s: CAN'T OPEN DIFF FILE\n", filename);
+							log_cb(RETRO_LOG_ERROR,  "%-12s: CAN'T OPEN DIFF FILE\n", filename);
 						romdata->errors++;
 						romp++;
 						continue;
