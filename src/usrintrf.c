@@ -2399,7 +2399,7 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 
 	if (Machine->gamedrv->flags &
 			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
-			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL | GAME_MUST_INITIALIZE))
+			  GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL ))
 	{
         pause_action = pause_action_showgamewarnings;
         pause_bitmap = bitmap;
@@ -2443,9 +2443,9 @@ int showgamewarnings(struct mame_bitmap *bitmap)
 			strcat(pause_buffer, ui_getstring (UI_nococktail));
 			strcat(pause_buffer, "\n");
 		}
-		if (Machine->gamedrv->flags & GAME_MUST_INITIALIZE)
+		if (Machine->gamedrv->flags & GAME_DOESNT_SERIALIZE)
 		{
-			strcat(pause_buffer, ui_getstring (UI_mustbeinitialized));
+			strcat(pause_buffer, ui_getstring (UI_no_serialization));
 			strcat(pause_buffer, "\n");
 		}
 

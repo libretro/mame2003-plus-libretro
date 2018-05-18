@@ -382,6 +382,9 @@ static void ss_c8(unsigned char *data, unsigned size)
 /* __LIBRETRO__: Serialize helper*/
 size_t state_get_dump_size(void)
 {
+  if(Machine->gamedrv->flags & GAME_DOESNT_SERIALIZE)
+    return 0;
+
 	ss_module *m;
 	TRACE(logerror("Beginning save\n"));
 	ss_dump_size = 0x18;

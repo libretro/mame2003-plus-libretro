@@ -71,9 +71,9 @@ static const char *mame_default_text[] =
 	"Screen flipping cocktail video is not supported by MAME 2003 for this title. If your frontend implements the libretro Shader API, an appropriate mirrored cocktail video shader may be available.",
 	"THIS GAME DOESN'T WORK PROPERLY",
 	"The game has protection which isn't fully emulated.",
-	"This game must be intialized in order to be playable.",
+	"This game does not have libretro serialization support.",
 	"There are working clones of this game. They are:",
-    "Type OK on Keyboard, or Left, Right on Joystick to continue",
+  "Type OK on Keyboard, or Left, Right on Joystick to continue",
 
 	/* main menu */
 	"Input (general)",

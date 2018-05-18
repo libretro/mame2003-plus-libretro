@@ -70,7 +70,7 @@ enum
 	UI_nococktail,
 	UI_brokengame,
 	UI_brokenprotection,
-	UI_mustbeinitialized,
+	UI_no_serialization,
 	UI_workingclones,
 	UI_typeok,
 
