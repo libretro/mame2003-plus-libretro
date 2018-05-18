@@ -889,12 +889,7 @@ static int init_game_options(void)
   Machine->ui_orientation = options.ui_orientation;
 
   /* initialize the samplerate */
-  if((Machine->drv->frames_per_second < 47 ) && (options.samplerate >= 30000))	
-  {	
-    log_cb(RETRO_LOG_WARN, LOGPRE "Sample rate too high for this driver. Setting sample rate to 22050.\n");	
-    options.samplerate = 22050;	
-    framerate_test = 1;	
-  }        
+  
   Machine->sample_rate = options.samplerate;
 
   /* catch any custom bios options needed on a per-game basis. this is a hack. */
