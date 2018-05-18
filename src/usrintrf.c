@@ -20,7 +20,6 @@
 
 extern void (*pause_action)(void);
 static void pause_action_showcopyright(void);
-static void pause_action_showgamewarnings(void);
 void pause_action_start_emulator(void);
 static struct mame_bitmap *pause_bitmap;
 static char pause_buffer[2048];
@@ -2492,6 +2491,7 @@ void showgamewarnings(void)
 				i++;
 			}
 		}
+    sprintf(&warn_buffer[strlen(warn_buffer)], "\nThis window will close automatically in 10 seconds.");
     wordwrap_text_buffer(warn_buffer, maxcols);
     usrintf_showmessage_secs(10, "%s", warn_buffer);
 	}
