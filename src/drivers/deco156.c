@@ -239,7 +239,7 @@ static WRITE32_HANDLER( wcvol95_sound_w )
 		else
 			YMZ280B_register_0_w(0,data & 0xff);
 	} else {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  non-byte written to sound %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  non-byte written to sound %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
 	}
 }
 
@@ -248,7 +248,7 @@ static READ32_HANDLER( wcvol95_sound_r )
 	if (mem_mask==0xffffff00) {
 		return YMZ280B_status_0_r(0);
 	} else {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  non-byte read from sound mask %08x\n",activecpu_get_pc(),mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  non-byte read from sound mask %08x\n",activecpu_get_pc(),mem_mask);
 	}
 
 	return 0;
@@ -449,7 +449,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 static void sound_irq_gen(int state)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "sound irq\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "sound irq\n");
 }
 
 static INTERRUPT_GEN( deco32_vbl_interrupt )
