@@ -20,7 +20,7 @@
 
 #define MAX_MESSAGE_LENGTH 2014
 
-static char warn_buffer[MAX_MESSAGE_LENGTH];
+static char message_buffer[MAX_MESSAGE_LENGTH];
 static char messagetext[MAX_MESSAGE_LENGTH];
 static int  messagecounter;
 
@@ -243,6 +243,7 @@ static const struct GfxLayout uifontlayout =
 static void wordwrap_text_buffer (char *buffer, int maxwidth);
 void display_warn_callback(int param);
 bool generate_warning_list(void);
+void generate_gameinfo(void);
 
 /*-------------------------------------------------
 	ui_markdirty - mark a raw rectangle dirty
@@ -2215,28 +2216,79 @@ static int mame_stats(struct mame_bitmap *bitmap,int selected)
 
 static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 {
+  char buf2[32];
+  int sel;
+  sel = selected - 1;
+  
+  generate_gameinfo();
+  
+	if (sel == -1)
+	{
+		/* startup info, print MAME version and ask for any key */
+
+		sprintf (buf2, "\n\t%s ", ui_getstring (UI_mame));	/* \t means that the line will be centered */
+		strcat(message_buffer, buf2);
+
+		sprintf (buf2, "\n\t%s", ui_getstring (UI_anykey));
+		strcat(message_buffer,buf2);
+		ui_drawbox(bitmap,0,0,uirotwidth,uirotheight);
+		ui_displaymessagewindow(bitmap,message_buffer);
+
+		sel = 0;
+		if (code_read_async() != CODE_NONE)
+			sel = -1;
+	}
+	else
+	{
+		/* menu system, use the normal menu keys */
+		strcat(message_buffer,"\n\t");
+		strcat(message_buffer,ui_getstring (UI_lefthilight));
+		strcat(message_buffer," ");
+		strcat(message_buffer,ui_getstring (UI_returntomain));
+		strcat(message_buffer," ");
+		strcat(message_buffer,ui_getstring (UI_righthilight));
+
+		ui_displaymessagewindow(bitmap,message_buffer);
+
+		if (input_ui_pressed(IPT_UI_SELECT))
+			sel = -1;
+
+		if (input_ui_pressed(IPT_UI_CANCEL))
+			sel = -1;
+
+		if (input_ui_pressed(IPT_UI_CONFIGURE))
+			sel = -2;
+	}
+
+	if (sel == -1 || sel == -2)
+	{
+		schedule_full_refresh();
+	}
+
+	return sel + 1;
+}
+
+
+void generate_gameinfo(void)
+{
 	int i;
-	char buf[2048];
 	char buf2[32];
-	int sel;
+  
+  message_buffer[0] = '\0';
 
-
-	sel = selected - 1;
-
-
-	sprintf(buf,"%s\n%s %s\n\n%s:\n",Machine->gamedrv->description,Machine->gamedrv->year,Machine->gamedrv->manufacturer,
+	sprintf(message_buffer,"%s\n%s %s\n\n%s:\n",Machine->gamedrv->description,Machine->gamedrv->year,Machine->gamedrv->manufacturer,
 		ui_getstring (UI_cpu));
 	i = 0;
 	while (i < MAX_CPU && Machine->drv->cpu[i].cpu_type)
 	{
 
 		if (Machine->drv->cpu[i].cpu_clock >= 1000000)
-			sprintf(&buf[strlen(buf)],"%s %d.%06d MHz",
+			sprintf(&message_buffer[strlen(message_buffer)],"%s %d.%06d MHz",
 					cputype_name(Machine->drv->cpu[i].cpu_type),
 					Machine->drv->cpu[i].cpu_clock / 1000000,
 					Machine->drv->cpu[i].cpu_clock % 1000000);
 		else
-			sprintf(&buf[strlen(buf)],"%s %d.%03d kHz",
+			sprintf(&message_buffer[strlen(message_buffer)],"%s %d.%03d kHz",
 					cputype_name(Machine->drv->cpu[i].cpu_type),
 					Machine->drv->cpu[i].cpu_clock / 1000,
 					Machine->drv->cpu[i].cpu_clock % 1000);
@@ -2244,51 +2296,51 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 		if (Machine->drv->cpu[i].cpu_flags & CPU_AUDIO_CPU)
 		{
 			sprintf (buf2, " (%s)", ui_getstring (UI_sound_lc));
-			strcat(buf, buf2);
+			strcat(message_buffer, buf2);
 		}
 
-		strcat(buf,"\n");
+		strcat(message_buffer,"\n");
 
 		i++;
 	}
 
 	sprintf (buf2, "\n%s", ui_getstring (UI_sound));
-	strcat (buf, buf2);
+	strcat (message_buffer, buf2);
 	if (Machine->drv->sound_attributes & SOUND_SUPPORTS_STEREO)
-		sprintf(&buf[strlen(buf)]," (%s)", ui_getstring (UI_stereo));
-	strcat(buf,":\n");
+		sprintf(&message_buffer[strlen(message_buffer)]," (%s)", ui_getstring (UI_stereo));
+	strcat(message_buffer,":\n");
 
 	i = 0;
 	while (i < MAX_SOUND && Machine->drv->sound[i].sound_type)
 	{
 		if (sound_num(&Machine->drv->sound[i]))
-			sprintf(&buf[strlen(buf)],"%dx",sound_num(&Machine->drv->sound[i]));
+			sprintf(&message_buffer[strlen(message_buffer)],"%dx",sound_num(&Machine->drv->sound[i]));
 
-		sprintf(&buf[strlen(buf)],"%s",sound_name(&Machine->drv->sound[i]));
+		sprintf(&message_buffer[strlen(message_buffer)],"%s",sound_name(&Machine->drv->sound[i]));
 
 		if (sound_clock(&Machine->drv->sound[i]))
 		{
 			if (sound_clock(&Machine->drv->sound[i]) >= 1000000)
-				sprintf(&buf[strlen(buf)]," %d.%06d MHz",
+				sprintf(&message_buffer[strlen(message_buffer)]," %d.%06d MHz",
 						sound_clock(&Machine->drv->sound[i]) / 1000000,
 						sound_clock(&Machine->drv->sound[i]) % 1000000);
 			else
-				sprintf(&buf[strlen(buf)]," %d.%03d kHz",
+				sprintf(&message_buffer[strlen(message_buffer)]," %d.%03d kHz",
 						sound_clock(&Machine->drv->sound[i]) / 1000,
 						sound_clock(&Machine->drv->sound[i]) % 1000);
 		}
 
-		strcat(buf,"\n");
+		strcat(message_buffer,"\n");
 
 		i++;
 	}
 
 	if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
-		sprintf(&buf[strlen(buf)],"\n%s\n", ui_getstring (UI_vectorgame));
+		sprintf(&message_buffer[strlen(message_buffer)],"\n%s\n", ui_getstring (UI_vectorgame));
 	else
 	{
-		sprintf(&buf[strlen(buf)],"\n%s:\n", ui_getstring (UI_screenres));
-		sprintf(&buf[strlen(buf)],"%d x %d (%s) %f Hz\n",
+		sprintf(&message_buffer[strlen(message_buffer)],"\n%s:\n", ui_getstring (UI_screenres));
+		sprintf(&message_buffer[strlen(message_buffer)],"%d x %d (%s) %f Hz\n",
 				Machine->visible_area.max_x - Machine->visible_area.min_x + 1,
 				Machine->visible_area.max_y - Machine->visible_area.min_y + 1,
 				(Machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "V" : "H",
@@ -2321,64 +2373,25 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 			pixelx /= tmin;
 			pixely /= tmin;
 
-			sprintf(&buf[strlen(buf)],"pixel aspect ratio %d:%d\n",
+			sprintf(&message_buffer[strlen(message_buffer)],"pixel aspect ratio %d:%d\n",
 					pixelx,pixely);
 		}
-		sprintf(&buf[strlen(buf)],"%d colors ",Machine->drv->total_colors);
+		sprintf(&message_buffer[strlen(message_buffer)],"%d colors ",Machine->drv->total_colors);
 #endif
 	}
-
-
-	if (sel == -1)
-	{
-		/* startup info, print MAME version and ask for any key */
-
-		sprintf (buf2, "\n\t%s ", ui_getstring (UI_mame));	/* \t means that the line will be centered */
-		strcat(buf, buf2);
-
-		sprintf (buf2, "\n\t%s", ui_getstring (UI_anykey));
-		strcat(buf,buf2);
-		ui_drawbox(bitmap,0,0,uirotwidth,uirotheight);
-		ui_displaymessagewindow(bitmap,buf);
-
-		sel = 0;
-		if (code_read_async() != CODE_NONE)
-			sel = -1;
-	}
-	else
-	{
-		/* menu system, use the normal menu keys */
-		strcat(buf,"\n\t");
-		strcat(buf,ui_getstring (UI_lefthilight));
-		strcat(buf," ");
-		strcat(buf,ui_getstring (UI_returntomain));
-		strcat(buf," ");
-		strcat(buf,ui_getstring (UI_righthilight));
-
-		ui_displaymessagewindow(bitmap,buf);
-
-		if (input_ui_pressed(IPT_UI_SELECT))
-			sel = -1;
-
-		if (input_ui_pressed(IPT_UI_CANCEL))
-			sel = -1;
-
-		if (input_ui_pressed(IPT_UI_CONFIGURE))
-			sel = -2;
-	}
-
-	if (sel == -1 || sel == -2)
-	{
-		schedule_full_refresh();
-	}
-
-	return sel + 1;
 }
+
 
 void ui_copyright_and_warnings(void)
 {
   if(!options.skip_warnings)   
-    usrintf_showmessage_secs(8, "%s\n\n%s", ui_getstring(UI_copyright), (generate_warning_list() ? warn_buffer : ""));
+    usrintf_showmessage_secs(8, "%s\n%s - %s %s\n\n%s", ui_getstring(UI_copyright), Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, (generate_warning_list() ? message_buffer : ""));
+  if(!string_is_empty(message_buffer))
+  {
+    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", message_buffer);
+  }
+  generate_gameinfo();
+  log_cb(RETRO_LOG_INFO, LOGPRE "\n\n%s", message_buffer);
   
 }
 
@@ -2481,7 +2494,7 @@ bool generate_warning_list(void)
   if(string_is_empty(buffer))
     return false;
   
-  snprintf(warn_buffer, MAX_MESSAGE_LENGTH, "        ----- Driver Warnings -----\n%s", buffer);
+  snprintf(message_buffer, MAX_MESSAGE_LENGTH, "        ----- Driver Warnings -----\n%s", buffer);
 	return true;
 }
 
