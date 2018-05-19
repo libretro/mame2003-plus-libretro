@@ -17,13 +17,16 @@
 #include "info.h"
 #include "libretro.h"
 
+#define MAX_MESSAGE_LENGTH 1024
 
 extern void (*pause_action)(void);
 static void pause_action_showcopyright(void);
 void pause_action_start_emulator(void);
 static struct mame_bitmap *pause_bitmap;
-static char pause_buffer[2048];
-static char warn_buffer[2048];
+static char pause_buffer[MAX_MESSAGE_LENGTH];
+static char warn_buffer[MAX_MESSAGE_LENGTH];
+static char messagetext[MAX_MESSAGE_LENGTH];
+static int messagecounter;
 static int pause_done;
 
 extern retro_log_printf_t log_cb; 
@@ -3132,10 +3135,6 @@ static void displaymessage(struct mame_bitmap *bitmap,const char *text)
 	dt[1].text = 0; /* terminate array */
 	displaytext(bitmap,dt);
 }
-
-
-static char messagetext[200];
-static int messagecounter;
 
 void CLIB_DECL usrintf_showmessage(const char *text,...)
 {
