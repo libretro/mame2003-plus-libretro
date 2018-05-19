@@ -19,7 +19,7 @@ static const char *mame_default_text[] =
 	"MAME",
 
 	/* copyright stuff */
-	"Copying game data without permission is forbidden by copyright law.\nIf you are not entitled to emulate this system, please exit now.",
+	"Copying game data without permission is forbidden by copyright law. If you are not entitled to emulate this system, please exit now.",
 
 	/* misc stuff */
 	"Return to Main Menu",

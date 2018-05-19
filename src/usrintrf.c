@@ -18,7 +18,7 @@
 #include <libretro.h>
 #include <string/stdstring.h>
 
-#define MAX_MESSAGE_LENGTH 1024
+#define MAX_MESSAGE_LENGTH 2014
 
 static char warn_buffer[MAX_MESSAGE_LENGTH];
 static char messagetext[MAX_MESSAGE_LENGTH];
@@ -2377,22 +2377,8 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 
 void ui_copyright_and_warnings(void)
 {
-  double warning_wait = 0;
-  if(!options.skip_disclaimer)
-  {
-    usrintf_showmessage_secs(4, "%s", ui_getstring(UI_copyright));
-    warning_wait = TIME_IN_SEC(4);
-  }
-  if(!options.skip_warnings)
-  {
-    if(generate_warning_list())
-      timer_set(warning_wait, 0, display_warn_callback);
-  }
-}
-
-void display_warn_callback(int param)
-{
-  usrintf_showmessage_secs(10, "%s", warn_buffer);
+  if(!options.skip_warnings)   
+    usrintf_showmessage_secs(8, " ----- Copyright Warning -----\n%s\n\n%s", ui_getstring(UI_copyright), (generate_warning_list() ? warn_buffer : ""));
 }
 
 bool generate_warning_list(void)
@@ -2494,7 +2480,7 @@ bool generate_warning_list(void)
   if(string_is_empty(buffer))
     return false;
   
-  snprintf(warn_buffer, MAX_MESSAGE_LENGTH, "-------- Driver Warnings --------\n%s", buffer);
+  snprintf(warn_buffer, MAX_MESSAGE_LENGTH, "   ----- Driver Warnings -----\n%s", buffer);
 	return true;
 }
 
