@@ -3258,7 +3258,9 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( fghthist )	/* MBF (c) 1993 Data East Corporation (US) */
 	DRIVER( fghthstw )	/* MBF (c) 1993 Data East Corporation (World) */
 	DRIVER( fghthsta )	/* MBF (c) 1993 Data East Corporation (US) */
-	/* Heavy Smash         MBG */
+	DRIVER( hvysmsh )	/* MBG (c) 1993 Data East Corporation (Euro) */
+	DRIVER( hvysmsha )	/* MBG (c) 1993 Data East Corporation (Asia) */
+	DRIVER( hvysmshj )	/* MBG (c) 1993 Data East Corporation (Japan) */
         DRIVER( nslasher )	/* MBH (c) 1994 Data East Corporation  */
 	DRIVER( nslasherj )	/* MBH (c) 1994 Data East Corporation  */
 	DRIVER( nslashers )	/* MBH (c) 1994 Data East Corporation  */
@@ -3289,16 +3291,25 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* MCD ?? */
 	/* Dunk Dream 95/Hoops MCE (c) 1995 */
 	/* MCF ?? */
-	DRIVER( avengrgs )	/* MCG (c) 1995 Data East Corporation (Japan) */
 	DRIVER( sotsugyo )	/* (c) 1995 Mitchell (Atlus license) */
 	DRIVER( sshangha )	/* (c) 1992 Hot-B */
 	DRIVER( sshanghb )	/* bootleg */
 		
 	/* Other Data East games not yet identified */
+	DRIVER( wcvol95 )	/* (c) 1995 Data East */
+	DRIVER( wcvol95x )      /* (c) 1995 Data East */
 	DRIVER( candance )	/* (c) 1996 Mitchell */
 	DRIVER( magdrop )	/* (c) 1995 Data East Corporation */
 	DRIVER( magdropp )	/* (c) 1995 Data East Corporation */
 	DRIVER( osman )		/* (c) 1996 Mitchell */
+		
+	/* Data East MLC Games */
+	DRIVER( avengrgs )	/* MCG (c) 1995 Data East Corporation (Europe) */
+	DRIVER( avengrgsj )     /* MCG (c) 1995 Data East Corporation (Japan) */
+	DRIVER( skullfng )	/* MCH (c) 1996 Data East Corporation (Japan) */
+	DRIVER( skullfngj )	/* MCH (c) 1996 Data East Corporation (Japan) */
+        DRIVER( hoops96 )       /* MCE (c) 1996 Data East Corporation (Europe) */
+        DRIVER( ddream95 )      /* MCE (c) 1995 Data East Corporation (Japan) */
 
 	/* Tehkan / Tecmo games (Tehkan became Tecmo in 1986) */
 	DRIVER( senjyo )	/* (c) 1983 Tehkan */

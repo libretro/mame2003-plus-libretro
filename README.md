@@ -1,8 +1,10 @@
 # Building romsets for mame2003-plus
 
-**mame2003-plus is built on the same codebase as MAME 0.78, meaning that 95% or more of MAME 0.78 romsets from MAME 0.78 will work as-is in mame2003-plus, where they immediately benefit from its bugfixes and other improvements.** In order to play the new games and games which received ROM updates in mame2003-plus, you will need to find or build the correct romsets.
+## What Arcade romsets work?
 
-Each version of an arcade emulator must be used with ROMs that have the same exact version number. For example, MAME 0.37b5 romsets are required by the MAME 2000 emulator, but MAME 0.37b5 sets will not work correctly with the MAME 2003 or MAME 2010 emulator cores. Those cores require MAME 0.78 and MAME 0.139 ROM sets, respectively.
+**mame2003-plus is built on the same codebase as MAME 0.78, meaning that 95% or more of MAME 0.78 romsets will work as-is in mame2003-plus, where they immediately benefit from its bugfixes and other improvements.** In order to play the new games and games which received ROM updates in mame2003-plus, you will need to find or build the correct romsets.
+
+mame2003-plus has the ability to generate an XML "DAT" file directly from the MAME Menu. When `mame_keyboard` input is enabled, you can enter the MAME menu by pressing the `Tab` key. With any input mode, you can also access the MAME menu by turning it on as a core option.
 
 > **What is a romset?**
 > Arcade games are packaged as zip files, most of which are composed of more than one individual 'ROM' files. That is why some resources refer to an individual arcade game as a ROM (like people use to describe a zipped game cartridge ROM) while other resources refer to an individual game as a ROM set, ROMset, or romset.
@@ -12,16 +14,28 @@ Each version of an arcade emulator must be used with ROMs that have the same exa
 DAT files describe the exact ROM contents that the emultaor needs including filenames, file sizes, and checksums to verify contents are not incorrect or corrupt. mame2003-plus has the ability to generate an XML "DAT" file from the MAME Menu. When `mame_keyboard` input is enabled, you can enter the MAME menu by pressing the `Tab` key. With any input mode, you can also access the MAME menu by turning it on as a core option.
 
 ## Step 2: Finding a source for ROMs
-As of May 1, 2018 it is believed that a complete MAME 0.78 romset collection and a complete MAME 0.139 romset collection together include all or nearly all ROMs needed to rebuild a complete collection of mame2003-plus romsets. 
-
-It should also be possible to build a complete mame2003-plus collection from the most recent MAME collection plus the MAME "Rollback" collection.
-
-This section will be updated in the future as more information becomes available.
+A complete MAME 0.78 romset collection and a complete MAME 0.139 romset collection together include nearly all ROMs needed to rebuild a complete collection of mame2003-plus romsets. It is also be possible to build a complete mame2003-plus collection from the most recent MAME collection plus the MAME "Rollback" collection.
 
 ## Step 3: Building mame2003-plus romsets
 Refer to [Validating, Rebuilding, and Filtering ROM Collections](https://github.com/RetroPie/RetroPie-Setup/wiki/Validating,-Rebuilding,-and-Filtering-ROM-Collections) for details on how to configure ClrMamePro to use your sources as "rebuild" folders.
 
 We recommend the "Full Non-Merged" format, where each romset zip files includes all the files needed to run each game, including any ROMs from 'parent' ROM sets and BIOS sets. To configure ClrMamePro to validate or rebuild a Full Non-Merged collection, use "Non-Merged" mode and disable "Separate BIOS Sets" from the "Advanced" menu in both ClrMamePro's Rebuild and Scanner menus.
+
+#### WORD TO THE WISE ABOUT CLRMAMEPRO SETTINGS
+ClrMamePro remains the most popular tool for rebuilding MAME romsets, at least for now. That said, ClrMamePro is focused on supporting more recent MAME versions so there are at least two things to know if you are using ClrMamePro to generate a mame2003-plus set:
+
+1. If you are scanning CHDs, go to `Settings` -> `Compressor` -> `CHDMan` tab and change `Req. CHD Version` to `3`.
+2. If you are using the suggested setting of `Disable Separate BIOS Sets` then ClrMamePro will report the BIOS romset files as missing even though you told the program you don't want them. mame2003-plus incorporates 15 different kinds of BIOS romsets, so it is normal to see a ClrMamePro message like this after a clean and complete scan: `You are missing 15 of 4831 known mame2003-plus.xml sets (+ BIOS sets)`
+
+### Sourcing CHDs
+
+mame2003-plus uses exactly the same MAME 0.78 CHDs as mame2003. 
+
+### Sourcing Samples
+
+Generally mame2003-plus uses the same samples as mame2003 however there are some exceptions. It should also be mentioned that the new CD soundtrack samples are not circulated as part of any common packs.
+
+Sample sourcing docs are a work in progress.
 
 # Input System
 
@@ -102,8 +116,7 @@ The first value listed for the core option represents the default. "Restart" ind
 * **EXPERIMENTAL: Skip ROM verification**: (Restart) `disabled|enabled`
 * **Sample Rate (KHz)**: `48000|8000|11025|22050|44100` - Change this manually only for specific reasons. The audio sample rate has far-reaching consequences.
 * **MK2/MK3 DCS Speedhack**: `enabled|disabled` - Speedhack for the Midway sound hardware used in Mortal Kombat 2, 3 and others. Improves performance in these games.
-* **Skip Disclaimer**: `enabled|disabled` - Skips the 'nag-screen'.
-* **Skip Warnings**: `disabled|enabled` - Skips the warning screen shown before games with known emulation errors
+* **Skip Warnings**: `disabled|enabled`
 
 
 # Troubleshooting
@@ -134,3 +147,4 @@ Placeholder
 # Development
 
 #programming channel of the libretro discord chat server: https://discordapp.com/invite/C4amCeV
+
