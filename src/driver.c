@@ -3593,17 +3593,19 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( viostrmu )	/* GX168 (c) 1993 (US) */
 	DRIVER( viostrmj )	/* GX168 (c) 1993 (Japan) */
 	DRIVER( viostrma )	/* GX168 (c) 1993 (Asia) */
-	DRIVER( dadandrn )	/* GX170 (c) 1993 (Japan) */
-	DRIVER( metamrph )	/* GX224 (c) 1993 (US) */
-	DRIVER( metamrpj )	/* GX224 (c) 1993 (Japan) */
-	DRIVER( mtlchamp )	/* GX234 (c) 1993 (World) */
-	DRIVER( mtlchmpj )	/* GX234 (c) 1993 (Japan) */
-	DRIVER( rungun )	/* GX247 (c) 1993 (World) */
-	DRIVER( rungunu )	/* GX247 (c) 1993 (US) */
+	DRIVER( dadandrn )  /* GX170 (c) 1993 (Japan) */
+	DRIVER( metamrph )  /* GX224 (c) 1993 (US) */
+	DRIVER( metamrpj )  /* GX224 (c) 1993 (Japan) */
+	DRIVER( mtlchamp )  /* GX234 (c) 1993 (World) */
+	DRIVER( mtlchmpj )  /* GX234 (c) 1993 (Japan) */
+	DRIVER( rungun )	  /* GX247 (c) 1993 (World) */
+	DRIVER( rungunu )	  /* GX247 (c) 1993 (US) */
 	DRIVER( slmdunkj )	/* GX247 (c) 1993 (Japan) */
-	DRIVER( dbz )		/* (c) 1993 Banpresto */
-	DRIVER( dbz2 )		/* (c) 1994 Banpresto */
-	DRIVER( bishi )		/* GX575 (c) 1996 (Japan) */
+	DRIVER( dbz )       /* (c) 1993 Banpresto */
+	DRIVER( dbz2 )      /* (c) 1994 Banpresto */
+	DRIVER( bishi )     /* GX575 (c) 1996 (Japan) */
+	DRIVER( sbishi )    /* GX575 (c) 1998 (Japan) */
+	DRIVER( sbishik )   /* GX575 (c) 1998 (Japan) */
 
 	/* Konami dual 68000 games */
 	DRIVER( overdriv )	/* GX789 (c) 1990 */
