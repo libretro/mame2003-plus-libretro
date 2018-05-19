@@ -140,7 +140,7 @@ static WRITE32_HANDLER( avengrs_eprom_w )
 		/*volume control todo */
 	}
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  eprom_w %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  eprom_w %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
 }
 
 static WRITE32_HANDLER( avengrs_palette_w )
@@ -162,7 +162,7 @@ static READ32_HANDLER( avengrs_sound_r )
 	if (mem_mask==0x00ffffff) {
 		return YMZ280B_status_0_r(0)<<24;
 	} else {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  non-byte read from sound mask %08x\n",activecpu_get_pc(),mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  non-byte read from sound mask %08x\n",activecpu_get_pc(),mem_mask);
 	}
 
 	return 0;
@@ -176,7 +176,7 @@ static WRITE32_HANDLER( avengrs_sound_w )
 		else
 			YMZ280B_register_0_w(0,data>>24);
 	} else {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  non-byte written to sound %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  non-byte written to sound %08x mask %08x\n",activecpu_get_pc(),data,mem_mask);
 	}
 }
 
@@ -409,7 +409,7 @@ static NVRAM_HANDLER(mlc)
 
 static void sound_irq_gen(int state)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "sound irq\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "sound irq\n");
 }
 
 static struct YMZ280Binterface ymz280b_intf =
@@ -712,3 +712,4 @@ GAME( 1996, skullfng, 0,        mlc_6bpp, mlc, mlc,      ROT270, "Data East Corp
 GAME( 1996, skullfngj,skullfng, mlc_6bpp, mlc, mlc,      ROT270, "Data East Corporation", "Skull Fang (Japan 1.09)" ) /* Version 1.09, Japan, Master 96.02.08 */
 GAME( 1996, hoops96,  0,        mlc_5bpp, mlc, mlc,      ROT0,   "Data East Corporation", "Hoops '96 (Europe/Asia 2.0)" )
 GAME( 1995, ddream95, hoops96,  mlc_5bpp, mlc, mlc,      ROT0,   "Data East Corporation", "Dunk Dream '95 (Japan 1.4 EAM)" )
+
