@@ -54,4 +54,4 @@ extern const unsigned int   sinista2_bootstrap_length;
 extern const unsigned char  zookeep_bootstrap_bytes[];
 extern const unsigned int   zookeep_bootstrap_length;
 
-#endif /* ARTWORK_H */
+#endif /* BOOTSTRAP_H */

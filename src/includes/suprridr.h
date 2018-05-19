@@ -4,6 +4,9 @@
 
 **************************************************************************/
 
+#ifndef SUPRRIDR_H
+#define SUPRRIDR_H
+
 /*----------- defined in vidhrdw/suprridr.c -----------*/
 
 extern data8_t *suprridr_fgram;
@@ -22,3 +25,5 @@ WRITE_HANDLER( suprridr_fgram_w );
 WRITE_HANDLER( suprridr_bgram_w );
 
 VIDEO_UPDATE( suprridr );
+
+#endif /* SUPRRIDR_H */
