@@ -179,9 +179,8 @@ struct GameOptions
   char   *libretro_save_path;
 
   int		   mame_debug;		       /* 1 to enable debugging */
-  int 	   skip_disclaimer;	     /* 1 to skip the disclaimer screen at startup */
   int 	   skip_gameinfo;		     /* 1 to skip the game info screen at startup */
-  int      skip_warnings;        /* 1 to skip the game warning screen at startup */
+  int      skip_warnings;        /* 1 to skip the warning messages at startup */
   int      display_setup;        /* 1 to display the MAME setup menu until reset to 0 */
 
   unsigned dial_share_xy;

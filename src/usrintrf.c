@@ -2378,7 +2378,8 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 void ui_copyright_and_warnings(void)
 {
   if(!options.skip_warnings)   
-    usrintf_showmessage_secs(8, " ----- Copyright Warning -----\n%s\n\n%s", ui_getstring(UI_copyright), (generate_warning_list() ? warn_buffer : ""));
+    usrintf_showmessage_secs(8, "%s\n\n%s", ui_getstring(UI_copyright), (generate_warning_list() ? warn_buffer : ""));
+  
 }
 
 bool generate_warning_list(void)
@@ -2480,7 +2481,7 @@ bool generate_warning_list(void)
   if(string_is_empty(buffer))
     return false;
   
-  snprintf(warn_buffer, MAX_MESSAGE_LENGTH, "   ----- Driver Warnings -----\n%s", buffer);
+  snprintf(warn_buffer, MAX_MESSAGE_LENGTH, "        ----- Driver Warnings -----\n%s", buffer);
 	return true;
 }
 
@@ -3163,7 +3164,10 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	/* show popup message if any */
 	if (messagecounter > 0)
 	{
-		displaymessage(bitmap, messagetext);
+    if (input_ui_pressed(IPT_UI_CANCEL)) /* a popup is on screen and the user presses the cancel button */
+      messagecounter = 1; /* decrease to trigger screen refresh */
+		else
+      displaymessage(bitmap, messagetext);
 
 		if (--messagecounter == 0)
 			schedule_full_refresh();
