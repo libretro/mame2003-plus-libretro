@@ -513,9 +513,6 @@ ROM_START( avengrgs )
 	ROM_LOAD( "mcg-12.5a",  0x000000, 0x200000, CRC(bef9b28f) SHA1(b7a2a0539ea4d22b48ce3f3eb367017f219da2c1) ) /* basic coin sounds etc. */
 	ROM_LOAD( "mcg-13.9k",  0x200000, 0x200000, CRC(92301551) SHA1(a7891e7a3c8d7f165ca73f5d5a034501df46e9a2) ) /* music */
 	ROM_LOAD( "mcg-14.6a",  0x400000, 0x200000, CRC(c0d8b5f0) SHA1(08eecf6e7d0273e41cda3472709a67e2b16068c9) ) /* music */
-
-	ROM_REGION( 0x80, REGION_USER1, ROMREGION_ERASE00 )
-	ROM_LOAD_OPTIONAL( "avengrgs.nv",  0x00, 0x80, CRC(c0e84b4e) SHA1(e7afca68cc5fa69ded32bc0a1dcc6a59fe7f081b) )
 ROM_END
 
 ROM_START( avengrgsj )
@@ -544,9 +541,6 @@ ROM_START( avengrgsj )
 	ROM_LOAD( "mcg-12.5a",  0x000000, 0x200000, CRC(bef9b28f) SHA1(b7a2a0539ea4d22b48ce3f3eb367017f219da2c1) ) /* basic coin sounds etc. */
 	ROM_LOAD( "mcg-13.9k",  0x200000, 0x200000, CRC(92301551) SHA1(a7891e7a3c8d7f165ca73f5d5a034501df46e9a2) ) /* music */
 	ROM_LOAD( "mcg-14.6a",  0x400000, 0x200000, CRC(c0d8b5f0) SHA1(08eecf6e7d0273e41cda3472709a67e2b16068c9) ) /* music */
-
-	ROM_REGION( 0x80, REGION_USER1, ROMREGION_ERASE00 )
-	ROM_LOAD_OPTIONAL( "avengrgsj.nv",  0x00, 0x80, CRC(7ea70843) SHA1(f010b77b824e37c5e8c5722d5fff79751118f0b7) )
 ROM_END
 
 ROM_START( hoops96 )
