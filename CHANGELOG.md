@@ -85,6 +85,8 @@
 * Shogun Warriors
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
+* Super Bishi Bashi Championship (ver JAA, 2 Players)
+* Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Super Rider
 * SWAT Police
 * Tang Tang
