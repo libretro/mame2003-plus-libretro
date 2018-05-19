@@ -34,11 +34,9 @@ void displaytext(struct mame_bitmap *bitmap,const struct DisplayText *dt);
 void ui_drawchar(struct mame_bitmap *dest, int ch, int color, int sx, int sy);
 void ui_text(struct mame_bitmap *bitmap,const char *buf,int x,int y);
 void ui_drawbox(struct mame_bitmap *bitmap,int leftx,int topy,int width,int height);
+void ui_copyright_and_warnings(void);
 void ui_displaymessagewindow(struct mame_bitmap *bitmap,const char *text);
 void ui_displaymenu(struct mame_bitmap *bitmap,const char **items,const char **subitems,char *flag,int selected,int arrowize_subitem);
-int showcopyright(struct mame_bitmap *bitmap);
-void showgamewarnings(void);
-int showgameinfo(struct mame_bitmap *bitmap);
 void set_ui_visarea (int xmin, int ymin, int xmax, int ymax);
 
 void init_user_interface(void);

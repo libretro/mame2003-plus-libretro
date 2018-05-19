@@ -118,7 +118,7 @@ void retro_set_environment(retro_environment_t cb)
     { APPNAME"_skip_rom_verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" },
     { APPNAME"_sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
     { APPNAME"_dcs_speedhack","MK2/MK3 DCS Speedhack; enabled|disabled"},
-    { APPNAME"_skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
+    { APPNAME"_skip_disclaimer", "Skip Disclaimer; disabled|enabled" },
     { APPNAME"_skip_warnings", "Skip Warnings; disabled|enabled" },
     { NULL, NULL },
   };

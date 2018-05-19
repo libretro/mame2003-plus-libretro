@@ -19,9 +19,7 @@ static const char *mame_default_text[] =
 	"MAME",
 
 	/* copyright stuff */
-	"Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.",
-	"IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.",
-	"To continue, type OK on Keyboard *OR* Left then Right on Joystick",
+	"Copying game data without permission is forbidden by copyright law.\nIf you are not entitled to emulate this system, please exit now.",
 
 	/* misc stuff */
 	"Return to Main Menu",

@@ -57,11 +57,9 @@
 				- calls the driver's VIDEO_START callback
 				- starts the audio system
 				- disposes of regions marked as disposable
-				- calls run_machine_core()
+				- calls ui_copyright_and_warnings()
 
-				run_machine_core()
-					- shows the copyright screen
-					- shows the game warnings
+				pause_action_start_emulator()
 					- initializes the user interface
 					- initializes the cheat system
 					- calls the driver's NVRAM_HANDLER
@@ -141,6 +139,7 @@ int mame_debug; /* !0 when -debug option is specified */
 int bailing;	/* set to 1 if the startup is aborted to prevent multiple error messages */
 
 extern int16_t XsoundBuffer[2048];
+extern void (*pause_action)(void);
 
 /* the active machine */
 static struct RunningMachine active_machine;
@@ -211,7 +210,7 @@ static struct chd_interface mame_chd_interface =
 static int init_machine(void);
 static void shutdown_machine(void);
 static int run_machine(void);
-static void run_machine_core(void);
+void pause_action_start_emulator(void);
 
 #ifdef MAME_DEBUG
 static int validitychecks(void);
@@ -456,8 +455,8 @@ static int run_machine(void)
 						Machine->memory_region[region].base = 0;
 					}
 
-				/* now do the core execution */
-				run_machine_core();
+				ui_copyright_and_warnings();
+        pause_action = pause_action_start_emulator;
 				return 0;
 			}
 
@@ -486,12 +485,6 @@ void run_machine_done(void)
     tilemap_close();
     vh_close();
 }
-
-
-/*-------------------------------------------------
-	run_machine_core - core execution loop
--------------------------------------------------*/
-extern void (*pause_action)(void);
 
 void pause_action_start_emulator(void)
 {
@@ -562,30 +555,6 @@ void pause_action_start_emulator(void)
 
     /* Unpause */
     pause_action = 0;
-}
-
-void run_machine_core(void)
-{
-	/* disable artwork for the start */
-	artwork_enable(0);
-
-    if(settingsloaded || options.skip_disclaimer)
-    {
-        if (options.skip_warnings)
-        {
-            pause_action = pause_action_start_emulator;
-        }
-        else
-        {
-            pause_action = pause_action_start_emulator;          
-            showgamewarnings();
-        }
-    }
-    else
-    {
-        showcopyright(artwork_get_ui_bitmap());
-    }
-
 }
 
 void run_machine_core_done(void)

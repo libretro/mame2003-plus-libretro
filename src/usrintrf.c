@@ -15,19 +15,14 @@
 #include "ui_text.h"
 #include "fileio.h"
 #include "info.h"
-#include "libretro.h"
+#include <libretro.h>
+#include <string/stdstring.h>
 
 #define MAX_MESSAGE_LENGTH 1024
 
-extern void (*pause_action)(void);
-static void pause_action_showcopyright(void);
-void pause_action_start_emulator(void);
-static struct mame_bitmap *pause_bitmap;
-static char pause_buffer[MAX_MESSAGE_LENGTH];
 static char warn_buffer[MAX_MESSAGE_LENGTH];
 static char messagetext[MAX_MESSAGE_LENGTH];
-static int messagecounter;
-static int pause_done;
+static int  messagecounter;
 
 extern retro_log_printf_t log_cb; 
 
@@ -246,7 +241,8 @@ static const struct GfxLayout uifontlayout =
 -------------------------------------------------*/
 
 static void wordwrap_text_buffer (char *buffer, int maxwidth);
-
+void display_warn_callback(int param);
+bool generate_warning_list(void);
 
 /*-------------------------------------------------
 	ui_markdirty - mark a raw rectangle dirty
@@ -2217,27 +2213,6 @@ static int mame_stats(struct mame_bitmap *bitmap,int selected)
 }
 
 
-int showcopyright(struct mame_bitmap *bitmap)
-{
-	char buf2[256];
-
-	strcpy (pause_buffer, ui_getstring(UI_copyright1));
-	strcat (pause_buffer, "\n\n");
-	sprintf(buf2, ui_getstring(UI_copyright2), Machine->gamedrv->description);
-	strcat (pause_buffer, buf2);
-	strcat (pause_buffer, "\n\n");
-	strcat (pause_buffer, ui_getstring(UI_copyright3));
-
-	setup_selected = -1;
-	
-	/* Prep pause action */
-    pause_action = pause_action_showcopyright;
-    pause_bitmap = bitmap;
-    pause_done = 0;
-
-    return 0;
-}
-
 static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 {
 	int i;
@@ -2400,11 +2375,32 @@ static int displaygameinfo(struct mame_bitmap *bitmap,int selected)
 	return sel + 1;
 }
 
-
-void showgamewarnings(void)
+void ui_copyright_and_warnings(void)
 {
-    int i;
-    int maxcols = (uirotwidth / uirotcharwidth) - 1;
+  double warning_wait = 0;
+  if(!options.skip_disclaimer)
+  {
+    usrintf_showmessage_secs(4, "%s", ui_getstring(UI_copyright));
+    warning_wait = TIME_IN_SEC(4);
+  }
+  if(!options.skip_warnings)
+  {
+    if(generate_warning_list())
+      timer_set(warning_wait, 0, display_warn_callback);
+  }
+}
+
+void display_warn_callback(int param)
+{
+  usrintf_showmessage_secs(10, "%s", warn_buffer);
+}
+
+bool generate_warning_list(void)
+{
+  int i;
+  char buffer[MAX_MESSAGE_LENGTH];
+  
+  buffer[0] = '\0';
 
 	if (Machine->gamedrv->flags &
 			(GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS |
@@ -2413,43 +2409,43 @@ void showgamewarnings(void)
 
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
 		{
-			strcat(warn_buffer, ui_getstring (UI_imperfectcolors));
-			strcat(warn_buffer, "\n");
+			strcat(buffer, ui_getstring (UI_imperfectcolors));
+			strcat(buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_WRONG_COLORS)
 		{
-			strcat(warn_buffer, ui_getstring (UI_wrongcolors));
-			strcat(warn_buffer, "\n");
+			strcat(buffer, ui_getstring (UI_wrongcolors));
+			strcat(buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_GRAPHICS)
 		{
-			strcat(warn_buffer, ui_getstring (UI_imperfectgraphics));
-			strcat(warn_buffer, "\n");
+			strcat(buffer, ui_getstring (UI_imperfectgraphics));
+			strcat(buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_SOUND)
 		{
-			strcat(warn_buffer, ui_getstring (UI_imperfectsound));
-			strcat(warn_buffer, "\n");
+			strcat(buffer, ui_getstring (UI_imperfectsound));
+			strcat(buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_NO_SOUND)
 		{
-			strcat(warn_buffer, ui_getstring (UI_nosound));
-			strcat(warn_buffer, "\n");
+			strcat(buffer, ui_getstring (UI_nosound));
+			strcat(buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & GAME_NO_COCKTAIL)
 		{
-			strcat(warn_buffer, ui_getstring (UI_nococktail));
-			strcat(warn_buffer, "\n");
+			strcat(buffer, ui_getstring (UI_nococktail));
+			strcat(buffer, "\n");
 		}
 		if (Machine->gamedrv->flags & GAME_DOESNT_SERIALIZE)
 		{
-			strcat(warn_buffer, ui_getstring (UI_no_serialization));
-			strcat(warn_buffer, "\n");
+			strcat(buffer, ui_getstring (UI_no_serialization));
+			strcat(buffer, "\n");
 		}
 
 		if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
@@ -2459,13 +2455,13 @@ void showgamewarnings(void)
 
 			if (Machine->gamedrv->flags & GAME_NOT_WORKING)
 			{
-				strcpy(warn_buffer, ui_getstring (UI_brokengame));
-				strcat(warn_buffer, "\n");
+				strcpy(buffer, ui_getstring (UI_brokengame));
+				strcat(buffer, "\n");
 			}
 			if (Machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
 			{
-				strcat(warn_buffer, ui_getstring (UI_brokenprotection));
-				strcat(warn_buffer, "\n");
+				strcat(buffer, ui_getstring (UI_brokenprotection));
+				strcat(buffer, "\n");
 			}
 
 			if (Machine->gamedrv->clone_of && !(Machine->gamedrv->clone_of->flags & NOT_A_DRIVER))
@@ -2482,47 +2478,26 @@ void showgamewarnings(void)
 					{
 						if (foundworking == 0)
 						{
-							strcat(warn_buffer,"\n\n");
-							strcat(warn_buffer, ui_getstring (UI_workingclones));
-							strcat(warn_buffer,"\n\n");
+							strcat(buffer,"\n\n");
+							strcat(buffer, ui_getstring (UI_workingclones));
+							strcat(buffer,"\n\n");
 						}
 						foundworking = 1;
 
-						sprintf(&warn_buffer[strlen(warn_buffer)],"%s\n",drivers[i]->name);
+						sprintf(&buffer[strlen(buffer)],"%s\n",drivers[i]->name);
 					}
 				}
 				i++;
 			}
 		}
-    sprintf(&warn_buffer[strlen(warn_buffer)], "\nThis window will close automatically in 10 seconds.");
-    wordwrap_text_buffer(warn_buffer, maxcols);
-    usrintf_showmessage_secs(10, "%s", warn_buffer);
 	}
-
-	return;
+  if(string_is_empty(buffer))
+    return false;
+  
+  snprintf(warn_buffer, MAX_MESSAGE_LENGTH, "-------- Driver Warnings --------\n%s", buffer);
+	return true;
 }
 
-#if 0 /* Will hang */
-int showgameinfo(struct mame_bitmap *bitmap)
-{
-	/* clear the input memory */
-	while (code_read_async() != CODE_NONE) {};
-
-	while (displaygameinfo(bitmap,0) == 1)
-	{
-		update_video_and_audio();
-	}
-
-	erase_screen(bitmap);
-	/* make sure that the screen is really cleared, in case autoframeskip kicked in */
-	update_video_and_audio();
-	update_video_and_audio();
-	update_video_and_audio();
-	update_video_and_audio();
-
-	return 0;
-}
-#endif
 
 /* Word-wraps the text in the specified buffer to fit in maxwidth characters per line.
    The contents of the buffer are modified.
@@ -3233,37 +3208,3 @@ int setup_active(void)
 	return setup_selected;
 }
 
-static int show_game_message(void)
-{
-    erase_screen(pause_bitmap);
-    ui_drawbox(pause_bitmap,0,0,uirotwidth,uirotheight);
-    ui_displaymessagewindow(pause_bitmap,pause_buffer);
-
-    update_video_and_audio();
-    
-    if (input_ui_pressed(IPT_UI_CANCEL))
-    {
-        return 1;
-    }
-    
-    if (code_pressed_memory(KEYCODE_O) || input_ui_pressed(IPT_UI_LEFT))
-    {
-        pause_done = 1;
-    }
-    else if (pause_done == 1 && (code_pressed_memory(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
-    {
-        pause_done = 2;
-        return 1;
-    }
-    
-    return 0;
-}
-
-static void pause_action_showcopyright(void)
-{
-    if(show_game_message())
-    {
-        setup_selected = 0;
-        showgamewarnings();
-    }
-}

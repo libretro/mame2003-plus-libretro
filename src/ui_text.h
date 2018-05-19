@@ -18,9 +18,7 @@ enum
 	UI_mame = 0,
 
 	/* copyright stuff */
-	UI_copyright1,
-	UI_copyright2,
-	UI_copyright3,
+	UI_copyright,
 
 	/* misc menu stuff */
 	UI_returntomain,
