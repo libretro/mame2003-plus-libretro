@@ -498,7 +498,10 @@ void pause_action_start_emulator(void)
         mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
         if(!nvram_file)
         {
-          if      ( strcasecmp(Machine->gamedrv->name, "bubblem") == 0)
+          if      ( strcasecmp(Machine->gamedrv->name, "avengrgs") == 0)
+            nvram_file = spawn_bootstrap_nvram(bubblem_bootstrap_bytes, bubblem_bootstrap_length);
+          
+          else if ( strcasecmp(Machine->gamedrv->name, "bubblem") == 0)
             nvram_file = spawn_bootstrap_nvram(bubblem_bootstrap_bytes, bubblem_bootstrap_length);
 
           else if ( strcasecmp(Machine->gamedrv->name, "mk2") == 0)

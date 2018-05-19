@@ -10,6 +10,9 @@
 #ifndef BOOTSTRAP_H
 #define BOOTSTRAP_H
 
+extern const unsigned char  avengrgs_bootstrap_bytes[];
+extern const unsigned int   avengrgs_bootstrap_length;
+
 extern const unsigned char  bubblem_bootstrap_bytes[];
 extern const unsigned int   bubblem_bootstrap_length;
 
