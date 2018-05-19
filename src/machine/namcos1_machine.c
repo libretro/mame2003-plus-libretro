@@ -1279,7 +1279,7 @@ DRIVER_INIT( bakutotu )
 				scanptr[7] = 0xfc;
 				srcptr = scanptr + 8;
 
-				logerror ("faulty loop patched at %06x\n", scanptr-rombase+7);
+				log_cb(RETRO_LOG_WARN, LOGPRE "faulty loop patched at %l\n", scanptr-rombase+7);
 			}
 			else
 				srcptr = scanptr + 1;

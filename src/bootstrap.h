@@ -7,6 +7,9 @@
     
 *********************************************************************/    
 
+#ifndef BOOTSTRAP_H
+#define BOOTSTRAP_H
+
 extern const unsigned char  bubblem_bootstrap_bytes[];
 extern const unsigned int   bubblem_bootstrap_length;
 
@@ -50,3 +53,5 @@ extern const unsigned int   sinista2_bootstrap_length;
 /* used for zookeep, zookeep2, and zookeep3 */
 extern const unsigned char  zookeep_bootstrap_bytes[];
 extern const unsigned int   zookeep_bootstrap_length;
+
+#endif /* ARTWORK_H */

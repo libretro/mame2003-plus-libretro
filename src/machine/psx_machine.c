@@ -455,7 +455,7 @@ static psx_sio_write_handler m_p_f_sio_write[ 2 ];
 
 static void sio_interrupt( int n_port )
 {
-	verboselog( 1, "sio_interrupt( %d ) %08x\n", n_port );
+	verboselog( 1, "sio_interrupt( %d )\n", n_port );
 	m_p_n_sio_status[ n_port ] |= ( 1 << 9 );
 	psx_irq_set( 0x80 );
 }

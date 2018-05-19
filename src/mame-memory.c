@@ -733,7 +733,7 @@ int CLIB_DECL fatalerror(const char *string, ...)
 {
 	va_list arg;
 	va_start(arg, string);
-	vprintf(string, arg);
+	log_cb(RETRO_LOG_ERROR, string, arg);
 	va_end(arg);
 	exit(1);
 	return 0;
@@ -2573,7 +2573,7 @@ int mem_address_bits_of_cpu(int cputype)
 			return readmem_to_bits[idx].bits;
 
 	/* this is a fatal error */
-	fatalerror("CPU #%d memory handlers don't have a table entry in readmem_to_bits!\n");
+	fatalerror("CPU memory handlers don't have a table entry in readmem_to_bits!\n");
 	exit(1);
 	return 0;
 }
