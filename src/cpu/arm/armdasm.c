@@ -104,14 +104,14 @@ void arm_disasm( char *pBuf, data32_t pc, data32_t opcode )
 {
 	const char *pBuf0;
 
-	const char *pConditionCodeTable[16] =
+    static const char *pConditionCodeTable[16] =
 	{
 		"EQ","NE","CS","CC",
 		"MI","PL","VS","VC",
 		"HI","LS","GE","LT",
 		"GT","LE","","NV"
 	};
-	const char *pOperation[16] =
+    static const char *pOperation[16] =
 	{
 		"AND","EOR","SUB","RSB",
 		"ADD","ADC","SBC","RSC",
@@ -335,6 +335,42 @@ void arm_disasm( char *pBuf, data32_t pc, data32_t opcode )
 		pBuf = WritePadding( pBuf, pBuf0 );
 
 		pBuf = WriteBranchAddress( pBuf, pc, opcode );
+		}
+	else if( (opcode&0x0f000000) == 0x0e000000 )
+	{
+		/* co-processor */
+		/* xxxx1110 oooLNNNN ddddpppp qqq1MMMM MRC/MCR */
+		if( (opcode&0x0f100000)==0x0e100000 )
+		{
+			if( (opcode&0x0f100010)==0x0e100010 )
+			{
+				pBuf += sprintf( pBuf, "MRC" );
+			}
+			else if( (opcode&0x0f100010)==0x0e000010 )
+			{
+				pBuf += sprintf( pBuf, "MCR" );
+			}
+			else
+			{
+				pBuf += sprintf( pBuf, "???" );
+			}
+
+			pBuf += sprintf( pBuf, "%s", pConditionCode );
+			pBuf = WritePadding( pBuf, pBuf0 );
+			pBuf += sprintf( pBuf, "R%d, CR%d {CRM%d, q%d}",(opcode>>12)&0xf, (opcode>>16)&0xf, (opcode>>0)&0xf, (opcode>>5)&0x7);
+			/* Nb:  full form should be o, p, R, CR, CRM, q */
+		}
+		else if( (opcode&0x0f000010)==0x0e000000 )
+		{
+			pBuf += sprintf( pBuf, "CDP" );
+			pBuf += sprintf( pBuf, "%s", pConditionCode );
+			pBuf = WritePadding( pBuf, pBuf0 );
+			pBuf += sprintf( pBuf, "%08x", opcode );
+		}
+		else
+		{
+			pBuf += sprintf( pBuf, "???" );
+		}
 	}
 	else if( (opcode&0x0f000000) == 0x0f000000 )
 	{
