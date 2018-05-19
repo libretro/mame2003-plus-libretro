@@ -249,7 +249,7 @@ static INLINE void cpu_write32( int addr, data32_t data )
 {
 	/* Unaligned writes are treated as normal writes */
 	cpu_writemem26ledw_dword(addr&ADDRESS_MASK,data);
-	if (ARM_DEBUG_CORE && addr&3) log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: Unaligned write %08x\n",R15,addr);
+	if (ARM_DEBUG_CORE && addr&3) log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: Unaligned write %08x\n",R15,addr);
 }
 
 static INLINE void cpu_write8( int addr, data8_t data )
@@ -264,7 +264,7 @@ static INLINE data32_t cpu_read32( int addr )
 	/* Unaligned reads rotate the word, they never combine words */
 	if (addr&3) {
 		if (ARM_DEBUG_CORE && addr&1)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: Unaligned byte read %08x\n",R15,addr);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: Unaligned byte read %08x\n",R15,addr);
 
 		if ((addr&3)==1)
 			return ((result&0x000000ff)<<24)|((result&0xffffff00)>> 8);
@@ -410,7 +410,7 @@ int arm_execute( int cycles )
 		}
 		else /* Undefined */
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Undefined instruction\n",R15);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Undefined instruction\n",R15);
 		L_Next:
 			arm_ICount -= S_CYCLE;
 			R15 += 4;
@@ -768,7 +768,7 @@ static void HandleMemSingle( data32_t insn )
 	/* Calculate Rn, accounting for PC */
 	rn = (insn & INSN_RN) >> INSN_RN_SHIFT;
 
-/*	if (rn==0xf) log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Source R15\n",R15);*/
+/*	if (rn==0xf) log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Source R15\n",R15);*/
 
 	if (insn & INSN_SDT_P)
 	{
@@ -786,7 +786,7 @@ static void HandleMemSingle( data32_t insn )
 		{
 			SetRegister(rn,rnv);
 	        if (ARM_DEBUG_CORE && rn == eR15)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "writeback R15 %08x\n", R15);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "writeback R15 %08x\n", R15);
 		}
 		else if (rn == eR15)
 		{
@@ -814,7 +814,7 @@ static void HandleMemSingle( data32_t insn )
 		if (insn & INSN_SDT_B)
 		{
 			if (ARM_DEBUG_CORE && rd == eR15)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "read byte R15 %08x\n", R15);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "read byte R15 %08x\n", R15);
 			SetRegister(rd,(data32_t) READ8(rnv));
 		}
 		else
@@ -845,14 +845,14 @@ static void HandleMemSingle( data32_t insn )
 		if (insn & INSN_SDT_B)
 		{
 			if (ARM_DEBUG_CORE && rd==eR15)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Wrote R15 in byte mode\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Wrote R15 in byte mode\n");
 
 			WRITE8(rnv, (data8_t) GetRegister(rd) & 0xffu);
 		}
 		else
 		{
 			if (ARM_DEBUG_CORE && rd==eR15)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Wrote R15 in 32bit mode\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Wrote R15 in 32bit mode\n");
 
 			WRITE32(rnv, rd == eR15 ? R15 + 8 : GetRegister(rd));
 		}
@@ -871,7 +871,7 @@ static void HandleMemSingle( data32_t insn )
 			else {
 
 				if ((insn&INSN_SDT_W)!=0)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  RegisterWritebackIncrement %d %d %d\n",R15,(insn & INSN_SDT_P)!=0,(insn&INSN_SDT_W)!=0,(insn & INSN_SDT_U)!=0);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  RegisterWritebackIncrement %d %d %d\n",R15,(insn & INSN_SDT_P)!=0,(insn&INSN_SDT_W)!=0,(insn & INSN_SDT_U)!=0);
 
 				SetRegister(rn,(rnv + off));
 			}
@@ -887,7 +887,7 @@ static void HandleMemSingle( data32_t insn )
 				SetRegister(rn,(rnv - off));
 
 				if ((insn&INSN_SDT_W)!=0)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  RegisterWritebackDecrement %d %d %d\n",R15,(insn & INSN_SDT_P)!=0,(insn&INSN_SDT_W)!=0,(insn & INSN_SDT_U)!=0);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  RegisterWritebackDecrement %d %d %d\n",R15,(insn & INSN_SDT_P)!=0,(insn&INSN_SDT_W)!=0,(insn & INSN_SDT_U)!=0);
 			}
 		}
 	}
@@ -970,7 +970,7 @@ static void HandleALU( data32_t insn )
 		if ((rn = (insn & INSN_RN) >> INSN_RN_SHIFT) == eR15)
 		{
 			if (ARM_DEBUG_CORE)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Pipelined R15 (Shift %d)\n",R15,(insn&INSN_I?8:insn&0x10u?12:12));
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Pipelined R15 (Shift %d)\n",R15,(insn&INSN_I?8:insn&0x10u?12:12));
 
 			/* Docs strongly suggest the mode bits should be included here, but it breaks Captain
 			America, as it starts doing unaligned reads */
@@ -1075,7 +1075,7 @@ static void HandleALU( data32_t insn )
 	} else if (rdn==eR15) {
 		if (insn & INSN_S) {
 			if (ARM_DEBUG_CORE)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: TST class on R15 s bit set\n",R15);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: TST class on R15 s bit set\n",R15);
 			
 			/* Dubious hack for 'TEQS R15, #$3', the docs suggest execution
                 should continue two instructions later (because pipelined R15
@@ -1099,7 +1099,7 @@ static void HandleALU( data32_t insn )
 			}
 		} else {
 			if (ARM_DEBUG_CORE)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: TST class on R15 no s bit set\n",R15);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: TST class on R15 no s bit set\n",R15);
 		}
 	}
 }
@@ -1116,7 +1116,7 @@ static void HandleMul( data32_t insn)
 		|| ((insn&INSN_MUL_RS)>>INSN_MUL_RS_SHIFT )==0xf
 		|| ((insn&INSN_MUL_RN)>>INSN_MUL_RN_SHIFT)==0xf)
 		)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  R15 used in mult\n",R15);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  R15 used in mult\n",R15);
 
 	/* Add on Rn if this is a MLA */
 	if (insn & INSN_MUL_A)
@@ -1191,7 +1191,7 @@ static int storeInc( data32_t pat, data32_t rbv)
 		if( (pat>>i)&1 )
 		{
 			if (ARM_DEBUG_CORE && i==15) /* R15 is plus 12 from address of STM */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: StoreInc on R15\n",R15);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: StoreInc on R15\n",R15);
 
 			WRITE32( rbv += 4, GetRegister(i) );
 			result++;
@@ -1210,7 +1210,7 @@ static int storeDec( data32_t pat, data32_t rbv)
 		if( (pat>>i)&1 )
 		{
 			if (ARM_DEBUG_CORE && i==15) /* R15 is plus 12 from address of STM */
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: StoreDec on R15\n",R15);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: StoreDec on R15\n",R15);
 
 			WRITE32( rbv -= 4, GetRegister(i) );
 			result++;
@@ -1226,7 +1226,7 @@ static void HandleMemBlock( data32_t insn)
 	int result;
 
 	if (ARM_DEBUG_CORE && insn & INSN_BDT_S)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  S Bit set in MEMBLOCK\n",R15);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  S Bit set in MEMBLOCK\n",R15);
 
 	if (insn & INSN_BDT_L)
 	{
@@ -1245,7 +1245,7 @@ static void HandleMemBlock( data32_t insn)
 			if (insn & INSN_BDT_W)
 			{
 				if (ARM_DEBUG_CORE && rb==15)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Illegal LDRM writeback to r15\n",R15);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Illegal LDRM writeback to r15\n",R15);
 
 				SetRegister(rb,GetRegister(rb)+result*4);
 			}
@@ -1266,7 +1266,7 @@ static void HandleMemBlock( data32_t insn)
 			if (insn & INSN_BDT_W)
 			{
 				if (rb==0xf)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Illegal LDRM writeback to r15\n",R15);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Illegal LDRM writeback to r15\n",R15);
 				SetRegister(rb,GetRegister(rb)-result*4);
 			}
 			/* If R15 is pulled from memory we defer setting it until after writeback
@@ -1286,7 +1286,7 @@ static void HandleMemBlock( data32_t insn)
 		if (insn & (1<<eR15))
 		{
 			if (ARM_DEBUG_CORE)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: Writing R15 in strm\n",R15);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: Writing R15 in strm\n",R15);
 
 			/* special case handling if writing to PC */
 			R15 += 12;
@@ -1343,15 +1343,15 @@ static data32_t decodeShift( data32_t insn, data32_t *pCarry)
 	/* All shift types ending in 1 are Rk, not #k */
 	if( t & 1 )
 	{
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  RegShift %02x %02x\n",R15, k>>1,GetRegister(k >> 1));*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  RegShift %02x %02x\n",R15, k>>1,GetRegister(k >> 1));*/
 		if (ARM_DEBUG_CORE && (insn&0x80)==0x80)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  RegShift ERROR (p36)\n",R15);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  RegShift ERROR (p36)\n",R15);
 
 		/*see p35 for check on this*/
 		k = GetRegister(k >> 1)&0x1f;
 		if( k == 0 ) /* Register shift by 0 is a no-op */
 		{
-/*			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  NO-OP Regshift\n",R15);*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  NO-OP Regshift\n",R15);*/
 			if (pCarry) *pCarry = R15 & C_MASK;
 			return rm;
 		}
@@ -1415,7 +1415,7 @@ static data32_t decodeShift( data32_t insn, data32_t *pCarry)
 		break;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: Decodeshift error\n",R15);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: Decodeshift error\n",R15);
 	return 0;
 } /* decodeShift */
 
@@ -1469,7 +1469,7 @@ static void HandleCoPro( data32_t insn)
 		SetRegister(rn, arm.coproRegister[crn]);
 
 		if (ARM_DEBUG_COPRO)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Copro read CR%d (%08x) to R%d\n", R15, crn, arm.coproRegister[crn], rn);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Copro read CR%d (%08x) to R%d\n", R15, crn, arm.coproRegister[crn], rn);
 	}
 	/* MCR - transfer main register to copro register */
 	else if( (insn&0x0f100010)==0x0e000010 )
@@ -1489,7 +1489,7 @@ static void HandleCoPro( data32_t insn)
 				arm.coproRegister[5]=DecimalToBCD(v0+v1);
 
 				if (ARM_DEBUG_COPRO)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Cmd:  Add 0 + 1, result in 5 (%08x + %08x == %08x)\n", v0, v1, arm.coproRegister[5]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Cmd:  Add 0 + 1, result in 5 (%08x + %08x == %08x)\n", v0, v1, arm.coproRegister[5]);
 			}
 			else if (arm.coproRegister[crn]==1)
 			{
@@ -1501,7 +1501,7 @@ static void HandleCoPro( data32_t insn)
 				arm.coproRegister[5]=DecimalToBCD(v0*v1);
 
 				if (ARM_DEBUG_COPRO)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Cmd:  Multiply 0 * 1, result in 5 (%08x * %08x == %08x)\n", v0, v1, arm.coproRegister[5]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Cmd:  Multiply 0 * 1, result in 5 (%08x * %08x == %08x)\n", v0, v1, arm.coproRegister[5]);
 			}
 			else if (arm.coproRegister[crn]==3)
 			{
@@ -1513,7 +1513,7 @@ static void HandleCoPro( data32_t insn)
 				arm.coproRegister[5]=DecimalToBCD(v0-v1);
 
 				if (ARM_DEBUG_COPRO)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Cmd:  Sub 0 - 1, result in 5 (%08x - %08x == %08x)\n", v0, v1, arm.coproRegister[5]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Cmd:  Sub 0 - 1, result in 5 (%08x - %08x == %08x)\n", v0, v1, arm.coproRegister[5]);
 			}
 			else
 			{
@@ -1522,7 +1522,7 @@ static void HandleCoPro( data32_t insn)
 		}
 
 		if (ARM_DEBUG_COPRO)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Copro write R%d (%08x) to CR%d\n", R15, rn, GetRegister(rn), crn);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Copro write R%d (%08x) to CR%d\n", R15, rn, GetRegister(rn), crn);
 	}
 	/* CDP - perform copro operation */
 	else if( (insn&0x0f000010)==0x0e000000 )
@@ -1541,10 +1541,10 @@ static void HandleCoPro( data32_t insn)
 		}
 
 		if (ARM_DEBUG_COPRO)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Copro cdp (%08x) (3==> %08x, 4==> %08x)\n", R15, insn, arm.coproRegister[3], arm.coproRegister[4]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Copro cdp (%08x) (3==> %08x, 4==> %08x)\n", R15, insn, arm.coproRegister[3], arm.coproRegister[4]);
 	}
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Unimplemented copro instruction %08x\n", R15, insn);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Unimplemented copro instruction %08x\n", R15, insn);
 	}
 }
