@@ -837,29 +837,6 @@ const struct RomModule *rom_next_chunk(const struct RomModule *romp)
 	debugload - log data to a file
 -------------------------------------------------*/
 
-//should all debugload() calls be changed to log_cb?
-void CLIB_DECL debugload(const char *string, ...)
-{
-#if defined(LOG_LOAD)
-	static int opened;
-	va_list arg;
-	FILE *f;
-
-	f = fopen("romload.log", opened++ ? "a" : "w");
-	if (f)
-	{
-		va_start(arg, string);
-		vflog_cb(RETRO_LOG_ERROR, LOGPRE f, string, arg);
-		va_end(arg);
-		fclose(f);
-	}
-#elif defined(DEBUG_LOG)
-   va_list arg;
-   va_start(arg, string);
-   vflog_cb(RETRO_LOG_ERROR, LOGPRE stderr, string, arg);
-   va_end(arg);
-#endif
-}
 
 
 /*-------------------------------------------------
@@ -881,8 +858,7 @@ int determine_bios_rom(const struct SystemBios *bios)
 		while(!BIOSENTRY_ISEND(bios))
 		{
 			char bios_number[3];
-			log_cb(RETRO_LOG_ERROR, bios_number, "%d\n", bios->value);
-
+			
 			if(!strcmp(bios_number, options.bios))
 				bios_no = bios->value;
 
@@ -901,7 +877,7 @@ int determine_bios_rom(const struct SystemBios *bios)
 		}
 	}
 
-	debugload("Using System BIOS: %d\n", bios_no);
+	log_cb(RETRO_LOG_INFO, LOGPRE "Using System BIOS: %d\n", bios_no);
 
 	return bios_no;
 }
@@ -1121,7 +1097,7 @@ static void region_post_process(struct rom_load_data *romdata, const struct RomM
 	UINT8 *base;
 	int i, j;
 
-	debugload("+ datawidth=%d little=%d\n", datawidth, littleendian);
+	log_cb(RETRO_LOG_INFO, LOGPRE "+ datawidth=%d little=%d\n", datawidth, littleendian);
 
 	/* if this is a CPU region, override with the CPU width and endianness */
 	if (type >= REGION_CPU1 && type < REGION_CPU1 + MAX_CPU)
@@ -1131,14 +1107,14 @@ static void region_post_process(struct rom_load_data *romdata, const struct RomM
 		{
 			datawidth = cputype_databus_width(cputype) / 8;
 			littleendian = (cputype_endianess(cputype) == CPU_IS_LE);
-			debugload("+ CPU region #%d: datawidth=%d little=%d\n", type - REGION_CPU1, datawidth, littleendian);
+			log_cb(RETRO_LOG_INFO, LOGPRE "+ CPU region #%d: datawidth=%d little=%d\n", type - REGION_CPU1, datawidth, littleendian);
 		}
 	}
 
 	/* if the region is inverted, do that now */
 	if (ROMREGION_ISINVERTED(regiondata))
 	{
-		debugload("+ Inverting region\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "+ Inverting region\n");
 		for (i = 0, base = romdata->regionbase; i < romdata->regionlength; i++)
 			*base++ ^= 0xff;
 	}
@@ -1150,7 +1126,7 @@ static void region_post_process(struct rom_load_data *romdata, const struct RomM
 	if (datawidth > 1 && !littleendian)
 #endif
 	{
-		debugload("+ Byte swapping region\n");
+		log_cb(RETRO_LOG_INFO, LOGPRE "+ Byte swapping region\n");
 		for (i = 0, base = romdata->regionbase; i < romdata->regionlength; i += datawidth)
 		{
 			UINT8 temp[8];
@@ -1224,7 +1200,7 @@ static int read_rom_data(struct rom_load_data *romdata, const struct RomModule *
 	UINT8 *base = romdata->regionbase + ROM_GETOFFSET(romp);
 	int i;
 
-	debugload("Loading ROM data: offs=%X len=%X mask=%02X group=%d skip=%d reverse=%d\n", ROM_GETOFFSET(romp), numbytes, datamask, groupsize, skip, reversed);
+	log_cb(RETRO_LOG_INFO, LOGPRE "Loading ROM data: offs=%X len=%X mask=%02X group=%d skip=%d reverse=%d\n", ROM_GETOFFSET(romp), numbytes, datamask, groupsize, skip, reversed);
 
 	/* make sure the length was an even multiple of the group size */
 	if (numbytes % groupsize != 0)
@@ -1260,12 +1236,12 @@ static int read_rom_data(struct rom_load_data *romdata, const struct RomModule *
 		UINT8 *bufptr = romdata->tempbuf;
 
 		/* read as much as we can */
-		debugload("  Reading %X bytes into buffer\n", bytesleft);
+		log_cb(RETRO_LOG_INFO, LOGPRE "  Reading %X bytes into buffer\n", bytesleft);
 		if (rom_fread(romdata, romdata->tempbuf, bytesleft) != bytesleft)
 			return 0;
 		numbytes -= bytesleft;
 
-		debugload("  Copying to %08X\n", (int)base);
+		log_cb(RETRO_LOG_INFO, LOGPRE "  Copying to %08X\n", (int)base);
 
 		/* unmasked cases */
 		if (datamask == 0xff)
@@ -1321,7 +1297,7 @@ static int read_rom_data(struct rom_load_data *romdata, const struct RomModule *
 				}
 		}
 	}
-	debugload("  All done\n");
+	log_cb(RETRO_LOG_INFO, LOGPRE "  All done\n");
 	return ROM_GETLENGTH(romp);
 }
 
@@ -1451,7 +1427,7 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 				int explength = 0;
 
 				/* open the file */
-				debugload("Opening ROM file: %s\n", ROM_GETNAME(romp));
+				log_cb(RETRO_LOG_INFO, LOGPRE "Opening ROM file: %s\n", ROM_GETNAME(romp));
 				if (!open_rom_file(romdata, romp))
 					handle_missing_file(romdata, romp);
 
@@ -1482,9 +1458,9 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 					/* if this was the first use of this file, verify the length and CRC */
 					if (baserom && !options.skip_rom_verify)
 					{
-						debugload("Verifying length (%X) and checksums\n", explength);
+						log_cb(RETRO_LOG_INFO, LOGPRE "Verifying length (%X) and checksums\n", explength);
                         verify_length_and_hash(romdata, ROM_GETNAME(baserom), explength, ROM_GETHASHDATA(baserom));
-						debugload("Verify finished\n");
+						log_cb(RETRO_LOG_INFO, LOGPRE "Verify finished\n");
 					}
 
 					/* reseek to the start and clear the baserom so we don't reverify */
@@ -1498,7 +1474,7 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 				/* close the file */
 				if (romdata->file)
 				{
-					debugload("Closing ROM file\n");
+					log_cb(RETRO_LOG_INFO, LOGPRE "Closing ROM file\n");
 					mame_fclose(romdata->file);
 					romdata->file = NULL;
 				}
@@ -1549,7 +1525,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 				strcat(filename, ".chd");
 
 			/* first open the source drive */
-			debugload("Opening disk image: %s\n", filename);
+			log_cb(RETRO_LOG_INFO, LOGPRE "Opening disk image: %s\n", filename);
 			source = chd_open(filename, 0, NULL);
 			if (!source)
 			{
@@ -1588,12 +1564,12 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 					strcat(filename, ".dif");
 
 				/* try to open the diff */
-				debugload("Opening differencing image: %s\n", filename);
+				log_cb(RETRO_LOG_INFO, LOGPRE "Opening differencing image: %s\n", filename);
 				diff = chd_open(filename, 1, source);
 				if (!diff)
 				{
 					/* didn't work; try creating it instead */
-					debugload("Creating differencing image: %s\n", filename);
+					log_cb(RETRO_LOG_INFO, LOGPRE "Creating differencing image: %s\n", filename);
 					err = chd_create(filename, 0, 0, CHDCOMPRESSION_NONE, source);
 					if (err != CHDERR_NONE)
 					{
@@ -1607,7 +1583,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 					}
 
 					/* open the newly-created diff file */
-					debugload("Opening differencing image: %s\n", filename);
+					log_cb(RETRO_LOG_INFO, LOGPRE "Opening differencing image: %s\n", filename);
 					diff = chd_open(filename, 1, source);
 					if (!diff)
 					{
@@ -1623,7 +1599,7 @@ static int process_disk_entries(struct rom_load_data *romdata, const struct RomM
 			}
 
 			/* we're okay, set the handle */
-			debugload("Assigning to handle %d\n", DISK_GETINDEX(romp));
+			log_cb(RETRO_LOG_INFO, LOGPRE "Assigning to handle %d\n", DISK_GETINDEX(romp));
 			disk_handle[DISK_GETINDEX(romp)] = DISK_ISREADONLY(romp) ? source : diff;
 			romp++;
 		}
@@ -1663,7 +1639,7 @@ int rom_load(const struct RomModule *romp)
 	{
 		int regiontype = ROMREGION_GETTYPE(region);
 
-		debugload("Processing region %02X (length=%X)\n", regiontype, ROMREGION_GETLENGTH(region));
+		log_cb(RETRO_LOG_INFO, LOGPRE "Processing region %02X (length=%X)\n", regiontype, ROMREGION_GETLENGTH(region));
 
 		/* the first entry must be a region */
 		if (!ROMENTRY_ISREGION(region))
@@ -1686,7 +1662,7 @@ int rom_load(const struct RomModule *romp)
 		/* remember the base and length */
 		romdata.regionlength = memory_region_length(regiontype);
 		romdata.regionbase = memory_region(regiontype);
-		debugload("Allocated %X bytes @ %08X\n", romdata.regionlength, (int)romdata.regionbase);
+		log_cb(RETRO_LOG_INFO, LOGPRE "Allocated %X bytes @ %08X\n", romdata.regionlength, (int)romdata.regionbase);
 
 		/* clear the region if it's requested */
 		if (ROMREGION_ISERASE(region))
@@ -1723,7 +1699,7 @@ int rom_load(const struct RomModule *romp)
 	for (regnum = 0; regnum < REGION_MAX; regnum++)
 		if (regionlist[regnum])
 		{
-			debugload("Post-processing region %02X\n", regnum);
+			log_cb(RETRO_LOG_INFO, LOGPRE "Post-processing region %02X\n", regnum);
 			romdata.regionlength = memory_region_length(regnum);
 			romdata.regionbase = memory_region(regnum);
 			region_post_process(&romdata, regionlist[regnum]);
