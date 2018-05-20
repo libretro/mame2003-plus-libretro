@@ -15,6 +15,7 @@
 #include "driver.h"
 #include "state.h"
 #include "log.h"
+#include "input.h"
 
 
 static int     driverIndex; /* Index of mame game loaded */
@@ -47,7 +48,7 @@ static retro_input_state_t         input_cb                      = NULL;
 static retro_audio_sample_batch_t  audio_batch_cb                = NULL;
 retro_set_led_state_t              led_state_cb                  = NULL;
 
-
+bool old_dual_joystick_state = false; /* used to track when this core option changes */
 
 /******************************************************************************
 
@@ -107,6 +108,7 @@ void retro_set_environment(retro_environment_t cb)
     { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
     { APPNAME"_bios_region", "Specify alternate BIOS region (Restart); default|asia|asia-aes|debug|europe|europe_a|japan|japan_a|japan_b|taiwan|us|us_a|uni-bios.10|uni-bios.11|uni-bios.13|uni-bios.20" },
     { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
+    { APPNAME"_dual_joysticks", "Dual Joystick Mode (Players 1 & 2); disabled|enabled" },
     { APPNAME"_rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
     { APPNAME"_tate_mode", "TATE Mode; disabled|enabled" },
     { APPNAME"_vector_resolution_multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },
@@ -298,6 +300,28 @@ static void update_variables(bool first_time)
     else
       options.dial_share_xy = 0;
   }
+
+  var.value = NULL;
+
+  var.key = APPNAME"_dual_joysticks";
+  options.dual_joysticks = false;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.dual_joysticks = true;
+    else
+      options.dual_joysticks = false;
+    
+    if(first_time)
+      old_dual_joystick_state = options.dual_joysticks;
+    
+    if(old_dual_joystick_state != options.dual_joysticks)
+    {
+      load_input_port_settings();
+      old_dual_joystick_state != options.dual_joysticks;
+    }
+  }
+  
   var.value = NULL;
 
   var.key = APPNAME"_rstick_to_btns";
@@ -1132,23 +1156,55 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
 
 void osd_customize_inputport_defaults(struct ipd *defaults)
 {
-#if 0
-   unsigned int i = 0;
+  unsigned int i = 0;
 
-   for( ; defaults[i].type != IPT_END; ++i)
-   {
-      struct ipd *entry = &defaults[i];
+  for( ; defaults[i].type != IPT_END; ++i)
+  {
+    struct ipd *entry = &defaults[i];
 
+    if(options.dual_joysticks)
+    {
       switch(entry->type)
       {
-         case (IPT_BUTTON1 | IPF_PLAYER1):
-            fprintf(stderr, "IPT_BUTTON1 | IPF_PLAYER1.\n");
+         case (IPT_JOYSTICKRIGHT_UP   | IPF_PLAYER1):
+            seq_set_1(entry->seq, JOYCODE_2_UP);
             break;
-         default:
-            fprintf(stderr, "Label not known.\n");
+         case (IPT_JOYSTICKRIGHT_DOWN | IPF_PLAYER1):
+            seq_set_1(entry->seq, JOYCODE_2_DOWN);
+            break;
+         case (IPT_JOYSTICKRIGHT_LEFT | IPF_PLAYER1):
+            seq_set_1(entry->seq, JOYCODE_2_LEFT);
+            break;
+         case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1):
+            seq_set_1(entry->seq, JOYCODE_2_RIGHT);
+            break;
+         case (IPT_JOYSTICK_UP   | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_3_UP);
+            break;
+         case (IPT_JOYSTICK_DOWN | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_3_DOWN);
+            break;
+         case (IPT_JOYSTICK_LEFT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_3_LEFT);
+            break;
+         case (IPT_JOYSTICK_RIGHT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_3_RIGHT);
+            break; 
+         case (IPT_JOYSTICKRIGHT_UP   | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_4_UP);
+            break;
+         case (IPT_JOYSTICKRIGHT_DOWN | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_4_DOWN);
+            break;
+         case (IPT_JOYSTICKRIGHT_LEFT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_4_LEFT);
+            break;
+         case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_4_RIGHT);
+            break;  
       }
-   }
-#endif
+    }
+  }
 }
 
 /* These calibration functions should never actually be used (as long as needs_calibration returns 0 anyway).*/
