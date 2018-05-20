@@ -16,6 +16,7 @@
 #include "state.h"
 #include "log.h"
 #include "input.h"
+#include "fileio.h"
 
 
 static int     driverIndex; /* Index of mame game loaded */
