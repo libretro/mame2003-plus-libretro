@@ -1221,8 +1221,20 @@ void osd_customize_inputport_defaults(struct ipd *defaults)
             break;
          case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2):
             seq_set_1(entry->seq, JOYCODE_4_RIGHT);
-            break;  
-      }
+            break;
+         case (IPT_JOYSTICKLEFT_UP   | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_3_UP);
+            break;
+         case (IPT_JOYSTICKLEFT_DOWN | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_3_DOWN);
+            break;
+         case (IPT_JOYSTICKLEFT_LEFT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_3_LEFT);
+            break;
+         case (IPT_JOYSTICKLEFT_RIGHT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_3_RIGHT);
+            break;
+     }
     }
     else
     {
@@ -1264,7 +1276,19 @@ void osd_customize_inputport_defaults(struct ipd *defaults)
          case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2):
             seq_set_1(entry->seq, JOYCODE_2_RIGHT_RIGHT);
             break;  
-      }
+         case (IPT_JOYSTICKLEFT_UP   | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_2_UP);
+            break;
+         case (IPT_JOYSTICKLEFT_DOWN | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_2_DOWN);
+            break;
+         case (IPT_JOYSTICKLEFT_LEFT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_2_LEFT);
+            break;
+         case (IPT_JOYSTICKLEFT_RIGHT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_2_RIGHT);
+            break;
+         }
     }
   }
 }
