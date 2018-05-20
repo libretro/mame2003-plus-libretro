@@ -34,6 +34,7 @@
 * DJ Boy
 * Dogou Souken (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
+* Dunk Dream 95
 * Double Wings
 * DownTown (joystick hack)
 * Dream World
@@ -47,7 +48,9 @@
 * Gunbarich
 * GunMaster
 * Hacha Mecha Figher (Unprotected)
+* Heavy Smash
 * Hook (Japan Version) [SumavisionQ5]
+* Hoops '96
 * Hyper Crash
 * Hyper Street Fighter II (Asia)
 * Ikari (joystick hack bootleg)
@@ -83,6 +86,7 @@
 * Samurai Shodown V Special
 * Sengoku 3
 * Shogun Warriors
+* Skull Fang
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
@@ -106,6 +110,8 @@
 * Virtua Bowling
 * Wing Force
 * Wonderboy In Monsterland (English Virtual Console Version)
+* World Cup Volley 95
+* World Cup Volley 95 Extra Version
 * Zintrick
 * Zupapa
 
