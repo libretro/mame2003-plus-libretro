@@ -312,8 +312,11 @@ static void update_variables(bool first_time)
     else
       options.dual_joysticks = false;
   }
+
   if(first_time)
+  {
     old_dual_joystick_state = options.dual_joysticks;
+  }
   else if(old_dual_joystick_state != options.dual_joysticks)
   {
     char cfg_file_path[PATH_MAX_LENGTH];
@@ -330,8 +333,8 @@ static void update_variables(bool first_time)
       }
       else
       {
-        log_cb(RETRO_LOG_INFO, LOGPRE "%s.cfg deleted. Reloading input maps.\n", options.romset_filename_noext);
-        usrintf_showmessage_secs(4, "%s.cfg deleted. Reloading input maps. Reloading input maps.", options.romset_filename_noext);
+        log_cb(RETRO_LOG_INFO, LOGPRE "%s.cfg deleted.\n", options.romset_filename_noext);
+        usrintf_showmessage_secs(4, "%s.cfg deleted. Reloading input maps.", options.romset_filename_noext);
       }
     }
     log_cb(RETRO_LOG_INFO, LOGPRE "Reloading input maps.\n");
