@@ -1640,7 +1640,6 @@ static void load_default_keys(void)
 {
 	config_file *cfg;
 
-	osd_customize_inputport_defaults(inputport_defaults);
 	memcpy(inputport_defaults_backup,inputport_defaults,sizeof(inputport_defaults));
 
 	cfg = config_open(NULL);
@@ -1649,6 +1648,8 @@ static void load_default_keys(void)
 		config_read_default_ports(cfg, inputport_defaults);
 		config_close(cfg);
 	}
+  
+  osd_customize_inputport_defaults(inputport_defaults);
 }
 
 static void save_default_keys(void)

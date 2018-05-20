@@ -311,14 +311,25 @@ static void update_variables(bool first_time)
       options.dual_joysticks = true;
     else
       options.dual_joysticks = false;
+  }
+  if(first_time)
+    old_dual_joystick_state = options.dual_joysticks;
+  else if(old_dual_joystick_state != options.dual_joysticks)
+  {
+    char cfg_file_path[PATH_MAX_LENGTH];
+
+    snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", options.libretro_content_path, path_default_slash(), options.romset_filename_noext);
     
-    if(first_time)
-      old_dual_joystick_state = options.dual_joysticks;
-    
-    if(old_dual_joystick_state != options.dual_joysticks)
+    if(path_is_valid(cfg_file_path))
     {
+      if(!remove(cfg_file_path) == 0)
+        log_cb(RETRO_LOG_ERROR, LOGPRE "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+    }
+    else
+    {
+      log_cb(RETRO_LOG_INFO, LOGPRE "%s.cfg deleted. Reloading input maps.\n", options.romset_filename_noext);
       load_input_port_settings();
-      old_dual_joystick_state != options.dual_joysticks;
+      old_dual_joystick_state = options.dual_joysticks;
     }
   }
   
@@ -1201,6 +1212,48 @@ void osd_customize_inputport_defaults(struct ipd *defaults)
             break;
          case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2):
             seq_set_1(entry->seq, JOYCODE_4_RIGHT);
+            break;  
+      }
+    }
+    else
+    {
+      switch(entry->type)
+      {
+         case (IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER1):
+            seq_set_3(entry->seq, KEYCODE_I, CODE_OR, JOYCODE_1_RIGHT_UP);
+            break;
+         case (IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER1):
+            seq_set_3(entry->seq, KEYCODE_K, CODE_OR, JOYCODE_1_RIGHT_DOWN);
+            break;
+         case (IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER1):
+            seq_set_3(entry->seq, KEYCODE_J, CODE_OR, JOYCODE_1_RIGHT_LEFT);
+            break;
+         case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1):
+            seq_set_3(entry->seq, KEYCODE_L, CODE_OR, JOYCODE_1_RIGHT_RIGHT);
+            break;
+         case (IPT_JOYSTICK_UP        | IPF_PLAYER2):
+            seq_set_3(entry->seq, KEYCODE_R, CODE_OR, JOYCODE_2_UP);
+            break;
+         case (IPT_JOYSTICK_DOWN      | IPF_PLAYER2):
+            seq_set_3(entry->seq, KEYCODE_F, CODE_OR, JOYCODE_2_DOWN);
+            break;
+         case (IPT_JOYSTICK_LEFT      | IPF_PLAYER2):
+            seq_set_3(entry->seq, KEYCODE_D, CODE_OR, JOYCODE_2_LEFT);
+            break;
+         case (IPT_JOYSTICK_RIGHT     | IPF_PLAYER2):
+            seq_set_3(entry->seq, KEYCODE_G, CODE_OR, JOYCODE_2_RIGHT);
+            break; 
+         case (IPT_JOYSTICKRIGHT_UP   | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_2_RIGHT_UP);
+            break;
+         case (IPT_JOYSTICKRIGHT_DOWN | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_2_RIGHT_DOWN);
+            break;
+         case (IPT_JOYSTICKRIGHT_LEFT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_2_RIGHT_LEFT);
+            break;
+         case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2):
+            seq_set_1(entry->seq, JOYCODE_2_RIGHT_RIGHT);
             break;  
       }
     }
