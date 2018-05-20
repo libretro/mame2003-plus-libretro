@@ -328,6 +328,7 @@ static void update_variables(bool first_time)
     else
     {
       log_cb(RETRO_LOG_INFO, LOGPRE "%s.cfg deleted. Reloading input maps.\n", options.romset_filename_noext);
+      usrintf_showmessage_secs(4, "%s.cfg deleted. Reloading input maps.", options.romset_filename_noext);
       load_input_port_settings();
       old_dual_joystick_state = options.dual_joysticks;
     }

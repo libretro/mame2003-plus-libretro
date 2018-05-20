@@ -105,6 +105,7 @@ The first value listed for the core option represents the default. "Restart" ind
 * **Use Backdrop artwork** (Restart): `disabled|enabled`
 * **Specify BIOS region** (Restart): `default|asia|asia-aes|debug|europe|europe_a|japan|japan_a|japan_b|taiwan|us|us_a|uni-bios.10|uni-bios.11|uni-bios.13|uni-bios.20`
 * **Share 2 player dial controls across one X/Y device**: `disabled|enabled` - Some dial/spinner hardware are actually one device with one axis for each player. This supports that setup, by invisibly breaking down the normal mouse x/y into two separate inputs.
+* **Dual Joystick Mode (Players 1 & 2)**: `disabled|enabled` - Player 1 uses Joysticks 1 & 2, Player 2 uses Joysticks 3 & 4
 * **Right Stick to Buttons**: `enabled|disabled` - Invisibly remap the retropad's right analog stick to serve as buttons
 * **TATE Mode**: `disabled|enabled` - Enable if rotating display for vertically oriented games (Pac-Man, Galaga, etc). Requires `video_allow_rotate = "false"` cfg setting in RetroArch.
 * **EXPERIMENTAL: Vector resolution multiplier**: (Restart) `1|2|3|4|5|6`
