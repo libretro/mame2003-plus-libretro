@@ -317,26 +317,26 @@ static void update_variables(bool first_time)
   else if(old_dual_joystick_state != options.dual_joysticks)
   {
     char cfg_file_path[PATH_MAX_LENGTH];
-
-    snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", options.libretro_content_path, path_default_slash(), options.romset_filename_noext);
+    char buffer[PATH_MAX_LENGTH];
+    osd_get_path(FILETYPE_CONFIG, buffer);
+    snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", buffer, path_default_slash(), options.romset_filename_noext);
     
     if(path_is_valid(cfg_file_path))
     {
       if(!remove(cfg_file_path) == 0)
       {
         log_cb(RETRO_LOG_ERROR, LOGPRE "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
-        usrintf_showmessage_secs(4, "ERROR: %s.cfg exists but cannot be deleted!", options.romset_filename_noext);
-        load_input_port_settings();
-        old_dual_joystick_state = options.dual_joysticks;        
+        usrintf_showmessage_secs(4, "ERROR: %s.cfg exists but cannot be deleted! Reloading input maps anyway.", options.romset_filename_noext);      
       }
       else
       {
         log_cb(RETRO_LOG_INFO, LOGPRE "%s.cfg deleted. Reloading input maps.\n", options.romset_filename_noext);
-        usrintf_showmessage_secs(4, "%s.cfg deleted. Reloading input maps.", options.romset_filename_noext);
-        load_input_port_settings();
-        old_dual_joystick_state = options.dual_joysticks;
+        usrintf_showmessage_secs(4, "%s.cfg deleted. Reloading input maps. Reloading input maps.", options.romset_filename_noext);
       }
     }
+    log_cb(RETRO_LOG_INFO, LOGPRE "Reloading input maps.\n");
+    load_input_port_settings();
+    old_dual_joystick_state = options.dual_joysticks;  
   }
   
   var.value = NULL;
