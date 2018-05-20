@@ -108,7 +108,7 @@ void retro_set_environment(retro_environment_t cb)
     { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
     { APPNAME"_bios_region", "Specify alternate BIOS region (Restart); default|asia|asia-aes|debug|europe|europe_a|japan|japan_a|japan_b|taiwan|us|us_a|uni-bios.10|uni-bios.11|uni-bios.13|uni-bios.20" },
     { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
-    { APPNAME"_dual_joysticks", "Dual Joystick Mode (Players 1 & 2); disabled|enabled" },
+    { APPNAME"_dual_joysticks (Restart)", "Dual Joystick Mode (Players 1 & 2); disabled|enabled" },
     { APPNAME"_rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
     { APPNAME"_tate_mode", "TATE Mode; disabled|enabled" },
     { APPNAME"_vector_resolution_multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },
@@ -323,21 +323,23 @@ static void update_variables(bool first_time)
     char buffer[PATH_MAX_LENGTH];
     osd_get_path(FILETYPE_CONFIG, buffer);
     snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", buffer, path_default_slash(), options.romset_filename_noext);
+    buffer[0] = '\0';
     
     if(path_is_valid(cfg_file_path))
     {
+      
       if(!remove(cfg_file_path) == 0)
       {
-        log_cb(RETRO_LOG_ERROR, LOGPRE "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
-        usrintf_showmessage_secs(4, "ERROR: %s.cfg exists but cannot be deleted! Reloading input maps anyway.", options.romset_filename_noext);      
+        snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
       }
       else
       {
-        log_cb(RETRO_LOG_INFO, LOGPRE "%s.cfg deleted.\n", options.romset_filename_noext);
-        usrintf_showmessage_secs(4, "%s.cfg deleted. Reloading input maps.", options.romset_filename_noext);
+        snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
       }
     }
-    log_cb(RETRO_LOG_INFO, LOGPRE "Reloading input maps.\n");
+    log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
+    usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
+    
     load_input_port_settings();
     old_dual_joystick_state = options.dual_joysticks;  
   }
@@ -1236,61 +1238,7 @@ void osd_customize_inputport_defaults(struct ipd *defaults)
             break;
      }
     }
-    else
-    {
-      switch(entry->type)
-      {
-         case (IPT_JOYSTICKRIGHT_UP    | IPF_PLAYER1):
-            seq_set_3(entry->seq, KEYCODE_I, CODE_OR, JOYCODE_1_RIGHT_UP);
-            break;
-         case (IPT_JOYSTICKRIGHT_DOWN  | IPF_PLAYER1):
-            seq_set_3(entry->seq, KEYCODE_K, CODE_OR, JOYCODE_1_RIGHT_DOWN);
-            break;
-         case (IPT_JOYSTICKRIGHT_LEFT  | IPF_PLAYER1):
-            seq_set_3(entry->seq, KEYCODE_J, CODE_OR, JOYCODE_1_RIGHT_LEFT);
-            break;
-         case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER1):
-            seq_set_3(entry->seq, KEYCODE_L, CODE_OR, JOYCODE_1_RIGHT_RIGHT);
-            break;
-         case (IPT_JOYSTICK_UP        | IPF_PLAYER2):
-            seq_set_3(entry->seq, KEYCODE_R, CODE_OR, JOYCODE_2_UP);
-            break;
-         case (IPT_JOYSTICK_DOWN      | IPF_PLAYER2):
-            seq_set_3(entry->seq, KEYCODE_F, CODE_OR, JOYCODE_2_DOWN);
-            break;
-         case (IPT_JOYSTICK_LEFT      | IPF_PLAYER2):
-            seq_set_3(entry->seq, KEYCODE_D, CODE_OR, JOYCODE_2_LEFT);
-            break;
-         case (IPT_JOYSTICK_RIGHT     | IPF_PLAYER2):
-            seq_set_3(entry->seq, KEYCODE_G, CODE_OR, JOYCODE_2_RIGHT);
-            break; 
-         case (IPT_JOYSTICKRIGHT_UP   | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_2_RIGHT_UP);
-            break;
-         case (IPT_JOYSTICKRIGHT_DOWN | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_2_RIGHT_DOWN);
-            break;
-         case (IPT_JOYSTICKRIGHT_LEFT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_2_RIGHT_LEFT);
-            break;
-         case (IPT_JOYSTICKRIGHT_RIGHT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_2_RIGHT_RIGHT);
-            break;  
-         case (IPT_JOYSTICKLEFT_UP   | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_2_UP);
-            break;
-         case (IPT_JOYSTICKLEFT_DOWN | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_2_DOWN);
-            break;
-         case (IPT_JOYSTICKLEFT_LEFT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_2_LEFT);
-            break;
-         case (IPT_JOYSTICKLEFT_RIGHT | IPF_PLAYER2):
-            seq_set_1(entry->seq, JOYCODE_2_RIGHT);
-            break;
-         }
-    }
-  }
+   }
 }
 
 /* These calibration functions should never actually be used (as long as needs_calibration returns 0 anyway).*/
