@@ -169,17 +169,23 @@ int osd_get_path_count(int pathtype)
 	return 1;
 }
 
+/******************************************************************************
+ 
+ osd_get_path
+ Sets char* path to point at a valid path of the type incidated by int pathtype,
+ although the path itself does not necessarily exist at this point in the process.
+ 
+ *****************************************************************************/
 void osd_get_path(int pathtype, char* path)
 {
    switch (pathtype)
-   {
-      case FILETYPE_ROM:
-      case FILETYPE_IMAGE:
-         strcpy(path, options.libretro_content_path);
-         break;
-         
-      /* user-initiated content goes in mam2003 save directory subfolders */
-        
+   {       
+       case FILETYPE_ROM:
+       case FILETYPE_IMAGE:	
+          strcpy(path, options.libretro_content_path);	
+          break;
+
+      /* user-initiated content goes in mame2003 save directory subfolders */      
       case FILETYPE_IMAGE_DIFF:
          snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_save_path, path_default_slash(), APPNAME, path_default_slash(), "diff");
          break;     
