@@ -2384,29 +2384,25 @@ void generate_gameinfo(void)
 
 void ui_copyright_and_warnings(void)
 {
-  if(generate_warning_list())
-  {
-      log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", message_buffer); /* log warning list to the console */
-      if(options.skip_disclaimer && !options.skip_warnings) /* set to only display warnings */
-      {
-        usrintf_showmessage_secs(8, "%s - %s %s\n\n%s", Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, message_buffer);
-      }
-      else if(options.skip_disclaimer && options.skip_warnings)
-        message_buffer[0] = '\0';     /* no need to hold the warnings in a string if not displaying them. 
-                                         now we can also use string_is_empty on the buffer as a test */ 
-  }
+  char buffer[MAX_MESSAGE_LENGTH];
   
   if(!options.skip_disclaimer)
+    snprintf(buffer, MAX_MESSAGE_LENGTH, "%s", ui_getstring(UI_copyright));
+  
+  if(generate_warning_list())
   {
-    if(!options.skip_warnings && !string_is_empty(message_buffer)) /* warnings present in the buffer */
+    log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", message_buffer); /* log warning list to the console */   
+    if(!options.skip_warnings)
     {
-      usrintf_showmessage_secs(8, "%s\n%s - %s %s\n\n%s", ui_getstring(UI_copyright), Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, message_buffer);
+      snprintf(&buffer[strlen(buffer)], MAX_MESSAGE_LENGTH - strlen(buffer), "%s - %s %s\n\n%s", Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, message_buffer);
     }
-    usrintf_showmessage_secs(8, "%s", ui_getstring(UI_copyright));
   }
-
+ 
   generate_gameinfo();
   log_cb(RETRO_LOG_INFO, LOGPRE "\n\n%s", message_buffer);
+  
+  if(strlen(buffer))
+    usrintf_showmessage_secs(8, "%s", buffer);
   
 }
 
@@ -2509,7 +2505,7 @@ bool generate_warning_list(void)
   if(string_is_empty(buffer))
     return false;
   
-  snprintf(message_buffer, MAX_MESSAGE_LENGTH, "          ----- Driver Warnings -----\n%s", buffer);
+  snprintf(message_buffer, MAX_MESSAGE_LENGTH, "         ----- Driver Warnings -----\n%s", buffer);
 	return true;
 }
 
