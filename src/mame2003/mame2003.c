@@ -121,7 +121,8 @@ void retro_set_environment(retro_environment_t cb)
     { APPNAME"_skip_rom_verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" },
     { APPNAME"_sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
     { APPNAME"_dcs_speedhack","DCS Speedhack; enabled|disabled"},
-    { APPNAME"_display_notices", "Display Notices; all|warnings|copyright|none" },
+    { APPNAME"_skip_disclaimer", "Skip Disclaimer; disabled|enabled" },
+    { APPNAME"_skip_warnings", "Skip Warnings; disabled|enabled" },
     { NULL, NULL },
   };
   environ_cb = cb;
@@ -443,18 +444,26 @@ static void update_variables(bool first_time)
 
   var.value = NULL;
 
-  var.key = APPNAME"_display_notices";
-  options.display_notices = ALL_NOTICES;
+  var.key = APPNAME"_skip_disclaimer";
+  options.skip_disclaimer = false;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
-    if(strcmp(var.value, "none") == 0)
-      options.display_notices = NO_NOTICES;
-    else if(strcmp(var.value, "all") == 0)
-      options.display_notices = ALL_NOTICES;     
-    else if(strcmp(var.value, "warnings") == 0)
-      options.display_notices = WARNING_NOTICES;
-    else if(strcmp(var.value, "copyright") == 0) 
-      options.display_notices = COPYRIGHT_NOTICE;      
+    if(strcmp(var.value, "enabled") == 0)
+      options.skip_disclaimer = true;
+    else
+      options.skip_disclaimer = false;
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"_skip_warnings";
+  options.skip_warnings = false;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.skip_warnings = true;
+    else
+      options.skip_warnings = false;
   }
 
   var.value = NULL;

@@ -2387,28 +2387,21 @@ void ui_copyright_and_warnings(void)
   if(generate_warning_list())
   {
       log_cb(RETRO_LOG_WARN, LOGPRE "\n\n%s", message_buffer); /* log warning list to the console */
-      if(options.display_notices == WARNING_NOTICES) /* set to only display warnings */
+      if(options.skip_disclaimer && !options.skip_warnings) /* set to only display warnings */
       {
         usrintf_showmessage_secs(8, "%s - %s %s\n\n%s", Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, message_buffer);
       }
-      else if(options.display_notices == NO_NOTICES)
+      else if(options.skip_disclaimer && options.skip_warnings)
         message_buffer[0] = '\0';     /* no need to hold the warnings in a string if not displaying them. 
                                          now we can also use string_is_empty on the buffer as a test */ 
   }
   
-  if(options.display_notices == ALL_NOTICES)
+  if(!options.skip_disclaimer)
   {
-    if(!string_is_empty(message_buffer)) 
+    if(!options.skip_warnings && !string_is_empty(message_buffer)) /* warnings present in the buffer */
     {
       usrintf_showmessage_secs(8, "%s\n%s - %s %s\n\n%s", ui_getstring(UI_copyright), Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer, message_buffer);
     }
-    else
-    {
-      usrintf_showmessage_secs(8, "%s", ui_getstring(UI_copyright));
-    }
-  }
-  else if(options.display_notices == COPYRIGHT_NOTICE)
-  {
     usrintf_showmessage_secs(8, "%s", ui_getstring(UI_copyright));
   }
 

@@ -164,11 +164,6 @@ struct RunningMachine
 #define RETROPAD_MODERN			1
 #define RETROPAD_SNES			2
 
-#define NO_NOTICES        0
-#define ALL_NOTICES       1
-#define COPYRIGHT_NOTICE  2
-#define WARNING_NOTICES   3
-
 /* The host platform should fill these fields with the preferences specified in the GUI */
 /* or on the commandline. */
 struct GameOptions
@@ -184,7 +179,8 @@ struct GameOptions
 
   int		   mame_debug;		       /* 1 to enable debugging */
   int 	   skip_gameinfo;		     /* 1 to skip the game info screen at startup */
-  int      display_notices;     /* 1 to skip the warning messages at startup */
+  bool 	   skip_disclaimer;	     /* 1 to skip the disclaimer screen at startup */
+  bool     skip_warnings;        /* 1 to skip the game warning screen at startup */
   int      display_setup;        /* 1 to display the MAME setup menu until reset to 0 */
 
   unsigned dial_share_xy;
