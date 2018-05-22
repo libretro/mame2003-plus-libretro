@@ -91,6 +91,7 @@ static void check_system_specs(void)
    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
 
+
 void retro_set_environment(retro_environment_t cb)
 {
   static const struct retro_variable vars[] = {
@@ -107,7 +108,8 @@ void retro_set_environment(retro_environment_t cb)
     { APPNAME"_brightness", "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0" },
     { APPNAME"_gamma", "Gamma correction; 1.2|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0" },
     { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
-    { APPNAME"_bios_region", "Specify alternate BIOS region (Restart); default|asia|asia-aes|debug|europe|europe_a|japan|japan_a|japan_b|taiwan|us|us_a|uni-bios.10|uni-bios.11|uni-bios.13|uni-bios.20" },
+    { APPNAME"_neogeo_bios", "Specify Neo Geo BIOS (Restart); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios20|unibios13|unibios11|unibios10|debug|asia-aes" },
+    { APPNAME"_stv_bios", "Specify Sega ST-V BIOS (Restart); default|japan|japana|us|japan_b|taiwan|europe" },    
     { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
     { APPNAME"_dual_joysticks", "Dual Joystick Mode (Players 1 & 2); disabled|enabled" },
     { APPNAME"_rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
@@ -279,16 +281,30 @@ static void update_variables(bool first_time)
       options.use_artwork = ARTWORK_USE_NONE;
   }
 
+  options.bios = NULL;
+
   var.value = NULL;
 
-  var.key = APPNAME"_bios_region";
-  options.bios = NULL;
+  var.key = APPNAME"_neogeo_bios";
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
-    if(strcmp(var.value, "default") == 0)
-      options.bios = NULL;
-    else
+    if(strcmp(var.value, "default") != 0) /* leave as null if set to default */
       options.bios = strdup(var.value);
+  }
+  
+  var.value = NULL;
+
+  var.key = APPNAME"_stv_bios";
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "default") != 0) /* do nothing if set to default */
+    {
+      if(!string_is_empty(options.bios)) /* there is something other than default in both BIOS core options. not good! */
+      {
+        log_cb(RETRO_LOG_ERROR, LOGPRE "Conflicting BIOS options have been set!\n");
+      }
+      options.bios = strdup(var.value);
+    }
   }
 
   var.value = NULL;
@@ -841,6 +857,7 @@ void retro_unload_game(void)
     mame_done();
     
     free(options.romset_filename_noext);
+    free(options.bios);
     
     /*free(fallbackDir);
     systemDir = 0;*/
