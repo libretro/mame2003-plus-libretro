@@ -1236,7 +1236,7 @@ static int read_rom_data(struct rom_load_data *romdata, const struct RomModule *
 		UINT8 *bufptr = romdata->tempbuf;
 
 		/* read as much as we can */
-		log_cb(RETRO_LOG_INFO, LOGPRE "  Reading %X bytes into buffer\n", bytesleft);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "  Reading %X bytes into buffer\n", bytesleft);
 		if (rom_fread(romdata, romdata->tempbuf, bytesleft) != bytesleft)
 			return 0;
 		numbytes -= bytesleft;
