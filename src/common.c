@@ -13,6 +13,7 @@
 #include "bootstrap.h"
 #include <stdarg.h>
 #include <ctype.h>
+#include <string/stdstring.h>
 
 #include "log.h"
 
@@ -875,14 +876,18 @@ int determine_bios_rom(const struct SystemBios *bios)
 		/* Test for bios short names */
 		while(!BIOSENTRY_ISEND(bios))
 		{
-			if(!strcmp(bios->_name, options.bios))
+			if(strcmp(bios->_name, options.bios) == 0)
+      {
+        log_cb(RETRO_LOG_INFO, LOGPRE "Using BIOS: %s\n", options.bios);
 				bios_no = bios->value;
-
+        break;
+      }
 			bios++;
 		}
+    if(string_is_empty(options.bios))
+      log_cb(RETRO_LOG_INFO, LOGPRE "No matching BIOS found. Using default system BIOS.");     
+    
 	}
-
-	log_cb(RETRO_LOG_INFO, LOGPRE "Using System BIOS: %s\n", bios->_name);
 
 	return bios_no;
 }
