@@ -281,31 +281,33 @@ static void update_variables(bool first_time)
       options.use_artwork = ARTWORK_USE_NONE;
   }
 
-  options.bios = NULL;
+  /** BEGIN BIOS OPTIONS **/
+
+  options.bios        = NULL;
+  options.neogeo_bios = NULL;
+  options.stv_bios    = NULL;
 
   var.value = NULL;
-
   var.key = APPNAME"_neogeo_bios";
+
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
     if(strcmp(var.value, "default") != 0) /* leave as null if set to default */
-      options.bios = strdup(var.value);
+      options.neogeo_bios = strdup(var.value);
   }
   
   var.value = NULL;
-
   var.key = APPNAME"_stv_bios";
+
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
     if(strcmp(var.value, "default") != 0) /* do nothing if set to default */
     {
-      if(!string_is_empty(options.bios)) /* there is something other than default in both BIOS core options. not good! */
-      {
-        log_cb(RETRO_LOG_ERROR, LOGPRE "Conflicting BIOS options have been set - using default BIOS instead! Please check your core options.\n");
-      }
-      options.bios = strdup(var.value);
+      options.stv_bios = strdup(var.value);
     }
   }
+
+  /** END BIOS OPTIONS **/
 
   var.value = NULL;
 
@@ -675,17 +677,40 @@ bool retro_load_game(const struct retro_game_info *game)
   driver_lookup = strdup(path_basename(game->path));
   path_remove_extension(driver_lookup);
 
-  log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: [%s].\n", driver_lookup);
+  log_cb(RETRO_LOG_INFO, LOGPRE "Content lookup name: %s.\n", driver_lookup);
 
   for (driverIndex = 0; driverIndex < total_drivers; driverIndex++)
   {
-     if ((strcasecmp(driver_lookup, drivers[driverIndex]->description) == 0) 
-      || (strcasecmp(driver_lookup, drivers[driverIndex]->name) == 0) )
-     {
-        log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: [%s].\n", (int) total_drivers, drivers[driverIndex]->name);
-        options.romset_filename_noext = driver_lookup;
-        break;          
-     }
+    const struct GameDriver *needle = drivers[driverIndex];
+
+    if ((strcasecmp(driver_lookup, needle->description) == 0) 
+      || (strcasecmp(driver_lookup, needle->name) == 0) )
+    {
+      log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: %s.\n", (int) total_drivers, needle->name);
+      options.romset_filename_noext = driver_lookup;
+      if(needle->bios != NULL) /* this is a driver that uses a bios, but which bios is it? */
+      {
+        char *ancestor_name = NULL;
+        if(needle->clone_of && !string_is_empty(needle->clone_of->name))
+        {
+          ancestor_name = needle->clone_of->name;
+
+          if(needle->clone_of->clone_of && !string_is_empty(needle->clone_of->clone_of->name)) /* search up to two levels up */
+            ancestor_name = needle->clone_of->clone_of->name;                                  /* that's enough, right? */
+          else
+            ancestor_name = needle->clone_of->name;
+        }
+        
+        if(!string_is_empty(ancestor_name))
+        {
+          if(strcmp(ancestor_name, "neogeo") == 0)
+            options.bios = options.neogeo_bios;
+          else if(strcmp(ancestor_name, "stvbios") == 0)
+            options.bios = options.stv_bios;
+        }
+      }
+      break;
+    }
   }
 
   if(driverIndex == total_drivers)
@@ -855,13 +880,12 @@ void retro_run (void)
 void retro_unload_game(void)
 {
     mame_done();
+    /* do we need to be freeing things here? */
     
     free(options.romset_filename_noext);
-    free(options.bios);
-    
-    /*free(fallbackDir);
-    systemDir = 0;*/
-    /* do we need to be freeing things here? */
+    if(options.bios)        free(options.bios);
+    if(options.neogeo_bios) free(options.neogeo_bios);
+    if(options.stv_bios)    free(options.stv_bios);   
 }
 
 void retro_deinit(void)

@@ -854,8 +854,12 @@ int determine_bios_rom(const struct SystemBios *bios)
 	/* Not system_bios_0 and options.bios is set  */
 	if(bios && (options.bios != NULL))
 	{
-		/* Allow '-bios n' to still be used */
-		while(!BIOSENTRY_ISEND(bios))
+
+    /* Allow '-bios n' to still be used */
+		/* no actually in mame2003 we don't use the old numerical bios index
+       we use the core option & option.bios string */
+    /*
+    while(!BIOSENTRY_ISEND(bios))
 		{
 			char bios_number[3];
 			
@@ -866,6 +870,7 @@ int determine_bios_rom(const struct SystemBios *bios)
 		}
 
 		bios = firstbios;
+    */
 
 		/* Test for bios short names */
 		while(!BIOSENTRY_ISEND(bios))
@@ -877,7 +882,7 @@ int determine_bios_rom(const struct SystemBios *bios)
 		}
 	}
 
-	log_cb(RETRO_LOG_INFO, LOGPRE "Using System BIOS: %d\n", bios_no);
+	log_cb(RETRO_LOG_INFO, LOGPRE "Using System BIOS: %s\n", bios->_name);
 
 	return bios_no;
 }
