@@ -19,17 +19,18 @@
 #include "fileio.h"
 
 
-static int     driverIndex; /* Index of mame game loaded */
-static float   delta_samples;
-int            samples_per_frame = 0;
-short*         samples_buffer;
-short*         conversion_buffer;
-int            usestereo = 1;
-int16_t        prev_pointer_x;
-int16_t        prev_pointer_y;
-unsigned       retroColorMode;
-unsigned long  lastled = 0;
-int16_t        XsoundBuffer[2048];
+static int                driverIndex; /* Index of mame game loaded */
+static struct GameDriver  *game_driver;
+static float              delta_samples;
+int                       samples_per_frame = 0;
+short*                    samples_buffer;
+short*                    conversion_buffer;
+int                       usestereo = 1;
+int16_t                   prev_pointer_x;
+int16_t                   prev_pointer_y;
+unsigned                  retroColorMode;
+unsigned long             lastled = 0;
+int16_t                   XsoundBuffer[2048];
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
@@ -78,7 +79,6 @@ void retro_init (void)
   environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf_cb);
 #endif
 
-  update_variables(true);
   options.use_samples = 1;
   check_system_specs();
 }
@@ -687,18 +687,19 @@ bool retro_load_game(const struct retro_game_info *game)
       || (strcasecmp(driver_lookup, needle->name) == 0) )
     {
       log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: %s.\n", (int) total_drivers, needle->name);
+      game_driver = needle;
       options.romset_filename_noext = driver_lookup;
-      if(needle->bios != NULL) /* this is a driver that uses a bios, but which bios is it? */
+      if(game_driver->bios != NULL) /* this is a driver that uses a bios, but which bios is it? */
       {
         char *ancestor_name = NULL;
-        if(needle->clone_of && !string_is_empty(needle->clone_of->name))
+        if(game_driver->clone_of && !string_is_empty(game_driver->clone_of->name))
         {
-          ancestor_name = needle->clone_of->name;
+          ancestor_name = game_driver->clone_of->name;
 
-          if(needle->clone_of->clone_of && !string_is_empty(needle->clone_of->clone_of->name)) /* search up to two levels up */
-            ancestor_name = needle->clone_of->clone_of->name;                                  /* that's enough, right? */
+          if(game_driver->clone_of->clone_of && !string_is_empty(game_driver->clone_of->clone_of->name)) /* search up to two levels up */
+            ancestor_name = game_driver->clone_of->clone_of->name;                                  /* that's enough, right? */
           else
-            ancestor_name = needle->clone_of->name;
+            ancestor_name = game_driver->clone_of->name;
         }
         
         if(!string_is_empty(ancestor_name))
@@ -755,6 +756,7 @@ bool retro_load_game(const struct retro_game_info *game)
   environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
   options.ui_orientation = uiModes[rotateMode];
 
+  update_variables(true);
   return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
 }
 
