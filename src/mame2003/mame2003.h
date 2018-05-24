@@ -46,6 +46,43 @@ extern retro_log_printf_t log_cb;
 
 /******************************************************************************
 
+Core options
+
+******************************************************************************/
+
+enum
+{
+  OPT_FRAMESKIP = 0,
+  OPT_INPUT_INTERFACE,
+  OPT_RETROPAD_LAYOUT,
+  OPT_MOUSE_DEVICE,
+  OPT_CROSSHAIR_ENABLED,
+  OPT_SKIP_DISCLAIMER,
+  OPT_SKIP_WARNINGS,
+  OPT_DISPLAY_SETUP,
+  OPT_BRIGHTNESS,
+  OPT_GAMMA,
+  OPT_BACKDROP,
+  OPT_NEOGEO_BIOS,
+  OPT_STV_BIOS,
+  OPT_SHARE_DIAL,
+  OPT_DUAL_JOY,
+  OPT_RSTICK_BTNS,
+  OPT_TATE_MODE,
+  OPT_VECTOR_RESOLUTION,
+  OPT_VECTOR_ANTIALIAS,
+  OPT_VECTOR_TRANSLUCENCY,
+  OPT_VECTOR_BEAM,
+  OPT_VECTOR_FLICKER,
+  OPT_VECTOR_INTENSITY,
+  OPT_SKIP_CRC,
+  OPT_SAMPLE_RATE,
+  OPT_DCS_SPEEDHACK,
+  OPT_end /* dummy last entry */
+};
+
+/******************************************************************************
+
 	Display
 
 ******************************************************************************/

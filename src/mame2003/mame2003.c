@@ -61,6 +61,7 @@ bool old_dual_joystick_state = false; /* used to track when this core option cha
 
 ******************************************************************************/
 static void init_core_options(void);
+void init_option(struct retro_variable *option, const char *key, const char *value);
 static void update_variables(bool first_time);
 static void check_system_specs(void);
 void retro_describe_buttons(void);
@@ -102,41 +103,67 @@ void retro_set_environment(retro_environment_t cb)
 
 static void init_core_options(void)
 {
-  static const struct retro_variable vars[] = {
-    { APPNAME"_frameskip", "Frameskip; 0|1|2|3|4|5" },
-    { APPNAME"_input_interface", "Input interface; retropad|mame_keyboard|simultaneous" },
-    { APPNAME"_retropad_layout", "RetroPad Layout; modern|SNES|MAME classic" },
-#if defined(__IOS__)
-    { APPNAME"_mouse_device", "Mouse Device; pointer|mouse|disabled" },
-#else
-    { APPNAME"_mouse_device", "Mouse Device; mouse|pointer|disabled" },
-#endif
-    { APPNAME"_crosshair_enabled", "Show Lightgun crosshair; enabled|disabled" },
-    { APPNAME"_display_setup", "Display MAME menu; disabled|enabled" },
-    { APPNAME"_brightness", "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0" },
-    { APPNAME"_gamma", "Gamma correction; 1.2|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0" },
-    { APPNAME"_enable_backdrop", "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled" },
-    { APPNAME"_neogeo_bios", "Specify Neo Geo BIOS (Restart); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes" },
-    { APPNAME"_stv_bios", "Specify Sega ST-V BIOS (Restart); default|japan|japana|us|japan_b|taiwan|europe" },    
-    { APPNAME"_dialsharexy", "Share 2 player dial controls across one X/Y device; disabled|enabled" },
-    { APPNAME"_dual_joysticks", "Dual Joystick Mode (Players 1 & 2); disabled|enabled" },
-    { APPNAME"_rstick_to_btns", "Right Stick to Buttons; enabled|disabled" },
-    { APPNAME"_tate_mode", "TATE Mode; disabled|enabled" },
-    { APPNAME"_vector_resolution_multiplier", "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6" },
-    { APPNAME"_vector_antialias", "EXPERIMENTAL: Vector antialias; disabled|enabled" },
-    { APPNAME"_vector_translucency", "Vector translucency; enabled|disabled" },
-    { APPNAME"_vector_beam_width", "EXPERIMENTAL: Vector beam width; 1|2|3|4|5" },
-    { APPNAME"_vector_flicker", "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100" },
-    { APPNAME"_vector_intensity", "Vector intensity; 1.5|0.5|1|2|2.5|3" },
-    { APPNAME"_skip_rom_verify", "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled" },
-    { APPNAME"_sample_rate", "Sample Rate (KHz); 48000|8000|11025|22050|44100" },
-    { APPNAME"_dcs_speedhack","DCS Speedhack; enabled|disabled"},
-    { APPNAME"_skip_disclaimer", "Skip Disclaimer; disabled|enabled" },
-    { APPNAME"_skip_warnings", "Skip Warnings; disabled|enabled" },
-    { NULL, NULL },
-  };
+  int default_index   = 0;
+  int effective_index = 0;
+  static struct retro_variable default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
+  static struct retro_variable effective_options[OPT_end + 1]; 
 
-  environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
+  init_option(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
+  init_option(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");
+  init_option(&default_options[OPT_RETROPAD_LAYOUT],     APPNAME"_retropad_layout",     "RetroPad Layout; modern|SNES|MAME classic");
+#if defined(__IOS__)
+  init_option(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
+#else
+  init_option(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; mouse|pointer|disabled");
+#endif
+  init_option(&default_options[OPT_CROSSHAIR_ENABLED],   APPNAME"_crosshair_enabled",   "Show Lightgun crosshair; enabled|disabled");
+  init_option(&default_options[OPT_SKIP_DISCLAIMER],     APPNAME"_skip_disclaimer",     "Skip Disclaimer; disabled|enabled");
+  init_option(&default_options[OPT_SKIP_WARNINGS],       APPNAME"_skip_warnings",       "Skip Warnings; disabled|enabled");    
+  init_option(&default_options[OPT_DISPLAY_SETUP],       APPNAME"_display_setup",       "Display MAME menu; disabled|enabled");
+  init_option(&default_options[OPT_BRIGHTNESS],          APPNAME"_brightness",
+                                                                                        "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
+  init_option(&default_options[OPT_GAMMA],               APPNAME"_gamma",
+                                                                                        "Gamma correction; 1.2|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
+  init_option(&default_options[OPT_BACKDROP],            APPNAME"_enable_backdrop",     "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled");
+  init_option(&default_options[OPT_NEOGEO_BIOS],         APPNAME"_neogeo_bios", 
+                                                                                        "Specify Neo Geo BIOS (Restart); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
+  init_option(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart); default|japan|japana|us|japan_b|taiwan|europe");    
+  init_option(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
+  init_option(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual Joystick Mode (Players 1 & 2); disabled|enabled");
+  init_option(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Right Stick to Buttons; enabled|disabled");
+  init_option(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
+  init_option(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier", 
+                                                                                        "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6");
+  init_option(&default_options[OPT_VECTOR_ANTIALIAS],    APPNAME"_vector_antialias",    "EXPERIMENTAL: Vector antialias; disabled|enabled");
+  init_option(&default_options[OPT_VECTOR_TRANSLUCENCY], APPNAME"_vector_translucency", "Vector translucency; enabled|disabled");
+  init_option(&default_options[OPT_VECTOR_BEAM],         APPNAME"_vector_beam_width",   "EXPERIMENTAL: Vector beam width; 1|2|3|4|5");
+  init_option(&default_options[OPT_VECTOR_FLICKER],      APPNAME"_vector_flicker",      "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100");
+  init_option(&default_options[OPT_VECTOR_INTENSITY],    APPNAME"_vector_intensity",    "Vector intensity; 1.5|0.5|1|2|2.5|3");
+  init_option(&default_options[OPT_SKIP_CRC],            APPNAME"_skip_rom_verify",     "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled");
+  init_option(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|44100");
+  init_option(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
+  
+  init_option(&default_options[OPT_end], NULL, NULL);
+  
+  for(default_index = 0; default_index < (OPT_end + 1); default_index++)
+  {
+    log_cb(RETRO_LOG_INFO, "default: %i    | effective: %i\n", default_index, effective_index);
+    if((default_index == OPT_STV_BIOS && !is_stv) || (default_index == OPT_NEOGEO_BIOS && !is_neogeo))
+    {
+      continue; /* only offer BIOS selection when it is relevant */
+    }
+    
+    effective_options[effective_index] = default_options[default_index];
+    effective_index++;
+  }
+
+  environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)effective_options);
+}
+
+void init_option(struct retro_variable *option, const char *key, const char *value)
+{
+  option->key = key;
+  option->value = value;
 }
 
 static void update_variables(bool first_time)
@@ -207,6 +234,30 @@ static void update_variables(bool first_time)
       options.crosshair_enable = 1;
     else
       options.crosshair_enable = 0;
+  }
+  
+  var.value = NULL;
+
+  var.key = APPNAME"_skip_disclaimer";
+  options.skip_disclaimer = false;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.skip_disclaimer = true;
+    else
+      options.skip_disclaimer = false;
+  }
+
+  var.value = NULL;
+
+  var.key = APPNAME"_skip_warnings";
+  options.skip_warnings = false;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.skip_warnings = true;
+    else
+      options.skip_warnings = false;
   }
   
   var.value = NULL;
@@ -469,30 +520,6 @@ static void update_variables(bool first_time)
 
   var.value = NULL;
 
-  var.key = APPNAME"_skip_disclaimer";
-  options.skip_disclaimer = false;
-  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-  {
-    if(strcmp(var.value, "enabled") == 0)
-      options.skip_disclaimer = true;
-    else
-      options.skip_disclaimer = false;
-  }
-
-  var.value = NULL;
-
-  var.key = APPNAME"_skip_warnings";
-  options.skip_warnings = false;
-  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-  {
-    if(strcmp(var.value, "enabled") == 0)
-      options.skip_warnings = true;
-    else
-      options.skip_warnings = false;
-  }
-
-  var.value = NULL;
-
   var.key = APPNAME"_sample_rate";
   options.samplerate = 48000;
 
@@ -700,6 +727,7 @@ bool retro_load_game(const struct retro_game_info *game)
       ||  (game_driver->clone_of && !string_is_empty(game_driver->clone_of->name) && (strcmp(game_driver->clone_of->name, "sf2") == 0)) )
       {
         is_sf2_layout = true; /* are there other games with this layout? */
+        log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as Street Fighter 2 or a clone.\n");
       }
 
       if(game_driver->bios != NULL) /* this is a driver that uses a bios, but which bios is it? */
@@ -718,9 +746,15 @@ bool retro_load_game(const struct retro_game_info *game)
         if(!string_is_empty(ancestor_name))
         {
           if(strcmp(ancestor_name, "neogeo") == 0)
+          {
             is_neogeo = true;
+            log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a Neo Geo game.\n");
+          }
           else if(strcmp(ancestor_name, "stvbios") == 0)
+          {
             is_stv = true;
+            log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a ST-V game.\n");
+          }
         }
       }
       break;
