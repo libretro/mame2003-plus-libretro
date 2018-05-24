@@ -584,6 +584,19 @@ void retro_get_system_info(struct retro_system_info *info)
   info->block_extract = true;
 }
 
+#define BTN1 "BTN1: "
+#define BTN2 "BTN2: "
+#define BTN3 "BTN3: "
+#define BTN4 "BTN4: "
+#define BTN5 "BTN5: "
+#define BTN6 "BTN6: "
+#define BTN7 "BTN7: "
+#define BTN8 "BTN8: "
+
+static const char* control_labels[RETRO_DEVICE_ID_JOYPAD_R3 + 1]; /* RETRO_DEVICE_ID_JOYPAD_R3 is the retropad input with the highest index # */
+static const char* sf2_button_labels[6];
+static const char* neogeo_button_labels[4];
+
 void retro_describe_buttons(void)
 {
   /* Assuming the standard RetroPad layout:
@@ -657,23 +670,133 @@ void retro_describe_buttons(void)
    *     [v]                               [1/LP]      |
    *                                                   |
    */
+
+  sf2_button_labels[COUNT_BUTTON1] = BTN1 "Weak Kick";
+  sf2_button_labels[COUNT_BUTTON2] = BTN2 "Medium Kick";
+  sf2_button_labels[COUNT_BUTTON3] = BTN3 "Strong Punch";
+  sf2_button_labels[COUNT_BUTTON4] = BTN4 "Weak Punch";
+  sf2_button_labels[COUNT_BUTTON5] = BTN5 "Medium Punch";
+  sf2_button_labels[COUNT_BUTTON6] = BTN6 "Strong Kick";
+  
+  neogeo_button_labels[COUNT_BUTTON1] = BTN1 "Neo Geo A";
+  neogeo_button_labels[COUNT_BUTTON2] = BTN2 "Neo Geo B";
+  neogeo_button_labels[COUNT_BUTTON3] = BTN3 "Neo Geo C";
+  neogeo_button_labels[COUNT_BUTTON4] = BTN4 "Neo Geo D";
+
+  /************  BASELINE "CLASSIC" MAPPING  ************/   
+  control_labels[RETRO_DEVICE_ID_JOYPAD_LEFT]    =  "Joystick Left";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_RIGHT]   =  "Joystick Right";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_UP]      =  "Joystick Up";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_DOWN]    =  "Joystick Down";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_B]       =  "Button 1";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_Y]       =  "Button 3";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_X]       =  "Button 4";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_A]       =  "Button 2";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_L]       =  "Button 5";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_R]       =  "Button 6";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_L2]      =  "Button 7";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_R2]      =  "Button 8";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_L3]      =  "Button 9";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_R3]      =  "Button 10";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_SELECT]  =  "Insert Coin";
+  control_labels[RETRO_DEVICE_ID_JOYPAD_START]   =  "Start";
+  
+  /************  CONTENT-SPECIFIC OVERLAYS FOR CLASSIC ************/ 
+  if(options.retropad_layout == RETROPAD_MAME)
+  {
+    if(is_sf2_layout)  /* overlay sf2-specific names */
+    {
+      control_labels[RETRO_DEVICE_ID_JOYPAD_B]     =  sf2_button_labels[COUNT_BUTTON1];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     =  sf2_button_labels[COUNT_BUTTON3];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_X]     =  sf2_button_labels[COUNT_BUTTON4];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_A]     =  sf2_button_labels[COUNT_BUTTON2];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_L]     =  sf2_button_labels[COUNT_BUTTON5];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_R]     =  sf2_button_labels[COUNT_BUTTON6];
+    }
+    else if(is_neogeo)
+    {
+      control_labels[RETRO_DEVICE_ID_JOYPAD_B]     =  neogeo_button_labels[COUNT_BUTTON1];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     =  neogeo_button_labels[COUNT_BUTTON3];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_X]     =  neogeo_button_labels[COUNT_BUTTON4];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_A]     =  neogeo_button_labels[COUNT_BUTTON2];
+    }
+  }
+
+  /************  "MODERN" MAPPING OVERLAY  ************/ 
+  if(options.retropad_layout == RETROPAD_MODERN)
+  {
+    control_labels[RETRO_DEVICE_ID_JOYPAD_B]     = "Button 4";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     = "Button 1";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_X]     = "Button 2";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_A]     = "Button 5";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_L]     = "Button 7";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_R]     = "Button 3";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_L2]    = "Button 8";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_R2]    = "Button 6";
+    
+    if(is_sf2_layout) /* overlay sf2-specific names */
+    {
+      control_labels[RETRO_DEVICE_ID_JOYPAD_B]   = sf2_button_labels[COUNT_BUTTON4];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]   = sf2_button_labels[COUNT_BUTTON1];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_X]   = sf2_button_labels[COUNT_BUTTON2];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_A]   = sf2_button_labels[COUNT_BUTTON5];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_L]   = sf2_button_labels[COUNT_BUTTON6];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_R]   = sf2_button_labels[COUNT_BUTTON3];
+    }
+    else if(is_neogeo)
+    {
+      control_labels[RETRO_DEVICE_ID_JOYPAD_B]   = neogeo_button_labels[COUNT_BUTTON4];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]   = neogeo_button_labels[COUNT_BUTTON1];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_X]   = neogeo_button_labels[COUNT_BUTTON2];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_R]   = neogeo_button_labels[COUNT_BUTTON3];
+    }
+  }
+  
+  /************  "MODERN" MAPPING OVERLAY  ************/
+  if(options.retropad_layout == RETROPAD_SNES)
+  {
+    control_labels[RETRO_DEVICE_ID_JOYPAD_B]    = "Button 4";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]    = "Button 1";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_X]    = "Button 2";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_A]    = "Button 5";
+    control_labels[RETRO_DEVICE_ID_JOYPAD_L]    = "Button 3";
+
+    if(is_sf2_layout) /* overlay sf2-specific names */
+    {
+      control_labels[RETRO_DEVICE_ID_JOYPAD_B]  = sf2_button_labels[COUNT_BUTTON4];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]  = sf2_button_labels[COUNT_BUTTON1];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_X]  = sf2_button_labels[COUNT_BUTTON2];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_A]  = sf2_button_labels[COUNT_BUTTON4];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_L]  = sf2_button_labels[COUNT_BUTTON3];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_R]  = sf2_button_labels[COUNT_BUTTON6];
+    }
+    else if(is_neogeo)
+    {
+      control_labels[RETRO_DEVICE_ID_JOYPAD_B]  = neogeo_button_labels[COUNT_BUTTON4];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]  = neogeo_button_labels[COUNT_BUTTON1];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_X]  = neogeo_button_labels[COUNT_BUTTON2];
+      control_labels[RETRO_DEVICE_ID_JOYPAD_L]  = neogeo_button_labels[COUNT_BUTTON3];
+    }
+  }
+  
+
 #define describe_buttons(INDEX) \
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   "Joystick Left" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  "Joystick Right" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     "Joystick Up" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   "Joystick Down" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      (options.retropad_layout == RETROPAD_MAME ? "Button 1" : "Button 4") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      (options.retropad_layout == RETROPAD_MAME ? "Button 3" : "Button 1") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      (options.retropad_layout == RETROPAD_MAME ? "Button 4" : "Button 2") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      (options.retropad_layout == RETROPAD_MAME ? "Button 2" : "Button 5") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      (options.retropad_layout == RETROPAD_MAME ? "Button 5" : (options.retropad_layout == RETROPAD_MODERN ? "Button 7" : "Button 3")) },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      (options.retropad_layout == RETROPAD_MODERN ? "Button 3" : "Button 6") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 8" : "Button 7") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     (options.retropad_layout == RETROPAD_MODERN ? "Button 6" : "Button 8") },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Button 9" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Button 10" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Insert Coin" },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  "Start" },
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   control_labels[RETRO_DEVICE_ID_JOYPAD_LEFT]   },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  control_labels[RETRO_DEVICE_ID_JOYPAD_RIGHT]  },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     control_labels[RETRO_DEVICE_ID_JOYPAD_UP]     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   control_labels[RETRO_DEVICE_ID_JOYPAD_DOWN]   },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      control_labels[RETRO_DEVICE_ID_JOYPAD_B]      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      control_labels[RETRO_DEVICE_ID_JOYPAD_X]      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      control_labels[RETRO_DEVICE_ID_JOYPAD_A]      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      control_labels[RETRO_DEVICE_ID_JOYPAD_L]      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      control_labels[RETRO_DEVICE_ID_JOYPAD_R]      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     control_labels[RETRO_DEVICE_ID_JOYPAD_L2]     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     control_labels[RETRO_DEVICE_ID_JOYPAD_R2]     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     control_labels[RETRO_DEVICE_ID_JOYPAD_L3]     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     control_labels[RETRO_DEVICE_ID_JOYPAD_R3]     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, control_labels[RETRO_DEVICE_ID_JOYPAD_SELECT] },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  control_labels[RETRO_DEVICE_ID_JOYPAD_START]  },
   
   struct retro_input_descriptor desc[] = {
     describe_buttons(0)
@@ -685,6 +808,7 @@ void retro_describe_buttons(void)
   
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
+
 
 bool retro_load_game(const struct retro_game_info *game)
 {
