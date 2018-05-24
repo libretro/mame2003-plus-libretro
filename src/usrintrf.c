@@ -3188,8 +3188,13 @@ int handle_user_interface(struct mame_bitmap *bitmap)
 	/* show popup message if any */
 	if (messagecounter > 0)
 	{
-    if (input_ui_pressed(IPT_UI_CANCEL)) /* a popup is on screen and the user presses the cancel button */
+    if ( /* a popup is on screen and the user presses one of these UI controls */
+        input_ui_pressed(IPT_UI_CANCEL) || input_ui_pressed(IPT_UI_SELECT)
+     || input_ui_pressed(IPT_UI_UP)     || input_ui_pressed(IPT_UI_DOWN)
+     || input_ui_pressed(IPT_UI_LEFT)   || input_ui_pressed(IPT_UI_RIGHT) )
+     {
       messagecounter = 1; /* decrease to trigger screen refresh */
+     }
 		else
       displaymessage(bitmap, messagetext);
 
