@@ -31,6 +31,10 @@ unsigned                  retroColorMode;
 unsigned long             lastled = 0;
 int16_t                   XsoundBuffer[2048];
 
+bool is_neogeo     = false;
+bool is_stv        = false;
+bool is_sf2_layout = false;
+
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
 extern int          retroJsState[72];
@@ -56,6 +60,7 @@ bool old_dual_joystick_state = false; /* used to track when this core option cha
   private function prototypes
 
 ******************************************************************************/
+static void init_core_options(void);
 static void update_variables(bool first_time);
 static void check_system_specs(void);
 void retro_describe_buttons(void);
@@ -90,8 +95,12 @@ static void check_system_specs(void)
    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &level);
 }
 
-
 void retro_set_environment(retro_environment_t cb)
+{
+  environ_cb = cb;
+}
+
+static void init_core_options(void)
 {
   static const struct retro_variable vars[] = {
     { APPNAME"_frameskip", "Frameskip; 0|1|2|3|4|5" },
@@ -126,9 +135,8 @@ void retro_set_environment(retro_environment_t cb)
     { APPNAME"_skip_warnings", "Skip Warnings; disabled|enabled" },
     { NULL, NULL },
   };
-  environ_cb = cb;
 
-  cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
+  environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
 }
 
 static void update_variables(bool first_time)
@@ -658,10 +666,6 @@ bool retro_load_game(const struct retro_game_info *game)
   int              orientation    = 0;
   unsigned         rotateMode     = 0;
   static const int uiModes[]      = {ROT0, ROT90, ROT180, ROT270};
-  
-  bool is_neogeo     = false;
-  bool is_stv        = false;
-  bool is_sf2_layout = false;
 
   if(string_is_empty(game->path))
   {
@@ -765,14 +769,14 @@ bool retro_load_game(const struct retro_game_info *game)
   environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rotateMode);
   options.ui_orientation = uiModes[rotateMode];
 
+  init_core_options();
   update_variables(true);
+  retro_describe_buttons();
 
   if(is_neogeo)
     options.bios = options.neogeo_bios;
   else if(is_stv)
     options.bios = options.stv_bios;
-
-  retro_describe_buttons();
 
   return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
 }
