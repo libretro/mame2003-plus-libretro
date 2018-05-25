@@ -7684,17 +7684,17 @@ const char *sf2_btn_label(int input)
   switch(input)
   {
     case IPT_BUTTON1:
-      return BTN1 "Weak Kick";
+      return BTN1 "Jab Punch";
     case IPT_BUTTON2:
-      return BTN2 "Medium Kick";
+      return BTN2 "Strong Punch";
     case IPT_BUTTON3:
-      return BTN3 "Strong Punch";
+      return BTN3 "Fierce Punch";
     case IPT_BUTTON4:
-      return BTN4 "Weak Punch";
+      return BTN4 "Short Kick";
     case IPT_BUTTON5:
-      return BTN5 "Medium Punch";
+      return BTN5 "Forward Kick";
     case IPT_BUTTON6:
-      return BTN6 "Strong Kick";
+      return BTN6 "Roundhouse Kick";
   } 
   return generic_btn_label(input);
 }
