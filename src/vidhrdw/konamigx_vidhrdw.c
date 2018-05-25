@@ -484,8 +484,8 @@ VIDEO_UPDATE(konamigx)
 
 	if( gx_invertlayersBC )
 	{
-		/*draw_crosshair( bitmap, readinputport( 9)*287/0xff+24, readinputport(10)*223/0xff+16, cliprect, 0 );
-		draw_crosshair( bitmap, readinputport(11)*287/0xff+24, readinputport(12)*223/0xff+16, cliprect, 1 );*/
+		draw_crosshair( bitmap, readinputport( 9)*287/0xff+24, readinputport(10)*223/0xff+16, cliprect );
+		draw_crosshair( bitmap, readinputport(11)*287/0xff+24, readinputport(12)*223/0xff+16, cliprect );
 	}
 }
 
