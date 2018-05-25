@@ -263,7 +263,7 @@ VIDEO_START( lgtnfght )	/* also tmnt2, ssriders */
 
 	if (K052109_vh_start(REGION_GFX1,NORMAL_PLANE_ORDER,tmnt_tile_callback))
 		return 1;
-	if (K053245_vh_start(REGION_GFX2,NORMAL_PLANE_ORDER,lgtnfght_sprite_callback))
+	if (K053245_vh_start(0, REGION_GFX2,NORMAL_PLANE_ORDER,lgtnfght_sprite_callback))
 		return 1;
 
 	K05324x_set_z_rejection(0);
@@ -284,7 +284,7 @@ VIDEO_START( sunsetbl )
 
 	if (K052109_vh_start(REGION_GFX1,NORMAL_PLANE_ORDER,ssbl_tile_callback))
 		return 1;
-	if (K053245_vh_start(REGION_GFX2,NORMAL_PLANE_ORDER,lgtnfght_sprite_callback))
+	if (K053245_vh_start(0, REGION_GFX2,NORMAL_PLANE_ORDER,lgtnfght_sprite_callback))
 		return 1;
 	return 0;
 }
@@ -295,7 +295,7 @@ VIDEO_START( detatwin )
 
 	if (K052109_vh_start(REGION_GFX1,NORMAL_PLANE_ORDER,detatwin_tile_callback))
 		return 1;
-	if (K053245_vh_start(REGION_GFX2,NORMAL_PLANE_ORDER,detatwin_sprite_callback))
+	if (K053245_vh_start(0, REGION_GFX2,NORMAL_PLANE_ORDER,detatwin_sprite_callback))
 		return 1;
 	return 0;
 }
@@ -306,7 +306,7 @@ VIDEO_START( glfgreat )
 
 	if (K052109_vh_start(REGION_GFX1,NORMAL_PLANE_ORDER,tmnt_tile_callback))
 		return 1;
-	if (K053245_vh_start(REGION_GFX2,NORMAL_PLANE_ORDER,lgtnfght_sprite_callback))
+	if (K053245_vh_start(0, REGION_GFX2,NORMAL_PLANE_ORDER,lgtnfght_sprite_callback))
 		return 1;
 
 	roz_tilemap = tilemap_create(glfgreat_get_roz_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,16,16,512,512);
@@ -339,7 +339,7 @@ VIDEO_START( prmrsocr )
 
 	if (K052109_vh_start(REGION_GFX1,NORMAL_PLANE_ORDER,tmnt_tile_callback))
 		return 1;
-	if (K053245_vh_start(REGION_GFX2,NORMAL_PLANE_ORDER,prmrsocr_sprite_callback))
+	if (K053245_vh_start(0, REGION_GFX2,NORMAL_PLANE_ORDER,prmrsocr_sprite_callback))
 		return 1;
 
 	roz_tilemap = tilemap_create(prmrsocr_get_roz_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,16,16,512,256);
@@ -536,7 +536,7 @@ WRITE16_HANDLER( ssriders_eeprom_w )
 		dim_c = data & 0x18;
 
 		/* bit 5 selects sprite ROM for testing in TMNT2 (bits 5-7, actually, according to the schematics) */
-		K053244_bankselect(((data & 0x20) >> 5) << 2);
+		K053244_bankselect(0, ((data & 0x20) >> 5) << 2);
 	}
 }
 
@@ -569,7 +569,7 @@ WRITE16_HANDLER( prmrsocr_122000_w )
 
 		/* bit 6 = sprite ROM bank */
 		prmrsocr_sprite_bank = (data & 0x40) >> 6;
-		K053244_bankselect(prmrsocr_sprite_bank << 2);
+		K053244_bankselect(0, prmrsocr_sprite_bank << 2);
 
 		/* other bits unknown (unused?) */
 	}
@@ -703,7 +703,7 @@ VIDEO_UPDATE( lgtnfght )
 	tilemap_draw(bitmap,cliprect,K052109_tilemap[sorted_layer[1]],0,2);
 	tilemap_draw(bitmap,cliprect,K052109_tilemap[sorted_layer[2]],0,4);
 
-	K053245_sprites_draw(bitmap,cliprect);
+	K053245_sprites_draw(0, bitmap,cliprect);
 }
 
 static int glfgreat_pixel;
@@ -762,7 +762,7 @@ VIDEO_UPDATE( glfgreat )
 		glfgreat_pixel = read_pixel(bitmap,0x105,0x80);
 	}
 
-	K053245_sprites_draw(bitmap,cliprect);
+	K053245_sprites_draw(0, bitmap,cliprect);
 }
 
 VIDEO_UPDATE( tmnt2 )
@@ -853,5 +853,5 @@ VIDEO_UPDATE( thndrx2 )
 
 VIDEO_EOF( detatwin )
 {
-	K053245_clear_buffer();
+	K053245_clear_buffer(0);
 }
