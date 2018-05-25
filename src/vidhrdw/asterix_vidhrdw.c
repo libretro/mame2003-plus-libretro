@@ -11,7 +11,7 @@ static int spritebanks[4];
 
 void reset_spritebank(void)
 {
-	K053244_bankselect(spritebank & 7);
+	K053244_bankselect(0, spritebank & 7);
 	spritebanks[0] = (spritebank << 12) & 0x7000;
 	spritebanks[1] = (spritebank <<  9) & 0x7000;
 	spritebanks[2] = (spritebank <<  6) & 0x7000;
@@ -53,7 +53,7 @@ VIDEO_START( asterix )
 	K053251_vh_start();
 
 	K054157_vh_start(REGION_GFX1, 0, scrolld, NORMAL_PLANE_ORDER, asterix_tile_callback);
-	if (K053245_vh_start(REGION_GFX2,NORMAL_PLANE_ORDER, asterix_sprite_callback))
+	if (K053245_vh_start(0, REGION_GFX2,NORMAL_PLANE_ORDER, asterix_sprite_callback))
 		return 1;
 	return 0;
 }
@@ -108,7 +108,7 @@ VIDEO_UPDATE( asterix )
 	K054157_tilemap_draw(bitmap, cliprect, layer[2], 0, 4);
 
 	pdrawgfx_shadow_lowpri = 1;	/* fix shadows in front of feet */
-	K053245_sprites_draw(bitmap, cliprect);
+	K053245_sprites_draw(0, bitmap, cliprect);
 
 	K054157_tilemap_draw(bitmap, cliprect, 2, 0, 0);
 }
