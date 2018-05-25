@@ -458,11 +458,7 @@ static int run_machine(void)
 					}
 
 				ui_copyright_and_warnings();
-  log_cb(RETRO_LOG_ERROR, "\nstarting to run\n");
-        
         pause_action = pause_action_start_emulator;
-  log_cb(RETRO_LOG_ERROR, "\ndid we make it\n");
-        
 				return 0;
 			}
 
