@@ -388,7 +388,7 @@ ROM_START( sbishi )
 	ROM_LOAD16_BYTE( "675jaa09.19n", 0x100000, 0x080000, CRC(63fe85a5) SHA1(e5ef1f3fc634264260d5fc3a669646abf1601b23) )
 	ROM_LOAD16_BYTE( "675jaa10.22n", 0x100001, 0x080000, CRC(703ac462) SHA1(6dd05b2a78517a46b9ae8322c6b94bddbe91e848) )
 
-	// dummy region (game has no sprites, but we want to use the GX mixer)
+	/* dummy region (game has no sprites, but we want to use the GX mixer) */
 	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_ERASE00 )
 
 	ROM_REGION( 0x200000, REGION_SOUND1, 0 )
@@ -409,7 +409,7 @@ ROM_START( sbishik )
 	ROM_LOAD16_BYTE( "675kaa09.19n", 0x100000, 0x080000, CRC(8d49c765) SHA1(7921f8f3671fbbc3d5ea529234268a1e23ea622c) )
 	ROM_LOAD16_BYTE( "675kaa10.22n", 0x100001, 0x080000, CRC(c16acf32) SHA1(df3eeb5ab3bab8e707eaa79ffc500e1dc2332a82) )
 
-	// dummy region (game has no sprites, but we want to use the GX mixer)
+	/* dummy region (game has no sprites, but we want to use the GX mixer) */
 	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_ERASE00 )
 
 	ROM_REGION( 0x200000, REGION_SOUND1, 0 )
