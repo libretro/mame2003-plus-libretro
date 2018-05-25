@@ -49,7 +49,7 @@ VIDEO_START(moo)
 	K053251_vh_start();
 	K054338_vh_start();
 
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_4, 1, NULL, moo_tile_callback)) return 1;
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_4, 1, NULL, moo_tile_callback, 0)) return 1;
 
 	if (!strcmp(Machine->gamedrv->name, "bucky") || !strcmp(Machine->gamedrv->name, "buckyua"))
 	{
