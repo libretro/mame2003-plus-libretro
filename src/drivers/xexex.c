@@ -155,7 +155,7 @@ static void xexex_objdma(int limiter)
 	frame = cpu_getcurrentframe();
 	if (limiter && counter == frame) return; /* make sure we only do DMA transfer once per frame*/
 
-	K053247_export_config(&dst, (struct GfxElement**)&src, (void**)&src, &counter, &counter);
+	K053247_export_config(&dst, 0, 0, 0, &counter);
 	src = spriteram16;
 	num_inactive = counter = 256;
 
