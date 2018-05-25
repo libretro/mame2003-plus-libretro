@@ -3,8 +3,10 @@
 Chequered Flag / Checkered Flag (GX717) (c) Konami 1988
 
 Notes:
-- Position counter doesn't behave correctly because of the K051733 protection.
+
 - 007232 volume & panning control is almost certainly wrong.
+- Needs HW tests or side-by-side tests to determine if the protection
+  is 100% ok now;
 - I've modified the YM2151 clock with an xtal of 2,on what I recall the
   music at the title screen should end when the words "Chequered Flag"
   flashes.Needs a comparison with a real PCB however. -AS
@@ -50,22 +52,22 @@ static WRITE_HANDLER( chqflag_bankswitch_w )
 
 	/* bit 5 = memory bank select */
 	if (data & 0x20){
-		memory_set_bankhandler_r (2, 0, paletteram_r);							/* palette */
-		memory_set_bankhandler_w (2, 0, paletteram_xBBBBBGGGGGRRRRR_swap_w);	/* palette */
+		install_mem_read_handler(0, 0x1800, 0x1fff, paletteram_r);							/* palette */
+	    install_mem_write_handler(0, 0x1800, 0x1fff, paletteram_xBBBBBGGGGGRRRRR_swap_w);	/* palette */
 		if (K051316_readroms){
-			memory_set_bankhandler_r (1, 0, K051316_rom_0_r);	/* 051316 #1 (ROM test) */
-			memory_set_bankhandler_w (1, 0, K051316_0_w);		/* 051316 #1 */
+			install_mem_read_handler(0, 0x1000, 0x17ff, K051316_rom_0_r);	/* 051316 #1 (ROM test) */
+			install_mem_write_handler(0, 0x1000, 0x17ff, K051316_0_w);		/* 051316 #1 */
 		}
 		else{
-			memory_set_bankhandler_r (1, 0, K051316_0_r);		/* 051316 #1 */
-			memory_set_bankhandler_w (1, 0, K051316_0_w);		/* 051316 #1 */
+			install_mem_read_handler(0, 0x1000, 0x17ff, K051316_0_r);		/* 051316 #1 */
+			install_mem_write_handler(0, 0x1000, 0x17ff, K051316_0_w);		/* 051316 #1 */
 		}
 	}
 	else{
-		memory_set_bankhandler_r (1, 0, MRA_RAM);				/* RAM */
-		memory_set_bankhandler_w (1, 0, MWA_RAM);				/* RAM */
-		memory_set_bankhandler_r (2, 0, MRA_RAM);				/* RAM */
-		memory_set_bankhandler_w (2, 0, MWA_RAM);				/* RAM */
+	    install_mem_read_handler(0, 0x1000, 0x17ff, MRA_BANK1);				/* RAM */
+	    install_mem_write_handler(0, 0x1000, 0x17ff, MWA_BANK1);				/* RAM */
+	    install_mem_read_handler(0, 0x1800, 0x1fff, MRA_BANK2);				/* RAM */
+		install_mem_write_handler(0, 0x1800, 0x1fff, MWA_BANK2);				/* RAM */
 	}
 
 	/* other bits unknown/unused */
@@ -81,13 +83,13 @@ static WRITE_HANDLER( chqflag_vreg_w )
 
 	/* bit 4 = enable rom reading thru K051316 #1 & #2 */
 	if ((K051316_readroms = (data & 0x10))){
-		memory_set_bankhandler_r (3, 0, K051316_rom_1_r);	/* 051316 (ROM test) */
+	    install_mem_read_handler(0, 0x2800, 0x2fff, K051316_rom_1_r);	/* 051316 (ROM test) */
 	}
 	else{
-		memory_set_bankhandler_r (3, 0, K051316_1_r);		/* 051316 */
+		install_mem_read_handler(0, 0x2800, 0x2fff, K051316_1_r);		/* 051316 */
 	}
 
-	/* Bits 3-7 probably control palette dimming in a similar way to TMNT2/Saunset Riders, */
+	/* Bits 3-7 probably control palette dimming in a similar way to TMNT2/Sunset Riders, */
 	/* however I don't have enough evidence to determine the exact behaviour. */
 	/* Bits 3 and 7 are set in night stages, where the background should get darker and */
 	/* the headlight (which have the shadow bit set) become highlights */
@@ -139,6 +141,7 @@ static READ_HANDLER( analog_read_r )
 
 WRITE_HANDLER( chqflag_sh_irqtrigger_w )
 {
+    soundlatch2_w(0, data);
 	cpu_set_irq_line(1,0,HOLD_LINE);
 }
 
@@ -191,7 +194,7 @@ static MEMORY_READ_START( chqflag_readmem_sound )
 	{ 0xb000, 0xb00d, K007232_read_port_1_r },	/* 007232 (chip 2) */
 	{ 0xc001, 0xc001, YM2151_status_port_0_r },	/* YM2151 */
 	{ 0xd000, 0xd000, soundlatch_r },			/* soundlatch_r */
-	/*{ 0xe000, 0xe000, MRA_NOP },				 // ??? /*/
+	{ 0xe000, 0xe000, soundlatch2_r },		    /* engine sound volume */
 MEMORY_END
 
 static WRITE_HANDLER( k007232_bankswitch_w )
@@ -324,14 +327,14 @@ INPUT_PORTS_END
 
 static void chqflag_ym2151_irq_w(int data)
 {
-	cpu_set_irq_line(1,IRQ_LINE_NMI,PULSE_LINE);
+    cpu_set_irq_line(1,IRQ_LINE_NMI, data ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 static struct YM2151interface ym2151_interface =
 {
 	1,
-	3579545/2,	/* 3.579545/2 MHz? */
+	3579545,	/* 3.579545 MHz */
 	{ YM3012_VOL(80,MIXER_PAN_LEFT,80,MIXER_PAN_RIGHT) },
 	{ chqflag_ym2151_irq_w },
 	{ 0 }
