@@ -160,9 +160,6 @@ struct RunningMachine
 #define ARTWORK_USE_BACKDROPS	0x01
 #define ARTWORK_USE_OVERLAYS	0x02
 #define ARTWORK_USE_BEZELS		0x04
-#define RETROPAD_MAME			0
-#define RETROPAD_MODERN			1
-#define RETROPAD_SNES			2
 
 /* The host platform should fill these fields with the preferences specified in the GUI */
 /* or on the commandline. */

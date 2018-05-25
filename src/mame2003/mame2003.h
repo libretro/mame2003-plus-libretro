@@ -81,6 +81,28 @@ enum
   OPT_end /* dummy last entry */
 };
 
+enum
+{
+  RETROPAD_MAME = 0,
+  RETROPAD_MODERN,
+  RETROPAD_SNES,
+  RETROPAD_end
+};
+
+enum
+{
+  COUNT_BUTTON1 = 0,
+  COUNT_BUTTON2,
+  COUNT_BUTTON3,
+  COUNT_BUTTON4,
+  COUNT_BUTTON5,
+  COUNT_BUTTON6,
+  COUNT_BUTTON7,
+  COUNT_BUTTON8,
+  COUNT_BUTTON_end
+};
+  
+
 /******************************************************************************
 
 	Display
