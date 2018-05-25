@@ -3493,6 +3493,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( simps2pa )	/* GX072 (c) 1991 */
 	DRIVER( simps2pj )	/* GX072 (c) 1991 (Japan) */
 	DRIVER( esckids )	/* GX975 (c) 1991 (Japan) */
+	DRIVER( esckids4p )	/* GX975 (c) 1991 (Asia) */
 	DRIVER( vendetta )	/* GX081 (c) 1991 (World) */
 	DRIVER( vendetao )	/* GX081 (c) 1991 (World) */
 	DRIVER( vendet2p )	/* GX081 (c) 1991 (World) */
@@ -3506,6 +3507,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( chqflagj )	/* GX717 (c) 1988 (Japan) */
 	DRIVER( ultraman )	/* GX910 (c) 1991 Banpresto/Bandai */
 	DRIVER( hexion )	/* GX122 (c) 1992 */
+	DRIVER( lethalen )	/* GX191 (c) 1992 */
 
 	/* Konami "Nemesis hardware" games */
 	DRIVER( nemesis )	/* GX456 (c) 1985 */
