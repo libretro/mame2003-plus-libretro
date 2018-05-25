@@ -1562,6 +1562,28 @@ struct ik input_keywords[] =
 int num_ik = sizeof(input_keywords)/sizeof(struct ik);
 
 /***************************************************************************/
+
+
+const char *generic_btn_label(int input)
+{
+  unsigned int i = 0;
+
+  for( ; inputport_defaults[i].type != IPT_END; ++i)
+  {
+    struct ipd *entry = &inputport_defaults[i];
+    if(entry->type == input)
+    {
+      if(input >= IPT_SERVICE1 && input <= IPT_UI_EDIT_CHEAT)
+        return entry->name; /* these strings are not player-specific */
+      else /* start with the third character, trimming the initial 'P1', 'P2', etc which we don't need for libretro */
+        return &entry->name[3];
+    }
+  }
+  return NULL;
+}
+
+
+/***************************************************************************/
 /* Generic IO */
 
 static int readint(mame_file *f,UINT32 *num)

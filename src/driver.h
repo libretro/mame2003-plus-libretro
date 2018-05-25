@@ -410,6 +410,8 @@ struct GameDriver
   const struct RomModule *rom;
 
   UINT32 flags;	/* orientation and other flags; see defines below */
+  
+  const char * (*btn_labeler)(int);
 };
 
 
@@ -442,87 +444,129 @@ struct GameDriver
 
 /***************************************************************************
 
-	Macros for building game drivers
+  Macros for building game drivers
 
 ***************************************************************************/
 
-#define GAME(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME)	\
-extern const struct GameDriver driver_##PARENT;	\
-const struct GameDriver driver_##NAME =		\
-{											\
-	__FILE__,								\
-	&driver_##PARENT,						\
-	#NAME,									\
-	system_bios_0,							\
-	FULLNAME,								\
-	#YEAR,									\
-	COMPANY,								\
-	construct_##MACHINE,					\
-	input_ports_##INPUT,					\
-	init_##INIT,							\
-	rom_##NAME,								\
-	MONITOR									\
+#define GAME(YEAR, NAME, PARENT, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME)  \
+extern const struct GameDriver driver_##PARENT;  \
+const struct GameDriver driver_##NAME =          \
+{                       \
+  __FILE__,             \
+  &driver_##PARENT,     \
+  #NAME,                \
+  system_bios_0,        \
+  FULLNAME,             \
+  #YEAR,                \
+  COMPANY,              \
+  construct_##MACHINE,  \
+  input_ports_##INPUT,  \
+  init_##INIT,          \
+  rom_##NAME,           \
+  MONITOR,              \
+  (&generic_btn_label)  \
 };
 
-#define GAMEX(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS)	\
-extern const struct GameDriver driver_##PARENT;	\
-const struct GameDriver driver_##NAME =		\
-{											\
-	__FILE__,								\
-	&driver_##PARENT,						\
-	#NAME,									\
-	system_bios_0,							\
-	FULLNAME,								\
-	#YEAR,									\
-	COMPANY,								\
-	construct_##MACHINE,					\
-	input_ports_##INPUT,					\
-	init_##INIT,							\
-	rom_##NAME,								\
-	(MONITOR)|(FLAGS)						\
+#define GAMEX(YEAR, NAME, PARENT, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, FLAGS)  \
+extern const struct GameDriver driver_##PARENT;   \
+const struct GameDriver driver_##NAME =           \
+{                       \
+  __FILE__,             \
+  &driver_##PARENT,     \
+  #NAME,                \
+  system_bios_0,        \
+  FULLNAME,             \
+  #YEAR,                \
+  COMPANY,              \
+  construct_##MACHINE,  \
+  input_ports_##INPUT,  \
+  init_##INIT,          \
+  rom_##NAME,           \
+  (MONITOR)|(FLAGS),    \
+  (&generic_btn_label)  \
 };
 
-#define GAMEB(YEAR,NAME,PARENT,BIOS,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME)	\
-extern const struct GameDriver driver_##PARENT;	\
-const struct GameDriver driver_##NAME =		\
-{											\
-	__FILE__,								\
-	&driver_##PARENT,						\
-	#NAME,									\
-	system_bios_##BIOS,						\
-	FULLNAME,								\
-	#YEAR,									\
-	COMPANY,								\
-	construct_##MACHINE,					\
-	input_ports_##INPUT,					\
-	init_##INIT,							\
-	rom_##NAME,								\
-	MONITOR									\
+#define GAMEC(YEAR, NAME, PARENT, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, BTN_LABELER)  \
+extern const struct GameDriver driver_##PARENT;  \
+const struct GameDriver driver_##NAME =          \
+{                       \
+  __FILE__,             \
+  &driver_##PARENT,     \
+  #NAME,                \
+  system_bios_0,        \
+  FULLNAME,             \
+  #YEAR,                \
+  COMPANY,              \
+  construct_##MACHINE,  \
+  input_ports_##INPUT,  \
+  init_##INIT,          \
+  rom_##NAME,           \
+  MONITOR,              \
+  BTN_LABELER           \
 };
 
-#define GAMEBX(YEAR,NAME,PARENT,BIOS,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS)	\
-extern const struct GameDriver driver_##PARENT;	\
-const struct GameDriver driver_##NAME =		\
-{											\
-	__FILE__,								\
-	&driver_##PARENT,						\
-	#NAME,									\
-	system_bios_##BIOS,						\
-	FULLNAME,								\
-	#YEAR,									\
-	COMPANY,								\
-	construct_##MACHINE,					\
-	input_ports_##INPUT,					\
-	init_##INIT,							\
-	rom_##NAME,								\
-	(MONITOR)|(FLAGS)						\
+#define GAMECX(YEAR, NAME, PARENT, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, FLAGS, BTN_LABELER)  \
+extern const struct GameDriver driver_##PARENT;   \
+const struct GameDriver driver_##NAME =           \
+{                       \
+  __FILE__,             \
+  &driver_##PARENT,     \
+  #NAME,                \
+  system_bios_0,        \
+  FULLNAME,             \
+  #YEAR,                \
+  COMPANY,              \
+  construct_##MACHINE,  \
+  input_ports_##INPUT,  \
+  init_##INIT,          \
+  rom_##NAME,           \
+  (MONITOR)|(FLAGS),    \
+  BTN_LABELER           \
+};
+
+#define GAMEB(YEAR, NAME, PARENT, BIOS, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, BTN_LABELER)  \
+extern const struct GameDriver driver_##PARENT;    \
+const struct GameDriver driver_##NAME =            \
+{                       \
+  __FILE__,             \
+  &driver_##PARENT,     \
+  #NAME,                \
+  system_bios_##BIOS,   \
+  FULLNAME,             \
+  #YEAR,                \
+  COMPANY,              \
+  construct_##MACHINE,  \
+  input_ports_##INPUT,  \
+  init_##INIT,          \
+  rom_##NAME,           \
+  MONITOR,              \
+  BTN_LABELER           \
+};
+
+#define GAMEBX(YEAR, NAME, PARENT, BIOS, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, FLAGS, BTN_LABELER)  \
+extern const struct GameDriver driver_##PARENT;  \
+const struct GameDriver driver_##NAME =          \
+{                       \
+  __FILE__,             \
+  &driver_##PARENT,     \
+  #NAME,                \
+  system_bios_##BIOS,   \
+  FULLNAME,             \
+  #YEAR,                \
+  COMPANY,              \
+  construct_##MACHINE,  \
+  input_ports_##INPUT,  \
+  init_##INIT,          \
+  rom_##NAME,           \
+  (MONITOR)|(FLAGS),    \
+  BTN_LABELER           \
 };
 
 /* monitor parameters to be used with the GAME() macro */
-#define	ROT0	0
-#define	ROT90	(ORIENTATION_SWAP_XY|ORIENTATION_FLIP_X)	/* rotate clockwise 90 degrees */
-#define	ROT180	(ORIENTATION_FLIP_X|ORIENTATION_FLIP_Y)		/* rotate 180 degrees */
-#define	ROT270	(ORIENTATION_SWAP_XY|ORIENTATION_FLIP_Y)	/* rotate counter-clockwise 90 degrees */
+#define	ROT0    0
+#define	ROT90   (ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X)	/* rotate clockwise 90 degrees */
+#define	ROT180  (ORIENTATION_FLIP_X  | ORIENTATION_FLIP_Y)		/* rotate 180 degrees */
+#define	ROT270  (ORIENTATION_SWAP_XY | ORIENTATION_FLIP_Y)	/* rotate counter-clockwise 90 degrees */
 
 /* this allows to leave the INIT field empty in the GAME() macro call */
 #define init_0 0
