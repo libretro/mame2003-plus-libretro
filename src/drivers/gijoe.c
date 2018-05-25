@@ -135,12 +135,12 @@ static WRITE16_HANDLER( control2_w )
 static void gijoe_objdma(void)
 {
 	data16_t *src_head, *src_tail, *dst_head, *dst_tail;
-	void *pdummy;
-	int idummy;
+	/* void *pdummy; */
+	/* int idummy; */
 
 	src_head = spriteram16;
 	src_tail = spriteram16 + 255*8;
-	K053247_export_config(&dst_head, (struct GfxElement**)&pdummy, (void**)&pdummy, &idummy, &idummy);
+	K053247_export_config(&dst_head, 0, 0, 0, 0);
 	dst_tail = dst_head + 255*8;
 
 	for (; src_head<=src_tail; src_head+=8)
