@@ -1236,7 +1236,7 @@ int konamigx_mixer_init(int objdma)
 	if (!(gx_shdzbuf = auto_malloc(GX_ZBUFSIZE))) return(1);
 	if (!(gx_objpool = auto_malloc(sizeof(struct GX_OBJ) * (GX_MAX_OBJECTS)))) return(1);
 
-	K053247_export_config(&K053247_ram, &K053247_gfx, (void**)&K053247_callback, &K053247_dx, &K053247_dy);
+	K053247_export_config(&K053247_ram, &K053247_gfx, &K053247_callback, &K053247_dx, &K053247_dy);
 	K054338_export_config(&K054338_shdRGB);
 
 	if (objdma)
