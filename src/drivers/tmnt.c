@@ -1014,7 +1014,7 @@ static MEMORY_READ16_START( tmnt2_readmem ) /***/
 	{ 0x1c0102, 0x1c0103, ssriders_eeprom_r },
 	{ 0x1c0400, 0x1c0401, watchdog_reset16_r },
 	{ 0x1c0500, 0x1c057f, MRA16_RAM },	/* TMNT2 only (1J) unknown, mostly MCU blit offsets */
-/*	{ 0x1c0800, 0x1c0801, ssriders_protection_r },	 // protection device /*/
+/*	{ 0x1c0800, 0x1c0801, ssriders_protection_r },  protection device */
 	{ 0x5a0000, 0x5a001f, K053244_word_noA1_r },
 	{ 0x5c0600, 0x5c0603, tmnt2_sound_r },	/* K053260 */
 	{ 0x600000, 0x603fff, K052109_word_r },
@@ -1215,7 +1215,7 @@ WRITE16_HANDLER( tmnt2_1c0800_w )
 			y += sunset_104000[CellVar + 0x08];
 		cpu_writemem24bew_word(dst+0x08,y);
 #if 0
-logerror("copy command %04x sprite %08x data %08x: %04x%04x %04x%04x  modifiers %08x:%04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x\n",
+log_cb(RETRO_LOG_ERROR, LOGPRE "copy command %04x sprite %08x data %08x: %04x%04x %04x%04x  modifiers %08x:%04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x %04x%04x\n",
 	tmnt2_1c0800[0x05],
 	CellDest,CellSrc,
 	src[0], src[1], src[2], src[3],
@@ -2463,7 +2463,16 @@ static struct K053260_interface k053260_interface_nmi =
 	{ 3579545 },
 	{ REGION_SOUND1 }, /* memory region */
 	{ { MIXER(70,MIXER_PAN_LEFT), MIXER(70,MIXER_PAN_RIGHT) } },
-/*	{ sound_nmi_callback },*/
+/*	{ sound_nmi_callback }, */
+};
+
+static struct K053260_interface dtk053260_interface_nmi =
+{
+	1,
+	{ 3579545 },
+	{ REGION_SOUND1 }, /* memory region */
+	{ { MIXER(75,MIXER_PAN_LEFT), MIXER(75,MIXER_PAN_RIGHT) } },
+/*	{ sound_nmi_callback }, */
 };
 
 static struct K053260_interface k053260_interface =
@@ -2666,7 +2675,7 @@ static MACHINE_DRIVER_START( detatwin )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-	MDRV_SOUND_ADD(K053260, k053260_interface_nmi)
+	MDRV_SOUND_ADD(K053260, dtk053260_interface_nmi)
 MACHINE_DRIVER_END
 
 
@@ -2830,7 +2839,7 @@ static MACHINE_DRIVER_START( ssriders )
 	/* sound hardware */
 	MDRV_SOUND_ATTRIBUTES(SOUND_SUPPORTS_STEREO)
 	MDRV_SOUND_ADD(YM2151, ym2151_interface)
-	MDRV_SOUND_ADD(K053260, k053260_interface_nmi)
+	MDRV_SOUND_ADD(K053260, dtk053260_interface_nmi)
 MACHINE_DRIVER_END
 
 
