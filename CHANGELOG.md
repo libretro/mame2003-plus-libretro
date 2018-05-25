@@ -39,6 +39,7 @@
 * DownTown (joystick hack)
 * Dream World
 * Dyna Gears
+* Escape Kids (Asia 4 Players)
 * FixEight (bootleg)
 * Fujiyama Buster
 * Gaia: The Last Choice Of Earth
@@ -58,6 +59,7 @@
 * In Your Face
 * Joe & Mac Return
 * Knuckle Bash 2
+* Lethal Enforcers
 * Magical Drop
 * Magical Drop Plus 1
 * Metal Slug 4
@@ -211,6 +213,7 @@
 
 
 ## Games now with improved sound
+* Asterix
 * Final Fight added ost sound track (KMFDManic)
 * Mortal added ost sound track (KMFDManic)
 * nbajam added ost sound track (KMFDManic)
@@ -272,6 +275,7 @@
 * Fixed the trench vectors bug in Star Wars by reverting back to older MAME code
 * Fixed some graphical issues with Gunbird and Strikers 1945
 * reverted the RC5c68 soundcore back to the superior earlier version pre the MAME76 changes
+* Fixed sound pitch in Asterix
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color when backdrops are first loaded.
 
