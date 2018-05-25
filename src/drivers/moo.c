@@ -144,7 +144,7 @@ static void moo_objdma(int type)
 	int counter, num_inactive;
 	data16_t *src, *dst, zmask;
 
-	K053247_export_config(&dst, (struct GfxElement**)&src, (void**)&src, &counter, &counter);
+	K053247_export_config(&dst, 0, 0, 0, &counter);
 	src = spriteram16;
 	num_inactive = counter = 256;
 
