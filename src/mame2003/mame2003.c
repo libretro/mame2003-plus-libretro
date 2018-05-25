@@ -16,6 +16,7 @@
 #include "state.h"
 #include "log.h"
 #include "input.h"
+#include "inptport.h"
 #include "fileio.h"
 
 
@@ -42,6 +43,9 @@ extern int16_t      mouse_x[4];
 extern int16_t      mouse_y[4];
 extern struct       osd_create_params videoConfig;
 extern int16_t      analogjoy[4][4];
+struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
+
+static const char * (*content_aware_labeler)(int);;
 
 retro_log_printf_t                 log_cb;
 
@@ -64,6 +68,11 @@ static void init_core_options(void);
 void init_option(struct retro_variable *option, const char *key, const char *value);
 static void update_variables(bool first_time);
 static void check_system_specs(void);
+const char *sf2_btn_label(int input);
+const char *neogeo_btn_label(int input);
+const char *generic_btn_label(int input);
+const char *null_btn_labeler(int input);
+const char *button_labeler(int input);
 void retro_describe_buttons(void);
 
 /******************************************************************************
@@ -85,6 +94,7 @@ void retro_init (void)
 #endif
 
   options.use_samples = 1;
+  content_aware_labeler = &null_btn_labeler;
   check_system_specs();
 }
 
@@ -147,11 +157,8 @@ static void init_core_options(void)
   
   for(default_index = 0; default_index < (OPT_end + 1); default_index++)
   {
-    log_cb(RETRO_LOG_INFO, "default: %i    | effective: %i\n", default_index, effective_index);
     if((default_index == OPT_STV_BIOS && !is_stv) || (default_index == OPT_NEOGEO_BIOS && !is_neogeo))
-    {
       continue; /* only offer BIOS selection when it is relevant */
-    }
     
     effective_options[effective_index] = default_options[default_index];
     effective_index++;
@@ -206,7 +213,9 @@ static void update_variables(bool first_time)
       options.retropad_layout = RETROPAD_SNES;
     else
       options.retropad_layout = RETROPAD_MAME;
-    retro_describe_buttons();
+    if(!first_time)
+      retro_describe_buttons(); /* the first time, MAME's init_game() needs to be called before this so there is also    */
+                                /* retro_describe_buttons() in retro_load_game() to take care of the initial description */
   }
 
   
@@ -584,18 +593,75 @@ void retro_get_system_info(struct retro_system_info *info)
   info->block_extract = true;
 }
 
-#define BTN1 "BTN1: "
-#define BTN2 "BTN2: "
-#define BTN3 "BTN3: "
-#define BTN4 "BTN4: "
-#define BTN5 "BTN5: "
-#define BTN6 "BTN6: "
-#define BTN7 "BTN7: "
-#define BTN8 "BTN8: "
-
 static const char* control_labels[RETRO_DEVICE_ID_JOYPAD_R3 + 1]; /* RETRO_DEVICE_ID_JOYPAD_R3 is the retropad input with the highest index # */
-static const char* sf2_button_labels[6];
-static const char* neogeo_button_labels[4];
+
+
+const char *sf2_btn_label(int input)
+{
+  switch(input)
+  {
+    case IPT_BUTTON1:
+      return BTN1 "Weak Kick";
+    case IPT_BUTTON2:
+      return BTN2 "Medium Kick";
+    case IPT_BUTTON3:
+      return BTN3 "Strong Punch";
+    case IPT_BUTTON4:
+      return BTN4 "Weak Punch";
+    case IPT_BUTTON5:
+      return BTN5 "Medium Punch";
+    case IPT_BUTTON6:
+      return BTN6 "Strong Kick";
+  } 
+  return NULL;
+}
+
+const char *neogeo_btn_label(int input)
+{
+  switch(input)
+  {
+    case IPT_BUTTON1:
+      return BTN1 "Neo Geo A";
+    case IPT_BUTTON2:
+      return BTN2 "Neo Geo B";
+    case IPT_BUTTON3:
+      return BTN3 "Neo Geo C";
+    case IPT_BUTTON4:
+      return BTN4 "Neo Geo D";
+  }
+  return NULL;
+}
+
+const char *generic_btn_label(int input)
+{
+  unsigned int i = 0;
+
+  for( ; default_inputs[i].type != IPT_END; ++i)
+  {
+    struct ipd *entry = &default_inputs[i];
+    if(entry->type == input)
+    {
+      if(input >= IPT_SERVICE1 && input <= IPT_UI_EDIT_CHEAT)
+        return entry->name; /* these strings are not player-specific */
+      else /* start with the third character, trimming the initial 'P1', 'P2', etc which we don't need for libretro */
+        return &entry->name[3];
+    }
+  }
+  return NULL;
+}
+
+const char *null_btn_labeler(int input)
+{
+  return NULL;
+}
+ 
+const char *button_labeler(int input)
+{
+  if(!string_is_empty((*content_aware_labeler)(input)))
+    return (*content_aware_labeler)(input);
+  
+  return generic_btn_label(input);
+}
 
 void retro_describe_buttons(void)
 {
@@ -671,114 +737,56 @@ void retro_describe_buttons(void)
    *                                                   |
    */
 
-  sf2_button_labels[COUNT_BUTTON1] = BTN1 "Weak Kick";
-  sf2_button_labels[COUNT_BUTTON2] = BTN2 "Medium Kick";
-  sf2_button_labels[COUNT_BUTTON3] = BTN3 "Strong Punch";
-  sf2_button_labels[COUNT_BUTTON4] = BTN4 "Weak Punch";
-  sf2_button_labels[COUNT_BUTTON5] = BTN5 "Medium Punch";
-  sf2_button_labels[COUNT_BUTTON6] = BTN6 "Strong Kick";
-  
-  neogeo_button_labels[COUNT_BUTTON1] = BTN1 "Neo Geo A";
-  neogeo_button_labels[COUNT_BUTTON2] = BTN2 "Neo Geo B";
-  neogeo_button_labels[COUNT_BUTTON3] = BTN3 "Neo Geo C";
-  neogeo_button_labels[COUNT_BUTTON4] = BTN4 "Neo Geo D";
-
+   
   /************  BASELINE "CLASSIC" MAPPING  ************/   
-  control_labels[RETRO_DEVICE_ID_JOYPAD_LEFT]    =  "Joystick Left";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_RIGHT]   =  "Joystick Right";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_UP]      =  "Joystick Up";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_DOWN]    =  "Joystick Down";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_B]       =  "Button 1";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_Y]       =  "Button 3";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_X]       =  "Button 4";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_A]       =  "Button 2";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_L]       =  "Button 5";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_R]       =  "Button 6";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_L2]      =  "Button 7";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_R2]      =  "Button 8";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_L3]      =  "Button 9";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_R3]      =  "Button 10";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_SELECT]  =  "Insert Coin";
-  control_labels[RETRO_DEVICE_ID_JOYPAD_START]   =  "Start";
   
-  /************  CONTENT-SPECIFIC OVERLAYS FOR CLASSIC ************/ 
-  if(options.retropad_layout == RETROPAD_MAME)
-  {
-    if(is_sf2_layout)  /* overlay sf2-specific names */
-    {
-      control_labels[RETRO_DEVICE_ID_JOYPAD_B]     =  sf2_button_labels[COUNT_BUTTON1];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     =  sf2_button_labels[COUNT_BUTTON3];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_X]     =  sf2_button_labels[COUNT_BUTTON4];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_A]     =  sf2_button_labels[COUNT_BUTTON2];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_L]     =  sf2_button_labels[COUNT_BUTTON5];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_R]     =  sf2_button_labels[COUNT_BUTTON6];
-    }
-    else if(is_neogeo)
-    {
-      control_labels[RETRO_DEVICE_ID_JOYPAD_B]     =  neogeo_button_labels[COUNT_BUTTON1];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     =  neogeo_button_labels[COUNT_BUTTON3];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_X]     =  neogeo_button_labels[COUNT_BUTTON4];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_A]     =  neogeo_button_labels[COUNT_BUTTON2];
-    }
-  }
+  log_cb(RETRO_LOG_ERROR, "\nhere 1\n");
+  control_labels[RETRO_DEVICE_ID_JOYPAD_LEFT]   = button_labeler(IPT_JOYSTICK_LEFT);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_RIGHT]  = button_labeler(IPT_JOYSTICK_RIGHT);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_UP]     = button_labeler(IPT_JOYSTICK_UP);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_DOWN]   = button_labeler(IPT_JOYSTICK_DOWN);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_B]      = button_labeler(IPT_BUTTON1);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_Y]      = button_labeler(IPT_BUTTON3);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_X]      = button_labeler(IPT_BUTTON4);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_A]      = button_labeler(IPT_BUTTON2);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_L]      = button_labeler(IPT_BUTTON5);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_R]      = button_labeler(IPT_BUTTON6);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_L2]     = button_labeler(IPT_BUTTON7);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_R2]     = button_labeler(IPT_BUTTON8);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_L3]     = button_labeler(IPT_BUTTON9);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_R3]     = button_labeler(IPT_BUTTON10);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_SELECT] = button_labeler(IPT_COIN1);  /* MAME uses distinct strings for each player input, while */
+  control_labels[RETRO_DEVICE_ID_JOYPAD_START]  = button_labeler(IPT_START1); /* libretro uses a unified strings across players and adds their */
+                                                                              /* index # dynamically. We grab the IPT_START1 & IPT_COIN1 */
+                                                                              /* labels from MAME and then make them generic for libretro. */
+  
+
+    log_cb(RETRO_LOG_ERROR, "\nhere 2\n");
 
   /************  "MODERN" MAPPING OVERLAY  ************/ 
   if(options.retropad_layout == RETROPAD_MODERN)
   {
-    control_labels[RETRO_DEVICE_ID_JOYPAD_B]     = "Button 4";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     = "Button 1";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_X]     = "Button 2";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_A]     = "Button 5";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_L]     = "Button 7";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_R]     = "Button 3";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_L2]    = "Button 8";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_R2]    = "Button 6";
-    
-    if(is_sf2_layout) /* overlay sf2-specific names */
-    {
-      control_labels[RETRO_DEVICE_ID_JOYPAD_B]   = sf2_button_labels[COUNT_BUTTON4];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]   = sf2_button_labels[COUNT_BUTTON1];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_X]   = sf2_button_labels[COUNT_BUTTON2];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_A]   = sf2_button_labels[COUNT_BUTTON5];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_L]   = sf2_button_labels[COUNT_BUTTON6];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_R]   = sf2_button_labels[COUNT_BUTTON3];
-    }
-    else if(is_neogeo)
-    {
-      control_labels[RETRO_DEVICE_ID_JOYPAD_B]   = neogeo_button_labels[COUNT_BUTTON4];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]   = neogeo_button_labels[COUNT_BUTTON1];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_X]   = neogeo_button_labels[COUNT_BUTTON2];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_R]   = neogeo_button_labels[COUNT_BUTTON3];
-    }
+    control_labels[RETRO_DEVICE_ID_JOYPAD_B]     = button_labeler(IPT_BUTTON4);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     = button_labeler(IPT_BUTTON1);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_X]     = button_labeler(IPT_BUTTON2);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_A]     = button_labeler(IPT_BUTTON5);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_L]     = button_labeler(IPT_BUTTON7);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_R]     = button_labeler(IPT_BUTTON3);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_L2]    = button_labeler(IPT_BUTTON8);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_R2]    = button_labeler(IPT_BUTTON6);
   }
   
   /************  "MODERN" MAPPING OVERLAY  ************/
   if(options.retropad_layout == RETROPAD_SNES)
   {
-    control_labels[RETRO_DEVICE_ID_JOYPAD_B]    = "Button 4";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]    = "Button 1";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_X]    = "Button 2";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_A]    = "Button 5";
-    control_labels[RETRO_DEVICE_ID_JOYPAD_L]    = "Button 3";
-
-    if(is_sf2_layout) /* overlay sf2-specific names */
-    {
-      control_labels[RETRO_DEVICE_ID_JOYPAD_B]  = sf2_button_labels[COUNT_BUTTON4];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]  = sf2_button_labels[COUNT_BUTTON1];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_X]  = sf2_button_labels[COUNT_BUTTON2];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_A]  = sf2_button_labels[COUNT_BUTTON4];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_L]  = sf2_button_labels[COUNT_BUTTON3];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_R]  = sf2_button_labels[COUNT_BUTTON6];
-    }
-    else if(is_neogeo)
-    {
-      control_labels[RETRO_DEVICE_ID_JOYPAD_B]  = neogeo_button_labels[COUNT_BUTTON4];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_Y]  = neogeo_button_labels[COUNT_BUTTON1];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_X]  = neogeo_button_labels[COUNT_BUTTON2];
-      control_labels[RETRO_DEVICE_ID_JOYPAD_L]  = neogeo_button_labels[COUNT_BUTTON3];
-    }
+    control_labels[RETRO_DEVICE_ID_JOYPAD_B]    = button_labeler(IPT_BUTTON4);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     = button_labeler(IPT_BUTTON1);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_X]    = button_labeler(IPT_BUTTON2);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_A]    = button_labeler(IPT_BUTTON5);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_L]    = button_labeler(IPT_BUTTON3);
   }
-  
+   log_cb(RETRO_LOG_ERROR, "\nhere 3\n");
+ 
 
 #define describe_buttons(INDEX) \
 { INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   control_labels[RETRO_DEVICE_ID_JOYPAD_LEFT]   },\
@@ -851,6 +859,7 @@ bool retro_load_game(const struct retro_game_info *game)
       ||  (game_driver->clone_of && !string_is_empty(game_driver->clone_of->name) && (strcmp(game_driver->clone_of->name, "sf2") == 0)) )
       {
         is_sf2_layout = true; /* are there other games with this layout? */
+        content_aware_labeler = &sf2_btn_label;
         log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as Street Fighter 2 or a clone.\n");
       }
 
@@ -872,6 +881,7 @@ bool retro_load_game(const struct retro_game_info *game)
           if(strcmp(ancestor_name, "neogeo") == 0)
           {
             is_neogeo = true;
+            content_aware_labeler = &neogeo_btn_label;
             log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a Neo Geo game.\n");
           }
           else if(strcmp(ancestor_name, "stvbios") == 0)
@@ -929,14 +939,21 @@ bool retro_load_game(const struct retro_game_info *game)
 
   init_core_options();
   update_variables(true);
-  retro_describe_buttons();
 
   if(is_neogeo)
     options.bios = options.neogeo_bios;
   else if(is_stv)
     options.bios = options.stv_bios;
 
-  return run_game(driverIndex) == 0; /* Boot the emulator with run_game in mame.c */
+  if(!init_game(driverIndex))
+    return false;
+  
+  retro_describe_buttons(); /* needs to be called after init_game() in order to use MAME button label strings */
+
+  if(!run_game(driverIndex))
+    return false;
+  
+  return true;
 }
 
 void retro_reset (void)
@@ -1415,10 +1432,11 @@ void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode a
 void osd_customize_inputport_defaults(struct ipd *defaults)
 {
   unsigned int i = 0;
+  default_inputs = defaults;
 
-  for( ; defaults[i].type != IPT_END; ++i)
+  for( ; default_inputs[i].type != IPT_END; ++i)
   {
-    struct ipd *entry = &defaults[i];
+    struct ipd *entry = &default_inputs[i];
 
     if(options.dual_joysticks)
     {

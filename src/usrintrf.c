@@ -15,6 +15,7 @@
 #include "ui_text.h"
 #include "fileio.h"
 #include "info.h"
+#include "log.h"
 #include <libretro.h>
 #include <string/stdstring.h>
 
@@ -24,7 +25,6 @@ static char message_buffer[MAX_MESSAGE_LENGTH];
 static char messagetext[MAX_MESSAGE_LENGTH];
 static int  messagecounter;
 
-extern retro_log_printf_t log_cb; 
 
 /***************************************************************************
 
