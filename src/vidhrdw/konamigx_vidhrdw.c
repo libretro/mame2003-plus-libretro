@@ -32,27 +32,31 @@ static void get_gx_psac_tile_info(int tile_index)
 	SET_TILE_INFO(0, tileno, colour, TILE_FLIPYX(flipx))
 }
 
+/* Soccer Superstars (tile and flip bits now TRUSTED) */
 static void get_gx_psac3_tile_info(int tile_index)
 {
-	int tileno, colour;
+	int tileno, colour, flip;
 	unsigned char *tmap = memory_region(REGION_GFX4);
 
-	tileno = tmap[tile_index*2] | ((tmap[(tile_index*2)+1] & 0x3f)<<8);
-	colour = (psac_colorbase << 4);
+	tileno = tmap[tile_index*2] | ((tmap[(tile_index*2)+1] & 0x0f)<<8);
+	colour = (psac_colorbase << 8);
 
-	SET_TILE_INFO(0, tileno, colour, 0)
+	flip = 0;
+	if (tmap[(tile_index*2)+1] & 0x20) flip |= TILE_FLIPX;
+	if (tmap[(tile_index*2)+1] & 0x10) flip |= TILE_FLIPY;
+
+	SET_TILE_INFO(0, tileno, colour, flip)
 }
 
 static void get_gx_psac1a_tile_info(int tile_index)
 {
 	int tileno, colour, flip;
-	data8_t *map = (data8_t *)&gx_psacram[tile_index*8];
+	data8_t *map = (data8_t *)&gx_psacram[tile_index*2];	/* *8 / 4 (gx_psacram is data32_t) */
 
-	tileno = map[1]<<8 | map[0];
+	/* this should be &0x7f for opengolf, except that makes the tilemaps unrecognizable.  huh? */
+	tileno = (map[1]&0x3f)<<8 | map[0];
 
-/*	if (tileno) log_cb(RETRO_LOG_ERROR, LOGPRE "1a map: %x\n", tileno);*/
-
-	colour = (psac_colorbase << 4);
+	colour = 0; /* (psac_colorbase << 4); */
 
 	flip = 0;
 	if (map[7] & 0x80) flip |= TILE_FLIPX;
@@ -64,13 +68,11 @@ static void get_gx_psac1a_tile_info(int tile_index)
 static void get_gx_psac1b_tile_info(int tile_index)
 {
 	int tileno, colour, flip;
-	data8_t *map = (data8_t *)&gx_psacram[tile_index*8];
+	data8_t *map = (data8_t *)&gx_psacram[tile_index*2];
 
-	tileno = map[5]<<8 | map[4];
+	tileno = (map[5]&0x3f)<<8 | map[4];
 
-/*	if (tileno) log_cb(RETRO_LOG_ERROR, LOGPRE "1b map: %x\n", tileno);*/
-
-	colour = (psac_colorbase << 4);
+	colour = 0; /* (psac_colorbase << 4); */
 
 	flip = 0;
 	if (map[7] & 0x20) flip |= TILE_FLIPX;
@@ -188,7 +190,7 @@ VIDEO_START(konamigx_5bpp)
 	else
 		game_tile_callback = konamigx_type2_tile_callback;
 
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -230,12 +232,12 @@ VIDEO_START(konamigx_5bpp)
 
 VIDEO_START(winspike)
 {
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_8, 0, NULL, konamigx_alpha_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_8, 0, NULL, konamigx_alpha_tile_callback, 0))
 	{
 		return 1;
 	}
 
-	if (K055673_vh_start(REGION_GFX2, K055673_LAYOUT_LE2, -42, -23, konamigx_le2_sprite_callback))
+	if (K055673_vh_start(REGION_GFX2, K055673_LAYOUT_LE2, -53, -23, konamigx_type2_sprite_callback))
 	{
 		return 1;
 	}
@@ -247,7 +249,7 @@ VIDEO_START(winspike)
 
 VIDEO_START(dragoonj)
 {
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 1, NULL, konamigx_type2_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 1, NULL, konamigx_type2_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -269,7 +271,7 @@ VIDEO_START(dragoonj)
 
 VIDEO_START(le2)
 {
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_8, 1, NULL, konamigx_type2_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_8, 1, NULL, konamigx_type2_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -289,7 +291,7 @@ VIDEO_START(le2)
 
 VIDEO_START(konamigx_6bpp)
 {
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_6, 0, NULL, konamigx_type2_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_6, 0, NULL, konamigx_type2_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -307,7 +309,7 @@ VIDEO_START(konamigx_6bpp)
 
 VIDEO_START(konamigx_type3)
 {
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_6, 0, NULL, konamigx_type2_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_6, 0, NULL, konamigx_type2_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -317,7 +319,7 @@ VIDEO_START(konamigx_type3)
 	gx_psac_tilemap = tilemap_create(get_gx_psac3_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 16, 16, 256, 1024);
 	gx_rozenable = 1;
 
-	K053936_wraparound_enable(0, 0);
+	K053936_wraparound_enable(0, 1);
 	K053936GP_set_offset(0, 0, 0);
 
 	return 0;
@@ -325,7 +327,7 @@ VIDEO_START(konamigx_type3)
 
 VIDEO_START(konamigx_type4)
 {
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_8, 0, NULL, konamigx_type2_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_8, 0, NULL, konamigx_type2_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -343,7 +345,7 @@ VIDEO_START(konamigx_type4)
 
 VIDEO_START(konamigx_6bpp_2)
 {
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_6, 1, NULL, konamigx_type2_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_6, 1, NULL, konamigx_type2_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -367,7 +369,7 @@ VIDEO_START(konamigx_6bpp_2)
 
 VIDEO_START(opengolf)
 {
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, konamigx_type2_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, konamigx_type2_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -396,7 +398,7 @@ VIDEO_START(opengolf)
 
 VIDEO_START(racinfrc)
 {
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_6, 0, NULL, konamigx_type2_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_6, 0, NULL, konamigx_type2_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -425,7 +427,7 @@ VIDEO_START(racinfrc)
 
 VIDEO_UPDATE(konamigx)
 {
-	int i, newbank, newbase, dirty, unchained, blendmode;
+	int i, newbank, newbase, dirty, unchained;
 
 	/* if any banks are different from last render, we need to flush the planes */
 	for (dirty = 0, i = 0; i < 8; i++)
@@ -475,45 +477,15 @@ VIDEO_UPDATE(konamigx)
 
 	if (dirty) K056832_MarkAllTilemapsDirty();
 
-	if (konamigx_cfgport >= 0)
-	{
-		/* background detail tuning*/
-		switch (readinputport(konamigx_cfgport))
-		{
-			/* Low : disable linescroll and all blend effects*/
-			case 0 : blendmode = 0x0000f555; break;
-
-			/* Med : only disable linescroll which is the most costly*/
-			case 1 : blendmode = 0x0000f000; break;
-
-			/* High: enable all effects*/
-			default: blendmode = 0;
-		}
-
-		/* character detail tuning*/
-		switch (readinputport(konamigx_cfgport+1))
-		{
-			/* Low : disable shadows and turn off depth buffers*/
-			case 0 : blendmode |= GXMIX_NOSHADOW + GXMIX_NOZBUF; break;
-
-			/* Med : only disable shadows*/
-			case 1 : blendmode |= GXMIX_NOSHADOW; break;
-
-			/* High: enable all shadows and depth buffers*/
-			default: blendmode |= 0;
-		}
-	}
-	else blendmode = 0;
-
 	if (gx_rozenable)
-		konamigx_mixer(bitmap, cliprect, 0, 0, gx_psac_tilemap, GXSUB_8BPP, blendmode);
+		konamigx_mixer(bitmap, cliprect, 0, 0, gx_psac_tilemap, GXSUB_8BPP, 0);
 	else
-		konamigx_mixer(bitmap, cliprect, 0, 0, 0, 0, blendmode);
+		konamigx_mixer(bitmap, cliprect, 0, 0, 0, 0, 0);
 
 	if( gx_invertlayersBC )
 	{
-		draw_crosshair( bitmap, readinputport( 9)*287/0xff+24, readinputport(10)*223/0xff+16, cliprect );
-		draw_crosshair( bitmap, readinputport(11)*287/0xff+24, readinputport(12)*223/0xff+16, cliprect );
+		draw_crosshair( bitmap, readinputport( 9)*287/0xff+24, readinputport(10)*223/0xff+16, cliprect, 0 );
+		draw_crosshair( bitmap, readinputport(11)*287/0xff+24, readinputport(12)*223/0xff+16, cliprect, 1 );
 	}
 }
 
