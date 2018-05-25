@@ -104,6 +104,15 @@ enum { IPT_END=1,IPT_PORT,
 	__ipt_max
 };
 
+#define BTN1 "BTN1: "
+#define BTN2 "BTN2: "
+#define BTN3 "BTN3: "
+#define BTN4 "BTN4: "
+#define BTN5 "BTN5: "
+#define BTN6 "BTN6: "
+#define BTN7 "BTN7: "
+#define BTN8 "BTN8: "
+
 #define IPT_UNUSED     IPF_UNUSED
 #define IPT_SPECIAL    IPT_UNUSED	/* special meaning handled by custom functions */
 

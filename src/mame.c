@@ -8,10 +8,11 @@
 
     libretro manages:
         - platform-specific init
-        - calls run_game() from the function retro_load_game()
+        - calls init_game() from retro_load_game()
+        - calls run_game() from retro_load_game
         
 	mame.c manages:
-		run_game()
+		init_game()
 			- constructs the machine driver
 			- calls init_game_options()
 
@@ -218,7 +219,7 @@ static int validitychecks(void);
 
 static int vh_open(void);
 static void vh_close(void);
-static int init_game_options(void);
+static void init_game_options(void);
 static int decode_graphics(const struct GfxDecodeInfo *gfxdecodeinfo);
 static void compute_aspect_ratio(const struct InternalMachineDriver *drv, int *aspect_x, int *aspect_y);
 static void scale_vectorgames(int gfx_width, int gfx_height, int *width, int *height);
@@ -255,20 +256,14 @@ static INLINE void bail_and_print(const char *message)
 
 ***************************************************************************/
 
-/*-------------------------------------------------
-	run_game - run the given game in a session
--------------------------------------------------*/
-
-int run_game(int game)
+bool init_game(int game)
 {
-	int err = 1;
-
 	begin_resource_tracking();
 
 #ifdef MAME_DEBUG
 	/* validity checks -- debug build only */
 	if (validitychecks())
-		return 1;
+		return false;
 #endif
 
 	/* first give the machine a good cleaning */
@@ -279,9 +274,7 @@ int run_game(int game)
 	expand_machine_driver(gamedrv->drv, &internal_drv);
 	Machine->drv = &internal_drv;
 
-	/* initialize the game options */
-	if (init_game_options())
-		return 1;
+	init_game_options();
 
 	/* here's the meat of it all */
 	bailing = 0;
@@ -291,25 +284,34 @@ int run_game(int game)
   /* finish setting up our local machine */
   if (init_machine())
       bail_and_print("Unable to initialize machine emulation");
+    
+  return true;
+}
+    
+
+/*-------------------------------------------------
+	run_game - run the given game in a session
+-------------------------------------------------*/
+
+bool run_game(int game)
+{
+  /* then run it */
+  if (run_machine())
+      bail_and_print("Unable to start machine emulation");
   else
   {
-      /* then run it */
-      if (run_machine())
-          bail_and_print("Unable to start machine emulation");
-      else
-      {
-          game_loaded = 1;
-          return 0;
-      }
-
-      /* shutdown the local machine */
-      shutdown_machine();
+      log_cb(RETRO_LOG_ERROR, "\ngame loaded = 1\n");
+      game_loaded = 1;
+      return true;
   }
+
+  /* shutdown the local machine */
+  shutdown_machine();
 
   /* stop tracking resources and exit the OSD layer */
   end_resource_tracking();
     
-	return err;
+	return false;
 }
 
 void run_game_done(void)
@@ -826,7 +828,7 @@ static void compute_aspect_ratio(const struct InternalMachineDriver *drv, int *a
 	game options
 -------------------------------------------------*/
 
-static int init_game_options(void)
+static void init_game_options(void)
 {
   /* copy some settings into easier-to-handle variables */
   record	   = options.record;
@@ -869,9 +871,7 @@ static int init_game_options(void)
   if(strcasecmp(Machine->gamedrv->name, "diehard") == 0) {
       options.bios = strdup("us");
   }
-
-  return 0;
-  }
+}
 
 
 
