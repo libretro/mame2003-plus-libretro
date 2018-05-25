@@ -48,7 +48,7 @@ VIDEO_START( surpratk )
 
 	if (K052109_vh_start(REGION_GFX1,NORMAL_PLANE_ORDER,tile_callback))
 		return 1;
-	if (K053245_vh_start(REGION_GFX2,NORMAL_PLANE_ORDER,sprite_callback))
+	if (K053245_vh_start(0,REGION_GFX2,NORMAL_PLANE_ORDER,sprite_callback))
 		return 1;
 
 	return 0;
@@ -98,5 +98,5 @@ VIDEO_UPDATE( surpratk )
 	tilemap_draw(bitmap,cliprect,K052109_tilemap[layer[1]],0,2);
 	tilemap_draw(bitmap,cliprect,K052109_tilemap[layer[2]],0,4);
 
-	K053245_sprites_draw(bitmap,cliprect);
+	K053245_sprites_draw(0,bitmap,cliprect);
 }
