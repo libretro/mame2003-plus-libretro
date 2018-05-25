@@ -119,7 +119,7 @@ VIDEO_START(gaiapols)
 
 	gametype = 0;
 
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game4bpp_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game4bpp_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -165,7 +165,7 @@ VIDEO_START(dadandrn)
 
 	gametype = 1;
 
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game5bpp_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game5bpp_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -200,7 +200,7 @@ VIDEO_START(mystwarr)
 
 	gametype = 0;
 
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, mystwarr_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, mystwarr_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -232,7 +232,7 @@ VIDEO_START(metamrph)
 	K054338_vh_start();
 	K053250_vh_start(1, &rgn_250);
 
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game4bpp_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game4bpp_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -262,7 +262,7 @@ VIDEO_START(viostorm)
 	K055555_vh_start();
 	K054338_vh_start();
 
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game4bpp_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game4bpp_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -289,7 +289,7 @@ VIDEO_START(martchmp)
 	K055555_vh_start();
 	K054338_vh_start();
 
-	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game5bpp_tile_callback))
+	if (K056832_vh_start(REGION_GFX1, K056832_BPP_5, 0, NULL, game5bpp_tile_callback, 0))
 	{
 		return 1;
 	}
@@ -476,7 +476,7 @@ READ16_HANDLER(ddd_053936_tilerom_2_r)
 
 VIDEO_UPDATE(dadandrn) /* and gaiapols */
 {
-	int i, newbase, dirty, rozmode, blendmode;
+	int i, newbase, dirty, rozmode;
 
 	if (gametype == 0)
 	{
@@ -528,31 +528,5 @@ VIDEO_UPDATE(dadandrn) /* and gaiapols */
 		#endif
 	}
 
-	/* background detail tuning*/
-	switch (readinputport(6))
-	{
-		/* Low : disable alpha on layer A to D, simulate translucency on sub layers*/
-		case 0 : blendmode = 0x0a55; break;
-
-		/* Med : emulate alpha on layer A to D, simulate translucency on sub layers*/
-		case 1 : blendmode = 0x0a00; break;
-
-		/* High: emulate alpha blending on all layers*/
-		default: blendmode = 0;
-	}
-
-	/* character detail tuning*/
-	switch (readinputport(7))
-	{
-		/* Low : disable shadows and turn off depth buffers*/
-		case 0 : blendmode |= GXMIX_NOSHADOW + GXMIX_NOZBUF; break;
-
-		/* Med : only disable shadows*/
-		case 1 : blendmode |= GXMIX_NOSHADOW; break;
-
-		/* High: enable all shadows and depth buffers*/
-		default: blendmode |= 0;
-	}
-
-	konamigx_mixer(bitmap, cliprect, (roz_enable) ? ult_936_tilemap : 0, rozmode, 0, 0, blendmode);
+	konamigx_mixer(bitmap, cliprect, (roz_enable) ? ult_936_tilemap : 0, rozmode, 0, 0, 0);
 }
