@@ -619,6 +619,7 @@ SOURCES_C += $(CORE_DIR)/drivers/pacman.c \
 				 $(CORE_DIR)/vidhrdw/rungun_vidhrdw.c $(CORE_DIR)/drivers/rungun.c \
 				 $(CORE_DIR)/vidhrdw/dbz2_vidhrdw.c $(CORE_DIR)/drivers/dbz2.c \
 				 $(CORE_DIR)/vidhrdw/bishi_vidhrdw.c $(CORE_DIR)/drivers/bishi.c \
+				 $(CORE_DIR)/vidhrdw/lethal_vidhrdw.c $(CORE_DIR)/drivers/lethal.c \
 				 $(CORE_DIR)/machine/konamigx_machine.c $(CORE_DIR)/vidhrdw/konamigx_vidhrdw.c $(CORE_DIR)/drivers/konamigx.c \
 				 $(CORE_DIR)/vidhrdw/djmain_vidhrdw.c $(CORE_DIR)/drivers/djmain.c \
 				 $(CORE_DIR)/vidhrdw/plygonet_vidhrdw.c $(CORE_DIR)/drivers/plygonet.c \
