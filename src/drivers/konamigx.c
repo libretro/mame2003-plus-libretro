@@ -1,6 +1,3 @@
-#define GX_DEBUG     0
-#define GX_SKIPIDLE  1
-
 /**************************************************************************
  *
  * konamigx.c - Konami System GX
@@ -36,7 +33,7 @@
  * d00000: 054157 ROM readback for memory test
  * d20000: sprite RAM (4k)
  * d40000: 054157/056832 tilemap generator    (VACSET)
- * d44000: tile bank selectors		          (VSCCS)
+ * d44000: tile bank selectors	              (VSCCS)
  * d48000: 053246/055673 sprite generator     (OBJSET1)
  * d4a000: more readback for sprite generator (OBJSET2)
  * d4c000: CCU1 registers                     (CCUS1)
@@ -97,13 +94,16 @@
  *
  */
 
+#define GX_DEBUG     0
+#define GX_SKIPIDLE  1
+
 #include "driver.h"
 #include "state.h"
 
 #include "vidhrdw/generic.h"
 #include "vidhrdw/konamiic.h"
 #include "cpu/m68000/m68000.h"
-#include "cpu/z80/z80.h"
+/* #include "cpu/z80/z80.h" */
 #include "machine/eeprom.h"
 #include "sound/k054539.h"
 #include "machine/konamigx.h"
@@ -139,8 +139,6 @@ static data16_t *gx_sndram;
 static int gx_rdport1_3, gx_syncen;
 
 static void *dmadelay_timer;
-
-
 
 /**********************************************************************************/
 /*
@@ -204,11 +202,6 @@ static struct sprite_entry {
 	int pri;
 	unsigned int adr;
 } sprites[0x100];
-
-static int pri_comp(const void *s1, const void *s2)
-{
-	return ((struct sprite_entry *)s1)->pri - ((struct sprite_entry *)s2)->pri;
-}
 
 static void generate_sprites(UINT32 src, UINT32 spr, int count)
 {
@@ -648,20 +641,6 @@ static WRITE32_HANDLER( ccu_w )
 	}
 }
 
-
-static int konamigx_irq_callback(int irqline)
-{
-	switch (irqline)
-	{
-		/* IRQ 3 ACK (object DMA end)*/
-		case 2: gx_rdport1_3 |= 0x80; break;
-
-		/* IRQ 4 ACK (ESC)*/
-		case 3: gx_rdport1_3 |= 0x8; break;
-	}
-
-	return(0); /* DUMMY: really don't know how to return appropriate values as in irq_line_vector[0][irqline]*/
-}
 
 /*
 	GX object DMA timings:
@@ -1421,13 +1400,11 @@ static struct GfxLayout bglayout_8bpp =
 {
 	16,16,
 	RGN_FRAC(1,1),
-	4,
-	{ 0, 1, 2, 3 },
-	{ 1*4, 0*4, 3*4, 2*4, 5*4, 4*4, 7*4, 6*4,
-			9*4, 8*4, 11*4, 10*4, 13*4, 12*4, 15*4, 14*4 },
-	{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64,
-			8*64, 9*64, 10*64, 11*64, 12*64, 13*64, 14*64, 15*64, },
-	16*64
+	8,
+	{ 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8, 8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8 },
+	{ 0*128, 1*128, 2*128, 3*128, 4*128, 5*128, 6*128, 7*128, 8*128, 9*128, 10*128, 11*128, 12*128, 13*128, 14*128, 15*128 },
+	16*128
 };
 
 struct GfxLayout t1_charlayout6 =
@@ -1562,6 +1539,7 @@ static MACHINE_DRIVER_START( gxtype3 )
 
 	MDRV_VIDEO_START(konamigx_type3)
 	MDRV_PALETTE_LENGTH(16384)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(0, 64*8-1, 0, 32*8-1)
 	MDRV_GFXDECODE(gfxdecodeinfo_type34)
 MACHINE_DRIVER_END
@@ -1573,6 +1551,7 @@ static MACHINE_DRIVER_START( gxtype4 )
 	MDRV_CPU_MEMORY(type4readmem, type4writemem)
 	MDRV_CPU_VBLANK_INT(konamigx_hbinterrupt, 262)
 
+	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_VISIBLE_AREA(0, 64*8-1, 0, 32*8-1)
 	MDRV_PALETTE_LENGTH(16384)
 	MDRV_GFXDECODE(gfxdecodeinfo_type34)
@@ -1701,18 +1680,6 @@ INPUT_PORTS_START( konamigx )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Background Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Character Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
 INPUT_PORTS_END
 
 
@@ -1836,18 +1803,6 @@ INPUT_PORTS_START( racinfrc )
 
 	PORT_START
 	PORT_ANALOGX( 0xff, 0x00, IPT_PEDAL, 35, 5, 0, 0x68, KEYCODE_LCONTROL, IP_JOY_DEFAULT, IP_KEY_DEFAULT, IP_JOY_DEFAULT )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Background Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Character Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( le2 )
@@ -1961,19 +1916,8 @@ INPUT_PORTS_START( le2 )
 
 	PORT_START
 	PORT_ANALOG( 0xff, 0x00, IPT_LIGHTGUN_Y | IPF_PLAYER2, 35, 15, 0, 0xff )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Background Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Character Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
 INPUT_PORTS_END
+
 
 INPUT_PORTS_START( gokuparo )
 	PORT_START
@@ -2061,18 +2005,6 @@ INPUT_PORTS_START( gokuparo )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Background Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Character Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
 INPUT_PORTS_END
 
 INPUT_PORTS_START( puzldama )
@@ -2161,17 +2093,6 @@ INPUT_PORTS_START( puzldama )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Background Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Character Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
 	PORT_DIPSETTING(    0x02, "High" )
 INPUT_PORTS_END
 
@@ -2261,17 +2182,6 @@ INPUT_PORTS_START( dragoonj )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Background Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Character Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
 	PORT_DIPSETTING(    0x02, "High" )
 INPUT_PORTS_END
 
@@ -2361,17 +2271,6 @@ INPUT_PORTS_START( type3 )
 	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Background Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
-	PORT_DIPSETTING(    0x02, "High" )
-
-	PORT_START
-	PORT_DIPNAME( 0x03, 0x02, "Character Detail" )
-	PORT_DIPSETTING(    0x00, "Low" )
-	PORT_DIPSETTING(    0x01, "Med" )
 	PORT_DIPSETTING(    0x02, "High" )
 INPUT_PORTS_END
 
@@ -2801,9 +2700,10 @@ ROM_START( winspike )
 	ROM_LOAD16_BYTE("705a09.7c", 0x000001, 128*1024, CRC(24e58845) SHA1(a01caced5bad9d98a3f33d72ca5eb9096c45e4ba) )
 
 	/* tiles: length of 1 meg each is TRUSTED by the internal checksum code */
+	/* do NOT change these to the 4 meg dumps again, those are WRONG!!!!!!! */
 	ROM_REGION( 0x800000, REGION_GFX1, ROMREGION_ERASE00 )
-    ROM_LOAD16_BYTE( "705a19", 0x000000, 0x400000, CRC(16986d64) SHA1(a9ad25607375c1c0e366bf268bad9ca64559586d) )
-	ROM_LOAD16_BYTE( "705a18", 0x000001, 0x400000, CRC(5055ae43) SHA1(24283f5d2ba24061dacd7c88347e051a7adbc85f) )
+    ROM_LOAD16_BYTE( "705a19.17h", 0x000000, 0x100000, CRC(bab84b30) SHA1(8522a0dc5e37524f51d632e9d975e949a14c0dc3) )
+	ROM_LOAD16_BYTE( "705a18.22h", 0x000001, 0x100000, CRC(eb97fb5f) SHA1(13de0ad060fd6f1312fa10edde1fef6481e8df64) )
 
 	/* sprites */
 	ROM_REGION( 0x1000000, REGION_GFX2, ROMREGION_ERASE00 )
@@ -3218,7 +3118,6 @@ static DRIVER_INIT(konamigx)
 #define BPP6  2
 #define BPP66 3
 
-	int i;
 	int readback = 0;
 
 	konamigx_cfgport = -1;
@@ -3251,6 +3150,9 @@ static DRIVER_INIT(konamigx)
 		#if GX_SKIPIDLE
 			ADD_SKIPPER32(0x2010f0, 0xc00000, 0xfe, 0x13f, -1, 0xff)
 		#endif
+
+		install_mem_read32_handler(0, 0xd44000, 0xd44003,  le2_gun_H_r );
+		install_mem_read32_handler(0, 0xd44004, 0xd44007,  le2_gun_V_r );
 
 		snd020_hack = 1;
 		konamigx_cfgport = 13;
@@ -3289,6 +3191,7 @@ static DRIVER_INIT(konamigx)
 
 	else if (!strcmp(Machine->gamedrv->name, "tkmmpzdm"))
 	{
+		int i;
 		data32_t *rom = (data32_t*)memory_region(REGION_CPU1);
 
 		/* The display is initialized after POST but the copyright screen disabled*/
@@ -3313,10 +3216,7 @@ static DRIVER_INIT(konamigx)
 
 	else if (!strcmp(Machine->gamedrv->name, "dragoonj"))
 	{
-		#if GX_SKIPIDLE
-			ADD_SKIPPER32(0x202f48, 0xc00000, 0x1020, 0x1020, 0xff00, 0x0000ff00)
-		#endif
-
+		int i;
 		esc_cb = dragoonj_esc;
 		konamigx_cfgport = 7;
 
@@ -3438,7 +3338,7 @@ GAMEX(1994, konamigx, 0, konamigx, konamigx, konamigx, ROT0, "Konami", "System G
 /* needs the 53936 to be playable */
 GAMEX( 1994, racinfrc, konamigx, racinfrc, racinfrc, konamigx, ROT0, "Konami", "Racin' Force (ver UAB)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
 GAMEX( 1994, opengolf, konamigx, opengolf,  racinfrc, konamigx, ROT0, "Konami", "Konami's Open Golf Championship (ver EAD)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
-GAMEX( 1994, ggreats2, opengolf, opengolf,  racinfrc, konamigx, ROT0, "Konami", "Golfing Greats 2 (ver JAC)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1994, ggreats2, opengolf, opengolf,  racinfrc, konamigx, ROT0, "Konami", "Golfing Greats 2 (ver JAC)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 
 
 /* Type 2: totally stock, sometimes with funny protection chips on the ROM board */
@@ -3450,7 +3350,7 @@ GAMEX( 1994, puzldama, konamigx, konamigx, puzldama, konamigx, ROT0, "Konami", "
 GAMEX( 1995, tbyahhoo, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Twin Bee Yahhoo! (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1995, tkmmpzdm, konamigx, konamigx_6bpp, puzldama, konamigx, ROT0, "Konami", "Tokimeki Memorial Taisen Puzzle-dama (ver JAB)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1995, dragoonj, konamigx, dragoonj, dragoonj, konamigx, ROT0, "Konami", "Dragoon Might (ver JAA)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1996, sexyparo, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Sexy Parodius (ver JAA)", GAME_IMPERFECT_GRAPHICS | GAME_DOESNT_SERIALIZE )
+GAMEX( 1996, sexyparo, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Sexy Parodius (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1996, daiskiss, konamigx, konamigx, gokuparo, konamigx, ROT0, "Konami", "Daisu-Kiss (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1996, tokkae,   konamigx, konamigx_6bpp, puzldama, konamigx, ROT0, "Konami", "Taisen Tokkae-dama (ver JAA)", GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1996, salmndr2, konamigx, konamigx_6bpp_2, gokuparo, konamigx, ROT0, "Konami", "Salamander 2 (ver JAA)", GAME_IMPERFECT_GRAPHICS|GAME_UNEMULATED_PROTECTION )
