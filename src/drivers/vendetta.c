@@ -147,7 +147,7 @@ static READ_HANDLER( vendetta_eeprom_r )
 
 	res = EEPROM_read_bit();
 
-	res |= 0x02;/*konami_eeprom_ack() << 5;  // add the ack /*/
+	res |= 0x02;/* konami_eeprom_ack() << 5; add the ack */
 
 	res |= readinputport( 3 ) & 0x0c; /* test switch */
 
@@ -198,21 +198,23 @@ static WRITE_HANDLER( vendetta_K052109_w ) {
 	K052109_w( offset + 0x2000, data );
 }
 
+static offs_t video_banking_base;
+
 static void vendetta_video_banking( int select )
 {
 	if ( select & 1 )
 	{
-		memory_set_bankhandler_r( 2, 0, paletteram_r );
-		memory_set_bankhandler_w( 2, 0, paletteram_xBBBBBGGGGGRRRRR_swap_w );
-		memory_set_bankhandler_r( 3, 0, K053247_r );
-		memory_set_bankhandler_w( 3, 0, K053247_w );
+		install_mem_read_handler(0,  video_banking_base + 0x2000, video_banking_base + 0x2fff,  paletteram_r );
+		install_mem_write_handler(0, video_banking_base + 0x2000, video_banking_base + 0x2fff,  paletteram_xBBBBBGGGGGRRRRR_swap_w );
+		install_mem_read_handler(0,  video_banking_base + 0x0000, video_banking_base + 0x0fff,  K053247_r );
+		install_mem_write_handler(0, video_banking_base + 0x0000, video_banking_base + 0x0fff,  K053247_w );
 	}
 	else
 	{
-		memory_set_bankhandler_r( 2, 0, vendetta_K052109_r );
-		memory_set_bankhandler_w( 2, 0, vendetta_K052109_w );
-		memory_set_bankhandler_r( 3, 0, K052109_r );
-		memory_set_bankhandler_w( 3, 0, K052109_w );
+		install_mem_read_handler(0,  video_banking_base + 0x2000, video_banking_base + 0x2fff,  vendetta_K052109_r );
+		install_mem_write_handler(0, video_banking_base + 0x2000, video_banking_base + 0x2fff,  vendetta_K052109_w );
+		install_mem_read_handler(0,  video_banking_base + 0x0000, video_banking_base + 0x0fff,  K052109_r );
+		install_mem_write_handler(0, video_banking_base + 0x0000, video_banking_base + 0x0fff,  K052109_w );
 	}
 }
 
@@ -320,7 +322,7 @@ static MEMORY_READ_START( esckids_readmem )
 	{ 0x3fd6, 0x3fd7, vendetta_sound_r },				/* Sound*/
 	{ 0x3fd8, 0x3fd9, K053246_r },			/* 053246 (Sprite)*/
 	{ 0x2000, 0x2fff, MRA_BANK3 },			/* 052109 (Tilemap) 0x0000-0x0fff*/
-	{ 0x4000, 0x5fff, MRA_BANK2 },			/* 052109 (Tilemap) 0x2000-0x3fff, Tilemap MASK-ROM bank selector (MASK-ROM Test)*/
+	{ 0x4000, 0x4fff, MRA_BANK2 },			/* 052109 (Tilemap) 0x2000-0x3fff, Tilemap MASK-ROM bank selector (MASK-ROM Test)*/
 	{ 0x2000, 0x5fff, K052109_r },			/* 052109 (Tilemap)*/
 	{ 0x6000, 0x7fff, MRA_BANK1 },			/* 053248 '975r01' 1M ROM (Banked)*/
 	{ 0x8000, 0xffff, MRA_ROM },			/* 053248 '975r01' 1M ROM (0x18000-0x1ffff)*/
@@ -337,7 +339,7 @@ static MEMORY_WRITE_START( esckids_writemem )
 	{ 0x3fd6, 0x3fd7, K053260_0_w },		/* Sound*/
 	{ 0x3fda, 0x3fda, MWA_NOP },			/* Not Emulated (Watchdog ???)*/
 	{ 0x2000, 0x2fff, MWA_BANK3 },			/* 052109 (Tilemap) 0x0000-0x0fff*/
-	{ 0x4000, 0x5fff, MWA_BANK2 },			/* 052109 (Tilemap) 0x2000-0x3fff, Tilemap MASK-ROM bank selector (MASK-ROM Test)*/
+	{ 0x4000, 0x4fff, MWA_BANK2 },			/* 052109 (Tilemap) 0x2000-0x3fff, Tilemap MASK-ROM bank selector (MASK-ROM Test)*/
 	{ 0x2000, 0x5fff, K052109_w },			/* 052109 (Tilemap)*/
 	{ 0x6000, 0x7fff, MWA_ROM },			/* 053248 '975r01' 1M ROM (Banked)*/
 	{ 0x8000, 0xffff, MWA_ROM },			/* 053248 '975r01' 1M ROM (0x18000-0x1ffff)*/
@@ -465,8 +467,8 @@ INPUT_PORTS_START( vendetta )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( esckids )
-	PORT_START		/* Player 1 Control*/
+INPUT_PORTS_START( esckids4p )
+	PORT_START		/* Player 1 Control */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
@@ -476,7 +478,7 @@ INPUT_PORTS_START( esckids )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 )
 
-	PORT_START		/* Player 2 Control*/
+	PORT_START		/* Player 2 Control */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
@@ -486,7 +488,67 @@ INPUT_PORTS_START( esckids )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
 
-	PORT_START		/* Start, Service*/
+	PORT_START		/* Start, Service */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START3 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START4 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* EEPROM data */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* EEPROM ready */
+	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_VBLANK ) /* not really vblank, object related. Its timed, otherwise sprites flicker */
+	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
+
+
+	PORT_START		/* Player 3 Control ???  (Not used) */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER3 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER3 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER3 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER3 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN3 )
+
+	PORT_START		/* Player 4 Control ???  (Not used) */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER4 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER4 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER4 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER4 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER4 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER4 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN4 )
+INPUT_PORTS_END
+
+INPUT_PORTS_START( esckids )
+	PORT_START		/* Player 1 Control */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 )
+
+	PORT_START		/* Player 2 Control */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
+
+	PORT_START		/* Start, Service */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -502,28 +564,6 @@ INPUT_PORTS_START( esckids )
 	PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, DEF_STR( Service_Mode ), KEYCODE_F2, IP_JOY_NONE )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_VBLANK ) /* not really vblank, object related. Its timed, otherwise sprites flicker */
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
-
-#if 0
-	PORT_START		/* Player 3 Control ???  (Not used)*/
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER3 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN3 )
-
-	PORT_START		/* Player 4 Control ???  (Not used)*/
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER4 )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER4 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER4 )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN4 )
-#endif
 INPUT_PORTS_END
 
 
@@ -743,6 +783,28 @@ ROM_END
 
 
 ROM_START( esckids )
+	ROM_REGION( 0x049000, REGION_CPU1, 0 )		/* Main CPU (053248) Code & Banked (1M x 1) */
+	ROM_LOAD( "975r01", 0x010000, 0x018000, CRC(9dfba99c)  )
+	ROM_CONTINUE(		0x008000, 0x008000 )
+
+	ROM_REGION( 0x010000, REGION_CPU2, 0 )		/* Sound CPU (Z80) Code (512K x 1) */
+	ROM_LOAD( "975f02", 0x000000, 0x010000, CRC(994fb229)  )
+
+	ROM_REGION( 0x100000, REGION_GFX1, 0 )		/* Tilemap MASK-ROM (4M x 2) */
+	ROM_LOAD( "975c09", 0x000000, 0x080000, CRC(bc52210e)  )
+	ROM_LOAD( "975c08", 0x080000, 0x080000, CRC(fcff9256)  )
+
+	ROM_REGION( 0x400000, REGION_GFX2, 0 )		/* Sprite MASK-ROM (8M x 4) */
+	ROM_LOAD( "975c04", 0x000000, 0x100000, CRC(15688a6f)  )
+	ROM_LOAD( "975c05", 0x100000, 0x100000, CRC(1ff33bb7)  )
+	ROM_LOAD( "975c06", 0x200000, 0x100000, CRC(36d410f9)  )
+	ROM_LOAD( "975c07", 0x300000, 0x100000, CRC(97ec541e)  )
+
+	ROM_REGION( 0x100000, REGION_SOUND1, 0 )	/* Samples MASK-ROM (4M x 1) */
+	ROM_LOAD( "975c03", 0x000000, 0x080000, CRC(dc4a1707)  )
+ROM_END
+
+ROM_START( esckidsj )
 	ROM_REGION( 0x049000, REGION_CPU1, 0 )		/* Main CPU (053248) Code & Banked (1M x 1)*/
 	ROM_LOAD( "975r01", 0x010000, 0x018000, CRC(7b5c5572) SHA1(b94b58c010539926d112c2dfd80bcbad76acc986) )
 	ROM_CONTINUE(		0x008000, 0x008000 )
@@ -798,10 +860,17 @@ static MACHINE_INIT( vendetta )
 
 static DRIVER_INIT( vendetta )
 {
+	video_banking_base = 0x4000;
 	konami_rom_deinterleave_2(REGION_GFX1);
 	konami_rom_deinterleave_4(REGION_GFX2);
 }
 
+static DRIVER_INIT( esckids )
+{
+	video_banking_base = 0x2000;
+	konami_rom_deinterleave_2(REGION_GFX1);
+	konami_rom_deinterleave_4(REGION_GFX2);
+}
 
 
 GAME( 1991, vendetta, 0,        vendetta, vendet4p, vendetta, ROT0, "Konami", "Vendetta (World 4 Players ver. T)" )
@@ -810,4 +879,5 @@ GAME( 1991, vendet2p, vendetta, vendetta, vendetta, vendetta, ROT0, "Konami", "V
 GAME( 1991, vendetas, vendetta, vendetta, vendetta, vendetta, ROT0, "Konami", "Vendetta (Asia 2 Players ver. U)" )
 GAME( 1991, vendtaso, vendetta, vendetta, vendetta, vendetta, ROT0, "Konami", "Vendetta (Asia 2 Players ver. D)" )
 GAME( 1991, vendettj, vendetta, vendetta, vendetta, vendetta, ROT0, "Konami", "Crime Fighters 2 (Japan 2 Players ver. P)" )
-GAME( 1991, esckids,  0,        esckids,  esckids,  vendetta, ROT0, "Konami", "Escape Kids (Japan 2 Players)" )
+GAME( 1991, esckids,  0,        esckids,  esckids4p,esckids,  ROT0, "Konami", "Escape Kids (Asia 4 Players)" )
+GAME( 1991, esckidsj, esckids,  esckids,  esckids,  esckids,  ROT0, "Konami", "Escape Kids (Japan 2 Players)" )
