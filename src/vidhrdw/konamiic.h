@@ -1,5 +1,6 @@
 /* helper function to join two 16-bit ROMs and form a 32-bit data stream */
 void konami_rom_deinterleave_2(int mem_region);
+void konami_rom_deinterleave_2_half(int mem_region);
 /* helper function to join four 16-bit ROMs and form a 64-bit data stream */
 void konami_rom_deinterleave_4(int mem_region);
 
@@ -75,6 +76,7 @@ WRITE16_HANDLER( K052109_lsb_w );
 void K052109_set_RMRD_line(int state);
 void K052109_tilemap_update(void);
 int K052109_is_IRQ_enabled(void);
+void K052109_set_layer_offsets(int layer, int dx, int dy);
 
 
 /*
@@ -109,21 +111,25 @@ READ_HANDLER( K052109_051960_r );
 WRITE_HANDLER( K052109_051960_w );
 
 
-int K053245_vh_start(int gfx_memory_region,int plane0,int plane1,int plane2,int plane3,
+int K053245_vh_start(int chip, int gfx_memory_region,int plane0,int plane1,int plane2,int plane3,
 		void (*callback)(int *code,int *color,int *priority_mask));
 READ16_HANDLER( K053245_word_r );
 WRITE16_HANDLER( K053245_word_w );
 READ_HANDLER( K053245_r );
 WRITE_HANDLER( K053245_w );
+WRITE_HANDLER( K053245_1_w );
 READ_HANDLER( K053244_r );
 WRITE_HANDLER( K053244_w );
+WRITE_HANDLER( K053244_1_w );
 READ16_HANDLER( K053244_lsb_r );
 WRITE16_HANDLER( K053244_lsb_w );
 READ16_HANDLER( K053244_word_r );
 WRITE16_HANDLER( K053244_word_w );
-void K053244_bankselect(int bank);	/* used by TMNT2, Asterix and Premier Soccer for ROM testing */
-void K053245_sprites_draw(struct mame_bitmap *bitmap,const struct rectangle *cliprect);
-void K053245_clear_buffer(void);
+void K053244_bankselect(int chip, int bank);	/* used by TMNT2, Asterix and Premier Soccer for ROM testing */
+void K053245_sprites_draw(int chip, struct mame_bitmap *bitmap,const struct rectangle *cliprect);
+void K053245_sprites_draw_lethal(int chip, struct mame_bitmap *bitmap,const struct rectangle *cliprect); /* for lethal enforcers */
+void K053245_clear_buffer(int chip);
+void K053245_set_SpriteOffset(int chip,int offsx, int offsy);
 
 #define K055673_LAYOUT_GX  0
 #define K055673_LAYOUT_RNG 1
@@ -159,8 +165,8 @@ void K053247_sprites_draw(struct mame_bitmap *bitmap,const struct rectangle *cli
 int K053247_read_register(int regnum);
 void K053247_set_SpriteOffset(int offsx, int offsy);
 void K053247_wraparound_enable(int status);
-void K05324x_set_z_rejection(int zcode); /* common to K053245/6/7*/
-void K053247_export_config(data16_t **ram, struct GfxElement **gfx, void **callback, int *dx, int *dy);
+void K05324x_set_z_rejection(int zcode); /* common to K053245/6/7 */
+void K053247_export_config(data16_t **ram, struct GfxElement **gfx, void (**callback)(int *, int *, int *), int *dx, int *dy);
 
 READ_HANDLER( K053246_r );
 WRITE_HANDLER( K053246_w );
@@ -254,16 +260,20 @@ READ16_HANDLER( K054157_rom_word_r );
 READ16_HANDLER( K054157_rom_word_8000_r );
 WRITE16_HANDLER( K054157_word_w );
 WRITE16_HANDLER( K054157_b_word_w );
+
 void K054157_tilemap_update(void);
 void K054157_tilemap_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int num, int flags, UINT32 priority);
 void K054157_tilemap_draw_alpha(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int num, int flags, int alpha);
 int K054157_is_IRQ_enabled(void);
 int K054157_get_lookup(int bits);
 void K054157_set_tile_bank(int bank);	/* Asterix */
+int K054157_get_current_rambank(void);
+void K056832_SetExtLinescroll(void);	/* Lethal Enforcers */
 
 int K056832_vh_start(int gfx_memory_region, int bpp, int big,
 			int (*scrolld)[4][2],
-			void (*callback)(int, int *, int *));
+			void (*callback)(int, int *, int *),
+			int djmain_hack);
 READ16_HANDLER( K056832_ram_word_r );
 WRITE16_HANDLER( K056832_ram_word_w );
 READ16_HANDLER( K056832_ram_half_word_r );
@@ -272,8 +282,19 @@ READ16_HANDLER( K056832_5bpp_rom_word_r );
 READ32_HANDLER( K056832_5bpp_rom_long_r );
 READ32_HANDLER( K056832_6bpp_rom_long_r );
 READ16_HANDLER( K056832_rom_word_r );
-WRITE16_HANDLER( K056832_word_w ); /* "VRAM" registers*/
+READ16_HANDLER( K056832_old_rom_word_r );
+WRITE16_HANDLER( K056832_word_w ); /* "VRAM" registers */
 WRITE16_HANDLER( K056832_b_word_w );
+READ_HANDLER( K056832_ram_code_lo_r );
+READ_HANDLER( K056832_ram_code_hi_r );
+READ_HANDLER( K056832_ram_attr_lo_r );
+READ_HANDLER( K056832_ram_attr_hi_r );
+WRITE_HANDLER( K056832_ram_code_lo_w );
+WRITE_HANDLER( K056832_ram_code_hi_w );
+WRITE_HANDLER( K056832_ram_attr_lo_w );
+WRITE_HANDLER( K056832_ram_attr_hi_w );
+WRITE_HANDLER( K056832_w );
+WRITE_HANDLER( K056832_b_w );
 void K056832_mark_plane_dirty(int num);
 void K056832_MarkAllTilemapsDirty(void);
 void K056832_tilemap_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprect, int num, int flags, UINT32 priority);
@@ -287,6 +308,9 @@ void K056832_linemap_enable(int enable);
 int  K056832_is_IRQ_enabled(int irqline);
 void K056832_read_AVAC(int *mode, int *data);
 int  K056832_read_register(int regnum);
+int K056832_get_current_rambank(void);
+int K056832_get_lookup(int bits);	/* Asterix */
+void K056832_set_tile_bank(int bank);	/* Asterix */
 
 READ32_HANDLER( K056832_ram_long_r );
 READ32_HANDLER( K056832_rom_long_r );
@@ -294,12 +318,14 @@ WRITE32_HANDLER( K056832_ram_long_w );
 WRITE32_HANDLER( K056832_long_w );
 WRITE32_HANDLER( K056832_b_long_w );
 
+
 /* bit depths for the 56832 */
 #define K056832_BPP_4	0
 #define K056832_BPP_5	1
 #define K056832_BPP_6	2
 #define K056832_BPP_8	3
 #define K056832_BPP_4dj	4
+#define K056832_BPP_8LE	5
 
 void K055555_vh_start(void); /* "PCU2"*/
 void K055555_write_reg(data8_t regnum, data8_t regdat);
