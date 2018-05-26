@@ -111,7 +111,7 @@ static void init_core_options(void)
 
   init_option(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
   init_option(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");
-  init_option(&default_options[OPT_RETROPAD_LAYOUT],     APPNAME"_retropad_layout",     "RetroPad Layout; modern|SNES|MAME classic");
+  init_option(&default_options[OPT_RETROPAD_LAYOUT],     APPNAME"_retropad_layout",     "RetroPad Layout; 10-Button Arcade|modern|SNES|MAME classic");
 #if defined(__IOS__)
   init_option(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
 #else
@@ -202,6 +202,8 @@ static void update_variables(bool first_time)
       options.retropad_layout = RETROPAD_MODERN;
     else if(strcmp(var.value, "SNES") == 0)
       options.retropad_layout = RETROPAD_SNES;
+    else if(strcmp(var.value, "10-Button Arcade") == 0)
+      options.retropad_layout = RETROPAD_10BUTTON;
     else
       options.retropad_layout = RETROPAD_MAME;
     if(!first_time)
@@ -705,6 +707,14 @@ void retro_describe_buttons(void)
     control_labels[RETRO_DEVICE_ID_JOYPAD_X]     = game_driver->btn_labeler(IPT_BUTTON2);
     control_labels[RETRO_DEVICE_ID_JOYPAD_A]     = game_driver->btn_labeler(IPT_BUTTON5);
     control_labels[RETRO_DEVICE_ID_JOYPAD_L]     = game_driver->btn_labeler(IPT_BUTTON3);
+  }
+  
+  if(options.retropad_layout == RETROPAD_10BUTTON)
+  {
+    control_labels[RETRO_DEVICE_ID_JOYPAD_B]      = game_driver->btn_labeler(IPT_BUTTON1);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]      = game_driver->btn_labeler(IPT_BUTTON2);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_X]      = game_driver->btn_labeler(IPT_BUTTON3);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_A]      = game_driver->btn_labeler(IPT_BUTTON4);
   }
  
 
@@ -1244,6 +1254,20 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
   {"RetroPad"   #INDEX " Start",       ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_START,  JOYCODE_##INDEX##_START}, \
   {"RetroPad"   #INDEX " Select",      ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_##INDEX##_SELECT}
 
+#define EMIT_RETRO_PAD_10BUTTON(INDEX) \
+  {"RetroPad"   #INDEX " B",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B,      JOYCODE_##INDEX##_BUTTON1}, \
+  {"RetroPad"   #INDEX " Y",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_Y,      JOYCODE_##INDEX##_BUTTON2}, \
+  {"RetroPad"   #INDEX " X",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_X,      JOYCODE_##INDEX##_BUTTON3}, \
+  {"RetroPad"   #INDEX " A",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_A,      JOYCODE_##INDEX##_BUTTON4}, \
+  {"RetroPad"   #INDEX " L",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L,      JOYCODE_##INDEX##_BUTTON5}, \
+  {"RetroPad"   #INDEX " R",           ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R,      JOYCODE_##INDEX##_BUTTON6}, \
+  {"RetroPad"   #INDEX " L2",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L2,     JOYCODE_##INDEX##_BUTTON7}, \
+  {"RetroPad"   #INDEX " R2",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R2,     JOYCODE_##INDEX##_BUTTON8}, \
+  {"RetroPad"   #INDEX " L3",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L3,     JOYCODE_##INDEX##_BUTTON9}, \
+  {"RetroPad"   #INDEX " R3",          ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R3,     JOYCODE_##INDEX##_BUTTON10}, \
+  {"RetroPad"   #INDEX " Start",       ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_START,  JOYCODE_##INDEX##_START}, \
+  {"RetroPad"   #INDEX " Select",      ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_##INDEX##_SELECT}
+
 #define EMIT_RETRO_PAD_MOUSE(INDEX) \
   {"RetroMouse" #INDEX " Left Click",  ((INDEX - 1) * 18) + 16,                            JOYCODE_MOUSE_##INDEX##_BUTTON1}, \
   {"RetroMouse" #INDEX " Right Click", ((INDEX - 1) * 18) + 17,                            JOYCODE_MOUSE_##INDEX##_BUTTON2}
@@ -1275,6 +1299,15 @@ struct JoystickInfo jsItemsSNES[] =
   {0, 0, 0}
 };
 
+struct JoystickInfo jsItems10Button[] =
+{
+  EMIT_RETRO_PAD_DIRECTIONS(1),EMIT_RETRO_PAD_10BUTTON(1),EMIT_RETRO_PAD_MOUSE(1),
+  EMIT_RETRO_PAD_DIRECTIONS(2),EMIT_RETRO_PAD_10BUTTON(2),EMIT_RETRO_PAD_MOUSE(2),
+  EMIT_RETRO_PAD_DIRECTIONS(3),EMIT_RETRO_PAD_10BUTTON(3),EMIT_RETRO_PAD_MOUSE(3),
+  EMIT_RETRO_PAD_DIRECTIONS(4),EMIT_RETRO_PAD_10BUTTON(4),EMIT_RETRO_PAD_MOUSE(4),
+  {0, 0, 0}
+};
+
 /******************************************************************************
 
 	Joystick & Mouse/Trackball
@@ -1292,6 +1325,8 @@ const struct JoystickInfo *osd_get_joy_list(void)
     return jsItemsModern;
   else if(options.retropad_layout == RETROPAD_SNES)
     return jsItemsSNES;
+  else if(options.retropad_layout == RETROPAD_10BUTTON)
+    return jsItems10Button;
   else
     return jsItems;
 }
