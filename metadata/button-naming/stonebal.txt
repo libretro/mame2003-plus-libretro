@@ -1,0 +1,5 @@
+BUTTON1: "Shoot/Fight"
+BUTTON2: "Push"
+BUTTON3: "Pass/Tackle"
+
+Gameslist: stonebal, stonebal2
