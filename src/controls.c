@@ -9,8 +9,9 @@
   * players, although there are exceptions. The approach is to use case statements with the
   * highest player numbers first so that the Player 1 labels can serve as default.
   */
-  
+
 #include "controls.h"
+#include "inptport.h"
  
 const struct ControlInfo 88games_ctrls
 {
