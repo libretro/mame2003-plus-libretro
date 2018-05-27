@@ -44,6 +44,7 @@ struct ControlInfo
   const bool has_cocktail_dipswitch;
   const bool uses_service;
   const char *control_details;
+  const char *(*get_name)(int);  
 };
 
 #define IP_ACTIVE_HIGH 0x0000

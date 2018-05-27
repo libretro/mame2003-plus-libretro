@@ -18,7 +18,8 @@ const struct ControlInfo 88games_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This is a 4 player team type game where 2 players compete each time." /* control_details */
+  "This is a 4 player team type game where 2 players compete each time.", /* control__details */
+  &88games_get_btn;
 }
 
 const char *88games_get_btn(int type)
@@ -41,7 +42,8 @@ const struct ControlInfo 005_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &005_get_btn;
 }
 
 const char *005_get_btn(int type)
@@ -66,7 +68,8 @@ const struct ControlInfo 10yardj_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &10yardj_get_btn;
 }
 
 const char *10yardj_get_btn(int type)
@@ -92,7 +95,8 @@ const struct ControlInfo gtmr_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game has several options regarding the control type. It has an optional brake pedal/button as well as the option to play the game with either a 270 wheel or an 8way joystick. The controls shown here are the ones used on the dedicated model. Notice the lack of the brake pedal. It seems that the brake pedal was used in conversion kits as the dedicated cabinet didn't have one." /* control_details */
+  "This game has several options regarding the control type. It has an optional brake pedal/button as well as the option to play the game with either a 270 wheel or an 8way joystick. The controls shown here are the ones used on the dedicated model. Notice the lack of the brake pedal. It seems that the brake pedal was used in conversion kits as the dedicated cabinet didn't have one.", /* control_details */
+  &gtmr_get_btn;
 }
 
 const char *gtmr_get_btn(int type)
@@ -115,7 +119,8 @@ const struct ControlInfo 1941_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &1941_get_btn;
 }
 
 const char *1941_get_btn(int type)
@@ -141,7 +146,8 @@ const struct ControlInfo 1942_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &1942_get_btn;
 }
 
 const char *1942_get_btn(int type)
@@ -167,7 +173,8 @@ const struct ControlInfo 1943kai_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "A - Fire, B - Bomb Pressing both buttons will allow the plane to loop" /* control_details */
+  "A - Fire, B - Bomb Pressing both buttons will allow the plane to loop", /* control__details */
+  &1943kai_get_btn;
 }
 
 const char *1943kai_get_btn(int type)
@@ -193,7 +200,8 @@ const struct ControlInfo 1943_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Press both buttons together to cause the plane to loop." /* control_details */
+  "Press both buttons together to cause the plane to loop.", /* control__details */
+  &1943_get_btn;
 }
 
 const char *1943_get_btn(int type)
@@ -219,7 +227,8 @@ const struct ControlInfo 1944_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &1944_get_btn;
 }
 
 const char *1944_get_btn(int type)
@@ -245,7 +254,8 @@ const struct ControlInfo 19xx_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "If you hold down the shoot button, your weapon powers up and gives you a homing missle in addition to you normal weapon." /* control_details */
+  "If you hold down the shoot button, your weapon powers up and gives you a homing missle in addition to you normal weapon.", /* control__details */
+  &19xx_get_btn;
 }
 
 const char *19xx_get_btn(int type)
@@ -271,7 +281,8 @@ const struct ControlInfo openice_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &openice_get_btn;
 }
 
 const char *openice_get_btn(int type)
@@ -298,7 +309,8 @@ const struct ControlInfo 39in1_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This is a bootleg pcb that contains many classic vertical arcade games. Because of this the 'alternating play' flag is invalid and will vary from game to game. The game kit is a pcb only and thus lacks any official labels. The manual for this version lists the buttons as 1P-S1 thru 2P-S3. However, these are simply the jamma pinouts. Every control panel overlay manufacturer that has since released a overlay for this unit has either left the labels blank or labeled them A, B and C respectively." /* control_details */
+  "This is a bootleg pcb that contains many classic vertical arcade games. Because of this the 'alternating play' flag is invalid and will vary from game to game. The game kit is a pcb only and thus lacks any official labels. The manual for this version lists the buttons as 1P-S1 thru 2P-S3. However, these are simply the jamma pinouts. Every control panel overlay manufacturer that has since released a overlay for this unit has either left the labels blank or labeled them A, B and C respectively.", /* control__details */
+  &39in1_get_btn;
 }
 
 const char *39in1_get_btn(int type)
@@ -325,7 +337,8 @@ const struct ControlInfo 4enraya_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &4enraya_get_btn;
 }
 
 const char *4enraya_get_btn(int type)
@@ -349,7 +362,8 @@ const struct ControlInfo 4in1_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &4in1_get_btn;
 }
 
 const char *4in1_get_btn(int type)
@@ -374,7 +388,8 @@ const struct ControlInfo 4dwarrio_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &4dwarrio_get_btn;
 }
 
 const char *4dwarrio_get_btn(int type)
@@ -400,7 +415,8 @@ const struct ControlInfo 64street_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Pressing both buttons will do a special attack" /* control_details */
+  "Pressing both buttons will do a special attack", /* control__details */
+  &64street_get_btn;
 }
 
 const char *64street_get_btn(int type)
@@ -427,6 +443,7 @@ const struct ControlInfo 720_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER: The 720 controller is unique. It is an optical sensed spinner with a joystick handle. The controller had two encoder wheels on the same axis /* control_details */ one was like a normal spinner encode wheel with 72 spokes & 72 gaps, the other encoder wheel had only two gaps spaced as far as alternating gaps on the normal encoder wheel (ie: instead of gap, spoke, gap, spoke, gap like on the normal wheel, the middle gap was part of the one fat spoke seperating the two gaps on the ends). The normal encoder wheel turns the character in the game, the other encoder wheel is to help keep the stick calibrated with the screen, on each rotation of the stick. Mame only emulates the normal wheel as a dial type input; the other is ignored. The character in the game can face 16 directions: the 4 cardinal directions, the 4 normal diagonals, and the 8 directions inbetween the cardinals and the diagonals. The Kick button makes the character skate faster (in case that's not clear). Both buttons are mirrored on opposite sides of the 'joystick' spinner, but like most mirror cases, they are wired as a total of only two buttons.";
+  &720_get_btn;
 }
 
 const char *720_get_btn(int type)
@@ -450,7 +467,8 @@ const struct ControlInfo 7jigen_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &7jigen_get_btn;
 }
 
 const char *7jigen_get_btn(int type)
@@ -470,7 +488,8 @@ const struct ControlInfo ace_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 2-way horizontal stick is a trigger stick, pushing left rotates the plane anticlockwise, pushing right rotates the plane clockwise" /* control_details */
+  "The 2-way horizontal stick is a trigger stick, pushing left rotates the plane anticlockwise, pushing right rotates the plane clockwise", /* control__details */
+  &ace_get_btn;
 }
 
 const char *ace_get_btn(int type)
@@ -495,7 +514,8 @@ const struct ControlInfo acrobatm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Hold down Fire button to increase power" /* control_details */
+  "Hold down Fire button to increase power", /* control__details */
+  &acrobatm_get_btn;
 }
 
 const char *acrobatm_get_btn(int type)
@@ -521,7 +541,8 @@ const struct ControlInfo actfancr_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &actfancr_get_btn;
 }
 
 const char *actfancr_get_btn(int type)
@@ -547,7 +568,8 @@ const struct ControlInfo hatena_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &hatena_get_btn;
 }
 
 const char *hatena_get_btn(int type)
@@ -571,7 +593,8 @@ const struct ControlInfo aerofgt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Pressing bomb button drops bomb and plane also loops. There are no labels on the CP." /* control_details */
+  "Pressing bomb button drops bomb and plane also loops. There are no labels on the CP.", /* control__details */
+  &aerofgt_get_btn;
 }
 
 const char *aerofgt_get_btn(int type)
@@ -597,7 +620,8 @@ const struct ControlInfo aburner2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'unknown' button is emulated in MAME but has no real purpose. As far as I can tell from the drivers, it was used for some sort of feedback in the simulation cockpits." /* control_details */
+  "The 'unknown' button is emulated in MAME but has no real purpose. As far as I can tell from the drivers, it was used for some sort of feedback in the simulation cockpits.", /* control__details */
+  &aburner2_get_btn;
 }
 
 const char *aburner2_get_btn(int type)
@@ -626,7 +650,8 @@ const struct ControlInfo koshien_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "A - Power-up B - Hit/Throw C - Unknown action during game" /* control_details */
+  "A - Power-up B - Hit/Throw C - Unknown action during game", /* control__details */
+  &koshien_get_btn;
 }
 
 const char *koshien_get_btn(int type)
@@ -653,7 +678,8 @@ const struct ControlInfo airbustr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Only 1 button on the CP but Mame has 2 mapped (both doing the same thing)" /* control_details */
+  "Only 1 button on the CP but Mame has 2 mapped (both doing the same thing)", /* control__details */
+  &airbustr_get_btn;
 }
 
 const char *airbustr_get_btn(int type)
@@ -679,7 +705,8 @@ const struct ControlInfo airduel_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Pinout shows 3 buttons (Fire1, Fire2, Fire3), the flyer shows 2 buttons, Mame has 4 buttons mapped and only 2 seem to work" /* control_details */
+  "Pinout shows 3 buttons (Fire1, Fire2, Fire3), the flyer shows 2 buttons, Mame has 4 buttons mapped and only 2 seem to work", /* control__details */
+  &airduel_get_btn;
 }
 
 const char *airduel_get_btn(int type)
@@ -707,7 +734,8 @@ const struct ControlInfo airwolf_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button 2 acts differently based on the position on the screen. In the lower half of the screen button 2 will shoot diagonally down to the ground. In the top half it will drop a bomb" /* control_details */
+  "Button 2 acts differently based on the position on the screen. In the lower half of the screen button 2 will shoot diagonally down to the ground. In the top half it will drop a bomb", /* control__details */
+  &airwolf_get_btn;
 }
 
 const char *airwolf_get_btn(int type)
@@ -733,7 +761,8 @@ const struct ControlInfo ajax_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ajax_get_btn;
 }
 
 const char *ajax_get_btn(int type)
@@ -760,7 +789,8 @@ const struct ControlInfo alexkidd_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "I cold not find what the 3rd button did nor did I immediately notice where it is written in the driver (I think it's one of those generic drivers)" /* control_details */
+  "I cold not find what the 3rd button did nor did I immediately notice where it is written in the driver (I think it's one of those generic drivers)", /* control__details */
+  &alexkidd_get_btn;
 }
 
 const char *alexkidd_get_btn(int type)
@@ -787,7 +817,8 @@ const struct ControlInfo alibaba_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Drop is not the button label (couldn't find one). It drops something behind your character which blocks the path of the Captain Thief which allows you to get away" /* control_details */
+  "Drop is not the button label (couldn't find one). It drops something behind your character which blocks the path of the Captain Thief which allows you to get away", /* control__details */
+  &alibaba_get_btn;
 }
 
 const char *alibaba_get_btn(int type)
@@ -812,7 +843,8 @@ const struct ControlInfo astorm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &astorm_get_btn;
 }
 
 const char *astorm_get_btn(int type)
@@ -839,7 +871,8 @@ const struct ControlInfo aliensyn_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &aliensyn_get_btn;
 }
 
 const char *aliensyn_get_btn(int type)
@@ -865,6 +898,7 @@ const struct ControlInfo avsp_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The default dipswitch is two player mode /* control_details */ you need to F2 into the game's service mode and change it to three player mode to play with 3 players. Each character has special moves.";
+  &avsp_get_btn;
 }
 
 const char *avsp_get_btn(int type)
@@ -891,7 +925,8 @@ const struct ControlInfo alien3_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "There isn't much info about the 'real' name for the second button on the guns. If you have any info feel free to corect." /* control_details */
+  "There isn't much info about the 'real' name for the second button on the guns. If you have any info feel free to corect.", /* control__details */
+  &alien3_get_btn;
 }
 
 const char *alien3_get_btn(int type)
@@ -917,7 +952,8 @@ const struct ControlInfo aliens_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &aliens_get_btn;
 }
 
 const char *aliens_get_btn(int type)
@@ -943,7 +979,8 @@ const struct ControlInfo aafb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joystick controls the player movement while the kicker is for kicking and passing." /* control_details */
+  "The joystick controls the player movement while the kicker is for kicking and passing.", /* control__details */
+  &aafb_get_btn;
 }
 
 const char *aafb_get_btn(int type)
@@ -972,7 +1009,8 @@ const struct ControlInfo alleymas_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Probably the oddest bowling game out there, this game uses a football kicker stick to bowl!" /* control_details */
+  "Probably the oddest bowling game out there, this game uses a football kicker stick to bowl!", /* control__details */
+  &alleymas_get_btn;
 }
 
 const char *alleymas_get_btn(int type)
@@ -998,7 +1036,8 @@ const struct ControlInfo alphaho_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &alphaho_get_btn;
 }
 
 const char *alphaho_get_btn(int type)
@@ -1023,7 +1062,8 @@ const struct ControlInfo alpinerd_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a dedicated platform shaped like a pair of skiis. It basically acts like a giant analog stick. The player navigates via three, lighted, navigational buttons. (Left, Right and Decision)  The Decision button also changes view during gameplay. The 'sweep' and 'edge' descriptions were taken directly from the game's cryptic i/o test menu. Knowing nothing about skiiing, the way the terms 'sweep' and 'edge' were used may be incorrect." /* control_details */
+  "This game uses a dedicated platform shaped like a pair of skiis. It basically acts like a giant analog stick. The player navigates via three, lighted, navigational buttons. (Left, Right and Decision)  The Decision button also changes view during gameplay. The 'sweep' and 'edge' descriptions were taken directly from the game's cryptic i/o test menu. Knowing nothing about skiiing, the way the terms 'sweep' and 'edge' were used may be incorrect.", /* control__details */
+  &alpinerd_get_btn;
 }
 
 const char *alpinerd_get_btn(int type)
@@ -1050,7 +1090,8 @@ const struct ControlInfo alpine_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo depicted a simple arrow pointing up for the button label. Upon research I found that this button makes you go down the hill faster. I modified the caption accordingly to avoid confusion. For left and right, the cpo shows a picture of a skiier going left and right respectively. I added the 'ski' part of the caption to prepare for the upcoming icon support in the viewer. As the game doesn't have a true caption, this shouldn't be any less accurate." /* control_details */
+  "The cpo depicted a simple arrow pointing up for the button label. Upon research I found that this button makes you go down the hill faster. I modified the caption accordingly to avoid confusion. For left and right, the cpo shows a picture of a skiier going left and right respectively. I added the 'ski' part of the caption to prepare for the upcoming icon support in the viewer. As the game doesn't have a true caption, this shouldn't be any less accurate.", /* control__details */
+  &alpine_get_btn;
 }
 
 const char *alpine_get_btn(int type)
@@ -1073,7 +1114,8 @@ const struct ControlInfo altbeast_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &altbeast_get_btn;
 }
 
 const char *altbeast_get_btn(int type)
@@ -1100,7 +1142,8 @@ const struct ControlInfo maze_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &maze_get_btn;
 }
 
 const char *maze_get_btn(int type)
@@ -1124,7 +1167,8 @@ const struct ControlInfo horshoes_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &horshoes_get_btn;
 }
 
 const char *horshoes_get_btn(int type)
@@ -1150,7 +1194,8 @@ const struct ControlInfo amspdwy_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &amspdwy_get_btn;
 }
 
 const char *amspdwy_get_btn(int type)
@@ -1173,7 +1218,8 @@ const struct ControlInfo amerdart_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "To play, aim with the trackball, press the 'lock' button to set the position and then roll to throw." /* control_details */
+  "To play, aim with the trackball, press the 'lock' button to set the position and then roll to throw.", /* control__details */
+  &amerdart_get_btn;
 }
 
 const char *amerdart_get_btn(int type)
@@ -1198,7 +1244,8 @@ const struct ControlInfo amidar_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &amidar_get_btn;
 }
 
 const char *amidar_get_btn(int type)
@@ -1223,7 +1270,8 @@ const struct ControlInfo angelkds_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Left joy controls the left kid, right controls the right kid" /* control_details */
+  "Left joy controls the left kid, right controls the right kid", /* control__details */
+  &angelkds_get_btn;
 }
 
 const char *angelkds_get_btn(int type)
@@ -1251,7 +1299,8 @@ const struct ControlInfo anteater_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Not sure if the label is correct but that's what it does. Couldn't find a pic of the panel" /* control_details */
+  "Not sure if the label is correct but that's what it does. Couldn't find a pic of the panel", /* control__details */
+  &anteater_get_btn;
 }
 
 const char *anteater_get_btn(int type)
@@ -1276,7 +1325,8 @@ const struct ControlInfo apb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &apb_get_btn;
 }
 
 const char *apb_get_btn(int type)
@@ -1301,7 +1351,8 @@ const struct ControlInfo apparel_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &apparel_get_btn;
 }
 
 const char *apparel_get_btn(int type)
@@ -1321,7 +1372,8 @@ const struct ControlInfo aquajack_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "In mame a dial is also emulated. This dial has no apparent function and isn't used in the game at all. It could be reminants of a hack or something." /* control_details */
+  "In mame a dial is also emulated. This dial has no apparent function and isn't used in the game at all. It could be reminants of a hack or something.", /* control__details */
+  &aquajack_get_btn;
 }
 
 const char *aquajack_get_btn(int type)
@@ -1349,7 +1401,8 @@ const struct ControlInfo aquarium_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "You can choose at the start of the game whether you would like to use 1 or 2 buttons Type A - 2 buttons Type B - 1 button No pic available, labelled on what they do" /* control_details */
+  "You can choose at the start of the game whether you would like to use 1 or 2 buttons Type A - 2 buttons Type B - 1 button No pic available, labelled on what they do", /* control__details */
+  &aquarium_get_btn;
 }
 
 const char *aquarium_get_btn(int type)
@@ -1375,7 +1428,8 @@ const struct ControlInfo arabian_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &arabian_get_btn;
 }
 
 const char *arabian_get_btn(int type)
@@ -1400,7 +1454,8 @@ const struct ControlInfo arbalest_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &arbalest_get_btn;
 }
 
 const char *arbalest_get_btn(int type)
@@ -1426,7 +1481,8 @@ const struct ControlInfo arcadecl_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &arcadecl_get_btn;
 }
 
 const char *arcadecl_get_btn(int type)
@@ -1453,7 +1509,8 @@ const struct ControlInfo archrivl_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The control panel for this game had two pass buttons, but they were merely wired to the same input as only one pass is wired in the schematics. The controls actually used 49-way joysticks for this game, which can be thought of as corse analog sticks." /* control_details */
+  "The control panel for this game had two pass buttons, but they were merely wired to the same input as only one pass is wired in the schematics. The controls actually used 49-way joysticks for this game, which can be thought of as corse analog sticks.", /* control__details */
+  &archrivl_get_btn;
 }
 
 const char *archrivl_get_btn(int type)
@@ -1479,7 +1536,8 @@ const struct ControlInfo area51_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "As with many of the lightgun games at the time, Area 51 requires you to fire off screen to reload. Mame has hacked this to where you fire at the absolute edge of the screen to reload. This is good for people who don't use lightguns but very bad for those of us who do." /* control_details */
+  "As with many of the lightgun games at the time, Area 51 requires you to fire off screen to reload. Mame has hacked this to where you fire at the absolute edge of the screen to reload. This is good for people who don't use lightguns but very bad for those of us who do.", /* control__details */
+  &area51_get_btn;
 }
 
 const char *area51_get_btn(int type)
@@ -1504,7 +1562,8 @@ const struct ControlInfo area51mx_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &area51mx_get_btn;
 }
 
 const char *area51mx_get_btn(int type)
@@ -1529,7 +1588,8 @@ const struct ControlInfo a51site4_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Shoot off-screen to reload. Note:  many pc lightguns have a dedicated reload button, which mame supports." /* control_details */
+  "Shoot off-screen to reload. Note:  many pc lightguns have a dedicated reload button, which mame supports.", /* control__details */
+  &a51site4_get_btn;
 }
 
 const char *a51site4_get_btn(int type)
@@ -1554,7 +1614,8 @@ const struct ControlInfo argus_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Fire button shoots flying objects, the laser hits the ground units" /* control_details */
+  "Fire button shoots flying objects, the laser hits the ground units", /* control__details */
+  &argus_get_btn;
 }
 
 const char *argus_get_btn(int type)
@@ -1580,7 +1641,8 @@ const struct ControlInfo arkarea_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "To change direction hold the direction button down while using the joystick" /* control_details */
+  "To change direction hold the direction button down while using the joystick", /* control__details */
+  &arkarea_get_btn;
 }
 
 const char *arkarea_get_btn(int type)
@@ -1606,7 +1668,8 @@ const struct ControlInfo arkanoid_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &arkanoid_get_btn;
 }
 
 const char *arkanoid_get_btn(int type)
@@ -1629,7 +1692,8 @@ const struct ControlInfo arknoid2_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &arknoid2_get_btn;
 }
 
 const char *arknoid2_get_btn(int type)
@@ -1652,7 +1716,8 @@ const struct ControlInfo arlingtn_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Sirp Please fix me.... vertical 2 ways have the wrong labels showing up and there isn't a directional 2 way button (vertical), which is what I use." /* control_details */
+  "Sirp Please fix me.... vertical 2 ways have the wrong labels showing up and there isn't a directional 2 way button (vertical), which is what I use.", /* control__details */
+  &arlingtn_get_btn;
 }
 
 const char *arlingtn_get_btn(int type)
@@ -1678,7 +1743,8 @@ const struct ControlInfo armwrest_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This Game only uses 3 directions of the 4 way stick. Down is not used." /* control_details */
+  "This Game only uses 3 directions of the 4 way stick. Down is not used.", /* control__details */
+  &armwrest_get_btn;
 }
 
 const char *armwrest_get_btn(int type)
@@ -1703,7 +1769,8 @@ const struct ControlInfo armedf_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button 3 is mapped in driver armedf.c but isn't used" /* control_details */
+  "Button 3 is mapped in driver armedf.c but isn't used", /* control__details */
+  &armedf_get_btn;
 }
 
 const char *armedf_get_btn(int type)
@@ -1730,7 +1797,8 @@ const struct ControlInfo armora_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Something of note is this game is pretty much unplayable in Mame without the artwork pack that goes with the rom. Be sure to download it." /* control_details */
+  "Something of note is this game is pretty much unplayable in Mame without the artwork pack that goes with the rom. Be sure to download it.", /* control__details */
+  &armora_get_btn;
 }
 
 const char *armora_get_btn(int type)
@@ -1754,7 +1822,8 @@ const struct ControlInfo armorcar_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "I think a bit of how to play info might be necessary. The sawhorse button releases a police barrier to crash cars. The 2nd gear button makes you go faster, but only while it is held." /* control_details */
+  "I think a bit of how to play info might be necessary. The sawhorse button releases a police barrier to crash cars. The 2nd gear button makes you go faster, but only while it is held.", /* control__details */
+  &armorcar_get_btn;
 }
 
 const char *armorcar_get_btn(int type)
@@ -1780,7 +1849,8 @@ const struct ControlInfo ashura_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ashura_get_btn;
 }
 
 const char *ashura_get_btn(int type)
@@ -1806,7 +1876,8 @@ const struct ControlInfo aso_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &aso_get_btn;
 }
 
 const char *aso_get_btn(int type)
@@ -1833,7 +1904,8 @@ const struct ControlInfo assault_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame-wise, this game is really odd. The original game uses dual 4-way trigger sticks. However the author of the mame driver also hacked in an optional 1 stick control scheme so you can play the game with a regular single stick. Unfortunately, this hack interferes with the real inputs so you have to clear one or the other to play properly. It should also be noted that you can not rapid roll with the hack as the game requires you to press both sticks left or right at once to do a roll. Also there is a phantom button defined that is useless. Gameplay Tips:  To rapid roll push both sticks in the same direction. (Left or right only)  To launch a grenade push both sticks to the outside and fire when ready." /* control_details */
+  "Mame-wise, this game is really odd. The original game uses dual 4-way trigger sticks. However the author of the mame driver also hacked in an optional 1 stick control scheme so you can play the game with a regular single stick. Unfortunately, this hack interferes with the real inputs so you have to clear one or the other to play properly. It should also be noted that you can not rapid roll with the hack as the game requires you to press both sticks left or right at once to do a roll. Also there is a phantom button defined that is useless. Gameplay Tips:  To rapid roll push both sticks in the same direction. (Left or right only)  To launch a grenade push both sticks to the outside and fire when ready.", /* control__details */
+  &assault_get_btn;
 }
 
 const char *assault_get_btn(int type)
@@ -1855,7 +1927,8 @@ const struct ControlInfo asterix_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Watch the attract screen to view general and special moves" /* control_details */
+  "Watch the attract screen to view general and special moves", /* control__details */
+  &asterix_get_btn;
 }
 
 const char *asterix_get_btn(int type)
@@ -1881,7 +1954,8 @@ const struct ControlInfo asteroid_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &asteroid_get_btn;
 }
 
 const char *asteroid_get_btn(int type)
@@ -1906,7 +1980,8 @@ const struct ControlInfo astdelux_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &astdelux_get_btn;
 }
 
 const char *astdelux_get_btn(int type)
@@ -1931,7 +2006,8 @@ const struct ControlInfo astrob_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Don't think Star Trek when you see the warp button. It activates a 10 second time warp which slows the enemies down. So who ever said that Binx was innovative was about 20 years too late." /* control_details */
+  "Don't think Star Trek when you see the warp button. It activates a 10 second time warp which slows the enemies down. So who ever said that Binx was innovative was about 20 years too late.", /* control__details */
+  &astrob_get_btn;
 }
 
 const char *astrob_get_btn(int type)
@@ -1955,7 +2031,8 @@ const struct ControlInfo astrof_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &astrof_get_btn;
 }
 
 const char *astrof_get_btn(int type)
@@ -1978,7 +2055,8 @@ const struct ControlInfo astinvad_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &astinvad_get_btn;
 }
 
 const char *astinvad_get_btn(int type)
@@ -2001,7 +2079,8 @@ const struct ControlInfo asuka_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &asuka_get_btn;
 }
 
 const char *asuka_get_btn(int type)
@@ -2027,7 +2106,8 @@ const struct ControlInfo asylum_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &asylum_get_btn;
 }
 
 const char *asylum_get_btn(int type)
@@ -2053,7 +2133,8 @@ const struct ControlInfo abaseb_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Action button depends if batting or fielding - selects hit, swings bat, selects pitch, throws etc" /* control_details */
+  "Action button depends if batting or fielding - selects hit, swings bat, selects pitch, throws etc", /* control__details */
+  &abaseb_get_btn;
 }
 
 const char *abaseb_get_btn(int type)
@@ -2079,6 +2160,7 @@ const struct ControlInfo atarifb_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There are 4 plays (well, four offense, four defense) per player displayed as part of the control panel with an LED for each play and selected with the action button. You cannot play against the computer: this game has to be played with two players. There is a four player version with four trackballs /* control_details */ that version has to be played with 4 players. **Update**  I looked in the mame cpo pack and found a pic to fill in the button label. Rebel, if you need a copy of the cpo pack please contact me, it's very helpful.";
+  &atarifb_get_btn;
 }
 
 const char *atarifb_get_btn(int type)
@@ -2103,7 +2185,8 @@ const struct ControlInfo ataxx_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ataxx_get_btn;
 }
 
 const char *ataxx_get_btn(int type)
@@ -2128,7 +2211,8 @@ const struct ControlInfo athena_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &athena_get_btn;
 }
 
 const char *athena_get_btn(int type)
@@ -2154,7 +2238,8 @@ const struct ControlInfo atehate_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &atehate_get_btn;
 }
 
 const char *atehate_get_btn(int type)
@@ -2178,7 +2263,8 @@ const struct ControlInfo atomicp_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "If a falling block has one block flashing you can press the second button and you get four choices. One of these it to get to select what the next shape will be. Mame has this as a 8-way in the system16.c driver but while playing acts like a 4-way" /* control_details */
+  "If a falling block has one block flashing you can press the second button and you get four choices. One of these it to get to select what the next shape will be. Mame has this as a 8-way in the system16.c driver but while playing acts like a 4-way", /* control__details */
+  &atomicp_get_btn;
 }
 
 const char *atomicp_get_btn(int type)
@@ -2204,7 +2290,8 @@ const struct ControlInfo robokid_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &robokid_get_btn;
 }
 
 const char *robokid_get_btn(int type)
@@ -2230,7 +2317,8 @@ const struct ControlInfo aurail_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Special sends out remote attack drones" /* control_details */
+  "Special sends out remote attack drones", /* control__details */
+  &aurail_get_btn;
 }
 
 const char *aurail_get_btn(int type)
@@ -2257,7 +2345,8 @@ const struct ControlInfo av2mj1bb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &av2mj1bb_get_btn;
 }
 
 const char *av2mj1bb_get_btn(int type)
@@ -2277,7 +2366,8 @@ const struct ControlInfo av2mj2rg_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &av2mj2rg_get_btn;
 }
 
 const char *av2mj2rg_get_btn(int type)
@@ -2297,7 +2387,8 @@ const struct ControlInfo avalnche_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &avalnche_get_btn;
 }
 
 const char *avalnche_get_btn(int type)
@@ -2320,7 +2411,8 @@ const struct ControlInfo avengers_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button A - Punch Button B - Kick" /* control_details */
+  "Button A - Punch Button B - Kick", /* control__details */
+  &avengers_get_btn;
 }
 
 const char *avengers_get_btn(int type)
@@ -2346,7 +2438,8 @@ const struct ControlInfo avspirit_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button A - Fire Button B - Jump" /* control_details */
+  "Button A - Fire Button B - Jump", /* control__details */
+  &avspirit_get_btn;
 }
 
 const char *avspirit_get_btn(int type)
@@ -2372,7 +2465,8 @@ const struct ControlInfo aztarac_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &aztarac_get_btn;
 }
 
 const char *aztarac_get_btn(int type)
@@ -2400,7 +2494,8 @@ const struct ControlInfo azurian_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &azurian_get_btn;
 }
 
 const char *azurian_get_btn(int type)
@@ -2425,7 +2520,8 @@ const struct ControlInfo baddudes_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Holding down attack while standing still will charge up a super punch. Pressing jump and attack at once will do a super kick at the expense of some of your energy." /* control_details */
+  "Holding down attack while standing still will charge up a super punch. Pressing jump and attack at once will do a super kick at the expense of some of your energy.", /* control__details */
+  &baddudes_get_btn;
 }
 
 const char *baddudes_get_btn(int type)
@@ -2451,7 +2547,8 @@ const struct ControlInfo badlands_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &badlands_get_btn;
 }
 
 const char *badlands_get_btn(int type)
@@ -2475,7 +2572,8 @@ const struct ControlInfo bagman_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bagman_get_btn;
 }
 
 const char *bagman_get_btn(int type)
@@ -2500,7 +2598,8 @@ const struct ControlInfo bkrtmaq_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This will display in mame as a 4 player even though it is only 2 player." /* control_details */
+  "This will display in mame as a 4 player even though it is only 2 player.", /* control__details */
+  &bkrtmaq_get_btn;
 }
 
 const char *bkrtmaq_get_btn(int type)
@@ -2524,7 +2623,8 @@ const struct ControlInfo bakutotu_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "All buttons do the same thing" /* control_details */
+  "All buttons do the same thing", /* control__details */
+  &bakutotu_get_btn;
 }
 
 const char *bakutotu_get_btn(int type)
@@ -2551,7 +2651,8 @@ const struct ControlInfo ballbomb_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ballbomb_get_btn;
 }
 
 const char *ballbomb_get_btn(int type)
@@ -2574,7 +2675,8 @@ const struct ControlInfo ballbros_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame has 3 buttons mapped but the game only has 1." /* control_details */
+  "Mame has 3 buttons mapped but the game only has 1.", /* control__details */
+  &ballbros_get_btn;
 }
 
 const char *ballbros_get_btn(int type)
@@ -2601,7 +2703,8 @@ const struct ControlInfo baluba_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &baluba_get_btn;
 }
 
 const char *baluba_get_btn(int type)
@@ -2626,7 +2729,8 @@ const struct ControlInfo bangball_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bangball_get_btn;
 }
 
 const char *bangball_get_btn(int type)
@@ -2651,7 +2755,8 @@ const struct ControlInfo bang_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bang_get_btn;
 }
 
 const char *bang_get_btn(int type)
@@ -2676,7 +2781,8 @@ const struct ControlInfo bankp_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bankp_get_btn;
 }
 
 const char *bankp_get_btn(int type)
@@ -2701,7 +2807,8 @@ const struct ControlInfo baraduke_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &baraduke_get_btn;
 }
 
 const char *baraduke_get_btn(int type)
@@ -2726,7 +2833,8 @@ const struct ControlInfo barricad_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Panel had directional buttons but of course mame is mapped to the normal joystick inputs" /* control_details */
+  "Panel had directional buttons but of course mame is mapped to the normal joystick inputs", /* control__details */
+  &barricad_get_btn;
 }
 
 const char *barricad_get_btn(int type)
@@ -2750,7 +2858,8 @@ const struct ControlInfo barrier_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame has the original directional buttons mapped to the normal mame movement buttons  Buttons are used to select skill level" /* control_details */
+  "Mame has the original directional buttons mapped to the normal mame movement buttons  Buttons are used to select skill level", /* control__details */
+  &barrier_get_btn;
 }
 
 const char *barrier_get_btn(int type)
@@ -2777,7 +2886,8 @@ const struct ControlInfo bsktball_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "On the real machine this game had the start button wired onto the action button and the true caption reads 'Start, Shoot  & Jump'  However it appears that the start button has been split out in mame." /* control_details */
+  "On the real machine this game had the start button wired onto the action button and the true caption reads 'Start, Shoot  & Jump'  However it appears that the start button has been split out in mame.", /* control__details */
+  &bsktball_get_btn;
 }
 
 const char *bsktball_get_btn(int type)
@@ -2802,7 +2912,8 @@ const struct ControlInfo batman_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &batman_get_btn;
 }
 
 const char *batman_get_btn(int type)
@@ -2828,7 +2939,8 @@ const struct ControlInfo batsugun_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &batsugun_get_btn;
 }
 
 const char *batsugun_get_btn(int type)
@@ -2854,7 +2966,8 @@ const struct ControlInfo battlnts_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &battlnts_get_btn;
 }
 
 const char *battlnts_get_btn(int type)
@@ -2879,7 +2992,8 @@ const struct ControlInfo bkraidj_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "At the ship select screen: To select a 'main shot power type' fighter, select your ship with A button, To select a 'Bomber power type', select your ship with B button, To select a 'Side shot power type', select your ship with C button, To select a 'Speed up type', select your ship with Start button. During game A - Shoot, B - Bomb" /* control_details */
+  "At the ship select screen: To select a 'main shot power type' fighter, select your ship with A button, To select a 'Bomber power type', select your ship with B button, To select a 'Side shot power type', select your ship with C button, To select a 'Speed up type', select your ship with Start button. During game A - Shoot, B - Bomb", /* control__details */
+  &bkraidj_get_btn;
 }
 
 const char *bkraidj_get_btn(int type)
@@ -2906,7 +3020,8 @@ const struct ControlInfo battlex_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &battlex_get_btn;
 }
 
 const char *battlex_get_btn(int type)
@@ -2931,7 +3046,8 @@ const struct ControlInfo bcruzm12_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Should be just a horizontal 2-way joystick as shown on the coinop link. However mame driver marineb.c has as 8-way" /* control_details */
+  "Should be just a horizontal 2-way joystick as shown on the coinop link. However mame driver marineb.c has as 8-way", /* control__details */
+  &bcruzm12_get_btn;
 }
 
 const char *bcruzm12_get_btn(int type)
@@ -2954,7 +3070,8 @@ const struct ControlInfo btlkroad_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &btlkroad_get_btn;
 }
 
 const char *btlkroad_get_btn(int type)
@@ -2984,7 +3101,8 @@ const struct ControlInfo battlane_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &battlane_get_btn;
 }
 
 const char *battlane_get_btn(int type)
@@ -3010,7 +3128,8 @@ const struct ControlInfo atlantis_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &atlantis_get_btn;
 }
 
 const char *atlantis_get_btn(int type)
@@ -3036,7 +3155,8 @@ const struct ControlInfo battlera_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &battlera_get_btn;
 }
 
 const char *battlera_get_btn(int type)
@@ -3063,7 +3183,8 @@ const struct ControlInfo bshark_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a one of a kind periscope control and you look into the periscope to see the screen similar to battlezone. For all intensive purposes it's a glorified star wars yoke though." /* control_details */
+  "This game uses a one of a kind periscope control and you look into the periscope to see the screen similar to battlezone. For all intensive purposes it's a glorified star wars yoke though.", /* control__details */
+  &bshark_get_btn;
 }
 
 const char *bshark_get_btn(int type)
@@ -3088,7 +3209,8 @@ const struct ControlInfo btoads_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is either set to 2 player, where you can select your toad, or 3 player, where the toads are hard-wired to the panel. You can adjust this setting in the dipswitches." /* control_details */
+  "This game is either set to 2 player, where you can select your toad, or 3 player, where the toads are hard-wired to the panel. You can adjust this setting in the dipswitches.", /* control__details */
+  &btoads_get_btn;
 }
 
 const char *btoads_get_btn(int type)
@@ -3114,7 +3236,8 @@ const struct ControlInfo bzone_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Both handles have holes for a trigger switch, but generally only one has a button." /* control_details */
+  "Both handles have holes for a trigger switch, but generally only one has a button.", /* control__details */
+  &bzone_get_btn;
 }
 
 const char *bzone_get_btn(int type)
@@ -3139,7 +3262,8 @@ const struct ControlInfo bayroute_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bayroute_get_btn;
 }
 
 const char *bayroute_get_btn(int type)
@@ -3165,7 +3289,8 @@ const struct ControlInfo beaminv_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &beaminv_get_btn;
 }
 
 const char *beaminv_get_btn(int type)
@@ -3188,7 +3313,8 @@ const struct ControlInfo bbusters_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bbusters_get_btn;
 }
 
 const char *bbusters_get_btn(int type)
@@ -3214,7 +3340,8 @@ const struct ControlInfo beathead_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Jump - player jumps to the adjacent block in the desired direction Big Jump - plyers jumps over the adjacent block and lands on the next" /* control_details */
+  "Jump - player jumps to the adjacent block in the desired direction Big Jump - plyers jumps over the adjacent block and lands on the next", /* control__details */
+  &beathead_get_btn;
 }
 
 const char *beathead_get_btn(int type)
@@ -3240,7 +3367,8 @@ const struct ControlInfo bm1stmix_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now." /* control_details */
+  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  &bm1stmix_get_btn;
 }
 
 const char *bm1stmix_get_btn(int type)
@@ -3267,7 +3395,8 @@ const struct ControlInfo bm2ndmix_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now." /* control_details */
+  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  &bm2ndmix_get_btn;
 }
 
 const char *bm2ndmix_get_btn(int type)
@@ -3294,7 +3423,8 @@ const struct ControlInfo bm4thmix_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now." /* control_details */
+  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  &bm4thmix_get_btn;
 }
 
 const char *bm4thmix_get_btn(int type)
@@ -3321,7 +3451,8 @@ const struct ControlInfo bm5thmix_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now." /* control_details */
+  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  &bm5thmix_get_btn;
 }
 
 const char *bm5thmix_get_btn(int type)
@@ -3348,7 +3479,8 @@ const struct ControlInfo bm6thmix_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now." /* control_details */
+  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  &bm6thmix_get_btn;
 }
 
 const char *bm6thmix_get_btn(int type)
@@ -3375,7 +3507,8 @@ const struct ControlInfo bmcompmx_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now." /* control_details */
+  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  &bmcompmx_get_btn;
 }
 
 const char *bmcompmx_get_btn(int type)
@@ -3402,7 +3535,8 @@ const struct ControlInfo bmcompm2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now." /* control_details */
+  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  &bmcompm2_get_btn;
 }
 
 const char *bmcompm2_get_btn(int type)
@@ -3429,7 +3563,8 @@ const struct ControlInfo bmcorerm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now." /* control_details */
+  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  &bmcorerm_get_btn;
 }
 
 const char *bmcorerm_get_btn(int type)
@@ -3456,7 +3591,8 @@ const struct ControlInfo bmdct_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now." /* control_details */
+  "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  &bmdct_get_btn;
 }
 
 const char *bmdct_get_btn(int type)
@@ -3483,7 +3619,8 @@ const struct ControlInfo beezer_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &beezer_get_btn;
 }
 
 const char *beezer_get_btn(int type)
@@ -3507,7 +3644,8 @@ const struct ControlInfo bel_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame has 4 buttons for this game, but it's leftover from the generic model 2 driver. Only the trigger button and grenade button, both monunted on the gun, exist." /* control_details */
+  "Mame has 4 buttons for this game, but it's leftover from the generic model 2 driver. Only the trigger button and grenade button, both monunted on the gun, exist.", /* control__details */
+  &bel_get_btn;
 }
 
 const char *bel_get_btn(int type)
@@ -3533,7 +3671,8 @@ const struct ControlInfo blswhstl_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Both buttons do the same thing. The review on gamefaqs says there is only 1 button, but the game is using the tmnt.c driver which has 2 buttons as default for all games" /* control_details */
+  "Both buttons do the same thing. The review on gamefaqs says there is only 1 button, but the game is using the tmnt.c driver which has 2 buttons as default for all games", /* control__details */
+  &blswhstl_get_btn;
 }
 
 const char *blswhstl_get_btn(int type)
@@ -3559,7 +3698,8 @@ const struct ControlInfo berabohm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Original game has 2 pressure sensitive buttons but mame is hacked to 4 buttons. To do the hard attack, press buttons 1 and 2 together, for high jump, press buttons 3 and 4 together. Taken from the driver (namcos1.c)   Notes: The berabohm buttons don't work too well. The real thing has a special pressure sensitive button, with two switches. The harder you push the button, the faster the two switches are closed one after another. Due to MAME's limited input sample rate (once per frame) it is difficult to measure the time between the two. Buttons (pressure sensitive) each button has two switches: the first is closed as soon as the button is pressed, the second a little later, depending on how hard the button is pressed. 	bits 0-5 control strength (0x00 = max 0x3f = min) 	bit 6 indicates the button is pressed 	bit 7 is not actually read by the game but I use it to simulate the second switch" /* control_details */
+  "Original game has 2 pressure sensitive buttons but mame is hacked to 4 buttons. To do the hard attack, press buttons 1 and 2 together, for high jump, press buttons 3 and 4 together. Taken from the driver (namcos1.c)   Notes: The berabohm buttons don't work too well. The real thing has a special pressure sensitive button, with two switches. The harder you push the button, the faster the two switches are closed one after another. Due to MAME's limited input sample rate (once per frame) it is difficult to measure the time between the two. Buttons (pressure sensitive) each button has two switches: the first is closed as soon as the button is pressed, the second a little later, depending on how hard the button is pressed. 	bits 0-5 control strength (0x00 = max 0x3f = min) 	bit 6 indicates the button is pressed 	bit 7 is not actually read by the game but I use it to simulate the second switch", /* control__details */
+  &berabohm_get_btn;
 }
 
 const char *berabohm_get_btn(int type)
@@ -3587,7 +3727,8 @@ const struct ControlInfo bermudat_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button two changes the formation of the picked up small shield airplanes." /* control_details */
+  "Button two changes the formation of the picked up small shield airplanes.", /* control__details */
+  &bermudat_get_btn;
 }
 
 const char *bermudat_get_btn(int type)
@@ -3615,7 +3756,8 @@ const struct ControlInfo berzerk_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game was shipped out the door with a 8 way optical joystick. The joystick behaved exactly like a regular 8 way joystick except it was constantly failing. It was so bad that Stern recalled the orignal joystick and offered free leaf replacments to all the owners. So for the history books this game didn't use a regular 8 way, but in actuality it did 99 percent of the time." /* control_details */
+  "This game was shipped out the door with a 8 way optical joystick. The joystick behaved exactly like a regular 8 way joystick except it was constantly failing. It was so bad that Stern recalled the orignal joystick and offered free leaf replacments to all the owners. So for the history books this game didn't use a regular 8 way, but in actuality it did 99 percent of the time.", /* control__details */
+  &berzerk_get_btn;
 }
 
 const char *berzerk_get_btn(int type)
@@ -3640,7 +3782,8 @@ const struct ControlInfo bigevglf_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button is on either side of the trackball. Button 2 is only used in cocktail mode." /* control_details */
+  "Button is on either side of the trackball. Button 2 is only used in cocktail mode.", /* control__details */
+  &bigevglf_get_btn;
 }
 
 const char *bigevglf_get_btn(int type)
@@ -3666,7 +3809,8 @@ const struct ControlInfo bigkarnk_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bigkarnk_get_btn;
 }
 
 const char *bigkarnk_get_btn(int type)
@@ -3692,7 +3836,8 @@ const struct ControlInfo bigrun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Obviously the horn button isn't labeled, but is the horn on the wheel." /* control_details */
+  "Obviously the horn button isn't labeled, but is the horn on the wheel.", /* control__details */
+  &bigrun_get_btn;
 }
 
 const char *bigrun_get_btn(int type)
@@ -3719,7 +3864,8 @@ const struct ControlInfo bigstrik_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "In offense A-Short Pass, B-Long Pass/Shoot, C-Fake Play In defense A-Sliding Tackle, B-Steal" /* control_details */
+  "In offense A-Short Pass, B-Long Pass/Shoot, C-Fake Play In defense A-Sliding Tackle, B-Steal", /* control__details */
+  &bigstrik_get_btn;
 }
 
 const char *bigstrik_get_btn(int type)
@@ -3746,7 +3892,8 @@ const struct ControlInfo bigtwin_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Couldn?t find what the actually button is called on the panel but by pressing it you cause the hand on the screen to grab a ball" /* control_details */
+  "Couldn?t find what the actually button is called on the panel but by pressing it you cause the hand on the screen to grab a ball", /* control__details */
+  &bigtwin_get_btn;
 }
 
 const char *bigtwin_get_btn(int type)
@@ -3771,7 +3918,8 @@ const struct ControlInfo bbonk_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Driver(lazercmd.c) has the controls as joystick while Klov states directional buttons - couldn't find any CPO pics" /* control_details */
+  "Driver(lazercmd.c) has the controls as joystick while Klov states directional buttons - couldn't find any CPO pics", /* control__details */
+  &bbonk_get_btn;
 }
 
 const char *bbonk_get_btn(int type)
@@ -3795,7 +3943,8 @@ const struct ControlInfo bijokkog_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &bijokkog_get_btn;
 }
 
 const char *bijokkog_get_btn(int type)
@@ -3815,7 +3964,8 @@ const struct ControlInfo bijokkoy_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &bijokkoy_get_btn;
 }
 
 const char *bijokkoy_get_btn(int type)
@@ -3835,7 +3985,8 @@ const struct ControlInfo bioatack_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bioatack_get_btn;
 }
 
 const char *bioatack_get_btn(int type)
@@ -3860,7 +4011,8 @@ const struct ControlInfo bioship_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Super-Fire is achived by holding down the Fire button until the meter at the lower end of the screen reads full. Holding the Cursor button down causes the Paladin to remain stationary and the cursor can be moved around the screen using the joystick" /* control_details */
+  "Super-Fire is achived by holding down the Fire button until the meter at the lower end of the screen reads full. Holding the Cursor button down causes the Paladin to remain stationary and the cursor can be moved around the screen using the joystick", /* control__details */
+  &bioship_get_btn;
 }
 
 const char *bioship_get_btn(int type)
@@ -3886,7 +4038,8 @@ const struct ControlInfo biofreak_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &biofreak_get_btn;
 }
 
 const char *biofreak_get_btn(int type)
@@ -3916,7 +4069,8 @@ const struct ControlInfo biomtoy_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Game is only 1 player while the driver (gaelco.c) has 2." /* control_details */
+  "Game is only 1 player while the driver (gaelco.c) has 2.", /* control__details */
+  &biomtoy_get_btn;
 }
 
 const char *biomtoy_get_btn(int type)
@@ -3942,7 +4096,8 @@ const struct ControlInfo bionicc_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bionicc_get_btn;
 }
 
 const char *bionicc_get_btn(int type)
@@ -3968,7 +4123,8 @@ const struct ControlInfo bking_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bking_get_btn;
 }
 
 const char *bking_get_btn(int type)
@@ -3992,7 +4148,8 @@ const struct ControlInfo bking2_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bking2_get_btn;
 }
 
 const char *bking2_get_btn(int type)
@@ -4016,7 +4173,8 @@ const struct ControlInfo bking3_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bking3_get_btn;
 }
 
 const char *bking3_get_btn(int type)
@@ -4040,7 +4198,8 @@ const struct ControlInfo birdtry_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "In game controls lists dial input for both players. I think this is taken from hbarrel which is from the same driver (dec0.c). Shouldn?t be in there. Gameplay - press the options button to change club, swing type and ball spin. Press the swing button to start swing. When red bar on right side of screen reaches desired power press swing again." /* control_details */
+  "In game controls lists dial input for both players. I think this is taken from hbarrel which is from the same driver (dec0.c). Shouldn?t be in there. Gameplay - press the options button to change club, swing type and ball spin. Press the swing button to start swing. When red bar on right side of screen reaches desired power press swing again.", /* control__details */
+  &birdtry_get_btn;
 }
 
 const char *birdtry_get_btn(int type)
@@ -4066,7 +4225,8 @@ const struct ControlInfo psailor1_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &psailor1_get_btn;
 }
 
 const char *psailor1_get_btn(int type)
@@ -4086,7 +4246,8 @@ const struct ControlInfo psailor2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &psailor2_get_btn;
 }
 
 const char *psailor2_get_btn(int type)
@@ -4106,7 +4267,8 @@ const struct ControlInfo blkheart_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &blkheart_get_btn;
 }
 
 const char *blkheart_get_btn(int type)
@@ -4132,7 +4294,8 @@ const struct ControlInfo blkhole_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &blkhole_get_btn;
 }
 
 const char *blkhole_get_btn(int type)
@@ -4155,7 +4318,8 @@ const struct ControlInfo blkpnthr_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "No panel pics but that's what the buttons do." /* control_details */
+  "No panel pics but that's what the buttons do.", /* control__details */
+  &blkpnthr_get_btn;
 }
 
 const char *blkpnthr_get_btn(int type)
@@ -4181,7 +4345,8 @@ const struct ControlInfo blktiger_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &blktiger_get_btn;
 }
 
 const char *blktiger_get_btn(int type)
@@ -4207,7 +4372,8 @@ const struct ControlInfo bwidow_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bwidow_get_btn;
 }
 
 const char *bwidow_get_btn(int type)
@@ -4235,7 +4401,8 @@ const struct ControlInfo bmaster_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bmaster_get_btn;
 }
 
 const char *bmaster_get_btn(int type)
@@ -4261,7 +4428,8 @@ const struct ControlInfo bladestl_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Mame driver has inputs for a 8 way joystick as well, but I've yet to find a machine that uses those inputs. It's unknown if this is a hack." /* control_details */
+  "The Mame driver has inputs for a 8 way joystick as well, but I've yet to find a machine that uses those inputs. It's unknown if this is a hack.", /* control__details */
+  &bladestl_get_btn;
 }
 
 const char *bladestl_get_btn(int type)
@@ -4288,7 +4456,8 @@ const struct ControlInfo blandia_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &blandia_get_btn;
 }
 
 const char *blandia_get_btn(int type)
@@ -4315,7 +4484,8 @@ const struct ControlInfo blastoff_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Driver (namcos1.c) has standard 3 button layout although only 2 are required" /* control_details */
+  "Driver (namcos1.c) has standard 3 button layout although only 2 are required", /* control__details */
+  &blastoff_get_btn;
 }
 
 const char *blastoff_get_btn(int type)
@@ -4342,7 +4512,8 @@ const struct ControlInfo blasted_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &blasted_get_btn;
 }
 
 const char *blasted_get_btn(int type)
@@ -4367,7 +4538,8 @@ const struct ControlInfo blaster_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a 49-way optical triggerstick with thumb button. The buttons are repeated on the control panel. The game uses aircraft style controls - Pull back on the stick to climb." /* control_details */
+  "This game uses a 49-way optical triggerstick with thumb button. The buttons are repeated on the control panel. The game uses aircraft style controls - Pull back on the stick to climb.", /* control__details */
+  &blaster_get_btn;
 }
 
 const char *blaster_get_btn(int type)
@@ -4394,7 +4566,8 @@ const struct ControlInfo blstroid_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &blstroid_get_btn;
 }
 
 const char *blstroid_get_btn(int type)
@@ -4419,7 +4592,8 @@ const struct ControlInfo blasto_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Cocktail cabinet had directional buttons (up/down/left/right) while upright had joysticks. Clearly seen on the arcadeflyer link" /* control_details */
+  "Cocktail cabinet had directional buttons (up/down/left/right) while upright had joysticks. Clearly seen on the arcadeflyer link", /* control__details */
+  &blasto_get_btn;
 }
 
 const char *blasto_get_btn(int type)
@@ -4444,7 +4618,8 @@ const struct ControlInfo blazeon_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Editor's note:  The control panel on this gmae labels the buttons simply as 'A' and 'B' but I felt it would be ok to simply put the actual functions as described in the flyer. As this game was often sold as a conversion kit, we can assume that the flyer used the labels 'A' and 'B' because that is the 'jamma standard' labeling scheme. A = Normal shot, B = Special Weapon / Attack" /* control_details */
+  "Editor's note:  The control panel on this gmae labels the buttons simply as 'A' and 'B' but I felt it would be ok to simply put the actual functions as described in the flyer. As this game was often sold as a conversion kit, we can assume that the flyer used the labels 'A' and 'B' because that is the 'jamma standard' labeling scheme. A = Normal shot, B = Special Weapon / Attack", /* control__details */
+  &blazeon_get_btn;
 }
 
 const char *blazeon_get_btn(int type)
@@ -4470,7 +4645,8 @@ const struct ControlInfo blockout_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that oddly enough, the drop button, which is on the top-fire is the 4th button, not the first. Button A rotates on the Z axis, B on the Y axis, and C on the Ry. If you can't follow that just try the game an you will cath on." /* control_details */
+  "Note that oddly enough, the drop button, which is on the top-fire is the 4th button, not the first. Button A rotates on the Z axis, B on the Y axis, and C on the Ry. If you can't follow that just try the game an you will cath on.", /* control__details */
+  &blockout_get_btn;
 }
 
 const char *blockout_get_btn(int type)
@@ -4498,7 +4674,8 @@ const struct ControlInfo blockade_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &blockade_get_btn;
 }
 
 const char *blockade_get_btn(int type)
@@ -4522,7 +4699,8 @@ const struct ControlInfo bloodbro_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bloodbro_get_btn;
 }
 
 const char *bloodbro_get_btn(int type)
@@ -4549,7 +4727,8 @@ const struct ControlInfo bloxeed_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bloxeed_get_btn;
 }
 
 const char *bloxeed_get_btn(int type)
@@ -4574,7 +4753,8 @@ const struct ControlInfo blueprnt_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &blueprnt_get_btn;
 }
 
 const char *blueprnt_get_btn(int type)
@@ -4599,7 +4779,8 @@ const struct ControlInfo blueshrk_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game actually used a one axis positional gun shaped to look like a spear gun. The spear shoots from the bottom of the screen and travels all the way to the top so just one axis is needed." /* control_details */
+  "This game actually used a one axis positional gun shaped to look like a spear gun. The spear shoots from the bottom of the screen and travels all the way to the top so just one axis is needed.", /* control__details */
+  &blueshrk_get_btn;
 }
 
 const char *blueshrk_get_btn(int type)
@@ -4621,7 +4802,8 @@ const struct ControlInfo bodyslam_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Press help when near team mate to tag Press punch + kick and a direction to run Press punch when opponent on ground to pick them up Press kick to pin Press help to get up off the ground" /* control_details */
+  "Press help when near team mate to tag Press punch + kick and a direction to run Press punch when opponent on ground to pick them up Press kick to pin Press help to get up off the ground", /* control__details */
+  &bodyslam_get_btn;
 }
 
 const char *bodyslam_get_btn(int type)
@@ -4648,7 +4830,8 @@ const struct ControlInfo bogeyman_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button A to swing the rod Button B Trick button (this can be used to jump when the player changes shape)or to trick the ghosts" /* control_details */
+  "Button A to swing the rod Button B Trick button (this can be used to jump when the player changes shape)or to trick the ghosts", /* control__details */
+  &bogeyman_get_btn;
 }
 
 const char *bogeyman_get_btn(int type)
@@ -4674,7 +4857,8 @@ const struct ControlInfo bombjack_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bombjack_get_btn;
 }
 
 const char *bombjack_get_btn(int type)
@@ -4699,7 +4883,8 @@ const struct ControlInfo boogwing_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Each player starts with a single bomb attached to their plane by a hook. Once dropped the hook can be used to pick up any land-based objects and drop them at will with the bomb button. Once the player's plane is shot down, they can run on land and fire with a pistol until hit." /* control_details */
+  "Each player starts with a single bomb attached to their plane by a hook. Once dropped the hook can be used to pick up any land-based objects and drop them at will with the bomb button. Once the player's plane is shot down, they can run on land and fire with a pistol until hit.", /* control__details */
+  &boogwing_get_btn;
 }
 
 const char *boogwing_get_btn(int type)
@@ -4725,7 +4910,8 @@ const struct ControlInfo boothill_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game did NOT have a paddle but something, that for lack of a better description, is a 'paddle gun'. It's similar to the T2 analog guns but with a single axis." /* control_details */
+  "This game did NOT have a paddle but something, that for lack of a better description, is a 'paddle gun'. It's similar to the T2 analog guns but with a single axis.", /* control__details */
+  &boothill_get_btn;
 }
 
 const char *boothill_get_btn(int type)
@@ -4752,7 +4938,8 @@ const struct ControlInfo bosco_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bosco_get_btn;
 }
 
 const char *bosco_get_btn(int type)
@@ -4777,7 +4964,8 @@ const struct ControlInfo bottom9_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Buttons A and B do various things. According to the manual, A= 'Throw/Swing/Go' and B = 'Select/Bunt/Back'" /* control_details */
+  "Buttons A and B do various things. According to the manual, A= 'Throw/Swing/Go' and B = 'Select/Bunt/Back'", /* control__details */
+  &bottom9_get_btn;
 }
 
 const char *bottom9_get_btn(int type)
@@ -4803,7 +4991,8 @@ const struct ControlInfo bouldash_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bouldash_get_btn;
 }
 
 const char *bouldash_get_btn(int type)
@@ -4827,7 +5016,8 @@ const struct ControlInfo bowler_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "4 players alternate with the same trackball in the upright cab. Mame doesn't have cocktail mode, but KLOV shows a two trackball cocktail." /* control_details */
+  "4 players alternate with the same trackball in the upright cab. Mame doesn't have cocktail mode, but KLOV shows a two trackball cocktail.", /* control__details */
+  &bowler_get_btn;
 }
 
 const char *bowler_get_btn(int type)
@@ -4853,7 +5043,8 @@ const struct ControlInfo boxingb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The dial is actually labeled rotation control. The buttons don't have labels, rather they have pictures of a rocket and a boxing glove respectively." /* control_details */
+  "The dial is actually labeled rotation control. The buttons don't have labels, rather they have pictures of a rocket and a boxing glove respectively.", /* control__details */
+  &boxingb_get_btn;
 }
 
 const char *boxingb_get_btn(int type)
@@ -4877,7 +5068,8 @@ const struct ControlInfo bradley_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "I've made an executive decision on this one. Since it's a prototype and there aren't any good pics of the control panel, I've decided to list the labels given in mame (which are not correct) and describe how the actual machine worked. First off we have a yoke designed for this military conversion. If not for this game, there wouldn't be a star wars yoke. The range of the shot was controlled by an analog dial on the bezel. Next to that was a digital knob that controlled the magnification. The game originally had a toggle switch that doesn't seem to be included in mame. My guess is that it was never hooked up to anything (this prototype was a mess and was never finished). Please note that all buttons save the first hae hard-coded mappings." /* control_details */
+  "I've made an executive decision on this one. Since it's a prototype and there aren't any good pics of the control panel, I've decided to list the labels given in mame (which are not correct) and describe how the actual machine worked. First off we have a yoke designed for this military conversion. If not for this game, there wouldn't be a star wars yoke. The range of the shot was controlled by an analog dial on the bezel. Next to that was a digital knob that controlled the magnification. The game originally had a toggle switch that doesn't seem to be included in mame. My guess is that it was never hooked up to anything (this prototype was a mess and was never finished). Please note that all buttons save the first hae hard-coded mappings.", /* control__details */
+  &bradley_get_btn;
 }
 
 const char *bradley_get_btn(int type)
@@ -4913,7 +5105,8 @@ const struct ControlInfo brkthru_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game's official overlay didn't have any labels. These are labels." /* control_details */
+  "This game's official overlay didn't have any labels. These are labels.", /* control__details */
+  &brkthru_get_btn;
 }
 
 const char *brkthru_get_btn(int type)
@@ -4939,7 +5132,8 @@ const struct ControlInfo bublbobl_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bublbobl_get_btn;
 }
 
 const char *bublbobl_get_btn(int type)
@@ -4963,7 +5157,8 @@ const struct ControlInfo bubbles_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &bubbles_get_btn;
 }
 
 const char *bubbles_get_btn(int type)
@@ -4987,7 +5182,8 @@ const struct ControlInfo buckrog_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The trigger stick button is mirrored on the control panel." /* control_details */
+  "The trigger stick button is mirrored on the control panel.", /* control__details */
+  &buckrog_get_btn;
 }
 
 const char *buckrog_get_btn(int type)
@@ -5014,7 +5210,8 @@ const struct ControlInfo buggychl_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "As it's mapped in mame, holidng down the shifter button keeps the car in high gear." /* control_details */
+  "As it's mapped in mame, holidng down the shifter button keeps the car in high gear.", /* control__details */
+  &buggychl_get_btn;
 }
 
 const char *buggychl_get_btn(int type)
@@ -5038,7 +5235,8 @@ const struct ControlInfo btime_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &btime_get_btn;
 }
 
 const char *btime_get_btn(int type)
@@ -5063,7 +5261,8 @@ const struct ControlInfo brubber_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Up and Down act essentially as a gear shift, you don\'t have to hold up or down to go fast or slow. Also note that you can only jump when going fast." /* control_details */
+  "Up and Down act essentially as a gear shift, you don\'t have to hold up or down to go fast or slow. Also note that you can only jump when going fast.", /* control__details */
+  &brubber_get_btn;
 }
 
 const char *brubber_get_btn(int type)
@@ -5088,7 +5287,8 @@ const struct ControlInfo cabal_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "There is a bootleg version that used 8-way sticks and 3 buttons instead of the official trackball and 2 buttons. The third button in the bootleg version is the roll button." /* control_details */
+  "There is a bootleg version that used 8-way sticks and 3 buttons instead of the official trackball and 2 buttons. The third button in the bootleg version is the roll button.", /* control__details */
+  &cabal_get_btn;
 }
 
 const char *cabal_get_btn(int type)
@@ -5114,7 +5314,8 @@ const struct ControlInfo cadash_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cadash_get_btn;
 }
 
 const char *cadash_get_btn(int type)
@@ -5140,7 +5341,8 @@ const struct ControlInfo dino_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &dino_get_btn;
 }
 
 const char *dino_get_btn(int type)
@@ -5166,7 +5368,8 @@ const struct ControlInfo calibr50_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joysticks were 'Loop 24' joysticks, which look like the yellow mechanical 'LS-30', except are optical instead of mechanical. They also had green handles and clicked 24 times to complete a full rotation, hence the 'Loop 24' name." /* control_details */
+  "The joysticks were 'Loop 24' joysticks, which look like the yellow mechanical 'LS-30', except are optical instead of mechanical. They also had green handles and clicked 24 times to complete a full rotation, hence the 'Loop 24' name.", /* control__details */
+  &calibr50_get_btn;
 }
 
 const char *calibr50_get_btn(int type)
@@ -5194,7 +5397,8 @@ const struct ControlInfo cameltry_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game seems to use a tetris cpo. The button isn't actually labeled, and the labels it were given are explained during gameplay. Pressing the button jumps while holding it down speeds up your decent." /* control_details */
+  "This game seems to use a tetris cpo. The button isn't actually labeled, and the labels it were given are explained during gameplay. Pressing the button jumps while holding it down speeds up your decent.", /* control__details */
+  &cameltry_get_btn;
 }
 
 const char *cameltry_get_btn(int type)
@@ -5217,7 +5421,8 @@ const struct ControlInfo canyon_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The panel had buttons labelled Black Start, Black Fire, White Start, White Fire. Black is the first player and White is the second, so we don't add that part onto the label here. It also had a button for Hi Score Reset (yes, on the panel itself), MAME oddly emulates this as p1 button 7, but the driver overrides the default key to an 'H' (for 'high' score reset). The driver will eventually be fixed to put this button in the service buttons, where it bleongs." /* control_details */
+  "The panel had buttons labelled Black Start, Black Fire, White Start, White Fire. Black is the first player and White is the second, so we don't add that part onto the label here. It also had a button for Hi Score Reset (yes, on the panel itself), MAME oddly emulates this as p1 button 7, but the driver overrides the default key to an 'H' (for 'high' score reset). The driver will eventually be fixed to put this button in the service buttons, where it bleongs.", /* control__details */
+  &canyon_get_btn;
 }
 
 const char *canyon_get_btn(int type)
@@ -5238,7 +5443,8 @@ const struct ControlInfo capbowl_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &capbowl_get_btn;
 }
 
 const char *capbowl_get_btn(int type)
@@ -5264,7 +5470,8 @@ const struct ControlInfo captaven_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &captaven_get_btn;
 }
 
 const char *captaven_get_btn(int type)
@@ -5290,7 +5497,8 @@ const struct ControlInfo captcomm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Pressing attack and jump performs a special. This game is basically a capcom ripoff of tmnt and the controls are similar. The only difference is the use of a very rare two-sided, circular, 2-in-1 button (unlabeled btw) instead of two regular buttons. It should also be noted that this game can be changed from 2 player up to 4 player in the dipswitches and just like tmnt when you have it in 4 player mode players can't select their characters." /* control_details */
+  "Pressing attack and jump performs a special. This game is basically a capcom ripoff of tmnt and the controls are similar. The only difference is the use of a very rare two-sided, circular, 2-in-1 button (unlabeled btw) instead of two regular buttons. It should also be noted that this game can be changed from 2 player up to 4 player in the dipswitches and just like tmnt when you have it in 4 player mode players can't select their characters.", /* control__details */
+  &captcomm_get_btn;
 }
 
 const char *captcomm_get_btn(int type)
@@ -5316,7 +5524,8 @@ const struct ControlInfo carnevil_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The lightgun is shaped like a small, piston grip, pump action shotgun. You can also reload by shooting off screen." /* control_details */
+  "The lightgun is shaped like a small, piston grip, pump action shotgun. You can also reload by shooting off screen.", /* control__details */
+  &carnevil_get_btn;
 }
 
 const char *carnevil_get_btn(int type)
@@ -5342,7 +5551,8 @@ const struct ControlInfo carnival_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &carnival_get_btn;
 }
 
 const char *carnival_get_btn(int type)
@@ -5365,7 +5575,8 @@ const struct ControlInfo cawing_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cawing_get_btn;
 }
 
 const char *cawing_get_btn(int type)
@@ -5391,7 +5602,8 @@ const struct ControlInfo cavelon_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cavelon_get_btn;
 }
 
 const char *cavelon_get_btn(int type)
@@ -5417,7 +5629,8 @@ const struct ControlInfo cninja_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cninja_get_btn;
 }
 
 const char *cninja_get_btn(int type)
@@ -5443,7 +5656,8 @@ const struct ControlInfo centiped_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &centiped_get_btn;
 }
 
 const char *centiped_get_btn(int type)
@@ -5468,7 +5682,8 @@ const struct ControlInfo challeng_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &challeng_get_btn;
 }
 
 const char *challeng_get_btn(int type)
@@ -5493,7 +5708,8 @@ const struct ControlInfo champbas_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The actual cpo labels simply read A, B, and C respectively. The bezel, however, tells you the functions. Since part of this projects goal is to aid in figuring out how to play, I improvised and combined the two." /* control_details */
+  "The actual cpo labels simply read A, B, and C respectively. The bezel, however, tells you the functions. Since part of this projects goal is to aid in figuring out how to play, I improvised and combined the two.", /* control__details */
+  &champbas_get_btn;
 }
 
 const char *champbas_get_btn(int type)
@@ -5520,7 +5736,8 @@ const struct ControlInfo csprint_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &csprint_get_btn;
 }
 
 const char *csprint_get_btn(int type)
@@ -5543,7 +5760,8 @@ const struct ControlInfo checkman_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original Japanese version of Check Man (checkmaj) uses two fire buttons to slide the rows of blocks left and right. The fire buttons were removed for the world release and the player select buttons are used to slide the blocks." /* control_details */
+  "The original Japanese version of Check Man (checkmaj) uses two fire buttons to slide the rows of blocks left and right. The fire buttons were removed for the world release and the player select buttons are used to slide the blocks.", /* control__details */
+  &checkman_get_btn;
 }
 
 const char *checkman_get_btn(int type)
@@ -5569,7 +5787,8 @@ const struct ControlInfo checkmat_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &checkmat_get_btn;
 }
 
 const char *checkmat_get_btn(int type)
@@ -5593,7 +5812,8 @@ const struct ControlInfo cheekyms_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cheekyms_get_btn;
 }
 
 const char *cheekyms_get_btn(int type)
@@ -5616,7 +5836,8 @@ const struct ControlInfo cheyenne_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Game used a rifle style lightgun on a pedestal mount." /* control_details */
+  "Game used a rifle style lightgun on a pedestal mount.", /* control__details */
+  &cheyenne_get_btn;
 }
 
 const char *cheyenne_get_btn(int type)
@@ -5641,7 +5862,8 @@ const struct ControlInfo cshift_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cshift_get_btn;
 }
 
 const char *cshift_get_btn(int type)
@@ -5663,7 +5885,8 @@ const struct ControlInfo chiller_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is one of only a handful that uses a mounted lightgun instead of a regular analog mounted gun. You would think that mame-wize it would be more autehntic to use an analog gun, but as the game doesn't have any calibration (since it's optical) it is reccomended that you use a standard lightgun for this game." /* control_details */
+  "This game is one of only a handful that uses a mounted lightgun instead of a regular analog mounted gun. You would think that mame-wize it would be more autehntic to use an analog gun, but as the game doesn't have any calibration (since it's optical) it is reccomended that you use a standard lightgun for this game.", /* control__details */
+  &chiller_get_btn;
 }
 
 const char *chiller_get_btn(int type)
@@ -5688,7 +5911,8 @@ const struct ControlInfo ccasino_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ccasino_get_btn;
 }
 
 const char *ccasino_get_btn(int type)
@@ -5708,7 +5932,8 @@ const struct ControlInfo chopper_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game's official cpo is unlabeled. If anyone has the manual to this game please feel free to verify these labels." /* control_details */
+  "This game's official cpo is unlabeled. If anyone has the manual to this game please feel free to verify these labels.", /* control__details */
+  &chopper_get_btn;
 }
 
 const char *chopper_get_btn(int type)
@@ -5734,7 +5959,8 @@ const struct ControlInfo circus_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original cpo didn't have any labels for the paddle, but rather the instructions:  'Bounce Man From Board. Pop Balloons For Points'  The game also listed the scoring chart on the cpo." /* control_details */
+  "The original cpo didn't have any labels for the paddle, but rather the instructions:  'Bounce Man From Board. Pop Balloons For Points'  The game also listed the scoring chart on the cpo.", /* control__details */
+  &circus_get_btn;
 }
 
 const char *circus_get_btn(int type)
@@ -5756,7 +5982,8 @@ const struct ControlInfo circusc_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "One neat feature of the game is that Player 1 and Player 2 can select different levels of difficulty." /* control_details */
+  "One neat feature of the game is that Player 1 and Player 2 can select different levels of difficulty.", /* control__details */
+  &circusc_get_btn;
 }
 
 const char *circusc_get_btn(int type)
@@ -5779,7 +6006,8 @@ const struct ControlInfo cischeat_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'Horn' button has a picture of a horn on it rather than actual text." /* control_details */
+  "The 'Horn' button has a picture of a horn on it rather than actual text.", /* control__details */
+  &cischeat_get_btn;
 }
 
 const char *cischeat_get_btn(int type)
@@ -5806,7 +6034,8 @@ const struct ControlInfo citycon_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &citycon_get_btn;
 }
 
 const char *citycon_get_btn(int type)
@@ -5832,7 +6061,8 @@ const struct ControlInfo citylove_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &citylove_get_btn;
 }
 
 const char *citylove_get_btn(int type)
@@ -5852,7 +6082,8 @@ const struct ControlInfo cloak_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cloak_get_btn;
 }
 
 const char *cloak_get_btn(int type)
@@ -5881,7 +6112,8 @@ const struct ControlInfo clowns_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game definately has a unique layout. Although players take turns, each player has his own controls, even on the upright version. Even stranger is the fact that the second players controls are on the left and player one is on the right." /* control_details */
+  "This game definately has a unique layout. Although players take turns, each player has his own controls, even on the upright version. Even stranger is the fact that the second players controls are on the left and player one is on the right.", /* control__details */
+  &clowns_get_btn;
 }
 
 const char *clowns_get_btn(int type)
@@ -5903,7 +6135,8 @@ const struct ControlInfo cltchitr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The A, B, and C buttons actually have a series of actions listed for each one on the cpo, but it's far too long to document here." /* control_details */
+  "The A, B, and C buttons actually have a series of actions listed for each one on the cpo, but it's far too long to document here.", /* control__details */
+  &cltchitr_get_btn;
 }
 
 const char *cltchitr_get_btn(int type)
@@ -5930,7 +6163,8 @@ const struct ControlInfo colony7_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &colony7_get_btn;
 }
 
 const char *colony7_get_btn(int type)
@@ -5957,7 +6191,8 @@ const struct ControlInfo columns_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The button is actually unlabed on the cpo and in the manual." /* control_details */
+  "The button is actually unlabed on the cpo and in the manual.", /* control__details */
+  &columns_get_btn;
 }
 
 const char *columns_get_btn(int type)
@@ -5982,7 +6217,8 @@ const struct ControlInfo combat_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a lightgun, but it's mounted to the control panel like an analog gun." /* control_details */
+  "This game uses a lightgun, but it's mounted to the control panel like an analog gun.", /* control__details */
+  &combat_get_btn;
 }
 
 const char *combat_get_btn(int type)
@@ -6007,7 +6243,8 @@ const struct ControlInfo commsega_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &commsega_get_btn;
 }
 
 const char *commsega_get_btn(int type)
@@ -6033,7 +6270,8 @@ const struct ControlInfo commando_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &commando_get_btn;
 }
 
 const char *commando_get_btn(int type)
@@ -6059,7 +6297,8 @@ const struct ControlInfo comotion_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &comotion_get_btn;
 }
 
 const char *comotion_get_btn(int type)
@@ -6083,7 +6322,8 @@ const struct ControlInfo congo_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &congo_get_btn;
 }
 
 const char *congo_get_btn(int type)
@@ -6108,7 +6348,8 @@ const struct ControlInfo contra_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &contra_get_btn;
 }
 
 const char *contra_get_btn(int type)
@@ -6134,7 +6375,8 @@ const struct ControlInfo cosmica_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game used odd buttons, that are essentially regular buttons with a translucent core." /* control_details */
+  "This game used odd buttons, that are essentially regular buttons with a translucent core.", /* control__details */
+  &cosmica_get_btn;
 }
 
 const char *cosmica_get_btn(int type)
@@ -6157,7 +6399,8 @@ const struct ControlInfo cavenger_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cavenger_get_btn;
 }
 
 const char *cavenger_get_btn(int type)
@@ -6183,7 +6426,8 @@ const struct ControlInfo cchasm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cchasm_get_btn;
 }
 
 const char *cchasm_get_btn(int type)
@@ -6208,7 +6452,8 @@ const struct ControlInfo cosmicg_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cosmicg_get_btn;
 }
 
 const char *cosmicg_get_btn(int type)
@@ -6231,7 +6476,8 @@ const struct ControlInfo cracksht_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game used a mounted lightgun as opposed to a free one." /* control_details */
+  "This game used a mounted lightgun as opposed to a free one.", /* control__details */
+  &cracksht_get_btn;
 }
 
 const char *cracksht_get_btn(int type)
@@ -6256,7 +6502,8 @@ const struct ControlInfo crash_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &crash_get_btn;
 }
 
 const char *crash_get_btn(int type)
@@ -6281,7 +6528,8 @@ const struct ControlInfo crater_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The shield button is the thumb button on the joystick." /* control_details */
+  "The shield button is the thumb button on the joystick.", /* control__details */
+  &crater_get_btn;
 }
 
 const char *crater_get_btn(int type)
@@ -6308,7 +6556,8 @@ const struct ControlInfo cclimber_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cclimber_get_btn;
 }
 
 const char *cclimber_get_btn(int type)
@@ -6336,7 +6585,8 @@ const struct ControlInfo cclimbr2_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cclimbr2_get_btn;
 }
 
 const char *cclimbr2_get_btn(int type)
@@ -6364,7 +6614,8 @@ const struct ControlInfo ckong_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ckong_get_btn;
 }
 
 const char *ckong_get_btn(int type)
@@ -6389,7 +6640,8 @@ const struct ControlInfo crimec_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &crimec_get_btn;
 }
 
 const char *crimec_get_btn(int type)
@@ -6415,7 +6667,8 @@ const struct ControlInfo crimfght_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Even though the screen will tell you to press start, you press the punch button to start the game. Oddly enough, this beat-em-up doesn't have a jump button." /* control_details */
+  "Even though the screen will tell you to press start, you press the punch button to start the game. Oddly enough, this beat-em-up doesn't have a jump button.", /* control__details */
+  &crimfght_get_btn;
 }
 
 const char *crimfght_get_btn(int type)
@@ -6441,7 +6694,8 @@ const struct ControlInfo crossbow_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a mounted optical crossbow instead of a regular lightgun." /* control_details */
+  "This game uses a mounted optical crossbow instead of a regular lightgun.", /* control__details */
+  &crossbow_get_btn;
 }
 
 const char *crossbow_get_btn(int type)
@@ -6466,7 +6720,8 @@ const struct ControlInfo crgolf_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game used a slew of small, red, chicklet, looking buttons. Along with a strang lever for the swing. Oddly enough the lever only adjusted the angle, and a button has to be pressed to actually hit the ball." /* control_details */
+  "This game used a slew of small, red, chicklet, looking buttons. Along with a strang lever for the swing. Oddly enough the lever only adjusted the angle, and a button has to be pressed to actually hit the ball.", /* control__details */
+  &crgolf_get_btn;
 }
 
 const char *crgolf_get_btn(int type)
@@ -6498,7 +6753,8 @@ const struct ControlInfo cbuster_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cbuster_get_btn;
 }
 
 const char *cbuster_get_btn(int type)
@@ -6525,7 +6781,8 @@ const struct ControlInfo crush_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &crush_get_btn;
 }
 
 const char *crush_get_btn(int type)
@@ -6549,7 +6806,8 @@ const struct ControlInfo cryptklr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Something of note is that this game uses a dedicated reload button that doesn't appear to be optional. The dedicated cabinet uses shotguns, in which the reload button is wired to the pump. Conversion kits often place the button on a control panel." /* control_details */
+  "Something of note is that this game uses a dedicated reload button that doesn't appear to be optional. The dedicated cabinet uses shotguns, in which the reload button is wired to the pump. Conversion kits often place the button on a control panel.", /* control__details */
+  &cryptklr_get_btn;
 }
 
 const char *cryptklr_get_btn(int type)
@@ -6575,7 +6833,8 @@ const struct ControlInfo ccastles_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The jump button is also the start button." /* control_details */
+  "The jump button is also the start button.", /* control__details */
+  &ccastles_get_btn;
 }
 
 const char *ccastles_get_btn(int type)
@@ -6600,7 +6859,8 @@ const struct ControlInfo crystalg_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &crystalg_get_btn;
 }
 
 const char *crystalg_get_btn(int type)
@@ -6620,7 +6880,8 @@ const struct ControlInfo crystal2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &crystal2_get_btn;
 }
 
 const char *crystal2_get_btn(int type)
@@ -6640,7 +6901,8 @@ const struct ControlInfo curvebal_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that player 1 and player 2 share a set of controls. During an inning change, player 1 swaps places with player 2 and vice-versa. The batter buttons are globally labeled 'Bat Control and Runners Speed'  and the pitch controls are labeled 'Speed of Pitch and Curve'." /* control_details */
+  "Note that player 1 and player 2 share a set of controls. During an inning change, player 1 swaps places with player 2 and vice-versa. The batter buttons are globally labeled 'Bat Control and Runners Speed'  and the pitch controls are labeled 'Speed of Pitch and Curve'.", /* control__details */
+  &curvebal_get_btn;
 }
 
 const char *curvebal_get_btn(int type)
@@ -6666,7 +6928,8 @@ const struct ControlInfo cybsled_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game used dual analog flight sticks. The Fire and Missile buttons are mirrored on both sticks, while the view point button is a lighted button on the control panel. It should be noted that this game was only sold as a dual cabinet with two boards linked together for head-2-head action, however due to limitations mame only emulates the first board and will probably never emulate the dual mode." /* control_details */
+  "This game used dual analog flight sticks. The Fire and Missile buttons are mirrored on both sticks, while the view point button is a lighted button on the control panel. It should be noted that this game was only sold as a dual cabinet with two boards linked together for head-2-head action, however due to limitations mame only emulates the first board and will probably never emulate the dual mode.", /* control__details */
+  &cybsled_get_btn;
 }
 
 const char *cybsled_get_btn(int type)
@@ -6698,7 +6961,8 @@ const struct ControlInfo cyberbal_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "I can't make out the fine print on the cpo image I used as a reference. If you know the real label for the button let me know." /* control_details */
+  "I can't make out the fine print on the cpo image I used as a reference. If you know the real label for the button let me know.", /* control__details */
+  &cyberbal_get_btn;
 }
 
 const char *cyberbal_get_btn(int type)
@@ -6723,7 +6987,8 @@ const struct ControlInfo cybots_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &cybots_get_btn;
 }
 
 const char *cybots_get_btn(int type)
@@ -6761,7 +7026,8 @@ const struct ControlInfo daioh_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &daioh_get_btn;
 }
 
 const char *daioh_get_btn(int type)
@@ -6791,7 +7057,8 @@ const struct ControlInfo dangar_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The transform button allows you to split the main ship into several smaller ships." /* control_details */
+  "The transform button allows you to split the main ship into several smaller ships.", /* control__details */
+  &dangar_get_btn;
 }
 
 const char *dangar_get_btn(int type)
@@ -6818,7 +7085,8 @@ const struct ControlInfo dangerz_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game does NOT use a trackball in real life. Instead, it uses quite possibly the most unique control ever. Two immovable trigger sticks are mounted on a panel attached to the monitor. When you try to move the sticks, they remain rigid and actually tilt the monitor!  The gameplay screen then scrolls depending upon where you tilt the monitor to. This gives the illusion of the player looking through a window onto the battle field." /* control_details */
+  "This game does NOT use a trackball in real life. Instead, it uses quite possibly the most unique control ever. Two immovable trigger sticks are mounted on a panel attached to the monitor. When you try to move the sticks, they remain rigid and actually tilt the monitor!  The gameplay screen then scrolls depending upon where you tilt the monitor to. This gives the illusion of the player looking through a window onto the battle field.", /* control__details */
+  &dangerz_get_btn;
 }
 
 const char *dangerz_get_btn(int type)
@@ -6844,7 +7112,8 @@ const struct ControlInfo indyheat_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Player 1 is the Red car, Player 2 is the White car (light grey-ish), Player 3 is the Blue car. Mame by default maps the pedal and the turbo button to the same button input (button 1). If you leave it this way, to use turbo, release the button and press it again. To enter service mode, hold down the blue turbo button and then press the service key (F2)." /* control_details */
+  "Player 1 is the Red car, Player 2 is the White car (light grey-ish), Player 3 is the Blue car. Mame by default maps the pedal and the turbo button to the same button input (button 1). If you leave it this way, to use turbo, release the button and press it again. To enter service mode, hold down the blue turbo button and then press the service key (F2).", /* control__details */
+  &indyheat_get_btn;
 }
 
 const char *indyheat_get_btn(int type)
@@ -6868,7 +7137,8 @@ const struct ControlInfo darkplnt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &darkplnt_get_btn;
 }
 
 const char *darkplnt_get_btn(int type)
@@ -6893,7 +7163,8 @@ const struct ControlInfo darkseal_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &darkseal_get_btn;
 }
 
 const char *darkseal_get_btn(int type)
@@ -6919,7 +7190,8 @@ const struct ControlInfo dstlk_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &dstlk_get_btn;
 }
 
 const char *dstlk_get_btn(int type)
@@ -6949,7 +7221,8 @@ const struct ControlInfo deadang_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &deadang_get_btn;
 }
 
 const char *deadang_get_btn(int type)
@@ -6975,7 +7248,8 @@ const struct ControlInfo redufo_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &redufo_get_btn;
 }
 
 const char *redufo_get_btn(int type)
@@ -6998,7 +7272,8 @@ const struct ControlInfo defender_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Joystick is on left side of control panel with reverse button the the right of it so it can be hit with thumb. Fire and thrust are on right side of control panel with smart bomb, and hyperspace to the left in a 45 degree angle. In mame you can turn on cheat mode and the controls are automatically re-mapped so that the game is quite playable on a standard 8way joystick." /* control_details */
+  "Joystick is on left side of control panel with reverse button the the right of it so it can be hit with thumb. Fire and thrust are on right side of control panel with smart bomb, and hyperspace to the left in a 45 degree angle. In mame you can turn on cheat mode and the controls are automatically re-mapped so that the game is quite playable on a standard 8way joystick.", /* control__details */
+  &defender_get_btn;
 }
 
 const char *defender_get_btn(int type)
@@ -7025,7 +7300,8 @@ const struct ControlInfo demoderb_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "OTHER: This game had a 2-way joystick as the forward/reverse shifter. Unlike Hi/Low shifters that have only two positions, the Demolition Derby shifter has a Forward, a Reverse, and a Neutral (centered, not labeled) like a 2-way (v) joystick. However, Mame emulates the shifter as buttons 1 & 2, and does not use the 2-way joystick. The start button is labeled 'Restart' on the CP. The game comes in 2 player standup and 4 player cocktail, and switches between the two with a dipswitch." /* control_details */
+  "OTHER: This game had a 2-way joystick as the forward/reverse shifter. Unlike Hi/Low shifters that have only two positions, the Demolition Derby shifter has a Forward, a Reverse, and a Neutral (centered, not labeled) like a 2-way (v) joystick. However, Mame emulates the shifter as buttons 1 & 2, and does not use the 2-way joystick. The start button is labeled 'Restart' on the CP. The game comes in 2 player standup and 4 player cocktail, and switches between the two with a dipswitch.", /* control__details */
+  &demoderb_get_btn;
 }
 
 const char *demoderb_get_btn(int type)
@@ -7049,7 +7325,8 @@ const struct ControlInfo depthch_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &depthch_get_btn;
 }
 
 const char *depthch_get_btn(int type)
@@ -7073,7 +7350,8 @@ const struct ControlInfo desertgu_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "It should be noted that this is the first game to my knowledge that uses an analog mounted gun. That would make it the great grandpa of future analog gun games like Terminator 2." /* control_details */
+  "It should be noted that this is the first game to my knowledge that uses an analog mounted gun. That would make it the great grandpa of future analog gun games like Terminator 2.", /* control__details */
+  &desertgu_get_btn;
 }
 
 const char *desertgu_get_btn(int type)
@@ -7098,7 +7376,8 @@ const struct ControlInfo destroyr_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a throttle control to control the speed of the ship (fast or slow) and a rotary paddle with 'push to release' to control the depth of the charge. The charge will explode at the depth setting that the Release button was pressed at, regardless of the current depth setting." /* control_details */
+  "This game uses a throttle control to control the speed of the ship (fast or slow) and a rotary paddle with 'push to release' to control the depth of the charge. The charge will explode at the depth setting that the Release button was pressed at, regardless of the current depth setting.", /* control__details */
+  &destroyr_get_btn;
 }
 
 const char *destroyr_get_btn(int type)
@@ -7122,7 +7401,8 @@ const struct ControlInfo devstors_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The men in tan uniforms leave guided missiles when shot. These can be picked up and when in range, a red crosshair will appear on a target and they will home on it." /* control_details */
+  "The men in tan uniforms leave guided missiles when shot. These can be picked up and when in range, a red crosshair will appear on a target and they will home on it.", /* control__details */
+  &devstors_get_btn;
 }
 
 const char *devstors_get_btn(int type)
@@ -7148,7 +7428,8 @@ const struct ControlInfo devilfsh_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &devilfsh_get_btn;
 }
 
 const char *devilfsh_get_btn(int type)
@@ -7173,7 +7454,8 @@ const struct ControlInfo devzone_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &devzone_get_btn;
 }
 
 const char *devzone_get_btn(int type)
@@ -7196,7 +7478,8 @@ const struct ControlInfo digdug_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &digdug_get_btn;
 }
 
 const char *digdug_get_btn(int type)
@@ -7221,7 +7504,8 @@ const struct ControlInfo digdug2_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &digdug2_get_btn;
 }
 
 const char *digdug2_get_btn(int type)
@@ -7247,7 +7531,8 @@ const struct ControlInfo digger_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &digger_get_btn;
 }
 
 const char *digger_get_btn(int type)
@@ -7273,7 +7558,8 @@ const struct ControlInfo dimahoo_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Although in mame the game has three buttons, and all 3 work, button 3 is redundant and mirrors button 1. On the actual game (sold in kit form only) only two buttons are used and this is confirmed on the instruction card for the game." /* control_details */
+  "Although in mame the game has three buttons, and all 3 work, button 3 is redundant and mirrors button 1. On the actual game (sold in kit form only) only two buttons are used and this is confirmed on the instruction card for the game.", /* control__details */
+  &dimahoo_get_btn;
 }
 
 const char *dimahoo_get_btn(int type)
@@ -7299,7 +7585,8 @@ const struct ControlInfo otatidai_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &otatidai_get_btn;
 }
 
 const char *otatidai_get_btn(int type)
@@ -7319,7 +7606,8 @@ const struct ControlInfo dotron_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &dotron_get_btn;
 }
 
 const char *dotron_get_btn(int type)
@@ -7349,7 +7637,8 @@ const struct ControlInfo dorunrun_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Something of note is that this game actually has a second button and this button is emulated in mame. The reason it isn't included here is because it was a dead button left-over from development of the game and isn't found on the control panel. The manual explains installing the controls, but neglects to mention this button, however it does show up in the service menu as 'p1 jump'." /* control_details */
+  "Something of note is that this game actually has a second button and this button is emulated in mame. The reason it isn't included here is because it was a dead button left-over from development of the game and isn't found on the control panel. The manual explains installing the controls, but neglects to mention this button, however it does show up in the service menu as 'p1 jump'.", /* control__details */
+  &dorunrun_get_btn;
 }
 
 const char *dorunrun_get_btn(int type)
@@ -7374,7 +7663,8 @@ const struct ControlInfo domino_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &domino_get_btn;
 }
 
 const char *domino_get_btn(int type)
@@ -7399,7 +7689,8 @@ const struct ControlInfo dominos_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &dominos_get_btn;
 }
 
 const char *dominos_get_btn(int type)
@@ -7423,7 +7714,8 @@ const struct ControlInfo dondenmj_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &dondenmj_get_btn;
 }
 
 const char *dondenmj_get_btn(int type)
@@ -7443,7 +7735,8 @@ const struct ControlInfo dkong_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &dkong_get_btn;
 }
 
 const char *dkong_get_btn(int type)
@@ -7468,7 +7761,8 @@ const struct ControlInfo dkong3_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &dkong3_get_btn;
 }
 
 const char *dkong3_get_btn(int type)
@@ -7493,7 +7787,8 @@ const struct ControlInfo dkongjr_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &dkongjr_get_btn;
 }
 
 const char *dkongjr_get_btn(int type)
@@ -7518,7 +7813,8 @@ const struct ControlInfo ddragon_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "From manual: JUMP KICK:  Joystick in the direction. Push jump then kick. ELBOW: Joystick in the direction. Push jump and punch buttons together. BACK KICK: Joystick in the direction. Push jump and kick buttons together. HEAD BUTT: Joystick in the direction. (TWICE) BODY THROW: Joystick in the direction. Push jump button after catching enemy. BREAK ENEMY'S HOLD: Push jump button only." /* control_details */
+  "From manual: JUMP KICK:  Joystick in the direction. Push jump then kick. ELBOW: Joystick in the direction. Push jump and punch buttons together. BACK KICK: Joystick in the direction. Push jump and kick buttons together. HEAD BUTT: Joystick in the direction. (TWICE) BODY THROW: Joystick in the direction. Push jump button after catching enemy. BREAK ENEMY'S HOLD: Push jump button only.", /* control__details */
+  &ddragon_get_btn;
 }
 
 const char *ddragon_get_btn(int type)
@@ -7545,7 +7841,8 @@ const struct ControlInfo ddragon3_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ddragon3_get_btn;
 }
 
 const char *ddragon3_get_btn(int type)
@@ -7572,7 +7869,8 @@ const struct ControlInfo ddragon2_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ddragon2_get_btn;
 }
 
 const char *ddragon2_get_btn(int type)
@@ -7599,7 +7897,8 @@ const struct ControlInfo ddribble_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "In order to move with the ball, you must hold down the dribble button." /* control_details */
+  "In order to move with the ball, you must hold down the dribble button.", /* control__details */
+  &ddribble_get_btn;
 }
 
 const char *ddribble_get_btn(int type)
@@ -7626,7 +7925,8 @@ const struct ControlInfo downtown_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses SNK LS-30 rotary joysticks. In standard MAME, rotation is controlled using the dial inputs." /* control_details */
+  "This game uses SNK LS-30 rotary joysticks. In standard MAME, rotation is controlled using the dial inputs.", /* control__details */
+  &downtown_get_btn;
 }
 
 const char *downtown_get_btn(int type)
@@ -7654,7 +7954,8 @@ const struct ControlInfo dragrace_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game actually uses a 360 degree steering wheel, but for obvious reasons, mame has mapped it to the vertical spinner. The numbers denote the gear position." /* control_details */
+  "The game actually uses a 360 degree steering wheel, but for obvious reasons, mame has mapped it to the vertical spinner. The numbers denote the gear position.", /* control__details */
+  &dragrace_get_btn;
 }
 
 const char *dragrace_get_btn(int type)
@@ -7681,7 +7982,8 @@ const struct ControlInfo dragngun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is probably the only game that features talking guns. You heard me right, the 'drag-guns' in this game had speakers that spouted out advice during gameplay." /* control_details */
+  "This game is probably the only game that features talking guns. You heard me right, the 'drag-guns' in this game had speakers that spouted out advice during gameplay.", /* control__details */
+  &dragngun_get_btn;
 }
 
 const char *dragngun_get_btn(int type)
@@ -7707,7 +8009,8 @@ const struct ControlInfo dspirit_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Shoot down flashing enemies and collect their eggs for mystery power (from the CP overlay)." /* control_details */
+  "Shoot down flashing enemies and collect their eggs for mystery power (from the CP overlay).", /* control__details */
+  &dspirit_get_btn;
 }
 
 const char *dspirit_get_btn(int type)
@@ -7734,7 +8037,8 @@ const struct ControlInfo drgnunit_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &drgnunit_get_btn;
 }
 
 const char *drgnunit_get_btn(int type)
@@ -7761,7 +8065,8 @@ const struct ControlInfo ddsom_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ddsom_get_btn;
 }
 
 const char *ddsom_get_btn(int type)
@@ -7789,7 +8094,8 @@ const struct ControlInfo ddtod_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ddtod_get_btn;
 }
 
 const char *ddtod_get_btn(int type)
@@ -7817,7 +8123,8 @@ const struct ControlInfo dynamcop_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Instruction panel has moves list" /* control_details */
+  "Instruction panel has moves list", /* control__details */
+  &dynamcop_get_btn;
 }
 
 const char *dynamcop_get_btn(int type)
@@ -7844,7 +8151,8 @@ const struct ControlInfo eswat_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &eswat_get_btn;
 }
 
 const char *eswat_get_btn(int type)
@@ -7871,7 +8179,8 @@ const struct ControlInfo ecofghtr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button 1 and 3 rotate the gun around the craft so you can fire in any direction" /* control_details */
+  "Button 1 and 3 rotate the gun around the craft so you can fire in any direction", /* control__details */
+  &ecofghtr_get_btn;
 }
 
 const char *ecofghtr_get_btn(int type)
@@ -7898,7 +8207,8 @@ const struct ControlInfo eggventr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &eggventr_get_btn;
 }
 
 const char *eggventr_get_btn(int type)
@@ -7923,7 +8233,8 @@ const struct ControlInfo elevator_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &elevator_get_btn;
 }
 
 const char *elevator_get_btn(int type)
@@ -7949,7 +8260,8 @@ const struct ControlInfo elim2_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &elim2_get_btn;
 }
 
 const char *elim2_get_btn(int type)
@@ -7973,7 +8285,8 @@ const struct ControlInfo enigma2_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &enigma2_get_btn;
 }
 
 const char *enigma2_get_btn(int type)
@@ -7997,7 +8310,8 @@ const struct ControlInfo eprom_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The buttons are arranged in a triangle, with fire on the bottom left corner, duck on the bottom right, and jump/start on the middle top corner. The original analog stick used Hall Effect sensors instead of POTs. Due to the price (and now out of production) of the sensors, many arcade operators replaced the hall effect sensors with their equivalent POT. This game is very hard to control in mame with 8-ways or keyboards. An analog joystick, OTOH, gives the player control like the original joystick." /* control_details */
+  "The buttons are arranged in a triangle, with fire on the bottom left corner, duck on the bottom right, and jump/start on the middle top corner. The original analog stick used Hall Effect sensors instead of POTs. Due to the price (and now out of production) of the sensors, many arcade operators replaced the hall effect sensors with their equivalent POT. This game is very hard to control in mame with 8-ways or keyboards. An analog joystick, OTOH, gives the player control like the original joystick.", /* control__details */
+  &eprom_get_btn;
 }
 
 const char *eprom_get_btn(int type)
@@ -8024,7 +8338,8 @@ const struct ControlInfo exerion_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game has two types of Cannon. Fast Fire shoots a limited number of rapid-fire shots from the ship's center. Fire shoots double forward shots for the ship's sides. The game uses standard controls, i.e., moving the stick up causes the ship to climb." /* control_details */
+  "This game has two types of Cannon. Fast Fire shoots a limited number of rapid-fire shots from the ship's center. Fire shoots double forward shots for the ship's sides. The game uses standard controls, i.e., moving the stick up causes the ship to climb.", /* control__details */
+  &exerion_get_btn;
 }
 
 const char *exerion_get_btn(int type)
@@ -8050,7 +8365,8 @@ const struct ControlInfo exterm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "OTHER: The 8-way trigger stick also can be rotated left or right. (Label 'Rotate Left', and 'Rotate Right')  The rotation is analog, while the rest of the stick is a digital 8-way trigger stick. Mame uses the DIAL type for this input. Mame by default maps the rotate left & right to the same inputs as move left and move right, and the game plays fairly well with this setup. To fire, you are supposed to move all the way to your side, press the fire button, and control the direction you shoot by rotating the trigger stick and moving it up and down. As long as you hold the fire button, you can't move away from the edge. NOTE: This entry has been modified to use a rotary optical joystick with a top fire button. This is the closest to the controls the game originally had, unfortunately a top fire rotary does not exist. You could, however, take a top fire handle and mount it into a rotary base, in theory at least. There is a cheat that lets you shoot all the time (making the 'fire/grab' button just a fire button)." /* control_details */
+  "OTHER: The 8-way trigger stick also can be rotated left or right. (Label 'Rotate Left', and 'Rotate Right')  The rotation is analog, while the rest of the stick is a digital 8-way trigger stick. Mame uses the DIAL type for this input. Mame by default maps the rotate left & right to the same inputs as move left and move right, and the game plays fairly well with this setup. To fire, you are supposed to move all the way to your side, press the fire button, and control the direction you shoot by rotating the trigger stick and moving it up and down. As long as you hold the fire button, you can't move away from the edge. NOTE: This entry has been modified to use a rotary optical joystick with a top fire button. This is the closest to the controls the game originally had, unfortunately a top fire rotary does not exist. You could, however, take a top fire handle and mount it into a rotary base, in theory at least. There is a cheat that lets you shoot all the time (making the 'fire/grab' button just a fire button).", /* control__details */
+  &exterm_get_btn;
 }
 
 const char *exterm_get_btn(int type)
@@ -8078,7 +8394,8 @@ const struct ControlInfo eyes_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &eyes_get_btn;
 }
 
 const char *eyes_get_btn(int type)
@@ -8103,7 +8420,8 @@ const struct ControlInfo f1dream_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joystick is used to guide the car around the track. Holding both Gear buttons down activates Turbo mode. Note: Directions for turn are not included because which direction the stick makes you turn depends upon which way your car is facing. It is actually quite confusing to control your car." /* control_details */
+  "The joystick is used to guide the car around the track. Holding both Gear buttons down activates Turbo mode. Note: Directions for turn are not included because which direction the stick makes you turn depends upon which way your car is facing. It is actually quite confusing to control your car.", /* control__details */
+  &f1dream_get_btn;
 }
 
 const char *f1dream_get_btn(int type)
@@ -8129,7 +8447,8 @@ const struct ControlInfo f1en_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses formula one style shifter buttons, which are mounted behind the steering wheel." /* control_details */
+  "This game uses formula one style shifter buttons, which are mounted behind the steering wheel.", /* control__details */
+  &f1en_get_btn;
 }
 
 const char *f1en_get_btn(int type)
@@ -8155,7 +8474,8 @@ const struct ControlInfo fantasy_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &fantasy_get_btn;
 }
 
 const char *fantasy_get_btn(int type)
@@ -8179,7 +8499,8 @@ const struct ControlInfo sqbert_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Used a 4-way Joystick rotated 45 degrees." /* control_details */
+  "Used a 4-way Joystick rotated 45 degrees.", /* control__details */
+  &sqbert_get_btn;
 }
 
 const char *sqbert_get_btn(int type)
@@ -8203,7 +8524,8 @@ const struct ControlInfo fax_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "In the mame driver, this game seems to have two sets of coin 1 and coin 2 buttons. It's unclear if this is a bug or intentional." /* control_details */
+  "In the mame driver, this game seems to have two sets of coin 1 and coin 2 buttons. It's unclear if this is a bug or intentional.", /* control__details */
+  &fax_get_btn;
 }
 
 const char *fax_get_btn(int type)
@@ -8227,7 +8549,8 @@ const struct ControlInfo fgoal_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &fgoal_get_btn;
 }
 
 const char *fgoal_get_btn(int type)
@@ -8249,7 +8572,8 @@ const struct ControlInfo fghtatck_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "It should be noted that mame includes a third button and rightly so, however, the button is an extra one not used in this game but in other games of the system. It does show up in the service menu, however." /* control_details */
+  "It should be noted that mame includes a third button and rightly so, however, the button is an extra one not used in this game but in other games of the system. It does show up in the service menu, however.", /* control__details */
+  &fghtatck_get_btn;
 }
 
 const char *fghtatck_get_btn(int type)
@@ -8275,7 +8599,8 @@ const struct ControlInfo fvipers_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "In mame you will notice a 4th button. This is because the game runs on the model-2b boardset, which is setup generically in mame with 4 inputs." /* control_details */
+  "In mame you will notice a 4th button. This is because the game runs on the model-2b boardset, which is setup generically in mame with 4 inputs.", /* control__details */
+  &fvipers_get_btn;
 }
 
 const char *fvipers_get_btn(int type)
@@ -8302,7 +8627,8 @@ const struct ControlInfo finalb_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Press the weak and medium buttons at the same time for a strong punch." /* control_details */
+  "Press the weak and medium buttons at the same time for a strong punch.", /* control__details */
+  &finalb_get_btn;
 }
 
 const char *finalb_get_btn(int type)
@@ -8330,6 +8656,7 @@ const struct ControlInfo ffight_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "If you press both buttons at the same time, your character does a special move or breaks out of a hold. Mame and some machines had a third cheat button /* control_details */ it basically presses both buttons for you. It is included since the timing of pressing both buttons at the same time can be tight, but is disabled in mame by default.";
+  &ffight_get_btn;
 }
 
 const char *ffight_get_btn(int type)
@@ -8356,7 +8683,8 @@ const struct ControlInfo finalap2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &finalap2_get_btn;
 }
 
 const char *finalap2_get_btn(int type)
@@ -8381,7 +8709,8 @@ const struct ControlInfo firetrap_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game works exactly like crazy climber except you can shoot by pressing right on the left joystick and left on the right joystick at the same time. Some conversion kits used top-fire joysticks as this is a rather un-natural movement for firing rapidly. Because of this an auxillary input for 'fire' is included. So you can play this game with two joysticks, a joystick and a top-fire, two top-fires or whatever floats your boat." /* control_details */
+  "This game works exactly like crazy climber except you can shoot by pressing right on the left joystick and left on the right joystick at the same time. Some conversion kits used top-fire joysticks as this is a rather un-natural movement for firing rapidly. Because of this an auxillary input for 'fire' is included. So you can play this game with two joysticks, a joystick and a top-fire, two top-fires or whatever floats your boat.", /* control__details */
+  &firetrap_get_btn;
 }
 
 const char *firetrap_get_btn(int type)
@@ -8410,7 +8739,8 @@ const struct ControlInfo firetrk_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "In this game the player 2 control panel is behind player 1. Yes I said behind. On a real fire truck there are two steering wheels. One is in the back of the truck and turns the read wheels independantly of the front, thus allowing for tight turns with such a long vehicle. This game is played exactly the same with player 2 controlling the rear wheel when two player mode is selected. When 1 player mode is selected, those rear controls are ignored and thus the game is much harder to play." /* control_details */
+  "In this game the player 2 control panel is behind player 1. Yes I said behind. On a real fire truck there are two steering wheels. One is in the back of the truck and turns the read wheels independantly of the front, thus allowing for tight turns with such a long vehicle. This game is played exactly the same with player 2 controlling the rear wheel when two player mode is selected. When 1 player mode is selected, those rear controls are ignored and thus the game is much harder to play.", /* control__details */
+  &firetrk_get_btn;
 }
 
 const char *firetrk_get_btn(int type)
@@ -8440,7 +8770,8 @@ const struct ControlInfo fshark_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &fshark_get_btn;
 }
 
 const char *fshark_get_btn(int type)
@@ -8466,7 +8797,8 @@ const struct ControlInfo foodf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Uses a Gimbal stick." /* control_details */
+  "Uses a Gimbal stick.", /* control__details */
+  &foodf_get_btn;
 }
 
 const char *foodf_get_btn(int type)
@@ -8492,6 +8824,7 @@ const struct ControlInfo forgottn_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The spinners also was the fire button. The spinner rotates the direction the character shoots. The players can buy power-ups /* control_details */ when they get a shooting power-up the character gets a floating shooting platform that rotates with the player. When the spinner is not pressed and is rotated, the platform rotates around the charcter, staying relative to the direction the character is facing. When the spinner is pressed and rotated, the platform and character rotate at their own centers.";
+  &forgottn_get_btn;
 }
 
 const char *forgottn_get_btn(int type)
@@ -8518,7 +8851,8 @@ const struct ControlInfo formatz_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "In the kit, it was optional to have the buttons mirrored on both sides of the joystick. Used 8-way leaf joysticks  Holding the laser button down gives the player one stronger shot. Holding the jump button down transforms the player between a robot and an airplane. Unlike most side-scroll shooters with only shoot straight sideways, you shoot diagonally when the joystick is pushed up or down." /* control_details */
+  "In the kit, it was optional to have the buttons mirrored on both sides of the joystick. Used 8-way leaf joysticks  Holding the laser button down gives the player one stronger shot. Holding the jump button down transforms the player between a robot and an airplane. Unlike most side-scroll shooters with only shoot straight sideways, you shoot diagonally when the joystick is pushed up or down.", /* control__details */
+  &formatz_get_btn;
 }
 
 const char *formatz_get_btn(int type)
@@ -8544,7 +8878,8 @@ const struct ControlInfo frenzy_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Sequel to Berzerk. An interesting feature of the game is that the fire button only works when the player is moving. Also, this game allows you and enemies to shoot out wall segments and move/shoot through them." /* control_details */
+  "Sequel to Berzerk. An interesting feature of the game is that the fire button only works when the player is moving. Also, this game allows you and enemies to shoot out wall segments and move/shoot through them.", /* control__details */
+  &frenzy_get_btn;
 }
 
 const char *frenzy_get_btn(int type)
@@ -8569,7 +8904,8 @@ const struct ControlInfo frogger_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &frogger_get_btn;
 }
 
 const char *frogger_get_btn(int type)
@@ -8593,7 +8929,8 @@ const struct ControlInfo frogs_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "It really was a three way joystick, basically a 4-way stick without a down. The button flicked out your frog's tongue. *update*    I looked into this. This game was generally hacked into an old frogger cab. The jump button was hacked into the 4way up and a tongue button was added. However mame uses a two way joystick and two buttons to emulate the hardware (which is correct input wise) so we reflect these constants in the database. As it's sorta a bootleg there isn't much point in worrying about control accuracy." /* control_details */
+  "It really was a three way joystick, basically a 4-way stick without a down. The button flicked out your frog's tongue. *update*    I looked into this. This game was generally hacked into an old frogger cab. The jump button was hacked into the 4way up and a tongue button was added. However mame uses a two way joystick and two buttons to emulate the hardware (which is correct input wise) so we reflect these constants in the database. As it's sorta a bootleg there isn't much point in worrying about control accuracy.", /* control__details */
+  &frogs_get_btn;
 }
 
 const char *frogs_get_btn(int type)
@@ -8617,7 +8954,8 @@ const struct ControlInfo frontlin_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game, along with Wild Western and Tin Star, used a unique controller. The Actual game uses a '8 way push to fire' spinner. The 'spinner' actually used a cam to engage one or two of the 4 microswitches below the control panel. So if you have a real spinner then don't expect to use it with this game. MAME emulates this like a dual 8-way joystick game. This set-up works well for the original controls, but poorly for anything else. Note: Spinners and rotary joysticks can not be used in MAME for this game. In the tank stages, use grenades to enter the blue tank. Exit the tank when it is hit. Use the spinner to rotate and fire the tank turret." /* control_details */
+  "This game, along with Wild Western and Tin Star, used a unique controller. The Actual game uses a '8 way push to fire' spinner. The 'spinner' actually used a cam to engage one or two of the 4 microswitches below the control panel. So if you have a real spinner then don't expect to use it with this game. MAME emulates this like a dual 8-way joystick game. This set-up works well for the original controls, but poorly for anything else. Note: Spinners and rotary joysticks can not be used in MAME for this game. In the tank stages, use grenades to enter the blue tank. Exit the tank when it is hit. Use the spinner to rotate and fire the tank turret.", /* control__details */
+  &frontlin_get_btn;
 }
 
 const char *frontlin_get_btn(int type)
@@ -8647,7 +8985,8 @@ const struct ControlInfo futspy_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The control panel on this game improperly labeled the bomb button as fire since the top button is the primary weapon." /* control_details */
+  "The control panel on this game improperly labeled the bomb button as fire since the top button is the primary weapon.", /* control__details */
+  &futspy_get_btn;
 }
 
 const char *futspy_get_btn(int type)
@@ -8673,7 +9012,8 @@ const struct ControlInfo gloc_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gloc_get_btn;
 }
 
 const char *gloc_get_btn(int type)
@@ -8702,7 +9042,8 @@ const struct ControlInfo gijoe_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gijoe_get_btn;
 }
 
 const char *gijoe_get_btn(int type)
@@ -8728,7 +9069,8 @@ const struct ControlInfo gground_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "It should be noted that the joystick had the simple label of 'Select Warrior / Move Player'" /* control_details */
+  "It should be noted that the joystick had the simple label of 'Select Warrior / Move Player'", /* control__details */
+  &gground_get_btn;
 }
 
 const char *gground_get_btn(int type)
@@ -8754,7 +9096,8 @@ const struct ControlInfo galaga88_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game was marketed as a conversion for Dragon Spirit, so it used an 8-way joystick, but the vertical inputs were ignored. The game has one actual action button 'Fire' located on the left and right side of the joystick. However the PCB does have three button inputs." /* control_details */
+  "This game was marketed as a conversion for Dragon Spirit, so it used an 8-way joystick, but the vertical inputs were ignored. The game has one actual action button 'Fire' located on the left and right side of the joystick. However the PCB does have three button inputs.", /* control__details */
+  &galaga88_get_btn;
 }
 
 const char *galaga88_get_btn(int type)
@@ -8781,7 +9124,8 @@ const struct ControlInfo galaga_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &galaga_get_btn;
 }
 
 const char *galaga_get_btn(int type)
@@ -8804,7 +9148,8 @@ const struct ControlInfo galaxian_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &galaxian_get_btn;
 }
 
 const char *galaxian_get_btn(int type)
@@ -8827,7 +9172,8 @@ const struct ControlInfo gforce2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Please note that none of the controls in this game have any labels. They are labeled by what they do." /* control_details */
+  "Please note that none of the controls in this game have any labels. They are labeled by what they do.", /* control__details */
+  &gforce2_get_btn;
 }
 
 const char *gforce2_get_btn(int type)
@@ -8855,7 +9201,8 @@ const struct ControlInfo galxwars_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &galxwars_get_btn;
 }
 
 const char *galxwars_get_btn(int type)
@@ -8878,7 +9225,8 @@ const struct ControlInfo galpanic_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &galpanic_get_btn;
 }
 
 const char *galpanic_get_btn(int type)
@@ -8903,7 +9251,8 @@ const struct ControlInfo galpani2_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game didn't actually label the button and in all the docs it's referred to as button 1, however it is clear what this button does. I labeled it 'cut' to avoid confusion as 'button 1' may seem like a parsing error to the average viewer. Also take note that the pcb has inputs for three physical buttons and they are emulated in mame, but only the first is used." /* control_details */
+  "This game didn't actually label the button and in all the docs it's referred to as button 1, however it is clear what this button does. I labeled it 'cut' to avoid confusion as 'button 1' may seem like a parsing error to the average viewer. Also take note that the pcb has inputs for three physical buttons and they are emulated in mame, but only the first is used.", /* control__details */
+  &galpani2_get_btn;
 }
 
 const char *galpani2_get_btn(int type)
@@ -8928,7 +9277,8 @@ const struct ControlInfo gaplus_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gaplus_get_btn;
 }
 
 const char *gaplus_get_btn(int type)
@@ -8953,7 +9303,8 @@ const struct ControlInfo gauntlet_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gauntlet_get_btn;
 }
 
 const char *gauntlet_get_btn(int type)
@@ -8979,7 +9330,8 @@ const struct ControlInfo gaunt2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gaunt2_get_btn;
 }
 
 const char *gaunt2_get_btn(int type)
@@ -9005,7 +9357,8 @@ const struct ControlInfo geebee_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This is a blockout type game that is controlled by a paddle (limited turn with POT), instead of a spinner as in Arkanoid." /* control_details */
+  "This is a blockout type game that is controlled by a paddle (limited turn with POT), instead of a spinner as in Arkanoid.", /* control__details */
+  &geebee_get_btn;
 }
 
 const char *geebee_get_btn(int type)
@@ -9028,7 +9381,8 @@ const struct ControlInfo gng_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Buttons are mirrored on both sides of the joystick." /* control_details */
+  "Buttons are mirrored on both sides of the joystick.", /* control__details */
+  &gng_get_btn;
 }
 
 const char *gng_get_btn(int type)
@@ -9054,7 +9408,8 @@ const struct ControlInfo ghouls_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ghouls_get_btn;
 }
 
 const char *ghouls_get_btn(int type)
@@ -9080,7 +9435,8 @@ const struct ControlInfo gigawing_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Normal shots are made by tapping on the 'Shot' button. If you hold it down (and you are recharged), you get a temporary 'Reflect Barrier' that reflect all the ememies' shots back at them. You don't have a max number of times to use the reflect barrier, except there is a fairly short recharge time before you can use it again. The 'Force Bomb' button is like most shooter's bomb buttons (you have limited number bombs & one bomb is stronger than a normal shot)." /* control_details */
+  "Normal shots are made by tapping on the 'Shot' button. If you hold it down (and you are recharged), you get a temporary 'Reflect Barrier' that reflect all the ememies' shots back at them. You don't have a max number of times to use the reflect barrier, except there is a fairly short recharge time before you can use it again. The 'Force Bomb' button is like most shooter's bomb buttons (you have limited number bombs & one bomb is stronger than a normal shot).", /* control__details */
+  &gigawing_get_btn;
 }
 
 const char *gigawing_get_btn(int type)
@@ -9106,7 +9462,8 @@ const struct ControlInfo goldmedl_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The buttons on this game aren't labeled, which is a shame as it's quite difficult to figure out what they do. With over 20 events and each event using the buttons for a different thing, it may be impossible to play this game without an instruction card. During the attract mode, however, it shows which buttons you are supposed to press when going through an event." /* control_details */
+  "The buttons on this game aren't labeled, which is a shame as it's quite difficult to figure out what they do. With over 20 events and each event using the buttons for a different thing, it may be impossible to play this game without an instruction card. During the attract mode, however, it shows which buttons you are supposed to press when going through an event.", /* control__details */
+  &goldmedl_get_btn;
 }
 
 const char *goldmedl_get_btn(int type)
@@ -9129,7 +9486,8 @@ const struct ControlInfo goldnaxe_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &goldnaxe_get_btn;
 }
 
 const char *goldnaxe_get_btn(int type)
@@ -9156,7 +9514,8 @@ const struct ControlInfo ga2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ga2_get_btn;
 }
 
 const char *ga2_get_btn(int type)
@@ -9183,7 +9542,8 @@ const struct ControlInfo gt97_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters." /* control_details */
+  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  &gt97_get_btn;
 }
 
 const char *gt97_get_btn(int type)
@@ -9209,7 +9569,8 @@ const struct ControlInfo gt98_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters." /* control_details */
+  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  &gt98_get_btn;
 }
 
 const char *gt98_get_btn(int type)
@@ -9235,7 +9596,8 @@ const struct ControlInfo gt99_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters." /* control_details */
+  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  &gt99_get_btn;
 }
 
 const char *gt99_get_btn(int type)
@@ -9261,7 +9623,8 @@ const struct ControlInfo gt2k_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters." /* control_details */
+  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  &gt2k_get_btn;
 }
 
 const char *gt2k_get_btn(int type)
@@ -9287,7 +9650,8 @@ const struct ControlInfo gt3d_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters." /* control_details */
+  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  &gt3d_get_btn;
 }
 
 const char *gt3d_get_btn(int type)
@@ -9313,7 +9677,8 @@ const struct ControlInfo gtg2_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters." /* control_details */
+  "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  &gtg2_get_btn;
 }
 
 const char *gtg2_get_btn(int type)
@@ -9339,7 +9704,8 @@ const struct ControlInfo glfgreat_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "MAME lists inputs for buttons 3 and 4 but they don't do anything. Use the Shot button to enter initials." /* control_details */
+  "MAME lists inputs for buttons 3 and 4 but they don't do anything. Use the Shot button to enter initials.", /* control__details */
+  &glfgreat_get_btn;
 }
 
 const char *glfgreat_get_btn(int type)
@@ -9367,7 +9733,8 @@ const struct ControlInfo golgo13_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The select and enter buttons may very well be useless in the game itself. Everything is in Japanese it's generally hard to tell with what little is know with this game. On the original game there was a scope you looked through that contained a small lcd with a closer view. In mame a 'zoom button' was hacked in. There is no telling if that was an original option or not." /* control_details */
+  "The select and enter buttons may very well be useless in the game itself. Everything is in Japanese it's generally hard to tell with what little is know with this game. On the original game there was a scope you looked through that contained a small lcd with a closer view. In mame a 'zoom button' was hacked in. There is no telling if that was an original option or not.", /* control__details */
+  &golgo13_get_btn;
 }
 
 const char *golgo13_get_btn(int type)
@@ -9396,7 +9763,8 @@ const struct ControlInfo gollygho_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gollygho_get_btn;
 }
 
 const char *gollygho_get_btn(int type)
@@ -9422,6 +9790,7 @@ const struct ControlInfo gondo_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Used the yellow snk LS-30 mechcanical rotatry. Rotating the joystick changes the direction the Character Weapon shoots. The Airbike Weapon always shoots straight forward. This was usually released as a kit /* control_details */ the instructions suggested mirroring the buttons on both sides of each joystick, but not all arcade operaters did this. Player1 is the blue air bike, player2 is the grey air bike.";
+  &gondo_get_btn;
 }
 
 const char *gondo_get_btn(int type)
@@ -9449,7 +9818,8 @@ const struct ControlInfo gorf_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The alternating play is not normal. Players alternate when a player passes a level or game over, not when a life is lost like most alternating games. If you press the button before the last shot gets off the screen or hits something, that shot will disappear and you shoot a new one." /* control_details */
+  "The alternating play is not normal. Players alternate when a player passes a level or game over, not when a life is lost like most alternating games. If you press the button before the last shot gets off the screen or hits something, that shot will disappear and you shoot a new one.", /* control__details */
+  &gorf_get_btn;
 }
 
 const char *gorf_get_btn(int type)
@@ -9474,7 +9844,8 @@ const struct ControlInfo grchamp_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &grchamp_get_btn;
 }
 
 const char *grchamp_get_btn(int type)
@@ -9497,7 +9868,8 @@ const struct ControlInfo f1gpstar_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &f1gpstar_get_btn;
 }
 
 const char *f1gpstar_get_btn(int type)
@@ -9523,7 +9895,8 @@ const struct ControlInfo gravitar_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gravitar_get_btn;
 }
 
 const char *gravitar_get_btn(int type)
@@ -9548,7 +9921,8 @@ const struct ControlInfo greatgun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The guns on this game are indeed lightguns, but they were mounted to the cabinet as they were very heavy shotguns." /* control_details */
+  "The guns on this game are indeed lightguns, but they were mounted to the cabinet as they were very heavy shotguns.", /* control__details */
+  &greatgun_get_btn;
 }
 
 const char *greatgun_get_btn(int type)
@@ -9573,7 +9947,8 @@ const struct ControlInfo gberet_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gberet_get_btn;
 }
 
 const char *gberet_get_btn(int type)
@@ -9599,7 +9974,8 @@ const struct ControlInfo gridiron_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The trackball itself is actually labeled 'Pass & Movement Control.'  The original game had a led counter on the control panel that displayed the currently select play number. In mame this is simulated by a tiny, tiny little orange character on the bottom left of the screen. This really needs to be replaced by some artwork files to make it a little bigger and easier to understand." /* control_details */
+  "The trackball itself is actually labeled 'Pass & Movement Control.'  The original game had a led counter on the control panel that displayed the currently select play number. In mame this is simulated by a tiny, tiny little orange character on the bottom left of the screen. This really needs to be replaced by some artwork files to make it a little bigger and easier to understand.", /* control__details */
+  &gridiron_get_btn;
 }
 
 const char *gridiron_get_btn(int type)
@@ -9624,7 +10000,8 @@ const struct ControlInfo gridlee_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gridlee_get_btn;
 }
 
 const char *gridlee_get_btn(int type)
@@ -9649,7 +10026,8 @@ const struct ControlInfo guardian_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Press both kicks or punches together to perform a power punch or kick respectively." /* control_details */
+  "Press both kicks or punches together to perform a power punch or kick respectively.", /* control__details */
+  &guardian_get_btn;
 }
 
 const char *guardian_get_btn(int type)
@@ -9679,6 +10057,7 @@ const struct ControlInfo gwar_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Grenade button also gets you into and out of the tank. Used the SNK LS-30, 12 direction rotary, but only faces 8 directions in the game. Usually the buttons were mirrored on both sides of the joystick for a total of four physical buttons per player, but both fire buttons and both grenade buttons are wired to the same PCB input. The recommended button colors are yellow for the fire button, and black for the grenade button. To enter test mode hold down the service key (F2) during boot or reboot until grid screen /* control_details */ press service button to go to next test screen; reboot to exit. Mame's driver has an extra 13th 'direction' between 5 & 6 because it 'avoids the 'joystick error' protection in Guerilla War which happens when direction changes directly from 0x50&lt;-&gt;0x60 8 times.'";
+  &gwar_get_btn;
 }
 
 const char *gwar_get_btn(int type)
@@ -9706,7 +10085,8 @@ const struct ControlInfo gunsmoke_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Six shot directions are possible by pressing the buttons in combination - Besides the obvious primary directions, pressing Fire Right and Fire Straight would aim between Straight and Right, same for Straight and Left, and pressing Left and Right together would shoot in both directions." /* control_details */
+  "Six shot directions are possible by pressing the buttons in combination - Besides the obvious primary directions, pressing Fire Right and Fire Straight would aim between Straight and Right, same for Straight and Left, and pressing Left and Right together would shoot in both directions.", /* control__details */
+  &gunsmoke_get_btn;
 }
 
 const char *gunsmoke_get_btn(int type)
@@ -9733,7 +10113,8 @@ const struct ControlInfo gunbird_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &gunbird_get_btn;
 }
 
 const char *gunbird_get_btn(int type)
@@ -9759,7 +10140,8 @@ const struct ControlInfo gunbustr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game's descriptions are in japanese when you start the game and since the game's cpo doesn't have any labels, I did the best I could with the in-game input test." /* control_details */
+  "The game's descriptions are in japanese when you start the game and since the game's cpo doesn't have any labels, I did the best I could with the in-game input test.", /* control__details */
+  &gunbustr_get_btn;
 }
 
 const char *gunbustr_get_btn(int type)
@@ -9789,7 +10171,8 @@ const struct ControlInfo gyruss_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joystick caused you to rotate around the exterior of the playfield." /* control_details */
+  "The joystick caused you to rotate around the exterior of the playfield.", /* control__details */
+  &gyruss_get_btn;
 }
 
 const char *gyruss_get_btn(int type)
@@ -9814,7 +10197,8 @@ const struct ControlInfo halleys_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that the mame driver labels button 2 as 'hyperspace' but according to the mame cpo pack and a few others sources it is the 'warp' button. If evidence is found to the contrary please feel free to correct." /* control_details */
+  "Note that the mame driver labels button 2 as 'hyperspace' but according to the mame cpo pack and a few others sources it is the 'warp' button. If evidence is found to the contrary please feel free to correct.", /* control__details */
+  &halleys_get_btn;
 }
 
 const char *halleys_get_btn(int type)
@@ -9840,7 +10224,8 @@ const struct ControlInfo hardyard_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "If dive is not the correct caption, please correct." /* control_details */
+  "If dive is not the correct caption, please correct.", /* control__details */
+  &hardyard_get_btn;
 }
 
 const char *hardyard_get_btn(int type)
@@ -9866,7 +10251,8 @@ const struct ControlInfo hattrick_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &hattrick_get_btn;
 }
 
 const char *hattrick_get_btn(int type)
@@ -9891,7 +10277,8 @@ const struct ControlInfo hcastle_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &hcastle_get_btn;
 }
 
 const char *hcastle_get_btn(int type)
@@ -9917,7 +10304,8 @@ const struct ControlInfo hbarrel_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This cpo actually didn't have any labels. The labels were obtained by the serivce manual." /* control_details */
+  "This cpo actually didn't have any labels. The labels were obtained by the serivce manual.", /* control__details */
+  &hbarrel_get_btn;
 }
 
 const char *hbarrel_get_btn(int type)
@@ -9945,7 +10333,8 @@ const struct ControlInfo hiimpact_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "1 & 2 are the red team, players 3 & 4 are the blue team. If one person plays per team, he calls all the plays. If two people team up and play on the same team: On the offense, players 2 & 3 call the play and control that team's quarterback. On the defense, players 1 & 4 call the play. The action button does everything: pass, handoff, kick, punt, jump, select play. To kick or punt farther, you have to hit the action button quickly. References: CPO http://www.klov.com/game_detail.php?letter=H&game_id=8111" /* control_details */
+  "1 & 2 are the red team, players 3 & 4 are the blue team. If one person plays per team, he calls all the plays. If two people team up and play on the same team: On the offense, players 2 & 3 call the play and control that team's quarterback. On the defense, players 1 & 4 call the play. The action button does everything: pass, handoff, kick, punt, jump, select play. To kick or punt farther, you have to hit the action button quickly. References: CPO http://www.klov.com/game_detail.php?letter=H&game_id=8111", /* control__details */
+  &hiimpact_get_btn;
 }
 
 const char *hiimpact_get_btn(int type)
@@ -9970,7 +10359,8 @@ const struct ControlInfo hippodrm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Like all Dataeast games of the day, this game's cpo didn't have any labels. Instead it had a gameplay insert for the bezel." /* control_details */
+  "Like all Dataeast games of the day, this game's cpo didn't have any labels. Instead it had a gameplay insert for the bezel.", /* control__details */
+  &hippodrm_get_btn;
 }
 
 const char *hippodrm_get_btn(int type)
@@ -9996,7 +10386,8 @@ const struct ControlInfo hitme_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses rather odd, non-arcade buttons." /* control_details */
+  "This game uses rather odd, non-arcade buttons.", /* control__details */
+  &hitme_get_btn;
 }
 
 const char *hitme_get_btn(int type)
@@ -10019,7 +10410,8 @@ const struct ControlInfo hitice_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game can be converted to 2 player via a dip swtich. This game has an unused button emulated in mame. The inputs actually exists, it just doesn't do anything." /* control_details */
+  "This game can be converted to 2 player via a dip swtich. This game has an unused button emulated in mame. The inputs actually exists, it just doesn't do anything.", /* control__details */
+  &hitice_get_btn;
 }
 
 const char *hitice_get_btn(int type)
@@ -10045,7 +10437,8 @@ const struct ControlInfo holo_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "It should be noted that this game doesn\'t have labels, as it is a conversion kit for the hologram (time traveler) cabinet." /* control_details */
+  "It should be noted that this game doesn\'t have labels, as it is a conversion kit for the hologram (time traveler) cabinet.", /* control__details */
+  &holo_get_btn;
 }
 
 const char *holo_get_btn(int type)
@@ -10079,7 +10472,8 @@ const struct ControlInfo hotrod_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &hotrod_get_btn;
 }
 
 const char *hotrod_get_btn(int type)
@@ -10102,7 +10496,8 @@ const struct ControlInfo hstennis_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Press both buttons to lob." /* control_details */
+  "Press both buttons to lob.", /* control__details */
+  &hstennis_get_btn;
 }
 
 const char *hstennis_get_btn(int type)
@@ -10128,7 +10523,8 @@ const struct ControlInfo housemnq_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &housemnq_get_btn;
 }
 
 const char *housemnq_get_btn(int type)
@@ -10148,7 +10544,8 @@ const struct ControlInfo housemn2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &housemn2_get_btn;
 }
 
 const char *housemn2_get_btn(int type)
@@ -10168,7 +10565,8 @@ const struct ControlInfo hustle_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &hustle_get_btn;
 }
 
 const char *hustle_get_btn(int type)
@@ -10192,7 +10590,8 @@ const struct ControlInfo hng64_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Hyper Neogeo 64 system was the next generation of the classic neogeo mvs system. This new system wasn't as popular and only had a few games released on it. They all used the same control layout and relied upon inserts to explain to the consumer what button was what. Also 99% of the games started with a 'How to Play' screen upon starting the game. Although these games don't work yet in mame, the inputs are already hooked up, just like the original neogeo. It would be silly to think that these would be altered after the driver is in working order." /* control_details */
+  "The Hyper Neogeo 64 system was the next generation of the classic neogeo mvs system. This new system wasn't as popular and only had a few games released on it. They all used the same control layout and relied upon inserts to explain to the consumer what button was what. Also 99% of the games started with a 'How to Play' screen upon starting the game. Although these games don't work yet in mame, the inputs are already hooked up, just like the original neogeo. It would be silly to think that these would be altered after the driver is in working order.", /* control__details */
+  &hng64_get_btn;
 }
 
 const char *hng64_get_btn(int type)
@@ -10220,7 +10619,8 @@ const struct ControlInfo hyperspt_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is actually 4 players, but you alternate in teams of two." /* control_details */
+  "This game is actually 4 players, but you alternate in teams of two.", /* control__details */
+  &hyperspt_get_btn;
 }
 
 const char *hyperspt_get_btn(int type)
@@ -10243,7 +10643,8 @@ const struct ControlInfo irobot_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This had a funny looking CP. The joystick sat on a small panel, sticking out toward the player at about 45 degrees toward the player. The two fire buttons were mirrored, one on each side of the small panel, one panels of there own, angled sideways at about 30 degrees from vertical. The two start buttons were the Atari cones on their own panel above the small panel of the joystick. Mame has two seperate buttons emulated, but the second does not do anything. The test screen only lists one fire button, so it looks like the two physical fire buttons were wired together in the original game, connected to the PCBs as one. The original joystick was a Hall Effect joystick: an analog joystick that used magnetics to vary the resistance instead of the usual POT." /* control_details */
+  "This had a funny looking CP. The joystick sat on a small panel, sticking out toward the player at about 45 degrees toward the player. The two fire buttons were mirrored, one on each side of the small panel, one panels of there own, angled sideways at about 30 degrees from vertical. The two start buttons were the Atari cones on their own panel above the small panel of the joystick. Mame has two seperate buttons emulated, but the second does not do anything. The test screen only lists one fire button, so it looks like the two physical fire buttons were wired together in the original game, connected to the PCBs as one. The original joystick was a Hall Effect joystick: an analog joystick that used magnetics to vary the resistance instead of the usual POT.", /* control__details */
+  &irobot_get_btn;
 }
 
 const char *irobot_get_btn(int type)
@@ -10269,7 +10670,8 @@ const struct ControlInfo 47pie2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &47pie2_get_btn;
 }
 
 const char *47pie2_get_btn(int type)
@@ -10289,7 +10691,8 @@ const struct ControlInfo idhimitu_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &idhimitu_get_btn;
 }
 
 const char *idhimitu_get_btn(int type)
@@ -10309,7 +10712,8 @@ const struct ControlInfo fromance_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &fromance_get_btn;
 }
 
 const char *fromance_get_btn(int type)
@@ -10329,7 +10733,8 @@ const struct ControlInfo idolmj_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &idolmj_get_btn;
 }
 
 const char *idolmj_get_btn(int type)
@@ -10349,7 +10754,8 @@ const struct ControlInfo iemoto_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &iemoto_get_btn;
 }
 
 const char *iemoto_get_btn(int type)
@@ -10369,7 +10775,8 @@ const struct ControlInfo ikari3_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Uses an LS-30 joystick." /* control_details */
+  "Uses an LS-30 joystick.", /* control__details */
+  &ikari3_get_btn;
 }
 
 const char *ikari3_get_btn(int type)
@@ -10398,7 +10805,8 @@ const struct ControlInfo ikari_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Uses an LS-30 joystick." /* control_details */
+  "Uses an LS-30 joystick.", /* control__details */
+  &ikari_get_btn;
 }
 
 const char *ikari_get_btn(int type)
@@ -10426,7 +10834,8 @@ const struct ControlInfo imekura_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &imekura_get_btn;
 }
 
 const char *imekura_get_btn(int type)
@@ -10447,6 +10856,7 @@ const struct ControlInfo indytemp_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Like some other Atari games, such as Road Runner & Peter Packrat, the player start buttons double as the action buttons. The original game has the Whip button mirrored on both sides of the joystick. The left side Whip button is also 1 player start button /* control_details */ mame emulates this as two buttons, button1 and start1. The right side Whip button is also the 2 players start button; mame emulates this as only the 'start2' button, even though pressing mame's start2 button also whips the whip. Also, the buttons are used to select the number of lives the player has: the right selects the normal 3 lives (1 credit), the left selects 7 lives (for 2 credits).";
+  &indytemp_get_btn;
 }
 
 const char *indytemp_get_btn(int type)
@@ -10471,7 +10881,8 @@ const struct ControlInfo inferno_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game actually uses a 4 way ball-top and a 4-way trigger stick. Both are rotated on a 45 degree angle al-la qbert. The 'fire' stick doesn't actually shoot, rather it aims your gun. The fire button must be used to actually fire." /* control_details */
+  "The game actually uses a 4 way ball-top and a 4-way trigger stick. Both are rotated on a 45 degree angle al-la qbert. The 'fire' stick doesn't actually shoot, rather it aims your gun. The fire button must be used to actually fire.", /* control__details */
+  &inferno_get_btn;
 }
 
 const char *inferno_get_btn(int type)
@@ -10500,7 +10911,8 @@ const struct ControlInfo invrvnge_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &invrvnge_get_btn;
 }
 
 const char *invrvnge_get_btn(int type)
@@ -10523,7 +10935,8 @@ const struct ControlInfo invho2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This is a two in one cabinet with two games in it. The control panel is split in half.... on the left is two directional buttons (Left,Right) and a button (Fire). These inputs are actually wired to the controls on the right side of the panel. These controls are a 4 way jostick and a button (gas). This seems like a huge waste of control space, but I suppose at the time, generic panels seemed silly." /* control_details */
+  "This is a two in one cabinet with two games in it. The control panel is split in half.... on the left is two directional buttons (Left,Right) and a button (Fire). These inputs are actually wired to the controls on the right side of the panel. These controls are a 4 way jostick and a button (gas). This seems like a huge waste of control space, but I suppose at the time, generic panels seemed silly.", /* control__details */
+  &invho2_get_btn;
 }
 
 const char *invho2_get_btn(int type)
@@ -10549,6 +10962,7 @@ const struct ControlInfo offroad_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There are no Start buttons /* control_details */ the Nitro buttons double as the Start buttons. You also use the the Nitro buttons to select improvements on your car. 'Player 1' is the Red car, 'Player 2' is the Yellow car, 'Player 3' is the Blue car. The game refers the players as 'Red Player', 'Yellow Player', 'Blue Player', not 'Player 1', etc. There are also two player cabs of this game, but all they did was remove the Yellow car's inputs, including the coin inputs. There are no dipswitches to change. So on these cabs, the 'second player' is the blue car, but all the inputs are connected to what is still 'Player 3' in mame. To eneter service mode, hold down Blue Nitro button and press service button. The menus are scrolled down by pressing the Red Nitro button, and selected by pressing the Blue Nitro button.";
+  &offroad_get_btn;
 }
 
 const char *offroad_get_btn(int type)
@@ -10573,6 +10987,7 @@ const struct ControlInfo offroadt_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There are no Start buttons /* control_details */ the Nitro buttons double as the Start buttons. You also use the the Nitro buttons to select improvements on your car. There are two Nitro buttons for each player, mirrored on each side of the steering wheel, but they are wired together as one button in the harness. 'Player 1' is the Red car or 'Red Player', 'Player 2' is the Yellow car or 'Yellow Player', and 'Player 3' is the Blue car or 'Blue Player'. The game and manual refer to the players with their color, not a number. Might be because of next point. There are also two player cabs of this game, but all they did was remove the Yellow car's inputs, including the coin inputs. There are no dipswitches to change. So on these cabs, the 'second player' is the blue car, but all the inputs are connected to what is still 'Player 3' in mame. This was usually done not because of blue being a more popular color, but the arcade operators need the blue nitro button to change game settings. To eneter service mode, hold down Blue Nitro button and press service button. The menus are scrolled down by pressing the Red Nitro button, and selected by pressing the Blue Nitro button. This is basically the same as the original Ironman Ivan Stewart's Super Off Road. However, it has new tracks, and the players can choose between driving a dune buggy or the original truck. The control is exactly the same.";
+  &offroadt_get_btn;
 }
 
 const char *offroadt_get_btn(int type)
@@ -10596,7 +11011,8 @@ const struct ControlInfo jackal_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &jackal_get_btn;
 }
 
 const char *jackal_get_btn(int type)
@@ -10622,7 +11038,8 @@ const struct ControlInfo jailbrek_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &jailbrek_get_btn;
 }
 
 const char *jailbrek_get_btn(int type)
@@ -10648,7 +11065,8 @@ const struct ControlInfo teamqb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The start button is labeled 'Join'. Player 1 is 'left QB', player 2 is 'left HB', and are on the same team. Player 3 is 'right QB', player 4 is 'right HB', and are on the same team. The CP has the players from left to right: LHB, LQB, RQB, RHB, or if you go by numbers, 2, 1, 3, 4. Only the quarterbacks have springsticks (to control throwing & kicking), but all players have a normal 8-way stick to control the player's movements. The action button does different things, depending on what the 8 way stick is doing. Since the 2 & 4 players don't have a spring stick, they often have the action button mirrored on both sides of the joystick. The analog joystick 'springsticks' were held all the way up by the spring, with free movement sideways. The farther back you pulled the springstick, the farther/faster you would throw or kick the ball when you released the stick. The label 'short' is positioned just below the springstick, below which is 'long'. Along with the words, part of the label is a fat pointed line or arrow, pointing down away from the springstick." /* control_details */
+  "The start button is labeled 'Join'. Player 1 is 'left QB', player 2 is 'left HB', and are on the same team. Player 3 is 'right QB', player 4 is 'right HB', and are on the same team. The CP has the players from left to right: LHB, LQB, RQB, RHB, or if you go by numbers, 2, 1, 3, 4. Only the quarterbacks have springsticks (to control throwing & kicking), but all players have a normal 8-way stick to control the player's movements. The action button does different things, depending on what the 8 way stick is doing. Since the 2 & 4 players don't have a spring stick, they often have the action button mirrored on both sides of the joystick. The analog joystick 'springsticks' were held all the way up by the spring, with free movement sideways. The farther back you pulled the springstick, the farther/faster you would throw or kick the ball when you released the stick. The label 'short' is positioned just below the springstick, below which is 'long'. Along with the words, part of the label is a fat pointed line or arrow, pointing down away from the springstick.", /* control__details */
+  &teamqb_get_btn;
 }
 
 const char *teamqb_get_btn(int type)
@@ -10702,7 +11120,8 @@ const struct ControlInfo jantouki_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &jantouki_get_btn;
 }
 
 const char *jantouki_get_btn(int type)
@@ -10722,7 +11141,8 @@ const struct ControlInfo journey_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This is five games in one, plus a bonus level. The five games all center around a musician (from the band Journey) getting to his instrument, and then getting back to the spaceship. The blast button is not used until the player retrieves his musical instrument. The blast button is mirrored on both sides of the centered joystick." /* control_details */
+  "This is five games in one, plus a bonus level. The five games all center around a musician (from the band Journey) getting to his instrument, and then getting back to the spaceship. The blast button is not used until the player retrieves his musical instrument. The blast button is mirrored on both sides of the centered joystick.", /* control__details */
+  &journey_get_btn;
 }
 
 const char *journey_get_btn(int type)
@@ -10747,7 +11167,8 @@ const struct ControlInfo joust_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &joust_get_btn;
 }
 
 const char *joust_get_btn(int type)
@@ -10770,7 +11191,8 @@ const struct ControlInfo joust2_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &joust2_get_btn;
 }
 
 const char *joust2_get_btn(int type)
@@ -10800,7 +11222,8 @@ const struct ControlInfo joyfulr_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original cpo simply had the two joysticks labeled 'car control' and 'hand control' respectively. It may not be apparent from playing, but the goal of this game is to navigate the car with the left stick, while grabbing things with the right." /* control_details */
+  "The original cpo simply had the two joysticks labeled 'car control' and 'hand control' respectively. It may not be apparent from playing, but the goal of this game is to navigate the car with the left stick, while grabbing things with the right.", /* control__details */
+  &joyfulr_get_btn;
 }
 
 const char *joyfulr_get_btn(int type)
@@ -10828,7 +11251,8 @@ const struct ControlInfo jrpacman_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &jrpacman_get_btn;
 }
 
 const char *jrpacman_get_btn(int type)
@@ -10852,7 +11276,8 @@ const struct ControlInfo jumpbug_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &jumpbug_get_btn;
 }
 
 const char *jumpbug_get_btn(int type)
@@ -10877,7 +11302,8 @@ const struct ControlInfo junglek_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &junglek_get_btn;
 }
 
 const char *junglek_get_btn(int type)
@@ -10902,7 +11328,8 @@ const struct ControlInfo jungler_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &jungler_get_btn;
 }
 
 const char *jungler_get_btn(int type)
@@ -10927,7 +11354,8 @@ const struct ControlInfo jpark_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Although the control is definately a gun, the physical control looks nothing like a gun. It looks like a pistol-grip analog stick." /* control_details */
+  "Although the control is definately a gun, the physical control looks nothing like a gun. It looks like a pistol-grip analog stick.", /* control__details */
+  &jpark_get_btn;
 }
 
 const char *jpark_get_btn(int type)
@@ -10952,7 +11380,8 @@ const struct ControlInfo kageki_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &kageki_get_btn;
 }
 
 const char *kageki_get_btn(int type)
@@ -10978,7 +11407,8 @@ const struct ControlInfo kanatuen_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &kanatuen_get_btn;
 }
 
 const char *kanatuen_get_btn(int type)
@@ -10998,7 +11428,8 @@ const struct ControlInfo kangaroo_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Diagonals were labelled 'Super Leap'." /* control_details */
+  "Diagonals were labelled 'Super Leap'.", /* control__details */
+  &kangaroo_get_btn;
 }
 
 const char *kangaroo_get_btn(int type)
@@ -11023,7 +11454,8 @@ const struct ControlInfo kaos_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Panel had symmetric layout with a jump button either side of the joy, but wired back to the same input." /* control_details */
+  "Panel had symmetric layout with a jump button either side of the joy, but wired back to the same input.", /* control__details */
+  &kaos_get_btn;
 }
 
 const char *kaos_get_btn(int type)
@@ -11048,7 +11480,8 @@ const struct ControlInfo kchamp_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is the very first \'street fighter\' style game. The controls on it are a tad odd. Instead of a joystick and an array of buttons, you have two joysticks. These joysticks don\'t have any labels and merely have arrow directions printed on the overlay. The left joystick controls movement while the right determines the type of attack. Different attack directions while in different positions perform different moves. Luckily, the game tutors you on moves during the first round. It should be noted that this game comes in one and two player versions." /* control_details */
+  "This game is the very first \'street fighter\' style game. The controls on it are a tad odd. Instead of a joystick and an array of buttons, you have two joysticks. These joysticks don\'t have any labels and merely have arrow directions printed on the overlay. The left joystick controls movement while the right determines the type of attack. Different attack directions while in different positions perform different moves. Luckily, the game tutors you on moves during the first round. It should be noted that this game comes in one and two player versions.", /* control__details */
+  &kchamp_get_btn;
 }
 
 const char *kchamp_get_btn(int type)
@@ -11076,7 +11509,8 @@ const struct ControlInfo karnov_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The option button actives whatever items you have collected." /* control_details */
+  "The option button actives whatever items you have collected.", /* control__details */
+  &karnov_get_btn;
 }
 
 const char *karnov_get_btn(int type)
@@ -11103,7 +11537,8 @@ const struct ControlInfo kick_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Teh roller on this game is made from a trackball ball, but this is not uncommon." /* control_details */
+  "Teh roller on this game is made from a trackball ball, but this is not uncommon.", /* control__details */
+  &kick_get_btn;
 }
 
 const char *kick_get_btn(int type)
@@ -11126,7 +11561,8 @@ const struct ControlInfo kicker_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Game used dipswitch for single or dual control layout, still alternating play. Mame uses single control layout." /* control_details */
+  "Game used dipswitch for single or dual control layout, still alternating play. Mame uses single control layout.", /* control__details */
+  &kicker_get_btn;
 }
 
 const char *kicker_get_btn(int type)
@@ -11152,7 +11588,8 @@ const struct ControlInfo mayumi_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mayumi_get_btn;
 }
 
 const char *mayumi_get_btn(int type)
@@ -11172,7 +11609,8 @@ const struct ControlInfo killcom_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The buttons actually have a global label 'laser fire' and each individual button has a sub label of 'up,' 'down,' and 'left.'" /* control_details */
+  "The buttons actually have a global label 'laser fire' and each individual button has a sub label of 'up,' 'down,' and 'left.'", /* control__details */
+  &killcom_get_btn;
 }
 
 const char *killcom_get_btn(int type)
@@ -11200,7 +11638,8 @@ const struct ControlInfo kinst_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &kinst_get_btn;
 }
 
 const char *kinst_get_btn(int type)
@@ -11230,7 +11669,8 @@ const struct ControlInfo kinst2_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &kinst2_get_btn;
 }
 
 const char *kinst2_get_btn(int type)
@@ -11260,7 +11700,8 @@ const struct ControlInfo kingball_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Galaga-like game, except you can be hit without lose a life!  Instead, you lose a life when the king you\'re protecting is lifted all the way to the top." /* control_details */
+  "Galaga-like game, except you can be hit without lose a life!  Instead, you lose a life when the king you\'re protecting is lifted all the way to the top.", /* control__details */
+  &kingball_get_btn;
 }
 
 const char *kingball_get_btn(int type)
@@ -11283,7 +11724,8 @@ const struct ControlInfo kingofb_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game lacks any labels, even in the manual. The labels reflect the function." /* control_details */
+  "This game lacks any labels, even in the manual. The labels reflect the function.", /* control__details */
+  &kingofb_get_btn;
 }
 
 const char *kingofb_get_btn(int type)
@@ -11309,7 +11751,8 @@ const struct ControlInfo klax_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &klax_get_btn;
 }
 
 const char *klax_get_btn(int type)
@@ -11334,7 +11777,8 @@ const struct ControlInfo knights_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &knights_get_btn;
 }
 
 const char *knights_get_btn(int type)
@@ -11360,7 +11804,8 @@ const struct ControlInfo konamigt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &konamigt_get_btn;
 }
 
 const char *konamigt_get_btn(int type)
@@ -11386,6 +11831,7 @@ const struct ControlInfo kroozr_ctrls
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER: Mame's driver (incorrectly) emulates this as an 8way trigger stick (so I included that). However, the real game used an analog trigger joystick (so I put other). The A/D circuit in part of the joystick assembly, instead of on the main PCB or daughter board like most analog joysticks /* control_details */ and the connection had 8 pins per axis. The joystick handle looked a lot like (if not exactly the same as) a tron handle. The spinner was also a push down button, much like a Forgotten Worlds spinner.";
+  &kroozr_get_btn;
 }
 
 const char *kroozr_get_btn(int type)
@@ -11413,7 +11859,8 @@ const struct ControlInfo kram_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joystick is labeled 'Kram Kontrol'" /* control_details */
+  "The joystick is labeled 'Kram Kontrol'", /* control__details */
+  &kram_get_btn;
 }
 
 const char *kram_get_btn(int type)
@@ -11439,7 +11886,8 @@ const struct ControlInfo krull_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game actually uses icons and doesn't have any labels." /* control_details */
+  "The game actually uses icons and doesn't have any labels.", /* control__details */
+  &krull_get_btn;
 }
 
 const char *krull_get_btn(int type)
@@ -11467,7 +11915,8 @@ const struct ControlInfo kungfum_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &kungfum_get_btn;
 }
 
 const char *kungfum_get_btn(int type)
@@ -11493,7 +11942,8 @@ const struct ControlInfo kurikint_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that the original cpo doesn't have labels for the joystick, this is simply what it does. Also not there are two jumps. Pressing up is NOT the same as pressing the dedicated jump button." /* control_details */
+  "Note that the original cpo doesn't have labels for the joystick, this is simply what it does. Also not there are two jumps. Pressing up is NOT the same as pressing the dedicated jump button.", /* control__details */
+  &kurikint_get_btn;
 }
 
 const char *kurikint_get_btn(int type)
@@ -11519,7 +11969,8 @@ const struct ControlInfo ladybug_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Although mame has 2 buttons mapped, it's merely a glitch caused by using the input template of a similar game. The actual game only has a joystick." /* control_details */
+  "Although mame has 2 buttons mapped, it's merely a glitch caused by using the input template of a similar game. The actual game only has a joystick.", /* control__details */
+  &ladybug_get_btn;
 }
 
 const char *ladybug_get_btn(int type)
@@ -11543,7 +11994,8 @@ const struct ControlInfo lagunar_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that the shifter button is mapped to button 1 in Mame, which could cause conflicts with the pedal." /* control_details */
+  "Note that the shifter button is mapped to button 1 in Mame, which could cause conflicts with the pedal.", /* control__details */
+  &lagunar_get_btn;
 }
 
 const char *lagunar_get_btn(int type)
@@ -11567,7 +12019,8 @@ const struct ControlInfo lghost_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Player 3 seems to have an extra input in mame. It won't hurt anything though." /* control_details */
+  "Player 3 seems to have an extra input in mame. It won't hurt anything though.", /* control__details */
+  &lghost_get_btn;
 }
 
 const char *lghost_get_btn(int type)
@@ -11593,7 +12046,8 @@ const struct ControlInfo lastduel_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button 1: Attack  Button 2: Rolling Attack (Stages 1, 3, and 6 when airplane), Jump (Stages 2, 4, and 5 when car), Surface Attack (Stages 2, 4, and 5 when 2 player mode and both players in airplanes). 2nd player can join during single player game." /* control_details */
+  "Button 1: Attack  Button 2: Rolling Attack (Stages 1, 3, and 6 when airplane), Jump (Stages 2, 4, and 5 when car), Surface Attack (Stages 2, 4, and 5 when 2 player mode and both players in airplanes). 2nd player can join during single player game.", /* control__details */
+  &lastduel_get_btn;
 }
 
 const char *lastduel_get_btn(int type)
@@ -11619,7 +12073,8 @@ const struct ControlInfo lethalen_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &lethalen_get_btn;
 }
 
 const char *lethalen_get_btn(int type)
@@ -11644,7 +12099,8 @@ const struct ControlInfo lethalj_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &lethalj_get_btn;
 }
 
 const char *lethalj_get_btn(int type)
@@ -11669,7 +12125,8 @@ const struct ControlInfo liberatr_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &liberatr_get_btn;
 }
 
 const char *liberatr_get_btn(int type)
@@ -11695,7 +12152,8 @@ const struct ControlInfo lnc_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &lnc_get_btn;
 }
 
 const char *lnc_get_btn(int type)
@@ -11720,7 +12178,8 @@ const struct ControlInfo lockon_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The two machine gun triggers are universally labeled and have the same function, despite the fact that they have seperate inputs. The other two buttons are the left and right thumb buttons respectively." /* control_details */
+  "The two machine gun triggers are universally labeled and have the same function, despite the fact that they have seperate inputs. The other two buttons are the left and right thumb buttons respectively.", /* control__details */
+  &lockon_get_btn;
 }
 
 const char *lockon_get_btn(int type)
@@ -11748,7 +12207,8 @@ const struct ControlInfo locomotn_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &locomotn_get_btn;
 }
 
 const char *locomotn_get_btn(int type)
@@ -11773,7 +12233,8 @@ const struct ControlInfo ldrun_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ldrun_get_btn;
 }
 
 const char *ldrun_get_btn(int type)
@@ -11799,7 +12260,8 @@ const struct ControlInfo looping_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &looping_get_btn;
 }
 
 const char *looping_get_btn(int type)
@@ -11823,7 +12285,8 @@ const struct ControlInfo losttomb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &losttomb_get_btn;
 }
 
 const char *losttomb_get_btn(int type)
@@ -11848,7 +12311,8 @@ const struct ControlInfo janjans1_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &janjans1_get_btn;
 }
 
 const char *janjans1_get_btn(int type)
@@ -11868,7 +12332,8 @@ const struct ControlInfo llander_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original used a large handle connected to a potentiometer for Thrust control. The select game button is actually player 2 start. so to toggle through games press p2 start and then p1 start when you are ready to play." /* control_details */
+  "The original used a large handle connected to a potentiometer for Thrust control. The select game button is actually player 2 start. so to toggle through games press p2 start and then p1 start when you are ready to play.", /* control__details */
+  &llander_get_btn;
 }
 
 const char *llander_get_btn(int type)
@@ -11893,7 +12358,8 @@ const struct ControlInfo lrescue_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &lrescue_get_btn;
 }
 
 const char *lrescue_get_btn(int type)
@@ -11916,7 +12382,8 @@ const struct ControlInfo lupin3_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "That isn't a typo, the button is actually called 'Magic Button.'" /* control_details */
+  "That isn't a typo, the button is actually called 'Magic Button.'", /* control__details */
+  &lupin3_get_btn;
 }
 
 const char *lupin3_get_btn(int type)
@@ -11941,7 +12408,8 @@ const struct ControlInfo m4_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game actually uses a two-way, top-fire lever, which is quite rare." /* control_details */
+  "This game actually uses a two-way, top-fire lever, which is quite rare.", /* control__details */
+  &m4_get_btn;
 }
 
 const char *m4_get_btn(int type)
@@ -11965,7 +12433,8 @@ const struct ControlInfo mplanets_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mplanets_get_btn;
 }
 
 const char *mplanets_get_btn(int type)
@@ -11992,7 +12461,8 @@ const struct ControlInfo msword_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &msword_get_btn;
 }
 
 const char *msword_get_btn(int type)
@@ -12018,7 +12488,8 @@ const struct ControlInfo magspot_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'L' and 'R' labels are indeed accurate. The original cpo used those to abbreviate 'left' and 'right'." /* control_details */
+  "The 'L' and 'R' labels are indeed accurate. The original cpo used those to abbreviate 'left' and 'right'.", /* control__details */
+  &magspot_get_btn;
 }
 
 const char *magspot_get_btn(int type)
@@ -12041,7 +12512,8 @@ const struct ControlInfo akiss_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &akiss_get_btn;
 }
 
 const char *akiss_get_btn(int type)
@@ -12061,7 +12533,8 @@ const struct ControlInfo mjangels_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjangels_get_btn;
 }
 
 const char *mjangels_get_btn(int type)
@@ -12081,7 +12554,8 @@ const struct ControlInfo bananadr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &bananadr_get_btn;
 }
 
 const char *bananadr_get_btn(int type)
@@ -12101,7 +12575,8 @@ const struct ControlInfo mjcamera_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjcamera_get_btn;
 }
 
 const char *mjcamera_get_btn(int type)
@@ -12121,7 +12596,8 @@ const struct ControlInfo mcnpshnt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mcnpshnt_get_btn;
 }
 
 const char *mcnpshnt_get_btn(int type)
@@ -12141,7 +12617,8 @@ const struct ControlInfo chinmoku_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &chinmoku_get_btn;
 }
 
 const char *chinmoku_get_btn(int type)
@@ -12161,7 +12638,8 @@ const struct ControlInfo cmehyou_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &cmehyou_get_btn;
 }
 
 const char *cmehyou_get_btn(int type)
@@ -12181,7 +12659,8 @@ const struct ControlInfo mjclinic_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjclinic_get_btn;
 }
 
 const char *mjclinic_get_btn(int type)
@@ -12201,7 +12680,8 @@ const struct ControlInfo club90s_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &club90s_get_btn;
 }
 
 const char *club90s_get_btn(int type)
@@ -12221,7 +12701,8 @@ const struct ControlInfo daiyogen_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &daiyogen_get_btn;
 }
 
 const char *daiyogen_get_btn(int type)
@@ -12241,7 +12722,8 @@ const struct ControlInfo mjderngr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjderngr_get_btn;
 }
 
 const char *mjderngr_get_btn(int type)
@@ -12261,7 +12743,8 @@ const struct ControlInfo mjdialq2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjdialq2_get_btn;
 }
 
 const char *mjdialq2_get_btn(int type)
@@ -12281,7 +12764,8 @@ const struct ControlInfo mjdiplob_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjdiplob_get_btn;
 }
 
 const char *mjdiplob_get_btn(int type)
@@ -12301,7 +12785,8 @@ const struct ControlInfo dokyusei_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &dokyusei_get_btn;
 }
 
 const char *dokyusei_get_btn(int type)
@@ -12321,7 +12806,8 @@ const struct ControlInfo dokyusp_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &dokyusp_get_btn;
 }
 
 const char *dokyusp_get_btn(int type)
@@ -12341,7 +12827,8 @@ const struct ControlInfo mjelctrn_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjelctrn_get_btn;
 }
 
 const char *mjelctrn_get_btn(int type)
@@ -12361,7 +12848,8 @@ const struct ControlInfo mjegolf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjegolf_get_btn;
 }
 
 const char *mjegolf_get_btn(int type)
@@ -12381,7 +12869,8 @@ const struct ControlInfo mjfocus_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjfocus_get_btn;
 }
 
 const char *mjfocus_get_btn(int type)
@@ -12401,7 +12890,8 @@ const struct ControlInfo mjfriday_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjfriday_get_btn;
 }
 
 const char *mjfriday_get_btn(int type)
@@ -12421,7 +12911,8 @@ const struct ControlInfo mfunclub_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mfunclub_get_btn;
 }
 
 const char *mfunclub_get_btn(int type)
@@ -12441,7 +12932,8 @@ const struct ControlInfo mgmen89_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mgmen89_get_btn;
 }
 
 const char *mgmen89_get_btn(int type)
@@ -12461,7 +12953,8 @@ const struct ControlInfo mgakuen_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mgakuen_get_btn;
 }
 
 const char *mgakuen_get_btn(int type)
@@ -12481,7 +12974,8 @@ const struct ControlInfo mgakuen2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mgakuen2_get_btn;
 }
 
 const char *mgakuen2_get_btn(int type)
@@ -12501,7 +12995,8 @@ const struct ControlInfo gakusai_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &gakusai_get_btn;
 }
 
 const char *gakusai_get_btn(int type)
@@ -12521,7 +13016,8 @@ const struct ControlInfo gakusai2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &gakusai2_get_btn;
 }
 
 const char *gakusai2_get_btn(int type)
@@ -12541,7 +13037,8 @@ const struct ControlInfo gal10ren_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &gal10ren_get_btn;
 }
 
 const char *gal10ren_get_btn(int type)
@@ -12561,7 +13058,8 @@ const struct ControlInfo galkaika_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &galkaika_get_btn;
 }
 
 const char *galkaika_get_btn(int type)
@@ -12581,7 +13079,8 @@ const struct ControlInfo galkoku_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &galkoku_get_btn;
 }
 
 const char *galkoku_get_btn(int type)
@@ -12601,7 +13100,8 @@ const struct ControlInfo mjgottsu_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjgottsu_get_btn;
 }
 
 const char *mjgottsu_get_btn(int type)
@@ -12621,7 +13121,8 @@ const struct ControlInfo hanamomo_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &hanamomo_get_btn;
 }
 
 const char *hanamomo_get_btn(int type)
@@ -12641,7 +13142,8 @@ const struct ControlInfo mhgaiden_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mhgaiden_get_btn;
 }
 
 const char *mhgaiden_get_btn(int type)
@@ -12661,7 +13163,8 @@ const struct ControlInfo mjhokite_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjhokite_get_btn;
 }
 
 const char *mjhokite_get_btn(int type)
@@ -12681,7 +13184,8 @@ const struct ControlInfo hourouki_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &hourouki_get_btn;
 }
 
 const char *hourouki_get_btn(int type)
@@ -12701,7 +13205,8 @@ const struct ControlInfo hypreact_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &hypreact_get_btn;
 }
 
 const char *hypreact_get_btn(int type)
@@ -12721,7 +13226,8 @@ const struct ControlInfo hypreac2_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &hypreac2_get_btn;
 }
 
 const char *hypreac2_get_btn(int type)
@@ -12741,7 +13247,8 @@ const struct ControlInfo mjikaga_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjikaga_get_btn;
 }
 
 const char *mjikaga_get_btn(int type)
@@ -12761,7 +13268,8 @@ const struct ControlInfo janbari_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &janbari_get_btn;
 }
 
 const char *janbari_get_btn(int type)
@@ -12781,7 +13289,8 @@ const struct ControlInfo mjlstory_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjlstory_get_btn;
 }
 
 const char *mjlstory_get_btn(int type)
@@ -12801,7 +13310,8 @@ const struct ControlInfo jogakuen_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &jogakuen_get_btn;
 }
 
 const char *jogakuen_get_btn(int type)
@@ -12821,7 +13331,8 @@ const struct ControlInfo kaguya_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &kaguya_get_btn;
 }
 
 const char *kaguya_get_btn(int type)
@@ -12841,7 +13352,8 @@ const struct ControlInfo mkeibaou_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mkeibaou_get_btn;
 }
 
 const char *mkeibaou_get_btn(int type)
@@ -12861,7 +13373,8 @@ const struct ControlInfo mjkinjas_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjkinjas_get_btn;
 }
 
 const char *mjkinjas_get_btn(int type)
@@ -12881,7 +13394,8 @@ const struct ControlInfo koinomp_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &koinomp_get_btn;
 }
 
 const char *koinomp_get_btn(int type)
@@ -12901,7 +13415,8 @@ const struct ControlInfo mjkoiura_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjkoiura_get_btn;
 }
 
 const char *mjkoiura_get_btn(int type)
@@ -12921,7 +13436,8 @@ const struct ControlInfo mjkojink_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjkojink_get_btn;
 }
 
 const char *mjkojink_get_btn(int type)
@@ -12941,7 +13457,8 @@ const struct ControlInfo mjkjidai_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjkjidai_get_btn;
 }
 
 const char *mjkjidai_get_btn(int type)
@@ -12961,7 +13478,8 @@ const struct ControlInfo mjlaman_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjlaman_get_btn;
 }
 
 const char *mjlaman_get_btn(int type)
@@ -12981,7 +13499,8 @@ const struct ControlInfo lemnangl_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &lemnangl_get_btn;
 }
 
 const char *lemnangl_get_btn(int type)
@@ -13001,7 +13520,8 @@ const struct ControlInfo mjnanpas_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjnanpas_get_btn;
 }
 
 const char *mjnanpas_get_btn(int type)
@@ -13021,7 +13541,8 @@ const struct ControlInfo mjnatsu_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjnatsu_get_btn;
 }
 
 const char *mjnatsu_get_btn(int type)
@@ -13041,7 +13562,8 @@ const struct ControlInfo ntopstar_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ntopstar_get_btn;
 }
 
 const char *ntopstar_get_btn(int type)
@@ -13061,7 +13583,8 @@ const struct ControlInfo neruton_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &neruton_get_btn;
 }
 
 const char *neruton_get_btn(int type)
@@ -13081,7 +13604,8 @@ const struct ControlInfo patimono_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &patimono_get_btn;
 }
 
 const char *patimono_get_btn(int type)
@@ -13101,7 +13625,8 @@ const struct ControlInfo pstadium_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &pstadium_get_btn;
 }
 
 const char *pstadium_get_btn(int type)
@@ -13121,7 +13646,8 @@ const struct ControlInfo ponchin_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ponchin_get_btn;
 }
 
 const char *ponchin_get_btn(int type)
@@ -13141,7 +13667,8 @@ const struct ControlInfo mjnquest_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjnquest_get_btn;
 }
 
 const char *mjnquest_get_btn(int type)
@@ -13161,7 +13688,8 @@ const struct ControlInfo renaiclb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &renaiclb_get_btn;
 }
 
 const char *renaiclb_get_btn(int type)
@@ -13181,7 +13709,8 @@ const struct ControlInfo mrokumei_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mrokumei_get_btn;
 }
 
 const char *mrokumei_get_btn(int type)
@@ -13201,7 +13730,8 @@ const struct ControlInfo sailorws_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &sailorws_get_btn;
 }
 
 const char *sailorws_get_btn(int type)
@@ -13221,7 +13751,8 @@ const struct ControlInfo msjiken_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &msjiken_get_btn;
 }
 
 const char *msjiken_get_btn(int type)
@@ -13241,7 +13772,8 @@ const struct ControlInfo mscoutm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mscoutm_get_btn;
 }
 
 const char *mscoutm_get_btn(int type)
@@ -13261,7 +13793,8 @@ const struct ControlInfo mjsikaku_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjsikaku_get_btn;
 }
 
 const char *mjsikaku_get_btn(int type)
@@ -13281,7 +13814,8 @@ const struct ControlInfo mjsister_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjsister_get_btn;
 }
 
 const char *mjsister_get_btn(int type)
@@ -13301,7 +13835,8 @@ const struct ControlInfo majs101b_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &majs101b_get_btn;
 }
 
 const char *majs101b_get_btn(int type)
@@ -13321,7 +13856,8 @@ const struct ControlInfo mladyhtr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mladyhtr_get_btn;
 }
 
 const char *mladyhtr_get_btn(int type)
@@ -13341,7 +13877,8 @@ const struct ControlInfo triplew1_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &triplew1_get_btn;
 }
 
 const char *triplew1_get_btn(int type)
@@ -13361,7 +13898,8 @@ const struct ControlInfo triplew2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &triplew2_get_btn;
 }
 
 const char *triplew2_get_btn(int type)
@@ -13381,7 +13919,8 @@ const struct ControlInfo uchuuai_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &uchuuai_get_btn;
 }
 
 const char *uchuuai_get_btn(int type)
@@ -13401,7 +13940,8 @@ const struct ControlInfo mjuraden_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjuraden_get_btn;
 }
 
 const char *mjuraden_get_btn(int type)
@@ -13421,7 +13961,8 @@ const struct ControlInfo vanilla_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &vanilla_get_btn;
 }
 
 const char *vanilla_get_btn(int type)
@@ -13441,7 +13982,8 @@ const struct ControlInfo vitaminc_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &vitaminc_get_btn;
 }
 
 const char *vitaminc_get_btn(int type)
@@ -13461,7 +14003,8 @@ const struct ControlInfo yarunara_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &yarunara_get_btn;
 }
 
 const char *yarunara_get_btn(int type)
@@ -13481,7 +14024,8 @@ const struct ControlInfo mjyuugi_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjyuugi_get_btn;
 }
 
 const char *mjyuugi_get_btn(int type)
@@ -13501,7 +14045,8 @@ const struct ControlInfo mjyougo_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mjyougo_get_btn;
 }
 
 const char *mjyougo_get_btn(int type)
@@ -13521,7 +14066,8 @@ const struct ControlInfo korinai_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &korinai_get_btn;
 }
 
 const char *korinai_get_btn(int type)
@@ -13541,7 +14087,8 @@ const struct ControlInfo mhavoc_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mhavoc_get_btn;
 }
 
 const char *mhavoc_get_btn(int type)
@@ -13565,7 +14112,8 @@ const struct ControlInfo maniach_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &maniach_get_btn;
 }
 
 const char *maniach_get_btn(int type)
@@ -13591,7 +14139,8 @@ const struct ControlInfo mappy_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mappy_get_btn;
 }
 
 const char *mappy_get_btn(int type)
@@ -13614,7 +14163,8 @@ const struct ControlInfo marble_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &marble_get_btn;
 }
 
 const char *marble_get_btn(int type)
@@ -13638,7 +14188,8 @@ const struct ControlInfo mario_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mario_get_btn;
 }
 
 const char *mario_get_btn(int type)
@@ -13661,7 +14212,8 @@ const struct ControlInfo mars_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mars_get_btn;
 }
 
 const char *mars_get_btn(int type)
@@ -13689,7 +14241,8 @@ const struct ControlInfo mmatrix_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mmatrix_get_btn;
 }
 
 const char *mmatrix_get_btn(int type)
@@ -13715,7 +14268,8 @@ const struct ControlInfo msh_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "As with all fighters, the actions for the joystick are reversed when you flip over your opponent to the opposite side of the screen. As with all capcom titles the top row of buttons is actually the first three instead of the last." /* control_details */
+  "As with all fighters, the actions for the joystick are reversed when you flip over your opponent to the opposite side of the screen. As with all capcom titles the top row of buttons is actually the first three instead of the last.", /* control__details */
+  &msh_get_btn;
 }
 
 const char *msh_get_btn(int type)
@@ -13757,7 +14311,8 @@ const struct ControlInfo mshvsf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mshvsf_get_btn;
 }
 
 const char *mshvsf_get_btn(int type)
@@ -13787,7 +14342,8 @@ const struct ControlInfo mvsc_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original control panels had the punch buttons on the top row of thee and the kick buttons on the bottom row. ame maps the punch buttons 1 - 3 and the kick buttons 4 - 6. This can be backwards for people. Mame devs have stood by this because of the jamma locations of each button." /* control_details */
+  "The original control panels had the punch buttons on the top row of thee and the kick buttons on the bottom row. ame maps the punch buttons 1 - 3 and the kick buttons 4 - 6. This can be backwards for people. Mame devs have stood by this because of the jamma locations of each button.", /* control__details */
+  &mvsc_get_btn;
 }
 
 const char *mvsc_get_btn(int type)
@@ -13817,7 +14373,8 @@ const struct ControlInfo matmania_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Press both buttons to pin. Rapidly press both buttons to kick out." /* control_details */
+  "Press both buttons to pin. Rapidly press both buttons to kick out.", /* control__details */
+  &matmania_get_btn;
 }
 
 const char *matmania_get_btn(int type)
@@ -13843,7 +14400,8 @@ const struct ControlInfo maxrpm_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Please note that mame has fudged the shifter input up. Also note that since the shifter buttons are mapped to button 1 and 2 they will conflict with the gas pedal with mame's default mappings." /* control_details */
+  "Please note that mame has fudged the shifter input up. Also note that since the shifter buttons are mapped to button 1 and 2 they will conflict with the gas pedal with mame's default mappings.", /* control__details */
+  &maxrpm_get_btn;
 }
 
 const char *maxrpm_get_btn(int type)
@@ -13868,7 +14426,8 @@ const struct ControlInfo maxforce_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &maxforce_get_btn;
 }
 
 const char *maxforce_get_btn(int type)
@@ -13893,7 +14452,8 @@ const struct ControlInfo mayday_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Right directions on the joystick are the only ones used as you can't turn back. Also note that the buttons are in different order on the control panel. (Mayday, Back, Fire Front)" /* control_details */
+  "Right directions on the joystick are the only ones used as you can't turn back. Also note that the buttons are in different order on the control panel. (Mayday, Back, Fire Front)", /* control__details */
+  &mayday_get_btn;
 }
 
 const char *mayday_get_btn(int type)
@@ -13920,7 +14480,8 @@ const struct ControlInfo mechatt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mechatt_get_btn;
 }
 
 const char *mechatt_get_btn(int type)
@@ -13946,7 +14507,8 @@ const struct ControlInfo mmehyou_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mmehyou_get_btn;
 }
 
 const char *mmehyou_get_btn(int type)
@@ -13966,7 +14528,8 @@ const struct ControlInfo pachiten_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &pachiten_get_btn;
 }
 
 const char *pachiten_get_btn(int type)
@@ -13986,7 +14549,8 @@ const struct ControlInfo megaman2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &megaman2_get_btn;
 }
 
 const char *megaman2_get_btn(int type)
@@ -14013,7 +14577,8 @@ const struct ControlInfo megazone_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &megazone_get_btn;
 }
 
 const char *megazone_get_btn(int type)
@@ -14038,7 +14603,8 @@ const struct ControlInfo mercs_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mercs_get_btn;
 }
 
 const char *mercs_get_btn(int type)
@@ -14064,7 +14630,8 @@ const struct ControlInfo metamrph_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game can be turned into a 2 player setup via a dip setting. Also something unique in 4 player games, this one allows you to have a shared coin slot via the settings. (This means the 2 player-style select screen even when you have the cabinet set to 4 players)" /* control_details */
+  "This game can be turned into a 2 player setup via a dip setting. Also something unique in 4 player games, this one allows you to have a shared coin slot via the settings. (This means the 2 player-style select screen even when you have the cabinet set to 4 players)", /* control__details */
+  &metamrph_get_btn;
 }
 
 const char *metamrph_get_btn(int type)
@@ -14090,7 +14657,8 @@ const struct ControlInfo metrocrs_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Teh control panel didn't have a button label." /* control_details */
+  "Teh control panel didn't have a button label.", /* control__details */
+  &metrocrs_get_btn;
 }
 
 const char *metrocrs_get_btn(int type)
@@ -14115,7 +14683,8 @@ const struct ControlInfo mwalk_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mwalk_get_btn;
 }
 
 const char *mwalk_get_btn(int type)
@@ -14141,7 +14710,8 @@ const struct ControlInfo midres_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &midres_get_btn;
 }
 
 const char *midres_get_btn(int type)
@@ -14169,7 +14739,8 @@ const struct ControlInfo gtmr2_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game does NOT use all of these controls. It has dipswitch settings which allow the games to be controlled with a 360 degree wheel, a 270 degree wheel, a 270 degree digital wheel (using a d2a conveter) and a plain old 8-way joystick with buttons. Uses with steering wheels please note that the game defaults to joystick input. Also note that the pedals optionally can be set to analog mode, but mame disables this feature due to input limitations." /* control_details */
+  "This game does NOT use all of these controls. It has dipswitch settings which allow the games to be controlled with a 360 degree wheel, a 270 degree wheel, a 270 degree digital wheel (using a d2a conveter) and a plain old 8-way joystick with buttons. Uses with steering wheels please note that the game defaults to joystick input. Also note that the pedals optionally can be set to analog mode, but mame disables this feature due to input limitations.", /* control__details */
+  &gtmr2_get_btn;
 }
 
 const char *gtmr2_get_btn(int type)
@@ -14199,7 +14770,8 @@ const struct ControlInfo milliped_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &milliped_get_btn;
 }
 
 const char *milliped_get_btn(int type)
@@ -14224,7 +14796,8 @@ const struct ControlInfo minefld_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &minefld_get_btn;
 }
 
 const char *minefld_get_btn(int type)
@@ -14253,7 +14826,8 @@ const struct ControlInfo mineswpr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Player 1 is actually position on the bottom right of the screen while Player 2 is at the top right" /* control_details */
+  "Player 1 is actually position on the bottom right of the screen while Player 2 is at the top right", /* control__details */
+  &mineswpr_get_btn;
 }
 
 const char *mineswpr_get_btn(int type)
@@ -14277,7 +14851,8 @@ const struct ControlInfo minigolf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &minigolf_get_btn;
 }
 
 const char *minigolf_get_btn(int type)
@@ -14298,7 +14873,8 @@ const struct ControlInfo mcontest_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mcontest_get_btn;
 }
 
 const char *mcontest_get_btn(int type)
@@ -14318,7 +14894,8 @@ const struct ControlInfo missile_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &missile_get_btn;
 }
 
 const char *missile_get_btn(int type)
@@ -14345,7 +14922,8 @@ const struct ControlInfo gmissile_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game actually uses a 2-way top-fire joystick, which is extremely rare. So rare we don't recognize it in the database." /* control_details */
+  "This game actually uses a 2-way top-fire joystick, which is extremely rare. So rare we don't recognize it in the database.", /* control__details */
+  &gmissile_get_btn;
 }
 
 const char *gmissile_get_btn(int type)
@@ -14368,7 +14946,8 @@ const struct ControlInfo moguchan_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Unknown as to what the button does but is listed in mame" /* control_details */
+  "Unknown as to what the button does but is listed in mame", /* control__details */
+  &moguchan_get_btn;
 }
 
 const char *moguchan_get_btn(int type)
@@ -14393,7 +14972,8 @@ const struct ControlInfo mole_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The button is layed out on a 3x3 grid and relates directly to the position on the screen  Top Row:    7 8 9 Middle Row: 4 5 6 Bottom Row: 1 2 3" /* control_details */
+  "The button is layed out on a 3x3 grid and relates directly to the position on the screen  Top Row:    7 8 9 Middle Row: 4 5 6 Bottom Row: 1 2 3", /* control__details */
+  &mole_get_btn;
 }
 
 const char *mole_get_btn(int type)
@@ -14422,7 +15002,8 @@ const struct ControlInfo monymony_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joystick was generically labeled 'control'. Also of note is that you can only jump when you are standing on a white circle and you can't control the direction of the jump like in most games." /* control_details */
+  "The joystick was generically labeled 'control'. Also of note is that you can only jump when you are standing on a white circle and you can't control the direction of the jump like in most games.", /* control__details */
+  &monymony_get_btn;
 }
 
 const char *monymony_get_btn(int type)
@@ -14447,7 +15028,8 @@ const struct ControlInfo monsterb_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &monsterb_get_btn;
 }
 
 const char *monsterb_get_btn(int type)
@@ -14472,7 +15054,8 @@ const struct ControlInfo montecar_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Please note that this game's driver hard-code's all of the buttons. The gears are remapped to z,x,c and v while track select is remapped to space." /* control_details */
+  "Please note that this game's driver hard-code's all of the buttons. The gears are remapped to z,x,c and v while track select is remapped to space.", /* control__details */
+  &montecar_get_btn;
 }
 
 const char *montecar_get_btn(int type)
@@ -14500,7 +15083,8 @@ const struct ControlInfo mooncrst_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mooncrst_get_btn;
 }
 
 const char *mooncrst_get_btn(int type)
@@ -14523,7 +15107,8 @@ const struct ControlInfo mpatrol_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mpatrol_get_btn;
 }
 
 const char *mpatrol_get_btn(int type)
@@ -14547,7 +15132,8 @@ const struct ControlInfo moonwar_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game's original control panel also has a button called 'Hyper Flip' that for whatever reason isn't emulated in mame. Also the roller for this game looks more like some sort of futuristic valve and is dubbed the 'Vector Director' by the label underneath it." /* control_details */
+  "The game's original control panel also has a button called 'Hyper Flip' that for whatever reason isn't emulated in mame. Also the roller for this game looks more like some sort of futuristic valve and is dubbed the 'Vector Director' by the label underneath it.", /* control__details */
+  &moonwar_get_btn;
 }
 
 const char *moonwar_get_btn(int type)
@@ -14572,7 +15158,8 @@ const struct ControlInfo mk_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. It is highly reccomended that you wrie ctrlr files for these gmaes if you intend to play them. Also there is actually a second block button used for sf2 conversions but it alternates between broken and half working in the mame source." /* control_details */
+  "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. It is highly reccomended that you wrie ctrlr files for these gmaes if you intend to play them. Also there is actually a second block button used for sf2 conversions but it alternates between broken and half working in the mame source.", /* control__details */
+  &mk_get_btn;
 }
 
 const char *mk_get_btn(int type)
@@ -14601,7 +15188,8 @@ const struct ControlInfo mk3_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. The Run button is placed inthe lower left hand corner, similar to a mamers 'modified neogeo' layout. It is highly reccomended that you write ctrlr files for these games if you intend to play them." /* control_details */
+  "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. The Run button is placed inthe lower left hand corner, similar to a mamers 'modified neogeo' layout. It is highly reccomended that you write ctrlr files for these games if you intend to play them.", /* control__details */
+  &mk3_get_btn;
 }
 
 const char *mk3_get_btn(int type)
@@ -14631,7 +15219,8 @@ const struct ControlInfo mk4_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The final mortal kombat game to be released in the arcades." /* control_details */
+  "The final mortal kombat game to be released in the arcades.", /* control__details */
+  &mk4_get_btn;
 }
 
 const char *mk4_get_btn(int type)
@@ -14661,7 +15250,8 @@ const struct ControlInfo mk2_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. It is highly reccomended that you write ctrlr files for these games if you intend to play them. Also there is actually a second block button used for sf2 conversions but it alternates between broken and half working in the mame source." /* control_details */
+  "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. It is highly reccomended that you write ctrlr files for these games if you intend to play them. Also there is actually a second block button used for sf2 conversions but it alternates between broken and half working in the mame source.", /* control__details */
+  &mk2_get_btn;
 }
 
 const char *mk2_get_btn(int type)
@@ -14690,7 +15280,8 @@ const struct ControlInfo mtrap_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "On the original control panel, the order was (from left to right) red, yellow, blue... Not the order that mame has (yellow, red, blue)." /* control_details */
+  "On the original control panel, the order was (from left to right) red, yellow, blue... Not the order that mame has (yellow, red, blue).", /* control__details */
+  &mtrap_get_btn;
 }
 
 const char *mtrap_get_btn(int type)
@@ -14718,7 +15309,8 @@ const struct ControlInfo mrdo_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mrdo_get_btn;
 }
 
 const char *mrdo_get_btn(int type)
@@ -14743,7 +15335,8 @@ const struct ControlInfo docastle_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The button is actually unlabeled." /* control_details */
+  "The button is actually unlabeled.", /* control__details */
+  &docastle_get_btn;
 }
 
 const char *docastle_get_btn(int type)
@@ -14768,7 +15361,8 @@ const struct ControlInfo dowild_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &dowild_get_btn;
 }
 
 const char *dowild_get_btn(int type)
@@ -14793,7 +15387,8 @@ const struct ControlInfo mrdrillr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The drill button is actually unlabeled as the game was only sold in a conversion kit with a very generic namco overlay." /* control_details */
+  "The drill button is actually unlabeled as the game was only sold in a conversion kit with a very generic namco overlay.", /* control__details */
+  &mrdrillr_get_btn;
 }
 
 const char *mrdrillr_get_btn(int type)
@@ -14818,7 +15413,8 @@ const struct ControlInfo mspacman_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mspacman_get_btn;
 }
 
 const char *mspacman_get_btn(int type)
@@ -14842,7 +15438,8 @@ const struct ControlInfo mvp_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The buttons aren't labeled red, yellow and blue rather that is their color. The instruction card uses these colors to explain the various functions of the buttons." /* control_details */
+  "The buttons aren't labeled red, yellow and blue rather that is their color. The instruction card uses these colors to explain the various functions of the buttons.", /* control__details */
+  &mvp_get_btn;
 }
 
 const char *mvp_get_btn(int type)
@@ -14869,7 +15466,8 @@ const struct ControlInfo mx5000_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Air-to-air and air-to-ground refer to missiles." /* control_details */
+  "Air-to-air and air-to-ground refer to missiles.", /* control__details */
+  &mx5000_get_btn;
 }
 
 const char *mx5000_get_btn(int type)
@@ -14895,7 +15493,8 @@ const struct ControlInfo mysticm_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &mysticm_get_btn;
 }
 
 const char *mysticm_get_btn(int type)
@@ -14920,7 +15519,8 @@ const struct ControlInfo mystwarr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame has three buttons, but only uses the first two. There is a dipswitch to change between 2 and 4 players." /* control_details */
+  "Mame has three buttons, but only uses the first two. There is a dipswitch to change between 2 and 4 players.", /* control__details */
+  &mystwarr_get_btn;
 }
 
 const char *mystwarr_get_btn(int type)
@@ -14947,7 +15547,8 @@ const struct ControlInfo nametune_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game used special lighted buttons for the tune buttons." /* control_details */
+  "The game used special lighted buttons for the tune buttons.", /* control__details */
+  &nametune_get_btn;
 }
 
 const char *nametune_get_btn(int type)
@@ -14971,7 +15572,8 @@ const struct ControlInfo narc_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &narc_get_btn;
 }
 
 const char *narc_get_btn(int type)
@@ -14999,7 +15601,8 @@ const struct ControlInfo nastar_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The orignal cpo lacks labels." /* control_details */
+  "The orignal cpo lacks labels.", /* control__details */
+  &nastar_get_btn;
 }
 
 const char *nastar_get_btn(int type)
@@ -15025,7 +15628,8 @@ const struct ControlInfo natodef_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo actually had pictures of the tank going in various directions for the joystick labels." /* control_details */
+  "The cpo actually had pictures of the tank going in various directions for the joystick labels.", /* control__details */
+  &natodef_get_btn;
 }
 
 const char *natodef_get_btn(int type)
@@ -15050,7 +15654,8 @@ const struct ControlInfo naughtyb_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &naughtyb_get_btn;
 }
 
 const char *naughtyb_get_btn(int type)
@@ -15075,7 +15680,8 @@ const struct ControlInfo nbahangt_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Default setting is for 2-player cabinet but this can be changed to 4-player as a dip switch setting" /* control_details */
+  "Default setting is for 2-player cabinet but this can be changed to 4-player as a dip switch setting", /* control__details */
+  &nbahangt_get_btn;
 }
 
 const char *nbahangt_get_btn(int type)
@@ -15102,7 +15708,8 @@ const struct ControlInfo nbajam_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &nbajam_get_btn;
 }
 
 const char *nbajam_get_btn(int type)
@@ -15129,7 +15736,8 @@ const struct ControlInfo neckneck_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Even though this game allows 6 players, it is wired to a single player layout in mame, due to the odd layout. Each numbered button represents a horse a player can control. it also doubles as a start button for that player. All the button does is jump. There is also a global start button that starts the race without giving others time to join. This is mapped to player 1 start in mame." /* control_details */
+  "Even though this game allows 6 players, it is wired to a single player layout in mame, due to the odd layout. Each numbered button represents a horse a player can control. it also doubles as a start button for that player. All the button does is jump. There is also a global start button that starts the race without giving others time to join. This is mapped to player 1 start in mame.", /* control__details */
+  &neckneck_get_btn;
 }
 
 const char *neckneck_get_btn(int type)
@@ -15155,7 +15763,8 @@ const struct ControlInfo ngpgal_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ngpgal_get_btn;
 }
 
 const char *ngpgal_get_btn(int type)
@@ -15175,7 +15784,8 @@ const struct ControlInfo nmsengen_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &nmsengen_get_btn;
 }
 
 const char *nmsengen_get_btn(int type)
@@ -15195,7 +15805,8 @@ const struct ControlInfo neogeo_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The NeoGeo Mvs system was a generic cabinet that could have games swapped out very easily, similar to console games. There was a single game version, a 2 game, 4 game, and 6, game version. The multi-cart versions had buttons to switch to a new game prior to inserting your quarter. As of this writing, this feature is unemulated in MAME. They all used the same control layout and relied upon inserts to explain to the consumer what button was what. Also 99% of the neogeo games started with a 'How to Play' screen upon starting the game." /* control_details */
+  "The NeoGeo Mvs system was a generic cabinet that could have games swapped out very easily, similar to console games. There was a single game version, a 2 game, 4 game, and 6, game version. The multi-cart versions had buttons to switch to a new game prior to inserting your quarter. As of this writing, this feature is unemulated in MAME. They all used the same control layout and relied upon inserts to explain to the consumer what button was what. Also 99% of the neogeo games started with a 'How to Play' screen upon starting the game.", /* control__details */
+  &neogeo_get_btn;
 }
 
 const char *neogeo_get_btn(int type)
@@ -15223,7 +15834,8 @@ const struct ControlInfo nyny_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo also has a general caption for the joystick, but it's unreadable." /* control_details */
+  "The cpo also has a general caption for the joystick, but it's unreadable.", /* control__details */
+  &nyny_get_btn;
 }
 
 const char *nyny_get_btn(int type)
@@ -15247,6 +15859,7 @@ const struct ControlInfo blitz_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER:  There is a dipswitch to use either two 49-way or two 8-way joysticks for direction control. AFAIK, all blitz dedicated cabs came with 49-way stick /* control_details */ some upgrade kits came with 49-way sticks, others without any sticks (I guess assumed operator would use already installed 8-ways). Mame currently (0.82u3) only emulates the 8-way. In-game instructions sometimes refer to the buttons by their color instead of the label. Turbo = White, Jump = Blue, Pass = Red. When choosing the offensive play: the Turbo (White) button switches between the two pages of plays, Jump (Blue) flips the play directions left to right, and Pass (Red) chooses the highlighted play. When choosing the defensive play: any button chooses the highlighted play (only one page, and plays can't be flipped). When choosing either offense and defense you can turn off showing which play is highlighted by pressing up on the joystick three times (useful when playing against another player). Turbo + Pass when running with the ball gives a stiff arm. Tapping Turbo twice when running with the ball gives a spin.";
+  &blitz_get_btn;
 }
 
 const char *blitz_get_btn(int type)
@@ -15273,7 +15886,8 @@ const struct ControlInfo nibbler_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &nibbler_get_btn;
 }
 
 const char *nibbler_get_btn(int type)
@@ -15297,7 +15911,8 @@ const struct ControlInfo nss_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   true, /* uses_service */
-  "The Nintendo Super System is the super nintendo version of the playchoice system and it runs on basically the same concept. The control panel has 2 (or 4) industrial versions of the snes control pad mounted to it. Please note that as of this posting, the mame driver doesn't emulate the nss fully. Game select buttons aren't implemented yet. Also note that the gamepad's select buttons are mapped to service buttons 1-4 respectively." /* control_details */
+  "The Nintendo Super System is the super nintendo version of the playchoice system and it runs on basically the same concept. The control panel has 2 (or 4) industrial versions of the snes control pad mounted to it. Please note that as of this posting, the mame driver doesn't emulate the nss fully. Game select buttons aren't implemented yet. Also note that the gamepad's select buttons are mapped to service buttons 1-4 respectively.", /* control__details */
+  &nss_get_btn;
 }
 
 const char *nss_get_btn(int type)
@@ -15331,7 +15946,8 @@ const struct ControlInfo nomnlnd_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &nomnlnd_get_btn;
 }
 
 const char *nomnlnd_get_btn(int type)
@@ -15356,7 +15972,8 @@ const struct ControlInfo nova2001_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game had a pause button (unlabeled on the cpo) but apparently the feature isn't working in mame." /* control_details */
+  "This game had a pause button (unlabeled on the cpo) but apparently the feature isn't working in mame.", /* control__details */
+  &nova2001_get_btn;
 }
 
 const char *nova2001_get_btn(int type)
@@ -15382,7 +15999,8 @@ const struct ControlInfo ojankoc_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ojankoc_get_btn;
 }
 
 const char *ojankoc_get_btn(int type)
@@ -15402,7 +16020,8 @@ const struct ControlInfo ojankohs_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ojankohs_get_btn;
 }
 
 const char *ojankohs_get_btn(int type)
@@ -15422,7 +16041,8 @@ const struct ControlInfo ojankoy_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ojankoy_get_btn;
 }
 
 const char *ojankoy_get_btn(int type)
@@ -15442,7 +16062,8 @@ const struct ControlInfo ojanko2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ojanko2_get_btn;
 }
 
 const char *ojanko2_get_btn(int type)
@@ -15462,7 +16083,8 @@ const struct ControlInfo ojousan_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ojousan_get_btn;
 }
 
 const char *ojousan_get_btn(int type)
@@ -15482,7 +16104,8 @@ const struct ControlInfo olibochu_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &olibochu_get_btn;
 }
 
 const char *olibochu_get_btn(int type)
@@ -15506,7 +16129,8 @@ const struct ControlInfo omegrace_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game acutally uses one of the very rare optical dials. No it doesn't really spin, you turn it like a paddle. Ironically, I believe that this was one of mame's first optical games and thus the 2 way optical was named 'dial' instead of 'spinner,' which is what most optical mame games have." /* control_details */
+  "This game acutally uses one of the very rare optical dials. No it doesn't really spin, you turn it like a paddle. Ironically, I believe that this was one of mame's first optical games and thus the 2 way optical was named 'dial' instead of 'spinner,' which is what most optical mame games have.", /* control__details */
+  &omegrace_get_btn;
 }
 
 const char *omegrace_get_btn(int type)
@@ -15530,7 +16154,8 @@ const struct ControlInfo oneshot_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &oneshot_get_btn;
 }
 
 const char *oneshot_get_btn(int type)
@@ -15555,7 +16180,8 @@ const struct ControlInfo othunder_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &othunder_get_btn;
 }
 
 const char *othunder_get_btn(int type)
@@ -15581,7 +16207,8 @@ const struct ControlInfo opwolf_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &opwolf_get_btn;
 }
 
 const char *opwolf_get_btn(int type)
@@ -15607,7 +16234,8 @@ const struct ControlInfo opwolf3_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The bomb button is actually the reload cock on the gun. Yes this doesn't make any sense, just go with it." /* control_details */
+  "The bomb button is actually the reload cock on the gun. Yes this doesn't make any sense, just go with it.", /* control__details */
+  &opwolf3_get_btn;
 }
 
 const char *opwolf3_get_btn(int type)
@@ -15633,7 +16261,8 @@ const struct ControlInfo orangec_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &orangec_get_btn;
 }
 
 const char *orangec_get_btn(int type)
@@ -15653,7 +16282,8 @@ const struct ControlInfo otonano_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &otonano_get_btn;
 }
 
 const char *otonano_get_btn(int type)
@@ -15673,7 +16303,8 @@ const struct ControlInfo outrun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The shifter is hard-coded to the space-bar to avoid conflicts." /* control_details */
+  "The shifter is hard-coded to the space-bar to avoid conflicts.", /* control__details */
+  &outrun_get_btn;
 }
 
 const char *outrun_get_btn(int type)
@@ -15698,7 +16329,8 @@ const struct ControlInfo overdriv_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &overdriv_get_btn;
 }
 
 const char *overdriv_get_btn(int type)
@@ -15723,7 +16355,8 @@ const struct ControlInfo pow_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "On the original cpo, the buttons are in 'Double Dragon' configuration (jump on the top row, punch and kick on the bottom). You may wish to remap for comfort" /* control_details */
+  "On the original cpo, the buttons are in 'Double Dragon' configuration (jump on the top row, punch and kick on the bottom). You may wish to remap for comfort", /* control__details */
+  &pow_get_btn;
 }
 
 const char *pow_get_btn(int type)
@@ -15750,7 +16383,8 @@ const struct ControlInfo pacland_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pacland_get_btn;
 }
 
 const char *pacland_get_btn(int type)
@@ -15773,7 +16407,8 @@ const struct ControlInfo pacplus_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pacplus_get_btn;
 }
 
 const char *pacplus_get_btn(int type)
@@ -15797,7 +16432,8 @@ const struct ControlInfo pacmania_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original CP had one button on either side of the CP for Bounce. Note By HowarC:  This seems to be a glitch in mame caused by a sloppy macro. For now three buttons is ok, but I will submit a new driver which ditches the other two." /* control_details */
+  "The original CP had one button on either side of the CP for Bounce. Note By HowarC:  This seems to be a glitch in mame caused by a sloppy macro. For now three buttons is ok, but I will submit a new driver which ditches the other two.", /* control__details */
+  &pacmania_get_btn;
 }
 
 const char *pacmania_get_btn(int type)
@@ -15824,7 +16460,8 @@ const struct ControlInfo paddlema_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is 4 player but only one start button is used. Upon inserting a coin and presing start, you are presented with a menu to choose the number of players and play mode." /* control_details */
+  "This game is 4 player but only one start button is used. Upon inserting a coin and presing start, you are presented with a menu to choose the number of players and play mode.", /* control__details */
+  &paddlema_get_btn;
 }
 
 const char *paddlema_get_btn(int type)
@@ -15849,7 +16486,8 @@ const struct ControlInfo pandoras_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pandoras_get_btn;
 }
 
 const char *pandoras_get_btn(int type)
@@ -15874,7 +16512,8 @@ const struct ControlInfo paperboy_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Game used a handlebar controller, Pushing forward on the handles made the bike speed up, pulling back slowed it down." /* control_details */
+  "Game used a handlebar controller, Pushing forward on the handles made the bike speed up, pulling back slowed it down.", /* control__details */
+  &paperboy_get_btn;
 }
 
 const char *paperboy_get_btn(int type)
@@ -15900,7 +16539,8 @@ const struct ControlInfo pastelg_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &pastelg_get_btn;
 }
 
 const char *pastelg_get_btn(int type)
@@ -15920,7 +16560,8 @@ const struct ControlInfo pengo_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pengo_get_btn;
 }
 
 const char *pengo_get_btn(int type)
@@ -15945,7 +16586,8 @@ const struct ControlInfo pepper2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pepper2_get_btn;
 }
 
 const char *pepper2_get_btn(int type)
@@ -15969,7 +16611,8 @@ const struct ControlInfo peterpak_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game uses a unique type of trigger stick that is rarely used. Although it looks different, the diagrams show similar mounting and throw of a more standard tron stick." /* control_details */
+  "This game uses a unique type of trigger stick that is rarely used. Although it looks different, the diagrams show similar mounting and throw of a more standard tron stick.", /* control__details */
+  &peterpak_get_btn;
 }
 
 const char *peterpak_get_btn(int type)
@@ -15995,7 +16638,8 @@ const struct ControlInfo phoenix_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &phoenix_get_btn;
 }
 
 const char *phoenix_get_btn(int type)
@@ -16019,7 +16663,8 @@ const struct ControlInfo pigout_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pigout_get_btn;
 }
 
 const char *pigout_get_btn(int type)
@@ -16045,7 +16690,8 @@ const struct ControlInfo pigskin_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "OTHER: This game used a 49-way joystick. This game was recently updated to accomidate true analog inputs to better emulate the 49-way joystick. Unfortunately, they turned an othewise tidy driver into an ungodly mess. The stick is there and oddly enough three joystick directions (up, down, and only left) and now the normal 'button 1' labels are overwritten with the game selection labels, which are secondary functions and should NOT be the custom labels for the buttons. For the love of all things good, someone PLEASE fix this driver. The joystick controls one player, but when you punch, the rest of the team also punches. If another teammate has the ball and you press the pass button, he passes the ball to you. If you have the ball and press and hold the pass button, the choices rolls between long, short, back passes, and a drop kick, which happens when you let go of the button." /* control_details */
+  "OTHER: This game used a 49-way joystick. This game was recently updated to accomidate true analog inputs to better emulate the 49-way joystick. Unfortunately, they turned an othewise tidy driver into an ungodly mess. The stick is there and oddly enough three joystick directions (up, down, and only left) and now the normal 'button 1' labels are overwritten with the game selection labels, which are secondary functions and should NOT be the custom labels for the buttons. For the love of all things good, someone PLEASE fix this driver. The joystick controls one player, but when you punch, the rest of the team also punches. If another teammate has the ball and you press the pass button, he passes the ball to you. If you have the ball and press and hold the pass button, the choices rolls between long, short, back passes, and a drop kick, which happens when you let go of the button.", /* control__details */
+  &pigskin_get_btn;
 }
 
 const char *pigskin_get_btn(int type)
@@ -16072,7 +16718,8 @@ const struct ControlInfo pbaction_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo lables are a little misleading. By 'Start' it actually refers to launching the pinball, not the start button, which the game actually has two of. Also, although there are two buttons on each side Labeled 'Start And Shake' apparently, only the left button starts and only the right button shakes. This may be a mame issue though. My best guess is on the original cpo, each button was cross-wired to both switches as a last-minute layout decision." /* control_details */
+  "The cpo lables are a little misleading. By 'Start' it actually refers to launching the pinball, not the start button, which the game actually has two of. Also, although there are two buttons on each side Labeled 'Start And Shake' apparently, only the left button starts and only the right button shakes. This may be a mame issue though. My best guess is on the original cpo, each button was cross-wired to both switches as a last-minute layout decision.", /* control__details */
+  &pbaction_get_btn;
 }
 
 const char *pbaction_get_btn(int type)
@@ -16096,7 +16743,8 @@ const struct ControlInfo piratetr_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The games cpo didn't have any directional arrows, nor did it have any labels, probably due to the simplistic layout." /* control_details */
+  "The games cpo didn't have any directional arrows, nor did it have any labels, probably due to the simplistic layout.", /* control__details */
+  &piratetr_get_btn;
 }
 
 const char *piratetr_get_btn(int type)
@@ -16120,7 +16768,8 @@ const struct ControlInfo pitfight_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Although in the arcades the start buton was also the jump button, this is not the case in mame. My guess is in the arcades two inputs were wired to the same button to save space much like in other 3 and 4 player games. This game only had a 2 player verison in japan, but often the 3 player us version was also used in a 2 player cabinet because of the way the menu is setup. Unlike most multiplayer games, the coin slots are shared and you can select each character regardless of which stick you press start at." /* control_details */
+  "Although in the arcades the start buton was also the jump button, this is not the case in mame. My guess is in the arcades two inputs were wired to the same button to save space much like in other 3 and 4 player games. This game only had a 2 player verison in japan, but often the 3 player us version was also used in a 2 player cabinet because of the way the menu is setup. Unlike most multiplayer games, the coin slots are shared and you can select each character regardless of which stick you press start at.", /* control__details */
+  &pitfight_get_btn;
 }
 
 const char *pitfight_get_btn(int type)
@@ -16147,7 +16796,8 @@ const struct ControlInfo pitfall2_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The actual cpo for this game didn't have a label for the button, nor a visual hint of what it's for. Also the manual doesn't explicitly say that the button is the 'jump' button. This is probably due to the fact that the pitfall series is one of the most popular in early gaming history and you'd have to live in a cave not to know that the button is for jumping." /* control_details */
+  "The actual cpo for this game didn't have a label for the button, nor a visual hint of what it's for. Also the manual doesn't explicitly say that the button is the 'jump' button. This is probably due to the fact that the pitfall series is one of the most popular in early gaming history and you'd have to live in a cave not to know that the button is for jumping.", /* control__details */
+  &pitfall2_get_btn;
 }
 
 const char *pitfall2_get_btn(int type)
@@ -16172,7 +16822,8 @@ const struct ControlInfo playch10_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   true, /* uses_service */
-  "The playchoice 10 system is a pay-per-play system based on the original nes console and plays the same titles. Instead of purchasing lives, you purchase time on the machine. The machine can hold 10 games at once and you switch using the game menu on the secondary monitor." /* control_details */
+  "The playchoice 10 system is a pay-per-play system based on the original nes console and plays the same titles. Instead of purchasing lives, you purchase time on the machine. The machine can hold 10 games at once and you switch using the game menu on the secondary monitor.", /* control__details */
+  &playch10_get_btn;
 }
 
 const char *playch10_get_btn(int type)
@@ -16214,7 +16865,8 @@ const struct ControlInfo pleiads_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pleiads_get_btn;
 }
 
 const char *pleiads_get_btn(int type)
@@ -16238,7 +16890,8 @@ const struct ControlInfo plotting_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &plotting_get_btn;
 }
 
 const char *plotting_get_btn(int type)
@@ -16263,7 +16916,8 @@ const struct ControlInfo ptblank_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "To reload fire offscreen." /* control_details */
+  "To reload fire offscreen.", /* control__details */
+  &ptblank_get_btn;
 }
 
 const char *ptblank_get_btn(int type)
@@ -16288,7 +16942,8 @@ const struct ControlInfo polaris_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original cpo simply labeled the joystick 'control'" /* control_details */
+  "The original cpo simply labeled the joystick 'control'", /* control__details */
+  &polaris_get_btn;
 }
 
 const char *polaris_get_btn(int type)
@@ -16313,7 +16968,8 @@ const struct ControlInfo polepos_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button 1 is actually the spacebar by default to avoid conflicts with the pedals. The high/low shifter is emulated by a single toggle input in mame." /* control_details */
+  "Button 1 is actually the spacebar by default to avoid conflicts with the pedals. The high/low shifter is emulated by a single toggle input in mame.", /* control__details */
+  &polepos_get_btn;
 }
 
 const char *polepos_get_btn(int type)
@@ -16338,7 +16994,8 @@ const struct ControlInfo polepos2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Button1 is actually spacbar by default in this game to avoid conflicts with the pedals. The high / low shifter is emulated in mame by a single button toggle. The upright cab only uses the gas pedal while the cockpit uses both. This is a dipswitch setting that you can alter if you wish to better suit your layout." /* control_details */
+  "Button1 is actually spacbar by default in this game to avoid conflicts with the pedals. The high / low shifter is emulated in mame by a single button toggle. The upright cab only uses the gas pedal while the cockpit uses both. This is a dipswitch setting that you can alter if you wish to better suit your layout.", /* control__details */
+  &polepos2_get_btn;
 }
 
 const char *polepos2_get_btn(int type)
@@ -16363,7 +17020,8 @@ const struct ControlInfo policetr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Fire offscreen to reload." /* control_details */
+  "Fire offscreen to reload.", /* control__details */
+  &policetr_get_btn;
 }
 
 const char *policetr_get_btn(int type)
@@ -16388,7 +17046,8 @@ const struct ControlInfo polyplay_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that this game didn't have any labels. The poly play system was the second East-German arcade machine. Quite, frankly it was a slapped-together piece of crap. It used inferior russian computer hardware, an old television converted to rgb and a cabient made out of chip-board laminated to look like fake wood. We use the terms 'arcade contols' in a generic sense on this one. The joystick and button were salvaged from industrial machines and are nothing like real arcade controls." /* control_details */
+  "Note that this game didn't have any labels. The poly play system was the second East-German arcade machine. Quite, frankly it was a slapped-together piece of crap. It used inferior russian computer hardware, an old television converted to rgb and a cabient made out of chip-board laminated to look like fake wood. We use the terms 'arcade contols' in a generic sense on this one. The joystick and button were salvaged from industrial machines and are nothing like real arcade controls.", /* control__details */
+  &polyplay_get_btn;
 }
 
 const char *polyplay_get_btn(int type)
@@ -16413,7 +17072,8 @@ const struct ControlInfo ponpoko_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ponpoko_get_btn;
 }
 
 const char *ponpoko_get_btn(int type)
@@ -16438,7 +17098,8 @@ const struct ControlInfo pooyan_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pooyan_get_btn;
 }
 
 const char *pooyan_get_btn(int type)
@@ -16461,7 +17122,8 @@ const struct ControlInfo popeye_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &popeye_get_btn;
 }
 
 const char *popeye_get_btn(int type)
@@ -16486,7 +17148,8 @@ const struct ControlInfo popper_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "For you Q-Bert fans that don't have a diagonal joystick mounted this is the game for you. It is essentailly the same game only an 8-way joystick is used." /* control_details */
+  "For you Q-Bert fans that don't have a diagonal joystick mounted this is the game for you. It is essentailly the same game only an 8-way joystick is used.", /* control__details */
+  &popper_get_btn;
 }
 
 const char *popper_get_btn(int type)
@@ -16511,7 +17174,8 @@ const struct ControlInfo pdrift_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pdrift_get_btn;
 }
 
 const char *pdrift_get_btn(int type)
@@ -16536,7 +17200,8 @@ const struct ControlInfo powerdrv_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Tap the front and back tires rapidly to acelerate and use the shifter to change gearing for obstacles. Pop a wheelie with the wheelie button." /* control_details */
+  "Tap the front and back tires rapidly to acelerate and use the shifter to change gearing for obstacles. Pop a wheelie with the wheelie button.", /* control__details */
+  &powerdrv_get_btn;
 }
 
 const char *powerdrv_get_btn(int type)
@@ -16560,7 +17225,8 @@ const struct ControlInfo pclubj_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Even though the label indicates that this is a 4 way joystick it is really a two way. The joystick is desginated as a 4 way because the cpo actually had arrows in all 4 directions. This isn't even a game, it is a photo booth in which users select a overlay and have theri pciture printed with it in front. Considering mame's 'arcade machine only' policy, it is suprising that it is included in mame." /* control_details */
+  "Even though the label indicates that this is a 4 way joystick it is really a two way. The joystick is desginated as a 4 way because the cpo actually had arrows in all 4 directions. This isn't even a game, it is a photo booth in which users select a overlay and have theri pciture printed with it in front. Considering mame's 'arcade machine only' policy, it is suprising that it is included in mame.", /* control__details */
+  &pclubj_get_btn;
 }
 
 const char *pclubj_get_btn(int type)
@@ -16586,7 +17252,8 @@ const struct ControlInfo kiwame_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &kiwame_get_btn;
 }
 
 const char *kiwame_get_btn(int type)
@@ -16606,7 +17273,8 @@ const struct ControlInfo profpac_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Something of note is that on this layout the first player is on the right side instead of the left. Note:  As of mame 0.83 this game isn't working yet... I am just preparing for when it does." /* control_details */
+  "Something of note is that on this layout the first player is on the right side instead of the left. Note:  As of mame 0.83 this game isn't working yet... I am just preparing for when it does.", /* control__details */
+  &profpac_get_btn;
 }
 
 const char *profpac_get_btn(int type)
@@ -16629,7 +17297,8 @@ const struct ControlInfo psychos_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The player starts as a flying-saucer which the player can fly anywhere in the screen. After a few seconds, the flying-saucer drops the main character that runs/jumps/drops between the platforms. After a life is lost, the player returns to the saucer." /* control_details */
+  "The player starts as a flying-saucer which the player can fly anywhere in the screen. After a few seconds, the flying-saucer drops the main character that runs/jumps/drops between the platforms. After a life is lost, the player returns to the saucer.", /* control__details */
+  &psychos_get_btn;
 }
 
 const char *psychos_get_btn(int type)
@@ -16655,7 +17324,8 @@ const struct ControlInfo puckman_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &puckman_get_btn;
 }
 
 const char *puckman_get_btn(int type)
@@ -16679,7 +17349,8 @@ const struct ControlInfo pulsar_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original game had the fire button on the left and the joystick on the right." /* control_details */
+  "The original game had the fire button on the left and the joystick on the right.", /* control__details */
+  &pulsar_get_btn;
 }
 
 const char *pulsar_get_btn(int type)
@@ -16704,7 +17375,8 @@ const struct ControlInfo punchout_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Hook Uppercut is also referred to as the 'knockout blow' on the control panel and can only be used when your ko meter flashes. The button is a large gameshow type of button." /* control_details */
+  "The Hook Uppercut is also referred to as the 'knockout blow' on the control panel and can only be used when your ko meter flashes. The button is a large gameshow type of button.", /* control__details */
+  &punchout_get_btn;
 }
 
 const char *punchout_get_btn(int type)
@@ -16731,7 +17403,8 @@ const struct ControlInfo punkshot_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &punkshot_get_btn;
 }
 
 const char *punkshot_get_btn(int type)
@@ -16757,7 +17430,8 @@ const struct ControlInfo pbobble_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &pbobble_get_btn;
 }
 
 const char *pbobble_get_btn(int type)
@@ -16780,7 +17454,8 @@ const struct ControlInfo pbobble2_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Puzzle Bobble 2 is listed as using an 8-way joystick and 4 buttons, though only left, right and 1 button are used for gameplay. Up, down and buttons 2 and 3 are only used during Test Mode. I can find no references to button 4." /* control_details */
+  "Puzzle Bobble 2 is listed as using an 8-way joystick and 4 buttons, though only left, right and 1 button are used for gameplay. Up, down and buttons 2 and 3 are only used during Test Mode. I can find no references to button 4.", /* control__details */
+  &pbobble2_get_btn;
 }
 
 const char *pbobble2_get_btn(int type)
@@ -16809,6 +17484,7 @@ const struct ControlInfo pbobble3_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame lists Puzzle Bobble 3 as having 4 buttons and an 8-way joystick (because it is a Taito F3 System game) /* control_details */ only one button is used during gameplay, Test Mode lists 3 buttons. Only left and right are used during gameplay, up and down are used during Test Mode. I can find no references to button 4.";
+  &pbobble3_get_btn;
 }
 
 const char *pbobble3_get_btn(int type)
@@ -16836,7 +17512,8 @@ const struct ControlInfo qbert_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Used a 4-way joystick rotated 45 degrees." /* control_details */
+  "Used a 4-way joystick rotated 45 degrees.", /* control__details */
+  &qbert_get_btn;
 }
 
 const char *qbert_get_btn(int type)
@@ -16860,7 +17537,8 @@ const struct ControlInfo qbertqub_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Used a 4-way joystick rotated 45 degrees" /* control_details */
+  "Used a 4-way joystick rotated 45 degrees", /* control__details */
+  &qbertqub_get_btn;
 }
 
 const char *qbertqub_get_btn(int type)
@@ -16884,7 +17562,8 @@ const struct ControlInfo qix_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &qix_get_btn;
 }
 
 const char *qix_get_btn(int type)
@@ -16910,7 +17589,8 @@ const struct ControlInfo quantum_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game did not use buttons, the only input is a trackball." /* control_details */
+  "This game did not use buttons, the only input is a trackball.", /* control__details */
+  &quantum_get_btn;
 }
 
 const char *quantum_get_btn(int type)
@@ -16934,7 +17614,8 @@ const struct ControlInfo quarterb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that the buttons do various things based on the gameplay scenario. Also both buttons were labeled 'Action' so 'A' and 'B' were added to avoid confusion. Also the kicker only labeled the three actions it is used for, not how to aim, ect. This was added for your benefit." /* control_details */
+  "Note that the buttons do various things based on the gameplay scenario. Also both buttons were labeled 'Action' so 'A' and 'B' were added to avoid confusion. Also the kicker only labeled the three actions it is used for, not how to aim, ect. This was added for your benefit.", /* control__details */
+  &quarterb_get_btn;
 }
 
 const char *quarterb_get_btn(int type)
@@ -16972,7 +17653,8 @@ const struct ControlInfo quartet_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Ironically this game is also available in a 2 player variety. Wouldn't that make it a duo?" /* control_details */
+  "Ironically this game is also available in a 2 player variety. Wouldn't that make it a duo?", /* control__details */
+  &quartet_get_btn;
 }
 
 const char *quartet_get_btn(int type)
@@ -16998,7 +17680,8 @@ const struct ControlInfo quasar_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'forward' button appears to be broken in mame." /* control_details */
+  "The 'forward' button appears to be broken in mame.", /* control__details */
+  &quasar_get_btn;
 }
 
 const char *quasar_get_btn(int type)
@@ -17022,7 +17705,8 @@ const struct ControlInfo qad_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "You may wonder why the control type is listed as 'Just Buttons' instead of 'Trivia Buttons'. This is one of the few arcade trivia games that doesn't use trivia-style buttons. It uses standard pushbuttons." /* control_details */
+  "You may wonder why the control type is listed as 'Just Buttons' instead of 'Trivia Buttons'. This is one of the few arcade trivia games that doesn't use trivia-style buttons. It uses standard pushbuttons.", /* control__details */
+  &qad_get_btn;
 }
 
 const char *qad_get_btn(int type)
@@ -17046,7 +17730,8 @@ const struct ControlInfo qndream_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Like all capcom quiz games, this game's cp uses regular push buttons instead of trivia-style buttons." /* control_details */
+  "Like all capcom quiz games, this game's cp uses regular push buttons instead of trivia-style buttons.", /* control__details */
+  &qndream_get_btn;
 }
 
 const char *qndream_get_btn(int type)
@@ -17070,7 +17755,8 @@ const struct ControlInfo qmhayaku_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &qmhayaku_get_btn;
 }
 
 const char *qmhayaku_get_btn(int type)
@@ -17090,7 +17776,8 @@ const struct ControlInfo rtype_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The longer you hold down the fire button, the stronger the shot. The force button 'shoots' or recalls a power-up piece from and to your ship. Mame has four buttons for this game for some reason, but only uses the first two. The game has the fire and force buttons on both sides of the joystick, but not 'mirrored': the force is to the left of the fire button on both sides of the joystick. NOTE  In Mame this game actually has four buttons. This is due to some sloppy code and nothing more. The dipswitches between this game and a similar game running on the same system were identical, so the input function was simply re-routed to that game. This needs to be removed asap." /* control_details */
+  "The longer you hold down the fire button, the stronger the shot. The force button 'shoots' or recalls a power-up piece from and to your ship. Mame has four buttons for this game for some reason, but only uses the first two. The game has the fire and force buttons on both sides of the joystick, but not 'mirrored': the force is to the left of the fire button on both sides of the joystick. NOTE  In Mame this game actually has four buttons. This is due to some sloppy code and nothing more. The dipswitches between this game and a similar game running on the same system were identical, so the input function was simply re-routed to that game. This needs to be removed asap.", /* control__details */
+  &rtype_get_btn;
 }
 
 const char *rtype_get_btn(int type)
@@ -17116,7 +17803,8 @@ const struct ControlInfo radarscp_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note by HowardC:  As of mame version .77 this game should us a 2-way stick. If it doesn't contact me." /* control_details */
+  "Note by HowardC:  As of mame version .77 this game should us a 2-way stick. If it doesn't contact me.", /* control__details */
+  &radarscp_get_btn;
 }
 
 const char *radarscp_get_btn(int type)
@@ -17139,7 +17827,8 @@ const struct ControlInfo radrad_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &radrad_get_btn;
 }
 
 const char *radrad_get_btn(int type)
@@ -17164,7 +17853,8 @@ const struct ControlInfo rchase_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game didn't have a gun, rather a joystick with a crosshair on the screen. The machine also had a bench the players sat on with two solenoids mounted underneath to give the illusion of them sitting in the mine cart." /* control_details */
+  "The game didn't have a gun, rather a joystick with a crosshair on the screen. The machine also had a bench the players sat on with two solenoids mounted underneath to give the illusion of them sitting in the mine cart.", /* control__details */
+  &rchase_get_btn;
 }
 
 const char *rchase_get_btn(int type)
@@ -17189,7 +17879,8 @@ const struct ControlInfo rainbow_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &rainbow_get_btn;
 }
 
 const char *rainbow_get_btn(int type)
@@ -17213,7 +17904,8 @@ const struct ControlInfo rallyx_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &rallyx_get_btn;
 }
 
 const char *rallyx_get_btn(int type)
@@ -17238,7 +17930,8 @@ const struct ControlInfo rampage_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &rampage_get_btn;
 }
 
 const char *rampage_get_btn(int type)
@@ -17264,7 +17957,8 @@ const struct ControlInfo rmpgwt_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The tilt in mame does not work." /* control_details */
+  "The tilt in mame does not work.", /* control__details */
+  &rmpgwt_get_btn;
 }
 
 const char *rmpgwt_get_btn(int type)
@@ -17292,6 +17986,7 @@ const struct ControlInfo rampart_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The player's Place Piece/Fire button is also the start button. There are three basic different CP layouts for this game: 3 player trackball, 2 player trackball (dipswitch with same ROM as 3 player TB), and 2 player 8-way joystick (with ramprt2p and rampartj). The 3 player dedicated TB CP had two buttons per player on the left side of the TB. The kit highly recomends mirroring the buttons on both sides the joystick, with two buttons wired to each button input, but this was not always followed. Button2 (Rotate Peice/Fire) is labeled as the 3 player TB CP /* control_details */ for the joystick CP, this button was 'Rotate Piece/Speed Up' instead to give the joystick two movement speeds in the shooting part of the game.";
+  &rampart_get_btn;
 }
 
 const char *rampart_get_btn(int type)
@@ -17317,7 +18012,8 @@ const struct ControlInfo rastan_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Joystick in center of Panel, with attack and jump buttons on both sides, for both left and right handed players. Player start buttons were on RIGHT side of CP, with P1 at top, and P2 at bottom" /* control_details */
+  "Joystick in center of Panel, with attack and jump buttons on both sides, for both left and right handed players. Player start buttons were on RIGHT side of CP, with P1 at top, and P2 at bottom", /* control__details */
+  &rastan_get_btn;
 }
 
 const char *rastan_get_btn(int type)
@@ -17343,7 +18039,8 @@ const struct ControlInfo reactor_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The action buttons are 'mirrored' on both sides of the trackball like normal, and double as start buttons. However, the start half of the buttons are not mirrored: the start buttons go 1 2 1 2 from left to right, and the left side start buttons give you 3 ships for one credit, while the right side buttons give you 7 ships for two credits. So the layout, from left to right, is (energy / 1 player with 3 ships), (decoy / 2 players with 3 ships each), trackball, (decoy / 1 player with 7 ships), (energy / 2 players with 7 ships each). Mame's emulated buttons go start1, start2, trackball, p1 button2, p1 button1, following the above layout. So the start buttons are also action buttons, and the action buttons are start buttons, but they are 4 different buttons, even though there are two different actions." /* control_details */
+  "The action buttons are 'mirrored' on both sides of the trackball like normal, and double as start buttons. However, the start half of the buttons are not mirrored: the start buttons go 1 2 1 2 from left to right, and the left side start buttons give you 3 ships for one credit, while the right side buttons give you 7 ships for two credits. So the layout, from left to right, is (energy / 1 player with 3 ships), (decoy / 2 players with 3 ships each), trackball, (decoy / 1 player with 7 ships), (energy / 2 players with 7 ships each). Mame's emulated buttons go start1, start2, trackball, p1 button2, p1 button1, following the above layout. So the start buttons are also action buttons, and the action buttons are start buttons, but they are 4 different buttons, even though there are two different actions.", /* control__details */
+  &reactor_get_btn;
 }
 
 const char *reactor_get_btn(int type)
@@ -17369,7 +18066,8 @@ const struct ControlInfo rmhaihai_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &rmhaihai_get_btn;
 }
 
 const char *rmhaihai_get_btn(int type)
@@ -17389,7 +18087,8 @@ const struct ControlInfo rmhaijin_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &rmhaijin_get_btn;
 }
 
 const char *rmhaijin_get_btn(int type)
@@ -17409,7 +18108,8 @@ const struct ControlInfo rmhaisei_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &rmhaisei_get_btn;
 }
 
 const char *rmhaisei_get_btn(int type)
@@ -17429,7 +18129,8 @@ const struct ControlInfo redlin2p_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &redlin2p_get_btn;
 }
 
 const char *redlin2p_get_btn(int type)
@@ -17452,7 +18153,8 @@ const struct ControlInfo regulus_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game doesn't have any labels, probably because the controls are so self-explainatory." /* control_details */
+  "This game doesn't have any labels, probably because the controls are so self-explainatory.", /* control__details */
+  &regulus_get_btn;
 }
 
 const char *regulus_get_btn(int type)
@@ -17478,7 +18180,8 @@ const struct ControlInfo renegade_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &renegade_get_btn;
 }
 
 const char *renegade_get_btn(int type)
@@ -17505,7 +18208,8 @@ const struct ControlInfo rescue_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &rescue_get_btn;
 }
 
 const char *rescue_get_btn(int type)
@@ -17534,7 +18238,8 @@ const struct ControlInfo rescraid_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The CP has the steering stick on the left side, shooting stick on the right. Mame has it emulated the opposite, so the labels are not mixed up." /* control_details */
+  "The CP has the steering stick on the left side, shooting stick on the right. Mame has it emulated the opposite, so the labels are not mixed up.", /* control__details */
+  &rescraid_get_btn;
 }
 
 const char *rescraid_get_btn(int type)
@@ -17563,7 +18268,8 @@ const struct ControlInfo nekkyoku_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &nekkyoku_get_btn;
 }
 
 const char *nekkyoku_get_btn(int type)
@@ -17583,7 +18289,8 @@ const struct ControlInfo jedi_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Triggers fire cannon on all levels. Thumb buttons usually also fire cannon, except on the AT-Walker stages, where they rotate the turret." /* control_details */
+  "Triggers fire cannon on all levels. Thumb buttons usually also fire cannon, except on the AT-Walker stages, where they rotate the turret.", /* control__details */
+  &jedi_get_btn;
 }
 
 const char *jedi_get_btn(int type)
@@ -17610,7 +18317,8 @@ const struct ControlInfo revx_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'bomb' button actually shoots a compact disc. But that's what it is labeled in the game." /* control_details */
+  "The 'bomb' button actually shoots a compact disc. But that's what it is labeled in the game.", /* control__details */
+  &revx_get_btn;
 }
 
 const char *revx_get_btn(int type)
@@ -17636,7 +18344,8 @@ const struct ControlInfo ripoff_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This is a two player cooperative game. You cannot shoot the other player, but if you crash into him, you both blow up. Prevent the small tanks from stealing the triangular fuel pods by shooting them. The game ends when all the pods are gone." /* control_details */
+  "This is a two player cooperative game. You cannot shoot the other player, but if you crash into him, you both blow up. Prevent the small tanks from stealing the triangular fuel pods by shooting them. The game ends when all the pods are gone.", /* control__details */
+  &ripoff_get_btn;
 }
 
 const char *ripoff_get_btn(int type)
@@ -17660,7 +18369,8 @@ const struct ControlInfo roadblst_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Steering wheel is unique in that it uses optics but is restricted to ~270 degrees, and it returns to the center position using springs. Also, it has 2 triggers (Fire Lasers), and 2 thumb buttons (Activate Special Weapon). Each trigger / thumb button does the same action." /* control_details */
+  "Steering wheel is unique in that it uses optics but is restricted to ~270 degrees, and it returns to the center position using springs. Also, it has 2 triggers (Fire Lasers), and 2 thumb buttons (Activate Special Weapon). Each trigger / thumb button does the same action.", /* control__details */
+  &roadblst_get_btn;
 }
 
 const char *roadblst_get_btn(int type)
@@ -17685,7 +18395,8 @@ const struct ControlInfo roadf_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Game used a joystick and two pushbuttons for Low Gear and High Gear. No Shifter. High Gear cannot be pressed until the car has started and built up some RPM's." /* control_details */
+  "Game used a joystick and two pushbuttons for Low Gear and High Gear. No Shifter. High Gear cannot be pressed until the car has started and built up some RPM's.", /* control__details */
+  &roadf_get_btn;
 }
 
 const char *roadf_get_btn(int type)
@@ -17712,6 +18423,7 @@ const struct ControlInfo roadrunn_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame includes buttons 2 & 3, but they are not used. The original game has the hop button mirrored on both sides of the joystick. The left side jump button is also 1 player start button /* control_details */ mame emulates this as two buttons, button1 and start1. The right side hop button is also 2 players start button; mame emulates this as only the 'start2' button, even though pressing mame's start2 button also makes RoadRunner hop. The original joystick was a Hall Effect joystick: an analog joystick that used magnetics to vary the resistance instead of the usual POT.";
+  &roadrunn_get_btn;
 }
 
 const char *roadrunn_get_btn(int type)
@@ -17738,7 +18450,8 @@ const struct ControlInfo robby_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &robby_get_btn;
 }
 
 const char *robby_get_btn(int type)
@@ -17763,7 +18476,8 @@ const struct ControlInfo robocop_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &robocop_get_btn;
 }
 
 const char *robocop_get_btn(int type)
@@ -17789,7 +18503,8 @@ const struct ControlInfo robocop2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &robocop2_get_btn;
 }
 
 const char *robocop2_get_btn(int type)
@@ -17816,7 +18531,8 @@ const struct ControlInfo robotron_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The drivers in mame don't have a cocktail mode, but klov shows a cocktail cab, and the robotron drawing set shows two (cocktail) sets of dual joysticks." /* control_details */
+  "The drivers in mame don't have a cocktail mode, but klov shows a cocktail cab, and the robotron drawing set shows two (cocktail) sets of dual joysticks.", /* control__details */
+  &robotron_get_btn;
 }
 
 const char *robotron_get_btn(int type)
@@ -17844,7 +18560,8 @@ const struct ControlInfo rocnrope_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &rocnrope_get_btn;
 }
 
 const char *rocnrope_get_btn(int type)
@@ -17870,7 +18587,8 @@ const struct ControlInfo rollerg_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The two buttons have other uses besides those labeled, but you will be prompted on how to use them during gameplay." /* control_details */
+  "The two buttons have other uses besides those labeled, but you will be prompted on how to use them during gameplay.", /* control__details */
+  &rollerg_get_btn;
 }
 
 const char *rollerg_get_btn(int type)
@@ -17896,7 +18614,8 @@ const struct ControlInfo rthunder_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The buttons are mirrored on both sides of the joystick. There are three settings for the type of control panel: 'Type A Upright' (1 joystick, alternating), 'Type B Cocktail--no flip' (2 joysticks, alternating), and 'Type C Cocktail--flip' (2 joysticks, alternating). Those with normal 2 joystick upright cabs will be happy with the Type B setting." /* control_details */
+  "The buttons are mirrored on both sides of the joystick. There are three settings for the type of control panel: 'Type A Upright' (1 joystick, alternating), 'Type B Cocktail--no flip' (2 joysticks, alternating), and 'Type C Cocktail--flip' (2 joysticks, alternating). Those with normal 2 joystick upright cabs will be happy with the Type B setting.", /* control__details */
+  &rthunder_get_btn;
 }
 
 const char *rthunder_get_btn(int type)
@@ -17922,7 +18641,8 @@ const struct ControlInfo rranger_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original cpo used icons, but they are very cryptic. 'Shoot' sported a rather understandable gun icon, but 'Jump' had an icon of overlapping up and down arrows." /* control_details */
+  "The original cpo used icons, but they are very cryptic. 'Shoot' sported a rather understandable gun icon, but 'Jump' had an icon of overlapping up and down arrows.", /* control__details */
+  &rranger_get_btn;
 }
 
 const char *rranger_get_btn(int type)
@@ -17948,7 +18668,8 @@ const struct ControlInfo roundup_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original panel has the same button either side of the joystick so can be played with either hand" /* control_details */
+  "The original panel has the same button either side of the joystick so can be played with either hand", /* control__details */
+  &roundup_get_btn;
 }
 
 const char *roundup_get_btn(int type)
@@ -17973,7 +18694,8 @@ const struct ControlInfo royalmah_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &royalmah_get_btn;
 }
 
 const char *royalmah_get_btn(int type)
@@ -17993,7 +18715,8 @@ const struct ControlInfo rungun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Please note that although all 4 player inputs are in mame you can NOT play a 2 on 2 game. The original 4-player cab was actually two cabinets linked together. Since mame doesn't emulate the link or the second monitor, this game is 2 player only." /* control_details */
+  "Please note that although all 4 player inputs are in mame you can NOT play a 2 on 2 game. The original 4-player cab was actually two cabinets linked together. Since mame doesn't emulate the link or the second monitor, this game is 2 player only.", /* control__details */
+  &rungun_get_btn;
 }
 
 const char *rungun_get_btn(int type)
@@ -18020,7 +18743,8 @@ const struct ControlInfo runaway_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The hi / low shifter was actually a plastic switch, but it operates just like a high / low shifter in mame so it's mapped it to that. The jump button was unlabeled on the original cpo." /* control_details */
+  "The hi / low shifter was actually a plastic switch, but it operates just like a high / low shifter in mame so it's mapped it to that. The jump button was unlabeled on the original cpo.", /* control__details */
+  &runaway_get_btn;
 }
 
 const char *runaway_get_btn(int type)
@@ -18043,7 +18767,8 @@ const struct ControlInfo kirarast_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &kirarast_get_btn;
 }
 
 const char *kirarast_get_btn(int type)
@@ -18063,7 +18788,8 @@ const struct ControlInfo stunrun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Even though the yoke's buttons have seperate inputs, they seem to both perform the same function." /* control_details */
+  "Even though the yoke's buttons have seperate inputs, they seem to both perform the same function.", /* control__details */
+  &stunrun_get_btn;
 }
 
 const char *stunrun_get_btn(int type)
@@ -18089,7 +18815,8 @@ const struct ControlInfo salamand_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &salamand_get_btn;
 }
 
 const char *salamand_get_btn(int type)
@@ -18115,7 +18842,8 @@ const struct ControlInfo searchar_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &searchar_get_btn;
 }
 
 const char *searchar_get_btn(int type)
@@ -18143,7 +18871,8 @@ const struct ControlInfo sarge_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The buttons are mirrored across both sticks. They are labeled generically because you can control various vehicles in the game and they have different functions for each. This game driver has hacked in inputs that allow you to play the game with a regular joystick. To disable these hacked inputs you need to either disable cheats or remap the hacked inputs to 'none' in the input menu." /* control_details */
+  "The buttons are mirrored across both sticks. They are labeled generically because you can control various vehicles in the game and they have different functions for each. This game driver has hacked in inputs that allow you to play the game with a regular joystick. To disable these hacked inputs you need to either disable cheats or remap the hacked inputs to 'none' in the input menu.", /* control__details */
+  &sarge_get_btn;
 }
 
 const char *sarge_get_btn(int type)
@@ -18169,7 +18898,8 @@ const struct ControlInfo satansat_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joystick had the typical generic 'control' caption below it." /* control_details */
+  "The joystick had the typical generic 'control' caption below it.", /* control__details */
+  &satansat_get_btn;
 }
 
 const char *satansat_get_btn(int type)
@@ -18193,7 +18923,8 @@ const struct ControlInfo shollow_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game actually uses a gorf-style trigger stick, but a restrictor is used to make it 2-way." /* control_details */
+  "This game actually uses a gorf-style trigger stick, but a restrictor is used to make it 2-way.", /* control__details */
+  &shollow_get_btn;
 }
 
 const char *shollow_get_btn(int type)
@@ -18217,7 +18948,8 @@ const struct ControlInfo scandal_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &scandal_get_btn;
 }
 
 const char *scandal_get_btn(int type)
@@ -18237,7 +18969,8 @@ const struct ControlInfo scramble_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &scramble_get_btn;
 }
 
 const char *scramble_get_btn(int type)
@@ -18263,7 +18996,8 @@ const struct ControlInfo sdi_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "For those of you who have 'fraken-panels' this is the game for you. This game uses the extremely odd combination of a top-fire 8-way joystick and a trackball. All controls are required too so forget about playing this game unless you have those controls." /* control_details */
+  "For those of you who have 'fraken-panels' this is the game for you. This game uses the extremely odd combination of a top-fire 8-way joystick and a trackball. All controls are required too so forget about playing this game unless you have those controls.", /* control__details */
+  &sdi_get_btn;
 }
 
 const char *sdi_get_btn(int type)
@@ -18292,7 +19026,8 @@ const struct ControlInfo seawolf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'paddle' is actually a periscope you look through and turn. The field of view you have when looking through the scope helps you aim. Mame displays a cross hair to help you aim, you can turn it off with the F1 key." /* control_details */
+  "The 'paddle' is actually a periscope you look through and turn. The field of view you have when looking through the scope helps you aim. Mame displays a cross hair to help you aim, you can turn it off with the F1 key.", /* control__details */
+  &seawolf_get_btn;
 }
 
 const char *seawolf_get_btn(int type)
@@ -18315,7 +19050,8 @@ const struct ControlInfo seawolf2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'paddle' is actually a periscope you look through and turn. The field of view you have when looking through the scope helps you aim. Mame displays a cross hair to help you aim, you can turn it off with the F1 key." /* control_details */
+  "The 'paddle' is actually a periscope you look through and turn. The field of view you have when looking through the scope helps you aim. Mame displays a cross hair to help you aim, you can turn it off with the F1 key.", /* control__details */
+  &seawolf2_get_btn;
 }
 
 const char *seawolf2_get_btn(int type)
@@ -18338,7 +19074,8 @@ const struct ControlInfo secolove_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &secolove_get_btn;
 }
 
 const char *secolove_get_btn(int type)
@@ -18358,7 +19095,8 @@ const struct ControlInfo seiha_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &seiha_get_btn;
 }
 
 const char *seiha_get_btn(int type)
@@ -18378,7 +19116,8 @@ const struct ControlInfo sengokmj_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &sengokmj_get_btn;
 }
 
 const char *sengokmj_get_btn(int type)
@@ -18398,7 +19137,8 @@ const struct ControlInfo shdancer_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Pull joystick down and push ATTACK button to send your dog to attack your opponents. To wipe out everything on the screen use NINJA MAGIC button." /* control_details */
+  "Pull joystick down and push ATTACK button to send your dog to attack your opponents. To wipe out everything on the screen use NINJA MAGIC button.", /* control__details */
+  &shdancer_get_btn;
 }
 
 const char *shdancer_get_btn(int type)
@@ -18425,7 +19165,8 @@ const struct ControlInfo shadoww_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Yes, although it is rare to see the game with it's original layout, it was designed to be played with a top-fire joystick." /* control_details */
+  "Yes, although it is rare to see the game with it's original layout, it was designed to be played with a top-fire joystick.", /* control__details */
+  &shadoww_get_btn;
 }
 
 const char *shadoww_get_btn(int type)
@@ -18452,7 +19193,8 @@ const struct ControlInfo sharkatt_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo labels the joystick as 'shark control.'  Above both buttons are the words 'press to'  (as in press to thrust or press to munch)." /* control_details */
+  "The cpo labels the joystick as 'shark control.'  Above both buttons are the words 'press to'  (as in press to thrust or press to munch).", /* control__details */
+  &sharkatt_get_btn;
 }
 
 const char *sharkatt_get_btn(int type)
@@ -18478,7 +19220,8 @@ const struct ControlInfo sshooter_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sshooter_get_btn;
 }
 
 const char *sshooter_get_btn(int type)
@@ -18503,7 +19246,8 @@ const struct ControlInfo sheriff_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "NOTE  The input emulation is correct in mame, but this games real life controls are NOT dual 8-ways. The game used a 8 way joystick and a special rotary dial with a trigger, which used absolute positon. Basically it acted like an 8way joystick that stays in the direction you point it." /* control_details */
+  "NOTE  The input emulation is correct in mame, but this games real life controls are NOT dual 8-ways. The game used a 8 way joystick and a special rotary dial with a trigger, which used absolute positon. Basically it acted like an 8way joystick that stays in the direction you point it.", /* control__details */
+  &sheriff_get_btn;
 }
 
 const char *sheriff_get_btn(int type)
@@ -18532,7 +19276,8 @@ const struct ControlInfo shinobi_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "CP is a generic SEGA CP, with buttons arranged in a triangle." /* control_details */
+  "CP is a generic SEGA CP, with buttons arranged in a triangle.", /* control__details */
+  &shinobi_get_btn;
 }
 
 const char *shinobi_get_btn(int type)
@@ -18559,7 +19304,8 @@ const struct ControlInfo shootout_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'jump' label is misleading. While moving left or right you press it to roll out of the way. The button is only effective while moving." /* control_details */
+  "The 'jump' label is misleading. While moving left or right you press it to roll out of the way. The button is only effective while moving.", /* control__details */
+  &shootout_get_btn;
 }
 
 const char *shootout_get_btn(int type)
@@ -18585,7 +19331,8 @@ const struct ControlInfo shootbul_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &shootbul_get_btn;
 }
 
 const char *shootbul_get_btn(int type)
@@ -18609,7 +19356,8 @@ const struct ControlInfo shuffle_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Please note that the actual cpo shows the generic arrows shooting out from the trackball with the caption 'control puck'  this has been left out for length reasons. Also the button caption may not exactly be 'game select' but this cpo was screened directly over the metal, and thus it's very difficult to find a completely readable one." /* control_details */
+  "Please note that the actual cpo shows the generic arrows shooting out from the trackball with the caption 'control puck'  this has been left out for length reasons. Also the button caption may not exactly be 'game select' but this cpo was screened directly over the metal, and thus it's very difficult to find a completely readable one.", /* control__details */
+  &shuffle_get_btn;
 }
 
 const char *shuffle_get_btn(int type)
@@ -18634,7 +19382,8 @@ const struct ControlInfo shufshot_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &shufshot_get_btn;
 }
 
 const char *shufshot_get_btn(int type)
@@ -18660,7 +19409,8 @@ const struct ControlInfo sidearms_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sidearms_get_btn;
 }
 
 const char *sidearms_get_btn(int type)
@@ -18687,7 +19437,8 @@ const struct ControlInfo sidetrac_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that the original game used a generic exidy panel and thus the button was unlabeled." /* control_details */
+  "Note that the original game used a generic exidy panel and thus the button was unlabeled.", /* control__details */
+  &sidetrac_get_btn;
 }
 
 const char *sidetrac_get_btn(int type)
@@ -18712,7 +19463,8 @@ const struct ControlInfo sinistar_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sinistar_get_btn;
 }
 
 const char *sinistar_get_btn(int type)
@@ -18738,7 +19490,8 @@ const struct ControlInfo skullxbo_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "CP has 2 sword buttons either side of joystick, and 1 turn button directly below joystick. This just allows for left/right handed players - both sword buttons are wired to same input." /* control_details */
+  "CP has 2 sword buttons either side of joystick, and 1 turn button directly below joystick. This just allows for left/right handed players - both sword buttons are wired to same input.", /* control__details */
+  &skullxbo_get_btn;
 }
 
 const char *skullxbo_get_btn(int type)
@@ -18764,7 +19517,8 @@ const struct ControlInfo skydiver_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game actually used a parachute ripcord mounted as a 2-way joystick. You adjust for the wind by moving the cord left or right and pull up on it to release the chute." /* control_details */
+  "This game actually used a parachute ripcord mounted as a 2-way joystick. You adjust for the wind by moving the cord left or right and pull up on it to release the chute.", /* control__details */
+  &skydiver_get_btn;
 }
 
 const char *skydiver_get_btn(int type)
@@ -18788,7 +19542,8 @@ const struct ControlInfo skysoldr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &skysoldr_get_btn;
 }
 
 const char *skysoldr_get_btn(int type)
@@ -18814,7 +19569,8 @@ const struct ControlInfo slapfigh_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game is 2 player alternating, with a cocktail mode. As with all alternating cocktail games, a separate input is for the second player when the video flips for the second player." /* control_details */
+  "The game is 2 player alternating, with a cocktail mode. As with all alternating cocktail games, a separate input is for the second player when the video flips for the second player.", /* control__details */
+  &slapfigh_get_btn;
 }
 
 const char *slapfigh_get_btn(int type)
@@ -18840,7 +19596,8 @@ const struct ControlInfo slikshot_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'trackball' is actually an entire section of a pool table, with a cue ball, cue stick, and various sensors to track their movement. The buttons are lighted when they are required and you are prompted on screen as to which to press." /* control_details */
+  "The 'trackball' is actually an entire section of a pool table, with a cue ball, cue stick, and various sensors to track their movement. The buttons are lighted when they are required and you are prompted on screen as to which to press.", /* control__details */
+  &slikshot_get_btn;
 }
 
 const char *slikshot_get_btn(int type)
@@ -18867,7 +19624,8 @@ const struct ControlInfo slither_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &slither_get_btn;
 }
 
 const char *slither_get_btn(int type)
@@ -18893,7 +19651,8 @@ const struct ControlInfo slyspy_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &slyspy_get_btn;
 }
 
 const char *slyspy_get_btn(int type)
@@ -18919,7 +19678,8 @@ const struct ControlInfo smashtv_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joysticks were just globally labeled 'move' and 'fire'" /* control_details */
+  "The joysticks were just globally labeled 'move' and 'fire'", /* control__details */
+  &smashtv_get_btn;
 }
 
 const char *smashtv_get_btn(int type)
@@ -18947,7 +19707,8 @@ const struct ControlInfo snakjack_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &snakjack_get_btn;
 }
 
 const char *snakjack_get_btn(int type)
@@ -18972,7 +19733,8 @@ const struct ControlInfo snapjack_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo generically labeled the entire joystick 'control'." /* control_details */
+  "The cpo generically labeled the entire joystick 'control'.", /* control__details */
+  &snapjack_get_btn;
 }
 
 const char *snapjack_get_btn(int type)
@@ -18996,7 +19758,8 @@ const struct ControlInfo snowbros_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Snow Bros is listed as using an 8-way joystick, though only left and right are used during gameplay." /* control_details */
+  "Snow Bros is listed as using an 8-way joystick, though only left and right are used during gameplay.", /* control__details */
+  &snowbros_get_btn;
 }
 
 const char *snowbros_get_btn(int type)
@@ -19022,7 +19785,8 @@ const struct ControlInfo solarfox_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "it should be noted that the triger button was also mirrored on the control panel itself." /* control_details */
+  "it should be noted that the triger button was also mirrored on the control panel itself.", /* control__details */
+  &solarfox_get_btn;
 }
 
 const char *solarfox_get_btn(int type)
@@ -19048,7 +19812,8 @@ const struct ControlInfo solarq_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &solarq_get_btn;
 }
 
 const char *solarq_get_btn(int type)
@@ -19074,7 +19839,8 @@ const struct ControlInfo amazon_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &amazon_get_btn;
 }
 
 const char *amazon_get_btn(int type)
@@ -19100,7 +19866,8 @@ const struct ControlInfo sbm_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is unplayable on anyone's layout. It used a series of photo sensors and a punching pad, along with boxing gloves to make a 'punching sim'. Mame maps the impact position on the pad to the directional arrows and the speed is calculated by the photo sensors. Player 2 joystick may also do something. It doesn't really matter as the game is unplayable. Interesting side note.... The original machine was responsible for several lawsuits as the pad wasn't padded enough and people injured themselves hitting it." /* control_details */
+  "This game is unplayable on anyone's layout. It used a series of photo sensors and a punching pad, along with boxing gloves to make a 'punching sim'. Mame maps the impact position on the pad to the directional arrows and the speed is calculated by the photo sensors. Player 2 joystick may also do something. It doesn't really matter as the game is unplayable. Interesting side note.... The original machine was responsible for several lawsuits as the pad wasn't padded enough and people injured themselves hitting it.", /* control__details */
+  &sbm_get_btn;
 }
 
 const char *sbm_get_btn(int type)
@@ -19128,7 +19895,8 @@ const struct ControlInfo souledge_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original control panel actually has attack with arrows going left and right for 'Attack A' and attack with arrows going up and down for 'Attack B'  On some panels you will see this game with the labels A,B,K,G" /* control_details */
+  "The original control panel actually has attack with arrows going left and right for 'Attack A' and attack with arrows going up and down for 'Attack B'  On some panels you will see this game with the labels A,B,K,G", /* control__details */
+  &souledge_get_btn;
 }
 
 const char *souledge_get_btn(int type)
@@ -19156,7 +19924,8 @@ const struct ControlInfo sspaceat_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Space Invader type game." /* control_details */
+  "Space Invader type game.", /* control__details */
+  &sspaceat_get_btn;
 }
 
 const char *sspaceat_get_btn(int type)
@@ -19179,7 +19948,8 @@ const struct ControlInfo spacduel_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that the 2 player start button does NOT function as a start button, rather a game select button. The good news is you can play a 2 player game on a single quarter!" /* control_details */
+  "Note that the 2 player start button does NOT function as a start button, rather a game select button. The good news is you can play a 2 player game on a single quarter!", /* control__details */
+  &spacduel_get_btn;
 }
 
 const char *spacduel_get_btn(int type)
@@ -19204,7 +19974,8 @@ const struct ControlInfo spacefb_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game's cpo used nautical labels above the directional buttons and arrows below them. Since we aren't all sailors, the arrow directions are included." /* control_details */
+  "The game's cpo used nautical labels above the directional buttons and arrows below them. Since we aren't all sailors, the arrow directions are included.", /* control__details */
+  &spacefb_get_btn;
 }
 
 const char *spacefb_get_btn(int type)
@@ -19228,7 +19999,8 @@ const struct ControlInfo spacfury_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &spacfury_get_btn;
 }
 
 const char *spacfury_get_btn(int type)
@@ -19252,7 +20024,8 @@ const struct ControlInfo spacegun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &spacegun_get_btn;
 }
 
 const char *spacegun_get_btn(int type)
@@ -19279,7 +20052,8 @@ const struct ControlInfo sharrier_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "If you are wondering why there are three 'shot' buttons, you are not alone. The trigger on the flight stick shoots and there are two buttons on the control panel that also shoot. They all have the same function, but for documentation's sake all three will be included." /* control_details */
+  "If you are wondering why there are three 'shot' buttons, you are not alone. The trigger on the flight stick shoots and there are two buttons on the control panel that also shoot. They all have the same function, but for documentation's sake all three will be included.", /* control__details */
+  &sharrier_get_btn;
 }
 
 const char *sharrier_get_btn(int type)
@@ -19306,7 +20080,8 @@ const struct ControlInfo invaders_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game cpo image uses 'control' as the label for the joystick. I modified it slightly to avoid confusion. The midway version of the game (invaders) actually used directional buttons instead of the joystick. The Taito version (Sitv) used the two-way joystick." /* control_details */
+  "The game cpo image uses 'control' as the label for the joystick. I modified it slightly to avoid confusion. The midway version of the game (invaders) actually used directional buttons instead of the joystick. The Taito version (Sitv) used the two-way joystick.", /* control__details */
+  &invaders_get_btn;
 }
 
 const char *invaders_get_btn(int type)
@@ -19329,7 +20104,8 @@ const struct ControlInfo spacedx_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &spacedx_get_btn;
 }
 
 const char *spacedx_get_btn(int type)
@@ -19354,7 +20130,8 @@ const struct ControlInfo invadpt2_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Taito version of this game (invadpt2) used a directional joystick. The Midway version (invaddlx) replaced the joystick with directional buttons. The buttons were labelled 'Laser Base Control' with arrows." /* control_details */
+  "The Taito version of this game (invadpt2) used a directional joystick. The Midway version (invaddlx) replaced the joystick with directional buttons. The buttons were labelled 'Laser Base Control' with arrows.", /* control__details */
+  &invadpt2_get_btn;
 }
 
 const char *invadpt2_get_btn(int type)
@@ -19377,7 +20154,8 @@ const struct ControlInfo spacelnc_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &spacelnc_get_btn;
 }
 
 const char *spacelnc_get_btn(int type)
@@ -19400,7 +20178,8 @@ const struct ControlInfo spaceod_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo has very subtle icons integrated into the artwork. A death-ray like beam eminates from the 'laser' button while bombs appear to be dropping out of the 'bomb' button." /* control_details */
+  "The cpo has very subtle icons integrated into the artwork. A death-ray like beam eminates from the 'laser' button while bombs appear to be dropping out of the 'bomb' button.", /* control__details */
+  &spaceod_get_btn;
 }
 
 const char *spaceod_get_btn(int type)
@@ -19426,7 +20205,8 @@ const struct ControlInfo panic_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game has a cocktail mode, so player 2 inputs are defined in mame." /* control_details */
+  "This game has a cocktail mode, so player 2 inputs are defined in mame.", /* control__details */
+  &panic_get_btn;
 }
 
 const char *panic_get_btn(int type)
@@ -19452,7 +20232,8 @@ const struct ControlInfo spacezap_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "A very simple game. the directional buttons point the laser up, down, left or right. Shoot all the aliens before they destroy the base." /* control_details */
+  "A very simple game. the directional buttons point the laser up, down, left or right. Shoot all the aliens before they destroy the base.", /* control__details */
+  &spacezap_get_btn;
 }
 
 const char *spacezap_get_btn(int type)
@@ -19477,7 +20258,8 @@ const struct ControlInfo speakres_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo generically labels the joystick 'control.'" /* control_details */
+  "The cpo generically labels the joystick 'control.'", /* control__details */
+  &speakres_get_btn;
 }
 
 const char *speakres_get_btn(int type)
@@ -19500,7 +20282,8 @@ const struct ControlInfo spectar_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The fire decal also has an icon of a rocket." /* control_details */
+  "The fire decal also has an icon of a rocket.", /* control__details */
+  &spectar_get_btn;
 }
 
 const char *spectar_get_btn(int type)
@@ -19525,7 +20308,8 @@ const struct ControlInfo spdcoin_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &spdcoin_get_btn;
 }
 
 const char *spdcoin_get_btn(int type)
@@ -19547,7 +20331,8 @@ const struct ControlInfo speedfrk_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Speed is controlled by the shifter. Pressing the pedal makes the car move forward at the selected speed. Stay on the road and avoid all cars to avoid crashing." /* control_details */
+  "Speed is controlled by the shifter. Pressing the pedal makes the car move forward at the selected speed. Stay on the road and avoid all cars to avoid crashing.", /* control__details */
+  &speedfrk_get_btn;
 }
 
 const char *speedfrk_get_btn(int type)
@@ -19569,7 +20354,8 @@ const struct ControlInfo speedrcr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game has three volcano buttons mounted on the control panel, these buttons are used to fire the three weapons on your car. They are unlabeled but are referred to as A, B, and C in the game's test menu. The start button doubles as a jump button. In mame an extra button and an extra pedal are defined but this doesn't reflect the original hardware." /* control_details */
+  "The game has three volcano buttons mounted on the control panel, these buttons are used to fire the three weapons on your car. They are unlabeled but are referred to as A, B, and C in the game's test menu. The start button doubles as a jump button. In mame an extra button and an extra pedal are defined but this doesn't reflect the original hardware.", /* control__details */
+  &speedrcr_get_btn;
 }
 
 const char *speedrcr_get_btn(int type)
@@ -19595,7 +20381,8 @@ const struct ControlInfo spidman_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &spidman_get_btn;
 }
 
 const char *spidman_get_btn(int type)
@@ -19621,7 +20408,8 @@ const struct ControlInfo spiders_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Teh original cpo simply depicts two arrows with the label 'Movement'." /* control_details */
+  "Teh original cpo simply depicts two arrows with the label 'Movement'.", /* control__details */
+  &spiders_get_btn;
 }
 
 const char *spiders_get_btn(int type)
@@ -19644,7 +20432,8 @@ const struct ControlInfo sprint1_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that the gear buttons are remapped from the button defaults. The number labels denote shift position." /* control_details */
+  "Note that the gear buttons are remapped from the button defaults. The number labels denote shift position.", /* control__details */
+  &sprint1_get_btn;
 }
 
 const char *sprint1_get_btn(int type)
@@ -19671,7 +20460,8 @@ const struct ControlInfo starcas_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame simulates this game using a 2-way joystick, but the actual game used Directional buttons labeled Left and Right. There was also a Rock-Ola version of the Control Panel (black background) which used pictograms for the button labels. Controls were the same, however." /* control_details */
+  "Mame simulates this game using a 2-way joystick, but the actual game used Directional buttons labeled Left and Right. There was also a Rock-Ola version of the Control Panel (black background) which used pictograms for the button labels. Controls were the same, however.", /* control__details */
+  &starcas_get_btn;
 }
 
 const char *starcas_get_btn(int type)
@@ -19695,7 +20485,8 @@ const struct ControlInfo starforc_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &starforc_get_btn;
 }
 
 const char *starforc_get_btn(int type)
@@ -19720,7 +20511,8 @@ const struct ControlInfo stargrds_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The player start buttons double as the 'Weapon' button and the cpo labels it so." /* control_details */
+  "The player start buttons double as the 'Weapon' button and the cpo labels it so.", /* control__details */
+  &stargrds_get_btn;
 }
 
 const char *stargrds_get_btn(int type)
@@ -19748,7 +20540,8 @@ const struct ControlInfo starhawk_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Each player has an 8-way Joystick with a Fire Button on top. There are three buttons on the control panel that control the speed of the targeting crosshairs. Shoot as many ships as possible." /* control_details */
+  "Each player has an 8-way Joystick with a Fire Button on top. There are three buttons on the control panel that control the speed of the targeting crosshairs. Shoot as many ships as possible.", /* control__details */
+  &starhawk_get_btn;
 }
 
 const char *starhawk_get_btn(int type)
@@ -19776,7 +20569,8 @@ const struct ControlInfo starjack_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "On the original control panel, the start buttons were double-wired to the bomb buttons." /* control_details */
+  "On the original control panel, the start buttons were double-wired to the bomb buttons.", /* control__details */
+  &starjack_get_btn;
 }
 
 const char *starjack_get_btn(int type)
@@ -19802,7 +20596,8 @@ const struct ControlInfo startrek_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &startrek_get_btn;
 }
 
 const char *startrek_get_btn(int type)
@@ -19828,7 +20623,8 @@ const struct ControlInfo starwars_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Buttons correspond to the Trigger and Thumb buttons on the yoke. Aircraft style controls, moving control down moves aiming cursor up." /* control_details */
+  "Buttons correspond to the Trigger and Thumb buttons on the yoke. Aircraft style controls, moving control down moves aiming cursor up.", /* control__details */
+  &starwars_get_btn;
 }
 
 const char *starwars_get_btn(int type)
@@ -19856,7 +20652,8 @@ const struct ControlInfo stargate_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Joystick is on left side of control panel with reverse button the the right of it so it can be hit with thumb. Fire and thrust are on right side of control panel with smart bomb, inviso, and hyperspace to the left in a 45 degree angle." /* control_details */
+  "Joystick is on left side of control panel with reverse button the the right of it so it can be hit with thumb. Fire and thrust are on right side of control panel with smart bomb, inviso, and hyperspace to the left in a 45 degree angle.", /* control__details */
+  &stargate_get_btn;
 }
 
 const char *stargate_get_btn(int type)
@@ -19884,7 +20681,8 @@ const struct ControlInfo sgunner_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sgunner_get_btn;
 }
 
 const char *sgunner_get_btn(int type)
@@ -19910,7 +20708,8 @@ const struct ControlInfo sgunner2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sgunner2_get_btn;
 }
 
 const char *sgunner2_get_btn(int type)
@@ -19936,7 +20735,8 @@ const struct ControlInfo stocker_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &stocker_get_btn;
 }
 
 const char *stocker_get_btn(int type)
@@ -19959,7 +20759,8 @@ const struct ControlInfo stratab_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game only has one start button. You press it multiple times for up to 4 players. Mame has two player inputs for cocktail modes, so a person must assume that in cocktail mode teams take turns with the two control panels." /* control_details */
+  "This game only has one start button. You press it multiple times for up to 4 players. Mame has two player inputs for cocktail modes, so a person must assume that in cocktail mode teams take turns with the two control panels.", /* control__details */
+  &stratab_get_btn;
 }
 
 const char *stratab_get_btn(int type)
@@ -19985,7 +20786,8 @@ const struct ControlInfo stratgyx_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game used a very stylish, metal, top-fire joystick." /* control_details */
+  "This game used a very stylish, metal, top-fire joystick.", /* control__details */
+  &stratgyx_get_btn;
 }
 
 const char *stratgyx_get_btn(int type)
@@ -20012,7 +20814,8 @@ const struct ControlInfo sf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original, dedicated, Street Fighter cabinet only had two, giant, semi-analog buttons. How hard the button was pressed determined which of the three attack strengths registered. The conversion kit and second revision of this game used the classic sf2 layout well all know and love." /* control_details */
+  "The original, dedicated, Street Fighter cabinet only had two, giant, semi-analog buttons. How hard the button was pressed determined which of the three attack strengths registered. The conversion kit and second revision of this game used the classic sf2 layout well all know and love.", /* control__details */
+  &sf_get_btn;
 }
 
 const char *sf_get_btn(int type)
@@ -20042,7 +20845,8 @@ const struct ControlInfo sfa2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sfa2_get_btn;
 }
 
 const char *sfa2_get_btn(int type)
@@ -20072,7 +20876,8 @@ const struct ControlInfo sfa3_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sfa3_get_btn;
 }
 
 const char *sfa3_get_btn(int type)
@@ -20102,7 +20907,8 @@ const struct ControlInfo sfa_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sfa_get_btn;
 }
 
 const char *sfa_get_btn(int type)
@@ -20132,7 +20938,8 @@ const struct ControlInfo sf2ce_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is essentially a clone of sf2. Only one or two chips where changed and it has the same layout." /* control_details */
+  "This game is essentially a clone of sf2. Only one or two chips where changed and it has the same layout.", /* control__details */
+  &sf2ce_get_btn;
 }
 
 const char *sf2ce_get_btn(int type)
@@ -20162,7 +20969,8 @@ const struct ControlInfo sf2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sf2_get_btn;
 }
 
 const char *sf2_get_btn(int type)
@@ -20192,7 +21000,8 @@ const struct ControlInfo sfiii2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sfiii2_get_btn;
 }
 
 const char *sfiii2_get_btn(int type)
@@ -20222,7 +21031,8 @@ const struct ControlInfo sfiii3_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sfiii3_get_btn;
 }
 
 const char *sfiii3_get_btn(int type)
@@ -20252,7 +21062,8 @@ const struct ControlInfo sfiii_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sfiii_get_btn;
 }
 
 const char *sfiii_get_btn(int type)
@@ -20282,7 +21093,8 @@ const struct ControlInfo sftm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sftm_get_btn;
 }
 
 const char *sftm_get_btn(int type)
@@ -20312,7 +21124,8 @@ const struct ControlInfo strider_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &strider_get_btn;
 }
 
 const char *strider_get_btn(int type)
@@ -20338,7 +21151,8 @@ const struct ControlInfo sbowling_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sbowling_get_btn;
 }
 
 const char *sbowling_get_btn(int type)
@@ -20362,7 +21176,8 @@ const struct ControlInfo strkforc_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'weapon' refers to your secondary weapon. Also note that the start button transforms your ship and on the original panel, the start button was labeled 'Start/Transform'" /* control_details */
+  "The 'weapon' refers to your secondary weapon. Also note that the start button transforms your ship and on the original panel, the start button was labeled 'Start/Transform'", /* control__details */
+  &strkforc_get_btn;
 }
 
 const char *strkforc_get_btn(int type)
@@ -20389,7 +21204,8 @@ const struct ControlInfo s1945_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &s1945_get_btn;
 }
 
 const char *s1945_get_btn(int type)
@@ -20415,7 +21231,8 @@ const struct ControlInfo s1945iii_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &s1945iii_get_btn;
 }
 
 const char *s1945iii_get_btn(int type)
@@ -20442,7 +21259,8 @@ const struct ControlInfo subs_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is essentially unplayable in mame because in the original game, the two monitors were on opposite ends of the cab. Player 1 couldn't see player 2 and vice-versa. In mame the two monitors are combiend and thus it runs the effect." /* control_details */
+  "This game is essentially unplayable in mame because in the original game, the two monitors were on opposite ends of the cab. Player 1 couldn't see player 2 and vice-versa. In mame the two monitors are combiend and thus it runs the effect.", /* control__details */
+  &subs_get_btn;
 }
 
 const char *subs_get_btn(int type)
@@ -20465,7 +21283,8 @@ const struct ControlInfo ssriders_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ssriders_get_btn;
 }
 
 const char *ssriders_get_btn(int type)
@@ -20491,7 +21310,8 @@ const struct ControlInfo sbagman_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The action button picks things up and drops them." /* control_details */
+  "The action button picks things up and drops them.", /* control__details */
+  &sbagman_get_btn;
 }
 
 const char *sbagman_get_btn(int type)
@@ -20516,7 +21336,8 @@ const struct ControlInfo sbrkout_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original game used a 3-position rotary switch to select between 3 different variations: Progressive, Double, and Cavity." /* control_details */
+  "The original game used a 3-position rotary switch to select between 3 different variations: Progressive, Double, and Cavity.", /* control__details */
+  &sbrkout_get_btn;
 }
 
 const char *sbrkout_get_btn(int type)
@@ -20542,7 +21363,8 @@ const struct ControlInfo scobra_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original CP labelled both buttons as 'Discharge Buttons.'  Sidewinder Missile is a bit of an overstatement for little tiny blips." /* control_details */
+  "The original CP labelled both buttons as 'Discharge Buttons.'  Sidewinder Missile is a bit of an overstatement for little tiny blips.", /* control__details */
+  &scobra_get_btn;
 }
 
 const char *scobra_get_btn(int type)
@@ -20568,7 +21390,8 @@ const struct ControlInfo scontra_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &scontra_get_btn;
 }
 
 const char *scontra_get_btn(int type)
@@ -20594,7 +21417,8 @@ const struct ControlInfo spdodgeb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Press boht buttons to jump." /* control_details */
+  "Press boht buttons to jump.", /* control__details */
+  &spdodgeb_get_btn;
 }
 
 const char *spdodgeb_get_btn(int type)
@@ -20620,7 +21444,8 @@ const struct ControlInfo sgemf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sgemf_get_btn;
 }
 
 const char *sgemf_get_btn(int type)
@@ -20647,7 +21472,8 @@ const struct ControlInfo shimpact_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Obviously the action depends upon the position you are playing and what team you are on." /* control_details */
+  "Obviously the action depends upon the position you are playing and what team you are on.", /* control__details */
+  &shimpact_get_btn;
 }
 
 const char *shimpact_get_btn(int type)
@@ -20672,7 +21498,8 @@ const struct ControlInfo marukin_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &marukin_get_btn;
 }
 
 const char *marukin_get_btn(int type)
@@ -20692,7 +21519,8 @@ const struct ControlInfo smgp_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The shifter switches are formula 1 style, meaning that they are mounted behind the wheel for quick shifting." /* control_details */
+  "The shifter switches are formula 1 style, meaning that they are mounted behind the wheel for quick shifting.", /* control__details */
+  &smgp_get_btn;
 }
 
 const char *smgp_get_btn(int type)
@@ -20718,7 +21546,8 @@ const struct ControlInfo superpac_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &superpac_get_btn;
 }
 
 const char *superpac_get_btn(int type)
@@ -20743,7 +21572,8 @@ const struct ControlInfo spbactn_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game was actually a 'video pinball' table with real controls and everything. Note that this game is gonna be unplayable on a panel without pinball buttons." /* control_details */
+  "This game was actually a 'video pinball' table with real controls and everything. Note that this game is gonna be unplayable on a panel without pinball buttons.", /* control__details */
+  &spbactn_get_btn;
 }
 
 const char *spbactn_get_btn(int type)
@@ -20766,7 +21596,8 @@ const struct ControlInfo spnchout_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Each button has a dual function. They are labeled in the order of netrual postion and up respectively. The Hook button only deleivers the knock out blow when the screen flashes to use it. The Hook button is a huge plunger button, similar to what you would see on a gameshow." /* control_details */
+  "Each button has a dual function. They are labeled in the order of netrual postion and up respectively. The Hook button only deleivers the knock out blow when the screen flashes to use it. The Hook button is a huge plunger button, similar to what you would see on a gameshow.", /* control__details */
+  &spnchout_get_btn;
 }
 
 const char *spnchout_get_btn(int type)
@@ -20793,7 +21624,8 @@ const struct ControlInfo sqix_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &sqix_get_btn;
 }
 
 const char *sqix_get_btn(int type)
@@ -20818,7 +21650,8 @@ const struct ControlInfo srmp7_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &srmp7_get_btn;
 }
 
 const char *srmp7_get_btn(int type)
@@ -20838,7 +21671,8 @@ const struct ControlInfo srmp2_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &srmp2_get_btn;
 }
 
 const char *srmp2_get_btn(int type)
@@ -20858,7 +21692,8 @@ const struct ControlInfo srmp3_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &srmp3_get_btn;
 }
 
 const char *srmp3_get_btn(int type)
@@ -20878,7 +21713,8 @@ const struct ControlInfo srmp4_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &srmp4_get_btn;
 }
 
 const char *srmp4_get_btn(int type)
@@ -20898,7 +21734,8 @@ const struct ControlInfo sspeedr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Please note that with default mame mappings, the shifter and gas pedal will interfere with each other." /* control_details */
+  "Please note that with default mame mappings, the shifter and gas pedal will interfere with each other.", /* control__details */
+  &sspeedr_get_btn;
 }
 
 const char *sspeedr_get_btn(int type)
@@ -20922,7 +21759,8 @@ const struct ControlInfo ssprint_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Player one is blue, Player 2 is Red, Player 3 is yellow." /* control_details */
+  "Player one is blue, Player 2 is Red, Player 3 is yellow.", /* control__details */
+  &ssprint_get_btn;
 }
 
 const char *ssprint_get_btn(int type)
@@ -20945,7 +21783,8 @@ const struct ControlInfo ssf2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The ssf2 cpo image I found was very fuzzy. If you have a DEDICATED ssf2 cpo image please correct any mistakes I might have made. The labels to this game are very important as not only is it one of the very last dedicated capcom fighter cabs, but it's labels become the 'universal standard' for future capcom fighters." /* control_details */
+  "The ssf2 cpo image I found was very fuzzy. If you have a DEDICATED ssf2 cpo image please correct any mistakes I might have made. The labels to this game are very important as not only is it one of the very last dedicated capcom fighter cabs, but it's labels become the 'universal standard' for future capcom fighters.", /* control__details */
+  &ssf2_get_btn;
 }
 
 const char *ssf2_get_btn(int type)
@@ -20975,7 +21814,8 @@ const struct ControlInfo sstrike_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The 'trackball' actually consists of a small scale version of the beginning of a bowling alley and a cue ball with various sensors to track it's movement. This game basically recycles the hardware of Slick Shot into a bowling game." /* control_details */
+  "The 'trackball' actually consists of a small scale version of the beginning of a bowling alley and a cue ball with various sensors to track it's movement. This game basically recycles the hardware of Slick Shot into a bowling game.", /* control__details */
+  &sstrike_get_btn;
 }
 
 const char *sstrike_get_btn(int type)
@@ -21001,7 +21841,8 @@ const struct ControlInfo szaxxon_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The control panel had duplicate Fire buttons on the panel, as well as the joystick trigger button. The Joystick had an LED that would light up when the trigger was pulled. Aircraft style controls - Pulling back on the joystick causes aircraft to climb." /* control_details */
+  "The control panel had duplicate Fire buttons on the panel, as well as the joystick trigger button. The Joystick had an LED that would light up when the trigger was pulled. Aircraft style controls - Pulling back on the joystick causes aircraft to climb.", /* control__details */
+  &szaxxon_get_btn;
 }
 
 const char *szaxxon_get_btn(int type)
@@ -21026,7 +21867,8 @@ const struct ControlInfo superman_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Hold Punch button down momentarily to release Blast Punch. During shooting scenes the Kick button actually emits Heat Vision instead of kicking." /* control_details */
+  "Hold Punch button down momentarily to release Blast Punch. During shooting scenes the Kick button actually emits Heat Vision instead of kicking.", /* control__details */
+  &superman_get_btn;
 }
 
 const char *superman_get_btn(int type)
@@ -21052,7 +21894,8 @@ const struct ControlInfo swimmer_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &swimmer_get_btn;
 }
 
 const char *swimmer_get_btn(int type)
@@ -21077,7 +21920,8 @@ const struct ControlInfo tnk3_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This rotary is a unique one. It almost looks like a dial at first glance, but the dial can also be shifted in 8 directions, just like a rotary 8-way." /* control_details */
+  "This rotary is a unique one. It almost looks like a dial at first glance, but the dial can also be shifted in 8 directions, just like a rotary 8-way.", /* control__details */
+  &tnk3_get_btn;
 }
 
 const char *tnk3_get_btn(int type)
@@ -21105,7 +21949,8 @@ const struct ControlInfo ttmahjng_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ttmahjng_get_btn;
 }
 
 const char *ttmahjng_get_btn(int type)
@@ -21125,7 +21970,8 @@ const struct ControlInfo tailg_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original game had an ambidexterous setup. The controls were setup as Shield, Fire, Site Control(Joystick), Fire, Shield." /* control_details */
+  "The original game had an ambidexterous setup. The controls were setup as Shield, Fire, Site Control(Joystick), Fire, Shield.", /* control__details */
+  &tailg_get_btn;
 }
 
 const char *tailg_get_btn(int type)
@@ -21151,7 +21997,8 @@ const struct ControlInfo hotgmck_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &hotgmck_get_btn;
 }
 
 const char *hotgmck_get_btn(int type)
@@ -21171,7 +22018,8 @@ const struct ControlInfo hotgmck3_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &hotgmck3_get_btn;
 }
 
 const char *hotgmck3_get_btn(int type)
@@ -21191,7 +22039,8 @@ const struct ControlInfo hgkairak_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &hgkairak_get_btn;
 }
 
 const char *hgkairak_get_btn(int type)
@@ -21211,7 +22060,8 @@ const struct ControlInfo fromanc2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &fromanc2_get_btn;
 }
 
 const char *fromanc2_get_btn(int type)
@@ -21231,7 +22081,8 @@ const struct ControlInfo fromanc4_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &fromanc4_get_btn;
 }
 
 const char *fromanc4_get_btn(int type)
@@ -21251,7 +22102,8 @@ const struct ControlInfo fromancr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &fromancr_get_btn;
 }
 
 const char *fromancr_get_btn(int type)
@@ -21271,7 +22123,8 @@ const struct ControlInfo tank8_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that this game lacks any labels. This is probably due to the self-explainatory layout. Also not that oddly enough, on this game the trigger button is NOT mirroed to the left stick. The only trigger is on the right one." /* control_details */
+  "Note that this game lacks any labels. This is probably due to the self-explainatory layout. Also not that oddly enough, on this game the trigger button is NOT mirroed to the left stick. The only trigger is on the right one.", /* control__details */
+  &tank8_get_btn;
 }
 
 const char *tank8_get_btn(int type)
@@ -21296,7 +22149,8 @@ const struct ControlInfo tankbatt_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &tankbatt_get_btn;
 }
 
 const char *tankbatt_get_btn(int type)
@@ -21321,7 +22175,8 @@ const struct ControlInfo tapper_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game used a real beer tap instead of a shifter. You pull down on the tap to pour and release to serve. In mame it's emulated as a single button." /* control_details */
+  "This game used a real beer tap instead of a shifter. You pull down on the tap to pour and release to serve. In mame it's emulated as a single button.", /* control__details */
+  &tapper_get_btn;
 }
 
 const char *tapper_get_btn(int type)
@@ -21346,7 +22201,8 @@ const struct ControlInfo targ_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &targ_get_btn;
 }
 
 const char *targ_get_btn(int type)
@@ -21371,7 +22227,8 @@ const struct ControlInfo tazmania_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &tazmania_get_btn;
 }
 
 const char *tazmania_get_btn(int type)
@@ -21397,7 +22254,8 @@ const struct ControlInfo tbowl_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &tbowl_get_btn;
 }
 
 const char *tbowl_get_btn(int type)
@@ -21423,7 +22281,8 @@ const struct ControlInfo tmnt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Pressing both buttons does a special attack." /* control_details */
+  "Pressing both buttons does a special attack.", /* control__details */
+  &tmnt_get_btn;
 }
 
 const char *tmnt_get_btn(int type)
@@ -21449,7 +22308,8 @@ const struct ControlInfo tmnt2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Both buttons do a special attack." /* control_details */
+  "Both buttons do a special attack.", /* control__details */
+  &tmnt2_get_btn;
 }
 
 const char *tmnt2_get_btn(int type)
@@ -21476,6 +22336,7 @@ const struct ControlInfo tehkanwc_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Two buttons were usually wired to the same single button input per player, one on each side of the TB. Mame has a hack so you can play with 8-way joyaticks, but the original had trackballs /* control_details */ mame also has the trackballs, but since no keys are mapped to the TBs (to enable the joystick hack), the TBs don't show in the tab input menu. There apparently were joystick bootlegs of this game; mame only has one version, so the bootlegs might have been hardware hacks no just the inputs (or mame is missing the different ROMs).";
+  &tehkanwc_get_btn;
 }
 
 const char *tehkanwc_get_btn(int type)
@@ -21500,7 +22361,8 @@ const struct ControlInfo tekken_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo itself in this game labels the punch and kick buttons as just 'punch' and 'kick' grouped. The bezel labes them in detail. Please note that the punch buttons are on the top row of the tekken games, so remap accordingly." /* control_details */
+  "The cpo itself in this game labels the punch and kick buttons as just 'punch' and 'kick' grouped. The bezel labes them in detail. Please note that the punch buttons are on the top row of the tekken games, so remap accordingly.", /* control__details */
+  &tekken_get_btn;
 }
 
 const char *tekken_get_btn(int type)
@@ -21528,7 +22390,8 @@ const struct ControlInfo tekken2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo itself in this game labels the punch and kick buttons as just 'punch' and 'kick' grouped. The bezel labes them in detail. Please note that the punch buttons are on the top row of the tekken games, so remap accordingly." /* control_details */
+  "The cpo itself in this game labels the punch and kick buttons as just 'punch' and 'kick' grouped. The bezel labes them in detail. Please note that the punch buttons are on the top row of the tekken games, so remap accordingly.", /* control__details */
+  &tekken2_get_btn;
 }
 
 const char *tekken2_get_btn(int type)
@@ -21556,7 +22419,8 @@ const struct ControlInfo tekken3_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo itself in this game labels the punch and kick buttons as just 'punch' and 'kick' grouped. The bezel labes them in detail. Please note that the punch buttons are on the top row of the tekken games, so remap accordingly." /* control_details */
+  "The cpo itself in this game labels the punch and kick buttons as just 'punch' and 'kick' grouped. The bezel labes them in detail. Please note that the punch buttons are on the top row of the tekken games, so remap accordingly.", /* control__details */
+  &tekken3_get_btn;
 }
 
 const char *tekken3_get_btn(int type)
@@ -21584,7 +22448,8 @@ const struct ControlInfo telmahjn_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &telmahjn_get_btn;
 }
 
 const char *telmahjn_get_btn(int type)
@@ -21604,7 +22469,8 @@ const struct ControlInfo tempest_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Super Zapper kills all enemies. Three Zaps per level." /* control_details */
+  "Super Zapper kills all enemies. Three Zaps per level.", /* control__details */
+  &tempest_get_btn;
 }
 
 const char *tempest_get_btn(int type)
@@ -21628,7 +22494,8 @@ const struct ControlInfo tengai_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame lists 3 buttons although only 2 actually work" /* control_details */
+  "Mame lists 3 buttons although only 2 actually work", /* control__details */
+  &tengai_get_btn;
 }
 
 const char *tengai_get_btn(int type)
@@ -21655,7 +22522,8 @@ const struct ControlInfo term2_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &term2_get_btn;
 }
 
 const char *term2_get_btn(int type)
@@ -21681,7 +22549,8 @@ const struct ControlInfo terracre_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &terracre_get_btn;
 }
 
 const char *terracre_get_btn(int type)
@@ -21707,7 +22576,8 @@ const struct ControlInfo terraf_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &terraf_get_btn;
 }
 
 const char *terraf_get_btn(int type)
@@ -21733,7 +22603,8 @@ const struct ControlInfo atetris_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Atari Tetris uses a 4-way joystick, though only 3 positions are connected/used (left,right,down). Also the rotate button starts the game. We don't label it start though because on every single tetris machine there is a seperate start button which is apparently wired to button 1 to avoid confusion." /* control_details */
+  "Atari Tetris uses a 4-way joystick, though only 3 positions are connected/used (left,right,down). Also the rotate button starts the game. We don't label it start though because on every single tetris machine there is a seperate start button which is apparently wired to button 1 to avoid confusion.", /* control__details */
+  &atetris_get_btn;
 }
 
 const char *atetris_get_btn(int type)
@@ -21758,7 +22629,8 @@ const struct ControlInfo tetris_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &tetris_get_btn;
 }
 
 const char *tetris_get_btn(int type)
@@ -21783,7 +22655,8 @@ const struct ControlInfo tetrisp_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &tetrisp_get_btn;
 }
 
 const char *tetrisp_get_btn(int type)
@@ -21809,7 +22682,8 @@ const struct ControlInfo tetrisp2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "As everybody knows how to play tetris by the time this game was relased, the controls are completely un-labeled on the real panel." /* control_details */
+  "As everybody knows how to play tetris by the time this game was relased, the controls are completely un-labeled on the real panel.", /* control__details */
+  &tetrisp2_get_btn;
 }
 
 const char *tetrisp2_get_btn(int type)
@@ -21836,7 +22710,8 @@ const struct ControlInfo ctribe_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ctribe_get_btn;
 }
 
 const char *ctribe_get_btn(int type)
@@ -21862,7 +22737,8 @@ const struct ControlInfo elecyoyo_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &elecyoyo_get_btn;
 }
 
 const char *elecyoyo_get_btn(int type)
@@ -21886,7 +22762,8 @@ const struct ControlInfo esb_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Buttons 1 and 4 correspond to the Yoke triggers. Buttons 2 and 3 correspond to the Yoke thumb buttons. These shoot TOW cables on the Probots stages and Fire on the other stages. Game uses aircraft style controls, i.e. pulling the yoke grips down in MAME causes the cursor to move upward." /* control_details */
+  "Buttons 1 and 4 correspond to the Yoke triggers. Buttons 2 and 3 correspond to the Yoke thumb buttons. These shoot TOW cables on the Probots stages and Fire on the other stages. Game uses aircraft style controls, i.e. pulling the yoke grips down in MAME causes the cursor to move upward.", /* control__details */
+  &esb_get_btn;
 }
 
 const char *esb_get_btn(int type)
@@ -21914,7 +22791,8 @@ const struct ControlInfo theend_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &theend_get_btn;
 }
 
 const char *theend_get_btn(int type)
@@ -21937,7 +22815,8 @@ const struct ControlInfo lkage_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &lkage_get_btn;
 }
 
 const char *lkage_get_btn(int type)
@@ -21963,7 +22842,8 @@ const struct ControlInfo themj_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &themj_get_btn;
 }
 
 const char *themj_get_btn(int type)
@@ -21983,7 +22863,8 @@ const struct ControlInfo mainevt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The action button was one of those huge, round, lighted buttons." /* control_details */
+  "The action button was one of those huge, round, lighted buttons.", /* control__details */
+  &mainevt_get_btn;
 }
 
 const char *mainevt_get_btn(int type)
@@ -22009,7 +22890,8 @@ const struct ControlInfo ninjaw_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ninjaw_get_btn;
 }
 
 const char *ninjaw_get_btn(int type)
@@ -22035,7 +22917,8 @@ const struct ControlInfo thepit_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &thepit_get_btn;
 }
 
 const char *thepit_get_btn(int type)
@@ -22060,7 +22943,8 @@ const struct ControlInfo punisher_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &punisher_get_btn;
 }
 
 const char *punisher_get_btn(int type)
@@ -22087,6 +22971,7 @@ const struct ControlInfo ghostb_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In the versions in mame, there aren't seperate start buttons. The shoot button doubles as the start button. Mame's driver, however, includes normal seperate start buttons /* control_details */ they don't work. However, it seems like there were versions of this game that had the normal seperate start buttons. There also is a 3 player version. The Mame driver includes player 3 inputs in the 2 player game even though they aren't used.";
+  &ghostb_get_btn;
 }
 
 const char *ghostb_get_btn(int type)
@@ -22112,7 +22997,8 @@ const struct ControlInfo simpsons_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &simpsons_get_btn;
 }
 
 const char *simpsons_get_btn(int type)
@@ -22138,7 +23024,8 @@ const struct ControlInfo srumbler_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &srumbler_get_btn;
 }
 
 const char *srumbler_get_btn(int type)
@@ -22164,7 +23051,8 @@ const struct ControlInfo 3stooges_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "In this three player game, which player you are determines which stooge you are. P1=Larry  P2=Curly  P3=Moe" /* control_details */
+  "In this three player game, which player you are determines which stooge you are. P1=Larry  P2=Curly  P3=Moe", /* control__details */
+  &3stooges_get_btn;
 }
 
 const char *3stooges_get_btn(int type)
@@ -22189,7 +23077,8 @@ const struct ControlInfo tinstar_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game actually had a unique digital dial to aim with. Also mame strangely puts the firing controls on the left stick, even though the dial is on the right of the joystick." /* control_details */
+  "The game actually had a unique digital dial to aim with. Also mame strangely puts the firing controls on the left stick, even though the dial is on the right of the joystick.", /* control__details */
+  &tinstar_get_btn;
 }
 
 const char *tinstar_get_btn(int type)
@@ -22218,7 +23107,8 @@ const struct ControlInfo thief_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Pacman like game." /* control_details */
+  "Pacman like game.", /* control__details */
+  &thief_get_btn;
 }
 
 const char *thief_get_btn(int type)
@@ -22242,7 +23132,8 @@ const struct ControlInfo 3wonders_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "3rd button mapped in mame but not used (AFAIK). This game has 3 games in 1 and the 2 buttons act differently in each game. There doesn't seem to be anything written on the control panel but for game 1 - Attack, Jump 2 - Attack, Special Attack 3 - Push Block, Push Block" /* control_details */
+  "3rd button mapped in mame but not used (AFAIK). This game has 3 games in 1 and the 2 buttons act differently in each game. There doesn't seem to be anything written on the control panel but for game 1 - Attack, Jump 2 - Attack, Special Attack 3 - Push Block, Push Block", /* control__details */
+  &3wonders_get_btn;
 }
 
 const char *3wonders_get_btn(int type)
@@ -22269,7 +23160,8 @@ const struct ControlInfo thndrbld_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The upright version of this game sported a force-feedback joystick, while the cockpit version used the force-feedback to shake the whole cockpit!" /* control_details */
+  "The upright version of this game sported a force-feedback joystick, while the cockpit version used the force-feedback to shake the whole cockpit!", /* control__details */
+  &thndrbld_get_btn;
 }
 
 const char *thndrbld_get_btn(int type)
@@ -22297,7 +23189,8 @@ const struct ControlInfo thundfox_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Couldn't find a control panel pic. Press Button 1 for close range attack (punching, stabbing), press button 3 to use the weapon (throw grenade, shoot gun). Need to kneel down to pick up the weapons" /* control_details */
+  "Couldn't find a control panel pic. Press Button 1 for close range attack (punching, stabbing), press button 3 to use the weapon (throw grenade, shoot gun). Need to kneel down to pick up the weapons", /* control__details */
+  &thundfox_get_btn;
 }
 
 const char *thundfox_get_btn(int type)
@@ -22324,7 +23217,8 @@ const struct ControlInfo thunderj_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &thunderj_get_btn;
 }
 
 const char *thunderj_get_btn(int type)
@@ -22350,7 +23244,8 @@ const struct ControlInfo tickee_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &tickee_get_btn;
 }
 
 const char *tickee_get_btn(int type)
@@ -22375,7 +23270,8 @@ const struct ControlInfo tigerh_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Shooting the colored crosses provides the following power-ups: White - Forward firing Little Heli, Red - Side Firing Little Heli, Blue - Bomb. A max of two bombs and two little helis are possible. Shooting 10 yellow diamonds awards an additional life." /* control_details */
+  "Shooting the colored crosses provides the following power-ups: White - Forward firing Little Heli, Red - Side Firing Little Heli, Blue - Bomb. A max of two bombs and two little helis are possible. Shooting 10 yellow diamonds awards an additional life.", /* control__details */
+  &tigerh_get_btn;
 }
 
 const char *tigerh_get_btn(int type)
@@ -22401,7 +23297,8 @@ const struct ControlInfo tigeroad_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &tigeroad_get_btn;
 }
 
 const char *tigeroad_get_btn(int type)
@@ -22427,7 +23324,8 @@ const struct ControlInfo timber_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "OTHER:  The two buttons in mame are actually a two-way joystick. The 4-way joystick is for moving and pushing, the buttons (2-way) chops the wood." /* control_details */
+  "OTHER:  The two buttons in mame are actually a two-way joystick. The 4-way joystick is for moving and pushing, the buttons (2-way) chops the wood.", /* control__details */
+  &timber_get_btn;
 }
 
 const char *timber_get_btn(int type)
@@ -22453,7 +23351,8 @@ const struct ControlInfo timecris_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The player uses the pedal to rise up from behind cover. teh cryptic label is posted on the control panel, with a giant arrow pointing down. This is probably to make the player aware that there is a pedal on a gun game, which is obviously quite odd." /* control_details */
+  "The player uses the pedal to rise up from behind cover. teh cryptic label is posted on the control panel, with a giant arrow pointing down. This is probably to make the player aware that there is a pedal on a gun game, which is obviously quite odd.", /* control__details */
+  &timecris_get_btn;
 }
 
 const char *timecris_get_btn(int type)
@@ -22479,7 +23378,8 @@ const struct ControlInfo timekill_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The distinction of left and right on these labels isn't which limb you use, but describes the position of the buttons on the control panel. Each player has two arm and leg buttons and they both do different things, even though they are labeld different. On the original control panel the arm buttons are on the top row and the legs are on the bottom with the head button centered, above both rows. So to play this game properly, some remapping will probably be required." /* control_details */
+  "The distinction of left and right on these labels isn't which limb you use, but describes the position of the buttons on the control panel. Each player has two arm and leg buttons and they both do different things, even though they are labeld different. On the original control panel the arm buttons are on the top row and the legs are on the bottom with the head button centered, above both rows. So to play this game properly, some remapping will probably be required.", /* control__details */
+  &timekill_get_btn;
 }
 
 const char *timekill_get_btn(int type)
@@ -22508,7 +23408,8 @@ const struct ControlInfo timeplt_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &timeplt_get_btn;
 }
 
 const char *timeplt_get_btn(int type)
@@ -22533,7 +23434,8 @@ const struct ControlInfo timesold_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game used a 12 direction mechanical rotary (SNK LS-30)." /* control_details */
+  "This game used a 12 direction mechanical rotary (SNK LS-30).", /* control__details */
+  &timesold_get_btn;
 }
 
 const char *timesold_get_btn(int type)
@@ -22561,7 +23463,8 @@ const struct ControlInfo titlef_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game actually used a pair of digital 'twist sticks'  basically, you moved them up and down as normal, but to press left or right you twist them. Explaining how to play is rather complicated as the game uses combinations of both stick movements to do moves." /* control_details */
+  "The game actually used a pair of digital 'twist sticks'  basically, you moved them up and down as normal, but to press left or right you twist them. Explaining how to play is rather complicated as the game uses combinations of both stick movements to do moves.", /* control__details */
+  &titlef_get_btn;
 }
 
 const char *titlef_get_btn(int type)
@@ -22589,7 +23492,8 @@ const struct ControlInfo toki_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &toki_get_btn;
 }
 
 const char *toki_get_btn(int type)
@@ -22615,7 +23519,8 @@ const struct ControlInfo tmmjprd_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &tmmjprd_get_btn;
 }
 
 const char *tmmjprd_get_btn(int type)
@@ -22635,7 +23540,8 @@ const struct ControlInfo mahmajn_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mahmajn_get_btn;
 }
 
 const char *mahmajn_get_btn(int type)
@@ -22655,7 +23561,8 @@ const struct ControlInfo mahmajn2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mahmajn2_get_btn;
 }
 
 const char *mahmajn2_get_btn(int type)
@@ -22675,7 +23582,8 @@ const struct ControlInfo tokyogal_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &tokyogal_get_btn;
 }
 
 const char *tokyogal_get_btn(int type)
@@ -22695,7 +23603,8 @@ const struct ControlInfo tomahawk_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The cpo has the generic 'control' label under the joystick, which was popular in that era." /* control_details */
+  "The cpo has the generic 'control' label under the joystick, which was popular in that era.", /* control__details */
+  &tomahawk_get_btn;
 }
 
 const char *tomahawk_get_btn(int type)
@@ -22720,7 +23629,8 @@ const struct ControlInfo tontonb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &tontonb_get_btn;
 }
 
 const char *tontonb_get_btn(int type)
@@ -22741,6 +23651,7 @@ const struct ControlInfo toobin_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The buttons are arranged in a flattened pentagon shape, with the point on the bottom. The throw button is the bottom point, above that are the two forward buttons, and the two back buttons on the top. The original CP used the throw button also as the start /* control_details */ Mame has a seperate 'start' button, but both mame's 'throw' and 'start' buttons throw and start. Mame labels the five buttons a little differently than the original CP: 'throw', 'R Paddle Forward', 'L Paddle Forward', 'L Paddle Backward', and 'R Paddle backward'.";
+  &toobin_get_btn;
 }
 
 const char *toobin_get_btn(int type)
@@ -22765,7 +23676,8 @@ const struct ControlInfo topspeed_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game has a ton of extra inputs that show up do to a digital hack. Ignore them as buttons 1-4 is all you need." /* control_details */
+  "This game has a ton of extra inputs that show up do to a digital hack. Ignore them as buttons 1-4 is all you need.", /* control__details */
+  &topspeed_get_btn;
 }
 
 const char *topspeed_get_btn(int type)
@@ -22791,7 +23703,8 @@ const struct ControlInfo totcarn_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The start button is used in the game to speed up or skip hints, and to place mines/bombs." /* control_details */
+  "The start button is used in the game to speed up or skip hints, and to place mines/bombs.", /* control__details */
+  &totcarn_get_btn;
 }
 
 const char *totcarn_get_btn(int type)
@@ -22819,7 +23732,8 @@ const struct ControlInfo tdfever_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "You'll usually only see a two player version of this game as the 4 player used a specialized cocktail cabinet." /* control_details */
+  "You'll usually only see a two player version of this game as the 4 player used a specialized cocktail cabinet.", /* control__details */
+  &tdfever_get_btn;
 }
 
 const char *tdfever_get_btn(int type)
@@ -22847,7 +23761,8 @@ const struct ControlInfo toypop_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The only know control panel image of this game shows two trivia style buttons labeled 'shoot' on either side of the joysticks. Of course this is just a mirrored layout." /* control_details */
+  "The only know control panel image of this game shows two trivia style buttons labeled 'shoot' on either side of the joysticks. Of course this is just a mirrored layout.", /* control__details */
+  &toypop_get_btn;
 }
 
 const char *toypop_get_btn(int type)
@@ -22872,7 +23787,8 @@ const struct ControlInfo trackfld_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &trackfld_get_btn;
 }
 
 const char *trackfld_get_btn(int type)
@@ -22895,7 +23811,8 @@ const struct ControlInfo tranqgun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &tranqgun_get_btn;
 }
 
 const char *tranqgun_get_btn(int type)
@@ -22920,7 +23837,8 @@ const struct ControlInfo trisport_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &trisport_get_btn;
 }
 
 const char *trisport_get_btn(int type)
@@ -22946,7 +23864,8 @@ const struct ControlInfo triplhnt_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This lightgun is actually a shotgun mounted to the cabinet." /* control_details */
+  "This lightgun is actually a shotgun mounted to the cabinet.", /* control__details */
+  &triplhnt_get_btn;
 }
 
 const char *triplhnt_get_btn(int type)
@@ -22971,7 +23890,8 @@ const struct ControlInfo statriv2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game also has two 'play 1000' buttons defined in mame. These appear to be service buttons to change the question packs." /* control_details */
+  "The game also has two 'play 1000' buttons defined in mame. These appear to be service buttons to change the question packs.", /* control__details */
+  &statriv2_get_btn;
 }
 
 const char *statriv2_get_btn(int type)
@@ -22995,7 +23915,8 @@ const struct ControlInfo gtsers8_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The lighted trivia buttons are actually blank, as is the control panel overlay. There are  labeled arrows on the screen that point to the appropriate button. (Note:  even though all sources, evne the original game machines point ot alternating 2 player gameplay, it doesn't seem to work in mame... it's probably a bug.)" /* control_details */
+  "The lighted trivia buttons are actually blank, as is the control panel overlay. There are  labeled arrows on the screen that point to the appropriate button. (Note:  even though all sources, evne the original game machines point ot alternating 2 player gameplay, it doesn't seem to work in mame... it's probably a bug.)", /* control__details */
+  &gtsers8_get_btn;
 }
 
 const char *gtsers8_get_btn(int type)
@@ -23020,7 +23941,8 @@ const struct ControlInfo gt507uk_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The lighted trivia buttons are actually blank, as is the control panel overlay. There are  labeled arrows on the screen that point to the appropriate button. (Note:  even though all sources, evne the original game machines point ot alternating 2 player gameplay, it doesn't seem to work in mame... it's probably a bug.)" /* control_details */
+  "The lighted trivia buttons are actually blank, as is the control panel overlay. There are  labeled arrows on the screen that point to the appropriate button. (Note:  even though all sources, evne the original game machines point ot alternating 2 player gameplay, it doesn't seem to work in mame... it's probably a bug.)", /* control__details */
+  &gt507uk_get_btn;
 }
 
 const char *gt507uk_get_btn(int type)
@@ -23045,7 +23967,8 @@ const struct ControlInfo gt5_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The lighted trivia buttons are actually blank, as is the control panel overlay. There are  labeled arrows on the screen that point to the appropriate button. (Note:  even though all sources, evne the original game machines point ot alternating 2 player gameplay, it doesn't seem to work in mame... it's probably a bug.)" /* control_details */
+  "The lighted trivia buttons are actually blank, as is the control panel overlay. There are  labeled arrows on the screen that point to the appropriate button. (Note:  even though all sources, evne the original game machines point ot alternating 2 player gameplay, it doesn't seem to work in mame... it's probably a bug.)", /* control__details */
+  &gt5_get_btn;
 }
 
 const char *gt5_get_btn(int type)
@@ -23070,7 +23993,8 @@ const struct ControlInfo trvgns_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The lighted trivia buttons are actually blank, as is the contorl panel overlay. The game itself has arrows pointing down to the appropriate button. Also note that buttons a-d also act as the star buttons, again with an arrow pointing towards which is which. (A = 1 player game, B= 2 players, ect)" /* control_details */
+  "The lighted trivia buttons are actually blank, as is the contorl panel overlay. The game itself has arrows pointing down to the appropriate button. Also note that buttons a-d also act as the star buttons, again with an arrow pointing towards which is which. (A = 1 player game, B= 2 players, ect)", /* control__details */
+  &trvgns_get_btn;
 }
 
 const char *trvgns_get_btn(int type)
@@ -23094,7 +24018,8 @@ const struct ControlInfo triviasp_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons." /* control_details */
+  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  &triviasp_get_btn;
 }
 
 const char *triviasp_get_btn(int type)
@@ -23116,7 +24041,8 @@ const struct ControlInfo triviabb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons." /* control_details */
+  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  &triviabb_get_btn;
 }
 
 const char *triviabb_get_btn(int type)
@@ -23138,7 +24064,8 @@ const struct ControlInfo triviag1_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons." /* control_details */
+  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  &triviag1_get_btn;
 }
 
 const char *triviag1_get_btn(int type)
@@ -23160,7 +24087,8 @@ const struct ControlInfo triviag2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons." /* control_details */
+  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  &triviag2_get_btn;
 }
 
 const char *triviag2_get_btn(int type)
@@ -23182,7 +24110,8 @@ const struct ControlInfo triviayp_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons." /* control_details */
+  "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  &triviayp_get_btn;
 }
 
 const char *triviayp_get_btn(int type)
@@ -23204,7 +24133,8 @@ const struct ControlInfo trog_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Like many 4 player games, which character you choose determines which controls you'll use and vice-versa." /* control_details */
+  "Like many 4 player games, which character you choose determines which controls you'll use and vice-versa.", /* control__details */
+  &trog_get_btn;
 }
 
 const char *trog_get_btn(int type)
@@ -23229,7 +24159,8 @@ const struct ControlInfo tron_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joystick in this game was unique. It was an 8-way leaf joystick with a larqe actuator and a diagonal 4-way restrictor making it possible (but difficult) to hit the diagonals. The 4-way mode was useful for the Tanks stage, and necessary for the Light Cycle stage. Controls worked as follows: Light Cycles: The joystick controls the direction of travel and the trigger controls the speed of the bike. Grid Bugs: The stick controls the movement of your character and the spinner controls the direction of fire. Tanks: The stick controls the movement of your tank and the spinner controls the direction of fire. MCP Cone: The stick controls the movement of your character and the spinner controls the direction of fire." /* control_details */
+  "The joystick in this game was unique. It was an 8-way leaf joystick with a larqe actuator and a diagonal 4-way restrictor making it possible (but difficult) to hit the diagonals. The 4-way mode was useful for the Tanks stage, and necessary for the Light Cycle stage. Controls worked as follows: Light Cycles: The joystick controls the direction of travel and the trigger controls the speed of the bike. Grid Bugs: The stick controls the movement of your character and the spinner controls the direction of fire. Tanks: The stick controls the movement of your tank and the spinner controls the direction of fire. MCP Cone: The stick controls the movement of your character and the spinner controls the direction of fire.", /* control__details */
+  &tron_get_btn;
 }
 
 const char *tron_get_btn(int type)
@@ -23256,7 +24187,8 @@ const struct ControlInfo tubep_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "this game doesn't have any labels." /* control_details */
+  "this game doesn't have any labels.", /* control__details */
+  &tubep_get_btn;
 }
 
 const char *tubep_get_btn(int type)
@@ -23281,7 +24213,8 @@ const struct ControlInfo tunhunt_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &tunhunt_get_btn;
 }
 
 const char *tunhunt_get_btn(int type)
@@ -23307,7 +24240,8 @@ const struct ControlInfo turbo_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The shifter doesn't appear to work properly. The lo button seems to act more like a brake than anything else even though the game doesn't have a brake. The hi button toggles gears." /* control_details */
+  "The shifter doesn't appear to work properly. The lo button seems to act more like a brake than anything else even though the game doesn't have a brake. The hi button toggles gears.", /* control__details */
+  &turbo_get_btn;
 }
 
 const char *turbo_get_btn(int type)
@@ -23332,7 +24266,8 @@ const struct ControlInfo turbofrc_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "3rd player in mame not working??" /* control_details */
+  "3rd player in mame not working??", /* control__details */
+  &turbofrc_get_btn;
 }
 
 const char *turbofrc_get_btn(int type)
@@ -23357,7 +24292,8 @@ const struct ControlInfo toutrun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The shifter has a side button for turbo, thus the name of the game." /* control_details */
+  "The shifter has a side button for turbo, thus the name of the game.", /* control__details */
+  &toutrun_get_btn;
 }
 
 const char *toutrun_get_btn(int type)
@@ -23383,7 +24319,8 @@ const struct ControlInfo tshoot_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Grenade Button is actually mounted on top of the machine gun. Technically it counts as a part of the gun, but the button itself is a stock lighted button. This game had an interesting gimmick where feathers were blown in front of the screen between two layers of plexi if a round was successful. Somone should take advantage of mame's switchable artwork system and re-create this effect via a series of feather animations." /* control_details */
+  "The Grenade Button is actually mounted on top of the machine gun. Technically it counts as a part of the gun, but the button itself is a stock lighted button. This game had an interesting gimmick where feathers were blown in front of the screen between two layers of plexi if a round was successful. Somone should take advantage of mame's switchable artwork system and re-create this effect via a series of feather animations.", /* control__details */
+  &tshoot_get_btn;
 }
 
 const char *tshoot_get_btn(int type)
@@ -23410,7 +24347,8 @@ const struct ControlInfo tutankhm_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The fire buttons are actually supposed to be a 2 way joystick, but for whatever reason, the mame driver sets them as buttons." /* control_details */
+  "The fire buttons are actually supposed to be a 2 way joystick, but for whatever reason, the mame driver sets them as buttons.", /* control__details */
+  &tutankhm_get_btn;
 }
 
 const char *tutankhm_get_btn(int type)
@@ -23437,7 +24375,8 @@ const struct ControlInfo twincobr_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &twincobr_get_btn;
 }
 
 const char *twincobr_get_btn(int type)
@@ -23463,7 +24402,8 @@ const struct ControlInfo twineagl_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The conversion kit came with ?Button? and ?Missile? labels even though the flyer and the conversion manual state they are ?Bomb? and ?Missile? buttons" /* control_details */
+  "The conversion kit came with ?Button? and ?Missile? labels even though the flyer and the conversion manual state they are ?Bomb? and ?Missile? buttons", /* control__details */
+  &twineagl_get_btn;
 }
 
 const char *twineagl_get_btn(int type)
@@ -23489,7 +24429,8 @@ const struct ControlInfo twineag2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &twineag2_get_btn;
 }
 
 const char *twineag2_get_btn(int type)
@@ -23516,7 +24457,8 @@ const struct ControlInfo twotiger_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame used to incorrectly define this game as a spinner. Now it properly shows up as a one-axis yoke. The 'misc' entry was added to show that it doesn't use the traditional star wars, 2-axis yoke. The three player start button selects dogfight mode." /* control_details */
+  "Mame used to incorrectly define this game as a spinner. Now it properly shows up as a one-axis yoke. The 'misc' entry was added to show that it doesn't use the traditional star wars, 2-axis yoke. The three player start button selects dogfight mode.", /* control__details */
+  &twotiger_get_btn;
 }
 
 const char *twotiger_get_btn(int type)
@@ -23543,7 +24485,8 @@ const struct ControlInfo earthjkr_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Hold down A to increase shot power" /* control_details */
+  "Hold down A to increase shot power", /* control__details */
+  &earthjkr_get_btn;
 }
 
 const char *earthjkr_get_btn(int type)
@@ -23569,7 +24512,8 @@ const struct ControlInfo unsquad_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &unsquad_get_btn;
 }
 
 const char *unsquad_get_btn(int type)
@@ -23595,7 +24539,8 @@ const struct ControlInfo vball_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "A hits the ball and B jumps." /* control_details */
+  "A hits the ball and B jumps.", /* control__details */
+  &vball_get_btn;
 }
 
 const char *vball_get_btn(int type)
@@ -23621,7 +24566,8 @@ const struct ControlInfo usclssic_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &usclssic_get_btn;
 }
 
 const char *usclssic_get_btn(int type)
@@ -23646,7 +24592,8 @@ const struct ControlInfo ultramhm_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &ultramhm_get_btn;
 }
 
 const char *ultramhm_get_btn(int type)
@@ -23666,7 +24613,8 @@ const struct ControlInfo ultratnk_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &ultratnk_get_btn;
 }
 
 const char *ultratnk_get_btn(int type)
@@ -23691,7 +24639,8 @@ const struct ControlInfo utoukond_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &utoukond_get_btn;
 }
 
 const char *utoukond_get_btn(int type)
@@ -23718,7 +24667,8 @@ const struct ControlInfo undrfire_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The guns second buton is a shotgun pump." /* control_details */
+  "The guns second buton is a shotgun pump.", /* control__details */
+  &undrfire_get_btn;
 }
 
 const char *undrfire_get_btn(int type)
@@ -23744,7 +24694,8 @@ const struct ControlInfo uniwars_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &uniwars_get_btn;
 }
 
 const char *uniwars_get_btn(int type)
@@ -23767,7 +24718,8 @@ const struct ControlInfo upndown_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &upndown_get_btn;
 }
 
 const char *upndown_get_btn(int type)
@@ -23792,7 +24744,8 @@ const struct ControlInfo valkyrie_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Hold down attack button to use magic." /* control_details */
+  "Hold down attack button to use magic.", /* control__details */
+  &valkyrie_get_btn;
 }
 
 const char *valkyrie_get_btn(int type)
@@ -23819,7 +24772,8 @@ const struct ControlInfo vandyke_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &vandyke_get_btn;
 }
 
 const char *vandyke_get_btn(int type)
@@ -23845,7 +24799,8 @@ const struct ControlInfo vanguard_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The buttons on this control panel are arranged in a diamond shape. As each button fires in a different direction it is very difficult to play this game without a diamond patterened layout. Also the joystick is labeled control, but for obvious reasons the labels in this entry have the usual labeling." /* control_details */
+  "The buttons on this control panel are arranged in a diamond shape. As each button fires in a different direction it is very difficult to play this game without a diamond patterened layout. Also the joystick is labeled control, but for obvious reasons the labels in this entry have the usual labeling.", /* control__details */
+  &vanguard_get_btn;
 }
 
 const char *vanguard_get_btn(int type)
@@ -23873,7 +24828,8 @@ const struct ControlInfo varth_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &varth_get_btn;
 }
 
 const char *varth_get_btn(int type)
@@ -23899,7 +24855,8 @@ const struct ControlInfo vendetta_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &vendetta_get_btn;
 }
 
 const char *vendetta_get_btn(int type)
@@ -23925,7 +24882,8 @@ const struct ControlInfo venture_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &venture_get_btn;
 }
 
 const char *venture_get_btn(int type)
@@ -23950,7 +24908,8 @@ const struct ControlInfo victory_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game used a tempest style spinner, three round lighted buttons for normal functions, and a large, rectangular, trivia-style button for the doomsday weapon activation." /* control_details */
+  "The game used a tempest style spinner, three round lighted buttons for normal functions, and a large, rectangular, trivia-style button for the doomsday weapon activation.", /* control__details */
+  &victory_get_btn;
 }
 
 const char *victory_get_btn(int type)
@@ -23976,7 +24935,8 @@ const struct ControlInfo victroad_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &victroad_get_btn;
 }
 
 const char *victroad_get_btn(int type)
@@ -24004,7 +24964,8 @@ const struct ControlInfo hustler_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The joystick is a twist joystick." /* control_details */
+  "The joystick is a twist joystick.", /* control__details */
+  &hustler_get_btn;
 }
 
 const char *hustler_get_btn(int type)
@@ -24027,7 +24988,8 @@ const struct ControlInfo videopin_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game had a control panel that repliactes real pinball controls. It even had a section you could nudge in the front and a plunger. The plunger appears to be digital, but since it really adds to the feel of the game, I tacked on the 'other' flag. The hardcoded defaults for the flippers are left ctrl and right ctrl. It is suggested that you place a videopin.ini in your personal ctrlr folder and remap them to match visual pinball defaults." /* control_details */
+  "This game had a control panel that repliactes real pinball controls. It even had a section you could nudge in the front and a plunger. The plunger appears to be digital, but since it really adds to the feel of the game, I tacked on the 'other' flag. The hardcoded defaults for the flippers are left ctrl and right ctrl. It is suggested that you place a videopin.ini in your personal ctrlr folder and remap them to match visual pinball defaults.", /* control__details */
+  &videopin_get_btn;
 }
 
 const char *videopin_get_btn(int type)
@@ -24052,7 +25014,8 @@ const struct ControlInfo vigilant_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game lacks labels for the buttons, even on the official cpo and in the manual. These are simply the actions they do. Trivia:  The cpo of this game has 'I'm Bad!' graffiti on it which is a tribute to the game BadDudes, relased by the same company eariler that year. In that game the character would yell the phrase at the end of each level." /* control_details */
+  "This game lacks labels for the buttons, even on the official cpo and in the manual. These are simply the actions they do. Trivia:  The cpo of this game has 'I'm Bad!' graffiti on it which is a tribute to the game BadDudes, relased by the same company eariler that year. In that game the character would yell the phrase at the end of each level.", /* control__details */
+  &vigilant_get_btn;
 }
 
 const char *vigilant_get_btn(int type)
@@ -24078,7 +25041,8 @@ const struct ControlInfo vimana_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "If you hold the shoot button for a while you increase the spread of your bullets." /* control_details */
+  "If you hold the shoot button for a while you increase the spread of your bullets.", /* control__details */
+  &vimana_get_btn;
 }
 
 const char *vimana_get_btn(int type)
@@ -24105,7 +25069,8 @@ const struct ControlInfo vindictr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "There are two button on each stick (trigger and thumb buttons). The thumb buttons are to rotate the tanks' turrent if you bought the ability to rotate (and it's not damaged). The right trigger is the normal fire button, the left trigger button is to fire the special weapon. If you have different types of special weapons, the start is used to switch between the different types. The odd numbered buttons are the triggers and the even numbered ones are the thumb switches for the left and right joysticks respectively. Note:  If you have cheats enabled the game inputs are hacked to use a 4way joystick as the controls. There isn't an option to turn it off in the cheat menu, so if you wish to play the game correctly, turn cheats off." /* control_details */
+  "There are two button on each stick (trigger and thumb buttons). The thumb buttons are to rotate the tanks' turrent if you bought the ability to rotate (and it's not damaged). The right trigger is the normal fire button, the left trigger button is to fire the special weapon. If you have different types of special weapons, the start is used to switch between the different types. The odd numbered buttons are the triggers and the even numbered ones are the thumb switches for the left and right joysticks respectively. Note:  If you have cheats enabled the game inputs are hacked to use a 4way joystick as the controls. There isn't an option to turn it off in the cheat menu, so if you wish to play the game correctly, turn cheats off.", /* control__details */
+  &vindictr_get_btn;
 }
 
 const char *vindictr_get_btn(int type)
@@ -24133,7 +25098,8 @@ const struct ControlInfo vindctr2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "There are two button on each stick (trigger and thumb buttons). The thumb buttons are to rotate the tanks' turrent if you bought the ability to rotate (and it's not damaged). The right trigger is the normal fire button, the left trigger button is to fire the special weapon. If you have different types of special weapons, the start is used to switch between the different types. The odd numbered buttons are the trigger sticks and the even numbered ones are the thumbsticks on the left and right stck respectively." /* control_details */
+  "There are two button on each stick (trigger and thumb buttons). The thumb buttons are to rotate the tanks' turrent if you bought the ability to rotate (and it's not damaged). The right trigger is the normal fire button, the left trigger button is to fire the special weapon. If you have different types of special weapons, the start is used to switch between the different types. The odd numbered buttons are the trigger sticks and the even numbered ones are the thumbsticks on the left and right stck respectively.", /* control__details */
+  &vindctr2_get_btn;
 }
 
 const char *vindctr2_get_btn(int type)
@@ -24161,7 +25127,8 @@ const struct ControlInfo viofight_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "As this game is a taito game, it is generally sold as a convrsion kit with the buttons mounted in a 'double dragon' layout with the punch/kick buttons at the bottom of the triangle. Pressing punch and jump at the smae time does a special move. Also the offical cpo doesn't have any labels for anything. This is based on parts of the manual and documentation for teh game." /* control_details */
+  "As this game is a taito game, it is generally sold as a convrsion kit with the buttons mounted in a 'double dragon' layout with the punch/kick buttons at the bottom of the triangle. Pressing punch and jump at the smae time does a special move. Also the offical cpo doesn't have any labels for anything. This is based on parts of the manual and documentation for teh game.", /* control__details */
+  &viofight_get_btn;
 }
 
 const char *viofight_get_btn(int type)
@@ -24188,7 +25155,8 @@ const struct ControlInfo viper_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game actually uses two trigger sticks that are mounted stationary on the montior, which moves as you pull on the sticks. As you pull, the area of the screen moves as well. This gives the illusion that you are manning a gun turrent. Each stick has two thumb buttons but there are only two inputs. To confuse things even more, both inputs do the same thing. (Fire)" /* control_details */
+  "This game actually uses two trigger sticks that are mounted stationary on the montior, which moves as you pull on the sticks. As you pull, the area of the screen moves as well. This gives the illusion that you are manning a gun turrent. Each stick has two thumb buttons but there are only two inputs. To confuse things even more, both inputs do the same thing. (Fire)", /* control__details */
+  &viper_get_btn;
 }
 
 const char *viper_get_btn(int type)
@@ -24214,7 +25182,8 @@ const struct ControlInfo vf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that on a real vf cabinet the defense button was to the left adn slightly below the punch button. Those of you with neogeo layouts shoudl have not problem replicating the layout." /* control_details */
+  "Note that on a real vf cabinet the defense button was to the left adn slightly below the punch button. Those of you with neogeo layouts shoudl have not problem replicating the layout.", /* control__details */
+  &vf_get_btn;
 }
 
 const char *vf_get_btn(int type)
@@ -24241,7 +25210,8 @@ const struct ControlInfo vf2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Note that on a real vf2 cabinet the defense button was to the left adn slightly below the punch button. Those of you with neogeo layouts shoudl have not problem replicating the layout." /* control_details */
+  "Note that on a real vf2 cabinet the defense button was to the left adn slightly below the punch button. Those of you with neogeo layouts shoudl have not problem replicating the layout.", /* control__details */
+  &vf2_get_btn;
 }
 
 const char *vf2_get_btn(int type)
@@ -24268,7 +25238,8 @@ const struct ControlInfo vsgongf_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vsgongf_get_btn;
 }
 
 const char *vsgongf_get_btn(int type)
@@ -24294,7 +25265,8 @@ const struct ControlInfo rbibb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &rbibb_get_btn;
 }
 
 const char *rbibb_get_btn(int type)
@@ -24320,7 +25292,8 @@ const struct ControlInfo balonfgt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &balonfgt_get_btn;
 }
 
 const char *balonfgt_get_btn(int type)
@@ -24346,7 +25319,8 @@ const struct ControlInfo vsbball_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vsbball_get_btn;
 }
 
 const char *vsbball_get_btn(int type)
@@ -24372,7 +25346,8 @@ const struct ControlInfo btlecity_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &btlecity_get_btn;
 }
 
 const char *btlecity_get_btn(int type)
@@ -24398,7 +25373,8 @@ const struct ControlInfo cstlevna_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &cstlevna_get_btn;
 }
 
 const char *cstlevna_get_btn(int type)
@@ -24424,7 +25400,8 @@ const struct ControlInfo cluclu_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &cluclu_get_btn;
 }
 
 const char *cluclu_get_btn(int type)
@@ -24450,7 +25427,8 @@ const struct ControlInfo drmario_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &drmario_get_btn;
 }
 
 const char *drmario_get_btn(int type)
@@ -24476,7 +25454,8 @@ const struct ControlInfo duckhunt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &duckhunt_get_btn;
 }
 
 const char *duckhunt_get_btn(int type)
@@ -24502,7 +25481,8 @@ const struct ControlInfo excitebk_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &excitebk_get_btn;
 }
 
 const char *excitebk_get_btn(int type)
@@ -24528,7 +25508,8 @@ const struct ControlInfo vsfdf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vsfdf_get_btn;
 }
 
 const char *vsfdf_get_btn(int type)
@@ -24554,7 +25535,8 @@ const struct ControlInfo vsgradus_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vsgradus_get_btn;
 }
 
 const char *vsgradus_get_btn(int type)
@@ -24580,7 +25562,8 @@ const struct ControlInfo vsgshoe_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vsgshoe_get_btn;
 }
 
 const char *vsgshoe_get_btn(int type)
@@ -24605,7 +25588,8 @@ const struct ControlInfo hogalley_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &hogalley_get_btn;
 }
 
 const char *hogalley_get_btn(int type)
@@ -24630,7 +25614,8 @@ const struct ControlInfo hotsmash_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. This game is unique to the system in that it uses a spinner. As it's one of the last games released for the system, it can be assumed that this is the only vs game to do so." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. This game is unique to the system in that it uses a spinner. As it's one of the last games released for the system, it can be assumed that this is the only vs game to do so.", /* control__details */
+  &hotsmash_get_btn;
 }
 
 const char *hotsmash_get_btn(int type)
@@ -24652,7 +25637,8 @@ const struct ControlInfo iceclimb_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &iceclimb_get_btn;
 }
 
 const char *iceclimb_get_btn(int type)
@@ -24678,7 +25664,8 @@ const struct ControlInfo iceclmrj_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &iceclmrj_get_btn;
 }
 
 const char *iceclmrj_get_btn(int type)
@@ -24704,7 +25691,8 @@ const struct ControlInfo machridr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &machridr_get_btn;
 }
 
 const char *machridr_get_btn(int type)
@@ -24730,7 +25718,8 @@ const struct ControlInfo vsmahjng_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &vsmahjng_get_btn;
 }
 
 const char *vsmahjng_get_btn(int type)
@@ -24750,7 +25739,8 @@ const struct ControlInfo mightybj_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &mightybj_get_btn;
 }
 
 const char *mightybj_get_btn(int type)
@@ -24776,7 +25766,8 @@ const struct ControlInfo jajamaru_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &jajamaru_get_btn;
 }
 
 const char *jajamaru_get_btn(int type)
@@ -24802,7 +25793,8 @@ const struct ControlInfo vspinbal_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vspinbal_get_btn;
 }
 
 const char *vspinbal_get_btn(int type)
@@ -24828,7 +25820,8 @@ const struct ControlInfo platoon_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &platoon_get_btn;
 }
 
 const char *platoon_get_btn(int type)
@@ -24854,7 +25847,8 @@ const struct ControlInfo bnglngby_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &bnglngby_get_btn;
 }
 
 const char *bnglngby_get_btn(int type)
@@ -24880,7 +25874,8 @@ const struct ControlInfo vsslalom_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vsslalom_get_btn;
 }
 
 const char *vsslalom_get_btn(int type)
@@ -24905,7 +25900,8 @@ const struct ControlInfo vssoccer_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vssoccer_get_btn;
 }
 
 const char *vssoccer_get_btn(int type)
@@ -24931,7 +25927,8 @@ const struct ControlInfo starlstr_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &starlstr_get_btn;
 }
 
 const char *starlstr_get_btn(int type)
@@ -24957,7 +25954,8 @@ const struct ControlInfo smgolf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &smgolf_get_btn;
 }
 
 const char *smgolf_get_btn(int type)
@@ -24983,7 +25981,8 @@ const struct ControlInfo suprmrio_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &suprmrio_get_btn;
 }
 
 const char *suprmrio_get_btn(int type)
@@ -25009,7 +26008,8 @@ const struct ControlInfo vsskykid_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vsskykid_get_btn;
 }
 
 const char *vsskykid_get_btn(int type)
@@ -25035,7 +26035,8 @@ const struct ControlInfo supxevs_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &supxevs_get_btn;
 }
 
 const char *supxevs_get_btn(int type)
@@ -25061,7 +26062,8 @@ const struct ControlInfo tkoboxng_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &tkoboxng_get_btn;
 }
 
 const char *tkoboxng_get_btn(int type)
@@ -25087,7 +26089,8 @@ const struct ControlInfo vstennis_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B button, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B button, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vstennis_get_btn;
 }
 
 const char *vstennis_get_btn(int type)
@@ -25113,7 +26116,8 @@ const struct ControlInfo vstetris_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &vstetris_get_btn;
 }
 
 const char *vstetris_get_btn(int type)
@@ -25139,7 +26143,8 @@ const struct ControlInfo goonies_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &goonies_get_btn;
 }
 
 const char *goonies_get_btn(int type)
@@ -25165,7 +26170,8 @@ const struct ControlInfo topgun_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  &topgun_get_btn;
 }
 
 const char *topgun_get_btn(int type)
@@ -25191,7 +26197,8 @@ const struct ControlInfo wrecking_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. This cabinet is really two cabinets joined together. Two pairs of people can play two different games at the same time." /* control_details */
+  "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. This cabinet is really two cabinets joined together. Two pairs of people can play two different games at the same time.", /* control__details */
+  &wrecking_get_btn;
 }
 
 const char *wrecking_get_btn(int type)
@@ -25218,6 +26225,7 @@ const struct ControlInfo wacko_ctrls
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The trackball moves the player. There are two 4-way joysticks, one one each side of the trackball, but they are both wired to the same input. Mame maps both sticks to the left stick of a dual stick combo to avoid the conflicting default keyboard mapping of the normal joystick and the trackball /* control_details */ mame's right stick input type is not used. (Note for HowardC:  Accepted for now, but I'll try to get the mame devs to accept a fixed one. Remapping to avoid conflict is silly as almost everyone maps the 'left joystick' to match their regular joystick. Now if it was mapped to joystick right then I could have seen it.)  Keep an eye on this game for driver changes.";
+  &wacko_get_btn;
 }
 
 const char *wacko_get_btn(int type)
@@ -25249,7 +26257,8 @@ const struct ControlInfo mj4simai_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &mj4simai_get_btn;
 }
 
 const char *mj4simai_get_btn(int type)
@@ -25269,7 +26278,8 @@ const struct ControlInfo wargods_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The game uses the same williams/midway classic 'X' layout, so remapping will be required. The only difference is the run button hs ben replaced with a lighted 3d button, which allows you to move on the z-axis. It should be noted that not all revisions use the lighted button and many use a standard pushbutton with the mk3 layout." /* control_details */
+  "The game uses the same williams/midway classic 'X' layout, so remapping will be required. The only difference is the run button hs ben replaced with a lighted 3d button, which allows you to move on the z-axis. It should be noted that not all revisions use the lighted button and many use a standard pushbutton with the mk3 layout.", /* control__details */
+  &wargods_get_btn;
 }
 
 const char *wargods_get_btn(int type)
@@ -25299,7 +26309,8 @@ const struct ControlInfo wotw_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &wotw_get_btn;
 }
 
 const char *wotw_get_btn(int type)
@@ -25323,7 +26334,8 @@ const struct ControlInfo warlords_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The player buttons simply start the game. They do not do anything else and the mame start buttons are deactivated in this game." /* control_details */
+  "The player buttons simply start the game. They do not do anything else and the mame start buttons are deactivated in this game.", /* control__details */
+  &warlords_get_btn;
 }
 
 const char *warlords_get_btn(int type)
@@ -25346,7 +26358,8 @@ const struct ControlInfo warpwarp_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is also known as Warp Warp." /* control_details */
+  "This game is also known as Warp Warp.", /* control__details */
+  &warpwarp_get_btn;
 }
 
 const char *warpwarp_get_btn(int type)
@@ -25371,7 +26384,8 @@ const struct ControlInfo warrior_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Warrior had two top fire style joysticks, one per player. Moving the joystick would move your knight. Moving the joystick while pressing the button swings the knights sword. You cannot move and fight simultaneously. Movement directions are relative to the screen, not the direction the night is fighting. ie: Left is always toward the left of the screen. The knights are almost always facing each other." /* control_details */
+  "Warrior had two top fire style joysticks, one per player. Moving the joystick would move your knight. Moving the joystick while pressing the button swings the knights sword. You cannot move and fight simultaneously. Movement directions are relative to the screen, not the direction the night is fighting. ie: Left is always toward the left of the screen. The knights are almost always facing each other.", /* control__details */
+  &warrior_get_btn;
 }
 
 const char *warrior_get_btn(int type)
@@ -25396,7 +26410,8 @@ const struct ControlInfo suzume_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play." /* control_details */
+  "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  &suzume_get_btn;
 }
 
 const char *suzume_get_btn(int type)
@@ -25416,7 +26431,8 @@ const struct ControlInfo wecleman_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &wecleman_get_btn;
 }
 
 const char *wecleman_get_btn(int type)
@@ -25442,7 +26458,8 @@ const struct ControlInfo wfortune_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is just like the tv show. Everyone spins the same wheel which is mapped to player one's controls. The wheel is a glorified, oversized, spinner with a wof 'wheel' sticker on top of it. When not spinning, the wheel moves the cursor while the select button selects the action highlighted. It should be noted that the wheel won't spin left while in 'spin the wheel' mode." /* control_details */
+  "This game is just like the tv show. Everyone spins the same wheel which is mapped to player one's controls. The wheel is a glorified, oversized, spinner with a wof 'wheel' sticker on top of it. When not spinning, the wheel moves the cursor while the select button selects the action highlighted. It should be noted that the wheel won't spin left while in 'spin the wheel' mode.", /* control__details */
+  &wfortune_get_btn;
 }
 
 const char *wfortune_get_btn(int type)
@@ -25471,7 +26488,8 @@ const struct ControlInfo whodunit_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game actually used a mounted lightgun (or light shotgun I should say) but the 'other' flag that we generally tag onto special controls isn't needed as the game plays just fine with an unmounted lightgun and there have been arcade conversions utilizing unmounted guns." /* control_details */
+  "This game actually used a mounted lightgun (or light shotgun I should say) but the 'other' flag that we generally tag onto special controls isn't needed as the game plays just fine with an unmounted lightgun and there have been arcade conversions utilizing unmounted guns.", /* control__details */
+  &whodunit_get_btn;
 }
 
 const char *whodunit_get_btn(int type)
@@ -25496,7 +26514,8 @@ const struct ControlInfo wildfang_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Special transforms your warrior into a small guy riding a tiger" /* control_details */
+  "Special transforms your warrior into a small guy riding a tiger", /* control__details */
+  &wildfang_get_btn;
 }
 
 const char *wildfang_get_btn(int type)
@@ -25523,7 +26542,8 @@ const struct ControlInfo moo_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Combinations of Jump, Shoot and a Direction perform various special moves. They are listed on screen as you run across them." /* control_details */
+  "Combinations of Jump, Shoot and a Direction perform various special moves. They are listed on screen as you run across them.", /* control__details */
+  &moo_get_btn;
 }
 
 const char *moo_get_btn(int type)
@@ -25549,7 +26569,8 @@ const struct ControlInfo willow_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Holding attack button will increase the power of the attack" /* control_details */
+  "Holding attack button will increase the power of the attack", /* control__details */
+  &willow_get_btn;
 }
 
 const char *willow_get_btn(int type)
@@ -25575,7 +26596,8 @@ const struct ControlInfo wizdfire_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &wizdfire_get_btn;
 }
 
 const char *wizdfire_get_btn(int type)
@@ -25601,7 +26623,8 @@ const struct ControlInfo wow_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The original game had a fire button on the left and a ball top joystick on the left." /* control_details */
+  "The original game had a fire button on the left and a ball top joystick on the left.", /* control__details */
+  &wow_get_btn;
 }
 
 const char *wow_get_btn(int type)
@@ -25626,7 +26649,8 @@ const struct ControlInfo wolfpack_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &wolfpack_get_btn;
 }
 
 const char *wolfpack_get_btn(int type)
@@ -25649,7 +26673,8 @@ const struct ControlInfo wboy_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &wboy_get_btn;
 }
 
 const char *wboy_get_btn(int type)
@@ -25673,7 +26698,8 @@ const struct ControlInfo wbml_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &wbml_get_btn;
 }
 
 const char *wbml_get_btn(int type)
@@ -25699,7 +26725,8 @@ const struct ControlInfo wbeachvl_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "3rd button is mapped but not known what it does" /* control_details */
+  "3rd button is mapped but not known what it does", /* control__details */
+  &wbeachvl_get_btn;
 }
 
 const char *wbeachvl_get_btn(int type)
@@ -25726,7 +26753,8 @@ const struct ControlInfo wcbowl_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "When looking in the tab menu it would seem the game is only 2 player, however it is a 4 player game with each player entering the game by pressing the Player1 start button (on the control panel it is just a Start button). Player 2 start button is mapped but doesn?t do anything" /* control_details */
+  "When looking in the tab menu it would seem the game is only 2 player, however it is a 4 player game with each player entering the game by pressing the Player1 start button (on the control panel it is just a Start button). Player 2 start button is mapped but doesn?t do anything", /* control__details */
+  &wcbowl_get_btn;
 }
 
 const char *wcbowl_get_btn(int type)
@@ -25752,7 +26780,8 @@ const struct ControlInfo wcbowldx_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &wcbowldx_get_btn;
 }
 
 const char *wcbowldx_get_btn(int type)
@@ -25779,6 +26808,7 @@ const struct ControlInfo wseries_ctrls
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This is a simultaneous 2 player alternating game /* control_details */ a player is on the left side when pitching, on the right side when batting. The aim button is shown with two physical buttons wired to one pin in the schematics. All buttons are on one input port in the machine; mame puts them all as player 1 inputs, but on the 2 player game, the aim button(s) is more like a player 2 button. (On a one player game, all inputs are like player 1 inputs.)";
+  &wseries_get_btn;
 }
 
 const char *wseries_get_btn(int type)
@@ -25811,7 +26841,8 @@ const struct ControlInfo wsf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "A and B both do varouis things, depending upon the situation." /* control_details */
+  "A and B both do varouis things, depending upon the situation.", /* control__details */
+  &wsf_get_btn;
 }
 
 const char *wsf_get_btn(int type)
@@ -25837,7 +26868,8 @@ const struct ControlInfo wtennis_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The label for the button is unknown. I took an educated guess and take full responsibility for it's accuracy." /* control_details */
+  "The label for the button is unknown. I took an educated guess and take full responsibility for it's accuracy.", /* control__details */
+  &wtennis_get_btn;
 }
 
 const char *wtennis_get_btn(int type)
@@ -25862,7 +26894,8 @@ const struct ControlInfo wwfsstar_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Press button A to punch, button B to kick. As with all WWF games, the two buttons do a number of things by pressing different combinations at different times including pin, ect. If anyone wishes to make a list please do so here." /* control_details */
+  "Press button A to punch, button B to kick. As with all WWF games, the two buttons do a number of things by pressing different combinations at different times including pin, ect. If anyone wishes to make a list please do so here.", /* control__details */
+  &wwfsstar_get_btn;
 }
 
 const char *wwfsstar_get_btn(int type)
@@ -25888,7 +26921,8 @@ const struct ControlInfo wwfwfest_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The A and B buttons do various things depending upon the wrestler and the situation. Generally when you can do something special you recieve a message on the screen on how to do so." /* control_details */
+  "The A and B buttons do various things depending upon the wrestler and the situation. Generally when you can do something special you recieve a message on the screen on how to do so.", /* control__details */
+  &wwfwfest_get_btn;
 }
 
 const char *wwfwfest_get_btn(int type)
@@ -25914,7 +26948,8 @@ const struct ControlInfo wwfmania_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game has the same mame-related layout problems as the mk games. The X pattern applies. Press punch and kick at the same time to run. Note that the punch buttons are on the top row and the kick buttons are on the bottom, unlike the mk games and similar to sf games." /* control_details */
+  "This game has the same mame-related layout problems as the mk games. The X pattern applies. Press punch and kick at the same time to run. Note that the punch buttons are on the top row and the kick buttons are on the bottom, unlike the mk games and similar to sf games.", /* control__details */
+  &wwfmania_get_btn;
 }
 
 const char *wwfmania_get_btn(int type)
@@ -25943,7 +26978,8 @@ const struct ControlInfo xmen_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &xmen_get_btn;
 }
 
 const char *xmen_get_btn(int type)
@@ -25970,7 +27006,8 @@ const struct ControlInfo xmvsf_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &xmvsf_get_btn;
 }
 
 const char *xmvsf_get_btn(int type)
@@ -26000,7 +27037,8 @@ const struct ControlInfo xmcota_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &xmcota_get_btn;
 }
 
 const char *xmcota_get_btn(int type)
@@ -26030,7 +27068,8 @@ const struct ControlInfo xsleena_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Pressing the jump button while already in the air will do a second jump boost. Much of the data on this game is purely speculative as it is a copy of Solar Warrior. It is assumed that they use the same labels." /* control_details */
+  "Pressing the jump button while already in the air will do a second jump boost. Much of the data on this game is purely speculative as it is a copy of Solar Warrior. It is assumed that they use the same labels.", /* control__details */
+  &xsleena_get_btn;
 }
 
 const char *xsleena_get_btn(int type)
@@ -26056,7 +27095,8 @@ const struct ControlInfo xenophob_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This trigger stick has two thumb buttons in additon to the normal fire button. The left and right buttons each do over a dozen things, with what they do depending upon the message displayed on the screen at the time. They are appropriately labeled 'left button' and 'right button' on the screen." /* control_details */
+  "This trigger stick has two thumb buttons in additon to the normal fire button. The left and right buttons each do over a dozen things, with what they do depending upon the message displayed on the screen at the time. They are appropriately labeled 'left button' and 'right button' on the screen.", /* control__details */
+  &xenophob_get_btn;
 }
 
 const char *xenophob_get_btn(int type)
@@ -26083,7 +27123,8 @@ const struct ControlInfo xevious_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The labels on the original cpo are the ones in this entry, however they don't really apply to what the buttons do. Button 1 shoots and Button 2 Fires bombs. Because of this the button labels may be swapped as I don't have access to a real machine." /* control_details */
+  "The labels on the original cpo are the ones in this entry, however they don't really apply to what the buttons do. Button 1 shoots and Button 2 Fires bombs. Because of this the button labels may be swapped as I don't have access to a real machine.", /* control__details */
+  &xevious_get_btn;
 }
 
 const char *xevious_get_btn(int type)
@@ -26109,7 +27150,8 @@ const struct ControlInfo xybots_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game used a twist stick, not to be confused with a rotary mechanical stick. Basically you can twist the stick left and right for two additional inputs." /* control_details */
+  "This game used a twist stick, not to be confused with a rotary mechanical stick. Basically you can twist the stick left and right for two additional inputs.", /* control__details */
+  &xybots_get_btn;
 }
 
 const char *xybots_get_btn(int type)
@@ -26136,7 +27178,8 @@ const struct ControlInfo yesnoj_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &yesnoj_get_btn;
 }
 
 const char *yesnoj_get_btn(int type)
@@ -26158,7 +27201,8 @@ const struct ControlInfo yiear_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &yiear_get_btn;
 }
 
 const char *yiear_get_btn(int type)
@@ -26184,7 +27228,8 @@ const struct ControlInfo yosakdon_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &yosakdon_get_btn;
 }
 
 const char *yosakdon_get_btn(int type)
@@ -26207,7 +27252,8 @@ const struct ControlInfo yuyugogo_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Game in Japanese. No references available. Buttons relate to the numbers on the screen." /* control_details */
+  "Game in Japanese. No references available. Buttons relate to the numbers on the screen.", /* control__details */
+  &yuyugogo_get_btn;
 }
 
 const char *yuyugogo_get_btn(int type)
@@ -26232,7 +27278,8 @@ const struct ControlInfo zaxxon_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The fire button is also placed on the control panel. The button on the trigger stick lights up when it's time for you to do some shooting." /* control_details */
+  "The fire button is also placed on the control panel. The button on the trigger stick lights up when it's time for you to do some shooting.", /* control__details */
+  &zaxxon_get_btn;
 }
 
 const char *zaxxon_get_btn(int type)
@@ -26257,7 +27304,8 @@ const struct ControlInfo zerohour_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &zerohour_get_btn;
 }
 
 const char *zerohour_get_btn(int type)
@@ -26282,7 +27330,8 @@ const struct ControlInfo zeropnt_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &zeropnt_get_btn;
 }
 
 const char *zeropnt_get_btn(int type)
@@ -26307,7 +27356,8 @@ const struct ControlInfo zeropnt2_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &zeropnt2_get_btn;
 }
 
 const char *zeropnt2_get_btn(int type)
@@ -26332,7 +27382,8 @@ const struct ControlInfo zerowing_ctrls
   true, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Control wise this game is pretty standard, but the game's claim to fame is the wording of the translated text, or more accurately the poor wording of the translated text. This is commonly referred to as 'Engrish'  Ever wondered where the 'All Your Base Are Belong To Us.' line comes from?  It's this game. So for a good laugh check it out. All your controls are belong to us!!!!" /* control_details */
+  "Control wise this game is pretty standard, but the game's claim to fame is the wording of the translated text, or more accurately the poor wording of the translated text. This is commonly referred to as 'Engrish'  Ever wondered where the 'All Your Base Are Belong To Us.' line comes from?  It's this game. So for a good laugh check it out. All your controls are belong to us!!!!", /* control__details */
+  &zerowing_get_btn;
 }
 
 const char *zerowing_get_btn(int type)
@@ -26358,7 +27409,8 @@ const struct ControlInfo zerozone_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &zerozone_get_btn;
 }
 
 const char *zerozone_get_btn(int type)
@@ -26383,7 +27435,8 @@ const struct ControlInfo zigzag_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game is a pirated version of digdug. With the execption of a new title, the game plays exactly the same." /* control_details */
+  "This game is a pirated version of digdug. With the execption of a new title, the game plays exactly the same.", /* control__details */
+  &zigzag_get_btn;
 }
 
 const char *zigzag_get_btn(int type)
@@ -26408,7 +27461,8 @@ const struct ControlInfo zingzip_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &zingzip_get_btn;
 }
 
 const char *zingzip_get_btn(int type)
@@ -26434,7 +27488,8 @@ const struct ControlInfo zoar_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This is probably the only 2d shooter ever to utilize the z axis. Instead of being able to speedup or slowdown with the up and down directions, these directions allow you to make the craft raise or lower to the ground. The top speed key doesn't appear to do anything until you try to move left or right. When you do you will move much more quickly." /* control_details */
+  "This is probably the only 2d shooter ever to utilize the z axis. Instead of being able to speedup or slowdown with the up and down directions, these directions allow you to make the craft raise or lower to the ground. The top speed key doesn't appear to do anything until you try to move left or right. When you do you will move much more quickly.", /* control__details */
+  &zoar_get_btn;
 }
 
 const char *zoar_get_btn(int type)
@@ -26461,7 +27516,8 @@ const struct ControlInfo zodiack_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &zodiack_get_btn;
 }
 
 const char *zodiack_get_btn(int type)
@@ -26486,7 +27542,8 @@ const struct ControlInfo zombraid_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Controls were sawed-off shotguns with pump action reload, this is mapped to button 2" /* control_details */
+  "Controls were sawed-off shotguns with pump action reload, this is mapped to button 2", /* control__details */
+  &zombraid_get_btn;
 }
 
 const char *zombraid_get_btn(int type)
@@ -26512,7 +27569,8 @@ const struct ControlInfo zookeep_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &zookeep_get_btn;
 }
 
 const char *zookeep_get_btn(int type)
@@ -26537,7 +27595,8 @@ const struct ControlInfo zunkyou_ctrls
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &zunkyou_get_btn;
 }
 
 const char *zunkyou_get_btn(int type)
@@ -26563,7 +27622,8 @@ const struct ControlInfo zwackery_ctrls
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "This game has an identical control panel layout as discs of tron. Unfortunately due to the fact that it's a platformer, it is extremely akward to play unless you have those exact controls." /* control_details */
+  "This game has an identical control panel layout as discs of tron. Unfortunately due to the fact that it's a platformer, it is extremely akward to play unless you have those exact controls.", /* control__details */
+  &zwackery_get_btn;
 }
 
 const char *zwackery_get_btn(int type)
@@ -26593,7 +27653,8 @@ const struct ControlInfo zzyzzyxx_ctrls
   false, /* has_tilt */
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "" /* control_details */
+  "", /* control_details */
+  &zzyzzyxx_get_btn;
 }
 
 const char *zzyzzyxx_get_btn(int type)
