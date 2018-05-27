@@ -846,10 +846,10 @@ struct ipd inputport_defaults[] =
   { (IPT_LIGHTGUN_Y | IPF_PLAYER8)+IPT_EXTENSION,                "Lightgun Y 8", SEQ_DEF_1(JOYCODE_8_DOWN) },
 
   { IPT_UNKNOWN,             "UNKNOWN",         SEQ_DEF_0 },
-  { IPT_OSD_RESERVED,        "",                SEQ_DEF_0 },
-  { IPT_OSD_RESERVED,        "",                SEQ_DEF_0 },
-  { IPT_OSD_RESERVED,        "",                SEQ_DEF_0 },
-  { IPT_OSD_RESERVED,        "",                SEQ_DEF_0 },
+  { IPT_OSD_DESCRIPTION,        "",                SEQ_DEF_0 },
+  { IPT_OSD_DESCRIPTION,        "",                SEQ_DEF_0 },
+  { IPT_OSD_DESCRIPTION,        "",                SEQ_DEF_0 },
+  { IPT_OSD_DESCRIPTION,        "",                SEQ_DEF_0 },
   { IPT_END,                 0,                 SEQ_DEF_0 }  /* returned when there is no match */
 };
 

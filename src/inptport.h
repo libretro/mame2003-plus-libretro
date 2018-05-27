@@ -35,6 +35,16 @@ struct InputPort
 	InputSeq seq;                  	/* input sequence affecting the input bits */
 };
 
+struct ControlInfo
+{
+  const unsigned num_players;
+  const bool alternating_controls;
+  const bool mirrored_controls;
+  const bool has_tilt;
+  const bool has_cocktail_dipswitch;
+  const bool uses_service;
+  const char *control_details;
+};
 
 #define IP_ACTIVE_HIGH 0x0000
 #define IP_ACTIVE_LOW 0xffff
@@ -71,7 +81,7 @@ enum { IPT_END=1,IPT_PORT,
 /* input bits to this, the bit will be inverted while a vertical blank is happening. */
 	IPT_VBLANK,
 	IPT_UNKNOWN,
-	IPT_OSD_RESERVED,
+	IPT_OSD_DESCRIPTION,
 	IPT_OSD_1,
 	IPT_OSD_2,
 	IPT_OSD_3,
@@ -412,6 +422,8 @@ struct ik
 	UINT32 type;
 	UINT32 val;
 };
+
+
 extern struct ik input_keywords[];
 extern struct ik *osd_input_keywords;
 extern int num_ik;

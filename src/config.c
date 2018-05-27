@@ -598,7 +598,7 @@ int config_write_default_ports(config_file *cfg, const struct ipd *input_ports_d
 
 	while (input_ports_default[i].type != IPT_END)
 	{
-		if (input_ports_default[i].type != IPT_OSD_RESERVED)
+		if (input_ports_default[i].type != IPT_OSD_DESCRIPTION)
 		{
 			writeint(cfg->file, input_ports_default[i].type);
 			seq_write(cfg->file, &input_ports_default_backup[i].seq);
