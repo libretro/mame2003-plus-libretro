@@ -10,9 +10,6 @@
   * highest player numbers first so that the Player 1 labels can serve as default.
   */
  
-  } /* end of switch */
-}
-
 const struct ControlInfo 88games_ctrls
 {
   2, /* num_players */
