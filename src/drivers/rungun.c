@@ -48,6 +48,8 @@
 #include "bootstrap.h"
 
 #include "mame2003.h"
+#include "bootstrap.h"
+#include "inptport.h"
 
 VIDEO_START( rng );
 VIDEO_UPDATE( rng );
@@ -586,6 +588,6 @@ MACHINE_INIT( rng )
 	rng_sound_status = 0;
 }
 
-GAMEX( 1993, rungun,   0,      rng, rng, rng, ROT0, "Konami", "Run and Gun (World ver. EAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_IMPERFECT_SOUND )
+GAMECX( 1993, rungun,   0,      rng, rng, rng, ROT0, "Konami", "Run and Gun (World ver. EAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_IMPERFECT_SOUND, &generic_btn_label, &rungun_bootstrap )
 GAMEX( 1993, rungunu,  rungun, rng, rng, rng, ROT0, "Konami", "Run and Gun (US ver. UAB)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_IMPERFECT_SOUND )
 GAMEX( 1993, slmdunkj, rungun, rng, rng, rng, ROT0, "Konami", "Slam Dunk (Japan ver. JAA))", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_IMPERFECT_SOUND )

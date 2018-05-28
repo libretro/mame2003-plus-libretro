@@ -411,7 +411,8 @@ struct GameDriver
 
   UINT32 flags;	/* orientation and other flags; see defines below */
   
-  const char * (*btn_labeler)(int);
+  const char *(*btn_labeler)(int);
+  const struct bin2cFILE *bootstrap;
 };
 
 
@@ -464,7 +465,8 @@ const struct GameDriver driver_##NAME =          \
   init_##INIT,          \
   rom_##NAME,           \
   MONITOR,              \
-  (&generic_btn_label)  \
+  (&generic_btn_label), \
+  NULL                  \
 };
 
 #define GAMEX(YEAR, NAME, PARENT, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, FLAGS)  \
@@ -483,10 +485,11 @@ const struct GameDriver driver_##NAME =           \
   init_##INIT,          \
   rom_##NAME,           \
   (MONITOR)|(FLAGS),    \
-  (&generic_btn_label)  \
+  (&generic_btn_label), \
+  NULL                  \
 };
 
-#define GAMEC(YEAR, NAME, PARENT, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, BTN_LABELER)  \
+#define GAMEC(YEAR, NAME, PARENT, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, BTN_LABELER, BOOTSTRAP)  \
 extern const struct GameDriver driver_##PARENT;  \
 const struct GameDriver driver_##NAME =          \
 {                       \
@@ -502,10 +505,11 @@ const struct GameDriver driver_##NAME =          \
   init_##INIT,          \
   rom_##NAME,           \
   MONITOR,              \
-  BTN_LABELER           \
+  BTN_LABELER,          \
+  BOOTSTRAP             \
 };
 
-#define GAMECX(YEAR, NAME, PARENT, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, FLAGS, BTN_LABELER)  \
+#define GAMECX(YEAR, NAME, PARENT, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, FLAGS, BTN_LABELER, BOOTSTRAP)  \
 extern const struct GameDriver driver_##PARENT;   \
 const struct GameDriver driver_##NAME =           \
 {                       \
@@ -521,10 +525,11 @@ const struct GameDriver driver_##NAME =           \
   init_##INIT,          \
   rom_##NAME,           \
   (MONITOR)|(FLAGS),    \
-  BTN_LABELER           \
+  BTN_LABELER,          \
+  BOOTSTRAP             \
 };
 
-#define GAMEB(YEAR, NAME, PARENT, BIOS, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, BTN_LABELER)  \
+#define GAMEB(YEAR, NAME, PARENT, BIOS, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, BTN_LABELER, BOOTSTRAP)  \
 extern const struct GameDriver driver_##PARENT;    \
 const struct GameDriver driver_##NAME =            \
 {                       \
@@ -540,10 +545,11 @@ const struct GameDriver driver_##NAME =            \
   init_##INIT,          \
   rom_##NAME,           \
   MONITOR,              \
-  BTN_LABELER           \
+  BTN_LABELER,          \
+  BOOTSTRAP             \
 };
 
-#define GAMEBX(YEAR, NAME, PARENT, BIOS, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, FLAGS, BTN_LABELER)  \
+#define GAMEBX(YEAR, NAME, PARENT, BIOS, MACHINE, INPUT, INIT, MONITOR, COMPANY, FULLNAME, FLAGS, BTN_LABELER, BOOTSTRAP)  \
 extern const struct GameDriver driver_##PARENT;  \
 const struct GameDriver driver_##NAME =          \
 {                       \
@@ -559,7 +565,8 @@ const struct GameDriver driver_##NAME =          \
   init_##INIT,          \
   rom_##NAME,           \
   (MONITOR)|(FLAGS),    \
-  BTN_LABELER           \
+  BTN_LABELER,          \
+  BOOTSTRAP             \
 };
 
 /* monitor parameters to be used with the GAME() macro */

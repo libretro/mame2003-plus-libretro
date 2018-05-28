@@ -38,6 +38,9 @@
 #include "taito_f3.h"
 #include "state.h"
 
+#include "bootstrap.h"
+#include "inptport.h"
+
 VIDEO_START( f3 );
 VIDEO_UPDATE( f3 );
 VIDEO_EOF( f3 );
@@ -3237,7 +3240,7 @@ GAME( 1995, pbobbl2u, pbobble2, f3,      f3, pbobble2, ROT0,   "Taito America Co
 GAME( 1995, pbobbl2x, pbobble2, f3,      f3, pbobbl2x, ROT0,   "Taito Corporation",         "Puzzle Bobble 2X (Japan)" )
 GAME( 1995, ktiger2,  0,        f3,      f3, ktiger2,  ROT270, "Taito Corporation",         "Kyukyoku Tiger 2 (Japan)" )
 /* Twin Cobra 2 (US & World) is known to exist */
-GAME( 1995, bubblem,  0,        f3_224a, f3, bubblem,  ROT0,   "Taito Corporation Japan",   "Bubble Memories - The Story Of Bubble Bobble 3 (World)" )
+GAMEC( 1995, bubblem,  0,        f3_224a, f3, bubblem,  ROT0,   "Taito Corporation Japan",   "Bubble Memories - The Story Of Bubble Bobble 3 (World)", &generic_btn_label, &bubblem_bootstrap )
 GAME( 1995, bubblemj, bubblem,  f3_224a, f3, bubblem,  ROT0,   "Taito Corporation",         "Bubble Memories - The Story Of Bubble Bobble 3 (Japan)" )
 GAME( 1996, cleopatr, 0,        f3_224a, f3, cleopatr, ROT0,   "Taito Corporation",         "Cleopatra Fortune (Japan)" )
 GAME( 1996, pbobble3, 0,        f3,      f3, pbobble3, ROT0,   "Taito Corporation",         "Puzzle Bobble 3 (World)" )

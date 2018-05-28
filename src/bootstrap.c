@@ -8,8 +8,11 @@
 *********************************************************************/    
 
 #include "bootstrap.h"
+#include "fileio.h"
 
-const unsigned char avengrgs_bootstrap_bytes[] = {
+const struct bin2cFILE avengrgs_bootstrap = {
+    128,
+  {
    83, 65, 82, 85,  0,  0,  0,  0,  0,  0, 65, 38,  0,  0,  0,  4,  0,128,
     0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1, 50,  3,  0,  1,
   100,  3,  0,  2,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -18,11 +21,12 @@ const unsigned char avengrgs_bootstrap_bytes[] = {
     1,  1,  1,  1,  1,  1, 50,  3,  0,  1,100,  3,  0,  2,  0,  0,  1,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,
+  }
 };
 
-const unsigned int avengrgs_bootstrap_length = 128;
-
-const unsigned char bubblem_bootstrap_bytes[] = {
+const struct bin2cFILE bubblem_bootstrap = {
+    128,
+  {
    84, 65, 73, 84, 79,  3, 48, 49, 49, 48,224,  1, 17, 18, 48,  0,  0,  0,
     2,  4,255,247, 34, 18,  0,  0,  0,  0,  0,  0,108,231,255,255,255,255,
   255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -31,11 +35,12 @@ const unsigned char bubblem_bootstrap_bytes[] = {
   255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
   255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
   255,255,
+  }
 };
 
-const unsigned int bubblem_bootstrap_length = 128;
-
-const unsigned char mk2_bootstrap_bytes[] = {
+const struct bin2cFILE mk2_bootstrap = {
+    16384,
+  {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,
     0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,
@@ -947,11 +952,12 @@ const unsigned char mk2_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,
+  }
 };
 
-const unsigned int mk2_bootstrap_length = 16384;
-
-const unsigned char mk2chal_bootstrap_bytes[] = {
+const struct bin2cFILE mk2chal_bootstrap = {
+    16384,
+  {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,
     0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,
@@ -1863,11 +1869,12 @@ const unsigned char mk2chal_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,
+  }
 };
 
-const unsigned int mk2chal_bootstrap_length = 16384;
-
-const unsigned char mk2r14_bootstrap_bytes[] = {
+const struct bin2cFILE mk2r14_bootstrap = {
+    16384,
+  {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,
     0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,
@@ -2779,11 +2786,12 @@ const unsigned char mk2r14_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,
+  }
 };
 
-const unsigned int mk2r14_bootstrap_length = 16384;
-
-const unsigned char mk2r21_bootstrap_bytes[] = {
+const struct bin2cFILE mk2r21_bootstrap = {
+    16384,
+  {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,
     0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,
@@ -3695,11 +3703,12 @@ const unsigned char mk2r21_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,
+  }
 };
 
-const unsigned int mk2r21_bootstrap_length = 16384;
-
-const unsigned char mk2r32_bootstrap_bytes[] = {
+const struct bin2cFILE mk2r32_bootstrap = {
+    16384,
+  {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,
     0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,
@@ -4611,11 +4620,12 @@ const unsigned char mk2r32_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,
+  }
 };
 
-const unsigned int mk2r32_bootstrap_length = 16384;
-
-const unsigned char mk2r42_bootstrap_bytes[] = {
+const struct bin2cFILE mk2r42_bootstrap = {
+    16384,
+  {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,
     0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,
@@ -5527,11 +5537,12 @@ const unsigned char mk2r42_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,
+  }
 };
 
-const unsigned int mk2r42_bootstrap_length = 16384;
-
-const unsigned char mk2r91_bootstrap_bytes[] = {
+const struct bin2cFILE mk2r91_bootstrap = {
+    16384,
+  {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,
     0,  0,  0,  0,  0,  0,  0,  0,255,  0,255,  0,  0,  0,  0,  0,  0,  0,
@@ -6443,13 +6454,14 @@ const unsigned char mk2r91_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,
+  }
 };
-
-const unsigned int mk2r91_bootstrap_length = 16384;
 
 
 /* used for qix, qix2, qixa, qixb */
-const unsigned char qix_bootstrap_bytes[] = {
+const struct bin2cFILE qix_bootstrap = {
+    1024,
+  {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -6507,11 +6519,12 @@ const unsigned char qix_bootstrap_bytes[] = {
     0,  0,  4,  1,  4,  0,  0,  1,  0,  6,  2,  0,  0,  1,  1,  4,  1,  1,
     0,  0,  3, 16,  3,117, 55,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  }
 };
 
-const unsigned int qix_bootstrap_length = 1024;
-
-const unsigned char rungun_bootstrap_bytes[] = {
+const struct bin2cFILE rungun_bootstrap = {
+    128,
+  {
     4, 20,251,235,146, 71, 69, 65, 65,  0, 21,  3,  7,  3,  0,  0,  0,  0,
     0,  0,  0,  0,  0, 30,  0, 21, 32,  0,  1,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -6520,11 +6533,12 @@ const unsigned char rungun_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,
+  }
 };
 
-const unsigned int rungun_bootstrap_length = 128;
-
-const unsigned char sinistar_bootstrap_bytes[] = {
+const struct bin2cFILE sinistar_bootstrap = {
+    1024,
+  {
     3, 48,  3, 48,  0,  3,  0,  5,  0,  1,  0,  1,  0,  3,  0,  1,  0,  4,
     0,  1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  5, 81,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -6582,11 +6596,12 @@ const unsigned char sinistar_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  }
 };
 
-const unsigned int sinistar_bootstrap_length = 1024;
-
-const unsigned char sinista1_bootstrap_bytes[] = {
+const struct bin2cFILE sinista1_bootstrap = {
+    1024,
+  {
     3, 48,  3, 48,  0,  3,  0,  5,  0,  1,  0,  1,  0,  3,  0,  1,  0,  4,
     0,  1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  5, 81,  5, 81,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -6644,11 +6659,12 @@ const unsigned char sinista1_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  }
 };
 
-const unsigned int sinista1_bootstrap_length = 1024;
-
-const unsigned char sinista2_bootstrap_bytes[] = {
+const struct bin2cFILE sinista2_bootstrap = {
+    1024,
+  {
     3, 48,  3, 48,  0,  3,  0,  5,  0,  1,  0,  1,  0,  3,  0,  1,  0,  4,
     0,  1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  5, 81,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -6706,12 +6722,13 @@ const unsigned char sinista2_bootstrap_bytes[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  }
 };
 
-const unsigned int sinista2_bootstrap_length = 1024;
-
 /* used for zookeep, zookeep2, and zookeep3 */
-const unsigned char zookeep_bootstrap_bytes[] = {
+const struct bin2cFILE zookeep_bootstrap = {
+    1024,
+  {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,255,
     2,144,  1,192,  0, 48,  3,  2,254,249,  0,  0,  0,  0,  0, 20,240,  0,
     0,  0,  0,  0, 94,120,  0,  0,  0,  0,254,  0,  0,  0,  0,  0,  0,  0,
@@ -6769,6 +6786,5 @@ const unsigned char zookeep_bootstrap_bytes[] = {
     0,  0,  4,  1,  4,  0,  0,  1,  0,  6,  2,  0,  0,  1,  1,  4,  1,  1,
     0,  0, 18, 16,  3,  1,  1,  0, 57, 48,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  }
 };
-
-const unsigned int zookeep_bootstrap_length = 1024;

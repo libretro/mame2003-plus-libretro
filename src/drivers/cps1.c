@@ -7745,18 +7745,18 @@ GAME( 1990, cawingu,  cawing,   cps1,     cawing,   cps1,     ROT0,   "Capcom", 
 GAME( 1990, cawingj,  cawing,   cps1,     cawing,   cps1,     ROT0,   "Capcom", "U.S. Navy (Japan 901012)" )
 GAME( 1990, nemo,     0,        cps1,     nemo,     cps1,     ROT0,   "Capcom", "Nemo (World 901130)" )						/* ETC */
 GAME( 1990, nemoj,    nemo,     cps1,     nemo,     cps1,     ROT0,   "Capcom", "Nemo (Japan 901120)" )
-GAMEC(1991, sf2,      0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910522)", &sf2_btn_label )	/* ETC*/
-GAMEC(1991, sf2eb,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910214)", &sf2_btn_label )	/* ETC*/
-GAMEC(1991, sf2ua,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910206)", &sf2_btn_label )
-GAMEC(1991, sf2ub,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910214)", &sf2_btn_label )
-GAMEC(1991, sf2ud,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910318)", &sf2_btn_label )
-GAMEC(1991, sf2ue,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910228)", &sf2_btn_label )
-GAMEC(1991, sf2uf,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910411)", &sf2_btn_label )
-GAMEC(1991, sf2ui,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910522)", &sf2_btn_label )
-GAMEC(1991, sf2uk,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 911101)", &sf2_btn_label )
-GAMEC(1991, sf2j,     sf2,      sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 911210)", &sf2_btn_label )
-GAMEC(1991, sf2ja,    sf2,      sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910214)", &sf2_btn_label )
-GAMEC(1991, sf2jc,    sf2,      sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910306)", &sf2_btn_label )
+GAMEC(1991, sf2,      0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910522)", &sf2_btn_label, NULL )	/* ETC*/
+GAMEC(1991, sf2eb,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910214)", &sf2_btn_label, NULL )	/* ETC*/
+GAMEC(1991, sf2ua,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910206)", &sf2_btn_label, NULL )
+GAMEC(1991, sf2ub,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910214)", &sf2_btn_label, NULL )
+GAMEC(1991, sf2ud,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910318)", &sf2_btn_label, NULL )
+GAMEC(1991, sf2ue,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910228)", &sf2_btn_label, NULL )
+GAMEC(1991, sf2uf,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910411)", &sf2_btn_label, NULL )
+GAMEC(1991, sf2ui,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910522)", &sf2_btn_label, NULL )
+GAMEC(1991, sf2uk,    sf2,      sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 911101)", &sf2_btn_label, NULL )
+GAMEC(1991, sf2j,     sf2,      sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 911210)", &sf2_btn_label, NULL )
+GAMEC(1991, sf2ja,    sf2,      sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910214)", &sf2_btn_label, NULL )
+GAMEC(1991, sf2jc,    sf2,      sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910306)", &sf2_btn_label, NULL )
 GAME( 1991, 3wonders, 0,        cps1,     3wonders, cps1,     ROT0,   "Capcom", "Three Wonders (World 910520)" )					/* ETC */
 GAME( 1991, 3wonderu, 3wonders, cps1,     3wonders, cps1,     ROT0,   "Capcom", "Three Wonders (US 910520)" )
 GAME( 1991, wonder3,  3wonders, cps1,     3wonders, cps1,     ROT0,   "Capcom", "Wonder 3 (Japan 910520)" )
@@ -7770,25 +7770,25 @@ GAME( 1991, captcomj, captcomm, cps1,     captcomm, cps1,     ROT0,   "Capcom", 
 GAME( 1991, knights,  0,        cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)" )				/* ETC */
 GAME( 1991, knightsu, knights,  cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (US 911127)" )
 GAME( 1991, knightsj, knights,  cps1,     knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127)" )
-GAMEC(1992, sf2ce,    0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (World 920313)", &sf2_btn_label )	/* ETC */
-GAMEC(1992, sf2ceua,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920313)", &sf2_btn_label )
-GAMEC(1992, sf2ceub,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920513)", &sf2_btn_label )
-GAMEC(1992, sf2ceuc,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920803)", &sf2_btn_label )
-GAMEC(1992, sf2cej,   sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (Japan 920513)", &sf2_btn_label )
-GAMEC(1992, sf2rb,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Rainbow set 1)", &sf2_btn_label )	/* 920322 - based on World version*/
-GAMEC(1992, sf2rb2,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Rainbow set 2)", &sf2_btn_label )	/* 920322 - based on World version*/
-GAMEC(1992, sf2red,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Red Wave)", &sf2_btn_label )		/* 920313 - based on World version*/
-GAMEC(1992, sf2v004,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II! - Champion Edition (V004)", &sf2_btn_label )		/* 102092 !!! - based on (heavily modified) World version*/
-GAMEC(1992, sf2accp2, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Accelerator Pt.II)", &sf2_btn_label )  /* 920313 - based on USA version*/
-GAMECX(1992, sf2m1,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1)", GAME_NOT_WORKING, &sf2_btn_label )
-GAMECX(1992, sf2m2,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M2)", GAME_NOT_WORKING, &sf2_btn_label )
-GAMECX(1992, sf2m3,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3)", GAME_NOT_WORKING , &sf2_btn_label)
-GAMEC(1992, sf2m4,    sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M4)", &sf2_btn_label )
-GAMEC(1992, sf2m5,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M5)", &sf2_btn_label )
-GAMEC(1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M6)", &sf2_btn_label )
-GAMEC(1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M7)", &sf2_btn_label )
-GAMEC(1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (YYC)", &sf2_btn_label )
-GAMEC(1992, sf2koryu, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Kouryu)", &sf2_btn_label )
+GAMEC(1992, sf2ce,    0,        sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (World 920313)", &sf2_btn_label, NULL )	/* ETC */
+GAMEC(1992, sf2ceua,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920313)", &sf2_btn_label, NULL )
+GAMEC(1992, sf2ceub,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920513)", &sf2_btn_label, NULL )
+GAMEC(1992, sf2ceuc,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920803)", &sf2_btn_label, NULL )
+GAMEC(1992, sf2cej,   sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (Japan 920513)", &sf2_btn_label, NULL )
+GAMEC(1992, sf2rb,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Rainbow set 1)", &sf2_btn_label, NULL )	/* 920322 - based on World version*/
+GAMEC(1992, sf2rb2,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Rainbow set 2)", &sf2_btn_label, NULL )	/* 920322 - based on World version*/
+GAMEC(1992, sf2red,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Red Wave)", &sf2_btn_label, NULL )		/* 920313 - based on World version*/
+GAMEC(1992, sf2v004,  sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II! - Champion Edition (V004)", &sf2_btn_label, NULL )		/* 102092 !!! - based on (heavily modified) World version*/
+GAMEC(1992, sf2accp2, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Accelerator Pt.II)", &sf2_btn_label, NULL )  /* 920313 - based on USA version*/
+GAMECX(1992, sf2m1,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1)", GAME_NOT_WORKING, &sf2_btn_label, NULL )
+GAMECX(1992, sf2m2,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M2)", GAME_NOT_WORKING, &sf2_btn_label, NULL )
+GAMECX(1992, sf2m3,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3)", GAME_NOT_WORKING , &sf2_btn_label, NULL )
+GAMEC(1992, sf2m4,    sf2ce,    sf2,      sf2j,     cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M4)", &sf2_btn_label, NULL )
+GAMEC(1992, sf2m5,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M5)", &sf2_btn_label, NULL )
+GAMEC(1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M6)", &sf2_btn_label, NULL )
+GAMEC(1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M7)", &sf2_btn_label, NULL )
+GAMEC(1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (YYC)", &sf2_btn_label, NULL )
+GAMEC(1992, sf2koryu, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Kouryu)", &sf2_btn_label, NULL )
 GAME( 1992, varth,    0,        cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" )		/* ETC */
 GAME( 1992, varthu,   varth,    cps1,     varth,    cps1,     ROT270, "Capcom (Romstar license)", "Varth - Operation Thunderstorm (US 920612)" )
 GAME( 1992, varthj,   varth,    cps1,     varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (Japan 920714)" )

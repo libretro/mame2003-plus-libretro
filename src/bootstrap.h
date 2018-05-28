@@ -10,51 +10,38 @@
 #ifndef BOOTSTRAP_H
 #define BOOTSTRAP_H
 
-extern const unsigned char  avengrgs_bootstrap_bytes[];
-extern const unsigned int   avengrgs_bootstrap_length;
+#include "fileio.h"
 
-extern const unsigned char  bubblem_bootstrap_bytes[];
-extern const unsigned int   bubblem_bootstrap_length;
+extern const struct bin2cFILE avengrgs_bootstrap;
 
-extern const unsigned char  mk2_bootstrap_bytes[];;
-extern const unsigned int   mk2_bootstrap_length;
+extern const struct bin2cFILE bubblem_bootstrap;
 
-extern const unsigned char  mk2chal_bootstrap_bytes[];
-extern const unsigned int   mk2chal_bootstrap_length;
+extern const struct bin2cFILE mk2_bootstrap;
 
-extern const unsigned char  mk2r14_bootstrap_bytes[];
-extern const unsigned int   mk2r14_bootstrap_length;
+extern const struct bin2cFILE mk2chal_bootstrap;
 
-extern const unsigned char  mk2r21_bootstrap_bytes[];
-extern const unsigned int   mk2r21_bootstrap_length;
+extern const struct bin2cFILE mk2r14_bootstrap;
 
-extern const unsigned char  mk2r32_bootstrap_bytes[];
-extern const unsigned int   mk2r32_bootstrap_length;
+extern const struct bin2cFILE mk2r21_bootstrap;
 
-extern const unsigned char  mk2r42_bootstrap_bytes[];
-extern const unsigned int   mk2r42_bootstrap_length;
+extern const struct bin2cFILE mk2r32_bootstrap;
 
-extern const unsigned char  mk2r91_bootstrap_bytes[];
-extern const unsigned int   mk2r91_bootstrap_length;
+extern const struct bin2cFILE mk2r42_bootstrap;
+
+extern const struct bin2cFILE mk2r91_bootstrap;
 
 /* used for qix, qix2, qixa, qixb */
-extern const unsigned char  qix_bootstrap_bytes[];
-extern const unsigned int   qix_bootstrap_length;
+extern const struct bin2cFILE qix_bootstrap;
 
-extern const unsigned char  rungun_bootstrap_bytes[];
-extern const unsigned int   rungun_bootstrap_length;
+extern const struct bin2cFILE rungun_bootstrap;
 
-extern const unsigned char  sinistar_bootstrap_bytes[];
-extern const unsigned int   sinistar_bootstrap_length;
+extern const struct bin2cFILE sinistar_bootstrap;
 
-extern const unsigned char  sinista1_bootstrap_bytes[];
-extern const unsigned int   sinista1_bootstrap_length;
+extern const struct bin2cFILE sinista1_bootstrap;
 
-extern const unsigned char  sinista2_bootstrap_bytes[];
-extern const unsigned int   sinista2_bootstrap_length;
+extern const struct bin2cFILE sinista2_bootstrap;
 
 /* used for zookeep, zookeep2, and zookeep3 */
-extern const unsigned char  zookeep_bootstrap_bytes[];
-extern const unsigned int   zookeep_bootstrap_length;
+extern const struct bin2cFILE zookeep_bootstrap;
 
 #endif /* BOOTSTRAP_H */

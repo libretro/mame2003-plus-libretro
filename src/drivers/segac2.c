@@ -4510,6 +4510,6 @@ static DRIVER_INIT (megaplay)
 
 }
 
-GAMEBX( 1993, megaplay, 0,        megaplay, megaplay, megaplay, megaplay, ROT0, "Sega",                  "MegaPlay - Bios", NOT_A_DRIVER, &generic_btn_label)
-GAMEBX( 1993, mp_sonic, megaplay, megaplay, megaplay, mp_sonic, megaplay, ROT0, "Sega",                  "MegaPlay - Sonic The Hedgehog", GAME_NOT_WORKING, &generic_btn_label )
-GAMEBX( 1993, mp_gaxe2, megaplay, megaplay, megaplay, mp_gaxe2, megaplay, ROT0, "Sega",                  "MegaPlay - Golden Axe 2", GAME_NOT_WORKING, &generic_btn_label )
+GAMEBX( 1993, megaplay, 0,        megaplay, megaplay, megaplay, megaplay, ROT0, "Sega",                  "MegaPlay - Bios", NOT_A_DRIVER, &generic_btn_label, NULL )
+GAMEBX( 1993, mp_sonic, megaplay, megaplay, megaplay, mp_sonic, megaplay, ROT0, "Sega",                  "MegaPlay - Sonic The Hedgehog", GAME_NOT_WORKING, &generic_btn_label, NULL )
+GAMEBX( 1993, mp_gaxe2, megaplay, megaplay, megaplay, mp_gaxe2, megaplay, ROT0, "Sega",                  "MegaPlay - Golden Axe 2", GAME_NOT_WORKING, &generic_btn_label, NULL )

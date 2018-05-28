@@ -57,6 +57,10 @@ typedef struct _mame_file mame_file;
 /* Return the number of paths for a given type */
 int osd_get_path_count(int pathtype);
 
+struct bin2cFILE {
+  const unsigned int length;
+  const unsigned char data[]; 
+};
 
 /******************************************************************************
  

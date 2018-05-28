@@ -786,8 +786,7 @@ static void print_resource_info(FILE* out, const struct GameDriver* game)
 void print_mame_xml(int old_style_flag)
 {
     int driver_index = 0;
-    int pathcount = osd_get_path_count(FILETYPE_XML_DAT);   	
-    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, pathcount, APPNAME".xml", "w+b");	
+    FILE *xml_dat = osd_fopen(FILETYPE_XML_DAT, 1, APPNAME".xml", "w+b");	
     
     old_style = old_style_flag;
     	
