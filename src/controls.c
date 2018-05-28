@@ -9388,6 +9388,7 @@ const char *firetrap_get_btn(int type)
   return NULL;
 }
 
+#if 0
 const struct ControlInfo firetrk_ctrls =
 {
   2, /* num_players */
@@ -9420,6 +9421,7 @@ const char *firetrk_get_btn(int type)
 
   return NULL;
 }
+#endif
 
 const struct ControlInfo fshark_ctrls =
 {
@@ -11453,7 +11455,7 @@ const char *irobot_get_btn(int type)
 /* P1NumButtons=2 */
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Analog Stick+stick";
     case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "??-not used-??";
+    case IPT_BUTTON2: return "Not used";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -11890,6 +11892,7 @@ const char *jailbrek_get_btn(int type)
   return NULL;
 }
 
+#if 0
 const struct ControlInfo teamqb_ctrls =
 {
   4, /* num_players */
@@ -11936,16 +11939,17 @@ const char *teamqb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_AD_STICK_X: return "Aim Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Aim Right";
-    case IPT_AD_STICK_Y: return ""Throw / Kick";
+    case IPT_AD_STICK_Y: return "Throw / Kick";
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Short / Long";
 /*  case (IPT_JOYSTICK_UP | IPF_PLAYER0): return "Up";
     case (IPT_JOYSTICK_DOWN | IPF_PLAYER0): return "Down";
     case (IPT_JOYSTICK_LEFT | IPF_PLAYER0): return "Left";
-    case (IPT_JOYSTICK_RIGHT | IPF_PLAYER0): return "Right*/";
+    case (IPT_JOYSTICK_RIGHT | IPF_PLAYER0): return "Right";
   } /* end of switch */
 
   return NULL;
 }
+#endif
 
 const struct ControlInfo jantouki_ctrls =
 {
@@ -18965,6 +18969,7 @@ const char *quantum_get_btn(int type)
   return NULL;
 }
 
+#if 0
 const struct ControlInfo quarterb_ctrls =
 {
   2, /* num_players */
@@ -19005,6 +19010,7 @@ const char *quarterb_get_btn(int type)
 
   return NULL;
 }
+#endif
 
 const struct ControlInfo quartet_ctrls =
 {
@@ -24816,7 +24822,7 @@ const char *srumbler_get_btn(int type)
   return NULL;
 }
 
-const struct ControlInfo 3stooges_ctrls =
+const struct ControlInfo a3stooges_ctrls =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -24828,7 +24834,7 @@ const struct ControlInfo 3stooges_ctrls =
   &a3stooges_get_btn
 };
 
-const char *3stooges_get_btn(int type)
+const char *a3stooges_get_btn(int type)
 {
   switch(type)
   {
