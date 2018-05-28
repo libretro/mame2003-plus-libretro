@@ -12,8 +12,20 @@
 
 #include "controls.h"
 #include "inptport.h"
+
+const struct ControlInfo generic_ctrl =
+{
+  0,
+  false,
+  false,
+  false,
+  false,
+  false,
+  "",
+  &generic_btn_label
+};
  
-const struct ControlInfo a88games_ctrls =
+const struct ControlInfo a88games_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -36,10 +48,10 @@ const char *a88games_get_btn(int type)
     case IPT_BUTTON3: return "Run";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a005_ctrls =
+const struct ControlInfo a005_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -64,10 +76,10 @@ const char *a005_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a10yardj_ctrls =
+const struct ControlInfo a10yardj_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -93,10 +105,10 @@ const char *a10yardj_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gtmr_ctrls =
+const struct ControlInfo gtmr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -119,10 +131,10 @@ const char *gtmr_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a1941_ctrls =
+const struct ControlInfo a1941_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -148,10 +160,10 @@ const char *a1941_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a1942_ctrls =
+const struct ControlInfo a1942_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -177,10 +189,10 @@ const char *a1942_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a1943kai_ctrls =
+const struct ControlInfo a1943kai_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -206,10 +218,10 @@ const char *a1943kai_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a1943_ctrls =
+const struct ControlInfo a1943_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -235,10 +247,10 @@ const char *a1943_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a1944_ctrls =
+const struct ControlInfo a1944_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -264,10 +276,10 @@ const char *a1944_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a19xx_ctrls =
+const struct ControlInfo a19xx_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -293,10 +305,10 @@ const char *a19xx_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo openice_ctrls =
+const struct ControlInfo openice_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -323,10 +335,10 @@ const char *openice_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a39in1_ctrls =
+const struct ControlInfo a39in1_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -353,10 +365,10 @@ const char *a39in1_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a4enraya_ctrls =
+const struct ControlInfo a4enraya_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -380,10 +392,10 @@ const char *a4enraya_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a4in1_ctrls =
+const struct ControlInfo a4in1_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -408,10 +420,10 @@ const char *a4in1_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a4dwarrio_ctrls =
+const struct ControlInfo a4dwarrio_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -437,10 +449,10 @@ const char *a4dwarrio_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a64street_ctrls =
+const struct ControlInfo a64street_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -466,10 +478,10 @@ const char *a64street_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a720_ctrls =
+const struct ControlInfo a720_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -493,10 +505,10 @@ const char *a720_get_btn(int type)
     case IPT_DIAL: return "Rotate Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a7jigen_ctrls =
+const struct ControlInfo a7jigen_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -516,10 +528,10 @@ const char *a7jigen_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ace_ctrls =
+const struct ControlInfo ace_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -544,10 +556,10 @@ const char *ace_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Slow Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo acrobatm_ctrls =
+const struct ControlInfo acrobatm_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -573,10 +585,10 @@ const char *acrobatm_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo actfancr_ctrls =
+const struct ControlInfo actfancr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -602,10 +614,10 @@ const char *actfancr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hatena_ctrls =
+const struct ControlInfo hatena_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -629,10 +641,10 @@ const char *hatena_get_btn(int type)
     case IPT_BUTTON4: return "4";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aerofgt_ctrls =
+const struct ControlInfo aerofgt_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -658,10 +670,10 @@ const char *aerofgt_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aburner2_ctrls =
+const struct ControlInfo aburner2_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -690,10 +702,10 @@ const char *aburner2_get_btn(int type)
     case (IPT_AD_STICK_Z + IPT_EXTENSION): return "Fast";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo koshien_ctrls =
+const struct ControlInfo koshien_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -720,10 +732,10 @@ const char *koshien_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo airbustr_ctrls =
+const struct ControlInfo airbustr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -749,10 +761,10 @@ const char *airbustr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo airduel_ctrls =
+const struct ControlInfo airduel_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -780,10 +792,10 @@ const char *airduel_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo airwolf_ctrls =
+const struct ControlInfo airwolf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -809,10 +821,10 @@ const char *airwolf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ajax_ctrls =
+const struct ControlInfo ajax_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -839,10 +851,10 @@ const char *ajax_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo alexkidd_ctrls =
+const struct ControlInfo alexkidd_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -869,10 +881,10 @@ const char *alexkidd_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo alibaba_ctrls =
+const struct ControlInfo alibaba_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -897,10 +909,10 @@ const char *alibaba_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo astorm_ctrls =
+const struct ControlInfo astorm_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -927,10 +939,10 @@ const char *astorm_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aliensyn_ctrls =
+const struct ControlInfo aliensyn_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -955,10 +967,10 @@ const char *aliensyn_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo avsp_ctrls =
+const struct ControlInfo avsp_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -985,10 +997,10 @@ const char *avsp_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo alien3_ctrls =
+const struct ControlInfo alien3_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1014,10 +1026,10 @@ const char *alien3_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aliens_ctrls =
+const struct ControlInfo aliens_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1043,10 +1055,10 @@ const char *aliens_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aafb_ctrls =
+const struct ControlInfo aafb_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -1075,10 +1087,10 @@ const char *aafb_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Long";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo alleymas_ctrls =
+const struct ControlInfo alleymas_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1104,10 +1116,10 @@ const char *alleymas_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo alphaho_ctrls =
+const struct ControlInfo alphaho_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1132,10 +1144,10 @@ const char *alphaho_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo alpinerd_ctrls =
+const struct ControlInfo alpinerd_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -1162,10 +1174,10 @@ const char *alpinerd_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Decrease Edge";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo alpine_ctrls =
+const struct ControlInfo alpine_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1188,10 +1200,10 @@ const char *alpine_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Ski Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo altbeast_ctrls =
+const struct ControlInfo altbeast_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1218,10 +1230,10 @@ const char *altbeast_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo maze_ctrls =
+const struct ControlInfo maze_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1245,10 +1257,10 @@ const char *maze_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo horshoes_ctrls =
+const struct ControlInfo horshoes_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -1274,10 +1286,10 @@ const char *horshoes_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo amspdwy_ctrls =
+const struct ControlInfo amspdwy_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1300,10 +1312,10 @@ const char *amspdwy_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo amerdart_ctrls =
+const struct ControlInfo amerdart_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -1328,10 +1340,10 @@ const char *amerdart_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo amidar_ctrls =
+const struct ControlInfo amidar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1356,10 +1368,10 @@ const char *amidar_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo angelkds_ctrls =
+const struct ControlInfo angelkds_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1387,10 +1399,10 @@ const char *angelkds_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo anteater_ctrls =
+const struct ControlInfo anteater_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1415,10 +1427,10 @@ const char *anteater_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo apb_ctrls =
+const struct ControlInfo apb_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -1443,10 +1455,10 @@ const char *apb_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo apparel_ctrls =
+const struct ControlInfo apparel_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -1466,10 +1478,10 @@ const char *apparel_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aquajack_ctrls =
+const struct ControlInfo aquajack_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -1497,10 +1509,10 @@ const char *aquajack_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aquarium_ctrls =
+const struct ControlInfo aquarium_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1526,10 +1538,10 @@ const char *aquarium_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo arabian_ctrls =
+const struct ControlInfo arabian_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1554,10 +1566,10 @@ const char *arabian_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo arbalest_ctrls =
+const struct ControlInfo arbalest_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1583,10 +1595,10 @@ const char *arbalest_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo arcadecl_ctrls =
+const struct ControlInfo arcadecl_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1613,10 +1625,10 @@ const char *arcadecl_get_btn(int type)
     case IPT_TRACKBALL_X: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo archrivl_ctrls =
+const struct ControlInfo archrivl_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1642,10 +1654,10 @@ const char *archrivl_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo area51_ctrls =
+const struct ControlInfo area51_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1670,10 +1682,10 @@ const char *area51_get_btn(int type)
     case IPT_LIGHTGUN_X: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo area51mx_ctrls =
+const struct ControlInfo area51mx_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1698,10 +1710,10 @@ const char *area51mx_get_btn(int type)
     case IPT_LIGHTGUN_X: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a51site4_ctrls =
+const struct ControlInfo a51site4_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1726,10 +1738,10 @@ const char *a51site4_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo argus_ctrls =
+const struct ControlInfo argus_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1755,10 +1767,10 @@ const char *argus_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo arkarea_ctrls =
+const struct ControlInfo arkarea_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1784,10 +1796,10 @@ const char *arkarea_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo arkanoid_ctrls =
+const struct ControlInfo arkanoid_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1810,10 +1822,10 @@ const char *arkanoid_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo arknoid2_ctrls =
+const struct ControlInfo arknoid2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1836,10 +1848,10 @@ const char *arknoid2_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo arlingtn_ctrls =
+const struct ControlInfo arlingtn_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1865,10 +1877,10 @@ const char *arlingtn_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo armwrest_ctrls =
+const struct ControlInfo armwrest_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -1893,10 +1905,10 @@ const char *armwrest_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo armedf_ctrls =
+const struct ControlInfo armedf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1923,10 +1935,10 @@ const char *armedf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo armora_ctrls =
+const struct ControlInfo armora_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -1950,10 +1962,10 @@ const char *armora_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo armorcar_ctrls =
+const struct ControlInfo armorcar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -1979,10 +1991,10 @@ const char *armorcar_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ashura_ctrls =
+const struct ControlInfo ashura_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2008,10 +2020,10 @@ const char *ashura_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aso_ctrls =
+const struct ControlInfo aso_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2038,10 +2050,10 @@ const char *aso_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo assault_ctrls =
+const struct ControlInfo assault_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -2063,10 +2075,10 @@ const char *assault_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Rapid Roll Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo asterix_ctrls =
+const struct ControlInfo asterix_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2092,10 +2104,10 @@ const char *asterix_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo asteroid_ctrls =
+const struct ControlInfo asteroid_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2120,10 +2132,10 @@ const char *asteroid_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo astdelux_ctrls =
+const struct ControlInfo astdelux_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2148,10 +2160,10 @@ const char *astdelux_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "ROTATE LEFT";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo astrob_ctrls =
+const struct ControlInfo astrob_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2175,10 +2187,10 @@ const char *astrob_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo astrof_ctrls =
+const struct ControlInfo astrof_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2201,10 +2213,10 @@ const char *astrof_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo astinvad_ctrls =
+const struct ControlInfo astinvad_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2227,10 +2239,10 @@ const char *astinvad_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo asuka_ctrls =
+const struct ControlInfo asuka_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2256,10 +2268,10 @@ const char *asuka_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo asylum_ctrls =
+const struct ControlInfo asylum_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -2285,10 +2297,10 @@ const char *asylum_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo abaseb_ctrls =
+const struct ControlInfo abaseb_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2313,10 +2325,10 @@ const char *abaseb_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo atarifb_ctrls =
+const struct ControlInfo atarifb_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2341,10 +2353,10 @@ const char *atarifb_get_btn(int type)
     case IPT_TRACKBALL_X: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ataxx_ctrls =
+const struct ControlInfo ataxx_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2369,10 +2381,10 @@ const char *ataxx_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo athena_ctrls =
+const struct ControlInfo athena_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2398,10 +2410,10 @@ const char *athena_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo atehate_ctrls =
+const struct ControlInfo atehate_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2425,10 +2437,10 @@ const char *atehate_get_btn(int type)
     case IPT_BUTTON4: return "4";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo atomicp_ctrls =
+const struct ControlInfo atomicp_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2454,10 +2466,10 @@ const char *atomicp_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo robokid_ctrls =
+const struct ControlInfo robokid_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2483,10 +2495,10 @@ const char *robokid_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aurail_ctrls =
+const struct ControlInfo aurail_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2513,10 +2525,10 @@ const char *aurail_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo av2mj1bb_ctrls =
+const struct ControlInfo av2mj1bb_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -2536,10 +2548,10 @@ const char *av2mj1bb_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo av2mj2rg_ctrls =
+const struct ControlInfo av2mj2rg_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -2559,10 +2571,10 @@ const char *av2mj2rg_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo avalnche_ctrls =
+const struct ControlInfo avalnche_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2585,10 +2597,10 @@ const char *avalnche_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo avengers_ctrls =
+const struct ControlInfo avengers_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2614,10 +2626,10 @@ const char *avengers_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo avspirit_ctrls =
+const struct ControlInfo avspirit_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2643,10 +2655,10 @@ const char *avspirit_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo aztarac_ctrls =
+const struct ControlInfo aztarac_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2674,10 +2686,10 @@ const char *aztarac_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo azurian_ctrls =
+const struct ControlInfo azurian_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2702,10 +2714,10 @@ const char *azurian_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo baddudes_ctrls =
+const struct ControlInfo baddudes_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2731,10 +2743,10 @@ const char *baddudes_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo badlands_ctrls =
+const struct ControlInfo badlands_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2758,10 +2770,10 @@ const char *badlands_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bagman_ctrls =
+const struct ControlInfo bagman_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2786,10 +2798,10 @@ const char *bagman_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bkrtmaq_ctrls =
+const struct ControlInfo bkrtmaq_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2813,10 +2825,10 @@ const char *bkrtmaq_get_btn(int type)
     case IPT_BUTTON4: return "4";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bakutotu_ctrls =
+const struct ControlInfo bakutotu_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2843,10 +2855,10 @@ const char *bakutotu_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ballbomb_ctrls =
+const struct ControlInfo ballbomb_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2869,10 +2881,10 @@ const char *ballbomb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ballbros_ctrls =
+const struct ControlInfo ballbros_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2899,10 +2911,10 @@ const char *ballbros_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo baluba_ctrls =
+const struct ControlInfo baluba_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -2927,10 +2939,10 @@ const char *baluba_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bangball_ctrls =
+const struct ControlInfo bangball_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2955,10 +2967,10 @@ const char *bangball_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bang_ctrls =
+const struct ControlInfo bang_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -2983,10 +2995,10 @@ const char *bang_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bankp_ctrls =
+const struct ControlInfo bankp_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3011,10 +3023,10 @@ const char *bankp_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo baraduke_ctrls =
+const struct ControlInfo baraduke_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3039,10 +3051,10 @@ const char *baraduke_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo barricad_ctrls =
+const struct ControlInfo barricad_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -3066,10 +3078,10 @@ const char *barricad_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo barrier_ctrls =
+const struct ControlInfo barrier_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3096,10 +3108,10 @@ const char *barrier_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bsktball_ctrls =
+const struct ControlInfo bsktball_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3124,10 +3136,10 @@ const char *bsktball_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo batman_ctrls =
+const struct ControlInfo batman_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3153,10 +3165,10 @@ const char *batman_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo batsugun_ctrls =
+const struct ControlInfo batsugun_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3182,10 +3194,10 @@ const char *batsugun_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo battlnts_ctrls =
+const struct ControlInfo battlnts_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3210,10 +3222,10 @@ const char *battlnts_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bkraidj_ctrls =
+const struct ControlInfo bkraidj_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3240,10 +3252,10 @@ const char *bkraidj_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo battlex_ctrls =
+const struct ControlInfo battlex_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3268,10 +3280,10 @@ const char *battlex_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bcruzm12_ctrls =
+const struct ControlInfo bcruzm12_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3294,10 +3306,10 @@ const char *bcruzm12_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo btlkroad_ctrls =
+const struct ControlInfo btlkroad_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3327,10 +3339,10 @@ const char *btlkroad_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo battlane_ctrls =
+const struct ControlInfo battlane_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3356,10 +3368,10 @@ const char *battlane_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo atlantis_ctrls =
+const struct ControlInfo atlantis_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3385,10 +3397,10 @@ const char *atlantis_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo battlera_ctrls =
+const struct ControlInfo battlera_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3415,10 +3427,10 @@ const char *battlera_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bshark_ctrls =
+const struct ControlInfo bshark_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -3443,10 +3455,10 @@ const char *bshark_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo btoads_ctrls =
+const struct ControlInfo btoads_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -3472,10 +3484,10 @@ const char *btoads_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bzone_ctrls =
+const struct ControlInfo bzone_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -3500,10 +3512,10 @@ const char *bzone_get_btn(int type)
     case IPT_JOYSTICKRIGHT_DOWN: return "Right Tread Backward";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bayroute_ctrls =
+const struct ControlInfo bayroute_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3529,10 +3541,10 @@ const char *bayroute_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo beaminv_ctrls =
+const struct ControlInfo beaminv_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3555,10 +3567,10 @@ const char *beaminv_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bbusters_ctrls =
+const struct ControlInfo bbusters_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -3584,10 +3596,10 @@ const char *bbusters_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo beathead_ctrls =
+const struct ControlInfo beathead_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3613,10 +3625,10 @@ const char *beathead_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bm1stmix_ctrls =
+const struct ControlInfo bm1stmix_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3643,10 +3655,10 @@ const char *bm1stmix_get_btn(int type)
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bm2ndmix_ctrls =
+const struct ControlInfo bm2ndmix_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3673,10 +3685,10 @@ const char *bm2ndmix_get_btn(int type)
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bm4thmix_ctrls =
+const struct ControlInfo bm4thmix_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3703,10 +3715,10 @@ const char *bm4thmix_get_btn(int type)
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bm5thmix_ctrls =
+const struct ControlInfo bm5thmix_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3733,10 +3745,10 @@ const char *bm5thmix_get_btn(int type)
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bm6thmix_ctrls =
+const struct ControlInfo bm6thmix_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3763,10 +3775,10 @@ const char *bm6thmix_get_btn(int type)
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bmcompmx_ctrls =
+const struct ControlInfo bmcompmx_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3793,10 +3805,10 @@ const char *bmcompmx_get_btn(int type)
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bmcompm2_ctrls =
+const struct ControlInfo bmcompm2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3823,10 +3835,10 @@ const char *bmcompm2_get_btn(int type)
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bmcorerm_ctrls =
+const struct ControlInfo bmcorerm_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3853,10 +3865,10 @@ const char *bmcorerm_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bmdct_ctrls =
+const struct ControlInfo bmdct_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3883,10 +3895,10 @@ const char *bmdct_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo beezer_ctrls =
+const struct ControlInfo beezer_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3910,10 +3922,10 @@ const char *beezer_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bel_ctrls =
+const struct ControlInfo bel_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3939,10 +3951,10 @@ const char *bel_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blswhstl_ctrls =
+const struct ControlInfo blswhstl_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -3968,10 +3980,10 @@ const char *blswhstl_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo berabohm_ctrls =
+const struct ControlInfo berabohm_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -3999,10 +4011,10 @@ const char *berabohm_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bermudat_ctrls =
+const struct ControlInfo bermudat_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4030,10 +4042,10 @@ const char *bermudat_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo berzerk_ctrls =
+const struct ControlInfo berzerk_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4058,10 +4070,10 @@ const char *berzerk_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bigevglf_ctrls =
+const struct ControlInfo bigevglf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4087,10 +4099,10 @@ const char *bigevglf_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bigkarnk_ctrls =
+const struct ControlInfo bigkarnk_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4116,10 +4128,10 @@ const char *bigkarnk_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bigrun_ctrls =
+const struct ControlInfo bigrun_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -4146,10 +4158,10 @@ const char *bigrun_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bigstrik_ctrls =
+const struct ControlInfo bigstrik_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4176,10 +4188,10 @@ const char *bigstrik_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bigtwin_ctrls =
+const struct ControlInfo bigtwin_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4204,10 +4216,10 @@ const char *bigtwin_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bbonk_ctrls =
+const struct ControlInfo bbonk_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4231,10 +4243,10 @@ const char *bbonk_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bijokkog_ctrls =
+const struct ControlInfo bijokkog_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -4254,10 +4266,10 @@ const char *bijokkog_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bijokkoy_ctrls =
+const struct ControlInfo bijokkoy_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -4277,10 +4289,10 @@ const char *bijokkoy_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bioatack_ctrls =
+const struct ControlInfo bioatack_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4305,10 +4317,10 @@ const char *bioatack_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bioship_ctrls =
+const struct ControlInfo bioship_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4334,10 +4346,10 @@ const char *bioship_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo biofreak_ctrls =
+const struct ControlInfo biofreak_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4367,10 +4379,10 @@ const char *biofreak_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo biomtoy_ctrls =
+const struct ControlInfo biomtoy_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -4396,10 +4408,10 @@ const char *biomtoy_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bionicc_ctrls =
+const struct ControlInfo bionicc_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4425,10 +4437,10 @@ const char *bionicc_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bking_ctrls =
+const struct ControlInfo bking_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4452,10 +4464,10 @@ const char *bking_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bking2_ctrls =
+const struct ControlInfo bking2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4479,10 +4491,10 @@ const char *bking2_get_btn(int type)
     case IPT_TRACKBALL_X: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bking3_ctrls =
+const struct ControlInfo bking3_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4506,10 +4518,10 @@ const char *bking3_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo birdtry_ctrls =
+const struct ControlInfo birdtry_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4535,10 +4547,10 @@ const char *birdtry_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo psailor1_ctrls =
+const struct ControlInfo psailor1_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -4558,10 +4570,10 @@ const char *psailor1_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo psailor2_ctrls =
+const struct ControlInfo psailor2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -4581,10 +4593,10 @@ const char *psailor2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blkheart_ctrls =
+const struct ControlInfo blkheart_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4610,10 +4622,10 @@ const char *blkheart_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blkhole_ctrls =
+const struct ControlInfo blkhole_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4636,10 +4648,10 @@ const char *blkhole_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blkpnthr_ctrls =
+const struct ControlInfo blkpnthr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4665,10 +4677,10 @@ const char *blkpnthr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blktiger_ctrls =
+const struct ControlInfo blktiger_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4694,10 +4706,10 @@ const char *blktiger_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bwidow_ctrls =
+const struct ControlInfo bwidow_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4725,10 +4737,10 @@ const char *bwidow_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bmaster_ctrls =
+const struct ControlInfo bmaster_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4754,10 +4766,10 @@ const char *bmaster_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bladestl_ctrls =
+const struct ControlInfo bladestl_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4784,10 +4796,10 @@ const char *bladestl_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blandia_ctrls =
+const struct ControlInfo blandia_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4814,10 +4826,10 @@ const char *blandia_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blastoff_ctrls =
+const struct ControlInfo blastoff_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4844,10 +4856,10 @@ const char *blastoff_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blasted_ctrls =
+const struct ControlInfo blasted_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4872,10 +4884,10 @@ const char *blasted_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blaster_ctrls =
+const struct ControlInfo blaster_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -4902,10 +4914,10 @@ const char *blaster_get_btn(int type)
     case IPT_AD_STICK_X: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blstroid_ctrls =
+const struct ControlInfo blstroid_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4930,10 +4942,10 @@ const char *blstroid_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Ship Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blasto_ctrls =
+const struct ControlInfo blasto_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4958,10 +4970,10 @@ const char *blasto_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blazeon_ctrls =
+const struct ControlInfo blazeon_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -4987,10 +4999,10 @@ const char *blazeon_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blockout_ctrls =
+const struct ControlInfo blockout_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5018,10 +5030,10 @@ const char *blockout_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blockade_ctrls =
+const struct ControlInfo blockade_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5045,10 +5057,10 @@ const char *blockade_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bloodbro_ctrls =
+const struct ControlInfo bloodbro_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5075,10 +5087,10 @@ const char *bloodbro_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bloxeed_ctrls =
+const struct ControlInfo bloxeed_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5103,10 +5115,10 @@ const char *bloxeed_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blueprnt_ctrls =
+const struct ControlInfo blueprnt_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5131,10 +5143,10 @@ const char *blueprnt_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Walk Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blueshrk_ctrls =
+const struct ControlInfo blueshrk_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -5156,10 +5168,10 @@ const char *blueshrk_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bodyslam_ctrls =
+const struct ControlInfo bodyslam_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5186,10 +5198,10 @@ const char *bodyslam_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bogeyman_ctrls =
+const struct ControlInfo bogeyman_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5215,10 +5227,10 @@ const char *bogeyman_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bombjack_ctrls =
+const struct ControlInfo bombjack_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5243,10 +5255,10 @@ const char *bombjack_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo boogwing_ctrls =
+const struct ControlInfo boogwing_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5272,10 +5284,10 @@ const char *boogwing_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo boothill_ctrls =
+const struct ControlInfo boothill_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5302,10 +5314,10 @@ const char *boothill_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bosco_ctrls =
+const struct ControlInfo bosco_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5330,10 +5342,10 @@ const char *bosco_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bottom9_ctrls =
+const struct ControlInfo bottom9_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5359,10 +5371,10 @@ const char *bottom9_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bouldash_ctrls =
+const struct ControlInfo bouldash_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5386,10 +5398,10 @@ const char *bouldash_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bowler_ctrls =
+const struct ControlInfo bowler_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -5415,10 +5427,10 @@ const char *bowler_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo boxingb_ctrls =
+const struct ControlInfo boxingb_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5442,10 +5454,10 @@ const char *boxingb_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bradley_ctrls =
+const struct ControlInfo bradley_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -5481,10 +5493,10 @@ const char *bradley_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo brkthru_ctrls =
+const struct ControlInfo brkthru_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5510,10 +5522,10 @@ const char *brkthru_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bublbobl_ctrls =
+const struct ControlInfo bublbobl_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5537,10 +5549,10 @@ const char *bublbobl_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bubbles_ctrls =
+const struct ControlInfo bubbles_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5564,10 +5576,10 @@ const char *bubbles_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo buckrog_ctrls =
+const struct ControlInfo buckrog_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5594,10 +5606,10 @@ const char *buckrog_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo buggychl_ctrls =
+const struct ControlInfo buggychl_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -5621,10 +5633,10 @@ const char *buggychl_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo btime_ctrls =
+const struct ControlInfo btime_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5649,10 +5661,10 @@ const char *btime_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo brubber_ctrls =
+const struct ControlInfo brubber_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5677,10 +5689,10 @@ const char *brubber_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cabal_ctrls =
+const struct ControlInfo cabal_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5706,10 +5718,10 @@ const char *cabal_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cadash_ctrls =
+const struct ControlInfo cadash_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5735,10 +5747,10 @@ const char *cadash_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dino_ctrls =
+const struct ControlInfo dino_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -5764,10 +5776,10 @@ const char *dino_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo calibr50_ctrls =
+const struct ControlInfo calibr50_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5795,10 +5807,10 @@ const char *calibr50_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cameltry_ctrls =
+const struct ControlInfo cameltry_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5821,10 +5833,10 @@ const char *cameltry_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo canyon_ctrls =
+const struct ControlInfo canyon_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5845,10 +5857,10 @@ const char *canyon_get_btn(int type)
     case IPT_BUTTON1: return "Fire";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo capbowl_ctrls =
+const struct ControlInfo capbowl_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -5874,10 +5886,10 @@ const char *capbowl_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo captaven_ctrls =
+const struct ControlInfo captaven_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -5903,10 +5915,10 @@ const char *captaven_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo captcomm_ctrls =
+const struct ControlInfo captcomm_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -5932,10 +5944,10 @@ const char *captcomm_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo carnevil_ctrls =
+const struct ControlInfo carnevil_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -5961,10 +5973,10 @@ const char *carnevil_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo carnival_ctrls =
+const struct ControlInfo carnival_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -5987,10 +5999,10 @@ const char *carnival_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cawing_ctrls =
+const struct ControlInfo cawing_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -6016,10 +6028,10 @@ const char *cawing_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cavelon_ctrls =
+const struct ControlInfo cavelon_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6045,10 +6057,10 @@ const char *cavelon_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cninja_ctrls =
+const struct ControlInfo cninja_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -6074,10 +6086,10 @@ const char *cninja_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo centiped_ctrls =
+const struct ControlInfo centiped_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6102,10 +6114,10 @@ const char *centiped_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo challeng_ctrls =
+const struct ControlInfo challeng_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6130,10 +6142,10 @@ const char *challeng_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo champbas_ctrls =
+const struct ControlInfo champbas_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -6160,10 +6172,10 @@ const char *champbas_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo csprint_ctrls =
+const struct ControlInfo csprint_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -6186,10 +6198,10 @@ const char *csprint_get_btn(int type)
     case IPT_PEDAL: return "Accelerate ";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo checkman_ctrls =
+const struct ControlInfo checkman_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6215,10 +6227,10 @@ const char *checkman_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo checkmat_ctrls =
+const struct ControlInfo checkmat_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -6242,10 +6254,10 @@ const char *checkmat_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cheekyms_ctrls =
+const struct ControlInfo cheekyms_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6268,10 +6280,10 @@ const char *cheekyms_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "R";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cheyenne_ctrls =
+const struct ControlInfo cheyenne_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -6296,10 +6308,10 @@ const char *cheyenne_get_btn(int type)
     case IPT_LIGHTGUN_X: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cshift_ctrls =
+const struct ControlInfo cshift_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6321,10 +6333,10 @@ const char *cshift_get_btn(int type)
     case IPT_BUTTON2: return "Red Things";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo chiller_ctrls =
+const struct ControlInfo chiller_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6349,10 +6361,10 @@ const char *chiller_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ccasino_ctrls =
+const struct ControlInfo ccasino_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -6372,10 +6384,10 @@ const char *ccasino_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo chopper_ctrls =
+const struct ControlInfo chopper_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6401,10 +6413,10 @@ const char *chopper_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo circus_ctrls =
+const struct ControlInfo circus_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6426,10 +6438,10 @@ const char *circus_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo circusc_ctrls =
+const struct ControlInfo circusc_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6452,10 +6464,10 @@ const char *circusc_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cischeat_ctrls =
+const struct ControlInfo cischeat_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6482,10 +6494,10 @@ const char *cischeat_get_btn(int type)
     case IPT_PADDLE: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo citycon_ctrls =
+const struct ControlInfo citycon_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6511,10 +6523,10 @@ const char *citycon_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo citylove_ctrls =
+const struct ControlInfo citylove_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -6534,10 +6546,10 @@ const char *citylove_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cloak_ctrls =
+const struct ControlInfo cloak_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6566,10 +6578,10 @@ const char *cloak_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo clowns_ctrls =
+const struct ControlInfo clowns_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6591,10 +6603,10 @@ const char *clowns_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cltchitr_ctrls =
+const struct ControlInfo cltchitr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -6621,10 +6633,10 @@ const char *cltchitr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo colony7_ctrls =
+const struct ControlInfo colony7_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6651,10 +6663,10 @@ const char *colony7_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Control Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo columns_ctrls =
+const struct ControlInfo columns_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -6679,10 +6691,10 @@ const char *columns_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo combat_ctrls =
+const struct ControlInfo combat_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -6707,10 +6719,10 @@ const char *combat_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo commsega_ctrls =
+const struct ControlInfo commsega_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6736,10 +6748,10 @@ const char *commsega_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo commando_ctrls =
+const struct ControlInfo commando_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6765,10 +6777,10 @@ const char *commando_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo comotion_ctrls =
+const struct ControlInfo comotion_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -6792,10 +6804,10 @@ const char *comotion_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo congo_ctrls =
+const struct ControlInfo congo_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6820,10 +6832,10 @@ const char *congo_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right-Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo contra_ctrls =
+const struct ControlInfo contra_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -6849,10 +6861,10 @@ const char *contra_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cosmica_ctrls =
+const struct ControlInfo cosmica_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6875,10 +6887,10 @@ const char *cosmica_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cavenger_ctrls =
+const struct ControlInfo cavenger_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6904,10 +6916,10 @@ const char *cavenger_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cchasm_ctrls =
+const struct ControlInfo cchasm_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6932,10 +6944,10 @@ const char *cchasm_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cosmicg_ctrls =
+const struct ControlInfo cosmicg_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6958,10 +6970,10 @@ const char *cosmicg_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cracksht_ctrls =
+const struct ControlInfo cracksht_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -6986,10 +6998,10 @@ const char *cracksht_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo crash_ctrls =
+const struct ControlInfo crash_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7014,10 +7026,10 @@ const char *crash_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo crater_ctrls =
+const struct ControlInfo crater_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7044,10 +7056,10 @@ const char *crater_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Turn Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cclimber_ctrls =
+const struct ControlInfo cclimber_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7075,10 +7087,10 @@ const char *cclimber_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Right Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cclimbr2_ctrls =
+const struct ControlInfo cclimbr2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7106,10 +7118,10 @@ const char *cclimbr2_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Right Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ckong_ctrls =
+const struct ControlInfo ckong_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7134,10 +7146,10 @@ const char *ckong_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo crimec_ctrls =
+const struct ControlInfo crimec_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -7163,10 +7175,10 @@ const char *crimec_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo crimfght_ctrls =
+const struct ControlInfo crimfght_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -7192,10 +7204,10 @@ const char *crimfght_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo crossbow_ctrls =
+const struct ControlInfo crossbow_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -7220,10 +7232,10 @@ const char *crossbow_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo crgolf_ctrls =
+const struct ControlInfo crgolf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7255,10 +7267,10 @@ const char *crgolf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cbuster_ctrls =
+const struct ControlInfo cbuster_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -7285,10 +7297,10 @@ const char *cbuster_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo crush_ctrls =
+const struct ControlInfo crush_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7312,10 +7324,10 @@ const char *crush_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cryptklr_ctrls =
+const struct ControlInfo cryptklr_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -7341,10 +7353,10 @@ const char *cryptklr_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ccastles_ctrls =
+const struct ControlInfo ccastles_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7369,10 +7381,10 @@ const char *ccastles_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo crystalg_ctrls =
+const struct ControlInfo crystalg_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -7392,10 +7404,10 @@ const char *crystalg_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo crystal2_ctrls =
+const struct ControlInfo crystal2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -7415,10 +7427,10 @@ const char *crystal2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo curvebal_ctrls =
+const struct ControlInfo curvebal_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -7444,10 +7456,10 @@ const char *curvebal_get_btn(int type)
     case IPT_BUTTON2: return "Bunt";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cybsled_ctrls =
+const struct ControlInfo cybsled_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -7475,10 +7487,10 @@ const char *cybsled_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Left Tread Backward";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cyberbal_ctrls =
+const struct ControlInfo cyberbal_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -7503,10 +7515,10 @@ const char *cyberbal_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cybots_ctrls =
+const struct ControlInfo cybots_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -7544,10 +7556,10 @@ const char *cybots_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Forward";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo daioh_ctrls =
+const struct ControlInfo daioh_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -7577,10 +7589,10 @@ const char *daioh_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dangar_ctrls =
+const struct ControlInfo dangar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7607,10 +7619,10 @@ const char *dangar_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dangerz_ctrls =
+const struct ControlInfo dangerz_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -7636,10 +7648,10 @@ const char *dangerz_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo indyheat_ctrls =
+const struct ControlInfo indyheat_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -7663,10 +7675,10 @@ const char *indyheat_get_btn(int type)
     case IPT_PEDAL: return "Gas";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo darkplnt_ctrls =
+const struct ControlInfo darkplnt_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7691,10 +7703,10 @@ const char *darkplnt_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo darkseal_ctrls =
+const struct ControlInfo darkseal_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -7720,10 +7732,10 @@ const char *darkseal_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dstlk_ctrls =
+const struct ControlInfo dstlk_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -7753,10 +7765,10 @@ const char *dstlk_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo deadang_ctrls =
+const struct ControlInfo deadang_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7782,10 +7794,10 @@ const char *deadang_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo redufo_ctrls =
+const struct ControlInfo redufo_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7808,10 +7820,10 @@ const char *redufo_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo defender_ctrls =
+const struct ControlInfo defender_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7838,10 +7850,10 @@ const char *defender_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo demoderb_ctrls =
+const struct ControlInfo demoderb_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -7865,10 +7877,10 @@ const char *demoderb_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo depthch_ctrls =
+const struct ControlInfo depthch_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -7892,10 +7904,10 @@ const char *depthch_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Ship Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo desertgu_ctrls =
+const struct ControlInfo desertgu_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -7920,10 +7932,10 @@ const char *desertgu_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo destroyr_ctrls =
+const struct ControlInfo destroyr_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -7947,10 +7959,10 @@ const char *destroyr_get_btn(int type)
     case IPT_PADDLE_V: return "Set Depth of Charge Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo devstors_ctrls =
+const struct ControlInfo devstors_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -7976,10 +7988,10 @@ const char *devstors_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Forward";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo devilfsh_ctrls =
+const struct ControlInfo devilfsh_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8004,10 +8016,10 @@ const char *devilfsh_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo devzone_ctrls =
+const struct ControlInfo devzone_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8030,10 +8042,10 @@ const char *devzone_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Movement Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo digdug_ctrls =
+const struct ControlInfo digdug_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8058,10 +8070,10 @@ const char *digdug_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo digdug2_ctrls =
+const struct ControlInfo digdug2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8087,10 +8099,10 @@ const char *digdug2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo digger_ctrls =
+const struct ControlInfo digger_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8116,10 +8128,10 @@ const char *digger_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dimahoo_ctrls =
+const struct ControlInfo dimahoo_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8145,10 +8157,10 @@ const char *dimahoo_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo otatidai_ctrls =
+const struct ControlInfo otatidai_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -8168,10 +8180,10 @@ const char *otatidai_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dotron_ctrls =
+const struct ControlInfo dotron_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8201,10 +8213,10 @@ const char *dotron_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Aim";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dorunrun_ctrls =
+const struct ControlInfo dorunrun_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8229,10 +8241,10 @@ const char *dorunrun_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo domino_ctrls =
+const struct ControlInfo domino_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8257,10 +8269,10 @@ const char *domino_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dominos_ctrls =
+const struct ControlInfo dominos_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8284,10 +8296,10 @@ const char *dominos_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dondenmj_ctrls =
+const struct ControlInfo dondenmj_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -8307,10 +8319,10 @@ const char *dondenmj_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dkong_ctrls =
+const struct ControlInfo dkong_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8335,10 +8347,10 @@ const char *dkong_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Run Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dkong3_ctrls =
+const struct ControlInfo dkong3_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8363,10 +8375,10 @@ const char *dkong3_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dkongjr_ctrls =
+const struct ControlInfo dkongjr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8391,10 +8403,10 @@ const char *dkongjr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ddragon_ctrls =
+const struct ControlInfo ddragon_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8421,10 +8433,10 @@ const char *ddragon_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ddragon3_ctrls =
+const struct ControlInfo ddragon3_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -8451,10 +8463,10 @@ const char *ddragon3_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ddragon2_ctrls =
+const struct ControlInfo ddragon2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8481,10 +8493,10 @@ const char *ddragon2_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ddribble_ctrls =
+const struct ControlInfo ddribble_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8511,10 +8523,10 @@ const char *ddribble_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo downtown_ctrls =
+const struct ControlInfo downtown_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8542,10 +8554,10 @@ const char *downtown_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dragrace_ctrls =
+const struct ControlInfo dragrace_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8572,10 +8584,10 @@ const char *dragrace_get_btn(int type)
     case IPT_DIAL_V: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dragngun_ctrls =
+const struct ControlInfo dragngun_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8601,10 +8613,10 @@ const char *dragngun_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dspirit_ctrls =
+const struct ControlInfo dspirit_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8631,10 +8643,10 @@ const char *dspirit_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo drgnunit_ctrls =
+const struct ControlInfo drgnunit_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8661,10 +8673,10 @@ const char *drgnunit_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ddsom_ctrls =
+const struct ControlInfo ddsom_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -8692,10 +8704,10 @@ const char *ddsom_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ddtod_ctrls =
+const struct ControlInfo ddtod_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -8723,10 +8735,10 @@ const char *ddtod_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dynamcop_ctrls =
+const struct ControlInfo dynamcop_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8753,10 +8765,10 @@ const char *dynamcop_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo eswat_ctrls =
+const struct ControlInfo eswat_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8783,10 +8795,10 @@ const char *eswat_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ecofghtr_ctrls =
+const struct ControlInfo ecofghtr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8813,10 +8825,10 @@ const char *ecofghtr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo eggventr_ctrls =
+const struct ControlInfo eggventr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8841,10 +8853,10 @@ const char *eggventr_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo elevator_ctrls =
+const struct ControlInfo elevator_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8870,10 +8882,10 @@ const char *elevator_get_btn(int type)
     case IPT_JOYSTICK_UP: return "";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo elim2_ctrls =
+const struct ControlInfo elim2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8897,10 +8909,10 @@ const char *elim2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo enigma2_ctrls =
+const struct ControlInfo enigma2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8924,10 +8936,10 @@ const char *enigma2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo eprom_ctrls =
+const struct ControlInfo eprom_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -8954,10 +8966,10 @@ const char *eprom_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo exerion_ctrls =
+const struct ControlInfo exerion_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -8983,10 +8995,10 @@ const char *exerion_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo exterm_ctrls =
+const struct ControlInfo exterm_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -9014,10 +9026,10 @@ const char *exterm_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo eyes_ctrls =
+const struct ControlInfo eyes_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9042,10 +9054,10 @@ const char *eyes_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo f1dream_ctrls =
+const struct ControlInfo f1dream_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9071,10 +9083,10 @@ const char *f1dream_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Turn";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo f1en_ctrls =
+const struct ControlInfo f1en_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -9100,10 +9112,10 @@ const char *f1en_get_btn(int type)
     case IPT_PEDAL2: return "Brake";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo fantasy_ctrls =
+const struct ControlInfo fantasy_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9127,10 +9139,10 @@ const char *fantasy_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sqbert_ctrls =
+const struct ControlInfo sqbert_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9154,10 +9166,10 @@ const char *sqbert_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up+Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo fax_ctrls =
+const struct ControlInfo fax_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -9181,10 +9193,10 @@ const char *fax_get_btn(int type)
     case IPT_BUTTON4: return "D";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo fgoal_ctrls =
+const struct ControlInfo fgoal_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9206,10 +9218,10 @@ const char *fgoal_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo fghtatck_ctrls =
+const struct ControlInfo fghtatck_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -9235,10 +9247,10 @@ const char *fghtatck_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo fvipers_ctrls =
+const struct ControlInfo fvipers_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -9265,10 +9277,10 @@ const char *fvipers_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo finalb_ctrls =
+const struct ControlInfo finalb_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -9295,10 +9307,10 @@ const char *finalb_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ffight_ctrls =
+const struct ControlInfo ffight_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -9325,10 +9337,10 @@ const char *ffight_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo finalap2_ctrls =
+const struct ControlInfo finalap2_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -9353,10 +9365,10 @@ const char *finalap2_get_btn(int type)
     case IPT_PEDAL2: return "Brake";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo firetrap_ctrls =
+const struct ControlInfo firetrap_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9385,11 +9397,11 @@ const char *firetrap_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Right Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
 #if 0
-const struct ControlInfo firetrk_ctrls =
+const struct ControlInfo firetrk_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -9419,11 +9431,11 @@ const char *firetrk_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 #endif
 
-const struct ControlInfo fshark_ctrls =
+const struct ControlInfo fshark_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9449,10 +9461,10 @@ const char *fshark_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo foodf_ctrls =
+const struct ControlInfo foodf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9477,10 +9489,10 @@ const char *foodf_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo forgottn_ctrls =
+const struct ControlInfo forgottn_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -9507,10 +9519,10 @@ const char *forgottn_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo formatz_ctrls =
+const struct ControlInfo formatz_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9536,10 +9548,10 @@ const char *formatz_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo frenzy_ctrls =
+const struct ControlInfo frenzy_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9564,10 +9576,10 @@ const char *frenzy_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo frogger_ctrls =
+const struct ControlInfo frogger_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9591,10 +9603,10 @@ const char *frogger_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo frogs_ctrls =
+const struct ControlInfo frogs_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -9618,10 +9630,10 @@ const char *frogs_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo frontlin_ctrls =
+const struct ControlInfo frontlin_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9651,10 +9663,10 @@ const char *frontlin_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo futspy_ctrls =
+const struct ControlInfo futspy_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9680,10 +9692,10 @@ const char *futspy_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gloc_ctrls =
+const struct ControlInfo gloc_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -9712,10 +9724,10 @@ const char *gloc_get_btn(int type)
     case (IPT_AD_STICK_Z + IPT_EXTENSION): return "Slow Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gijoe_ctrls =
+const struct ControlInfo gijoe_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -9741,10 +9753,10 @@ const char *gijoe_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gground_ctrls =
+const struct ControlInfo gground_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -9770,10 +9782,10 @@ const char *gground_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo galaga88_ctrls =
+const struct ControlInfo galaga88_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9800,10 +9812,10 @@ const char *galaga88_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo galaga_ctrls =
+const struct ControlInfo galaga_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9826,10 +9838,10 @@ const char *galaga_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo galaxian_ctrls =
+const struct ControlInfo galaxian_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9852,10 +9864,10 @@ const char *galaxian_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Control Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gforce2_ctrls =
+const struct ControlInfo gforce2_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -9883,10 +9895,10 @@ const char *gforce2_get_btn(int type)
     case (IPT_AD_STICK_Z + IPT_EXTENSION): return "Slow";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo galxwars_ctrls =
+const struct ControlInfo galxwars_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9909,10 +9921,10 @@ const char *galxwars_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "R";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo galpanic_ctrls =
+const struct ControlInfo galpanic_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -9937,10 +9949,10 @@ const char *galpanic_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo galpani2_ctrls =
+const struct ControlInfo galpani2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9965,10 +9977,10 @@ const char *galpani2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gaplus_ctrls =
+const struct ControlInfo gaplus_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -9993,10 +10005,10 @@ const char *gaplus_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gauntlet_ctrls =
+const struct ControlInfo gauntlet_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -10022,10 +10034,10 @@ const char *gauntlet_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gaunt2_ctrls =
+const struct ControlInfo gaunt2_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -10051,10 +10063,10 @@ const char *gaunt2_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo geebee_ctrls =
+const struct ControlInfo geebee_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10077,10 +10089,10 @@ const char *geebee_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gng_ctrls =
+const struct ControlInfo gng_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10106,10 +10118,10 @@ const char *gng_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ghouls_ctrls =
+const struct ControlInfo ghouls_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10135,10 +10147,10 @@ const char *ghouls_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gigawing_ctrls =
+const struct ControlInfo gigawing_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -10164,10 +10176,10 @@ const char *gigawing_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo goldmedl_ctrls =
+const struct ControlInfo goldmedl_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -10190,10 +10202,10 @@ const char *goldmedl_get_btn(int type)
     case IPT_BUTTON3: return "Button C";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo goldnaxe_ctrls =
+const struct ControlInfo goldnaxe_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -10220,10 +10232,10 @@ const char *goldnaxe_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ga2_ctrls =
+const struct ControlInfo ga2_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -10250,10 +10262,10 @@ const char *ga2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gt97_ctrls =
+const struct ControlInfo gt97_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10279,10 +10291,10 @@ const char *gt97_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Back Swing";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gt98_ctrls =
+const struct ControlInfo gt98_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10308,10 +10320,10 @@ const char *gt98_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Back Swing";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gt99_ctrls =
+const struct ControlInfo gt99_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10337,10 +10349,10 @@ const char *gt99_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Back Swing";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gt2k_ctrls =
+const struct ControlInfo gt2k_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10366,10 +10378,10 @@ const char *gt2k_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Back Swing";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gt3d_ctrls =
+const struct ControlInfo gt3d_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10395,10 +10407,10 @@ const char *gt3d_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Back Swing";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gtg2_ctrls =
+const struct ControlInfo gtg2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10424,10 +10436,10 @@ const char *gtg2_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Back Swing";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo glfgreat_ctrls =
+const struct ControlInfo glfgreat_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -10455,10 +10467,10 @@ const char *glfgreat_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo golgo13_ctrls =
+const struct ControlInfo golgo13_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -10487,10 +10499,10 @@ const char *golgo13_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gollygho_ctrls =
+const struct ControlInfo gollygho_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -10515,10 +10527,10 @@ const char *gollygho_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gondo_ctrls =
+const struct ControlInfo gondo_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -10546,10 +10558,10 @@ const char *gondo_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gorf_ctrls =
+const struct ControlInfo gorf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10574,10 +10586,10 @@ const char *gorf_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo grchamp_ctrls =
+const struct ControlInfo grchamp_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -10600,10 +10612,10 @@ const char *grchamp_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo f1gpstar_ctrls =
+const struct ControlInfo f1gpstar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10629,10 +10641,10 @@ const char *f1gpstar_get_btn(int type)
     case IPT_PADDLE: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gravitar_ctrls =
+const struct ControlInfo gravitar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10657,10 +10669,10 @@ const char *gravitar_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo greatgun_ctrls =
+const struct ControlInfo greatgun_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -10685,10 +10697,10 @@ const char *greatgun_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gberet_ctrls =
+const struct ControlInfo gberet_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10714,10 +10726,10 @@ const char *gberet_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gridiron_ctrls =
+const struct ControlInfo gridiron_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10742,10 +10754,10 @@ const char *gridiron_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gridlee_ctrls =
+const struct ControlInfo gridlee_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10770,10 +10782,10 @@ const char *gridlee_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo guardian_ctrls =
+const struct ControlInfo guardian_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -10802,10 +10814,10 @@ const char *guardian_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gwar_ctrls =
+const struct ControlInfo gwar_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -10833,10 +10845,10 @@ const char *gwar_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gunsmoke_ctrls =
+const struct ControlInfo gunsmoke_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10863,10 +10875,10 @@ const char *gunsmoke_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gunbird_ctrls =
+const struct ControlInfo gunbird_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -10892,10 +10904,10 @@ const char *gunbird_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gunbustr_ctrls =
+const struct ControlInfo gunbustr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -10925,10 +10937,10 @@ const char *gunbustr_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gyruss_ctrls =
+const struct ControlInfo gyruss_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10953,10 +10965,10 @@ const char *gyruss_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo halleys_ctrls =
+const struct ControlInfo halleys_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -10982,10 +10994,10 @@ const char *halleys_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hardyard_ctrls =
+const struct ControlInfo hardyard_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -11011,10 +11023,10 @@ const char *hardyard_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hattrick_ctrls =
+const struct ControlInfo hattrick_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11039,10 +11051,10 @@ const char *hattrick_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hcastle_ctrls =
+const struct ControlInfo hcastle_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -11068,10 +11080,10 @@ const char *hcastle_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hbarrel_ctrls =
+const struct ControlInfo hbarrel_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11099,10 +11111,10 @@ const char *hbarrel_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hiimpact_ctrls =
+const struct ControlInfo hiimpact_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -11127,10 +11139,10 @@ const char *hiimpact_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hippodrm_ctrls =
+const struct ControlInfo hippodrm_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11156,10 +11168,10 @@ const char *hippodrm_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hitme_ctrls =
+const struct ControlInfo hitme_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -11182,10 +11194,10 @@ const char *hitme_get_btn(int type)
     case IPT_BUTTON3: return "Ante";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hitice_ctrls =
+const struct ControlInfo hitice_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -11211,10 +11223,10 @@ const char *hitice_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo holo_ctrls =
+const struct ControlInfo holo_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11248,10 +11260,10 @@ const char *holo_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Forward";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hotrod_ctrls =
+const struct ControlInfo hotrod_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -11274,10 +11286,10 @@ const char *hotrod_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hstennis_ctrls =
+const struct ControlInfo hstennis_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11303,10 +11315,10 @@ const char *hstennis_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo housemnq_ctrls =
+const struct ControlInfo housemnq_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -11326,10 +11338,10 @@ const char *housemnq_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo housemn2_ctrls =
+const struct ControlInfo housemn2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -11349,10 +11361,10 @@ const char *housemn2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hustle_ctrls =
+const struct ControlInfo hustle_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11376,10 +11388,10 @@ const char *hustle_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hng64_ctrls =
+const struct ControlInfo hng64_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11387,7 +11399,7 @@ const struct ControlInfo hng64_ctrls =
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The Hyper Neogeo 64 system was the next generation of the classic neogeo mvs system. This new system wasn't as popular and only had a few games released on it. They all used the same control layout and relied upon inserts to explain to the consumer what button was what. Also 99% of the games started with a 'How to Play' screen upon starting the game. Although these games don't work yet in mame, the inputs are already hooked up, just like the original neogeo. It would be silly to think that these would be altered after the driver is in working order.", /* control__details */
+  "The Hyper Neo Geo 64 system was the next generation of the classic Neo Geo mvs system. This new system wasn't as popular and only had a few games released on it. They all used the same control layout and relied upon inserts to explain to the consumer what button was what. Also 99% of the games started with a 'How to Play' screen upon starting the game. Although these games don't work yet in MAME 0.141, the inputs are already hooked up, just like the original Neo Geo. It would be silly to think that these would be altered after the driver is in working order.", /* control__details */
   &hng64_get_btn
 };
 
@@ -11407,10 +11419,10 @@ const char *hng64_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hyperspt_ctrls =
+const struct ControlInfo hyperspt_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11433,10 +11445,10 @@ const char *hyperspt_get_btn(int type)
     case IPT_BUTTON3: return "Go (Right)";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo irobot_ctrls =
+const struct ControlInfo irobot_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -11462,10 +11474,10 @@ const char *irobot_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a47pie2_ctrls =
+const struct ControlInfo a47pie2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -11485,10 +11497,10 @@ const char *a47pie2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo idhimitu_ctrls =
+const struct ControlInfo idhimitu_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -11508,10 +11520,10 @@ const char *idhimitu_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo fromance_ctrls =
+const struct ControlInfo fromance_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -11531,10 +11543,10 @@ const char *fromance_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo idolmj_ctrls =
+const struct ControlInfo idolmj_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -11554,10 +11566,10 @@ const char *idolmj_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo iemoto_ctrls =
+const struct ControlInfo iemoto_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -11577,10 +11589,10 @@ const char *iemoto_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ikari3_ctrls =
+const struct ControlInfo ikari3_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11609,10 +11621,10 @@ const char *ikari3_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ikari_ctrls =
+const struct ControlInfo ikari_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11640,10 +11652,10 @@ const char *ikari_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo imekura_ctrls =
+const struct ControlInfo imekura_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -11663,10 +11675,10 @@ const char *imekura_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo indytemp_ctrls =
+const struct ControlInfo indytemp_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -11691,10 +11703,10 @@ const char *indytemp_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo inferno_ctrls =
+const struct ControlInfo inferno_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11723,10 +11735,10 @@ const char *inferno_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right+Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo invrvnge_ctrls =
+const struct ControlInfo invrvnge_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -11749,10 +11761,10 @@ const char *invrvnge_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo invho2_ctrls =
+const struct ControlInfo invho2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -11777,10 +11789,10 @@ const char *invho2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo offroad_ctrls =
+const struct ControlInfo offroad_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -11804,10 +11816,10 @@ const char *offroad_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo offroadt_ctrls =
+const struct ControlInfo offroadt_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -11831,10 +11843,10 @@ const char *offroadt_get_btn(int type)
     case IPT_PEDAL: return "On";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo jackal_ctrls =
+const struct ControlInfo jackal_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -11860,10 +11872,10 @@ const char *jackal_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo jailbrek_ctrls =
+const struct ControlInfo jailbrek_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -11889,11 +11901,11 @@ const char *jailbrek_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
 #if 0
-const struct ControlInfo teamqb_ctrls =
+const struct ControlInfo teamqb_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -11947,11 +11959,11 @@ const char *teamqb_get_btn(int type)
     case (IPT_JOYSTICK_RIGHT | IPF_PLAYER0): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 #endif
 
-const struct ControlInfo jantouki_ctrls =
+const struct ControlInfo jantouki_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -11971,10 +11983,10 @@ const char *jantouki_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo journey_ctrls =
+const struct ControlInfo journey_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -11999,10 +12011,10 @@ const char *journey_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo joust_ctrls =
+const struct ControlInfo joust_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12025,10 +12037,10 @@ const char *joust_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo joust2_ctrls =
+const struct ControlInfo joust2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12058,10 +12070,10 @@ const char *joust2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo joyfulr_ctrls =
+const struct ControlInfo joyfulr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12089,10 +12101,10 @@ const char *joyfulr_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Hand Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo jrpacman_ctrls =
+const struct ControlInfo jrpacman_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12116,10 +12128,10 @@ const char *jrpacman_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo jumpbug_ctrls =
+const struct ControlInfo jumpbug_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12144,10 +12156,10 @@ const char *jumpbug_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo junglek_ctrls =
+const struct ControlInfo junglek_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12172,10 +12184,10 @@ const char *junglek_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo jungler_ctrls =
+const struct ControlInfo jungler_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12200,10 +12212,10 @@ const char *jungler_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo jpark_ctrls =
+const struct ControlInfo jpark_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12228,10 +12240,10 @@ const char *jpark_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kageki_ctrls =
+const struct ControlInfo kageki_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12257,10 +12269,10 @@ const char *kageki_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kanatuen_ctrls =
+const struct ControlInfo kanatuen_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -12280,10 +12292,10 @@ const char *kanatuen_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kangaroo_ctrls =
+const struct ControlInfo kangaroo_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12308,10 +12320,10 @@ const char *kangaroo_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kaos_ctrls =
+const struct ControlInfo kaos_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12336,10 +12348,10 @@ const char *kaos_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kchamp_ctrls =
+const struct ControlInfo kchamp_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12367,10 +12379,10 @@ const char *kchamp_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Attack Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo karnov_ctrls =
+const struct ControlInfo karnov_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12397,10 +12409,10 @@ const char *karnov_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kick_ctrls =
+const struct ControlInfo kick_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12423,10 +12435,10 @@ const char *kick_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kicker_ctrls =
+const struct ControlInfo kicker_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12452,10 +12464,10 @@ const char *kicker_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mayumi_ctrls =
+const struct ControlInfo mayumi_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -12475,10 +12487,10 @@ const char *mayumi_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo killcom_ctrls =
+const struct ControlInfo killcom_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12506,10 +12518,10 @@ const char *killcom_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kinst_ctrls =
+const struct ControlInfo kinst_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12539,10 +12551,10 @@ const char *kinst_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kinst2_ctrls =
+const struct ControlInfo kinst2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12572,10 +12584,10 @@ const char *kinst2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kingball_ctrls =
+const struct ControlInfo kingball_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12598,10 +12610,10 @@ const char *kingball_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kingofb_ctrls =
+const struct ControlInfo kingofb_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12627,10 +12639,10 @@ const char *kingofb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo klax_ctrls =
+const struct ControlInfo klax_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -12655,10 +12667,10 @@ const char *klax_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo knights_ctrls =
+const struct ControlInfo knights_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -12684,10 +12696,10 @@ const char *knights_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo konamigt_ctrls =
+const struct ControlInfo konamigt_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -12712,10 +12724,10 @@ const char *konamigt_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kroozr_ctrls =
+const struct ControlInfo kroozr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12743,10 +12755,10 @@ const char *kroozr_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kram_ctrls =
+const struct ControlInfo kram_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12772,10 +12784,10 @@ const char *kram_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo krull_ctrls =
+const struct ControlInfo krull_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12803,10 +12815,10 @@ const char *krull_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kungfum_ctrls =
+const struct ControlInfo kungfum_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12832,10 +12844,10 @@ const char *kungfum_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kurikint_ctrls =
+const struct ControlInfo kurikint_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12861,10 +12873,10 @@ const char *kurikint_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ladybug_ctrls =
+const struct ControlInfo ladybug_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -12888,10 +12900,10 @@ const char *ladybug_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lagunar_ctrls =
+const struct ControlInfo lagunar_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -12915,10 +12927,10 @@ const char *lagunar_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lghost_ctrls =
+const struct ControlInfo lghost_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -12944,10 +12956,10 @@ const char *lghost_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lastduel_ctrls =
+const struct ControlInfo lastduel_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -12973,10 +12985,10 @@ const char *lastduel_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lethalen_ctrls =
+const struct ControlInfo lethalen_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -13001,10 +13013,10 @@ const char *lethalen_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lethalj_ctrls =
+const struct ControlInfo lethalj_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -13029,10 +13041,10 @@ const char *lethalj_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo liberatr_ctrls =
+const struct ControlInfo liberatr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13058,10 +13070,10 @@ const char *liberatr_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lnc_ctrls =
+const struct ControlInfo lnc_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13086,10 +13098,10 @@ const char *lnc_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lockon_ctrls =
+const struct ControlInfo lockon_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -13117,10 +13129,10 @@ const char *lockon_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo locomotn_ctrls =
+const struct ControlInfo locomotn_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13145,10 +13157,10 @@ const char *locomotn_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ldrun_ctrls =
+const struct ControlInfo ldrun_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13174,10 +13186,10 @@ const char *ldrun_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo looping_ctrls =
+const struct ControlInfo looping_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13201,10 +13213,10 @@ const char *looping_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo losttomb_ctrls =
+const struct ControlInfo losttomb_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13229,10 +13241,10 @@ const char *losttomb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo janjans1_ctrls =
+const struct ControlInfo janjans1_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13252,10 +13264,10 @@ const char *janjans1_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo llander_ctrls =
+const struct ControlInfo llander_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -13280,10 +13292,10 @@ const char *llander_get_btn(int type)
     case (IPT_PADDLE_V + IPT_EXTENSION): return "Decrease Thrust";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lrescue_ctrls =
+const struct ControlInfo lrescue_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13306,10 +13318,10 @@ const char *lrescue_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lupin3_ctrls =
+const struct ControlInfo lupin3_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13334,10 +13346,10 @@ const char *lupin3_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo m4_ctrls =
+const struct ControlInfo m4_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -13361,10 +13373,10 @@ const char *m4_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mplanets_ctrls =
+const struct ControlInfo mplanets_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13391,10 +13403,10 @@ const char *mplanets_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo msword_ctrls =
+const struct ControlInfo msword_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13420,10 +13432,10 @@ const char *msword_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo magspot_ctrls =
+const struct ControlInfo magspot_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -13446,10 +13458,10 @@ const char *magspot_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "R";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo akiss_ctrls =
+const struct ControlInfo akiss_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13469,10 +13481,10 @@ const char *akiss_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjangels_ctrls =
+const struct ControlInfo mjangels_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13492,10 +13504,10 @@ const char *mjangels_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bananadr_ctrls =
+const struct ControlInfo bananadr_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13515,10 +13527,10 @@ const char *bananadr_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjcamera_ctrls =
+const struct ControlInfo mjcamera_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13538,10 +13550,10 @@ const char *mjcamera_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mcnpshnt_ctrls =
+const struct ControlInfo mcnpshnt_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13561,10 +13573,10 @@ const char *mcnpshnt_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo chinmoku_ctrls =
+const struct ControlInfo chinmoku_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13584,10 +13596,10 @@ const char *chinmoku_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cmehyou_ctrls =
+const struct ControlInfo cmehyou_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13607,10 +13619,10 @@ const char *cmehyou_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjclinic_ctrls =
+const struct ControlInfo mjclinic_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13630,10 +13642,10 @@ const char *mjclinic_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo club90s_ctrls =
+const struct ControlInfo club90s_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13653,10 +13665,10 @@ const char *club90s_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo daiyogen_ctrls =
+const struct ControlInfo daiyogen_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13676,10 +13688,10 @@ const char *daiyogen_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjderngr_ctrls =
+const struct ControlInfo mjderngr_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13699,10 +13711,10 @@ const char *mjderngr_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjdialq2_ctrls =
+const struct ControlInfo mjdialq2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13722,10 +13734,10 @@ const char *mjdialq2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjdiplob_ctrls =
+const struct ControlInfo mjdiplob_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13745,10 +13757,10 @@ const char *mjdiplob_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dokyusei_ctrls =
+const struct ControlInfo dokyusei_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13768,10 +13780,10 @@ const char *dokyusei_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dokyusp_ctrls =
+const struct ControlInfo dokyusp_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13791,10 +13803,10 @@ const char *dokyusp_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjelctrn_ctrls =
+const struct ControlInfo mjelctrn_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13814,10 +13826,10 @@ const char *mjelctrn_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjegolf_ctrls =
+const struct ControlInfo mjegolf_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13837,10 +13849,10 @@ const char *mjegolf_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjfocus_ctrls =
+const struct ControlInfo mjfocus_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13860,10 +13872,10 @@ const char *mjfocus_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjfriday_ctrls =
+const struct ControlInfo mjfriday_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13883,10 +13895,10 @@ const char *mjfriday_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mfunclub_ctrls =
+const struct ControlInfo mfunclub_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13906,10 +13918,10 @@ const char *mfunclub_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mgmen89_ctrls =
+const struct ControlInfo mgmen89_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13929,10 +13941,10 @@ const char *mgmen89_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mgakuen_ctrls =
+const struct ControlInfo mgakuen_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13952,10 +13964,10 @@ const char *mgakuen_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mgakuen2_ctrls =
+const struct ControlInfo mgakuen2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13975,10 +13987,10 @@ const char *mgakuen2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gakusai_ctrls =
+const struct ControlInfo gakusai_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -13998,10 +14010,10 @@ const char *gakusai_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gakusai2_ctrls =
+const struct ControlInfo gakusai2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14021,10 +14033,10 @@ const char *gakusai2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gal10ren_ctrls =
+const struct ControlInfo gal10ren_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14044,10 +14056,10 @@ const char *gal10ren_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo galkaika_ctrls =
+const struct ControlInfo galkaika_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14067,10 +14079,10 @@ const char *galkaika_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo galkoku_ctrls =
+const struct ControlInfo galkoku_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14090,10 +14102,10 @@ const char *galkoku_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjgottsu_ctrls =
+const struct ControlInfo mjgottsu_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14113,10 +14125,10 @@ const char *mjgottsu_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hanamomo_ctrls =
+const struct ControlInfo hanamomo_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14136,10 +14148,10 @@ const char *hanamomo_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mhgaiden_ctrls =
+const struct ControlInfo mhgaiden_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14159,10 +14171,10 @@ const char *mhgaiden_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjhokite_ctrls =
+const struct ControlInfo mjhokite_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14182,10 +14194,10 @@ const char *mjhokite_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hourouki_ctrls =
+const struct ControlInfo hourouki_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14205,10 +14217,10 @@ const char *hourouki_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hypreact_ctrls =
+const struct ControlInfo hypreact_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14228,10 +14240,10 @@ const char *hypreact_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hypreac2_ctrls =
+const struct ControlInfo hypreac2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14251,10 +14263,10 @@ const char *hypreac2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjikaga_ctrls =
+const struct ControlInfo mjikaga_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14274,10 +14286,10 @@ const char *mjikaga_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo janbari_ctrls =
+const struct ControlInfo janbari_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14297,10 +14309,10 @@ const char *janbari_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjlstory_ctrls =
+const struct ControlInfo mjlstory_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14320,10 +14332,10 @@ const char *mjlstory_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo jogakuen_ctrls =
+const struct ControlInfo jogakuen_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14343,10 +14355,10 @@ const char *jogakuen_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kaguya_ctrls =
+const struct ControlInfo kaguya_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14366,10 +14378,10 @@ const char *kaguya_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mkeibaou_ctrls =
+const struct ControlInfo mkeibaou_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14389,10 +14401,10 @@ const char *mkeibaou_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjkinjas_ctrls =
+const struct ControlInfo mjkinjas_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14412,10 +14424,10 @@ const char *mjkinjas_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo koinomp_ctrls =
+const struct ControlInfo koinomp_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14435,10 +14447,10 @@ const char *koinomp_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjkoiura_ctrls =
+const struct ControlInfo mjkoiura_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14458,10 +14470,10 @@ const char *mjkoiura_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjkojink_ctrls =
+const struct ControlInfo mjkojink_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14481,10 +14493,10 @@ const char *mjkojink_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjkjidai_ctrls =
+const struct ControlInfo mjkjidai_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14504,10 +14516,10 @@ const char *mjkjidai_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjlaman_ctrls =
+const struct ControlInfo mjlaman_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14527,10 +14539,10 @@ const char *mjlaman_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lemnangl_ctrls =
+const struct ControlInfo lemnangl_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14550,10 +14562,10 @@ const char *lemnangl_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjnanpas_ctrls =
+const struct ControlInfo mjnanpas_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14573,10 +14585,10 @@ const char *mjnanpas_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjnatsu_ctrls =
+const struct ControlInfo mjnatsu_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14596,10 +14608,10 @@ const char *mjnatsu_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ntopstar_ctrls =
+const struct ControlInfo ntopstar_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14619,10 +14631,10 @@ const char *ntopstar_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo neruton_ctrls =
+const struct ControlInfo neruton_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14642,10 +14654,10 @@ const char *neruton_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo patimono_ctrls =
+const struct ControlInfo patimono_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14665,10 +14677,10 @@ const char *patimono_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pstadium_ctrls =
+const struct ControlInfo pstadium_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14688,10 +14700,10 @@ const char *pstadium_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ponchin_ctrls =
+const struct ControlInfo ponchin_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14711,10 +14723,10 @@ const char *ponchin_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjnquest_ctrls =
+const struct ControlInfo mjnquest_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14734,10 +14746,10 @@ const char *mjnquest_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo renaiclb_ctrls =
+const struct ControlInfo renaiclb_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14757,10 +14769,10 @@ const char *renaiclb_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mrokumei_ctrls =
+const struct ControlInfo mrokumei_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14780,10 +14792,10 @@ const char *mrokumei_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sailorws_ctrls =
+const struct ControlInfo sailorws_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14803,10 +14815,10 @@ const char *sailorws_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo msjiken_ctrls =
+const struct ControlInfo msjiken_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14826,10 +14838,10 @@ const char *msjiken_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mscoutm_ctrls =
+const struct ControlInfo mscoutm_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14849,10 +14861,10 @@ const char *mscoutm_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjsikaku_ctrls =
+const struct ControlInfo mjsikaku_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14872,10 +14884,10 @@ const char *mjsikaku_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjsister_ctrls =
+const struct ControlInfo mjsister_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14895,10 +14907,10 @@ const char *mjsister_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo majs101b_ctrls =
+const struct ControlInfo majs101b_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14918,10 +14930,10 @@ const char *majs101b_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mladyhtr_ctrls =
+const struct ControlInfo mladyhtr_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14941,10 +14953,10 @@ const char *mladyhtr_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo triplew1_ctrls =
+const struct ControlInfo triplew1_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14964,10 +14976,10 @@ const char *triplew1_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo triplew2_ctrls =
+const struct ControlInfo triplew2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -14987,10 +14999,10 @@ const char *triplew2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo uchuuai_ctrls =
+const struct ControlInfo uchuuai_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15010,10 +15022,10 @@ const char *uchuuai_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjuraden_ctrls =
+const struct ControlInfo mjuraden_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15033,10 +15045,10 @@ const char *mjuraden_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vanilla_ctrls =
+const struct ControlInfo vanilla_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15056,10 +15068,10 @@ const char *vanilla_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vitaminc_ctrls =
+const struct ControlInfo vitaminc_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15079,10 +15091,10 @@ const char *vitaminc_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo yarunara_ctrls =
+const struct ControlInfo yarunara_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15102,10 +15114,10 @@ const char *yarunara_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjyuugi_ctrls =
+const struct ControlInfo mjyuugi_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15125,10 +15137,10 @@ const char *mjyuugi_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mjyougo_ctrls =
+const struct ControlInfo mjyougo_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15148,10 +15160,10 @@ const char *mjyougo_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo korinai_ctrls =
+const struct ControlInfo korinai_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15171,10 +15183,10 @@ const char *korinai_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mhavoc_ctrls =
+const struct ControlInfo mhavoc_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -15198,10 +15210,10 @@ const char *mhavoc_get_btn(int type)
     case IPT_DIAL: return "Move Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo maniach_ctrls =
+const struct ControlInfo maniach_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15227,10 +15239,10 @@ const char *maniach_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mappy_ctrls =
+const struct ControlInfo mappy_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -15253,10 +15265,10 @@ const char *mappy_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo marble_ctrls =
+const struct ControlInfo marble_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15280,10 +15292,10 @@ const char *marble_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mario_ctrls =
+const struct ControlInfo mario_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15306,10 +15318,10 @@ const char *mario_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mars_ctrls =
+const struct ControlInfo mars_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -15337,10 +15349,10 @@ const char *mars_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mmatrix_ctrls =
+const struct ControlInfo mmatrix_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15366,10 +15378,10 @@ const char *mmatrix_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo msh_ctrls =
+const struct ControlInfo msh_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15411,10 +15423,10 @@ const char *msh_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Forward";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mshvsf_ctrls =
+const struct ControlInfo mshvsf_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15444,10 +15456,10 @@ const char *mshvsf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mvsc_ctrls =
+const struct ControlInfo mvsc_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15477,10 +15489,10 @@ const char *mvsc_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo matmania_ctrls =
+const struct ControlInfo matmania_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15506,10 +15518,10 @@ const char *matmania_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo maxrpm_ctrls =
+const struct ControlInfo maxrpm_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15534,10 +15546,10 @@ const char *maxrpm_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo maxforce_ctrls =
+const struct ControlInfo maxforce_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15562,10 +15574,10 @@ const char *maxforce_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mayday_ctrls =
+const struct ControlInfo mayday_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -15592,10 +15604,10 @@ const char *mayday_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mechatt_ctrls =
+const struct ControlInfo mechatt_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15621,10 +15633,10 @@ const char *mechatt_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mmehyou_ctrls =
+const struct ControlInfo mmehyou_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15644,10 +15656,10 @@ const char *mmehyou_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pachiten_ctrls =
+const struct ControlInfo pachiten_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -15667,10 +15679,10 @@ const char *pachiten_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo megaman2_ctrls =
+const struct ControlInfo megaman2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15697,10 +15709,10 @@ const char *megaman2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo megazone_ctrls =
+const struct ControlInfo megazone_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -15725,10 +15737,10 @@ const char *megazone_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mercs_ctrls =
+const struct ControlInfo mercs_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -15754,10 +15766,10 @@ const char *mercs_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo metamrph_ctrls =
+const struct ControlInfo metamrph_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -15783,10 +15795,10 @@ const char *metamrph_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo metrocrs_ctrls =
+const struct ControlInfo metrocrs_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -15811,10 +15823,10 @@ const char *metrocrs_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mwalk_ctrls =
+const struct ControlInfo mwalk_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -15840,10 +15852,10 @@ const char *mwalk_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo midres_ctrls =
+const struct ControlInfo midres_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15871,10 +15883,10 @@ const char *midres_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gtmr2_ctrls =
+const struct ControlInfo gtmr2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15904,10 +15916,10 @@ const char *gtmr2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo milliped_ctrls =
+const struct ControlInfo milliped_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -15932,10 +15944,10 @@ const char *milliped_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo minefld_ctrls =
+const struct ControlInfo minefld_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -15964,10 +15976,10 @@ const char *minefld_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Machine Gun Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mineswpr_ctrls =
+const struct ControlInfo mineswpr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -15991,10 +16003,10 @@ const char *mineswpr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo minigolf_ctrls =
+const struct ControlInfo minigolf_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -16015,10 +16027,10 @@ const char *minigolf_get_btn(int type)
     case IPT_BUTTON1: return "Tee Selection";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mcontest_ctrls =
+const struct ControlInfo mcontest_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -16038,10 +16050,10 @@ const char *mcontest_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo missile_ctrls =
+const struct ControlInfo missile_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16068,10 +16080,10 @@ const char *missile_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gmissile_ctrls =
+const struct ControlInfo gmissile_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -16094,10 +16106,10 @@ const char *gmissile_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo moguchan_ctrls =
+const struct ControlInfo moguchan_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16122,10 +16134,10 @@ const char *moguchan_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mole_ctrls =
+const struct ControlInfo mole_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16154,10 +16166,10 @@ const char *mole_get_btn(int type)
     case IPT_BUTTON9: return "Attack 9";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo monymony_ctrls =
+const struct ControlInfo monymony_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16182,10 +16194,10 @@ const char *monymony_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo monsterb_ctrls =
+const struct ControlInfo monsterb_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16210,10 +16222,10 @@ const char *monsterb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo montecar_ctrls =
+const struct ControlInfo montecar_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -16241,10 +16253,10 @@ const char *montecar_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mooncrst_ctrls =
+const struct ControlInfo mooncrst_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16267,10 +16279,10 @@ const char *mooncrst_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mpatrol_ctrls =
+const struct ControlInfo mpatrol_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16294,10 +16306,10 @@ const char *mpatrol_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Faster";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo moonwar_ctrls =
+const struct ControlInfo moonwar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16322,10 +16334,10 @@ const char *moonwar_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mk_ctrls =
+const struct ControlInfo mk_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -16354,10 +16366,10 @@ const char *mk_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mk3_ctrls =
+const struct ControlInfo mk3_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -16365,7 +16377,7 @@ const struct ControlInfo mk3_ctrls =
   true, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. The Run button is placed inthe lower left hand corner, similar to a mamers 'modified neogeo' layout. It is highly reccomended that you write ctrlr files for these games if you intend to play them.", /* control__details */
+  "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. The Run button is placed inthe lower left hand corner, similar to a mamers 'modified Neo Geo' layout. It is highly reccomended that you write ctrlr files for these games if you intend to play them.", /* control__details */
   &mk3_get_btn
 };
 
@@ -16387,10 +16399,10 @@ const char *mk3_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mk4_ctrls =
+const struct ControlInfo mk4_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -16420,10 +16432,10 @@ const char *mk4_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mk2_ctrls =
+const struct ControlInfo mk2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -16452,10 +16464,10 @@ const char *mk2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mtrap_ctrls =
+const struct ControlInfo mtrap_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16483,10 +16495,10 @@ const char *mtrap_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mrdo_ctrls =
+const struct ControlInfo mrdo_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16511,10 +16523,10 @@ const char *mrdo_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo docastle_ctrls =
+const struct ControlInfo docastle_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16539,10 +16551,10 @@ const char *docastle_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo dowild_ctrls =
+const struct ControlInfo dowild_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16567,10 +16579,10 @@ const char *dowild_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mrdrillr_ctrls =
+const struct ControlInfo mrdrillr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16595,10 +16607,10 @@ const char *mrdrillr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mspacman_ctrls =
+const struct ControlInfo mspacman_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16622,10 +16634,10 @@ const char *mspacman_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mvp_ctrls =
+const struct ControlInfo mvp_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -16652,10 +16664,10 @@ const char *mvp_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mx5000_ctrls =
+const struct ControlInfo mx5000_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16681,10 +16693,10 @@ const char *mx5000_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mysticm_ctrls =
+const struct ControlInfo mysticm_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16709,10 +16721,10 @@ const char *mysticm_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mystwarr_ctrls =
+const struct ControlInfo mystwarr_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -16739,10 +16751,10 @@ const char *mystwarr_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nametune_ctrls =
+const struct ControlInfo nametune_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -16766,10 +16778,10 @@ const char *nametune_get_btn(int type)
     case IPT_BUTTON4: return "4";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo narc_ctrls =
+const struct ControlInfo narc_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -16797,10 +16809,10 @@ const char *narc_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nastar_ctrls =
+const struct ControlInfo nastar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16826,10 +16838,10 @@ const char *nastar_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo natodef_ctrls =
+const struct ControlInfo natodef_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16854,10 +16866,10 @@ const char *natodef_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo naughtyb_ctrls =
+const struct ControlInfo naughtyb_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -16882,10 +16894,10 @@ const char *naughtyb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nbahangt_ctrls =
+const struct ControlInfo nbahangt_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -16912,10 +16924,10 @@ const char *nbahangt_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nbajam_ctrls =
+const struct ControlInfo nbajam_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -16942,10 +16954,10 @@ const char *nbajam_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo neckneck_ctrls =
+const struct ControlInfo neckneck_ctrl =
 {
   6, /* num_players */
   false, /* alternating_controls */
@@ -16971,10 +16983,10 @@ const char *neckneck_get_btn(int type)
     case IPT_BUTTON6: return "6";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ngpgal_ctrls =
+const struct ControlInfo ngpgal_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -16994,10 +17006,10 @@ const char *ngpgal_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nmsengen_ctrls =
+const struct ControlInfo nmsengen_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17017,10 +17029,10 @@ const char *nmsengen_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo neogeo_ctrls =
+const struct ControlInfo neogeo_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -17028,7 +17040,7 @@ const struct ControlInfo neogeo_ctrls =
   false, /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
-  "The NeoGeo Mvs system was a generic cabinet that could have games swapped out very easily, similar to console games. There was a single game version, a 2 game, 4 game, and 6, game version. The multi-cart versions had buttons to switch to a new game prior to inserting your quarter. As of this writing, this feature is unemulated in MAME. They all used the same control layout and relied upon inserts to explain to the consumer what button was what. Also 99% of the neogeo games started with a 'How to Play' screen upon starting the game.", /* control__details */
+  "The Neo Geo MVS system is a generic cabinet that can have games swapped out very easily, similar to console games. A single game cabinet, a 2 game, 4 game, and 6 game variation were manufactured. The multi-cart versions had buttons to switch to a new game prior to inserting your quarter. This feature is unemulated as of MAME 0.141. Neo Geo cabinets all used the same control layout and relied upon inserts to explain to the consumer what button had what function. Most Neo Geo games begin with a 'How to Play' screen with gameplay information.", /* control__details */
   &neogeo_get_btn
 };
 
@@ -17038,20 +17050,21 @@ const char *neogeo_get_btn(int type)
   {
 /* P1NumButtons=4 */
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "8-way Joystick+joy8way";
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
-    case IPT_BUTTON4: return "D";
+    case IPT_BUTTON1: return BTN1 "Neo Geo A";
+    case IPT_BUTTON2: return BTN2 "Neo Geo B";
+    case IPT_BUTTON3: return BTN3 "Neo Geo C";
+    case IPT_BUTTON4: return BTN4 "Neo Geo D";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return generic_btn_label(type);
 }
 
-const struct ControlInfo nyny_ctrls =
+
+const struct ControlInfo nyny_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17074,10 +17087,10 @@ const char *nyny_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo blitz_ctrls =
+const struct ControlInfo blitz_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -17104,10 +17117,10 @@ const char *blitz_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nibbler_ctrls =
+const struct ControlInfo nibbler_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17131,10 +17144,10 @@ const char *nibbler_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nss_ctrls =
+const struct ControlInfo nss_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -17168,10 +17181,10 @@ const char *nss_get_btn(int type)
     case IPT_SERVICE4: return "Select (Player 4)";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nomnlnd_ctrls =
+const struct ControlInfo nomnlnd_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17196,10 +17209,10 @@ const char *nomnlnd_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nova2001_ctrls =
+const struct ControlInfo nova2001_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17225,10 +17238,10 @@ const char *nova2001_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ojankoc_ctrls =
+const struct ControlInfo ojankoc_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17248,10 +17261,10 @@ const char *ojankoc_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ojankohs_ctrls =
+const struct ControlInfo ojankohs_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17271,10 +17284,10 @@ const char *ojankohs_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ojankoy_ctrls =
+const struct ControlInfo ojankoy_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17294,10 +17307,10 @@ const char *ojankoy_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ojanko2_ctrls =
+const struct ControlInfo ojanko2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17317,10 +17330,10 @@ const char *ojanko2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ojousan_ctrls =
+const struct ControlInfo ojousan_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17340,10 +17353,10 @@ const char *ojousan_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo olibochu_ctrls =
+const struct ControlInfo olibochu_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17367,10 +17380,10 @@ const char *olibochu_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo omegrace_ctrls =
+const struct ControlInfo omegrace_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17394,10 +17407,10 @@ const char *omegrace_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo oneshot_ctrls =
+const struct ControlInfo oneshot_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -17422,10 +17435,10 @@ const char *oneshot_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo othunder_ctrls =
+const struct ControlInfo othunder_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -17451,10 +17464,10 @@ const char *othunder_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo opwolf_ctrls =
+const struct ControlInfo opwolf_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -17480,10 +17493,10 @@ const char *opwolf_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo opwolf3_ctrls =
+const struct ControlInfo opwolf3_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -17509,10 +17522,10 @@ const char *opwolf3_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo orangec_ctrls =
+const struct ControlInfo orangec_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17532,10 +17545,10 @@ const char *orangec_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo otonano_ctrls =
+const struct ControlInfo otonano_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17555,10 +17568,10 @@ const char *otonano_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo outrun_ctrls =
+const struct ControlInfo outrun_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -17583,10 +17596,10 @@ const char *outrun_get_btn(int type)
     case IPT_PEDAL2: return "Brake";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo overdriv_ctrls =
+const struct ControlInfo overdriv_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -17611,10 +17624,10 @@ const char *overdriv_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pow_ctrls =
+const struct ControlInfo pow_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -17641,10 +17654,10 @@ const char *pow_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pacland_ctrls =
+const struct ControlInfo pacland_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17667,10 +17680,10 @@ const char *pacland_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Run Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pacplus_ctrls =
+const struct ControlInfo pacplus_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17694,10 +17707,10 @@ const char *pacplus_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pacmania_ctrls =
+const struct ControlInfo pacmania_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17724,10 +17737,10 @@ const char *pacmania_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo paddlema_ctrls =
+const struct ControlInfo paddlema_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -17752,10 +17765,10 @@ const char *paddlema_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pandoras_ctrls =
+const struct ControlInfo pandoras_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17780,10 +17793,10 @@ const char *pandoras_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo paperboy_ctrls =
+const struct ControlInfo paperboy_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17809,10 +17822,10 @@ const char *paperboy_get_btn(int type)
     case IPT_AD_STICK_Y: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pastelg_ctrls =
+const struct ControlInfo pastelg_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -17832,10 +17845,10 @@ const char *pastelg_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pengo_ctrls =
+const struct ControlInfo pengo_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17860,10 +17873,10 @@ const char *pengo_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pepper2_ctrls =
+const struct ControlInfo pepper2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17887,10 +17900,10 @@ const char *pepper2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo peterpak_ctrls =
+const struct ControlInfo peterpak_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17916,10 +17929,10 @@ const char *peterpak_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo phoenix_ctrls =
+const struct ControlInfo phoenix_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -17943,10 +17956,10 @@ const char *phoenix_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pigout_ctrls =
+const struct ControlInfo pigout_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -17972,10 +17985,10 @@ const char *pigout_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pigskin_ctrls =
+const struct ControlInfo pigskin_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18002,10 +18015,10 @@ const char *pigskin_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pbaction_ctrls =
+const struct ControlInfo pbaction_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18029,10 +18042,10 @@ const char *pbaction_get_btn(int type)
     case IPT_BUTTON4: return "Shake and Start Button (Right)";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo piratetr_ctrls =
+const struct ControlInfo piratetr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18056,10 +18069,10 @@ const char *piratetr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pitfight_ctrls =
+const struct ControlInfo pitfight_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -18086,10 +18099,10 @@ const char *pitfight_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pitfall2_ctrls =
+const struct ControlInfo pitfall2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18114,10 +18127,10 @@ const char *pitfall2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo playch10_ctrls =
+const struct ControlInfo playch10_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18159,10 +18172,10 @@ const char *playch10_get_btn(int type)
     case IPT_SERVICE4: return "Reset";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pleiads_ctrls =
+const struct ControlInfo pleiads_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18186,10 +18199,10 @@ const char *pleiads_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo plotting_ctrls =
+const struct ControlInfo plotting_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18214,10 +18227,10 @@ const char *plotting_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ptblank_ctrls =
+const struct ControlInfo ptblank_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18242,10 +18255,10 @@ const char *ptblank_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo polaris_ctrls =
+const struct ControlInfo polaris_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18270,10 +18283,10 @@ const char *polaris_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo polepos_ctrls =
+const struct ControlInfo polepos_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -18298,10 +18311,10 @@ const char *polepos_get_btn(int type)
     case IPT_PEDAL2: return "Brake";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo polepos2_ctrls =
+const struct ControlInfo polepos2_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -18326,10 +18339,10 @@ const char *polepos2_get_btn(int type)
     case IPT_PEDAL2: return "Brake";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo policetr_ctrls =
+const struct ControlInfo policetr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18354,10 +18367,10 @@ const char *policetr_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo polyplay_ctrls =
+const struct ControlInfo polyplay_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -18382,10 +18395,10 @@ const char *polyplay_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ponpoko_ctrls =
+const struct ControlInfo ponpoko_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18410,10 +18423,10 @@ const char *ponpoko_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pooyan_ctrls =
+const struct ControlInfo pooyan_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18436,10 +18449,10 @@ const char *pooyan_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo popeye_ctrls =
+const struct ControlInfo popeye_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18464,10 +18477,10 @@ const char *popeye_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo popper_ctrls =
+const struct ControlInfo popper_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18492,10 +18505,10 @@ const char *popper_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pdrift_ctrls =
+const struct ControlInfo pdrift_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -18520,10 +18533,10 @@ const char *pdrift_get_btn(int type)
     case IPT_PEDAL2: return "Brake";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo powerdrv_ctrls =
+const struct ControlInfo powerdrv_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -18547,10 +18560,10 @@ const char *powerdrv_get_btn(int type)
     case IPT_BUTTON4: return "2wd/4wd";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pclubj_ctrls =
+const struct ControlInfo pclubj_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -18576,10 +18589,10 @@ const char *pclubj_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kiwame_ctrls =
+const struct ControlInfo kiwame_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -18599,10 +18612,10 @@ const char *kiwame_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo profpac_ctrls =
+const struct ControlInfo profpac_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18625,10 +18638,10 @@ const char *profpac_get_btn(int type)
     case IPT_BUTTON3: return "C";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo psychos_ctrls =
+const struct ControlInfo psychos_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18654,10 +18667,10 @@ const char *psychos_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Move Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo puckman_ctrls =
+const struct ControlInfo puckman_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18681,10 +18694,10 @@ const char *puckman_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pulsar_ctrls =
+const struct ControlInfo pulsar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18709,10 +18722,10 @@ const char *pulsar_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo punchout_ctrls =
+const struct ControlInfo punchout_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -18739,10 +18752,10 @@ const char *punchout_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Dodge Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo punkshot_ctrls =
+const struct ControlInfo punkshot_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18768,10 +18781,10 @@ const char *punkshot_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pbobble_ctrls =
+const struct ControlInfo pbobble_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18794,10 +18807,10 @@ const char *pbobble_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pbobble2_ctrls =
+const struct ControlInfo pbobble2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18825,10 +18838,10 @@ const char *pbobble2_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo pbobble3_ctrls =
+const struct ControlInfo pbobble3_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -18856,10 +18869,10 @@ const char *pbobble3_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo qbert_ctrls =
+const struct ControlInfo qbert_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18883,10 +18896,10 @@ const char *qbert_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Down+Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo qbertqub_ctrls =
+const struct ControlInfo qbertqub_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18910,10 +18923,10 @@ const char *qbertqub_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right+Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo qix_ctrls =
+const struct ControlInfo qix_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18939,10 +18952,10 @@ const char *qix_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo quantum_ctrls =
+const struct ControlInfo quantum_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -18966,11 +18979,11 @@ const char *quantum_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
 #if 0
-const struct ControlInfo quarterb_ctrls =
+const struct ControlInfo quarterb_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -19008,11 +19021,11 @@ const char *quarterb_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Set Power";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 #endif
 
-const struct ControlInfo quartet_ctrls =
+const struct ControlInfo quartet_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -19038,10 +19051,10 @@ const char *quartet_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo quasar_ctrls =
+const struct ControlInfo quasar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19065,10 +19078,10 @@ const char *quasar_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo qad_ctrls =
+const struct ControlInfo qad_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -19092,10 +19105,10 @@ const char *qad_get_btn(int type)
     case IPT_BUTTON4: return "4";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo qndream_ctrls =
+const struct ControlInfo qndream_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -19119,10 +19132,10 @@ const char *qndream_get_btn(int type)
     case IPT_BUTTON4: return "4";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo qmhayaku_ctrls =
+const struct ControlInfo qmhayaku_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -19142,10 +19155,10 @@ const char *qmhayaku_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rtype_ctrls =
+const struct ControlInfo rtype_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19171,10 +19184,10 @@ const char *rtype_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo radarscp_ctrls =
+const struct ControlInfo radarscp_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19197,10 +19210,10 @@ const char *radarscp_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo radrad_ctrls =
+const struct ControlInfo radrad_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19225,10 +19238,10 @@ const char *radrad_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rchase_ctrls =
+const struct ControlInfo rchase_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -19253,10 +19266,10 @@ const char *rchase_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rainbow_ctrls =
+const struct ControlInfo rainbow_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19280,10 +19293,10 @@ const char *rainbow_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rallyx_ctrls =
+const struct ControlInfo rallyx_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19308,10 +19321,10 @@ const char *rallyx_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rampage_ctrls =
+const struct ControlInfo rampage_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -19337,10 +19350,10 @@ const char *rampage_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rmpgwt_ctrls =
+const struct ControlInfo rmpgwt_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -19367,10 +19380,10 @@ const char *rmpgwt_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rampart_ctrls =
+const struct ControlInfo rampart_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -19396,10 +19409,10 @@ const char *rampart_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rastan_ctrls =
+const struct ControlInfo rastan_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19425,10 +19438,10 @@ const char *rastan_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo reactor_ctrls =
+const struct ControlInfo reactor_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19454,10 +19467,10 @@ const char *reactor_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rmhaihai_ctrls =
+const struct ControlInfo rmhaihai_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -19477,10 +19490,10 @@ const char *rmhaihai_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rmhaijin_ctrls =
+const struct ControlInfo rmhaijin_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -19500,10 +19513,10 @@ const char *rmhaijin_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rmhaisei_ctrls =
+const struct ControlInfo rmhaisei_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -19523,10 +19536,10 @@ const char *rmhaisei_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo redlin2p_ctrls =
+const struct ControlInfo redlin2p_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -19549,10 +19562,10 @@ const char *redlin2p_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo regulus_ctrls =
+const struct ControlInfo regulus_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19578,10 +19591,10 @@ const char *regulus_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo renegade_ctrls =
+const struct ControlInfo renegade_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19608,10 +19621,10 @@ const char *renegade_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rescue_ctrls =
+const struct ControlInfo rescue_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19640,10 +19653,10 @@ const char *rescue_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rescraid_ctrls =
+const struct ControlInfo rescraid_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19672,10 +19685,10 @@ const char *rescraid_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Steering Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo nekkyoku_ctrls =
+const struct ControlInfo nekkyoku_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -19695,10 +19708,10 @@ const char *nekkyoku_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo jedi_ctrls =
+const struct ControlInfo jedi_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -19725,10 +19738,10 @@ const char *jedi_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo revx_ctrls =
+const struct ControlInfo revx_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -19754,10 +19767,10 @@ const char *revx_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ripoff_ctrls =
+const struct ControlInfo ripoff_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -19781,10 +19794,10 @@ const char *ripoff_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo roadblst_ctrls =
+const struct ControlInfo roadblst_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -19809,10 +19822,10 @@ const char *roadblst_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo roadf_ctrls =
+const struct ControlInfo roadf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19838,10 +19851,10 @@ const char *roadf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo roadrunn_ctrls =
+const struct ControlInfo roadrunn_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19868,10 +19881,10 @@ const char *roadrunn_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo robby_ctrls =
+const struct ControlInfo robby_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19896,10 +19909,10 @@ const char *robby_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo robocop_ctrls =
+const struct ControlInfo robocop_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19925,10 +19938,10 @@ const char *robocop_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo robocop2_ctrls =
+const struct ControlInfo robocop2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -19955,10 +19968,10 @@ const char *robocop2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo robotron_ctrls =
+const struct ControlInfo robotron_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -19986,10 +19999,10 @@ const char *robotron_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rocnrope_ctrls =
+const struct ControlInfo rocnrope_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20015,10 +20028,10 @@ const char *rocnrope_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rollerg_ctrls =
+const struct ControlInfo rollerg_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20044,10 +20057,10 @@ const char *rollerg_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rthunder_ctrls =
+const struct ControlInfo rthunder_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20073,10 +20086,10 @@ const char *rthunder_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rranger_ctrls =
+const struct ControlInfo rranger_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20102,10 +20115,10 @@ const char *rranger_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo roundup_ctrls =
+const struct ControlInfo roundup_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20130,10 +20143,10 @@ const char *roundup_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo royalmah_ctrls =
+const struct ControlInfo royalmah_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -20153,10 +20166,10 @@ const char *royalmah_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rungun_ctrls =
+const struct ControlInfo rungun_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -20183,10 +20196,10 @@ const char *rungun_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo runaway_ctrls =
+const struct ControlInfo runaway_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20209,10 +20222,10 @@ const char *runaway_get_btn(int type)
     case IPT_BUTTON3: return "Forward / Reverse";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo kirarast_ctrls =
+const struct ControlInfo kirarast_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -20232,10 +20245,10 @@ const char *kirarast_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo stunrun_ctrls =
+const struct ControlInfo stunrun_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -20261,10 +20274,10 @@ const char *stunrun_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo salamand_ctrls =
+const struct ControlInfo salamand_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20290,10 +20303,10 @@ const char *salamand_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo searchar_ctrls =
+const struct ControlInfo searchar_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20321,10 +20334,10 @@ const char *searchar_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sarge_ctrls =
+const struct ControlInfo sarge_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20350,10 +20363,10 @@ const char *sarge_get_btn(int type)
     case IPT_JOYSTICKRIGHT_DOWN: return "Right Tread Backward";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo satansat_ctrls =
+const struct ControlInfo satansat_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20377,10 +20390,10 @@ const char *satansat_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo shollow_ctrls =
+const struct ControlInfo shollow_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20404,10 +20417,10 @@ const char *shollow_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo scandal_ctrls =
+const struct ControlInfo scandal_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -20427,10 +20440,10 @@ const char *scandal_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo scramble_ctrls =
+const struct ControlInfo scramble_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20456,10 +20469,10 @@ const char *scramble_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Fast";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sdi_ctrls =
+const struct ControlInfo sdi_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20488,10 +20501,10 @@ const char *sdi_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo seawolf_ctrls =
+const struct ControlInfo seawolf_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -20514,10 +20527,10 @@ const char *seawolf_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo seawolf2_ctrls =
+const struct ControlInfo seawolf2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20540,10 +20553,10 @@ const char *seawolf2_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo secolove_ctrls =
+const struct ControlInfo secolove_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -20563,10 +20576,10 @@ const char *secolove_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo seiha_ctrls =
+const struct ControlInfo seiha_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -20586,10 +20599,10 @@ const char *seiha_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sengokmj_ctrls =
+const struct ControlInfo sengokmj_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -20609,10 +20622,10 @@ const char *sengokmj_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo shdancer_ctrls =
+const struct ControlInfo shdancer_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20639,10 +20652,10 @@ const char *shdancer_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo shadoww_ctrls =
+const struct ControlInfo shadoww_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20669,10 +20682,10 @@ const char *shadoww_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sharkatt_ctrls =
+const struct ControlInfo sharkatt_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20698,10 +20711,10 @@ const char *sharkatt_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sshooter_ctrls =
+const struct ControlInfo sshooter_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20726,10 +20739,10 @@ const char *sshooter_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sheriff_ctrls =
+const struct ControlInfo sheriff_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20758,10 +20771,10 @@ const char *sheriff_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo shinobi_ctrls =
+const struct ControlInfo shinobi_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20788,10 +20801,10 @@ const char *shinobi_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo shootout_ctrls =
+const struct ControlInfo shootout_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20817,10 +20830,10 @@ const char *shootout_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo shootbul_ctrls =
+const struct ControlInfo shootbul_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -20844,10 +20857,10 @@ const char *shootbul_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo shuffle_ctrls =
+const struct ControlInfo shuffle_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20872,10 +20885,10 @@ const char *shuffle_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo shufshot_ctrls =
+const struct ControlInfo shufshot_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -20901,10 +20914,10 @@ const char *shufshot_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sidearms_ctrls =
+const struct ControlInfo sidearms_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -20931,10 +20944,10 @@ const char *sidearms_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sidetrac_ctrls =
+const struct ControlInfo sidetrac_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20959,10 +20972,10 @@ const char *sidetrac_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sinistar_ctrls =
+const struct ControlInfo sinistar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -20988,10 +21001,10 @@ const char *sinistar_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo skullxbo_ctrls =
+const struct ControlInfo skullxbo_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -21017,10 +21030,10 @@ const char *skullxbo_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo skydiver_ctrls =
+const struct ControlInfo skydiver_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -21044,10 +21057,10 @@ const char *skydiver_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo skysoldr_ctrls =
+const struct ControlInfo skysoldr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -21073,10 +21086,10 @@ const char *skysoldr_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo slapfigh_ctrls =
+const struct ControlInfo slapfigh_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21102,10 +21115,10 @@ const char *slapfigh_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo slikshot_ctrls =
+const struct ControlInfo slikshot_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21132,10 +21145,10 @@ const char *slikshot_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo slither_ctrls =
+const struct ControlInfo slither_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21161,10 +21174,10 @@ const char *slither_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo slyspy_ctrls =
+const struct ControlInfo slyspy_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21190,10 +21203,10 @@ const char *slyspy_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo smashtv_ctrls =
+const struct ControlInfo smashtv_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -21221,10 +21234,10 @@ const char *smashtv_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo snakjack_ctrls =
+const struct ControlInfo snakjack_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21249,10 +21262,10 @@ const char *snakjack_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo snapjack_ctrls =
+const struct ControlInfo snapjack_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21276,10 +21289,10 @@ const char *snapjack_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo snowbros_ctrls =
+const struct ControlInfo snowbros_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -21305,10 +21318,10 @@ const char *snowbros_get_btn(int type)
     case IPT_JOYSTICK_UP: return "N/A";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo solarfox_ctrls =
+const struct ControlInfo solarfox_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21334,10 +21347,10 @@ const char *solarfox_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo solarq_ctrls =
+const struct ControlInfo solarq_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -21363,10 +21376,10 @@ const char *solarq_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo amazon_ctrls =
+const struct ControlInfo amazon_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21392,10 +21405,10 @@ const char *amazon_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sbm_ctrls =
+const struct ControlInfo sbm_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21423,10 +21436,10 @@ const char *sbm_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo souledge_ctrls =
+const struct ControlInfo souledge_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -21454,10 +21467,10 @@ const char *souledge_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sspaceat_ctrls =
+const struct ControlInfo sspaceat_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21480,10 +21493,10 @@ const char *sspaceat_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Control Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spacduel_ctrls =
+const struct ControlInfo spacduel_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -21508,10 +21521,10 @@ const char *spacduel_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spacefb_ctrls =
+const struct ControlInfo spacefb_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21535,10 +21548,10 @@ const char *spacefb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Starboard (Right)";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spacfury_ctrls =
+const struct ControlInfo spacfury_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21562,10 +21575,10 @@ const char *spacfury_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spacegun_ctrls =
+const struct ControlInfo spacegun_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -21592,10 +21605,10 @@ const char *spacegun_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sharrier_ctrls =
+const struct ControlInfo sharrier_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -21622,10 +21635,10 @@ const char *sharrier_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo invaders_ctrls =
+const struct ControlInfo invaders_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21648,10 +21661,10 @@ const char *invaders_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Control Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spacedx_ctrls =
+const struct ControlInfo spacedx_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -21676,10 +21689,10 @@ const char *spacedx_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo invadpt2_ctrls =
+const struct ControlInfo invadpt2_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21702,10 +21715,10 @@ const char *invadpt2_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spacelnc_ctrls =
+const struct ControlInfo spacelnc_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21728,10 +21741,10 @@ const char *spacelnc_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spaceod_ctrls =
+const struct ControlInfo spaceod_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21757,10 +21770,10 @@ const char *spaceod_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo panic_ctrls =
+const struct ControlInfo panic_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21786,10 +21799,10 @@ const char *panic_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spacezap_ctrls =
+const struct ControlInfo spacezap_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21814,10 +21827,10 @@ const char *spacezap_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo speakres_ctrls =
+const struct ControlInfo speakres_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21840,10 +21853,10 @@ const char *speakres_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spectar_ctrls =
+const struct ControlInfo spectar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21868,10 +21881,10 @@ const char *spectar_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spdcoin_ctrls =
+const struct ControlInfo spdcoin_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -21893,10 +21906,10 @@ const char *spdcoin_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo speedfrk_ctrls =
+const struct ControlInfo speedfrk_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -21918,10 +21931,10 @@ const char *speedfrk_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo speedrcr_ctrls =
+const struct ControlInfo speedrcr_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -21947,10 +21960,10 @@ const char *speedrcr_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spidman_ctrls =
+const struct ControlInfo spidman_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -21976,10 +21989,10 @@ const char *spidman_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spiders_ctrls =
+const struct ControlInfo spiders_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22002,10 +22015,10 @@ const char *spiders_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sprint1_ctrls =
+const struct ControlInfo sprint1_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -22032,10 +22045,10 @@ const char *sprint1_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo starcas_ctrls =
+const struct ControlInfo starcas_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22059,10 +22072,10 @@ const char *starcas_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo starforc_ctrls =
+const struct ControlInfo starforc_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22087,10 +22100,10 @@ const char *starforc_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo stargrds_ctrls =
+const struct ControlInfo stargrds_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -22118,10 +22131,10 @@ const char *stargrds_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Shoot Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo starhawk_ctrls =
+const struct ControlInfo starhawk_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22149,10 +22162,10 @@ const char *starhawk_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo starjack_ctrls =
+const struct ControlInfo starjack_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22178,10 +22191,10 @@ const char *starjack_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo startrek_ctrls =
+const struct ControlInfo startrek_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22207,10 +22220,10 @@ const char *startrek_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo starwars_ctrls =
+const struct ControlInfo starwars_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -22238,10 +22251,10 @@ const char *starwars_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo stargate_ctrls =
+const struct ControlInfo stargate_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22269,10 +22282,10 @@ const char *stargate_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sgunner_ctrls =
+const struct ControlInfo sgunner_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22298,10 +22311,10 @@ const char *sgunner_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sgunner2_ctrls =
+const struct ControlInfo sgunner2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22327,10 +22340,10 @@ const char *sgunner2_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo stocker_ctrls =
+const struct ControlInfo stocker_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -22353,10 +22366,10 @@ const char *stocker_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo stratab_ctrls =
+const struct ControlInfo stratab_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -22382,10 +22395,10 @@ const char *stratab_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo stratgyx_ctrls =
+const struct ControlInfo stratgyx_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22412,10 +22425,10 @@ const char *stratgyx_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sf_ctrls =
+const struct ControlInfo sf_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22445,10 +22458,10 @@ const char *sf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sfa2_ctrls =
+const struct ControlInfo sfa2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22478,10 +22491,10 @@ const char *sfa2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sfa3_ctrls =
+const struct ControlInfo sfa3_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22511,10 +22524,10 @@ const char *sfa3_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sfa_ctrls =
+const struct ControlInfo sfa_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22544,10 +22557,10 @@ const char *sfa_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sf2ce_ctrls =
+const struct ControlInfo sf2ce_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22577,10 +22590,10 @@ const char *sf2ce_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sf2_ctrls =
+const struct ControlInfo sf2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22592,28 +22605,29 @@ const struct ControlInfo sf2_ctrls =
   &sf2_get_btn
 };
 
+
 const char *sf2_get_btn(int type)
 {
   switch(type)
   {
 /* P1NumButtons=6 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "8-way Joystick+joy8way";
-    case IPT_BUTTON1: return "Light Punch";
-    case IPT_BUTTON2: return "Middle Punch";
-    case IPT_BUTTON3: return "Heavy Punch";
-    case IPT_BUTTON4: return "Light Kick";
-    case IPT_BUTTON5: return "Middle Kick";
-    case IPT_BUTTON6: return "Heavy Kick";
+    case (IPT_OSD_DESCRIPTION): return "8-way Joystick+joy8way";
+    case IPT_BUTTON1: return BTN1 "Jab Punch";
+    case IPT_BUTTON2: return BTN2 "Strong Punch";
+    case IPT_BUTTON3: return BTN3 "Fierce Punch";
+    case IPT_BUTTON4: return BTN4 "Short Kick";
+    case IPT_BUTTON5: return BTN5 "Forward Kick";
+    case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return generic_btn_label(type);
 }
 
-const struct ControlInfo sfiii2_ctrls =
+const struct ControlInfo sfiii2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22643,10 +22657,10 @@ const char *sfiii2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sfiii3_ctrls =
+const struct ControlInfo sfiii3_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22676,10 +22690,10 @@ const char *sfiii3_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sfiii_ctrls =
+const struct ControlInfo sfiii_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22709,10 +22723,10 @@ const char *sfiii_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sftm_ctrls =
+const struct ControlInfo sftm_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22742,10 +22756,10 @@ const char *sftm_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo strider_ctrls =
+const struct ControlInfo strider_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22771,10 +22785,10 @@ const char *strider_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sbowling_ctrls =
+const struct ControlInfo sbowling_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22798,10 +22812,10 @@ const char *sbowling_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo strkforc_ctrls =
+const struct ControlInfo strkforc_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22828,10 +22842,10 @@ const char *strkforc_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo s1945_ctrls =
+const struct ControlInfo s1945_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22857,10 +22871,10 @@ const char *s1945_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo s1945iii_ctrls =
+const struct ControlInfo s1945iii_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22887,10 +22901,10 @@ const char *s1945iii_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo subs_ctrls =
+const struct ControlInfo subs_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -22913,10 +22927,10 @@ const char *subs_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ssriders_ctrls =
+const struct ControlInfo ssriders_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -22942,10 +22956,10 @@ const char *ssriders_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sbagman_ctrls =
+const struct ControlInfo sbagman_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22970,10 +22984,10 @@ const char *sbagman_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sbrkout_ctrls =
+const struct ControlInfo sbrkout_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -22999,10 +23013,10 @@ const char *sbrkout_get_btn(int type)
     case IPT_PADDLE: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo scobra_ctrls =
+const struct ControlInfo scobra_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23028,10 +23042,10 @@ const char *scobra_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo scontra_ctrls =
+const struct ControlInfo scontra_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -23057,10 +23071,10 @@ const char *scontra_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spdodgeb_ctrls =
+const struct ControlInfo spdodgeb_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -23086,10 +23100,10 @@ const char *spdodgeb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sgemf_ctrls =
+const struct ControlInfo sgemf_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -23116,10 +23130,10 @@ const char *sgemf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo shimpact_ctrls =
+const struct ControlInfo shimpact_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -23144,10 +23158,10 @@ const char *shimpact_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo marukin_ctrls =
+const struct ControlInfo marukin_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23167,10 +23181,10 @@ const char *marukin_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo smgp_ctrls =
+const struct ControlInfo smgp_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -23196,10 +23210,10 @@ const char *smgp_get_btn(int type)
     case IPT_PEDAL2: return "Brake";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo superpac_ctrls =
+const struct ControlInfo superpac_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23224,10 +23238,10 @@ const char *superpac_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spbactn_ctrls =
+const struct ControlInfo spbactn_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -23250,10 +23264,10 @@ const char *spbactn_get_btn(int type)
     case IPT_BUTTON3: return "Plunger";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo spnchout_ctrls =
+const struct ControlInfo spnchout_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -23280,10 +23294,10 @@ const char *spnchout_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Dodge Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sqix_ctrls =
+const struct ControlInfo sqix_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23308,10 +23322,10 @@ const char *sqix_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo srmp7_ctrls =
+const struct ControlInfo srmp7_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23331,10 +23345,10 @@ const char *srmp7_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo srmp2_ctrls =
+const struct ControlInfo srmp2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23354,10 +23368,10 @@ const char *srmp2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo srmp3_ctrls =
+const struct ControlInfo srmp3_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23377,10 +23391,10 @@ const char *srmp3_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo srmp4_ctrls =
+const struct ControlInfo srmp4_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23400,10 +23414,10 @@ const char *srmp4_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sspeedr_ctrls =
+const struct ControlInfo sspeedr_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -23427,10 +23441,10 @@ const char *sspeedr_get_btn(int type)
     case IPT_PEDAL: return "Accelerate";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ssprint_ctrls =
+const struct ControlInfo ssprint_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -23453,10 +23467,10 @@ const char *ssprint_get_btn(int type)
     case IPT_PEDAL: return "Gas";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ssf2_ctrls =
+const struct ControlInfo ssf2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -23486,10 +23500,10 @@ const char *ssf2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo sstrike_ctrls =
+const struct ControlInfo sstrike_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23515,10 +23529,10 @@ const char *sstrike_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo szaxxon_ctrls =
+const struct ControlInfo szaxxon_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23543,10 +23557,10 @@ const char *szaxxon_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo superman_ctrls =
+const struct ControlInfo superman_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -23572,10 +23586,10 @@ const char *superman_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo swimmer_ctrls =
+const struct ControlInfo swimmer_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23600,10 +23614,10 @@ const char *swimmer_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tnk3_ctrls =
+const struct ControlInfo tnk3_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23631,10 +23645,10 @@ const char *tnk3_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ttmahjng_ctrls =
+const struct ControlInfo ttmahjng_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23654,10 +23668,10 @@ const char *ttmahjng_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tailg_ctrls =
+const struct ControlInfo tailg_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -23683,10 +23697,10 @@ const char *tailg_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hotgmck_ctrls =
+const struct ControlInfo hotgmck_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23706,10 +23720,10 @@ const char *hotgmck_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hotgmck3_ctrls =
+const struct ControlInfo hotgmck3_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23729,10 +23743,10 @@ const char *hotgmck3_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hgkairak_ctrls =
+const struct ControlInfo hgkairak_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23752,10 +23766,10 @@ const char *hgkairak_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo fromanc2_ctrls =
+const struct ControlInfo fromanc2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23775,10 +23789,10 @@ const char *fromanc2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo fromanc4_ctrls =
+const struct ControlInfo fromanc4_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23798,10 +23812,10 @@ const char *fromanc4_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo fromancr_ctrls =
+const struct ControlInfo fromancr_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -23821,10 +23835,10 @@ const char *fromancr_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tank8_ctrls =
+const struct ControlInfo tank8_ctrl =
 {
   8, /* num_players */
   false, /* alternating_controls */
@@ -23849,10 +23863,10 @@ const char *tank8_get_btn(int type)
     case IPT_JOYSTICKRIGHT_DOWN: return "Right Tread Backward";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tankbatt_ctrls =
+const struct ControlInfo tankbatt_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23877,10 +23891,10 @@ const char *tankbatt_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tapper_ctrls =
+const struct ControlInfo tapper_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23905,10 +23919,10 @@ const char *tapper_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo targ_ctrls =
+const struct ControlInfo targ_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23933,10 +23947,10 @@ const char *targ_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tazmania_ctrls =
+const struct ControlInfo tazmania_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -23962,10 +23976,10 @@ const char *tazmania_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tbowl_ctrls =
+const struct ControlInfo tbowl_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -23991,10 +24005,10 @@ const char *tbowl_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tmnt_ctrls =
+const struct ControlInfo tmnt_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -24020,10 +24034,10 @@ const char *tmnt_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tmnt2_ctrls =
+const struct ControlInfo tmnt2_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -24049,10 +24063,10 @@ const char *tmnt2_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tehkanwc_ctrls =
+const struct ControlInfo tehkanwc_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24077,10 +24091,10 @@ const char *tehkanwc_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tekken_ctrls =
+const struct ControlInfo tekken_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24108,10 +24122,10 @@ const char *tekken_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tekken2_ctrls =
+const struct ControlInfo tekken2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24139,10 +24153,10 @@ const char *tekken2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tekken3_ctrls =
+const struct ControlInfo tekken3_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24170,10 +24184,10 @@ const char *tekken3_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo telmahjn_ctrls =
+const struct ControlInfo telmahjn_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -24193,10 +24207,10 @@ const char *telmahjn_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tempest_ctrls =
+const struct ControlInfo tempest_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24220,10 +24234,10 @@ const char *tempest_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tengai_ctrls =
+const struct ControlInfo tengai_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24250,10 +24264,10 @@ const char *tengai_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo term2_ctrls =
+const struct ControlInfo term2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24279,10 +24293,10 @@ const char *term2_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo terracre_ctrls =
+const struct ControlInfo terracre_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24308,10 +24322,10 @@ const char *terracre_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo terraf_ctrls =
+const struct ControlInfo terraf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24337,10 +24351,10 @@ const char *terraf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo atetris_ctrls =
+const struct ControlInfo atetris_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24365,10 +24379,10 @@ const char *atetris_get_btn(int type)
     case IPT_JOYSTICK_UP: return "";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tetris_ctrls =
+const struct ControlInfo tetris_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24393,10 +24407,10 @@ const char *tetris_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tetrisp_ctrls =
+const struct ControlInfo tetrisp_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24422,10 +24436,10 @@ const char *tetrisp_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tetrisp2_ctrls =
+const struct ControlInfo tetrisp2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24452,10 +24466,10 @@ const char *tetrisp2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ctribe_ctrls =
+const struct ControlInfo ctribe_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24481,10 +24495,10 @@ const char *ctribe_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo elecyoyo_ctrls =
+const struct ControlInfo elecyoyo_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24508,10 +24522,10 @@ const char *elecyoyo_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo esb_ctrls =
+const struct ControlInfo esb_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -24539,10 +24553,10 @@ const char *esb_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo theend_ctrls =
+const struct ControlInfo theend_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24565,10 +24579,10 @@ const char *theend_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo lkage_ctrls =
+const struct ControlInfo lkage_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24594,10 +24608,10 @@ const char *lkage_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo themj_ctrls =
+const struct ControlInfo themj_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -24617,10 +24631,10 @@ const char *themj_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mainevt_ctrls =
+const struct ControlInfo mainevt_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -24646,10 +24660,10 @@ const char *mainevt_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ninjaw_ctrls =
+const struct ControlInfo ninjaw_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24675,10 +24689,10 @@ const char *ninjaw_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo thepit_ctrls =
+const struct ControlInfo thepit_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24703,10 +24717,10 @@ const char *thepit_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo punisher_ctrls =
+const struct ControlInfo punisher_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24732,10 +24746,10 @@ const char *punisher_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ghostb_ctrls =
+const struct ControlInfo ghostb_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24761,10 +24775,10 @@ const char *ghostb_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo simpsons_ctrls =
+const struct ControlInfo simpsons_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -24790,10 +24804,10 @@ const char *simpsons_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo srumbler_ctrls =
+const struct ControlInfo srumbler_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24819,10 +24833,10 @@ const char *srumbler_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a3stooges_ctrls =
+const struct ControlInfo a3stooges_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -24847,10 +24861,10 @@ const char *a3stooges_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tinstar_ctrls =
+const struct ControlInfo tinstar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24879,10 +24893,10 @@ const char *tinstar_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Move Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo thief_ctrls =
+const struct ControlInfo thief_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -24906,10 +24920,10 @@ const char *thief_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo a3wonders_ctrls =
+const struct ControlInfo a3wonders_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24936,10 +24950,10 @@ const char *a3wonders_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo thndrbld_ctrls =
+const struct ControlInfo thndrbld_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -24967,10 +24981,10 @@ const char *thndrbld_get_btn(int type)
     case (IPT_AD_STICK_Z + IPT_EXTENSION): return "Slow";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo thundfox_ctrls =
+const struct ControlInfo thundfox_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -24997,10 +25011,10 @@ const char *thundfox_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo thunderj_ctrls =
+const struct ControlInfo thunderj_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -25026,10 +25040,10 @@ const char *thunderj_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tickee_ctrls =
+const struct ControlInfo tickee_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -25054,10 +25068,10 @@ const char *tickee_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tigerh_ctrls =
+const struct ControlInfo tigerh_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -25083,10 +25097,10 @@ const char *tigerh_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tigeroad_ctrls =
+const struct ControlInfo tigeroad_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -25112,10 +25126,10 @@ const char *tigeroad_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo timber_ctrls =
+const struct ControlInfo timber_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -25141,10 +25155,10 @@ const char *timber_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo timecris_ctrls =
+const struct ControlInfo timecris_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -25170,10 +25184,10 @@ const char *timecris_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo timekill_ctrls =
+const struct ControlInfo timekill_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -25202,10 +25216,10 @@ const char *timekill_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo timeplt_ctrls =
+const struct ControlInfo timeplt_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -25230,10 +25244,10 @@ const char *timeplt_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo timesold_ctrls =
+const struct ControlInfo timesold_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -25261,10 +25275,10 @@ const char *timesold_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo titlef_ctrls =
+const struct ControlInfo titlef_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -25292,10 +25306,10 @@ const char *titlef_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Right Fist Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo toki_ctrls =
+const struct ControlInfo toki_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -25321,10 +25335,10 @@ const char *toki_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tmmjprd_ctrls =
+const struct ControlInfo tmmjprd_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -25344,10 +25358,10 @@ const char *tmmjprd_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mahmajn_ctrls =
+const struct ControlInfo mahmajn_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -25367,10 +25381,10 @@ const char *mahmajn_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mahmajn2_ctrls =
+const struct ControlInfo mahmajn2_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -25390,10 +25404,10 @@ const char *mahmajn2_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tokyogal_ctrls =
+const struct ControlInfo tokyogal_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -25413,10 +25427,10 @@ const char *tokyogal_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tomahawk_ctrls =
+const struct ControlInfo tomahawk_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -25441,10 +25455,10 @@ const char *tomahawk_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tontonb_ctrls =
+const struct ControlInfo tontonb_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -25464,10 +25478,10 @@ const char *tontonb_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo toobin_ctrls =
+const struct ControlInfo toobin_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -25492,10 +25506,10 @@ const char *toobin_get_btn(int type)
     case IPT_BUTTON5: return "Back Paddle (Right)";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo topspeed_ctrls =
+const struct ControlInfo topspeed_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -25521,10 +25535,10 @@ const char *topspeed_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo totcarn_ctrls =
+const struct ControlInfo totcarn_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -25552,10 +25566,10 @@ const char *totcarn_get_btn(int type)
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tdfever_ctrls =
+const struct ControlInfo tdfever_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -25583,10 +25597,10 @@ const char *tdfever_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo toypop_ctrls =
+const struct ControlInfo toypop_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -25611,10 +25625,10 @@ const char *toypop_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo trackfld_ctrls =
+const struct ControlInfo trackfld_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -25637,10 +25651,10 @@ const char *trackfld_get_btn(int type)
     case IPT_BUTTON3: return "Run";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tranqgun_ctrls =
+const struct ControlInfo tranqgun_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -25665,10 +25679,10 @@ const char *tranqgun_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo trisport_ctrls =
+const struct ControlInfo trisport_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -25694,10 +25708,10 @@ const char *trisport_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo triplhnt_ctrls =
+const struct ControlInfo triplhnt_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -25722,10 +25736,10 @@ const char *triplhnt_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo statriv2_ctrls =
+const struct ControlInfo statriv2_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -25749,10 +25763,10 @@ const char *statriv2_get_btn(int type)
     case IPT_BUTTON4: return "D";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gtsers8_ctrls =
+const struct ControlInfo gtsers8_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -25777,10 +25791,10 @@ const char *gtsers8_get_btn(int type)
     case IPT_BUTTON5: return "5";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gt507uk_ctrls =
+const struct ControlInfo gt507uk_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -25805,10 +25819,10 @@ const char *gt507uk_get_btn(int type)
     case IPT_BUTTON5: return "5";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo gt5_ctrls =
+const struct ControlInfo gt5_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -25833,10 +25847,10 @@ const char *gt5_get_btn(int type)
     case IPT_BUTTON5: return "5";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo trvgns_ctrls =
+const struct ControlInfo trvgns_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -25860,10 +25874,10 @@ const char *trvgns_get_btn(int type)
     case IPT_BUTTON4: return "D";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo triviasp_ctrls =
+const struct ControlInfo triviasp_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -25885,10 +25899,10 @@ const char *triviasp_get_btn(int type)
     case IPT_BUTTON2: return "Incorrect";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo triviabb_ctrls =
+const struct ControlInfo triviabb_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -25910,10 +25924,10 @@ const char *triviabb_get_btn(int type)
     case IPT_BUTTON2: return "Incorrect";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo triviag1_ctrls =
+const struct ControlInfo triviag1_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -25935,10 +25949,10 @@ const char *triviag1_get_btn(int type)
     case IPT_BUTTON2: return "Incorrect";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo triviag2_ctrls =
+const struct ControlInfo triviag2_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -25960,10 +25974,10 @@ const char *triviag2_get_btn(int type)
     case IPT_BUTTON2: return "Incorrect";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo triviayp_ctrls =
+const struct ControlInfo triviayp_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -25985,10 +25999,10 @@ const char *triviayp_get_btn(int type)
     case IPT_BUTTON2: return "Incorrect";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo trog_ctrls =
+const struct ControlInfo trog_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -26013,10 +26027,10 @@ const char *trog_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tron_ctrls =
+const struct ControlInfo tron_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26043,10 +26057,10 @@ const char *tron_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Aim Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tubep_ctrls =
+const struct ControlInfo tubep_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26071,10 +26085,10 @@ const char *tubep_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tunhunt_ctrls =
+const struct ControlInfo tunhunt_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -26100,10 +26114,10 @@ const char *tunhunt_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo turbo_ctrls =
+const struct ControlInfo turbo_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -26128,10 +26142,10 @@ const char *turbo_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo turbofrc_ctrls =
+const struct ControlInfo turbofrc_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -26156,10 +26170,10 @@ const char *turbofrc_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo toutrun_ctrls =
+const struct ControlInfo toutrun_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -26185,10 +26199,10 @@ const char *toutrun_get_btn(int type)
     case IPT_PEDAL2: return "Brake";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tshoot_ctrls =
+const struct ControlInfo tshoot_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26215,10 +26229,10 @@ const char *tshoot_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tutankhm_ctrls =
+const struct ControlInfo tutankhm_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26245,10 +26259,10 @@ const char *tutankhm_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo twincobr_ctrls =
+const struct ControlInfo twincobr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26274,10 +26288,10 @@ const char *twincobr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo twineagl_ctrls =
+const struct ControlInfo twineagl_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26303,10 +26317,10 @@ const char *twineagl_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo twineag2_ctrls =
+const struct ControlInfo twineag2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26333,10 +26347,10 @@ const char *twineag2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo twotiger_ctrls =
+const struct ControlInfo twotiger_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26363,10 +26377,10 @@ const char *twotiger_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo earthjkr_ctrls =
+const struct ControlInfo earthjkr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26392,10 +26406,10 @@ const char *earthjkr_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo unsquad_ctrls =
+const struct ControlInfo unsquad_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26421,10 +26435,10 @@ const char *unsquad_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vball_ctrls =
+const struct ControlInfo vball_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -26450,10 +26464,10 @@ const char *vball_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo usclssic_ctrls =
+const struct ControlInfo usclssic_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26478,10 +26492,10 @@ const char *usclssic_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ultramhm_ctrls =
+const struct ControlInfo ultramhm_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -26501,10 +26515,10 @@ const char *ultramhm_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo ultratnk_ctrls =
+const struct ControlInfo ultratnk_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26529,10 +26543,10 @@ const char *ultratnk_get_btn(int type)
     case IPT_JOYSTICKRIGHT_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo utoukond_ctrls =
+const struct ControlInfo utoukond_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26559,10 +26573,10 @@ const char *utoukond_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo undrfire_ctrls =
+const struct ControlInfo undrfire_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26588,10 +26602,10 @@ const char *undrfire_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Aim Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo uniwars_ctrls =
+const struct ControlInfo uniwars_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26614,10 +26628,10 @@ const char *uniwars_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Control Lever (Right)";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo upndown_ctrls =
+const struct ControlInfo upndown_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26642,10 +26656,10 @@ const char *upndown_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo valkyrie_ctrls =
+const struct ControlInfo valkyrie_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26672,10 +26686,10 @@ const char *valkyrie_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vandyke_ctrls =
+const struct ControlInfo vandyke_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26701,10 +26715,10 @@ const char *vandyke_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vanguard_ctrls =
+const struct ControlInfo vanguard_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26732,10 +26746,10 @@ const char *vanguard_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo varth_ctrls =
+const struct ControlInfo varth_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26761,10 +26775,10 @@ const char *varth_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vendetta_ctrls =
+const struct ControlInfo vendetta_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -26790,10 +26804,10 @@ const char *vendetta_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo venture_ctrls =
+const struct ControlInfo venture_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26818,10 +26832,10 @@ const char *venture_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo victory_ctrls =
+const struct ControlInfo victory_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26847,10 +26861,10 @@ const char *victory_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo victroad_ctrls =
+const struct ControlInfo victroad_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26878,10 +26892,10 @@ const char *victroad_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hustler_ctrls =
+const struct ControlInfo hustler_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -26904,10 +26918,10 @@ const char *hustler_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo videopin_ctrls =
+const struct ControlInfo videopin_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -26932,10 +26946,10 @@ const char *videopin_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Pull plunger";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vigilant_ctrls =
+const struct ControlInfo vigilant_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26961,10 +26975,10 @@ const char *vigilant_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vimana_ctrls =
+const struct ControlInfo vimana_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -26991,10 +27005,10 @@ const char *vimana_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vindictr_ctrls =
+const struct ControlInfo vindictr_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -27022,10 +27036,10 @@ const char *vindictr_get_btn(int type)
     case IPT_JOYSTICKRIGHT_DOWN: return "Right back";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vindctr2_ctrls =
+const struct ControlInfo vindctr2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -27053,10 +27067,10 @@ const char *vindctr2_get_btn(int type)
     case IPT_JOYSTICKRIGHT_DOWN: return "Right back";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo viofight_ctrls =
+const struct ControlInfo viofight_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -27083,10 +27097,10 @@ const char *viofight_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo viper_ctrls =
+const struct ControlInfo viper_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -27112,10 +27126,10 @@ const char *viper_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vf_ctrls =
+const struct ControlInfo vf_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -27142,10 +27156,10 @@ const char *vf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vf2_ctrls =
+const struct ControlInfo vf2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -27172,10 +27186,10 @@ const char *vf2_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vsgongf_ctrls =
+const struct ControlInfo vsgongf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27201,10 +27215,10 @@ const char *vsgongf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo rbibb_ctrls =
+const struct ControlInfo rbibb_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27230,10 +27244,10 @@ const char *rbibb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo balonfgt_ctrls =
+const struct ControlInfo balonfgt_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27259,10 +27273,10 @@ const char *balonfgt_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vsbball_ctrls =
+const struct ControlInfo vsbball_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27288,10 +27302,10 @@ const char *vsbball_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo btlecity_ctrls =
+const struct ControlInfo btlecity_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27317,10 +27331,10 @@ const char *btlecity_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cstlevna_ctrls =
+const struct ControlInfo cstlevna_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27346,10 +27360,10 @@ const char *cstlevna_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo cluclu_ctrls =
+const struct ControlInfo cluclu_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27375,10 +27389,10 @@ const char *cluclu_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo drmario_ctrls =
+const struct ControlInfo drmario_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27404,10 +27418,10 @@ const char *drmario_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo duckhunt_ctrls =
+const struct ControlInfo duckhunt_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27433,10 +27447,10 @@ const char *duckhunt_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo excitebk_ctrls =
+const struct ControlInfo excitebk_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27462,10 +27476,10 @@ const char *excitebk_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vsfdf_ctrls =
+const struct ControlInfo vsfdf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27491,10 +27505,10 @@ const char *vsfdf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vsgradus_ctrls =
+const struct ControlInfo vsgradus_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27520,10 +27534,10 @@ const char *vsgradus_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vsgshoe_ctrls =
+const struct ControlInfo vsgshoe_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27548,10 +27562,10 @@ const char *vsgshoe_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hogalley_ctrls =
+const struct ControlInfo hogalley_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27576,10 +27590,10 @@ const char *hogalley_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo hotsmash_ctrls =
+const struct ControlInfo hotsmash_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -27601,10 +27615,10 @@ const char *hotsmash_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo iceclimb_ctrls =
+const struct ControlInfo iceclimb_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27630,10 +27644,10 @@ const char *iceclimb_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo iceclmrj_ctrls =
+const struct ControlInfo iceclmrj_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -27659,10 +27673,10 @@ const char *iceclmrj_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo machridr_ctrls =
+const struct ControlInfo machridr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27688,10 +27702,10 @@ const char *machridr_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vsmahjng_ctrls =
+const struct ControlInfo vsmahjng_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -27711,10 +27725,10 @@ const char *vsmahjng_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mightybj_ctrls =
+const struct ControlInfo mightybj_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27740,10 +27754,10 @@ const char *mightybj_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo jajamaru_ctrls =
+const struct ControlInfo jajamaru_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27769,10 +27783,10 @@ const char *jajamaru_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vspinbal_ctrls =
+const struct ControlInfo vspinbal_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27798,10 +27812,10 @@ const char *vspinbal_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo platoon_ctrls =
+const struct ControlInfo platoon_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27827,10 +27841,10 @@ const char *platoon_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo bnglngby_ctrls =
+const struct ControlInfo bnglngby_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27856,10 +27870,10 @@ const char *bnglngby_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vsslalom_ctrls =
+const struct ControlInfo vsslalom_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27884,10 +27898,10 @@ const char *vsslalom_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vssoccer_ctrls =
+const struct ControlInfo vssoccer_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27913,10 +27927,10 @@ const char *vssoccer_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo starlstr_ctrls =
+const struct ControlInfo starlstr_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27942,10 +27956,10 @@ const char *starlstr_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo smgolf_ctrls =
+const struct ControlInfo smgolf_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -27971,10 +27985,10 @@ const char *smgolf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo suprmrio_ctrls =
+const struct ControlInfo suprmrio_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28000,10 +28014,10 @@ const char *suprmrio_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vsskykid_ctrls =
+const struct ControlInfo vsskykid_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28029,10 +28043,10 @@ const char *vsskykid_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo supxevs_ctrls =
+const struct ControlInfo supxevs_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28058,10 +28072,10 @@ const char *supxevs_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo tkoboxng_ctrls =
+const struct ControlInfo tkoboxng_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28087,10 +28101,10 @@ const char *tkoboxng_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vstennis_ctrls =
+const struct ControlInfo vstennis_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -28116,10 +28130,10 @@ const char *vstennis_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo vstetris_ctrls =
+const struct ControlInfo vstetris_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28145,10 +28159,10 @@ const char *vstetris_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo goonies_ctrls =
+const struct ControlInfo goonies_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28174,10 +28188,10 @@ const char *goonies_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo topgun_ctrls =
+const struct ControlInfo topgun_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28203,10 +28217,10 @@ const char *topgun_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wrecking_ctrls =
+const struct ControlInfo wrecking_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -28232,10 +28246,10 @@ const char *wrecking_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wacko_ctrls =
+const struct ControlInfo wacko_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28267,10 +28281,10 @@ const char *wacko_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Krooz Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo mj4simai_ctrls =
+const struct ControlInfo mj4simai_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -28290,10 +28304,10 @@ const char *mj4simai_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wargods_ctrls =
+const struct ControlInfo wargods_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -28323,10 +28337,10 @@ const char *wargods_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wotw_ctrls =
+const struct ControlInfo wotw_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28350,10 +28364,10 @@ const char *wotw_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo warlords_ctrls =
+const struct ControlInfo warlords_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -28376,10 +28390,10 @@ const char *warlords_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo warpwarp_ctrls =
+const struct ControlInfo warpwarp_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28404,10 +28418,10 @@ const char *warpwarp_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo warrior_ctrls =
+const struct ControlInfo warrior_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -28432,10 +28446,10 @@ const char *warrior_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo suzume_ctrls =
+const struct ControlInfo suzume_ctrl =
 {
   1, /* num_players */
   true, /* alternating_controls */
@@ -28455,10 +28469,10 @@ const char *suzume_get_btn(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Mahjong Control Panel+other";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wecleman_ctrls =
+const struct ControlInfo wecleman_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -28484,10 +28498,10 @@ const char *wecleman_get_btn(int type)
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wfortune_ctrls =
+const struct ControlInfo wfortune_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -28516,10 +28530,10 @@ const char *wfortune_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Spin Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo whodunit_ctrls =
+const struct ControlInfo whodunit_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28544,10 +28558,10 @@ const char *whodunit_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wildfang_ctrls =
+const struct ControlInfo wildfang_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -28574,10 +28588,10 @@ const char *wildfang_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo moo_ctrls =
+const struct ControlInfo moo_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -28603,10 +28617,10 @@ const char *moo_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo willow_ctrls =
+const struct ControlInfo willow_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28632,10 +28646,10 @@ const char *willow_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wizdfire_ctrls =
+const struct ControlInfo wizdfire_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -28661,10 +28675,10 @@ const char *wizdfire_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wow_ctrls =
+const struct ControlInfo wow_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -28689,10 +28703,10 @@ const char *wow_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wolfpack_ctrls =
+const struct ControlInfo wolfpack_ctrl =
 {
   1, /* num_players */
   false, /* alternating_controls */
@@ -28715,10 +28729,10 @@ const char *wolfpack_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wboy_ctrls =
+const struct ControlInfo wboy_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28742,10 +28756,10 @@ const char *wboy_get_btn(int type)
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wbml_ctrls =
+const struct ControlInfo wbml_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28771,10 +28785,10 @@ const char *wbml_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wbeachvl_ctrls =
+const struct ControlInfo wbeachvl_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -28801,10 +28815,10 @@ const char *wbeachvl_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right-Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wcbowl_ctrls =
+const struct ControlInfo wcbowl_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -28830,10 +28844,10 @@ const char *wcbowl_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wcbowldx_ctrls =
+const struct ControlInfo wcbowldx_ctrl =
 {
   4, /* num_players */
   true, /* alternating_controls */
@@ -28859,10 +28873,10 @@ const char *wcbowldx_get_btn(int type)
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wseries_ctrls =
+const struct ControlInfo wseries_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -28895,10 +28909,10 @@ const char *wseries_get_btn(int type)
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wsf_ctrls =
+const struct ControlInfo wsf_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -28924,10 +28938,10 @@ const char *wsf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wtennis_ctrls =
+const struct ControlInfo wtennis_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -28952,10 +28966,10 @@ const char *wtennis_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wwfsstar_ctrls =
+const struct ControlInfo wwfsstar_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -28981,10 +28995,10 @@ const char *wwfsstar_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wwfwfest_ctrls =
+const struct ControlInfo wwfwfest_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -29010,10 +29024,10 @@ const char *wwfwfest_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo wwfmania_ctrls =
+const struct ControlInfo wwfmania_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29042,10 +29056,10 @@ const char *wwfmania_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Move Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo xmen_ctrls =
+const struct ControlInfo xmen_ctrl =
 {
   4, /* num_players */
   false, /* alternating_controls */
@@ -29072,10 +29086,10 @@ const char *xmen_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo xmvsf_ctrls =
+const struct ControlInfo xmvsf_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29105,10 +29119,10 @@ const char *xmvsf_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo xmcota_ctrls =
+const struct ControlInfo xmcota_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29138,10 +29152,10 @@ const char *xmcota_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo xsleena_ctrls =
+const struct ControlInfo xsleena_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29167,10 +29181,10 @@ const char *xsleena_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo xenophob_ctrls =
+const struct ControlInfo xenophob_ctrl =
 {
   3, /* num_players */
   false, /* alternating_controls */
@@ -29197,10 +29211,10 @@ const char *xenophob_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo xevious_ctrls =
+const struct ControlInfo xevious_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29226,10 +29240,10 @@ const char *xevious_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo xybots_ctrls =
+const struct ControlInfo xybots_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29256,10 +29270,10 @@ const char *xybots_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo yesnoj_ctrls =
+const struct ControlInfo yesnoj_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29281,10 +29295,10 @@ const char *yesnoj_get_btn(int type)
     case IPT_BUTTON2: return "No";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo yiear_ctrls =
+const struct ControlInfo yiear_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29310,10 +29324,10 @@ const char *yiear_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo yosakdon_ctrls =
+const struct ControlInfo yosakdon_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29336,10 +29350,10 @@ const char *yosakdon_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo yuyugogo_ctrls =
+const struct ControlInfo yuyugogo_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29364,10 +29378,10 @@ const char *yuyugogo_get_btn(int type)
     case IPT_BUTTON5: return "??";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zaxxon_ctrls =
+const struct ControlInfo zaxxon_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29392,10 +29406,10 @@ const char *zaxxon_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zerohour_ctrls =
+const struct ControlInfo zerohour_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29420,10 +29434,10 @@ const char *zerohour_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zeropnt_ctrls =
+const struct ControlInfo zeropnt_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29448,10 +29462,10 @@ const char *zeropnt_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zeropnt2_ctrls =
+const struct ControlInfo zeropnt2_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29476,10 +29490,10 @@ const char *zeropnt2_get_btn(int type)
     case IPT_LIGHTGUN_X: return "Left";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zerowing_ctrls =
+const struct ControlInfo zerowing_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29505,10 +29519,10 @@ const char *zerowing_get_btn(int type)
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zerozone_ctrls =
+const struct ControlInfo zerozone_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29533,10 +29547,10 @@ const char *zerozone_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zigzag_ctrls =
+const struct ControlInfo zigzag_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29561,10 +29575,10 @@ const char *zigzag_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zingzip_ctrls =
+const struct ControlInfo zingzip_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29590,10 +29604,10 @@ const char *zingzip_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zoar_ctrls =
+const struct ControlInfo zoar_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29620,10 +29634,10 @@ const char *zoar_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zodiack_ctrls =
+const struct ControlInfo zodiack_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29648,10 +29662,10 @@ const char *zodiack_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zombraid_ctrls =
+const struct ControlInfo zombraid_ctrl =
 {
   2, /* num_players */
   false, /* alternating_controls */
@@ -29677,10 +29691,10 @@ const char *zombraid_get_btn(int type)
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zookeep_ctrls =
+const struct ControlInfo zookeep_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29705,10 +29719,10 @@ const char *zookeep_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zunkyou_ctrls =
+const struct ControlInfo zunkyou_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29734,10 +29748,10 @@ const char *zunkyou_get_btn(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zwackery_ctrls =
+const struct ControlInfo zwackery_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29767,10 +29781,10 @@ const char *zwackery_get_btn(int type)
     case (IPT_DIAL + IPT_EXTENSION): return "Aim Sword Right";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }
 
-const struct ControlInfo zzyzzyxx_ctrls =
+const struct ControlInfo zzyzzyxx_ctrl =
 {
   2, /* num_players */
   true, /* alternating_controls */
@@ -29793,5 +29807,5 @@ const char *zzyzzyxx_get_btn(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
 
-  return NULL;
+  return "";
 }

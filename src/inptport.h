@@ -35,18 +35,6 @@ struct InputPort
 	InputSeq seq;                  	/* input sequence affecting the input bits */
 };
 
-struct ControlInfo
-{
-  const unsigned num_players;
-  const bool alternating_controls;
-  const bool mirrored_controls;
-  const bool has_tilt;
-  const bool has_cocktail_dipswitch;
-  const bool uses_service;
-  const char *control_details;
-  const char *(*get_name)(int);  
-};
-
 #define IP_ACTIVE_HIGH 0x0000
 #define IP_ACTIVE_LOW 0xffff
 
@@ -114,15 +102,6 @@ enum { IPT_END=1,IPT_PORT,
 	IPT_COIN5, IPT_COIN6, IPT_COIN7, IPT_COIN8,
 	__ipt_max
 };
-
-#define BTN1 "BTN1: "
-#define BTN2 "BTN2: "
-#define BTN3 "BTN3: "
-#define BTN4 "BTN4: "
-#define BTN5 "BTN5: "
-#define BTN6 "BTN6: "
-#define BTN7 "BTN7: "
-#define BTN8 "BTN8: "
 
 #define IPT_UNUSED     IPF_UNUSED
 #define IPT_SPECIAL    IPT_UNUSED	/* special meaning handled by custom functions */

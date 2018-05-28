@@ -79,6 +79,8 @@
 #include "tilemap.h"
 #include "profiler.h"
 
+#include "controls.h"
+
 
 /***************************************************************************
 
@@ -411,7 +413,7 @@ struct GameDriver
 
   UINT32 flags;	/* orientation and other flags; see defines below */
   
-  const char *(*btn_labeler)(int);
+  const struct ControlInfo *ctrl_dat;
   const struct bin2cFILE *bootstrap;
 };
 
@@ -465,7 +467,7 @@ const struct GameDriver driver_##NAME =          \
   init_##INIT,          \
   rom_##NAME,           \
   MONITOR,              \
-  (&generic_btn_label), \
+  (&generic_ctrl), \
   NULL                  \
 };
 
@@ -485,7 +487,7 @@ const struct GameDriver driver_##NAME =           \
   init_##INIT,          \
   rom_##NAME,           \
   (MONITOR)|(FLAGS),    \
-  (&generic_btn_label), \
+  (&generic_ctrl), \
   NULL                  \
 };
 

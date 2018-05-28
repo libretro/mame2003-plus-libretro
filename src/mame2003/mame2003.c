@@ -18,6 +18,7 @@
 #include "input.h"
 #include "inptport.h"
 #include "fileio.h"
+#include "controls.h"
 
 
 static const struct GameDriver  *game_driver;
@@ -665,22 +666,22 @@ void retro_describe_buttons(void)
    
   /************  BASELINE "CLASSIC" MAPPING  ************/   
   
-  control_labels[RETRO_DEVICE_ID_JOYPAD_LEFT]   = game_driver->btn_labeler(IPT_JOYSTICK_LEFT);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_RIGHT]  = game_driver->btn_labeler(IPT_JOYSTICK_RIGHT);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_UP]     = game_driver->btn_labeler(IPT_JOYSTICK_UP);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_DOWN]   = game_driver->btn_labeler(IPT_JOYSTICK_DOWN);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_B]      = game_driver->btn_labeler(IPT_BUTTON1);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_Y]      = game_driver->btn_labeler(IPT_BUTTON3);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_X]      = game_driver->btn_labeler(IPT_BUTTON4);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_A]      = game_driver->btn_labeler(IPT_BUTTON2);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_L]      = game_driver->btn_labeler(IPT_BUTTON5);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_R]      = game_driver->btn_labeler(IPT_BUTTON6);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_L2]     = game_driver->btn_labeler(IPT_BUTTON7);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_R2]     = game_driver->btn_labeler(IPT_BUTTON8);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_L3]     = game_driver->btn_labeler(IPT_BUTTON9);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_R3]     = game_driver->btn_labeler(IPT_BUTTON10);
-  control_labels[RETRO_DEVICE_ID_JOYPAD_SELECT] = game_driver->btn_labeler(IPT_COIN1);  /* MAME uses distinct strings for each player input, while */
-  control_labels[RETRO_DEVICE_ID_JOYPAD_START]  = game_driver->btn_labeler(IPT_START1); /* libretro uses a unified strings across players and adds their */
+  control_labels[RETRO_DEVICE_ID_JOYPAD_LEFT]   = game_driver->ctrl_dat->get_name(IPT_JOYSTICK_LEFT);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_RIGHT]  = game_driver->ctrl_dat->get_name(IPT_JOYSTICK_RIGHT);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_UP]     = game_driver->ctrl_dat->get_name(IPT_JOYSTICK_UP);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_DOWN]   = game_driver->ctrl_dat->get_name(IPT_JOYSTICK_DOWN);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_B]      = game_driver->ctrl_dat->get_name(IPT_BUTTON1);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_Y]      = game_driver->ctrl_dat->get_name(IPT_BUTTON3);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_X]      = game_driver->ctrl_dat->get_name(IPT_BUTTON4);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_A]      = game_driver->ctrl_dat->get_name(IPT_BUTTON2);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_L]      = game_driver->ctrl_dat->get_name(IPT_BUTTON5);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_R]      = game_driver->ctrl_dat->get_name(IPT_BUTTON6);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_L2]     = game_driver->ctrl_dat->get_name(IPT_BUTTON7);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_R2]     = game_driver->ctrl_dat->get_name(IPT_BUTTON8);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_L3]     = game_driver->ctrl_dat->get_name(IPT_BUTTON9);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_R3]     = game_driver->ctrl_dat->get_name(IPT_BUTTON10);
+  control_labels[RETRO_DEVICE_ID_JOYPAD_SELECT] = game_driver->ctrl_dat->get_name(IPT_COIN1);  /* MAME uses distinct strings for each player input, while */
+  control_labels[RETRO_DEVICE_ID_JOYPAD_START]  = game_driver->ctrl_dat->get_name(IPT_START1); /* libretro uses a unified strings across players and adds their */
                                                                               /* index # dynamically. We grab the IPT_START1 & IPT_COIN1 */
                                                                               /* labels from MAME and then make them generic for libretro. */
   
@@ -689,32 +690,32 @@ void retro_describe_buttons(void)
   /************  "MODERN" MAPPING OVERLAY  ************/ 
   if(options.retropad_layout == RETROPAD_MODERN)
   {
-    control_labels[RETRO_DEVICE_ID_JOYPAD_B]     = game_driver->btn_labeler(IPT_BUTTON4);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     = game_driver->btn_labeler(IPT_BUTTON1);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_X]     = game_driver->btn_labeler(IPT_BUTTON2);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_A]     = game_driver->btn_labeler(IPT_BUTTON5);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_L]     = game_driver->btn_labeler(IPT_BUTTON7);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_R]     = game_driver->btn_labeler(IPT_BUTTON3);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_L2]    = game_driver->btn_labeler(IPT_BUTTON8);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_R2]    = game_driver->btn_labeler(IPT_BUTTON6);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_B]     = game_driver->ctrl_dat->get_name(IPT_BUTTON4);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     = game_driver->ctrl_dat->get_name(IPT_BUTTON1);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_X]     = game_driver->ctrl_dat->get_name(IPT_BUTTON2);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_A]     = game_driver->ctrl_dat->get_name(IPT_BUTTON5);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_L]     = game_driver->ctrl_dat->get_name(IPT_BUTTON7);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_R]     = game_driver->ctrl_dat->get_name(IPT_BUTTON3);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_L2]    = game_driver->ctrl_dat->get_name(IPT_BUTTON8);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_R2]    = game_driver->ctrl_dat->get_name(IPT_BUTTON6);
   }
   
   /************  "MODERN" MAPPING OVERLAY  ************/
   if(options.retropad_layout == RETROPAD_SNES)
   {
-    control_labels[RETRO_DEVICE_ID_JOYPAD_B]     = game_driver->btn_labeler(IPT_BUTTON4);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     = game_driver->btn_labeler(IPT_BUTTON1);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_X]     = game_driver->btn_labeler(IPT_BUTTON2);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_A]     = game_driver->btn_labeler(IPT_BUTTON5);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_L]     = game_driver->btn_labeler(IPT_BUTTON3);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_B]     = game_driver->ctrl_dat->get_name(IPT_BUTTON4);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]     = game_driver->ctrl_dat->get_name(IPT_BUTTON1);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_X]     = game_driver->ctrl_dat->get_name(IPT_BUTTON2);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_A]     = game_driver->ctrl_dat->get_name(IPT_BUTTON5);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_L]     = game_driver->ctrl_dat->get_name(IPT_BUTTON3);
   }
   
   if(options.retropad_layout == RETROPAD_10BUTTON)
   {
-    control_labels[RETRO_DEVICE_ID_JOYPAD_B]      = game_driver->btn_labeler(IPT_BUTTON1);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]      = game_driver->btn_labeler(IPT_BUTTON2);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_X]      = game_driver->btn_labeler(IPT_BUTTON3);
-    control_labels[RETRO_DEVICE_ID_JOYPAD_A]      = game_driver->btn_labeler(IPT_BUTTON4);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_B]      = game_driver->ctrl_dat->get_name(IPT_BUTTON1);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_Y]      = game_driver->ctrl_dat->get_name(IPT_BUTTON2);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_X]      = game_driver->ctrl_dat->get_name(IPT_BUTTON3);
+    control_labels[RETRO_DEVICE_ID_JOYPAD_A]      = game_driver->ctrl_dat->get_name(IPT_BUTTON4);
   }
  
 

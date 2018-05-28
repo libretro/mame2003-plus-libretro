@@ -10,3187 +10,3211 @@
 
 #include "inptport.h"
 
-extern const struct ControlInfo a88games_ctrls;
+struct ControlInfo
+{
+  const unsigned num_players;
+  const bool alternating_controls;
+  const bool mirrored_controls;
+  const bool has_tilt;
+  const bool has_cocktail_dipswitch;
+  const bool uses_service;
+  const char *control_details;
+  const char *(*get_name)(int);  
+};
+
+
+#define BTN1 "B1: "
+#define BTN2 "B2: "
+#define BTN3 "B3: "
+#define BTN4 "B4: "
+#define BTN5 "B5: "
+#define BTN6 "B6: "
+#define BTN7 "B7: "
+#define BTN8 "B8: "
+
+extern const struct ControlInfo generic_ctrl;
+
+extern const struct ControlInfo a88games_ctrl;
 const char *a88games_get_btn(int type);
 
-extern const struct ControlInfo a005_ctrls;
+extern const struct ControlInfo a005_ctrl;
 const char *a005_get_btn(int type);
 
-extern const struct ControlInfo a10yardj_ctrls;
+extern const struct ControlInfo a10yardj_ctrl;
 const char *a10yardj_get_btn(int type);
 
-extern const struct ControlInfo gtmr_ctrls;
+extern const struct ControlInfo gtmr_ctrl;
 const char *gtmr_get_btn(int type);
 
-extern const struct ControlInfo a1941_ctrls;
+extern const struct ControlInfo a1941_ctrl;
 const char *a1941_get_btn(int type);
 
-extern const struct ControlInfo a1942_ctrls;
+extern const struct ControlInfo a1942_ctrl;
 const char *a1942_get_btn(int type);
 
-extern const struct ControlInfo a1943kai_ctrls;
+extern const struct ControlInfo a1943kai_ctrl;
 const char *a1943kai_get_btn(int type);
 
-extern const struct ControlInfo a1943_ctrls;
+extern const struct ControlInfo a1943_ctrl;
 const char *a1943_get_btn(int type);
 
-extern const struct ControlInfo a1944_ctrls;
+extern const struct ControlInfo a1944_ctrl;
 const char *a1944_get_btn(int type);
 
-extern const struct ControlInfo a19xx_ctrls;
+extern const struct ControlInfo a19xx_ctrl;
 const char *a19xx_get_btn(int type);
 
-extern const struct ControlInfo openice_ctrls;
+extern const struct ControlInfo openice_ctrl;
 const char *openice_get_btn(int type);
 
-extern const struct ControlInfo a39in1_ctrls;
+extern const struct ControlInfo a39in1_ctrl;
 const char *a39in1_get_btn(int type);
 
-extern const struct ControlInfo a4enraya_ctrls;
+extern const struct ControlInfo a4enraya_ctrl;
 const char *a4enraya_get_btn(int type);
 
-extern const struct ControlInfo a4in1_ctrls;
+extern const struct ControlInfo a4in1_ctrl;
 const char *a4in1_get_btn(int type);
 
-extern const struct ControlInfo a4dwarrio_ctrls;
+extern const struct ControlInfo a4dwarrio_ctrl;
 const char *a4dwarrio_get_btn(int type);
 
-extern const struct ControlInfo a64street_ctrls;
+extern const struct ControlInfo a64street_ctrl;
 const char *a64street_get_btn(int type);
 
-extern const struct ControlInfo a720_ctrls;
+extern const struct ControlInfo a720_ctrl;
 const char *a720_get_btn(int type);
 
-extern const struct ControlInfo a7jigen_ctrls;
+extern const struct ControlInfo a7jigen_ctrl;
 const char *a7jigen_get_btn(int type);
 
-extern const struct ControlInfo ace_ctrls;
+extern const struct ControlInfo ace_ctrl;
 const char *ace_get_btn(int type);
 
-extern const struct ControlInfo acrobatm_ctrls;
+extern const struct ControlInfo acrobatm_ctrl;
 const char *acrobatm_get_btn(int type);
 
-extern const struct ControlInfo actfancr_ctrls;
+extern const struct ControlInfo actfancr_ctrl;
 const char *actfancr_get_btn(int type);
 
-extern const struct ControlInfo hatena_ctrls;
+extern const struct ControlInfo hatena_ctrl;
 const char *hatena_get_btn(int type);
 
-extern const struct ControlInfo aerofgt_ctrls;
+extern const struct ControlInfo aerofgt_ctrl;
 const char *aerofgt_get_btn(int type);
 
-extern const struct ControlInfo aburner2_ctrls;
+extern const struct ControlInfo aburner2_ctrl;
 const char *aburner2_get_btn(int type);
 
-extern const struct ControlInfo koshien_ctrls;
+extern const struct ControlInfo koshien_ctrl;
 const char *koshien_get_btn(int type);
 
-extern const struct ControlInfo airbustr_ctrls;
+extern const struct ControlInfo airbustr_ctrl;
 const char *airbustr_get_btn(int type);
 
-extern const struct ControlInfo airduel_ctrls;
+extern const struct ControlInfo airduel_ctrl;
 const char *airduel_get_btn(int type);
 
-extern const struct ControlInfo airwolf_ctrls;
+extern const struct ControlInfo airwolf_ctrl;
 const char *airwolf_get_btn(int type);
 
-extern const struct ControlInfo ajax_ctrls;
+extern const struct ControlInfo ajax_ctrl;
 const char *ajax_get_btn(int type);
 
-extern const struct ControlInfo alexkidd_ctrls;
+extern const struct ControlInfo alexkidd_ctrl;
 const char *alexkidd_get_btn(int type);
 
-extern const struct ControlInfo alibaba_ctrls;
+extern const struct ControlInfo alibaba_ctrl;
 const char *alibaba_get_btn(int type);
 
-extern const struct ControlInfo astorm_ctrls;
+extern const struct ControlInfo astorm_ctrl;
 const char *astorm_get_btn(int type);
 
-extern const struct ControlInfo aliensyn_ctrls;
+extern const struct ControlInfo aliensyn_ctrl;
 const char *aliensyn_get_btn(int type);
 
-extern const struct ControlInfo avsp_ctrls;
+extern const struct ControlInfo avsp_ctrl;
 const char *avsp_get_btn(int type);
 
-extern const struct ControlInfo alien3_ctrls;
+extern const struct ControlInfo alien3_ctrl;
 const char *alien3_get_btn(int type);
 
-extern const struct ControlInfo aliens_ctrls;
+extern const struct ControlInfo aliens_ctrl;
 const char *aliens_get_btn(int type);
 
-extern const struct ControlInfo aafb_ctrls;
+extern const struct ControlInfo aafb_ctrl;
 const char *aafb_get_btn(int type);
 
-extern const struct ControlInfo alleymas_ctrls;
+extern const struct ControlInfo alleymas_ctrl;
 const char *alleymas_get_btn(int type);
 
-extern const struct ControlInfo alphaho_ctrls;
+extern const struct ControlInfo alphaho_ctrl;
 const char *alphaho_get_btn(int type);
 
-extern const struct ControlInfo alpinerd_ctrls;
+extern const struct ControlInfo alpinerd_ctrl;
 const char *alpinerd_get_btn(int type);
 
-extern const struct ControlInfo alpine_ctrls;
+extern const struct ControlInfo alpine_ctrl;
 const char *alpine_get_btn(int type);
 
-extern const struct ControlInfo altbeast_ctrls;
+extern const struct ControlInfo altbeast_ctrl;
 const char *altbeast_get_btn(int type);
 
-extern const struct ControlInfo maze_ctrls;
+extern const struct ControlInfo maze_ctrl;
 const char *maze_get_btn(int type);
 
-extern const struct ControlInfo horshoes_ctrls;
+extern const struct ControlInfo horshoes_ctrl;
 const char *horshoes_get_btn(int type);
 
-extern const struct ControlInfo amspdwy_ctrls;
+extern const struct ControlInfo amspdwy_ctrl;
 const char *amspdwy_get_btn(int type);
 
-extern const struct ControlInfo amerdart_ctrls;
+extern const struct ControlInfo amerdart_ctrl;
 const char *amerdart_get_btn(int type);
 
-extern const struct ControlInfo amidar_ctrls;
+extern const struct ControlInfo amidar_ctrl;
 const char *amidar_get_btn(int type);
 
-extern const struct ControlInfo angelkds_ctrls;
+extern const struct ControlInfo angelkds_ctrl;
 const char *angelkds_get_btn(int type);
 
-extern const struct ControlInfo anteater_ctrls;
+extern const struct ControlInfo anteater_ctrl;
 const char *anteater_get_btn(int type);
 
-extern const struct ControlInfo apb_ctrls;
+extern const struct ControlInfo apb_ctrl;
 const char *apb_get_btn(int type);
 
-extern const struct ControlInfo apparel_ctrls;
+extern const struct ControlInfo apparel_ctrl;
 const char *apparel_get_btn(int type);
 
-extern const struct ControlInfo aquajack_ctrls;
+extern const struct ControlInfo aquajack_ctrl;
 const char *aquajack_get_btn(int type);
 
-extern const struct ControlInfo aquarium_ctrls;
+extern const struct ControlInfo aquarium_ctrl;
 const char *aquarium_get_btn(int type);
 
-extern const struct ControlInfo arabian_ctrls;
+extern const struct ControlInfo arabian_ctrl;
 const char *arabian_get_btn(int type);
 
-extern const struct ControlInfo arbalest_ctrls;
+extern const struct ControlInfo arbalest_ctrl;
 const char *arbalest_get_btn(int type);
 
-extern const struct ControlInfo arcadecl_ctrls;
+extern const struct ControlInfo arcadecl_ctrl;
 const char *arcadecl_get_btn(int type);
 
-extern const struct ControlInfo archrivl_ctrls;
+extern const struct ControlInfo archrivl_ctrl;
 const char *archrivl_get_btn(int type);
 
-extern const struct ControlInfo area51_ctrls;
+extern const struct ControlInfo area51_ctrl;
 const char *area51_get_btn(int type);
 
-extern const struct ControlInfo area51mx_ctrls;
+extern const struct ControlInfo area51mx_ctrl;
 const char *area51mx_get_btn(int type);
 
-extern const struct ControlInfo a51site4_ctrls;
+extern const struct ControlInfo a51site4_ctrl;
 const char *a51site4_get_btn(int type);
 
-extern const struct ControlInfo argus_ctrls;
+extern const struct ControlInfo argus_ctrl;
 const char *argus_get_btn(int type);
 
-extern const struct ControlInfo arkarea_ctrls;
+extern const struct ControlInfo arkarea_ctrl;
 const char *arkarea_get_btn(int type);
 
-extern const struct ControlInfo arkanoid_ctrls;
+extern const struct ControlInfo arkanoid_ctrl;
 const char *arkanoid_get_btn(int type);
 
-extern const struct ControlInfo arknoid2_ctrls;
+extern const struct ControlInfo arknoid2_ctrl;
 const char *arknoid2_get_btn(int type);
 
-extern const struct ControlInfo arlingtn_ctrls;
+extern const struct ControlInfo arlingtn_ctrl;
 const char *arlingtn_get_btn(int type);
 
-extern const struct ControlInfo armwrest_ctrls;
+extern const struct ControlInfo armwrest_ctrl;
 const char *armwrest_get_btn(int type);
 
-extern const struct ControlInfo armedf_ctrls;
+extern const struct ControlInfo armedf_ctrl;
 const char *armedf_get_btn(int type);
 
-extern const struct ControlInfo armora_ctrls;
+extern const struct ControlInfo armora_ctrl;
 const char *armora_get_btn(int type);
 
-extern const struct ControlInfo armorcar_ctrls;
+extern const struct ControlInfo armorcar_ctrl;
 const char *armorcar_get_btn(int type);
 
-extern const struct ControlInfo ashura_ctrls;
+extern const struct ControlInfo ashura_ctrl;
 const char *ashura_get_btn(int type);
 
-extern const struct ControlInfo aso_ctrls;
+extern const struct ControlInfo aso_ctrl;
 const char *aso_get_btn(int type);
 
-extern const struct ControlInfo assault_ctrls;
+extern const struct ControlInfo assault_ctrl;
 const char *assault_get_btn(int type);
 
-extern const struct ControlInfo asterix_ctrls;
+extern const struct ControlInfo asterix_ctrl;
 const char *asterix_get_btn(int type);
 
-extern const struct ControlInfo asteroid_ctrls;
+extern const struct ControlInfo asteroid_ctrl;
 const char *asteroid_get_btn(int type);
 
-extern const struct ControlInfo astdelux_ctrls;
+extern const struct ControlInfo astdelux_ctrl;
 const char *astdelux_get_btn(int type);
 
-extern const struct ControlInfo astrob_ctrls;
+extern const struct ControlInfo astrob_ctrl;
 const char *astrob_get_btn(int type);
 
-extern const struct ControlInfo astrof_ctrls;
+extern const struct ControlInfo astrof_ctrl;
 const char *astrof_get_btn(int type);
 
-extern const struct ControlInfo astinvad_ctrls;
+extern const struct ControlInfo astinvad_ctrl;
 const char *astinvad_get_btn(int type);
 
-extern const struct ControlInfo asuka_ctrls;
+extern const struct ControlInfo asuka_ctrl;
 const char *asuka_get_btn(int type);
 
-extern const struct ControlInfo asylum_ctrls;
+extern const struct ControlInfo asylum_ctrl;
 const char *asylum_get_btn(int type);
 
-extern const struct ControlInfo abaseb_ctrls;
+extern const struct ControlInfo abaseb_ctrl;
 const char *abaseb_get_btn(int type);
 
-extern const struct ControlInfo atarifb_ctrls;
+extern const struct ControlInfo atarifb_ctrl;
 const char *atarifb_get_btn(int type);
 
-extern const struct ControlInfo ataxx_ctrls;
+extern const struct ControlInfo ataxx_ctrl;
 const char *ataxx_get_btn(int type);
 
-extern const struct ControlInfo athena_ctrls;
+extern const struct ControlInfo athena_ctrl;
 const char *athena_get_btn(int type);
 
-extern const struct ControlInfo atehate_ctrls;
+extern const struct ControlInfo atehate_ctrl;
 const char *atehate_get_btn(int type);
 
-extern const struct ControlInfo atomicp_ctrls;
+extern const struct ControlInfo atomicp_ctrl;
 const char *atomicp_get_btn(int type);
 
-extern const struct ControlInfo robokid_ctrls;
+extern const struct ControlInfo robokid_ctrl;
 const char *robokid_get_btn(int type);
 
-extern const struct ControlInfo aurail_ctrls;
+extern const struct ControlInfo aurail_ctrl;
 const char *aurail_get_btn(int type);
 
-extern const struct ControlInfo av2mj1bb_ctrls;
+extern const struct ControlInfo av2mj1bb_ctrl;
 const char *av2mj1bb_get_btn(int type);
 
-extern const struct ControlInfo av2mj2rg_ctrls;
+extern const struct ControlInfo av2mj2rg_ctrl;
 const char *av2mj2rg_get_btn(int type);
 
-extern const struct ControlInfo avalnche_ctrls;
+extern const struct ControlInfo avalnche_ctrl;
 const char *avalnche_get_btn(int type);
 
-extern const struct ControlInfo avengers_ctrls;
+extern const struct ControlInfo avengers_ctrl;
 const char *avengers_get_btn(int type);
 
-extern const struct ControlInfo avspirit_ctrls;
+extern const struct ControlInfo avspirit_ctrl;
 const char *avspirit_get_btn(int type);
 
-extern const struct ControlInfo aztarac_ctrls;
+extern const struct ControlInfo aztarac_ctrl;
 const char *aztarac_get_btn(int type);
 
-extern const struct ControlInfo azurian_ctrls;
+extern const struct ControlInfo azurian_ctrl;
 const char *azurian_get_btn(int type);
 
-extern const struct ControlInfo baddudes_ctrls;
+extern const struct ControlInfo baddudes_ctrl;
 const char *baddudes_get_btn(int type);
 
-extern const struct ControlInfo badlands_ctrls;
+extern const struct ControlInfo badlands_ctrl;
 const char *badlands_get_btn(int type);
 
-extern const struct ControlInfo bagman_ctrls;
+extern const struct ControlInfo bagman_ctrl;
 const char *bagman_get_btn(int type);
 
-extern const struct ControlInfo bkrtmaq_ctrls;
+extern const struct ControlInfo bkrtmaq_ctrl;
 const char *bkrtmaq_get_btn(int type);
 
-extern const struct ControlInfo bakutotu_ctrls;
+extern const struct ControlInfo bakutotu_ctrl;
 const char *bakutotu_get_btn(int type);
 
-extern const struct ControlInfo ballbomb_ctrls;
+extern const struct ControlInfo ballbomb_ctrl;
 const char *ballbomb_get_btn(int type);
 
-extern const struct ControlInfo ballbros_ctrls;
+extern const struct ControlInfo ballbros_ctrl;
 const char *ballbros_get_btn(int type);
 
-extern const struct ControlInfo baluba_ctrls;
+extern const struct ControlInfo baluba_ctrl;
 const char *baluba_get_btn(int type);
 
-extern const struct ControlInfo bangball_ctrls;
+extern const struct ControlInfo bangball_ctrl;
 const char *bangball_get_btn(int type);
 
-extern const struct ControlInfo bang_ctrls;
+extern const struct ControlInfo bang_ctrl;
 const char *bang_get_btn(int type);
 
-extern const struct ControlInfo bankp_ctrls;
+extern const struct ControlInfo bankp_ctrl;
 const char *bankp_get_btn(int type);
 
-extern const struct ControlInfo baraduke_ctrls;
+extern const struct ControlInfo baraduke_ctrl;
 const char *baraduke_get_btn(int type);
 
-extern const struct ControlInfo barricad_ctrls;
+extern const struct ControlInfo barricad_ctrl;
 const char *barricad_get_btn(int type);
 
-extern const struct ControlInfo barrier_ctrls;
+extern const struct ControlInfo barrier_ctrl;
 const char *barrier_get_btn(int type);
 
-extern const struct ControlInfo bsktball_ctrls;
+extern const struct ControlInfo bsktball_ctrl;
 const char *bsktball_get_btn(int type);
 
-extern const struct ControlInfo batman_ctrls;
+extern const struct ControlInfo batman_ctrl;
 const char *batman_get_btn(int type);
 
-extern const struct ControlInfo batsugun_ctrls;
+extern const struct ControlInfo batsugun_ctrl;
 const char *batsugun_get_btn(int type);
 
-extern const struct ControlInfo battlnts_ctrls;
+extern const struct ControlInfo battlnts_ctrl;
 const char *battlnts_get_btn(int type);
 
-extern const struct ControlInfo bkraidj_ctrls;
+extern const struct ControlInfo bkraidj_ctrl;
 const char *bkraidj_get_btn(int type);
 
-extern const struct ControlInfo battlex_ctrls;
+extern const struct ControlInfo battlex_ctrl;
 const char *battlex_get_btn(int type);
 
-extern const struct ControlInfo bcruzm12_ctrls;
+extern const struct ControlInfo bcruzm12_ctrl;
 const char *bcruzm12_get_btn(int type);
 
-extern const struct ControlInfo btlkroad_ctrls;
+extern const struct ControlInfo btlkroad_ctrl;
 const char *btlkroad_get_btn(int type);
 
-extern const struct ControlInfo battlane_ctrls;
+extern const struct ControlInfo battlane_ctrl;
 const char *battlane_get_btn(int type);
 
-extern const struct ControlInfo atlantis_ctrls;
+extern const struct ControlInfo atlantis_ctrl;
 const char *atlantis_get_btn(int type);
 
-extern const struct ControlInfo battlera_ctrls;
+extern const struct ControlInfo battlera_ctrl;
 const char *battlera_get_btn(int type);
 
-extern const struct ControlInfo bshark_ctrls;
+extern const struct ControlInfo bshark_ctrl;
 const char *bshark_get_btn(int type);
 
-extern const struct ControlInfo btoads_ctrls;
+extern const struct ControlInfo btoads_ctrl;
 const char *btoads_get_btn(int type);
 
-extern const struct ControlInfo bzone_ctrls;
+extern const struct ControlInfo bzone_ctrl;
 const char *bzone_get_btn(int type);
 
-extern const struct ControlInfo bayroute_ctrls;
+extern const struct ControlInfo bayroute_ctrl;
 const char *bayroute_get_btn(int type);
 
-extern const struct ControlInfo beaminv_ctrls;
+extern const struct ControlInfo beaminv_ctrl;
 const char *beaminv_get_btn(int type);
 
-extern const struct ControlInfo bbusters_ctrls;
+extern const struct ControlInfo bbusters_ctrl;
 const char *bbusters_get_btn(int type);
 
-extern const struct ControlInfo beathead_ctrls;
+extern const struct ControlInfo beathead_ctrl;
 const char *beathead_get_btn(int type);
 
-extern const struct ControlInfo bm1stmix_ctrls;
+extern const struct ControlInfo bm1stmix_ctrl;
 const char *bm1stmix_get_btn(int type);
 
-extern const struct ControlInfo bm2ndmix_ctrls;
+extern const struct ControlInfo bm2ndmix_ctrl;
 const char *bm2ndmix_get_btn(int type);
 
-extern const struct ControlInfo bm4thmix_ctrls;
+extern const struct ControlInfo bm4thmix_ctrl;
 const char *bm4thmix_get_btn(int type);
 
-extern const struct ControlInfo bm5thmix_ctrls;
+extern const struct ControlInfo bm5thmix_ctrl;
 const char *bm5thmix_get_btn(int type);
 
-extern const struct ControlInfo bm6thmix_ctrls;
+extern const struct ControlInfo bm6thmix_ctrl;
 const char *bm6thmix_get_btn(int type);
 
-extern const struct ControlInfo bmcompmx_ctrls;
+extern const struct ControlInfo bmcompmx_ctrl;
 const char *bmcompmx_get_btn(int type);
 
-extern const struct ControlInfo bmcompm2_ctrls;
+extern const struct ControlInfo bmcompm2_ctrl;
 const char *bmcompm2_get_btn(int type);
 
-extern const struct ControlInfo bmcorerm_ctrls;
+extern const struct ControlInfo bmcorerm_ctrl;
 const char *bmcorerm_get_btn(int type);
 
-extern const struct ControlInfo bmdct_ctrls;
+extern const struct ControlInfo bmdct_ctrl;
 const char *bmdct_get_btn(int type);
 
-extern const struct ControlInfo beezer_ctrls;
+extern const struct ControlInfo beezer_ctrl;
 const char *beezer_get_btn(int type);
 
-extern const struct ControlInfo bel_ctrls;
+extern const struct ControlInfo bel_ctrl;
 const char *bel_get_btn(int type);
 
-extern const struct ControlInfo blswhstl_ctrls;
+extern const struct ControlInfo blswhstl_ctrl;
 const char *blswhstl_get_btn(int type);
 
-extern const struct ControlInfo berabohm_ctrls;
+extern const struct ControlInfo berabohm_ctrl;
 const char *berabohm_get_btn(int type);
 
-extern const struct ControlInfo bermudat_ctrls;
+extern const struct ControlInfo bermudat_ctrl;
 const char *bermudat_get_btn(int type);
 
-extern const struct ControlInfo berzerk_ctrls;
+extern const struct ControlInfo berzerk_ctrl;
 const char *berzerk_get_btn(int type);
 
-extern const struct ControlInfo bigevglf_ctrls;
+extern const struct ControlInfo bigevglf_ctrl;
 const char *bigevglf_get_btn(int type);
 
-extern const struct ControlInfo bigkarnk_ctrls;
+extern const struct ControlInfo bigkarnk_ctrl;
 const char *bigkarnk_get_btn(int type);
 
-extern const struct ControlInfo bigrun_ctrls;
+extern const struct ControlInfo bigrun_ctrl;
 const char *bigrun_get_btn(int type);
 
-extern const struct ControlInfo bigstrik_ctrls;
+extern const struct ControlInfo bigstrik_ctrl;
 const char *bigstrik_get_btn(int type);
 
-extern const struct ControlInfo bigtwin_ctrls;
+extern const struct ControlInfo bigtwin_ctrl;
 const char *bigtwin_get_btn(int type);
 
-extern const struct ControlInfo bbonk_ctrls;
+extern const struct ControlInfo bbonk_ctrl;
 const char *bbonk_get_btn(int type);
 
-extern const struct ControlInfo bijokkog_ctrls;
+extern const struct ControlInfo bijokkog_ctrl;
 const char *bijokkog_get_btn(int type);
 
-extern const struct ControlInfo bijokkoy_ctrls;
+extern const struct ControlInfo bijokkoy_ctrl;
 const char *bijokkoy_get_btn(int type);
 
-extern const struct ControlInfo bioatack_ctrls;
+extern const struct ControlInfo bioatack_ctrl;
 const char *bioatack_get_btn(int type);
 
-extern const struct ControlInfo bioship_ctrls;
+extern const struct ControlInfo bioship_ctrl;
 const char *bioship_get_btn(int type);
 
-extern const struct ControlInfo biofreak_ctrls;
+extern const struct ControlInfo biofreak_ctrl;
 const char *biofreak_get_btn(int type);
 
-extern const struct ControlInfo biomtoy_ctrls;
+extern const struct ControlInfo biomtoy_ctrl;
 const char *biomtoy_get_btn(int type);
 
-extern const struct ControlInfo bionicc_ctrls;
+extern const struct ControlInfo bionicc_ctrl;
 const char *bionicc_get_btn(int type);
 
-extern const struct ControlInfo bking_ctrls;
+extern const struct ControlInfo bking_ctrl;
 const char *bking_get_btn(int type);
 
-extern const struct ControlInfo bking2_ctrls;
+extern const struct ControlInfo bking2_ctrl;
 const char *bking2_get_btn(int type);
 
-extern const struct ControlInfo bking3_ctrls;
+extern const struct ControlInfo bking3_ctrl;
 const char *bking3_get_btn(int type);
 
-extern const struct ControlInfo birdtry_ctrls;
+extern const struct ControlInfo birdtry_ctrl;
 const char *birdtry_get_btn(int type);
 
-extern const struct ControlInfo psailor1_ctrls;
+extern const struct ControlInfo psailor1_ctrl;
 const char *psailor1_get_btn(int type);
 
-extern const struct ControlInfo psailor2_ctrls;
+extern const struct ControlInfo psailor2_ctrl;
 const char *psailor2_get_btn(int type);
 
-extern const struct ControlInfo blkheart_ctrls;
+extern const struct ControlInfo blkheart_ctrl;
 const char *blkheart_get_btn(int type);
 
-extern const struct ControlInfo blkhole_ctrls;
+extern const struct ControlInfo blkhole_ctrl;
 const char *blkhole_get_btn(int type);
 
-extern const struct ControlInfo blkpnthr_ctrls;
+extern const struct ControlInfo blkpnthr_ctrl;
 const char *blkpnthr_get_btn(int type);
 
-extern const struct ControlInfo blktiger_ctrls;
+extern const struct ControlInfo blktiger_ctrl;
 const char *blktiger_get_btn(int type);
 
-extern const struct ControlInfo bwidow_ctrls;
+extern const struct ControlInfo bwidow_ctrl;
 const char *bwidow_get_btn(int type);
 
-extern const struct ControlInfo bmaster_ctrls;
+extern const struct ControlInfo bmaster_ctrl;
 const char *bmaster_get_btn(int type);
 
-extern const struct ControlInfo bladestl_ctrls;
+extern const struct ControlInfo bladestl_ctrl;
 const char *bladestl_get_btn(int type);
 
-extern const struct ControlInfo blandia_ctrls;
+extern const struct ControlInfo blandia_ctrl;
 const char *blandia_get_btn(int type);
 
-extern const struct ControlInfo blastoff_ctrls;
+extern const struct ControlInfo blastoff_ctrl;
 const char *blastoff_get_btn(int type);
 
-extern const struct ControlInfo blasted_ctrls;
+extern const struct ControlInfo blasted_ctrl;
 const char *blasted_get_btn(int type);
 
-extern const struct ControlInfo blaster_ctrls;
+extern const struct ControlInfo blaster_ctrl;
 const char *blaster_get_btn(int type);
 
-extern const struct ControlInfo blstroid_ctrls;
+extern const struct ControlInfo blstroid_ctrl;
 const char *blstroid_get_btn(int type);
 
-extern const struct ControlInfo blasto_ctrls;
+extern const struct ControlInfo blasto_ctrl;
 const char *blasto_get_btn(int type);
 
-extern const struct ControlInfo blazeon_ctrls;
+extern const struct ControlInfo blazeon_ctrl;
 const char *blazeon_get_btn(int type);
 
-extern const struct ControlInfo blockout_ctrls;
+extern const struct ControlInfo blockout_ctrl;
 const char *blockout_get_btn(int type);
 
-extern const struct ControlInfo blockade_ctrls;
+extern const struct ControlInfo blockade_ctrl;
 const char *blockade_get_btn(int type);
 
-extern const struct ControlInfo bloodbro_ctrls;
+extern const struct ControlInfo bloodbro_ctrl;
 const char *bloodbro_get_btn(int type);
 
-extern const struct ControlInfo bloxeed_ctrls;
+extern const struct ControlInfo bloxeed_ctrl;
 const char *bloxeed_get_btn(int type);
 
-extern const struct ControlInfo blueprnt_ctrls;
+extern const struct ControlInfo blueprnt_ctrl;
 const char *blueprnt_get_btn(int type);
 
-extern const struct ControlInfo blueshrk_ctrls;
+extern const struct ControlInfo blueshrk_ctrl;
 const char *blueshrk_get_btn(int type);
 
-extern const struct ControlInfo bodyslam_ctrls;
+extern const struct ControlInfo bodyslam_ctrl;
 const char *bodyslam_get_btn(int type);
 
-extern const struct ControlInfo bogeyman_ctrls;
+extern const struct ControlInfo bogeyman_ctrl;
 const char *bogeyman_get_btn(int type);
 
-extern const struct ControlInfo bombjack_ctrls;
+extern const struct ControlInfo bombjack_ctrl;
 const char *bombjack_get_btn(int type);
 
-extern const struct ControlInfo boogwing_ctrls;
+extern const struct ControlInfo boogwing_ctrl;
 const char *boogwing_get_btn(int type);
 
-extern const struct ControlInfo boothill_ctrls;
+extern const struct ControlInfo boothill_ctrl;
 const char *boothill_get_btn(int type);
 
-extern const struct ControlInfo bosco_ctrls;
+extern const struct ControlInfo bosco_ctrl;
 const char *bosco_get_btn(int type);
 
-extern const struct ControlInfo bottom9_ctrls;
+extern const struct ControlInfo bottom9_ctrl;
 const char *bottom9_get_btn(int type);
 
-extern const struct ControlInfo bouldash_ctrls;
+extern const struct ControlInfo bouldash_ctrl;
 const char *bouldash_get_btn(int type);
 
-extern const struct ControlInfo bowler_ctrls;
+extern const struct ControlInfo bowler_ctrl;
 const char *bowler_get_btn(int type);
 
-extern const struct ControlInfo boxingb_ctrls;
+extern const struct ControlInfo boxingb_ctrl;
 const char *boxingb_get_btn(int type);
 
-extern const struct ControlInfo bradley_ctrls;
+extern const struct ControlInfo bradley_ctrl;
 const char *bradley_get_btn(int type);
 
-extern const struct ControlInfo brkthru_ctrls;
+extern const struct ControlInfo brkthru_ctrl;
 const char *brkthru_get_btn(int type);
 
-extern const struct ControlInfo bublbobl_ctrls;
+extern const struct ControlInfo bublbobl_ctrl;
 const char *bublbobl_get_btn(int type);
 
-extern const struct ControlInfo bubbles_ctrls;
+extern const struct ControlInfo bubbles_ctrl;
 const char *bubbles_get_btn(int type);
 
-extern const struct ControlInfo buckrog_ctrls;
+extern const struct ControlInfo buckrog_ctrl;
 const char *buckrog_get_btn(int type);
 
-extern const struct ControlInfo buggychl_ctrls;
+extern const struct ControlInfo buggychl_ctrl;
 const char *buggychl_get_btn(int type);
 
-extern const struct ControlInfo btime_ctrls;
+extern const struct ControlInfo btime_ctrl;
 const char *btime_get_btn(int type);
 
-extern const struct ControlInfo brubber_ctrls;
+extern const struct ControlInfo brubber_ctrl;
 const char *brubber_get_btn(int type);
 
-extern const struct ControlInfo cabal_ctrls;
+extern const struct ControlInfo cabal_ctrl;
 const char *cabal_get_btn(int type);
 
-extern const struct ControlInfo cadash_ctrls;
+extern const struct ControlInfo cadash_ctrl;
 const char *cadash_get_btn(int type);
 
-extern const struct ControlInfo dino_ctrls;
+extern const struct ControlInfo dino_ctrl;
 const char *dino_get_btn(int type);
 
-extern const struct ControlInfo calibr50_ctrls;
+extern const struct ControlInfo calibr50_ctrl;
 const char *calibr50_get_btn(int type);
 
-extern const struct ControlInfo cameltry_ctrls;
+extern const struct ControlInfo cameltry_ctrl;
 const char *cameltry_get_btn(int type);
 
-extern const struct ControlInfo canyon_ctrls;
+extern const struct ControlInfo canyon_ctrl;
 const char *canyon_get_btn(int type);
 
-extern const struct ControlInfo capbowl_ctrls;
+extern const struct ControlInfo capbowl_ctrl;
 const char *capbowl_get_btn(int type);
 
-extern const struct ControlInfo captaven_ctrls;
+extern const struct ControlInfo captaven_ctrl;
 const char *captaven_get_btn(int type);
 
-extern const struct ControlInfo captcomm_ctrls;
+extern const struct ControlInfo captcomm_ctrl;
 const char *captcomm_get_btn(int type);
 
-extern const struct ControlInfo carnevil_ctrls;
+extern const struct ControlInfo carnevil_ctrl;
 const char *carnevil_get_btn(int type);
 
-extern const struct ControlInfo carnival_ctrls;
+extern const struct ControlInfo carnival_ctrl;
 const char *carnival_get_btn(int type);
 
-extern const struct ControlInfo cawing_ctrls;
+extern const struct ControlInfo cawing_ctrl;
 const char *cawing_get_btn(int type);
 
-extern const struct ControlInfo cavelon_ctrls;
+extern const struct ControlInfo cavelon_ctrl;
 const char *cavelon_get_btn(int type);
 
-extern const struct ControlInfo cninja_ctrls;
+extern const struct ControlInfo cninja_ctrl;
 const char *cninja_get_btn(int type);
 
-extern const struct ControlInfo centiped_ctrls;
+extern const struct ControlInfo centiped_ctrl;
 const char *centiped_get_btn(int type);
 
-extern const struct ControlInfo challeng_ctrls;
+extern const struct ControlInfo challeng_ctrl;
 const char *challeng_get_btn(int type);
 
-extern const struct ControlInfo champbas_ctrls;
+extern const struct ControlInfo champbas_ctrl;
 const char *champbas_get_btn(int type);
 
-extern const struct ControlInfo csprint_ctrls;
+extern const struct ControlInfo csprint_ctrl;
 const char *csprint_get_btn(int type);
 
-extern const struct ControlInfo checkman_ctrls;
+extern const struct ControlInfo checkman_ctrl;
 const char *checkman_get_btn(int type);
 
-extern const struct ControlInfo checkmat_ctrls;
+extern const struct ControlInfo checkmat_ctrl;
 const char *checkmat_get_btn(int type);
 
-extern const struct ControlInfo cheekyms_ctrls;
+extern const struct ControlInfo cheekyms_ctrl;
 const char *cheekyms_get_btn(int type);
 
-extern const struct ControlInfo cheyenne_ctrls;
+extern const struct ControlInfo cheyenne_ctrl;
 const char *cheyenne_get_btn(int type);
 
-extern const struct ControlInfo cshift_ctrls;
+extern const struct ControlInfo cshift_ctrl;
 const char *cshift_get_btn(int type);
 
-extern const struct ControlInfo chiller_ctrls;
+extern const struct ControlInfo chiller_ctrl;
 const char *chiller_get_btn(int type);
 
-extern const struct ControlInfo ccasino_ctrls;
+extern const struct ControlInfo ccasino_ctrl;
 const char *ccasino_get_btn(int type);
 
-extern const struct ControlInfo chopper_ctrls;
+extern const struct ControlInfo chopper_ctrl;
 const char *chopper_get_btn(int type);
 
-extern const struct ControlInfo circus_ctrls;
+extern const struct ControlInfo circus_ctrl;
 const char *circus_get_btn(int type);
 
-extern const struct ControlInfo circusc_ctrls;
+extern const struct ControlInfo circusc_ctrl;
 const char *circusc_get_btn(int type);
 
-extern const struct ControlInfo cischeat_ctrls;
+extern const struct ControlInfo cischeat_ctrl;
 const char *cischeat_get_btn(int type);
 
-extern const struct ControlInfo citycon_ctrls;
+extern const struct ControlInfo citycon_ctrl;
 const char *citycon_get_btn(int type);
 
-extern const struct ControlInfo citylove_ctrls;
+extern const struct ControlInfo citylove_ctrl;
 const char *citylove_get_btn(int type);
 
-extern const struct ControlInfo cloak_ctrls;
+extern const struct ControlInfo cloak_ctrl;
 const char *cloak_get_btn(int type);
 
-extern const struct ControlInfo clowns_ctrls;
+extern const struct ControlInfo clowns_ctrl;
 const char *clowns_get_btn(int type);
 
-extern const struct ControlInfo cltchitr_ctrls;
+extern const struct ControlInfo cltchitr_ctrl;
 const char *cltchitr_get_btn(int type);
 
-extern const struct ControlInfo colony7_ctrls;
+extern const struct ControlInfo colony7_ctrl;
 const char *colony7_get_btn(int type);
 
-extern const struct ControlInfo columns_ctrls;
+extern const struct ControlInfo columns_ctrl;
 const char *columns_get_btn(int type);
 
-extern const struct ControlInfo combat_ctrls;
+extern const struct ControlInfo combat_ctrl;
 const char *combat_get_btn(int type);
 
-extern const struct ControlInfo commsega_ctrls;
+extern const struct ControlInfo commsega_ctrl;
 const char *commsega_get_btn(int type);
 
-extern const struct ControlInfo commando_ctrls;
+extern const struct ControlInfo commando_ctrl;
 const char *commando_get_btn(int type);
 
-extern const struct ControlInfo comotion_ctrls;
+extern const struct ControlInfo comotion_ctrl;
 const char *comotion_get_btn(int type);
 
-extern const struct ControlInfo congo_ctrls;
+extern const struct ControlInfo congo_ctrl;
 const char *congo_get_btn(int type);
 
-extern const struct ControlInfo contra_ctrls;
+extern const struct ControlInfo contra_ctrl;
 const char *contra_get_btn(int type);
 
-extern const struct ControlInfo cosmica_ctrls;
+extern const struct ControlInfo cosmica_ctrl;
 const char *cosmica_get_btn(int type);
 
-extern const struct ControlInfo cavenger_ctrls;
+extern const struct ControlInfo cavenger_ctrl;
 const char *cavenger_get_btn(int type);
 
-extern const struct ControlInfo cchasm_ctrls;
+extern const struct ControlInfo cchasm_ctrl;
 const char *cchasm_get_btn(int type);
 
-extern const struct ControlInfo cosmicg_ctrls;
+extern const struct ControlInfo cosmicg_ctrl;
 const char *cosmicg_get_btn(int type);
 
-extern const struct ControlInfo cracksht_ctrls;
+extern const struct ControlInfo cracksht_ctrl;
 const char *cracksht_get_btn(int type);
 
-extern const struct ControlInfo crash_ctrls;
+extern const struct ControlInfo crash_ctrl;
 const char *crash_get_btn(int type);
 
-extern const struct ControlInfo crater_ctrls;
+extern const struct ControlInfo crater_ctrl;
 const char *crater_get_btn(int type);
 
-extern const struct ControlInfo cclimber_ctrls;
+extern const struct ControlInfo cclimber_ctrl;
 const char *cclimber_get_btn(int type);
 
-extern const struct ControlInfo cclimbr2_ctrls;
+extern const struct ControlInfo cclimbr2_ctrl;
 const char *cclimbr2_get_btn(int type);
 
-extern const struct ControlInfo ckong_ctrls;
+extern const struct ControlInfo ckong_ctrl;
 const char *ckong_get_btn(int type);
 
-extern const struct ControlInfo crimec_ctrls;
+extern const struct ControlInfo crimec_ctrl;
 const char *crimec_get_btn(int type);
 
-extern const struct ControlInfo crimfght_ctrls;
+extern const struct ControlInfo crimfght_ctrl;
 const char *crimfght_get_btn(int type);
 
-extern const struct ControlInfo crossbow_ctrls;
+extern const struct ControlInfo crossbow_ctrl;
 const char *crossbow_get_btn(int type);
 
-extern const struct ControlInfo crgolf_ctrls;
+extern const struct ControlInfo crgolf_ctrl;
 const char *crgolf_get_btn(int type);
 
-extern const struct ControlInfo cbuster_ctrls;
+extern const struct ControlInfo cbuster_ctrl;
 const char *cbuster_get_btn(int type);
 
-extern const struct ControlInfo crush_ctrls;
+extern const struct ControlInfo crush_ctrl;
 const char *crush_get_btn(int type);
 
-extern const struct ControlInfo cryptklr_ctrls;
+extern const struct ControlInfo cryptklr_ctrl;
 const char *cryptklr_get_btn(int type);
 
-extern const struct ControlInfo ccastles_ctrls;
+extern const struct ControlInfo ccastles_ctrl;
 const char *ccastles_get_btn(int type);
 
-extern const struct ControlInfo crystalg_ctrls;
+extern const struct ControlInfo crystalg_ctrl;
 const char *crystalg_get_btn(int type);
 
-extern const struct ControlInfo crystal2_ctrls;
+extern const struct ControlInfo crystal2_ctrl;
 const char *crystal2_get_btn(int type);
 
-extern const struct ControlInfo curvebal_ctrls;
+extern const struct ControlInfo curvebal_ctrl;
 const char *curvebal_get_btn(int type);
 
-extern const struct ControlInfo cybsled_ctrls;
+extern const struct ControlInfo cybsled_ctrl;
 const char *cybsled_get_btn(int type);
 
-extern const struct ControlInfo cyberbal_ctrls;
+extern const struct ControlInfo cyberbal_ctrl;
 const char *cyberbal_get_btn(int type);
 
-extern const struct ControlInfo cybots_ctrls;
+extern const struct ControlInfo cybots_ctrl;
 const char *cybots_get_btn(int type);
 
-extern const struct ControlInfo daioh_ctrls;
+extern const struct ControlInfo daioh_ctrl;
 const char *daioh_get_btn(int type);
 
-extern const struct ControlInfo dangar_ctrls;
+extern const struct ControlInfo dangar_ctrl;
 const char *dangar_get_btn(int type);
 
-extern const struct ControlInfo dangerz_ctrls;
+extern const struct ControlInfo dangerz_ctrl;
 const char *dangerz_get_btn(int type);
 
-extern const struct ControlInfo indyheat_ctrls;
+extern const struct ControlInfo indyheat_ctrl;
 const char *indyheat_get_btn(int type);
 
-extern const struct ControlInfo darkplnt_ctrls;
+extern const struct ControlInfo darkplnt_ctrl;
 const char *darkplnt_get_btn(int type);
 
-extern const struct ControlInfo darkseal_ctrls;
+extern const struct ControlInfo darkseal_ctrl;
 const char *darkseal_get_btn(int type);
 
-extern const struct ControlInfo dstlk_ctrls;
+extern const struct ControlInfo dstlk_ctrl;
 const char *dstlk_get_btn(int type);
 
-extern const struct ControlInfo deadang_ctrls;
+extern const struct ControlInfo deadang_ctrl;
 const char *deadang_get_btn(int type);
 
-extern const struct ControlInfo redufo_ctrls;
+extern const struct ControlInfo redufo_ctrl;
 const char *redufo_get_btn(int type);
 
-extern const struct ControlInfo defender_ctrls;
+extern const struct ControlInfo defender_ctrl;
 const char *defender_get_btn(int type);
 
-extern const struct ControlInfo demoderb_ctrls;
+extern const struct ControlInfo demoderb_ctrl;
 const char *demoderb_get_btn(int type);
 
-extern const struct ControlInfo depthch_ctrls;
+extern const struct ControlInfo depthch_ctrl;
 const char *depthch_get_btn(int type);
 
-extern const struct ControlInfo desertgu_ctrls;
+extern const struct ControlInfo desertgu_ctrl;
 const char *desertgu_get_btn(int type);
 
-extern const struct ControlInfo destroyr_ctrls;
+extern const struct ControlInfo destroyr_ctrl;
 const char *destroyr_get_btn(int type);
 
-extern const struct ControlInfo devstors_ctrls;
+extern const struct ControlInfo devstors_ctrl;
 const char *devstors_get_btn(int type);
 
-extern const struct ControlInfo devilfsh_ctrls;
+extern const struct ControlInfo devilfsh_ctrl;
 const char *devilfsh_get_btn(int type);
 
-extern const struct ControlInfo devzone_ctrls;
+extern const struct ControlInfo devzone_ctrl;
 const char *devzone_get_btn(int type);
 
-extern const struct ControlInfo digdug_ctrls;
+extern const struct ControlInfo digdug_ctrl;
 const char *digdug_get_btn(int type);
 
-extern const struct ControlInfo digdug2_ctrls;
+extern const struct ControlInfo digdug2_ctrl;
 const char *digdug2_get_btn(int type);
 
-extern const struct ControlInfo digger_ctrls;
+extern const struct ControlInfo digger_ctrl;
 const char *digger_get_btn(int type);
 
-extern const struct ControlInfo dimahoo_ctrls;
+extern const struct ControlInfo dimahoo_ctrl;
 const char *dimahoo_get_btn(int type);
 
-extern const struct ControlInfo otatidai_ctrls;
+extern const struct ControlInfo otatidai_ctrl;
 const char *otatidai_get_btn(int type);
 
-extern const struct ControlInfo dotron_ctrls;
+extern const struct ControlInfo dotron_ctrl;
 const char *dotron_get_btn(int type);
 
-extern const struct ControlInfo dorunrun_ctrls;
+extern const struct ControlInfo dorunrun_ctrl;
 const char *dorunrun_get_btn(int type);
 
-extern const struct ControlInfo domino_ctrls;
+extern const struct ControlInfo domino_ctrl;
 const char *domino_get_btn(int type);
 
-extern const struct ControlInfo dominos_ctrls;
+extern const struct ControlInfo dominos_ctrl;
 const char *dominos_get_btn(int type);
 
-extern const struct ControlInfo dondenmj_ctrls;
+extern const struct ControlInfo dondenmj_ctrl;
 const char *dondenmj_get_btn(int type);
 
-extern const struct ControlInfo dkong_ctrls;
+extern const struct ControlInfo dkong_ctrl;
 const char *dkong_get_btn(int type);
 
-extern const struct ControlInfo dkong3_ctrls;
+extern const struct ControlInfo dkong3_ctrl;
 const char *dkong3_get_btn(int type);
 
-extern const struct ControlInfo dkongjr_ctrls;
+extern const struct ControlInfo dkongjr_ctrl;
 const char *dkongjr_get_btn(int type);
 
-extern const struct ControlInfo ddragon_ctrls;
+extern const struct ControlInfo ddragon_ctrl;
 const char *ddragon_get_btn(int type);
 
-extern const struct ControlInfo ddragon3_ctrls;
+extern const struct ControlInfo ddragon3_ctrl;
 const char *ddragon3_get_btn(int type);
 
-extern const struct ControlInfo ddragon2_ctrls;
+extern const struct ControlInfo ddragon2_ctrl;
 const char *ddragon2_get_btn(int type);
 
-extern const struct ControlInfo ddribble_ctrls;
+extern const struct ControlInfo ddribble_ctrl;
 const char *ddribble_get_btn(int type);
 
-extern const struct ControlInfo downtown_ctrls;
+extern const struct ControlInfo downtown_ctrl;
 const char *downtown_get_btn(int type);
 
-extern const struct ControlInfo dragrace_ctrls;
+extern const struct ControlInfo dragrace_ctrl;
 const char *dragrace_get_btn(int type);
 
-extern const struct ControlInfo dragngun_ctrls;
+extern const struct ControlInfo dragngun_ctrl;
 const char *dragngun_get_btn(int type);
 
-extern const struct ControlInfo dspirit_ctrls;
+extern const struct ControlInfo dspirit_ctrl;
 const char *dspirit_get_btn(int type);
 
-extern const struct ControlInfo drgnunit_ctrls;
+extern const struct ControlInfo drgnunit_ctrl;
 const char *drgnunit_get_btn(int type);
 
-extern const struct ControlInfo ddsom_ctrls;
+extern const struct ControlInfo ddsom_ctrl;
 const char *ddsom_get_btn(int type);
 
-extern const struct ControlInfo ddtod_ctrls;
+extern const struct ControlInfo ddtod_ctrl;
 const char *ddtod_get_btn(int type);
 
-extern const struct ControlInfo dynamcop_ctrls;
+extern const struct ControlInfo dynamcop_ctrl;
 const char *dynamcop_get_btn(int type);
 
-extern const struct ControlInfo eswat_ctrls;
+extern const struct ControlInfo eswat_ctrl;
 const char *eswat_get_btn(int type);
 
-extern const struct ControlInfo ecofghtr_ctrls;
+extern const struct ControlInfo ecofghtr_ctrl;
 const char *ecofghtr_get_btn(int type);
 
-extern const struct ControlInfo eggventr_ctrls;
+extern const struct ControlInfo eggventr_ctrl;
 const char *eggventr_get_btn(int type);
 
-extern const struct ControlInfo elevator_ctrls;
+extern const struct ControlInfo elevator_ctrl;
 const char *elevator_get_btn(int type);
 
-extern const struct ControlInfo elim2_ctrls;
+extern const struct ControlInfo elim2_ctrl;
 const char *elim2_get_btn(int type);
 
-extern const struct ControlInfo enigma2_ctrls;
+extern const struct ControlInfo enigma2_ctrl;
 const char *enigma2_get_btn(int type);
 
-extern const struct ControlInfo eprom_ctrls;
+extern const struct ControlInfo eprom_ctrl;
 const char *eprom_get_btn(int type);
 
-extern const struct ControlInfo exerion_ctrls;
+extern const struct ControlInfo exerion_ctrl;
 const char *exerion_get_btn(int type);
 
-extern const struct ControlInfo exterm_ctrls;
+extern const struct ControlInfo exterm_ctrl;
 const char *exterm_get_btn(int type);
 
-extern const struct ControlInfo eyes_ctrls;
+extern const struct ControlInfo eyes_ctrl;
 const char *eyes_get_btn(int type);
 
-extern const struct ControlInfo f1dream_ctrls;
+extern const struct ControlInfo f1dream_ctrl;
 const char *f1dream_get_btn(int type);
 
-extern const struct ControlInfo f1en_ctrls;
+extern const struct ControlInfo f1en_ctrl;
 const char *f1en_get_btn(int type);
 
-extern const struct ControlInfo fantasy_ctrls;
+extern const struct ControlInfo fantasy_ctrl;
 const char *fantasy_get_btn(int type);
 
-extern const struct ControlInfo sqbert_ctrls;
+extern const struct ControlInfo sqbert_ctrl;
 const char *sqbert_get_btn(int type);
 
-extern const struct ControlInfo fax_ctrls;
+extern const struct ControlInfo fax_ctrl;
 const char *fax_get_btn(int type);
 
-extern const struct ControlInfo fgoal_ctrls;
+extern const struct ControlInfo fgoal_ctrl;
 const char *fgoal_get_btn(int type);
 
-extern const struct ControlInfo fghtatck_ctrls;
+extern const struct ControlInfo fghtatck_ctrl;
 const char *fghtatck_get_btn(int type);
 
-extern const struct ControlInfo fvipers_ctrls;
+extern const struct ControlInfo fvipers_ctrl;
 const char *fvipers_get_btn(int type);
 
-extern const struct ControlInfo finalb_ctrls;
+extern const struct ControlInfo finalb_ctrl;
 const char *finalb_get_btn(int type);
 
-extern const struct ControlInfo ffight_ctrls;
+extern const struct ControlInfo ffight_ctrl;
 const char *ffight_get_btn(int type);
 
-extern const struct ControlInfo finalap2_ctrls;
+extern const struct ControlInfo finalap2_ctrl;
 const char *finalap2_get_btn(int type);
 
-extern const struct ControlInfo firetrap_ctrls;
+extern const struct ControlInfo firetrap_ctrl;
 const char *firetrap_get_btn(int type);
 
-extern const struct ControlInfo firetrk_ctrls;
+extern const struct ControlInfo firetrk_ctrl;
 const char *firetrk_get_btn(int type);
 
-extern const struct ControlInfo fshark_ctrls;
+extern const struct ControlInfo fshark_ctrl;
 const char *fshark_get_btn(int type);
 
-extern const struct ControlInfo foodf_ctrls;
+extern const struct ControlInfo foodf_ctrl;
 const char *foodf_get_btn(int type);
 
-extern const struct ControlInfo forgottn_ctrls;
+extern const struct ControlInfo forgottn_ctrl;
 const char *forgottn_get_btn(int type);
 
-extern const struct ControlInfo formatz_ctrls;
+extern const struct ControlInfo formatz_ctrl;
 const char *formatz_get_btn(int type);
 
-extern const struct ControlInfo frenzy_ctrls;
+extern const struct ControlInfo frenzy_ctrl;
 const char *frenzy_get_btn(int type);
 
-extern const struct ControlInfo frogger_ctrls;
+extern const struct ControlInfo frogger_ctrl;
 const char *frogger_get_btn(int type);
 
-extern const struct ControlInfo frogs_ctrls;
+extern const struct ControlInfo frogs_ctrl;
 const char *frogs_get_btn(int type);
 
-extern const struct ControlInfo frontlin_ctrls;
+extern const struct ControlInfo frontlin_ctrl;
 const char *frontlin_get_btn(int type);
 
-extern const struct ControlInfo futspy_ctrls;
+extern const struct ControlInfo futspy_ctrl;
 const char *futspy_get_btn(int type);
 
-extern const struct ControlInfo gloc_ctrls;
+extern const struct ControlInfo gloc_ctrl;
 const char *gloc_get_btn(int type);
 
-extern const struct ControlInfo gijoe_ctrls;
+extern const struct ControlInfo gijoe_ctrl;
 const char *gijoe_get_btn(int type);
 
-extern const struct ControlInfo gground_ctrls;
+extern const struct ControlInfo gground_ctrl;
 const char *gground_get_btn(int type);
 
-extern const struct ControlInfo galaga88_ctrls;
+extern const struct ControlInfo galaga88_ctrl;
 const char *galaga88_get_btn(int type);
 
-extern const struct ControlInfo galaga_ctrls;
+extern const struct ControlInfo galaga_ctrl;
 const char *galaga_get_btn(int type);
 
-extern const struct ControlInfo galaxian_ctrls;
+extern const struct ControlInfo galaxian_ctrl;
 const char *galaxian_get_btn(int type);
 
-extern const struct ControlInfo gforce2_ctrls;
+extern const struct ControlInfo gforce2_ctrl;
 const char *gforce2_get_btn(int type);
 
-extern const struct ControlInfo galxwars_ctrls;
+extern const struct ControlInfo galxwars_ctrl;
 const char *galxwars_get_btn(int type);
 
-extern const struct ControlInfo galpanic_ctrls;
+extern const struct ControlInfo galpanic_ctrl;
 const char *galpanic_get_btn(int type);
 
-extern const struct ControlInfo galpani2_ctrls;
+extern const struct ControlInfo galpani2_ctrl;
 const char *galpani2_get_btn(int type);
 
-extern const struct ControlInfo gaplus_ctrls;
+extern const struct ControlInfo gaplus_ctrl;
 const char *gaplus_get_btn(int type);
 
-extern const struct ControlInfo gauntlet_ctrls;
+extern const struct ControlInfo gauntlet_ctrl;
 const char *gauntlet_get_btn(int type);
 
-extern const struct ControlInfo gaunt2_ctrls;
+extern const struct ControlInfo gaunt2_ctrl;
 const char *gaunt2_get_btn(int type);
 
-extern const struct ControlInfo geebee_ctrls;
+extern const struct ControlInfo geebee_ctrl;
 const char *geebee_get_btn(int type);
 
-extern const struct ControlInfo gng_ctrls;
+extern const struct ControlInfo gng_ctrl;
 const char *gng_get_btn(int type);
 
-extern const struct ControlInfo ghouls_ctrls;
+extern const struct ControlInfo ghouls_ctrl;
 const char *ghouls_get_btn(int type);
 
-extern const struct ControlInfo gigawing_ctrls;
+extern const struct ControlInfo gigawing_ctrl;
 const char *gigawing_get_btn(int type);
 
-extern const struct ControlInfo goldmedl_ctrls;
+extern const struct ControlInfo goldmedl_ctrl;
 const char *goldmedl_get_btn(int type);
 
-extern const struct ControlInfo goldnaxe_ctrls;
+extern const struct ControlInfo goldnaxe_ctrl;
 const char *goldnaxe_get_btn(int type);
 
-extern const struct ControlInfo ga2_ctrls;
+extern const struct ControlInfo ga2_ctrl;
 const char *ga2_get_btn(int type);
 
-extern const struct ControlInfo gt97_ctrls;
+extern const struct ControlInfo gt97_ctrl;
 const char *gt97_get_btn(int type);
 
-extern const struct ControlInfo gt98_ctrls;
+extern const struct ControlInfo gt98_ctrl;
 const char *gt98_get_btn(int type);
 
-extern const struct ControlInfo gt99_ctrls;
+extern const struct ControlInfo gt99_ctrl;
 const char *gt99_get_btn(int type);
 
-extern const struct ControlInfo gt2k_ctrls;
+extern const struct ControlInfo gt2k_ctrl;
 const char *gt2k_get_btn(int type);
 
-extern const struct ControlInfo gt3d_ctrls;
+extern const struct ControlInfo gt3d_ctrl;
 const char *gt3d_get_btn(int type);
 
-extern const struct ControlInfo gtg2_ctrls;
+extern const struct ControlInfo gtg2_ctrl;
 const char *gtg2_get_btn(int type);
 
-extern const struct ControlInfo glfgreat_ctrls;
+extern const struct ControlInfo glfgreat_ctrl;
 const char *glfgreat_get_btn(int type);
 
-extern const struct ControlInfo golgo13_ctrls;
+extern const struct ControlInfo golgo13_ctrl;
 const char *golgo13_get_btn(int type);
 
-extern const struct ControlInfo gollygho_ctrls;
+extern const struct ControlInfo gollygho_ctrl;
 const char *gollygho_get_btn(int type);
 
-extern const struct ControlInfo gondo_ctrls;
+extern const struct ControlInfo gondo_ctrl;
 const char *gondo_get_btn(int type);
 
-extern const struct ControlInfo gorf_ctrls;
+extern const struct ControlInfo gorf_ctrl;
 const char *gorf_get_btn(int type);
 
-extern const struct ControlInfo grchamp_ctrls;
+extern const struct ControlInfo grchamp_ctrl;
 const char *grchamp_get_btn(int type);
 
-extern const struct ControlInfo f1gpstar_ctrls;
+extern const struct ControlInfo f1gpstar_ctrl;
 const char *f1gpstar_get_btn(int type);
 
-extern const struct ControlInfo gravitar_ctrls;
+extern const struct ControlInfo gravitar_ctrl;
 const char *gravitar_get_btn(int type);
 
-extern const struct ControlInfo greatgun_ctrls;
+extern const struct ControlInfo greatgun_ctrl;
 const char *greatgun_get_btn(int type);
 
-extern const struct ControlInfo gberet_ctrls;
+extern const struct ControlInfo gberet_ctrl;
 const char *gberet_get_btn(int type);
 
-extern const struct ControlInfo gridiron_ctrls;
+extern const struct ControlInfo gridiron_ctrl;
 const char *gridiron_get_btn(int type);
 
-extern const struct ControlInfo gridlee_ctrls;
+extern const struct ControlInfo gridlee_ctrl;
 const char *gridlee_get_btn(int type);
 
-extern const struct ControlInfo guardian_ctrls;
+extern const struct ControlInfo guardian_ctrl;
 const char *guardian_get_btn(int type);
 
-extern const struct ControlInfo gwar_ctrls;
+extern const struct ControlInfo gwar_ctrl;
 const char *gwar_get_btn(int type);
 
-extern const struct ControlInfo gunsmoke_ctrls;
+extern const struct ControlInfo gunsmoke_ctrl;
 const char *gunsmoke_get_btn(int type);
 
-extern const struct ControlInfo gunbird_ctrls;
+extern const struct ControlInfo gunbird_ctrl;
 const char *gunbird_get_btn(int type);
 
-extern const struct ControlInfo gunbustr_ctrls;
+extern const struct ControlInfo gunbustr_ctrl;
 const char *gunbustr_get_btn(int type);
 
-extern const struct ControlInfo gyruss_ctrls;
+extern const struct ControlInfo gyruss_ctrl;
 const char *gyruss_get_btn(int type);
 
-extern const struct ControlInfo halleys_ctrls;
+extern const struct ControlInfo halleys_ctrl;
 const char *halleys_get_btn(int type);
 
-extern const struct ControlInfo hardyard_ctrls;
+extern const struct ControlInfo hardyard_ctrl;
 const char *hardyard_get_btn(int type);
 
-extern const struct ControlInfo hattrick_ctrls;
+extern const struct ControlInfo hattrick_ctrl;
 const char *hattrick_get_btn(int type);
 
-extern const struct ControlInfo hcastle_ctrls;
+extern const struct ControlInfo hcastle_ctrl;
 const char *hcastle_get_btn(int type);
 
-extern const struct ControlInfo hbarrel_ctrls;
+extern const struct ControlInfo hbarrel_ctrl;
 const char *hbarrel_get_btn(int type);
 
-extern const struct ControlInfo hiimpact_ctrls;
+extern const struct ControlInfo hiimpact_ctrl;
 const char *hiimpact_get_btn(int type);
 
-extern const struct ControlInfo hippodrm_ctrls;
+extern const struct ControlInfo hippodrm_ctrl;
 const char *hippodrm_get_btn(int type);
 
-extern const struct ControlInfo hitme_ctrls;
+extern const struct ControlInfo hitme_ctrl;
 const char *hitme_get_btn(int type);
 
-extern const struct ControlInfo hitice_ctrls;
+extern const struct ControlInfo hitice_ctrl;
 const char *hitice_get_btn(int type);
 
-extern const struct ControlInfo holo_ctrls;
+extern const struct ControlInfo holo_ctrl;
 const char *holo_get_btn(int type);
 
-extern const struct ControlInfo hotrod_ctrls;
+extern const struct ControlInfo hotrod_ctrl;
 const char *hotrod_get_btn(int type);
 
-extern const struct ControlInfo hstennis_ctrls;
+extern const struct ControlInfo hstennis_ctrl;
 const char *hstennis_get_btn(int type);
 
-extern const struct ControlInfo housemnq_ctrls;
+extern const struct ControlInfo housemnq_ctrl;
 const char *housemnq_get_btn(int type);
 
-extern const struct ControlInfo housemn2_ctrls;
+extern const struct ControlInfo housemn2_ctrl;
 const char *housemn2_get_btn(int type);
 
-extern const struct ControlInfo hustle_ctrls;
+extern const struct ControlInfo hustle_ctrl;
 const char *hustle_get_btn(int type);
 
-extern const struct ControlInfo hng64_ctrls;
+extern const struct ControlInfo hng64_ctrl;
 const char *hng64_get_btn(int type);
 
-extern const struct ControlInfo hyperspt_ctrls;
+extern const struct ControlInfo hyperspt_ctrl;
 const char *hyperspt_get_btn(int type);
 
-extern const struct ControlInfo irobot_ctrls;
+extern const struct ControlInfo irobot_ctrl;
 const char *irobot_get_btn(int type);
 
-extern const struct ControlInfo a47pie2_ctrls;
+extern const struct ControlInfo a47pie2_ctrl;
 const char *a47pie2_get_btn(int type);
 
-extern const struct ControlInfo idhimitu_ctrls;
+extern const struct ControlInfo idhimitu_ctrl;
 const char *idhimitu_get_btn(int type);
 
-extern const struct ControlInfo fromance_ctrls;
+extern const struct ControlInfo fromance_ctrl;
 const char *fromance_get_btn(int type);
 
-extern const struct ControlInfo idolmj_ctrls;
+extern const struct ControlInfo idolmj_ctrl;
 const char *idolmj_get_btn(int type);
 
-extern const struct ControlInfo iemoto_ctrls;
+extern const struct ControlInfo iemoto_ctrl;
 const char *iemoto_get_btn(int type);
 
-extern const struct ControlInfo ikari3_ctrls;
+extern const struct ControlInfo ikari3_ctrl;
 const char *ikari3_get_btn(int type);
 
-extern const struct ControlInfo ikari_ctrls;
+extern const struct ControlInfo ikari_ctrl;
 const char *ikari_get_btn(int type);
 
-extern const struct ControlInfo imekura_ctrls;
+extern const struct ControlInfo imekura_ctrl;
 const char *imekura_get_btn(int type);
 
-extern const struct ControlInfo indytemp_ctrls;
+extern const struct ControlInfo indytemp_ctrl;
 const char *indytemp_get_btn(int type);
 
-extern const struct ControlInfo inferno_ctrls;
+extern const struct ControlInfo inferno_ctrl;
 const char *inferno_get_btn(int type);
 
-extern const struct ControlInfo invrvnge_ctrls;
+extern const struct ControlInfo invrvnge_ctrl;
 const char *invrvnge_get_btn(int type);
 
-extern const struct ControlInfo invho2_ctrls;
+extern const struct ControlInfo invho2_ctrl;
 const char *invho2_get_btn(int type);
 
-extern const struct ControlInfo offroad_ctrls;
+extern const struct ControlInfo offroad_ctrl;
 const char *offroad_get_btn(int type);
 
-extern const struct ControlInfo offroadt_ctrls;
+extern const struct ControlInfo offroadt_ctrl;
 const char *offroadt_get_btn(int type);
 
-extern const struct ControlInfo jackal_ctrls;
+extern const struct ControlInfo jackal_ctrl;
 const char *jackal_get_btn(int type);
 
-extern const struct ControlInfo jailbrek_ctrls;
+extern const struct ControlInfo jailbrek_ctrl;
 const char *jailbrek_get_btn(int type);
 
-extern const struct ControlInfo teamqb_ctrls;
+extern const struct ControlInfo teamqb_ctrl;
 const char *teamqb_get_btn(int type);
 
-extern const struct ControlInfo jantouki_ctrls;
+extern const struct ControlInfo jantouki_ctrl;
 const char *jantouki_get_btn(int type);
 
-extern const struct ControlInfo journey_ctrls;
+extern const struct ControlInfo journey_ctrl;
 const char *journey_get_btn(int type);
 
-extern const struct ControlInfo joust_ctrls;
+extern const struct ControlInfo joust_ctrl;
 const char *joust_get_btn(int type);
 
-extern const struct ControlInfo joust2_ctrls;
+extern const struct ControlInfo joust2_ctrl;
 const char *joust2_get_btn(int type);
 
-extern const struct ControlInfo joyfulr_ctrls;
+extern const struct ControlInfo joyfulr_ctrl;
 const char *joyfulr_get_btn(int type);
 
-extern const struct ControlInfo jrpacman_ctrls;
+extern const struct ControlInfo jrpacman_ctrl;
 const char *jrpacman_get_btn(int type);
 
-extern const struct ControlInfo jumpbug_ctrls;
+extern const struct ControlInfo jumpbug_ctrl;
 const char *jumpbug_get_btn(int type);
 
-extern const struct ControlInfo junglek_ctrls;
+extern const struct ControlInfo junglek_ctrl;
 const char *junglek_get_btn(int type);
 
-extern const struct ControlInfo jungler_ctrls;
+extern const struct ControlInfo jungler_ctrl;
 const char *jungler_get_btn(int type);
 
-extern const struct ControlInfo jpark_ctrls;
+extern const struct ControlInfo jpark_ctrl;
 const char *jpark_get_btn(int type);
 
-extern const struct ControlInfo kageki_ctrls;
+extern const struct ControlInfo kageki_ctrl;
 const char *kageki_get_btn(int type);
 
-extern const struct ControlInfo kanatuen_ctrls;
+extern const struct ControlInfo kanatuen_ctrl;
 const char *kanatuen_get_btn(int type);
 
-extern const struct ControlInfo kangaroo_ctrls;
+extern const struct ControlInfo kangaroo_ctrl;
 const char *kangaroo_get_btn(int type);
 
-extern const struct ControlInfo kaos_ctrls;
+extern const struct ControlInfo kaos_ctrl;
 const char *kaos_get_btn(int type);
 
-extern const struct ControlInfo kchamp_ctrls;
+extern const struct ControlInfo kchamp_ctrl;
 const char *kchamp_get_btn(int type);
 
-extern const struct ControlInfo karnov_ctrls;
+extern const struct ControlInfo karnov_ctrl;
 const char *karnov_get_btn(int type);
 
-extern const struct ControlInfo kick_ctrls;
+extern const struct ControlInfo kick_ctrl;
 const char *kick_get_btn(int type);
 
-extern const struct ControlInfo kicker_ctrls;
+extern const struct ControlInfo kicker_ctrl;
 const char *kicker_get_btn(int type);
 
-extern const struct ControlInfo mayumi_ctrls;
+extern const struct ControlInfo mayumi_ctrl;
 const char *mayumi_get_btn(int type);
 
-extern const struct ControlInfo killcom_ctrls;
+extern const struct ControlInfo killcom_ctrl;
 const char *killcom_get_btn(int type);
 
-extern const struct ControlInfo kinst_ctrls;
+extern const struct ControlInfo kinst_ctrl;
 const char *kinst_get_btn(int type);
 
-extern const struct ControlInfo kinst2_ctrls;
+extern const struct ControlInfo kinst2_ctrl;
 const char *kinst2_get_btn(int type);
 
-extern const struct ControlInfo kingball_ctrls;
+extern const struct ControlInfo kingball_ctrl;
 const char *kingball_get_btn(int type);
 
-extern const struct ControlInfo kingofb_ctrls;
+extern const struct ControlInfo kingofb_ctrl;
 const char *kingofb_get_btn(int type);
 
-extern const struct ControlInfo klax_ctrls;
+extern const struct ControlInfo klax_ctrl;
 const char *klax_get_btn(int type);
 
-extern const struct ControlInfo knights_ctrls;
+extern const struct ControlInfo knights_ctrl;
 const char *knights_get_btn(int type);
 
-extern const struct ControlInfo konamigt_ctrls;
+extern const struct ControlInfo konamigt_ctrl;
 const char *konamigt_get_btn(int type);
 
-extern const struct ControlInfo kroozr_ctrls;
+extern const struct ControlInfo kroozr_ctrl;
 const char *kroozr_get_btn(int type);
 
-extern const struct ControlInfo kram_ctrls;
+extern const struct ControlInfo kram_ctrl;
 const char *kram_get_btn(int type);
 
-extern const struct ControlInfo krull_ctrls;
+extern const struct ControlInfo krull_ctrl;
 const char *krull_get_btn(int type);
 
-extern const struct ControlInfo kungfum_ctrls;
+extern const struct ControlInfo kungfum_ctrl;
 const char *kungfum_get_btn(int type);
 
-extern const struct ControlInfo kurikint_ctrls;
+extern const struct ControlInfo kurikint_ctrl;
 const char *kurikint_get_btn(int type);
 
-extern const struct ControlInfo ladybug_ctrls;
+extern const struct ControlInfo ladybug_ctrl;
 const char *ladybug_get_btn(int type);
 
-extern const struct ControlInfo lagunar_ctrls;
+extern const struct ControlInfo lagunar_ctrl;
 const char *lagunar_get_btn(int type);
 
-extern const struct ControlInfo lghost_ctrls;
+extern const struct ControlInfo lghost_ctrl;
 const char *lghost_get_btn(int type);
 
-extern const struct ControlInfo lastduel_ctrls;
+extern const struct ControlInfo lastduel_ctrl;
 const char *lastduel_get_btn(int type);
 
-extern const struct ControlInfo lethalen_ctrls;
+extern const struct ControlInfo lethalen_ctrl;
 const char *lethalen_get_btn(int type);
 
-extern const struct ControlInfo lethalj_ctrls;
+extern const struct ControlInfo lethalj_ctrl;
 const char *lethalj_get_btn(int type);
 
-extern const struct ControlInfo liberatr_ctrls;
+extern const struct ControlInfo liberatr_ctrl;
 const char *liberatr_get_btn(int type);
 
-extern const struct ControlInfo lnc_ctrls;
+extern const struct ControlInfo lnc_ctrl;
 const char *lnc_get_btn(int type);
 
-extern const struct ControlInfo lockon_ctrls;
+extern const struct ControlInfo lockon_ctrl;
 const char *lockon_get_btn(int type);
 
-extern const struct ControlInfo locomotn_ctrls;
+extern const struct ControlInfo locomotn_ctrl;
 const char *locomotn_get_btn(int type);
 
-extern const struct ControlInfo ldrun_ctrls;
+extern const struct ControlInfo ldrun_ctrl;
 const char *ldrun_get_btn(int type);
 
-extern const struct ControlInfo looping_ctrls;
+extern const struct ControlInfo looping_ctrl;
 const char *looping_get_btn(int type);
 
-extern const struct ControlInfo losttomb_ctrls;
+extern const struct ControlInfo losttomb_ctrl;
 const char *losttomb_get_btn(int type);
 
-extern const struct ControlInfo janjans1_ctrls;
+extern const struct ControlInfo janjans1_ctrl;
 const char *janjans1_get_btn(int type);
 
-extern const struct ControlInfo llander_ctrls;
+extern const struct ControlInfo llander_ctrl;
 const char *llander_get_btn(int type);
 
-extern const struct ControlInfo lrescue_ctrls;
+extern const struct ControlInfo lrescue_ctrl;
 const char *lrescue_get_btn(int type);
 
-extern const struct ControlInfo lupin3_ctrls;
+extern const struct ControlInfo lupin3_ctrl;
 const char *lupin3_get_btn(int type);
 
-extern const struct ControlInfo m4_ctrls;
+extern const struct ControlInfo m4_ctrl;
 const char *m4_get_btn(int type);
 
-extern const struct ControlInfo mplanets_ctrls;
+extern const struct ControlInfo mplanets_ctrl;
 const char *mplanets_get_btn(int type);
 
-extern const struct ControlInfo msword_ctrls;
+extern const struct ControlInfo msword_ctrl;
 const char *msword_get_btn(int type);
 
-extern const struct ControlInfo magspot_ctrls;
+extern const struct ControlInfo magspot_ctrl;
 const char *magspot_get_btn(int type);
 
-extern const struct ControlInfo akiss_ctrls;
+extern const struct ControlInfo akiss_ctrl;
 const char *akiss_get_btn(int type);
 
-extern const struct ControlInfo mjangels_ctrls;
+extern const struct ControlInfo mjangels_ctrl;
 const char *mjangels_get_btn(int type);
 
-extern const struct ControlInfo bananadr_ctrls;
+extern const struct ControlInfo bananadr_ctrl;
 const char *bananadr_get_btn(int type);
 
-extern const struct ControlInfo mjcamera_ctrls;
+extern const struct ControlInfo mjcamera_ctrl;
 const char *mjcamera_get_btn(int type);
 
-extern const struct ControlInfo mcnpshnt_ctrls;
+extern const struct ControlInfo mcnpshnt_ctrl;
 const char *mcnpshnt_get_btn(int type);
 
-extern const struct ControlInfo chinmoku_ctrls;
+extern const struct ControlInfo chinmoku_ctrl;
 const char *chinmoku_get_btn(int type);
 
-extern const struct ControlInfo cmehyou_ctrls;
+extern const struct ControlInfo cmehyou_ctrl;
 const char *cmehyou_get_btn(int type);
 
-extern const struct ControlInfo mjclinic_ctrls;
+extern const struct ControlInfo mjclinic_ctrl;
 const char *mjclinic_get_btn(int type);
 
-extern const struct ControlInfo club90s_ctrls;
+extern const struct ControlInfo club90s_ctrl;
 const char *club90s_get_btn(int type);
 
-extern const struct ControlInfo daiyogen_ctrls;
+extern const struct ControlInfo daiyogen_ctrl;
 const char *daiyogen_get_btn(int type);
 
-extern const struct ControlInfo mjderngr_ctrls;
+extern const struct ControlInfo mjderngr_ctrl;
 const char *mjderngr_get_btn(int type);
 
-extern const struct ControlInfo mjdialq2_ctrls;
+extern const struct ControlInfo mjdialq2_ctrl;
 const char *mjdialq2_get_btn(int type);
 
-extern const struct ControlInfo mjdiplob_ctrls;
+extern const struct ControlInfo mjdiplob_ctrl;
 const char *mjdiplob_get_btn(int type);
 
-extern const struct ControlInfo dokyusei_ctrls;
+extern const struct ControlInfo dokyusei_ctrl;
 const char *dokyusei_get_btn(int type);
 
-extern const struct ControlInfo dokyusp_ctrls;
+extern const struct ControlInfo dokyusp_ctrl;
 const char *dokyusp_get_btn(int type);
 
-extern const struct ControlInfo mjelctrn_ctrls;
+extern const struct ControlInfo mjelctrn_ctrl;
 const char *mjelctrn_get_btn(int type);
 
-extern const struct ControlInfo mjegolf_ctrls;
+extern const struct ControlInfo mjegolf_ctrl;
 const char *mjegolf_get_btn(int type);
 
-extern const struct ControlInfo mjfocus_ctrls;
+extern const struct ControlInfo mjfocus_ctrl;
 const char *mjfocus_get_btn(int type);
 
-extern const struct ControlInfo mjfriday_ctrls;
+extern const struct ControlInfo mjfriday_ctrl;
 const char *mjfriday_get_btn(int type);
 
-extern const struct ControlInfo mfunclub_ctrls;
+extern const struct ControlInfo mfunclub_ctrl;
 const char *mfunclub_get_btn(int type);
 
-extern const struct ControlInfo mgmen89_ctrls;
+extern const struct ControlInfo mgmen89_ctrl;
 const char *mgmen89_get_btn(int type);
 
-extern const struct ControlInfo mgakuen_ctrls;
+extern const struct ControlInfo mgakuen_ctrl;
 const char *mgakuen_get_btn(int type);
 
-extern const struct ControlInfo mgakuen2_ctrls;
+extern const struct ControlInfo mgakuen2_ctrl;
 const char *mgakuen2_get_btn(int type);
 
-extern const struct ControlInfo gakusai_ctrls;
+extern const struct ControlInfo gakusai_ctrl;
 const char *gakusai_get_btn(int type);
 
-extern const struct ControlInfo gakusai2_ctrls;
+extern const struct ControlInfo gakusai2_ctrl;
 const char *gakusai2_get_btn(int type);
 
-extern const struct ControlInfo gal10ren_ctrls;
+extern const struct ControlInfo gal10ren_ctrl;
 const char *gal10ren_get_btn(int type);
 
-extern const struct ControlInfo galkaika_ctrls;
+extern const struct ControlInfo galkaika_ctrl;
 const char *galkaika_get_btn(int type);
 
-extern const struct ControlInfo galkoku_ctrls;
+extern const struct ControlInfo galkoku_ctrl;
 const char *galkoku_get_btn(int type);
 
-extern const struct ControlInfo mjgottsu_ctrls;
+extern const struct ControlInfo mjgottsu_ctrl;
 const char *mjgottsu_get_btn(int type);
 
-extern const struct ControlInfo hanamomo_ctrls;
+extern const struct ControlInfo hanamomo_ctrl;
 const char *hanamomo_get_btn(int type);
 
-extern const struct ControlInfo mhgaiden_ctrls;
+extern const struct ControlInfo mhgaiden_ctrl;
 const char *mhgaiden_get_btn(int type);
 
-extern const struct ControlInfo mjhokite_ctrls;
+extern const struct ControlInfo mjhokite_ctrl;
 const char *mjhokite_get_btn(int type);
 
-extern const struct ControlInfo hourouki_ctrls;
+extern const struct ControlInfo hourouki_ctrl;
 const char *hourouki_get_btn(int type);
 
-extern const struct ControlInfo hypreact_ctrls;
+extern const struct ControlInfo hypreact_ctrl;
 const char *hypreact_get_btn(int type);
 
-extern const struct ControlInfo hypreac2_ctrls;
+extern const struct ControlInfo hypreac2_ctrl;
 const char *hypreac2_get_btn(int type);
 
-extern const struct ControlInfo mjikaga_ctrls;
+extern const struct ControlInfo mjikaga_ctrl;
 const char *mjikaga_get_btn(int type);
 
-extern const struct ControlInfo janbari_ctrls;
+extern const struct ControlInfo janbari_ctrl;
 const char *janbari_get_btn(int type);
 
-extern const struct ControlInfo mjlstory_ctrls;
+extern const struct ControlInfo mjlstory_ctrl;
 const char *mjlstory_get_btn(int type);
 
-extern const struct ControlInfo jogakuen_ctrls;
+extern const struct ControlInfo jogakuen_ctrl;
 const char *jogakuen_get_btn(int type);
 
-extern const struct ControlInfo kaguya_ctrls;
+extern const struct ControlInfo kaguya_ctrl;
 const char *kaguya_get_btn(int type);
 
-extern const struct ControlInfo mkeibaou_ctrls;
+extern const struct ControlInfo mkeibaou_ctrl;
 const char *mkeibaou_get_btn(int type);
 
-extern const struct ControlInfo mjkinjas_ctrls;
+extern const struct ControlInfo mjkinjas_ctrl;
 const char *mjkinjas_get_btn(int type);
 
-extern const struct ControlInfo koinomp_ctrls;
+extern const struct ControlInfo koinomp_ctrl;
 const char *koinomp_get_btn(int type);
 
-extern const struct ControlInfo mjkoiura_ctrls;
+extern const struct ControlInfo mjkoiura_ctrl;
 const char *mjkoiura_get_btn(int type);
 
-extern const struct ControlInfo mjkojink_ctrls;
+extern const struct ControlInfo mjkojink_ctrl;
 const char *mjkojink_get_btn(int type);
 
-extern const struct ControlInfo mjkjidai_ctrls;
+extern const struct ControlInfo mjkjidai_ctrl;
 const char *mjkjidai_get_btn(int type);
 
-extern const struct ControlInfo mjlaman_ctrls;
+extern const struct ControlInfo mjlaman_ctrl;
 const char *mjlaman_get_btn(int type);
 
-extern const struct ControlInfo lemnangl_ctrls;
+extern const struct ControlInfo lemnangl_ctrl;
 const char *lemnangl_get_btn(int type);
 
-extern const struct ControlInfo mjnanpas_ctrls;
+extern const struct ControlInfo mjnanpas_ctrl;
 const char *mjnanpas_get_btn(int type);
 
-extern const struct ControlInfo mjnatsu_ctrls;
+extern const struct ControlInfo mjnatsu_ctrl;
 const char *mjnatsu_get_btn(int type);
 
-extern const struct ControlInfo ntopstar_ctrls;
+extern const struct ControlInfo ntopstar_ctrl;
 const char *ntopstar_get_btn(int type);
 
-extern const struct ControlInfo neruton_ctrls;
+extern const struct ControlInfo neruton_ctrl;
 const char *neruton_get_btn(int type);
 
-extern const struct ControlInfo patimono_ctrls;
+extern const struct ControlInfo patimono_ctrl;
 const char *patimono_get_btn(int type);
 
-extern const struct ControlInfo pstadium_ctrls;
+extern const struct ControlInfo pstadium_ctrl;
 const char *pstadium_get_btn(int type);
 
-extern const struct ControlInfo ponchin_ctrls;
+extern const struct ControlInfo ponchin_ctrl;
 const char *ponchin_get_btn(int type);
 
-extern const struct ControlInfo mjnquest_ctrls;
+extern const struct ControlInfo mjnquest_ctrl;
 const char *mjnquest_get_btn(int type);
 
-extern const struct ControlInfo renaiclb_ctrls;
+extern const struct ControlInfo renaiclb_ctrl;
 const char *renaiclb_get_btn(int type);
 
-extern const struct ControlInfo mrokumei_ctrls;
+extern const struct ControlInfo mrokumei_ctrl;
 const char *mrokumei_get_btn(int type);
 
-extern const struct ControlInfo sailorws_ctrls;
+extern const struct ControlInfo sailorws_ctrl;
 const char *sailorws_get_btn(int type);
 
-extern const struct ControlInfo msjiken_ctrls;
+extern const struct ControlInfo msjiken_ctrl;
 const char *msjiken_get_btn(int type);
 
-extern const struct ControlInfo mscoutm_ctrls;
+extern const struct ControlInfo mscoutm_ctrl;
 const char *mscoutm_get_btn(int type);
 
-extern const struct ControlInfo mjsikaku_ctrls;
+extern const struct ControlInfo mjsikaku_ctrl;
 const char *mjsikaku_get_btn(int type);
 
-extern const struct ControlInfo mjsister_ctrls;
+extern const struct ControlInfo mjsister_ctrl;
 const char *mjsister_get_btn(int type);
 
-extern const struct ControlInfo majs101b_ctrls;
+extern const struct ControlInfo majs101b_ctrl;
 const char *majs101b_get_btn(int type);
 
-extern const struct ControlInfo mladyhtr_ctrls;
+extern const struct ControlInfo mladyhtr_ctrl;
 const char *mladyhtr_get_btn(int type);
 
-extern const struct ControlInfo triplew1_ctrls;
+extern const struct ControlInfo triplew1_ctrl;
 const char *triplew1_get_btn(int type);
 
-extern const struct ControlInfo triplew2_ctrls;
+extern const struct ControlInfo triplew2_ctrl;
 const char *triplew2_get_btn(int type);
 
-extern const struct ControlInfo uchuuai_ctrls;
+extern const struct ControlInfo uchuuai_ctrl;
 const char *uchuuai_get_btn(int type);
 
-extern const struct ControlInfo mjuraden_ctrls;
+extern const struct ControlInfo mjuraden_ctrl;
 const char *mjuraden_get_btn(int type);
 
-extern const struct ControlInfo vanilla_ctrls;
+extern const struct ControlInfo vanilla_ctrl;
 const char *vanilla_get_btn(int type);
 
-extern const struct ControlInfo vitaminc_ctrls;
+extern const struct ControlInfo vitaminc_ctrl;
 const char *vitaminc_get_btn(int type);
 
-extern const struct ControlInfo yarunara_ctrls;
+extern const struct ControlInfo yarunara_ctrl;
 const char *yarunara_get_btn(int type);
 
-extern const struct ControlInfo mjyuugi_ctrls;
+extern const struct ControlInfo mjyuugi_ctrl;
 const char *mjyuugi_get_btn(int type);
 
-extern const struct ControlInfo mjyougo_ctrls;
+extern const struct ControlInfo mjyougo_ctrl;
 const char *mjyougo_get_btn(int type);
 
-extern const struct ControlInfo korinai_ctrls;
+extern const struct ControlInfo korinai_ctrl;
 const char *korinai_get_btn(int type);
 
-extern const struct ControlInfo mhavoc_ctrls;
+extern const struct ControlInfo mhavoc_ctrl;
 const char *mhavoc_get_btn(int type);
 
-extern const struct ControlInfo maniach_ctrls;
+extern const struct ControlInfo maniach_ctrl;
 const char *maniach_get_btn(int type);
 
-extern const struct ControlInfo mappy_ctrls;
+extern const struct ControlInfo mappy_ctrl;
 const char *mappy_get_btn(int type);
 
-extern const struct ControlInfo marble_ctrls;
+extern const struct ControlInfo marble_ctrl;
 const char *marble_get_btn(int type);
 
-extern const struct ControlInfo mario_ctrls;
+extern const struct ControlInfo mario_ctrl;
 const char *mario_get_btn(int type);
 
-extern const struct ControlInfo mars_ctrls;
+extern const struct ControlInfo mars_ctrl;
 const char *mars_get_btn(int type);
 
-extern const struct ControlInfo mmatrix_ctrls;
+extern const struct ControlInfo mmatrix_ctrl;
 const char *mmatrix_get_btn(int type);
 
-extern const struct ControlInfo msh_ctrls;
+extern const struct ControlInfo msh_ctrl;
 const char *msh_get_btn(int type);
 
-extern const struct ControlInfo mshvsf_ctrls;
+extern const struct ControlInfo mshvsf_ctrl;
 const char *mshvsf_get_btn(int type);
 
-extern const struct ControlInfo mvsc_ctrls;
+extern const struct ControlInfo mvsc_ctrl;
 const char *mvsc_get_btn(int type);
 
-extern const struct ControlInfo matmania_ctrls;
+extern const struct ControlInfo matmania_ctrl;
 const char *matmania_get_btn(int type);
 
-extern const struct ControlInfo maxrpm_ctrls;
+extern const struct ControlInfo maxrpm_ctrl;
 const char *maxrpm_get_btn(int type);
 
-extern const struct ControlInfo maxforce_ctrls;
+extern const struct ControlInfo maxforce_ctrl;
 const char *maxforce_get_btn(int type);
 
-extern const struct ControlInfo mayday_ctrls;
+extern const struct ControlInfo mayday_ctrl;
 const char *mayday_get_btn(int type);
 
-extern const struct ControlInfo mechatt_ctrls;
+extern const struct ControlInfo mechatt_ctrl;
 const char *mechatt_get_btn(int type);
 
-extern const struct ControlInfo mmehyou_ctrls;
+extern const struct ControlInfo mmehyou_ctrl;
 const char *mmehyou_get_btn(int type);
 
-extern const struct ControlInfo pachiten_ctrls;
+extern const struct ControlInfo pachiten_ctrl;
 const char *pachiten_get_btn(int type);
 
-extern const struct ControlInfo megaman2_ctrls;
+extern const struct ControlInfo megaman2_ctrl;
 const char *megaman2_get_btn(int type);
 
-extern const struct ControlInfo megazone_ctrls;
+extern const struct ControlInfo megazone_ctrl;
 const char *megazone_get_btn(int type);
 
-extern const struct ControlInfo mercs_ctrls;
+extern const struct ControlInfo mercs_ctrl;
 const char *mercs_get_btn(int type);
 
-extern const struct ControlInfo metamrph_ctrls;
+extern const struct ControlInfo metamrph_ctrl;
 const char *metamrph_get_btn(int type);
 
-extern const struct ControlInfo metrocrs_ctrls;
+extern const struct ControlInfo metrocrs_ctrl;
 const char *metrocrs_get_btn(int type);
 
-extern const struct ControlInfo mwalk_ctrls;
+extern const struct ControlInfo mwalk_ctrl;
 const char *mwalk_get_btn(int type);
 
-extern const struct ControlInfo midres_ctrls;
+extern const struct ControlInfo midres_ctrl;
 const char *midres_get_btn(int type);
 
-extern const struct ControlInfo gtmr2_ctrls;
+extern const struct ControlInfo gtmr2_ctrl;
 const char *gtmr2_get_btn(int type);
 
-extern const struct ControlInfo milliped_ctrls;
+extern const struct ControlInfo milliped_ctrl;
 const char *milliped_get_btn(int type);
 
-extern const struct ControlInfo minefld_ctrls;
+extern const struct ControlInfo minefld_ctrl;
 const char *minefld_get_btn(int type);
 
-extern const struct ControlInfo mineswpr_ctrls;
+extern const struct ControlInfo mineswpr_ctrl;
 const char *mineswpr_get_btn(int type);
 
-extern const struct ControlInfo minigolf_ctrls;
+extern const struct ControlInfo minigolf_ctrl;
 const char *minigolf_get_btn(int type);
 
-extern const struct ControlInfo mcontest_ctrls;
+extern const struct ControlInfo mcontest_ctrl;
 const char *mcontest_get_btn(int type);
 
-extern const struct ControlInfo missile_ctrls;
+extern const struct ControlInfo missile_ctrl;
 const char *missile_get_btn(int type);
 
-extern const struct ControlInfo gmissile_ctrls;
+extern const struct ControlInfo gmissile_ctrl;
 const char *gmissile_get_btn(int type);
 
-extern const struct ControlInfo moguchan_ctrls;
+extern const struct ControlInfo moguchan_ctrl;
 const char *moguchan_get_btn(int type);
 
-extern const struct ControlInfo mole_ctrls;
+extern const struct ControlInfo mole_ctrl;
 const char *mole_get_btn(int type);
 
-extern const struct ControlInfo monymony_ctrls;
+extern const struct ControlInfo monymony_ctrl;
 const char *monymony_get_btn(int type);
 
-extern const struct ControlInfo monsterb_ctrls;
+extern const struct ControlInfo monsterb_ctrl;
 const char *monsterb_get_btn(int type);
 
-extern const struct ControlInfo montecar_ctrls;
+extern const struct ControlInfo montecar_ctrl;
 const char *montecar_get_btn(int type);
 
-extern const struct ControlInfo mooncrst_ctrls;
+extern const struct ControlInfo mooncrst_ctrl;
 const char *mooncrst_get_btn(int type);
 
-extern const struct ControlInfo mpatrol_ctrls;
+extern const struct ControlInfo mpatrol_ctrl;
 const char *mpatrol_get_btn(int type);
 
-extern const struct ControlInfo moonwar_ctrls;
+extern const struct ControlInfo moonwar_ctrl;
 const char *moonwar_get_btn(int type);
 
-extern const struct ControlInfo mk_ctrls;
+extern const struct ControlInfo mk_ctrl;
 const char *mk_get_btn(int type);
 
-extern const struct ControlInfo mk3_ctrls;
+extern const struct ControlInfo mk3_ctrl;
 const char *mk3_get_btn(int type);
 
-extern const struct ControlInfo mk4_ctrls;
+extern const struct ControlInfo mk4_ctrl;
 const char *mk4_get_btn(int type);
 
-extern const struct ControlInfo mk2_ctrls;
+extern const struct ControlInfo mk2_ctrl;
 const char *mk2_get_btn(int type);
 
-extern const struct ControlInfo mtrap_ctrls;
+extern const struct ControlInfo mtrap_ctrl;
 const char *mtrap_get_btn(int type);
 
-extern const struct ControlInfo mrdo_ctrls;
+extern const struct ControlInfo mrdo_ctrl;
 const char *mrdo_get_btn(int type);
 
-extern const struct ControlInfo docastle_ctrls;
+extern const struct ControlInfo docastle_ctrl;
 const char *docastle_get_btn(int type);
 
-extern const struct ControlInfo dowild_ctrls;
+extern const struct ControlInfo dowild_ctrl;
 const char *dowild_get_btn(int type);
 
-extern const struct ControlInfo mrdrillr_ctrls;
+extern const struct ControlInfo mrdrillr_ctrl;
 const char *mrdrillr_get_btn(int type);
 
-extern const struct ControlInfo mspacman_ctrls;
+extern const struct ControlInfo mspacman_ctrl;
 const char *mspacman_get_btn(int type);
 
-extern const struct ControlInfo mvp_ctrls;
+extern const struct ControlInfo mvp_ctrl;
 const char *mvp_get_btn(int type);
 
-extern const struct ControlInfo mx5000_ctrls;
+extern const struct ControlInfo mx5000_ctrl;
 const char *mx5000_get_btn(int type);
 
-extern const struct ControlInfo mysticm_ctrls;
+extern const struct ControlInfo mysticm_ctrl;
 const char *mysticm_get_btn(int type);
 
-extern const struct ControlInfo mystwarr_ctrls;
+extern const struct ControlInfo mystwarr_ctrl;
 const char *mystwarr_get_btn(int type);
 
-extern const struct ControlInfo nametune_ctrls;
+extern const struct ControlInfo nametune_ctrl;
 const char *nametune_get_btn(int type);
 
-extern const struct ControlInfo narc_ctrls;
+extern const struct ControlInfo narc_ctrl;
 const char *narc_get_btn(int type);
 
-extern const struct ControlInfo nastar_ctrls;
+extern const struct ControlInfo nastar_ctrl;
 const char *nastar_get_btn(int type);
 
-extern const struct ControlInfo natodef_ctrls;
+extern const struct ControlInfo natodef_ctrl;
 const char *natodef_get_btn(int type);
 
-extern const struct ControlInfo naughtyb_ctrls;
+extern const struct ControlInfo naughtyb_ctrl;
 const char *naughtyb_get_btn(int type);
 
-extern const struct ControlInfo nbahangt_ctrls;
+extern const struct ControlInfo nbahangt_ctrl;
 const char *nbahangt_get_btn(int type);
 
-extern const struct ControlInfo nbajam_ctrls;
+extern const struct ControlInfo nbajam_ctrl;
 const char *nbajam_get_btn(int type);
 
-extern const struct ControlInfo neckneck_ctrls;
+extern const struct ControlInfo neckneck_ctrl;
 const char *neckneck_get_btn(int type);
 
-extern const struct ControlInfo ngpgal_ctrls;
+extern const struct ControlInfo ngpgal_ctrl;
 const char *ngpgal_get_btn(int type);
 
-extern const struct ControlInfo nmsengen_ctrls;
+extern const struct ControlInfo nmsengen_ctrl;
 const char *nmsengen_get_btn(int type);
 
-extern const struct ControlInfo neogeo_ctrls;
+extern const struct ControlInfo neogeo_ctrl;
 const char *neogeo_get_btn(int type);
 
-extern const struct ControlInfo nyny_ctrls;
+extern const struct ControlInfo nyny_ctrl;
 const char *nyny_get_btn(int type);
 
-extern const struct ControlInfo blitz_ctrls;
+extern const struct ControlInfo blitz_ctrl;
 const char *blitz_get_btn(int type);
 
-extern const struct ControlInfo nibbler_ctrls;
+extern const struct ControlInfo nibbler_ctrl;
 const char *nibbler_get_btn(int type);
 
-extern const struct ControlInfo nss_ctrls;
+extern const struct ControlInfo nss_ctrl;
 const char *nss_get_btn(int type);
 
-extern const struct ControlInfo nomnlnd_ctrls;
+extern const struct ControlInfo nomnlnd_ctrl;
 const char *nomnlnd_get_btn(int type);
 
-extern const struct ControlInfo nova2001_ctrls;
+extern const struct ControlInfo nova2001_ctrl;
 const char *nova2001_get_btn(int type);
 
-extern const struct ControlInfo ojankoc_ctrls;
+extern const struct ControlInfo ojankoc_ctrl;
 const char *ojankoc_get_btn(int type);
 
-extern const struct ControlInfo ojankohs_ctrls;
+extern const struct ControlInfo ojankohs_ctrl;
 const char *ojankohs_get_btn(int type);
 
-extern const struct ControlInfo ojankoy_ctrls;
+extern const struct ControlInfo ojankoy_ctrl;
 const char *ojankoy_get_btn(int type);
 
-extern const struct ControlInfo ojanko2_ctrls;
+extern const struct ControlInfo ojanko2_ctrl;
 const char *ojanko2_get_btn(int type);
 
-extern const struct ControlInfo ojousan_ctrls;
+extern const struct ControlInfo ojousan_ctrl;
 const char *ojousan_get_btn(int type);
 
-extern const struct ControlInfo olibochu_ctrls;
+extern const struct ControlInfo olibochu_ctrl;
 const char *olibochu_get_btn(int type);
 
-extern const struct ControlInfo omegrace_ctrls;
+extern const struct ControlInfo omegrace_ctrl;
 const char *omegrace_get_btn(int type);
 
-extern const struct ControlInfo oneshot_ctrls;
+extern const struct ControlInfo oneshot_ctrl;
 const char *oneshot_get_btn(int type);
 
-extern const struct ControlInfo othunder_ctrls;
+extern const struct ControlInfo othunder_ctrl;
 const char *othunder_get_btn(int type);
 
-extern const struct ControlInfo opwolf_ctrls;
+extern const struct ControlInfo opwolf_ctrl;
 const char *opwolf_get_btn(int type);
 
-extern const struct ControlInfo opwolf3_ctrls;
+extern const struct ControlInfo opwolf3_ctrl;
 const char *opwolf3_get_btn(int type);
 
-extern const struct ControlInfo orangec_ctrls;
+extern const struct ControlInfo orangec_ctrl;
 const char *orangec_get_btn(int type);
 
-extern const struct ControlInfo otonano_ctrls;
+extern const struct ControlInfo otonano_ctrl;
 const char *otonano_get_btn(int type);
 
-extern const struct ControlInfo outrun_ctrls;
+extern const struct ControlInfo outrun_ctrl;
 const char *outrun_get_btn(int type);
 
-extern const struct ControlInfo overdriv_ctrls;
+extern const struct ControlInfo overdriv_ctrl;
 const char *overdriv_get_btn(int type);
 
-extern const struct ControlInfo pow_ctrls;
+extern const struct ControlInfo pow_ctrl;
 const char *pow_get_btn(int type);
 
-extern const struct ControlInfo pacland_ctrls;
+extern const struct ControlInfo pacland_ctrl;
 const char *pacland_get_btn(int type);
 
-extern const struct ControlInfo pacplus_ctrls;
+extern const struct ControlInfo pacplus_ctrl;
 const char *pacplus_get_btn(int type);
 
-extern const struct ControlInfo pacmania_ctrls;
+extern const struct ControlInfo pacmania_ctrl;
 const char *pacmania_get_btn(int type);
 
-extern const struct ControlInfo paddlema_ctrls;
+extern const struct ControlInfo paddlema_ctrl;
 const char *paddlema_get_btn(int type);
 
-extern const struct ControlInfo pandoras_ctrls;
+extern const struct ControlInfo pandoras_ctrl;
 const char *pandoras_get_btn(int type);
 
-extern const struct ControlInfo paperboy_ctrls;
+extern const struct ControlInfo paperboy_ctrl;
 const char *paperboy_get_btn(int type);
 
-extern const struct ControlInfo pastelg_ctrls;
+extern const struct ControlInfo pastelg_ctrl;
 const char *pastelg_get_btn(int type);
 
-extern const struct ControlInfo pengo_ctrls;
+extern const struct ControlInfo pengo_ctrl;
 const char *pengo_get_btn(int type);
 
-extern const struct ControlInfo pepper2_ctrls;
+extern const struct ControlInfo pepper2_ctrl;
 const char *pepper2_get_btn(int type);
 
-extern const struct ControlInfo peterpak_ctrls;
+extern const struct ControlInfo peterpak_ctrl;
 const char *peterpak_get_btn(int type);
 
-extern const struct ControlInfo phoenix_ctrls;
+extern const struct ControlInfo phoenix_ctrl;
 const char *phoenix_get_btn(int type);
 
-extern const struct ControlInfo pigout_ctrls;
+extern const struct ControlInfo pigout_ctrl;
 const char *pigout_get_btn(int type);
 
-extern const struct ControlInfo pigskin_ctrls;
+extern const struct ControlInfo pigskin_ctrl;
 const char *pigskin_get_btn(int type);
 
-extern const struct ControlInfo pbaction_ctrls;
+extern const struct ControlInfo pbaction_ctrl;
 const char *pbaction_get_btn(int type);
 
-extern const struct ControlInfo piratetr_ctrls;
+extern const struct ControlInfo piratetr_ctrl;
 const char *piratetr_get_btn(int type);
 
-extern const struct ControlInfo pitfight_ctrls;
+extern const struct ControlInfo pitfight_ctrl;
 const char *pitfight_get_btn(int type);
 
-extern const struct ControlInfo pitfall2_ctrls;
+extern const struct ControlInfo pitfall2_ctrl;
 const char *pitfall2_get_btn(int type);
 
-extern const struct ControlInfo playch10_ctrls;
+extern const struct ControlInfo playch10_ctrl;
 const char *playch10_get_btn(int type);
 
-extern const struct ControlInfo pleiads_ctrls;
+extern const struct ControlInfo pleiads_ctrl;
 const char *pleiads_get_btn(int type);
 
-extern const struct ControlInfo plotting_ctrls;
+extern const struct ControlInfo plotting_ctrl;
 const char *plotting_get_btn(int type);
 
-extern const struct ControlInfo ptblank_ctrls;
+extern const struct ControlInfo ptblank_ctrl;
 const char *ptblank_get_btn(int type);
 
-extern const struct ControlInfo polaris_ctrls;
+extern const struct ControlInfo polaris_ctrl;
 const char *polaris_get_btn(int type);
 
-extern const struct ControlInfo polepos_ctrls;
+extern const struct ControlInfo polepos_ctrl;
 const char *polepos_get_btn(int type);
 
-extern const struct ControlInfo polepos2_ctrls;
+extern const struct ControlInfo polepos2_ctrl;
 const char *polepos2_get_btn(int type);
 
-extern const struct ControlInfo policetr_ctrls;
+extern const struct ControlInfo policetr_ctrl;
 const char *policetr_get_btn(int type);
 
-extern const struct ControlInfo polyplay_ctrls;
+extern const struct ControlInfo polyplay_ctrl;
 const char *polyplay_get_btn(int type);
 
-extern const struct ControlInfo ponpoko_ctrls;
+extern const struct ControlInfo ponpoko_ctrl;
 const char *ponpoko_get_btn(int type);
 
-extern const struct ControlInfo pooyan_ctrls;
+extern const struct ControlInfo pooyan_ctrl;
 const char *pooyan_get_btn(int type);
 
-extern const struct ControlInfo popeye_ctrls;
+extern const struct ControlInfo popeye_ctrl;
 const char *popeye_get_btn(int type);
 
-extern const struct ControlInfo popper_ctrls;
+extern const struct ControlInfo popper_ctrl;
 const char *popper_get_btn(int type);
 
-extern const struct ControlInfo pdrift_ctrls;
+extern const struct ControlInfo pdrift_ctrl;
 const char *pdrift_get_btn(int type);
 
-extern const struct ControlInfo powerdrv_ctrls;
+extern const struct ControlInfo powerdrv_ctrl;
 const char *powerdrv_get_btn(int type);
 
-extern const struct ControlInfo pclubj_ctrls;
+extern const struct ControlInfo pclubj_ctrl;
 const char *pclubj_get_btn(int type);
 
-extern const struct ControlInfo kiwame_ctrls;
+extern const struct ControlInfo kiwame_ctrl;
 const char *kiwame_get_btn(int type);
 
-extern const struct ControlInfo profpac_ctrls;
+extern const struct ControlInfo profpac_ctrl;
 const char *profpac_get_btn(int type);
 
-extern const struct ControlInfo psychos_ctrls;
+extern const struct ControlInfo psychos_ctrl;
 const char *psychos_get_btn(int type);
 
-extern const struct ControlInfo puckman_ctrls;
+extern const struct ControlInfo puckman_ctrl;
 const char *puckman_get_btn(int type);
 
-extern const struct ControlInfo pulsar_ctrls;
+extern const struct ControlInfo pulsar_ctrl;
 const char *pulsar_get_btn(int type);
 
-extern const struct ControlInfo punchout_ctrls;
+extern const struct ControlInfo punchout_ctrl;
 const char *punchout_get_btn(int type);
 
-extern const struct ControlInfo punkshot_ctrls;
+extern const struct ControlInfo punkshot_ctrl;
 const char *punkshot_get_btn(int type);
 
-extern const struct ControlInfo pbobble_ctrls;
+extern const struct ControlInfo pbobble_ctrl;
 const char *pbobble_get_btn(int type);
 
-extern const struct ControlInfo pbobble2_ctrls;
+extern const struct ControlInfo pbobble2_ctrl;
 const char *pbobble2_get_btn(int type);
 
-extern const struct ControlInfo pbobble3_ctrls;
+extern const struct ControlInfo pbobble3_ctrl;
 const char *pbobble3_get_btn(int type);
 
-extern const struct ControlInfo qbert_ctrls;
+extern const struct ControlInfo qbert_ctrl;
 const char *qbert_get_btn(int type);
 
-extern const struct ControlInfo qbertqub_ctrls;
+extern const struct ControlInfo qbertqub_ctrl;
 const char *qbertqub_get_btn(int type);
 
-extern const struct ControlInfo qix_ctrls;
+extern const struct ControlInfo qix_ctrl;
 const char *qix_get_btn(int type);
 
-extern const struct ControlInfo quantum_ctrls;
+extern const struct ControlInfo quantum_ctrl;
 const char *quantum_get_btn(int type);
 
-extern const struct ControlInfo quarterb_ctrls;
+extern const struct ControlInfo quarterb_ctrl;
 const char *quarterb_get_btn(int type);
 
-extern const struct ControlInfo quartet_ctrls;
+extern const struct ControlInfo quartet_ctrl;
 const char *quartet_get_btn(int type);
 
-extern const struct ControlInfo quasar_ctrls;
+extern const struct ControlInfo quasar_ctrl;
 const char *quasar_get_btn(int type);
 
-extern const struct ControlInfo qad_ctrls;
+extern const struct ControlInfo qad_ctrl;
 const char *qad_get_btn(int type);
 
-extern const struct ControlInfo qndream_ctrls;
+extern const struct ControlInfo qndream_ctrl;
 const char *qndream_get_btn(int type);
 
-extern const struct ControlInfo qmhayaku_ctrls;
+extern const struct ControlInfo qmhayaku_ctrl;
 const char *qmhayaku_get_btn(int type);
 
-extern const struct ControlInfo rtype_ctrls;
+extern const struct ControlInfo rtype_ctrl;
 const char *rtype_get_btn(int type);
 
-extern const struct ControlInfo radarscp_ctrls;
+extern const struct ControlInfo radarscp_ctrl;
 const char *radarscp_get_btn(int type);
 
-extern const struct ControlInfo radrad_ctrls;
+extern const struct ControlInfo radrad_ctrl;
 const char *radrad_get_btn(int type);
 
-extern const struct ControlInfo rchase_ctrls;
+extern const struct ControlInfo rchase_ctrl;
 const char *rchase_get_btn(int type);
 
-extern const struct ControlInfo rainbow_ctrls;
+extern const struct ControlInfo rainbow_ctrl;
 const char *rainbow_get_btn(int type);
 
-extern const struct ControlInfo rallyx_ctrls;
+extern const struct ControlInfo rallyx_ctrl;
 const char *rallyx_get_btn(int type);
 
-extern const struct ControlInfo rampage_ctrls;
+extern const struct ControlInfo rampage_ctrl;
 const char *rampage_get_btn(int type);
 
-extern const struct ControlInfo rmpgwt_ctrls;
+extern const struct ControlInfo rmpgwt_ctrl;
 const char *rmpgwt_get_btn(int type);
 
-extern const struct ControlInfo rampart_ctrls;
+extern const struct ControlInfo rampart_ctrl;
 const char *rampart_get_btn(int type);
 
-extern const struct ControlInfo rastan_ctrls;
+extern const struct ControlInfo rastan_ctrl;
 const char *rastan_get_btn(int type);
 
-extern const struct ControlInfo reactor_ctrls;
+extern const struct ControlInfo reactor_ctrl;
 const char *reactor_get_btn(int type);
 
-extern const struct ControlInfo rmhaihai_ctrls;
+extern const struct ControlInfo rmhaihai_ctrl;
 const char *rmhaihai_get_btn(int type);
 
-extern const struct ControlInfo rmhaijin_ctrls;
+extern const struct ControlInfo rmhaijin_ctrl;
 const char *rmhaijin_get_btn(int type);
 
-extern const struct ControlInfo rmhaisei_ctrls;
+extern const struct ControlInfo rmhaisei_ctrl;
 const char *rmhaisei_get_btn(int type);
 
-extern const struct ControlInfo redlin2p_ctrls;
+extern const struct ControlInfo redlin2p_ctrl;
 const char *redlin2p_get_btn(int type);
 
-extern const struct ControlInfo regulus_ctrls;
+extern const struct ControlInfo regulus_ctrl;
 const char *regulus_get_btn(int type);
 
-extern const struct ControlInfo renegade_ctrls;
+extern const struct ControlInfo renegade_ctrl;
 const char *renegade_get_btn(int type);
 
-extern const struct ControlInfo rescue_ctrls;
+extern const struct ControlInfo rescue_ctrl;
 const char *rescue_get_btn(int type);
 
-extern const struct ControlInfo rescraid_ctrls;
+extern const struct ControlInfo rescraid_ctrl;
 const char *rescraid_get_btn(int type);
 
-extern const struct ControlInfo nekkyoku_ctrls;
+extern const struct ControlInfo nekkyoku_ctrl;
 const char *nekkyoku_get_btn(int type);
 
-extern const struct ControlInfo jedi_ctrls;
+extern const struct ControlInfo jedi_ctrl;
 const char *jedi_get_btn(int type);
 
-extern const struct ControlInfo revx_ctrls;
+extern const struct ControlInfo revx_ctrl;
 const char *revx_get_btn(int type);
 
-extern const struct ControlInfo ripoff_ctrls;
+extern const struct ControlInfo ripoff_ctrl;
 const char *ripoff_get_btn(int type);
 
-extern const struct ControlInfo roadblst_ctrls;
+extern const struct ControlInfo roadblst_ctrl;
 const char *roadblst_get_btn(int type);
 
-extern const struct ControlInfo roadf_ctrls;
+extern const struct ControlInfo roadf_ctrl;
 const char *roadf_get_btn(int type);
 
-extern const struct ControlInfo roadrunn_ctrls;
+extern const struct ControlInfo roadrunn_ctrl;
 const char *roadrunn_get_btn(int type);
 
-extern const struct ControlInfo robby_ctrls;
+extern const struct ControlInfo robby_ctrl;
 const char *robby_get_btn(int type);
 
-extern const struct ControlInfo robocop_ctrls;
+extern const struct ControlInfo robocop_ctrl;
 const char *robocop_get_btn(int type);
 
-extern const struct ControlInfo robocop2_ctrls;
+extern const struct ControlInfo robocop2_ctrl;
 const char *robocop2_get_btn(int type);
 
-extern const struct ControlInfo robotron_ctrls;
+extern const struct ControlInfo robotron_ctrl;
 const char *robotron_get_btn(int type);
 
-extern const struct ControlInfo rocnrope_ctrls;
+extern const struct ControlInfo rocnrope_ctrl;
 const char *rocnrope_get_btn(int type);
 
-extern const struct ControlInfo rollerg_ctrls;
+extern const struct ControlInfo rollerg_ctrl;
 const char *rollerg_get_btn(int type);
 
-extern const struct ControlInfo rthunder_ctrls;
+extern const struct ControlInfo rthunder_ctrl;
 const char *rthunder_get_btn(int type);
 
-extern const struct ControlInfo rranger_ctrls;
+extern const struct ControlInfo rranger_ctrl;
 const char *rranger_get_btn(int type);
 
-extern const struct ControlInfo roundup_ctrls;
+extern const struct ControlInfo roundup_ctrl;
 const char *roundup_get_btn(int type);
 
-extern const struct ControlInfo royalmah_ctrls;
+extern const struct ControlInfo royalmah_ctrl;
 const char *royalmah_get_btn(int type);
 
-extern const struct ControlInfo rungun_ctrls;
+extern const struct ControlInfo rungun_ctrl;
 const char *rungun_get_btn(int type);
 
-extern const struct ControlInfo runaway_ctrls;
+extern const struct ControlInfo runaway_ctrl;
 const char *runaway_get_btn(int type);
 
-extern const struct ControlInfo kirarast_ctrls;
+extern const struct ControlInfo kirarast_ctrl;
 const char *kirarast_get_btn(int type);
 
-extern const struct ControlInfo stunrun_ctrls;
+extern const struct ControlInfo stunrun_ctrl;
 const char *stunrun_get_btn(int type);
 
-extern const struct ControlInfo salamand_ctrls;
+extern const struct ControlInfo salamand_ctrl;
 const char *salamand_get_btn(int type);
 
-extern const struct ControlInfo searchar_ctrls;
+extern const struct ControlInfo searchar_ctrl;
 const char *searchar_get_btn(int type);
 
-extern const struct ControlInfo sarge_ctrls;
+extern const struct ControlInfo sarge_ctrl;
 const char *sarge_get_btn(int type);
 
-extern const struct ControlInfo satansat_ctrls;
+extern const struct ControlInfo satansat_ctrl;
 const char *satansat_get_btn(int type);
 
-extern const struct ControlInfo shollow_ctrls;
+extern const struct ControlInfo shollow_ctrl;
 const char *shollow_get_btn(int type);
 
-extern const struct ControlInfo scandal_ctrls;
+extern const struct ControlInfo scandal_ctrl;
 const char *scandal_get_btn(int type);
 
-extern const struct ControlInfo scramble_ctrls;
+extern const struct ControlInfo scramble_ctrl;
 const char *scramble_get_btn(int type);
 
-extern const struct ControlInfo sdi_ctrls;
+extern const struct ControlInfo sdi_ctrl;
 const char *sdi_get_btn(int type);
 
-extern const struct ControlInfo seawolf_ctrls;
+extern const struct ControlInfo seawolf_ctrl;
 const char *seawolf_get_btn(int type);
 
-extern const struct ControlInfo seawolf2_ctrls;
+extern const struct ControlInfo seawolf2_ctrl;
 const char *seawolf2_get_btn(int type);
 
-extern const struct ControlInfo secolove_ctrls;
+extern const struct ControlInfo secolove_ctrl;
 const char *secolove_get_btn(int type);
 
-extern const struct ControlInfo seiha_ctrls;
+extern const struct ControlInfo seiha_ctrl;
 const char *seiha_get_btn(int type);
 
-extern const struct ControlInfo sengokmj_ctrls;
+extern const struct ControlInfo sengokmj_ctrl;
 const char *sengokmj_get_btn(int type);
 
-extern const struct ControlInfo shdancer_ctrls;
+extern const struct ControlInfo shdancer_ctrl;
 const char *shdancer_get_btn(int type);
 
-extern const struct ControlInfo shadoww_ctrls;
+extern const struct ControlInfo shadoww_ctrl;
 const char *shadoww_get_btn(int type);
 
-extern const struct ControlInfo sharkatt_ctrls;
+extern const struct ControlInfo sharkatt_ctrl;
 const char *sharkatt_get_btn(int type);
 
-extern const struct ControlInfo sshooter_ctrls;
+extern const struct ControlInfo sshooter_ctrl;
 const char *sshooter_get_btn(int type);
 
-extern const struct ControlInfo sheriff_ctrls;
+extern const struct ControlInfo sheriff_ctrl;
 const char *sheriff_get_btn(int type);
 
-extern const struct ControlInfo shinobi_ctrls;
+extern const struct ControlInfo shinobi_ctrl;
 const char *shinobi_get_btn(int type);
 
-extern const struct ControlInfo shootout_ctrls;
+extern const struct ControlInfo shootout_ctrl;
 const char *shootout_get_btn(int type);
 
-extern const struct ControlInfo shootbul_ctrls;
+extern const struct ControlInfo shootbul_ctrl;
 const char *shootbul_get_btn(int type);
 
-extern const struct ControlInfo shuffle_ctrls;
+extern const struct ControlInfo shuffle_ctrl;
 const char *shuffle_get_btn(int type);
 
-extern const struct ControlInfo shufshot_ctrls;
+extern const struct ControlInfo shufshot_ctrl;
 const char *shufshot_get_btn(int type);
 
-extern const struct ControlInfo sidearms_ctrls;
+extern const struct ControlInfo sidearms_ctrl;
 const char *sidearms_get_btn(int type);
 
-extern const struct ControlInfo sidetrac_ctrls;
+extern const struct ControlInfo sidetrac_ctrl;
 const char *sidetrac_get_btn(int type);
 
-extern const struct ControlInfo sinistar_ctrls;
+extern const struct ControlInfo sinistar_ctrl;
 const char *sinistar_get_btn(int type);
 
-extern const struct ControlInfo skullxbo_ctrls;
+extern const struct ControlInfo skullxbo_ctrl;
 const char *skullxbo_get_btn(int type);
 
-extern const struct ControlInfo skydiver_ctrls;
+extern const struct ControlInfo skydiver_ctrl;
 const char *skydiver_get_btn(int type);
 
-extern const struct ControlInfo skysoldr_ctrls;
+extern const struct ControlInfo skysoldr_ctrl;
 const char *skysoldr_get_btn(int type);
 
-extern const struct ControlInfo slapfigh_ctrls;
+extern const struct ControlInfo slapfigh_ctrl;
 const char *slapfigh_get_btn(int type);
 
-extern const struct ControlInfo slikshot_ctrls;
+extern const struct ControlInfo slikshot_ctrl;
 const char *slikshot_get_btn(int type);
 
-extern const struct ControlInfo slither_ctrls;
+extern const struct ControlInfo slither_ctrl;
 const char *slither_get_btn(int type);
 
-extern const struct ControlInfo slyspy_ctrls;
+extern const struct ControlInfo slyspy_ctrl;
 const char *slyspy_get_btn(int type);
 
-extern const struct ControlInfo smashtv_ctrls;
+extern const struct ControlInfo smashtv_ctrl;
 const char *smashtv_get_btn(int type);
 
-extern const struct ControlInfo snakjack_ctrls;
+extern const struct ControlInfo snakjack_ctrl;
 const char *snakjack_get_btn(int type);
 
-extern const struct ControlInfo snapjack_ctrls;
+extern const struct ControlInfo snapjack_ctrl;
 const char *snapjack_get_btn(int type);
 
-extern const struct ControlInfo snowbros_ctrls;
+extern const struct ControlInfo snowbros_ctrl;
 const char *snowbros_get_btn(int type);
 
-extern const struct ControlInfo solarfox_ctrls;
+extern const struct ControlInfo solarfox_ctrl;
 const char *solarfox_get_btn(int type);
 
-extern const struct ControlInfo solarq_ctrls;
+extern const struct ControlInfo solarq_ctrl;
 const char *solarq_get_btn(int type);
 
-extern const struct ControlInfo amazon_ctrls;
+extern const struct ControlInfo amazon_ctrl;
 const char *amazon_get_btn(int type);
 
-extern const struct ControlInfo sbm_ctrls;
+extern const struct ControlInfo sbm_ctrl;
 const char *sbm_get_btn(int type);
 
-extern const struct ControlInfo souledge_ctrls;
+extern const struct ControlInfo souledge_ctrl;
 const char *souledge_get_btn(int type);
 
-extern const struct ControlInfo sspaceat_ctrls;
+extern const struct ControlInfo sspaceat_ctrl;
 const char *sspaceat_get_btn(int type);
 
-extern const struct ControlInfo spacduel_ctrls;
+extern const struct ControlInfo spacduel_ctrl;
 const char *spacduel_get_btn(int type);
 
-extern const struct ControlInfo spacefb_ctrls;
+extern const struct ControlInfo spacefb_ctrl;
 const char *spacefb_get_btn(int type);
 
-extern const struct ControlInfo spacfury_ctrls;
+extern const struct ControlInfo spacfury_ctrl;
 const char *spacfury_get_btn(int type);
 
-extern const struct ControlInfo spacegun_ctrls;
+extern const struct ControlInfo spacegun_ctrl;
 const char *spacegun_get_btn(int type);
 
-extern const struct ControlInfo sharrier_ctrls;
+extern const struct ControlInfo sharrier_ctrl;
 const char *sharrier_get_btn(int type);
 
-extern const struct ControlInfo invaders_ctrls;
+extern const struct ControlInfo invaders_ctrl;
 const char *invaders_get_btn(int type);
 
-extern const struct ControlInfo spacedx_ctrls;
+extern const struct ControlInfo spacedx_ctrl;
 const char *spacedx_get_btn(int type);
 
-extern const struct ControlInfo invadpt2_ctrls;
+extern const struct ControlInfo invadpt2_ctrl;
 const char *invadpt2_get_btn(int type);
 
-extern const struct ControlInfo spacelnc_ctrls;
+extern const struct ControlInfo spacelnc_ctrl;
 const char *spacelnc_get_btn(int type);
 
-extern const struct ControlInfo spaceod_ctrls;
+extern const struct ControlInfo spaceod_ctrl;
 const char *spaceod_get_btn(int type);
 
-extern const struct ControlInfo panic_ctrls;
+extern const struct ControlInfo panic_ctrl;
 const char *panic_get_btn(int type);
 
-extern const struct ControlInfo spacezap_ctrls;
+extern const struct ControlInfo spacezap_ctrl;
 const char *spacezap_get_btn(int type);
 
-extern const struct ControlInfo speakres_ctrls;
+extern const struct ControlInfo speakres_ctrl;
 const char *speakres_get_btn(int type);
 
-extern const struct ControlInfo spectar_ctrls;
+extern const struct ControlInfo spectar_ctrl;
 const char *spectar_get_btn(int type);
 
-extern const struct ControlInfo spdcoin_ctrls;
+extern const struct ControlInfo spdcoin_ctrl;
 const char *spdcoin_get_btn(int type);
 
-extern const struct ControlInfo speedfrk_ctrls;
+extern const struct ControlInfo speedfrk_ctrl;
 const char *speedfrk_get_btn(int type);
 
-extern const struct ControlInfo speedrcr_ctrls;
+extern const struct ControlInfo speedrcr_ctrl;
 const char *speedrcr_get_btn(int type);
 
-extern const struct ControlInfo spidman_ctrls;
+extern const struct ControlInfo spidman_ctrl;
 const char *spidman_get_btn(int type);
 
-extern const struct ControlInfo spiders_ctrls;
+extern const struct ControlInfo spiders_ctrl;
 const char *spiders_get_btn(int type);
 
-extern const struct ControlInfo sprint1_ctrls;
+extern const struct ControlInfo sprint1_ctrl;
 const char *sprint1_get_btn(int type);
 
-extern const struct ControlInfo starcas_ctrls;
+extern const struct ControlInfo starcas_ctrl;
 const char *starcas_get_btn(int type);
 
-extern const struct ControlInfo starforc_ctrls;
+extern const struct ControlInfo starforc_ctrl;
 const char *starforc_get_btn(int type);
 
-extern const struct ControlInfo stargrds_ctrls;
+extern const struct ControlInfo stargrds_ctrl;
 const char *stargrds_get_btn(int type);
 
-extern const struct ControlInfo starhawk_ctrls;
+extern const struct ControlInfo starhawk_ctrl;
 const char *starhawk_get_btn(int type);
 
-extern const struct ControlInfo starjack_ctrls;
+extern const struct ControlInfo starjack_ctrl;
 const char *starjack_get_btn(int type);
 
-extern const struct ControlInfo startrek_ctrls;
+extern const struct ControlInfo startrek_ctrl;
 const char *startrek_get_btn(int type);
 
-extern const struct ControlInfo starwars_ctrls;
+extern const struct ControlInfo starwars_ctrl;
 const char *starwars_get_btn(int type);
 
-extern const struct ControlInfo stargate_ctrls;
+extern const struct ControlInfo stargate_ctrl;
 const char *stargate_get_btn(int type);
 
-extern const struct ControlInfo sgunner_ctrls;
+extern const struct ControlInfo sgunner_ctrl;
 const char *sgunner_get_btn(int type);
 
-extern const struct ControlInfo sgunner2_ctrls;
+extern const struct ControlInfo sgunner2_ctrl;
 const char *sgunner2_get_btn(int type);
 
-extern const struct ControlInfo stocker_ctrls;
+extern const struct ControlInfo stocker_ctrl;
 const char *stocker_get_btn(int type);
 
-extern const struct ControlInfo stratab_ctrls;
+extern const struct ControlInfo stratab_ctrl;
 const char *stratab_get_btn(int type);
 
-extern const struct ControlInfo stratgyx_ctrls;
+extern const struct ControlInfo stratgyx_ctrl;
 const char *stratgyx_get_btn(int type);
 
-extern const struct ControlInfo sf_ctrls;
+extern const struct ControlInfo sf_ctrl;
 const char *sf_get_btn(int type);
 
-extern const struct ControlInfo sfa2_ctrls;
+extern const struct ControlInfo sfa2_ctrl;
 const char *sfa2_get_btn(int type);
 
-extern const struct ControlInfo sfa3_ctrls;
+extern const struct ControlInfo sfa3_ctrl;
 const char *sfa3_get_btn(int type);
 
-extern const struct ControlInfo sfa_ctrls;
+extern const struct ControlInfo sfa_ctrl;
 const char *sfa_get_btn(int type);
 
-extern const struct ControlInfo sf2ce_ctrls;
+extern const struct ControlInfo sf2ce_ctrl;
 const char *sf2ce_get_btn(int type);
 
-extern const struct ControlInfo sf2_ctrls;
+extern const struct ControlInfo sf2_ctrl;
 const char *sf2_get_btn(int type);
 
-extern const struct ControlInfo sfiii2_ctrls;
+extern const struct ControlInfo sfiii2_ctrl;
 const char *sfiii2_get_btn(int type);
 
-extern const struct ControlInfo sfiii3_ctrls;
+extern const struct ControlInfo sfiii3_ctrl;
 const char *sfiii3_get_btn(int type);
 
-extern const struct ControlInfo sfiii_ctrls;
+extern const struct ControlInfo sfiii_ctrl;
 const char *sfiii_get_btn(int type);
 
-extern const struct ControlInfo sftm_ctrls;
+extern const struct ControlInfo sftm_ctrl;
 const char *sftm_get_btn(int type);
 
-extern const struct ControlInfo strider_ctrls;
+extern const struct ControlInfo strider_ctrl;
 const char *strider_get_btn(int type);
 
-extern const struct ControlInfo sbowling_ctrls;
+extern const struct ControlInfo sbowling_ctrl;
 const char *sbowling_get_btn(int type);
 
-extern const struct ControlInfo strkforc_ctrls;
+extern const struct ControlInfo strkforc_ctrl;
 const char *strkforc_get_btn(int type);
 
-extern const struct ControlInfo s1945_ctrls;
+extern const struct ControlInfo s1945_ctrl;
 const char *s1945_get_btn(int type);
 
-extern const struct ControlInfo s1945iii_ctrls;
+extern const struct ControlInfo s1945iii_ctrl;
 const char *s1945iii_get_btn(int type);
 
-extern const struct ControlInfo subs_ctrls;
+extern const struct ControlInfo subs_ctrl;
 const char *subs_get_btn(int type);
 
-extern const struct ControlInfo ssriders_ctrls;
+extern const struct ControlInfo ssriders_ctrl;
 const char *ssriders_get_btn(int type);
 
-extern const struct ControlInfo sbagman_ctrls;
+extern const struct ControlInfo sbagman_ctrl;
 const char *sbagman_get_btn(int type);
 
-extern const struct ControlInfo sbrkout_ctrls;
+extern const struct ControlInfo sbrkout_ctrl;
 const char *sbrkout_get_btn(int type);
 
-extern const struct ControlInfo scobra_ctrls;
+extern const struct ControlInfo scobra_ctrl;
 const char *scobra_get_btn(int type);
 
-extern const struct ControlInfo scontra_ctrls;
+extern const struct ControlInfo scontra_ctrl;
 const char *scontra_get_btn(int type);
 
-extern const struct ControlInfo spdodgeb_ctrls;
+extern const struct ControlInfo spdodgeb_ctrl;
 const char *spdodgeb_get_btn(int type);
 
-extern const struct ControlInfo sgemf_ctrls;
+extern const struct ControlInfo sgemf_ctrl;
 const char *sgemf_get_btn(int type);
 
-extern const struct ControlInfo shimpact_ctrls;
+extern const struct ControlInfo shimpact_ctrl;
 const char *shimpact_get_btn(int type);
 
-extern const struct ControlInfo marukin_ctrls;
+extern const struct ControlInfo marukin_ctrl;
 const char *marukin_get_btn(int type);
 
-extern const struct ControlInfo smgp_ctrls;
+extern const struct ControlInfo smgp_ctrl;
 const char *smgp_get_btn(int type);
 
-extern const struct ControlInfo superpac_ctrls;
+extern const struct ControlInfo superpac_ctrl;
 const char *superpac_get_btn(int type);
 
-extern const struct ControlInfo spbactn_ctrls;
+extern const struct ControlInfo spbactn_ctrl;
 const char *spbactn_get_btn(int type);
 
-extern const struct ControlInfo spnchout_ctrls;
+extern const struct ControlInfo spnchout_ctrl;
 const char *spnchout_get_btn(int type);
 
-extern const struct ControlInfo sqix_ctrls;
+extern const struct ControlInfo sqix_ctrl;
 const char *sqix_get_btn(int type);
 
-extern const struct ControlInfo srmp7_ctrls;
+extern const struct ControlInfo srmp7_ctrl;
 const char *srmp7_get_btn(int type);
 
-extern const struct ControlInfo srmp2_ctrls;
+extern const struct ControlInfo srmp2_ctrl;
 const char *srmp2_get_btn(int type);
 
-extern const struct ControlInfo srmp3_ctrls;
+extern const struct ControlInfo srmp3_ctrl;
 const char *srmp3_get_btn(int type);
 
-extern const struct ControlInfo srmp4_ctrls;
+extern const struct ControlInfo srmp4_ctrl;
 const char *srmp4_get_btn(int type);
 
-extern const struct ControlInfo sspeedr_ctrls;
+extern const struct ControlInfo sspeedr_ctrl;
 const char *sspeedr_get_btn(int type);
 
-extern const struct ControlInfo ssprint_ctrls;
+extern const struct ControlInfo ssprint_ctrl;
 const char *ssprint_get_btn(int type);
 
-extern const struct ControlInfo ssf2_ctrls;
+extern const struct ControlInfo ssf2_ctrl;
 const char *ssf2_get_btn(int type);
 
-extern const struct ControlInfo sstrike_ctrls;
+extern const struct ControlInfo sstrike_ctrl;
 const char *sstrike_get_btn(int type);
 
-extern const struct ControlInfo szaxxon_ctrls;
+extern const struct ControlInfo szaxxon_ctrl;
 const char *szaxxon_get_btn(int type);
 
-extern const struct ControlInfo superman_ctrls;
+extern const struct ControlInfo superman_ctrl;
 const char *superman_get_btn(int type);
 
-extern const struct ControlInfo swimmer_ctrls;
+extern const struct ControlInfo swimmer_ctrl;
 const char *swimmer_get_btn(int type);
 
-extern const struct ControlInfo tnk3_ctrls;
+extern const struct ControlInfo tnk3_ctrl;
 const char *tnk3_get_btn(int type);
 
-extern const struct ControlInfo ttmahjng_ctrls;
+extern const struct ControlInfo ttmahjng_ctrl;
 const char *ttmahjng_get_btn(int type);
 
-extern const struct ControlInfo tailg_ctrls;
+extern const struct ControlInfo tailg_ctrl;
 const char *tailg_get_btn(int type);
 
-extern const struct ControlInfo hotgmck_ctrls;
+extern const struct ControlInfo hotgmck_ctrl;
 const char *hotgmck_get_btn(int type);
 
-extern const struct ControlInfo hotgmck3_ctrls;
+extern const struct ControlInfo hotgmck3_ctrl;
 const char *hotgmck3_get_btn(int type);
 
-extern const struct ControlInfo hgkairak_ctrls;
+extern const struct ControlInfo hgkairak_ctrl;
 const char *hgkairak_get_btn(int type);
 
-extern const struct ControlInfo fromanc2_ctrls;
+extern const struct ControlInfo fromanc2_ctrl;
 const char *fromanc2_get_btn(int type);
 
-extern const struct ControlInfo fromanc4_ctrls;
+extern const struct ControlInfo fromanc4_ctrl;
 const char *fromanc4_get_btn(int type);
 
-extern const struct ControlInfo fromancr_ctrls;
+extern const struct ControlInfo fromancr_ctrl;
 const char *fromancr_get_btn(int type);
 
-extern const struct ControlInfo tank8_ctrls;
+extern const struct ControlInfo tank8_ctrl;
 const char *tank8_get_btn(int type);
 
-extern const struct ControlInfo tankbatt_ctrls;
+extern const struct ControlInfo tankbatt_ctrl;
 const char *tankbatt_get_btn(int type);
 
-extern const struct ControlInfo tapper_ctrls;
+extern const struct ControlInfo tapper_ctrl;
 const char *tapper_get_btn(int type);
 
-extern const struct ControlInfo targ_ctrls;
+extern const struct ControlInfo targ_ctrl;
 const char *targ_get_btn(int type);
 
-extern const struct ControlInfo tazmania_ctrls;
+extern const struct ControlInfo tazmania_ctrl;
 const char *tazmania_get_btn(int type);
 
-extern const struct ControlInfo tbowl_ctrls;
+extern const struct ControlInfo tbowl_ctrl;
 const char *tbowl_get_btn(int type);
 
-extern const struct ControlInfo tmnt_ctrls;
+extern const struct ControlInfo tmnt_ctrl;
 const char *tmnt_get_btn(int type);
 
-extern const struct ControlInfo tmnt2_ctrls;
+extern const struct ControlInfo tmnt2_ctrl;
 const char *tmnt2_get_btn(int type);
 
-extern const struct ControlInfo tehkanwc_ctrls;
+extern const struct ControlInfo tehkanwc_ctrl;
 const char *tehkanwc_get_btn(int type);
 
-extern const struct ControlInfo tekken_ctrls;
+extern const struct ControlInfo tekken_ctrl;
 const char *tekken_get_btn(int type);
 
-extern const struct ControlInfo tekken2_ctrls;
+extern const struct ControlInfo tekken2_ctrl;
 const char *tekken2_get_btn(int type);
 
-extern const struct ControlInfo tekken3_ctrls;
+extern const struct ControlInfo tekken3_ctrl;
 const char *tekken3_get_btn(int type);
 
-extern const struct ControlInfo telmahjn_ctrls;
+extern const struct ControlInfo telmahjn_ctrl;
 const char *telmahjn_get_btn(int type);
 
-extern const struct ControlInfo tempest_ctrls;
+extern const struct ControlInfo tempest_ctrl;
 const char *tempest_get_btn(int type);
 
-extern const struct ControlInfo tengai_ctrls;
+extern const struct ControlInfo tengai_ctrl;
 const char *tengai_get_btn(int type);
 
-extern const struct ControlInfo term2_ctrls;
+extern const struct ControlInfo term2_ctrl;
 const char *term2_get_btn(int type);
 
-extern const struct ControlInfo terracre_ctrls;
+extern const struct ControlInfo terracre_ctrl;
 const char *terracre_get_btn(int type);
 
-extern const struct ControlInfo terraf_ctrls;
+extern const struct ControlInfo terraf_ctrl;
 const char *terraf_get_btn(int type);
 
-extern const struct ControlInfo atetris_ctrls;
+extern const struct ControlInfo atetris_ctrl;
 const char *atetris_get_btn(int type);
 
-extern const struct ControlInfo tetris_ctrls;
+extern const struct ControlInfo tetris_ctrl;
 const char *tetris_get_btn(int type);
 
-extern const struct ControlInfo tetrisp_ctrls;
+extern const struct ControlInfo tetrisp_ctrl;
 const char *tetrisp_get_btn(int type);
 
-extern const struct ControlInfo tetrisp2_ctrls;
+extern const struct ControlInfo tetrisp2_ctrl;
 const char *tetrisp2_get_btn(int type);
 
-extern const struct ControlInfo ctribe_ctrls;
+extern const struct ControlInfo ctribe_ctrl;
 const char *ctribe_get_btn(int type);
 
-extern const struct ControlInfo elecyoyo_ctrls;
+extern const struct ControlInfo elecyoyo_ctrl;
 const char *elecyoyo_get_btn(int type);
 
-extern const struct ControlInfo esb_ctrls;
+extern const struct ControlInfo esb_ctrl;
 const char *esb_get_btn(int type);
 
-extern const struct ControlInfo theend_ctrls;
+extern const struct ControlInfo theend_ctrl;
 const char *theend_get_btn(int type);
 
-extern const struct ControlInfo lkage_ctrls;
+extern const struct ControlInfo lkage_ctrl;
 const char *lkage_get_btn(int type);
 
-extern const struct ControlInfo themj_ctrls;
+extern const struct ControlInfo themj_ctrl;
 const char *themj_get_btn(int type);
 
-extern const struct ControlInfo mainevt_ctrls;
+extern const struct ControlInfo mainevt_ctrl;
 const char *mainevt_get_btn(int type);
 
-extern const struct ControlInfo ninjaw_ctrls;
+extern const struct ControlInfo ninjaw_ctrl;
 const char *ninjaw_get_btn(int type);
 
-extern const struct ControlInfo thepit_ctrls;
+extern const struct ControlInfo thepit_ctrl;
 const char *thepit_get_btn(int type);
 
-extern const struct ControlInfo punisher_ctrls;
+extern const struct ControlInfo punisher_ctrl;
 const char *punisher_get_btn(int type);
 
-extern const struct ControlInfo ghostb_ctrls;
+extern const struct ControlInfo ghostb_ctrl;
 const char *ghostb_get_btn(int type);
 
-extern const struct ControlInfo simpsons_ctrls;
+extern const struct ControlInfo simpsons_ctrl;
 const char *simpsons_get_btn(int type);
 
-extern const struct ControlInfo srumbler_ctrls;
+extern const struct ControlInfo srumbler_ctrl;
 const char *srumbler_get_btn(int type);
 
-extern const struct ControlInfo a3stooges_ctrls;
+extern const struct ControlInfo a3stooges_ctrl;
 const char *a3stooges_get_btn(int type);
 
-extern const struct ControlInfo tinstar_ctrls;
+extern const struct ControlInfo tinstar_ctrl;
 const char *tinstar_get_btn(int type);
 
-extern const struct ControlInfo thief_ctrls;
+extern const struct ControlInfo thief_ctrl;
 const char *thief_get_btn(int type);
 
-extern const struct ControlInfo a3wonders_ctrls;
+extern const struct ControlInfo a3wonders_ctrl;
 const char *a3wonders_get_btn(int type);
 
-extern const struct ControlInfo thndrbld_ctrls;
+extern const struct ControlInfo thndrbld_ctrl;
 const char *thndrbld_get_btn(int type);
 
-extern const struct ControlInfo thundfox_ctrls;
+extern const struct ControlInfo thundfox_ctrl;
 const char *thundfox_get_btn(int type);
 
-extern const struct ControlInfo thunderj_ctrls;
+extern const struct ControlInfo thunderj_ctrl;
 const char *thunderj_get_btn(int type);
 
-extern const struct ControlInfo tickee_ctrls;
+extern const struct ControlInfo tickee_ctrl;
 const char *tickee_get_btn(int type);
 
-extern const struct ControlInfo tigerh_ctrls;
+extern const struct ControlInfo tigerh_ctrl;
 const char *tigerh_get_btn(int type);
 
-extern const struct ControlInfo tigeroad_ctrls;
+extern const struct ControlInfo tigeroad_ctrl;
 const char *tigeroad_get_btn(int type);
 
-extern const struct ControlInfo timber_ctrls;
+extern const struct ControlInfo timber_ctrl;
 const char *timber_get_btn(int type);
 
-extern const struct ControlInfo timecris_ctrls;
+extern const struct ControlInfo timecris_ctrl;
 const char *timecris_get_btn(int type);
 
-extern const struct ControlInfo timekill_ctrls;
+extern const struct ControlInfo timekill_ctrl;
 const char *timekill_get_btn(int type);
 
-extern const struct ControlInfo timeplt_ctrls;
+extern const struct ControlInfo timeplt_ctrl;
 const char *timeplt_get_btn(int type);
 
-extern const struct ControlInfo timesold_ctrls;
+extern const struct ControlInfo timesold_ctrl;
 const char *timesold_get_btn(int type);
 
-extern const struct ControlInfo titlef_ctrls;
+extern const struct ControlInfo titlef_ctrl;
 const char *titlef_get_btn(int type);
 
-extern const struct ControlInfo toki_ctrls;
+extern const struct ControlInfo toki_ctrl;
 const char *toki_get_btn(int type);
 
-extern const struct ControlInfo tmmjprd_ctrls;
+extern const struct ControlInfo tmmjprd_ctrl;
 const char *tmmjprd_get_btn(int type);
 
-extern const struct ControlInfo mahmajn_ctrls;
+extern const struct ControlInfo mahmajn_ctrl;
 const char *mahmajn_get_btn(int type);
 
-extern const struct ControlInfo mahmajn2_ctrls;
+extern const struct ControlInfo mahmajn2_ctrl;
 const char *mahmajn2_get_btn(int type);
 
-extern const struct ControlInfo tokyogal_ctrls;
+extern const struct ControlInfo tokyogal_ctrl;
 const char *tokyogal_get_btn(int type);
 
-extern const struct ControlInfo tomahawk_ctrls;
+extern const struct ControlInfo tomahawk_ctrl;
 const char *tomahawk_get_btn(int type);
 
-extern const struct ControlInfo tontonb_ctrls;
+extern const struct ControlInfo tontonb_ctrl;
 const char *tontonb_get_btn(int type);
 
-extern const struct ControlInfo toobin_ctrls;
+extern const struct ControlInfo toobin_ctrl;
 const char *toobin_get_btn(int type);
 
-extern const struct ControlInfo topspeed_ctrls;
+extern const struct ControlInfo topspeed_ctrl;
 const char *topspeed_get_btn(int type);
 
-extern const struct ControlInfo totcarn_ctrls;
+extern const struct ControlInfo totcarn_ctrl;
 const char *totcarn_get_btn(int type);
 
-extern const struct ControlInfo tdfever_ctrls;
+extern const struct ControlInfo tdfever_ctrl;
 const char *tdfever_get_btn(int type);
 
-extern const struct ControlInfo toypop_ctrls;
+extern const struct ControlInfo toypop_ctrl;
 const char *toypop_get_btn(int type);
 
-extern const struct ControlInfo trackfld_ctrls;
+extern const struct ControlInfo trackfld_ctrl;
 const char *trackfld_get_btn(int type);
 
-extern const struct ControlInfo tranqgun_ctrls;
+extern const struct ControlInfo tranqgun_ctrl;
 const char *tranqgun_get_btn(int type);
 
-extern const struct ControlInfo trisport_ctrls;
+extern const struct ControlInfo trisport_ctrl;
 const char *trisport_get_btn(int type);
 
-extern const struct ControlInfo triplhnt_ctrls;
+extern const struct ControlInfo triplhnt_ctrl;
 const char *triplhnt_get_btn(int type);
 
-extern const struct ControlInfo statriv2_ctrls;
+extern const struct ControlInfo statriv2_ctrl;
 const char *statriv2_get_btn(int type);
 
-extern const struct ControlInfo gtsers8_ctrls;
+extern const struct ControlInfo gtsers8_ctrl;
 const char *gtsers8_get_btn(int type);
 
-extern const struct ControlInfo gt507uk_ctrls;
+extern const struct ControlInfo gt507uk_ctrl;
 const char *gt507uk_get_btn(int type);
 
-extern const struct ControlInfo gt5_ctrls;
+extern const struct ControlInfo gt5_ctrl;
 const char *gt5_get_btn(int type);
 
-extern const struct ControlInfo trvgns_ctrls;
+extern const struct ControlInfo trvgns_ctrl;
 const char *trvgns_get_btn(int type);
 
-extern const struct ControlInfo triviasp_ctrls;
+extern const struct ControlInfo triviasp_ctrl;
 const char *triviasp_get_btn(int type);
 
-extern const struct ControlInfo triviabb_ctrls;
+extern const struct ControlInfo triviabb_ctrl;
 const char *triviabb_get_btn(int type);
 
-extern const struct ControlInfo triviag1_ctrls;
+extern const struct ControlInfo triviag1_ctrl;
 const char *triviag1_get_btn(int type);
 
-extern const struct ControlInfo triviag2_ctrls;
+extern const struct ControlInfo triviag2_ctrl;
 const char *triviag2_get_btn(int type);
 
-extern const struct ControlInfo triviayp_ctrls;
+extern const struct ControlInfo triviayp_ctrl;
 const char *triviayp_get_btn(int type);
 
-extern const struct ControlInfo trog_ctrls;
+extern const struct ControlInfo trog_ctrl;
 const char *trog_get_btn(int type);
 
-extern const struct ControlInfo tron_ctrls;
+extern const struct ControlInfo tron_ctrl;
 const char *tron_get_btn(int type);
 
-extern const struct ControlInfo tubep_ctrls;
+extern const struct ControlInfo tubep_ctrl;
 const char *tubep_get_btn(int type);
 
-extern const struct ControlInfo tunhunt_ctrls;
+extern const struct ControlInfo tunhunt_ctrl;
 const char *tunhunt_get_btn(int type);
 
-extern const struct ControlInfo turbo_ctrls;
+extern const struct ControlInfo turbo_ctrl;
 const char *turbo_get_btn(int type);
 
-extern const struct ControlInfo turbofrc_ctrls;
+extern const struct ControlInfo turbofrc_ctrl;
 const char *turbofrc_get_btn(int type);
 
-extern const struct ControlInfo toutrun_ctrls;
+extern const struct ControlInfo toutrun_ctrl;
 const char *toutrun_get_btn(int type);
 
-extern const struct ControlInfo tshoot_ctrls;
+extern const struct ControlInfo tshoot_ctrl;
 const char *tshoot_get_btn(int type);
 
-extern const struct ControlInfo tutankhm_ctrls;
+extern const struct ControlInfo tutankhm_ctrl;
 const char *tutankhm_get_btn(int type);
 
-extern const struct ControlInfo twincobr_ctrls;
+extern const struct ControlInfo twincobr_ctrl;
 const char *twincobr_get_btn(int type);
 
-extern const struct ControlInfo twineagl_ctrls;
+extern const struct ControlInfo twineagl_ctrl;
 const char *twineagl_get_btn(int type);
 
-extern const struct ControlInfo twineag2_ctrls;
+extern const struct ControlInfo twineag2_ctrl;
 const char *twineag2_get_btn(int type);
 
-extern const struct ControlInfo twotiger_ctrls;
+extern const struct ControlInfo twotiger_ctrl;
 const char *twotiger_get_btn(int type);
 
-extern const struct ControlInfo earthjkr_ctrls;
+extern const struct ControlInfo earthjkr_ctrl;
 const char *earthjkr_get_btn(int type);
 
-extern const struct ControlInfo unsquad_ctrls;
+extern const struct ControlInfo unsquad_ctrl;
 const char *unsquad_get_btn(int type);
 
-extern const struct ControlInfo vball_ctrls;
+extern const struct ControlInfo vball_ctrl;
 const char *vball_get_btn(int type);
 
-extern const struct ControlInfo usclssic_ctrls;
+extern const struct ControlInfo usclssic_ctrl;
 const char *usclssic_get_btn(int type);
 
-extern const struct ControlInfo ultramhm_ctrls;
+extern const struct ControlInfo ultramhm_ctrl;
 const char *ultramhm_get_btn(int type);
 
-extern const struct ControlInfo ultratnk_ctrls;
+extern const struct ControlInfo ultratnk_ctrl;
 const char *ultratnk_get_btn(int type);
 
-extern const struct ControlInfo utoukond_ctrls;
+extern const struct ControlInfo utoukond_ctrl;
 const char *utoukond_get_btn(int type);
 
-extern const struct ControlInfo undrfire_ctrls;
+extern const struct ControlInfo undrfire_ctrl;
 const char *undrfire_get_btn(int type);
 
-extern const struct ControlInfo uniwars_ctrls;
+extern const struct ControlInfo uniwars_ctrl;
 const char *uniwars_get_btn(int type);
 
-extern const struct ControlInfo upndown_ctrls;
+extern const struct ControlInfo upndown_ctrl;
 const char *upndown_get_btn(int type);
 
-extern const struct ControlInfo valkyrie_ctrls;
+extern const struct ControlInfo valkyrie_ctrl;
 const char *valkyrie_get_btn(int type);
 
-extern const struct ControlInfo vandyke_ctrls;
+extern const struct ControlInfo vandyke_ctrl;
 const char *vandyke_get_btn(int type);
 
-extern const struct ControlInfo vanguard_ctrls;
+extern const struct ControlInfo vanguard_ctrl;
 const char *vanguard_get_btn(int type);
 
-extern const struct ControlInfo varth_ctrls;
+extern const struct ControlInfo varth_ctrl;
 const char *varth_get_btn(int type);
 
-extern const struct ControlInfo vendetta_ctrls;
+extern const struct ControlInfo vendetta_ctrl;
 const char *vendetta_get_btn(int type);
 
-extern const struct ControlInfo venture_ctrls;
+extern const struct ControlInfo venture_ctrl;
 const char *venture_get_btn(int type);
 
-extern const struct ControlInfo victory_ctrls;
+extern const struct ControlInfo victory_ctrl;
 const char *victory_get_btn(int type);
 
-extern const struct ControlInfo victroad_ctrls;
+extern const struct ControlInfo victroad_ctrl;
 const char *victroad_get_btn(int type);
 
-extern const struct ControlInfo hustler_ctrls;
+extern const struct ControlInfo hustler_ctrl;
 const char *hustler_get_btn(int type);
 
-extern const struct ControlInfo videopin_ctrls;
+extern const struct ControlInfo videopin_ctrl;
 const char *videopin_get_btn(int type);
 
-extern const struct ControlInfo vigilant_ctrls;
+extern const struct ControlInfo vigilant_ctrl;
 const char *vigilant_get_btn(int type);
 
-extern const struct ControlInfo vimana_ctrls;
+extern const struct ControlInfo vimana_ctrl;
 const char *vimana_get_btn(int type);
 
-extern const struct ControlInfo vindictr_ctrls;
+extern const struct ControlInfo vindictr_ctrl;
 const char *vindictr_get_btn(int type);
 
-extern const struct ControlInfo vindctr2_ctrls;
+extern const struct ControlInfo vindctr2_ctrl;
 const char *vindctr2_get_btn(int type);
 
-extern const struct ControlInfo viofight_ctrls;
+extern const struct ControlInfo viofight_ctrl;
 const char *viofight_get_btn(int type);
 
-extern const struct ControlInfo viper_ctrls;
+extern const struct ControlInfo viper_ctrl;
 const char *viper_get_btn(int type);
 
-extern const struct ControlInfo vf_ctrls;
+extern const struct ControlInfo vf_ctrl;
 const char *vf_get_btn(int type);
 
-extern const struct ControlInfo vf2_ctrls;
+extern const struct ControlInfo vf2_ctrl;
 const char *vf2_get_btn(int type);
 
-extern const struct ControlInfo vsgongf_ctrls;
+extern const struct ControlInfo vsgongf_ctrl;
 const char *vsgongf_get_btn(int type);
 
-extern const struct ControlInfo rbibb_ctrls;
+extern const struct ControlInfo rbibb_ctrl;
 const char *rbibb_get_btn(int type);
 
-extern const struct ControlInfo balonfgt_ctrls;
+extern const struct ControlInfo balonfgt_ctrl;
 const char *balonfgt_get_btn(int type);
 
-extern const struct ControlInfo vsbball_ctrls;
+extern const struct ControlInfo vsbball_ctrl;
 const char *vsbball_get_btn(int type);
 
-extern const struct ControlInfo btlecity_ctrls;
+extern const struct ControlInfo btlecity_ctrl;
 const char *btlecity_get_btn(int type);
 
-extern const struct ControlInfo cstlevna_ctrls;
+extern const struct ControlInfo cstlevna_ctrl;
 const char *cstlevna_get_btn(int type);
 
-extern const struct ControlInfo cluclu_ctrls;
+extern const struct ControlInfo cluclu_ctrl;
 const char *cluclu_get_btn(int type);
 
-extern const struct ControlInfo drmario_ctrls;
+extern const struct ControlInfo drmario_ctrl;
 const char *drmario_get_btn(int type);
 
-extern const struct ControlInfo duckhunt_ctrls;
+extern const struct ControlInfo duckhunt_ctrl;
 const char *duckhunt_get_btn(int type);
 
-extern const struct ControlInfo excitebk_ctrls;
+extern const struct ControlInfo excitebk_ctrl;
 const char *excitebk_get_btn(int type);
 
-extern const struct ControlInfo vsfdf_ctrls;
+extern const struct ControlInfo vsfdf_ctrl;
 const char *vsfdf_get_btn(int type);
 
-extern const struct ControlInfo vsgradus_ctrls;
+extern const struct ControlInfo vsgradus_ctrl;
 const char *vsgradus_get_btn(int type);
 
-extern const struct ControlInfo vsgshoe_ctrls;
+extern const struct ControlInfo vsgshoe_ctrl;
 const char *vsgshoe_get_btn(int type);
 
-extern const struct ControlInfo hogalley_ctrls;
+extern const struct ControlInfo hogalley_ctrl;
 const char *hogalley_get_btn(int type);
 
-extern const struct ControlInfo hotsmash_ctrls;
+extern const struct ControlInfo hotsmash_ctrl;
 const char *hotsmash_get_btn(int type);
 
-extern const struct ControlInfo iceclimb_ctrls;
+extern const struct ControlInfo iceclimb_ctrl;
 const char *iceclimb_get_btn(int type);
 
-extern const struct ControlInfo iceclmrj_ctrls;
+extern const struct ControlInfo iceclmrj_ctrl;
 const char *iceclmrj_get_btn(int type);
 
-extern const struct ControlInfo machridr_ctrls;
+extern const struct ControlInfo machridr_ctrl;
 const char *machridr_get_btn(int type);
 
-extern const struct ControlInfo vsmahjng_ctrls;
+extern const struct ControlInfo vsmahjng_ctrl;
 const char *vsmahjng_get_btn(int type);
 
-extern const struct ControlInfo mightybj_ctrls;
+extern const struct ControlInfo mightybj_ctrl;
 const char *mightybj_get_btn(int type);
 
-extern const struct ControlInfo jajamaru_ctrls;
+extern const struct ControlInfo jajamaru_ctrl;
 const char *jajamaru_get_btn(int type);
 
-extern const struct ControlInfo vspinbal_ctrls;
+extern const struct ControlInfo vspinbal_ctrl;
 const char *vspinbal_get_btn(int type);
 
-extern const struct ControlInfo platoon_ctrls;
+extern const struct ControlInfo platoon_ctrl;
 const char *platoon_get_btn(int type);
 
-extern const struct ControlInfo bnglngby_ctrls;
+extern const struct ControlInfo bnglngby_ctrl;
 const char *bnglngby_get_btn(int type);
 
-extern const struct ControlInfo vsslalom_ctrls;
+extern const struct ControlInfo vsslalom_ctrl;
 const char *vsslalom_get_btn(int type);
 
-extern const struct ControlInfo vssoccer_ctrls;
+extern const struct ControlInfo vssoccer_ctrl;
 const char *vssoccer_get_btn(int type);
 
-extern const struct ControlInfo starlstr_ctrls;
+extern const struct ControlInfo starlstr_ctrl;
 const char *starlstr_get_btn(int type);
 
-extern const struct ControlInfo smgolf_ctrls;
+extern const struct ControlInfo smgolf_ctrl;
 const char *smgolf_get_btn(int type);
 
-extern const struct ControlInfo suprmrio_ctrls;
+extern const struct ControlInfo suprmrio_ctrl;
 const char *suprmrio_get_btn(int type);
 
-extern const struct ControlInfo vsskykid_ctrls;
+extern const struct ControlInfo vsskykid_ctrl;
 const char *vsskykid_get_btn(int type);
 
-extern const struct ControlInfo supxevs_ctrls;
+extern const struct ControlInfo supxevs_ctrl;
 const char *supxevs_get_btn(int type);
 
-extern const struct ControlInfo tkoboxng_ctrls;
+extern const struct ControlInfo tkoboxng_ctrl;
 const char *tkoboxng_get_btn(int type);
 
-extern const struct ControlInfo vstennis_ctrls;
+extern const struct ControlInfo vstennis_ctrl;
 const char *vstennis_get_btn(int type);
 
-extern const struct ControlInfo vstetris_ctrls;
+extern const struct ControlInfo vstetris_ctrl;
 const char *vstetris_get_btn(int type);
 
-extern const struct ControlInfo goonies_ctrls;
+extern const struct ControlInfo goonies_ctrl;
 const char *goonies_get_btn(int type);
 
-extern const struct ControlInfo topgun_ctrls;
+extern const struct ControlInfo topgun_ctrl;
 const char *topgun_get_btn(int type);
 
-extern const struct ControlInfo wrecking_ctrls;
+extern const struct ControlInfo wrecking_ctrl;
 const char *wrecking_get_btn(int type);
 
-extern const struct ControlInfo wacko_ctrls;
+extern const struct ControlInfo wacko_ctrl;
 const char *wacko_get_btn(int type);
 
-extern const struct ControlInfo mj4simai_ctrls;
+extern const struct ControlInfo mj4simai_ctrl;
 const char *mj4simai_get_btn(int type);
 
-extern const struct ControlInfo wargods_ctrls;
+extern const struct ControlInfo wargods_ctrl;
 const char *wargods_get_btn(int type);
 
-extern const struct ControlInfo wotw_ctrls;
+extern const struct ControlInfo wotw_ctrl;
 const char *wotw_get_btn(int type);
 
-extern const struct ControlInfo warlords_ctrls;
+extern const struct ControlInfo warlords_ctrl;
 const char *warlords_get_btn(int type);
 
-extern const struct ControlInfo warpwarp_ctrls;
+extern const struct ControlInfo warpwarp_ctrl;
 const char *warpwarp_get_btn(int type);
 
-extern const struct ControlInfo warrior_ctrls;
+extern const struct ControlInfo warrior_ctrl;
 const char *warrior_get_btn(int type);
 
-extern const struct ControlInfo suzume_ctrls;
+extern const struct ControlInfo suzume_ctrl;
 const char *suzume_get_btn(int type);
 
-extern const struct ControlInfo wecleman_ctrls;
+extern const struct ControlInfo wecleman_ctrl;
 const char *wecleman_get_btn(int type);
 
-extern const struct ControlInfo wfortune_ctrls;
+extern const struct ControlInfo wfortune_ctrl;
 const char *wfortune_get_btn(int type);
 
-extern const struct ControlInfo whodunit_ctrls;
+extern const struct ControlInfo whodunit_ctrl;
 const char *whodunit_get_btn(int type);
 
-extern const struct ControlInfo wildfang_ctrls;
+extern const struct ControlInfo wildfang_ctrl;
 const char *wildfang_get_btn(int type);
 
-extern const struct ControlInfo moo_ctrls;
+extern const struct ControlInfo moo_ctrl;
 const char *moo_get_btn(int type);
 
-extern const struct ControlInfo willow_ctrls;
+extern const struct ControlInfo willow_ctrl;
 const char *willow_get_btn(int type);
 
-extern const struct ControlInfo wizdfire_ctrls;
+extern const struct ControlInfo wizdfire_ctrl;
 const char *wizdfire_get_btn(int type);
 
-extern const struct ControlInfo wow_ctrls;
+extern const struct ControlInfo wow_ctrl;
 const char *wow_get_btn(int type);
 
-extern const struct ControlInfo wolfpack_ctrls;
+extern const struct ControlInfo wolfpack_ctrl;
 const char *wolfpack_get_btn(int type);
 
-extern const struct ControlInfo wboy_ctrls;
+extern const struct ControlInfo wboy_ctrl;
 const char *wboy_get_btn(int type);
 
-extern const struct ControlInfo wbml_ctrls;
+extern const struct ControlInfo wbml_ctrl;
 const char *wbml_get_btn(int type);
 
-extern const struct ControlInfo wbeachvl_ctrls;
+extern const struct ControlInfo wbeachvl_ctrl;
 const char *wbeachvl_get_btn(int type);
 
-extern const struct ControlInfo wcbowl_ctrls;
+extern const struct ControlInfo wcbowl_ctrl;
 const char *wcbowl_get_btn(int type);
 
-extern const struct ControlInfo wcbowldx_ctrls;
+extern const struct ControlInfo wcbowldx_ctrl;
 const char *wcbowldx_get_btn(int type);
 
-extern const struct ControlInfo wseries_ctrls;
+extern const struct ControlInfo wseries_ctrl;
 const char *wseries_get_btn(int type);
 
-extern const struct ControlInfo wsf_ctrls;
+extern const struct ControlInfo wsf_ctrl;
 const char *wsf_get_btn(int type);
 
-extern const struct ControlInfo wtennis_ctrls;
+extern const struct ControlInfo wtennis_ctrl;
 const char *wtennis_get_btn(int type);
 
-extern const struct ControlInfo wwfsstar_ctrls;
+extern const struct ControlInfo wwfsstar_ctrl;
 const char *wwfsstar_get_btn(int type);
 
-extern const struct ControlInfo wwfwfest_ctrls;
+extern const struct ControlInfo wwfwfest_ctrl;
 const char *wwfwfest_get_btn(int type);
 
-extern const struct ControlInfo wwfmania_ctrls;
+extern const struct ControlInfo wwfmania_ctrl;
 const char *wwfmania_get_btn(int type);
 
-extern const struct ControlInfo xmen_ctrls;
+extern const struct ControlInfo xmen_ctrl;
 const char *xmen_get_btn(int type);
 
-extern const struct ControlInfo xmvsf_ctrls;
+extern const struct ControlInfo xmvsf_ctrl;
 const char *xmvsf_get_btn(int type);
 
-extern const struct ControlInfo xmcota_ctrls;
+extern const struct ControlInfo xmcota_ctrl;
 const char *xmcota_get_btn(int type);
 
-extern const struct ControlInfo xsleena_ctrls;
+extern const struct ControlInfo xsleena_ctrl;
 const char *xsleena_get_btn(int type);
 
-extern const struct ControlInfo xenophob_ctrls;
+extern const struct ControlInfo xenophob_ctrl;
 const char *xenophob_get_btn(int type);
 
-extern const struct ControlInfo xevious_ctrls;
+extern const struct ControlInfo xevious_ctrl;
 const char *xevious_get_btn(int type);
 
-extern const struct ControlInfo xybots_ctrls;
+extern const struct ControlInfo xybots_ctrl;
 const char *xybots_get_btn(int type);
 
-extern const struct ControlInfo yesnoj_ctrls;
+extern const struct ControlInfo yesnoj_ctrl;
 const char *yesnoj_get_btn(int type);
 
-extern const struct ControlInfo yiear_ctrls;
+extern const struct ControlInfo yiear_ctrl;
 const char *yiear_get_btn(int type);
 
-extern const struct ControlInfo yosakdon_ctrls;
+extern const struct ControlInfo yosakdon_ctrl;
 const char *yosakdon_get_btn(int type);
 
-extern const struct ControlInfo yuyugogo_ctrls;
+extern const struct ControlInfo yuyugogo_ctrl;
 const char *yuyugogo_get_btn(int type);
 
-extern const struct ControlInfo zaxxon_ctrls;
+extern const struct ControlInfo zaxxon_ctrl;
 const char *zaxxon_get_btn(int type);
 
-extern const struct ControlInfo zerohour_ctrls;
+extern const struct ControlInfo zerohour_ctrl;
 const char *zerohour_get_btn(int type);
 
-extern const struct ControlInfo zeropnt_ctrls;
+extern const struct ControlInfo zeropnt_ctrl;
 const char *zeropnt_get_btn(int type);
 
-extern const struct ControlInfo zeropnt2_ctrls;
+extern const struct ControlInfo zeropnt2_ctrl;
 const char *zeropnt2_get_btn(int type);
 
-extern const struct ControlInfo zerowing_ctrls;
+extern const struct ControlInfo zerowing_ctrl;
 const char *zerowing_get_btn(int type);
 
-extern const struct ControlInfo zerozone_ctrls;
+extern const struct ControlInfo zerozone_ctrl;
 const char *zerozone_get_btn(int type);
 
-extern const struct ControlInfo zigzag_ctrls;
+extern const struct ControlInfo zigzag_ctrl;
 const char *zigzag_get_btn(int type);
 
-extern const struct ControlInfo zingzip_ctrls;
+extern const struct ControlInfo zingzip_ctrl;
 const char *zingzip_get_btn(int type);
 
-extern const struct ControlInfo zoar_ctrls;
+extern const struct ControlInfo zoar_ctrl;
 const char *zoar_get_btn(int type);
 
-extern const struct ControlInfo zodiack_ctrls;
+extern const struct ControlInfo zodiack_ctrl;
 const char *zodiack_get_btn(int type);
 
-extern const struct ControlInfo zombraid_ctrls;
+extern const struct ControlInfo zombraid_ctrl;
 const char *zombraid_get_btn(int type);
 
-extern const struct ControlInfo zookeep_ctrls;
+extern const struct ControlInfo zookeep_ctrl;
 const char *zookeep_get_btn(int type);
 
-extern const struct ControlInfo zunkyou_ctrls;
+extern const struct ControlInfo zunkyou_ctrl;
 const char *zunkyou_get_btn(int type);
 
-extern const struct ControlInfo zwackery_ctrls;
+extern const struct ControlInfo zwackery_ctrl;
 const char *zwackery_get_btn(int type);
 
-extern const struct ControlInfo zzyzzyxx_ctrls;
+extern const struct ControlInfo zzyzzyxx_ctrl;
 const char *zzyzzyxx_get_btn(int type);
 
 #endif /* CONTROLS_H */
