@@ -26,7 +26,6 @@ SOURCES_C += \
 	$(CORE_DIR)/bootstrap.c \
 	$(CORE_DIR)/common.c \
 	$(CORE_DIR)/config.c \
-#	$(CORE_DIR)/controls.c \
 	$(CORE_DIR)/cpuexec.c \
 	$(CORE_DIR)/cpuint.c \
 	$(CORE_DIR)/cpuintrf.c \
