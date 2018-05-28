@@ -23532,6 +23532,34 @@ const char *sstrike_get_btn(int type)
   return "";
 }
 
+const struct ControlInfo stonebal_ctrl =
+{
+  0, /* num_players */
+  false, /* alternating_controls */
+  false, /* mirrored_controls */
+  false, /* has_tilt */
+  false, /* has_cocktail_dipswitch */
+  false, /* uses_service */
+  "", /* control__details */
+  &stonebal_get_btn
+};
+
+const char *stonebal_get_btn(int type)
+{
+  switch(type)
+  {
+    case IPT_BUTTON1: return "Shoot/Fight";
+    case IPT_BUTTON2: return "Push";
+    case IPT_BUTTON3: return "Pass/Tackle";
+  } /* end of switch */
+
+  return generic_btn_label(type);
+}
+
+
+
+const char *stonebal_get_btn(int type);
+
 const struct ControlInfo szaxxon_ctrl =
 {
   2, /* num_players */

@@ -2554,6 +2554,9 @@ const char *ssf2_get_btn(int type);
 extern const struct ControlInfo sstrike_ctrl;
 const char *sstrike_get_btn(int type);
 
+extern const struct ControlInfo stonebal_ctrl;
+const char *stonebal_get_btn(int type);
+
 extern const struct ControlInfo szaxxon_ctrl;
 const char *szaxxon_get_btn(int type);
 

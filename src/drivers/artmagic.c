@@ -1027,5 +1027,5 @@ static DRIVER_INIT( stonebal )
 
 GAME( 1993, ultennis, 0,        artmagic, ultennis, ultennis, ROT0, "Art and Magic", "Ultimate Tennis" )
 GAME( 1994, cheesech, 0,        artmagic, cheesech, cheesech, ROT0, "Art and Magic", "Cheese Chase" )
-GAME( 1994, stonebal, 0,        stonebal, stonebal, stonebal, ROT0, "Art and Magic", "Stone Ball (4 Players)" )
-GAME( 1994, stoneba2, stonebal, stonebal, stonebal, stonebal, ROT0, "Art and Magic", "Stone Ball (2 Players)" )
+GAMEC( 1994, stonebal, 0,        stonebal, stonebal, stonebal, ROT0, "Art and Magic", "Stone Ball (4 Players)", &stonebal_ctrl, NULL )
+GAMEC( 1994, stoneba2, stonebal, stonebal, stonebal, stonebal, ROT0, "Art and Magic", "Stone Ball (2 Players)", &stonebal_ctrl, NULL )
