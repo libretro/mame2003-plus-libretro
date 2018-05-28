@@ -35,6 +35,8 @@ extern const struct bin2cFILE qix_bootstrap;
 
 extern const struct bin2cFILE rungun_bootstrap;
 
+extern const struct bin2cFILE rungunu_bootstrap;
+
 extern const struct bin2cFILE sinistar_bootstrap;
 
 extern const struct bin2cFILE sinista1_bootstrap;
