@@ -1037,7 +1037,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 /******************************************************************************
 
-	Keymapping
+	RetroPad Keymapping
 
 ******************************************************************************/
 
@@ -1113,6 +1113,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *                                                   |
    */
 
+   
 int get_mame_ctrl_id(int player_index, int retro_ID)
 {
   int player_flag = 0;
@@ -1192,43 +1193,31 @@ int get_mame_ctrl_id(int player_index, int retro_ID)
   }
   return 0;
 }
-void retro_describe_buttons(void)
-{
-   
-#define describe_buttons(INDEX) \
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_LEFT))   },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_RIGHT))  },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_UP))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_DOWN))   },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_B))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_Y))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_X))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_A))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L2))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R2))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L3))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R3))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_SELECT)) },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_START))  },
-  
-  struct retro_input_descriptor desc[] = {
-    describe_buttons(0)
-    describe_buttons(1)
-    describe_buttons(2)
-    describe_buttons(3)
-    { 0, 0, 0, 0, NULL }
-  };
-  
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-}
+
 
 /* libretro presents "Player 1", "Player 2", "Player 3", etc and uses internal indexes of 0, 1, 2              */
 /* MAME presents "Player 1", "Player 2," "Player 3", and indexes them via enum values like JOYCODE_1_BUTTON1,  */
 /* JOYCODE_2_BUTTON1, or #defines like the masks IPF_PLAYER1, IPF_PLAYER2                                      */
 /* Therefore INDEX is used as the "display" value and also when mapping to MAME enums and player # masks.      */
 /* (INDEX - 1) is used for libretro internal data structures.                                                  */
+
+#define describe_buttons(INDEX) \
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_LEFT))   },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_RIGHT))  },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_UP))     },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_DOWN))   },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_B))      },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_Y))      },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_X))      },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_A))      },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_L))      },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_R))      },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_L2))     },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_R2))     },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_L3))     },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_R3))     },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_SELECT)) },\
+{ (INDEX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id((INDEX - 1), RETRO_DEVICE_ID_JOYPAD_START))  },
 
 #define EMIT_RETRO_PAD_DIRECTIONS(INDEX) \
   {"RetroPad"   #INDEX " Left",        ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT,   JOYCODE_##INDEX##_LEFT}, \
@@ -1346,6 +1335,19 @@ int retroJsState[72];
 int16_t mouse_x[4];
 int16_t mouse_y[4];
 int16_t analogjoy[4][4];
+
+
+void retro_describe_buttons(void)
+{  
+  struct retro_input_descriptor desc[] = {
+    describe_buttons(1)
+    describe_buttons(2)
+    describe_buttons(3)
+    describe_buttons(4)
+    { 0, 0, 0, 0, NULL }
+  };
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+}
 
 const struct JoystickInfo *osd_get_joy_list(void)
 {
@@ -1480,7 +1482,7 @@ void osd_joystick_end_calibration(void) { }
 /******************************************************************************
 
 	Keyboard
-
+  
 ******************************************************************************/
 
 extern const struct KeyboardInfo retroKeys[];
@@ -1498,18 +1500,11 @@ int osd_is_key_pressed(int keycode)
   return (keycode < 512 && keycode >= 0) ? retroKeyState[keycode] : 0;
 }
 
-
 int osd_readkey_unicode(int flush)
 {
   /* TODO*/
   return 0;
 }
-
-/******************************************************************************
-
-	Keymapping
-
-******************************************************************************/
 
 /* Unassigned keycodes*/
 /*	KEYCODE_OPENBRACE, KEYCODE_CLOSEBRACE, KEYCODE_BACKSLASH2, KEYCODE_STOP, KEYCODE_LWIN, KEYCODE_RWIN, KEYCODE_DEL_PAD, KEYCODE_PAUSE,*/
