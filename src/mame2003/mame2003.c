@@ -1224,6 +1224,11 @@ void retro_describe_buttons(void)
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
+/* libretro presents "Player 1", "Player 2", "Player 3", etc and uses internal indexes of 0, 1, 2              */
+/* MAME presents "Player 1", "Player 2," "Player 3", and indexes them via enum values like JOYCODE_1_BUTTON1,  */
+/* JOYCODE_2_BUTTON1, or #defines like the masks IPF_PLAYER1, IPF_PLAYER2                                      */
+/* Therefore INDEX is used as the "display" value and also when mapping to MAME enums and player # masks.      */
+/* (INDEX - 1) is used for libretro internal data structures.                                                  */
 
 #define EMIT_RETRO_PAD_DIRECTIONS(INDEX) \
   {"RetroPad"   #INDEX " Left",        ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT,   JOYCODE_##INDEX##_LEFT}, \
