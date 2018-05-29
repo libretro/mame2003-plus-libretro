@@ -659,21 +659,35 @@ void retro_get_system_info(struct retro_system_info *info)
    *                                                   |
    */
 
-int get_retro_mapping(int retro_ID)
+int get_mame_ctrl_id(int player_index, int retro_ID)
 {
+  int player_flag = 0;
+  
+  /* TODO: use the player-specific bitwise flag in order to get player-specific form of the ID */ 
+
+/*  
+  switch(player_index)
+  {
+    case 0: player_flag = IPF_PLAYER1; break;
+    case 1: player_flag = IPF_PLAYER2; break;
+    case 3: player_flag = IPF_PLAYER3; break;
+    case 4: player_flag = IPF_PLAYER4; break;
+  }
+*/
+
   if(options.retropad_layout == RETROPAD_MODERN)
   {
     switch(retro_ID)
     {
       /************  "MODERN" MAPPING OVERLAY  ************/ 
-      case RETRO_DEVICE_ID_JOYPAD_B:  return IPT_BUTTON4;
-      case RETRO_DEVICE_ID_JOYPAD_Y:  return IPT_BUTTON1;
-      case RETRO_DEVICE_ID_JOYPAD_X:  return IPT_BUTTON2;
-      case RETRO_DEVICE_ID_JOYPAD_A:  return IPT_BUTTON5;
-      case RETRO_DEVICE_ID_JOYPAD_L:  return IPT_BUTTON7;
-      case RETRO_DEVICE_ID_JOYPAD_R:  return IPT_BUTTON3;
-      case RETRO_DEVICE_ID_JOYPAD_L2: return IPT_BUTTON8;
-      case RETRO_DEVICE_ID_JOYPAD_R2: return IPT_BUTTON6;
+      case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
+      case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
+      case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
+      case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
+      case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON7);
+      case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON3);
+      case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON8);
+      case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON6);
     }
   }
   else if(options.retropad_layout == RETROPAD_SNES)
@@ -681,70 +695,69 @@ int get_retro_mapping(int retro_ID)
     switch(retro_ID)
     {      
       /************  "SNES" MAPPING OVERLAY  ************/
-      case RETRO_DEVICE_ID_JOYPAD_B: return IPT_BUTTON4;
-      case RETRO_DEVICE_ID_JOYPAD_Y: return IPT_BUTTON1;
-      case RETRO_DEVICE_ID_JOYPAD_X: return IPT_BUTTON2;
-      case RETRO_DEVICE_ID_JOYPAD_A: return IPT_BUTTON5;
-      case RETRO_DEVICE_ID_JOYPAD_L: return IPT_BUTTON3;
+      case RETRO_DEVICE_ID_JOYPAD_B: return (player_flag | IPT_BUTTON4);
+      case RETRO_DEVICE_ID_JOYPAD_Y: return (player_flag | IPT_BUTTON1);
+      case RETRO_DEVICE_ID_JOYPAD_X: return (player_flag | IPT_BUTTON2);
+      case RETRO_DEVICE_ID_JOYPAD_A: return (player_flag | IPT_BUTTON5);
+      case RETRO_DEVICE_ID_JOYPAD_L: return (player_flag | IPT_BUTTON3);
     }
   }
   else if(options.retropad_layout == RETROPAD_10BUTTON)
   {
     switch(retro_ID)
     {
-      case RETRO_DEVICE_ID_JOYPAD_B: return IPT_BUTTON1;
-      case RETRO_DEVICE_ID_JOYPAD_Y: return IPT_BUTTON2;
-      case RETRO_DEVICE_ID_JOYPAD_X: return IPT_BUTTON3;
-      case RETRO_DEVICE_ID_JOYPAD_A: return IPT_BUTTON4;
+      case RETRO_DEVICE_ID_JOYPAD_B: return (player_flag | IPT_BUTTON1);
+      case RETRO_DEVICE_ID_JOYPAD_Y: return (player_flag | IPT_BUTTON2);
+      case RETRO_DEVICE_ID_JOYPAD_X: return (player_flag | IPT_BUTTON3);
+      case RETRO_DEVICE_ID_JOYPAD_A: return (player_flag | IPT_BUTTON4);
     }
   }
 
   /************  BASELINE "CLASSIC" MAPPING  ************/     
   switch(retro_ID)
   {
-    case RETRO_DEVICE_ID_JOYPAD_LEFT:   return IPT_JOYSTICK_LEFT;
-    case RETRO_DEVICE_ID_JOYPAD_RIGHT:  return IPT_JOYSTICK_RIGHT;
-    case RETRO_DEVICE_ID_JOYPAD_UP:     return IPT_JOYSTICK_UP;
-    case RETRO_DEVICE_ID_JOYPAD_DOWN:   return IPT_JOYSTICK_DOWN;
-    case RETRO_DEVICE_ID_JOYPAD_B:      return IPT_BUTTON1;
-    case RETRO_DEVICE_ID_JOYPAD_Y:      return IPT_BUTTON3;
-    case RETRO_DEVICE_ID_JOYPAD_X:      return IPT_BUTTON4;
-    case RETRO_DEVICE_ID_JOYPAD_A:      return IPT_BUTTON2;
-    case RETRO_DEVICE_ID_JOYPAD_L:      return IPT_BUTTON5;
-    case RETRO_DEVICE_ID_JOYPAD_R:      return IPT_BUTTON6;
-    case RETRO_DEVICE_ID_JOYPAD_L2:     return IPT_BUTTON7;
-    case RETRO_DEVICE_ID_JOYPAD_R2:     return IPT_BUTTON8;
-    case RETRO_DEVICE_ID_JOYPAD_L3:     return IPT_BUTTON9;
-    case RETRO_DEVICE_ID_JOYPAD_R3:     return IPT_BUTTON10;
-    case RETRO_DEVICE_ID_JOYPAD_SELECT: return IPT_COIN1;  /* MAME uses distinct strings for each player input, while */
-    case RETRO_DEVICE_ID_JOYPAD_START:  return IPT_START1; /* libretro uses a unified strings across players and adds their */
-                                                                              /* index # dynamically. We grab the IPT_START1 & IPT_COIN1 */
-                                                                         /* labels from MAME and then make them generic for libretro.*/
+    case RETRO_DEVICE_ID_JOYPAD_LEFT:   return (player_flag | IPT_JOYSTICK_LEFT);
+    case RETRO_DEVICE_ID_JOYPAD_RIGHT:  return (player_flag | IPT_JOYSTICK_RIGHT);
+    case RETRO_DEVICE_ID_JOYPAD_UP:     return (player_flag | IPT_JOYSTICK_UP);
+    case RETRO_DEVICE_ID_JOYPAD_DOWN:   return (player_flag | IPT_JOYSTICK_DOWN);
+    case RETRO_DEVICE_ID_JOYPAD_B:      return (player_flag | IPT_BUTTON1);
+    case RETRO_DEVICE_ID_JOYPAD_Y:      return (player_flag | IPT_BUTTON3);
+    case RETRO_DEVICE_ID_JOYPAD_X:      return (player_flag | IPT_BUTTON4);
+    case RETRO_DEVICE_ID_JOYPAD_A:      return (player_flag | IPT_BUTTON2);
+    case RETRO_DEVICE_ID_JOYPAD_L:      return (player_flag | IPT_BUTTON5);
+    case RETRO_DEVICE_ID_JOYPAD_R:      return (player_flag | IPT_BUTTON6);
+    case RETRO_DEVICE_ID_JOYPAD_L2:     return (player_flag | IPT_BUTTON7);
+    case RETRO_DEVICE_ID_JOYPAD_R2:     return (player_flag | IPT_BUTTON8);
+    case RETRO_DEVICE_ID_JOYPAD_L3:     return (player_flag | IPT_BUTTON9);
+    case RETRO_DEVICE_ID_JOYPAD_R3:     return (player_flag | IPT_BUTTON10);
+    case RETRO_DEVICE_ID_JOYPAD_SELECT: return IPT_COIN1;
+    case RETRO_DEVICE_ID_JOYPAD_START:  return IPT_START1;                       
+   /* MAME uses distinct strings for each player input, while        */                                                                          
+   /* libretro uses a unified strings across players and adds their  */                                                                           /* index # dynamically. We grab the IPT_START1 & IPT_COIN1        */
+   /* labels from MAME and then make them generic for libretro.      */
   }
   return 0;
 }
 void retro_describe_buttons(void)
 {
-  
-  /* TODO: need to invoke get_retro_mapping with the player specific bitwise flag in order to get player-specific control names */
    
 #define describe_buttons(INDEX) \
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_LEFT))   },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_RIGHT))  },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_UP))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_DOWN))   },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_B))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_Y))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_X))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_A))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_L))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_R))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_L2))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_R2))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_L3))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_R3))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_SELECT)) },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  game_driver->ctrl_dat->get_name(get_retro_mapping(RETRO_DEVICE_ID_JOYPAD_START))  },
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_LEFT))   },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_RIGHT))  },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_UP))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_DOWN))   },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_B))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_Y))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_X))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_A))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L2))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R2))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L3))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R3))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_SELECT)) },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_START))  },
   
   struct retro_input_descriptor desc[] = {
     describe_buttons(0)
