@@ -587,190 +587,6 @@ void retro_get_system_info(struct retro_system_info *info)
   info->block_extract = true;
 }
 
-  /* Assuming the standard RetroPad layout:
-   *
-   *   [L2]                                 [R2]
-   *   [L]                                   [R]
-   *
-   *     [^]                               [X]
-   *
-   * [<]     [>]    [start] [selct]    [Y]     [A]
-   *
-   *     [v]                               [B]
-   *
-   *
-   * or standard RetroPad fight stick layout:
-   *
-   *   [start] [selct]
-   *                                         [X]  [R]  [L]
-   *     [^]                            [Y]
-   *
-   * [<]     [>]                             [A]  [R2] [L2]
-   *                                    [B]
-   *     [v]
-   *
-   *
-   *
-   * key: [MAME button/Street Fighter II move]
-   *
-   * options.retropad_layout == RETROPAD_MODERN
-   * ========================
-   * Uses the fight stick & pad layout popularised by Street Figher IV.
-   * Needs an 8+ button controller by default.
-   *
-   * [8/-]                                     [6/HK]  |
-   * [7/-]                                     [3/HP]  |
-   *                                                   |        [2/MP]  [3/HP]  [7/-]
-   *     [^]                               [2/MP]      |  [1/LP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
-   *
-   * retropad_layout == RETROPAD_SNES
-   * ========================
-   * Uses the layout popularised by SNES Street Figher II.
-   * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
-   *
-   * [7/-]                                      [8/-]  |
-   * [3/HP]                                    [6/HK]  |
-   *                                                   |        [2/MP]  [6/HK]  [3/HP]
-   *     [^]                               [2/MP]      |  [1/LP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
-   *                                                   |  [4/LK]
-   *     [v]                               [4/LK]      |
-   *                                                   |
-   *
-   * options.retropad_layout == RETROPAD_MAME
-   * ========================
-   * Uses current MAME's default Xbox 360 controller layout.
-   * Not sensible for 6 button fighters, but may suit other games.
-   *
-   * [7/-]                                     [8/-]   |
-   * [5/MK]                                    [6/HK]  |
-   *                                                   |        [4/WK]  [6/HK]  [5/MK]
-   *     [^]                               [4/WK]      |  [3/HP]
-   *                                                   |
-   * [<]     [>]    [start] [selct]    [3/HP]  [2/MP]  |        [2/MP]  [8/-]   [7/-]
-   *                                                   |  [1/LP]
-   *     [v]                               [1/LP]      |
-   *                                                   |
-   */
-
-int get_mame_ctrl_id(int player_index, int retro_ID)
-{
-  int player_flag = 0;
-  
-  /* TODO: use the player-specific bitwise flag in order to get player-specific form of the ID */ 
-
-/*  
-  switch(player_index)
-  {
-    case 0: player_flag = IPF_PLAYER1; break;
-    case 1: player_flag = IPF_PLAYER2; break;
-    case 3: player_flag = IPF_PLAYER3; break;
-    case 4: player_flag = IPF_PLAYER4; break;
-  }
-*/
-
-  if(options.retropad_layout == RETROPAD_MODERN)
-  {
-    switch(retro_ID)
-    {
-      /************  "MODERN" MAPPING OVERLAY  ************/ 
-      case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
-      case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
-      case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
-      case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
-      case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON7);
-      case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON3);
-      case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON8);
-      case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON6);
-    }
-  }
-  else if(options.retropad_layout == RETROPAD_SNES)
-  {
-    switch(retro_ID)
-    {      
-      /************  "SNES" MAPPING OVERLAY  ************/
-      case RETRO_DEVICE_ID_JOYPAD_B: return (player_flag | IPT_BUTTON4);
-      case RETRO_DEVICE_ID_JOYPAD_Y: return (player_flag | IPT_BUTTON1);
-      case RETRO_DEVICE_ID_JOYPAD_X: return (player_flag | IPT_BUTTON2);
-      case RETRO_DEVICE_ID_JOYPAD_A: return (player_flag | IPT_BUTTON5);
-      case RETRO_DEVICE_ID_JOYPAD_L: return (player_flag | IPT_BUTTON3);
-    }
-  }
-  else if(options.retropad_layout == RETROPAD_10BUTTON)
-  {
-    switch(retro_ID)
-    {
-      case RETRO_DEVICE_ID_JOYPAD_B: return (player_flag | IPT_BUTTON1);
-      case RETRO_DEVICE_ID_JOYPAD_Y: return (player_flag | IPT_BUTTON2);
-      case RETRO_DEVICE_ID_JOYPAD_X: return (player_flag | IPT_BUTTON3);
-      case RETRO_DEVICE_ID_JOYPAD_A: return (player_flag | IPT_BUTTON4);
-    }
-  }
-
-  /************  BASELINE "CLASSIC" MAPPING  ************/     
-  switch(retro_ID)
-  {
-    case RETRO_DEVICE_ID_JOYPAD_LEFT:   return (player_flag | IPT_JOYSTICK_LEFT);
-    case RETRO_DEVICE_ID_JOYPAD_RIGHT:  return (player_flag | IPT_JOYSTICK_RIGHT);
-    case RETRO_DEVICE_ID_JOYPAD_UP:     return (player_flag | IPT_JOYSTICK_UP);
-    case RETRO_DEVICE_ID_JOYPAD_DOWN:   return (player_flag | IPT_JOYSTICK_DOWN);
-    case RETRO_DEVICE_ID_JOYPAD_B:      return (player_flag | IPT_BUTTON1);
-    case RETRO_DEVICE_ID_JOYPAD_Y:      return (player_flag | IPT_BUTTON3);
-    case RETRO_DEVICE_ID_JOYPAD_X:      return (player_flag | IPT_BUTTON4);
-    case RETRO_DEVICE_ID_JOYPAD_A:      return (player_flag | IPT_BUTTON2);
-    case RETRO_DEVICE_ID_JOYPAD_L:      return (player_flag | IPT_BUTTON5);
-    case RETRO_DEVICE_ID_JOYPAD_R:      return (player_flag | IPT_BUTTON6);
-    case RETRO_DEVICE_ID_JOYPAD_L2:     return (player_flag | IPT_BUTTON7);
-    case RETRO_DEVICE_ID_JOYPAD_R2:     return (player_flag | IPT_BUTTON8);
-    case RETRO_DEVICE_ID_JOYPAD_L3:     return (player_flag | IPT_BUTTON9);
-    case RETRO_DEVICE_ID_JOYPAD_R3:     return (player_flag | IPT_BUTTON10);
-    case RETRO_DEVICE_ID_JOYPAD_SELECT: return IPT_COIN1;
-    case RETRO_DEVICE_ID_JOYPAD_START:  return IPT_START1;                       
-   /* MAME uses distinct strings for each player input, while        */                                                                          
-   /* libretro uses a unified strings across players and adds their  */                                                                           /* index # dynamically. We grab the IPT_START1 & IPT_COIN1        */
-   /* labels from MAME and then make them generic for libretro.      */
-  }
-  return 0;
-}
-void retro_describe_buttons(void)
-{
-   
-#define describe_buttons(INDEX) \
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_LEFT))   },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_RIGHT))  },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_UP))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_DOWN))   },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_B))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_Y))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_X))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_A))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R))      },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L2))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R2))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L3))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R3))     },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_SELECT)) },\
-{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_START))  },
-  
-  struct retro_input_descriptor desc[] = {
-    describe_buttons(0)
-    describe_buttons(1)
-    describe_buttons(2)
-    describe_buttons(3)
-    { 0, 0, 0, 0, NULL }
-  };
-  
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-}
-
-
 bool retro_load_game(const struct retro_game_info *game)
 {
   int              driverIndex    = 0;
@@ -1224,6 +1040,190 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 	Keymapping
 
 ******************************************************************************/
+
+  /* Assuming the standard RetroPad layout:
+   *
+   *   [L2]                                 [R2]
+   *   [L]                                   [R]
+   *
+   *     [^]                               [X]
+   *
+   * [<]     [>]    [start] [selct]    [Y]     [A]
+   *
+   *     [v]                               [B]
+   *
+   *
+   * or standard RetroPad fight stick layout:
+   *
+   *   [start] [selct]
+   *                                         [X]  [R]  [L]
+   *     [^]                            [Y]
+   *
+   * [<]     [>]                             [A]  [R2] [L2]
+   *                                    [B]
+   *     [v]
+   *
+   *
+   *
+   * key: [MAME button/Street Fighter II move]
+   *
+   * options.retropad_layout == RETROPAD_MODERN
+   * ========================
+   * Uses the fight stick & pad layout popularised by Street Figher IV.
+   * Needs an 8+ button controller by default.
+   *
+   * [8/-]                                     [6/HK]  |
+   * [7/-]                                     [3/HP]  |
+   *                                                   |        [2/MP]  [3/HP]  [7/-]
+   *     [^]                               [2/MP]      |  [1/LP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [6/HK]  [8/-]
+   *                                                   |  [4/LK]
+   *     [v]                               [4/LK]      |
+   *                                                   |
+   *
+   * retropad_layout == RETROPAD_SNES
+   * ========================
+   * Uses the layout popularised by SNES Street Figher II.
+   * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
+   *
+   * [7/-]                                      [8/-]  |
+   * [3/HP]                                    [6/HK]  |
+   *                                                   |        [2/MP]  [6/HK]  [3/HP]
+   *     [^]                               [2/MP]      |  [1/LP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [1/LP]  [5/MK]  |        [5/MK]  [8/-]   [7/-]
+   *                                                   |  [4/LK]
+   *     [v]                               [4/LK]      |
+   *                                                   |
+   *
+   * options.retropad_layout == RETROPAD_MAME
+   * ========================
+   * Uses current MAME's default Xbox 360 controller layout.
+   * Not sensible for 6 button fighters, but may suit other games.
+   *
+   * [7/-]                                     [8/-]   |
+   * [5/MK]                                    [6/HK]  |
+   *                                                   |        [4/WK]  [6/HK]  [5/MK]
+   *     [^]                               [4/WK]      |  [3/HP]
+   *                                                   |
+   * [<]     [>]    [start] [selct]    [3/HP]  [2/MP]  |        [2/MP]  [8/-]   [7/-]
+   *                                                   |  [1/LP]
+   *     [v]                               [1/LP]      |
+   *                                                   |
+   */
+
+int get_mame_ctrl_id(int player_index, int retro_ID)
+{
+  int player_flag = 0;
+  
+  /* TODO: use the player-specific bitwise flag in order to get player-specific form of the ID */ 
+
+/*  
+  switch(player_index)
+  {
+    case 0: player_flag = IPF_PLAYER1; break;
+    case 1: player_flag = IPF_PLAYER2; break;
+    case 3: player_flag = IPF_PLAYER3; break;
+    case 4: player_flag = IPF_PLAYER4; break;
+  }
+*/
+
+  if(options.retropad_layout == RETROPAD_MODERN)
+  {
+    switch(retro_ID)
+    {
+      /************  "MODERN" MAPPING OVERLAY  ************/ 
+      case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
+      case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
+      case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
+      case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
+      case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON7);
+      case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON3);
+      case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON8);
+      case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON6);
+    }
+  }
+  else if(options.retropad_layout == RETROPAD_SNES)
+  {
+    switch(retro_ID)
+    {      
+      /************  "SNES" MAPPING OVERLAY  ************/
+      case RETRO_DEVICE_ID_JOYPAD_B: return (player_flag | IPT_BUTTON4);
+      case RETRO_DEVICE_ID_JOYPAD_Y: return (player_flag | IPT_BUTTON1);
+      case RETRO_DEVICE_ID_JOYPAD_X: return (player_flag | IPT_BUTTON2);
+      case RETRO_DEVICE_ID_JOYPAD_A: return (player_flag | IPT_BUTTON5);
+      case RETRO_DEVICE_ID_JOYPAD_L: return (player_flag | IPT_BUTTON3);
+    }
+  }
+  else if(options.retropad_layout == RETROPAD_10BUTTON)
+  {
+    switch(retro_ID)
+    {
+      case RETRO_DEVICE_ID_JOYPAD_B: return (player_flag | IPT_BUTTON1);
+      case RETRO_DEVICE_ID_JOYPAD_Y: return (player_flag | IPT_BUTTON2);
+      case RETRO_DEVICE_ID_JOYPAD_X: return (player_flag | IPT_BUTTON3);
+      case RETRO_DEVICE_ID_JOYPAD_A: return (player_flag | IPT_BUTTON4);
+    }
+  }
+
+  /************  BASELINE "CLASSIC" MAPPING  ************/     
+  switch(retro_ID)
+  {
+    case RETRO_DEVICE_ID_JOYPAD_LEFT:   return (player_flag | IPT_JOYSTICK_LEFT);
+    case RETRO_DEVICE_ID_JOYPAD_RIGHT:  return (player_flag | IPT_JOYSTICK_RIGHT);
+    case RETRO_DEVICE_ID_JOYPAD_UP:     return (player_flag | IPT_JOYSTICK_UP);
+    case RETRO_DEVICE_ID_JOYPAD_DOWN:   return (player_flag | IPT_JOYSTICK_DOWN);
+    case RETRO_DEVICE_ID_JOYPAD_B:      return (player_flag | IPT_BUTTON1);
+    case RETRO_DEVICE_ID_JOYPAD_Y:      return (player_flag | IPT_BUTTON3);
+    case RETRO_DEVICE_ID_JOYPAD_X:      return (player_flag | IPT_BUTTON4);
+    case RETRO_DEVICE_ID_JOYPAD_A:      return (player_flag | IPT_BUTTON2);
+    case RETRO_DEVICE_ID_JOYPAD_L:      return (player_flag | IPT_BUTTON5);
+    case RETRO_DEVICE_ID_JOYPAD_R:      return (player_flag | IPT_BUTTON6);
+    case RETRO_DEVICE_ID_JOYPAD_L2:     return (player_flag | IPT_BUTTON7);
+    case RETRO_DEVICE_ID_JOYPAD_R2:     return (player_flag | IPT_BUTTON8);
+    case RETRO_DEVICE_ID_JOYPAD_L3:     return (player_flag | IPT_BUTTON9);
+    case RETRO_DEVICE_ID_JOYPAD_R3:     return (player_flag | IPT_BUTTON10);
+    case RETRO_DEVICE_ID_JOYPAD_SELECT: return IPT_COIN1;
+    case RETRO_DEVICE_ID_JOYPAD_START:  return IPT_START1;                       
+   /* MAME uses distinct strings for each player input, while        */                                                                          
+   /* libretro uses a unified strings across players and adds their  */                                                                           /* index # dynamically. We grab the IPT_START1 & IPT_COIN1        */
+   /* labels from MAME and then make them generic for libretro.      */
+  }
+  return 0;
+}
+void retro_describe_buttons(void)
+{
+   
+#define describe_buttons(INDEX) \
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_LEFT))   },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_RIGHT))  },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_UP))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_DOWN))   },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_B))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_Y))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_X))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_A))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R))      },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L2))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R2))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_L3))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_R3))     },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_SELECT)) },\
+{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id(INDEX, RETRO_DEVICE_ID_JOYPAD_START))  },
+  
+  struct retro_input_descriptor desc[] = {
+    describe_buttons(0)
+    describe_buttons(1)
+    describe_buttons(2)
+    describe_buttons(3)
+    { 0, 0, 0, 0, NULL }
+  };
+  
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+}
+
 
 #define EMIT_RETRO_PAD_DIRECTIONS(INDEX) \
   {"RetroPad"   #INDEX " Left",        ((INDEX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT,   JOYCODE_##INDEX##_LEFT}, \

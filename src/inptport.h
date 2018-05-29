@@ -409,7 +409,7 @@ extern struct ik *osd_input_keywords;
 extern int num_ik;
 
 void seq_set_string(InputSeq* a, const char *buf);
-const char *generic_btn_label(int input);
+const char *generic_ctrl_label(int input);
 
 
 #ifdef __cplusplus

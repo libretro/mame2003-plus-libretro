@@ -1564,7 +1564,7 @@ int num_ik = sizeof(input_keywords)/sizeof(struct ik);
 /***************************************************************************/
 
 
-const char *generic_btn_label(int input)
+const char *generic_ctrl_label(int input)
 {
   unsigned int i = 0;
 
