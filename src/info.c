@@ -730,7 +730,7 @@ static void print_game_info(FILE* out, const struct GameDriver* game)
 		fprintf(out, "</manufacturer>\n");
 	}
 
-	print_game_history(out, game);
+/*	print_game_history(out, game); */
 	print_game_bios(out, game);
 	print_game_rom(out, game);
 	print_game_sample(out, game);
@@ -812,7 +812,7 @@ void print_mame_xml(int old_style_flag)
 		"\t\t<!ELEMENT driver (#PCDATA)>\n"
 		"\t\t<!ELEMENT year (#PCDATA)>\n"
 		"\t\t<!ELEMENT manufacturer (#PCDATA)>\n"
-		"\t\t<!ELEMENT history (#PCDATA)>\n"
+		/*"\t\t<!ELEMENT history (#PCDATA)>\n"*/
 		"\t\t<!ELEMENT biosset EMPTY>\n"
 		"\t\t\t<!ATTLIST biosset name CDATA #REQUIRED>\n"
 		"\t\t\t<!ATTLIST biosset description CDATA #REQUIRED>\n"
