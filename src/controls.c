@@ -23548,9 +23548,9 @@ const char *stonebal_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot/Fight";
-    case IPT_BUTTON2: return "Pass/Tackle";
-    case IPT_BUTTON3: return "Push";
+    case IPT_BUTTON1: return BTN1 "Shoot/Fight";
+    case IPT_BUTTON2: return BTN2 "Pass/Tackle";
+    case IPT_BUTTON3: return BTN3 "Push";
   } /* end of switch */
 
   return generic_ctrl_label(type);
