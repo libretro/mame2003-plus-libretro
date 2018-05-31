@@ -176,18 +176,16 @@ static void update_variables(bool first_time)
   for(index = 0; index < OPT_end; index++)
   {
     var.value = NULL;
-    var.key = effective_defaults[index].key;
+    var.key = default_options[index].key;
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
     {
       current_options[index].value = var.value;
     }
   }
   
-  options.frameskip = 0;                                             /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_FRAMESKIP].value))
     options.frameskip = atoi(current_options[OPT_FRAMESKIP].value);
 
-  options.input_interface = RETRO_DEVICE_JOYPAD;                     /* default if none set by frontend */
   if (!string_is_empty(current_options[OPT_INPUT_INTERFACE].value))
   {
     if(strcmp(current_options[OPT_INPUT_INTERFACE].value, "retropad") == 0)
@@ -198,7 +196,6 @@ static void update_variables(bool first_time)
       options.input_interface = 0; /* retropad and keyboard simultaneously. "old-school mame2003 input mode" */
   }
 
-  options.retropad_layout = RETROPAD_MAME;
   if (!string_is_empty(current_options[OPT_RETROPAD_LAYOUT].value))
   {
     if(strcmp(current_options[OPT_RETROPAD_LAYOUT].value, "modern") == 0)
@@ -214,7 +211,6 @@ static void update_variables(bool first_time)
                                 /* retro_describe_buttons() in retro_load_game() to take care of the initial description */
   }
 
-  options.mouse_device = 0;
   if(!string_is_empty(current_options[OPT_MOUSE_DEVICE].value))
   {
     if(strcmp(current_options[OPT_MOUSE_DEVICE].value, "pointer") == 0)
@@ -225,7 +221,6 @@ static void update_variables(bool first_time)
       options.mouse_device = 0;
   }
 
-  options.crosshair_enable = 0;
   if(!string_is_empty(current_options[OPT_CROSSHAIR_ENABLED].value))
   {
     if(strcmp(current_options[OPT_CROSSHAIR_ENABLED].value, "enabled") == 0)
@@ -234,8 +229,6 @@ static void update_variables(bool first_time)
       options.crosshair_enable = 0;
   }
   
-
-  options.skip_disclaimer = false;
   if(!string_is_empty(current_options[OPT_SKIP_DISCLAIMER].value))
   {
     if(strcmp(current_options[OPT_SKIP_DISCLAIMER].value, "enabled") == 0)
@@ -244,7 +237,6 @@ static void update_variables(bool first_time)
       options.skip_disclaimer = false;
   }
 
-  options.skip_warnings = false;
   if(!string_is_empty(current_options[OPT_SKIP_WARNINGS].value))
   {
     if(strcmp(current_options[OPT_SKIP_WARNINGS].value, "enabled") == 0)
@@ -253,7 +245,6 @@ static void update_variables(bool first_time)
       options.skip_warnings = false;
   }
   
-  options.display_setup = 0;
   if(!string_is_empty(current_options[OPT_DISPLAY_SETUP].value))
   {
     if(strcmp(current_options[OPT_DISPLAY_SETUP].value, "enabled") == 0)
@@ -262,7 +253,6 @@ static void update_variables(bool first_time)
       options.display_setup = 0;
   }
 
-  options.brightness = 1.0f; /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_BRIGHTNESS].value))
   {
     options.brightness = atof(current_options[OPT_BRIGHTNESS].value);
@@ -270,7 +260,6 @@ static void update_variables(bool first_time)
       palette_set_global_brightness(options.brightness);    
   }
 
-  options.gamma = 1.2f; /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_GAMMA].value))
   {
     options.gamma = atof(current_options[OPT_GAMMA].value);
@@ -310,7 +299,6 @@ static void update_variables(bool first_time)
   displayosd(bitmap,buf,oc/2,100/2);
 */
 
-  options.use_artwork = ARTWORK_USE_NONE;
   if(!string_is_empty(current_options[OPT_BACKDROP].value))
   {
     if(strcmp(current_options[OPT_BACKDROP].value, "enabled") == 0)
@@ -341,7 +329,6 @@ static void update_variables(bool first_time)
 
   /** END BIOS OPTIONS **/
 
-  options.use_samples = true;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_USE_SAMPLES].value))
   {
     if(strcmp(current_options[OPT_USE_SAMPLES].value, "enabled") == 0)
@@ -350,7 +337,6 @@ static void update_variables(bool first_time)
       options.use_samples = false;
   }
   
-  options.dial_share_xy = 0;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_SHARE_DIAL].value))
   {
     if(strcmp(current_options[OPT_SHARE_DIAL].value, "enabled") == 0)
@@ -359,7 +345,6 @@ static void update_variables(bool first_time)
       options.dial_share_xy = 0;
   }
 
-  options.dual_joysticks = false;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_DUAL_JOY].value))
   {
     if(strcmp(current_options[OPT_DUAL_JOY].value, "enabled") == 0)
@@ -399,7 +384,6 @@ static void update_variables(bool first_time)
     old_dual_joystick_state = options.dual_joysticks;  
   }
   
-  options.rstick_to_btns = 0;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_RSTICK_BTNS].value))
   {
     if(strcmp(current_options[OPT_RSTICK_BTNS].value, "enabled") == 0)
@@ -408,7 +392,6 @@ static void update_variables(bool first_time)
       options.rstick_to_btns = 0;
   }
 
-  options.tate_mode = 0;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_TATE_MODE].value))
   {
     if(strcmp(current_options[OPT_TATE_MODE].value, "enabled") == 0)
@@ -417,13 +400,11 @@ static void update_variables(bool first_time)
       options.tate_mode = 0;
   }
 
-  options.vector_resolution_multiplier = 1;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_VECTOR_RESOLUTION].value))
   {
     options.vector_resolution_multiplier = atoi(current_options[OPT_VECTOR_RESOLUTION].value);
   }
 
-  options.antialias = 0;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_VECTOR_ANTIALIAS].value))
   {
     if(strcmp(current_options[OPT_VECTOR_ANTIALIAS].value, "enabled") == 0)
@@ -432,7 +413,6 @@ static void update_variables(bool first_time)
       options.antialias = 0;
   }
 
-  options.translucency = 1;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_VECTOR_TRANSLUCENCY].value))
   {
     if(strcmp(current_options[OPT_VECTOR_TRANSLUCENCY].value, "enabled") == 0)
@@ -441,25 +421,21 @@ static void update_variables(bool first_time)
       options.translucency = 0;
   }
 
-  options.beam = 1;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_VECTOR_BEAM].value))
   {
     options.beam = atoi(current_options[OPT_VECTOR_BEAM].value); /* integer: vector beam width */
   }
 
-  options.vector_flicker = 20;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_VECTOR_FLICKER].value))
   {
     options.vector_flicker = (int)(2.55 * atof(current_options[OPT_VECTOR_FLICKER].value)); /* why 2.55? must be an old mame family recipe */
   }
 
-  options.vector_intensity = 1.5f;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_VECTOR_INTENSITY].value))
   {
     options.vector_intensity = atof(current_options[OPT_VECTOR_INTENSITY].value); /* float: vector beam intensity */
   }
 
-  options.nvram_bootstrap = true;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_NVRAM_BOOTSTRAP].value))
   {
     if(strcmp(current_options[OPT_NVRAM_BOOTSTRAP].value, "enabled") == 1)
@@ -468,13 +444,11 @@ static void update_variables(bool first_time)
       options.nvram_bootstrap = false;
   }
 
-  options.samplerate = 48000;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_SAMPLE_RATE].value))
   {
     options.samplerate = atoi(current_options[OPT_SAMPLE_RATE].value);
   }
 
-  options.activate_dcs_speedhack = 1;  /* default if none set by frontend */
   if(!string_is_empty(current_options[OPT_DCS_SPEEDHACK].value))
   {
     if(strcmp(current_options[OPT_DCS_SPEEDHACK].value, "enabled") == 0)
