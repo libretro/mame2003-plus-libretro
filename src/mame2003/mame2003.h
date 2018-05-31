@@ -82,6 +82,13 @@ enum
   OPT_end /* dummy last entry */
 };
 
+struct retro_variable_default
+{
+   const char *key;
+   const char *defaults_string;
+};
+
+
 enum
 {
   RETROPAD_MAME = 0,

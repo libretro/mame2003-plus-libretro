@@ -205,7 +205,7 @@ struct GameOptions
   int		   vector_height;	       /* requested height for vector games; 0 means default (480) */
   int		   beam;			           /* vector beam width */
   int	     vector_flicker;	     /* vector beam flicker effect control */
-  float	   vector_intensity_correction;   
+  float	   vector_intensity;   
   int		   translucency;	       /* 1 to enable translucency on vectors */
   int 	   antialias;		         /* 1 to enable antialiasing on vectors */
   unsigned vector_resolution_multiplier;
