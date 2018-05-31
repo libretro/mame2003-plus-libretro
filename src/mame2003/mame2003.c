@@ -433,7 +433,7 @@ static void update_variables(bool first_time)
 
   if(!string_is_empty(current_options[OPT_VECTOR_INTENSITY].value))
   {
-    options.vector_intensity = atof(current_options[OPT_VECTOR_INTENSITY].value); /* float: vector beam intensity */
+    options.vector_intensity_correction = atof(current_options[OPT_VECTOR_INTENSITY].value); /* float: vector beam intensity */
   }
 
   if(!string_is_empty(current_options[OPT_NVRAM_BOOTSTRAP].value))
