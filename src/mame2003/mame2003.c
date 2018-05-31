@@ -150,18 +150,18 @@ static void init_core_options(void)
 
 static void set_variables(bool first_time)
 {
- static struct retro_variable_default  effective_defaults[OPT_end + 1];
- static unsigned effective_options_count;         /* the number of core options in effect for the current content */
- static struct retro_variable_default  *active_variables = NULL;
- int default_index   = 0; 
- 
- if(first_time)
-   active_variables = &default_options;
- else
- {
-   active_variables = NULL;
-   /* convert current_options to retro_variable_default format   */ 
- }
+  static struct retro_variable_default  effective_defaults[OPT_end + 1];
+  static unsigned effective_options_count;         /* the number of core options in effect for the current content */
+  static struct retro_variable_default  *active_variables = NULL;
+  int default_index   = 0; 
+
+  if(first_time)
+    active_variables = &default_options;
+  else
+  {
+    active_variables = NULL;
+    /* convert current_options to retro_variable_default format   */ 
+  }
 
   for(default_index = 0; default_index < (OPT_end + 1); default_index++)
   {
