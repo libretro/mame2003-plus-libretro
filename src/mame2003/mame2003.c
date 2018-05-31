@@ -46,8 +46,6 @@ extern int16_t      analogjoy[4][4];
 struct ipd          *default_inputs; /* pointer the array of structs with default MAME input mappings and labels */
 
 static struct retro_variable_default  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
-static struct retro_variable_default  effective_defaults[OPT_end + 1];
-static unsigned                       effective_options_count;         /* the number of core options in effect for the current content */
 static struct retro_variable          current_options[OPT_end + 1];
 
 retro_log_printf_t                 log_cb;
@@ -70,6 +68,7 @@ bool old_dual_joystick_state = false; /* used to track when this core option cha
 static void init_core_options(void);
 void        init_default(struct retro_variable_default *option, const char *key, const char *value);
 static void update_variables(bool first_time);
+static void set_variables(bool first_time);
 static void check_system_specs(void);
 void        retro_describe_buttons(void);
 
@@ -109,8 +108,6 @@ void retro_set_environment(retro_environment_t cb)
 
 static void init_core_options(void)
 {
-  int default_index   = 0;
-
   init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");
   init_default(&default_options[OPT_RETROPAD_LAYOUT],     APPNAME"_retropad_layout",     "RetroPad Layout; 10-Button Arcade|modern|SNES|MAME classic");
@@ -148,13 +145,30 @@ static void init_core_options(void)
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
   
   init_default(&default_options[OPT_end], NULL, NULL);
-  
+  set_variables(true);
+}
+
+static void set_variables(bool first_time)
+{
+ static struct retro_variable_default  effective_defaults[OPT_end + 1];
+ static unsigned effective_options_count;         /* the number of core options in effect for the current content */
+ static struct retro_variable_default  *active_variables = NULL;
+ int default_index   = 0; 
+ 
+ if(first_time)
+   active_variables = &default_options;
+ else
+ {
+   active_variables = NULL;
+   /* convert current_options to retro_variable_default format   */ 
+ }
+
   for(default_index = 0; default_index < (OPT_end + 1); default_index++)
   {
     if((default_index == OPT_STV_BIOS && !is_stv) || (default_index == OPT_NEOGEO_BIOS && !is_neogeo))
       continue; /* only offer BIOS selection when it is relevant */
     
-    effective_defaults[effective_options_count] = default_options[default_index];
+    effective_defaults[effective_options_count] = active_variables[default_index];
     effective_options_count++;
   }
 
@@ -173,7 +187,7 @@ static void update_variables(bool first_time)
   struct retro_variable var;
   int index;
 
-  for(index = 0; index < OPT_end; index++)
+  for(index = 0; index < OPT_end + 1; index++)
   {
     var.value = NULL;
     var.key = default_options[index].key;
