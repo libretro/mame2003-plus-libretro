@@ -86,7 +86,6 @@ void retro_init (void)
   environ_cb(RETRO_ENVIRONMENT_GET_PERF_INTERFACE, &perf_cb);
 #endif
 
-  options.use_samples = 1;
   check_system_specs();
 }
 
@@ -129,7 +128,8 @@ static void init_core_options(void)
   init_option(&default_options[OPT_BACKDROP],            APPNAME"_enable_backdrop",     "EXPERIMENTAL: Use Backdrop artwork (Restart); disabled|enabled");
   init_option(&default_options[OPT_NEOGEO_BIOS],         APPNAME"_neogeo_bios", 
                                                                                         "Specify Neo Geo BIOS (Restart); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
-  init_option(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart); default|japan|japana|us|japan_b|taiwan|europe");    
+  init_option(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart); default|japan|japana|us|japan_b|taiwan|europe");  
+  init_option(&default_options[OPT_USE_SAMPLES],         APPNAME"_use_samples",         "Use audio samples; enabled|disabled");
   init_option(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_option(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual Joystick Mode (Players 1 & 2); disabled|enabled");
   init_option(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Right Stick to Buttons; enabled|disabled");
@@ -371,7 +371,17 @@ static void update_variables(bool first_time)
   /** END BIOS OPTIONS **/
 
   var.value = NULL;
-
+  var.key = APPNAME"_use_samples";
+  options.use_samples = true;
+  if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+  {
+    if(strcmp(var.value, "enabled") == 0)
+      options.use_samples = true;
+    else
+      options.use_samples = false;
+  }
+  
+  var.value = NULL;
   var.key = APPNAME"_dialsharexy";
   options.dial_share_xy = 0;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
@@ -1622,3 +1632,4 @@ const struct KeyboardInfo retroKeys[] =
 
     {0, 0, 0}
 };
+

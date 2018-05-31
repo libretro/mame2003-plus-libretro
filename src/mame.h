@@ -192,7 +192,7 @@ struct GameOptions
   unsigned activate_dcs_speedhack;
 
   int		   samplerate;		       /* sound sample playback rate, in KHz */
-  int		   use_samples;	         /* 1 to enable external .wav samples */
+  bool	   use_samples;	         /* 1 to enable external .wav samples */
 
   float	   brightness;		       /* brightness of the display */
   float	   pause_bright;		     /* additional brightness when in pause */
