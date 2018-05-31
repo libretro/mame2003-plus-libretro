@@ -69,6 +69,7 @@ static void init_core_options(void);
 void        init_default(struct retro_variable_default *option, const char *key, const char *value);
 static void update_variables(bool first_time);
 static void set_variables(bool first_time);
+static struct retro_variable_default *spawn_effective_default(int option_index);
 static void check_system_specs(void);
 void        retro_describe_buttons(void);
 
@@ -152,23 +153,33 @@ static void set_variables(bool first_time)
 {
   static struct retro_variable_default  effective_defaults[OPT_end + 1];
   static unsigned effective_options_count;         /* the number of core options in effect for the current content */
-  int default_index   = 0; 
+  int option_index   = 0; 
 
-  for(default_index = 0; default_index < (OPT_end + 1); default_index++)
+  for(option_index = 0; option_index < (OPT_end + 1); option_index++)
   {
-    if((default_index == OPT_STV_BIOS && !is_stv) || (default_index == OPT_NEOGEO_BIOS && !is_neogeo))
+    if((option_index == OPT_STV_BIOS && !is_stv) || (option_index == OPT_NEOGEO_BIOS && !is_neogeo))
       continue; /* only offer BIOS selection when it is relevant */
     
-    if(first_time)
-      effective_defaults[effective_options_count] = default_options[default_index];
-    else
-    {
-      /*not implemented yet! */
-    }
+    effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_default(option_index);
     effective_options_count++;
   }
 
   environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)effective_defaults);
+
+  /* should we free string memory here from the !first_time codepath? does the frontend need our string pointers to remain valid?*/
+  
+  
+}
+
+static struct retro_variable_default *spawn_effective_default(int option_index)
+{
+  static struct retro_variable_default *encoded_default = NULL;
+  /* search for the string "; " as the delimiter between the option display name and the values */
+  /* stringify the current value for this option */
+  /* see if the current option string is already listed first in the original default -- is it the first in the pipe-delimited list? if so, just return default_options[option_index] */
+  /* if the current selected option is not in the original defaults string at all, log an error message. that shouldn't be possible. */
+  /* otherwise, create a copy of default_options[option_index].defaults_string. First add the stringified current option as the first in the pipe-delimited list for this copied string, and then remove the option from wherever it was originally in the defaults string */
+  return encoded_default;
 }
 
 void init_default(struct retro_variable_default *def, const char *key, const char *label_and_values)
