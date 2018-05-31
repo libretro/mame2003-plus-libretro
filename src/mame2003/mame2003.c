@@ -177,7 +177,7 @@ static void update_variables(bool first_time)
   {
     var.value = NULL;
     var.key = default_options[index].key;
-    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && !string_is_empty(var.value))
     {
       current_options[index].value = var.value;
     }
