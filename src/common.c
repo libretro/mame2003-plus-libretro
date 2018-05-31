@@ -1466,7 +1466,7 @@ static int process_rom_entries(struct rom_load_data *romdata, const struct RomMo
 					while (ROMENTRY_ISCONTINUE(romp));
 
 					/* if this was the first use of this file, verify the length and CRC */
-					if (baserom && !options.skip_rom_verify)
+					if (baserom)
 					{
 						log_cb(RETRO_LOG_DEBUG, LOGPRE "Verifying length (%X) and checksums\n", explength);
             verify_length_and_hash(romdata, ROM_GETNAME(baserom), explength, ROM_GETHASHDATA(baserom));
