@@ -141,7 +141,7 @@ static void init_core_options(void)
   init_option(&default_options[OPT_VECTOR_BEAM],         APPNAME"_vector_beam_width",   "EXPERIMENTAL: Vector beam width; 1|2|3|4|5");
   init_option(&default_options[OPT_VECTOR_FLICKER],      APPNAME"_vector_flicker",      "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100");
   init_option(&default_options[OPT_VECTOR_INTENSITY],    APPNAME"_vector_intensity",    "Vector intensity; 1.5|0.5|1|2|2.5|3");
-  init_option(&default_options[OPT_SKIP_CRC],            APPNAME"_skip_rom_verify",     "EXPERIMENTAL: Skip ROM verification (Restart); disabled|enabled");
+  init_option(&default_options[OPT_NVRAM_BOOTSTRAP],     APPNAME"_nvram_bootstraps",    "NVRAM Bootstraps; enabled|disabled");
   init_option(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|44100");
   init_option(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
   
@@ -511,14 +511,14 @@ static void update_variables(bool first_time)
 
   var.value = NULL;
 
-  var.key = APPNAME"_skip_rom_verify";
-  options.skip_rom_verify = 0;
+  var.key = APPNAME"_nvram_bootstraps";
+  options.nvram_bootstrap = true;
   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
   {
     if(strcmp(var.value, "enabled") == 1)
-      options.skip_rom_verify = 1;
+      options.nvram_bootstrap = true;
     else
-      options.skip_rom_verify = 0;
+      options.nvram_bootstrap = false;
   }
 
   var.value = NULL;
@@ -1116,10 +1116,10 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 
 /* libretro presents "Player 1", "Player 2", "Player 3", etc while internally using indexed data starting at 0, 1, 2 */
 /* MAME presents "Player 1", "Player 2," "Player 3", and indexes them via enum values like JOYCODE_1_BUTTON1,        */
-/* JOYCODE_2_BUTTON1, JOYCODE_3_BUTTON1 or with #deinfed masks IPF_PLAYER1, IPF_PLAYER2, IPF_PLAYER3.                */
+/* JOYCODE_2_BUTTON1, JOYCODE_3_BUTTON1 or with #define-d masks IPF_PLAYER1, IPF_PLAYER2, IPF_PLAYER3.               */
 /*                                                                                                                   */
 /* We are by convention passing "display" value used for mapping to MAME enums and player # masks to our macros.     */
-/* (Display Index - 1) can be used for indexed data structures.                                       */   
+/* (Display Index - 1) can be used for indexed data structures.                                                      */   
 
   
 int get_mame_ctrl_id(int display_index, int retro_ID)

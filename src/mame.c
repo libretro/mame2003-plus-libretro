@@ -498,7 +498,7 @@ void pause_action_start_emulator(void)
     if (Machine->drv->nvram_handler)
     {
         mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
-        if(!nvram_file && (Machine->gamedrv->bootstrap != NULL))
+        if(!nvram_file && options.nvram_bootstrap && (Machine->gamedrv->bootstrap != NULL))
         {
           nvram_file = spawn_bootstrap_nvram(Machine->gamedrv->bootstrap->data, Machine->gamedrv->bootstrap->length);
         }
