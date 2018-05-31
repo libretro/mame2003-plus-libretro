@@ -152,23 +152,19 @@ static void set_variables(bool first_time)
 {
   static struct retro_variable_default  effective_defaults[OPT_end + 1];
   static unsigned effective_options_count;         /* the number of core options in effect for the current content */
-  static struct retro_variable_default  *active_variables = NULL;
   int default_index   = 0; 
-
-  if(first_time)
-    active_variables = &default_options;
-  else
-  {
-    active_variables = NULL;
-    /* convert current_options to retro_variable_default format   */ 
-  }
 
   for(default_index = 0; default_index < (OPT_end + 1); default_index++)
   {
     if((default_index == OPT_STV_BIOS && !is_stv) || (default_index == OPT_NEOGEO_BIOS && !is_neogeo))
       continue; /* only offer BIOS selection when it is relevant */
     
-    effective_defaults[effective_options_count] = active_variables[default_index];
+    if(first_time)
+      effective_defaults[effective_options_count] = default_options[default_index];
+    else
+    {
+      /*not implemented yet! */
+    }
     effective_options_count++;
   }
 
@@ -191,286 +187,267 @@ static void update_variables(bool first_time)
   {
     var.value = NULL;
     var.key = default_options[index].key;
-    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && !string_is_empty(var.value))
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && !string_is_empty(var.value)) /* the frontend sends a value for this core option */
     {
-      current_options[index].value = var.value;
-    }
-  }
-  
-  if(!string_is_empty(current_options[OPT_FRAMESKIP].value))
-    options.frameskip = atoi(current_options[OPT_FRAMESKIP].value);
+      current_options[index].value = var.value; /* keep the state of core options matched with the frontend */
+      if(index == OPT_FRAMESKIP)
+        options.frameskip = atoi(var.value);
 
-  if (!string_is_empty(current_options[OPT_INPUT_INTERFACE].value))
-  {
-    if(strcmp(current_options[OPT_INPUT_INTERFACE].value, "retropad") == 0)
-      options.input_interface = RETRO_DEVICE_JOYPAD;
-    else if(strcmp(current_options[OPT_INPUT_INTERFACE].value, "mame_keyboard") == 0)
-      options.input_interface = RETRO_DEVICE_KEYBOARD;
-    else
-      options.input_interface = 0; /* retropad and keyboard simultaneously. "old-school mame2003 input mode" */
-  }
+      if (index == OPT_INPUT_INTERFACE)
+      {
+        if(strcmp(var.value, "retropad") == 0)
+          options.input_interface = RETRO_DEVICE_JOYPAD;
+        else if(strcmp(var.value, "mame_keyboard") == 0)
+          options.input_interface = RETRO_DEVICE_KEYBOARD;
+        else
+          options.input_interface = 0; /* retropad and keyboard simultaneously. "old-school mame2003 input mode" */
+      }
 
-  if (!string_is_empty(current_options[OPT_RETROPAD_LAYOUT].value))
-  {
-    if(strcmp(current_options[OPT_RETROPAD_LAYOUT].value, "modern") == 0)
-      options.retropad_layout = RETROPAD_MODERN;
-    else if(strcmp(current_options[OPT_RETROPAD_LAYOUT].value, "SNES") == 0)
-      options.retropad_layout = RETROPAD_SNES;
-    else if(strcmp(current_options[OPT_RETROPAD_LAYOUT].value, "10-Button Arcade") == 0)
-      options.retropad_layout = RETROPAD_10BUTTON;
-    else
-      options.retropad_layout = RETROPAD_MAME;
-    if(!first_time)
-      retro_describe_buttons(); /* the first time, MAME's init_game() needs to be called before this so there is also    */
-                                /* retro_describe_buttons() in retro_load_game() to take care of the initial description */
-  }
+      if (index == OPT_RETROPAD_LAYOUT)
+      {
+        if(strcmp(var.value, "modern") == 0)
+          options.retropad_layout = RETROPAD_MODERN;
+        else if(strcmp(var.value, "SNES") == 0)
+          options.retropad_layout = RETROPAD_SNES;
+        else if(strcmp(var.value, "10-Button Arcade") == 0)
+          options.retropad_layout = RETROPAD_10BUTTON;
+        else
+          options.retropad_layout = RETROPAD_MAME;
+        if(!first_time)
+          retro_describe_buttons(); /* the first time, MAME's init_game() needs to be called before this so there is also    */
+                                    /* retro_describe_buttons() in retro_load_game() to take care of the initial description */
+      }
 
-  if(!string_is_empty(current_options[OPT_MOUSE_DEVICE].value))
-  {
-    if(strcmp(current_options[OPT_MOUSE_DEVICE].value, "pointer") == 0)
-      options.mouse_device = RETRO_DEVICE_POINTER;
-    else if(strcmp(current_options[OPT_MOUSE_DEVICE].value, "mouse") == 0)
-      options.mouse_device = RETRO_DEVICE_MOUSE;
-    else
-      options.mouse_device = 0;
-  }
+      if(index == OPT_MOUSE_DEVICE)
+      {
+        if(strcmp(var.value, "pointer") == 0)
+          options.mouse_device = RETRO_DEVICE_POINTER;
+        else if(strcmp(var.value, "mouse") == 0)
+          options.mouse_device = RETRO_DEVICE_MOUSE;
+        else
+          options.mouse_device = 0;
+      }
 
-  if(!string_is_empty(current_options[OPT_CROSSHAIR_ENABLED].value))
-  {
-    if(strcmp(current_options[OPT_CROSSHAIR_ENABLED].value, "enabled") == 0)
-      options.crosshair_enable = 1;
-    else
-      options.crosshair_enable = 0;
-  }
-  
-  if(!string_is_empty(current_options[OPT_SKIP_DISCLAIMER].value))
-  {
-    if(strcmp(current_options[OPT_SKIP_DISCLAIMER].value, "enabled") == 0)
-      options.skip_disclaimer = true;
-    else
-      options.skip_disclaimer = false;
-  }
-
-  if(!string_is_empty(current_options[OPT_SKIP_WARNINGS].value))
-  {
-    if(strcmp(current_options[OPT_SKIP_WARNINGS].value, "enabled") == 0)
-      options.skip_warnings = true;
-    else
-      options.skip_warnings = false;
-  }
-  
-  if(!string_is_empty(current_options[OPT_DISPLAY_SETUP].value))
-  {
-    if(strcmp(current_options[OPT_DISPLAY_SETUP].value, "enabled") == 0)
-      options.display_setup = 1;
-    else
-      options.display_setup = 0;
-  }
-
-  if(!string_is_empty(current_options[OPT_BRIGHTNESS].value))
-  {
-    options.brightness = atof(current_options[OPT_BRIGHTNESS].value);
-    if(!first_time)
-      palette_set_global_brightness(options.brightness);    
-  }
-
-  if(!string_is_empty(current_options[OPT_GAMMA].value))
-  {
-    options.gamma = atof(current_options[OPT_GAMMA].value);
-    if(!first_time)
-      palette_set_global_gamma(options.gamma);
-  }
-
-  /* TODO: Add overclock option. Below is the code from the old MAME osd to help process the core option.*/
-  /*
-
-  double overclock;
-  int cpu, doallcpus = 0, oc;
-
-  if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
-    doallcpus = 1;
-  if (!code_pressed(KEYCODE_LCONTROL) && !code_pressed(KEYCODE_RCONTROL))
-    increment *= 5;
-  if( increment )
-  {
-    overclock = timer_get_overclock(arg);
-    overclock += 0.01 * increment;
-    if (overclock < 0.01) overclock = 0.01;
-    if (overclock > 2.0) overclock = 2.0;
-    if( doallcpus )
-      for( cpu = 0; cpu < cpu_gettotalcpu(); cpu++ )
-        timer_set_overclock(cpu, overclock);
-    else
-      timer_set_overclock(arg, overclock);
-  }
-
-  oc = 100 * timer_get_overclock(arg) + 0.5;
-
-  if( doallcpus )
-    sprintf(buf,"%s %s %3d%%", ui_getstring (UI_allcpus), ui_getstring (UI_overclock), oc);
-  else
-    sprintf(buf,"%s %s%d %3d%%", ui_getstring (UI_overclock), ui_getstring (UI_cpu), arg, oc);
-  displayosd(bitmap,buf,oc/2,100/2);
-*/
-
-  if(!string_is_empty(current_options[OPT_BACKDROP].value))
-  {
-    if(strcmp(current_options[OPT_BACKDROP].value, "enabled") == 0)
-      options.use_artwork = ARTWORK_USE_BACKDROPS;
-    else
-      options.use_artwork = ARTWORK_USE_NONE;
-  }
-
-  /** BEGIN BIOS OPTIONS **/
-
-  options.bios        = NULL;
-  options.neogeo_bios = NULL;
-  options.stv_bios    = NULL;
-
-  if(!string_is_empty(current_options[OPT_NEOGEO_BIOS].value))
-  {
-    if(strcmp(current_options[OPT_NEOGEO_BIOS].value, "default") != 0) /* leave as null if set to default */
-      options.neogeo_bios = strdup(current_options[OPT_STV_BIOS].value);
-  }
-  
-  if(!string_is_empty(current_options[OPT_STV_BIOS].value))
-  {
-    if(strcmp(current_options[OPT_STV_BIOS].value, "default") != 0) /* do nothing if set to default */
-    {
-      options.stv_bios = strdup(current_options[OPT_STV_BIOS].value);
-    }
-  }
-
-  /** END BIOS OPTIONS **/
-
-  if(!string_is_empty(current_options[OPT_USE_SAMPLES].value))
-  {
-    if(strcmp(current_options[OPT_USE_SAMPLES].value, "enabled") == 0)
-      options.use_samples = true;
-    else
-      options.use_samples = false;
-  }
-  
-  if(!string_is_empty(current_options[OPT_SHARE_DIAL].value))
-  {
-    if(strcmp(current_options[OPT_SHARE_DIAL].value, "enabled") == 0)
-      options.dial_share_xy = 1;
-    else
-      options.dial_share_xy = 0;
-  }
-
-  if(!string_is_empty(current_options[OPT_DUAL_JOY].value))
-  {
-    if(strcmp(current_options[OPT_DUAL_JOY].value, "enabled") == 0)
-      options.dual_joysticks = true;
-    else
-      options.dual_joysticks = false;
-  }
-
-  if(first_time)
-  {
-    old_dual_joystick_state = options.dual_joysticks;
-  }
-  else if(old_dual_joystick_state != options.dual_joysticks)
-  {
-    char cfg_file_path[PATH_MAX_LENGTH];
-    char buffer[PATH_MAX_LENGTH];
-    osd_get_path(FILETYPE_CONFIG, buffer);
-    snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", buffer, path_default_slash(), options.romset_filename_noext);
-    buffer[0] = '\0';
-    
-    if(path_is_valid(cfg_file_path))
-    {
+      if(index == OPT_CROSSHAIR_ENABLED)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.crosshair_enable = 1;
+        else
+          options.crosshair_enable = 0;
+      }
       
-      if(!remove(cfg_file_path) == 0)
+      if(index == OPT_SKIP_DISCLAIMER)
       {
-        snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+        if(strcmp(var.value, "enabled") == 0)
+          options.skip_disclaimer = true;
+        else
+          options.skip_disclaimer = false;
       }
+
+      if(index == OPT_SKIP_WARNINGS)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.skip_warnings = true;
+        else
+          options.skip_warnings = false;
+      }
+      
+      if(index == OPT_DISPLAY_SETUP)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.display_setup = 1;
+        else
+          options.display_setup = 0;
+      }
+
+      if(index == OPT_BRIGHTNESS)
+      {
+        options.brightness = atof(var.value);
+        if(!first_time)
+          palette_set_global_brightness(options.brightness);    
+      }
+
+      if(index == OPT_GAMMA)
+      {
+        options.gamma = atof(var.value);
+        if(!first_time)
+          palette_set_global_gamma(options.gamma);
+      }
+
+      /* TODO: Add overclock option. Below is the code from the old MAME osd to help process the core option.*/
+      /*
+
+      double overclock;
+      int cpu, doallcpus = 0, oc;
+
+      if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
+        doallcpus = 1;
+      if (!code_pressed(KEYCODE_LCONTROL) && !code_pressed(KEYCODE_RCONTROL))
+        increment *= 5;
+      if( increment )
+      {
+        overclock = timer_get_overclock(arg);
+        overclock += 0.01 * increment;
+        if (overclock < 0.01) overclock = 0.01;
+        if (overclock > 2.0) overclock = 2.0;
+        if( doallcpus )
+          for( cpu = 0; cpu < cpu_gettotalcpu(); cpu++ )
+            timer_set_overclock(cpu, overclock);
+        else
+          timer_set_overclock(arg, overclock);
+      }
+
+      oc = 100 * timer_get_overclock(arg) + 0.5;
+
+      if( doallcpus )
+        sprintf(buf,"%s %s %3d%%", ui_getstring (UI_allcpus), ui_getstring (UI_overclock), oc);
       else
+        sprintf(buf,"%s %s%d %3d%%", ui_getstring (UI_overclock), ui_getstring (UI_cpu), arg, oc);
+      displayosd(bitmap,buf,oc/2,100/2);
+    */
+
+      if(index == OPT_BACKDROP)
       {
-        snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+        if(strcmp(var.value, "enabled") == 0)
+          options.use_artwork = ARTWORK_USE_BACKDROPS;
+        else
+          options.use_artwork = ARTWORK_USE_NONE;
       }
+
+      /** BEGIN BIOS OPTIONS **/
+
+      options.bios        = NULL;
+      options.neogeo_bios = NULL;
+      options.stv_bios    = NULL;
+
+      if(index == OPT_NEOGEO_BIOS && strcmp(var.value, "default") != 0) /* do nothing if set to default */
+        options.neogeo_bios = strdup(var.value);
+      
+      if(index == OPT_STV_BIOS && strcmp(var.value, "default") != 0) /* do nothing if set to default */
+        options.stv_bios = strdup(var.value);
+
+      /** END BIOS OPTIONS **/
+
+      if(index == OPT_USE_SAMPLES)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.use_samples = true;
+        else
+          options.use_samples = false;
+      }
+      
+      if(index == OPT_SHARE_DIAL)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.dial_share_xy = 1;
+        else
+          options.dial_share_xy = 0;
+      }
+
+      if(index == OPT_DUAL_JOY)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.dual_joysticks = true;
+        else
+          options.dual_joysticks = false;
+      }
+
+      if(first_time)
+      {
+        old_dual_joystick_state = options.dual_joysticks;
+      }
+      else if(old_dual_joystick_state != options.dual_joysticks)
+      {
+        char cfg_file_path[PATH_MAX_LENGTH];
+        char buffer[PATH_MAX_LENGTH];
+        osd_get_path(FILETYPE_CONFIG, buffer);
+        snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", buffer, path_default_slash(), options.romset_filename_noext);
+        buffer[0] = '\0';
+        
+        if(path_is_valid(cfg_file_path))
+        {
+          
+          if(!remove(cfg_file_path) == 0)
+          {
+            snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+          }
+          else
+          {
+            snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+          }
+        }
+        log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
+        usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
+        
+        load_input_port_settings();
+        old_dual_joystick_state = options.dual_joysticks;  
+      }
+      
+      if(index == OPT_RSTICK_BTNS)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.rstick_to_btns = 1;
+        else
+          options.rstick_to_btns = 0;
+      }
+
+      if(index == OPT_TATE_MODE)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.tate_mode = 1;
+        else
+          options.tate_mode = 0;
+      }
+
+      if(index == OPT_VECTOR_RESOLUTION)
+        options.vector_resolution_multiplier = atoi(var.value);
+
+      if(index == OPT_VECTOR_ANTIALIAS)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.antialias = 1; /* integer: 1 to enable antialiasing on vectors _ does not work as of 2018/04/17*/
+        else
+          options.antialias = 0;
+      }
+
+      if(index == OPT_VECTOR_TRANSLUCENCY)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.translucency = 1; /* integer: 1 to enable translucency on vectors */
+        else
+          options.translucency = 0;
+      }
+
+      if(index == OPT_VECTOR_BEAM)
+        options.beam = atoi(var.value); /* integer: vector beam width */
+
+      if(index == OPT_VECTOR_FLICKER)
+        options.vector_flicker = (int)(2.55 * atof(var.value)); /* why 2.55? must be an old mame family recipe */
+
+      if(index == OPT_VECTOR_INTENSITY)
+        options.vector_intensity_correction = atof(var.value); /* float: vector beam intensity */
+
+      if(index == OPT_NVRAM_BOOTSTRAP)
+      {
+        if(strcmp(var.value, "enabled") == 1)
+          options.nvram_bootstrap = true;
+        else
+          options.nvram_bootstrap = false;
+      }
+
+      if(index == OPT_SAMPLE_RATE)
+        options.samplerate = atoi(var.value);
+
+      if(index == OPT_DCS_SPEEDHACK)
+      {
+        if(strcmp(var.value, "enabled") == 0)
+          options.activate_dcs_speedhack = 1;
+        else
+          options.activate_dcs_speedhack = 0;
+      }      
     }
-    log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
-    usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
-    
-    load_input_port_settings();
-    old_dual_joystick_state = options.dual_joysticks;  
   }
   
-  if(!string_is_empty(current_options[OPT_RSTICK_BTNS].value))
-  {
-    if(strcmp(current_options[OPT_RSTICK_BTNS].value, "enabled") == 0)
-      options.rstick_to_btns = 1;
-    else
-      options.rstick_to_btns = 0;
-  }
-
-  if(!string_is_empty(current_options[OPT_TATE_MODE].value))
-  {
-    if(strcmp(current_options[OPT_TATE_MODE].value, "enabled") == 0)
-      options.tate_mode = 1;
-    else
-      options.tate_mode = 0;
-  }
-
-  if(!string_is_empty(current_options[OPT_VECTOR_RESOLUTION].value))
-  {
-    options.vector_resolution_multiplier = atoi(current_options[OPT_VECTOR_RESOLUTION].value);
-  }
-
-  if(!string_is_empty(current_options[OPT_VECTOR_ANTIALIAS].value))
-  {
-    if(strcmp(current_options[OPT_VECTOR_ANTIALIAS].value, "enabled") == 0)
-      options.antialias = 1; /* integer: 1 to enable antialiasing on vectors _ does not work as of 2018/04/17*/
-    else
-      options.antialias = 0;
-  }
-
-  if(!string_is_empty(current_options[OPT_VECTOR_TRANSLUCENCY].value))
-  {
-    if(strcmp(current_options[OPT_VECTOR_TRANSLUCENCY].value, "enabled") == 0)
-      options.translucency = 1; /* integer: 1 to enable translucency on vectors */
-    else
-      options.translucency = 0;
-  }
-
-  if(!string_is_empty(current_options[OPT_VECTOR_BEAM].value))
-  {
-    options.beam = atoi(current_options[OPT_VECTOR_BEAM].value); /* integer: vector beam width */
-  }
-
-  if(!string_is_empty(current_options[OPT_VECTOR_FLICKER].value))
-  {
-    options.vector_flicker = (int)(2.55 * atof(current_options[OPT_VECTOR_FLICKER].value)); /* why 2.55? must be an old mame family recipe */
-  }
-
-  if(!string_is_empty(current_options[OPT_VECTOR_INTENSITY].value))
-  {
-    options.vector_intensity_correction = atof(current_options[OPT_VECTOR_INTENSITY].value); /* float: vector beam intensity */
-  }
-
-  if(!string_is_empty(current_options[OPT_NVRAM_BOOTSTRAP].value))
-  {
-    if(strcmp(current_options[OPT_NVRAM_BOOTSTRAP].value, "enabled") == 1)
-      options.nvram_bootstrap = true;
-    else
-      options.nvram_bootstrap = false;
-  }
-
-  if(!string_is_empty(current_options[OPT_SAMPLE_RATE].value))
-  {
-    options.samplerate = atoi(current_options[OPT_SAMPLE_RATE].value);
-  }
-
-  if(!string_is_empty(current_options[OPT_DCS_SPEEDHACK].value))
-  {
-    if(strcmp(current_options[OPT_DCS_SPEEDHACK].value, "enabled") == 0)
-      options.activate_dcs_speedhack = 1;
-    else
-      options.activate_dcs_speedhack = 0;
-  }
-
   ledintf.set_led_state = NULL;
   environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
   led_state_cb = ledintf.set_led_state;
