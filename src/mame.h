@@ -218,9 +218,7 @@ struct GameOptions
   int      crc_only;             /* specify if only CRC should be used as checksum */
   bool     nvram_bootstrap;
   
-  char     *bios;			           /* specify system bios (if used), 0 is default */
-  char     *neogeo_bios;         /* allows user to set core options for their preferred neo geo bios at the game or core level */
-  char     *stv_bios;            /* allows user to set core options for their preferred neo geo bios at the game or core level */
+  const char *bios;			         /* specify system bios (if used), 0 is default */
 
   int		   debug_width;	         /* requested width of debugger bitmap */
   int		   debug_height;	       /* requested height of debugger bitmap */

@@ -851,6 +851,7 @@ int determine_bios_rom(const struct SystemBios *bios)
 
 	/* set to default */
 	int bios_no = 0;
+  log_cb(RETRO_LOG_ERROR, "\n\noptions.bios: %s\n\n", options.bios);
 
 	/* Not system_bios_0 and options.bios is set  */
 	if(bios && (options.bios != NULL))

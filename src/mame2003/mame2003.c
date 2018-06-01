@@ -194,7 +194,7 @@ static void update_variables(bool first_time)
   struct retro_variable var;
   int index;
 
-  for(index = 0; index < OPT_end + 1; index++)
+  for(index = 0; index < OPT_end; index++)
   {
     var.value = NULL;
     var.key = default_options[index].key;
@@ -325,19 +325,11 @@ static void update_variables(bool first_time)
           options.use_artwork = ARTWORK_USE_NONE;
       }
 
-      /** BEGIN BIOS OPTIONS **/
-
-      options.bios        = NULL;
-      options.neogeo_bios = NULL;
-      options.stv_bios    = NULL;
-
-      if(index == OPT_NEOGEO_BIOS && strcmp(var.value, "default") != 0) /* do nothing if set to default */
-        options.neogeo_bios = strdup(var.value);
-      
-      if(index == OPT_STV_BIOS && strcmp(var.value, "default") != 0) /* do nothing if set to default */
-        options.stv_bios = strdup(var.value);
-
-      /** END BIOS OPTIONS **/
+      if(index == OPT_NEOGEO_BIOS || index == OPT_STV_BIOS)
+      {
+        if(strcmp(var.value, "default") != 0) /* do nothing if set to default */
+          options.bios = var.value;
+      }
 
       if(index == OPT_USE_SAMPLES)
       {
@@ -616,11 +608,6 @@ bool retro_load_game(const struct retro_game_info *game)
   init_core_options();
   update_variables(true);
 
-  if(is_neogeo)
-    options.bios = options.neogeo_bios;
-  else if(is_stv)
-    options.bios = options.stv_bios;
-
   if(!init_game(driverIndex))
     return false;
   
@@ -756,10 +743,7 @@ void retro_unload_game(void)
     mame_done();
     /* do we need to be freeing things here? */
     
-    free(options.romset_filename_noext);
-    if(options.bios)        free(options.bios);
-    if(options.neogeo_bios) free(options.neogeo_bios);
-    if(options.stv_bios)    free(options.stv_bios);   
+    free(options.romset_filename_noext); 
 }
 
 void retro_deinit(void)
