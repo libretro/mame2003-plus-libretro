@@ -1175,13 +1175,13 @@ int get_mame_ctrl_id(int display_index, int retro_ID)
   {"RetroPad"   #DISPLAY_IDX " Select",      ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_SELECT, JOYCODE_##DISPLAY_IDX##_SELECT}
 
 #define EMIT_RETRO_PAD_10BUTTON(DISPLAY_IDX) \
-  {"RetroPad"   #DISPLAY_IDX " B",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
-  {"RetroPad"   #DISPLAY_IDX " Y",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_Y,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
-  {"RetroPad"   #DISPLAY_IDX " X",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_X,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
-  {"RetroPad"   #DISPLAY_IDX " A",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_A,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
-  {"RetroPad"   #DISPLAY_IDX " L",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L,      JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
-  {"RetroPad"   #DISPLAY_IDX " R",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R,      JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
-  {"RetroPad"   #DISPLAY_IDX " L2",          ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L2,     JOYCODE_##DISPLAY_IDX##_BUTTON7}, \
+  {"RetroPad"   #DISPLAY_IDX " B",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_B,      JOYCODE_##DISPLAY_IDX##_BUTTON4}, \
+  {"RetroPad"   #DISPLAY_IDX " Y",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_Y,      JOYCODE_##DISPLAY_IDX##_BUTTON1}, \
+  {"RetroPad"   #DISPLAY_IDX " X",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_X,      JOYCODE_##DISPLAY_IDX##_BUTTON2}, \
+  {"RetroPad"   #DISPLAY_IDX " A",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_A,      JOYCODE_##DISPLAY_IDX##_BUTTON5}, \
+  {"RetroPad"   #DISPLAY_IDX " L",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L,      JOYCODE_##DISPLAY_IDX##_BUTTON3}, \
+  {"RetroPad"   #DISPLAY_IDX " R",           ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R,      JOYCODE_##DISPLAY_IDX##_BUTTON7}, \
+  {"RetroPad"   #DISPLAY_IDX " L2",          ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L2,     JOYCODE_##DISPLAY_IDX##_BUTTON6}, \
   {"RetroPad"   #DISPLAY_IDX " R2",          ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R2,     JOYCODE_##DISPLAY_IDX##_BUTTON8}, \
   {"RetroPad"   #DISPLAY_IDX " L3",          ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_L3,     JOYCODE_##DISPLAY_IDX##_BUTTON9}, \
   {"RetroPad"   #DISPLAY_IDX " R3",          ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_R3,     JOYCODE_##DISPLAY_IDX##_BUTTON10}, \
