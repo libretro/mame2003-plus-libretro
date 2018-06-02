@@ -68,7 +68,7 @@ static void update_variables(bool first_time);
 static void set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_default(int option_index);
 static void check_system_specs(void);
-void        retro_describe_buttons(void);
+void        retro_describe_controls(void);
 
 /******************************************************************************
 
@@ -118,6 +118,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SKIP_DISCLAIMER],     APPNAME"_skip_disclaimer",     "Skip Disclaimer; disabled|enabled");
   init_default(&default_options[OPT_SKIP_WARNINGS],       APPNAME"_skip_warnings",       "Skip Warnings; disabled|enabled");    
   init_default(&default_options[OPT_DISPLAY_SETUP],       APPNAME"_display_setup",       "Display MAME menu; disabled|enabled");
+  init_default(&default_options[OPT_ALL_CTRLS],           APPNAME"_all_ctrls",           "Display Unused Controls; enabled|disabled");
   init_default(&default_options[OPT_BRIGHTNESS],          APPNAME"_brightness",
                                                                                         "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
   init_default(&default_options[OPT_GAMMA],               APPNAME"_gamma",
@@ -128,7 +129,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart); default|japan|japana|us|japan_b|taiwan|europe");  
   init_default(&default_options[OPT_USE_SAMPLES],         APPNAME"_use_samples",         "Use audio samples; enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
-  init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual Joystick Mode (Players 1 & 2); disabled|enabled");
+  init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual Joystick Mode (!NETPLAY); disabled|enabled");
   init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Right Stick to Buttons; enabled|disabled");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier", 
@@ -211,7 +212,7 @@ static void update_variables(bool first_time)
 
         case OPT_INPUT_INTERFACE:
           if(strcmp(var.value, "retropad") == 0)
-            options.input_interface = RETRO_DEVICE_ANALOG;
+            options.input_interface = RETRO_DEVICE_JOYPAD;
           else if(strcmp(var.value, "mame_keyboard") == 0)
             options.input_interface = RETRO_DEVICE_KEYBOARD;
           else
@@ -228,8 +229,8 @@ static void update_variables(bool first_time)
           else
             options.retropad_layout = RETROPAD_MAME;
           if(!first_time)
-            retro_describe_buttons(); /* the first time, MAME's init_game() needs to be called before this so there is also    */
-                                      /* retro_describe_buttons() in retro_load_game() to take care of the initial description */
+            retro_describe_controls(); /* the first time, MAME's init_game() needs to be called before this so there is also    */
+                                      /* retro_describe_controls() in retro_load_game() to take care of the initial description */
           break;
 
         case OPT_MOUSE_DEVICE:
@@ -267,6 +268,13 @@ static void update_variables(bool first_time)
             options.display_setup = 1;
           else
             options.display_setup = 0;
+          break;
+
+        case OPT_ALL_CTRLS:
+          if(strcmp(var.value, "enabled") == 0)
+            options.all_ctrls = true;
+          else
+            options.all_ctrls = false;
           break;
 
         case OPT_BRIGHTNESS:
@@ -601,7 +609,7 @@ bool retro_load_game(const struct retro_game_info *game)
   if(!init_game(driverIndex))
     return false;
   
-  retro_describe_buttons(); /* needs to be called after init_game() in order to use MAME button label strings */
+  retro_describe_controls(); /* needs to be called after init_game() in order to use MAME button label strings */
 
   if(!run_game(driverIndex))
     return false;
@@ -659,10 +667,10 @@ void retro_run (void)
       unsigned int offset = (i * 18);
 
       /* Analog joystick */
-      analogjoy[i][0] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X);
-      analogjoy[i][1] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y);
-      analogjoy[i][2] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
-      analogjoy[i][3] = input_cb(i, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
+      analogjoy[i][0] = input_cb(i, RETRO_DEVICE_JOYPAD, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X);
+      analogjoy[i][1] = input_cb(i, RETRO_DEVICE_JOYPAD, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y);
+      analogjoy[i][2] = input_cb(i, RETRO_DEVICE_JOYPAD, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_X);
+      analogjoy[i][3] = input_cb(i, RETRO_DEVICE_JOYPAD, RETRO_DEVICE_INDEX_ANALOG_RIGHT, RETRO_DEVICE_ID_ANALOG_Y);
       
       /* Joystick */
       if (options.rstick_to_btns)
@@ -1094,23 +1102,62 @@ int get_mame_ctrl_id(int display_index, int retro_ID)
   return 0;
 }
 
-#define describe_buttons(DISPLAY_IDX) \
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_LEFT))   },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_RIGHT))  },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_UP))     },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,   game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_DOWN))   },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_B))      },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_Y))      },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_X))      },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_A))      },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_L))      },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,      game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_R))      },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_L2))     },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_R2))     },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_L3))     },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_R3))     },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_SELECT)) },\
-{ (DISPLAY_IDX - 1), RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,  game_driver->ctrl_dat->get_name(get_mame_ctrl_id((DISPLAY_IDX - 1), RETRO_DEVICE_ID_JOYPAD_START))  },
+#define control_name(DISPLAY_IDX, RETRO_TYPE)
+
+enum { /* "display" numbers for the players */
+  DISP_PLAYER1 = 1,
+  DISP_PLAYER2,
+  DISP_PLAYER3,
+  DISP_PLAYER4,
+  DISP_PLAYER5,
+  DISP_PLAYER6,
+};
+
+void retro_describe_controls(void)
+{
+  const int NUMBER_OF_RETRO_TYPES = RETRO_DEVICE_ID_JOYPAD_R3 + 1;
+
+  int       retro_type     = 0;
+  int       display_idx    = 0;
+
+  struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
+  struct retro_input_descriptor *needle = &desc[0];
+  
+  for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
+  {
+    for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < NUMBER_OF_RETRO_TYPES; retro_type++)
+    {
+      const char *control_name = game_driver->ctrl_dat->get_name(get_mame_ctrl_id((display_idx - 1), retro_type));
+      if(string_is_empty(control_name))
+      {
+        	switch(retro_type) /* a couple of universals */
+          {
+            case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
+            case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
+          }
+      }
+      if(string_is_empty(control_name) && !options.all_ctrls)
+        continue;
+
+      needle->port = display_idx - 1;
+      needle->device = RETRO_DEVICE_JOYPAD;
+      needle->index = 0;
+      needle->id = retro_type;
+      needle->description = control_name;
+      log_cb(RETRO_LOG_INFO, LOGPRE"Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
+      needle++;
+    }
+  }
+
+  /* the extra final record remains zeroed to indicate the end of the description to the frontend */ 
+  needle->port = 0;
+  needle->device = 0;
+  needle->index = 0;
+  needle->id = 0;
+  needle->description = NULL;
+  
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+}
 
 #define EMIT_RETRO_PAD_DIRECTIONS(DISPLAY_IDX) \
   {"RetroPad"   #DISPLAY_IDX " Left",        ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
@@ -1237,20 +1284,6 @@ int16_t mouse_x[4];
 int16_t mouse_y[4];
 int16_t analogjoy[4][4];
 
-
-void retro_describe_buttons(void)
-{  
-  struct retro_input_descriptor desc[] = {
-    describe_buttons(1) /* Player 1 */
-    describe_buttons(2) /* Player 2 */
-    describe_buttons(3)
-    describe_buttons(4)
-    describe_buttons(5)
-    describe_buttons(6)
-    { 0, 0, 0, 0, NULL }
-  };
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
-}
 
 const struct JoystickInfo *osd_get_joy_list(void)
 {

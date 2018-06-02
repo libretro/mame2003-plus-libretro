@@ -187,7 +187,8 @@ struct GameOptions
   int 	   skip_gameinfo;		     /* 1 to skip the game info screen at startup */
   bool 	   skip_disclaimer;	     /* 1 to skip the disclaimer screen at startup */
   bool     skip_warnings;        /* 1 to skip the game warning screen at startup */
-  int      display_setup;        /* 1 to display the MAME setup menu until reset to 0 */
+  bool     display_setup;        /* the MAME setup menu */
+  bool     all_ctrls;            /* show unused controls in the frontend remapper */
 
   unsigned dial_share_xy;
   unsigned mouse_device;
