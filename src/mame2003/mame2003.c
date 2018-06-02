@@ -109,7 +109,7 @@ static void init_core_options(void)
 {
   init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");
-  init_default(&default_options[OPT_RETROPAD_LAYOUT],     APPNAME"_retropad_layout",     "RetroPad Layout; 10-Button Arcade|modern|SNES|MAME classic");
+  init_default(&default_options[OPT_RETROPAD_LAYOUT],     APPNAME"_retropad_layout",     "RetroPad Layout; Gamepad|Arcade|SNES|Classic Gamepad");
 #if defined(__IOS__)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
 #else
@@ -220,14 +220,14 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_RETROPAD_LAYOUT:
-          if(strcmp(var.value, "modern") == 0)
+          if(strcmp(var.value, "Gamepad") == 0)
             options.retropad_layout = RETROPAD_MODERN;
           else if(strcmp(var.value, "SNES") == 0)
             options.retropad_layout = RETROPAD_SNES;
-          else if(strcmp(var.value, "10-Button Arcade") == 0)
+          else if(strcmp(var.value, "Arcade") == 0)
             options.retropad_layout = RETROPAD_10BUTTON;
           else
-            options.retropad_layout = RETROPAD_MAME;
+            options.retropad_layout = RETROPAD_CLASSIC;
           if(!first_time)
             retro_describe_controls(); /* the first time, MAME's init_game() needs to be called before this so there is also    */
                                       /* retro_describe_controls() in retro_load_game() to take care of the initial description */
@@ -990,7 +990,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *     [v]                               [4/LK]      |
    *                                                   |
    *
-   * options.retropad_layout == RETROPAD_MAME
+   * options.retropad_layout == RETROPAD_CLASSIC
    * ========================
    * Uses current MAME's default Xbox 360 controller layout.
    * Not sensible for 6 button fighters, but may suit other games.
