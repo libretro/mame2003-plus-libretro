@@ -69,6 +69,7 @@ static void set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_default(int option_index);
 static void check_system_specs(void);
 void        retro_describe_controls(void);
+void        init_retropad_names(void);
 
 /******************************************************************************
 
@@ -118,7 +119,6 @@ static void init_core_options(void)
   init_default(&default_options[OPT_SKIP_DISCLAIMER],     APPNAME"_skip_disclaimer",     "Skip Disclaimer; disabled|enabled");
   init_default(&default_options[OPT_SKIP_WARNINGS],       APPNAME"_skip_warnings",       "Skip Warnings; disabled|enabled");    
   init_default(&default_options[OPT_DISPLAY_SETUP],       APPNAME"_display_setup",       "Display MAME menu; disabled|enabled");
-  init_default(&default_options[OPT_ALL_CTRLS],           APPNAME"_all_ctrls",           "Display Unused Controls; enabled|disabled");
   init_default(&default_options[OPT_BRIGHTNESS],          APPNAME"_brightness",
                                                                                         "Brightness; 1.0|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.1|1.2|1.3|1.4|1.5|1.6|1.7|1.8|1.9|2.0");
   init_default(&default_options[OPT_GAMMA],               APPNAME"_gamma",
@@ -268,13 +268,6 @@ static void update_variables(bool first_time)
             options.display_setup = 1;
           else
             options.display_setup = 0;
-          break;
-
-        case OPT_ALL_CTRLS:
-          if(strcmp(var.value, "enabled") == 0)
-            options.all_ctrls = true;
-          else
-            options.all_ctrls = false;
           break;
 
         case OPT_BRIGHTNESS:
@@ -604,6 +597,8 @@ bool retro_load_game(const struct retro_game_info *game)
   options.ui_orientation = uiModes[rotateMode];
 
   init_core_options();
+  init_retropad_names();
+
   update_variables(true);
 
   if(!init_game(driverIndex))
@@ -1136,7 +1131,7 @@ void retro_describe_controls(void)
             case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
           }
       }
-      if(string_is_empty(control_name) && !options.all_ctrls)
+      if(string_is_empty(control_name))
         continue;
 
       needle->port = display_idx - 1;
@@ -1157,6 +1152,54 @@ void retro_describe_controls(void)
   needle->description = NULL;
   
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+}
+
+#define DIRECTIONAL_COUNT           8  /* map Left, Right Up, Down as well as B, Y, A, X */
+#define DIRECTIONAL_COUNT_NO_DBL    4
+#define BUTTON_COUNT_PER           12 /* 10 MAME buttons plus Start and Select          */
+#define MOUSE_BUTTON_PER            2
+#define SIX_PLAYER_COUNT            6
+
+#define PER_PLAYER_CTRL_COUNT_NO_DBL (DIRECTIONAL_COUNT_NO_DBL + BUTTON_COUNT_PER)
+
+#define POPULATE_RETRO_CTRL_NAMES(DISPLAY_IDX) \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_LEFT]   = "RetroPad"   #DISPLAY_IDX " Left";   \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_RIGHT]  = "RetroPad"   #DISPLAY_IDX " Right";  \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_UP]     = "RetroPad"   #DISPLAY_IDX " Up";     \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_DOWN]   = "RetroPad"   #DISPLAY_IDX " Down";   \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_B]      = "RetroPad"   #DISPLAY_IDX " B";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_Y]      = "RetroPad"   #DISPLAY_IDX " Y";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_X]      = "RetroPad"   #DISPLAY_IDX " X";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_A]      = "RetroPad"   #DISPLAY_IDX " A";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_B]      = "RetroPad"   #DISPLAY_IDX " B";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_Y]      = "RetroPad"   #DISPLAY_IDX " Y";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_X]      = "RetroPad"   #DISPLAY_IDX " X";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_A]      = "RetroPad"   #DISPLAY_IDX " A";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_L]      = "RetroPad"   #DISPLAY_IDX " L";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_R]      = "RetroPad"   #DISPLAY_IDX " R";      \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_L2]     = "RetroPad"   #DISPLAY_IDX " L2";     \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_R2]     = "RetroPad"   #DISPLAY_IDX " R2";     \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_L3]     = "RetroPad"   #DISPLAY_IDX " L3";     \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_R3]     = "RetroPad"   #DISPLAY_IDX " R3";     \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_START]  = "RetroPad"   #DISPLAY_IDX " Start";  \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_JOYPAD_SELECT] = "RetroPad"   #DISPLAY_IDX " Select"; \
+  
+#define POPULATE_RETRO_MOUSE_NAMES(DISPLAY_IDX) \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_MOUSE_LEFT]    = "RetroMouse" #DISPLAY_IDX " Left Click";  \
+    retropad_ctrl_names[DISPLAY_IDX - 1][RETRO_DEVICE_ID_MOUSE_RIGHT]   = "RetroMouse" #DISPLAY_IDX " Right Click"; \
+
+
+const char *retropad_ctrl_names[SIX_PLAYER_COUNT][PER_PLAYER_CTRL_COUNT_NO_DBL];
+const char   *retro_mouse_names[SIX_PLAYER_COUNT][RETRO_DEVICE_ID_MOUSE_BUTTON_5];
+
+void init_retropad_names(void)
+{
+  int player;
+  for(player = 1; player <= SIX_PLAYER_COUNT; player++)
+  {
+    POPULATE_RETRO_CTRL_NAMES(player)
+    POPULATE_RETRO_MOUSE_NAMES(player)
+  }
 }
 
 #define EMIT_RETRO_PAD_DIRECTIONS(DISPLAY_IDX) \
