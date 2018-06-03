@@ -17060,7 +17060,7 @@ const char *neogeo_get_ctrl_name(int type)
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return generic_ctrl_label(type);
+  return "";
 }
 
 
@@ -22560,38 +22560,6 @@ const char *sfa_get_ctrl_name(int type)
   return "";
 }
 
-const struct ControlInfo sf2ce_ctrl =
-{
-  2, /* num_players */
-  false, /* alternating_controls */
-  true, /* mirrored_controls */
-  false, /* has_tilt */
-  false, /* has_cocktail_dipswitch */
-  false, /* uses_service */
-  "This game is essentially a clone of sf2. Only one or two chips where changed and it has the same layout.", /* control__details */
-  &sf2ce_get_ctrl_name
-};
-
-const char *sf2ce_get_ctrl_name(int type)
-{
-  switch(type)
-  {
-/* P1NumButtons=6 */
-    case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "8-way Joystick+joy8way";
-    case IPT_BUTTON1: return "Light Punch";
-    case IPT_BUTTON2: return "Middle Punch";
-    case IPT_BUTTON3: return "Heavy Punch";
-    case IPT_BUTTON4: return "Light Kick";
-    case IPT_BUTTON5: return "Middle Kick";
-    case IPT_BUTTON6: return "Heavy Kick";
-    case IPT_JOYSTICK_UP: return "Jump";
-    case IPT_JOYSTICK_DOWN: return "Crouch";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
-  } /* end of switch */
-
-  return "";
-}
 
 const struct ControlInfo sf2_ctrl =
 {
@@ -22618,13 +22586,13 @@ const char *sf2_get_ctrl_name(int type)
     case IPT_BUTTON4: return BTN4 "Short Kick";
     case IPT_BUTTON5: return BTN5 "Forward Kick";
     case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
-    case IPT_JOYSTICK_UP: return "Jump";
-    case IPT_JOYSTICK_DOWN: return "Crouch";
-    case IPT_JOYSTICK_LEFT: return "Left";
+    case IPT_JOYSTICK_UP:    return "Jump";
+    case IPT_JOYSTICK_DOWN:  return "Crouch";
+    case IPT_JOYSTICK_LEFT:  return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return generic_ctrl_label(type);
+  return "";
 }
 
 const struct ControlInfo sfiii2_ctrl =
@@ -23553,7 +23521,7 @@ const char *stonebal_get_ctrl_name(int type)
     case IPT_BUTTON3: return BTN3 "Push";
   } /* end of switch */
 
-  return generic_ctrl_label(type);
+  return "";
 }
 
 

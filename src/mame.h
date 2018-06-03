@@ -161,6 +161,13 @@ struct RunningMachine
 #define ARTWORK_USE_OVERLAYS	0x02
 #define ARTWORK_USE_BEZELS		0x04
 
+enum /* used to index content-specific flags */
+{
+  CONTENT_NEOGEO = 0,
+  CONTENT_STV,
+  CONTENT_end,
+};
+
 /* The host platform should fill these fields with the preferences specified in the GUI */
 /* or on the commandline. */
 struct GameOptions
@@ -168,6 +175,8 @@ struct GameOptions
   mame_file *record;			       /* handle to file to record input to */
   mame_file *playback;		       /* handle to file to playback input from */
   mame_file *language_file;	     /* handle to file for localization */
+
+  bool content_flags[CONTENT_end];
 
   char   *romset_filename_noext;
   char   *libretro_content_path;
@@ -178,7 +187,8 @@ struct GameOptions
   int 	   skip_gameinfo;		     /* 1 to skip the game info screen at startup */
   bool 	   skip_disclaimer;	     /* 1 to skip the disclaimer screen at startup */
   bool     skip_warnings;        /* 1 to skip the game warning screen at startup */
-  int      display_setup;        /* 1 to display the MAME setup menu until reset to 0 */
+  bool     display_setup;        /* the MAME setup menu */
+  bool     all_ctrls;            /* show unused controls in the frontend remapper */
 
   unsigned dial_share_xy;
   unsigned mouse_device;
@@ -190,6 +200,7 @@ struct GameOptions
 
   int      crosshair_enable;
   unsigned activate_dcs_speedhack;
+  bool     mame_remapping;       /* display MAME input remapping menu */
 
   int		   samplerate;		       /* sound sample playback rate, in KHz */
   bool	   use_samples;	         /* 1 to enable external .wav samples */

@@ -91,7 +91,7 @@ struct retro_variable_default
 
 enum
 {
-  RETROPAD_MAME = 0,
+  RETROPAD_CLASSIC = 0,
   RETROPAD_MODERN,
   RETROPAD_SNES,
   RETROPAD_10BUTTON,
