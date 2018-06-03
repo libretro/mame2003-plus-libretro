@@ -192,9 +192,9 @@ struct GameOptions
 
   unsigned dial_share_xy;
   unsigned mouse_device;
-  unsigned input_interface;        /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
-  unsigned retropad_layout;        /* can be set to RETROPAD_MODERN, RETROPAD_SNES, or RETROPAD_MAME */
-  bool     dual_joysticks;         /* Player 1 uses Joystick 1 & 2, Player 2 uses Joystick 3 and 4 */
+  unsigned input_interface;                /* can be set to RETRO_DEVICE_JOYPAD, RETRO_DEVICE_KEYBOARD, or 0 (both simultaneously) */
+  unsigned retropad_layout[DISP_PLAYER6];  /* flags to indicate the default layout for each player */
+  bool     dual_joysticks;                 /* Player 1 uses Joystick 1 & 2, Player 2 uses Joystick 3 and 4 */
   unsigned rstick_to_btns;
   unsigned tate_mode;
 
