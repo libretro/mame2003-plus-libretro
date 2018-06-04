@@ -2889,7 +2889,7 @@ static void setup_menu_init(void)
 {
 	menu_total = 0;
 
-  if(1/*options.input_interface == RETRO_DEVICE_KEYBOARD*/)
+  if(options.mame_remapping)
   {
 	  menu_item[menu_total] = ui_getstring (UI_inputgeneral); menu_action[menu_total++] = UI_DEFCODE;
     menu_item[menu_total] = ui_getstring (UI_inputspecific); menu_action[menu_total++] = UI_CODE;
@@ -2933,7 +2933,7 @@ static void setup_menu_init(void)
 			in++;
 		}
 
-		if (num != 0)
+		if (options.mame_remapping && num != 0)
 		{
 			menu_item[menu_total] = ui_getstring (UI_analogcontrols); menu_action[menu_total++] = UI_ANALOG;
 		}

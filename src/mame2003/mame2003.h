@@ -84,6 +84,7 @@ enum
   OPT_NVRAM_BOOTSTRAP,
   OPT_SAMPLE_RATE,
   OPT_DCS_SPEEDHACK,
+  OPT_MAME_REMAPPING,
   OPT_end /* dummy last entry */
 };
 
