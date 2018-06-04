@@ -73,7 +73,6 @@ int uirotcharwidth, uirotcharheight;
 
 static int setup_selected;
 static int setup_via_menu = 0;
-static int retropad_menu_flag = 0;
 
 UINT8 ui_dirty;
 
@@ -2885,7 +2884,7 @@ static int menu_action[MAX_SETUPMENU_ITEMS];
 static int menu_total;
 
 
-static void setup_menu_init(void)
+void setup_menu_init(void)
 {
 	menu_total = 0;
 
@@ -2939,8 +2938,8 @@ static void setup_menu_init(void)
 		}
 	}
 
-	/* Joystick calibration possible? */
-	if ((osd_joystick_needs_calibration()) != 0)
+	/* Joystick calibration possible? - not implemented in the libretro port as of May 2018*/
+	if ((options.mame_remapping && osd_joystick_needs_calibration()) != 0)
 	{
 		menu_item[menu_total] = ui_getstring (UI_calibrate); menu_action[menu_total++] = UI_CALIBRATE;
 	}
@@ -2965,8 +2964,7 @@ static void setup_menu_init(void)
 #endif
   if(!options.display_setup) 
   {
-    menu_item[menu_total] = ui_getstring (UI_returntogame);
-    menu_action[menu_total++] = UI_EXIT;
+    menu_item[menu_total] = ui_getstring (UI_returntogame); menu_action[menu_total++] = UI_EXIT;
   }
 	menu_item[menu_total] = 0; /* terminate array */
 }
@@ -3168,16 +3166,6 @@ int handle_user_interface(struct mame_bitmap *bitmap)
   }   
   else if(setup_selected)
   {  
-    if (retropad_menu_flag == 0 && options.input_interface == RETRO_DEVICE_JOYPAD)
-    {
-        /*retropad_menu_flag = 1;*/
-        /*setup_menu_init();*/
-    }
-    else if (retropad_menu_flag == 1 && options.input_interface != RETRO_DEVICE_JOYPAD)
-    {
-      /*retropad_menu_flag = 0;*/
-      /*setup_menu_init();*/
-    }
     setup_selected = setup_menu(bitmap, setup_selected);
   }
 

@@ -19,6 +19,7 @@
 #include "inptport.h"
 #include "fileio.h"
 #include "controls.h"
+#include "usrintrf.h"
 
 
 static const struct GameDriver  *game_driver;
@@ -496,6 +497,8 @@ static void update_variables(bool first_time)
             options.mame_remapping = true;
           else
             options.mame_remapping = false;
+          if(!first_time)
+            setup_menu_init();
           break;
       }
     }
