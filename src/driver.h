@@ -94,19 +94,19 @@
 
 
 /* start/end tags for the machine driver */
-#define MACHINE_DRIVER_START(game)                                \
-  void construct_##game(struct InternalMachineDriver *machine)    \
-  {                                                               \
-   struct MachineCPU *cpu = NULL;									                \
-   (void)cpu;														                          \
+#define MACHINE_DRIVER_START(game) 										\
+	void construct_##game(struct InternalMachineDriver *machine)		\
+	{																	\
+		struct MachineCPU *cpu = NULL;									\
+		(void)cpu;														\
 
-#define MACHINE_DRIVER_END \
-  }                        \
+#define MACHINE_DRIVER_END 												\
+	}																	\
 
 
 /* importing data from other machine drivers */
-#define MDRV_IMPORT_FROM(game) \
-	construct_##game(machine);   \
+#define MDRV_IMPORT_FROM(game) 											\
+	construct_##game(machine); 											\
 
 
 /* add/modify/remove/replace CPUs */
@@ -287,7 +287,6 @@ void machine_remove_sound(struct InternalMachineDriver *machine, const char *tag
 
 struct InternalMachineDriver
 {
-  const char *name;
 	struct MachineCPU cpu[MAX_CPU];
 	float frames_per_second;
 	int vblank_duration;
