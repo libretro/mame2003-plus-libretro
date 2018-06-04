@@ -216,20 +216,6 @@ static config_file *config_init(const char *name, int save)
 	{
 		/* mame 0.74 with 8 coin counters */
 		{ "MAMECFG\x9",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 8 },
-
-#ifndef NOLEGACY
-		/* mame 0.36b16 with key/joy merge */
-		{ "MAMECFG\x8",	"MAMEDEF\x7",	input_port_read_ver_8, seq_read_ver_8, 4 },
-
-		/* mame 0.36b13 with and/or/not combination */
-		{ "MAMECFG\x7",	"MAMEDEF\x6",	input_port_read_ver_7, seq_read_ver_7, 4 },
-
-		/* mame 0.36b12 with multi key/joy extension */
-		{ "MAMECFG\x6",	"MAMEDEF\x5",	input_port_read_ver_6, seq_read_ver_6, 4 },
-
-		/* mame 0.36b11 */
-		{ "MAMECFG\x5",	"MAMEDEF\x4",	input_port_read_ver_5, seq_read_ver_5, 4 }
-#endif
 	};
 
 	config_file *cfg;
@@ -312,7 +298,10 @@ static unsigned int count_input_ports(const struct InputPort *in)
 
 config_file *config_open(const char *name)
 {
-	return config_init(name, 0);
+	if(options.mame_remapper)
+    return config_init(name, 0);
+
+  return NULL;
 }
 
 
@@ -323,7 +312,10 @@ config_file *config_open(const char *name)
 
 config_file *config_create(const char *name)
 {
-	return config_init(name, 1);
+	if(options.mame_remapper)
+    return config_init(name, 1);
+
+  return NULL;
 }
 
 

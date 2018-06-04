@@ -73,7 +73,7 @@ int uirotcharwidth, uirotcharheight;
 
 static int setup_selected;
 static int setup_via_menu = 0;
-static int retropad_menu_flag = 0;
+static int mame_remap_flag = false;
 
 UINT8 ui_dirty;
 
@@ -2889,12 +2889,6 @@ static void setup_menu_init(void)
 {
 	menu_total = 0;
 
-  if(1/*options.input_interface == RETRO_DEVICE_KEYBOARD*/)
-  {
-	  menu_item[menu_total] = ui_getstring (UI_inputgeneral); menu_action[menu_total++] = UI_DEFCODE;
-    menu_item[menu_total] = ui_getstring (UI_inputspecific); menu_action[menu_total++] = UI_CODE;
-  }
-
 	/* Determine if there are any dip switches */
 	{
 		struct InputPort *in;
@@ -2917,6 +2911,12 @@ static void setup_menu_init(void)
 		}
 	}
 
+  if(options.mame_remapper)
+  {
+	  menu_item[menu_total] = ui_getstring (UI_inputgeneral); menu_action[menu_total++] = UI_DEFCODE;
+    menu_item[menu_total] = ui_getstring (UI_inputspecific); menu_action[menu_total++] = UI_CODE;
+  }
+  
 	/* Determine if there are any analog controls */
 	{
 		struct InputPort *in;
@@ -2933,7 +2933,7 @@ static void setup_menu_init(void)
 			in++;
 		}
 
-		if (num != 0)
+		if (num != 0 && options.mame_remapper)
 		{
 			menu_item[menu_total] = ui_getstring (UI_analogcontrols); menu_action[menu_total++] = UI_ANALOG;
 		}
@@ -3168,15 +3168,17 @@ int handle_user_interface(struct mame_bitmap *bitmap)
   }   
   else if(setup_selected)
   {  
-    if (retropad_menu_flag == 0 && options.input_interface == RETRO_DEVICE_JOYPAD)
+    if (!mame_remap_flag && options.mame_remapper)
     {
-        /*retropad_menu_flag = 1;*/
-        /*setup_menu_init();*/
+      mame_remap_flag = true;
+      setup_menu_init();
+      schedule_full_refresh();
     }
-    else if (retropad_menu_flag == 1 && options.input_interface != RETRO_DEVICE_JOYPAD)
+    else if (mame_remap_flag && !options.mame_remapper)
     {
-      /*retropad_menu_flag = 0;*/
-      /*setup_menu_init();*/
+      mame_remap_flag = false;
+      setup_menu_init();
+      schedule_full_refresh();
     }
     setup_selected = setup_menu(bitmap, setup_selected);
   }
