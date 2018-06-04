@@ -1148,16 +1148,16 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
     {
       switch(retro_ID)
       {
-        case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON1);
-        case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON2);
-        case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON3);
-        case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON4);
-        case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON5);
-        case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON6);
-        case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON7);
-        case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
-        case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
-        case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
+	case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
+	case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
+	case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
+	case RETRO_DEVICE_ID_JOYPAD_A:  return (player_flag | IPT_BUTTON5);
+	case RETRO_DEVICE_ID_JOYPAD_L:  return (player_flag | IPT_BUTTON3);
+	case RETRO_DEVICE_ID_JOYPAD_R:  return (player_flag | IPT_BUTTON7);
+	case RETRO_DEVICE_ID_JOYPAD_L2: return (player_flag | IPT_BUTTON6);
+	case RETRO_DEVICE_ID_JOYPAD_R2: return (player_flag | IPT_BUTTON8);
+	case RETRO_DEVICE_ID_JOYPAD_L3: return (player_flag | IPT_BUTTON9);
+	case RETRO_DEVICE_ID_JOYPAD_R3: return (player_flag | IPT_BUTTON10);
       }
       return 0;
     }
