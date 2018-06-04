@@ -240,7 +240,22 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	int skipfirst = 0;
 
 	/* if the user doesn't want to use samples, bail */
-	if (!options.use_samples) return 0;
+	const char* ost[] = {	"outrun", "outruna", "outrunb", \
+				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
+				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
+				"ffight", "ffightu", "ffightj",  "ffightj1",0
+		 };    
+
+	i = 0;
+
+	if (!options.use_samples) 
+	{
+        	while(ost[i])
+		{
+			if( strcmp(ost[i]   ,  basename) ==0 ) return 0;
+ 			i++;
+		}
+	}
 
 	if (samplenames == 0 || samplenames[0] == 0) return 0;
 
