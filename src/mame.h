@@ -165,6 +165,7 @@ enum /* used to index content-specific flags */
 {
   CONTENT_NEOGEO = 0,
   CONTENT_STV,
+  CONTENT_ALTERNATE_SOUND,
   CONTENT_end,
 };
 
@@ -228,6 +229,7 @@ struct GameOptions
   char	   savegame;		         /* character representing a savegame to load */
   int      crc_only;             /* specify if only CRC should be used as checksum */
   bool     nvram_bootstrap;
+  bool     mame_remapper;
   
   const char *bios;			         /* specify system bios (if used), 0 is default */
 
