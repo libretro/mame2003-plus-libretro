@@ -696,6 +696,11 @@ static void set_content_flags(void)
 				"ffight", "ffightu", "ffightj",  "ffightj1", 0
 		 };    
 
+  if(true) /* TODO: test for lightgun games */
+  {
+    options.content_flags[CONTENT_LIGHTGUN] = true;
+  }
+
   if (Machine->gamedrv->clone_of == &driver_neogeo
    ||(Machine->gamedrv->clone_of && Machine->gamedrv->clone_of->clone_of == &driver_neogeo))
   {
@@ -729,10 +734,6 @@ static void set_content_flags(void)
   if(true) /* TODO: test for games which with dual joystick configurations */
   {
     options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
-  }
-  if(true) /* TODO: test for lightgun games */
-  {
-    options.content_flags[CONTENT_LIGHTGUN] = true;
   }
 }
 
