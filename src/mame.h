@@ -165,6 +165,12 @@ enum /* used to index content-specific flags */
 {
   CONTENT_NEOGEO = 0,
   CONTENT_STV,
+  CONTENT_DIEHARD,
+  CONTENT_ALT_SOUND,
+  CONTENT_VECTOR,
+  CONTENT_DIAL,
+  CONTENT_DUAL_JOYSTICK,
+  CONTENT_LIGHTGUN,
   CONTENT_end,
 };
 

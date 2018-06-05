@@ -44,7 +44,6 @@ extern int	mcd_number;
 extern int	memcard_status;
 extern int	memcard_number;
 extern int	memcard_manager;
-extern struct GameDriver driver_neogeo;
 
 extern int neogeo_memcard_load(int);
 extern void neogeo_memcard_save(void);
@@ -2950,9 +2949,7 @@ void setup_menu_init(void)
 
 	menu_item[menu_total] = ui_getstring (UI_cheat); menu_action[menu_total++] = UI_CHEAT;
 
-	if (Machine->gamedrv->clone_of == &driver_neogeo ||
-			(Machine->gamedrv->clone_of &&
-				Machine->gamedrv->clone_of->clone_of == &driver_neogeo))
+	if (options.content_flags[CONTENT_NEOGEO])
 	{
 		menu_item[menu_total] = ui_getstring (UI_memorycard); menu_action[menu_total++] = UI_MEMCARD;
 	}
