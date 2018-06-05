@@ -109,12 +109,12 @@ static void init_core_options(void)
 {
   init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");
-  init_default(&default_options[OPT_RETROPAD1_LAYOUT],    APPNAME"_retropad1_layout",    "RetroPad 1 Layout; Gamepad|Arcade|SNES|Classic Gamepad");
-  init_default(&default_options[OPT_RETROPAD2_LAYOUT],    APPNAME"_retropad2_layout",    "RetroPad 2 Layout; Gamepad|Arcade|SNES|Classic Gamepad");
-  init_default(&default_options[OPT_RETROPAD3_LAYOUT],    APPNAME"_retropad3_layout",    "RetroPad 3 Layout; Gamepad|Arcade|SNES|Classic Gamepad");
-  init_default(&default_options[OPT_RETROPAD4_LAYOUT],    APPNAME"_retropad4_layout",    "RetroPad 4 Layout; Gamepad|Arcade|SNES|Classic Gamepad");
-  init_default(&default_options[OPT_RETROPAD5_LAYOUT],    APPNAME"_retropad5_layout",    "RetroPad 5 Layout; Gamepad|Arcade|SNES|Classic Gamepad");
-  init_default(&default_options[OPT_RETROPAD6_LAYOUT],    APPNAME"_retropad6_layout",    "RetroPad 6 Layout; Gamepad|Arcade|SNES|Classic Gamepad");
+  init_default(&default_options[OPT_RETROPAD1_LAYOUT],    APPNAME"_retropad1_layout",    "RetroPad 1 Layout; Modern Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD2_LAYOUT],    APPNAME"_retropad2_layout",    "RetroPad 2 Layout; Modern Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD3_LAYOUT],    APPNAME"_retropad3_layout",    "RetroPad 3 Layout; Modern Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD4_LAYOUT],    APPNAME"_retropad4_layout",    "RetroPad 4 Layout; Modern Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD5_LAYOUT],    APPNAME"_retropad5_layout",    "RetroPad 5 Layout; Modern Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD6_LAYOUT],    APPNAME"_retropad6_layout",    "RetroPad 6 Layout; Modern Gamepad|8-Button|6-Button");
 #if defined(__IOS__)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
 #else
@@ -226,61 +226,61 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_RETROPAD1_LAYOUT:
-          if(strcmp(var.value, "Gamepad") == 0)
+          if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[0] = RETROPAD_GAMEPAD;
-          else if(strcmp(var.value, "Arcade") == 0)
+          else if(strcmp(var.value, "8-Button") == 0)
             options.retropad_layout[0] = RETROPAD_ARCADE;
-          else if(strcmp(var.value, "SNES") == 0)
+          else if(strcmp(var.value, "6-Button") == 0)
             options.retropad_layout[0] = RETROPAD_SNES;
           else
             options.retropad_layout[0] = RETROPAD_CLASSIC;
           break;
         case OPT_RETROPAD2_LAYOUT:
-          if(strcmp(var.value, "Gamepad") == 0)
+          if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[1] = RETROPAD_GAMEPAD;
-          else if(strcmp(var.value, "Arcade") == 0)
+          else if(strcmp(var.value, "8-Button") == 0)
             options.retropad_layout[1] = RETROPAD_ARCADE;
-          else if(strcmp(var.value, "SNES") == 0)
+          else if(strcmp(var.value, "6-Button") == 0)
             options.retropad_layout[1] = RETROPAD_SNES;
           else
             options.retropad_layout[1] = RETROPAD_CLASSIC;
           break;
         case OPT_RETROPAD3_LAYOUT:
-          if(strcmp(var.value, "Gamepad") == 0)
+          if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[2] = RETROPAD_GAMEPAD;
-          else if(strcmp(var.value, "Arcade") == 0)
+          else if(strcmp(var.value, "8-Button") == 0)
             options.retropad_layout[2] = RETROPAD_ARCADE;
-          else if(strcmp(var.value, "SNES") == 0)
+          else if(strcmp(var.value, "6-Button") == 0)
             options.retropad_layout[2] = RETROPAD_SNES;
           else
             options.retropad_layout[2] = RETROPAD_CLASSIC;
           break;
         case OPT_RETROPAD4_LAYOUT:
-          if(strcmp(var.value, "Gamepad") == 0)
+          if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[3] = RETROPAD_GAMEPAD;
-          else if(strcmp(var.value, "Arcade") == 0)
+          else if(strcmp(var.value, "8-Button") == 0)
             options.retropad_layout[3] = RETROPAD_ARCADE;
-          else if(strcmp(var.value, "SNES") == 0)
+          else if(strcmp(var.value, "6-Button") == 0)
             options.retropad_layout[3] = RETROPAD_SNES;
           else
             options.retropad_layout[3] = RETROPAD_CLASSIC;
           break;
         case OPT_RETROPAD5_LAYOUT:
-          if(strcmp(var.value, "Gamepad") == 0)
+          if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[4] = RETROPAD_GAMEPAD;
-          else if(strcmp(var.value, "Arcade") == 0)
+          else if(strcmp(var.value, "8-Button") == 0)
             options.retropad_layout[4] = RETROPAD_ARCADE;
-          else if(strcmp(var.value, "SNES") == 0)
+          else if(strcmp(var.value, "6-Button") == 0)
             options.retropad_layout[4] = RETROPAD_SNES;
           else
             options.retropad_layout[4] = RETROPAD_CLASSIC;
           break;
         case OPT_RETROPAD6_LAYOUT:
-          if(strcmp(var.value, "Gamepad") == 0)
+          if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[5] = RETROPAD_GAMEPAD;
-          else if(strcmp(var.value, "Arcade") == 0)
+          else if(strcmp(var.value, "8-Button") == 0)
             options.retropad_layout[5] = RETROPAD_ARCADE;
-          else if(strcmp(var.value, "SNES") == 0)
+          else if(strcmp(var.value, "6-Button") == 0)
             options.retropad_layout[5] = RETROPAD_SNES;
           else
             options.retropad_layout[5] = RETROPAD_CLASSIC;
