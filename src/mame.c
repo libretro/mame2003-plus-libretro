@@ -820,10 +820,6 @@ static void init_game_options(void)
   
   Machine->sample_rate = options.samplerate;
 
-  /* catch any custom bios options needed on a per-game basis. this is a hack. */
-  if(strcasecmp(Machine->gamedrv->name, "diehard") == 0) {
-      options.bios = strdup("us");
-  }
 }
 
 

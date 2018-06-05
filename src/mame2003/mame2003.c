@@ -63,6 +63,7 @@ bool old_dual_joystick_state = false; /* used to track when this core option cha
   private function prototypes
 
 ******************************************************************************/
+static void set_content_flags(void);
 static void init_core_options(void);
 void        init_default(struct retro_variable_default *option, const char *key, const char *value);
 static void update_variables(bool first_time);
@@ -132,7 +133,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_NEOGEO_BIOS],         APPNAME"_neogeo_bios", 
                                                                                         "Specify Neo Geo BIOS (Restart); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
   init_default(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart); default|japan|japana|us|japan_b|taiwan|europe");  
-  init_default(&default_options[OPT_USE_SAMPLES],         APPNAME"_use_samples",         "Use ost samples; enabled|disabled");
+  init_default(&default_options[OPT_USE_SAMPLES],         APPNAME"_use_samples",         "Use OST samples; enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual Joystick Mode (!NETPLAY); disabled|enabled");
   init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Right Stick to Buttons; enabled|disabled");
@@ -163,6 +164,10 @@ static void set_variables(bool first_time)
   {
     switch(option_index)
     {
+      case OPT_CROSSHAIR_ENABLED:
+         if(!options.content_flags[CONTENT_LIGHTGUN])
+           return;
+         break;
       case OPT_STV_BIOS:
          if(!options.content_flags[CONTENT_STV])
            continue; /* only offer BIOS selection when it is relevant */
@@ -171,9 +176,30 @@ static void set_variables(bool first_time)
           if(!options.content_flags[CONTENT_NEOGEO])
             continue; /* only offer BIOS selection when it is relevant */
           break;
+      case OPT_USE_SAMPLES:
+         if(!options.content_flags[CONTENT_ALT_SOUND])
+           return;
+         break;
+      case OPT_SHARE_DIAL:
+         if(!options.content_flags[CONTENT_DIAL])
+           return;
+         break;
+      case OPT_DUAL_JOY:
+         if(!options.content_flags[CONTENT_DUAL_JOYSTICK])
+           return;
+         break;
+      case OPT_VECTOR_RESOLUTION:
+      case OPT_VECTOR_ANTIALIAS:
+      case OPT_VECTOR_TRANSLUCENCY:
+      case OPT_VECTOR_BEAM:
+      case OPT_VECTOR_FLICKER:
+      case OPT_VECTOR_INTENSITY:
+         if(!options.content_flags[CONTENT_VECTOR])
+           return;
+         break;
     }
-      effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_default(option_index);
-      effective_options_count++;
+   effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_default(option_index);
+   effective_options_count++;
   }
   environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)effective_defaults);
 }
@@ -376,7 +402,10 @@ static void update_variables(bool first_time)
         case OPT_STV_BIOS:
           if(!options.content_flags[CONTENT_STV])
             break;
-          options.bios = (strcmp(var.value, "default") == 0) ? NULL : var.value;
+          if(options.content_flags[CONTENT_DIEHARD]) /* catch required bios for this one game. */
+            options.bios = "us";
+          else
+            options.bios = (strcmp(var.value, "default") == 0) ? NULL : var.value;
           break;
 
         case OPT_NEOGEO_BIOS:
@@ -387,9 +416,14 @@ static void update_variables(bool first_time)
 
         case OPT_USE_SAMPLES:
           if(strcmp(var.value, "enabled") == 0)
+          {
             options.use_samples = true;
+          }
           else
-            options.use_samples = false;
+          {
+            if(options.content_flags[CONTENT_ALT_SOUND])
+              options.use_samples = false;
+          }
           break;
 
         case OPT_SHARE_DIAL:
@@ -586,34 +620,8 @@ bool retro_load_game(const struct retro_game_info *game)
       log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: %s.\n", (int) total_drivers, needle->name);
       game_driver = needle;
       options.romset_filename_noext = driver_lookup;
-      
-      if(game_driver->bios != NULL) /* this is a driver that uses a bios, but which bios is it? */
-      {
-        const char *ancestor_name = NULL;
-        if(game_driver->clone_of && !string_is_empty(game_driver->clone_of->name))
-        {
-          ancestor_name = game_driver->clone_of->name;
 
-          if(game_driver->clone_of->clone_of && !string_is_empty(game_driver->clone_of->clone_of->name)) /* search up to two levels up */
-            ancestor_name = game_driver->clone_of->clone_of->name;                                       /* that's enough, right? */
-          else
-            ancestor_name = game_driver->clone_of->name;
-        }
-        
-        if(!string_is_empty(ancestor_name))
-        {
-          if(strcmp(ancestor_name, "neogeo") == 0)
-          {
-            options.content_flags[CONTENT_NEOGEO] = true;
-            log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a Neo Geo game.\n");
-          }
-          else if(strcmp(ancestor_name, "stvbios") == 0)
-          {
-            options.content_flags[CONTENT_STV] = true;
-            log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a ST-V game.\n");
-          }
-        }
-      }
+      set_content_flags();
       break;
     }
   }
@@ -672,6 +680,61 @@ bool retro_load_game(const struct retro_game_info *game)
     return false;
   
   return true;
+}
+
+static void set_content_flags(void)
+{
+  int i = 0;
+
+  extern struct GameDriver driver_neogeo;
+  extern struct GameDriver driver_stvbios;
+
+	/* if the user doesn't want to use samples, bail */
+	const char* ost_drivers[] = {	"outrun", "outruna", "outrunb", \
+				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
+				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
+				"ffight", "ffightu", "ffightj",  "ffightj1", 0
+		 };    
+
+  if(true) /* TODO: test for lightgun games */
+  {
+    options.content_flags[CONTENT_LIGHTGUN] = true;
+  }
+
+  if (Machine->gamedrv->clone_of == &driver_neogeo
+   ||(Machine->gamedrv->clone_of && Machine->gamedrv->clone_of->clone_of == &driver_neogeo))
+  {
+    options.content_flags[CONTENT_NEOGEO] = true;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a Neo Geo game.\n");
+  }
+  else if (Machine->gamedrv->clone_of == &driver_stvbios
+   ||(Machine->gamedrv->clone_of && Machine->gamedrv->clone_of->clone_of == &driver_stvbios))
+  {
+    options.content_flags[CONTENT_STV] = true;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a ST-V game.\n");
+  }
+  if(strcasecmp(Machine->gamedrv->name, "diehard") == 0)
+    options.content_flags[CONTENT_DIEHARD] = true;
+
+  while(ost_drivers[i])
+  {
+    if(strcmp(ost_drivers[i], Machine->gamedrv->name) == 0)
+      options.content_flags[CONTENT_ALT_SOUND] = true;
+    i++;
+  }
+  
+  if(true) /* TODO: test for vector games */
+  {
+    options.content_flags[CONTENT_VECTOR] = true;
+  }
+  if(true) /* TODO: test for dial games */
+  {
+    options.content_flags[CONTENT_DIAL] = true;
+  }
+  if(true) /* TODO: test for games which with dual joystick configurations */
+  {
+    options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
+  }
 }
 
 void retro_reset (void)
