@@ -98,8 +98,8 @@ struct retro_variable_default
 enum
 {
   RETROPAD_GAMEPAD = 0,
-  RETROPAD_ARCADE,
-  RETROPAD_SNES,
+  RETROPAD_8BUTTON,
+  RETROPAD_6BUTTON,
   RETROPAD_CLASSIC,
   RETROPAD_end
 };

@@ -229,9 +229,9 @@ static void update_variables(bool first_time)
           if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[0] = RETROPAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[0] = RETROPAD_ARCADE;
+            options.retropad_layout[0] = RETROPAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[0] = RETROPAD_SNES;
+            options.retropad_layout[0] = RETROPAD_6BUTTON;
           else
             options.retropad_layout[0] = RETROPAD_CLASSIC;
           break;
@@ -239,9 +239,9 @@ static void update_variables(bool first_time)
           if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[1] = RETROPAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[1] = RETROPAD_ARCADE;
+            options.retropad_layout[1] = RETROPAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[1] = RETROPAD_SNES;
+            options.retropad_layout[1] = RETROPAD_6BUTTON;
           else
             options.retropad_layout[1] = RETROPAD_CLASSIC;
           break;
@@ -249,9 +249,9 @@ static void update_variables(bool first_time)
           if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[2] = RETROPAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[2] = RETROPAD_ARCADE;
+            options.retropad_layout[2] = RETROPAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[2] = RETROPAD_SNES;
+            options.retropad_layout[2] = RETROPAD_6BUTTON;
           else
             options.retropad_layout[2] = RETROPAD_CLASSIC;
           break;
@@ -259,9 +259,9 @@ static void update_variables(bool first_time)
           if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[3] = RETROPAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[3] = RETROPAD_ARCADE;
+            options.retropad_layout[3] = RETROPAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[3] = RETROPAD_SNES;
+            options.retropad_layout[3] = RETROPAD_6BUTTON;
           else
             options.retropad_layout[3] = RETROPAD_CLASSIC;
           break;
@@ -269,9 +269,9 @@ static void update_variables(bool first_time)
           if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[4] = RETROPAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[4] = RETROPAD_ARCADE;
+            options.retropad_layout[4] = RETROPAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[4] = RETROPAD_SNES;
+            options.retropad_layout[4] = RETROPAD_6BUTTON;
           else
             options.retropad_layout[4] = RETROPAD_CLASSIC;
           break;
@@ -279,9 +279,9 @@ static void update_variables(bool first_time)
           if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[5] = RETROPAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[5] = RETROPAD_ARCADE;
+            options.retropad_layout[5] = RETROPAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[5] = RETROPAD_SNES;
+            options.retropad_layout[5] = RETROPAD_6BUTTON;
           else
             options.retropad_layout[5] = RETROPAD_CLASSIC;
           break;
@@ -1037,9 +1037,8 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *     [v]                               [4/LK]      |
    *                                                   |
    *
-   * retropad_layout == RETROPAD_SNES
+   * retropad_layout == RETROPAD_6BUTTON
    * ========================
-   * Uses the layout popularised by SNES Street Figher II.
    * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
    *
    * [7/-]                                      [8/-]  |
@@ -1133,7 +1132,6 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
     {
       switch(retro_ID)
       {
-        /************  "MODERN" MAPPING OVERLAY  ************/ 
         case RETRO_DEVICE_ID_JOYPAD_B:  return (player_flag | IPT_BUTTON4);
         case RETRO_DEVICE_ID_JOYPAD_Y:  return (player_flag | IPT_BUTTON1);
         case RETRO_DEVICE_ID_JOYPAD_X:  return (player_flag | IPT_BUTTON2);
@@ -1147,7 +1145,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       }
       return 0;
     }
-    case RETROPAD_ARCADE:
+    case RETROPAD_8BUTTON:
     {
       switch(retro_ID)
       {
@@ -1164,7 +1162,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       }
       return 0;
     }
-    case RETROPAD_SNES:
+    case RETROPAD_6BUTTON:
     {
       switch(retro_ID)
       {      
@@ -1283,7 +1281,7 @@ void retro_describe_controls(void)
   {"RetroMouse" #DISPLAY_IDX " Left Click",  ((DISPLAY_IDX - 1) * 18) + 16,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
   {"RetroMouse" #DISPLAY_IDX " Right Click", ((DISPLAY_IDX - 1) * 18) + 17,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2},
   
-#define EMIT_RETROPAD_ARCADE(DISPLAY_IDX) \
+#define EMIT_RETROPAD_8BUTTON(DISPLAY_IDX) \
   {"RetroPad"   #DISPLAY_IDX " Left",        ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RetroPad"   #DISPLAY_IDX " Right",       ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_RIGHT,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
   {"RetroPad"   #DISPLAY_IDX " Up",          ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_UP,     JOYCODE_##DISPLAY_IDX##_UP}, \
@@ -1307,7 +1305,7 @@ void retro_describe_controls(void)
   {"RetroMouse" #DISPLAY_IDX " Left Click",  ((DISPLAY_IDX - 1) * 18) + 16,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
   {"RetroMouse" #DISPLAY_IDX " Right Click", ((DISPLAY_IDX - 1) * 18) + 17,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2},
 
-#define EMIT_RETROPAD_SNES(DISPLAY_IDX) \
+#define EMIT_RETROPAD_6BUTTON(DISPLAY_IDX) \
   {"RetroPad"   #DISPLAY_IDX " Left",        ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_LEFT,   JOYCODE_##DISPLAY_IDX##_LEFT}, \
   {"RetroPad"   #DISPLAY_IDX " Right",       ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_RIGHT,  JOYCODE_##DISPLAY_IDX##_RIGHT}, \
   {"RetroPad"   #DISPLAY_IDX " Up",          ((DISPLAY_IDX - 1) * 18) + RETRO_DEVICE_ID_JOYPAD_UP,     JOYCODE_##DISPLAY_IDX##_UP}, \
@@ -1357,12 +1355,12 @@ void retro_describe_controls(void)
 
 struct JoystickInfo alternate_joystick_maps[PLAYER_COUNT][RETROPAD_end][PER_PLAYER_CTRL_COUNT] =
 {
-  {{EMIT_RETROPAD_GAMEPAD(1)},{EMIT_RETROPAD_ARCADE(1)},{EMIT_RETROPAD_SNES(1)},{EMIT_RETROPAD_CLASSIC(1)}},
-  {{EMIT_RETROPAD_GAMEPAD(2)},{EMIT_RETROPAD_ARCADE(2)},{EMIT_RETROPAD_SNES(2)},{EMIT_RETROPAD_CLASSIC(2)}},
-  {{EMIT_RETROPAD_GAMEPAD(3)},{EMIT_RETROPAD_ARCADE(3)},{EMIT_RETROPAD_SNES(3)},{EMIT_RETROPAD_CLASSIC(3)}},
-  {{EMIT_RETROPAD_GAMEPAD(4)},{EMIT_RETROPAD_ARCADE(4)},{EMIT_RETROPAD_SNES(4)},{EMIT_RETROPAD_CLASSIC(4)}},
-  {{EMIT_RETROPAD_GAMEPAD(5)},{EMIT_RETROPAD_ARCADE(5)},{EMIT_RETROPAD_SNES(5)},{EMIT_RETROPAD_CLASSIC(5)}},
-  {{EMIT_RETROPAD_GAMEPAD(6)},{EMIT_RETROPAD_ARCADE(6)},{EMIT_RETROPAD_SNES(6)},{EMIT_RETROPAD_CLASSIC(6)}},
+  {{EMIT_RETROPAD_GAMEPAD(1)},{EMIT_RETROPAD_8BUTTON(1)},{EMIT_RETROPAD_6BUTTON(1)},{EMIT_RETROPAD_CLASSIC(1)}},
+  {{EMIT_RETROPAD_GAMEPAD(2)},{EMIT_RETROPAD_8BUTTON(2)},{EMIT_RETROPAD_6BUTTON(2)},{EMIT_RETROPAD_CLASSIC(2)}},
+  {{EMIT_RETROPAD_GAMEPAD(3)},{EMIT_RETROPAD_8BUTTON(3)},{EMIT_RETROPAD_6BUTTON(3)},{EMIT_RETROPAD_CLASSIC(3)}},
+  {{EMIT_RETROPAD_GAMEPAD(4)},{EMIT_RETROPAD_8BUTTON(4)},{EMIT_RETROPAD_6BUTTON(4)},{EMIT_RETROPAD_CLASSIC(4)}},
+  {{EMIT_RETROPAD_GAMEPAD(5)},{EMIT_RETROPAD_8BUTTON(5)},{EMIT_RETROPAD_6BUTTON(5)},{EMIT_RETROPAD_CLASSIC(5)}},
+  {{EMIT_RETROPAD_GAMEPAD(6)},{EMIT_RETROPAD_8BUTTON(6)},{EMIT_RETROPAD_6BUTTON(6)},{EMIT_RETROPAD_CLASSIC(6)}},
 };
 
 
