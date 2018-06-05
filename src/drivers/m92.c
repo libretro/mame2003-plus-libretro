@@ -330,6 +330,7 @@ PORT_END
 static MEMORY_READ_START( sound_readmem )
 	{ 0x00000, 0x1ffff, MRA_ROM },
 	{ 0xa0000, 0xa3fff, MRA_RAM },
+	{ 0xa8000, 0xa803f, IremGA20_r },
 	{ 0xa8042, 0xa8043, YM2151_status_port_0_r },
 	{ 0xa8044, 0xa8045, m92_soundlatch_r },
 	{ 0xffff0, 0xfffff, MRA_ROM },
