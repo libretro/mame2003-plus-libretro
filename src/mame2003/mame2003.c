@@ -166,8 +166,8 @@ static void set_variables(bool first_time)
     {
       case OPT_CROSSHAIR_ENABLED:
          if(!options.content_flags[CONTENT_LIGHTGUN])
-           return;
-         break;
+           continue;
+         break; 
       case OPT_STV_BIOS:
          if(!options.content_flags[CONTENT_STV])
            continue; /* only offer BIOS selection when it is relevant */
@@ -178,15 +178,15 @@ static void set_variables(bool first_time)
           break;
       case OPT_USE_SAMPLES:
          if(!options.content_flags[CONTENT_ALT_SOUND])
-           return;
+           continue;
          break;
       case OPT_SHARE_DIAL:
          if(!options.content_flags[CONTENT_DIAL])
-           return;
+           continue;
          break;
       case OPT_DUAL_JOY:
          if(!options.content_flags[CONTENT_DUAL_JOYSTICK])
-           return;
+           continue;
          break;
       case OPT_VECTOR_RESOLUTION:
       case OPT_VECTOR_ANTIALIAS:
@@ -195,7 +195,7 @@ static void set_variables(bool first_time)
       case OPT_VECTOR_FLICKER:
       case OPT_VECTOR_INTENSITY:
          if(!options.content_flags[CONTENT_VECTOR])
-           return;
+           continue;
          break;
     }
    effective_defaults[effective_options_count] = first_time ? default_options[option_index] : *spawn_effective_default(option_index);
