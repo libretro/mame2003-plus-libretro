@@ -701,7 +701,7 @@ static void set_content_flags(void)
     options.content_flags[CONTENT_LIGHTGUN] = true;
   }
 
-  if (Machine->gamedrv->clone_of == &driver_neogeo
+  /*if (Machine->gamedrv->clone_of == &driver_neogeo
    ||(Machine->gamedrv->clone_of && Machine->gamedrv->clone_of->clone_of == &driver_neogeo))
   {
     options.content_flags[CONTENT_NEOGEO] = true;
@@ -713,8 +713,10 @@ static void set_content_flags(void)
     options.content_flags[CONTENT_STV] = true;
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a ST-V game.\n");
   }
+
   if(strcasecmp(Machine->gamedrv->name, "diehard") == 0)
-    options.content_flags[CONTENT_DIEHARD] = true;
+    options.content_flags[CONTENT_DIEHARD] = true; 
+
 
   while(ost_drivers[i])
   {
@@ -722,6 +724,7 @@ static void set_content_flags(void)
       options.content_flags[CONTENT_ALT_SOUND] = true;
     i++;
   }
+*/
   
   if(true) /* TODO: test for vector games */
   {

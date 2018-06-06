@@ -413,7 +413,7 @@ endif
 endif
 
 ifeq ($(DEBUG), 1)
-   CFLAGS += -O0 -g
+   CFLAGS += -O0 -g3
 else
    CFLAGS += -O2 -DNDEBUG
 endif
