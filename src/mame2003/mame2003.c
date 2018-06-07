@@ -110,12 +110,12 @@ static void init_core_options(void)
 {
   init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");
-  init_default(&default_options[OPT_RETROPAD1_LAYOUT],    APPNAME"_retropad1_layout",    "RetroPad 1 Layout; Modern Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD2_LAYOUT],    APPNAME"_retropad2_layout",    "RetroPad 2 Layout; Modern Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD3_LAYOUT],    APPNAME"_retropad3_layout",    "RetroPad 3 Layout; Modern Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD4_LAYOUT],    APPNAME"_retropad4_layout",    "RetroPad 4 Layout; Modern Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD5_LAYOUT],    APPNAME"_retropad5_layout",    "RetroPad 5 Layout; Modern Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD6_LAYOUT],    APPNAME"_retropad6_layout",    "RetroPad 6 Layout; Modern Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD1_LAYOUT],    APPNAME"_retropad1_layout",    "RetroPad 1 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD2_LAYOUT],    APPNAME"_retropad2_layout",    "RetroPad 2 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD3_LAYOUT],    APPNAME"_retropad3_layout",    "RetroPad 3 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD4_LAYOUT],    APPNAME"_retropad4_layout",    "RetroPad 4 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD5_LAYOUT],    APPNAME"_retropad5_layout",    "RetroPad 5 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
+  init_default(&default_options[OPT_RETROPAD6_LAYOUT],    APPNAME"_retropad6_layout",    "RetroPad 6 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
 #if defined(__IOS__)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
 #else
