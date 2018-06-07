@@ -23502,7 +23502,7 @@ const char *sstrike_get_ctrl_name(int type)
 
 const struct ControlInfo stonebal_ctrl =
 {
-  0, /* num_players */
+  4, /* num_players */
   false, /* alternating_controls */
   false, /* mirrored_controls */
   false, /* has_tilt */
@@ -23523,10 +23523,6 @@ const char *stonebal_get_ctrl_name(int type)
 
   return "";
 }
-
-
-
-const char *stonebal_get_ctrl_name(int type);
 
 const struct ControlInfo szaxxon_ctrl =
 {
