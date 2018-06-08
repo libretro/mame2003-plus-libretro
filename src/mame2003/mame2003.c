@@ -564,7 +564,16 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    else 
       info->timing.fps = Machine->drv->frames_per_second; /* qbert is 61 fps */
 
-   info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
+   if  ( (Machine->drv->frames_per_second * 1000 < options.samplerate) || ( Machine->drv->frames_per_second < 60) ) 
+   {
+	info->timing.sample_rate = Machine->drv->frames_per_second * 1000;
+	log_cb(RETRO_LOG_INFO, LOGPRE "Sample timing rate too high for framerate required dropping to %f",  Machine->drv->frames_per_second * 1000);
+   }       
+   else
+   {
+	info->timing.sample_rate = options.samplerate;
+	log_cb(RETRO_LOG_INFO, LOGPRE "Sample rate set to %d",options.samplerate); 
+   }
 }
 
 unsigned retro_api_version(void)
@@ -985,7 +994,9 @@ bool retro_unserialize(const void * data, size_t size)
 
 int osd_start_audio_stream(int stereo)
 {
-	 Machine->sample_rate = Machine->drv->frames_per_second * 1000;
+    if  ( ( Machine->drv->frames_per_second * 1000 < options.samplerate) || (Machine->drv->frames_per_second < 60) )   Machine->sample_rate = Machine->drv->frames_per_second * 1000;
+    else Machine->sample_rate = options.samplerate;
+
 	delta_samples = 0.0f;
 	usestereo = stereo ? 1 : 0;
 
