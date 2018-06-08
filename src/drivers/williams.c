@@ -2516,12 +2516,12 @@ static DRIVER_INIT( joust2 )
  *
  *************************************/
 
-GAME( 1980, defender, 0,        defender, defender, defender, ROT0,   "Williams", "Defender (Red label)" )
-GAME( 1980, defendg,  defender, defender, defender, defender, ROT0,   "Williams", "Defender (Green label)" )
-GAME( 1980, defendw,  defender, defender, defender, defender, ROT0,   "Williams", "Defender (White label)" )
-GAMEX(1980, defndjeu, defender, defender, defender, defndjeu, ROT0,   "Jeutel", "Defender [Q] (bootleg)", GAME_NOT_WORKING )
-GAME( 1980, defcmnd,  defender, defender, defender, defender, ROT0,   "bootleg", "Defense Command (set 1)" )
-GAME( 1981, defence,  defender, defender, defender, defender, ROT0,   "Outer Limits", "Defence Command" )
+GAMEC( 1980, defender, 0,        defender, defender, defender, ROT0,   "Williams", "Defender (Red label)",   &generic_ctrl, &defender_bootstrap )
+GAMEC( 1980, defendg,  defender, defender, defender, defender, ROT0,   "Williams", "Defender (Green label)", &generic_ctrl, &defendg_bootstrap )
+GAMEC( 1980, defendw,  defender, defender, defender, defender, ROT0,   "Williams", "Defender (White label)", &generic_ctrl, &defendg_bootstrap )
+GAMEX( 1980, defndjeu, defender, defender, defender, defndjeu, ROT0,   "Jeutel", "Defender [Q] (bootleg)",   GAME_NOT_WORKING )
+GAMEC( 1980, defcmnd,  defender, defender, defender, defender, ROT0,   "bootleg", "Defense Command (set 1)", &generic_ctrl, &defcmnd_bootstrap )
+GAMEC( 1981, defence,  defender, defender, defender, defender, ROT0,   "Outer Limits", "Defence Command",    &generic_ctrl, &defence_bootstrap   )
 
 GAME( 1980, mayday,   0,        defender, defender, mayday,   ROT0,   "<unknown>", "Mayday (set 1)" )
 GAME( 1980, maydaya,  mayday,   defender, defender, mayday,   ROT0,   "<unknown>", "Mayday (set 2)" )
