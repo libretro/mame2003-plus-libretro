@@ -270,7 +270,7 @@ static void cpu_pre_run(void)
 {
 	int cpunum;
 
-	log_cb(RETRO_LOG_INFO, "[MAME 2003] Machine reset\n");
+	log_cb(RETRO_LOG_INFO, LOGPRE "Preparing emulated CPUs for execution.\n");
 
 	begin_resource_tracking();
 

@@ -23,6 +23,7 @@ extern void deco156_decrypt(void);
 #include "deco16ic.h"
 #include "state.h"
 
+#include "mame2003.h"
 #include "bootstrap.h"
 #include "inptport.h"
 

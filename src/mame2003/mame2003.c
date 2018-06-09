@@ -415,13 +415,11 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_USE_SAMPLES:
-          if(strcmp(var.value, "enabled") == 0)
+          if(options.content_flags[CONTENT_ALT_SOUND])
           {
-            options.use_samples = true;
-          }
-          else
-          {
-            if(options.content_flags[CONTENT_ALT_SOUND])
+            if(strcmp(var.value, "enabled") == 0)
+              options.use_samples = true;
+            else
               options.use_samples = false;
           }
           break;
@@ -509,7 +507,7 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_NVRAM_BOOTSTRAP:
-          if(strcmp(var.value, "enabled") == 1)
+          if(strcmp(var.value, "enabled") == 0)
             options.nvram_bootstrap = true;
           else
             options.nvram_bootstrap = false;
@@ -629,8 +627,6 @@ bool retro_load_game(const struct retro_game_info *game)
       log_cb(RETRO_LOG_INFO, LOGPRE "Total MAME drivers: %i. Matched game driver: %s.\n", (int) total_drivers, needle->name);
       game_driver = needle;
       options.romset_filename_noext = driver_lookup;
-
-      set_content_flags();
       break;
     }
   }
@@ -640,6 +636,8 @@ bool retro_load_game(const struct retro_game_info *game)
       log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!", (int) total_drivers);
       return false;
   }
+  
+  set_content_flags();
 
   options.libretro_content_path = strdup(game->path);
   path_basedir(options.libretro_content_path);
@@ -708,6 +706,7 @@ static void set_content_flags(void)
   if(true) /* TODO: test for lightgun games */
   {
     options.content_flags[CONTENT_LIGHTGUN] = true;
+    /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using lightgun controls.\n");*/
   }
 
   if (game_driver->clone_of == &driver_neogeo
@@ -724,27 +723,36 @@ static void set_content_flags(void)
   }
 
   if(strcasecmp(game_driver->name, "diehard") == 0)
-    options.content_flags[CONTENT_DIEHARD] = true; 
+  {
+    options.content_flags[CONTENT_DIEHARD] = true;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as \"Die Hard: Arcade\". BIOS will be set to \"us\".\n");
+  }
 
 
   while(ost_drivers[i])
   {
     if(strcmp(ost_drivers[i], game_driver->name) == 0)
+    {
       options.content_flags[CONTENT_ALT_SOUND] = true;
+      log_cb(RETRO_LOG_INFO, LOGPRE "Content has an alternative audio option controlled via libretro core option.\n");
+    }
     i++;
   }
   
   if(true) /* TODO: test for vector games */
   {
     options.content_flags[CONTENT_VECTOR] = true;
+    /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using a vector video display.\n");*/
   }
   if(true) /* TODO: test for dial games */
   {
     options.content_flags[CONTENT_DIAL] = true;
+    /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using a rotary dial input device.\n");*/
   }
   if(true) /* TODO: test for games which with dual joystick configurations */
   {
     options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
+    /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");*/
   }
 }
 

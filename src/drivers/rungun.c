@@ -45,7 +45,6 @@
 #include "cpu/z80/z80.h"
 #include "machine/eeprom.h"
 #include "sound/k054539.h"
-#include "bootstrap.h"
 
 #include "mame2003.h"
 #include "bootstrap.h"

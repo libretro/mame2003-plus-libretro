@@ -300,7 +300,6 @@ bool run_game(int game)
       bail_and_print("Unable to start machine emulation");
   else
   {
-      log_cb(RETRO_LOG_ERROR, "\ngame loaded = 1\n");
       game_loaded = 1;
       return true;
   }
@@ -490,29 +489,37 @@ void run_machine_done(void)
 
 void pause_action_start_emulator(void)
 {
-    init_user_interface();
-    artwork_enable(1);
-    InitCheat();
+  init_user_interface();
+  artwork_enable(1);
+  InitCheat();
 
-    /* load the NVRAM now */
-    if (Machine->drv->nvram_handler)
+  /* load the NVRAM now */
+  if (Machine->drv->nvram_handler)
+  {
+    mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
+
+    if(!nvram_file)
+      log_cb(RETRO_LOG_INFO, LOGPRE "First run: NVRAM handler found for %s but no existing NVRAM file found.\n", Machine->gamedrv->name);
+    
+    log_cb(RETRO_LOG_INFO, LOGPRE "options.nvram_bootstrap: %i \n", options.nvram_bootstrap);
+    if(!nvram_file && options.nvram_bootstrap && (Machine->gamedrv->bootstrap != NULL))
     {
-        mame_file *nvram_file = mame_fopen(Machine->gamedrv->name, 0, FILETYPE_NVRAM, 0);
-        if(!nvram_file && options.nvram_bootstrap && (Machine->gamedrv->bootstrap != NULL))
-        {
-          nvram_file = spawn_bootstrap_nvram(Machine->gamedrv->bootstrap->data, Machine->gamedrv->bootstrap->length);
-        }
-
-        (*Machine->drv->nvram_handler)(nvram_file, 0);
-        if (nvram_file)
-            mame_fclose(nvram_file);
+      log_cb(RETRO_LOG_INFO, LOGPRE "Spwaning NVRAM bootstrap as the initial NVRAM image.\n");
+      nvram_file = spawn_bootstrap_nvram(Machine->gamedrv->bootstrap->data, Machine->gamedrv->bootstrap->length);
     }
+    else
+      log_cb(RETRO_LOG_INFO, LOGPRE "Delegating population of initial NVRAM to emulated system.\n");
 
-    /* run the emulation! */
-    cpu_run();
+    (*Machine->drv->nvram_handler)(nvram_file, 0);
+    if (nvram_file)
+        mame_fclose(nvram_file);
+  }
 
-    /* Unpause */
-    pause_action = 0;
+  /* run the emulation! */
+  cpu_run();
+
+  /* Unpause */
+  pause_action = 0;
 }
 
 void run_machine_core_done(void)
