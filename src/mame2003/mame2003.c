@@ -110,12 +110,14 @@ static void init_core_options(void)
 {
   init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");
+/*
   init_default(&default_options[OPT_RETROPAD1_LAYOUT],    APPNAME"_retropad1_layout",    "RetroPad 1 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
   init_default(&default_options[OPT_RETROPAD2_LAYOUT],    APPNAME"_retropad2_layout",    "RetroPad 2 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
   init_default(&default_options[OPT_RETROPAD3_LAYOUT],    APPNAME"_retropad3_layout",    "RetroPad 3 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
   init_default(&default_options[OPT_RETROPAD4_LAYOUT],    APPNAME"_retropad4_layout",    "RetroPad 4 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
   init_default(&default_options[OPT_RETROPAD5_LAYOUT],    APPNAME"_retropad5_layout",    "RetroPad 5 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
   init_default(&default_options[OPT_RETROPAD6_LAYOUT],    APPNAME"_retropad6_layout",    "RetroPad 6 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
+*/
 #if defined(__IOS__)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
 #else
@@ -250,7 +252,7 @@ static void update_variables(bool first_time)
           else
             options.input_interface = 0; /* retropad and keyboard simultaneously. "old-school mame2003 input mode" */
           break;
-
+/*
         case OPT_RETROPAD1_LAYOUT:
           if(strcmp(var.value, "Modern Gamepad") == 0)
             options.retropad_layout[0] = PAD_GAMEPAD;
@@ -311,7 +313,7 @@ static void update_variables(bool first_time)
           else
             options.retropad_layout[5] = PAD_CLASSIC;
           break;
-
+*/
         case OPT_MOUSE_DEVICE:
           if(strcmp(var.value, "pointer") == 0)
             options.mouse_device = RETRO_DEVICE_POINTER;
@@ -591,6 +593,21 @@ void retro_get_system_info(struct retro_system_info *info)
   info->block_extract = true;
 }
 
+static const struct retro_controller_description controllers[] = {
+  { "Gamepad",         PAD_GAMEPAD },
+  { "8-Button",        PAD_8BUTTON },
+  { "6-Button",        PAD_6BUTTON },
+  { "Classic Gamepad", PAD_CLASSIC },
+};
+
+static const struct retro_controller_info ports[] = {
+  { controllers, 4 },
+  { controllers, 4 },
+  { controllers, 4 },
+  { controllers, 4 },
+  { 0 },
+};
+
 bool retro_load_game(const struct retro_game_info *game)
 {
   int              driverIndex    = 0;
@@ -681,8 +698,9 @@ bool retro_load_game(const struct retro_game_info *game)
   if(!init_game(driverIndex))
     return false;
   
+  environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)ports);
   retro_describe_controls(); /* needs to be called after init_game() in order to use MAME button label strings */
-
+  
   if(!run_game(driverIndex))
     return false;
   
@@ -1066,7 +1084,6 @@ size_t retro_get_memory_size(unsigned type) {return 0;}
 bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info){return false;}
 void retro_cheat_reset(void){}
 void retro_cheat_set(unsigned unused, bool unused1, const char* unused2){}
-void retro_set_controller_port_device(unsigned in_port, unsigned device){}
 void retro_set_video_refresh(retro_video_refresh_t cb) { video_cb = cb; }
 void retro_set_audio_sample(retro_audio_sample_t cb) { }
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
@@ -1106,7 +1123,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *
    * key: [MAME button/Street Fighter II move]
    *
-   * RETROPAD_GAMEPAD
+   * PAD_GAMEPAD
    * ========================
    * Uses the fight stick & pad layout popularised by Street Figher IV.
    * Needs an 8+ button controller by default.
@@ -1121,7 +1138,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *     [v]                               [4/LK]      |
    *                                                   |
    *
-   * RETROPAD_6BUTTON
+   * PAD_6BUTTON
    * ========================
    * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
    *
@@ -1135,7 +1152,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *     [v]                               [4/LK]      |
    *                                                   |
    *
-   * RETROPAD_CLASSIC
+   * PAD_CLASSIC
    * ========================
    * Uses current MAME's default Xbox 360 controller layout.
    * Not sensible for 6 button fighters, but may suit other games.
@@ -1159,7 +1176,64 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 /* We are by convention passing "display" value used for mapping to MAME enums and player # masks to our macros.     */
 /* (Display Index - 1) can be used for indexed data structures.                                                      */   
 
+static struct retro_input_descriptor empty[] = { { 0 } };
+
+void retro_set_controller_port_device(unsigned in_port, unsigned device)
+{
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty);
+  options.retropad_layout[in_port] = device;
+  retro_describe_controls();
+}
+
+void retro_describe_controls(void)
+{
+  const int NUMBER_OF_RETRO_TYPES = RETRO_DEVICE_ID_JOYPAD_R3 + 1;
+
+  int       retro_type     = 0;
+  int       display_idx    = 0;
   
+  log_cb(RETRO_LOG_INFO, LOGPRE "PAD_GAMEPAD Code: %i | PAD_8BUTTON Code: %i | PAD_6BUTTON Code %i | PAD_CLASSIC Code %i\n", PAD_GAMEPAD, PAD_8BUTTON, PAD_6BUTTON, PAD_CLASSIC);
+
+
+  struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
+  struct retro_input_descriptor *needle = &desc[0];
+  
+  for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
+  {
+    for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < NUMBER_OF_RETRO_TYPES; retro_type++)
+    {
+      const char *control_name = game_driver->ctrl_dat->get_name(get_mame_ctrl_id(display_idx, retro_type));
+      if(string_is_empty(control_name))
+      {
+        	switch(retro_type) /* a couple of universals */
+          {
+            case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
+            case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
+          }
+      }
+      if(string_is_empty(control_name))
+        continue;
+
+      needle->port = display_idx - 1;
+      needle->device = RETRO_DEVICE_JOYPAD;
+      needle->index = 0;
+      needle->id = retro_type;
+      needle->description = control_name;
+      log_cb(RETRO_LOG_INFO, LOGPRE"Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
+      needle++;
+    }
+  }
+
+  /* the extra final record remains zeroed to indicate the end of the description to the frontend */ 
+  needle->port = 0;
+  needle->device = 0;
+  needle->index = 0;
+  needle->id = 0;
+  needle->description = NULL;
+  
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+}
+
 int get_mame_ctrl_id(int display_idx, int retro_ID)
 {
   int player_flag = 0;
@@ -1282,55 +1356,6 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
     }
   }
   return 0;  
-}
-
-void retro_describe_controls(void)
-{
-  const int NUMBER_OF_RETRO_TYPES = RETRO_DEVICE_ID_JOYPAD_R3 + 1;
-
-  int       retro_type     = 0;
-  int       display_idx    = 0;
-  
-  log_cb(RETRO_LOG_INFO, LOGPRE "PAD_GAMEPAD Code: %i | PAD_8BUTTON Code: %i | PAD_6BUTTON Code %i | PAD_CLASSIC Code %i\n", PAD_GAMEPAD, PAD_8BUTTON, PAD_6BUTTON, PAD_CLASSIC);
-
-
-  struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
-  struct retro_input_descriptor *needle = &desc[0];
-  
-  for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
-  {
-    for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < NUMBER_OF_RETRO_TYPES; retro_type++)
-    {
-      const char *control_name = game_driver->ctrl_dat->get_name(get_mame_ctrl_id(display_idx, retro_type));
-      if(string_is_empty(control_name))
-      {
-        	switch(retro_type) /* a couple of universals */
-          {
-            case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
-            case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
-          }
-      }
-      if(string_is_empty(control_name))
-        continue;
-
-      needle->port = display_idx - 1;
-      needle->device = RETRO_DEVICE_JOYPAD;
-      needle->index = 0;
-      needle->id = retro_type;
-      needle->description = control_name;
-      log_cb(RETRO_LOG_INFO, LOGPRE"Describing controls for: display_idx: %i | retro_type: %i | id: %i | desc: %s\n", display_idx, retro_type, needle->id, needle->description);
-      needle++;
-    }
-  }
-
-  /* the extra final record remains zeroed to indicate the end of the description to the frontend */ 
-  needle->port = 0;
-  needle->device = 0;
-  needle->index = 0;
-  needle->id = 0;
-  needle->description = NULL;
-  
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
 #define DIRECTIONAL_COUNT           8  /* map Left, Right Up, Down as well as B, Y, A, X */
