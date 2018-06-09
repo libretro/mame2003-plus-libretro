@@ -253,63 +253,63 @@ static void update_variables(bool first_time)
 
         case OPT_RETROPAD1_LAYOUT:
           if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[0] = RETROPAD_GAMEPAD;
+            options.retropad_layout[0] = PAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[0] = RETROPAD_8BUTTON;
+            options.retropad_layout[0] = PAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[0] = RETROPAD_6BUTTON;
+            options.retropad_layout[0] = PAD_6BUTTON;
           else
-            options.retropad_layout[0] = RETROPAD_CLASSIC;
+            options.retropad_layout[0] = PAD_CLASSIC;
           break;
         case OPT_RETROPAD2_LAYOUT:
           if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[1] = RETROPAD_GAMEPAD;
+            options.retropad_layout[1] = PAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[1] = RETROPAD_8BUTTON;
+            options.retropad_layout[1] = PAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[1] = RETROPAD_6BUTTON;
+            options.retropad_layout[1] = PAD_6BUTTON;
           else
-            options.retropad_layout[1] = RETROPAD_CLASSIC;
+            options.retropad_layout[1] = PAD_CLASSIC;
           break;
         case OPT_RETROPAD3_LAYOUT:
           if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[2] = RETROPAD_GAMEPAD;
+            options.retropad_layout[2] = PAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[2] = RETROPAD_8BUTTON;
+            options.retropad_layout[2] = PAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[2] = RETROPAD_6BUTTON;
+            options.retropad_layout[2] = PAD_6BUTTON;
           else
-            options.retropad_layout[2] = RETROPAD_CLASSIC;
+            options.retropad_layout[2] = PAD_CLASSIC;
           break;
         case OPT_RETROPAD4_LAYOUT:
           if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[3] = RETROPAD_GAMEPAD;
+            options.retropad_layout[3] = PAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[3] = RETROPAD_8BUTTON;
+            options.retropad_layout[3] = PAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[3] = RETROPAD_6BUTTON;
+            options.retropad_layout[3] = PAD_6BUTTON;
           else
-            options.retropad_layout[3] = RETROPAD_CLASSIC;
+            options.retropad_layout[3] = PAD_CLASSIC;
           break;
         case OPT_RETROPAD5_LAYOUT:
           if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[4] = RETROPAD_GAMEPAD;
+            options.retropad_layout[4] = PAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[4] = RETROPAD_8BUTTON;
+            options.retropad_layout[4] = PAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[4] = RETROPAD_6BUTTON;
+            options.retropad_layout[4] = PAD_6BUTTON;
           else
-            options.retropad_layout[4] = RETROPAD_CLASSIC;
+            options.retropad_layout[4] = PAD_CLASSIC;
           break;
         case OPT_RETROPAD6_LAYOUT:
           if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[5] = RETROPAD_GAMEPAD;
+            options.retropad_layout[5] = PAD_GAMEPAD;
           else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[5] = RETROPAD_8BUTTON;
+            options.retropad_layout[5] = PAD_8BUTTON;
           else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[5] = RETROPAD_6BUTTON;
+            options.retropad_layout[5] = PAD_6BUTTON;
           else
-            options.retropad_layout[5] = RETROPAD_CLASSIC;
+            options.retropad_layout[5] = PAD_CLASSIC;
           break;
 
         case OPT_MOUSE_DEVICE:
@@ -1106,7 +1106,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *
    * key: [MAME button/Street Fighter II move]
    *
-   * options.retropad_layout == RETROPAD_GAMEPAD
+   * RETROPAD_GAMEPAD
    * ========================
    * Uses the fight stick & pad layout popularised by Street Figher IV.
    * Needs an 8+ button controller by default.
@@ -1121,7 +1121,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *     [v]                               [4/LK]      |
    *                                                   |
    *
-   * retropad_layout == RETROPAD_6BUTTON
+   * RETROPAD_6BUTTON
    * ========================
    * Only needs a 6+ button controller by default, doesn't suit 8+ button fight sticks.
    *
@@ -1135,7 +1135,7 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
    *     [v]                               [4/LK]      |
    *                                                   |
    *
-   * options.retropad_layout == RETROPAD_CLASSIC
+   * RETROPAD_CLASSIC
    * ========================
    * Uses current MAME's default Xbox 360 controller layout.
    * Not sensible for 6 button fighters, but may suit other games.
@@ -1212,7 +1212,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   log_cb(RETRO_LOG_DEBUG, "display_idx: %i | options.retropad_layout[display_idx - 1]: %i\n", display_idx, options.retropad_layout[display_idx - 1]);
   switch(options.retropad_layout[display_idx - 1])
   {
-    case RETROPAD_GAMEPAD:
+    case PAD_GAMEPAD:
     {
       switch(retro_ID)
       {
@@ -1229,7 +1229,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       }
       return 0;
     }
-    case RETROPAD_8BUTTON:
+    case PAD_8BUTTON:
     {
       switch(retro_ID)
       {
@@ -1246,7 +1246,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       }
       return 0;
     }
-    case RETROPAD_6BUTTON:
+    case PAD_6BUTTON:
     {
       switch(retro_ID)
       {      
@@ -1263,7 +1263,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       }
       return 0;
     }
-    case RETROPAD_CLASSIC:
+    case PAD_CLASSIC:
     {
       switch(retro_ID)
       {
@@ -1284,14 +1284,15 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   return 0;  
 }
 
-#define control_name(DISPLAY_IDX, RETRO_TYPE)
-
 void retro_describe_controls(void)
 {
   const int NUMBER_OF_RETRO_TYPES = RETRO_DEVICE_ID_JOYPAD_R3 + 1;
 
   int       retro_type     = 0;
   int       display_idx    = 0;
+  
+  log_cb(RETRO_LOG_INFO, LOGPRE "PAD_GAMEPAD Code: %i | PAD_8BUTTON Code: %i | PAD_6BUTTON Code %i | PAD_CLASSIC Code %i\n", PAD_GAMEPAD, PAD_8BUTTON, PAD_6BUTTON, PAD_CLASSIC);
+
 
   struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
@@ -1437,7 +1438,7 @@ void retro_describe_controls(void)
   {"RetroMouse" #DISPLAY_IDX " Left Click",  ((DISPLAY_IDX - 1) * 18) + 16,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON1}, \
   {"RetroMouse" #DISPLAY_IDX " Right Click", ((DISPLAY_IDX - 1) * 18) + 17,                            JOYCODE_MOUSE_##DISPLAY_IDX##_BUTTON2},
 
-struct JoystickInfo alternate_joystick_maps[PLAYER_COUNT][RETROPAD_end][PER_PLAYER_CTRL_COUNT] =
+struct JoystickInfo alternate_joystick_maps[PLAYER_COUNT][IDX_PAD_end][PER_PLAYER_CTRL_COUNT] =
 {
   {{EMIT_RETROPAD_GAMEPAD(1)},{EMIT_RETROPAD_8BUTTON(1)},{EMIT_RETROPAD_6BUTTON(1)},{EMIT_RETROPAD_CLASSIC(1)}},
   {{EMIT_RETROPAD_GAMEPAD(2)},{EMIT_RETROPAD_8BUTTON(2)},{EMIT_RETROPAD_6BUTTON(2)},{EMIT_RETROPAD_CLASSIC(2)}},
@@ -1466,11 +1467,25 @@ const struct JoystickInfo *osd_get_joy_list(void)
   int player_map_idx = 0;
   int overall_idx    = 0;
   int display_idx    = 0;
-  
+   
   for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
   {
     for(player_map_idx = 0; player_map_idx < PER_PLAYER_CTRL_COUNT; player_map_idx++)
-      mame_joy_map[overall_idx++] = alternate_joystick_maps[display_idx - 1][options.retropad_layout[display_idx - 1]][player_map_idx];
+    {
+      int data_idx     = display_idx - 1;
+      int coded_layout = options.retropad_layout[data_idx];
+      int layout_idx   = 0;
+      
+      switch(coded_layout)
+      {
+        case PAD_GAMEPAD: layout_idx = IDX_GAMEPAD; break;
+        case PAD_8BUTTON: layout_idx = IDX_8BUTTON; break;
+        case PAD_6BUTTON: layout_idx = IDX_6BUTTON; break;
+        case PAD_CLASSIC: layout_idx = IDX_CLASSIC; break;
+      }
+ 
+      mame_joy_map[overall_idx++] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
+    }
   }
 
   /* the extra final record remains zeroed to indicate the end of the description to the frontend */ 
