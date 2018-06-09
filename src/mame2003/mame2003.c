@@ -422,6 +422,8 @@ static void update_variables(bool first_time)
             else
               options.use_samples = false;
           }
+          else
+            options.use_samples = true;
           break;
 
         case OPT_SHARE_DIAL:
