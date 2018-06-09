@@ -133,13 +133,13 @@ static void init_core_options(void)
   init_default(&default_options[OPT_NEOGEO_BIOS],         APPNAME"_neogeo_bios", 
                                                                                         "Specify Neo Geo BIOS (Restart); default|euro|euro-s1|us|us-e|asia|japan|japan-s2|unibios33|unibios20|unibios13|unibios11|unibios10|debug|asia-aes");
   init_default(&default_options[OPT_STV_BIOS],            APPNAME"_stv_bios",            "Specify Sega ST-V BIOS (Restart); default|japan|japana|us|japan_b|taiwan|europe");  
-  init_default(&default_options[OPT_USE_SAMPLES],         APPNAME"_use_samples",         "Use OST samples; enabled|disabled");
+  init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual Joystick Mode (!NETPLAY); disabled|enabled");
   init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Right Stick to Buttons; enabled|disabled");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier", 
-                                                                                        "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6");
+                                                                                         "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6");
   init_default(&default_options[OPT_VECTOR_ANTIALIAS],    APPNAME"_vector_antialias",    "EXPERIMENTAL: Vector antialias; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_TRANSLUCENCY], APPNAME"_vector_translucency", "Vector translucency; enabled|disabled");
   init_default(&default_options[OPT_VECTOR_BEAM],         APPNAME"_vector_beam_width",   "EXPERIMENTAL: Vector beam width; 1|2|3|4|5");
@@ -176,7 +176,7 @@ static void set_variables(bool first_time)
           if(!options.content_flags[CONTENT_NEOGEO])
             continue; /* only offer BIOS selection when it is relevant */
           break;
-      case OPT_USE_SAMPLES:
+      case OPT_USE_ALT_SOUND:
          if(!options.content_flags[CONTENT_ALT_SOUND])
            continue;
          break;
@@ -414,7 +414,7 @@ static void update_variables(bool first_time)
           options.bios = (strcmp(var.value, "default") == 0) ? NULL : var.value;
           break;
 
-        case OPT_USE_SAMPLES:
+        case OPT_USE_ALT_SOUND:
           if(options.content_flags[CONTENT_ALT_SOUND])
           {
             if(strcmp(var.value, "enabled") == 0)

@@ -238,8 +238,9 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	int i;
 	struct GameSamples *samples;
 	int skipfirst = 0;
-
-	if (samplenames == 0 || samplenames[0] == 0) return 0;
+  
+  if(!options.use_samples || samplenames == 0 || samplenames[0] == 0)
+    return 0;
 
 	if (samplenames[0][0] == '*')
 		skipfirst = 1;
