@@ -422,8 +422,6 @@ static void update_variables(bool first_time)
             else
               options.use_samples = false;
           }
-          else
-            options.use_samples = true;
           break;
 
         case OPT_SHARE_DIAL:
@@ -540,6 +538,10 @@ static void update_variables(bool first_time)
   if(!first_time)
     retro_describe_controls(); /* the first time, MAME's init_game() needs to be called before this, so there is also    */
                                /* retro_describe_controls() in retro_load_game() to take care of the initial description */
+  
+  if(!options.content_flags[CONTENT_ALT_SOUND])
+    options.use_samples = true;
+
   ledintf.set_led_state = NULL;
   environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
   led_state_cb = ledintf.set_led_state;
