@@ -537,8 +537,9 @@ static void update_variables(bool first_time)
       }
     }
   }
+/*
   if(!first_time)
-    retro_describe_controls(); /* the first time, MAME's init_game() needs to be called before this, so there is also    */
+    retro_describe_controls();*/ /* the first time, MAME's init_game() needs to be called before this, so there is also    */
                                /* retro_describe_controls() in retro_load_game() to take care of the initial description */
   ledintf.set_led_state = NULL;
   environ_cb(RETRO_ENVIRONMENT_GET_LED_INTERFACE, &ledintf);
@@ -594,17 +595,15 @@ void retro_get_system_info(struct retro_system_info *info)
 }
 
 static const struct retro_controller_description controllers[] = {
-  { "Gamepad",         PAD_GAMEPAD },
   { "8-Button",        PAD_8BUTTON },
   { "6-Button",        PAD_6BUTTON },
   { "Classic Gamepad", PAD_CLASSIC },
 };
 
 static const struct retro_controller_info ports[] = {
-  { controllers, 4 },
-  { controllers, 4 },
-  { controllers, 4 },
-  { controllers, 4 },
+  { controllers, 3 },
+  { controllers, 3 },
+  { controllers, 3 },
   { 0 },
 };
 
@@ -1192,7 +1191,7 @@ void retro_describe_controls(void)
   int       retro_type     = 0;
   int       display_idx    = 0;
   
-  log_cb(RETRO_LOG_INFO, LOGPRE "PAD_GAMEPAD Code: %i | PAD_8BUTTON Code: %i | PAD_6BUTTON Code %i | PAD_CLASSIC Code %i\n", PAD_GAMEPAD, PAD_8BUTTON, PAD_6BUTTON, PAD_CLASSIC);
+  log_cb(RETRO_LOG_INFO, LOGPRE "PAD_GAMEPAD Code: %i | PAD_8BUTTON Code: %i | PAD_6BUTTON Code %i | PAD_CLASSIC Code %i\n", RETRO_DEVICE_JOYPAD, PAD_8BUTTON, PAD_6BUTTON, PAD_CLASSIC);
 
 
   struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
@@ -1286,7 +1285,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   log_cb(RETRO_LOG_DEBUG, "display_idx: %i | options.retropad_layout[display_idx - 1]: %i\n", display_idx, options.retropad_layout[display_idx - 1]);
   switch(options.retropad_layout[display_idx - 1])
   {
-    case PAD_GAMEPAD:
+    case RETRO_DEVICE_JOYPAD:
     {
       switch(retro_ID)
       {
@@ -1503,10 +1502,10 @@ const struct JoystickInfo *osd_get_joy_list(void)
       
       switch(coded_layout)
       {
-        case PAD_GAMEPAD: layout_idx = IDX_GAMEPAD; break;
-        case PAD_8BUTTON: layout_idx = IDX_8BUTTON; break;
-        case PAD_6BUTTON: layout_idx = IDX_6BUTTON; break;
-        case PAD_CLASSIC: layout_idx = IDX_CLASSIC; break;
+        case RETRO_DEVICE_JOYPAD: layout_idx = IDX_GAMEPAD; break;
+        case PAD_8BUTTON:         layout_idx = IDX_8BUTTON; break;
+        case PAD_6BUTTON:         layout_idx = IDX_6BUTTON; break;
+        case PAD_CLASSIC:         layout_idx = IDX_CLASSIC; break;
       }
  
       mame_joy_map[overall_idx++] = alternate_joystick_maps[data_idx][layout_idx][player_map_idx];
