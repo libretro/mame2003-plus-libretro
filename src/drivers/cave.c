@@ -905,7 +905,7 @@ static MEMORY_READ16_START( pwrinst2_readmem )
 /**/{ 0xc00000, 0xc00005, MRA16_RAM					},	/* Layer 1 Control*/
 /**/{ 0xc80000, 0xc80005, MRA16_RAM					},	/* Layer 3 Control*/
 	{ 0xa80000, 0xa8007f, donpachi_videoregs_r		},	/* Video Regs*/
-	{ 0xd80000, 0xd80001, soundlatch_ack_r				},	/* ? From Sound CPU*/
+	{ 0xd80000, 0xd80001, MRA16_NOP					},	/* ? From Sound CPU*/
 	{ 0xe80000, 0xe80001, pwrinst2_eeprom_r			},	/* EEPROM*/
 	{ 0xf00000, 0xf04fff, MRA16_RAM					},	/* Palette*/
 MEMORY_END
@@ -1281,7 +1281,7 @@ static PORT_WRITE_START( pwrinst2_sound_writeport )
 	{ 0x10, 0x17, pwrinst2_okibank_w		},	/* Samples bank*/
 	{ 0x40, 0x40, YM2203_control_port_0_w	},	/* YM2203*/
 	{ 0x41, 0x41, YM2203_write_port_0_w		},	/**/
-        { 0x50, 0x50, soundlatch_ack_w			},  /* To Main CPU */
+/*	{ 0x50, 0x50, IOWP_NOP		},	*/ /* ?? volume*/
 /*	{ 0x51, 0x51, IOWP_NOP		},	*/ /* ?? volume*/
 	{ 0x80, 0x80, pwrinst2_rombank_w		},	/* ROM bank*/
 PORT_END
