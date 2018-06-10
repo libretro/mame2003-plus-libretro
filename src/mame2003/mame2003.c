@@ -599,15 +599,20 @@ void retro_get_system_info(struct retro_system_info *info)
 }
 
 static const struct retro_controller_description controllers[] = {
+  { "Default",	       RETRO_DEVICE_JOYPAD},
   { "8-Button",        PAD_8BUTTON },
   { "6-Button",        PAD_6BUTTON },
   { "Classic Gamepad", PAD_CLASSIC },
 };
 
 static const struct retro_controller_info ports[] = {
-  { controllers, 3 },
-  { controllers, 3 },
-  { controllers, 3 },
+  { controllers, 4 },
+  { controllers, 4 },
+  { controllers, 4 },
+  { controllers, 4 },
+  { controllers, 4 },
+  { controllers, 4 },
+
   { 0 },
 };
 
