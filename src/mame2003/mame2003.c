@@ -605,14 +605,11 @@ static const struct retro_controller_description controllers[] = {
   { "Classic Gamepad", PAD_CLASSIC },
 };
 
-static const struct retro_controller_info ports[] = {
+static const struct retro_controller_info retropad_device_ports[] = {
   { controllers, 4 },
   { controllers, 4 },
   { controllers, 4 },
   { controllers, 4 },
-  { controllers, 4 },
-  { controllers, 4 },
-
   { 0 },
 };
 
@@ -706,7 +703,7 @@ bool retro_load_game(const struct retro_game_info *game)
   if(!init_game(driverIndex))
     return false;
   
-  environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)ports);
+  environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)retropad_device_ports);
   retro_describe_controls(); /* needs to be called after init_game() in order to use MAME button label strings */
   
   if(!run_game(driverIndex))
