@@ -2532,8 +2532,8 @@ GAME( 1981, colony7a, colony7,  defender, colony7,  colony7,  ROT270, "Taito", "
 
 GAME( 1981, stargate, 0,        williams, stargate, stargate, ROT0,   "Williams", "Stargate" )
 
-GAME( 1982, robotron, 0,        williams, robotron, robotron, ROT0,   "Williams", "Robotron (Solid Blue label)" )
-GAME( 1982, robotryo, robotron, williams, robotron, robotron, ROT0,   "Williams", "Robotron (Yellow-Orange label)" )
+GAMEC( 1982, robotron, 0,        williams, robotron, robotron, ROT0,   "Williams", "Robotron (Solid Blue label)",    &robotron_ctrl, NULL )
+GAMEC( 1982, robotryo, robotron, williams, robotron, robotron, ROT0,   "Williams", "Robotron (Yellow-Orange label)", &robotron_ctrl, NULL )
 
 GAME( 1982, joust,    0,        williams, joust,    joust,    ROT0,   "Williams", "Joust (White-Green label)" )
 GAME( 1982, joustr,   joust,    williams, joust,    joust,    ROT0,   "Williams", "Joust (Solid Red label)" )
@@ -2545,9 +2545,9 @@ GAME( 1982, bubblesp, bubbles,  williams, bubbles,  bubbles,  ROT0,   "Williams"
 
 GAME( 1982, splat,    0,        williams, splat,    splat,    ROT0,   "Williams", "Splat!" )
 
-GAMEC( 1982, sinistar, 0,        sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 3)", &generic_ctrl, &sinistar_bootstrap)
-GAMEC( 1982, sinista1, sinistar, sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (prototype version)", &generic_ctrl, &sinista1_bootstrap )
-GAMEC( 1982, sinista2, sinistar, sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 2)", &generic_ctrl, &sinista2_bootstrap )
+GAMEC( 1982, sinistar, 0,        sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 3)",          &generic_ctrl, &sinistar_bootstrap)
+GAMEC( 1982, sinista1, sinistar, sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (prototype version)",   &generic_ctrl, &sinista1_bootstrap )
+GAMEC( 1982, sinista2, sinistar, sinistar, sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 2)",          &generic_ctrl, &sinista2_bootstrap )
 
 GAME( 1983, playball, 0,        playball, playball, playball, ROT270, "Williams", "PlayBall! (prototype)" )
 

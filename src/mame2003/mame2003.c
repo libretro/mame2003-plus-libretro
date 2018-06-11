@@ -434,35 +434,43 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_DUAL_JOY:
-          if(strcmp(var.value, "enabled") == 0)
-            options.dual_joysticks = true;
-          else
-            options.dual_joysticks = false;
-
-          if(first_time)
-            old_dual_joystick_state = options.dual_joysticks;
-          else if(old_dual_joystick_state != options.dual_joysticks)
+          if(options.content_flags[CONTENT_DUAL_JOYSTICK])
           {
-            char cfg_file_path[PATH_MAX_LENGTH];
-            char buffer[PATH_MAX_LENGTH];
-            osd_get_path(FILETYPE_CONFIG, buffer);
-            snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", buffer, path_default_slash(), options.romset_filename_noext);
-            buffer[0] = '\0';
+            if(strcmp(var.value, "enabled") == 0)
+              options.dual_joysticks = true;
+            else
+              options.dual_joysticks = false;
             
-            if(path_is_valid(cfg_file_path))
-            {            
-              if(!remove(cfg_file_path) == 0)
-                snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
-              else
-                snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+            if(first_time)
+              old_dual_joystick_state = options.dual_joysticks;
+            else if(old_dual_joystick_state != options.dual_joysticks)
+            {
+              char cfg_file_path[PATH_MAX_LENGTH];
+              char buffer[PATH_MAX_LENGTH];
+              osd_get_path(FILETYPE_CONFIG, buffer);
+              snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", buffer, path_default_slash(), options.romset_filename_noext);
+              buffer[0] = '\0';
+              
+              if(path_is_valid(cfg_file_path))
+              {            
+                if(!remove(cfg_file_path) == 0)
+                  snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+                else
+                  snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+              }
+              log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
+              usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
+              
+              load_input_port_settings();
+              old_dual_joystick_state = options.dual_joysticks;
             }
-            log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
-            usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
-            
-            load_input_port_settings();
-            old_dual_joystick_state = options.dual_joysticks;
+            break;
           }
-          break;
+          else /* always disabled except when options.content_flags[CONTENT_DUAL_JOYSTICK] has been set to true */
+          {
+            options.dual_joysticks = false; 
+            break;
+          }
 
         case OPT_RSTICK_BTNS:
           if(strcmp(var.value, "enabled") == 0)
@@ -726,7 +734,10 @@ static void set_content_flags(void)
 				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
 				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
 				"ffight", "ffightu", "ffightj",  "ffightj1", 0
-		 };    
+		 };
+
+  const char* dual_joy_drivers[] = { "angelkds", "aponow", "bandido", "bwidow", "ccboot", "ccboot2", "cclimber", "cclimbr2", "cclimbrj", "cloak", "cloakfr", "cloakgr", "cloaksp", "complexx", "dribling", "driblino", "firetpbl", "firetrap", "frontlin", "idsoccer", "inferno", "joyfulr", "karatedo", "karatevs", "kchamp", "kchampvs", "krull", "liblrabl", "losttmbh", "losttomb", "mars", "minefld", "mnchmobl", "rescraid", "rescrdsa", "rescue", "rockclim", "roishtar", "screwloo", "sdungeon", "sheriff", "smashtv", "smashtv4", "smashtv5", "smashtv6", "spcpostn", "splat", "stargrds", "stompin", "tinstar", "titlef", "totcarn", "totcarnp", "ultratnk", "wmatch", "wwester1", "wwestern", 0,
+  };  
 
   if(true) /* TODO: test for lightgun games */
   {
@@ -753,7 +764,7 @@ static void set_content_flags(void)
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as \"Die Hard: Arcade\". BIOS will be set to \"us\".\n");
   }
 
-
+  i = 0;
   while(ost_drivers[i])
   {
     if(strcmp(ost_drivers[i], game_driver->name) == 0)
@@ -769,16 +780,32 @@ static void set_content_flags(void)
     options.content_flags[CONTENT_VECTOR] = true;
     /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using a vector video display.\n");*/
   }
+
   if(true) /* TODO: test for dial games */
   {
     options.content_flags[CONTENT_DIAL] = true;
     /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using a rotary dial input device.\n");*/
   }
-  if(true) /* TODO: test for games which with dual joystick configurations */
+
+  i = 0;
+  if(game_driver->ctrl_dat->dual_joysticks)
   {
     options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
-    /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");*/
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified by controls.c as using \"dual joystick\" controls.\n");
   }
+  else
+  {
+    while(dual_joy_drivers[i]) /* fallback: if dual_joystick is not specified by ControlInfo, check our whitelist */
+    {
+      if(strcmp(dual_joy_drivers[i], game_driver->name) == 0)
+      {
+        options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
+        log_cb(RETRO_LOG_INFO, LOGPRE "Content listed in \"dual joystick\" whitelist.\n");
+      }
+      i++;
+    }
+  }
+
 }
 
 void retro_reset (void)
