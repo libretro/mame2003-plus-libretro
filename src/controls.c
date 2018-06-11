@@ -25,7 +25,7 @@ const struct ControlInfo generic_ctrl =
   false, /* dual joystick controls */
   &generic_ctrl_label /* button labeler function */ 
 };
- 
+
 const struct ControlInfo a88games_ctrl =
 {
   2, /* num_players */
@@ -20673,7 +20673,6 @@ const char *robocop2_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=3 */
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "8-way Joystick+joy8way";
     case IPT_BUTTON1: return "Shoot Left";
     case IPT_BUTTON2: return "Shoot Right";
@@ -20689,14 +20688,14 @@ const char *robocop2_get_ctrl_name(int type)
 
 const struct ControlInfo robotron_ctrl =
 {
-  2, /* num_players */
-  true, /* alternating_controls */
-  true, /* mirrored_controls */
-  true, /* has_tilt */
+  2,     /* num_players */
+  true,  /* alternating_controls */
+  true,  /* mirrored_controls */
+  true,  /* has_tilt */
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The drivers in mame don't have a cocktail mode, but klov shows a cocktail cab, and the robotron drawing set shows two (cocktail) sets of dual joysticks.", /* control__details */
-  false, /* dual joystick controls */
+  true,  /* dual joystick controls */
   &robotron_get_ctrl_name
 };
 
@@ -20706,13 +20705,13 @@ const char *robotron_get_ctrl_name(int type)
   {
 /* P1NumButtons=0 */
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER1): return "Dual 8-way Joysticks+doublejoy8way";
-    case IPT_JOYSTICKLEFT_UP: return "Move Up";
-    case IPT_JOYSTICKLEFT_DOWN: return "Move Down";
-    case IPT_JOYSTICKLEFT_LEFT: return "Move Left";
-    case IPT_JOYSTICKLEFT_RIGHT: return "Move Right";
-    case IPT_JOYSTICKRIGHT_UP: return "Fire Up";
-    case IPT_JOYSTICKRIGHT_DOWN: return "Fire Down";
-    case IPT_JOYSTICKRIGHT_LEFT: return "Fire Left";
+    case IPT_JOYSTICKLEFT_UP:     return "Move Up";
+    case IPT_JOYSTICKLEFT_DOWN:   return "Move Down";
+    case IPT_JOYSTICKLEFT_LEFT:   return "Move Left";
+    case IPT_JOYSTICKLEFT_RIGHT:  return "Move Right";
+    case IPT_JOYSTICKRIGHT_UP:    return "Fire Up";
+    case IPT_JOYSTICKRIGHT_DOWN:  return "Fire Down";
+    case IPT_JOYSTICKRIGHT_LEFT:  return "Fire Left";
     case IPT_JOYSTICKRIGHT_RIGHT: return "Fire Right";
   } /* end of switch */
 
