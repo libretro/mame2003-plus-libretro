@@ -15,14 +15,15 @@
 
 const struct ControlInfo generic_ctrl =
 {
-  0,
-  false,
-  false,
-  false,
-  false,
-  false,
-  "",
-  &generic_ctrl_label
+  0,     /* num_players */
+  false, /* alternating_controls */
+  false, /* mirrored_controls */
+  false, /* has_tilt */
+  false, /* has_cocktail_dipswitch */
+  false, /* uses_service */
+  "",    /* control__details */
+  false, /* dual joystick controls */
+  &generic_ctrl_label /* button labeler function */ 
 };
  
 const struct ControlInfo a88games_ctrl =
@@ -34,6 +35,7 @@ const struct ControlInfo a88games_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This is a 4 player team type game where 2 players compete each time.", /* control__details */
+  false, /* dual joystick controls */
   &a88games_get_ctrl_name
 };
 
@@ -60,6 +62,7 @@ const struct ControlInfo a005_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &a005_get_ctrl_name
 };
 
@@ -88,6 +91,7 @@ const struct ControlInfo a10yardj_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &a10yardj_get_ctrl_name
 };
 
@@ -117,6 +121,7 @@ const struct ControlInfo gtmr_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game has several options regarding the control type. It has an optional brake pedal/button as well as the option to play the game with either a 270 wheel or an 8way joystick. The controls shown here are the ones used on the dedicated model. Notice the lack of the brake pedal. It seems that the brake pedal was used in conversion kits as the dedicated cabinet didn't have one.", /* control_details */
+  false, /* dual joystick controls */
   &gtmr_get_ctrl_name
 };
 
@@ -143,6 +148,7 @@ const struct ControlInfo a1941_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &a1941_get_ctrl_name
 };
 
@@ -172,6 +178,7 @@ const struct ControlInfo a1942_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &a1942_get_ctrl_name
 };
 
@@ -201,6 +208,7 @@ const struct ControlInfo a1943kai_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "A - Fire, B - Bomb Pressing both buttons will allow the plane to loop", /* control__details */
+  false, /* dual joystick controls */
   &a1943kai_get_ctrl_name
 };
 
@@ -230,6 +238,7 @@ const struct ControlInfo a1943_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Press both buttons together to cause the plane to loop.", /* control__details */
+  false, /* dual joystick controls */
   &a1943_get_ctrl_name
 };
 
@@ -259,6 +268,7 @@ const struct ControlInfo a1944_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &a1944_get_ctrl_name
 };
 
@@ -288,6 +298,7 @@ const struct ControlInfo a19xx_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "If you hold down the shoot button, your weapon powers up and gives you a homing missle in addition to you normal weapon.", /* control__details */
+  false, /* dual joystick controls */
   &a19xx_get_ctrl_name
 };
 
@@ -317,6 +328,7 @@ const struct ControlInfo openice_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &openice_get_ctrl_name
 };
 
@@ -347,6 +359,7 @@ const struct ControlInfo a39in1_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This is a bootleg pcb that contains many classic vertical arcade games. Because of this the 'alternating play' flag is invalid and will vary from game to game. The game kit is a pcb only and thus lacks any official labels. The manual for this version lists the buttons as 1P-S1 thru 2P-S3. However, these are simply the jamma pinouts. Every control panel overlay manufacturer that has since released a overlay for this unit has either left the labels blank or labeled them A, B and C respectively.", /* control__details */
+  false, /* dual joystick controls */
   &a39in1_get_ctrl_name
 };
 
@@ -377,6 +390,7 @@ const struct ControlInfo a4enraya_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &a4enraya_get_ctrl_name
 };
 
@@ -404,6 +418,7 @@ const struct ControlInfo a4in1_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &a4in1_get_ctrl_name
 };
 
@@ -432,6 +447,7 @@ const struct ControlInfo a4dwarrio_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &a4dwarrio_get_ctrl_name
 };
 
@@ -461,6 +477,7 @@ const struct ControlInfo a64street_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Pressing both buttons will do a special attack", /* control__details */
+  false, /* dual joystick controls */
   &a64street_get_ctrl_name
 };
 
@@ -490,6 +507,7 @@ const struct ControlInfo a720_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER: The 720 controller is unique. It is an optical sensed spinner with a joystick handle. The controller had two encoder wheels on the same axis /* control_details */ one was like a normal spinner encode wheel with 72 spokes & 72 gaps, the other encoder wheel had only two gaps spaced as far as alternating gaps on the normal encoder wheel (ie: instead of gap, spoke, gap, spoke, gap like on the normal wheel, the middle gap was part of the one fat spoke seperating the two gaps on the ends). The normal encoder wheel turns the character in the game, the other encoder wheel is to help keep the stick calibrated with the screen, on each rotation of the stick. Mame only emulates the normal wheel as a dial type input; the other is ignored. The character in the game can face 16 directions: the 4 cardinal directions, the 4 normal diagonals, and the 8 directions inbetween the cardinals and the diagonals. The Kick button makes the character skate faster (in case that's not clear). Both buttons are mirrored on opposite sides of the 'joystick' spinner, but like most mirror cases, they are wired as a total of only two buttons.",
+  false, /* dual joystick controls */
   &a720_get_ctrl_name
 };
 
@@ -517,6 +535,7 @@ const struct ControlInfo a7jigen_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &a7jigen_get_ctrl_name
 };
 
@@ -540,6 +559,7 @@ const struct ControlInfo ace_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 2-way horizontal stick is a trigger stick, pushing left rotates the plane anticlockwise, pushing right rotates the plane clockwise", /* control__details */
+  false, /* dual joystick controls */
   &ace_get_ctrl_name
 };
 
@@ -568,6 +588,7 @@ const struct ControlInfo acrobatm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Hold down Fire button to increase power", /* control__details */
+  false, /* dual joystick controls */
   &acrobatm_get_ctrl_name
 };
 
@@ -597,6 +618,7 @@ const struct ControlInfo actfancr_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &actfancr_get_ctrl_name
 };
 
@@ -626,6 +648,7 @@ const struct ControlInfo hatena_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &hatena_get_ctrl_name
 };
 
@@ -653,6 +676,7 @@ const struct ControlInfo aerofgt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Pressing bomb button drops bomb and plane also loops. There are no labels on the CP.", /* control__details */
+  false, /* dual joystick controls */
   &aerofgt_get_ctrl_name
 };
 
@@ -682,6 +706,7 @@ const struct ControlInfo aburner2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'unknown' button is emulated in MAME but has no real purpose. As far as I can tell from the drivers, it was used for some sort of feedback in the simulation cockpits.", /* control__details */
+  false, /* dual joystick controls */
   &aburner2_get_ctrl_name
 };
 
@@ -714,6 +739,7 @@ const struct ControlInfo koshien_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "A - Power-up B - Hit/Throw C - Unknown action during game", /* control__details */
+  false, /* dual joystick controls */
   &koshien_get_ctrl_name
 };
 
@@ -744,6 +770,7 @@ const struct ControlInfo airbustr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Only 1 button on the CP but Mame has 2 mapped (both doing the same thing)", /* control__details */
+  false, /* dual joystick controls */
   &airbustr_get_ctrl_name
 };
 
@@ -773,6 +800,7 @@ const struct ControlInfo airduel_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Pinout shows 3 buttons (Fire1, Fire2, Fire3), the flyer shows 2 buttons, Mame has 4 buttons mapped and only 2 seem to work", /* control__details */
+  false, /* dual joystick controls */
   &airduel_get_ctrl_name
 };
 
@@ -804,6 +832,7 @@ const struct ControlInfo airwolf_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button 2 acts differently based on the position on the screen. In the lower half of the screen button 2 will shoot diagonally down to the ground. In the top half it will drop a bomb", /* control__details */
+  false, /* dual joystick controls */
   &airwolf_get_ctrl_name
 };
 
@@ -833,6 +862,7 @@ const struct ControlInfo ajax_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ajax_get_ctrl_name
 };
 
@@ -863,6 +893,7 @@ const struct ControlInfo alexkidd_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "I cold not find what the 3rd button did nor did I immediately notice where it is written in the driver (I think it's one of those generic drivers)", /* control__details */
+  false, /* dual joystick controls */
   &alexkidd_get_ctrl_name
 };
 
@@ -893,6 +924,7 @@ const struct ControlInfo alibaba_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Drop is not the button label (couldn't find one). It drops something behind your character which blocks the path of the Captain Thief which allows you to get away", /* control__details */
+  false, /* dual joystick controls */
   &alibaba_get_ctrl_name
 };
 
@@ -921,6 +953,7 @@ const struct ControlInfo astorm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &astorm_get_ctrl_name
 };
 
@@ -951,6 +984,7 @@ const struct ControlInfo aliensyn_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &aliensyn_get_ctrl_name
 };
 
@@ -979,6 +1013,7 @@ const struct ControlInfo avsp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The default dipswitch is two player mode /* control_details */ you need to F2 into the game's service mode and change it to three player mode to play with 3 players. Each character has special moves.",
+  false, /* dual joystick controls */
   &avsp_get_ctrl_name
 };
 
@@ -1009,6 +1044,7 @@ const struct ControlInfo alien3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There isn't much info about the 'real' name for the second button on the guns. If you have any info feel free to corect.", /* control__details */
+  false, /* dual joystick controls */
   &alien3_get_ctrl_name
 };
 
@@ -1038,6 +1074,7 @@ const struct ControlInfo aliens_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &aliens_get_ctrl_name
 };
 
@@ -1067,6 +1104,7 @@ const struct ControlInfo aafb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joystick controls the player movement while the kicker is for kicking and passing.", /* control__details */
+  false, /* dual joystick controls */
   &aafb_get_ctrl_name
 };
 
@@ -1099,6 +1137,7 @@ const struct ControlInfo alleymas_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Probably the oddest bowling game out there, this game uses a football kicker stick to bowl!", /* control__details */
+  false, /* dual joystick controls */
   &alleymas_get_ctrl_name
 };
 
@@ -1128,6 +1167,7 @@ const struct ControlInfo alphaho_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &alphaho_get_ctrl_name
 };
 
@@ -1156,6 +1196,7 @@ const struct ControlInfo alpinerd_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a dedicated platform shaped like a pair of skiis. It basically acts like a giant analog stick. The player navigates via three, lighted, navigational buttons. (Left, Right and Decision)  The Decision button also changes view during gameplay. The 'sweep' and 'edge' descriptions were taken directly from the game's cryptic i/o test menu. Knowing nothing about skiiing, the way the terms 'sweep' and 'edge' were used may be incorrect.", /* control__details */
+  false, /* dual joystick controls */
   &alpinerd_get_ctrl_name
 };
 
@@ -1186,6 +1227,7 @@ const struct ControlInfo alpine_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo depicted a simple arrow pointing up for the button label. Upon research I found that this button makes you go down the hill faster. I modified the caption accordingly to avoid confusion. For left and right, the cpo shows a picture of a skiier going left and right respectively. I added the 'ski' part of the caption to prepare for the upcoming icon support in the viewer. As the game doesn't have a true caption, this shouldn't be any less accurate.", /* control__details */
+  false, /* dual joystick controls */
   &alpine_get_ctrl_name
 };
 
@@ -1212,6 +1254,7 @@ const struct ControlInfo altbeast_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &altbeast_get_ctrl_name
 };
 
@@ -1242,6 +1285,7 @@ const struct ControlInfo maze_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &maze_get_ctrl_name
 };
 
@@ -1269,6 +1313,7 @@ const struct ControlInfo horshoes_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &horshoes_get_ctrl_name
 };
 
@@ -1298,6 +1343,7 @@ const struct ControlInfo amspdwy_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &amspdwy_get_ctrl_name
 };
 
@@ -1324,6 +1370,7 @@ const struct ControlInfo amerdart_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "To play, aim with the trackball, press the 'lock' button to set the position and then roll to throw.", /* control__details */
+  false, /* dual joystick controls */
   &amerdart_get_ctrl_name
 };
 
@@ -1352,6 +1399,7 @@ const struct ControlInfo amidar_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &amidar_get_ctrl_name
 };
 
@@ -1380,6 +1428,7 @@ const struct ControlInfo angelkds_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Left joy controls the left kid, right controls the right kid", /* control__details */
+  false, /* dual joystick controls */
   &angelkds_get_ctrl_name
 };
 
@@ -1411,6 +1460,7 @@ const struct ControlInfo anteater_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Not sure if the label is correct but that's what it does. Couldn't find a pic of the panel", /* control__details */
+  false, /* dual joystick controls */
   &anteater_get_ctrl_name
 };
 
@@ -1439,6 +1489,7 @@ const struct ControlInfo apb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &apb_get_ctrl_name
 };
 
@@ -1467,6 +1518,7 @@ const struct ControlInfo apparel_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &apparel_get_ctrl_name
 };
 
@@ -1490,6 +1542,7 @@ const struct ControlInfo aquajack_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In mame a dial is also emulated. This dial has no apparent function and isn't used in the game at all. It could be reminants of a hack or something.", /* control__details */
+  false, /* dual joystick controls */
   &aquajack_get_ctrl_name
 };
 
@@ -1521,6 +1574,7 @@ const struct ControlInfo aquarium_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "You can choose at the start of the game whether you would like to use 1 or 2 buttons Type A - 2 buttons Type B - 1 button No pic available, labelled on what they do", /* control__details */
+  false, /* dual joystick controls */
   &aquarium_get_ctrl_name
 };
 
@@ -1550,6 +1604,7 @@ const struct ControlInfo arabian_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &arabian_get_ctrl_name
 };
 
@@ -1578,6 +1633,7 @@ const struct ControlInfo arbalest_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &arbalest_get_ctrl_name
 };
 
@@ -1607,6 +1663,7 @@ const struct ControlInfo arcadecl_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &arcadecl_get_ctrl_name
 };
 
@@ -1637,6 +1694,7 @@ const struct ControlInfo archrivl_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The control panel for this game had two pass buttons, but they were merely wired to the same input as only one pass is wired in the schematics. The controls actually used 49-way joysticks for this game, which can be thought of as corse analog sticks.", /* control__details */
+  false, /* dual joystick controls */
   &archrivl_get_ctrl_name
 };
 
@@ -1666,6 +1724,7 @@ const struct ControlInfo area51_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "As with many of the lightgun games at the time, Area 51 requires you to fire off screen to reload. Mame has hacked this to where you fire at the absolute edge of the screen to reload. This is good for people who don't use lightguns but very bad for those of us who do.", /* control__details */
+  false, /* dual joystick controls */
   &area51_get_ctrl_name
 };
 
@@ -1694,6 +1753,7 @@ const struct ControlInfo area51mx_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &area51mx_get_ctrl_name
 };
 
@@ -1722,6 +1782,7 @@ const struct ControlInfo a51site4_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Shoot off-screen to reload. Note:  many pc lightguns have a dedicated reload button, which mame supports.", /* control__details */
+  false, /* dual joystick controls */
   &a51site4_get_ctrl_name
 };
 
@@ -1750,6 +1811,7 @@ const struct ControlInfo argus_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Fire button shoots flying objects, the laser hits the ground units", /* control__details */
+  false, /* dual joystick controls */
   &argus_get_ctrl_name
 };
 
@@ -1779,6 +1841,7 @@ const struct ControlInfo arkarea_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "To change direction hold the direction button down while using the joystick", /* control__details */
+  false, /* dual joystick controls */
   &arkarea_get_ctrl_name
 };
 
@@ -1808,6 +1871,7 @@ const struct ControlInfo arkanoid_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &arkanoid_get_ctrl_name
 };
 
@@ -1834,6 +1898,7 @@ const struct ControlInfo arknoid2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &arknoid2_get_ctrl_name
 };
 
@@ -1860,6 +1925,7 @@ const struct ControlInfo arlingtn_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Sirp Please fix me.... vertical 2 ways have the wrong labels showing up and there isn't a directional 2 way button (vertical), which is what I use.", /* control__details */
+  false, /* dual joystick controls */
   &arlingtn_get_ctrl_name
 };
 
@@ -1889,6 +1955,7 @@ const struct ControlInfo armwrest_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This Game only uses 3 directions of the 4 way stick. Down is not used.", /* control__details */
+  false, /* dual joystick controls */
   &armwrest_get_ctrl_name
 };
 
@@ -1917,6 +1984,7 @@ const struct ControlInfo armedf_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button 3 is mapped in driver armedf.c but isn't used", /* control__details */
+  false, /* dual joystick controls */
   &armedf_get_ctrl_name
 };
 
@@ -1947,6 +2015,7 @@ const struct ControlInfo armora_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Something of note is this game is pretty much unplayable in Mame without the artwork pack that goes with the rom. Be sure to download it.", /* control__details */
+  false, /* dual joystick controls */
   &armora_get_ctrl_name
 };
 
@@ -1974,6 +2043,7 @@ const struct ControlInfo armorcar_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "I think a bit of how to play info might be necessary. The sawhorse button releases a police barrier to crash cars. The 2nd gear button makes you go faster, but only while it is held.", /* control__details */
+  false, /* dual joystick controls */
   &armorcar_get_ctrl_name
 };
 
@@ -2003,6 +2073,7 @@ const struct ControlInfo ashura_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ashura_get_ctrl_name
 };
 
@@ -2032,6 +2103,7 @@ const struct ControlInfo aso_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &aso_get_ctrl_name
 };
 
@@ -2062,6 +2134,7 @@ const struct ControlInfo assault_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame-wise, this game is really odd. The original game uses dual 4-way trigger sticks. However the author of the mame driver also hacked in an optional 1 stick control scheme so you can play the game with a regular single stick. Unfortunately, this hack interferes with the real inputs so you have to clear one or the other to play properly. It should also be noted that you can not rapid roll with the hack as the game requires you to press both sticks left or right at once to do a roll. Also there is a phantom button defined that is useless. Gameplay Tips:  To rapid roll push both sticks in the same direction. (Left or right only)  To launch a grenade push both sticks to the outside and fire when ready.", /* control__details */
+  false, /* dual joystick controls */
   &assault_get_ctrl_name
 };
 
@@ -2087,6 +2160,7 @@ const struct ControlInfo asterix_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Watch the attract screen to view general and special moves", /* control__details */
+  false, /* dual joystick controls */
   &asterix_get_ctrl_name
 };
 
@@ -2116,6 +2190,7 @@ const struct ControlInfo asteroid_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &asteroid_get_ctrl_name
 };
 
@@ -2144,6 +2219,7 @@ const struct ControlInfo astdelux_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &astdelux_get_ctrl_name
 };
 
@@ -2172,6 +2248,7 @@ const struct ControlInfo astrob_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Don't think Star Trek when you see the warp button. It activates a 10 second time warp which slows the enemies down. So who ever said that Binx was innovative was about 20 years too late.", /* control__details */
+  false, /* dual joystick controls */
   &astrob_get_ctrl_name
 };
 
@@ -2199,6 +2276,7 @@ const struct ControlInfo astrof_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &astrof_get_ctrl_name
 };
 
@@ -2225,6 +2303,7 @@ const struct ControlInfo astinvad_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &astinvad_get_ctrl_name
 };
 
@@ -2251,6 +2330,7 @@ const struct ControlInfo asuka_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &asuka_get_ctrl_name
 };
 
@@ -2280,6 +2360,7 @@ const struct ControlInfo asylum_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &asylum_get_ctrl_name
 };
 
@@ -2309,6 +2390,7 @@ const struct ControlInfo abaseb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Action button depends if batting or fielding - selects hit, swings bat, selects pitch, throws etc", /* control__details */
+  false, /* dual joystick controls */
   &abaseb_get_ctrl_name
 };
 
@@ -2337,6 +2419,7 @@ const struct ControlInfo atarifb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There are 4 plays (well, four offense, four defense) per player displayed as part of the control panel with an LED for each play and selected with the action button. You cannot play against the computer: this game has to be played with two players. There is a four player version with four trackballs /* control_details */ that version has to be played with 4 players. **Update**  I looked in the mame cpo pack and found a pic to fill in the button label. Rebel, if you need a copy of the cpo pack please contact me, it's very helpful.",
+  false, /* dual joystick controls */
   &atarifb_get_ctrl_name
 };
 
@@ -2365,6 +2448,7 @@ const struct ControlInfo ataxx_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ataxx_get_ctrl_name
 };
 
@@ -2393,6 +2477,7 @@ const struct ControlInfo athena_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &athena_get_ctrl_name
 };
 
@@ -2422,6 +2507,7 @@ const struct ControlInfo atehate_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &atehate_get_ctrl_name
 };
 
@@ -2449,6 +2535,7 @@ const struct ControlInfo atomicp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "If a falling block has one block flashing you can press the second button and you get four choices. One of these it to get to select what the next shape will be. Mame has this as a 8-way in the system16.c driver but while playing acts like a 4-way", /* control__details */
+  false, /* dual joystick controls */
   &atomicp_get_ctrl_name
 };
 
@@ -2478,6 +2565,7 @@ const struct ControlInfo robokid_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &robokid_get_ctrl_name
 };
 
@@ -2507,6 +2595,7 @@ const struct ControlInfo aurail_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Special sends out remote attack drones", /* control__details */
+  false, /* dual joystick controls */
   &aurail_get_ctrl_name
 };
 
@@ -2537,6 +2626,7 @@ const struct ControlInfo av2mj1bb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &av2mj1bb_get_ctrl_name
 };
 
@@ -2560,6 +2650,7 @@ const struct ControlInfo av2mj2rg_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &av2mj2rg_get_ctrl_name
 };
 
@@ -2583,6 +2674,7 @@ const struct ControlInfo avalnche_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &avalnche_get_ctrl_name
 };
 
@@ -2609,6 +2701,7 @@ const struct ControlInfo avengers_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button A - Punch Button B - Kick", /* control__details */
+  false, /* dual joystick controls */
   &avengers_get_ctrl_name
 };
 
@@ -2638,6 +2731,7 @@ const struct ControlInfo avspirit_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button A - Fire Button B - Jump", /* control__details */
+  false, /* dual joystick controls */
   &avspirit_get_ctrl_name
 };
 
@@ -2667,6 +2761,7 @@ const struct ControlInfo aztarac_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &aztarac_get_ctrl_name
 };
 
@@ -2698,6 +2793,7 @@ const struct ControlInfo azurian_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &azurian_get_ctrl_name
 };
 
@@ -2726,6 +2822,7 @@ const struct ControlInfo baddudes_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Holding down attack while standing still will charge up a super punch. Pressing jump and attack at once will do a super kick at the expense of some of your energy.", /* control__details */
+  false, /* dual joystick controls */
   &baddudes_get_ctrl_name
 };
 
@@ -2755,6 +2852,7 @@ const struct ControlInfo badlands_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &badlands_get_ctrl_name
 };
 
@@ -2782,6 +2880,7 @@ const struct ControlInfo bagman_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bagman_get_ctrl_name
 };
 
@@ -2810,6 +2909,7 @@ const struct ControlInfo bkrtmaq_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This will display in mame as a 4 player even though it is only 2 player.", /* control__details */
+  false, /* dual joystick controls */
   &bkrtmaq_get_ctrl_name
 };
 
@@ -2837,6 +2937,7 @@ const struct ControlInfo bakutotu_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "All buttons do the same thing", /* control__details */
+  false, /* dual joystick controls */
   &bakutotu_get_ctrl_name
 };
 
@@ -2867,6 +2968,7 @@ const struct ControlInfo ballbomb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ballbomb_get_ctrl_name
 };
 
@@ -2893,6 +2995,7 @@ const struct ControlInfo ballbros_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame has 3 buttons mapped but the game only has 1.", /* control__details */
+  false, /* dual joystick controls */
   &ballbros_get_ctrl_name
 };
 
@@ -2923,6 +3026,7 @@ const struct ControlInfo baluba_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &baluba_get_ctrl_name
 };
 
@@ -2951,6 +3055,7 @@ const struct ControlInfo bangball_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bangball_get_ctrl_name
 };
 
@@ -2979,6 +3084,7 @@ const struct ControlInfo bang_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bang_get_ctrl_name
 };
 
@@ -3007,6 +3113,7 @@ const struct ControlInfo bankp_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bankp_get_ctrl_name
 };
 
@@ -3035,6 +3142,7 @@ const struct ControlInfo baraduke_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &baraduke_get_ctrl_name
 };
 
@@ -3063,6 +3171,7 @@ const struct ControlInfo barricad_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Panel had directional buttons but of course mame is mapped to the normal joystick inputs", /* control__details */
+  false, /* dual joystick controls */
   &barricad_get_ctrl_name
 };
 
@@ -3090,6 +3199,7 @@ const struct ControlInfo barrier_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame has the original directional buttons mapped to the normal mame movement buttons  Buttons are used to select skill level", /* control__details */
+  false, /* dual joystick controls */
   &barrier_get_ctrl_name
 };
 
@@ -3120,6 +3230,7 @@ const struct ControlInfo bsktball_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "On the real machine this game had the start button wired onto the action button and the true caption reads 'Start, Shoot  & Jump'  However it appears that the start button has been split out in mame.", /* control__details */
+  false, /* dual joystick controls */
   &bsktball_get_ctrl_name
 };
 
@@ -3148,6 +3259,7 @@ const struct ControlInfo batman_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &batman_get_ctrl_name
 };
 
@@ -3177,6 +3289,7 @@ const struct ControlInfo batsugun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &batsugun_get_ctrl_name
 };
 
@@ -3206,6 +3319,7 @@ const struct ControlInfo battlnts_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &battlnts_get_ctrl_name
 };
 
@@ -3234,6 +3348,7 @@ const struct ControlInfo bkraidj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "At the ship select screen: To select a 'main shot power type' fighter, select your ship with A button, To select a 'Bomber power type', select your ship with B button, To select a 'Side shot power type', select your ship with C button, To select a 'Speed up type', select your ship with Start button. During game A - Shoot, B - Bomb", /* control__details */
+  false, /* dual joystick controls */
   &bkraidj_get_ctrl_name
 };
 
@@ -3264,6 +3379,7 @@ const struct ControlInfo battlex_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &battlex_get_ctrl_name
 };
 
@@ -3292,6 +3408,7 @@ const struct ControlInfo bcruzm12_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Should be just a horizontal 2-way joystick as shown on the coinop link. However mame driver marineb.c has as 8-way", /* control__details */
+  false, /* dual joystick controls */
   &bcruzm12_get_ctrl_name
 };
 
@@ -3318,6 +3435,7 @@ const struct ControlInfo btlkroad_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &btlkroad_get_ctrl_name
 };
 
@@ -3351,6 +3469,7 @@ const struct ControlInfo battlane_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &battlane_get_ctrl_name
 };
 
@@ -3380,6 +3499,7 @@ const struct ControlInfo atlantis_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &atlantis_get_ctrl_name
 };
 
@@ -3409,6 +3529,7 @@ const struct ControlInfo battlera_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &battlera_get_ctrl_name
 };
 
@@ -3439,6 +3560,7 @@ const struct ControlInfo bshark_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a one of a kind periscope control and you look into the periscope to see the screen similar to battlezone. For all intensive purposes it's a glorified star wars yoke though.", /* control__details */
+  false, /* dual joystick controls */
   &bshark_get_ctrl_name
 };
 
@@ -3467,6 +3589,7 @@ const struct ControlInfo btoads_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is either set to 2 player, where you can select your toad, or 3 player, where the toads are hard-wired to the panel. You can adjust this setting in the dipswitches.", /* control__details */
+  false, /* dual joystick controls */
   &btoads_get_ctrl_name
 };
 
@@ -3496,6 +3619,7 @@ const struct ControlInfo bzone_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Both handles have holes for a trigger switch, but generally only one has a button.", /* control__details */
+  false, /* dual joystick controls */
   &bzone_get_ctrl_name
 };
 
@@ -3524,6 +3648,7 @@ const struct ControlInfo bayroute_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bayroute_get_ctrl_name
 };
 
@@ -3553,6 +3678,7 @@ const struct ControlInfo beaminv_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &beaminv_get_ctrl_name
 };
 
@@ -3579,6 +3705,7 @@ const struct ControlInfo bbusters_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bbusters_get_ctrl_name
 };
 
@@ -3608,6 +3735,7 @@ const struct ControlInfo beathead_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Jump - player jumps to the adjacent block in the desired direction Big Jump - plyers jumps over the adjacent block and lands on the next", /* control__details */
+  false, /* dual joystick controls */
   &beathead_get_ctrl_name
 };
 
@@ -3637,6 +3765,7 @@ const struct ControlInfo bm1stmix_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  false, /* dual joystick controls */
   &bm1stmix_get_ctrl_name
 };
 
@@ -3667,6 +3796,7 @@ const struct ControlInfo bm2ndmix_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  false, /* dual joystick controls */
   &bm2ndmix_get_ctrl_name
 };
 
@@ -3697,6 +3827,7 @@ const struct ControlInfo bm4thmix_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  false, /* dual joystick controls */
   &bm4thmix_get_ctrl_name
 };
 
@@ -3727,6 +3858,7 @@ const struct ControlInfo bm5thmix_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  false, /* dual joystick controls */
   &bm5thmix_get_ctrl_name
 };
 
@@ -3757,6 +3889,7 @@ const struct ControlInfo bm6thmix_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  false, /* dual joystick controls */
   &bm6thmix_get_ctrl_name
 };
 
@@ -3787,6 +3920,7 @@ const struct ControlInfo bmcompmx_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  false, /* dual joystick controls */
   &bmcompmx_get_ctrl_name
 };
 
@@ -3817,6 +3951,7 @@ const struct ControlInfo bmcompm2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  false, /* dual joystick controls */
   &bmcompm2_get_ctrl_name
 };
 
@@ -3847,6 +3982,7 @@ const struct ControlInfo bmcorerm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  false, /* dual joystick controls */
   &bmcorerm_get_ctrl_name
 };
 
@@ -3877,6 +4013,7 @@ const struct ControlInfo bmdct_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a musical 'keyboard' and Turntable. The keyboard is actually 5 trivia buttons rotated 90 degrees, arranged like a section of a piano.    This game has a 6th button next to the start buttons on the control panel labeled 'Effector'. The button is mapped to start3 in mame because of it's physical position and this seems to make the most sense. As the button doesn't really impact gameplay, we'll simply ignore it for now.", /* control__details */
+  false, /* dual joystick controls */
   &bmdct_get_ctrl_name
 };
 
@@ -3907,6 +4044,7 @@ const struct ControlInfo beezer_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &beezer_get_ctrl_name
 };
 
@@ -3934,6 +4072,7 @@ const struct ControlInfo bel_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame has 4 buttons for this game, but it's leftover from the generic model 2 driver. Only the trigger button and grenade button, both monunted on the gun, exist.", /* control__details */
+  false, /* dual joystick controls */
   &bel_get_ctrl_name
 };
 
@@ -3963,6 +4102,7 @@ const struct ControlInfo blswhstl_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Both buttons do the same thing. The review on gamefaqs says there is only 1 button, but the game is using the tmnt.c driver which has 2 buttons as default for all games", /* control__details */
+  false, /* dual joystick controls */
   &blswhstl_get_ctrl_name
 };
 
@@ -3992,6 +4132,7 @@ const struct ControlInfo berabohm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Original game has 2 pressure sensitive buttons but mame is hacked to 4 buttons. To do the hard attack, press buttons 1 and 2 together, for high jump, press buttons 3 and 4 together. Taken from the driver (namcos1.c)   Notes: The berabohm buttons don't work too well. The real thing has a special pressure sensitive button, with two switches. The harder you push the button, the faster the two switches are closed one after another. Due to MAME's limited input sample rate (once per frame) it is difficult to measure the time between the two. Buttons (pressure sensitive) each button has two switches: the first is closed as soon as the button is pressed, the second a little later, depending on how hard the button is pressed. 	bits 0-5 control strength (0x00 = max 0x3f = min) 	bit 6 indicates the button is pressed 	bit 7 is not actually read by the game but I use it to simulate the second switch", /* control__details */
+  false, /* dual joystick controls */
   &berabohm_get_ctrl_name
 };
 
@@ -4023,6 +4164,7 @@ const struct ControlInfo bermudat_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button two changes the formation of the picked up small shield airplanes.", /* control__details */
+  false, /* dual joystick controls */
   &bermudat_get_ctrl_name
 };
 
@@ -4054,6 +4196,7 @@ const struct ControlInfo berzerk_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game was shipped out the door with a 8 way optical joystick. The joystick behaved exactly like a regular 8 way joystick except it was constantly failing. It was so bad that Stern recalled the orignal joystick and offered free leaf replacments to all the owners. So for the history books this game didn't use a regular 8 way, but in actuality it did 99 percent of the time.", /* control__details */
+  false, /* dual joystick controls */
   &berzerk_get_ctrl_name
 };
 
@@ -4082,6 +4225,7 @@ const struct ControlInfo bigevglf_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button is on either side of the trackball. Button 2 is only used in cocktail mode.", /* control__details */
+  false, /* dual joystick controls */
   &bigevglf_get_ctrl_name
 };
 
@@ -4111,6 +4255,7 @@ const struct ControlInfo bigkarnk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bigkarnk_get_ctrl_name
 };
 
@@ -4140,6 +4285,7 @@ const struct ControlInfo bigrun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Obviously the horn button isn't labeled, but is the horn on the wheel.", /* control__details */
+  false, /* dual joystick controls */
   &bigrun_get_ctrl_name
 };
 
@@ -4170,6 +4316,7 @@ const struct ControlInfo bigstrik_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In offense A-Short Pass, B-Long Pass/Shoot, C-Fake Play In defense A-Sliding Tackle, B-Steal", /* control__details */
+  false, /* dual joystick controls */
   &bigstrik_get_ctrl_name
 };
 
@@ -4200,6 +4347,7 @@ const struct ControlInfo bigtwin_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Couldn?t find what the actually button is called on the panel but by pressing it you cause the hand on the screen to grab a ball", /* control__details */
+  false, /* dual joystick controls */
   &bigtwin_get_ctrl_name
 };
 
@@ -4228,6 +4376,7 @@ const struct ControlInfo bbonk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Driver(lazercmd.c) has the controls as joystick while Klov states directional buttons - couldn't find any CPO pics", /* control__details */
+  false, /* dual joystick controls */
   &bbonk_get_ctrl_name
 };
 
@@ -4255,6 +4404,7 @@ const struct ControlInfo bijokkog_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &bijokkog_get_ctrl_name
 };
 
@@ -4278,6 +4428,7 @@ const struct ControlInfo bijokkoy_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &bijokkoy_get_ctrl_name
 };
 
@@ -4301,6 +4452,7 @@ const struct ControlInfo bioatack_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bioatack_get_ctrl_name
 };
 
@@ -4329,6 +4481,7 @@ const struct ControlInfo bioship_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Super-Fire is achived by holding down the Fire button until the meter at the lower end of the screen reads full. Holding the Cursor button down causes the Paladin to remain stationary and the cursor can be moved around the screen using the joystick", /* control__details */
+  false, /* dual joystick controls */
   &bioship_get_ctrl_name
 };
 
@@ -4358,6 +4511,7 @@ const struct ControlInfo biofreak_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &biofreak_get_ctrl_name
 };
 
@@ -4391,6 +4545,7 @@ const struct ControlInfo biomtoy_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Game is only 1 player while the driver (gaelco.c) has 2.", /* control__details */
+  false, /* dual joystick controls */
   &biomtoy_get_ctrl_name
 };
 
@@ -4420,6 +4575,7 @@ const struct ControlInfo bionicc_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bionicc_get_ctrl_name
 };
 
@@ -4449,6 +4605,7 @@ const struct ControlInfo bking_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bking_get_ctrl_name
 };
 
@@ -4476,6 +4633,7 @@ const struct ControlInfo bking2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bking2_get_ctrl_name
 };
 
@@ -4503,6 +4661,7 @@ const struct ControlInfo bking3_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bking3_get_ctrl_name
 };
 
@@ -4530,6 +4689,7 @@ const struct ControlInfo birdtry_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In game controls lists dial input for both players. I think this is taken from hbarrel which is from the same driver (dec0.c). Shouldn?t be in there. Gameplay - press the options button to change club, swing type and ball spin. Press the swing button to start swing. When red bar on right side of screen reaches desired power press swing again.", /* control__details */
+  false, /* dual joystick controls */
   &birdtry_get_ctrl_name
 };
 
@@ -4559,6 +4719,7 @@ const struct ControlInfo psailor1_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &psailor1_get_ctrl_name
 };
 
@@ -4582,6 +4743,7 @@ const struct ControlInfo psailor2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &psailor2_get_ctrl_name
 };
 
@@ -4605,6 +4767,7 @@ const struct ControlInfo blkheart_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &blkheart_get_ctrl_name
 };
 
@@ -4634,6 +4797,7 @@ const struct ControlInfo blkhole_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &blkhole_get_ctrl_name
 };
 
@@ -4660,6 +4824,7 @@ const struct ControlInfo blkpnthr_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "No panel pics but that's what the buttons do.", /* control__details */
+  false, /* dual joystick controls */
   &blkpnthr_get_ctrl_name
 };
 
@@ -4689,6 +4854,7 @@ const struct ControlInfo blktiger_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &blktiger_get_ctrl_name
 };
 
@@ -4718,6 +4884,7 @@ const struct ControlInfo bwidow_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bwidow_get_ctrl_name
 };
 
@@ -4749,6 +4916,7 @@ const struct ControlInfo bmaster_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bmaster_get_ctrl_name
 };
 
@@ -4778,6 +4946,7 @@ const struct ControlInfo bladestl_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Mame driver has inputs for a 8 way joystick as well, but I've yet to find a machine that uses those inputs. It's unknown if this is a hack.", /* control__details */
+  false, /* dual joystick controls */
   &bladestl_get_ctrl_name
 };
 
@@ -4808,6 +4977,7 @@ const struct ControlInfo blandia_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &blandia_get_ctrl_name
 };
 
@@ -4838,6 +5008,7 @@ const struct ControlInfo blastoff_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Driver (namcos1.c) has standard 3 button layout although only 2 are required", /* control__details */
+  false, /* dual joystick controls */
   &blastoff_get_ctrl_name
 };
 
@@ -4868,6 +5039,7 @@ const struct ControlInfo blasted_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &blasted_get_ctrl_name
 };
 
@@ -4896,6 +5068,7 @@ const struct ControlInfo blaster_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a 49-way optical triggerstick with thumb button. The buttons are repeated on the control panel. The game uses aircraft style controls - Pull back on the stick to climb.", /* control__details */
+  false, /* dual joystick controls */
   &blaster_get_ctrl_name
 };
 
@@ -4926,6 +5099,7 @@ const struct ControlInfo blstroid_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &blstroid_get_ctrl_name
 };
 
@@ -4954,6 +5128,7 @@ const struct ControlInfo blasto_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Cocktail cabinet had directional buttons (up/down/left/right) while upright had joysticks. Clearly seen on the arcadeflyer link", /* control__details */
+  false, /* dual joystick controls */
   &blasto_get_ctrl_name
 };
 
@@ -4982,6 +5157,7 @@ const struct ControlInfo blazeon_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Editor's note:  The control panel on this gmae labels the buttons simply as 'A' and 'B' but I felt it would be ok to simply put the actual functions as described in the flyer. As this game was often sold as a conversion kit, we can assume that the flyer used the labels 'A' and 'B' because that is the 'jamma standard' labeling scheme. A = Normal shot, B = Special Weapon / Attack", /* control__details */
+  false, /* dual joystick controls */
   &blazeon_get_ctrl_name
 };
 
@@ -5011,6 +5187,7 @@ const struct ControlInfo blockout_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that oddly enough, the drop button, which is on the top-fire is the 4th button, not the first. Button A rotates on the Z axis, B on the Y axis, and C on the Ry. If you can't follow that just try the game an you will cath on.", /* control__details */
+  false, /* dual joystick controls */
   &blockout_get_ctrl_name
 };
 
@@ -5042,6 +5219,7 @@ const struct ControlInfo blockade_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &blockade_get_ctrl_name
 };
 
@@ -5069,6 +5247,7 @@ const struct ControlInfo bloodbro_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bloodbro_get_ctrl_name
 };
 
@@ -5099,6 +5278,7 @@ const struct ControlInfo bloxeed_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bloxeed_get_ctrl_name
 };
 
@@ -5127,6 +5307,7 @@ const struct ControlInfo blueprnt_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &blueprnt_get_ctrl_name
 };
 
@@ -5155,6 +5336,7 @@ const struct ControlInfo blueshrk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game actually used a one axis positional gun shaped to look like a spear gun. The spear shoots from the bottom of the screen and travels all the way to the top so just one axis is needed.", /* control__details */
+  false, /* dual joystick controls */
   &blueshrk_get_ctrl_name
 };
 
@@ -5180,6 +5362,7 @@ const struct ControlInfo bodyslam_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Press help when near team mate to tag Press punch + kick and a direction to run Press punch when opponent on ground to pick them up Press kick to pin Press help to get up off the ground", /* control__details */
+  false, /* dual joystick controls */
   &bodyslam_get_ctrl_name
 };
 
@@ -5210,6 +5393,7 @@ const struct ControlInfo bogeyman_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button A to swing the rod Button B Trick button (this can be used to jump when the player changes shape)or to trick the ghosts", /* control__details */
+  false, /* dual joystick controls */
   &bogeyman_get_ctrl_name
 };
 
@@ -5239,6 +5423,7 @@ const struct ControlInfo bombjack_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bombjack_get_ctrl_name
 };
 
@@ -5267,6 +5452,7 @@ const struct ControlInfo boogwing_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Each player starts with a single bomb attached to their plane by a hook. Once dropped the hook can be used to pick up any land-based objects and drop them at will with the bomb button. Once the player's plane is shot down, they can run on land and fire with a pistol until hit.", /* control__details */
+  false, /* dual joystick controls */
   &boogwing_get_ctrl_name
 };
 
@@ -5296,6 +5482,7 @@ const struct ControlInfo boothill_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game did NOT have a paddle but something, that for lack of a better description, is a 'paddle gun'. It's similar to the T2 analog guns but with a single axis.", /* control__details */
+  false, /* dual joystick controls */
   &boothill_get_ctrl_name
 };
 
@@ -5326,6 +5513,7 @@ const struct ControlInfo bosco_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bosco_get_ctrl_name
 };
 
@@ -5354,6 +5542,7 @@ const struct ControlInfo bottom9_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Buttons A and B do various things. According to the manual, A= 'Throw/Swing/Go' and B = 'Select/Bunt/Back'", /* control__details */
+  false, /* dual joystick controls */
   &bottom9_get_ctrl_name
 };
 
@@ -5383,6 +5572,7 @@ const struct ControlInfo bouldash_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bouldash_get_ctrl_name
 };
 
@@ -5410,6 +5600,7 @@ const struct ControlInfo bowler_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "4 players alternate with the same trackball in the upright cab. Mame doesn't have cocktail mode, but KLOV shows a two trackball cocktail.", /* control__details */
+  false, /* dual joystick controls */
   &bowler_get_ctrl_name
 };
 
@@ -5439,6 +5630,7 @@ const struct ControlInfo boxingb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The dial is actually labeled rotation control. The buttons don't have labels, rather they have pictures of a rocket and a boxing glove respectively.", /* control__details */
+  false, /* dual joystick controls */
   &boxingb_get_ctrl_name
 };
 
@@ -5466,6 +5658,7 @@ const struct ControlInfo bradley_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "I've made an executive decision on this one. Since it's a prototype and there aren't any good pics of the control panel, I've decided to list the labels given in mame (which are not correct) and describe how the actual machine worked. First off we have a yoke designed for this military conversion. If not for this game, there wouldn't be a star wars yoke. The range of the shot was controlled by an analog dial on the bezel. Next to that was a digital knob that controlled the magnification. The game originally had a toggle switch that doesn't seem to be included in mame. My guess is that it was never hooked up to anything (this prototype was a mess and was never finished). Please note that all buttons save the first hae hard-coded mappings.", /* control__details */
+  false, /* dual joystick controls */
   &bradley_get_ctrl_name
 };
 
@@ -5505,6 +5698,7 @@ const struct ControlInfo brkthru_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game's official overlay didn't have any labels. These are labels.", /* control__details */
+  false, /* dual joystick controls */
   &brkthru_get_ctrl_name
 };
 
@@ -5534,6 +5728,7 @@ const struct ControlInfo bublbobl_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bublbobl_get_ctrl_name
 };
 
@@ -5561,6 +5756,7 @@ const struct ControlInfo bubbles_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &bubbles_get_ctrl_name
 };
 
@@ -5588,6 +5784,7 @@ const struct ControlInfo buckrog_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The trigger stick button is mirrored on the control panel.", /* control__details */
+  false, /* dual joystick controls */
   &buckrog_get_ctrl_name
 };
 
@@ -5618,6 +5815,7 @@ const struct ControlInfo buggychl_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "As it's mapped in mame, holidng down the shifter button keeps the car in high gear.", /* control__details */
+  false, /* dual joystick controls */
   &buggychl_get_ctrl_name
 };
 
@@ -5645,6 +5843,7 @@ const struct ControlInfo btime_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &btime_get_ctrl_name
 };
 
@@ -5673,6 +5872,7 @@ const struct ControlInfo brubber_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Up and Down act essentially as a gear shift, you don\'t have to hold up or down to go fast or slow. Also note that you can only jump when going fast.", /* control__details */
+  false, /* dual joystick controls */
   &brubber_get_ctrl_name
 };
 
@@ -5701,6 +5901,7 @@ const struct ControlInfo cabal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There is a bootleg version that used 8-way sticks and 3 buttons instead of the official trackball and 2 buttons. The third button in the bootleg version is the roll button.", /* control__details */
+  false, /* dual joystick controls */
   &cabal_get_ctrl_name
 };
 
@@ -5730,6 +5931,7 @@ const struct ControlInfo cadash_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cadash_get_ctrl_name
 };
 
@@ -5759,6 +5961,7 @@ const struct ControlInfo dino_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &dino_get_ctrl_name
 };
 
@@ -5788,6 +5991,7 @@ const struct ControlInfo calibr50_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joysticks were 'Loop 24' joysticks, which look like the yellow mechanical 'LS-30', except are optical instead of mechanical. They also had green handles and clicked 24 times to complete a full rotation, hence the 'Loop 24' name.", /* control__details */
+  false, /* dual joystick controls */
   &calibr50_get_ctrl_name
 };
 
@@ -5819,6 +6023,7 @@ const struct ControlInfo cameltry_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game seems to use a tetris cpo. The button isn't actually labeled, and the labels it were given are explained during gameplay. Pressing the button jumps while holding it down speeds up your decent.", /* control__details */
+  false, /* dual joystick controls */
   &cameltry_get_ctrl_name
 };
 
@@ -5845,6 +6050,7 @@ const struct ControlInfo canyon_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The panel had buttons labelled Black Start, Black Fire, White Start, White Fire. Black is the first player and White is the second, so we don't add that part onto the label here. It also had a button for Hi Score Reset (yes, on the panel itself), MAME oddly emulates this as p1 button 7, but the driver overrides the default key to an 'H' (for 'high' score reset). The driver will eventually be fixed to put this button in the service buttons, where it bleongs.", /* control__details */
+  false, /* dual joystick controls */
   &canyon_get_ctrl_name
 };
 
@@ -5869,6 +6075,7 @@ const struct ControlInfo capbowl_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &capbowl_get_ctrl_name
 };
 
@@ -5898,6 +6105,7 @@ const struct ControlInfo captaven_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &captaven_get_ctrl_name
 };
 
@@ -5927,6 +6135,7 @@ const struct ControlInfo captcomm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Pressing attack and jump performs a special. This game is basically a capcom ripoff of tmnt and the controls are similar. The only difference is the use of a very rare two-sided, circular, 2-in-1 button (unlabeled btw) instead of two regular buttons. It should also be noted that this game can be changed from 2 player up to 4 player in the dipswitches and just like tmnt when you have it in 4 player mode players can't select their characters.", /* control__details */
+  false, /* dual joystick controls */
   &captcomm_get_ctrl_name
 };
 
@@ -5956,6 +6165,7 @@ const struct ControlInfo carnevil_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The lightgun is shaped like a small, piston grip, pump action shotgun. You can also reload by shooting off screen.", /* control__details */
+  false, /* dual joystick controls */
   &carnevil_get_ctrl_name
 };
 
@@ -5985,6 +6195,7 @@ const struct ControlInfo carnival_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &carnival_get_ctrl_name
 };
 
@@ -6011,6 +6222,7 @@ const struct ControlInfo cawing_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cawing_get_ctrl_name
 };
 
@@ -6040,6 +6252,7 @@ const struct ControlInfo cavelon_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cavelon_get_ctrl_name
 };
 
@@ -6069,6 +6282,7 @@ const struct ControlInfo cninja_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cninja_get_ctrl_name
 };
 
@@ -6098,6 +6312,7 @@ const struct ControlInfo centiped_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &centiped_get_ctrl_name
 };
 
@@ -6126,6 +6341,7 @@ const struct ControlInfo challeng_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &challeng_get_ctrl_name
 };
 
@@ -6154,6 +6370,7 @@ const struct ControlInfo champbas_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The actual cpo labels simply read A, B, and C respectively. The bezel, however, tells you the functions. Since part of this projects goal is to aid in figuring out how to play, I improvised and combined the two.", /* control__details */
+  false, /* dual joystick controls */
   &champbas_get_ctrl_name
 };
 
@@ -6184,6 +6401,7 @@ const struct ControlInfo csprint_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &csprint_get_ctrl_name
 };
 
@@ -6210,6 +6428,7 @@ const struct ControlInfo checkman_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original Japanese version of Check Man (checkmaj) uses two fire buttons to slide the rows of blocks left and right. The fire buttons were removed for the world release and the player select buttons are used to slide the blocks.", /* control__details */
+  false, /* dual joystick controls */
   &checkman_get_ctrl_name
 };
 
@@ -6239,6 +6458,7 @@ const struct ControlInfo checkmat_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &checkmat_get_ctrl_name
 };
 
@@ -6266,6 +6486,7 @@ const struct ControlInfo cheekyms_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cheekyms_get_ctrl_name
 };
 
@@ -6292,6 +6513,7 @@ const struct ControlInfo cheyenne_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Game used a rifle style lightgun on a pedestal mount.", /* control__details */
+  false, /* dual joystick controls */
   &cheyenne_get_ctrl_name
 };
 
@@ -6320,6 +6542,7 @@ const struct ControlInfo cshift_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cshift_get_ctrl_name
 };
 
@@ -6345,6 +6568,7 @@ const struct ControlInfo chiller_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is one of only a handful that uses a mounted lightgun instead of a regular analog mounted gun. You would think that mame-wize it would be more autehntic to use an analog gun, but as the game doesn't have any calibration (since it's optical) it is reccomended that you use a standard lightgun for this game.", /* control__details */
+  false, /* dual joystick controls */
   &chiller_get_ctrl_name
 };
 
@@ -6373,6 +6597,7 @@ const struct ControlInfo ccasino_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ccasino_get_ctrl_name
 };
 
@@ -6396,6 +6621,7 @@ const struct ControlInfo chopper_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game's official cpo is unlabeled. If anyone has the manual to this game please feel free to verify these labels.", /* control__details */
+  false, /* dual joystick controls */
   &chopper_get_ctrl_name
 };
 
@@ -6425,6 +6651,7 @@ const struct ControlInfo circus_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original cpo didn't have any labels for the paddle, but rather the instructions:  'Bounce Man From Board. Pop Balloons For Points'  The game also listed the scoring chart on the cpo.", /* control__details */
+  false, /* dual joystick controls */
   &circus_get_ctrl_name
 };
 
@@ -6450,6 +6677,7 @@ const struct ControlInfo circusc_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "One neat feature of the game is that Player 1 and Player 2 can select different levels of difficulty.", /* control__details */
+  false, /* dual joystick controls */
   &circusc_get_ctrl_name
 };
 
@@ -6476,6 +6704,7 @@ const struct ControlInfo cischeat_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'Horn' button has a picture of a horn on it rather than actual text.", /* control__details */
+  false, /* dual joystick controls */
   &cischeat_get_ctrl_name
 };
 
@@ -6506,6 +6735,7 @@ const struct ControlInfo citycon_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &citycon_get_ctrl_name
 };
 
@@ -6535,6 +6765,7 @@ const struct ControlInfo citylove_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &citylove_get_ctrl_name
 };
 
@@ -6558,6 +6789,7 @@ const struct ControlInfo cloak_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cloak_get_ctrl_name
 };
 
@@ -6590,6 +6822,7 @@ const struct ControlInfo clowns_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game definately has a unique layout. Although players take turns, each player has his own controls, even on the upright version. Even stranger is the fact that the second players controls are on the left and player one is on the right.", /* control__details */
+  false, /* dual joystick controls */
   &clowns_get_ctrl_name
 };
 
@@ -6615,6 +6848,7 @@ const struct ControlInfo cltchitr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The A, B, and C buttons actually have a series of actions listed for each one on the cpo, but it's far too long to document here.", /* control__details */
+  false, /* dual joystick controls */
   &cltchitr_get_ctrl_name
 };
 
@@ -6645,6 +6879,7 @@ const struct ControlInfo colony7_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &colony7_get_ctrl_name
 };
 
@@ -6675,6 +6910,7 @@ const struct ControlInfo columns_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The button is actually unlabed on the cpo and in the manual.", /* control__details */
+  false, /* dual joystick controls */
   &columns_get_ctrl_name
 };
 
@@ -6703,6 +6939,7 @@ const struct ControlInfo combat_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a lightgun, but it's mounted to the control panel like an analog gun.", /* control__details */
+  false, /* dual joystick controls */
   &combat_get_ctrl_name
 };
 
@@ -6731,6 +6968,7 @@ const struct ControlInfo commsega_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &commsega_get_ctrl_name
 };
 
@@ -6760,6 +6998,7 @@ const struct ControlInfo commando_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &commando_get_ctrl_name
 };
 
@@ -6789,6 +7028,7 @@ const struct ControlInfo comotion_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &comotion_get_ctrl_name
 };
 
@@ -6816,6 +7056,7 @@ const struct ControlInfo congo_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &congo_get_ctrl_name
 };
 
@@ -6844,6 +7085,7 @@ const struct ControlInfo contra_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &contra_get_ctrl_name
 };
 
@@ -6873,6 +7115,7 @@ const struct ControlInfo cosmica_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game used odd buttons, that are essentially regular buttons with a translucent core.", /* control__details */
+  false, /* dual joystick controls */
   &cosmica_get_ctrl_name
 };
 
@@ -6899,6 +7142,7 @@ const struct ControlInfo cavenger_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cavenger_get_ctrl_name
 };
 
@@ -6928,6 +7172,7 @@ const struct ControlInfo cchasm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cchasm_get_ctrl_name
 };
 
@@ -6956,6 +7201,7 @@ const struct ControlInfo cosmicg_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cosmicg_get_ctrl_name
 };
 
@@ -6982,6 +7228,7 @@ const struct ControlInfo cracksht_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game used a mounted lightgun as opposed to a free one.", /* control__details */
+  false, /* dual joystick controls */
   &cracksht_get_ctrl_name
 };
 
@@ -7010,6 +7257,7 @@ const struct ControlInfo crash_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &crash_get_ctrl_name
 };
 
@@ -7038,6 +7286,7 @@ const struct ControlInfo crater_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The shield button is the thumb button on the joystick.", /* control__details */
+  false, /* dual joystick controls */
   &crater_get_ctrl_name
 };
 
@@ -7068,6 +7317,7 @@ const struct ControlInfo cclimber_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cclimber_get_ctrl_name
 };
 
@@ -7099,6 +7349,7 @@ const struct ControlInfo cclimbr2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cclimbr2_get_ctrl_name
 };
 
@@ -7130,6 +7381,7 @@ const struct ControlInfo ckong_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ckong_get_ctrl_name
 };
 
@@ -7158,6 +7410,7 @@ const struct ControlInfo crimec_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &crimec_get_ctrl_name
 };
 
@@ -7187,6 +7440,7 @@ const struct ControlInfo crimfght_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Even though the screen will tell you to press start, you press the punch button to start the game. Oddly enough, this beat-em-up doesn't have a jump button.", /* control__details */
+  false, /* dual joystick controls */
   &crimfght_get_ctrl_name
 };
 
@@ -7216,6 +7470,7 @@ const struct ControlInfo crossbow_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a mounted optical crossbow instead of a regular lightgun.", /* control__details */
+  false, /* dual joystick controls */
   &crossbow_get_ctrl_name
 };
 
@@ -7244,6 +7499,7 @@ const struct ControlInfo crgolf_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game used a slew of small, red, chicklet, looking buttons. Along with a strang lever for the swing. Oddly enough the lever only adjusted the angle, and a button has to be pressed to actually hit the ball.", /* control__details */
+  false, /* dual joystick controls */
   &crgolf_get_ctrl_name
 };
 
@@ -7279,6 +7535,7 @@ const struct ControlInfo cbuster_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cbuster_get_ctrl_name
 };
 
@@ -7309,6 +7566,7 @@ const struct ControlInfo crush_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &crush_get_ctrl_name
 };
 
@@ -7336,6 +7594,7 @@ const struct ControlInfo cryptklr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Something of note is that this game uses a dedicated reload button that doesn't appear to be optional. The dedicated cabinet uses shotguns, in which the reload button is wired to the pump. Conversion kits often place the button on a control panel.", /* control__details */
+  false, /* dual joystick controls */
   &cryptklr_get_ctrl_name
 };
 
@@ -7365,6 +7624,7 @@ const struct ControlInfo ccastles_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The jump button is also the start button.", /* control__details */
+  false, /* dual joystick controls */
   &ccastles_get_ctrl_name
 };
 
@@ -7393,6 +7653,7 @@ const struct ControlInfo crystalg_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &crystalg_get_ctrl_name
 };
 
@@ -7416,6 +7677,7 @@ const struct ControlInfo crystal2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &crystal2_get_ctrl_name
 };
 
@@ -7439,6 +7701,7 @@ const struct ControlInfo curvebal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that player 1 and player 2 share a set of controls. During an inning change, player 1 swaps places with player 2 and vice-versa. The batter buttons are globally labeled 'Bat Control and Runners Speed'  and the pitch controls are labeled 'Speed of Pitch and Curve'.", /* control__details */
+  false, /* dual joystick controls */
   &curvebal_get_ctrl_name
 };
 
@@ -7468,6 +7731,7 @@ const struct ControlInfo cybsled_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game used dual analog flight sticks. The Fire and Missile buttons are mirrored on both sticks, while the view point button is a lighted button on the control panel. It should be noted that this game was only sold as a dual cabinet with two boards linked together for head-2-head action, however due to limitations mame only emulates the first board and will probably never emulate the dual mode.", /* control__details */
+  false, /* dual joystick controls */
   &cybsled_get_ctrl_name
 };
 
@@ -7499,6 +7763,7 @@ const struct ControlInfo cyberbal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "I can't make out the fine print on the cpo image I used as a reference. If you know the real label for the button let me know.", /* control__details */
+  false, /* dual joystick controls */
   &cyberbal_get_ctrl_name
 };
 
@@ -7527,6 +7792,7 @@ const struct ControlInfo cybots_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &cybots_get_ctrl_name
 };
 
@@ -7568,6 +7834,7 @@ const struct ControlInfo daioh_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &daioh_get_ctrl_name
 };
 
@@ -7601,6 +7868,7 @@ const struct ControlInfo dangar_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The transform button allows you to split the main ship into several smaller ships.", /* control__details */
+  false, /* dual joystick controls */
   &dangar_get_ctrl_name
 };
 
@@ -7631,6 +7899,7 @@ const struct ControlInfo dangerz_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game does NOT use a trackball in real life. Instead, it uses quite possibly the most unique control ever. Two immovable trigger sticks are mounted on a panel attached to the monitor. When you try to move the sticks, they remain rigid and actually tilt the monitor!  The gameplay screen then scrolls depending upon where you tilt the monitor to. This gives the illusion of the player looking through a window onto the battle field.", /* control__details */
+  false, /* dual joystick controls */
   &dangerz_get_ctrl_name
 };
 
@@ -7660,6 +7929,7 @@ const struct ControlInfo indyheat_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Player 1 is the Red car, Player 2 is the White car (light grey-ish), Player 3 is the Blue car. Mame by default maps the pedal and the turbo button to the same button input (button 1). If you leave it this way, to use turbo, release the button and press it again. To enter service mode, hold down the blue turbo button and then press the service key (F2).", /* control__details */
+  false, /* dual joystick controls */
   &indyheat_get_ctrl_name
 };
 
@@ -7687,6 +7957,7 @@ const struct ControlInfo darkplnt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &darkplnt_get_ctrl_name
 };
 
@@ -7715,6 +7986,7 @@ const struct ControlInfo darkseal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &darkseal_get_ctrl_name
 };
 
@@ -7744,6 +8016,7 @@ const struct ControlInfo dstlk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &dstlk_get_ctrl_name
 };
 
@@ -7777,6 +8050,7 @@ const struct ControlInfo deadang_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &deadang_get_ctrl_name
 };
 
@@ -7806,6 +8080,7 @@ const struct ControlInfo redufo_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &redufo_get_ctrl_name
 };
 
@@ -7832,6 +8107,7 @@ const struct ControlInfo defender_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Joystick is on left side of control panel with reverse button the the right of it so it can be hit with thumb. Fire and thrust are on right side of control panel with smart bomb, and hyperspace to the left in a 45 degree angle. In mame you can turn on cheat mode and the controls are automatically re-mapped so that the game is quite playable on a standard 8way joystick.", /* control__details */
+  false, /* dual joystick controls */
   &defender_get_ctrl_name
 };
 
@@ -7862,6 +8138,7 @@ const struct ControlInfo demoderb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER: This game had a 2-way joystick as the forward/reverse shifter. Unlike Hi/Low shifters that have only two positions, the Demolition Derby shifter has a Forward, a Reverse, and a Neutral (centered, not labeled) like a 2-way (v) joystick. However, Mame emulates the shifter as buttons 1 & 2, and does not use the 2-way joystick. The start button is labeled 'Restart' on the CP. The game comes in 2 player standup and 4 player cocktail, and switches between the two with a dipswitch.", /* control__details */
+  false, /* dual joystick controls */
   &demoderb_get_ctrl_name
 };
 
@@ -7889,6 +8166,7 @@ const struct ControlInfo depthch_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &depthch_get_ctrl_name
 };
 
@@ -7916,6 +8194,7 @@ const struct ControlInfo desertgu_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "It should be noted that this is the first game to my knowledge that uses an analog mounted gun. That would make it the great grandpa of future analog gun games like Terminator 2.", /* control__details */
+  false, /* dual joystick controls */
   &desertgu_get_ctrl_name
 };
 
@@ -7944,6 +8223,7 @@ const struct ControlInfo destroyr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a throttle control to control the speed of the ship (fast or slow) and a rotary paddle with 'push to release' to control the depth of the charge. The charge will explode at the depth setting that the Release button was pressed at, regardless of the current depth setting.", /* control__details */
+  false, /* dual joystick controls */
   &destroyr_get_ctrl_name
 };
 
@@ -7971,6 +8251,7 @@ const struct ControlInfo devstors_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The men in tan uniforms leave guided missiles when shot. These can be picked up and when in range, a red crosshair will appear on a target and they will home on it.", /* control__details */
+  false, /* dual joystick controls */
   &devstors_get_ctrl_name
 };
 
@@ -8000,6 +8281,7 @@ const struct ControlInfo devilfsh_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &devilfsh_get_ctrl_name
 };
 
@@ -8028,6 +8310,7 @@ const struct ControlInfo devzone_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &devzone_get_ctrl_name
 };
 
@@ -8054,6 +8337,7 @@ const struct ControlInfo digdug_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &digdug_get_ctrl_name
 };
 
@@ -8082,6 +8366,7 @@ const struct ControlInfo digdug2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &digdug2_get_ctrl_name
 };
 
@@ -8111,6 +8396,7 @@ const struct ControlInfo digger_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &digger_get_ctrl_name
 };
 
@@ -8140,6 +8426,7 @@ const struct ControlInfo dimahoo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Although in mame the game has three buttons, and all 3 work, button 3 is redundant and mirrors button 1. On the actual game (sold in kit form only) only two buttons are used and this is confirmed on the instruction card for the game.", /* control__details */
+  false, /* dual joystick controls */
   &dimahoo_get_ctrl_name
 };
 
@@ -8169,6 +8456,7 @@ const struct ControlInfo otatidai_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &otatidai_get_ctrl_name
 };
 
@@ -8192,6 +8480,7 @@ const struct ControlInfo dotron_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &dotron_get_ctrl_name
 };
 
@@ -8225,6 +8514,7 @@ const struct ControlInfo dorunrun_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Something of note is that this game actually has a second button and this button is emulated in mame. The reason it isn't included here is because it was a dead button left-over from development of the game and isn't found on the control panel. The manual explains installing the controls, but neglects to mention this button, however it does show up in the service menu as 'p1 jump'.", /* control__details */
+  false, /* dual joystick controls */
   &dorunrun_get_ctrl_name
 };
 
@@ -8253,6 +8543,7 @@ const struct ControlInfo domino_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &domino_get_ctrl_name
 };
 
@@ -8281,6 +8572,7 @@ const struct ControlInfo dominos_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &dominos_get_ctrl_name
 };
 
@@ -8308,6 +8600,7 @@ const struct ControlInfo dondenmj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &dondenmj_get_ctrl_name
 };
 
@@ -8331,6 +8624,7 @@ const struct ControlInfo dkong_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &dkong_get_ctrl_name
 };
 
@@ -8359,6 +8653,7 @@ const struct ControlInfo dkong3_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &dkong3_get_ctrl_name
 };
 
@@ -8387,6 +8682,7 @@ const struct ControlInfo dkongjr_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &dkongjr_get_ctrl_name
 };
 
@@ -8415,6 +8711,7 @@ const struct ControlInfo ddragon_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "From manual: JUMP KICK:  Joystick in the direction. Push jump then kick. ELBOW: Joystick in the direction. Push jump and punch buttons together. BACK KICK: Joystick in the direction. Push jump and kick buttons together. HEAD BUTT: Joystick in the direction. (TWICE) BODY THROW: Joystick in the direction. Push jump button after catching enemy. BREAK ENEMY'S HOLD: Push jump button only.", /* control__details */
+  false, /* dual joystick controls */
   &ddragon_get_ctrl_name
 };
 
@@ -8445,6 +8742,7 @@ const struct ControlInfo ddragon3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ddragon3_get_ctrl_name
 };
 
@@ -8475,6 +8773,7 @@ const struct ControlInfo ddragon2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ddragon2_get_ctrl_name
 };
 
@@ -8505,6 +8804,7 @@ const struct ControlInfo ddribble_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In order to move with the ball, you must hold down the dribble button.", /* control__details */
+  false, /* dual joystick controls */
   &ddribble_get_ctrl_name
 };
 
@@ -8535,6 +8835,7 @@ const struct ControlInfo downtown_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses SNK LS-30 rotary joysticks. In standard MAME, rotation is controlled using the dial inputs.", /* control__details */
+  false, /* dual joystick controls */
   &downtown_get_ctrl_name
 };
 
@@ -8566,6 +8867,7 @@ const struct ControlInfo dragrace_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game actually uses a 360 degree steering wheel, but for obvious reasons, mame has mapped it to the vertical spinner. The numbers denote the gear position.", /* control__details */
+  false, /* dual joystick controls */
   &dragrace_get_ctrl_name
 };
 
@@ -8596,6 +8898,7 @@ const struct ControlInfo dragngun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is probably the only game that features talking guns. You heard me right, the 'drag-guns' in this game had speakers that spouted out advice during gameplay.", /* control__details */
+  false, /* dual joystick controls */
   &dragngun_get_ctrl_name
 };
 
@@ -8625,6 +8928,7 @@ const struct ControlInfo dspirit_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Shoot down flashing enemies and collect their eggs for mystery power (from the CP overlay).", /* control__details */
+  false, /* dual joystick controls */
   &dspirit_get_ctrl_name
 };
 
@@ -8655,6 +8959,7 @@ const struct ControlInfo drgnunit_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &drgnunit_get_ctrl_name
 };
 
@@ -8685,6 +8990,7 @@ const struct ControlInfo ddsom_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ddsom_get_ctrl_name
 };
 
@@ -8716,6 +9022,7 @@ const struct ControlInfo ddtod_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ddtod_get_ctrl_name
 };
 
@@ -8747,6 +9054,7 @@ const struct ControlInfo dynamcop_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Instruction panel has moves list", /* control__details */
+  false, /* dual joystick controls */
   &dynamcop_get_ctrl_name
 };
 
@@ -8777,6 +9085,7 @@ const struct ControlInfo eswat_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &eswat_get_ctrl_name
 };
 
@@ -8807,6 +9116,7 @@ const struct ControlInfo ecofghtr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button 1 and 3 rotate the gun around the craft so you can fire in any direction", /* control__details */
+  false, /* dual joystick controls */
   &ecofghtr_get_ctrl_name
 };
 
@@ -8837,6 +9147,7 @@ const struct ControlInfo eggventr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &eggventr_get_ctrl_name
 };
 
@@ -8865,6 +9176,7 @@ const struct ControlInfo elevator_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &elevator_get_ctrl_name
 };
 
@@ -8894,6 +9206,7 @@ const struct ControlInfo elim2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &elim2_get_ctrl_name
 };
 
@@ -8921,6 +9234,7 @@ const struct ControlInfo enigma2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &enigma2_get_ctrl_name
 };
 
@@ -8948,6 +9262,7 @@ const struct ControlInfo eprom_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The buttons are arranged in a triangle, with fire on the bottom left corner, duck on the bottom right, and jump/start on the middle top corner. The original analog stick used Hall Effect sensors instead of POTs. Due to the price (and now out of production) of the sensors, many arcade operators replaced the hall effect sensors with their equivalent POT. This game is very hard to control in mame with 8-ways or keyboards. An analog joystick, OTOH, gives the player control like the original joystick.", /* control__details */
+  false, /* dual joystick controls */
   &eprom_get_ctrl_name
 };
 
@@ -8978,6 +9293,7 @@ const struct ControlInfo exerion_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game has two types of Cannon. Fast Fire shoots a limited number of rapid-fire shots from the ship's center. Fire shoots double forward shots for the ship's sides. The game uses standard controls, i.e., moving the stick up causes the ship to climb.", /* control__details */
+  false, /* dual joystick controls */
   &exerion_get_ctrl_name
 };
 
@@ -9007,6 +9323,7 @@ const struct ControlInfo exterm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER: The 8-way trigger stick also can be rotated left or right. (Label 'Rotate Left', and 'Rotate Right')  The rotation is analog, while the rest of the stick is a digital 8-way trigger stick. Mame uses the DIAL type for this input. Mame by default maps the rotate left & right to the same inputs as move left and move right, and the game plays fairly well with this setup. To fire, you are supposed to move all the way to your side, press the fire button, and control the direction you shoot by rotating the trigger stick and moving it up and down. As long as you hold the fire button, you can't move away from the edge. NOTE: This entry has been modified to use a rotary optical joystick with a top fire button. This is the closest to the controls the game originally had, unfortunately a top fire rotary does not exist. You could, however, take a top fire handle and mount it into a rotary base, in theory at least. There is a cheat that lets you shoot all the time (making the 'fire/grab' button just a fire button).", /* control__details */
+  false, /* dual joystick controls */
   &exterm_get_ctrl_name
 };
 
@@ -9038,6 +9355,7 @@ const struct ControlInfo eyes_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &eyes_get_ctrl_name
 };
 
@@ -9066,6 +9384,7 @@ const struct ControlInfo f1dream_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joystick is used to guide the car around the track. Holding both Gear buttons down activates Turbo mode. Note: Directions for turn are not included because which direction the stick makes you turn depends upon which way your car is facing. It is actually quite confusing to control your car.", /* control__details */
+  false, /* dual joystick controls */
   &f1dream_get_ctrl_name
 };
 
@@ -9095,6 +9414,7 @@ const struct ControlInfo f1en_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses formula one style shifter buttons, which are mounted behind the steering wheel.", /* control__details */
+  false, /* dual joystick controls */
   &f1en_get_ctrl_name
 };
 
@@ -9124,6 +9444,7 @@ const struct ControlInfo fantasy_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &fantasy_get_ctrl_name
 };
 
@@ -9151,6 +9472,7 @@ const struct ControlInfo sqbert_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Used a 4-way Joystick rotated 45 degrees.", /* control__details */
+  false, /* dual joystick controls */
   &sqbert_get_ctrl_name
 };
 
@@ -9178,6 +9500,7 @@ const struct ControlInfo fax_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In the mame driver, this game seems to have two sets of coin 1 and coin 2 buttons. It's unclear if this is a bug or intentional.", /* control__details */
+  false, /* dual joystick controls */
   &fax_get_ctrl_name
 };
 
@@ -9205,6 +9528,7 @@ const struct ControlInfo fgoal_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &fgoal_get_ctrl_name
 };
 
@@ -9230,6 +9554,7 @@ const struct ControlInfo fghtatck_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "It should be noted that mame includes a third button and rightly so, however, the button is an extra one not used in this game but in other games of the system. It does show up in the service menu, however.", /* control__details */
+  false, /* dual joystick controls */
   &fghtatck_get_ctrl_name
 };
 
@@ -9259,6 +9584,7 @@ const struct ControlInfo fvipers_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In mame you will notice a 4th button. This is because the game runs on the model-2b boardset, which is setup generically in mame with 4 inputs.", /* control__details */
+  false, /* dual joystick controls */
   &fvipers_get_ctrl_name
 };
 
@@ -9289,6 +9615,7 @@ const struct ControlInfo finalb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Press the weak and medium buttons at the same time for a strong punch.", /* control__details */
+  false, /* dual joystick controls */
   &finalb_get_ctrl_name
 };
 
@@ -9319,6 +9646,7 @@ const struct ControlInfo ffight_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "If you press both buttons at the same time, your character does a special move or breaks out of a hold. Mame and some machines had a third cheat button /* control_details */ it basically presses both buttons for you. It is included since the timing of pressing both buttons at the same time can be tight, but is disabled in mame by default.",
+  false, /* dual joystick controls */
   &ffight_get_ctrl_name
 };
 
@@ -9349,6 +9677,7 @@ const struct ControlInfo finalap2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &finalap2_get_ctrl_name
 };
 
@@ -9377,6 +9706,7 @@ const struct ControlInfo firetrap_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game works exactly like crazy climber except you can shoot by pressing right on the left joystick and left on the right joystick at the same time. Some conversion kits used top-fire joysticks as this is a rather un-natural movement for firing rapidly. Because of this an auxillary input for 'fire' is included. So you can play this game with two joysticks, a joystick and a top-fire, two top-fires or whatever floats your boat.", /* control__details */
+  false, /* dual joystick controls */
   &firetrap_get_ctrl_name
 };
 
@@ -9410,6 +9740,7 @@ const struct ControlInfo firetrk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In this game the player 2 control panel is behind player 1. Yes I said behind. On a real fire truck there are two steering wheels. One is in the back of the truck and turns the read wheels independantly of the front, thus allowing for tight turns with such a long vehicle. This game is played exactly the same with player 2 controlling the rear wheel when two player mode is selected. When 1 player mode is selected, those rear controls are ignored and thus the game is much harder to play.", /* control__details */
+  false, /* dual joystick controls */
   &firetrk_get_ctrl_name
 };
 
@@ -9444,6 +9775,7 @@ const struct ControlInfo fshark_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &fshark_get_ctrl_name
 };
 
@@ -9473,6 +9805,7 @@ const struct ControlInfo foodf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Uses a Gimbal stick.", /* control__details */
+  false, /* dual joystick controls */
   &foodf_get_ctrl_name
 };
 
@@ -9501,6 +9834,7 @@ const struct ControlInfo forgottn_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The spinners also was the fire button. The spinner rotates the direction the character shoots. The players can buy power-ups /* control_details */ when they get a shooting power-up the character gets a floating shooting platform that rotates with the player. When the spinner is not pressed and is rotated, the platform rotates around the charcter, staying relative to the direction the character is facing. When the spinner is pressed and rotated, the platform and character rotate at their own centers.",
+  false, /* dual joystick controls */
   &forgottn_get_ctrl_name
 };
 
@@ -9531,6 +9865,7 @@ const struct ControlInfo formatz_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In the kit, it was optional to have the buttons mirrored on both sides of the joystick. Used 8-way leaf joysticks  Holding the laser button down gives the player one stronger shot. Holding the jump button down transforms the player between a robot and an airplane. Unlike most side-scroll shooters with only shoot straight sideways, you shoot diagonally when the joystick is pushed up or down.", /* control__details */
+  false, /* dual joystick controls */
   &formatz_get_ctrl_name
 };
 
@@ -9560,6 +9895,7 @@ const struct ControlInfo frenzy_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Sequel to Berzerk. An interesting feature of the game is that the fire button only works when the player is moving. Also, this game allows you and enemies to shoot out wall segments and move/shoot through them.", /* control__details */
+  false, /* dual joystick controls */
   &frenzy_get_ctrl_name
 };
 
@@ -9588,6 +9924,7 @@ const struct ControlInfo frogger_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &frogger_get_ctrl_name
 };
 
@@ -9615,6 +9952,7 @@ const struct ControlInfo frogs_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "It really was a three way joystick, basically a 4-way stick without a down. The button flicked out your frog's tongue. *update*    I looked into this. This game was generally hacked into an old frogger cab. The jump button was hacked into the 4way up and a tongue button was added. However mame uses a two way joystick and two buttons to emulate the hardware (which is correct input wise) so we reflect these constants in the database. As it's sorta a bootleg there isn't much point in worrying about control accuracy.", /* control__details */
+  false, /* dual joystick controls */
   &frogs_get_ctrl_name
 };
 
@@ -9642,6 +9980,7 @@ const struct ControlInfo frontlin_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game, along with Wild Western and Tin Star, used a unique controller. The Actual game uses a '8 way push to fire' spinner. The 'spinner' actually used a cam to engage one or two of the 4 microswitches below the control panel. So if you have a real spinner then don't expect to use it with this game. MAME emulates this like a dual 8-way joystick game. This set-up works well for the original controls, but poorly for anything else. Note: Spinners and rotary joysticks can not be used in MAME for this game. In the tank stages, use grenades to enter the blue tank. Exit the tank when it is hit. Use the spinner to rotate and fire the tank turret.", /* control__details */
+  false, /* dual joystick controls */
   &frontlin_get_ctrl_name
 };
 
@@ -9675,6 +10014,7 @@ const struct ControlInfo futspy_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The control panel on this game improperly labeled the bomb button as fire since the top button is the primary weapon.", /* control__details */
+  false, /* dual joystick controls */
   &futspy_get_ctrl_name
 };
 
@@ -9704,6 +10044,7 @@ const struct ControlInfo gloc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gloc_get_ctrl_name
 };
 
@@ -9736,6 +10077,7 @@ const struct ControlInfo gijoe_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gijoe_get_ctrl_name
 };
 
@@ -9765,6 +10107,7 @@ const struct ControlInfo gground_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "It should be noted that the joystick had the simple label of 'Select Warrior / Move Player'", /* control__details */
+  false, /* dual joystick controls */
   &gground_get_ctrl_name
 };
 
@@ -9794,6 +10137,7 @@ const struct ControlInfo galaga88_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game was marketed as a conversion for Dragon Spirit, so it used an 8-way joystick, but the vertical inputs were ignored. The game has one actual action button 'Fire' located on the left and right side of the joystick. However the PCB does have three button inputs.", /* control__details */
+  false, /* dual joystick controls */
   &galaga88_get_ctrl_name
 };
 
@@ -9824,6 +10168,7 @@ const struct ControlInfo galaga_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &galaga_get_ctrl_name
 };
 
@@ -9850,6 +10195,7 @@ const struct ControlInfo galaxian_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &galaxian_get_ctrl_name
 };
 
@@ -9876,6 +10222,7 @@ const struct ControlInfo gforce2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Please note that none of the controls in this game have any labels. They are labeled by what they do.", /* control__details */
+  false, /* dual joystick controls */
   &gforce2_get_ctrl_name
 };
 
@@ -9907,6 +10254,7 @@ const struct ControlInfo galxwars_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &galxwars_get_ctrl_name
 };
 
@@ -9933,6 +10281,7 @@ const struct ControlInfo galpanic_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &galpanic_get_ctrl_name
 };
 
@@ -9961,6 +10310,7 @@ const struct ControlInfo galpani2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game didn't actually label the button and in all the docs it's referred to as button 1, however it is clear what this button does. I labeled it 'cut' to avoid confusion as 'button 1' may seem like a parsing error to the average viewer. Also take note that the pcb has inputs for three physical buttons and they are emulated in mame, but only the first is used.", /* control__details */
+  false, /* dual joystick controls */
   &galpani2_get_ctrl_name
 };
 
@@ -9989,6 +10339,7 @@ const struct ControlInfo gaplus_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gaplus_get_ctrl_name
 };
 
@@ -10017,6 +10368,7 @@ const struct ControlInfo gauntlet_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gauntlet_get_ctrl_name
 };
 
@@ -10046,6 +10398,7 @@ const struct ControlInfo gaunt2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gaunt2_get_ctrl_name
 };
 
@@ -10075,6 +10428,7 @@ const struct ControlInfo geebee_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This is a blockout type game that is controlled by a paddle (limited turn with POT), instead of a spinner as in Arkanoid.", /* control__details */
+  false, /* dual joystick controls */
   &geebee_get_ctrl_name
 };
 
@@ -10101,6 +10455,7 @@ const struct ControlInfo gng_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Buttons are mirrored on both sides of the joystick.", /* control__details */
+  false, /* dual joystick controls */
   &gng_get_ctrl_name
 };
 
@@ -10130,6 +10485,7 @@ const struct ControlInfo ghouls_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ghouls_get_ctrl_name
 };
 
@@ -10159,6 +10515,7 @@ const struct ControlInfo gigawing_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Normal shots are made by tapping on the 'Shot' button. If you hold it down (and you are recharged), you get a temporary 'Reflect Barrier' that reflect all the ememies' shots back at them. You don't have a max number of times to use the reflect barrier, except there is a fairly short recharge time before you can use it again. The 'Force Bomb' button is like most shooter's bomb buttons (you have limited number bombs & one bomb is stronger than a normal shot).", /* control__details */
+  false, /* dual joystick controls */
   &gigawing_get_ctrl_name
 };
 
@@ -10188,6 +10545,7 @@ const struct ControlInfo goldmedl_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The buttons on this game aren't labeled, which is a shame as it's quite difficult to figure out what they do. With over 20 events and each event using the buttons for a different thing, it may be impossible to play this game without an instruction card. During the attract mode, however, it shows which buttons you are supposed to press when going through an event.", /* control__details */
+  false, /* dual joystick controls */
   &goldmedl_get_ctrl_name
 };
 
@@ -10214,6 +10572,7 @@ const struct ControlInfo goldnaxe_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &goldnaxe_get_ctrl_name
 };
 
@@ -10244,6 +10603,7 @@ const struct ControlInfo ga2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ga2_get_ctrl_name
 };
 
@@ -10274,6 +10634,7 @@ const struct ControlInfo gt97_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  false, /* dual joystick controls */
   &gt97_get_ctrl_name
 };
 
@@ -10303,6 +10664,7 @@ const struct ControlInfo gt98_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  false, /* dual joystick controls */
   &gt98_get_ctrl_name
 };
 
@@ -10332,6 +10694,7 @@ const struct ControlInfo gt99_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  false, /* dual joystick controls */
   &gt99_get_ctrl_name
 };
 
@@ -10361,6 +10724,7 @@ const struct ControlInfo gt2k_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  false, /* dual joystick controls */
   &gt2k_get_ctrl_name
 };
 
@@ -10390,6 +10754,7 @@ const struct ControlInfo gt3d_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  false, /* dual joystick controls */
   &gt3d_get_ctrl_name
 };
 
@@ -10419,6 +10784,7 @@ const struct ControlInfo gtg2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "1 = Up Left, 2 = Up, 3 = Up Right. A = Down Left, B = Down, C = Down Right. On the control panel overlay is instruction on how to swing using those numbers and letters.", /* control__details */
+  false, /* dual joystick controls */
   &gtg2_get_ctrl_name
 };
 
@@ -10448,6 +10814,7 @@ const struct ControlInfo glfgreat_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "MAME lists inputs for buttons 3 and 4 but they don't do anything. Use the Shot button to enter initials.", /* control__details */
+  false, /* dual joystick controls */
   &glfgreat_get_ctrl_name
 };
 
@@ -10479,6 +10846,7 @@ const struct ControlInfo golgo13_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The select and enter buttons may very well be useless in the game itself. Everything is in Japanese it's generally hard to tell with what little is know with this game. On the original game there was a scope you looked through that contained a small lcd with a closer view. In mame a 'zoom button' was hacked in. There is no telling if that was an original option or not.", /* control__details */
+  false, /* dual joystick controls */
   &golgo13_get_ctrl_name
 };
 
@@ -10511,6 +10879,7 @@ const struct ControlInfo gollygho_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gollygho_get_ctrl_name
 };
 
@@ -10539,6 +10908,7 @@ const struct ControlInfo gondo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Used the yellow snk LS-30 mechcanical rotatry. Rotating the joystick changes the direction the Character Weapon shoots. The Airbike Weapon always shoots straight forward. This was usually released as a kit /* control_details */ the instructions suggested mirroring the buttons on both sides of each joystick, but not all arcade operaters did this. Player1 is the blue air bike, player2 is the grey air bike.",
+  false, /* dual joystick controls */
   &gondo_get_ctrl_name
 };
 
@@ -10570,6 +10940,7 @@ const struct ControlInfo gorf_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The alternating play is not normal. Players alternate when a player passes a level or game over, not when a life is lost like most alternating games. If you press the button before the last shot gets off the screen or hits something, that shot will disappear and you shoot a new one.", /* control__details */
+  false, /* dual joystick controls */
   &gorf_get_ctrl_name
 };
 
@@ -10598,6 +10969,7 @@ const struct ControlInfo grchamp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &grchamp_get_ctrl_name
 };
 
@@ -10624,6 +10996,7 @@ const struct ControlInfo f1gpstar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &f1gpstar_get_ctrl_name
 };
 
@@ -10653,6 +11026,7 @@ const struct ControlInfo gravitar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gravitar_get_ctrl_name
 };
 
@@ -10681,6 +11055,7 @@ const struct ControlInfo greatgun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The guns on this game are indeed lightguns, but they were mounted to the cabinet as they were very heavy shotguns.", /* control__details */
+  false, /* dual joystick controls */
   &greatgun_get_ctrl_name
 };
 
@@ -10709,6 +11084,7 @@ const struct ControlInfo gberet_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gberet_get_ctrl_name
 };
 
@@ -10738,6 +11114,7 @@ const struct ControlInfo gridiron_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The trackball itself is actually labeled 'Pass & Movement Control.'  The original game had a led counter on the control panel that displayed the currently select play number. In mame this is simulated by a tiny, tiny little orange character on the bottom left of the screen. This really needs to be replaced by some artwork files to make it a little bigger and easier to understand.", /* control__details */
+  false, /* dual joystick controls */
   &gridiron_get_ctrl_name
 };
 
@@ -10766,6 +11143,7 @@ const struct ControlInfo gridlee_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gridlee_get_ctrl_name
 };
 
@@ -10794,6 +11172,7 @@ const struct ControlInfo guardian_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Press both kicks or punches together to perform a power punch or kick respectively.", /* control__details */
+  false, /* dual joystick controls */
   &guardian_get_ctrl_name
 };
 
@@ -10826,6 +11205,7 @@ const struct ControlInfo gwar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Grenade button also gets you into and out of the tank. Used the SNK LS-30, 12 direction rotary, but only faces 8 directions in the game. Usually the buttons were mirrored on both sides of the joystick for a total of four physical buttons per player, but both fire buttons and both grenade buttons are wired to the same PCB input. The recommended button colors are yellow for the fire button, and black for the grenade button. To enter test mode hold down the service key (F2) during boot or reboot until grid screen /* control_details */ press service button to go to next test screen; reboot to exit. Mame's driver has an extra 13th 'direction' between 5 & 6 because it 'avoids the 'joystick error' protection in Guerilla War which happens when direction changes directly from 0x50&lt;-&gt;0x60 8 times.'",
+  false, /* dual joystick controls */
   &gwar_get_ctrl_name
 };
 
@@ -10857,6 +11237,7 @@ const struct ControlInfo gunsmoke_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Six shot directions are possible by pressing the buttons in combination - Besides the obvious primary directions, pressing Fire Right and Fire Straight would aim between Straight and Right, same for Straight and Left, and pressing Left and Right together would shoot in both directions.", /* control__details */
+  false, /* dual joystick controls */
   &gunsmoke_get_ctrl_name
 };
 
@@ -10887,6 +11268,7 @@ const struct ControlInfo gunbird_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &gunbird_get_ctrl_name
 };
 
@@ -10916,6 +11298,7 @@ const struct ControlInfo gunbustr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game's descriptions are in japanese when you start the game and since the game's cpo doesn't have any labels, I did the best I could with the in-game input test.", /* control__details */
+  false, /* dual joystick controls */
   &gunbustr_get_ctrl_name
 };
 
@@ -10949,6 +11332,7 @@ const struct ControlInfo gyruss_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joystick caused you to rotate around the exterior of the playfield.", /* control__details */
+  false, /* dual joystick controls */
   &gyruss_get_ctrl_name
 };
 
@@ -10977,6 +11361,7 @@ const struct ControlInfo halleys_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that the mame driver labels button 2 as 'hyperspace' but according to the mame cpo pack and a few others sources it is the 'warp' button. If evidence is found to the contrary please feel free to correct.", /* control__details */
+  false, /* dual joystick controls */
   &halleys_get_ctrl_name
 };
 
@@ -11006,6 +11391,7 @@ const struct ControlInfo hardyard_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "If dive is not the correct caption, please correct.", /* control__details */
+  false, /* dual joystick controls */
   &hardyard_get_ctrl_name
 };
 
@@ -11035,6 +11421,7 @@ const struct ControlInfo hattrick_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &hattrick_get_ctrl_name
 };
 
@@ -11063,6 +11450,7 @@ const struct ControlInfo hcastle_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &hcastle_get_ctrl_name
 };
 
@@ -11092,6 +11480,7 @@ const struct ControlInfo hbarrel_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This cpo actually didn't have any labels. The labels were obtained by the serivce manual.", /* control__details */
+  false, /* dual joystick controls */
   &hbarrel_get_ctrl_name
 };
 
@@ -11123,6 +11512,7 @@ const struct ControlInfo hiimpact_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "1 & 2 are the red team, players 3 & 4 are the blue team. If one person plays per team, he calls all the plays. If two people team up and play on the same team: On the offense, players 2 & 3 call the play and control that team's quarterback. On the defense, players 1 & 4 call the play. The action button does everything: pass, handoff, kick, punt, jump, select play. To kick or punt farther, you have to hit the action button quickly. References: CPO http://www.klov.com/game_detail.php?letter=H&game_id=8111", /* control__details */
+  false, /* dual joystick controls */
   &hiimpact_get_ctrl_name
 };
 
@@ -11151,6 +11541,7 @@ const struct ControlInfo hippodrm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Like all Dataeast games of the day, this game's cpo didn't have any labels. Instead it had a gameplay insert for the bezel.", /* control__details */
+  false, /* dual joystick controls */
   &hippodrm_get_ctrl_name
 };
 
@@ -11180,6 +11571,7 @@ const struct ControlInfo hitme_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses rather odd, non-arcade buttons.", /* control__details */
+  false, /* dual joystick controls */
   &hitme_get_ctrl_name
 };
 
@@ -11206,6 +11598,7 @@ const struct ControlInfo hitice_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game can be converted to 2 player via a dip swtich. This game has an unused button emulated in mame. The inputs actually exists, it just doesn't do anything.", /* control__details */
+  false, /* dual joystick controls */
   &hitice_get_ctrl_name
 };
 
@@ -11235,6 +11628,7 @@ const struct ControlInfo holo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "It should be noted that this game doesn\'t have labels, as it is a conversion kit for the hologram (time traveler) cabinet.", /* control__details */
+  false, /* dual joystick controls */
   &holo_get_ctrl_name
 };
 
@@ -11272,6 +11666,7 @@ const struct ControlInfo hotrod_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &hotrod_get_ctrl_name
 };
 
@@ -11298,6 +11693,7 @@ const struct ControlInfo hstennis_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Press both buttons to lob.", /* control__details */
+  false, /* dual joystick controls */
   &hstennis_get_ctrl_name
 };
 
@@ -11327,6 +11723,7 @@ const struct ControlInfo housemnq_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &housemnq_get_ctrl_name
 };
 
@@ -11350,6 +11747,7 @@ const struct ControlInfo housemn2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &housemn2_get_ctrl_name
 };
 
@@ -11373,6 +11771,7 @@ const struct ControlInfo hustle_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &hustle_get_ctrl_name
 };
 
@@ -11400,6 +11799,7 @@ const struct ControlInfo hng64_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Hyper Neo Geo 64 system was the next generation of the classic Neo Geo mvs system. This new system wasn't as popular and only had a few games released on it. They all used the same control layout and relied upon inserts to explain to the consumer what button was what. Also 99% of the games started with a 'How to Play' screen upon starting the game. Although these games don't work yet in MAME 0.141, the inputs are already hooked up, just like the original Neo Geo. It would be silly to think that these would be altered after the driver is in working order.", /* control__details */
+  false, /* dual joystick controls */
   &hng64_get_ctrl_name
 };
 
@@ -11431,6 +11831,7 @@ const struct ControlInfo hyperspt_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is actually 4 players, but you alternate in teams of two.", /* control__details */
+  false, /* dual joystick controls */
   &hyperspt_get_ctrl_name
 };
 
@@ -11457,6 +11858,7 @@ const struct ControlInfo irobot_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This had a funny looking CP. The joystick sat on a small panel, sticking out toward the player at about 45 degrees toward the player. The two fire buttons were mirrored, one on each side of the small panel, one panels of there own, angled sideways at about 30 degrees from vertical. The two start buttons were the Atari cones on their own panel above the small panel of the joystick. Mame has two seperate buttons emulated, but the second does not do anything. The test screen only lists one fire button, so it looks like the two physical fire buttons were wired together in the original game, connected to the PCBs as one. The original joystick was a Hall Effect joystick: an analog joystick that used magnetics to vary the resistance instead of the usual POT.", /* control__details */
+  false, /* dual joystick controls */
   &irobot_get_ctrl_name
 };
 
@@ -11486,6 +11888,7 @@ const struct ControlInfo a47pie2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &a47pie2_get_ctrl_name
 };
 
@@ -11509,6 +11912,7 @@ const struct ControlInfo idhimitu_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &idhimitu_get_ctrl_name
 };
 
@@ -11532,6 +11936,7 @@ const struct ControlInfo fromance_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &fromance_get_ctrl_name
 };
 
@@ -11555,6 +11960,7 @@ const struct ControlInfo idolmj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &idolmj_get_ctrl_name
 };
 
@@ -11578,6 +11984,7 @@ const struct ControlInfo iemoto_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &iemoto_get_ctrl_name
 };
 
@@ -11601,6 +12008,7 @@ const struct ControlInfo ikari3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Uses an LS-30 joystick.", /* control__details */
+  false, /* dual joystick controls */
   &ikari3_get_ctrl_name
 };
 
@@ -11633,6 +12041,7 @@ const struct ControlInfo ikari_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Uses an LS-30 joystick.", /* control__details */
+  false, /* dual joystick controls */
   &ikari_get_ctrl_name
 };
 
@@ -11664,6 +12073,7 @@ const struct ControlInfo imekura_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &imekura_get_ctrl_name
 };
 
@@ -11687,6 +12097,7 @@ const struct ControlInfo indytemp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Like some other Atari games, such as Road Runner & Peter Packrat, the player start buttons double as the action buttons. The original game has the Whip button mirrored on both sides of the joystick. The left side Whip button is also 1 player start button /* control_details */ mame emulates this as two buttons, button1 and start1. The right side Whip button is also the 2 players start button; mame emulates this as only the 'start2' button, even though pressing mame's start2 button also whips the whip. Also, the buttons are used to select the number of lives the player has: the right selects the normal 3 lives (1 credit), the left selects 7 lives (for 2 credits).",
+  false, /* dual joystick controls */
   &indytemp_get_ctrl_name
 };
 
@@ -11715,6 +12126,7 @@ const struct ControlInfo inferno_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game actually uses a 4 way ball-top and a 4-way trigger stick. Both are rotated on a 45 degree angle al-la qbert. The 'fire' stick doesn't actually shoot, rather it aims your gun. The fire button must be used to actually fire.", /* control__details */
+  false, /* dual joystick controls */
   &inferno_get_ctrl_name
 };
 
@@ -11747,6 +12159,7 @@ const struct ControlInfo invrvnge_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &invrvnge_get_ctrl_name
 };
 
@@ -11773,6 +12186,7 @@ const struct ControlInfo invho2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This is a two in one cabinet with two games in it. The control panel is split in half.... on the left is two directional buttons (Left,Right) and a button (Fire). These inputs are actually wired to the controls on the right side of the panel. These controls are a 4 way jostick and a button (gas). This seems like a huge waste of control space, but I suppose at the time, generic panels seemed silly.", /* control__details */
+  false, /* dual joystick controls */
   &invho2_get_ctrl_name
 };
 
@@ -11801,6 +12215,7 @@ const struct ControlInfo offroad_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There are no Start buttons /* control_details */ the Nitro buttons double as the Start buttons. You also use the the Nitro buttons to select improvements on your car. 'Player 1' is the Red car, 'Player 2' is the Yellow car, 'Player 3' is the Blue car. The game refers the players as 'Red Player', 'Yellow Player', 'Blue Player', not 'Player 1', etc. There are also two player cabs of this game, but all they did was remove the Yellow car's inputs, including the coin inputs. There are no dipswitches to change. So on these cabs, the 'second player' is the blue car, but all the inputs are connected to what is still 'Player 3' in mame. To eneter service mode, hold down Blue Nitro button and press service button. The menus are scrolled down by pressing the Red Nitro button, and selected by pressing the Blue Nitro button.",
+  false, /* dual joystick controls */
   &offroad_get_ctrl_name
 };
 
@@ -11828,6 +12243,7 @@ const struct ControlInfo offroadt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There are no Start buttons /* control_details */ the Nitro buttons double as the Start buttons. You also use the the Nitro buttons to select improvements on your car. There are two Nitro buttons for each player, mirrored on each side of the steering wheel, but they are wired together as one button in the harness. 'Player 1' is the Red car or 'Red Player', 'Player 2' is the Yellow car or 'Yellow Player', and 'Player 3' is the Blue car or 'Blue Player'. The game and manual refer to the players with their color, not a number. Might be because of next point. There are also two player cabs of this game, but all they did was remove the Yellow car's inputs, including the coin inputs. There are no dipswitches to change. So on these cabs, the 'second player' is the blue car, but all the inputs are connected to what is still 'Player 3' in mame. This was usually done not because of blue being a more popular color, but the arcade operators need the blue nitro button to change game settings. To eneter service mode, hold down Blue Nitro button and press service button. The menus are scrolled down by pressing the Red Nitro button, and selected by pressing the Blue Nitro button. This is basically the same as the original Ironman Ivan Stewart's Super Off Road. However, it has new tracks, and the players can choose between driving a dune buggy or the original truck. The control is exactly the same.",
+  false, /* dual joystick controls */
   &offroadt_get_ctrl_name
 };
 
@@ -11855,6 +12271,7 @@ const struct ControlInfo jackal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &jackal_get_ctrl_name
 };
 
@@ -11884,6 +12301,7 @@ const struct ControlInfo jailbrek_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &jailbrek_get_ctrl_name
 };
 
@@ -11914,6 +12332,7 @@ const struct ControlInfo teamqb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The start button is labeled 'Join'. Player 1 is 'left QB', player 2 is 'left HB', and are on the same team. Player 3 is 'right QB', player 4 is 'right HB', and are on the same team. The CP has the players from left to right: LHB, LQB, RQB, RHB, or if you go by numbers, 2, 1, 3, 4. Only the quarterbacks have springsticks (to control throwing & kicking), but all players have a normal 8-way stick to control the player's movements. The action button does different things, depending on what the 8 way stick is doing. Since the 2 & 4 players don't have a spring stick, they often have the action button mirrored on both sides of the joystick. The analog joystick 'springsticks' were held all the way up by the spring, with free movement sideways. The farther back you pulled the springstick, the farther/faster you would throw or kick the ball when you released the stick. The label 'short' is positioned just below the springstick, below which is 'long'. Along with the words, part of the label is a fat pointed line or arrow, pointing down away from the springstick.", /* control__details */
+  false, /* dual joystick controls */
   &teamqb_get_ctrl_name
 };
 
@@ -11972,6 +12391,7 @@ const struct ControlInfo jantouki_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &jantouki_get_ctrl_name
 };
 
@@ -11995,6 +12415,7 @@ const struct ControlInfo journey_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This is five games in one, plus a bonus level. The five games all center around a musician (from the band Journey) getting to his instrument, and then getting back to the spaceship. The blast button is not used until the player retrieves his musical instrument. The blast button is mirrored on both sides of the centered joystick.", /* control__details */
+  false, /* dual joystick controls */
   &journey_get_ctrl_name
 };
 
@@ -12023,6 +12444,7 @@ const struct ControlInfo joust_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &joust_get_ctrl_name
 };
 
@@ -12049,6 +12471,7 @@ const struct ControlInfo joust2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &joust2_get_ctrl_name
 };
 
@@ -12082,6 +12505,7 @@ const struct ControlInfo joyfulr_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original cpo simply had the two joysticks labeled 'car control' and 'hand control' respectively. It may not be apparent from playing, but the goal of this game is to navigate the car with the left stick, while grabbing things with the right.", /* control__details */
+  false, /* dual joystick controls */
   &joyfulr_get_ctrl_name
 };
 
@@ -12113,6 +12537,7 @@ const struct ControlInfo jrpacman_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &jrpacman_get_ctrl_name
 };
 
@@ -12140,6 +12565,7 @@ const struct ControlInfo jumpbug_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &jumpbug_get_ctrl_name
 };
 
@@ -12168,6 +12594,7 @@ const struct ControlInfo junglek_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &junglek_get_ctrl_name
 };
 
@@ -12196,6 +12623,7 @@ const struct ControlInfo jungler_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &jungler_get_ctrl_name
 };
 
@@ -12224,6 +12652,7 @@ const struct ControlInfo jpark_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Although the control is definately a gun, the physical control looks nothing like a gun. It looks like a pistol-grip analog stick.", /* control__details */
+  false, /* dual joystick controls */
   &jpark_get_ctrl_name
 };
 
@@ -12252,6 +12681,7 @@ const struct ControlInfo kageki_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &kageki_get_ctrl_name
 };
 
@@ -12281,6 +12711,7 @@ const struct ControlInfo kanatuen_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &kanatuen_get_ctrl_name
 };
 
@@ -12304,6 +12735,7 @@ const struct ControlInfo kangaroo_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Diagonals were labelled 'Super Leap'.", /* control__details */
+  false, /* dual joystick controls */
   &kangaroo_get_ctrl_name
 };
 
@@ -12332,6 +12764,7 @@ const struct ControlInfo kaos_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Panel had symmetric layout with a jump button either side of the joy, but wired back to the same input.", /* control__details */
+  false, /* dual joystick controls */
   &kaos_get_ctrl_name
 };
 
@@ -12360,6 +12793,7 @@ const struct ControlInfo kchamp_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is the very first \'street fighter\' style game. The controls on it are a tad odd. Instead of a joystick and an array of buttons, you have two joysticks. These joysticks don\'t have any labels and merely have arrow directions printed on the overlay. The left joystick controls movement while the right determines the type of attack. Different attack directions while in different positions perform different moves. Luckily, the game tutors you on moves during the first round. It should be noted that this game comes in one and two player versions.", /* control__details */
+  false, /* dual joystick controls */
   &kchamp_get_ctrl_name
 };
 
@@ -12391,6 +12825,7 @@ const struct ControlInfo karnov_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The option button actives whatever items you have collected.", /* control__details */
+  false, /* dual joystick controls */
   &karnov_get_ctrl_name
 };
 
@@ -12421,6 +12856,7 @@ const struct ControlInfo kick_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Teh roller on this game is made from a trackball ball, but this is not uncommon.", /* control__details */
+  false, /* dual joystick controls */
   &kick_get_ctrl_name
 };
 
@@ -12447,6 +12883,7 @@ const struct ControlInfo kicker_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Game used dipswitch for single or dual control layout, still alternating play. Mame uses single control layout.", /* control__details */
+  false, /* dual joystick controls */
   &kicker_get_ctrl_name
 };
 
@@ -12476,6 +12913,7 @@ const struct ControlInfo mayumi_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mayumi_get_ctrl_name
 };
 
@@ -12499,6 +12937,7 @@ const struct ControlInfo killcom_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The buttons actually have a global label 'laser fire' and each individual button has a sub label of 'up,' 'down,' and 'left.'", /* control__details */
+  false, /* dual joystick controls */
   &killcom_get_ctrl_name
 };
 
@@ -12530,6 +12969,7 @@ const struct ControlInfo kinst_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &kinst_get_ctrl_name
 };
 
@@ -12563,6 +13003,7 @@ const struct ControlInfo kinst2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &kinst2_get_ctrl_name
 };
 
@@ -12596,6 +13037,7 @@ const struct ControlInfo kingball_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Galaga-like game, except you can be hit without lose a life!  Instead, you lose a life when the king you\'re protecting is lifted all the way to the top.", /* control__details */
+  false, /* dual joystick controls */
   &kingball_get_ctrl_name
 };
 
@@ -12622,6 +13064,7 @@ const struct ControlInfo kingofb_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game lacks any labels, even in the manual. The labels reflect the function.", /* control__details */
+  false, /* dual joystick controls */
   &kingofb_get_ctrl_name
 };
 
@@ -12651,6 +13094,7 @@ const struct ControlInfo klax_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &klax_get_ctrl_name
 };
 
@@ -12679,6 +13123,7 @@ const struct ControlInfo knights_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &knights_get_ctrl_name
 };
 
@@ -12708,6 +13153,7 @@ const struct ControlInfo konamigt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &konamigt_get_ctrl_name
 };
 
@@ -12736,6 +13182,7 @@ const struct ControlInfo kroozr_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER: Mame's driver (incorrectly) emulates this as an 8way trigger stick (so I included that). However, the real game used an analog trigger joystick (so I put other). The A/D circuit in part of the joystick assembly, instead of on the main PCB or daughter board like most analog joysticks /* control_details */ and the connection had 8 pins per axis. The joystick handle looked a lot like (if not exactly the same as) a tron handle. The spinner was also a push down button, much like a Forgotten Worlds spinner.",
+  false, /* dual joystick controls */
   &kroozr_get_ctrl_name
 };
 
@@ -12767,6 +13214,7 @@ const struct ControlInfo kram_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joystick is labeled 'Kram Kontrol'", /* control__details */
+  false, /* dual joystick controls */
   &kram_get_ctrl_name
 };
 
@@ -12796,6 +13244,7 @@ const struct ControlInfo krull_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game actually uses icons and doesn't have any labels.", /* control__details */
+  false, /* dual joystick controls */
   &krull_get_ctrl_name
 };
 
@@ -12827,6 +13276,7 @@ const struct ControlInfo kungfum_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &kungfum_get_ctrl_name
 };
 
@@ -12856,6 +13306,7 @@ const struct ControlInfo kurikint_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that the original cpo doesn't have labels for the joystick, this is simply what it does. Also not there are two jumps. Pressing up is NOT the same as pressing the dedicated jump button.", /* control__details */
+  false, /* dual joystick controls */
   &kurikint_get_ctrl_name
 };
 
@@ -12885,6 +13336,7 @@ const struct ControlInfo ladybug_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Although mame has 2 buttons mapped, it's merely a glitch caused by using the input template of a similar game. The actual game only has a joystick.", /* control__details */
+  false, /* dual joystick controls */
   &ladybug_get_ctrl_name
 };
 
@@ -12912,6 +13364,7 @@ const struct ControlInfo lagunar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that the shifter button is mapped to button 1 in Mame, which could cause conflicts with the pedal.", /* control__details */
+  false, /* dual joystick controls */
   &lagunar_get_ctrl_name
 };
 
@@ -12939,6 +13392,7 @@ const struct ControlInfo lghost_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Player 3 seems to have an extra input in mame. It won't hurt anything though.", /* control__details */
+  false, /* dual joystick controls */
   &lghost_get_ctrl_name
 };
 
@@ -12968,6 +13422,7 @@ const struct ControlInfo lastduel_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button 1: Attack  Button 2: Rolling Attack (Stages 1, 3, and 6 when airplane), Jump (Stages 2, 4, and 5 when car), Surface Attack (Stages 2, 4, and 5 when 2 player mode and both players in airplanes). 2nd player can join during single player game.", /* control__details */
+  false, /* dual joystick controls */
   &lastduel_get_ctrl_name
 };
 
@@ -12997,6 +13452,7 @@ const struct ControlInfo lethalen_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &lethalen_get_ctrl_name
 };
 
@@ -13025,6 +13481,7 @@ const struct ControlInfo lethalj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &lethalj_get_ctrl_name
 };
 
@@ -13053,6 +13510,7 @@ const struct ControlInfo liberatr_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &liberatr_get_ctrl_name
 };
 
@@ -13082,6 +13540,7 @@ const struct ControlInfo lnc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &lnc_get_ctrl_name
 };
 
@@ -13110,6 +13569,7 @@ const struct ControlInfo lockon_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The two machine gun triggers are universally labeled and have the same function, despite the fact that they have seperate inputs. The other two buttons are the left and right thumb buttons respectively.", /* control__details */
+  false, /* dual joystick controls */
   &lockon_get_ctrl_name
 };
 
@@ -13141,6 +13601,7 @@ const struct ControlInfo locomotn_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &locomotn_get_ctrl_name
 };
 
@@ -13169,6 +13630,7 @@ const struct ControlInfo ldrun_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ldrun_get_ctrl_name
 };
 
@@ -13198,6 +13660,7 @@ const struct ControlInfo looping_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &looping_get_ctrl_name
 };
 
@@ -13225,6 +13688,7 @@ const struct ControlInfo losttomb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &losttomb_get_ctrl_name
 };
 
@@ -13253,6 +13717,7 @@ const struct ControlInfo janjans1_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &janjans1_get_ctrl_name
 };
 
@@ -13276,6 +13741,7 @@ const struct ControlInfo llander_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original used a large handle connected to a potentiometer for Thrust control. The select game button is actually player 2 start. so to toggle through games press p2 start and then p1 start when you are ready to play.", /* control__details */
+  false, /* dual joystick controls */
   &llander_get_ctrl_name
 };
 
@@ -13304,6 +13770,7 @@ const struct ControlInfo lrescue_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &lrescue_get_ctrl_name
 };
 
@@ -13330,6 +13797,7 @@ const struct ControlInfo lupin3_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "That isn't a typo, the button is actually called 'Magic Button.'", /* control__details */
+  false, /* dual joystick controls */
   &lupin3_get_ctrl_name
 };
 
@@ -13358,6 +13826,7 @@ const struct ControlInfo m4_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game actually uses a two-way, top-fire lever, which is quite rare.", /* control__details */
+  false, /* dual joystick controls */
   &m4_get_ctrl_name
 };
 
@@ -13385,6 +13854,7 @@ const struct ControlInfo mplanets_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mplanets_get_ctrl_name
 };
 
@@ -13415,6 +13885,7 @@ const struct ControlInfo msword_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &msword_get_ctrl_name
 };
 
@@ -13444,6 +13915,7 @@ const struct ControlInfo magspot_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'L' and 'R' labels are indeed accurate. The original cpo used those to abbreviate 'left' and 'right'.", /* control__details */
+  false, /* dual joystick controls */
   &magspot_get_ctrl_name
 };
 
@@ -13470,6 +13942,7 @@ const struct ControlInfo akiss_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &akiss_get_ctrl_name
 };
 
@@ -13493,6 +13966,7 @@ const struct ControlInfo mjangels_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjangels_get_ctrl_name
 };
 
@@ -13516,6 +13990,7 @@ const struct ControlInfo bananadr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &bananadr_get_ctrl_name
 };
 
@@ -13539,6 +14014,7 @@ const struct ControlInfo mjcamera_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjcamera_get_ctrl_name
 };
 
@@ -13562,6 +14038,7 @@ const struct ControlInfo mcnpshnt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mcnpshnt_get_ctrl_name
 };
 
@@ -13585,6 +14062,7 @@ const struct ControlInfo chinmoku_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &chinmoku_get_ctrl_name
 };
 
@@ -13608,6 +14086,7 @@ const struct ControlInfo cmehyou_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &cmehyou_get_ctrl_name
 };
 
@@ -13631,6 +14110,7 @@ const struct ControlInfo mjclinic_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjclinic_get_ctrl_name
 };
 
@@ -13654,6 +14134,7 @@ const struct ControlInfo club90s_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &club90s_get_ctrl_name
 };
 
@@ -13677,6 +14158,7 @@ const struct ControlInfo daiyogen_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &daiyogen_get_ctrl_name
 };
 
@@ -13700,6 +14182,7 @@ const struct ControlInfo mjderngr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjderngr_get_ctrl_name
 };
 
@@ -13723,6 +14206,7 @@ const struct ControlInfo mjdialq2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjdialq2_get_ctrl_name
 };
 
@@ -13746,6 +14230,7 @@ const struct ControlInfo mjdiplob_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjdiplob_get_ctrl_name
 };
 
@@ -13769,6 +14254,7 @@ const struct ControlInfo dokyusei_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &dokyusei_get_ctrl_name
 };
 
@@ -13792,6 +14278,7 @@ const struct ControlInfo dokyusp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &dokyusp_get_ctrl_name
 };
 
@@ -13815,6 +14302,7 @@ const struct ControlInfo mjelctrn_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjelctrn_get_ctrl_name
 };
 
@@ -13838,6 +14326,7 @@ const struct ControlInfo mjegolf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjegolf_get_ctrl_name
 };
 
@@ -13861,6 +14350,7 @@ const struct ControlInfo mjfocus_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjfocus_get_ctrl_name
 };
 
@@ -13884,6 +14374,7 @@ const struct ControlInfo mjfriday_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjfriday_get_ctrl_name
 };
 
@@ -13907,6 +14398,7 @@ const struct ControlInfo mfunclub_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mfunclub_get_ctrl_name
 };
 
@@ -13930,6 +14422,7 @@ const struct ControlInfo mgmen89_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mgmen89_get_ctrl_name
 };
 
@@ -13953,6 +14446,7 @@ const struct ControlInfo mgakuen_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mgakuen_get_ctrl_name
 };
 
@@ -13976,6 +14470,7 @@ const struct ControlInfo mgakuen2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mgakuen2_get_ctrl_name
 };
 
@@ -13999,6 +14494,7 @@ const struct ControlInfo gakusai_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &gakusai_get_ctrl_name
 };
 
@@ -14022,6 +14518,7 @@ const struct ControlInfo gakusai2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &gakusai2_get_ctrl_name
 };
 
@@ -14045,6 +14542,7 @@ const struct ControlInfo gal10ren_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &gal10ren_get_ctrl_name
 };
 
@@ -14068,6 +14566,7 @@ const struct ControlInfo galkaika_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &galkaika_get_ctrl_name
 };
 
@@ -14091,6 +14590,7 @@ const struct ControlInfo galkoku_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &galkoku_get_ctrl_name
 };
 
@@ -14114,6 +14614,7 @@ const struct ControlInfo mjgottsu_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjgottsu_get_ctrl_name
 };
 
@@ -14137,6 +14638,7 @@ const struct ControlInfo hanamomo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &hanamomo_get_ctrl_name
 };
 
@@ -14160,6 +14662,7 @@ const struct ControlInfo mhgaiden_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mhgaiden_get_ctrl_name
 };
 
@@ -14183,6 +14686,7 @@ const struct ControlInfo mjhokite_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjhokite_get_ctrl_name
 };
 
@@ -14206,6 +14710,7 @@ const struct ControlInfo hourouki_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &hourouki_get_ctrl_name
 };
 
@@ -14229,6 +14734,7 @@ const struct ControlInfo hypreact_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &hypreact_get_ctrl_name
 };
 
@@ -14252,6 +14758,7 @@ const struct ControlInfo hypreac2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &hypreac2_get_ctrl_name
 };
 
@@ -14275,6 +14782,7 @@ const struct ControlInfo mjikaga_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjikaga_get_ctrl_name
 };
 
@@ -14298,6 +14806,7 @@ const struct ControlInfo janbari_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &janbari_get_ctrl_name
 };
 
@@ -14321,6 +14830,7 @@ const struct ControlInfo mjlstory_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjlstory_get_ctrl_name
 };
 
@@ -14344,6 +14854,7 @@ const struct ControlInfo jogakuen_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &jogakuen_get_ctrl_name
 };
 
@@ -14367,6 +14878,7 @@ const struct ControlInfo kaguya_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &kaguya_get_ctrl_name
 };
 
@@ -14390,6 +14902,7 @@ const struct ControlInfo mkeibaou_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mkeibaou_get_ctrl_name
 };
 
@@ -14413,6 +14926,7 @@ const struct ControlInfo mjkinjas_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjkinjas_get_ctrl_name
 };
 
@@ -14436,6 +14950,7 @@ const struct ControlInfo koinomp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &koinomp_get_ctrl_name
 };
 
@@ -14459,6 +14974,7 @@ const struct ControlInfo mjkoiura_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjkoiura_get_ctrl_name
 };
 
@@ -14482,6 +14998,7 @@ const struct ControlInfo mjkojink_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjkojink_get_ctrl_name
 };
 
@@ -14505,6 +15022,7 @@ const struct ControlInfo mjkjidai_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjkjidai_get_ctrl_name
 };
 
@@ -14528,6 +15046,7 @@ const struct ControlInfo mjlaman_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjlaman_get_ctrl_name
 };
 
@@ -14551,6 +15070,7 @@ const struct ControlInfo lemnangl_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &lemnangl_get_ctrl_name
 };
 
@@ -14574,6 +15094,7 @@ const struct ControlInfo mjnanpas_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjnanpas_get_ctrl_name
 };
 
@@ -14597,6 +15118,7 @@ const struct ControlInfo mjnatsu_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjnatsu_get_ctrl_name
 };
 
@@ -14620,6 +15142,7 @@ const struct ControlInfo ntopstar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ntopstar_get_ctrl_name
 };
 
@@ -14643,6 +15166,7 @@ const struct ControlInfo neruton_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &neruton_get_ctrl_name
 };
 
@@ -14666,6 +15190,7 @@ const struct ControlInfo patimono_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &patimono_get_ctrl_name
 };
 
@@ -14689,6 +15214,7 @@ const struct ControlInfo pstadium_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &pstadium_get_ctrl_name
 };
 
@@ -14712,6 +15238,7 @@ const struct ControlInfo ponchin_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ponchin_get_ctrl_name
 };
 
@@ -14735,6 +15262,7 @@ const struct ControlInfo mjnquest_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjnquest_get_ctrl_name
 };
 
@@ -14758,6 +15286,7 @@ const struct ControlInfo renaiclb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &renaiclb_get_ctrl_name
 };
 
@@ -14781,6 +15310,7 @@ const struct ControlInfo mrokumei_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mrokumei_get_ctrl_name
 };
 
@@ -14804,6 +15334,7 @@ const struct ControlInfo sailorws_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &sailorws_get_ctrl_name
 };
 
@@ -14827,6 +15358,7 @@ const struct ControlInfo msjiken_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &msjiken_get_ctrl_name
 };
 
@@ -14850,6 +15382,7 @@ const struct ControlInfo mscoutm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mscoutm_get_ctrl_name
 };
 
@@ -14873,6 +15406,7 @@ const struct ControlInfo mjsikaku_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjsikaku_get_ctrl_name
 };
 
@@ -14896,6 +15430,7 @@ const struct ControlInfo mjsister_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjsister_get_ctrl_name
 };
 
@@ -14919,6 +15454,7 @@ const struct ControlInfo majs101b_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &majs101b_get_ctrl_name
 };
 
@@ -14942,6 +15478,7 @@ const struct ControlInfo mladyhtr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mladyhtr_get_ctrl_name
 };
 
@@ -14965,6 +15502,7 @@ const struct ControlInfo triplew1_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &triplew1_get_ctrl_name
 };
 
@@ -14988,6 +15526,7 @@ const struct ControlInfo triplew2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &triplew2_get_ctrl_name
 };
 
@@ -15011,6 +15550,7 @@ const struct ControlInfo uchuuai_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &uchuuai_get_ctrl_name
 };
 
@@ -15034,6 +15574,7 @@ const struct ControlInfo mjuraden_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjuraden_get_ctrl_name
 };
 
@@ -15057,6 +15598,7 @@ const struct ControlInfo vanilla_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &vanilla_get_ctrl_name
 };
 
@@ -15080,6 +15622,7 @@ const struct ControlInfo vitaminc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &vitaminc_get_ctrl_name
 };
 
@@ -15103,6 +15646,7 @@ const struct ControlInfo yarunara_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &yarunara_get_ctrl_name
 };
 
@@ -15126,6 +15670,7 @@ const struct ControlInfo mjyuugi_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjyuugi_get_ctrl_name
 };
 
@@ -15149,6 +15694,7 @@ const struct ControlInfo mjyougo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mjyougo_get_ctrl_name
 };
 
@@ -15172,6 +15718,7 @@ const struct ControlInfo korinai_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &korinai_get_ctrl_name
 };
 
@@ -15195,6 +15742,7 @@ const struct ControlInfo mhavoc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mhavoc_get_ctrl_name
 };
 
@@ -15222,6 +15770,7 @@ const struct ControlInfo maniach_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &maniach_get_ctrl_name
 };
 
@@ -15251,6 +15800,7 @@ const struct ControlInfo mappy_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mappy_get_ctrl_name
 };
 
@@ -15277,6 +15827,7 @@ const struct ControlInfo marble_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &marble_get_ctrl_name
 };
 
@@ -15304,6 +15855,7 @@ const struct ControlInfo mario_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mario_get_ctrl_name
 };
 
@@ -15330,6 +15882,7 @@ const struct ControlInfo mars_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mars_get_ctrl_name
 };
 
@@ -15361,6 +15914,7 @@ const struct ControlInfo mmatrix_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mmatrix_get_ctrl_name
 };
 
@@ -15390,6 +15944,7 @@ const struct ControlInfo msh_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "As with all fighters, the actions for the joystick are reversed when you flip over your opponent to the opposite side of the screen. As with all capcom titles the top row of buttons is actually the first three instead of the last.", /* control__details */
+  false, /* dual joystick controls */
   &msh_get_ctrl_name
 };
 
@@ -15435,6 +15990,7 @@ const struct ControlInfo mshvsf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mshvsf_get_ctrl_name
 };
 
@@ -15468,6 +16024,7 @@ const struct ControlInfo mvsc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original control panels had the punch buttons on the top row of thee and the kick buttons on the bottom row. ame maps the punch buttons 1 - 3 and the kick buttons 4 - 6. This can be backwards for people. Mame devs have stood by this because of the jamma locations of each button.", /* control__details */
+  false, /* dual joystick controls */
   &mvsc_get_ctrl_name
 };
 
@@ -15501,6 +16058,7 @@ const struct ControlInfo matmania_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Press both buttons to pin. Rapidly press both buttons to kick out.", /* control__details */
+  false, /* dual joystick controls */
   &matmania_get_ctrl_name
 };
 
@@ -15530,6 +16088,7 @@ const struct ControlInfo maxrpm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Please note that mame has fudged the shifter input up. Also note that since the shifter buttons are mapped to button 1 and 2 they will conflict with the gas pedal with mame's default mappings.", /* control__details */
+  false, /* dual joystick controls */
   &maxrpm_get_ctrl_name
 };
 
@@ -15558,6 +16117,7 @@ const struct ControlInfo maxforce_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &maxforce_get_ctrl_name
 };
 
@@ -15586,6 +16146,7 @@ const struct ControlInfo mayday_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Right directions on the joystick are the only ones used as you can't turn back. Also note that the buttons are in different order on the control panel. (Mayday, Back, Fire Front)", /* control__details */
+  false, /* dual joystick controls */
   &mayday_get_ctrl_name
 };
 
@@ -15616,6 +16177,7 @@ const struct ControlInfo mechatt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mechatt_get_ctrl_name
 };
 
@@ -15645,6 +16207,7 @@ const struct ControlInfo mmehyou_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mmehyou_get_ctrl_name
 };
 
@@ -15668,6 +16231,7 @@ const struct ControlInfo pachiten_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &pachiten_get_ctrl_name
 };
 
@@ -15691,6 +16255,7 @@ const struct ControlInfo megaman2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &megaman2_get_ctrl_name
 };
 
@@ -15721,6 +16286,7 @@ const struct ControlInfo megazone_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &megazone_get_ctrl_name
 };
 
@@ -15749,6 +16315,7 @@ const struct ControlInfo mercs_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mercs_get_ctrl_name
 };
 
@@ -15778,6 +16345,7 @@ const struct ControlInfo metamrph_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game can be turned into a 2 player setup via a dip setting. Also something unique in 4 player games, this one allows you to have a shared coin slot via the settings. (This means the 2 player-style select screen even when you have the cabinet set to 4 players)", /* control__details */
+  false, /* dual joystick controls */
   &metamrph_get_ctrl_name
 };
 
@@ -15807,6 +16375,7 @@ const struct ControlInfo metrocrs_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Teh control panel didn't have a button label.", /* control__details */
+  false, /* dual joystick controls */
   &metrocrs_get_ctrl_name
 };
 
@@ -15835,6 +16404,7 @@ const struct ControlInfo mwalk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mwalk_get_ctrl_name
 };
 
@@ -15864,6 +16434,7 @@ const struct ControlInfo midres_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &midres_get_ctrl_name
 };
 
@@ -15895,6 +16466,7 @@ const struct ControlInfo gtmr2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game does NOT use all of these controls. It has dipswitch settings which allow the games to be controlled with a 360 degree wheel, a 270 degree wheel, a 270 degree digital wheel (using a d2a conveter) and a plain old 8-way joystick with buttons. Uses with steering wheels please note that the game defaults to joystick input. Also note that the pedals optionally can be set to analog mode, but mame disables this feature due to input limitations.", /* control__details */
+  false, /* dual joystick controls */
   &gtmr2_get_ctrl_name
 };
 
@@ -15928,6 +16500,7 @@ const struct ControlInfo milliped_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &milliped_get_ctrl_name
 };
 
@@ -15956,6 +16529,7 @@ const struct ControlInfo minefld_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &minefld_get_ctrl_name
 };
 
@@ -15988,6 +16562,7 @@ const struct ControlInfo mineswpr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Player 1 is actually position on the bottom right of the screen while Player 2 is at the top right", /* control__details */
+  false, /* dual joystick controls */
   &mineswpr_get_ctrl_name
 };
 
@@ -16015,6 +16590,7 @@ const struct ControlInfo minigolf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &minigolf_get_ctrl_name
 };
 
@@ -16039,6 +16615,7 @@ const struct ControlInfo mcontest_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mcontest_get_ctrl_name
 };
 
@@ -16062,6 +16639,7 @@ const struct ControlInfo missile_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &missile_get_ctrl_name
 };
 
@@ -16092,6 +16670,7 @@ const struct ControlInfo gmissile_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game actually uses a 2-way top-fire joystick, which is extremely rare. So rare we don't recognize it in the database.", /* control__details */
+  false, /* dual joystick controls */
   &gmissile_get_ctrl_name
 };
 
@@ -16118,6 +16697,7 @@ const struct ControlInfo moguchan_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Unknown as to what the button does but is listed in mame", /* control__details */
+  false, /* dual joystick controls */
   &moguchan_get_ctrl_name
 };
 
@@ -16146,6 +16726,7 @@ const struct ControlInfo mole_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The button is layed out on a 3x3 grid and relates directly to the position on the screen  Top Row:    7 8 9 Middle Row: 4 5 6 Bottom Row: 1 2 3", /* control__details */
+  false, /* dual joystick controls */
   &mole_get_ctrl_name
 };
 
@@ -16178,6 +16759,7 @@ const struct ControlInfo monymony_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joystick was generically labeled 'control'. Also of note is that you can only jump when you are standing on a white circle and you can't control the direction of the jump like in most games.", /* control__details */
+  false, /* dual joystick controls */
   &monymony_get_ctrl_name
 };
 
@@ -16206,6 +16788,7 @@ const struct ControlInfo monsterb_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &monsterb_get_ctrl_name
 };
 
@@ -16234,6 +16817,7 @@ const struct ControlInfo montecar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Please note that this game's driver hard-code's all of the buttons. The gears are remapped to z,x,c and v while track select is remapped to space.", /* control__details */
+  false, /* dual joystick controls */
   &montecar_get_ctrl_name
 };
 
@@ -16265,6 +16849,7 @@ const struct ControlInfo mooncrst_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mooncrst_get_ctrl_name
 };
 
@@ -16291,6 +16876,7 @@ const struct ControlInfo mpatrol_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mpatrol_get_ctrl_name
 };
 
@@ -16318,6 +16904,7 @@ const struct ControlInfo moonwar_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game's original control panel also has a button called 'Hyper Flip' that for whatever reason isn't emulated in mame. Also the roller for this game looks more like some sort of futuristic valve and is dubbed the 'Vector Director' by the label underneath it.", /* control__details */
+  false, /* dual joystick controls */
   &moonwar_get_ctrl_name
 };
 
@@ -16346,6 +16933,7 @@ const struct ControlInfo mk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. It is highly reccomended that you wrie ctrlr files for these gmaes if you intend to play them. Also there is actually a second block button used for sf2 conversions but it alternates between broken and half working in the mame source.", /* control__details */
+  false, /* dual joystick controls */
   &mk_get_ctrl_name
 };
 
@@ -16378,6 +16966,7 @@ const struct ControlInfo mk3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. The Run button is placed inthe lower left hand corner, similar to a mamers 'modified Neo Geo' layout. It is highly reccomended that you write ctrlr files for these games if you intend to play them.", /* control__details */
+  false, /* dual joystick controls */
   &mk3_get_ctrl_name
 };
 
@@ -16411,6 +17000,7 @@ const struct ControlInfo mk4_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The final mortal kombat game to be released in the arcades.", /* control__details */
+  false, /* dual joystick controls */
   &mk4_get_ctrl_name
 };
 
@@ -16444,6 +17034,7 @@ const struct ControlInfo mk2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame uses the jamma standard for button numbering and thus all of the mk games are completely off. The games buttons were arranged in a cross pattern with block the center of the 'X' high and low punch on the left and high and low kick on the right respectively. It is highly reccomended that you write ctrlr files for these games if you intend to play them. Also there is actually a second block button used for sf2 conversions but it alternates between broken and half working in the mame source.", /* control__details */
+  false, /* dual joystick controls */
   &mk2_get_ctrl_name
 };
 
@@ -16476,6 +17067,7 @@ const struct ControlInfo mtrap_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "On the original control panel, the order was (from left to right) red, yellow, blue... Not the order that mame has (yellow, red, blue).", /* control__details */
+  false, /* dual joystick controls */
   &mtrap_get_ctrl_name
 };
 
@@ -16507,6 +17099,7 @@ const struct ControlInfo mrdo_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mrdo_get_ctrl_name
 };
 
@@ -16535,6 +17128,7 @@ const struct ControlInfo docastle_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The button is actually unlabeled.", /* control__details */
+  false, /* dual joystick controls */
   &docastle_get_ctrl_name
 };
 
@@ -16563,6 +17157,7 @@ const struct ControlInfo dowild_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &dowild_get_ctrl_name
 };
 
@@ -16591,6 +17186,7 @@ const struct ControlInfo mrdrillr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The drill button is actually unlabeled as the game was only sold in a conversion kit with a very generic namco overlay.", /* control__details */
+  false, /* dual joystick controls */
   &mrdrillr_get_ctrl_name
 };
 
@@ -16619,6 +17215,7 @@ const struct ControlInfo mspacman_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mspacman_get_ctrl_name
 };
 
@@ -16646,6 +17243,7 @@ const struct ControlInfo mvp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The buttons aren't labeled red, yellow and blue rather that is their color. The instruction card uses these colors to explain the various functions of the buttons.", /* control__details */
+  false, /* dual joystick controls */
   &mvp_get_ctrl_name
 };
 
@@ -16676,6 +17274,7 @@ const struct ControlInfo mx5000_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Air-to-air and air-to-ground refer to missiles.", /* control__details */
+  false, /* dual joystick controls */
   &mx5000_get_ctrl_name
 };
 
@@ -16705,6 +17304,7 @@ const struct ControlInfo mysticm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &mysticm_get_ctrl_name
 };
 
@@ -16733,6 +17333,7 @@ const struct ControlInfo mystwarr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame has three buttons, but only uses the first two. There is a dipswitch to change between 2 and 4 players.", /* control__details */
+  false, /* dual joystick controls */
   &mystwarr_get_ctrl_name
 };
 
@@ -16763,6 +17364,7 @@ const struct ControlInfo nametune_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game used special lighted buttons for the tune buttons.", /* control__details */
+  false, /* dual joystick controls */
   &nametune_get_ctrl_name
 };
 
@@ -16790,6 +17392,7 @@ const struct ControlInfo narc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &narc_get_ctrl_name
 };
 
@@ -16821,6 +17424,7 @@ const struct ControlInfo nastar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The orignal cpo lacks labels.", /* control__details */
+  false, /* dual joystick controls */
   &nastar_get_ctrl_name
 };
 
@@ -16850,6 +17454,7 @@ const struct ControlInfo natodef_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo actually had pictures of the tank going in various directions for the joystick labels.", /* control__details */
+  false, /* dual joystick controls */
   &natodef_get_ctrl_name
 };
 
@@ -16878,6 +17483,7 @@ const struct ControlInfo naughtyb_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &naughtyb_get_ctrl_name
 };
 
@@ -16906,6 +17512,7 @@ const struct ControlInfo nbahangt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Default setting is for 2-player cabinet but this can be changed to 4-player as a dip switch setting", /* control__details */
+  false, /* dual joystick controls */
   &nbahangt_get_ctrl_name
 };
 
@@ -16936,6 +17543,7 @@ const struct ControlInfo nbajam_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &nbajam_get_ctrl_name
 };
 
@@ -16966,6 +17574,7 @@ const struct ControlInfo neckneck_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Even though this game allows 6 players, it is wired to a single player layout in mame, due to the odd layout. Each numbered button represents a horse a player can control. it also doubles as a start button for that player. All the button does is jump. There is also a global start button that starts the race without giving others time to join. This is mapped to player 1 start in mame.", /* control__details */
+  false, /* dual joystick controls */
   &neckneck_get_ctrl_name
 };
 
@@ -16995,6 +17604,7 @@ const struct ControlInfo ngpgal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ngpgal_get_ctrl_name
 };
 
@@ -17018,6 +17628,7 @@ const struct ControlInfo nmsengen_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &nmsengen_get_ctrl_name
 };
 
@@ -17041,6 +17652,7 @@ const struct ControlInfo neogeo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Neo Geo MVS system is a generic cabinet that can have games swapped out very easily, similar to console games. A single game cabinet, a 2 game, 4 game, and 6 game variation were manufactured. The multi-cart versions had buttons to switch to a new game prior to inserting your quarter. This feature is unemulated as of MAME 0.141. Neo Geo cabinets all used the same control layout and relied upon inserts to explain to the consumer what button had what function. Most Neo Geo games begin with a 'How to Play' screen with gameplay information.", /* control__details */
+  false, /* dual joystick controls */
   &neogeo_get_ctrl_name
 };
 
@@ -17073,6 +17685,7 @@ const struct ControlInfo nyny_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo also has a general caption for the joystick, but it's unreadable.", /* control__details */
+  false, /* dual joystick controls */
   &nyny_get_ctrl_name
 };
 
@@ -17099,6 +17712,7 @@ const struct ControlInfo blitz_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER:  There is a dipswitch to use either two 49-way or two 8-way joysticks for direction control. AFAIK, all blitz dedicated cabs came with 49-way stick /* control_details */ some upgrade kits came with 49-way sticks, others without any sticks (I guess assumed operator would use already installed 8-ways). Mame currently (0.82u3) only emulates the 8-way. In-game instructions sometimes refer to the buttons by their color instead of the label. Turbo = White, Jump = Blue, Pass = Red. When choosing the offensive play: the Turbo (White) button switches between the two pages of plays, Jump (Blue) flips the play directions left to right, and Pass (Red) chooses the highlighted play. When choosing the defensive play: any button chooses the highlighted play (only one page, and plays can't be flipped). When choosing either offense and defense you can turn off showing which play is highlighted by pressing up on the joystick three times (useful when playing against another player). Turbo + Pass when running with the ball gives a stiff arm. Tapping Turbo twice when running with the ball gives a spin.",
+  false, /* dual joystick controls */
   &blitz_get_ctrl_name
 };
 
@@ -17129,6 +17743,7 @@ const struct ControlInfo nibbler_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &nibbler_get_ctrl_name
 };
 
@@ -17156,6 +17771,7 @@ const struct ControlInfo nss_ctrl =
   false, /* has_cocktail_dipswitch */
   true, /* uses_service */
   "The Nintendo Super System is the super nintendo version of the playchoice system and it runs on basically the same concept. The control panel has 2 (or 4) industrial versions of the snes control pad mounted to it. Please note that as of this posting, the mame driver doesn't emulate the nss fully. Game select buttons aren't implemented yet. Also note that the gamepad's select buttons are mapped to service buttons 1-4 respectively.", /* control__details */
+  false, /* dual joystick controls */
   &nss_get_ctrl_name
 };
 
@@ -17193,6 +17809,7 @@ const struct ControlInfo nomnlnd_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &nomnlnd_get_ctrl_name
 };
 
@@ -17221,6 +17838,7 @@ const struct ControlInfo nova2001_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game had a pause button (unlabeled on the cpo) but apparently the feature isn't working in mame.", /* control__details */
+  false, /* dual joystick controls */
   &nova2001_get_ctrl_name
 };
 
@@ -17250,6 +17868,7 @@ const struct ControlInfo ojankoc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ojankoc_get_ctrl_name
 };
 
@@ -17273,6 +17892,7 @@ const struct ControlInfo ojankohs_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ojankohs_get_ctrl_name
 };
 
@@ -17296,6 +17916,7 @@ const struct ControlInfo ojankoy_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ojankoy_get_ctrl_name
 };
 
@@ -17319,6 +17940,7 @@ const struct ControlInfo ojanko2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ojanko2_get_ctrl_name
 };
 
@@ -17342,6 +17964,7 @@ const struct ControlInfo ojousan_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ojousan_get_ctrl_name
 };
 
@@ -17365,6 +17988,7 @@ const struct ControlInfo olibochu_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &olibochu_get_ctrl_name
 };
 
@@ -17392,6 +18016,7 @@ const struct ControlInfo omegrace_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game acutally uses one of the very rare optical dials. No it doesn't really spin, you turn it like a paddle. Ironically, I believe that this was one of mame's first optical games and thus the 2 way optical was named 'dial' instead of 'spinner,' which is what most optical mame games have.", /* control__details */
+  false, /* dual joystick controls */
   &omegrace_get_ctrl_name
 };
 
@@ -17419,6 +18044,7 @@ const struct ControlInfo oneshot_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &oneshot_get_ctrl_name
 };
 
@@ -17447,6 +18073,7 @@ const struct ControlInfo othunder_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &othunder_get_ctrl_name
 };
 
@@ -17476,6 +18103,7 @@ const struct ControlInfo opwolf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &opwolf_get_ctrl_name
 };
 
@@ -17505,6 +18133,7 @@ const struct ControlInfo opwolf3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The bomb button is actually the reload cock on the gun. Yes this doesn't make any sense, just go with it.", /* control__details */
+  false, /* dual joystick controls */
   &opwolf3_get_ctrl_name
 };
 
@@ -17534,6 +18163,7 @@ const struct ControlInfo orangec_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &orangec_get_ctrl_name
 };
 
@@ -17557,6 +18187,7 @@ const struct ControlInfo otonano_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &otonano_get_ctrl_name
 };
 
@@ -17580,6 +18211,7 @@ const struct ControlInfo outrun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The shifter is hard-coded to the space-bar to avoid conflicts.", /* control__details */
+  false, /* dual joystick controls */
   &outrun_get_ctrl_name
 };
 
@@ -17608,6 +18240,7 @@ const struct ControlInfo overdriv_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &overdriv_get_ctrl_name
 };
 
@@ -17636,6 +18269,7 @@ const struct ControlInfo pow_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "On the original cpo, the buttons are in 'Double Dragon' configuration (jump on the top row, punch and kick on the bottom). You may wish to remap for comfort", /* control__details */
+  false, /* dual joystick controls */
   &pow_get_ctrl_name
 };
 
@@ -17666,6 +18300,7 @@ const struct ControlInfo pacland_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pacland_get_ctrl_name
 };
 
@@ -17692,6 +18327,7 @@ const struct ControlInfo pacplus_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pacplus_get_ctrl_name
 };
 
@@ -17719,6 +18355,7 @@ const struct ControlInfo pacmania_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original CP had one button on either side of the CP for Bounce. Note By HowarC:  This seems to be a glitch in mame caused by a sloppy macro. For now three buttons is ok, but I will submit a new driver which ditches the other two.", /* control__details */
+  false, /* dual joystick controls */
   &pacmania_get_ctrl_name
 };
 
@@ -17749,6 +18386,7 @@ const struct ControlInfo paddlema_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is 4 player but only one start button is used. Upon inserting a coin and presing start, you are presented with a menu to choose the number of players and play mode.", /* control__details */
+  false, /* dual joystick controls */
   &paddlema_get_ctrl_name
 };
 
@@ -17777,6 +18415,7 @@ const struct ControlInfo pandoras_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pandoras_get_ctrl_name
 };
 
@@ -17805,6 +18444,7 @@ const struct ControlInfo paperboy_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Game used a handlebar controller, Pushing forward on the handles made the bike speed up, pulling back slowed it down.", /* control__details */
+  false, /* dual joystick controls */
   &paperboy_get_ctrl_name
 };
 
@@ -17834,6 +18474,7 @@ const struct ControlInfo pastelg_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &pastelg_get_ctrl_name
 };
 
@@ -17857,6 +18498,7 @@ const struct ControlInfo pengo_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pengo_get_ctrl_name
 };
 
@@ -17885,6 +18527,7 @@ const struct ControlInfo pepper2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pepper2_get_ctrl_name
 };
 
@@ -17912,6 +18555,7 @@ const struct ControlInfo peterpak_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game uses a unique type of trigger stick that is rarely used. Although it looks different, the diagrams show similar mounting and throw of a more standard tron stick.", /* control__details */
+  false, /* dual joystick controls */
   &peterpak_get_ctrl_name
 };
 
@@ -17941,6 +18585,7 @@ const struct ControlInfo phoenix_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &phoenix_get_ctrl_name
 };
 
@@ -17968,6 +18613,7 @@ const struct ControlInfo pigout_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pigout_get_ctrl_name
 };
 
@@ -17997,6 +18643,7 @@ const struct ControlInfo pigskin_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER: This game used a 49-way joystick. This game was recently updated to accomidate true analog inputs to better emulate the 49-way joystick. Unfortunately, they turned an othewise tidy driver into an ungodly mess. The stick is there and oddly enough three joystick directions (up, down, and only left) and now the normal 'button 1' labels are overwritten with the game selection labels, which are secondary functions and should NOT be the custom labels for the buttons. For the love of all things good, someone PLEASE fix this driver. The joystick controls one player, but when you punch, the rest of the team also punches. If another teammate has the ball and you press the pass button, he passes the ball to you. If you have the ball and press and hold the pass button, the choices rolls between long, short, back passes, and a drop kick, which happens when you let go of the button.", /* control__details */
+  false, /* dual joystick controls */
   &pigskin_get_ctrl_name
 };
 
@@ -18027,6 +18674,7 @@ const struct ControlInfo pbaction_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo lables are a little misleading. By 'Start' it actually refers to launching the pinball, not the start button, which the game actually has two of. Also, although there are two buttons on each side Labeled 'Start And Shake' apparently, only the left button starts and only the right button shakes. This may be a mame issue though. My best guess is on the original cpo, each button was cross-wired to both switches as a last-minute layout decision.", /* control__details */
+  false, /* dual joystick controls */
   &pbaction_get_ctrl_name
 };
 
@@ -18054,6 +18702,7 @@ const struct ControlInfo piratetr_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The games cpo didn't have any directional arrows, nor did it have any labels, probably due to the simplistic layout.", /* control__details */
+  false, /* dual joystick controls */
   &piratetr_get_ctrl_name
 };
 
@@ -18081,6 +18730,7 @@ const struct ControlInfo pitfight_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Although in the arcades the start buton was also the jump button, this is not the case in mame. My guess is in the arcades two inputs were wired to the same button to save space much like in other 3 and 4 player games. This game only had a 2 player verison in japan, but often the 3 player us version was also used in a 2 player cabinet because of the way the menu is setup. Unlike most multiplayer games, the coin slots are shared and you can select each character regardless of which stick you press start at.", /* control__details */
+  false, /* dual joystick controls */
   &pitfight_get_ctrl_name
 };
 
@@ -18111,6 +18761,7 @@ const struct ControlInfo pitfall2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The actual cpo for this game didn't have a label for the button, nor a visual hint of what it's for. Also the manual doesn't explicitly say that the button is the 'jump' button. This is probably due to the fact that the pitfall series is one of the most popular in early gaming history and you'd have to live in a cave not to know that the button is for jumping.", /* control__details */
+  false, /* dual joystick controls */
   &pitfall2_get_ctrl_name
 };
 
@@ -18139,6 +18790,7 @@ const struct ControlInfo playch10_ctrl =
   false, /* has_cocktail_dipswitch */
   true, /* uses_service */
   "The playchoice 10 system is a pay-per-play system based on the original nes console and plays the same titles. Instead of purchasing lives, you purchase time on the machine. The machine can hold 10 games at once and you switch using the game menu on the secondary monitor.", /* control__details */
+  false, /* dual joystick controls */
   &playch10_get_ctrl_name
 };
 
@@ -18184,6 +18836,7 @@ const struct ControlInfo pleiads_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pleiads_get_ctrl_name
 };
 
@@ -18211,6 +18864,7 @@ const struct ControlInfo plotting_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &plotting_get_ctrl_name
 };
 
@@ -18239,6 +18893,7 @@ const struct ControlInfo ptblank_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "To reload fire offscreen.", /* control__details */
+  false, /* dual joystick controls */
   &ptblank_get_ctrl_name
 };
 
@@ -18267,6 +18922,7 @@ const struct ControlInfo polaris_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original cpo simply labeled the joystick 'control'", /* control__details */
+  false, /* dual joystick controls */
   &polaris_get_ctrl_name
 };
 
@@ -18295,6 +18951,7 @@ const struct ControlInfo polepos_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button 1 is actually the spacebar by default to avoid conflicts with the pedals. The high/low shifter is emulated by a single toggle input in mame.", /* control__details */
+  false, /* dual joystick controls */
   &polepos_get_ctrl_name
 };
 
@@ -18323,6 +18980,7 @@ const struct ControlInfo polepos2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Button1 is actually spacbar by default in this game to avoid conflicts with the pedals. The high / low shifter is emulated in mame by a single button toggle. The upright cab only uses the gas pedal while the cockpit uses both. This is a dipswitch setting that you can alter if you wish to better suit your layout.", /* control__details */
+  false, /* dual joystick controls */
   &polepos2_get_ctrl_name
 };
 
@@ -18351,6 +19009,7 @@ const struct ControlInfo policetr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Fire offscreen to reload.", /* control__details */
+  false, /* dual joystick controls */
   &policetr_get_ctrl_name
 };
 
@@ -18379,6 +19038,7 @@ const struct ControlInfo polyplay_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that this game didn't have any labels. The poly play system was the second East-German arcade machine. Quite, frankly it was a slapped-together piece of crap. It used inferior russian computer hardware, an old television converted to rgb and a cabient made out of chip-board laminated to look like fake wood. We use the terms 'arcade contols' in a generic sense on this one. The joystick and button were salvaged from industrial machines and are nothing like real arcade controls.", /* control__details */
+  false, /* dual joystick controls */
   &polyplay_get_ctrl_name
 };
 
@@ -18407,6 +19067,7 @@ const struct ControlInfo ponpoko_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ponpoko_get_ctrl_name
 };
 
@@ -18435,6 +19096,7 @@ const struct ControlInfo pooyan_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pooyan_get_ctrl_name
 };
 
@@ -18461,6 +19123,7 @@ const struct ControlInfo popeye_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &popeye_get_ctrl_name
 };
 
@@ -18489,6 +19152,7 @@ const struct ControlInfo popper_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "For you Q-Bert fans that don't have a diagonal joystick mounted this is the game for you. It is essentailly the same game only an 8-way joystick is used.", /* control__details */
+  false, /* dual joystick controls */
   &popper_get_ctrl_name
 };
 
@@ -18517,6 +19181,7 @@ const struct ControlInfo pdrift_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pdrift_get_ctrl_name
 };
 
@@ -18545,6 +19210,7 @@ const struct ControlInfo powerdrv_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Tap the front and back tires rapidly to acelerate and use the shifter to change gearing for obstacles. Pop a wheelie with the wheelie button.", /* control__details */
+  false, /* dual joystick controls */
   &powerdrv_get_ctrl_name
 };
 
@@ -18572,6 +19238,7 @@ const struct ControlInfo pclubj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Even though the label indicates that this is a 4 way joystick it is really a two way. The joystick is desginated as a 4 way because the cpo actually had arrows in all 4 directions. This isn't even a game, it is a photo booth in which users select a overlay and have theri pciture printed with it in front. Considering mame's 'arcade machine only' policy, it is suprising that it is included in mame.", /* control__details */
+  false, /* dual joystick controls */
   &pclubj_get_ctrl_name
 };
 
@@ -18601,6 +19268,7 @@ const struct ControlInfo kiwame_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &kiwame_get_ctrl_name
 };
 
@@ -18624,6 +19292,7 @@ const struct ControlInfo profpac_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Something of note is that on this layout the first player is on the right side instead of the left. Note:  As of mame 0.83 this game isn't working yet... I am just preparing for when it does.", /* control__details */
+  false, /* dual joystick controls */
   &profpac_get_ctrl_name
 };
 
@@ -18650,6 +19319,7 @@ const struct ControlInfo psychos_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The player starts as a flying-saucer which the player can fly anywhere in the screen. After a few seconds, the flying-saucer drops the main character that runs/jumps/drops between the platforms. After a life is lost, the player returns to the saucer.", /* control__details */
+  false, /* dual joystick controls */
   &psychos_get_ctrl_name
 };
 
@@ -18679,6 +19349,7 @@ const struct ControlInfo puckman_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &puckman_get_ctrl_name
 };
 
@@ -18706,6 +19377,7 @@ const struct ControlInfo pulsar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original game had the fire button on the left and the joystick on the right.", /* control__details */
+  false, /* dual joystick controls */
   &pulsar_get_ctrl_name
 };
 
@@ -18734,6 +19406,7 @@ const struct ControlInfo punchout_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Hook Uppercut is also referred to as the 'knockout blow' on the control panel and can only be used when your ko meter flashes. The button is a large gameshow type of button.", /* control__details */
+  false, /* dual joystick controls */
   &punchout_get_ctrl_name
 };
 
@@ -18764,6 +19437,7 @@ const struct ControlInfo punkshot_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &punkshot_get_ctrl_name
 };
 
@@ -18793,6 +19467,7 @@ const struct ControlInfo pbobble_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &pbobble_get_ctrl_name
 };
 
@@ -18819,6 +19494,7 @@ const struct ControlInfo pbobble2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Puzzle Bobble 2 is listed as using an 8-way joystick and 4 buttons, though only left, right and 1 button are used for gameplay. Up, down and buttons 2 and 3 are only used during Test Mode. I can find no references to button 4.", /* control__details */
+  false, /* dual joystick controls */
   &pbobble2_get_ctrl_name
 };
 
@@ -18850,6 +19526,7 @@ const struct ControlInfo pbobble3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame lists Puzzle Bobble 3 as having 4 buttons and an 8-way joystick (because it is a Taito F3 System game) /* control_details */ only one button is used during gameplay, Test Mode lists 3 buttons. Only left and right are used during gameplay, up and down are used during Test Mode. I can find no references to button 4.",
+  false, /* dual joystick controls */
   &pbobble3_get_ctrl_name
 };
 
@@ -18881,6 +19558,7 @@ const struct ControlInfo qbert_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Used a 4-way joystick rotated 45 degrees.", /* control__details */
+  false, /* dual joystick controls */
   &qbert_get_ctrl_name
 };
 
@@ -18908,6 +19586,7 @@ const struct ControlInfo qbertqub_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Used a 4-way joystick rotated 45 degrees", /* control__details */
+  false, /* dual joystick controls */
   &qbertqub_get_ctrl_name
 };
 
@@ -18935,6 +19614,7 @@ const struct ControlInfo qix_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &qix_get_ctrl_name
 };
 
@@ -18964,6 +19644,7 @@ const struct ControlInfo quantum_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game did not use buttons, the only input is a trackball.", /* control__details */
+  false, /* dual joystick controls */
   &quantum_get_ctrl_name
 };
 
@@ -18992,6 +19673,7 @@ const struct ControlInfo quarterb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that the buttons do various things based on the gameplay scenario. Also both buttons were labeled 'Action' so 'A' and 'B' were added to avoid confusion. Also the kicker only labeled the three actions it is used for, not how to aim, ect. This was added for your benefit.", /* control__details */
+  false, /* dual joystick controls */
   &quarterb_get_ctrl_name
 };
 
@@ -19034,6 +19716,7 @@ const struct ControlInfo quartet_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Ironically this game is also available in a 2 player variety. Wouldn't that make it a duo?", /* control__details */
+  false, /* dual joystick controls */
   &quartet_get_ctrl_name
 };
 
@@ -19063,6 +19746,7 @@ const struct ControlInfo quasar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'forward' button appears to be broken in mame.", /* control__details */
+  false, /* dual joystick controls */
   &quasar_get_ctrl_name
 };
 
@@ -19090,6 +19774,7 @@ const struct ControlInfo qad_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "You may wonder why the control type is listed as 'Just Buttons' instead of 'Trivia Buttons'. This is one of the few arcade trivia games that doesn't use trivia-style buttons. It uses standard pushbuttons.", /* control__details */
+  false, /* dual joystick controls */
   &qad_get_ctrl_name
 };
 
@@ -19117,6 +19802,7 @@ const struct ControlInfo qndream_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Like all capcom quiz games, this game's cp uses regular push buttons instead of trivia-style buttons.", /* control__details */
+  false, /* dual joystick controls */
   &qndream_get_ctrl_name
 };
 
@@ -19144,6 +19830,7 @@ const struct ControlInfo qmhayaku_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &qmhayaku_get_ctrl_name
 };
 
@@ -19167,6 +19854,7 @@ const struct ControlInfo rtype_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The longer you hold down the fire button, the stronger the shot. The force button 'shoots' or recalls a power-up piece from and to your ship. Mame has four buttons for this game for some reason, but only uses the first two. The game has the fire and force buttons on both sides of the joystick, but not 'mirrored': the force is to the left of the fire button on both sides of the joystick. NOTE  In Mame this game actually has four buttons. This is due to some sloppy code and nothing more. The dipswitches between this game and a similar game running on the same system were identical, so the input function was simply re-routed to that game. This needs to be removed asap.", /* control__details */
+  false, /* dual joystick controls */
   &rtype_get_ctrl_name
 };
 
@@ -19196,6 +19884,7 @@ const struct ControlInfo radarscp_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note by HowardC:  As of mame version .77 this game should us a 2-way stick. If it doesn't contact me.", /* control__details */
+  false, /* dual joystick controls */
   &radarscp_get_ctrl_name
 };
 
@@ -19222,6 +19911,7 @@ const struct ControlInfo radrad_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &radrad_get_ctrl_name
 };
 
@@ -19250,6 +19940,7 @@ const struct ControlInfo rchase_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game didn't have a gun, rather a joystick with a crosshair on the screen. The machine also had a bench the players sat on with two solenoids mounted underneath to give the illusion of them sitting in the mine cart.", /* control__details */
+  false, /* dual joystick controls */
   &rchase_get_ctrl_name
 };
 
@@ -19278,6 +19969,7 @@ const struct ControlInfo rainbow_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &rainbow_get_ctrl_name
 };
 
@@ -19305,6 +19997,7 @@ const struct ControlInfo rallyx_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &rallyx_get_ctrl_name
 };
 
@@ -19333,6 +20026,7 @@ const struct ControlInfo rampage_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &rampage_get_ctrl_name
 };
 
@@ -19362,6 +20056,7 @@ const struct ControlInfo rmpgwt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The tilt in mame does not work.", /* control__details */
+  false, /* dual joystick controls */
   &rmpgwt_get_ctrl_name
 };
 
@@ -19392,6 +20087,7 @@ const struct ControlInfo rampart_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The player's Place Piece/Fire button is also the start button. There are three basic different CP layouts for this game: 3 player trackball, 2 player trackball (dipswitch with same ROM as 3 player TB), and 2 player 8-way joystick (with ramprt2p and rampartj). The 3 player dedicated TB CP had two buttons per player on the left side of the TB. The kit highly recomends mirroring the buttons on both sides the joystick, with two buttons wired to each button input, but this was not always followed. Button2 (Rotate Peice/Fire) is labeled as the 3 player TB CP /* control_details */ for the joystick CP, this button was 'Rotate Piece/Speed Up' instead to give the joystick two movement speeds in the shooting part of the game.",
+  false, /* dual joystick controls */
   &rampart_get_ctrl_name
 };
 
@@ -19421,6 +20117,7 @@ const struct ControlInfo rastan_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Joystick in center of Panel, with attack and jump buttons on both sides, for both left and right handed players. Player start buttons were on RIGHT side of CP, with P1 at top, and P2 at bottom", /* control__details */
+  false, /* dual joystick controls */
   &rastan_get_ctrl_name
 };
 
@@ -19450,6 +20147,7 @@ const struct ControlInfo reactor_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The action buttons are 'mirrored' on both sides of the trackball like normal, and double as start buttons. However, the start half of the buttons are not mirrored: the start buttons go 1 2 1 2 from left to right, and the left side start buttons give you 3 ships for one credit, while the right side buttons give you 7 ships for two credits. So the layout, from left to right, is (energy / 1 player with 3 ships), (decoy / 2 players with 3 ships each), trackball, (decoy / 1 player with 7 ships), (energy / 2 players with 7 ships each). Mame's emulated buttons go start1, start2, trackball, p1 button2, p1 button1, following the above layout. So the start buttons are also action buttons, and the action buttons are start buttons, but they are 4 different buttons, even though there are two different actions.", /* control__details */
+  false, /* dual joystick controls */
   &reactor_get_ctrl_name
 };
 
@@ -19479,6 +20177,7 @@ const struct ControlInfo rmhaihai_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &rmhaihai_get_ctrl_name
 };
 
@@ -19502,6 +20201,7 @@ const struct ControlInfo rmhaijin_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &rmhaijin_get_ctrl_name
 };
 
@@ -19525,6 +20225,7 @@ const struct ControlInfo rmhaisei_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &rmhaisei_get_ctrl_name
 };
 
@@ -19548,6 +20249,7 @@ const struct ControlInfo redlin2p_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &redlin2p_get_ctrl_name
 };
 
@@ -19574,6 +20276,7 @@ const struct ControlInfo regulus_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game doesn't have any labels, probably because the controls are so self-explainatory.", /* control__details */
+  false, /* dual joystick controls */
   &regulus_get_ctrl_name
 };
 
@@ -19603,6 +20306,7 @@ const struct ControlInfo renegade_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &renegade_get_ctrl_name
 };
 
@@ -19633,6 +20337,7 @@ const struct ControlInfo rescue_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &rescue_get_ctrl_name
 };
 
@@ -19665,6 +20370,7 @@ const struct ControlInfo rescraid_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The CP has the steering stick on the left side, shooting stick on the right. Mame has it emulated the opposite, so the labels are not mixed up.", /* control__details */
+  false, /* dual joystick controls */
   &rescraid_get_ctrl_name
 };
 
@@ -19697,6 +20403,7 @@ const struct ControlInfo nekkyoku_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &nekkyoku_get_ctrl_name
 };
 
@@ -19720,6 +20427,7 @@ const struct ControlInfo jedi_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Triggers fire cannon on all levels. Thumb buttons usually also fire cannon, except on the AT-Walker stages, where they rotate the turret.", /* control__details */
+  false, /* dual joystick controls */
   &jedi_get_ctrl_name
 };
 
@@ -19750,6 +20458,7 @@ const struct ControlInfo revx_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'bomb' button actually shoots a compact disc. But that's what it is labeled in the game.", /* control__details */
+  false, /* dual joystick controls */
   &revx_get_ctrl_name
 };
 
@@ -19779,6 +20488,7 @@ const struct ControlInfo ripoff_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This is a two player cooperative game. You cannot shoot the other player, but if you crash into him, you both blow up. Prevent the small tanks from stealing the triangular fuel pods by shooting them. The game ends when all the pods are gone.", /* control__details */
+  false, /* dual joystick controls */
   &ripoff_get_ctrl_name
 };
 
@@ -19806,6 +20516,7 @@ const struct ControlInfo roadblst_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Steering wheel is unique in that it uses optics but is restricted to ~270 degrees, and it returns to the center position using springs. Also, it has 2 triggers (Fire Lasers), and 2 thumb buttons (Activate Special Weapon). Each trigger / thumb button does the same action.", /* control__details */
+  false, /* dual joystick controls */
   &roadblst_get_ctrl_name
 };
 
@@ -19834,6 +20545,7 @@ const struct ControlInfo roadf_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Game used a joystick and two pushbuttons for Low Gear and High Gear. No Shifter. High Gear cannot be pressed until the car has started and built up some RPM's.", /* control__details */
+  false, /* dual joystick controls */
   &roadf_get_ctrl_name
 };
 
@@ -19863,6 +20575,7 @@ const struct ControlInfo roadrunn_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame includes buttons 2 & 3, but they are not used. The original game has the hop button mirrored on both sides of the joystick. The left side jump button is also 1 player start button /* control_details */ mame emulates this as two buttons, button1 and start1. The right side hop button is also 2 players start button; mame emulates this as only the 'start2' button, even though pressing mame's start2 button also makes RoadRunner hop. The original joystick was a Hall Effect joystick: an analog joystick that used magnetics to vary the resistance instead of the usual POT.",
+  false, /* dual joystick controls */
   &roadrunn_get_ctrl_name
 };
 
@@ -19893,6 +20606,7 @@ const struct ControlInfo robby_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &robby_get_ctrl_name
 };
 
@@ -19921,6 +20635,7 @@ const struct ControlInfo robocop_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &robocop_get_ctrl_name
 };
 
@@ -19950,6 +20665,7 @@ const struct ControlInfo robocop2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &robocop2_get_ctrl_name
 };
 
@@ -19980,6 +20696,7 @@ const struct ControlInfo robotron_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The drivers in mame don't have a cocktail mode, but klov shows a cocktail cab, and the robotron drawing set shows two (cocktail) sets of dual joysticks.", /* control__details */
+  false, /* dual joystick controls */
   &robotron_get_ctrl_name
 };
 
@@ -20011,6 +20728,7 @@ const struct ControlInfo rocnrope_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &rocnrope_get_ctrl_name
 };
 
@@ -20040,6 +20758,7 @@ const struct ControlInfo rollerg_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The two buttons have other uses besides those labeled, but you will be prompted on how to use them during gameplay.", /* control__details */
+  false, /* dual joystick controls */
   &rollerg_get_ctrl_name
 };
 
@@ -20069,6 +20788,7 @@ const struct ControlInfo rthunder_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The buttons are mirrored on both sides of the joystick. There are three settings for the type of control panel: 'Type A Upright' (1 joystick, alternating), 'Type B Cocktail--no flip' (2 joysticks, alternating), and 'Type C Cocktail--flip' (2 joysticks, alternating). Those with normal 2 joystick upright cabs will be happy with the Type B setting.", /* control__details */
+  false, /* dual joystick controls */
   &rthunder_get_ctrl_name
 };
 
@@ -20098,6 +20818,7 @@ const struct ControlInfo rranger_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original cpo used icons, but they are very cryptic. 'Shoot' sported a rather understandable gun icon, but 'Jump' had an icon of overlapping up and down arrows.", /* control__details */
+  false, /* dual joystick controls */
   &rranger_get_ctrl_name
 };
 
@@ -20127,6 +20848,7 @@ const struct ControlInfo roundup_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original panel has the same button either side of the joystick so can be played with either hand", /* control__details */
+  false, /* dual joystick controls */
   &roundup_get_ctrl_name
 };
 
@@ -20155,6 +20877,7 @@ const struct ControlInfo royalmah_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &royalmah_get_ctrl_name
 };
 
@@ -20178,6 +20901,7 @@ const struct ControlInfo rungun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Please note that although all 4 player inputs are in mame you can NOT play a 2 on 2 game. The original 4-player cab was actually two cabinets linked together. Since mame doesn't emulate the link or the second monitor, this game is 2 player only.", /* control__details */
+  false, /* dual joystick controls */
   &rungun_get_ctrl_name
 };
 
@@ -20208,6 +20932,7 @@ const struct ControlInfo runaway_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The hi / low shifter was actually a plastic switch, but it operates just like a high / low shifter in mame so it's mapped it to that. The jump button was unlabeled on the original cpo.", /* control__details */
+  false, /* dual joystick controls */
   &runaway_get_ctrl_name
 };
 
@@ -20234,6 +20959,7 @@ const struct ControlInfo kirarast_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &kirarast_get_ctrl_name
 };
 
@@ -20257,6 +20983,7 @@ const struct ControlInfo stunrun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Even though the yoke's buttons have seperate inputs, they seem to both perform the same function.", /* control__details */
+  false, /* dual joystick controls */
   &stunrun_get_ctrl_name
 };
 
@@ -20286,6 +21013,7 @@ const struct ControlInfo salamand_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &salamand_get_ctrl_name
 };
 
@@ -20315,6 +21043,7 @@ const struct ControlInfo searchar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &searchar_get_ctrl_name
 };
 
@@ -20346,6 +21075,7 @@ const struct ControlInfo sarge_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The buttons are mirrored across both sticks. They are labeled generically because you can control various vehicles in the game and they have different functions for each. This game driver has hacked in inputs that allow you to play the game with a regular joystick. To disable these hacked inputs you need to either disable cheats or remap the hacked inputs to 'none' in the input menu.", /* control__details */
+  false, /* dual joystick controls */
   &sarge_get_ctrl_name
 };
 
@@ -20375,6 +21105,7 @@ const struct ControlInfo satansat_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joystick had the typical generic 'control' caption below it.", /* control__details */
+  false, /* dual joystick controls */
   &satansat_get_ctrl_name
 };
 
@@ -20402,6 +21133,7 @@ const struct ControlInfo shollow_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game actually uses a gorf-style trigger stick, but a restrictor is used to make it 2-way.", /* control__details */
+  false, /* dual joystick controls */
   &shollow_get_ctrl_name
 };
 
@@ -20429,6 +21161,7 @@ const struct ControlInfo scandal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &scandal_get_ctrl_name
 };
 
@@ -20452,6 +21185,7 @@ const struct ControlInfo scramble_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &scramble_get_ctrl_name
 };
 
@@ -20481,6 +21215,7 @@ const struct ControlInfo sdi_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "For those of you who have 'fraken-panels' this is the game for you. This game uses the extremely odd combination of a top-fire 8-way joystick and a trackball. All controls are required too so forget about playing this game unless you have those controls.", /* control__details */
+  false, /* dual joystick controls */
   &sdi_get_ctrl_name
 };
 
@@ -20513,6 +21248,7 @@ const struct ControlInfo seawolf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'paddle' is actually a periscope you look through and turn. The field of view you have when looking through the scope helps you aim. Mame displays a cross hair to help you aim, you can turn it off with the F1 key.", /* control__details */
+  false, /* dual joystick controls */
   &seawolf_get_ctrl_name
 };
 
@@ -20539,6 +21275,7 @@ const struct ControlInfo seawolf2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'paddle' is actually a periscope you look through and turn. The field of view you have when looking through the scope helps you aim. Mame displays a cross hair to help you aim, you can turn it off with the F1 key.", /* control__details */
+  false, /* dual joystick controls */
   &seawolf2_get_ctrl_name
 };
 
@@ -20565,6 +21302,7 @@ const struct ControlInfo secolove_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &secolove_get_ctrl_name
 };
 
@@ -20588,6 +21326,7 @@ const struct ControlInfo seiha_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &seiha_get_ctrl_name
 };
 
@@ -20611,6 +21350,7 @@ const struct ControlInfo sengokmj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &sengokmj_get_ctrl_name
 };
 
@@ -20634,6 +21374,7 @@ const struct ControlInfo shdancer_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Pull joystick down and push ATTACK button to send your dog to attack your opponents. To wipe out everything on the screen use NINJA MAGIC button.", /* control__details */
+  false, /* dual joystick controls */
   &shdancer_get_ctrl_name
 };
 
@@ -20664,6 +21405,7 @@ const struct ControlInfo shadoww_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Yes, although it is rare to see the game with it's original layout, it was designed to be played with a top-fire joystick.", /* control__details */
+  false, /* dual joystick controls */
   &shadoww_get_ctrl_name
 };
 
@@ -20694,6 +21436,7 @@ const struct ControlInfo sharkatt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo labels the joystick as 'shark control.'  Above both buttons are the words 'press to'  (as in press to thrust or press to munch).", /* control__details */
+  false, /* dual joystick controls */
   &sharkatt_get_ctrl_name
 };
 
@@ -20723,6 +21466,7 @@ const struct ControlInfo sshooter_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sshooter_get_ctrl_name
 };
 
@@ -20751,6 +21495,7 @@ const struct ControlInfo sheriff_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "NOTE  The input emulation is correct in mame, but this games real life controls are NOT dual 8-ways. The game used a 8 way joystick and a special rotary dial with a trigger, which used absolute positon. Basically it acted like an 8way joystick that stays in the direction you point it.", /* control__details */
+  false, /* dual joystick controls */
   &sheriff_get_ctrl_name
 };
 
@@ -20783,6 +21528,7 @@ const struct ControlInfo shinobi_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "CP is a generic SEGA CP, with buttons arranged in a triangle.", /* control__details */
+  false, /* dual joystick controls */
   &shinobi_get_ctrl_name
 };
 
@@ -20813,6 +21559,7 @@ const struct ControlInfo shootout_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'jump' label is misleading. While moving left or right you press it to roll out of the way. The button is only effective while moving.", /* control__details */
+  false, /* dual joystick controls */
   &shootout_get_ctrl_name
 };
 
@@ -20842,6 +21589,7 @@ const struct ControlInfo shootbul_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &shootbul_get_ctrl_name
 };
 
@@ -20869,6 +21617,7 @@ const struct ControlInfo shuffle_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Please note that the actual cpo shows the generic arrows shooting out from the trackball with the caption 'control puck'  this has been left out for length reasons. Also the button caption may not exactly be 'game select' but this cpo was screened directly over the metal, and thus it's very difficult to find a completely readable one.", /* control__details */
+  false, /* dual joystick controls */
   &shuffle_get_ctrl_name
 };
 
@@ -20897,6 +21646,7 @@ const struct ControlInfo shufshot_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &shufshot_get_ctrl_name
 };
 
@@ -20926,6 +21676,7 @@ const struct ControlInfo sidearms_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sidearms_get_ctrl_name
 };
 
@@ -20956,6 +21707,7 @@ const struct ControlInfo sidetrac_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that the original game used a generic exidy panel and thus the button was unlabeled.", /* control__details */
+  false, /* dual joystick controls */
   &sidetrac_get_ctrl_name
 };
 
@@ -20984,6 +21736,7 @@ const struct ControlInfo sinistar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sinistar_get_ctrl_name
 };
 
@@ -21013,6 +21766,7 @@ const struct ControlInfo skullxbo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "CP has 2 sword buttons either side of joystick, and 1 turn button directly below joystick. This just allows for left/right handed players - both sword buttons are wired to same input.", /* control__details */
+  false, /* dual joystick controls */
   &skullxbo_get_ctrl_name
 };
 
@@ -21042,6 +21796,7 @@ const struct ControlInfo skydiver_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game actually used a parachute ripcord mounted as a 2-way joystick. You adjust for the wind by moving the cord left or right and pull up on it to release the chute.", /* control__details */
+  false, /* dual joystick controls */
   &skydiver_get_ctrl_name
 };
 
@@ -21069,6 +21824,7 @@ const struct ControlInfo skysoldr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &skysoldr_get_ctrl_name
 };
 
@@ -21098,6 +21854,7 @@ const struct ControlInfo slapfigh_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game is 2 player alternating, with a cocktail mode. As with all alternating cocktail games, a separate input is for the second player when the video flips for the second player.", /* control__details */
+  false, /* dual joystick controls */
   &slapfigh_get_ctrl_name
 };
 
@@ -21127,6 +21884,7 @@ const struct ControlInfo slikshot_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'trackball' is actually an entire section of a pool table, with a cue ball, cue stick, and various sensors to track their movement. The buttons are lighted when they are required and you are prompted on screen as to which to press.", /* control__details */
+  false, /* dual joystick controls */
   &slikshot_get_ctrl_name
 };
 
@@ -21157,6 +21915,7 @@ const struct ControlInfo slither_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &slither_get_ctrl_name
 };
 
@@ -21186,6 +21945,7 @@ const struct ControlInfo slyspy_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &slyspy_get_ctrl_name
 };
 
@@ -21215,6 +21975,7 @@ const struct ControlInfo smashtv_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joysticks were just globally labeled 'move' and 'fire'", /* control__details */
+  false, /* dual joystick controls */
   &smashtv_get_ctrl_name
 };
 
@@ -21246,6 +22007,7 @@ const struct ControlInfo snakjack_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &snakjack_get_ctrl_name
 };
 
@@ -21274,6 +22036,7 @@ const struct ControlInfo snapjack_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo generically labeled the entire joystick 'control'.", /* control__details */
+  false, /* dual joystick controls */
   &snapjack_get_ctrl_name
 };
 
@@ -21301,6 +22064,7 @@ const struct ControlInfo snowbros_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Snow Bros is listed as using an 8-way joystick, though only left and right are used during gameplay.", /* control__details */
+  false, /* dual joystick controls */
   &snowbros_get_ctrl_name
 };
 
@@ -21330,6 +22094,7 @@ const struct ControlInfo solarfox_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "it should be noted that the triger button was also mirrored on the control panel itself.", /* control__details */
+  false, /* dual joystick controls */
   &solarfox_get_ctrl_name
 };
 
@@ -21359,6 +22124,7 @@ const struct ControlInfo solarq_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &solarq_get_ctrl_name
 };
 
@@ -21388,6 +22154,7 @@ const struct ControlInfo amazon_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &amazon_get_ctrl_name
 };
 
@@ -21417,6 +22184,7 @@ const struct ControlInfo sbm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is unplayable on anyone's layout. It used a series of photo sensors and a punching pad, along with boxing gloves to make a 'punching sim'. Mame maps the impact position on the pad to the directional arrows and the speed is calculated by the photo sensors. Player 2 joystick may also do something. It doesn't really matter as the game is unplayable. Interesting side note.... The original machine was responsible for several lawsuits as the pad wasn't padded enough and people injured themselves hitting it.", /* control__details */
+  false, /* dual joystick controls */
   &sbm_get_ctrl_name
 };
 
@@ -21448,6 +22216,7 @@ const struct ControlInfo souledge_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original control panel actually has attack with arrows going left and right for 'Attack A' and attack with arrows going up and down for 'Attack B'  On some panels you will see this game with the labels A,B,K,G", /* control__details */
+  false, /* dual joystick controls */
   &souledge_get_ctrl_name
 };
 
@@ -21479,6 +22248,7 @@ const struct ControlInfo sspaceat_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Space Invader type game.", /* control__details */
+  false, /* dual joystick controls */
   &sspaceat_get_ctrl_name
 };
 
@@ -21505,6 +22275,7 @@ const struct ControlInfo spacduel_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that the 2 player start button does NOT function as a start button, rather a game select button. The good news is you can play a 2 player game on a single quarter!", /* control__details */
+  false, /* dual joystick controls */
   &spacduel_get_ctrl_name
 };
 
@@ -21533,6 +22304,7 @@ const struct ControlInfo spacefb_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game's cpo used nautical labels above the directional buttons and arrows below them. Since we aren't all sailors, the arrow directions are included.", /* control__details */
+  false, /* dual joystick controls */
   &spacefb_get_ctrl_name
 };
 
@@ -21560,6 +22332,7 @@ const struct ControlInfo spacfury_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &spacfury_get_ctrl_name
 };
 
@@ -21587,6 +22360,7 @@ const struct ControlInfo spacegun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &spacegun_get_ctrl_name
 };
 
@@ -21617,6 +22391,7 @@ const struct ControlInfo sharrier_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "If you are wondering why there are three 'shot' buttons, you are not alone. The trigger on the flight stick shoots and there are two buttons on the control panel that also shoot. They all have the same function, but for documentation's sake all three will be included.", /* control__details */
+  false, /* dual joystick controls */
   &sharrier_get_ctrl_name
 };
 
@@ -21647,6 +22422,7 @@ const struct ControlInfo invaders_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game cpo image uses 'control' as the label for the joystick. I modified it slightly to avoid confusion. The midway version of the game (invaders) actually used directional buttons instead of the joystick. The Taito version (Sitv) used the two-way joystick.", /* control__details */
+  false, /* dual joystick controls */
   &invaders_get_ctrl_name
 };
 
@@ -21673,6 +22449,7 @@ const struct ControlInfo spacedx_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &spacedx_get_ctrl_name
 };
 
@@ -21701,6 +22478,7 @@ const struct ControlInfo invadpt2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Taito version of this game (invadpt2) used a directional joystick. The Midway version (invaddlx) replaced the joystick with directional buttons. The buttons were labelled 'Laser Base Control' with arrows.", /* control__details */
+  false, /* dual joystick controls */
   &invadpt2_get_ctrl_name
 };
 
@@ -21727,6 +22505,7 @@ const struct ControlInfo spacelnc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &spacelnc_get_ctrl_name
 };
 
@@ -21753,6 +22532,7 @@ const struct ControlInfo spaceod_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo has very subtle icons integrated into the artwork. A death-ray like beam eminates from the 'laser' button while bombs appear to be dropping out of the 'bomb' button.", /* control__details */
+  false, /* dual joystick controls */
   &spaceod_get_ctrl_name
 };
 
@@ -21782,6 +22562,7 @@ const struct ControlInfo panic_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game has a cocktail mode, so player 2 inputs are defined in mame.", /* control__details */
+  false, /* dual joystick controls */
   &panic_get_ctrl_name
 };
 
@@ -21811,6 +22592,7 @@ const struct ControlInfo spacezap_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "A very simple game. the directional buttons point the laser up, down, left or right. Shoot all the aliens before they destroy the base.", /* control__details */
+  false, /* dual joystick controls */
   &spacezap_get_ctrl_name
 };
 
@@ -21839,6 +22621,7 @@ const struct ControlInfo speakres_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo generically labels the joystick 'control.'", /* control__details */
+  false, /* dual joystick controls */
   &speakres_get_ctrl_name
 };
 
@@ -21865,6 +22648,7 @@ const struct ControlInfo spectar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The fire decal also has an icon of a rocket.", /* control__details */
+  false, /* dual joystick controls */
   &spectar_get_ctrl_name
 };
 
@@ -21893,6 +22677,7 @@ const struct ControlInfo spdcoin_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &spdcoin_get_ctrl_name
 };
 
@@ -21918,6 +22703,7 @@ const struct ControlInfo speedfrk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Speed is controlled by the shifter. Pressing the pedal makes the car move forward at the selected speed. Stay on the road and avoid all cars to avoid crashing.", /* control__details */
+  false, /* dual joystick controls */
   &speedfrk_get_ctrl_name
 };
 
@@ -21943,6 +22729,7 @@ const struct ControlInfo speedrcr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game has three volcano buttons mounted on the control panel, these buttons are used to fire the three weapons on your car. They are unlabeled but are referred to as A, B, and C in the game's test menu. The start button doubles as a jump button. In mame an extra button and an extra pedal are defined but this doesn't reflect the original hardware.", /* control__details */
+  false, /* dual joystick controls */
   &speedrcr_get_ctrl_name
 };
 
@@ -21972,6 +22759,7 @@ const struct ControlInfo spidman_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &spidman_get_ctrl_name
 };
 
@@ -22001,6 +22789,7 @@ const struct ControlInfo spiders_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Teh original cpo simply depicts two arrows with the label 'Movement'.", /* control__details */
+  false, /* dual joystick controls */
   &spiders_get_ctrl_name
 };
 
@@ -22027,6 +22816,7 @@ const struct ControlInfo sprint1_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that the gear buttons are remapped from the button defaults. The number labels denote shift position.", /* control__details */
+  false, /* dual joystick controls */
   &sprint1_get_ctrl_name
 };
 
@@ -22057,6 +22847,7 @@ const struct ControlInfo starcas_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame simulates this game using a 2-way joystick, but the actual game used Directional buttons labeled Left and Right. There was also a Rock-Ola version of the Control Panel (black background) which used pictograms for the button labels. Controls were the same, however.", /* control__details */
+  false, /* dual joystick controls */
   &starcas_get_ctrl_name
 };
 
@@ -22084,6 +22875,7 @@ const struct ControlInfo starforc_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &starforc_get_ctrl_name
 };
 
@@ -22112,6 +22904,7 @@ const struct ControlInfo stargrds_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The player start buttons double as the 'Weapon' button and the cpo labels it so.", /* control__details */
+  false, /* dual joystick controls */
   &stargrds_get_ctrl_name
 };
 
@@ -22143,6 +22936,7 @@ const struct ControlInfo starhawk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Each player has an 8-way Joystick with a Fire Button on top. There are three buttons on the control panel that control the speed of the targeting crosshairs. Shoot as many ships as possible.", /* control__details */
+  false, /* dual joystick controls */
   &starhawk_get_ctrl_name
 };
 
@@ -22174,6 +22968,7 @@ const struct ControlInfo starjack_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "On the original control panel, the start buttons were double-wired to the bomb buttons.", /* control__details */
+  false, /* dual joystick controls */
   &starjack_get_ctrl_name
 };
 
@@ -22203,6 +22998,7 @@ const struct ControlInfo startrek_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &startrek_get_ctrl_name
 };
 
@@ -22232,6 +23028,7 @@ const struct ControlInfo starwars_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Buttons correspond to the Trigger and Thumb buttons on the yoke. Aircraft style controls, moving control down moves aiming cursor up.", /* control__details */
+  false, /* dual joystick controls */
   &starwars_get_ctrl_name
 };
 
@@ -22263,6 +23060,7 @@ const struct ControlInfo stargate_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Joystick is on left side of control panel with reverse button the the right of it so it can be hit with thumb. Fire and thrust are on right side of control panel with smart bomb, inviso, and hyperspace to the left in a 45 degree angle.", /* control__details */
+  false, /* dual joystick controls */
   &stargate_get_ctrl_name
 };
 
@@ -22294,6 +23092,7 @@ const struct ControlInfo sgunner_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sgunner_get_ctrl_name
 };
 
@@ -22323,6 +23122,7 @@ const struct ControlInfo sgunner2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sgunner2_get_ctrl_name
 };
 
@@ -22352,6 +23152,7 @@ const struct ControlInfo stocker_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &stocker_get_ctrl_name
 };
 
@@ -22378,6 +23179,7 @@ const struct ControlInfo stratab_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game only has one start button. You press it multiple times for up to 4 players. Mame has two player inputs for cocktail modes, so a person must assume that in cocktail mode teams take turns with the two control panels.", /* control__details */
+  false, /* dual joystick controls */
   &stratab_get_ctrl_name
 };
 
@@ -22407,6 +23209,7 @@ const struct ControlInfo stratgyx_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game used a very stylish, metal, top-fire joystick.", /* control__details */
+  false, /* dual joystick controls */
   &stratgyx_get_ctrl_name
 };
 
@@ -22437,6 +23240,7 @@ const struct ControlInfo sf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original, dedicated, Street Fighter cabinet only had two, giant, semi-analog buttons. How hard the button was pressed determined which of the three attack strengths registered. The conversion kit and second revision of this game used the classic sf2 layout well all know and love.", /* control__details */
+  false, /* dual joystick controls */
   &sf_get_ctrl_name
 };
 
@@ -22470,6 +23274,7 @@ const struct ControlInfo sfa2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sfa2_get_ctrl_name
 };
 
@@ -22503,6 +23308,7 @@ const struct ControlInfo sfa3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sfa3_get_ctrl_name
 };
 
@@ -22536,6 +23342,7 @@ const struct ControlInfo sfa_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sfa_get_ctrl_name
 };
 
@@ -22570,6 +23377,7 @@ const struct ControlInfo sf2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sf2_get_ctrl_name
 };
 
@@ -22604,6 +23412,7 @@ const struct ControlInfo sfiii2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sfiii2_get_ctrl_name
 };
 
@@ -22637,6 +23446,7 @@ const struct ControlInfo sfiii3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sfiii3_get_ctrl_name
 };
 
@@ -22670,6 +23480,7 @@ const struct ControlInfo sfiii_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sfiii_get_ctrl_name
 };
 
@@ -22703,6 +23514,7 @@ const struct ControlInfo sftm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sftm_get_ctrl_name
 };
 
@@ -22736,6 +23548,7 @@ const struct ControlInfo strider_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &strider_get_ctrl_name
 };
 
@@ -22765,6 +23578,7 @@ const struct ControlInfo sbowling_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sbowling_get_ctrl_name
 };
 
@@ -22792,6 +23606,7 @@ const struct ControlInfo strkforc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'weapon' refers to your secondary weapon. Also note that the start button transforms your ship and on the original panel, the start button was labeled 'Start/Transform'", /* control__details */
+  false, /* dual joystick controls */
   &strkforc_get_ctrl_name
 };
 
@@ -22822,6 +23637,7 @@ const struct ControlInfo s1945_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &s1945_get_ctrl_name
 };
 
@@ -22851,6 +23667,7 @@ const struct ControlInfo s1945iii_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &s1945iii_get_ctrl_name
 };
 
@@ -22881,6 +23698,7 @@ const struct ControlInfo subs_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is essentially unplayable in mame because in the original game, the two monitors were on opposite ends of the cab. Player 1 couldn't see player 2 and vice-versa. In mame the two monitors are combiend and thus it runs the effect.", /* control__details */
+  false, /* dual joystick controls */
   &subs_get_ctrl_name
 };
 
@@ -22907,6 +23725,7 @@ const struct ControlInfo ssriders_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ssriders_get_ctrl_name
 };
 
@@ -22936,6 +23755,7 @@ const struct ControlInfo sbagman_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The action button picks things up and drops them.", /* control__details */
+  false, /* dual joystick controls */
   &sbagman_get_ctrl_name
 };
 
@@ -22964,6 +23784,7 @@ const struct ControlInfo sbrkout_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original game used a 3-position rotary switch to select between 3 different variations: Progressive, Double, and Cavity.", /* control__details */
+  false, /* dual joystick controls */
   &sbrkout_get_ctrl_name
 };
 
@@ -22993,6 +23814,7 @@ const struct ControlInfo scobra_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original CP labelled both buttons as 'Discharge Buttons.'  Sidewinder Missile is a bit of an overstatement for little tiny blips.", /* control__details */
+  false, /* dual joystick controls */
   &scobra_get_ctrl_name
 };
 
@@ -23022,6 +23844,7 @@ const struct ControlInfo scontra_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &scontra_get_ctrl_name
 };
 
@@ -23051,6 +23874,7 @@ const struct ControlInfo spdodgeb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Press boht buttons to jump.", /* control__details */
+  false, /* dual joystick controls */
   &spdodgeb_get_ctrl_name
 };
 
@@ -23080,6 +23904,7 @@ const struct ControlInfo sgemf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sgemf_get_ctrl_name
 };
 
@@ -23110,6 +23935,7 @@ const struct ControlInfo shimpact_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Obviously the action depends upon the position you are playing and what team you are on.", /* control__details */
+  false, /* dual joystick controls */
   &shimpact_get_ctrl_name
 };
 
@@ -23138,6 +23964,7 @@ const struct ControlInfo marukin_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &marukin_get_ctrl_name
 };
 
@@ -23161,6 +23988,7 @@ const struct ControlInfo smgp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The shifter switches are formula 1 style, meaning that they are mounted behind the wheel for quick shifting.", /* control__details */
+  false, /* dual joystick controls */
   &smgp_get_ctrl_name
 };
 
@@ -23190,6 +24018,7 @@ const struct ControlInfo superpac_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &superpac_get_ctrl_name
 };
 
@@ -23218,6 +24047,7 @@ const struct ControlInfo spbactn_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game was actually a 'video pinball' table with real controls and everything. Note that this game is gonna be unplayable on a panel without pinball buttons.", /* control__details */
+  false, /* dual joystick controls */
   &spbactn_get_ctrl_name
 };
 
@@ -23244,6 +24074,7 @@ const struct ControlInfo spnchout_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Each button has a dual function. They are labeled in the order of netrual postion and up respectively. The Hook button only deleivers the knock out blow when the screen flashes to use it. The Hook button is a huge plunger button, similar to what you would see on a gameshow.", /* control__details */
+  false, /* dual joystick controls */
   &spnchout_get_ctrl_name
 };
 
@@ -23274,6 +24105,7 @@ const struct ControlInfo sqix_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &sqix_get_ctrl_name
 };
 
@@ -23302,6 +24134,7 @@ const struct ControlInfo srmp7_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &srmp7_get_ctrl_name
 };
 
@@ -23325,6 +24158,7 @@ const struct ControlInfo srmp2_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &srmp2_get_ctrl_name
 };
 
@@ -23348,6 +24182,7 @@ const struct ControlInfo srmp3_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &srmp3_get_ctrl_name
 };
 
@@ -23371,6 +24206,7 @@ const struct ControlInfo srmp4_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &srmp4_get_ctrl_name
 };
 
@@ -23394,6 +24230,7 @@ const struct ControlInfo sspeedr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Please note that with default mame mappings, the shifter and gas pedal will interfere with each other.", /* control__details */
+  false, /* dual joystick controls */
   &sspeedr_get_ctrl_name
 };
 
@@ -23421,6 +24258,7 @@ const struct ControlInfo ssprint_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Player one is blue, Player 2 is Red, Player 3 is yellow.", /* control__details */
+  false, /* dual joystick controls */
   &ssprint_get_ctrl_name
 };
 
@@ -23447,6 +24285,7 @@ const struct ControlInfo ssf2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The ssf2 cpo image I found was very fuzzy. If you have a DEDICATED ssf2 cpo image please correct any mistakes I might have made. The labels to this game are very important as not only is it one of the very last dedicated capcom fighter cabs, but it's labels become the 'universal standard' for future capcom fighters.", /* control__details */
+  false, /* dual joystick controls */
   &ssf2_get_ctrl_name
 };
 
@@ -23480,6 +24319,7 @@ const struct ControlInfo sstrike_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The 'trackball' actually consists of a small scale version of the beginning of a bowling alley and a cue ball with various sensors to track it's movement. This game basically recycles the hardware of Slick Shot into a bowling game.", /* control__details */
+  false, /* dual joystick controls */
   &sstrike_get_ctrl_name
 };
 
@@ -23509,6 +24349,7 @@ const struct ControlInfo stonebal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control__details */
+  false, /* dual joystick controls */
   &stonebal_get_ctrl_name
 };
 
@@ -23533,6 +24374,7 @@ const struct ControlInfo szaxxon_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The control panel had duplicate Fire buttons on the panel, as well as the joystick trigger button. The Joystick had an LED that would light up when the trigger was pulled. Aircraft style controls - Pulling back on the joystick causes aircraft to climb.", /* control__details */
+  false, /* dual joystick controls */
   &szaxxon_get_ctrl_name
 };
 
@@ -23561,6 +24403,7 @@ const struct ControlInfo superman_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Hold Punch button down momentarily to release Blast Punch. During shooting scenes the Kick button actually emits Heat Vision instead of kicking.", /* control__details */
+  false, /* dual joystick controls */
   &superman_get_ctrl_name
 };
 
@@ -23590,6 +24433,7 @@ const struct ControlInfo swimmer_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &swimmer_get_ctrl_name
 };
 
@@ -23618,6 +24462,7 @@ const struct ControlInfo tnk3_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This rotary is a unique one. It almost looks like a dial at first glance, but the dial can also be shifted in 8 directions, just like a rotary 8-way.", /* control__details */
+  false, /* dual joystick controls */
   &tnk3_get_ctrl_name
 };
 
@@ -23649,6 +24494,7 @@ const struct ControlInfo ttmahjng_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ttmahjng_get_ctrl_name
 };
 
@@ -23672,6 +24518,7 @@ const struct ControlInfo tailg_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original game had an ambidexterous setup. The controls were setup as Shield, Fire, Site Control(Joystick), Fire, Shield.", /* control__details */
+  false, /* dual joystick controls */
   &tailg_get_ctrl_name
 };
 
@@ -23701,6 +24548,7 @@ const struct ControlInfo hotgmck_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &hotgmck_get_ctrl_name
 };
 
@@ -23724,6 +24572,7 @@ const struct ControlInfo hotgmck3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &hotgmck3_get_ctrl_name
 };
 
@@ -23747,6 +24596,7 @@ const struct ControlInfo hgkairak_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &hgkairak_get_ctrl_name
 };
 
@@ -23770,6 +24620,7 @@ const struct ControlInfo fromanc2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &fromanc2_get_ctrl_name
 };
 
@@ -23793,6 +24644,7 @@ const struct ControlInfo fromanc4_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &fromanc4_get_ctrl_name
 };
 
@@ -23816,6 +24668,7 @@ const struct ControlInfo fromancr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &fromancr_get_ctrl_name
 };
 
@@ -23839,6 +24692,7 @@ const struct ControlInfo tank8_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that this game lacks any labels. This is probably due to the self-explainatory layout. Also not that oddly enough, on this game the trigger button is NOT mirroed to the left stick. The only trigger is on the right one.", /* control__details */
+  false, /* dual joystick controls */
   &tank8_get_ctrl_name
 };
 
@@ -23867,6 +24721,7 @@ const struct ControlInfo tankbatt_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &tankbatt_get_ctrl_name
 };
 
@@ -23895,6 +24750,7 @@ const struct ControlInfo tapper_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game used a real beer tap instead of a shifter. You pull down on the tap to pour and release to serve. In mame it's emulated as a single button.", /* control__details */
+  false, /* dual joystick controls */
   &tapper_get_ctrl_name
 };
 
@@ -23923,6 +24779,7 @@ const struct ControlInfo targ_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &targ_get_ctrl_name
 };
 
@@ -23951,6 +24808,7 @@ const struct ControlInfo tazmania_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &tazmania_get_ctrl_name
 };
 
@@ -23980,6 +24838,7 @@ const struct ControlInfo tbowl_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &tbowl_get_ctrl_name
 };
 
@@ -24009,6 +24868,7 @@ const struct ControlInfo tmnt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Pressing both buttons does a special attack.", /* control__details */
+  false, /* dual joystick controls */
   &tmnt_get_ctrl_name
 };
 
@@ -24038,6 +24898,7 @@ const struct ControlInfo tmnt2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Both buttons do a special attack.", /* control__details */
+  false, /* dual joystick controls */
   &tmnt2_get_ctrl_name
 };
 
@@ -24067,6 +24928,7 @@ const struct ControlInfo tehkanwc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Two buttons were usually wired to the same single button input per player, one on each side of the TB. Mame has a hack so you can play with 8-way joyaticks, but the original had trackballs /* control_details */ mame also has the trackballs, but since no keys are mapped to the TBs (to enable the joystick hack), the TBs don't show in the tab input menu. There apparently were joystick bootlegs of this game; mame only has one version, so the bootlegs might have been hardware hacks no just the inputs (or mame is missing the different ROMs).",
+  false, /* dual joystick controls */
   &tehkanwc_get_ctrl_name
 };
 
@@ -24095,6 +24957,7 @@ const struct ControlInfo tekken_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo itself in this game labels the punch and kick buttons as just 'punch' and 'kick' grouped. The bezel labes them in detail. Please note that the punch buttons are on the top row of the tekken games, so remap accordingly.", /* control__details */
+  false, /* dual joystick controls */
   &tekken_get_ctrl_name
 };
 
@@ -24126,6 +24989,7 @@ const struct ControlInfo tekken2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo itself in this game labels the punch and kick buttons as just 'punch' and 'kick' grouped. The bezel labes them in detail. Please note that the punch buttons are on the top row of the tekken games, so remap accordingly.", /* control__details */
+  false, /* dual joystick controls */
   &tekken2_get_ctrl_name
 };
 
@@ -24157,6 +25021,7 @@ const struct ControlInfo tekken3_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo itself in this game labels the punch and kick buttons as just 'punch' and 'kick' grouped. The bezel labes them in detail. Please note that the punch buttons are on the top row of the tekken games, so remap accordingly.", /* control__details */
+  false, /* dual joystick controls */
   &tekken3_get_ctrl_name
 };
 
@@ -24188,6 +25053,7 @@ const struct ControlInfo telmahjn_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &telmahjn_get_ctrl_name
 };
 
@@ -24211,6 +25077,7 @@ const struct ControlInfo tempest_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Super Zapper kills all enemies. Three Zaps per level.", /* control__details */
+  false, /* dual joystick controls */
   &tempest_get_ctrl_name
 };
 
@@ -24238,6 +25105,7 @@ const struct ControlInfo tengai_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame lists 3 buttons although only 2 actually work", /* control__details */
+  false, /* dual joystick controls */
   &tengai_get_ctrl_name
 };
 
@@ -24268,6 +25136,7 @@ const struct ControlInfo term2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &term2_get_ctrl_name
 };
 
@@ -24297,6 +25166,7 @@ const struct ControlInfo terracre_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &terracre_get_ctrl_name
 };
 
@@ -24326,6 +25196,7 @@ const struct ControlInfo terraf_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &terraf_get_ctrl_name
 };
 
@@ -24355,6 +25226,7 @@ const struct ControlInfo atetris_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Atari Tetris uses a 4-way joystick, though only 3 positions are connected/used (left,right,down). Also the rotate button starts the game. We don't label it start though because on every single tetris machine there is a seperate start button which is apparently wired to button 1 to avoid confusion.", /* control__details */
+  false, /* dual joystick controls */
   &atetris_get_ctrl_name
 };
 
@@ -24383,6 +25255,7 @@ const struct ControlInfo tetris_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &tetris_get_ctrl_name
 };
 
@@ -24411,6 +25284,7 @@ const struct ControlInfo tetrisp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &tetrisp_get_ctrl_name
 };
 
@@ -24440,6 +25314,7 @@ const struct ControlInfo tetrisp2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "As everybody knows how to play tetris by the time this game was relased, the controls are completely un-labeled on the real panel.", /* control__details */
+  false, /* dual joystick controls */
   &tetrisp2_get_ctrl_name
 };
 
@@ -24470,6 +25345,7 @@ const struct ControlInfo ctribe_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ctribe_get_ctrl_name
 };
 
@@ -24499,6 +25375,7 @@ const struct ControlInfo elecyoyo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &elecyoyo_get_ctrl_name
 };
 
@@ -24526,6 +25403,7 @@ const struct ControlInfo esb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Buttons 1 and 4 correspond to the Yoke triggers. Buttons 2 and 3 correspond to the Yoke thumb buttons. These shoot TOW cables on the Probots stages and Fire on the other stages. Game uses aircraft style controls, i.e. pulling the yoke grips down in MAME causes the cursor to move upward.", /* control__details */
+  false, /* dual joystick controls */
   &esb_get_ctrl_name
 };
 
@@ -24557,6 +25435,7 @@ const struct ControlInfo theend_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &theend_get_ctrl_name
 };
 
@@ -24583,6 +25462,7 @@ const struct ControlInfo lkage_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &lkage_get_ctrl_name
 };
 
@@ -24612,6 +25492,7 @@ const struct ControlInfo themj_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &themj_get_ctrl_name
 };
 
@@ -24635,6 +25516,7 @@ const struct ControlInfo mainevt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The action button was one of those huge, round, lighted buttons.", /* control__details */
+  false, /* dual joystick controls */
   &mainevt_get_ctrl_name
 };
 
@@ -24664,6 +25546,7 @@ const struct ControlInfo ninjaw_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ninjaw_get_ctrl_name
 };
 
@@ -24693,6 +25576,7 @@ const struct ControlInfo thepit_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &thepit_get_ctrl_name
 };
 
@@ -24721,6 +25605,7 @@ const struct ControlInfo punisher_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &punisher_get_ctrl_name
 };
 
@@ -24750,6 +25635,7 @@ const struct ControlInfo ghostb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In the versions in mame, there aren't seperate start buttons. The shoot button doubles as the start button. Mame's driver, however, includes normal seperate start buttons /* control_details */ they don't work. However, it seems like there were versions of this game that had the normal seperate start buttons. There also is a 3 player version. The Mame driver includes player 3 inputs in the 2 player game even though they aren't used.",
+  false, /* dual joystick controls */
   &ghostb_get_ctrl_name
 };
 
@@ -24779,6 +25665,7 @@ const struct ControlInfo simpsons_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &simpsons_get_ctrl_name
 };
 
@@ -24808,6 +25695,7 @@ const struct ControlInfo srumbler_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &srumbler_get_ctrl_name
 };
 
@@ -24837,6 +25725,7 @@ const struct ControlInfo a3stooges_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "In this three player game, which player you are determines which stooge you are. P1=Larry  P2=Curly  P3=Moe", /* control__details */
+  false, /* dual joystick controls */
   &a3stooges_get_ctrl_name
 };
 
@@ -24865,6 +25754,7 @@ const struct ControlInfo tinstar_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game actually had a unique digital dial to aim with. Also mame strangely puts the firing controls on the left stick, even though the dial is on the right of the joystick.", /* control__details */
+  false, /* dual joystick controls */
   &tinstar_get_ctrl_name
 };
 
@@ -24897,6 +25787,7 @@ const struct ControlInfo thief_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Pacman like game.", /* control__details */
+  false, /* dual joystick controls */
   &thief_get_ctrl_name
 };
 
@@ -24924,6 +25815,7 @@ const struct ControlInfo a3wonders_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "3rd button mapped in mame but not used (AFAIK). This game has 3 games in 1 and the 2 buttons act differently in each game. There doesn't seem to be anything written on the control panel but for game 1 - Attack, Jump 2 - Attack, Special Attack 3 - Push Block, Push Block", /* control__details */
+  false, /* dual joystick controls */
   &a3wonders_get_ctrl_name
 };
 
@@ -24954,6 +25846,7 @@ const struct ControlInfo thndrbld_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The upright version of this game sported a force-feedback joystick, while the cockpit version used the force-feedback to shake the whole cockpit!", /* control__details */
+  false, /* dual joystick controls */
   &thndrbld_get_ctrl_name
 };
 
@@ -24985,6 +25878,7 @@ const struct ControlInfo thundfox_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Couldn't find a control panel pic. Press Button 1 for close range attack (punching, stabbing), press button 3 to use the weapon (throw grenade, shoot gun). Need to kneel down to pick up the weapons", /* control__details */
+  false, /* dual joystick controls */
   &thundfox_get_ctrl_name
 };
 
@@ -25015,6 +25909,7 @@ const struct ControlInfo thunderj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &thunderj_get_ctrl_name
 };
 
@@ -25044,6 +25939,7 @@ const struct ControlInfo tickee_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &tickee_get_ctrl_name
 };
 
@@ -25072,6 +25968,7 @@ const struct ControlInfo tigerh_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Shooting the colored crosses provides the following power-ups: White - Forward firing Little Heli, Red - Side Firing Little Heli, Blue - Bomb. A max of two bombs and two little helis are possible. Shooting 10 yellow diamonds awards an additional life.", /* control__details */
+  false, /* dual joystick controls */
   &tigerh_get_ctrl_name
 };
 
@@ -25101,6 +25998,7 @@ const struct ControlInfo tigeroad_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &tigeroad_get_ctrl_name
 };
 
@@ -25130,6 +26028,7 @@ const struct ControlInfo timber_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "OTHER:  The two buttons in mame are actually a two-way joystick. The 4-way joystick is for moving and pushing, the buttons (2-way) chops the wood.", /* control__details */
+  false, /* dual joystick controls */
   &timber_get_ctrl_name
 };
 
@@ -25159,6 +26058,7 @@ const struct ControlInfo timecris_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The player uses the pedal to rise up from behind cover. teh cryptic label is posted on the control panel, with a giant arrow pointing down. This is probably to make the player aware that there is a pedal on a gun game, which is obviously quite odd.", /* control__details */
+  false, /* dual joystick controls */
   &timecris_get_ctrl_name
 };
 
@@ -25188,6 +26088,7 @@ const struct ControlInfo timekill_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The distinction of left and right on these labels isn't which limb you use, but describes the position of the buttons on the control panel. Each player has two arm and leg buttons and they both do different things, even though they are labeld different. On the original control panel the arm buttons are on the top row and the legs are on the bottom with the head button centered, above both rows. So to play this game properly, some remapping will probably be required.", /* control__details */
+  false, /* dual joystick controls */
   &timekill_get_ctrl_name
 };
 
@@ -25220,6 +26121,7 @@ const struct ControlInfo timeplt_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &timeplt_get_ctrl_name
 };
 
@@ -25248,6 +26150,7 @@ const struct ControlInfo timesold_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game used a 12 direction mechanical rotary (SNK LS-30).", /* control__details */
+  false, /* dual joystick controls */
   &timesold_get_ctrl_name
 };
 
@@ -25279,6 +26182,7 @@ const struct ControlInfo titlef_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game actually used a pair of digital 'twist sticks'  basically, you moved them up and down as normal, but to press left or right you twist them. Explaining how to play is rather complicated as the game uses combinations of both stick movements to do moves.", /* control__details */
+  false, /* dual joystick controls */
   &titlef_get_ctrl_name
 };
 
@@ -25310,6 +26214,7 @@ const struct ControlInfo toki_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &toki_get_ctrl_name
 };
 
@@ -25339,6 +26244,7 @@ const struct ControlInfo tmmjprd_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &tmmjprd_get_ctrl_name
 };
 
@@ -25362,6 +26268,7 @@ const struct ControlInfo mahmajn_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mahmajn_get_ctrl_name
 };
 
@@ -25385,6 +26292,7 @@ const struct ControlInfo mahmajn2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mahmajn2_get_ctrl_name
 };
 
@@ -25408,6 +26316,7 @@ const struct ControlInfo tokyogal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &tokyogal_get_ctrl_name
 };
 
@@ -25431,6 +26340,7 @@ const struct ControlInfo tomahawk_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The cpo has the generic 'control' label under the joystick, which was popular in that era.", /* control__details */
+  false, /* dual joystick controls */
   &tomahawk_get_ctrl_name
 };
 
@@ -25459,6 +26369,7 @@ const struct ControlInfo tontonb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &tontonb_get_ctrl_name
 };
 
@@ -25482,6 +26393,7 @@ const struct ControlInfo toobin_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The buttons are arranged in a flattened pentagon shape, with the point on the bottom. The throw button is the bottom point, above that are the two forward buttons, and the two back buttons on the top. The original CP used the throw button also as the start /* control_details */ Mame has a seperate 'start' button, but both mame's 'throw' and 'start' buttons throw and start. Mame labels the five buttons a little differently than the original CP: 'throw', 'R Paddle Forward', 'L Paddle Forward', 'L Paddle Backward', and 'R Paddle backward'.",
+  false, /* dual joystick controls */
   &toobin_get_ctrl_name
 };
 
@@ -25510,6 +26422,7 @@ const struct ControlInfo topspeed_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game has a ton of extra inputs that show up do to a digital hack. Ignore them as buttons 1-4 is all you need.", /* control__details */
+  false, /* dual joystick controls */
   &topspeed_get_ctrl_name
 };
 
@@ -25539,6 +26452,7 @@ const struct ControlInfo totcarn_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The start button is used in the game to speed up or skip hints, and to place mines/bombs.", /* control__details */
+  false, /* dual joystick controls */
   &totcarn_get_ctrl_name
 };
 
@@ -25570,6 +26484,7 @@ const struct ControlInfo tdfever_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "You'll usually only see a two player version of this game as the 4 player used a specialized cocktail cabinet.", /* control__details */
+  false, /* dual joystick controls */
   &tdfever_get_ctrl_name
 };
 
@@ -25601,6 +26516,7 @@ const struct ControlInfo toypop_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The only know control panel image of this game shows two trivia style buttons labeled 'shoot' on either side of the joysticks. Of course this is just a mirrored layout.", /* control__details */
+  false, /* dual joystick controls */
   &toypop_get_ctrl_name
 };
 
@@ -25629,6 +26545,7 @@ const struct ControlInfo trackfld_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &trackfld_get_ctrl_name
 };
 
@@ -25655,6 +26572,7 @@ const struct ControlInfo tranqgun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &tranqgun_get_ctrl_name
 };
 
@@ -25683,6 +26601,7 @@ const struct ControlInfo trisport_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &trisport_get_ctrl_name
 };
 
@@ -25712,6 +26631,7 @@ const struct ControlInfo triplhnt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This lightgun is actually a shotgun mounted to the cabinet.", /* control__details */
+  false, /* dual joystick controls */
   &triplhnt_get_ctrl_name
 };
 
@@ -25740,6 +26660,7 @@ const struct ControlInfo statriv2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game also has two 'play 1000' buttons defined in mame. These appear to be service buttons to change the question packs.", /* control__details */
+  false, /* dual joystick controls */
   &statriv2_get_ctrl_name
 };
 
@@ -25767,6 +26688,7 @@ const struct ControlInfo gtsers8_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The lighted trivia buttons are actually blank, as is the control panel overlay. There are  labeled arrows on the screen that point to the appropriate button. (Note:  even though all sources, evne the original game machines point ot alternating 2 player gameplay, it doesn't seem to work in mame... it's probably a bug.)", /* control__details */
+  false, /* dual joystick controls */
   &gtsers8_get_ctrl_name
 };
 
@@ -25795,6 +26717,7 @@ const struct ControlInfo gt507uk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The lighted trivia buttons are actually blank, as is the control panel overlay. There are  labeled arrows on the screen that point to the appropriate button. (Note:  even though all sources, evne the original game machines point ot alternating 2 player gameplay, it doesn't seem to work in mame... it's probably a bug.)", /* control__details */
+  false, /* dual joystick controls */
   &gt507uk_get_ctrl_name
 };
 
@@ -25823,6 +26746,7 @@ const struct ControlInfo gt5_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The lighted trivia buttons are actually blank, as is the control panel overlay. There are  labeled arrows on the screen that point to the appropriate button. (Note:  even though all sources, evne the original game machines point ot alternating 2 player gameplay, it doesn't seem to work in mame... it's probably a bug.)", /* control__details */
+  false, /* dual joystick controls */
   &gt5_get_ctrl_name
 };
 
@@ -25851,6 +26775,7 @@ const struct ControlInfo trvgns_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The lighted trivia buttons are actually blank, as is the contorl panel overlay. The game itself has arrows pointing down to the appropriate button. Also note that buttons a-d also act as the star buttons, again with an arrow pointing towards which is which. (A = 1 player game, B= 2 players, ect)", /* control__details */
+  false, /* dual joystick controls */
   &trvgns_get_ctrl_name
 };
 
@@ -25878,6 +26803,7 @@ const struct ControlInfo triviasp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  false, /* dual joystick controls */
   &triviasp_get_ctrl_name
 };
 
@@ -25903,6 +26829,7 @@ const struct ControlInfo triviabb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  false, /* dual joystick controls */
   &triviabb_get_ctrl_name
 };
 
@@ -25928,6 +26855,7 @@ const struct ControlInfo triviag1_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  false, /* dual joystick controls */
   &triviag1_get_ctrl_name
 };
 
@@ -25953,6 +26881,7 @@ const struct ControlInfo triviag2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  false, /* dual joystick controls */
   &triviag2_get_ctrl_name
 };
 
@@ -25978,6 +26907,7 @@ const struct ControlInfo triviayp_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "When a question is asked, a possible answer is displayed. You either press correct to select the given answer, or press incorrect until the correct answer is displayed and then press correct to confirm. Mame has a bunch of extra inputs defined, but all you should be concerned with are the 'red' (incorrect) and 'green' (correct) buttons.", /* control__details */
+  false, /* dual joystick controls */
   &triviayp_get_ctrl_name
 };
 
@@ -26003,6 +26933,7 @@ const struct ControlInfo trog_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Like many 4 player games, which character you choose determines which controls you'll use and vice-versa.", /* control__details */
+  false, /* dual joystick controls */
   &trog_get_ctrl_name
 };
 
@@ -26031,6 +26962,7 @@ const struct ControlInfo tron_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joystick in this game was unique. It was an 8-way leaf joystick with a larqe actuator and a diagonal 4-way restrictor making it possible (but difficult) to hit the diagonals. The 4-way mode was useful for the Tanks stage, and necessary for the Light Cycle stage. Controls worked as follows: Light Cycles: The joystick controls the direction of travel and the trigger controls the speed of the bike. Grid Bugs: The stick controls the movement of your character and the spinner controls the direction of fire. Tanks: The stick controls the movement of your tank and the spinner controls the direction of fire. MCP Cone: The stick controls the movement of your character and the spinner controls the direction of fire.", /* control__details */
+  false, /* dual joystick controls */
   &tron_get_ctrl_name
 };
 
@@ -26061,6 +26993,7 @@ const struct ControlInfo tubep_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "this game doesn't have any labels.", /* control__details */
+  false, /* dual joystick controls */
   &tubep_get_ctrl_name
 };
 
@@ -26089,6 +27022,7 @@ const struct ControlInfo tunhunt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &tunhunt_get_ctrl_name
 };
 
@@ -26118,6 +27052,7 @@ const struct ControlInfo turbo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The shifter doesn't appear to work properly. The lo button seems to act more like a brake than anything else even though the game doesn't have a brake. The hi button toggles gears.", /* control__details */
+  false, /* dual joystick controls */
   &turbo_get_ctrl_name
 };
 
@@ -26146,6 +27081,7 @@ const struct ControlInfo turbofrc_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "3rd player in mame not working??", /* control__details */
+  false, /* dual joystick controls */
   &turbofrc_get_ctrl_name
 };
 
@@ -26174,6 +27110,7 @@ const struct ControlInfo toutrun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The shifter has a side button for turbo, thus the name of the game.", /* control__details */
+  false, /* dual joystick controls */
   &toutrun_get_ctrl_name
 };
 
@@ -26203,6 +27140,7 @@ const struct ControlInfo tshoot_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Grenade Button is actually mounted on top of the machine gun. Technically it counts as a part of the gun, but the button itself is a stock lighted button. This game had an interesting gimmick where feathers were blown in front of the screen between two layers of plexi if a round was successful. Somone should take advantage of mame's switchable artwork system and re-create this effect via a series of feather animations.", /* control__details */
+  false, /* dual joystick controls */
   &tshoot_get_ctrl_name
 };
 
@@ -26233,6 +27171,7 @@ const struct ControlInfo tutankhm_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The fire buttons are actually supposed to be a 2 way joystick, but for whatever reason, the mame driver sets them as buttons.", /* control__details */
+  false, /* dual joystick controls */
   &tutankhm_get_ctrl_name
 };
 
@@ -26263,6 +27202,7 @@ const struct ControlInfo twincobr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &twincobr_get_ctrl_name
 };
 
@@ -26292,6 +27232,7 @@ const struct ControlInfo twineagl_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The conversion kit came with ?Button? and ?Missile? labels even though the flyer and the conversion manual state they are ?Bomb? and ?Missile? buttons", /* control__details */
+  false, /* dual joystick controls */
   &twineagl_get_ctrl_name
 };
 
@@ -26321,6 +27262,7 @@ const struct ControlInfo twineag2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &twineag2_get_ctrl_name
 };
 
@@ -26351,6 +27293,7 @@ const struct ControlInfo twotiger_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mame used to incorrectly define this game as a spinner. Now it properly shows up as a one-axis yoke. The 'misc' entry was added to show that it doesn't use the traditional star wars, 2-axis yoke. The three player start button selects dogfight mode.", /* control__details */
+  false, /* dual joystick controls */
   &twotiger_get_ctrl_name
 };
 
@@ -26381,6 +27324,7 @@ const struct ControlInfo earthjkr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Hold down A to increase shot power", /* control__details */
+  false, /* dual joystick controls */
   &earthjkr_get_ctrl_name
 };
 
@@ -26410,6 +27354,7 @@ const struct ControlInfo unsquad_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &unsquad_get_ctrl_name
 };
 
@@ -26439,6 +27384,7 @@ const struct ControlInfo vball_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "A hits the ball and B jumps.", /* control__details */
+  false, /* dual joystick controls */
   &vball_get_ctrl_name
 };
 
@@ -26468,6 +27414,7 @@ const struct ControlInfo usclssic_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &usclssic_get_ctrl_name
 };
 
@@ -26496,6 +27443,7 @@ const struct ControlInfo ultramhm_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &ultramhm_get_ctrl_name
 };
 
@@ -26519,6 +27467,7 @@ const struct ControlInfo ultratnk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &ultratnk_get_ctrl_name
 };
 
@@ -26547,6 +27496,7 @@ const struct ControlInfo utoukond_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &utoukond_get_ctrl_name
 };
 
@@ -26577,6 +27527,7 @@ const struct ControlInfo undrfire_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The guns second buton is a shotgun pump.", /* control__details */
+  false, /* dual joystick controls */
   &undrfire_get_ctrl_name
 };
 
@@ -26606,6 +27557,7 @@ const struct ControlInfo uniwars_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &uniwars_get_ctrl_name
 };
 
@@ -26632,6 +27584,7 @@ const struct ControlInfo upndown_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &upndown_get_ctrl_name
 };
 
@@ -26660,6 +27613,7 @@ const struct ControlInfo valkyrie_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Hold down attack button to use magic.", /* control__details */
+  false, /* dual joystick controls */
   &valkyrie_get_ctrl_name
 };
 
@@ -26690,6 +27644,7 @@ const struct ControlInfo vandyke_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &vandyke_get_ctrl_name
 };
 
@@ -26719,6 +27674,7 @@ const struct ControlInfo vanguard_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The buttons on this control panel are arranged in a diamond shape. As each button fires in a different direction it is very difficult to play this game without a diamond patterened layout. Also the joystick is labeled control, but for obvious reasons the labels in this entry have the usual labeling.", /* control__details */
+  false, /* dual joystick controls */
   &vanguard_get_ctrl_name
 };
 
@@ -26750,6 +27706,7 @@ const struct ControlInfo varth_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &varth_get_ctrl_name
 };
 
@@ -26779,6 +27736,7 @@ const struct ControlInfo vendetta_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &vendetta_get_ctrl_name
 };
 
@@ -26808,6 +27766,7 @@ const struct ControlInfo venture_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &venture_get_ctrl_name
 };
 
@@ -26836,6 +27795,7 @@ const struct ControlInfo victory_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game used a tempest style spinner, three round lighted buttons for normal functions, and a large, rectangular, trivia-style button for the doomsday weapon activation.", /* control__details */
+  false, /* dual joystick controls */
   &victory_get_ctrl_name
 };
 
@@ -26865,6 +27825,7 @@ const struct ControlInfo victroad_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &victroad_get_ctrl_name
 };
 
@@ -26896,6 +27857,7 @@ const struct ControlInfo hustler_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The joystick is a twist joystick.", /* control__details */
+  false, /* dual joystick controls */
   &hustler_get_ctrl_name
 };
 
@@ -26922,6 +27884,7 @@ const struct ControlInfo videopin_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game had a control panel that repliactes real pinball controls. It even had a section you could nudge in the front and a plunger. The plunger appears to be digital, but since it really adds to the feel of the game, I tacked on the 'other' flag. The hardcoded defaults for the flippers are left ctrl and right ctrl. It is suggested that you place a videopin.ini in your personal ctrlr folder and remap them to match visual pinball defaults.", /* control__details */
+  false, /* dual joystick controls */
   &videopin_get_ctrl_name
 };
 
@@ -26950,6 +27913,7 @@ const struct ControlInfo vigilant_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game lacks labels for the buttons, even on the official cpo and in the manual. These are simply the actions they do. Trivia:  The cpo of this game has 'I'm Bad!' graffiti on it which is a tribute to the game BadDudes, relased by the same company eariler that year. In that game the character would yell the phrase at the end of each level.", /* control__details */
+  false, /* dual joystick controls */
   &vigilant_get_ctrl_name
 };
 
@@ -26979,6 +27943,7 @@ const struct ControlInfo vimana_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "If you hold the shoot button for a while you increase the spread of your bullets.", /* control__details */
+  false, /* dual joystick controls */
   &vimana_get_ctrl_name
 };
 
@@ -27009,6 +27974,7 @@ const struct ControlInfo vindictr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There are two button on each stick (trigger and thumb buttons). The thumb buttons are to rotate the tanks' turrent if you bought the ability to rotate (and it's not damaged). The right trigger is the normal fire button, the left trigger button is to fire the special weapon. If you have different types of special weapons, the start is used to switch between the different types. The odd numbered buttons are the triggers and the even numbered ones are the thumb switches for the left and right joysticks respectively. Note:  If you have cheats enabled the game inputs are hacked to use a 4way joystick as the controls. There isn't an option to turn it off in the cheat menu, so if you wish to play the game correctly, turn cheats off.", /* control__details */
+  false, /* dual joystick controls */
   &vindictr_get_ctrl_name
 };
 
@@ -27040,6 +28006,7 @@ const struct ControlInfo vindctr2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "There are two button on each stick (trigger and thumb buttons). The thumb buttons are to rotate the tanks' turrent if you bought the ability to rotate (and it's not damaged). The right trigger is the normal fire button, the left trigger button is to fire the special weapon. If you have different types of special weapons, the start is used to switch between the different types. The odd numbered buttons are the trigger sticks and the even numbered ones are the thumbsticks on the left and right stck respectively.", /* control__details */
+  false, /* dual joystick controls */
   &vindctr2_get_ctrl_name
 };
 
@@ -27071,6 +28038,7 @@ const struct ControlInfo viofight_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "As this game is a taito game, it is generally sold as a convrsion kit with the buttons mounted in a 'double dragon' layout with the punch/kick buttons at the bottom of the triangle. Pressing punch and jump at the smae time does a special move. Also the offical cpo doesn't have any labels for anything. This is based on parts of the manual and documentation for teh game.", /* control__details */
+  false, /* dual joystick controls */
   &viofight_get_ctrl_name
 };
 
@@ -27101,6 +28069,7 @@ const struct ControlInfo viper_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game actually uses two trigger sticks that are mounted stationary on the montior, which moves as you pull on the sticks. As you pull, the area of the screen moves as well. This gives the illusion that you are manning a gun turrent. Each stick has two thumb buttons but there are only two inputs. To confuse things even more, both inputs do the same thing. (Fire)", /* control__details */
+  false, /* dual joystick controls */
   &viper_get_ctrl_name
 };
 
@@ -27130,6 +28099,7 @@ const struct ControlInfo vf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that on a real vf cabinet the defense button was to the left adn slightly below the punch button. Those of you with neogeo layouts shoudl have not problem replicating the layout.", /* control__details */
+  false, /* dual joystick controls */
   &vf_get_ctrl_name
 };
 
@@ -27160,6 +28130,7 @@ const struct ControlInfo vf2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Note that on a real vf2 cabinet the defense button was to the left adn slightly below the punch button. Those of you with neogeo layouts shoudl have not problem replicating the layout.", /* control__details */
+  false, /* dual joystick controls */
   &vf2_get_ctrl_name
 };
 
@@ -27190,6 +28161,7 @@ const struct ControlInfo vsgongf_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vsgongf_get_ctrl_name
 };
 
@@ -27219,6 +28191,7 @@ const struct ControlInfo rbibb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &rbibb_get_ctrl_name
 };
 
@@ -27248,6 +28221,7 @@ const struct ControlInfo balonfgt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &balonfgt_get_ctrl_name
 };
 
@@ -27277,6 +28251,7 @@ const struct ControlInfo vsbball_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vsbball_get_ctrl_name
 };
 
@@ -27306,6 +28281,7 @@ const struct ControlInfo btlecity_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &btlecity_get_ctrl_name
 };
 
@@ -27335,6 +28311,7 @@ const struct ControlInfo cstlevna_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &cstlevna_get_ctrl_name
 };
 
@@ -27364,6 +28341,7 @@ const struct ControlInfo cluclu_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &cluclu_get_ctrl_name
 };
 
@@ -27393,6 +28371,7 @@ const struct ControlInfo drmario_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &drmario_get_ctrl_name
 };
 
@@ -27422,6 +28401,7 @@ const struct ControlInfo duckhunt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &duckhunt_get_ctrl_name
 };
 
@@ -27451,6 +28431,7 @@ const struct ControlInfo excitebk_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &excitebk_get_ctrl_name
 };
 
@@ -27480,6 +28461,7 @@ const struct ControlInfo vsfdf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vsfdf_get_ctrl_name
 };
 
@@ -27509,6 +28491,7 @@ const struct ControlInfo vsgradus_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vsgradus_get_ctrl_name
 };
 
@@ -27538,6 +28521,7 @@ const struct ControlInfo vsgshoe_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vsgshoe_get_ctrl_name
 };
 
@@ -27566,6 +28550,7 @@ const struct ControlInfo hogalley_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &hogalley_get_ctrl_name
 };
 
@@ -27594,6 +28579,7 @@ const struct ControlInfo hotsmash_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. This game is unique to the system in that it uses a spinner. As it's one of the last games released for the system, it can be assumed that this is the only vs game to do so.", /* control__details */
+  false, /* dual joystick controls */
   &hotsmash_get_ctrl_name
 };
 
@@ -27619,6 +28605,7 @@ const struct ControlInfo iceclimb_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &iceclimb_get_ctrl_name
 };
 
@@ -27648,6 +28635,7 @@ const struct ControlInfo iceclmrj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &iceclmrj_get_ctrl_name
 };
 
@@ -27677,6 +28665,7 @@ const struct ControlInfo machridr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &machridr_get_ctrl_name
 };
 
@@ -27706,6 +28695,7 @@ const struct ControlInfo vsmahjng_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &vsmahjng_get_ctrl_name
 };
 
@@ -27729,6 +28719,7 @@ const struct ControlInfo mightybj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &mightybj_get_ctrl_name
 };
 
@@ -27758,6 +28749,7 @@ const struct ControlInfo jajamaru_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &jajamaru_get_ctrl_name
 };
 
@@ -27787,6 +28779,7 @@ const struct ControlInfo vspinbal_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vspinbal_get_ctrl_name
 };
 
@@ -27816,6 +28809,7 @@ const struct ControlInfo platoon_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &platoon_get_ctrl_name
 };
 
@@ -27845,6 +28839,7 @@ const struct ControlInfo bnglngby_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &bnglngby_get_ctrl_name
 };
 
@@ -27874,6 +28869,7 @@ const struct ControlInfo vsslalom_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vsslalom_get_ctrl_name
 };
 
@@ -27902,6 +28898,7 @@ const struct ControlInfo vssoccer_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vssoccer_get_ctrl_name
 };
 
@@ -27931,6 +28928,7 @@ const struct ControlInfo starlstr_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &starlstr_get_ctrl_name
 };
 
@@ -27960,6 +28958,7 @@ const struct ControlInfo smgolf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &smgolf_get_ctrl_name
 };
 
@@ -27989,6 +28988,7 @@ const struct ControlInfo suprmrio_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &suprmrio_get_ctrl_name
 };
 
@@ -28018,6 +29018,7 @@ const struct ControlInfo vsskykid_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vsskykid_get_ctrl_name
 };
 
@@ -28047,6 +29048,7 @@ const struct ControlInfo supxevs_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &supxevs_get_ctrl_name
 };
 
@@ -28076,6 +29078,7 @@ const struct ControlInfo tkoboxng_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &tkoboxng_get_ctrl_name
 };
 
@@ -28105,6 +29108,7 @@ const struct ControlInfo vstennis_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B button, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vstennis_get_ctrl_name
 };
 
@@ -28134,6 +29138,7 @@ const struct ControlInfo vstetris_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &vstetris_get_ctrl_name
 };
 
@@ -28163,6 +29168,7 @@ const struct ControlInfo goonies_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &goonies_get_ctrl_name
 };
 
@@ -28192,6 +29198,7 @@ const struct ControlInfo topgun_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. Although the cabinets had buttons for 3 and 4 player start, most of the games were only two player.", /* control__details */
+  false, /* dual joystick controls */
   &topgun_get_ctrl_name
 };
 
@@ -28221,6 +29228,7 @@ const struct ControlInfo wrecking_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The Nintendo Vs. System was released along side the original NES game console. The games it plays are virtually identical. This is the earliest known mvs cabinet. Almost all Vs cabinets had a layout exactly like the NES at home, with a joystick, A and B buttons, or a zapper. This cabinet is really two cabinets joined together. Two pairs of people can play two different games at the same time.", /* control__details */
+  false, /* dual joystick controls */
   &wrecking_get_ctrl_name
 };
 
@@ -28250,6 +29258,7 @@ const struct ControlInfo wacko_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The trackball moves the player. There are two 4-way joysticks, one one each side of the trackball, but they are both wired to the same input. Mame maps both sticks to the left stick of a dual stick combo to avoid the conflicting default keyboard mapping of the normal joystick and the trackball /* control_details */ mame's right stick input type is not used. (Note for HowardC:  Accepted for now, but I'll try to get the mame devs to accept a fixed one. Remapping to avoid conflict is silly as almost everyone maps the 'left joystick' to match their regular joystick. Now if it was mapped to joystick right then I could have seen it.)  Keep an eye on this game for driver changes.",
+  false, /* dual joystick controls */
   &wacko_get_ctrl_name
 };
 
@@ -28285,6 +29294,7 @@ const struct ControlInfo mj4simai_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &mj4simai_get_ctrl_name
 };
 
@@ -28308,6 +29318,7 @@ const struct ControlInfo wargods_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The game uses the same williams/midway classic 'X' layout, so remapping will be required. The only difference is the run button hs ben replaced with a lighted 3d button, which allows you to move on the z-axis. It should be noted that not all revisions use the lighted button and many use a standard pushbutton with the mk3 layout.", /* control__details */
+  false, /* dual joystick controls */
   &wargods_get_ctrl_name
 };
 
@@ -28341,6 +29352,7 @@ const struct ControlInfo wotw_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &wotw_get_ctrl_name
 };
 
@@ -28368,6 +29380,7 @@ const struct ControlInfo warlords_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The player buttons simply start the game. They do not do anything else and the mame start buttons are deactivated in this game.", /* control__details */
+  false, /* dual joystick controls */
   &warlords_get_ctrl_name
 };
 
@@ -28394,6 +29407,7 @@ const struct ControlInfo warpwarp_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is also known as Warp Warp.", /* control__details */
+  false, /* dual joystick controls */
   &warpwarp_get_ctrl_name
 };
 
@@ -28422,6 +29436,7 @@ const struct ControlInfo warrior_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Warrior had two top fire style joysticks, one per player. Moving the joystick would move your knight. Moving the joystick while pressing the button swings the knights sword. You cannot move and fight simultaneously. Movement directions are relative to the screen, not the direction the night is fighting. ie: Left is always toward the left of the screen. The knights are almost always facing each other.", /* control__details */
+  false, /* dual joystick controls */
   &warrior_get_ctrl_name
 };
 
@@ -28450,6 +29465,7 @@ const struct ControlInfo suzume_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Mahjong games are NOT compatable with ctrlr files. As a matter of fact they pretty much all have the same layout and all have the same controls. The controls are hardcoded, so remapping isn't reccomended, especially considering the fact that a full keyboard of buttons are required to play.", /* control__details */
+  false, /* dual joystick controls */
   &suzume_get_ctrl_name
 };
 
@@ -28473,6 +29489,7 @@ const struct ControlInfo wecleman_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &wecleman_get_ctrl_name
 };
 
@@ -28502,6 +29519,7 @@ const struct ControlInfo wfortune_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is just like the tv show. Everyone spins the same wheel which is mapped to player one's controls. The wheel is a glorified, oversized, spinner with a wof 'wheel' sticker on top of it. When not spinning, the wheel moves the cursor while the select button selects the action highlighted. It should be noted that the wheel won't spin left while in 'spin the wheel' mode.", /* control__details */
+  false, /* dual joystick controls */
   &wfortune_get_ctrl_name
 };
 
@@ -28534,6 +29552,7 @@ const struct ControlInfo whodunit_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game actually used a mounted lightgun (or light shotgun I should say) but the 'other' flag that we generally tag onto special controls isn't needed as the game plays just fine with an unmounted lightgun and there have been arcade conversions utilizing unmounted guns.", /* control__details */
+  false, /* dual joystick controls */
   &whodunit_get_ctrl_name
 };
 
@@ -28562,6 +29581,7 @@ const struct ControlInfo wildfang_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Special transforms your warrior into a small guy riding a tiger", /* control__details */
+  false, /* dual joystick controls */
   &wildfang_get_ctrl_name
 };
 
@@ -28592,6 +29612,7 @@ const struct ControlInfo moo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Combinations of Jump, Shoot and a Direction perform various special moves. They are listed on screen as you run across them.", /* control__details */
+  false, /* dual joystick controls */
   &moo_get_ctrl_name
 };
 
@@ -28621,6 +29642,7 @@ const struct ControlInfo willow_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Holding attack button will increase the power of the attack", /* control__details */
+  false, /* dual joystick controls */
   &willow_get_ctrl_name
 };
 
@@ -28650,6 +29672,7 @@ const struct ControlInfo wizdfire_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &wizdfire_get_ctrl_name
 };
 
@@ -28679,6 +29702,7 @@ const struct ControlInfo wow_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The original game had a fire button on the left and a ball top joystick on the left.", /* control__details */
+  false, /* dual joystick controls */
   &wow_get_ctrl_name
 };
 
@@ -28707,6 +29731,7 @@ const struct ControlInfo wolfpack_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &wolfpack_get_ctrl_name
 };
 
@@ -28733,6 +29758,7 @@ const struct ControlInfo wboy_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &wboy_get_ctrl_name
 };
 
@@ -28760,6 +29786,7 @@ const struct ControlInfo wbml_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &wbml_get_ctrl_name
 };
 
@@ -28789,6 +29816,7 @@ const struct ControlInfo wbeachvl_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "3rd button is mapped but not known what it does", /* control__details */
+  false, /* dual joystick controls */
   &wbeachvl_get_ctrl_name
 };
 
@@ -28819,6 +29847,7 @@ const struct ControlInfo wcbowl_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "When looking in the tab menu it would seem the game is only 2 player, however it is a 4 player game with each player entering the game by pressing the Player1 start button (on the control panel it is just a Start button). Player 2 start button is mapped but doesn?t do anything", /* control__details */
+  false, /* dual joystick controls */
   &wcbowl_get_ctrl_name
 };
 
@@ -28848,6 +29877,7 @@ const struct ControlInfo wcbowldx_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &wcbowldx_get_ctrl_name
 };
 
@@ -28877,6 +29907,7 @@ const struct ControlInfo wseries_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This is a simultaneous 2 player alternating game /* control_details */ a player is on the left side when pitching, on the right side when batting. The aim button is shown with two physical buttons wired to one pin in the schematics. All buttons are on one input port in the machine; mame puts them all as player 1 inputs, but on the 2 player game, the aim button(s) is more like a player 2 button. (On a one player game, all inputs are like player 1 inputs.)",
+  false, /* dual joystick controls */
   &wseries_get_ctrl_name
 };
 
@@ -28913,6 +29944,7 @@ const struct ControlInfo wsf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "A and B both do varouis things, depending upon the situation.", /* control__details */
+  false, /* dual joystick controls */
   &wsf_get_ctrl_name
 };
 
@@ -28942,6 +29974,7 @@ const struct ControlInfo wtennis_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The label for the button is unknown. I took an educated guess and take full responsibility for it's accuracy.", /* control__details */
+  false, /* dual joystick controls */
   &wtennis_get_ctrl_name
 };
 
@@ -28970,6 +30003,7 @@ const struct ControlInfo wwfsstar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Press button A to punch, button B to kick. As with all WWF games, the two buttons do a number of things by pressing different combinations at different times including pin, ect. If anyone wishes to make a list please do so here.", /* control__details */
+  false, /* dual joystick controls */
   &wwfsstar_get_ctrl_name
 };
 
@@ -28999,6 +30033,7 @@ const struct ControlInfo wwfwfest_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The A and B buttons do various things depending upon the wrestler and the situation. Generally when you can do something special you recieve a message on the screen on how to do so.", /* control__details */
+  false, /* dual joystick controls */
   &wwfwfest_get_ctrl_name
 };
 
@@ -29028,6 +30063,7 @@ const struct ControlInfo wwfmania_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game has the same mame-related layout problems as the mk games. The X pattern applies. Press punch and kick at the same time to run. Note that the punch buttons are on the top row and the kick buttons are on the bottom, unlike the mk games and similar to sf games.", /* control__details */
+  false, /* dual joystick controls */
   &wwfmania_get_ctrl_name
 };
 
@@ -29060,6 +30096,7 @@ const struct ControlInfo xmen_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &xmen_get_ctrl_name
 };
 
@@ -29090,6 +30127,7 @@ const struct ControlInfo xmvsf_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &xmvsf_get_ctrl_name
 };
 
@@ -29123,6 +30161,7 @@ const struct ControlInfo xmcota_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &xmcota_get_ctrl_name
 };
 
@@ -29156,6 +30195,7 @@ const struct ControlInfo xsleena_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Pressing the jump button while already in the air will do a second jump boost. Much of the data on this game is purely speculative as it is a copy of Solar Warrior. It is assumed that they use the same labels.", /* control__details */
+  false, /* dual joystick controls */
   &xsleena_get_ctrl_name
 };
 
@@ -29185,6 +30225,7 @@ const struct ControlInfo xenophob_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This trigger stick has two thumb buttons in additon to the normal fire button. The left and right buttons each do over a dozen things, with what they do depending upon the message displayed on the screen at the time. They are appropriately labeled 'left button' and 'right button' on the screen.", /* control__details */
+  false, /* dual joystick controls */
   &xenophob_get_ctrl_name
 };
 
@@ -29215,6 +30256,7 @@ const struct ControlInfo xevious_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The labels on the original cpo are the ones in this entry, however they don't really apply to what the buttons do. Button 1 shoots and Button 2 Fires bombs. Because of this the button labels may be swapped as I don't have access to a real machine.", /* control__details */
+  false, /* dual joystick controls */
   &xevious_get_ctrl_name
 };
 
@@ -29244,6 +30286,7 @@ const struct ControlInfo xybots_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game used a twist stick, not to be confused with a rotary mechanical stick. Basically you can twist the stick left and right for two additional inputs.", /* control__details */
+  false, /* dual joystick controls */
   &xybots_get_ctrl_name
 };
 
@@ -29274,6 +30317,7 @@ const struct ControlInfo yesnoj_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &yesnoj_get_ctrl_name
 };
 
@@ -29299,6 +30343,7 @@ const struct ControlInfo yiear_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &yiear_get_ctrl_name
 };
 
@@ -29328,6 +30373,7 @@ const struct ControlInfo yosakdon_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &yosakdon_get_ctrl_name
 };
 
@@ -29354,6 +30400,7 @@ const struct ControlInfo yuyugogo_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Game in Japanese. No references available. Buttons relate to the numbers on the screen.", /* control__details */
+  false, /* dual joystick controls */
   &yuyugogo_get_ctrl_name
 };
 
@@ -29382,6 +30429,7 @@ const struct ControlInfo zaxxon_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "The fire button is also placed on the control panel. The button on the trigger stick lights up when it's time for you to do some shooting.", /* control__details */
+  false, /* dual joystick controls */
   &zaxxon_get_ctrl_name
 };
 
@@ -29410,6 +30458,7 @@ const struct ControlInfo zerohour_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &zerohour_get_ctrl_name
 };
 
@@ -29438,6 +30487,7 @@ const struct ControlInfo zeropnt_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &zeropnt_get_ctrl_name
 };
 
@@ -29466,6 +30516,7 @@ const struct ControlInfo zeropnt2_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &zeropnt2_get_ctrl_name
 };
 
@@ -29494,6 +30545,7 @@ const struct ControlInfo zerowing_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Control wise this game is pretty standard, but the game's claim to fame is the wording of the translated text, or more accurately the poor wording of the translated text. This is commonly referred to as 'Engrish'  Ever wondered where the 'All Your Base Are Belong To Us.' line comes from?  It's this game. So for a good laugh check it out. All your controls are belong to us!!!!", /* control__details */
+  false, /* dual joystick controls */
   &zerowing_get_ctrl_name
 };
 
@@ -29523,6 +30575,7 @@ const struct ControlInfo zerozone_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &zerozone_get_ctrl_name
 };
 
@@ -29551,6 +30604,7 @@ const struct ControlInfo zigzag_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game is a pirated version of digdug. With the execption of a new title, the game plays exactly the same.", /* control__details */
+  false, /* dual joystick controls */
   &zigzag_get_ctrl_name
 };
 
@@ -29579,6 +30633,7 @@ const struct ControlInfo zingzip_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &zingzip_get_ctrl_name
 };
 
@@ -29608,6 +30663,7 @@ const struct ControlInfo zoar_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This is probably the only 2d shooter ever to utilize the z axis. Instead of being able to speedup or slowdown with the up and down directions, these directions allow you to make the craft raise or lower to the ground. The top speed key doesn't appear to do anything until you try to move left or right. When you do you will move much more quickly.", /* control__details */
+  false, /* dual joystick controls */
   &zoar_get_ctrl_name
 };
 
@@ -29638,6 +30694,7 @@ const struct ControlInfo zodiack_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &zodiack_get_ctrl_name
 };
 
@@ -29666,6 +30723,7 @@ const struct ControlInfo zombraid_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "Controls were sawed-off shotguns with pump action reload, this is mapped to button 2", /* control__details */
+  false, /* dual joystick controls */
   &zombraid_get_ctrl_name
 };
 
@@ -29695,6 +30753,7 @@ const struct ControlInfo zookeep_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &zookeep_get_ctrl_name
 };
 
@@ -29723,6 +30782,7 @@ const struct ControlInfo zunkyou_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &zunkyou_get_ctrl_name
 };
 
@@ -29752,6 +30812,7 @@ const struct ControlInfo zwackery_ctrl =
   false, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "This game has an identical control panel layout as discs of tron. Unfortunately due to the fact that it's a platformer, it is extremely akward to play unless you have those exact controls.", /* control__details */
+  false, /* dual joystick controls */
   &zwackery_get_ctrl_name
 };
 
@@ -29785,6 +30846,7 @@ const struct ControlInfo zzyzzyxx_ctrl =
   true, /* has_cocktail_dipswitch */
   false, /* uses_service */
   "", /* control_details */
+  false, /* dual joystick controls */
   &zzyzzyxx_get_ctrl_name
 };
 

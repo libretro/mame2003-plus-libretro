@@ -19,6 +19,7 @@ struct ControlInfo
   const bool has_cocktail_dipswitch;
   const bool uses_service;
   const char *control_details;
+  const bool dual_joysticks;
   const char *(*get_name)(int);  
 };
 
