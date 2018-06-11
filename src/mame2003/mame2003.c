@@ -706,6 +706,7 @@ bool retro_load_game(const struct retro_game_info *game)
     return false;
   
   environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)retropad_subdevice_ports);
+
   retro_describe_controls(); /* needs to be called after init_game() in order to use MAME button label strings */
   
   if(!run_game(driverIndex))
@@ -1199,9 +1200,6 @@ void retro_describe_controls(void)
   int       retro_type     = 0;
   int       display_idx    = 0;
   
-  log_cb(RETRO_LOG_INFO, LOGPRE "PAD_GAMEPAD Code: %i | PAD_8BUTTON Code: %i | PAD_6BUTTON Code %i | PAD_CLASSIC Code %i\n", RETRO_DEVICE_JOYPAD, PAD_8BUTTON, PAD_6BUTTON, PAD_CLASSIC);
-
-
   struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
   
