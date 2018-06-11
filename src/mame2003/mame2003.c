@@ -606,13 +606,12 @@ static const struct retro_controller_description controllers[] = {
 };
 
 static const struct retro_controller_info retropad_subdevice_ports[] = {
-
   { controllers, 4 },
   { controllers, 4 },
   { controllers, 4 },
   { controllers, 4 },
   { controllers, 4 },
-  { controllers, 4 },  
+  { controllers, 4 },
   { 0 },
 };
 
