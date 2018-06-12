@@ -429,11 +429,19 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_SHARE_DIAL:
-          if(strcmp(var.value, "enabled") == 0)
-            options.dial_share_xy = 1;
+          if(options.content_flags[CONTENT_DIAL])
+          {
+            if(strcmp(var.value, "enabled") == 0)
+              options.dial_share_xy = 1;
+            else
+              options.dial_share_xy = 0;
+            break;
+          }
           else
+          {
             options.dial_share_xy = 0;
-          break;
+            break;
+          }          
 
         case OPT_DUAL_JOY:
           if(options.content_flags[CONTENT_DUAL_JOYSTICK])
