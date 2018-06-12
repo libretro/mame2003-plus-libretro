@@ -13,7 +13,7 @@
 struct ControlInfo
 {
   const bool alternating_controls;
-  const bool mirrored_controls; /* mirrored_controls == 1 for games that the controls are labeled the same for all players. Games that have different controls for per player, or only one player, or only one player at a time, will have mirrored=0 */
+  const bool mirrored_controls; /* mirrored_controls == 1 for games that the controls are labeled the same for all players. Games that have different controls for per player, or only one player, or only one player at a time, will have mirrored_controls == 0 */
   const char *control_details;
   const char *(*get_name)(int);  
 };
