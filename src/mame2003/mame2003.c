@@ -900,6 +900,13 @@ static void set_content_flags(void)
 		}
 		++input;
 	}
+  
+  /* drivers need to be associated with an accurate ControlInfo stuct in controls.c to be flagged as having alternating controls */  
+  if(game_driver->ctrl_dat->alternating_controls) 
+  { 
+    options.content_flags[CONTENT_ALTERNATING_CTRLS] = true;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having alternating controls.\n");
+  }
 
 }
 

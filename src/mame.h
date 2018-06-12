@@ -176,6 +176,7 @@ enum /* used to index content-specific flags */
   CONTENT_AD_STICK,
   CONTENT_HAS_SERVICE,
   CONTENT_HAS_TILT,  
+  CONTENT_ALTERNATING_CTRLS,
   CONTENT_end,
 };
 
