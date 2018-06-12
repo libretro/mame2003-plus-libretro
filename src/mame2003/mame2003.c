@@ -59,18 +59,17 @@ retro_set_led_state_t              led_state_cb                  = NULL;
 bool old_dual_joystick_state = false; /* used to track when this core option changes */
 
 /******************************************************************************
-
   private function prototypes
-
 ******************************************************************************/
-static void set_content_flags(void);
-static void init_core_options(void);
-void        init_default(struct retro_variable_default *option, const char *key, const char *value);
-static void update_variables(bool first_time);
-static void set_variables(bool first_time);
+static void   set_content_flags(void);
+static void   init_core_options(void);
+       void   init_default(struct retro_variable_default *option, const char *key, const char *value);
+static void   update_variables(bool first_time);
+static void   set_variables(bool first_time);
 static struct retro_variable_default *spawn_effective_default(int option_index);
-static void check_system_specs(void);
-void        retro_describe_controls(void);
+static void   check_system_specs(void);
+       void   retro_describe_controls(void);
+       int    get_mame_ctrl_id(int display_idx, int retro_ID);
 
 /******************************************************************************
 
