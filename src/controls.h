@@ -12,14 +12,9 @@
 
 struct ControlInfo
 {
-  const unsigned num_players;
   const bool alternating_controls;
-  const bool mirrored_controls;
-  const bool has_tilt;
-  const bool has_cocktail_dipswitch;
-  const bool uses_service;
+  const bool mirrored_controls; /* mirrored_controls == 1 for games that the controls are labeled the same for all players. Games that have different controls for per player, or only one player, or only one player at a time, will have mirrored_controls == 0 */
   const char *control_details;
-  const bool dual_joysticks;
   const char *(*get_name)(int);  
 };
 
