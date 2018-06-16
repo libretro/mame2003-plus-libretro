@@ -273,18 +273,7 @@ bool init_game(int game)
 	Machine->gamedrv = gamedrv = drivers[game];
 	expand_machine_driver(gamedrv->drv, &internal_drv);
 	Machine->drv = &internal_drv;
-
-	init_game_options();
-
-	/* here's the meat of it all */
-	bailing = 0;
   
-  begin_resource_tracking();
-
-  /* finish setting up our local machine */
-  if (init_machine())
-      bail_and_print("Unable to initialize machine emulation");
-    
   return true;
 }
     
@@ -295,6 +284,17 @@ bool init_game(int game)
 
 bool run_game(int game)
 {
+	init_game_options();
+
+	/* here's the meat of it all */
+	bailing = 0;
+  
+  begin_resource_tracking();
+
+  /* finish setting up our local machine */
+  if (init_machine())
+      bail_and_print("Unable to initialize machine emulation");
+
   /* then run it */
   if (run_machine())
       bail_and_print("Unable to start machine emulation");

@@ -3516,14 +3516,12 @@ static INLINE void plotclip(struct mame_bitmap *bitmap,int x,int y,int pen,const
 		plot_pixel(bitmap,x,y,pen);
 }
 
-int crosshair_enable = 1;
-
 void draw_crosshair(struct mame_bitmap *bitmap,int x,int y,const struct rectangle *clip)
 {
 	unsigned short black,white;
 	int i;
 
-	if (!crosshair_enable)
+	if (!options.crosshair_enable)
 		return;
 
 	black = Machine->uifont->colortable[0];
