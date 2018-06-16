@@ -189,6 +189,8 @@ struct GameOptions
   mame_file *language_file;	     /* handle to file for localization */
 
   bool content_flags[CONTENT_end];
+  int  player_count;
+  int  button_count;
 
   char   *romset_filename_noext;
   char   *libretro_content_path;

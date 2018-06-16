@@ -792,22 +792,22 @@ static void set_content_flags(void)
 			switch (input->type & IPF_PLAYERMASK)
 			{
 				case IPF_PLAYER1:
-					/*if (nplayer<1) nplayer = 1;*/
+					if (options.player_count < 1) options.player_count = 1;
 					break;
 				case IPF_PLAYER2:
-					/*if (nplayer<2) nplayer = 2;*/
+					if (options.player_count < 2) options.player_count = 2;
 					break;
 				case IPF_PLAYER3:
-					/*if (nplayer<3) nplayer = 3;*/
+					if (options.player_count < 3) options.player_count = 3;
 					break;
 				case IPF_PLAYER4:
-					/*if (nplayer<4) nplayer = 4;*/
+					if (options.player_count < 4) options.player_count = 4;
 					break;
 				case IPF_PLAYER5:
-					/*if (nplayer<5) nplayer = 5;*/
+					if (options.player_count < 5) options.player_count = 5;
 					break;
 				case IPF_PLAYER6:
-					/*if (nplayer<6) nplayer = 6;*/
+					if (options.player_count < 6) options.player_count = 6;
 					break;
 			}
 			switch (input->type & ~IPF_MASK)
@@ -836,34 +836,34 @@ static void set_content_flags(void)
           log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");
 					break;
 				case IPT_BUTTON1:
-					/*if (nbutton<1) nbutton = 1;*/
+					if (options.button_count < 1) options.button_count = 1;
 					break;
 				case IPT_BUTTON2:
-					/*if (nbutton<2) nbutton = 2;*/
+					if (options.button_count < 2) options.button_count = 2;
 					break;
 				case IPT_BUTTON3:
-					/*if (nbutton<3) nbutton = 3;*/
+					if (options.button_count < 3) options.button_count = 3;
 					break;
 				case IPT_BUTTON4:
-					/*if (nbutton<4) nbutton = 4;*/
+					if (options.button_count < 4) options.button_count = 4;
 					break;
 				case IPT_BUTTON5:
-					/*if (nbutton<5) nbutton = 5;*/
+					if (options.button_count < 5) options.button_count = 5;
 					break;
 				case IPT_BUTTON6:
-					/*if (nbutton<6) nbutton = 6;*/
+					if (options.button_count <6 ) options.button_count = 6;
 					break;
 				case IPT_BUTTON7:
-					/*if (nbutton<7) nbutton = 7;*/
+					if (options.button_count < 7) options.button_count = 7;
 					break;
 				case IPT_BUTTON8:
-					/*if (nbutton<8) nbutton = 8;*/
+					if (options.button_count < 8) options.button_count = 8;
 					break;
 				case IPT_BUTTON9:
-					/*if (nbutton<9) nbutton = 9;*/
+					if (options.button_count < 9) options.button_count = 9;
 					break;
 				case IPT_BUTTON10:
-					/*if (nbutton<10) nbutton = 10;*/
+					if (options.button_count < 10) options.button_count = 10;
 					break;
 				case IPT_PADDLE:
           options.content_flags[CONTENT_PADDLE] = true;
