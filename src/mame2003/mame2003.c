@@ -59,7 +59,9 @@ retro_set_led_state_t              led_state_cb                  = NULL;
 bool old_dual_joystick_state = false; /* used to track when this core option changes */
 
 /******************************************************************************
+
   private function prototypes
+
 ******************************************************************************/
 static void   set_content_flags(void);
 static void   init_core_options(void);
@@ -70,6 +72,7 @@ static struct retro_variable_default *spawn_effective_default(int option_index);
 static void   check_system_specs(void);
        void   retro_describe_controls(void);
        int    get_mame_ctrl_id(int display_idx, int retro_ID);
+
 
 /******************************************************************************
 
@@ -426,42 +429,58 @@ static void update_variables(bool first_time)
           break;
 
         case OPT_SHARE_DIAL:
-          if(strcmp(var.value, "enabled") == 0)
-            options.dial_share_xy = 1;
+          if(options.content_flags[CONTENT_DIAL])
+          {
+            if(strcmp(var.value, "enabled") == 0)
+              options.dial_share_xy = 1;
+            else
+              options.dial_share_xy = 0;
+            break;
+          }
           else
+          {
             options.dial_share_xy = 0;
-          break;
+            break;
+          }          
 
         case OPT_DUAL_JOY:
-          if(strcmp(var.value, "enabled") == 0)
-            options.dual_joysticks = true;
-          else
-            options.dual_joysticks = false;
-
-          if(first_time)
-            old_dual_joystick_state = options.dual_joysticks;
-          else if(old_dual_joystick_state != options.dual_joysticks)
+          if(options.content_flags[CONTENT_DUAL_JOYSTICK])
           {
-            char cfg_file_path[PATH_MAX_LENGTH];
-            char buffer[PATH_MAX_LENGTH];
-            osd_get_path(FILETYPE_CONFIG, buffer);
-            snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", buffer, path_default_slash(), options.romset_filename_noext);
-            buffer[0] = '\0';
+            if(strcmp(var.value, "enabled") == 0)
+              options.dual_joysticks = true;
+            else
+              options.dual_joysticks = false;
             
-            if(path_is_valid(cfg_file_path))
-            {            
-              if(!remove(cfg_file_path) == 0)
-                snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
-              else
-                snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+            if(first_time)
+              old_dual_joystick_state = options.dual_joysticks;
+            else if(old_dual_joystick_state != options.dual_joysticks)
+            {
+              char cfg_file_path[PATH_MAX_LENGTH];
+              char buffer[PATH_MAX_LENGTH];
+              osd_get_path(FILETYPE_CONFIG, buffer);
+              snprintf(cfg_file_path, PATH_MAX_LENGTH, "%s%s%s.cfg", buffer, path_default_slash(), options.romset_filename_noext);
+              buffer[0] = '\0';
+              
+              if(path_is_valid(cfg_file_path))
+              {            
+                if(!remove(cfg_file_path) == 0)
+                  snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+                else
+                  snprintf(buffer, PATH_MAX_LENGTH, "%s.cfg exists but cannot be deleted!\n", options.romset_filename_noext);
+              }
+              log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
+              usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
+              
+              load_input_port_settings();
+              old_dual_joystick_state = options.dual_joysticks;
             }
-            log_cb(RETRO_LOG_INFO, LOGPRE "%s Reloading input maps.\n", buffer);
-            usrintf_showmessage_secs(4, "%s Reloading input maps.", buffer);
-            
-            load_input_port_settings();
-            old_dual_joystick_state = options.dual_joysticks;
+            break;
           }
-          break;
+          else /* always disabled except when options.content_flags[CONTENT_DUAL_JOYSTICK] has been set to true */
+          {
+            options.dual_joysticks = false; 
+            break;
+          }
 
         case OPT_RSTICK_BTNS:
           if(strcmp(var.value, "enabled") == 0)
@@ -610,7 +629,7 @@ static const struct retro_controller_info retropad_subdevice_ports[] = {
   { controllers, 4 },
   { controllers, 4 },
   { controllers, 4 },
-  { controllers, 4 },  
+  { controllers, 4 },
   { 0 },
 };
 
@@ -659,7 +678,9 @@ bool retro_load_game(const struct retro_game_info *game)
       log_cb(RETRO_LOG_ERROR, LOGPRE "Total MAME drivers: %i. MAME driver not found for selected game!", (int) total_drivers);
       return false;
   }
-  
+
+  if(!init_game(driverIndex))
+    return false;  
   set_content_flags();
 
   options.libretro_content_path = strdup(game->path);
@@ -700,11 +721,9 @@ bool retro_load_game(const struct retro_game_info *game)
 
   init_core_options();
   update_variables(true);
-
-  if(!init_game(driverIndex))
-    return false;
   
   environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)retropad_subdevice_ports);
+
   retro_describe_controls(); /* needs to be called after init_game() in order to use MAME button label strings */
   
   if(!run_game(driverIndex))
@@ -719,19 +738,13 @@ static void set_content_flags(void)
 
   extern struct GameDriver driver_neogeo;
   extern struct GameDriver driver_stvbios;
+  const struct InputPortTiny* input = game_driver->input_ports;
 
-	/* if the user doesn't want to use samples, bail */
 	const char* ost_drivers[] = {	"outrun", "outruna", "outrunb", \
 				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
 				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
 				"ffight", "ffightu", "ffightj",  "ffightj1", 0
 		 };    
-
-  if(true) /* TODO: test for lightgun games */
-  {
-    options.content_flags[CONTENT_LIGHTGUN] = true;
-    /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using lightgun controls.\n");*/
-  }
 
   if (game_driver->clone_of == &driver_neogeo
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_neogeo))
@@ -763,21 +776,138 @@ static void set_content_flags(void)
     i++;
   }
   
-  if(true) /* TODO: test for vector games */
+  
+  if(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
   {
     options.content_flags[CONTENT_VECTOR] = true;
-    /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using a vector video display.\n");*/
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using a vector video display.\n");
   }
-  if(true) /* TODO: test for dial games */
-  {
-    options.content_flags[CONTENT_DIAL] = true;
-    /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using a rotary dial input device.\n");*/
+  
+  /******** INPUT-BASED CONTENT FLAGS ********/
+	while ((input->type & ~IPF_MASK) != IPT_END)
+	{
+		/* skip analog extension fields */
+		if ((input->type & ~IPF_MASK) != IPT_EXTENSION)
+		{
+			switch (input->type & IPF_PLAYERMASK)
+			{
+				case IPF_PLAYER1:
+					/*if (nplayer<1) nplayer = 1;*/
+					break;
+				case IPF_PLAYER2:
+					/*if (nplayer<2) nplayer = 2;*/
+					break;
+				case IPF_PLAYER3:
+					/*if (nplayer<3) nplayer = 3;*/
+					break;
+				case IPF_PLAYER4:
+					/*if (nplayer<4) nplayer = 4;*/
+					break;
+				case IPF_PLAYER5:
+					/*if (nplayer<5) nplayer = 5;*/
+					break;
+				case IPF_PLAYER6:
+					/*if (nplayer<6) nplayer = 6;*/
+					break;
+			}
+			switch (input->type & ~IPF_MASK)
+			{
+				case IPT_JOYSTICKRIGHT_UP:
+				case IPT_JOYSTICKRIGHT_DOWN:
+				case IPT_JOYSTICKRIGHT_LEFT:
+				case IPT_JOYSTICKRIGHT_RIGHT:
+				case IPT_JOYSTICKLEFT_UP:
+				case IPT_JOYSTICKLEFT_DOWN:
+				case IPT_JOYSTICKLEFT_LEFT:
+				case IPT_JOYSTICKLEFT_RIGHT:
+					if (input->type & IPF_2WAY)
+          {
+						/*control = "doublejoy2way";*/
+          }
+					else if (input->type & IPF_4WAY)
+          {
+						/*control = "doublejoy4way";*/
+          }
+					else
+          {
+						/*control = "doublejoy8way";*/
+          }
+          options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");
+					break;
+				case IPT_BUTTON1:
+					/*if (nbutton<1) nbutton = 1;*/
+					break;
+				case IPT_BUTTON2:
+					/*if (nbutton<2) nbutton = 2;*/
+					break;
+				case IPT_BUTTON3:
+					/*if (nbutton<3) nbutton = 3;*/
+					break;
+				case IPT_BUTTON4:
+					/*if (nbutton<4) nbutton = 4;*/
+					break;
+				case IPT_BUTTON5:
+					/*if (nbutton<5) nbutton = 5;*/
+					break;
+				case IPT_BUTTON6:
+					/*if (nbutton<6) nbutton = 6;*/
+					break;
+				case IPT_BUTTON7:
+					/*if (nbutton<7) nbutton = 7;*/
+					break;
+				case IPT_BUTTON8:
+					/*if (nbutton<8) nbutton = 8;*/
+					break;
+				case IPT_BUTTON9:
+					/*if (nbutton<9) nbutton = 9;*/
+					break;
+				case IPT_BUTTON10:
+					/*if (nbutton<10) nbutton = 10;*/
+					break;
+				case IPT_PADDLE:
+          options.content_flags[CONTENT_PADDLE] = true;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using paddle controls.\n");
+          break;
+				case IPT_DIAL:
+          options.content_flags[CONTENT_DIAL] = true;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using dial controls.\n");
+					break;
+				case IPT_TRACKBALL_X:
+				case IPT_TRACKBALL_Y:
+          options.content_flags[CONTENT_TRACKBALL] = true;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using trackball controls.\n");
+					break;
+				case IPT_AD_STICK_X:
+				case IPT_AD_STICK_Y:
+          options.content_flags[CONTENT_AD_STICK] = true;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
+					break;
+				case IPT_LIGHTGUN_X:
+				case IPT_LIGHTGUN_Y:
+          options.content_flags[CONTENT_LIGHTGUN] = true;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using Analog/Digital stick controls.\n");
+					break;
+				case IPT_SERVICE :
+          options.content_flags[CONTENT_HAS_SERVICE] = true;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a service button.\n");
+					break;
+				case IPT_TILT :
+          options.content_flags[CONTENT_HAS_TILT] = true;
+          log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having a tilt feature.\n");
+					break;
+			}
+		}
+		++input;
+	}
+  
+  /* drivers need to be associated with an accurate ControlInfo stuct in controls.c to be flagged as having alternating controls */  
+  if(game_driver->ctrl_dat->alternating_controls) 
+  { 
+    options.content_flags[CONTENT_ALTERNATING_CTRLS] = true;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having alternating controls.\n");
   }
-  if(true) /* TODO: test for games which with dual joystick configurations */
-  {
-    options.content_flags[CONTENT_DUAL_JOYSTICK] = true;
-    /*log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using \"dual joystick\" controls.\n");*/
-  }
+
 }
 
 void retro_reset (void)
@@ -1198,9 +1328,6 @@ void retro_describe_controls(void)
   int       retro_type     = 0;
   int       display_idx    = 0;
   
-  log_cb(RETRO_LOG_INFO, LOGPRE "PAD_GAMEPAD Code: %i | PAD_8BUTTON Code: %i | PAD_6BUTTON Code %i | PAD_CLASSIC Code %i\n", RETRO_DEVICE_JOYPAD, PAD_8BUTTON, PAD_6BUTTON, PAD_CLASSIC);
-
-
   struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
   
