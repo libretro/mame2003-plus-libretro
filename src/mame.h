@@ -177,6 +177,9 @@ enum /* used to index content-specific flags */
   CONTENT_HAS_SERVICE,
   CONTENT_HAS_TILT,  
   CONTENT_ALTERNATING_CTRLS,
+  CONTENT_MIRRORED_CTRLS,
+  CONTENT_DCS_SPEEDHACK,
+  CONTENT_NVRAM_BOOTSTRAP,
   CONTENT_end,
 };
 
@@ -190,6 +193,7 @@ struct GameOptions
 
   bool content_flags[CONTENT_end];
   int  player_count;
+  int  ctrl_count;
   int  button_count;
 
   char   *romset_filename_noext;

@@ -13,10 +13,45 @@
 #include "controls.h"
 #include "inptport.h"
 
+/***********************************************************
+  PRIVATE HELPER FUNCTIONS
+ ***********************************************************/
+
+static const char *joy2way_labels(int type);
+static const char *joy4way_labels(int type);
+
+static const char *joy2way_labels(int type)
+{
+  switch(type)
+  {
+    case IPT_JOYSTICK_LEFT: return "Left";
+    case IPT_JOYSTICK_RIGHT: return "Right";
+  } /* end of switch */ 
+  
+  return "";  
+}
+
+static const char *joy4way_labels(int type)
+{
+  switch(type)
+  {
+    case IPT_JOYSTICK_UP: return "Up";
+    case IPT_JOYSTICK_DOWN: return "Down";
+    case IPT_JOYSTICK_LEFT: return "Left";
+    case IPT_JOYSTICK_RIGHT: return "Right";
+  } /* end of switch */ 
+  
+  return "";  
+}
+
+/***********************************************************
+  CONTROLS METADATA
+ ***********************************************************/
+ 
 const struct ControlInfo generic_ctrl =
 {
   false, /* alternating_controls */
-  false, /* mirrored_controls */
+  true, /* mirrored_controls */
   "",    /* control_details */
   &generic_ctrl_label /* button labeler function */ 
 };
@@ -9496,7 +9531,7 @@ const char *teamqb_get_ctrl_name(int type)
 /*  case (IPT_JOYSTICK_UP | IPF_PLAYER0): return "Up";
     case (IPT_JOYSTICK_DOWN | IPF_PLAYER0): return "Down";
     case (IPT_JOYSTICK_LEFT | IPF_PLAYER0): return "Left";
-    case (IPT_JOYSTICK_RIGHT | IPF_PLAYER0): return "Right";
+    case (IPT_JOYSTICK_RIGHT | IPF_PLAYER0): return "Right";*/
   } /* end of switch */
 
   return "";
@@ -13508,7 +13543,7 @@ const char *nmsengen_get_ctrl_name(int type)
 {
   switch(type)
   {
-/* P1NumButtons=0 */
+
   } /* end of switch */
 
   return "";
@@ -13530,13 +13565,9 @@ const char *neogeo_get_ctrl_name(int type)
     case IPT_BUTTON2: return BTN2 "Neo Geo B";
     case IPT_BUTTON3: return BTN3 "Neo Geo C";
     case IPT_BUTTON4: return BTN4 "Neo Geo D";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 
@@ -18668,13 +18699,9 @@ const char *stonebal_get_ctrl_name(int type)
     case IPT_BUTTON1: return BTN1 "Shoot/Fight";
     case IPT_BUTTON2: return BTN2 "Pass/Tackle";
     case IPT_BUTTON3: return BTN3 "Push";
-    case IPT_JOYSTICK_UP: return "Up";
-    case IPT_JOYSTICK_DOWN: return "Down";
-    case IPT_JOYSTICK_LEFT: return "Left";
-    case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
 
-  return "";
+  return joy4way_labels(type);
 }
 
 const struct ControlInfo szaxxon_ctrl =
