@@ -2274,7 +2274,7 @@ void generate_gameinfo(void)
   
   message_buffer[0] = '\0';
 
-	sprintf(message_buffer,"%s\n%s %s\n\n%s:\n",Machine->gamedrv->description,Machine->gamedrv->year,Machine->gamedrv->manufacturer,
+	sprintf(message_buffer,"CONTROLS: %s\n\nGAMEINFO: %s\n%s %s\n\n%s:\n",Machine->gamedrv->ctrl_dat->control_details, Machine->gamedrv->description, Machine->gamedrv->year, Machine->gamedrv->manufacturer,
 		ui_getstring (UI_cpu));
 	i = 0;
 	while (i < MAX_CPU && Machine->drv->cpu[i].cpu_type)

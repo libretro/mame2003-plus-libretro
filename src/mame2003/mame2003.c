@@ -46,6 +46,8 @@ struct ipd          *default_inputs; /* pointer the array of structs with defaul
 static struct retro_variable_default  default_options[OPT_end + 1];    /* need the plus one for the NULL entries at the end */
 static struct retro_variable          current_options[OPT_end + 1];
 
+static struct retro_input_descriptor empty[] = { { 0 } };
+
 retro_log_printf_t                 log_cb;
 
 struct                             retro_perf_callback perf_cb;
@@ -111,15 +113,6 @@ void retro_set_environment(retro_environment_t cb)
 static void init_core_options(void)
 {
   init_default(&default_options[OPT_FRAMESKIP],           APPNAME"_frameskip",           "Frameskip; 0|1|2|3|4|5");
-  init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");
-/*
-  init_default(&default_options[OPT_RETROPAD1_LAYOUT],    APPNAME"_retropad1_layout",    "RetroPad 1 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD2_LAYOUT],    APPNAME"_retropad2_layout",    "RetroPad 2 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD3_LAYOUT],    APPNAME"_retropad3_layout",    "RetroPad 3 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD4_LAYOUT],    APPNAME"_retropad4_layout",    "RetroPad 4 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD5_LAYOUT],    APPNAME"_retropad5_layout",    "RetroPad 5 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
-  init_default(&default_options[OPT_RETROPAD6_LAYOUT],    APPNAME"_retropad6_layout",    "RetroPad 6 Layout; Modern Gamepad|Classic Gamepad|8-Button|6-Button");
-*/
 #if defined(__IOS__)
   init_default(&default_options[OPT_MOUSE_DEVICE],        APPNAME"_mouse_device",        "Mouse Device; pointer|mouse|disabled");
 #else
@@ -152,6 +145,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_NVRAM_BOOTSTRAP],     APPNAME"_nvram_bootstraps",    "NVRAM Bootstraps; enabled|disabled");
   init_default(&default_options[OPT_SAMPLE_RATE],         APPNAME"_sample_rate",         "Sample Rate (KHz); 48000|8000|11025|22050|44100");
   init_default(&default_options[OPT_DCS_SPEEDHACK],       APPNAME"_dcs_speedhack",       "DCS Speedhack; enabled|disabled");
+  init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");  
   init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Activate MAME Remapping (!NETPLAY); disabled|enabled");
   
   init_default(&default_options[OPT_end], NULL, NULL);
@@ -199,6 +193,14 @@ static void set_variables(bool first_time)
       case OPT_VECTOR_FLICKER:
       case OPT_VECTOR_INTENSITY:
          if(!options.content_flags[CONTENT_VECTOR])
+           continue;
+         break;
+      case OPT_DCS_SPEEDHACK:
+         if(!options.content_flags[CONTENT_DCS_SPEEDHACK])
+           continue;
+         break;
+      case OPT_NVRAM_BOOTSTRAP:
+         if(!options.content_flags[CONTENT_NVRAM_BOOTSTRAP])
            continue;
          break;
     }
@@ -254,68 +256,7 @@ static void update_variables(bool first_time)
           else
             options.input_interface = 0; /* retropad and keyboard simultaneously. "old-school mame2003 input mode" */
           break;
-/*
-        case OPT_RETROPAD1_LAYOUT:
-          if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[0] = PAD_GAMEPAD;
-          else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[0] = PAD_8BUTTON;
-          else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[0] = PAD_6BUTTON;
-          else
-            options.retropad_layout[0] = PAD_CLASSIC;
-          break;
-        case OPT_RETROPAD2_LAYOUT:
-          if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[1] = PAD_GAMEPAD;
-          else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[1] = PAD_8BUTTON;
-          else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[1] = PAD_6BUTTON;
-          else
-            options.retropad_layout[1] = PAD_CLASSIC;
-          break;
-        case OPT_RETROPAD3_LAYOUT:
-          if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[2] = PAD_GAMEPAD;
-          else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[2] = PAD_8BUTTON;
-          else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[2] = PAD_6BUTTON;
-          else
-            options.retropad_layout[2] = PAD_CLASSIC;
-          break;
-        case OPT_RETROPAD4_LAYOUT:
-          if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[3] = PAD_GAMEPAD;
-          else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[3] = PAD_8BUTTON;
-          else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[3] = PAD_6BUTTON;
-          else
-            options.retropad_layout[3] = PAD_CLASSIC;
-          break;
-        case OPT_RETROPAD5_LAYOUT:
-          if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[4] = PAD_GAMEPAD;
-          else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[4] = PAD_8BUTTON;
-          else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[4] = PAD_6BUTTON;
-          else
-            options.retropad_layout[4] = PAD_CLASSIC;
-          break;
-        case OPT_RETROPAD6_LAYOUT:
-          if(strcmp(var.value, "Modern Gamepad") == 0)
-            options.retropad_layout[5] = PAD_GAMEPAD;
-          else if(strcmp(var.value, "8-Button") == 0)
-            options.retropad_layout[5] = PAD_8BUTTON;
-          else if(strcmp(var.value, "6-Button") == 0)
-            options.retropad_layout[5] = PAD_6BUTTON;
-          else
-            options.retropad_layout[5] = PAD_CLASSIC;
-          break;
-*/
+
         case OPT_MOUSE_DEVICE:
           if(strcmp(var.value, "pointer") == 0)
             options.mouse_device = RETRO_DEVICE_POINTER;
@@ -555,10 +496,6 @@ static void update_variables(bool first_time)
       }
     }
   }
-/*
-  if(!first_time)
-    retro_describe_controls();*/ /* the first time, MAME's init_game() needs to be called before this, so there is also    */
-                               /* retro_describe_controls() in retro_load_game() to take care of the initial description */
   
   if(!options.content_flags[CONTENT_ALT_SOUND])
     options.use_samples = true;
@@ -616,14 +553,21 @@ void retro_get_system_info(struct retro_system_info *info)
   info->block_extract = true;
 }
 
-static const struct retro_controller_description controllers[] = {
+static struct retro_controller_description controllers[] = {
   { "Gamepad",	       RETRO_DEVICE_JOYPAD},
   { "8-Button",        PAD_8BUTTON },
   { "6-Button",        PAD_6BUTTON },
   { "Classic Gamepad", PAD_CLASSIC },
 };
 
-static const struct retro_controller_info retropad_subdevice_ports[] = {
+static struct retro_controller_description unsupported_controllers[] = {
+  { "UNSUPPORTED (Gamepad)",	       RETRO_DEVICE_JOYPAD},
+  { "UNSUPPORTED (8-Button)",        PAD_8BUTTON },
+  { "UNSUPPORTED (6-Button)",        PAD_6BUTTON },
+  { "UNSUPPORTED (Classic Gamepad)", PAD_CLASSIC },
+};
+
+static struct retro_controller_info retropad_subdevice_ports[] = {
   { controllers, 4 },
   { controllers, 4 },
   { controllers, 4 },
@@ -636,6 +580,7 @@ static const struct retro_controller_info retropad_subdevice_ports[] = {
 bool retro_load_game(const struct retro_game_info *game)
 {
   int              driverIndex    = 0;
+  int              port_index;
   char             *driver_lookup = NULL;
   int              orientation    = 0;
   unsigned         rotateMode     = 0;
@@ -722,9 +667,13 @@ bool retro_load_game(const struct retro_game_info *game)
   init_core_options();
   update_variables(true);
   
-  environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)retropad_subdevice_ports);
+  for(port_index = DISP_PLAYER6 - 1; port_index > (options.ctrl_count - 1); port_index--)
+  {
+    retropad_subdevice_ports[port_index].types       = &unsupported_controllers;
+    retropad_subdevice_ports[port_index].num_types   = 4;
+  }
 
-  retro_describe_controls(); /* needs to be called after init_game() in order to use MAME button label strings */
+  environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)retropad_subdevice_ports);
   
   if(!run_game(driverIndex))
     return false;
@@ -738,7 +687,7 @@ static void set_content_flags(void)
 
   extern struct GameDriver driver_neogeo;
   extern struct GameDriver driver_stvbios;
-  const struct InputPortTiny* input = game_driver->input_ports;
+  const struct InputPortTiny *input = game_driver->input_ports;
 
 	const char* ost_drivers[] = {	"outrun", "outruna", "outrunb", \
 				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
@@ -746,6 +695,7 @@ static void set_content_flags(void)
 				"ffight", "ffightu", "ffightj",  "ffightj1", 0
 		 };    
 
+  /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
   if (game_driver->clone_of == &driver_neogeo
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_neogeo))
   {
@@ -759,31 +709,33 @@ static void set_content_flags(void)
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as a ST-V game.\n");
   }
 
+  /************ DIE HARD: ARCADE ************/
   if(strcasecmp(game_driver->name, "diehard") == 0)
   {
     options.content_flags[CONTENT_DIEHARD] = true;
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as \"Die Hard: Arcade\". BIOS will be set to \"us\".\n");
   }
 
-
+  /************ DRIVERS WITH ALTERNATE SOUNDTRACKS ************/
   while(ost_drivers[i])
   {
     if(strcmp(ost_drivers[i], game_driver->name) == 0)
     {
       options.content_flags[CONTENT_ALT_SOUND] = true;
-      log_cb(RETRO_LOG_INFO, LOGPRE "Content has an alternative audio option controlled via libretro core option.\n");
+      log_cb(RETRO_LOG_INFO, LOGPRE "Content has an alternative audio option controlled via core option.\n");
+      break;
     }
     i++;
   }
-  
-  
+
+  /************ DRIVERS WITH VECTOR VIDEO DISPLAYS ************/  
   if(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
   {
     options.content_flags[CONTENT_VECTOR] = true;
     log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as using a vector video display.\n");
   }
   
-  /******** INPUT-BASED CONTENT FLAGS ********/
+  /************ INPUT-BASED CONTENT FLAGS ************/
 	while ((input->type & ~IPF_MASK) != IPT_END)
 	{
 		/* skip analog extension fields */
@@ -900,13 +852,54 @@ static void set_content_flags(void)
 		}
 		++input;
 	}
-  
-  /* drivers need to be associated with an accurate ControlInfo stuct in controls.c to be flagged as having alternating controls */  
+
+  /************ DRIVERS FLAGGED IN CONTROLS.C WITH ALTERNATING CONTROLS ************/  
   if(game_driver->ctrl_dat->alternating_controls) 
   { 
     options.content_flags[CONTENT_ALTERNATING_CTRLS] = true;
-    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as having alternating controls.\n");
+    if(options.player_count == 2)
+      options.ctrl_count = 1; /* ie: two players take alternating turns using the "player 1" controls */
+    else if(options.player_count == 4)
+      options.ctrl_count = 2;
+    else
+      options.ctrl_count = options.player_count;
   }
+  else
+    options.ctrl_count = options.player_count;
+ 
+  log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as supporting %i players with %i distinct controls.\n", options.player_count, options.ctrl_count);
+  log_cb(RETRO_LOG_INFO, LOGPRE "Content identified as supporting %i button controls.\n", options.button_count);
+
+  
+  
+  /************ DRIVERS FLAGGED IN CONTROLS.C WITH MIRRORED CONTROLS ************/  
+  if(game_driver->ctrl_dat->mirrored_controls) 
+  { 
+    options.content_flags[CONTENT_MIRRORED_CTRLS] = true;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified by controls.c as having mirrored multiplayer control labels.\n");
+  }
+  else
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content identified by controls.c as having non-mirrored multiplayer control labels.\n");
+
+
+  /************ DCS DRIVERS WITH SPEEDDUP HACKS ************/
+  while(/*dcs_drivers[i]*/true)
+  {
+    if(/*strcmp(dcs_drivers[i], game_driver->name) == 0*/true)
+    {
+      options.content_flags[CONTENT_DCS_SPEEDHACK] = true;
+      /*log_cb(RETRO_LOG_INFO, LOGPRE "DCS content has a speedup hack controlled via core option.\n");*/
+      break;
+    }
+    i++;
+  }
+  
+  /************ DRIVERS WITH NVRAM BOOTSTRAP PATCHES ************/
+  if(game_driver->bootstrap != NULL)
+  {
+    options.content_flags[CONTENT_NVRAM_BOOTSTRAP] = true;
+    log_cb(RETRO_LOG_INFO, LOGPRE "Content has an NVRAM bootstrap controlled via core option.\n");
+  }  
 
 }
 
@@ -1312,11 +1305,9 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 /* We are by convention passing "display" value used for mapping to MAME enums and player # masks to our macros.     */
 /* (Display Index - 1) can be used for indexed data structures.                                                      */   
 
-static struct retro_input_descriptor empty[] = { { 0 } };
-
 void retro_set_controller_port_device(unsigned in_port, unsigned device)
 {
-  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty);
+  environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, empty); /* is this necessary? it was in the sample code */
   options.retropad_layout[in_port] = device;
   retro_describe_controls();
 }
@@ -1325,25 +1316,34 @@ void retro_describe_controls(void)
 {
   const int NUMBER_OF_RETRO_TYPES = RETRO_DEVICE_ID_JOYPAD_R3 + 1;
 
-  int       retro_type     = 0;
-  int       display_idx    = 0;
+  int retro_type   = 0;
+  int display_idx  = 0;
   
   struct retro_input_descriptor desc[(DISP_PLAYER6 * NUMBER_OF_RETRO_TYPES) +  1]; /* second + 1 for the final zeroed record. */
   struct retro_input_descriptor *needle = &desc[0];
   
-  for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
+  for(display_idx = DISP_PLAYER1; (display_idx <= options.ctrl_count && display_idx <= DISP_PLAYER6); display_idx++)
   {
     for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < NUMBER_OF_RETRO_TYPES; retro_type++)
     {
-      const char *control_name = game_driver->ctrl_dat->get_name(get_mame_ctrl_id(display_idx, retro_type));
-      if(string_is_empty(control_name))
+      const char *control_name;
+      int mame_ctrl_id = get_mame_ctrl_id(display_idx, retro_type);
+
+      if(mame_ctrl_id >= IPT_BUTTON1 && mame_ctrl_id <= IPT_BUTTON10)
       {
-        	switch(retro_type) /* a couple of universals */
-          {
-            case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
-            case RETRO_DEVICE_ID_JOYPAD_START:  control_name = "Start"; break;
-          }
+        if((mame_ctrl_id - IPT_BUTTON1 + 1) > options.button_count)
+        {
+          continue;
+        }
       }
+
+      switch(retro_type)
+      {
+        case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
+        case  RETRO_DEVICE_ID_JOYPAD_START: control_name = "Start"; break;
+        default:                            control_name = game_driver->ctrl_dat->get_name(mame_ctrl_id); break;
+      }
+
       if(string_is_empty(control_name))
         continue;
 
@@ -1363,27 +1363,33 @@ void retro_describe_controls(void)
   needle->index = 0;
   needle->id = 0;
   needle->description = NULL;
-  
+
   environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
+  
 }
 
 int get_mame_ctrl_id(int display_idx, int retro_ID)
 {
-  int player_flag = 0;
-  
-  /* TODO: use the player-specific bitwise flag in order to get player-specific form of the ID */ 
+  int player_flag;
 
-/*  
-  switch(display_idx)
+  /* A few games have different control names per-player. The MAME player masks are only applied to those
+     identified by mirrored_controls == false in controls.c.
+  */
+  if(!options.content_flags[CONTENT_MIRRORED_CTRLS])
   {
-    case 1: player_flag = IPF_PLAYER1; break;
-    case 2: player_flag = IPF_PLAYER2; break;
-    case 3: player_flag = IPF_PLAYER3; break;
-    case 4: player_flag = IPF_PLAYER4; break;
-    case 5: player_flag = IPF_PLAYER5; break;
-    case 6: player_flag = IPF_PLAYER6; break;    
+    switch(display_idx)
+    {
+      case 1: player_flag = IPF_PLAYER1; break;
+      case 2: player_flag = IPF_PLAYER2; break;
+      case 3: player_flag = IPF_PLAYER3; break;
+      case 4: player_flag = IPF_PLAYER4; break;
+      case 5: player_flag = IPF_PLAYER5; break;
+      case 6: player_flag = IPF_PLAYER6; break;    
+    }
   }
-*/
+  else
+    player_flag = 0;
+
   switch(retro_ID) /* universal default mappings */
   {
     case RETRO_DEVICE_ID_JOYPAD_LEFT:   return (player_flag | IPT_JOYSTICK_LEFT);
