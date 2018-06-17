@@ -66,6 +66,7 @@ Are the OKI M6295 clocks from Heavy Smash are correct at least for the Mitchell 
 #include "machine/eeprom.h"
 #include "deco16ic.h"
 #include "vidhrdw/generic.h"
+#include "bootstrap.h"
 
 static UINT32 *simpl156_systemram;
 static const UINT8 *simpl156_default_eeprom = NULL;
@@ -1345,6 +1346,6 @@ GAME( 1995, magdrop,  chainrec, magdrop,     simpl156, chainrec, ROT0,  "Data Ea
 GAME( 1995, magdropp, chainrec, magdropp,    simpl156, chainrec, ROT0,  "Data East Corporation", "Magical Drop Plus 1 (Japan, Version 2.1)" )
 
 /* Mitchell games running on the DEC-22VO / MT5601-0 PCB */
-GAME( 1995, charlien, 0,        mitchell156, simpl156, charlien, ROT0,  "Mitchell", "Charlie Ninja" ) /* language in service mode */
+GAMEC( 1995, charlien, 0,        mitchell156, simpl156, charlien, ROT0,  "Mitchell", "Charlie Ninja" , &generic_ctrl, &charlien_bootstrap) /* language in service mode */
 GAME( 1996, osman,    0,        mitchell156, simpl156, osman,    ROT0,  "Mitchell", "Osman (World)" )
 GAME( 1996, candance, osman,    mitchell156, simpl156, candance, ROT0,  "Mitchell", "Cannon Dancer (Japan)" )

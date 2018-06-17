@@ -684,4 +684,4 @@ static DRIVER_INIT( backfire )
 	install_mem_read32_handler(0, 0x0170018, 0x017001b, backfire_speedup_r );
 }
 
-GAMEC( 1995, backfire, 0, backfire, backfire, backfire, ROT0, "Data East Corporation", "Backfire!", &generic_ctrl, &charlien_bootstrap )
+GAME( 1995, backfire, 0, backfire, backfire, backfire, ROT0, "Data East Corporation", "Backfire!" )
