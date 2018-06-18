@@ -68,9 +68,9 @@ const char *a88games_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Run";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Run";
+    case IPT_BUTTON1: return BTN1 "Run";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Run";
   } /* end of switch */
 
   return "";
@@ -88,7 +88,7 @@ const char *a005_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -110,8 +110,8 @@ const char *a10yardj_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Pass / Hike";
-    case IPT_BUTTON2: return "Lateral";
+    case IPT_BUTTON1: return BTN1 "Pass / Hike";
+    case IPT_BUTTON2: return BTN2 "Lateral";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -133,7 +133,7 @@ const char *gtmr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -153,8 +153,8 @@ const char *a1941_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Loop";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Loop";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -176,8 +176,8 @@ const char *a1942_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Loop";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Loop";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -199,8 +199,8 @@ const char *a1943kai_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -222,8 +222,8 @@ const char *a1943_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Special";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Special";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -245,8 +245,8 @@ const char *a1944_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -268,8 +268,8 @@ const char *a19xx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -291,9 +291,9 @@ const char *openice_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Turbo";
-    case IPT_BUTTON2: return "Shoot / Block";
-    case IPT_BUTTON3: return "Pass / Steal";
+    case IPT_BUTTON1: return BTN1 "Turbo";
+    case IPT_BUTTON2: return BTN2 "Shoot / Block";
+    case IPT_BUTTON3: return BTN3 "Pass / Steal";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -315,9 +315,9 @@ const char *a39in1_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -339,8 +339,8 @@ const char *a4enraya_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Down";
-    case IPT_BUTTON2: return "Shot";
+    case IPT_BUTTON1: return BTN1 "Down";
+    case IPT_BUTTON2: return BTN2 "Shot";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -360,7 +360,7 @@ const char *a4in1_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -382,8 +382,8 @@ const char *a4dwarrio_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -405,8 +405,8 @@ const char *a64street_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -428,8 +428,8 @@ const char *a720_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Kick";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Kick";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
     case IPT_DIAL: return "Rotate Left";
   } /* end of switch */
@@ -467,7 +467,7 @@ const char *ace_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_UP: return "Speed Up";
@@ -489,8 +489,8 @@ const char *acrobatm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -512,8 +512,8 @@ const char *actfancr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -535,10 +535,10 @@ const char *hatena_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
   } /* end of switch */
 
   return "";
@@ -556,8 +556,8 @@ const char *aerofgt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -579,9 +579,9 @@ const char *aburner2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Vulcan";
-    case IPT_BUTTON3: return "Unknown";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Vulcan";
+    case IPT_BUTTON3: return BTN3 "Unknown";
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
     case IPT_AD_STICK_Y: return "Up";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
@@ -605,9 +605,9 @@ const char *koshien_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -629,8 +629,8 @@ const char *airbustr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -652,10 +652,10 @@ const char *airduel_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Gun";
-    case IPT_BUTTON2: return "Guided Bomb";
-    case IPT_BUTTON3: return "Unknown";
-    case IPT_BUTTON4: return "Unknown";
+    case IPT_BUTTON1: return BTN1 "Gun";
+    case IPT_BUTTON2: return BTN2 "Guided Bomb";
+    case IPT_BUTTON3: return BTN3 "Unknown";
+    case IPT_BUTTON4: return BTN4 "Unknown";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -677,8 +677,8 @@ const char *airwolf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -700,9 +700,9 @@ const char *ajax_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Machine Gun";
-    case IPT_BUTTON2: return "Missle";
-    case IPT_BUTTON3: return "Super Weapon";
+    case IPT_BUTTON1: return BTN1 "Machine Gun";
+    case IPT_BUTTON2: return BTN2 "Missle";
+    case IPT_BUTTON3: return BTN3 "Super Weapon";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -724,9 +724,9 @@ const char *alexkidd_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Unknown";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Unknown";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -748,7 +748,7 @@ const char *alibaba_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Drop";
+    case IPT_BUTTON1: return BTN1 "Drop";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -770,9 +770,9 @@ const char *astorm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Roll";
-    case IPT_BUTTON3: return "Special";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Roll";
+    case IPT_BUTTON3: return BTN3 "Special";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -794,7 +794,7 @@ const char *aliensyn_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -816,9 +816,9 @@ const char *avsp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Attack";
-    case IPT_BUTTON3: return "Jump (Dash)";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Attack";
+    case IPT_BUTTON3: return BTN3 "Jump (Dash)";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -840,8 +840,8 @@ const char *alien3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Secondary Weapon";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Secondary Weapon";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -863,8 +863,8 @@ const char *aliens_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot 1";
-    case IPT_BUTTON2: return "Shoot 2";
+    case IPT_BUTTON1: return BTN1 "Shoot 1";
+    case IPT_BUTTON2: return BTN2 "Shoot 2";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -886,7 +886,7 @@ const char *aafb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action";
+    case IPT_BUTTON1: return BTN1 "Action";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -912,8 +912,8 @@ const char *alleymas_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left";
-    case IPT_BUTTON2: return "Right";
+    case IPT_BUTTON1: return BTN1 "Left";
+    case IPT_BUTTON2: return BTN2 "Right";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -935,7 +935,7 @@ const char *alphaho_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -957,9 +957,9 @@ const char *alpinerd_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Decision";
-    case IPT_BUTTON2: return "Left (Select)";
-    case IPT_BUTTON3: return "Right (Select)";
+    case IPT_BUTTON1: return BTN1 "Decision";
+    case IPT_BUTTON2: return BTN2 "Left (Select)";
+    case IPT_BUTTON3: return BTN3 "Right (Select)";
     case IPT_AD_STICK_X: return "Sweep Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Sweep Right";
     case IPT_AD_STICK_Y: return "Increase Edge ";
@@ -981,7 +981,7 @@ const char *alpine_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Ski Faster";
+    case IPT_BUTTON1: return BTN1 "Ski Faster";
     case IPT_JOYSTICK_RIGHT: return "Ski Right";
     case IPT_JOYSTICK_LEFT: return "Ski Left";
   } /* end of switch */
@@ -1001,9 +1001,9 @@ const char *altbeast_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick ";
-    case IPT_BUTTON3: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick ";
+    case IPT_BUTTON3: return BTN3 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1047,8 +1047,8 @@ const char *horshoes_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Angle";
-    case IPT_BUTTON2: return "Grip";
+    case IPT_BUTTON1: return BTN1 "Angle";
+    case IPT_BUTTON2: return BTN2 "Grip";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_X: return "Left";
@@ -1070,7 +1070,7 @@ const char *amspdwy_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -1090,7 +1090,7 @@ const char *amerdart_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Lock";
+    case IPT_BUTTON1: return BTN1 "Lock";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -1112,7 +1112,7 @@ const char *amidar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1160,7 +1160,7 @@ const char *anteater_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Tongue Return";
+    case IPT_BUTTON1: return BTN1 "Tongue Return";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1182,8 +1182,8 @@ const char *apb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Siren / Start";
-    case IPT_BUTTON2: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Siren / Start";
+    case IPT_BUTTON2: return BTN2 "Fire";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_DIAL: return "Left";
     case IPT_PEDAL: return "Accelerate";
@@ -1222,10 +1222,10 @@ const char *aquajack_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Machine Gun";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Vulcan";
-    case IPT_BUTTON4: return "Thrust";
+    case IPT_BUTTON1: return BTN1 "Machine Gun";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Vulcan";
+    case IPT_BUTTON4: return BTN4 "Thrust";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -1247,8 +1247,8 @@ const char *aquarium_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate Right";
-    case IPT_BUTTON2: return "Rotate Left";
+    case IPT_BUTTON1: return BTN1 "Rotate Right";
+    case IPT_BUTTON2: return BTN2 "Rotate Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -1270,7 +1270,7 @@ const char *arabian_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Kick";
     case IPT_JOYSTICK_RIGHT: return "Walk";
     case IPT_JOYSTICK_LEFT: return "Walk";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -1292,8 +1292,8 @@ const char *arbalest_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Special";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Special";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1315,9 +1315,9 @@ const char *arcadecl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire / Left Missile";
-    case IPT_BUTTON2: return "Fire / Center Missile";
-    case IPT_BUTTON3: return "Fire / Right Missile";
+    case IPT_BUTTON1: return BTN1 "Fire / Left Missile";
+    case IPT_BUTTON2: return BTN2 "Fire / Center Missile";
+    case IPT_BUTTON3: return BTN3 "Fire / Right Missile";
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
@@ -1339,8 +1339,8 @@ const char *archrivl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot/Jump";
-    case IPT_BUTTON2: return "Pass/Punch";
+    case IPT_BUTTON1: return BTN1 "Shoot/Jump";
+    case IPT_BUTTON2: return BTN2 "Pass/Punch";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -1362,7 +1362,7 @@ const char *area51_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
     case IPT_LIGHTGUN_Y: return "Up";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
@@ -1384,7 +1384,7 @@ const char *area51mx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
     case IPT_LIGHTGUN_Y: return "Up";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
@@ -1406,7 +1406,7 @@ const char *a51site4_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -1428,8 +1428,8 @@ const char *argus_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Laser";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Laser";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1451,8 +1451,8 @@ const char *arkarea_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Direction";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Direction";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1474,7 +1474,7 @@ const char *arkanoid_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -1494,7 +1494,7 @@ const char *arknoid2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -1514,10 +1514,10 @@ const char *arlingtn_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "WIN";
-    case IPT_BUTTON2: return "PLACE";
-    case IPT_BUTTON3: return "SHOW";
-    case IPT_BUTTON4: return "COLLECT";
+    case IPT_BUTTON1: return BTN1 "WIN";
+    case IPT_BUTTON2: return BTN2 "PLACE";
+    case IPT_BUTTON3: return BTN3 "SHOW";
+    case IPT_BUTTON4: return BTN4 "COLLECT";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
@@ -1537,7 +1537,7 @@ const char *armwrest_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Power";
+    case IPT_BUTTON1: return BTN1 "Power";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "";
     case IPT_JOYSTICK_UP: return "Pull";
@@ -1559,9 +1559,9 @@ const char *armedf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Special";
-    case IPT_BUTTON3: return "Unknown";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Special";
+    case IPT_BUTTON3: return BTN3 "Unknown";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1583,8 +1583,8 @@ const char *armora_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Forward";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Forward";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -1604,8 +1604,8 @@ const char *armorcar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sawhorse";
-    case IPT_BUTTON2: return "2nd Gear";
+    case IPT_BUTTON1: return BTN1 "Sawhorse";
+    case IPT_BUTTON2: return BTN2 "2nd Gear";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1627,8 +1627,8 @@ const char *ashura_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1650,9 +1650,9 @@ const char *aso_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Laser";
-    case IPT_BUTTON2: return "Missile";
-    case IPT_BUTTON3: return "Power Up";
+    case IPT_BUTTON1: return BTN1 "Laser";
+    case IPT_BUTTON2: return BTN2 "Missile";
+    case IPT_BUTTON3: return BTN3 "Power Up";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1674,7 +1674,7 @@ const char *assault_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICKRIGHT_RIGHT: return "Rapid Roll Right";
   } /* end of switch */
 
@@ -1693,8 +1693,8 @@ const char *asterix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -1716,9 +1716,9 @@ const char *asteroid_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "FIRE";
-    case IPT_BUTTON2: return "THRUST";
-    case IPT_BUTTON3: return "HYPER SPACE";
+    case IPT_BUTTON1: return BTN1 "FIRE";
+    case IPT_BUTTON2: return BTN2 "THRUST";
+    case IPT_BUTTON3: return BTN3 "HYPER SPACE";
     case IPT_JOYSTICK_LEFT: return "Rotate Left";
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
@@ -1738,9 +1738,9 @@ const char *astdelux_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "FIRE";
-    case IPT_BUTTON2: return "THRUST";
-    case IPT_BUTTON3: return "SHIELDS";
+    case IPT_BUTTON1: return BTN1 "FIRE";
+    case IPT_BUTTON2: return BTN2 "THRUST";
+    case IPT_BUTTON3: return BTN3 "SHIELDS";
     case IPT_JOYSTICK_RIGHT: return "ROTATE RIGHT";
     case IPT_JOYSTICK_LEFT: return "ROTATE LEFT";
   } /* end of switch */
@@ -1760,8 +1760,8 @@ const char *astrob_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Warp";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Warp";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -1781,7 +1781,7 @@ const char *astrof_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Missile";
+    case IPT_BUTTON1: return BTN1 "Missile";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -1801,7 +1801,7 @@ const char *astinvad_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "FIRE";
+    case IPT_BUTTON1: return BTN1 "FIRE";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -1821,8 +1821,8 @@ const char *asuka_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1844,8 +1844,8 @@ const char *asylum_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1867,7 +1867,7 @@ const char *abaseb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action";
+    case IPT_BUTTON1: return BTN1 "Action";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -1889,7 +1889,7 @@ const char *atarifb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Play Select:  Press to Pass / Kick";
+    case IPT_BUTTON1: return BTN1 "Play Select:  Press to Pass / Kick";
     case (IPT_TRACKBALL_Y + IPT_EXTENSION): return "Down";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
@@ -1911,7 +1911,7 @@ const char *ataxx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Select";
+    case IPT_BUTTON1: return BTN1 "Select";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -1933,8 +1933,8 @@ const char *athena_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
-    case IPT_BUTTON2: return "Attack";
+    case IPT_BUTTON1: return BTN1 "Jump";
+    case IPT_BUTTON2: return BTN2 "Attack";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -1956,10 +1956,10 @@ const char *atehate_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
   } /* end of switch */
 
   return "";
@@ -1977,8 +1977,8 @@ const char *atomicp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate";
-    case IPT_BUTTON2: return "Special";
+    case IPT_BUTTON1: return BTN1 "Rotate";
+    case IPT_BUTTON2: return BTN2 "Special";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2000,8 +2000,8 @@ const char *robokid_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Weapon Select";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Weapon Select";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2023,9 +2023,9 @@ const char *aurail_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Sepcial";
-    case IPT_BUTTON3: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Sepcial";
+    case IPT_BUTTON3: return BTN3 "Shield";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2083,7 +2083,7 @@ const char *avalnche_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Serve";
+    case IPT_BUTTON1: return BTN1 "Serve";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -2103,8 +2103,8 @@ const char *avengers_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2126,8 +2126,8 @@ const char *avspirit_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2149,8 +2149,8 @@ const char *aztarac_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Radar";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Radar";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -2174,7 +2174,7 @@ const char *azurian_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2196,8 +2196,8 @@ const char *baddudes_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2219,8 +2219,8 @@ const char *badlands_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Gas";
-    case IPT_BUTTON2: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Gas";
+    case IPT_BUTTON2: return BTN2 "Fire";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -2240,7 +2240,7 @@ const char *bagman_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action";
+    case IPT_BUTTON1: return BTN1 "Action";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2262,10 +2262,10 @@ const char *bkrtmaq_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
   } /* end of switch */
 
   return "";
@@ -2283,9 +2283,9 @@ const char *bakutotu_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Fire";
-    case IPT_BUTTON3: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Fire";
+    case IPT_BUTTON3: return BTN3 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2307,7 +2307,7 @@ const char *ballbomb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -2327,9 +2327,9 @@ const char *ballbros_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate";
-    case IPT_BUTTON2: return "Unknown";
-    case IPT_BUTTON3: return "Unknown";
+    case IPT_BUTTON1: return BTN1 "Rotate";
+    case IPT_BUTTON2: return BTN2 "Unknown";
+    case IPT_BUTTON3: return BTN3 "Unknown";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "";
     case IPT_JOYSTICK_UP: return "Up";
@@ -2351,7 +2351,7 @@ const char *baluba_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2373,7 +2373,7 @@ const char *bangball_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Throw";
+    case IPT_BUTTON1: return BTN1 "Throw";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2395,7 +2395,7 @@ const char *bang_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -2417,9 +2417,9 @@ const char *bankp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot Door 1";
-    case IPT_BUTTON2: return "Shoot Door 2";
-    case IPT_BUTTON3: return "Shoot Door 3";
+    case IPT_BUTTON1: return BTN1 "Shoot Door 1";
+    case IPT_BUTTON2: return BTN2 "Shoot Door 2";
+    case IPT_BUTTON3: return BTN3 "Shoot Door 3";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -2439,7 +2439,7 @@ const char *baraduke_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2483,9 +2483,9 @@ const char *barrier_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Beginner";
-    case IPT_BUTTON2: return "Intermediate";
-    case IPT_BUTTON3: return "Expert";
+    case IPT_BUTTON1: return BTN1 "Beginner";
+    case IPT_BUTTON2: return BTN2 "Intermediate";
+    case IPT_BUTTON3: return BTN3 "Expert";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2507,7 +2507,7 @@ const char *bsktball_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot & Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot & Jump";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -2529,8 +2529,8 @@ const char *batman_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Action";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2552,8 +2552,8 @@ const char *batsugun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2575,7 +2575,7 @@ const char *battlnts_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2597,9 +2597,9 @@ const char *bkraidj_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2621,7 +2621,7 @@ const char *battlex_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2643,7 +2643,7 @@ const char *bcruzm12_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -2663,12 +2663,12 @@ const char *btlkroad_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Light Punch";
-    case IPT_BUTTON2: return "Middle Punch";
-    case IPT_BUTTON3: return "Heavy Punch";
-    case IPT_BUTTON4: return "Light Kick";
-    case IPT_BUTTON5: return "Middle Kick";
-    case IPT_BUTTON6: return "Heavy Kick";
+    case IPT_BUTTON1: return BTN1 "Light Punch";
+    case IPT_BUTTON2: return BTN2 "Middle Punch";
+    case IPT_BUTTON3: return BTN3 "Heavy Punch";
+    case IPT_BUTTON4: return BTN4 "Light Kick";
+    case IPT_BUTTON5: return BTN5 "Middle Kick";
+    case IPT_BUTTON6: return BTN6 "Heavy Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2690,8 +2690,8 @@ const char *battlane_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Missile";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Missile";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2713,8 +2713,8 @@ const char *atlantis_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2736,9 +2736,9 @@ const char *battlera_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Grenade";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2760,7 +2760,7 @@ const char *bshark_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -2782,8 +2782,8 @@ const char *btoads_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Start / Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Start / Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2805,7 +2805,7 @@ const char *bzone_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICKLEFT_UP: return "Left Tread Forward";
     case IPT_JOYSTICKLEFT_DOWN: return "Left Tread Backward";
     case IPT_JOYSTICKRIGHT_UP: return "Right Tread Forward";
@@ -2827,8 +2827,8 @@ const char *bayroute_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2850,7 +2850,7 @@ const char *beaminv_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -2870,8 +2870,8 @@ const char *bbusters_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_LIGHTGUN_Y: return "Up";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_X: return "Left";
@@ -2893,8 +2893,8 @@ const char *beathead_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
-    case IPT_BUTTON2: return "Big Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
+    case IPT_BUTTON2: return BTN2 "Big Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -2916,11 +2916,11 @@ const char *bm1stmix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "White 1";
-    case IPT_BUTTON2: return "Black 1";
-    case IPT_BUTTON3: return "White 2";
-    case IPT_BUTTON4: return "Black 2";
-    case IPT_BUTTON5: return "White 3";
+    case IPT_BUTTON1: return BTN1 "White 1";
+    case IPT_BUTTON2: return BTN2 "Black 1";
+    case IPT_BUTTON3: return BTN3 "White 2";
+    case IPT_BUTTON4: return BTN4 "Black 2";
+    case IPT_BUTTON5: return BTN5 "White 3";
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
@@ -2940,11 +2940,11 @@ const char *bm2ndmix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "White 1";
-    case IPT_BUTTON2: return "Black 1";
-    case IPT_BUTTON3: return "White 2";
-    case IPT_BUTTON4: return "Black 2";
-    case IPT_BUTTON5: return "White 3";
+    case IPT_BUTTON1: return BTN1 "White 1";
+    case IPT_BUTTON2: return BTN2 "Black 1";
+    case IPT_BUTTON3: return BTN3 "White 2";
+    case IPT_BUTTON4: return BTN4 "Black 2";
+    case IPT_BUTTON5: return BTN5 "White 3";
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
@@ -2964,11 +2964,11 @@ const char *bm4thmix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "White 1";
-    case IPT_BUTTON2: return "Black 1";
-    case IPT_BUTTON3: return "White 2";
-    case IPT_BUTTON4: return "Black 2";
-    case IPT_BUTTON5: return "White 3";
+    case IPT_BUTTON1: return BTN1 "White 1";
+    case IPT_BUTTON2: return BTN2 "Black 1";
+    case IPT_BUTTON3: return BTN3 "White 2";
+    case IPT_BUTTON4: return BTN4 "Black 2";
+    case IPT_BUTTON5: return BTN5 "White 3";
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
@@ -2988,11 +2988,11 @@ const char *bm5thmix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "White 1";
-    case IPT_BUTTON2: return "Black 1";
-    case IPT_BUTTON3: return "White 2";
-    case IPT_BUTTON4: return "Black 2";
-    case IPT_BUTTON5: return "White 3";
+    case IPT_BUTTON1: return BTN1 "White 1";
+    case IPT_BUTTON2: return BTN2 "Black 1";
+    case IPT_BUTTON3: return BTN3 "White 2";
+    case IPT_BUTTON4: return BTN4 "Black 2";
+    case IPT_BUTTON5: return BTN5 "White 3";
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
@@ -3012,11 +3012,11 @@ const char *bm6thmix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "White 1";
-    case IPT_BUTTON2: return "Black 1";
-    case IPT_BUTTON3: return "White 2";
-    case IPT_BUTTON4: return "Black 2";
-    case IPT_BUTTON5: return "White 3";
+    case IPT_BUTTON1: return BTN1 "White 1";
+    case IPT_BUTTON2: return BTN2 "Black 1";
+    case IPT_BUTTON3: return BTN3 "White 2";
+    case IPT_BUTTON4: return BTN4 "Black 2";
+    case IPT_BUTTON5: return BTN5 "White 3";
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
@@ -3036,11 +3036,11 @@ const char *bmcompmx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "White 1";
-    case IPT_BUTTON2: return "Black 1";
-    case IPT_BUTTON3: return "White 2";
-    case IPT_BUTTON4: return "Black 2";
-    case IPT_BUTTON5: return "White 3";
+    case IPT_BUTTON1: return BTN1 "White 1";
+    case IPT_BUTTON2: return BTN2 "Black 1";
+    case IPT_BUTTON3: return BTN3 "White 2";
+    case IPT_BUTTON4: return BTN4 "Black 2";
+    case IPT_BUTTON5: return BTN5 "White 3";
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
@@ -3060,11 +3060,11 @@ const char *bmcompm2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "White 1";
-    case IPT_BUTTON2: return "Black 1";
-    case IPT_BUTTON3: return "White 2";
-    case IPT_BUTTON4: return "Black 2";
-    case IPT_BUTTON5: return "White 3";
+    case IPT_BUTTON1: return BTN1 "White 1";
+    case IPT_BUTTON2: return BTN2 "Black 1";
+    case IPT_BUTTON3: return BTN3 "White 2";
+    case IPT_BUTTON4: return BTN4 "Black 2";
+    case IPT_BUTTON5: return BTN5 "White 3";
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
     case IPT_DIAL: return "Scratch";
   } /* end of switch */
@@ -3084,11 +3084,11 @@ const char *bmcorerm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "White 1";
-    case IPT_BUTTON2: return "Black 1";
-    case IPT_BUTTON3: return "White 2";
-    case IPT_BUTTON4: return "Black 2";
-    case IPT_BUTTON5: return "White 3";
+    case IPT_BUTTON1: return BTN1 "White 1";
+    case IPT_BUTTON2: return BTN2 "Black 1";
+    case IPT_BUTTON3: return BTN3 "White 2";
+    case IPT_BUTTON4: return BTN4 "Black 2";
+    case IPT_BUTTON5: return BTN5 "White 3";
     case IPT_DIAL: return "Scratch";
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
   } /* end of switch */
@@ -3108,11 +3108,11 @@ const char *bmdct_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "White 1";
-    case IPT_BUTTON2: return "Black 1";
-    case IPT_BUTTON3: return "White 2";
-    case IPT_BUTTON4: return "Black 2";
-    case IPT_BUTTON5: return "White 3";
+    case IPT_BUTTON1: return BTN1 "White 1";
+    case IPT_BUTTON2: return BTN2 "Black 1";
+    case IPT_BUTTON3: return BTN3 "White 2";
+    case IPT_BUTTON4: return BTN4 "Black 2";
+    case IPT_BUTTON5: return BTN5 "White 3";
     case IPT_DIAL: return "Scratch";
     case (IPT_DIAL + IPT_EXTENSION): return "Scratch";
   } /* end of switch */
@@ -3154,8 +3154,8 @@ const char *bel_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -3177,8 +3177,8 @@ const char *blswhstl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3200,10 +3200,10 @@ const char *berabohm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Hard Attack";
-    case IPT_BUTTON3: return "Jump";
-    case IPT_BUTTON4: return "High Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Hard Attack";
+    case IPT_BUTTON3: return BTN3 "Jump";
+    case IPT_BUTTON4: return BTN4 "High Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3225,8 +3225,8 @@ const char *bermudat_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "??";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "??";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3250,7 +3250,7 @@ const char *berzerk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3272,8 +3272,8 @@ const char *bigevglf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Club Select";
-    case IPT_BUTTON2: return "Club Select (2P)";
+    case IPT_BUTTON1: return BTN1 "Club Select";
+    case IPT_BUTTON2: return BTN2 "Club Select (2P)";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_X: return "Left";
@@ -3295,8 +3295,8 @@ const char *bigkarnk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3318,11 +3318,11 @@ const char *bigrun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Brake";
-    case IPT_BUTTON3: return "Low";
-    case IPT_BUTTON4: return "High";
-    case IPT_BUTTON5: return "Horn";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Brake";
+    case IPT_BUTTON3: return BTN3 "Low";
+    case IPT_BUTTON4: return BTN4 "High";
+    case IPT_BUTTON5: return BTN5 "Horn";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -3342,9 +3342,9 @@ const char *bigstrik_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3366,7 +3366,7 @@ const char *bigtwin_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Grab";
+    case IPT_BUTTON1: return BTN1 "Grab";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3446,7 +3446,7 @@ const char *bioatack_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3468,8 +3468,8 @@ const char *bioship_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Cursor";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Cursor";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3491,12 +3491,12 @@ const char *biofreak_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Punch";
-    case IPT_BUTTON2: return "Right Punch";
-    case IPT_BUTTON3: return "Fire/Shield";
-    case IPT_BUTTON4: return "Left Kick";
-    case IPT_BUTTON5: return "Right Kick";
-    case IPT_BUTTON6: return "Hover";
+    case IPT_BUTTON1: return BTN1 "Left Punch";
+    case IPT_BUTTON2: return BTN2 "Right Punch";
+    case IPT_BUTTON3: return BTN3 "Fire/Shield";
+    case IPT_BUTTON4: return BTN4 "Left Kick";
+    case IPT_BUTTON5: return BTN5 "Right Kick";
+    case IPT_BUTTON6: return BTN6 "Hover";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3518,8 +3518,8 @@ const char *biomtoy_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3541,8 +3541,8 @@ const char *bionicc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bionic Reach";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bionic Reach";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3630,8 +3630,8 @@ const char *birdtry_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Swing";
-    case IPT_BUTTON2: return "Options";
+    case IPT_BUTTON1: return BTN1 "Swing";
+    case IPT_BUTTON2: return BTN2 "Options";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -3689,8 +3689,8 @@ const char *blkheart_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire A";
-    case IPT_BUTTON2: return "Fire B";
+    case IPT_BUTTON1: return BTN1 "Fire A";
+    case IPT_BUTTON2: return BTN2 "Fire B";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3712,7 +3712,7 @@ const char *blkhole_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -3732,8 +3732,8 @@ const char *blkpnthr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3755,8 +3755,8 @@ const char *blktiger_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Mace";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Mace";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -3804,8 +3804,8 @@ const char *bmaster_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3827,9 +3827,9 @@ const char *bladestl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Pass / Face-Off";
-    case IPT_BUTTON3: return "FIGHT!";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Pass / Face-Off";
+    case IPT_BUTTON3: return BTN3 "FIGHT!";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -3851,9 +3851,9 @@ const char *blandia_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack High";
-    case IPT_BUTTON2: return "Attack Middle";
-    case IPT_BUTTON3: return "Attack Low";
+    case IPT_BUTTON1: return BTN1 "Attack High";
+    case IPT_BUTTON2: return BTN2 "Attack Middle";
+    case IPT_BUTTON3: return BTN3 "Attack Low";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3875,9 +3875,9 @@ const char *blastoff_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Change Weapon";
-    case IPT_BUTTON3: return "NA";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Change Weapon";
+    case IPT_BUTTON3: return BTN3 "NA";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -3899,7 +3899,7 @@ const char *blasted_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Aim Up";
     case IPT_JOYSTICK_DOWN: return "Aim Down";
     case IPT_JOYSTICK_LEFT: return "Aim Left";
@@ -3921,9 +3921,9 @@ const char *blaster_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Blast";
-    case IPT_BUTTON2: return "Thrust";
-    case IPT_BUTTON3: return "Unknown";
+    case IPT_BUTTON1: return BTN1 "Blast";
+    case IPT_BUTTON2: return BTN2 "Thrust";
+    case IPT_BUTTON3: return BTN3 "Unknown";
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Down";
     case IPT_AD_STICK_Y: return "Up";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
@@ -3945,9 +3945,9 @@ const char *blstroid_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
-    case IPT_BUTTON3: return "Transform:  Armor, Shots, Speed";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
+    case IPT_BUTTON3: return BTN3 "Transform:  Armor, Shots, Speed";
     case IPT_DIAL: return "Rotate Ship Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Ship Right";
   } /* end of switch */
@@ -3967,7 +3967,7 @@ const char *blasto_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -3989,8 +3989,8 @@ const char *blazeon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Normal Shot";
-    case IPT_BUTTON2: return "Special Weapon / Attack";
+    case IPT_BUTTON1: return BTN1 "Normal Shot";
+    case IPT_BUTTON2: return BTN2 "Special Weapon / Attack";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -4012,10 +4012,10 @@ const char *blockout_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A Button";
-    case IPT_BUTTON2: return "B Button";
-    case IPT_BUTTON3: return "C Button";
-    case IPT_BUTTON4: return "Drop";
+    case IPT_BUTTON1: return BTN1 "A Button";
+    case IPT_BUTTON2: return BTN2 "B Button";
+    case IPT_BUTTON3: return BTN3 "C Button";
+    case IPT_BUTTON4: return BTN4 "Drop";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4059,9 +4059,9 @@ const char *bloodbro_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Roll";
-    case IPT_BUTTON3: return "Dynamite";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Roll";
+    case IPT_BUTTON3: return BTN3 "Dynamite";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -4083,7 +4083,7 @@ const char *bloxeed_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate";
+    case IPT_BUTTON1: return BTN1 "Rotate";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4105,7 +4105,7 @@ const char *blueprnt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Run";
+    case IPT_BUTTON1: return BTN1 "Run";
     case IPT_JOYSTICK_UP: return "Walk Up";
     case IPT_JOYSTICK_DOWN: return "Walk Down";
     case IPT_JOYSTICK_LEFT: return "Walk Left";
@@ -4147,9 +4147,9 @@ const char *bodyslam_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
-    case IPT_BUTTON3: return "Help";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
+    case IPT_BUTTON3: return BTN3 "Help";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -4171,8 +4171,8 @@ const char *bogeyman_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4194,7 +4194,7 @@ const char *bombjack_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -4216,8 +4216,8 @@ const char *boogwing_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4239,7 +4239,7 @@ const char *boothill_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4263,7 +4263,7 @@ const char *bosco_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4285,8 +4285,8 @@ const char *bottom9_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4330,8 +4330,8 @@ const char *bowler_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Straight/Hook";
-    case IPT_BUTTON2: return "??";
+    case IPT_BUTTON1: return BTN1 "Straight/Hook";
+    case IPT_BUTTON2: return BTN2 "??";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_X: return "Left";
@@ -4353,8 +4353,8 @@ const char *boxingb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rocket";
-    case IPT_BUTTON2: return "Punch";
+    case IPT_BUTTON1: return BTN1 "Rocket";
+    case IPT_BUTTON2: return BTN2 "Punch";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
@@ -4375,15 +4375,15 @@ const char *bradley_get_ctrl_name(int type)
   switch(type)
   {
 /* P1NumButtons=10 */
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_BUTTON10: return "Magnification Toggle";
-    case IPT_BUTTON2: return "Armor Piercing (Single Shot)";
-    case IPT_BUTTON3: return "High Explosive (Single Shot)";
-    case IPT_BUTTON4: return "Armor Piercing (Low Rate)";
-    case IPT_BUTTON5: return "High Explosive (Low Rate)";
-    case IPT_BUTTON6: return "Armor Piercing (High Rate)";
-    case IPT_BUTTON7: return "High Explosive (High Rate)";
-    case IPT_BUTTON8: return "Select Tow Missiles";
+    case IPT_BUTTON2: return BTN2 "Armor Piercing (Single Shot)";
+    case IPT_BUTTON3: return BTN3 "High Explosive (Single Shot)";
+    case IPT_BUTTON4: return BTN4 "Armor Piercing (Low Rate)";
+    case IPT_BUTTON5: return BTN5 "High Explosive (Low Rate)";
+    case IPT_BUTTON6: return BTN6 "Armor Piercing (High Rate)";
+    case IPT_BUTTON7: return BTN7 "High Explosive (High Rate)";
+    case IPT_BUTTON8: return BTN7 "Select Tow Missiles";
     case IPT_BUTTON9: return "7.62 mm Machine Gun";
     case (IPT_AD_STICK_Z + IPT_EXTENSION): return "Decrease Range";
     case IPT_AD_STICK_Z: return "Increase Range";
@@ -4408,8 +4408,8 @@ const char *brkthru_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4431,8 +4431,8 @@ const char *bublbobl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Bubble";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Bubble";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -4474,9 +4474,9 @@ const char *buckrog_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Slow";
-    case IPT_BUTTON3: return "Fast";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Slow";
+    case IPT_BUTTON3: return BTN3 "Fast";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4498,8 +4498,8 @@ const char *buggychl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "H / L";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "H / L";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -4519,7 +4519,7 @@ const char *btime_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Pepper";
+    case IPT_BUTTON1: return BTN1 "Pepper";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4541,7 +4541,7 @@ const char *brubber_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Fast";
     case IPT_JOYSTICK_DOWN: return "Slow";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4563,8 +4563,8 @@ const char *cabal_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -4586,8 +4586,8 @@ const char *cadash_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4609,8 +4609,8 @@ const char *dino_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4632,8 +4632,8 @@ const char *calibr50_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rapid Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Rapid Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4657,7 +4657,7 @@ const char *cameltry_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump / Speedup";
+    case IPT_BUTTON1: return BTN1 "Jump / Speedup";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
@@ -4677,7 +4677,7 @@ const char *canyon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
   } /* end of switch */
 
   return "";
@@ -4695,8 +4695,8 @@ const char *capbowl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Hook Left";
-    case IPT_BUTTON2: return "Hook Right";
+    case IPT_BUTTON1: return BTN1 "Hook Left";
+    case IPT_BUTTON2: return BTN2 "Hook Right";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -4718,8 +4718,8 @@ const char *captaven_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Start / Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Start / Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4741,8 +4741,8 @@ const char *captcomm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4764,8 +4764,8 @@ const char *carnevil_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Trigger";
-    case IPT_BUTTON2: return "Reload";
+    case IPT_BUTTON1: return BTN1 "Trigger";
+    case IPT_BUTTON2: return BTN2 "Reload";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -4787,7 +4787,7 @@ const char *carnival_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -4807,8 +4807,8 @@ const char *cawing_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Special Weapon";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Special Weapon";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4830,8 +4830,8 @@ const char *cavelon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Magic Sword";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Magic Sword";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4853,8 +4853,8 @@ const char *cninja_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Aim Up";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4876,7 +4876,7 @@ const char *centiped_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -4898,9 +4898,9 @@ const char *challeng_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
-    case IPT_BUTTON3: return "Warp";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
+    case IPT_BUTTON3: return BTN3 "Warp";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -4920,9 +4920,9 @@ const char *champbas_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A: Change Batter, Pitcher";
-    case IPT_BUTTON2: return "B: Bat, Extra Bases - Pitch, Throw Ball";
-    case IPT_BUTTON3: return "C: Steal, Run Back";
+    case IPT_BUTTON1: return BTN1 "A: Change Batter, Pitcher";
+    case IPT_BUTTON2: return BTN2 "B: Bat, Extra Bases - Pitch, Throw Ball";
+    case IPT_BUTTON3: return BTN3 "C: Steal, Run Back";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -4965,8 +4965,8 @@ const char *checkman_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Slide left";
-    case IPT_BUTTON2: return "Slide right";
+    case IPT_BUTTON1: return BTN1 "Slide left";
+    case IPT_BUTTON2: return BTN2 "Slide right";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5010,7 +5010,7 @@ const char *cheekyms_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Hammer";
+    case IPT_BUTTON1: return BTN1 "Hammer";
     case IPT_JOYSTICK_LEFT: return "L";
     case IPT_JOYSTICK_RIGHT: return "R";
   } /* end of switch */
@@ -5030,7 +5030,7 @@ const char *cheyenne_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -5052,8 +5052,8 @@ const char *cshift_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Blue Things";
-    case IPT_BUTTON2: return "Red Things";
+    case IPT_BUTTON1: return BTN1 "Blue Things";
+    case IPT_BUTTON2: return BTN2 "Red Things";
   } /* end of switch */
 
   return "";
@@ -5071,7 +5071,7 @@ const char *chiller_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -5111,8 +5111,8 @@ const char *chopper_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Special Weapon";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Special Weapon";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5154,7 +5154,7 @@ const char *circusc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -5174,11 +5174,11 @@ const char *cischeat_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Brake";
-    case IPT_BUTTON3: return "Low";
-    case IPT_BUTTON4: return "Hi";
-    case IPT_BUTTON5: return "Horn";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Brake";
+    case IPT_BUTTON3: return BTN3 "Low";
+    case IPT_BUTTON4: return BTN4 "Hi";
+    case IPT_BUTTON5: return BTN5 "Horn";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PADDLE: return "Left";
   } /* end of switch */
@@ -5198,8 +5198,8 @@ const char *citycon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5239,7 +5239,7 @@ const char *cloak_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Light Fuse";
+    case IPT_BUTTON1: return BTN1 "Light Fuse";
     case IPT_JOYSTICKLEFT_UP: return "Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left";
@@ -5285,9 +5285,9 @@ const char *cltchitr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5309,9 +5309,9 @@ const char *colony7_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Mega - Blaster";
-    case IPT_BUTTON3: return "Eradicator";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Mega - Blaster";
+    case IPT_BUTTON3: return BTN3 "Eradicator";
     case IPT_JOYSTICK_UP: return "Control Up";
     case IPT_JOYSTICK_DOWN: return "Control Down";
     case IPT_JOYSTICK_LEFT: return "Control Left";
@@ -5333,7 +5333,7 @@ const char *columns_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Switch Pieces";
+    case IPT_BUTTON1: return BTN1 "Switch Pieces";
     case IPT_JOYSTICK_UP: return "(Not Used)";
     case IPT_JOYSTICK_DOWN: return "Drop";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5355,7 +5355,7 @@ const char *combat_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -5377,8 +5377,8 @@ const char *commsega_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Machine Gun";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Machine Gun";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5400,8 +5400,8 @@ const char *commando_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Machine Gun";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Machine Gun";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5445,7 +5445,7 @@ const char *congo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up-Right";
     case IPT_JOYSTICK_DOWN: return "Down-Left";
     case IPT_JOYSTICK_LEFT: return "Left-Up";
@@ -5467,8 +5467,8 @@ const char *contra_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5490,7 +5490,7 @@ const char *cosmica_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -5510,8 +5510,8 @@ const char *cavenger_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5533,9 +5533,9 @@ const char *cchasm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
-    case IPT_BUTTON3: return "Shields";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
+    case IPT_BUTTON3: return BTN3 "Shields";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
@@ -5555,7 +5555,7 @@ const char *cosmicg_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -5575,7 +5575,7 @@ const char *cracksht_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -5597,7 +5597,7 @@ const char *crash_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fast";
+    case IPT_BUTTON1: return BTN1 "Fast";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5619,9 +5619,9 @@ const char *crater_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire (Trigger)";
-    case IPT_BUTTON2: return "Shield";
-    case IPT_BUTTON3: return "??";
+    case IPT_BUTTON1: return BTN1 "Fire (Trigger)";
+    case IPT_BUTTON2: return BTN2 "Shield";
+    case IPT_BUTTON3: return BTN3 "??";
     case IPT_JOYSTICK_DOWN: return "Reverse";
     case IPT_JOYSTICK_UP: return "Forward";
     case IPT_DIAL: return "Turn Left";
@@ -5695,7 +5695,7 @@ const char *ckong_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5717,8 +5717,8 @@ const char *crimec_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5740,8 +5740,8 @@ const char *crimfght_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick ";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick ";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5763,7 +5763,7 @@ const char *crossbow_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -5785,12 +5785,12 @@ const char *crgolf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Swing";
-    case IPT_BUTTON2: return "Address Up";
-    case IPT_BUTTON3: return "Address Down";
-    case IPT_BUTTON4: return "Address Left";
-    case IPT_BUTTON5: return "Address Right";
-    case IPT_BUTTON6: return "Club Select";
+    case IPT_BUTTON1: return BTN1 "Swing";
+    case IPT_BUTTON2: return BTN2 "Address Up";
+    case IPT_BUTTON3: return BTN3 "Address Down";
+    case IPT_BUTTON4: return BTN4 "Address Left";
+    case IPT_BUTTON5: return BTN5 "Address Right";
+    case IPT_BUTTON6: return BTN6 "Club Select";
     case IPT_AD_STICK_X: return "";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "";
     case IPT_AD_STICK_Y: return "Decrease Swing Angle";
@@ -5814,9 +5814,9 @@ const char *cbuster_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fight";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Pick Up";
+    case IPT_BUTTON1: return BTN1 "Fight";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Pick Up";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -5860,8 +5860,8 @@ const char *cryptklr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Reload";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Reload";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -5883,7 +5883,7 @@ const char *ccastles_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -5945,8 +5945,8 @@ const char *curvebal_get_ctrl_name(int type)
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "Just Buttons+button";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Left (Curve)";
     case (IPT_BUTTON2 | IPF_PLAYER2): return "Right (Curve)";
-    case IPT_BUTTON1: return "Swing";
-    case IPT_BUTTON2: return "Bunt";
+    case IPT_BUTTON1: return BTN1 "Swing";
+    case IPT_BUTTON2: return BTN2 "Bunt";
   } /* end of switch */
 
   return "";
@@ -5964,10 +5964,10 @@ const char *cybsled_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Missile";
-    case IPT_BUTTON3: return "View Point";
-    case IPT_BUTTON4: return "unknown";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Missile";
+    case IPT_BUTTON3: return BTN3 "View Point";
+    case IPT_BUTTON4: return BTN4 "unknown";
     case IPT_AD_STICK_X: return "Left Tread Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Left Tread Right";
     case IPT_AD_STICK_Y: return "Left Tread Forward";
@@ -5989,7 +5989,7 @@ const char *cyberbal_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action";
+    case IPT_BUTTON1: return BTN1 "Action";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6021,10 +6021,10 @@ const char *cybots_get_ctrl_name(int type)
     case (IPT_JOYSTICK_LEFT | IPF_PLAYER2): return "Forward";
     case (IPT_JOYSTICK_DOWN | IPF_PLAYER2): return "Duck";
     case (IPT_JOYSTICK_UP | IPF_PLAYER2): return "Jump";
-    case IPT_BUTTON1: return "Attack 1";
-    case IPT_BUTTON2: return "Attack 2";
-    case IPT_BUTTON3: return "Boost";
-    case IPT_BUTTON4: return "Weapons";
+    case IPT_BUTTON1: return BTN1 "Attack 1";
+    case IPT_BUTTON2: return BTN2 "Attack 2";
+    case IPT_BUTTON3: return BTN3 "Boost";
+    case IPT_BUTTON4: return BTN4 "Weapons";
     case IPT_JOYSTICK_LEFT: return "Back / Defense";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_UP: return "Jump";
@@ -6046,12 +6046,12 @@ const char *daioh_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Laser Shot";
-    case IPT_BUTTON2: return "Ion Shot";
-    case IPT_BUTTON3: return "Missile Shot";
-    case IPT_BUTTON4: return "Fire Bomb";
-    case IPT_BUTTON5: return "Mega Beam";
-    case IPT_BUTTON6: return "Atomic Bomb";
+    case IPT_BUTTON1: return BTN1 "Laser Shot";
+    case IPT_BUTTON2: return BTN2 "Ion Shot";
+    case IPT_BUTTON3: return BTN3 "Missile Shot";
+    case IPT_BUTTON4: return BTN4 "Fire Bomb";
+    case IPT_BUTTON5: return BTN5 "Mega Beam";
+    case IPT_BUTTON6: return BTN6 "Atomic Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6073,9 +6073,9 @@ const char *dangar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Transform";
-    case IPT_BUTTON3: return "??";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Transform";
+    case IPT_BUTTON3: return BTN3 "??";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -6097,8 +6097,8 @@ const char *dangerz_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Machine Gun";
-    case IPT_BUTTON2: return "Heat - Seaking Missile";
+    case IPT_BUTTON1: return BTN1 "Machine Gun";
+    case IPT_BUTTON2: return BTN2 "Heat - Seaking Missile";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -6120,7 +6120,7 @@ const char *indyheat_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Turbo";
+    case IPT_BUTTON1: return BTN1 "Turbo";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Gas";
@@ -6141,9 +6141,9 @@ const char *darkplnt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
-    case IPT_BUTTON3: return "Laser";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
+    case IPT_BUTTON3: return BTN3 "Laser";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
@@ -6163,8 +6163,8 @@ const char *darkseal_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Magic";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Magic";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6186,12 +6186,12 @@ const char *dstlk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Light Punch";
-    case IPT_BUTTON2: return "Middle Punch";
-    case IPT_BUTTON3: return "Heavy Punch";
-    case IPT_BUTTON4: return "Light Kick";
-    case IPT_BUTTON5: return "Middle Kick";
-    case IPT_BUTTON6: return "Heavy Kick";
+    case IPT_BUTTON1: return BTN1 "Light Punch";
+    case IPT_BUTTON2: return BTN2 "Middle Punch";
+    case IPT_BUTTON3: return BTN3 "Heavy Punch";
+    case IPT_BUTTON4: return BTN4 "Light Kick";
+    case IPT_BUTTON5: return BTN5 "Middle Kick";
+    case IPT_BUTTON6: return BTN6 "Heavy Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6213,8 +6213,8 @@ const char *deadang_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_JOYSTICK_UP: return "Aim Up";
     case IPT_JOYSTICK_DOWN: return "Aim Down";
     case IPT_JOYSTICK_LEFT: return "Aim Left";
@@ -6236,7 +6236,7 @@ const char *redufo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -6256,11 +6256,11 @@ const char *defender_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "FIRE";
-    case IPT_BUTTON2: return "THRUST";
-    case IPT_BUTTON3: return "SMART BOMB";
-    case IPT_BUTTON4: return "HYPERSPACE";
-    case IPT_BUTTON5: return "REVERSE";
+    case IPT_BUTTON1: return BTN1 "FIRE";
+    case IPT_BUTTON2: return BTN2 "THRUST";
+    case IPT_BUTTON3: return BTN3 "SMART BOMB";
+    case IPT_BUTTON4: return BTN4 "HYPERSPACE";
+    case IPT_BUTTON5: return BTN5 "REVERSE";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
   } /* end of switch */
@@ -6280,8 +6280,8 @@ const char *demoderb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Forward";
-    case IPT_BUTTON2: return "Reverse";
+    case IPT_BUTTON1: return BTN1 "Forward";
+    case IPT_BUTTON2: return BTN2 "Reverse";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -6301,8 +6301,8 @@ const char *depthch_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Left Charge";
-    case IPT_BUTTON2: return "Fire Right Charge";
+    case IPT_BUTTON1: return BTN1 "Fire Left Charge";
+    case IPT_BUTTON2: return BTN2 "Fire Right Charge";
     case IPT_JOYSTICK_LEFT: return "Move Ship Left";
     case IPT_JOYSTICK_RIGHT: return "Move Ship Right";
   } /* end of switch */
@@ -6322,7 +6322,7 @@ const char *desertgu_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -6344,8 +6344,8 @@ const char *destroyr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Release Charge";
-    case IPT_BUTTON2: return "Slow";
+    case IPT_BUTTON1: return BTN1 "Release Charge";
+    case IPT_BUTTON2: return BTN2 "Slow";
     case (IPT_PADDLE_V + IPT_EXTENSION): return "Set Depth of Charge Down";
     case IPT_PADDLE_V: return "Set Depth of Charge Up";
   } /* end of switch */
@@ -6365,8 +6365,8 @@ const char *devstors_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Weapon";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Weapon";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Backward";
@@ -6388,7 +6388,7 @@ const char *devilfsh_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Drop bait";
+    case IPT_BUTTON1: return BTN1 "Drop bait";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6410,7 +6410,7 @@ const char *devzone_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Movement Left";
     case IPT_JOYSTICK_RIGHT: return "Movement Right";
   } /* end of switch */
@@ -6430,7 +6430,7 @@ const char *digdug_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Pump";
+    case IPT_BUTTON1: return BTN1 "Pump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6452,8 +6452,8 @@ const char *digdug2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Pump";
-    case IPT_BUTTON2: return "Drill";
+    case IPT_BUTTON1: return BTN1 "Pump";
+    case IPT_BUTTON2: return BTN2 "Drill";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6475,8 +6475,8 @@ const char *digger_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Dig";
-    case IPT_BUTTON2: return "Fill";
+    case IPT_BUTTON1: return BTN1 "Dig";
+    case IPT_BUTTON2: return BTN2 "Fill";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6498,8 +6498,8 @@ const char *dimahoo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6539,10 +6539,10 @@ const char *dotron_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Throw";
-    case IPT_BUTTON2: return "Deflect";
-    case IPT_BUTTON3: return "Aim Up";
-    case IPT_BUTTON4: return "Aim Down";
+    case IPT_BUTTON1: return BTN1 "Throw";
+    case IPT_BUTTON2: return BTN2 "Deflect";
+    case IPT_BUTTON3: return BTN3 "Aim Up";
+    case IPT_BUTTON4: return BTN4 "Aim Down";
     case IPT_JOYSTICK_UP: return "Move Tron";
     case IPT_JOYSTICK_DOWN: return "Move Tron";
     case IPT_JOYSTICK_LEFT: return "Move Tron";
@@ -6566,7 +6566,7 @@ const char *dorunrun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6588,7 +6588,7 @@ const char *domino_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Swat";
+    case IPT_BUTTON1: return BTN1 "Swat";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6650,7 +6650,7 @@ const char *dkong_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_LEFT: return "Run Left";
     case IPT_JOYSTICK_DOWN: return "Climb Down Ladder";
     case IPT_JOYSTICK_UP: return "Climb Up Ladder";
@@ -6672,7 +6672,7 @@ const char *dkong3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "SPRAY";
+    case IPT_BUTTON1: return BTN1 "SPRAY";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6694,7 +6694,7 @@ const char *dkongjr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "JUMP";
+    case IPT_BUTTON1: return BTN1 "JUMP";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6716,9 +6716,9 @@ const char *ddragon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Kick";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Punch";
+    case IPT_BUTTON1: return BTN1 "Kick";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Punch";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6740,9 +6740,9 @@ const char *ddragon3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6764,9 +6764,9 @@ const char *ddragon2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack Left";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Attack Right";
+    case IPT_BUTTON1: return BTN1 "Attack Left";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Attack Right";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -6788,9 +6788,9 @@ const char *ddribble_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Dribble";
-    case IPT_BUTTON2: return "Shoot";
-    case IPT_BUTTON3: return "Pass";
+    case IPT_BUTTON1: return BTN1 "Dribble";
+    case IPT_BUTTON2: return BTN2 "Shoot";
+    case IPT_BUTTON3: return BTN3 "Pass";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6812,8 +6812,8 @@ const char *downtown_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -6837,11 +6837,11 @@ const char *dragrace_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "1";
-    case IPT_BUTTON3: return "2";
-    case IPT_BUTTON4: return "3";
-    case IPT_BUTTON5: return "4";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "1";
+    case IPT_BUTTON3: return BTN3 "2";
+    case IPT_BUTTON4: return BTN4 "3";
+    case IPT_BUTTON5: return BTN5 "4";
     case (IPT_DIAL_V + IPT_EXTENSION): return "Down";
     case IPT_DIAL_V: return "Up";
   } /* end of switch */
@@ -6861,8 +6861,8 @@ const char *dragngun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Dragon Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Dragon Bomb";
     case IPT_LIGHTGUN_Y: return "Up";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_X: return "Left";
@@ -6884,9 +6884,9 @@ const char *dspirit_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
-    case IPT_BUTTON3: return "Unknown";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
+    case IPT_BUTTON3: return BTN3 "Unknown";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -6908,9 +6908,9 @@ const char *drgnunit_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Shield";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -6932,10 +6932,10 @@ const char *ddsom_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Select";
-    case IPT_BUTTON4: return "Magic";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Select";
+    case IPT_BUTTON4: return BTN4 "Magic";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6957,10 +6957,10 @@ const char *ddtod_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Magic";
-    case IPT_BUTTON4: return "Select";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Magic";
+    case IPT_BUTTON4: return BTN4 "Select";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -6982,9 +6982,9 @@ const char *dynamcop_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
-    case IPT_BUTTON3: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
+    case IPT_BUTTON3: return BTN3 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7006,9 +7006,9 @@ const char *eswat_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Special Weapons";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Special Weapons";
     case IPT_JOYSTICK_UP: return "Shoot Upward";
     case IPT_JOYSTICK_DOWN: return "Kneel";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7030,9 +7030,9 @@ const char *ecofghtr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate CCW";
-    case IPT_BUTTON2: return "Shot";
-    case IPT_BUTTON3: return "Rotate CW";
+    case IPT_BUTTON1: return BTN1 "Rotate CCW";
+    case IPT_BUTTON2: return BTN2 "Shot";
+    case IPT_BUTTON3: return BTN3 "Rotate CW";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7054,7 +7054,7 @@ const char *eggventr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -7076,8 +7076,8 @@ const char *elevator_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump/Kick";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump/Kick";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Kneel";
@@ -7099,8 +7099,8 @@ const char *elim2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
     case IPT_JOYSTICK_LEFT: return "Rotate Left";
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
@@ -7120,8 +7120,8 @@ const char *enigma2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -7141,9 +7141,9 @@ const char *eprom_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump / Start";
-    case IPT_BUTTON3: return "Duck";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump / Start";
+    case IPT_BUTTON3: return BTN3 "Duck";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -7165,8 +7165,8 @@ const char *exerion_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fast Fire";
-    case IPT_BUTTON2: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fast Fire";
+    case IPT_BUTTON2: return BTN2 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7188,8 +7188,8 @@ const char *exterm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire / Grap";
-    case IPT_BUTTON2: return "Pound";
+    case IPT_BUTTON1: return BTN1 "Fire / Grap";
+    case IPT_BUTTON2: return BTN2 "Pound";
     case IPT_JOYSTICK_RIGHT: return "Move Right";
     case IPT_JOYSTICK_LEFT: return "Move Left";
     case IPT_JOYSTICK_DOWN: return "Move Down";
@@ -7213,7 +7213,7 @@ const char *eyes_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7235,8 +7235,8 @@ const char *f1dream_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1st Gear";
-    case IPT_BUTTON2: return "2nd Gear";
+    case IPT_BUTTON1: return BTN1 "1st Gear";
+    case IPT_BUTTON2: return BTN2 "2nd Gear";
     case IPT_JOYSTICK_RIGHT: return "Turn";
     case IPT_JOYSTICK_LEFT: return "Turn";
     case IPT_JOYSTICK_DOWN: return "Turn";
@@ -7258,8 +7258,8 @@ const char *f1en_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Gear Down";
-    case IPT_BUTTON2: return "Gear Up";
+    case IPT_BUTTON1: return BTN1 "Gear Down";
+    case IPT_BUTTON2: return BTN2 "Gear Up";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -7325,10 +7325,10 @@ const char *fax_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
-    case IPT_BUTTON4: return "D";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
+    case IPT_BUTTON4: return BTN4 "D";
   } /* end of switch */
 
   return "";
@@ -7366,8 +7366,8 @@ const char *fghtatck_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7389,9 +7389,9 @@ const char *fvipers_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
-    case IPT_BUTTON3: return "Guard";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
+    case IPT_BUTTON3: return BTN3 "Guard";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7413,9 +7413,9 @@ const char *finalb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Weak";
-    case IPT_BUTTON2: return "Medium Strength";
-    case IPT_BUTTON3: return "Duck";
+    case IPT_BUTTON1: return BTN1 "Weak";
+    case IPT_BUTTON2: return BTN2 "Medium Strength";
+    case IPT_BUTTON3: return BTN3 "Duck";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7437,9 +7437,9 @@ const char *ffight_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7461,7 +7461,7 @@ const char *finalap2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "High / Low";
     case IPT_DIAL: return "Turn Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Turn Right";
     case IPT_PEDAL: return "Accelerate";
@@ -7483,7 +7483,7 @@ const char *firetrap_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICKLEFT_UP: return "Left Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Left Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left Left";
@@ -7515,9 +7515,9 @@ const char *firetrk_get_ctrl_name(int type)
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Bell";
     case IPT_DIAL: return "Left (Rear Wheels)";
     case (IPT_DIAL + IPT_EXTENSION): return "Right (Rear Wheels)";
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Horn";
-    case IPT_BUTTON3: return "Track Select";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Horn";
+    case IPT_BUTTON3: return BTN3 "Track Select";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -7538,8 +7538,8 @@ const char *fshark_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7561,7 +7561,7 @@ const char *foodf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Throw";
+    case IPT_BUTTON1: return BTN1 "Throw";
     case IPT_AD_STICK_Y: return "Up";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_X: return "Left";
@@ -7583,7 +7583,7 @@ const char *forgottn_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Push to Fire";
+    case IPT_BUTTON1: return BTN1 "Push to Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7607,8 +7607,8 @@ const char *formatz_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Laser / Hold for Energy";
-    case IPT_BUTTON2: return "Jump Button / Hold to Transform";
+    case IPT_BUTTON1: return BTN1 "Laser / Hold for Energy";
+    case IPT_BUTTON2: return BTN2 "Jump Button / Hold to Transform";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7630,7 +7630,7 @@ const char *frenzy_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7674,8 +7674,8 @@ const char *frogs_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Tongue";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Tongue";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -7695,8 +7695,8 @@ const char *frontlin_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Tank/Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Tank/Grenade";
     case IPT_JOYSTICKLEFT_DOWN: return "Aim Down";
     case IPT_JOYSTICKLEFT_UP: return "Aim Up";
     case IPT_JOYSTICKLEFT_LEFT: return "Aim Left";
@@ -7722,8 +7722,8 @@ const char *futspy_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Fire (Bomb)";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Fire (Bomb)";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7745,9 +7745,9 @@ const char *gloc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Vulcan - Gun";
-    case IPT_BUTTON2: return "Missile";
-    case IPT_BUTTON3: return "Afterburner";
+    case IPT_BUTTON1: return BTN1 "Vulcan - Gun";
+    case IPT_BUTTON2: return BTN2 "Missile";
+    case IPT_BUTTON3: return BTN3 "Afterburner";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -7771,8 +7771,8 @@ const char *gijoe_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Super Weapon";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Super Weapon";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -7794,8 +7794,8 @@ const char *gground_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Magic Weapon";
-    case IPT_BUTTON2: return "special Weapon";
+    case IPT_BUTTON1: return BTN1 "Magic Weapon";
+    case IPT_BUTTON2: return BTN2 "special Weapon";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7817,9 +7817,9 @@ const char *galaga88_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Fire";
-    case IPT_BUTTON3: return "N/A";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Fire";
+    case IPT_BUTTON3: return BTN3 "N/A";
     case IPT_JOYSTICK_UP: return "N/A";
     case IPT_JOYSTICK_DOWN: return "N/A";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7841,7 +7841,7 @@ const char *galaga_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -7861,7 +7861,7 @@ const char *galaxian_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Control Left";
     case IPT_JOYSTICK_RIGHT: return "Control Right";
   } /* end of switch */
@@ -7881,8 +7881,8 @@ const char *gforce2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Missile";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Missile";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -7906,7 +7906,7 @@ const char *galxwars_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "L";
     case IPT_JOYSTICK_RIGHT: return "R";
   } /* end of switch */
@@ -7926,7 +7926,7 @@ const char *galpanic_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Cut";
+    case IPT_BUTTON1: return BTN1 "Cut";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7948,7 +7948,7 @@ const char *galpani2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Cut";
+    case IPT_BUTTON1: return BTN1 "Cut";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7970,7 +7970,7 @@ const char *gaplus_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -7992,8 +7992,8 @@ const char *gauntlet_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Magic / Start";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Magic / Start";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -8015,8 +8015,8 @@ const char *gaunt2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Magic / Start";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Magic / Start";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -8038,7 +8038,7 @@ const char *geebee_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Serve";
+    case IPT_BUTTON1: return BTN1 "Serve";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -8058,8 +8058,8 @@ const char *gng_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8081,8 +8081,8 @@ const char *ghouls_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8104,8 +8104,8 @@ const char *gigawing_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shot / Hold for Reflect Barrier";
-    case IPT_BUTTON2: return "Force Bomb";
+    case IPT_BUTTON1: return BTN1 "Shot / Hold for Reflect Barrier";
+    case IPT_BUTTON2: return BTN2 "Force Bomb";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -8127,9 +8127,9 @@ const char *goldmedl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Button A";
-    case IPT_BUTTON2: return "Button B";
-    case IPT_BUTTON3: return "Button C";
+    case IPT_BUTTON1: return BTN1 "Button A";
+    case IPT_BUTTON2: return BTN2 "Button B";
+    case IPT_BUTTON3: return BTN3 "Button C";
   } /* end of switch */
 
   return "";
@@ -8147,9 +8147,9 @@ const char *goldnaxe_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Magic";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Magic";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -8171,9 +8171,9 @@ const char *ga2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Magic";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Magic";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8195,8 +8195,8 @@ const char *gt97_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Face Left";
-    case IPT_BUTTON2: return "Face Right";
+    case IPT_BUTTON1: return BTN1 "Face Left";
+    case IPT_BUTTON2: return BTN2 "Face Right";
     case IPT_TRACKBALL_Y: return "Forward Swing";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Choose Club";
     case IPT_TRACKBALL_X: return "Choose Club";
@@ -8218,8 +8218,8 @@ const char *gt98_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Face Left";
-    case IPT_BUTTON2: return "Face Right";
+    case IPT_BUTTON1: return BTN1 "Face Left";
+    case IPT_BUTTON2: return BTN2 "Face Right";
     case IPT_TRACKBALL_X: return "Choose Club";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Choose Club";
     case IPT_TRACKBALL_Y: return "Forward Swing";
@@ -8241,8 +8241,8 @@ const char *gt99_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Face Left";
-    case IPT_BUTTON2: return "Face Right";
+    case IPT_BUTTON1: return BTN1 "Face Left";
+    case IPT_BUTTON2: return BTN2 "Face Right";
     case IPT_TRACKBALL_X: return "Choose Club";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Choose Club";
     case IPT_TRACKBALL_Y: return "Forward Swing";
@@ -8264,8 +8264,8 @@ const char *gt2k_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Face Left";
-    case IPT_BUTTON2: return "Face Right";
+    case IPT_BUTTON1: return BTN1 "Face Left";
+    case IPT_BUTTON2: return BTN2 "Face Right";
     case IPT_TRACKBALL_X: return "Choose Club";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Choose Club";
     case IPT_TRACKBALL_Y: return "Forward Swing";
@@ -8287,8 +8287,8 @@ const char *gt3d_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Face Left";
-    case IPT_BUTTON2: return "Face Right";
+    case IPT_BUTTON1: return BTN1 "Face Left";
+    case IPT_BUTTON2: return BTN2 "Face Right";
     case IPT_TRACKBALL_Y: return "Forward Swing";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Choose Club";
     case IPT_TRACKBALL_X: return "Choose Club";
@@ -8310,8 +8310,8 @@ const char *gtg2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Face Left";
-    case IPT_BUTTON2: return "Face Right";
+    case IPT_BUTTON1: return BTN1 "Face Left";
+    case IPT_BUTTON2: return BTN2 "Face Right";
     case IPT_TRACKBALL_X: return "Choose Club";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Choose Club";
     case IPT_TRACKBALL_Y: return "Forward Swing";
@@ -8333,10 +8333,10 @@ const char *glfgreat_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Stance";
-    case IPT_BUTTON2: return "Shot";
-    case IPT_BUTTON3: return "N/A";
-    case IPT_BUTTON4: return "N/A";
+    case IPT_BUTTON1: return BTN1 "Stance";
+    case IPT_BUTTON2: return BTN2 "Shot";
+    case IPT_BUTTON3: return BTN3 "N/A";
+    case IPT_BUTTON4: return BTN4 "N/A";
     case IPT_JOYSTICK_UP: return "Select longer distance club";
     case IPT_JOYSTICK_DOWN: return "Select shorter distance club";
     case IPT_JOYSTICK_LEFT: return "Rotate Left";
@@ -8358,9 +8358,9 @@ const char *golgo13_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Trigger";
-    case IPT_BUTTON2: return "Zoom In / Zoom Out";
-    case IPT_BUTTON3: return "Enter";
+    case IPT_BUTTON1: return BTN1 "Trigger";
+    case IPT_BUTTON2: return BTN2 "Zoom In / Zoom Out";
+    case IPT_BUTTON3: return BTN3 "Enter";
     case IPT_JOYSTICK_UP: return "Select Up";
     case IPT_JOYSTICK_DOWN: return "Select Down";
     case IPT_LIGHTGUN_X: return "Aim Left";
@@ -8384,7 +8384,7 @@ const char *gollygho_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
+    case IPT_BUTTON1: return BTN1 "1";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -8406,8 +8406,8 @@ const char *gondo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Character Weapon";
-    case IPT_BUTTON2: return "Airbike Weapon";
+    case IPT_BUTTON1: return BTN1 "Character Weapon";
+    case IPT_BUTTON2: return BTN2 "Airbike Weapon";
     case IPT_DIAL: return "Rotate Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8431,7 +8431,7 @@ const char *gorf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -8474,10 +8474,10 @@ const char *f1gpstar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Brake";
-    case IPT_BUTTON3: return "Lo";
-    case IPT_BUTTON4: return "Hi";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Brake";
+    case IPT_BUTTON3: return BTN3 "Lo";
+    case IPT_BUTTON4: return BTN4 "Hi";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PADDLE: return "Left";
   } /* end of switch */
@@ -8497,9 +8497,9 @@ const char *gravitar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thurst";
-    case IPT_BUTTON3: return "Tractor/Shield";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thurst";
+    case IPT_BUTTON3: return BTN3 "Tractor/Shield";
     case IPT_JOYSTICK_LEFT: return "Rotate Left";
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
@@ -8519,7 +8519,7 @@ const char *greatgun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -8541,8 +8541,8 @@ const char *gberet_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Weapon";
-    case IPT_BUTTON2: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Weapon";
+    case IPT_BUTTON2: return BTN2 "Shoot";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8564,7 +8564,7 @@ const char *gridiron_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Pass & Formation Set";
+    case IPT_BUTTON1: return BTN1 "Pass & Formation Set";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -8586,7 +8586,7 @@ const char *gridlee_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -8608,11 +8608,11 @@ const char *guardian_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fast Punch";
-    case IPT_BUTTON2: return "Fast Kick";
-    case IPT_BUTTON3: return "Defense";
-    case IPT_BUTTON4: return "Strong Punch";
-    case IPT_BUTTON5: return "Strong Kick";
+    case IPT_BUTTON1: return BTN1 "Fast Punch";
+    case IPT_BUTTON2: return BTN2 "Fast Kick";
+    case IPT_BUTTON3: return BTN3 "Defense";
+    case IPT_BUTTON4: return BTN4 "Strong Punch";
+    case IPT_BUTTON5: return BTN5 "Strong Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8634,8 +8634,8 @@ const char *gwar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8659,9 +8659,9 @@ const char *gunsmoke_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire - Left";
-    case IPT_BUTTON2: return "Fire - Center";
-    case IPT_BUTTON3: return "Fire - Right";
+    case IPT_BUTTON1: return BTN1 "Fire - Left";
+    case IPT_BUTTON2: return BTN2 "Fire - Center";
+    case IPT_BUTTON3: return BTN3 "Fire - Right";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8683,8 +8683,8 @@ const char *gunbird_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8706,8 +8706,8 @@ const char *gunbustr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Trigger";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Trigger";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Move Forward";
     case IPT_JOYSTICK_DOWN: return "move Backward";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -8733,7 +8733,7 @@ const char *gyruss_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8755,8 +8755,8 @@ const char *halleys_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Warp";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Warp";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8778,8 +8778,8 @@ const char *hardyard_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Pass / Jump";
-    case IPT_BUTTON2: return "Dive";
+    case IPT_BUTTON1: return BTN1 "Pass / Jump";
+    case IPT_BUTTON2: return BTN2 "Dive";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8801,7 +8801,7 @@ const char *hattrick_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8823,8 +8823,8 @@ const char *hcastle_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8846,8 +8846,8 @@ const char *hbarrel_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8871,7 +8871,7 @@ const char *hiimpact_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action";
+    case IPT_BUTTON1: return BTN1 "Action";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8893,8 +8893,8 @@ const char *hippodrm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8916,9 +8916,9 @@ const char *hitme_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Stand";
-    case IPT_BUTTON2: return "Hit";
-    case IPT_BUTTON3: return "Ante";
+    case IPT_BUTTON1: return BTN1 "Stand";
+    case IPT_BUTTON2: return BTN2 "Hit";
+    case IPT_BUTTON3: return BTN3 "Ante";
   } /* end of switch */
 
   return "";
@@ -8936,8 +8936,8 @@ const char *hitice_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot / Check";
-    case IPT_BUTTON2: return "Pass / Save";
+    case IPT_BUTTON1: return BTN1 "Shoot / Check";
+    case IPT_BUTTON2: return BTN2 "Pass / Save";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -8967,8 +8967,8 @@ const char *holo_get_ctrl_name(int type)
     case (IPT_JOYSTICK_DOWN | IPF_PLAYER2): return "Crouch";
     case (IPT_JOYSTICK_LEFT | IPF_PLAYER2): return "Forward";
     case (IPT_JOYSTICK_RIGHT | IPF_PLAYER2): return "Backward / Defense";
-    case IPT_BUTTON1: return "Quick Tricks";
-    case IPT_BUTTON2: return "Fierce Tricks";
+    case IPT_BUTTON1: return BTN1 "Quick Tricks";
+    case IPT_BUTTON2: return BTN2 "Fierce Tricks";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Backward / Defend";
@@ -9011,8 +9011,8 @@ const char *hstennis_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Hard";
-    case IPT_BUTTON2: return "Soft";
+    case IPT_BUTTON1: return BTN1 "Hard";
+    case IPT_BUTTON2: return BTN2 "Soft";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9092,10 +9092,10 @@ const char *hng64_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
-    case IPT_BUTTON4: return "D";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
+    case IPT_BUTTON4: return BTN4 "D";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9117,9 +9117,9 @@ const char *hyperspt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Go (Left)";
-    case IPT_BUTTON2: return "Up";
-    case IPT_BUTTON3: return "Go (Right)";
+    case IPT_BUTTON1: return BTN1 "Go (Left)";
+    case IPT_BUTTON2: return BTN2 "Up";
+    case IPT_BUTTON3: return BTN3 "Go (Right)";
   } /* end of switch */
 
   return "";
@@ -9137,8 +9137,8 @@ const char *irobot_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Not used";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Not used";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -9250,9 +9250,9 @@ const char *ikari3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Kick";
-    case IPT_BUTTON2: return "Punch";
-    case IPT_BUTTON3: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Kick";
+    case IPT_BUTTON2: return BTN2 "Punch";
+    case IPT_BUTTON3: return BTN3 "Jump";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -9276,8 +9276,8 @@ const char *ikari_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Gun";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Gun";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -9319,7 +9319,7 @@ const char *indytemp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Whip";
+    case IPT_BUTTON1: return BTN1 "Whip";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9341,7 +9341,7 @@ const char *inferno_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICKLEFT_UP: return "Move Up+Right";
     case IPT_JOYSTICKLEFT_DOWN: return "Move Down+Left";
     case IPT_JOYSTICKLEFT_LEFT: return "Move Left+Up";
@@ -9367,7 +9367,7 @@ const char *invrvnge_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Move Left";
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
@@ -9387,7 +9387,7 @@ const char *invho2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire / Gas";
+    case IPT_BUTTON1: return BTN1 "Fire / Gas";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9409,7 +9409,7 @@ const char *offroad_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Nitro / Start";
+    case IPT_BUTTON1: return BTN1 "Nitro / Start";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_DIAL: return "Left";
     case IPT_PEDAL: return "Accelerate";
@@ -9430,7 +9430,7 @@ const char *offroadt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Nitro / Start";
+    case IPT_BUTTON1: return BTN1 "Nitro / Start";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "On";
@@ -9451,8 +9451,8 @@ const char *jackal_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Machine Gun";
-    case IPT_BUTTON2: return "Hand Grenade";
+    case IPT_BUTTON1: return BTN1 "Machine Gun";
+    case IPT_BUTTON2: return BTN2 "Hand Grenade";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9474,8 +9474,8 @@ const char *jailbrek_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Select";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Select";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9519,7 +9519,7 @@ const char *teamqb_get_ctrl_name(int type)
     case (IPT_JOYSTICK_DOWN | IPF_PLAYER2): return "Down";
     case (IPT_JOYSTICK_LEFT | IPF_PLAYER2): return "Left";
     case (IPT_JOYSTICK_RIGHT | IPF_PLAYER2): return "Right";
-    case IPT_BUTTON1: return "Action";
+    case IPT_BUTTON1: return BTN1 "Action";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9568,7 +9568,7 @@ const char *journey_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Blast";
+    case IPT_BUTTON1: return BTN1 "Blast";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9590,7 +9590,7 @@ const char *joust_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Flap";
+    case IPT_BUTTON1: return BTN1 "Flap";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -9616,8 +9616,8 @@ const char *joust2_get_ctrl_name(int type)
     case (IPT_BUTTON2 | IPF_PLAYER2): return "Start Player 2 / Transform";
     case (IPT_JOYSTICK_LEFT | IPF_PLAYER2): return "Left";
     case (IPT_JOYSTICK_RIGHT | IPF_PLAYER2): return "Right";
-    case IPT_BUTTON1: return "Flap";
-    case IPT_BUTTON2: return "Start Player 1 / Transform";
+    case IPT_BUTTON1: return BTN1 "Flap";
+    case IPT_BUTTON2: return BTN2 "Start Player 1 / Transform";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -9685,7 +9685,7 @@ const char *jumpbug_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9707,7 +9707,7 @@ const char *junglek_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump / Knife";
+    case IPT_BUTTON1: return BTN1 "Jump / Knife";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9729,7 +9729,7 @@ const char *jungler_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9751,7 +9751,7 @@ const char *jpark_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -9773,8 +9773,8 @@ const char *kageki_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jab";
-    case IPT_BUTTON2: return "Punch";
+    case IPT_BUTTON1: return BTN1 "Jab";
+    case IPT_BUTTON2: return BTN2 "Punch";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9814,7 +9814,7 @@ const char *kangaroo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
+    case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -9836,9 +9836,9 @@ const char *kaos_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
-    case IPT_BUTTON2: return "??";
-    case IPT_BUTTON3: return "??";
+    case IPT_BUTTON1: return BTN1 "Jump";
+    case IPT_BUTTON2: return BTN2 "??";
+    case IPT_BUTTON3: return BTN3 "??";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -9884,9 +9884,9 @@ const char *karnov_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Option";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Option";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9908,7 +9908,7 @@ const char *kick_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Press to Kick";
+    case IPT_BUTTON1: return BTN1 "Press to Kick";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -9928,8 +9928,8 @@ const char *kicker_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Kick";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Kick";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9969,10 +9969,10 @@ const char *killcom_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Left";
-    case IPT_BUTTON2: return "Fire Up";
-    case IPT_BUTTON3: return "Fire Right";
-    case IPT_BUTTON4: return "Hyperspace";
+    case IPT_BUTTON1: return BTN1 "Fire Left";
+    case IPT_BUTTON2: return BTN2 "Fire Up";
+    case IPT_BUTTON3: return BTN3 "Fire Right";
+    case IPT_BUTTON4: return BTN4 "Hyperspace";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -9994,12 +9994,12 @@ const char *kinst_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Quick (High Attack)";
-    case IPT_BUTTON2: return "Medium (High Attack)";
-    case IPT_BUTTON3: return "Fierce (High Attack)";
-    case IPT_BUTTON4: return "Quick (Low Attack)";
-    case IPT_BUTTON5: return "Medium (Low Attack)";
-    case IPT_BUTTON6: return "Fierce (Low Attack)";
+    case IPT_BUTTON1: return BTN1 "Quick (High Attack)";
+    case IPT_BUTTON2: return BTN2 "Medium (High Attack)";
+    case IPT_BUTTON3: return BTN3 "Fierce (High Attack)";
+    case IPT_BUTTON4: return BTN4 "Quick (Low Attack)";
+    case IPT_BUTTON5: return BTN5 "Medium (Low Attack)";
+    case IPT_BUTTON6: return BTN6 "Fierce (Low Attack)";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -10021,12 +10021,12 @@ const char *kinst2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Quick (High Attack)";
-    case IPT_BUTTON2: return "Medium (High Attack)";
-    case IPT_BUTTON3: return "Fierce (High Attack)";
-    case IPT_BUTTON4: return "Quick (Low Attack)";
-    case IPT_BUTTON5: return "Medium (Low Attack)";
-    case IPT_BUTTON6: return "Fierce (Low Attack)";
+    case IPT_BUTTON1: return BTN1 "Quick (High Attack)";
+    case IPT_BUTTON2: return BTN2 "Medium (High Attack)";
+    case IPT_BUTTON3: return BTN3 "Fierce (High Attack)";
+    case IPT_BUTTON4: return BTN4 "Quick (Low Attack)";
+    case IPT_BUTTON5: return BTN5 "Medium (Low Attack)";
+    case IPT_BUTTON6: return BTN6 "Fierce (Low Attack)";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -10048,7 +10048,7 @@ const char *kingball_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -10068,8 +10068,8 @@ const char *kingofb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Uppercut";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Uppercut";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10091,7 +10091,7 @@ const char *klax_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Start / Flip";
+    case IPT_BUTTON1: return BTN1 "Start / Flip";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10113,8 +10113,8 @@ const char *knights_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10136,9 +10136,9 @@ const char *konamigt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Brake";
-    case IPT_BUTTON3: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Brake";
+    case IPT_BUTTON3: return BTN3 "High / Low";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -10158,8 +10158,8 @@ const char *kroozr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Zap!";
-    case IPT_BUTTON2: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Zap!";
+    case IPT_BUTTON2: return BTN2 "Shield";
     case IPT_JOYSTICK_UP: return "Krooz Up";
     case IPT_JOYSTICK_DOWN: return "Krooz Down";
     case IPT_JOYSTICK_LEFT: return "Krooz Left";
@@ -10183,8 +10183,8 @@ const char *kram_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Wall";
-    case IPT_BUTTON2: return "Breakout";
+    case IPT_BUTTON1: return BTN1 "Wall";
+    case IPT_BUTTON2: return BTN2 "Breakout";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10232,8 +10232,8 @@ const char *kungfum_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Kick";
-    case IPT_BUTTON2: return "Punch";
+    case IPT_BUTTON1: return BTN1 "Kick";
+    case IPT_BUTTON2: return BTN2 "Punch";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Stoop Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10255,8 +10255,8 @@ const char *kurikint_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch / Kick";
-    case IPT_BUTTON2: return "Jump (higher)";
+    case IPT_BUTTON1: return BTN1 "Punch / Kick";
+    case IPT_BUTTON2: return BTN2 "Jump (higher)";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10300,7 +10300,7 @@ const char *lagunar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "High / Low";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -10321,8 +10321,8 @@ const char *lghost_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Laser Gun";
-    case IPT_BUTTON2: return "Special Weapon";
+    case IPT_BUTTON1: return BTN1 "Laser Gun";
+    case IPT_BUTTON2: return BTN2 "Special Weapon";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -10344,8 +10344,8 @@ const char *lastduel_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Button 1";
-    case IPT_BUTTON2: return "Button 2";
+    case IPT_BUTTON1: return BTN1 "Button 1";
+    case IPT_BUTTON2: return BTN2 "Button 2";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -10367,7 +10367,7 @@ const char *lethalen_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -10389,7 +10389,7 @@ const char *lethalj_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -10411,8 +10411,8 @@ const char *liberatr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Shield";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_X: return "Left";
     case IPT_TRACKBALL_Y: return "Up";
@@ -10434,7 +10434,7 @@ const char *lnc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Lock";
+    case IPT_BUTTON1: return BTN1 "Lock";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10456,10 +10456,10 @@ const char *lockon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Machine Gun Fire (1)";
-    case IPT_BUTTON2: return "Machine Gun Fire (2)";
-    case IPT_BUTTON3: return "Hover Aircraft";
-    case IPT_BUTTON4: return "Lock-On Missiles";
+    case IPT_BUTTON1: return BTN1 "Machine Gun Fire (1)";
+    case IPT_BUTTON2: return BTN2 "Machine Gun Fire (2)";
+    case IPT_BUTTON3: return BTN3 "Hover Aircraft";
+    case IPT_BUTTON4: return BTN4 "Lock-On Missiles";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -10481,7 +10481,7 @@ const char *locomotn_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Speed";
+    case IPT_BUTTON1: return BTN1 "Speed";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10503,8 +10503,8 @@ const char *ldrun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Dig Left";
-    case IPT_BUTTON2: return "Dig Right";
+    case IPT_BUTTON1: return BTN1 "Dig Left";
+    case IPT_BUTTON2: return BTN2 "Dig Right";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10526,8 +10526,8 @@ const char *looping_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Accelerator";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Accelerator";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
@@ -10547,7 +10547,7 @@ const char *losttomb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Whip";
+    case IPT_BUTTON1: return BTN1 "Whip";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10587,7 +10587,7 @@ const char *llander_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Abort";
+    case IPT_BUTTON1: return BTN1 "Abort";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_PADDLE_V: return "Increase Thrust";
@@ -10609,7 +10609,7 @@ const char *lrescue_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -10629,7 +10629,7 @@ const char *lupin3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Magic Button";
+    case IPT_BUTTON1: return BTN1 "Magic Button";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10651,8 +10651,8 @@ const char *m4_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Reload";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Reload";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
@@ -10672,7 +10672,7 @@ const char *mplanets_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -10696,8 +10696,8 @@ const char *msword_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -10719,7 +10719,7 @@ const char *magspot_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "L";
     case IPT_JOYSTICK_RIGHT: return "R";
   } /* end of switch */
@@ -12089,8 +12089,8 @@ const char *mhavoc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire/Jump";
-    case IPT_BUTTON2: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Fire/Jump";
+    case IPT_BUTTON2: return BTN2 "Shield";
     case (IPT_DIAL + IPT_EXTENSION): return "Move Right";
     case IPT_DIAL: return "Move Left";
   } /* end of switch */
@@ -12110,8 +12110,8 @@ const char *maniach_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12133,7 +12133,7 @@ const char *mappy_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Door Open / Close";
+    case IPT_BUTTON1: return BTN1 "Door Open / Close";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -12175,7 +12175,7 @@ const char *mario_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -12221,8 +12221,8 @@ const char *mmatrix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12256,12 +12256,12 @@ const char *msh_get_ctrl_name(int type)
     case (IPT_JOYSTICK_DOWN | IPF_PLAYER2): return "Duck";
     case (IPT_JOYSTICK_LEFT | IPF_PLAYER2): return "Forward";
     case (IPT_JOYSTICK_RIGHT | IPF_PLAYER2): return "Back / Defense";
-    case IPT_BUTTON1: return "Jab Punch";
-    case IPT_BUTTON2: return "Strong Punch";
-    case IPT_BUTTON3: return "Fierce Punch";
-    case IPT_BUTTON4: return "Short Kick";
-    case IPT_BUTTON5: return "Forward Kick";
-    case IPT_BUTTON6: return "Roundhouse Kick";
+    case IPT_BUTTON1: return BTN1 "Jab Punch";
+    case IPT_BUTTON2: return BTN2 "Strong Punch";
+    case IPT_BUTTON3: return BTN3 "Fierce Punch";
+    case IPT_BUTTON4: return BTN4 "Short Kick";
+    case IPT_BUTTON5: return BTN5 "Forward Kick";
+    case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Back  / Defense";
@@ -12283,12 +12283,12 @@ const char *mshvsf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch - Jab ";
-    case IPT_BUTTON2: return "Punch - Strong";
-    case IPT_BUTTON3: return "Punch - Fierce";
-    case IPT_BUTTON4: return "Kick - Short";
-    case IPT_BUTTON5: return "Kick - Forward";
-    case IPT_BUTTON6: return "Kick - Roundhouse";
+    case IPT_BUTTON1: return BTN1 "Punch - Jab ";
+    case IPT_BUTTON2: return BTN2 "Punch - Strong";
+    case IPT_BUTTON3: return BTN3 "Punch - Fierce";
+    case IPT_BUTTON4: return BTN4 "Kick - Short";
+    case IPT_BUTTON5: return BTN5 "Kick - Forward";
+    case IPT_BUTTON6: return BTN6 "Kick - Roundhouse";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12310,12 +12310,12 @@ const char *mvsc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch - Jab";
-    case IPT_BUTTON2: return "Punch - Strong";
-    case IPT_BUTTON3: return "Punch - Fierce";
-    case IPT_BUTTON4: return "Kick - Short";
-    case IPT_BUTTON5: return "Kick - Forward";
-    case IPT_BUTTON6: return "Kick - Round-House";
+    case IPT_BUTTON1: return BTN1 "Punch - Jab";
+    case IPT_BUTTON2: return BTN2 "Punch - Strong";
+    case IPT_BUTTON3: return BTN3 "Punch - Fierce";
+    case IPT_BUTTON4: return BTN4 "Kick - Short";
+    case IPT_BUTTON5: return BTN5 "Kick - Forward";
+    case IPT_BUTTON6: return BTN6 "Kick - Round-House";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -12337,8 +12337,8 @@ const char *matmania_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action Punch";
-    case IPT_BUTTON2: return "Action Kick";
+    case IPT_BUTTON1: return BTN1 "Action Punch";
+    case IPT_BUTTON2: return BTN2 "Action Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12360,8 +12360,8 @@ const char *maxrpm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shift Up";
-    case IPT_BUTTON2: return "Shift Down";
+    case IPT_BUTTON1: return BTN1 "Shift Up";
+    case IPT_BUTTON2: return BTN2 "Shift Down";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -12382,7 +12382,7 @@ const char *maxforce_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -12404,9 +12404,9 @@ const char *mayday_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Front";
-    case IPT_BUTTON2: return "Mayday";
-    case IPT_BUTTON3: return "Back";
+    case IPT_BUTTON1: return BTN1 "Fire Front";
+    case IPT_BUTTON2: return BTN2 "Mayday";
+    case IPT_BUTTON3: return BTN3 "Back";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "";
@@ -12428,8 +12428,8 @@ const char *mechatt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -12487,9 +12487,9 @@ const char *megaman2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Weapon Change";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Weapon Change";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12511,7 +12511,7 @@ const char *megazone_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12533,8 +12533,8 @@ const char *mercs_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12556,8 +12556,8 @@ const char *metamrph_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12579,7 +12579,7 @@ const char *metrocrs_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12601,8 +12601,8 @@ const char *mwalk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Dance";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Dance";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12624,8 +12624,8 @@ const char *midres_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12649,8 +12649,8 @@ const char *gtmr2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Brake";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Brake";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_DIAL: return "Left";
@@ -12676,7 +12676,7 @@ const char *milliped_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_X: return "Left";
@@ -12698,7 +12698,7 @@ const char *minefld_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Cannon";
+    case IPT_BUTTON1: return BTN1 "Cannon";
     case IPT_JOYSTICKLEFT_RIGHT: return "Tank Direction Right";
     case IPT_JOYSTICKLEFT_LEFT: return "Tank Direction Left";
     case IPT_JOYSTICKLEFT_DOWN: return "Tank Direction Down";
@@ -12746,7 +12746,7 @@ const char *minigolf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Tee Selection";
+    case IPT_BUTTON1: return BTN1 "Tee Selection";
   } /* end of switch */
 
   return "";
@@ -12782,9 +12782,9 @@ const char *missile_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire - Alpha Base";
-    case IPT_BUTTON2: return "Fire - Delta Base";
-    case IPT_BUTTON3: return "Fire - Omega Base";
+    case IPT_BUTTON1: return BTN1 "Fire - Alpha Base";
+    case IPT_BUTTON2: return BTN2 "Fire - Delta Base";
+    case IPT_BUTTON3: return BTN3 "Fire - Omega Base";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -12806,7 +12806,7 @@ const char *gmissile_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -12826,7 +12826,7 @@ const char *moguchan_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Unkown";
+    case IPT_BUTTON1: return BTN1 "Unkown";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -12849,14 +12849,14 @@ const char *mole_get_ctrl_name(int type)
   switch(type)
   {
 /* P1NumButtons=9 */
-    case IPT_BUTTON1: return "Attack 1";
-    case IPT_BUTTON2: return "Attack 2";
-    case IPT_BUTTON3: return "Attack 3";
-    case IPT_BUTTON4: return "Attack 4";
-    case IPT_BUTTON5: return "Attack 5";
-    case IPT_BUTTON6: return "Attack 6";
-    case IPT_BUTTON7: return "Attack 7";
-    case IPT_BUTTON8: return "Attack 8";
+    case IPT_BUTTON1: return BTN1 "Attack 1";
+    case IPT_BUTTON2: return BTN2 "Attack 2";
+    case IPT_BUTTON3: return BTN3 "Attack 3";
+    case IPT_BUTTON4: return BTN4 "Attack 4";
+    case IPT_BUTTON5: return BTN5 "Attack 5";
+    case IPT_BUTTON6: return BTN6 "Attack 6";
+    case IPT_BUTTON7: return BTN7 "Attack 7";
+    case IPT_BUTTON8: return BTN7 "Attack 8";
     case IPT_BUTTON9: return "Attack 9";
   } /* end of switch */
 
@@ -12875,7 +12875,7 @@ const char *monymony_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12897,7 +12897,7 @@ const char *monsterb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Zap";
+    case IPT_BUTTON1: return BTN1 "Zap";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -12919,12 +12919,12 @@ const char *montecar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Gear 1";
-    case IPT_BUTTON3: return "Gear 2";
-    case IPT_BUTTON4: return "Gear 3";
-    case IPT_BUTTON5: return "Gear 4";
-    case IPT_BUTTON6: return "Track Select";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Gear 1";
+    case IPT_BUTTON3: return BTN3 "Gear 2";
+    case IPT_BUTTON4: return BTN4 "Gear 3";
+    case IPT_BUTTON5: return BTN5 "Gear 4";
+    case IPT_BUTTON6: return BTN6 "Track Select";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -12944,7 +12944,7 @@ const char *mooncrst_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -12964,8 +12964,8 @@ const char *mpatrol_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_LEFT: return "Slower";
     case IPT_JOYSTICK_RIGHT: return "Faster";
   } /* end of switch */
@@ -12985,9 +12985,9 @@ const char *moonwar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Missile";
-    case IPT_BUTTON2: return "Warp Drive";
-    case IPT_BUTTON3: return "Shields";
+    case IPT_BUTTON1: return BTN1 "Fire Missile";
+    case IPT_BUTTON2: return BTN2 "Warp Drive";
+    case IPT_BUTTON3: return BTN3 "Shields";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -13007,11 +13007,11 @@ const char *mk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High Punch";
-    case IPT_BUTTON2: return "Block";
-    case IPT_BUTTON3: return "High Kick";
-    case IPT_BUTTON4: return "Low Punch";
-    case IPT_BUTTON5: return "Low Kick";
+    case IPT_BUTTON1: return BTN1 "High Punch";
+    case IPT_BUTTON2: return BTN2 "Block";
+    case IPT_BUTTON3: return BTN3 "High Kick";
+    case IPT_BUTTON4: return BTN4 "Low Punch";
+    case IPT_BUTTON5: return BTN5 "Low Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -13033,12 +13033,12 @@ const char *mk3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High Punch";
-    case IPT_BUTTON2: return "Block";
-    case IPT_BUTTON3: return "High Kick";
-    case IPT_BUTTON4: return "Low Punch";
-    case IPT_BUTTON5: return "Low Kick";
-    case IPT_BUTTON6: return "Run";
+    case IPT_BUTTON1: return BTN1 "High Punch";
+    case IPT_BUTTON2: return BTN2 "Block";
+    case IPT_BUTTON3: return BTN3 "High Kick";
+    case IPT_BUTTON4: return BTN4 "Low Punch";
+    case IPT_BUTTON5: return BTN5 "Low Kick";
+    case IPT_BUTTON6: return BTN6 "Run";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -13060,12 +13060,12 @@ const char *mk4_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High Punch";
-    case IPT_BUTTON2: return "Block";
-    case IPT_BUTTON3: return "High Kick";
-    case IPT_BUTTON4: return "Low Punch";
-    case IPT_BUTTON5: return "Low Kick";
-    case IPT_BUTTON6: return "Run";
+    case IPT_BUTTON1: return BTN1 "High Punch";
+    case IPT_BUTTON2: return BTN2 "Block";
+    case IPT_BUTTON3: return BTN3 "High Kick";
+    case IPT_BUTTON4: return BTN4 "Low Punch";
+    case IPT_BUTTON5: return BTN5 "Low Kick";
+    case IPT_BUTTON6: return BTN6 "Run";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -13087,11 +13087,11 @@ const char *mk2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High Punch";
-    case IPT_BUTTON2: return "Block";
-    case IPT_BUTTON3: return "High Kick";
-    case IPT_BUTTON4: return "Low Punch";
-    case IPT_BUTTON5: return "Low Kick";
+    case IPT_BUTTON1: return BTN1 "High Punch";
+    case IPT_BUTTON2: return BTN2 "Block";
+    case IPT_BUTTON3: return BTN3 "High Kick";
+    case IPT_BUTTON4: return BTN4 "Low Punch";
+    case IPT_BUTTON5: return BTN5 "Low Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -13113,10 +13113,10 @@ const char *mtrap_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Dog";
-    case IPT_BUTTON2: return "Doors - Yellow";
-    case IPT_BUTTON3: return "Doors - Red";
-    case IPT_BUTTON4: return "Doors - Blue";
+    case IPT_BUTTON1: return BTN1 "Dog";
+    case IPT_BUTTON2: return BTN2 "Doors - Yellow";
+    case IPT_BUTTON3: return BTN3 "Doors - Red";
+    case IPT_BUTTON4: return BTN4 "Doors - Blue";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13138,7 +13138,7 @@ const char *mrdo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Throw";
+    case IPT_BUTTON1: return BTN1 "Throw";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13160,7 +13160,7 @@ const char *docastle_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13182,7 +13182,7 @@ const char *dowild_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Run";
+    case IPT_BUTTON1: return BTN1 "Run";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13204,7 +13204,7 @@ const char *mrdrillr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Drill";
+    case IPT_BUTTON1: return BTN1 "Drill";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13248,9 +13248,9 @@ const char *mvp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Red";
-    case IPT_BUTTON2: return "Yellow";
-    case IPT_BUTTON3: return "Blue";
+    case IPT_BUTTON1: return BTN1 "Red";
+    case IPT_BUTTON2: return BTN2 "Yellow";
+    case IPT_BUTTON3: return BTN3 "Blue";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13272,8 +13272,8 @@ const char *mx5000_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Air - to - Air";
-    case IPT_BUTTON2: return "Air - to - Ground";
+    case IPT_BUTTON1: return BTN1 "Air - to - Air";
+    case IPT_BUTTON2: return BTN2 "Air - to - Ground";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13295,7 +13295,7 @@ const char *mysticm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13317,9 +13317,9 @@ const char *mystwarr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "NA";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "NA";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -13341,10 +13341,10 @@ const char *nametune_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
   } /* end of switch */
 
   return "";
@@ -13362,10 +13362,10 @@ const char *narc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Crouch";
-    case IPT_BUTTON4: return "Rocket Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Crouch";
+    case IPT_BUTTON4: return BTN4 "Rocket Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13387,8 +13387,8 @@ const char *nastar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13410,7 +13410,7 @@ const char *natodef_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
+    case IPT_BUTTON1: return BTN1 "1";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13432,7 +13432,7 @@ const char *naughtyb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Throw";
+    case IPT_BUTTON1: return BTN1 "Throw";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13454,9 +13454,9 @@ const char *nbahangt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Turbo";
-    case IPT_BUTTON2: return "Shoot / Block";
-    case IPT_BUTTON3: return "Pass / Steal";
+    case IPT_BUTTON1: return BTN1 "Turbo";
+    case IPT_BUTTON2: return BTN2 "Shoot / Block";
+    case IPT_BUTTON3: return BTN3 "Pass / Steal";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13478,9 +13478,9 @@ const char *nbajam_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Turbo";
-    case IPT_BUTTON2: return "Shoot / Block";
-    case IPT_BUTTON3: return "Pass / Steal";
+    case IPT_BUTTON1: return BTN1 "Turbo";
+    case IPT_BUTTON2: return BTN2 "Shoot / Block";
+    case IPT_BUTTON3: return BTN3 "Pass / Steal";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13502,12 +13502,12 @@ const char *neckneck_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
-    case IPT_BUTTON5: return "5";
-    case IPT_BUTTON6: return "6";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
+    case IPT_BUTTON5: return BTN5 "5";
+    case IPT_BUTTON6: return BTN6 "6";
   } /* end of switch */
 
   return "";
@@ -13583,7 +13583,7 @@ const char *nyny_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -13603,9 +13603,9 @@ const char *blitz_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Turbo";
-    case IPT_BUTTON2: return "Jump/Tackle";
-    case IPT_BUTTON3: return "Pass/Change Player";
+    case IPT_BUTTON1: return BTN1 "Turbo";
+    case IPT_BUTTON2: return BTN2 "Jump/Tackle";
+    case IPT_BUTTON3: return BTN3 "Pass/Change Player";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -13649,12 +13649,12 @@ const char *nss_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "Y";
-    case IPT_BUTTON3: return "A";
-    case IPT_BUTTON4: return "X";
-    case IPT_BUTTON5: return "L";
-    case IPT_BUTTON6: return "R";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "Y";
+    case IPT_BUTTON3: return BTN3 "A";
+    case IPT_BUTTON4: return BTN4 "X";
+    case IPT_BUTTON5: return BTN5 "L";
+    case IPT_BUTTON6: return BTN6 "R";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13680,7 +13680,7 @@ const char *nomnlnd_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire!";
+    case IPT_BUTTON1: return BTN1 "Fire!";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13702,8 +13702,8 @@ const char *nova2001_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Pause";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Pause";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -13837,8 +13837,8 @@ const char *omegrace_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -13858,7 +13858,7 @@ const char *oneshot_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -13880,8 +13880,8 @@ const char *othunder_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -13903,8 +13903,8 @@ const char *opwolf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Rocket Gun";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Rocket Gun";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -13926,8 +13926,8 @@ const char *opwolf3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -13985,7 +13985,7 @@ const char *outrun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "High / Low";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -14007,9 +14007,9 @@ const char *overdriv_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Brake";
-    case IPT_BUTTON3: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Brake";
+    case IPT_BUTTON3: return BTN3 "High / Low";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -14029,9 +14029,9 @@ const char *pow_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Kick";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Punch";
+    case IPT_BUTTON1: return BTN1 "Kick";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Punch";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14053,7 +14053,7 @@ const char *pacland_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_LEFT: return "Run Left";
     case IPT_JOYSTICK_RIGHT: return "Run Right";
   } /* end of switch */
@@ -14095,9 +14095,9 @@ const char *pacmania_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Bounce";
-    case IPT_BUTTON2: return "Bounce";
-    case IPT_BUTTON3: return "Bounce";
+    case IPT_BUTTON1: return BTN1 "Bounce";
+    case IPT_BUTTON2: return BTN2 "Bounce";
+    case IPT_BUTTON3: return BTN3 "Bounce";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -14119,7 +14119,7 @@ const char *paddlema_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Bounce";
+    case IPT_BUTTON1: return BTN1 "Bounce";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -14141,7 +14141,7 @@ const char *pandoras_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14163,8 +14163,8 @@ const char *paperboy_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Throw";
-    case IPT_BUTTON2: return "Throw";
+    case IPT_BUTTON1: return BTN1 "Throw";
+    case IPT_BUTTON2: return BTN2 "Throw";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_Y + IPT_EXTENSION): return "Break";
@@ -14204,7 +14204,7 @@ const char *pengo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Push";
+    case IPT_BUTTON1: return BTN1 "Push";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -14248,8 +14248,8 @@ const char *peterpak_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Throw";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Throw";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14271,8 +14271,8 @@ const char *phoenix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Force Field";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Force Field";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -14292,8 +14292,8 @@ const char *pigout_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
-    case IPT_BUTTON2: return "Throw";
+    case IPT_BUTTON1: return BTN1 "Jump";
+    case IPT_BUTTON2: return BTN2 "Throw";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14315,9 +14315,9 @@ const char *pigskin_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Pass";
-    case IPT_BUTTON3: return "Team Attitude";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Pass";
+    case IPT_BUTTON3: return BTN3 "Team Attitude";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -14339,10 +14339,10 @@ const char *pbaction_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Flipper Button";
-    case IPT_BUTTON2: return "Right Flipper Button";
-    case IPT_BUTTON3: return "Shake and Start Button (Left)";
-    case IPT_BUTTON4: return "Shake and Start Button (Right)";
+    case IPT_BUTTON1: return BTN1 "Left Flipper Button";
+    case IPT_BUTTON2: return BTN2 "Right Flipper Button";
+    case IPT_BUTTON3: return BTN3 "Shake and Start Button (Left)";
+    case IPT_BUTTON4: return BTN4 "Shake and Start Button (Right)";
   } /* end of switch */
 
   return "";
@@ -14382,9 +14382,9 @@ const char *pitfight_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
-    case IPT_BUTTON3: return "Start / Jump";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
+    case IPT_BUTTON3: return BTN3 "Start / Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14406,7 +14406,7 @@ const char *pitfall2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14436,8 +14436,8 @@ const char *playch10_get_ctrl_name(int type)
     case (IPT_JOYSTICK_DOWN | IPF_PLAYER2): return "Down";
     case (IPT_JOYSTICK_LEFT | IPF_PLAYER2): return "Left";
     case (IPT_JOYSTICK_RIGHT | IPF_PLAYER2): return "Right";
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -14467,8 +14467,8 @@ const char *pleiads_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Warp";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Warp";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -14488,7 +14488,7 @@ const char *plotting_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14510,7 +14510,7 @@ const char *ptblank_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -14532,7 +14532,7 @@ const char *polaris_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14554,7 +14554,7 @@ const char *polepos_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "High / Low";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_DIAL: return "Left";
     case IPT_PEDAL: return "Accelerate";
@@ -14576,7 +14576,7 @@ const char *polepos2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "High / Low";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_DIAL: return "Left";
     case IPT_PEDAL: return "Accelerate";
@@ -14598,7 +14598,7 @@ const char *policetr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -14620,7 +14620,7 @@ const char *polyplay_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
+    case IPT_BUTTON1: return BTN1 "A";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14642,7 +14642,7 @@ const char *ponpoko_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14664,7 +14664,7 @@ const char *pooyan_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
@@ -14684,7 +14684,7 @@ const char *popeye_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
+    case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -14706,7 +14706,7 @@ const char *popper_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Throw";
+    case IPT_BUTTON1: return BTN1 "Throw";
     case IPT_JOYSTICK_UP: return "Move Up";
     case IPT_JOYSTICK_DOWN: return "Move Down";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -14728,7 +14728,7 @@ const char *pdrift_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "High / Low";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -14750,10 +14750,10 @@ const char *powerdrv_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Back Tire";
-    case IPT_BUTTON2: return "Front Tire";
-    case IPT_BUTTON3: return "Wheelie";
-    case IPT_BUTTON4: return "2wd/4wd";
+    case IPT_BUTTON1: return BTN1 "Back Tire";
+    case IPT_BUTTON2: return BTN2 "Front Tire";
+    case IPT_BUTTON3: return BTN3 "Wheelie";
+    case IPT_BUTTON4: return BTN4 "2wd/4wd";
   } /* end of switch */
 
   return "";
@@ -14771,8 +14771,8 @@ const char *pclubj_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Ok / Print";
-    case IPT_BUTTON2: return "Cancel";
+    case IPT_BUTTON1: return BTN1 "Ok / Print";
+    case IPT_BUTTON2: return BTN2 "Cancel";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14812,9 +14812,9 @@ const char *profpac_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
   } /* end of switch */
 
   return "";
@@ -14832,8 +14832,8 @@ const char *psychos_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Primary Fire";
-    case IPT_BUTTON2: return "Secondary Fire ";
+    case IPT_BUTTON1: return BTN1 "Primary Fire";
+    case IPT_BUTTON2: return BTN2 "Secondary Fire ";
     case IPT_JOYSTICK_RIGHT: return "Move Right";
     case IPT_JOYSTICK_LEFT: return "Move Left";
     case IPT_JOYSTICK_DOWN: return "Move Down";
@@ -14877,7 +14877,7 @@ const char *pulsar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14899,9 +14899,9 @@ const char *punchout_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Blow To Head/Body";
-    case IPT_BUTTON2: return "Right Blow to Head/Body";
-    case IPT_BUTTON3: return "Hook Uppercut";
+    case IPT_BUTTON1: return BTN1 "Left Blow To Head/Body";
+    case IPT_BUTTON2: return BTN2 "Right Blow to Head/Body";
+    case IPT_BUTTON3: return BTN3 "Hook Uppercut";
     case IPT_JOYSTICK_UP: return "Guard Up";
     case IPT_JOYSTICK_DOWN: return "Guard Down";
     case IPT_JOYSTICK_LEFT: return "Dodge Left";
@@ -14923,8 +14923,8 @@ const char *punkshot_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Pass / Hit";
-    case IPT_BUTTON2: return "Shoot / Block";
+    case IPT_BUTTON1: return BTN1 "Pass / Hit";
+    case IPT_BUTTON2: return BTN2 "Shoot / Block";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -14946,7 +14946,7 @@ const char *pbobble_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -14966,10 +14966,10 @@ const char *pbobble2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "NA";
-    case IPT_BUTTON3: return "NA";
-    case IPT_BUTTON4: return "NA";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "NA";
+    case IPT_BUTTON3: return BTN3 "NA";
+    case IPT_BUTTON4: return BTN4 "NA";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -14991,10 +14991,10 @@ const char *pbobble3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "NA";
-    case IPT_BUTTON3: return "NA";
-    case IPT_BUTTON4: return "NA";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "NA";
+    case IPT_BUTTON3: return BTN3 "NA";
+    case IPT_BUTTON4: return BTN4 "NA";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -15060,8 +15060,8 @@ const char *qix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fast Draw";
-    case IPT_BUTTON2: return "Slow Draw";
+    case IPT_BUTTON1: return BTN1 "Fast Draw";
+    case IPT_BUTTON2: return BTN2 "Slow Draw";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15114,8 +15114,8 @@ const char *quarterb_get_ctrl_name(int type)
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
-    case IPT_BUTTON1: return "Action A";
-    case IPT_BUTTON2: return "Action B";
+    case IPT_BUTTON1: return BTN1 "Action A";
+    case IPT_BUTTON2: return BTN2 "Action B";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15142,8 +15142,8 @@ const char *quartet_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump / Start";
-    case IPT_BUTTON2: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Jump / Start";
+    case IPT_BUTTON2: return BTN2 "Shoot";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15165,8 +15165,8 @@ const char *quasar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Forward";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Forward";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -15186,10 +15186,10 @@ const char *qad_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
   } /* end of switch */
 
   return "";
@@ -15207,10 +15207,10 @@ const char *qndream_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
   } /* end of switch */
 
   return "";
@@ -15246,8 +15246,8 @@ const char *rtype_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Force";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Force";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -15269,7 +15269,7 @@ const char *radarscp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -15289,7 +15289,7 @@ const char *radrad_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15311,7 +15311,7 @@ const char *rchase_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -15333,8 +15333,8 @@ const char *rainbow_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rainbow";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Rainbow";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -15354,7 +15354,7 @@ const char *rallyx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Smoke Screen";
+    case IPT_BUTTON1: return BTN1 "Smoke Screen";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_RIGHT: return "Right";
@@ -15376,8 +15376,8 @@ const char *rampage_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Climb";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15399,9 +15399,9 @@ const char *rmpgwt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
-    case IPT_BUTTON2: return "Punch";
-    case IPT_BUTTON3: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Jump";
+    case IPT_BUTTON2: return BTN2 "Punch";
+    case IPT_BUTTON3: return BTN3 "Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15423,8 +15423,8 @@ const char *rampart_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Place Piece/Fire/Start";
-    case IPT_BUTTON2: return "Rotate Piece/Fire";
+    case IPT_BUTTON1: return BTN1 "Place Piece/Fire/Start";
+    case IPT_BUTTON2: return BTN2 "Rotate Piece/Fire";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -15446,8 +15446,8 @@ const char *rastan_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15469,8 +15469,8 @@ const char *reactor_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Energy";
-    case IPT_BUTTON2: return "Decoy";
+    case IPT_BUTTON1: return BTN1 "Energy";
+    case IPT_BUTTON2: return BTN2 "Decoy";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -15567,8 +15567,8 @@ const char *regulus_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15590,9 +15590,9 @@ const char *renegade_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack Left";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Attack Right";
+    case IPT_BUTTON1: return BTN1 "Attack Left";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Attack Right";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15614,7 +15614,7 @@ const char *rescue_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Bomb";
     case IPT_JOYSTICKLEFT_UP: return "Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left";
@@ -15640,7 +15640,7 @@ const char *rescraid_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Select Weapons";
+    case IPT_BUTTON1: return BTN1 "Select Weapons";
     case IPT_JOYSTICKLEFT_UP: return "Shooting Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Shooting Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Shooting Left";
@@ -15684,9 +15684,9 @@ const char *jedi_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire / Rotate Left";
-    case IPT_BUTTON2: return "Fire";
-    case IPT_BUTTON3: return "Fire / Rotate Right";
+    case IPT_BUTTON1: return BTN1 "Fire / Rotate Left";
+    case IPT_BUTTON2: return BTN2 "Fire";
+    case IPT_BUTTON3: return BTN3 "Fire / Rotate Right";
     case IPT_AD_STICK_Y: return "Up";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_X: return "Left";
@@ -15708,8 +15708,8 @@ const char *revx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -15731,8 +15731,8 @@ const char *ripoff_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Forward";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Forward";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -15752,8 +15752,8 @@ const char *roadblst_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Lasers";
-    case IPT_BUTTON2: return "Activate Special Weapon";
+    case IPT_BUTTON1: return BTN1 "Fire Lasers";
+    case IPT_BUTTON2: return BTN2 "Activate Special Weapon";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_DIAL: return "Left";
     case IPT_PEDAL: return "Accelerate";
@@ -15774,8 +15774,8 @@ const char *roadf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Low Gear";
-    case IPT_BUTTON2: return "High Gear";
+    case IPT_BUTTON1: return BTN1 "Low Gear";
+    case IPT_BUTTON2: return BTN2 "High Gear";
     case IPT_JOYSTICK_UP: return "Speed Up";
     case IPT_JOYSTICK_DOWN: return "Slow Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15797,9 +15797,9 @@ const char *roadrunn_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Hop";
-    case IPT_BUTTON2: return "??not used";
-    case IPT_BUTTON3: return "??not used";
+    case IPT_BUTTON1: return BTN1 "Hop";
+    case IPT_BUTTON2: return BTN2 "??not used";
+    case IPT_BUTTON3: return BTN3 "??not used";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -15821,7 +15821,7 @@ const char *robby_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Magic";
+    case IPT_BUTTON1: return BTN1 "Magic";
     case IPT_JOYSTICK_UP: return "Move Up";
     case IPT_JOYSTICK_DOWN: return "Move Down";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -15843,8 +15843,8 @@ const char *robocop_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot/Punch";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot/Punch";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15866,9 +15866,9 @@ const char *robocop2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot Left";
-    case IPT_BUTTON2: return "Shoot Right";
-    case IPT_BUTTON3: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot Left";
+    case IPT_BUTTON2: return BTN2 "Shoot Right";
+    case IPT_BUTTON3: return BTN3 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15916,8 +15916,8 @@ const char *rocnrope_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rope";
-    case IPT_BUTTON2: return "Flash";
+    case IPT_BUTTON1: return BTN1 "Rope";
+    case IPT_BUTTON2: return BTN2 "Flash";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15939,8 +15939,8 @@ const char *rollerg_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15962,8 +15962,8 @@ const char *rthunder_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -15985,8 +15985,8 @@ const char *rranger_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
-    case IPT_BUTTON2: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Jump";
+    case IPT_BUTTON2: return BTN2 "Shoot";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16008,7 +16008,7 @@ const char *roundup_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Cube Color Select";
+    case IPT_BUTTON1: return BTN1 "Cube Color Select";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16048,9 +16048,9 @@ const char *rungun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16072,9 +16072,9 @@ const char *runaway_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Switcher";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Forward / Reverse";
+    case IPT_BUTTON1: return BTN1 "Switcher";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Forward / Reverse";
   } /* end of switch */
 
   return "";
@@ -16110,8 +16110,8 @@ const char *stunrun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire (left)";
-    case IPT_BUTTON2: return "Fire (right)";
+    case IPT_BUTTON1: return BTN1 "Fire (left)";
+    case IPT_BUTTON2: return BTN2 "Fire (right)";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -16133,8 +16133,8 @@ const char *salamand_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Missile";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Missile";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16156,8 +16156,8 @@ const char *searchar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16181,8 +16181,8 @@ const char *sarge_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Trigger Switch";
-    case IPT_BUTTON2: return "Thumb Button";
+    case IPT_BUTTON1: return BTN1 "Trigger Switch";
+    case IPT_BUTTON2: return BTN2 "Thumb Button";
     case IPT_JOYSTICKLEFT_UP: return "Left Tread Forward";
     case IPT_JOYSTICKLEFT_DOWN: return "Left Tread Backward";
     case IPT_JOYSTICKRIGHT_UP: return "Right Tread Forward";
@@ -16204,8 +16204,8 @@ const char *satansat_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Firing Button";
-    case IPT_BUTTON2: return "Laser Beam";
+    case IPT_BUTTON1: return BTN1 "Firing Button";
+    case IPT_BUTTON2: return BTN2 "Laser Beam";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -16225,8 +16225,8 @@ const char *shollow_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Shield";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -16264,8 +16264,8 @@ const char *scramble_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Laser";
-    case IPT_BUTTON2: return "Bombs";
+    case IPT_BUTTON1: return BTN1 "Laser";
+    case IPT_BUTTON2: return BTN2 "Bombs";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Slow";
@@ -16287,7 +16287,7 @@ const char *sdi_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Move Up";
     case IPT_JOYSTICK_DOWN: return "Move Down";
     case IPT_JOYSTICK_LEFT: return "Move Left";
@@ -16313,7 +16313,7 @@ const char *seawolf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Torpedo";
+    case IPT_BUTTON1: return BTN1 "Fire Torpedo";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -16333,7 +16333,7 @@ const char *seawolf2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Torpedo";
+    case IPT_BUTTON1: return BTN1 "Fire Torpedo";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -16407,9 +16407,9 @@ const char *shdancer_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Ninja Magic";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Ninja Magic";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16431,9 +16431,9 @@ const char *shadoww_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Grab";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Grab";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16455,8 +16455,8 @@ const char *sharkatt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Munch";
-    case IPT_BUTTON2: return "Thrust";
+    case IPT_BUTTON1: return BTN1 "Munch";
+    case IPT_BUTTON2: return BTN2 "Thrust";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16478,7 +16478,7 @@ const char *sshooter_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -16500,7 +16500,7 @@ const char *sheriff_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICKLEFT_UP: return "Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Left";
@@ -16526,9 +16526,9 @@ const char *shinobi_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Ninja Magic";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Ninja Magic";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16550,8 +16550,8 @@ const char *shootout_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16595,7 +16595,7 @@ const char *shuffle_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Game Select";
+    case IPT_BUTTON1: return BTN1 "Game Select";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -16617,8 +16617,8 @@ const char *shufshot_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Zoom";
-    case IPT_BUTTON2: return "Wax";
+    case IPT_BUTTON1: return BTN1 "Zoom";
+    case IPT_BUTTON2: return BTN2 "Wax";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -16640,9 +16640,9 @@ const char *sidearms_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Left";
-    case IPT_BUTTON2: return "Fire Right";
-    case IPT_BUTTON3: return "Power";
+    case IPT_BUTTON1: return BTN1 "Fire Left";
+    case IPT_BUTTON2: return BTN2 "Fire Right";
+    case IPT_BUTTON3: return BTN3 "Power";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16664,7 +16664,7 @@ const char *sidetrac_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Speed Up";
+    case IPT_BUTTON1: return BTN1 "Speed Up";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16686,8 +16686,8 @@ const char *sinistar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Sinibomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Sinibomb";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -16709,8 +16709,8 @@ const char *skullxbo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sword";
-    case IPT_BUTTON2: return "Turn";
+    case IPT_BUTTON1: return BTN1 "Sword";
+    case IPT_BUTTON2: return BTN2 "Turn";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16732,8 +16732,8 @@ const char *skydiver_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
-    case IPT_BUTTON2: return "Open Chute";
+    case IPT_BUTTON1: return BTN1 "Jump";
+    case IPT_BUTTON2: return BTN2 "Open Chute";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -16753,8 +16753,8 @@ const char *skysoldr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Cannon";
-    case IPT_BUTTON2: return "Missle";
+    case IPT_BUTTON1: return BTN1 "Cannon";
+    case IPT_BUTTON2: return BTN2 "Missle";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -16776,8 +16776,8 @@ const char *slapfigh_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Weapon Select";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Weapon Select";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -16799,9 +16799,9 @@ const char *slikshot_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Yellow";
-    case IPT_BUTTON2: return "Green";
-    case IPT_BUTTON3: return "Red";
+    case IPT_BUTTON1: return BTN1 "Yellow";
+    case IPT_BUTTON2: return BTN2 "Green";
+    case IPT_BUTTON3: return BTN3 "Red";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -16823,8 +16823,8 @@ const char *slither_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Down";
-    case IPT_BUTTON2: return "Fire Up";
+    case IPT_BUTTON1: return BTN1 "Fire Down";
+    case IPT_BUTTON2: return BTN2 "Fire Up";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -16846,8 +16846,8 @@ const char *slyspy_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16895,7 +16895,7 @@ const char *snakjack_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sneeze Button";
+    case IPT_BUTTON1: return BTN1 "Sneeze Button";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -16939,8 +16939,8 @@ const char *snowbros_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot and Kick Snowball";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot and Kick Snowball";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "N/A";
@@ -16962,8 +16962,8 @@ const char *solarfox_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Speed Control";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Speed Control";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -16985,10 +16985,10 @@ const char *solarq_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
-    case IPT_BUTTON3: return "Hyper Space";
-    case IPT_BUTTON4: return "Nova";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
+    case IPT_BUTTON3: return BTN3 "Hyper Space";
+    case IPT_BUTTON4: return BTN4 "Nova";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -17008,8 +17008,8 @@ const char *amazon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17031,10 +17031,10 @@ const char *sbm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sensor 1";
-    case IPT_BUTTON2: return "Sensor 2";
-    case IPT_BUTTON3: return "Sensor 3";
-    case IPT_BUTTON4: return "Sensor 4";
+    case IPT_BUTTON1: return BTN1 "Sensor 1";
+    case IPT_BUTTON2: return BTN2 "Sensor 2";
+    case IPT_BUTTON3: return BTN3 "Sensor 3";
+    case IPT_BUTTON4: return BTN4 "Sensor 4";
     case IPT_JOYSTICK_UP: return "Aim Up";
     case IPT_JOYSTICK_DOWN: return "Aim Down";
     case IPT_JOYSTICK_LEFT: return "Aim Left";
@@ -17056,10 +17056,10 @@ const char *souledge_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack A";
-    case IPT_BUTTON2: return "Attack B";
-    case IPT_BUTTON3: return "Kick";
-    case IPT_BUTTON4: return "Guard";
+    case IPT_BUTTON1: return BTN1 "Attack A";
+    case IPT_BUTTON2: return BTN2 "Attack B";
+    case IPT_BUTTON3: return BTN3 "Kick";
+    case IPT_BUTTON4: return BTN4 "Guard";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17081,7 +17081,7 @@ const char *sspaceat_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Control Left";
     case IPT_JOYSTICK_RIGHT: return "Control Right";
   } /* end of switch */
@@ -17101,9 +17101,9 @@ const char *spacduel_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
-    case IPT_BUTTON3: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
+    case IPT_BUTTON3: return BTN3 "Shield";
     case IPT_JOYSTICK_LEFT: return "Rotate Left";
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
@@ -17123,8 +17123,8 @@ const char *spacefb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Warp";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Warp";
     case IPT_JOYSTICK_LEFT: return "Port (Left)";
     case IPT_JOYSTICK_RIGHT: return "Starboard (Right)";
   } /* end of switch */
@@ -17144,8 +17144,8 @@ const char *spacfury_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
     case IPT_JOYSTICK_LEFT: return "Rotate Left";
     case IPT_JOYSTICK_RIGHT: return "Rotate Right";
   } /* end of switch */
@@ -17165,9 +17165,9 @@ const char *spacegun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Trigger";
-    case IPT_BUTTON2: return "Bomb Select";
-    case IPT_BUTTON3: return "Back Up";
+    case IPT_BUTTON1: return BTN1 "Trigger";
+    case IPT_BUTTON2: return BTN2 "Bomb Select";
+    case IPT_BUTTON3: return BTN3 "Back Up";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -17189,9 +17189,9 @@ const char *sharrier_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shot";
-    case IPT_BUTTON2: return "Shot";
-    case IPT_BUTTON3: return "Shot";
+    case IPT_BUTTON1: return BTN1 "Shot";
+    case IPT_BUTTON2: return BTN2 "Shot";
+    case IPT_BUTTON3: return BTN3 "Shot";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -17213,7 +17213,7 @@ const char *invaders_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_RIGHT: return "Control Right";
     case IPT_JOYSTICK_LEFT: return "Control Left";
   } /* end of switch */
@@ -17233,7 +17233,7 @@ const char *spacedx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17255,7 +17255,7 @@ const char *invadpt2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Laser";
+    case IPT_BUTTON1: return BTN1 "Fire Laser";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -17275,7 +17275,7 @@ const char *spacelnc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Launch";
+    case IPT_BUTTON1: return BTN1 "Launch";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -17295,8 +17295,8 @@ const char *spaceod_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Laser";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Laser";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17318,8 +17318,8 @@ const char *panic_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Holing";
-    case IPT_BUTTON2: return "Closing";
+    case IPT_BUTTON1: return BTN1 "Holing";
+    case IPT_BUTTON2: return BTN2 "Closing";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -17341,7 +17341,7 @@ const char *spacezap_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17363,7 +17363,7 @@ const char *speakres_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -17383,7 +17383,7 @@ const char *spectar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17445,9 +17445,9 @@ const char *speedrcr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -17468,8 +17468,8 @@ const char *spidman_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17491,7 +17491,7 @@ const char *spiders_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Move Left";
     case IPT_JOYSTICK_RIGHT: return "Move Right";
   } /* end of switch */
@@ -17511,11 +17511,11 @@ const char *sprint1_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "1";
-    case IPT_BUTTON3: return "2";
-    case IPT_BUTTON4: return "3";
-    case IPT_BUTTON5: return "4";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "1";
+    case IPT_BUTTON3: return BTN3 "2";
+    case IPT_BUTTON4: return BTN4 "3";
+    case IPT_BUTTON5: return BTN5 "4";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -17535,8 +17535,8 @@ const char *starcas_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -17556,7 +17556,7 @@ const char *starforc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17604,10 +17604,10 @@ const char *starhawk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Slow";
-    case IPT_BUTTON3: return "Medium";
-    case IPT_BUTTON4: return "Fast";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Slow";
+    case IPT_BUTTON3: return BTN3 "Medium";
+    case IPT_BUTTON4: return BTN4 "Fast";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -17629,8 +17629,8 @@ const char *starjack_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17652,10 +17652,10 @@ const char *startrek_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
-    case IPT_BUTTON3: return "Photons";
-    case IPT_BUTTON4: return "Warp";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
+    case IPT_BUTTON3: return BTN3 "Photons";
+    case IPT_BUTTON4: return BTN4 "Warp";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
@@ -17675,10 +17675,10 @@ const char *starwars_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Fire";
-    case IPT_BUTTON3: return "Fire";
-    case IPT_BUTTON4: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Fire";
+    case IPT_BUTTON3: return BTN3 "Fire";
+    case IPT_BUTTON4: return BTN4 "Fire";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -17700,12 +17700,12 @@ const char *stargate_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "FIRE";
-    case IPT_BUTTON2: return "THRUST";
-    case IPT_BUTTON3: return "SMART BOMB";
-    case IPT_BUTTON4: return "REVERSE";
-    case IPT_BUTTON5: return "INVISO";
-    case IPT_BUTTON6: return "HYPERSPACE";
+    case IPT_BUTTON1: return BTN1 "FIRE";
+    case IPT_BUTTON2: return BTN2 "THRUST";
+    case IPT_BUTTON3: return BTN3 "SMART BOMB";
+    case IPT_BUTTON4: return BTN4 "REVERSE";
+    case IPT_BUTTON5: return BTN5 "INVISO";
+    case IPT_BUTTON6: return BTN6 "HYPERSPACE";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
@@ -17725,8 +17725,8 @@ const char *sgunner_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Missile";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Missile";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -17748,8 +17748,8 @@ const char *sgunner2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Missile";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Missile";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -17771,7 +17771,7 @@ const char *stocker_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "High / Low";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -17791,8 +17791,8 @@ const char *stratab_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Hook Left";
-    case IPT_BUTTON2: return "Hook Right";
+    case IPT_BUTTON1: return BTN1 "Hook Left";
+    case IPT_BUTTON2: return BTN2 "Hook Right";
     case IPT_TRACKBALL_Y: return "Up";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_X: return "Left";
@@ -17814,9 +17814,9 @@ const char *stratgyx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Tank Fire";
-    case IPT_BUTTON2: return "Turrent Rotate Left";
-    case IPT_BUTTON3: return "Turrent Rotate Right";
+    case IPT_BUTTON1: return BTN1 "Tank Fire";
+    case IPT_BUTTON2: return BTN2 "Turrent Rotate Left";
+    case IPT_BUTTON3: return BTN3 "Turrent Rotate Right";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17838,12 +17838,12 @@ const char *sf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Light Punch";
-    case IPT_BUTTON2: return "Middle Punch";
-    case IPT_BUTTON3: return "Heavy Punch";
-    case IPT_BUTTON4: return "Light Kick";
-    case IPT_BUTTON5: return "Middle Kick";
-    case IPT_BUTTON6: return "Heavy Kick";
+    case IPT_BUTTON1: return BTN1 "Light Punch";
+    case IPT_BUTTON2: return BTN2 "Middle Punch";
+    case IPT_BUTTON3: return BTN3 "Heavy Punch";
+    case IPT_BUTTON4: return BTN4 "Light Kick";
+    case IPT_BUTTON5: return BTN5 "Middle Kick";
+    case IPT_BUTTON6: return BTN6 "Heavy Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17865,12 +17865,12 @@ const char *sfa2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jab Punch";
-    case IPT_BUTTON2: return "Strong Punch";
-    case IPT_BUTTON3: return "Fierce Punch";
-    case IPT_BUTTON4: return "Short Kick";
-    case IPT_BUTTON5: return "Strong Kick";
-    case IPT_BUTTON6: return "Roundhouse Kick";
+    case IPT_BUTTON1: return BTN1 "Jab Punch";
+    case IPT_BUTTON2: return BTN2 "Strong Punch";
+    case IPT_BUTTON3: return BTN3 "Fierce Punch";
+    case IPT_BUTTON4: return BTN4 "Short Kick";
+    case IPT_BUTTON5: return BTN5 "Strong Kick";
+    case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17892,12 +17892,12 @@ const char *sfa3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jab Punch";
-    case IPT_BUTTON2: return "Strong Punch";
-    case IPT_BUTTON3: return "Fierce Punch";
-    case IPT_BUTTON4: return "Short Kick";
-    case IPT_BUTTON5: return "Strong Kick";
-    case IPT_BUTTON6: return "Roundhouse Kick";
+    case IPT_BUTTON1: return BTN1 "Jab Punch";
+    case IPT_BUTTON2: return BTN2 "Strong Punch";
+    case IPT_BUTTON3: return BTN3 "Fierce Punch";
+    case IPT_BUTTON4: return BTN4 "Short Kick";
+    case IPT_BUTTON5: return BTN5 "Strong Kick";
+    case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17919,12 +17919,12 @@ const char *sfa_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jab Punch";
-    case IPT_BUTTON2: return "Strong Punch";
-    case IPT_BUTTON3: return "Fierce Punch";
-    case IPT_BUTTON4: return "Short Kick";
-    case IPT_BUTTON5: return "Strong Kick";
-    case IPT_BUTTON6: return "Roundhouse Kick";
+    case IPT_BUTTON1: return BTN1 "Jab Punch";
+    case IPT_BUTTON2: return BTN2 "Strong Punch";
+    case IPT_BUTTON3: return BTN3 "Fierce Punch";
+    case IPT_BUTTON4: return BTN4 "Short Kick";
+    case IPT_BUTTON5: return BTN5 "Strong Kick";
+    case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -17976,12 +17976,12 @@ const char *sfiii2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jab Punch";
-    case IPT_BUTTON2: return "Strong Punch";
-    case IPT_BUTTON3: return "Fierce Punch";
-    case IPT_BUTTON4: return "Short Kick";
-    case IPT_BUTTON5: return "Strong Kick";
-    case IPT_BUTTON6: return "Roundhouse Kick";
+    case IPT_BUTTON1: return BTN1 "Jab Punch";
+    case IPT_BUTTON2: return BTN2 "Strong Punch";
+    case IPT_BUTTON3: return BTN3 "Fierce Punch";
+    case IPT_BUTTON4: return BTN4 "Short Kick";
+    case IPT_BUTTON5: return BTN5 "Strong Kick";
+    case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18003,12 +18003,12 @@ const char *sfiii3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jab Punch";
-    case IPT_BUTTON2: return "Strong Punch";
-    case IPT_BUTTON3: return "Fierce Punch";
-    case IPT_BUTTON4: return "Short Kick";
-    case IPT_BUTTON5: return "Strong Kick";
-    case IPT_BUTTON6: return "Roundhouse Kick";
+    case IPT_BUTTON1: return BTN1 "Jab Punch";
+    case IPT_BUTTON2: return BTN2 "Strong Punch";
+    case IPT_BUTTON3: return BTN3 "Fierce Punch";
+    case IPT_BUTTON4: return BTN4 "Short Kick";
+    case IPT_BUTTON5: return BTN5 "Strong Kick";
+    case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18030,12 +18030,12 @@ const char *sfiii_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jab Punch";
-    case IPT_BUTTON2: return "Strong Punch";
-    case IPT_BUTTON3: return "Fierce Punch";
-    case IPT_BUTTON4: return "Short Kick";
-    case IPT_BUTTON5: return "Strong Kick";
-    case IPT_BUTTON6: return "Roundhouse Kick";
+    case IPT_BUTTON1: return BTN1 "Jab Punch";
+    case IPT_BUTTON2: return BTN2 "Strong Punch";
+    case IPT_BUTTON3: return BTN3 "Fierce Punch";
+    case IPT_BUTTON4: return BTN4 "Short Kick";
+    case IPT_BUTTON5: return BTN5 "Strong Kick";
+    case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18057,12 +18057,12 @@ const char *sftm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Light Punch";
-    case IPT_BUTTON2: return "Middle Punch";
-    case IPT_BUTTON3: return "Heavy Punch";
-    case IPT_BUTTON4: return "Light Kick";
-    case IPT_BUTTON5: return "Middle Kick";
-    case IPT_BUTTON6: return "Heavy Kick";
+    case IPT_BUTTON1: return BTN1 "Light Punch";
+    case IPT_BUTTON2: return BTN2 "Middle Punch";
+    case IPT_BUTTON3: return BTN3 "Heavy Punch";
+    case IPT_BUTTON4: return BTN4 "Light Kick";
+    case IPT_BUTTON5: return BTN5 "Middle Kick";
+    case IPT_BUTTON6: return BTN6 "Heavy Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18084,8 +18084,8 @@ const char *strider_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sword";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Sword";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18129,9 +18129,9 @@ const char *strkforc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Weapon Select";
-    case IPT_BUTTON2: return "Fire";
-    case IPT_BUTTON3: return "Weapon";
+    case IPT_BUTTON1: return BTN1 "Weapon Select";
+    case IPT_BUTTON2: return BTN2 "Fire";
+    case IPT_BUTTON3: return BTN3 "Weapon";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18153,8 +18153,8 @@ const char *s1945_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18176,9 +18176,9 @@ const char *s1945iii_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Loop";
-    case IPT_BUTTON3: return "Special";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Loop";
+    case IPT_BUTTON3: return BTN3 "Special";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18200,7 +18200,7 @@ const char *subs_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Torpedo";
+    case IPT_BUTTON1: return BTN1 "Fire Torpedo";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -18220,8 +18220,8 @@ const char *ssriders_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18243,7 +18243,7 @@ const char *sbagman_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action";
+    case IPT_BUTTON1: return BTN1 "Action";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18265,10 +18265,10 @@ const char *sbrkout_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Serve";
-    case IPT_BUTTON2: return "Progressive";
-    case IPT_BUTTON3: return "Double";
-    case IPT_BUTTON4: return "Cavity";
+    case IPT_BUTTON1: return BTN1 "Serve";
+    case IPT_BUTTON2: return BTN2 "Progressive";
+    case IPT_BUTTON3: return BTN3 "Double";
+    case IPT_BUTTON4: return BTN4 "Cavity";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PADDLE: return "Left";
   } /* end of switch */
@@ -18288,8 +18288,8 @@ const char *scobra_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sidewinder Missile";
-    case IPT_BUTTON2: return "Bombs";
+    case IPT_BUTTON1: return BTN1 "Sidewinder Missile";
+    case IPT_BUTTON2: return BTN2 "Bombs";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -18311,8 +18311,8 @@ const char *scontra_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18334,8 +18334,8 @@ const char *spdodgeb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Offensive Throw / Defensive Catch";
-    case IPT_BUTTON2: return "offensive Pass / Defensive Duck";
+    case IPT_BUTTON1: return BTN1 "Offensive Throw / Defensive Catch";
+    case IPT_BUTTON2: return BTN2 "offensive Pass / Defensive Duck";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18357,9 +18357,9 @@ const char *sgemf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
-    case IPT_BUTTON3: return "Special";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
+    case IPT_BUTTON3: return BTN3 "Special";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18381,7 +18381,7 @@ const char *shimpact_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action";
+    case IPT_BUTTON1: return BTN1 "Action";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18421,8 +18421,8 @@ const char *smgp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shift Down";
-    case IPT_BUTTON2: return "Shift Up";
+    case IPT_BUTTON1: return BTN1 "Shift Down";
+    case IPT_BUTTON2: return BTN2 "Shift Up";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -18444,7 +18444,7 @@ const char *superpac_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Super Speed";
+    case IPT_BUTTON1: return BTN1 "Super Speed";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18466,9 +18466,9 @@ const char *spbactn_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Flipper";
-    case IPT_BUTTON2: return "Right Flipper";
-    case IPT_BUTTON3: return "Plunger";
+    case IPT_BUTTON1: return BTN1 "Left Flipper";
+    case IPT_BUTTON2: return BTN2 "Right Flipper";
+    case IPT_BUTTON3: return BTN3 "Plunger";
   } /* end of switch */
 
   return "";
@@ -18486,9 +18486,9 @@ const char *spnchout_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Blow to Head/Body";
-    case IPT_BUTTON2: return "Right Blow to Head/Body";
-    case IPT_BUTTON3: return "Uppercut / Hook / Knock Out Blow";
+    case IPT_BUTTON1: return BTN1 "Left Blow to Head/Body";
+    case IPT_BUTTON2: return BTN2 "Right Blow to Head/Body";
+    case IPT_BUTTON3: return BTN3 "Uppercut / Hook / Knock Out Blow";
     case IPT_JOYSTICK_UP: return "Guard Up";
     case IPT_JOYSTICK_DOWN: return "Guard Down";
     case IPT_JOYSTICK_LEFT: return "Dodge Left";
@@ -18510,7 +18510,7 @@ const char *sqix_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Draw";
+    case IPT_BUTTON1: return BTN1 "Draw";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18604,7 +18604,7 @@ const char *sspeedr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High / Low";
+    case IPT_BUTTON1: return BTN1 "High / Low";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -18646,12 +18646,12 @@ const char *ssf2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jab Punch";
-    case IPT_BUTTON2: return "Strong Punch";
-    case IPT_BUTTON3: return "Fierce Punch";
-    case IPT_BUTTON4: return "Short Kick";
-    case IPT_BUTTON5: return "Strong Kick";
-    case IPT_BUTTON6: return "Roundhouse Kick";
+    case IPT_BUTTON1: return BTN1 "Jab Punch";
+    case IPT_BUTTON2: return BTN2 "Strong Punch";
+    case IPT_BUTTON3: return BTN3 "Fierce Punch";
+    case IPT_BUTTON4: return BTN4 "Short Kick";
+    case IPT_BUTTON5: return BTN5 "Strong Kick";
+    case IPT_BUTTON6: return BTN6 "Roundhouse Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Crouch";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18673,8 +18673,8 @@ const char *sstrike_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Right Hook";
-    case IPT_BUTTON2: return "Left Hook";
+    case IPT_BUTTON1: return BTN1 "Right Hook";
+    case IPT_BUTTON2: return BTN2 "Left Hook";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -18716,7 +18716,7 @@ const char *szaxxon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18738,8 +18738,8 @@ const char *superman_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18761,7 +18761,7 @@ const char *swimmer_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Dive";
+    case IPT_BUTTON1: return BTN1 "Dive";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18783,8 +18783,8 @@ const char *tnk3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Cannon";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Cannon";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -18826,8 +18826,8 @@ const char *tailg_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Shield";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -18957,7 +18957,7 @@ const char *tank8_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICKLEFT_UP: return "Left Tread Forward";
     case IPT_JOYSTICKLEFT_DOWN: return "Left Tread Backward";
     case IPT_JOYSTICKRIGHT_UP: return "Right Tread Forward";
@@ -18979,7 +18979,7 @@ const char *tankbatt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19001,7 +19001,7 @@ const char *tapper_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Pour / Serve";
+    case IPT_BUTTON1: return BTN1 "Pour / Serve";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19023,7 +19023,7 @@ const char *targ_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19045,8 +19045,8 @@ const char *tazmania_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Zapper";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Zapper";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19068,8 +19068,8 @@ const char *tbowl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Start / Jump";
-    case IPT_BUTTON2: return "Snap / Pass / Tackle / Kick";
+    case IPT_BUTTON1: return BTN1 "Start / Jump";
+    case IPT_BUTTON2: return BTN2 "Snap / Pass / Tackle / Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19091,8 +19091,8 @@ const char *tmnt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
-    case IPT_BUTTON2: return "Attack";
+    case IPT_BUTTON1: return BTN1 "Jump";
+    case IPT_BUTTON2: return BTN2 "Attack";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -19114,8 +19114,8 @@ const char *tmnt2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
-    case IPT_BUTTON2: return "Attack";
+    case IPT_BUTTON1: return BTN1 "Jump";
+    case IPT_BUTTON2: return BTN2 "Attack";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -19137,7 +19137,7 @@ const char *tehkanwc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Kick";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -19159,10 +19159,10 @@ const char *tekken_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Punch";
-    case IPT_BUTTON2: return "Right Punch";
-    case IPT_BUTTON3: return "Left Kick";
-    case IPT_BUTTON4: return "Right Kick";
+    case IPT_BUTTON1: return BTN1 "Left Punch";
+    case IPT_BUTTON2: return BTN2 "Right Punch";
+    case IPT_BUTTON3: return BTN3 "Left Kick";
+    case IPT_BUTTON4: return BTN4 "Right Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19184,10 +19184,10 @@ const char *tekken2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Punch";
-    case IPT_BUTTON2: return "Right Punch";
-    case IPT_BUTTON3: return "Left Kick";
-    case IPT_BUTTON4: return "Right Kick";
+    case IPT_BUTTON1: return BTN1 "Left Punch";
+    case IPT_BUTTON2: return BTN2 "Right Punch";
+    case IPT_BUTTON3: return BTN3 "Left Kick";
+    case IPT_BUTTON4: return BTN4 "Right Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19209,10 +19209,10 @@ const char *tekken3_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Punch";
-    case IPT_BUTTON2: return "Right Punch";
-    case IPT_BUTTON3: return "Left Kick";
-    case IPT_BUTTON4: return "Right Kick";
+    case IPT_BUTTON1: return BTN1 "Left Punch";
+    case IPT_BUTTON2: return BTN2 "Right Punch";
+    case IPT_BUTTON3: return BTN3 "Left Kick";
+    case IPT_BUTTON4: return BTN4 "Right Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19252,8 +19252,8 @@ const char *tempest_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Super Zapper";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Super Zapper";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -19273,9 +19273,9 @@ const char *tengai_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
-    case IPT_BUTTON3: return "??";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
+    case IPT_BUTTON3: return BTN3 "??";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19297,8 +19297,8 @@ const char *term2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Trigger";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Trigger";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -19320,8 +19320,8 @@ const char *terracre_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Formation";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Formation";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19343,8 +19343,8 @@ const char *terraf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Formation";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Formation";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19366,7 +19366,7 @@ const char *atetris_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate";
+    case IPT_BUTTON1: return BTN1 "Rotate";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -19388,7 +19388,7 @@ const char *tetris_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate";
+    case IPT_BUTTON1: return BTN1 "Rotate";
     case IPT_JOYSTICK_UP: return "";
     case IPT_JOYSTICK_DOWN: return "Drop";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19410,8 +19410,8 @@ const char *tetrisp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate";
-    case IPT_BUTTON2: return "Rotate";
+    case IPT_BUTTON1: return BTN1 "Rotate";
+    case IPT_BUTTON2: return BTN2 "Rotate";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19433,9 +19433,9 @@ const char *tetrisp2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate Clockwise";
-    case IPT_BUTTON2: return "Rotate Anti Clockwise";
-    case IPT_BUTTON3: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Rotate Clockwise";
+    case IPT_BUTTON2: return BTN2 "Rotate Anti Clockwise";
+    case IPT_BUTTON3: return BTN3 "Bomb";
     case IPT_JOYSTICK_UP: return "";
     case IPT_JOYSTICK_DOWN: return "Drop";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19457,8 +19457,8 @@ const char *ctribe_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19502,10 +19502,10 @@ const char *esb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Fire / Shoot TOW Cable";
-    case IPT_BUTTON3: return "Fire / Shoot TOW Cable";
-    case IPT_BUTTON4: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Fire / Shoot TOW Cable";
+    case IPT_BUTTON3: return BTN3 "Fire / Shoot TOW Cable";
+    case IPT_BUTTON4: return BTN4 "Fire";
     case IPT_AD_STICK_Y: return "Up";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_X: return "Left";
@@ -19527,7 +19527,7 @@ const char *theend_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -19547,8 +19547,8 @@ const char *lkage_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sword";
-    case IPT_BUTTON2: return "Star Knives";
+    case IPT_BUTTON1: return BTN1 "Sword";
+    case IPT_BUTTON2: return BTN2 "Star Knives";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19588,8 +19588,8 @@ const char *mainevt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Action";
-    case IPT_BUTTON2: return "Tag";
+    case IPT_BUTTON1: return BTN1 "Action";
+    case IPT_BUTTON2: return BTN2 "Tag";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19611,8 +19611,8 @@ const char *ninjaw_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Dagger";
-    case IPT_BUTTON2: return "Ninja Star";
+    case IPT_BUTTON1: return BTN1 "Dagger";
+    case IPT_BUTTON2: return BTN2 "Ninja Star";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19634,7 +19634,7 @@ const char *thepit_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19656,8 +19656,8 @@ const char *punisher_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19679,8 +19679,8 @@ const char *ghostb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot / Start";
-    case IPT_BUTTON2: return "Beam";
+    case IPT_BUTTON1: return BTN1 "Shoot / Start";
+    case IPT_BUTTON2: return BTN2 "Beam";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -19702,8 +19702,8 @@ const char *simpsons_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19725,8 +19725,8 @@ const char *srumbler_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Escape";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Escape";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19748,7 +19748,7 @@ const char *a3stooges_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Slap / Throw";
+    case IPT_BUTTON1: return BTN1 "Slap / Throw";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19770,7 +19770,7 @@ const char *tinstar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICKLEFT_UP: return "Aim Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Aim Down";
     case IPT_JOYSTICKLEFT_LEFT: return "Aim Left";
@@ -19818,9 +19818,9 @@ const char *a3wonders_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "??";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "??";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -19842,8 +19842,8 @@ const char *thndrbld_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -19867,9 +19867,9 @@ const char *thundfox_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Weapon";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Weapon";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19891,8 +19891,8 @@ const char *thunderj_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19914,7 +19914,7 @@ const char *tickee_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Trigger";
+    case IPT_BUTTON1: return BTN1 "Trigger";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -19936,8 +19936,8 @@ const char *tigerh_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Mini-Gun";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Mini-Gun";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -19959,8 +19959,8 @@ const char *tigeroad_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -19982,8 +19982,8 @@ const char *timber_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Chop Left";
-    case IPT_BUTTON2: return "Chop Right";
+    case IPT_BUTTON1: return BTN1 "Chop Left";
+    case IPT_BUTTON2: return BTN2 "Chop Right";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -20005,8 +20005,8 @@ const char *timecris_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Step on It!";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Step on It!";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -20028,11 +20028,11 @@ const char *timekill_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Arm";
-    case IPT_BUTTON2: return "Right Arm";
-    case IPT_BUTTON3: return "Left Leg";
-    case IPT_BUTTON4: return "Right Leg";
-    case IPT_BUTTON5: return "Head";
+    case IPT_BUTTON1: return BTN1 "Left Arm";
+    case IPT_BUTTON2: return BTN2 "Right Arm";
+    case IPT_BUTTON3: return BTN3 "Left Leg";
+    case IPT_BUTTON4: return BTN4 "Right Leg";
+    case IPT_BUTTON5: return BTN5 "Head";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -20054,7 +20054,7 @@ const char *timeplt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20076,8 +20076,8 @@ const char *timesold_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Hyper Weapon";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Hyper Weapon";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -20127,8 +20127,8 @@ const char *toki_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20222,7 +20222,7 @@ const char *tomahawk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20262,11 +20262,11 @@ const char *toobin_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Throw Can / Start";
-    case IPT_BUTTON2: return "Paddle Forward (Right)";
-    case IPT_BUTTON3: return "Paddle Forward (Left)";
-    case IPT_BUTTON4: return "Back Paddle (Left)";
-    case IPT_BUTTON5: return "Back Paddle (Right)";
+    case IPT_BUTTON1: return BTN1 "Throw Can / Start";
+    case IPT_BUTTON2: return BTN2 "Paddle Forward (Right)";
+    case IPT_BUTTON3: return BTN3 "Paddle Forward (Left)";
+    case IPT_BUTTON4: return BTN4 "Back Paddle (Left)";
+    case IPT_BUTTON5: return BTN5 "Back Paddle (Right)";
   } /* end of switch */
 
   return "";
@@ -20284,10 +20284,10 @@ const char *topspeed_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Brake";
-    case IPT_BUTTON3: return "Nitro";
-    case IPT_BUTTON4: return "Hi / Lo";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Brake";
+    case IPT_BUTTON3: return BTN3 "Nitro";
+    case IPT_BUTTON4: return BTN4 "Hi / Lo";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -20333,8 +20333,8 @@ const char *tdfever_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Run";
-    case IPT_BUTTON2: return "Pass";
+    case IPT_BUTTON1: return BTN1 "Run";
+    case IPT_BUTTON2: return BTN2 "Pass";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20358,7 +20358,7 @@ const char *toypop_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20380,9 +20380,9 @@ const char *trackfld_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Run";
-    case IPT_BUTTON2: return "Jump/Throw";
-    case IPT_BUTTON3: return "Run";
+    case IPT_BUTTON1: return BTN1 "Run";
+    case IPT_BUTTON2: return BTN2 "Jump/Throw";
+    case IPT_BUTTON3: return BTN3 "Run";
   } /* end of switch */
 
   return "";
@@ -20400,7 +20400,7 @@ const char *tranqgun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20422,8 +20422,8 @@ const char *trisport_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Set / Start";
-    case IPT_BUTTON2: return "Select";
+    case IPT_BUTTON1: return BTN1 "Set / Start";
+    case IPT_BUTTON2: return BTN2 "Select";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -20445,7 +20445,7 @@ const char *triplhnt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -20467,10 +20467,10 @@ const char *statriv2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
-    case IPT_BUTTON4: return "D";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
+    case IPT_BUTTON4: return BTN4 "D";
   } /* end of switch */
 
   return "";
@@ -20488,11 +20488,11 @@ const char *gtsers8_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
-    case IPT_BUTTON5: return "5";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
+    case IPT_BUTTON5: return BTN5 "5";
   } /* end of switch */
 
   return "";
@@ -20510,11 +20510,11 @@ const char *gt507uk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
-    case IPT_BUTTON5: return "5";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
+    case IPT_BUTTON5: return BTN5 "5";
   } /* end of switch */
 
   return "";
@@ -20532,11 +20532,11 @@ const char *gt5_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
-    case IPT_BUTTON5: return "5";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
+    case IPT_BUTTON5: return BTN5 "5";
   } /* end of switch */
 
   return "";
@@ -20554,10 +20554,10 @@ const char *trvgns_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
-    case IPT_BUTTON3: return "C";
-    case IPT_BUTTON4: return "D";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
+    case IPT_BUTTON3: return BTN3 "C";
+    case IPT_BUTTON4: return BTN4 "D";
   } /* end of switch */
 
   return "";
@@ -20575,8 +20575,8 @@ const char *triviasp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Correct";
-    case IPT_BUTTON2: return "Incorrect";
+    case IPT_BUTTON1: return BTN1 "Correct";
+    case IPT_BUTTON2: return BTN2 "Incorrect";
   } /* end of switch */
 
   return "";
@@ -20594,8 +20594,8 @@ const char *triviabb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Correct";
-    case IPT_BUTTON2: return "Incorrect";
+    case IPT_BUTTON1: return BTN1 "Correct";
+    case IPT_BUTTON2: return BTN2 "Incorrect";
   } /* end of switch */
 
   return "";
@@ -20613,8 +20613,8 @@ const char *triviag1_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Correct";
-    case IPT_BUTTON2: return "Incorrect";
+    case IPT_BUTTON1: return BTN1 "Correct";
+    case IPT_BUTTON2: return BTN2 "Incorrect";
   } /* end of switch */
 
   return "";
@@ -20632,8 +20632,8 @@ const char *triviag2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Correct";
-    case IPT_BUTTON2: return "Incorrect";
+    case IPT_BUTTON1: return BTN1 "Correct";
+    case IPT_BUTTON2: return BTN2 "Incorrect";
   } /* end of switch */
 
   return "";
@@ -20651,8 +20651,8 @@ const char *triviayp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Correct";
-    case IPT_BUTTON2: return "Incorrect";
+    case IPT_BUTTON1: return BTN1 "Correct";
+    case IPT_BUTTON2: return BTN2 "Incorrect";
   } /* end of switch */
 
   return "";
@@ -20670,7 +20670,7 @@ const char *trog_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
+    case IPT_BUTTON1: return BTN1 "Punch";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20692,7 +20692,7 @@ const char *tron_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20716,7 +20716,7 @@ const char *tubep_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20738,8 +20738,8 @@ const char *tunhunt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Shield";
     case IPT_AD_STICK_X: return "Left";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_Y: return "Up";
@@ -20761,9 +20761,9 @@ const char *turbo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Lo";
-    case IPT_BUTTON3: return "Hi";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Lo";
+    case IPT_BUTTON3: return BTN3 "Hi";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -20783,7 +20783,7 @@ const char *turbofrc_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -20805,8 +20805,8 @@ const char *toutrun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High / Low";
-    case IPT_BUTTON2: return "Turbo";
+    case IPT_BUTTON1: return BTN1 "High / Low";
+    case IPT_BUTTON2: return BTN2 "Turbo";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
     case IPT_PEDAL: return "Accelerate";
@@ -20828,9 +20828,9 @@ const char *tshoot_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
-    case IPT_BUTTON3: return "Gobble!";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
+    case IPT_BUTTON3: return BTN3 "Gobble!";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -20852,9 +20852,9 @@ const char *tutankhm_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Left";
-    case IPT_BUTTON2: return "Fire Right";
-    case IPT_BUTTON3: return "Flash";
+    case IPT_BUTTON1: return BTN1 "Fire Left";
+    case IPT_BUTTON2: return BTN2 "Fire Right";
+    case IPT_BUTTON3: return BTN3 "Flash";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20876,8 +20876,8 @@ const char *twincobr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20899,8 +20899,8 @@ const char *twineagl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Missile";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Missile";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20922,9 +20922,9 @@ const char *twineag2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
-    case IPT_BUTTON3: return "Special";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
+    case IPT_BUTTON3: return BTN3 "Special";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -20946,9 +20946,9 @@ const char *twotiger_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Bomb";
-    case IPT_BUTTON3: return "Speed";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Bomb";
+    case IPT_BUTTON3: return BTN3 "Speed";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Right";
     case IPT_AD_STICK_X: return "Left";
     case IPT_AD_STICK_Y: return "";
@@ -20970,8 +20970,8 @@ const char *earthjkr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A-Shoot";
-    case IPT_BUTTON2: return "B-Bomb";
+    case IPT_BUTTON1: return BTN1 "A-Shoot";
+    case IPT_BUTTON2: return BTN2 "B-Bomb";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -20993,8 +20993,8 @@ const char *unsquad_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Special Weapon";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Special Weapon";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21016,8 +21016,8 @@ const char *vball_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21039,7 +21039,7 @@ const char *usclssic_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Select Club";
+    case IPT_BUTTON1: return BTN1 "Select Club";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -21079,7 +21079,7 @@ const char *ultratnk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICKLEFT_UP: return "Up";
     case IPT_JOYSTICKLEFT_DOWN: return "Down";
     case IPT_JOYSTICKRIGHT_UP: return "Up";
@@ -21101,9 +21101,9 @@ const char *utoukond_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21125,8 +21125,8 @@ const char *undrfire_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_LIGHTGUN_X: return "Aim Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Aim Right";
     case IPT_LIGHTGUN_Y: return "Aim Up";
@@ -21148,7 +21148,7 @@ const char *uniwars_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Firing Button";
+    case IPT_BUTTON1: return BTN1 "Firing Button";
     case IPT_JOYSTICK_LEFT: return "Control Lever (Left)";
     case IPT_JOYSTICK_RIGHT: return "Control Lever (Right)";
   } /* end of switch */
@@ -21168,7 +21168,7 @@ const char *upndown_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21190,9 +21190,9 @@ const char *valkyrie_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "??";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "??";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -21214,8 +21214,8 @@ const char *vandyke_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21237,10 +21237,10 @@ const char *vanguard_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire Back";
-    case IPT_BUTTON2: return "Fire Forward";
-    case IPT_BUTTON3: return "Fire Down";
-    case IPT_BUTTON4: return "Fire Up";
+    case IPT_BUTTON1: return BTN1 "Fire Back";
+    case IPT_BUTTON2: return BTN2 "Fire Forward";
+    case IPT_BUTTON3: return BTN3 "Fire Down";
+    case IPT_BUTTON4: return BTN4 "Fire Up";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21262,8 +21262,8 @@ const char *varth_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Special";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Special";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21285,8 +21285,8 @@ const char *vendetta_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21308,7 +21308,7 @@ const char *venture_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21330,10 +21330,10 @@ const char *victory_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Thrust";
-    case IPT_BUTTON3: return "Shields";
-    case IPT_BUTTON4: return "Doomsday";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Thrust";
+    case IPT_BUTTON3: return BTN3 "Shields";
+    case IPT_BUTTON4: return BTN4 "Doomsday";
     case IPT_DIAL: return "Rotate Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Rotate Right";
   } /* end of switch */
@@ -21353,8 +21353,8 @@ const char *victroad_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Grenade";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Grenade";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21378,7 +21378,7 @@ const char *hustler_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
+    case IPT_BUTTON1: return BTN1 "Shoot";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -21398,9 +21398,9 @@ const char *videopin_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Left Flipper";
-    case IPT_BUTTON2: return "Right Flipper";
-    case IPT_BUTTON3: return "Nudge";
+    case IPT_BUTTON1: return BTN1 "Left Flipper";
+    case IPT_BUTTON2: return BTN2 "Right Flipper";
+    case IPT_BUTTON3: return BTN3 "Nudge";
     case IPT_JOYSTICK_UP: return "";
     case IPT_JOYSTICK_DOWN: return "Pull plunger";
   } /* end of switch */
@@ -21420,8 +21420,8 @@ const char *vigilant_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Duck";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21443,9 +21443,9 @@ const char *vimana_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Circle Bomb";
-    case IPT_BUTTON3: return "??";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Circle Bomb";
+    case IPT_BUTTON3: return BTN3 "??";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -21467,10 +21467,10 @@ const char *vindictr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Special";
-    case IPT_BUTTON2: return "Rotate left";
-    case IPT_BUTTON3: return "Fire";
-    case IPT_BUTTON4: return "Rotate right";
+    case IPT_BUTTON1: return BTN1 "Special";
+    case IPT_BUTTON2: return BTN2 "Rotate left";
+    case IPT_BUTTON3: return BTN3 "Fire";
+    case IPT_BUTTON4: return BTN4 "Rotate right";
     case IPT_JOYSTICKRIGHT_UP: return "Right forward";
     case IPT_JOYSTICKLEFT_DOWN: return "Left back";
     case IPT_JOYSTICKLEFT_UP: return "Left forward";
@@ -21492,10 +21492,10 @@ const char *vindctr2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "special";
-    case IPT_BUTTON2: return "rotate left";
-    case IPT_BUTTON3: return "fire";
-    case IPT_BUTTON4: return "rotate right";
+    case IPT_BUTTON1: return BTN1 "special";
+    case IPT_BUTTON2: return BTN2 "rotate left";
+    case IPT_BUTTON3: return BTN3 "fire";
+    case IPT_BUTTON4: return BTN4 "rotate right";
     case IPT_JOYSTICKRIGHT_UP: return "Right forward";
     case IPT_JOYSTICKLEFT_DOWN: return "Left back";
     case IPT_JOYSTICKLEFT_UP: return "Left forward";
@@ -21517,9 +21517,9 @@ const char *viofight_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Kick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21541,8 +21541,8 @@ const char *viper_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Fire";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -21564,9 +21564,9 @@ const char *vf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
-    case IPT_BUTTON3: return "Defense";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
+    case IPT_BUTTON3: return BTN3 "Defense";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21588,9 +21588,9 @@ const char *vf2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
-    case IPT_BUTTON3: return "Defense";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
+    case IPT_BUTTON3: return BTN3 "Defense";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21612,8 +21612,8 @@ const char *vsgongf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21635,8 +21635,8 @@ const char *rbibb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21658,8 +21658,8 @@ const char *balonfgt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21681,8 +21681,8 @@ const char *vsbball_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21704,8 +21704,8 @@ const char *btlecity_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_UP: return "Up";
@@ -21727,8 +21727,8 @@ const char *cstlevna_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21750,8 +21750,8 @@ const char *cluclu_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_UP: return "Up";
@@ -21773,8 +21773,8 @@ const char *drmario_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21796,8 +21796,8 @@ const char *duckhunt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_UP: return "Up";
@@ -21819,8 +21819,8 @@ const char *excitebk_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21842,8 +21842,8 @@ const char *vsfdf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21865,8 +21865,8 @@ const char *vsgradus_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21888,7 +21888,7 @@ const char *vsgshoe_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -21910,7 +21910,7 @@ const char *hogalley_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -21952,8 +21952,8 @@ const char *iceclimb_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21975,8 +21975,8 @@ const char *iceclmrj_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -21998,8 +21998,8 @@ const char *machridr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22039,8 +22039,8 @@ const char *mightybj_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22062,8 +22062,8 @@ const char *jajamaru_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22085,8 +22085,8 @@ const char *vspinbal_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22108,8 +22108,8 @@ const char *platoon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22131,8 +22131,8 @@ const char *bnglngby_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22154,7 +22154,7 @@ const char *vsslalom_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Lean Forward";
     case IPT_JOYSTICK_DOWN: return "Brake";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22176,8 +22176,8 @@ const char *vssoccer_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22199,8 +22199,8 @@ const char *starlstr_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_UP: return "Up";
@@ -22222,8 +22222,8 @@ const char *smgolf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22245,8 +22245,8 @@ const char *suprmrio_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22268,8 +22268,8 @@ const char *vsskykid_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22291,8 +22291,8 @@ const char *supxevs_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22314,8 +22314,8 @@ const char *tkoboxng_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22337,8 +22337,8 @@ const char *vstennis_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22360,8 +22360,8 @@ const char *vstetris_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22383,8 +22383,8 @@ const char *goonies_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22406,8 +22406,8 @@ const char *topgun_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22429,8 +22429,8 @@ const char *wrecking_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "B";
-    case IPT_BUTTON2: return "A";
+    case IPT_BUTTON1: return BTN1 "B";
+    case IPT_BUTTON2: return BTN2 "A";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22500,12 +22500,12 @@ const char *wargods_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High Punch";
-    case IPT_BUTTON2: return "Block";
-    case IPT_BUTTON3: return "High Kick";
-    case IPT_BUTTON4: return "Low Punch";
-    case IPT_BUTTON5: return "Low Kick";
-    case IPT_BUTTON6: return "3D";
+    case IPT_BUTTON1: return BTN1 "High Punch";
+    case IPT_BUTTON2: return BTN2 "Block";
+    case IPT_BUTTON3: return BTN3 "High Kick";
+    case IPT_BUTTON4: return BTN4 "Low Punch";
+    case IPT_BUTTON5: return BTN5 "Low Kick";
+    case IPT_BUTTON6: return BTN6 "3D";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22527,8 +22527,8 @@ const char *wotw_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Shield";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -22548,7 +22548,7 @@ const char *warlords_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Start";
+    case IPT_BUTTON1: return BTN1 "Start";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -22568,7 +22568,7 @@ const char *warpwarp_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22590,7 +22590,7 @@ const char *warrior_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sword";
+    case IPT_BUTTON1: return BTN1 "Sword";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22629,10 +22629,10 @@ const char *wecleman_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Accelerate";
-    case IPT_BUTTON2: return "Brake";
-    case IPT_BUTTON3: return "Low Gear";
-    case IPT_BUTTON4: return "High Gear";
+    case IPT_BUTTON1: return BTN1 "Accelerate";
+    case IPT_BUTTON2: return BTN2 "Brake";
+    case IPT_BUTTON3: return BTN3 "Low Gear";
+    case IPT_BUTTON4: return BTN4 "High Gear";
     case IPT_PADDLE: return "Left";
     case (IPT_PADDLE + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -22658,7 +22658,7 @@ const char *wfortune_get_ctrl_name(int type)
 /* P2NumButtons=1 */
     case (IPT_OSD_DESCRIPTION | IPF_PLAYER2): return "";
     case (IPT_BUTTON1 | IPF_PLAYER2): return "Select";
-    case IPT_BUTTON1: return "Select";
+    case IPT_BUTTON1: return BTN1 "Select";
     case IPT_DIAL: return "Spin Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Spin Right";
   } /* end of switch */
@@ -22678,7 +22678,7 @@ const char *whodunit_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_X: return "Left";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_Y: return "Up";
@@ -22700,9 +22700,9 @@ const char *wildfang_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Special";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Special";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22724,8 +22724,8 @@ const char *moo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Shoot";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Shoot";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22747,8 +22747,8 @@ const char *willow_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22770,8 +22770,8 @@ const char *wizdfire_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Magic";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Magic";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22793,7 +22793,7 @@ const char *wow_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22815,7 +22815,7 @@ const char *wolfpack_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_DIAL: return "Left";
     case (IPT_DIAL + IPT_EXTENSION): return "Right";
   } /* end of switch */
@@ -22835,8 +22835,8 @@ const char *wboy_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Speed / Attack";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Speed / Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
   } /* end of switch */
@@ -22856,8 +22856,8 @@ const char *wbml_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sword";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Sword";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -22879,9 +22879,9 @@ const char *wbeachvl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Hit";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Unknown";
+    case IPT_BUTTON1: return BTN1 "Hit";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Unknown";
     case IPT_JOYSTICK_UP: return "Up-Left";
     case IPT_JOYSTICK_DOWN: return "Down-Right";
     case IPT_JOYSTICK_LEFT: return "Left-Down";
@@ -22903,8 +22903,8 @@ const char *wcbowl_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Hook Left";
-    case IPT_BUTTON2: return "Hook Right";
+    case IPT_BUTTON1: return BTN1 "Hook Left";
+    case IPT_BUTTON2: return BTN2 "Hook Right";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -22926,8 +22926,8 @@ const char *wcbowldx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Hook Left";
-    case IPT_BUTTON2: return "Hook Right";
+    case IPT_BUTTON1: return BTN1 "Hook Left";
+    case IPT_BUTTON2: return BTN2 "Hook Right";
     case IPT_TRACKBALL_X: return "Left";
     case (IPT_TRACKBALL_X + IPT_EXTENSION): return "Right";
     case IPT_TRACKBALL_Y: return "Up";
@@ -22955,9 +22955,9 @@ const char *wseries_get_ctrl_name(int type)
     case ((IPT_AD_STICK_X + IPT_EXTENSION) | IPF_PLAYER2): return "Right";
     case (IPT_AD_STICK_Y | IPF_PLAYER2): return "Pitch";
     case ((IPT_AD_STICK_Y + IPT_EXTENSION) | IPF_PLAYER2): return "Windup";
-    case IPT_BUTTON1: return "Go Back";
-    case IPT_BUTTON2: return "Xtra Base";
-    case IPT_BUTTON3: return "Aim";
+    case IPT_BUTTON1: return BTN1 "Go Back";
+    case IPT_BUTTON2: return BTN2 "Xtra Base";
+    case IPT_BUTTON3: return BTN3 "Aim";
     case IPT_AD_STICK_X: return "Swing";
     case (IPT_AD_STICK_X + IPT_EXTENSION): return "Swing";
     case IPT_AD_STICK_Y: return "Up";
@@ -22979,8 +22979,8 @@ const char *wsf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23002,7 +23002,7 @@ const char *wtennis_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Swing";
+    case IPT_BUTTON1: return BTN1 "Swing";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -23024,8 +23024,8 @@ const char *wwfsstar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -23047,8 +23047,8 @@ const char *wwfwfest_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "A";
-    case IPT_BUTTON2: return "B";
+    case IPT_BUTTON1: return BTN1 "A";
+    case IPT_BUTTON2: return BTN2 "B";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23070,11 +23070,11 @@ const char *wwfmania_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Defense";
-    case IPT_BUTTON3: return "Power Punch";
-    case IPT_BUTTON4: return "Kick";
-    case IPT_BUTTON5: return "Power Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Defense";
+    case IPT_BUTTON3: return BTN3 "Power Punch";
+    case IPT_BUTTON4: return BTN4 "Kick";
+    case IPT_BUTTON5: return BTN5 "Power Kick";
     case IPT_JOYSTICK_RIGHT: return "Move Right";
     case IPT_JOYSTICK_LEFT: return "Move Left";
     case IPT_JOYSTICK_DOWN: return "Move Down";
@@ -23096,9 +23096,9 @@ const char *xmen_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Jump";
-    case IPT_BUTTON3: return "Mutant Power";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Jump";
+    case IPT_BUTTON3: return BTN3 "Mutant Power";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_UP: return "Up";
@@ -23120,12 +23120,12 @@ const char *xmvsf_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch - Light";
-    case IPT_BUTTON2: return "Punch - Medium";
-    case IPT_BUTTON3: return "Punch - Heavy";
-    case IPT_BUTTON4: return "Kick - Light";
-    case IPT_BUTTON5: return "Kick - Medium";
-    case IPT_BUTTON6: return "Kick - Heavy";
+    case IPT_BUTTON1: return BTN1 "Punch - Light";
+    case IPT_BUTTON2: return BTN2 "Punch - Medium";
+    case IPT_BUTTON3: return BTN3 "Punch - Heavy";
+    case IPT_BUTTON4: return BTN4 "Kick - Light";
+    case IPT_BUTTON5: return BTN5 "Kick - Medium";
+    case IPT_BUTTON6: return BTN6 "Kick - Heavy";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23147,12 +23147,12 @@ const char *xmcota_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch - Jab ";
-    case IPT_BUTTON2: return "Punch - Strong";
-    case IPT_BUTTON3: return "Punch - Fierce";
-    case IPT_BUTTON4: return "Kick - Short";
-    case IPT_BUTTON5: return "Kick - Forward";
-    case IPT_BUTTON6: return "Kick - Roundhouse";
+    case IPT_BUTTON1: return BTN1 "Punch - Jab ";
+    case IPT_BUTTON2: return BTN2 "Punch - Strong";
+    case IPT_BUTTON3: return BTN3 "Punch - Fierce";
+    case IPT_BUTTON4: return BTN4 "Kick - Short";
+    case IPT_BUTTON5: return BTN5 "Kick - Forward";
+    case IPT_BUTTON6: return BTN6 "Kick - Roundhouse";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -23174,8 +23174,8 @@ const char *xsleena_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23197,9 +23197,9 @@ const char *xenophob_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire / Punch";
-    case IPT_BUTTON2: return "Left Button";
-    case IPT_BUTTON3: return "Right Button";
+    case IPT_BUTTON1: return BTN1 "Fire / Punch";
+    case IPT_BUTTON2: return BTN2 "Left Button";
+    case IPT_BUTTON3: return BTN3 "Right Button";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23221,8 +23221,8 @@ const char *xevious_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Zapper";
-    case IPT_BUTTON2: return "Blaster";
+    case IPT_BUTTON1: return BTN1 "Zapper";
+    case IPT_BUTTON2: return BTN2 "Blaster";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23244,9 +23244,9 @@ const char *xybots_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Turn Left";
-    case IPT_BUTTON3: return "Turn Right";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Turn Left";
+    case IPT_BUTTON3: return BTN3 "Turn Right";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23268,8 +23268,8 @@ const char *yesnoj_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Yes";
-    case IPT_BUTTON2: return "No";
+    case IPT_BUTTON1: return BTN1 "Yes";
+    case IPT_BUTTON2: return BTN2 "No";
   } /* end of switch */
 
   return "";
@@ -23287,8 +23287,8 @@ const char *yiear_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Punch";
-    case IPT_BUTTON2: return "Kick";
+    case IPT_BUTTON1: return BTN1 "Punch";
+    case IPT_BUTTON2: return BTN2 "Kick";
     case IPT_JOYSTICK_UP: return "Jump";
     case IPT_JOYSTICK_DOWN: return "Stoop Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23310,7 +23310,7 @@ const char *yosakdon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_RIGHT: return "Right";
   } /* end of switch */
@@ -23330,11 +23330,11 @@ const char *yuyugogo_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "1";
-    case IPT_BUTTON2: return "2";
-    case IPT_BUTTON3: return "3";
-    case IPT_BUTTON4: return "4";
-    case IPT_BUTTON5: return "??";
+    case IPT_BUTTON1: return BTN1 "1";
+    case IPT_BUTTON2: return BTN2 "2";
+    case IPT_BUTTON3: return BTN3 "3";
+    case IPT_BUTTON4: return BTN4 "4";
+    case IPT_BUTTON5: return BTN5 "??";
   } /* end of switch */
 
   return "";
@@ -23352,7 +23352,7 @@ const char *zaxxon_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23374,7 +23374,7 @@ const char *zerohour_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23396,7 +23396,7 @@ const char *zeropnt_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_LIGHTGUN_Y: return "Up";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_X: return "Left";
@@ -23418,7 +23418,7 @@ const char *zeropnt2_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case (IPT_LIGHTGUN_Y + IPT_EXTENSION): return "Down";
     case IPT_LIGHTGUN_Y: return "Up";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
@@ -23440,8 +23440,8 @@ const char *zerowing_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Shield";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Shield";
     case IPT_JOYSTICK_RIGHT: return "Right";
     case IPT_JOYSTICK_LEFT: return "Left";
     case IPT_JOYSTICK_DOWN: return "Down";
@@ -23463,7 +23463,7 @@ const char *zerozone_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Rotate";
+    case IPT_BUTTON1: return BTN1 "Rotate";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23485,7 +23485,7 @@ const char *zigzag_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Pump";
+    case IPT_BUTTON1: return BTN1 "Pump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23507,8 +23507,8 @@ const char *zingzip_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Bomb";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Bomb";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23530,9 +23530,9 @@ const char *zoar_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "High Missile";
-    case IPT_BUTTON2: return "Low Missile";
-    case IPT_BUTTON3: return "Top Speed";
+    case IPT_BUTTON1: return BTN1 "High Missile";
+    case IPT_BUTTON2: return BTN2 "Low Missile";
+    case IPT_BUTTON3: return BTN3 "Top Speed";
     case IPT_JOYSTICK_UP: return "Gain Altitude";
     case IPT_JOYSTICK_DOWN: return "Lose Altitude";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23554,7 +23554,7 @@ const char *zodiack_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
+    case IPT_BUTTON1: return BTN1 "Fire";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23576,8 +23576,8 @@ const char *zombraid_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Fire";
-    case IPT_BUTTON2: return "Reload";
+    case IPT_BUTTON1: return BTN1 "Fire";
+    case IPT_BUTTON2: return BTN2 "Reload";
     case IPT_LIGHTGUN_Y: return "Up";
     case (IPT_LIGHTGUN_X + IPT_EXTENSION): return "Right";
     case IPT_LIGHTGUN_X: return "Left";
@@ -23599,7 +23599,7 @@ const char *zookeep_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Jump";
+    case IPT_BUTTON1: return BTN1 "Jump";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23621,8 +23621,8 @@ const char *zunkyou_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Attack";
-    case IPT_BUTTON2: return "Special Attack";
+    case IPT_BUTTON1: return BTN1 "Attack";
+    case IPT_BUTTON2: return BTN2 "Special Attack";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Left";
@@ -23644,10 +23644,10 @@ const char *zwackery_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Sword";
-    case IPT_BUTTON2: return "Shield";
-    case IPT_BUTTON3: return "Pick Up";
-    case IPT_BUTTON4: return "Cast Spell";
+    case IPT_BUTTON1: return BTN1 "Sword";
+    case IPT_BUTTON2: return BTN2 "Shield";
+    case IPT_BUTTON3: return BTN3 "Pick Up";
+    case IPT_BUTTON4: return BTN4 "Cast Spell";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
     case IPT_JOYSTICK_LEFT: return "Run Left";
@@ -23671,7 +23671,7 @@ const char *zzyzzyxx_get_ctrl_name(int type)
 {
   switch(type)
   {
-    case IPT_BUTTON1: return "Make Brick";
+    case IPT_BUTTON1: return BTN1 "Make Brick";
     case IPT_JOYSTICK_UP: return "Up";
     case IPT_JOYSTICK_DOWN: return "Down";
   } /* end of switch */
