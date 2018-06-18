@@ -857,11 +857,10 @@ static void set_content_flags(void)
   if(game_driver->ctrl_dat->alternating_controls) 
   { 
     options.content_flags[CONTENT_ALTERNATING_CTRLS] = true;
-    if(options.player_count == 2)
-      options.ctrl_count = 1; /* ie: two players take alternating turns using the "player 1" controls */
-    else if(options.player_count == 4)
-      options.ctrl_count = 2;
-    else
+    /* there may or may not be some need to have a ctrl_count different than player_count, perhaps because of some
+       alternating controls layout. this is a place to check some condition and make the two numbers different
+       if that should ever prove useful. */
+    if(true)       
       options.ctrl_count = options.player_count;
   }
   else
