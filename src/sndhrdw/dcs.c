@@ -455,6 +455,15 @@ void dcs2_init(offs_t polling_offset)
 		for (i = 0; i < 0x400; i++)
 			dcs_expanded_rom[0x400 * page + i] = romsrc[BYTE_XOR_LE(0x1000 * page + i)];
 	
+    /* install the speedup handler */
+    if (options.activate_dcs_speedhack)
+    {
+      dcs_speedup1 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x04f8, 0x04f8), dcs_speedup1_w);
+      dcs_speedup2 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x063d, 0x063d), dcs_speedup2_w);
+	    dcs_speedup3 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x063a, 0x063a), dcs_speedup3_w);
+      dcs_speedup4 = install_mem_write16_handler(dcs_cpunum, ADSP_DATA_ADDR_RANGE(0x0641, 0x0641), dcs_speedup4_w);
+     }
+	
 	/* create the timer */
 	dcs.reg_timer = timer_alloc(dcs_irq);
 	dcs.sport_timer = timer_alloc(sport0_irq);
