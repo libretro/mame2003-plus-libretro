@@ -30,6 +30,7 @@
 #include "cpu/tms34010/tms34010.h"
 #include "sndhrdw/williams.h"
 #include "midyunit.h"
+#include "bootstrap.h"
 
 const char *const mk_sample_names_yunit[] =
 {
@@ -1960,8 +1961,8 @@ ROM_END
  *
  *************************************/
 
-GAME( 1988, narc,     0,       zunit,    narc,    narc,     ROT0, "Williams", "Narc (rev 7.00)" )
-GAME( 1988, narc3,    narc,    zunit,    narc,    narc3,    ROT0, "Williams", "Narc (rev 3.20)" )
+GAMEC( 1988, narc,     0,       zunit,    narc,    narc,     ROT0, "Williams", "Narc (rev 7.00)", &narc_ctrl, &narc_bootstrap  )
+GAMEC( 1988, narc3,    narc,    zunit,    narc,    narc3,    ROT0, "Williams", "Narc (rev 3.20)", &narc_ctrl, &narc3_bootstrap )
 
 GAME( 1990, trog,     0,       trog,     trog,    trog,     ROT0, "Midway",   "Trog (rev LA4 03-11-91)" )
 GAME( 1990, trog3,    trog,    trog,     trog,    trog3,    ROT0, "Midway",   "Trog (rev LA3 02-14-91)" )
