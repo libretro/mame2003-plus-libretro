@@ -2383,7 +2383,7 @@ void generate_gameinfo(void)
 void ui_copyright_and_warnings(void)
 {
   char buffer[MAX_MESSAGE_LENGTH];
-  
+  buffer[0]='\0';
   if(!options.skip_disclaimer)
     snprintf(buffer, MAX_MESSAGE_LENGTH, "%s", ui_getstring(UI_copyright));
   
