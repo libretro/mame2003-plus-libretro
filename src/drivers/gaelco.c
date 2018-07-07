@@ -614,11 +614,58 @@ INPUT_PORTS_START( biomtoy )
 INPUT_PORTS_END
 
 /*============================================================================
+							SQUASH
+  ============================================================================*/
+
+static WRITE16_HANDLER( gaelco_vram_encrypted_w )
+{
+	data = gaelco_decrypt(offset, data, 0x0f, 0x4228);
+	COMBINE_DATA(&gaelco_videoram[offset]);
+
+	gaelco_mark_offset_dirty(offset);
+}
+
+static WRITE16_HANDLER(gaelco_encrypted_w)
+{
+	data = gaelco_decrypt(offset, data, 0x0f, 0x4228);
+	COMBINE_DATA(&gaelco_screen[offset]);
+}
+
+static MEMORY_READ16_START( squash_readmem )
+    { 0x000000, 0x0fffff, MRA16_ROM },			        /* ROM */
+	{ 0x100000, 0x101fff, MRA16_RAM },			        /* Video RAM */
+    { 0x102000, 0x103fff, MRA16_RAM },			        /* Screen RAM */
+    { 0x200000, 0x2007ff, MRA16_RAM },			        /* Palette */
+	{ 0x440000, 0x440fff, MRA16_RAM },			        /* Sprite RAM */
+	{ 0x700000, 0x700001, input_port_0_word_r },        /* DIPSW #2 */
+	{ 0x700002, 0x700003, input_port_1_word_r },        /* DIPSW #1 */
+	{ 0x700004, 0x700005, input_port_2_word_r },        /* INPUT #1 */
+	{ 0x700006, 0x700007, input_port_3_word_r },        /* INPUT #2 */
+	{ 0x70000e, 0x70000f, OKIM6295_status_0_lsb_r },    /* OKI6295 status register */
+	{ 0xff0000, 0xffffff, MRA16_RAM },			        /* Work RAM */
+MEMORY_END
+
+
+static MEMORY_WRITE16_START( squash_writemem )
+    { 0x000000, 0x0fffff, MWA16_ROM },								     /* ROM */
+	{ 0x100000, 0x101fff, gaelco_vram_encrypted_w, &gaelco_videoram },	 /* Video RAM */
+	{ 0x102000, 0x103fff, gaelco_encrypted_w, &gaelco_screen },			 /* Screen RAM */
+	{ 0x108000, 0x108007, MWA16_RAM, &gaelco_vregs },			         /* Video Registers */
+/*	{ 0x10800c, 0x10800d, watchdog_reset_w },					         // INT 6 ACK/Watchdog timer /*/
+    { 0x200000, 0x2007ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 }, /* Palette */
+	{ 0x440000, 0x440fff, MWA16_RAM, &gaelco_spriteram },			     /* Sprite RAM */
+	{ 0x70000c, 0x70000d, OKIM6295_bankswitch_w },					     /* OKI6295 bankswitch */
+	{ 0x70000e, 0x70000f, OKIM6295_data_0_lsb_w },					     /* OKI6295 data register */
+	{ 0xff0000, 0xffffff, MWA16_RAM },								     /* Work RAM */
+MEMORY_END
+
+
+/*============================================================================
 					THUNDER HOOP
 ============================================================================*/
 
 static MEMORY_READ16_START( thoop_readmem )
-        { 0x000000, 0x0fffff, MRA16_ROM },			/* ROM */
+    { 0x000000, 0x0fffff, MRA16_ROM },			/* ROM */
 	{ 0x100000, 0x101fff, MRA16_RAM },			/* Video RAM */
 	{ 0x102000, 0x103fff, MRA16_RAM },			/* Screen RAM */
 	{ 0x200000, 0x2007ff, MRA16_RAM },			/* Palette */
@@ -646,7 +693,7 @@ static WRITE16_HANDLER(thoop_encrypted_w)
 }
 
 static MEMORY_WRITE16_START( thoop_writemem )
-        { 0x000000, 0x0fffff, MWA16_ROM },							/* ROM */
+    { 0x000000, 0x0fffff, MWA16_ROM },							/* ROM */
 	{ 0x100000, 0x101fff, thoop_vram_encrypted_w, &gaelco_videoram },	/* Video RAM */
 	{ 0x102000, 0x103fff, thoop_encrypted_w, &gaelco_screen },								/* Screen RAM */
 	{ 0x108000, 0x108007, MWA16_RAM, &gaelco_vregs },		/* Video Registers */
@@ -654,9 +701,79 @@ static MEMORY_WRITE16_START( thoop_writemem )
 	{ 0x200000, 0x2007ff, paletteram16_xBBBBBGGGGGRRRRR_word_w, &paletteram16 },/* Palette */
 	{ 0x440000, 0x440fff, MWA16_RAM, &gaelco_spriteram },		/* Sprite RAM */
 	{ 0x70000c, 0x70000d, OKIM6295_bankswitch_w },					/* OKI6295 bankswitch */
-        { 0x70000e, 0x70000f, OKIM6295_data_0_lsb_w },					/* OKI6295 data register */
+    { 0x70000e, 0x70000f, OKIM6295_data_0_lsb_w },					/* OKI6295 data register */
 	{ 0xff0000, 0xffffff, MWA16_RAM },							/* Work RAM */
 MEMORY_END
+
+INPUT_PORTS_START( squash )
+	PORT_START /* dip 0 */
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 6C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 3C_2C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_3C ) )
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
+	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_B ) )
+	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 3C_4C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(    0x18, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( 1C_6C ) )
+	PORT_DIPNAME( 0x40, 0x40, "2 Player Continue" )
+	PORT_DIPSETTING(    0x40, "2 Credits / 5 Games" )
+	PORT_DIPSETTING(    0x00, "1 Credit / 3 Games" )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Free_Play ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START /* dip 1 */
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
+	PORT_DIPSETTING(    0x02, "Easy" )
+	PORT_DIPSETTING(    0x03, "Normal" )
+	PORT_DIPSETTING(    0x01, "Hard" )
+	PORT_DIPSETTING(    0x00, "Hardest" )
+	PORT_DIPNAME( 0x0c, 0x0c, "Number of Faults" )
+	PORT_DIPSETTING(    0x08, "4" )
+	PORT_DIPSETTING(    0x0c, "5" )
+	PORT_DIPSETTING(    0x04, "6" )
+	PORT_DIPSETTING(    0x00, "7" )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )/* Not Listed/shown in test mode */
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Demo_Sounds ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unused ) ) /* Listed as "Unused" in test mode */
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
+
+	PORT_START	/* 1P INPUTS & COINSW */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
+
+	PORT_START	/* 2P INPUTS & STARTSW */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER2 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
+INPUT_PORTS_END
 
 INPUT_PORTS_START( thoop )
 	PORT_START	/* DSW2 8bit */
@@ -786,6 +903,31 @@ static MACHINE_DRIVER_START( maniacsq )
 	MDRV_SOUND_ADD(OKIM6295, maniacsq_okim6295_interface)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( squash )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 12000000)	/* MC68000P12, 12 MHz */
+	MDRV_CPU_MEMORY(squash_readmem,squash_writemem)
+	MDRV_CPU_VBLANK_INT(irq6_line_hold,1)
+
+	MDRV_FRAMES_PER_SECOND(60)
+	MDRV_VBLANK_DURATION(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_INTERLEAVE(10)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_SIZE(32*16, 32*16)
+	MDRV_VISIBLE_AREA(0, 320-1, 16, 256-1)
+	MDRV_GFXDECODE(gfxdecodeinfo_0x100000)
+	MDRV_PALETTE_LENGTH(1024)
+
+	MDRV_VIDEO_START(bigkarnk)
+	MDRV_VIDEO_UPDATE(bigkarnk)
+
+	/* sound hardware */
+	MDRV_SOUND_ADD(OKIM6295, bigkarnk_okim6295_interface)
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( thoop )
 
 	/* basic machine hardware */
@@ -870,6 +1012,28 @@ ROM_START( biomtoy )
 ROM_END
 
 /* encrypted video ram */
+ROM_START( squash )
+	ROM_REGION( 0x100000, REGION_CPU1, 0 )	/* 68000 code */
+	ROM_LOAD16_BYTE( "squash.d18", 0x000000, 0x20000, CRC(ce7aae96) SHA1(4fe8666ae571bffc5a08fa68346c0623282989eb) )
+	ROM_LOAD16_BYTE( "squash.d16", 0x000001, 0x20000, CRC(8ffaedd7) SHA1(f4aada17ba67dd8b6c5a395e832bcbba2764c59d) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "squash.c09", 0x300000, 0x80000, CRC(0bb91c69) SHA1(8be945049ab411a4d49bd64bd3937542ec9ef9fb) )
+	ROM_RELOAD(		0x380000, 0x80000 )
+	ROM_LOAD( "squash.c10", 0x200000, 0x80000, CRC(892a035c) SHA1(d0156ceb9aa6639a1124c17fb12389be319bb51f) )
+	ROM_RELOAD(		0x280000, 0x80000 )
+	ROM_LOAD( "squash.c11", 0x100000, 0x80000, CRC(9e19694d) SHA1(1df4646f3147719fef516a37aa361ae26d9b23a2) )
+	ROM_RELOAD(		0x180000, 0x80000 )
+	ROM_LOAD( "squash.c12", 0x000000, 0x80000, CRC(5c440645) SHA1(4f2fc1647ffc549fa079f2dc0aaaceb447afdf44) )
+	ROM_RELOAD(		0x080000, 0x80000 )
+
+	ROM_REGION( 0x140000, REGION_SOUND1, 0 )	/* ADPCM samples - sound chip is OKIM6295 */
+	ROM_LOAD( "squash.d01",   0x000000, 0x80000, CRC(a1b9651b) SHA1(a396ba94889f70ea06d6330e3606b0f2497ff6ce) )
+	ROM_RELOAD(		0x040000, 0x080000 )
+	ROM_RELOAD(		0x0c0000, 0x080000 )
+ROM_END
+
+/* encrypted video ram */
 ROM_START( thoop )
 	ROM_REGION( 0x100000, REGION_CPU1, 0 )	/* 68000 code */
 	ROM_LOAD16_BYTE( "th18dea1.040", 0x000000, 0x80000, CRC(59bad625) SHA1(28e058b2290bc5f7130b801014d026432f9e7fd5) ) 
@@ -899,7 +1063,10 @@ ROM_START( thoop )
 ROM_END
 
 
-GAME( 1991, bigkarnk, 0,        bigkarnk, bigkarnk, 0, ROT0, "Gaelco", "Big Karnak" )
-GAME( 1995, biomtoy,  0,        maniacsq, biomtoy,  0, ROT0, "Gaelco", "Biomechanical Toy (unprotected)" )
-GAME( 1996, maniacsp, maniacsq, maniacsq, maniacsq, 0, ROT0, "Gaelco", "Maniac Square (prototype)" )
-GAME( 1992, thoop,    0,	thoop,    thoop,    0, ROT0, "Gaelco", "Thunder Hoop" )
+GAME(1991, bigkarnk, 0,        bigkarnk, bigkarnk, 0, ROT0, "Gaelco", "Big Karnak" )
+GAME(1995, biomtoy,  0,        maniacsq, biomtoy,  0, ROT0, "Gaelco", "Biomechanical Toy (unprotected)" )
+GAME(1996, maniacsp, maniacsq, maniacsq, maniacsq, 0, ROT0, "Gaelco", "Maniac Square (prototype)" )
+GAME(1992, squash,   0,	       squash,   squash,   0, ROT0, "Gaelco", "Squash" )
+GAME(1992, thoop,    0,	       thoop,    thoop,    0, ROT0, "Gaelco", "Thunder Hoop" )
+
+
