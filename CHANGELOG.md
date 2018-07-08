@@ -91,6 +91,7 @@
 * Skull Fang
 * Snk Vs Capcom : Svc Chaos (bootleg)
 * Sonic Boom
+* Squash
 * Super Bishi Bashi Championship (ver JAA, 2 Players)
 * Super Bishi Bashi Championship (ver KAA, 3 Players)
 * Super Rider
