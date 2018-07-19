@@ -29,18 +29,18 @@ int			mj_current_music = 0;
 const char *const moonwalker_samples_set_names[] =
 {
 	"*moonwalker",
-	"bad-01.wav",
-	"bad-02.wav",
-	"smoothcriminal-01.wav",
-	"smoothcriminal-02.wav",	
-	"beatit-01.wav",
-	"beatit-02.wav",
-	"thriller-01.wav",
-	"thriller-02.wav",	
-	"billiejean-01.wav",
-	"billiejean-02.wav",
-	"title-01.wav",
-	"title-02.wav",
+	"bad-01",
+	"bad-02",
+	"smoothcriminal-01",
+	"smoothcriminal-02",	
+	"beatit-01",
+	"beatit-02",
+	"thriller-01",
+	"thriller-02",	
+	"billiejean-01",
+	"billiejean-02",
+	"title-01",
+	"title-02",
 	0
 };
 
