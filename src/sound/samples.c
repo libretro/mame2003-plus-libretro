@@ -1,5 +1,5 @@
 #include "driver.h"
-
+void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load, int b_h_decode);
 
 
 static int firstchannel,numchannels;
