@@ -6,7 +6,7 @@ static int firstchannel,numchannels;
 int leftSampleNum;
 int rightSampleNum;
 
-void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load, int b_h_decode);
+void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load);
 
 /* Start one of the samples loaded from disk. Note: channel must be in the range */
 /* 0 .. Samplesinterface->channels-1. It is NOT the discrete channel to pass to */
@@ -31,7 +31,7 @@ void sample_start(int channel,int samplenum,int loop)
 		if (Machine->samples->sample[samplenum]->b_decoded == 0)
 		{
 			// Lets decode this sample before playing it.
-			readsample(Machine->samples->sample[samplenum], samplenum, Machine->samples, 1, 0);
+			readsample(Machine->samples->sample[samplenum], samplenum, Machine->samples, 1);
 		}
 
 		if (Machine->samples->sample[samplenum]->b_decoded == 1)
@@ -125,8 +125,8 @@ void sample_stop(int channel)
 	if (Machine->samples->sample[c_sample] != NULL) {
 		if (Machine->samples->sample[c_sample]->b_decoded == 1) {
 			// A non pre loaded sample, lets free from memory. Useful for devices with limited amount of RAM using large sample files.
-			if (Machine->samples->sample[c_sample]->b_h_decoded == 0)
-				readsample(Machine->samples->sample[c_sample], c_sample, Machine->samples, 0, 0);
+			if (Machine->samples->sample[c_sample]->length > GAME_SAMPLE_LARGE)
+				readsample(Machine->samples->sample[c_sample], c_sample, Machine->samples, 0);
 
 			if (channel == 0)
 				leftSampleNum = NULL;

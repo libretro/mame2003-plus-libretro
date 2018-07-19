@@ -1,38 +1,32 @@
 /*********************************************************************
-
 	common.c
-
 	Generic functions, mostly ROM and graphics related.
-
 *********************************************************************/
 
 #include "driver.h"
 #include "png.h"
 #include "harddisk.h"
 #include "artwork.h"
-#include "bootstrap.h"
 #include <stdarg.h>
 #include <ctype.h>
-#include <string/stdstring.h>
 #include "lib/libflac/include/flac/all.h"
-#include "log.h"
+//#define LOG_LOAD
+
 
 
 /***************************************************************************
-
 	Constants
-
 ***************************************************************************/
 
-#define BITMAP_SAFETY 16 /* osd_alloc_bitmap allocates a "safety area" 16 pixels around the bitmap. For performance reasons some graphic routines don't clip at boundaries of the bitmap.*/
-#define MAX_MALLOCS   4096
+// VERY IMPORTANT: osd_alloc_bitmap must allocate also a "safety area" 16 pixels wide all
+// around the bitmap. This is required because, for performance reasons, some graphic
+// routines don't clip at boundaries of the bitmap.
+#define BITMAP_SAFETY			16
 
-
+#define MAX_MALLOCS				4096
 
 /***************************************************************************
-
 	Type definitions
-
 ***************************************************************************/
 
 struct malloc_info
@@ -40,6 +34,7 @@ struct malloc_info
 	int tag;
 	void *ptr;
 };
+
 
 /***************************************************************************
 	FLAC stuff
@@ -126,7 +121,7 @@ FLAC__StreamDecoderWriteStatus my_write_callback(const FLAC__StreamDecoder *deco
 
 	flacrd->decoded_size += frame->header.blocksize;
 
-	for (i=0;i<frame->header.blocksize;i++)
+	for ( i=0;i<frame->header.blocksize;i++)
 	{
 		flacrd->write_data[i+flacrd->write_position] = buffer[0][i];
 	}
@@ -136,11 +131,8 @@ FLAC__StreamDecoderWriteStatus my_write_callback(const FLAC__StreamDecoder *deco
 	return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
 }
 
-
 /***************************************************************************
-
 	Global variables
-
 ***************************************************************************/
 
 /* These globals are only kept on a machine basis - LBO 042898 */
@@ -148,6 +140,8 @@ unsigned int dispensed_tickets;
 unsigned int coins[COIN_COUNTERS];
 unsigned int lastcoin[COIN_COUNTERS];
 unsigned int coinlockedout[COIN_COUNTERS];
+
+int snapno;
 
 /* malloc tracking */
 static struct malloc_info malloc_list[MAX_MALLOCS];
@@ -168,9 +162,7 @@ static int system_bios;
 
 
 /***************************************************************************
-
 	Functions
-
 ***************************************************************************/
 
 void showdisclaimer(void)   /* MAURY_BEGIN: dichiarazione */
@@ -202,7 +194,7 @@ void showdisclaimer(void)   /* MAURY_BEGIN: dichiarazione */
 /*-------------------------------------------------
 	read_wav_sample - read a WAV file as a sample
 -------------------------------------------------*/
-static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, const char *filename, int filetype, int b_data, int b_h_decoded)
+static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, const char *filename, int filetype, int b_data)
 {
 	unsigned long offset = 0;
 	UINT32 length, rate, filesize, temp32;
@@ -298,10 +290,8 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		}
 
 		// For small samples, lets force them to pre load into memory.
-		if(length < GAME_SAMPLE_LARGE) {
+		if(length <= GAME_SAMPLE_LARGE)
 			b_data = 1;
-			b_h_decoded = 1;
-		}
 			
 		/* allocate the game sample */
 		if(b_data == 1)
@@ -320,7 +310,6 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		result->length = length;
 		result->smpfreq = rate;
 		result->resolution = bits;
-		result->b_h_decoded = b_h_decoded;
 
 		if(b_data == 1) {
 			// read the data in
@@ -339,9 +328,6 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 			}
 
 			result->b_decoded = 1;
-
-			if(b_h_decoded == 1)
-				f_load_sample_sizes = f_load_sample_sizes + result->length;
 		}
 		else
 			result->b_decoded = 0;
@@ -350,16 +336,14 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 	}
 	else if(f_type == 2) { // Load FLAC file.
 		int f_length;
-
+		
 		mame_fseek(f, 0, SEEK_END);
 		f_length = mame_ftell(f);
 		mame_fseek(f, 0, 0);
 
 		// For small samples, lets force them to pre load into memory.
-		if (f_length < GAME_SAMPLE_LARGE) {
+		if (f_length <= GAME_SAMPLE_LARGE)
 			b_data = 1;
-			b_h_decoded = 1;
-		}
 			
 		flac_reader flac_file;
 		
@@ -374,7 +358,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		mame_fread(f, flac_file.rawdata, f_length);
 
 		FLAC__StreamDecoder *decoder = FLAC__stream_decoder_new();
-
+		
 		if (!decoder) {
 			free(flac_file.rawdata);
 			return NULL;
@@ -404,7 +388,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 			return NULL;
 		}
 
-		// only support16 bit.
+		// only support 16 bit.
 		if (flac_file.bits_per_sample != 16) {
 			free(flac_file.rawdata);
 			FLAC__stream_decoder_delete(decoder);
@@ -415,11 +399,10 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 			result = auto_malloc(sizeof(struct GameSample) + (flac_file.total_samples * (flac_file.bits_per_sample / 8)));
 		else
 			result = auto_malloc(sizeof(struct GameSample));
-		
+
 		strcpy(result->gamename, gamename);
 		strcpy(result->filename, filename);
 		result->filetype = filetype;
-		result->b_h_decoded = b_h_decoded;
 		
 		result->smpfreq = flac_file.sample_rate;
 		result->length = flac_file.total_samples * (flac_file.bits_per_sample / 8);
@@ -436,15 +419,10 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 			}
 
 			result->b_decoded = 1;
-
-			if(b_h_decoded == 1)
-				f_load_sample_sizes = f_load_sample_sizes + result->length;			
 		}
 		else
 			result->b_decoded = 0;
 
-		result->b_h_decoded = b_h_decoded;
-			
 		if (FLAC__stream_decoder_finish (decoder) != true) {
 			free(flac_file.rawdata);
 			FLAC__stream_decoder_delete(decoder);
@@ -452,9 +430,9 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		}
 
 		FLAC__stream_decoder_delete(decoder);
-		
+
 		free(flac_file.rawdata);
-		
+
 		return result;
 	}
 	else
@@ -462,7 +440,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 }
 
 // Handles freeing previous played sample from memory. Helps with the low memory devices which load large sample files.
-void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load, int b_h_decode)
+void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load)
 {
 	mame_file *f;
 	struct GameSample *SampleFile;
@@ -481,10 +459,8 @@ void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *
 		// Free up some memory.
 		free(SamplesData->sample[channel]);
 
-		if(load == 0)
-			SamplesData->sample[channel] = read_wav_sample(f, gamename, filename, filetype, 0, b_h_decode); // Reload sample info after freeing from memory.
-		else
-			SamplesData->sample[channel] = read_wav_sample(f, gamename, filename, filetype, 1, b_h_decode); // Load a sample into memory before playing it.
+		// Reload or load a sample into memory.
+		SamplesData->sample[channel] = read_wav_sample(f, gamename, filename, filetype, load);
 
 		mame_fclose(f);
 	}
@@ -501,9 +477,9 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	int i;
 	struct GameSamples *samples;
 	int skipfirst = 0;
+
 	/* if the user doesn't want to use samples, bail */
-	if( (!options.use_samples)  &&  (options.content_flags[CONTENT_ALT_SOUND]) ) return 0;
-		
+	if (!options.use_samples) return 0;
 
 	if (samplenames == 0 || samplenames[0] == 0) return 0;
 
@@ -558,34 +534,18 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 				// Open FLAC.
 				if(f_type == 0) {
 					if (f_skip == 1)				
-						samples->sample[i] = read_wav_sample(f, samplenames[0]+1, samplenames[i+skipfirst], FILETYPE_SAMPLE_FLAC, 0, 0);
+						samples->sample[i] = read_wav_sample(f, samplenames[0]+1, samplenames[i+skipfirst], FILETYPE_SAMPLE_FLAC, 0);
 					else
-						samples->sample[i] = read_wav_sample(f, basename, samplenames[i+skipfirst], FILETYPE_SAMPLE_FLAC, 0, 0);
+						samples->sample[i] = read_wav_sample(f, basename, samplenames[i+skipfirst], FILETYPE_SAMPLE_FLAC, 0);
 				}
 				else { // Open WAV.
 					if (f_skip == 1)
-						samples->sample[i] = read_wav_sample(f, samplenames[0]+1, samplenames[i+skipfirst], FILETYPE_SAMPLE, 0, 0);
+						samples->sample[i] = read_wav_sample(f, samplenames[0]+1, samplenames[i+skipfirst], FILETYPE_SAMPLE, 0);
 					else
-						samples->sample[i] = read_wav_sample(f, basename, samplenames[i+skipfirst], FILETYPE_SAMPLE, 0, 0);
+						samples->sample[i] = read_wav_sample(f, basename, samplenames[i+skipfirst], FILETYPE_SAMPLE, 0);
 				}
 					
 				mame_fclose(f);
-			}
-		}
-	}
-
-	int f_tmp_size = f_load_sample_sizes;
-
-	// Load as many samples into memory until the MAX allowed limit is reached. Helps with FLACs as they take a bit longer than WAVs to load because they need to be decoded first. Also a bit more performance for OST games like Mortal Kombat which can switch between music quickly during a event in a game.
-	for (i = 0;i < samples->total;i++) {
-		if(samples->sample[i] != NULL) {
-			if(samples->sample[i]->b_decoded == 0) {
-				if(f_tmp_size + samples->sample[i]->length <= GAME_SAMPLE_MAX_TOTAL) {
-					readsample(samples->sample[i], i, samples, 1, 1);
-
-					if(samples->sample[i]->b_decoded == 1)
-						f_tmp_size = f_tmp_size + samples->sample[i]->length;
-				}
 			}
 		}
 	}
