@@ -2659,19 +2659,3 @@ SOURCES_C += \
 	$(CORE_DIR)/lib/libflac/libflac/stream_encoder_framing.c \
 	$(CORE_DIR)/lib/libflac/libflac/window.c
 endif
-SOURCES_C += \
-	$(CORE_DIR)/lib/libflac/libflac/bitmath.c \
-	$(CORE_DIR)/lib/libflac/libflac/bitreader.c \
-	$(CORE_DIR)/lib/libflac/libflac/bitwriter.c \
-	$(CORE_DIR)/lib/libflac/libflac/cpu.c \
-	$(CORE_DIR)/lib/libflac/libflac/crc.c \
-	$(CORE_DIR)/lib/libflac/libflac/fixed.c \
-	$(CORE_DIR)/lib/libflac/libflac/float.c \
-	$(CORE_DIR)/lib/libflac/libflac/format.c \
-	$(CORE_DIR)/lib/libflac/libflac/lpc.c \
-	$(CORE_DIR)/lib/libflac/libflac/md5.c \
-	$(CORE_DIR)/lib/libflac/libflac/memory.c \
-	$(CORE_DIR)/lib/libflac/libflac/stream_decoder.c \
-	$(CORE_DIR)/lib/libflac/libflac/stream_encoder.c \
-	$(CORE_DIR)/lib/libflac/libflac/stream_encoder_framing.c \
-	$(CORE_DIR)/lib/libflac/libflac/window.c
