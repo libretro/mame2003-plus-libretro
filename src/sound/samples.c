@@ -6,6 +6,8 @@ static int firstchannel,numchannels;
 int leftSampleNum;
 int rightSampleNum;
 
+void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load, int b_h_decode);
+
 /* Start one of the samples loaded from disk. Note: channel must be in the range */
 /* 0 .. Samplesinterface->channels-1. It is NOT the discrete channel to pass to */
 /* mixer_play_sample() */
