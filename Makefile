@@ -429,6 +429,8 @@ include Makefile.common
 # some structures and thus they can't be linked against each other.
 DEFS = $(COREDEFINES) -Dasm=__asm__
 
+DEFS += -DFLAC__NO_DLL
+
 CFLAGS += $(INCFLAGS) $(INCFLAGS_PLATFORM)
 
 # combine the various definitions to one
