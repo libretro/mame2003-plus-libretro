@@ -2642,9 +2642,7 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/zlib/trees.c \
 	$(LIBRETRO_COMM_DIR)/zlib/uncompr.c \
 	$(LIBRETRO_COMM_DIR)/zlib/unzip.c \
-	$(LIBRETRO_COMM_DIR)/zlib/zutil.c
-endif
-SOURCES_C += \
+	$(LIBRETRO_COMM_DIR)/zlib/zutil.c \
 	$(CORE_DIR)/lib/libflac/libflac/bitmath.c \
 	$(CORE_DIR)/lib/libflac/libflac/bitreader.c \
 	$(CORE_DIR)/lib/libflac/libflac/bitwriter.c \
@@ -2660,3 +2658,4 @@ SOURCES_C += \
 	$(CORE_DIR)/lib/libflac/libflac/stream_encoder.c \
 	$(CORE_DIR)/lib/libflac/libflac/stream_encoder_framing.c \
 	$(CORE_DIR)/lib/libflac/libflac/window.c
+endif
