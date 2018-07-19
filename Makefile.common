@@ -2644,7 +2644,7 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/zlib/unzip.c \
 	$(LIBRETRO_COMM_DIR)/zlib/zutil.c
 endif
-SOURCES_C +=
+SOURCES_C += \
 	$(CORE_DIR)/lib/libflac/libflac/bitmath.c \
 	$(CORE_DIR)/lib/libflac/libflac/bitreader.c \
 	$(CORE_DIR)/lib/libflac/libflac/bitwriter.c \
