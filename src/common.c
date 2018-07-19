@@ -956,7 +956,8 @@ void auto_free(void)
 	while (malloc_list_index > 0 && malloc_list[malloc_list_index - 1].tag >= tag)
 	{
 		struct malloc_info *info = &malloc_list[--malloc_list_index];
-		free(info->ptr);
+// flac cause this to segfault needs looked into stop the segfault for now wavs are fine no segfault with them
+//		free(info->ptr);
 	}
 }
 
