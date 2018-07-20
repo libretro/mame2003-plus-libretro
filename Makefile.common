@@ -5,7 +5,7 @@ INCFLAGS := \
     -I$(CORE_DIR)/includes \
     -I$(CORE_DIR)/cpu/m68000
 
-INCFLAGS += -DFLAC__NO_ASM -DHAVE_INTTYPES_H -DHAVE_ICONV -DHAVE_LANGINFO_CODESET -DHAVE_SOCKLEN_T -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I$(CORE_DIR)/lib/libflac/include \
+INCFLAGS += -DFLAC__NO_ASM -DHAVE_INTTYPES_H -DHAVE_ICONV -DHAVE_LANGINFO_CODESET -DHAVE_SOCKLEN_T -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I$(CORE_DIR)/lib/libFLAC/include \
     -I$(CORE_DIR)/mame2003 \
     -I$(LIBRETRO_COMM_DIR)/include \
     -I$(LIBRETRO_COMM_DIR)/zlib 
@@ -2645,18 +2645,18 @@ SOURCES_C += \
 	$(LIBRETRO_COMM_DIR)/zlib/zutil.c
 endif
 SOURCES_C += \
-	$(CORE_DIR)/lib/libflac/libflac/bitmath.c \
-	$(CORE_DIR)/lib/libflac/libflac/bitreader.c \
-	$(CORE_DIR)/lib/libflac/libflac/bitwriter.c \
-	$(CORE_DIR)/lib/libflac/libflac/cpu.c \
-	$(CORE_DIR)/lib/libflac/libflac/crc.c \
-	$(CORE_DIR)/lib/libflac/libflac/fixed.c \
-	$(CORE_DIR)/lib/libflac/libflac/float.c \
-	$(CORE_DIR)/lib/libflac/libflac/format.c \
-	$(CORE_DIR)/lib/libflac/libflac/lpc.c \
-	$(CORE_DIR)/lib/libflac/libflac/md5.c \
-	$(CORE_DIR)/lib/libflac/libflac/memory.c \
-	$(CORE_DIR)/lib/libflac/libflac/stream_decoder.c \
-	$(CORE_DIR)/lib/libflac/libflac/stream_encoder.c \
-	$(CORE_DIR)/lib/libflac/libflac/stream_encoder_framing.c \
-	$(CORE_DIR)/lib/libflac/libflac/window.c
+	$(CORE_DIR)/lib/libFLAC/bitmath.c \
+	$(CORE_DIR)/lib/libFLAC/bitreader.c \
+	$(CORE_DIR)/lib/libFLAC/bitwriter.c \
+	$(CORE_DIR)/lib/libFLAC/cpu.c \
+	$(CORE_DIR)/lib/libFLAC/crc.c \
+	$(CORE_DIR)/lib/libFLAC/fixed.c \
+	$(CORE_DIR)/lib/libFLAC/float.c \
+	$(CORE_DIR)/lib/libFLAC/format.c \
+	$(CORE_DIR)/lib/libFLAC/lpc.c \
+	$(CORE_DIR)/lib/libFLAC/md5.c \
+	$(CORE_DIR)/lib/libFLAC/memory.c \
+	$(CORE_DIR)/lib/libFLAC/stream_decoder.c \
+	$(CORE_DIR)/lib/libFLAC/stream_encoder.c \
+	$(CORE_DIR)/lib/libFLAC/stream_encoder_framing.c \
+	$(CORE_DIR)/lib/libFLAC/window.c
