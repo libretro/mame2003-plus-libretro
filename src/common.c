@@ -355,7 +355,7 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		flac_file.decoded_size = 0;		
 
 		// Allocate space for the data.
-		flac_file.rawdata = auto_malloc(f_length);
+		flac_file.rawdata = malloc(f_length);
 
 		// Read the sample data in.
 		mame_fread(f, flac_file.rawdata, f_length);
@@ -959,8 +959,7 @@ void auto_free(void)
 	while (malloc_list_index > 0 && malloc_list[malloc_list_index - 1].tag >= tag)
 	{
 		struct malloc_info *info = &malloc_list[--malloc_list_index];
-// flac cause this to segfault needs looked into stop the segfault for now wavs are fine no segfault with them
-//		free(info->ptr);
+		free(info->ptr);
 	}
 }
 
