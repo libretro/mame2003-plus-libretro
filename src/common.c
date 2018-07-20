@@ -339,7 +339,9 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 	}
 	else if(f_type == 2) { // Load FLAC file.
 		int f_length;
-		
+    flac_reader flac_file;
+    FLAC__StreamDecoder *decoder;
+
 		mame_fseek(f, 0, SEEK_END);
 		f_length = mame_ftell(f);
 		mame_fseek(f, 0, 0);
@@ -348,8 +350,6 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 		if (f_length <= GAME_SAMPLE_LARGE)
 			b_data = 1;
 			
-		flac_reader flac_file;
-		
 		flac_file.length = f_length;
 		flac_file.position = 0;
 		flac_file.decoded_size = 0;		
@@ -359,10 +359,9 @@ static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, co
 
 		// Read the sample data in.
 		mame_fread(f, flac_file.rawdata, f_length);
+		decoder = FLAC__stream_decoder_new();
 
-		FLAC__StreamDecoder *decoder = FLAC__stream_decoder_new();
-		
-		if (!decoder) {
+    if (!decoder) {
 			free(flac_file.rawdata);
 			return NULL;
 		}
