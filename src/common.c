@@ -11,7 +11,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <string/stdstring.h>
-#include "lib/libflac/include/flac/all.h"
+#include "lib/libFLAC/include/FLAC/all.h"
 #include "log.h"
 //#define LOG_LOAD
 
