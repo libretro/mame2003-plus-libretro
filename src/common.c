@@ -7,9 +7,12 @@
 #include "png.h"
 #include "harddisk.h"
 #include "artwork.h"
+#include "bootstrap.h"
 #include <stdarg.h>
 #include <ctype.h>
+#include <string/stdstring.h>
 #include "lib/libflac/include/flac/all.h"
+#include "log.h"
 //#define LOG_LOAD
 
 
