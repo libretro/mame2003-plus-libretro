@@ -1312,10 +1312,10 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device)
   retro_describe_controls();
 }
 
+#define NUMBER_OF_RETRO_TYPES (RETRO_DEVICE_ID_JOYPAD_R3 + 1)
+
 void retro_describe_controls(void)
 {
-  const int NUMBER_OF_RETRO_TYPES = RETRO_DEVICE_ID_JOYPAD_R3 + 1;
-
   int retro_type   = 0;
   int display_idx  = 0;
   
