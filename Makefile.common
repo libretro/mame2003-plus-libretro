@@ -10,6 +10,10 @@ INCFLAGS += -DFLAC__NO_ASM -DHAVE_INTTYPES_H -DHAVE_ICONV -DHAVE_LANGINFO_CODESE
     -I$(LIBRETRO_COMM_DIR)/include \
     -I$(LIBRETRO_COMM_DIR)/zlib 
 
+ifeq ($(system_platform), win)
+INCFLAGS += -DHAVE_FSEEKO
+endif
+
 ifneq (,$(findstring msvc2003,$(platform)))
 INCFLAGS += -I$(LIBRETRO_COMM_DIR)/include/compat/msvc
 endif
