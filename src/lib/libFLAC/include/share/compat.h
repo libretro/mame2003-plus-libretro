@@ -62,9 +62,10 @@
 #define FLAC__off_t off_t
 #endif
 
-#if HAVE_INTTYPES_H
-#define __STDC_FORMAT_MACROS
+#ifdef _MSC_VER
+#if _MSC_VER >= 1800
 #include <inttypes.h>
+#endif
 #endif
 
 #if defined(_MSC_VER)
