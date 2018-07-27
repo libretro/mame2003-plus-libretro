@@ -122,7 +122,9 @@ void sample_stop(int channel)
 
 	mixer_stop_sample(channel + firstchannel);
 
-	if (Machine->samples->sample[c_sample] != NULL) {
+	if (!options.use_samples) return;
+
+	if ( Machine->samples->sample[c_sample] != NULL ) {
 		if (Machine->samples->sample[c_sample]->b_decoded == 1) {
 			// A non pre loaded sample, lets free from memory. Useful for devices with limited amount of RAM using large sample files.
 			if (Machine->samples->sample[c_sample]->length > GAME_SAMPLE_LARGE)
