@@ -689,13 +689,7 @@ static void set_content_flags(void)
   extern struct GameDriver driver_stvbios;
   const struct InputPortTiny *input = game_driver->input_ports;
 
-	const char* ost_drivers[] = {	"outrun", "outruna", "outrunb", \
-				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
-				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
-				"ffight", "ffightu", "ffightj",  "ffightj1", \
-				"moonwalk", "moonwlka", "moonwlkb", 0
-		 };    
-
+extern	const char* ost_drivers[]; 
   /************ DRIVERS WITH MULTIPLE BIOS OPTIONS ************/
   if (game_driver->clone_of == &driver_neogeo
    ||(game_driver->clone_of && game_driver->clone_of->clone_of == &driver_neogeo))
