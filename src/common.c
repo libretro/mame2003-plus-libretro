@@ -15,7 +15,12 @@
 #include "log.h"
 //#define LOG_LOAD
 
-
+	const char* ost_drivers[] = {	"outrun", "outruna", "outrunb","toutrun","toutruna" \
+				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
+				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
+				"ffight", "ffightu", "ffightj",  "ffightj1", \
+				"moonwalk", "moonwlka", "moonwlkb", 0
+		 };    
 
 /***************************************************************************
 	Constants
@@ -481,7 +486,7 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	int skipfirst = 0;
 
 	/* if the user doesn't want to use samples, bail */
-	if (!options.use_samples) return 0;
+	if( (!options.use_samples)  &&  (options.content_flags[CONTENT_ALT_SOUND]) ) return 0;
 
 	if (samplenames == 0 || samplenames[0] == 0) return 0;
 
