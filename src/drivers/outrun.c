@@ -25,18 +25,18 @@ int		outrun_start_counter = 0;
 const char *const outrun_samples_set_names[] =
 {
 	"*outrun",
-	"intro-01.wav",
-	"intro-02.wav",
-	"title-cut-01.wav",
-	"title-cut-02.wav",
-	"map-01.wav",
-	"map-02.wav",	
-	"track1-01.wav",
-	"track1-02.wav",
-	"track3-01.wav",
-	"track3-02.wav",
-	"track4-01.wav",
-	"track4-02.wav",
+	"intro-01",
+	"intro-02",
+	"title-cut-01",
+	"title-cut-02",
+	"map-01",
+	"map-02",	
+	"track1-01",
+	"track1-02",
+	"track3-01",
+	"track3-02",
+	"track4-01",
+	"track4-02",
 	0
 };
 
