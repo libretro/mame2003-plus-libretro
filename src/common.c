@@ -24,6 +24,7 @@ const char* ost_drivers[] = {	"outrun", "outruna", "outrunb","toutrun","toutruna
 				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
 				"ffight", "ffightu", "ffightj",  "ffightj1", \
 				"moonwalk", "moonwlka", "moonwlkb", 0
+			    };
 /***************************************************************************
 
 	Constants
