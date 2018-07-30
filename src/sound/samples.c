@@ -3,10 +3,7 @@
 
 
 static int firstchannel,numchannels;
-int leftSampleNum;
-int rightSampleNum;
 
-void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load);
 
 /* Start one of the samples loaded from disk. Note: channel must be in the range */
 /* 0 .. Samplesinterface->channels-1. It is NOT the discrete channel to pass to */
@@ -18,49 +15,32 @@ void sample_start(int channel,int samplenum,int loop)
 	if (Machine->samples->sample[samplenum] == 0) return;
 	if (channel >= numchannels)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE"error: sample_start() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_start() called with channel = %d, but only %d channels allocated - aborting sample_start()!\n",channel,numchannels);
 		return;
 	}
 	if (samplenum >= Machine->samples->total)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE"error: sample_start() called with samplenum = %d, but only %d samples available\n",samplenum,Machine->samples->total);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_start() called with samplenum = %d, but only %d samples available - aborting sample_start()\n",samplenum,Machine->samples->total);
 		return;
 	}
 
-	if (Machine->samples->sample[samplenum] != NULL) {
-		if (Machine->samples->sample[samplenum]->b_decoded == 0)
-		{
-			// Lets decode this sample before playing it.
-			readsample(Machine->samples->sample[samplenum], samplenum, Machine->samples, 1);
-		}
-
-		if (Machine->samples->sample[samplenum]->b_decoded == 1)
-		{
-			if (channel == 0)
-				leftSampleNum = samplenum;
-
-			if (channel == 1)
-				rightSampleNum = samplenum;
-						
-			if (Machine->samples->sample[samplenum]->resolution == 8 )
-			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE"play 8 bit sample %d, channel %d\n",samplenum,channel);
-				mixer_play_sample(firstchannel + channel,
-						Machine->samples->sample[samplenum]->data,
-						Machine->samples->sample[samplenum]->length,
-						Machine->samples->sample[samplenum]->smpfreq,
-						loop);
-			}
-			else
-			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE"play 16 bit sample %d, channel %d\n",samplenum,channel);
-				mixer_play_sample_16(firstchannel + channel,
-						(short *) Machine->samples->sample[samplenum]->data,
-						Machine->samples->sample[samplenum]->length,
-						Machine->samples->sample[samplenum]->smpfreq,
-						loop);
-			}
-		}
+	if ( Machine->samples->sample[samplenum]->resolution == 8 )
+	{
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "play 8 bit sample %d, channel %d\n",samplenum,channel);
+		mixer_play_sample(firstchannel + channel,
+				Machine->samples->sample[samplenum]->data,
+				Machine->samples->sample[samplenum]->length,
+				Machine->samples->sample[samplenum]->smpfreq,
+				loop);
+	}
+	else
+	{
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "play 16 bit sample %d, channel %d\n",samplenum,channel);
+		mixer_play_sample_16(firstchannel + channel,
+				(short *) Machine->samples->sample[samplenum]->data,
+				Machine->samples->sample[samplenum]->length,
+				Machine->samples->sample[samplenum]->smpfreq,
+				loop);
 	}
 }
 
@@ -70,21 +50,21 @@ void sample_set_freq(int channel,int freq)
 	if (Machine->samples == 0) return;
 	if (channel >= numchannels)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE"error: sample_adjust() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_adjust() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
 		return;
 	}
 
 	mixer_set_sample_frequency(channel + firstchannel,freq);
 }
 
-// Set sample volume by speaker.
+/* Set sample volume by speaker.*/
 void sample_set_stereo_volume(int channel,int volume_left, int volume_right)
 {
 	if (Machine->sample_rate == 0) return;
 	if (Machine->samples == 0) return;
 	if (channel >= numchannels)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE"error: sample_adjust() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_adjust() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
 		return;
 	}
 
@@ -97,7 +77,7 @@ void sample_set_volume(int channel,int volume)
 	if (Machine->samples == 0) return;
 	if (channel >= numchannels)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE"error: sample_adjust() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_adjust() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
 		return;
 	}
 
@@ -106,37 +86,14 @@ void sample_set_volume(int channel,int volume)
 
 void sample_stop(int channel)
 {
-	int c_sample;
-
-	if (channel == 0)
-		c_sample = leftSampleNum;
-	else if (channel == 1)
-		c_sample = rightSampleNum;
-		
 	if (Machine->sample_rate == 0) return;
 	if (channel >= numchannels)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE"error: sample_stop() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_stop() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
 		return;
 	}
 
 	mixer_stop_sample(channel + firstchannel);
-
-	if (!options.use_samples) return;
-
-	if ( Machine->samples->sample[c_sample] != NULL ) {
-		if (Machine->samples->sample[c_sample]->b_decoded == 1) {
-			// A non pre loaded sample, lets free from memory. Useful for devices with limited amount of RAM using large sample files.
-			if (Machine->samples->sample[c_sample]->length > GAME_SAMPLE_LARGE)
-				readsample(Machine->samples->sample[c_sample], c_sample, Machine->samples, 0);
-
-			if (channel == 0)
-				leftSampleNum = NULL;
-
-			if (channel == 1)
-				rightSampleNum = NULL;
-		}
-	}
 }
 
 int sample_playing(int channel)
@@ -144,7 +101,7 @@ int sample_playing(int channel)
 	if (Machine->sample_rate == 0) return 0;
 	if (channel >= numchannels)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE"error: sample_playing() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
+		log_cb(RETRO_LOG_ERROR, LOGPRE "error: sample_playing() called with channel = %d, but only %d channels allocated\n",channel,numchannels);
 		return 0;
 	}
 

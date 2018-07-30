@@ -78,7 +78,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 		case FILETYPE_ROM:
 		case FILETYPE_IMAGE:
 		case FILETYPE_SAMPLE:
-		case FILETYPE_SAMPLE_FLAC:
 		case FILETYPE_ARTWORK:
 		case FILETYPE_HISTORY:
 		case FILETYPE_LANGUAGE:
@@ -109,9 +108,6 @@ mame_file *mame_fopen(const char *gamename, const char *filename, int filetype, 
 		/* samples */
 		case FILETYPE_SAMPLE:
 			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD);
-
-		case FILETYPE_SAMPLE_FLAC:
- 			return generic_fopen(filetype, gamename, filename, 0, FILEFLAG_OPENREAD);
 
 		/* artwork files */
 		case FILETYPE_ARTWORK:
@@ -218,10 +214,6 @@ void osd_get_path(int pathtype, char* path)
       case FILETYPE_SAMPLE:
          snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "samples");
          break;
-      case FILETYPE_SAMPLE_FLAC:
-         snprintf(path, PATH_MAX_LENGTH, "%s%s%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME, path_default_slash(), "samples");
-         break;
-
       default:
          /* .dat files and additional core content goes in mame2003 system directory */
          snprintf(path, PATH_MAX_LENGTH, "%s%s%s", options.libretro_system_path, path_default_slash(), APPNAME);
@@ -803,10 +795,6 @@ static const char *get_extension_for_filetype(int filetype)
 		case FILETYPE_SAMPLE:		/* samples */
 			extension = "wav";
 			break;
-
-		case FILETYPE_SAMPLE_FLAC:		/* samples */
-			extension = "flac";
-			break;			
 
 		case FILETYPE_ARTWORK:		/* artwork files */
 			extension = "png";
