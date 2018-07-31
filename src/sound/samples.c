@@ -123,6 +123,8 @@ void sample_stop(int channel)
 	mixer_stop_sample(channel + firstchannel);
 
 	if (!options.use_samples) return;
+        if ( ( channel != 0) || (channel !=1) ) return; // return normally if not matching ost channel specs
+
 
 	if ( Machine->samples->sample[c_sample] != NULL ) {
 		if (Machine->samples->sample[c_sample]->b_decoded == 1) {
