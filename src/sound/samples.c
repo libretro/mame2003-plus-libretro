@@ -106,7 +106,7 @@ void sample_set_volume(int channel,int volume)
 
 void sample_stop(int channel)
 {
-	int c_sample;
+	int c_sample=0;
 
 	if (channel == 0)
 		c_sample = leftSampleNum;
