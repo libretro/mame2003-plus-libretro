@@ -106,7 +106,7 @@ void sample_set_volume(int channel,int volume)
 
 void sample_stop(int channel)
 {
-	int c_sample;
+	int c_sample=0; // a check is done on this could be any number can cause a segfault
 
 	if (channel == 0)
 		c_sample = leftSampleNum;
@@ -123,7 +123,7 @@ void sample_stop(int channel)
 	mixer_stop_sample(channel + firstchannel);
 
 	if (!options.use_samples) return;
-        if ( ( channel != 0) || (channel !=1) ) return; // return normally if not matching ost channel specs
+        if ( ( channel != 0) || (channel !=1) ) return; // return normally if not matching ost channel specs no need to process normal games anyway
 
 
 	if ( Machine->samples->sample[c_sample] != NULL ) {
