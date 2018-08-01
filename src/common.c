@@ -1,9 +1,6 @@
 /*********************************************************************
-
 	common.c
-
 	Generic functions, mostly ROM and graphics related.
-
 *********************************************************************/
 
 #include "driver.h"
@@ -14,32 +11,30 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <string/stdstring.h>
-
+#include "lib/libFLAC/include/FLAC/all.h"
 #include "log.h"
+//#define LOG_LOAD
 
-
-
-const char* ost_drivers[] = {	"outrun", "outruna", "outrunb","toutrun","toutruna" \
+	const char* ost_drivers[] = {	"outrun", "outruna", "outrunb","toutrun","toutruna" \
 				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
 				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
 				"ffight", "ffightu", "ffightj",  "ffightj1", \
 				"moonwalk", "moonwlka", "moonwlkb", 0
-			    };
+		 };    
+
 /***************************************************************************
-
 	Constants
-
 ***************************************************************************/
 
-#define BITMAP_SAFETY 16 /* osd_alloc_bitmap allocates a "safety area" 16 pixels around the bitmap. For performance reasons some graphic routines don't clip at boundaries of the bitmap.*/
-#define MAX_MALLOCS   4096
+// VERY IMPORTANT: osd_alloc_bitmap must allocate also a "safety area" 16 pixels wide all
+// around the bitmap. This is required because, for performance reasons, some graphic
+// routines don't clip at boundaries of the bitmap.
+#define BITMAP_SAFETY			16
 
-
+#define MAX_MALLOCS				4096
 
 /***************************************************************************
-
 	Type definitions
-
 ***************************************************************************/
 
 struct malloc_info
@@ -49,11 +44,103 @@ struct malloc_info
 };
 
 
+/***************************************************************************
+	FLAC stuff
+***************************************************************************/
+typedef struct _flac_reader
+{
+	UINT8* rawdata;
+	INT16* write_data;
+	int position;
+	int length;
+	int decoded_size;
+	int sample_rate;
+	int channels;
+	int bits_per_sample;
+	int total_samples;
+	int write_position;
+}flac_reader;
+
+
+void my_error_callback(const FLAC__StreamDecoder * decoder, FLAC__StreamDecoderErrorStatus status, void * client_data)
+{
+	printf("FLAC callback error\n");
+}
+
+void my_metadata_callback(const FLAC__StreamDecoder *decoder, const FLAC__StreamMetadata *metadata, void *client_data)
+{
+
+	flac_reader *flacrd =  (flac_reader*)client_data;
+
+	if (metadata->type==0)
+	{
+		const FLAC__StreamMetadata_StreamInfo *streaminfo = &(metadata->data.stream_info);
+
+		flacrd->sample_rate = streaminfo->sample_rate;
+		flacrd->channels = streaminfo->channels;
+		flacrd->bits_per_sample = streaminfo->bits_per_sample;
+		flacrd->total_samples = streaminfo->total_samples;
+	}
+}
+
+
+
+
+FLAC__StreamDecoderReadStatus my_read_callback(const FLAC__StreamDecoder *decoder, FLAC__byte buffer[], size_t *bytes, void *client_data)
+{
+	flac_reader *flacrd =  (flac_reader*)client_data;
+
+	if(*bytes > 0)
+	{
+		if (*bytes <=  flacrd->length)
+		{
+			memcpy(buffer, flacrd->rawdata+flacrd->position, *bytes);
+			flacrd->position+=*bytes;
+			flacrd->length-=*bytes;
+			return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE;
+		}
+		else
+		{
+			memcpy(buffer, flacrd->rawdata+flacrd->position,  flacrd->length);
+		    flacrd->position+= flacrd->length;
+			flacrd->length = 0;
+
+			return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE;
+		}
+	}
+	else
+	{
+		return FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM;
+	}
+
+	if ( flacrd->length==0)
+	{
+		return FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM;
+	}
+
+	return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE;
+
+}
+
+FLAC__StreamDecoderWriteStatus my_write_callback(const FLAC__StreamDecoder *decoder, const FLAC__Frame *frame, const FLAC__int32 *const buffer[], void *client_data)
+{
+	int i;
+	flac_reader *flacrd =  (flac_reader*)client_data;
+
+	flacrd->decoded_size += frame->header.blocksize;
+
+	for ( i=0;i<frame->header.blocksize;i++)
+	{
+		flacrd->write_data[i+flacrd->write_position] = buffer[0][i];
+	}
+
+	flacrd->write_position +=  frame->header.blocksize;
+
+	return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
+}
 
 /***************************************************************************
-
 	Global variables
-
 ***************************************************************************/
 
 /* These globals are only kept on a machine basis - LBO 042898 */
@@ -61,6 +148,8 @@ unsigned int dispensed_tickets;
 unsigned int coins[COIN_COUNTERS];
 unsigned int lastcoin[COIN_COUNTERS];
 unsigned int coinlockedout[COIN_COUNTERS];
+
+int snapno;
 
 /* malloc tracking */
 static struct malloc_info malloc_list[MAX_MALLOCS];
@@ -81,9 +170,7 @@ static int system_bios;
 
 
 /***************************************************************************
-
 	Functions
-
 ***************************************************************************/
 
 void showdisclaimer(void)   /* MAURY_BEGIN: dichiarazione */
@@ -101,12 +188,9 @@ void showdisclaimer(void)   /* MAURY_BEGIN: dichiarazione */
 
 
 /***************************************************************************
-
 	Sample handling code
-
 	This function is different from readroms() because it doesn't fail if
 	it doesn't find a file: it will load as many samples as it can find.
-
 ***************************************************************************/
 
 #ifdef MSB_FIRST
@@ -118,121 +202,276 @@ void showdisclaimer(void)   /* MAURY_BEGIN: dichiarazione */
 /*-------------------------------------------------
 	read_wav_sample - read a WAV file as a sample
 -------------------------------------------------*/
-
-static struct GameSample *read_wav_sample(mame_file *f)
+static struct GameSample *read_wav_sample(mame_file *f, const char *gamename, const char *filename, int filetype, int b_data)
 {
 	unsigned long offset = 0;
 	UINT32 length, rate, filesize, temp32;
 	UINT16 bits, temp16;
 	char buf[32];
 	struct GameSample *result;
+	int f_type = 0;
 
-	/* read the core header and make sure it's a WAVE file */
+	/* read the core header and make sure it's a proper  file */
 	offset += mame_fread(f, buf, 4);
+	
 	if (offset < 4)
 		return NULL;
-	if (memcmp(&buf[0], "RIFF", 4) != 0)
-		return NULL;
 
-	/* get the total size */
-	offset += mame_fread(f, &filesize, 4);
-	if (offset < 8)
-		return NULL;
-	filesize = intelLong(filesize);
+	if (memcmp(&buf[0], "RIFF", 4) == 0)
+		f_type = 1; // WAV
+	else if (memcmp(&buf[0], "fLaC", 4) == 0)
+		f_type = 2; // FLAC
+	else
+		return NULL; // No idea what file this is.
 
-	/* read the RIFF file type and make sure it's a WAVE file */
-	offset += mame_fread(f, buf, 4);
-	if (offset < 12)
-		return NULL;
-	if (memcmp(&buf[0], "WAVE", 4) != 0)
-		return NULL;
-
-	/* seek until we find a format tag */
-	while (1)
-	{
-		offset += mame_fread(f, buf, 4);
-		offset += mame_fread(f, &length, 4);
-		length = intelLong(length);
-		if (memcmp(&buf[0], "fmt ", 4) == 0)
-			break;
-
-		/* seek to the next block */
-		mame_fseek(f, length, SEEK_CUR);
-		offset += length;
-		if (offset >= filesize)
+	// Load WAV file.
+	if(f_type == 1) {
+		/* get the total size */
+		offset += mame_fread(f, &filesize, 4);
+		if (offset < 8)
 			return NULL;
-	}
+		filesize = intelLong(filesize);
 
-	/* read the format -- make sure it is PCM */
-	offset += mame_fread_lsbfirst(f, &temp16, 2);
-	if (temp16 != 1)
-		return NULL;
-
-	/* number of channels -- only mono is supported */
-	offset += mame_fread_lsbfirst(f, &temp16, 2);
-	if (temp16 != 1)
-		return NULL;
-
-	/* sample rate */
-	offset += mame_fread(f, &rate, 4);
-	rate = intelLong(rate);
-
-	/* bytes/second and block alignment are ignored */
-	offset += mame_fread(f, buf, 6);
-
-	/* bits/sample */
-	offset += mame_fread_lsbfirst(f, &bits, 2);
-	if (bits != 8 && bits != 16)
-		return NULL;
-
-	/* seek past any extra data */
-	mame_fseek(f, length - 16, SEEK_CUR);
-	offset += length - 16;
-
-	/* seek until we find a data tag */
-	while (1)
-	{
+		/* read the RIFF file type and make sure it's a WAVE file */
 		offset += mame_fread(f, buf, 4);
-		offset += mame_fread(f, &length, 4);
-		length = intelLong(length);
-		if (memcmp(&buf[0], "data", 4) == 0)
-			break;
-
-		/* seek to the next block */
-		mame_fseek(f, length, SEEK_CUR);
-		offset += length;
-		if (offset >= filesize)
+		if (offset < 12)
 			return NULL;
+		if (memcmp(&buf[0], "WAVE", 4) != 0)
+			return NULL;
+
+		/* seek until we find a format tag */
+		while (1)
+		{
+			offset += mame_fread(f, buf, 4);
+			offset += mame_fread(f, &length, 4);
+			length = intelLong(length);
+			if (memcmp(&buf[0], "fmt ", 4) == 0)
+				break;
+
+			/* seek to the next block */
+			mame_fseek(f, length, SEEK_CUR);
+			offset += length;
+			if (offset >= filesize)
+				return NULL;
+		}
+
+		/* read the format -- make sure it is PCM */
+		offset += mame_fread_lsbfirst(f, &temp16, 2);
+		if (temp16 != 1)
+			return NULL;
+
+		/* number of channels -- only mono is supported */
+		offset += mame_fread_lsbfirst(f, &temp16, 2);
+		if (temp16 != 1)
+			return NULL;
+
+		/* sample rate */
+		offset += mame_fread(f, &rate, 4);
+		rate = intelLong(rate);
+
+		/* bytes/second and block alignment are ignored */
+		offset += mame_fread(f, buf, 6);
+
+		/* bits/sample */
+		offset += mame_fread_lsbfirst(f, &bits, 2);
+		if (bits != 8 && bits != 16)
+			return NULL;
+
+		/* seek past any extra data */
+		mame_fseek(f, length - 16, SEEK_CUR);
+		offset += length - 16;
+
+		/* seek until we find a data tag */
+		while (1)
+		{
+			offset += mame_fread(f, buf, 4);
+			offset += mame_fread(f, &length, 4);
+			length = intelLong(length);
+			if (memcmp(&buf[0], "data", 4) == 0)
+				break;
+
+			/* seek to the next block */
+			mame_fseek(f, length, SEEK_CUR);
+			offset += length;
+			if (offset >= filesize)
+				return NULL;
+		}
+
+		// For small samples, lets force them to pre load into memory.
+		if(length <= GAME_SAMPLE_LARGE)
+			b_data = 1;
+			
+		/* allocate the game sample */
+		if(b_data == 1)
+			result = auto_malloc(sizeof(struct GameSample) + length);
+		else
+			result = malloc(sizeof(struct GameSample));
+			
+		if (result == NULL)
+			return NULL;
+
+		/* fill in the sample data */
+		strcpy(result->gamename, gamename);
+		strcpy(result->filename, filename);
+		result->filetype = filetype;
+
+		result->length = length;
+		result->smpfreq = rate;
+		result->resolution = bits;
+
+		if(b_data == 1) {
+			// read the data in
+			if (bits == 8)
+			{
+				mame_fread(f, result->data, length);
+
+				// convert 8-bit data to signed samples
+				for (temp32 = 0; temp32 < length; temp32++)
+					result->data[temp32] ^= 0x80;
+			}
+			else
+			{
+				// 16-bit data is fine as-is
+				mame_fread_lsbfirst(f, result->data, length);
+			}
+
+			result->b_decoded = 1;
+		}
+		else
+			result->b_decoded = 0;
+
+		return result;
 	}
+	else if(f_type == 2) { // Load FLAC file.
+		int f_length;
+    flac_reader flac_file;
+    FLAC__StreamDecoder *decoder;
 
-	/* allocate the game sample */
-	result = auto_malloc(sizeof(struct GameSample) + length);
-	if (result == NULL)
-		return NULL;
+		mame_fseek(f, 0, SEEK_END);
+		f_length = mame_ftell(f);
+		mame_fseek(f, 0, 0);
 
-	/* fill in the sample data */
-	result->length = length;
-	result->smpfreq = rate;
-	result->resolution = bits;
+		// For small samples, lets force them to pre load into memory.
+		if (f_length <= GAME_SAMPLE_LARGE)
+			b_data = 1;
+			
+		flac_file.length = f_length;
+		flac_file.position = 0;
+		flac_file.decoded_size = 0;		
 
-	/* read the data in */
-	if (bits == 8)
-	{
-		mame_fread(f, result->data, length);
+		// Allocate space for the data.
+		flac_file.rawdata = malloc(f_length);
 
-		/* convert 8-bit data to signed samples */
-		for (temp32 = 0; temp32 < length; temp32++)
-			result->data[temp32] ^= 0x80;
+		// Read the sample data in.
+		mame_fread(f, flac_file.rawdata, f_length);
+		decoder = FLAC__stream_decoder_new();
+
+    if (!decoder) {
+			free(flac_file.rawdata);
+			return NULL;
+		}
+
+		if(FLAC__stream_decoder_init_stream(decoder, my_read_callback,
+			NULL, //my_seek_callback,      // or NULL
+			NULL, //my_tell_callback,      // or NULL
+			NULL, //my_length_callback,    // or NULL
+			NULL, //my_eof_callback,       // or NULL
+			my_write_callback,
+			my_metadata_callback, //my_metadata_callback,  // or NULL
+			my_error_callback,
+			(void*)&flac_file) != FLAC__STREAM_DECODER_INIT_STATUS_OK)
+				return NULL;
+
+		if (FLAC__stream_decoder_process_until_end_of_metadata(decoder) != FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM) {
+			free(flac_file.rawdata);
+			FLAC__stream_decoder_delete(decoder);
+			return NULL;
+		}
+
+		// only Mono supported
+		if (flac_file.channels != 1) { 
+			free(flac_file.rawdata);
+			FLAC__stream_decoder_delete(decoder);
+			return NULL;
+		}
+
+		// only support 16 bit.
+		if (flac_file.bits_per_sample != 16) {
+			free(flac_file.rawdata);
+			FLAC__stream_decoder_delete(decoder);
+			return NULL;
+		}
+
+		if (b_data == 1)
+			result = auto_malloc(sizeof(struct GameSample) + (flac_file.total_samples * (flac_file.bits_per_sample / 8)));
+		else
+			result = malloc(sizeof(struct GameSample));
+
+		strcpy(result->gamename, gamename);
+		strcpy(result->filename, filename);
+		result->filetype = filetype;
+		
+		result->smpfreq = flac_file.sample_rate;
+		result->length = flac_file.total_samples * (flac_file.bits_per_sample / 8);
+		result->resolution = flac_file.bits_per_sample;
+		flac_file.write_position = 0;
+
+		if (b_data == 1) {
+			flac_file.write_data = result->data;
+			
+			if (FLAC__stream_decoder_process_until_end_of_stream (decoder) != FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM) {
+				free(flac_file.rawdata);
+				FLAC__stream_decoder_delete(decoder);
+				return NULL;
+			}
+
+			result->b_decoded = 1;
+		}
+		else
+			result->b_decoded = 0;
+
+		if (FLAC__stream_decoder_finish (decoder) != true) {
+			free(flac_file.rawdata);
+			FLAC__stream_decoder_delete(decoder);
+			return NULL;
+		}
+
+		FLAC__stream_decoder_delete(decoder);
+
+		free(flac_file.rawdata);
+
+		return result;
 	}
 	else
-	{
-		/* 16-bit data is fine as-is */
-		mame_fread_lsbfirst(f, result->data, length);
-	}
-
-	return result;
+		return NULL;
 }
 
+// Handles freeing previous played sample from memory. Helps with the low memory devices which load large sample files.
+void readsample(struct GameSample *SampleInfo, int channel, struct GameSamples *SamplesData, int load)
+{
+	mame_file *f;
+	struct GameSample *SampleFile;
+
+	// Try opening the file.
+	f = mame_fopen(SampleInfo->gamename,SampleInfo->filename,SampleInfo->filetype,0);
+
+	if (f != 0) {
+		char gamename[512];
+		char filename[512];
+		int filetype = SampleInfo->filetype;
+
+		strcpy(gamename, SampleInfo->gamename);
+		strcpy(filename, SampleInfo->filename);
+
+		// Free up some memory.
+		free(SamplesData->sample[channel]);
+
+		// Reload or load a sample into memory.
+		SamplesData->sample[channel] = read_wav_sample(f, gamename, filename, filetype, load);
+
+		mame_fclose(f);
+	}
+}
 
 /*-------------------------------------------------
 	readsamples - load all samples
@@ -245,10 +484,11 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	int i;
 	struct GameSamples *samples;
 	int skipfirst = 0;
-   if( (!options.use_samples)  &&  (options.content_flags[CONTENT_ALT_SOUND]) ) return 0;
 
-  if( samplenames == 0 || samplenames[0] == 0)
-    return 0;
+	/* if the user doesn't want to use samples, bail */
+	if( (!options.use_samples)  &&  (options.content_flags[CONTENT_ALT_SOUND]) ) return 0;
+
+	if (samplenames == 0 || samplenames[0] == 0) return 0;
 
 	if (samplenames[0][0] == '*')
 		skipfirst = 1;
@@ -261,8 +501,6 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	if ((samples = auto_malloc(sizeof(struct GameSamples) + (i-1)*sizeof(struct GameSample))) == 0)
 		return 0;
 
-  log_cb(RETRO_LOG_INFO, LOGPRE "Searching for %i individual audio sample files in %s.zip\n", samples->total, basename);
-
 	samples->total = i;
 	for (i = 0;i < samples->total;i++)
 		samples->sample[i] = 0;
@@ -270,24 +508,58 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	for (i = 0;i < samples->total;i++)
 	{
 		mame_file *f;
-
+		int f_type = 0;
+		int f_skip = 0;
+		
 		if (samplenames[i+skipfirst][0])
 		{
-			if ((f = mame_fopen(basename,samplenames[i+skipfirst],FILETYPE_SAMPLE,0)) == 0)
-				if (skipfirst)
-					f = mame_fopen(samplenames[0]+1,samplenames[i+skipfirst],FILETYPE_SAMPLE,0);
+			// Try opening FLAC samples first.
+			if ((f = mame_fopen(basename,samplenames[i+skipfirst],FILETYPE_SAMPLE_FLAC,0)) == 0)
+			{
+				if (skipfirst) {
+					f = mame_fopen(samplenames[0]+1,samplenames[i+skipfirst],FILETYPE_SAMPLE_FLAC,0);
+					f_skip = 1;
+				}
+
+				// Fall back to WAV if it exists.
+				if (!f)
+				{
+					f_type = 1;
+					f_skip = 0;
+					
+					if ((f = mame_fopen(basename,samplenames[i+skipfirst],FILETYPE_SAMPLE,0)) == 0)
+						if (skipfirst) {
+							f = mame_fopen(samplenames[0]+1,samplenames[i+skipfirst],FILETYPE_SAMPLE,0);
+							f_skip = 1;
+						}
+				}
+			}
+
+			// Get sample info. Small sample files will pre load into memory at this point.
 			if (f != 0)
 			{
-				/*just use the unzipped name for now if you want directory and zip printed differently i can add code for that*/
-				log_cb(RETRO_LOG_INFO, LOGPRE "%s->%s\n", samplenames[0]+1,samplenames[i+skipfirst]);
-				samples->sample[i] = read_wav_sample(f);
+				// Open FLAC.
+				if(f_type == 0) {
+					if (f_skip == 1)				
+						samples->sample[i] = read_wav_sample(f, samplenames[0]+1, samplenames[i+skipfirst], FILETYPE_SAMPLE_FLAC, 0);
+					else
+						samples->sample[i] = read_wav_sample(f, basename, samplenames[i+skipfirst], FILETYPE_SAMPLE_FLAC, 0);
+				}
+				else { // Open WAV.
+					if (f_skip == 1)
+						samples->sample[i] = read_wav_sample(f, samplenames[0]+1, samplenames[i+skipfirst], FILETYPE_SAMPLE, 0);
+					else
+						samples->sample[i] = read_wav_sample(f, basename, samplenames[i+skipfirst], FILETYPE_SAMPLE, 0);
+				}
+					
 				mame_fclose(f);
 			}
 		}
 	}
-
+	
 	return samples;
 }
+
 
 
 
