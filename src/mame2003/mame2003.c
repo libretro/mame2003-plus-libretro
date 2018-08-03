@@ -1042,7 +1042,7 @@ size_t retro_serialize_size(void)
 bool retro_serialize(void *data, size_t size)
 {
    int cpunum;
-	if(retro_serialize_size() && data && size)
+	if( ( retro_serialize_size() ) && (data)  && (size) )
 	{
 		/* write the save state */
 		state_save_save_begin(data);
@@ -1083,7 +1083,7 @@ bool retro_unserialize(const void * data, size_t size)
 {
     int cpunum;
 	/* if successful, load it */
-	if (retro_serialize_size() && data && size && !state_save_load_begin((void*)data, size))
+	if ( (retro_serialize_size() ) && ( data ) && ( size ) && ( !state_save_load_begin((void*)data, size) ) )
 	{
         /* read tag 0 */
         state_save_set_current_tag(0);
