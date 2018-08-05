@@ -141,6 +141,7 @@
 * Juno First
 * Kick
 * Kozmik Kroozer
+* Fighters History
 * Fire Barrel
 * Funky Jet
 * Green Beret
