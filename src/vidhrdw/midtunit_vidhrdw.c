@@ -259,7 +259,7 @@ WRITE16_HANDLER( midtunit_control_w )
 		other important bits:
 			bit 2 (0x0004) is toggled periodically
 	*/
-	log_cb(RETRO_LOG_ERROR, LOGPRE "T-unit control = %04X\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "T-unit control = %04X\n", data);
 
 	COMBINE_DATA(&midtunit_control);
 
