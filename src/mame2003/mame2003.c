@@ -1185,17 +1185,9 @@ int osd_update_audio_stream(INT16 *buffer)
 			
 		//process next frame
 			
-		if ( samples_per_frame  != orig_samples_per_frame ) 
-
-
-		{
-		//	log_cb(RETRO_LOG_INFO,"sound(delta) current spf: %d\n",samples_per_frame);
+		if ( samples_per_frame  != orig_samples_per_frame ) samples_per_frame = orig_samples_per_frame;
 		
-			samples_per_frame = orig_samples_per_frame;
-		
-		//	log_cb(RETRO_LOG_INFO,"sound(delta)  reset spf to default: %d\n",samples_per_frame);
-		}
-
+		// dont drop any sample frames some games like mk will drift with time
    		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - orig_samples_per_frame;
 		if ( delta_samples >= 1.0f )
 		{
@@ -1203,17 +1195,16 @@ int osd_update_audio_stream(INT16 *buffer)
 			int integer_delta = (int)delta_samples;
 			if (integer_delta <= 16 )
                         { 
-				//log_cb(RETRO_LOG_INFO,"sound: counter %d Delta added value %d added to frame\n",counter,integer_delta);
+				log_cb(RETRO_LOG_DEBUG,"sound: Delta added value %d added to frame\n",integer_delta);
 				samples_per_frame += integer_delta;
 			}
 			else if(integer_delta >= 16) log_cb(RETRO_LOG_INFO, "sound: Delta not added to samples_per_frame too large integer_delta:%d\n", integer_delta);
-			else log_cb(RETRO_LOG_INFO,"sound(delta) no contitions met\n");	
+			else log_cb(RETRO_LOG_DEBUG,"sound(delta) no contitions met\n");	
 			delta_samples -= integer_delta; 
 
 		}
 	}
-        counter ++;
-	return samples_per_frame;
+        return samples_per_frame;
 }
 
 void osd_stop_audio_stream(void)
