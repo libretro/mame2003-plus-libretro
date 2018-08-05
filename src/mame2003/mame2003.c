@@ -1165,8 +1165,8 @@ int osd_start_audio_stream(int stereo)
 
 int osd_update_audio_stream(INT16 *buffer)
 {
-	int j;
-	static int counter =0;
+	int i,j;
+	
 	if ( Machine->sample_rate !=0 && buffer )
 	{
    		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
@@ -1174,7 +1174,7 @@ int osd_update_audio_stream(INT16 *buffer)
 			audio_batch_cb(samples_buffer, samples_per_frame);
 		else
 		{
-			for (int i = 0, j = 0; i < samples_per_frame; i++)
+			for (i = 0, j = 0; i < samples_per_frame; i++)
         		{
 				conversion_buffer[j++] = samples_buffer[i];
 				conversion_buffer[j++] = samples_buffer[i];
