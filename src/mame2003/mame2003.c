@@ -25,6 +25,7 @@
 static const struct GameDriver  *game_driver;
 static float              delta_samples;
 int                       samples_per_frame = 0;
+int 			  orig_samples_per_frame =0;
 short*                    samples_buffer;
 short*                    conversion_buffer;
 int                       usestereo = 1;
@@ -1042,7 +1043,7 @@ size_t retro_serialize_size(void)
 bool retro_serialize(void *data, size_t size)
 {
    int cpunum;
-	if(retro_serialize_size() && data && size)
+	if( ( retro_serialize_size() ) && (data)  && (size) )
 	{
 		/* write the save state */
 		state_save_save_begin(data);
@@ -1083,7 +1084,7 @@ bool retro_unserialize(const void * data, size_t size)
 {
     int cpunum;
 	/* if successful, load it */
-	if (retro_serialize_size() && data && size && !state_save_load_begin((void*)data, size))
+	if ( (retro_serialize_size() ) && ( data ) && ( size ) && ( !state_save_load_begin((void*)data, size) ) )
 	{
         /* read tag 0 */
         state_save_set_current_tag(0);
@@ -1151,11 +1152,12 @@ int osd_start_audio_stream(int stereo)
 
 	/* determine the number of samples per frame */
 	samples_per_frame = Machine->sample_rate / Machine->drv->frames_per_second;
+	orig_samples_per_frame = samples_per_frame;
 
 	if (Machine->sample_rate == 0) return 0;
 
-	samples_buffer = (short *) calloc(samples_per_frame, 2 + usestereo * 2);
-	if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame, 4);
+	samples_buffer = (short *) calloc(samples_per_frame+16, 2 + usestereo * 2);
+	if (!usestereo) conversion_buffer = (short *) calloc(samples_per_frame+16, 4);
 	
 	return samples_per_frame;
 }
@@ -1163,8 +1165,8 @@ int osd_start_audio_stream(int stereo)
 
 int osd_update_audio_stream(INT16 *buffer)
 {
-	int i,j;
-
+	int j;
+	static int counter =0;
 	if ( Machine->sample_rate !=0 && buffer )
 	{
    		memcpy(samples_buffer, buffer, samples_per_frame * (usestereo ? 4 : 2));
@@ -1172,24 +1174,38 @@ int osd_update_audio_stream(INT16 *buffer)
 			audio_batch_cb(samples_buffer, samples_per_frame);
 		else
 		{
-			for (i = 0, j = 0; i < samples_per_frame; i++)
+			for (int i = 0, j = 0; i < samples_per_frame; i++)
         		{
 				conversion_buffer[j++] = samples_buffer[i];
 				conversion_buffer[j++] = samples_buffer[i];
 		        }
          		audio_batch_cb(conversion_buffer,samples_per_frame);
 		}	
-   		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - samples_per_frame;
-		if (delta_samples >= 1.0f)
+		
+			
+		//process next frame
+			
+		if ( samples_per_frame  != orig_samples_per_frame ) samples_per_frame = orig_samples_per_frame;
+		
+		// dont drop any sample frames some games like mk will drift with time
+   		delta_samples += (Machine->sample_rate / Machine->drv->frames_per_second) - orig_samples_per_frame;
+		if ( delta_samples >= 1.0f )
 		{
+		
 			int integer_delta = (int)delta_samples;
-			samples_per_frame += integer_delta;
-			delta_samples -= integer_delta;
+			if (integer_delta <= 16 )
+                        { 
+				log_cb(RETRO_LOG_DEBUG,"sound: Delta added value %d added to frame\n",integer_delta);
+				samples_per_frame += integer_delta;
+			}
+			else if(integer_delta >= 16) log_cb(RETRO_LOG_INFO, "sound: Delta not added to samples_per_frame too large integer_delta:%d\n", integer_delta);
+			else log_cb(RETRO_LOG_DEBUG,"sound(delta) no contitions met\n");	
+			delta_samples -= integer_delta; 
+
 		}
 	}
-	return samples_per_frame;
+        return samples_per_frame;
 }
-
 
 void osd_stop_audio_stream(void)
 {
