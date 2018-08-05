@@ -1663,7 +1663,6 @@ READ32_HANDLER( deco32_fghthist_prot_r)
 
 	val=deco16_146_core_prot_r(addr, mem_mask>>16);
 
-#if 0
 	if (addr!=0x7b6 && addr!=0x1c && addr!=0x1e0 && addr!=0x1d4
 		&& addr!=0x2c4 && addr!=0x7a4 && addr!=0x30 /* confirmed*/
 		&& addr!=0x49a && addr!=0x49c && addr!=0x584 /* confirmed*/
@@ -1675,7 +1674,7 @@ READ32_HANDLER( deco32_fghthist_prot_r)
 		&& addr!=0x1ae && addr!=0x1d6 && addr!=0x4f8 && addr!=0x614 /* cnofirmed*/
 		&& addr!=0x5ae && addr!=0x50a && addr!=0x476 && addr!=0x328 && addr!=0x3e && addr!=0x558 /* dbl check these later*/
 		&& addr!=0x444 && addr!=0x46a /* confirmed*/
-		&& cpu_get_pc(space->cpu)!=0x16448 /* hmm*/
+		&& activecpu_get_pc()!=0x16448 /* hmm */
  		&& addr!=0x67a
 		&& addr!=0x6c2 && addr!=0xac && addr!=0x416 && addr!=0x2c2 /* confirmed*/
 		&& addr!=0x3d8
@@ -1698,11 +1697,11 @@ READ32_HANDLER( deco32_fghthist_prot_r)
 		&& addr!=0x440 && addr!=0x460
 		)
 	{
-	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);*/
-	/*	popmessage("Read protection port %04x", addr);*/
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", activecpu_get_pc(), addr, val);
+		usrintf_showmessage("Read protection port %04x", addr);
 	}
-	/*  log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", cpu_get_pc(space->cpu), addr, val);*/
-#endif
+	/*  log_cb(RETRO_LOG_ERROR, LOGPRE "Protection PC %06x: warning - read unmapped protection address %04x (ret %04x)\n", activecpu_get_pc(), addr, val);*/
+
 	return (val<<16)|0xffff;
 }
 
