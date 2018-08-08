@@ -413,8 +413,7 @@ endif
 endif
 
 ifeq ($(DEBUG), 1)
-   CFLAGS += -fsanitize=address -fno-omit-frame-pointer -g -O0
-   LDFLAGS += -fsanitize=address 
+   CFLAGS += -O0 -g3
 else
    CFLAGS += -O2 -DNDEBUG
 endif
