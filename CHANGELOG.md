@@ -265,6 +265,7 @@
 * Fixed a reset problem after level 3 in Night Slashers (ARM CPU)
 * Enabled breakable backgrounds in 64th street code via BritneysPAIRS
 * Improved sprite drawing for Gun Force 2
+* Updated and hooked up the UPD7810 sound cpu to the metro driver enabling full sound and music for all the games
 * Added the ICS2115 soundcore for the PGM games
 * Updated the PGM driver to MAME105 more games are now playable
 * Hooked Up Toshiba T5182 sound in Mustache Boy and The Lost Castle In Darkmist
