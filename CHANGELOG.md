@@ -216,6 +216,7 @@
 
 ## Games now with improved sound
 * Asterix
+* Crazy Balloon
 * Final Fight added ost sound track (KMFDManic)
 * Mortal added ost sound track (KMFDManic)
 * nbajam added ost sound track (KMFDManic)
@@ -280,6 +281,7 @@
 * reverted the RC5c68 soundcore back to the superior earlier version pre the MAME76 changes
 * Fixed sound pitch in Asterix
 * Fixed missing road in Hang-On game now playable
+* Hooked up custom sound for Crazy Balloon game now has music and extra SFX which were missing before
 * Backported some changes from later MAME for the ARM CPU core required for all the 32-bit Data East games to function
 correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, deco_mlc.c and simpl1156.c
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
