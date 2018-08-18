@@ -19,6 +19,7 @@
 				"mk", "mkr4", "mkprot9", "mkla1", "mkla2",  "mkla3", "mkla4", \
 				"nbajam", "nbajamr2", "nbajamte", "nbajamt12", "nbajamt2",  "nbajamt3", \
 				"ffight", "ffightu", "ffightj",  "ffightj1", \
+				"ddragon", "ddragonu", "ddragonw",  "ddragonb", \
 				"moonwalk", "moonwlka", "moonwlkb", 0
 		 };    
 
