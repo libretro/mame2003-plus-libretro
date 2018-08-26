@@ -79,13 +79,7 @@ To Do:
 
 - srmp7		:	Needs interrupts by the sound chip (unsupported yet). Kludged to work.
 
-- stmblade	:	There is a rogue "tilemap" sprite that pops up at level 2 and stays
-				there till the end of the game (a piece of sky to the left of the screen).
-				It seems that the x&y offsets in the sprite list should be apllied
-				to it (-$200,-$200) to move it off screen. But currently those offsets
-				are ignored for "tilemap" sprites. This may be related to the kludge for srmp4.
-
-- ultrax : bad gfx offsets and wrong visible area
+- ultrax    :   bad gfx offsets and wrong visible area
 - twineag2  :   bad gfx offsets on some scenes
 
 - dynagear  :   Requires 2 kludges for the video emulation and has some bad shadow sprites
@@ -360,8 +354,6 @@ static READ16_HANDLER( drifto94_rand_r )
 {
 	return mame_rand() & 0xffff;
 }
-
-
 
 static MEMORY_READ16_START( drifto94_readmem )
 	{ 0x480000, 0x480001, MRA16_NOP				},	/* ?*/
@@ -2811,7 +2803,7 @@ static struct GfxLayout layout_16x8x6_2 =
 	16,8,
 	RGN_FRAC(1,1),
 	6,
-	{	STEP8(0,1)		},
+	{	2,3,4,5,6,7		},
 	{	STEP16(0,8)		},
 	{	STEP8(0,16*8)	},
 	16*8*8
@@ -2939,7 +2931,10 @@ DRIVER_INIT( twineag2 )		{	init_ssv();interrupt_ultrax=1;
 DRIVER_INIT( ultrax )		{	init_ssv();interrupt_ultrax=1;
 								ssv_sprites_offsx = -8;	ssv_sprites_offsy = 0;
 								ssv_tilemap_offsx = +0;	ssv_tilemap_offsy = 0;	}
-DRIVER_INIT( vasara )		{	init_ssv(); ssv_special = 2;
+DRIVER_INIT( vasara )		{	init_ssv();
+								ssv_sprites_offsx = +0;	ssv_sprites_offsy = +0xf0;
+								ssv_tilemap_offsx = +0;	ssv_tilemap_offsy = -0xf8;	}
+DRIVER_INIT( vasara2 )		{	init_ssv();
 								ssv_sprites_offsx = +0;	ssv_sprites_offsy = +0xf0;
 								ssv_tilemap_offsx = +0;	ssv_tilemap_offsy = -0xf8;	}
 
@@ -2955,13 +2950,12 @@ static MACHINE_DRIVER_START( ssv )
 	MDRV_MACHINE_INIT(ssv)
 
 	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN | VIDEO_RGB_DIRECT)
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER | VIDEO_NEEDS_6BITS_PER_GUN)
 
 	MDRV_SCREEN_SIZE(0x180, 0x100)
 	MDRV_VISIBLE_AREA(0, 0x150-1, 0, 0xf0-1)
 	MDRV_GFXDECODE(ssv_gfxdecodeinfo)
-	MDRV_PALETTE_LENGTH(0x8000+256)	/* provide 256 addition colors as security buffer*/
-									/* when the last color codes are used for 256 color tiles*/
+	MDRV_PALETTE_LENGTH(0x8000)
 	MDRV_VIDEO_START(ssv)
 	MDRV_VIDEO_UPDATE(ssv)
 
@@ -3104,7 +3098,7 @@ static MACHINE_DRIVER_START( stmblade )
 
 	MDRV_NVRAM_HANDLER(ssv)
 	/* video hardware */
-	MDRV_VISIBLE_AREA(0, 0x158-1, 0, 0xf0-1)
+	MDRV_VISIBLE_AREA(0, 0x158-1, 1, 0xf0-1)
 MACHINE_DRIVER_END
 
 
@@ -4422,7 +4416,7 @@ GAMEX( 1994,  drifto94, 0,        drifto94, drifto94, drifto94, ROT0,   "Visco",
 GAMEX( 1995,  hypreact, 0,        hypreact, hypreact, hypreact, ROT0,   "Sammy",              "Mahjong Hyper Reaction (Japan)",                   GAME_NO_COCKTAIL | GAME_NOT_WORKING )
 GAMEX( 1994,  twineag2, 0,        twineag2, twineag2, twineag2, ROT270, "Seta",               "Twin Eagle II - The Rescue Mission",               GAME_NO_COCKTAIL )
 GAMEX( 1996,  janjans1, 0,        janjans1, janjans1, janjans1, ROT0,   "Visco",              "Lovely Pop Mahjong Jan Jan Shimasyo (Japan)",      GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1996?, meosism,  0,        meosism,  meosism,  meosism,  ROT0,   "Sammy",              "Meosis Magic (Japan)",                             GAME_NO_COCKTAIL )
+GAMEX( 1996,  meosism,  0,        meosism,  meosism,  meosism,  ROT0,   "Sammy",              "Meosis Magic (Japan)",                             GAME_NO_COCKTAIL )
 GAMEX( 1997,  mslider,  0,        mslider,  mslider,  mslider,  ROT0,   "Visco / Datt Japan", "Monster Slider (Japan)",                           GAME_NO_COCKTAIL )
 GAMEX( 1996,  stmblade, 0,        stmblade, stmblade, stmblade, ROT270, "Visco",              "Storm Blade (US)",                                 GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
 GAMEX( 1997,  hypreac2, 0,        hypreac2, hypreac2, hypreac2, ROT0,   "Sammy",              "Mahjong Hyper Reaction 2 (Japan)",                 GAME_NO_COCKTAIL )
@@ -4432,10 +4426,8 @@ GAMEX( 1998,  ryorioh,  0,        ryorioh,  ryorioh,  ryorioh,  ROT0,   "Visco",
 GAMEX( 1998,  sxyreact, 0,        sxyreact, sxyreact, sxyreact, ROT0,   "Sammy",              "Pachinko Sexy Reaction (Japan)",                   GAME_NO_COCKTAIL )
 GAMEX( 1999,  cairblad, 0,        sxyreact, cairblad, sxyreact, ROT270, "Sammy",              "Change Air Blade (Japan)",                         GAME_NO_COCKTAIL )
 GAMEX( 2000,  vasara,   0,        ryorioh,  vasara,   vasara,   ROT270, "Visco",              "Vasara",                                           GAME_NO_COCKTAIL )
-GAMEX( 2001,  vasara2,  0,        ryorioh,  vasara2,  vasara,   ROT270, "Visco",              "Vasara 2 (set 1)",                                 GAME_NO_COCKTAIL )
-GAMEX( 2001,  vasara2a, vasara2,  ryorioh,  vasara2,  vasara,   ROT270, "Visco",              "Vasara 2 (set 2)",                                 GAME_NO_COCKTAIL )
-
-/* Games not working properly:*/
+GAMEX( 2001,  vasara2,  0,        ryorioh,  vasara2,  vasara2,  ROT270, "Visco",              "Vasara 2 (set 1)",                                 GAME_NO_COCKTAIL )
+GAMEX( 2001,  vasara2a, vasara2,  ryorioh,  vasara2,  vasara2,  ROT270, "Visco",              "Vasara 2 (set 2)",                                 GAME_NO_COCKTAIL )
 GAMEX( 1995,  ultrax,   0,        ultrax,   ultrax,   ultrax,   ROT270,	"Banpresto + Tsuburaya Prod.", "Ultra X Weapons - Ultra Keibitai",        GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
 
 /*	Games not working at all:*/
