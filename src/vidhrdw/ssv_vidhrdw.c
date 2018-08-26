@@ -18,12 +18,12 @@
 
 	Offset: 	Bits:					Value:
 
-		0.w		f--- ---- ---- ----		Shadow (Highlight?)
-				-edc ---- ---- ----		Each bit enables 2 bitplanes*
-				---- ba-- ---- ----		X Size (1,2,4,8 tiles)
-				---- --98 ---- ----		Y Size (1,2,4,8 tiles)
-				---- ---- 765- ----		Index of a scroll to apply to the single-sprite(s)
-				---- ---- ---4 3210		Number of single-sprites, minus 1
+        0.w     f--- ---- ---- ----     Shadow
+                -edc ---- ---- ----     Each bit enables 2 bitplanes*
+                ---- ba-- ---- ----     X Size (1,2,4,8 tiles)
+                ---- --98 ---- ----     Y Size (1,2,4,8 tiles)
+                ---- ---- 765- ----     Index of a scroll to apply to the single-sprite(s)
+                ---- ---- ---4 3210     Number of single-sprites, minus 1
 
 		2.w		f--- ---- ---- ----		List end
 				-edc ba98 7654 3210		Offset of the single-sprite(s) data
@@ -55,10 +55,10 @@
 				---- --9- ---- ----		Code? Color?
 				---- ---8 7654 3210		Color code (64 color steps)
 
-		4.w		f--- ---- ---- ----		Shadow (Highlight?)
-				-edc ---- ---- ----		Each bit enables 2 bitplanes*
-				---- ba-- ---- ----		X Size (1,2,4,8 tiles)
-				---- --98 7654 3210		X
+        4.w     f--- ---- ---- ----     Shadow
+                -edc ---- ---- ----     Each bit enables 2 bitplanes*
+                ---- ba-- ---- ----     X Size (1,2,4,8 tiles)
+                ---- --98 7654 3210     X
 
 		6.w		fedc ---- ---- ----
 				---- ba-- ---- ----		Y Size (1,2,4 tiles) **
@@ -94,13 +94,13 @@
 
 		4.w								? 0000, 05ff, 057f
 
-		6.w		fed- ---- ---- ----		Tilemap width (games only use 1 -> $200, 2 -> $400)
-				---c ---- ---- ----		?
-				---- b--- ---- ----		Shadow (Highlight?)
-				---- -a98 ---- ----		Each bit enables 2 bitplanes*
-				---- ---- 7654 3210		? some games leave it to 0, others
-										  use e.g 28 for scroll 0, 29 for
-										  scroll 1, 2a etc.
+        6.w     fed- ---- ---- ----     Tilemap width (games only use 1 -> $200, 2 -> $400)
+                ---c ---- ---- ----     ?
+                ---- b--- ---- ----     Shadow
+                ---- -a98 ---- ----     Each bit enables 2 bitplanes*
+                ---- ---- 7654 3210     ? some games leave it to 0, others
+                                          use e.g 28 for scroll 0, 29 for
+                                          scroll 1, 2a etc.
 
 	Where scroll x&y refer to a virtual $8000 x $200 tilemap (filling the
 	whole spriteram) made of 16x16 tiles. A tile uses 4 bytes:
@@ -120,10 +120,16 @@
 *** The tiles size is (always?) 16x16 so Code and Code+1 are used.
 
 
-	Note that there is a "background layer": a series of tilemap sprites
-	that fill up the screen and use scroll 0 as the source tilemap are
-	always displayed before the sprites in the sprites list.
+    Note that there is a "background layer": a series of tilemap sprites
+    that fill up the screen and use scroll 0 as the source tilemap are
+    always displayed before the sprites in the sprites list.
 
+    Shadows:
+
+    The low bits of the pens from a "shadowing" tile (regardless of color code)
+    substitute the top bits of the color index (0-7fff) in the frame buffer.
+    The number of low bits from the "shadowing tile" is 4 or 2, depending on
+    bit 7 of 1c0077.
 
 Note: press Z to show some info on each sprite (debug builds only)
 
@@ -133,11 +139,60 @@ Note: press Z to show some info on each sprite (debug builds only)
 #include "vidhrdw/generic.h"
 #include "seta.h"
 
+int shadow_pen_mask, shadow_pen_shift;
+
+void ssv_drawgfx(	struct mame_bitmap *bitmap, const struct GfxElement *gfx,
+					unsigned int code,unsigned int color,int flipx,int flipy,int x0,int y0,
+					const struct rectangle *cliprect, int shadow	)
+{
+	UINT8 *source, *addr, pen;
+	UINT16 *dest;
+	int sx, x1, dx;
+	int sy, y1, dy;
+
+	addr	=	(code  % gfx->total_elements) * gfx->char_modulo + gfx->gfxdata;
+	color	=	gfx->color_granularity * (color % gfx->total_colors);
+
+	if ( flipx )	{	x1 = x0-1;				x0 += gfx->width-1;		dx = -1;	}
+	else			{	x1 = x0 + gfx->width;							dx =  1;	}
+
+	if ( flipy )	{	y1 = y0-1;				y0 += gfx->height-1;	dy = -1;	}
+	else			{	y1 = y0 + gfx->height;							dy =  1;	}
+
+#define SSV_DRAWGFX(SETPIXELCOLOR)												\
+	for ( sy = y0; sy != y1; sy += dy )											\
+	{																			\
+		if ( sy >= cliprect->min_y && sy <= cliprect->max_y )					\
+		{																		\
+			source	=	addr;													\
+			dest	=	(UINT16 *)bitmap->line[sy];								\
+																				\
+			for ( sx = x0; sx != x1; sx += dx )									\
+			{																	\
+				pen = *source++;												\
+																				\
+				if ( pen && sx >= cliprect->min_x && sx <= cliprect->max_x )	\
+					SETPIXELCOLOR												\
+			}																	\
+		}																		\
+																				\
+		addr	+=	gfx->line_modulo;											\
+	}
+
+	if (shadow)
+	{
+		SSV_DRAWGFX( { dest[sx] = ((dest[sx] & shadow_pen_mask) | (pen << shadow_pen_shift)) & 0x7fff; } )
+	}
+	else
+	{
+		SSV_DRAWGFX( { dest[sx] = (color + pen) & 0x7fff; } )
+	}
+}
+
+
 VIDEO_START( ssv )
 {
 	Machine->gfx[0]->color_granularity = 64; /* 256 colour sprites with palette selectable on 64 colour boundaries */
-
-	alpha_set_level(0x80);	/* until proper shadows are implemented*/
 
 	return 0;
 }
@@ -145,7 +200,7 @@ VIDEO_START( ssv )
 /* Scroll values + CRT controller registers */
 data16_t *ssv_scroll;
 
-int ssv_special;	/* kludge for hypreac2*/
+int ssv_special;	/* kludge for hypreac2 */
 
 int ssv_tile_code[16];
 
@@ -465,10 +520,10 @@ static void ssv_draw_row(struct mame_bitmap *bitmap, int sx, int sy, int scroll)
 	int y, y1, sy1, flipy, ynum, ystart, yend, yinc;
 	data16_t *s3;
 
-	xnum	=		0x20;		/* width in tiles (screen-wide)*/
-	ynum	=		0x8;		/* height in tiles (always 64 pixels?)*/
+	xnum	=		0x20;		/* width in tiles (screen-wide) */
+	ynum	=		0x8;		/* height in tiles (always 64 pixels?) */
 
-	scroll	&=		0x7;		/* scroll register index*/
+	scroll	&=		0x7;		/* scroll register index */
 
 	/* Sign extend the position */
 	sx = 0;
@@ -497,13 +552,143 @@ static void ssv_draw_row(struct mame_bitmap *bitmap, int sx, int sy, int scroll)
 
 	/* Get the scroll data */
 
-	x		=	ssv_scroll[ scroll * 4 + 0 ];	/* x scroll*/
-	y		=	ssv_scroll[ scroll * 4 + 1 ];	/* y scroll*/
-/*				ssv_scroll[ scroll * 4 + 2 ];	// ? 0, 05ff, 057f*/
+	x		=	ssv_scroll[ scroll * 4 + 0 ];	/* x scroll */
+	y		=	ssv_scroll[ scroll * 4 + 1 ];	/* y scroll */
+/*				ssv_scroll[ scroll * 4 + 2 ];   ? 0, 05ff, 057f */
 	mode	=	ssv_scroll[ scroll * 4 + 3 ];	/* shadow, depth etc.*/
 
 	/* How is the background layer disabled ? */
-	if ((mode & 0x0700) == 0)	return;
+	if ((mode & 0xe000) == 0)	return;
+
+	shadow	=	(mode & 0x0800);
+
+	/* Decide the actual size of the tilemap. $200 and $400 pixels
+       are the only values actually used AFAIK */
+	size	=	1 << (8 + ((mode & 0xe000) >> 13));
+	page	=	(x & 0x7fff) / size;
+
+	/* Given a fixed scroll value, the portion of tilemap displayed changes
+       with the sprite postion */
+	x	+=	sx;
+	y	+=	sy;
+
+	/* Tweak the scroll values (game specific) */
+	x	+=	ssv_tilemap_offsx;
+	y	+=	ssv_tilemap_offsy;
+
+	/* Draw the rows */
+
+	x1	=	x;
+	y1	=	y;
+	sx1	=	sx - (x & 0xf);
+	sy1	=	sy - (y & 0xf);
+
+	for (sx=sx1,x=x1; sx <= clip.max_x; sx+=0x10,x+=0x10)
+	{
+		for (sy=sy1,y=y1; sy <= clip.max_y; sy+=0x10,y+=0x10)
+		{
+			int tx, ty, gfx;
+
+			s3	=	&spriteram16[	page * (size * ((0x1000/0x200)/2))	+
+									((x & ((size -1) & ~0xf)) << 2)	+
+									((y & ((0x200-1) & ~0xf)) >> 3)		];
+
+			code	=	s3[0];	/* code high bits */
+			attr	=	s3[1];	/* code low  bits + color */
+
+			/* Code's high bits are scrambled */
+			code	+=	ssv_tile_code[(attr & 0x3c00)>>10];
+			flipy	=	(attr & 0x4000);
+			flipx	=	(attr & 0x8000);
+			
+			if ((ssv_scroll[0x74/2] & 0x1000) && ((ssv_scroll[0x74/2] & 0x2000) == 0))
+			{
+				if (flipx == 0) flipx = 1; else flipx = 0;
+			}
+			if ((ssv_scroll[0x74/2] & 0x4000) && ((ssv_scroll[0x74/2] & 0x2000) == 0))
+			{
+				if (flipy == 0) flipy = 1; else flipy = 0;
+			}
+
+			color	=	attr;
+
+			/* Select 256 or 64 color tiles */
+			gfx	=	((mode & 0x0100) ? 0 : 1);
+
+			/* Force 16x16 tiles ? */
+			if (flipx)	{ xstart = 1-1;  xend = -1; xinc = -1; }
+			else		{ xstart = 0;    xend = 1;  xinc = +1; }
+
+			if (flipy)	{ ystart = 2-1;  yend = -1; yinc = -1; }
+			else		{ ystart = 0;    yend = 2;  yinc = +1; }
+
+			/* Draw a tile (16x16) */
+			for (tx = xstart; tx != xend; tx += xinc)
+			{
+				for (ty = ystart; ty != yend; ty += yinc)
+				{
+					ssv_drawgfx( bitmap,	Machine->gfx[gfx],
+											code++,
+											color,
+											flipx, flipy,
+											sx + tx * 16, sy + ty * 8,
+											&clip, shadow	);
+				} /* ty */
+			} /* tx */
+
+		} /* sy */
+	} /* sx */
+
+}
+
+/* Draw the "background layer" using multiple tilemap sprites */
+static void ssv_draw_row2(struct mame_bitmap *bitmap, int sx, int sy, int scroll)
+{
+	struct rectangle clip;
+	int attr, code, color, mode, size, page, shadow;
+	int x, x1, sx1, flipx, xnum, xstart, xend, xinc;
+	int y, y1, sy1, flipy, ynum, ystart, yend, yinc;
+	data16_t *s3;
+
+	xnum	=		0x20;		/* width in tiles (screen-wide) */
+	ynum	=		0x8;		/* height in tiles (always 64 pixels?) */
+
+	scroll	&=		0x7;		/* scroll register index */
+
+	/* Sign extend the position */
+	sx = 0;
+	sy = (sy & 0x1ff) - (sy & 0x200);
+
+	/* Set up a clipping region for the tilemap slice .. */
+
+	clip.min_x = sx;
+	clip.max_x = sx + xnum * 0x10 - 1;
+	clip.min_y = sy;
+	clip.max_y = sy + ynum * 0x8  - 1;
+
+	/* .. and clip it against the visible screen */
+
+	if (clip.min_x > Machine->visible_area.max_x)	return;
+	if (clip.min_y > Machine->visible_area.max_y)	return;
+
+	if (clip.max_x < Machine->visible_area.min_x)	return;
+	if (clip.max_y < Machine->visible_area.min_y)	return;
+
+	if (clip.min_x < Machine->visible_area.min_x)	clip.min_x = Machine->visible_area.min_x;
+	if (clip.max_x > Machine->visible_area.max_x)	clip.max_x = Machine->visible_area.max_x;
+
+	if (clip.min_y < Machine->visible_area.min_y)	clip.min_y = Machine->visible_area.min_y;
+	if (clip.max_y > Machine->visible_area.max_y)	clip.max_y = Machine->visible_area.max_y;
+
+	/* Get the scroll data */
+
+	x		=	ssv_scroll[ scroll * 4 + 0 ];	/* x scroll */
+	y		=	ssv_scroll[ scroll * 4 + 1 ];	/* y scroll */
+/*				ssv_scroll[ scroll * 4 + 2 ];	? 0, 05ff, 057f */
+	mode	=	ssv_scroll[ scroll * 4 + 3 ];	/* shadow, depth etc. */
+
+	/* How is the background layer disabled ? */
+	if ((mode & 0xe000) == 0)	return;
 
 	shadow	=	(mode & 0x0800);
 
@@ -538,13 +723,21 @@ static void ssv_draw_row(struct mame_bitmap *bitmap, int sx, int sy, int scroll)
 									((x & ((size -1) & ~0xf)) << 2)	+
 									((y & ((0x200-1) & ~0xf)) >> 3)		];
 
-			code	=	s3[0];	/* code high bits*/
-			attr	=	s3[1];	/* code low  bits + color*/
+			code	=	s3[0];	/* code high bits */
+			attr	=	s3[1];	/* code low  bits + color */
 
 			/* Code's high bits are scrambled */
 			code	+=	ssv_tile_code[(attr & 0x3c00)>>10];
 			flipy	=	(attr & 0x4000);
 			flipx	=	(attr & 0x8000);
+			if ((ssv_scroll[0x74/2] & 0x1000) && ((ssv_scroll[0x74/2] & 0x2000) == 0))
+			{
+				if (flipx == 0) flipx = 1; else flipx = 0;
+			}
+			if ((ssv_scroll[0x74/2] & 0x4000) && ((ssv_scroll[0x74/2] & 0x2000) == 0))
+			{
+				if (flipy == 0) flipy = 1; else flipy = 0;
+			}
 			color	=	attr;
 
 			/* Select 256 or 64 color tiles */
@@ -578,9 +771,12 @@ static void ssv_draw_row(struct mame_bitmap *bitmap, int sx, int sy, int scroll)
 	} /* sx */
 
 }
-
-/* Draw the "background layer" using multiple tilemap sprites */
-
+static void ssv_draw_layer2(struct mame_bitmap *bitmap,int  nr)
+{
+	int sy;
+	for ( sy = 0; sy <= Machine->visible_area.max_y; sy += 0x40 )
+		ssv_draw_row2(bitmap, 0, sy, nr);
+}
 static void ssv_draw_layer(struct mame_bitmap *bitmap,int  nr)
 {
 	int sy;
@@ -589,8 +785,7 @@ static void ssv_draw_layer(struct mame_bitmap *bitmap,int  nr)
 }
 
 /* Draw sprites in the sprites list */
-
-static void ssv_draw_sprites(struct mame_bitmap *bitmap)
+static void ssv_draw_sprites2(struct mame_bitmap *bitmap)
 {
 	/* Sprites list */
 
@@ -602,8 +797,8 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 	for ( ; s1 < end1; s1+=4 )
 	{
 		int attr, code, color, num, sprite;
-		int sx, x, xoffs, flipx, xnum, xstart, xend, xinc;
-		int sy, y, yoffs, flipy, ynum, ystart, yend, yinc;
+		int sx, x, xoffs, flipx, xnum, xstart, xend, xinc, sprites_offsx;
+		int sy, y, yoffs, flipy, ynum, ystart, yend, yinc, sprites_offsy, tilemaps_offsy;
 		int mode,global_depth,global_xnum,global_ynum;
 
 		mode	=		s1[ 0 ];
@@ -616,6 +811,7 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 
 		/* Single-sprite address */
 		s2		=		&spriteram16[ (sprite & 0x7fff) * 4 ];
+		tilemaps_offsy = ((s2[3] & 0x1ff) - (s2[3] & 0x200));
 
 		/* Every single sprite is offset by x & yoffs, and additionally
 		   by one of the 8 x & y offsets in the 1c0040-1c005f area   */
@@ -657,21 +853,30 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 					depth = local_depth;
 			}
 
-			if ( xnum == 0 && ynum == 0x0c00 )
+			if ( s2[0] <= 7 && s2[1] == 0 && xnum == 0 && ynum == 0x0c00)
 			{
+				/* Tilemap Sprite */
 				int scroll;
 
-				scroll	=		s2[ 0 ];	/* scroll index*/
-/*								s2[ 1 ];	// always 0*/
-/*								s2[ 2 ];	// ignore x offset?*/
-/*								s2[ 3 ];	// ignore y offset?*/
+				scroll	=	s2[ 0 ];	/* scroll index */
 
-				/* Kludge for srmp4*/
-				if (ssv_scroll[0x7a/2] == 0x4940)	sy+=0x60;
+				if (ssv_scroll[0x76/2] & 0x1000)
+					sy -= 0x20;						/* eaglshot */
+				else
+				{
+					if (ssv_scroll[0x7a/2] & 0x0800)
+					{
+						if (ssv_scroll[0x7a/2] & 0x1000)	/* drifto94, dynagear, keithlcy, mslider, stmblade, gdfs, ultrax, twineag2 */
+							sy -= tilemaps_offsy;
+						else						/* srmp4 */
+							sy += tilemaps_offsy;
+					}
+				}
 
-				if (ssv_special !=3) /* dynagears draws rows over sprites?! (but needs rows for hi-score table..)*/
-					ssv_draw_row(bitmap, sx, sy, scroll);
+				if ((mode & 0x001f) != 0)
+					ssv_draw_row2(bitmap,sx, sy, scroll);
 			}
+
 /* 	"normal" sprite
 	hot spots:
 	"warning" in hypreac2 has mode & 0x0100 and is not 16x16
@@ -685,13 +890,14 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 				int shadow, gfx, transparency;
 				if (s2 >= end2)	break;
 
-				code	=	s2[0];	/* code high bits*/
-				attr	=	s2[1];	/* code low  bits + color*/
+				code	=	s2[0];	/* code high bits */
+				attr	=	s2[1];	/* code low  bits + color */
 
 				/* Code's high bits are scrambled */
 				code	+=	ssv_tile_code[(attr & 0x3c00)>>10];
 				flipy	=	(attr & 0x4000);
 				flipx	=	(attr & 0x8000);
+								
 				color	=	attr;
 
 				/* Select 256 or 64 color tiles */
@@ -699,8 +905,8 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 				shadow	=	(depth & 0x8000);
 
 				/* Single-sprite tile size */
-				xnum = 1 << (xnum >> 10);	/* 1, 2, 4 or 8 tiles*/
-				ynum = 1 << (ynum >> 10);	/* 1, 2, 4 tiles (8 means tilemap sprite?)*/
+				xnum = 1 << (xnum >> 10);	/* 1, 2, 4 or 8 tiles */
+				ynum = 1 << (ynum >> 10);	/* 1, 2, 4 tiles (8 means tilemap sprite?) */
 
 				if (flipx)	{ xstart = xnum-1;  xend = -1;    xinc = -1; }
 				else		{ xstart = 0;       xend = xnum;  xinc = +1; }
@@ -716,16 +922,57 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 				sx	=	(sx & 0x1ff) - (sx & 0x200);
 				sy	=	(sy & 0x1ff) - (sy & 0x200);
 
-				/* Tweak it (game specific) */
-				if (ssv_special == 2) sy = 232 - sy; /* vasara, wheres the register for this?*/
+               sprites_offsx =  ((ssv_scroll[0x74/2] & 0x7f) - (ssv_scroll[0x74/2] & 0x80));
 
-				sx	=	ssv_sprites_offsx + sx;
-				if (ssv_scroll[0x74/2] & 0x8000)	/* srmp7, twineag2, ultrax*/
-					sy	=	ssv_sprites_offsy + sy;	/* ?*/
+				sprites_offsy = -((ssv_scroll[0x70/2] & 0x1ff) - (ssv_scroll[0x70/2] & 0x200) + ssv_scroll[0x6a/2] + 1);
+
+				if (ssv_scroll[0x74/2] & 0x4000) /* flipscreen y */
+				{
+					sy = -sy;
+					if (ssv_scroll[0x74/2] & 0x8000)
+						sy += 0x00;			
+					else
+						sy -= 0x10;			/* vasara (hack) */
+				}
+
+				if (ssv_scroll[0x74/2] & 0x1000) /* flipscreen x */
+				{
+					sx = -sx + 0x100;
+				}
+
+				/* sprites can be relative to a side, the other side or the center */
+
+				if (ssv_scroll[0x7a/2] == 0x7140)
+				{
+					/* srmp7 */
+					sx	=	sprites_offsx + sx;
+					sy	=	sprites_offsy - sy;
+				}
+				else if (ssv_scroll[0x7a/2] & 0x0800)
+				{
+					/* dynagear, drifto94, eaglshot, keithlcy, mslider, srmp4, stmblade, twineag2, ultrax */
+					sx	=	sprites_offsx + sx - (xnum * 8)    ;
+					sy	=	sprites_offsy - sy - (ynum * 8) / 2;
+				}
 				else
-					sy	=	ssv_sprites_offsy - sy - (ynum-1) * 8;
+				{
+					/* hypreact, hypreac2, janjans1, meosism, ryorioh, survarts, sxyreact, sxyreac2, vasara, vasara2 */
+					sx	=	sprites_offsx + sx;
+					sy	=	sprites_offsy - sy - (ynum * 8);
+				}
+
+
+
+				/* Sprite code masking */
+				if (xnum == 2 && ynum == 4) /* needed by hypreact */
+				{
+					code &= ~7;
+				}
+
+				
 
 				/* Draw the tiles */
+
 				transparency = shadow ? TRANSPARENCY_ALPHA : TRANSPARENCY_PEN;
 
 				for (x = xstart; x != xend; x += xinc)
@@ -739,6 +986,230 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 											sx + x * 16, sy + y * 8,
 											&Machine->visible_area,
 											transparency, 0 );
+					}
+				}
+
+				#ifdef MAME_DEBUG
+				if (keyboard_pressed(KEYCODE_Z))	/* Display some info on each sprite */
+				{	struct DisplayText dt[2];	char buf[10];
+					sprintf(buf, "%02X",/*(s2[2] & ~0x3ff)>>8*/mode>>8);
+					dt[0].text = buf;	dt[0].color = ((s1[0] & 0x0200) ? UI_COLOR_INVERSE : UI_COLOR_NORMAL);
+					dt[0].x = sx;		dt[0].y = sy;
+					dt[1].text = 0;	/* terminate array */
+					displaytext(Machine->scrbitmap,dt);		}
+				#endif
+
+			}		/* sprite type */
+
+		}	/* single-sprites */
+
+	}	/* sprites list */
+}
+static void ssv_draw_sprites(struct mame_bitmap *bitmap)
+{
+	/* Sprites list */
+
+	data16_t *s1	=	spriteram16;
+	data16_t *end1	=	spriteram16 + 0x02000/2;
+	data16_t *end2	=	spriteram16 + 0x40000/2;
+	data16_t *s2;
+
+	for ( ; s1 < end1; s1+=4 )
+	{
+		int attr, code, color, num, sprite;
+		int sx, x, xoffs, flipx, xnum, xstart, xend, xinc, sprites_offsx;
+		int sy, y, yoffs, flipy, ynum, ystart, yend, yinc, sprites_offsy, tilemaps_offsy;
+		int mode,global_depth,global_xnum,global_ynum;
+
+		mode	=		s1[ 0 ];
+		sprite	=		s1[ 1 ];
+		xoffs	=		s1[ 2 ];
+		yoffs	=		s1[ 3 ];
+
+		/* Last sprite */
+		if (sprite & 0x8000) break;
+
+		/* Single-sprite address */
+		s2		=		&spriteram16[ (sprite & 0x7fff) * 4 ];
+		tilemaps_offsy = ((s2[3] & 0x1ff) - (s2[3] & 0x200));
+
+
+		/* Every single sprite is offset by x & yoffs, and additionally
+           by one of the 8 x & y offsets in the 1c0040-1c005f area   */
+		xoffs	+=		ssv_scroll[((mode & 0x00e0) >> 4) + 0x40/2];
+		yoffs	+=		ssv_scroll[((mode & 0x00e0) >> 4) + 0x42/2];
+
+		/* Number of single-sprites (1-32) */
+		num				=	(mode & 0x001f) + 1;
+		global_ynum		=	(mode & 0x0300) << 2;
+		global_xnum		=	(mode & 0x0c00);
+		global_depth	=	(mode & 0xf000);
+
+		for( ; num > 0; num--,s2+=4 )
+		{
+			int depth, local_depth, local_xnum, local_ynum;
+
+			if (s2 >= end2)	break;
+
+			sx		=		s2[ 2 ];
+			sy		=		s2[ 3 ];
+
+			local_depth		=	sx & 0xf000;
+			local_xnum		=	sx & 0x0c00;
+			local_ynum		=	sy & 0x0c00;
+
+			if (ssv_scroll[0x76/2] & 0x4000)
+			{
+				xnum	=	local_xnum;
+				ynum	=	local_ynum;
+				depth	=	local_depth;
+			}
+			else
+			{
+				xnum	=	global_xnum;
+				ynum	=	global_ynum;
+				depth	=	global_depth;
+			}
+
+			if ( s2[0] <= 7 && s2[1] == 0 && xnum == 0 && ynum == 0x0c00)
+			{
+				/* Tilemap Sprite */
+				int scroll;
+
+				scroll	=	s2[ 0 ];	/* scroll index */
+
+				if (ssv_scroll[0x76/2] & 0x1000)
+					sy -= 0x20;						/* eaglshot */
+				else
+				{
+					if (ssv_scroll[0x7a/2] & 0x0800)
+					{
+						if (ssv_scroll[0x7a/2] & 0x1000)	/* drifto94, dynagear, keithlcy, mslider, stmblade, gdfs, ultrax, twineag2 */
+							sy -= tilemaps_offsy;
+						else						/* srmp4 */
+							sy += tilemaps_offsy;
+					}
+				}
+
+				if ((mode & 0x001f) != 0)
+					ssv_draw_row(bitmap,sx, sy, scroll);
+			}
+			else
+			{
+
+/*  "normal" sprite
+    hot spots:
+    "warning" in hypreac2 has mode & 0x0100 and is not 16x16
+    keithlcy high scores has mode & 0x0100 and y & 0x0c00 can be 0x0c00
+    drifto94 "you have proved yOur".. has mode & 0x0100 and x & 0x0c00 can be 0x0c00
+    ultrax (begin of lev1): 100010: 6b60 4280 0016 00a0
+                            121400: 51a0 0042 6800 0c00 needs to be a normal sprite
+*/
+
+				int shadow, gfx;
+				if (s2 >= end2)	break;
+
+				code	=	s2[0];	/* code high bits */
+				attr	=	s2[1];	/* code low  bits + color */
+
+				/* Code's high bits are scrambled */
+				code	+=	ssv_tile_code[(attr & 0x3c00)>>10];
+				flipy	=	(attr & 0x4000);
+				flipx	=	(attr & 0x8000);
+				
+				if ((ssv_scroll[0x74/2] & 0x1000) && ((ssv_scroll[0x74/2] & 0x2000) == 0))
+				{
+					if (flipx == 0) flipx = 1; else flipx = 0;
+				}
+				if ((ssv_scroll[0x74/2] & 0x4000) && ((ssv_scroll[0x74/2] & 0x2000) == 0))
+				{
+					if (flipy == 0) flipy = 1; else flipy = 0;
+				}
+
+				color	=	attr;
+
+				/* Select 256 or 64 color tiles */
+				gfx		=	(depth & 0x1000) ? 0 : 1;
+				shadow	=	(depth & 0x8000);
+
+				/* Single-sprite tile size */
+				xnum = 1 << (xnum >> 10);	/* 1, 2, 4 or 8 tiles */
+				ynum = 1 << (ynum >> 10);	/* 1, 2, 4 tiles (8 means tilemap sprite?) */
+
+				if (flipx)	{ xstart = xnum-1;  xend = -1;    xinc = -1; }
+				else		{ xstart = 0;       xend = xnum;  xinc = +1; }
+
+				if (flipy)	{ ystart = ynum-1;  yend = -1;    yinc = -1; }
+				else		{ ystart = 0;       yend = ynum;  yinc = +1; }
+
+				/* Apply global offsets */
+				sx	+=	xoffs;
+				sy	+=	yoffs;
+
+				/* Sign extend the position */
+				sx	=	(sx & 0x1ff) - (sx & 0x200);
+				sy	=	(sy & 0x1ff) - (sy & 0x200);
+
+				sprites_offsx =  ((ssv_scroll[0x74/2] & 0x7f) - (ssv_scroll[0x74/2] & 0x80));
+
+				sprites_offsy = -((ssv_scroll[0x70/2] & 0x1ff) - (ssv_scroll[0x70/2] & 0x200) + ssv_scroll[0x6a/2] + 1);
+
+				if (ssv_scroll[0x74/2] & 0x4000) /* flipscreen y */
+				{
+					sy = -sy;
+					if (ssv_scroll[0x74/2] & 0x8000)
+						sy += 0x00;			
+					else
+						sy -= 0x10;			/* vasara (hack) */
+				}
+
+				if (ssv_scroll[0x74/2] & 0x1000) /* flipscreen x */
+				{
+					sx = -sx + 0x100;
+				}
+
+				/* sprites can be relative to a side, the other side or the center */
+
+				if (ssv_scroll[0x7a/2] == 0x7140)
+				{
+					/* srmp7 */
+					sx	=	sprites_offsx + sx;
+					sy	=	sprites_offsy - sy;
+				}
+				else if (ssv_scroll[0x7a/2] & 0x0800)
+				{
+					/* dynagear, drifto94, eaglshot, keithlcy, mslider, srmp4, stmblade, twineag2, ultrax */
+					sx	=	sprites_offsx + sx - (xnum * 8)    ;
+					sy	=	sprites_offsy - sy - (ynum * 8) / 2;
+				}
+				else
+				{
+					/* hypreact, hypreac2, janjans1, meosism, ryorioh, survarts, sxyreact, sxyreac2, vasara, vasara2 */
+					sx	=	sprites_offsx + sx;
+					sy	=	sprites_offsy - sy - (ynum * 8);
+				}
+
+
+
+				/* Sprite code masking */
+				if (xnum == 2 && ynum == 4) /* needed by hypreact */
+				{
+					code &= ~7;
+				}
+
+
+				/* Draw the tiles */
+
+				for (x = xstart; x != xend; x += xinc)
+				{
+					for (y = ystart; y != yend; y += yinc)
+					{
+						ssv_drawgfx( bitmap,	Machine->gfx[gfx],
+												code++,
+												color,
+												flipx, flipy,
+												sx + x * 16, sy + y * 8,
+												&Machine->visible_area, shadow	);
 					}
 				}
 
@@ -777,6 +1248,22 @@ void ssv_enable_video(int enable)
 
 VIDEO_UPDATE( ssv )
 {
+	if (ssv_special !=3)
+	{
+	if (ssv_scroll[0x76/2] & 0x0080)
+	{
+		/* 4 bit shadows (mslider, stmblade) */
+		shadow_pen_mask		=	0x1fff;
+		shadow_pen_shift	=	11;
+	}
+	else
+	{
+		/* 2 bit shadows */
+		shadow_pen_mask		=	0x3fff;
+		shadow_pen_shift	=	13;
+	}
+	}
+
 	/* The background color is the first one in the palette */
 	fillbitmap(bitmap,Machine->pens[0],&Machine->visible_area);
 
@@ -784,14 +1271,14 @@ VIDEO_UPDATE( ssv )
 
 	if (ssv_special !=3)
 	{
-		ssv_draw_layer(bitmap,0);		/* "background layer"*/
-		ssv_draw_sprites(bitmap);	/* sprites list*/
-	} /* dynagears is weird, whats really going on?*/
+		ssv_draw_layer(bitmap,0);		/* "background layer" */
+		ssv_draw_sprites(bitmap);	/* sprites list */
+	} /* dynagears is weird, whats really going on? */
 	else
 	{
-		ssv_draw_layer(bitmap,0);
-		ssv_draw_layer(bitmap,1);
-		ssv_draw_sprites(bitmap);
-		ssv_draw_layer(bitmap,3);
+		ssv_draw_layer2(bitmap,0);
+		ssv_draw_layer2(bitmap,1);
+		ssv_draw_sprites2(bitmap);
+		ssv_draw_layer2(bitmap,3);
 	}
 }
