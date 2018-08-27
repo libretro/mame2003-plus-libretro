@@ -56,14 +56,14 @@ static int cb2 = -1;
 READ_HANDLER( gameplan_sound_r )
 {
 #ifdef VERBOSE
-	log_cb(RETRO_LOG_ERROR, LOGPRE "GAME:  read reg%X at PC %04x\n", offset, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "GAME:  read reg%X at PC %04x\n", offset, activecpu_get_pc());
 #endif
 
 	if (offset == 0)
 	{
 #ifdef VERBOSE
-		if (finished_sound)  log_cb(RETRO_LOG_ERROR, LOGPRE "[GAME: checking sound request ack: OK (%d)]\n", finished_sound);
-		else  log_cb(RETRO_LOG_ERROR, LOGPRE "[GAME: checking sound request ack: BAD (%d)]\n", finished_sound);
+		if (finished_sound)  log_cb(RETRO_LOG_DEBUG, LOGPRE "[GAME: checking sound request ack: OK (%d)]\n", finished_sound);
+		else  log_cb(RETRO_LOG_DEBUG, LOGPRE "[GAME: checking sound request ack: BAD (%d)]\n", finished_sound);
 #endif
 
 		return finished_sound;
@@ -75,13 +75,13 @@ READ_HANDLER( gameplan_sound_r )
 WRITE_HANDLER( gameplan_sound_w )
 {
 #ifdef VERBOSE
-	log_cb(RETRO_LOG_ERROR, LOGPRE "GAME: write reg%X with %02x at PC %04x\n", offset, data, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "GAME: write reg%X with %02x at PC %04x\n", offset, data, activecpu_get_pc());
 #endif
 
 	if (offset == 1)
 	{
 #ifdef VERBOSE
-		log_cb(RETRO_LOG_ERROR, LOGPRE "[GAME: request sound number %d]\n", data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "[GAME: request sound number %d]\n", data);
 #endif
 
 		if (cb2 == 0)
@@ -116,14 +116,14 @@ WRITE_HANDLER( gameplan_sound_w )
 READ_HANDLER( gameplan_via5_r )
 {
 #ifdef VERBOSE
-	log_cb(RETRO_LOG_ERROR, LOGPRE "SOUND:  read reg%X at PC %04x\n", offset, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "SOUND:  read reg%X at PC %04x\n", offset, activecpu_get_pc());
 #endif
 
 	if (offset == 0)
 	{
 		new_request = 0;
 #ifdef VERBOSE
-		log_cb(RETRO_LOG_ERROR, LOGPRE "[SOUND: received sound request %d]\n", port_b);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "[SOUND: received sound request %d]\n", port_b);
 #endif
 		return port_b;
 	}
@@ -133,14 +133,14 @@ READ_HANDLER( gameplan_via5_r )
 		if (new_request == 1)
 		{
 #ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "[SOUND: checking for new request - found]\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "[SOUND: checking for new request - found]\n");
 #endif
 			return 0x40;
 		}
 		else
 		{
 #ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "[SOUND: checking for new request - none]\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "[SOUND: checking for new request - none]\n");
 #endif
 			return 0;
 		}
@@ -152,13 +152,13 @@ READ_HANDLER( gameplan_via5_r )
 WRITE_HANDLER( gameplan_via5_w )
 {
 #ifdef VERBOSE
-	log_cb(RETRO_LOG_ERROR, LOGPRE "SOUND: write reg%X with %02x at PC %04x\n", offset, data, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "SOUND: write reg%X with %02x at PC %04x\n", offset, data, activecpu_get_pc());
 #endif
 
 	if (offset == 2)
 	{
 #ifdef VERBOSE
-		log_cb(RETRO_LOG_ERROR, LOGPRE "[SOUND: ack received request %d]\n", data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "[SOUND: ack received request %d]\n", data);
 #endif
 		finished_sound = data;
 	}
@@ -169,7 +169,7 @@ READ_HANDLER( gameplan_video_r )
 	static int x;
 	x++;
 #if 0
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: reading %d from 200d\n", activecpu_get_pc(), x);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: reading %d from 200d\n", activecpu_get_pc(), x);
 #endif
 	return x;
 }
@@ -180,14 +180,14 @@ WRITE_HANDLER( gameplan_video_w )
 	static unsigned char xpos, ypos, colour = 7;
 
 #ifdef VERBOSE
-	log_cb(RETRO_LOG_ERROR, LOGPRE "VIA 1: PC %04x: %x -> reg%X\n", activecpu_get_pc(), data, offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "VIA 1: PC %04x: %x -> reg%X\n", activecpu_get_pc(), data, offset);
 #endif
 
 	if (offset == 0)			/* write to 2000 */
 	{
 		r0 = data;
 #ifdef VERBOSE
-		log_cb(RETRO_LOG_ERROR, LOGPRE "  mode = %d\n", data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "  mode = %d\n", data);
 #endif
 	}
 	else if (offset == 1)		/* write to 2001 */
@@ -199,15 +199,15 @@ WRITE_HANDLER( gameplan_video_w )
 			else if (data & 0x0f)
 			{
 #ifdef VERBOSE
-				log_cb(RETRO_LOG_ERROR, LOGPRE "  !movement command %02x unknown\n", data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "  !movement command %02x unknown\n", data);
 #endif
 			}
 
 #ifdef VERBOSE_VIDEO
 #ifdef SHOW_CHARS
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%c", colour_names[colour][0]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%c", colour_names[colour][0]);
 #else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  line command %02x at (%d, %d) col %d (%s)\n", data, xpos, ypos, colour, colour_names[colour]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  line command %02x at (%d, %d) col %d (%s)\n", data, xpos, ypos, colour, colour_names[colour]);
 #endif
 #endif
 
@@ -233,9 +233,9 @@ WRITE_HANDLER( gameplan_video_w )
 			xpos = data;
 #ifdef VERBOSE_VIDEO
 #ifdef SHOW_CHARS
-			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 #else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  X = %d\n", xpos);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  X = %d\n", xpos);
 #endif
 #endif
 		}
@@ -244,7 +244,7 @@ WRITE_HANDLER( gameplan_video_w )
 			ypos = data;
 #ifdef VERBOSE_VIDEO
 #ifndef SHOW_CHARS
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  Y = %d\n", ypos);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  Y = %d\n", ypos);
 #endif
 #endif
 		}
@@ -253,18 +253,18 @@ WRITE_HANDLER( gameplan_video_w )
 			if (offset == 1 && data == 0)
 			{
 #ifdef VERBOSE_VIDEO
-				log_cb(RETRO_LOG_ERROR, LOGPRE "  clear screen\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "  clear screen\n");
 #endif
 				gameplan_clear_screen();
 			}
 #ifdef VERBOSE
-			else log_cb(RETRO_LOG_ERROR, LOGPRE "  !not clear screen: offset = %d, data = %d\n", offset, data);
+			else log_cb(RETRO_LOG_DEBUG, LOGPRE "  !not clear screen: offset = %d, data = %d\n", offset, data);
 #endif
 		}
 #ifdef VERBOSE
 		else
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  !offset = %d, data = %02x\n", offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  !offset = %d, data = %02x\n", offset, data);
 		}
 #endif
 	}
@@ -280,14 +280,14 @@ WRITE_HANDLER( gameplan_video_w )
 				clear_to_colour = colour;
 #ifdef VERBOSE_VIDEO
 			if (fix_clear_to_colour == -1)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "  clear screen colour = %d (%s)\n", colour, colour_names[colour]);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "  clear screen colour = %d (%s)\n", colour, colour_names[colour]);
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "  clear req colour %d hidden by fixed colour %d\n", colour, fix_clear_to_colour);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "  clear req colour %d hidden by fixed colour %d\n", colour, fix_clear_to_colour);
 #endif
 		}
 #ifdef VERBOSE
 		else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  !offset = %d, data = %02x\n", offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  !offset = %d, data = %02x\n", offset, data);
 #endif
 	}
 	else if (offset == 3)
@@ -295,13 +295,13 @@ WRITE_HANDLER( gameplan_video_w )
 		if (r0 == 0)
 		{
 #ifdef VERBOSE
-			if ((data & 0xf8) != 0xf8)  log_cb(RETRO_LOG_ERROR, LOGPRE "  !unknown data (%02x) written for pixel (%3d, %3d)\n", data, xpos, ypos);
+			if ((data & 0xf8) != 0xf8)  log_cb(RETRO_LOG_DEBUG, LOGPRE "  !unknown data (%02x) written for pixel (%3d, %3d)\n", data, xpos, ypos);
 #endif
 
 			colour = data & 7;
 #ifdef VERBOSE_VIDEO
 #ifndef SHOW_CHARS
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  colour %d, move to (%d, %d)\n", colour, xpos, ypos);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  colour %d, move to (%d, %d)\n", colour, xpos, ypos);
 #endif
 #endif
 		}
@@ -309,17 +309,17 @@ WRITE_HANDLER( gameplan_video_w )
 		{
 			clear_to_colour = fix_clear_to_colour = data & 0x07;
 #ifdef VERBOSE
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  unusual colour request %d\n", data & 7);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  unusual colour request %d\n", data & 7);
 #endif
 		}
 #ifdef VERBOSE
 		else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  !offset = %d, data = %02x\n", offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  !offset = %d, data = %02x\n", offset, data);
 #endif
 	}
 #ifdef VERBOSE
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "  !offset = %d, data = %02x\n", offset, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "  !offset = %d, data = %02x\n", offset, data);
 #endif
 }
 
@@ -336,7 +336,7 @@ WRITE_HANDLER( gameplan_video_w )
 void gameplan_clear_screen(void)
 {
 #ifdef VERBOSE_VIDEO
-	log_cb(RETRO_LOG_ERROR, LOGPRE "  clearing the screen to colour %d (%s)\n", clear_to_colour, colour_names[clear_to_colour]);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  clearing the screen to colour %d (%s)\n", clear_to_colour, colour_names[clear_to_colour]);
 #endif
 
 	fillbitmap(tmpbitmap, Machine->pens[clear_to_colour], 0);

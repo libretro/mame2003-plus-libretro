@@ -63,7 +63,7 @@ WRITE_HANDLER( circus_clown_y_w )
 WRITE_HANDLER( circus_clown_z_w )
 {
 	clown_z = (data & 0x0f);
-*(memory_region(REGION_CPU1)+0x8000)=data; log_cb(RETRO_LOG_ERROR, LOGPRE "Z:%02x\n",data); /*DEBUG*/
+*(memory_region(REGION_CPU1)+0x8000)=data; log_cb(RETRO_LOG_DEBUG, LOGPRE "Z:%02x\n",data); /*DEBUG*/
 	/* Bits 4-6 enable/disable trigger different events */
 	/* descriptions are based on Circus schematics      */
 
@@ -101,7 +101,7 @@ WRITE_HANDLER( circus_clown_z_w )
 
 	/* Bit 7 enables amplifier (1 = on) */
 
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "clown Z = %02x\n",data);*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "clown Z = %02x\n",data);*/
 }
 
 static void get_bg_tile_info(int tile_index)

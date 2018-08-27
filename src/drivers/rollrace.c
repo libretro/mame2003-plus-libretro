@@ -32,7 +32,7 @@ READ_HANDLER( ra_fake_d800_r )
 
 WRITE_HANDLER( ra_fake_d800_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "d900: %02X\n",data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "d900: %02X\n",data);*/
 }
 
 static MEMORY_READ_START (readmem)

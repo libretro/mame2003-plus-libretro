@@ -281,7 +281,7 @@ static void effects_update(int channel)
 				{
 					/* this shouldn't happen on the effects channels (but it happens e.g. hachamf command 04)*/
 
-					log_cb(RETRO_LOG_ERROR, LOGPRE "effects channel %d invalid token %02x\n",channel,read8(effects->current));
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "effects channel %d invalid token %02x\n",channel,read8(effects->current));
 				}
 			}
 
@@ -911,7 +911,7 @@ static void get_command(void)
 		/* startup handshake*/
 		if (cmd == from_main[NMK004_state.protection_check])
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "advance handshake to %02x\n",to_main[NMK004_state.protection_check]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "advance handshake to %02x\n",to_main[NMK004_state.protection_check]);
 			NMK004_state.to_main = to_main[NMK004_state.protection_check++];
 		}
 	}
@@ -1073,7 +1073,7 @@ READ16_HANDLER( NMK004_r )
 /*static int last;*/
 	res = NMK004_state.to_main;
 
-/*if (res != last) log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: NMK004_r %02x\n",cpu_get_pc(space->cpu),res);*/
+/*if (res != last) log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: NMK004_r %02x\n",cpu_get_pc(space->cpu),res);*/
 /*last = res;*/
 
 	return res;

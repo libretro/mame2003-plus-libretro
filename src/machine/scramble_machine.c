@@ -244,14 +244,14 @@ static READ_HANDLER( scramble_protection_r )
 	case 0x1ca2: return 0x00;  /* I don't think it's checked */
 	case 0x1d7e: return 0xb0;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: read protection\n",activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: read protection\n",activecpu_get_pc());
 		return 0;
 	}
 }
 
 static READ_HANDLER( scrambls_protection_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: read protection\n",activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: read protection\n",activecpu_get_pc());
 
 	return 0x6f;
 }
@@ -264,7 +264,7 @@ READ_HANDLER( scramblb_protection_1_r )
 	case 0x01da: return 0x80;
 	case 0x01e4: return 0x00;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: read protection 1\n",activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: read protection 1\n",activecpu_get_pc());
 		return 0;
 	}
 }
@@ -275,7 +275,7 @@ READ_HANDLER( scramblb_protection_2_r )
 	{
 	case 0x01ca: return 0x90;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: read protection 2\n",activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: read protection 2\n",activecpu_get_pc());
 		return 0;
 	}
 }
@@ -291,7 +291,7 @@ READ_HANDLER( jumpbug_protection_r )
 	case 0x0235:  return 0x02;
 	case 0x0311:  return 0x00;  /* not checked */
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown protection read. Offset: %04X  PC=%04X\n",0xb000+offset,activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown protection read. Offset: %04X  PC=%04X\n",0xb000+offset,activecpu_get_pc());
 	}
 
 	return 0;
@@ -317,7 +317,7 @@ static READ_HANDLER( mariner_protection_2_r )
 
 READ_HANDLER( triplep_pip_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: triplep read port 2\n",activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: triplep read port 2\n",activecpu_get_pc());
 	if (activecpu_get_pc() == 0x015a) return 0xff;
 	else if (activecpu_get_pc() == 0x0886) return 0x05;
 	else return 0;
@@ -325,7 +325,7 @@ READ_HANDLER( triplep_pip_r )
 
 READ_HANDLER( triplep_pap_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: triplep read port 3\n",activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: triplep read port 3\n",activecpu_get_pc());
 	if (activecpu_get_pc() == 0x015d) return 0x04;
 	else return 0;
 }
@@ -342,7 +342,7 @@ static READ_HANDLER( checkmaj_protection_r )
 	case 0x10f1:  return 0xaa;
 	case 0x1402:  return 0xaa;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown protection read. PC=%04X\n",activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown protection read. PC=%04X\n",activecpu_get_pc());
 	}
 
 	return 0;

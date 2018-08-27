@@ -98,7 +98,7 @@ READ_HANDLER( retofinv_68705_portC_r )
 
 WRITE_HANDLER( retofinv_68705_portC_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 68705 port C write %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 port C write %02x\n",activecpu_get_pc(),data);
 	portC_out = data;
 }
 
@@ -110,7 +110,7 @@ WRITE_HANDLER( retofinv_68705_ddrC_w )
 
 WRITE_HANDLER( retofinv_mcu_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_w %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: mcu_w %02x\n",activecpu_get_pc(),data);
 	from_main = data;
 	main_sent = 1;
 	cpu_set_irq_line(3,0,ASSERT_LINE);
@@ -118,7 +118,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_w %02x\n",activecpu_get_pc(),data);
 
 READ_HANDLER( retofinv_mcu_r )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_r %02x\n",activecpu_get_pc(),from_mcu);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: mcu_r %02x\n",activecpu_get_pc(),from_mcu);
 	mcu_sent = 0;
 	return from_mcu;
 }

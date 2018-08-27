@@ -149,8 +149,8 @@ static WRITE16_HANDLER( protection_w )
 		}
 	default:
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Write protection at %06x (%04x)\n", activecpu_get_pc(), data&0xffff);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "*** Unknown protection %d\n", cpu_readmem24bew(0xffc684));
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Write protection at %06x (%04x)\n", activecpu_get_pc(), data&0xffff);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "*** Unknown protection %d\n", cpu_readmem24bew(0xffc684));
 			break;
 		}
 	}

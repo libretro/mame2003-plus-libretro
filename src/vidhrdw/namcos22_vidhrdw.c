@@ -558,7 +558,7 @@ LoadMatrix( const INT32 *pSource, double M[4][4] )
 			return pSource;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "bad LoadMatrix(0x%08x)!!\n", opcode );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "bad LoadMatrix(0x%08x)!!\n", opcode );
 			return NULL;
 		}
 	}
@@ -896,12 +896,12 @@ BlitQuads( struct mame_bitmap *pBitmap, INT32 addr, double m[4][4], INT32 base )
 		if( mbDumpScene )
 		{
 			int q;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "  %06x", size );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "  %06x", size );
 			for( q=0; q<size; q++ )
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE  " %06x", GetPolyData(addr+q)&0xffffff );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  " %06x", GetPolyData(addr+q)&0xffffff );
 			}
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n" );
 		}
 
 		addr += size;
@@ -936,8 +936,8 @@ READ32_HANDLER( namcos22_dspram_r )
 {
 	if( keyboard_pressed(KEYCODE_SPACE) )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "pointram_r(%08x)\n", offset*4 );
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x pointram_r(%08x)\n", activecpu_get_pc(), offset*4 );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "pointram_r(%08x)\n", offset*4 );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x pointram_r(%08x)\n", activecpu_get_pc(), offset*4 );
 	}
 	return namcos22_polygonram[offset];
 }
@@ -946,8 +946,8 @@ WRITE32_HANDLER( namcos22_dspram_w )
 {
 	if( keyboard_pressed(KEYCODE_SPACE)  )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "pointram_w(%08x,%08x)\n", offset*4, data );
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x pointram_w(%08x,%08x)\n", activecpu_get_pc(), offset*4, data );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "pointram_w(%08x,%08x)\n", offset*4, data );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x pointram_w(%08x,%08x)\n", activecpu_get_pc(), offset*4, data );
 	}
 	COMBINE_DATA( &namcos22_polygonram[offset] );
 }
@@ -1036,7 +1036,7 @@ DrawPolygons( struct mame_bitmap *bitmap )
 
 	if( keyboard_pressed(KEYCODE_SPACE)  )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "DrawPolygons\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "DrawPolygons\n" );
 	}
 
 	/*************************************************************************/
@@ -1096,21 +1096,21 @@ DrawPolygons( struct mame_bitmap *bitmap )
 		{
 			if( (i&0x1f)==0 )
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "\n%d:\t",i/32 );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n%d:\t",i/32 );
 			}
-			log_cb(RETRO_LOG_ERROR, LOGPRE  " %08x", pWindow[i] );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  " %08x", pWindow[i] );
 		}
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n" );
 	}
 	pDebug = pSource;
 	for(;;)
 	{
 		if( mbDumpScene )
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n" );
 			while( pDebug<pSource )
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x ", *pDebug++ );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x ", *pDebug++ );
 			}
 		}
 		code = *pSource++;
@@ -1135,12 +1135,12 @@ DrawPolygons( struct mame_bitmap *bitmap )
 			{
 				if( mbDumpScene )
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE  "\n#%03x: ", iObject );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n#%03x: ", iObject );
 					while( pDebug<pSource )
 					{
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x ", *pDebug++ );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x ", *pDebug++ );
 					}
-					log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 				}
 				BlitPolyObject( bitmap, code, M );
 			}
@@ -1187,7 +1187,7 @@ DrawPolygons( struct mame_bitmap *bitmap )
 				iTarget  = *pSource++; iTarget  &= (MAX_CAMERA-1);
 				if( iSource0>=MAX_CAMERA || iSource1>=MAX_CAMERA || iTarget>=MAX_CAMERA )
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "illegal compose\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "illegal compose\n");
 					return;
 				}
 				assert( iSource0<0x80 && iSource1<0x80 && iTarget<0x80 );
@@ -1211,12 +1211,12 @@ DrawPolygons( struct mame_bitmap *bitmap )
 				{
 					if( mbDumpScene )
 					{
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "\n#%03x: ", iObject );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n#%03x: ", iObject );
 						while( pDebug<pSource )
 						{
-							log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x ", *pDebug++ );
+							log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x ", *pDebug++ );
 						}
-						log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 					}
 					BlitPolyObject( bitmap, code, M );
 				}
@@ -1253,7 +1253,7 @@ DrawPolygons( struct mame_bitmap *bitmap )
 						break;
 
 					default:
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "0x8010: unknown attr[%04x]\n", code );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "0x8010: unknown attr[%04x]\n", code );
 						break;
 					}
 				} while( code != 0xffff );
@@ -1267,22 +1267,22 @@ DrawPolygons( struct mame_bitmap *bitmap )
 				if( mbDumpScene )
 				{
 					int namcos22_i;
-					log_cb(RETRO_LOG_ERROR, LOGPRE  "[eof %08x]\n", code );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "[eof %08x]\n", code );
 					for( namcos22_i=0; namcos22_i<32; namcos22_i++ )
 					{
-						log_cb(RETRO_LOG_ERROR, LOGPRE  " %08x", *pSource++ );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  " %08x", *pSource++ );
 					}
 					while( keyboard_pressed( KEYCODE_U ) ){}
-					log_cb(RETRO_LOG_ERROR, LOGPRE  "\n\n" );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n\n" );
 				}
 				return;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "unknown opcode: %04x\n", code );
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "[premature eof = %04x]\n",code );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "unknown opcode: %04x\n", code );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "[premature eof = %04x]\n",code );
 				for( i=0; i<32; i++ )
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE  " %08x", *pSource++ );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  " %08x", *pSource++ );
 				}
 				return;
 			}
@@ -1436,8 +1436,8 @@ VIDEO_START( namcos22s )
 							mpPolyH = mpPolyM + mPtRomSize;
 							for( i=0; i<0x4000/*mPtRomSize*/; i++ )
 							{
-								if( (i&0x7)==0 ) log_cb(RETRO_LOG_ERROR, LOGPRE  "\n%06x:", i );
-								log_cb(RETRO_LOG_ERROR, LOGPRE  " %06x", GetPolyData(i)&0xffffff );
+								if( (i&0x7)==0 ) log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n%06x:", i );
+								log_cb(RETRO_LOG_DEBUG, LOGPRE  " %06x", GetPolyData(i)&0xffffff );
 							}
 							return 0; /* no error */
 						}

@@ -312,12 +312,12 @@ static WRITE_HANDLER( spy_3f90_w )
 /*
 int i;
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "collision test:\n");
+log_cb(RETRO_LOG_DEBUG, LOGPRE "collision test:\n");
 for (i = 0;i < 0xfe;i++)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ",pmcram[i]);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ",pmcram[i]);
 	if (i == 0x0f || (i > 0x10 && (i - 0x10) % 14 == 13))
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 }
 */
 		spy_collision();

@@ -86,14 +86,14 @@ WRITE_HANDLER( irobot_sharedmem_w )
 
 static void irvg_done_callback (int param)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "vg done. ");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "vg done. ");
 	IR_CPU_STATE;
 	irvg_running = 0;
 }
 
 WRITE_HANDLER( irobot_statwr_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "write %2x ", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "write %2x ", data);
 	IR_CPU_STATE;
 
 	irobot_combase = comRAM[data >> 7];
@@ -109,9 +109,9 @@ WRITE_HANDLER( irobot_statwr_w )
 		irobot_run_video();
 #if IR_TIMING
 		if (irvg_running == 0)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "vg start ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "vg start ");
 		else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "vg start [busy!] ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "vg start [busy!] ");
 		IR_CPU_STATE;
 		timer_adjust(irvg_timer, TIME_IN_MSEC(10), 0, 0);
 #endif
@@ -177,7 +177,7 @@ static void scanline_callback(int scanline)
 {
     if (scanline == 0) irvg_vblank=0;
     if (scanline == 224) irvg_vblank=1;
-    log_cb(RETRO_LOG_ERROR, LOGPRE "SCANLINE CALLBACK %d\n",scanline);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "SCANLINE CALLBACK %d\n",scanline);
     /* set the IRQ line state based on the 32V line state */
     cpu_set_irq_line(0, M6809_IRQ_LINE, (scanline & 32) ? ASSERT_LINE : CLEAR_LINE);
 
@@ -237,7 +237,7 @@ READ_HANDLER( irobot_status_r )
 {
 	int d=0;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "status read. ");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "status read. ");
 	IR_CPU_STATE;
 
 	if (!irmb_running) d |= 0x20;
@@ -455,7 +455,7 @@ DRIVER_INIT( irobot )
 
 static void irmb_done_callback (int param)
 {
-    log_cb(RETRO_LOG_ERROR, LOGPRE "mb done. ");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "mb done. ");
 	IR_CPU_STATE;
 	irmb_running = 0;
 	cpu_set_irq_line(0, M6809_FIRQ_LINE, ASSERT_LINE);
@@ -845,19 +845,19 @@ default:	case 0x3f:	IXOR(irmb_din(curop), 0);							break;
 	}
 	profiler_mark(PROFILER_END);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%d instructions for Mathbox \n", icount);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%d instructions for Mathbox \n", icount);
 
 
 #if IR_TIMING
 	if (irmb_running == 0)
 	{
 		timer_adjust(irmb_timer, TIME_IN_HZ(12000000) * icount, 0, 0);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "mb start ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "mb start ");
 		IR_CPU_STATE;
 	}
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "mb start [busy!] ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "mb start [busy!] ");
 		IR_CPU_STATE;
 		timer_adjust(irmb_timer, TIME_IN_NSEC(200) * icount, 0, 0);
 	}
@@ -876,10 +876,10 @@ void disassemble_instruction(irmb_ops *op)
 	int lp;
 
 	if (i==0)
-		log_cb(RETRO_LOG_ERROR, LOGPRE " Address  a b func stor: Q :Y, R, S RDCSAESM da m rs\n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04X    : ",i);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%X ",op->areg);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%X ",op->breg);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE " Address  a b func stor: Q :Y, R, S RDCSAESM da m rs\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X    : ",i);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%X ",op->areg);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%X ",op->breg);
 
 	lp=(op->func & 0x38)>>3;
 	if ((lp&1)==0)
@@ -887,61 +887,61 @@ void disassemble_instruction(irmb_ops *op)
 	else if((op->flags & FL_DIV) != 0)
 		lp&=6;
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "*");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "*");
 
 	switch (lp)
 	{
 		case 0:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ADD  ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ADD  ");
 			break;
 		case 1:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "SUBR ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SUBR ");
 			break;
 		case 2:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "SUB  ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SUB  ");
 			break;
 		case 3:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "OR   ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "OR   ");
 			break;
 		case 4:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "AND  ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "AND  ");
 			break;
 		case 5:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "AND  ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "AND  ");
 			break;
 		case 6:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "XOR  ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "XOR  ");
 			break;
 		case 7:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "XNOR ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "XNOR ");
 			break;
 	}
 
 	switch ((op->func & 0x1c0)>>6)
 	{
 		case 0:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  - : Q :F,");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  - : Q :F,");
 			break;
 		case 1:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  - : - :F,");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  - : - :F,");
 			break;
 		case 2:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  R%x: - :A,",op->breg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  R%x: - :A,",op->breg);
 			break;
 		case 3:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "  R%x: - :F,",op->breg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "  R%x: - :F,",op->breg);
 			break;
 		case 4:
-			log_cb(RETRO_LOG_ERROR, LOGPRE ">>R%x:>>Q:F,",op->breg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE ">>R%x:>>Q:F,",op->breg);
 			break;
 		case 5:
-			log_cb(RETRO_LOG_ERROR, LOGPRE ">>R%x: - :F,",op->breg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE ">>R%x: - :F,",op->breg);
 			break;
 		case 6:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "<<R%x:<<Q:F,",op->breg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "<<R%x:<<Q:F,",op->breg);
 			break;
 		case 7:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "<<R%x: - :F,",op->breg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "<<R%x: - :F,",op->breg);
 			break;
 	}
 
@@ -951,73 +951,73 @@ void disassemble_instruction(irmb_ops *op)
 	else if((op->flags & FL_MULT) == 0)
 		lp&=5;
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "*");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "*");
 
 	switch (lp)
 	{
 		case 0:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "R%x, Q ",op->areg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "R%x, Q ",op->areg);
 			break;
 		case 1:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "R%x,R%x ",op->areg,op->breg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "R%x,R%x ",op->areg,op->breg);
 			break;
 		case 2:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "00, Q ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "00, Q ");
 			break;
 		case 3:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "00,R%x ",op->breg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "00,R%x ",op->breg);
 			break;
 		case 4:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "00,R%x ",op->areg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "00,R%x ",op->areg);
 			break;
 		case 5:
-			log_cb(RETRO_LOG_ERROR, LOGPRE " D,R%x ",op->areg);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " D,R%x ",op->areg);
 			break;
 		case 6:
-			log_cb(RETRO_LOG_ERROR, LOGPRE " D, Q ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " D, Q ");
 			break;
 		case 7:
-			log_cb(RETRO_LOG_ERROR, LOGPRE " D,00 ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " D,00 ");
 			break;
 	}
 
 	for (lp=0;lp<8;lp++)
 		if (op->flags & (0x80>>lp))
-			log_cb(RETRO_LOG_ERROR, LOGPRE "1");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "1");
 		else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "0");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "0");
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE " %02X ",op->diradd);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%X\n",op->ramsel);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " %02X ",op->diradd);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%X\n",op->ramsel);
 	if (op->jtype)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "              ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "              ");
 		switch (op->jtype)
 		{
 			case 1:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "BO ");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "BO ");
 				break;
 			case 2:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "BZ ");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "BZ ");
 				break;
 			case 3:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "BH ");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "BH ");
 				break;
 			case 4:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "BL ");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "BL ");
 				break;
 			case 5:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "B  ");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "B  ");
 				break;
 			case 6:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Cl ");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Cl ");
 				break;
 			case 7:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Return\n\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Return\n\n");
 				break;
 		}
-		if (op->jtype != 7) log_cb(RETRO_LOG_ERROR, LOGPRE "  %04X    \n",op->nxtadd);
-		if (op->jtype == 5) log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+		if (op->jtype != 7) log_cb(RETRO_LOG_DEBUG, LOGPRE "  %04X    \n",op->nxtadd);
+		if (op->jtype == 5) log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 		}
 	}
 }

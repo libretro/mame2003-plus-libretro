@@ -460,7 +460,7 @@ void m107_vh_raster_partial_refresh(struct mame_bitmap *bitmap,int start_line,in
 WRITE_HANDLER( m107_spritebuffer_w )
 {
 	if (offset==0) {
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: buffered spriteram\n",activecpu_get_pc());*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: buffered spriteram\n",activecpu_get_pc());*/
 		memcpy(m107_spriteram,spriteram,0x1000);
 	}
 }

@@ -236,7 +236,7 @@ static void draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *clip
 				case 6: pri_mask = 0; break; /* insert coin in gundam*/
 				/*case 7: pri_mask = 0; break;*/
 
-				default: log_cb(RETRO_LOG_ERROR, LOGPRE "unhandled pri %d\n",cur_pri); pri_mask=0;
+				default: log_cb(RETRO_LOG_DEBUG, LOGPRE "unhandled pri %d\n",cur_pri); pri_mask=0;
 			}
 
 		}

@@ -146,7 +146,7 @@ void system16_decode(data16_t *dest,data16_t *source,int size,unsigned short *de
 		data^= decrypt_data[mask*256+decode_offset];
 
 /*		if(decrypt_data[mask*256+decode_offset] == 0xffff)*/
-/*			log_cb(RETRO_LOG_ERROR, LOGPRE "Decrypt Error: Offset=%5x\n",offset);*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "Decrypt Error: Offset=%5x\n",offset);*/
 
 		dest[offset/2] = data;
 	}

@@ -162,7 +162,7 @@ static READ32_HANDLER( deco32_irq_controller_r )
 /*		return 0xffffff80 | cpu_getvblank() | (0x40); */ /*test for lock load guns*/
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: Unmapped IRQ read %08x (%08x)\n",activecpu_get_pc(),offset,mem_mask);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: Unmapped IRQ read %08x (%08x)\n",activecpu_get_pc(),offset,mem_mask);
 	return 0xffffffff;
 }
 
@@ -172,7 +172,7 @@ static WRITE32_HANDLER( deco32_irq_controller_w )
 
 	switch (offset) {
 	case 0: /* IRQ enable - probably an irq mask, but only values used are 0xc8 and 0xca */
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  IRQ write %d %08x\n",activecpu_get_pc(),offset,data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  IRQ write %d %08x\n",activecpu_get_pc(),offset,data);*/
 		raster_enable=(data&0xff)==0xc8; /* 0xca seems to be off */
 		break;
 
@@ -210,7 +210,7 @@ static READ32_HANDLER( captaven_prot_r )
 	case 0xed4: return readinputport(2); /* Misc */
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x: Unmapped protection read %04x\n",activecpu_get_pc(),offset<<2);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x: Unmapped protection read %04x\n",activecpu_get_pc(),offset<<2);
 	return 0xffffffff;
 }
 
@@ -248,7 +248,7 @@ static WRITE32_HANDLER( fghthist_eeprom_w )
 
 static READ32_HANDLER( dragngun_service_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:Read service\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:Read service\n",activecpu_get_pc());*/
 	return readinputport(3);
 }
 
@@ -263,7 +263,7 @@ static READ32_HANDLER( lockload_gun_mirror_r )
 
 static READ32_HANDLER( dragngun_prot_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:Read prot %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:Read prot %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);*/
 
 	static int strobe=0;
 	if (!strobe) strobe=8;
@@ -291,13 +291,13 @@ static READ32_HANDLER( dragngun_lightgun_r )
 	case 7: return readinputport(7); break;
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Illegal lightgun port %d read \n",dragngun_lightgun_port);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Illegal lightgun port %d read \n",dragngun_lightgun_port);*/
 	return 0;
 }
 
 static WRITE32_HANDLER( dragngun_lightgun_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Lightgun port %d\n",dragngun_lightgun_port);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Lightgun port %d\n",dragngun_lightgun_port);*/
 	dragngun_lightgun_port=offset;
 }
 
@@ -314,7 +314,7 @@ static WRITE32_HANDLER( dragngun_eeprom_w )
 		EEPROM_set_cs_line((data & 0x4) ? CLEAR_LINE : ASSERT_LINE);
 		return;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:Write control 1 %08x %08x\n",activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:Write control 1 %08x %08x\n",activecpu_get_pc(),offset,data);
 }
 
 static READ32_HANDLER(dragngun_oki_2_r)
@@ -339,7 +339,7 @@ static READ32_HANDLER( tattass_prot_r )
 	case 0x35a: return tattass_eprom_bit << 16;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:Read prot %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:Read prot %08x (%08x)\n",activecpu_get_pc(),offset<<1,mem_mask);
 
 	return 0xffffffff;
 }
@@ -390,10 +390,10 @@ static WRITE32_HANDLER( tattass_control_w )
 		if ((data&0x40)==0) {
 			if (bufPtr) {
 				int i;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Eprom reset (bit count %d): ",readBitCount);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Eprom reset (bit count %d): ",readBitCount);
 				for (i=0; i<bufPtr; i++)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%s",buffer[i] ? "1" : "0");
-				log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%s",buffer[i] ? "1" : "0");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 
 			}
 			bufPtr=0;
@@ -404,7 +404,7 @@ static WRITE32_HANDLER( tattass_control_w )
 		/* Eprom has been clocked */
 		if (lastClock==0 && data&0x20 && data&0x40) {
 			if (bufPtr>=32) {
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Eprom overflow!");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Eprom overflow!");
 				bufPtr=0;
 			}
 
@@ -455,13 +455,13 @@ static WRITE32_HANDLER( tattass_control_w )
 					pendingCommand=2;
 				}
 				else {
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Detected unknown eprom command\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Detected unknown eprom command\n");
 				}
 			}
 
 		} else {
 			if (!(data&0x40)) {
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Cs set low\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Cs set low\n");
 				bufPtr=0;
 			}
 		}
@@ -2913,7 +2913,7 @@ static READ32_HANDLER( captaven_skip )
 	data32_t ret=deco32_ram[0x748c/4];
 
 	if (activecpu_get_pc()==0x39e8 && (ret&0xff)!=0) {
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU Spin - %d cycles left this frame ran %d (%d)\n",cycles_left_to_run(),cycles_currently_ran(),cycles_left_to_run()+cycles_currently_ran());*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU Spin - %d cycles left this frame ran %d (%d)\n",cycles_left_to_run(),cycles_currently_ran(),cycles_left_to_run()+cycles_currently_ran());*/
 		cpu_spinuntil_int();
 	}
 

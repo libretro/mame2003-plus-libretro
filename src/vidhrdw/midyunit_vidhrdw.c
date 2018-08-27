@@ -269,7 +269,7 @@ WRITE16_HANDLER( midyunit_control_w )
 		{
 			if (autoerase_enable)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "autoerase off @ %d\n", cpu_getscanline());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "autoerase off @ %d\n", cpu_getscanline());
 				update_partial(cpu_getscanline() - 1, 1);
 			}
 			autoerase_enable = 0;
@@ -280,7 +280,7 @@ WRITE16_HANDLER( midyunit_control_w )
 		{
 			if (!autoerase_enable)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "autoerase on @ %d\n", cpu_getscanline());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "autoerase on @ %d\n", cpu_getscanline());
 				update_partial(cpu_getscanline() - 1, 1);
 			}
 			autoerase_enable = 1;
@@ -581,7 +581,7 @@ WRITE16_HANDLER( midyunit_dma_w )
 #if LOG_DMA
 	if (keyboard_pressed(KEYCODE_L))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "----\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "----\n");
 		logerror("DMA command %04X: (xflip=%d yflip=%d)\n",
 				command, (command >> 4) & 1, (command >> 5) & 1);
 		logerror("  offset=%08X pos=(%d,%d) w=%d h=%d\n",

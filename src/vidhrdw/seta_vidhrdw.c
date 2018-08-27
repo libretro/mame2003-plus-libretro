@@ -274,7 +274,7 @@ WRITE16_HANDLER( seta_vregs_w )
 						if ( (samples_len > 0x100000) && ((addr+0x40000) <= samples_len) )
 							memcpy(&rom[0xc0000],&rom[addr],0x40000);
 						else
-							log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06X - Invalid samples bank %02X !\n", activecpu_get_pc(), new_bank);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %06X - Invalid samples bank %02X !\n", activecpu_get_pc(), new_bank);
 					}
 					else if (samples_len == 0x480000)	/* zombraid */
 					{

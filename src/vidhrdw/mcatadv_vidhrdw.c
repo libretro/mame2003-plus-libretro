@@ -87,7 +87,7 @@ static void mcatadv_drawsprites ( struct mame_bitmap *bitmap, const struct recta
 	}
 	else if( vidregs_old[2] ) /* I suppose it's possible that there is 4 banks, haven't seen it used though */
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Spritebank != 0/1\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Spritebank != 0/1\n");
 	}
 
 	while ( source<finish )

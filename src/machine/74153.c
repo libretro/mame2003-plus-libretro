@@ -127,7 +127,7 @@ void TTL74153_config(int which, const struct TTL74153_interface *intf)
 {
 	if (which >= MAX_TTL74153)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Only %d 74153's are supported at this time.\n", MAX_TTL74153);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Only %d 74153's are supported at this time.\n", MAX_TTL74153);
 		return;
 	}
 

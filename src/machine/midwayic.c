@@ -189,7 +189,7 @@ UINT8 midway_serial_pic_status_r(void)
 
 UINT8 midway_serial_pic_r(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:security R = %04X\n", activecpu_get_pc(), serial.buffer);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:security R = %04X\n", activecpu_get_pc(), serial.buffer);
 	serial.status = 1;
 	return serial.buffer;
 }
@@ -197,7 +197,7 @@ UINT8 midway_serial_pic_r(void)
 
 void midway_serial_pic_w(UINT8 data)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:security W = %04X\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:security W = %04X\n", activecpu_get_pc(), data);
 
 	/* status seems to reflect the clock bit */
 	serial.status = (data >> 4) & 1;
@@ -256,7 +256,7 @@ UINT8 midway_serial_pic2_status_r(void)
 		result = 1;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PIC status %d\n", activecpu_get_pc(), result);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:PIC status %d\n", activecpu_get_pc(), result);
 	return result;
 }
 
@@ -266,7 +266,7 @@ UINT8 midway_serial_pic2_r(void)
 	UINT8 result = 0;
 
 	/* PIC data register */
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PIC data read (index=%d total=%d latch=%03X) =", activecpu_get_pc(), pic.index, pic.total, pic.latch);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:PIC data read (index=%d total=%d latch=%03X) =", activecpu_get_pc(), pic.index, pic.total, pic.latch);
 
 	/* return the current result */
 	if (pic.latch & 0xf00)
@@ -276,7 +276,7 @@ UINT8 midway_serial_pic2_r(void)
 	else if (pic.index < pic.total)
 		result = 0xff;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%02X\n", result);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%02X\n", result);
 	return result;
 }
 
@@ -289,9 +289,9 @@ void midway_serial_pic2_w(UINT8 data)
 
 	/* PIC command register */
 	if (pic.state == 0)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PIC command %02X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:PIC command %02X\n", activecpu_get_pc(), data);
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:PIC data %02X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:PIC data %02X\n", activecpu_get_pc(), data);
 
 	/* store in the latch, along with a bit to indicate we have data */
 	pic.latch = (data & 0x00f) | 0x480;
@@ -551,7 +551,7 @@ static void update_ioasic_irq(void)
 
 static void cage_irq_handler(int reason)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE irq handler: %d\n", reason);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CAGE irq handler: %d\n", reason);
 	ioasic.sound_irq_state = 0;
 	if (reason & CAGE_IRQ_REASON_DATA_READY)
 		ioasic.sound_irq_state |= 0x0040;
@@ -563,7 +563,7 @@ static void cage_irq_handler(int reason)
 
 static void ioasic_input_empty(int state)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "ioasic_input_empty(%d)\n", state);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "ioasic_input_empty(%d)\n", state);
 	if (state)
 		ioasic.sound_irq_state |= 0x0080;
 	else
@@ -574,7 +574,7 @@ static void ioasic_input_empty(int state)
 
 static void ioasic_output_full(int state)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "ioasic_output_full(%d)\n", state);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "ioasic_output_full(%d)\n", state);
 	if (state)
 		ioasic.sound_irq_state |= 0x0040;
 	else
@@ -603,7 +603,7 @@ static UINT16 ioasic_fifo_r(void)
 		update_ioasic_irq();
 
 		if (LOG_FIFO && (ioasic.fifo_bytes < 4 || ioasic.fifo_bytes >= FIFO_SIZE - 4))
-			log_cb(RETRO_LOG_ERROR, LOGPRE "fifo_r(%04X): FIFO bytes = %d!\n", result, ioasic.fifo_bytes);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "fifo_r(%04X): FIFO bytes = %d!\n", result, ioasic.fifo_bytes);
 		
 		/* if we just cleared the buffer, this may generate an IRQ on the master CPU */
 		/* because of the way the streaming code works, we need to make sure that the */
@@ -613,13 +613,13 @@ static UINT16 ioasic_fifo_r(void)
 		{
 			ioasic.fifo_force_buffer_empty_pc = activecpu_get_pc();
 			if (LOG_FIFO)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "fifo_r(%04X): FIFO empty, PC = %04X\n", result, ioasic.fifo_force_buffer_empty_pc);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "fifo_r(%04X): FIFO empty, PC = %04X\n", result, ioasic.fifo_force_buffer_empty_pc);
 		}
 	}
 	else
 	{
 		if (LOG_FIFO)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "fifo_r(): nothing to read!\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "fifo_r(): nothing to read!\n");
 	}
 	return result;
 }
@@ -647,7 +647,7 @@ static UINT16 ioasic_fifo_status_r(void)
 			ioasic.fifo_force_buffer_empty_pc = 0;
 			result |= 0x08;
 			if (LOG_FIFO)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "ioasic_fifo_status_r(%04X): force empty, PC = %04X\n", result, currpc);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "ioasic_fifo_status_r(%04X): force empty, PC = %04X\n", result, currpc);
 		}
 	}
 
@@ -666,7 +666,7 @@ static void ioasic_fifo_reset_w(int state)
 		update_ioasic_irq();
 	}
 	if (LOG_FIFO)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "fifo_reset(%d)\n", state);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "fifo_reset(%d)\n", state);
 }
 
 
@@ -679,12 +679,12 @@ void midway_ioasic_fifo_w(data16_t data)
 		ioasic.fifo_bytes++;
 		update_ioasic_irq();
 		if (LOG_FIFO && (ioasic.fifo_bytes < 4 || ioasic.fifo_bytes >= FIFO_SIZE - 4))
-			log_cb(RETRO_LOG_ERROR, LOGPRE "fifo_w(%04X): FIFO bytes = %d!\n", data, ioasic.fifo_bytes);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "fifo_w(%04X): FIFO bytes = %d!\n", data, ioasic.fifo_bytes);
 	}
 	else
 	{
 		if (LOG_FIFO)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "fifo_w(%04X): out of space!\n", data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "fifo_w(%04X): out of space!\n", data);
 	}
 }
 
@@ -783,7 +783,7 @@ READ32_HANDLER( midway_ioasic_r )
 	}
 
 	if (LOG_IOASIC)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:ioasic_r(%d) = %08X\n", activecpu_get_pc(), offset, result);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:ioasic_r(%d) = %08X\n", activecpu_get_pc(), offset, result);
 
 	return result;
 }
@@ -808,7 +808,7 @@ WRITE32_HANDLER( midway_ioasic_w )
 	newreg = ioasic.reg[offset];
 
 	if (LOG_IOASIC)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:ioasic_w(%d) = %08X\n", activecpu_get_pc(), offset, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:ioasic_w(%d) = %08X\n", activecpu_get_pc(), offset, data);
 
 	switch (offset)
 	{
@@ -817,7 +817,7 @@ WRITE32_HANDLER( midway_ioasic_w )
 			if (data == 0xe2)
 			{
 				ioasic.shuffle_active = 1;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "*** I/O ASIC shuffling enabled!\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "*** I/O ASIC shuffling enabled!\n");
 				ioasic.reg[IOASIC_INTCTL] = 0;
 				ioasic.reg[IOASIC_UNKNOWN4] = 0;	/* bug in 10th Degree assumes this */
 			}
@@ -832,7 +832,7 @@ WRITE32_HANDLER( midway_ioasic_w )
 	
 		case IOASIC_DEBUGOUT:
 			if (PRINTF_DEBUG)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%c", data & 0xff);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%c", data & 0xff);
 			break;
 			
 		case IOASIC_SOUNDCTL:
@@ -880,7 +880,7 @@ WRITE32_HANDLER( midway_ioasic_w )
 			/* bit  7 = sound output buffer empty */
 			/* bit 14 = LED? */
 			if ((oldreg ^ newreg) & 0x3ff6)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "IOASIC int control = %04X\n", data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "IOASIC int control = %04X\n", data);
 			update_ioasic_irq();
 			break;
 

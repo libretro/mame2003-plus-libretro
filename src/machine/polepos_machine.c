@@ -179,7 +179,7 @@ READ16_HANDLER( polepos2_ic25_r )
 		ic25_last_result = (INT8)ic25_last_signed * (UINT8)ic25_last_unsigned;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04X: read IC25 @ %04X = %02X\n", activecpu_get_pc(), offset, result);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X: read IC25 @ %04X = %02X\n", activecpu_get_pc(), offset, result);
 
 	return result | (result << 8);
 }
@@ -329,7 +329,7 @@ READ_HANDLER( polepos_mcu_data_r )
 				break;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Unknwon MCU transfer mode: %02x\n", polepos_mcu.transfer_id);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknwon MCU transfer mode: %02x\n", polepos_mcu.transfer_id);
 				break;
 		}
 	}
@@ -385,7 +385,7 @@ WRITE_HANDLER( polepos_mcu_data_w )
 					break;
 
 					default:
-						log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown sample triggered (%d)\n", data );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown sample triggered (%d)\n", data );
 					break;
 				}
 			}

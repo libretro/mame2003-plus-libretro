@@ -161,7 +161,7 @@ namcos3d_Rotate( double M[4][4], const struct RotParam *pParam )
 		matrix3d_RotX( M, pParam->thx_sin, pParam->thx_cos );
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "unknown rolt:%08x\n",pParam->rolt );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "unknown rolt:%08x\n",pParam->rolt );
 		break;
 	}
 } /* namcos3d_Rotate */

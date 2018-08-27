@@ -681,11 +681,11 @@ void irem_cpu_decrypt(int cpu,const unsigned char *decryption_table)
 				t[A]++;
 			}
 #ifdef MAME_DEBUG
-        if (t[A]==0) log_cb(RETRO_LOG_ERROR, LOGPRE "Unused: [%d] %02x\t%s\n",byte_count_table[A],A,opmap1[A]);
-        if (t[A]>1) log_cb(RETRO_LOG_ERROR, LOGPRE "DUPLICATE: %02x\t%s\n",A,opmap1[A]);
+        if (t[A]==0) log_cb(RETRO_LOG_DEBUG, LOGPRE "Unused: [%d] %02x\t%s\n",byte_count_table[A],A,opmap1[A]);
+        if (t[A]>1) log_cb(RETRO_LOG_DEBUG, LOGPRE "DUPLICATE: %02x\t%s\n",A,opmap1[A]);
 #else
-        if (t[A]==0) log_cb(RETRO_LOG_ERROR, LOGPRE "Unused: [%d] %02x\n",byte_count_table[A],A);
-        if (t[A]>1) log_cb(RETRO_LOG_ERROR, LOGPRE "DUPLICATE: %02x\n",A);
+        if (t[A]==0) log_cb(RETRO_LOG_DEBUG, LOGPRE "Unused: [%d] %02x\n",byte_count_table[A],A);
+        if (t[A]>1) log_cb(RETRO_LOG_DEBUG, LOGPRE "DUPLICATE: %02x\n",A);
 #endif
     }
 }

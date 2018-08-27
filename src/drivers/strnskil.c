@@ -59,13 +59,13 @@ static READ_HANDLER( protection_r )
 		default:		res = 0xff; break;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: protection_r -> %02x\n",activecpu_get_pc(),res);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: protection_r -> %02x\n",activecpu_get_pc(),res);
 	return res;
 }
 
 static WRITE_HANDLER( protection_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: protection_w %02x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: protection_w %02x\n",activecpu_get_pc(),data);
 }
 
 /****************************************************************************/

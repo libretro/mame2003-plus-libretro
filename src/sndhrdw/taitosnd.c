@@ -56,7 +56,7 @@ WRITE_HANDLER( taitosound_port_w )
 	/*logerror("taitosnd: Master cpu mode [%02x]\n", data);*/
 	if (data > 4)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "tc0140syt : error Master entering unknown mode[%02x]\n", data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "tc0140syt : error Master entering unknown mode[%02x]\n", data);
 	}
 }
 

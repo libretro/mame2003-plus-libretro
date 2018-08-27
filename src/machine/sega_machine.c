@@ -79,7 +79,7 @@ WRITE_HANDLER( sega_mult2_w )
 WRITE_HANDLER( sega_switch_w )
 {
 	ioSwitch = data;
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "ioSwitch: %02x\n",ioSwitch); */
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "ioSwitch: %02x\n",ioSwitch); */
 }
 
 WRITE_HANDLER( sega_coin_counter_w )

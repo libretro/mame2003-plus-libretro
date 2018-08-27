@@ -129,7 +129,7 @@ WRITE16_HANDLER(f3_68681_w)
 					log_cb(RETRO_LOG_WARN, LOGPRE "Timer:  Unimplemented external IP2\n");
 					break;
 				case 5:
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Timer:  Unimplemented external IP2/16\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Timer:  Unimplemented external IP2/16\n");
 					break;
 				case 6:
 					log_cb(RETRO_LOG_DEBUG, LOGPRE "Timer:  X1/Clk, counter is %04x, so interrupt every %d cycles\n",counter,(M68000_CLOCK/M68681_CLOCK)*counter);

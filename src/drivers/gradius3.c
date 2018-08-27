@@ -49,7 +49,7 @@ static WRITE16_HANDLER( K052109_halfword_w )
 	/* is this a bug in the game or something else? */
 	if (!ACCESSING_LSB)
 		K052109_w(offset,(data >> 8) & 0xff);
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%06x half %04x = %04x\n",activecpu_get_pc(),offset,data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x half %04x = %04x\n",activecpu_get_pc(),offset,data);*/
 }
 
 static READ16_HANDLER( K051937_halfword_r )
@@ -153,11 +153,11 @@ static WRITE16_HANDLER( cpuB_irqtrigger_w )
 {
 	if (irqBmask & 4)
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x trigger cpu B irq 4 %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x trigger cpu B irq 4 %02x\n",activecpu_get_pc(),data);
 		cpu_set_irq_line(1,4,HOLD_LINE);
 	}
 	else
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x MISSED cpu B irq 4 %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x MISSED cpu B irq 4 %02x\n",activecpu_get_pc(),data);
 }
 
 static WRITE16_HANDLER( sound_command_w )

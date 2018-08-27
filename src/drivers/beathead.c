@@ -315,7 +315,7 @@ static WRITE32_HANDLER( sound_data_w )
 
 static WRITE32_HANDLER( sound_reset_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Sound reset = %d\n", !offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Sound reset = %d\n", !offset);
 	cpu_set_reset_line(1, offset ? CLEAR_LINE : ASSERT_LINE);
 }
 

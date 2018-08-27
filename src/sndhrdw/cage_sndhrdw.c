@@ -332,9 +332,9 @@ static void update_dma_state(void)
 		
 		/* make sure our assumptions are correct */
 		if (tms32031_io_regs[DMA_DEST_ADDR] != 0x808048)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE DMA: unexpected dest address %08X!\n", tms32031_io_regs[DMA_DEST_ADDR]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "CAGE DMA: unexpected dest address %08X!\n", tms32031_io_regs[DMA_DEST_ADDR]);
 		if ((tms32031_io_regs[DMA_GLOBAL_CTL] & 0xfef) != 0xe03)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE DMA: unexpected transfer params %08X!\n", tms32031_io_regs[DMA_GLOBAL_CTL]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "CAGE DMA: unexpected transfer params %08X!\n", tms32031_io_regs[DMA_GLOBAL_CTL]);
 		
 		/* do the DMA up front */
 		addr = tms32031_io_regs[DMA_SOURCE_ADDR];
@@ -390,7 +390,7 @@ static void update_timer(int which)
 		
 		/* make sure our assumptions are correct */
 		if (tms32031_io_regs[base + TIMER0_GLOBAL_CTL] != 0x2c1)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "CAGE TIMER%d: unexpected timer config %08X!\n", which, tms32031_io_regs[base + TIMER0_GLOBAL_CTL]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "CAGE TIMER%d: unexpected timer config %08X!\n", which, tms32031_io_regs[base + TIMER0_GLOBAL_CTL]);
 
 		timer_adjust(timer[which], period, which, TIME_NEVER);
 	}

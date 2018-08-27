@@ -133,7 +133,7 @@ static WRITE32_HANDLER( latch_w )
 		D0  = CC.R
 	*/
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "latch_w(%08X) & %08X\n", data, ~mem_mask);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "latch_w(%08X) & %08X\n", data, ~mem_mask);
 
 	/* upper byte */
 	if (!(mem_mask & 0xff000000))
@@ -171,12 +171,12 @@ static WRITE32_HANDLER( atarigx2_protection_w )
 	{
 		int pc = activecpu_get_previouspc();
 /*		if (pc == 0x11cbe || pc == 0x11c30)*/
-/*			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Protection W@%04X = %04X  (result to %06X)\n", pc, offset, data, activecpu_get_reg(M68K_A2));*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Protection W@%04X = %04X  (result to %06X)\n", pc, offset, data, activecpu_get_reg(M68K_A2));*/
 /*		else*/
 		if (ACCESSING_MSW32)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Protection W@%04X = %04X\n", pc, offset * 4, data >> 16);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Protection W@%04X = %04X\n", pc, offset * 4, data >> 16);
 		else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Protection W@%04X = %04X\n", pc, offset * 4 + 2, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Protection W@%04X = %04X\n", pc, offset * 4 + 2, data);
 	}
 
 	COMBINE_DATA(&protection_base[offset]);
@@ -1149,14 +1149,14 @@ static READ32_HANDLER( atarigx2_protection_r )
 				result = rand() << 16;
 			else
 				result = 0xffff << 16;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Unhandled protection R@%04X = %04X\n", activecpu_get_previouspc(), offset, result);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Unhandled protection R@%04X = %04X\n", activecpu_get_previouspc(), offset, result);
 		}
 	}
 
 	if (ACCESSING_MSW32)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Protection R@%04X = %04X\n", activecpu_get_previouspc(), offset * 4, result >> 16);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Protection R@%04X = %04X\n", activecpu_get_previouspc(), offset * 4, result >> 16);
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06X:Protection R@%04X = %04X\n", activecpu_get_previouspc(), offset * 4 + 2, result);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X:Protection R@%04X = %04X\n", activecpu_get_previouspc(), offset * 4 + 2, result);
 	return result;
 }
 

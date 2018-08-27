@@ -611,7 +611,7 @@ READ_HANDLER( exidy_shriot_r )
 		}
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Undeclared RIOT read: %x  PC:%x\n",offset,activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Undeclared RIOT read: %x  PC:%x\n",offset,activecpu_get_pc());
 	return 0xff;
 }
 

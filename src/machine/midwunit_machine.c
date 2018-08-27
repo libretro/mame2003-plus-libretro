@@ -82,7 +82,7 @@ WRITE16_HANDLER( midwunit_cmos_w )
 	}
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Unexpected CMOS W @ %05X\n", activecpu_get_pc(), offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Unexpected CMOS W @ %05X\n", activecpu_get_pc(), offset);
 		usrintf_showmessage("Bad CMOS write");
 	}
 }
@@ -119,7 +119,7 @@ WRITE16_HANDLER( midwunit_io_w )
 	switch (offset)
 	{
 		case 1:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Control W @ %05X = %04X\n", activecpu_get_pc(), offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Control W @ %05X = %04X\n", activecpu_get_pc(), offset, data);
 
 			/* bit 4 reset sound CPU */
 			dcs_reset_w(newword & 0x10);
@@ -135,7 +135,7 @@ WRITE16_HANDLER( midwunit_io_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Unknown I/O write to %d = %04X\n", activecpu_get_pc(), offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Unknown I/O write to %d = %04X\n", activecpu_get_pc(), offset, data);
 			break;
 	}
 	iodata[offset] = newword;
@@ -159,8 +159,8 @@ WRITE16_HANDLER( midxunit_io_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:I/O write to %d = %04X\n", activecpu_get_pc(), offset, data);
-/*			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Unknown I/O write to %d = %04X\n", activecpu_get_pc(), offset, data);*/
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:I/O write to %d = %04X\n", activecpu_get_pc(), offset, data);
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Unknown I/O write to %d = %04X\n", activecpu_get_pc(), offset, data);*/
 			break;
 	}
 	iodata[offset] = newword;
@@ -171,7 +171,7 @@ WRITE16_HANDLER( midxunit_unknown_w )
 {
 	int offs = offset / 0x40000;
 	if (ACCESSING_LSB && offset % 0x40000 == 0)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:midxunit_unknown_w @ %d = %02X\n", activecpu_get_pc(), offs, data & 0xff);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:midxunit_unknown_w @ %d = %02X\n", activecpu_get_pc(), offs, data & 0xff);
 }
 
 
@@ -198,7 +198,7 @@ READ16_HANDLER( midwunit_io_r )
 			return (midway_serial_pic_status_r() << 12) | midwunit_sound_state_r(0,0);
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Unknown I/O read from %d\n", activecpu_get_pc(), offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Unknown I/O read from %d\n", activecpu_get_pc(), offset);
 			break;
 	}
 	return ~0;
@@ -218,7 +218,7 @@ READ16_HANDLER( midxunit_io_r )
 			return readinputport(offset);
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Unknown I/O read from %d\n", activecpu_get_pc(), offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Unknown I/O read from %d\n", activecpu_get_pc(), offset);
 			break;
 	}
 	return ~0;
@@ -324,7 +324,7 @@ READ16_HANDLER( midxunit_uart_r )
 			break;
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:UART R @ %X = %02X\n", activecpu_get_pc(), offset, result);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:UART R @ %X = %02X\n", activecpu_get_pc(), offset, result);*/
 	return result;
 }
 
@@ -360,7 +360,7 @@ WRITE16_HANDLER( midxunit_uart_w )
 			break;
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:UART W @ %X = %02X\n", activecpu_get_pc(), offset, data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:UART W @ %X = %02X\n", activecpu_get_pc(), offset, data);*/
 }
 
 
@@ -539,7 +539,7 @@ static WRITE16_HANDLER( wwfmania_io_0_w )
 			ioshuffle[8] = 4;
 			break;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Changed I/O swiching to %d\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Changed I/O swiching to %d\n", data);
 }
 
 DRIVER_INIT( wwfmania )
@@ -673,7 +673,7 @@ WRITE16_HANDLER( midxunit_security_clock_w )
 
 READ16_HANDLER( midwunit_sound_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Sound read\n", activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Sound read\n", activecpu_get_pc());
 
 	if (Machine->sample_rate)
 		return dcs_data_r() & 0xff;
@@ -694,14 +694,14 @@ WRITE16_HANDLER( midwunit_sound_w )
 	/* check for out-of-bounds accesses */
 	if (offset)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Unexpected write to sound (hi) = %04X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Unexpected write to sound (hi) = %04X\n", activecpu_get_pc(), data);
 		return;
 	}
 
 	/* call through based on the sound type */
 	if (ACCESSING_LSB)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Sound write = %04X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Sound write = %04X\n", activecpu_get_pc(), data);
 		dcs_data_w(data & 0xff);
 	}
 }

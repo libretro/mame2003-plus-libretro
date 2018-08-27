@@ -75,7 +75,7 @@ WRITE_HANDLER( darwin_0803_w )
 {
 	/* bit 0 = NMI enable */
 	/*nmi_enable = ~data & 1;*/
-	log_cb(RETRO_LOG_ERROR, LOGPRE "0803 %02X\n",data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "0803 %02X\n",data);
         nmi_enable = data;
 	/* bit 1 = ? maybe IRQ acknowledge */
 }

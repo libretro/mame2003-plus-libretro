@@ -137,14 +137,14 @@ static void delayed_gamma_w(int data)
 
 WRITE_HANDLER( mhavoc_gamma_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "  writing to gamma processor: %02x (%d %d)\n", data, gamma_rcvd, alpha_xmtd);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  writing to gamma processor: %02x (%d %d)\n", data, gamma_rcvd, alpha_xmtd);
 	timer_set(TIME_NOW, data, delayed_gamma_w);
 }
 
 
 READ_HANDLER( mhavoc_alpha_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "\t\t\t\t\treading from alpha processor: %02x (%d %d)\n", alpha_data, gamma_rcvd, alpha_xmtd);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "\t\t\t\t\treading from alpha processor: %02x (%d %d)\n", alpha_data, gamma_rcvd, alpha_xmtd);
 	gamma_rcvd = 1;
 	alpha_xmtd = 0;
 	return alpha_data;
@@ -160,7 +160,7 @@ READ_HANDLER( mhavoc_alpha_r )
 
 WRITE_HANDLER( mhavoc_alpha_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "\t\t\t\t\twriting to alpha processor: %02x %d %d\n", data, alpha_rcvd, gamma_xmtd);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "\t\t\t\t\twriting to alpha processor: %02x %d %d\n", data, alpha_rcvd, gamma_xmtd);
 	alpha_rcvd = 0;
 	gamma_xmtd = 1;
 	gamma_data = data;
@@ -169,7 +169,7 @@ WRITE_HANDLER( mhavoc_alpha_w )
 
 READ_HANDLER( mhavoc_gamma_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "  reading from gamma processor: %02x (%d %d)\n", gamma_data, alpha_rcvd, gamma_xmtd);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "  reading from gamma processor: %02x (%d %d)\n", gamma_data, alpha_rcvd, gamma_xmtd);
 	alpha_rcvd = 1;
 	gamma_xmtd = 0;
 	return gamma_data;
@@ -189,7 +189,7 @@ WRITE_HANDLER( mhavoc_ram_banksel_w )
 
 	data &= 0x01;
 	cpu_setbank(1, &ram_base[bank[data]]);
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Alpha RAM select: %02x\n",data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Alpha RAM select: %02x\n",data);*/
 }
 
 
@@ -199,7 +199,7 @@ WRITE_HANDLER( mhavoc_rom_banksel_w )
 
 	data &= 0x03;
 	cpu_setbank(2, &ram_base[bank[data]]);
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Alpha ROM select: %02x\n",data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Alpha ROM select: %02x\n",data);*/
 }
 
 
@@ -294,7 +294,7 @@ WRITE_HANDLER( mhavoc_out_0_w )
 	cpu_set_reset_line(1, (data & 0x08) ? CLEAR_LINE : ASSERT_LINE);
 	if (!(data & 0x08))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\t\t\t\t*** resetting gamma processor. ***\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\t\t\t\t*** resetting gamma processor. ***\n");
 		alpha_rcvd = 0;
 		alpha_xmtd = 0;
 		gamma_rcvd = 0;
@@ -320,7 +320,7 @@ WRITE_HANDLER( alphaone_out_0_w )
 	/* Bit 0 = left coin counter */
 	coin_counter_w(0, data & 0x01);
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "alphaone_out_0_w(%02X)\n", data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "alphaone_out_0_w(%02X)\n", data);
 }
 
 

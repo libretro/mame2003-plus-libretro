@@ -191,7 +191,7 @@ WRITE_HANDLER( dynax_flipscreen_w )
 {
 	flipscreen = data & 1;
 	if (data & ~1)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 PC %06X: Warning, flip screen <- %02X\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#0 PC %06X: Warning, flip screen <- %02X\n", activecpu_get_pc(), data);
 	log_cb(RETRO_LOG_DEBUG, LOGPRE "F=%02X ",data);
 }
 

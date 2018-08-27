@@ -1290,44 +1290,44 @@ static void butasan_log_vram(void)
 	if ( keyboard_pressed(KEYCODE_M) )
 	{
 		int i;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\nSprite RAM\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "---------------------------------------\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "       +0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +a +b +c +d +e +f\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\nSprite RAM\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "---------------------------------------\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "       +0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +a +b +c +d +e +f\n");
 		for (offs = 0 ; offs < spriteram_size ; offs += 16)
 		{
 			for (i = 0 ; i < 16 ; i ++)
 			{
 				if (i == 0)
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%04x : ", offs + 0xf000);
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ", spriteram[offs]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x : ", offs + 0xf000);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ", spriteram[offs]);
 				}
 				else if (i == 7)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%02x  ", spriteram[offs + 7]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x  ", spriteram[offs + 7]);
 				else if (i == 15)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%02x\n", spriteram[offs + 15]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x\n", spriteram[offs + 15]);
 				else
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ", spriteram[offs + i]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ", spriteram[offs + i]);
 			}
 		}
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\nColor RAM\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "---------------------------------------\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "       +0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +a +b +c +d +e +f\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\nColor RAM\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "---------------------------------------\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "       +0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +a +b +c +d +e +f\n");
 		for (offs = 0 ; offs < 0xbf0 ; offs += 16)
 		{
 			for (i = 0 ; i < 16 ; i ++)
 			{
 				if (i == 0)
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%04x : ", offs + 0xc400);
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ", argus_paletteram[offs]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x : ", offs + 0xc400);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ", argus_paletteram[offs]);
 				}
 				else if (i == 7)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%02x  ", argus_paletteram[offs + 7]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x  ", argus_paletteram[offs + 7]);
 				else if (i == 15)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%02x\n", argus_paletteram[offs + 15]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x\n", argus_paletteram[offs + 15]);
 				else
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ", argus_paletteram[offs + i]);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ", argus_paletteram[offs + i]);
 			}
 		}
 	}

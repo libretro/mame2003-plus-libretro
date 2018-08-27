@@ -126,7 +126,7 @@ static void palette_notifier(int addr)
 
 	if(addr > 0x200)
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "Large palette ? %03x (%04x)\n", addr, activecpu_get_pc());
+log_cb(RETRO_LOG_DEBUG, LOGPRE "Large palette ? %03x (%04x)\n", addr, activecpu_get_pc());
 	}
 	else
 	{
@@ -307,10 +307,10 @@ static WRITE_HANDLER( rombankswitch_w )
 		if(data>high)
 		{
 			high = data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "New rom size : %x\n", (high+1)*0x2000);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "New rom size : %x\n", (high+1)*0x2000);
 		}
 
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "robs %d, %02x (%04x)\n", offset, data, activecpu_get_pc());*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "robs %d, %02x (%04x)\n", offset, data, activecpu_get_pc());*/
 		cur_rombank = data;
 		cpu_setbank(1, memory_region(REGION_CPU1)+0x10000+0x2000*cur_rombank);
 	}
@@ -327,10 +327,10 @@ static WRITE_HANDLER( rombank2switch_w )
 		if(data>high)
 		{
 			high = data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "New rom2 size : %x\n", (high+1)*0x4000);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "New rom2 size : %x\n", (high+1)*0x4000);
 		}
 
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "robs2 %02x (%04x)\n", data, activecpu_get_pc());*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "robs2 %02x (%04x)\n", data, activecpu_get_pc());*/
 
 		cur_rombank2 = data;
 		cpu_setbank(6, memory_region(REGION_CPU3)+0x10000+0x4000*cur_rombank2);
@@ -366,7 +366,7 @@ static WRITE_HANDLER( rambankswitch_w )
 		}
 		else
 		{
-log_cb(RETRO_LOG_ERROR, LOGPRE "unknown rambankswitch %d, %02x (%04x)\n", offset, data, activecpu_get_pc());
+log_cb(RETRO_LOG_DEBUG, LOGPRE "unknown rambankswitch %d, %02x (%04x)\n", offset, data, activecpu_get_pc());
 			current_notifier[offset] = 0;
 			current_base[offset] = empty_ram;
 		}
@@ -463,7 +463,7 @@ static WRITE_HANDLER( mcu_data_w )
 {
 	last_data = data;
 	last_data_adr = activecpu_get_pc();
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "mcu write %02x (%04x)\n", data, activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "mcu write %02x (%04x)\n", data, activecpu_get_pc());*/
 	switch(data)
 	{
 	case 0x43:
@@ -476,12 +476,12 @@ static WRITE_HANDLER( mcu_data_w )
 
 static WRITE_HANDLER( mcu_control_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "mcu control %02x (%04x)\n", data, activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "mcu control %02x (%04x)\n", data, activecpu_get_pc());*/
 }
 
 static READ_HANDLER( mcu_data_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "mcu read (%04x) [%02x, %04x]\n", activecpu_get_pc(), last_data, last_data_adr);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "mcu read (%04x) [%02x, %04x]\n", activecpu_get_pc(), last_data, last_data_adr);*/
 	if(mcu_pos==mcu_reply_len)
 		return 0;
 
@@ -490,14 +490,14 @@ static READ_HANDLER( mcu_data_r )
 
 static READ_HANDLER( mcu_control_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "mcu control read (%04x)\n", activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "mcu control read (%04x)\n", activecpu_get_pc());*/
 	return 0x1;
 }
 
 #if 0
 static WRITE_HANDLER( sound_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Sound_w %02x (%04x)\n", data, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Sound_w %02x (%04x)\n", data, activecpu_get_pc());
 }
 #endif
 
@@ -528,7 +528,7 @@ static READ_HANDLER( mux_r )
 	case 7:
 		return input_port_4_r(0);
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Mux read from unknown port %d (%04x)\n", mux_ctrl, activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Mux read from unknown port %d (%04x)\n", mux_ctrl, activecpu_get_pc());
 		return 0xff;
 	}
 }
@@ -541,7 +541,7 @@ static WRITE_HANDLER( mux_w )
 		control2_w(0, data);
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Mux write to unknown port %d, %02x (%04x)\n", mux_ctrl, data, activecpu_get_pc());
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Mux write to unknown port %d, %02x (%04x)\n", mux_ctrl, data, activecpu_get_pc());
 	}
 }
 

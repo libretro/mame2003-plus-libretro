@@ -24,7 +24,7 @@ static READ_HANDLER( dorachan_protection_r )
 		case 0x72a2 : return 0xd5;
 		case 0x72b5 : return 0xcb;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "unhandled $2400 read @ %x\n",activecpu_get_previouspc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "unhandled $2400 read @ %x\n",activecpu_get_previouspc());
 	return 0xff;
 }
 

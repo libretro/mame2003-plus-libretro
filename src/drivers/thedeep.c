@@ -123,7 +123,7 @@ static WRITE_HANDLER( thedeep_protection_w )
 		break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "pc %04x: protection_command %02x\n", activecpu_get_pc(),protection_command);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "pc %04x: protection_command %02x\n", activecpu_get_pc(),protection_command);
 	}
 }
 
@@ -141,7 +141,7 @@ static READ_HANDLER( thedeep_protection_r )
 static WRITE_HANDLER( thedeep_e100_w )
 {
 	if (data != 1)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "pc %04x: e100 = %02x\n", activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "pc %04x: e100 = %02x\n", activecpu_get_pc(),data);
 }
 
 static MEMORY_READ_START( thedeep_readmem )

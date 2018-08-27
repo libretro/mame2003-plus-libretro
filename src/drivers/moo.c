@@ -320,7 +320,7 @@ static WRITE16_HANDLER( moo_prot_w )
 
 static WRITE16_HANDLER( moobl_oki_bank_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%x to OKI bank\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%x to OKI bank\n", data);
 
 	OKIM6295_set_bank_base(0, (data & 0x0f)* 0x40000);
 }

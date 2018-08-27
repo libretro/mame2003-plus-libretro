@@ -138,7 +138,7 @@ static WRITE16_HANDLER( pirates_out_w )
 		/* bit 7 used (function unknown) */
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: out_w %04x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: out_w %04x\n",activecpu_get_pc(),data);*/
 }
 
 static READ16_HANDLER( pirates_in1_r )
@@ -146,7 +146,7 @@ static READ16_HANDLER( pirates_in1_r )
 /*	static int prot = 0xa3;*/
 	int bit;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: IN1_r\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: IN1_r\n",activecpu_get_pc());*/
 
 #if 0
 	/* Pirates protection workaround. It more complicated than this... see code at

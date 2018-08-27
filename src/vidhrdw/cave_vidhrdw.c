@@ -433,7 +433,7 @@ int cave_vh_start( int num )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: Unsupported number of layers: %d\n",num);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: Unsupported number of layers: %d\n",num);
 			return 1;
 	}
 

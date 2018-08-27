@@ -57,7 +57,7 @@ static READ16_HANDLER( realbrk_dsw_r )
 							((readinputport(4) & 0x0300) << 4) |
 							((readinputport(5) & 0x0300) << 6) ;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: read with unknown dsw_select = %02x\n",activecpu_get_pc(),realbrk_dsw_select[0]);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X: read with unknown dsw_select = %02x\n",activecpu_get_pc(),realbrk_dsw_select[0]);
 	return 0xffff;
 }
 

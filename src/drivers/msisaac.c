@@ -188,7 +188,7 @@ MCU simulation TODO:
  		break;
 
  		default:
- 			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU#0 read from MCU pc=%4x, mcu_val=%2x\n", activecpu_get_pc(), mcu_val );
+ 			log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU#0 read from MCU pc=%4x, mcu_val=%2x\n", activecpu_get_pc(), mcu_val );
  		   	return mcu_val;
  		break;
 	}
@@ -295,7 +295,7 @@ static MACHINE_INIT( ta7630 )
 	}
 
 	/*for (i=0; i<8; i++)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "SOUND Chan#%i name=%s\n", i, mixer_get_name(i) );*/
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "SOUND Chan#%i name=%s\n", i, mixer_get_name(i) );*/
 /*
   channels 0-2 AY#0
   channels 3-5 AY#1

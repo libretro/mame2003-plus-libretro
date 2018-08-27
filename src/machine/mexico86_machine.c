@@ -126,7 +126,7 @@ WRITE_HANDLER( mexico86_68705_portB_w )
 	if ((ddrB & 0x02) && (data & 0x02) && (~portB_out & 0x02)) /* positive edge trigger */
 	{
 		address = portA_out;
-/*if (address >= 0x80) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 68705 address %02x\n",activecpu_get_pc(),portA_out);*/
+/*if (address >= 0x80) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 address %02x\n",activecpu_get_pc(),portA_out);*/
 	}
 	if ((ddrB & 0x08) && (~data & 0x08) && (portB_out & 0x08))
 	{
@@ -158,11 +158,11 @@ WRITE_HANDLER( mexico86_68705_portB_w )
 	}
 	if ((ddrB & 0x40) && (~data & 0x40) && (portB_out & 0x40))
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 68705 unknown port B bit %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 unknown port B bit %02x\n",activecpu_get_pc(),data);
 	}
 	if ((ddrB & 0x80) && (~data & 0x80) && (portB_out & 0x80))
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 68705 unknown port B bit %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 unknown port B bit %02x\n",activecpu_get_pc(),data);
 	}
 
 	portB_out = data;

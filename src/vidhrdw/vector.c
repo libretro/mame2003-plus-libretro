@@ -484,7 +484,7 @@ void vector_add_point (int x, int y, rgb_t color, int intensity)
 	if (new_index >= MAX_POINTS)
 	{
 		new_index--;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "*** Warning! Vector list overflow!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "*** Warning! Vector list overflow!\n");
 	}
 }
 
@@ -516,7 +516,7 @@ void vector_add_point_callback (int x, int y, rgb_t (*color_callback)(void), int
 	if (new_index >= MAX_POINTS)
 	{
 		new_index--;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "*** Warning! Vector list overflow!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "*** Warning! Vector list overflow!\n");
 	}
 }
 
@@ -538,7 +538,7 @@ void vector_add_clip (int x1, int yy1, int x2, int y2)
 	if (new_index >= MAX_POINTS)
 	{
 		new_index--;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "*** Warning! Vector list overflow!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "*** Warning! Vector list overflow!\n");
 	}
 }
 
@@ -551,7 +551,7 @@ void vector_set_clip (int x1, int yy1, int x2, int y2)
 	/* failsafe */
 	if ((x1 >= x2) || (yy1 >= y2))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Error in clipping parameters.\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Error in clipping parameters.\n");
 		xmin = 0;
 		ymin = 0;
 		xmax = vecwidth;

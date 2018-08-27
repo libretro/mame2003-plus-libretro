@@ -16,13 +16,13 @@ void pit8254_w (int which, int offset, int data)
 	switch (offset)
 	{
 		case 0:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PIT8254#%d write %d to timer1\n",which, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "PIT8254#%d write %d to timer1\n",which, data);
 			break;
 		case 1:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PIT8254#%d write %d to timer2\n",which, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "PIT8254#%d write %d to timer2\n",which, data);
 			break;
 		case 2:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PIT8254#%d write %d to timer3\n",which, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "PIT8254#%d write %d to timer3\n",which, data);
 			break;
 		case 3:
 			{
@@ -30,8 +30,8 @@ void pit8254_w (int which, int offset, int data)
 				int rw=(data>>4)&3;
 				int mode=(data>>1)&0x07;
 				int bcd=data&0x01;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "PIT8254#%d write %02x to control : ", which, data);
-				log_cb(RETRO_LOG_ERROR, LOGPRE "*** SC=%d RW=%d MODE=%d BCD=%d\n",sc, rw, mode, bcd);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "PIT8254#%d write %02x to control : ", which, data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "*** SC=%d RW=%d MODE=%d BCD=%d\n",sc, rw, mode, bcd);
 			}
 
 			break;
@@ -43,17 +43,17 @@ int pit8254_r (int which, int offset)
 	switch (offset)
 	{
 		case 0:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PIT8254#%d read from timer1\n", which);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "PIT8254#%d read from timer1\n", which);
 
 			break;
 		case 1:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PIT8254#%d read from timer2\n", which);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "PIT8254#%d read from timer2\n", which);
 			break;
 		case 2:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PIT8254#%d read from timer3\n", which);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "PIT8254#%d read from timer3\n", which);
 			break;
 		case 3:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "PIT8254#%d read from control\n", which);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "PIT8254#%d read from control\n", which);
 			break;
 	}
 

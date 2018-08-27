@@ -67,7 +67,7 @@ WRITE_HANDLER( digdug_customio_data_w )
 {
 	customio[offset] = data;
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: custom IO offset %02x data %02x\n",activecpu_get_pc(),offset,data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: custom IO offset %02x data %02x\n",activecpu_get_pc(),offset,data);
 
 	switch (customio_command)
 	{
@@ -226,7 +226,7 @@ void digdug_nmi_generate (int param)
 WRITE_HANDLER( digdug_customio_w )
 {
 	if (data != 0x10 && data != 0x71)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: custom IO command %02x\n",activecpu_get_pc(),data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: custom IO command %02x\n",activecpu_get_pc(),data);
 
 	customio_command = data;
 

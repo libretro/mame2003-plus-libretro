@@ -212,7 +212,7 @@ WRITE16_HANDLER( rpunch_crtc_data_w )
 				break;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "CRTC register %02X = %02X\n", crtc_register, data & 0xff);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "CRTC register %02X = %02X\n", crtc_register, data & 0xff);
 				break;
 		}
 	}
@@ -233,12 +233,12 @@ WRITE16_HANDLER( rpunch_ins_w )
 		if (offset == 0)
 		{
 			gins = data & 0x3f;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "GINS = %02X\n", data & 0x3f);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "GINS = %02X\n", data & 0x3f);
 		}
 		else
 		{
 			bins = data & 0x3f;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "BINS = %02X\n", data & 0x3f);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "BINS = %02X\n", data & 0x3f);
 		}
 	}
 }

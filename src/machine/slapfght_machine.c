@@ -244,7 +244,7 @@ unsigned char val;
 WRITE_HANDLER( getstar_sh_intenable_w )
 {
 	getstar_sh_intenabled = 1;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "cpu #1 PC=%d: %d written to a0e0\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu #1 PC=%d: %d written to a0e0\n",activecpu_get_pc(),data);
 }
 
 

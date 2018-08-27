@@ -599,7 +599,7 @@ static READ16_HANDLER( math0_quotient_r ){
 	case 4: return math0_context.quotient[2] ? (UINT16)(operand0/(INT16)math0_context.quotient[2]) : 0x7fff;
 	case 5: return math0_context.quotient[2] ? (UINT16)(operand0%(INT16)math0_context.quotient[2]) : 0x0000;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE  "unknown quotient_r\n" );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE  "unknown quotient_r\n" );
 	return 0;
 }
 static READ16_HANDLER( math0_compare_r ){ /* 0xe8006 */
@@ -661,7 +661,7 @@ static READ16_HANDLER( math1_quotient_r ){
 	case 4: return math1_context.quotient[2] ? (UINT16)(operand0/(INT16)math1_context.quotient[2]) : 0x7fff;
 	case 5: return math1_context.quotient[2] ? (UINT16)(operand0%(INT16)math1_context.quotient[2]) : 0x0000;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE  "unknown quotient_r\n" );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE  "unknown quotient_r\n" );
 	return 0;
 }
 static READ16_HANDLER( math1_compare_r ){ /* 0xe8006 */

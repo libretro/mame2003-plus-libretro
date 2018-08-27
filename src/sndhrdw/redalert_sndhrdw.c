@@ -90,7 +90,7 @@ WRITE_HANDLER( redalert_AY8910_w )
 			AY8910_control_port_0_w(offset,sound_register_IC2);
 			break;
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Invalid Sound Command: %02X\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Invalid Sound Command: %02X\n",data);
 			break;
 	}
 }

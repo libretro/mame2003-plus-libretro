@@ -111,26 +111,26 @@ static UINT8 prot_lock,nvram_lock;
 /*Custom RAM (Protection)*/
 static READ_HANDLER( custom_ram_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Custom RAM read at %02x PC = %x\n",offset+0xaf80,activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Custom RAM read at %02x PC = %x\n",offset+0xaf80,activecpu_get_pc());
 	return cus_ram[offset];/* ^ 0x55;*/
 }
 
 static WRITE_HANDLER( custom_ram_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "Custom RAM write at %02x : %02x PC = %x\n",offset+0xaf80,data,activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "Custom RAM write at %02x : %02x PC = %x\n",offset+0xaf80,data,activecpu_get_pc());*/
 	if(prot_lock)	{ cus_ram[offset] = data; }
 }
 
 /*this might be used as NVRAM commands btw*/
 static WRITE_HANDLER( prot_lock_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x Prot lock value written %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x Prot lock value written %02x\n",activecpu_get_pc(),data);*/
 	prot_lock = data;
 }
 
 static WRITE_HANDLER( nvram_lock_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x Nvram lock value written %02x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x Nvram lock value written %02x\n",activecpu_get_pc(),data);
 	nvram_lock = data;
 }
 

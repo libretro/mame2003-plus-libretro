@@ -110,7 +110,7 @@ VIDEO_START( mazerbla )
 
 	if ((tmpbitmaps[0]==0) || (tmpbitmaps[1]==0) || (tmpbitmaps[2]==0) || (tmpbitmaps[3]==0))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "too bad - run out of memory in video_start() ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "too bad - run out of memory in video_start() ");
 		return 1;
 	}
 
@@ -698,19 +698,19 @@ unsigned char * rom = memory_region(REGION_CPU3) + (gfx_rom_bank * 0x2000) + 0x1
 /*
 	if ((mode<=0x07) || (mode>=0x10))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "paradr=");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%3x ",VCU_gfx_param_addr );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "paradr=");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%3x ",VCU_gfx_param_addr );
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ", cfb_ram[VCU_gfx_param_addr + 0] );
-		log_cb(RETRO_LOG_ERROR, LOGPRE "x=%04x ", xpos );					//1,2
-		log_cb(RETRO_LOG_ERROR, LOGPRE "y=%04x ", ypos );					//3,4
-		log_cb(RETRO_LOG_ERROR, LOGPRE "color=%02x ", color);				//5
-		log_cb(RETRO_LOG_ERROR, LOGPRE "color2=%02x ", color2);			//6
-		log_cb(RETRO_LOG_ERROR, LOGPRE "mode=%02x ", mode );				//7
-		log_cb(RETRO_LOG_ERROR, LOGPRE "xpix=%02x ", pix_xsize );			//8
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ypix=%02x ", pix_ysize );			//9
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ", cfb_ram[VCU_gfx_param_addr + 0] );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "x=%04x ", xpos );					//1,2
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "y=%04x ", ypos );					//3,4
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "color=%02x ", color);				//5
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "color2=%02x ", color2);			//6
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "mode=%02x ", mode );				//7
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "xpix=%02x ", pix_xsize );			//8
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ypix=%02x ", pix_ysize );			//9
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "addr=%4i bank=%1i\n", offset, gfx_rom_bank);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "addr=%4i bank=%1i\n", offset, gfx_rom_bank);
 	}
 */
 
@@ -863,28 +863,28 @@ unsigned char * rom = memory_region(REGION_CPU3) + (gfx_rom_bank * 0x2000) + 0x1
 /*
 	if (0) */ /*(mode != 0x07)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "paladr=");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%3x ",VCU_gfx_param_addr );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "paladr=");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%3x ",VCU_gfx_param_addr );
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ", cfb_ram[VCU_gfx_param_addr + 0] );
-		log_cb(RETRO_LOG_ERROR, LOGPRE "x=%04x ", xpos );					//1,2
-		log_cb(RETRO_LOG_ERROR, LOGPRE "y=%04x ", ypos );					//3,4
-		log_cb(RETRO_LOG_ERROR, LOGPRE "color=%02x ", color);				//5
-		log_cb(RETRO_LOG_ERROR, LOGPRE "color2=%02x ", color2 );			//6
-		log_cb(RETRO_LOG_ERROR, LOGPRE "mode=%02x ", mode );				//7
-		log_cb(RETRO_LOG_ERROR, LOGPRE "xpix=%02x ", pix_xsize );			//8
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ypix=%02x ", pix_ysize );			//9
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ", cfb_ram[VCU_gfx_param_addr + 0] );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "x=%04x ", xpos );					//1,2
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "y=%04x ", ypos );					//3,4
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "color=%02x ", color);				//5
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "color2=%02x ", color2 );			//6
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "mode=%02x ", mode );				//7
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "xpix=%02x ", pix_xsize );			//8
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ypix=%02x ", pix_ysize );			//9
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "addr=%4i bank=%1i\n", offset, gfx_rom_bank);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "addr=%4i bank=%1i\n", offset, gfx_rom_bank);
 
 		for (y=0; y<16; y++)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: ",offset+y*16);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: ",offset+y*16);
 			for (x=0; x<16; x++)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ",cfb_ram[offset+x+y*16]);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ",cfb_ram[offset+x+y*16]);
 			}
-			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 		}
 	}
 

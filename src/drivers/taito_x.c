@@ -248,7 +248,7 @@ READ16_HANDLER( superman_dsw_input_r )
 		case 0x03:
 			return (readinputport (1) & 0xf0) >> 4;
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "taitox unknown dsw read offset: %04x\n", offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "taitox unknown dsw read offset: %04x\n", offset);
 			return 0x00;
 	}
 }
@@ -265,7 +265,7 @@ static READ16_HANDLER( daisenpu_input_r )
 			return readinputport(4);
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "taitox unknown input read offset: %04x\n", offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "taitox unknown input read offset: %04x\n", offset);
 			return 0x00;
 	}
 }
@@ -283,7 +283,7 @@ static WRITE16_HANDLER( daisenpu_input_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "taitox unknown input write %04x to offset %04x\n",data,offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "taitox unknown input write %04x to offset %04x\n",data,offset);
 	}
 }
 
@@ -301,7 +301,7 @@ static WRITE16_HANDLER( kyustrkr_input_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "taitox unknown input write %04x to offset %04x\n",data,offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "taitox unknown input write %04x to offset %04x\n",data,offset);
 	}
 }
 

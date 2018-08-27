@@ -18,7 +18,7 @@ static unsigned char buffer0[9],buffer1[9];
 
 READ_HANDLER( docastle_shared0_r )
 {
-	if (offset == 8) log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 shared0r  clock = %d\n",activecpu_gettotalcycles());
+	if (offset == 8) log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 shared0r  clock = %d\n",activecpu_gettotalcycles());
 
 	/* this shouldn't be done, however it's the only way I've found */
 	/* to make dip switches work in Do Run Run. */
@@ -34,7 +34,7 @@ READ_HANDLER( docastle_shared0_r )
 
 READ_HANDLER( docastle_shared1_r )
 {
-	if (offset == 8) log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 shared1r  clock = %d\n",activecpu_gettotalcycles());
+	if (offset == 8) log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #1 shared1r  clock = %d\n",activecpu_gettotalcycles());
 	return buffer1[offset];
 }
 

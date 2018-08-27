@@ -323,7 +323,7 @@ INTERRUPT_GEN( mcr68_interrupt )
 	if (!m6840_state[0].timer_active)
 		subtract_from_counter(0, 1);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "--- VBLANK ---\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "--- VBLANK ---\n");
 
 	/* also set a timer to generate the 493 signal at a specific time before the next VBLANK */
 	/* the timing of this is crucial for Blasted and Tri-Sports, which check the timing of */
@@ -369,7 +369,7 @@ static void mcr68_493_callback(int param)
 	v493_irq_state = 1;
 	update_mcr68_interrupts();
 	timer_set(cpu_getscanlineperiod(), 0, mcr68_493_off_callback);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "--- (INT1) ---\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "--- (INT1) ---\n");
 }
 
 

@@ -76,7 +76,7 @@ static WRITE_HANDLER( exerion_portb_w )
 	porta = memory_region(REGION_CPU1)[0x5f76];
 	portb = data;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Port B = %02X\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Port B = %02X\n", data);
 }
 
 

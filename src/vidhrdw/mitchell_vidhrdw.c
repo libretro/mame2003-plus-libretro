@@ -160,7 +160,7 @@ static int paletteram_bank;
 
 WRITE_HANDLER( pang_gfxctrl_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: pang_gfxctrl_w %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: pang_gfxctrl_w %02x\n",activecpu_get_pc(),data);
 {
 	char baf[40];
 	sprintf(baf,"%02x",data);

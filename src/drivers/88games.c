@@ -500,7 +500,7 @@ static void k88games_banking( int lines )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	int offs;
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: bank select %02x\n",activecpu_get_pc(),lines);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: bank select %02x\n",activecpu_get_pc(),lines);
 
 	/* bits 0-2 select ROM bank for 0000-1fff */
 	/* bit 3: when 1, palette RAM at 1000-1fff */

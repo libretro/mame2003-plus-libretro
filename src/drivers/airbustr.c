@@ -289,7 +289,7 @@ unsigned char *RAM = memory_region(REGION_CPU1);
 	else					RAM = &RAM[0x10000 + 0x4000 * ((data & 7)-3)];
 
 	cpu_setbank(1,RAM);
-/*	if (data > 7)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 - suspicious bank: %d ! - PC = %04X\n", data, activecpu_get_pc());*/
+/*	if (data > 7)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 - suspicious bank: %d ! - PC = %04X\n", data, activecpu_get_pc());*/
 
 	u1 = data & 0xf8;
 }
@@ -361,7 +361,7 @@ unsigned char *RAM = memory_region(REGION_CPU2);
 	else					RAM = &RAM[0x10000 + 0x4000 * ((data & 7)-3)];
 
 	cpu_setbank(2,RAM);
-/*	if (data > 7)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - suspicious bank: %d ! - PC = %04X\n", data, activecpu_get_pc());*/
+/*	if (data > 7)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #1 - suspicious bank: %d ! - PC = %04X\n", data, activecpu_get_pc());*/
 
 	flipscreen = data & 0x10;	/* probably..*/
 	tilemap_set_flip(ALL_TILEMAPS,flipscreen ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
@@ -497,7 +497,7 @@ unsigned char *RAM = memory_region(REGION_CPU3);
 	else					RAM = &RAM[0x10000 + 0x4000 * ((data & 7)-3)];
 
 	cpu_setbank(3,RAM);
-/*	if (data > 7)	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #2 - suspicious bank: %d ! - PC = %04X\n", data, activecpu_get_pc());*/
+/*	if (data > 7)	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #2 - suspicious bank: %d ! - PC = %04X\n", data, activecpu_get_pc());*/
 
 	u3 = data & 0xf8;
 }

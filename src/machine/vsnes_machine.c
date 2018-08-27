@@ -825,7 +825,7 @@ static void mapper4_set_chr (void)
 
 static void mapper4_irq ( int num, int scanline, int vblank, int blanked )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "entra\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "entra\n");
 	if ((scanline < BOTTOM_VISIBLE_SCANLINE) || (scanline == NUM_SCANLINE-1))
 	{
 		if ((IRQ_enable) && !blanked)
@@ -932,7 +932,7 @@ static WRITE_HANDLER( mapper4_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "mapper4_w uncaught: %04x value: %02x\n", offset + 0x8000, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "mapper4_w uncaught: %04x value: %02x\n", offset + 0x8000, data);
 			break;
 	}
 }

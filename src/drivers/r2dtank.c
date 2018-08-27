@@ -46,7 +46,7 @@ Should be very similar to Sigma's Spiders hardware.
 static int dipsw_bank;
 static WRITE_HANDLER( dipsw_bank_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "bank = %x\n",data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "bank = %x\n",data);*/
 	dipsw_bank = data;
 }
 
@@ -102,7 +102,7 @@ static READ_HANDLER( dipsw_r )
 /*	case 0xe8: */ /* lose a life?*/
 		
 	default:
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown dipsw_r bank = %x\n",dipsw_bank);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown dipsw_r bank = %x\n",dipsw_bank);*/
 		return 0xff;
 	}
 }

@@ -129,7 +129,7 @@ WRITE_HANDLER( destroyr_output_w )
 		destroyr_misc_w(offset, data);
 		break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "unmapped output port %d\n", offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "unmapped output port %d\n", offset);
 		break;
 	}
 }
@@ -162,7 +162,7 @@ READ_HANDLER( destroyr_input_r )
 		return readinputport(1);
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "unmapped input port %d\n", offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "unmapped input port %d\n", offset);
 
 	return 0;
 }

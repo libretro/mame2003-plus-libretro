@@ -51,43 +51,43 @@ static int inport16_step,inport17_step,inport23_step;
 
 static READ_HANDLER( inport16_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IN  $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport16_step);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IN  $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport16_step);*/
 	return(inport16_step);
 }
 
 static READ_HANDLER( inport1c_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IN  $1c : pc = %04x - data = 0x80\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IN  $1c : pc = %04x - data = 0x80\n",activecpu_get_pc());*/
 	return(0x80);	/* infinite loop (at 0x0fb3) until bit 7 is set*/
 }
 
 static READ_HANDLER( inport22_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IN  $22 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport17_step);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IN  $22 : pc = %04x - data = %02x\n",activecpu_get_pc(),inport17_step);*/
 	return(inport17_step);
 }
 
 static READ_HANDLER( inport23_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "IN  $23 : pc = %04x - step = %02x\n",activecpu_get_pc(),inport23_step);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "IN  $23 : pc = %04x - step = %02x\n",activecpu_get_pc(),inport23_step);*/
 	return(inport23_step);
 }
 
 static WRITE_HANDLER( outport16_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "OUT $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "OUT $16 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
 	inport16_step = data;
 }
 
 static WRITE_HANDLER( outport17_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "OUT $17 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "OUT $17 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
 	inport17_step = data;
 }
 
 static WRITE_HANDLER( outport24_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "OUT $24 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "OUT $24 : pc = %04x - data = %02x\n",activecpu_get_pc(),data);*/
 	inport23_step = data;
 }
 

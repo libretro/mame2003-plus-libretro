@@ -283,7 +283,7 @@ static WRITE_HANDLER ( suzume_bank_w )
 
 	suzume_bank = data;
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: bank %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: bank %02x\n",activecpu_get_pc(),data);
 
 	/* bits 6, 4 and 3 used for something input related? */
 
@@ -297,7 +297,7 @@ static WRITE_HANDLER ( tontonb_bank_w )
 	data8_t *rom = memory_region(REGION_CPU1);
 	int address;
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: bank %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: bank %02x\n",activecpu_get_pc(),data);
 
 	if (data == 0) return;	/* tontonb fix?*/
 

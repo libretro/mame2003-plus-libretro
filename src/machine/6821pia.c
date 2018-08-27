@@ -389,7 +389,7 @@ int pia_read(int which, int offset)
 				pia_set_input_ca1(which, p->intf->in_ca1_func(0));
 #ifdef MAME_DEBUG
 			else if (!(p->in_set & PIA_IN_SET_CA1)) {
-				log_cb(RETRO_LOG_ERROR, LOGPRE "PIA%d: Warning! no CA1 read handler. Assuming pin not connected\n",which);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "PIA%d: Warning! no CA1 read handler. Assuming pin not connected\n",which);
 				p->in_set |= PIA_IN_SET_CA1; /* disable logging*/
 			}
 #endif /* MAME_DEBUG*/
@@ -397,7 +397,7 @@ int pia_read(int which, int offset)
 				pia_set_input_ca2(which, p->intf->in_ca2_func(0));
 #ifdef MAME_DEBUG
 			else if (C2_INPUT(p->ctl_a) && !(p->in_set & PIA_IN_SET_CA2)) {
-				log_cb(RETRO_LOG_ERROR, LOGPRE "PIA%d: Warning! no CA2 read handler. Assuming pin not connected\n",which);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "PIA%d: Warning! no CA2 read handler. Assuming pin not connected\n",which);
 				p->in_set |= PIA_IN_SET_CA2; /* disable logging*/
 			}
 #endif /* MAME_DEBUG*/
@@ -420,7 +420,7 @@ int pia_read(int which, int offset)
 				pia_set_input_cb1(which, p->intf->in_cb1_func(0));
 #ifdef MAME_DEBUG
 			else if (!(p->in_set & PIA_IN_SET_CB1)) {
-				log_cb(RETRO_LOG_ERROR, LOGPRE "PIA%d: Error! no CB1 read handler. Three-state pin is undefined\n",which);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "PIA%d: Error! no CB1 read handler. Three-state pin is undefined\n",which);
 				p->in_set |= PIA_IN_SET_CB1; /* disable logging*/
 			}
 #endif /* MAME_DEBUG*/
@@ -428,7 +428,7 @@ int pia_read(int which, int offset)
 				pia_set_input_cb2(which, p->intf->in_cb2_func(0));
 #ifdef MAME_DEBUG
 			else if (C2_INPUT(p->ctl_b) && !(p->in_set & PIA_IN_SET_CB2)) {
-				log_cb(RETRO_LOG_ERROR, LOGPRE "PIA%d: Error! no CB2 read handler. Three-state pin is undefined\n",which);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "PIA%d: Error! no CB2 read handler. Three-state pin is undefined\n",which);
 				p->in_set |= PIA_IN_SET_CB2; /* disable logging*/
 			}
 #endif /* MAME_DEBUG*/

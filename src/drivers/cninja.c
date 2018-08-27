@@ -89,7 +89,7 @@ static READ16_HANDLER( cninja_irq_r )
 		return 0;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Unmapped IRQ read %d\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Unmapped IRQ read %d\n",activecpu_get_pc(),offset);
 	return 0;
 }
 
@@ -102,7 +102,7 @@ static WRITE16_HANDLER( cninja_irq_w )
 			0xc8:	Raster IRQ turned on (68k IRQ level 4)
 			0xd8:	Raster IRQ turned on (68k IRQ level 3)
 		*/
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  IRQ write %d %08x\n",activecpu_get_pc(),offset,data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  IRQ write %d %08x\n",activecpu_get_pc(),offset,data);
 		cninja_irq_mask=data&0xff;
 		return;
 
@@ -118,7 +118,7 @@ static WRITE16_HANDLER( cninja_irq_w )
 		return;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:  Unmapped IRQ write %d %04x\n",activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:  Unmapped IRQ write %d %04x\n",activecpu_get_pc(),offset,data);
 }
 
 static READ16_HANDLER( robocop2_prot_r )

@@ -32,7 +32,7 @@ int RP5H01_init( struct RP5H01_interface *interface ) {
 	intf = interface;
 
 	if ( intf->num > MAX_RP5H01 ) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "Requested number of RP5H01's is bigger than the supported amount\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "Requested number of RP5H01's is bigger than the supported amount\n" );
 		return -1;
 	}
 
@@ -55,7 +55,7 @@ void RP5H01_enable_w( int which, int data ) {
 	RP5H01	*chip;
 
 	if ( which >= intf->num ) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
 		return;
 	}
 
@@ -71,7 +71,7 @@ void RP5H01_reset_w( int which, int data ) {
 	int		newstate = ( data == 0 ) ? 0 : 1;
 
 	if ( which >= intf->num ) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
 		return;
 	}
 
@@ -97,7 +97,7 @@ void RP5H01_clock_w( int which, int data ) {
 	int		newstate = ( data == 0 ) ? 0 : 1;
 
 	if ( which >= intf->num ) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
 		return;
 	}
 
@@ -122,7 +122,7 @@ void RP5H01_test_w( int which, int data ) {
 	RP5H01	*chip;
 
 	if ( which >= intf->num ) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
 		return;
 	}
 
@@ -141,7 +141,7 @@ int RP5H01_counter_r( int which ) {
 	RP5H01	*chip;
 
 	if ( which >= intf->num ) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
 		return 0;
 	}
 
@@ -161,7 +161,7 @@ int RP5H01_data_r( int which ) {
 	int		byte, bit;
 
 	if ( which >= intf->num ) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "RP5H01_enable: trying to access an unmapped chip\n" );
 		return 0;
 	}
 

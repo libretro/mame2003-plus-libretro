@@ -263,7 +263,7 @@ static READ32_HANDLER ( macrossp_soundstatus_r )
 {
 	static int toggle;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x read soundstatus\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x read soundstatus\n",activecpu_get_pc());*/
 
 	/* bit 1 is sound status */
 	/* bit 0 unknown - it is expected to toggle, vblank? */
@@ -290,7 +290,7 @@ static WRITE32_HANDLER( macrossp_soundcmd_w )
 
 static READ16_HANDLER( macrossp_soundcmd_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%06x read soundcmd\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x read soundcmd\n",activecpu_get_pc());*/
 	sndpending = 0;
 	return soundlatch_word_r(offset,mem_mask);
 }
@@ -746,7 +746,7 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 
 static void irqhandler(int irq)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "ES5506 irq %d\n",irq);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "ES5506 irq %d\n",irq);
 
 	/* IRQ lines 1 & 4 on the sound 68000 are definitely triggered by the ES5506,
 	but I haven't noticed the ES5506 ever assert the line - maybe only used when developing the game? */

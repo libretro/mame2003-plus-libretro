@@ -53,37 +53,37 @@ READ16_HANDLER( cchasm_6840_r )
 	switch (offset)
 	{
 	case 0x0:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Read from unimplemented port...\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read from unimplemented port...\n");
 		break;
 
 	case 0x1:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Read status register\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read status register\n");
 
 		return m6840_status;
 		break;
 
 	case 0x2:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Read MSB of timer 1 (%d)\n",m6840_timerMSB[0]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read MSB of timer 1 (%d)\n",m6840_timerMSB[0]);
 		return m6840_timerMSB[0];
 
 	case 0x3:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Read LSB of timer 1\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read LSB of timer 1\n");
 		return m6840_timerLSB[0];
 
 	case 0x4:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Read MSB of timer 2 %i\n",m6840_timerMSB[1]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read MSB of timer 2 %i\n",m6840_timerMSB[1]);
 		return m6840_timerMSB[1];
 
 	case 0x5:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Read LSB of timer 2 %i\n",m6840_timerLSB[1]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read LSB of timer 2 %i\n",m6840_timerLSB[1]);
 		return m6840_timerLSB[1];
 
 	case 0x6:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Read MSB of timer 3 (%d)\n",m6840_timerMSB[2]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read MSB of timer 3 (%d)\n",m6840_timerMSB[2]);
 		return m6840_timerMSB[2];
 
 	case 0x7:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Read LSB of timer 3\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read LSB of timer 3\n");
 		return m6840_timerLSB[2];
 	}
 	return 0;
@@ -134,7 +134,7 @@ WRITE16_HANDLER( cchasm_6840_w )
 				if ((data&0x1))
 				{
 					int i;
-					log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: Internal reset\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: Internal reset\n");
 					for (i=0; i<3; i++) {
 						m6840_timerLSB[i]=255;
 						m6840_timerMSB[i]=255;
@@ -142,58 +142,58 @@ WRITE16_HANDLER( cchasm_6840_w )
 					}
 				}
 				else
-					log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: Timers go!\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: Timers go!\n");
 
 
 			}
 
 			else if (m6840_cr_select==2) {
 				if (data&0x1)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: Divide by 8 prescaler selected\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: Divide by 8 prescaler selected\n");
 			}
 
 			/* Following bits apply to both registers */
 			if (data&0x2)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: Internal clock selected on CR %d\n",m6840_cr_select);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: Internal clock selected on CR %d\n",m6840_cr_select);
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: External clock selected on CR %d\n",m6840_cr_select);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: External clock selected on CR %d\n",m6840_cr_select);
 
 			if (data&0x4)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: Dual 8 bit count mode selected on CR %d\n",m6840_cr_select);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: Dual 8 bit count mode selected on CR %d\n",m6840_cr_select);
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: 16 bit count mode selected on CR %d\n",m6840_cr_select);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: 16 bit count mode selected on CR %d\n",m6840_cr_select);
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE " Write %02x to control register 1/3\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " Write %02x to control register 1/3\n",data);
 			break;
 		case 0x1:
 			m6840_cr[1] = data;
 			if (data&0x1)
 			{
 				m6840_cr_select=0;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: Control register 1 selected\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: Control register 1 selected\n");
 			}
 			else {
 				m6840_cr_select=2;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: Control register 3 selected\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: Control register 3 selected\n");
 			}
 
 			if (data&0x80)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: Cr2 Timer output enabled\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: Cr2 Timer output enabled\n");
 
 			if (data&0x40)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "MC6840: Cr2 interrupt output enabled\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "MC6840: Cr2 interrupt output enabled\n");
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE " Write %02x to control register 2\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " Write %02x to control register 2\n",data);
 			break;
 		case 0x2:
 			m6840_timerMSB[0]=data;
 			m6840_status &= ~0x01;
-			log_cb(RETRO_LOG_ERROR, LOGPRE " Write %02x to MSB of Timer 1\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " Write %02x to MSB of Timer 1\n",data);
 			break;
 		case 0x3:
 			m6840_status &= ~0x01;
 			m6840_timerLSB[0]=data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE " Write %02x to LSB of Timer 1\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " Write %02x to LSB of Timer 1\n",data);
 			break;
 		case 0x4:
 			m6840_status &= ~0x02;
@@ -201,23 +201,23 @@ WRITE16_HANDLER( cchasm_6840_w )
 			m6840_timerMSB[1]=data;
 			if ((m6840_cr[1] & 0x38) == 0)
 				timer_set (TIME_IN_NSEC(M6840_CYCLE) * ((m6840_timerMSB[1]<<8) | m6840_timerLSB[1]), 0, timer_2_timeout);
-			log_cb(RETRO_LOG_ERROR, LOGPRE " Write %02x to MSB of Timer 2\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " Write %02x to MSB of Timer 2\n",data);
 			break;
 		case 0x5:
 			m6840_status &= ~0x02;
 			cchasm_6840_irq(CLEAR_LINE);
 			m6840_timerLSB[1]=data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE " Write %02x to LSB of Timer 2\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " Write %02x to LSB of Timer 2\n",data);
 			break;
 		case 0x6:
 			m6840_status &= ~0x04;
 			m6840_timerMSB[2]=data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE " Write %02x to MSB of Timer 3\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " Write %02x to MSB of Timer 3\n",data);
 			break;
 		case 0x7:
 			m6840_status &= ~0x04;
 			m6840_timerLSB[2]=data;
-			log_cb(RETRO_LOG_ERROR, LOGPRE " Write %02x to LSB of Timer 3\n",data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE " Write %02x to LSB of Timer 3\n",data);
 			break;
 		}
 	}

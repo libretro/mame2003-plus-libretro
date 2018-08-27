@@ -341,7 +341,7 @@ WRITE_HANDLER( balsente_misc_output_w )
 	/* special case is offset 7, which recalls the NVRAM data */
 	if (offset == 7)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "nvrecall_w=%d\n", data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "nvrecall_w=%d\n", data);
 	}
 	else
 	{
@@ -623,7 +623,7 @@ WRITE_HANDLER( balsente_adc_select_w )
 {
 	/* set a timer to go off and read the value after 50us */
 	/* it's important that we do this for Mini Golf */
-log_cb(RETRO_LOG_ERROR, LOGPRE "adc_select %d\n", offset & 7);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "adc_select %d\n", offset & 7);
 	timer_set(TIME_IN_USEC(50), offset & 7, adc_finished);
 }
 
@@ -1044,7 +1044,7 @@ WRITE_HANDLER( balsente_chip_select_w )
 					"PULSE_WIDTH",
 					"WAVE_SELECT"
 				};
-				log_cb(RETRO_LOG_ERROR, LOGPRE "s%04X:   CEM#%d:%s=%f\n", activecpu_get_previouspc(), i, names[dac_register], voltage);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "s%04X:   CEM#%d:%s=%f\n", activecpu_get_previouspc(), i, names[dac_register], voltage);
 			}
 #endif
 		}
@@ -1165,13 +1165,13 @@ static void update_grudge_steering(void)
 		grudge_steering_result ^= 0x10;
 		if (diff[2] > 0) grudge_steering_result ^= 0x20;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Recomputed steering\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Recomputed steering\n");
 }
 
 
 READ_HANDLER( grudge_steering_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:grudge_steering_r(@%d)\n", activecpu_get_pc(), cpu_getscanline());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:grudge_steering_r(@%d)\n", activecpu_get_pc(), cpu_getscanline());
 	grudge_steering_result |= 0x80;
 	return grudge_steering_result;
 }
@@ -1202,7 +1202,7 @@ READ_HANDLER( shrike_shared_6809_r )
 		return 0;
 	if (offset == 9)
 		return 0xaa;
-log_cb(RETRO_LOG_ERROR, LOGPRE "6809 read %02x = %02x\n", offset, shrike_shared[offset] & 0xff);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "6809 read %02x = %02x\n", offset, shrike_shared[offset] & 0xff);
 	return shrike_shared[offset] & 0xff;
 }
 
@@ -1210,6 +1210,6 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "6809 read %02x = %02x\n", offset, shrike_shared[
 WRITE_HANDLER( shrike_shared_6809_w )
 {
 if (offset != 0x0a || data != 0x55)
-log_cb(RETRO_LOG_ERROR, LOGPRE "6809 wrote %02x = %02x\n", offset, data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "6809 wrote %02x = %02x\n", offset, data);
 	shrike_shared[offset] = (shrike_shared[offset] & ~0xff) | data;
 }

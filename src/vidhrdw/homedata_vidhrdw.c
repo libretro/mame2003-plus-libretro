@@ -74,7 +74,7 @@ static void mrokumei_handleblit( int rom_base )
 	BaseAddr= (DestParam&0x1000);
 	DestAddr= (DestParam&0x0fff);
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE  "[blit bank %02x src %04x dst %04x]\n",blitter_bank,SourceAddr,DestParam);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE  "[blit bank %02x src %04x dst %04x]\n",blitter_bank,SourceAddr,DestParam);*/
 
 	if( homedata_visible_page == 0 )
 	{
@@ -163,7 +163,7 @@ static void reikaids_handleblit( int rom_base )
 	DestAddr= (DestParam&0x3fff);
 	flipx	= (DestParam&0x8000);
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE  "[blit %02x %04x %04x]\n",blitter_bank,SourceAddr,DestParam);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE  "[blit %02x %04x %04x]\n",blitter_bank,SourceAddr,DestParam);*/
 
 	if( homedata_visible_page == 0 )
 	{
@@ -260,7 +260,7 @@ static void pteacher_handleblit( int rom_base )
 	BaseAddr= (DestParam&0x4000);
 	DestAddr= (DestParam&0x3fff);
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE  "[blit %02x %04x %04x]->%d\n",blitter_bank,SourceAddr,DestParam,homedata_visible_page);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE  "[blit %02x %04x %04x]->%d\n",blitter_bank,SourceAddr,DestParam,homedata_visible_page);*/
 
 	if( homedata_visible_page == 0 )
 	{
@@ -639,7 +639,7 @@ WRITE_HANDLER( reikaids_gfx_bank_w )
 
 WRITE_HANDLER( pteacher_gfx_bank_w )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE  "%04x: gfxbank:=%02x\n", activecpu_get_pc(), data );*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE  "%04x: gfxbank:=%02x\n", activecpu_get_pc(), data );*/
 	if (pteacher_gfx_bank != data)
 	{
 		pteacher_gfx_bank = data;

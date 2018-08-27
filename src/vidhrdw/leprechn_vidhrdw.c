@@ -130,7 +130,7 @@ WRITE_HANDLER( leprechn_videoram_w )
 
 	default:
 	    /* Doesn't seem to happen.*/
-	    log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown Graphics Command #%2X at %04X\n", graphics_command, activecpu_get_pc());
+	    log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown Graphics Command #%2X at %04X\n", graphics_command, activecpu_get_pc());
     }
 }
 

@@ -77,7 +77,7 @@ WRITE16_HANDLER( midtunit_cmos_w )
 #if 0
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Unexpected CMOS W @ %05X\n", activecpu_get_pc(), offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Unexpected CMOS W @ %05X\n", activecpu_get_pc(), offset);
 		usrintf_showmessage("Bad CMOS write");
 	}
 #endif
@@ -648,7 +648,7 @@ MACHINE_INIT( midtunit )
 
 READ16_HANDLER( midtunit_sound_state_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:Sound status read\n", activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:Sound status read\n", activecpu_get_pc());*/
 
 	if (sound_type == SOUND_DCS && Machine->sample_rate)
 		return dcs_control_r() >> 4;

@@ -114,7 +114,7 @@ void topspeed_draw_sprites(struct mame_bitmap *bitmap,const struct rectangle *cl
 		}
 
 		if (bad_chunks)
-log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
 	}
 }
 

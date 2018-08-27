@@ -375,7 +375,7 @@ static void _TMS9928A_change_register (int reg, UINT8 val) {
     val &= Mask[reg];
     tms.Regs[reg] = val;
 
-    log_cb(RETRO_LOG_ERROR, LOGPRE "TMS9928A: Reg %d = %02xh\n", reg, (int)val);
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "TMS9928A: Reg %d = %02xh\n", reg, (int)val);
     tms.Change = 1;
     switch (reg) {
     case 0:
@@ -392,7 +392,7 @@ static void _TMS9928A_change_register (int reg, UINT8 val) {
                 tms.pattern = (tms.Regs[4] * 2048) & (tms.vramsize - 1);
             }
             tms.mode = TMS_MODE;
-            log_cb(RETRO_LOG_ERROR, LOGPRE "TMS9928A: %s\n", modes[tms.mode]);
+            log_cb(RETRO_LOG_DEBUG, LOGPRE "TMS9928A: %s\n", modes[tms.mode]);
             _TMS9928A_set_dirty (1);
         }
         break;
@@ -407,7 +407,7 @@ static void _TMS9928A_change_register (int reg, UINT8 val) {
         if (tms.mode != mode) {
             tms.mode = mode;
             _TMS9928A_set_dirty (1);
-            log_cb(RETRO_LOG_ERROR, LOGPRE "TMS9928A: %s\n", modes[tms.mode]);
+            log_cb(RETRO_LOG_DEBUG, LOGPRE "TMS9928A: %s\n", modes[tms.mode]);
         }
         break;
     case 2:

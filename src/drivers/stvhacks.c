@@ -244,7 +244,7 @@ static READ32_HANDLER( cottonbm_speedup2_r )
 		   (stv_workram_h[0x0ffc48/4] != 0x260fbe2c)
 		   )
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "cpu1 skip %08x %08x\n",stv_workram_h[0x0ffc44/4],stv_workram_h[0x0ffc48/4]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu1 skip %08x %08x\n",stv_workram_h[0x0ffc44/4],stv_workram_h[0x0ffc48/4]);
 
 			cpu_spinuntil_time(TIME_IN_USEC(200));
 		}
@@ -288,7 +288,7 @@ static READ32_HANDLER( cotton2_speedup2_r )
 		   (stv_workram_h[0x0ffc48/4] != 0x260fd25c)
 		   )
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "cpu1 skip %08x %08x\n",stv_workram_h[0x0ffc44/4],stv_workram_h[0x0ffc48/4]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "cpu1 skip %08x %08x\n",stv_workram_h[0x0ffc44/4],stv_workram_h[0x0ffc48/4]);
 
 			cpu_spinuntil_time(TIME_IN_USEC(200));
 		}

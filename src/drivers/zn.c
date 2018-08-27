@@ -378,7 +378,7 @@ static READ32_HANDLER( sio0_r )
 		/* baud */
 		break;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: sio0_r( %04x ) %04x\n", activecpu_get_pc(), offset, n_return );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: sio0_r( %04x ) %04x\n", activecpu_get_pc(), offset, n_return );
 	return n_return;
 }
 
@@ -415,7 +415,7 @@ static WRITE32_HANDLER( sio0_w )
 		/* baud */
 		break;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: sio0_w( %04x, %08x )%s\n", activecpu_get_pc(), offset, data, s_char );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: sio0_w( %04x, %08x )%s\n", activecpu_get_pc(), offset, data, s_char );
 }
 
 static WRITE_HANDLER( qsound_bankswitch_w )

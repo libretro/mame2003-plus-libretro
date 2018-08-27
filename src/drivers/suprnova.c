@@ -665,7 +665,7 @@ static WRITE32_HANDLER( msm6242_w )
 
 	if(offset>=4)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Timer 0 outbound\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Timer 0 outbound\n");
 		return;
 	}
 }
@@ -722,11 +722,11 @@ static WRITE32_HANDLER( skns_io_w )
 		}
 		else
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unk IO Write memmask:%08x offset:%08x data:%08x\n", mem_mask, offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unk IO Write memmask:%08x offset:%08x data:%08x\n", mem_mask, offset, data);
 		}
 	break;
 	default:
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unk IO Write memmask:%08x offset:%08x data:%08x\n", mem_mask, offset, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unk IO Write memmask:%08x offset:%08x data:%08x\n", mem_mask, offset, data);
 	break;
 	}
 }

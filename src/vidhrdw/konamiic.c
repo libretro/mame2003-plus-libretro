@@ -1292,7 +1292,7 @@ void K007121_sprites_draw(int chip,struct mame_bitmap *bitmap,const struct recta
 	int is_flakatck = K007121_ctrlram[chip][0x06] & 0x04;	/* WRONG!!!! */
 
 #if 0
-log_cb(RETRO_LOG_ERROR, LOGPRE "%02x-%02x-%02x-%02x-%02x-%02x-%02x-%02x  %02x-%02x-%02x-%02x-%02x-%02x-%02x-%02x",
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x-%02x-%02x-%02x-%02x-%02x-%02x-%02x  %02x-%02x-%02x-%02x-%02x-%02x-%02x-%02x",
 	K007121_ctrlram[0][0x00],K007121_ctrlram[0][0x01],K007121_ctrlram[0][0x02],K007121_ctrlram[0][0x03],K007121_ctrlram[0][0x04],K007121_ctrlram[0][0x05],K007121_ctrlram[0][0x06],K007121_ctrlram[0][0x07],
 	K007121_ctrlram[1][0x00],K007121_ctrlram[1][0x01],K007121_ctrlram[1][0x02],K007121_ctrlram[1][0x03],K007121_ctrlram[1][0x04],K007121_ctrlram[1][0x05],K007121_ctrlram[1][0x06],K007121_ctrlram[1][0x07]);
 
@@ -1377,7 +1377,7 @@ if (keyboard_pressed(KEYCODE_D))
 				case 0x00: width = height = 2; number &= (~3); break;
 				case 0x08: width = height = 4; number &= (~3); break;
 				default: width = 1; height = 1;
-/*					log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown sprite size %02x\n",attr&0xe);*/
+/*					log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown sprite size %02x\n",attr&0xe);*/
 /*					usrintf_showmessage("Unknown sprite size %02x\n",attr&0xe);*/
 			}
 
@@ -2168,7 +2168,7 @@ WRITE_HANDLER( K052109_w )
 		}
 		else if (offset == 0x1e80)
 		{
-/*if ((data & 0xfe)) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 052109 register 1e80 = %02x\n",activecpu_get_pc(),data);*/
+/*if ((data & 0xfe)) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 052109 register 1e80 = %02x\n",activecpu_get_pc(),data);*/
 			tilemap_set_flip(K052109_tilemap[0],(data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 			tilemap_set_flip(K052109_tilemap[1],(data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 			tilemap_set_flip(K052109_tilemap[2],(data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
@@ -2484,7 +2484,7 @@ int K051960_vh_start(int gfx_memory_region,int plane0,int plane1,int plane2,int 
 	}
 
 	if (!(Machine->drv->video_attributes & VIDEO_HAS_SHADOWS))
-		log_cb(RETRO_LOG_ERROR, LOGPRE "driver should use VIDEO_HAS_SHADOWS");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "driver should use VIDEO_HAS_SHADOWS");
 
 	/* prepare shadow draw table */
 	gfx_drawmode_table[0] = DRAWMODE_NONE;
@@ -2979,7 +2979,7 @@ int K053245_vh_start(int chip, int gfx_memory_region,int plane0,int plane1,int p
 
 
 	if (!(Machine->drv->video_attributes & VIDEO_HAS_SHADOWS))
-		log_cb(RETRO_LOG_ERROR, LOGPRE "driver should use VIDEO_HAS_SHADOWS");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "driver should use VIDEO_HAS_SHADOWS");
 
 	/* prepare shadow draw table */
 	gfx_drawmode_table[0] = DRAWMODE_NONE;
@@ -3103,7 +3103,7 @@ void K053244_chip_w(int chip, int offset, int data)
 /*			usrintf_showmessage("053244 reg 05 = %02x",data);*/
 		/* bit 2 = unknown, Parodius uses it */
 		/* bit 5 = unknown, Rollergames uses it */
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: write %02x to 053244 address 5\n",activecpu_get_pc(),data);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: write %02x to 053244 address 5\n",activecpu_get_pc(),data);*/
 		break;
 	}
 	case 0x06:
@@ -3732,12 +3732,12 @@ int K053247_vh_start(int gfx_memory_region, int dx, int dy, int plane0,int plane
 	if (Machine->color_depth == 32)
 	{
 		if ((Machine->drv->video_attributes & (VIDEO_HAS_SHADOWS|VIDEO_HAS_HIGHLIGHTS)) != VIDEO_HAS_SHADOWS+VIDEO_HAS_HIGHLIGHTS)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "driver missing SHADOWS or HIGHLIGHTS flag");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "driver missing SHADOWS or HIGHLIGHTS flag");
 	}
 	else
 	{
 		if (!(Machine->drv->video_attributes & VIDEO_HAS_SHADOWS))
-			log_cb(RETRO_LOG_ERROR, LOGPRE "driver should use VIDEO_HAS_SHADOWS");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "driver should use VIDEO_HAS_SHADOWS");
 	}
 
 	/* prepare shadow draw table */
@@ -3891,7 +3891,7 @@ int K055673_vh_start(int gfx_memory_region, int layout, int dx, int dy, void (*c
 	}
 
 	if (!(Machine->drv->video_attributes & VIDEO_HAS_SHADOWS))
-		log_cb(RETRO_LOG_ERROR, LOGPRE "driver should use VIDEO_HAS_SHADOWS");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "driver should use VIDEO_HAS_SHADOWS");
 
 	/* prepare shadow draw table */
 	c = Machine->gfx[gfx_index]->color_granularity-1;
@@ -4779,7 +4779,7 @@ READ_HANDLER( K051316_rom_2_r )
 void K051316_ctrl_w(int chip,int offset,int data)
 {
 	K051316_ctrlram[chip][offset] = data;
-/*if (offset >= 0x0c) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: write %02x to 051316 reg %x\n",activecpu_get_pc(),data,offset);*/
+/*if (offset >= 0x0c) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: write %02x to 051316 reg %x\n",activecpu_get_pc(),data,offset);*/
 }
 
 WRITE_HANDLER( K051316_ctrl_0_w )
@@ -4833,7 +4833,7 @@ void K051316_zoom_draw(int chip, struct mame_bitmap *bitmap,const struct rectang
 			flags,priority);
 
 #if 0
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x",
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x",
 			K051316_ctrlram[chip][0x00],
 			K051316_ctrlram[chip][0x01],
 			K051316_ctrlram[chip][0x02],
@@ -4971,7 +4971,7 @@ static void K053936_zoom_draw(int chip,data16_t *ctrl,data16_t *linectrl,struct 
 
 #if 0
 if (keyboard_pressed(KEYCODE_D))
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x %04x %04x %04x\n%04x %04x %04x %04x\n%04x %04x %04x %04x\n%04x %04x %04x %04x",
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x %04x %04x %04x\n%04x %04x %04x %04x\n%04x %04x %04x %04x\n%04x %04x %04x %04x",
 			ctrl[0x00],
 			ctrl[0x01],
 			ctrl[0x02],
@@ -5412,7 +5412,7 @@ static void K054157_reset_linescroll(void)
 			}
 			break;
 		case 1:
-/*			log_cb(RETRO_LOG_ERROR, LOGPRE "LS mode layer %d unknown (%d)\n", layer, lmode);*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "LS mode layer %d unknown (%d)\n", layer, lmode);*/
 			goto rhaaa_lovely;
 		case 2:
 			if(K054157_tilemap[layer] == K054157_tilemaps[layer]) {
@@ -5510,7 +5510,7 @@ static void K054157_change_rombank(void)
 		bank = K054157_regs[0x1a] | (K054157_regs[0x1b] << 16);
 
 	K054157_cur_rombank = bank % K054157_romnbbanks;
-/*log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: %04x %04x %04x",activecpu_get_pc(),K054157_regs[0x1a],K054157_regs[0x1b],K054157_cur_rombank);*/
+/*log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: %04x %04x %04x",activecpu_get_pc(),K054157_regs[0x1a],K054157_regs[0x1b],K054157_cur_rombank);*/
 }
 
 int K054157_vh_start(int gfx_memory_region, int big, int (*scrolld)[4][2], int plane0,int plane1,int plane2,int plane3, void (*callback)(int, int *, int *))
@@ -5668,7 +5668,7 @@ READ16_HANDLER( K054157_rom_word_r )
 {
 	int addr = 0x2000*K054157_cur_rombank + 2*offset;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: addr %06x",activecpu_get_pc(),addr);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: addr %06x",activecpu_get_pc(),addr);*/
 
 	return K054157_rombase[addr+1] | (K054157_rombase[addr] << 8);
 }
@@ -5677,9 +5677,9 @@ READ16_HANDLER( K054157_rom_word_8000_r )
 {
 	int addr = 0x8000*K054157_cur_rombank + 2*offset;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: addr %06x",activecpu_get_pc(),addr);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: addr %06x",activecpu_get_pc(),addr);*/
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "rd @ %x (bank %x, final %x)\n", offset*2, K054157_cur_rombank, addr);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "rd @ %x (bank %x, final %x)\n", offset*2, K054157_cur_rombank, addr);*/
 
 	return K054157_rombase[addr+1] | (K054157_rombase[addr] << 8);
 }
@@ -7580,7 +7580,7 @@ WRITE32_HANDLER( K055555_long_w )
 		}
 		else
 		{
-/*			log_cb(RETRO_LOG_ERROR, LOGPRE "5^5: unknown mem_mask %08x\n", mem_mask);*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "5^5: unknown mem_mask %08x\n", mem_mask);*/
 			return;
 		}
 	}
@@ -7954,7 +7954,7 @@ READ16_HANDLER( K053250_0_ram_r )
 
 READ16_HANDLER( K053250_0_rom_r )
 {
-/*	if (!(K053250_info.chip[0].regs[5] & 1)) log_cb(RETRO_LOG_ERROR, LOGPRE "Back: Reading rom memory with enable=0\n");*/
+/*	if (!(K053250_info.chip[0].regs[5] & 1)) log_cb(RETRO_LOG_DEBUG, LOGPRE "Back: Reading rom memory with enable=0\n");*/
 
 	return *(K053250_info.chip[0].base + 0x80000*K053250_info.chip[0].regs[6] + 0x800*K053250_info.chip[0].regs[7] + (offset>>1));
 }
@@ -7987,7 +7987,7 @@ READ16_HANDLER( K053250_1_ram_r )
 
 READ16_HANDLER( K053250_1_rom_r )
 {
-/*	if (!(K053250_info.chip[1].regs[5] & 1)) log_cb(RETRO_LOG_ERROR, LOGPRE "Back: Reading rom memory with enable=0\n");*/
+/*	if (!(K053250_info.chip[1].regs[5] & 1)) log_cb(RETRO_LOG_DEBUG, LOGPRE "Back: Reading rom memory with enable=0\n");*/
 
 	return *(K053250_info.chip[1].base + 0x80000*K053250_info.chip[1].regs[6] + 0x800*K053250_info.chip[1].regs[7] + (offset>>1));
 }
@@ -8288,7 +8288,7 @@ void K053250_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprect, 
 #if 0
 		if(kx) {
 			UINT16 *l1 = line + ((4*kc) & 0x7ff);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Line %d [%02x] (%04x %04x %04x %04x)", kc,
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Line %d [%02x] (%04x %04x %04x %04x)", kc,
 								K053250_info.chip[chip].regs[4],
 								l1[0],
 								l1[1],
@@ -8297,7 +8297,7 @@ void K053250_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprect, 
 		}
 
 		if(kkc)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "(%d, %d)", kxx, kyy);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "(%d, %d)", kxx, kyy);
 #endif
 	}
 
@@ -8329,7 +8329,7 @@ void K053250_draw(struct mame_bitmap *bitmap, const struct rectangle *cliprect, 
 		sp = 1;
 		break;
 	default:
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown mode %02x\n", K053250_info.chip[chip].regs[4] & 0xe0);*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown mode %02x\n", K053250_info.chip[chip].regs[4] & 0xe0);*/
 		mask1 = 0xffff0000;
 		mask2 = 0x0000ffff;
 		sp = 0;

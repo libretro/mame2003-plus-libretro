@@ -103,7 +103,7 @@ static READ16_HANDLER( special_port1_r )
 
 static WRITE16_HANDLER( skullxbo_mobwr_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "MOBWR[%02X] = %04X\n", offset, data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "MOBWR[%02X] = %04X\n", offset, data);
 }
 
 

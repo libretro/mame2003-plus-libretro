@@ -520,8 +520,8 @@ static data32_t *process_bitmap(data32_t *objdata, int vc, int logit)
 		UINT8 flags = (upper2 >> 13) & 0x0f;
 		UINT8 firstpix = (upper2 >> 17) & 0x3f;
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "        ypos=%X height=%X link=%06X data=%06X\n", ypos, height, link << 3, data << 3);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "        xpos=%X depth=%X pitch=%X dwidth=%X iwidth=%X index=%X flags=%X firstpix=%X\n", xpos, depth, pitch, dwidth, iwidth, _index, flags, firstpix);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "        ypos=%X height=%X link=%06X data=%06X\n", ypos, height, link << 3, data << 3);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "        xpos=%X depth=%X pitch=%X dwidth=%X iwidth=%X index=%X flags=%X firstpix=%X\n", xpos, depth, pitch, dwidth, iwidth, _index, flags, firstpix);
 	}
 
 	/* only render if valid */
@@ -620,7 +620,7 @@ static data32_t *process_bitmap(data32_t *objdata, int vc, int logit)
 			case 2:
 				/* only handle pitch=1 for now */
 				if (pitch != 1)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Unhandled pitch = %d\n", pitch);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Unhandled pitch = %d\n", pitch);
 
 				clutbase = (UINT16 *)jaguar_gpu_clut + (_index & 0xf0);
 				(*bitmap4[flags & 7])(firstpix, iwidth, src, xpos);
@@ -630,7 +630,7 @@ static data32_t *process_bitmap(data32_t *objdata, int vc, int logit)
 			case 3:
 				/* only handle pitch=1 for now */
 				if (pitch != 1)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Unhandled pitch = %d\n", pitch);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Unhandled pitch = %d\n", pitch);
 
 				clutbase = (UINT16 *)jaguar_gpu_clut;
 				(*bitmap8[flags & 7])(firstpix, iwidth, src, xpos);
@@ -640,7 +640,7 @@ static data32_t *process_bitmap(data32_t *objdata, int vc, int logit)
 			case 4:
 				/* only handle pitch=1 for now */
 				if (pitch != 1)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Unhandled pitch = %d\n", pitch);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Unhandled pitch = %d\n", pitch);
 
 				(*bitmap16[flags & 7])(firstpix, iwidth, src, xpos);
 				break;
@@ -700,9 +700,9 @@ static data32_t *process_scaled_bitmap(data32_t *objdata, int vc, int logit)
 		INT32 hscale = lower3 & 0xff;
 		INT32 vscale = (lower3 >> 8) & 0xff;
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "        ypos=%X height=%X link=%06X data=%06X\n", ypos, height, link << 3, data << 3);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "        xpos=%X depth=%X pitch=%X dwidth=%X iwidth=%X index=%X flags=%X firstpix=%X\n", xpos, depth, pitch, dwidth, iwidth, _index, flags, firstpix);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "        hscale=%X vscale=%X remainder=%X\n", hscale, vscale, remainder);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "        ypos=%X height=%X link=%06X data=%06X\n", ypos, height, link << 3, data << 3);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "        xpos=%X depth=%X pitch=%X dwidth=%X iwidth=%X index=%X flags=%X firstpix=%X\n", xpos, depth, pitch, dwidth, iwidth, _index, flags, firstpix);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "        hscale=%X vscale=%X remainder=%X\n", hscale, vscale, remainder);
 	}
 
 	/* only render if valid */
@@ -730,11 +730,11 @@ static data32_t *process_scaled_bitmap(data32_t *objdata, int vc, int logit)
 
 		/* only handle pitch=0 for now */
 		if (pitch != 1)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unhandled pitch = %d\n", pitch);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unhandled pitch = %d\n", pitch);
 		if (flags & 2)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unhandled blend mode in scaled bitmap case\n");
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unhandled blend mode in scaled bitmap case\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unhandled blend mode in scaled bitmap case\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unhandled blend mode in scaled bitmap case\n");
 		}
 
 		/* preadjust for firstpix */
@@ -855,32 +855,32 @@ static data32_t *process_branch(data32_t *objdata, int vc, int logit)
 	{
 		/* 0: branch if ypos == vc or ypos == 0x7ff */
 		case 0:
-			if (logit) log_cb(RETRO_LOG_ERROR, LOGPRE "        branch if %X == vc or %X == 0x7ff to %06X\n", ypos, ypos, link << 3);
+			if (logit) log_cb(RETRO_LOG_DEBUG, LOGPRE "        branch if %X == vc or %X == 0x7ff to %06X\n", ypos, ypos, link << 3);
 			taken = (ypos == vc) || (ypos == 0x7ff);
 			break;
 
 		/* 1: branch if ypos > vc */
 		case 1:
-			if (logit) log_cb(RETRO_LOG_ERROR, LOGPRE "        branch if %X > vc to %06X\n", ypos, link << 3);
+			if (logit) log_cb(RETRO_LOG_DEBUG, LOGPRE "        branch if %X > vc to %06X\n", ypos, link << 3);
 			taken = (ypos > vc);
 			break;
 
 		/* 2: branch if ypos < vc */
 		case 2:
-			if (logit) log_cb(RETRO_LOG_ERROR, LOGPRE "        branch if %X < vc to %06X\n", ypos, link << 3);
+			if (logit) log_cb(RETRO_LOG_DEBUG, LOGPRE "        branch if %X < vc to %06X\n", ypos, link << 3);
 			taken = (ypos < vc);
 			break;
 
 		/* 3: branch if object processor flag is set */
 		case 3:
-			if (logit) log_cb(RETRO_LOG_ERROR, LOGPRE "        branch if object flag set to %06X\n", link << 3);
+			if (logit) log_cb(RETRO_LOG_DEBUG, LOGPRE "        branch if object flag set to %06X\n", link << 3);
 			fprintf(stderr, "Unhandled branch!\n");
 			link = 0, taken = 1;
 			break;
 
 		/* 4: branch on second half of display line */
 		case 4:
-			if (logit) log_cb(RETRO_LOG_ERROR, LOGPRE "        branch if second half of line to %06X\n", link << 3);
+			if (logit) log_cb(RETRO_LOG_DEBUG, LOGPRE "        branch if second half of line to %06X\n", link << 3);
 			taken = (vc & 1);
 			break;
 
@@ -937,21 +937,21 @@ static void process_object_list(struct mame_bitmap *bitmap, const struct rectang
 					/* bitmap object */
 					case 0:
 						if (logit)
-							log_cb(RETRO_LOG_ERROR, LOGPRE "bitmap = %08X-%08X %08X-%08X\n", objdata[0], objdata[1], objdata[2], objdata[3]);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "bitmap = %08X-%08X %08X-%08X\n", objdata[0], objdata[1], objdata[2], objdata[3]);
 						objdata = process_bitmap(objdata, vc, logit);
 						break;
 
 					/* scaled bitmap object */
 					case 1:
 						if (logit)
-							log_cb(RETRO_LOG_ERROR, LOGPRE "scaled = %08X-%08X %08X-%08X %08X-%08X\n", objdata[0], objdata[1], objdata[2], objdata[3], objdata[4], objdata[5]);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "scaled = %08X-%08X %08X-%08X %08X-%08X\n", objdata[0], objdata[1], objdata[2], objdata[3], objdata[4], objdata[5]);
 						objdata = process_scaled_bitmap(objdata, vc, logit);
 						break;
 
 					/* branch */
 					case 3:
 						if (logit)
-							log_cb(RETRO_LOG_ERROR, LOGPRE "branch = %08X-%08X\n", objdata[0], objdata[1]);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "branch = %08X-%08X\n", objdata[0], objdata[1]);
 						objdata = process_branch(objdata, vc, logit);
 						break;
 
@@ -962,7 +962,7 @@ static void process_object_list(struct mame_bitmap *bitmap, const struct rectang
 						done = 1;
 
 						if (logit)
-							log_cb(RETRO_LOG_ERROR, LOGPRE "stop   = %08X-%08X\n", objdata[0], objdata[1]);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "stop   = %08X-%08X\n", objdata[0], objdata[1]);
 						if (interrupt)
 						{
 #ifndef MESS

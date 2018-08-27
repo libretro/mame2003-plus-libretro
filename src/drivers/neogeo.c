@@ -444,7 +444,7 @@ static READ16_HANDLER( timer16_r )
 	int coinflip = pd4990a_testbit_r(0);
 	int databit = pd4990a_databit_r(0);
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU %04x - Read timer\n",activecpu_get_pc());*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU %04x - Read timer\n",activecpu_get_pc());*/
 
 	res = (readinputport(4) & ~(readinputport(5) & 0x20)) ^ (coinflip << 6) ^ (databit << 7);
 
@@ -582,7 +582,7 @@ static WRITE16_HANDLER( neo_bankswitch_w )
 
 	if (memory_region_length(REGION_CPU1) <= 0x100000)
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "warning: bankswitch to %02x but no banks available\n",data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "warning: bankswitch to %02x but no banks available\n",data);
 		return;
 	}
 
@@ -590,7 +590,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "warning: bankswitch to %02x but no banks availab
 	bankaddress = (data+1)*0x100000;
 	if (bankaddress >= memory_region_length(REGION_CPU1))
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "PC %06x: warning: bankswitch to empty bank %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %06x: warning: bankswitch to empty bank %02x\n",activecpu_get_pc(),data);
 		bankaddress = 0x100000;
 	}
 
@@ -638,7 +638,7 @@ static READ16_HANDLER( neo_control_16_r )
 /* this does much more than this, but I'm not sure exactly what */
 WRITE16_HANDLER( neo_control_16_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: neo_control_16_w %04x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: neo_control_16_w %04x\n",activecpu_get_pc(),data);
 
 	/* Auto-Anim Speed Control */
 	neogeo_frame_counter_speed = (data >> 8) & 0xff;
@@ -648,7 +648,7 @@ WRITE16_HANDLER( neo_control_16_w )
 
 static WRITE16_HANDLER( neo_irq2pos_16_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: neo_irq2pos_16_w offset %d %04x\n",activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: neo_irq2pos_16_w offset %d %04x\n",activecpu_get_pc(),offset,data);
 
 	if (offset)
 		irq2pos_value = (irq2pos_value & 0xffff0000) | (UINT32)data;
@@ -662,7 +662,7 @@ static WRITE16_HANDLER( neo_irq2pos_16_w )
 
 		irq2start = current_rasterline + line;
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "irq2start = %d, current_rasterline = %d, current_rastercounter = %d\n",irq2start,current_rasterline,current_rastercounter);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "irq2start = %d, current_rasterline = %d, current_rastercounter = %d\n",irq2start,current_rasterline,current_rastercounter);
 	}
 }
 
@@ -851,7 +851,7 @@ static READ_HANDLER( z80_port_r )
 		}
 
 	default:
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 PC %04x: read unmapped port %02x\n",activecpu_get_pc(),offset&0xff);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #1 PC %04x: read unmapped port %02x\n",activecpu_get_pc(),offset&0xff);
 		return 0;
 		break;
 	}
@@ -890,7 +890,7 @@ static WRITE_HANDLER( z80_port_w )
 		break;
 
 	default:
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 PC %04x: write %02x to unmapped port %02x\n",activecpu_get_pc(),data,offset&0xff);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #1 PC %04x: write %02x to unmapped port %02x\n",activecpu_get_pc(),data,offset&0xff);
 		break;
 	}
 }

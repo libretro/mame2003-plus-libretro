@@ -135,7 +135,7 @@ static READ_HANDLER( paddle2_prot_r )
 
 static WRITE_HANDLER( paddle2_prot_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: prot_w %02x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: prot_w %02x\n",activecpu_get_pc(),data);
 	paddle2_prot = data;
 }
 

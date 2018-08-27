@@ -174,7 +174,7 @@ void hdgsp_write_to_shiftreg(UINT32 address, UINT16 *shiftreg)
 		gsp_shiftreg_source = &hdgsp_vram[address];
 	}
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown shiftreg write %08X\n", address);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown shiftreg write %08X\n", address);
 }
 
 
@@ -203,7 +203,7 @@ void hdgsp_read_from_shiftreg(UINT32 address, UINT16 *shiftreg)
 		memmove(&hdgsp_vram[address], gsp_shiftreg_source, 512);
 	}
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown shiftreg read %08X\n", address);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown shiftreg read %08X\n", address);
 }
 
 
@@ -263,7 +263,7 @@ WRITE16_HANDLER( hdgsp_control_lo_w )
 	newword = hdgsp_control_lo[offset];
 
 	if (oldword != newword && offset != 0)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "GSP:hdgsp_control_lo(%X)=%04X\n", offset, newword);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "GSP:hdgsp_control_lo(%X)=%04X\n", offset, newword);
 }
 
 
@@ -324,7 +324,7 @@ WRITE16_HANDLER( hdgsp_control_hi_w )
 
 		default:
 			if (oldword != newword)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "GSP:hdgsp_control_hi_w(%X)=%04X\n", offset, newword);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "GSP:hdgsp_control_hi_w(%X)=%04X\n", offset, newword);
 			break;
 	}
 }
