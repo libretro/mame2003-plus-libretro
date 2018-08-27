@@ -143,7 +143,7 @@ WRITE_HANDLER( victory_charram_w );
 
 static READ_HANDLER( sound_response_r )
 {
-	if (LOG_SOUND) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:!!!! Sound response read = %02X\n", activecpu_get_previouspc(), sound_response);
+	if (LOG_SOUND) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:!!!! Sound response read = %02X\n", activecpu_get_previouspc(), sound_response);
 	pia_0_cb1_w(0, 0);
 	return sound_response;
 }
@@ -151,7 +151,7 @@ static READ_HANDLER( sound_response_r )
 
 static READ_HANDLER( sound_status_r )
 {
-	if (LOG_SOUND) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:!!!! Sound status read = %02X\n", activecpu_get_previouspc(), (pia_0_ca1_r(0) << 7) | (pia_0_cb1_r(0) << 6));
+	if (LOG_SOUND) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:!!!! Sound status read = %02X\n", activecpu_get_previouspc(), (pia_0_ca1_r(0) << 7) | (pia_0_cb1_r(0) << 6));
 	return (pia_0_ca1_r(0) << 7) | (pia_0_cb1_r(0) << 6);
 }
 
@@ -160,7 +160,7 @@ static void delayed_command_w(int data)
 {
 	pia_0_porta_w(0, data);
 	pia_0_ca1_w(0, 0);
-	if (LOG_SOUND) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:!!!! Sound command = %02X\n", activecpu_get_previouspc(), data);
+	if (LOG_SOUND) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:!!!! Sound command = %02X\n", activecpu_get_previouspc(), data);
 }
 
 static WRITE_HANDLER( sound_command_w )
@@ -172,20 +172,20 @@ static WRITE_HANDLER( sound_command_w )
 WRITE_HANDLER( victory_sound_response_w )
 {
 	sound_response = data;
-	if (LOG_SOUND) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:!!!! Sound response = %02X\n", activecpu_get_previouspc(), data);
+	if (LOG_SOUND) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:!!!! Sound response = %02X\n", activecpu_get_previouspc(), data);
 }
 
 
 WRITE_HANDLER( victory_sound_irq_clear_w )
 {
-	if (LOG_SOUND) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:!!!! Sound IRQ clear = %02X\n", activecpu_get_previouspc(), data);
+	if (LOG_SOUND) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:!!!! Sound IRQ clear = %02X\n", activecpu_get_previouspc(), data);
 	if (!data) pia_0_ca1_w(0, 1);
 }
 
 
 WRITE_HANDLER( victory_main_ack_w )
 {
-	if (LOG_SOUND) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:!!!! Sound ack = %02X\n", activecpu_get_previouspc(), data);
+	if (LOG_SOUND) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:!!!! Sound ack = %02X\n", activecpu_get_previouspc(), data);
 	if (sound_response_ack_clk && !data)
 		pia_0_cb1_w(0, 1);
 	sound_response_ack_clk = data;

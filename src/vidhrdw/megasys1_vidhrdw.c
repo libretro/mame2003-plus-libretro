@@ -219,18 +219,18 @@ static int hardware_type_z;
 #define SHOW_WRITE_ERROR(_format_,_offset_,_data_)\
 { \
 	usrintf_showmessage(_format_,_offset_,_data_);\
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
-	log_cb(RETRO_LOG_ERROR, LOGPRE _format_,_offset_,_data_);\
-	log_cb(RETRO_LOG_ERROR, LOGPRE "\n");\
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE _format_,_offset_,_data_);\
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");\
 }
 
 #else
 
 #define SHOW_WRITE_ERROR(_format_,_offset_,_data_)\
 {\
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
-	log_cb(RETRO_LOG_ERROR, LOGPRE _format_,_offset_,_data_); \
-	log_cb(RETRO_LOG_ERROR, LOGPRE "\n");\
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X : Warning, ",activecpu_get_pc()); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE _format_,_offset_,_data_); \
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");\
 }
 
 #endif
@@ -803,7 +803,7 @@ PALETTE_INIT( megasys1 )
 	{
 		memcpy (megasys1_layers_order, priorities[i].priorities, 16 * sizeof(int));
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "WARNING: using an hand-crafted priorities scheme\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "WARNING: using an hand-crafted priorities scheme\n");
 
 		return;
 	}
@@ -854,7 +854,7 @@ PALETTE_INIT( megasys1 )
 
 				if (result & 1)
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "WARNING, pri $%X split %d - layer %d's opaque pens not totally opaque\n",pri_code,offset,top);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "WARNING, pri $%X split %d - layer %d's opaque pens not totally opaque\n",pri_code,offset,top);
 
 					layers_order[offset] = 0xfffff;
 					break;
@@ -862,7 +862,7 @@ PALETTE_INIT( megasys1 )
 
 				if  ((result & 6) == 6)
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "WARNING, pri $%X split %d - layer %d's transparent pens aren't always transparent nor always opaque\n",pri_code,offset,top);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "WARNING, pri $%X split %d - layer %d's transparent pens aren't always transparent nor always opaque\n",pri_code,offset,top);
 
 					layers_order[offset] = 0xfffff;
 					break;
@@ -896,7 +896,7 @@ PALETTE_INIT( megasys1 )
 					layer = layer0;
 					if (layer0 != layer1)
 					{
-						log_cb(RETRO_LOG_ERROR, LOGPRE "WARNING, pri $%X - 'sprite splitting' does not simply split sprites\n",pri_code);
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "WARNING, pri $%X - 'sprite splitting' does not simply split sprites\n",pri_code);
 
 						order = 0xfffff;
 						break;
@@ -938,7 +938,7 @@ PALETTE_INIT( megasys1 )
 #if 0
 	/* log the priority schemes */
 	for (i = 0; i < 16; i++)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PROM %X] %05x\n", i, megasys1_layers_order[i]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PROM %X] %05x\n", i, megasys1_layers_order[i]);
 #endif
 
 

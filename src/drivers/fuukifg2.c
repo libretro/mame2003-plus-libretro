@@ -122,7 +122,7 @@ static WRITE_HANDLER( fuuki16_sound_rombank_w )
 	if (data <= 2)
 		cpu_setbank(1, memory_region(REGION_CPU2) + 0x8000 * data + 0x10000);
 	else
-	 	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #1 - PC %04X: unknown bank bits: %02X\n",activecpu_get_pc(),data);
+	 	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #1 - PC %04X: unknown bank bits: %02X\n",activecpu_get_pc(),data);
 }
 
 static MEMORY_READ_START( fuuki16_sound_readmem )

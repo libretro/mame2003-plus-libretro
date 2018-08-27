@@ -472,12 +472,12 @@ WRITE16_HANDLER( toaplan1_tile_offsets_w )
 	if ( offset == 0 )
 	{
 		COMBINE_DATA(&tiles_offsetx);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Tiles_offsetx now = %08x\n",tiles_offsetx);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Tiles_offsetx now = %08x\n",tiles_offsetx);
 	}
 	else
 	{
 		COMBINE_DATA(&tiles_offsety);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Tiles_offsety now = %08x\n",tiles_offsety);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Tiles_offsety now = %08x\n",tiles_offsety);
 	}
 	toaplan1_reset = 1;
 	toaplan1_set_scrolls();
@@ -487,7 +487,7 @@ WRITE16_HANDLER( rallybik_bcu_flipscreen_w )
 {
 	if (ACCESSING_LSB && (data != bcu_flipscreen))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Setting BCU controller flipscreen port to %04x\n",data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Setting BCU controller flipscreen port to %04x\n",data);
 		bcu_flipscreen = data & 0x01;		/* 0x0001 = flip, 0x0000 = no flip */
 		tilemap_set_flip(ALL_TILEMAPS, (data ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0));
 		if (bcu_flipscreen)
@@ -514,7 +514,7 @@ WRITE16_HANDLER( toaplan1_bcu_flipscreen_w )
 {
 	if (ACCESSING_LSB && (data != bcu_flipscreen))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Setting BCU controller flipscreen port to %04x\n",data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Setting BCU controller flipscreen port to %04x\n",data);
 		bcu_flipscreen = data & 0x01;		/* 0x0001 = flip, 0x0000 = no flip */
 		tilemap_set_flip(ALL_TILEMAPS, (data ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0));
 		if (bcu_flipscreen)
@@ -545,7 +545,7 @@ WRITE16_HANDLER( toaplan1_fcu_flipscreen_w )
 {
 	if (ACCESSING_MSB)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Setting FCU controller flipscreen port to %04x\n",data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Setting FCU controller flipscreen port to %04x\n",data);
 		fcu_flipscreen = data & 0x8000;	/* 0x8000 = flip, 0x0000 = no flip */
 	}
 }
@@ -597,7 +597,7 @@ WRITE16_HANDLER( toaplan1_spriteram16_w )
 #ifdef MAME_DEBUG
 	if (spriteram_offs >= (TOAPLAN1_SPRITERAM_SIZE/2))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite_RAM_word_w, %08x out of range !\n", spriteram_offs);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Sprite_RAM_word_w, %08x out of range !\n", spriteram_offs);
 		return;
 	}
 #endif
@@ -617,7 +617,7 @@ WRITE16_HANDLER( toaplan1_spritesizeram16_w )
 #ifdef MAME_DEBUG
 	if (spriteram_offs >= (TOAPLAN1_SPRITESIZERAM_SIZE/2))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Sprite_Size_RAM_word_w, %08x out of range !\n", spriteram_offs);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Sprite_Size_RAM_word_w, %08x out of range !\n", spriteram_offs);
 		return;
 	}
 #endif
@@ -629,7 +629,7 @@ WRITE16_HANDLER( toaplan1_spritesizeram16_w )
 
 WRITE16_HANDLER( toaplan1_bcu_control_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "BCU tile controller register:%02x now = %04x\n",offset,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "BCU tile controller register:%02x now = %04x\n",offset,data);
 
 	/*** Hack for Zero Wing and OutZone, to reset the sound system on */
 	/*** soft resets. These two games don't have a sound reset port,  */
@@ -650,7 +650,7 @@ READ16_HANDLER( toaplan1_tileram_offs_r )
 WRITE16_HANDLER( toaplan1_tileram_offs_w )
 {
 	if (data >= 0x4000)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Hmmm, unknown video layer being selected (%08x)\n",data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Hmmm, unknown video layer being selected (%08x)\n",data);
 	COMBINE_DATA(&pf_voffs);
 }
 
@@ -679,7 +679,7 @@ READ16_HANDLER( toaplan1_tileram16_r )
 				video_data = pf4_tilevram16[vram_offset];
 				break;
 		default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Hmmm, reading %04x from unknown playfield layer address %06x  Offset:%01x !!!\n",video_data,pf_voffs,offset);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Hmmm, reading %04x from unknown playfield layer address %06x  Offset:%01x !!!\n",video_data,pf_voffs,offset);
 				break;
 	}
 
@@ -742,7 +742,7 @@ WRITE16_HANDLER( toaplan1_tileram16_w )
 				}
 				break;
 		default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Hmmm, writing %04x to unknown playfield layer address %06x  Offset:%01x\n",data,pf_voffs,offset);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Hmmm, writing %04x to unknown playfield layer address %06x  Offset:%01x\n",data,pf_voffs,offset);
 				break;
 	}
 }
@@ -763,7 +763,7 @@ READ16_HANDLER( toaplan1_scroll_regs_r )
 		case 05: scroll = pf3_scrolly; break;
 		case 06: scroll = pf4_scrollx; break;
 		case 07: scroll = pf4_scrolly; break;
-		default: log_cb(RETRO_LOG_ERROR, LOGPRE "Hmmm, reading unknown video scroll register (%08x) !!!\n",offset);
+		default: log_cb(RETRO_LOG_DEBUG, LOGPRE "Hmmm, reading unknown video scroll register (%08x) !!!\n",offset);
 				 break;
 	}
 	return scroll;
@@ -798,7 +798,7 @@ WRITE16_HANDLER( toaplan1_scroll_regs_w )
 		case 07: COMBINE_DATA(&pf4_scrolly);		/* 1EBh */
 				 tilemap_set_scrolly(pf4_tilemap,0,(pf4_scrolly >> 7) - (tiles_offsety - scrolly_offs));
 				 break;
-		default: log_cb(RETRO_LOG_ERROR, LOGPRE "Hmmm, writing %08x to unknown video scroll register (%08x) !!!\n",data ,offset);
+		default: log_cb(RETRO_LOG_DEBUG, LOGPRE "Hmmm, writing %08x to unknown video scroll register (%08x) !!!\n",data ,offset);
 				 break;
 	}
 }
@@ -818,8 +818,8 @@ void toaplan1_log_vram(void)
 			int schar,sattr,sxpos,sypos,bschar,bsattr,bsxpos,bsypos;
 			data16_t *size  = (data16_t *)(toaplan1_spritesizeram16);
 			data16_t *bsize = (data16_t *)(toaplan1_buffered_spritesizeram16);
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
-			log_cb(RETRO_LOG_ERROR, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
 			for ( sprite_voffs = 0; sprite_voffs < (spriteram_size/2); sprite_voffs += 4 )
 			{
 				bschar = buffered_spriteram16[sprite_voffs];
@@ -838,8 +838,8 @@ void toaplan1_log_vram(void)
 		else									/* SCU controller */
 		{
 			int schar,sattr,sxpos,sypos,bschar,bsattr,bsxpos,bsypos;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
-			log_cb(RETRO_LOG_ERROR, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
 			for ( sprite_voffs = 0; sprite_voffs < (spriteram_size/2); sprite_voffs += 4 )
 			{
 				bschar = buffered_spriteram16[sprite_voffs];
@@ -865,8 +865,8 @@ void toaplan1_log_vram(void)
 		while (keyboard_pressed(KEYCODE_SLASH)) ;
 		if (toaplan1_spritesizeram16)			/* FCU controller */
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
-			log_cb(RETRO_LOG_ERROR, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
 			for ( offs = 0; offs < (TOAPLAN1_SPRITESIZERAM_SIZE/2); offs +=4 )
 			{
 				logerror("SizeOffs:%04x   now:%04x %04x %04x %04x    next: %04x %04x %04x %04x\n", offs,
@@ -883,8 +883,8 @@ void toaplan1_log_vram(void)
 		offs_t tile_voffs;
 		int tchar[5], tattr[5];
 		while (keyboard_pressed(KEYCODE_N)) ;	/* BCU controller */
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
 		for ( tile_voffs = 0; tile_voffs < (TOAPLAN1_TILEVRAM_SIZE/2); tile_voffs += 2 )
 		{
 			tchar[1] = pf1_tilevram16[tile_voffs + 1];
@@ -895,7 +895,7 @@ void toaplan1_log_vram(void)
 			tattr[3] = pf3_tilevram16[tile_voffs];
 			tchar[4] = pf4_tilevram16[tile_voffs + 1];
 			tattr[4] = pf4_tilevram16[tile_voffs];
-/*			log_cb(RETRO_LOG_ERROR, LOGPRE "PF3 offs:%04x   Tile:%04x  Attr:%04x\n", tile_voffs, tchar, tattr);*/
+/*			log_cb(RETRO_LOG_DEBUG, LOGPRE "PF3 offs:%04x   Tile:%04x  Attr:%04x\n", tile_voffs, tchar, tattr);*/
 			logerror("$(%04x)  Attr-Tile PF1:%04x-%04x  PF2:%04x-%04x  PF3:%04x-%04x  PF4:%04x-%04x\n", tile_voffs,
 									tattr[1], tchar[1],  tattr[2], tchar[2],
 									tattr[3], tchar[3],  tattr[4], tchar[4]);
@@ -905,7 +905,7 @@ void toaplan1_log_vram(void)
 	if ( keyboard_pressed(KEYCODE_W) )
 	{
 		while (keyboard_pressed(KEYCODE_W)) ;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Mark here\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Mark here\n");
 	}
 	if ( keyboard_pressed(KEYCODE_E) )
 	{
@@ -915,14 +915,14 @@ void toaplan1_log_vram(void)
 	}
 	if (displog)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Scrolls    PF1-X  PF1-Y     PF2-X  PF2-Y     PF3-X  PF3-Y     PF4-X  PF4-Y\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "------>    #%04x  #%04x     #%04x  #%04x     #%04x  #%04x     #%04x  #%04x\n",pf1_scrollx,pf1_scrolly,pf2_scrollx,pf2_scrolly,pf3_scrollx,pf3_scrolly,pf4_scrollx,pf4_scrolly);
 	}
 	if ( keyboard_pressed(KEYCODE_B) )
 	{
 /*		while (keyboard_pressed(KEYCODE_B)) ;*/
 		scrollx_offs1 += 0x1; scrollx_offs2 += 0x1; scrollx_offs3 += 0x1; scrollx_offs4 += 0x1;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Scrollx_offs now = %08x\n",scrollx_offs4);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Scrollx_offs now = %08x\n",scrollx_offs4);
 		tilemap_set_scrollx(pf1_tilemap,0,(pf1_scrollx >> 7) - (tiles_offsetx - scrollx_offs1));
 		tilemap_set_scrollx(pf2_tilemap,0,(pf2_scrollx >> 7) - (tiles_offsetx - scrollx_offs2));
 		tilemap_set_scrollx(pf3_tilemap,0,(pf3_scrollx >> 7) - (tiles_offsetx - scrollx_offs3));
@@ -932,7 +932,7 @@ void toaplan1_log_vram(void)
 	{
 /*		while (keyboard_pressed(KEYCODE_V)) ;*/
 		scrollx_offs1 -= 0x1; scrollx_offs2 -= 0x1; scrollx_offs3 -= 0x1; scrollx_offs4 -= 0x1;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Scrollx_offs now = %08x\n",scrollx_offs4);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Scrollx_offs now = %08x\n",scrollx_offs4);
 		tilemap_set_scrollx(pf1_tilemap,0,(pf1_scrollx >> 7) - (tiles_offsetx - scrollx_offs1));
 		tilemap_set_scrollx(pf2_tilemap,0,(pf2_scrollx >> 7) - (tiles_offsetx - scrollx_offs2));
 		tilemap_set_scrollx(pf3_tilemap,0,(pf3_scrollx >> 7) - (tiles_offsetx - scrollx_offs3));
@@ -942,7 +942,7 @@ void toaplan1_log_vram(void)
 	{
 /*		while (keyboard_pressed(KEYCODE_C)) ;*/
 		scrolly_offs += 0x1;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Scrolly_offs now = %08x\n",scrolly_offs);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Scrolly_offs now = %08x\n",scrolly_offs);
 		tilemap_set_scrolly(pf1_tilemap,0,(pf1_scrolly >> 7) - (tiles_offsety - scrolly_offs));
 		tilemap_set_scrolly(pf2_tilemap,0,(pf2_scrolly >> 7) - (tiles_offsety - scrolly_offs));
 		tilemap_set_scrolly(pf3_tilemap,0,(pf3_scrolly >> 7) - (tiles_offsety - scrolly_offs));
@@ -952,7 +952,7 @@ void toaplan1_log_vram(void)
 	{
 /*		while (keyboard_pressed(KEYCODE_X)) ;*/
 		scrolly_offs -= 0x1;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Scrolly_offs now = %08x\n",scrolly_offs);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Scrolly_offs now = %08x\n",scrolly_offs);
 		tilemap_set_scrolly(pf1_tilemap,0,(pf1_scrolly >> 7) - (tiles_offsety - scrolly_offs));
 		tilemap_set_scrolly(pf2_tilemap,0,(pf2_scrolly >> 7) - (tiles_offsety - scrolly_offs));
 		tilemap_set_scrolly(pf3_tilemap,0,(pf3_scrolly >> 7) - (tiles_offsety - scrolly_offs));

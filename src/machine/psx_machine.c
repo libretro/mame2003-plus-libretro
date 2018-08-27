@@ -21,7 +21,7 @@ static INLINE void verboselog( int n_level, const char *s_fmt, ... )
 		va_start( v, s_fmt );
 		vsprintf( buf, s_fmt, v );
 		va_end( v );
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: %s", activecpu_get_pc(), buf );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: %s", activecpu_get_pc(), buf );
 	}
 }
 

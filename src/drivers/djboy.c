@@ -216,7 +216,7 @@ ProtectionOut( int i, UINT8 data )
 	}
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "prot_output_buffer overflow!\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "prot_output_buffer overflow!\n" );
 		exit(1);
 	}
 } /* ProtectionOut */
@@ -242,7 +242,7 @@ static WRITE_HANDLER( coinplus_w )
 	coin_counter_w( 1, data&2 );
 	if( data&1 )
 	{ /* TODO: coinage adjustments */
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "COIN A+\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "COIN A+\n" );
 		switch( (dsw&0x30)>>4 )
 		{
 		case 0: coin += 4; break; /* 1 coin, 1 credit */
@@ -253,7 +253,7 @@ static WRITE_HANDLER( coinplus_w )
 	}
 	if( data&2 )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "COIN B+\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "COIN B+\n" );
 		switch( (dsw&0xc0)>>6 )
 		{
 		case 0: coin += 4; break; /* 1 coin, 1 credit */
@@ -277,7 +277,7 @@ OutputProtectionState(int i, int type )
 		{
 			dat = 0x01;
 			mDjBoyState = eDJBOY_PRESS_P1_START;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "COIN UP\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "COIN UP\n" );
 		}
 		else if( complete )
 		{
@@ -291,7 +291,7 @@ OutputProtectionState(int i, int type )
 		{
 			dat = 0x01;
 			mDjBoyState = eDJBOY_PRESS_P1_START;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "COIN UP\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "COIN UP\n" );
 		}
 		else if( complete )
 		{
@@ -305,7 +305,7 @@ OutputProtectionState(int i, int type )
 		{
 			dat = 0x01;
 			mDjBoyState = eDJBOY_PRESS_P1_START;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "COIN UP\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "COIN UP\n" );
 		}
 		else if( complete )
 		{
@@ -319,13 +319,13 @@ OutputProtectionState(int i, int type )
 		{ /* p1 start */
 			dat = 0x16;
 			mDjBoyState = eDJBOY_ACTIVE_GAMEPLAY;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "P1 START\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "P1 START\n" );
 		}
 		else if( coin>=8 )
 		{
 			dat = 0x05;
 			mDjBoyState = eDJBOY_PRESS_P1_OR_P2_START;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "COIN2 UP\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "COIN2 UP\n" );
 		}
 		break;
 
@@ -335,7 +335,7 @@ OutputProtectionState(int i, int type )
 			dat = 0x16;
 			mDjBoyState = eDJBOY_ACTIVE_GAMEPLAY;
 			lives[0] = GetLives();
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "P1 START!\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "P1 START!\n" );
 			coin-=4;
 		}
 		else if( io&2 )
@@ -344,7 +344,7 @@ OutputProtectionState(int i, int type )
 			mDjBoyState = eDJBOY_ACTIVE_GAMEPLAY;
 			lives[0] = GetLives();
 			lives[1] = GetLives();
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "P2 START!\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "P2 START!\n" );
 			coin-=8;
 		}
 		break;
@@ -353,7 +353,7 @@ OutputProtectionState(int i, int type )
 		if( lives[0]==0 && lives[1]==0 && complete )
 		{ /* continue countdown complete */
 			dat = 0x0f;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "countdown complete!\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "countdown complete!\n" );
 			mDjBoyState = eDJBOY_ATTRACT_HIGHSCORE;
 		}
 		else if( coin>=4 )
@@ -364,7 +364,7 @@ OutputProtectionState(int i, int type )
 				lives[0] = GetLives();
 				mDjBoyState = eDJBOY_ACTIVE_GAMEPLAY;
 				coin-=4;
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "P1 CONTINUE!\n" );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "P1 CONTINUE!\n" );
 			}
 			else if( (io&2) && lives[1]==0 )
 			{
@@ -372,7 +372,7 @@ OutputProtectionState(int i, int type )
 				lives[1] = GetLives();
 				mDjBoyState = eDJBOY_ACTIVE_GAMEPLAY;
 				coin-=4;
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "P2 CONTINUE!\n" );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "P2 CONTINUE!\n" );
 			}
 		}
 		break;
@@ -398,25 +398,25 @@ static WRITE_HANDLER( beast_data_w )
 {
 	prot_busy_count = 1;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE  "0x%04x: prot_w(0x%02x)\n", cpu_get_pc(space->cpu), data );*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE  "0x%04x: prot_w(0x%02x)\n", cpu_get_pc(space->cpu), data );*/
 
 	watchdog_reset_w(0,0);
 
 	if( prot_mode == ePROT_WAIT_DSW1_WRITEBACK )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "[DSW1_WRITEBACK]\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "[DSW1_WRITEBACK]\n" );
 		ProtectionOut( 0, readinputport(4) ); /* DSW2 */
 		prot_mode = ePROT_WAIT_DSW2_WRITEBACK;
 	}
 	else if( prot_mode == ePROT_WAIT_DSW2_WRITEBACK )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "[DSW2_WRITEBACK]\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "[DSW2_WRITEBACK]\n" );
 		prot_mode = ePROT_STORE_PARAM;
 		prot_offs = 0;
 	}
 	else if( prot_mode == ePROT_STORE_PARAM )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "prot param[%d]: 0x%02x\n", prot_offs, data );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "prot param[%d]: 0x%02x\n", prot_offs, data );
 		if( prot_offs<8 )
 		{
 			prot_param[prot_offs++] = data;
@@ -446,7 +446,7 @@ static WRITE_HANDLER( beast_data_w )
 			}
 			else
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "UNEXPECTED PREFIX!\n" );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "UNEXPECTED PREFIX!\n" );
 			}
 			break;
 
@@ -459,7 +459,7 @@ static WRITE_HANDLER( beast_data_w )
 			break;
 
 		case 0x03: /* prepare for memory write to protection device ram (pc == 0x7987) */ /* -> 0x02*/
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "[WRITE BYTES]\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "[WRITE BYTES]\n" );
 			prot_mode = ePROT_WRITE_BYTES;
 			prot_offs = 0;
 			break;
@@ -517,12 +517,12 @@ static WRITE_HANDLER( beast_data_w )
 			if( prot_mode == ePROT_WRITE_BYTES )
 			{
 				prot_mode = ePROT_READ_BYTES;
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "[READ BYTES]\n" );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "[READ BYTES]\n" );
 			}
 			else
 			{
 				prot_mode = ePROT_WRITE_BYTES;
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "[WRITE BYTES*]\n" );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "[WRITE BYTES*]\n" );
 			}
 			prot_offs = 0;
 			break;
@@ -537,16 +537,16 @@ static WRITE_HANDLER( beast_data_w )
 			if( lives[0]>0 && lives[1]>0 )
 			{
 				lives[1]--;
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x P2 DIE(%d)\n", data, lives[1] );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x P2 DIE(%d)\n", data, lives[1] );
 			}
 			else if( lives[0]>0 )
 			{
 				lives[0]--;
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x P1 DIE(%d)\n", data, lives[0] );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x P1 DIE(%d)\n", data, lives[0] );
 			}
 			else
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x COMPLETE.\n", data );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x COMPLETE.\n", data );
 				complete = 0xa9;
 			}
 			break;
@@ -555,50 +555,50 @@ static WRITE_HANDLER( beast_data_w )
 			if( lives[0]>0 && lives[1]>0 )
 			{
 				lives[0]--;
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x P1 DIE(%d)\n", data, lives[0] );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x P1 DIE(%d)\n", data, lives[0] );
 			}
 			else if( lives[1]>0 )
 			{
 				lives[1]--;
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x P2 DIE (%d)\n", data, lives[1] );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x P2 DIE (%d)\n", data, lives[1] );
 			}
 			else
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x COMPLETE.\n", data );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x COMPLETE.\n", data );
 				complete = 0x92;
 			}
 			break;
 
 		case 0xa3: /* p2 bonus life */
 			lives[1]++;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x P2 BONUS(%d)\n", data, lives[1] );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x P2 BONUS(%d)\n", data, lives[1] );
 			break;
 
 		case 0xa5: /* p1 bonus life */
 			lives[0]++;
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x P1 BONUS(%d)\n", data, lives[0] );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x P1 BONUS(%d)\n", data, lives[0] );
 			break;
 
 		case 0xad: /* 1p game start ack */
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x 1P GAME START\n", data );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x 1P GAME START\n", data );
 			break;
 
 		case 0xb0: /* 1p+2p game start ack */
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x 1P+2P GAME START\n", data );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x 1P+2P GAME START\n", data );
 			break;
 
 		case 0xb3: /* 1p continue ack */
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x 1P CONTINUE\n", data );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x 1P CONTINUE\n", data );
 			break;
 
 		case 0xb7: /* 2p continue ack */
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%02x 2P CONTINUE\n", data );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%02x 2P CONTINUE\n", data );
 			break;
 
 		default:
 		case 0x97:
 		case 0x9a:
-		/*	log_cb(RETRO_LOG_ERROR, LOGPRE  "!!0x%04x: prot_w(0x%02x)\n", cpu_get_pc(space->cpu), data );*/
+		/*	log_cb(RETRO_LOG_DEBUG, LOGPRE  "!!0x%04x: prot_w(0x%02x)\n", cpu_get_pc(space->cpu), data );*/
 			break;
 		}
 	}
@@ -619,7 +619,7 @@ static READ_HANDLER( beast_data_r )
 	}
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "prot_r: data expected!\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "prot_r: data expected!\n" );
 	}
 	return data;
 } /* beast_data_r */
@@ -657,7 +657,7 @@ static WRITE_HANDLER( cpu1_bankswitch_w )
 	unsigned char *RAM = memory_region(REGION_CPU1);
 	data ^= bankxor;
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE  "cpu1_bankswitch( 0x%02x )\n", data );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE  "cpu1_bankswitch( 0x%02x )\n", data );
 	cpu_setbank(4,&RAM[0x10000]);
 
 

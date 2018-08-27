@@ -23,7 +23,7 @@ void tmp68301_update_timer( int i );
 int tmp68301_irq_callback(int int_level)
 {
 	int vector = tmp68301_irq_vector[int_level];
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: irq callback returns %04X for level %x\n",activecpu_get_pc(),vector,int_level);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X: irq callback returns %04X for level %x\n",activecpu_get_pc(),vector,int_level);*/
 	return vector;
 }
 
@@ -34,7 +34,7 @@ void tmp68301_timer_callback(int i)
 	data16_t ICR	=	tmp68301_regs[0x8e/2+i];	/* Interrupt Controller Register (ICR7..9)*/
 	data16_t IVNR	=	tmp68301_regs[0x9a/2];		/* Interrupt Vector Number Register (IVNR)*/
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: callback timer %04X, j = %d\n",activecpu_get_pc(),i,tcount);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X: callback timer %04X, j = %d\n",activecpu_get_pc(),i,tcount);*/
 
 	if	(	(TCR & 0x0004) &&	/* INT*/
 			!(IMR & (0x100<<i))
@@ -96,14 +96,14 @@ void tmp68301_update_timer( int i )
 		break;
 	}
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: TMP68301 Timer %d, duration %lf, max %04X\n",activecpu_get_pc(),i,duration,max);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X: TMP68301 Timer %d, duration %lf, max %04X\n",activecpu_get_pc(),i,duration,max);*/
 
 	if (!(TCR & 0x0002))				/* CS*/
 	{
 		if (duration)
 			timer_adjust(tmp68301_timer[i],TIME_IN_HZ(duration),i,0);
 		else
-			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: TMP68301 error, timer %d duration is 0\n",activecpu_get_pc(),i);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X: TMP68301 error, timer %d duration is 0\n",activecpu_get_pc(),i);
 	}
 }
 
@@ -157,7 +157,7 @@ WRITE16_HANDLER( tmp68301_regs_w )
 
 	if (!ACCESSING_LSB)	return;
 
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: TMP68301 Reg %04X<-%04X & %04X\n",activecpu_get_pc(),offset*2,data,mem_mask^0xffff);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X: TMP68301 Reg %04X<-%04X & %04X\n",activecpu_get_pc(),offset*2,data,mem_mask^0xffff);*/
 
 	switch( offset * 2 )
 	{

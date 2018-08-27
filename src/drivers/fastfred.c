@@ -42,7 +42,7 @@ static READ_HANDLER( fastfred_custom_io_r )
     case 0x7b58: return 0x20;
     }
 
-    log_cb(RETRO_LOG_ERROR, LOGPRE "Uncaught custom I/O read %04X at %04X\n", 0xc800+offset, activecpu_get_pc());
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Uncaught custom I/O read %04X at %04X\n", 0xc800+offset, activecpu_get_pc());
     return 0x00;
 }
 
@@ -70,7 +70,7 @@ static READ_HANDLER( flyboy_custom1_io_r )
 	 return 0x00;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Uncaught custom I/O read %04X at %04X\n", 0xc085+offset, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Uncaught custom I/O read %04X at %04X\n", 0xc085+offset, activecpu_get_pc());
 	return 0x00;
 }
 
@@ -95,7 +95,7 @@ static READ_HANDLER( flyboy_custom2_io_r )
 	 return 0x00;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Uncaught custom I/O read %04X at %04X\n", 0xc8fb+offset, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Uncaught custom I/O read %04X at %04X\n", 0xc8fb+offset, activecpu_get_pc());
 	return 0x00;
 }
 

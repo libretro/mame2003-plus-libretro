@@ -280,7 +280,7 @@ WRITE16_HANDLER( midwunit_control_w )
 		other important bits:
 			bit 2 (0x0004) is toggled periodically
 	*/
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Wolf-unit control = %04X\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wolf-unit control = %04X\n", data);
 
 	COMBINE_DATA(&midtunit_control);
 
@@ -771,7 +771,7 @@ WRITE16_HANDLER( midtunit_dma_w )
 				dma_register[DMA_LRSKIP] >> 8, dma_register[DMA_LRSKIP] & 0xff,
 				dma_register[DMA_SCALE_X], dma_register[DMA_SCALE_Y], dma_register[DMA_UNKNOWN_E],
 				dma_register[DMA_CONFIG]);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "----\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "----\n");
 	}
 #endif
 
@@ -788,7 +788,7 @@ WRITE16_HANDLER( midtunit_dma_w )
 		dma_state.offset = gfxoffset;
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "DMA source out of range: %08X\n", gfxoffset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "DMA source out of range: %08X\n", gfxoffset);
 		goto skipdma;
 	}
 
@@ -869,7 +869,7 @@ VIDEO_UPDATE( midtunit )
 
 #if LOG_DMA
 	if (keyboard_pressed(KEYCODE_L))
-		log_cb(RETRO_LOG_ERROR, LOGPRE "---\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "---\n");
 #endif
 
 	/* get the current scroll offset */

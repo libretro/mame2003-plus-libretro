@@ -87,7 +87,7 @@ static WRITE16_HANDLER( io_latch_w )
 		if (!(data & 0x10)) atarijsa_reset();
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "sound control = %04X\n", data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "sound control = %04X\n", data);
 }
 
 
@@ -135,7 +135,7 @@ static READ16_HANDLER( bankswitch_r )
 {
 	/* this is the table lookup; the bank is determined by the address that was requested */
 	bank_offset = (offset & 3) * 0x1000;
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Bankswitch index %d -> %04X\n", offset, bank_offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Bankswitch index %d -> %04X\n", offset, bank_offset);
 
 	return bankswitch_base[offset];
 }
@@ -144,7 +144,7 @@ static READ16_HANDLER( bankswitch_r )
 static READ16_HANDLER( bankrom_r )
 {
 	/* this is the banked ROM read */
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06X: %04X\n", activecpu_get_previouspc(), offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X: %04X\n", activecpu_get_previouspc(), offset);
 
 	/* if the values are $3e000 or $3e002 are being read by code just below the
 		ROM bank area, we need to return the correct value to give the proper checksum */

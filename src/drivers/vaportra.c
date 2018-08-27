@@ -53,7 +53,7 @@ static READ16_HANDLER( vaportra_control_r )
 			return (readinputport(0) + (readinputport(1) << 8));
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown control read at %d\n",offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown control read at %d\n",offset);
 	return ~0;
 }
 

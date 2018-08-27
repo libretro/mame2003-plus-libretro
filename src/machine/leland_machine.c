@@ -324,7 +324,7 @@ READ_HANDLER( indyheat_analog_r )
 			return 0;
 
 		case 3:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected analog read(%02X)\n", 8 + offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected analog read(%02X)\n", 8 + offset);
 			break;
 	}
 	return 0xff;
@@ -342,7 +342,7 @@ WRITE_HANDLER( indyheat_analog_w )
 		case 0:
 		case 1:
 		case 2:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Unexpected analog write(%02X) = %02X\n", 8 + offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Unexpected analog write(%02X) = %02X\n", 8 + offset, data);
 			break;
 	}
 }
@@ -499,7 +499,7 @@ WRITE_HANDLER( leland_master_alt_bankswitch_w )
 	/* update any bankswitching */
 	if (LOG_BANKSWITCHING_M)
 		if ((alternate_bank ^ data) & 0x0f)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:alternate_bank = %02X\n", activecpu_get_previouspc(), data & 0x0f);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:alternate_bank = %02X\n", activecpu_get_previouspc(), data & 0x0f);
 	alternate_bank = data & 15;
 	(*leland_update_master_bank)();
 
@@ -590,7 +590,7 @@ void viper_bankswitch(void)
 	address = &master_base[bank_list[alternate_bank & 3]];
 	if (bank_list[alternate_bank & 3] >= master_length)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Master bank %02X out of range!\n", activecpu_get_previouspc(), alternate_bank & 3);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:Master bank %02X out of range!\n", activecpu_get_previouspc(), alternate_bank & 3);
 		address = &master_base[bank_list[0]];
 	}
 	cpu_setbank(1, address);
@@ -611,7 +611,7 @@ void offroad_bankswitch(void)
 	address = &master_base[bank_list[alternate_bank & 7]];
 	if (bank_list[alternate_bank & 7] >= master_length)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Master bank %02X out of range!\n", activecpu_get_previouspc(), alternate_bank & 7);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:Master bank %02X out of range!\n", activecpu_get_previouspc(), alternate_bank & 7);
 		address = &master_base[bank_list[0]];
 	}
 	cpu_setbank(1, address);
@@ -636,7 +636,7 @@ void ataxx_bankswitch(void)
 	address = &master_base[bank_list[master_bank & 15]];
 	if (bank_list[master_bank & 15] >= master_length)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Master bank %02X out of range!\n", activecpu_get_previouspc(), master_bank & 15);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:Master bank %02X out of range!\n", activecpu_get_previouspc(), master_bank & 15);
 		address = &master_base[bank_list[0]];
 	}
 	cpu_setbank(1, address);
@@ -834,7 +834,7 @@ void ataxx_init_eeprom(UINT8 default_val, const UINT16 *data, UINT8 serial_offse
 READ_HANDLER( ataxx_eeprom_r )
 {
 	int port = readinputport(2);
-	if (LOG_EEPROM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:EE read\n", activecpu_get_previouspc());
+	if (LOG_EEPROM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:EE read\n", activecpu_get_previouspc());
 	return (port & ~0x01) | EEPROM_read_bit();
 }
 
@@ -860,11 +860,11 @@ WRITE_HANDLER( leland_battery_ram_w )
 {
 	if (battery_ram_enable)
 	{
-		if (LOG_BATTERY_RAM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:BatteryW@%04X=%02X\n", activecpu_get_previouspc(), offset, data);
+		if (LOG_BATTERY_RAM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:BatteryW@%04X=%02X\n", activecpu_get_previouspc(), offset, data);
 		battery_ram[offset] = data;
 	}
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:BatteryW@%04X (invalid!)\n", activecpu_get_previouspc(), offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:BatteryW@%04X (invalid!)\n", activecpu_get_previouspc(), offset);
 }
 
 
@@ -872,13 +872,13 @@ WRITE_HANDLER( ataxx_battery_ram_w )
 {
 	if (battery_ram_enable)
 	{
-		if (LOG_BATTERY_RAM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:BatteryW@%04X=%02X\n", activecpu_get_previouspc(), offset, data);
+		if (LOG_BATTERY_RAM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:BatteryW@%04X=%02X\n", activecpu_get_previouspc(), offset, data);
 		battery_ram[offset] = data;
 	}
 	else if ((master_bank & 0x30) == 0x20)
 		ataxx_qram[((master_bank & 0xc0) << 8) + offset] = data;
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:BatteryW@%04X (invalid!)\n", activecpu_get_previouspc(), offset);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:BatteryW@%04X (invalid!)\n", activecpu_get_previouspc(), offset);
 }
 
 
@@ -974,7 +974,7 @@ static int keycard_r(void)
 {
 	int result = 0;
 
-	if (LOG_KEYCARDS_FULL) log_cb(RETRO_LOG_ERROR, LOGPRE "  (%04X:keycard_r)\n", activecpu_get_previouspc());
+	if (LOG_KEYCARDS_FULL) log_cb(RETRO_LOG_DEBUG, LOGPRE "  (%04X:keycard_r)\n", activecpu_get_previouspc());
 
 	/* if we have a valid keycard read state, we're reading from the keycard */
 	if (keycard_state & 0x80)
@@ -983,12 +983,12 @@ static int keycard_r(void)
 		if (keycard_bit == 1)
 		{
 			keycard_shift = 0xff;	/* no data, but this is where we would clock it in */
-			if (LOG_KEYCARDS) log_cb(RETRO_LOG_ERROR, LOGPRE "  (clocked in %02X)\n", keycard_shift);
+			if (LOG_KEYCARDS) log_cb(RETRO_LOG_DEBUG, LOGPRE "  (clocked in %02X)\n", keycard_shift);
 		}
 
 		/* clock in the bit */
 		result = (~keycard_shift & 1) << ((keycard_state >> 4) & 3);
-		if (LOG_KEYCARDS) log_cb(RETRO_LOG_ERROR, LOGPRE "  (read %02X)\n", result);
+		if (LOG_KEYCARDS) log_cb(RETRO_LOG_DEBUG, LOGPRE "  (read %02X)\n", result);
 	}
 	return result;
 }
@@ -998,20 +998,20 @@ static void keycard_w(int data)
 	int new_state = data & 0xb0;
 	int new_clock = data & 0x40;
 
-	if (LOG_KEYCARDS_FULL) log_cb(RETRO_LOG_ERROR, LOGPRE "  (%04X:keycard_w=%02X)\n", activecpu_get_previouspc(), data);
+	if (LOG_KEYCARDS_FULL) log_cb(RETRO_LOG_DEBUG, LOGPRE "  (%04X:keycard_w=%02X)\n", activecpu_get_previouspc(), data);
 
 	/* check for going active */
 	if (!keycard_state && new_state)
 	{
 		keycard_command[0] = keycard_command[1] = keycard_command[2] = 0;
-		if (LOG_KEYCARDS) log_cb(RETRO_LOG_ERROR, LOGPRE "keycard going active (state=%02X)\n", new_state);
+		if (LOG_KEYCARDS) log_cb(RETRO_LOG_DEBUG, LOGPRE "keycard going active (state=%02X)\n", new_state);
 	}
 
 	/* check for going inactive */
 	else if (keycard_state && !new_state)
 	{
 		keycard_command[0] = keycard_command[1] = keycard_command[2] = 0;
-		if (LOG_KEYCARDS) log_cb(RETRO_LOG_ERROR, LOGPRE "keycard going inactive\n");
+		if (LOG_KEYCARDS) log_cb(RETRO_LOG_DEBUG, LOGPRE "keycard going inactive\n");
 	}
 
 	/* check for clocks */
@@ -1027,7 +1027,7 @@ static void keycard_w(int data)
 		/* look for a bit write */
 		else if (!new_clock && !keycard_clock && !(data & 0x80))
 		{
-			if (LOG_KEYCARDS) log_cb(RETRO_LOG_ERROR, LOGPRE "  (write %02X)\n", data);
+			if (LOG_KEYCARDS) log_cb(RETRO_LOG_DEBUG, LOGPRE "  (write %02X)\n", data);
 
 			keycard_shift &= ~0x80;
 			if (data & (1 << ((new_state >> 4) & 3)))
@@ -1036,13 +1036,13 @@ static void keycard_w(int data)
 			/* clock out the data on the last bit */
 			if (keycard_bit == 7)
 			{
-				if (LOG_KEYCARDS) log_cb(RETRO_LOG_ERROR, LOGPRE "  (clocked out %02X)\n", keycard_shift);
+				if (LOG_KEYCARDS) log_cb(RETRO_LOG_DEBUG, LOGPRE "  (clocked out %02X)\n", keycard_shift);
 				keycard_command[0] = keycard_command[1];
 				keycard_command[1] = keycard_command[2];
 				keycard_command[2] = keycard_shift;
 				if (keycard_command[0] == 0x62 && keycard_command[1] == 0x00 && keycard_command[2] == 0x80)
 				{
-					if (LOG_KEYCARDS) log_cb(RETRO_LOG_ERROR, LOGPRE "  (got command $62)\n");
+					if (LOG_KEYCARDS) log_cb(RETRO_LOG_DEBUG, LOGPRE "  (got command $62)\n");
 				}
 			}
 		}
@@ -1053,7 +1053,7 @@ static void keycard_w(int data)
 	{
 		/* only an error if the selected bit changes; read/write transitions are okay */
 		if ((new_state & 0x30) != (keycard_state & 0x30))
-			if (LOG_KEYCARDS) log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR: Caught keycard state transition %02X -> %02X\n", keycard_state, new_state);
+			if (LOG_KEYCARDS) log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR: Caught keycard state transition %02X -> %02X\n", keycard_state, new_state);
 	}
 
 	keycard_state = new_state;
@@ -1108,7 +1108,7 @@ WRITE_HANDLER( leland_master_analog_key_w )
 			/* update top board banking for some games */
 			if (LOG_BANKSWITCHING_M)
 				if ((top_board_bank ^ data) & 0xc0)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:top_board_bank = %02X\n", activecpu_get_previouspc(), data & 0xc0);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:top_board_bank = %02X\n", activecpu_get_previouspc(), data & 0xc0);
 			top_board_bank = data & 0xc0;
 			(*leland_update_master_bank)();
 			break;
@@ -1159,12 +1159,12 @@ READ_HANDLER( leland_master_input_r )
 
 		case 0x11:	/* /GIN1 */
 			result = readinputport(3);
-			if (LOG_EEPROM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:EE read\n", activecpu_get_previouspc());
+			if (LOG_EEPROM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:EE read\n", activecpu_get_previouspc());
 			result = (result & ~0x01) | EEPROM_read_bit();
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Master I/O read offset %02X\n", offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Master I/O read offset %02X\n", offset);
 			break;
 	}
 	return result;
@@ -1204,7 +1204,7 @@ WRITE_HANDLER( leland_master_output_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Master I/O write offset %02X=%02X\n", offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Master I/O write offset %02X=%02X\n", offset, data);
 			break;
 	}
 }
@@ -1227,7 +1227,7 @@ READ_HANDLER( ataxx_master_input_r )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Master I/O read offset %02X\n", offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Master I/O read offset %02X\n", offset);
 			break;
 	}
 	return result;
@@ -1248,7 +1248,7 @@ WRITE_HANDLER( ataxx_master_output_w )
 		case 0x04:	/* /MBNK */
 			if (LOG_BANKSWITCHING_M)
 				if ((master_bank ^ data) & 0xff)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:master_bank = %02X\n", activecpu_get_previouspc(), data & 0xff);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:master_bank = %02X\n", activecpu_get_previouspc(), data & 0xff);
 			master_bank = data;
 			ataxx_bankswitch();
 			break;
@@ -1264,7 +1264,7 @@ WRITE_HANDLER( ataxx_master_output_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "Master I/O write offset %02X=%02X\n", offset, data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Master I/O write offset %02X=%02X\n", offset, data);
 			break;
 	}
 }
@@ -1301,22 +1301,22 @@ WRITE_HANDLER( ataxx_paletteram_and_misc_w )
 	else if (offset == 0x7fc)
 	{
 		xrom1_addr = (xrom1_addr & 0xff00) | (data & 0x00ff);
-		if (LOG_XROM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:XROM1 address low write = %02X (addr=%04X)\n", activecpu_get_previouspc(), data, xrom1_addr);
+		if (LOG_XROM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:XROM1 address low write = %02X (addr=%04X)\n", activecpu_get_previouspc(), data, xrom1_addr);
 	}
 	else if (offset == 0x7fd)
 	{
 		xrom1_addr = (xrom1_addr & 0x00ff) | ((data << 8) & 0xff00);
-		if (LOG_XROM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:XROM1 address high write = %02X (addr=%04X)\n", activecpu_get_previouspc(), data, xrom1_addr);
+		if (LOG_XROM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:XROM1 address high write = %02X (addr=%04X)\n", activecpu_get_previouspc(), data, xrom1_addr);
 	}
 	else if (offset == 0x7fe)
 	{
 		xrom2_addr = (xrom2_addr & 0xff00) | (data & 0x00ff);
-		if (LOG_XROM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:XROM2 address low write = %02X (addr=%04X)\n", activecpu_get_previouspc(), data, xrom2_addr);
+		if (LOG_XROM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:XROM2 address low write = %02X (addr=%04X)\n", activecpu_get_previouspc(), data, xrom2_addr);
 	}
 	else if (offset == 0x7ff)
 	{
 		xrom2_addr = (xrom2_addr & 0x00ff) | ((data << 8) & 0xff00);
-		if (LOG_XROM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:XROM2 address high write = %02X (addr=%04X)\n", activecpu_get_previouspc(), data, xrom2_addr);
+		if (LOG_XROM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:XROM2 address high write = %02X (addr=%04X)\n", activecpu_get_previouspc(), data, xrom2_addr);
 	}
 	else
 		extra_tram[offset] = data;
@@ -1330,13 +1330,13 @@ READ_HANDLER( ataxx_paletteram_and_misc_r )
 	else if (offset == 0x7fc || offset == 0x7fd)
 	{
 		int result = xrom_base[0x00000 | xrom1_addr | ((offset & 1) << 16)];
-		if (LOG_XROM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:XROM1 read(%d) = %02X (addr=%04X)\n", activecpu_get_previouspc(), offset - 0x7fc, result, xrom1_addr);
+		if (LOG_XROM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:XROM1 read(%d) = %02X (addr=%04X)\n", activecpu_get_previouspc(), offset - 0x7fc, result, xrom1_addr);
 		return result;
 	}
 	else if (offset == 0x7fe || offset == 0x7ff)
 	{
 		int result = xrom_base[0x20000 | xrom2_addr | ((offset & 1) << 16)];
-		if (LOG_XROM) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:XROM2 read(%d) = %02X (addr=%04X)\n", activecpu_get_previouspc(), offset - 0x7fc, result, xrom2_addr);
+		if (LOG_XROM) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:XROM2 read(%d) = %02X (addr=%04X)\n", activecpu_get_previouspc(), offset - 0x7fc, result, xrom2_addr);
 		return result;
 	}
 	else
@@ -1374,7 +1374,7 @@ WRITE_HANDLER( leland_sound_port_w )
     /* some bankswitching occurs here */
 	if (LOG_BANKSWITCHING_M)
 		if ((sound_port_bank ^ data) & 0x24)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:sound_port_bank = %02X\n", activecpu_get_previouspc(), data & 0x24);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:sound_port_bank = %02X\n", activecpu_get_previouspc(), data & 0x24);
     sound_port_bank = data & 0x24;
     (*leland_update_master_bank)();
 }
@@ -1393,12 +1393,12 @@ WRITE_HANDLER( leland_slave_small_banksw_w )
 
 	if (bankaddress >= slave_length)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Slave bank %02X out of range!", activecpu_get_previouspc(), data & 1);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:Slave bank %02X out of range!", activecpu_get_previouspc(), data & 1);
 		bankaddress = 0x10000;
 	}
 	cpu_setbank(3, &slave_base[bankaddress]);
 
-	if (LOG_BANKSWITCHING_S) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Slave bank = %02X (%05X)\n", activecpu_get_previouspc(), data & 1, bankaddress);
+	if (LOG_BANKSWITCHING_S) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:Slave bank = %02X (%05X)\n", activecpu_get_previouspc(), data & 1, bankaddress);
 }
 
 
@@ -1408,12 +1408,12 @@ WRITE_HANDLER( leland_slave_large_banksw_w )
 
 	if (bankaddress >= slave_length)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Slave bank %02X out of range!", activecpu_get_previouspc(), data & 15);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:Slave bank %02X out of range!", activecpu_get_previouspc(), data & 15);
 		bankaddress = 0x10000;
 	}
 	cpu_setbank(3, &slave_base[bankaddress]);
 
-	if (LOG_BANKSWITCHING_S) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Slave bank = %02X (%05X)\n", activecpu_get_previouspc(), data & 15, bankaddress);
+	if (LOG_BANKSWITCHING_S) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:Slave bank = %02X (%05X)\n", activecpu_get_previouspc(), data & 15, bankaddress);
 }
 
 
@@ -1432,12 +1432,12 @@ WRITE_HANDLER( ataxx_slave_banksw_w )
 
 	if (bankaddress >= slave_length)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Slave bank %02X out of range!", activecpu_get_previouspc(), data & 0x3f);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:Slave bank %02X out of range!", activecpu_get_previouspc(), data & 0x3f);
 		bankaddress = 0x2000;
 	}
 	cpu_setbank(3, &slave_base[bankaddress]);
 
-	if (LOG_BANKSWITCHING_S) log_cb(RETRO_LOG_ERROR, LOGPRE "%04X:Slave bank = %02X (%05X)\n", activecpu_get_previouspc(), data, bankaddress);
+	if (LOG_BANKSWITCHING_S) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04X:Slave bank = %02X (%05X)\n", activecpu_get_previouspc(), data, bankaddress);
 }
 
 

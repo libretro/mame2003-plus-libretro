@@ -104,7 +104,7 @@ WRITE_HANDLER( starwars_out_w )
 			break;
 
 		case 7:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "recall\n"); /* what's that? */
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "recall\n"); /* what's that? */
 			break;
 	}
 }
@@ -227,7 +227,7 @@ void run_mbox(void)
 	int IP15_8, IP7, IP6_0; /* Instruction PROM values */
 
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Running Mathbox...\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Running Mathbox...\n");
 
 	/* loop until finished */
 	while (M_STOP > 0)
@@ -238,8 +238,8 @@ void run_mbox(void)
 		IP6_0  = PROM_MAS[MPA];
 
 #if (MATHDEBUG)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n(MPA:%x), Strobe: %x, IP7: %d, IP6_0:%x\n",MPA, IP15_8, IP7, IP6_0);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "(BIC: %x), A: %x, B: %x, C: %x, ACC: %x\n",BIC,A,B,C,ACC);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n(MPA:%x), Strobe: %x, IP7: %d, IP6_0:%x\n",MPA, IP15_8, IP7, IP6_0);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "(BIC: %x), A: %x, B: %x, C: %x, ACC: %x\n",BIC,A,B,C,ACC);
 #endif
 
 		/* construct the current RAM address */
@@ -254,7 +254,7 @@ void run_mbox(void)
 		MA_byte = 0x5000 + (MA << 1);
 		RAMWORD = (RAM[MA_byte + 1] & 0x00ff) | ((RAM[MA_byte] & 0x00ff) << 8);
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "MATH ADDR: %x, CPU ADDR: %x, RAMWORD: %x\n", MA, MA_byte, RAMWORD);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "MATH ADDR: %x, CPU ADDR: %x, RAMWORD: %x\n", MA, MA_byte, RAMWORD);
 
 		/*
 		 * RAMWORD is the sixteen bit Math RAM value for the selected address

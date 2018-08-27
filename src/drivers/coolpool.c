@@ -85,7 +85,7 @@ WRITE16_HANDLER( coolpool_34010_io_register_w )
 	{
 		dpyadr = ~data & 0xfffc;
 		dpyadrscan = cpu_getscanline() + 1;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "dpyadr = %04X on scan %d\n", dpyadr, dpyadrscan);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "dpyadr = %04X on scan %d\n", dpyadr, dpyadrscan);
 	}
 }
 
@@ -196,14 +196,14 @@ MACHINE_INIT( coolpool )
 
 WRITE16_HANDLER( amerdart_input_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:IOP write = %04X\n", activecpu_get_pc(), data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:IOP write = %04X\n", activecpu_get_pc(), data);
 	COMBINE_DATA(&input_data);
 	cpu_set_irq_line(0, 1, ASSERT_LINE);
 }
 
 READ16_HANDLER( amerdart_input_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:IOP read\n", activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:IOP read\n", activecpu_get_pc());
 	cpu_set_irq_line(0, 1, CLEAR_LINE);
 
 	switch (input_data)
@@ -223,7 +223,7 @@ READ16_HANDLER( amerdart_input_r )
 
 static WRITE16_HANDLER( coolpool_misc_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:IOP_reset_w %04x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:IOP_reset_w %04x\n",activecpu_get_pc(),data);
 
 	coin_counter_w(0,~data & 0x0001);
 	coin_counter_w(1,~data & 0x0002);
@@ -235,7 +235,7 @@ static int cmd_pending,iop_cmd,iop_answer;
 
 static WRITE16_HANDLER( coolpool_iop_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:IOP write %04x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:IOP write %04x\n",activecpu_get_pc(),data);
 	iop_cmd = data;
 	cmd_pending = 1;
 	cpu_set_irq_line(1, 0, HOLD_LINE);	/* ???  I have no idea who should generate this! */
@@ -245,7 +245,7 @@ static WRITE16_HANDLER( coolpool_iop_w )
 
 static READ16_HANDLER( coolpool_iop_r )
 {
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:IOP read %04x\n",activecpu_get_pc(),iop_answer);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:IOP read %04x\n",activecpu_get_pc(),iop_answer);*/
 	cpu_set_irq_line(0, 1, CLEAR_LINE);
 
 	return iop_answer;
@@ -254,13 +254,13 @@ static READ16_HANDLER( coolpool_iop_r )
 static READ16_HANDLER( dsp_cmd_r )
 {
 	cmd_pending = 0;
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:IOP cmd_r %04x\n",activecpu_get_pc(),iop_cmd);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:IOP cmd_r %04x\n",activecpu_get_pc(),iop_cmd);*/
 	return iop_cmd;
 }
 
 static WRITE16_HANDLER( dsp_answer_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%08x:IOP answer %04x\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%08x:IOP answer %04x\n",activecpu_get_pc(),data);
 /*usrintf_showmessage("IOP answer %04x",data);*/
 	iop_answer = data;
 	cpu_set_irq_line(0, 1, ASSERT_LINE);

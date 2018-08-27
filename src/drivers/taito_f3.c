@@ -102,7 +102,7 @@ static READ32_HANDLER( f3_control_r )
 			return (coin_word[1]<<16) | readinputport(6);
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped control address %06x\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped control address %06x\n",activecpu_get_pc(),offset);
 	return 0xffffffff;
 }
 
@@ -139,7 +139,7 @@ static WRITE32_HANDLER( f3_control_w )
 			}
 			return;
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write unmapped control address %06x %08x\n",activecpu_get_pc(),offset,data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - write unmapped control address %06x %08x\n",activecpu_get_pc(),offset,data);
 }
 
 static WRITE32_HANDLER( f3_sound_reset_0_w )
@@ -170,7 +170,7 @@ static WRITE32_HANDLER( f3_sound_bankswitch_w )
 		cpu_setbank(2, &rom[(idx*0x20000)/2 + 0x80000]);
 
 	} else {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Sound bankswitch in unsupported game\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Sound bankswitch in unsupported game\n");
 	}
 }
 

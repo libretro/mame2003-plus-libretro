@@ -55,7 +55,7 @@ static WRITE_HANDLER ( unknown_port_2_w )
 
 static WRITE_HANDLER ( coinlock_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: coin lock %sable\n", activecpu_get_pc(), data ? "dis" : "en");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: coin lock %sable\n", activecpu_get_pc(), data ? "dis" : "en");
 }
 
 

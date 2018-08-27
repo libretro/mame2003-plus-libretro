@@ -232,7 +232,7 @@ static READ_HANDLER( spunchout_prot_r ) {
 		break;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Read from unknown protection? port %02x ( selector = %02x )\n", offset, prot_mode_sel );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Read from unknown protection? port %02x ( selector = %02x )\n", offset, prot_mode_sel );
 
 	return prot_mem[offset];
 }
@@ -292,7 +292,7 @@ static WRITE_HANDLER( spunchout_prot_w ) {
 			return;
 	}
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Wrote to unknown protection? port %02x ( %02x )\n", offset, data );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Wrote to unknown protection? port %02x ( %02x )\n", offset, data );
 
 	prot_mem[offset] = data;
 }

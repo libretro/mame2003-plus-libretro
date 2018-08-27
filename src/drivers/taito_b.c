@@ -2654,7 +2654,7 @@ static MACHINE_INIT( mb87078 )
 	{
 		int i;
 		for (i=0; i<6; i++)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "SOUND Chan#%i name=%s\n", i, mixer_get_name(i) );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SOUND Chan#%i name=%s\n", i, mixer_get_name(i) );
 	}
 */
 }

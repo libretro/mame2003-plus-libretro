@@ -405,7 +405,7 @@ static void compute_sensors(void)
 	inters_to_words(inter1, inter2, inter3, &beams, &word1, &word2, &word3);
 	words_to_sensors(word1, word2, word3, beams, &nextsensor0, &nextsensor1, &nextsensor2, &nextsensor3);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%15f: Sensor values: %04x %04x %04x %04x\n", timer_get_time(), nextsensor0, nextsensor1, nextsensor2, nextsensor3);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%15f: Sensor values: %04x %04x %04x %04x\n", timer_get_time(), nextsensor0, nextsensor1, nextsensor2, nextsensor3);
 }
 
 
@@ -498,7 +498,7 @@ WRITE_HANDLER( slikshot_z80_control_w )
 	/* reset the Z80 on bit 4 changing */
 	if (delta & 0x10)
 	{
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%15f: Reset Z80: %02x  PC=%04x\n", timer_get_time(), data & 0x10, cpunum_get_reg(2, Z80_PC));*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%15f: Reset Z80: %02x  PC=%04x\n", timer_get_time(), data & 0x10, cpunum_get_reg(2, Z80_PC));*/
 
 		/* this is a big kludge: only allow a reset if the Z80 is stopped */
 		/* at its endpoint; otherwise, we never get a result from the Z80 */
@@ -523,7 +523,7 @@ WRITE_HANDLER( slikshot_z80_control_w )
 	/* won't work with it configured as such */
 	if (delta & data & 0x20)
 	{
-/*		log_cb(RETRO_LOG_ERROR, LOGPRE "%15f: Clock edge high\n", timer_get_time());*/
+/*		log_cb(RETRO_LOG_DEBUG, LOGPRE "%15f: Clock edge high\n", timer_get_time());*/
 	}
 }
 
@@ -639,10 +639,10 @@ int main(int argc, char *argv[])
 		sscanf(argv[2], "%x", &sens1);
 		sscanf(argv[3], "%x", &sens2);
 		sscanf(argv[4], "%x", &sens3);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "sensors: %04x %04x %04x %04x\n", sens0, sens1, sens2, sens3);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "sensors: %04x %04x %04x %04x\n", sens0, sens1, sens2, sens3);
 		if (sens0 && sens1)
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "error: sensor 0 or 1 must be 0\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "error: sensor 0 or 1 must be 0\n");
 			return 1;
 		}
 
@@ -651,10 +651,10 @@ int main(int argc, char *argv[])
 				(UINT32)word1, (UINT32)word2, (UINT32)word3, (UINT32)beams);
 
 		words_to_inters(word1, word2, word3, beams, &inter1, &inter2, &inter3);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "inter1 = %04x  inter2 = %04x  inter3 = %04x\n", (UINT32)inter1, (UINT32)inter2, (UINT32)inter3);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "inter1 = %04x  inter2 = %04x  inter3 = %04x\n", (UINT32)inter1, (UINT32)inter2, (UINT32)inter3);
 
 		inters_to_vels(inter1, inter2, inter3, beams, &x, &vx, &vy);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "x = %02x  vx = %02x  vy = %02x\n", (UINT32)x, (UINT32)vx, (UINT32)vy);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "x = %02x  vx = %02x  vy = %02x\n", (UINT32)x, (UINT32)vx, (UINT32)vy);
 	}
 	else if (argc == 4)
 	{
@@ -667,17 +667,17 @@ int main(int argc, char *argv[])
 		x = xin;
 		vx = vxin;
 		vy = vyin;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "x = %02x  vx = %02x  vy = %02x\n", (UINT32)x, (UINT32)vx, (UINT32)vy);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "x = %02x  vx = %02x  vy = %02x\n", (UINT32)x, (UINT32)vx, (UINT32)vy);
 
 		vels_to_inters(x, vx, vy, &inter1, &inter2, &inter3, &beams);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "inter1 = %04x  inter2 = %04x  inter3 = %04x  beams = %d\n", (UINT32)inter1, (UINT32)inter2, (UINT32)inter3, (UINT32)beams);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "inter1 = %04x  inter2 = %04x  inter3 = %04x  beams = %d\n", (UINT32)inter1, (UINT32)inter2, (UINT32)inter3, (UINT32)beams);
 
 		inters_to_words(inter1, inter2, inter3, &beams, &word1, &word2, &word3);
 		printf("word1 = %04x  word2 = %04x  word3 = %04x  beams = %d\n",
 				(UINT32)word1, (UINT32)word2, (UINT32)word3, (UINT32)beams);
 
 		words_to_sensors(word1, word2, word3, beams, &sens0, &sens1, &sens2, &sens3);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "sensors: %04x %04x %04x %04x\n", sens0, sens1, sens2, sens3);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "sensors: %04x %04x %04x %04x\n", sens0, sens1, sens2, sens3);
 	}
 
 	return 0;

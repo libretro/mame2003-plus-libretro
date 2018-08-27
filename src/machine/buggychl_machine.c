@@ -62,18 +62,18 @@ READ_HANDLER( buggychl_68705_portB_r )
 
 WRITE_HANDLER( buggychl_68705_portB_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 68705 port B write %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 port B write %02x\n",activecpu_get_pc(),data);
 
 	if ((ddrB & 0x02) && (~data & 0x02) && (portB_out & 0x02))
 	{
 		portA_in = from_main;
 		if (main_sent) cpu_set_irq_line(2,0,CLEAR_LINE);
 		main_sent = 0;
-log_cb(RETRO_LOG_ERROR, LOGPRE "read command %02x from main cpu\n",portA_in);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "read command %02x from main cpu\n",portA_in);
 	}
 	if ((ddrB & 0x04) && (data & 0x04) && (~portB_out & 0x04))
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "send command %02x to main cpu\n",portA_out);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "send command %02x to main cpu\n",portA_out);
 		from_mcu = portA_out;
 		mcu_sent = 1;
 	}
@@ -103,13 +103,13 @@ READ_HANDLER( buggychl_68705_portC_r )
 	portC_in = 0;
 	if (main_sent) portC_in |= 0x01;
 	if (!mcu_sent) portC_in |= 0x02;
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 68705 port C read %02x\n",activecpu_get_pc(),portC_in);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 port C read %02x\n",activecpu_get_pc(),portC_in);
 	return (portC_out & ddrC) | (portC_in & ~ddrC);
 }
 
 WRITE_HANDLER( buggychl_68705_portC_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: 68705 port C write %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: 68705 port C write %02x\n",activecpu_get_pc(),data);
 	portC_out = data;
 }
 
@@ -121,7 +121,7 @@ WRITE_HANDLER( buggychl_68705_ddrC_w )
 
 WRITE_HANDLER( buggychl_mcu_w )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_w %02x\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: mcu_w %02x\n",activecpu_get_pc(),data);
 	from_main = data;
 	main_sent = 1;
 	cpu_set_irq_line(2,0,ASSERT_LINE);
@@ -129,7 +129,7 @@ log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_w %02x\n",activecpu_get_pc(),data);
 
 READ_HANDLER( buggychl_mcu_r )
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: mcu_r %02x\n",activecpu_get_pc(),from_mcu);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: mcu_r %02x\n",activecpu_get_pc(),from_mcu);
 	mcu_sent = 0;
 	return from_mcu;
 }

@@ -316,10 +316,10 @@ void HD63484_command_w(UINT16 cmd)
 	{
 		int i;
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "PC %05x: HD63484 command %s (%04x) ",activecpu_get_pc(),instruction_name[fifo[0]>>10],fifo[0]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %05x: HD63484 command %s (%04x) ",activecpu_get_pc(),instruction_name[fifo[0]>>10],fifo[0]);
 		for (i = 1;i < fifo_counter;i++)
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x ",fifo[i]);
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x ",fifo[i]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 
 		if (fifo[0] == 0x0400)	/* ORG */
 			org = ((fifo[1] & 0x00ff) << 12) | ((fifo[2] & 0xfff0) >> 4);
@@ -336,7 +336,7 @@ void HD63484_command_w(UINT16 cmd)
 			else if (fifo[0] == 0x080d)
 				rwp = (rwp & 0xff000) | ((fifo[1] & 0xfff0) >> 4);
 			else
-log_cb(RETRO_LOG_ERROR, LOGPRE "unsupported register\n");
+log_cb(RETRO_LOG_DEBUG, LOGPRE "unsupported register\n");
 		}
 		else if ((fifo[0] & 0xfff0) == 0x1800)	/* WPTN */
 		{
@@ -601,7 +601,7 @@ rwp /= 2;
 		}
 		else
 {
-log_cb(RETRO_LOG_ERROR, LOGPRE "unsupported command\n");
+log_cb(RETRO_LOG_DEBUG, LOGPRE "unsupported command\n");
 usrintf_showmessage("unsupported command %s (%04x)",instruction_name[fifo[0]>>10],fifo[0]);
 }
 
@@ -615,7 +615,7 @@ static READ_HANDLER( HD63484_status_r )
 {
 	if (offset == 1) return 0xff;	/* high 8 bits - not used */
 
-	if (activecpu_get_pc() != 0xfced6 && activecpu_get_pc() != 0xfe1d6) log_cb(RETRO_LOG_ERROR, LOGPRE "%05x: HD63484 status read\n",activecpu_get_pc());
+	if (activecpu_get_pc() != 0xfced6 && activecpu_get_pc() != 0xfe1d6) log_cb(RETRO_LOG_DEBUG, LOGPRE "%05x: HD63484 status read\n",activecpu_get_pc());
 	return 0x22|4;	/* write FIFO ready + command end    + read FIFO ready */
 }
 
@@ -626,7 +626,7 @@ static WRITE_HANDLER( HD63484_address_w )
 	reg[offset] = data;
 	regno = reg[0];	/* only low 8 bits are used */
 /*if (offset == 0)*/
-/*	log_cb(RETRO_LOG_ERROR, LOGPRE "PC %05x: HD63484 select register %02x\n",activecpu_get_pc(),regno);*/
+/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %05x: HD63484 select register %02x\n",activecpu_get_pc(),regno);*/
 }
 
 static WRITE_HANDLER( HD63484_data_w )
@@ -642,7 +642,7 @@ static WRITE_HANDLER( HD63484_data_w )
 			HD63484_command_w(val);
 		else
 		{
-log_cb(RETRO_LOG_ERROR, LOGPRE "PC %05x: HD63484 register %02x write %04x\n",activecpu_get_pc(),regno,val);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %05x: HD63484 register %02x write %04x\n",activecpu_get_pc(),regno,val);
 			HD63484_reg[regno/2] = val;
 			if (regno & 0x80) regno += 2;	/* autoincrement */
 		}
@@ -659,12 +659,12 @@ static READ_HANDLER( HD63484_data_r )
 	}
 	else if (regno == 0)
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "%05x: HD63484 read FIFO\n",activecpu_get_pc());
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%05x: HD63484 read FIFO\n",activecpu_get_pc());
 		res = readfifo;
 	}
 	else
 	{
-log_cb(RETRO_LOG_ERROR, LOGPRE "%05x: HD63484 read register %02x\n",activecpu_get_pc(),regno);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "%05x: HD63484 read register %02x\n",activecpu_get_pc(),regno);
 		res = 0;
 	}
 

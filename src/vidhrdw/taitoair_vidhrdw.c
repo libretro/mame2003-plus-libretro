@@ -404,7 +404,7 @@ VIDEO_UPDATE( taitoair )
 		while(adr>=0 && taitoair_line_ram[adr] && taitoair_line_ram[adr] != 0x4000) {
 			int pcount;
 			if(!(taitoair_line_ram[adr] & 0x8000) || adr<10) {
-				log_cb(RETRO_LOG_ERROR, LOGPRE "quad: unknown value %04x at %04x\n", taitoair_line_ram[adr], adr);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "quad: unknown value %04x at %04x\n", taitoair_line_ram[adr], adr);
 				break;
 			}
 			q.col = (taitoair_line_ram[adr] & 0x7fff) + 0x300;

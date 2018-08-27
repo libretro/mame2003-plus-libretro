@@ -18,7 +18,7 @@ static WRITE16_HANDLER( igs_priority_w )
 	COMBINE_DATA(&igs_priority);
 
 	if (data & ~0x7)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written to igs_priority = %02x\n", activecpu_get_pc(), igs_priority);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written to igs_priority = %02x\n", activecpu_get_pc(), igs_priority);
 }
 
 
@@ -169,7 +169,7 @@ static WRITE16_HANDLER( igs_blit_flags_w )
 
 	COMBINE_DATA(&blitter.flags);
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: blit x %03x, y %03x, w %03x, h %03x, gfx %03x%04x, depth %02x, pen %02x, flags %03x\n", activecpu_get_pc(),
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: blit x %03x, y %03x, w %03x, h %03x, gfx %03x%04x, depth %02x, pen %02x, flags %03x\n", activecpu_get_pc(),
 					blitter.x,blitter.y,blitter.w,blitter.h,blitter.gfx_hi,blitter.gfx_lo,blitter.depth,blitter.pen,blitter.flags);
 
 	dest	=	layer[	   blitter.flags & 0x0007	];
@@ -272,7 +272,7 @@ static WRITE16_HANDLER( igs_##NUM##_input_w )	\
 	COMBINE_DATA(&igs_input_sel);				\
 												\
 	if ( (igs_input_sel & 0xff00) || ((~igs_input_sel) & ((1 << NUM)-1)) )	\
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written in igs_input_sel = %02x\n", activecpu_get_pc(), igs_input_sel);	\
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written in igs_input_sel = %02x\n", activecpu_get_pc(), igs_input_sel);	\
 }												\
 												\
 static READ16_HANDLER( igs_##NUM##_input_r )	\
@@ -616,7 +616,7 @@ static WRITE16_HANDLER( chmplst2_magic_w )
 			}
 
 			if ( igs_input_sel2 & ~0x7f )
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written in igs_input_sel2 = %02x\n", activecpu_get_pc(), igs_input_sel2);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written in igs_input_sel2 = %02x\n", activecpu_get_pc(), igs_input_sel2);
 
 			break;
 
@@ -629,12 +629,12 @@ static WRITE16_HANDLER( chmplst2_magic_w )
 			}
 
 			if ( chmplst2_pen_hi & ~0xf )
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written in chmplst2_pen_hi = %02x\n", activecpu_get_pc(), chmplst2_pen_hi);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written in chmplst2_pen_hi = %02x\n", activecpu_get_pc(), chmplst2_pen_hi);
 
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
 	}
 }
 
@@ -650,7 +650,7 @@ static READ16_HANDLER( chmplst2_magic_r )
 			if (~igs_input_sel2 & 0x10)	return readinputport(8);
 			/* fall through */
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
 			break;
 
 		case 0x03:	return 0xff;
@@ -703,12 +703,12 @@ static WRITE16_HANDLER( chindrag_magic_w )
 				coin_counter_w(0,data & 2);
 
 			if (data & ~0x2)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written in coin counter = %02x\n", activecpu_get_pc(), data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written in coin counter = %02x\n", activecpu_get_pc(), data);
 
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
 	}
 }
 
@@ -743,7 +743,7 @@ static READ16_HANDLER( chindrag_magic_r )
 		case 0x34:	return 0x32;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
 	}
 
 	return 0;
@@ -769,12 +769,12 @@ static WRITE16_HANDLER( grtwall_magic_w )
 			}
 
 			if (data & ~0x11)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written in coin counter = %02x\n", activecpu_get_pc(), data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written in coin counter = %02x\n", activecpu_get_pc(), data);
 
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
 	}
 }
 
@@ -807,7 +807,7 @@ static READ16_HANDLER( grtwall_magic_r )
 		case 0x34:	return 0x32;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
 	}
 
 	return 0;
@@ -823,7 +823,7 @@ static WRITE16_HANDLER( lhb_okibank_w )
 	}
 
 	if ( data & (~0x200) )
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written in oki bank = %02x\n", activecpu_get_pc(), data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written in oki bank = %02x\n", activecpu_get_pc(), data);
 
 }
 
@@ -840,7 +840,7 @@ static WRITE16_HANDLER( lhb_input2_w )
 	}
 
 	if ( igs_input_sel2 & (~0x7f) )
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written in igs_input_sel2 = %02x\n", activecpu_get_pc(), igs_input_sel2);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written in igs_input_sel2 = %02x\n", activecpu_get_pc(), igs_input_sel2);
 
 }
 
@@ -857,7 +857,7 @@ static READ16_HANDLER( lhb_input2_r )
 			if (~igs_input_sel2 & 0x08)	return readinputport(9);
 			if (~igs_input_sel2 & 0x10)	return readinputport(10);
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, reading with igs_input_sel2 = %02x\n", activecpu_get_pc(), igs_input_sel2);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, reading with igs_input_sel2 = %02x\n", activecpu_get_pc(), igs_input_sel2);
 			break;
 	}
 	return 0;
@@ -882,12 +882,12 @@ static WRITE16_HANDLER( vbowl_magic_w )
 			}
 
 			if (data & ~0x3)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written in coin counter = %02x\n", activecpu_get_pc(), data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written in coin counter = %02x\n", activecpu_get_pc(), data);
 
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
 	}
 }
 
@@ -921,7 +921,7 @@ static READ16_HANDLER( vbowl_magic_r )
 		case 0x34:	return 0x32;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
 	}
 
 	return 0;
@@ -948,12 +948,12 @@ static WRITE16_HANDLER( xymg_magic_w )
 			}
 
 			if ( igs_input_sel2 & ~0x3f )
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written in igs_input_sel2 = %02x\n", activecpu_get_pc(), igs_input_sel2);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written in igs_input_sel2 = %02x\n", activecpu_get_pc(), igs_input_sel2);
 
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, writing to igs_magic %02x = %02x\n", activecpu_get_pc(), igs_magic[0], data);
 	}
 }
 
@@ -971,7 +971,7 @@ static READ16_HANDLER( xymg_magic_r )
 			if (~igs_input_sel2 & 0x10)	return readinputport(8);
 			/* fall through */
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, reading with igs_magic = %02x\n", activecpu_get_pc(), igs_magic[0]);
 			break;
 	}
 
@@ -1081,7 +1081,7 @@ static WRITE16_HANDLER( vbowl_pen_hi_w )
 	}
 
 	if (data & ~0x7)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%06x: warning, unknown bits written to pen_hi = %04x\n", activecpu_get_pc(), igs_priority);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06x: warning, unknown bits written to pen_hi = %04x\n", activecpu_get_pc(), igs_priority);
 }
 
 static WRITE16_HANDLER( vbowl_link_0_w )	{ }

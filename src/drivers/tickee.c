@@ -82,7 +82,7 @@ static WRITE16_HANDLER( tickee_control_w )
 	}
 
 	if (olddata != tickee_control[offset])
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%08X:tickee_control_w(%d) = %04X (was %04X)\n", activecpu_get_pc(), offset, tickee_control[offset], olddata);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%08X:tickee_control_w(%d) = %04X (was %04X)\n", activecpu_get_pc(), offset, tickee_control[offset], olddata);
 }
 
 

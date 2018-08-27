@@ -92,18 +92,18 @@ static WRITE_HANDLER( portb_0_w )
 
 static READ_HANDLER( portb_1_r )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "%04x: read DIP\n",activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x: read DIP\n",activecpu_get_pc());
 	return readinputport(1);
 }
 
 static WRITE_HANDLER( ca2_1_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "76477 #0 VCO SEL = %d\n",data & 1);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "76477 #0 VCO SEL = %d\n",data & 1);
 }
 
 static WRITE_HANDLER( cb2_1_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "DIP tristate %sactive\n",(data & 1) ? "in" : "");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "DIP tristate %sactive\n",(data & 1) ? "in" : "");
 }
 
 static struct pia6821_interface pia0_intf =

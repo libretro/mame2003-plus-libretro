@@ -370,7 +370,7 @@ static WRITE16_HANDLER( irqctrl_w )
 {
 	if (ACCESSING_LSB)
 	{
-		/* log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 - PC = %06X - $140005 <- %02X (old value: %02X)\n",activecpu_get_pc(), data&0xFF, old_data&0xFF);*/
+		/* log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 - PC = %06X - $140005 <- %02X (old value: %02X)\n",activecpu_get_pc(), data&0xFF, old_data&0xFF);*/
 
 		/* Bit 0 : SUBINT*/
 		if ( (wecleman_irqctrl & 1) && (!(data & 1)) )	/* 1->0 transition*/

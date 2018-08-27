@@ -302,7 +302,7 @@ WRITE_HANDLER( xevious_vh_latch_w )
 		flip_screen_set(scroll & 1);
 		break;
    default:
-		   log_cb(RETRO_LOG_ERROR, LOGPRE "CRTC WRITE REG: %x  Data: %03x\n",reg, scroll);
+		   log_cb(RETRO_LOG_DEBUG, LOGPRE "CRTC WRITE REG: %x  Data: %03x\n",reg, scroll);
 		   break;
 	}
 }

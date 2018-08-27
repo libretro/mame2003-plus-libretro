@@ -644,9 +644,9 @@ WRITE_HANDLER( williams2_7segment_w )
 		dot = ' ';
 
 	if (n == -1)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "[ %c]\n", dot);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "[ %c]\n", dot);
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "[%d%c]\n", n, dot);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "[%d%c]\n", n, dot);
 }
 
 
@@ -888,7 +888,7 @@ static READ_HANDLER( tshoot_input_port_0_3_r )
 static WRITE_HANDLER( tshoot_maxvol_w )
 {
 	/* something to do with the sound volume */
-	log_cb(RETRO_LOG_ERROR, LOGPRE "tshoot maxvol = %d (pc:%x)\n", data, activecpu_get_pc());
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "tshoot maxvol = %d (pc:%x)\n", data, activecpu_get_pc());
 }
 
 
@@ -903,17 +903,17 @@ static WRITE_HANDLER( tshoot_lamp_w )
 #if 0
 	/* gun coil */
 	if (data & 0x10)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "[gun coil] ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "[gun coil] ");
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "           ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "           ");
 
 	/* feather coil */
 	if (data & 0x20)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "[feather coil] ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "[feather coil] ");
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "               ");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "               ");
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 #endif
 }
 

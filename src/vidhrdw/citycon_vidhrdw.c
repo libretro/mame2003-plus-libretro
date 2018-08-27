@@ -111,7 +111,7 @@ WRITE_HANDLER( citycon_background_w )
 	flip_screen_set(data & 0x01);
 
 	/* bits 1-3 are unknown */
-/*	if ((data & 0x0e) != 0) log_cb(RETRO_LOG_ERROR, LOGPRE "background register = %02x\n",data);*/
+/*	if ((data & 0x0e) != 0) log_cb(RETRO_LOG_DEBUG, LOGPRE "background register = %02x\n",data);*/
 }
 
 

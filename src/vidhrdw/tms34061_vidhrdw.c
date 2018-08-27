@@ -196,7 +196,7 @@ static WRITE_HANDLER( register_w )
 				case 0x20:	tms34061.yshift = 7;	break;
 				case 0x40:	tms34061.yshift = 8;	break;
 				case 0x80:	tms34061.yshift = 9;	break;
-				default:	log_cb(RETRO_LOG_ERROR, LOGPRE "Invalid value for XYOFFSET = %04x\n", tms34061.regs[TMS34061_XYOFFSET]);	break;
+				default:	log_cb(RETRO_LOG_DEBUG, LOGPRE "Invalid value for XYOFFSET = %04x\n", tms34061.regs[TMS34061_XYOFFSET]);	break;
 			}
 			tms34061.xmask = (1 << tms34061.yshift) - 1;
 			break;

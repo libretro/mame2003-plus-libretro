@@ -278,7 +278,7 @@ static WRITE_HANDLER( input_w )
 	{
 		case 0:
 		default:
-log_cb(RETRO_LOG_ERROR, LOGPRE "PC %04x: write %02x to port 01\n",activecpu_get_pc(),data);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: write %02x to port 01\n",activecpu_get_pc(),data);
 			break;
 		case 1:
 			mahjong_input_select_w(offset,data);

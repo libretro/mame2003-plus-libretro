@@ -83,7 +83,7 @@ static void generate_interrupt(int state)
 {
 	itech8_update_interrupts(-1, state, -1);
 
-	if (FULL_LOGGING && state) log_cb(RETRO_LOG_ERROR, LOGPRE "------------ DISPLAY INT (%d) --------------\n", cpu_getscanline());
+	if (FULL_LOGGING && state) log_cb(RETRO_LOG_DEBUG, LOGPRE "------------ DISPLAY INT (%d) --------------\n", cpu_getscanline());
 }
 
 
@@ -612,7 +612,7 @@ static void blitter_done(int param)
 	blit_in_progress = 0;
 	itech8_update_interrupts(-1, -1, 1);
 
-	if (FULL_LOGGING) log_cb(RETRO_LOG_ERROR, LOGPRE "------------ BLIT DONE (%d) --------------\n", cpu_getscanline());
+	if (FULL_LOGGING) log_cb(RETRO_LOG_DEBUG, LOGPRE "------------ BLIT DONE (%d) --------------\n", cpu_getscanline());
 }
 
 
@@ -628,7 +628,7 @@ READ_HANDLER( itech8_blitter_r )
 	int result = blitter_data[offset / 2];
 
 	/* debugging */
-	if (FULL_LOGGING) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x:blitter_r(%02x)\n", activecpu_get_previouspc(), offset / 2);
+	if (FULL_LOGGING) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x:blitter_r(%02x)\n", activecpu_get_previouspc(), offset / 2);
 
 	/* low bit seems to be ignored */
 	offset /= 2;
@@ -691,7 +691,7 @@ WRITE_HANDLER( itech8_blitter_w )
 	}
 
 	/* debugging */
-	if (FULL_LOGGING) log_cb(RETRO_LOG_ERROR, LOGPRE "%04x:blitter_w(%02x)=%02x\n", activecpu_get_previouspc(), offset, data);
+	if (FULL_LOGGING) log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x:blitter_w(%02x)=%02x\n", activecpu_get_previouspc(), offset, data);
 }
 
 

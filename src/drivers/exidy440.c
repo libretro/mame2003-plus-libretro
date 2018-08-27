@@ -341,7 +341,7 @@ static WRITE_HANDLER( bankram_w )
 	if (exidy440_bank == 15 && offset >= 0x2000)
 	{
 		memory_region(REGION_CPU1)[0x10000 + 15 * 0x4000 + offset] = data;
-		log_cb(RETRO_LOG_ERROR, LOGPRE "W EEROM[%04X] = %02X\n", offset - 0x2000, data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "W EEROM[%04X] = %02X\n", offset - 0x2000, data);
 	}
 
 	/* everything else is ROM and we ignore it */
@@ -437,7 +437,7 @@ static void delayed_sound_command_w(int param)
 
 static WRITE_HANDLER( io1_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "W I/O1[%02X]=%02X\n", offset, data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "W I/O1[%02X]=%02X\n", offset, data);
 
 	/* switch off the upper 4 bits of the offset */
 	switch (offset & 0xe0)

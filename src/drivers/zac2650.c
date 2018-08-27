@@ -349,7 +349,7 @@ WRITE_HANDLER( tinvader_sound_w )
 {
     /* sounds are NOT the same as space invaders */
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Register %x = Data %d\n",data & 0xfe,data & 0x01);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Register %x = Data %d\n",data & 0xfe,data & 0x01);
 
     /* 08 = hit invader */
     /* 20 = bonus (extra base) */

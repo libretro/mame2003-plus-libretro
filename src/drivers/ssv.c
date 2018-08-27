@@ -292,7 +292,7 @@ static WRITE16_HANDLER( dsp_w )
 			break;
 		default:
 			dsp_ram[0x21] = 0;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "SSV DSP: unknown function %x (%x)\n", dsp_ram[0x20], activecpu_get_pc());
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SSV DSP: unknown function %x (%x)\n", dsp_ram[0x20], activecpu_get_pc());
 			break;
 		}
 	}
@@ -392,7 +392,7 @@ static READ16_HANDLER( hypreact_input_r )
 	if (input_sel & 0x0002)	return readinputport(6);
 	if (input_sel & 0x0004)	return readinputport(7);
 	if (input_sel & 0x0008)	return readinputport(8);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: unknown input read: %04X\n",activecpu_get_pc(),input_sel);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X: unknown input read: %04X\n",activecpu_get_pc(),input_sel);
 	return 0xffff;
 }
 
@@ -540,7 +540,7 @@ static READ16_HANDLER( srmp4_input_r )
 	if (input_sel & 0x0004)	return readinputport(6);
 	if (input_sel & 0x0008)	return readinputport(7);
 	if (input_sel & 0x0010)	return readinputport(8);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: unknown input read: %04X\n",activecpu_get_pc(),input_sel);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X: unknown input read: %04X\n",activecpu_get_pc(),input_sel);
 	return 0xffff;
 }
 
@@ -588,7 +588,7 @@ static READ16_HANDLER( srmp7_input_r )
 	if (input_sel & 0x0004)	return readinputport(6);
 	if (input_sel & 0x0008)	return readinputport(7);
 	if (input_sel & 0x0010)	return readinputport(8);
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06X: unknown input read: %04X\n",activecpu_get_pc(),input_sel);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06X: unknown input read: %04X\n",activecpu_get_pc(),input_sel);
 	return 0xffff;
 }
 

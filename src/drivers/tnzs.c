@@ -261,7 +261,7 @@ int kageki_init_samples(const struct MachineSound *msound)
 		{
 			*dest++ = ((*scan++) ^ 0x80);
 		}
-	/*	log_cb(RETRO_LOG_ERROR, LOGPRE "samples num:%02X ofs:%04X lng:%04X\n", i, start, size);*/
+	/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "samples num:%02X ofs:%04X lng:%04X\n", i, start, size);*/
 	}
 
 	return 0;
@@ -292,7 +292,7 @@ static READ_HANDLER( kageki_csport_r )
 			break;
 		default:
 			dsw = 0x00;
-		/*	log_cb(RETRO_LOG_ERROR, LOGPRE "kageki_csport_sel error !! (0x%08X)\n", kageki_csport_sel);*/
+		/*	log_cb(RETRO_LOG_DEBUG, LOGPRE "kageki_csport_sel error !! (0x%08X)\n", kageki_csport_sel);*/
 	}
 
 	return (dsw & 0xff);

@@ -183,7 +183,7 @@ static WRITE16_HANDLER( ioc_w )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write ioc offset %06x with %04x\n",activecpu_get_pc(),offset,data);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - write ioc offset %06x with %04x\n",activecpu_get_pc(),offset,data);
 			break;
 	}
 

@@ -72,7 +72,7 @@ PALETTE_INIT( higemaru )
 
 WRITE_HANDLER( higemaru_c800_w )
 {
-	if (data & 0x7c) log_cb(RETRO_LOG_ERROR, LOGPRE "c800 = %02x\n",data);
+	if (data & 0x7c) log_cb(RETRO_LOG_DEBUG, LOGPRE "c800 = %02x\n",data);
 
 	/* bits 0 and 1 are coin counters */
 	coin_counter_w(0,data & 2);

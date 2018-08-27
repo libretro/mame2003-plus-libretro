@@ -259,7 +259,7 @@ static READ16_HANDLER ( dblewing_prot_r )
 	}
 
 
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);*/
 
 	if ((offset*2)==0x0f8) return 0; /* dblwings_080_data;*/
 	if ((offset*2)==0x104) return 0;
@@ -272,7 +272,7 @@ static READ16_HANDLER ( dblewing_prot_r )
 	if ((offset*2)==0x786) return 0;
 
 	/*printf("dblewing prot r %08x, %04x, %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask);*/
-	log_cb(RETRO_LOG_ERROR, LOGPRE "dblewing prot r %08x, %04x, %04x\n",activecpu_get_pc(), offset*2, mem_mask);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "dblewing prot r %08x, %04x, %04x\n",activecpu_get_pc(), offset*2, mem_mask);
 
 	return 0;/*mame_rand(space->machine);*/
 }
@@ -280,7 +280,7 @@ static READ16_HANDLER ( dblewing_prot_r )
 static WRITE16_HANDLER( dblewing_prot_w )
 {
 /*  if(offset*2 != 0x380)*/
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
 
 	switch(offset*2)
 	{
@@ -358,7 +358,7 @@ static WRITE16_HANDLER( dblewing_prot_w )
 
 				case 0xeff5: boss_move = 1; break;
 				case 0xd2f1: boss_move = 2; break;
-				/*default:   log_cb(RETRO_LOG_ERROR, LOGPRE "%04x\n",dblwings_38e_data); break;*/
+				/*default:   log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x\n",dblwings_38e_data); break;*/
 				/*case 0xe65a: boss_shoot_type = 0; break;*/
 			}
 			return;
@@ -382,7 +382,7 @@ static WRITE16_HANDLER( dblewing_prot_w )
 			return;  /* p2 inputs select screen  OK*/
 	}
 
-/*  log_cb(RETRO_LOG_ERROR, LOGPRE "dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
+/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "dblewing prot w %08x, %04x, %04x %04x\n",cpu_get_pc(space->cpu), offset*2, mem_mask,data);*/
 
 	if ((offset*2)==0x008) { dblwings_008_data = data; return; }
 	if ((offset*2)==0x080) { dblwings_080_data = data; return; } /* p3 3rd boss?*/

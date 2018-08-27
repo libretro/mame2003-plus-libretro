@@ -163,7 +163,7 @@ BlitPolyObject( struct mame_bitmap *bitmap, int code, double M[4][4] )
 
 			if( vertexCount>MAX_VERTEX )
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "vertex overflow: %d\n", vertexCount );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "vertex overflow: %d\n", vertexCount );
 				return;
 			}
 			for( count=0; count<vertexCount; count++ )
@@ -180,7 +180,7 @@ BlitPolyObject( struct mame_bitmap *bitmap, int code, double M[4][4] )
 			if( surfaceCount > MAX_SURFACE )
 			{
 				mbDspError = 1;
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "surface overflow: %d\n", surfaceCount );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "surface overflow: %d\n", surfaceCount );
 				return;
 			}
 			for( count=0; count<surfaceCount; count++ )
@@ -303,13 +303,13 @@ DrawPolygons( struct mame_bitmap *bitmap )
 	if( bDebug )
 	{
 		while( keyboard_pressed( KEYCODE_U ) ){}
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "\nDSPRAM:\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "\nDSPRAM:\n" );
 		for( i=0; i<0x30*1; i++ )
 		{
-			if( (i&0x7)==0 ) log_cb(RETRO_LOG_ERROR, LOGPRE  "\n\t%04x: ",i*2 );
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%04x ", (UINT16)pDSPRAM[i] );
+			if( (i&0x7)==0 ) log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n\t%04x: ",i*2 );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%04x ", (UINT16)pDSPRAM[i] );
 		}
-		log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n" );
 	}
 
 	pDSPRAM += 0x200/2;
@@ -364,7 +364,7 @@ DrawPolygons( struct mame_bitmap *bitmap )
 		case (INT16)0xffff: /* end-of-list marker */
 			if( bDebug )
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "\n\n" );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n\n" );
 			}
 			return;
 
@@ -378,12 +378,12 @@ DrawPolygons( struct mame_bitmap *bitmap )
 		if( mbDspError ) return;
 		if( bDebug )
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "obj: ");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "obj: ");
 			for( i=0; i<size; i++ )
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%04x ", (UINT16)pDSPRAM[i] );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%04x ", (UINT16)pDSPRAM[i] );
 			}
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "\n" );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "\n" );
 		}
 		pDSPRAM += size;
 	} /* next object */

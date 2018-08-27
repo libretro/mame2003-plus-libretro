@@ -540,7 +540,7 @@ WRITE_HANDLER( omegaf_bg2_enabled_w )
 
 WRITE_HANDLER( omegaf_sprite_overdraw_w )
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE  "sprite overdraw flag : %02x\n", data );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE  "sprite overdraw flag : %02x\n", data );
 	if (sprite_overdraw_enabled != (data & 1))
 	{
 		sprite_overdraw_enabled = data & 1;

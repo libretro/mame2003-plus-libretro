@@ -195,8 +195,8 @@ WRITE16_HANDLER( twincobr_fgscroll_w )
 
 WRITE16_HANDLER( twincobr_exscroll_w )	/* Extra unused video layer */
 {
-	if (offset == 0) log_cb(RETRO_LOG_ERROR, LOGPRE "PC - write %04x to unknown video scroll Y register\n",data);
-	else log_cb(RETRO_LOG_ERROR, LOGPRE "PC - write %04x to unknown video scroll X register\n",data);
+	if (offset == 0) log_cb(RETRO_LOG_DEBUG, LOGPRE "PC - write %04x to unknown video scroll Y register\n",data);
+	else log_cb(RETRO_LOG_DEBUG, LOGPRE "PC - write %04x to unknown video scroll X register\n",data);
 }
 
 /******************** Wardner interface to this hardware ********************/
@@ -234,8 +234,8 @@ WRITE_HANDLER( wardner_fgscroll_w )
 
 WRITE_HANDLER( wardner_exscroll_w )	/* Extra unused video layer */
 {
-	if (offset == 0) log_cb(RETRO_LOG_ERROR, LOGPRE "PC - write %04x to unknown video scroll Y register\n",data);
-	else log_cb(RETRO_LOG_ERROR, LOGPRE "PC - write %04x to unknown video scroll X register\n",data);
+	if (offset == 0) log_cb(RETRO_LOG_DEBUG, LOGPRE "PC - write %04x to unknown video scroll Y register\n",data);
+	else log_cb(RETRO_LOG_DEBUG, LOGPRE "PC - write %04x to unknown video scroll X register\n",data);
 }
 
 READ_HANDLER( wardner_videoram_r )

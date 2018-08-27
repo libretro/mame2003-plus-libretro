@@ -118,7 +118,7 @@ READ16_HANDLER (PSTARS_protram_r)
 		return readinputport(4);
 	else if (offset >= 0x10)  /*timer*/
 	{
-	  log_cb(RETRO_LOG_ERROR, LOGPRE "PSTARS ACCESS COUNTER %6X\n",pstar_ram[offset-0x10]);
+	  log_cb(RETRO_LOG_DEBUG, LOGPRE "PSTARS ACCESS COUNTER %6X\n",pstar_ram[offset-0x10]);
 		return pstar_ram[offset-0x10]--;
 	}
 	return 0x0000;
@@ -133,7 +133,7 @@ READ16_HANDLER (PSTARS_r16)
 		realkey=PSTARSKEY>>8;
 		realkey|=PSTARSKEY;
 		d^=realkey;
-/*      log_cb(RETRO_LOG_ERROR, LOGPRE "PSTARS A27 R  %6X\n",PSTARS_VAL);*/
+/*      log_cb(RETRO_LOG_DEBUG, LOGPRE "PSTARS A27 R  %6X\n",PSTARS_VAL);*/
 		return d;
 	}
 	else if(offset==1)
@@ -295,7 +295,7 @@ WRITE16_HANDLER (PSTARS_w16)
 	   			break;
 				default:
 					 PSTARS_VAL=0x890000;
-				   log_cb(RETRO_LOG_ERROR, LOGPRE "PSTARS PC(%06x) UNKNOWN %4X %4X\n",activecpu_get_pc(),PSTARSINT[1],PSTARSINT[0]);
+				   log_cb(RETRO_LOG_DEBUG, LOGPRE "PSTARS PC(%06x) UNKNOWN %4X %4X\n",activecpu_get_pc(),PSTARSINT[1],PSTARSINT[0]);
 
 		}
 
@@ -531,7 +531,7 @@ READ16_HANDLER (ASIC28_r16)
 
 		case 0x20: /* PhotoY2k spritenum conversion 4/4*/
 			if(!ASIC28RCNT)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "ASIC28: PhotoY2K spr4 %04x %06x (%06x)\n", val & 0xffff, photoy2k_trf[2], activecpu_get_pc());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "ASIC28: PhotoY2K spr4 %04x %06x (%06x)\n", val & 0xffff, photoy2k_trf[2], activecpu_get_pc());
 			val = photoy2k_soff >> 16;
 			break;
 
@@ -539,12 +539,12 @@ READ16_HANDLER (ASIC28_r16)
 			if(!ASIC28RCNT) {
 				extern unsigned int pgmy2ks[];
 				photoy2k_trf[2] = val & 0xffff;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "ASIC28: PhotoY2K spr3 %04x %06x (%06x)\n", val & 0xffff, photoy2k_trf[1], activecpu_get_pc());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "ASIC28: PhotoY2K spr3 %04x %06x (%06x)\n", val & 0xffff, photoy2k_trf[1], activecpu_get_pc());
 				if(photoy2k_trf[0] < 0x3c00)
 					photoy2k_soff = pgmy2ks[photoy2k_trf[0]];
 				else
 					photoy2k_soff = 0;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "ASIC28: spriteval %04x, %06x -> %06x\n", photoy2k_trf[0], (photoy2k_trf[2]<<16)|photoy2k_trf[1], photoy2k_soff);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "ASIC28: spriteval %04x, %06x -> %06x\n", photoy2k_trf[0], (photoy2k_trf[2]<<16)|photoy2k_trf[1], photoy2k_soff);
 			}
 			val = photoy2k_soff & 0xffff;
 			break;
@@ -552,7 +552,7 @@ READ16_HANDLER (ASIC28_r16)
 		case 0x22: /* PhotoY2k spritenum conversion 2/4*/
 			if(!ASIC28RCNT) {
 				photoy2k_trf[1] = val & 0xffff;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "ASIC28: PhotoY2K spr2 %04x %06x (%06x)\n", val & 0xffff, photoy2k_trf[0], activecpu_get_pc());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "ASIC28: PhotoY2K spr2 %04x %06x (%06x)\n", val & 0xffff, photoy2k_trf[0], activecpu_get_pc());
 			}
 			val = photoy2k_trf[0] | 0x880000;
 			break;
@@ -560,7 +560,7 @@ READ16_HANDLER (ASIC28_r16)
 		case 0x23: /* PhotoY2k spritenum conversion 1/4*/
 			if(!ASIC28RCNT) {
 				photoy2k_trf[0] = val & 0xffff;
-				log_cb(RETRO_LOG_ERROR, LOGPRE "ASIC28: PhotoY2K spr1 %04x (%06x)\n", val & 0xffff, activecpu_get_pc());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "ASIC28: PhotoY2K spr1 %04x (%06x)\n", val & 0xffff, activecpu_get_pc());
 			}
 			val = 0x880000;
 			break;
@@ -570,7 +570,7 @@ READ16_HANDLER (ASIC28_r16)
 				photoy2k_seqpos++;
 			val = photoy2k_spritenum();
 			if(!ASIC28RCNT)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "ASIC28: PhotoY2K seq_next  %05x -> %06x (%06x)\n", photoy2k_seqpos, val, activecpu_get_pc());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "ASIC28: PhotoY2K seq_next  %05x -> %06x (%06x)\n", photoy2k_seqpos, val, activecpu_get_pc());
 			break;
 
 		case 0x32: /* PhotoY2k start of sequence*/
@@ -578,7 +578,7 @@ READ16_HANDLER (ASIC28_r16)
 				photoy2k_seqpos = (val & 0xffff) << 4;
 			val = photoy2k_spritenum();
 			if(!ASIC28RCNT)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "ASIC28: PhotoY2K seq_start %05x -> %06x (%06x)\n", photoy2k_seqpos, val, activecpu_get_pc());
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "ASIC28: PhotoY2K seq_start %05x -> %06x (%06x)\n", photoy2k_seqpos, val, activecpu_get_pc());
 			break;
 
 		case 0x99:
@@ -756,7 +756,7 @@ WRITE16_HANDLER (ASIC28_w16)
 		data^=realkey;
 		ASIC28REGS[1]=data;
 /*		ErrorLogMessage("ASIC28 CMD %X  PARAM %X",ASIC28REGS[1],ASIC28REGS[0]);*/
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ASIC28 CMD %04x  PARAM %04x\n",ASIC28REGS[1],ASIC28REGS[0]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ASIC28 CMD %04x  PARAM %04x\n",ASIC28REGS[1],ASIC28REGS[0]);
 
 		ASICPARAMS[ASIC28REGS[1]&0xff]=ASIC28REGS[0];
 		if(ASIC28REGS[1]==0xE7)

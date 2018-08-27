@@ -322,7 +322,7 @@ VIDEO_UPDATE( carpolo )
 					  bit 1 marked as WIDE, but never appears to be set */
 	if (carpolo_spriteram[0x0f] & 0x02)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "WIDE!\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "WIDE!\n");
 	}
 
 	if (carpolo_spriteram[0x0f] & 0x01)

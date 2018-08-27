@@ -37,7 +37,7 @@ static void copd2_set_tableoffset(UINT16 data)
 	copd2_offs = data;
 	if (copd2_offs>0xff)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "copd2 offs > 0x100\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "copd2 offs > 0x100\n");
 	}
 
 	copd2_table_2[copd2_offs/8] = cop_438;
@@ -82,20 +82,20 @@ static void copd2_set_tableoffset(UINT16 data)
 	{
 		int i;
 
-		log_cb(RETRO_LOG_ERROR, LOGPRE "start\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "start\n");
 
 		for (i=0;i<0x20;i++)
 		{
 			int ii;
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%02x | %01x | %04x | %04x | ", i, copd2_table_2[i], copd2_table_3[i], copd2_table_4[i]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x | %01x | %04x | %04x | ", i, copd2_table_2[i], copd2_table_3[i], copd2_table_4[i]);
 
 
 			for (ii=0;ii<0x8;ii++)
 			{
-				log_cb(RETRO_LOG_ERROR, LOGPRE "%03x ", copd2_table[i*8 + ii]);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "%03x ", copd2_table[i*8 + ii]);
 
 			}
-			log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 		}
 
 	}
@@ -139,7 +139,7 @@ static WRITE16_HANDLER( seibu_common_video_regs_w )
 		case (0x026/2): { denjinmk_scrollram16[3] = seibu_vregs[offset]; break; }
 		case (0x028/2): { denjinmk_scrollram16[4] = seibu_vregs[offset]; break; }
 		case (0x02a/2): { denjinmk_scrollram16[5] = seibu_vregs[offset]; break; }
-		default: { log_cb(RETRO_LOG_ERROR, LOGPRE "seibu_common_video_regs_w unhandled offset %02x %04x\n",offset*2,data); break; }
+		default: { log_cb(RETRO_LOG_DEBUG, LOGPRE "seibu_common_video_regs_w unhandled offset %02x %04x\n",offset*2,data); break; }
 	}
 }
 
@@ -424,7 +424,7 @@ static WRITE16_HANDLER( generic_cop_w )
 		case (0x010/2):
 		{
 			if(data)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: COP RAM 0x410 used with %04x\n",data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Warning: COP RAM 0x410 used with %04x\n",data);
 			else
 			{
 				/* guess */
@@ -820,7 +820,7 @@ static WRITE16_HANDLER( generic_cop_w )
 
 				if(!div)
 				{
-					log_cb(RETRO_LOG_ERROR, LOGPRE "divide by zero?\n");
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "divide by zero?\n");
 					div = 1;
 				}
 
@@ -899,7 +899,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				rel_xy = cpu_readmem24bew_word(cop_sprite_dma_src + 4 + offs);
 
 				/*if(rel_xy & 0x0706)*/
-				/*  log_cb(RETRO_LOG_ERROR, LOGPRE "sprite rel_xy = %04x\n",rel_xy);*/
+				/*  log_cb(RETRO_LOG_DEBUG, LOGPRE "sprite rel_xy = %04x\n",rel_xy);*/
 
 				if(rel_xy & 1)
 					cpu_writemem24bew_word(cop_register[4] + offs + 4,0xc0 + abs_x - (rel_xy & 0xf8));
@@ -1024,7 +1024,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				return;
 			}
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "%04x\n",cop_mcu_ram[offset]);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "%04x\n",cop_mcu_ram[offset]);
 			break;
 		}
 
@@ -1110,7 +1110,7 @@ static WRITE16_HANDLER( generic_cop_w )
 					}
 					else
 					{
-						log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: palette DMA used with mode %02x!\n",pal_brightness_mode);
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "Warning: palette DMA used with mode %02x!\n",pal_brightness_mode);
 						pal_val = cpu_readmem24bew_word(src);
 					}
 
@@ -1185,7 +1185,7 @@ static WRITE16_HANDLER( generic_cop_w )
 			/* private buffer copies */
 			if ((cop_dma_trigger==0x14) || (cop_dma_trigger==0x15)) return;
 
-			log_cb(RETRO_LOG_ERROR, LOGPRE "SRC: %08x %08x DST:%08x SIZE:%08x TRIGGER: %08x\n",cop_dma_src[cop_dma_trigger] << 6,cop_dma_fade_table,cop_dma_dst[cop_dma_trigger] << 6,cop_dma_size[cop_dma_trigger] << 5,cop_dma_trigger);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "SRC: %08x %08x DST:%08x SIZE:%08x TRIGGER: %08x\n",cop_dma_src[cop_dma_trigger] << 6,cop_dma_fade_table,cop_dma_dst[cop_dma_trigger] << 6,cop_dma_size[cop_dma_trigger] << 5,cop_dma_trigger);
 
 			break;
 		}
@@ -1226,7 +1226,7 @@ static WRITE16_HANDLER( generic_cop_w )
 						{
 							case 2:	xchg_flag = (vali > valj); break;
 							case 1: xchg_flag = (vali < valj); break;
-							default: xchg_flag = 0; log_cb(RETRO_LOG_ERROR, LOGPRE "Warning: sort-DMA used with param %02x\n",cop_sort_param); break;
+							default: xchg_flag = 0; log_cb(RETRO_LOG_DEBUG, LOGPRE "Warning: sort-DMA used with param %02x\n",cop_sort_param); break;
 						}
 
 						if(xchg_flag)

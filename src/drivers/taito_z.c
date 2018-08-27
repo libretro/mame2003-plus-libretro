@@ -757,7 +757,7 @@ static WRITE16_HANDLER( cpua_ctrl_w )	/* assumes Z80 sandwiched between 68Ks */
 
 	parse_control();
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
 }
 
 static WRITE16_HANDLER( cpua_noz80_ctrl_w )	/* assumes no Z80 */
@@ -768,7 +768,7 @@ static WRITE16_HANDLER( cpua_noz80_ctrl_w )	/* assumes no Z80 */
 
 	parse_control_noz80();
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
 }
 
 
@@ -1034,7 +1034,7 @@ static READ16_HANDLER( bshark_stick_r )
 			return input_port_8_word_r(0,mem_mask);
 	}
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped stick offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped stick offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -1067,7 +1067,7 @@ static READ16_HANDLER( nightstr_stick_r )
 			return input_port_8_word_r(0,mem_mask);
 	}
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped stick offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped stick offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -1115,7 +1115,7 @@ static READ16_HANDLER( sci_steer_input_r )
 			return (steer & 0xff00) >> 8;
 	}
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped steer input offset %06x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped steer input offset %06x\n",activecpu_get_pc(),offset);
 
 	return 0xff;
 }
@@ -1198,7 +1198,7 @@ static READ16_HANDLER( dblaxle_steer_input_r )
 			return steer &0xff;
 	}
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read unmapped steer input offset %02x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped steer input offset %02x\n",activecpu_get_pc(),offset);
 	return 0x00;
 }
 
@@ -1214,7 +1214,7 @@ static READ16_HANDLER( chasehq_motor_r )
 			return 0x55;	/* motor cpu status ? */
 
 		default:
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - read motor cpu %03x\n",activecpu_get_pc(),offset);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read motor cpu %03x\n",activecpu_get_pc(),offset);
 			return 0;
 	}
 }
@@ -1223,7 +1223,7 @@ static WRITE16_HANDLER( chasehq_motor_w )
 {
 	/* Writes $e00000-25 and $e00200-219 */
 
-log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: warning - write %04x to motor cpu %03x\n",activecpu_get_pc(),data,offset);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - write %04x to motor cpu %03x\n",activecpu_get_pc(),data,offset);
 
 }
 

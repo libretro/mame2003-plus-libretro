@@ -189,7 +189,7 @@ static WRITE16_HANDLER( cpua_ctrl_w )
 
 	parse_control();
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: write %04x to cpu control\n",activecpu_get_pc(),data);
 }
 
 

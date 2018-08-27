@@ -440,7 +440,7 @@ static WRITE_HANDLER( le_4800_w )
 					break;
 
 				default:
-					log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown LE 48xx register write: %x to %x (PC=%x)\n", data, offset, activecpu_get_pc());
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown LE 48xx register write: %x to %x (PC=%x)\n", data, offset, activecpu_get_pc());
 					break;
 			}
 		}
