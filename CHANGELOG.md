@@ -144,6 +144,7 @@
 * Fighters History
 * Fire Barrel
 * Funky Jet
+* Gardia
 * Green Beret
 * Hacha Mecha Figher
 * Max RPM
