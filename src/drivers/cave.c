@@ -3885,7 +3885,7 @@ DRIVER_INIT( plegends )
 	time_vblank_irq = 2000;	/**/
 	
 	/* set up data ROMs */
-	memcpy(data_rom, memory_region(REGION_CPU2), memory_region_length(REGION_CPU2));
+	memcpy(data_rom, memory_region(REGION_USER1), memory_region_length(REGION_USER1));
 	
 }
 
