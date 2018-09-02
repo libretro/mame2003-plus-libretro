@@ -105,7 +105,7 @@ static UINT32 bam1Autoincrement(void)
 		v60.reg[modVal&0x1F]+=4;
 		break;
 	default:
-		fatalerror("CPU - BAM1 - 7");
+		log_cb(RETRO_LOG_DEBUG, "CPU - BAM1 - 7");
 		break;
 	}
 	return 1;
@@ -144,7 +144,7 @@ static UINT32 bam1Autodecrement(void)
 		v60.reg[modVal&0x1F]-=4;
 		break;
 	default:
-		fatalerror("CPU - BAM1 - 7");
+		log_cb(RETRO_LOG_DEBUG, "CPU - BAM1 - 7");
 		break;
 	}
 	amOut=MemRead32(v60.reg[modVal&0x1F]);
@@ -1090,69 +1090,69 @@ static UINT32 am1ImmediateQuick(void)
 
 static UINT32 am1Error1(void)
 {
-	fatalerror("CPU - AM1 - 1 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM1 - 1 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 bam1Error1(void)
 {
-	fatalerror("CPU - BAM1 - 1 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - BAM1 - 1 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 am1Error2(void)
 {
-	fatalerror("CPU - AM1 - 2 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM1 - 2 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 bam1Error2(void)
 {
-	fatalerror("CPU - BAM1 - 2 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - BAM1 - 2 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 #ifdef UNUSED_FUNCTION
 static UINT32 am1Error3(void)
 {
-	fatalerror("CPU - AM1 - 3 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM1 - 3 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 bam1Error3(void)
 {
-	fatalerror("CPU - BAM1 - 3 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - BAM1 - 3 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 #endif
 
 static UINT32 am1Error4(void)
 {
-	fatalerror("CPU - AM1 - 4 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM1 - 4 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 bam1Error4(void)
 {
-	fatalerror("CPU - BAM1 - 4 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - BAM1 - 4 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 am1Error5(void)
 {
-	fatalerror("CPU - AM1 - 5 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM1 - 5 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 bam1Error5(void)
 {
-	fatalerror("CPU - BAM1 - 5 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - BAM1 - 5 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 bam1Error6(void)
 {
-	fatalerror("CPU - BAM1 - 6 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - BAM1 - 6 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 

@@ -984,31 +984,31 @@ static UINT32 opCVTDZP(void)
 
 static UINT32 op58UNHANDLED(void)
 {
-	fatalerror("Unhandled 58 opcode at PC: /%06x", PC);
+	log_cb(RETRO_LOG_DEBUG, "Unhandled 58 opcode at PC: /%06x", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 op5AUNHANDLED(void)
 {
-	fatalerror("Unhandled 5A opcode at PC: /%06x", PC);
+	log_cb(RETRO_LOG_DEBUG, "Unhandled 5A opcode at PC: /%06x", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 op5BUNHANDLED(void)
 {
-	fatalerror("Unhandled 5B opcode at PC: /%06x", PC);
+	log_cb(RETRO_LOG_DEBUG, "Unhandled 5B opcode at PC: /%06x", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 op5DUNHANDLED(void)
 {
-	fatalerror("Unhandled 5D opcode at PC: /%06x", PC);
+	log_cb(RETRO_LOG_DEBUG, "Unhandled 5D opcode at PC: /%06x", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 op59UNHANDLED(void)
 {
-	fatalerror("Unhandled 59 opcode at PC: /%06x", PC);
+	log_cb(RETRO_LOG_DEBUG, "Unhandled 59 opcode at PC: /%06x", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
