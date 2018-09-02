@@ -239,7 +239,11 @@ void pgm_dw2_decrypt(void);
 void pgm_djlzz_decrypt(void);
 void pgm_killbld_decrypt(void);
 void pgm_pstar_decrypt(void);
+void pgm_ket_decrypt(void);
+void pgm_espgal_decrypt(void);
+void pgm_py2k2_decrypt(void);
 
+READ16_HANDLER( pgm_calendar_r );
 READ16_HANDLER( pgm_asic3_r );
 WRITE16_HANDLER( pgm_asic3_w );
 WRITE16_HANDLER( pgm_asic3_reg_w );
@@ -416,6 +420,17 @@ WRITE16_HANDLER( pgm_calendar_w )
 	}
 }
 
+/*************************************
+ *
+ *	NVRAM
+ *
+ *************************************/
+
+static READ16_HANDLER( nvram_r ) /* ddp3blk needs this to boot */
+{
+	return ((data16_t *)generic_nvram)[offset] | 0xfff0;
+}
+
 /*** Memory Maps *************************************************************/
 
 
@@ -469,6 +484,56 @@ static MEMORY_WRITE16_START( pgm_writemem )
 	{ 0xc10000, 0xc1ffff, z80_ram_w }, /* Z80 Program */
 MEMORY_END
 
+static MEMORY_READ16_START( cavepgm_readmem )
+	{ 0x000000, 0x3fffff, MRA16_ROM },   /* BIOS ROM */
+
+	{ 0x800000, 0x81ffff, MRA16_RAM }, /* Main Ram, Sprites, SRAM? */
+	{ 0x820000, 0x8fffff, pgm_mirror_r },
+	{ 0x800000, 0x81ffff, nvram_r },   /* ddp3blk */
+
+	{ 0x900000, 0x903fff, MRA16_RAM }, /* Backgrounds */
+	{ 0x904000, 0x905fff, MRA16_RAM }, /* Text Layer */
+	{ 0x907000, 0x9077ff, MRA16_RAM },
+	{ 0xa00000, 0xa011ff, MRA16_RAM },
+	{ 0xb00000, 0xb0ffff, MRA16_RAM }, /* Video Regs inc. Zoom Table */
+
+	{ 0xc00002, 0xc00003, soundlatch_word_r },
+	{ 0xc00004, 0xc00005, soundlatch2_word_r },
+	{ 0xc00006, 0xc00007, pgm_calendar_r },
+	{ 0xc0000c, 0xc0000d, soundlatch3_word_r },
+
+	{ 0xC08000, 0xC08001, input_port_0_word_r }, /* p1+p2 controls*/
+	{ 0xC08002, 0xC08003, input_port_1_word_r }, /* p3+p4 controls*/
+	{ 0xC08004, 0xC08005, input_port_2_word_r }, /* extra controls*/
+	{ 0xC08006, 0xC08007, input_port_3_word_r }, /* dipswitches*/
+
+	{ 0xc10000, 0xc1ffff, z80_ram_r }, /* Z80 Program */
+MEMORY_END
+
+static MEMORY_WRITE16_START( cavepgm_writemem )
+	{ 0x000000, 0x3fffff, MWA16_ROM },   /* BIOS ROM */
+
+	{ 0x700006, 0x700007, MWA16_NOP }, /* Watchdog?*/
+
+	{ 0x800000, 0x81ffff, MWA16_RAM, &pgm_mainram },
+	{ 0x820000, 0x8fffff, pgm_mirror_w },
+	{ 0x800000, 0x81ffff, MWA16_RAM, (data16_t **)&generic_nvram, &generic_nvram_size }, /* ddp3blk */
+
+	{ 0x900000, 0x903fff, pgm_bg_videoram_w, &pgm_bg_videoram }, /* Backgrounds */
+	{ 0x904000, 0x905fff, pgm_tx_videoram_w, &pgm_tx_videoram },/* Text Layer */
+	{ 0x907000, 0x9077ff, MWA16_RAM, &pgm_rowscrollram },
+	{ 0xa00000, 0xa011ff, paletteram16_xRRRRRGGGGGBBBBB_word_w, &paletteram16 },
+	{ 0xb00000, 0xb0ffff, MWA16_RAM, &pgm_videoregs }, /* Video Regs inc. Zoom Table */
+
+	{ 0xc00002, 0xc00003, m68k_l1_w },
+	{ 0xc00004, 0xc00005, soundlatch2_word_w },
+	{ 0xc00006, 0xc00007, pgm_calendar_w },
+	{ 0xc00008, 0xc00009, z80_reset_w },
+	{ 0xc0000a, 0xc0000b, z80_ctrl_w },
+	{ 0xc0000c, 0xc0000d, soundlatch3_word_w },
+
+	{ 0xc10000, 0xc1ffff, z80_ram_w }, /* Z80 Program */
+MEMORY_END
 
 static UINT16 *killbld_sharedprotram;
 
@@ -1003,6 +1068,37 @@ static MACHINE_DRIVER_START( pgm )
 	MDRV_VIDEO_UPDATE(pgm)
 MACHINE_DRIVER_END
 
+static MACHINE_DRIVER_START( cavepgm )
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(M68000, 20000000) /* 20 mhz! verified on real board */
+	MDRV_CPU_MEMORY(cavepgm_readmem,cavepgm_writemem)
+	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
+
+	MDRV_CPU_ADD(Z80, 8467200)
+	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
+	MDRV_CPU_PORTS(z80_readport, z80_writeport)
+	MDRV_CPU_FLAGS(CPU_AUDIO_CPU | CPU_16BIT_PORT)
+	
+	MDRV_NVRAM_HANDLER(generic_0fill)
+
+	MDRV_SOUND_ADD(ICS2115, pgm_ics2115_interface)
+
+    MDRV_FRAMES_PER_SECOND(59.170000)
+	MDRV_VBLANK_DURATION(DEFAULT_60HZ_VBLANK_DURATION)
+
+	/* video hardware */
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER )
+	MDRV_SCREEN_SIZE(64*8, 64*8)
+	MDRV_VISIBLE_AREA(0*8, 56*8-1, 0*8, 28*8-1)
+	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_PALETTE_LENGTH(0x1200/2)
+
+	MDRV_VIDEO_START(pgm)
+	MDRV_VIDEO_EOF(pgm)
+	MDRV_VIDEO_UPDATE(pgm)
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( killbld )
 
 	/* basic machine hardware */
@@ -1456,6 +1552,184 @@ static DRIVER_INIT( pstar )
 	install_mem_write16_handler(0, 0x500000, 0x500005, PSTARS_w16);
 }
 
+static UINT16 value0, value1, valuekey, ddp3lastcommand;
+static UINT32 valueresponse;
+int ddp3internal_slot = 0;
+UINT32 ddp3slots[0xff];
+INT16 thrust;
+
+static WRITE16_HANDLER( ddp3_asic_w )
+{
+
+	if (offset == 0)
+	{
+		value0 = data;
+		return;
+	}
+	else if (offset == 1)
+	{
+		UINT16 realkey;
+		if ((data >> 8) == 0xff)
+			valuekey = 0xff00;
+		realkey = valuekey >> 8;
+		realkey |= valuekey;
+		{
+			valuekey += 0x0100;
+			valuekey &= 0xff00;
+			if (valuekey == 0xff00)
+				valuekey =  0x0100;
+		}
+		data ^= realkey;
+		value1 = data;
+		value0 ^= realkey;
+
+		ddp3lastcommand = value1 & 0xff;
+
+		/* typical frame (ddp3) (all 3 games use only these commands? for the most part of levels espgal just issues 8e)
+            vbl
+            145f28 command 67
+            145f70 command e5
+            145f28 command 67
+            145f70 command e5
+            1460c6 command 40
+            145ec0 command 8e
+        */
+
+		switch (ddp3lastcommand)
+		{
+			default:
+				valueresponse = 0x880000;
+				break;
+
+			case 0x40:
+				valueresponse = 0x880000;
+				ddp3slots[(value0>>10)&0x1F] = (ddp3slots[(value0>>5)&0x1F]+ddp3slots[(value0>>0)&0x1F])&0xffffff;
+				
+				break;
+
+			case 0x67:
+				valueresponse = 0x880000;
+				ddp3internal_slot = (value0 & 0xff00)>>8;
+				ddp3slots[ddp3internal_slot] = (value0 & 0x00ff) << 16;
+				break;
+
+			case 0xe5:
+				valueresponse = 0x880000;
+				ddp3slots[ddp3internal_slot] |= (value0 & 0xffff);
+				if (value0 > 0xf000) thrust = -value0;
+				break;
+
+			case 0x8e:
+				valueresponse = ddp3slots[value0 & 0xff];
+				break;
+
+			case 0x99: /* reset? */
+			valuekey = 0x100;
+				valueresponse = 0x880000;
+				break;
+
+		}
+	}
+	else if (offset==2)
+	{
+
+	}
+
+}
+
+static READ16_HANDLER( ddp3_asic_r )
+{
+
+	if (offset == 0)
+	{
+		UINT16 d = valueresponse & 0xffff;
+		UINT16 realkey = valuekey >> 8;
+		realkey |= valuekey;
+		d ^= realkey;
+
+
+		return d;
+
+	}
+	else if (offset == 1)
+	{
+		UINT16 d = valueresponse >> 16;
+		UINT16 realkey = valuekey >> 8;
+		realkey |= valuekey;
+		d ^= realkey;
+
+
+		return d;
+
+	}
+	return 0xffff;
+}
+
+static READ16_HANDLER( ddp3_ram_mirror_r )
+{
+	return 0x0000;
+}
+
+void install_asic27a_ddp3(void)
+{
+	install_mem_read16_handler(0,  0x500000, 0x500005, ddp3_asic_r);
+	install_mem_write16_handler(0, 0x500000, 0x500005, ddp3_asic_w);
+	install_mem_read16_handler(0,  0x880000, 0x89ffff, ddp3_ram_mirror_r);
+}
+
+void install_asic27a_ket(void)
+{
+	install_mem_read16_handler(0,  0x400000, 0x400005, ddp3_asic_r);
+	install_mem_write16_handler(0, 0x400000, 0x400005, ddp3_asic_w);
+	install_mem_read16_handler(0,  0x880000, 0x89ffff, ddp3_ram_mirror_r);
+}
+
+void install_asic27a_espgal(void)
+{
+	install_mem_read16_handler(0,  0x400000, 0x400005, ddp3_asic_r);
+	install_mem_write16_handler(0, 0x400000, 0x400005, ddp3_asic_w);
+	install_mem_read16_handler(0,  0x880000, 0x89ffff, ddp3_ram_mirror_r);
+}
+
+static void pgm_basic_init_nobank(void)
+{
+	expand_32x32x5bpp();
+	expand_colourdata();
+}
+
+static DRIVER_INIT( ddp3 )
+{
+	pgm_basic_init_nobank();
+	pgm_py2k2_decrypt(); /* yes, it's the same as photo y2k2 */
+	install_asic27a_ddp3();
+}
+
+static DRIVER_INIT( ddp3blk )
+{
+	UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
+	pgm_basic_init_nobank();
+	pgm_py2k2_decrypt(); /* yes, it's the same as photo y2k2 */
+	install_asic27a_ddp3();
+	
+	rom[0x13C33A/2] = 0x4e71;
+	rom[0x13C33C/2] = 0x4e71;
+	rom[0x13C348/2] = 0x4e71;
+	rom[0x13C34A/2] = 0x4e71;
+}
+
+static DRIVER_INIT( ket )
+{
+	pgm_basic_init_nobank();
+	pgm_ket_decrypt();
+	install_asic27a_ket();
+}
+
+static DRIVER_INIT( espgal )
+{
+	pgm_basic_init_nobank();
+	pgm_espgal_decrypt();
+	install_asic27a_espgal();
+}
 
 /*** Rom Loading *************************************************************/
 
@@ -1946,6 +2220,239 @@ ROM_START( puzlstar )
 	ROM_LOAD( "m0800.u2",    0x400000, 0x400000,  CRC(e1a46541) SHA1(6fe9de5700d8638374734d80551dcedb62975140) )
 ROM_END
 
+ROM_START( ket )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* doesn't use a separate BIOS rom */
+	ROM_LOAD16_WORD_SWAP( "ketsui_v100.u38", 0x000000, 0x200000, CRC(dfe62f3b) SHA1(baa58d1ce47a707f84f65779ac0689894793e9d9) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom",    0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM text bios - surface scratched to remove details */
+	ROM_LOAD( "t04701w064.u19",  0x400000, 0x800000, CRC(2665b041) SHA1(fb1107778b66f2af0de77ac82e1ee2902f53a959) ) /* text-1 */
+
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+	
+	ROM_REGION( 0x1000000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04701w064.u7",    0x0000000, 0x0800000, CRC(5ef1b94b) SHA1(f10dfa46e0a4d297c3a856aea5b49d648f98935c) ) /* image-1 */
+	ROM_LOAD( "a04702w064.u8",    0x0800000, 0x0800000, CRC(26d6da7f) SHA1(f20e07a7994f41b5ed917f8b0119dc5542f3541c) ) /* image-2 */
+
+	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04701w064.u1",    0x0000000, 0x0800000, CRC(1bec008d) SHA1(07d117dc2eebb35727fb18a7c563acbaf25a8d36) ) /* bitmap-1 */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	/* there is a position for the PGM audio bios rom, but it's unpopulated, and the M of PGM has been scratched off the PCB */
+	ROM_LOAD( "m04701b032.u17",    0x400000, 0x400000, CRC(b46e22d1) SHA1(670853dc485942fb96380568494bdf3235f446ee) ) /* music-1 */
+ROM_END
+
+ROM_START( keta )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* doesn't use a separate BIOS rom */
+	ROM_LOAD16_WORD_SWAP( "ketsui_prg_revised.bin", 0x000000, 0x200000, CRC(69fcf5eb) SHA1(f726e251b4daa2f8d717e32000d4d7abc71c710d) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM text bios - surface scratched to remove details */
+	ROM_LOAD( "t04701w064.u19",   0x400000, 0x800000, CRC(2665b041) SHA1(fb1107778b66f2af0de77ac82e1ee2902f53a959) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1000000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04701w064.u7",    0x0000000, 0x0800000, CRC(5ef1b94b) SHA1(f10dfa46e0a4d297c3a856aea5b49d648f98935c) ) /* image-1 */
+	ROM_LOAD( "a04702w064.u8",    0x0800000, 0x0800000, CRC(26d6da7f) SHA1(f20e07a7994f41b5ed917f8b0119dc5542f3541c) ) /* image-2 */
+
+	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04701w064.u1",    0x0000000, 0x0800000, CRC(1bec008d) SHA1(07d117dc2eebb35727fb18a7c563acbaf25a8d36) ) /* bitmap-1 */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	/* there is a position for the PGM audio bios rom, but it's unpopulated, and the M of PGM has been scratched off the PCB */
+	ROM_LOAD( "music-1.u17",    0x400000, 0x400000, CRC(b46e22d1) SHA1(670853dc485942fb96380568494bdf3235f446ee) )
+ROM_END
+
+ROM_START( ketb )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* doesn't use a separate BIOS rom */
+	ROM_LOAD16_WORD_SWAP( "ketsui_prg_original.bin", 0x000000, 0x200000, CRC(cca5e153) SHA1(b653feaa2004c379312def6b1613c3497f654ddf) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM text bios - surface scratched to remove details */
+	ROM_LOAD( "t04701w064.u19",   0x400000, 0x800000, CRC(2665b041) SHA1(fb1107778b66f2af0de77ac82e1ee2902f53a959) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1000000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04701w064.u7",    0x0000000, 0x0800000, CRC(5ef1b94b) SHA1(f10dfa46e0a4d297c3a856aea5b49d648f98935c) ) /* image-1 */
+	ROM_LOAD( "a04702w064.u8",    0x0800000, 0x0800000, CRC(26d6da7f) SHA1(f20e07a7994f41b5ed917f8b0119dc5542f3541c) ) /* image-2 */
+
+	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04701w064.u1",    0x0000000, 0x0800000, CRC(1bec008d) SHA1(07d117dc2eebb35727fb18a7c563acbaf25a8d36) ) /* bitmap-1 */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 )  /* Samples - (8 bit mono 11025Hz) - */
+	/* there is a position for the PGM audio bios rom, but it's unpopulated, and the M of PGM has been scratched off the PCB */
+	ROM_LOAD( "music-1.u17",    0x400000, 0x400000, CRC(b46e22d1) SHA1(670853dc485942fb96380568494bdf3235f446ee) )
+ROM_END
+
+ROM_START( espgal )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	/* doesn't use a separate BIOS rom */
+	ROM_LOAD16_WORD_SWAP( "espgaluda_v100.u38", 0x000000, 0x200000, CRC(08ecec34) SHA1(bce2e7fb9105ed51603d09cbd3a9eeb5b8f47ee2) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom",     0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM text bios - surface scratched to remove details */
+	ROM_LOAD( "t04801w064.u19",   0x400000, 0x800000, CRC(6021c79e) SHA1(fbc340dafb18aa3094de29b881318a5a9794e4bc) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1000000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04801w064.u7",    0x0000000, 0x0800000, CRC(26dd4932) SHA1(9bbabb5a53cb5ba88397cc2c258980f3b70314ce) ) /* image-1 */
+	ROM_LOAD( "a04802w064.u8",    0x0800000, 0x0800000, CRC(0e6bf7a9) SHA1(a7541e2b5a0df2bc62a5b347e54dbc2ed1922db2) ) /* image-2 */
+
+	ROM_REGION( 0x0800000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04801w064.u1",    0x0000000, 0x0800000, CRC(98dce13a) SHA1(61d48b7117459f7babc022b68231f6928177a71d) ) /* bitmap-1 */
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	/* there is a position for the PGM audio bios rom, but it's unpopulated, and the M of PGM has been scratched off the PCB */
+	ROM_LOAD( "w04801b032.u17",    0x400000, 0x400000, CRC(60298536) SHA1(6b7333f16cce778c5725dbdf75a5446f0906397a) ) /* music-1 */
+ROM_END
+
+ROM_START( ddp3 )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "ddp3_bios.u37",    0x00000, 0x080000, CRC(b3cc5c8f) SHA1(02d9511cf71e4a0d6ca8fd9a1ef2c79b0d001824) ) /* uses a standard PGM bios with the startup logos hacked out */
+	ROM_LOAD16_WORD_SWAP( "ddp3_v101.u36",  0x100000, 0x200000, CRC(195b5c1e) SHA1(f18d791c034b0a3d85888a92fb5d326ee3deb04f) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM bios */
+	ROM_LOAD( "t04401w064.u19",0x400000, 0x800000, CRC(3a95f19c) SHA1(fd3c47cf0b8b1e20c6bec4be68a089fc8bbf4dbe) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1c00000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04401w064.u7",  0x0000000, 0x0800000, CRC(ed229794) SHA1(1cf1863495a18c7c7d277a9be43ec116b00960b0) )
+	ROM_LOAD( "a04402w064.u8",  0x0800000, 0x0800000, CRC(752167b0) SHA1(c33c3398dd8e479c9d5bd348924958a6aecbf0fc) )
+
+	ROM_REGION( 0x1000000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04401w064.u1",  0x0000000, 0x0800000, CRC(8cbff066) SHA1(eef1cd566bc70ebf45f047e56026803d5c1dac43) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* same as standard PGM bios */
+	ROM_LOAD( "m04401b032.u17",  0x400000, 0x400000, CRC(5a0dbd76) SHA1(06ab202f6bd5ebfb35b9d8cc7a8fb83ec8840659) )
+ROM_END
+
+ROM_START( ddp3a )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "ddp3_bios.u37",    0x00000, 0x080000, CRC(b3cc5c8f) SHA1(02d9511cf71e4a0d6ca8fd9a1ef2c79b0d001824) ) /* uses a standard PGM bios with the startup logos hacked out */
+	ROM_LOAD16_WORD_SWAP( "ddp3_d_d_1_0.u36",  0x100000, 0x200000, CRC(5d3f85ba) SHA1(4c24ea206140863d456179750366921442e1d2b8) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM bios */
+	ROM_LOAD( "t04401w064.u19",0x400000, 0x800000, CRC(3a95f19c) SHA1(fd3c47cf0b8b1e20c6bec4be68a089fc8bbf4dbe) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1c00000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04401w064.u7",  0x0000000, 0x0800000, CRC(ed229794) SHA1(1cf1863495a18c7c7d277a9be43ec116b00960b0) )
+	ROM_LOAD( "a04402w064.u8",  0x0800000, 0x0800000, CRC(752167b0) SHA1(c33c3398dd8e479c9d5bd348924958a6aecbf0fc) )
+
+	ROM_REGION( 0x1000000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04401w064.u1",  0x0000000, 0x0800000, CRC(8cbff066) SHA1(eef1cd566bc70ebf45f047e56026803d5c1dac43) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* same as standard PGM bios */
+	ROM_LOAD( "m04401b032.u17",  0x400000, 0x400000, CRC(5a0dbd76) SHA1(06ab202f6bd5ebfb35b9d8cc7a8fb83ec8840659) )
+ROM_END
+
+ROM_START( ddp3b )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "ddp3_bios.u37",    0x00000, 0x080000, CRC(b3cc5c8f) SHA1(02d9511cf71e4a0d6ca8fd9a1ef2c79b0d001824) ) /*  uses a standard PGM bios with the startup logos hacked out */
+	ROM_LOAD16_WORD_SWAP( "dd v100.bin",  0x100000, 0x200000, CRC(7da0c1e4) SHA1(aca2fe35ba0ab3628900fa2aba2d22fc4fd7046d) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom",  0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM bios */
+	ROM_LOAD( "t04401w064.u19",0x400000, 0x800000, CRC(3a95f19c) SHA1(fd3c47cf0b8b1e20c6bec4be68a089fc8bbf4dbe) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1c00000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04401w064.u7",  0x0000000, 0x0800000, CRC(ed229794) SHA1(1cf1863495a18c7c7d277a9be43ec116b00960b0) )
+	ROM_LOAD( "a04402w064.u8",  0x0800000, 0x0800000, CRC(752167b0) SHA1(c33c3398dd8e479c9d5bd348924958a6aecbf0fc) )
+
+	ROM_REGION( 0x1000000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04401w064.u1",  0x0000000, 0x0800000, CRC(8cbff066) SHA1(eef1cd566bc70ebf45f047e56026803d5c1dac43) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* same as standard PGM bios */
+	ROM_LOAD( "m04401b032.u17",  0x400000, 0x400000, CRC(5a0dbd76) SHA1(06ab202f6bd5ebfb35b9d8cc7a8fb83ec8840659) )
+ROM_END
+
+/* this expects Magic values in NVRAM to boot */
+ROM_START( ddp3blk )
+	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
+	ROM_LOAD16_WORD_SWAP( "ddp3_bios.u37",    0x00000, 0x080000, CRC(b3cc5c8f) SHA1(02d9511cf71e4a0d6ca8fd9a1ef2c79b0d001824) ) /* uses a standard PGM bios with the startup logos hacked out */
+	ROM_LOAD16_WORD_SWAP( "ddb10.u45",  0x100000, 0x200000, CRC(72b35510) SHA1(9a432e5e1ebe61aafd737b6acc905653e5af0d38) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
+
+	ROM_REGION32_LE( 0x400000, REGION_USER1, ROMREGION_ERASE00 )
+	/* no external protection rom */
+
+	ROM_REGION( 0xc00000, REGION_GFX1, 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_LOAD( "pgm_t01s.rom",  0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) /* same as standard PGM bios */
+	ROM_LOAD( "t04401w064.u19",0x400000, 0x800000, CRC(3a95f19c) SHA1(fd3c47cf0b8b1e20c6bec4be68a089fc8bbf4dbe) ) /* text-1 */
+	
+	ROM_REGION( 0xc00000/5*8, REGION_GFX2, ROMREGION_DISPOSE ) /* Region for 32x32 BG Tiles */
+	/* 32x32 Tile Data is put here for easier Decoding */
+
+	ROM_REGION( 0x1c00000, REGION_GFX3, ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_LOAD( "a04401w064.u7",  0x0000000, 0x0800000, CRC(ed229794) SHA1(1cf1863495a18c7c7d277a9be43ec116b00960b0) )
+	ROM_LOAD( "a04402w064.u8",  0x0800000, 0x0800000, CRC(752167b0) SHA1(c33c3398dd8e479c9d5bd348924958a6aecbf0fc) )
+
+	ROM_REGION( 0x1000000, REGION_GFX4, 0 ) /* Sprite Masks + Colour Indexes */
+	ROM_LOAD( "b04401w064.u1",  0x0000000, 0x0800000, CRC(8cbff066) SHA1(eef1cd566bc70ebf45f047e56026803d5c1dac43) )
+
+	ROM_REGION( 0x1000000, REGION_SOUND1, 0 ) /* Samples - (8 bit mono 11025Hz) - */
+	ROM_LOAD( "pgm_m01s.rom",    0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) /* same as standard PGM bios */
+	ROM_LOAD( "m04401b032.u17",  0x400000, 0x400000, CRC(5a0dbd76) SHA1(06ab202f6bd5ebfb35b9d8cc7a8fb83ec8840659) )
+ROM_END
+
 /*** GAME ********************************************************************/
 
 GAMEX( 1997, pgm,      0,          pgm,     pgm,      0,          ROT0, "IGS", "PGM (Polygame Master) System BIOS", NOT_A_DRIVER )
@@ -1970,4 +2477,18 @@ GAMEX( 1998, killbld,  pgm,        killbld, killbld,  killbld,    ROT0, "IGS", "
 
 /* not working */
 GAMEX( 1999, kovsh,    kov,        pgm,     sango,    kovsh,      ROT0, "IGS", "Knights of Valour Superheroes - Sangoku Senki Superheroes (ver. 322)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+
+/* Cave Games On PGM Hardware */
+
+GAMEX( 2002, ddp3,    0,         cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou", GAME_IMPERFECT_SOUND)
+GAMEX( 2002, ddp3a,   ddp3,      cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, second revision)", GAME_IMPERFECT_SOUND) /* Displays "2002.04.05.Master Ver" */
+GAMEX( 2002, ddp3b,   ddp3,      cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, first revision)", GAME_IMPERFECT_SOUND) /* Displays "2002.04.05 Master Ver" */
+GAMEX( 2002, ddp3blk, ddp3,      cavepgm,    pgm,     ddp3blk,   ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (Black Label)", GAME_IMPERFECT_SOUND)
+
+/* the exact text of the 'version' shows which revision of the game it is; the newest has 2 '.' symbols in the string, the oldest, none. */
+
+GAMEX( 2002, espgal,  0,         cavepgm,    pgm,     espgal,    ROT270, "Cave", "EspGaluda", GAME_IMPERFECT_SOUND)
+GAMEX( 2002, ket,     0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui", GAME_IMPERFECT_SOUND) /* Displays 2003/01/01. Master Ver */
+GAMEX( 2002, keta,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui (older)", GAME_IMPERFECT_SOUND) /* Displays 2003/01/01 Master Ver */
+GAMEX( 2002, ketb,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui (first revision)", GAME_IMPERFECT_SOUND) /* Displays 2003/01/01 Master Ver */
 
