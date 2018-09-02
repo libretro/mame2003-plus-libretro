@@ -1,8 +1,8 @@
 
-/* AM3 Functions (for ReadAM)*/
-/* ***************************/
+// AM3 Functions (for ReadAM)
+// **************************
 
-UINT32 am3Register(void)
+static UINT32 am3Register(void)
 {
 	switch (modDim)
 	{
@@ -20,7 +20,7 @@ UINT32 am3Register(void)
 	return 1;
 }
 
-UINT32 am3RegisterIndirect(void)
+static UINT32 am3RegisterIndirect(void)
 {
 	switch (modDim)
 	{
@@ -38,7 +38,7 @@ UINT32 am3RegisterIndirect(void)
 	return 1;
 }
 
-UINT32 am3RegisterIndirectIndexed(void)
+static UINT32 am3RegisterIndirectIndexed(void)
 {
 	switch (modDim)
 	{
@@ -56,7 +56,7 @@ UINT32 am3RegisterIndirectIndexed(void)
 	return 2;
 }
 
-UINT32 am3Autoincrement(void)
+static UINT32 am3Autoincrement(void)
 {
 	switch (modDim)
 	{
@@ -77,7 +77,7 @@ UINT32 am3Autoincrement(void)
 	return 1;
 }
 
-UINT32 am3Autodecrement(void)
+static UINT32 am3Autodecrement(void)
 {
 	switch (modDim)
 	{
@@ -98,7 +98,7 @@ UINT32 am3Autodecrement(void)
 	return 1;
 }
 
-UINT32 am3Displacement8(void)
+static UINT32 am3Displacement8(void)
 {
 	switch (modDim)
 	{
@@ -116,7 +116,7 @@ UINT32 am3Displacement8(void)
 	return 2;
 }
 
-UINT32 am3Displacement16(void)
+static UINT32 am3Displacement16(void)
 {
 	switch (modDim)
 	{
@@ -134,7 +134,7 @@ UINT32 am3Displacement16(void)
 	return 3;
 }
 
-UINT32 am3Displacement32(void)
+static UINT32 am3Displacement32(void)
 {
 	switch (modDim)
 	{
@@ -153,7 +153,7 @@ UINT32 am3Displacement32(void)
 }
 
 
-UINT32 am3DisplacementIndexed8(void)
+static UINT32 am3DisplacementIndexed8(void)
 {
 	switch (modDim)
 	{
@@ -171,7 +171,7 @@ UINT32 am3DisplacementIndexed8(void)
 	return 3;
 }
 
-UINT32 am3DisplacementIndexed16(void)
+static UINT32 am3DisplacementIndexed16(void)
 {
 	switch (modDim)
 	{
@@ -189,7 +189,7 @@ UINT32 am3DisplacementIndexed16(void)
 	return 4;
 }
 
-UINT32 am3DisplacementIndexed32(void)
+static UINT32 am3DisplacementIndexed32(void)
 {
 	switch (modDim)
 	{
@@ -208,7 +208,7 @@ UINT32 am3DisplacementIndexed32(void)
 }
 
 
-UINT32 am3PCDisplacement8(void)
+static UINT32 am3PCDisplacement8(void)
 {
 	switch (modDim)
 	{
@@ -226,7 +226,7 @@ UINT32 am3PCDisplacement8(void)
 	return 2;
 }
 
-UINT32 am3PCDisplacement16(void)
+static UINT32 am3PCDisplacement16(void)
 {
 	switch (modDim)
 	{
@@ -244,7 +244,7 @@ UINT32 am3PCDisplacement16(void)
 	return 3;
 }
 
-UINT32 am3PCDisplacement32(void)
+static UINT32 am3PCDisplacement32(void)
 {
 	switch (modDim)
 	{
@@ -262,7 +262,7 @@ UINT32 am3PCDisplacement32(void)
 	return 5;
 }
 
-UINT32 am3PCDisplacementIndexed8(void)
+static UINT32 am3PCDisplacementIndexed8(void)
 {
 	switch (modDim)
 	{
@@ -280,7 +280,7 @@ UINT32 am3PCDisplacementIndexed8(void)
 	return 3;
 }
 
-UINT32 am3PCDisplacementIndexed16(void)
+static UINT32 am3PCDisplacementIndexed16(void)
 {
 	switch (modDim)
 	{
@@ -298,7 +298,7 @@ UINT32 am3PCDisplacementIndexed16(void)
 	return 4;
 }
 
-UINT32 am3PCDisplacementIndexed32(void)
+static UINT32 am3PCDisplacementIndexed32(void)
 {
 	switch (modDim)
 	{
@@ -316,7 +316,7 @@ UINT32 am3PCDisplacementIndexed32(void)
 	return 6;
 }
 
-UINT32 am3DisplacementIndirect8(void)
+static UINT32 am3DisplacementIndirect8(void)
 {
 	switch (modDim)
 	{
@@ -334,7 +334,7 @@ UINT32 am3DisplacementIndirect8(void)
 	return 2;
 }
 
-UINT32 am3DisplacementIndirect16(void)
+static UINT32 am3DisplacementIndirect16(void)
 {
 	switch (modDim)
 	{
@@ -352,7 +352,7 @@ UINT32 am3DisplacementIndirect16(void)
 	return 3;
 }
 
-UINT32 am3DisplacementIndirect32(void)
+static UINT32 am3DisplacementIndirect32(void)
 {
 	switch (modDim)
 	{
@@ -371,7 +371,7 @@ UINT32 am3DisplacementIndirect32(void)
 }
 
 
-UINT32 am3DisplacementIndirectIndexed8(void)
+static UINT32 am3DisplacementIndirectIndexed8(void)
 {
 	switch (modDim)
 	{
@@ -389,7 +389,7 @@ UINT32 am3DisplacementIndirectIndexed8(void)
 	return 3;
 }
 
-UINT32 am3DisplacementIndirectIndexed16(void)
+static UINT32 am3DisplacementIndirectIndexed16(void)
 {
 	switch (modDim)
 	{
@@ -407,7 +407,7 @@ UINT32 am3DisplacementIndirectIndexed16(void)
 	return 4;
 }
 
-UINT32 am3DisplacementIndirectIndexed32(void)
+static UINT32 am3DisplacementIndirectIndexed32(void)
 {
 	switch (modDim)
 	{
@@ -425,7 +425,7 @@ UINT32 am3DisplacementIndirectIndexed32(void)
 	return 6;
 }
 
-UINT32 am3PCDisplacementIndirect8(void)
+static UINT32 am3PCDisplacementIndirect8(void)
 {
 	switch (modDim)
 	{
@@ -443,7 +443,7 @@ UINT32 am3PCDisplacementIndirect8(void)
 	return 2;
 }
 
-UINT32 am3PCDisplacementIndirect16(void)
+static UINT32 am3PCDisplacementIndirect16(void)
 {
 	switch (modDim)
 	{
@@ -461,7 +461,7 @@ UINT32 am3PCDisplacementIndirect16(void)
 	return 3;
 }
 
-UINT32 am3PCDisplacementIndirect32(void)
+static UINT32 am3PCDisplacementIndirect32(void)
 {
 	switch (modDim)
 	{
@@ -480,7 +480,7 @@ UINT32 am3PCDisplacementIndirect32(void)
 }
 
 
-UINT32 am3PCDisplacementIndirectIndexed8(void)
+static UINT32 am3PCDisplacementIndirectIndexed8(void)
 {
 	switch (modDim)
 	{
@@ -498,7 +498,7 @@ UINT32 am3PCDisplacementIndirectIndexed8(void)
 	return 3;
 }
 
-UINT32 am3PCDisplacementIndirectIndexed16(void)
+static UINT32 am3PCDisplacementIndirectIndexed16(void)
 {
 	switch (modDim)
 	{
@@ -516,7 +516,7 @@ UINT32 am3PCDisplacementIndirectIndexed16(void)
 	return 4;
 }
 
-UINT32 am3PCDisplacementIndirectIndexed32(void)
+static UINT32 am3PCDisplacementIndirectIndexed32(void)
 {
 	switch (modDim)
 	{
@@ -535,7 +535,7 @@ UINT32 am3PCDisplacementIndirectIndexed32(void)
 }
 
 
-UINT32 am3DoubleDisplacement8(void)
+static UINT32 am3DoubleDisplacement8(void)
 {
 	switch (modDim)
 	{
@@ -553,7 +553,7 @@ UINT32 am3DoubleDisplacement8(void)
 	return 3;
 }
 
-UINT32 am3DoubleDisplacement16(void)
+static UINT32 am3DoubleDisplacement16(void)
 {
 	switch (modDim)
 	{
@@ -571,7 +571,7 @@ UINT32 am3DoubleDisplacement16(void)
 	return 5;
 }
 
-UINT32 am3DoubleDisplacement32(void)
+static UINT32 am3DoubleDisplacement32(void)
 {
 	switch (modDim)
 	{
@@ -590,7 +590,7 @@ UINT32 am3DoubleDisplacement32(void)
 }
 
 
-UINT32 am3PCDoubleDisplacement8(void)
+static UINT32 am3PCDoubleDisplacement8(void)
 {
 	switch (modDim)
 	{
@@ -608,7 +608,7 @@ UINT32 am3PCDoubleDisplacement8(void)
 	return 3;
 }
 
-UINT32 am3PCDoubleDisplacement16(void)
+static UINT32 am3PCDoubleDisplacement16(void)
 {
 	switch (modDim)
 	{
@@ -626,7 +626,7 @@ UINT32 am3PCDoubleDisplacement16(void)
 	return 5;
 }
 
-UINT32 am3PCDoubleDisplacement32(void)
+static UINT32 am3PCDoubleDisplacement32(void)
 {
 	switch (modDim)
 	{
@@ -644,7 +644,7 @@ UINT32 am3PCDoubleDisplacement32(void)
 	return 9;
 }
 
-UINT32 am3DirectAddress(void)
+static UINT32 am3DirectAddress(void)
 {
 	switch (modDim)
 	{
@@ -662,7 +662,7 @@ UINT32 am3DirectAddress(void)
 	return 5;
 }
 
-UINT32 am3DirectAddressIndexed(void)
+static UINT32 am3DirectAddressIndexed(void)
 {
 	switch (modDim)
 	{
@@ -680,7 +680,7 @@ UINT32 am3DirectAddressIndexed(void)
 	return 6;
 }
 
-UINT32 am3DirectAddressDeferred(void)
+static UINT32 am3DirectAddressDeferred(void)
 {
 	switch (modDim)
 	{
@@ -698,7 +698,7 @@ UINT32 am3DirectAddressDeferred(void)
 	return 5;
 }
 
-UINT32 am3DirectAddressDeferredIndexed(void)
+static UINT32 am3DirectAddressDeferredIndexed(void)
 {
 	switch (modDim)
 	{
@@ -716,54 +716,56 @@ UINT32 am3DirectAddressDeferredIndexed(void)
 	return 6;
 }
 
-UINT32 am3Immediate(void)
+static UINT32 am3Immediate(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM3 - IMM (PC=%06x)\n", PC);
-	abort();
+	fatalerror("CPU - AM3 - IMM (PC=%06x)", PC);
+	return 0; /* never reached, fatalerror won't return */
 }
 
-UINT32 am3ImmediateQuick(void)
+static UINT32 am3ImmediateQuick(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM3 - IMMQ (PC=%06x)\n", PC);
-	abort();
+	fatalerror("CPU - AM3 - IMMQ (PC=%06x)", PC);
+	return 0; /* never reached, fatalerror won't return */
 }
 
 
 
-/* AM3 Tables (for ReadAMAddress)*/
-/* *******************************/
+// AM3 Tables (for ReadAMAddress)
+// ******************************
 
-UINT32 am3Error1(void)
+static UINT32 am3Error1(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM3 - 1 (PC=%06x)\n", PC);
-	abort();
+	fatalerror("CPU - AM3 - 1 (PC=%06x)", PC);
+	return 0; /* never reached, fatalerror won't return */
 }
 
-UINT32 am3Error2(void)
+static UINT32 am3Error2(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM3 - 2 (PC=%06x)\n", PC);
-	abort();
+	fatalerror("CPU - AM3 - 2 (PC=%06x)", PC);
+	return 0; /* never reached, fatalerror won't return */
 }
 
-UINT32 am3Error3(void)
+#ifdef UNUSED_FUNCTION
+static UINT32 am3Error3(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM3 - 3 (PC=%06x)\n", PC);
-	abort();
+	fatalerror("CPU - AM3 - 3 (PC=%06x)", PC);
+	return 0; /* never reached, fatalerror won't return */
+}
+#endif
+
+static UINT32 am3Error4(void)
+{
+	fatalerror("CPU - AM3 - 4 (PC=%06x)", PC);
+	return 0; /* never reached, fatalerror won't return */
 }
 
-UINT32 am3Error4(void)
+static UINT32 am3Error5(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM3 - 4 (PC=%06x)\n", PC);
-	abort();
+	fatalerror("CPU - AM3 - 5 (PC=%06x)", PC);
+	return 0; /* never reached, fatalerror won't return */
 }
 
-UINT32 am3Error5(void)
-{
-	log_cb(RETRO_LOG_ERROR, LOGPRE "CPU - AM3 - 5 (PC=%06x)\n", PC);
-	abort();
-}
-
-UINT32 (*AMTable3_G7a[16])(void) =
+static UINT32 (*const AMTable3_G7a[16])(void) =
 {
 	am3PCDisplacementIndexed8,
 	am3PCDisplacementIndexed16,
@@ -783,7 +785,7 @@ UINT32 (*AMTable3_G7a[16])(void) =
 	am3Error5
 };
 
-UINT32 am3Group7a(void)
+static UINT32 am3Group7a(void)
 {
 	if (!(modVal2&0x10))
 		return am3Error4();
@@ -791,7 +793,7 @@ UINT32 am3Group7a(void)
 	return AMTable3_G7a[modVal2&0xF]();
 }
 
-UINT32 (*AMTable3_G7[32])(void) =
+static UINT32 (*const AMTable3_G7[32])(void) =
 {
 	am3ImmediateQuick,
 	am3ImmediateQuick,
@@ -827,7 +829,7 @@ UINT32 (*AMTable3_G7[32])(void) =
   am3Error2
 };
 
-UINT32 (*AMTable3_G6[8])(void) =
+static UINT32 (*const AMTable3_G6[8])(void) =
 {
 	am3DisplacementIndexed8,
 	am3DisplacementIndexed16,
@@ -842,21 +844,21 @@ UINT32 (*AMTable3_G6[8])(void) =
 
 
 
-UINT32 am3Group6(void)
+static UINT32 am3Group6(void)
 {
 	modVal2=OpRead8(modAdd+1);
 	return AMTable3_G6[modVal2>>5]();
 }
 
 
-UINT32 am3Group7(void)
+static UINT32 am3Group7(void)
 {
 	return AMTable3_G7[modVal&0x1F]();
 }
 
 
 
-UINT32 (*AMTable3[2][8])(void) =
+static UINT32 (*const AMTable3[2][8])(void) =
 {
 	{
 		am3Displacement8,

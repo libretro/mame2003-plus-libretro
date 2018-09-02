@@ -1,9 +1,9 @@
 
 /*
-	FULLY TRUSTED
+    FULLY TRUSTED
 */
 
-UINT32 opTB(int reg) /* TRUSTED */
+static UINT32 opTB(int reg) /* TRUSTED */
 {
 	if (v60.reg[reg] == 0)
 	{
@@ -14,7 +14,7 @@ UINT32 opTB(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBGT(int reg) /* TRUSTED */
+static UINT32 opDBGT(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -28,7 +28,7 @@ UINT32 opDBGT(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBLE(int reg) /* TRUSTED */
+static UINT32 opDBLE(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -43,7 +43,7 @@ UINT32 opDBLE(int reg) /* TRUSTED */
 }
 
 
-UINT32 opDBGE(int reg) /* TRUSTED */
+static UINT32 opDBGE(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -57,7 +57,7 @@ UINT32 opDBGE(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBLT(int reg) /* TRUSTED */
+static UINT32 opDBLT(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -71,7 +71,7 @@ UINT32 opDBLT(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBH(int reg) /* TRUSTED */
+static UINT32 opDBH(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -84,7 +84,7 @@ UINT32 opDBH(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBNH(int reg) /* TRUSTED */
+static UINT32 opDBNH(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -98,7 +98,7 @@ UINT32 opDBNH(int reg) /* TRUSTED */
 }
 
 
-UINT32 opDBL(int reg) /* TRUSTED */
+static UINT32 opDBL(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -111,7 +111,7 @@ UINT32 opDBL(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBNL(int reg) /* TRUSTED */
+static UINT32 opDBNL(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -124,7 +124,7 @@ UINT32 opDBNL(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBE(int reg) /* TRUSTED */
+static UINT32 opDBE(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -137,7 +137,7 @@ UINT32 opDBE(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBNE(int reg) /* TRUSTED */
+static UINT32 opDBNE(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -150,7 +150,7 @@ UINT32 opDBNE(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBV(int reg) /* TRUSTED */
+static UINT32 opDBV(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -163,7 +163,7 @@ UINT32 opDBV(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBNV(int reg) /* TRUSTED */
+static UINT32 opDBNV(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -176,7 +176,7 @@ UINT32 opDBNV(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBN(int reg) /* TRUSTED */
+static UINT32 opDBN(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -189,7 +189,7 @@ UINT32 opDBN(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBP(int reg) /* TRUSTED */
+static UINT32 opDBP(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -202,7 +202,7 @@ UINT32 opDBP(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 opDBR(int reg) /* TRUSTED */
+static UINT32 opDBR(int reg) /* TRUSTED */
 {
 	v60.reg[reg]--;
 
@@ -215,7 +215,7 @@ UINT32 opDBR(int reg) /* TRUSTED */
 	return 4;
 }
 
-UINT32 (*OpC6Table[8])(int reg) = /* TRUSTED */
+static UINT32 (*const OpC6Table[8])(int reg) = /* TRUSTED */
 {
 	opDBV,
 	opDBL,
@@ -227,7 +227,7 @@ UINT32 (*OpC6Table[8])(int reg) = /* TRUSTED */
 	opDBLE
 };
 
-UINT32 (*OpC7Table[8])(int reg) = /* TRUSTED */
+static UINT32 (*const OpC7Table[8])(int reg) = /* TRUSTED */
 {
 	opDBNV,
 	opDBNL,
@@ -240,13 +240,13 @@ UINT32 (*OpC7Table[8])(int reg) = /* TRUSTED */
 };
 
 
-UINT32 opC6(void) /* TRUSTED */
+static UINT32 opC6(void) /* TRUSTED */
 {
 	UINT8 appb=OpRead8(PC + 1);
 	return OpC6Table[appb>>5](appb&0x1f);
 }
 
-UINT32 opC7(void) /* TRUSTED */
+static UINT32 opC7(void) /* TRUSTED */
 {
 	UINT8 appb=OpRead8(PC + 1);
 	return OpC7Table[appb>>5](appb&0x1f);
