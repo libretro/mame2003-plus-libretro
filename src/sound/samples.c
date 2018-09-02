@@ -27,39 +27,40 @@ void sample_start(int channel,int samplenum,int loop)
 		return;
 	}
 
-	if (Machine->samples->sample[samplenum] != NULL) {
-		if (Machine->samples->sample[samplenum]->b_decoded == 0)
+	if (Machine->samples->sample[samplenum] != NULL)
+	{
+		if ( (Machine->samples->sample[samplenum]->b_decoded == 0) && (options.content_flags[CONTENT_ALT_SOUND]) )
 		{
 			// Lets decode this sample before playing it.
 			readsample(Machine->samples->sample[samplenum], samplenum, Machine->samples, 1);
 		}
 
-		if (Machine->samples->sample[samplenum]->b_decoded == 1)
+		if ( (Machine->samples->sample[samplenum]->b_decoded == 1) && (options.content_flags[CONTENT_ALT_SOUND]) )
 		{
 			if (channel == 0)
 				leftSampleNum = samplenum;
 
 			if (channel == 1)
 				rightSampleNum = samplenum;
-						
-			if (Machine->samples->sample[samplenum]->resolution == 8 )
-			{
+		}			
+		if (Machine->samples->sample[samplenum]->resolution == 8 )
+		{
 				log_cb(RETRO_LOG_DEBUG, LOGPRE"play 8 bit sample %d, channel %d\n",samplenum,channel);
 				mixer_play_sample(firstchannel + channel,
-						Machine->samples->sample[samplenum]->data,
-						Machine->samples->sample[samplenum]->length,
-						Machine->samples->sample[samplenum]->smpfreq,
-						loop);
-			}
-			else
-			{
-				log_cb(RETRO_LOG_DEBUG, LOGPRE"play 16 bit sample %d, channel %d\n",samplenum,channel);
-				mixer_play_sample_16(firstchannel + channel,
-						(short *) Machine->samples->sample[samplenum]->data,
-						Machine->samples->sample[samplenum]->length,
-						Machine->samples->sample[samplenum]->smpfreq,
-						loop);
-			}
+					Machine->samples->sample[samplenum]->data,
+					Machine->samples->sample[samplenum]->length,
+					Machine->samples->sample[samplenum]->smpfreq,
+					loop);
+		}
+		else
+		{
+			log_cb(RETRO_LOG_DEBUG, LOGPRE"play 16 bit sample %d, channel %d\n",samplenum,channel);
+			mixer_play_sample_16(firstchannel + channel,
+			(short *) Machine->samples->sample[samplenum]->data,
+			Machine->samples->sample[samplenum]->length,
+			Machine->samples->sample[samplenum]->smpfreq,
+				loop);
+			
 		}
 	}
 }
