@@ -261,13 +261,13 @@ static UINT32 opCMPF(void)
 
 static UINT32 op5FUNHANDLED(void)
 {
-	fatalerror("Unhandled 5F opcode at %08x", PC);
+	log_cb(RETRO_LOG_DEBUG, "Unhandled 5F opcode at %08x", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 op5CUNHANDLED(void)
 {
-	fatalerror("Unhandled 5C opcode at %08x", PC);
+	log_cb(RETRO_LOG_DEBUG, "Unhandled 5C opcode at %08x", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 

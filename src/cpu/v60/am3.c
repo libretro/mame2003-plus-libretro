@@ -718,13 +718,13 @@ static UINT32 am3DirectAddressDeferredIndexed(void)
 
 static UINT32 am3Immediate(void)
 {
-	fatalerror("CPU - AM3 - IMM (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM3 - IMM (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 am3ImmediateQuick(void)
 {
-	fatalerror("CPU - AM3 - IMMQ (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM3 - IMMQ (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
@@ -735,33 +735,33 @@ static UINT32 am3ImmediateQuick(void)
 
 static UINT32 am3Error1(void)
 {
-	fatalerror("CPU - AM3 - 1 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM3 - 1 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 am3Error2(void)
 {
-	fatalerror("CPU - AM3 - 2 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM3 - 2 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 #ifdef UNUSED_FUNCTION
 static UINT32 am3Error3(void)
 {
-	fatalerror("CPU - AM3 - 3 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM3 - 3 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 #endif
 
 static UINT32 am3Error4(void)
 {
-	fatalerror("CPU - AM3 - 4 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM3 - 4 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 
 static UINT32 am3Error5(void)
 {
-	fatalerror("CPU - AM3 - 5 (PC=%06x)", PC);
+	log_cb(RETRO_LOG_DEBUG, "CPU - AM3 - 5 (PC=%06x)", PC);
 	return 0; /* never reached, fatalerror won't return */
 }
 

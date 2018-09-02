@@ -82,7 +82,7 @@ static UINT32 opTRAPFL(void)
 	if ((TKCW & 0x1F0) & ((v60ReadPSW() & 0x1F00) >> 4))
 	{
 		// @@@ FPU exception
-		fatalerror("Hit TRAPFL! PC=%x", PC);
+		log_cb(RETRO_LOG_DEBUG, "Hit TRAPFL! PC=%x", PC);
 	}
 
 	return 1;
