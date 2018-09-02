@@ -94,6 +94,7 @@ struct v60info {
 } v60;
 
 int v60_ICount;
+static int v60_stall_io;
 
 #define _CY v60.flags.CY
 #define _OV v60.flags.OV
@@ -220,41 +221,83 @@ static void v60_try_irq(void);
 
 #define STACK_REG(IS,EL)	((IS)==0?37+(EL):36)
 
+static void v60SaveStack(void)
+{
+	if (PSW & 0x10000000)
+		ISP = SP;
+	else
+		v60.reg[37 + ((PSW >> 24) & 3)] = SP;
+}
 static UINT32 v60ReadPSW(void)
 {
-	v60.reg[STACK_REG((v60.reg[33]>>28)&1, (v60.reg[33]>>24)&3)] = SP;
-	UPDATEPSW();
+	PSW &= 0xfffffff0;
+	PSW |= (_Z?1:0) | (_S?2:0) | (_OV?4:0) | (_CY?8:0);
 	return PSW;
 }
 
+
 static void v60ReloadStack(void)
 {
-	SP = v60.reg[STACK_REG((v60.reg[33]>>28)&1, (v60.reg[33]>>24)&3)];
+	if (PSW & 0x10000000)
+		SP = ISP;
+	else
+		SP = v60.reg[37 + ((PSW >> 24) & 3)];
 }
 
-static void v60WritePSW(UINT32 newval)
+static  void v60WritePSW(UINT32 newval)
 {
-	UINT32 oldval = v60ReadPSW();
-	int oldIS, newIS, oldEL, newEL;
+	/* determine if we need to save/restore the stacks */
+	int updateStack = 0;
 
+	/* if the interrupt state is changing, we definitely need to update */
+	if ((newval ^ PSW) & 0x10000000)
+		updateStack = 1;
+
+	/* if we are not in interrupt mode and the level is changing, we also must update */
+	else if (!(PSW & 0x10000000) && ((newval ^ PSW) & 0x03000000))
+		updateStack = 1;
+
+	/* save the previous stack value */
+	if (updateStack)
+		v60SaveStack();
+
+	/* set the new value and update the flags */
 	PSW = newval;
-	UPDATECPUFLAGS();
+	_Z =  (UINT8)(PSW & 1);
+	_S =  (UINT8)(PSW & 2);
+	_OV = (UINT8)(PSW & 4);
+	_CY = (UINT8)(PSW & 8);
 
-	/* Now check if we must swap SP*/
-	oldIS = (oldval >> 28) & 1;
-	newIS = (newval >> 28) & 1;
-
-	oldEL = (oldval >> 24) & 3;
-	newEL = (newval >> 24) & 3;
-
-	if (oldIS != newIS)
-	{
-		v60.reg[STACK_REG(oldIS,oldEL)] = SP;
-		SP = v60.reg[STACK_REG(newIS,newEL)];
-	}
+	/* fetch the new stack value */
+	if (updateStack)
+		v60ReloadStack();
 }
 
-#define GETINTVECT(nint)	MemRead32(SBR + (nint)*4)
+UINT32 v60_update_psw_for_exception(int is_interrupt, int target_level)
+{
+	UINT32 oldPSW = v60ReadPSW();
+	UINT32 newPSW = oldPSW;
+
+	// Change to interrupt context
+	newPSW &= ~(3 << 24);  // PSW.EL = 0
+	newPSW |= target_level << 24; // set target level
+	newPSW &= ~(1 << 18);  // PSW.IE = 0
+	newPSW &= ~(1 << 16);  // PSW.TE = 0
+	newPSW &= ~(1 << 27);  // PSW.TP = 0
+	newPSW &= ~(1 << 17);  // PSW.AE = 0
+	newPSW &= ~(1 << 29);  // PSW.EM = 0
+	if (is_interrupt)
+		newPSW |=  (1 << 28);// PSW.IS = 1
+	newPSW |=  (1 << 31);  // PSW.ASA = 1
+	v60WritePSW(newPSW);
+
+	return oldPSW;
+}
+
+
+
+#define GETINTVECT(nint)	MemRead32((SBR & ~0xfff) + (nint)*4)
+#define EXCEPTION_CODE_AND_SIZE(code, size)	(((code) << 16) | (size))
 
 static float u2f(UINT32 v)
 {
@@ -303,12 +346,18 @@ static int v60_default_irq_cb(int irqline)
 	return 0;
 }
 
+void v60_stall(void)
+{
+	v60_stall_io = 1;
+}
+
 static void base_init(const char *type)
 {
+	v60_stall_io = 0;
 	int cpu = cpu_getactivecpu();
 	static int opt_init = 0;
 	if(!opt_init) {
-		InitTables();	/* set up opcode tables*/
+	//	InitTables();	/* set up opcode tables*/
 #ifdef MAME_DEBUG
 		v60_dasm_init();
 #endif

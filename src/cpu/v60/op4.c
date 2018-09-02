@@ -1,9 +1,9 @@
 
 /*
-	FULLY TRUSTED
+    FULLY TRUSTED
 */
 
-UINT32 opBGT8(void) /* TRUSTED */
+static UINT32 opBGT8(void) /* TRUSTED */
 {
 	NORMALIZEFLAGS();
 
@@ -16,7 +16,7 @@ UINT32 opBGT8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBGT16(void) /* TRUSTED */
+static UINT32 opBGT16(void) /* TRUSTED */
 {
 	NORMALIZEFLAGS();
 
@@ -30,7 +30,7 @@ UINT32 opBGT16(void) /* TRUSTED */
 }
 
 
-UINT32 opBGE8(void) /* TRUSTED */
+static UINT32 opBGE8(void) /* TRUSTED */
 {
 	NORMALIZEFLAGS();
 
@@ -43,7 +43,7 @@ UINT32 opBGE8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBGE16(void) /* TRUSTED */
+static UINT32 opBGE16(void) /* TRUSTED */
 {
 	NORMALIZEFLAGS();
 
@@ -56,7 +56,7 @@ UINT32 opBGE16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBLT8(void) /* TRUSTED */
+static UINT32 opBLT8(void) /* TRUSTED */
 {
 	NORMALIZEFLAGS();
 
@@ -69,7 +69,7 @@ UINT32 opBLT8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBLT16(void) /* TRUSTED */
+static UINT32 opBLT16(void) /* TRUSTED */
 {
 	NORMALIZEFLAGS();
 
@@ -83,7 +83,7 @@ UINT32 opBLT16(void) /* TRUSTED */
 }
 
 
-UINT32 opBLE8(void) /* TRUSTED */
+static UINT32 opBLE8(void) /* TRUSTED */
 {
 	NORMALIZEFLAGS();
 
@@ -96,7 +96,7 @@ UINT32 opBLE8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBLE16(void) /* TRUSTED */
+static UINT32 opBLE16(void) /* TRUSTED */
 {
 	NORMALIZEFLAGS();
 
@@ -109,7 +109,7 @@ UINT32 opBLE16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBH8(void) /* TRUSTED */
+static UINT32 opBH8(void) /* TRUSTED */
 {
 	if (!(_CY | _Z))
 	{
@@ -120,7 +120,7 @@ UINT32 opBH8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBH16(void) /* TRUSTED */
+static UINT32 opBH16(void) /* TRUSTED */
 {
 	if (!(_CY | _Z))
 	{
@@ -131,7 +131,7 @@ UINT32 opBH16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBNH8(void) /* TRUSTED */
+static UINT32 opBNH8(void) /* TRUSTED */
 {
 	if ((_CY | _Z))
 	{
@@ -142,7 +142,7 @@ UINT32 opBNH8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBNH16(void) /* TRUSTED */
+static UINT32 opBNH16(void) /* TRUSTED */
 {
 	if ((_CY | _Z))
 	{
@@ -153,7 +153,7 @@ UINT32 opBNH16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBNL8(void) /* TRUSTED */
+static UINT32 opBNL8(void) /* TRUSTED */
 {
 	if (!(_CY))
 	{
@@ -164,7 +164,7 @@ UINT32 opBNL8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBNL16(void) /* TRUSTED */
+static UINT32 opBNL16(void) /* TRUSTED */
 {
 	if (!(_CY))
 	{
@@ -175,7 +175,7 @@ UINT32 opBNL16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBL8(void) /* TRUSTED */
+static UINT32 opBL8(void) /* TRUSTED */
 {
 	if ((_CY))
 	{
@@ -186,7 +186,7 @@ UINT32 opBL8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBL16(void) /* TRUSTED */
+static UINT32 opBL16(void) /* TRUSTED */
 {
 	if ((_CY))
 	{
@@ -197,7 +197,7 @@ UINT32 opBL16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBNE8(void) /* TRUSTED */
+static UINT32 opBNE8(void) /* TRUSTED */
 {
 	if (!(_Z))
 	{
@@ -208,7 +208,7 @@ UINT32 opBNE8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBNE16(void) /* TRUSTED */
+static UINT32 opBNE16(void) /* TRUSTED */
 {
 	if (!(_Z))
 	{
@@ -219,7 +219,7 @@ UINT32 opBNE16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBE8(void) /* TRUSTED */
+static UINT32 opBE8(void) /* TRUSTED */
 {
 	if ((_Z))
 	{
@@ -230,7 +230,7 @@ UINT32 opBE8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBE16(void) /* TRUSTED */
+static UINT32 opBE16(void) /* TRUSTED */
 {
 	if ((_Z))
 	{
@@ -241,7 +241,7 @@ UINT32 opBE16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBNV8(void) /* TRUSTED */
+static UINT32 opBNV8(void) /* TRUSTED */
 {
 	if (!(_OV))
 	{
@@ -252,7 +252,7 @@ UINT32 opBNV8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBNV16(void) /* TRUSTED */
+static UINT32 opBNV16(void) /* TRUSTED */
 {
 	if (!(_OV))
 	{
@@ -263,7 +263,7 @@ UINT32 opBNV16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBV8(void) /* TRUSTED */
+static UINT32 opBV8(void) /* TRUSTED */
 {
 	if ((_OV))
 	{
@@ -274,7 +274,7 @@ UINT32 opBV8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBV16(void) /* TRUSTED */
+static UINT32 opBV16(void) /* TRUSTED */
 {
 	if ((_OV))
 	{
@@ -285,7 +285,7 @@ UINT32 opBV16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBP8(void) /* TRUSTED */
+static UINT32 opBP8(void) /* TRUSTED */
 {
 	if (!(_S))
 	{
@@ -296,7 +296,7 @@ UINT32 opBP8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBP16(void) /* TRUSTED */
+static UINT32 opBP16(void) /* TRUSTED */
 {
 	if (!(_S))
 	{
@@ -307,7 +307,7 @@ UINT32 opBP16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBN8(void) /* TRUSTED */
+static UINT32 opBN8(void) /* TRUSTED */
 {
 	if ((_S))
 	{
@@ -318,7 +318,7 @@ UINT32 opBN8(void) /* TRUSTED */
 	return 2;
 }
 
-UINT32 opBN16(void) /* TRUSTED */
+static UINT32 opBN16(void) /* TRUSTED */
 {
 	if ((_S))
 	{
@@ -329,25 +329,25 @@ UINT32 opBN16(void) /* TRUSTED */
 	return 3;
 }
 
-UINT32 opBR8(void) /* TRUSTED */
+static UINT32 opBR8(void) /* TRUSTED */
 {
 	PC += (INT8)OpRead8(PC + 1);
 	return 0;
 }
 
-UINT32 opBR16(void) /* TRUSTED */
+static UINT32 opBR16(void) /* TRUSTED */
 {
 	PC += (INT16)OpRead16(PC + 1);
 	return 0;
 }
 
-UINT32 opBSR(void) /* TRUSTED */
+static UINT32 opBSR(void) /* TRUSTED */
 {
-	/* Save Next PC onto the stack*/
+	// Save Next PC onto the stack
 	SP -= 4;
 	MemWrite32(SP, PC+3);
 
-	/* Jump to subroutine*/
+	// Jump to subroutine
 	PC += (INT16)OpRead16(PC + 1);
 	return 0;
 }

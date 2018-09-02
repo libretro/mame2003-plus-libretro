@@ -1,53 +1,53 @@
 
-/* NOTE for bit string/field addressing*/
-/* *************************************/
-/* modDim must be passed as 10 for bit string instructions,*/
-/* and as 11 for bit field instructions*/
+// NOTE for bit string/field addressing
+// ************************************
+// modDim must be passed as 10 for bit string instructions,
+// and as 11 for bit field instructions
 
 
 
-/* Output variables for ReadAMAddress()*/
-UINT8 amFlag;
-UINT32 amOut;
-UINT32 bamOffset;
+// Output variables for ReadAMAddress()
+static UINT8 amFlag;
+static UINT32 amOut;
+static UINT32 bamOffset;
 
-/* Appo temp var*/
-UINT32 amLength1,amLength2,amLength3,amLength4;
+// Appo temp var
+static UINT32 amLength1,amLength2;
 
 
-/* Global vars used by AM functions*/
-UINT32 modAdd;
-UINT8 modM;
-UINT8 modVal;
-UINT8 modVal2;
-UINT8 modWriteValB;
-UINT16 modWriteValH;
-UINT32 modWriteValW;
-UINT8 modDim;
+// Global vars used by AM functions
+static UINT32 modAdd;
+static UINT8 modM;
+static UINT8 modVal;
+static UINT8 modVal2;
+static UINT8 modWriteValB;
+static UINT16 modWriteValH;
+static UINT32 modWriteValW;
+static UINT8 modDim;
 
-/* Addressing mode functions and tables*/
-#include "am1.c" /* ReadAM*/
-#include "am2.c" /* ReadAMAddress*/
-#include "am3.c" /* WriteAM*/
+// Addressing mode functions and tables
+#include "am1.c" // ReadAM
+#include "am2.c" // ReadAMAddress
+#include "am3.c" // WriteAM
 
 /*
   Input:
   modAdd
-	modDim
+    modDim
 
   Output:
-	amOut
-	amLength
+    amOut
+    amLength
 */
 
-UINT32 ReadAM(void)
+static UINT32 ReadAM(void)
 {
 	modM=modM?1:0;
 	modVal=OpRead8(modAdd);
 	return AMTable1[modM][modVal>>5]();
 }
 
-UINT32 BitReadAM(void)
+static UINT32 BitReadAM(void)
 {
 	modM=modM?1:0;
 	modVal=OpRead8(modAdd);
@@ -59,22 +59,22 @@ UINT32 BitReadAM(void)
 /*
   Input:
   modAdd
-	modDim
+    modDim
 
   Output:
-	amOut
-	amFlag
-	amLength
+    amOut
+    amFlag
+    amLength
 */
 
-UINT32 ReadAMAddress(void)
+static UINT32 ReadAMAddress(void)
 {
 	modM=modM?1:0;
 	modVal=OpRead8(modAdd);
 	return AMTable2[modM][modVal>>5]();
 }
 
-UINT32 BitReadAMAddress(void)
+static UINT32 BitReadAMAddress(void)
 {
 	modM=modM?1:0;
 	modVal=OpRead8(modAdd);
@@ -84,15 +84,15 @@ UINT32 BitReadAMAddress(void)
 /*
   Input:
   modAdd
-	modDim
-	modWriteValB/H/W
+    modDim
+    modWriteValB/H/W
 
   Output:
-	amOut
-	amLength
+    amOut
+    amLength
 */
 
-UINT32 WriteAM(void)
+static UINT32 WriteAM(void)
 {
 	modM=modM?1:0;
 	modVal=OpRead8(modAdd);
