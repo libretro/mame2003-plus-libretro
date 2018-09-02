@@ -5682,6 +5682,16 @@ Other Sun games
 		
 	/* Varia Metal */	
 	DRIVER( vmetal )    /* (c) 1995 Excellent Systems */
-
+		
+		
+	/* Cave PGM System Games */
+	DRIVER( ket )
+	DRIVER( keta )
+	DRIVER( ketb )
+	DRIVER( ddp3 )
+	DRIVER( ddp3a )
+	DRIVER( ddp3b )
+	DRIVER( ddp3blk )
+	DRIVER( espgal )
 
 #endif	/* DRIVER_RECURSIVE */
