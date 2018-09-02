@@ -485,7 +485,8 @@ struct GameSamples *readsamples(const char **samplenames,const char *basename)
 	int i;
 	struct GameSamples *samples;
 	int skipfirst = 0;
-
+	printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<**************************************>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+	printf("options.use_samples:%d options.content_flags[CONTENT_ALT_SOUND]:%d ",options.use_samples,options.content_flags[CONTENT_ALT_SOUND]); 
 	/* if the user doesn't want to use samples, bail */
 	if( (!options.use_samples)  &&  (options.content_flags[CONTENT_ALT_SOUND]) ) return 0;
 
