@@ -354,7 +354,8 @@ Stephh's notes (based on some tests) :
 #include "machine/eeprom.h"
 #include "machine/random.h"
 
-#define OSC_A	(32215900)	/* System 32 master crystal is 32215900 Hz*/
+#define MASTER_CLOCK  32215900
+
 #define MAX_COLOURS (16384)
 enum { EEPROM_SYS32_0=0, EEPROM_ALIEN3, EEPROM_RADM, EEPROM_RADR };
 
@@ -2073,11 +2074,11 @@ static struct GfxDecodeInfo gfxdecodeinfo[] =
 static MACHINE_DRIVER_START( system32 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD(V60, OSC_A/2/12) /* Reality is 16.somethingMHz, use magic /12 factor to get approximate speed*/
+	MDRV_CPU_ADD(V60, MASTER_CLOCK/2)
 	MDRV_CPU_MEMORY(system32_readmem,system32_writemem)
 	MDRV_CPU_VBLANK_INT(system32_interrupt,2)
 
-	MDRV_CPU_ADD_TAG("sound", Z80, OSC_A/4)	/* verified on real PCB*/
+	MDRV_CPU_ADD_TAG("sound", Z80, MASTER_CLOCK/4)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU)
 	MDRV_CPU_MEMORY(sound_readmem_32, sound_writemem_32)
 	MDRV_CPU_PORTS(sound_readport_32, sound_writeport_32)
@@ -2116,7 +2117,7 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( jpark )
 	MDRV_IMPORT_FROM( system32 )
 
-	MDRV_CPU_ADD_TAG("cabinet", Z80, OSC_A/8)	/* ???*/
+	MDRV_CPU_ADD_TAG("cabinet", Z80, MASTER_CLOCK/4)
 	MDRV_CPU_MEMORY( jpcab_readmem, jpcab_writemem )
 	MDRV_CPU_PORTS( jpcab_readport, jpcab_writeport )
 /*	MDRV_CPU_VBLANK_INT(irq0_line_pulse,1)		*/ /* CPU has an IRQ handler, it appears to be periodic*/
@@ -3240,5 +3241,4 @@ GAMEX(1993, darkedge, 0,        sys32_hi, darkedge, s32,      ROT0, "Sega", "Dar
 GAMEX(1993, f1lap,    0,        system32, f1lap,	f1sl,     ROT0, "Sega", "F1 Super Lap", GAME_NOT_WORKING ) /* blank screen, also requires 2 linked sys32 boards to function */
 GAMEX(1994, dbzvrvs,  0,        sys32_hi, system32,	s32,      ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION) /* does nothing useful, known to be heavily protected */
 GAMEX(1995, slipstrm, 0,        sys32_hi, system32,	f1en,     ROT0, "Capcom", "Slipstream", GAME_NOT_WORKING ) /* unhandled v60 opcodes .... */
-/* Air Rescue */
 /* Loony Toons (maybe) */
