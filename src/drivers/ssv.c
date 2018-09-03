@@ -2837,11 +2837,6 @@ static struct ES5506interface es5506_interface =
 	{ 0 }
 };
 
-/* Average clock cycles per instruction (12?) */
-#define AVERAGE_CPI		(12)
-
-#define CLOCK_16MHz			(16000000 / AVERAGE_CPI)	/* Known speed for system boards STA-0001 & STA-0001B*/
-#define CLOCK_12MHz			(12000000 / AVERAGE_CPI)
 
 /***************************************************************************
 
@@ -2941,7 +2936,7 @@ DRIVER_INIT( vasara2 )		{	init_ssv();
 static MACHINE_DRIVER_START( ssv )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", V60, CLOCK_16MHz) /* Based on STA-0001 & STA-0001B System boards */
+	MDRV_CPU_ADD_TAG("main", V60, 16000000) /* Based on STA-0001 & STA-0001B System boards */
 	MDRV_CPU_VBLANK_INT(ssv_interrupt,2)	/* Vblank */
 
 	MDRV_FRAMES_PER_SECOND(60)
