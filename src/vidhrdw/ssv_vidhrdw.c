@@ -197,6 +197,56 @@ VIDEO_START( ssv )
 	return 0;
 }
 
+VIDEO_START( eaglshot )
+{
+	if ( video_start_ssv() )
+		return 1;
+
+	eaglshot_gfxram		=	(data16_t*)auto_malloc(16 * 0x40000);
+	eaglshot_dirty_tile	=	(char*)auto_malloc(16 * 0x40000 / (16*8));
+
+	if ( !eaglshot_gfxram || !eaglshot_dirty_tile )
+		return 1;
+
+	return 0;
+}
+
+static struct tilemap *gdfs_tmap;
+
+static void get_tile_info_0(int tile_index)
+{
+	data16_t tile = gdfs_tmapram[tile_index];
+	SET_TILE_INFO(3, tile, 0, TILE_FLIPXY( tile >> 14 ));
+}
+
+WRITE16_HANDLER( gdfs_tmapram_w )
+{
+	data16_t old_data	=	gdfs_tmapram[offset];
+	data16_t new_data	=	COMBINE_DATA(&gdfs_tmapram[offset]);
+	if (old_data != new_data)	tilemap_mark_tile_dirty(gdfs_tmap, offset);
+}
+
+VIDEO_START( gdfs )
+{
+	if ( video_start_ssv() )
+		return 1;
+
+	Machine->gfx[2]->color_granularity = 64; /* 256 colour sprites with palette selectable on 64 colour boundaries */
+
+	eaglshot_gfxram		=	(data16_t*)auto_malloc(4 * 0x100000);
+	eaglshot_dirty_tile	=	(char*)auto_malloc(4 * 0x100000 / (16*8));
+
+	gdfs_tmap			=	tilemap_create(	get_tile_info_0, tilemap_scan_rows,
+											TILEMAP_TRANSPARENT, 16,16, 0x100,0x100	);
+
+	if ( !eaglshot_gfxram || !eaglshot_dirty_tile || !gdfs_tmap)
+		return 1;
+
+	tilemap_set_transparent_pen(gdfs_tmap, 0);
+
+	return 0;
+}
+
 /* Scroll values + CRT controller registers */
 data16_t *ssv_scroll;
 
@@ -206,6 +256,9 @@ int ssv_tile_code[16];
 
 int ssv_sprites_offsx, ssv_sprites_offsy;
 int ssv_tilemap_offsx, ssv_tilemap_offsy;
+
+data16_t *eaglshot_gfxram, *gdfs_tmapram, *gdfs_tmapscroll;
+char eaglshot_dirty, *eaglshot_dirty_tile;
 
 /***************************************************************************
 
@@ -1238,6 +1291,237 @@ static void ssv_draw_sprites(struct mame_bitmap *bitmap)
 
 
 ***************************************************************************/
+
+VIDEO_UPDATE( eaglshot )
+{
+	int tile;
+
+	/* Decode tiles from ram */
+	if (eaglshot_dirty)
+	{
+		eaglshot_dirty = 0;
+
+		for (tile = 0; tile < (16 * 0x40000 / (16*8)); tile++)
+		{
+			if (eaglshot_dirty_tile[tile])
+			{
+				eaglshot_dirty_tile[tile] = 0;
+
+				decodechar(Machine->gfx[0], tile, (UINT8 *)eaglshot_gfxram, Machine->drv->gfxdecodeinfo[0].gfxlayout);
+				decodechar(Machine->gfx[1], tile, (UINT8 *)eaglshot_gfxram, Machine->drv->gfxdecodeinfo[1].gfxlayout);
+			}
+		}
+	}
+
+	video_update_ssv(bitmap, cliprect);
+}
+
+/*
+    Sprites RAM is 0x80000 bytes long. The first 0x2000? bytes hold a list
+    of sprites to display (the list can be made shorter using an end-of-list
+    marker).
+
+    Each entry in the list (16 bytes) is a multi-sprite (e.g it tells the
+    hardware to display several single-sprites).
+
+    The list looks like this:
+
+    Offset:     Bits:                   Value:
+
+        0.h     fedc ba-- ---- ----
+                ---- --98 7654 3210     X displacement
+
+        2.h     fedc ba-- ---- ----
+                ---- --98 7654 3210     Y displacement
+
+        4.h     f--- ---- ---- ----     List end
+                -edc ba98 7654 3210     Offset of the single-sprite(s) data
+
+        0.h                             Number of single-sprites (how many bits?)
+
+    A single-sprite is:
+
+    Offset:     Bits:                   Value:
+
+        0.h                             Code
+
+        2.h     f--- ---- ---- ----     Flip X
+                -e-- ---- ---- ----     Flip Y
+                ---- -a-- ---- ----     0 = 256 color steps, 1 = 64 color steps
+                ---- --98 7654 3210     Color code
+
+        4.h     fedc ba-- ---- ----
+                ---- --98 7654 3210     X displacement
+
+        6.h     fedc ba-- ---- ----
+                ---- --98 7654 3210     Y displacement
+
+        8.h     fedc ba98 ---- ----     Y Size
+                ---- ---- 7654 3210     X Size
+
+        A.h     fedc ba98 ---- ----
+                ---- ---- 7654 ----     Priority
+                ---- ---- ---- 32--     Y Tiles (1,2,4,8)
+                ---- ---- ---- --10     X Tiles (1,2,4,8)
+
+        C.h                             Unused
+
+        E.h                             Unused
+
+*/
+static void gdfs_draw_zooming_sprites(struct mame_bitmap *bitmap, int priority)
+{
+	/* Sprites list */
+
+	data16_t *s1	=	spriteram16_2;
+	data16_t *end1	=	spriteram16_2 + 0x02000/2;
+	data16_t *s2;
+
+	priority <<= 4;
+
+	for ( ; s1 < end1; s1+=8/2 )
+	{
+		int attr, code, color, num, sprite, zoom, size;
+		int sx, x, xoffs, flipx, xnum, xstart, xend, xinc, xdim, xscale;
+		int sy, y, yoffs, flipy, ynum, ystart, yend, yinc, ydim, yscale;
+
+		xoffs	=		s1[ 0 ];
+		yoffs	=		s1[ 1 ];
+		sprite	=		s1[ 2 ];
+		num		=		s1[ 3 ] % 0x101;
+
+		/* Last sprite */
+		if (sprite & 0x8000) break;
+
+		/* Single-sprite address */
+		s2		=		&spriteram16_2[ (sprite & 0x7fff) * 16/2 ];
+
+		for( ; num > 0; num--,s2+=16/2 )
+		{
+			code	=	s2[ 0 ];
+			attr	=	s2[ 1 ];
+			sx		=	s2[ 2 ];
+			sy		=	s2[ 3 ];
+			zoom	=	s2[ 4 ];
+			size	=	s2[ 5 ];
+
+			if (priority != (size & 0xf0))
+				break;
+
+			flipx	=	(attr & 0x8000);
+			flipy	=	(attr & 0x4000);
+			color	=	(attr & 0x0400) ? attr : attr * 4;
+
+			/* Single-sprite tile size */
+			xnum = 1 << ((size >> 0) & 3);
+			ynum = 1 << ((size >> 2) & 3);
+
+			xnum = (xnum + 1) / 2;
+
+			if (flipx)	{ xstart = xnum-1;  xend = -1;    xinc = -1; }
+			else		{ xstart = 0;       xend = xnum;  xinc = +1; }
+
+			if (flipy)	{ ystart = ynum-1;  yend = -1;    yinc = -1; }
+			else		{ ystart = 0;       yend = ynum;  yinc = +1; }
+
+			/* Apply global offsets */
+			sx	+=	xoffs;
+			sy	+=	yoffs;
+
+			/* Sign extend the position */
+			sx	=	(sx & 0x1ff) - (sx & 0x200);
+			sy	=	(sy & 0x1ff) - (sy & 0x200);
+
+			sy	=	-sy;
+
+			/* Use fixed point values (16.16), for accuracy */
+			sx <<= 16;
+			sy <<= 16;
+
+			xdim	=	( ( ((zoom >> 0) & 0xff) + 1) << 16 ) / xnum;
+			ydim	=	( ( ((zoom >> 8) & 0xff) + 1) << 16 ) / ynum;
+
+			xscale	=	xdim / 16;
+			yscale	=	ydim / 8;
+
+			/* Let's approximate to the nearest greater integer value
+               to avoid holes in between tiles */
+			if (xscale & 0xffff)	xscale += (1<<16) / 16;
+			if (yscale & 0xffff)	yscale += (1<<16) / 8;
+
+			/* Draw the tiles */
+
+			for (x = xstart; x != xend; x += xinc)
+			{
+				for (y = ystart; y != yend; y += yinc)
+				{
+					drawgfxzoom(	bitmap,	Machine->gfx[2],
+									code++,
+									color,
+									flipx, flipy,
+									(sx + x * xdim) / 0x10000, (sy + y * ydim) / 0x10000,
+									&Machine->visible_area, TRANSPARENCY_PEN, 0,
+									xscale, yscale
+					);
+				}
+			}
+
+			#ifdef MAME_DEBUG
+			if (code_pressed(KEYCODE_Z))	/* Display some info on each sprite */
+			{	struct DisplayText dt[2];	char buf[10];
+				sprintf(buf, "%X",size);
+				dt[0].text = buf;	dt[0].color = UI_COLOR_INVERSE;
+				dt[0].x = sx / 0x10000;		dt[0].y = sy / 0x10000;
+				dt[1].text = 0;	/* terminate array */
+				displaytext(Machine->scrbitmap,dt);		}
+			#endif
+		}	/* single-sprites */
+
+	}	/* sprites list */
+}
+
+VIDEO_UPDATE( gdfs )
+{
+	int tile, pri;
+
+	video_update_ssv(bitmap, cliprect);
+
+	/* Decode zooming sprites tiles from ram */
+	if (eaglshot_dirty)
+	{
+		eaglshot_dirty = 0;
+
+		for (tile = 0; tile < (4 * 0x100000 / (16*8)); tile++)
+		{
+			if (eaglshot_dirty_tile[tile])
+			{
+				eaglshot_dirty_tile[tile] = 0;
+
+				decodechar(Machine->gfx[2], tile, (UINT8 *)eaglshot_gfxram, Machine->drv->gfxdecodeinfo[2].gfxlayout);
+			}
+		}
+	}
+
+	for (pri = 0; pri <= 0xf; pri++)
+		gdfs_draw_zooming_sprites(bitmap, pri);
+
+	tilemap_set_scrollx(gdfs_tmap,0,gdfs_tmapscroll[0x0c/2]);
+	tilemap_set_scrolly(gdfs_tmap,0,gdfs_tmapscroll[0x10/2]);
+	tilemap_draw(bitmap,cliprect, gdfs_tmap, 0, 0);
+
+#if 0
+	draw_crosshair(bitmap,
+		Machine->visible_area.min_x + ((Machine->visible_area.max_x - Machine->visible_area.min_x) * readinputport(5)) / 255,
+		Machine->visible_area.min_y + ((Machine->visible_area.max_y - Machine->visible_area.min_y) * readinputport(6)) / 255,
+		cliprect,0);
+
+	draw_crosshair(bitmap,
+		Machine->visible_area.min_x + ((Machine->visible_area.max_x - Machine->visible_area.min_x) * readinputport(7)) / 255,
+		Machine->visible_area.min_y + ((Machine->visible_area.max_y - Machine->visible_area.min_y) * readinputport(8)) / 255,
+		cliprect,1);
+#endif
+}
+
 
 static int enable_video;
 
