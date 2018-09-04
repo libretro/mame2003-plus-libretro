@@ -156,7 +156,7 @@ static void update(int param, INT16 **buffer, int length)
 			
 			/*printf("ramp:%x vol:%x\n",volacc,vol); */
 
-			logerror("ICS2115: KEYRUN %02d adr=%08x end=%08x delta=%08x\n",
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: KEYRUN %02d adr=%08x end=%08x delta=%08x\n",
 					 osc, adr, end, delta);
 
 			for(i=0; i<length; i++) {
@@ -176,7 +176,7 @@ if(1)
 				adr += delta;
 				if(adr >= end) 
 				{
-					logerror("ICS2115: KEYDONE %2d\n", osc);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: KEYDONE %2d\n", osc);
 					adr -= (end-loop);
 					if((!(conf & 0x8)) || ics2115.voice[osc].tout == 0) {
 						ics2115.voice[osc].state &= ~V_ON;
@@ -227,9 +227,9 @@ static void recalc_timer(int timer)
 	if(period)
 		period = 1/62.8206;
 	if(period)
-		logerror("ICS2115: timer %d freq=%gHz\n", timer, 1/period);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: timer %d freq=%gHz\n", timer, 1/period);
 	else
-		logerror("ICS2115: timer %d off\n", timer);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: timer %d off\n", timer);
 
 	if(ics2115.timer[timer].period != period) {
 		ics2115.timer[timer].period = period;
