@@ -4957,6 +4957,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( vasara )	/* (c) 2000 Visco */
         DRIVER( vasara2 )	/* (c) 2001 Visco */
         DRIVER( vasara2a )	/* (c) 2001 Visco */
+        DRIVER( gdfs )          /* (c) 1995 Banpresto */
 	DRIVER( ultrax )	/* (c) 1995 Banpresto */
 	DRIVER( jsk )		/* (c) 1997 Visco */
 
