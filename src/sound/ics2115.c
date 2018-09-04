@@ -36,15 +36,44 @@
 /*   20ba: 01 08 09*/
 /*   2299: 01 09 19*/
 
+#define FLAG_OSCCONF_DISABLE	(1 << 1)
+#define FLAG_OSCCONF_NOENVELOPE	(FLAG_OSCCONF_DISABLE)
+#define FLAG_OSCCONF_EIGHTBIT	(1 << 2)
+#define FLAG_OSCCONF_LOOP	(1 << 3)
+#define FLAG_OSCCONF_LOOP_BIDIR	(1 << 4)
+#define FLAG_OSCCONF_IRQ	(1 << 5)
+#define FLAG_OSCCONF_INVERT	(1 << 6)
+/* Possibly enables IRQ for completion */
+
+#define FLAG_VOLCTL_DONE	(1 << 0)
+/* Unsure, but envelope can be disabled with this, so I assume it's a disable bit... */
+#define FLAG_VOLCTL_DISABLE (1 << 1)
+#define FLAG_VOLCTL_NOENVELOPE	(FLAG_VOLCTL_DONE | FLAG_VOLCTL_DISABLE)
+#define FLAG_VOLCTL_LOOP	(1 << 3)
+#define FLAG_VOLCTL_LOOP_BIDIR	(1 << 4)
+#define FLAG_VOLCTL_IRQ		(1 << 5)
+#define FLAG_VOLCTL_INVERT	(1 << 6)
+
+#define	FLAG_STATE_ON		(1 << 0)
+#define	FLAG_STATE_WAVEIRQ	(1 << 1)
+#define	FLAG_STATE_VOLIRQ	(1 << 2)
+#define	FLAG_STATE_IRQ		(FLAG_STATE_VOLIRQ | FLAG_STATE_WAVEIRQ)
+
+
 enum { V_ON = 1, V_DONE = 2 };
+
+static UINT32 ramp[32];
 
 static struct {
 	struct ics2115_interface *intf;
 	UINT8 *rom;
 	INT16 *ulaw;
+	UINT16 *voltbl;
 
 	struct {
-		UINT16 fc, addrh, addrl, strth, endh, volacc;
+		INT16 left;
+		UINT16 add;
+		UINT16 fc, addrh, addrl, strth, endh, volacc, incr, tout;
 		UINT8 strtl, endl, saddr, pan, conf, ctl;
 		UINT8 vstart, vend, vctl;
 		UINT8 state;
@@ -110,9 +139,24 @@ static void update(int param, INT16 **buffer, int length)
 			UINT32 delta = (ics2115.voice[osc].fc << 2)*(33075.0/44100.0);
 			UINT8 conf = ics2115.voice[osc].conf;
 			INT32 vol = ics2115.voice[osc].volacc;
-			vol = (((vol & 0xff0)|0x1000)<<(vol>>12))>>12;
+			UINT32 volacc = (ics2115.voice[osc].volacc) >> 4 & 0xffff;
+			ics2115.voice[osc].add = (double)((ics2115.voice[osc].incr & 0x3F) << 4) / (double)(1 << (3 * ((ics2115.voice[osc].incr >> 6) & 3)));
+			
+			if ((ics2115.voice[osc].tout > 0) && (osc < 8))ics2115.voice[osc].tout--;
+			if (volacc == 0xe68) volacc = 0xe20;
+			if (volacc == 0xee0) volacc = 0xe20;
+			if (volacc == 0xfcc) volacc = 0xf40;
+			if (volacc == 0xe18) volacc = 0xeb0;
+			vol = ics2115.voltbl[volacc];
+			if (!(ics2115.voice[osc].ctl & 0x8)) ramp[osc]  = 0x0;
+			if (ics2115.voice[osc].ctl & 0x8) ramp[osc]  += 0x150;
+			
+			if ((ramp[osc] + 0x50) > vol) vol = 0x0;
+			else vol -= ramp[osc];
+			
+			/*printf("ramp:%x vol:%x\n",volacc,vol); */
 
-			log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: KEYRUN %02d adr=%08x end=%08x delta=%08x\n",
+			logerror("ICS2115: KEYRUN %02d adr=%08x end=%08x delta=%08x\n",
 					 osc, adr, end, delta);
 
 			for(i=0; i<length; i++) {
@@ -122,18 +166,28 @@ static void update(int param, INT16 **buffer, int length)
 				else
 					v = ((INT8)v) << 6;
 
-				v = (v*vol)>>(16+5);
+if(1)
+{
+				v = (v * vol) >> (18);
 				buffer[0][i] += v;
 				buffer[1][i] += v;
+
+
 				adr += delta;
-				if(adr >= end) {
-					log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: KEYDONE %2d\n", osc);
+				if(adr >= end) 
+				{
+					logerror("ICS2115: KEYDONE %2d\n", osc);
 					adr -= (end-loop);
-					ics2115.voice[osc].state &= ~V_ON;
-					ics2115.voice[osc].state |= V_DONE;
+					if((!(conf & 0x8)) || ics2115.voice[osc].tout == 0) {
+						ics2115.voice[osc].state &= ~V_ON;
+						ics2115.voice[osc].state |= V_DONE;
+						
+					}
+					
 					rec_irq = 1;
 					break;
 				}
+			}
 			}
 			ics2115.voice[osc].addrh = adr >> 16;
 			ics2115.voice[osc].addrl = adr;
@@ -166,15 +220,16 @@ static void timer_cb(int timer)
 	recalc_irq();
 }
 
+/* Arcadez keep original timers otherwise all games drop to 5fps */
 static void recalc_timer(int timer)
 {
 	double period = ics2115.timer[timer].scale*ics2115.timer[timer].preset / 33868800.0;
 	if(period)
 		period = 1/62.8206;
 	if(period)
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: timer %d freq=%gHz\n", timer, 1/period);
+		logerror("ICS2115: timer %d freq=%gHz\n", timer, 1/period);
 	else
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: timer %d off\n", timer);
+		logerror("ICS2115: timer %d off\n", timer);
 
 	if(ics2115.timer[timer].period != period) {
 		ics2115.timer[timer].period = period;
@@ -188,6 +243,7 @@ static void recalc_timer(int timer)
 
 static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 {
+	ics2115.voice[ics2115.osc].tout = 40;
 	switch(reg) {
 	case 0x00: /* [osc] Oscillator Configuration*/
 		if(msb) {
@@ -240,6 +296,15 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 					 ics2115.voice[ics2115.osc].endl, caller_get_pc());
 		}
 		break;
+
+	case 0x06: /* [osc] Volume Increment */
+		if(msb) 
+				ics2115.voice[ics2115.osc].incr = (ics2115.voice[ics2115.osc].incr & ~0xFF00) | (data << 8);
+		else /* This is unused? */
+				ics2115.voice[ics2115.osc].incr = (ics2115.voice[ics2115.osc].incr & ~0x00FF) | (data << 0);
+        
+		break;	
+		
 
 	case 0x07: /* [osc] Volume Start*/
 		if(msb) {
@@ -374,6 +439,12 @@ static void ics2115_reg_w(UINT8 reg, UINT8 data, int msb)
 static UINT16 ics2115_reg_r(UINT8 reg)
 {
 	switch(reg) {
+	case 0x06: /* [osc] Volume Increment */
+			return ics2115.voice[ics2115.osc].incr;
+
+			break;
+
+
 	case 0x0d: /* [osc] Volume Enveloppe Control*/
 		log_cb(RETRO_LOG_DEBUG, LOGPRE "ICS2115: %2d: read vctl (%04x)\n", ics2115.osc, caller_get_pc());
 		/*		res = ics2115.voice[ics2115.osc].vctl << 8;*/
@@ -443,6 +514,12 @@ int ics2115_sh_start( const struct MachineSound *msound )
 	ics2115.timer[1].timer = timer_alloc(timer_cb);
 	ics2115.ulaw = auto_malloc(256*sizeof(INT16));
 	ics2115.stream = stream_init_multi(2, bufp, ics2115.intf->mixing_level, Machine->sample_rate, 0, update);
+	ics2115.voltbl = auto_malloc(8192);
+   
+    for (i = 0; i < 0x1000; i++) {
+		ics2115.voltbl[i] = floor(pow(2.0,(((double)i/256 - 16) + 14.7)*1.06));
+
+    }
 
 	if(!ics2115.timer[0].timer || !ics2115.timer[1].timer || !ics2115.ulaw)
 		return 1;
