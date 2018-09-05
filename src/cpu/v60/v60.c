@@ -353,8 +353,9 @@ void v60_stall(void)
 
 static void base_init(const char *type)
 {
+	int cpu;
 	v60_stall_io = 0;
-	int cpu = cpu_getactivecpu();
+	cpu = cpu_getactivecpu();
 
 	v60.irq_cb = v60_default_irq_cb;
 	v60.irq_line = CLEAR_LINE;
