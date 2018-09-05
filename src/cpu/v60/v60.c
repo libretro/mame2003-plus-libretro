@@ -355,14 +355,6 @@ static void base_init(const char *type)
 {
 	v60_stall_io = 0;
 	int cpu = cpu_getactivecpu();
-	static int opt_init = 0;
-	if(!opt_init) {
-	//	InitTables();	/* set up opcode tables*/
-#ifdef MAME_DEBUG
-		v60_dasm_init();
-#endif
-		opt_init = 1;
-	}
 
 	v60.irq_cb = v60_default_irq_cb;
 	v60.irq_line = CLEAR_LINE;
