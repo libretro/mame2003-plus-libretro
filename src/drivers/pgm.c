@@ -300,7 +300,7 @@ static WRITE16_HANDLER ( z80_reset_w )
 	else
 	{
 		/* this might not be 100% correct, but several of the games (ddp2, puzzli2 etc. expect the z80 to be turned
-           off during data uploads, they write here before the upload */
+           off during data uploads, they write here before the upload  */
          cpu_set_halt_line(1, ASSERT_LINE);
 		/*Note Puzzle Star needs this also*/
 	}
