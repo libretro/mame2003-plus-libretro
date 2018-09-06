@@ -1299,77 +1299,72 @@ static DRIVER_INIT( olds )
 /* Killing Blade uses some kind of DMA protection device which can copy data from a data rom.  The
    MCU appears to have an internal ROM as if you remove the data ROM then the shared ram is filled
    with a constant value.
-   
-   The device can perform various decryption operations on the data it copies.  for now we're just
-   using a dump of the shared RAM instead.  This will be improved later.
+   The device can perform various decryption operations on the data it copies.
 */
 
 static int kb_cmd;
-static int reg;
-static int ptr;
+static int kb_reg;
+static int kb_ptr;
+UINT32 kb_regs[0x10];
+
 
 static WRITE16_HANDLER( killbld_prot_w )
 {
-/*  mame_printf_debug("killbrd prot r\n");*/
-/*  return 0;*/
-	offset&=0xf;
+	offset &= 0xf;
 
-	if(offset==0)
-		kb_cmd=data;
-	else /*offset==2*/
+	if (offset == 0)
+		kb_cmd = data;
+	else /* offset==2 */
 	{
-		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X: ASIC25 W CMD %X  VAL %X",activecpu_get_pc(),kb_cmd,data);
-		if(kb_cmd==0)
-			reg=data;
-		else if(kb_cmd==2)
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X: ASIC25 W CMD %X  VAL %X\n", activecpu_get_pc(),kb_cmd,data);
+		if (kb_cmd == 0)
+			kb_reg = data;
+		else if (kb_cmd == 2)
 		{
-
-			if(data==1)	/*Execute cmd*/
+			if (data == 1)	/* Execute cmd */
 			{
-				UINT16 cmd=killbld_sharedprotram[0x200/2];
-				/*mame_printf_debug("command %04x\n",cmd);*/
-				if(cmd==0x6d)	/*Store values to asic ram*/
+				UINT16 cmd = killbld_sharedprotram[0x200/2];
+
+				if (cmd == 0x6d)	/* Store values to asic ram */
 				{
-					UINT32 p1=(killbld_sharedprotram[0x298/2] << 16) | killbld_sharedprotram[0x29a/2];
-					UINT32 p2=(killbld_sharedprotram[0x29c/2] << 16) | killbld_sharedprotram[0x29e/2];
-					static UINT32 Regs[0x10];
-					if((p2&0xFFFF)==0x9)	/*Set value*/
+					UINT32 p1 = (killbld_sharedprotram[0x298/2] << 16) | killbld_sharedprotram[0x29a/2];
+					UINT32 p2 = (killbld_sharedprotram[0x29c/2] << 16) | killbld_sharedprotram[0x29e/2];
+
+					if ((p2 & 0xffff) == 0x9)	/* Set value */
 					{
-						int reg2=(p2>>16)&0xFFFF;
-						if(reg2&0x200)
-							Regs[reg2&0xFF]=p1;
+						int reg = (p2 >> 16) & 0xffff;
+						if (reg & 0x200)
+							kb_regs[reg & 0xff] = p1;
 					}
-					if((p2&0xFFFF)==0x6)	/*Add value*/
+					if ((p2 & 0xffff) == 0x6)	/* Add value */
 					{
-						int src1=(p1>>16)&0xFF;
-						int src2=(p1>>0)&0xFF;
-						int dst=(p2>>16)&0xFF;
-						Regs[dst]=Regs[src2]-Regs[src1];
+						int src1 = (p1 >> 16) & 0xff;
+						int src2 = (p1 >> 0) & 0xff;
+						int dst = (p2 >> 16) & 0xff;
+						kb_regs[dst] = kb_regs[src2] - kb_regs[src1];
 					}
-					if((p2&0xFFFF)==0x1)	/*Add Imm?*/
+					if ((p2 & 0xffff) == 0x1)	/* Add Imm? */
 					{
-						int reg2=(p2>>16)&0xFF;
-						int imm=(p1>>0)&0xFFFF;
-						Regs[reg2]+=imm;
+						int reg = (p2 >> 16) & 0xff;
+						int imm = (p1 >> 0) & 0xffff;
+						kb_regs[reg] += imm;
 					}
-					if((p2&0xFFFF)==0xa)	/*Get value*/
+					if ((p2 & 0xffff) == 0xa)	/* Get value */
 					{
-						int reg2=(p1>>16)&0xFF;
-						killbld_sharedprotram[0x29c/2] = (Regs[reg2]>>16)&0xffff;
-						killbld_sharedprotram[0x29e/2] = Regs[reg2]&0xffff;
+						int reg = (p1 >> 16) & 0xFF;
+						killbld_sharedprotram[0x29c/2] = (kb_regs[reg] >> 16) & 0xffff;
+						killbld_sharedprotram[0x29e/2] = kb_regs[reg] & 0xffff;
 					}
 				}
-				if(cmd==0x4f)	/*memcpy with encryption / scrambling*/
+				if(cmd == 0x4f)	/* memcpy with encryption / scrambling */
 				{
-					UINT16 src=killbld_sharedprotram[0x290/2]>>1; /* ?*/
-					UINT32 dst=killbld_sharedprotram[0x292/2];
-					UINT16 size=killbld_sharedprotram[0x294/2];
-					UINT16 mode=killbld_sharedprotram[0x296/2];
+					UINT16 src = killbld_sharedprotram[0x290 / 2] >> 1; /* ? */
+					UINT32 dst = killbld_sharedprotram[0x292 / 2];
+					UINT16 size = killbld_sharedprotram[0x294 / 2];
+					UINT16 mode = killbld_sharedprotram[0x296 / 2];
 
-
-				/*  int a=1;*/
-				/*  if(src==0x580)*/
-				/*      int a=1;*/
+					UINT16 param;
+					
 					/*
                     P_SRC =0x300290 (offset from prot rom base)
                     P_DST =0x300292 (words from 0x300000)
@@ -1377,117 +1372,176 @@ static WRITE16_HANDLER( killbld_prot_w )
                     P_MODE=0x300296
                     Mode 5 direct
                     Mode 6 swap nibbles and bytes
-                    1,2,3 unk.
+                    1,2,3 table based ops
                     */
+	
+					param = mode >> 8;
+					mode &=0xf;  /* what are the other bits? */
 
-					/*mame_printf_debug("src %04x dst %04x size %04x mode %04x\n",src,dst,size,mode);*/
-
-					/*if (src&1) mame_printf_debug("odd offset\n");*/
-
-					mode &=0xf;  /* what are the other bits?*/
-
-					if (mode == 1 || mode == 2 || mode == 3)
+					if (mode == 0)
 					{
-						/* for now, cheat -- the scramble isn't understood, it might
-                           be state based */
+						printf("unhandled copy mode %04x!\n", mode);
+						/* not used by killing blade */
+						/* plain byteswapped copy */
+					}
+					if ((mode == 1) || (mode == 2) || (mode == 3))
+					{
+						/* mode3 applies a xor from a 0x100 byte table to the data being
+						   transferred
+						   the table is stored at the start of the protection rom.
+						   the param used with the mode gives a start offset into the table
+						   odd offsets seem to change the table slightly (see rawDataOdd)
+					   */
+						  					
+						/*
+						unsigned char rawDataOdd[256] = {
+							0xB6, 0xA8, 0xB1, 0x5D, 0x2C, 0x5D, 0x4F, 0xC1,
+							0xCF, 0x39, 0x3A, 0xB7,	0x65, 0x85, 0xD9, 0xEE,
+							0xDB, 0x7B, 0x5F, 0x81, 0x03, 0x6D, 0xEB, 0x07,
+							0x0F, 0xB5, 0x61, 0x59, 0xCD, 0x60, 0x06, 0x21,
+							0xA0, 0x99, 0xDD, 0x27,	0x42, 0xD7, 0xC5, 0x5B,
+							0x3B, 0xC6, 0x4F, 0xA2, 0x20, 0xF6, 0x61, 0x61,
+							0x8C, 0x46, 0x8C, 0xCA, 0xE0, 0x0E, 0x2C, 0xE9,
+							0xBA, 0x0F, 0x45, 0x6D,	0x36, 0x1C, 0x18, 0x37,
+							0xE7, 0x85, 0x89, 0xA4, 0x94, 0x46, 0x30, 0x9B,
+							0xB2, 0xF4, 0x41, 0x55, 0xA5, 0x63, 0x1C, 0xEF,
+							0xB7, 0x18, 0xB3, 0xB1,	0xD4, 0x72, 0xA0, 0x1C,
+							0x0B, 0x97, 0x02, 0xB6, 0xC5, 0x1F, 0x1B, 0x94,
+							0xC3, 0x83, 0xAA, 0xAC, 0xD9, 0x44, 0x09, 0xD7,
+							0x6C, 0xDB, 0x07, 0xA9,	0xAD, 0x64, 0x83, 0xF1,
+							0x92, 0x09, 0xCD, 0x0E, 0x99, 0x2F, 0xBC, 0xF8,
+							0x3C, 0x63, 0x8F, 0x0A, 0x33, 0x03, 0x84, 0x91,
+							0x6C, 0xAC, 0x3A, 0x15,	0xCB, 0x67, 0xC7, 0x69,
+							0xA1, 0x92, 0x99, 0x74, 0xEE, 0x90, 0x0D, 0xBE,
+							0x57, 0x30, 0xD1, 0xBA, 0xE5, 0xDE, 0xFA, 0xD6,
+							0x83, 0x8C, 0xE4, 0x43,	0x36, 0x5E, 0xCD, 0x84,
+							0x1A, 0x18, 0x31, 0xB9, 0x20, 0x48, 0xE3, 0xA8,
+							0x89, 0x32, 0xF0, 0x90, 0x21, 0x80, 0x33, 0xAE,
+							0x3C, 0xA6, 0xB8, 0x8C,	0x72, 0x17, 0xD1, 0x0C,
+							0x1A, 0x29, 0xFA, 0x38, 0x87, 0xC9, 0x6E, 0xC7,
+							0x05, 0xDE, 0x85, 0x6E, 0x92, 0x7E, 0xD4, 0xED,
+							0x5C, 0xD3, 0x03, 0xD4,	0xFE, 0xCB, 0x6C, 0x19,
+							0x7A, 0x83, 0x79, 0x5B, 0xF6, 0x71, 0xBA, 0xF4,
+							0x37, 0x53, 0xC9, 0xC1, 0xDE, 0xDB, 0xDE, 0xB1,
+							0x64, 0x17, 0x31, 0x0E,	0xD7, 0xA2, 0x13, 0x8E,
+							0x52, 0x8D, 0xCB, 0x19, 0x3D, 0x0B, 0x31, 0x58,
+							0x4A, 0xDE, 0x0C, 0x01, 0x2B, 0x85, 0x2D, 0xE5,
+							0x13, 0x22, 0x48, 0xB6,	0xF3, 0x2D, 0x00, 0x9A
+						};
+						*/
 						int x;
-						UINT16 *RAMDUMP = (UINT16*)memory_region(REGION_USER2);
-						for (x=0;x<size;x++)
-						{
-							UINT16 dat;
+						UINT16 *PROTROM = (UINT16*)memory_region(REGION_USER1);
 
-							dat = RAMDUMP[dst+x];
-							killbld_sharedprotram[dst+x] = dat;
+						for (x = 0; x < size; x++)
+						{
+				
+							UINT16 dat2 = PROTROM[src + x];
+
+							UINT8 extraoffset = param&0xfe; /* the lowest bit changed the table addressing in tests, see 'rawDataOdd' table instead.. it's still related to the main one, not identical */
+							UINT8* dectable = (UINT8*)memory_region(REGION_USER1);/* rawDataEven; the basic decryption table is at the start of the mcu data rom! at least in killbld */
+							UINT16 extraxor = ((dectable[((x*2)+0+extraoffset)&0xff]) << 8) | (dectable[((x*2)+1+extraoffset)&0xff] << 0);
+							
+							dat2 = ((dat2 & 0x00ff)<<8) | ((dat2 & 0xff00)>>8);
+							
+							if (mode==3) dat2 ^= extraxor;						
+							if (mode==2) dat2 += extraxor;
+							if (mode==1) dat2 -= extraxor;
+							
+							/*if (dat!=dat2)
+								printf("Mode %04x Param %04x Mismatch %04x %04x\n", mode, param, dat, dat2);
+							*/
+
+							killbld_sharedprotram[dst + x] = dat2;
 						}
+	
+						/* hack, patches out some additional security checks... we need to emulate them instead!
+						  they occur before it displays the disclaimer, so if you remove the overlay patches it will display
+						  the highscore table before coming up with this error... */
+						if ((mode==3) && (param==0x54) && (src*2==0x2120) && (dst*2==0x2600)) killbld_sharedprotram[0x2600 / 2] = 0x4e75;
+						
+					}
+					if (mode == 4)
+					{
+						printf("unhandled copy mode %04x!\n", mode);
+						/* not used by killing blade */
+						/* looks almost like a fixed value xor, but isn't */
 					}
 					else if (mode == 5)
 					{
 						/* mode 5 seems to be a straight copy */
 						int x;
-						UINT16 *RAMDUMP = (UINT16*)memory_region(REGION_USER2);
 						UINT16 *PROTROM = (UINT16*)memory_region(REGION_USER1);
-						for (x=0;x<size;x++)
+						for (x = 0; x < size; x++)
 						{
-							UINT16 dat;
-							dat = PROTROM[src+x];
+							UINT16 dat = PROTROM[src + x];
 
-							if (RAMDUMP[dst+x] != dat)
-								log_cb(RETRO_LOG_DEBUG, LOGPRE "Mismatch! %04x %04x\n", RAMDUMP[dst+x], dat);
 
-							killbld_sharedprotram[dst+x] = dat;
+							killbld_sharedprotram[dst + x] = dat;
 						}
 					}
 					else if (mode == 6)
 					{
 						/* mode 6 seems to swap bytes and nibbles */
 						int x;
-						UINT16 *RAMDUMP = (UINT16*)memory_region(REGION_USER2);
 						UINT16 *PROTROM = (UINT16*)memory_region(REGION_USER1);
-						for (x=0;x<size;x++)
+						for (x = 0; x < size; x++)
 						{
-							UINT16 dat;
-							dat = PROTROM[src+x];
+							UINT16 dat = PROTROM[src + x];
 
 							dat = ((dat & 0xf000) >> 12)|
 								  ((dat & 0x0f00) >> 4)|
 								  ((dat & 0x00f0) << 4)|
 								  ((dat & 0x000f) << 12);
 
-
-							if (RAMDUMP[dst+x] != dat)
-								log_cb(RETRO_LOG_DEBUG, LOGPRE "Mismatch! Mode 6 %04x %04x\n", RAMDUMP[dst+x], dat);
-
-							killbld_sharedprotram[dst+x] = dat;
+							killbld_sharedprotram[dst + x] = dat;
 						}
+					}
+					else if (mode == 7)
+					{
+						printf("unhandled copy mode %04x!\n", mode);
+						/* not used by killing blade */
+						/* weird mode, the params get left in memory? - maybe it's a NOP? */
 					}
 					else
 					{
-						log_cb(RETRO_LOG_DEBUG, LOGPRE "unknown copy mode!\n");
-					}
-					/* hack.. it jumps here but there isn't valid code even when we do
-                       use what was in ram.. probably some more protection as the game
-                       still doesn't behave 100% correctly :-/
-                       the code is copied in 'mode 3' but even the code put here on
-                       the real ram dump is corrupt??? something _very_ strange is
-                       going on.. maybe more rom overlays, or ram overlays too??
-                    */
-					killbld_sharedprotram[0x2600/2]=0x4e75;
+						printf("unhandled copy mode %04x!\n", mode);
+						/* not used by killing blade */
+						/* invalid? */
 
+					}
 
 				}
-				reg++;
+				kb_reg++;
 			}
 		}
-		else if(kb_cmd==4)
-			ptr=data;
-		else if(kb_cmd==0x20)
-			ptr++;
+		else if (kb_cmd == 4)
+			kb_ptr = data;
+		else if (kb_cmd == 0x20)
+			kb_ptr++;
 	}
 }
 
 static READ16_HANDLER( killbld_prot_r )
 {
-/*  mame_printf_debug("killbld prot w\n");*/
+
 	UINT16 res ;
 
-	offset&=0xf;
-	res=0;
+	offset &= 0xf;
+	res = 0;
 
-	if(offset==1)
+	if (offset == 1)
 	{
-		if(kb_cmd==1)
+		if (kb_cmd == 1)
 		{
-			res=reg&0x7f;
+			res = kb_reg & 0x7f;
 		}
-		else if(kb_cmd==5)
+		else if (kb_cmd == 5)
 		{
-			UINT32 protvalue;
-			protvalue = 0x89911400|readinputport(4);
-			res=(protvalue>>(8*(ptr-1)))&0xff;
-
+			UINT32 protvalue = 0x89911400 | readinputport(4);
+			res = (protvalue >> (8 * (kb_ptr - 1))) & 0xff;
 		}
 	}
-	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X: ASIC25 R CMD %X  VAL %X",activecpu_get_pc(),kb_cmd,res);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "%06X: ASIC25 R CMD %X  VAL %X\n", activecpu_get_pc(),kb_cmd,res);
 	return res;
 }
 
@@ -1498,44 +1552,28 @@ static MACHINE_INIT( killbld )
 	machine_init_pgm();
 
 	/* fill the protection ram with a5 */
-	for (i = 0;i < 0x4000/2;i++)
+	for (i = 0; i < 0x4000/2; i++)
 		killbld_sharedprotram[i] = 0xa5a5;
 
 }
 
 
+/* ASIC025/ASIC022 don't provide rom patches like the DW2 protection does, the previous dump was bad :-) */
 static DRIVER_INIT( killbld )
 {
-	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
 
 	pgm_basic_init();
- 	pgm_killbld_decrypt();
-
-
-
-	/* this isn't a hack.. doing a rom dump while the game is running shows the
-       rom space to look like this.. there may be more overlays / enables tho */
-
-	/* the game actually performs a CRC check of the rom during the 'Please Wait'
-       screen, the checksum expected is that of the patched rom.  if the checksum
-       fails the please wait screen doesn't last as long and the region supplied
-       by the protection device is ignored and the attract sequence appears out
-       of order */
-	mem16[0x108a2c/2]=0xB6AA;
-	mem16[0x108a30/2]=0x6610;
-	mem16[0x108a32/2]=0x13c2;
-	mem16[0x108a34/2]=0x0080;
-	mem16[0x108a36/2]=0x9c76;
-	mem16[0x108a38/2]=0x23c3;
-	mem16[0x108a3a/2]=0x0080;
-	mem16[0x108a3c/2]=0x9c78;
-	mem16[0x108a3e/2]=0x1002;
-	mem16[0x108a40/2]=0x6054;
-	mem16[0x108a42/2]=0x5202;
-	mem16[0x108a44/2]=0x0c02;
+	pgm_killbld_decrypt();
 
 	install_mem_read16_handler(0, 0xd40000, 0xd40003, killbld_prot_r);
 	install_mem_write16_handler(0, 0xd40000, 0xd40003, killbld_prot_w);
+	
+	kb_cmd = 0;
+	kb_reg = 0;
+	kb_ptr = 0;
+	memset(kb_regs, 0, 0x10);
+
+
 }
 
 extern READ16_HANDLER( PSTARS_protram_r );
@@ -2152,13 +2190,39 @@ ROM_START( photoy2k )
 	ROM_LOAD( "m0700.rom",    0x400000, 0x080000, CRC(acc7afce) SHA1(ac2d344ebac336f0f363bb045dd8ea4e83d1fb50) )
 ROM_END
 
+/*
+The Killing Blade (English / World Version)
+IGS, 1998
+This is a cart for the IGS PGM system.
+
+Notes:
+      U1           - 32MBit MASKROM (SOP44, labelled "M0300")
+      U2           - 32MBit MASKROM (SOP44, labelled "A0307")
+      U3           - 16MBit MASKROM (DIP42, labelled "A0302")
+      U4           - 16MBit MASKROM (DIP42, labelled "A0304")
+      U5           - 16MBit MASKROM (DIP42, labelled "A0305")
+      U8           - 16MBit MASKROM (DIP42, labelled "B0301")
+      U9           - 32MBit MASKROM (SOP44, labelled "A0300")
+      U10          - 32MBit MASKROM (SOP44, labelled "A0301")
+      U11          - 32MBit MASKROM (SOP44, labelled "A0303")
+      U12          - 32MBit MASKROM (SOP44, labelled "A0306")
+      U13          - 32MBit MASKROM (SOP44, labelled "B0300")
+      U14          - 32MBit MASKROM (SOP44, labelled "B0302")
+      U15          - 32MBit MASKROM (SOP44, labelled "B0303")
+	  
+the text on the chip are
+
+IGS
+PGM P0300 V109
+1A0577Y3
+J982846
+
+*/
+
 ROM_START( killbld )
 	ROM_REGION( 0x600000, REGION_CPU1, 0 ) /* 68000 Code */
-	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  /* (BIOS)*/
-	ROM_LOAD16_WORD_SWAP( "kb.u9", 0x100000, 0x200000, CRC(43da77d7) SHA1(f99e89da4587d6c9e3c2ae66fa139830d893fdda) ) /* not verified to be correct*/
-
-	ROM_REGION( 0x4000, REGION_USER2, 0 ) /* dump of RAM shared with protection device, todo, emulate protection device instead! */
-	ROM_LOAD( "kb.ram", 0x000000, 0x04000,  CRC(6994c507) SHA1(8264c56709488b72282d6ddfce3a4b188c6cc109) )
+	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  /* (BIOS) */
+	ROM_LOAD16_WORD_SWAP( "p0300_v109.u9", 0x100000, 0x200000, CRC(2fcee215) SHA1(855281a9090bfdf3da9f4d50c121765131a13400) )
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 ) /* Z80 - romless */
 
@@ -2455,40 +2519,40 @@ ROM_END
 
 /*** GAME ********************************************************************/
 
-GAMEX( 1997, pgm,      0,          pgm,     pgm,      0,          ROT0, "IGS", "PGM (Polygame Master) System BIOS", NOT_A_DRIVER )
+GAMEX( 1997, pgm,      0,          pgm,     pgm,      0,         ROT0, "IGS", "PGM (Polygame Master) System BIOS", NOT_A_DRIVER )
 
-GAMEX( 1997, orlegend, pgm,        pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 126)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1997, orlegnde, orlegend,   pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112)", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1997, orlegndc, orlegend,   pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112, Chinese Board)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, orlegend, pgm,        pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 126)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 1997, orlegnde, orlegend,   pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 1997, orlegndc, orlegend,   pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend - Xi Yo Gi Shi Re Zuang (ver. 112, Chinese Board)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1998, olds,     pgm,        pgm,     pgm,      orlegend,   ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1998, olds103t, olds,       pgm,     pgm,      olds,       ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 103, China, Tencent) (unprotected)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1998, olds,     pgm,        pgm,     pgm,      orlegend,  ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 101, Korean Board)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 1998, olds103t, olds,       pgm,     pgm,      olds,      ROT0, "IGS", "Oriental Legend Special - Xi You Shi E Zhuan Super (ver. 103, China, Tencent) (unprotected)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1997, dragwld2, pgm,        pgm,     pgm,      dragwld2,   ROT0, "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1997, dragwld2, pgm,        pgm,     pgm,      dragwld2,  ROT0, "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1999, kov,      pgm,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 117)", GAME_IMPERFECT_GRAPHICS ) /* ver # provided by protection? */
-GAMEX( 1999, kov115,   kov,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 115)", GAME_IMPERFECT_GRAPHICS ) /* ver # provided by protection? */
-GAMEX( 1999, kovplus,  kov,        pgm,     sango,    kov, 	  ROT0, "IGS", "Knights of Valour Plus - Sangoku Senki Plus (ver. 119)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, kov,      pgm,        pgm,     sango,    kov, 	     ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 117)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
+GAMEX( 1999, kov115,   kov,        pgm,     sango,    kov, 	     ROT0, "IGS", "Knights of Valour - Sangoku Senki (ver. 115)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
+GAMEX( 1999, kovplus,  kov,        pgm,     sango,    kov, 	     ROT0, "IGS", "Knights of Valour Plus - Sangoku Senki Plus (ver. 119)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1999, photoy2k, pgm,        pgm,     photoy2k, djlzz,      ROT0, "IGS", "Photo Y2K", GAME_IMPERFECT_GRAPHICS )
-GAMEX( 1999, puzlstar, pgm,        pgm,     sango,    pstar,      ROT0, "IGS", "Puzzle Star", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 1999, photoy2k, pgm,        pgm,     photoy2k, djlzz,     ROT0, "IGS", "Photo Y2K", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 1999, puzlstar, pgm,        pgm,     sango,    pstar,     ROT0, "IGS", "Puzzle Star", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAMEX( 1998, killbld,  pgm,        killbld, killbld,  killbld,    ROT0, "IGS", "The Killing Blade (ver. 109, Chinese Board)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION )
+GAMEX( 1998, killbld,  pgm,        killbld, killbld,  killbld,   ROT0, "IGS", "The Killing Blade (ver. 109, Chinese Board)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 /* not working */
-GAMEX( 1999, kovsh,    kov,        pgm,     sango,    kovsh,      ROT0, "IGS", "Knights of Valour Superheroes - Sangoku Senki Superheroes (ver. 322)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAMEX( 1999, kovsh,    kov,        pgm,     sango,    kovsh,     ROT0, "IGS", "Knights of Valour Superheroes - Sangoku Senki Superheroes (ver. 322)", GAME_IMPERFECT_GRAPHICS | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 
 /* Cave Games On PGM Hardware */
 
-GAMEX( 2002, ddp3,    0,         cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou", GAME_IMPERFECT_SOUND)
-GAMEX( 2002, ddp3a,   ddp3,      cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, second revision)", GAME_IMPERFECT_SOUND) /* Displays "2002.04.05.Master Ver" */
-GAMEX( 2002, ddp3b,   ddp3,      cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, first revision)", GAME_IMPERFECT_SOUND) /* Displays "2002.04.05 Master Ver" */
-GAMEX( 2002, ddp3blk, ddp3,      cavepgm,    pgm,     ddp3blk,   ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (Black Label)", GAME_IMPERFECT_SOUND)
+GAMEX( 2002, ddp3,    0,         cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 2002, ddp3a,   ddp3,      cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, second revision)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* Displays "2002.04.05.Master Ver" */
+GAMEX( 2002, ddp3b,   ddp3,      cavepgm,    pgm,     ddp3,      ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, first revision)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* Displays "2002.04.05 Master Ver" */
+GAMEX( 2002, ddp3blk, ddp3,      cavepgm,    pgm,     ddp3blk,   ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (Black Label)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 /* the exact text of the 'version' shows which revision of the game it is; the newest has 2 '.' symbols in the string, the oldest, none. */
 
-GAMEX( 2002, espgal,  0,         cavepgm,    pgm,     espgal,    ROT270, "Cave", "EspGaluda", GAME_IMPERFECT_SOUND)
-GAMEX( 2002, ket,     0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui", GAME_IMPERFECT_SOUND) /* Displays 2003/01/01. Master Ver */
-GAMEX( 2002, keta,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui (older)", GAME_IMPERFECT_SOUND) /* Displays 2003/01/01 Master Ver */
-GAMEX( 2002, ketb,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui (first revision)", GAME_IMPERFECT_SOUND) /* Displays 2003/01/01 Master Ver */
+GAMEX( 2002, espgal,  0,         cavepgm,    pgm,     espgal,    ROT270, "Cave", "EspGaluda", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEX( 2002, ket,     0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01. Master Ver */
+GAMEX( 2002, keta,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui (older)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01 Master Ver */
+GAMEX( 2002, ketb,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui (first revision)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* Displays 2003/01/01 Master Ver */
 
