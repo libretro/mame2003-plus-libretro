@@ -34,12 +34,15 @@
 * DJ Boy
 * Dogou Souken (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
+* DoDonPachi Dai-Ou-Jou
+* DoDonPachi Dai-Ou-Jou (Black Label)
 * Dunk Dream 95
 * Double Wings
 * DownTown (joystick hack)
 * Dream World
 * Dyna Gears
 * Escape Kids (Asia 4 Players)
+* ESPGaluda
 * FixEight (bootleg)
 * Fujiyama Buster
 * Gaia: The Last Choice Of Earth
@@ -58,6 +61,7 @@
 * Ikari III - The Rescue (World, 8-Way Joystick)
 * In Your Face
 * Joe & Mac Return
+* Ketsui
 * Knuckle Bash 2
 * Lethal Enforcers
 * Magical Drop
@@ -66,6 +70,7 @@
 * Metal Slug 5
 * Midnight Resistance (joystick hack bootleg)
 * Mighty Warriors
+* Mobil Shot Gundam Final Shooting
 * Mouse Shooter GoGo
 * Multi Champ Deluxe
 * Night Slashers
@@ -135,6 +140,7 @@
 * Domino Man
 * Dragon World
 * Driftout 94
+* Eagle Shot Golf
 * Hang-On
 * Ironhorse
 * Journey
@@ -283,6 +289,9 @@
 * Fixed sound pitch in Asterix
 * Fixed missing road in Hang-On game now playable
 * Hooked up custom sound for Crazy Balloon game now has music and extra SFX which were missing before
+* Added support for the Cave PGM games and improved the ICS2115 soundcore thanks to ShmupMAME and amadvance for the code
+* Added Mobil Shot Gundam Final Shooting and fixed Eagle Shot Golf in the ssv driver
+* Fixed the ES5506 sound problems which affected all the games in the ssv driver [grant2258]
 * Backported some changes from later MAME for the ARM CPU core required for all the 32-bit Data East games to function
 correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, deco_mlc.c and simpl1156.c
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
