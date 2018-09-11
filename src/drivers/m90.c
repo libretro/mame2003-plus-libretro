@@ -934,7 +934,7 @@ static DRIVER_INIT( riskchal )
 
 static DRIVER_INIT( shisen2 )
 {
-	irem_cpu_decrypt(0,shisen2_decryption_table);
+	irem_cpu_decrypt(0,matchit2_decryption_table);
 }
 
 

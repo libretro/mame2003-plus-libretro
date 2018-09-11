@@ -684,7 +684,7 @@ static DRIVER_INIT( firebarr )
 	RAM = memory_region(REGION_CPU2);
 	memcpy(RAM+0xffff0,RAM+0x1fff0,0x10); /* Sound cpu Start vector */
 
-	irem_cpu_decrypt(1,firebarr_decryption_table);
+	irem_cpu_decrypt(1,rtypeleo_decryption_table);
 
 	m107_irq_vectorbase=0x20;
 	m107_spritesystem = 1;
