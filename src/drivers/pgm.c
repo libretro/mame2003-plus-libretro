@@ -1075,7 +1075,7 @@ static MACHINE_DRIVER_START( cavepgm )
 	MDRV_CPU_MEMORY(cavepgm_readmem,cavepgm_writemem)
 	MDRV_CPU_VBLANK_INT(pgm_interrupt,2)
 
-	MDRV_CPU_ADD(Z80, 8467200)
+	MDRV_CPU_ADD(Z80, 8468000)
 	MDRV_CPU_MEMORY(z80_readmem, z80_writemem)
 	MDRV_CPU_PORTS(z80_readport, z80_writeport)
 	MDRV_CPU_FLAGS(CPU_AUDIO_CPU | CPU_16BIT_PORT)
@@ -1198,11 +1198,6 @@ static void pgm_basic_init(void)
 
 /* Oriental Legend INIT */
 
-READ16_HANDLER ( orlegend_speedup )
-{
-	if (activecpu_get_pc()==0x104DD2) cpu_spinuntil_int();
-	return pgm_mainram[0x00a70e/2];
-}
 
 static DRIVER_INIT( orlegend )
 {
@@ -1211,7 +1206,6 @@ static DRIVER_INIT( orlegend )
 	install_mem_read16_handler (0, 0xC0400e, 0xC0400f, pgm_asic3_r);
 	install_mem_write16_handler(0, 0xC04000, 0xC04001, pgm_asic3_reg_w);
 	install_mem_write16_handler(0, 0xC0400e, 0xC0400f, pgm_asic3_w);
-	install_mem_read16_handler (0, 0x80a70e, 0x80a70f, orlegend_speedup);
 }
 
 static DRIVER_INIT( dragwld2 )
