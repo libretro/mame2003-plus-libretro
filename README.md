@@ -2,7 +2,7 @@
 mame2003-plus was originally built from the MAME 0.78 codebase
 
 # Documenation
-[Please see the mame2003-plus wiki](https://github.com/libretro/mame2003-plus-libretro/wiki)**.
+**[Please see the mame2003-plus wiki](https://github.com/libretro/mame2003-plus-libretro/wiki)**.
 
 ## Development chat
 #programming channel of the [libretro discord chat server](https://discordapp.com/invite/C4amCeV).
@@ -14,4 +14,4 @@ mame2003-plus was originally built from the MAME 0.78 codebase
 > **What is a romset?**
 > Arcade games are packaged as zip files, most of which are composed of more than one individual 'ROM' files. That is why some resources refer to an individual arcade game as a ROM (like people use to describe a zipped game cartridge ROM) while other resources refer to an individual game as a ROM set, ROMset, or romset.
 
-**[Read more in our guide on building a mame2003-plus romsets.](https://github.com/libretro/mame2003-plus-libretro/wiki/Building-romsets-for-mame2003-plus)**
+**[Read more in our guide on building a mame2003-plus romsets.](https://github.com/libretro/mame2003-plus-libretro/wiki/Building-romsets-for-mame2003-plus)**.
