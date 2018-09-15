@@ -3638,7 +3638,7 @@ static WRITE16_HANDLER( sandscrp_soundlatch_word_w )
 		latch1_full = 1;
 		soundlatch_w(0, data & 0xff);
 		cpu_set_nmi_line(1,PULSE_LINE);
-		cpu_spinuntil_time(TIME_IN_USEC(100));	/* Allow the other cpu to reply*/
+		cpu_spinuntil_time(TIME_IN_USEC(400));	/* Allow the other cpu to reply*/
 	}
 }
 
@@ -5300,7 +5300,7 @@ static struct OKIM6295interface okim6295_intf_15kHz =
 	1,
 	{ 12000000/6/132 }, /* 2MHz -> 6295 (mode B) */
 	{ REGION_SOUND1 },
-	{ 100 }
+	{ 50 }
 };
 
 static struct OKIM6295interface okim6295_intf_18kHz =
@@ -5625,7 +5625,7 @@ static struct YM2203interface ym2203_intf_sandscrp =
 {
 	1,
 	4000000,	/* ? */
-	{ YM2203_VOL(100,100) },
+	{ YM2203_VOL(80,80) },
 	{ input_port_4_r },	/* Port A Read - DSW 1 */
 	{ input_port_5_r },	/* Port B Read - DSW 2 */
 	{ 0 },	/* Port A Write */
