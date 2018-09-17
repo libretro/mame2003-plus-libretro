@@ -401,6 +401,10 @@ UINT32 mame_fread(mame_file *file, void *buffer, UINT32 length)
 
 UINT32 mame_fwrite(mame_file *file, const void *buffer, UINT32 length)
 {
+	/* check against null pointer */
+	if (!file)
+		return 0;
+	
 	/* switch off the file type */
 	switch (file->type)
 	{
