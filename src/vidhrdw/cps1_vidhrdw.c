@@ -377,6 +377,9 @@ static struct CPS1config cps1_config_table[]=
 	{"pnickj",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"pang3",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
 	{"pang3j",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
+		
+    /* CPS Changer */
+	{"wofch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 
     /* CPS2 games */
 	{"cps2",    NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff },
