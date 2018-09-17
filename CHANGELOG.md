@@ -103,6 +103,7 @@
 * SWAT Police
 * Tang Tang
 * Teeter Torture
+* Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)
 * Tetris the Absolute The Grand Master 2
 * Tetris the Absolute The Grand Master 2 Plus
 * The Great Ragtime Show
