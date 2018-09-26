@@ -61,7 +61,7 @@
 * Ikari III - The Rescue (World, 8-Way Joystick)
 * In Your Face
 * Joe & Mac Return
-* Ketsui
+* Ketsui Kizuna Jigoku Tachi
 * Knuckle Bash 2
 * Lethal Enforcers
 * Magical Drop
