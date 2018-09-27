@@ -2546,7 +2546,7 @@ GAMEX( 2002, ddp3blk, ddp3,      cavepgm,    pgm,     ddp3blk,   ROT270, "Cave",
 /* the exact text of the 'version' shows which revision of the game it is; the newest has 2 '.' symbols in the string, the oldest, none. */
 
 GAMEX( 2002, espgal,  0,         cavepgm,    pgm,     espgal,    ROT270, "Cave", "EspGaluda", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAMEX( 2002, ket,     0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01. Master Ver */
-GAMEX( 2002, keta,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui (older)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01 Master Ver */
-GAMEX( 2002, ketb,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui (first revision)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* Displays 2003/01/01 Master Ver */
+GAMEX( 2002, ket,     0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01. Master Ver */
+GAMEX( 2002, keta,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi (older)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )  /* Displays 2003/01/01 Master Ver */
+GAMEX( 2002, ketb,    ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui Kizuna Jigoku Tachi (first revision)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND ) /* Displays 2003/01/01 Master Ver */
 
