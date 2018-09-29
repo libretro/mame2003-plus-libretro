@@ -2205,24 +2205,11 @@ ScanJoysticks( struct InputPort *in )
 
 			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
 			{
-				/* If we are still pointing at a diagonal, we are in an indeterminant state.
-				 *
-				 * This could happen if the player moved the joystick from the idle position directly
-				 * to a diagonal, or from one diagonal directly to an extreme diagonal.
-				 *
-				 * The chances of this happening with a keyboard are slim, but we still need to
-				 * constrain this case.
-				 *
-				 * For now, just resolve randomly.
-				 */
-				if( rand()&1 )
-				{
+				 
+				 /* For now, just resolve the issue buy accepting only inputs when one switch
+				  selected  like a 4 way restrict does	 */
 					mJoy4Way[i] &= 0x3; /* eliminate horizontal component */
-				}
-				else
-				{
 					mJoy4Way[i] &= 0xc; /* eliminate vertical component */
-				}
 			}
 		}
 	}
