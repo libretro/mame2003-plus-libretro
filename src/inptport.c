@@ -2127,7 +2127,7 @@ The above "Joy" states contain packed bits:
 	0100	left
 	1000	right
 */
-
+static int last_direction;
 static void
 ScanJoysticks( struct InputPort *in )
 {
@@ -2180,39 +2180,21 @@ ScanJoysticks( struct InputPort *in )
 			mJoyCurrent[i]&=0x3; /* clear left and right */
 		}
 
-		/* Only update mJoy4Way if the joystick has moved. */
+				/* Only update mJoy4Way if the joystick has moved. */
 		if( mJoyCurrent[i]!=mJoyPrevious[i] )
 		{
 			mJoy4Way[i] = mJoyCurrent[i];
-
+             //only set direction if if isnt a diag inpupt
+			if( (!mJoy4Way[i] & 0x3) && !(mJoy4Way[i] & 0xc) ) last_direction = mJoy4Way[i]; 
 			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
 			{
-				/* If joystick is pointing at a diagonal, acknowledge that the player moved
-				 * the joystick by favoring a direction change.  This minimizes frustration
-				 * when using a keyboard for input, and maximizes responsiveness.
-				 *
-				 * For example, if you are holding "left" then switch to "up" (where both left
-				 * and up are briefly pressed at the same time), we'll transition immediately
-				 * to "up."
-				 *
-				 * Under the old "sticky" key implentation, "up" wouldn't be triggered until
-				 * left was released.
-				 *
-				 * Zero any switches that didn't change from the previous to current state.
-				 */
-				mJoy4Way[i] ^= (mJoy4Way[i] & mJoyPrevious[i]);
-			}
-
-			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
-			{
-				 
-				 /* For now, just resolve the issue buy accepting only inputs when one switch
-				  selected  like a 4 way restrict does	 */
-					mJoy4Way[i] &= 0x3; /* eliminate horizontal component */
-					mJoy4Way[i] &= 0xc; /* eliminate vertical component */
-			}
+				//favour last direction assume the diag was a mistake 
+				mJoy4Way[i] ^= last_direction;
+	    	}
 		}
+	
 	}
+
 } /* ScanJoysticks */
 
 void update_input_ports(void)
