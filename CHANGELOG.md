@@ -19,6 +19,8 @@
 * Bonk's Adventure
 * Boogie Wings
 * Bubble Bobble (prototype on tokio hardware)
+* Bubble Bobble Lost Cave
+* Bubble Bobble Ultra
 * Cabal (Joystick with 3 buttons version)
 * Cannon Dancer
 * Chain Reaction
