@@ -1394,6 +1394,8 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bublboblp )     /* Prototype (c) 1986 Taito Corporation */
 	DRIVER( boblbobl )	/* bootleg */
 	DRIVER( sboblbob )	/* bootleg */
+	DRIVER( bublboblu )	/* hack */
+	DRIVER( bublcave )	/* hack */
 	DRIVER( missb2 )	/* bootleg on enhanced hardware */
 	DRIVER( kikikai )	/* A85 (c) 1986 Taito Corporation */
 	DRIVER( kicknrun )	/* A87 (c) 1986 Taito Corporation */
