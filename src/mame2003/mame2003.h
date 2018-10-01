@@ -79,6 +79,7 @@ enum
   OPT_DCS_SPEEDHACK,
   OPT_INPUT_INTERFACE,  
   OPT_MAME_REMAPPING,
+  OPT_4WAY,
   OPT_end /* dummy last entry */
 };
 
