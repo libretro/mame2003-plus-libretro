@@ -149,7 +149,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");  
   init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Activate MAME Remapping (!NETPLAY); disabled|enabled");
   
-  init_default(&default_options[OPT_4WAY],	              APPNAME"_four_way_emulation",      "Alternative 4way emulation ; enabled|disabled");
+  init_default(&default_options[OPT_4WAY],	              APPNAME"_four_way_emulation",  "Alternative 4way emulation ; disabled|enabled");
   
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
