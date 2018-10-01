@@ -2127,7 +2127,7 @@ The above "Joy" states contain packed bits:
 	0100	left
 	1000	right
 */
-
+static int last_direction;
 static void
 ScanJoysticks( struct InputPort *in )
 {
@@ -2184,46 +2184,56 @@ ScanJoysticks( struct InputPort *in )
 		if( mJoyCurrent[i]!=mJoyPrevious[i] )
 		{
 			mJoy4Way[i] = mJoyCurrent[i];
-
-			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
+			if (!options.four_way_emulation) //start use original code
 			{
-				/* If joystick is pointing at a diagonal, acknowledge that the player moved
-				 * the joystick by favoring a direction change.  This minimizes frustration
-				 * when using a keyboard for input, and maximizes responsiveness.
-				 *
-				 * For example, if you are holding "left" then switch to "up" (where both left
-				 * and up are briefly pressed at the same time), we'll transition immediately
-				 * to "up."
-				 *
-				 * Under the old "sticky" key implentation, "up" wouldn't be triggered until
-				 * left was released.
-				 *
-				 * Zero any switches that didn't change from the previous to current state.
-				 */
-				mJoy4Way[i] ^= (mJoy4Way[i] & mJoyPrevious[i]);
-			}
+			  if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
+			  {
+			  	  /* If joystick is pointing at a diagonal, acknowledge that the player moved
+				   * the joystick by favoring a direction change.  This minimizes frustration
+				   * when using a keyboard for input, and maximizes responsiveness.
+				   *
+				   * For example, if you are holding "left" then switch to "up" (where both left
+				   * and up are briefly pressed at the same time), we'll transition immediately
+				   * to "up."
+				   *
+				   * Under the old "sticky" key implentation, "up" wouldn't be triggered until
+				   * left was released.
+				   *
+				   * Zero any switches that didn't change from the previous to current state.
+				   */
+				  mJoy4Way[i] ^= (mJoy4Way[i] & mJoyPrevious[i]);
+			  }
 
-			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
+			  if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
+			  {
+			  	  /* If we are still pointing at a diagonal, we are in an indeterminant state.
+				   *
+				   * This could happen if the player moved the joystick from the idle position directly
+				   * to a diagonal, or from one diagonal directly to an extreme diagonal.
+				   *
+				   * The chances of this happening with a keyboard are slim, but we still need to
+				   * constrain this case.
+				   *
+				   * For now, just resolve randomly.
+				   */
+				  if( rand()&1 )
+				  {
+				  	  mJoy4Way[i] &= 0x3; /* eliminate horizontal component */
+				  }
+				  else
+				  {
+				 	  mJoy4Way[i] &= 0xc; /* eliminate vertical component */
+				  }
+			  }
+			}// end use original code
+			//new 4 way emluation
+            if (options.four_way_emulation) //start use alternative code 
 			{
-				/* If we are still pointing at a diagonal, we are in an indeterminant state.
-				 *
-				 * This could happen if the player moved the joystick from the idle position directly
-				 * to a diagonal, or from one diagonal directly to an extreme diagonal.
-				 *
-				 * The chances of this happening with a keyboard are slim, but we still need to
-				 * constrain this case.
-				 *
-				 * For now, just resolve randomly.
-				 */
-				if( rand()&1 )
-				{
-					mJoy4Way[i] &= 0x3; /* eliminate horizontal component */
-				}
-				else
-				{
-					mJoy4Way[i] &= 0xc; /* eliminate vertical component */
-				}
-			}
+			  if( (!mJoy4Way[i] & 0x3) && !(mJoy4Way[i] & 0xc) ) last_direction = mJoy4Way[i]; 
+			  if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )  
+			  mJoy4Way[i] ^= last_direction; //favour last direction assume the diag was a mistake
+	    	}
+			
 		}
 	}
 } /* ScanJoysticks */
