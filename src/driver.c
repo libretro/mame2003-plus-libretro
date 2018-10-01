@@ -2125,8 +2125,18 @@ V-V                           TP-027
 	DRIVER( megaman )	/* 06/10/1995 (c) 1995 (Asia)  */
 	DRIVER( rockmanj )	/* 22/09/1995 (c) 1995 (Japan) */
 		
-        /* Capcom CPS Changer */
-        DRIVER( wofch )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
+    /* Capcom CPS Changer */
+    DRIVER( wofch )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
+	
+	/* Hacks of Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031) */
+	DRIVER( sk3p1 )		/* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Red) */
+	DRIVER( sk3p2 )		/* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Green set 1) */
+	DRIVER( sk3p3 )		/* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Green set 2) */
+	DRIVER( sk3p7 )		/* Sangokushi 3 Gaiden Kakou-On S Revence Dx 2010 (Set 04) */
+	DRIVER( sk3p8 )		/* Sangokushi 3 Gaiden Kakou-On S Revence Dx 2010 (Set 05) */
+	DRIVER( sk3p9 )		/* Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set 06) */
+	DRIVER( tk2p2 )		/* Tenchi wo Kurau II (Lock Triple Mode)(CPS Changer, Japan 921031) */
+	DRIVER( tk2p3 )		/* Tenchi Wo Kurau II (Imitation Sword Invincible Version)(2010-01-29)(CPS Changer, Japan 921031) */
 
 	/* Capcom CPS2 games */
 	/* list completed by CPS2Shock */
