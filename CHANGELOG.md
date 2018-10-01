@@ -91,6 +91,12 @@
 * Rolling Crush
 * Samurai Shodown V
 * Samurai Shodown V Special
+* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Red)
+* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Green set 1)
+* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Green set 2)
+* Sangokushi 3 Gaiden Kakou-On S Revence Dx 2010 (Set 04)
+* Sangokushi 3 Gaiden Kakou-On S Revence Dx 2010 (Set 05)
+* Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set 06)
 * Sengoku 3
 * Shogun Warriors
 * Skull Fang
@@ -104,6 +110,8 @@
 * Tang Tang
 * Teeter Torture
 * Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)
+* Tenchi wo Kurau II (Lock Triple Mode) (CPS Changer, Japan 921031)
+* Tenchi Wo Kurau II (Imitation Sword Invincible Version) (2010-01-29) (CPS Changer, Japan 921031)
 * Tetris the Absolute The Grand Master 2
 * Tetris the Absolute The Grand Master 2 Plus
 * The Great Ragtime Show
