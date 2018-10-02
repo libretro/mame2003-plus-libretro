@@ -2181,11 +2181,10 @@ ScanJoysticks( struct InputPort *in )
 		}
 
 		/* Only update mJoy4Way if the joystick has moved. */
-		if( mJoyCurrent[i]!=mJoyPrevious[i] )
+		if( mJoyCurrent[i]!=mJoyPrevious[i] && !options.four_way_emulation)
 		{
 			mJoy4Way[i] = mJoyCurrent[i];
-			if (!options.four_way_emulation) //start use original code
-			{
+
 			  if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )
 			  {
 			  	  /* If joystick is pointing at a diagonal, acknowledge that the player moved
@@ -2225,17 +2224,25 @@ ScanJoysticks( struct InputPort *in )
 				 	  mJoy4Way[i] &= 0xc; /* eliminate vertical component */
 				  }
 			  }
-			}// end use original code
-			//new 4 way emluation
-            if (options.four_way_emulation) //start use alternative code 
-			{
-			  if( (!mJoy4Way[i] & 0x3) && !(mJoy4Way[i] & 0xc) ) last_direction = mJoy4Way[i]; 
-			  if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) )  
-			  mJoy4Way[i] ^= last_direction; //favour last direction assume the diag was a mistake
-	    	}
-			
+
 		}
+        else if (options.four_way_emulation) //start use alternative code 
+		{
+			mJoy4Way[i] = mJoyCurrent[i];
+			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) && ( options.four_way_emulation == 1) )   mJoy4Way[i] ^= last_direction ; // xor 
+			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) && ( options.four_way_emulation == 2) )  mJoy4Way[i] = last_direction ; // last pressed  
+			if  ( (mJoyCurrent[i]) && (mJoyCurrent[i] !=5) && (mJoyCurrent[i] !=6) && (mJoyCurrent[i] !=9) && (mJoyCurrent[i] !=10)) 
+			{ 
+				last_direction = mJoyCurrent[i]; 
+				
+			}
+			else  mJoy4Way[i] = last_direction; // put any logic on diagonal
+		}
+				
+ 	
+
 	}
+
 } /* ScanJoysticks */
 
 void update_input_ports(void)

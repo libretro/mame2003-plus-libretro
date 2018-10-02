@@ -149,7 +149,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_INPUT_INTERFACE],     APPNAME"_input_interface",     "Input interface; retropad|mame_keyboard|simultaneous");  
   init_default(&default_options[OPT_MAME_REMAPPING],      APPNAME"_mame_remapping",      "Activate MAME Remapping (!NETPLAY); disabled|enabled");
   
-  init_default(&default_options[OPT_4WAY],	              APPNAME"_four_way_emulation",  "Alternative 4way emulation ; disabled|enabled");
+  init_default(&default_options[OPT_4WAY],	              APPNAME"_four_way_emulation",  "Alternative 4way emulation ; original|xor|last_pressed");
   
   init_default(&default_options[OPT_end], NULL, NULL);
   set_variables(true);
@@ -499,15 +499,17 @@ static void update_variables(bool first_time)
             setup_menu_init();
           break;
 		case OPT_4WAY:
-         if(strcmp(var.value, "enabled") == 0)		
-		  options.four_way_emulation = true;
-         else
-          options.four_way_emulation = false;
+         if(strcmp(var.value, "original") == 0)		
+		  options.four_way_emulation = 0;
+         else if (strcmp(var.value, "xor") == 0)		
+	      options.four_way_emulation = 1;
+	     else if (strcmp(var.value, "last_pressed") == 0)		
+		  options.four_way_emulation = 2;
 		  break;
       }
     }
   }
-  
+ 
   if(!options.content_flags[CONTENT_ALT_SOUND])
     options.use_samples = true;
 
