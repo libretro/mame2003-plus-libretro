@@ -252,7 +252,7 @@ struct GameOptions
   int		   debug_width;	         /* requested width of debugger bitmap */
   int		   debug_height;	       /* requested height of debugger bitmap */
   int		   debug_depth;	         /* requested depth of debugger bitmap */
-  bool 	 four_way_emulation; /* use new 4 way emulation */
+  int 	 four_way_emulation; /* use new 4 way emulation */
 };
 
 
