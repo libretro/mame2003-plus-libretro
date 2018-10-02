@@ -2228,18 +2228,12 @@ ScanJoysticks( struct InputPort *in )
 		}
         else if (options.four_way_emulation) //start use alternative code 
 		{
-			mJoy4Way[i] = mJoyCurrent[i];
-			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) && ( options.four_way_emulation == 1) )   mJoy4Way[i] ^= last_direction ; // xor 
-			if( (mJoy4Way[i] & 0x3) && (mJoy4Way[i] & 0xc) && ( options.four_way_emulation == 2) )  mJoy4Way[i] = last_direction ; // last pressed  
-			if  ( (mJoyCurrent[i]) && (mJoyCurrent[i] !=5) && (mJoyCurrent[i] !=6) && (mJoyCurrent[i] !=9) && (mJoyCurrent[i] !=10)) 
-			{ 
-				last_direction = mJoyCurrent[i]; 
-				
-			}
-			else  mJoy4Way[i] = last_direction; // put any logic on diagonal
-		}
-				
- 	
+		
+			//last press no code needed just ignore diagonals and no movement
+			if  ( (mJoyCurrent[i]) && (mJoyCurrent[i] !=5) && (mJoyCurrent[i] !=6) && (mJoyCurrent[i] !=9) && (mJoyCurrent[i] !=10)) 	mJoy4Way[i] = mJoyCurrent[i]; 	
+
+		}		
+		
 
 	}
 
