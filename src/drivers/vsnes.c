@@ -11,7 +11,7 @@ RP2C04-001:
 - Gradius
 - Hogan's Alley
 - Mach Rider (Japan, Fighting Course)
-- PinballF
+- Pinball
 - Platoon
 - Super Xevious
 
