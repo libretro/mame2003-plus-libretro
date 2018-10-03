@@ -11,7 +11,7 @@ RP2C04-001:
 - Gradius
 - Hogan's Alley
 - Mach Rider (Japan, Fighting Course)
-- Pinball
+- PinballF
 - Platoon
 - Super Xevious
 
@@ -2106,7 +2106,7 @@ static struct NESinterface nes_dual_interface =
 static struct DACinterface nes_dual_dac_interface =
 {
 	2,
-	{ 25, 25 },
+	{ 18, 18 },
 };
 
 static MACHINE_DRIVER_START( vsnes )
