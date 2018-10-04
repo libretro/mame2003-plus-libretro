@@ -363,6 +363,7 @@
 correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, deco_mlc.c and simpl1156.c
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
 * Fixed background character movements in Power Instinct 2 and Power Instinct Legends
+* Fixed graphical issues for 3 Nintendo PlayChoice 10 games Baseball Stars, Mario's Open Golf and Metroid
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color when backdrops are first loaded.
 
 ------------------------------------
