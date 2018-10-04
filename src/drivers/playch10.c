@@ -317,8 +317,10 @@ extern DRIVER_INIT( pcaboard );	/* a-board games */
 extern DRIVER_INIT( pcbboard );	/* b-board games */
 extern DRIVER_INIT( pccboard );	/* c-board games */
 extern DRIVER_INIT( pcdboard );	/* d-board games */
+extern DRIVER_INIT( pcdboard_2 );	/* d-board games with extra ram */
 extern DRIVER_INIT( pceboard );	/* e-board games */
 extern DRIVER_INIT( pcfboard );	/* f-board games */
+extern DRIVER_INIT( pcfboard_2 );	/* f-board games with extra ram */
 extern DRIVER_INIT( pcgboard );	/* g-board games */
 extern DRIVER_INIT( pcgboard_type2 ); /* g-board games with 4 screen mirror */
 extern DRIVER_INIT( pchboard );	/* h-board games */
@@ -1718,7 +1720,7 @@ GAME( 1988, pc_cntra,playch10, playch10, playch10, pcbboard, ROT0, "Konami (Nint
 GAME( 1986, pc_goons,playch10, playch10, playch10, pccboard, ROT0, "Konami", "PlayChoice-10 - The Goonies" )
 
 /* D-Board Games */
-GAME( 1986, pc_mtoid,playch10, playch10, playch10, pcdboard, ROT0, "Nintendo", "PlayChoice-10 - Metroid" )
+GAME( 1986, pc_mtoid,playch10, playch10, playch10, pcdboard_2, ROT0, "Nintendo", "PlayChoice-10 - Metroid" )
 GAME( 1987, pc_radrc,playch10, playch10, playch10, pcdboard, ROT0, "Square", "PlayChoice-10 - Rad Racer" )
 
 /* E-Board Games */
@@ -1731,7 +1733,7 @@ GAME( 1988, pc_ddrgn,playch10, playch10, playch10, pcfboard, ROT0, "Technos", "P
 GAME( 1989, pc_ngaid,playch10, playch10, playch10, pcfboard, ROT0, "Tecmo (Nintendo of America license)", "PlayChoice-10 - Ninja Gaiden" )
 GAME( 1989, pc_tmnt ,playch10, playch10, playch10, pcfboard, ROT0, "Konami (Nintendo of America license)", "PlayChoice-10 - Teenage Mutant Ninja Turtles" )
 GAME( 1989, pc_ftqst,playch10, playch10, playch10, pcfboard, ROT0, "Sunsoft (Nintendo of America license)", "PlayChoice-10 - Uncle Fester's Quest - The Addams Family" )
-GAME( 1989, pc_bstar,playch10, playch10, playch10, pcfboard, ROT0, "SNK (Nintendo of America license)", "PlayChoice-10 - Baseball Stars" )
+GAME( 1989, pc_bstar,playch10, playch10, playch10, pcfboard_2, ROT0, "SNK (Nintendo of America license)", "PlayChoice-10 - Baseball Stars" )
 GAME( 1989, pc_tbowl,playch10, playch10, playch10, pcfboard, ROT0, "Tecmo (Nintendo of America license)", "PlayChoice-10 - Tecmo Bowl" )
 GAME( 1990, pc_drmro,playch10, playch10, playch10, pcfboard, ROT0, "Nintendo", "PlayChoice-10 - Dr. Mario" )
 GAME( 1990, pc_ynoid,playch10, playch10, playch10, pcfboard, ROT0, "Capcom USA (Nintendo of America license)", "PlayChoice-10 - Yo! Noid" )
