@@ -504,6 +504,18 @@ DRIVER_INIT( pcdboard )
 	init_playch10();
 }
 
+/* D Board games with extra ram (Metroid) */
+
+DRIVER_INIT( pcdboard_2 )
+{
+	/* extra ram at $6000-$7fff */
+	install_mem_read_handler( 1, 0x6000, 0x7fff, MRA_RAM );
+	install_mem_write_handler( 1, 0x6000, 0x7fff, MWA_RAM );
+
+	/* common init */
+	init_pcdboard();
+}
+
 /**********************************************************************************/
 
 /* E Board games (Mike Tyson's Punchout) - BROKEN - FIX ME */
@@ -613,6 +625,18 @@ DRIVER_INIT( pcfboard )
 
 	/* common init */
 	init_playch10();
+}
+
+/* F Board games with extra ram (Baseball Stars) */
+
+DRIVER_INIT( pcfboard_2 )
+{
+	/* extra ram at $6000-$6fff */
+	install_mem_read_handler( 1, 0x6000, 0x6fff, MRA_RAM );
+	install_mem_write_handler( 1, 0x6000, 0x6fff, MWA_RAM );
+
+	/* common init */
+	init_pcfboard();
 }
 
 /**********************************************************************************/
@@ -864,6 +888,10 @@ DRIVER_INIT( pckboard )
 	memcpy( &memory_region( REGION_CPU2 )[0x08000], &memory_region( REGION_CPU2 )[0x48000], 0x8000 );
 
 	mmc1_rom_mask = 0x0f;
+
+	/* extra ram at $6000-$7fff */
+	install_mem_read_handler( 1, 0x6000, 0x7fff, MRA_RAM );
+	install_mem_write_handler( 1, 0x6000, 0x7fff, MWA_RAM );
 
 	/* Roms are banked at $8000 to $bfff */
 	install_mem_write_handler( 1, 0x8000, 0xffff, mmc1_rom_switch_w );
