@@ -2181,23 +2181,6 @@ V-V                           TP-027
 	DRIVER( wofchs41 )  /* Tenchi wo Kurau II (Enhanced mode)(Japan 921031) */
 	DRIVER( wofchs42 )  /* Tenchi wo Kurau II (Many Boss)(Alt)(Japan 921031) */
 	DRIVER( wofchs43 )  /* Tenchi wo Kurau II (Juggernauts)(Japan 921031) */
-	DRIVER( sk3p4 )  /* Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 01) */
-	DRIVER( sk3p5 )  /* Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 02) */
-	DRIVER( sk3p6 )  /* Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 03) */
-	DRIVER( sk3p10 )  /* Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set 07) */
-	DRIVER( sk2h45 )  /* Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set ??) */
-		
-	/* Hacks of Tenchi wo Kurau II: Sekiheki no Tatakai (CPS) */
-	DRIVER( sk2h14 )  /* Sangokushi II (Chinese Translation)  */
-	DRIVER( tk2h118 )  /* Tenchi wo Kurau II (Three Boss Edition) */
-	DRIVER( tk2h108 )  /* Tenchi wo Kurau II (Warriors of Fate Plus 2 2018) */
-	DRIVER( tk2h12 )  /*  Tenchi wo Kurau II (Playstation Version hack)(2009-12-09) */
-	DRIVER( tk2h110 )  /* Tenchi wo Kurau II (Master Edition Ver.1) */
-	DRIVER( tk2h120 )  /*  Tenchi wo Kurau II (Master Edition Ver.2) */
-	DRIVER( tk2h122 )  /* Tenchi wo Kurau II (Master Edition Ver.3) */
-	DRIVER( tk2h123 )  /* Tenchi wo Kurau II (Li Dian Master Edition) */
-	DRIVER( tk2h10 )  /* Tenchi wo Kurau II (Sanmei Spiral Counterattack Beta 103)(2013-12-26) */
-	DRIVER( tk2h101 )  /*  Tenchi wo Kurau II (War Wolf Edition) */
 	
 	/* Capcom CPS2 games */
 	/* list completed by CPS2Shock */
