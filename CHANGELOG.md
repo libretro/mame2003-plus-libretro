@@ -10,14 +10,14 @@
 * Air Rescue
 * Asura Blade 
 * Asura Buster
+* B-Rap Boys
+* B-Rap Boys Special
 * Backfire!
 * Bang Bang Busters
 * Baryon
 * Battle Shark (Japan, Joystick)
 * Bonk's Adventure
 * Boogie Wings
-* B-Rap Boys
-* B-Rap Boys Special
 * Bubble Bobble (prototype on tokio hardware)
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
@@ -34,14 +34,14 @@
 * Denjin Makai 
 * Diet Go Go
 * DJ Boy
-* DoDonPachi Dai-Ou-Jou
-* DoDonPachi Dai-Ou-Jou (Black Label)
 * Dogou Souken (joystick hack bootleg)
 * Donkey Kong II Jumpman Returns
+* DoDonPachi Dai-Ou-Jou
+* DoDonPachi Dai-Ou-Jou (Black Label)
+* Dunk Dream 95
 * Double Wings
 * DownTown (joystick hack)
 * Dream World
-* Dunk Dream 95
 * Dyna Gears
 * Escape Kids (Asia 4 Players)
 * ESPGaluda
@@ -93,18 +93,12 @@
 * Rolling Crush
 * Samurai Shodown V
 * Samurai Shodown V Special
-* Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 01)
-* Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 02)
-* Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 03)
-* Sangokushi 3 Gaiden Kakou-On's Revence Dx 2010 (Set 04)
-* Sangokushi 3 Gaiden Kakou-On's Revence Dx 2010 (Set 05)
+* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Red)
 * Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Green set 1)
 * Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Green set 2)
-* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Red)
-* Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set ??)
+* Sangokushi 3 Gaiden Kakou-On S Revence Dx 2010 (Set 04)
+* Sangokushi 3 Gaiden Kakou-On S Revence Dx 2010 (Set 05)
 * Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set 06)
-* Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set 07)
-* Sangokushi II (Chinese Translation) 
 * Sengoku 3
 * Shogun Warriors
 * Skull Fang
@@ -117,60 +111,9 @@
 * SWAT Police
 * Tang Tang
 * Teeter Torture
-* Tenchi wo Kurau II (A key to enter the mode)(Japan 921031)
-* Tenchi wo Kurau II (Add Kassar's Super Punch)(Japan 921031)
-* Tenchi wo Kurau II (Boss Rush Extreme)(Alt)(Japan 921031)
-* Tenchi wo Kurau II (Boss Rush Extreme)(Japan 921031)
-* Tenchi wo Kurau II (Boss Rush)(Japan 921031)
-* Tenchi wo Kurau II (BT Enhanced Edition)(2010-09-08)(Japan 921031)
-* Tenchi wo Kurau II (Easy Control-Kassar-Super Spinning Pile
-* Tenchi wo Kurau II (Enhanced mode)(Japan 921031)
-* Tenchi wo Kurau II (Extra Mode ON)(2013-03-19)(Japan 921031)
-* Tenchi wo Kurau II (Guan Yu's Big Move Improved)(Japan 921031)
-* Tenchi wo Kurau II (Hell Difficulty)(Japan 921031)
-* Tenchi wo Kurau II (Imitation Sword Invincible Version) (2010-01-29) (CPS Changer, Japan 921031)
-* Tenchi wo Kurau II (Imitation Sword Invincible Version)(Japan 921031)
-* Tenchi wo Kurau II (Juggernauts)(Japan 921031)
-* Tenchi wo Kurau II (Kakou-on's Revenge-Prologue)(Japan 921031)
-* Tenchi wo Kurau II (Kassar-Grabbing-Super Spinning Pile
-* Tenchi wo Kurau II (Kassar-Midair Grabbing Simplified)(2013-03-19)(Japan 921031)
-* Tenchi wo Kurau II (Kassar-Super Spinning Pile
-* Tenchi wo Kurau II (Kassar-Super Spinning Pile
-* Tenchi wo Kurau II (Kassar-Unlimited Super Spinning Pile
-* Tenchi wo Kurau II (Kassar-Viper Halberd-Super Spinning Pile
-* Tenchi wo Kurau II (Li Dian Master Edition)
-* Tenchi wo Kurau II (Lock Triple Mode) (CPS Changer, Japan 921031)
-* Tenchi wo Kurau II (Many Boss)(Alt)(Japan 921031)
-* Tenchi wo Kurau II (Many Boss)(Japan 921031)
-* Tenchi wo Kurau II (Master Edition Ver.1)
-* Tenchi wo Kurau II (Master Edition Ver.2)
-* Tenchi wo Kurau II (Master Edition Ver.3)
-* Tenchi wo Kurau II (Mode Plus)(Japan 921031)
-* Tenchi wo Kurau II (Open Mode)(Japan 921031)
-* Tenchi wo Kurau II (Open space Enhanced Second Edition)(Japan 921031)
-* Tenchi wo Kurau II (Open Space To Strengthen The First Edition)(Japan 921031)
-* Tenchi wo Kurau II (Playstation Version hack)(2009-12-09)
-* Tenchi wo Kurau II (Sangokushi III Gaiden: Kakou-on's Revenge DX)(Japan 921031)
-* Tenchi wo Kurau II (Sangokushi III Gaiden: Kakou-on's Revenge)(Alt)(Japan 921031)
-* Tenchi wo Kurau II (Sangokushi III Gaiden: Kakou-on's Revenge)(Japan 921031)
-* Tenchi wo Kurau II (Sangokushi III Part 2)(Japan 921031)
-* Tenchi wo Kurau II (Sanmei Spiral Counterattack Beta 103)(2013-12-26)
-* Tenchi wo Kurau II (Skull And Grass)(Japan 921031)
-* Tenchi wo Kurau II (Three Boss Edition)
-* Tenchi wo Kurau II (True Purgatory Edition)(Japan 921031)
-* Tenchi wo Kurau II (War Wolf Edition)
-* Tenchi wo Kurau II (Warriors of Fate Plus 2 2018)
-* Tenchi wo Kurau II (Wei Yan Empty Into A Big Seat)(Japan 921031)
-* Tenchi wo Kurau II (Wei Yan Ordinary Drop Cancellation)(Japan 921031)
-* Tenchi wo Kurau II (Wei Yanchao killed More)(Japan 921031)
-* Tenchi wo Kurau II (Zhang Fei Moves To Simplify)(Japan 921031)
-* Tenchi wo Kurau II (Zhang Fei Vampire Edition)(2010-11-12)(Japan 921031)
-* Tenchi wo Kurau II (Zhang Fei Vampire Edition)(Alt)(2010-11-12)(Japan 921031)
-* Tenchi wo Kurau II (Zhang Feiwu)(2010-08-21)(Japan 921031)
-* Tenchi wo Kurau II (Zhao Yun Movement Changes)(2010-08-21)(Japan 921031)
-* Tenchi wo Kurau II (Zhao Yun Sheng Long Lie broke)(Japan 921031)
-* Tenchi wo Kurau II (Zhao Yunsheng Long Edition)(Japan 921031)
 * Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)
+* Tenchi wo Kurau II (Lock Triple Mode) (CPS Changer, Japan 921031)
+* Tenchi Wo Kurau II (Imitation Sword Invincible Version) (2010-01-29) (CPS Changer, Japan 921031)
 * Tetris the Absolute The Grand Master 2
 * Tetris the Absolute The Grand Master 2 Plus
 * The Great Ragtime Show
@@ -190,6 +133,7 @@
 * World Cup Volley 95 Extra Version
 * Zintrick
 * Zupapa
+
 
 ## Games fixed and now working
 
@@ -363,6 +307,7 @@
 correctly in this core affected drivers are backfire.c, deco32.c, deco156.c, deco_mlc.c and simpl1156.c
 * Fixed the Bally / Midway MCR games making them all playable in MAME2003-Plus [grant2258]
 * Fixed background character movements in Power Instinct 2 and Power Instinct Legends
+* Fixed graphical issues for 3 Nintendo PlayChoice 10 games Baseball Stars, Mario's Open Golf and Metroid
 * Experimental support for MAME second-generation "Backdrop" artwork from pre-MAME 0.107. Backdrops are toggled via a core option and loaded from /libretro system/mame2003-plus/artwork. Right now there is a color when backdrops are first loaded.
 
 ------------------------------------
