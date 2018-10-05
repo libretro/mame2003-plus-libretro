@@ -356,6 +356,16 @@ static struct CPS1config cps1_config_table[]=
 	{"wofa",    NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* bootleg? */
 	{"wofu",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"wofj",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
+	{"sk2h14",    NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* Sangokushi II (Chinese Translation) */
+	{"tk2h118",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Tenchi wo Kurau II (Three Boss Edition) */
+	{"tk2h108",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Tenchi wo Kurau II (Warriors of Fate Plus 2 2018) */
+	{"tk2h12",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Tenchi wo Kurau II (Playstation Version hack)(2009-12-09) */
+	{"tk2h110",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Tenchi wo Kurau II (Master Edition Ver.1) */
+	{"tk2h120",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Tenchi wo Kurau II (Master Edition Ver.2) */
+	{"tk2h122",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Tenchi wo Kurau II (Master Edition Ver.3) */
+	{"tk2h123",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Tenchi wo Kurau II (Li Dian Master Edition) */
+	{"tk2h10",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Tenchi wo Kurau II (Sanmei Spiral Counterattack Beta 103)(2013-12-26) */
+	{"tk2h101",    QSOUND_1, 0,0,0, 0x0000,0xffff,0x0000,0xffff }, /* Tenchi wo Kurau II (War Wolf Edition) */
 	{"dino",    QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"dinou",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"dinoj",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
