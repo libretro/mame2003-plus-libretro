@@ -369,6 +369,12 @@ static INLINE void generate_exception(int exception)
 	asap.pflag = asap.iflag;
 	asap.iflag = 0;
 
+  if(!src2val)
+	{
+		log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor exception generating exception: src2val is null\n");
+		exit(1);
+	}
+  
 	src2val[REGBASE + 30] = asap.pc;
 	src2val[REGBASE + 31] = (asap.nextpc == ~0) ? asap.pc + 4 : asap.nextpc;
 
@@ -416,32 +422,42 @@ void asap_set_irq_callback(int (*callback)(int irqline))
 
 unsigned asap_get_context(void *dst)
 {
-	/* copy the context */
-	if (dst)
-	{
-		if (src2val)
-			memcpy(&asap.r[0], &src2val[REGBASE], 32 * sizeof(UINT32));
-		*(asap_regs *)dst = asap;
-	}
+  /* copy the context */
+  if (dst)
+  {
+    if (src2val)
+      memcpy(&asap.r[0], &src2val[REGBASE], 32 * sizeof(UINT32));
+    else
+    {
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor get_context: src2val is null\n");
+      exit(1);
+    }
+    *(asap_regs *)dst = asap;
+  }
 
-	/* return the context size */
-	return sizeof(asap_regs);
+  /* return the context size */
+  return sizeof(asap_regs);
 }
 
 
 void asap_set_context(void *src)
 {
-	/* copy the context */
+  /* copy the context */
 	if (src)
 	{
 		asap = *(asap_regs *)src;
 		if (src2val)
 			memcpy(&src2val[REGBASE], &asap.r[0], 32 * sizeof(UINT32));
-		UPDATEPC();
+    else
+    {
+      log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor set_context: src2val is null\n");
+      exit(1);
+    }
+    UPDATEPC();
 
-		/* check for IRQs */
-		check_irqs();
-	}
+    /* check for IRQs */
+    check_irqs();
+  }
 }
 
 
@@ -481,14 +497,19 @@ static void init_tables(void)
 		src2val = malloc(65536 * sizeof(UINT32));
 
 	/* fill scr2 table */
-	if (src2val)
-	{
-		int i;
+  if (src2val)
+  {
+    int i;
 
-		for (i = 0; i < REGBASE; i++)
-			src2val[i] = i;
-		memcpy(&src2val[REGBASE], &asap.r[0], 32 * sizeof(UINT32));
-	}
+    for (i = 0; i < REGBASE; i++)
+      src2val[i] = i;
+    memcpy(&src2val[REGBASE], &asap.r[0], 32 * sizeof(UINT32));
+  }
+  else
+  {
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor init: src2val is null\n");
+    exit(1);
+  }
 }
 
 void asap_init(void)
@@ -498,7 +519,13 @@ void asap_init(void)
 
 void asap_reset(void *param)
 {
-	/* initialize the state */
+  /* initialize the state */
+  if(!src2val)
+  {
+    log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor reset: src2val is null\n");
+    exit(1);
+  }
+
 	src2val[REGBASE + 0] = 0;
 	asap.pc = 0;
 	asap.iflag = 0;
