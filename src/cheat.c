@@ -9507,7 +9507,7 @@ static void WatchCheatEntry(CheatEntry * entry, UINT8 associate)
 	UINT32		i;
 	CheatEntry	* associateEntry = NULL;
 
-	if(!entry || !associate)
+	if(!associate)
     return;
   
   associateEntry = entry;
