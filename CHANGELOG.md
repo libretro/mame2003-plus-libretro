@@ -8,19 +8,13 @@
 * 1943 - The Battle Of Midway Mark II
 * Air Attack
 * Air Rescue
-* Asura Blade 
 * Asura Buster
 * Backfire!
 * Bang Bang Busters
 * Baryon
 * Battle Shark (Japan, Joystick)
-* Bonk's Adventure
 * Boogie Wings
-* B-Rap Boys
-* B-Rap Boys Special
 * Bubble Bobble (prototype on tokio hardware)
-* Bubble Bobble Lost Cave
-* Bubble Bobble Ultra
 * Cabal (Joystick with 3 buttons version)
 * Cannon Dancer
 * Chain Reaction
@@ -33,11 +27,9 @@
 * Deluxe 5
 * Denjin Makai 
 * Diet Go Go
-* DJ Boy
 * DoDonPachi Dai-Ou-Jou
 * DoDonPachi Dai-Ou-Jou (Black Label)
 * Dogou Souken (joystick hack bootleg)
-* Donkey Kong II Jumpman Returns
 * Double Wings
 * DownTown (joystick hack)
 * Dream World
@@ -75,7 +67,6 @@
 * Mobil Shot Gundam Final Shooting
 * Mouse Shooter GoGo
 * Multi Champ Deluxe
-* Night Slashers
 * Oriental Legend Special
 * Osman
 * Pack'n Bang Bang
@@ -93,6 +84,111 @@
 * Rolling Crush
 * Samurai Shodown V
 * Samurai Shodown V Special
+* Sengoku 3
+* Skull Fang
+* Snk Vs Capcom : Svc Chaos (bootleg)
+* Sonic Boom
+* Squash
+* Super Bishi Bashi Championship (ver JAA, 2 Players)
+* Super Bishi Bashi Championship (ver KAA, 3 Players)
+* Super Rider
+* SWAT Police
+* Tang Tang
+* Teeter Torture
+* Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)
+* Tetris the Absolute The Grand Master 2
+* Tetris the Absolute The Grand Master 2 Plus
+* The Great Ragtime Show
+* The Killing Blade
+* The King Of Fighters 2001
+* The King Of Fighters 2002
+* The King of Fighters 10th Anniversary
+* The Last Hope
+* The Lost Castle In Darkmist
+* Thunder Hoop
+* Title Fight
+* Varia Metal
+* Vasara 2
+* Virtua Bowling
+* Wing Force
+* Wonderboy In Monsterland (English Virtual Console Version)
+* World Cup Volley 95
+* World Cup Volley 95 Extra Version
+* Zintrick
+* Zupapa
+
+## Games fixed and now working
+
+* Alcon
+* Arch Rivals
+* Avenging Spirit
+* B-Rap Boys
+* B-Rap Boys Special
+* Bakuretsu Breaker
+* Blasted
+* Blood Warrior
+* Bonk's Adventure
+* Crater Raider
+* Demolition Derby
+* Die Hard Arcade (requires a fast system, video and sound issues remain)
+* Discs Of Tron
+* DJ Boy
+* Domino Man
+* Dragon World
+* Driftout 94
+* Eagle Shot Golf
+* Great 1000 Miles Rally
+* Hang-On
+* Ironhorse
+* Journey
+* Juno First
+* Kick
+* Kozmik Kroozer
+* Fighters History
+* Fire Barrel
+* Funky Jet
+* Gardia
+* Green Beret
+* Hacha Mecha Figher
+* Max RPM
+* Monster Slider
+* Night Slashers
+* Phantasm
+* Photo Y2k
+* Pigskin 621AD
+* Power Drive
+* Rampage
+* Rogha Armor Force
+* Run And Gun (NVRAM) markwkidd
+* Rush'N Attack
+* Sarge
+* Satan's Hollow
+* Shogun Warriors
+* Slap Fight (Official Version)
+* Snowboard Championship
+* Solar Fox
+* Spy Hunter
+* Spy Hunter 2
+* Star Guards
+* Street Fighter (With Added Speedups)
+* Tapper
+* Task Force Harrier
+* Timber
+* Thunder Dragon
+* Tri-Sports
+* Tron
+* Turbo Tag
+* Twin Eagle 2
+* Two Tigers
+* Xenophobe
+* Wacko
+* Zwackery
+
+## New Hacks
+
+* Bubble Bobble Lost Cave
+* Bubble Bobble Ultra
+* Donkey Kong II Jumpman Returns
 * Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 01)
 * Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 02)
 * Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 03)
@@ -105,18 +201,6 @@
 * Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set 06)
 * Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set 07)
 * Sangokushi II (Chinese Translation) 
-* Sengoku 3
-* Shogun Warriors
-* Skull Fang
-* Snk Vs Capcom : Svc Chaos (bootleg)
-* Sonic Boom
-* Squash
-* Super Bishi Bashi Championship (ver JAA, 2 Players)
-* Super Bishi Bashi Championship (ver KAA, 3 Players)
-* Super Rider
-* SWAT Police
-* Tang Tang
-* Teeter Torture
 * Tenchi wo Kurau II (A key to enter the mode)(Japan 921031)
 * Tenchi wo Kurau II (Add Kassar's Super Punch)(Japan 921031)
 * Tenchi wo Kurau II (Boss Rush Extreme)(Alt)(Japan 921031)
@@ -170,92 +254,11 @@
 * Tenchi wo Kurau II (Zhao Yun Movement Changes)(2010-08-21)(Japan 921031)
 * Tenchi wo Kurau II (Zhao Yun Sheng Long Lie broke)(Japan 921031)
 * Tenchi wo Kurau II (Zhao Yunsheng Long Edition)(Japan 921031)
-* Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)
-* Tetris the Absolute The Grand Master 2
-* Tetris the Absolute The Grand Master 2 Plus
-* The Great Ragtime Show
-* The Killing Blade
-* The King Of Fighters 2001
-* The King Of Fighters 2002
-* The Last Hope
-* The Lost Castle In Darkmist
-* Thunder Hoop
-* Title Fight
-* Varia Metal
-* Vasara 2
-* Virtua Bowling
-* Wing Force
-* Wonderboy In Monsterland (English Virtual Console Version)
-* World Cup Volley 95
-* World Cup Volley 95 Extra Version
-* Zintrick
-* Zupapa
-
-## Games fixed and now working
-
-* Great 1000 Miles Rally
-* Alcon
-* Arch Rivals
-* Avenging Spirit
-* Bakuretsu Breaker
-* Blasted
-* Blood Warrior
-* Crater Raider
-* Demolition Derby
-* Die Hard Arcade (requires a fast system, video and sound issues remain)
-* Discs Of Tron
-* Domino Man
-* Dragon World
-* Driftout 94
-* Eagle Shot Golf
-* Hang-On
-* Ironhorse
-* Journey
-* Juno First
-* Kick
-* Kozmik Kroozer
-* Fighters History
-* Fire Barrel
-* Funky Jet
-* Gardia
-* Green Beret
-* Hacha Mecha Figher
-* Max RPM
-* Monster Slider
-* Phantasm
-* Photo Y2k
-* Pigskin 621AD
-* Power Drive
-* Rampage
-* Rogha Armor Force
-* Run And Gun (NVRAM) markwkidd
-* Rush'N Attack
-* Sarge
-* Satan's Hollow
-* Slap Fight (Official Version)
-* Snowboard Championship
-* Solar Fox
-* Spy Hunter
-* Spy Hunter 2
-* Star Guards
-* Street Fighter (With Added Speedups)
-* Tapper
-* Task Force Harrier
-* Timber
-* Thunder Dragon
-* Tri-Sports
-* Tron
-* Turbo Tag
-* Twin Eagle 2
-* Two Tigers
-* Xenophobe
-* Wacko
-* Zwackery
-
 
 ## Games now with sound
 
 * Acrobat Mission
+* Asura Blade 
 * Bio-ship Paladin
 * Black Heart
 * Daitoride
