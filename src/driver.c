@@ -5735,6 +5735,7 @@ Other Sun games
 	DRIVER( samsho5 )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( samsh5sp )	/* 0270 (c) 2003 Yuki Enterprises */
 	DRIVER( mslug5 )	/* 0268 (c) 2003 SNK Playmore */
+	DRIVER( kof10th )       /* 2005 SNK Playmore */
 	DRIVER( crswd2bl )      /* 0054 Crossed Swords 2  (CD only? not confirmed, MVS might exist) */
 	DRIVER( zintrckb )	/* 0211 hack - this is not a genuine MVS proto, its a bootleg made from the CD version */
 	DRIVER( lasthope )      /* (c) 2005 NG:DEV.TEAM */
@@ -5757,7 +5758,6 @@ Other Sun games
 		
 	/* Varia Metal */	
 	DRIVER( vmetal )    /* (c) 1995 Excellent Systems */
-		
 		
 	/* Cave PGM System Games */
 	DRIVER( ket )
