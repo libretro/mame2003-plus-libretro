@@ -14,6 +14,7 @@
 * Baryon
 * Battle Shark (Japan, Joystick)
 * Boogie Wings
+* Botanic
 * Bubble Bobble (prototype on tokio hardware)
 * Cabal (Joystick with 3 buttons version)
 * Cannon Dancer
