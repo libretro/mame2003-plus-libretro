@@ -2127,78 +2127,9 @@ V-V                           TP-027
 	DRIVER( megaman )	/* 06/10/1995 (c) 1995 (Asia)  */
 	DRIVER( rockmanj )	/* 22/09/1995 (c) 1995 (Japan) */
 		
-	/* Capcom CPS Changer */
-	DRIVER( wofch )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
-	
-	/* Hacks of Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031) */
-	DRIVER( sk3p1 )		/* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Red) */
-	DRIVER( sk3p2 )		/* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Green set 1) */
-	DRIVER( sk3p3 )		/* Sangokushi 3 Gaiden Kakou-on's Revenge DX 2010 (Green set 2) */
-	DRIVER( sk3p7 )		/* Sangokushi 3 Gaiden Kakou-On S Revence Dx 2010 (Set 04) */
-	DRIVER( sk3p8 )		/* Sangokushi 3 Gaiden Kakou-On S Revence Dx 2010 (Set 05) */
-	DRIVER( sk3p9 )		/* Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set 06) */
-	DRIVER( tk2p2 )		/* Tenchi wo Kurau II (Lock Triple Mode)(CPS Changer, Japan 921031) */
-	DRIVER( tk2p3 )		/* Tenchi Wo Kurau II (Imitation Sword Invincible Version)(2010-01-29)(CPS Changer, Japan 921031) */
-	DRIVER( wofchs01 )  /* Tenchi wo Kurau II (Imitation Sword Invincible Version)(Japan 921031) */
-	DRIVER( wofchs02 )  /* Tenchi wo Kurau II (Boss Rush)(Japan 921031) */
-	DRIVER( wofchs03 )  /* Tenchi wo Kurau II (Boss Rush Extreme)(Japan 921031) */
-	DRIVER( wofchs04 )  /* Tenchi wo Kurau II (Mode Plus)(Japan 921031) */
-	DRIVER( wofchs05 )  /* Tenchi wo Kurau II (A key to enter the mode)(Japan 921031) */
-	DRIVER( wofchs06 )  /* Tenchi wo Kurau II (Hell Difficulty)(Japan 921031) */
-	DRIVER( wofchs07 )  /* Tenchi wo Kurau II (True Purgatory Edition)(Japan 921031) */
-	DRIVER( wofchs08 )  /* Tenchi wo Kurau II (Open Mode)(Japan 921031) */
-	DRIVER( wofchs09 )  /* Tenchi wo Kurau II (Skull And Grass)(Japan 921031) */
-	DRIVER( wofchs10 )  /* Tenchi wo Kurau II (Sangokushi III Gaiden: Kakou-on's Revenge)(Japan 921031) */
-	DRIVER( wofchs11 )  /* Tenchi wo Kurau II (Sangokushi III Gaiden: Kakou-on's Revenge DX)(Japan 921031) */
-	DRIVER( wofchs12 )  /* Tenchi wo Kurau II (Sangokushi III Part 2)(Japan 921031) */
-	DRIVER( wofchs13 )  /* Tenchi wo Kurau II (Sangokushi III Gaiden: Kakou-on's Revenge)(Alt)(Japan 921031) */
-	DRIVER( wofchs14 )  /* Tenchi wo Kurau II (Zhao Yunsheng Long Edition)(Japan 921031) */
-	DRIVER( wofchs15 )  /* Tenchi wo Kurau II (Zhang Feiwu)(2010-08-21)(Japan 921031) */
-	DRIVER( wofchs16 )  /* Tenchi wo Kurau II (Zhang Fei Vampire Edition)(2010-11-12)(Japan 921031) */
-	DRIVER( wofchs17 )  /* Tenchi wo Kurau II (Zhao Yun Movement Changes)(2010-08-21)(Japan 921031) */
-	DRIVER( wofchs18 )  /* Tenchi wo Kurau II (Zhang Fei Moves To Simplify)(Japan 921031) */
-	DRIVER( wofchs19 )  /* Tenchi wo Kurau II (Extra Mode ON)(2013-03-19)(Japan 921031) */
-	DRIVER( wofchs20 )  /* Tenchi wo Kurau II (Easy Control-Kassar-Super Spinning Pile	DRIVER (A))(2013-03-19)(Japan 921031) */
-	DRIVER( wofchs21 )  /* Tenchi wo Kurau II (Kassar-Super Spinning Pile	DRIVER (+A))(2013-03-19)(Japan 921031) */
-	DRIVER( wofchs22 )  /* Tenchi wo Kurau II (Kassar-Super Spinning Pile	DRIVER (-A))(2013-03-19)(Japan 921031) */
-	DRIVER( wofchs23 )  /* Tenchi wo Kurau II (Kassar-Viper Halberd-Super Spinning Pile	DRIVER)(2013-03-19)(Japan 921031) */
-	DRIVER( wofchs24 )  /* Tenchi wo Kurau II (Kassar-Grabbing-Super Spinning Pile	DRIVER)(2013-03-19)(Japan 921031) */
-	DRIVER( wofchs25 )  /* Tenchi wo Kurau II (Kassar-Midair Grabbing Simplified)(2013-03-19)(Japan 921031) */
-	DRIVER( wofchs26 )  /* Tenchi wo Kurau II (Kassar-Unlimited Super Spinning Pile	DRIVER)(2013-03-19)(Japan 921031) */
-	DRIVER( wofchs27 )  /* Tenchi wo Kurau II (Guan Yu's Big Move Improved)(Japan 921031) */
-	DRIVER( wofchs28 )  /* Tenchi wo Kurau II (Wei Yan Ordinary Drop Cancellation)(Japan 921031) */
-	DRIVER( wofchs29 )  /* Tenchi wo Kurau II (Wei Yan Empty Into A Big Seat)(Japan 921031) */
-	DRIVER( wofchs30 )  /* Tenchi wo Kurau II (Open Space To Strengthen The First Edition)(Japan 921031) */
-	DRIVER( wofchs31 )  /* Tenchi wo Kurau II (Open space Enhanced Second Edition)(Japan 921031) */
-	DRIVER( wofchs33 )  /* Tenchi wo Kurau II (Zhao Yun Sheng Long Lie broke)(Japan 921031) */
-	DRIVER( wofchs34 )  /* Tenchi wo Kurau II (Add Kassar's Super Punch)(Japan 921031) */
-	DRIVER( wofchs35 )  /* Tenchi wo Kurau II (Wei Yanchao killed More)(Japan 921031) */
-	DRIVER( wofchs36 )  /* Tenchi wo Kurau II (Boss Rush Extreme)(Alt)(Japan 921031) */
-	DRIVER( wofchs37 )  /* Tenchi wo Kurau II (Many Boss)(Japan 921031) */
-	DRIVER( wofchs38 )  /* Tenchi wo Kurau II (Kakou-on's Revenge-Prologue)(Japan 921031) */
-	DRIVER( wofchs39 )  /* Tenchi wo Kurau II (Zhang Fei Vampire Edition)(Alt)(2010-11-12)(Japan 921031) */
-	DRIVER( wofchs40 )  /* Tenchi wo Kurau II (BT Enhanced Edition)(2010-09-08)(Japan 921031) */
-	DRIVER( wofchs41 )  /* Tenchi wo Kurau II (Enhanced mode)(Japan 921031) */
-	DRIVER( wofchs42 )  /* Tenchi wo Kurau II (Many Boss)(Alt)(Japan 921031) */
-	DRIVER( wofchs43 )  /* Tenchi wo Kurau II (Juggernauts)(Japan 921031) */
-	DRIVER( sk3p4 )  /* Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 01) */
-	DRIVER( sk3p5 )  /* Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 02) */
-	DRIVER( sk3p6 )  /* Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 03) */
-	DRIVER( sk3p10 )  /* Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set 07) */
-	DRIVER( sk2h45 )  /* Sangokushi 3 Gaiden Kakou-On's Revenge Dx 2010 (Set ??) */
-		
-	/* Hacks of Tenchi wo Kurau II: Sekiheki no Tatakai (CPS) */
-	DRIVER( sk2h14 )  /* Sangokushi II (Chinese Translation)  */
-	DRIVER( tk2h118 )  /* Tenchi wo Kurau II (Three Boss Edition) */
-	DRIVER( tk2h108 )  /* Tenchi wo Kurau II (Warriors of Fate Plus 2 2018) */
-	DRIVER( tk2h12 )  /*  Tenchi wo Kurau II (Playstation Version hack)(2009-12-09) */
-	DRIVER( tk2h110 )  /* Tenchi wo Kurau II (Master Edition Ver.1) */
-	DRIVER( tk2h120 )  /*  Tenchi wo Kurau II (Master Edition Ver.2) */
-	DRIVER( tk2h122 )  /* Tenchi wo Kurau II (Master Edition Ver.3) */
-	DRIVER( tk2h123 )  /* Tenchi wo Kurau II (Li Dian Master Edition) */
-	DRIVER( tk2h10 )  /* Tenchi wo Kurau II (Sanmei Spiral Counterattack Beta 103)(2013-12-26) */
-	DRIVER( tk2h101 )  /*  Tenchi wo Kurau II (War Wolf Edition) */
-	
+    /* Capcom CPS Changer */
+    DRIVER( wofch )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
+
 	/* Capcom CPS2 games */
 	/* list completed by CPS2Shock */
 	/* http://cps2shock.retrogames.com */
