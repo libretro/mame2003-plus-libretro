@@ -18,4 +18,4 @@ Developer documentation can be found in **[the MAME 2003-Plus wiki](https://gith
 
 **mame2003-plus was originally built from the MAME 0.78 codebase, meaning that 95% or more of MAME 0.78 romsets will work as-is in mame2003-plus, where they immediately benefit from its bugfixes and other improvements.** In order to play the new games and games which received ROM updates in mame2003-plus, you will need to find or build the correct romsets.
 
-**[Read more in our guide on building a mame2003-plus romsets.](https://github.com/libretro/mame2003-plus-libretro/wiki/Building-romsets-for-mame2003-plus)**.
+**[Read more about rebuilding romsets in the libretro core documentation for mame2003-plus](https://docs.libretro.com/library/mame2003_plus/#Building-romsets-for-MAME-2003-Plus)**.
