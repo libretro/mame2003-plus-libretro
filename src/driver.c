@@ -1253,6 +1253,18 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( hook )		/* (c) 1992 Irem (World) */
 	DRIVER( hooku )		/* (c) 1992 Irem America (US) */
 	DRIVER( hookj )		/* (c) 1992 Irem (Japan) */
+	DRIVER( hooks01 )	// Hook (1V4)(World)
+	DRIVER( hooks02 )	// Hook (Zinc Children's Edition Update 15-05-2018)(World)
+	DRIVER( hooks03 )	// Hook (Zinc Children's Edition Update 02-05-2018)(World)
+	DRIVER( hooks04 )	// Hook (X2 Edition)(World)
+	DRIVER( hooks05 )	// Hook (Can Be Substituted For Character)(World)
+	DRIVER( hookus01 )	// Hook (plus)(US)
+	DRIVER( hookus02 )	// Hook (Can Be Substituted For Character)(US)
+	DRIVER( hookjs01 )	// Hook (Can Be Substituted For Character)(Japan)
+	DRIVER( nbbatmans01 )	// Ninja Baseball Bat Man (X2 Edition)(World)
+	DRIVER( nbbatmans02 )	// Ninja Baseball Bat Man (1V4)(World)
+	DRIVER( nbbatmanus01 )	// Ninja Baseball Bat Man (Unknown Hack)(US)
+	DRIVER( nbbatmanus02 )	// Ninja Baseball Bat Man (New Starter Edition Update 161024)(US)
 	DRIVER( rtypeleo )	/* (c) 1992 Irem (World) */
 	DRIVER( rtypelej )	/* (c) 1992 Irem (Japan) */
 	DRIVER( inthunt )	/* (c) 1993 Irem (World) */
