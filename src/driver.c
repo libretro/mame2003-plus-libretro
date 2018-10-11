@@ -3498,6 +3498,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( contra )	/* GX633 (c) 1987 */
 	DRIVER( contrab )	/* bootleg */
 	DRIVER( contraj )	/* GX633 (c) 1987 (Japan) */
+	DRIVER( contrajs01 )	/* Contra (Translation Chinese) */
 	DRIVER( contrajb )	/* bootleg */
 	DRIVER( gryzor )	/* GX633 (c) 1987 */
 	DRIVER( combasc )	/* GX611 (c) 1988 */
