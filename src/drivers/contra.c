@@ -382,6 +382,31 @@ ROM_START( contraj )
 	ROM_LOAD( "633f11.20g",   0x0300, 0x0100, CRC(14ca5e19) SHA1(eeee2f8b3d1e4acf47de1e74c4e507ff924591e7) )	/* 007121 #1 char lookup table */
 ROM_END
 
+// Contra (Translation Chinese)
+ROM_START( contrajs01 )
+	ROM_REGION( 0x28000, REGION_CPU1, 0 )	/* 64k for code + 96k for banked ROMs */
+	ROM_LOAD( "s01.633n03.18a",   0x20000, 0x08000, CRC(10faba24) SHA1(8769ab8f00d8aa215b1a759c60f6a9a0bd17af57) )
+	ROM_CONTINUE(             0x08000, 0x08000 )
+	ROM_LOAD( "s01.633k02.17a",   0x10000, 0x10000, CRC(10447386) SHA1(e06dbe59f77ceea6953b45de8b8bd5e813d44881) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )    
+	ROM_LOAD( "633e01.12a",   0x08000, 0x08000, CRC(d1549255) SHA1(d700c7de36746ba247e3a5d0410b7aa036aa4073) )
+
+	ROM_REGION( 0x80000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "s01.633e04.7d",    0x00000, 0x40000, CRC(60515b18) SHA1(242d104fffc2dab1c81bd55b676a048d76a27c9e) )
+	ROM_LOAD16_BYTE( "s01.633e05.7f",    0x00001, 0x40000, CRC(595566c5) SHA1(89b56dec9293f158ea1c06afc5492f50ac2478d3) )
+
+	ROM_REGION( 0x80000, REGION_GFX2, ROMREGION_DISPOSE )
+	ROM_LOAD16_BYTE( "s01.633e06.16d",   0x00000, 0x40000, CRC(40a66752) SHA1(b3a28c5faa49bd76dd5fefa0f070b309a131c618) )
+	ROM_LOAD16_BYTE( "s01.633e07.16f",   0x00001, 0x40000, CRC(635466bb) SHA1(229f9334f2d5fcb14cb2808c95073ed4b95926f6) )
+
+	ROM_REGION( 0x0400, REGION_PROMS, 0 )
+	ROM_LOAD( "633e08.10g",   0x0000, 0x0100, CRC(9f0949fa) SHA1(7c8fefdcae4523d008a7d39062194c7a80aa3500) )    
+	ROM_LOAD( "633e09.12g",   0x0100, 0x0100, CRC(14ca5e19) SHA1(eeee2f8b3d1e4acf47de1e74c4e507ff924591e7) )    
+	ROM_LOAD( "633f10.18g",   0x0200, 0x0100, CRC(2b244d84) SHA1(c3bde7afb501bae58d07721c637dc06938c22150) )    
+	ROM_LOAD( "633f11.20g",   0x0300, 0x0100, CRC(14ca5e19) SHA1(eeee2f8b3d1e4acf47de1e74c4e507ff924591e7) )    
+ROM_END
+
 ROM_START( contrajb )
 	ROM_REGION( 0x28000, REGION_CPU1, 0 )	/* 64k for code + 96k for banked ROMs */
 	ROM_LOAD( "g-2.rom",      0x20000, 0x08000, CRC(bdb9196d) SHA1(fad170e8fda94c9c9d7b82433daa30b80af12efc) )
@@ -431,9 +456,9 @@ ROM_START( gryzor )
 ROM_END
 
 
-
 GAME( 1987, contra,   0,      contra, contra, 0, ROT90, "Konami", "Contra (US)" )
 GAME( 1987, contrab,  contra, contra, contra, 0, ROT90, "bootleg", "Contra (US bootleg)" )
 GAME( 1987, contraj,  contra, contra, contra, 0, ROT90, "Konami", "Contra (Japan)" )
 GAME( 1987, contrajb, contra, contra, contra, 0, ROT90, "bootleg", "Contra (Japan bootleg)" )
 GAME( 1987, gryzor,   contra, contra, contra, 0, ROT90, "Konami", "Gryzor" )
+GAME( 200?, contrajs01, contra, contra, contra, 0, ROT90, "ShengDa", "Contra (Translation Chinese)" )
