@@ -126,6 +126,7 @@
 * B-Rap Boys
 * B-Rap Boys Special
 * Bakuretsu Breaker
+* Baseball Stars (Playchoice 10)
 * Blasted
 * Blood Warrior
 * Bonk's Adventure
@@ -151,7 +152,9 @@
 * Gardia
 * Green Beret
 * Hacha Mecha Figher
+* Mario's Open Golf (Playchoice 10)
 * Max RPM
+* Metroid (Playchoice 10)
 * Monster Slider
 * Night Slashers
 * Phantasm
