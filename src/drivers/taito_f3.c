@@ -2810,8 +2810,8 @@ ROM_START( landmkrp )
 	ROM_LOAD16_BYTE("snd-7.35", 0x800000, 0x80000, CRC(69410f0f) SHA1(ff023842383ce26818ec7361831e122737a9e94b) )
 ROM_END
 
-/******************************************************************************/
-CODES FROM HBMAME 0.202
+/**************CODES FROM HBMAME 0.202***************************/
+
 
 // Cleopatra Fortune (Hack)(Ver 2.1J 1996/09/05)
 ROM_START( cleopath )
