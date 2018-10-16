@@ -1728,6 +1728,27 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( popnpopu )	/* E51 (c) 1997 Taito Corporation (US) */
 	DRIVER( landmakr )	/* E61 (c) 1998 Taito Corporation (Japan) */
 	DRIVER( landmkrp )	/* E61 (c) 1998 Taito Corporation (World, prototype) */
+	
+	/* Hacks of Taito F3 games */
+	DRIVER( akkanvdrs01 ) /* Akkanbeder (Translation Chinese)(Ver 2.5J 1995/06/14) */
+	DRIVER( arabianmjs01 ) /* Arabian Magic (Translation Chinese)(Ver 1.0J 1992/07/06) */
+	DRIVER( bubsymphjs01 ) /* Bubble Symphony (Translation Chinese)(Ver 2.5J 1994/10/05) */
+	DRIVER( cleopath ) /* Cleopatra Fortune (Hack)(Ver 2.1J 1996/09/05) */
+	DRIVER( cleopatrs01 ) /* Cleopatra Fortune (Translation Chinese)(Ver 2.1J) */
+	DRIVER( dankugas01 ) /* Dan-Ku-Ga Plus (Ver 0.0J 1994/12/13) */
+	DRIVER( dankugas02 ) /* Dan-Ku-Ga (Enable Hidden Characters)(Ver 0.0J 1994/12/13) */
+	DRIVER( driusgxh ) /* Darius Gaiden (Hack)(Ver 2.5O 1994/09/19) */
+	DRIVER( elvactrjs01 ) /* Elevator Action Returns (Translation Chinese)(Ver 2.2J 1995/02/20) */
+	DRIVER( gekiridh ) /* Gekirindan (World Hack)(Ver 2.3O 1995/09/21) */
+	DRIVER( gekiridoc ) /* Gekirindan (Translation To China)(Ver 2.3J 1995/09/21) */
+	DRIVER( gseekerjs01 ) /* Grid Seeker: Project Storm Hammer (Translation Chinese)(Ver 1.3J) */
+	DRIVER( kaiserknjs01 ) /* Kaiser Knuckle Plus (Ver 2.1J 1994/07/29) */
+	DRIVER( kaiserknjs02 ) /* Kaiser Knuckle (Enable Hidden Characters)(Ver 2.1J 1994/07/29) */
+	DRIVER( kaiserkns01 ) /* Kaiser Knuckle (Enable Hidden Characters)(Ver 2.1O 1994/07/29) */
+	DRIVER( landmakh ) /* Land Maker (Hack)(Ver 2.01J 1998/06/01) */
+	DRIVER( landmakrs01 ) /* Land Maker (Translation Chinese)(Ver 2.01J 1998/06/01) */
+	DRIVER( lightbrjs01 ) /* Light Bringer (Translation Chinese)(Ver 2.1J 1994/02/18) */
+	DRIVER( pbobl2xh ) /* Puzzle Bobble 2X (Hack)(Ver 2.3O 1995/07/31) */
 
 	/* Toaplan games */
 	DRIVER( perfrman )	/* (c) 1985 Data East Corporation (Japan) */
