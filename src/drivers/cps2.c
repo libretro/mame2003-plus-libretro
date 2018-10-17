@@ -6364,7 +6364,7 @@ GAME( 1998, sfa3r1,   sfa3,    cps2, ssf2,    cps2, ROT0,   "Capcom", "Street Fi
 GAME( 1998, sfz3j,    sfa3,    cps2, ssf2,    cps2, ROT0,   "Capcom", "Street Fighter Zero 3 (Japan 980727)" )
 GAME( 1998, sfz3jr1,  sfa3,    cps2, ssf2,    cps2, ROT0,   "Capcom", "Street Fighter Zero 3 (Japan 980629)" )
 GAME( 1998, sfz3a,    sfa3,    cps2, ssf2,    cps2, ROT0,   "Capcom", "Street Fighter Zero 3 (Asia 980701)" )
-GAME( 2004, hsf2a,    0,       cps2, ssf2,    cps2, ROT0,   "Capcom", "Hyper Street Fighter II - The Anniversary Edition (Asia 040202)", &sf2_ctrl, NULL )
+GAMEC(2004, hsf2a,    0,       cps2, ssf2,    cps2, ROT0,   "Capcom", "Hyper Street Fighter II - The Anniversary Edition (Asia 040202)", &sf2_ctrl, NULL )
 
 
 /* Games released on CPS-2 hardware by Takumi */
