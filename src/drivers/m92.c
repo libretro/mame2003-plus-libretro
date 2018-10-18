@@ -2809,7 +2809,7 @@ GAME( 200?, hookus01,    hook,     nonraster, hook,     hook,     ROT0,   "Unkno
 GAME( 200?, hookus02,    hook,     nonraster, hook,     hook,     ROT0,   "RockyWall",         "Hook (Can Be Substituted For Character)(US)" )
 GAME( 200?, hookjs01,    hook,     nonraster, hook,     hook,     ROT0,   "RockyWall",         "Hook (Can Be Substituted For Character)(Japan)" )
 // Ninja Baseball Bat Man
-GAME( 200?, nbbatmans01, nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Unknown",         "Ninja Baseball Bat Man (X2 Edition)(World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 200?, nbbatmans02, nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Unknown",         "Ninja Baseball Bat Man (1V4)(World)", GAME_IMPERFECT_GRAPHICS)
-GAME( 200?, nbbatmanus01,nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Unknown",         "Ninja Baseball Bat Man (Unknown Hack)(US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 200?, nbbatmanus02,nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Unknown",         "Ninja Baseball Bat Man (New Starter Edition Update 161024)(US)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 200?, nbbatmans01, nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Unknown",         "Ninja Baseball Bat Man (X2 Edition)(World)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 200?, nbbatmans02, nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Unknown",         "Ninja Baseball Bat Man (1V4)(World)", GAME_IMPERFECT_GRAPHICS)
+GAMEX( 200?, nbbatmanus01,nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Unknown",         "Ninja Baseball Bat Man (Unknown Hack)(US)", GAME_IMPERFECT_GRAPHICS )
+GAMEX( 200?, nbbatmanus02,nbbatman, raster,    nbbatman, nbbatman, ROT0,   "Unknown",         "Ninja Baseball Bat Man (New Starter Edition Update 161024)(US)", GAME_IMPERFECT_GRAPHICS )
