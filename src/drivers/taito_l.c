@@ -2880,7 +2880,8 @@ GAME( 1993, plgirls2, 0,        cachat,   plgirls2, 0,        ROT270, "Hot-B.", 
 GAME( 1990, evilston, 0,        evilston, evilston, evilston, ROT270, "Spacy Industrial, Ltd.", "Evil Stone" )
 
 GAME( 2007, evilstons01,  evilston, evilston,  evilston, evilston, ROT270, "S.Arkames.", "Evil Stone (Translation French V2)(11.28.2007)" )
-GAME( 200?, kurikintjs01, kurikint, kurikint,  kurikintj, 0,         ROT0,   "Unknown", "Kuri Kinton (Translation Chinese)(Japan)" )
+GAME( 200?, kurikintjs01, kurikint, kurikint, kurikinj, 0,        ROT0,   "Unknown", "Kuri Kinton (Translation Chinese)(Japan)" )
+//GAME( 200?, kurikintjs01, kurikint, kurikint,  kurikintj, 0,         ROT0,   "Unknown", "Kuri Kinton (Translation Chinese)(Japan)" )
 GAME( 200?, plottingas01, plotting, plotting,  plotting, plotting, ROT0,   "Unknown", "Plotting (Translation Chinese)(World set 2, protected)" )
 //GAME( 200?, plottingas01, plotting, plotting,  plotting, plottinga, ROT0,   "Unknown", "Plotting (Translation Chinese)(World set 2, protected)" )
 
