@@ -5824,5 +5824,8 @@ Other Sun games
 	DRIVER( mizubakus01 ) // Mizubaku Daibouken (Translation Chinese)(Japan) 丑八怪大冒险/女士大冒险
 	DRIVER( runarks01 ) // Runark (Translation Chinese)(Japan) 森林保护神
 	DRIVER( thundfoxjs01 ) // Thunder Fox (Translation Chinese)(Japan) 雷狐行动
+	DRIVER( evilstons01 ) // Evil Stone (Translation French V2)(11.28.2007)
+	DRIVER( kurikintjs01 ) // Kuri Kinton (Translation Chinese)(Japan) 功夫金团
+	DRIVER( plottingas01 ) // Plotting (Translation Chinese)(World set 2, protected)
 	
 #endif	/* DRIVER_RECURSIVE */
