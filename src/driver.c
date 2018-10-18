@@ -5814,5 +5814,6 @@ Other Sun games
 	DRIVER( flstoryjs01 ) // The FairyLand Story (Translation Chinese)(Japan) 仙境物语
 	DRIVER( lkages01 ) // The Legend of Kage (Translation Chinese) 影之传说
 	DRIVER( kikikais01 ) // KiKi KaiKai (Translation Chinese) 奇奇怪界
+	DRIVER( solomonjs01 ) // Solomon no Kagi (Translation Chinese) 所罗门之钥
 	
 #endif	/* DRIVER_RECURSIVE */
