@@ -5827,5 +5827,10 @@ Other Sun games
 	DRIVER( evilstons01 ) // Evil Stone (Translation French V2)(11.28.2007)
 	DRIVER( kurikintjs01 ) // Kuri Kinton (Translation Chinese)(Japan) 功夫金团
 	DRIVER( plottingas01 ) // Plotting (Translation Chinese)(World set 2, protected)
-	
+	DRIVER( geminis01 ) // Gemini Wing (Translation Chinese)(Japan) 捉虫敢死队/昆虫世界
+	DRIVER( rygarjs01 ) // Argus no Senshi (Translation Chinese)(Japan) 阿尔卑斯古战士
+	DRIVER( silkworms01 ) // Silk Worm (Translation Chinese)(World) 联合大作战/中东战争
+	DRIVER( geminit ) // Gemini Wing (Hack) 
+	DRIVER( rygark ) // Argus no Senshi (Translation Korean)(Japan)
+		
 #endif	/* DRIVER_RECURSIVE */
