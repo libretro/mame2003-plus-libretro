@@ -5803,5 +5803,9 @@ Other Sun games
 	DRIVER( ddp3b )
 	DRIVER( ddp3blk )
 	DRIVER( espgal )
+	
+	/* GXB增加的驱动 */
+	DRIVER( alpines01 )  // Alpine Ski (Translation Chinese)(set 1)
+	DRIVER( frontlins01 )  // Front Line (Translation Chinese)
 
 #endif	/* DRIVER_RECURSIVE */
