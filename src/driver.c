@@ -5805,11 +5805,12 @@ Other Sun games
 	DRIVER( espgal )
 	
 	/* GXB增加的驱动 */
-	DRIVER( alpines01 )  // Alpine Ski (Translation Chinese)(set 1)
-	DRIVER( frontlins01 )  // Front Line (Translation Chinese)
-	DRIVER( bombjacks01 ) // Bomb Jack (Translation Chinese)(set 1)
+	DRIVER( alpines01 )  // Alpine Ski (Translation Chinese)(set 1) 高山滑雪
+	DRIVER( frontlins01 )  // Front Line (Translation Chinese) 前线
+	DRIVER( bombjacks01 ) // Bomb Jack (Translation Chinese)(set 1) 炸弹杰克
 	DRIVER( bmbjckgr )  // Bomb Jack (Greek)
 	DRIVER( bombjckb )  // Bomb Jack (Bootleg)
 	DRIVER( bombjred )  // Bomb Jack (Red)
+	DRIVER( flstoryjs01 ) // The FairyLand Story (Translation Chinese)(Japan) 仙境物语
 
 #endif	/* DRIVER_RECURSIVE */
