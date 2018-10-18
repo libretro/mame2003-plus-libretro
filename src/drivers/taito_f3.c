@@ -3974,32 +3974,21 @@ GAME( 1998, landmakr, 0,        f3,      f3, landmakr, ROT0,   "Taito Corporatio
 GAME( 1998, landmkrp, landmakr, f3,      f3, landmkrp, ROT0,   "Taito Corporation",         "Land Maker (World Prototype)" )
 
 /*ADDED MAMY HACKS FROM HBMAME 0.202, MOST OF HACKS ARE DONE BY SHENGDA COMPANY*/
- // Cleopatra Fortune
+GAME( 200?, gseekerjs01, gseeker,  f3_224b, f3, gseeker,  ROT90,  "ShengDa Corporation",         "Grid Seeker: Project Storm Hammer (Translation Chinese)(Ver 1.3J)" )
 GAME( 200?, cleopatrs01,       	cleopatr, f3_224a, f3,  cleopatr, ROT0,   "Unknown",         "Cleopatra Fortune (Translation Chinese)(Ver 2.1J)" )
 GAME( 200?, cleopath,  			cleopatr, f3_224a, f3,  cleopatr, ROT0,   "Unknown",     "Cleopatra Fortune (Hack)(Ver 2.1J 1996/09/05)" )
- // Akkanbeder
 GAME( 200?, akkanvdrs01,       spcinv95, f3_224a, f3,  spcinv95, ROT270, "Unknown",         "Akkanbeder (Translation Chinese)(Ver 2.5J 1995/06/14)" )
- // Arabian Magic
-GAME( 200?, arabianmjs01,      arabianm, f3_224a, f3,  arabianm, ROT0,   "Unknown",         "Arabian Magic (Translation Chinese)(Ver 1.0J 1992/07/06)" )
- // Bubble Symphony
-GAME( 200?, bubsymphjs01,      bublbob2, f3_224a, f3,  bubsymph, ROT0,   "Unknown",         "Bubble Symphony (Translation Chinese)(Ver 2.5J 1994/10/05)" )
- // Dan-Ku-Ga
+GAME( 200?, arabianmjs01, arabianm, f3_224a, f3, arabianm, ROT0,   "ShengDa Corp.",         "Arabian Magic (Translation Chinese)(Ver 1.0J 1992/07/06)" )
+GAME( 200?, bubsymphjs01, bublbob2, f3_224a, f3, bubsymph, ROT0,   "ShengDa Corporation",         "Bubble Symphony (Translation Chinese)(Ver 2.5J 1994/10/05)" )
 GAME( 200?, dankugas01,        dankuga,  f3_224a, kn,  kaiserkn, ROT0,   "Unknown",         "Dan-Ku-Ga Plus (Ver 0.0J 1994/12/13, prototype)" )
 GAME( 200?, dankugas02,        dankuga,  f3_224a, kn,  kaiserkn, ROT0,   "yumeji",         "Dan-Ku-Ga (Enable Hidden Characters)(Ver 0.0J 1994/12/13, prototype)" )
- // Elevator Action Returns
 GAME( 200?, elvactrjs01,       elvactr,  f3,      f3,  elvactr,  ROT0,   "Unknown",         "Elevator Action Returns (Translation Chinese)(Ver 2.2J 1995/02/20)" )
- // Grid Seeker: Project Storm Hammer
-GAME( 200?, gseekerjs01,       gseeker,  f3_224b_eeprom, f3,  gseeker,  ROT90,  "Unknown",         "Grid Seeker: Project Storm Hammer (Translation Chinese)(Ver 1.3J)" )
- // Kaiser Knuckle
 GAME( 200?, kaiserkns01,       kaiserkn, f3_224a, kn,  kaiserkn, ROT0,   "yumeji",         "Kaiser Knuckle (Enable Hidden Characters)(Ver 2.1O 1994/07/29)" )
 GAME( 200?, kaiserknjs01,      kaiserkn, f3_224a, kn,  kaiserkn, ROT0,   "Unknown",         "Kaiser Knuckle Plus (Ver 2.1J 1994/07/29)" )
 GAME( 200?, kaiserknjs02,      kaiserkn, f3_224a, kn,  kaiserkn, ROT0,   "yumeji",         "Kaiser Knuckle (Enable Hidden Characters)(Ver 2.1J 1994/07/29)" )
- // Land Maker
 GAME( 200?, landmakrs01,       landmakr, f3,      f3,  landmakr, ROT0,   "Unknown",         "Land Maker (Translation Chinese)(Ver 2.01J 1998/06/01)" )
 GAME( 200?, landmakh,  landmakr, f3,      f3,  landmakr, ROT0,   "Unknown",     "Land Maker (Hack)(Ver 2.01J 1998/06/01)" )
- // Light Bringer
 GAME( 200?, lightbrjs01,       lightbr,  f3_224a, f3,  lightbr,  ROT0,   "Unknown",         "Light Bringer (Translation Chinese)(Ver 2.1J 1994/02/18)" )
-
 GAME( 200?, driusgxh,  dariusg,  f3,      f3,  dariusg,  ROT0,   "Unknown",     "Darius Gaiden (Hack)(Ver 2.5O 1994/09/19)" )
 // GAME( 2000, f3demo,    0,        f3,      f3,  pbobble3, ROT0,   "Antiriad", "Demo - Taito F3", MACHINE_NOT_WORKING | MACHINE_SUPPORTS_SAVE )
 GAME( 200?, gekiridh,  gekiridn, f3,      f3,  gekirido, ROT270, "Unknown",     "Gekirindan (World Hack)(Ver 2.3O 1995/09/21)" )
