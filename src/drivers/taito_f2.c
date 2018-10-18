@@ -6960,7 +6960,7 @@ GAME( 1991, driveout, driftout, driveout, driftout, driveout, ROT270, "bootleg",
 /****************************************************
         hacks from HBMAME 0.202
 *****************************************************/
-GAME( 200?, cameltrj, cameltry, cameltry, cameltrj, f2,       ROT0,   "ShengDa Corporation", "Cameltry (Translation Chinese)(Japan, YM2610)" )
+GAME( 200?, cameltryjs01, cameltry, cameltry, cameltrj, f2,       ROT0,   "ShengDa Corporation", "Cameltry (Translation Chinese)(Japan, YM2610)" )
 GAME( 200?, deadconxjs01,  deadconx, deadconxj, deadconxj, 0,        ROT0,   "Unknown",         "Dead Connection (Translation Chinese)(Japan)" )
 GAME( 200?, dondokodjs01, dondokod, dondokod, dondokdj, f2,       ROT0,   "ShengDa Corporation", "Don Doko Don (Translation Chinese)(Japan)" )
 GAME( 200?, dinorexs01,    dinorex,  dinorex,   dinorex,   0,        ROT0,   "DDJ",             "Dino Rex (Easy Move)(World)" )
