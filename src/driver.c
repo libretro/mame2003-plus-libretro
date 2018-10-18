@@ -1457,6 +1457,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bonzeadu )	/* B41 (c) 1988 Taito America Corporation (US) */
 	DRIVER( jigkmgri )	/* B41 (c) 1988 Taito Corporation (Japan)*/
 	DRIVER( asuka )		/* ??? (c) 1988 Taito Corporation (Japan) */
+	DRIVER( asukac )	/* Asuka & Asuka (Translation Chinese)(World) */ //飞鸟飞鸟汉化版 
 	DRIVER( mofflott )	/* C17 (c) 1989 Taito Corporation (Japan) */
 	DRIVER( cadash )	/* C21 (c) 1989 Taito Corporation Japan */
 	DRIVER( cadashj )	/* C21 (c) 1989 Taito Corporation */
