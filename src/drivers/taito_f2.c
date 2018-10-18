@@ -6960,14 +6960,12 @@ GAME( 1991, driveout, driftout, driveout, driftout, driveout, ROT270, "bootleg",
 /****************************************************
         hacks from HBMAME 0.202
 *****************************************************/
-GAME( 200?, cameltryjs01, cameltry, cameltry, cameltrj, f2,       ROT0,   "ShengDa Corporation", "Cameltry (Translation Chinese)(Japan, YM2610)" )
-GAME( 200?, deadconxjs01,  deadconx, deadconxj, deadconxj, 0,        ROT0,   "Unknown",         "Dead Connection (Translation Chinese)(Japan)" )
+GAME( 200?, cameltryjs01, cameltry, cameltry, cameltrj, f2,       ROT0,   "ShengDa Corporation", "Cameltry (Translation Chinese)(Japan, YM2610)" )   
+GAME( 200?, deadconxjs01, deadconx, deadconj, deadconj, f2,       ROT0,   "ShengDa Corporation", "Dead Connection (Translation Chinese)(Japan)" )
 GAME( 200?, dondokodjs01, dondokod, dondokod, dondokdj, f2,       ROT0,   "ShengDa Corporation", "Don Doko Don (Translation Chinese)(Japan)" )
-GAME( 200?, dinorexs01,    dinorex,  dinorex,   dinorex,   0,        ROT0,   "DDJ",             "Dino Rex (Easy Move)(World)" )
+GAME( 200?, dinorexs01,    dinorex,  dinorex,  dinorex,  f2,       ROT0,   "DDJ",             "Dino Rex (Easy Move)(World)" )
 GAME( 200?, gunfrontjs01, gunfront, gunfront, gunfronj, f2,       ROT270, "ShengDa Corporation", "Gun Frontier (Translation Chinese)(Japan)" )
-GAME( 200?, megablstjs01,  megab, megab,     megabj,    0,        ROT0,   "Unknown",         "Mega Blast (Translation Chinese)(Japan)" )
-//GAME( 200?, megablstjs01,  megablst, megab,     megabj,    0,        ROT0,   "Unknown",         "Mega Blast (Translation Chinese)(Japan)" )
-// 可以看出ROMSET从HBMAME到MAME 0.78的差别，megablst是HBMAME的名字，MAME 0.78是megab。
-GAME( 200?, mizubakus01,   liquidk,  liquidk,   mizubaku,  0,        ROT0,   "Unknown",         "Mizubaku Daibouken (Translation Chinese)(Japan)" )
-GAME( 200?, runarks01,     growl,    growl,     runark,    0,        ROT0,   "Unknown",         "Runark (Translation Chinese)(Japan)" )
+GAME( 200?, megablstjs01,  metalb,   metalb,   metalbj,  f2,       ROT0,   "ShengDa Corporation", "Mega Blast (Translation Chinese)(Japan)" )
+GAME( 200?, mizubakus01, liquidk,  liquidk,  mizubaku, f2,       ROT0,   "ShengDa Corporation", "Mizubaku Daibouken (Translation Chinese)(Japan)" )
+GAME( 200?, runarks01,   growl,    growl,    runark,   f2,       ROT0,   "ShengDa Corporation", "Runark (Translation Chinese)(Japan)" )
 GAME( 200?, thundfoxjs01,  thundfox, thundfox, thndfoxj, f2,       ROT0,   "Taito Corporation", "Thunder Fox (Translation Chinese)(Japan)" )
