@@ -5807,5 +5807,9 @@ Other Sun games
 	/* GXB增加的驱动 */
 	DRIVER( alpines01 )  // Alpine Ski (Translation Chinese)(set 1)
 	DRIVER( frontlins01 )  // Front Line (Translation Chinese)
+	DRIVER( bombjacks01 ) // Bomb Jack (Translation Chinese)(set 1)
+	DRIVER( bmbjckgr )  // Bomb Jack (Greek)
+	DRIVER( bombjckb )  // Bomb Jack (Bootleg)
+	DRIVER( bombjred )  // Bomb Jack (Red)
 
 #endif	/* DRIVER_RECURSIVE */
