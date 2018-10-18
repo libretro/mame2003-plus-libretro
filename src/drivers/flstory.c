@@ -783,7 +783,7 @@ ROM_START( flstoryjs01 )
 ROM_END
 
 GAMEX( 1985, flstory,  0,        flstory,  flstory,  0, ROT180, "Taito", "The FairyLand Story", GAME_IMPERFECT_SOUND )
-GAMEX( 200?, flstoryjs01,  flstory,  flstory,flstory,  0, ROT180, "Unknown", "The FairyLand Story (Translation Chinese)(Japan)", MACHINE_IMPERFECT_SOUND )
+GAMEX( 200?, flstoryjs01,  flstory,  flstory,flstory,  0, ROT180, "Unknown", "The FairyLand Story (Translation Chinese)(Japan)", GAME_IMPERFECT_SOUND )
 GAMEX( 1985, flstoryj, flstory,  flstory,  flstory,  0, ROT180, "Taito", "The FairyLand Story (Japan)", GAME_IMPERFECT_SOUND )
 GAMEX( 1985, onna34ro, 0,        onna34ro, onna34ro, 0, ROT0,   "Taito", "Onna Sansirou - Typhoon Gal (set 1)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND )
 GAMEX( 1985, onna34ra, onna34ro, onna34ro, onna34ro, 0, ROT0,   "Taito", "Onna Sansirou - Typhoon Gal (set 2)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND )
