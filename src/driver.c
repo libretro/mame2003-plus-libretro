@@ -5832,5 +5832,6 @@ Other Sun games
 	DRIVER( silkworms01 ) // Silk Worm (Translation Chinese)(World) 联合大作战/中东战争
 	DRIVER( geminit ) // Gemini Wing (Hack) 
 	DRIVER( rygark ) // Argus no Senshi (Translation Korean)(Japan)
+	DRIVER( fstarfrcc ) // Final Star Force (Translation Chinese)(US) 最终星际武力
 		
 #endif	/* DRIVER_RECURSIVE */
