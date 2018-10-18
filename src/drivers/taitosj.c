@@ -2822,4 +2822,4 @@ GAME( 1983, hwrace,   0,        nomcu,    hwrace,     0,       ROT270, "Taito Co
 GAME( 1984, kikstart, 0,        kikstart, kikstart,   kikstart,ROT0,   "Taito Corporation", "Kick Start Wheelie King" )
 // add 2 Chinese hacks
 GAME( 200?, alpines01, alpine, nomcu, alpine, alpine, ROT270, "Unknown", "Alpine Ski (Translation Chinese)(set 1)" ) //高山滑雪
-GAME( 200?, frontlins01, frontlin,        mcu,      frontlin, init_taitosj, ROT270, "Unknown", "Front Line (Translation Chinese)" ) //前线
+GAME( 200?, frontlins01, frontlin,        mcu,      frontlin, 0, ROT270, "Unknown", "Front Line (Translation Chinese)" ) //前线
