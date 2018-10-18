@@ -5815,5 +5815,14 @@ Other Sun games
 	DRIVER( lkages01 ) // The Legend of Kage (Translation Chinese) 影之传说
 	DRIVER( kikikais01 ) // KiKi KaiKai (Translation Chinese) 奇奇怪界
 	DRIVER( solomonjs01 ) // Solomon no Kagi (Translation Chinese) 所罗门之钥
+	DRIVER( cameltryjs01 ) // Cameltry (Translation Chinese)(Japan, YM2610) 骆驼珠
+	DRIVER( deadconxjs01 ) // Dead Connection (Translation Chinese)(Japan) 死亡边缘
+	DRIVER( dondokodjs01 ) // Don Doko Don (Translation Chinese)(Japan) 捶捶帮/木匠兄弟
+	DRIVER( dinorexs01 ) // Dino Rex (Easy Move)(World) 
+	DRIVER( gunfrontjs01 ) // Gun Frontier (Translation Chinese)(Japan) 枪之国度
+	DRIVER( megablstjs01 ) // Mega Blast (Translation Chinese)(Japan) 空间战机
+	DRIVER( mizubakus01 ) // Mizubaku Daibouken (Translation Chinese)(Japan) 丑八怪大冒险/女士大冒险
+	DRIVER( runarks01 ) // Runark (Translation Chinese)(Japan) 森林保护神
+	DRIVER( thundfoxjs01 ) // Thunder Fox (Translation Chinese)(Japan) 雷狐行动
 	
 #endif	/* DRIVER_RECURSIVE */
