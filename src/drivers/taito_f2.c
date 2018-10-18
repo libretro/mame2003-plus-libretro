@@ -6970,4 +6970,4 @@ GAME( 200?, megablstjs01,  megab, megab,     megabj,    0,        ROT0,   "Unkno
 // 可以看出ROMSET从HBMAME到MAME 0.78的差别，megablst是HBMAME的名字，MAME 0.78是megab。
 GAME( 200?, mizubakus01,   liquidk,  liquidk,   mizubaku,  0,        ROT0,   "Unknown",         "Mizubaku Daibouken (Translation Chinese)(Japan)" )
 GAME( 200?, runarks01,     growl,    growl,     runark,    0,        ROT0,   "Unknown",         "Runark (Translation Chinese)(Japan)" )
-GAME( 200?, thundfoxjs01,  thundfox, thundfox,  thundfoxj, 0,        ROT0,   "Unknown",         "Thunder Fox (Translation Chinese)(Japan)" )
+GAME( 200?, thundfoxjs01,  thundfox, thundfox, thndfoxj, f2,       ROT0,   "Taito Corporation", "Thunder Fox (Translation Chinese)(Japan)" )
