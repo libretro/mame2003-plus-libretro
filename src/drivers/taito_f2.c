@@ -6960,11 +6960,11 @@ GAME( 1991, driveout, driftout, driveout, driftout, driveout, ROT270, "bootleg",
 /****************************************************
         hacks from HBMAME 0.202
 *****************************************************/
-GAME( 200?, cameltryjs01,  cameltry, cameltry,  cameltryj, cameltry, ROT0,   "Unknown",         "Cameltry (Translation Chinese)(Japan, YM2610)" )
+GAME( 200?, cameltrj, cameltry, cameltry, cameltrj, f2,       ROT0,   "ShengDa Corporation", "Cameltry (Translation Chinese)(Japan, YM2610)" )
 GAME( 200?, deadconxjs01,  deadconx, deadconxj, deadconxj, 0,        ROT0,   "Unknown",         "Dead Connection (Translation Chinese)(Japan)" )
-GAME( 200?, dondokodjs01,  dondokod, dondokod,  dondokodj, 0,        ROT0,   "Unknown",         "Don Doko Don (Translation Chinese)(Japan)" )
+GAME( 200?, dondokodjs01, dondokod, dondokod, dondokdj, f2,       ROT0,   "ShengDa Corporation", "Don Doko Don (Translation Chinese)(Japan)" )
 GAME( 200?, dinorexs01,    dinorex,  dinorex,   dinorex,   0,        ROT0,   "DDJ",             "Dino Rex (Easy Move)(World)" )
-GAME( 200?, gunfrontjs01,  gunfront, gunfront,  gunfrontj, 0,        ROT270, "Unknown",         "Gun Frontier (Translation Chinese)(Japan)" )
+GAME( 200?, gunfrontjs01, gunfront, gunfront, gunfronj, f2,       ROT270, "ShengDa Corporation", "Gun Frontier (Translation Chinese)(Japan)" )
 GAME( 200?, megablstjs01,  megab, megab,     megabj,    0,        ROT0,   "Unknown",         "Mega Blast (Translation Chinese)(Japan)" )
 //GAME( 200?, megablstjs01,  megablst, megab,     megabj,    0,        ROT0,   "Unknown",         "Mega Blast (Translation Chinese)(Japan)" )
 // 可以看出ROMSET从HBMAME到MAME 0.78的差别，megablst是HBMAME的名字，MAME 0.78是megab。
