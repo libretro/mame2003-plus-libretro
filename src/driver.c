@@ -5813,5 +5813,6 @@ Other Sun games
 	DRIVER( bombjred )  // Bomb Jack (Red)
 	DRIVER( flstoryjs01 ) // The FairyLand Story (Translation Chinese)(Japan) 仙境物语
 	DRIVER( lkages01 ) // The Legend of Kage (Translation Chinese) 影之传说
+	DRIVER( kikikais01 ) // KiKi KaiKai (Translation Chinese) 奇奇怪界
 	
 #endif	/* DRIVER_RECURSIVE */
