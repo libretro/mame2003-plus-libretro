@@ -137,10 +137,10 @@ static void init_core_options(void)
   init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Right Stick to Buttons; enabled|disabled");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier", 
-                                                                                         "EXPERIMENTAL: Vector resolution multiplier (Restart); 1|2|3|4|5|6");
-  init_default(&default_options[OPT_VECTOR_ANTIALIAS],    APPNAME"_vector_antialias",    "EXPERIMENTAL: Vector antialias; disabled|enabled");
+                                                                                         "Vector resolution multiplier (Restart); 1|2|3|4|5|6|7|8|9|10");
+  init_default(&default_options[OPT_VECTOR_ANTIALIAS],    APPNAME"_vector_antialias",    "Vector antialias; enabled|disabled");
+  init_default(&default_options[OPT_VECTOR_BEAM],         APPNAME"_vector_beam_width",   "Vector beam width (only with antialias); 1|1.5|2|2.5|3|4|5|6|7|8|9|10");
   init_default(&default_options[OPT_VECTOR_TRANSLUCENCY], APPNAME"_vector_translucency", "Vector translucency; enabled|disabled");
-  init_default(&default_options[OPT_VECTOR_BEAM],         APPNAME"_vector_beam_width",   "EXPERIMENTAL: Vector beam width; 1|2|3|4|5");
   init_default(&default_options[OPT_VECTOR_FLICKER],      APPNAME"_vector_flicker",      "Vector flicker; 20|0|10|20|30|40|50|60|70|80|90|100");
   init_default(&default_options[OPT_VECTOR_INTENSITY],    APPNAME"_vector_intensity",    "Vector intensity; 1.5|0.5|1|2|2.5|3");
   init_default(&default_options[OPT_NVRAM_BOOTSTRAP],     APPNAME"_nvram_bootstraps",    "NVRAM Bootstraps; enabled|disabled");
@@ -453,15 +453,15 @@ static void update_variables(bool first_time)
             options.antialias = 0;
           break;
 
+          case OPT_VECTOR_BEAM:
+          options.beam = atof(var.value); /* float: vector beam width */
+          break;
+          
         case OPT_VECTOR_TRANSLUCENCY:
           if(strcmp(var.value, "enabled") == 0)
             options.translucency = 1; /* integer: 1 to enable translucency on vectors */
           else
             options.translucency = 0;
-          break;
-
-        case OPT_VECTOR_BEAM:
-          options.beam = atoi(var.value); /* integer: vector beam width */
           break;
 
         case OPT_VECTOR_FLICKER:
