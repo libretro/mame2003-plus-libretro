@@ -5834,5 +5834,7 @@ Other Sun games
 	DRIVER( rygark ) // Argus no Senshi (Translation Korean)(Japan)
 	DRIVER( fstarfrcc ) // Final Star Force (Translation Chinese)(US) 最终星际武力
 	DRIVER( insectxs01 ) // Insector X (Translation Chinese)(World) 杀虫战记X
+	DRIVER( botanic )	/* (c) 1985 */
+	
 		
 #endif	/* DRIVER_RECURSIVE */
