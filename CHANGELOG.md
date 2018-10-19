@@ -13,6 +13,7 @@
 * Bang Bang Busters
 * Baryon
 * Battle Shark (Japan, Joystick)
+* Botanic
 * Boogie Wings
 * Bubble Bobble (prototype on tokio hardware)
 * Cabal (Joystick with 3 buttons version)
