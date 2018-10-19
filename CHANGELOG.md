@@ -189,6 +189,9 @@
 * Bubble Bobble Lost Cave
 * Bubble Bobble Ultra
 * Donkey Kong II Jumpman Returns
+
+## New Hacks only available in HBMAME 2003 Plus
+
 * Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 01)
 * Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 02)
 * Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 03)
