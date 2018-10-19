@@ -127,6 +127,7 @@
 * B-Rap Boys Special
 * Bakuretsu Breaker
 * Blasted
+* Baseball Stars (Playchoice 10)
 * Blood Warrior
 * Bonk's Adventure
 * Crater Raider
@@ -151,7 +152,9 @@
 * Gardia
 * Green Beret
 * Hacha Mecha Figher
+* Mario's Open Golf (Playchoice 10)
 * Max RPM
+* Metroid (Playchoice 10)
 * Monster Slider
 * Night Slashers
 * Phantasm
@@ -320,6 +323,9 @@
 * Argus no Senshi (Translation Korean)(Japan)
 * Final Star Force (Translation Chinese)(US)
 * Insector X (Translation Chinese)(World)
+* Vs. Dr. Mario (Translation Chinese)(2002-10)
+* Vs. Super Mario Bros. 2002
+* Vs. Super Skater Bros.
 
 ## Games now with sound
 
