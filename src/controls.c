@@ -18687,7 +18687,7 @@ const char *sstrike_get_ctrl_name(int type)
 const struct ControlInfo stonebal_ctrl =
 {
   false, /* alternating_controls */
-  false, /* mirrored_controls */
+  true, /* mirrored_controls */
   "", /* control_details */
   &stonebal_get_ctrl_name
 };
