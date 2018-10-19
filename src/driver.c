@@ -5835,6 +5835,8 @@ Other Sun games
 	DRIVER( fstarfrcc ) // Final Star Force (Translation Chinese)(US) 最终星际武力
 	DRIVER( insectxs01 ) // Insector X (Translation Chinese)(World) 杀虫战记X
 	DRIVER( botanic )	/* (c) 1985 */
-	
+	DRIVER( drmarios01 )	/* Vs. Dr. Mario (Translation Chinese)(2002-10) */
+	DRIVER( mrio2002 )	/* Vs. Super Mario Bros. 2002 */
+	DRIVER( suprsktr )	/* Vs. Super Skater Bros. */
 		
 #endif	/* DRIVER_RECURSIVE */
