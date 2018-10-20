@@ -1,4 +1,4 @@
-# MAME 2003-Plus CHANGELOG
+# HBMAME 2003 Plus CHANGELOG
 
 * Lead developer: arcadez with code additions via iq_132 and BritneysPAIRS.
 * MAME 2003 Plus Repository maintainers: arcadez, grant2258, and markwkidd.
@@ -195,7 +195,7 @@
 * Bubble Bobble Ultra
 * Donkey Kong II Jumpman Returns
 
-## New Hacks only available in HBMAME 2003 Plus
+## New Hacks Only Available in HBMAME 2003 Plus
 
 * Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 01)
 * Sangokushi 3 Gaiden Kakou-On'S Revence Dx 2010 (Set 02)
