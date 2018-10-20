@@ -554,7 +554,7 @@ unsigned retro_api_version(void)
 
 void retro_get_system_info(struct retro_system_info *info)
 {
-  info->library_name = "HBMAME 2003 Plus Modified by GXB. 严禁商用！";
+  info->library_name = "HBMAME 2003 Plus - Modified by GXB. 严禁商用！";
 #ifndef GIT_VERSION
 #define GIT_VERSION ""
 #endif
