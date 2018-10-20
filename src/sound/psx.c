@@ -219,7 +219,7 @@ READ32_HANDLER( psx_spu_r )
 			}
 			return ( m_p_n_repeataddress[ n_channel ] << 16 ) | m_p_n_adsrvolume[ n_channel ];
 		default:
-			log_cb(RETRO_LOG_WARN, "psx_spu_r( %08x, %08x ) channel %d reg %d\n", offset, mem_mask, n_channel, offset % 4 ); 
+			log_cb(RETRO_LOG_DEBUG, "psx_spu_r( %08x, %08x ) channel %d reg %d\n", offset, mem_mask, n_channel, offset % 4 ); 
 			return 0;
 		}
 	}
@@ -246,7 +246,7 @@ READ32_HANDLER( psx_spu_r )
 			log_cb(RETRO_LOG_DEBUG, "psx_spu_r() spu status = %08x\n", m_n_spustatus );
 			return m_n_spustatus;
 		default:
-			log_cb(RETRO_LOG_WARN, "psx_spu_r( %08x, %08x ) %08x\n", offset, mem_mask, 0xc00 + ( offset * 4 ) );
+			log_cb(RETRO_LOG_DEBUG, "psx_spu_r( %08x, %08x ) %08x\n", offset, mem_mask, 0xc00 + ( offset * 4 ) );
 			return 0;
 		}
 	}
@@ -309,7 +309,7 @@ WRITE32_HANDLER( psx_spu_w )
 			}
 			break;
 		default:
-			log_cb( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) channel %d reg %d\n", offset, mem_mask, data, n_channel, offset % 4 ); 
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) channel %d reg %d\n", offset, mem_mask, data, n_channel, offset % 4 ); 
 			break;
 		}
 	}
@@ -368,7 +368,7 @@ WRITE32_HANDLER( psx_spu_w )
 		case SPU_REG( 0xda0 ):
 			if( ACCESSING_LSW32 )
 			{
-				log_cb( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
 			}
 			if( ACCESSING_MSW32 )
 			{
@@ -379,7 +379,7 @@ WRITE32_HANDLER( psx_spu_w )
 		case SPU_REG( 0xda4 ):
 			if( ACCESSING_LSW32 )
 			{
-				log_cb( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
 			}
 			if( ACCESSING_MSW32 )
 			{
@@ -407,7 +407,7 @@ WRITE32_HANDLER( psx_spu_w )
 			}
 			if( ACCESSING_MSW32 )
 			{
-				log_cb( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
+				log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
 			}
 			break;
 		case SPU_REG( 0xdb0 ):
@@ -454,7 +454,7 @@ WRITE32_HANDLER( psx_spu_w )
 			log_cb( RETRO_LOG_DEBUG, "psx_spu_w() effect %d = %04x\n", offset & 0x0f, m_p_n_effect[ offset & 0x0f ] );
 			break;
 		default:
-			log_cb( RETRO_LOG_WARN, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
+			log_cb( RETRO_LOG_DEBUG, "psx_spu_w( %08x, %08x, %08x ) %08x\n", offset, mem_mask, data, 0xc00 + ( offset * 4 ) ); 
 			break;
 		}
 	}

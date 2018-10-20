@@ -548,7 +548,7 @@ void z8000_init(void)
 	z8000_exec = (Z8000_exec *)malloc(0x10000 * sizeof(Z8000_exec));
 	if( !z8000_exec )
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "cannot allocate Z8000 execution table\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "cannot allocate Z8000 execution table\n");
 		return;
 	}
 
@@ -573,7 +573,7 @@ void z8000_init(void)
 		for (i = init->beg; i <= init->end; i += init->step)
 		{
 			if (z8000_exec[i].opcode != zinvalid)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "Z8000 opcode %04x clash '%s'\n", i, z8000_exec[i].dasm);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "Z8000 opcode %04x clash '%s'\n", i, z8000_exec[i].dasm);
 
 			z8000_exec[i].opcode = init->opcode;
 			z8000_exec[i].cycles = init->cycles;

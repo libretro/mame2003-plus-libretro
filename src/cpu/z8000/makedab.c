@@ -54,34 +54,34 @@ int main(int ac, char **av)
         }
     }
 
-	log_cb(RETRO_LOG_ERROR, LOGPRE "/************************************************ \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " * Result table for Z8000 DAB instruction         \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " *                                                \n");
-    log_cb(RETRO_LOG_ERROR, LOGPRE " * bits    description                            \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " * ---------------------------------------------- \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " * 0..7    destination value                      \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " * 8       carry flag before                      \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " * 9       half carry flag before                 \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " * 10      D flag (0 add/adc, 1 sub/sbc)          \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " *                                                \n");
-    log_cb(RETRO_LOG_ERROR, LOGPRE " * result  description                            \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " * ---------------------------------------------- \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " * 0..7    result value                           \n");
-	log_cb(RETRO_LOG_ERROR, LOGPRE " * 8       carry flag after                       \n");
-    log_cb(RETRO_LOG_ERROR, LOGPRE " ************************************************/\n");
-    log_cb(RETRO_LOG_ERROR, LOGPRE "static UINT16 Z8000_dab[0x800] = {\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "/************************************************ \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " * Result table for Z8000 DAB instruction         \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " *                                                \n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE " * bits    description                            \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " * ---------------------------------------------- \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " * 0..7    destination value                      \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " * 8       carry flag before                      \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " * 9       half carry flag before                 \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " * 10      D flag (0 add/adc, 1 sub/sbc)          \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " *                                                \n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE " * result  description                            \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " * ---------------------------------------------- \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " * 0..7    result value                           \n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE " * 8       carry flag after                       \n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE " ************************************************/\n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "static UINT16 Z8000_dab[0x800] = {\n");
     for (i = 0; i < 0x800; i++) {
 		if ((i & 0x3ff) == 0) {
 			if (i & 0x400)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "\t/* sub/sbc results */\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "\t/* sub/sbc results */\n");
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "\t/* add/adc results */\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "\t/* add/adc results */\n");
 		}
-        if ((i & 7) == 0) log_cb(RETRO_LOG_ERROR, LOGPRE "\t");
-		log_cb(RETRO_LOG_ERROR, LOGPRE "0x%03x,",dab[i]);
-		if ((i & 7) == 7) log_cb(RETRO_LOG_ERROR, LOGPRE "\n");
+        if ((i & 7) == 0) log_cb(RETRO_LOG_DEBUG, LOGPRE "\t");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "0x%03x,",dab[i]);
+		if ((i & 7) == 7) log_cb(RETRO_LOG_DEBUG, LOGPRE "\n");
 	}
-	log_cb(RETRO_LOG_ERROR, LOGPRE "};\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "};\n");
 
     return 0;
 }

@@ -82,14 +82,14 @@ int main (int argc,char *argv[])
 	filebuf=malloc(len+16);
 	if (!filebuf)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Memory allocation error\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Memory allocation error\n");
 		fclose (f);
 		return 3;
 	}
 	memset (filebuf,0,len+16);
 	if (fread(filebuf,1,len,f)!=len)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Read error\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Read error\n");
 		fclose (f);
 		free (filebuf);
 		return 4;

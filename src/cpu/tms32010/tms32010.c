@@ -258,7 +258,7 @@ static void other_7F_opcodes(void)  { }
 
 static void illegal(void)
 {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32010:  PC=%04x,  Illegal opcode = %04x\n", (R.PC-1), R.opcode.w.l);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "TMS32010:  PC=%04x,  Illegal opcode = %04x\n", (R.PC-1), R.opcode.w.l);
 }
 
 static void abst(void)
@@ -768,7 +768,7 @@ static int Ext_IRQ(void)
 {
 	if (INTM == 0)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32010:  EXT INTERRUPT\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "TMS32010:  EXT INTERRUPT\n");
 		R.INTF = TMS32010_INT_NONE;
 		SET(INTM_FLAG);
 		PUSH_STACK(R.PC);

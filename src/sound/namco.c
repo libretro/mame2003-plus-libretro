@@ -653,7 +653,7 @@ WRITE_HANDLER( namcos1_sound_w )
 	/* verify the offset */
 	if (offset > 63)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "NAMCOS1 sound: Attempting to write past the 64 registers segment\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "NAMCOS1 sound: Attempting to write past the 64 registers segment\n");
 		return;
 	}
 

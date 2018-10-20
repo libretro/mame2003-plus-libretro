@@ -2583,7 +2583,7 @@ OP(xycb,fe) { WM( EA, SET(7,RM(EA)) );								} /* SET  7,(XY+o)	  */
 OP(xycb,ff) { _A = SET(7, RM(EA) ); WM( EA,_A );					} /* SET  7,A=(XY+o)  */
 
 OP(illegal,1) {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80 #%d ill. opcode $%02x $%02x\n", 
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d ill. opcode $%02x $%02x\n", 
 			cpu_getactivecpu(), cpu_readop((_PCD-1)&0xffff), cpu_readop(_PCD));
 }
 
@@ -3171,7 +3171,7 @@ OP(fd,ff) { illegal_1(); op_ff();									} /* DB   FD		  */
 
 OP(illegal,2)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Z80 #%d ill. opcode $ed $%02x\n",
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80 #%d ill. opcode $ed $%02x\n",
 			cpu_getactivecpu(), cpu_readop((_PCD-1)&0xffff));
 }
 
@@ -3999,7 +3999,7 @@ void z80_init(void)
 		SZHVC_sub = (UINT8 *)malloc(2*256*256);
 		if( !SZHVC_add || !SZHVC_sub )
 		{          
-      log_cb(RETRO_LOG_WARN, LOGPRE "Z80: failed to allocate 2 * 128K flags arrays!!!\n");
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Z80: failed to allocate 2 * 128K flags arrays!!!\n");
 
       /* TODO: Don't abort, switch back to main thread and exit cleanly: 
       * This is only used if a malloc fails in src/cpu/z80/z80.c so not too high a priority */

@@ -1099,7 +1099,7 @@ static INLINE UINT32 SRLL(UINT32 dest, UINT8 count)
  ******************************************/
 static void  zinvalid(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Z8000 invalid opcode %04x: %04x\n", PC, Z.op[0]);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Z8000 invalid opcode %04x: %04x\n", PC, Z.op[0]);
 }
 
 /******************************************

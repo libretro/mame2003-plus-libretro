@@ -371,7 +371,7 @@ static INLINE void generate_exception(int exception)
 
   if(!src2val)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor exception generating exception: src2val is null\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Atari Simplified Architecture Processor exception generating exception: src2val is null\n");
 		exit(1);
 	}
   
@@ -429,7 +429,7 @@ unsigned asap_get_context(void *dst)
       memcpy(&asap.r[0], &src2val[REGBASE], 32 * sizeof(UINT32));
     else
     {
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor get_context: src2val is null\n");
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Atari Simplified Architecture Processor get_context: src2val is null\n");
       exit(1);
     }
     *(asap_regs *)dst = asap;
@@ -450,7 +450,7 @@ void asap_set_context(void *src)
 			memcpy(&src2val[REGBASE], &asap.r[0], 32 * sizeof(UINT32));
     else
     {
-      log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor set_context: src2val is null\n");
+      log_cb(RETRO_LOG_DEBUG, LOGPRE "Atari Simplified Architecture Processor set_context: src2val is null\n");
       exit(1);
     }
     UPDATEPC();
@@ -507,7 +507,7 @@ static void init_tables(void)
   }
   else
   {
-    log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor init: src2val is null\n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Atari Simplified Architecture Processor init: src2val is null\n");
     exit(1);
   }
 }
@@ -522,7 +522,7 @@ void asap_reset(void *param)
   /* initialize the state */
   if(!src2val)
   {
-    log_cb(RETRO_LOG_ERROR, LOGPRE "Atari Simplified Architecture Processor reset: src2val is null\n");
+    log_cb(RETRO_LOG_DEBUG, LOGPRE "Atari Simplified Architecture Processor reset: src2val is null\n");
     exit(1);
   }
 

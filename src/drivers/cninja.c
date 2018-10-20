@@ -131,10 +131,10 @@ static READ16_HANDLER( robocop2_prot_r )
 		case 0x4e6: /* Dip switches */
 			return readinputport(2);
 		case 0x504: /* PC: 6b6.  b4, 2c, 36 written before read */
-			log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset);
 			return 0x84;
 	}
-	log_cb(RETRO_LOG_WARN, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Protection PC %06x: warning - read unmapped memory address %04x\n",activecpu_get_pc(),offset);
 	return 0;
 }
 

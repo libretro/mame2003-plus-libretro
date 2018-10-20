@@ -156,7 +156,7 @@ WRITE_HANDLER( taitosound_slave_port_w )
 	tc0140syt.submode = data;
 	/*logerror("taitosnd: Slave cpu mode [%02x]\n", data);*/
 	if (data > 6)
-		log_cb(RETRO_LOG_WARN, LOGPRE "tc0140syt error : Slave cpu unknown mode[%02x]\n", data);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "tc0140syt error : Slave cpu unknown mode[%02x]\n", data);
 }
 
 WRITE_HANDLER( taitosound_slave_comm_w )

@@ -391,7 +391,7 @@ static void UPD7759_cmd_w(int chip, UINT8 data)
 				return;
 
 			default:
-				log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759.%d Unknown parameter mode %d ?\n", chip, ch->param_mode);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759.%d Unknown parameter mode %d ?\n", chip, ch->param_mode);
 				ch->param_mode = 0;
 		}
 	}
@@ -430,7 +430,7 @@ static void UPD7759_cmd_w(int chip, UINT8 data)
 		case 0xc0:
 			if(data == 0xff) {
 				if(UPD7759_chips.intf->mode == UPD7759_STANDALONE_MODE)
-					log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759.%d: cmd_w 0xff in standalone mode\n", chip);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759.%d: cmd_w 0xff in standalone mode\n", chip);
 				if(ch->drq && ch->started)
 				{
 					ch->drq = 0;
@@ -438,7 +438,7 @@ static void UPD7759_cmd_w(int chip, UINT8 data)
 				}
 			}
 			else
-				log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759.%d: Unknown command %02x\n", chip, data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759.%d: Unknown command %02x\n", chip, data);
 		break;
 	}
 }
@@ -461,7 +461,7 @@ void UPD7759_reset_w(int chip, UINT8 data)
 		return;
 
 	if(chip >= UPD7759_chips.intf->num) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759_reset_w() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759_reset_w() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
 		return;
 	}
 
@@ -490,7 +490,7 @@ void UPD7759_start_w(int chip, UINT8 data)
 		return;
 
 	if(chip >= UPD7759_chips.intf->num) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759_start_w() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759_start_w() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
 		return;
 	}
 
@@ -502,12 +502,12 @@ void UPD7759_start_w(int chip, UINT8 data)
 		UINT8 scount;
 
 		if(memcmp(ch->cur_rombank+1, "\x5A\xA5\x69\x55", 4))
-			log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759.%d: Header check failure on sample start\n", chip);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759.%d: Header check failure on sample start\n", chip);
 
 		scount = ch->cur_rombank[0];
 
 		if(ch->port > scount) {
-			log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759.%d: Sample number %x is higher than rom sample number (%x)\n", chip, ch->port, scount);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759.%d: Sample number %x is higher than rom sample number (%x)\n", chip, ch->port, scount);
 			return;
 		}
 
@@ -533,7 +533,7 @@ void UPD7759_port_w(int chip, UINT8 data)
 		return;
 
 	if(chip >= UPD7759_chips.intf->num) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759_port_w() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759_port_w() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
 		return;
 	}
 
@@ -553,7 +553,7 @@ int UPD7759_busy_r(int chip)
 		return 0;
 
 	if(chip >= UPD7759_chips.intf->num) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759_busy_r() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759_busy_r() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
 		return 0;
 	}
 
@@ -568,7 +568,7 @@ void UPD7759_set_bank_base(int chip, UINT32 base)
 		return;
 
 	if(chip >= UPD7759_chips.intf->num) {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "UPD7759_set_bank_base() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "UPD7759_set_bank_base() called with channel = %d, but only %d channels allocated\n", chip, UPD7759_chips.intf->num);
 		return;
 	}
 

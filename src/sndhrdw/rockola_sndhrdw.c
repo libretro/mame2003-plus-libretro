@@ -827,7 +827,7 @@ static void rockola_speech_w(data8_t data, data16_t *table, int start)
 				break;
 
 			default:
-				log_cb(RETRO_LOG_WARN, LOGPRE "speech: unknown command: 0x%x\n", data);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "speech: unknown command: 0x%x\n", data);
 			}
 			break;
 

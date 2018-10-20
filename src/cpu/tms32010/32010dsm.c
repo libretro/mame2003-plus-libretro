@@ -305,7 +305,7 @@ unsigned Dasm32010(char *str, unsigned pc)
 			case 'w': w <<=1; w |= ((code & (1<<bit)) ? 1 : 0); bit--; break;
 			case ' ': break;
 			case '1': case '0':  bit--; break;
-			case '\0': log_cb(RETRO_LOG_ERROR, LOGPRE "premature end of parse string, opcode %x, bit = %d\n",code,bit); exit(1);
+			case '\0': log_cb(RETRO_LOG_DEBUG, LOGPRE "premature end of parse string, opcode %x, bit = %d\n",code,bit); exit(1);
 		}
 		cp++;
 	}
@@ -331,7 +331,7 @@ unsigned Dasm32010(char *str, unsigned pc)
 				case 'S': sprintf(num,",%d",s); break;
 				case 'W': sprintf(num,"%04Xh",w); break;
 				default:
-					log_cb(RETRO_LOG_ERROR, LOGPRE "illegal escape character in format '%s'\n",Op[op].fmt);
+					log_cb(RETRO_LOG_DEBUG, LOGPRE "illegal escape character in format '%s'\n",Op[op].fmt);
 					exit(1);
 			}
 			q = num; while (*q) *str++ = *q++;

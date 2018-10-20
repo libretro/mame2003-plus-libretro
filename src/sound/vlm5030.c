@@ -597,7 +597,7 @@ void VLM5030_ST(int pin )
 					                |        VLM5030_rom[(table+1)&VLM5030_address_mask];
         /* show unsupported parameter message */
         if( interp_step != 1)
-          log_cb(RETRO_LOG_WARN, LOGPRE "No %d %dBPS parameter",table/2,interp_step*2400);
+          log_cb(RETRO_LOG_DEBUG, LOGPRE "No %d %dBPS parameter",table/2,interp_step*2400);
 				}
 				VLM5030_update();
 				/* log_cb(RETRO_LOG_DEBUG, LOGPRE "VLM5030 %02X start adr=%04X\n",table/2,VLM5030_address ); */

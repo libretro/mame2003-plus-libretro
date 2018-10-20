@@ -1678,7 +1678,7 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 
 		default:
 			if (r < 0x120)
-				log_cb(RETRO_LOG_ERROR, LOGPRE "YMF262: write to unknown register (set#2): %03x value=%02x\n",r,v);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF262: write to unknown register (set#2): %03x value=%02x\n",r,v);
 		break;
 		}
 
@@ -1738,7 +1738,7 @@ static void OPL3WriteReg(OPL3 *chip, int r, int v)
 		break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "YMF262: write to unknown register: %02x value=%02x\n",r,v);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "YMF262: write to unknown register: %02x value=%02x\n",r,v);
 		break;
 		}
 		break;
@@ -2251,7 +2251,7 @@ static int OPL3_LockTable(void)
 	if (cymfile)
 		timer_pulse ( TIME_IN_HZ(110), 0, cymfile_callback); /*110 Hz pulse timer*/
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Could not create ymf262_.cym file\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Could not create ymf262_.cym file\n");
 #endif
 
 	return 0;

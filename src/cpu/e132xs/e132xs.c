@@ -598,7 +598,7 @@ void e132xs_set_entry_point(int which)
 			break;
 
 		default:
-			log_cb(RETRO_LOG_WARN, LOGPRE "E1-32XS: Entry Point Error. Target not defined (= %d)\n",which);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "E1-32XS: Entry Point Error. Target not defined (= %d)\n",which);
 			break;
 	}
 }
@@ -1148,7 +1148,7 @@ void e132xs_movd(void)
 
 		if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) )
 		{	/*future expansion*/
-			log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC or SR used in RET instruction @ %x\n", PC );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Denoted PC or SR used in RET instruction @ %x\n", PC );
 		}
 		else
 		{
@@ -1247,13 +1247,13 @@ void e132xs_divu(void)
 
 	if( S_CODE == D_CODE && S_CODE == (D_CODE + INC) )
 	{
-		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted the same register code in DIVU instruction @ %x\n", PC );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Denoted the same register code in DIVU instruction @ %x\n", PC );
 	}
 	else
 	{
 		if( (S_CODE == PC_CODE && !S_BIT) && (S_CODE == SR_CODE && !S_BIT) )
 		{
-			log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC / SR as source register in DIVU instruction @ %x\n", PC );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Denoted PC / SR as source register in DIVU instruction @ %x\n", PC );
 		}
 		else
 		{
@@ -1318,13 +1318,13 @@ void e132xs_divs(void)
 
 	if( S_CODE == D_CODE && S_CODE == (D_CODE + INC) )
 	{
-		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted the same register code in DIVS instruction @ %x\n", PC );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Denoted the same register code in DIVS instruction @ %x\n", PC );
 	}
 	else
 	{
 		if( (S_CODE == PC_CODE && !S_BIT) && (S_CODE == SR_CODE && !S_BIT) )
 		{
-			log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC / SR as source register in DIVS instruction @ %x\n", PC );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "Denoted PC / SR as source register in DIVS instruction @ %x\n", PC );
 		}
 		else
 		{
@@ -2579,7 +2579,7 @@ void e132xs_shl(void)
 
 void reserved(void)
 {
-	log_cb(RETRO_LOG_WARN, LOGPRE "- Reserved opcode executed @ %x, OP = %x\n", OP, PC );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "- Reserved opcode executed @ %x, OP = %x\n", OP, PC );
 }
 
 void e132xs_testlz(void)
@@ -2870,7 +2870,7 @@ void e132xs_ldxx2(void)
 
 	if( (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		log_cb(RETRO_LOG_WARN, LOGPRE "- In e132xs_ldxx2 must not denote PC or SR. PC = %x\n", PC );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "- In e132xs_ldxx2 must not denote PC or SR. PC = %x\n", PC );
 	}
 	else
 	{
@@ -3274,7 +3274,7 @@ void e132xs_stxx2(void)
 
 	if( (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		log_cb(RETRO_LOG_WARN, LOGPRE "In e132xs_stxx2 must not denote PC or SR. PC = %x\n", PC );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "In e132xs_stxx2 must not denote PC or SR. PC = %x\n", PC );
 	}
 	else
 	{
@@ -3462,7 +3462,7 @@ void e132xs_mulu(void)
 	/*PC or SR aren't denoted, else result is undefined*/
 	if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) || (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC or SR in MULU instruction @ x\n", PC );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Denoted PC or SR in MULU instruction @ x\n", PC );
 	}
 	else
 	{
@@ -3512,7 +3512,7 @@ void e132xs_muls(void)
 	/*PC or SR aren't denoted, else result is undefined*/
 	if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) || (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC or SR in MULS instruction @ x\n", PC );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Denoted PC or SR in MULS instruction @ x\n", PC );
 	}
 	else
 	{
@@ -3912,7 +3912,7 @@ void e132xs_mul(void)
 	/*PC or SR aren't denoted, else result is undefined*/
 	if( (S_CODE == PC_CODE && !S_BIT) || (S_CODE == SR_CODE && !S_BIT) || (D_CODE == PC_CODE && !D_BIT) || (D_CODE == SR_CODE && !D_BIT) )
 	{
-		log_cb(RETRO_LOG_WARN, LOGPRE "Denoted PC or SR in MUL instruction @ x\n", PC );
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Denoted PC or SR in MUL instruction @ x\n", PC );
 	}
 	else
 	{

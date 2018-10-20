@@ -2488,16 +2488,16 @@ static void FM_ADPCMAWrite(YM2610 *F2610,int r,int v)
 					adpcm[c].flag      = 1;
 
 					if(F2610->pcmbuf==NULL){					/* Check ROM Mapped */
-						log_cb(RETRO_LOG_ERROR, LOGPRE "YM2608-YM2610: ADPCM-A rom not mapped\n");
+						log_cb(RETRO_LOG_DEBUG, LOGPRE "YM2608-YM2610: ADPCM-A rom not mapped\n");
 						adpcm[c].flag = 0;
 					} else{
 						if(adpcm[c].end >= F2610->pcm_size){	/* Check End in Range */
-							log_cb(RETRO_LOG_ERROR, LOGPRE "YM2610: ADPCM-A end out of range: $%08x\n",adpcm[c].end);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "YM2610: ADPCM-A end out of range: $%08x\n",adpcm[c].end);
 							/*adpcm[c].end = F2610->pcm_size-1;*/ /* JB: DO NOT uncomment this, otherwise you will break the comparison in the ADPCM_CALC_CHA() */
 						}
 						if(adpcm[c].start >= F2610->pcm_size)	/* Check Start in Range */
 						{
-							log_cb(RETRO_LOG_ERROR, LOGPRE "YM2608-YM2610: ADPCM-A start out of range: $%08x\n",adpcm[c].start);
+							log_cb(RETRO_LOG_DEBUG, LOGPRE "YM2608-YM2610: ADPCM-A start out of range: $%08x\n",adpcm[c].start);
 							adpcm[c].flag = 0;
 						}
 					}
@@ -3664,7 +3664,7 @@ int YM2608Write(int n, int a,UINT8 v)
 			switch( addr )
 			{
 			case 0x0e:	/* DAC data */
-				log_cb(RETRO_LOG_WARN, LOGPRE "YM2608: write to DAC data (unimplemented) value=%02x\n",v);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "YM2608: write to DAC data (unimplemented) value=%02x\n",v);
 				break;
 			default:
 				/* 0x00-0x0d */
@@ -3715,7 +3715,7 @@ UINT8 YM2608Read(int n,int a)
 		{
 			if(addr == 0x0f)
 			{
-				log_cb(RETRO_LOG_WARN, LOGPRE "YM2608 A/D convertion is accessed but not implemented !\n");
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "YM2608 A/D convertion is accessed but not implemented !\n");
 				ret = 0x80; /* 2's complement PCM data - result from A/D convertion */
 			}
 		}
@@ -4363,7 +4363,7 @@ int YM2610Write(int n, int a, UINT8 v)
 				break;
 
 			default:
-				log_cb(RETRO_LOG_WARN, LOGPRE "YM2610: write to unknown deltat register %02x val=%02x\n",addr,v);
+				log_cb(RETRO_LOG_DEBUG, LOGPRE "YM2610: write to unknown deltat register %02x val=%02x\n",addr,v);
 				break;
 			}
 
