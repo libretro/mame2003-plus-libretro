@@ -5838,5 +5838,19 @@ Other Sun games
 	DRIVER( drmarios01 )	/* Vs. Dr. Mario (Translation Chinese)(2002-10) */
 	DRIVER( mrio2002 )	/* Vs. Super Mario Bros. 2002 */
 	DRIVER( suprsktr )	/* Vs. Super Skater Bros. */
-		
+	DRIVER( kovss01 )    /* Knights of Valour (Enhanced Power)(ver. 117) */
+	DRIVER( kov100s01 )  /* Knights of Valour (Enhanced Power)(ver. 100) */
+	DRIVER( kov115s01 )  /* Knights of Valour (Enhanced Power)(ver. 115) */
+	DRIVER( kov115s02 )  /* Knights of Valour (The Latest 2018-8-12 Super Enhanced Version Of The Rom Energy Collector Version ---Corrected Version 2 Slow Version Of The Low Damage)(ver. 115) */
+	DRIVER( kov115s03 )  /* Knights of Valour (The Latest 2018-8-11 Reduce The Basic Perfect Version Of Damage. Zhang Lingjian Should Not Exceed 30 Combos)(ver. 115) */
+	DRIVER( kov115s04 )  /* Knights of Valour (The Latest 2018-8-11 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 1)(ver. 115) */
+	DRIVER( kov115s05 )  /* Knights of Valour (The Latest 2018-8-11 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 2)(ver. 115) */
+	DRIVER( kov115s06 )  /* Knights of Valour (The Latest 2018-8-12 Super Enhanced Version Of The Rom Energy Collector Quick Version --- Corrected Version 1 Restore Big Sword Damage)(ver. 115) */
+	DRIVER( kov115s07 )  /* Knights of Valour (The Latest 2017-8-30 Reduce Damage To The Lowest Level Of Damage To The Three Countries)(ver. 115) */
+	DRIVER( kov115s08 )  /* Knights of Valour (The Latest 2017-8-30 Reduce The Basic Perfect Version Of Damage. Zhang Lingjian Should Not Exceed 30 Combos)(ver. 115) */
+	DRIVER( kov115s09 )  /* Knights of Valour (The Latest 2017-5-20 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 1)(ver. 115) */
+	DRIVER( kov115s10 )  /* Knights of Valour (The Latest 2017-5-20 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 2)(ver. 115) */
+	DRIVER( kov115s11 )  /* Knights of Valour (The Latest 2017 Super Enhanced Version)(ver. 115) */
+
+
 #endif	/* DRIVER_RECURSIVE */
