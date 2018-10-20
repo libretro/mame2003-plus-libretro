@@ -1,7 +1,8 @@
 # MAME 2003-Plus CHANGELOG
 
 * Lead developer: arcadez with code additions via iq_132 and BritneysPAIRS.
-* Repository maintainers: arcadez, grant2258, and markwkidd.
+* MAME 2003 Plus Repository maintainers: arcadez, grant2258, and markwkidd.
+* HBMAME 2003 Plus Repository maintainers: GXB(SumavisionQ5).
 
 ## New games
 
@@ -326,6 +327,20 @@
 * Vs. Dr. Mario (Translation Chinese)(2002-10)
 * Vs. Super Mario Bros. 2002
 * Vs. Super Skater Bros.
+* Knights of Valour (Enhanced Power)(ver. 117)
+* Knights of Valour (Enhanced Power)(ver. 100)
+* Knights of Valour (Enhanced Power)(ver. 115)
+* Knights of Valour (The Latest 2018-8-12 Super Enhanced Version Of The Rom Energy Collector Version ---Corrected Version 2 Slow Version Of The Low Damage)(ver. 115)
+* Knights of Valour (The Latest 2018-8-11 Reduce The Basic Perfect Version Of Damage. Zhang Lingjian Should Not Exceed 30 Combos)(ver. 115)
+* Knights of Valour (The Latest 2018-8-11 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 1)(ver. 115)
+* Knights of Valour (The Latest 2018-8-11 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 2)(ver. 115)
+* Knights of Valour (The Latest 2018-8-12 Super Enhanced Version Of The Rom Energy Collector Quick Version --- Corrected Version 1 Restore Big Sword Damage)(ver. 115)
+* Knights of Valour (The Latest 2017-8-30 Reduce Damage To The Lowest Level Of Damage To The Three Countries)(ver. 115)
+* Knights of Valour (The Latest 2017-8-30 Reduce The Basic Perfect Version Of Damage. Zhang Lingjian Should Not Exceed 30 Combos)(ver. 115)
+* Knights of Valour (The Latest 2017-5-20 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 1)(ver. 115)
+* Knights of Valour (The Latest 2017-5-20 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 2)(ver. 115)
+* Knights of Valour (The Latest 2017 Super Enhanced Version)(ver. 115)
+
 
 ## Games now with sound
 
