@@ -694,7 +694,7 @@ static UINT32 compile_one(struct drccore *drc, UINT32 pc)
 	/* handle the results */		
 	if (!(result & RECOMPILE_SUCCESSFUL))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Unimplemented op %08X (%02X,%02X)\n", *opptr, *opptr >> 26, *opptr & 0x3f);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Unimplemented op %08X (%02X,%02X)\n", *opptr, *opptr >> 26, *opptr & 0x3f);
 		mips3_exit();
 		exit(1);
 	}
@@ -2463,7 +2463,7 @@ if ((nextop >> 26) == 0x2a &&
 			return RECOMPILE_SUCCESSFUL_CP(1,4);
 #if 0
 
-			case 0x30:	/* LL */		log_cb(RETRO_LOG_ERROR, LOGPRE "mips3 Unhandled op: LL\n");									break;
+			case 0x30:	/* LL */		log_cb(RETRO_LOG_DEBUG, LOGPRE "mips3 Unhandled op: LL\n");									break;
 
 #endif
 
@@ -2512,7 +2512,7 @@ if ((nextop >> 26) == 0x2a &&
 				return RECOMPILE_SUCCESSFUL | RECOMPILE_MAY_CAUSE_EXCEPTION | RECOMPILE_END_OF_STRING;
 			}
 
-/*		case 0x34:	// LLD		log_cb(RETRO_LOG_ERROR, LOGPRE "mips3 Unhandled op: LLD\n");									break; */
+/*		case 0x34:	// LLD		log_cb(RETRO_LOG_DEBUG, LOGPRE "mips3 Unhandled op: LLD\n");									break; */
 
 		case 0x35:	/* LDC1 */
 			_mov_m32abs_r32(&mips3_icount, REG_EBP);								/* mov	[mips3_icount],ebp*/
@@ -2612,7 +2612,7 @@ if ((nextop >> 26) == 0x2a &&
 			_mov_r32_m32abs(REG_EBP, &mips3_icount);								/* mov	ebp,[mips3_icount]*/
 			return RECOMPILE_SUCCESSFUL_CP(1,4);
 
-/*		case 0x38:	// SC 	log_cb(RETRO_LOG_ERROR, LOGPRE "mips3 Unhandled op: SC\n");									break;*/
+/*		case 0x38:	// SC 	log_cb(RETRO_LOG_DEBUG, LOGPRE "mips3 Unhandled op: SC\n");									break;*/
 
 		case 0x39:	/* SWC1 */
 			_mov_m32abs_r32(&mips3_icount, REG_EBP);								/* mov	[mips3_icount],ebp*/
@@ -2651,7 +2651,7 @@ if ((nextop >> 26) == 0x2a &&
 			return RECOMPILE_SUCCESSFUL_CP(1,4);
 
 /*		case 0x3b:	// SWC3		invalid_instruction(op);												break;*/
-/*		case 0x3c:	// SCD		log_cb(RETRO_LOG_ERROR, LOGPRE "mips3 Unhandled op: SCD\n");									break;*/
+/*		case 0x3c:	// SCD		log_cb(RETRO_LOG_DEBUG, LOGPRE "mips3 Unhandled op: SCD\n");									break;*/
 
 		case 0x3d:	/* SDC1 */
 			_mov_m32abs_r32(&mips3_icount, REG_EBP);								/* mov	[mips3_icount],ebp*/

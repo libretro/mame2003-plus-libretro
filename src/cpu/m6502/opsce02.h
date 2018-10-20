@@ -173,7 +173,7 @@
  ***************************************************************/
 #define AUG 													\
  t1=RDOPARG(); t2=RDOPARG(); t3=RDOPARG(); \
- retro_log_cb(RETRO_LOG_ERROR, LOGPRE "m65ce02 at pc:%.4x reserved op aug %.2x %.2x %.2x\n", \
+ retro_log_cb(RETRO_LOG_DEBUG, LOGPRE "m65ce02 at pc:%.4x reserved op aug %.2x %.2x %.2x\n", \
   t1,t2,t3);
 
 /* 65ce02 ******************************************************

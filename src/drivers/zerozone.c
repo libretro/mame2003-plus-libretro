@@ -50,7 +50,7 @@ static READ16_HANDLER( zerozone_input_r )
 			return readinputport(3);
 	}
 
-log_cb(RETRO_LOG_WARN, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x800000+offset);
+log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #0 PC %06x: warning - read unmapped memory address %06x\n",activecpu_get_pc(),0x800000+offset);
 
 	return 0x00;
 }

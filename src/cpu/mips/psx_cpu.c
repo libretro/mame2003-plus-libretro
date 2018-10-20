@@ -744,7 +744,7 @@ int mips_execute( int cycles )
 					break;
 				case RS_CFC:
 					/* todo: */
-					log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP0 CFC not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 CFC not supported\n", mipscpu.pc );
 					mips_stop();
 					mips_advance_pc();
 					break;
@@ -756,7 +756,7 @@ int mips_execute( int cycles )
 					break;
 				case RS_CTC:
 					/* todo: */
-					log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP0 CTC not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 CTC not supported\n", mipscpu.pc );
 					mips_stop();
 					mips_advance_pc();
 					break;
@@ -765,19 +765,19 @@ int mips_execute( int cycles )
 					{
 					case RT_BCF:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP0 BCF not supported\n", mipscpu.pc );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 BCF not supported\n", mipscpu.pc );
 						mips_stop();
 						mips_advance_pc();
 						break;
 					case RT_BCT:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP0 BCT not supported\n", mipscpu.pc );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 BCT not supported\n", mipscpu.pc );
 						mips_stop();
 						mips_advance_pc();
 						break;
 					default:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 						mips_stop();
 						mips_advance_pc();
 						break;
@@ -795,7 +795,7 @@ int mips_execute( int cycles )
 							break;
 						default:
 							/* todo: */
-							log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+							log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 							mips_stop();
 							mips_advance_pc();
 							break;
@@ -803,7 +803,7 @@ int mips_execute( int cycles )
 						break;
 					default:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP0 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 						mips_stop();
 						mips_advance_pc();
 						break;
@@ -824,25 +824,25 @@ int mips_execute( int cycles )
 				{
 				case RS_MFC:
 					/* todo: */
-					log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 BCT not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 BCT not supported\n", mipscpu.pc );
 					mips_stop();
 					mips_advance_pc();
 					break;
 				case RS_CFC:
 					/* todo: */
-					log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 CFC not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 CFC not supported\n", mipscpu.pc );
 					mips_stop();
 					mips_advance_pc();
 					break;
 				case RS_MTC:
 					/* todo: */
-					log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 MTC not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 MTC not supported\n", mipscpu.pc );
 					mips_stop();
 					mips_advance_pc();
 					break;
 				case RS_CTC:
 					/* todo: */
-					log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 CTC not supported\n", mipscpu.pc );
+					log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 CTC not supported\n", mipscpu.pc );
 					mips_stop();
 					mips_advance_pc();
 					break;
@@ -851,19 +851,19 @@ int mips_execute( int cycles )
 					{
 					case RT_BCF:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 BCF not supported\n", mipscpu.pc );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 BCF not supported\n", mipscpu.pc );
 						mips_stop();
 						mips_advance_pc();
 						break;
 					case RT_BCT:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 BCT not supported\n", mipscpu.pc );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 BCT not supported\n", mipscpu.pc );
 						mips_stop();
 						mips_advance_pc();
 						break;
 					default:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 						mips_stop();
 						mips_advance_pc();
 						break;
@@ -874,13 +874,13 @@ int mips_execute( int cycles )
 					{
 					case 1:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 						mips_stop();
 						mips_advance_pc();
 						break;
 					default:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 						mips_stop();
 						mips_advance_pc();
 						break;
@@ -918,19 +918,19 @@ int mips_execute( int cycles )
 					{
 					case RT_BCF:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP2 BCF not supported\n", mipscpu.pc );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 BCF not supported\n", mipscpu.pc );
 						mips_stop();
 						mips_advance_pc();
 						break;
 					case RT_BCT:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP2 BCT not supported\n", mipscpu.pc );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 BCT not supported\n", mipscpu.pc );
 						mips_stop();
 						mips_advance_pc();
 						break;
 					default:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP2 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 						mips_stop();
 						mips_advance_pc();
 						break;
@@ -945,7 +945,7 @@ int mips_execute( int cycles )
 						break;
 					default:
 						/* todo: */
-						log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP2 unknown command %08x\n", mipscpu.pc, mipscpu.op );
+						log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP2 unknown command %08x\n", mipscpu.pc, mipscpu.op );
 						mips_stop();
 						mips_advance_pc();
 						break;
@@ -958,7 +958,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: LB SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LB SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -995,7 +995,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: LH SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LH SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1032,7 +1032,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: LWL SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LWL SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1099,7 +1099,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: LW SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LW SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1122,7 +1122,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: LBU SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LBU SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1159,7 +1159,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: LHU SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LHU SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1196,7 +1196,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: LWR SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LWR SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1263,7 +1263,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: SB SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SB SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1302,7 +1302,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: SH SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SH SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1341,7 +1341,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: SWL SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SWL SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1411,7 +1411,7 @@ int mips_execute( int cycles )
 			{
 				/* todo: */
 /* used by bootstrap
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: SW SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SW SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 */
 				mips_advance_pc();
@@ -1436,7 +1436,7 @@ int mips_execute( int cycles )
 			if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: SWR SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SWR SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1503,7 +1503,7 @@ int mips_execute( int cycles )
 			break;
 		case OP_LWC1:
 			/* todo: */
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 LWC not supported\n", mipscpu.pc );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 LWC not supported\n", mipscpu.pc );
 			mips_stop();
 			mips_advance_pc();
 			break;
@@ -1516,7 +1516,7 @@ int mips_execute( int cycles )
 			else if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: LWC2 SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: LWC2 SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1539,7 +1539,7 @@ int mips_execute( int cycles )
 			break;
 		case OP_SWC1:
 			/* todo: */
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: COP1 SWC not supported\n", mipscpu.pc );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: COP1 SWC not supported\n", mipscpu.pc );
 			mips_stop();
 			mips_advance_pc();
 			break;
@@ -1552,7 +1552,7 @@ int mips_execute( int cycles )
 			else if( ( mipscpu.cp0r[ CP0_SR ] & SR_ISC ) != 0 )
 			{
 				/* todo: */
-				log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: SWC2 SR_ISC not supported\n", mipscpu.pc );
+				log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: SWC2 SR_ISC not supported\n", mipscpu.pc );
 				mips_stop();
 				mips_advance_pc();
 			}
@@ -1573,7 +1573,7 @@ int mips_execute( int cycles )
 			}
 			break;
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: unknown opcode %08x\n", mipscpu.pc, mipscpu.op );
+			log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: unknown opcode %08x\n", mipscpu.pc, mipscpu.op );
 			mips_stop();
 			mips_exception( EXC_RI );
 			break;
@@ -2951,6 +2951,6 @@ static void docop2( int gteop )
 		break;
 	}
 	usrintf_showmessage_secs( 1, "unknown GTE op %08x", gteop );
-	log_cb(RETRO_LOG_ERROR, LOGPRE  "%08x: unknown GTE op %08x\n", mipscpu.pc, gteop );
+	log_cb(RETRO_LOG_DEBUG, LOGPRE  "%08x: unknown GTE op %08x\n", mipscpu.pc, gteop );
 	mips_stop();
 }

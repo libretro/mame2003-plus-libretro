@@ -659,7 +659,7 @@ int pokey_sh_start(const struct MachineSound *msound)
 
 		if( p->channel == -1 )
 		{
-			log_cb(RETRO_LOG_ERROR, LOGPRE "failed to initialize sound channel\n");
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "failed to initialize sound channel\n");
             return 1;
 		}
 	}
@@ -871,7 +871,7 @@ int pokey_register_r(int chip, int offs)
 			}
 		}
 		else
-		log_cb(RETRO_LOG_WARN, LOGPRE "PC %04x: warning - read p[chip] #%d POT%d\n", activecpu_get_pc(), chip, pot);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "PC %04x: warning - read p[chip] #%d POT%d\n", activecpu_get_pc(), chip, pot);
 		break;
 
     case ALLPOT_C:

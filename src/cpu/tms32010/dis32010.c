@@ -43,7 +43,7 @@ int main(int argc,char *argv[])
 
 	if(!(F=fopen(argv[1],"rb")))
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "\n%s: Can't open file %s\n",argv[0],argv[1]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "\n%s: Can't open file %s\n",argv[0],argv[1]);
 		exit(2);
 	}
 	argv++; argc--;
@@ -70,14 +70,14 @@ int main(int argc,char *argv[])
 	Buffer = calloc((filelength+1),sizeof(char));
 	if (Buffer==NULL)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Out of Memory !!!");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Out of Memory !!!");
 		fclose(F);
 		exit(3);
 	}
 	String_Output = calloc(80,sizeof(char));
 	if (String_Output==NULL)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Out of Memory !!!");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Out of Memory !!!");
 		free(Buffer);
 		fclose(F);
 		exit(4);
@@ -85,7 +85,7 @@ int main(int argc,char *argv[])
 
 	if (fseek(F,0,SEEK_SET) != 0)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Error seeking to beginning of file\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Error seeking to beginning of file\n");
 		free(String_Output);
 		free(Buffer);
 		fclose(F);
@@ -122,8 +122,8 @@ int main(int argc,char *argv[])
 	}
 	else
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "ERROR length to dump was %d ", length_to_dump/2);
-		log_cb(RETRO_LOG_ERROR, LOGPRE ", but bytes read from file were %d\n", bytes_read/2);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "ERROR length to dump was %d ", length_to_dump/2);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE ", but bytes read from file were %d\n", bytes_read/2);
 		free(String_Output);
 		free(Buffer);
 		fclose(F);

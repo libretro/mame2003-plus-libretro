@@ -433,7 +433,7 @@ static void opcodes_DX(void) { }
 
 static void illegal(void)
 {
-		log_cb(RETRO_LOG_ERROR, LOGPRE "TMS32025:  PC = %04x,  Illegal opcode = %04x\n", (R.PC-1), R.opcode.w.l);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "TMS32025:  PC = %04x,  Illegal opcode = %04x\n", (R.PC-1), R.opcode.w.l);
 }
 
 static void abst(void)

@@ -8138,7 +8138,7 @@ int main(int argc, char **argv)
 
 	if (argc != 4 && argc != 5)
 	{
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Usage: %s outfile jumptable-outfile type [ppro]\n", argv[0]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Usage: %s outfile jumptable-outfile type [ppro]\n", argv[0]);
 		exit(1);
 	}
 

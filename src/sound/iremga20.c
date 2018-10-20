@@ -186,7 +186,7 @@ READ_HANDLER( IremGA20_r )
 			break;
 
 		default:
-			log_cb(RETRO_LOG_ERROR, LOGPRE "GA20: read unk. register %d, channel %d\n", offset & 0xf, channel);
+			log_cb(RETRO_LOG_DEBUG, LOGPRE "GA20: read unk. register %d, channel %d\n", offset & 0xf, channel);
 			break;
 	}
 

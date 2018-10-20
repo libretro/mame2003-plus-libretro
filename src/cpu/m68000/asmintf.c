@@ -38,7 +38,7 @@ int illegal_pc = 0 ;
 #ifdef MAME_DEBUG
 void m68k_illegal_opcode(void)
 {
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Illegal Opcode %4x at %8x\n",illegal_op,illegal_pc);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Illegal Opcode %4x at %8x\n",illegal_op,illegal_pc);
 }
 #endif
 

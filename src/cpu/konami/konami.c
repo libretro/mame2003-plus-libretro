@@ -326,7 +326,7 @@ CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N
 	case 3: val = Y;	break; 			\
 	case 4: val = S; 	break; /* ? */	\
 	case 5: val = U;	break;			\
-	default: val = 0xff; log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
+	default: val = 0xff; log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
 }
 
 #define SETREG(val,reg) 				\
@@ -337,7 +337,7 @@ CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N,CC_N
 	case 3: Y = val;	break;			\
 	case 4: S = val;	break; /* ? */	\
 	case 5: U = val; 	break;			\
-	default: log_cb(RETRO_LOG_ERROR, LOGPRE "Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
+	default: log_cb(RETRO_LOG_DEBUG, LOGPRE "Unknown TFR/EXG idx at PC:%04x\n", PC ); break; \
 }
 
 /* opcode timings */

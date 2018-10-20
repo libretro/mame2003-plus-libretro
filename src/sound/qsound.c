@@ -158,9 +158,9 @@ int qsound_sh_start(const struct MachineSound *msound)
 #endif
 
 #if LOG_QSOUND
-	log_cb(RETRO_LOG_ERROR, LOGPRE "Pan table\n");
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "Pan table\n");
 	for (i=0; i<33; i++)
-		log_cb(RETRO_LOG_ERROR, LOGPRE "%02x ", qsound_pan_table[i]);
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "%02x ", qsound_pan_table[i]);
 #endif
 	{
 		/* Allocate stream */
@@ -365,7 +365,7 @@ void qsound_set_command(int data, int value)
 			break;
 	}
 #if LOG_QSOUND
-	log_cb(RETRO_LOG_ERROR, LOGPRE "QSOUND WRITE %02x CH%02d-R%02d =%04x\n", data, ch, reg, value);
+	log_cb(RETRO_LOG_DEBUG, LOGPRE "QSOUND WRITE %02x CH%02d-R%02d =%04x\n", data, ch, reg, value);
 #endif
 }
 

@@ -1852,7 +1852,7 @@ static int OPLL_LockTable(void)
 	if (cymfile)
 		timer_pulse ( TIME_IN_HZ(110), 0, cymfile_callback); /*110 Hz pulse timer*/
 	else
-		log_cb(RETRO_LOG_ERROR, LOGPRE "Could not create file 2413_.cym\n");
+		log_cb(RETRO_LOG_DEBUG, LOGPRE "Could not create file 2413_.cym\n");
 #endif
 
 	return 0;

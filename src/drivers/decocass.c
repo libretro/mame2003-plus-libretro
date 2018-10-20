@@ -103,7 +103,7 @@ WRITE_HANDLER( decocass_w )
 	else if (offset >= 0xe500 && offset <= 0xe5ff) { decocass_e5xx_w(offset - 0xe500,data); return; }
 	else if (offset >= 0xf000 && offset <= 0xffff) { return; }
 
-	else log_cb(RETRO_LOG_WARN, LOGPRE "CPU #%d PC %04x: warning - write %02x to unmapped memory address %04x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
+	else log_cb(RETRO_LOG_DEBUG, LOGPRE "CPU #%d PC %04x: warning - write %02x to unmapped memory address %04x\n",cpu_getactivecpu(),activecpu_get_pc(),data,offset);
 
 	rom[offset] = data;
 
