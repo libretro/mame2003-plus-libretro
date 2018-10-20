@@ -1347,7 +1347,7 @@ void retro_describe_controls(void)
     for(retro_type = RETRO_DEVICE_ID_JOYPAD_B; retro_type < NUMBER_OF_RETRO_TYPES; retro_type++)
     {
       const char *control_name;
-      int mame_ctrl_id = get_mame_ctrl_id(display_idx, retro_type);
+      int mame_ctrl_id = get_mame_ctrl_id(display_idx, retro_type) & ~IPF_PLAYERMASK ;
 
       if(mame_ctrl_id >= IPT_BUTTON1 && mame_ctrl_id <= IPT_BUTTON10)
       {
@@ -1361,7 +1361,7 @@ void retro_describe_controls(void)
       {
         case RETRO_DEVICE_ID_JOYPAD_SELECT: control_name = "Coin";  break;
         case  RETRO_DEVICE_ID_JOYPAD_START: control_name = "Start"; break;
-        default:                            control_name = game_driver->ctrl_dat->get_name(mame_ctrl_id); break;
+        default:                            control_name = game_driver->ctrl_dat->get_name(mame_ctrl_id  ); break;
       }
 
       if(string_is_empty(control_name))
@@ -1392,10 +1392,6 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
 {
   int player_flag;
 
-  /* A few games have different control names per-player. The MAME player masks are only applied to those
-     identified by mirrored_controls == false in controls.c.
-  */
-  if(!options.content_flags[CONTENT_MIRRORED_CTRLS])
   {
     switch(display_idx)
     {
@@ -1407,8 +1403,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
       case 6: player_flag = IPF_PLAYER6; break;    
     }
   }
-  else
-    player_flag = 0;
+  
 
   switch(retro_ID) /* universal default mappings */
   {
