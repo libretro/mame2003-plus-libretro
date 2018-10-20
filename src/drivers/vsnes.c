@@ -2087,13 +2087,13 @@ static struct NESinterface nes_interface =
 {
 	1,
 	{ REGION_CPU1 },
-	{ 50 },
+	{ 25 },
 };
 
 static struct DACinterface nes_dac_interface =
 {
 	1,
-	{ 50 },
+	{ 18 },
 };
 
 static struct NESinterface nes_dual_interface =
