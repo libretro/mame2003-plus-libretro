@@ -1253,18 +1253,18 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( hook )		/* (c) 1992 Irem (World) */
 	DRIVER( hooku )		/* (c) 1992 Irem America (US) */
 	DRIVER( hookj )		/* (c) 1992 Irem (Japan) */
-	DRIVER( hooks01 )	// Hook (1V4)(World)
-	DRIVER( hooks02 )	// Hook (Zinc Children's Edition Update 15-05-2018)(World)
-	DRIVER( hooks03 )	// Hook (Zinc Children's Edition Update 02-05-2018)(World)
-	DRIVER( hooks04 )	// Hook (X2 Edition)(World)
-	DRIVER( hooks05 )	// Hook (Can Be Substituted For Character)(World)
-	DRIVER( hookus01 )	// Hook (plus)(US)
-	DRIVER( hookus02 )	// Hook (Can Be Substituted For Character)(US)
-	DRIVER( hookjs01 )	// Hook (Can Be Substituted For Character)(Japan)
-	DRIVER( nbbatmans01 )	// Ninja Baseball Bat Man (X2 Edition)(World)
-	DRIVER( nbbatmans02 )	// Ninja Baseball Bat Man (1V4)(World)
-	DRIVER( nbbatmanus01 )	// Ninja Baseball Bat Man (Unknown Hack)(US)
-	DRIVER( nbbatmanus02 )	// Ninja Baseball Bat Man (New Starter Edition Update 161024)(US)
+	DRIVER( hooks01 )	/*  Hook (1V4)(World) */
+	DRIVER( hooks02 )	/*  Hook (Zinc Children's Edition Update 15-05-2018)(World) */
+	DRIVER( hooks03 )	/*  Hook (Zinc Children's Edition Update 02-05-2018)(World) */
+	DRIVER( hooks04 )	/*  Hook (X2 Edition)(World) */
+	DRIVER( hooks05 )	/*  Hook (Can Be Substituted For Character)(World) */
+	DRIVER( hookus01 )	/*  Hook (plus)(US) */
+	DRIVER( hookus02 )	/*  Hook (Can Be Substituted For Character)(US) */
+	DRIVER( hookjs01 )	/*  Hook (Can Be Substituted For Character)(Japan) */
+	DRIVER( nbbatmans01 )	/*  Ninja Baseball Bat Man (X2 Edition)(World) */
+	DRIVER( nbbatmans02 )	/*  Ninja Baseball Bat Man (1V4)(World) */
+	DRIVER( nbbatmanus01 )	/*  Ninja Baseball Bat Man (Unknown Hack)(US) */
+	DRIVER( nbbatmanus02 )	/*  Ninja Baseball Bat Man (New Starter Edition Update 161024)(US) */
 	DRIVER( rtypeleo )	/* (c) 1992 Irem (World) */
 	DRIVER( rtypelej )	/* (c) 1992 Irem (Japan) */
 	DRIVER( inthunt )	/* (c) 1993 Irem (World) */
@@ -1457,7 +1457,7 @@ const struct GameDriver *test_drivers[] =
 	DRIVER( bonzeadu )	/* B41 (c) 1988 Taito America Corporation (US) */
 	DRIVER( jigkmgri )	/* B41 (c) 1988 Taito Corporation (Japan)*/
 	DRIVER( asuka )		/* ??? (c) 1988 Taito Corporation (Japan) */
-	DRIVER( asukac )	/* Asuka & Asuka (Translation Chinese)(World) */ //飞鸟飞鸟汉化版 
+	DRIVER( asukac )	/* Asuka & Asuka (Translation Chinese)(World) 飞鸟飞鸟汉化版 */
 	DRIVER( mofflott )	/* C17 (c) 1989 Taito Corporation (Japan) */
 	DRIVER( cadash )	/* C21 (c) 1989 Taito Corporation Japan */
 	DRIVER( cadashj )	/* C21 (c) 1989 Taito Corporation */
@@ -5805,35 +5805,35 @@ Other Sun games
 	DRIVER( espgal )
 	
 	/* GXB增加的驱动 */
-	DRIVER( alpines01 )  // Alpine Ski (Translation Chinese)(set 1) 高山滑雪
-	DRIVER( frontlins01 )  // Front Line (Translation Chinese) 前线
-	DRIVER( bombjacks01 ) // Bomb Jack (Translation Chinese)(set 1) 炸弹杰克
-	DRIVER( bmbjckgr )  // Bomb Jack (Greek)
-	DRIVER( bombjckb )  // Bomb Jack (Bootleg)
-	DRIVER( bombjred )  // Bomb Jack (Red)
-	DRIVER( flstoryjs01 ) // The FairyLand Story (Translation Chinese)(Japan) 仙境物语
-	DRIVER( lkages01 ) // The Legend of Kage (Translation Chinese) 影之传说
-	DRIVER( kikikais01 ) // KiKi KaiKai (Translation Chinese) 奇奇怪界
-	DRIVER( solomonjs01 ) // Solomon no Kagi (Translation Chinese) 所罗门之钥
-	DRIVER( cameltryjs01 ) // Cameltry (Translation Chinese)(Japan, YM2610) 骆驼珠
-	DRIVER( deadconxjs01 ) // Dead Connection (Translation Chinese)(Japan) 死亡边缘
-	DRIVER( dondokodjs01 ) // Don Doko Don (Translation Chinese)(Japan) 捶捶帮/木匠兄弟
-	DRIVER( dinorexs01 ) // Dino Rex (Easy Move)(World) 
-	DRIVER( gunfrontjs01 ) // Gun Frontier (Translation Chinese)(Japan) 枪之国度
-	DRIVER( megablstjs01 ) // Mega Blast (Translation Chinese)(Japan) 空间战机
-	DRIVER( mizubakus01 ) // Mizubaku Daibouken (Translation Chinese)(Japan) 丑八怪大冒险/女士大冒险
-	DRIVER( runarks01 ) // Runark (Translation Chinese)(Japan) 森林保护神
-	DRIVER( thundfoxjs01 ) // Thunder Fox (Translation Chinese)(Japan) 雷狐行动
-	DRIVER( evilstons01 ) // Evil Stone (Translation French V2)(11.28.2007)
-	DRIVER( kurikintjs01 ) // Kuri Kinton (Translation Chinese)(Japan) 功夫金团
-	DRIVER( plottingas01 ) // Plotting (Translation Chinese)(World set 2, protected)
-	DRIVER( geminis01 ) // Gemini Wing (Translation Chinese)(Japan) 捉虫敢死队/昆虫世界
-	DRIVER( rygarjs01 ) // Argus no Senshi (Translation Chinese)(Japan) 阿尔卑斯古战士
-	DRIVER( silkworms01 ) // Silk Worm (Translation Chinese)(World) 联合大作战/中东战争
-	DRIVER( geminit ) // Gemini Wing (Hack) 
-	DRIVER( rygark ) // Argus no Senshi (Translation Korean)(Japan)
-	DRIVER( fstarfrcc ) // Final Star Force (Translation Chinese)(US) 最终星际武力
-	DRIVER( insectxs01 ) // Insector X (Translation Chinese)(World) 杀虫战记X
+	DRIVER( alpines01 )  /* Alpine Ski (Translation Chinese)(set 1) 高山滑雪 */
+	DRIVER( frontlins01 )  /* Front Line (Translation Chinese) 前线 */
+	DRIVER( bombjacks01 ) /* Bomb Jack (Translation Chinese)(set 1) 炸弹杰克 */
+	DRIVER( bmbjckgr )  /* Bomb Jack (Greek) */
+	DRIVER( bombjckb )  /* Bomb Jack (Bootleg) */
+	DRIVER( bombjred )  /* Bomb Jack (Red) */
+	DRIVER( flstoryjs01 ) /* The FairyLand Story (Translation Chinese)(Japan) 仙境物语 */
+	DRIVER( lkages01 ) /* The Legend of Kage (Translation Chinese) 影之传说 */
+	DRIVER( kikikais01 ) /* KiKi KaiKai (Translation Chinese) 奇奇怪界 */
+	DRIVER( solomonjs01 ) /* Solomon no Kagi (Translation Chinese) 所罗门之钥 */
+	DRIVER( cameltryjs01 ) /* Cameltry (Translation Chinese)(Japan, YM2610) 骆驼珠 */
+	DRIVER( deadconxjs01 ) /* Dead Connection (Translation Chinese)(Japan) 死亡边缘 */
+	DRIVER( dondokodjs01 ) /* Don Doko Don (Translation Chinese)(Japan) 捶捶帮/木匠兄弟 */
+	DRIVER( dinorexs01 ) /* Dino Rex (Easy Move)(World)  */
+	DRIVER( gunfrontjs01 ) /* Gun Frontier (Translation Chinese)(Japan) 枪之国度 */
+	DRIVER( megablstjs01 ) /* Mega Blast (Translation Chinese)(Japan) 空间战机 */
+	DRIVER( mizubakus01 ) /* Mizubaku Daibouken (Translation Chinese)(Japan) 丑八怪大冒险/女士大冒险 */
+	DRIVER( runarks01 ) /* Runark (Translation Chinese)(Japan) 森林保护神 */
+	DRIVER( thundfoxjs01 ) /* Thunder Fox (Translation Chinese)(Japan) 雷狐行动 */
+	DRIVER( evilstons01 ) /* Evil Stone (Translation French V2)(11.28.2007) */
+	DRIVER( kurikintjs01 ) /* Kuri Kinton (Translation Chinese)(Japan) 功夫金团 */
+	DRIVER( plottingas01 ) /* Plotting (Translation Chinese)(World set 2, protected) */
+	DRIVER( geminis01 ) /* Gemini Wing (Translation Chinese)(Japan) 捉虫敢死队/昆虫世界 */
+	DRIVER( rygarjs01 ) /* Argus no Senshi (Translation Chinese)(Japan) 阿尔卑斯古战士 */
+	DRIVER( silkworms01 ) /* Silk Worm (Translation Chinese)(World) 联合大作战/中东战争 */
+	DRIVER( geminit ) /* Gemini Wing (Hack)  */
+	DRIVER( rygark ) /* Argus no Senshi (Translation Korean)(Japan) */
+	DRIVER( fstarfrcc ) /* Final Star Force (Translation Chinese)(US) 最终星际武力 */
+	DRIVER( insectxs01 ) /* Insector X (Translation Chinese)(World) 杀虫战记X */
 	DRIVER( botanic )	/* (c) 1985 */
 	DRIVER( drmarios01 )	/* Vs. Dr. Mario (Translation Chinese)(2002-10) */
 	DRIVER( mrio2002 )	/* Vs. Super Mario Bros. 2002 */
@@ -6227,6 +6227,4 @@ Other Sun games
 	DRIVER( orlegendcs94 )  /* Oriental Legend (Plus)(Ver.?)(ver. 112, Chinese Board) */
 	DRIVER( orlegendes01 )  /* Oriental Legend (Enhanced Power)(ver. 112) */
 	DRIVER( orlegend111cs01 )  /* Oriental Legend (Enhanced Power)(ver. 111) */
-
-
 #endif	/* DRIVER_RECURSIVE */
