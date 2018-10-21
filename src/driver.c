@@ -5851,6 +5851,382 @@ Other Sun games
 	DRIVER( kov115s09 )  /* Knights of Valour (The Latest 2017-5-20 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 1)(ver. 115) */
 	DRIVER( kov115s10 )  /* Knights of Valour (The Latest 2017-5-20 Super Enhanced Version Rom Repair Zhuge Liang More Than 15 Level Small Sword Spike Soldier Can Not Gather Energy)(Set 2)(ver. 115) */
 	DRIVER( kov115s11 )  /* Knights of Valour (The Latest 2017 Super Enhanced Version)(ver. 115) */
+	DRIVER( killblds01 )  /* The Killing Blade (Always Have Super Move)(ver. 109, Chinese Board) */
+	DRIVER( killblds02 )  /* The Killing Blade (Easy Move)(ver. 109, Chinese Board) */
+	DRIVER( killblds03 )  /* The Killing Blade (Enable Hidden Boss)(ver. 109, Chinese Board) */
+	DRIVER( killblds04 )  /* The Killing Blade (Qun Ying Edition)(ver. 109, Chinese Board) */
+	DRIVER( kovph1 )  /* Knights of Valour Plus 2007 (Hack set 1)(ver. 119, set 1) */
+	DRIVER( kovph2 )  /* Knights of Valour Plus (The world's third test version 1.16)(ver. 119, set 1) */
+	DRIVER( kovph3 )  /* Knights of Valour Plus (948 Takes he ordinary road official version A)(ver. 119, set 1) */
+	DRIVER( kovph4 )  /* Knights of Valour Plus 2006 (Hack set 4)(ver. 119, set 1) */
+	DRIVER( kovph5 )  /* Knights of Valour Plus (Hack set 5)(ver. 119, set 1) */
+	DRIVER( kovph6 )  /* Knights of Valour Plus (Authentic 2006 Competitions V0.97)(ver. 119, set 1) */
+	DRIVER( kovph8 )  /* Knights of Valour Plus (Hack set 8)(ver. 119, set 1) */
+	DRIVER( kovph11 )  /* Knights of Valour Plus (Evil phoenix battle)(ver. 119, set 1) */
+	DRIVER( kovph12 )  /* Knights of Valour Plus (New Year gift revision)(ver. 119, set 1) */
+	DRIVER( kovph13 )  /* Knights of Valour Plus (Hack set 13)(ver. 119, set 1) */
+	DRIVER( kovph15 )  /* Knights of Valour Plus (Hack set 15)(ver. 119, set 1) */
+	DRIVER( kovph17 )  /* Knights of Valour Plus 2012 (Hack set 17)(ver. 119, set 1) */
+	DRIVER( kovph18 )  /* Knights of Valour Plus 2012 (Hack set 18)(ver. 119, set 1) */
+	DRIVER( kovph24 )  /* Knights of Valour Plus (Rich World Perfect Edition)(ver. 119, set 1) */
+	DRIVER( kovph25 )  /* Knights of Valour Plus (Rise from the ashes)(ver. 119, set 1) */
+	DRIVER( kovpluss01 )  /* Knights of Valour Plus (Lock Four-Player Mode)(ver. 119) */
+	DRIVER( kovpluss03 )  /* Knights of Valour Plus (Three Kingdoms Wars Authentic (Travel Edition))(ver. 119, set 1) */
+	DRIVER( kovpluss04 )  /* Knights of Valour Plus (Three Kingdoms Wars 2013 Yu Feng Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss05 )  /* Knights of Valour Plus (Forced Into The Burst Sword Room)(ver. 119) */
+	DRIVER( kovpluss06 )  /* Knights of Valour Plus (948 Takes The Unusual Road)(ver. 119, set 1) */
+	DRIVER( kovpluss07 )  /* Knights of Valour Plus (Cao Cao 4 People?)(ver. 119, set 1) */
+	DRIVER( kovpluss08 )  /* Knights of Valour Plus (Battle Of Chibi)(Wei Wu Wu will Fight)(ver. 119, set 1) */
+	DRIVER( kovpluss09 )  /* Knights of Valour Plus (Wind Clouds Chung Feng Front)(ver. 119, set 1) */
+	DRIVER( kovpluss12 )  /* Knights of Valour Plus (Hong Wave Filled)(ver. 119, set 1) */
+	DRIVER( kovpluss13 )  /* Knights of Valour Plus (Cao Corrected Version)(ver. 119, set 1) */
+	DRIVER( kovpluss14 )  /* Knights of Valour Plus (New Work Un The Three Kingdoms - Who Is The Deer?)(ver. 119, set 1) */
+	DRIVER( kovpluss15 )  /* Knights of Valour Plus (Authentic Miss)(ver. 119, set 1) */
+	DRIVER( kovpluss16 )  /* Knights of Valour Plus (Double Child Birthday Special Edition (12.17))(ver. 119, set 1) */
+	DRIVER( kovpluss18 )  /* Knights of Valour Plus (Super 1.0)(ver. 119, set 1) */
+	DRIVER( kovpluss19 )  /* Knights of Valour Plus (Who Is Fighting For The Wind?)(ver. 119, set 1) */
+	DRIVER( kovpluss20 )  /* Knights of Valour Plus (Shu Complex Letter (Hidden Character Version))(ver. 119, set 1) */
+	DRIVER( kovpluss21 )  /* Knights of Valour Plus (Legend Of Evil Phoenix, True Unparalleled Dance, And The Sublimation Of Feng)(ver. 119, set 1) */
+	DRIVER( kovpluss24 )  /* Knights of Valour Plus (New Third Of The World)(ver. 119, set 1) */
+	DRIVER( kovpluss25 )  /* Knights of Valour Plus (Knife Shield Yong)(ver. 119, set 1) */
+	DRIVER( kovpluss26 )  /* Knights of Valour Plus (Crazy Zhang Liao)(ver. 119, set 1) */
+	DRIVER( kovpluss27 )  /* Knights of Valour Plus (Imitate the World Edition (Test))(ver. 119, set 1) */
+	DRIVER( kovpluss28 )  /* Knights of Valour Plus (Memory Version)(ver. 119, set 1) */
+	DRIVER( kovpluss29 )  /* Knights of Valour Plus (Forced To Enter Jingzhou)(ver. 119) */
+	DRIVER( kovpluss30 )  /* Knights of Valour Plus (New Year kiss version ?)(ver. 119, set 1) */
+	DRIVER( kovpluss31 )  /* Knights of Valour Plus (Authentic Miss Beta)(ver. 119, set 1) */
+	DRIVER( kovpluss32 )  /* Knights of Valour Plus (Wars Wei Wuchuan 2016 Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss33 )  /* Knights of Valour Plus (Authentic Miss 2016 Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss34 )  /* Knights of Valour Plus (Authentic 2008 (Bug Fix Edition))(ver. 119, set 1) */
+	DRIVER( kovpluss35 )  /* Knights of Valour Plus (Authentic Hacks Tour Together Enhanced Version)(ver. 119, set 1) */
+	DRIVER( kovpluss36 )  /* Knights of Valour Plus (Authentic 2007 Super Simple BT Version)(ver. 119, set 1) */
+	DRIVER( kovpluss37 )  /* Knights of Valour Plus (Authentic 2008 Revised Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss38 )  /* Knights of Valour Plus (Authentic 2010 Wei Wu Generals Again)(ver. 119, set 1) */
+	DRIVER( kovpluss39 )  /* Knights of Valour Plus (Authentic 2011)(ver. 119, set 1) */
+	DRIVER( kovpluss40 )  /* Knights of Valour Plus (Authentic 2012 (Old Version))(ver. 119, set 1) */
+	DRIVER( kovpluss41 )  /* Knights of Valour Plus (Authentic 2012 Nightmare Version Swim Gather Version)(ver. 119, set 1) */
+	DRIVER( kovpluss42 )  /* Knights of Valour Plus (Authentic 2012 Nightmare Version (Old Version))(ver. 119, set 1) */
+	DRIVER( kovpluss43 )  /* Knights of Valour Plus (Authentic 2012 Nightmare April New Version)(ver. 119, set 1) */
+	DRIVER( kovpluss44 )  /* Knights of Valour Plus (Authentic 2012 Nightmare Version 2013.11 Month Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss45 )  /* Knights of Valour Plus (Authentic 2012 Unparalleled Version Of Tour Gather)(ver. 119, set 1) */
+	DRIVER( kovpluss46 )  /* Knights of Valour Plus (Authentic 2019)(ver. 119, set 1) */
+	DRIVER( kovpluss47 )  /* Knights of Valour Plus (Authentic Enhanced Version)(ver. 119, set 1) */
+	DRIVER( kovpluss48 )  /* Knights of Valour Plus (Who Is The Deer Dead (National Day Edition))(ver. 119, set 1) */
+	DRIVER( kovpluss49 )  /* Knights of Valour Plus (Gone With The World War - Libu)(ver. 119, set 1) */
+	DRIVER( kovpluss50 )  /* Knights of Valour Plus (Dragon And The World)(ver. 119, set 1) */
+	DRIVER( kovpluss51 )  /* Knights of Valour Plus (Open The Magic Zhang Gas Tank Will Kill)(ver. 119) */
+	DRIVER( kovpluss52 )  /* Knights of Valour Plus (Newcomer Modified Version)(ver. 119, set 1) */
+	DRIVER( kovpluss53 )  /* Knights of Valour Plus (Style Moves Revision )(ver. 119, set 1) */
+	DRIVER( kovpluss54 )  /* Knights of Valour Plus (Qin Double, Love, Dominate The World)(ver. 119, set 1) */
+	DRIVER( kovpluss55 )  /* Knights of Valour Plus (Double Qin Double Dominate The World To Commemorate The Special Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss56 )  /* Knights of Valour Plus (Fushu Flutter Official Version D)(ver. 119, set 1) */
+	DRIVER( kovpluss57 )  /* Knights of Valour Plus (Flock Male Flurry Official Version D5)(ver. 119, set 1) */
+	DRIVER( kovpluss58 )  /* Knights of Valour Plus (Qunying Edition Rev Final SP2)(ver. 119, set 1) */
+	DRIVER( kovpluss59 )  /* Knights of Valour Plus (Imitation Fengyun Correction)(ver. 119, set 1) */
+	DRIVER( kovpluss60 )  /* Knights of Valour Plus (Single Into The Fire Sword Chamber)(ver. 119, set 1) */
+	DRIVER( kovpluss61 )  /* Knights of Valour Plus (Single Into The Secret Room)(ver. 119, set 1) */
+	DRIVER( kovpluss62 )  /* Knights of Valour Plus (Chaotic Dance Special Edition) */
+	DRIVER( kovpluss63 )  /* Knights of Valour Plus (Enable Test Mode Y Enhanced Power)(ver. 119, set 1) */
+	DRIVER( kovpluss64 )  /* Knights of Valour Plus (Super)(ver. 119, set 1) */
+	DRIVER( kovpluss65 )  /* Knights of Valour Plus (Shu Revival Experience Version)(ver. 119, set 1) */
+	DRIVER( kovpluss66 )  /* Knights of Valour Plus (Repair The Third Dead Machine)(ver. 119, set 1) */
+	DRIVER( kovpluss67 )  /* Knights of Valour Plus (Three Kingdoms Wars - The World Under A New Version)(ver. 119, set 1) */
+	DRIVER( kovpluss72 )  /* Knights of Valour Plus (Legend Of Evil Feng Warriors Fushuang Feng Sublimation)(ver. 119, set 1) */
+	DRIVER( kovpluss73 )  /* Knights of Valour Plus (Really War Of The Flies Fluttering The Three Kingdoms West Tour Fix It)(ver. 119, set 1) */
+	DRIVER( kovpluss74 )  /* Knights of Valour Plus (Wei Wuchuan Of The Three Kingdoms)(ver. 119, set 1) */
+	DRIVER( kovpluss75 )  /* Knights of Valour Plus (Royal Sword Flight)(ver. 119, set 1) */
+	DRIVER( kovpluss76 )  /* Knights of Valour Plus (Dynasty Warriors Warriors Second Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss79 )  /* Knights of Valour Plus (Imitation Turmoil)(ver. 119, set 1) */
+	DRIVER( kovpluss80 )  /* Knights of Valour Plus (Gas Gathering fast)(ver. 119, set 1) */
+	DRIVER( kovpluss81 )  /* Knights of Valour Plus (Super Plus) */
+	DRIVER( kovpluss82 )  /* Knights of Valour Plus (All Explosive Style Open)(ver. 119, set 1) */
+	DRIVER( kovpluss83 )  /* Knights of Valour Plus (Variation Kong Ming)(ver. 119, set 1) */
+	DRIVER( kovpluss84 )  /* Knights of Valour Plus (Metamorphosis Guanyu Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss85 )  /* Knights of Valour Plus (Metamorphosis GuanYu Second Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss86 )  /* Knights of Valour Plus (Huang Zhong Edition Is Absolute Nightmare)(ver. 119, set 1) */
+	DRIVER( kovpluss87 )  /* Knights of Valour Plus (Troubled Times)(ver. 119) */
+	DRIVER( kovpluss88 )  /* Knights of Valour Plus (Chaos Double British)(ver. 119, set 1) */
+	DRIVER( kovpluss89 )  /* Knights of Valour Plus (Ma Chao Version?)(ver. 119, set 1) */
+	DRIVER( kovpluss90 )  /* Knights of Valour Plus (Massive Dance)(ver. 119, set 1) */
+	DRIVER( kovpluss91 )  /* Knights of Valour Plus (Three Kingdoms Unknown Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss92 )  /* Knights of Valour Plus (Super Zhuge Liang)(ver. 119, set 1) */
+	DRIVER( kovpluss93 )  /* Knights of Valour Plus (Super Moves Version)(ver. 119, set 1) */
+	DRIVER( kovpluss94 )  /* Knights of Valour Plus (Five Tigers Will Be Flurry)(ver. 119, set 1) */
+	DRIVER( kovpluss95 )  /* Knights of Valour Plus (Wei Yan - Zhao Yun Flurry)(ver. 119, set 1) */
+	DRIVER( kovpluss96 )  /* Knights of Valour Plus (Righteous Spirit)(ver. 119, set 1) */
+	DRIVER( kovpluss97 )  /* Knights of Valour Plus (Metamorphosis Zhang Liao First Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss98 )  /* Knights of Valour Plus (Metamorphosis Zhang Liao Second Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss99 )  /* Knights of Valour Plus (Metamorphosis Zhang Liao Third Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss100 )  /* Knights of Valour Plus (Zhao Yun Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss101 )  /* Knights of Valour Plus (Zhao Yun Enhanced Version)(ver. 119, set 1) */
+	DRIVER( kovpluss102 )  /* Knights of Valour Plus (119 Color Modified Version)(ver. 119, set 1) */
+	DRIVER( kovpluss103 )  /* Knights of Valour Plus (Person Color Replacement)(ver. 119, set 1) */
+	DRIVER( kovpluss104 )  /* Knights of Valour Plus (Character Color Replacement (Alt))(ver. 119, set 1) */
+	DRIVER( kovpluss105 )  /* Knights of Valour Plus (Three King Color Version)(ver. 119, set 1) */
+	DRIVER( kovpluss106 )  /* Knights of Valour Plus (Four Swords Colored Version)(ver. 119, set 1) */
+	DRIVER( kovpluss107 )  /* Knights of Valour Plus (Zhao Yun: White)(ver. 119, set 1) */
+	DRIVER( kovpluss108 )  /* Knights of Valour Plus (Simulator Bug Is Fully Repaired)(ver. 119, set 1) */
+	DRIVER( kovpluss109 )  /* Knights of Valour Plus (Problem Fix-Original Bug Repair)(ver. 119, set 1) */
+	DRIVER( kovpluss110 )  /* Knights of Valour Plus (Prop Picture Repair) */
+	DRIVER( kovpluss112 )  /* Knights of Valour Plus (Plus P1)(ver. 119, set 1) */
+	DRIVER( kovpluss113 )  /* Knights of Valour Plus (Plus SP2)(ver. 119, set 1) */
+	DRIVER( kovpluss114 )  /* Knights of Valour Plus (Revised SP1 / SP2)(ver. 119, set 1) */
+	DRIVER( kovpluss115 )  /* Knights of Valour Plus (Three Kingdoms Warriors 2015 Amazing Change purgatory)(ver. 119, set 1) */
+	DRIVER( kovpluss116 )  /* Knights of Valour Plus (Three Gods Warriors 2016)(ver. 119, set 1) */
+	DRIVER( kovpluss117 )  /* Knights of Valour Plus (Enable Choosing Same One)(ver. 119) */
+	DRIVER( kovpluss118 )  /* Knights of Valour Plus (Full Character Four Swords)(ver. 119, set 1) */
+	DRIVER( kovpluss119 )  /* Knights of Valour Plus (Ship Sailor Version)(ver. 119, set 1) */
+	DRIVER( kovpluss120 )  /* Knights of Valour Plus (Kotomira Version)(ver. 119, set 1) */
+	DRIVER( kovpluss121 )  /* Knights of Valour Plus (Liu Bei Rev Final SP1 1.0)(ver. 119, set 1) */
+	DRIVER( kovpluss122 )  /* Knights of Valour Plus (Liu Version 2.0)(ver. 119, set 1) */
+	DRIVER( kovpluss123 )  /* Knights of Valour Plus (Lu Bu version)(ver. 119, set 1) */
+	DRIVER( kovpluss124 )  /* Knights of Valour Plus (Perfect Lu Bu Version)(Internal Version)(ver. 119, set 1) */
+	DRIVER( kovpluss125 )  /* Knights of Valour Plus (Perfect Lu Bu Version)(ver. 119, set 1) */
+	DRIVER( kovpluss126 )  /* Knights of Valour Plus (Lu Xun 119 Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss127 )  /* Knights of Valour Plus (Meng You Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss128 )  /* Knights of Valour Plus (Horse Thief Yue Ji Revision)(ver. 119, set 1) */
+	DRIVER( kovpluss129 )  /* Knights of Valour Plus (Guan Zhaoma innocent people)(ver. 119, set 1) */
+	DRIVER( kovpluss130 )  /* Knights of Valour Plus (Blue Dragon Leopard)(ver. 119, set 1) */
+	DRIVER( kovpluss131 )  /* Knights of Valour Plus (Ninja And Iron Armor)(ver. 119, set 1) */
+	DRIVER( kovpluss132 )  /* Knights of Valour Plus (Double Can Take Four Swords)(ver. 119, set 1) */
+	DRIVER( kovpluss133 )  /* Knights of Valour Plus (Iron Armor Revision)(ver. 119, set 1) */
+	DRIVER( kovpluss134 )  /* Knights of Valour Plus (Release Miscellaneous Goods Limit)(ver. 119, set 1) */
+	DRIVER( kovpluss135 )  /* Knights of Valour Plus (Life Is Not Reduced)(ver. 119, set 1) */
+	DRIVER( kovpluss136 )  /* Knights of Valour Plus (Wei Yan Is Here, Perfect Revision)(ver. 119, set 1) */
+	DRIVER( kovpluss137 )  /* Knights of Valour Plus (King Of The Lord)(ver. 119, set 1) */
+	DRIVER( kovpluss138 )  /* Knights of Valour Plus (Xiahou II)(ver. 119, set 1) */
+	DRIVER( kovpluss139 )  /* Knights of Valour Plus (Zhao Yun Brush Version)(ver. 119, set 1) */
+	DRIVER( kovpluss140 )  /* Knights of Valour Plus (Zhao Yunchao Optimization)(ver. 119, set 1) */
+	DRIVER( kovpluss141 )  /* Knights of Valour Plus (Resolution FZ Hack)(ver. 119, set 1) */
+	DRIVER( kovpluss142 )  /* Knights of Valour Plus (FZ & Bobo Advertising Version)(ver. 119, set 1) */
+	DRIVER( kovpluss143 )  /* Knights of Valour Plus (Three Kingdoms Warriors 2015)(ver. 119, set 1) */
+	DRIVER( kovpluss144 )  /* Knights of Valour Plus (Three Kingdoms Warriors 2015 Unparalleled Purgatory)(ver. 119, set 1) */
+	DRIVER( kovpluss145 )  /* Knights of Valour Plus (King Of The Three King Spike The New Version)(ver. 119, set 1) */
+	DRIVER( kovpluss146 )  /* Knights of Valour Plus (Three Kingdoms War Authentic BAKA)(ver. 119, set 1) */
+	DRIVER( kovpluss147 )  /* Knights of Valour Plus (Three Kingdoms Wars)(ver. 119, set 1) */
+	DRIVER( kovpluss148 )  /* Knights of Valour Plus (Warring States Nightmare Origin Of Zero)(ver. 119, set 1) */
+	DRIVER( kovpluss149 )  /* Knights of Valour Plus (Three Kingdoms War Riboud Legend)(ver. 119, set 1) */
+	DRIVER( kovpluss150 )  /* Knights of Valour Plus (Three Kingdoms God of Wars Musou 2015)(ver. 119, set 1) */
+	DRIVER( kovpluss151 )  /* Knights of Valour Plus (Fractional Defense Energy Enhancement)(ver. 119, set 1) */
+	DRIVER( kovpluss152 )  /* Knights of Valour Plus (Three Kingdoms War Valkyrie Come)(ver. 119, set 1) */
+	DRIVER( kovpluss153 )  /* Knights of Valour Plus (Three Kingdoms 2017 Unparalleled Version)(ver. 119, set 1) */
+	DRIVER( kovpluss154 )  /* Knights of Valour Plus (Three Kingdoms Wars 2017 Musou version)(ver. 119, set 1) */
+	DRIVER( kovpluss155 )  /* Knights of Valour Plus (The Three Kingdoms Great God Road)(ver. 119, set 1) */
+	DRIVER( kovpluss156 )  /* Knights of Valour Plus (Three Kingdoms War Ares 2016 Color Correction Version)(ver. 119, set 1) */
+	DRIVER( kovpluss157 )  /* Knights of Valour Plus (Three Kingdoms Ares 2016 Heroes 2 New Version)(ver. 119, set 1) */
+	DRIVER( kovpluss158 )  /* Knights of Valour Plus (Authentic King)(ver. 119, set 1) */
+	DRIVER( kovpluss159 )  /* Knights of Valour Plus (The Three Kingdoms War, The Three Kingdoms Of The Dead)(ver. 119, set 1) */
+	DRIVER( kovpluss160 )  /* Knights of Valour Plus (War Of The Three Kingdoms Warrior Edge)(ver. 119, set 1) */
+	DRIVER( kovpluss161 )  /* Knights of Valour Plus (Three Kingdoms 2016 Unparalleled Flurry New)(Alt)(ver. 119, set 1) */
+	DRIVER( kovpluss162 )  /* Knights of Valour Plus (Three Kingdoms Jiqin Double Love 2015 Enhanced Version)(ver. 119, set 1) */
+	DRIVER( kovpluss163 )  /* Knights of Valour Plus (Full Half Ice Condition)(ver. 119, set 1) */
+	DRIVER( kovpluss164 )  /* Knights of Valour Plus (War Of The Three Kingdoms 2015 Nightmare Advent)(ver. 119, set 1) */
+	DRIVER( kovpluss165 )  /* Knights of Valour Plus (Yu Feng 2013)(ver. 119, set 1) */
+	DRIVER( kovpluss166 )  /* Knights of Valour Plus (Description Of Hack Unknown)(Set 01)(ver. 119, set 1) */
+	DRIVER( kovpluss167 )  /* Knights of Valour Plus (2012 Authentic Nightmare Come)(ver. 119, set 1) */
+	DRIVER( kovpluss168 )  /* Knights of Valour Plus (Description Of Hack Unknown)(Set 02)(ver. 119, set 1) */
+	DRIVER( kovpluss169 )  /* Knights of Valour Plus (Unparalleled Authentic 2015 Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss170 )  /* Knights of Valour Plus (2015 Authentic Nightmare Come)(ver. 119, set 1) */
+	DRIVER( kovpluss171 )  /* Knights of Valour Plus (Sanguozhanji Warriors 2015)(ver. 119, set 1) */
+	DRIVER( kovpluss172 )  /* Knights of Valour Plus (2016 Authentic Nightmare Come)(Ver.?)(ver. 119, set 1) */
+	DRIVER( kovpluss173 )  /* Knights of Valour Plus (Three Kingdoms 2016 Unparalleled Flurry New)(ver. 119, set 1) */
+	DRIVER( kovpluss174 )  /* Knights of Valour Plus (2016 Authentic Nightmare Come)(ver. 119, set 1) */
+	DRIVER( kovpluss175 )  /* Knights of Valour Plus (2015 Authentic Six Swords Legend)(ver. 119, set 1) */
+	DRIVER( kovpluss176 )  /* Knights of Valour Plus (Qin Double Sanguozhanji 2015)(ver. 119, set 1) */
+	DRIVER( kovpluss179 )  /* Knights of Valour Plus (Description Of Hack Unknown)(Set 03)(ver. 119, set 1) */
+	DRIVER( kovpluss180 )  /* Knights of Valour Plus (Sanguozhanji Savior)(ver. 119, set 1) */
+	DRIVER( kovpluss181 )  /* Knights of Valour Plus (2012 Add character, Easy Max Power)(Hacks Alt 01)(ver. 119, set 1) */
+	DRIVER( kovpluss182 )  /* Knights of Valour Plus (Sanguozhanji Authentic King Spike)(ver. 119, set 1) */
+	DRIVER( kovpluss184 )  /* Knights of Valour Plus (Dragon World)(ver. 119, set 1) */
+	DRIVER( kovpluss185 )  /* Knights of Valour Plus (Riboud Sanguozhanji Legend)(ver. 119, set 1) */
+	DRIVER( kovpluss186 )  /* Knights of Valour Plus (Riboud Sanguozhanji Troubled Times)(ver. 119, set 1) */
+	DRIVER( kovpluss187 )  /* Knights of Valour Plus (2015 Warriors Warriors Purgatory)(ver. 119, set 1) */
+	DRIVER( kovpluss188 )  /* Knights of Valour Plus (2015 Variety Unparalleled Purgatory)(ver. 119, set 1) */
+	DRIVER( kovpluss190 )  /* Knights of Valour Plus (Sanguozhanji Moye Sword)(ver. 119, set 1) */
+	DRIVER( kovpluss191 )  /* Knights of Valour Plus (Qin Double Sanguozhanji Love War 2015 Enhanced Version)(ver. 119, set 1) */
+	DRIVER( kovpluss192 )  /* Knights of Valour Plus (Add New character, New Boss Start, Max Power)(Hacks Alt 03)(ver. 119, set 1) */
+	DRIVER( kovpluss193 )  /* Knights of Valour Plus (Add New character, Max Power)(Hacks Alt 05)(ver. 119, set 1) */
+	DRIVER( kovpluss194 )  /* Knights of Valour Plus (Sanguozhanji Shu Renaissance)(ver. 119, set 1) */
+	DRIVER( kovpluss195 )  /* Knights of Valour Plus (Sanguozhanji Souls Three Kingdoms)(ver. 119, set 1) */
+	DRIVER( kovpluss196 )  /* Knights of Valour Plus (Wu Chuan Wei Sanguozhanji 2015)(ver. 119, set 1) */
+	DRIVER( kovpluss197 )  /* Knights of Valour Plus (Sanguozhanji Five Reversal)(ver. 119, set 1) */
+	DRIVER( kovpluss198 )  /* Knights of Valour Plus (Sanguozhanji Brave Edge)(ver. 119, set 1) */
+	DRIVER( kovpluss199 )  /* Knights of Valour Plus (Description Of Hack Unknown)(Set 04)(ver. 119, set 1) */
+	DRIVER( kovpluss200 )  /* Knights of Valour Plus (Sanguozhanji Unparalleled Ares 2015)(ver. 119, set 1) */
+	DRIVER( kovpluss201 )  /* Knights of Valour Plus (2016 Warriors Ares)(ver. 119, set 1) */
+	DRIVER( kovpluss202 )  /* Knights of Valour Plus (Liu Bei)(Repaired)(ver. 119, set 1) */
+	DRIVER( kovpluss203 )  /* Knights of Valour Plus (King)(ver. 119, set 1) */
+	DRIVER( kovpluss204 )  /* Knights of Valour Plus (2015 Authentic Nightmare Edicion)(ver. 119, set 1) */
+	DRIVER( kovpluss205 )  /* Knights of Valour Plus (Piano Double Boss)(ver. 119, set 1) */
+	DRIVER( kovpluss207 )  /* Knights of Valour Plus (Three Wars 2015 Variety purgatory)(ver. 119, set 1) */
+	DRIVER( kovpluss208 )  /* Knights of Valour Plus (Three Wars A948 World Hegemony)(ver. 119, set 1) */
+	DRIVER( kovpluss211 )  /* Knights of Valour Plus (Three Wars Moye Fly Overhead)(ver. 119, set 1) */
+	DRIVER( kovpluss212 )  /* Knights of Valour Plus (Three Wars Moye Sword 1)(ver. 119, set 1) */
+	DRIVER( kovpluss213 )  /* Knights of Valour Plus (Three Wars Moye Sword 2)(ver. 119, set 1) */
+	DRIVER( kovpluss214 )  /* Knights of Valour Plus (Three Wars Unparalleled Flurry 2016)(ver. 119, set 1) */
+	DRIVER( kovpluss215 )  /* Knights of Valour Plus (World Series Tour Poly Edition 2015)(ver. 119, set 1) */
+	DRIVER( kovpluss216 )  /* Knights of Valour Plus (Excepcional)(ver. 119, set 1) */
+	DRIVER( kovpluss218 )  /* Knights of Valour Plus Three Kingdoms Wars Authentic 2012 Nightmare Edition (Travel Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss219 )  /* Knights of Valour Plus (Fighting To Death)(Alt)(ver. 119, set 1) */
+	DRIVER( kovpluss221 )  /* Knights of Valour Plus (Authentic 2008)(Bug Fix Edition))(ver. 119, set 1) */
+	DRIVER( kovpluss222 )  /* Knights of Valour Plus (New Year kiss version 1.12)(active version)(ver. 119, set 1) */
+	DRIVER( kovpluss223 )  /* Knights of Valour Plus (Authentic 2008 Revision)(ver. 119, set 1) */
+	DRIVER( kovpluss224 )  /* Knights of Valour Plus (Authentic 2007)(ver. 119, set 1) */
+	DRIVER( kovpluss225 )  /* Knights of Valour Plus (Authentic 2008 Group Dances Test Version)(ver. 119, set 1) */
+	DRIVER( kovpluss226 )  /* Knights of Valour Plus (Authentic 2009)(ver. 119, set 1) */
+	DRIVER( kovpluss227 )  /* Knights of Valour Plus (Authentic 2012 Tour Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss228 )  /* Knights of Valour Plus (Qin Double Dominant World 0.518 (alt))(ver. 119, set 1) */
+	DRIVER( kovpluss229 )  /* Knights of Valour Plus (Qin Double Love Dominate The World Second Version)(ver. 119, set 1) */
+	DRIVER( kovpluss230 )  /* Knights of Valour Plus (Double Qin Double Situation Dominate The World Official Version)(ver. 119, set 1) */
+	DRIVER( kovpluss231 )  /* Knights of Valour Plus (Sima Thief)(ver. 119, set 1) */
+	DRIVER( kovpluss232 )  /* Knights of Valour Plus (True Group Dance v2.0 final Version)(ver. 119, set 1) */
+	DRIVER( kovpluss233 )  /* Knights of Valour Plus (Really Unparalleled And Crowded. Rev Final SP1)(ver. 119, set 1) */
+	DRIVER( kovpluss234 )  /* Knights of Valour Plus (Really Unparalleled, Group Dance, The Sublimation Of Maple, The Final Restoration)(ver. 119, set 1) */
+	DRIVER( kovpluss235 )  /* Knights of Valour Plus (Small version)(ver. 119, set 1) */
+	DRIVER( kovpluss236 )  /* Knights of Valour Plus (Bear Dominates The World)(ver. 119, set 1) */
+	DRIVER( kovpluss237 )  /* Knights of Valour Plus (Three Kingdoms War 2016)(ver. 119, set 1) */
+	DRIVER( kovpluss238 )  /* Knights of Valour Plus (Three Kingdoms 2016 Six Swords of God)(ver. 119, set 1) */
+	DRIVER( kovpluss239 )  /* Knights of Valour Plus (Description Of Hack Unknown)(Set 05)(ver. 119, set 1) */
+	DRIVER( kovpluss241 )  /* Knights of Valour Plus (Plus 2007 FZ Hack)(ver. 119, set 1) */
+	DRIVER( kovpluss242 )  /* Knights of Valour Plus (Enhanced Version)(Alt)(ver. 119, set 1) */
+	DRIVER( kovpluss243 )  /* Knights of Valour Plus (Xin Lin Hack)(ver. 119, set 1) */
+	DRIVER( kovpluss245 )  /* Knights of Valour Plus (Hack Rev Final (FZ))(ver. 119, set 1) */
+	DRIVER( kovpluss246 )  /* Knights of Valour Plus (Combo Hack)(ver. 119, set 1) */
+	DRIVER( kovpluss247 )  /* Knights of Valour Plus (Warlord Revival)(ver. 119, set 1) */
+	DRIVER( kovpluss248 )  /* Knights of Valour Plus (Death Dead)(ver. 119, set 1) */
+	DRIVER( kovpluss250 )  /* Knights of Valour Plus (Authentic Miss)(Alt)(ver. 119, set 1) */
+	DRIVER( kovpluss251 )  /* Knights of Valour Plus (Authentic 2012 Tour Gatherings)(ver. 119, set 1) */
+	DRIVER( kovpluss252 )  /* Knights of Valour Plus (Double Qin Double Dominate The World (Alt))(ver. 119, set 1) */
+	DRIVER( kovpluss253 )  /* Knights of Valour Plus (Soldier Version)(ver. 119, set 1) */
+	DRIVER( kovpluss254 )  /* Knights of Valour Plus (Warring States Three Kingdoms)(ver. 119, set 1) */
+	DRIVER( kovpluss255 )  /* Knights of Valour Plus (Repair Hack Image V3)(ver. 119, set 1) */
+	DRIVER( kovpluss256 )  /* Knights of Valour Plus (Fangyue Magic Rain 2016 Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss257 )  /* Knights of Valour Plus (Group Edition 2016 Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss258 )  /* Knights of Valour Plus (Revived 2016 Edition)(ver. 119, set 1) */
+	DRIVER( kovpluss259 )  /* Knights of Valour Plus (2012 Update Original)(Set 01)(ver. 119, set 1) */
+	DRIVER( kovpluss260 )  /* Knights of Valour Plus (2012 Update Original)(Set 02)(ver. 119, set 1) */
+	DRIVER( kovpluss261 )  /* Knights of Valour Plus (2012 Update Original)(Set 03)(ver. 119, set 1) */
+	DRIVER( kovpluss262 )  /* Knights of Valour Plus (2012 Update Original)(Set 04)(ver. 119, set 1) */
+	DRIVER( kovpluss264 )  /* Knights of Valour Plus (Three Kingdoms Ares St Dragon World Test)(ver. 119, set 1) */
+	DRIVER( kovpluss266 )  /* Knights of Valour Plus (Warriors Warriors S 2017)(ver. 119, set 1) */
+	DRIVER( kovpluss267 )  /* Knights of Valour Plus (Battle Of Chibi)(ver. 119, set 1) */
+	DRIVER( kovpluss268 )  /* Knights of Valour Plus (Three Centuries)(ver. 119, set 1) */
+	DRIVER( kovpluss269 )  /* Knights of Valour Plus (Dragon Finch Update)(ver. 119, set 1) */
+	DRIVER( kovpluss270 )  /* Knights of Valour Plus (Wars)(ver. 119, set 1) */
+	DRIVER( kovpluss271 )  /* Knights of Valour Plus (Warfare Nightmare Falls +S 201)(Set 01)(ver. 119, set 1) */
+	DRIVER( kovpluss272 )  /* Knights of Valour Plus (Warfare Nightmare Falls +S 201)(Set 02)(ver. 119, set 1) */
+	DRIVER( kovpluss273 )  /* Knights of Valour Plus (Warfare 2017 Nightmare Zs)(ver. 119, set 1) */
+	DRIVER( kovpluss274 )  /* Knights of Valour Plus (Warfare 2017 Nightmare St)(ver. 119, set 1) */
+	DRIVER( kovpluss275 )  /* Knights of Valour Plus (2012 Edition Of The Unparalleled Update)(ver. 119, set 1) */
+	DRIVER( kovpluss276 )  /* Knights of Valour Plus (Beer Dream)(ver. 119, set 1) */
+	DRIVER( kovpluss277 )  /* Knights of Valour Plus (Authentic 2012 Nightmare S)(ver. 119, set 1) */
+	DRIVER( kovpluss280 )  /* Knights of Valour Plus (king Spike)(Ver.?)(ver. 119, set 1) */
+	DRIVER( kovpluss281 )  /* Knights of Valour Plus (E Meng Jiang Lin 2014 )(Ver.?)(ver. 119, set 1) */
+	DRIVER( kovpluss282 )  /* Knights of Valour Plus (Wu Shuang 2012 Edition 2017)(ver. 119) */
+	DRIVER( kovpluss283 )  /* Knights of Valour Plus (Single Rider Savior)(ver. 119) */
+	DRIVER( kovpluss284 )  /* Knights of Valour Plus (E Meng Jiang Lin 2012 Edition 2017)(ver. 119) */
+	DRIVER( kovpluss285 )  /* Knights of Valour Plus (Jifang Moon Magic Rain link)(ver. 119) */
+	DRIVER( kovpluss286 )  /* Knights of Valour Plus (Hong Bo Fu Wang)(ver. 119) */
+	DRIVER( kovpluss287 )  /* Knights of Valour Plus (Huo Long Hu Ti)(ver. 119) */
+	DRIVER( kovplusas01 )  /* Knights of Valour Plus (Enhanced Power)(ver. 119, set 2) */
+	DRIVER( orlegends01 )  /* Oriental Legend (Description Of Hack Unknown)(Set 01)(ver. 126) */
+	DRIVER( orlegends03 )  /* Oriental Legend (Description Of Hack Unknown)(Set 03)(ver. 126) */
+	DRIVER( orlegends04 )  /* Oriental Legend (Unknow Hack)(ver. 126) */
+	DRIVER( orlegends05 )  /* Oriental Legend (Evil Spirit Plus)(ver. 126) */
+	DRIVER( orlegends06 )  /* Oriental Legend (Plus Revision)(ver. 126) */
+	DRIVER( orlegends07 )  /* Oriental Legend (Kamikemono Fukkatsu Special Set 2)(ver. 126) */
+	DRIVER( orlegends08 )  /* Oriental Legend (Boss Beta 01)(ver. 126)  */
+	DRIVER( orlegends09 )  /* Oriental Legend (Skills Instruction Is Simplified)(ver. 126) */
+	DRIVER( orlegends10 )  /* Oriental Legend (Super Qigong)(ver. 126) */
+	DRIVER( orlegends11 )  /* Oriental Legend (Super Moves)(ver. 126) */
+	DRIVER( orlegends12 )  /* Oriental Legend (Note Edition)(ver. 126) */
+	DRIVER( orlegendcs01 )  /* Oriental Legend (Easy Super Moves)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs02 )  /* Oriental Legend (Journey To The West Back To Lingshan)(Ver.?)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs03 )  /* Oriental Legend (Enhanced Score)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs04 )  /* Oriental Legend (Evil Wind Return The Final Version)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs05 )  /* Oriental Legend (Plus Ver 1.0)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs06 )  /* Oriental Legend (Super Return 2 Funny Innocence Plus)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs07 )  /* Oriental Legend (Super Return 3 Phantom Legend)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs08 )  /* Oriental Legend (Super Return 3 West Overlord)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs09 )  /* Oriental Legend (Super Return 4 I Want To Rank)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs10 )  /* Oriental Legend (Super Return 4 I Want To Rank Fever)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs11 )  /* Oriental Legend (Super Return 4 I Want To Rank Pro)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs12 )  /* Oriental Legend (Super Return 5 Very Skynet EX-2)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs13 )  /* Oriental Legend (Super Return 5 Very Skynet EX-3)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs14 )  /* Oriental Legend (Super Return 5 Very Skynet EX-3 Easy)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs16 )  /* Oriental Legend (Warcraft Liberation 1024 Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs17 )  /* Oriental Legend (Warcraft Liberation 1201 Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs18 )  /* Oriental Legend (Warcraft Liberation Longma Special Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs19 )  /* Oriental Legend (Warcraft Liberation Sha Wu Net Special Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs20 )  /* Oriental Legend (Warcraft Liberation Sun Wukong Special Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs21 )  /* Oriental Legend (Warcraft Liberation Little Dragon Girl Special Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs22 )  /* Oriental Legend (Warcraft Liberation Pig Eight Rings Special Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs23 )  /* Oriental Legend (World Of Warcraft Liberation)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs24 )  /* Oriental Legend (Wave Power Recovery)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs25 )  /* Oriental Legend (Super World - Red Dragon Dance 1)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs26 )  /* Oriental Legend (Super World - Red Dragon Dance 2)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs28 )  /* Oriental Legend (2008 Musou Dragon Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs29 )  /* Oriental Legend (Thousands Of Machines Change. Variety Unparalleled 1)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs30 )  /* Oriental Legend (Thousands Of Machines Change. Variety Unparalleled 2)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs31 )  /* Oriental Legend (Thousands Of Machines Change. Variety Unparalleled 3)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs32 )  /* Oriental Legend (Thousands Of Machines Change. Variety Unparalleled 4)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs33 )  /* Oriental Legend (Thousands Of Machines. Variety Unparalleled PRO)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs34 )  /* Oriental Legend (Return of the Holy)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs35 )  /* Oriental Legend (Plus Ver 1.1)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs36 )  /* Oriental Legend (Plus Ver 1.2 (Moves Simplified Version))(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs37 )  /* Oriental Legend (Group Of Flurry Dance Beta 2)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs38 )  /* Oriental Legend (Group Of Flurry Dance Beta 3)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs39 )  /* Oriental Legend (Group Of Demon Dances)(Alt)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs42 )  /* Oriental Legend (Westbound Evil Wind Beta 3)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs43 )  /* Oriental Legend (Return Of Evil Winds Beta 1)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs44 )  /* Oriental Legend (Return Of Evil Winds Beta 2)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs45 )  /* Oriental Legend (Return Of Evil Winds Beta 3)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs46 )  /* Oriental Legend (Join Hands)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs47 )  /* Oriental Legend (Join Hands 2)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs49 )  /* Oriental Legend (Westbound Flat Demon)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs50 )  /* Oriental Legend (Chaos Demon Discipline)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs51 )  /* Oriental Legend (Small Work)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs52 )  /* Oriental Legend (Hide The Conversation)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs53 )  /* Oriental Legend (Wukong Legend)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs54 )  /* Oriental Legend (Return Of Evil Winds)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs55 )  /* Oriental Legend (Instructional Simplified Version)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs56 )  /* Oriental Legend (Gold Fish)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs57 )  /* Oriental Legend (Full-Featured Pig Journey)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs58 )  /* Oriental Legend (Boss Weakened Version)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs60 )  /* Oriental Legend (Golden Monkey Legend)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs61 )  /* Oriental Legend (Full Featured Dragon Horse)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs62 )  /* Oriental Legend (Full Color Little Dragon Girl)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs63 )  /* Oriental Legend (The Full Role Of Sand Wu Net)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs64 )  /* Oriental Legend (The Full Role Of The Monkey King)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs67 )  /* Oriental Legend (Super Return To Thousands Of Machines To Change 2008 v2.0)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs69 )  /* Oriental Legend (Pro Silver Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs70 )  /* Oriental Legend (Plus v2.0a)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs71 )  /* Oriental Legend (Super 2008)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs72 )  /* Oriental Legend (Super World - Resurrection Of The Beast Special)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs73 )  /* Oriental Legend (Super World - Resurrection Of The Beast)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs74 )  /* Oriental Legend (Super Return 5 Very Skynet Ex)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs75 )  /* Oriental Legend (Super Return 5 Very Skynet)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs76 )  /* Oriental Legend (Plus v1.3)(2006-09-12)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs77 )  /* Oriental Legend (Plus v3.0)(ver. 112, Chinese Board)) */
+	DRIVER( orlegendcs78 )  /* Oriental Legend (Chao Mo Ji Super v2.0)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs79 )  /* Oriental Legend (Enhanced Power)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs80 )  /* Oriental Legend (River Crab Westward Tour - Warcraft Liberation Home Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs81 )  /* Oriental Legend (Super World - Red Baby Special Edition)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs82 )  /* Oriental Legend (Group Of Demon Dances)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs83 )  /* Oriental Legend (Westward Journey Super Pig)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs84 )  /* Oriental Legend (Westward Variety)(World of Warcraft)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs85 )  /* Oriental Legend (Westward Full Attack Enhanced Version)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs86 )  /* Oriental Legend (Westward Flock Of Shameless 2017 Strengthening)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs87 )  /* Oriental Legend (Westward Tour 1v4)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs88 )  /* Oriental Legend (Description Of Hack Unknown)(Set 01)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs89 )  /* Oriental Legend (Description Of Hack Unknown)(Set 02)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs90 )  /* Oriental Legend (Description Of Hack Unknown)(Set 03)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs91 )  /* Oriental Legend (Description Of Hack Unknown)(Set 04)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs92 )  /* Oriental Legend (Xiyou Turned Into An Enhanced Version)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs93 )  /* Oriental Legend (Jing Yu Jing)(ver. 112, Chinese Board) */
+	DRIVER( orlegendcs94 )  /* Oriental Legend (Plus)(Ver.?)(ver. 112, Chinese Board) */
+	DRIVER( orlegendes01 )  /* Oriental Legend (Enhanced Power)(ver. 112) */
+	DRIVER( orlegend111cs01 )  /* Oriental Legend (Enhanced Power)(ver. 111) */
 
 
 #endif	/* DRIVER_RECURSIVE */
