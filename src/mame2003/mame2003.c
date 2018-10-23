@@ -1674,8 +1674,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
 
 int osd_is_joy_pressed(int joycode)
 {
-  printf("joy %d\n",joycode);
-  return (joycode >= 1000) ? retroJsState[joycode-1000] : 0;
+   return (joycode >= 1000) ? retroJsState[joycode-1000] : 0;
 }
 
 int osd_is_joystick_axis_code(int joycode)
@@ -1805,7 +1804,7 @@ const struct KeyboardInfo *osd_get_key_list(void)
 
 int osd_is_key_pressed(int keycode)
 {
-  printf("key %d\n",keycode);
+  
   return (keycode < 512 && keycode >= 0) ? retroKeyState[keycode] : 0;
 }
 
