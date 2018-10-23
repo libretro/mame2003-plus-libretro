@@ -37,7 +37,7 @@ int16_t                   XsoundBuffer[2048];
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
- int          retroJsState[108];
+extern int          retroJsState[72];
 extern int16_t      mouse_x[4];
 extern int16_t      mouse_y[4];
 extern struct       osd_create_params videoConfig;
@@ -1509,7 +1509,7 @@ int get_mame_ctrl_id(int display_idx, int retro_ID)
   return 0;  
 }
 
-#define DIRECTIONAL_COUNT           8  /* map Left, Right Up, Down as well as B, Y, A, X */
+#define DIRECTIONAL_COUNT           4  /* map Left, Right Up, Down as well as B, Y, A, X */
 #define DIRECTIONAL_COUNT_NO_DBL    4
 #define BUTTON_COUNT_PER           12 /* 10 MAME buttons plus Start and Select          */
 #define MOUSE_BUTTON_PER            2
@@ -1631,7 +1631,7 @@ struct JoystickInfo alternate_joystick_maps[PLAYER_COUNT][IDX_PAD_end][PER_PLAYE
 
 ******************************************************************************/
 
-
+int retroJsState[72];
 int16_t mouse_x[4];
 int16_t mouse_y[4];
 int16_t analogjoy[4][4];
