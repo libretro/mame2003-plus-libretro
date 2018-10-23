@@ -2304,6 +2304,23 @@ ROM_START( insectx )
 	ROM_LOAD( "insector.r16", 0x80000, 0x80000, CRC(db5a7434) SHA1(71fac872b19a13a7ad25c8ad895c322ec9573fdc) )
 ROM_END
 
+/**********
+ Insector X
+ This hack may not work !
+************/
+
+ROM_START( insectxs01 )
+	ROM_REGION( 0x20000, REGION_CPU1, 0 )	/* 64k + bankswitch areas for the first CPU */
+	ROM_LOAD( "b97__03_ps01.u32", 0x00000, 0x20000, CRC(2f478739) SHA1(b073170bbf14a974d7ab28d8c078c4e8823f259f) )
+
+	ROM_REGION( 0x10000, REGION_CPU2, 0 )	/* 64k for the second CPU */
+	ROM_LOAD( "b97__07.u38", 0x00000, 0x10000, CRC(324b28c9) SHA1(db77a4ac60196d0f0f35dbc5c951ec29d6392463) )
+
+	ROM_REGION( 0x100000, REGION_GFX1, ROMREGION_DISPOSE )
+	ROM_LOAD( "b97__01_ps01.u1", 0x00000, 0x80000, CRC(4b6ec740) SHA1(f6065bdc73e9997e24e19a664eb161cad6948c95) )
+	ROM_LOAD( "b97__02_ps01.u2", 0x80000, 0x80000, CRC(78e9ecc4) SHA1(a6921d434d0c3dc6ac6ee4aad7ac8b1d901d0daf) )
+ROM_END
+
 
 /*  ( YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR COMPANY    FULLNAME     FLAGS ) */
 GAME( 1987, plumppop, 0,        drtoppel, plumppop, drtoppel, ROT0,   "Taito Corporation", "Plump Pop (Japan)" )
@@ -2323,3 +2340,6 @@ GAME( 1988, tnzs,     0,        tnzs,     tnzs,     tnzs,     ROT0,   "Taito Cor
 GAME( 1988, tnzsb,    tnzs,     tnzsb,    tnzsb,    tnzsb,    ROT0,   "bootleg", "The NewZealand Story (World, bootleg)" )
 GAME( 1988, tnzs2,    tnzs,     tnzs,     tnzs2,    tnzs,     ROT0,   "Taito Corporation Japan", "The NewZealand Story 2 (World)" )
 GAME( 1989, insectx,  0,        insectx,  insectx,  insectx,  ROT0,   "Taito Corporation Japan", "Insector X (World)" )
+//THIS HACK MAY NOT WORK! NEED TESTING!!
+GAME( 200?, insectxs01,      insectx,        insectx,  insectx,  insectx, ROT0,   "Unknown", "Insector X (Translation Chinese)(World)" )
+// 还缺少一个中文HACK：新西兰物语/纽西兰童话
