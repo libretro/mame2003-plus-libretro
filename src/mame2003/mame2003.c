@@ -37,7 +37,7 @@ int16_t                   XsoundBuffer[2048];
 
 extern const struct KeyboardInfo retroKeys[];
 extern int          retroKeyState[512];
-extern int          retroJsState[72];
+ int          retroJsState[109]= {0}; // initialise to zero we are only reaing 4 players atm
 extern int16_t      mouse_x[4];
 extern int16_t      mouse_y[4];
 extern struct       osd_create_params videoConfig;
@@ -1633,7 +1633,7 @@ struct JoystickInfo alternate_joystick_maps[PLAYER_COUNT][IDX_PAD_end][PER_PLAYE
 
 ******************************************************************************/
 
-int retroJsState[72];
+
 int16_t mouse_x[4];
 int16_t mouse_y[4];
 int16_t analogjoy[4][4];
