@@ -1644,7 +1644,7 @@ const struct JoystickInfo *osd_get_joy_list(void)
   int overall_idx    = 0;
   int display_idx    = 0;
    
-  for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER6; display_idx++)
+  for(display_idx = DISP_PLAYER1; display_idx <= DISP_PLAYER5; display_idx++)
   {
     for(player_map_idx = 0; player_map_idx < PER_PLAYER_CTRL_COUNT; player_map_idx++)
     {
