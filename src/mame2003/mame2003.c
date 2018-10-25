@@ -1681,7 +1681,7 @@ int osd_is_joy_pressed(int joycode)
 
 int osd_is_joystick_axis_code(int joycode)
 {
-    return 0;
+    return 1;
 }
 
 void osd_lightgun_read(int player, int *deltax, int *deltay)
@@ -1705,15 +1705,18 @@ int convert_analog_scale(int input)
 
 void osd_analogjoy_read(int player,int analog_axis[MAX_ANALOG_AXES], InputCode analogjoy_input[MAX_ANALOG_AXES])
 {
+	int deadzone = 1.28 * 15;
     int i;
     for (i = 0; i < MAX_ANALOG_AXES; i ++)
     {
-        if (analogjoy[player][i])
-            analog_axis[i] = convert_analog_scale(analogjoy[player][i]);
-    }
-
-    analogjoy_input[0] = IPT_AD_STICK_X;
-    analogjoy_input[1] = IPT_AD_STICK_Y;
+		analog_axis[i]=0;
+		if (analogjoy_input[i] != CODE_NONE)
+		{	
+			if (convert_analog_scale(analogjoy[player][i]) > deadzone)	analog_axis[i] = convert_analog_scale(analogjoy[player][i]);
+		    if (convert_analog_scale(analogjoy[player][i]) < -deadzone)     analog_axis[i] = convert_analog_scale(analogjoy[player][i]);
+			
+		}			
+	}
 }
 
 void osd_customize_inputport_defaults(struct ipd *defaults)
