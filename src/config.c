@@ -176,6 +176,10 @@ static int input_port_read_ver_8(mame_file *f, struct InputPort *in)
 {
 	UINT32 i;
 	UINT16 w;
+  
+  if(!options.mame_remapping)
+    return 0;
+  
 	if (readint(f,&i) != 0)
 		return -1;
 	in->type = i;
@@ -288,10 +292,7 @@ static unsigned int count_input_ports(const struct InputPort *in)
 
 config_file *config_open(const char *name)
 {
-	if(options.mame_remapping)
-    return config_init(name, 0);
-
-  return NULL;
+  return config_init(name, 0);
 }
 
 
@@ -302,10 +303,7 @@ config_file *config_open(const char *name)
 
 config_file *config_create(const char *name)
 {
-	if(options.mame_remapping)
-    return config_init(name, 1);
-
-  return NULL;
+  return config_init(name, 1);
 }
 
 
