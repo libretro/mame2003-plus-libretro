@@ -686,9 +686,9 @@ bool retro_load_game(const struct retro_game_info *game)
   environ_cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)retropad_subdevice_ports);
   
   if(!run_game(driverIndex))
-    return false;
+    return true;
   
-  return true;
+  return false;
 }
 
 static void set_content_flags(void)
