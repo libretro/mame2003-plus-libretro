@@ -131,7 +131,7 @@ static void init_core_options(void)
   init_default(&default_options[OPT_USE_ALT_SOUND],       APPNAME"_use_alt_sound",       "Use CD soundtrack (Restart); enabled|disabled");
   init_default(&default_options[OPT_SHARE_DIAL],          APPNAME"_dialsharexy",         "Share 2 player dial controls across one X/Y device; disabled|enabled");
   init_default(&default_options[OPT_DUAL_JOY],            APPNAME"_dual_joysticks",      "Dual Joystick Mode (!NETPLAY); disabled|enabled");
-  init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Right Stick to Buttons; enabled|disabled");
+  init_default(&default_options[OPT_RSTICK_BTNS],         APPNAME"_rstick_to_btns",      "Mame Right Stick to Buttons; enabled|disabled");
   init_default(&default_options[OPT_TATE_MODE],           APPNAME"_tate_mode",           "TATE Mode; disabled|enabled");
   init_default(&default_options[OPT_VECTOR_RESOLUTION],   APPNAME"_vector_resolution_multiplier", 
                                                                                          "Vector resolution multiplier (Restart core); 1|2|3|4|5|6|7|8|9|10");
@@ -1002,12 +1002,23 @@ void retro_run (void)
          retroJsState[17 + offset] = 0;
       }
      
-      
+ //      mame rstick to buttons hack goes here it will disable the rstick it will allow people on snes pads to use buttons on dual joystick games
+// 18 down  19 left 20 up
+
+      if ( (options.rstick_to_btns) && (options.content_flags[CONTENT_DUAL_JOYSTICK]) )	
+      {
+         retroJsState[21 + offset] = analogjoy[i][2] >  0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+         retroJsState[20 + offset] = analogjoy[i][3] < -0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+		 retroJsState[18 + offset] = analogjoy[i][3] >  0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+         retroJsState[19 + offset] = analogjoy[i][2] < -0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+	  }
+      else
+	  {	  
         retroJsState[21	+ offset] = analogjoy[i][2] >  0x4000 ? 1 : 0;
         retroJsState[19 + offset] = analogjoy[i][2] < -0x4000 ? 1 : 0;
         retroJsState[18 + offset] = analogjoy[i][3] >  0x4000 ? 1 : 0;
         retroJsState[20 + offset] = analogjoy[i][3] < -0x4000 ? 1 : 0;
-          
+	  }   
  
 
  }
