@@ -1002,9 +1002,7 @@ void retro_run (void)
          retroJsState[17 + offset] = 0;
       }
      
- //      mame rstick to buttons hack goes here it will disable the rstick it will allow people on snes pads to use buttons on dual joystick games
-// 18 down  19 left 20 up
-
+ 
       if ( (options.rstick_to_btns) && (options.content_flags[CONTENT_DUAL_JOYSTICK]) )	
       {
          retroJsState[21 + offset] = analogjoy[i][2] >  0x4000 ? 1 : input_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
