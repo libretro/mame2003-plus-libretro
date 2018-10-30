@@ -294,23 +294,24 @@ bool run_game(int game)
   /* finish setting up our local machine */
   if (init_machine())
       bail_and_print("Unable to initialize machine emulation");
-
-  /* then run it */
-  if (run_machine())
-      bail_and_print("Unable to start machine emulation");
   else
-  {
-      game_loaded = 1;
-      return true;
+  {	  
+  /* then run it */
+      if (run_machine())
+          bail_and_print("Unable to start machine emulation");
+      else
+      {
+         game_loaded = 1;
+         return 0;
+      }
+
+      /* shutdown the local machine */
+      shutdown_machine();
   }
-
-  /* shutdown the local machine */
-  shutdown_machine();
-
   /* stop tracking resources and exit the OSD layer */
   end_resource_tracking();
     
-	return false;
+	return 1;
 }
 
 void run_game_done(void)
