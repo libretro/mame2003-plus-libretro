@@ -1012,7 +1012,7 @@ void retro_run (void)
 	  }
       else
 	  {	  
-        retroJsState[21	+ offset] = analogjoy[i][2] >  0x4000 ? 1 : 0;
+        retroJsState[21 + offset] = analogjoy[i][2] >  0x4000 ? 1 : 0;
         retroJsState[19 + offset] = analogjoy[i][2] < -0x4000 ? 1 : 0;
         retroJsState[18 + offset] = analogjoy[i][3] >  0x4000 ? 1 : 0;
         retroJsState[20 + offset] = analogjoy[i][3] < -0x4000 ? 1 : 0;
